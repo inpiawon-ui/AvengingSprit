@@ -93,6 +93,23 @@ add('UltimateCooldown', (0, 0, 115, 132), 'UltimateButton', 'IMG', local=True)
 add('PossessButton',  (448, 858, 114, 132), 'ControlGroup', 'BTN')
 
 
+# ── 룸 클리어 버프 3택1 (기본 숨김, 코드가 켠다) ────────────────────
+# 로그라이크 축 — 룸마다 런 한정 빌드를 쌓는다 (GameComposition 콘텐츠 5).
+add('BuffChoicePanel', (0, 0, 576, 1024), ROOT, 'IMG')          # 딤 + 입력 차단
+add('BuffTitleText',   (88, 250, 400, 40), 'BuffChoicePanel', 'TMP',
+    text='ROOM CLEAR', size=cap(26), align='C', color=HOST_C)
+add('BuffSubText',     (88, 296, 400, 24), 'BuffChoicePanel', 'TMP',
+    text='하나를 선택하세요', size=cap(13), align='C', color=MUTED)
+for i in range(3):
+    y = 350 + i * 148
+    add(f'BuffCard{i}',      (108, y, 360, 128), 'BuffChoicePanel', 'BTN')
+    add(f'BuffCard{i}Accent', (0, 0, 10, 128), f'BuffCard{i}', 'IMG', local=True)
+    add(f'BuffCard{i}Name',  (140, y + 26, 300, 34), 'BuffChoicePanel', 'TMP',
+        size=cap(19), align='L', color=WHITE)
+    add(f'BuffCard{i}Desc',  (140, y + 68, 300, 26), 'BuffChoicePanel', 'TMP',
+        size=cap(13), align='L', color=MUTED)
+
+
 def main():
     rows = []
     for e in L:

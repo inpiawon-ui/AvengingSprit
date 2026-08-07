@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Game.Character;
 using Game.Module.Common;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.EventBus;
+using GameFramework.Core.Module.Resource;
 using GameFramework.Core.Module.Scene;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,6 +28,7 @@ namespace Game.Module.InGame
         private const float HostBarWidth = 98f;
         private const float BossBarWidth = 260f;
         private const float KnobRadius = 34f;
+        private const int BuffCardCount = 3;
 
         private UIBinder _ui;
         private BattleDirector _battle;
@@ -37,6 +40,7 @@ namespace Game.Module.InGame
         private Vector2 _knobHome;
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
+        private BuffTable _buffTable;
         private bool _finished;
 
         private void Awake()
@@ -65,7 +69,16 @@ namespace Game.Module.InGame
             _ui.OnClick("PauseButton", OnPause);
 
             _ui.SetActive("BossGroup", false);
+            _ui.SetActive("BuffChoicePanel", false);
             SetPossessReady(false);
+
+            // 딤 — 뒤 화면을 덮고 조작 입력을 막는다
+            var dim = _ui.Get<Image>("BuffChoicePanel");
+            if (dim != null)
+            {
+                dim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
+                dim.raycastTarget = true;
+            }
         }
 
         private void OnEnable()
@@ -78,6 +91,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRoomEntered));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(e => SetPossessReady(e.HasTarget)));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
+            _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
         }
 
         private void OnDisable()
@@ -99,6 +113,11 @@ namespace Game.Module.InGame
             }
             _battle = gameObject.AddComponent<BattleDirector>();
             await _battle.BootAsync(field, layer);
+
+            // 카드 문구는 테이블에서 읽는다 — 버프 정의를 UI 에 복제하지 않기 위함
+            try { _buffTable = await CoreModule.Get<IResourceManager>().LoadAsync<BuffTable>("TableData/BuffTable"); }
+            catch (Exception e) { Debug.LogError($"[InGame] BuffTable 로드 실패 — {e.Message}"); }
+
             RefreshCurrency();
         }
 
@@ -215,6 +234,52 @@ namespace Game.Module.InGame
         }
 
         private static float Ratio(int v, int max) => max > 0 ? Mathf.Clamp01((float)v / max) : 0f;
+
+        // ── 룸 클리어 버프 3택1 ──────────────────────────────────
+        private void OnBuffOffer(BuffOfferEvent e)
+        {
+            if (_buffTable == null || e.OfferedKeys == null) return;
+
+            for (int i = 0; i < BuffCardCount; i++)
+            {
+                bool has = i < e.OfferedKeys.Length;
+                _ui.SetActive($"BuffCard{i}", has);
+                _ui.SetActive($"BuffCard{i}Name", has);
+                _ui.SetActive($"BuffCard{i}Desc", has);
+                if (!has) continue;
+
+                var entry = _buffTable.Get(e.OfferedKeys[i]);
+                if (entry == null) continue;
+
+                _ui.SetText($"BuffCard{i}Name", entry.NameKr);
+                _ui.SetText($"BuffCard{i}Desc", entry.Description);
+
+                // 카드 판때기. 호스트 슬롯 프레임을 붙여봤지만 속이 비어 있어 딤 위에서
+                // 보이지 않았다. 단색 패널이 읽기 쉽다 (Image 는 sprite 가 null 이면 단색을 그린다).
+                var card = _ui.Get<Image>($"BuffCard{i}");
+                if (card != null) card.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+
+                // 강조색 막대도 같은 이유로 스프라이트가 필요 없다
+                var accent = _ui.Get<Image>($"BuffCard{i}Accent");
+                if (accent != null && ColorUtility.TryParseHtmlString(entry.ColorHex, out var c))
+                    accent.color = c;
+
+                // 매번 다른 버프가 오므로 이전 리스너를 지우고 새로 건다
+                var btn = _ui.Get<Button>($"BuffCard{i}");
+                if (btn == null) continue;
+                var key = entry.BuffKey;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => OnBuffPicked(key));
+            }
+            _ui.SetActive("BuffChoicePanel", true);
+            _ui.Find("BuffChoicePanel")?.SetAsLastSibling();
+        }
+
+        private void OnBuffPicked(string buffKey)
+        {
+            _ui.SetActive("BuffChoicePanel", false);
+            _battle?.ChooseBuff(buffKey);
+        }
 
         // ── 종료 ─────────────────────────────────────────────────
         private void OnStageFinished(StageFinishedEvent e)

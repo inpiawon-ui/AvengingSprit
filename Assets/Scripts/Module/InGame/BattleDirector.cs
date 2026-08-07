@@ -52,6 +52,16 @@ namespace Game.Module.InGame
 
         private float _stopTimer;
 
+        private BuffTable _buffTable;
+        private readonly RunBuffs _buffs = new();
+        private readonly List<BuffEntry> _offer = new();
+        private readonly System.Random _rng = new();
+        private bool _awaitingBuff;
+
+        /// <summary>이 런에 쌓인 버프. 스테이지를 나가면 사라진다.</summary>
+        public RunBuffs Buffs => _buffs;
+        public bool IsAwaitingBuff => _awaitingBuff;
+
         public Vector2 MoveInput { get; set; }
 
         /// <summary>지금 사격 중인가. 멈춰서 사거리 안에 적이 있을 때만 true (궁수의 전설 규칙).</summary>
@@ -75,6 +85,10 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
 
+            try { _buffTable = await res.LoadAsync<BuffTable>("TableData/BuffTable"); }
+            catch (Exception e) { Debug.LogError($"[Battle] BuffTable 로드 실패 — {e.Message}"); }
+            _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
+
             // 탄은 유닛보다 위에 그린다 — 유닛 뒤로 숨으면 피격 판단이 안 보인다
             var shotGo = new GameObject("ShotLayer", typeof(RectTransform));
             shotGo.transform.SetParent(_unitLayer.parent, false);
@@ -93,10 +107,10 @@ namespace Game.Module.InGame
         // ─────────────────────────────────────────────────────────
         private void SpawnGhost()
         {
-            _ghostHp = _config.GhostHpMax;
+            _ghostHp = GhostHpMax;
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", GetSprite("unit_ghost"),
-                         _config.GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
+                         GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
                          new Vector2(72f, 90f));
             _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.72f);
             PublishHp();
@@ -113,6 +127,9 @@ namespace Game.Module.InGame
 
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
         public Sprite UnitSprite(string hostKey) => GetSprite($"unit_{hostKey}");
+
+        /// <summary>런타임에 붙이는 UI 스프라이트(버프 카드 등). 이름으로 아틀라스에서 꺼낸다.</summary>
+        public Sprite AtlasSprite(string spriteName) => GetSprite(spriteName);
 
         private void EnterRoom(int index)
         {
@@ -188,9 +205,11 @@ namespace Game.Module.InGame
         private void Update()
         {
             if (!_running || _config == null) return;
+            if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             float dt = Time.deltaTime;
 
-            _ultimateCharge = Mathf.Min(_ultimateCharge + dt, _config.UltimateChargeSeconds);
+            _ultimateCharge = Mathf.Min(_ultimateCharge + dt * _buffs.UltimateChargeMul,
+                                        _config.UltimateChargeSeconds);
 
             TickPlayer(dt);
             SyncFireRing();
@@ -216,7 +235,7 @@ namespace Game.Module.InGame
             bool moving = MoveInput.sqrMagnitude > 0.0001f;
             if (moving)
             {
-                var p = me.Position + MoveInput * me.MoveSpeed * dt;
+                var p = me.Position + MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt;
                 var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
                 p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
                 p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
@@ -236,10 +255,12 @@ namespace Game.Module.InGame
 
             var target = Nearest(_host.Position);
             bool inRange = target != null &&
-                           Vector2.Distance(_host.Position, target.Position) <= _host.AttackRange;
+                           Vector2.Distance(_host.Position, target.Position)
+                               <= _host.AttackRange * _buffs.RangeMul;
             IsFiring = inRange;
             if (!inRange) return;
-            if (!_host.TickAttack(dt)) return;
+            // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
+            if (!_host.TickAttack(dt, _buffs.IntervalMul)) return;
             PerformAttack(_host, target, true);
         }
 
@@ -282,10 +303,14 @@ namespace Game.Module.InGame
                     MeleeStrike(attacker, target, fromPlayer, hitAll: kind == AttackKind.Pulse);
                     break;
 
-                case AttackKind.Spread:
+                default:
                 {
-                    int n = p.ShotCount;
-                    float span = p.SpreadDegrees;
+                    // 다중 사격 버프는 확산이 아닌 방식에도 탄을 더한다 (플레이어 한정)
+                    int extra = fromPlayer ? _buffs.ExtraShots : 0;
+                    int n = (kind == AttackKind.Spread ? p.ShotCount : 1) + extra;
+                    float span = kind == AttackKind.Spread ? p.SpreadDegrees : 0f;
+                    if (extra > 0) span = Mathf.Max(span, 10f * (n - 1));
+
                     for (int i = 0; i < n; i++)
                     {
                         float off = n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
@@ -293,10 +318,6 @@ namespace Game.Module.InGame
                     }
                     break;
                 }
-
-                default:
-                    FireShot(attacker, target, fromPlayer, 0f);
-                    break;
             }
         }
 
@@ -304,7 +325,7 @@ namespace Game.Module.InGame
         private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll)
         {
             var p = attacker.Profile;
-            float reach = attacker.AttackRange;
+            float reach = attacker.AttackRange * (fromPlayer ? _buffs.RangeMul : 1f);
 
             // 슬러거 "탄환 반사" — 휘두르는 범위 안의 적 탄을 지운다
             if (p != null && p.ReflectsShots)
@@ -325,7 +346,7 @@ namespace Game.Module.InGame
                     if (e == null || !e.IsAlive) continue;
                     if (Vector2.Distance(e.Position, attacker.Position) > reach) continue;
                     Burst(e.Position, true);
-                    HitEnemyWith(e, attacker.Atk, p);
+                    HitEnemyWith(e, Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul), p);
                     if (!hitAll) break;
                 }
                 return;
@@ -348,9 +369,11 @@ namespace Game.Module.InGame
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
             bool dead = victim.TakeDamage(damage);
-            if (p != null && p.SlowPercent > 0) victim.ApplySlow(p.SlowPercent, _config.SlowSeconds);
-            if (p != null && p.LifestealPercent > 0 && _host != null)
-                _host.Heal(Mathf.Max(1, damage * p.LifestealPercent / 100));
+            int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
+            int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
+            if (slow > 0) victim.ApplySlow(slow, _config.SlowSeconds);
+            if (steal > 0 && _host != null)
+                _host.Heal(Mathf.Max(1, damage * steal / 100));
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -368,14 +391,18 @@ namespace Game.Module.InGame
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
-            shot.Fire(attacker.Position, target.Position,
-                      (fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy) * (snipe ? 1.6f : 1f),
-                      attacker.Atk, fromPlayer, target, _config.ShotSize,
+            float speed = (fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy)
+                          * (snipe ? 1.6f : 1f)
+                          * (fromPlayer ? _buffs.ShotSpeedMul : 1f);
+
+            shot.Fire(attacker.Position, target.Position, speed,
+                      fromPlayer ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul) : attacker.Atk,
+                      fromPlayer, target, _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
                       _config.ShotLifeSeconds,
-                      pierce: p != null && p.Kind == AttackKind.Pierce,
-                      slowPercent: p?.SlowPercent ?? 0,
-                      lifestealPercent: p?.LifestealPercent ?? 0,
+                      pierce: (p != null && p.Kind == AttackKind.Pierce) || (fromPlayer && _buffs.Pierce),
+                      slowPercent: (p?.SlowPercent ?? 0) + (fromPlayer ? _buffs.SlowPercent : 0),
+                      lifestealPercent: (p?.LifestealPercent ?? 0) + (fromPlayer ? _buffs.LifestealPercent : 0),
                       angleOffsetDeg: angleOffsetDeg);
         }
 
@@ -592,8 +619,47 @@ namespace Game.Module.InGame
             bool isLast = _roomIndex >= _config.RoomsPerStage - 1;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
+
+            // 로그라이크 축 — 룸마다 3택1 로 런 한정 빌드를 쌓는다.
+            // 고를 때까지 전투를 멈춘다(적이 없는 상태라 안전하다).
+            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng);
+            if (_offer.Count == 0) { EnterRoom(_roomIndex + 1); return; }
+
+            _awaitingBuff = true;
+            var keys = new string[_offer.Count];
+            for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
+            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys });
+        }
+
+        /// <summary>제시된 3장 중 하나를 고른다. UI 가 호출한다.</summary>
+        public void ChooseBuff(string buffKey)
+        {
+            if (!_awaitingBuff) return;
+
+            var e = _buffTable?.Get(buffKey);
+            if (e == null) return;
+
+            _buffs.Apply(e);
+
+            // 즉발 효과 — 누적 배율이 아니라 그 자리에서 끝나는 것들
+            if (e.Kind == BuffKind.GhostHp)
+            {
+                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + e.Value);
+                PublishHp();
+            }
+            else if (e.Kind == BuffKind.Heal && _host != null)
+            {
+                _host.Heal(Mathf.Max(1, _host.HpMax * e.Value / 100));
+                PublishHp();
+            }
+
+            _awaitingBuff = false;
+            _offer.Clear();
+            _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
             EnterRoom(_roomIndex + 1);
         }
+
+        private int GhostHpMax => _config.GhostHpMax + _buffs.GhostHpBonus;
 
         private void Finish(bool cleared)
         {
@@ -613,7 +679,7 @@ namespace Game.Module.InGame
             _bus.Publish(new CombatHpChangedEvent
             {
                 GhostHp = _ghostHp,
-                GhostHpMax = _config.GhostHpMax,
+                GhostHpMax = GhostHpMax,
                 HostHp = _host != null ? _host.Hp : 0,
                 HostHpMax = _host != null ? _host.HpMax : 0,
                 HasHost = _host != null,

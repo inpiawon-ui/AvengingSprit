@@ -54,6 +54,22 @@ namespace Game.Module.Events
         public bool HasTarget;
     }
 
+    /// <summary>
+    /// 룸을 클리어해 버프 3택1을 제시한다. 선택 전까지 전투는 멈춘다.
+    /// 배열 길이는 3이지만 남은 버프가 모자라면 더 짧을 수 있다.
+    /// </summary>
+    public struct BuffOfferEvent : IEvent
+    {
+        public string[] OfferedKeys;
+    }
+
+    /// <summary>버프를 골랐다. 화면을 닫고 다음 룸으로 넘어간다.</summary>
+    public struct BuffChosenEvent : IEvent
+    {
+        public string ChosenKey;
+        public int TotalBuffCount;
+    }
+
     /// <summary>스테이지가 끝났다. 클리어·전멸 공통.</summary>
     public struct StageFinishedEvent : IEvent
     {

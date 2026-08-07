@@ -341,6 +341,170 @@
    "y": 1072.5,
    "w": 142.5,
    "h": 165.0
+  },
+  {
+   "name": "BuffChoicePanel",
+   "parent": "InGameMainUI",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 720.0,
+   "h": 1280.0
+  },
+  {
+   "name": "BuffTitleText",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 110.0,
+   "y": 312.5,
+   "w": 500.0,
+   "h": 50.0,
+   "text": "ROOM CLEAR",
+   "size": 46.4,
+   "align": "C",
+   "color": "#F0B428"
+  },
+  {
+   "name": "BuffSubText",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 110.0,
+   "y": 370.0,
+   "w": 500.0,
+   "h": 30.0,
+   "text": "하나를 선택하세요",
+   "size": 23.2,
+   "align": "C",
+   "color": "#8C9AB4"
+  },
+  {
+   "name": "BuffCard0",
+   "parent": "BuffChoicePanel",
+   "create": "BTN",
+   "x": 135.0,
+   "y": 437.5,
+   "w": 450.0,
+   "h": 160.0
+  },
+  {
+   "name": "BuffCard0Accent",
+   "parent": "BuffCard0",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 12.5,
+   "h": 160.0,
+   "local": true
+  },
+  {
+   "name": "BuffCard0Name",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 470.0,
+   "w": 375.0,
+   "h": 42.5,
+   "size": 33.9,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "BuffCard0Desc",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 522.5,
+   "w": 375.0,
+   "h": 32.5,
+   "size": 23.2,
+   "align": "L",
+   "color": "#8C9AB4"
+  },
+  {
+   "name": "BuffCard1",
+   "parent": "BuffChoicePanel",
+   "create": "BTN",
+   "x": 135.0,
+   "y": 622.5,
+   "w": 450.0,
+   "h": 160.0
+  },
+  {
+   "name": "BuffCard1Accent",
+   "parent": "BuffCard1",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 12.5,
+   "h": 160.0,
+   "local": true
+  },
+  {
+   "name": "BuffCard1Name",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 655.0,
+   "w": 375.0,
+   "h": 42.5,
+   "size": 33.9,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "BuffCard1Desc",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 707.5,
+   "w": 375.0,
+   "h": 32.5,
+   "size": 23.2,
+   "align": "L",
+   "color": "#8C9AB4"
+  },
+  {
+   "name": "BuffCard2",
+   "parent": "BuffChoicePanel",
+   "create": "BTN",
+   "x": 135.0,
+   "y": 807.5,
+   "w": 450.0,
+   "h": 160.0
+  },
+  {
+   "name": "BuffCard2Accent",
+   "parent": "BuffCard2",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 12.5,
+   "h": 160.0,
+   "local": true
+  },
+  {
+   "name": "BuffCard2Name",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 840.0,
+   "w": 375.0,
+   "h": 42.5,
+   "size": 33.9,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "BuffCard2Desc",
+   "parent": "BuffChoicePanel",
+   "create": "TMP",
+   "x": 175.0,
+   "y": 892.5,
+   "w": 375.0,
+   "h": 32.5,
+   "size": 23.2,
+   "align": "L",
+   "color": "#8C9AB4"
   }
  ]
 }

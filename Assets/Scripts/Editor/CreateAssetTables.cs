@@ -43,6 +43,24 @@ namespace Game.Editor
             new object[]{ "vampire",    "VAMPIRE",     "흡혈귀",     "흡혈 전투",     74, 82, 76, 66, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "blood_tornado",   HostUnlockType.ChapterBossClear, 3,  0 },
         };
 
+
+        // buffKey, 한글명, 설명, 종류, 값, 중복가능, 강조색
+        private static readonly object[][] Buffs =
+        {
+            new object[]{ "atk_up",     "공격력 강화", "피해량 +25%",            BuffKind.Attack,         25, true,  "#E8604A" },
+            new object[]{ "aspd_up",    "연사 강화",   "발사 간격 -18%",         BuffKind.AttackSpeed,    18, true,  "#F0B428" },
+            new object[]{ "range_up",   "사거리 강화", "사거리 +25%",            BuffKind.Range,          25, true,  "#4AA8E8" },
+            new object[]{ "move_up",    "질주",        "이동 속도 +18%",         BuffKind.MoveSpeed,      18, true,  "#5CC850" },
+            new object[]{ "ghost_hp",   "영혼 강화",   "고스트 최대 체력 +40",   BuffKind.GhostHp,        40, true,  "#5AC8F0" },
+            new object[]{ "heal",       "응급 회복",   "호스트 체력 40% 회복",   BuffKind.Heal,           40, true,  "#8CD048" },
+            new object[]{ "multishot",  "다중 사격",   "탄 +1 발",               BuffKind.MultiShot,       1, true,  "#C98CF0" },
+            new object[]{ "pierce",     "관통탄",      "탄이 적을 관통한다",      BuffKind.Pierce,          1, false, "#A0E0FF" },
+            new object[]{ "lifesteal",  "흡혈",        "피해의 15% 회복",        BuffKind.Lifesteal,      15, true,  "#E04A7A" },
+            new object[]{ "slow",       "서리",        "명중 시 둔화 25%",       BuffKind.Slow,           25, true,  "#7ED8F0" },
+            new object[]{ "ult_charge", "얼티밋 충전", "충전 속도 +30%",         BuffKind.UltimateCharge, 30, true,  "#F07828" },
+            new object[]{ "shot_speed", "탄속 강화",   "탄속 +30%",              BuffKind.ShotSpeed,      30, true,  "#F2F4F8" },
+        };
+
         // ultimateKey, 영문명, 한글명, 설명
         private static readonly string[][] Ultimates =
         {
@@ -94,6 +112,18 @@ namespace Game.Editor
             Set(ult, "_entries", uEntries);
             SaveAsset(ult, $"{Dir}/UltimateTable.asset");
 
+            var buff = ScriptableObject.CreateInstance<BuffTable>();
+            var bEntries = Buffs.Select(b =>
+            {
+                var e = new BuffEntry();
+                Set(e, "_buffKey", b[0]); Set(e, "_nameKr", b[1]); Set(e, "_description", b[2]);
+                Set(e, "_kind", b[3]); Set(e, "_value", b[4]);
+                Set(e, "_stackable", b[5]); Set(e, "_colorHex", b[6]);
+                return e;
+            }).ToArray();
+            Set(buff, "_entries", bEntries);
+            SaveAsset(buff, $"{Dir}/BuffTable.asset");
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             // 인게임 공통 수치 — 04_scenes.md 규약: 스크립트 하드코딩 금지, 이 SO 한 곳에서 관리
@@ -101,6 +131,7 @@ namespace Game.Editor
                 SaveAsset(ScriptableObject.CreateInstance<GameConfig>(), $"{Dir}/GameConfig.asset");
 
             RegisterAddressable($"{Dir}/GameConfig.asset", "TableData/GameConfig");
+            RegisterAddressable($"{Dir}/BuffTable.asset", "TableData/BuffTable");
             RegisterAddressable($"{Dir}/HostTable.asset", "TableData/HostTable");
             RegisterAddressable($"{Dir}/UltimateTable.asset", "TableData/UltimateTable");
             Debug.Log($"[CreateAssetTables] 호스트 {entries.Length}종 · 얼티밋 {uEntries.Length}종 생성 완료");

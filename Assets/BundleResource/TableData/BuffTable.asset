@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd76eeb717176404485530ce03b91e7c, type: 3}
+  m_Name: BuffTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Character.BuffTable
+  _entries:
+  - _buffKey: atk_up
+    _nameKr: "\uACF5\uACA9\uB825 \uAC15\uD654"
+    _description: "\uD53C\uD574\uB7C9 +25%"
+    _kind: 0
+    _value: 25
+    _stackable: 1
+    _colorHex: '#E8604A'
+  - _buffKey: aspd_up
+    _nameKr: "\uC5F0\uC0AC \uAC15\uD654"
+    _description: "\uBC1C\uC0AC \uAC04\uACA9 -18%"
+    _kind: 1
+    _value: 18
+    _stackable: 1
+    _colorHex: '#F0B428'
+  - _buffKey: range_up
+    _nameKr: "\uC0AC\uAC70\uB9AC \uAC15\uD654"
+    _description: "\uC0AC\uAC70\uB9AC +25%"
+    _kind: 2
+    _value: 25
+    _stackable: 1
+    _colorHex: '#4AA8E8'
+  - _buffKey: move_up
+    _nameKr: "\uC9C8\uC8FC"
+    _description: "\uC774\uB3D9 \uC18D\uB3C4 +18%"
+    _kind: 3
+    _value: 18
+    _stackable: 1
+    _colorHex: '#5CC850'
+  - _buffKey: ghost_hp
+    _nameKr: "\uC601\uD63C \uAC15\uD654"
+    _description: "\uACE0\uC2A4\uD2B8 \uCD5C\uB300 \uCCB4\uB825 +40"
+    _kind: 4
+    _value: 40
+    _stackable: 1
+    _colorHex: '#5AC8F0'
+  - _buffKey: heal
+    _nameKr: "\uC751\uAE09 \uD68C\uBCF5"
+    _description: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 40% \uD68C\uBCF5"
+    _kind: 5
+    _value: 40
+    _stackable: 1
+    _colorHex: '#8CD048'
+  - _buffKey: multishot
+    _nameKr: "\uB2E4\uC911 \uC0AC\uACA9"
+    _description: "\uD0C4 +1 \uBC1C"
+    _kind: 6
+    _value: 1
+    _stackable: 1
+    _colorHex: '#C98CF0'
+  - _buffKey: pierce
+    _nameKr: "\uAD00\uD1B5\uD0C4"
+    _description: "\uD0C4\uC774 \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4"
+    _kind: 7
+    _value: 1
+    _stackable: 0
+    _colorHex: '#A0E0FF'
+  - _buffKey: lifesteal
+    _nameKr: "\uD761\uD608"
+    _description: "\uD53C\uD574\uC758 15% \uD68C\uBCF5"
+    _kind: 8
+    _value: 15
+    _stackable: 1
+    _colorHex: '#E04A7A'
+  - _buffKey: slow
+    _nameKr: "\uC11C\uB9AC"
+    _description: "\uBA85\uC911 \uC2DC \uB454\uD654 25%"
+    _kind: 9
+    _value: 25
+    _stackable: 1
+    _colorHex: '#7ED8F0'
+  - _buffKey: ult_charge
+    _nameKr: "\uC5BC\uD2F0\uBC0B \uCDA9\uC804"
+    _description: "\uCDA9\uC804 \uC18D\uB3C4 +30%"
+    _kind: 10
+    _value: 30
+    _stackable: 1
+    _colorHex: '#F07828'
+  - _buffKey: shot_speed
+    _nameKr: "\uD0C4\uC18D \uAC15\uD654"
+    _description: "\uD0C4\uC18D +30%"
+    _kind: 11
+    _value: 30
+    _stackable: 1
+    _colorHex: '#F2F4F8'

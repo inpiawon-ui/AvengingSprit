@@ -172,12 +172,15 @@ namespace Game.Module.InGame
             rt.sizeDelta = new Vector2(full * ((float)Hp / HpMax), rt.sizeDelta.y);
         }
 
-        /// <summary>공격 쿨다운을 진행시키고, 이번 프레임에 때릴 수 있으면 true.</summary>
-        public bool TickAttack(float dt)
+        /// <summary>
+        /// 공격 쿨다운을 진행시키고, 이번 프레임에 때릴 수 있으면 true.
+        /// `intervalMul` 은 런 버프(연사 강화) 배율이다 — 유닛 스탯은 건드리지 않는다.
+        /// </summary>
+        public bool TickAttack(float dt, float intervalMul = 1f)
         {
             _attackTimer -= dt;
             if (_attackTimer > 0f) return false;
-            _attackTimer = AttackInterval;
+            _attackTimer = AttackInterval * Mathf.Max(0.05f, intervalMul);
             return true;
         }
 

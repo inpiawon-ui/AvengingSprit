@@ -1674,6 +1674,21 @@
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
+  },
+  {
+   "file": "buffcard.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 108,
+   "h": 140,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    18,
+    18,
+    18,
+    18
+   ]
   }
  ]
 }
