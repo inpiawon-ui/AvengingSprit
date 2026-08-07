@@ -78,8 +78,32 @@ namespace Game.Editor
             Debug.Log($"[UIAssetPipeline] 임포터 설정 {done}개 (누락 {miss})");
 
             BuildAtlases(spec.assets);
+            PackAtlases();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 아틀라스를 실제로 팩한다.
+        /// `spritePackerMode` 가 Disabled 면 런타임에 `SpriteAtlas.GetSprite()` 가 항상 null 을 준다
+        /// (에셋은 로드되지만 spriteCount = 0). 에디터 플레이에서도 동작하도록 V2 모드로 켠다.
+        /// </summary>
+        private static void PackAtlases()
+        {
+            if (EditorSettings.spritePackerMode != SpritePackerMode.SpriteAtlasV2)
+            {
+                EditorSettings.spritePackerMode = SpritePackerMode.SpriteAtlasV2;
+                Debug.Log("[UIAssetPipeline] spritePackerMode → SpriteAtlasV2 (Disabled 였음)");
+            }
+            SpriteAtlasUtility.PackAllAtlases(EditorUserBuildSettings.activeBuildTarget);
+
+            foreach (var guid in AssetDatabase.FindAssets("t:SpriteAtlas"))
+            {
+                var p = AssetDatabase.GUIDToAssetPath(guid);
+                var a = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(p);
+                if (a != null)
+                    Debug.Log($"[UIAssetPipeline] 팩 완료 {Path.GetFileNameWithoutExtension(p)} — 스프라이트 {a.spriteCount}개");
+            }
         }
 
         private static bool ApplyImporter(string path, Asset a)

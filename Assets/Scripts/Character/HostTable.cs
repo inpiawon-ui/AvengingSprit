@@ -1,0 +1,112 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Game.Character
+{
+    /// <summary>호스트 해금 조건 유형. 잠금 셀 문구를 규격화하기 위해 2종으로만 제한한다.</summary>
+    public enum HostUnlockType
+    {
+        /// <summary>시작 시 보유 (아마조네스)</summary>
+        Owned,
+        /// <summary>지정 챕터의 지정 스테이지 도달</summary>
+        StageReach,
+        /// <summary>지정 챕터 보스 격파</summary>
+        ChapterBossClear,
+    }
+
+    /// <summary>
+    /// 호스트 1종의 마스터 데이터.
+    /// 표시 스탯은 0~100 스케일이며 실전투 수치와 다르다 (기획 GD-SYS 용어 구분).
+    /// </summary>
+    [Serializable]
+    public sealed class HostEntry
+    {
+        [SerializeField] private string _hostKey;
+        [SerializeField] private string _nameEn;
+        [SerializeField] private string _nameKr;
+        [SerializeField] private string _role;
+
+        [Header("표시 스탯 (0~100)")]
+        [SerializeField] private int _hp;
+        [SerializeField] private int _atk;
+        [SerializeField] private int _spd;
+        [SerializeField] private int _dash;
+
+        [Header("얼티밋")]
+        [SerializeField] private string _ultimateKey;
+
+        [Header("해금 조건")]
+        [SerializeField] private HostUnlockType _unlockType;
+        [SerializeField] private int _unlockChapter;
+        [SerializeField] private int _unlockStage;
+
+        public string HostKey => _hostKey;
+        public string NameEn  => _nameEn;
+        public string NameKr  => _nameKr;
+        public string Role    => _role;
+        public int Hp   => _hp;
+        public int Atk  => _atk;
+        public int Spd  => _spd;
+        public int Dash => _dash;
+        public string UltimateKey => _ultimateKey;
+        public HostUnlockType UnlockType => _unlockType;
+        public int UnlockChapter => _unlockChapter;
+        public int UnlockStage   => _unlockStage;
+
+        /// <summary>잠금 셀에 표시할 해금 조건 문구.</summary>
+        public string UnlockText => _unlockType switch
+        {
+            HostUnlockType.Owned            => string.Empty,
+            HostUnlockType.StageReach       => $"CH{_unlockChapter} · {_unlockStage}스테이지",
+            HostUnlockType.ChapterBossClear => $"CH{_unlockChapter} 보스 격파",
+            _ => string.Empty,
+        };
+
+        /// <summary>Addressable 주소. constants.md 4절 — `host/{hostKey}`</summary>
+        public string PrefabAddress => $"host/{_hostKey}";
+    }
+
+    /// <summary>
+    /// 호스트 12종을 배열 하나로 관리한다.
+    /// 개별 asset 분리 금지 — constants.md 6절 설계 제약 3.
+    /// </summary>
+    [CreateAssetMenu(fileName = "HostTable", menuName = "AVSR/Host Table")]
+    public sealed class HostTable : ScriptableObject
+    {
+        [SerializeField] private HostEntry[] _entries = Array.Empty<HostEntry>();
+
+        private Dictionary<string, HostEntry> _index;
+
+        public IReadOnlyList<HostEntry> Entries => _entries;
+        public int Count => _entries.Length;
+
+        public HostEntry Get(string hostKey)
+        {
+            if (string.IsNullOrEmpty(hostKey)) return null;
+            _index ??= BuildIndex();
+            return _index.TryGetValue(hostKey, out var e) ? e : null;
+        }
+
+        public HostEntry GetAt(int index)
+            => index >= 0 && index < _entries.Length ? _entries[index] : null;
+
+        /// <summary>시작 보유 호스트. 신규 유저의 기본 선택 대상이다.</summary>
+        public HostEntry FirstOwned()
+        {
+            for (int i = 0; i < _entries.Length; i++)
+                if (_entries[i].UnlockType == HostUnlockType.Owned)
+                    return _entries[i];
+            return _entries.Length > 0 ? _entries[0] : null;
+        }
+
+        private Dictionary<string, HostEntry> BuildIndex()
+        {
+            var d = new Dictionary<string, HostEntry>(_entries.Length);
+            for (int i = 0; i < _entries.Length; i++)
+                if (!string.IsNullOrEmpty(_entries[i].HostKey))
+                    d[_entries[i].HostKey] = _entries[i];
+            return d;
+        }
+    }
+}

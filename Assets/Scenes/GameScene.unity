@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.SceneUILoader
   _safeAreaPanel: {fileID: 72264659}
-  _uiAddress: UI/InGame/MinigameUI
+  _uiAddress: 
   _loadOnStart: 1
 --- !u!114 &72264661
 MonoBehaviour:

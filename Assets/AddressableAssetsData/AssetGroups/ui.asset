@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: tabledata
+  m_Name: ui
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: tabledata
-  m_GUID: bf4716c092e6c334b8ba88aec823916a
+  m_GroupName: ui
+  m_GUID: d78444df26df12246a540cebe42e97d0
   m_SerializeEntries:
-  - m_GUID: 49828203da53a9b489520d704cdd06b7
-    m_Address: TableData/HostTable
+  - m_GUID: cdefceab91ae8e54b89565965d6e4c69
+    m_Address: UI/Lobby/HostSelectPanel
     m_ReadOnly: 0
     m_SerializedLabels:
-    - label_tabledata
+    - label_lobby
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 549e10a77b384ac498a65c98cd31bc59
-    m_Address: TableData/GameConfig
+  - m_GUID: dac6e9b6113c5c34a9c86817a4f40620
+    m_Address: UI/Lobby/LobbyMainUI
     m_ReadOnly: 0
     m_SerializedLabels:
-    - label_tabledata
+    - label_lobby
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: da90110f6c9271d43bf25f1a72561906
-    m_Address: TableData/UltimateTable
+  - m_GUID: ef33e130826fdde4ca91d0cdff808431
+    m_Address: UI/Title/TitleMainUI
     m_ReadOnly: 0
     m_SerializedLabels:
-    - label_tabledata
+    - label_title
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 9d40d8f22ea546d4a9df4315e42bc182, type: 2}
-    - {fileID: 11400000, guid: 0f7e81d585a8467459c727b275ff35cd, type: 2}
+    - {fileID: 11400000, guid: a5594e8af47bb3b44b8e71a0c4705bf8, type: 2}
+    - {fileID: 11400000, guid: 1155d2aabf6f8f44280dee0a1d591193, type: 2}

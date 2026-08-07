@@ -3509,6 +3509,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2605939298851886734}
+  - component: {fileID: 591855816076633449}
   m_Layer: 0
   m_Name: LobbyMainUI
   m_TagString: Untagged
@@ -3536,6 +3537,7 @@ RectTransform:
   - {fileID: 263156930919994006}
   - {fileID: 7300826472888127019}
   - {fileID: 6047017800114358100}
+  - {fileID: 730994327851149521}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3543,6 +3545,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &591855816076633449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3472112865936879437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36bfbc6c9e5f7546ac14b546c2f2a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.LobbyMainUI
+  _hostSelectPanel: {fileID: 8971440149306221525}
 --- !u!1 &3482130658114064810
 GameObject:
   m_ObjectHideFlags: 0
@@ -9173,3 +9188,116 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &3543129333665806727
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2605939298851886734}
+    m_Modifications:
+    - target: {fileID: 1397871507842407170, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_Name
+      value: HostSelectPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1152
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -128
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+--- !u!224 &730994327851149521 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4255543398503420246, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+  m_PrefabInstance: {fileID: 3543129333665806727}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8971440149306221525 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5596650607390333522, guid: cdefceab91ae8e54b89565965d6e4c69, type: 3}
+  m_PrefabInstance: {fileID: 3543129333665806727}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca2fc8c0a44891b43b4ef611f8c67a53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.HostSelectPanel

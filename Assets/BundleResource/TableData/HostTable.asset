@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcbe853718c328242a07fdef11d49d8d, type: 3}
+  m_Name: HostTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Character.HostTable
+  _entries:
+  - _hostKey: amazoness
+    _nameEn: AMAZONESS
+    _nameKr: "\uC544\uB9C8\uC870\uB124\uC2A4"
+    _role: "\uACE0\uC18D \uADFC\uAC70\uB9AC"
+    _hp: 72
+    _atk: 68
+    _spd: 82
+    _dash: 90
+    _ultimateKey: blade_storm
+    _unlockType: 0
+    _unlockChapter: 0
+    _unlockStage: 0
+  - _hostKey: rambo
+    _nameEn: RAMBO
+    _nameKr: "\uB78C\uBCF4"
+    _role: "\uC911\uD654\uAE30 \uC0AC\uC218"
+    _hp: 80
+    _atk: 85
+    _spd: 55
+    _dash: 45
+    _ultimateKey: bullet_hell
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 5
+  - _hostKey: wizard
+    _nameEn: WIZARD
+    _nameKr: "\uB9C8\uBC95\uC0AC"
+    _role: "\uB9C8\uBC95 \uC6D0\uAC70\uB9AC"
+    _hp: 58
+    _atk: 88
+    _spd: 62
+    _dash: 55
+    _ultimateKey: elemental_nova
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 12
+  - _hostKey: ninja
+    _nameEn: NINJA
+    _nameKr: "\uB2CC\uC790"
+    _role: "\uBC38\uB7F0\uC2A4 \uC5B4\uC314\uC2E0"
+    _hp: 66
+    _atk: 74
+    _spd: 88
+    _dash: 92
+    _ultimateKey: shadow_burst
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 20
+  - _hostKey: mafia
+    _nameEn: MAFIA
+    _nameKr: "\uB9C8\uD53C\uC544"
+    _role: "\uD655\uC0B0 \uC0AC\uC218"
+    _hp: 70
+    _atk: 76
+    _spd: 64
+    _dash: 58
+    _ultimateKey: tommy_barrage
+    _unlockType: 2
+    _unlockChapter: 1
+    _unlockStage: 0
+  - _hostKey: hitman
+    _nameEn: HITMAN
+    _nameKr: "\uD788\uD2B8\uB9E8"
+    _role: "\uC815\uBC00 \uC800\uACA9"
+    _hp: 60
+    _atk: 92
+    _spd: 68
+    _dash: 62
+    _ultimateKey: perfect_kill
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 8
+  - _hostKey: yogamaster
+    _nameEn: YOGA MASTER
+    _nameKr: "\uC694\uAC00\uB9C8\uC2A4\uD130"
+    _role: "\uBD80\uC591 \uC11C\uD3EC\uD2B8"
+    _hp: 76
+    _atk: 52
+    _spd: 70
+    _dash: 74
+    _ultimateKey: astral_form
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 15
+  - _hostKey: dragon
+    _nameEn: DRAGON
+    _nameKr: "\uB4DC\uB798\uACE4"
+    _role: "\uD5E4\uBE44 \uD0F1\uD06C"
+    _hp: 95
+    _atk: 80
+    _spd: 42
+    _dash: 38
+    _ultimateKey: dragon_breath
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 22
+  - _hostKey: robot
+    _nameEn: ROBOT
+    _nameKr: "\uB85C\uBD07"
+    _role: "\uD14C\uD06C \uBC38\uB7F0\uC2A4"
+    _hp: 82
+    _atk: 72
+    _spd: 60
+    _dash: 50
+    _ultimateKey: system_override
+    _unlockType: 2
+    _unlockChapter: 2
+    _unlockStage: 0
+  - _hostKey: snowwoman
+    _nameEn: SNOW WOMAN
+    _nameKr: "\uC124\uB140"
+    _role: "\uC5BC\uC74C \uCEE8\uD2B8\uB864"
+    _hp: 62
+    _atk: 70
+    _spd: 74
+    _dash: 68
+    _ultimateKey: absolute_zero
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 8
+  - _hostKey: slugger
+    _nameEn: SLUGGER
+    _nameKr: "\uC2AC\uB7EC\uAC70"
+    _role: "\uD0C4\uD658 \uBC18\uC0AC"
+    _hp: 78
+    _atk: 66
+    _spd: 72
+    _dash: 70
+    _ultimateKey: grand_slam
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 15
+  - _hostKey: vampire
+    _nameEn: VAMPIRE
+    _nameKr: "\uD761\uD608\uADC0"
+    _role: "\uD761\uD608 \uC804\uD22C"
+    _hp: 74
+    _atk: 82
+    _spd: 76
+    _dash: 66
+    _ultimateKey: blood_tornado
+    _unlockType: 2
+    _unlockChapter: 3
+    _unlockStage: 0
