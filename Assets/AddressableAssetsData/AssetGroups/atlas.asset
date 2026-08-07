@@ -15,8 +15,26 @@ MonoBehaviour:
   m_GroupName: atlas
   m_GUID: c75b0115ab861994c9299430cfe51ad6
   m_SerializeEntries:
+  - m_GUID: 1e96b1afdf884864e9f9c8aab6403557
+    m_Address: atlas/hostselectpanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 370c9b6577eeda248b408e6b66ea29c9
+    m_Address: atlas/lobbymainui
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c6d262aec3f6f8d4db55aeb6d5b2c088
     m_Address: atlas/ui_icons
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f008486b76a109f49a60ab1426524c6c
+    m_Address: atlas/titlemainui
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

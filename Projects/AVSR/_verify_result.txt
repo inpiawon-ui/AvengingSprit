@@ -1,0 +1,17 @@
+명세 115개 / 납품 116개 / 대조 115개
+
+[1] 누락 0건
+[2] 명세에 없는 과잉 1건
+    AVSR_UI_transparency_fix_review.png
+
+[3] 문제 10건
+    battlepassbarbg.png: alpha=Y 인데 투명 영역 없음
+    battlepassbarfill.png: alpha=Y 인데 투명 영역 없음
+    continuebutton.png: 녹색 계열 1색 (팔레트 이탈)
+    ghostexpbarbg.png: alpha=Y 인데 투명 영역 없음
+    ghostexpbarfill.png: alpha=Y 인데 투명 영역 없음
+    hostlisttitle.png: slice9 부족 B(6<15) — 확장 시 테두리 잘림
+    progressbarbg.png: alpha=Y 인데 투명 영역 없음
+    progressbarfill.png: alpha=Y 인데 투명 영역 없음
+    statbarbg.png: alpha=Y 인데 투명 영역 없음
+    statbarfill.png: alpha=Y 인데 투명 영역 없음

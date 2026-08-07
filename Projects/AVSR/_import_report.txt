@@ -1,0 +1,8 @@
+스펙 115개 / 복사 115개
+
+  lobbymainui         48개  → Assets/BaseResource/LobbyMainUI/
+  hostselectpanel     65개  → Assets/BaseResource/HostSelectPanel/
+  titlemainui          2개  → Assets/BaseResource/TitleMainUI/
+
+화면 미배정(로비로 기본 배정) 0건: []
+9-slice 보유: 31개 / pivot=left: 4개

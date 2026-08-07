@@ -1,0 +1,1309 @@
+{
+ "assets": [
+  {
+   "file": "achievementtabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "arrowicon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 24,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "backgroundimage.png",
+   "prefab": "TitleMainUI",
+   "atlas": "titlemainui",
+   "w": 720,
+   "h": 1280,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "battlepassart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 90,
+   "h": 80,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "battlepassbadge.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 40,
+   "h": 40,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "battlepassbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 120,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "battlepassbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 120,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "battlepasscard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 112,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "bossportrait.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 84,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "chapterbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 236,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "chapterbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 216,
+   "h": 150,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "chaptercard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 344,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  {
+   "file": "continuebutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 198,
+   "h": 74,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "dailyloginart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 70,
+   "h": 64,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "dailylogincard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 112,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "dailylogincheck.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 26,
+   "h": 26,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "eventart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 70,
+   "h": 64,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "eventcard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 104,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "featuretabbarbackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 616,
+   "h": 108,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "friendstabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "friendstablock.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "gemcounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 112,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "gemicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 32,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostarrowchevron.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 38,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostarrowsprite.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 42,
+   "h": 58,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostavatar.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 176,
+   "h": 220,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostexpbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 106,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "ghostexpbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 106,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "ghostportraiticon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostwidget.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 188,
+   "h": 96,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "file": "goldcounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 132,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "goldicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 32,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "headerghostdeco.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 84,
+   "h": 92,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "headerportaldeco.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 208,
+   "h": 144,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "hostbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 202,
+   "h": 150,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostdetailframe.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 300,
+   "h": 644,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    32,
+    24
+   ]
+  },
+  {
+   "file": "hostdetaillockicon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 96,
+   "h": 96,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostlisttitle.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 344,
+   "h": 34,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    40,
+    40,
+    6,
+    6
+   ]
+  },
+  {
+   "file": "hostportalpedestal.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 232,
+   "h": 58,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_amazoness.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_dragon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_hitman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_mafia.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_ninja.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_rambo.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_robot.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_slugger.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_snowwoman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_vampire.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_wizard.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostportraitimage_yogamaster.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 182,
+   "h": 168,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostselectbackground.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 720,
+   "h": 1152,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotframe.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 108,
+   "h": 140,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    12,
+    12,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "hostslotframe_locked.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 108,
+   "h": 140,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    12,
+    12,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "hostslotframe_selected.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 108,
+   "h": 140,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    12,
+    12,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "hostslotlockicon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 40,
+   "h": 40,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_amazoness.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_dragon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_hitman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_mafia.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_ninja.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_rambo.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_robot.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_slugger.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_snowwoman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_vampire.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_wizard.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotportrait_yogamaster.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostslotselectmarker.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "top-left",
+   "slice9": []
+  },
+  {
+   "file": "hostupgradebutton.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 348,
+   "h": 82,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "hostupgradeicon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 40,
+   "h": 40,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "inventorytabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "lobbybackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 720,
+   "h": 1280,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "logolockup.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 194,
+   "h": 102,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "mailbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 56,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "missiontabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "notifybadge.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 24,
+   "h": 24,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ownedhostchesticon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 40,
+   "h": 36,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "plusbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "portalring.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 200,
+   "h": 56,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "possessghosticon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 56,
+   "h": 56,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "possessstartbutton.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 348,
+   "h": 102,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "progressbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 154,
+   "h": 20,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "file": "progressbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 154,
+   "h": 20,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "file": "progressrewardchest.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 42,
+   "h": 44,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "rankingtabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "settingsbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 56,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "shopbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "shopbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 202,
+   "h": 150,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "staminacounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 126,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "staminaicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 32,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "statbarbg.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 124,
+   "h": 16,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "statbarfill.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 124,
+   "h": 16,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "staticon_atk.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "staticon_dash.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "staticon_hp.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "staticon_spd.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "tipbar.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 696,
+   "h": 78,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "tipicon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "titlelogo.png",
+   "prefab": "TitleMainUI",
+   "atlas": "titlemainui",
+   "w": 582,
+   "h": 306,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "tophudbackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 720,
+   "h": 128,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    20
+   ]
+  },
+  {
+   "file": "ultimatecard.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 268,
+   "h": 110,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "ultimateicon_amazoness.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_dragon.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_hitman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_mafia.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_ninja.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_rambo.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_robot.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_slugger.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_snowwoman.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_vampire.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_wizard.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimateicon_yogamaster.png",
+   "prefab": "HostSelectPanel",
+   "atlas": "hostselectpanel",
+   "w": 60,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  }
+ ]
+}
