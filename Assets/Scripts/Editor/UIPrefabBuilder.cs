@@ -50,7 +50,10 @@ namespace Game.Editor
         [MenuItem("Tools/Game/Build UI Prefabs From Spec")]
         public static void BuildAll()
         {
-            var files = Directory.GetFiles(SpecDir, "*.json");
+            // `_` 로 시작하는 파일은 화면 스펙이 아니다 (_import.json 등 파이프라인 보조 파일)
+            var files = Directory.GetFiles(SpecDir, "*.json")
+                                 .Where(f => !Path.GetFileName(f).StartsWith("_"))
+                                 .ToArray();
             if (files.Length == 0)
             {
                 Debug.LogError($"[UIPrefabBuilder] 스펙이 없다: {SpecDir}");
@@ -90,20 +93,34 @@ namespace Game.Editor
                     continue;
                 }
 
-                // 로컬 변환에 필요한 부모 절대좌표 — 가장 가까운 rect 보유 조상을 찾는다
+                // 로컬 변환에 필요한 부모 절대좌표.
+                //
+                // ⚠️ 직계 부모에 rect 가 없으면(=런타임/레이아웃이 위치를 정하는 노드,
+                //    예: GridLayoutGroup 이 배치하는 `HostSlot`) 그 자식의 설계서 좌표는
+                //    **절대좌표가 아니라 부모 기준 로컬**이다. 조상을 더 거슬러 올라가면
+                //    셀이 아니라 그리드 기준이 되어 셀 밖으로 튄다.
                 int px = 0, py = 0;
-                for (int a = pi; a >= 0; a = spec.nodes[a].parentIdx)
+                bool parentIsDynamic = pi != 0 && !spec.nodes[pi].HasRect;
+
+                if (!parentIsDynamic)
                 {
-                    if (spec.nodes[a].HasRect)
+                    for (int a = pi; a >= 0; a = spec.nodes[a].parentIdx)
                     {
-                        px = spec.nodes[a].rect[0];
-                        py = spec.nodes[a].rect[1];
-                        break;
+                        if (spec.nodes[a].HasRect)
+                        {
+                            px = spec.nodes[a].rect[0];
+                            py = spec.nodes[a].rect[1];
+                            break;
+                        }
+                        if (a == 0) break;
                     }
-                    if (a == 0) break;
+                    // ~Panel 은 화면 y=128 부터 시작한다. 루트 기준 좌표에서 그만큼 빼야
+                    // 설계서의 절대 y 가 패널 내부 로컬로 맞는다.
+                    if (spec.nodes[0].comp == "RootPanel" && px == 0 && py == 0)
+                        py = HudHeight;
                 }
-                if (spec.nodes[0].comp == "RootPanel" && px == 0 && py == 0)
-                    py = HudHeight;   // ~Panel 은 y=128 부터 시작
+                // parentIsDynamic — 부모를 레이아웃/코드가 배치한다(GridLayoutGroup 의 `HostSlot` 등).
+                // 이때 설계서 좌표는 절대값이 아니라 **부모 기준 로컬**이므로 원점 그대로 쓴다.
 
                 created[i] = CreateNode(n, created[pi], px, py);
                 made++;
