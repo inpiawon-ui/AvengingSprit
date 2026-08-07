@@ -27,12 +27,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c6d262aec3f6f8d4db55aeb6d5b2c088
-    m_Address: atlas/ui_icons
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f008486b76a109f49a60ab1426524c6c
     m_Address: atlas/titlemainui
     m_ReadOnly: 0

@@ -21,12 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 549e10a77b384ac498a65c98cd31bc59
-    m_Address: TableData/GameConfig
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_tabledata
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: da90110f6c9271d43bf25f1a72561906
     m_Address: TableData/UltimateTable
     m_ReadOnly: 0
