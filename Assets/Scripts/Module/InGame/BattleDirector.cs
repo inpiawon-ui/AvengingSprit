@@ -52,6 +52,17 @@ namespace Game.Module.InGame
 
         private float _stopTimer;
 
+        private const float ChargeSeconds = 0.9f;
+        private const float ChargeSpeedMul = 5.5f;
+        private const int MaxRoomUnits = 14;
+        private const float SummonRadius = 200f;
+
+        private BossTable _bossTable;
+        private readonly BossBrain _brain = new();
+        private Unit _boss;
+        private float _telegraphPulse;
+        private float _chargeDamageMul = 1f;
+
         private BuffTable _buffTable;
         private readonly RunBuffs _buffs = new();
         private readonly List<BuffEntry> _offer = new();
@@ -85,6 +96,8 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
 
+            try { _bossTable = await res.LoadAsync<BossTable>("TableData/BossTable"); }
+            catch (Exception e) { Debug.LogError($"[Battle] BossTable 로드 실패 — {e.Message}"); }
             try { _buffTable = await res.LoadAsync<BuffTable>("TableData/BuffTable"); }
             catch (Exception e) { Debug.LogError($"[Battle] BuffTable 로드 실패 — {e.Message}"); }
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
@@ -140,6 +153,8 @@ namespace Game.Module.InGame
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
             _enemies.Clear();
 
+            _boss = null;
+
             // 이전 룸의 탄이 다음 룸까지 날아가 첫 적을 때리는 일을 막는다
             for (int i = 0; i < _shots.Count; i++) _shots[i].Despawn();
 
@@ -152,15 +167,27 @@ namespace Game.Module.InGame
 
             if (isBoss)
             {
-                var boss = NewUnit("Boss");
                 int chapter = _player != null ? _player.CurrentChapter : 1;
-                boss.Setup(UnitSide.Enemy, "boss", "BOSS", GetSprite("unit_boss"),
-                           _config.BossHp(chapter), _config.BossAtk, _config.BossMoveSpeed,
+                var def = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
+
+                var boss = NewUnit("Boss");
+                boss.Setup(UnitSide.Enemy, def?.BossKey ?? "boss", def?.NameKr ?? "BOSS",
+                           GetSprite(def?.SpriteName ?? "unit_boss"),
+                           Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
+                           Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
+                           _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
                            _config.BossAttackRange, _config.BossAttackInterval,
                            new Vector2(160f, 160f), isBoss: true);
                 boss.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.2f);
                 _enemies.Add(boss);
-                _bus.Publish(new BossHpChangedEvent { BossHp = boss.Hp, BossHpMax = boss.HpMax });
+                _boss = boss;
+                _brain.Setup(def);
+                _bus.Publish(new BossHpChangedEvent
+                {
+                    BossHp = boss.Hp, BossHpMax = boss.HpMax,
+                    BossName = def != null ? $"{def.NameEn}" : "BOSS",
+                    Phase = 1,
+                });
             }
             else
             {
@@ -280,10 +307,127 @@ namespace Game.Module.InGame
                 e.TickFlash(dt);
                 e.TickSlow(dt);
 
+                // 보스는 쿨다운으로 여러 패턴을 돌린다 — 잡몹 AI 를 태우지 않는다
+                if (e.IsBoss) { TickBoss(e, me, dt); continue; }
+
                 float d = Vector2.Distance(e.Position, me.Position);
                 if (d > e.AttackRange) { e.MoveToward(me.Position, dt); continue; }
                 if (!e.TickAttack(dt)) continue;
                 PerformAttack(e, me, false);
+            }
+        }
+
+        // ── 보스 ─────────────────────────────────────────────────
+        private void TickBoss(Unit boss, Unit me, float dt)
+        {
+            int before = _brain.Phase;
+            _brain.UpdatePhase((float)boss.Hp / boss.HpMax);
+            if (_brain.Phase != before)
+                _bus.Publish(new BossHpChangedEvent
+                {
+                    BossHp = boss.Hp, BossHpMax = boss.HpMax, Phase = _brain.Phase,
+                });
+
+            // 돌진 중에는 다른 행동을 하지 않는다. 접촉하면 피해를 주고 멈춘다.
+            if (_brain.ChargeLeft > 0f)
+            {
+                boss.Position += _brain.ChargeDir * (boss.MoveSpeed * ChargeSpeedMul) * dt;
+                if (Vector2.Distance(boss.Position, me.Position) <= _config.ShotHitRadius * 1.6f)
+                {
+                    DamagePlayer(Mathf.RoundToInt(boss.Atk * _chargeDamageMul));
+                    _brain.BeginCharge(Vector2.zero, 0f);
+                }
+                return;
+            }
+
+            var move = _brain.Tick(dt);
+
+            // 예고 중에는 제자리에서 번쩍인다. 피할 시간을 주지 않으면 패턴이 아니라 사고다.
+            if (_brain.IsTelegraphing) { _telegraphPulse += dt; PulseTelegraph(boss); return; }
+
+            if (move == null)
+            {
+                // 쿨다운 대기 중에는 천천히 접근만 한다
+                if (Vector2.Distance(boss.Position, me.Position) > boss.AttackRange)
+                    boss.MoveToward(me.Position, dt);
+                boss.SetTelegraph(false);
+                return;
+            }
+
+            boss.SetTelegraph(false);
+            ExecuteBossMove(boss, me, move);
+        }
+
+        private void PulseTelegraph(Unit boss)
+        {
+            boss.SetTelegraph(Mathf.Repeat(_telegraphPulse, 0.16f) < 0.08f);
+        }
+
+        private void ExecuteBossMove(Unit boss, Unit me, BossMove m)
+        {
+            int dmg = Mathf.RoundToInt(boss.Atk * m.DamageMul);
+            switch (m.Pattern)
+            {
+                case BossPattern.Volley:
+                    FireFan(boss, me.Position, m.ShotCount, m.SpreadDegrees, dmg);
+                    break;
+
+                case BossPattern.Ring:
+                    // 사방 360° — 붙어 있으면 피하기 어렵다. 거리를 벌리게 만드는 패턴.
+                    FireFan(boss, me.Position, m.ShotCount, 360f - 360f / m.ShotCount, dmg);
+                    break;
+
+                case BossPattern.AimedBurst:
+                    FireFan(boss, me.Position, m.ShotCount, m.SpreadDegrees, dmg);
+                    break;
+
+                case BossPattern.Charge:
+                    _chargeDamageMul = m.DamageMul;
+                    _brain.BeginCharge(me.Position - boss.Position, ChargeSeconds);
+                    break;
+
+                case BossPattern.Summon:
+                    SummonMinions(boss, m.ShotCount);
+                    break;
+            }
+        }
+
+        private void FireFan(Unit from, Vector2 at, int count, float spanDeg, int damage)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                float off = count == 1 ? 0f : -spanDeg * 0.5f + spanDeg * i / (count - 1);
+                var shot = RentShot();
+                if (shot == null) return;
+                shot.Fire(from.Position, at, _config.ShotSpeedEnemy, damage,
+                          false, null, _config.ShotSize * 1.15f, ShotBossColor,
+                          _config.ShotLifeSeconds * 1.4f, angleOffsetDeg: off);
+            }
+        }
+
+        /// <summary>보스만 노리다 둘러싸이게 만든다. 방 상한을 넘지 않게 막는다.</summary>
+        private void SummonMinions(Unit boss, int count)
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return;
+            if (_enemies.Count > MaxRoomUnits) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                var e = hosts[(_enemies.Count * 3 + i * 7) % hosts.Count];
+                var u = NewUnit($"Minion_{e.HostKey}_{_enemies.Count}");
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, GetSprite($"unit_{e.HostKey}"),
+                        Mathf.Max(1, Mathf.RoundToInt(_config.EnemyHp(e.Hp) * 0.6f)),
+                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                        _config.EnemySpeed(e.Spd),
+                        _config.EnemyAttackRange * e.RangeMul,
+                        _config.EnemyAttackInterval * e.IntervalMul,
+                        new Vector2(78f, 72f), isBoss: false, profile: e);
+
+                // 보스(160px)와 겹치지 않게 바깥에 원형으로 흩는다
+                float a = (i / (float)count) * Mathf.PI * 2f + _enemies.Count * 0.7f;
+                u.Position = boss.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * SummonRadius;
+                _enemies.Add(u);
             }
         }
 
@@ -383,6 +527,8 @@ namespace Game.Module.InGame
         // ── 투사체 ────────────────────────────────────────────────
         private static readonly Color ShotPlayerColor = new(1f, 0.72f, 0.24f, 1f);
         private static readonly Color ShotEnemyColor = new(0.55f, 0.78f, 1f, 1f);
+        // 보스 탄은 잡몹과 색을 나눈다 — 화면이 탄으로 덮이면 무엇을 피해야 할지 안 보인다
+        private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
 
         private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg)
         {

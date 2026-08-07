@@ -44,6 +44,37 @@ namespace Game.Editor
         };
 
 
+
+        // bossKey, 챕터, 영문명, 한글명, 스프라이트, HP배율, ATK배율, 이동배율, 페이즈쿨다운배율
+        // 패턴: (종류, 시작페이즈, 쿨다운, 탄수, 확산각, 피해배율)
+        //
+        // 잡몹은 한 행동만 반복하지만 보스는 여러 행동을 쿨다운으로 돌리고,
+        // 체력이 깎이면 쓸 수 있는 행동이 늘어난다(페이즈 2 = 60% · 3 = 30%).
+        private static readonly object[][] Bosses =
+        {
+            new object[]{ "mad_doctor", 1, "MAD DOCTOR", "매드 닥터", "unit_boss", 1.00f, 1.00f, 1.00f, 0.80f,
+                new object[][] {
+                    new object[]{ BossPattern.Volley,     1, 3.2f,  5, 54f, 1.0f },
+                    new object[]{ BossPattern.Summon,     1, 9.0f,  2,  0f, 1.0f },
+                    new object[]{ BossPattern.AimedBurst, 2, 5.0f,  4,  6f, 0.7f },
+                    new object[]{ BossPattern.Ring,       3, 6.5f, 12,  0f, 0.9f },
+                } },
+            new object[]{ "iron_claw",  2, "IRON CLAW",  "아이언 클로", "unit_boss", 1.25f, 1.15f, 1.30f, 0.75f,
+                new object[][] {
+                    new object[]{ BossPattern.Charge,     1, 5.0f,  1,  0f, 1.6f },
+                    new object[]{ BossPattern.AimedBurst, 1, 3.6f,  5,  5f, 0.8f },
+                    new object[]{ BossPattern.Volley,     2, 4.2f,  7, 70f, 0.9f },
+                    new object[]{ BossPattern.Charge,     3, 3.0f,  1,  0f, 1.8f },
+                } },
+            new object[]{ "overlord",   3, "OVERLORD",   "오버로드",   "unit_boss", 1.55f, 1.30f, 0.95f, 0.72f,
+                new object[][] {
+                    new object[]{ BossPattern.Ring,       1, 5.0f, 10,  0f, 1.0f },
+                    new object[]{ BossPattern.Volley,     1, 3.4f,  7, 62f, 1.0f },
+                    new object[]{ BossPattern.Summon,     2, 8.0f,  3,  0f, 1.0f },
+                    new object[]{ BossPattern.Ring,       3, 3.4f, 16,  0f, 1.1f },
+                } },
+        };
+
         // buffKey, 한글명, 설명, 종류, 값, 중복가능, 강조색
         private static readonly object[][] Buffs =
         {
@@ -112,6 +143,28 @@ namespace Game.Editor
             Set(ult, "_entries", uEntries);
             SaveAsset(ult, $"{Dir}/UltimateTable.asset");
 
+            var boss = ScriptableObject.CreateInstance<BossTable>();
+            var bossEntries = Bosses.Select(b =>
+            {
+                var e = new BossEntry();
+                Set(e, "_bossKey", b[0]); Set(e, "_chapter", b[1]);
+                Set(e, "_nameEn", b[2]); Set(e, "_nameKr", b[3]); Set(e, "_spriteName", b[4]);
+                Set(e, "_hpMul", b[5]); Set(e, "_atkMul", b[6]);
+                Set(e, "_moveSpeedMul", b[7]); Set(e, "_phaseCooldownMul", b[8]);
+                var moves = ((object[][])b[9]).Select(m =>
+                {
+                    var mv = new BossMove();
+                    Set(mv, "_pattern", m[0]); Set(mv, "_fromPhase", m[1]);
+                    Set(mv, "_cooldown", m[2]); Set(mv, "_shotCount", m[3]);
+                    Set(mv, "_spreadDegrees", m[4]); Set(mv, "_damageMul", m[5]);
+                    return mv;
+                }).ToArray();
+                Set(e, "_moves", moves);
+                return e;
+            }).ToArray();
+            Set(boss, "_entries", bossEntries);
+            SaveAsset(boss, $"{Dir}/BossTable.asset");
+
             var buff = ScriptableObject.CreateInstance<BuffTable>();
             var bEntries = Buffs.Select(b =>
             {
@@ -131,6 +184,7 @@ namespace Game.Editor
                 SaveAsset(ScriptableObject.CreateInstance<GameConfig>(), $"{Dir}/GameConfig.asset");
 
             RegisterAddressable($"{Dir}/GameConfig.asset", "TableData/GameConfig");
+            RegisterAddressable($"{Dir}/BossTable.asset", "TableData/BossTable");
             RegisterAddressable($"{Dir}/BuffTable.asset", "TableData/BuffTable");
             RegisterAddressable($"{Dir}/HostTable.asset", "TableData/HostTable");
             RegisterAddressable($"{Dir}/UltimateTable.asset", "TableData/UltimateTable");

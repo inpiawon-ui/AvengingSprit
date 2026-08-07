@@ -46,6 +46,10 @@ namespace Game.Module.Events
     {
         public int BossHp;
         public int BossHpMax;
+        /// <summary>비어 있으면 이름 표기를 건드리지 않는다(체력만 갱신하는 호출).</summary>
+        public string BossName;
+        /// <summary>1~3. 0 이면 페이즈 표기를 건드리지 않는다.</summary>
+        public int Phase;
     }
 
     /// <summary>빙의 가능한 대상이 사거리에 들어오거나 벗어났다.</summary>

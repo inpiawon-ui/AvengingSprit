@@ -30,6 +30,7 @@ namespace Game.Module.InGame
         private float _flashTimer;
         private int _slowPercent;
         private float _slowTimer;
+        private bool _telegraph;
 
         public UnitSide Side { get; private set; }
         public string Key { get; private set; }
@@ -188,9 +189,25 @@ namespace Game.Module.InGame
         public void TickFlash(float dt)
         {
             if (_body == null) return;
-            if (_flashTimer <= 0f) { _body.color = Color.white; return; }
+            if (_flashTimer <= 0f)
+            {
+                if (!_telegraph) _body.color = Color.white;
+                return;
+            }
             _flashTimer -= dt;
             _body.color = _flashTimer > 0f ? new Color(1f, 0.45f, 0.45f, 1f) : Color.white;
+        }
+
+        /// <summary>
+        /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.
+        /// 피격 점멸과 같은 틴트를 쓰므로 켜져 있는 동안은 점멸이 덮어쓰지 않는다.
+        /// </summary>
+        public void SetTelegraph(bool on)
+        {
+            _telegraph = on;
+            if (_body == null) return;
+            if (on) _body.color = new Color(1f, 0.86f, 0.35f, 1f);
+            else if (_flashTimer <= 0f) _body.color = Color.white;
         }
 
         /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>

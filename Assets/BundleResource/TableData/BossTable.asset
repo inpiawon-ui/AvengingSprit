@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbbda284a47f0b439f46a27dd514fdb, type: 3}
+  m_Name: BossTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Character.BossTable
+  _entries:
+  - _bossKey: mad_doctor
+    _chapter: 1
+    _nameEn: MAD DOCTOR
+    _nameKr: "\uB9E4\uB4DC \uB2E5\uD130"
+    _spriteName: unit_boss
+    _hpMul: 1
+    _atkMul: 1
+    _moveSpeedMul: 1
+    _phaseCooldownMul: 0.8
+    _moves:
+    - _pattern: 0
+      _fromPhase: 1
+      _cooldown: 3.2
+      _shotCount: 5
+      _spreadDegrees: 54
+      _damageMul: 1
+    - _pattern: 3
+      _fromPhase: 1
+      _cooldown: 9
+      _shotCount: 2
+      _spreadDegrees: 0
+      _damageMul: 1
+    - _pattern: 4
+      _fromPhase: 2
+      _cooldown: 5
+      _shotCount: 4
+      _spreadDegrees: 6
+      _damageMul: 0.7
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 6.5
+      _shotCount: 12
+      _spreadDegrees: 0
+      _damageMul: 0.9
+  - _bossKey: iron_claw
+    _chapter: 2
+    _nameEn: IRON CLAW
+    _nameKr: "\uC544\uC774\uC5B8 \uD074\uB85C"
+    _spriteName: unit_boss
+    _hpMul: 1.25
+    _atkMul: 1.15
+    _moveSpeedMul: 1.3
+    _phaseCooldownMul: 0.75
+    _moves:
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 5
+      _shotCount: 1
+      _spreadDegrees: 0
+      _damageMul: 1.6
+    - _pattern: 4
+      _fromPhase: 1
+      _cooldown: 3.6
+      _shotCount: 5
+      _spreadDegrees: 5
+      _damageMul: 0.8
+    - _pattern: 0
+      _fromPhase: 2
+      _cooldown: 4.2
+      _shotCount: 7
+      _spreadDegrees: 70
+      _damageMul: 0.9
+    - _pattern: 2
+      _fromPhase: 3
+      _cooldown: 3
+      _shotCount: 1
+      _spreadDegrees: 0
+      _damageMul: 1.8
+  - _bossKey: overlord
+    _chapter: 3
+    _nameEn: OVERLORD
+    _nameKr: "\uC624\uBC84\uB85C\uB4DC"
+    _spriteName: unit_boss
+    _hpMul: 1.55
+    _atkMul: 1.3
+    _moveSpeedMul: 0.95
+    _phaseCooldownMul: 0.72
+    _moves:
+    - _pattern: 1
+      _fromPhase: 1
+      _cooldown: 5
+      _shotCount: 10
+      _spreadDegrees: 0
+      _damageMul: 1
+    - _pattern: 0
+      _fromPhase: 1
+      _cooldown: 3.4
+      _shotCount: 7
+      _spreadDegrees: 62
+      _damageMul: 1
+    - _pattern: 3
+      _fromPhase: 2
+      _cooldown: 8
+      _shotCount: 3
+      _spreadDegrees: 0
+      _damageMul: 1
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 3.4
+      _shotCount: 16
+      _spreadDegrees: 0
+      _damageMul: 1.1

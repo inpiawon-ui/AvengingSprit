@@ -41,6 +41,8 @@ namespace Game.Module.InGame
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
         private BuffTable _buffTable;
+        private string _bossName = "BOSS";
+        private int _bossPhase = 1;
         private bool _finished;
 
         private void Awake()
@@ -186,6 +188,12 @@ namespace Game.Module.InGame
             if (!show) return;
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
             _ui.SetFill("BossHpBarFill", Ratio(e.BossHp, e.BossHpMax), BossBarWidth);
+
+            // 이름·페이즈는 바뀔 때만 온다. 매 피격 갱신에 덮어쓰지 않는다.
+            if (!string.IsNullOrEmpty(e.BossName)) _bossName = e.BossName;
+            if (e.Phase > 0) _bossPhase = e.Phase;
+            if (!string.IsNullOrEmpty(e.BossName) || e.Phase > 0)
+                _ui.SetText("BossLabel", _bossPhase > 1 ? $"{_bossName}  PHASE {_bossPhase}" : _bossName);
         }
 
         private void OnPossessed(PossessedEvent e)
