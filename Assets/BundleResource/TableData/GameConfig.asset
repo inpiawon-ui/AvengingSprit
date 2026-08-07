@@ -17,6 +17,7 @@ MonoBehaviour:
   _ghostMoveSpeed: 320
   _possessRange: 110
   _ghostDamageScale: 0.22
+  _attackResumeSeconds: 0.12
   _hostHpPerPoint: 6
   _hostHpBase: 60
   _hostAtkPerPoint: 0.32

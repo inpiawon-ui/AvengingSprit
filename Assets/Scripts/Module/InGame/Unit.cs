@@ -24,6 +24,7 @@ namespace Game.Module.InGame
         private Image _hpBarBg;
         private Image _hpBarFill;
         private Image _possessMark;
+        private Image _fireRing;
 
         private float _attackTimer;
         private float _flashTimer;
@@ -127,6 +128,23 @@ namespace Game.Module.InGame
         public void SetPossessMark(bool on)
         {
             if (_possessMark != null) _possessMark.gameObject.SetActive(on);
+        }
+
+        /// <summary>
+        /// 사격 중 표시. 궁수의 전설은 "멈춰야 쏜다"가 규칙이라 지금 쏘는 중인지가
+        /// 한눈에 보여야 한다. 발밑 링을 켜서 알린다.
+        /// </summary>
+        public void SetFiring(bool on)
+        {
+            if (_fireRing == null)
+            {
+                if (!on) return;
+                _fireRing = GetOrCreate("FireRing", new Vector2(_rect.sizeDelta.x * 0.9f, 14f),
+                                        new Vector2(0f, -_rect.sizeDelta.y * 0.45f));
+                _fireRing.color = new Color(1f, 0.72f, 0.24f, 0.55f);
+                _fireRing.transform.SetAsFirstSibling();
+            }
+            if (_fireRing.gameObject.activeSelf != on) _fireRing.gameObject.SetActive(on);
         }
 
         public void SetSprite(Sprite s)

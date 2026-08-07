@@ -50,7 +50,12 @@ namespace Game.Module.InGame
         private Unit _possessTarget;
         private bool _hadPossessTarget;
 
+        private float _stopTimer;
+
         public Vector2 MoveInput { get; set; }
+
+        /// <summary>지금 사격 중인가. 멈춰서 사거리 안에 적이 있을 때만 true (궁수의 전설 규칙).</summary>
+        public bool IsFiring { get; private set; }
         public float UltimateRatio => _config == null ? 0f
             : Mathf.Clamp01(_ultimateCharge / _config.UltimateChargeSeconds);
         public bool CanPossess => _host == null && _possessTarget != null;
@@ -188,6 +193,7 @@ namespace Game.Module.InGame
             _ultimateCharge = Mathf.Min(_ultimateCharge + dt, _config.UltimateChargeSeconds);
 
             TickPlayer(dt);
+            SyncFireRing();
             TickEnemies(dt);
             TickShots(dt);
             CleanupDead();
@@ -204,24 +210,42 @@ namespace Game.Module.InGame
             if (me == null) return;
             me.TickFlash(dt);
 
-            // 이동 — 조이스틱 입력. 필드 밖으로 나가지 않게 잘라낸다.
-            if (MoveInput.sqrMagnitude > 0.0001f)
+            // ⚠️ 궁수의 전설 규칙 — **움직이는 동안에는 쏘지 않는다.**
+            //    이동과 공격이 배타적이어야 "자리를 잡을까 딜을 넣을까"의 긴장이 생긴다.
+            //    이걸 없애면 조작이 그냥 산책이 된다.
+            bool moving = MoveInput.sqrMagnitude > 0.0001f;
+            if (moving)
             {
                 var p = me.Position + MoveInput * me.MoveSpeed * dt;
                 var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
                 p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
                 p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
                 me.Position = p;
+                _stopTimer = 0f;
+                IsFiring = false;
+                return;
             }
 
+            // 멈춘 직후 아주 짧게 준비 시간을 둔다. 없으면 톡톡 끊어 눌러도 손해가 없어
+            // 멈춤의 대가가 사라진다.
+            _stopTimer += dt;
+            if (_stopTimer < _config.AttackResumeSeconds) { IsFiring = false; return; }
+
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
-            if (_host == null) return;
+            if (_host == null) { IsFiring = false; return; }
 
             var target = Nearest(_host.Position);
-            if (target == null) return;
-            if (Vector2.Distance(_host.Position, target.Position) > _host.AttackRange) return;
+            bool inRange = target != null &&
+                           Vector2.Distance(_host.Position, target.Position) <= _host.AttackRange;
+            IsFiring = inRange;
+            if (!inRange) return;
             if (!_host.TickAttack(dt)) return;
             PerformAttack(_host, target, true);
+        }
+
+        private void SyncFireRing()
+        {
+            if (_host != null) _host.SetFiring(IsFiring);
         }
 
         private void TickEnemies(float dt)

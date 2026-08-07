@@ -23,6 +23,9 @@ namespace Game.Character
         [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
         [SerializeField] private float _ghostDamageScale = 0.22f;
 
+        [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
+        [SerializeField] private float _attackResumeSeconds = 0.12f;
+
         [Header("호스트 — 표시 스탯(0~100) → 전투 수치 환산")]
         [SerializeField] private float _hostHpPerPoint = 6f;
         [SerializeField] private int _hostHpBase = 60;
@@ -73,6 +76,8 @@ namespace Game.Character
         public float GhostMoveSpeed => _ghostMoveSpeed;
         public float PossessRange => _possessRange;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
+
+        public float AttackResumeSeconds => _attackResumeSeconds;
 
         public float HostAttackRange => _hostAttackRange;
         public float HostAttackInterval => _hostAttackInterval;
