@@ -1,0 +1,6 @@
+부모 인덱스 이상: 4 ['31:StatBarFill', '37:StatBarFill', '43:StatBarFill', '49:StatBarFill']
+
+StatRow_HP       rect=[424, 648, 270, 32]  자식 4: ['StatIcon_HP', 'StatLabelText', 'StatBarBg', 'StatValueText']
+StatRow_ATK      rect=[424, 686, 270, 32]  자식 4: ['StatIcon_ATK', 'StatLabelText', 'StatBarBg', 'StatValueText']
+StatRow_SPD      rect=[424, 724, 270, 32]  자식 4: ['StatIcon_SPD', 'StatLabelText', 'StatBarBg', 'StatValueText']
+StatRow_DASH     rect=[424, 762, 270, 32]  자식 4: ['StatIcon_DASH', 'StatLabelText', 'StatBarBg', 'StatValueText']

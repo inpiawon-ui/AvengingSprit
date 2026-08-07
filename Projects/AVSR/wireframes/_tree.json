@@ -1,0 +1,2403 @@
+{
+ "HostSelect": [
+  {
+   "name": "TopHudGroup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    0,
+    0,
+    720,
+    128
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(0,0,720,128)"
+  },
+  {
+   "name": "HostSelectPanel",
+   "parent": null,
+   "depth": 0,
+   "comp": "RootPanel",
+   "rect": null,
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "anchorMin (0,1) / anchorMax (1,1) / pivot (0.5,1) / anchored"
+  },
+  {
+   "name": "HostSelectBackground",
+   "parent": null,
+   "depth": 0,
+   "comp": "Image",
+   "rect": [
+    0,
+    128,
+    720,
+    1152
+   ],
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full (0,128,720,1152)"
+  },
+  {
+   "name": "HeaderGroup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    0,
+    144,
+    720,
+    132
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(0,144,720,132)"
+  },
+  {
+   "name": "HeaderGhostDeco",
+   "parent": "HeaderGroup",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    12,
+    146,
+    84,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(12,146,84,92)"
+  },
+  {
+   "name": "HeaderTitleText",
+   "parent": "HeaderGroup",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    104,
+    148,
+    396,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(104,148,396,92)"
+  },
+  {
+   "name": "HeaderDescText",
+   "parent": "HeaderGroup",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    104,
+    248,
+    496,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(104,248,496,26)"
+  },
+  {
+   "name": "HeaderPortalDeco",
+   "parent": "HeaderGroup",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    500,
+    138,
+    208,
+    144
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(500,138,208,144)"
+  },
+  {
+   "name": "HostListTitle",
+   "parent": null,
+   "depth": 0,
+   "comp": "ImageSliced",
+   "rect": [
+    12,
+    288,
+    344,
+    34
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(12,288,344,34)"
+  },
+  {
+   "name": "HostListTitleText",
+   "parent": "HostListTitle",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    12,
+    290,
+    344,
+    30
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(12,290,344,30)"
+  },
+  {
+   "name": "HostGrid",
+   "parent": null,
+   "depth": 0,
+   "comp": "Grid",
+   "rect": [
+    12,
+    330,
+    344,
+    590
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(12,330,344,590) · cell 108×140 · spacing (10,10) · 3열 × 4행 "
+  },
+  {
+   "name": "HostSlot",
+   "parent": "HostGrid",
+   "depth": 1,
+   "comp": "Button",
+   "rect": null,
+   "repeat": 12,
+   "stretch": false,
+   "raw_pos": "위 셀"
+  },
+  {
+   "name": "HostSlotFrame",
+   "parent": "HostSlot ×12",
+   "depth": 2,
+   "comp": "ImageSliced",
+   "rect": [
+    0,
+    0,
+    108,
+    140
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(0,0,108,140)"
+  },
+  {
+   "name": "HostSlotPortrait",
+   "parent": "HostSlot ×12",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    9,
+    6,
+    91,
+    84
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "center (9,6,91,84)"
+  },
+  {
+   "name": "HostSlotNameText",
+   "parent": "HostSlot ×12",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    4,
+    104,
+    100,
+    30
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(4,104,100,30)"
+  },
+  {
+   "name": "HostSlotLockIcon",
+   "parent": "HostSlot ×12",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    34,
+    34,
+    40,
+    40
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "center (34,34,40,40)"
+  },
+  {
+   "name": "HostSlotSelectMarker",
+   "parent": "HostSlot ×12",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    2,
+    2,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "top-left (2,2,28,28)"
+  },
+  {
+   "name": "GhostArrowGroup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    362,
+    500,
+    42,
+    100
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(362,500,42,100)"
+  },
+  {
+   "name": "GhostArrowSprite",
+   "parent": "GhostArrowGroup",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    362,
+    500,
+    42,
+    58
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(362,500,42,58)"
+  },
+  {
+   "name": "GhostArrowChevron",
+   "parent": "GhostArrowGroup",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    364,
+    564,
+    38,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(364,564,38,32)"
+  },
+  {
+   "name": "HostDetailCard",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    408,
+    288,
+    300,
+    644
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(408,288,300,644)"
+  },
+  {
+   "name": "HostDetailFrame",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    408,
+    288,
+    300,
+    644
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "Stretch (408,288,300,644)"
+  },
+  {
+   "name": "HostNameEnText",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    414,
+    304,
+    288,
+    38
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(414,304,288,38)"
+  },
+  {
+   "name": "HostNameKrText",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    414,
+    344,
+    288,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(414,344,288,26)"
+  },
+  {
+   "name": "HostPortalPedestal",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    442,
+    548,
+    232,
+    58
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(442,548,232,58)"
+  },
+  {
+   "name": "HostPortraitImage",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    467,
+    378,
+    182,
+    168
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(467,378,182,168)"
+  },
+  {
+   "name": "HostDetailLockIcon",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    510,
+    414,
+    96,
+    96
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "center (510,414,96,96)"
+  },
+  {
+   "name": "StatGroupLabel",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    428,
+    618,
+    92,
+    22
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(428,618,92,22)"
+  },
+  {
+   "name": "StatRow_HP",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Group",
+   "rect": [
+    424,
+    648,
+    270,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,648,270,32)"
+  },
+  {
+   "name": "StatIcon_HP",
+   "parent": "StatRow_HP",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    424,
+    650,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,650,28,28)"
+  },
+  {
+   "name": "StatLabelText",
+   "parent": "StatRow_HP",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    458,
+    652,
+    62,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(458,652,62,24)"
+  },
+  {
+   "name": "StatBarBg",
+   "parent": "StatRow_HP",
+   "depth": 2,
+   "comp": "ImageSliced",
+   "rect": [
+    526,
+    656,
+    124,
+    16
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(526,656,124,16)"
+  },
+  {
+   "name": "StatBarFill",
+   "parent": null,
+   "depth": 4,
+   "comp": "Image",
+   "rect": [
+    526,
+    656,
+    124,
+    16
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(526,656,124,16)"
+  },
+  {
+   "name": "StatValueText",
+   "parent": "StatRow_HP",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    656,
+    652,
+    38,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(656,652,38,24)"
+  },
+  {
+   "name": "StatRow_ATK",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Group",
+   "rect": [
+    424,
+    686,
+    270,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,686,270,32)"
+  },
+  {
+   "name": "StatIcon_ATK",
+   "parent": "StatRow_ATK",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    424,
+    688,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,688,28,28)"
+  },
+  {
+   "name": "StatLabelText/StatBarBg/StatBarFill/StatValueText",
+   "parent": "StatRow_ATK",
+   "depth": 2,
+   "comp": "Group",
+   "rect": null,
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "y+38"
+  },
+  {
+   "name": "StatRow_SPD",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Group",
+   "rect": [
+    424,
+    724,
+    270,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,724,270,32)"
+  },
+  {
+   "name": "StatIcon_SPD",
+   "parent": "StatRow_SPD",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    424,
+    726,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,726,28,28)"
+  },
+  {
+   "name": "StatLabelText/StatBarBg/StatBarFill/StatValueText",
+   "parent": "StatRow_SPD",
+   "depth": 2,
+   "comp": "Group",
+   "rect": null,
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "y+76"
+  },
+  {
+   "name": "StatRow_DASH",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "Group",
+   "rect": [
+    424,
+    762,
+    270,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,762,270,32)"
+  },
+  {
+   "name": "StatIcon_DASH",
+   "parent": "StatRow_DASH",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    424,
+    764,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,764,28,28)"
+  },
+  {
+   "name": "StatLabelText/StatBarBg/StatBarFill/StatValueText",
+   "parent": "StatRow_DASH",
+   "depth": 2,
+   "comp": "Group",
+   "rect": null,
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "y+114"
+  },
+  {
+   "name": "UltimateCard",
+   "parent": "HostDetailCard",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    424,
+    810,
+    268,
+    110
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(424,810,268,110)"
+  },
+  {
+   "name": "UltimateLabel",
+   "parent": "UltimateCard",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    432,
+    816,
+    120,
+    22
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(432,816,120,22)"
+  },
+  {
+   "name": "UltimateIcon",
+   "parent": "UltimateCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    434,
+    842,
+    60,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(434,842,60,60)"
+  },
+  {
+   "name": "UltimateNameText",
+   "parent": "UltimateCard",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    502,
+    842,
+    184,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(502,842,184,26)"
+  },
+  {
+   "name": "UltimateDescText",
+   "parent": "UltimateCard",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    502,
+    870,
+    184,
+    46
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(502,870,184,46)"
+  },
+  {
+   "name": "HostUpgradeButton",
+   "parent": null,
+   "depth": 0,
+   "comp": "Button",
+   "rect": [
+    360,
+    952,
+    348,
+    82
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(360,952,348,82)"
+  },
+  {
+   "name": "HostUpgradeIcon",
+   "parent": "HostUpgradeButton",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    372,
+    972,
+    40,
+    40
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(372,972,40,40)"
+  },
+  {
+   "name": "HostUpgradeTitleText",
+   "parent": "HostUpgradeButton",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    422,
+    960,
+    220,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(422,960,220,32)"
+  },
+  {
+   "name": "HostUpgradeSubText",
+   "parent": "HostUpgradeButton",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    422,
+    992,
+    220,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(422,992,220,24)"
+  },
+  {
+   "name": "ArrowIcon",
+   "parent": "HostUpgradeButton",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    664,
+    984,
+    24,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(664,984,24,32)"
+  },
+  {
+   "name": "PossessStartButton",
+   "parent": null,
+   "depth": 0,
+   "comp": "Button",
+   "rect": [
+    360,
+    1046,
+    348,
+    102
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(360,1046,348,102)"
+  },
+  {
+   "name": "PossessGhostIcon",
+   "parent": "PossessStartButton",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    376,
+    1069,
+    56,
+    56
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(376,1069,56,56)"
+  },
+  {
+   "name": "PossessTitleText",
+   "parent": "PossessStartButton",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    444,
+    1058,
+    200,
+    42
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(444,1058,200,42)"
+  },
+  {
+   "name": "PossessSubText",
+   "parent": "PossessStartButton",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    444,
+    1100,
+    200,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(444,1100,200,26)"
+  },
+  {
+   "name": "ArrowIcon",
+   "parent": "PossessStartButton",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    664,
+    1081,
+    24,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(664,1081,24,32)"
+  },
+  {
+   "name": "TipBar",
+   "parent": null,
+   "depth": 0,
+   "comp": "ImageSliced",
+   "rect": [
+    12,
+    1166,
+    696,
+    78
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(12,1166,696,78)"
+  },
+  {
+   "name": "TipIcon",
+   "parent": "TipBar",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    24,
+    1180,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,1180,28,28)"
+  },
+  {
+   "name": "TipText",
+   "parent": "TipBar",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    60,
+    1176,
+    400,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(60,1176,400,60)"
+  },
+  {
+   "name": "OwnedHostChestIcon",
+   "parent": "TipBar",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    474,
+    1188,
+    40,
+    36
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(474,1188,40,36)"
+  },
+  {
+   "name": "OwnedHostCountText",
+   "parent": "TipBar",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    522,
+    1188,
+    180,
+    36
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(522,1188,180,36)"
+  },
+  {
+   "name": "PopupParent",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": null,
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full · sizeDelta (0,0) · 최하위 자식"
+  }
+ ],
+ "Lobby": [
+  {
+   "name": "LobbyMainUI",
+   "parent": null,
+   "depth": 0,
+   "comp": "RootUI",
+   "rect": null,
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full · sizeDelta (0,0)"
+  },
+  {
+   "name": "LobbyStageArea",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": null,
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full"
+  },
+  {
+   "name": "LobbyBackground",
+   "parent": "LobbyStageArea",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    0,
+    0,
+    720,
+    1280
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(0,0,720,1280)"
+  },
+  {
+   "name": "PortalRing",
+   "parent": "LobbyStageArea",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    260,
+    676,
+    200,
+    56
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "center (260,676,200,56)"
+  },
+  {
+   "name": "GhostAvatar",
+   "parent": "LobbyStageArea",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    272,
+    430,
+    176,
+    220
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "center (272,430,176,220)"
+  },
+  {
+   "name": "ChapterCard",
+   "parent": null,
+   "depth": 0,
+   "comp": "ImageSliced",
+   "rect": [
+    12,
+    300,
+    222,
+    344
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "top-left (12,300,222,344)"
+  },
+  {
+   "name": "ChapterNumberText",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    24,
+    312,
+    140,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,312,140,26)"
+  },
+  {
+   "name": "ChapterNameText",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    24,
+    340,
+    150,
+    44
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,340,150,44)"
+  },
+  {
+   "name": "BossLabel",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    24,
+    396,
+    60,
+    20
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,396,60,20)"
+  },
+  {
+   "name": "BossNameText",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    24,
+    418,
+    120,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,418,120,26)"
+  },
+  {
+   "name": "BossPortrait",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "Image",
+   "rect": [
+    144,
+    388,
+    84,
+    84
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(144,388,84,84)"
+  },
+  {
+   "name": "ProgressLabel",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    24,
+    482,
+    90,
+    20
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,482,90,20)"
+  },
+  {
+   "name": "ProgressBarBg",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    24,
+    506,
+    154,
+    20
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,506,154,20)"
+  },
+  {
+   "name": "ProgressBarFill",
+   "parent": "ProgressBarBg",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    24,
+    506,
+    154,
+    20
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,506,154,20)"
+  },
+  {
+   "name": "ProgressText",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "TMP",
+   "rect": [
+    30,
+    508,
+    64,
+    16
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(30,508,64,16)"
+  },
+  {
+   "name": "ProgressRewardChest",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    186,
+    486,
+    42,
+    44
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(186,486,42,44)"
+  },
+  {
+   "name": "ContinueButton",
+   "parent": "ChapterCard",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    24,
+    552,
+    198,
+    74
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(24,552,198,74)"
+  },
+  {
+   "name": "ContinueButtonText",
+   "parent": "ContinueButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    34,
+    558,
+    178,
+    36
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(34,558,178,36)"
+  },
+  {
+   "name": "ContinueCostText",
+   "parent": "ContinueButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    34,
+    594,
+    178,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(34,594,178,26)"
+  },
+  {
+   "name": "SidePromoGroup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    470,
+    300,
+    238,
+    344
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(470,300,238,344)"
+  },
+  {
+   "name": "BattlePassCard",
+   "parent": "SidePromoGroup",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    470,
+    300,
+    238,
+    112
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(470,300,238,112)"
+  },
+  {
+   "name": "BattlePassArt",
+   "parent": "BattlePassCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    600,
+    308,
+    90,
+    80
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(600,308,90,80)"
+  },
+  {
+   "name": "BattlePassBadge",
+   "parent": "BattlePassCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    478,
+    352,
+    40,
+    40
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(478,352,40,40)"
+  },
+  {
+   "name": "BattlePassBarBg",
+   "parent": "BattlePassCard",
+   "depth": 2,
+   "comp": "ImageSliced",
+   "rect": [
+    524,
+    364,
+    120,
+    14
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(524,364,120,14)"
+  },
+  {
+   "name": "BattlePassBarFill",
+   "parent": "BattlePassCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    524,
+    364,
+    120,
+    14
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(524,364,120,14)"
+  },
+  {
+   "name": "EventCard",
+   "parent": "SidePromoGroup",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    470,
+    420,
+    238,
+    104
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(470,420,238,104)"
+  },
+  {
+   "name": "EventArt",
+   "parent": "EventCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    618,
+    436,
+    70,
+    64
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(618,436,70,64)"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "EventCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    686,
+    416,
+    24,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(686,416,24,24)"
+  },
+  {
+   "name": "DailyLoginCard",
+   "parent": "SidePromoGroup",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    470,
+    532,
+    238,
+    112
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(470,532,238,112)"
+  },
+  {
+   "name": "DailyLoginArt",
+   "parent": "DailyLoginCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    618,
+    548,
+    70,
+    64
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(618,548,70,64)"
+  },
+  {
+   "name": "DailyLoginCheck",
+   "parent": "DailyLoginCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    478,
+    600,
+    26,
+    26
+   ],
+   "repeat": 5,
+   "stretch": false,
+   "raw_pos": "(478,600,26,26) 외 4칸"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "DailyLoginCard",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    686,
+    528,
+    24,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(686,528,24,24)"
+  },
+  {
+   "name": "FeatureTabBar",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    52,
+    700,
+    616,
+    108
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(52,700,616,108)"
+  },
+  {
+   "name": "FeatureTabBarBackground",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    52,
+    700,
+    616,
+    108
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "Stretch (52,700,616,108)"
+  },
+  {
+   "name": "MissionTab",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    58,
+    708,
+    116,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(58,708,116,92)"
+  },
+  {
+   "name": "MissionTabIcon",
+   "parent": "MissionTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    92,
+    716,
+    48,
+    48
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(92,716,48,48)"
+  },
+  {
+   "name": "MissionTabLabel",
+   "parent": "MissionTab",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    58,
+    770,
+    116,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(58,770,116,24)"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "MissionTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    158,
+    710,
+    20,
+    20
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(158,710,20,20)"
+  },
+  {
+   "name": "AchievementTab",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    181,
+    708,
+    116,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(181,708,116,92)"
+  },
+  {
+   "name": "AchievementTabIcon",
+   "parent": "AchievementTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    215,
+    716,
+    48,
+    48
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(215,716,48,48)"
+  },
+  {
+   "name": "AchievementTabLabel",
+   "parent": "AchievementTab",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    181,
+    770,
+    116,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(181,770,116,24)"
+  },
+  {
+   "name": "RankingTab",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    304,
+    708,
+    116,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(304,708,116,92)"
+  },
+  {
+   "name": "RankingTabIcon",
+   "parent": "RankingTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    338,
+    716,
+    48,
+    48
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(338,716,48,48)"
+  },
+  {
+   "name": "RankingTabLabel",
+   "parent": "RankingTab",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    304,
+    770,
+    116,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(304,770,116,24)"
+  },
+  {
+   "name": "InventoryTab",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    427,
+    708,
+    116,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(427,708,116,92)"
+  },
+  {
+   "name": "InventoryTabIcon",
+   "parent": "InventoryTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    461,
+    716,
+    48,
+    48
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(461,716,48,48)"
+  },
+  {
+   "name": "InventoryTabLabel",
+   "parent": "InventoryTab",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    427,
+    770,
+    116,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(427,770,116,24)"
+  },
+  {
+   "name": "FriendsTab",
+   "parent": "FeatureTabBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    550,
+    708,
+    116,
+    92
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(550,708,116,92)"
+  },
+  {
+   "name": "FriendsTabIcon",
+   "parent": "FriendsTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    584,
+    716,
+    48,
+    48
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(584,716,48,48)"
+  },
+  {
+   "name": "FriendsTabLabel",
+   "parent": "FriendsTab",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    550,
+    770,
+    116,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(550,770,116,24)"
+  },
+  {
+   "name": "FriendsTabLock",
+   "parent": "FriendsTab",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    604,
+    736,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(604,736,28,28)"
+  },
+  {
+   "name": "MainActionBar",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    10,
+    830,
+    700,
+    260
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(10,830,700,260)"
+  },
+  {
+   "name": "HostButton",
+   "parent": "MainActionBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    10,
+    830,
+    222,
+    260
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(10,830,222,260)"
+  },
+  {
+   "name": "HostButtonArt",
+   "parent": "HostButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    20,
+    840,
+    202,
+    150
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(20,840,202,150)"
+  },
+  {
+   "name": "HostButtonTitleText",
+   "parent": "HostButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    20,
+    996,
+    202,
+    44
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(20,996,202,44)"
+  },
+  {
+   "name": "HostButtonSubText",
+   "parent": "HostButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    20,
+    1042,
+    202,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(20,1042,202,26)"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "HostButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    202,
+    824,
+    24,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(202,824,24,24)"
+  },
+  {
+   "name": "ChapterButton",
+   "parent": "MainActionBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    242,
+    830,
+    236,
+    260
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(242,830,236,260)"
+  },
+  {
+   "name": "ChapterButtonArt",
+   "parent": "ChapterButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    252,
+    840,
+    216,
+    150
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(252,840,216,150)"
+  },
+  {
+   "name": "ChapterButtonTitleText",
+   "parent": "ChapterButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    252,
+    996,
+    216,
+    44
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(252,996,216,44)"
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "parent": "ChapterButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    252,
+    1042,
+    216,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(252,1042,216,26)"
+  },
+  {
+   "name": "ShopButton",
+   "parent": "MainActionBar",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    488,
+    830,
+    222,
+    260
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(488,830,222,260)"
+  },
+  {
+   "name": "ShopButtonArt",
+   "parent": "ShopButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    498,
+    840,
+    202,
+    150
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(498,840,202,150)"
+  },
+  {
+   "name": "ShopButtonTitleText",
+   "parent": "ShopButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    498,
+    996,
+    202,
+    44
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(498,996,202,44)"
+  },
+  {
+   "name": "ShopButtonSubText",
+   "parent": "ShopButton",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    498,
+    1042,
+    202,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(498,1042,202,26)"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "ShopButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    680,
+    824,
+    24,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(680,824,24,24)"
+  },
+  {
+   "name": "LogoLockup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Image",
+   "rect": [
+    263,
+    1120,
+    194,
+    102
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "bottom-center (263,1120,194,102)"
+  },
+  {
+   "name": "VersionText",
+   "parent": null,
+   "depth": 0,
+   "comp": "TMP",
+   "rect": [
+    14,
+    1250,
+    110,
+    22
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "bottom-left (14,1250,110,22)"
+  },
+  {
+   "name": "TopHudGroup",
+   "parent": null,
+   "depth": 0,
+   "comp": "Group",
+   "rect": [
+    0,
+    0,
+    720,
+    128
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "top-stretch (0,0,720,128)"
+  },
+  {
+   "name": "TopHudBackground",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    0,
+    0,
+    720,
+    128
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(0,0,720,128)"
+  },
+  {
+   "name": "GhostWidget",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    8,
+    18,
+    188,
+    96
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(8,18,188,96)"
+  },
+  {
+   "name": "GhostPortraitIcon",
+   "parent": "GhostWidget",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    16,
+    30,
+    60,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(16,30,60,60)"
+  },
+  {
+   "name": "GhostLabelText",
+   "parent": "GhostWidget",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    82,
+    26,
+    104,
+    22
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(82,26,104,22)"
+  },
+  {
+   "name": "GhostLevelText",
+   "parent": "GhostWidget",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    82,
+    50,
+    104,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(82,50,104,24)"
+  },
+  {
+   "name": "GhostExpBarBg",
+   "parent": "GhostWidget",
+   "depth": 2,
+   "comp": "ImageSliced",
+   "rect": [
+    82,
+    78,
+    106,
+    14
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(82,78,106,14)"
+  },
+  {
+   "name": "GhostExpBarFill",
+   "parent": null,
+   "depth": 4,
+   "comp": "Image",
+   "rect": [
+    82,
+    78,
+    106,
+    14
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(82,78,106,14)"
+  },
+  {
+   "name": "GhostExpText",
+   "parent": "GhostWidget",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    118,
+    94,
+    72,
+    16
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(118,94,72,16)"
+  },
+  {
+   "name": "StaminaCounter",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    204,
+    32,
+    126,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(204,32,126,60)"
+  },
+  {
+   "name": "StaminaIcon",
+   "parent": "StaminaCounter",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    210,
+    44,
+    32,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(210,44,32,32)"
+  },
+  {
+   "name": "StaminaText",
+   "parent": "StaminaCounter",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    246,
+    44,
+    50,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(246,44,50,32)"
+  },
+  {
+   "name": "PlusButton",
+   "parent": "StaminaCounter",
+   "depth": 2,
+   "comp": "Button",
+   "rect": [
+    298,
+    46,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(298,46,28,28)"
+  },
+  {
+   "name": "GoldCounter",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    338,
+    32,
+    132,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(338,32,132,60)"
+  },
+  {
+   "name": "GoldIcon",
+   "parent": "GoldCounter",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    344,
+    44,
+    32,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(344,44,32,32)"
+  },
+  {
+   "name": "GoldText",
+   "parent": "GoldCounter",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    380,
+    44,
+    56,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(380,44,56,32)"
+  },
+  {
+   "name": "PlusButton",
+   "parent": "GoldCounter",
+   "depth": 2,
+   "comp": "Button",
+   "rect": [
+    438,
+    46,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(438,46,28,28)"
+  },
+  {
+   "name": "GemCounter",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "ImageSliced",
+   "rect": [
+    478,
+    32,
+    112,
+    60
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(478,32,112,60)"
+  },
+  {
+   "name": "GemIcon",
+   "parent": "GemCounter",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    484,
+    44,
+    32,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(484,44,32,32)"
+  },
+  {
+   "name": "GemText",
+   "parent": "GemCounter",
+   "depth": 2,
+   "comp": "TMP",
+   "rect": [
+    520,
+    44,
+    40,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(520,44,40,32)"
+  },
+  {
+   "name": "PlusButton",
+   "parent": "GemCounter",
+   "depth": 2,
+   "comp": "Button",
+   "rect": [
+    558,
+    46,
+    28,
+    28
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(558,46,28,28)"
+  },
+  {
+   "name": "MailButton",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    600,
+    34,
+    48,
+    56
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(600,34,48,56)"
+  },
+  {
+   "name": "NotifyBadge",
+   "parent": "MailButton",
+   "depth": 2,
+   "comp": "Image",
+   "rect": [
+    636,
+    28,
+    24,
+    24
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(636,28,24,24)"
+  },
+  {
+   "name": "SettingsButton",
+   "parent": "TopHudGroup",
+   "depth": 1,
+   "comp": "Button",
+   "rect": [
+    658,
+    34,
+    48,
+    56
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "(658,34,48,56)"
+  }
+ ],
+ "Title": [
+  {
+   "name": "TitleMainUI",
+   "parent": null,
+   "depth": 0,
+   "comp": "RootUI",
+   "rect": null,
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full (0,0~1,1) · sizeDelta (0,0)"
+  },
+  {
+   "name": "BackgroundImage",
+   "parent": null,
+   "depth": 0,
+   "comp": "Image",
+   "rect": [
+    0,
+    0,
+    720,
+    1280
+   ],
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full (0,0,720,1280)"
+  },
+  {
+   "name": "TitleLogo",
+   "parent": null,
+   "depth": 0,
+   "comp": "Image",
+   "rect": [
+    69,
+    380,
+    582,
+    306
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "top-center (69,380,582,306)"
+  },
+  {
+   "name": "TapToStartText",
+   "parent": null,
+   "depth": 0,
+   "comp": "TMP",
+   "rect": [
+    200,
+    862,
+    320,
+    46
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "top-center (200,862,320,46)"
+  },
+  {
+   "name": "CopyrightText",
+   "parent": null,
+   "depth": 0,
+   "comp": "TMP",
+   "rect": [
+    110,
+    1178,
+    500,
+    32
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "bottom-center (110,1178,500,32)"
+  },
+  {
+   "name": "VersionText",
+   "parent": null,
+   "depth": 0,
+   "comp": "TMP",
+   "rect": [
+    14,
+    1238,
+    116,
+    26
+   ],
+   "repeat": 1,
+   "stretch": false,
+   "raw_pos": "bottom-left (14,1238,116,26)"
+  },
+  {
+   "name": "TouchArea",
+   "parent": null,
+   "depth": 0,
+   "comp": "Button",
+   "rect": null,
+   "repeat": 1,
+   "stretch": true,
+   "raw_pos": "Stretch Full · 최하위 형제(최상단 렌더)"
+  }
+ ]
+}

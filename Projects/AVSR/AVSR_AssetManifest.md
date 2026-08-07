@@ -85,7 +85,7 @@ ChatGPT :  시안 → 승인 → 전량 생성 → 개별 PNG 분리 → 파일�
 |----------|---------|------:|-------:|:---:|--------|-------|--------|------|
 | `backgroundimage.png` | `BackgroundImage` | 720 | 1280 | N | - | center | GPT | S1 배경. 야경 도시 실루엣, 로비보다 더 어둡고 요소 적게. 상단 절반은 여백 |
 | `titlelogo.png` | `TitleLogo` | 582 | 306 | Y | - | center | **GPT+ANCHOR** | `logolockup` **×3 정수 확대**. 앵커: `ui_crops/logolockup_x3.png` — 로고 형태를 최대한 보존 |
-| `tophudbackground.png` | `TopHudBackground` | 720 | 128 | Y | 8,8,4,6 | center | GPT | 어두운 반투명 바 + 하단 골드 1px 라인 |
+| `tophudbackground.png` | `TopHudBackground` | 720 | 128 | Y | 16,16,16,20 | center | GPT | 어두운 반투명 바 + 하단 골드 1px 라인 |
 | `ghostwidget.png` | `GhostWidget` | 188 | 96 | Y | 10,10,10,10 | center | GPT | 청색 테두리 패널, 내부 비움 |
 | `ghostportraiticon.png` | `GhostPortraitIcon` | 60 | 60 | Y | - | center | GPT+ANCHOR | 고스트 얼굴 버스트. 크롭 원본 ~48×52로 작고 JPEG 노이즈 지배 → 리드로우 |
 | `ghostexpbarbg.png` | `GhostExpBarBg` | 106 | 14 | Y | 4,4,4,4 | center | GPT | 빈 트랙 (어두운 슬롯) |

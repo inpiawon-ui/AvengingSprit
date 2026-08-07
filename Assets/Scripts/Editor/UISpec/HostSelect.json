@@ -1,0 +1,931 @@
+{
+ "screen": "HostSelect",
+ "root": "HostSelectPanel",
+ "referenceResolution": [
+  720,
+  1280
+ ],
+ "nodes": [
+  {
+   "name": "HostSelectPanel",
+   "parentIdx": -1,
+   "comp": "RootPanel",
+   "stretch": false,
+   "repeat": 1,
+   "rect": []
+  },
+  {
+   "name": "HostSelectBackground",
+   "parentIdx": 0,
+   "comp": "Image",
+   "stretch": true,
+   "repeat": 1,
+   "rect": [
+    0,
+    128,
+    720,
+    1152
+   ]
+  },
+  {
+   "name": "HeaderGroup",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    0,
+    144,
+    720,
+    132
+   ]
+  },
+  {
+   "name": "HeaderGhostDeco",
+   "parentIdx": 2,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    146,
+    84,
+    92
+   ]
+  },
+  {
+   "name": "HeaderTitleText",
+   "parentIdx": 2,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    104,
+    148,
+    396,
+    92
+   ]
+  },
+  {
+   "name": "HeaderDescText",
+   "parentIdx": 2,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    104,
+    248,
+    496,
+    26
+   ]
+  },
+  {
+   "name": "HeaderPortalDeco",
+   "parentIdx": 2,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    500,
+    138,
+    208,
+    144
+   ]
+  },
+  {
+   "name": "HostListTitle",
+   "parentIdx": 0,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    288,
+    344,
+    34
+   ]
+  },
+  {
+   "name": "HostListTitleText",
+   "parentIdx": 7,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    290,
+    344,
+    30
+   ]
+  },
+  {
+   "name": "HostGrid",
+   "parentIdx": 0,
+   "comp": "Grid",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    330,
+    344,
+    590
+   ]
+  },
+  {
+   "name": "HostSlot",
+   "parentIdx": 9,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 12,
+   "rect": []
+  },
+  {
+   "name": "HostSlotFrame",
+   "parentIdx": 10,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    0,
+    0,
+    108,
+    140
+   ]
+  },
+  {
+   "name": "HostSlotPortrait",
+   "parentIdx": 10,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    9,
+    6,
+    91,
+    84
+   ]
+  },
+  {
+   "name": "HostSlotNameText",
+   "parentIdx": 10,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    4,
+    104,
+    100,
+    30
+   ]
+  },
+  {
+   "name": "HostSlotLockIcon",
+   "parentIdx": 10,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    34,
+    34,
+    40,
+    40
+   ]
+  },
+  {
+   "name": "HostSlotSelectMarker",
+   "parentIdx": 10,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    2,
+    2,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "GhostArrowGroup",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    362,
+    500,
+    42,
+    100
+   ]
+  },
+  {
+   "name": "GhostArrowSprite",
+   "parentIdx": 16,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    362,
+    500,
+    42,
+    58
+   ]
+  },
+  {
+   "name": "GhostArrowChevron",
+   "parentIdx": 16,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    364,
+    564,
+    38,
+    32
+   ]
+  },
+  {
+   "name": "HostDetailCard",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    408,
+    288,
+    300,
+    644
+   ]
+  },
+  {
+   "name": "HostDetailFrame",
+   "parentIdx": 19,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    408,
+    288,
+    300,
+    644
+   ]
+  },
+  {
+   "name": "HostNameEnText",
+   "parentIdx": 19,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    414,
+    304,
+    288,
+    38
+   ]
+  },
+  {
+   "name": "HostNameKrText",
+   "parentIdx": 19,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    414,
+    344,
+    288,
+    26
+   ]
+  },
+  {
+   "name": "HostPortalPedestal",
+   "parentIdx": 19,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    442,
+    548,
+    232,
+    58
+   ]
+  },
+  {
+   "name": "HostPortraitImage",
+   "parentIdx": 19,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    467,
+    378,
+    182,
+    168
+   ]
+  },
+  {
+   "name": "HostDetailLockIcon",
+   "parentIdx": 19,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    510,
+    414,
+    96,
+    96
+   ]
+  },
+  {
+   "name": "StatGroupLabel",
+   "parentIdx": 19,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    428,
+    618,
+    92,
+    22
+   ]
+  },
+  {
+   "name": "StatRow_HP",
+   "parentIdx": 19,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    648,
+    270,
+    32
+   ]
+  },
+  {
+   "name": "StatIcon_HP",
+   "parentIdx": 27,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    650,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "StatLabelText",
+   "parentIdx": 27,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    458,
+    652,
+    62,
+    24
+   ]
+  },
+  {
+   "name": "StatBarBg",
+   "parentIdx": 27,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    656,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatBarFill",
+   "parentIdx": 30,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    656,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatValueText",
+   "parentIdx": 27,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    656,
+    652,
+    38,
+    24
+   ]
+  },
+  {
+   "name": "StatRow_ATK",
+   "parentIdx": 19,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    686,
+    270,
+    32
+   ]
+  },
+  {
+   "name": "StatIcon_ATK",
+   "parentIdx": 33,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    688,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "StatLabelText",
+   "parentIdx": 33,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    458,
+    690,
+    62,
+    24
+   ]
+  },
+  {
+   "name": "StatBarBg",
+   "parentIdx": 33,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    694,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatBarFill",
+   "parentIdx": 36,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    694,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatValueText",
+   "parentIdx": 33,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    656,
+    690,
+    38,
+    24
+   ]
+  },
+  {
+   "name": "StatRow_SPD",
+   "parentIdx": 19,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    724,
+    270,
+    32
+   ]
+  },
+  {
+   "name": "StatIcon_SPD",
+   "parentIdx": 39,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    726,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "StatLabelText",
+   "parentIdx": 39,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    458,
+    728,
+    62,
+    24
+   ]
+  },
+  {
+   "name": "StatBarBg",
+   "parentIdx": 39,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    732,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatBarFill",
+   "parentIdx": 42,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    732,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatValueText",
+   "parentIdx": 39,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    656,
+    728,
+    38,
+    24
+   ]
+  },
+  {
+   "name": "StatRow_DASH",
+   "parentIdx": 19,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    762,
+    270,
+    32
+   ]
+  },
+  {
+   "name": "StatIcon_DASH",
+   "parentIdx": 45,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    764,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "StatLabelText",
+   "parentIdx": 45,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    458,
+    766,
+    62,
+    24
+   ]
+  },
+  {
+   "name": "StatBarBg",
+   "parentIdx": 45,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    770,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatBarFill",
+   "parentIdx": 48,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    526,
+    770,
+    124,
+    16
+   ]
+  },
+  {
+   "name": "StatValueText",
+   "parentIdx": 45,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    656,
+    766,
+    38,
+    24
+   ]
+  },
+  {
+   "name": "UltimateCard",
+   "parentIdx": 19,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    424,
+    810,
+    268,
+    110
+   ]
+  },
+  {
+   "name": "UltimateLabel",
+   "parentIdx": 51,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    432,
+    816,
+    120,
+    22
+   ]
+  },
+  {
+   "name": "UltimateIcon",
+   "parentIdx": 51,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    434,
+    842,
+    60,
+    60
+   ]
+  },
+  {
+   "name": "UltimateNameText",
+   "parentIdx": 51,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    502,
+    842,
+    184,
+    26
+   ]
+  },
+  {
+   "name": "UltimateDescText",
+   "parentIdx": 51,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    502,
+    870,
+    184,
+    46
+   ]
+  },
+  {
+   "name": "HostUpgradeButton",
+   "parentIdx": 0,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    360,
+    952,
+    348,
+    82
+   ]
+  },
+  {
+   "name": "HostUpgradeIcon",
+   "parentIdx": 56,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    372,
+    972,
+    40,
+    40
+   ]
+  },
+  {
+   "name": "HostUpgradeTitleText",
+   "parentIdx": 56,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    422,
+    960,
+    220,
+    32
+   ]
+  },
+  {
+   "name": "HostUpgradeSubText",
+   "parentIdx": 56,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    422,
+    992,
+    220,
+    24
+   ]
+  },
+  {
+   "name": "ArrowIcon",
+   "parentIdx": 56,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    664,
+    984,
+    24,
+    32
+   ]
+  },
+  {
+   "name": "PossessStartButton",
+   "parentIdx": 0,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    360,
+    1046,
+    348,
+    102
+   ]
+  },
+  {
+   "name": "PossessGhostIcon",
+   "parentIdx": 61,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    376,
+    1069,
+    56,
+    56
+   ]
+  },
+  {
+   "name": "PossessTitleText",
+   "parentIdx": 61,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    444,
+    1058,
+    200,
+    42
+   ]
+  },
+  {
+   "name": "PossessSubText",
+   "parentIdx": 61,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    444,
+    1100,
+    200,
+    26
+   ]
+  },
+  {
+   "name": "ArrowIcon",
+   "parentIdx": 61,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    664,
+    1081,
+    24,
+    32
+   ]
+  },
+  {
+   "name": "TipBar",
+   "parentIdx": 0,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    1166,
+    696,
+    78
+   ]
+  },
+  {
+   "name": "TipIcon",
+   "parentIdx": 66,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    1180,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "TipText",
+   "parentIdx": 66,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    60,
+    1176,
+    400,
+    60
+   ]
+  },
+  {
+   "name": "OwnedHostChestIcon",
+   "parentIdx": 66,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    474,
+    1188,
+    40,
+    36
+   ]
+  },
+  {
+   "name": "OwnedHostCountText",
+   "parentIdx": 66,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    522,
+    1188,
+    180,
+    36
+   ]
+  },
+  {
+   "name": "PopupParent",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": true,
+   "repeat": 1,
+   "rect": []
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "screen": "Title",
+ "root": "TitleMainUI",
+ "referenceResolution": [
+  720,
+  1280
+ ],
+ "nodes": [
+  {
+   "name": "TitleMainUI",
+   "parentIdx": -1,
+   "comp": "RootUI",
+   "stretch": true,
+   "repeat": 1,
+   "rect": []
+  },
+  {
+   "name": "BackgroundImage",
+   "parentIdx": 0,
+   "comp": "Image",
+   "stretch": true,
+   "repeat": 1,
+   "rect": [
+    0,
+    0,
+    720,
+    1280
+   ]
+  },
+  {
+   "name": "TitleLogo",
+   "parentIdx": 0,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    69,
+    380,
+    582,
+    306
+   ]
+  },
+  {
+   "name": "TapToStartText",
+   "parentIdx": 0,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    200,
+    862,
+    320,
+    46
+   ]
+  },
+  {
+   "name": "CopyrightText",
+   "parentIdx": 0,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    110,
+    1178,
+    500,
+    32
+   ]
+  },
+  {
+   "name": "VersionText",
+   "parentIdx": 0,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    14,
+    1238,
+    116,
+    26
+   ]
+  },
+  {
+   "name": "TouchArea",
+   "parentIdx": 0,
+   "comp": "Button",
+   "stretch": true,
+   "repeat": 1,
+   "rect": []
+  }
+ ]
+}

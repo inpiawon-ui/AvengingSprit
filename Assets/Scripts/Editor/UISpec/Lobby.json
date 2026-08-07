@@ -1,0 +1,1196 @@
+{
+ "screen": "Lobby",
+ "root": "LobbyMainUI",
+ "referenceResolution": [
+  720,
+  1280
+ ],
+ "nodes": [
+  {
+   "name": "LobbyMainUI",
+   "parentIdx": -1,
+   "comp": "RootUI",
+   "stretch": true,
+   "repeat": 1,
+   "rect": []
+  },
+  {
+   "name": "LobbyStageArea",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": true,
+   "repeat": 1,
+   "rect": []
+  },
+  {
+   "name": "LobbyBackground",
+   "parentIdx": 1,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    0,
+    0,
+    720,
+    1280
+   ]
+  },
+  {
+   "name": "PortalRing",
+   "parentIdx": 1,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    260,
+    676,
+    200,
+    56
+   ]
+  },
+  {
+   "name": "GhostAvatar",
+   "parentIdx": 1,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    272,
+    430,
+    176,
+    220
+   ]
+  },
+  {
+   "name": "ChapterCard",
+   "parentIdx": 0,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    12,
+    300,
+    222,
+    344
+   ]
+  },
+  {
+   "name": "ChapterNumberText",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    312,
+    140,
+    26
+   ]
+  },
+  {
+   "name": "ChapterNameText",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    340,
+    150,
+    44
+   ]
+  },
+  {
+   "name": "BossLabel",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    396,
+    60,
+    20
+   ]
+  },
+  {
+   "name": "BossNameText",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    418,
+    120,
+    26
+   ]
+  },
+  {
+   "name": "BossPortrait",
+   "parentIdx": 5,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    144,
+    388,
+    84,
+    84
+   ]
+  },
+  {
+   "name": "ProgressLabel",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    482,
+    90,
+    20
+   ]
+  },
+  {
+   "name": "ProgressBarBg",
+   "parentIdx": 5,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    506,
+    154,
+    20
+   ]
+  },
+  {
+   "name": "ProgressBarFill",
+   "parentIdx": 12,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    506,
+    154,
+    20
+   ]
+  },
+  {
+   "name": "ProgressText",
+   "parentIdx": 5,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    30,
+    508,
+    64,
+    16
+   ]
+  },
+  {
+   "name": "ProgressRewardChest",
+   "parentIdx": 5,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    186,
+    486,
+    42,
+    44
+   ]
+  },
+  {
+   "name": "ContinueButton",
+   "parentIdx": 5,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    24,
+    552,
+    198,
+    74
+   ]
+  },
+  {
+   "name": "ContinueButtonText",
+   "parentIdx": 16,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    34,
+    558,
+    178,
+    36
+   ]
+  },
+  {
+   "name": "ContinueCostText",
+   "parentIdx": 16,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    34,
+    594,
+    178,
+    26
+   ]
+  },
+  {
+   "name": "SidePromoGroup",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    470,
+    300,
+    238,
+    344
+   ]
+  },
+  {
+   "name": "BattlePassCard",
+   "parentIdx": 19,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    470,
+    300,
+    238,
+    112
+   ]
+  },
+  {
+   "name": "BattlePassArt",
+   "parentIdx": 20,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    600,
+    308,
+    90,
+    80
+   ]
+  },
+  {
+   "name": "BattlePassBadge",
+   "parentIdx": 20,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    478,
+    352,
+    40,
+    40
+   ]
+  },
+  {
+   "name": "BattlePassBarBg",
+   "parentIdx": 20,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    524,
+    364,
+    120,
+    14
+   ]
+  },
+  {
+   "name": "BattlePassBarFill",
+   "parentIdx": 20,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    524,
+    364,
+    120,
+    14
+   ]
+  },
+  {
+   "name": "EventCard",
+   "parentIdx": 19,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    470,
+    420,
+    238,
+    104
+   ]
+  },
+  {
+   "name": "EventArt",
+   "parentIdx": 25,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    618,
+    436,
+    70,
+    64
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 25,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    686,
+    416,
+    24,
+    24
+   ]
+  },
+  {
+   "name": "DailyLoginCard",
+   "parentIdx": 19,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    470,
+    532,
+    238,
+    112
+   ]
+  },
+  {
+   "name": "DailyLoginArt",
+   "parentIdx": 28,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    618,
+    548,
+    70,
+    64
+   ]
+  },
+  {
+   "name": "DailyLoginCheck",
+   "parentIdx": 28,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 5,
+   "rect": [
+    478,
+    600,
+    26,
+    26
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 28,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    686,
+    528,
+    24,
+    24
+   ]
+  },
+  {
+   "name": "FeatureTabBar",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    52,
+    700,
+    616,
+    108
+   ]
+  },
+  {
+   "name": "FeatureTabBarBackground",
+   "parentIdx": 32,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    52,
+    700,
+    616,
+    108
+   ]
+  },
+  {
+   "name": "MissionTab",
+   "parentIdx": 32,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    58,
+    708,
+    116,
+    92
+   ]
+  },
+  {
+   "name": "MissionTabIcon",
+   "parentIdx": 34,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    92,
+    716,
+    48,
+    48
+   ]
+  },
+  {
+   "name": "MissionTabLabel",
+   "parentIdx": 34,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    58,
+    770,
+    116,
+    24
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 34,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    158,
+    710,
+    20,
+    20
+   ]
+  },
+  {
+   "name": "AchievementTab",
+   "parentIdx": 32,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    181,
+    708,
+    116,
+    92
+   ]
+  },
+  {
+   "name": "AchievementTabIcon",
+   "parentIdx": 38,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    215,
+    716,
+    48,
+    48
+   ]
+  },
+  {
+   "name": "AchievementTabLabel",
+   "parentIdx": 38,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    181,
+    770,
+    116,
+    24
+   ]
+  },
+  {
+   "name": "RankingTab",
+   "parentIdx": 32,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    304,
+    708,
+    116,
+    92
+   ]
+  },
+  {
+   "name": "RankingTabIcon",
+   "parentIdx": 41,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    338,
+    716,
+    48,
+    48
+   ]
+  },
+  {
+   "name": "RankingTabLabel",
+   "parentIdx": 41,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    304,
+    770,
+    116,
+    24
+   ]
+  },
+  {
+   "name": "InventoryTab",
+   "parentIdx": 32,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    427,
+    708,
+    116,
+    92
+   ]
+  },
+  {
+   "name": "InventoryTabIcon",
+   "parentIdx": 44,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    461,
+    716,
+    48,
+    48
+   ]
+  },
+  {
+   "name": "InventoryTabLabel",
+   "parentIdx": 44,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    427,
+    770,
+    116,
+    24
+   ]
+  },
+  {
+   "name": "FriendsTab",
+   "parentIdx": 32,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    550,
+    708,
+    116,
+    92
+   ]
+  },
+  {
+   "name": "FriendsTabIcon",
+   "parentIdx": 47,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    584,
+    716,
+    48,
+    48
+   ]
+  },
+  {
+   "name": "FriendsTabLabel",
+   "parentIdx": 47,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    550,
+    770,
+    116,
+    24
+   ]
+  },
+  {
+   "name": "FriendsTabLock",
+   "parentIdx": 47,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    604,
+    736,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "MainActionBar",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    10,
+    830,
+    700,
+    260
+   ]
+  },
+  {
+   "name": "HostButton",
+   "parentIdx": 51,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    10,
+    830,
+    222,
+    260
+   ]
+  },
+  {
+   "name": "HostButtonArt",
+   "parentIdx": 52,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    20,
+    840,
+    202,
+    150
+   ]
+  },
+  {
+   "name": "HostButtonTitleText",
+   "parentIdx": 52,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    20,
+    996,
+    202,
+    44
+   ]
+  },
+  {
+   "name": "HostButtonSubText",
+   "parentIdx": 52,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    20,
+    1042,
+    202,
+    26
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 52,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    202,
+    824,
+    24,
+    24
+   ]
+  },
+  {
+   "name": "ChapterButton",
+   "parentIdx": 51,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    242,
+    830,
+    236,
+    260
+   ]
+  },
+  {
+   "name": "ChapterButtonArt",
+   "parentIdx": 57,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    252,
+    840,
+    216,
+    150
+   ]
+  },
+  {
+   "name": "ChapterButtonTitleText",
+   "parentIdx": 57,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    252,
+    996,
+    216,
+    44
+   ]
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "parentIdx": 57,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    252,
+    1042,
+    216,
+    26
+   ]
+  },
+  {
+   "name": "ShopButton",
+   "parentIdx": 51,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    488,
+    830,
+    222,
+    260
+   ]
+  },
+  {
+   "name": "ShopButtonArt",
+   "parentIdx": 61,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    498,
+    840,
+    202,
+    150
+   ]
+  },
+  {
+   "name": "ShopButtonTitleText",
+   "parentIdx": 61,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    498,
+    996,
+    202,
+    44
+   ]
+  },
+  {
+   "name": "ShopButtonSubText",
+   "parentIdx": 61,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    498,
+    1042,
+    202,
+    26
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 61,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    680,
+    824,
+    24,
+    24
+   ]
+  },
+  {
+   "name": "LogoLockup",
+   "parentIdx": 0,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    263,
+    1120,
+    194,
+    102
+   ]
+  },
+  {
+   "name": "VersionText",
+   "parentIdx": 0,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    14,
+    1250,
+    110,
+    22
+   ]
+  },
+  {
+   "name": "TopHudGroup",
+   "parentIdx": 0,
+   "comp": "Group",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    0,
+    0,
+    720,
+    128
+   ]
+  },
+  {
+   "name": "TopHudBackground",
+   "parentIdx": 68,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    0,
+    0,
+    720,
+    128
+   ]
+  },
+  {
+   "name": "GhostWidget",
+   "parentIdx": 68,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    8,
+    18,
+    188,
+    96
+   ]
+  },
+  {
+   "name": "GhostPortraitIcon",
+   "parentIdx": 70,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    16,
+    30,
+    60,
+    60
+   ]
+  },
+  {
+   "name": "GhostLabelText",
+   "parentIdx": 70,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    82,
+    26,
+    104,
+    22
+   ]
+  },
+  {
+   "name": "GhostLevelText",
+   "parentIdx": 70,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    82,
+    50,
+    104,
+    24
+   ]
+  },
+  {
+   "name": "GhostExpBarBg",
+   "parentIdx": 70,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    82,
+    78,
+    106,
+    14
+   ]
+  },
+  {
+   "name": "GhostExpBarFill",
+   "parentIdx": 74,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    82,
+    78,
+    106,
+    14
+   ]
+  },
+  {
+   "name": "GhostExpText",
+   "parentIdx": 70,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    118,
+    94,
+    72,
+    16
+   ]
+  },
+  {
+   "name": "StaminaCounter",
+   "parentIdx": 68,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    204,
+    32,
+    126,
+    60
+   ]
+  },
+  {
+   "name": "StaminaIcon",
+   "parentIdx": 77,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    210,
+    44,
+    32,
+    32
+   ]
+  },
+  {
+   "name": "StaminaText",
+   "parentIdx": 77,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    246,
+    44,
+    50,
+    32
+   ]
+  },
+  {
+   "name": "PlusButton",
+   "parentIdx": 77,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    298,
+    46,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "GoldCounter",
+   "parentIdx": 68,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    338,
+    32,
+    132,
+    60
+   ]
+  },
+  {
+   "name": "GoldIcon",
+   "parentIdx": 81,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    344,
+    44,
+    32,
+    32
+   ]
+  },
+  {
+   "name": "GoldText",
+   "parentIdx": 81,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    380,
+    44,
+    56,
+    32
+   ]
+  },
+  {
+   "name": "PlusButton",
+   "parentIdx": 81,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    438,
+    46,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "GemCounter",
+   "parentIdx": 68,
+   "comp": "ImageSliced",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    478,
+    32,
+    112,
+    60
+   ]
+  },
+  {
+   "name": "GemIcon",
+   "parentIdx": 85,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    484,
+    44,
+    32,
+    32
+   ]
+  },
+  {
+   "name": "GemText",
+   "parentIdx": 85,
+   "comp": "TMP",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    520,
+    44,
+    40,
+    32
+   ]
+  },
+  {
+   "name": "PlusButton",
+   "parentIdx": 85,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    558,
+    46,
+    28,
+    28
+   ]
+  },
+  {
+   "name": "MailButton",
+   "parentIdx": 68,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    600,
+    34,
+    48,
+    56
+   ]
+  },
+  {
+   "name": "NotifyBadge",
+   "parentIdx": 89,
+   "comp": "Image",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    636,
+    28,
+    24,
+    24
+   ]
+  },
+  {
+   "name": "SettingsButton",
+   "parentIdx": 68,
+   "comp": "Button",
+   "stretch": false,
+   "repeat": 1,
+   "rect": [
+    658,
+    34,
+    48,
+    56
+   ]
+  }
+ ]
+}
