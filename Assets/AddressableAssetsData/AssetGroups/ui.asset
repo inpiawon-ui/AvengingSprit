@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: ui
   m_GUID: d78444df26df12246a540cebe42e97d0
   m_SerializeEntries:
+  - m_GUID: 3719384aa77b7b7478e358d7f9d8abda
+    m_Address: UI/InGame/InGameMainUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_ingame
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cdefceab91ae8e54b89565965d6e4c69
     m_Address: UI/Lobby/HostSelectPanel
     m_ReadOnly: 0

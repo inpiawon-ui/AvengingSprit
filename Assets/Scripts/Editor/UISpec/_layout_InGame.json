@@ -1,0 +1,346 @@
+{
+ "screen": "InGame",
+ "root": "InGameMainUI",
+ "build": true,
+ "origin": [
+  0,
+  0
+ ],
+ "items": [
+  {
+   "name": "RoomField",
+   "parent": "InGameMainUI",
+   "create": "GROUP",
+   "x": 0.0,
+   "y": 130.0,
+   "w": 720.0,
+   "h": 900.0
+  },
+  {
+   "name": "RoomFloor",
+   "parent": "RoomField",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 130.0,
+   "w": 720.0,
+   "h": 900.0
+  },
+  {
+   "name": "UnitLayer",
+   "parent": "RoomField",
+   "create": "GROUP",
+   "x": 0.0,
+   "y": 130.0,
+   "w": 720.0,
+   "h": 900.0
+  },
+  {
+   "name": "TopHudGroup",
+   "parent": "InGameMainUI",
+   "create": "GROUP",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 720.0,
+   "h": 147.5
+  },
+  {
+   "name": "GhostHudIcon",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 3.8,
+   "y": 10.0,
+   "w": 48.8,
+   "h": 50.0
+  },
+  {
+   "name": "GhostLabel",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 58.8,
+   "y": 12.5,
+   "w": 75.0,
+   "h": 20.0,
+   "text": "GHOST",
+   "size": 21.4,
+   "align": "L",
+   "color": "#5AC8F0"
+  },
+  {
+   "name": "GhostHpBarBg",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 58.8,
+   "y": 38.8,
+   "w": 113.8,
+   "h": 16.2
+  },
+  {
+   "name": "GhostHpBarFill",
+   "parent": "GhostHpBarBg",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 113.8,
+   "h": 16.2,
+   "local": true
+  },
+  {
+   "name": "GhostHpText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 177.5,
+   "y": 36.2,
+   "w": 77.5,
+   "h": 21.2,
+   "size": 23.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "HostPortraitFrame",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 10.0,
+   "y": 68.8,
+   "w": 72.5,
+   "h": 67.5
+  },
+  {
+   "name": "HostPortraitImage",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 15.0,
+   "y": 73.8,
+   "w": 62.5,
+   "h": 57.5
+  },
+  {
+   "name": "HostLabel",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 95.0,
+   "y": 72.5,
+   "w": 62.5,
+   "h": 20.0,
+   "text": "HOST",
+   "size": 21.4,
+   "align": "L",
+   "color": "#F0B428"
+  },
+  {
+   "name": "HostHpBarBg",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 95.0,
+   "y": 101.2,
+   "w": 97.5,
+   "h": 15.0
+  },
+  {
+   "name": "HostHpBarFill",
+   "parent": "HostHpBarBg",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 97.5,
+   "h": 15.0,
+   "local": true
+  },
+  {
+   "name": "HostHpText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 197.5,
+   "y": 98.8,
+   "w": 72.5,
+   "h": 20.0,
+   "size": 23.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "HostNameText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 95.0,
+   "y": 123.8,
+   "w": 187.5,
+   "h": 16.2,
+   "size": 17.9,
+   "align": "L",
+   "color": "#F0B428"
+  },
+  {
+   "name": "BossGroup",
+   "parent": "TopHudGroup",
+   "create": "GROUP",
+   "x": 278.8,
+   "y": 7.5,
+   "w": 262.5,
+   "h": 72.5
+  },
+  {
+   "name": "BossLabel",
+   "parent": "BossGroup",
+   "create": "TMP",
+   "x": 377.5,
+   "y": 10.0,
+   "w": 62.5,
+   "h": 18.8,
+   "text": "BOSS",
+   "size": 21.4,
+   "align": "C",
+   "color": "#E8404A"
+  },
+  {
+   "name": "BossHpBarBg",
+   "parent": "BossGroup",
+   "create": "IMG",
+   "x": 278.8,
+   "y": 36.2,
+   "w": 260.0,
+   "h": 22.5
+  },
+  {
+   "name": "BossHpBarFill",
+   "parent": "BossHpBarBg",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 260.0,
+   "h": 22.5,
+   "local": true
+  },
+  {
+   "name": "BossHpText",
+   "parent": "BossGroup",
+   "create": "TMP",
+   "x": 357.5,
+   "y": 58.8,
+   "w": 102.5,
+   "h": 17.5,
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "GoldIcon",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 573.8,
+   "y": 22.5,
+   "w": 20.0,
+   "h": 18.8
+  },
+  {
+   "name": "GoldText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 598.8,
+   "y": 20.0,
+   "w": 65.0,
+   "h": 22.5,
+   "size": 23.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "GemIcon",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 576.2,
+   "y": 55.0,
+   "w": 20.0,
+   "h": 18.8
+  },
+  {
+   "name": "GemText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 601.2,
+   "y": 52.5,
+   "w": 65.0,
+   "h": 22.5,
+   "size": 23.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "PauseButton",
+   "parent": "TopHudGroup",
+   "create": "BTN",
+   "x": 670.0,
+   "y": 13.8,
+   "w": 36.2,
+   "h": 45.0
+  },
+  {
+   "name": "StageText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 278.8,
+   "y": 82.5,
+   "w": 260.0,
+   "h": 20.0,
+   "size": 19.6,
+   "align": "C",
+   "color": "#8C9AB4"
+  },
+  {
+   "name": "ControlGroup",
+   "parent": "InGameMainUI",
+   "create": "GROUP",
+   "x": 0.0,
+   "y": 1062.5,
+   "w": 720.0,
+   "h": 217.5
+  },
+  {
+   "name": "DPadBase",
+   "parent": "ControlGroup",
+   "create": "IMG",
+   "x": 13.8,
+   "y": 1071.2,
+   "w": 166.2,
+   "h": 160.0
+  },
+  {
+   "name": "DPadKnob",
+   "parent": "DPadBase",
+   "create": "IMG",
+   "x": 51.2,
+   "y": 37.5,
+   "w": 75.0,
+   "h": 68.8,
+   "local": true
+  },
+  {
+   "name": "UltimateButton",
+   "parent": "ControlGroup",
+   "create": "BTN",
+   "x": 410.0,
+   "y": 1072.5,
+   "w": 143.8,
+   "h": 165.0
+  },
+  {
+   "name": "UltimateCooldown",
+   "parent": "UltimateButton",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 143.8,
+   "h": 165.0,
+   "local": true
+  },
+  {
+   "name": "PossessButton",
+   "parent": "ControlGroup",
+   "create": "BTN",
+   "x": 560.0,
+   "y": 1072.5,
+   "w": 142.5,
+   "h": 165.0
+  }
+ ]
+}

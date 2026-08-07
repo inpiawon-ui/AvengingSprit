@@ -1,4 +1,5 @@
 using System.Linq;
+using Game.Module.InGame;
 using Game.Module.Lobby;
 using Game.Module.Title;
 using UnityEditor;
@@ -25,15 +26,15 @@ namespace Game.Editor
             ($"{PrefabRoot}/Title/TitleMainUI.prefab",           "UI/Title/TitleMainUI",      "label_title"),
             ($"{PrefabRoot}/Lobby/LobbyMainUI.prefab",           "UI/Lobby/LobbyMainUI",      "label_lobby"),
             ($"{PrefabRoot}/HostSelect/HostSelectPanel.prefab",  "UI/Lobby/HostSelectPanel",  "label_lobby"),
+            ($"{PrefabRoot}/InGame/InGameMainUI.prefab",         "UI/InGame/InGameMainUI",    "label_ingame"),
         };
 
         // 씬 이름, SceneUILoader 에 넣을 ~UI 주소.
-        // GameScene 은 1차 범위에 인게임 UI 가 없으므로 빈 문자열 — 템플릿 잔재(MinigameUI)를 지운다.
         private static readonly (string scene, string address)[] SceneUi =
         {
             ("Assets/Scenes/TitleScene.unity", "UI/Title/TitleMainUI"),
             ("Assets/Scenes/LobbyScene.unity", "UI/Lobby/LobbyMainUI"),
-            ("Assets/Scenes/GameScene.unity",  ""),
+            ("Assets/Scenes/GameScene.unity",  "UI/InGame/InGameMainUI"),
         };
 
         [MenuItem("Tools/Game/Wire Scenes And Prefabs")]
@@ -51,6 +52,7 @@ namespace Game.Editor
         {
             Attach<TitleMainUI>($"{PrefabRoot}/Title/TitleMainUI.prefab");
             Attach<HostSelectPanel>($"{PrefabRoot}/HostSelect/HostSelectPanel.prefab");
+            Attach<InGameMainUI>($"{PrefabRoot}/InGame/InGameMainUI.prefab");
 
             // 로비는 HostSelectPanel 참조를 함께 물려야 한다
             var lobbyPath = $"{PrefabRoot}/Lobby/LobbyMainUI.prefab";

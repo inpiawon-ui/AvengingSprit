@@ -51,5 +51,11 @@ namespace Game.User
 
         void AddCurrency(int gold, int gem);
         void SetProgress(int chapter, int stage);
+
+        /// <summary>
+        /// 스테이지 종료 보상. 골드·고스트 EXP 지급 후 저장까지 한 번에 처리한다.
+        /// `cleared` 일 때만 스테이지를 전진시킨다 — 실패는 진행도를 건드리지 않는다.
+        /// </summary>
+        UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared);
     }
 }

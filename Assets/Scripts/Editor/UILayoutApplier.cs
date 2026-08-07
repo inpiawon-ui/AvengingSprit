@@ -28,6 +28,7 @@ namespace Game.Editor
         {
             ("Lobby", "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab"),
             ("HostSelect", "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab"),
+            ("InGame", "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab"),
         };
 
         [Serializable]
@@ -61,6 +62,8 @@ namespace Game.Editor
         {
             public string screen;
             public string root;
+            /// <summary>프리팹이 없으면 이 표가 노드까지 만든다(신규 화면).</summary>
+            public bool build;
             /// <summary>표에 없는 조상의 절대 좌표. 패널이 화면 중간에서 시작할 때 쓴다.</summary>
             public float[] origin;
             /// <summary>루트 자신의 배치 [x, y, w, h]. 스트레치 앵커는 유지한다.</summary>
@@ -86,8 +89,26 @@ namespace Game.Editor
                     continue;
                 }
 
-                var root = PrefabUtility.LoadPrefabContents(prefabPath);
+                GameObject root;
+                if (spec.build && !File.Exists(prefabPath))
+                {
+                    // 신규 화면 — 루트만 만들고 나머지 노드는 표의 create 가 채운다
+                    root = new GameObject(spec.root, typeof(RectTransform));
+                    var rrt = (RectTransform)root.transform;
+                    rrt.anchorMin = Vector2.zero;
+                    rrt.anchorMax = Vector2.one;
+                    rrt.pivot = new Vector2(0.5f, 0.5f);
+                    rrt.anchoredPosition = Vector2.zero;
+                    rrt.sizeDelta = Vector2.zero;
+                    EnsureFolder(Path.GetDirectoryName(prefabPath).Replace('\\', '/'));
+                }
+                else
+                {
+                    root = PrefabUtility.LoadPrefabContents(prefabPath);
+                }
                 if (root == null) { Debug.LogError($"[UILayout] 로드 실패: {prefabPath}"); continue; }
+                bool created = !PrefabUtility.IsPartOfPrefabInstance(root) &&
+                               PrefabUtility.GetPrefabAssetType(root) == PrefabAssetType.NotAPrefab;
 
                 int applied = 0, missing = 0;
                 var abs = new Dictionary<Transform, Vector2>();
@@ -120,7 +141,8 @@ namespace Game.Editor
                 }
 
                 PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
-                PrefabUtility.UnloadPrefabContents(root);
+                if (created) UnityEngine.Object.DestroyImmediate(root);
+                else PrefabUtility.UnloadPrefabContents(root);
                 Debug.Log($"[UILayout] {screen} — 적용 {applied}개 / 누락 {missing}개");
             }
 
@@ -163,15 +185,19 @@ namespace Game.Editor
                 var leaf = it.name.Contains('/') ? it.name.Split('/').Last() : it.name;
                 var go = new GameObject(leaf, typeof(RectTransform));
                 go.transform.SetParent(parent, false);
-                if (it.create == "TMP")
+                switch (it.create)
                 {
-                    var t = go.AddComponent<TextMeshProUGUI>();
-                    t.raycastTarget = false;
-                }
-                else if (it.create == "IMG")
-                {
-                    var img = go.AddComponent<Image>();
-                    img.raycastTarget = false;
+                    case "TMP":
+                        go.AddComponent<TextMeshProUGUI>().raycastTarget = false;
+                        break;
+                    case "IMG":
+                        go.AddComponent<Image>().raycastTarget = false;
+                        break;
+                    case "BTN":
+                        go.AddComponent<Image>();
+                        go.AddComponent<Button>();
+                        break;
+                    // GROUP — RectTransform 만
                 }
                 found = go.transform;
             }
@@ -253,6 +279,19 @@ namespace Game.Editor
             rt.pivot = new Vector2(0f, 1f);
             rt.sizeDelta = new Vector2(w, h);
             rt.anchoredPosition = new Vector2(pos.x - parentAbs.x, -(pos.y - parentAbs.y));
+        }
+
+        private static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) return;
+            var parts = path.Split('/');
+            var cur = parts[0];
+            for (int i = 1; i < parts.Length; i++)
+            {
+                var next = $"{cur}/{parts[i]}";
+                if (!AssetDatabase.IsValidFolder(next)) AssetDatabase.CreateFolder(cur, parts[i]);
+                cur = next;
+            }
         }
 
         private static void ApplyGrid(Transform t, Item it)

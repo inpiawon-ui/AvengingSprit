@@ -87,6 +87,11 @@ namespace Game.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            // 인게임 공통 수치 — 04_scenes.md 규약: 스크립트 하드코딩 금지, 이 SO 한 곳에서 관리
+            if (AssetDatabase.LoadAssetAtPath<GameConfig>($"{Dir}/GameConfig.asset") == null)
+                SaveAsset(ScriptableObject.CreateInstance<GameConfig>(), $"{Dir}/GameConfig.asset");
+
+            RegisterAddressable($"{Dir}/GameConfig.asset", "TableData/GameConfig");
             RegisterAddressable($"{Dir}/HostTable.asset", "TableData/HostTable");
             RegisterAddressable($"{Dir}/UltimateTable.asset", "TableData/UltimateTable");
             Debug.Log($"[CreateAssetTables] 호스트 {entries.Length}종 · 얼티밋 {uEntries.Length}종 생성 완료");

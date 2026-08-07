@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dfc27dc77a8ce9b44b1480603ed5152f
+    m_Address: atlas/ingamemainui
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f008486b76a109f49a60ab1426524c6c
     m_Address: atlas/titlemainui
     m_ReadOnly: 0

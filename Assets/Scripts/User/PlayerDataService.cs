@@ -146,6 +146,34 @@ namespace Game.User
             });
         }
 
+        public async UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared)
+        {
+            if (_data == null) return;
+
+            _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
+            PublishCurrency();
+
+            // 고스트 EXP — 넘치면 레벨업하고 남은 양을 이월한다
+            _data.ghostExp += Mathf.Max(0, ghostExp);
+            while (_data.ghostExpMax > 0 && _data.ghostExp >= _data.ghostExpMax)
+            {
+                _data.ghostExp -= _data.ghostExpMax;
+                _data.ghostLevel++;
+                _data.ghostExpMax += 20;
+            }
+            _bus?.Publish(new GhostProgressChangedEvent
+            {
+                NewLevel = _data.ghostLevel,
+                NewExp = _data.ghostExp,
+                NewExpMax = _data.ghostExpMax,
+            });
+
+            // 클리어했을 때만 스테이지를 전진시킨다. 실패는 진행도를 건드리지 않는다.
+            if (cleared) SetProgress(_data.currentChapter, _data.reachedStage + 1);
+
+            await SaveAsync();
+        }
+
         private void PublishCurrency()
         {
             if (_data == null) return;

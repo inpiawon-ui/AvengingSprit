@@ -1,0 +1,106 @@
+using UnityEngine;
+
+namespace Game.Character
+{
+    /// <summary>
+    /// 인게임 공통 수치의 단일 출처. 04_scenes.md 규약 — 각 스크립트에 하드코딩하지 않는다.
+    /// 에셋: `Assets/BundleResource/TableData/GameConfig.asset` · 주소 `TableData/GameConfig`
+    ///
+    /// 호스트 테이블의 스탯은 0~100 표시 스케일이다(확정 사항). 실제 전투 수치는
+    /// 여기 계수로 환산한다 — 표시값을 바꾸지 않고 전투 밸런스만 조정하기 위함이다.
+    /// </summary>
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "Game/GameConfig")]
+    public sealed class GameConfig : ScriptableObject
+    {
+        [Header("진행")]
+        [SerializeField] private int _roomsPerStage = 6;
+
+        [Header("고스트")]
+        [SerializeField] private int _ghostHpMax = 120;
+        [SerializeField] private float _ghostMoveSpeed = 320f;
+        [SerializeField] private float _possessRange = 110f;
+
+        [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
+        [SerializeField] private float _ghostDamageScale = 0.22f;
+
+        [Header("호스트 — 표시 스탯(0~100) → 전투 수치 환산")]
+        [SerializeField] private float _hostHpPerPoint = 6f;
+        [SerializeField] private int _hostHpBase = 60;
+        [SerializeField] private float _hostAtkPerPoint = 0.32f;
+        [SerializeField] private int _hostAtkBase = 6;
+        [SerializeField] private float _hostSpeedPerPoint = 2.4f;
+        [SerializeField] private float _hostSpeedBase = 140f;
+        [SerializeField] private float _hostAttackRange = 210f;
+        [SerializeField] private float _hostAttackInterval = 0.55f;
+
+        [Header("적")]
+        [SerializeField] private float _enemyHpScale = 0.55f;
+        [SerializeField] private float _enemyAtkScale = 0.7f;
+        [SerializeField] private float _enemySpeedScale = 0.62f;
+        [SerializeField] private float _enemyAttackRange = 120f;
+        [SerializeField] private float _enemyAttackInterval = 1.1f;
+        [SerializeField] private int _enemiesPerRoomMin = 4;
+        [SerializeField] private int _enemiesPerRoomMax = 7;
+
+        [Header("보스")]
+        [SerializeField] private int _bossHpBase = 900;
+        [SerializeField] private int _bossAtk = 26;
+        [SerializeField] private float _bossMoveSpeed = 70f;
+        [SerializeField] private float _bossAttackRange = 190f;
+        [SerializeField] private float _bossAttackInterval = 1.6f;
+
+        [Header("투사체 — 기본 공격은 탄이 날아가 맞아야 피해가 들어간다")]
+        [SerializeField] private float _shotSpeedPlayer = 720f;
+        [SerializeField] private float _shotSpeedEnemy = 420f;
+        [SerializeField] private float _shotSize = 26f;
+        [SerializeField] private float _shotHitRadius = 34f;
+        [SerializeField] private float _shotLifeSeconds = 1.6f;
+
+        [Header("얼티밋")]
+        [SerializeField] private float _ultimateChargeSeconds = 14f;
+        [SerializeField] private int _ultimateDamage = 140;
+
+        [Header("보상")]
+        [SerializeField] private int _rewardGoldPerRoom = 120;
+        [SerializeField] private int _rewardGhostExpPerRoom = 8;
+
+        public int RoomsPerStage => _roomsPerStage;
+
+        public int GhostHpMax => _ghostHpMax;
+        public float GhostMoveSpeed => _ghostMoveSpeed;
+        public float PossessRange => _possessRange;
+        public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
+
+        public float HostAttackRange => _hostAttackRange;
+        public float HostAttackInterval => _hostAttackInterval;
+        public int HostHp(int statHp) => _hostHpBase + Mathf.RoundToInt(statHp * _hostHpPerPoint);
+        public int HostAtk(int statAtk) => _hostAtkBase + Mathf.RoundToInt(statAtk * _hostAtkPerPoint);
+        public float HostSpeed(int statSpd) => _hostSpeedBase + statSpd * _hostSpeedPerPoint;
+
+        public float EnemyAttackRange => _enemyAttackRange;
+        public float EnemyAttackInterval => _enemyAttackInterval;
+        public int EnemiesPerRoom(int roomIndex)
+            => Mathf.Clamp(_enemiesPerRoomMin + roomIndex / 2, _enemiesPerRoomMin, _enemiesPerRoomMax);
+        public int EnemyHp(int statHp) => Mathf.Max(1, Mathf.RoundToInt(HostHp(statHp) * _enemyHpScale));
+        public int EnemyAtk(int statAtk) => Mathf.Max(1, Mathf.RoundToInt(HostAtk(statAtk) * _enemyAtkScale));
+        public float EnemySpeed(int statSpd) => HostSpeed(statSpd) * _enemySpeedScale;
+
+        public int BossHp(int chapter) => _bossHpBase + Mathf.Max(0, chapter - 1) * 400;
+        public int BossAtk => _bossAtk;
+        public float BossMoveSpeed => _bossMoveSpeed;
+        public float BossAttackRange => _bossAttackRange;
+        public float BossAttackInterval => _bossAttackInterval;
+
+        public float ShotSpeedPlayer => _shotSpeedPlayer;
+        public float ShotSpeedEnemy => _shotSpeedEnemy;
+        public float ShotSize => _shotSize;
+        public float ShotHitRadius => _shotHitRadius;
+        public float ShotLifeSeconds => _shotLifeSeconds;
+
+        public float UltimateChargeSeconds => _ultimateChargeSeconds;
+        public int UltimateDamage => _ultimateDamage;
+
+        public int RewardGold(int rooms) => _rewardGoldPerRoom * rooms;
+        public int RewardGhostExp(int rooms) => _rewardGhostExpPerRoom * rooms;
+    }
+}

@@ -1304,6 +1304,376 @@
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
+  },
+  {
+   "file": "bosshpbarbg.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 260,
+   "h": 22,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    10,
+    6,
+    10,
+    6
+   ]
+  },
+  {
+   "file": "bosshpbarfill.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 12,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "dpadbase.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 166,
+   "h": 160,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  {
+   "file": "gemicon.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 20,
+   "h": 19,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghosthpbarbg.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 114,
+   "h": 16,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    6,
+    4,
+    6,
+    4
+   ]
+  },
+  {
+   "file": "ghosthpbarfill.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 12,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "ghosthudicon.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 49,
+   "h": 50,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "goldicon.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 20,
+   "h": 19,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hosthpbarbg.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 98,
+   "h": 15,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    6,
+    4,
+    6,
+    4
+   ]
+  },
+  {
+   "file": "hosthpbarfill.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 12,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "hostportraitframe.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 72,
+   "h": 68,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "file": "pausebutton.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 36,
+   "h": 45,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "possessbutton.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 142,
+   "h": 165,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "roomfloor.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 720,
+   "h": 900,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimatebutton.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 144,
+   "h": 165,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "unit_amazoness.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_boss.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 84,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_dragon.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_ghost.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 176,
+   "h": 220,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_hitman.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_mafia.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_ninja.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_rambo.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_robot.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_slugger.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_snowwoman.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_vampire.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_wizard.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "unit_yogamaster.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 91,
+   "h": 84,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "dpadknob.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 75,
+   "h": 69,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ultimatecooldown.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 16,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "shot.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 32,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
   }
  ]
 }

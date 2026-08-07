@@ -28,6 +28,7 @@ namespace Game.Editor
             ("TitleMainUI",     "Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab"),
             ("LobbyMainUI",     "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab"),
             ("HostSelectPanel", "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab"),
+            ("InGameMainUI",    "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab"),
         };
 
         [MenuItem("Tools/Game/Bind Sprites To UI Prefabs")]

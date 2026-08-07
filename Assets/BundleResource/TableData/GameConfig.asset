@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1f0efdb1087dee448140449bc0b52b1, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Character.GameConfig
+  _roomsPerStage: 6
+  _ghostHpMax: 120
+  _ghostMoveSpeed: 320
+  _possessRange: 110
+  _ghostDamageScale: 0.22
+  _hostHpPerPoint: 6
+  _hostHpBase: 60
+  _hostAtkPerPoint: 0.32
+  _hostAtkBase: 6
+  _hostSpeedPerPoint: 2.4
+  _hostSpeedBase: 140
+  _hostAttackRange: 210
+  _hostAttackInterval: 0.55
+  _enemyHpScale: 0.55
+  _enemyAtkScale: 0.7
+  _enemySpeedScale: 0.62
+  _enemyAttackRange: 120
+  _enemyAttackInterval: 1.1
+  _enemiesPerRoomMin: 4
+  _enemiesPerRoomMax: 7
+  _bossHpBase: 900
+  _bossAtk: 26
+  _bossMoveSpeed: 70
+  _bossAttackRange: 190
+  _bossAttackInterval: 1.6
+  _shotSpeedPlayer: 720
+  _shotSpeedEnemy: 420
+  _shotSize: 26
+  _shotHitRadius: 34
+  _shotLifeSeconds: 1.6
+  _ultimateChargeSeconds: 14
+  _ultimateDamage: 140
+  _rewardGoldPerRoom: 120
+  _rewardGhostExpPerRoom: 8
