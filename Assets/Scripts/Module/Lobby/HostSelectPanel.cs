@@ -26,7 +26,7 @@ namespace Game.Module.Lobby
     public sealed class HostSelectPanel : MonoBehaviour
     {
         private const string AtlasAddress = "atlas/hostselectpanel";
-        private const float StatBarWidth = 124f;
+        private const float StatBarWidth = 122f;   // 목업 실측 — StatBarBg 폭
         private const int MaxStat = 100;
 
         private UIBinder _ui;

@@ -1,0 +1,590 @@
+{
+ "screen": "HostSelect",
+ "root": "HostSelectPanel",
+ "origin": [
+  0,
+  105
+ ],
+ "rootRect": [
+  0,
+  105,
+  720,
+  1175
+ ],
+ "items": [
+  {
+   "name": "HeaderGroup",
+   "x": 0,
+   "y": 108.0,
+   "w": 720,
+   "h": 139.2
+  },
+  {
+   "name": "HeaderGhostDeco",
+   "x": 14.8,
+   "y": 112.2,
+   "w": 63.3,
+   "h": 65.4
+  },
+  {
+   "name": "HeaderTitleText",
+   "x": 88.6,
+   "y": 155.4,
+   "w": 326.8,
+   "h": 41.1,
+   "size": 39.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "HeaderDescText",
+   "x": 89.6,
+   "y": 205.0,
+   "w": 421.7,
+   "h": 27.4,
+   "size": 19.6,
+   "align": "TL",
+   "color": "#8C9AB4",
+   "wrap": true
+  },
+  {
+   "name": "HeaderPortalDeco",
+   "x": 532.4,
+   "y": 108.0,
+   "w": 212.9,
+   "h": 137.0
+  },
+  {
+   "name": "HostListTitle",
+   "x": 12.7,
+   "y": 256,
+   "w": 339.4,
+   "h": 34
+  },
+  {
+   "name": "HostListTitleText",
+   "x": 12.7,
+   "y": 258,
+   "w": 339.4,
+   "h": 30,
+   "text": "HOST LIST",
+   "size": 24.1,
+   "align": "C",
+   "color": "#F0B428"
+  },
+  {
+   "name": "HostGrid",
+   "x": 14.8,
+   "y": 300,
+   "w": 327,
+   "h": 624,
+   "grid": [
+    105,
+    150,
+    6,
+    8,
+    3
+   ]
+  },
+  {
+   "name": "HostSlotFrame",
+   "x": 0,
+   "y": 0,
+   "w": 105,
+   "h": 150,
+   "local": true
+  },
+  {
+   "name": "HostSlotPortrait",
+   "x": 7,
+   "y": 12,
+   "w": 91,
+   "h": 84,
+   "local": true
+  },
+  {
+   "name": "HostSlotNameText",
+   "x": 2,
+   "y": 108,
+   "w": 101,
+   "h": 26,
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8",
+   "local": true
+  },
+  {
+   "name": "HostSlotLockIcon",
+   "x": 33,
+   "y": 46,
+   "w": 40,
+   "h": 40,
+   "local": true
+  },
+  {
+   "name": "HostSlotSelectMarker",
+   "x": 4,
+   "y": 4,
+   "w": 26,
+   "h": 26,
+   "local": true
+  },
+  {
+   "name": "GhostArrowGroup",
+   "x": 348,
+   "y": 548,
+   "w": 50,
+   "h": 104
+  },
+  {
+   "name": "GhostArrowSprite",
+   "x": 350,
+   "y": 548,
+   "w": 44,
+   "h": 60
+  },
+  {
+   "name": "GhostArrowChevron",
+   "x": 352,
+   "y": 616,
+   "w": 40,
+   "h": 34
+  },
+  {
+   "name": "HostDetailCard",
+   "x": 420,
+   "y": 250,
+   "w": 283,
+   "h": 737
+  },
+  {
+   "name": "HostDetailFrame",
+   "x": 420,
+   "y": 250,
+   "w": 283,
+   "h": 737
+  },
+  {
+   "name": "HostNameEnText",
+   "x": 430,
+   "y": 268,
+   "w": 263,
+   "h": 32,
+   "size": 22.6,
+   "align": "C",
+   "color": "#C98CF0"
+  },
+  {
+   "name": "HostNameKrText",
+   "x": 430,
+   "y": 302,
+   "w": 263,
+   "h": 26,
+   "size": 21.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "HostPortalPedestal",
+   "x": 438,
+   "y": 545,
+   "w": 246,
+   "h": 62
+  },
+  {
+   "name": "HostPortraitImage",
+   "x": 470,
+   "y": 392,
+   "w": 182,
+   "h": 168
+  },
+  {
+   "name": "HostDetailLockIcon",
+   "x": 513,
+   "y": 428,
+   "w": 96,
+   "h": 96
+  },
+  {
+   "name": "StatGroupLabel",
+   "x": 440,
+   "y": 630,
+   "w": 120,
+   "h": 24,
+   "text": "능력치",
+   "size": 18.1,
+   "align": "L",
+   "color": "#8C9AB4"
+  },
+  {
+   "name": "StatRow_HP",
+   "x": 437,
+   "y": 662,
+   "w": 250,
+   "h": 34
+  },
+  {
+   "name": "StatIcon_HP",
+   "x": 437,
+   "y": 670,
+   "w": 20,
+   "h": 20
+  },
+  {
+   "name": "StatRow_HP/StatLabelText",
+   "x": 465,
+   "y": 668,
+   "w": 60,
+   "h": 24,
+   "text": "HP",
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_HP/StatBarBg",
+   "x": 531,
+   "y": 673,
+   "w": 122,
+   "h": 12
+  },
+  {
+   "name": "StatRow_HP/StatBarBg/StatBarFill",
+   "x": 531,
+   "y": 673,
+   "w": 122,
+   "h": 12,
+   "color": "#E8404A"
+  },
+  {
+   "name": "StatRow_HP/StatValueText",
+   "x": 657,
+   "y": 668,
+   "w": 40,
+   "h": 24,
+   "size": 21.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_ATK",
+   "x": 437,
+   "y": 700,
+   "w": 250,
+   "h": 34
+  },
+  {
+   "name": "StatIcon_ATK",
+   "x": 437,
+   "y": 708,
+   "w": 20,
+   "h": 20
+  },
+  {
+   "name": "StatRow_ATK/StatLabelText",
+   "x": 465,
+   "y": 706,
+   "w": 60,
+   "h": 24,
+   "text": "ATK",
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_ATK/StatBarBg",
+   "x": 531,
+   "y": 711,
+   "w": 122,
+   "h": 12
+  },
+  {
+   "name": "StatRow_ATK/StatBarBg/StatBarFill",
+   "x": 531,
+   "y": 711,
+   "w": 122,
+   "h": 12,
+   "color": "#F08828"
+  },
+  {
+   "name": "StatRow_ATK/StatValueText",
+   "x": 657,
+   "y": 706,
+   "w": 40,
+   "h": 24,
+   "size": 21.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_SPD",
+   "x": 437,
+   "y": 738,
+   "w": 250,
+   "h": 34
+  },
+  {
+   "name": "StatIcon_SPD",
+   "x": 437,
+   "y": 746,
+   "w": 20,
+   "h": 20
+  },
+  {
+   "name": "StatRow_SPD/StatLabelText",
+   "x": 465,
+   "y": 744,
+   "w": 60,
+   "h": 24,
+   "text": "SPD",
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_SPD/StatBarBg",
+   "x": 531,
+   "y": 749,
+   "w": 122,
+   "h": 12
+  },
+  {
+   "name": "StatRow_SPD/StatBarBg/StatBarFill",
+   "x": 531,
+   "y": 749,
+   "w": 122,
+   "h": 12,
+   "color": "#3C9CF0"
+  },
+  {
+   "name": "StatRow_SPD/StatValueText",
+   "x": 657,
+   "y": 744,
+   "w": 40,
+   "h": 24,
+   "size": 21.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_DASH",
+   "x": 437,
+   "y": 776,
+   "w": 250,
+   "h": 34
+  },
+  {
+   "name": "StatIcon_DASH",
+   "x": 437,
+   "y": 784,
+   "w": 20,
+   "h": 20
+  },
+  {
+   "name": "StatRow_DASH/StatLabelText",
+   "x": 465,
+   "y": 782,
+   "w": 60,
+   "h": 24,
+   "text": "DASH",
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StatRow_DASH/StatBarBg",
+   "x": 531,
+   "y": 787,
+   "w": 122,
+   "h": 12
+  },
+  {
+   "name": "StatRow_DASH/StatBarBg/StatBarFill",
+   "x": 531,
+   "y": 787,
+   "w": 122,
+   "h": 12,
+   "color": "#5CC850"
+  },
+  {
+   "name": "StatRow_DASH/StatValueText",
+   "x": 657,
+   "y": 782,
+   "w": 40,
+   "h": 24,
+   "size": 21.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "UltimateCard",
+   "x": 430,
+   "y": 822,
+   "w": 263,
+   "h": 150
+  },
+  {
+   "name": "UltimateLabel",
+   "x": 442,
+   "y": 830,
+   "w": 130,
+   "h": 20,
+   "text": "ULTIMATE",
+   "size": 15.1,
+   "align": "L",
+   "color": "#C98CF0"
+  },
+  {
+   "name": "UltimateIcon",
+   "x": 442,
+   "y": 856,
+   "w": 62,
+   "h": 68
+  },
+  {
+   "name": "UltimateNameText",
+   "x": 512,
+   "y": 856,
+   "w": 170,
+   "h": 24,
+   "size": 18.1,
+   "align": "L",
+   "color": "#F0B428"
+  },
+  {
+   "name": "UltimateDescText",
+   "x": 512,
+   "y": 884,
+   "w": 170,
+   "h": 78,
+   "size": 16.6,
+   "align": "TL",
+   "color": "#8C9AB4",
+   "wrap": true
+  },
+  {
+   "name": "HostUpgradeButton",
+   "x": 377.4,
+   "y": 1015.4,
+   "w": 323.6,
+   "h": 85.4
+  },
+  {
+   "name": "HostUpgradeIcon",
+   "x": 408.0,
+   "y": 1035.4,
+   "w": 38.0,
+   "h": 46
+  },
+  {
+   "name": "HostUpgradeTitleText",
+   "x": 398.5,
+   "y": 1027.4,
+   "w": 263.5,
+   "h": 32,
+   "size": 33.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "HostUpgradeSubText",
+   "x": 455.4,
+   "y": 1067.4,
+   "w": 210.8,
+   "h": 22,
+   "size": 18.1,
+   "align": "C",
+   "color": "#4AA8E8"
+  },
+  {
+   "name": "HostUpgradeButton/ArrowIcon",
+   "x": 659.9,
+   "y": 1043.4,
+   "w": 21.1,
+   "h": 30
+  },
+  {
+   "name": "PossessStartButton",
+   "x": 374.2,
+   "y": 1111.3,
+   "w": 328.9,
+   "h": 98.0
+  },
+  {
+   "name": "PossessGhostIcon",
+   "x": 409.0,
+   "y": 1137.3,
+   "w": 40.1,
+   "h": 52
+  },
+  {
+   "name": "PossessTitleText",
+   "x": 398.5,
+   "y": 1133.3,
+   "w": 274.1,
+   "h": 36,
+   "size": 40.7,
+   "align": "C",
+   "color": "#241A08"
+  },
+  {
+   "name": "PossessSubText",
+   "x": 398.5,
+   "y": 1171.3,
+   "w": 274.1,
+   "h": 24,
+   "size": 19.6,
+   "align": "C",
+   "color": "#241A08"
+  },
+  {
+   "name": "PossessStartButton/ArrowIcon",
+   "x": 662.0,
+   "y": 1149.3,
+   "w": 21.1,
+   "h": 28
+  },
+  {
+   "name": "TipBar",
+   "x": 10.5,
+   "y": 1202.9,
+   "w": 698.9,
+   "h": 70
+  },
+  {
+   "name": "TipIcon",
+   "x": 25.3,
+   "y": 1226.9,
+   "w": 21.1,
+   "h": 20
+  },
+  {
+   "name": "TipText",
+   "x": 52.7,
+   "y": 1214.9,
+   "w": 390.0,
+   "h": 50,
+   "size": 16.6,
+   "align": "TL",
+   "color": "#8C9AB4",
+   "wrap": true
+  },
+  {
+   "name": "OwnedHostChestIcon",
+   "x": 476.5,
+   "y": 1222.9,
+   "w": 35.8,
+   "h": 28
+  },
+  {
+   "name": "OwnedHostCountText",
+   "x": 522.9,
+   "y": 1226.9,
+   "w": 184.5,
+   "h": 26,
+   "size": 21.1,
+   "align": "L",
+   "color": "#F0B428"
+  }
+ ]
+}

@@ -27,6 +27,7 @@ namespace Game.Editor
         private static readonly (string screen, string prefab)[] Targets =
         {
             ("Lobby", "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab"),
+            ("HostSelect", "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab"),
         };
 
         [Serializable]
@@ -43,6 +44,16 @@ namespace Game.Editor
             public float dx;
             public string create;
             public string parent;
+
+            /// <summary>좌표가 캔버스 절대값이 아니라 **부모 기준 로컬**이다.
+            /// 런타임에 복제되는 노드(GridLayoutGroup 이 배치하는 셀의 자식 등)에 쓴다.</summary>
+            public bool local;
+
+            /// <summary>같은 이름의 노드 전부에 적용한다(스탯 4행의 `StatBarFill` 등).</summary>
+            public bool all;
+
+            /// <summary>GridLayoutGroup 설정 — [cellW, cellH, spaceX, spaceY, 열 수]</summary>
+            public float[] grid;
         }
 
         [Serializable]
@@ -50,6 +61,10 @@ namespace Game.Editor
         {
             public string screen;
             public string root;
+            /// <summary>표에 없는 조상의 절대 좌표. 패널이 화면 중간에서 시작할 때 쓴다.</summary>
+            public float[] origin;
+            /// <summary>루트 자신의 배치 [x, y, w, h]. 스트레치 앵커는 유지한다.</summary>
+            public float[] rootRect;
             public Item[] items;
         }
 
@@ -76,6 +91,11 @@ namespace Game.Editor
 
                 int applied = 0, missing = 0;
                 var abs = new Dictionary<Transform, Vector2>();
+                var origin = spec.origin != null && spec.origin.Length == 2
+                    ? new Vector2(spec.origin[0], spec.origin[1])
+                    : Vector2.zero;
+
+                PlaceRoot(root, spec.rootRect);
 
                 foreach (var it in spec.items)
                 {
@@ -91,9 +111,10 @@ namespace Game.Editor
                     {
                         var rt = targets[i];
                         var pos = new Vector2(it.x + it.dx * i, it.y);
-                        Place(rt, pos, it.w, it.h, abs);
+                        Place(rt, pos, it.w, it.h, abs, origin, it.local);
                         ApplyText(rt, it);
-                        abs[rt] = pos;
+                        ApplyGrid(rt, it);
+                        if (!it.local) abs[rt] = pos;
                         applied++;
                     }
                 }
@@ -113,11 +134,21 @@ namespace Game.Editor
             var result = new List<Transform>();
             Transform found;
 
+            if (it.all)
+            {
+                CollectByName(root, it.name, result);
+                return result;
+            }
+
             if (it.name.Contains('/'))
             {
-                var parts = it.name.Split('/');
-                var p = FindByName(root, parts[0]);
-                found = p == null ? null : FindByName(p, parts[1]);
+                // 이름이 겹치는 노드(4개 스탯 행의 StatBarFill 등)는 경로로 좁힌다
+                found = root;
+                foreach (var part in it.name.Split('/'))
+                {
+                    found = FindByName(found, part);
+                    if (found == null) break;
+                }
             }
             else
             {
@@ -168,6 +199,13 @@ namespace Game.Editor
             return result;
         }
 
+        private static void CollectByName(Transform root, string name, List<Transform> into)
+        {
+            if (root.name == name) into.Add(root);
+            for (int i = 0; i < root.childCount; i++)
+                CollectByName(root.GetChild(i), name, into);
+        }
+
         private static Transform FindByName(Transform root, string name)
         {
             if (root.name == name) return root;
@@ -179,15 +217,35 @@ namespace Game.Editor
             return null;
         }
 
+        /// <summary>루트는 스트레치 앵커를 유지한 채 y·높이만 맞춘다(폭은 화면을 따라간다).</summary>
+        private static void PlaceRoot(GameObject root, float[] r)
+        {
+            if (r == null || r.Length != 4) return;
+            var rt = (RectTransform)root.transform;
+            rt.anchorMin = new Vector2(0f, 1f);
+            rt.anchorMax = new Vector2(1f, 1f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.anchoredPosition = new Vector2(0f, -r[1]);
+            rt.sizeDelta = new Vector2(0f, r[3]);
+        }
+
         /// <summary>top-left 앵커로 정규화하고 절대 좌표를 부모 기준 로컬로 바꿔 배치한다.</summary>
         private static void Place(Transform t, Vector2 pos, float w, float h,
-                                  Dictionary<Transform, Vector2> abs)
+                                  Dictionary<Transform, Vector2> abs, Vector2 origin, bool local)
         {
             var rt = (RectTransform)t;
-            var parentAbs = Vector2.zero;
-            for (var p = t.parent; p != null; p = p.parent)
+            var parentAbs = origin;
+            if (local)
             {
-                if (abs.TryGetValue(p, out var v)) { parentAbs = v; break; }
+                // 좌표가 이미 부모 기준이다 — 절대→로컬 변환을 하지 않는다
+                parentAbs = pos - pos;   // (0,0)
+            }
+            else
+            {
+                for (var p = t.parent; p != null; p = p.parent)
+                {
+                    if (abs.TryGetValue(p, out var v)) { parentAbs = v; break; }
+                }
             }
 
             rt.anchorMin = new Vector2(0f, 1f);
@@ -197,10 +255,29 @@ namespace Game.Editor
             rt.anchoredPosition = new Vector2(pos.x - parentAbs.x, -(pos.y - parentAbs.y));
         }
 
+        private static void ApplyGrid(Transform t, Item it)
+        {
+            if (it.grid == null || it.grid.Length != 5) return;
+            var g = t.GetComponent<GridLayoutGroup>();
+            if (g == null) return;
+            g.cellSize = new Vector2(it.grid[0], it.grid[1]);
+            g.spacing = new Vector2(it.grid[2], it.grid[3]);
+            g.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            g.constraintCount = Mathf.RoundToInt(it.grid[4]);
+        }
+
         private static void ApplyText(Transform t, Item it)
         {
             var tmp = t.GetComponent<TextMeshProUGUI>();
-            if (tmp == null) return;
+            if (tmp == null)
+            {
+                // 텍스트가 아닌 노드에 색을 주면 Image 틴트로 해석한다(스탯 바 4색 등)
+                var img = t.GetComponent<Image>();
+                if (img != null && !string.IsNullOrEmpty(it.color) &&
+                    ColorUtility.TryParseHtmlString(it.color, out var ic))
+                    img.color = ic;
+                return;
+            }
 
             if (!string.IsNullOrEmpty(it.text)) tmp.text = it.text;
             if (it.size > 0f)
