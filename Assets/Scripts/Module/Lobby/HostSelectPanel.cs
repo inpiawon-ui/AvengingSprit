@@ -105,6 +105,9 @@ namespace Game.Module.Lobby
             _ui.SetActive("PossessStartButton", true);
             _ui.SetText("PossessTitleText", _isChapterStart ? "빙의 시작" : "돌아가기");
             _ui.SetText("PossessSubText", _isChapterStart ? "(POSSESS)" : "(BACK)");
+            _ui.SetText("StatGroupLabel", "능력치");
+            _ui.SetText("HostUpgradeTitleText", "HOST 강화");
+            _ui.SetText("HostUpgradeSubText", "능력치 · ULTIMATE · 숙련도");
         }
 
         /// <summary>설계서의 `HostSlot` 1칸을 12개로 복제해 그리드를 만든다.</summary>
@@ -122,7 +125,11 @@ namespace Game.Module.Lobby
             var selected = GetSprite("hostslotframe_selected");
             var locked   = GetSprite("hostslotframe_locked");
 
+            // 템플릿은 그리드에서 빼둔다. 자식으로 남기면 GridLayoutGroup 이 13칸으로 계산해
+            // 4행이 되고 마지막 줄이 잘린다.
+            template.SetParent(transform, false);
             template.gameObject.SetActive(false);
+
             var hosts = _player.AllHosts;
             for (int i = 0; i < hosts.Count; i++)
             {
@@ -205,7 +212,7 @@ namespace Game.Module.Lobby
 
         private void SetStat(string stat, int value, bool unlocked)
         {
-            _ui.SetText($"StatValueText", unlocked ? value.ToString() : "???");
+            // 행마다 StatLabelText·StatValueText 이름이 같으므로 반드시 행을 좁혀서 찾는다.
             var row = _ui.Find($"StatRow_{stat}");
             if (row == null) return;
             var label = _ui.Find(row, "StatLabelText")?.GetComponent<TMPro.TextMeshProUGUI>();
