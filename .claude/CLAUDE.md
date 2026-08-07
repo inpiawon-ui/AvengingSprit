@@ -22,6 +22,32 @@ Claude Code가 이 프로젝트에서 작업 할 때 반드시 참조하는 규�
 
 ---
 
+## ⚠️ 작업 공정 (최상단 권위 — 순서를 바꾸지 않는다)
+
+**게임 제작의 진행 순서는 [`Template/Planning_Flow.md`](../Template/Planning_Flow.md)를 단일 권위로 한다.**
+
+```
+Stage 0  컨셉        Game_Concept.md (컨펌된 간략 컨셉)
+Stage 1  게임 구성    [ProjCode]_GameComposition.md   — 필러·콘텐츠·루프 (씬 무관)   → 게이트 A
+Stage 2  콘텐츠 세부  [ProjCode]_Content_[이름].md                                  → 게이트 B
+Stage 2b UI 레이아웃  wireframes/[ProjCode]_Screen_[이름].md + 박스 목업(HTML)
+                      + [ProjCode]_AssetManifest.md                                → 게이트 B2
+──────── 기획 종료 / 디자인 시작 ────────
+Stage 3  디자인       씬 그룹핑 → 프리팹(unityMCP) → 리소스(ChatGPT)                 → 게이트 C
+Stage 4  클라이언트   프리팹 바인딩 + 기능 구현
+```
+
+**절대 규칙**
+- **앞 Stage가 확정되기 전에 다음 Stage로 넘어가지 않는다.**
+- **콘텐츠 구성을 먼저 정한다. 씬은 Stage 3에서 정한다.**
+- 각 게이트는 **사용자 승인**이다. 임의로 통과시키지 않는다.
+- 접착제는 네이밍 규약: **요소 이름 = 프리팹 GameObject 이름 = 클라 바인딩 키** (세 곳 동일).
+- 빈 양식은 `Template/` 의 4종(`Game_Composition` · `Content_Spec` · `Screen_Spec` · `Asset_Manifest`)을 쓴다.
+
+> 이 절이 `.claude/agents/` 의 어떤 에이전트 정의서와 충돌하면 **이 절이 이긴다.**
+
+---
+
 ## 클로드 구조 (Claude Convention)
 
 ```
@@ -50,7 +76,7 @@ Claude Code가 이 프로젝트에서 작업 할 때 반드시 참조하는 규�
 ├── agents/                 | 에이전트 팀 (2-계층 구조) |
 │   ├── management/         | PM, PD, 모든 팀장 (client-lead, art-lead, plan-lead, sound-lead, server-lead) |
 │   ├── client/             | 클라이언트 팀원 7명 (framework/game/ui/network/tools/qa/scribe) |
-│   ├── art/                | 아트 팀원 6명 (comfyui/file/concept/ui/character/bg) — 작업 공간: Projects/[ProjCode]/ |
+│   ├── art/                | 아트 팀원 6명 — ⚠️ ComfyUI 전제로 작성됨. 현재 리소스는 사용자가 ChatGPT로 직접 생성하므로 대부분 미사용 |
 │   ├── plan/               | 기획 팀원 10명 — 게임 기획 문서 자동 생성 — 작업 공간: Projects/[ProjCode]/ |
 │   ├── sound/              | 사운드 팀원 3명 (bgm/sfx/voice) — 사운드 방향·스펙 기획 — 작업 공간: Projects/[ProjCode]/ |
 │   └── server/             | 서버 팀원 8명 (api/auth/database/realtime/infra/security/qa/scribe) + 규약 리뷰어 — 백엔드·클라-서버 계약 — 산출물: Projects/[ProjCode]/[ProjCode]_SRV_Design.md |
@@ -115,6 +141,7 @@ Assets/Scripts/Module/CLAUDE.md          | 모듈별 구현 명세
 
 ## 참조 정보
 
+@Template/Planning_Flow.md
 @.claude/project/project_state.md
 @.claude/project/summary.md
 @.claude/project/terminology.md

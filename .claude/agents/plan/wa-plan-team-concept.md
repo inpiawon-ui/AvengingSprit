@@ -33,7 +33,7 @@ memory: project
 
 ## 3. 참조 템플릿
 
-- `Template/Unity_GameDev_Concept.md` — Concept 문서 전체 구조 및 섹션 형식 기준
+- `Template/Game_Composition_Template.md` — Stage 1 게임 구성 양식
 
 ---
 
@@ -46,7 +46,7 @@ memory: project
 
 ## 5. 작업 지시
 
-1. `Template/Unity_GameDev_Concept.md`를 읽어 7개 섹션 구조를 파악한다.
+1. `Template/Planning_Flow.md`와 `Game_Composition_Template.md`를 읽어 Stage 1 구조를 파악한다.
 2. 게임 설명 텍스트에서 각 섹션에 해당하는 내용을 추출·해석한다.
 3. 아래 7개 섹션을 순서대로 작성한다:
    - **1️⃣ CONCEPT**: 게임명, 한 문장 설명, 타겟 플레이어, 플랫폼, 개발/출시 형태

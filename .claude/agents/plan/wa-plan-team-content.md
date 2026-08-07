@@ -1,10 +1,14 @@
 ﻿---
 name: "wa-plan-team-content"
 aliases: ["content", "컨텐츠기획", "레벨기획"]
-description: "GD_Design.md의 GD-LVL-001(레벨/컨텐츠 설계) 섹션을 작성한다. 컨텐츠 구조·튜토리얼·퀘스트 체계·난이도 구간을 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
+description: "Content_[콘텐츠명].md의 GD-LVL-001(레벨/컨텐츠 설계) 섹션을 작성한다. 컨텐츠 구조·튜토리얼·퀘스트 체계·난이도 구간을 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
 model: sonnet
 memory: project
 ---
+> ⚠️ **작업 공정은 [`Template/Planning_Flow.md`](../../../Template/Planning_Flow.md)를 단일 권위로 한다.**
+> 이 에이전트는 **Stage 2(콘텐츠별 세부)** 담당이다. 산출물은 `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` —
+> **콘텐츠마다 별도 파일**이며 양식은 `Template/Content_Spec_Template.md`다. 여러 담당이 한 파일에 동시에 쓰지 않는다.
+
 
 # wa-plan-team-content
 
@@ -26,7 +30,7 @@ GD-LVL-001 (레벨/컨텐츠 설계)을 담당한다. 사운드 방향은 `wa-ma
 ## 2. 입력
 
 - **`Projects/[ProjCode]/[ProjCode]_ProjectPlan.md`**: C 문서
-- **`Projects/[ProjCode]/[ProjCode]_GD_Design.md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
+- **`Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
 - **ProjCode**: 프로젝트 코드
 
 ---
@@ -40,7 +44,7 @@ GD-LVL-001 (레벨/컨텐츠 설계)을 담당한다. 사운드 방향은 `wa-ma
 
 ## 4. 출력
 
-- `Projects/[ProjCode]/[ProjCode]_GD_Design.md` — GD-LVL-001 섹션 추가
+- `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` — GD-LVL-001 섹션 추가
 
 ---
 
@@ -48,9 +52,9 @@ GD-LVL-001 (레벨/컨텐츠 설계)을 담당한다. 사운드 방향은 `wa-ma
 
 ### 컨텐츠 기획 (GD-LVL-001)
 
-1. `[ProjCode]_GD_Design.md`의 GD-COR-001 코어루프와 GD-SYS-001 시스템 목록을 읽는다.
+1. `[ProjCode]_Content_[콘텐츠명].md`의 GD-COR-001 코어루프와 GD-SYS-001 시스템 목록을 읽는다.
 2. `Template/02_GameDesign.md`의 GD-LVL-001 구조를 파악한다.
-3. `[ProjCode]_GD_Design.md`에 아래 섹션을 추가한다:
+3. `[ProjCode]_Content_[콘텐츠명].md`에 아래 섹션을 추가한다:
 
    **GD-LVL-001: 레벨/컨텐츠 설계**
    - **컨텐츠 구조**: 학습→연습→심화→보상 4단 구조 적용 방식
@@ -89,7 +93,7 @@ GD-LVL-001 (레벨/컨텐츠 설계)을 담당한다. 사운드 방향은 `wa-ma
 
 ## 8. 핸드오프
 
-- **반환**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md` (LVL 섹션 추가됨)
+- **반환**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` (LVL 섹션 추가됨)
 - **다음**: wa-manager-plan-lead (병렬 완료 대기)
 
 ---

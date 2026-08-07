@@ -21,7 +21,7 @@ alwaysApply: true
 
 ## InGame 씬 규약
 
-> 아래 Addressable 주소(`InGameObjects/...`, `TableData/GameConfig`, `char/...`)는
+> 아래 Addressable 주소(`InGameObjects/...`, `TableData/GameConfig`, `host/...`, `ghost/...`)는
 > [`.claude/project/constants.md`](../../project/constants.md) 4절(주소 템플릿)을 단일 출처로 한다.
 > 본 문서의 주소 표기는 규약 설명용이며 구체 값은 constants.md를 따른다.
 
@@ -41,11 +41,15 @@ alwaysApply: true
 - 이벤트로 열리는 오버레이: `UI.Register` (Global Popup, Single)
 - 오버레이 UI는 `LoadSceneUIAsync` 사용 금지.
 
-### 캐릭터 로드
-- 캐릭터 주소 하드코딩 금지.
-- `UserDataManager`에서 `EquippedCharacterId`를 조회 → `CharacterTable`에서 `prefabsname` 필드를 취득 → 주소 결정.
-- 주소 형식: `char/{prefabsname}`
-  - 예: `prefabsname = "minji"` → 주소 `char/minji`
+### 호스트 로드
+
+- 호스트 주소 하드코딩 금지.
+- `UserDataManager`에서 `SelectedHostId`를 조회 → `HostTable`에서 `hostKey` 필드를 취득 → 주소 결정.
+- 주소 형식: `host/{hostKey}`
+  - 예: `hostKey = "amazoness"` → 주소 `host/amazoness`
+- 호스트 키 12종은 [`constants.md`](../../project/constants.md) 4절을 단일 출처로 한다.
+
+> 고스트(플레이어 본체)는 `ghost/{파일명}` 주소를 사용한다.
 
 ### 인게임 오브젝트 프리팹 참조
 - 인게임 오브젝트의 하위 구성요소(장애물 등) 직접 참조(Inspector 연결) 금지.

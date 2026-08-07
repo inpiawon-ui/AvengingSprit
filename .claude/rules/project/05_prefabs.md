@@ -70,15 +70,26 @@ alwaysApply: true
 > `~Panel`·`~Popup` 고정 높이(`H`)와 `SystemPopup` sortingOrder 값은
 > [`.claude/project/constants.md`](../../project/constants.md) 3절(UI 수치)을 따른다.
 
-| 타입 | Anchor | Width | Height | 비고 |
-|------|--------|-------|--------|------|
-| `~UI` | Stretch Full (0,0 ~ 1,1) | 0 | 0 | 씬 전체를 채움 |
-| `~Panel` | 좌우 Stretch (0,0 ~ 1,1) | 0 | **H** | 상단 HUD가 보이도록 고정 높이 (constants.md) |
-| `~Popup` | 좌우 Stretch (0,0 ~ 1,1) | 0 | **H** | Panel과 동일 기준 |
-| `SystemPopup` | 별도 Canvas (sortingOrder는 constants.md) | — | — | 코드 생성, 예외 |
+| 타입 | anchorMin | anchorMax | pivot | anchoredPosition | sizeDelta |
+|------|-----------|-----------|-------|------------------|-----------|
+| `~UI` | `(0, 0)` | `(1, 1)` | `(0.5, 0.5)` | `(0, 0)` | `(0, 0)` |
+| `~Panel` | `(0, 1)` | `(1, 1)` | `(0.5, 1)` | `(0, -T)` | `(0, H)` |
+| `~Popup` | `(0, 1)` | `(1, 1)` | `(0.5, 1)` | `(0, -T)` | `(0, H)` |
+| `SystemPopup` | 별도 Canvas (sortingOrder는 constants.md) | — | — | — | 코드 생성, 예외 |
 
-- `~Panel`, `~Popup`의 sizeDelta: `(0, H)` — Width는 0(Stretch), Height는 constants.md 값 고정.
-- `~UI`의 sizeDelta: `(0, 0)` — 상하좌우 모두 Stretch.
+- **`H`** = `~Panel`·`~Popup` 고정 높이 (constants.md 3절)
+- **`T`** = 상단 HUD 오프셋 = `기준 해상도 세로 − H` (constants.md 값 기준: `1280 − 1152 = 128`)
+
+### 왜 상단 앵커인가
+
+`~Panel`·`~Popup`은 **상단 HUD를 가리지 않는 고정 높이 창**이다.
+- `anchorMin.y = anchorMax.y = 1` → **세로는 Stretch가 아니라 상단 고정**. 이래야 `sizeDelta.y`가 실제 높이가 된다.
+- `anchorMin.x = 0`, `anchorMax.x = 1` → **가로만 Stretch**. `sizeDelta.x = 0`이 곧 화면 폭.
+- `pivot.y = 1` → 기준점이 위쪽 변. `anchoredPosition.y = -T` 로 HUD 높이만큼 아래로 내린다.
+
+> ⚠️ **`(0,0) ~ (1,1)`(Stretch Full)에 `sizeDelta (0, H)`를 함께 쓰면 안 된다.**
+> Stretch Full에서 `sizeDelta`는 **부모 대비 증감분**이므로 실제 높이가 `화면 높이 + H`(1280 + 1152 = 2432)가 된다.
+> `~UI`만 Stretch Full이며, 이때 `sizeDelta`는 반드시 `(0, 0)`이다.
 
 ## ScrollView
 - 스크롤뷰 생성 시 **재사용 스크롤뷰(오브젝트 풀링)** 를 기본으로 한다 (오브젝트 부하 감소).

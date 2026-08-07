@@ -1,10 +1,14 @@
 ﻿---
 name: "wa-plan-team-balance-combat"
 aliases: ["combat", "전투밸런스", "전투기획"]
-description: "GD_Design.md의 GD-ECO-001-A(전투 밸런스) 섹션을 작성한다. 데미지 공식·능력치 체계·난이도 곡선·TTK 목표를 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
+description: "Content_[콘텐츠명].md의 GD-ECO-001-A(전투 밸런스) 섹션을 작성한다. 데미지 공식·능력치 체계·난이도 곡선·TTK 목표를 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
 model: sonnet
 memory: project
 ---
+> ⚠️ **작업 공정은 [`Template/Planning_Flow.md`](../../../Template/Planning_Flow.md)를 단일 권위로 한다.**
+> 이 에이전트는 **Stage 2(콘텐츠별 세부)** 담당이다. 산출물은 `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` —
+> **콘텐츠마다 별도 파일**이며 양식은 `Template/Content_Spec_Template.md`다. 여러 담당이 한 파일에 동시에 쓰지 않는다.
+
 
 # wa-plan-team-balance-combat
 
@@ -26,7 +30,7 @@ memory: project
 ## 2. 입력
 
 - **`Projects/[ProjCode]/[ProjCode]_ProjectPlan.md`**: C 문서
-- **`Projects/[ProjCode]/[ProjCode]_GD_Design.md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
+- **`Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
 - **ProjCode**: 프로젝트 코드
 
 ---
@@ -34,13 +38,13 @@ memory: project
 ## 3. 참조 템플릿
 
 - `Template/02_GameDesign.md` — GD-ECO-001 전투 밸런스 공식 섹션
-- `Projects/[ProjCode]/[ProjCode]_GD_Design.md` — GD-SYS-001 시스템 ID 참조
+- `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` — GD-SYS-001 시스템 ID 참조
 
 ---
 
 ## 4. 출력
 
-- **파일명**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md`
+- **파일명**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`
 - **담당 섹션**: GD-ECO-001 전투 밸런스 파트
 - **형식**: 기존 파일에 섹션 추가
 
@@ -48,9 +52,9 @@ memory: project
 
 ## 5. 작업 지시
 
-1. `[ProjCode]_GD_Design.md`의 GD-SYS-001을 읽어 전투 관련 시스템 ID를 파악한다.
+1. `[ProjCode]_Content_[콘텐츠명].md`의 GD-SYS-001을 읽어 전투 관련 시스템 ID를 파악한다.
 2. `Template/02_GameDesign.md`의 GD-ECO-001 전투 밸런스 섹션 구조를 파악한다.
-3. `[ProjCode]_GD_Design.md`에 아래 내용을 추가한다:
+3. `[ProjCode]_Content_[콘텐츠명].md`에 아래 내용을 추가한다:
 
    **GD-ECO-001-A: 전투 밸런스**
 
@@ -71,7 +75,7 @@ memory: project
    ```
 5. 모든 수치에 `[근거: ...]`를 표기한다.
 6. `[대괄호]` 플레이스홀더를 전부 채운다.
-7. `[ProjCode]_GD_Design.md` 상단 Version·Last Updated를 갱신한다.
+7. `[ProjCode]_Content_[콘텐츠명].md` 상단 Version·Last Updated를 갱신한다.
 
 ---
 
@@ -97,13 +101,13 @@ memory: project
 - [ ] 데미지 공식, 능력치 체계, 난이도 곡선 작성 완료
 - [ ] TTK 목표 `[근거: ...]` 표기 완료
 - [ ] `[대괄호]` 플레이스홀더 0개 (TBD 처리된 항목 제외)
-- [ ] `[ProjCode]_GD_Design.md` 저장 완료
+- [ ] `[ProjCode]_Content_[콘텐츠명].md` 저장 완료
 
 ---
 
 ## 8. 핸드오프
 
-- **반환**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md` (전투 섹션 추가됨)
+- **반환**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` (전투 섹션 추가됨)
 - **다음**: wa-manager-plan-lead (병렬 완료 대기)
 
 ---

@@ -26,9 +26,9 @@ memory: project
 ## 2. 입력
 
 - `Projects/[ProjCode]/[ProjCode]_Concept.md`
-- `Projects/[ProjCode]/Unity_GameDev_Template.md`
+- `Projects/[ProjCode]/[ProjCode]_GameComposition.md`
 - `Projects/[ProjCode]/[ProjCode]_ProjectPlan.md`
-- `Projects/[ProjCode]/[ProjCode]_GD_Design.md`
+- `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`
 - `Projects/[ProjCode]/[ProjCode]_SND_Design.md`
 - `Projects/[ProjCode]/[ProjCode]_Monetization_Design.md`
 - **ProjCode**: 프로젝트 코드
@@ -64,7 +64,7 @@ memory: project
 
    **점검 3: 파트 간 수치 충돌 감지**
    - 동일 항목이 다른 문서에서 다른 값으로 기술된 경우 탐지
-   - 예: GD_Design의 FPS 목표 vs ProjectPlan의 성능 예산
+   - 예: Content 스펙의 FPS 목표 vs ProjectPlan의 성능 예산
    - 충돌 항목에 `[WARNING]` 등급 부여
 
    **점검 4: [근거: ...] 누락 탐지**

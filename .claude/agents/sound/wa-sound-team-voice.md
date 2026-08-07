@@ -33,7 +33,7 @@ memory: project
 
 ### 캐릭터 일관성 관점
 - 캐릭터별 음성 방향이 캐릭터 설정·내러티브와 일치하는지 확인
-- Narrative 팀 산출물(`GD_Design.md` NAR 섹션) 참조하여 캐릭터 성격 반영
+- Narrative 팀 산출물(`Content_[콘텐츠명].md` NAR 섹션) 참조하여 캐릭터 성격 반영
 
 ### 범위 정의 관점
 - 전체 VO를 녹음할지, 주요 대사만 할지, 감탄사만 할지 명확히 정의
@@ -45,7 +45,7 @@ memory: project
 
 **1단계: 게임 컨셉 파악**
 - 팀장(`wa-manager-sound-lead`)으로부터 전달받은 사운드 방향 가이드 확인
-- `Projects/[ProjCode]/[ProjCode]_Concept.md` 및 GD_Design.md NAR 섹션에서 캐릭터 정보 파악
+- `Projects/[ProjCode]/[ProjCode]_Concept.md` 및 Content_[콘텐츠명].md NAR 섹션에서 캐릭터 정보 파악
 
 **2단계: VO 방향 설계**
 - 주요 캐릭터별 음성 방향 정의
@@ -85,7 +85,7 @@ memory: project
 ## 6. 협업 규칙
 
 - **팀장(`wa-manager-sound-lead`)**: VO 방향 가이드 수신, 완료 시 검수 요청
-- **Narrative 팀(`wa-plan-team-narrative`)**: 캐릭터 설정·감정선 참조 (GD_Design.md NAR 섹션)
+- **Narrative 팀(`wa-plan-team-narrative`)**: 캐릭터 설정·감정선 참조 (Content_[콘텐츠명].md NAR 섹션)
 - **bgm**: VO 재생 구간의 BGM 볼륨 조절 권고 공유
 
 ---

@@ -13,11 +13,17 @@ Claude는 모든 작업 전에 이 `MODE` 값을 먼저 확인하고, `.claude/C
 ## 현재 모드
 
 ```
-MODE: TEMPLATE
-ProjCode: (none)
-게임명: (none)
-활성화일: (none)
+MODE: GAME
+ProjCode: AVSR
+게임명: AVENGING SPIRIT: RE:BORN
+활성화일: 2026-08-07
 ```
+
+> **확정 컨셉**: [`Template/Game_Concept.md`](../../Template/Game_Concept.md)
+> **디자인 레퍼런스**: `Projects/AVSR/Reference/` (제안서 PDF 추출본 — 목업 5종·호스트 12종·슬라이드 10p)
+>
+> **아트 제1원칙**: 1991 아케이드 원작 **AVENGING SPIRIT의 감성 재현이 최우선**이다.
+> 모던함·트렌드와 충돌하면 원작 감성을 택한다.
 
 ---
 

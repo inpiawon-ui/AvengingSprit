@@ -45,7 +45,7 @@ memory: project
 
 **1단계: 게임 컨셉 파악**
 - 팀장(`wa-manager-sound-lead`)으로부터 전달받은 사운드 방향 가이드 확인
-- `Projects/[ProjCode]/[ProjCode]_Concept.md` 및 GD_Design.md에서 게임 메커닉·이벤트 목록 파악
+- `Projects/[ProjCode]/[ProjCode]_Concept.md` 및 Content_[콘텐츠명].md에서 게임 메커닉·이벤트 목록 파악
 
 **2단계: SFX 목록 설계**
 - 카테고리별 SFX 목록 작성 (UI / 캐릭터 액션 / 환경 / 시스템)

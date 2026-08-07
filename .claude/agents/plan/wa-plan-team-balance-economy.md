@@ -1,10 +1,14 @@
 ﻿---
 name: "wa-plan-team-balance-economy"
 aliases: ["economy", "경제밸런스", "경제기획"]
-description: "GD_Design.md의 GD-ECO-001-B(경제 밸런스) 섹션을 작성한다. 재화 체계·Source/Sink 순환·드롭률·천장 시스템을 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
+description: "Content_[콘텐츠명].md의 GD-ECO-001-B(경제 밸런스) 섹션을 작성한다. 재화 체계·Source/Sink 순환·드롭률·천장 시스템을 설계한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
 model: sonnet
 memory: project
 ---
+> ⚠️ **작업 공정은 [`Template/Planning_Flow.md`](../../../Template/Planning_Flow.md)를 단일 권위로 한다.**
+> 이 에이전트는 **Stage 2(콘텐츠별 세부)** 담당이다. 산출물은 `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` —
+> **콘텐츠마다 별도 파일**이며 양식은 `Template/Content_Spec_Template.md`다. 여러 담당이 한 파일에 동시에 쓰지 않는다.
+
 
 # wa-plan-team-balance-economy
 
@@ -26,7 +30,7 @@ memory: project
 ## 2. 입력
 
 - **`Projects/[ProjCode]/[ProjCode]_ProjectPlan.md`**: C 문서
-- **`Projects/[ProjCode]/[ProjCode]_GD_Design.md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
+- **`Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`**: GD-COR-001, GD-SYS-001 섹션 (wa-plan-team-system 산출물)
 - **ProjCode**: 프로젝트 코드
 
 ---
@@ -40,7 +44,7 @@ memory: project
 
 ## 4. 출력
 
-- **파일명**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md`
+- **파일명**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`
 - **담당 섹션**: GD-ECO-001 경제 밸런스 파트
 - **형식**: 기존 파일에 섹션 추가
 
@@ -48,10 +52,10 @@ memory: project
 
 ## 5. 작업 지시
 
-1. `[ProjCode]_GD_Design.md`의 GD-COR-001을 읽어 보상 루프 구조를 파악한다.
+1. `[ProjCode]_Content_[콘텐츠명].md`의 GD-COR-001을 읽어 보상 루프 구조를 파악한다.
 2. `[ProjCode]_ProjectPlan.md`의 수익화 방향을 읽는다.
 3. `Template/02_GameDesign.md`의 GD-ECO-001 경제 체계 섹션 구조를 파악한다.
-4. `[ProjCode]_GD_Design.md`에 아래 내용을 추가한다:
+4. `[ProjCode]_Content_[콘텐츠명].md`에 아래 내용을 추가한다:
 
    **GD-ECO-001-B: 경제 밸런스**
 
@@ -74,7 +78,7 @@ memory: project
 
 5. 모든 수치에 `[근거: ...]`를 표기한다.
 6. wa-plan-team-balance-combat의 전투 보상 수치와 충돌 여부를 확인하고, 충돌 시 `[WARNING]`으로 표시한다.
-7. `[ProjCode]_GD_Design.md` 상단 Version·Last Updated를 갱신한다.
+7. `[ProjCode]_Content_[콘텐츠명].md` 상단 Version·Last Updated를 갱신한다.
 
 ---
 
@@ -102,13 +106,13 @@ memory: project
 - [ ] 드롭률 테이블 작성 완료 (가챠 있으면 천장 포함)
 - [ ] 경제 시뮬레이션 (D7/D30) 완료
 - [ ] `[대괄호]` 플레이스홀더 0개 (TBD 처리된 항목 제외)
-- [ ] `[ProjCode]_GD_Design.md` 저장 완료
+- [ ] `[ProjCode]_Content_[콘텐츠명].md` 저장 완료
 
 ---
 
 ## 8. 핸드오프
 
-- **반환**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md` (경제 섹션 추가됨)
+- **반환**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` (경제 섹션 추가됨)
 - **다음**: wa-manager-plan-lead (병렬 완료 대기)
 
 ---

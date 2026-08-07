@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVSR — S2 Lobby 박스 목업 (720×1280)</title>
+<style>
+  :root { --s: 0.68; }
+  @media (min-height: 1000px) { :root { --s: 0.76; } }
+  @media (min-height: 1200px) { :root { --s: 0.86; } }
+  @media (min-height: 1450px) { :root { --s: 1; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#dfe2e7; color:#1c2430;
+         font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif; }
+  .page { padding:16px 20px 40px; }
+  h1 { font-size:17px; margin:0 0 4px; letter-spacing:.02em; }
+  .meta { font-size:12px; color:#4d5666; margin:0 0 10px; }
+  .meta b { color:#1c2430; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; font-size:11px; color:#4d5666;
+            background:#f2f4f7; border:1px solid #c8ced7; border-radius:4px; padding:7px 10px; margin:0 0 14px; }
+  .legend span { display:flex; align-items:center; gap:5px; }
+  .sw { width:22px; height:12px; border-radius:2px; display:inline-block; }
+  .holder { width:calc(720px * var(--s)); height:calc(1280px * var(--s)); }
+  .frame { width:720px; height:1280px; position:relative; overflow:hidden;
+           background:#f6f7f9; border:2px solid #6d7684;
+           transform:scale(var(--s)); transform-origin:top left; }
+
+  .b { position:absolute; border:1px solid #8a929e; background:#e3e6eb; border-radius:2px;
+       overflow:hidden; padding:2px 4px; }
+  .n  { font:600 12px/1.2 ui-monospace,Consolas,"Courier New",monospace; color:#161d28;
+        white-space:nowrap; letter-spacing:-.02em; }
+  .nn { font:600 10px/1.15 ui-monospace,Consolas,"Courier New",monospace; color:#161d28;
+        white-space:nowrap; letter-spacing:-.04em; }
+  .k  { font:10px/1.25 inherit; color:#5b6472; }
+  .v  { font:600 10px/1.25 inherit; color:#1f4f96; }
+  .c  { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .t0 { background:#f0f2f5; } .t1 { background:#e6e9ee; }
+  .t2 { background:#d7dce3; } .t3 { background:#c6ccd5; }
+  .grp { border:1px dashed #79818f; background:transparent; }
+  .grp > .n { color:#5b6472; }
+  .oos { border:2px dashed #99a0ab;
+         background:repeating-linear-gradient(45deg,#eceef1,#eceef1 7px,#e0e3e7 7px,#e0e3e7 14px); }
+  .gold { border:2px solid #a8760a; background:#f7ecce; }
+  .blue { border:2px solid #2a5aa8; background:#dde7f7; }
+  .purple { border:2px solid #6b4a86; background:#e9def2; }
+  .badge { border:1px solid #b03028; background:#f7d6d3; border-radius:50%;
+           font:700 11px/1 monospace; color:#8d2018; display:flex; align-items:center; justify-content:center; }
+  .hud { background:#ccd3dc; border:2px solid #55606f; }
+  .cap { font-size:11.5px; color:#41495a; margin-top:12px; max-width:900px; line-height:1.65; }
+  .cap b { color:#1c2430; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>AVSR &nbsp;/&nbsp; S2 <b>Lobby (HUB)</b> &nbsp;— 박스 목업</h1>
+  <p class="meta">UI 타입 <b>LobbyMainUI (~UI)</b> · 해상도 <b>720 × 1280 (9:16 네이티브)</b> ·
+     Addressable <b>UI/Lobby/LobbyMainUI</b> · 목업 원본 <b>lobby_hub.jpeg (683×1024) 재구성</b></p>
+  <div class="legend">
+    <span><i class="sw" style="background:#e3e6eb;border:1px solid #8a929e"></i>✅ 1차 동작</span>
+    <span><i class="sw" style="background:repeating-linear-gradient(45deg,#eceef1,#eceef1 5px,#e0e3e7 5px,#e0e3e7 10px);border:2px dashed #99a0ab"></i>⛔ 1차 밖 (존재·비동작)</span>
+    <span><i class="sw" style="background:#f7ecce;border:2px solid #a8760a"></i>골드 CTA</span>
+    <span><i class="sw" style="background:#dde7f7;border:2px solid #2a5aa8"></i>블루</span>
+    <span><i class="sw" style="background:#e9def2;border:2px solid #6b4a86"></i>퍼플</span>
+    <span><i class="sw" style="border:1px dashed #79818f"></i>그룹(비렌더)</span>
+    <span>박스 안 <b>모노스페이스 = 요소 이름</b></span>
+  </div>
+
+  <div class="holder"><div class="frame">
+
+    <!-- ── LobbyStageArea ───────────────────────────────── -->
+    <div class="b t0" style="left:0;top:0;width:720px;height:1280px;">
+      <div class="n" style="margin-top:132px">LobbyBackground</div>
+      <div class="k">Stretch Full 720×1280 · 야경 공업도시 · 달 · JALECO 네온 · FACTORY AREA 3 간판 (1차 정적 1종)</div>
+      <div class="k" style="margin-top:2px">└ 그룹 <b>LobbyStageArea</b> 하위</div>
+    </div>
+
+    <div class="b t2 c" style="left:260px;top:676px;width:200px;height:56px;">
+      <div class="n">PortalRing</div><div class="k">저속 회전+명멸</div>
+    </div>
+    <div class="b t3 c" style="left:300px;top:420px;width:160px;height:240px;">
+      <div class="n">GhostAvatar</div><div class="k">대형 고스트</div><div class="k">상하 부유 루프</div>
+    </div>
+
+    <!-- ── ChapterCard ──────────────────────────────────── -->
+    <div class="b t1" style="left:12px;top:300px;width:222px;height:344px;">
+      <div class="nn" style="color:#3d4655">ChapterCard</div>
+    </div>
+    <div class="b t2" style="left:24px;top:312px;width:140px;height:26px;">
+      <div class="nn">ChapterNumberText</div>
+    </div>
+    <div class="b t2 c" style="left:24px;top:340px;width:150px;height:44px;">
+      <div class="nn">ChapterNameText</div><div class="v">CHAPTER 01 / [TBD]</div>
+    </div>
+    <div class="b t2" style="left:24px;top:396px;width:60px;height:20px;"><div class="nn">BossLabel</div></div>
+    <div class="b t2" style="left:24px;top:418px;width:120px;height:26px;"><div class="nn">BossNameText</div></div>
+    <div class="b t3 c" style="left:158px;top:392px;width:66px;height:66px;"><div class="nn">BossPortrait</div></div>
+    <div class="b t2" style="left:24px;top:482px;width:90px;height:20px;"><div class="nn">ProgressLabel</div></div>
+    <div class="b t3" style="left:24px;top:506px;width:154px;height:20px;"><div class="nn">ProgressBarBg/Fill</div></div>
+    <div class="b t1" style="left:30px;top:508px;width:64px;height:16px;padding:0 2px;"><div class="nn">ProgressText</div></div>
+    <div class="b oos c" style="left:186px;top:486px;width:42px;height:44px;padding:1px;">
+      <div class="nn" style="font-size:8px">Progress</div><div class="nn" style="font-size:8px">RewardChest</div><div class="k" style="font-size:9px">⛔</div>
+    </div>
+    <div class="b gold c" style="left:24px;top:552px;width:198px;height:74px;">
+      <div class="n">ContinueButton</div>
+      <div class="nn" style="margin-top:2px">ContinueButtonText</div>
+      <div class="v">START (신규) / CONTINUE</div>
+      <div class="nn">ContinueCostText</div><div class="v">⚡ x5</div>
+    </div>
+
+    <!-- ── SidePromoGroup ───────────────────────────────── -->
+    <div class="b grp" style="left:470px;top:300px;width:238px;height:344px;">
+      <div class="n" style="text-align:right">SidePromoGroup</div>
+    </div>
+    <div class="b oos c" style="left:474px;top:304px;width:230px;height:104px;">
+      <div class="n">BattlePassCard</div>
+      <div class="k">SEASON 1 · GHOST REVENGE · 방패 Lv · 게이지</div><div class="k">⛔ 1차 밖</div>
+    </div>
+    <div class="b oos c" style="left:474px;top:424px;width:230px;height:96px;">
+      <div class="n">EventCard</div><div class="k">⏱ 잔여시간 · 선물상자</div><div class="k">⛔ 1차 밖</div>
+    </div>
+    <div class="badge" style="position:absolute;left:686px;top:416px;width:22px;height:22px;">!</div>
+    <div class="b oos c" style="left:474px;top:536px;width:230px;height:104px;">
+      <div class="n">DailyLoginCard</div><div class="k">체크 5칸 · DAY n · 상자</div><div class="k">⛔ 1차 밖</div>
+    </div>
+    <div class="badge" style="position:absolute;left:686px;top:528px;width:22px;height:22px;">!</div>
+
+    <!-- ── FeatureTabBar ────────────────────────────────── -->
+    <div class="b t1" style="left:52px;top:700px;width:616px;height:108px;">
+      <div class="nn" style="color:#3d4655">FeatureTabBar &nbsp;/&nbsp; FeatureTabBarBackground &nbsp;— ⛔ 5탭 전부 1차 밖</div>
+    </div>
+    <div class="b oos c" style="left:58px;top:716px;width:116px;height:86px;padding:2px;">
+      <div class="nn">MissionTab</div><div class="nn" style="font-size:7px">MissionTabIcon</div><div class="k">MISSION</div>
+    </div>
+    <div class="badge" style="position:absolute;left:158px;top:710px;width:20px;height:20px;">!</div>
+    <div class="b oos c" style="left:181px;top:716px;width:116px;height:86px;padding:2px;">
+      <div class="nn" style="font-size:9px">AchievementTab</div><div class="nn" style="font-size:7px">AchievementTabIcon</div><div class="k">ACHIEVEMENT</div>
+    </div>
+    <div class="b oos c" style="left:304px;top:716px;width:116px;height:86px;padding:2px;">
+      <div class="nn">RankingTab</div><div class="nn" style="font-size:7px">RankingTabIcon</div><div class="k">RANKING</div>
+    </div>
+    <div class="b oos c" style="left:427px;top:716px;width:116px;height:86px;padding:2px;">
+      <div class="nn" style="font-size:9px">InventoryTab</div><div class="nn" style="font-size:7px">InventoryTabIcon</div><div class="k">INVENTORY</div>
+    </div>
+    <div class="b oos c" style="left:550px;top:716px;width:116px;height:86px;padding:2px;">
+      <div class="nn">FriendsTab</div><div class="nn" style="font-size:7px">FriendsTabIcon</div><div class="k">FRIENDS</div>
+      <div class="nn" style="font-size:8px;color:#8d2018">FriendsTabLock 🔒</div>
+    </div>
+
+    <!-- ── MainActionBar ────────────────────────────────── -->
+    <div class="b grp" style="left:10px;top:830px;width:700px;height:260px;">
+      <div class="n">MainActionBar</div>
+    </div>
+    <div class="b purple c" style="left:10px;top:830px;width:222px;height:260px;">
+      <div class="n">HostButton</div>
+      <div class="nn" style="margin-top:6px">HostButtonArt</div>
+      <div class="nn">HostButtonTitleText</div><div class="v">HOST</div>
+      <div class="nn">HostButtonSubText</div><div class="k">육성 · ULTIMATE · 도감</div>
+      <div class="v" style="margin-top:4px">→ Route = HostBrowse</div>
+    </div>
+    <div class="badge" style="position:absolute;left:206px;top:822px;width:22px;height:22px;">!</div>
+    <div class="b gold c" style="left:242px;top:830px;width:236px;height:260px;box-shadow:0 0 0 4px rgba(168,118,10,.25);">
+      <div class="n">ChapterButton</div>
+      <div class="k" style="color:#8a6608">(발광 테두리 — 시각 우선순위 1위)</div>
+      <div class="nn" style="margin-top:4px">ChapterButtonArt</div>
+      <div class="nn">ChapterButtonTitleText</div><div class="v">CHAPTER</div>
+      <div class="nn">ChapterButtonSubText</div><div class="k">게임 시작</div>
+      <div class="v" style="margin-top:4px">→ Route = ChapterStart</div>
+    </div>
+    <div class="b blue c" style="left:488px;top:830px;width:222px;height:260px;">
+      <div class="n">ShopButton</div>
+      <div class="nn" style="margin-top:6px">ShopButtonArt</div>
+      <div class="nn">ShopButtonTitleText</div><div class="v">SHOP</div>
+      <div class="nn">ShopButtonSubText</div><div class="k">상점 · 패키지 · 재화</div>
+      <div class="k" style="margin-top:4px;color:#8d2018">⛔ 1차 밖</div>
+    </div>
+    <div class="badge" style="position:absolute;left:684px;top:822px;width:22px;height:22px;">!</div>
+
+    <!-- ── 브랜딩 ───────────────────────────────────────── -->
+    <div class="b t2 c" style="left:250px;top:1104px;width:220px;height:140px;">
+      <div class="n">LogoLockup</div>
+      <div class="v">Avenging(적)/SPIRIT(청)/RE:BORN(골드)</div>
+      <div class="k">정본 픽셀 락업</div>
+    </div>
+    <div class="b t1 c" style="left:14px;top:1250px;width:110px;height:22px;padding:0 3px;">
+      <div class="nn">VersionText</div>
+    </div>
+
+    <!-- ── TopHudGroup (형제 순서 마지막 = 최상단) ──────── -->
+    <div class="b hud" style="left:0;top:0;width:720px;height:128px;">
+      <div class="nn" style="color:#2b3442">TopHudGroup &nbsp;/&nbsp; TopHudBackground &nbsp;— ⭐ S2·S3 <b>공유</b> (LobbyMainUI 소유 · 형제 순서 마지막)</div>
+    </div>
+    <div class="b t1" style="left:8px;top:18px;width:188px;height:96px;padding:1px 3px;">
+      <div class="nn" style="font-size:9px;color:#3d4655">GhostWidget</div>
+    </div>
+    <div class="b t3 c" style="left:16px;top:30px;width:60px;height:60px;padding:1px;">
+      <div class="nn" style="font-size:8px">Ghost</div><div class="nn" style="font-size:8px">PortraitIcon</div>
+    </div>
+    <div class="b t2" style="left:82px;top:26px;width:104px;height:22px;padding:0 2px;">
+      <div class="nn" style="font-size:9px">GhostLabelText</div>
+    </div>
+    <div class="b t2" style="left:82px;top:50px;width:104px;height:24px;padding:0 2px;">
+      <div class="nn" style="font-size:9px">GhostLevelText</div>
+    </div>
+    <div class="b t3" style="left:82px;top:78px;width:106px;height:14px;padding:0 2px;">
+      <div class="nn" style="font-size:8px">GhostExpBarBg/Fill (청)</div>
+    </div>
+    <div class="b t1" style="left:118px;top:94px;width:72px;height:16px;padding:0 2px;">
+      <div class="nn" style="font-size:8px">GhostExpText</div>
+    </div>
+
+    <div class="b t1 c" style="left:204px;top:32px;width:126px;height:60px;padding:1px;">
+      <div class="nn" style="font-size:9px">StaminaCounter</div><div class="v" style="font-size:9px">⚡ 30/30</div>
+      <div class="nn" style="font-size:8px;color:#6b7280">Icon/Text/PlusButton ⛔</div>
+    </div>
+    <div class="b t1 c" style="left:338px;top:32px;width:132px;height:60px;padding:1px;">
+      <div class="nn" style="font-size:9px">GoldCounter</div><div class="v" style="font-size:9px">🪙 0</div>
+      <div class="nn" style="font-size:8px;color:#6b7280">Icon/Text/PlusButton ⛔</div>
+    </div>
+    <div class="b t1 c" style="left:478px;top:32px;width:112px;height:60px;padding:1px;">
+      <div class="nn" style="font-size:9px">GemCounter</div><div class="v" style="font-size:9px">💎 0</div>
+      <div class="nn" style="font-size:8px;color:#6b7280">Icon/Text/PlusButton ⛔</div>
+    </div>
+    <div class="b oos c" style="left:600px;top:34px;width:48px;height:56px;padding:1px;">
+      <div class="nn" style="font-size:8px">Mail</div><div class="nn" style="font-size:8px">Button</div>
+    </div>
+    <div class="badge" style="position:absolute;left:636px;top:28px;width:20px;height:20px;">!</div>
+    <div class="b oos c" style="left:658px;top:34px;width:48px;height:56px;padding:1px;">
+      <div class="nn" style="font-size:8px">Settings</div><div class="nn" style="font-size:8px">Button</div>
+    </div>
+
+  </div></div>
+
+  <p class="cap">
+    <b>9:16 재구성</b> — 목업 683×1024를 폭 기준 ×1.054(→1080) 한 뒤 남는 <b>+200px을 아래로만 배분</b>했다:
+    HUD 82→128(+46, 노치 세이프에어리어 흡수) · HUD↔카드 배경 노출 +38 · 카드↔탭바 +26 · 액션바 214→260(+46) · 로고 영역 88→140(+52).
+    <b>세로로 늘려 왜곡한 요소는 없다.</b><br>
+    <b>목업 예외 없음</b> — 이 화면은 승인된 예외 4건과 무관하다. `START`/`CONTINUE`, `Lv.1`, `CHAPTER 01`, `0`은
+    <b>레이아웃 동일 · 값만 바인딩</b>이다.<br>
+    <b>재사용 요소</b> — NotifyBadge 6곳(Mail/Mission/Event/DailyLogin/Host/Shop) · PlusButton 3곳(Stamina/Gold/Gem). 부모가 달라 형제 이름 유일성 성립 → <b>에셋 1종으로 수렴</b>.
+  </p>
+</div>
+</body>
+</html>

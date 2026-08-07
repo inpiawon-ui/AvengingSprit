@@ -1,10 +1,14 @@
 ﻿---
 name: "wa-plan-team-narrative"
 aliases: ["narrative", "내러티브", "스토리기획"]
-description: "GD_Design.md의 GD-NAR-001(내러티브) 섹션을 작성한다. 세계관 바이블·주요 캐릭터·스토리 구조·대사 톤 가이드·스토리-시스템 연동 표를 확정한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
+description: "Content_[콘텐츠명].md의 GD-NAR-001(내러티브) 섹션을 작성한다. 세계관 바이블·주요 캐릭터·스토리 구조·대사 톤 가이드·스토리-시스템 연동 표를 확정한다. wa-plan-team-system 완료 후 병렬 실행된다. wa-manager-plan-lead로부터 호출된다."
 model: sonnet
 memory: project
 ---
+> ⚠️ **작업 공정은 [`Template/Planning_Flow.md`](../../../Template/Planning_Flow.md)를 단일 권위로 한다.**
+> 이 에이전트는 **Stage 2(콘텐츠별 세부)** 담당이다. 산출물은 `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` —
+> **콘텐츠마다 별도 파일**이며 양식은 `Template/Content_Spec_Template.md`다. 여러 담당이 한 파일에 동시에 쓰지 않는다.
+
 
 # wa-plan-team-narrative
 
@@ -40,7 +44,7 @@ memory: project
 
 ## 4. 출력
 
-- **파일명**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md`
+- **파일명**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md`
 - **담당 섹션**: GD-NAR-001
 - **형식**: 기존 파일에 섹션 추가
 
@@ -50,7 +54,7 @@ memory: project
 
 1. `[ProjCode]_Concept.md`와 `[ProjCode]_ProjectPlan.md`의 GD 파트를 읽어 스토리 요소와 세계관 힌트를 파악한다.
 2. `Template/02_GameDesign.md`의 GD-NAR-001 구조를 파악한다.
-3. `[ProjCode]_GD_Design.md`에 아래 섹션을 추가한다:
+3. `[ProjCode]_Content_[콘텐츠명].md`에 아래 섹션을 추가한다:
 
    **GD-NAR-001: 내러티브**
 
@@ -108,13 +112,13 @@ memory: project
 - [ ] 스토리-시스템 연동 표 작성 완료
 - [ ] 신규 용어 `COM-GLS-001 등록 필요` 표시 완료
 - [ ] `[대괄호]` 플레이스홀더 0개 (TBD 처리된 항목 제외)
-- [ ] `[ProjCode]_GD_Design.md` 저장 완료
+- [ ] `[ProjCode]_Content_[콘텐츠명].md` 저장 완료
 
 ---
 
 ## 8. 핸드오프
 
-- **반환**: `Projects/[ProjCode]/[ProjCode]_GD_Design.md` (NAR 섹션 추가됨)
+- **반환**: `Projects/[ProjCode]/[ProjCode]_Content_[콘텐츠명].md` (NAR 섹션 추가됨)
 - **다음**: wa-manager-plan-lead (병렬 완료 대기)
 
 ---

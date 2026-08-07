@@ -25,19 +25,24 @@ memory: project
 |---|---|---|---|
 | **1. 활성화 트리거·가드** | PD | "개발 시작" 수신 → `Template/Game_Concept.md` **존재 확인**. **없으면** `MODE: TEMPLATE` 유지 + 사용자에게 "Game_Concept.md 필요" 보고 후 **중단** | — |
 | **2. ProjCode 취득·모드 전환** | PD | `Game_Concept.md`에서 `ProjCode`/게임명 취득 → [`project_state.md`](../../project/project_state.md) 마커를 `MODE: GAME` + ProjCode/게임명/활성화일로 **기록** | — |
-| **3. 기획 위임(직접)** | PD→plan-lead | `Game_Concept.md`를 **확정 컨셉**으로 전달 → plan-lead가 Phase A(`Projects/[ProjCode]/` 생성·양식 복사) 후 세부 기획 세트 생성(**Game_Concept 확장**) | plan-lead 내부 휴먼게이트(Concept 확장본 검토) |
-| **4. 상위 휴먼게이트** | PD→사용자 | 완성된 기획 세트를 사용자에게 제시 → **구현 착수 승인** 요청 | **사용자 승인** |
-| **5. 기획→PD 스펙화** | PD | 기획 산출물을 팀별 **완성 조건·품질 기준·제외 범위**로 확정(2절 스펙 형식) | — |
-| **6. 구현 위임** | PD→PM | PM에게 client/art/sound/server 팬아웃 위임. **의존 순서**: 서버 계약→클라 통합, 아트·사운드 에셋→클라팀 반입 | PM 조율 |
-| **7. 통합·품질·보고** | PM→PD→사용자 | PM 통합 → PD 품질 게이트 검토 → 사용자 완료 보고 | **PD 품질 게이트** |
+| **3. Stage 1 — 게임 구성** | PD→plan-lead | `Projects/[ProjCode]/` 생성 + `Template/` 양식 4종 복사 → `[ProjCode]_GameComposition.md` 작성 (**필러·콘텐츠 인벤토리·루프. 씬은 정하지 않는다**) | **게이트 A — 사용자 승인** |
+| **4. Stage 2 — 콘텐츠 세부** | PD→plan-lead | 승인된 콘텐츠마다 `[ProjCode]_Content_[이름].md` 1개씩 | **게이트 B — 사용자 승인** (콘텐츠 단위) |
+| **5. Stage 2b — UI 레이아웃** | PD→plan-lead | `wireframes/[ProjCode]_Screen_[이름].md` + **박스 목업(HTML)** + `[ProjCode]_AssetManifest.md` | **게이트 B2 — 사용자 승인** |
+| **6. Stage 3 — 디자인** | PD→PM→art/client | ① 화면→씬 그룹핑 ② 프리팹 생성(unityMCP) ③ 리소스 생성(ComfyUI, AssetManifest 입력) | **게이트 C — 사용자 승인** |
+| **7. Stage 4 — 클라이언트** | PD→PM→client | 프리팹 바인딩 + 기능 구현 → PD 품질 게이트 → 사용자 보고 | **PD 품질 게이트** |
+
+> 📌 **작업 공정의 단일 권위는 [`Template/Planning_Flow.md`](../../../Template/Planning_Flow.md)** 다. 위 3~7단계는 그 Stage 1~4를 PD 관점으로 옮긴 것이다.
+> 이 표와 `Planning_Flow.md`가 충돌하면 **`Planning_Flow.md`가 이긴다.**
 
 **가드 규칙 (1단계 상세):**
 - `Template/Game_Concept.md`가 **없으면** 절대 활성화하지 않는다. `MODE: TEMPLATE` 유지 + 보고 + 중단.
 - 활성화 신호 = `Game_Concept.md` 존재 **+** "개발 시작" 지시 (둘 다 필요). 마커 기록(2단계)이 최종 권위다.
 
-**기획 단계 주의 (3단계):**
-- `Game_Concept.md`는 **이미 컨펌된 간략 컨셉**이다. plan-lead의 concept 단계는 **생성이 아니라 확장**(간략 → 정식 `[ProjCode]_Concept.md`)이다.
-- plan-lead Phase A의 `Template/` 전체 복사 시 **`Game_Concept.md`는 복사 제외**(per-game 입력이며 정식 Concept는 `[ProjCode]_Concept.md`로 별도 생성).
+**기획 단계 주의 (3~5단계):**
+- `Game_Concept.md`는 **이미 컨펌된 간략 컨셉**이다. 이것을 길게 늘린 별도 Concept 문서를 만들지 않는다. 바로 **Stage 1(게임 구성)** 로 간다.
+- `Template/` 복사 대상은 **빈 양식 4종만**: `Game_Composition_Template` · `Content_Spec_Template` · `Screen_Spec_Template` · `Asset_Manifest_Template`. (`Game_Concept.md`는 per-game 입력이므로 복사 제외)
+- **Stage 1에서 씬을 정하지 않는다.** 씬 그룹핑은 Stage 3이다.
+- **앞 Stage의 게이트를 통과하기 전에 다음 Stage로 넘어가지 않는다.** 문서를 미리 쌓아두지 않는다.
 
 ---
 

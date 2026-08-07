@@ -33,7 +33,7 @@ IAP 상품군·광고 전략·구독 모델·첫 구매 유도 경로·ARPU 예�
 
 ## 3. 참조 템플릿
 
-- `Template/Unity_GameDev_Concept.md` — 섹션 4 MONETIZATION (수익원·가격대·유도 경로 구조)
+- `Template/Content_Spec_Template.md` — Stage 2 콘텐츠 세부 양식 (수익화 콘텐츠에 적용)
 - `Template/09_Modules.md` — MOD-IAP(인앱결제), MOD-ADS(광고) 모듈
 
 ---

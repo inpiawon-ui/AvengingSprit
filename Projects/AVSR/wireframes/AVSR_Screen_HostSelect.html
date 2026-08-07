@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVSR — S3 HostSelect 박스 목업 (720×1280)</title>
+<style>
+  :root { --s: 0.68; }
+  @media (min-height: 1000px) { :root { --s: 0.76; } }
+  @media (min-height: 1200px) { :root { --s: 0.86; } }
+  @media (min-height: 1450px) { :root { --s: 1; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#dfe2e7; color:#1c2430;
+         font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif; }
+  .page { padding:16px 20px 40px; }
+  h1 { font-size:17px; margin:0 0 4px; letter-spacing:.02em; }
+  .meta { font-size:12px; color:#4d5666; margin:0 0 10px; }
+  .meta b { color:#1c2430; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; font-size:11px; color:#4d5666;
+            background:#f2f4f7; border:1px solid #c8ced7; border-radius:4px; padding:7px 10px; margin:0 0 14px; }
+  .legend span { display:flex; align-items:center; gap:5px; }
+  .sw { width:22px; height:12px; border-radius:2px; display:inline-block; }
+  .holder { width:calc(720px * var(--s)); height:calc(1280px * var(--s)); }
+  .frame { width:720px; height:1280px; position:relative; overflow:hidden;
+           background:#f6f7f9; border:2px solid #6d7684;
+           transform:scale(var(--s)); transform-origin:top left; }
+
+  .b { position:absolute; border:1px solid #8a929e; background:#e3e6eb; border-radius:2px;
+       overflow:hidden; padding:2px 4px; }
+  .n  { font:600 12px/1.2 ui-monospace,Consolas,"Courier New",monospace; color:#161d28;
+        white-space:nowrap; letter-spacing:-.02em; }
+  .nn { font:600 10px/1.15 ui-monospace,Consolas,"Courier New",monospace; color:#161d28;
+        white-space:nowrap; letter-spacing:-.04em; }
+  .k  { font:10px/1.25 inherit; color:#5b6472; }
+  .v  { font:600 10px/1.25 inherit; color:#1f4f96; }
+  .c  { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .t0 { background:#f0f2f5; } .t1 { background:#e6e9ee; }
+  .t2 { background:#d7dce3; } .t3 { background:#c6ccd5; }
+  .grp { border:1px dashed #79818f; background:transparent; }
+  .grp > .n, .grp > .nn { color:#5b6472; }
+  .gold { border:2px solid #a8760a; background:#f7ecce; }
+  .blue { border:2px solid #2a5aa8; background:#dde7f7; }
+  .lock { border:2px solid #a9b0ba; background:#e9ebee; }
+  .exc  { border:2px solid #b03028; background:#fbe6e4; }
+  .hud  { background:#ccd3dc; border:2px dashed #55606f; }
+  .cap { font-size:11.5px; color:#41495a; margin-top:12px; max-width:940px; line-height:1.7; }
+  .cap b { color:#1c2430; } .cap .red { color:#8d2018; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>AVSR &nbsp;/&nbsp; S3 <b>HostSelect</b> &nbsp;— 박스 목업</h1>
+  <p class="meta">UI 타입 <b>HostSelectPanel (~Panel)</b> · 해상도 <b>720 × 1280 (9:16 네이티브)</b> ·
+     패널 실영역 <b>y 128~1280 (높이 1152)</b> · Addressable <b>UI/Lobby/HostSelectPanel</b> ·
+     목업 원본 <b>host_select.jpeg (683×1024) 재구성</b></p>
+  <div class="legend">
+    <span><i class="sw" style="background:#e3e6eb;border:1px solid #8a929e"></i>✅ 1차 동작</span>
+    <span><i class="sw" style="background:#dde7f7;border:2px solid #2a5aa8"></i>🟡 진입만 (HOST 강화)</span>
+    <span><i class="sw" style="background:#f7ecce;border:2px solid #a8760a"></i>골드 CTA / 선택 상태</span>
+    <span><i class="sw" style="background:#e9ebee;border:2px solid #a9b0ba"></i>🔒 잠금 (실루엣+자물쇠)</span>
+    <span><i class="sw" style="background:#fbe6e4;border:2px solid #b03028"></i>⚠️ 승인된 목업 예외 적용처</span>
+    <span><i class="sw" style="background:#ccd3dc;border:2px dashed #55606f"></i>공유 — LobbyMainUI 소유</span>
+  </div>
+
+  <div class="holder"><div class="frame">
+
+    <!-- 패널 배경 -->
+    <div class="b t0" style="left:0;top:128px;width:720px;height:1152px;">
+      <div class="n" style="margin-top:2px">HostSelectPanel &nbsp;(~Panel · sizeDelta (0,1152) · anchoredPos (0,-128))</div>
+      <div class="nn" style="color:#5b6472">└ HostSelectBackground &nbsp;— Stretch Full · 던전 배경</div>
+    </div>
+
+    <!-- 헤더 -->
+    <div class="b grp" style="left:0;top:144px;width:720px;height:132px;"><div class="nn">HeaderGroup</div></div>
+    <div class="b t3 c" style="left:12px;top:146px;width:84px;height:92px;padding:1px;">
+      <div class="nn" style="font-size:9px">Header</div><div class="nn" style="font-size:9px">GhostDeco</div>
+    </div>
+    <div class="b t2 c" style="left:104px;top:148px;width:396px;height:92px;">
+      <div class="n">HeaderTitleText</div>
+      <div class="v">첫 번째 / HOST 를 선택하세요! &nbsp;(HOST만 골드)</div>
+    </div>
+    <div class="b t1 c" style="left:104px;top:248px;width:496px;height:26px;padding:0 4px;">
+      <div class="nn">HeaderDescText</div>
+    </div>
+    <div class="b t3 c" style="left:500px;top:138px;width:208px;height:144px;padding:1px;">
+      <div class="nn">HeaderPortalDeco</div><div class="k">배경 장식</div>
+    </div>
+
+    <!-- HOST LIST 타이틀 -->
+    <div class="b t2 c" style="left:12px;top:288px;width:344px;height:34px;padding:0;">
+      <div class="nn">HostListTitle &nbsp;/&nbsp; HostListTitleText &nbsp;— ☠ HOST LIST ☠</div>
+    </div>
+
+    <!-- 그리드 프레임 -->
+    <div class="b grp" style="left:12px;top:330px;width:344px;height:590px;padding:1px 3px;">
+      <div class="nn">HostGrid — 3열 × 4행 = 12칸 · cell 108×140 · spacing 10 · 스크롤 없음</div>
+    </div>
+
+    <!-- 행 1 -->
+    <div class="b gold c" style="left:12px;top:330px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_amazoness</div>
+      <div class="nn" style="font-size:8px">SelectMarker ◤</div>
+      <div class="k" style="font-size:9px">Portrait 96×96</div>
+      <div class="v" style="font-size:9px">아마조네스</div>
+      <div class="k" style="font-size:8px">보유 · 선택중</div>
+    </div>
+    <div class="b lock c" style="left:130px;top:330px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_rambo</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">람보</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:248px;top:330px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_wizard</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">마법사</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <!-- 행 2 -->
+    <div class="b lock c" style="left:12px;top:480px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_ninja</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">닌자</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:130px;top:480px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_mafia</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">마피아</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:248px;top:480px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_hitman</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">히트맨</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <!-- 행 3 -->
+    <div class="b lock c" style="left:12px;top:630px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:7px">HostSlot_yogamaster</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">요가마스터</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:130px;top:630px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_dragon</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">드래곤</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:248px;top:630px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_robot</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">로봇</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <!-- 행 4 -->
+    <div class="b lock c" style="left:12px;top:780px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:7px">HostSlot_snowwoman</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">설녀</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:130px;top:780px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_slugger</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">슬러거</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+    <div class="b lock c" style="left:248px;top:780px;width:108px;height:140px;padding:1px;">
+      <div class="nn" style="font-size:8px">HostSlot_vampire</div><div class="k" style="font-size:14px">🔒</div>
+      <div class="v" style="font-size:9px">흡혈귀</div><div class="k" style="font-size:8px">실루엣</div>
+    </div>
+
+    <!-- 좌하단 배경 노출 영역 (9:16 잔여분 흡수) -->
+    <div class="b grp c" style="left:12px;top:934px;width:344px;height:212px;border-color:#b9c0ca;">
+      <div class="nn" style="color:#8d95a1">— 요소 없음 —</div>
+      <div class="k" style="color:#8d95a1">HostSelectBackground 노출 영역</div>
+      <div class="k" style="color:#8d95a1">(목업도 동일 · 9:16 잔여 세로분 흡수처)</div>
+    </div>
+
+    <!-- 고스트 화살표 -->
+    <div class="b grp" style="left:360px;top:498px;width:46px;height:104px;padding:0;"></div>
+    <div class="b t3 c" style="left:362px;top:500px;width:42px;height:58px;padding:0;">
+      <div class="nn" style="font-size:7px">GhostArrow</div><div class="nn" style="font-size:7px">Sprite</div>
+    </div>
+    <div class="b t2 c" style="left:364px;top:564px;width:38px;height:32px;padding:0;">
+      <div class="nn" style="font-size:7px">Chevron »</div>
+    </div>
+
+    <!-- 상세 카드 -->
+    <div class="b t1" style="left:408px;top:288px;width:300px;height:644px;">
+      <div class="nn" style="color:#3d4655">HostDetailCard / HostDetailFrame</div>
+    </div>
+    <div class="b t2 c" style="left:414px;top:304px;width:288px;height:38px;">
+      <div class="nn">HostNameEnText</div><div class="v">AMAZONESS</div>
+    </div>
+    <div class="b t2 c" style="left:414px;top:344px;width:288px;height:26px;padding:0;">
+      <div class="nn">HostNameKrText &nbsp;— 아마조네스</div>
+    </div>
+    <div class="b t3 c" style="left:462px;top:378px;width:192px;height:192px;">
+      <div class="n">HostPortraitImage</div>
+      <div class="k">192×192 = 64px 원본 ×3 (정수 배율)</div>
+      <div class="k">잠금 시 → 실루엣 + HostDetailLockIcon(96×96)</div>
+    </div>
+    <div class="b t2 c" style="left:442px;top:548px;width:232px;height:58px;padding:0;">
+      <div class="nn">HostPortalPedestal</div>
+    </div>
+    <div class="b t2" style="left:428px;top:618px;width:92px;height:22px;padding:0 3px;">
+      <div class="nn">StatGroupLabel</div>
+    </div>
+    <div class="b t1" style="left:424px;top:648px;width:270px;height:32px;padding:1px 3px;">
+      <div class="nn">StatRow_HP &nbsp;· <b>StatIcon_HP</b>/Label/BarBg/BarFill/Value · 72</div>
+    </div>
+    <div class="b t1" style="left:424px;top:686px;width:270px;height:32px;padding:1px 3px;">
+      <div class="nn">StatRow_ATK &nbsp;· <b>StatIcon_ATK</b>/동일 자식 구성 · 68</div>
+    </div>
+    <div class="b t1" style="left:424px;top:724px;width:270px;height:32px;padding:1px 3px;">
+      <div class="nn">StatRow_SPD &nbsp;· <b>StatIcon_SPD</b>/동일 자식 구성 · 82</div>
+    </div>
+    <div class="b exc" style="left:424px;top:762px;width:270px;height:32px;padding:1px 3px;">
+      <div class="nn" style="color:#8d2018">StatRow_DASH ⚠️예외① · <b>StatIcon_DASH</b> (JUMP→DASH) · 90</div>
+    </div>
+    <div class="b t2" style="left:424px;top:810px;width:268px;height:110px;padding:1px 3px;">
+      <div class="nn">UltimateCard &nbsp;/&nbsp; UltimateLabel</div>
+    </div>
+    <div class="b t3 c" style="left:434px;top:842px;width:60px;height:60px;padding:0;">
+      <div class="nn" style="font-size:8px">Ultimate</div><div class="nn" style="font-size:8px">Icon</div>
+    </div>
+    <div class="b exc" style="left:502px;top:842px;width:184px;height:26px;padding:0 3px;">
+      <div class="nn" style="color:#8d2018">UltimateNameText ⚠️예외④</div>
+    </div>
+    <div class="b t1" style="left:502px;top:870px;width:184px;height:46px;padding:1px 3px;">
+      <div class="nn" style="font-size:9px">UltimateDescText (2줄)</div>
+      <div class="k" style="font-size:9px">잠금 시 → <b>해금 조건 텍스트</b>로 대체</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="b blue c" style="left:360px;top:952px;width:348px;height:82px;">
+      <div class="n">HostUpgradeButton &nbsp;🟡 진입만</div>
+      <div class="nn">Icon / TitleText(HOST 강화) / SubText / ArrowIcon ›</div>
+    </div>
+    <div class="b gold c" style="left:360px;top:1046px;width:348px;height:102px;">
+      <div class="n">PossessStartButton &nbsp;✅ → GameScene</div>
+      <div class="nn">PossessGhostIcon / PossessTitleText(빙의 시작)</div>
+      <div class="nn">PossessSubText((POSSESS)) / ArrowIcon ›</div>
+      <div class="k">잠금 선택 시 비활성(무채색·탭 무반응)</div>
+    </div>
+
+    <!-- TipBar -->
+    <div class="b t1" style="left:12px;top:1166px;width:696px;height:78px;padding:1px 3px;">
+      <div class="nn" style="color:#3d4655">TipBar &nbsp;/&nbsp; TipIcon 💡</div>
+    </div>
+    <div class="b exc" style="left:60px;top:1176px;width:400px;height:60px;padding:1px 4px;">
+      <div class="nn" style="color:#8d2018">TipText ⚠️예외①</div>
+      <div class="k" style="font-size:9px">HOST마다 이동속도, <b>대시(회피) 속도</b>, 공격 방식이 다릅니다.<br>다양한 HOST를 경험해 보세요!</div>
+    </div>
+    <div class="b t3 c" style="left:474px;top:1188px;width:40px;height:36px;padding:0;">
+      <div class="nn" style="font-size:7px">OwnedHost</div><div class="nn" style="font-size:7px">ChestIcon</div>
+    </div>
+    <div class="b exc c" style="left:522px;top:1188px;width:180px;height:36px;padding:0 3px;">
+      <div class="nn" style="color:#8d2018">OwnedHostCountText ⚠️예외③</div>
+      <div class="v">보유 HOST 1/12</div>
+    </div>
+
+    <!-- PopupParent -->
+    <div class="b grp" style="left:0;top:128px;width:720px;height:1152px;border-color:#b9c0ca;padding:0 4px;">
+      <div class="nn" style="color:#8d95a1;text-align:right">PopupParent — Stretch Full · sizeDelta (0,0) · 최하위 자식 (1차엔 여는 Popup 없음)</div>
+    </div>
+
+    <!-- 공유 HUD (LobbyMainUI 소유 · 이 패널의 자식 아님) -->
+    <div class="b hud c" style="left:0;top:0;width:720px;height:128px;">
+      <div class="n">TopHudGroup &nbsp;⭐ 공유 — <b>LobbyMainUI 소유 · 이 패널의 자식 아님</b></div>
+      <div class="nn">GhostWidget / StaminaCounter / GoldCounter / GemCounter / MailButton / SettingsButton</div>
+      <div class="k">요소 정의는 AVSR_Screen_Lobby.md — <b>동일 이름을 그대로 사용한다</b></div>
+      <div class="k" style="color:#8d2018">⚠️ 두 목업 불일치: host_select엔 Lv 표기 없음 → <b>로비 목업(Lv+EXP)을 정본 채택</b> (확정 #11)</div>
+    </div>
+
+  </div></div>
+
+  <p class="cap">
+    <b>미결 해소 — 그리드 세로 여백(15칸→12칸)</b>: <b>셀 확대(정수 배율 상한 내) + 잔여는 배경 노출.</b>
+    가로는 3열이 폭을 확정하므로 108px 고정, 세로만 126→140. 근거 = 셀 초상을 <b>32px 원본 ×3 = 96px</b> 정수 배율로 못 박으면
+    셀 높이는 <b>96 + 이름행 30 + 패딩 14 = 140</b>이 자연 도출된다. ×4(128px)로 키우면 이름행이 짓눌린다 —
+    <b>확정 #16(Point 필터·정수 배율)이 셀 크기의 상한을 정한다.</b>
+    4행 그리드(330~920)는 HostDetailCard(288~932) 하단과 12px 내로 정렬되어 좌우 균형이 유지되고,
+    남는 좌하단은 <b>목업이 이미 배경을 노출하던 영역</b>이라 확장분을 그대로 흡수한다.<br>
+    <span class="red">승인된 목업 예외 4건 전부 반영</span> — ① DASH: <b>StatRow_DASH + TipText 2곳</b> · ② 3×4=12칸 ·
+    ③ OwnedHostCountText <b>1/12</b> · ④ UltimateNameText <b>BLADE STORM</b>. 색상 변형 4칸은 코스튬으로 분리(확정 #10).
+  </p>
+</div>
+</body>
+</html>

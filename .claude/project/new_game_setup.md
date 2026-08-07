@@ -115,7 +115,7 @@
   - `"Write(.claude/agents/**)"`, `"Edit(.claude/agents/**)"` 포함 여부 확인
 
 > **기획·아트·사운드 팀 산출물 경로**: 기획팀·사운드팀은 게임별 산출물을 `Projects/[ProjCode]/` 에 생성한다
-> (예: `[ProjCode]_Concept.md`, `[ProjCode]_GD_Design.md`, `[ProjCode]_SND_Design.md`).
+> (예: `[ProjCode]_Concept.md`, `[ProjCode]_Content_[콘텐츠명].md`, `[ProjCode]_SND_Design.md`).
 > 아트팀 완성 에셋은 클라이언트 팀이 `Assets/BundleResource/` 로 반입·통합한다 (핸드오프: `wa-manager-client-lead` 6-1절).
 
 ---
@@ -129,7 +129,7 @@
 - [ ] 레지스트리 §2 **스타일 base 3종**(comfy_positive/negative, gpt_style)만 이 게임 스타일로 교체 (스타일 락)
 - [ ] 이후 에셋 생성 시마다 표에 **한 줄씩 기록**(id·subject·seed·워크플로우·경로·tier)
 
-> **2-티어 원칙 (상속됨)**: **ComfyUI = 무료 초안·구도 탐색(draft)** / **GPT 등 = 최종 품질(final)**.
+> **생성 도구: ChatGPT 단일 티어** (ComfyUI 미사용). 모든 에셋을 GPT에서 **text2img로 새로 생성**한다.
 > final은 프롬프트에서 **새로(text2img) 생성**한다. ⚠️ draft 이미지를 **img2img/edit 레퍼런스로 넣지 않는다**(퀄 상한이 draft에 앵커링됨).
 > 세트 일관성은 **final끼리(예: GPT→GPT) 레퍼런스**로 잡는다. 상세: 레지스트리 템플릿 §0~1.
 

@@ -20,13 +20,13 @@
 |---------|------|---------|
 | **wa-manager-plan-lead** | 팀장/오케스트레이터 | `wa-manager-plan-lead-log.md` |
 | **wa-plan-team-concept** | 컨셉 기획자 | `[ProjCode]_Concept.md` |
-| **wa-plan-team-guide** | 가이드 문서 기획자 | `Unity_GameDev_Template.md` (프로젝트 전용 재작성) |
+| **wa-plan-team-guide** | 화면 설계 (Stage 2b) | `wireframes/[ProjCode]_Screen_*.md` + 박스 목업 `.html` + `[ProjCode]_AssetManifest.md` |
 | **wa-plan-team-project** | 총괄 기획자 | `[ProjCode]_ProjectPlan.md` |
-| **wa-plan-team-system** | 시스템 기획자 | `[ProjCode]_GD_Design.md` (GD-COR/SYS 섹션) |
-| **wa-plan-team-balance-combat** | 전투 밸런스 기획자 | `[ProjCode]_GD_Design.md` (전투 섹션) |
-| **wa-plan-team-balance-economy** | 경제 밸런스 기획자 | `[ProjCode]_GD_Design.md` (경제 섹션) |
-| **wa-plan-team-content** | 컨텐츠 기획자 | `[ProjCode]_GD_Design.md` (LVL 섹션) |
-| **wa-plan-team-narrative** | 내러티브 기획자 | `[ProjCode]_GD_Design.md` (NAR 섹션) |
+| **wa-plan-team-system** | 시스템 기획자 | `[ProjCode]_Content_[콘텐츠명].md` (GD-COR/SYS 섹션) |
+| **wa-plan-team-balance-combat** | 전투 밸런스 기획자 | `[ProjCode]_Content_[콘텐츠명].md` (전투 섹션) |
+| **wa-plan-team-balance-economy** | 경제 밸런스 기획자 | `[ProjCode]_Content_[콘텐츠명].md` (경제 섹션) |
+| **wa-plan-team-content** | 컨텐츠 기획자 | `[ProjCode]_Content_[콘텐츠명].md` (LVL 섹션) |
+| **wa-plan-team-narrative** | 내러티브 기획자 | `[ProjCode]_Content_[콘텐츠명].md` (NAR 섹션) |
 | **wa-plan-team-monetization** | 수익화 기획자 | `[ProjCode]_Monetization_Design.md` |
 | **wa-plan-team-reviewer** | 검수 기획자 | `[ProjCode]_ReviewReport.md` |
 
@@ -75,20 +75,20 @@ wa-manager-plan-lead (Phase A: 준비)
     1. wa-plan-team-concept → [ProjCode]_Concept.md
     ⛔ HUMAN REVIEW GATE (사람 승인 대기)
 
-    2. wa-plan-team-guide → Unity_GameDev_Template.md (재작성)
+    2b. wa-plan-team-guide → Screen_*.md + 박스 목업(.html) + AssetManifest.md
     3. wa-plan-team-project → [ProjCode]_ProjectPlan.md
 
     4. wa-plan-team-system (단독 먼저)
-       → [ProjCode]_GD_Design.md (COR/SYS 섹션)
+       → [ProjCode]_Content_[콘텐츠명].md (COR/SYS 섹션)
 
     5. 병렬 실행:
-       ├── wa-plan-team-balance-combat  → GD_Design (전투 섹션)
-       ├── wa-plan-team-balance-economy → GD_Design (경제 섹션)
-       ├── wa-plan-team-content         → GD_Design (LVL 섹션)
-       ├── wa-plan-team-narrative       → GD_Design (NAR 섹션)
+       ├── wa-plan-team-balance-combat  → Content 스펙 (전투 섹션)
+       ├── wa-plan-team-balance-economy → Content 스펙 (경제 섹션)
+       ├── wa-plan-team-content         → Content 스펙 (LVL 섹션)
+       ├── wa-plan-team-narrative       → Content 스펙 (NAR 섹션)
        └── wa-plan-team-monetization    → Monetization_Design
 
-    6. Lead: GD_Design.md 섹션 병합
+    6. Lead: Content_[콘텐츠명].md 섹션 병합
 
     7. wa-plan-team-reviewer → [ProjCode]_ReviewReport.md
 
@@ -103,9 +103,9 @@ wa-manager-plan-lead (Phase A: 준비)
 ```
 Projects/[ProjCode]/
 ├── [ProjCode]_Concept.md           ← wa-plan-team-concept
-├── Unity_GameDev_Template.md       ← wa-plan-team-guide (A계층 재작성)
+├── wireframes/                    ← wa-plan-team-guide (Stage 2b 화면 설계 + 박스 목업)
 ├── [ProjCode]_ProjectPlan.md       ← wa-plan-team-project (C)
-├── [ProjCode]_GD_Design.md         ← wa-plan-team-system + balance-combat/economy + content + narrative 병합 (D)
+├── [ProjCode]_Content_[콘텐츠명].md         ← wa-plan-team-system + balance-combat/economy + content + narrative 병합 (D)
 ├── [ProjCode]_SND_Design.md        ← wa-manager-sound-lead 팀 (사운드 방향 기획)
 ├── [ProjCode]_Monetization_Design.md ← wa-plan-team-monetization
 ├── [ProjCode]_ReviewReport.md      ← wa-plan-team-reviewer
