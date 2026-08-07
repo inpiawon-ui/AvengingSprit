@@ -64,6 +64,8 @@ namespace Game.Module.Lobby
             _tokens.Clear();
         }
 
+        public bool IsOpen => gameObject.activeSelf;
+
         public void Open(bool isChapterStart)
         {
             _isChapterStart = isChapterStart;

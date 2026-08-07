@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Game.Module.Common;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Data;
+using GameFramework.Core.Module.Input;
 using GameFramework.Core.Module.Network;
 using GameFramework.Core.Module.Scene;
 using UnityEngine;
@@ -26,6 +27,8 @@ namespace Game.Module.Boot
         {
             // 세이브 — 평문 JSON(민감정보 없음). 수동 등록 모듈은 Auto 스캔 이전에 등록한다.
             RegisterModule(new DataModule());
+            // 입력 — 뒤로가기(ESC·안드로이드 백) 처리에 필요하다.
+            RegisterModule(new InputModule());
 
             // NetworkModule은 [Module(Layer = ModuleLayer.Core)] 어트리뷰트로
             // base.RegisterModules()의 자동 스캔에서 등록됨 — 수동 등록 불필요

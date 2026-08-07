@@ -143,7 +143,7 @@ for c, t in zip(TAB_C, TABS):
     add(f'{t}Tab', 'content', (c - 50, 620, 100, 72))
     add(f'{t}TabIcon', 'content', (c - 20, 624, 40, 40))
     add(f'{t}TabLabel', 'content', (c - 50, 674, 100, 17),
-        text=t.upper(), size=cap(10), align='C', color=WHITE)
+        text=t.upper(), size=cap(9), align='C', color=WHITE)
 add('MissionTab/NotifyBadge', 'content', (141, 619, 18, 18))
 add('FriendsTabLock', 'content', (549, 641, 21, 21))
 
@@ -151,20 +151,20 @@ add('FriendsTabLock', 'content', (549, 641, 21, 21))
 add('MainActionBar', 'content', (12, 706, 645, 196))
 add('HostButton', 'content', (12, 712, 200, 188))
 add('HostButtonArt', 'content', (20, 718, 184, 116))
-add('HostButtonTitleText', 'content', (12, 833, 200, 34), text='HOST', size=cap(28), align='C', color=LAV)
+add('HostButtonTitleText', 'content', (12, 836, 200, 34), text='HOST', size=cap(28), align='C', color=LAV)
 add('HostButtonSubText', 'content', (12, 869, 200, 20),
     text='육성 · ULTIMATE · 도감', size=cap(12), align='C', color=LAV_D)
 add('HostButton/NotifyBadge', 'content', (194, 715, 20, 20))
 
 add('ChapterButton', 'content', (228, 708, 215, 194))
 add('ChapterButtonArt', 'content', (235, 714, 201, 122))
-add('ChapterButtonTitleText', 'content', (228, 833, 215, 36), text='CHAPTER', size=cap(32), align='C', color=GOLD)
+add('ChapterButtonTitleText', 'content', (228, 838, 215, 34), text='CHAPTER', size=cap(32), align='C', color=GOLD)
 add('ChapterButtonSubText', 'content', (228, 869, 215, 20),
     text='게임 시작', size=cap(12), align='C', color=GOLD_D)
 
 add('ShopButton', 'content', (452, 712, 203, 188))
 add('ShopButtonArt', 'content', (458, 718, 191, 116))
-add('ShopButtonTitleText', 'content', (452, 833, 203, 34), text='SHOP', size=cap(28), align='C', color=SHOP)
+add('ShopButtonTitleText', 'content', (452, 836, 203, 34), text='SHOP', size=cap(28), align='C', color=SHOP)
 add('ShopButtonSubText', 'content', (452, 869, 203, 20),
     text='상점 · 패키지 · 재화', size=cap(12), align='C', color=SHOP_D)
 add('ShopButton/NotifyBadge', 'content', (637, 715, 20, 20))

@@ -556,7 +556,7 @@
    "w": 105.4,
    "h": 17.9,
    "text": "MISSION",
-   "size": 15.1,
+   "size": 13.6,
    "align": "C",
    "color": "#F2F4F8"
   },
@@ -581,7 +581,7 @@
    "w": 105.4,
    "h": 17.9,
    "text": "ACHIEVEMENT",
-   "size": 15.1,
+   "size": 13.6,
    "align": "C",
    "color": "#F2F4F8"
   },
@@ -606,7 +606,7 @@
    "w": 105.4,
    "h": 17.9,
    "text": "RANKING",
-   "size": 15.1,
+   "size": 13.6,
    "align": "C",
    "color": "#F2F4F8"
   },
@@ -631,7 +631,7 @@
    "w": 105.4,
    "h": 17.9,
    "text": "INVENTORY",
-   "size": 15.1,
+   "size": 13.6,
    "align": "C",
    "color": "#F2F4F8"
   },
@@ -656,7 +656,7 @@
    "w": 105.4,
    "h": 17.9,
    "text": "FRIENDS",
-   "size": 15.1,
+   "size": 13.6,
    "align": "C",
    "color": "#F2F4F8"
   },
@@ -698,7 +698,7 @@
   {
    "name": "HostButtonTitleText",
    "x": 12.7,
-   "y": 1078.7,
+   "y": 1081.8,
    "w": 210.8,
    "h": 35.8,
    "text": "HOST",
@@ -741,9 +741,9 @@
   {
    "name": "ChapterButtonTitleText",
    "x": 240.4,
-   "y": 1078.7,
+   "y": 1083.9,
    "w": 226.6,
-   "h": 38.0,
+   "h": 35.8,
    "text": "CHAPTER",
    "size": 48.2,
    "align": "C",
@@ -777,7 +777,7 @@
   {
    "name": "ShopButtonTitleText",
    "x": 476.5,
-   "y": 1078.7,
+   "y": 1081.8,
    "w": 214.0,
    "h": 35.8,
    "text": "SHOP",

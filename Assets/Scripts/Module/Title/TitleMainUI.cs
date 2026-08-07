@@ -15,7 +15,7 @@ namespace Game.Module.Title
     /// 타이틀 화면. 기능은 전면 탭 1종뿐이다.
     /// 원작 아케이드의 "화면 하나 · 프롬프트 하나" 를 따른다 — 버튼 위젯을 두지 않는다.
     /// </summary>
-    public sealed class TitleMainUI : MonoBehaviour
+    public sealed class TitleMainUI : MonoBehaviour, IBackTarget
     {
         private const float BlinkPeriod = 1.1f;
 
@@ -34,7 +34,11 @@ namespace Game.Module.Title
             _ui.SetText("VersionText", $"v{Application.version}");
 
             _ui.OnClick("TouchArea", OnTapped);
+            gameObject.AddComponent<BackButtonRouter>();
         }
+
+        /// <summary>타이틀에는 되돌아갈 화면이 없다 — 라우터가 종료 확인을 띄운다.</summary>
+        public bool OnBackPressed() => false;
 
         private void OnEnable()
         {

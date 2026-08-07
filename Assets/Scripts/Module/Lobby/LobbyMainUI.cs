@@ -17,7 +17,7 @@ namespace Game.Module.Lobby
     ///   CONTINUE · CHAPTER → 스테이지 진입 모드
     ///   HOST              → 조회·강화 모드
     /// </summary>
-    public sealed class LobbyMainUI : MonoBehaviour
+    public sealed class LobbyMainUI : MonoBehaviour, IBackTarget
     {
         private const float ExpBarWidth = 84f;   // 목업 실측 — GhostExpBarBg 폭
 
@@ -47,6 +47,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
 
+            gameObject.AddComponent<BackButtonRouter>();
             _ui.SetText("VersionText", $"v{Application.version}");
 
             _ui.OnClick("ContinueButton", () => OpenHostSelect(true));
@@ -134,6 +135,17 @@ namespace Game.Module.Lobby
                 return;
             }
             _hostSelectPanel.Open(e.IsChapterStart);
+        }
+
+        /// <summary>로비에서 열리는 것은 호스트 선택 패널뿐이다. 열려 있으면 그것부터 닫는다.</summary>
+        public bool OnBackPressed()
+        {
+            if (_hostSelectPanel != null && _hostSelectPanel.IsOpen)
+            {
+                _hostSelectPanel.Close();
+                return true;
+            }
+            return false;
         }
 
         private void NotifyNotReady(string label)
