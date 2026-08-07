@@ -1,0 +1,824 @@
+{
+ "screen": "Lobby",
+ "root": "LobbyMainUI",
+ "items": [
+  {
+   "name": "TopHudGroup",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 720.0,
+   "h": 105.4
+  },
+  {
+   "name": "TopHudBackground",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 720.0,
+   "h": 105.4
+  },
+  {
+   "name": "GhostWidget",
+   "x": 9.5,
+   "y": 10.5,
+   "w": 169.7,
+   "h": 81.2
+  },
+  {
+   "name": "GhostPortraitIcon",
+   "x": 12.7,
+   "y": 13.7,
+   "w": 61.1,
+   "h": 61.1
+  },
+  {
+   "name": "GhostLabelText",
+   "x": 82.2,
+   "y": 16.9,
+   "w": 86.4,
+   "h": 16.9,
+   "text": "GHOST",
+   "size": 13.6,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "GhostLevelText",
+   "x": 82.2,
+   "y": 34.8,
+   "w": 86.4,
+   "h": 22.1,
+   "size": 18.1,
+   "align": "L",
+   "color": "#F0B428"
+  },
+  {
+   "name": "GhostExpBarBg",
+   "x": 82.2,
+   "y": 58.0,
+   "w": 84.3,
+   "h": 11.6
+  },
+  {
+   "name": "GhostExpBarFill",
+   "x": 82.2,
+   "y": 58.0,
+   "w": 84.3,
+   "h": 11.6
+  },
+  {
+   "name": "GhostExpText",
+   "x": 101.2,
+   "y": 69.6,
+   "w": 65.4,
+   "h": 15.8,
+   "size": 13.6,
+   "align": "R",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StaminaCounter",
+   "x": 188.7,
+   "y": 22.1,
+   "w": 111.7,
+   "h": 35.8
+  },
+  {
+   "name": "StaminaIcon",
+   "x": 196.1,
+   "y": 28.5,
+   "w": 16.9,
+   "h": 22.1
+  },
+  {
+   "name": "StaminaText",
+   "x": 217.2,
+   "y": 29.5,
+   "w": 54.8,
+   "h": 20.0,
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "StaminaCounter/PlusButton",
+   "x": 275.1,
+   "y": 31.6,
+   "w": 16.9,
+   "h": 16.9
+  },
+  {
+   "name": "GoldCounter",
+   "x": 307.8,
+   "y": 22.1,
+   "w": 113.9,
+   "h": 35.8
+  },
+  {
+   "name": "GoldIcon",
+   "x": 315.2,
+   "y": 28.5,
+   "w": 22.1,
+   "h": 22.1
+  },
+  {
+   "name": "GoldText",
+   "x": 341.6,
+   "y": 29.5,
+   "w": 59.0,
+   "h": 20.0,
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "GoldCounter/PlusButton",
+   "x": 401.6,
+   "y": 31.6,
+   "w": 16.9,
+   "h": 16.9
+  },
+  {
+   "name": "GemCounter",
+   "x": 431.2,
+   "y": 22.1,
+   "w": 116.0,
+   "h": 35.8
+  },
+  {
+   "name": "GemIcon",
+   "x": 437.5,
+   "y": 28.5,
+   "w": 22.1,
+   "h": 22.1
+  },
+  {
+   "name": "GemText",
+   "x": 463.8,
+   "y": 29.5,
+   "w": 59.0,
+   "h": 20.0,
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "GemCounter/PlusButton",
+   "x": 525.0,
+   "y": 31.6,
+   "w": 16.9,
+   "h": 16.9
+  },
+  {
+   "name": "MailButton",
+   "x": 597.7,
+   "y": 27.4,
+   "w": 36.9,
+   "h": 27.4
+  },
+  {
+   "name": "MailButton/NotifyBadge",
+   "x": 625.1,
+   "y": 20.0,
+   "w": 20.0,
+   "h": 20.0
+  },
+  {
+   "name": "SettingsButton",
+   "x": 665.2,
+   "y": 26.4,
+   "w": 28.5,
+   "h": 28.5
+  },
+  {
+   "name": "GhostAvatar",
+   "x": 269.9,
+   "y": 510.5,
+   "w": 185.5,
+   "h": 231.9
+  },
+  {
+   "name": "PortalRing",
+   "x": 269.9,
+   "y": 830.9,
+   "w": 185.5,
+   "h": 56.9
+  },
+  {
+   "name": "ChapterCard",
+   "x": 14.8,
+   "y": 504.1,
+   "w": 208.7,
+   "h": 305.7
+  },
+  {
+   "name": "ChapterNumberText",
+   "x": 23.2,
+   "y": 514.7,
+   "w": 137.0,
+   "h": 22.1,
+   "size": 21.1,
+   "align": "L",
+   "color": "#4AA8E8"
+  },
+  {
+   "name": "ChapterNameText",
+   "x": 21.1,
+   "y": 537.9,
+   "w": 168.7,
+   "h": 31.6,
+   "size": 36.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "BossLabel",
+   "x": 21.1,
+   "y": 572.7,
+   "w": 63.3,
+   "h": 20.0,
+   "text": "BOSS",
+   "size": 19.6,
+   "align": "L",
+   "color": "#E8404A"
+  },
+  {
+   "name": "BossNameText",
+   "x": 21.1,
+   "y": 598.0,
+   "w": 82.2,
+   "h": 22.1,
+   "size": 19.6,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "BossPortrait",
+   "x": 105.4,
+   "y": 571.6,
+   "w": 75.9,
+   "h": 84.3
+  },
+  {
+   "name": "ProgressLabel",
+   "x": 21.1,
+   "y": 672.8,
+   "w": 84.3,
+   "h": 20.0,
+   "text": "PROGRESS",
+   "size": 19.6,
+   "align": "L",
+   "color": "#6E90B8"
+  },
+  {
+   "name": "ProgressBarBg",
+   "x": 21.1,
+   "y": 696.0,
+   "w": 128.6,
+   "h": 9.5
+  },
+  {
+   "name": "ProgressBarFill",
+   "x": 21.1,
+   "y": 696.0,
+   "w": 128.6,
+   "h": 9.5
+  },
+  {
+   "name": "ProgressText",
+   "x": 21.1,
+   "y": 688.6,
+   "w": 84.3,
+   "h": 22.1,
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "ProgressRewardChest",
+   "x": 156.0,
+   "y": 674.9,
+   "w": 35.8,
+   "h": 34.8
+  },
+  {
+   "name": "ContinueButton",
+   "x": 31.6,
+   "y": 729.7,
+   "w": 184.5,
+   "h": 65.4
+  },
+  {
+   "name": "ContinueButtonText",
+   "x": 31.6,
+   "y": 738.2,
+   "w": 184.5,
+   "h": 27.4,
+   "size": 27.1,
+   "align": "C",
+   "color": "#241A08"
+  },
+  {
+   "name": "ContinueButton/StaminaIcon",
+   "x": 100.1,
+   "y": 766.6,
+   "w": 19.0,
+   "h": 22.1,
+   "create": "IMG",
+   "parent": "ContinueButton"
+  },
+  {
+   "name": "ContinueCostText",
+   "x": 122.3,
+   "y": 767.7,
+   "w": 46.4,
+   "h": 20.0,
+   "text": "x5",
+   "size": 19.6,
+   "align": "L",
+   "color": "#241A08"
+  },
+  {
+   "name": "SidePromoGroup",
+   "x": 482.8,
+   "y": 504.1,
+   "w": 220.3,
+   "h": 316.3
+  },
+  {
+   "name": "BattlePassCard",
+   "x": 482.8,
+   "y": 504.1,
+   "w": 220.3,
+   "h": 100.1
+  },
+  {
+   "name": "BattlePassTitleText",
+   "x": 491.2,
+   "y": 513.6,
+   "w": 137.0,
+   "h": 22.1,
+   "text": "BATTLE PASS",
+   "size": 22.6,
+   "align": "L",
+   "color": "#F0B428",
+   "create": "TMP",
+   "parent": "BattlePassCard"
+  },
+  {
+   "name": "BattlePassSeasonText",
+   "x": 493.4,
+   "y": 538.9,
+   "w": 137.0,
+   "h": 21.1,
+   "text": "SEASON 1",
+   "size": 21.1,
+   "align": "L",
+   "color": "#F2F4F8",
+   "create": "TMP",
+   "parent": "BattlePassCard"
+  },
+  {
+   "name": "BattlePassBadge",
+   "x": 491.2,
+   "y": 565.3,
+   "w": 35.8,
+   "h": 35.8
+  },
+  {
+   "name": "BattlePassBarBg",
+   "x": 532.4,
+   "y": 570.5,
+   "w": 82.2,
+   "h": 10.5
+  },
+  {
+   "name": "BattlePassBarFill",
+   "x": 532.4,
+   "y": 570.5,
+   "w": 82.2,
+   "h": 10.5
+  },
+  {
+   "name": "BattlePassExpText",
+   "x": 530.2,
+   "y": 581.1,
+   "w": 86.4,
+   "h": 20.0,
+   "text": "45 / 100",
+   "size": 19.6,
+   "align": "C",
+   "color": "#F2F4F8",
+   "create": "TMP",
+   "parent": "BattlePassCard"
+  },
+  {
+   "name": "BattlePassArt",
+   "x": 616.7,
+   "y": 506.2,
+   "w": 82.2,
+   "h": 97.0
+  },
+  {
+   "name": "EventCard",
+   "x": 482.8,
+   "y": 611.7,
+   "w": 220.3,
+   "h": 102.3
+  },
+  {
+   "name": "EventTitleText",
+   "x": 491.2,
+   "y": 620.1,
+   "w": 137.0,
+   "h": 27.4,
+   "text": "EVENT",
+   "size": 30.1,
+   "align": "L",
+   "color": "#4AA8E8",
+   "create": "TMP",
+   "parent": "EventCard"
+  },
+  {
+   "name": "EventTimerText",
+   "x": 491.2,
+   "y": 674.9,
+   "w": 137.0,
+   "h": 22.1,
+   "text": "6D 18H",
+   "size": 21.1,
+   "align": "L",
+   "color": "#4AA8E8",
+   "create": "TMP",
+   "parent": "EventCard"
+  },
+  {
+   "name": "EventArt",
+   "x": 600.9,
+   "y": 626.4,
+   "w": 80.1,
+   "h": 82.2
+  },
+  {
+   "name": "EventCard/NotifyBadge",
+   "x": 672.6,
+   "y": 613.8,
+   "w": 23.2,
+   "h": 23.2
+  },
+  {
+   "name": "DailyLoginCard",
+   "x": 482.8,
+   "y": 719.2,
+   "w": 220.3,
+   "h": 101.2
+  },
+  {
+   "name": "DailyLoginTitleText",
+   "x": 491.2,
+   "y": 725.5,
+   "w": 158.1,
+   "h": 25.3,
+   "text": "DAILY LOGIN",
+   "size": 27.1,
+   "align": "L",
+   "color": "#8CD048",
+   "create": "TMP",
+   "parent": "DailyLoginCard"
+  },
+  {
+   "name": "DailyLoginArt",
+   "x": 603.0,
+   "y": 740.3,
+   "w": 54.8,
+   "h": 48.5
+  },
+  {
+   "name": "DailyLoginCheck",
+   "x": 487.0,
+   "y": 785.6,
+   "w": 16.9,
+   "h": 16.9,
+   "clone": 4,
+   "dx": 17.9
+  },
+  {
+   "name": "DailyLoginDayText",
+   "x": 645.2,
+   "y": 789.8,
+   "w": 52.7,
+   "h": 19.0,
+   "text": "DAY 5",
+   "size": 16.6,
+   "align": "R",
+   "color": "#F2F4F8",
+   "create": "TMP",
+   "parent": "DailyLoginCard"
+  },
+  {
+   "name": "DailyLoginCard/NotifyBadge",
+   "x": 672.6,
+   "y": 721.3,
+   "w": 23.2,
+   "h": 23.2
+  },
+  {
+   "name": "FeatureTabBar",
+   "x": 21.1,
+   "y": 852.0,
+   "w": 674.7,
+   "h": 80.1
+  },
+  {
+   "name": "FeatureTabBarBackground",
+   "x": 21.1,
+   "y": 852.0,
+   "w": 674.7,
+   "h": 80.1
+  },
+  {
+   "name": "MissionTab",
+   "x": 64.3,
+   "y": 854.1,
+   "w": 105.4,
+   "h": 75.9
+  },
+  {
+   "name": "MissionTabIcon",
+   "x": 95.9,
+   "y": 858.3,
+   "w": 42.2,
+   "h": 42.2
+  },
+  {
+   "name": "MissionTabLabel",
+   "x": 64.3,
+   "y": 911.0,
+   "w": 105.4,
+   "h": 17.9,
+   "text": "MISSION",
+   "size": 15.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "AchievementTab",
+   "x": 181.3,
+   "y": 854.1,
+   "w": 105.4,
+   "h": 75.9
+  },
+  {
+   "name": "AchievementTabIcon",
+   "x": 212.9,
+   "y": 858.3,
+   "w": 42.2,
+   "h": 42.2
+  },
+  {
+   "name": "AchievementTabLabel",
+   "x": 181.3,
+   "y": 911.0,
+   "w": 105.4,
+   "h": 17.9,
+   "text": "ACHIEVEMENT",
+   "size": 15.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "RankingTab",
+   "x": 298.3,
+   "y": 854.1,
+   "w": 105.4,
+   "h": 75.9
+  },
+  {
+   "name": "RankingTabIcon",
+   "x": 330.0,
+   "y": 858.3,
+   "w": 42.2,
+   "h": 42.2
+  },
+  {
+   "name": "RankingTabLabel",
+   "x": 298.3,
+   "y": 911.0,
+   "w": 105.4,
+   "h": 17.9,
+   "text": "RANKING",
+   "size": 15.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "InventoryTab",
+   "x": 415.3,
+   "y": 854.1,
+   "w": 105.4,
+   "h": 75.9
+  },
+  {
+   "name": "InventoryTabIcon",
+   "x": 447.0,
+   "y": 858.3,
+   "w": 42.2,
+   "h": 42.2
+  },
+  {
+   "name": "InventoryTabLabel",
+   "x": 415.3,
+   "y": 911.0,
+   "w": 105.4,
+   "h": 17.9,
+   "text": "INVENTORY",
+   "size": 15.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "FriendsTab",
+   "x": 532.4,
+   "y": 854.1,
+   "w": 105.4,
+   "h": 75.9
+  },
+  {
+   "name": "FriendsTabIcon",
+   "x": 564.0,
+   "y": 858.3,
+   "w": 42.2,
+   "h": 42.2
+  },
+  {
+   "name": "FriendsTabLabel",
+   "x": 532.4,
+   "y": 911.0,
+   "w": 105.4,
+   "h": 17.9,
+   "text": "FRIENDS",
+   "size": 15.1,
+   "align": "C",
+   "color": "#F2F4F8"
+  },
+  {
+   "name": "MissionTab/NotifyBadge",
+   "x": 148.6,
+   "y": 853.1,
+   "w": 19.0,
+   "h": 19.0
+  },
+  {
+   "name": "FriendsTabLock",
+   "x": 578.7,
+   "y": 876.3,
+   "w": 22.1,
+   "h": 22.1
+  },
+  {
+   "name": "MainActionBar",
+   "x": 12.7,
+   "y": 944.8,
+   "w": 679.9,
+   "h": 206.6
+  },
+  {
+   "name": "HostButton",
+   "x": 12.7,
+   "y": 951.1,
+   "w": 210.8,
+   "h": 198.2
+  },
+  {
+   "name": "HostButtonArt",
+   "x": 21.1,
+   "y": 957.4,
+   "w": 194.0,
+   "h": 122.3
+  },
+  {
+   "name": "HostButtonTitleText",
+   "x": 12.7,
+   "y": 1078.7,
+   "w": 210.8,
+   "h": 35.8,
+   "text": "HOST",
+   "size": 42.2,
+   "align": "C",
+   "color": "#C9A0F0"
+  },
+  {
+   "name": "HostButtonSubText",
+   "x": 12.7,
+   "y": 1116.6,
+   "w": 210.8,
+   "h": 21.1,
+   "text": "육성 · ULTIMATE · 도감",
+   "size": 18.1,
+   "align": "C",
+   "color": "#9B7ACC"
+  },
+  {
+   "name": "HostButton/NotifyBadge",
+   "x": 204.5,
+   "y": 954.3,
+   "w": 21.1,
+   "h": 21.1
+  },
+  {
+   "name": "ChapterButton",
+   "x": 240.4,
+   "y": 946.9,
+   "w": 226.6,
+   "h": 204.5
+  },
+  {
+   "name": "ChapterButtonArt",
+   "x": 247.7,
+   "y": 953.2,
+   "w": 211.9,
+   "h": 128.6
+  },
+  {
+   "name": "ChapterButtonTitleText",
+   "x": 240.4,
+   "y": 1078.7,
+   "w": 226.6,
+   "h": 38.0,
+   "text": "CHAPTER",
+   "size": 48.2,
+   "align": "C",
+   "color": "#F0B428"
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "x": 240.4,
+   "y": 1116.6,
+   "w": 226.6,
+   "h": 21.1,
+   "text": "게임 시작",
+   "size": 18.1,
+   "align": "C",
+   "color": "#C89830"
+  },
+  {
+   "name": "ShopButton",
+   "x": 476.5,
+   "y": 951.1,
+   "w": 214.0,
+   "h": 198.2
+  },
+  {
+   "name": "ShopButtonArt",
+   "x": 482.8,
+   "y": 957.4,
+   "w": 201.3,
+   "h": 122.3
+  },
+  {
+   "name": "ShopButtonTitleText",
+   "x": 476.5,
+   "y": 1078.7,
+   "w": 214.0,
+   "h": 35.8,
+   "text": "SHOP",
+   "size": 42.2,
+   "align": "C",
+   "color": "#6EC0F0"
+  },
+  {
+   "name": "ShopButtonSubText",
+   "x": 476.5,
+   "y": 1116.6,
+   "w": 214.0,
+   "h": 21.1,
+   "text": "상점 · 패키지 · 재화",
+   "size": 18.1,
+   "align": "C",
+   "color": "#5A96C0"
+  },
+  {
+   "name": "ShopButton/NotifyBadge",
+   "x": 671.5,
+   "y": 954.3,
+   "w": 21.1,
+   "h": 21.1
+  },
+  {
+   "name": "LogoLockup",
+   "x": 263.5,
+   "y": 1157.7,
+   "w": 168.7,
+   "h": 113.9
+  },
+  {
+   "name": "VersionText",
+   "x": 14.8,
+   "y": 1246.3,
+   "w": 73.8,
+   "h": 15.8,
+   "size": 15.1,
+   "align": "L",
+   "color": "#4A5468"
+  }
+ ]
+}

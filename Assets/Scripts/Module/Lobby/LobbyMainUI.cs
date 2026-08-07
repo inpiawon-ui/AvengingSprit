@@ -19,7 +19,11 @@ namespace Game.Module.Lobby
     /// </summary>
     public sealed class LobbyMainUI : MonoBehaviour
     {
-        private const float ExpBarWidth = 106f;
+        private const float ExpBarWidth = 84f;   // 목업 실측 — GhostExpBarBg 폭
+
+        // TBD-CH — 챕터 미기획. 목업이 노출한 CH3 값만 실제 문구다.
+        private static readonly string[] ChapterNames = { "FACTORY", "HARBOR", "TOWER" };
+        private static readonly string[] BossNames = { "MAD DOCTOR", "IRON CLAW", "OVERLORD" };
 
         [SerializeField] private HostSelectPanel _hostSelectPanel;
 
@@ -42,6 +46,8 @@ namespace Game.Module.Lobby
         {
             _ui = new UIBinder(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
+
+            _ui.SetText("VersionText", $"v{Application.version}");
 
             _ui.OnClick("ContinueButton", () => OpenHostSelect(true));
             _ui.OnClick("ChapterButton",  () => OpenHostSelect(true));
@@ -103,6 +109,12 @@ namespace Game.Module.Lobby
             if (_player == null || !_player.IsReady) return;
             _ui.SetText("ChapterNumberText", $"CHAPTER {_player.CurrentChapter:00}");
             _ui.SetText("ProgressText", $"{_player.ReachedStage} / 30");
+
+            // 챕터 콘텐츠 미기획 — 목업(CH3)의 문구를 임시로 쓴다.
+            // ChapterTable 이 생기면 이 배열을 걷어내고 데이터에서 읽는다. (TBD-CH)
+            int idx = Mathf.Clamp(_player.CurrentChapter - 1, 0, ChapterNames.Length - 1);
+            _ui.SetText("ChapterNameText", ChapterNames[idx]);
+            _ui.SetText("BossNameText", BossNames[idx]);
             // 신규 유저에게 '이어서 하기'는 성립하지 않는다 — 상태별 라벨 전환
             bool started = _player.ReachedStage > 1 || _player.ClearedChapter > 0;
             _ui.SetText("ContinueButtonText", started ? "CONTINUE" : "START");
