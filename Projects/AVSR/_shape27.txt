@@ -1,0 +1,30 @@
+파일                             대칭    색      밀도      내부  판정
+hostselectbackground          13%   16    3.8%          OK
+hostlisttitle                 39%   14   11.7%          OK
+hostdetailframe               26%   15    3.5%    1.1%  OK
+ultimatecard                  34%   15    6.3%    0.0%  OK
+hostupgradebutton             77%   14   35.3%    0.0%  OK
+possessstartbutton            78%   15   64.7%    1.7%  OK
+tipbar                        26%   15    3.8%    0.0%  OK
+hostslotframe                 27%   15    5.7%    0.0%  OK
+hostslotframe_selected        36%   12   10.8%    0.0%  OK
+hostslotframe_locked          29%   14    0.0%    0.0%  OK
+hostslotlockicon              42%   15   69.8%          OK
+hostslotselectmarker          18%   14  100.0%          OK
+hostdetaillockicon            48%   15   72.8%          OK
+headerghostdeco               22%   13   83.8%          OK
+headerportaldeco              68%   15   97.0%          OK
+hostportalpedestal            72%   14   71.8%          OK
+ghostarrowsprite              25%   14   68.7%          OK
+ghostarrowchevron             16%   14  100.0%          OK
+possessghosticon              36%   14   94.7%          OK
+hostupgradeicon               55%   14  100.0%          OK
+arrowicon                     13%   13    5.2%          OK
+ownedhostchesticon            13%   15   74.1%          OK
+tipicon                       83%   14  100.0%          OK
+staticon_hp                   41%   13  100.0%          OK
+staticon_atk                  12%   13  100.0%          OK
+staticon_spd                  15%   14  100.0%          OK
+staticon_dash                 12%   14  100.0%          OK
+
+코드 도형 0건 / 27개

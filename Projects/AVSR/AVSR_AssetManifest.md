@@ -85,11 +85,11 @@ ChatGPT :  시안 → 승인 → 전량 생성 → 개별 PNG 분리 → 파일�
 |----------|---------|------:|-------:|:---:|--------|-------|--------|------|
 | `backgroundimage.png` | `BackgroundImage` | 720 | 1280 | N | - | center | GPT | S1 배경. 야경 도시 실루엣, 로비보다 더 어둡고 요소 적게. 상단 절반은 여백 |
 | `titlelogo.png` | `TitleLogo` | 582 | 306 | Y | - | center | **GPT+ANCHOR** | `logolockup` **×3 정수 확대**. 앵커: `ui_crops/logolockup_x3.png` — 로고 형태를 최대한 보존 |
-| `tophudbackground.png` | `TopHudBackground` | 720 | 128 | Y | 16,16,16,20 | center | GPT | 어두운 반투명 바 + 하단 골드 1px 라인 |
+| `tophudbackground.png` | `TopHudBackground` | 720 | 128 | Y | 18,18,16,20 | center | GPT | 어두운 반투명 바 + 하단 골드 1px 라인 |
 | `ghostwidget.png` | `GhostWidget` | 188 | 96 | Y | 10,10,10,10 | center | GPT | 청색 테두리 패널, 내부 비움 |
 | `ghostportraiticon.png` | `GhostPortraitIcon` | 60 | 60 | Y | - | center | GPT+ANCHOR | 고스트 얼굴 버스트. 크롭 원본 ~48×52로 작고 JPEG 노이즈 지배 → 리드로우 |
 | `ghostexpbarbg.png` | `GhostExpBarBg` | 106 | 14 | Y | 4,4,4,4 | center | GPT | 빈 트랙 (어두운 슬롯) |
-| `ghostexpbarfill.png` | `GhostExpBarFill` | 106 | 14 | Y | 4,4,4,4 | **left** | GPT | 청색 `#489CFC` 채움. EXP(적색 HP 아님) |
+| `ghostexpbarfill.png` | `GhostExpBarFill` | 106 | 14 | Y | 4,4,4,6 | **left** | GPT | 청색 `#489CFC` 채움. EXP(적색 HP 아님) |
 | `staminacounter.png` | `StaminaCounter` | 126 | 60 | Y | 20,20,12,12 | center | GPT | 골드 테두리 캡슐. 9-slice라 골드/젬과 동일 소스 복제 가능 |
 | `goldcounter.png` | `GoldCounter` | 132 | 60 | Y | 20,20,12,12 | center | GPT | 위와 동일 디자인 |
 | `gemcounter.png` | `GemCounter` | 112 | 60 | Y | 20,20,12,12 | center | GPT | 위와 동일 디자인 |
@@ -112,8 +112,8 @@ ChatGPT :  시안 → 승인 → 전량 생성 → 개별 PNG 분리 → 파일�
 | `battlepasscard.png` | `BattlePassCard` | 238 | 112 | Y | 16,16,16,16 | center | GPT | 골드 테두리 카드 프레임 |
 | `battlepassart.png` | `BattlePassArt` | 90 | 80 | Y | - | center | GPT+ANCHOR | 시즌 대표 캐릭터 버스트(목업 = 군인) |
 | `battlepassbadge.png` | `BattlePassBadge` | 40 | 40 | Y | - | center | GPT+ANCHOR | 방패 배지. 보라 채도 억제 |
-| `battlepassbarbg.png` | `BattlePassBarBg` | 120 | 14 | Y | 4,4,4,4 | center | GPT | 빈 트랙 |
-| `battlepassbarfill.png` | `BattlePassBarFill` | 120 | 14 | Y | 4,4,4,4 | **left** | GPT | 골드 채움 |
+| `battlepassbarbg.png` | `BattlePassBarBg` | 120 | 14 | Y | 6,6,4,4 | center | GPT | 빈 트랙 |
+| `battlepassbarfill.png` | `BattlePassBarFill` | 120 | 14 | Y | 4,4,4,6 | **left** | GPT | 골드 채움 |
 | `eventcard.png` | `EventCard` | 238 | 104 | Y | 16,16,16,16 | center | GPT | 청 테두리 카드 프레임 |
 | `eventart.png` | `EventArt` | 70 | 64 | Y | - | center | GPT+ANCHOR | 적·금 리본 선물상자 |
 | `dailylogincard.png` | `DailyLoginCard` | 238 | 112 | Y | 16,16,16,16 | center | GPT | 녹 테두리 카드 프레임 |
@@ -153,14 +153,14 @@ ChatGPT :  시안 → 승인 → 전량 생성 → 개별 PNG 분리 → 파일�
 | `staticon_atk.png` | `StatIcon_ATK` | 28 | 28 | Y | - | center | GPT | 주황 검 |
 | `staticon_spd.png` | `StatIcon_SPD` | 28 | 28 | Y | - | center | GPT | 청색 날개 부츠 |
 | `staticon_dash.png` ⚠️ | `StatIcon_DASH` | 28 | 28 | Y | - | center | GPT | **녹색 잔상 회피 스트릭**(옆으로 피하는 실루엣 + 잔상). ⚠️ **점프 아이콘 금지** — 목업의 `JUMP`가 `DASH`(패시브 회피)로 바뀐 항목이라 목업에 원본이 없다 |
-| `statbarbg.png` | `StatBarBg` | 124 | 16 | Y | 4,4,4,4 | center | GPT | 빈 트랙 |
+| `statbarbg.png` | `StatBarBg` | 124 | 16 | Y | 6,6,6,4 | center | GPT | 빈 트랙 |
 | `statbarfill.png` | `StatBarFill` | 124 | 16 | Y | 4,4,4,4 | **left** | GPT | 흰색 단색 채움. **런타임 머티리얼 tint 4색**(적·주황·청·녹)이므로 1종만 |
 | `ultimatecard.png` | `UltimateCard` | 268 | 110 | Y | 16,16,16,16 | center | GPT | 보라 테두리 패널(채도 억제), 내부 비움 |
 | `ultimateicon_{hostKey}.png` | `UltimateIcon` | 60 | 60 | Y | - | center | GPT | **×12.** 정본 = 제안서 `slide_07`. 목업엔 `amazoness` 1종만 존재 |
-| `hostupgradebutton.png` | `HostUpgradeButton` | 348 | 82 | Y | 24,24,16,16 | center | GPT | 딥 블루 버튼, 내부 비움 |
+| `hostupgradebutton.png` | `HostUpgradeButton` | 348 | 82 | Y | 24,24,40,16 | center | GPT | 딥 블루 버튼, 내부 비움 |
 | `hostupgradeicon.png` | `HostUpgradeIcon` | 40 | 40 | Y | - | center | GPT | 배지 안 상승 화살표 |
 | `arrowicon.png` | `ArrowIcon` | 24 | 32 | Y | - | center | GPT | `›` 우측 셰브런. **2곳 재사용** |
-| `possessstartbutton.png` | `PossessStartButton` | 348 | 102 | Y | 24,24,20,20 | center | GPT | 골드 CTA + 발광 테두리. 화면 최우선 버튼 |
+| `possessstartbutton.png` | `PossessStartButton` | 348 | 102 | Y | 24,40,44,52 | center | GPT | 골드 CTA + 발광 테두리. 화면 최우선 버튼 |
 | `possessghosticon.png` | `PossessGhostIcon` | 56 | 56 | Y | - | center | GPT+ANCHOR | 고스트 아이콘 (빙의 상징) |
 | `tipbar.png` | `TipBar` | 696 | 78 | Y | 16,16,12,12 | center | GPT | 어두운 반투명 바 + 청 테두리 |
 | `tipicon.png` | `TipIcon` | 28 | 28 | Y | - | center | GPT | 청색 전구 |

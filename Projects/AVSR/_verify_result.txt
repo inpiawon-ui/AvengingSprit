@@ -1,17 +1,28 @@
-명세 115개 / 납품 116개 / 대조 115개
+명세 115개 / 납품 69개 / 대조 69개
 
-[1] 누락 0건
-[2] 명세에 없는 과잉 1건
-    AVSR_UI_transparency_fix_review.png
+[1] 누락 46건
+    backgroundimage.png
+    battlepassart.png
+    chapterbuttonart.png
+    chaptercard.png
+    dailyloginart.png
+    eventart.png
+    hostbuttonart.png
+    hostportraitimage_amazoness.png
+    hostportraitimage_dragon.png
+    hostportraitimage_hitman.png
+    hostportraitimage_mafia.png
+    hostportraitimage_ninja.png
+    hostportraitimage_rambo.png
+    hostportraitimage_robot.png
+    hostportraitimage_slugger.png
+    hostportraitimage_snowwoman.png
+    hostportraitimage_vampire.png
+    hostportraitimage_wizard.png
+    hostportraitimage_yogamaster.png
+    hostslotportrait_amazoness.png
+[2] 명세에 없는 과잉 0건
 
-[3] 문제 10건
-    battlepassbarbg.png: alpha=Y 인데 투명 영역 없음
-    battlepassbarfill.png: alpha=Y 인데 투명 영역 없음
-    continuebutton.png: 녹색 계열 1색 (팔레트 이탈)
-    ghostexpbarbg.png: alpha=Y 인데 투명 영역 없음
-    ghostexpbarfill.png: alpha=Y 인데 투명 영역 없음
-    hostlisttitle.png: slice9 부족 B(6<15) — 확장 시 테두리 잘림
-    progressbarbg.png: alpha=Y 인데 투명 영역 없음
-    progressbarfill.png: alpha=Y 인데 투명 영역 없음
-    statbarbg.png: alpha=Y 인데 투명 영역 없음
-    statbarfill.png: alpha=Y 인데 투명 영역 없음
+[3] 문제 2건
+    hostupgradebutton.png: slice9 부족 T(16<38) — 확장 시 테두리 잘림
+    possessstartbutton.png: slice9 부족 R(24<38) T(20<41) B(20<50) — 확장 시 테두리 잘림

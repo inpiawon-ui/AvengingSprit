@@ -1,0 +1,11 @@
+AVSR host-select resource verification
+delivered_png=27
+size_errors=0
+palette_errors=0
+alpha_errors=0
+forbidden_green_errors=0
+result=PASS
+
+All 27 PNG files match their specified dimensions.
+Every file uses 16 colors or fewer. Transparent assets use alpha 0/255 only,
+and no forbidden green hue (60-180 degrees) remains.

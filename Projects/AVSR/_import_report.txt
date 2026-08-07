@@ -1,4 +1,4 @@
-스펙 115개 / 복사 115개
+스펙 115개 / 복사 69개
 
   lobbymainui         48개  → Assets/BaseResource/LobbyMainUI/
   hostselectpanel     65개  → Assets/BaseResource/HostSelectPanel/

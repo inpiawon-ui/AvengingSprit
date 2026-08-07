@@ -1,0 +1,14 @@
+전체 115개 = 9-slice 프레임 31 + 일반 84
+
+■ 재작업 대상 (일반 에셋인데 내용 밀도 12% 미만) — 6개
+   backgroundimage              밀도   1.1%
+   lobbybackground              밀도   1.2%
+   hostbuttonart                밀도   4.5%
+   hostselectbackground         밀도   4.8%
+   chapterbuttonart             밀도   8.9%
+   shopbuttonart                밀도   9.2%
+
+■ 살릴 수 있는 일반 에셋 — 78개 (밀도 12% 이상)
+   achievementtabicon, arrowicon, battlepassart, battlepassbadge, bossportrait, dailyloginart, dailylogincheck, eventart, friendstabicon, friendstablock, gemicon, ghostarrowchevron, ghostarrowsprite, ghostavatar, ghostportraiticon, goldicon, headerghostdeco, headerportaldeco, hostdetaillockicon, hostportalpedestal, hostportraitimage_amazoness, hostportraitimage_dragon, hostportraitimage_hitman, hostportraitimage_mafia ...
+
+■ 9-slice 프레임 31개 — 내부 비움이 정상이라 밀도로 판정 불가. 육안 검수 필요

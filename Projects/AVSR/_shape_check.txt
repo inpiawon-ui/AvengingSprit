@@ -1,0 +1,46 @@
+파일                             대칭    색      밀도      내부  판정
+achievementtabicon            28%   15   76.2%          OK
+battlepassbadge               24%   12  100.0%          OK
+battlepassbarbg               63%   13   10.1%          OK
+battlepassbarfill             58%   15   97.7%          OK
+battlepasscard                28%   15    7.3%    0.0%  OK
+bossportrait                  13%   15   85.5%          OK
+chapterbutton                 29%   15   10.0%    0.0%  OK
+continuebutton                39%   15   26.8%    0.0%  OK
+dailylogincard                32%   14    0.0%    0.0%  OK
+dailylogincheck               18%   15   68.2%          OK
+eventcard                     23%   15    8.0%    0.0%  OK
+featuretabbarbackground       26%   15    3.7%    0.1%  OK
+friendstabicon                15%   14   76.9%          OK
+friendstablock                25%   14   83.3%          OK
+gemcounter                    38%   14   16.4%    0.0%  OK
+gemicon                       20%   14   97.9%          OK
+ghostavatar                   18%   14  100.0%          OK
+ghostexpbarbg                 62%   15   85.4%          OK
+ghostexpbarfill               60%   15  100.0%          OK
+ghostportraiticon             28%   15   88.7%          OK
+ghostwidget                   26%   13    6.5%    0.2%  OK
+goldcounter                   41%   15   32.4%    0.0%  OK
+goldicon                      20%   14   93.9%          OK
+hostbutton                    20%   15    5.6%    0.0%  OK
+inventorytabicon              17%   15   78.1%          OK
+logolockup                    32%   15  100.0%          OK
+mailbutton                    47%   15   80.4%          OK
+missiontabicon                43%   15   83.6%          OK
+notifybadge                   26%   14   78.9%          OK
+plusbutton                    26%   14   94.3%          OK
+portalring                    54%   14  100.0%          OK
+progressbarbg                 41%   15   96.8%          OK
+progressbarfill               55%   14   72.5%          OK
+progressrewardchest           16%   15  100.0%          OK
+rankingtabicon                30%   15   48.2%          OK
+settingsbutton                43%   14   74.6%          OK
+shopbutton                    28%   15    8.1%    0.0%  OK
+staminacounter                46%   14    8.7%    0.0%  OK
+staminaicon                   16%   14  100.0%          OK
+statbarbg                     54%   15   93.3%          OK
+statbarfill                   49%   14   96.8%          OK
+tophudbackground              32%   14    0.0%    0.0%  OK
+
+코드 도형 판정: 0건 / 42개
+기준선 — chaptercard 통과본: 대칭 25% · 15색 · 내부밀도 0.0%
