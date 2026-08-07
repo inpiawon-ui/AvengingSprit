@@ -148,10 +148,14 @@ namespace Game.Module.InGame
                     // 방마다 등장 조합이 달라지도록 룸 인덱스를 섞어 넣는다
                     var e = hosts[(i * 5 + index * 3 + 1) % hosts.Count];
                     var u = NewUnit($"Enemy_{e.HostKey}_{i}");
+                    // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
                     u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, GetSprite($"unit_{e.HostKey}"),
-                            _config.EnemyHp(e.Hp), _config.EnemyAtk(e.Atk), _config.EnemySpeed(e.Spd),
-                            _config.EnemyAttackRange, _config.EnemyAttackInterval,
-                            new Vector2(84f, 78f));
+                            _config.EnemyHp(e.Hp),
+                            Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                            _config.EnemySpeed(e.Spd),
+                            _config.EnemyAttackRange * e.RangeMul,
+                            _config.EnemyAttackInterval * e.IntervalMul,
+                            new Vector2(84f, 78f), isBoss: false, profile: e);
                     u.Position = SpawnSlot(i, count);
                     _enemies.Add(u);
                 }
@@ -217,7 +221,7 @@ namespace Game.Module.InGame
             if (target == null) return;
             if (Vector2.Distance(_host.Position, target.Position) > _host.AttackRange) return;
             if (!_host.TickAttack(dt)) return;
-            FireShot(_host.Position, target.Position, _host.Atk, true, target);
+            PerformAttack(_host, target, true);
         }
 
         private void TickEnemies(float dt)
@@ -229,27 +233,126 @@ namespace Game.Module.InGame
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
                 e.TickFlash(dt);
+                e.TickSlow(dt);
 
                 float d = Vector2.Distance(e.Position, me.Position);
                 if (d > e.AttackRange) { e.MoveToward(me.Position, dt); continue; }
                 if (!e.TickAttack(dt)) continue;
-                FireShot(e.Position, me.Position, e.Atk, false, me);
+                PerformAttack(e, me, false);
             }
+        }
+
+        // ── 공격 방식 ────────────────────────────────────────────
+        // 호스트마다 교전 거리·탄 수·발사 간격이 달라야 "어떤 몸을 뺏었는가"에 의미가 생긴다.
+        // 사거리·간격·피해 배율은 Setup 시점에 이미 반영돼 있다(Unit.Atk/AttackRange/AttackInterval).
+
+        private void PerformAttack(Unit attacker, Unit target, bool fromPlayer)
+        {
+            var p = attacker.Profile;
+            var kind = p?.Kind ?? AttackKind.Single;
+
+            switch (kind)
+            {
+                case AttackKind.Melee:
+                case AttackKind.Pulse:
+                    MeleeStrike(attacker, target, fromPlayer, hitAll: kind == AttackKind.Pulse);
+                    break;
+
+                case AttackKind.Spread:
+                {
+                    int n = p.ShotCount;
+                    float span = p.SpreadDegrees;
+                    for (int i = 0; i < n; i++)
+                    {
+                        float off = n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
+                        FireShot(attacker, target, fromPlayer, off);
+                    }
+                    break;
+                }
+
+                default:
+                    FireShot(attacker, target, fromPlayer, 0f);
+                    break;
+            }
+        }
+
+        /// <summary>근접·광역은 탄을 쓰지 않고 즉시 판정한다. 대신 타격 위치에 섬광만 남긴다.</summary>
+        private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll)
+        {
+            var p = attacker.Profile;
+            float reach = attacker.AttackRange;
+
+            // 슬러거 "탄환 반사" — 휘두르는 범위 안의 적 탄을 지운다
+            if (p != null && p.ReflectsShots)
+            {
+                for (int i = 0; i < _shots.Count; i++)
+                {
+                    var s = _shots[i];
+                    if (!s.IsActive || s.FromPlayer == fromPlayer) continue;
+                    if (Vector2.Distance(s.Position, attacker.Position) <= reach) s.Despawn();
+                }
+            }
+
+            if (fromPlayer)
+            {
+                for (int i = _enemies.Count - 1; i >= 0; i--)
+                {
+                    var e = _enemies[i];
+                    if (e == null || !e.IsAlive) continue;
+                    if (Vector2.Distance(e.Position, attacker.Position) > reach) continue;
+                    Burst(e.Position, true);
+                    HitEnemyWith(e, attacker.Atk, p);
+                    if (!hitAll) break;
+                }
+                return;
+            }
+
+            Burst(target.Position, false);
+            DamagePlayer(attacker.Atk);
+        }
+
+        /// <summary>피해 없는 시각 효과. 근접 공격이 화면에서 아무 일도 없어 보이는 것을 막는다.</summary>
+        private void Burst(Vector2 at, bool fromPlayer)
+        {
+            var v = RentShot();
+            if (v == null) return;
+            v.Fire(at, at + Vector2.up, 0f, 0, fromPlayer, null,
+                   _config.ShotSize * 2.2f,
+                   fromPlayer ? ShotPlayerColor : ShotEnemyColor, 0.12f);
+        }
+
+        private void HitEnemyWith(Unit victim, int damage, HostEntry p)
+        {
+            bool dead = victim.TakeDamage(damage);
+            if (p != null && p.SlowPercent > 0) victim.ApplySlow(p.SlowPercent, _config.SlowSeconds);
+            if (p != null && p.LifestealPercent > 0 && _host != null)
+                _host.Heal(Mathf.Max(1, damage * p.LifestealPercent / 100));
+
+            if (dead) { KillEnemy(victim); return; }
+            if (victim.IsBoss)
+                _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
         }
 
         // ── 투사체 ────────────────────────────────────────────────
         private static readonly Color ShotPlayerColor = new(1f, 0.72f, 0.24f, 1f);
         private static readonly Color ShotEnemyColor = new(0.55f, 0.78f, 1f, 1f);
 
-        private void FireShot(Vector2 from, Vector2 to, int damage, bool fromPlayer, Unit target)
+        private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg)
         {
-            var p = RentShot();
-            if (p == null) return;
-            p.Fire(from, to,
-                   fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy,
-                   damage, fromPlayer, target, _config.ShotSize,
-                   fromPlayer ? ShotPlayerColor : ShotEnemyColor,
-                   _config.ShotLifeSeconds);
+            var shot = RentShot();
+            if (shot == null) return;
+            var p = attacker.Profile;
+            bool snipe = p != null && p.Kind == AttackKind.Snipe;
+
+            shot.Fire(attacker.Position, target.Position,
+                      (fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy) * (snipe ? 1.6f : 1f),
+                      attacker.Atk, fromPlayer, target, _config.ShotSize,
+                      fromPlayer ? ShotPlayerColor : ShotEnemyColor,
+                      _config.ShotLifeSeconds,
+                      pierce: p != null && p.Kind == AttackKind.Pierce,
+                      slowPercent: p?.SlowPercent ?? 0,
+                      lifestealPercent: p?.LifestealPercent ?? 0,
+                      angleOffsetDeg: angleOffsetDeg);
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
@@ -277,14 +380,14 @@ namespace Game.Module.InGame
 
                 if (!p.Tick(dt)) { p.Despawn(); continue; }
 
+                if (p.Damage <= 0) continue;   // 근접 타격 섬광 — 수명만 흘려보낸다
+
                 if (p.FromPlayer)
                 {
-                    var hit = HitEnemy(p.Position);
+                    var hit = HitEnemy(p.Position, p);
                     if (hit == null) continue;
-                    p.Despawn();
-                    if (hit.TakeDamage(p.Damage)) KillEnemy(hit);
-                    else if (hit.IsBoss)
-                        _bus.Publish(new BossHpChangedEvent { BossHp = hit.Hp, BossHpMax = hit.HpMax });
+                    if (p.Pierce) p.MarkHit(hit); else p.Despawn();
+                    ApplyShotHit(hit, p);
                 }
                 else
                 {
@@ -296,15 +399,29 @@ namespace Game.Module.InGame
             }
         }
 
-        private Unit HitEnemy(Vector2 at)
+        /// <summary>탄이 닿은 적. 관통탄은 이미 때린 대상을 건너뛴다.</summary>
+        private Unit HitEnemy(Vector2 at, Projectile shot)
         {
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
+                if (shot.Pierce && shot.HasHit(e)) continue;
                 if (Vector2.Distance(at, e.Position) <= _config.ShotHitRadius) return e;
             }
             return null;
+        }
+
+        private void ApplyShotHit(Unit victim, Projectile shot)
+        {
+            bool dead = victim.TakeDamage(shot.Damage);
+            if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
+            if (shot.LifestealPercent > 0 && _host != null)
+                _host.Heal(Mathf.Max(1, shot.Damage * shot.LifestealPercent / 100));
+
+            if (dead) { KillEnemy(victim); return; }
+            if (victim.IsBoss)
+                _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
         }
 
         private void DamagePlayer(int amount)
@@ -413,16 +530,18 @@ namespace Game.Module.InGame
             _host.Setup(UnitSide.Player, target.Key, entry != null ? entry.NameKr : target.DisplayName,
                         GetSprite($"unit_{target.Key}"),
                         entry != null ? _config.HostHp(entry.Hp) : 100,
-                        entry != null ? _config.HostAtk(entry.Atk) : 10,
+                        entry != null ? Mathf.RoundToInt(_config.HostAtk(entry.Atk) * entry.DamageMul) : 10,
                         entry != null ? _config.HostSpeed(entry.Spd) : 180f,
-                        _config.HostAttackRange, _config.HostAttackInterval,
-                        new Vector2(96f, 92f));
+                        _config.HostAttackRange * (entry?.RangeMul ?? 1f),
+                        _config.HostAttackInterval * (entry?.IntervalMul ?? 1f),
+                        new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
 
             _bus.Publish(new PossessedEvent
             {
                 PossessedHostKey = target.Key,
-                DisplayName = entry != null ? $"{entry.NameEn}" : target.DisplayName,
+                // 어떤 몸을 뺏었는지가 곧 빌드다 — 교전 스타일을 함께 보여준다
+                DisplayName = entry != null ? $"{entry.NameEn}  ·  {entry.AttackText}" : target.DisplayName,
                 HostHpMax = _host.HpMax,
             });
             PublishHp();

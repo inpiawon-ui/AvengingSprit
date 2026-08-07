@@ -177,7 +177,9 @@ namespace Game.Module.Lobby
             bool unlocked = _player.IsHostUnlocked(e);
 
             _ui.SetText("HostNameEnText", e.NameEn);
-            _ui.SetText("HostNameKrText", unlocked ? e.NameKr : "???");
+            // 어떤 몸을 뺏는지가 곧 빌드다 — 이름 옆에 교전 스타일을 함께 보여준다
+            _ui.SetText("HostNameKrText",
+                unlocked ? $"{e.NameKr}  ·  {e.Role} ({e.AttackText})" : "???");
 
             var portrait = _ui.Get<Image>("HostPortraitImage");
             if (portrait != null)

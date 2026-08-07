@@ -27,6 +27,8 @@ namespace Game.Module.InGame
 
         private float _attackTimer;
         private float _flashTimer;
+        private int _slowPercent;
+        private float _slowTimer;
 
         public UnitSide Side { get; private set; }
         public string Key { get; private set; }
@@ -49,10 +51,15 @@ namespace Game.Module.InGame
         /// <summary>호스트가 될 수 있는 적인가. 보스는 빙의 대상이 아니다.</summary>
         public bool IsPossessable => Side == UnitSide.Enemy && !IsBoss && IsAlive;
 
+        /// <summary>공격 방식 데이터. 보스는 null (기본 단발).</summary>
+        public Game.Character.HostEntry Profile { get; private set; }
+
         public void Setup(UnitSide side, string key, string displayName, Sprite sprite,
                           int hp, int atk, float moveSpeed, float attackRange,
-                          float attackInterval, Vector2 size, bool isBoss = false)
+                          float attackInterval, Vector2 size, bool isBoss = false,
+                          Game.Character.HostEntry profile = null)
         {
+            Profile = profile;
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -165,12 +172,29 @@ namespace Game.Module.InGame
             _body.color = _flashTimer > 0f ? new Color(1f, 0.45f, 0.45f, 1f) : Color.white;
         }
 
+        /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>
+        public void ApplySlow(int percent, float seconds)
+        {
+            if (percent <= 0) return;
+            if (percent >= _slowPercent) _slowPercent = Mathf.Clamp(percent, 0, 90);
+            _slowTimer = Mathf.Max(_slowTimer, seconds);
+        }
+
+        public void TickSlow(float dt)
+        {
+            if (_slowTimer <= 0f) return;
+            _slowTimer -= dt;
+            if (_slowTimer <= 0f) _slowPercent = 0;
+        }
+
+        private float CurrentSpeed => MoveSpeed * (1f - _slowPercent / 100f);
+
         public void MoveToward(Vector2 target, float dt)
         {
             var d = target - Position;
             float len = d.magnitude;
             if (len < 0.001f) return;
-            Position += d / len * MoveSpeed * dt;
+            Position += d / len * CurrentSpeed * dt;
         }
     }
 }

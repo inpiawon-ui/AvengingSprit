@@ -56,6 +56,9 @@ namespace Game.Character
         [SerializeField] private float _shotHitRadius = 34f;
         [SerializeField] private float _shotLifeSeconds = 1.6f;
 
+        [Tooltip("둔화 지속 시간 (설녀 명중 시)")]
+        [SerializeField] private float _slowSeconds = 1.6f;
+
         [Header("얼티밋")]
         [SerializeField] private float _ultimateChargeSeconds = 14f;
         [SerializeField] private int _ultimateDamage = 140;
@@ -96,6 +99,7 @@ namespace Game.Character
         public float ShotSize => _shotSize;
         public float ShotHitRadius => _shotHitRadius;
         public float ShotLifeSeconds => _shotLifeSeconds;
+        public float SlowSeconds => _slowSeconds <= 0f ? 1.6f : _slowSeconds;
 
         public float UltimateChargeSeconds => _ultimateChargeSeconds;
         public int UltimateDamage => _ultimateDamage;

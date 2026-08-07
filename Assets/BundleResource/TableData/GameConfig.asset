@@ -42,6 +42,7 @@ MonoBehaviour:
   _shotSize: 26
   _shotHitRadius: 34
   _shotLifeSeconds: 1.6
+  _slowSeconds: 1.6
   _ultimateChargeSeconds: 14
   _ultimateDamage: 140
   _rewardGoldPerRoom: 120
