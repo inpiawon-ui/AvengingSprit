@@ -1,0 +1,16 @@
+uv / uvx vendored binaries
+==========================
+
+version : 0.11.25
+target  : x86_64-pc-windows-msvc (Windows x64 전용)
+source  : https://github.com/astral-sh/uv/releases/download/0.11.25/uv-x86_64-pc-windows-msvc.zip
+
+용도
+----
+.mcp.json 의 Unity MCP 서버(`uvx --from mcpforunityserver==9.7.3 mcp-for-unity`)를
+별도 uv 설치 없이 clone 직후 바로 실행하기 위해 repo에 벤더링한 바이너리다.
+
+업데이트 방법
+-------------
+새 버전을 쓰려면 위 URL의 버전 번호만 바꿔 zip을 받아 uv.exe / uvx.exe 를 교체하고
+이 파일의 version 줄을 갱신한다. (.gitattributes 의 `*.exe binary` 규칙으로 손상 방지)

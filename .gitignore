@@ -1,0 +1,86 @@
+# 목적               |  문법       |  예시
+# ====================================================
+# 파일 제외 (전체)    |  파일명     |  .env
+# 파일 제외 (루트만)  |  /파일명    |  /config.txt
+# 폴더 제외 (전체)    |  폴더명/    |  node_modules/
+# 폴더 제외 (루트만)  |  /폴더명/   |  /build/
+# 확장자 전체 제외    |  *.확장자   |  *.log
+# 모든 하위 경로      |  **/패턴    |  **/*.meta
+# 예외 (다시 포함)    |  !패턴      |  !important.log
+# ====================================================
+
+# Unity generated
+/[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+
+# uv toolchain binaries (installed locally, not versioned)
+/Tools/uv/*.exe
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Bb]uild/
+[Bb]uilds/
+
+# 빌드 자동화 Editor 스크립트 폴더는 위 패턴에 걸리지 않도록 예외 처리
+!Assets/**/Editor/Build/
+!Assets/**/Editor/Build/**
+
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity3D generated file on crash reports
+sysinfo.txt
+
+# Unity3D generated folder on Burst Compiler
+*_DoNotShip/
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Claude Code
+CLAUDE.local.md
+**/.claude/settings.local.json
+**/.claude/cache/
+**/.claude/worktrees/
+
+# Crashlytics generated file
+crashlytics-build.properties
+
+# Rider / VS
+.idea/
+.vs/
+.vscode/
+.vsconfig
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# macOS
+.DS_Store
+*.apres
+
+# Environment
+.env
+.env.*
+*.env
+.env.local
+.env.*.local
+
+# Secrets
+secrets.json

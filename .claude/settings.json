@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Write(.claude/agents/**)",
+      "Edit(.claude/agents/**)"
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File .claude/hooks/protect_framework.ps1"
+          }
+        ]
+      }
+    ]
+  }
+}
