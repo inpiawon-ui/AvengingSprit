@@ -1,121 +1,94 @@
-# 작업 지시 — 2026-08-07
+# 작업 지시 — 2026-08-09
 
-> 이 파일이 현재 작업의 단일 지시서다. 갱신되면 상단 날짜가 바뀐다.
-> 납품은 `_exchange/in/` 에 개별 PNG로. 파일명은 아래 표 그대로.
+> 이 파일이 현재 작업의 단일 지시서다.
+> 납품은 `_exchange/in/` 에 개별 PNG. 파일명은 아래 표 그대로.
 
 ---
 
-## ✅ 통과한 것 (재작업 금지)
+## 정정 — 지난 검수가 틀렸다
 
-| 항목 | 검수 결과 |
+지난 지시서에 **"얼티밋 아이콘 12종 기존 납품분 정상"** 이라고 적었다. **오판이었다.**
+
+당시 검수는 크기·알파·색 수만 기계적으로 봤다. 이번에 147개 에셋을 체커보드 위에
+얹어 눈으로 전수 확인하니, 얼티밋 아이콘 12종은 전부
+**노란 다각형(오각형·삼각형·육각형·마름모) 안에 파란 원**이 그려진 도형이었다.
+기술을 나타내는 그림이 아니다.
+
+원인은 명확하다. **이 아이콘들만 앵커가 없었다.**
+확정 근거의 정본(제안서 로스터 페이지 `p07`)을 열어보니 빈 배경 카드뿐이라
+잘라낼 그림이 없었다. 앵커 없이 텍스트 프롬프트만 가면 도형이 나온다 —
+배경·프레임 작업에서 이미 확인된 패턴이다.
+
+그래서 이번엔 **대체 앵커를 만들어 붙였다.** 아래 `04_ultimate/` 를 반드시 볼 것.
+
+---
+
+## 이번 작업 — 얼티밋 아이콘 12종 재제작
+
+### 규격 (12개 공통)
+
+| 항목 | 값 |
 |---|---|
-| `lobbybackground` `backgroundimage` | 밀도 1.2%→21.4% · 대칭 28% · 녹색 0 · 요구 요소 8종 전부 확인 |
-| `chaptercard` | 내부 밀도 0.0%(속 완전 비움) · 테두리 11px(명세 24 이내) · 대칭 25% · 15색 · 340×260 확장 무결 |
-| `02_restored/` 6종 | 목업에서 직접 복원. 재생성하면 품질이 떨어진다 |
-| 호스트 초상 24종 · 얼티밋 아이콘 12종 | 기존 납품분 정상 |
+| 크기 | **64 × 64** (정사각) |
+| 배경 | **투명 필수** (RGBA, 알파 채널 有) |
+| 화풍 | HD 픽셀아트 · 1991 아케이드 감성 · 외곽선 있음 |
+| 팔레트 | 배경 `#050812` 계열 위에서 읽히는 채도. 골드 `#F0B428` · 블루 `#4AA8E8` |
+| 내용 | **기술의 그림**. 다각형·원 같은 추상 도형 금지 |
 
-**`chaptercard` 가 프레임 작업의 기준이다.** 나머지 프레임도 정확히 같은 방식으로.
+### 앵커 (`_exchange/out/04_ultimate/`)
 
----
+| 폴더 | 무엇 | 어떻게 쓰나 |
+|---|---|---|
+| `01_style/` | 같은 화면에서 **잘 나온** 아이콘 8종 ×4 | 화풍·외곽선 굵기·명암 기준. 이 톤에 맞춘다 |
+| `02_host/` | 얼티밋별 **주인 호스트 초상** ×2 | 색·실루엣 정체성. 파일명이 `얼티밋__호스트` |
+| `03_slot/` | 목업에서 이 아이콘이 놓이는 자리 | 실제 크기감·주변 대비 확인용 |
 
-## 🔨 이번 작업 — 39개
+`01_style/staticon_hp`(하트) · `staticon_atk`(검) 이 **기준선**이다. 정확히 그 밀도로.
 
-### A. 9-slice 프레임 14개
+### 12종 명세
 
-`chaptercard` 와 동일하게:
-- 앵커의 **내용물(글자·아이콘·바·초상)은 전부 제거**, 속은 비운다
-- **테두리 형태·두께·색·재질·마모는 살린다**
-- **테두리 실측 두께가 아래 9-slice 값을 넘지 않게** (넘으면 확장 시 잘린다)
-
-| filename | 규격 | 9-slice (L,R,T,B) | 앵커 |
+| 파일명 | 얼티밋 | 효과 | 그림 방향 |
 |---|---|---|---|
-| `tophudbackground.png` | 720×128 | 16,16,16,20 | `03_mockup/lobby_hub.jpeg` 상단 |
-| `battlepasscard.png` | 238×112 | 16,16,16,16 | `battlepasscard_x3.png` |
-| `eventcard.png` | 238×104 | 16,16,16,16 | `eventcard_x3.png` |
-| `dailylogincard.png` | 238×112 | 16,16,16,16 | `dailylogincard_x3.png` |
-| `featuretabbarbackground.png` | 616×108 | 16,16,12,12 | `featuretabbarbackground_x3.png` |
-| `hostbutton.png` | 222×260 | 20,20,20,20 | `hostbutton_x3.png` — **자주색 테두리만** |
-| `chapterbutton.png` | 236×260 | 20,20,20,20 | `chapterbutton_x3.png` — **골드 테두리만** |
-| `shopbutton.png` | 222×260 | 20,20,20,20 | `shopbutton_x3.png` — **블루 테두리만** |
-| `ghostwidget.png` | 188×96 | 10,10,10,10 | `ghostwidget_x3.png` |
-| `staminacounter.png` | 126×60 | 20,20,12,12 | `staminacounter_x3.png` |
-| `goldcounter.png` | 132×60 | 20,20,12,12 | `goldcounter_x3.png` |
-| `gemcounter.png` | 112×60 | 20,20,12,12 | `gemcounter_x3.png` |
-| `continuebutton.png` | 198×74 | 20,20,16,16 | `continuebutton_x3.png` |
-| `progressbarbg.png` | 154×20 | 4,4,4,4 | `progressbarbg_x3.png` |
+| `ultimateicon_amazoness.png` | BLADE STORM | 광역 검격, 3초 지속 | 회전하는 검 궤적 |
+| `ultimateicon_rambo.png` | BULLET HELL | 전화면 제압 사격, 5초 | 탄막이 쏟아지는 총구 |
+| `ultimateicon_wizard.png` | ELEMENTAL NOVA | 360° AoE, 보스 2배 피해 | 사방으로 터지는 마법진 |
+| `ultimateicon_ninja.png` | SHADOW BURST | 순간이동 연격 + 무적 | 잔상 남긴 수리검 |
+| `ultimateicon_mafia.png` | TOMMY BARRAGE | 광각 확산, 높은 경직 | 부채꼴로 퍼지는 탄 |
+| `ultimateicon_hitman.png` | PERFECT KILL | 관통탄, 일반 적 원샷 | 조준선 관통하는 탄환 |
+| `ultimateicon_yogamaster.png` | ASTRAL FORM | 위상 이탈, 무적 + 재생 8초 | 반투명 이중 실루엣 |
+| `ultimateicon_dragon.png` | DRAGON BREATH | 지속 화염 원뿔, 화상 | 원뿔형 화염 |
+| `ultimateicon_robot.png` | SYSTEM OVERRIDE | 자동조준 터렛 6초 | 조준 링 두른 터렛 |
+| `ultimateicon_snowwoman.png` | ABSOLUTE ZERO | 화면 내 전원 4초 빙결 | 얼음 결정 · 서리 |
+| `ultimateicon_slugger.png` | GRAND SLAM | 모든 탄환 3배 반사 | 배트에 튕기는 탄 |
+| `ultimateicon_vampire.png` | BLOOD TORNADO | 회오리 공격이 HP 흡수 | 핏빛 소용돌이 |
 
-> 하단 3버튼(`hostbutton`·`chapterbutton`·`shopbutton`)은 **프레임만**이다.
-> 안의 그림(캐릭터 3인·성채·보물상자)은 `02_restored/` 에 이미 완성돼 있다.
-
-### B. 게이지 fill 4개
-
-`~bg` 와 같은 형태에 **채움색만 다르다.** pivot 은 `left`(채워지는 방향).
-
-| filename | 규격 | 9-slice | 색 |
-|---|---|---|---|
-| `progressbarfill.png` | 154×20 | 4,4,4,4 | 골드 `#D89000` |
-| `ghostexpbarfill.png` | 106×14 | 4,4,4,4 | **청색 `#489CFC`** (EXP — 적색 HP 아님) |
-| `battlepassbarfill.png` | 120×14 | 4,4,4,4 | 골드 |
-| `statbarfill.png` | 124×16 | 4,4,4,4 | 골드 |
-
-`ghostexpbarbg.png`(106×14) · `battlepassbarbg.png`(120×14) · `statbarbg.png`(124×16) 도 함께. 전부 9-slice `4,4,4,4`, 빈 트랙(어두운 슬롯).
-
-### C. 아이콘 21개 — 투명 배경
-
-| filename | 규격 | 앵커 | 내용 |
-|---|---|---|---|
-| `staminaicon.png` | 32×32 | `staminaicon_x3.png` | 번개 |
-| `goldicon.png` | 32×32 | `goldicon_x3.png` | 금화 |
-| `gemicon.png` | 32×32 | `gemicon_x3.png` | 보라 젬 |
-| `missiontabicon.png` | 48×48 | `missiontabicon_x3.png` | 클립보드 + 별 |
-| `achievementtabicon.png` | 48×48 | `achievementtabicon_x3.png` | 트로피 |
-| `rankingtabicon.png` | 48×48 | `rankingtabicon_x3.png` | 시상대 1·2·3 |
-| `inventorytabicon.png` | 48×48 | `inventorytabicon_x3.png` | 배낭 |
-| `friendstabicon.png` | 48×48 | `friendstabicon_x3.png` | 인물 실루엣 2인 |
-| `friendstablock.png` | 28×28 | `friendstablock_x3.png` | 자물쇠 |
-| `mailbutton.png` | 48×56 | `mailbutton_x3.png` | 봉투 |
-| `settingsbutton.png` | 48×56 | `settingsbutton_x3.png` | 톱니 |
-| `plusbutton.png` | 28×28 | `plusbutton_x3.png` | 골드 원형 + |
-| `notifybadge.png` | 24×24 | `notifybadge_x3.png` | 적색 원 + ! |
-| `battlepassbadge.png` | 40×40 | `battlepassbadge_x3.png` | **보라 방패** (숫자는 엔진 렌더) |
-| `dailylogincheck.png` | 26×26 | `dailylogincheck_x3.png` | 녹색 체크 원 |
-| `progressrewardchest.png` | 42×44 | `progressrewardchest_x3.png` | 보물상자 |
-| `ghostportraiticon.png` | 60×60 | `ghostportraiticon_x3.png` | 고스트 얼굴 |
-| `bossportrait.png` | 84×84 | `bossportrait_x3.png` | 인물 흉상 |
-| `ghostavatar.png` | 176×220 | `ghostavatar_x3.png` | 대형 고스트 |
-| `portalring.png` | 200×56 | `portalring_x3.png` | 청색 포탈 링 |
-| `logolockup.png` | 194×102 | `logolockup_x3.png` | **IP 로고 — 글자 포함 유일 예외** |
+> 파일명은 **호스트 키** 기준이다(얼티밋 키가 아니다). Unity 배선이 이 이름으로 붙는다.
 
 ---
 
-## 📏 합격 기준 (자동 검사)
+## 검수 기준 — 이번엔 이걸로 자동 판정한다
 
-```
-좌우대칭 ≥98% AND 고유색 ≤6   → 코드 도형 판정. 반려
-고유색 > 16                    → 반려
-반투명 픽셀 존재                → 안티앨리어싱. 반려
-규격 불일치                     → 반려
-녹색 계열(hue 60~180°)          → 팔레트 이탈. 반려
-프레임 테두리 두께 > 9slice 값   → 확장 시 잘림. 반려
-```
+지난번처럼 눈대중으로 넘기지 않는다. 납품 즉시 아래를 돌린다.
 
-**목표치**: 대칭 80% 미만 · 색 10~16개. `chaptercard` 통과본이 대칭 25% / 15색이었다.
+| 검사 | 반려 조건 | 왜 |
+|---|---|---|
+| **코드 도형 판정** | 좌우대칭 ≥ 98% **그리고** 고유색 ≤ 6 | 이번에 걸린 12종이 정확히 이 값이었다 |
+| **알파** | 알파 채널 없음 / 전부 불투명 | 카드 위에 사각형이 얹힌다 |
+| **내용 밀도** | 평균색에서 18 이상 벗어난 픽셀 < 12% | 거의 빈 이미지 |
+| **크기** | 64×64 아님 | 배선 규격 |
 
----
-
-## ⚠️ 반복 확인 사항
-
-1. **`ImageDraw` 등 도형 그리기 함수로 만들지 말 것.** 전부 이미지 생성으로.
-   이전 납품 실패 원인이 `build_avsr_ui_full_v2.py` 의 `draw.polygon/ellipse/line` 이었다.
-2. **일괄 처리 금지.** 자산 1개당 앵커 1장 붙여서 하나씩.
-3. **16색 축소는 마지막에.** 먼저 줄이면 형태와 질감이 죽는다.
-4. **글자 금지.** 앵커에 `HOST` `CHAPTER` `BATTLE PASS` 등이 보이지만 전부 엔진이 렌더한다.
-   유일한 예외는 `logolockup`.
-5. **알파는 0 또는 255만.**
+**`PIL.ImageDraw` · `polygon` · `ellipse` 등 도형 API 로 그리지 말 것.**
+이미지 생성으로 만들어야 한다. 지난 납품이 도형 API 로 나온 것이 확인됐다.
 
 ---
 
-## 📦 납품
+## 통과한 것 (재작업 금지)
 
-`_exchange/in/` 에 개별 PNG. 하위 폴더 자유. 파일명은 위 표 그대로.
-납품 후 이 폴더의 `_verify_result.txt` 에 검수 결과가 기록된다.
+| 항목 | 근거 |
+|---|---|
+| 호스트 초상 24종 (`hostportraitimage_*` · `hostslotportrait_*`) | 전수 육안 확인 통과 |
+| 스탯 아이콘 4종 · 프레임류 · 배경류 | 전수 육안 확인 통과 |
+| `02_restored/` 6종 | 목업 직접 복원본. 재생성하면 품질이 떨어진다 |
+
+아래 5종은 **이쪽에서 목업에서 다시 잘라 해결했다.** 손대지 말 것.
+`unit_boss` · `rankingtabicon` · `mailbutton` · `arrowicon` · `progressbarfill`
