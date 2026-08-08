@@ -27,8 +27,15 @@ namespace Game.Module.InGame
         private const float GhostBarWidth = 114f;   // 목업 실측 (레이아웃 JSON 과 동일)
         private const float HostBarWidth = 98f;
         private const float BossBarWidth = 260f;
-        private const float KnobRadius = 34f;
         private const int BuffCardCount = 3;
+
+        /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
+        private const float KnobTravelRatio = 0.30f;
+        /// <summary>이 아래로 밀면 이동으로 치지 않는다 — 미세 흔들림에 사격이 끊기지 않게.</summary>
+        private const float MoveDeadzone = 0.18f;
+        private const float PadMargin = 12f;
+        /// <summary>상단 HUD 높이 (레이아웃 118 × 1.25). 이 영역은 패드가 따라오지 않는다.</summary>
+        private const float HudHeight = 148f;
 
         private UIBinder _ui;
         private BattleDirector _battle;
@@ -38,6 +45,7 @@ namespace Game.Module.InGame
         private RectTransform _dpad;
         private RectTransform _knob;
         private Vector2 _knobHome;
+        private Vector2 _dpadHome;
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
         private BuffTable _buffTable;
@@ -129,19 +137,58 @@ namespace Game.Module.InGame
                 _ultimateCooldown.fillAmount = 1f - _battle.UltimateRatio;
         }
 
-        // ── D-패드 ───────────────────────────────────────────────
+        // ── 플로팅 가상 패드 ─────────────────────────────────────
+        // 화면 아무 곳이나 누르면 그 자리로 패드가 따라오고, 손을 떼면 제자리로 돌아간다.
+        // 한손 세로 조작에서 엄지가 닿는 위치는 매번 다르다 — 고정 패드는 손을 옮기게 만든다.
+
         private void HookDPad()
         {
             if (_dpad == null) return;
-            var img = _dpad.GetComponent<Image>();
-            if (img != null) img.raycastTarget = true;
 
-            var trigger = _dpad.gameObject.GetComponent<EventTrigger>()
-                          ?? _dpad.gameObject.AddComponent<EventTrigger>();
-            trigger.triggers.Clear();
-            AddTrigger(trigger, EventTriggerType.PointerDown, OnPadDrag);
+            // 패드가 하단 `ControlGroup` 안에 있으면 그 좁은 영역 밖으로 못 나간다.
+            // 화면 어디로든 따라가야 하므로 루트로 올리고, 조작 버튼보다는 아래에 둔다.
+            var control = _ui.Find("ControlGroup");
+            int controlIndex = control != null ? control.GetSiblingIndex() : transform.childCount;
+            _dpad.SetParent(transform, worldPositionStays: true);
+            _dpad.SetSiblingIndex(controlIndex);
+            _dpadHome = _dpad.anchoredPosition;
+
+            BuildTouchCatcher();
+        }
+
+        /// <summary>
+        /// 전체 화면 입력 판. 버튼·팝업보다 아래(먼저 그려지는 쪽)에 두어
+        /// 다른 UI 가 먹지 않은 터치만 받는다.
+        /// </summary>
+        private void BuildTouchCatcher()
+        {
+            // 필드 바닥·HP 바 같은 장식 이미지가 터치를 먹으면 패드가 반응하지 않는다.
+            // 버튼(Selectable)만 남기고 전부 레이캐스트를 끈다.
+            foreach (var g in GetComponentsInChildren<Graphic>(true))
+                if (g.GetComponent<Selectable>() == null) g.raycastTarget = false;
+
+            var go = new GameObject("TouchCatcher", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(transform, false);
+            go.transform.SetSiblingIndex(0);
+
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = new Vector2(0f, -HudHeight);   // 상단 HUD 는 제외한다
+
+            var img = go.GetComponent<Image>();
+            img.color = new Color(0f, 0f, 0f, 0f);        // 보이지 않지만 터치는 받는다
+            img.raycastTarget = true;
+
+            var trigger = go.AddComponent<EventTrigger>();
+            AddTrigger(trigger, EventTriggerType.PointerDown, OnPadDown);
             AddTrigger(trigger, EventTriggerType.Drag, OnPadDrag);
             AddTrigger(trigger, EventTriggerType.PointerUp, _ => ReleasePad());
+
+            // 3택1 패널은 딤으로 입력을 막아야 하므로 다시 켠다
+            var dim = _ui.Get<Image>("BuffChoicePanel");
+            if (dim != null) dim.raycastTarget = true;
         }
 
         private static void AddTrigger(EventTrigger t, EventTriggerType type,
@@ -152,18 +199,62 @@ namespace Game.Module.InGame
             t.triggers.Add(entry);
         }
 
+        private void OnPadDown(PointerEventData e)
+        {
+            MovePadTo(e);
+            // 누른 순간에는 아직 민 방향이 없다. 0 이어야 "멈춰야 쏜다"가 유지된다.
+            if (_knob != null) _knob.anchoredPosition = _knobHome;
+            if (_battle != null) _battle.MoveInput = Vector2.zero;
+        }
+
+        /// <summary>패드 중심이 터치 지점에 오도록 옮긴다. 화면 밖으로 나가지 않게 잘라낸다.</summary>
+        private void MovePadTo(PointerEventData e)
+        {
+            var parent = _dpad.parent as RectTransform;
+            if (parent == null) return;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    parent, e.position, e.pressEventCamera, out var local)) return;
+
+            var ps = parent.rect.size;
+            var pp = parent.pivot;
+            // 앵커 (0,1)(부모 좌상단)의 부모 로컬 좌표
+            var anchor = new Vector2(-pp.x * ps.x, (1f - pp.y) * ps.y);
+
+            var size = _dpad.rect.size;
+            var pivot = _dpad.pivot;
+            // 패드 피벗이 어디든 중심이 터치 지점에 오게 한다
+            var pivotPos = local + new Vector2((pivot.x - 0.5f) * size.x,
+                                               (pivot.y - 0.5f) * size.y);
+
+            var pos = pivotPos - anchor;
+            pos.x = Mathf.Clamp(pos.x, PadMargin, ps.x - size.x - PadMargin);
+            pos.y = Mathf.Clamp(pos.y, -(ps.y - size.y - PadMargin), -PadMargin);
+            _dpad.anchoredPosition = pos;
+        }
+
         private void OnPadDrag(PointerEventData e)
         {
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     _dpad, e.position, e.pressEventCamera, out var local)) return;
 
-            var dir = Vector2.ClampMagnitude(local / KnobRadius, 1f);
-            if (_knob != null) _knob.anchoredPosition = _knobHome + dir * KnobRadius;
-            if (_battle != null) _battle.MoveInput = dir;
+            // ⚠️ 패드 피벗은 좌상단이다. 로컬 원점이 중심이 아니므로 중심을 빼줘야 한다.
+            //    빼지 않으면 어디를 눌러도 우하단 최대 속도가 된다.
+            var size = _dpad.rect.size;
+            var pivot = _dpad.pivot;
+            var center = new Vector2((0.5f - pivot.x) * size.x, (0.5f - pivot.y) * size.y);
+            float radius = size.x * KnobTravelRatio;
+
+            var dir = Vector2.ClampMagnitude((local - center) / radius, 1f);
+            if (_knob != null) _knob.anchoredPosition = _knobHome + dir * radius;
+
+            // 데드존 — 미세한 흔들림으로 이동 판정이 서면 사격이 영영 재개되지 않는다
+            if (_battle != null)
+                _battle.MoveInput = dir.magnitude < MoveDeadzone ? Vector2.zero : dir;
         }
 
         private void ReleasePad()
         {
+            if (_dpad != null) _dpad.anchoredPosition = _dpadHome;
             if (_knob != null) _knob.anchoredPosition = _knobHome;
             if (_battle != null) _battle.MoveInput = Vector2.zero;
         }

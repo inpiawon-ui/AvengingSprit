@@ -71,11 +71,28 @@ CHAPTER(3) > STAGE(30/챕터) > ROOM(6/스테이지)
 | | `BossGroup`(`BossLabel` · `BossHpBarBg/Fill` · `BossHpText`) | 보스 룸에서만 표시 |
 | | `GoldIcon`/`GoldText` · `GemIcon`/`GemText` · `PauseButton` · `StageText` | 재화 · 일시정지 · `ROOM n / 6` |
 | `RoomField` | `RoomFloor` · `UnitLayer` · `ShotLayer`(런타임 생성) | 전투 필드 |
-| `ControlGroup` | `DPadBase` + `DPadKnob` | 이동. 패드 영역 드래그 |
+| `ControlGroup` | `DPadBase` + `DPadKnob` | 이동. **플로팅 패드** — 아래 참조 |
 | | `UltimateButton` + `UltimateCooldown` | 충전 완료 시 발동 가능 |
 | | `PossessButton` | 빙의 가능 대상이 있을 때만 활성 |
 
 > `ULTIMATE` · `POSSESS` 글자는 **버튼 스프라이트에 이미 들어 있다**(목업 크롭). 별도 TMP 라벨을 얹지 않는다.
+
+### 가상 패드는 플로팅이다
+
+화면 아무 곳이나 누르면 **패드가 그 자리로 따라오고**, 손을 떼면 원래 자리로 돌아간다.
+한손 세로 조작에서 엄지가 닿는 위치는 매번 다르다 — 고정 패드는 손을 옮기게 만든다.
+
+| 동작 | 결과 |
+|------|------|
+| 화면(HUD 제외) 터치 | 패드 중심이 그 지점으로 이동. **이동 입력은 0** |
+| 드래그 | 중심 대비 방향이 이동 입력. 패드 폭의 30% 에서 최대 속도 |
+| 손 뗌 | 패드·노브 원위치, 이동 입력 0 |
+
+- 누른 순간 입력이 0 이어야 **"멈춰야 쏜다"** 가 유지된다. 탭만으로 사격이 끊기면 안 된다.
+- **데드존 18%** — 미세한 흔들림이 이동으로 잡히면 사격이 영영 재개되지 않는다.
+- 전체 화면 입력판(`TouchCatcher`)은 버튼보다 **아래**에 둔다.
+  `ULTIMATE` · `POSSESS` · `PAUSE` 가 터치를 먼저 가져간다.
+- 장식 이미지(바닥·HP 바)의 레이캐스트는 전부 끈다. 하나라도 켜져 있으면 그 위에서 패드가 죽는다.
 
 ---
 
