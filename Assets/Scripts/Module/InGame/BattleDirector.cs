@@ -57,6 +57,14 @@ namespace Game.Module.InGame
         private const int MaxRoomUnits = 14;
         private const float SummonRadius = 200f;
 
+        /// <summary>적 배치 띠 — 필드 높이 대비. 아래쪽은 플레이어 시작 위치를 위해 비운다.</summary>
+        private const float EnemyBandTop = 0.06f;
+        private const float EnemyBandBottom = 0.44f;
+        /// <summary>플레이어 시작 높이. 적 띠 끝과 탐지 거리보다 멀어야 첫 프레임에 안 달려든다.</summary>
+        private const float PlayerStartY = 0.80f;
+        /// <summary>밀어내기 속도 — 이동 속도 대비. 너무 크면 서로 튕겨 나간다.</summary>
+        private const float SeparationSpeedRatio = 0.55f;
+
         private BossTable _bossTable;
         private readonly BossBrain _brain = new();
         private Unit _boss;
@@ -125,7 +133,7 @@ namespace Game.Module.InGame
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", GetSprite("unit_ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
                          new Vector2(72f, 90f));
-            _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.72f);
+            _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * PlayerStartY);
             PublishHp();
         }
 
@@ -218,14 +226,41 @@ namespace Game.Module.InGame
         }
 
         /// <summary>필드 상단 절반에 고르게 흩어 놓는다. 플레이어 시작 위치와 겹치지 않게 한다.</summary>
+        /// <summary>
+        /// 방 위쪽에 넓게 흩어 배치한다.
+        ///
+        /// 좁게 모아두면 첫 프레임부터 한 덩어리로 보이고, 전부 같은 지점을 향해 움직여
+        /// 끝까지 뭉쳐 다닌다. 가로는 거의 꽉 채우고 세로도 벌린 뒤 행마다 어긋나게 민다.
+        /// 플레이어 시작 위치와는 탐지 거리보다 멀게 띄운다 — 들어가야 반응하게 하기 위함.
+        /// </summary>
         private Vector2 SpawnSlot(int i, int count)
         {
-            int cols = Mathf.CeilToInt(Mathf.Sqrt(count));
-            int row = i / cols, col = i % cols;
             float w = _field.rect.width, h = _field.rect.height;
-            float x = w * (0.18f + 0.64f * (cols == 1 ? 0.5f : (float)col / (cols - 1)));
-            float y = -h * (0.14f + 0.30f * row);
+            int cols = Mathf.Min(3, Mathf.Max(1, count));
+            int rows = Mathf.CeilToInt(count / (float)cols);
+
+            int row = i / cols;
+            int colInRow = i - row * cols;
+            int inRow = Mathf.Min(cols, count - row * cols);
+
+            float fx = inRow <= 1 ? 0.5f : (float)colInRow / (inRow - 1);
+            float fy = rows <= 1 ? 0.35f : (float)row / (rows - 1);
+
+            // 격자로 딱 맞으면 대형처럼 보인다. 행마다 반 칸씩 어긋나게 민다.
+            float stagger = row % 2 == 0 ? 0.07f : -0.07f;
+            float x = w * Mathf.Lerp(0.10f, 0.90f, Mathf.Clamp01(fx + stagger));
+            float y = -h * Mathf.Lerp(EnemyBandTop, EnemyBandBottom, fy);
             return new Vector2(x, y);
+        }
+
+        /// <summary>필드 밖으로 나가지 않게 잘라낸다. 밀림·돌진이 벽을 넘지 않게.</summary>
+        private void ClampToField(Unit u)
+        {
+            var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
+            var p = u.Position;
+            p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
+            p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
+            u.Position = p;
         }
 
         // ─────────────────────────────────────────────────────────
@@ -311,10 +346,51 @@ namespace Game.Module.InGame
                 if (e.IsBoss) { TickBoss(e, me, dt); continue; }
 
                 float d = Vector2.Distance(e.Position, me.Position);
-                if (d > e.AttackRange) { e.MoveToward(me.Position, dt); continue; }
-                if (!e.TickAttack(dt)) continue;
-                PerformAttack(e, me, false);
+
+                // 탐지 — 들어오기 전에는 제자리에서 기다린다.
+                // 처음부터 전부 달려들면 방이 통째로 한 덩어리가 되어 몰려다닌다.
+                if (!e.IsAggro)
+                {
+                    if (d > _config.EnemyDetectRange) { Separate(e, i, dt); continue; }
+                    e.IsAggro = true;
+                }
+
+                if (d > e.AttackRange) e.MoveToward(me.Position, dt);
+                else if (e.TickAttack(dt)) PerformAttack(e, me, false);
+
+                Separate(e, i, dt);
             }
+        }
+
+        /// <summary>
+        /// 서로 겹치지 않게 밀어낸다.
+        ///
+        /// 전부 같은 목표(플레이어)로 달려가면 사거리가 비슷한 개체끼리 같은 지점에 겹쳐
+        /// 한 마리처럼 보인다. 가까운 개체끼리만 반대로 밀어 덩어리를 푼다.
+        /// </summary>
+        private void Separate(Unit e, int index, float dt)
+        {
+            float r = _config.EnemySeparation;
+            if (r <= 0f) return;
+
+            Vector2 push = Vector2.zero;
+            for (int j = 0; j < _enemies.Count; j++)
+            {
+                if (j == index) continue;
+                var o = _enemies[j];
+                if (o == null || !o.IsAlive) continue;
+
+                var diff = e.Position - o.Position;
+                float dist = diff.magnitude;
+                if (dist >= r) continue;
+                // 겹쳐 있으면 방향이 없다 — 인덱스로 갈라 서로 반대로 민다
+                if (dist < 0.01f) { push += new Vector2((index % 2 == 0) ? 1f : -1f, 0.3f); continue; }
+                push += diff / dist * (1f - dist / r);
+            }
+            if (push.sqrMagnitude < 0.0001f) return;
+
+            e.Position += push.normalized * (e.MoveSpeed * SeparationSpeedRatio) * dt;
+            ClampToField(e);
         }
 
         // ── 보스 ─────────────────────────────────────────────────
@@ -427,6 +503,8 @@ namespace Game.Module.InGame
                 // 보스(160px)와 겹치지 않게 바깥에 원형으로 흩는다
                 float a = (i / (float)count) * Mathf.PI * 2f + _enemies.Count * 0.7f;
                 u.Position = boss.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * SummonRadius;
+                u.IsAggro = true;   // 불러낸 것들은 기다리지 않는다
+                ClampToField(u);
                 _enemies.Add(u);
             }
         }
@@ -512,6 +590,7 @@ namespace Game.Module.InGame
 
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
+            victim.IsAggro = true;
             bool dead = victim.TakeDamage(damage);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
@@ -611,6 +690,9 @@ namespace Game.Module.InGame
 
         private void ApplyShotHit(Unit victim, Projectile shot)
         {
+            // 맞았으면 무조건 반응한다. 사거리가 탐지 거리보다 긴 호스트(히트맨 357)로
+            // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
+            victim.IsAggro = true;
             bool dead = victim.TakeDamage(shot.Damage);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
             if (shot.LifestealPercent > 0 && _host != null)

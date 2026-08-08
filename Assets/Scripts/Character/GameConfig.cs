@@ -42,6 +42,10 @@ namespace Game.Character
         [SerializeField] private float _enemySpeedScale = 0.62f;
         [SerializeField] private float _enemyAttackRange = 120f;
         [SerializeField] private float _enemyAttackInterval = 1.1f;
+        [Tooltip("이 거리 안에 들어오면 플레이어를 인지하고 달려든다. 밖이면 제자리 대기.")]
+        [SerializeField] private float _enemyDetectRange = 300f;
+        [Tooltip("이보다 가까운 적끼리 서로 밀어낸다. 0 이면 겹쳐서 한 마리처럼 보인다.")]
+        [SerializeField] private float _enemySeparation = 82f;
         [SerializeField] private int _enemiesPerRoomMin = 4;
         [SerializeField] private int _enemiesPerRoomMax = 7;
 
@@ -86,6 +90,8 @@ namespace Game.Character
         public float HostSpeed(int statSpd) => _hostSpeedBase + statSpd * _hostSpeedPerPoint;
 
         public float EnemyAttackRange => _enemyAttackRange;
+        public float EnemyDetectRange => _enemyDetectRange;
+        public float EnemySeparation => _enemySeparation;
         public float EnemyAttackInterval => _enemyAttackInterval;
         public int EnemiesPerRoom(int roomIndex)
             => Mathf.Clamp(_enemiesPerRoomMin + roomIndex / 2, _enemiesPerRoomMin, _enemiesPerRoomMax);

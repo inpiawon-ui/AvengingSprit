@@ -56,6 +56,13 @@ namespace Game.Module.InGame
         /// <summary>공격 방식 데이터. 보스는 null (기본 단발).</summary>
         public Game.Character.HostEntry Profile { get; private set; }
 
+        /// <summary>
+        /// 플레이어를 인지했는가. false 면 제자리에서 기다린다.
+        /// 한 번 켜지면 꺼지지 않는다 — 사거리 밖으로 나갔다고 잊어버리면
+        /// 적이 왔다 갔다 하며 어그로가 끊긴 것처럼 보인다.
+        /// </summary>
+        public bool IsAggro { get; set; }
+
         public void Setup(UnitSide side, string key, string displayName, Sprite sprite,
                           int hp, int atk, float moveSpeed, float attackRange,
                           float attackInterval, Vector2 size, bool isBoss = false,
