@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.GameConfig
   _roomsPerStage: 6
+  _bossEveryStages: 3
   _ghostHpMax: 120
   _ghostMoveSpeed: 320
   _possessRange: 110
@@ -31,6 +32,8 @@ MonoBehaviour:
   _enemySpeedScale: 0.62
   _enemyAttackRange: 150
   _enemyAttackInterval: 1.1
+  _enemyDetectRange: 300
+  _enemySeparation: 82
   _enemiesPerRoomMin: 4
   _enemiesPerRoomMax: 7
   _bossHpBase: 900
