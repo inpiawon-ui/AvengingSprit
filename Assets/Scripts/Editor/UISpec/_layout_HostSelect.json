@@ -21,9 +21,9 @@
   },
   {
    "name": "HeaderGhostDeco",
-   "x": 14.8,
+   "x": 22.1,
    "y": 112.2,
-   "w": 63.3,
+   "w": 48.7,
    "h": 65.4
   },
   {
@@ -49,9 +49,9 @@
   },
   {
    "name": "HeaderPortalDeco",
-   "x": 532.4,
+   "x": 577.1,
    "y": 108.0,
-   "w": 212.9,
+   "w": 123.5,
    "h": 137.0
   },
   {
@@ -115,10 +115,10 @@
   },
   {
    "name": "HostSlotLockIcon",
-   "x": 33,
-   "y": 46,
-   "w": 40,
-   "h": 40,
+   "x": 37.2,
+   "y": 46.0,
+   "w": 31.6,
+   "h": 40.0,
    "local": true
   },
   {
@@ -138,10 +138,10 @@
   },
   {
    "name": "GhostArrowSprite",
-   "x": 350,
-   "y": 548,
-   "w": 44,
-   "h": 60
+   "x": 350.0,
+   "y": 554.4,
+   "w": 44.0,
+   "h": 47.3
   },
   {
    "name": "GhostArrowChevron",
@@ -186,10 +186,10 @@
   },
   {
    "name": "HostPortalPedestal",
-   "x": 438,
-   "y": 545,
-   "w": 246,
-   "h": 62
+   "x": 473.6,
+   "y": 545.0,
+   "w": 174.9,
+   "h": 62.0
   },
   {
    "name": "HostPortraitImage",
@@ -200,10 +200,10 @@
   },
   {
    "name": "HostDetailLockIcon",
-   "x": 513,
-   "y": 428,
-   "w": 96,
-   "h": 96
+   "x": 521.1,
+   "y": 428.0,
+   "w": 79.7,
+   "h": 96.0
   },
   {
    "name": "StatGroupLabel",
@@ -375,10 +375,10 @@
   },
   {
    "name": "StatIcon_DASH",
-   "x": 437,
-   "y": 784,
-   "w": 20,
-   "h": 20
+   "x": 437.0,
+   "y": 785.5,
+   "w": 20.0,
+   "h": 16.9
   },
   {
    "name": "StatRow_DASH/StatLabelText",
@@ -499,9 +499,9 @@
   {
    "name": "HostUpgradeButton/ArrowIcon",
    "x": 659.9,
-   "y": 1043.4,
+   "y": 1044.4,
    "w": 21.1,
-   "h": 30
+   "h": 28.1
   },
   {
    "name": "PossessStartButton",
@@ -513,9 +513,9 @@
   {
    "name": "PossessGhostIcon",
    "x": 409.0,
-   "y": 1137.3,
+   "y": 1141.2,
    "w": 40.1,
-   "h": 52
+   "h": 44.2
   },
   {
    "name": "PossessTitleText",

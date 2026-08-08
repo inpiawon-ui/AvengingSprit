@@ -17,6 +17,8 @@
 """
 import json, os
 
+import _fit_boxes
+
 S = 720.0 / 683.0
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', 'Assets', 'Scripts', 'Editor', 'UISpec', '_layout_HostSelect.json')
@@ -152,6 +154,10 @@ def main():
             if k in e:
                 r[k] = e[k]
         rows.append(r)
+
+    # 목업 실측 박스와 실제 에셋 비율이 어긋나면 여기서 맞춘다
+
+    _fit_boxes.report(_fit_boxes.fit(rows, 'HostSelectPanel'), 'HostSelect')
 
     out = os.path.abspath(OUT)
     with open(out, 'w', encoding='utf-8') as f:

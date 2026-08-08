@@ -82,6 +82,11 @@ namespace Game.Editor
                     var b = sprite.border;
                     img.type = (b.x + b.y + b.z + b.w) > 0 ? Image.Type.Sliced : Image.Type.Simple;
                     if (img.type == Image.Type.Sliced) img.pixelsPerUnitMultiplier = 1f;
+
+                    // 레이아웃 박스는 목업에서 잰 값이고 에셋 비율은 그와 다를 수 있다.
+                    // 그대로 늘리면 아이콘이 눌리거나 길어진다 — 비율을 지키고 박스 안에서 맞춘다.
+                    // 늘어나야 하는 것(9-slice·채움 바·배경)은 제외한다.
+                    img.preserveAspect = img.type == Image.Type.Simple && !AlwaysStretch(key);
                     bound++;
                 }
 
@@ -98,5 +103,13 @@ namespace Game.Editor
             AssetDatabase.Refresh();
             Debug.Log($"[UISpriteBinder] 완료 — 배선 {totalBound}개 / 미배선 {totalMiss}개");
         }
+        /// <summary>
+        /// 박스를 꽉 채워야 하는 요소 — 비율을 지키면 오히려 빈 틈이 생긴다.
+        /// 배경·바닥은 화면을 덮어야 하고, 채움 바는 폭을 코드가 조절한다.
+        /// </summary>
+        private static bool AlwaysStretch(string key)
+            => key.Contains("background") || key.Contains("floor")
+            || key.EndsWith("fill") || key.Contains("cooldown");
+
     }
 }
