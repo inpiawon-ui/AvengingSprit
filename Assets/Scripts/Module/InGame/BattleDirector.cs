@@ -149,9 +149,6 @@ namespace Game.Module.InGame
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
         public Sprite UnitSprite(string hostKey) => GetSprite($"unit_{hostKey}");
 
-        /// <summary>런타임에 붙이는 UI 스프라이트(버프 카드 등). 이름으로 아틀라스에서 꺼낸다.</summary>
-        public Sprite AtlasSprite(string spriteName) => GetSprite(spriteName);
-
         private void EnterRoom(int index)
         {
             _roomIndex = index;

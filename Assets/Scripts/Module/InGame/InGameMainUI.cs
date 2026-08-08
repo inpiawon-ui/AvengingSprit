@@ -359,21 +359,6 @@ namespace Game.Module.InGame
                 if (card != null) card.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
 
                 // 강조색 막대도 같은 이유로 스프라이트가 필요 없다
-                // 카드 3장은 이름이 달라 이름 기반 배선(UISpriteBinder)이 잡지 못한다.
-                // 스프라이트가 없으면 흰 사각형으로 그려지므로 여기서 직접 넣는다.
-                var card = _ui.Get<Image>($"BuffCard{i}");
-                if (card != null && card.sprite == null && _battle != null)
-                {
-                    var frame = _battle.AtlasSprite("buffcard");
-                    if (frame != null)
-                    {
-                        card.sprite = frame;
-                        card.type = Image.Type.Sliced;
-                        card.pixelsPerUnitMultiplier = 1f;
-                    }
-                    card.color = Color.white;
-                }
-
                 var accent = _ui.Get<Image>($"BuffCard{i}Accent");
                 if (accent != null && ColorUtility.TryParseHtmlString(entry.ColorHex, out var c))
                     accent.color = c;
