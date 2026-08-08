@@ -155,7 +155,11 @@ namespace Game.Module.InGame
         private void EnterRoom(int index)
         {
             _roomIndex = index;
-            bool isBoss = index == _config.RoomsPerStage - 1;
+            // 보스는 매 스테이지가 아니라 `BossEveryStages` 스테이지마다 나온다.
+            // 매번 나오면 보스가 관문이 아니라 그냥 마지막 방이 된다.
+            int stage = _player != null ? Mathf.Max(1, _player.ReachedStage) : 1;
+            bool isBossStage = stage % _config.BossEveryStages == 0;
+            bool isBoss = isBossStage && index == _config.RoomsPerStage - 1;
 
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
@@ -470,14 +474,20 @@ namespace Game.Module.InGame
 
         private void FireFan(Unit from, Vector2 at, int count, float spanDeg, int damage)
         {
+            // 보스 탄은 **화면 끝까지 나가야 한다.** 수명이 짧으면 중간에 사라져
+            // 보스에게서 멀찍이 떨어진 곳이 안전지대가 되고, 탄막을 피할 이유가 없어진다.
+            float speed = _config.ShotSpeedEnemy;
+            float reach = new Vector2(_field.rect.width, _field.rect.height).magnitude;
+            float life = reach / Mathf.Max(1f, speed) + 0.25f;
+
             for (int i = 0; i < count; i++)
             {
                 float off = count == 1 ? 0f : -spanDeg * 0.5f + spanDeg * i / (count - 1);
                 var shot = RentShot();
                 if (shot == null) return;
-                shot.Fire(from.Position, at, _config.ShotSpeedEnemy, damage,
+                shot.Fire(from.Position, at, speed, damage,
                           false, null, _config.ShotSize * 1.15f, ShotBossColor,
-                          _config.ShotLifeSeconds * 1.4f, angleOffsetDeg: off);
+                          life, angleOffsetDeg: off);
             }
         }
 

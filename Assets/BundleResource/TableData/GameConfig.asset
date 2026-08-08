@@ -24,19 +24,19 @@ MonoBehaviour:
   _hostAtkBase: 6
   _hostSpeedPerPoint: 2.4
   _hostSpeedBase: 140
-  _hostAttackRange: 210
+  _hostAttackRange: 265
   _hostAttackInterval: 0.55
   _enemyHpScale: 0.55
   _enemyAtkScale: 0.7
   _enemySpeedScale: 0.62
-  _enemyAttackRange: 120
+  _enemyAttackRange: 150
   _enemyAttackInterval: 1.1
   _enemiesPerRoomMin: 4
   _enemiesPerRoomMax: 7
   _bossHpBase: 900
   _bossAtk: 26
   _bossMoveSpeed: 70
-  _bossAttackRange: 190
+  _bossAttackRange: 260
   _bossAttackInterval: 1.6
   _shotSpeedPlayer: 720
   _shotSpeedEnemy: 420

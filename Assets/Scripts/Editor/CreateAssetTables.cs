@@ -48,30 +48,22 @@ namespace Game.Editor
         // bossKey, 챕터, 영문명, 한글명, 스프라이트, HP배율, ATK배율, 이동배율, 페이즈쿨다운배율
         // 패턴: (종류, 시작페이즈, 쿨다운, 탄수, 확산각, 피해배율)
         //
-        // 잡몹은 한 행동만 반복하지만 보스는 여러 행동을 쿨다운으로 돌리고,
-        // 체력이 깎이면 쓸 수 있는 행동이 늘어난다(페이즈 2 = 60% · 3 = 30%).
+        // 지금은 3체 모두 **5발 135° 부채꼴을 3초마다** 쏘는 것 하나뿐이다.
+        // BossBrain 은 여러 행동을 쿨다운으로 돌리고 페이즈(60%/30%)마다 레퍼토리를
+        // 늘리는 구조를 그대로 갖고 있다 — 여기 배열에 줄을 더하면 바로 살아난다.
         private static readonly object[][] Bosses =
         {
             new object[]{ "mad_doctor", 1, "MAD DOCTOR", "매드 닥터", "unit_boss", 1.00f, 1.00f, 1.00f, 0.80f,
                 new object[][] {
-                    new object[]{ BossPattern.Volley,     1, 3.2f,  5, 54f, 1.0f },
-                    new object[]{ BossPattern.Summon,     1, 9.0f,  2,  0f, 1.0f },
-                    new object[]{ BossPattern.AimedBurst, 2, 5.0f,  4,  6f, 0.7f },
-                    new object[]{ BossPattern.Ring,       3, 6.5f, 12,  0f, 0.9f },
+                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
                 } },
             new object[]{ "iron_claw",  2, "IRON CLAW",  "아이언 클로", "unit_boss", 1.25f, 1.15f, 1.30f, 0.75f,
                 new object[][] {
-                    new object[]{ BossPattern.Charge,     1, 5.0f,  1,  0f, 1.6f },
-                    new object[]{ BossPattern.AimedBurst, 1, 3.6f,  5,  5f, 0.8f },
-                    new object[]{ BossPattern.Volley,     2, 4.2f,  7, 70f, 0.9f },
-                    new object[]{ BossPattern.Charge,     3, 3.0f,  1,  0f, 1.8f },
+                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
                 } },
             new object[]{ "overlord",   3, "OVERLORD",   "오버로드",   "unit_boss", 1.55f, 1.30f, 0.95f, 0.72f,
                 new object[][] {
-                    new object[]{ BossPattern.Ring,       1, 5.0f, 10,  0f, 1.0f },
-                    new object[]{ BossPattern.Volley,     1, 3.4f,  7, 62f, 1.0f },
-                    new object[]{ BossPattern.Summon,     2, 8.0f,  3,  0f, 1.0f },
-                    new object[]{ BossPattern.Ring,       3, 3.4f, 16,  0f, 1.1f },
+                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
                 } },
         };
 

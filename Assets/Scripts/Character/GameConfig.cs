@@ -14,6 +14,8 @@ namespace Game.Character
     {
         [Header("진행")]
         [SerializeField] private int _roomsPerStage = 6;
+        [Tooltip("보스가 나오는 주기(스테이지). 3 이면 3·6·9… 스테이지의 마지막 방에만 나온다.")]
+        [SerializeField] private int _bossEveryStages = 3;
 
         [Header("고스트")]
         [SerializeField] private int _ghostHpMax = 120;
@@ -33,14 +35,14 @@ namespace Game.Character
         [SerializeField] private int _hostAtkBase = 6;
         [SerializeField] private float _hostSpeedPerPoint = 2.4f;
         [SerializeField] private float _hostSpeedBase = 140f;
-        [SerializeField] private float _hostAttackRange = 210f;
+        [SerializeField] private float _hostAttackRange = 265f;
         [SerializeField] private float _hostAttackInterval = 0.55f;
 
         [Header("적")]
         [SerializeField] private float _enemyHpScale = 0.55f;
         [SerializeField] private float _enemyAtkScale = 0.7f;
         [SerializeField] private float _enemySpeedScale = 0.62f;
-        [SerializeField] private float _enemyAttackRange = 120f;
+        [SerializeField] private float _enemyAttackRange = 150f;
         [SerializeField] private float _enemyAttackInterval = 1.1f;
         [Tooltip("이 거리 안에 들어오면 플레이어를 인지하고 달려든다. 밖이면 제자리 대기.")]
         [SerializeField] private float _enemyDetectRange = 300f;
@@ -53,7 +55,7 @@ namespace Game.Character
         [SerializeField] private int _bossHpBase = 900;
         [SerializeField] private int _bossAtk = 26;
         [SerializeField] private float _bossMoveSpeed = 70f;
-        [SerializeField] private float _bossAttackRange = 190f;
+        [SerializeField] private float _bossAttackRange = 260f;
         [SerializeField] private float _bossAttackInterval = 1.6f;
 
         [Header("투사체 — 기본 공격은 탄이 날아가 맞아야 피해가 들어간다")]
@@ -75,6 +77,7 @@ namespace Game.Character
         [SerializeField] private int _rewardGhostExpPerRoom = 8;
 
         public int RoomsPerStage => _roomsPerStage;
+        public int BossEveryStages => Mathf.Max(1, _bossEveryStages);
 
         public int GhostHpMax => _ghostHpMax;
         public float GhostMoveSpeed => _ghostMoveSpeed;
