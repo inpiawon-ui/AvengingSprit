@@ -1,11 +1,13 @@
-AVSR host-select resource verification
-delivered_png=27
+AVSR ultimate icon regeneration verification
+delivered_png=12
+dimensions=64x64
 size_errors=0
 palette_errors=0
 alpha_errors=0
-forbidden_green_errors=0
+code_shape_errors=0
+symmetry_range=29.44%-59.52%
+color_count_range=15-16
 result=PASS
 
-All 27 PNG files match their specified dimensions.
-Every file uses 16 colors or fewer. Transparent assets use alpha 0/255 only,
-and no forbidden green hue (60-180 degrees) remains.
+All 12 assets were generated individually from the supplied style, host,
+and slot references. No PIL.ImageDraw geometry APIs were used.
