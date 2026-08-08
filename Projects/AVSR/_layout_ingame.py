@@ -56,8 +56,8 @@ add('GhostHpBarFill', (0, 0, 91, 13), 'GhostHpBarBg', 'IMG', local=True)
 add('GhostHpText',    (142, 29, 62, 17), 'TopHudGroup', 'TMP',
     size=cap(13), align='L', color=WHITE)
 
-add('HostPortraitFrame', (8, 55, 58, 54), 'TopHudGroup', 'IMG')
-add('HostPortraitImage', (12, 59, 50, 46), 'TopHudGroup', 'IMG')
+add('HostPortraitFrame', (5, 54, 67, 67), 'TopHudGroup', 'IMG')
+add('HostPortraitImage', (13, 62, 51, 51), 'TopHudGroup', 'IMG')
 add('HostLabel',      (76, 58, 50, 16), 'TopHudGroup', 'TMP',
     text='HOST', size=cap(12), align='L', color=HOST_C)
 add('HostHpBarBg',    (76, 81, 78, 12), 'TopHudGroup', 'IMG')
@@ -79,7 +79,7 @@ add('GoldIcon',       (459, 18, 16, 15), 'TopHudGroup', 'IMG')
 add('GoldText',       (479, 16, 52, 18), 'TopHudGroup', 'TMP', size=cap(13), align='L', color=WHITE)
 add('GemIcon',        (461, 44, 16, 15), 'TopHudGroup', 'IMG')
 add('GemText',        (481, 42, 52, 18), 'TopHudGroup', 'TMP', size=cap(13), align='L', color=WHITE)
-add('PauseButton',    (536, 11, 29, 36), 'TopHudGroup', 'BTN')
+add('PauseButton',    (527, 10, 48, 48), 'TopHudGroup', 'BTN')
 
 # ── 스테이지 표기 (목업 concept 시트의 `STAGE 7`) ───────────────────
 add('StageText',      (223, 66, 208, 16), 'TopHudGroup', 'TMP',
@@ -87,12 +87,12 @@ add('StageText',      (223, 66, 208, 16), 'TopHudGroup', 'TMP',
 
 # ── 하단 조작 ───────────────────────────────────────────────────────
 add('ControlGroup',   (0, 850, 576, 174), ROOT, 'GROUP')
-add('DPadBase',       (11, 857, 133, 128), 'ControlGroup', 'IMG')
-add('DPadKnob',       (41, 30, 60, 55), 'DPadBase', 'IMG', local=True)
+add('DPadBase',       (7, 848, 144, 135), 'ControlGroup', 'IMG')
+add('DPadKnob',       (44, 32, 63, 62), 'DPadBase', 'IMG', local=True)
 
-add('UltimateButton', (328, 858, 115, 132), 'ControlGroup', 'BTN')
-add('UltimateCooldown', (0, 0, 115, 132), 'UltimateButton', 'IMG', local=True)
-add('PossessButton',  (448, 858, 114, 132), 'ControlGroup', 'BTN')
+add('UltimateButton', (324, 854, 122, 140), 'ControlGroup', 'BTN')
+add('UltimateCooldown', (0, 0, 122, 140), 'UltimateButton', 'IMG', local=True)
+add('PossessButton',  (445, 855, 110, 136), 'ControlGroup', 'BTN')
 
 
 # ── 룸 클리어 버프 3택1 (기본 숨김, 코드가 켠다) ────────────────────

@@ -100,19 +100,19 @@
    "name": "HostPortraitFrame",
    "parent": "TopHudGroup",
    "create": "IMG",
-   "x": 10.0,
-   "y": 68.8,
-   "w": 72.5,
-   "h": 67.5
+   "x": 6.2,
+   "y": 67.5,
+   "w": 83.8,
+   "h": 83.8
   },
   {
    "name": "HostPortraitImage",
    "parent": "TopHudGroup",
    "create": "IMG",
-   "x": 15.0,
-   "y": 73.8,
-   "w": 62.5,
-   "h": 57.5
+   "x": 16.2,
+   "y": 77.5,
+   "w": 63.8,
+   "h": 63.8
   },
   {
    "name": "HostLabel",
@@ -269,10 +269,10 @@
    "name": "PauseButton",
    "parent": "TopHudGroup",
    "create": "BTN",
-   "x": 670.0,
-   "y": 13.8,
-   "w": 36.2,
-   "h": 45.0
+   "x": 658.8,
+   "y": 12.5,
+   "w": 60.0,
+   "h": 60.0
   },
   {
    "name": "StageText",
@@ -299,29 +299,29 @@
    "name": "DPadBase",
    "parent": "ControlGroup",
    "create": "IMG",
-   "x": 13.8,
-   "y": 1071.2,
-   "w": 166.2,
-   "h": 160.0
+   "x": 8.8,
+   "y": 1060.0,
+   "w": 180.0,
+   "h": 168.8
   },
   {
    "name": "DPadKnob",
    "parent": "DPadBase",
    "create": "IMG",
-   "x": 51.2,
-   "y": 37.5,
-   "w": 75.0,
-   "h": 68.8,
+   "x": 55.0,
+   "y": 40.0,
+   "w": 78.8,
+   "h": 77.5,
    "local": true
   },
   {
    "name": "UltimateButton",
    "parent": "ControlGroup",
    "create": "BTN",
-   "x": 410.0,
-   "y": 1072.5,
-   "w": 143.8,
-   "h": 165.0
+   "x": 405.0,
+   "y": 1067.5,
+   "w": 152.5,
+   "h": 175.0
   },
   {
    "name": "UltimateCooldown",
@@ -329,18 +329,18 @@
    "create": "IMG",
    "x": 0.0,
    "y": 0.0,
-   "w": 143.8,
-   "h": 165.0,
+   "w": 152.5,
+   "h": 175.0,
    "local": true
   },
   {
    "name": "PossessButton",
    "parent": "ControlGroup",
    "create": "BTN",
-   "x": 560.0,
-   "y": 1072.5,
-   "w": 142.5,
-   "h": 165.0
+   "x": 556.2,
+   "y": 1068.8,
+   "w": 137.5,
+   "h": 170.0
   },
   {
    "name": "BuffChoicePanel",
