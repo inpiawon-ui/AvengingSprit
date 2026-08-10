@@ -160,6 +160,22 @@ namespace Game.Module.InGame
 
         private Sprite GetSprite(string n) => _atlas != null ? _atlas.GetSprite(n) : null;
 
+        /// <summary>
+        /// 방향 스프라이트 5장을 찾아 붙인다. 하나라도 없으면 붙이지 않는다 —
+        /// 없는 방향만 원래 그림으로 나오면 캐릭터가 방향마다 바뀌어 보인다.
+        /// 12종을 한 번에 만들지 않고 한 종씩 넣어 볼 수 있어야 해서 이렇게 둔다.
+        /// </summary>
+        private void ApplyFacingSprites(Unit u, string key)
+        {
+            var set = new Sprite[Unit.FacingSuffix.Length];
+            for (int i = 0; i < set.Length; i++)
+            {
+                set[i] = GetSprite($"unit_{key}_{Unit.FacingSuffix[i]}");
+                if (set[i] == null) return;
+            }
+            u.SetFacingSprites(set);
+        }
+
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
         public Sprite UnitSprite(string hostKey) => GetSprite($"unit_{hostKey}");
 
@@ -261,6 +277,7 @@ namespace Game.Module.InGame
                     u.PossessPriority = e.PossessPriority;
                     u.PossessRange = 0f;
                     u.SetState(EnemyState.Idle);
+                    ApplyFacingSprites(u, e.HostKey);
                     _enemies.Add(u);
                 }
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
@@ -468,6 +485,12 @@ namespace Game.Module.InGame
             if (_host == null) { IsFiring = false; return; }
 
             var target = Nearest(_host.Position);
+
+            // 노리는 쪽을 바라본다. 사거리 밖이라 아직 안 쏘더라도 몸은 돌려 둔다 —
+            // 조준이 먼저 보이고 사격이 뒤따라야 "겨눈다"는 느낌이 난다.
+            if (target != null) _host.SetFacing(target.Position - _host.Position);
+            else if (MoveInput.sqrMagnitude > 0.0001f) _host.SetFacing(MoveInput);
+
             bool inRange = target != null &&
                            Vector2.Distance(_host.Position, target.Position)
                                <= _host.AttackRange * _buffs.RangeMul;
@@ -531,6 +554,8 @@ namespace Game.Module.InGame
 
                 // 기획서 A 4-1 — Detect → Approach → Attack → Cooldown.
                 // 상태를 이름으로 들고 있어야 AI 타입별 분기를 넣을 자리가 생긴다.
+                e.SetFacing(me.Position - e.Position);   // 적도 플레이어를 바라본다
+
                 if (d > e.AttackRange)
                 {
                     e.SetState(EnemyState.Approach);
@@ -1120,6 +1145,7 @@ namespace Game.Module.InGame
                         _config.HostAttackInterval * (entry?.IntervalMul ?? 1f),
                         new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
+            ApplyFacingSprites(_host, key);
 
             // 기획서 A 3-3 — 빼앗은 몸은 온전하지 않다. 최대 체력의 70%로 시작한다.
             // 이게 없으면 교체가 곧 완전 회복이라, 몸을 갈아타는 데 대가가 없어진다.

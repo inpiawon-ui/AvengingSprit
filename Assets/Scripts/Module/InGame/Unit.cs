@@ -134,6 +134,11 @@ namespace Game.Module.InGame
 
             _body = GetOrCreate("Body", size, Vector2.zero);
             _body.sprite = sprite;
+            _baseSprite = sprite;
+            _facing = null;
+            _facingIndex = -1;
+            _facingFlip = false;
+            _body.transform.localScale = Vector3.one;
             _body.preserveAspect = true;
             _body.raycastTarget = false;
 
@@ -205,6 +210,70 @@ namespace Game.Module.InGame
         public void SetSprite(Sprite s)
         {
             if (_body != null) _body.sprite = s;
+            _baseSprite = s;
+        }
+
+        // ── 8방향 바라보기 ───────────────────────────────────────
+        // 그리는 것은 다섯 방향(↓ ↘ → ↗ ↑)뿐이고, 왼쪽 절반은 좌우 반전으로 만든다.
+        // 캐릭터가 좌우 대칭이라 반전이 자연스럽고, 제작량이 96장 → 60장으로 준다.
+        //
+        // 방향 스프라이트가 없으면 원래 그림을 그대로 쓴다. 12종을 한 번에 만들지
+        // 않고 한 종씩 넣어 볼 수 있어야 해서, 없는 쪽이 깨지면 안 된다.
+
+        /// <summary>바라보기 스프라이트 5장. 순서는 s / se / e / ne / n.</summary>
+        public static readonly string[] FacingSuffix = { "s", "se", "e", "ne", "n" };
+
+        private Sprite[] _facing;
+        private Sprite _baseSprite;
+        private int _facingIndex = -1;
+        private bool _facingFlip;
+
+        public bool HasFacing => _facing != null;
+
+        /// <summary>방향 스프라이트를 넘겨준다. 하나라도 비면 통째로 무시한다(섞이면 더 이상하다).</summary>
+        public void SetFacingSprites(Sprite[] five)
+        {
+            if (five == null || five.Length != FacingSuffix.Length) { _facing = null; return; }
+            for (int i = 0; i < five.Length; i++)
+                if (five[i] == null) { _facing = null; return; }
+            _facing = five;
+        }
+
+        /// <summary>
+        /// 바라보는 방향을 정한다. 8방향으로 반올림해 다섯 장 + 반전으로 표현한다.
+        /// 방향이 안 바뀌면 아무것도 하지 않는다 — 매 프레임 스프라이트를 갈면 낭비다.
+        /// </summary>
+        public void SetFacing(Vector2 dir)
+        {
+            if (_facing == null || dir.sqrMagnitude < 0.0001f) return;
+
+            // 화면 좌표계라 위쪽이 +y 다. 오른쪽(→)을 0 도로 두고 8칸으로 나눈다.
+            float deg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            int oct = Mathf.RoundToInt(deg / 45f);
+            if (oct < 0) oct += 8;              // 0=→ 1=↗ 2=↑ 3=↖ 4=← 5=↙ 6=↓ 7=↘
+
+            int index;
+            bool flip;
+            switch (oct)
+            {
+                case 0: index = 2; flip = false; break;   // →  e
+                case 1: index = 3; flip = false; break;   // ↗  ne
+                case 2: index = 4; flip = false; break;   // ↑  n
+                case 3: index = 3; flip = true;  break;   // ↖  ne 반전
+                case 4: index = 2; flip = true;  break;   // ←  e  반전
+                case 5: index = 1; flip = true;  break;   // ↙  se 반전
+                case 6: index = 0; flip = false; break;   // ↓  s
+                default: index = 1; flip = false; break;  // ↘  se
+            }
+            if (index == _facingIndex && flip == _facingFlip) return;
+
+            _facingIndex = index;
+            _facingFlip = flip;
+            if (_body == null) return;
+            _body.sprite = _facing[index];
+            // 좌우 반전은 스케일로 준다. 부호만 바꾸므로 픽셀 정렬이 깨지지 않는다.
+            var s = _body.transform.localScale;
+            _body.transform.localScale = new Vector3(flip ? -Mathf.Abs(s.x) : Mathf.Abs(s.x), s.y, s.z);
         }
 
         /// <summary>피해를 적용한다. 사망했으면 true.</summary>
