@@ -82,6 +82,10 @@ namespace Game.Module.InGame
         private readonly System.Random _rng = new();
         private bool _awaitingBuff;
 
+        /// <summary>런 레벨. 적을 잡아 EXP 를 모으고, 차면 버프 3택1 이 열린다 (기획서 A 5-2).</summary>
+        private int _level = 1;
+        private int _exp;
+
         /// <summary>이 런에 쌓인 버프. 스테이지를 나가면 사라진다.</summary>
         public RunBuffs Buffs => _buffs;
         public bool IsAwaitingBuff => _awaitingBuff;
@@ -397,6 +401,21 @@ namespace Game.Module.InGame
                 e.TickFlash(dt);
                 e.TickSlow(dt);
 
+                // 기획서 A 1-1 — 유령은 **적과 충돌하지 않고 표적도 되지 않는다.**
+                // 몸이 없는 동안에는 적도 보스도 쫓거나 때리지 않는다. 유령 상태의
+                // 압박은 맞아 죽는 것이 아니라 초당 깎이는 시계(A 1-2)에서 온다.
+                // 이미 날아가고 있는 탄은 그대로 맞는다 — 그건 조준이 아니라 잔탄이다.
+                //
+                // 보스방에서 특히 중요하다. 보스는 빙의 대상이 아니라(A 1-4) 몸을 잃으면
+                // 반격 수단이 없다. 계속 맞으면 전투가 아니라 처형이 된다.
+                if (_host == null)
+                {
+                    e.IsAggro = false;
+                    e.SetState(EnemyState.Idle);
+                    if (!e.IsBoss) Separate(e, i, dt);
+                    continue;
+                }
+
                 // 보스는 쿨다운으로 여러 패턴을 돌린다 — 잡몹 AI 를 태우지 않는다
                 if (e.IsBoss) { TickBoss(e, me, dt); continue; }
 
@@ -404,6 +423,7 @@ namespace Game.Module.InGame
 
                 // 탐지 — 들어오기 전에는 제자리에서 기다린다.
                 // 처음부터 전부 달려들면 방이 통째로 한 덩어리가 되어 몰려다닌다.
+
                 if (!e.IsAggro)
                 {
                     if (d > _config.EnemyDetectRange)
@@ -830,6 +850,7 @@ namespace Game.Module.InGame
             // 다시 빙의할 틈 없이 연쇄로 죽는다. 무적과 함께 주변을 늦춘다.
             _ghostProtect = _config.GhostProtectSeconds;
             _drainCarry = 0f;
+            _buffs.SetHost(null);
             SlowNearbyEnemies(pos);
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
@@ -882,6 +903,47 @@ namespace Game.Module.InGame
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
             Destroy(u.gameObject);
+
+            GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+        }
+
+        // ── 런 레벨 ──────────────────────────────────────────────
+        // 기획서 A 5-2 — EXP 가 차면 전투를 멈추고 버프 3택1 을 띄운다.
+        // 방을 비워야 버프가 나오던 것과 달리, **잡는 만큼** 성장한다.
+        // 방 하나가 곧 스테이지인 지금 구조에서는 이게 없으면 성장이 스테이지당 한 번뿐이다.
+
+        private void GainExp(int amount)
+        {
+            if (amount <= 0) return;
+            _exp += amount;
+
+            int need = _config.ExpToNext(_level);
+            if (_exp < need)
+            {
+                PublishExp(need);
+                return;
+            }
+
+            _exp -= need;
+            _level++;
+            PublishExp(_config.ExpToNext(_level));
+            OfferBuff();
+        }
+
+        private void PublishExp(int need)
+            => _bus.Publish(new RunExpChangedEvent { Level = _level, Exp = _exp, ExpToNext = need });
+
+        /// <summary>버프 3택1 을 연다. 이미 열려 있으면 아무것도 하지 않는다.</summary>
+        private void OfferBuff()
+        {
+            if (_awaitingBuff) return;
+            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile);
+            if (_offer.Count == 0) return;
+
+            _awaitingBuff = true;
+            var keys = new string[_offer.Count];
+            for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
+            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys });
         }
 
         private void CleanupDead()
@@ -964,6 +1026,8 @@ namespace Game.Module.InGame
             // 가장 취약한 지점이라, 여기서 맞으면 빙의 자체가 손해가 된다.
             _invuln = _config.PossessInvulnSeconds;
             _ghostProtect = 0f;
+            // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
+            _buffs.SetHost(entry);
 
             _bus.Publish(new PossessedEvent
             {
@@ -998,15 +1062,9 @@ namespace Game.Module.InGame
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
 
-            // 로그라이크 축 — 룸마다 3택1 로 런 한정 빌드를 쌓는다.
-            // 고를 때까지 전투를 멈춘다(적이 없는 상태라 안전하다).
-            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng);
-            if (_offer.Count == 0) { SpawnExit(); return; }
-
-            _awaitingBuff = true;
-            var keys = new string[_offer.Count];
-            for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
-            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys });
+            // 버프는 이제 **레벨업**에서 나온다(기획서 A 5-2). 방을 비운 것만으로는
+            // 주지 않는다 — 잡는 만큼 성장하는 쪽이 교전을 피하지 않게 만든다.
+            SpawnExit();
         }
 
         /// <summary>제시된 3장 중 하나를 고른다. UI 가 호출한다.</summary>
@@ -1034,7 +1092,9 @@ namespace Game.Module.InGame
             _awaitingBuff = false;
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
-            SpawnExit();
+            // 레벨업 중에도 방이 이미 비었을 수 있다 — 그때는 고른 뒤에 출구를 연다.
+            if (_enemies.Count == 0 && _exit == null && _roomIndex < _config.StagesPerChapter - 1)
+                SpawnExit();
         }
 
         // ── 출구 ─────────────────────────────────────────────────

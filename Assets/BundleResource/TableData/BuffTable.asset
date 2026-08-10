@@ -20,6 +20,9 @@ MonoBehaviour:
     _value: 25
     _stackable: 1
     _colorHex: '#E8604A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: aspd_up
     _nameKr: "\uC5F0\uC0AC \uAC15\uD654"
     _description: "\uBC1C\uC0AC \uAC04\uACA9 -18%"
@@ -27,6 +30,9 @@ MonoBehaviour:
     _value: 18
     _stackable: 1
     _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: range_up
     _nameKr: "\uC0AC\uAC70\uB9AC \uAC15\uD654"
     _description: "\uC0AC\uAC70\uB9AC +25%"
@@ -34,6 +40,9 @@ MonoBehaviour:
     _value: 25
     _stackable: 1
     _colorHex: '#4AA8E8'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: move_up
     _nameKr: "\uC9C8\uC8FC"
     _description: "\uC774\uB3D9 \uC18D\uB3C4 +18%"
@@ -41,6 +50,9 @@ MonoBehaviour:
     _value: 18
     _stackable: 1
     _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: ghost_hp
     _nameKr: "\uC601\uD63C \uAC15\uD654"
     _description: "\uACE0\uC2A4\uD2B8 \uCD5C\uB300 \uCCB4\uB825 +40"
@@ -48,6 +60,9 @@ MonoBehaviour:
     _value: 40
     _stackable: 1
     _colorHex: '#5AC8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: heal
     _nameKr: "\uC751\uAE09 \uD68C\uBCF5"
     _description: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 40% \uD68C\uBCF5"
@@ -55,6 +70,9 @@ MonoBehaviour:
     _value: 40
     _stackable: 1
     _colorHex: '#8CD048'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: multishot
     _nameKr: "\uB2E4\uC911 \uC0AC\uACA9"
     _description: "\uD0C4 +1 \uBC1C"
@@ -62,6 +80,9 @@ MonoBehaviour:
     _value: 1
     _stackable: 1
     _colorHex: '#C98CF0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: pierce
     _nameKr: "\uAD00\uD1B5\uD0C4"
     _description: "\uD0C4\uC774 \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4"
@@ -69,6 +90,9 @@ MonoBehaviour:
     _value: 1
     _stackable: 0
     _colorHex: '#A0E0FF'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: lifesteal
     _nameKr: "\uD761\uD608"
     _description: "\uD53C\uD574\uC758 15% \uD68C\uBCF5"
@@ -76,6 +100,9 @@ MonoBehaviour:
     _value: 15
     _stackable: 1
     _colorHex: '#E04A7A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: slow
     _nameKr: "\uC11C\uB9AC"
     _description: "\uBA85\uC911 \uC2DC \uB454\uD654 25%"
@@ -83,6 +110,9 @@ MonoBehaviour:
     _value: 25
     _stackable: 1
     _colorHex: '#7ED8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: ult_charge
     _nameKr: "\uC5BC\uD2F0\uBC0B \uCDA9\uC804"
     _description: "\uCDA9\uC804 \uC18D\uB3C4 +30%"
@@ -90,6 +120,9 @@ MonoBehaviour:
     _value: 30
     _stackable: 1
     _colorHex: '#F07828'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
   - _buffKey: shot_speed
     _nameKr: "\uD0C4\uC18D \uAC15\uD654"
     _description: "\uD0C4\uC18D +30%"
@@ -97,3 +130,166 @@ MonoBehaviour:
     _value: 30
     _stackable: 1
     _colorHex: '#F2F4F8'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+  - _buffKey: tag_shot_dmg
+    _nameKr: "\uD0C4\uD658 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD53C\uD574 +30%"
+    _kind: 0
+    _value: 30
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 1
+    _tag: 1
+    _hostKey: 
+  - _buffKey: tag_shot_multi
+    _nameKr: "\uD0C4\uD658 \uB2E4\uBC1C"
+    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD0C4 +1\uBC1C"
+    _kind: 6
+    _value: 1
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 1
+    _tag: 1
+    _hostKey: 
+  - _buffKey: tag_melee_dmg
+    _nameKr: "\uADFC\uC811 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD53C\uD574 +35%"
+    _kind: 0
+    _value: 35
+    _stackable: 1
+    _colorHex: '#E8404A'
+    _scope: 1
+    _tag: 2
+    _hostKey: 
+  - _buffKey: tag_melee_leech
+    _nameKr: "\uADFC\uC811 \uD761\uD608"
+    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD761\uD608 +12%"
+    _kind: 8
+    _value: 12
+    _stackable: 1
+    _colorHex: '#E8404A'
+    _scope: 1
+    _tag: 2
+    _hostKey: 
+  - _buffKey: tag_magic_dmg
+    _nameKr: "\uB9C8\uBC95 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uD53C\uD574 +32%"
+    _kind: 0
+    _value: 32
+    _stackable: 1
+    _colorHex: '#8A46D8'
+    _scope: 1
+    _tag: 3
+    _hostKey: 
+  - _buffKey: tag_magic_range
+    _nameKr: "\uB9C8\uBC95 \uC0AC\uAC70\uB9AC"
+    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +30%"
+    _kind: 2
+    _value: 30
+    _stackable: 1
+    _colorHex: '#8A46D8'
+    _scope: 1
+    _tag: 3
+    _hostKey: 
+  - _buffKey: tag_deploy_dmg
+    _nameKr: "\uC124\uCE58\uBB3C \uAC15\uD654"
+    _description: "\uC124\uCE58 \uACC4\uC5F4 \uD53C\uD574 +40%"
+    _kind: 0
+    _value: 40
+    _stackable: 1
+    _colorHex: '#4AA8E8'
+    _scope: 1
+    _tag: 4
+    _hostKey: 
+  - _buffKey: tag_deploy_rate
+    _nameKr: "\uC124\uCE58 \uAC00\uB3D9\uB960"
+    _description: "\uC124\uCE58 \uACC4\uC5F4 \uAC04\uACA9 -20%"
+    _kind: 1
+    _value: 20
+    _stackable: 1
+    _colorHex: '#4AA8E8'
+    _scope: 1
+    _tag: 4
+    _hostKey: 
+  - _buffKey: tag_breath_range
+    _nameKr: "\uBE0C\uB808\uC2A4 \uBC94\uC704"
+    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +35%"
+    _kind: 2
+    _value: 35
+    _stackable: 1
+    _colorHex: '#F07028'
+    _scope: 1
+    _tag: 5
+    _hostKey: 
+  - _buffKey: tag_breath_dmg
+    _nameKr: "\uBE0C\uB808\uC2A4 \uAC15\uD654"
+    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uD53C\uD574 +38%"
+    _kind: 0
+    _value: 38
+    _stackable: 1
+    _colorHex: '#F07028'
+    _scope: 1
+    _tag: 5
+    _hostKey: 
+  - _buffKey: host_ninja_star
+    _nameKr: "\uD45C\uCC3D \uAC15\uD654"
+    _description: "\uB2CC\uC790 \u2014 \uD0C4 +2\uBC1C"
+    _kind: 6
+    _value: 2
+    _stackable: 1
+    _colorHex: '#3A5CD8'
+    _scope: 2
+    _tag: 0
+    _hostKey: ninja
+  - _buffKey: host_dragon_breath
+    _nameKr: "\uBE0C\uB808\uC2A4 \uD3ED\uBC1C"
+    _description: "\uB4DC\uB798\uACE4 \u2014 \uD53C\uD574 +55%"
+    _kind: 0
+    _value: 55
+    _stackable: 1
+    _colorHex: '#F07028'
+    _scope: 2
+    _tag: 0
+    _hostKey: dragon
+  - _buffKey: host_robot_missile
+    _nameKr: "\uBBF8\uC0AC\uC77C \uAC15\uD654"
+    _description: "\uB85C\uBD07 \u2014 \uAC04\uACA9 -30%"
+    _kind: 1
+    _value: 30
+    _stackable: 1
+    _colorHex: '#9AA4B4'
+    _scope: 2
+    _tag: 0
+    _hostKey: robot
+  - _buffKey: host_amazon_spear
+    _nameKr: "\uCC3D \uD22C\uCC99 \uAC15\uD654"
+    _description: "\uC544\uB9C8\uC870\uB124\uC2A4 \u2014 \uC0AC\uAC70\uB9AC +45%"
+    _kind: 2
+    _value: 45
+    _stackable: 1
+    _colorHex: '#D8A828'
+    _scope: 2
+    _tag: 0
+    _hostKey: amazoness
+  - _buffKey: host_vampire_leech
+    _nameKr: "\uD53C\uC758 \uAC08\uC99D"
+    _description: "\uD761\uD608\uADC0 \u2014 \uD761\uD608 +20%"
+    _kind: 8
+    _value: 20
+    _stackable: 1
+    _colorHex: '#A02838'
+    _scope: 2
+    _tag: 0
+    _hostKey: vampire
+  - _buffKey: host_hitman_snipe
+    _nameKr: "\uC815\uBC00 \uC0AC\uACA9"
+    _description: "\uD788\uD2B8\uB9E8 \u2014 \uD53C\uD574 +70%"
+    _kind: 0
+    _value: 70
+    _stackable: 1
+    _colorHex: '#C8C8D0'
+    _scope: 2
+    _tag: 0
+    _hostKey: hitman

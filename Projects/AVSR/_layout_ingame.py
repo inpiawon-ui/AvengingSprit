@@ -87,6 +87,13 @@ add('GhostHpBarFill', (0, 0, 136, 20), 'GhostHpBarBg', 'IMG', local=True)
 add('GhostHpText',    (212, 30, 92, 26), 'TopHudGroup', 'TMP',
     size=cap(19), align='L', color=WHITE)
 
+# 런 EXP — 적을 잡아 모으고 차면 버프 3택1 이 열린다(기획서 A 5-2).
+# 게이지가 없으면 언제 선택 창이 뜨는지 예측할 수 없어 성장이 우연처럼 느껴진다.
+add('ExpBarBg',       (70, 56, 136, 10), 'TopHudGroup', 'IMG')
+add('ExpBarFill',     (0, 0, 136, 10), 'ExpBarBg', 'IMG', local=True)
+add('LevelText',      (212, 52, 92, 18), 'TopHudGroup', 'TMP',
+    text='Lv.1', size=cap(13), align='L', color=WHITE)
+
 # 1행 — 재화·일시정지 (원래 세로로 쌓여 있던 골드/젬을 가로로 편다)
 add('GoldIcon',       (310, 18, 24, 22), 'TopHudGroup', 'IMG')
 add('GoldText',       (340, 16, 70, 26), 'TopHudGroup', 'TMP', size=cap(19), align='L', color=WHITE)

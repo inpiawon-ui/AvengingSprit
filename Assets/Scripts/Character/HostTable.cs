@@ -92,6 +92,9 @@ namespace Game.Character
         [Tooltip("사격 대상을 고르는 규칙 (기획서 A 3-3 Target Type)")]
         [SerializeField] private TargetType _targetType = TargetType.Nearest;
 
+        [Tooltip("계열 태그. 태그형 버프가 이 몸에 붙는지를 가른다 (기획서 A 5-4)")]
+        [SerializeField] private BuffTag _tag = BuffTag.None;
+
         [Header("적으로 등장할 때")]
         [Tooltip("빙의 우선순위. 높을수록 먼저 잡힌다. 같으면 가까운 쪽 (기획서 A 4-3)")]
         [SerializeField] private int _possessPriority;
@@ -123,6 +126,7 @@ namespace Game.Character
         public bool ReflectsShots => _reflectsShots;
         public bool MoveAttack => _moveAttack;
         public TargetType Targeting => _targetType;
+        public BuffTag Tag => _tag;
         public int PossessPriority => _possessPriority;
 
         /// <summary>호스트 선택·인게임 HUD 에 쓰는 짧은 교전 스타일 문구.</summary>

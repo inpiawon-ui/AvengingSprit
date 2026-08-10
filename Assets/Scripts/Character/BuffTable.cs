@@ -36,6 +36,38 @@ namespace Game.Character
         ShotSpeed,
     }
 
+    /// <summary>
+    /// 버프가 언제 켜지는가 (기획서 A 5-4).
+    ///
+    /// 이 구분이 있어야 "지금 쓰는 몸에 맞는 버프를 골랐는가"가 판단이 된다.
+    /// 범용만 있으면 3택1 이 그냥 좋은 것 고르기가 된다.
+    /// </summary>
+    public enum BuffScope
+    {
+        /// <summary>항상 유지된다</summary>
+        Common,
+        /// <summary>해당 태그의 호스트를 쓸 때만 활성</summary>
+        Tag,
+        /// <summary>지정한 호스트를 쓸 때만 활성</summary>
+        HostOnly,
+    }
+
+    /// <summary>호스트 계열 태그. 태그형 버프가 어느 몸에 붙는지를 가른다.</summary>
+    public enum BuffTag
+    {
+        None,
+        /// <summary>탄환 — 단발·연사·확산·저격</summary>
+        Shot,
+        /// <summary>근접</summary>
+        Melee,
+        /// <summary>마법 — 관통·광역</summary>
+        Magic,
+        /// <summary>설치물</summary>
+        Deploy,
+        /// <summary>브레스</summary>
+        Breath,
+    }
+
     [Serializable]
     public sealed class BuffEntry
     {
@@ -49,6 +81,13 @@ namespace Game.Character
         [Tooltip("카드 강조색 (#RRGGBB)")]
         [SerializeField] private string _colorHex = "#F0B428";
 
+        [Header("적용 범위 (기획서 A 5-4)")]
+        [SerializeField] private BuffScope _scope = BuffScope.Common;
+        [Tooltip("Scope 가 Tag 일 때만 쓴다")]
+        [SerializeField] private BuffTag _tag = BuffTag.None;
+        [Tooltip("Scope 가 HostOnly 일 때만 쓴다")]
+        [SerializeField] private string _hostKey;
+
         public string BuffKey => _buffKey;
         public string NameKr => _nameKr;
         public string Description => _description;
@@ -56,6 +95,18 @@ namespace Game.Character
         public int Value => _value;
         public bool Stackable => _stackable;
         public string ColorHex => _colorHex;
+        public BuffScope Scope => _scope;
+        public BuffTag Tag => _tag;
+        public string HostKey => _hostKey;
+
+        /// <summary>지금 이 호스트를 쓰는 동안 켜져 있는가. 호스트가 없으면 범용만 켜진다.</summary>
+        public bool IsActiveFor(HostEntry host) => _scope switch
+        {
+            BuffScope.Common => true,
+            BuffScope.Tag => host != null && host.Tag == _tag,
+            BuffScope.HostOnly => host != null && host.HostKey == _hostKey,
+            _ => true,
+        };
     }
 
     /// <summary>
@@ -76,23 +127,64 @@ namespace Game.Character
             return null;
         }
 
+        // 뽑기 비율 (기획서 A 5-5). 범용만 쏟아지면 3택1 이 "좋은 것 고르기"가 되고,
+        // 전용만 쏟아지면 지금 몸에 안 맞는 카드만 나와 선택이 무의미해진다.
+        private const int CommonPercent = 60;
+        private const int TagPercent = 30;      // 나머지 10% 가 호스트 전용
+
+        private readonly List<BuffEntry> _common = new();
+        private readonly List<BuffEntry> _tag = new();
+        private readonly List<BuffEntry> _hostOnly = new();
+
         /// <summary>
-        /// 서로 다른 버프 `count` 개를 뽑는다. `taken` 은 이미 획득해 중복 불가인 키다.
-        /// 뽑을 것이 모자라면 있는 만큼만 돌려준다.
+        /// 서로 다른 버프 `count` 개를 뽑는다. `exclude` 는 이미 획득해 중복 불가인 키다.
+        ///
+        /// 범용 60 / 태그형 30 / 호스트 전용 10 비율로 분류를 먼저 고르고 그 안에서 뽑는다.
+        /// 해당 분류가 비면 다른 분류로 넘어간다 — 뽑을 것이 없어 빈손이 되는 편이 더 나쁘다.
+        ///
+        /// 태그형·전용은 **지금 쓰는 호스트에 맞는 것만** 후보로 넣는다. 안 맞는 카드는
+        /// 고르는 순간 꺼져 있어서, 3택1 이 사실상 2택이 되어 버린다.
         /// </summary>
-        public void Draw(List<BuffEntry> into, int count, HashSet<string> exclude, System.Random rng)
+        public void Draw(List<BuffEntry> into, int count, HashSet<string> exclude,
+                         System.Random rng, HostEntry host = null)
         {
             into.Clear();
-            var pool = new List<BuffEntry>(_entries.Length);
-            for (int i = 0; i < _entries.Length; i++)
-                if (exclude == null || !exclude.Contains(_entries[i].BuffKey)) pool.Add(_entries[i]);
+            _common.Clear(); _tag.Clear(); _hostOnly.Clear();
 
-            for (int i = 0; i < count && pool.Count > 0; i++)
+            for (int i = 0; i < _entries.Length; i++)
             {
+                var e = _entries[i];
+                if (exclude != null && exclude.Contains(e.BuffKey)) continue;
+                switch (e.Scope)
+                {
+                    case BuffScope.Common: _common.Add(e); break;
+                    case BuffScope.Tag: if (e.IsActiveFor(host)) _tag.Add(e); break;
+                    case BuffScope.HostOnly: if (e.IsActiveFor(host)) _hostOnly.Add(e); break;
+                }
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                var pool = PickPool(rng);
+                if (pool == null) return;                 // 셋 다 비었다
                 int k = rng.Next(pool.Count);
                 into.Add(pool[k]);
                 pool.RemoveAt(k);
             }
+        }
+
+        private List<BuffEntry> PickPool(System.Random rng)
+        {
+            int roll = rng.Next(100);
+            var first = roll < CommonPercent ? _common
+                      : roll < CommonPercent + TagPercent ? _tag
+                      : _hostOnly;
+            if (first.Count > 0) return first;
+
+            // 비었으면 남은 쪽에서 채운다
+            if (_common.Count > 0) return _common;
+            if (_tag.Count > 0) return _tag;
+            return _hostOnly.Count > 0 ? _hostOnly : null;
         }
     }
 }

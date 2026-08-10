@@ -771,6 +771,36 @@
    "slice9": []
   },
   {
+   "file": "expbarbg.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 136,
+   "h": 10,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  {
+   "file": "expbarfill.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 8,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
    "file": "gemicon.png",
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",

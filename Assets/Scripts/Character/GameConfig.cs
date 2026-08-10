@@ -50,6 +50,16 @@ namespace Game.Character
         [Range(10, 100)]
         [SerializeField] private int _hostStartHpPercent = 70;
 
+        [Header("런 레벨 — 적을 잡아 모으고, 차면 버프 3택1 (기획서 A 5-2)")]
+        [Tooltip("일반 적 1기 처치로 얻는 EXP")]
+        [SerializeField] private int _expPerEnemy = 10;
+        [Tooltip("보스 처치로 얻는 EXP")]
+        [SerializeField] private int _expPerBoss = 60;
+        [Tooltip("Lv.1 → Lv.2 에 필요한 EXP")]
+        [SerializeField] private int _expToLevelBase = 30;
+        [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
+        [SerializeField] private int _expGrowthPercent = 45;
+
         [Header("호스트 — 표시 스탯(0~100) → 전투 수치 환산")]
         [SerializeField] private float _hostHpPerPoint = 6f;
         [SerializeField] private int _hostHpBase = 60;
@@ -101,6 +111,16 @@ namespace Game.Character
         public int StagesPerChapter => Mathf.Max(1, _stagesPerChapter);
         public float ExitTouchRadius => _exitTouchRadius;
         public int HostStartHpPercent => Mathf.Clamp(_hostStartHpPercent, 10, 100);
+        public int ExpPerEnemy => _expPerEnemy;
+        public int ExpPerBoss => _expPerBoss;
+
+        /// <summary>해당 레벨에서 다음 레벨까지 필요한 EXP. 레벨마다 등비로 늘어난다.</summary>
+        public int ExpToNext(int level)
+        {
+            float need = _expToLevelBase;
+            for (int i = 1; i < Mathf.Max(1, level); i++) need *= 1f + _expGrowthPercent / 100f;
+            return Mathf.Max(1, Mathf.RoundToInt(need));
+        }
 
         public int GhostHpMax => _ghostHpMax;
         public float GhostMoveSpeed => _ghostMoveSpeed;

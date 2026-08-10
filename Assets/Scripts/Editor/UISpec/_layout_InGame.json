@@ -106,6 +106,38 @@
    "color": "#F2F4F8"
   },
   {
+   "name": "ExpBarBg",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 87.5,
+   "y": 70.0,
+   "w": 170.0,
+   "h": 12.5
+  },
+  {
+   "name": "ExpBarFill",
+   "parent": "ExpBarBg",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 170.0,
+   "h": 12.5,
+   "local": true
+  },
+  {
+   "name": "LevelText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 265.0,
+   "y": 65.0,
+   "w": 115.0,
+   "h": 22.5,
+   "text": "Lv.1",
+   "size": 23.2,
+   "align": "L",
+   "color": "#F2F4F8"
+  },
+  {
    "name": "GoldIcon",
    "parent": "TopHudGroup",
    "create": "IMG",

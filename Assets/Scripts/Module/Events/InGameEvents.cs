@@ -16,6 +16,14 @@ namespace Game.Module.Events
         public int StageIndex;
     }
 
+    /// <summary>런 EXP·레벨이 변했다. 게이지 표시용.</summary>
+    public struct RunExpChangedEvent : IEvent
+    {
+        public int Level;
+        public int Exp;
+        public int ExpToNext;
+    }
+
     /// <summary>룸의 적이 전멸했다.</summary>
     public struct RoomClearedEvent : IEvent
     {

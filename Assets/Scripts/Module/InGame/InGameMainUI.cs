@@ -30,6 +30,7 @@ namespace Game.Module.InGame
         private const float GhostBarWidth = 170f;   // 136 × 1.25
         private const float HostBarWidth = 147.5f;  // 118 × 1.25
         private const float BossBarWidth = 272.5f;  // 218 × 1.25
+        private const float ExpBarWidth = 170f;     // 136 × 1.25
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
@@ -103,6 +104,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<HostLostEvent>(_ => OnHostLost()));
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRoomEntered));
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(OnExitOpened));
+            _tokens.Add(bus.Subscribe<RunExpChangedEvent>(OnExpChanged));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(e => SetPossessReady(e.HasTarget)));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
@@ -324,6 +326,12 @@ namespace Game.Module.InGame
 
         private void OnExitOpened(ExitOpenedEvent e)
             => _ui.SetText("StageText", "출구가 열렸다 — 통과해서 다음 스테이지로");
+
+        private void OnExpChanged(RunExpChangedEvent e)
+        {
+            _ui.SetText("LevelText", $"Lv.{e.Level}");
+            _ui.SetFill("ExpBarFill", Ratio(e.Exp, e.ExpToNext), ExpBarWidth);
+        }
 
         /// <summary>빙의 가능할 때만 버튼을 밝힌다. 목업의 발광 상태를 알파로 흉내낸다.</summary>
         private void SetPossessReady(bool ready)
