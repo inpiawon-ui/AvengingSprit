@@ -24,7 +24,7 @@ MonoBehaviour:
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 0.45
+    _rangeMul: 0.9
     _intervalMul: 0.55
     _damageMul: 0.8
     _lifestealPercent: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
     _attackKind: 2
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1
+    _rangeMul: 3.0
     _intervalMul: 0.4
     _damageMul: 0.48
     _lifestealPercent: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
     _attackKind: 4
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1.3
+    _rangeMul: 3.9
     _intervalMul: 1.35
     _damageMul: 1.75
     _lifestealPercent: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
     _attackKind: 3
     _shotCount: 3
     _spreadDegrees: 16
-    _rangeMul: 0.9
+    _rangeMul: 2.7
     _intervalMul: 0.8
     _damageMul: 0.6
     _lifestealPercent: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
     _attackKind: 3
     _shotCount: 5
     _spreadDegrees: 34
-    _rangeMul: 0.7
+    _rangeMul: 2.1
     _intervalMul: 1.05
     _damageMul: 0.5
     _lifestealPercent: 0
@@ -149,7 +149,7 @@ MonoBehaviour:
     _attackKind: 5
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1.7
+    _rangeMul: 5.1
     _intervalMul: 1.7
     _damageMul: 2.4
     _lifestealPercent: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
     _attackKind: 6
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 0.55
+    _rangeMul: 1.1
     _intervalMul: 1.25
     _damageMul: 0.95
     _lifestealPercent: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
     _attackKind: 3
     _shotCount: 3
     _spreadDegrees: 12
-    _rangeMul: 0.5
+    _rangeMul: 1.5
     _intervalMul: 0.85
     _damageMul: 0.52
     _lifestealPercent: 0
@@ -224,7 +224,7 @@ MonoBehaviour:
     _attackKind: 4
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1.1
+    _rangeMul: 3.3
     _intervalMul: 1
     _damageMul: 1.15
     _lifestealPercent: 0
@@ -249,7 +249,7 @@ MonoBehaviour:
     _attackKind: 1
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1.05
+    _rangeMul: 3.15
     _intervalMul: 0.9
     _damageMul: 0.85
     _lifestealPercent: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 0.6
+    _rangeMul: 1.2
     _intervalMul: 0.75
     _damageMul: 1.35
     _lifestealPercent: 0
@@ -299,7 +299,7 @@ MonoBehaviour:
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 0.5
+    _rangeMul: 1.0
     _intervalMul: 0.7
     _damageMul: 1.05
     _lifestealPercent: 35

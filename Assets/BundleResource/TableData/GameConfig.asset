@@ -18,7 +18,7 @@ MonoBehaviour:
   _ghostMoveSpeed: 320
   _possessRange: 110
   _ghostDamageScale: 0.22
-  _ghostDrainPerSecond: 3
+  _ghostDrainPerSecond: 2
   _ghostProtectSeconds: 1
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
@@ -46,7 +46,7 @@ MonoBehaviour:
   _enemyHpScale: 0.55
   _enemyAtkScale: 0.7
   _enemySpeedScale: 0.62
-  _enemyAttackRange: 150
+  _enemyAttackRange: 60
   _enemyAttackInterval: 1.1
   _enemyDetectRange: 300
   _enemySeparation: 82
