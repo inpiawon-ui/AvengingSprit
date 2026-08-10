@@ -71,6 +71,9 @@ namespace Game.Module.InGame
                 float cos = Mathf.Cos(r), sin = Mathf.Sin(r);
                 _dir = new Vector2(_dir.x * cos - _dir.y * sin, _dir.x * sin + _dir.y * cos);
             }
+            // 탄환 스프라이트가 가로로 길어서, 돌려주지 않으면 위로 쏴도 오른쪽을 본다
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
             _speed = speed;
             _damage = damage;
             _fromPlayer = fromPlayer;

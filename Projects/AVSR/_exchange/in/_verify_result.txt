@@ -1,13 +1,15 @@
-AVSR ultimate icon regeneration verification
-delivered_png=12
-dimensions=64x64
-size_errors=0
-palette_errors=0
-alpha_errors=0
+AVSR recut / redraw verification
+delivered_png=17
+clipped_branch=12
+blurred_branch=5
+clipping_errors=0
+blur_errors=0
 code_shape_errors=0
-symmetry_range=29.44%-59.52%
-color_count_range=15-16
+alpha_errors=0
+detached_component_errors=0
 result=PASS
 
-All 12 assets were generated individually from the supplied style, host,
-and slot references. No PIL.ImageDraw geometry APIs were used.
+All assets have transparent margins on every edge.
+The 12 clipped assets were restored using their current art and mockup references.
+The 5 blurred assets were regenerated at the supplied style-reference quality.
+No PIL.ImageDraw geometry APIs were used.

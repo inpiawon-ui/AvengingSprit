@@ -49,9 +49,9 @@
   },
   {
    "name": "HeaderPortalDeco",
-   "x": 577.1,
+   "x": 576.9,
    "y": 108.0,
-   "w": 123.5,
+   "w": 123.9,
    "h": 137.0
   },
   {
@@ -115,9 +115,9 @@
   },
   {
    "name": "HostSlotLockIcon",
-   "x": 37.2,
+   "x": 36.8,
    "y": 46.0,
-   "w": 31.6,
+   "w": 32.4,
    "h": 40.0,
    "local": true
   },
@@ -376,9 +376,9 @@
   {
    "name": "StatIcon_DASH",
    "x": 437.0,
-   "y": 785.5,
+   "y": 785.4,
    "w": 20.0,
-   "h": 16.9
+   "h": 17.3
   },
   {
    "name": "StatRow_DASH/StatLabelText",
@@ -499,9 +499,9 @@
   {
    "name": "HostUpgradeButton/ArrowIcon",
    "x": 659.9,
-   "y": 1044.9,
+   "y": 1049.5,
    "w": 21.1,
-   "h": 27.1
+   "h": 17.8
   },
   {
    "name": "PossessStartButton",
@@ -513,9 +513,9 @@
   {
    "name": "PossessGhostIcon",
    "x": 409.0,
-   "y": 1141.2,
+   "y": 1141.3,
    "w": 40.1,
-   "h": 44.2
+   "h": 43.9
   },
   {
    "name": "PossessTitleText",
@@ -540,9 +540,9 @@
   {
    "name": "PossessStartButton/ArrowIcon",
    "x": 662.0,
-   "y": 1149.3,
+   "y": 1154.4,
    "w": 21.1,
-   "h": 28
+   "h": 17.8
   },
   {
    "name": "TipBar",
@@ -571,10 +571,10 @@
   },
   {
    "name": "OwnedHostChestIcon",
-   "x": 476.5,
+   "x": 477.6,
    "y": 1222.9,
-   "w": 35.8,
-   "h": 28
+   "w": 33.6,
+   "h": 28.0
   },
   {
    "name": "OwnedHostCountText",

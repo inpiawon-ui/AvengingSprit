@@ -47,9 +47,9 @@
    "name": "GhostHudIcon",
    "parent": "TopHudGroup",
    "create": "IMG",
-   "x": 3.8,
+   "x": 7.1,
    "y": 10.0,
-   "w": 48.8,
+   "w": 42.2,
    "h": 50.0
   },
   {
@@ -227,9 +227,9 @@
    "name": "GoldIcon",
    "parent": "TopHudGroup",
    "create": "IMG",
-   "x": 573.8,
+   "x": 574.4,
    "y": 22.5,
-   "w": 20.0,
+   "w": 18.8,
    "h": 18.8
   },
   {
@@ -248,9 +248,9 @@
    "name": "GemIcon",
    "parent": "TopHudGroup",
    "create": "IMG",
-   "x": 576.2,
+   "x": 579.3,
    "y": 55.0,
-   "w": 20.0,
+   "w": 13.8,
    "h": 18.8
   },
   {
