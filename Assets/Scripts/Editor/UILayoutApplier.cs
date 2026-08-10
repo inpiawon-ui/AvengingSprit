@@ -135,6 +135,10 @@ namespace Game.Editor
                         Place(rt, pos, it.w, it.h, abs, origin, it.local);
                         ApplyText(rt, it);
                         ApplyGrid(rt, it);
+                        // 표의 순서를 그리기 순서로 삼는다. Unity UI 는 형제 순서대로
+                        // 그리므로, 새로 만든 노드가 끝에 붙으면 앞의 것들을 덮는다.
+                        // (HUD 배경판을 추가했을 때 HUD 내용이 통째로 가려졌다.)
+                        rt.SetAsLastSibling();
                         if (!it.local) abs[rt] = pos;
                         applied++;
                     }

@@ -41,49 +41,80 @@ ROOT = 'InGameMainUI'
 
 # ── 전투 필드 ───────────────────────────────────────────────────────
 # 유닛은 런타임에 생성되므로 여기서는 바닥과 부모 컨테이너만 잡는다.
-add('RoomField',      (0, 104, 576, 720), ROOT, 'GROUP')
-add('RoomFloor',      (0, 104, 576, 720), 'RoomField', 'IMG')
-add('UnitLayer',      (0, 104, 576, 720), 'RoomField', 'GROUP')
+#
+# **HUD 바로 아래에서 시작한다.** BattleDirector 의 ClampToField 가 모든 유닛을
+# 이 사각형 안에 가두므로, 필드를 내리는 것만으로 몬스터가 HUD 를 가리는 일이
+# 없어진다. 코드에 별도 예외 영역을 두지 않는 이유다.
+#
+# ⚠️ HUD 보다 **먼저** 선언해야 한다. Unity UI 는 형제 순서대로 그리므로,
+# 뒤에 오면 바닥 이미지가 HUD 를 덮는다.
+HUD_H = 250
+FIELD_BOTTOM = 824                      # 하단 조작부(850) 위까지
+
+add('RoomField',      (0, HUD_H, 576, FIELD_BOTTOM - HUD_H), ROOT, 'GROUP')
+add('RoomFloor',      (0, HUD_H, 576, FIELD_BOTTOM - HUD_H), 'RoomField', 'IMG')
+add('UnitLayer',      (0, HUD_H, 576, FIELD_BOTTOM - HUD_H), 'RoomField', 'GROUP')
 
 # ── 상단 HUD ────────────────────────────────────────────────────────
-add('TopHudGroup',    (0, 0, 576, 118), ROOT, 'GROUP')
+# 목업 크기 그대로는 실기에서 글자와 바가 식별이 안 됐다. 모든 요소를 **1.5배**로
+# 키운다. Transform 스케일이 아니라 각 요소의 실제 크기·글자 크기를 키운다 —
+# 스케일은 자식까지 함께 늘어나고 픽셀 정렬이 깨진다.
+#
+# 다만 단순히 좌표까지 1.5배 하면 가로가 넘친다. 보스 바만 해도 208 → 312 라
+# 우측 재화·일시정지와 겹친다. 그래서 **행을 나눠 재배치**한다.
+#
+#   1행  고스트 상태 · 재화 · 일시정지
+#   2행  호스트 초상 · 상태 · 방 표기
+#   3행  보스 게이지 (보스방에서만 켜진다)
+#
+# 목업의 2단 구성과 달라지지만, 목업 좌표를 그대로 쓰면 읽을 수 없다는 것이
+# 실기에서 확인됐다. 읽히는 쪽을 택한다.
+add('TopHudGroup',    (0, 0, 576, HUD_H), ROOT, 'GROUP')
 
-add('GhostHudIcon',   (3, 8, 39, 40), 'TopHudGroup', 'IMG')
-add('GhostLabel',     (47, 10, 60, 16), 'TopHudGroup', 'TMP',
-    text='GHOST', size=cap(12), align='L', color=GHOST_C)
-add('GhostHpBarBg',   (47, 31, 91, 13), 'TopHudGroup', 'IMG')
-add('GhostHpBarFill', (0, 0, 91, 13), 'GhostHpBarBg', 'IMG', local=True)
-add('GhostHpText',    (142, 29, 62, 17), 'TopHudGroup', 'TMP',
-    size=cap(13), align='L', color=WHITE)
+# HUD 판. 목업에는 이 높이의 패널이 없어(1.5배 확대에서 나온 높이다) 목업을 늘리는
+# 대신 이 게임의 다른 UI 와 같은 언어로 짰다 — 어두운 남색 판 + 밝은 아래 경계.
+add('HudBackdrop',    (0, 0, 576, HUD_H), 'TopHudGroup', 'IMG')
 
-add('HostPortraitFrame', (5, 54, 67, 67), 'TopHudGroup', 'IMG')
-add('HostPortraitImage', (13, 62, 51, 51), 'TopHudGroup', 'IMG')
-add('HostLabel',      (76, 58, 50, 16), 'TopHudGroup', 'TMP',
-    text='HOST', size=cap(12), align='L', color=HOST_C)
-add('HostHpBarBg',    (76, 81, 78, 12), 'TopHudGroup', 'IMG')
-add('HostHpBarFill',  (0, 0, 78, 12), 'HostHpBarBg', 'IMG', local=True)
-add('HostHpText',     (158, 79, 58, 16), 'TopHudGroup', 'TMP',
-    size=cap(13), align='L', color=WHITE)
-add('HostNameText',   (76, 99, 150, 13), 'TopHudGroup', 'TMP',
-    size=cap(10), align='L', color=HOST_C)
+# 1행 — 고스트
+add('GhostHudIcon',   (4, 6, 58, 60), 'TopHudGroup', 'IMG')
+add('GhostLabel',     (70, 6, 84, 22), 'TopHudGroup', 'TMP',
+    text='GHOST', size=cap(18), align='L', color=GHOST_C)
+add('GhostHpBarBg',   (70, 32, 136, 20), 'TopHudGroup', 'IMG')
+add('GhostHpBarFill', (0, 0, 136, 20), 'GhostHpBarBg', 'IMG', local=True)
+add('GhostHpText',    (212, 30, 92, 26), 'TopHudGroup', 'TMP',
+    size=cap(19), align='L', color=WHITE)
 
-add('BossGroup',      (223, 6, 210, 58), 'TopHudGroup', 'GROUP')
-add('BossLabel',      (302, 8, 50, 15), 'BossGroup', 'TMP',
-    text='BOSS', size=cap(12), align='C', color=BOSS_C)
-add('BossHpBarBg',    (223, 29, 208, 18), 'BossGroup', 'IMG')
-add('BossHpBarFill',  (0, 0, 208, 18), 'BossHpBarBg', 'IMG', local=True)
-add('BossHpText',     (286, 47, 82, 14), 'BossGroup', 'TMP',
-    size=cap(11), align='C', color=WHITE)
+# 1행 — 재화·일시정지 (원래 세로로 쌓여 있던 골드/젬을 가로로 편다)
+add('GoldIcon',       (310, 18, 24, 22), 'TopHudGroup', 'IMG')
+add('GoldText',       (340, 16, 70, 26), 'TopHudGroup', 'TMP', size=cap(19), align='L', color=WHITE)
+add('GemIcon',        (416, 18, 24, 22), 'TopHudGroup', 'IMG')
+add('GemText',        (446, 16, 52, 26), 'TopHudGroup', 'TMP', size=cap(19), align='L', color=WHITE)
+add('PauseButton',    (502, 6, 72, 72), 'TopHudGroup', 'BTN')
 
-add('GoldIcon',       (459, 18, 16, 15), 'TopHudGroup', 'IMG')
-add('GoldText',       (479, 16, 52, 18), 'TopHudGroup', 'TMP', size=cap(13), align='L', color=WHITE)
-add('GemIcon',        (461, 44, 16, 15), 'TopHudGroup', 'IMG')
-add('GemText',        (481, 42, 52, 18), 'TopHudGroup', 'TMP', size=cap(13), align='L', color=WHITE)
-add('PauseButton',    (527, 10, 48, 48), 'TopHudGroup', 'BTN')
+# 2행 — 호스트
+add('HostPortraitFrame', (4, 78, 100, 100), 'TopHudGroup', 'IMG')
+add('HostPortraitImage', (16, 90, 76, 76), 'TopHudGroup', 'IMG')
+add('HostLabel',      (112, 80, 72, 22), 'TopHudGroup', 'TMP',
+    text='HOST', size=cap(18), align='L', color=HOST_C)
+add('HostHpBarBg',    (112, 106, 118, 18), 'TopHudGroup', 'IMG')
+add('HostHpBarFill',  (0, 0, 118, 18), 'HostHpBarBg', 'IMG', local=True)
+add('HostHpText',     (238, 104, 86, 24), 'TopHudGroup', 'TMP',
+    size=cap(19), align='L', color=WHITE)
+add('HostNameText',   (112, 132, 230, 20), 'TopHudGroup', 'TMP',
+    size=cap(15), align='L', color=HOST_C)
 
-# ── 스테이지 표기 (목업 concept 시트의 `STAGE 7`) ───────────────────
-add('StageText',      (223, 66, 208, 16), 'TopHudGroup', 'TMP',
-    size=cap(11), align='C', color=MUTED)
+# 2행 — 방 표기 (목업 concept 시트의 `STAGE 7`)
+add('StageText',      (352, 106, 218, 24), 'TopHudGroup', 'TMP',
+    size=cap(16), align='C', color=MUTED)
+
+# 3행 — 보스 (보스방에서만 켠다)
+add('BossGroup',      (132, 182, 312, 66), 'TopHudGroup', 'GROUP')
+add('BossLabel',      (132, 182, 312, 20), 'BossGroup', 'TMP',
+    text='BOSS', size=cap(17), align='C', color=BOSS_C)
+add('BossHpBarBg',    (132, 204, 312, 24), 'BossGroup', 'IMG')
+add('BossHpBarFill',  (0, 0, 312, 24), 'BossHpBarBg', 'IMG', local=True)
+add('BossHpText',     (132, 230, 312, 18), 'BossGroup', 'TMP',
+    size=cap(14), align='C', color=WHITE)
 
 # ── 하단 조작 ───────────────────────────────────────────────────────
 add('ControlGroup',   (0, 850, 576, 174), ROOT, 'GROUP')

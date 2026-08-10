@@ -34,8 +34,8 @@ namespace Game.Module.InGame
         /// <summary>이 아래로 밀면 이동으로 치지 않는다 — 미세 흔들림에 사격이 끊기지 않게.</summary>
         private const float MoveDeadzone = 0.18f;
         private const float PadMargin = 12f;
-        /// <summary>상단 HUD 높이 (레이아웃 118 × 1.25). 이 영역은 패드가 따라오지 않는다.</summary>
-        private const float HudHeight = 148f;
+        /// <summary>상단 HUD 높이 (레이아웃 250 × 1.25). 이 영역은 패드가 따라오지 않는다.</summary>
+        private const float HudHeight = 312.5f;
 
         private UIBinder _ui;
         private BattleDirector _battle;

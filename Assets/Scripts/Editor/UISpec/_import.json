@@ -1,281 +1,11 @@
 {
  "assets": [
   {
-   "file": "achievementtabicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 48,
-   "h": 48,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
    "file": "arrowicon.png",
    "prefab": "HostSelectPanel",
    "atlas": "hostselectpanel",
    "w": 24,
    "h": 32,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "backgroundimage.png",
-   "prefab": "TitleMainUI",
-   "atlas": "titlemainui",
-   "w": 720,
-   "h": 1280,
-   "alpha": "N",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "battlepassart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 90,
-   "h": 80,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "battlepassbadge.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 34,
-   "h": 38,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "battlepassbarbg.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 120,
-   "h": 14,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    6,
-    6,
-    4,
-    4
-   ]
-  },
-  {
-   "file": "battlepassbarfill.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 120,
-   "h": 14,
-   "alpha": "Y",
-   "pivot": "left",
-   "slice9": [
-    4,
-    4,
-    4,
-    6
-   ]
-  },
-  {
-   "file": "battlepasscard.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 238,
-   "h": 112,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    16,
-    16,
-    16,
-    16
-   ]
-  },
-  {
-   "file": "bossportrait.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 68,
-   "h": 82,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "chapterbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 236,
-   "h": 260,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    20,
-    20
-   ]
-  },
-  {
-   "file": "chapterbuttonart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 212,
-   "h": 129,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "chaptercard.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 222,
-   "h": 344,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    24,
-    24,
-    24,
-    24
-   ]
-  },
-  {
-   "file": "continuebutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 198,
-   "h": 74,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    16,
-    16
-   ]
-  },
-  {
-   "file": "dailyloginart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 70,
-   "h": 64,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "dailylogincard.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 238,
-   "h": 112,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    16,
-    16,
-    16,
-    16
-   ]
-  },
-  {
-   "file": "dailylogincheck.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 26,
-   "h": 26,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "eventart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 70,
-   "h": 64,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "eventcard.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 238,
-   "h": 104,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    16,
-    16,
-    16,
-    16
-   ]
-  },
-  {
-   "file": "featuretabbarbackground.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 616,
-   "h": 108,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    16,
-    16,
-    12,
-    12
-   ]
-  },
-  {
-   "file": "friendstabicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 46,
-   "h": 42,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "friendstablock.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 19,
-   "h": 26,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "gemcounter.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 112,
-   "h": 60,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    12,
-    12
-   ]
-  },
-  {
-   "file": "gemicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 22,
-   "h": 30,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
@@ -301,96 +31,6 @@
    "slice9": []
   },
   {
-   "file": "ghostavatar.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 174,
-   "h": 210,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "ghostexpbarbg.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 106,
-   "h": 14,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    4,
-    4,
-    4,
-    4
-   ]
-  },
-  {
-   "file": "ghostexpbarfill.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 106,
-   "h": 14,
-   "alpha": "Y",
-   "pivot": "left",
-   "slice9": [
-    4,
-    4,
-    4,
-    6
-   ]
-  },
-  {
-   "file": "ghostportraiticon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 49,
-   "h": 58,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "ghostwidget.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 188,
-   "h": 96,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    10,
-    10,
-    10,
-    10
-   ]
-  },
-  {
-   "file": "goldcounter.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 132,
-   "h": 60,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    12,
-    12
-   ]
-  },
-  {
-   "file": "goldicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 32,
-   "h": 32,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
    "file": "headerghostdeco.png",
    "prefab": "HostSelectPanel",
    "atlas": "hostselectpanel",
@@ -406,31 +46,6 @@
    "atlas": "hostselectpanel",
    "w": 128,
    "h": 142,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "hostbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 222,
-   "h": 260,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    20,
-    20
-   ]
-  },
-  {
-   "file": "hostbuttonart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 194,
-   "h": 122,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
@@ -826,91 +441,11 @@
    "slice9": []
   },
   {
-   "file": "inventorytabicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 48,
-   "h": 48,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "lobbybackground.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 720,
-   "h": 1280,
-   "alpha": "N",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "logolockup.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 160,
-   "h": 100,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "mailbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 46,
-   "h": 36,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "missiontabicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 34,
-   "h": 46,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "notifybadge.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 24,
-   "h": 24,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
    "file": "ownedhostchesticon.png",
    "prefab": "HostSelectPanel",
    "atlas": "hostselectpanel",
    "w": 38,
    "h": 31,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "plusbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 28,
-   "h": 28,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "portalring.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 120,
-   "h": 54,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
@@ -939,116 +474,6 @@
     44,
     52
    ]
-  },
-  {
-   "file": "progressbarbg.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 154,
-   "h": 20,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    6,
-    6,
-    6,
-    6
-   ]
-  },
-  {
-   "file": "progressbarfill.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 154,
-   "h": 20,
-   "alpha": "Y",
-   "pivot": "left",
-   "slice9": [
-    6,
-    6,
-    6,
-    6
-   ]
-  },
-  {
-   "file": "progressrewardchest.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 40,
-   "h": 38,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "rankingtabicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 46,
-   "h": 36,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "settingsbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 46,
-   "h": 48,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "shopbutton.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 222,
-   "h": 260,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    20,
-    20
-   ]
-  },
-  {
-   "file": "shopbuttonart.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 201,
-   "h": 122,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "staminacounter.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 126,
-   "h": 60,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    20,
-    20,
-    12,
-    12
-   ]
-  },
-  {
-   "file": "staminaicon.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 19,
-   "h": 30,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
   },
   {
    "file": "statbarbg.png",
@@ -1144,31 +569,6 @@
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
-  },
-  {
-   "file": "titlelogo.png",
-   "prefab": "TitleMainUI",
-   "atlas": "titlemainui",
-   "w": 474,
-   "h": 306,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": []
-  },
-  {
-   "file": "tophudbackground.png",
-   "prefab": "LobbyMainUI",
-   "atlas": "lobbymainui",
-   "w": 720,
-   "h": 128,
-   "alpha": "Y",
-   "pivot": "center",
-   "slice9": [
-    18,
-    18,
-    16,
-    20
-   ]
   },
   {
    "file": "ultimatecard.png",
@@ -1351,6 +751,16 @@
    ]
   },
   {
+   "file": "dpadknob.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 75,
+   "h": 69,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
    "file": "gemicon.png",
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",
@@ -1456,6 +866,21 @@
    ]
   },
   {
+   "file": "hudbackdrop.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 720,
+   "h": 312,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": [
+    0,
+    40,
+    0,
+    8
+   ]
+  },
+  {
    "file": "pausebutton.png",
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",
@@ -1491,6 +916,16 @@
    "slice9": []
   },
   {
+   "file": "shot.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 32,
+   "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
    "file": "ultimatebutton.png",
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",
@@ -1504,6 +939,16 @@
     20,
     20
    ]
+  },
+  {
+   "file": "ultimatecooldown.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 16,
+   "h": 16,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
   },
   {
    "file": "unit_amazoness.png",
@@ -1646,31 +1091,601 @@
    "slice9": []
   },
   {
-   "file": "dpadknob.png",
-   "prefab": "InGameMainUI",
-   "atlas": "ingamemainui",
-   "w": 75,
-   "h": 69,
+   "file": "achievementtabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
   },
   {
-   "file": "ultimatecooldown.png",
-   "prefab": "InGameMainUI",
-   "atlas": "ingamemainui",
-   "w": 16,
-   "h": 16,
+   "file": "battlepassart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 90,
+   "h": 80,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
   },
   {
-   "file": "shot.png",
-   "prefab": "InGameMainUI",
-   "atlas": "ingamemainui",
+   "file": "battlepassbadge.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 34,
+   "h": 38,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "battlepassbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 120,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    6,
+    6,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "battlepassbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 120,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    4,
+    4,
+    4,
+    6
+   ]
+  },
+  {
+   "file": "battlepasscard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 112,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "bossportrait.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 68,
+   "h": 82,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "chapterbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 236,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "chapterbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 212,
+   "h": 129,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "chaptercard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 344,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  {
+   "file": "continuebutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 198,
+   "h": 74,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "dailyloginart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 70,
+   "h": 64,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "dailylogincard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 112,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "dailylogincheck.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 26,
+   "h": 26,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "eventart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 70,
+   "h": 64,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "eventcard.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 238,
+   "h": 104,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  {
+   "file": "featuretabbarbackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 616,
+   "h": 108,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    16,
+    16,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "friendstabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 46,
+   "h": 42,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "friendstablock.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 19,
+   "h": 26,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "gemcounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 112,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "gemicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 22,
+   "h": 30,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostavatar.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 174,
+   "h": 210,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostexpbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 106,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "file": "ghostexpbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 106,
+   "h": 14,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    4,
+    4,
+    4,
+    6
+   ]
+  },
+  {
+   "file": "ghostportraiticon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 49,
+   "h": 58,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "ghostwidget.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 188,
+   "h": 96,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "file": "goldcounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 132,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "goldicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
    "w": 32,
    "h": 32,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "hostbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "hostbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 194,
+   "h": 122,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "inventorytabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 48,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "lobbybackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 720,
+   "h": 1280,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "logolockup.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 160,
+   "h": 100,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "mailbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 46,
+   "h": 36,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "missiontabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 34,
+   "h": 46,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "notifybadge.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 24,
+   "h": 24,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "plusbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 28,
+   "h": 28,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "portalring.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 120,
+   "h": 54,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "progressbarbg.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 154,
+   "h": 20,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "file": "progressbarfill.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 154,
+   "h": 20,
+   "alpha": "Y",
+   "pivot": "left",
+   "slice9": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "file": "progressrewardchest.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 40,
+   "h": 38,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "rankingtabicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 46,
+   "h": 36,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "settingsbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 46,
+   "h": 48,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "shopbutton.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 222,
+   "h": 260,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "file": "shopbuttonart.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 201,
+   "h": 122,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "staminacounter.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 126,
+   "h": 60,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    20,
+    20,
+    12,
+    12
+   ]
+  },
+  {
+   "file": "staminaicon.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 19,
+   "h": 30,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "tophudbackground.png",
+   "prefab": "LobbyMainUI",
+   "atlas": "lobbymainui",
+   "w": 720,
+   "h": 128,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": [
+    18,
+    18,
+    16,
+    20
+   ]
+  },
+  {
+   "file": "backgroundimage.png",
+   "prefab": "TitleMainUI",
+   "atlas": "titlemainui",
+   "w": 720,
+   "h": 1280,
+   "alpha": "N",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
+   "file": "titlelogo.png",
+   "prefab": "TitleMainUI",
+   "atlas": "titlemainui",
+   "w": 474,
+   "h": 306,
    "alpha": "Y",
    "pivot": "center",
    "slice9": []
