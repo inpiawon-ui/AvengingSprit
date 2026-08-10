@@ -102,6 +102,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<PossessedEvent>(OnPossessed));
             _tokens.Add(bus.Subscribe<HostLostEvent>(_ => OnHostLost()));
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRoomEntered));
+            _tokens.Add(bus.Subscribe<ExitOpenedEvent>(OnExitOpened));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(e => SetPossessReady(e.HasTarget)));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
@@ -315,9 +316,14 @@ namespace Game.Module.InGame
 
         private void OnRoomEntered(RoomEnteredEvent e)
         {
+            // 방 하나가 곧 스테이지 하나다. 마지막 스테이지가 보스방.
             _ui.SetText("StageText",
-                e.IsBossRoom ? "BOSS ROOM" : $"ROOM {e.RoomIndex + 1} / {e.RoomTotal}");
+                e.IsBossRoom ? $"BOSS  ·  STAGE {e.RoomIndex + 1}"
+                             : $"STAGE {e.RoomIndex + 1} / {e.RoomTotal}");
         }
+
+        private void OnExitOpened(ExitOpenedEvent e)
+            => _ui.SetText("StageText", "출구가 열렸다 — 통과해서 다음 스테이지로");
 
         /// <summary>빙의 가능할 때만 버튼을 밝힌다. 목업의 발광 상태를 알파로 흉내낸다.</summary>
         private void SetPossessReady(bool ready)

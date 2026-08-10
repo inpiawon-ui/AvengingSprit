@@ -761,6 +761,16 @@
    "slice9": []
   },
   {
+   "file": "exitportal.png",
+   "prefab": "InGameMainUI",
+   "atlas": "ingamemainui",
+   "w": 132,
+   "h": 146,
+   "alpha": "Y",
+   "pivot": "center",
+   "slice9": []
+  },
+  {
    "file": "gemicon.png",
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",

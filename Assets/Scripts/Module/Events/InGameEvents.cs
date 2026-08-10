@@ -10,6 +10,12 @@ namespace Game.Module.Events
         public bool IsBossRoom;
     }
 
+    /// <summary>방을 비워 출구가 열렸다. 통과해야 다음 스테이지로 넘어간다.</summary>
+    public struct ExitOpenedEvent : IEvent
+    {
+        public int StageIndex;
+    }
+
     /// <summary>룸의 적이 전멸했다.</summary>
     public struct RoomClearedEvent : IEvent
     {

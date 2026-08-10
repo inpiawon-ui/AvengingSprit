@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f0efdb1087dee448140449bc0b52b1, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.GameConfig
-  _roomsPerStage: 6
-  _bossEveryStages: 3
+  _stagesPerChapter: 3
+  _exitTouchRadius: 70
   _ghostHpMax: 100
   _ghostMoveSpeed: 320
   _possessRange: 110

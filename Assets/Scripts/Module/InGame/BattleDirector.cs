@@ -49,6 +49,7 @@ namespace Game.Module.InGame
         private float _drainCarry;
         private float _invuln;
         private float _ghostProtect;
+        private RectTransform _exit;
         private float _ultimateCharge;
         private bool _running;
         private Unit _possessTarget;
@@ -156,11 +157,9 @@ namespace Game.Module.InGame
         private void EnterRoom(int index)
         {
             _roomIndex = index;
-            // 보스는 매 스테이지가 아니라 `BossEveryStages` 스테이지마다 나온다.
-            // 매번 나오면 보스가 관문이 아니라 그냥 마지막 방이 된다.
-            int stage = _player != null ? Mathf.Max(1, _player.ReachedStage) : 1;
-            bool isBossStage = stage % _config.BossEveryStages == 0;
-            bool isBoss = isBossStage && index == _config.RoomsPerStage - 1;
+            DespawnExit();
+            // 방 하나가 곧 스테이지 하나다. 챕터의 **마지막 스테이지가 보스**다.
+            bool isBoss = index >= _config.StagesPerChapter - 1;
 
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
@@ -226,7 +225,7 @@ namespace Game.Module.InGame
 
             _bus.Publish(new RoomEnteredEvent
             {
-                RoomIndex = index, RoomTotal = _config.RoomsPerStage, IsBossRoom = isBoss,
+                RoomIndex = index, RoomTotal = _config.StagesPerChapter, IsBossRoom = isBoss,
             });
         }
 
@@ -287,8 +286,10 @@ namespace Game.Module.InGame
             TickShots(dt);
             CleanupDead();
             RefreshPossessTarget();
+            TickExit();
 
-            if (_enemies.Count == 0) OnRoomCleared();
+            // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
+            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -918,14 +919,15 @@ namespace Game.Module.InGame
 
         private void OnRoomCleared()
         {
-            bool isLast = _roomIndex >= _config.RoomsPerStage - 1;
+            // 마지막 스테이지 = 보스방. 보스를 잡으면 **챕터 클리어**로 끝난다.
+            bool isLast = _roomIndex >= _config.StagesPerChapter - 1;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
 
             // 로그라이크 축 — 룸마다 3택1 로 런 한정 빌드를 쌓는다.
             // 고를 때까지 전투를 멈춘다(적이 없는 상태라 안전하다).
             _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng);
-            if (_offer.Count == 0) { EnterRoom(_roomIndex + 1); return; }
+            if (_offer.Count == 0) { SpawnExit(); return; }
 
             _awaitingBuff = true;
             var keys = new string[_offer.Count];
@@ -958,6 +960,53 @@ namespace Game.Module.InGame
             _awaitingBuff = false;
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
+            SpawnExit();
+        }
+
+        // ── 출구 ─────────────────────────────────────────────────
+        // 방을 비우면 자동으로 다음 방으로 넘어가는 게 아니라 **출구가 열린다.**
+        // 걸어서 통과해야 넘어가므로, 다 잡은 뒤에도 한 번 더 판단할 여지가 생긴다
+        // (남은 Ghost HP 를 보고 쉬어 갈지 바로 갈지 — 시계가 계속 도는 상태다).
+
+        private void SpawnExit()
+        {
+            DespawnExit();
+            var go = new GameObject("Exit", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+
+            _exit = (RectTransform)go.transform;
+            _exit.anchorMin = _exit.anchorMax = new Vector2(0f, 1f);
+            _exit.pivot = new Vector2(0.5f, 0.5f);
+            _exit.sizeDelta = new Vector2(120f, 132f);
+            _exit.anchoredPosition = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.16f);
+
+            var img = go.GetComponent<Image>();
+            img.sprite = GetSprite("exitportal");
+            img.raycastTarget = false;
+            img.preserveAspect = true;
+
+            _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
+        }
+
+        private void DespawnExit()
+        {
+            if (_exit == null) return;
+            Destroy(_exit.gameObject);
+            _exit = null;
+        }
+
+        /// <summary>출구에 닿았으면 다음 스테이지로 넘어간다.</summary>
+        private void TickExit()
+        {
+            if (_exit == null) return;
+            var me = Avatar;
+            if (me == null) return;
+            if (Vector2.Distance(me.Position, _exit.anchoredPosition) > _config.ExitTouchRadius) return;
+
+            DespawnExit();
+            // 도달 스테이지를 갱신한다 — 호스트 해금 조건이 이 값을 본다.
+            if (_player != null)
+                _player.SetProgress(_player.CurrentChapter, _roomIndex + 2);
             EnterRoom(_roomIndex + 1);
         }
 
@@ -967,12 +1016,13 @@ namespace Game.Module.InGame
         {
             if (!_running) return;
             _running = false;
-            int rooms = cleared ? _config.RoomsPerStage : Mathf.Max(0, _roomIndex);
+            // 보상은 **통과한 스테이지 수** 기준. 챕터를 끝냈으면 전부 통과한 것이다.
+            int stages = cleared ? _config.StagesPerChapter : Mathf.Max(0, _roomIndex);
             _bus.Publish(new StageFinishedEvent
             {
                 IsCleared = cleared,
-                RewardGold = _config.RewardGold(rooms),
-                RewardGhostExp = _config.RewardGhostExp(rooms),
+                RewardGold = _config.RewardGold(stages),
+                RewardGhostExp = _config.RewardGhostExp(stages),
             });
         }
 

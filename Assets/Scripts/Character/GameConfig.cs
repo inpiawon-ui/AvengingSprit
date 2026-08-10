@@ -13,9 +13,13 @@ namespace Game.Character
     public sealed class GameConfig : ScriptableObject
     {
         [Header("진행")]
-        [SerializeField] private int _roomsPerStage = 6;
-        [Tooltip("보스가 나오는 주기(스테이지). 3 이면 3·6·9… 스테이지의 마지막 방에만 나온다.")]
-        [SerializeField] private int _bossEveryStages = 3;
+        // 방 하나 = 스테이지 하나다. 방을 비우면 출구가 열리고, 통과하면 다음 스테이지로 간다.
+        // 챕터의 **마지막 스테이지가 보스**이고, 그 보스를 잡으면 챕터 클리어다.
+        [Tooltip("한 챕터를 이루는 스테이지 수. 마지막 스테이지가 보스방이다.")]
+        [SerializeField] private int _stagesPerChapter = 3;
+
+        [Tooltip("방을 비운 뒤 열리는 출구의 접촉 판정 반경.")]
+        [SerializeField] private float _exitTouchRadius = 70f;
 
         [Header("고스트")]
         [SerializeField] private int _ghostHpMax = 100;
@@ -89,8 +93,8 @@ namespace Game.Character
         [SerializeField] private int _rewardGoldPerRoom = 120;
         [SerializeField] private int _rewardGhostExpPerRoom = 8;
 
-        public int RoomsPerStage => _roomsPerStage;
-        public int BossEveryStages => Mathf.Max(1, _bossEveryStages);
+        public int StagesPerChapter => Mathf.Max(1, _stagesPerChapter);
+        public float ExitTouchRadius => _exitTouchRadius;
 
         public int GhostHpMax => _ghostHpMax;
         public float GhostMoveSpeed => _ghostMoveSpeed;
