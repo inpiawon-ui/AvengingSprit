@@ -64,7 +64,8 @@ Boot → Title → Lobby → Game → Result
 | **호스트 프리팹** | `host/{호스트키}` | `host/amazoness`, `host/rambo` |
 | **고스트 프리팹** | `ghost/{파일명}` | `ghost/player` |
 | 인게임 오브젝트 | `InGameObjects/{파일명}` | `InGameObjects/Room01` |
-| 아틀라스 | `atlas/{파일명 소문자}` | `atlas/hostselectpanel`, `atlas/lobbymainui` |
+| 아틀라스 (화면) | `atlas/{파일명 소문자}` | `atlas/hostselectpanel`, `atlas/lobbymainui` |
+| **아틀라스 (캐릭터)** | `atlas/unit_{캐릭터키}` | `atlas/unit_rambo`, `atlas/unit_boss`, `atlas/unit_ghost` |
 | 테이블 데이터 | `TableData/{파일명}` | `TableData/HostTable` |
 | GameConfig | `TableData/GameConfig` | — |
 
@@ -72,6 +73,22 @@ Boot → Title → Lobby → Game → Result
 
 `amazoness` · `rambo` · `wizard` · `ninja` · `mafia` · `hitman` ·
 `yogamaster` · `dragon` · `robot` · `snowwoman` · `slugger` · `vampire`
+
+**캐릭터 스프라이트 규약** (인게임 몸통 — 초상·아이콘과 별개):
+
+| 항목 | 규약 |
+|---|---|
+| 텍스처 | `Assets/BaseResource/Unit/{키}/unit_{키}[_{접미}].png` |
+| 아틀라스 | `Assets/BundleResource/Atlas/unit_{키}.spriteatlasv2` → `atlas/unit_{키}` |
+| 방향 접미 | `s` `se` `e` `ne` `n` (5장). 왼쪽 3방향은 코드가 좌우 반전으로 만든다 |
+| 캔버스 | 96×96 고정 · 발밑은 아래에서 8px 위 · **발 중심 x=48** |
+
+> 발 중심이 48이어야 하는 이유: 좌우 반전축이 캔버스 중심이다. 48이 아니면
+> 왼쪽을 볼 때 몸이 옆으로 튄다.
+>
+> 캐릭터 키 = 호스트 키 12종 + `boss` + `ghost`.
+> 새 캐릭터는 폴더를 만들고 `Tools > Game > Import Loose Sprites And Repack` 만 돌리면
+> 임포터·아틀라스·주소가 자동으로 붙는다.
 
 ## 5. Addressable 라벨 목록
 

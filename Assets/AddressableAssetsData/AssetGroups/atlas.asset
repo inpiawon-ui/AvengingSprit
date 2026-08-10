@@ -27,8 +27,92 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e526f6dc68d1d845bd2925a7d95086e
+    m_Address: atlas/unit_ninja
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3ec2cd45dc7116d43bfc6478b0739549
+    m_Address: atlas/unit_wizard
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4029d585931f313468ba6c6526530994
+    m_Address: atlas/unit_rambo
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 412318a5ff4612f48ae5fc01764ebd5b
+    m_Address: atlas/unit_hitman
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6106939e511c4a348ad87ba2134c7c08
+    m_Address: atlas/unit_boss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76a04f8ec74c5264abcb95d8255e4e29
+    m_Address: atlas/unit_mafia
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a39c91d9367f9d42b7a7fa35c17cbec
+    m_Address: atlas/unit_yogamaster
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e63d543e9106e54893210be2582fcd2
+    m_Address: atlas/unit_snowwoman
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a9a09c8fe3a10247910beafb282d3e5
+    m_Address: atlas/unit_robot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aadfd8f3ccf275f4abe45365bbc4ae2b
+    m_Address: atlas/unit_amazoness
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae8abf13517673147b65d4d5f4dbd6b4
+    m_Address: atlas/unit_dragon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c63918c32d8cd634295b1128ddf1df8f
+    m_Address: atlas/unit_slugger
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dfc27dc77a8ce9b44b1480603ed5152f
     m_Address: atlas/ingamemainui
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e392cd2af6417b24696414d46edf0d62
+    m_Address: atlas/unit_ghost
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efd84b10d66d1b342ad368bb511b647d
+    m_Address: atlas/unit_vampire
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

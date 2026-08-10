@@ -25,7 +25,17 @@ namespace Game.Editor
     {
         private const string SpecPath = "Assets/Scripts/Editor/UISpec/_import.json";
         private const string BaseRes = "Assets/BaseResource";
+        private const string UnitRes = "Assets/BaseResource/Unit";
         private const string AtlasDir = "Assets/BundleResource/Atlas";
+
+        // 페이지 상한.
+        // 4096 자체는 요즘 모바일 GPU 가 문제없이 지원한다(ES 3.0 이 4096 최소 보장).
+        // 걸리는 건 하드웨어가 아니라 **무압축**이다 — 픽셀아트는 블록 압축에서
+        // 하드 엣지와 알파가 뭉개져 압축을 못 쓴다. 무압축 RGBA32 로
+        // 4096×4096 은 한 장이 64MB 다.
+        // 2048 로 묶으면 내용이 넘칠 때 64MB 한 장 대신 16MB 여러 장으로 쪼개진다.
+        private const int ScreenAtlasMaxSize = 2048;
+        private const int UnitAtlasMaxSize = 1024;   // 한 종은 방향 5장 + 프레임 몇 장이 전부
         private const string AtlasGroup = "atlas";
         private const string AtlasLabel = "label_atlas";
 
@@ -123,6 +133,10 @@ namespace Game.Editor
             {
                 Debug.Log("[UIAssetPipeline] 새 낱장 없음 — 리팩만 한다.");
             }
+
+            // 캐릭터 폴더가 늘거나(신규 캐릭터) 프레임이 추가되면 여기서 따라간다.
+            // 새 폴더를 만들고 이 메뉴만 돌리면 아틀라스·주소까지 붙는다.
+            BuildUnitAtlases();
 
             foreach (var p in Directory.GetFiles(AtlasDir, "*.spriteatlasv2"))
                 DedupePackables(p.Replace('\\', '/'));
@@ -242,69 +256,120 @@ namespace Game.Editor
             if (!settings.GetLabels().Contains(AtlasLabel)) settings.AddLabel(AtlasLabel);
 
             foreach (var g in assets.GroupBy(x => x.atlas))
-            {
-                var atlasPath = $"{AtlasDir}/{g.Key}.spriteatlasv2";
-
-                // v2 아틀라스는 AssetDatabase.LoadAssetAtPath 로 못 불러온다. 전용 API 사용.
-                var atlas = File.Exists(atlasPath) ? SpriteAtlasAsset.Load(atlasPath) : null;
-                if (atlas == null)
-                {
-                    atlas = new SpriteAtlasAsset();
-                    SpriteAtlasAsset.Save(atlas, atlasPath);
-                    AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
-                    atlas = SpriteAtlasAsset.Load(atlasPath);
-                }
-                if (atlas == null)
-                {
-                    Debug.LogError($"[UIAssetPipeline] 아틀라스 로드 실패: {atlasPath}");
-                    continue;
-                }
-
-                // 폴더 오브젝트 전체를 PackingSource 로 등록 (05_prefabs.md)
-                var folder = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(
-                    $"{BaseRes}/{g.First().prefab}");
-                if (folder != null) atlas.Add(new[] { folder });
-
-                SpriteAtlasAsset.Save(atlas, atlasPath);
-                AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
-                DedupePackables(atlasPath);
-
-                // 팩킹·텍스처 설정은 Importer 경유 (SpriteAtlasAsset 쪽은 obsolete)
-                if (AssetImporter.GetAtPath(atlasPath) is SpriteAtlasImporter imp)
-                {
-                    imp.packingSettings = new SpriteAtlasPackingSettings
-                    {
-                        enableRotation = false,       // UI 스프라이트 회전 금지
-                        enableTightPacking = false,
-                        padding = 4,
-                    };
-                    imp.textureSettings = new SpriteAtlasTextureSettings
-                    {
-                        filterMode = FilterMode.Point,   // 픽셀아트
-                        generateMipMaps = false,
-                        sRGB = true,
-                    };
-                    // 무압축 — 픽셀아트는 블록 압축에서 색이 뭉개진다
-                    imp.SetPlatformSettings(new TextureImporterPlatformSettings
-                    {
-                        name = "DefaultTexturePlatform",
-                        overridden = true,
-                        textureCompression = TextureImporterCompression.Uncompressed,
-                        maxTextureSize = 4096,
-                    });
-                    imp.SaveAndReimport();
-                }
-
-                // Addressable 등록 — 주소 `atlas/{소문자}`, 라벨 `label_atlas`
-                var guid = AssetDatabase.AssetPathToGUID(atlasPath);
-                var entry = settings.CreateOrMoveEntry(guid, group);
-                entry.address = $"{AtlasGroup}/{g.Key}";
-                entry.SetLabel(AtlasLabel, true);
-
-                Debug.Log($"[UIAssetPipeline] 아틀라스 {g.Key}: 스프라이트 {g.Count()}개 → {entry.address}");
-            }
+                BuildOneAtlas(g.Key, $"{BaseRes}/{g.First().prefab}", settings, group, ScreenAtlasMaxSize);
 
             EditorUtility.SetDirty(settings);
+        }
+
+        /// <summary>
+        /// 캐릭터(유닛) 아틀라스를 캐릭터 폴더 하나당 하나씩 만든다.
+        ///
+        /// 화면 아틀라스에 섞어 두면 안 되는 이유:
+        /// 한 방에서 실제로 쓰는 캐릭터는 3~4종인데, 화면 아틀라스는 통짜라
+        /// 12종을 전부 메모리에 올린다. 방향 5장에 공격 프레임까지 붙으면
+        /// 한 종이 20장이 되어 (14종 × 20 = 280장) 한 페이지에 들어가지도 않는다.
+        /// 캐릭터별로 쪼개면 한 종이 512×512(무압축 1MB)로 끝나고,
+        /// 방이 필요한 것만 올리면 된다.
+        ///
+        /// 폴더를 PackingSource 로 잡으므로, 새 프레임을 폴더에 떨어뜨리고
+        /// 이 메뉴만 돌리면 자동으로 수록된다.
+        /// </summary>
+        [MenuItem("Tools/Game/Build Unit Atlases")]
+        public static void BuildUnitAtlases()
+        {
+            if (!AssetDatabase.IsValidFolder(UnitRes))
+            {
+                Debug.LogError($"[UIAssetPipeline] 캐릭터 폴더 없음: {UnitRes}");
+                return;
+            }
+            EnsureFolder(AtlasDir);
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null)
+            {
+                Debug.LogError("[UIAssetPipeline] Addressable 설정이 없다.");
+                return;
+            }
+            var group = settings.FindGroup(AtlasGroup) ?? settings.CreateGroup(
+                AtlasGroup, false, false, true, null,
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema),
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema));
+            if (!settings.GetLabels().Contains(AtlasLabel)) settings.AddLabel(AtlasLabel);
+
+            int n = 0;
+            foreach (var folder in AssetDatabase.GetSubFolders(UnitRes))
+            {
+                var key = Path.GetFileName(folder);
+                BuildOneAtlas($"unit_{key}", folder, settings, group, UnitAtlasMaxSize);
+                n++;
+            }
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[UIAssetPipeline] 캐릭터 아틀라스 {n}개 갱신");
+        }
+
+        /// <summary>아틀라스 하나를 만들고 폴더를 PackingSource 로 물린 뒤 Addressable 에 등록한다.</summary>
+        private static void BuildOneAtlas(string atlasName, string folderPath,
+                                          AddressableAssetSettings settings,
+                                          AddressableAssetGroup group, int maxTextureSize)
+        {
+            var atlasPath = $"{AtlasDir}/{atlasName}.spriteatlasv2";
+
+            // v2 아틀라스는 AssetDatabase.LoadAssetAtPath 로 못 불러온다. 전용 API 사용.
+            var atlas = File.Exists(atlasPath) ? SpriteAtlasAsset.Load(atlasPath) : null;
+            if (atlas == null)
+            {
+                atlas = new SpriteAtlasAsset();
+                SpriteAtlasAsset.Save(atlas, atlasPath);
+                AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
+                atlas = SpriteAtlasAsset.Load(atlasPath);
+            }
+            if (atlas == null)
+            {
+                Debug.LogError($"[UIAssetPipeline] 아틀라스 로드 실패: {atlasPath}");
+                return;
+            }
+
+            // 폴더 오브젝트 전체를 PackingSource 로 등록 (05_prefabs.md)
+            var folder = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(folderPath);
+            if (folder != null) atlas.Add(new[] { folder });
+
+            SpriteAtlasAsset.Save(atlas, atlasPath);
+            AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
+            DedupePackables(atlasPath);
+
+            // 팩킹·텍스처 설정은 Importer 경유 (SpriteAtlasAsset 쪽은 obsolete)
+            if (AssetImporter.GetAtPath(atlasPath) is SpriteAtlasImporter imp)
+            {
+                imp.packingSettings = new SpriteAtlasPackingSettings
+                {
+                    enableRotation = false,       // UI 스프라이트 회전 금지
+                    enableTightPacking = false,
+                    padding = 4,
+                };
+                imp.textureSettings = new SpriteAtlasTextureSettings
+                {
+                    filterMode = FilterMode.Point,   // 픽셀아트
+                    generateMipMaps = false,
+                    sRGB = true,
+                };
+                // 무압축 — 픽셀아트는 블록 압축에서 색이 뭉개진다
+                imp.SetPlatformSettings(new TextureImporterPlatformSettings
+                {
+                    name = "DefaultTexturePlatform",
+                    overridden = true,
+                    textureCompression = TextureImporterCompression.Uncompressed,
+                    maxTextureSize = maxTextureSize,
+                });
+                imp.SaveAndReimport();
+            }
+
+            // Addressable 등록 — 주소 `atlas/{소문자}`, 라벨 `label_atlas`
+            var guid = AssetDatabase.AssetPathToGUID(atlasPath);
+            var entry = settings.CreateOrMoveEntry(guid, group);
+            entry.address = $"{AtlasGroup}/{atlasName}";
+            entry.SetLabel(AtlasLabel, true);
+
+            Debug.Log($"[UIAssetPipeline] 아틀라스 {atlasName} ← {folderPath} → {entry.address}");
         }
 
         private static void EnsureFolder(string path)

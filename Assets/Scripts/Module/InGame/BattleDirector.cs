@@ -27,11 +27,22 @@ namespace Game.Module.InGame
     {
         private const string AtlasAddress = "atlas/ingamemainui";
 
+        /// <summary>
+        /// 캐릭터 아틀라스 주소 접두사. 캐릭터 한 종이 아틀라스 하나다
+        /// (`Assets/BaseResource/Unit/{key}/` ↔ `atlas/unit_{key}`).
+        ///
+        /// 화면 아틀라스에 섞지 않는 이유: 한 방에 실제로 나오는 캐릭터는 몇 종뿐인데
+        /// 통짜 아틀라스는 12종을 전부 메모리에 올린다. 방향 5장에 공격 프레임까지
+        /// 붙으면 한 종이 20장이 되어 감당이 안 된다.
+        /// </summary>
+        private const string UnitAtlasPrefix = "atlas/unit_";
+
         private RectTransform _field;
         private RectTransform _unitLayer;
         private GameConfig _config;
         private IPlayerDataService _player;
-        private SpriteAtlas _atlas;
+        private SpriteAtlas _atlas;                                        // HUD·탄·바닥
+        private readonly Dictionary<string, SpriteAtlas> _unitAtlas = new();  // 캐릭터 키 → 아틀라스
         private IEventBus _bus;
 
         private Unit _ghost;
@@ -122,6 +133,9 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[Battle] BossTable 로드 실패 — {e.Message}"); }
             try { _buffTable = await res.LoadAsync<BuffTable>("TableData/BuffTable"); }
             catch (Exception e) { Debug.LogError($"[Battle] BuffTable 로드 실패 — {e.Message}"); }
+
+            // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
+            await LoadUnitAtlasesAsync(res, RunUnitKeys());
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
 
             // 탄은 유닛보다 위에 그린다 — 유닛 뒤로 숨으면 피격 판단이 안 보인다
@@ -144,7 +158,7 @@ namespace Game.Module.InGame
         {
             _ghostHp = GhostHpMax;
             _ghost = NewUnit("Ghost");
-            _ghost.Setup(UnitSide.Player, "ghost", "GHOST", GetSprite("unit_ghost"),
+            _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
                          new Vector2(72f, 90f));
             _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * PlayerStartY);
@@ -160,6 +174,73 @@ namespace Game.Module.InGame
 
         private Sprite GetSprite(string n) => _atlas != null ? _atlas.GetSprite(n) : null;
 
+        /// <summary>스프라이트 이름 → 캐릭터 아틀라스 키. `unit_boss` → `boss`.</summary>
+        private static string UnitKeyOf(string spriteName)
+            => spriteName != null && spriteName.StartsWith("unit_") ? spriteName.Substring(5) : spriteName;
+
+        /// <summary>캐릭터 스프라이트 조회. 아틀라스가 안 올라와 있으면 null 이다.</summary>
+        private Sprite UnitGet(string key, string suffix = null)
+        {
+            if (key == null || !_unitAtlas.TryGetValue(key, out var atlas) || atlas == null) return null;
+            return atlas.GetSprite(suffix == null ? $"unit_{key}" : $"unit_{key}_{suffix}");
+        }
+
+        /// <summary>
+        /// 이 런에서 쓸 캐릭터 아틀라스를 미리 올린다.
+        /// 스폰은 동기 코드라 이 시점에 다 올라와 있어야 한다 — 늦으면 그림 없이 스폰된다.
+        /// </summary>
+        private async UniTask LoadUnitAtlasesAsync(IResourceManager res, IEnumerable<string> keys)
+        {
+            foreach (var key in keys)
+            {
+                if (string.IsNullOrEmpty(key) || _unitAtlas.ContainsKey(key)) continue;
+                try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key); }
+                catch (Exception e)
+                {
+                    // 한 종이 없다고 런을 멈추지 않는다 — 그 캐릭터만 그림 없이 나온다.
+                    Debug.LogError($"[Battle] 캐릭터 아틀라스 로드 실패 unit_{key} — {e.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 방 <paramref name="index"/> 의 <paramref name="i"/> 번째 적이 쓸 호스트.
+        /// 미리 올릴 아틀라스를 고를 때와 실제로 스폰할 때가 반드시 같아야 하므로
+        /// 뽑는 식을 한 곳에만 둔다 — 갈라지면 그림 없는 적이 나온다.
+        /// </summary>
+        private static HostEntry EnemyAt(IReadOnlyList<HostEntry> hosts, int index, int i)
+            => hosts[(i * 5 + index * 3 + 1) % hosts.Count];
+
+        /// <summary>이 런이 건드릴 수 있는 캐릭터 키를 모은다.</summary>
+        private List<string> RunUnitKeys()
+        {
+            var keys = new List<string> { "ghost" };
+
+            int chapter = _player != null ? _player.CurrentChapter : 1;
+            var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
+            keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
+
+            // 빙의로 몸을 갈아타도 로비에서 고른 호스트는 긴급 투입으로 나올 수 있다.
+            var emergency = PickEmergencyHost();
+            if (emergency != null) keys.Add(emergency.HostKey);
+
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts != null && hosts.Count > 0)
+            {
+                // 방 종류(일반·정예)에 따라 마릿수가 달라지므로 둘 중 많은 쪽까지 훑는다.
+                for (int index = 0; index < _config.StagesPerChapter; index++)
+                {
+                    int count = Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index));
+                    for (int i = 0; i < count; i++)
+                    {
+                        var key = EnemyAt(hosts, index, i).HostKey;
+                        if (!keys.Contains(key)) keys.Add(key);
+                    }
+                }
+            }
+            return keys;
+        }
+
         /// <summary>
         /// 방향 스프라이트 5장을 찾아 붙인다. 하나라도 없으면 붙이지 않는다 —
         /// 없는 방향만 원래 그림으로 나오면 캐릭터가 방향마다 바뀌어 보인다.
@@ -170,14 +251,14 @@ namespace Game.Module.InGame
             var set = new Sprite[Unit.FacingSuffix.Length];
             for (int i = 0; i < set.Length; i++)
             {
-                set[i] = GetSprite($"unit_{key}_{Unit.FacingSuffix[i]}");
+                set[i] = UnitGet(key, Unit.FacingSuffix[i]);
                 if (set[i] == null) return;
             }
             u.SetFacingSprites(set);
         }
 
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
-        public Sprite UnitSprite(string hostKey) => GetSprite($"unit_{hostKey}");
+        public Sprite UnitSprite(string hostKey) => UnitGet(hostKey);
 
         /// <summary>
         /// 이 스테이지가 어떤 방인가 (기획서 A 06 ROOM TYPE).
@@ -228,7 +309,7 @@ namespace Game.Module.InGame
 
                 var boss = NewUnit("Boss");
                 boss.Setup(UnitSide.Enemy, def?.BossKey ?? "boss", def?.NameKr ?? "BOSS",
-                           GetSprite(def?.SpriteName ?? "unit_boss"),
+                           UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss")),
                            Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
                            Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
                            _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
@@ -260,11 +341,11 @@ namespace Game.Module.InGame
                 for (int i = 0; i < count; i++)
                 {
                     // 방마다 등장 조합이 달라지도록 룸 인덱스를 섞어 넣는다
-                    var e = hosts[(i * 5 + index * 3 + 1) % hosts.Count];
+                    var e = EnemyAt(hosts, index, i);
                     var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
                     // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
                     // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
-                    u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, GetSprite($"unit_{e.HostKey}"),
+                    u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
                             Mathf.RoundToInt(_config.EnemyHp(e.Hp) * (elite ? _config.EliteHpMul : 1f)),
                             Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul * (elite ? _config.EliteAtkMul : 1f)),
                             _config.EnemySpeed(e.Spd),
@@ -717,7 +798,7 @@ namespace Game.Module.InGame
             {
                 var e = hosts[(_enemies.Count * 3 + i * 7) % hosts.Count];
                 var u = NewUnit($"Minion_{e.HostKey}_{_enemies.Count}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, GetSprite($"unit_{e.HostKey}"),
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
                         Mathf.Max(1, Mathf.RoundToInt(_config.EnemyHp(e.Hp) * 0.6f)),
                         Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
                         _config.EnemySpeed(e.Spd),
@@ -1143,7 +1224,7 @@ namespace Game.Module.InGame
 
             _host = NewUnit($"Host_{key}");
             _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
-                        GetSprite($"unit_{key}"),
+                        UnitGet(key),
                         entry != null ? _config.HostHp(entry.Hp) : 100,
                         entry != null ? Mathf.RoundToInt(_config.HostAtk(entry.Atk) * entry.DamageMul) : 10,
                         entry != null ? _config.HostSpeed(entry.Spd) : 180f,
