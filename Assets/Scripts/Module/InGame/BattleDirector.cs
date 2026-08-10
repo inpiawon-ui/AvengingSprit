@@ -465,6 +465,13 @@ namespace Game.Module.InGame
                 p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
                 me.Position = p;
 
+                // 걷는 쪽을 바라본다. 아래 `return` 때문에 이동 중에는 조준 쪽
+                // 방향 전환에 도달하지 못하므로, 여기서 돌려 주지 않으면
+                // 이동 중에는 방향이 통째로 멈춘다.
+                // 이동 중 사격이 되는 호스트는 아래에서 조준 방향이 덮어쓴다 —
+                // 겨누는 쪽이 걷는 쪽보다 우선이다.
+                me.SetFacing(MoveInput);
+
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
                 // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
                 bool moveAttack = _host != null && _host.Profile != null && _host.Profile.MoveAttack;
@@ -489,7 +496,6 @@ namespace Game.Module.InGame
             // 노리는 쪽을 바라본다. 사거리 밖이라 아직 안 쏘더라도 몸은 돌려 둔다 —
             // 조준이 먼저 보이고 사격이 뒤따라야 "겨눈다"는 느낌이 난다.
             if (target != null) _host.SetFacing(target.Position - _host.Position);
-            else if (MoveInput.sqrMagnitude > 0.0001f) _host.SetFacing(MoveInput);
 
             bool inRange = target != null &&
                            Vector2.Distance(_host.Position, target.Position)
