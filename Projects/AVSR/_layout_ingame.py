@@ -48,7 +48,7 @@ ROOT = 'InGameMainUI'
 #
 # ⚠️ HUD 보다 **먼저** 선언해야 한다. Unity UI 는 형제 순서대로 그리므로,
 # 뒤에 오면 바닥 이미지가 HUD 를 덮는다.
-HUD_H = 250
+HUD_H = 184                             # 2행 바닥(178)에 여유 6
 FIELD_BOTTOM = 824                      # 하단 조작부(850) 위까지
 
 add('RoomField',      (0, HUD_H, 576, FIELD_BOTTOM - HUD_H), ROOT, 'GROUP')
@@ -64,8 +64,11 @@ add('UnitLayer',      (0, HUD_H, 576, FIELD_BOTTOM - HUD_H), 'RoomField', 'GROUP
 # 우측 재화·일시정지와 겹친다. 그래서 **행을 나눠 재배치**한다.
 #
 #   1행  고스트 상태 · 재화 · 일시정지
-#   2행  호스트 초상 · 상태 · 방 표기
-#   3행  보스 게이지 (보스방에서만 켜진다)
+#   2행  왼쪽 호스트 초상·상태 / 오른쪽 방 표기·보스 게이지
+#
+# 보스 게이지는 처음에 3행으로 따로 뒀는데, 보스방이 아닐 때 그 자리가 빈 띠로
+# 남아 전투 필드를 82px 잡아먹었다. 2행 오른쪽 빈 공간으로 넣어 없앴다.
+# 대신 가로가 312 → 272px 로 줄었다 — 읽는 데 문제되는 건 두께지 길이가 아니다.
 #
 # 목업의 2단 구성과 달라지지만, 목업 좌표를 그대로 쓰면 읽을 수 없다는 것이
 # 실기에서 확인됐다. 읽히는 쪽을 택한다.
@@ -78,7 +81,7 @@ add('HudBackdrop',    (0, 0, 576, HUD_H), 'TopHudGroup', 'IMG')
 # 1행 — 고스트
 add('GhostHudIcon',   (4, 6, 58, 60), 'TopHudGroup', 'IMG')
 add('GhostLabel',     (70, 6, 84, 22), 'TopHudGroup', 'TMP',
-    text='GHOST', size=cap(18), align='L', color=GHOST_C)
+    text='GHOST', size=cap(18), align='L', color=WHITE)
 add('GhostHpBarBg',   (70, 32, 136, 20), 'TopHudGroup', 'IMG')
 add('GhostHpBarFill', (0, 0, 136, 20), 'GhostHpBarBg', 'IMG', local=True)
 add('GhostHpText',    (212, 30, 92, 26), 'TopHudGroup', 'TMP',
@@ -95,25 +98,24 @@ add('PauseButton',    (502, 6, 72, 72), 'TopHudGroup', 'BTN')
 add('HostPortraitFrame', (4, 78, 100, 100), 'TopHudGroup', 'IMG')
 add('HostPortraitImage', (16, 90, 76, 76), 'TopHudGroup', 'IMG')
 add('HostLabel',      (112, 80, 72, 22), 'TopHudGroup', 'TMP',
-    text='HOST', size=cap(18), align='L', color=HOST_C)
+    text='HOST', size=cap(18), align='L', color=WHITE)
 add('HostHpBarBg',    (112, 106, 118, 18), 'TopHudGroup', 'IMG')
 add('HostHpBarFill',  (0, 0, 118, 18), 'HostHpBarBg', 'IMG', local=True)
 add('HostHpText',     (238, 104, 86, 24), 'TopHudGroup', 'TMP',
     size=cap(19), align='L', color=WHITE)
 add('HostNameText',   (112, 132, 230, 20), 'TopHudGroup', 'TMP',
-    size=cap(15), align='L', color=HOST_C)
+    size=cap(15), align='L', color=WHITE)
 
-# 2행 — 방 표기 (목업 concept 시트의 `STAGE 7`)
-add('StageText',      (352, 106, 218, 24), 'TopHudGroup', 'TMP',
-    size=cap(16), align='C', color=MUTED)
+# 2행 오른쪽 — 방 표기 (목업 concept 시트의 `STAGE 7`) 와 보스 게이지
+add('StageText',      (352, 80, 218, 22), 'TopHudGroup', 'TMP',
+    size=cap(16), align='C', color=WHITE)
 
-# 3행 — 보스 (보스방에서만 켠다)
-add('BossGroup',      (132, 182, 312, 66), 'TopHudGroup', 'GROUP')
-add('BossLabel',      (132, 182, 312, 20), 'BossGroup', 'TMP',
-    text='BOSS', size=cap(17), align='C', color=BOSS_C)
-add('BossHpBarBg',    (132, 204, 312, 24), 'BossGroup', 'IMG')
-add('BossHpBarFill',  (0, 0, 312, 24), 'BossHpBarBg', 'IMG', local=True)
-add('BossHpText',     (132, 230, 312, 18), 'BossGroup', 'TMP',
+add('BossGroup',      (352, 106, 218, 72), 'TopHudGroup', 'GROUP')
+add('BossLabel',      (352, 106, 218, 20), 'BossGroup', 'TMP',
+    text='BOSS', size=cap(17), align='C', color=WHITE)
+add('BossHpBarBg',    (352, 128, 218, 22), 'BossGroup', 'IMG')
+add('BossHpBarFill',  (0, 0, 218, 22), 'BossHpBarBg', 'IMG', local=True)
+add('BossHpText',     (352, 152, 218, 18), 'BossGroup', 'TMP',
     size=cap(14), align='C', color=WHITE)
 
 # ── 하단 조작 ───────────────────────────────────────────────────────

@@ -12,27 +12,27 @@
    "parent": "InGameMainUI",
    "create": "GROUP",
    "x": 0.0,
-   "y": 312.5,
+   "y": 230.0,
    "w": 720.0,
-   "h": 717.5
+   "h": 800.0
   },
   {
    "name": "RoomFloor",
    "parent": "RoomField",
    "create": "IMG",
    "x": 0.0,
-   "y": 312.5,
+   "y": 230.0,
    "w": 720.0,
-   "h": 717.5
+   "h": 800.0
   },
   {
    "name": "UnitLayer",
    "parent": "RoomField",
    "create": "GROUP",
    "x": 0.0,
-   "y": 312.5,
+   "y": 230.0,
    "w": 720.0,
-   "h": 717.5
+   "h": 800.0
   },
   {
    "name": "TopHudGroup",
@@ -41,7 +41,7 @@
    "x": 0.0,
    "y": 0.0,
    "w": 720.0,
-   "h": 312.5
+   "h": 230.0
   },
   {
    "name": "HudBackdrop",
@@ -50,7 +50,7 @@
    "x": 0.0,
    "y": 0.0,
    "w": 720.0,
-   "h": 312.5
+   "h": 230.0
   },
   {
    "name": "GhostHudIcon",
@@ -72,7 +72,7 @@
    "text": "GHOST",
    "size": 32.1,
    "align": "L",
-   "color": "#5AC8F0"
+   "color": "#F2F4F8"
   },
   {
    "name": "GhostHpBarBg",
@@ -185,7 +185,7 @@
    "text": "HOST",
    "size": 32.1,
    "align": "L",
-   "color": "#F0B428"
+   "color": "#F2F4F8"
   },
   {
    "name": "HostHpBarBg",
@@ -228,50 +228,50 @@
    "h": 25.0,
    "size": 26.8,
    "align": "L",
-   "color": "#F0B428"
+   "color": "#F2F4F8"
   },
   {
    "name": "StageText",
    "parent": "TopHudGroup",
    "create": "TMP",
    "x": 440.0,
-   "y": 132.5,
+   "y": 100.0,
    "w": 272.5,
-   "h": 30.0,
+   "h": 27.5,
    "size": 28.6,
    "align": "C",
-   "color": "#8C9AB4"
+   "color": "#F2F4F8"
   },
   {
    "name": "BossGroup",
    "parent": "TopHudGroup",
    "create": "GROUP",
-   "x": 165.0,
-   "y": 227.5,
-   "w": 390.0,
-   "h": 82.5
+   "x": 440.0,
+   "y": 132.5,
+   "w": 272.5,
+   "h": 90.0
   },
   {
    "name": "BossLabel",
    "parent": "BossGroup",
    "create": "TMP",
-   "x": 165.0,
-   "y": 227.5,
-   "w": 390.0,
+   "x": 440.0,
+   "y": 132.5,
+   "w": 272.5,
    "h": 25.0,
    "text": "BOSS",
    "size": 30.4,
    "align": "C",
-   "color": "#E8404A"
+   "color": "#F2F4F8"
   },
   {
    "name": "BossHpBarBg",
    "parent": "BossGroup",
    "create": "IMG",
-   "x": 165.0,
-   "y": 255.0,
-   "w": 390.0,
-   "h": 30.0
+   "x": 440.0,
+   "y": 160.0,
+   "w": 272.5,
+   "h": 27.5
   },
   {
    "name": "BossHpBarFill",
@@ -279,17 +279,17 @@
    "create": "IMG",
    "x": 0.0,
    "y": 0.0,
-   "w": 390.0,
-   "h": 30.0,
+   "w": 272.5,
+   "h": 27.5,
    "local": true
   },
   {
    "name": "BossHpText",
    "parent": "BossGroup",
    "create": "TMP",
-   "x": 165.0,
-   "y": 287.5,
-   "w": 390.0,
+   "x": 440.0,
+   "y": 190.0,
+   "w": 272.5,
    "h": 22.5,
    "size": 25.0,
    "align": "C",

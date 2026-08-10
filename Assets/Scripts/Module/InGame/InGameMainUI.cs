@@ -24,9 +24,12 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed class InGameMainUI : MonoBehaviour, IBackTarget
     {
-        private const float GhostBarWidth = 114f;   // 목업 실측 (레이아웃 JSON 과 동일)
-        private const float HostBarWidth = 98f;
-        private const float BossBarWidth = 260f;
+        // 게이지 채우기 폭. 레이아웃 JSON 의 `*HpBarBg` 가로와 같아야 한다 —
+        // 어긋나면 HP 가 가득 차도 바가 덜 차거나 넘친다.
+        // (_layout_ingame.py 의 목업 좌표 × 1.25)
+        private const float GhostBarWidth = 170f;   // 136 × 1.25
+        private const float HostBarWidth = 147.5f;  // 118 × 1.25
+        private const float BossBarWidth = 272.5f;  // 218 × 1.25
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
@@ -34,8 +37,8 @@ namespace Game.Module.InGame
         /// <summary>이 아래로 밀면 이동으로 치지 않는다 — 미세 흔들림에 사격이 끊기지 않게.</summary>
         private const float MoveDeadzone = 0.18f;
         private const float PadMargin = 12f;
-        /// <summary>상단 HUD 높이 (레이아웃 250 × 1.25). 이 영역은 패드가 따라오지 않는다.</summary>
-        private const float HudHeight = 312.5f;
+        /// <summary>상단 HUD 높이 (레이아웃 184 × 1.25). 이 영역은 패드가 따라오지 않는다.</summary>
+        private const float HudHeight = 230f;
 
         private UIBinder _ui;
         private BattleDirector _battle;

@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 IG = os.path.join(ROOT, 'Assets', 'BaseResource', 'InGameMainUI')
 
-W, H = 720, 312                   # _layout_ingame.py 의 HUD_H(250) × 1.25
+W, H = 720, 230                   # _layout_ingame.py 의 HUD_H(184) × 1.25
 
 TOP = (10, 13, 22)                # 위가 더 어둡다 — 화면 가장자리로 눈이 안 끌리게
 BOT = (21, 27, 42)
@@ -38,7 +38,7 @@ def main():
                      round(TOP[2] + (BOT[2] - TOP[2]) * t), 255))
 
     # 행 구분 이음매 — 고스트 / 호스트 / 보스 세 행의 경계에 맞춘다
-    for y in (round(76 * 1.25), round(178 * 1.25)):
+    for y in (round(76 * 1.25),):
         d.line([0, y, W, y], fill=SEAM + (255,))
 
     # 좌우 끝을 살짝 눌러 가운데로 시선을 모은다

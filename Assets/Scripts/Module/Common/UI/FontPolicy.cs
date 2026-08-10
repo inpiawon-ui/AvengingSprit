@@ -68,7 +68,11 @@ namespace Game.Module.Common.UI
             tmp.font = gothic;
             // 픽셀 폰트 미확보 임시 보정 — 목업 라벨은 굵은 아케이드체다.
             // Noto 는 가늘어 그대로 두면 화면이 흐리게 보인다. 볼드 + 자간으로 근사한다.
-            tmp.fontStyle = role == FontRole.Pixel ? FontStyles.Bold : FontStyles.Normal;
+            //
+            // 볼드는 픽셀 대상만이 아니라 **전부**에 건다. 인게임 HUD 를 실기에서
+            // 보니 한글 본문도 가늘어 읽히지 않았다. 자간은 아케이드 라벨 느낌이
+            // 필요한 픽셀 대상에만 준다 — 한글은 자간을 벌리면 오히려 흩어진다.
+            tmp.fontStyle = FontStyles.Bold;
             tmp.characterSpacing = role == FontRole.Pixel ? 1.5f : 0f;
         }
     }

@@ -870,7 +870,7 @@
    "prefab": "InGameMainUI",
    "atlas": "ingamemainui",
    "w": 720,
-   "h": 312,
+   "h": 230,
    "alpha": "N",
    "pivot": "center",
    "slice9": [

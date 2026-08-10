@@ -19,11 +19,14 @@ namespace Game.Editor
         private const string GothicPath = "Assets/BaseResource/Fonts/NotoSansKR SDF.asset";
         private const string PixelFontPath = "Assets/BaseResource/Fonts/PixelArcade SDF.asset";
 
+        // ⚠️ 화면을 추가하면 여기에도 넣어야 한다. InGameMainUI 가 빠져 있어서
+        //    인게임 글자만 외곽선도 볼드도 없이 남아 있었다 — 실기에서 안 읽혔다.
         private static readonly string[] Prefabs =
         {
             "Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab",
             "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab",
             "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab",
+            "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
         };
 
         [MenuItem("Tools/Game/Apply Fonts To UI Prefabs")]
@@ -86,16 +89,22 @@ namespace Game.Editor
 
         // ⚠️ TMP 의 _OutlineWidth 는 바깥으로 자라지 않고 **글자 안쪽을 깎는다.**
         //    두껍게 주면 획이 사라진다. _FaceDilate 로 살을 먼저 붙이고 외곽선은 얇게 준다.
+        //
+        // 외곽선은 전부 0.15 로 통일한다. 등급별로 0.05~0.12 를 나눠 줬더니 인게임
+        // HUD 처럼 어두운 배경에 작게 얹히는 글자가 읽히지 않았다. 두께를 하나로
+        // 맞추고, 등급 차이는 그림자로만 둔다.
+        private const float OutlineW = 0.15f;
+
         // 목업 실측 — 하단 3버튼 타이틀은 버튼 색과 같은 글로우를 두르고 있다.
-        private static readonly Fx Title = new("Title", 0.12f, 0.95f);
-        private static readonly Fx Label = new("Label", 0.09f, 0.85f);
-        private static readonly Fx Soft = new("Soft", 0.05f, 0.55f);
+        private static readonly Fx Title = new("Title", OutlineW, 0.95f);
+        private static readonly Fx Label = new("Label", OutlineW, 0.85f);
+        private static readonly Fx Soft = new("Soft", OutlineW, 0.55f);
 
         private static readonly Dictionary<string, Fx> Effects = new()
         {
-            ["HostButtonTitleText"] = new("GlowPurple", 0.12f, 0.95f, "#8A46D8"),
-            ["ChapterButtonTitleText"] = new("GlowGold", 0.12f, 0.95f, "#D08A14"),
-            ["ShopButtonTitleText"] = new("GlowBlue", 0.12f, 0.95f, "#2A74C8"),
+            ["HostButtonTitleText"] = new("GlowPurple", OutlineW, 0.95f, "#8A46D8"),
+            ["ChapterButtonTitleText"] = new("GlowGold", OutlineW, 0.95f, "#D08A14"),
+            ["ShopButtonTitleText"] = new("GlowBlue", OutlineW, 0.95f, "#2A74C8"),
         };
 
         /// <summary>골드 버튼 위의 어두운 글자 — 목업에 외곽선이 없다</summary>
