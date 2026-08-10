@@ -60,7 +60,7 @@ MonoBehaviour:
     _tag: 1
     _possessPriority: 3
     _ultimateKey: bullet_hell
-    _unlockType: 1
+    _unlockType: 0
     _unlockChapter: 1
     _unlockStage: 5
   - _hostKey: wizard
