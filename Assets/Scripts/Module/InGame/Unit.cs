@@ -135,9 +135,13 @@ namespace Game.Module.InGame
             _body = GetOrCreate("Body", size, Vector2.zero);
             _body.sprite = sprite;
             _baseSprite = sprite;
-            _facing = null;
+            for (int i = 0; i < _frames.Length; i++) _frames[i] = null;
             _facingIndex = -1;
             _facingFlip = false;
+            _frame = FrameIdle;
+            _frameTimer = 0f;
+            _shownFrame = -1;
+            _shownIndex = -1;
             _body.transform.localScale = Vector3.one;
             _body.preserveAspect = true;
             _body.raycastTarget = false;
@@ -223,20 +227,103 @@ namespace Game.Module.InGame
         /// <summary>바라보기 스프라이트 5장. 순서는 s / se / e / ne / n.</summary>
         public static readonly string[] FacingSuffix = { "s", "se", "e", "ne", "n" };
 
-        private Sprite[] _facing;
+        /// <summary>프레임 종류. 값이 곧 `_frames` 배열 인덱스다.</summary>
+        public const int FrameIdle = 0;
+        public const int FrameAtk1 = 1;
+        public const int FrameAtk2 = 2;
+        public const int FrameHit = 3;
+
+        /// <summary>파일명 접미. idle 은 접미가 없어 null 이다.</summary>
+        public static readonly string[] FrameSuffix = { null, "atk1", "atk2", "hit" };
+
+        // 연출 길이. 합(0.17초)이 어떤 호스트의 공격 간격보다도 짧아야 한다 —
+        // 길면 다음 발사가 이전 동작을 자르고 들어와 반동이 안 보인다.
+        private const float Atk1Seconds = 0.07f;
+        private const float Atk2Seconds = 0.10f;
+        private const float HitSeconds = 0.12f;   // 붉은 점멸과 같은 길이. 색과 자세가 따로 놀면 어색하다
+
+        private readonly Sprite[][] _frames = new Sprite[FrameSuffix.Length][];
         private Sprite _baseSprite;
         private int _facingIndex = -1;
         private bool _facingFlip;
 
-        public bool HasFacing => _facing != null;
+        private int _frame = FrameIdle;
+        private float _frameTimer;
+        private int _shownFrame = -1, _shownIndex = -1;
+        private bool _shownFlip;
 
-        /// <summary>방향 스프라이트를 넘겨준다. 하나라도 비면 통째로 무시한다(섞이면 더 이상하다).</summary>
-        public void SetFacingSprites(Sprite[] five)
+        public bool HasFacing => _frames[FrameIdle] != null;
+
+        /// <summary>
+        /// 방향 스프라이트를 넘겨준다. 한 벌(5장) 중 하나라도 비면 그 벌은 통째로 버린다 —
+        /// 섞이면 방향마다 다른 그림이 나와서 더 이상하다.
+        /// 공격·피격 벌이 없으면 그 동작에서도 idle 을 쓴다. 캐릭터를 한 종씩
+        /// 채워 넣을 수 있어야 해서, 없는 쪽이 깨지면 안 된다.
+        /// </summary>
+        public void SetFacingSprites(Sprite[] idle, Sprite[] atk1 = null,
+                                     Sprite[] atk2 = null, Sprite[] hit = null)
         {
-            if (five == null || five.Length != FacingSuffix.Length) { _facing = null; return; }
+            _frames[FrameIdle] = Validate(idle);
+            _frames[FrameAtk1] = Validate(atk1);
+            _frames[FrameAtk2] = Validate(atk2);
+            _frames[FrameHit] = Validate(hit);
+            _shownFrame = -1;   // 다음 Apply 에서 반드시 다시 그리게 한다
+        }
+
+        private static Sprite[] Validate(Sprite[] five)
+        {
+            if (five == null || five.Length != FacingSuffix.Length) return null;
             for (int i = 0; i < five.Length; i++)
-                if (five[i] == null) { _facing = null; return; }
-            _facing = five;
+                if (five[i] == null) return null;
+            return five;
+        }
+
+        /// <summary>사격 동작을 시작한다. 피격 중이면 무시한다 — 맞은 게 더 급한 정보다.</summary>
+        public void PlayAttack()
+        {
+            if (_frame == FrameHit && _frameTimer > 0f) return;
+            _frame = FrameAtk1;
+            _frameTimer = Atk1Seconds;
+            Apply();
+        }
+
+        /// <summary>피격 동작을 시작한다. 사격 중이어도 끊고 들어간다.</summary>
+        public void PlayHit()
+        {
+            _frame = FrameHit;
+            _frameTimer = HitSeconds;
+            Apply();
+        }
+
+        /// <summary>동작을 진행시킨다. atk1 → atk2 → idle 순으로 되돌아간다.</summary>
+        public void TickAnim(float dt)
+        {
+            if (_frame == FrameIdle) return;
+            _frameTimer -= dt;
+            if (_frameTimer > 0f) return;
+
+            if (_frame == FrameAtk1) { _frame = FrameAtk2; _frameTimer = Atk2Seconds; }
+            else { _frame = FrameIdle; _frameTimer = 0f; }
+            Apply();
+        }
+
+        /// <summary>현재 (프레임 × 방향) 을 화면에 반영한다. 바뀐 게 없으면 아무것도 하지 않는다.</summary>
+        private void Apply()
+        {
+            if (_body == null || _facingIndex < 0 || _frames[FrameIdle] == null) return;
+
+            // 그 동작의 그림이 없으면 idle 로 대신한다 — 없는 채로 두면 빈 칸이 된다.
+            int f = _frames[_frame] != null ? _frame : FrameIdle;
+            if (f == _shownFrame && _facingIndex == _shownIndex && _facingFlip == _shownFlip) return;
+
+            _shownFrame = f;
+            _shownIndex = _facingIndex;
+            _shownFlip = _facingFlip;
+            _body.sprite = _frames[f][_facingIndex];
+            // 좌우 반전은 스케일로 준다. 부호만 바꾸므로 픽셀 정렬이 깨지지 않는다.
+            var s = _body.transform.localScale;
+            _body.transform.localScale =
+                new Vector3(_facingFlip ? -Mathf.Abs(s.x) : Mathf.Abs(s.x), s.y, s.z);
         }
 
         /// <summary>
@@ -245,7 +332,7 @@ namespace Game.Module.InGame
         /// </summary>
         public void SetFacing(Vector2 dir)
         {
-            if (_facing == null || dir.sqrMagnitude < 0.0001f) return;
+            if (_frames[FrameIdle] == null || dir.sqrMagnitude < 0.0001f) return;
 
             // 화면 좌표계라 위쪽이 +y 다. 오른쪽(→)을 0 도로 두고 8칸으로 나눈다.
             float deg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -265,15 +352,9 @@ namespace Game.Module.InGame
                 case 6: index = 0; flip = false; break;   // ↓  s
                 default: index = 1; flip = false; break;  // ↘  se
             }
-            if (index == _facingIndex && flip == _facingFlip) return;
-
             _facingIndex = index;
             _facingFlip = flip;
-            if (_body == null) return;
-            _body.sprite = _facing[index];
-            // 좌우 반전은 스케일로 준다. 부호만 바꾸므로 픽셀 정렬이 깨지지 않는다.
-            var s = _body.transform.localScale;
-            _body.transform.localScale = new Vector3(flip ? -Mathf.Abs(s.x) : Mathf.Abs(s.x), s.y, s.z);
+            Apply();
         }
 
         /// <summary>피해를 적용한다. 사망했으면 true.</summary>
@@ -282,7 +363,8 @@ namespace Game.Module.InGame
             if (!IsAlive) return false;
             Hp = Mathf.Max(0, Hp - Mathf.Max(1, amount));
             RefreshHpBar();
-            _flashTimer = 0.12f;
+            _flashTimer = HitSeconds;
+            PlayHit();          // 틴트와 자세를 같은 자리에서 시작해야 따로 놀지 않는다
             return Hp == 0;
         }
 

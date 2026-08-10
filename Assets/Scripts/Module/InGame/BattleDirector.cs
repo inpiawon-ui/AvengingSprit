@@ -248,13 +248,27 @@ namespace Game.Module.InGame
         /// </summary>
         private void ApplyFacingSprites(Unit u, string key)
         {
+            var idle = FrameSet(key, null);
+            if (idle == null) return;   // 방향 그림이 없는 종은 지금 그림 그대로 둔다
+            u.SetFacingSprites(idle,
+                               FrameSet(key, Unit.FrameSuffix[Unit.FrameAtk1]),
+                               FrameSet(key, Unit.FrameSuffix[Unit.FrameAtk2]),
+                               FrameSet(key, Unit.FrameSuffix[Unit.FrameHit]));
+        }
+
+        /// <summary>한 동작의 방향 5장. 하나라도 없으면 null — 반쪽짜리는 안 쓴다.</summary>
+        private Sprite[] FrameSet(string key, string frame)
+        {
             var set = new Sprite[Unit.FacingSuffix.Length];
             for (int i = 0; i < set.Length; i++)
             {
-                set[i] = UnitGet(key, Unit.FacingSuffix[i]);
-                if (set[i] == null) return;
+                var suffix = frame == null
+                    ? Unit.FacingSuffix[i]
+                    : $"{Unit.FacingSuffix[i]}_{frame}";
+                set[i] = UnitGet(key, suffix);
+                if (set[i] == null) return null;
             }
-            u.SetFacingSprites(set);
+            return set;
         }
 
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
@@ -533,6 +547,7 @@ namespace Game.Module.InGame
             var me = Avatar;
             if (me == null) return;
             me.TickFlash(dt);
+            me.TickAnim(dt);
 
             // ⚠️ 궁수의 전설 규칙 — **움직이는 동안에는 쏘지 않는다.**
             //    이동과 공격이 배타적이어야 "자리를 잡을까 딜을 넣을까"의 긴장이 생긴다.
@@ -602,6 +617,7 @@ namespace Game.Module.InGame
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
                 e.TickFlash(dt);
+                e.TickAnim(dt);
                 e.TickSlow(dt);
 
                 // 기획서 A 1-1 — 유령은 **적과 충돌하지 않고 표적도 되지 않는다.**
@@ -821,6 +837,10 @@ namespace Game.Module.InGame
 
         private void PerformAttack(Unit attacker, Unit target, bool fromPlayer)
         {
+            // 공격 방식과 무관하게 몸은 똑같이 쏘는 동작을 한다.
+            // 여기 한 곳에서 켜야 근접·원거리·보스가 따로 놀지 않는다.
+            attacker.PlayAttack();
+
             var p = attacker.Profile;
             var kind = p?.Kind ?? AttackKind.Single;
 
