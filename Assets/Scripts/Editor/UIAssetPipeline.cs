@@ -84,6 +84,54 @@ namespace Game.Editor
         }
 
         /// <summary>
+        /// 매니페스트(_import.json)를 거치지 않고 들어온 낱장 PNG 를 임포트한다.
+        /// 방향 스프라이트·공격 프레임처럼 화면 설계서에 없는 파일이 대상이다.
+        ///
+        /// 아틀라스는 폴더 오브젝트를 PackingSource 로 잡으므로(BuildAtlases 참조),
+        /// **Sprite 타입으로만 만들면 아틀라스에 자동 수록된다.** 아틀라스 재구성은 필요 없다.
+        /// 그냥 두면 Unity 기본값(Default 타입·Bilinear·압축)으로 들어와 도트가 뭉개지고
+        /// `SpriteAtlas.GetSprite()` 가 null 을 준다.
+        /// </summary>
+        [MenuItem("Tools/Game/Import Loose Sprites And Repack")]
+        public static void ImportLooseSprites()
+        {
+            var targets = new List<string>();
+            foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { BaseRes }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (AssetImporter.GetAtPath(path) is TextureImporter ti
+                    && ti.textureType != TextureImporterType.Sprite)
+                    targets.Add(path);
+            }
+
+            if (targets.Count > 0)
+            {
+                AssetDatabase.StartAssetEditing();
+                try
+                {
+                    foreach (var p in targets) ApplyImporter(p, new Asset { pivot = "center" });
+                }
+                finally
+                {
+                    AssetDatabase.StopAssetEditing();
+                    AssetDatabase.Refresh();
+                }
+                Debug.Log($"[UIAssetPipeline] 낱장 임포트 {targets.Count}개 — "
+                          + string.Join(", ", targets.Select(Path.GetFileName)));
+            }
+            else
+            {
+                Debug.Log("[UIAssetPipeline] 새 낱장 없음 — 리팩만 한다.");
+            }
+
+            // 대상이 없어도 리팩은 항상 한다. 기존 PNG 를 덮어썼을 때
+            // (재납품·재정렬) 아틀라스 안의 그림이 옛 것으로 남는 것을 막는다.
+            PackAtlases();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        /// <summary>
         /// 아틀라스를 실제로 팩한다.
         /// `spritePackerMode` 가 Disabled 면 런타임에 `SpriteAtlas.GetSprite()` 가 항상 null 을 준다
         /// (에셋은 로드되지만 spriteCount = 0). 에디터 플레이에서도 동작하도록 V2 모드로 켠다.
