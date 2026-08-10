@@ -105,6 +105,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRoomEntered));
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(OnExitOpened));
             _tokens.Add(bus.Subscribe<RunExpChangedEvent>(OnExpChanged));
+            _tokens.Add(bus.Subscribe<EmergencyHostEvent>(OnEmergencyHost));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(e => SetPossessReady(e.HasTarget)));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
@@ -319,10 +320,20 @@ namespace Game.Module.InGame
         private void OnRoomEntered(RoomEnteredEvent e)
         {
             // 방 하나가 곧 스테이지 하나다. 마지막 스테이지가 보스방.
-            _ui.SetText("StageText",
-                e.IsBossRoom ? $"BOSS  ·  STAGE {e.RoomIndex + 1}"
-                             : $"STAGE {e.RoomIndex + 1} / {e.RoomTotal}");
+            // 방의 성격을 함께 보여준다 — 정예방에 들어선 걸 모르면 대비할 수 없다.
+            string kind = e.Kind switch
+            {
+                RoomKind.Boss => "BOSS",
+                RoomKind.Elite => "ELITE",
+                RoomKind.Rest => "REST",
+                _ => null,
+            };
+            string stage = $"STAGE {e.RoomIndex + 1} / {e.RoomTotal}";
+            _ui.SetText("StageText", kind == null ? stage : $"{kind}  ·  {stage}");
         }
+
+        private void OnEmergencyHost(EmergencyHostEvent e)
+            => _ui.SetText("StageText", $"긴급 빙의 — GHOST -{e.GhostCost}");
 
         private void OnExitOpened(ExitOpenedEvent e)
             => _ui.SetText("StageText", "출구가 열렸다 — 통과해서 다음 스테이지로");

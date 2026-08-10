@@ -86,6 +86,11 @@ namespace Game.Module.InGame
         private int _level = 1;
         private int _exp;
 
+        /// <summary>빙의할 대상이 하나도 없는 상태가 이어진 시간 (기획서 A 8-3).</summary>
+        private float _emergencyWait;
+        private bool _emergencyUsedThisRoom;
+        private RoomKind _roomKind = RoomKind.Normal;
+
         /// <summary>이 런에 쌓인 버프. 스테이지를 나가면 사라진다.</summary>
         public RunBuffs Buffs => _buffs;
         public bool IsAwaitingBuff => _awaitingBuff;
@@ -158,12 +163,31 @@ namespace Game.Module.InGame
         /// <summary>HUD 초상용. 아틀라스를 들고 있는 쪽이 하나뿐이라 여기서 내준다.</summary>
         public Sprite UnitSprite(string hostKey) => GetSprite($"unit_{hostKey}");
 
+        /// <summary>
+        /// 이 스테이지가 어떤 방인가 (기획서 A 06 ROOM TYPE).
+        ///
+        /// 마지막은 항상 보스다. 그 앞은 한 챕터 안에서 같은 방만 반복되지 않게
+        /// 스테이지 번호로 갈라 준다 — 지금은 3스테이지라 경우의 수가 적다.
+        /// 챕터가 길어지면 방 구성표를 데이터로 빼야 한다.
+        /// </summary>
+        private RoomKind KindOf(int index)
+        {
+            int last = _config.StagesPerChapter - 1;
+            if (index >= last) return RoomKind.Boss;
+            if (index == 0) return RoomKind.Normal;        // 첫 방은 늘 평범하게 연다
+            // 보스 직전은 정예로 조인다. 다만 Ghost HP 가 바닥이면 쉬어 가게 한다.
+            if (index == last - 1)
+                return _ghostHp <= GhostHpMax / 3 ? RoomKind.Rest : RoomKind.Elite;
+            return RoomKind.Normal;
+        }
+
         private void EnterRoom(int index)
         {
             _roomIndex = index;
             DespawnExit();
-            // 방 하나가 곧 스테이지 하나다. 챕터의 **마지막 스테이지가 보스**다.
-            bool isBoss = index >= _config.StagesPerChapter - 1;
+            _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
+            _roomKind = KindOf(index);
+            bool isBoss = _roomKind == RoomKind.Boss;
 
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
@@ -205,18 +229,28 @@ namespace Game.Module.InGame
                     Phase = 1,
                 });
             }
+            else if (_roomKind == RoomKind.Rest)
+            {
+                // 회복 방 — 적이 없다. 들어서는 순간 Ghost HP 를 돌려주고 출구를 연다.
+                // 유령 상태의 시계가 계속 도는 게임이라, 쉬어 가는 방이 곧 보상이다.
+                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + _config.RestGhostHeal);
+                PublishHp();
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
             else
             {
-                int count = _config.EnemiesPerRoom(index);
+                bool elite = _roomKind == RoomKind.Elite;
+                int count = elite ? _config.EliteEnemyCount : _config.EnemiesPerRoom(index);
                 for (int i = 0; i < count; i++)
                 {
                     // 방마다 등장 조합이 달라지도록 룸 인덱스를 섞어 넣는다
                     var e = hosts[(i * 5 + index * 3 + 1) % hosts.Count];
-                    var u = NewUnit($"Enemy_{e.HostKey}_{i}");
+                    var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
                     // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
+                    // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
                     u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, GetSprite($"unit_{e.HostKey}"),
-                            _config.EnemyHp(e.Hp),
-                            Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                            Mathf.RoundToInt(_config.EnemyHp(e.Hp) * (elite ? _config.EliteHpMul : 1f)),
+                            Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul * (elite ? _config.EliteAtkMul : 1f)),
                             _config.EnemySpeed(e.Spd),
                             _config.EnemyAttackRange * e.RangeMul,
                             _config.EnemyAttackInterval * e.IntervalMul,
@@ -234,7 +268,8 @@ namespace Game.Module.InGame
 
             _bus.Publish(new RoomEnteredEvent
             {
-                RoomIndex = index, RoomTotal = _config.StagesPerChapter, IsBossRoom = isBoss,
+                RoomIndex = index, RoomTotal = _config.StagesPerChapter,
+                IsBossRoom = isBoss, Kind = _roomKind,
             });
         }
 
@@ -295,6 +330,8 @@ namespace Game.Module.InGame
             TickShots(dt);
             CleanupDead();
             RefreshPossessTarget();
+            TickEmergency(dt);
+            if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
             TickExit();
 
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
@@ -335,6 +372,62 @@ namespace Game.Module.InGame
             _ghostHp = Mathf.Max(0, _ghostHp - whole);
             PublishHp();
             if (_ghostHp == 0) Finish(false);
+        }
+
+        /// <summary>
+        /// 긴급 호스트 (기획서 A 8-3).
+        ///
+        /// 빙의할 몸이 하나도 없으면 시계만 도는 상태가 된다 — 특히 보스방은 보스가
+        /// 빙의 대상이 아니라(A 1-4) 손쓸 방법이 아예 없다. 1초를 기다린 뒤 몸을 하나
+        /// 만들어 준다. 대신 값이 비싸다 — Ghost HP 를 추가로 깎고, 시작 체력이 30%다.
+        /// **구제책이지 선택지가 아니다.** 방마다 한 번뿐이고, 못 쓰면 그대로 패배다.
+        /// </summary>
+        private void TickEmergency(float dt)
+        {
+            if (_host != null || _awaitingBuff) { _emergencyWait = 0f; return; }
+            if (_possessTarget != null || HasPossessableTarget()) { _emergencyWait = 0f; return; }
+
+            _emergencyWait += dt;
+            if (_emergencyWait < _config.EmergencyDelaySeconds) return;
+            _emergencyWait = 0f;
+
+            // 기획서 A 8-1 — 빙의 대상이 없고 긴급 호스트도 못 쓰면 그 자리에서 진다.
+            if (_emergencyUsedThisRoom || _ghostHp <= _config.EmergencyGhostCost)
+            {
+                Finish(false);
+                return;
+            }
+
+            var entry = PickEmergencyHost();
+            if (entry == null) { Finish(false); return; }
+
+            _emergencyUsedThisRoom = true;
+            _ghostHp = Mathf.Max(1, _ghostHp - _config.EmergencyGhostCost);
+
+            EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position,
+                      _config.EmergencyHostHpPercent);
+            _bus.Publish(new EmergencyHostEvent
+            {
+                HostKey = entry.HostKey, GhostCost = _config.EmergencyGhostCost,
+            });
+        }
+
+        /// <summary>살아 있는 빙의 가능 적이 방에 남아 있는가. 사거리는 보지 않는다.</summary>
+        private bool HasPossessableTarget()
+        {
+            for (int i = 0; i < _enemies.Count; i++)
+                if (_enemies[i] != null && _enemies[i].IsPossessable) return true;
+            return false;
+        }
+
+        /// <summary>긴급 호스트로 쓸 몸. 로비에서 고른 호스트를 우선한다.</summary>
+        private HostEntry PickEmergencyHost()
+        {
+            if (_player == null || !_player.IsReady) return null;
+            var picked = _player.GetHost(_player.SelectedHostId);
+            if (picked != null) return picked;
+            var all = _player.AllHosts;
+            return all != null && all.Count > 0 ? all[0] : null;
         }
 
         private void TickPlayer(float dt)
@@ -1005,11 +1098,21 @@ namespace Game.Module.InGame
             Destroy(target.gameObject);
             _possessTarget = null;
 
+            EnterHost(entry, target.Key, target.DisplayName, pos, _config.HostStartHpPercent);
+        }
+
+        /// <summary>
+        /// 몸을 입는다. 일반 빙의와 긴급 호스트가 같은 길을 쓴다 —
+        /// 시작 체력만 다르고 나머지(무적·버프 재계산·표시)는 똑같아야 한다.
+        /// </summary>
+        private void EnterHost(HostEntry entry, string key, string fallbackName,
+                               Vector2 pos, int startHpPercent)
+        {
             _ghost.gameObject.SetActive(false);
 
-            _host = NewUnit($"Host_{target.Key}");
-            _host.Setup(UnitSide.Player, target.Key, entry != null ? entry.NameKr : target.DisplayName,
-                        GetSprite($"unit_{target.Key}"),
+            _host = NewUnit($"Host_{key}");
+            _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
+                        GetSprite($"unit_{key}"),
                         entry != null ? _config.HostHp(entry.Hp) : 100,
                         entry != null ? Mathf.RoundToInt(_config.HostAtk(entry.Atk) * entry.DamageMul) : 10,
                         entry != null ? _config.HostSpeed(entry.Spd) : 180f,
@@ -1020,20 +1123,21 @@ namespace Game.Module.InGame
 
             // 기획서 A 3-3 — 빼앗은 몸은 온전하지 않다. 최대 체력의 70%로 시작한다.
             // 이게 없으면 교체가 곧 완전 회복이라, 몸을 갈아타는 데 대가가 없어진다.
-            _host.SetHpPercent(_config.HostStartHpPercent);
+            _host.SetHpPercent(startHpPercent);
 
             // 기획서 A 02 — 빙의 직후 무적(0.35) + 호스트 진입 무적(0.5). 몸을 얻는 순간이
             // 가장 취약한 지점이라, 여기서 맞으면 빙의 자체가 손해가 된다.
             _invuln = _config.PossessInvulnSeconds;
             _ghostProtect = 0f;
+            _emergencyWait = 0f;
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
             _buffs.SetHost(entry);
 
             _bus.Publish(new PossessedEvent
             {
-                PossessedHostKey = target.Key,
+                PossessedHostKey = key,
                 // 어떤 몸을 뺏었는지가 곧 빌드다 — 교전 스타일을 함께 보여준다
-                DisplayName = entry != null ? $"{entry.NameEn}  ·  {entry.AttackText}" : target.DisplayName,
+                DisplayName = entry != null ? $"{entry.NameEn}  ·  {entry.AttackText}" : fallbackName,
                 HostHpMax = _host.HpMax,
             });
             PublishHp();

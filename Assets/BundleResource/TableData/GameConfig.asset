@@ -23,6 +23,13 @@ MonoBehaviour:
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
   _hostStartHpPercent: 70
+  _emergencyDelaySeconds: 1
+  _emergencyHostHpPercent: 30
+  _emergencyGhostCost: 20
+  _eliteEnemyCount: 2
+  _eliteHpMul: 2.4
+  _eliteAtkMul: 1.5
+  _restGhostHeal: 30
   _expPerEnemy: 10
   _expPerBoss: 60
   _expToLevelBase: 30

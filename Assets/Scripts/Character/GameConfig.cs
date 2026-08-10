@@ -50,6 +50,24 @@ namespace Game.Character
         [Range(10, 100)]
         [SerializeField] private int _hostStartHpPercent = 70;
 
+        [Header("긴급 호스트 (기획서 A 8-3)")]
+        [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
+        [SerializeField] private float _emergencyDelaySeconds = 1f;
+        [Tooltip("긴급 호스트의 시작 체력(%). 일반 빙의(70%)보다 훨씬 나쁘다 — 구제책이지 선택지가 아니다.")]
+        [SerializeField] private int _emergencyHostHpPercent = 30;
+        [Tooltip("긴급 호스트를 쓸 때 추가로 깎이는 Ghost HP")]
+        [SerializeField] private int _emergencyGhostCost = 20;
+
+        [Header("룸 타입 (기획서 A 06)")]
+        [Tooltip("정예 방의 적 수. 적게 나오지만 하나하나가 세다.")]
+        [SerializeField] private int _eliteEnemyCount = 2;
+        [Tooltip("정예 적의 체력 배율")]
+        [SerializeField] private float _eliteHpMul = 2.4f;
+        [Tooltip("정예 적의 공격력 배율")]
+        [SerializeField] private float _eliteAtkMul = 1.5f;
+        [Tooltip("회복 방에서 돌려주는 Ghost HP")]
+        [SerializeField] private int _restGhostHeal = 30;
+
         [Header("런 레벨 — 적을 잡아 모으고, 차면 버프 3택1 (기획서 A 5-2)")]
         [Tooltip("일반 적 1기 처치로 얻는 EXP")]
         [SerializeField] private int _expPerEnemy = 10;
@@ -111,6 +129,13 @@ namespace Game.Character
         public int StagesPerChapter => Mathf.Max(1, _stagesPerChapter);
         public float ExitTouchRadius => _exitTouchRadius;
         public int HostStartHpPercent => Mathf.Clamp(_hostStartHpPercent, 10, 100);
+        public float EmergencyDelaySeconds => _emergencyDelaySeconds;
+        public int EmergencyHostHpPercent => Mathf.Clamp(_emergencyHostHpPercent, 5, 100);
+        public int EmergencyGhostCost => Mathf.Max(0, _emergencyGhostCost);
+        public int EliteEnemyCount => Mathf.Max(1, _eliteEnemyCount);
+        public float EliteHpMul => _eliteHpMul;
+        public float EliteAtkMul => _eliteAtkMul;
+        public int RestGhostHeal => Mathf.Max(0, _restGhostHeal);
         public int ExpPerEnemy => _expPerEnemy;
         public int ExpPerBoss => _expPerBoss;
 

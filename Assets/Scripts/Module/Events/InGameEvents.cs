@@ -3,11 +3,37 @@ using GameFramework.Core.Common;
 namespace Game.Module.Events
 {
     /// <summary>룸에 입장했다. `RoomIndex` 는 0-base, `IsBossRoom` 이면 마지막 룸이다.</summary>
+    /// <summary>
+    /// 방의 성격 (기획서 A 06 ROOM TYPE).
+    ///
+    /// 기획서의 `분기 선택`은 넣지 않았다. 지금 진행이 스테이지 3개 직선이라
+    /// 갈림길을 놓을 자리가 없다. 챕터가 길어지면 그때 되살린다.
+    /// </summary>
+    public enum RoomKind
+    {
+        /// <summary>일반 전투</summary>
+        Normal,
+        /// <summary>정예 — 적이 적게 나오지만 하나하나가 세다</summary>
+        Elite,
+        /// <summary>회복·보상 — 적이 없다</summary>
+        Rest,
+        /// <summary>보스</summary>
+        Boss,
+    }
+
     public struct RoomEnteredEvent : IEvent
     {
         public int RoomIndex;
         public int RoomTotal;
         public bool IsBossRoom;
+        public RoomKind Kind;
+    }
+
+    /// <summary>빙의할 대상이 없어 긴급 호스트가 나왔다 (기획서 A 8-3).</summary>
+    public struct EmergencyHostEvent : IEvent
+    {
+        public string HostKey;
+        public int GhostCost;
     }
 
     /// <summary>방을 비워 출구가 열렸다. 통과해야 다음 스테이지로 넘어간다.</summary>
