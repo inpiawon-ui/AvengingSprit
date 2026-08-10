@@ -299,19 +299,19 @@
    "name": "DPadBase",
    "parent": "ControlGroup",
    "create": "IMG",
-   "x": 8.8,
-   "y": 1060.0,
-   "w": 180.0,
-   "h": 168.8
+   "x": 15.0,
+   "y": 1051.2,
+   "w": 173.8,
+   "h": 176.2
   },
   {
    "name": "DPadKnob",
    "parent": "DPadBase",
    "create": "IMG",
-   "x": 55.0,
-   "y": 40.0,
-   "w": 78.8,
-   "h": 77.5,
+   "x": 47.5,
+   "y": 47.5,
+   "w": 80.0,
+   "h": 80.0,
    "local": true
   },
   {

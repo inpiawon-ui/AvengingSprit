@@ -87,8 +87,10 @@ add('StageText',      (223, 66, 208, 16), 'TopHudGroup', 'TMP',
 
 # ── 하단 조작 ───────────────────────────────────────────────────────
 add('ControlGroup',   (0, 850, 576, 174), ROOT, 'GROUP')
-add('DPadBase',       (7, 848, 144, 135), 'ControlGroup', 'IMG')
-add('DPadKnob',       (44, 32, 63, 62), 'DPadBase', 'IMG', local=True)
+# 목업에 격자를 얹어 실측한 D패드 경계 — 바깥 금속 테두리 기준.
+# 노브는 패드 한가운데가 기본 자리다(_recut_dpad.py 가 같은 값을 계산해 출력한다).
+add('DPadBase',       (12, 841, 139, 141), 'ControlGroup', 'IMG')
+add('DPadKnob',       (38, 38, 64, 64), 'DPadBase', 'IMG', local=True)
 
 add('UltimateButton', (324, 854, 122, 140), 'ControlGroup', 'BTN')
 add('UltimateCooldown', (0, 0, 122, 140), 'UltimateButton', 'IMG', local=True)

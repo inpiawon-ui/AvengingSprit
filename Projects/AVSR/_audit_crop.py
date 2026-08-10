@@ -25,6 +25,15 @@ FULLBLEED = ('background', 'roomfloor', 'fill', 'bg', 'cooldown', 'tipbar',
              'lockup', 'art', 'frame', 'card', 'counter', 'widget', 'pedestal',
              'title', 'button')
 
+# 상자를 꽉 채우는 도형이라 '잘림' 판정이 원래 높게 나오는 것들.
+# 둥근 사각형·원은 상하좌우 중앙이 가장자리에 닿는 게 맞다.
+#
+# ⚠️ 여기에 넣기 전에 **목업과 대조해 크롭이 정확한지 눈으로 확인할 것.**
+# dpadbase 는 1차 감사에서 61.2% 로 걸렸는데 "목업 충실"이라고 넘겼다가,
+# 실제로는 좌우·아래가 잘리고 모서리에 얼룩이 남은 상태였다. 수치가
+# 오탐인 것과 결함이 없는 것은 다르다.
+SHAPE_FILLS_BOX = ('dpadbase', 'dpadknob')
+
 
 def analyse(path):
     im = Image.open(path).convert('RGBA')
@@ -67,7 +76,7 @@ def main():
             if not f.endswith('.png'):
                 continue
             name = f[:-4]
-            if any(s in name for s in FULLBLEED):
+            if any(s in name for s in FULLBLEED) or name in SHAPE_FILLS_BOX:
                 continue
             r = analyse(os.path.join(d, f))
             if r is None:
