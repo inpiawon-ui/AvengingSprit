@@ -40,6 +40,20 @@ namespace Game.Character
     }
 
     /// <summary>
+    /// 사격 대상을 고르는 규칙 (기획서 A 3-3 Target Type).
+    /// 호스트마다 "누구를 먼저 때리는가"가 다르면, 같은 화력이라도 교전 그림이 달라진다.
+    /// </summary>
+    public enum TargetType
+    {
+        /// <summary>가장 가까운 적. 기본값</summary>
+        Nearest,
+        /// <summary>체력이 가장 적은 적 — 마무리에 강하다</summary>
+        LowestHp,
+        /// <summary>체력이 가장 많은 적 — 탱커를 먼저 무너뜨린다</summary>
+        HighestHp,
+    }
+
+    /// <summary>
     /// 호스트 1종의 마스터 데이터.
     /// 표시 스탯은 0~100 스케일이며 실전투 수치와 다르다 (기획 GD-SYS 용어 구분).
     /// </summary>
@@ -71,6 +85,17 @@ namespace Game.Character
         [Tooltip("근접 시 사거리 안의 적 탄을 지우는가 (슬러거)")]
         [SerializeField] private bool _reflectsShots;
 
+        [Tooltip("이동 중에도 쏠 수 있는가. 기본은 전부 false — 멈춰야 쏜다가 이 게임의 최상위 규칙이다. " +
+                 "예외 호스트에만 켠다(기획서 A 3-3 Move Attack).")]
+        [SerializeField] private bool _moveAttack;
+
+        [Tooltip("사격 대상을 고르는 규칙 (기획서 A 3-3 Target Type)")]
+        [SerializeField] private TargetType _targetType = TargetType.Nearest;
+
+        [Header("적으로 등장할 때")]
+        [Tooltip("빙의 우선순위. 높을수록 먼저 잡힌다. 같으면 가까운 쪽 (기획서 A 4-3)")]
+        [SerializeField] private int _possessPriority;
+
         [Header("얼티밋")]
         [SerializeField] private string _ultimateKey;
 
@@ -96,6 +121,9 @@ namespace Game.Character
         public int LifestealPercent => _lifestealPercent;
         public int SlowPercent => _slowPercent;
         public bool ReflectsShots => _reflectsShots;
+        public bool MoveAttack => _moveAttack;
+        public TargetType Targeting => _targetType;
+        public int PossessPriority => _possessPriority;
 
         /// <summary>호스트 선택·인게임 HUD 에 쓰는 짧은 교전 스타일 문구.</summary>
         public string AttackText => _attackKind switch

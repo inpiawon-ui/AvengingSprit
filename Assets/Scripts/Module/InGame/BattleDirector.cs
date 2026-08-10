@@ -218,6 +218,11 @@ namespace Game.Module.InGame
                             _config.EnemyAttackInterval * e.IntervalMul,
                             new Vector2(84f, 78f), isBoss: false, profile: e);
                     u.Position = SpawnSlot(i, count);
+                    // 기획서 A 4-3 — 빙의 우선순위·사거리는 적마다 다를 수 있다.
+                    // 사거리 0 은 "전역 기본값을 쓴다"는 뜻이다.
+                    u.PossessPriority = e.PossessPriority;
+                    u.PossessRange = 0f;
+                    u.SetState(EnemyState.Idle);
                     _enemies.Add(u);
                 }
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
@@ -345,9 +350,16 @@ namespace Game.Module.InGame
                 p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
                 p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
                 me.Position = p;
-                _stopTimer = 0f;
-                IsFiring = false;
-                return;
+
+                // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
+                // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
+                bool moveAttack = _host != null && _host.Profile != null && _host.Profile.MoveAttack;
+                if (!moveAttack)
+                {
+                    _stopTimer = 0f;
+                    IsFiring = false;
+                    return;
+                }
             }
 
             // 멈춘 직후 아주 짧게 준비 시간을 둔다. 없으면 톡톡 끊어 눌러도 손해가 없어
@@ -394,12 +406,32 @@ namespace Game.Module.InGame
                 // 처음부터 전부 달려들면 방이 통째로 한 덩어리가 되어 몰려다닌다.
                 if (!e.IsAggro)
                 {
-                    if (d > _config.EnemyDetectRange) { Separate(e, i, dt); continue; }
+                    if (d > _config.EnemyDetectRange)
+                    {
+                        e.SetState(EnemyState.Idle);
+                        Separate(e, i, dt);
+                        continue;
+                    }
                     e.IsAggro = true;
+                    e.SetState(EnemyState.Detect);
                 }
 
-                if (d > e.AttackRange) e.MoveToward(me.Position, dt);
-                else if (e.TickAttack(dt)) PerformAttack(e, me, false);
+                // 기획서 A 4-1 — Detect → Approach → Attack → Cooldown.
+                // 상태를 이름으로 들고 있어야 AI 타입별 분기를 넣을 자리가 생긴다.
+                if (d > e.AttackRange)
+                {
+                    e.SetState(EnemyState.Approach);
+                    e.MoveToward(me.Position, dt);
+                }
+                else if (e.TickAttack(dt))
+                {
+                    e.SetState(EnemyState.Attack);
+                    PerformAttack(e, me, false);
+                }
+                else
+                {
+                    e.SetState(EnemyState.Cooldown);
+                }
 
                 Separate(e, i, dt);
             }
@@ -640,6 +672,7 @@ namespace Game.Module.InGame
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
             victim.IsAggro = true;
+            victim.SetState(EnemyState.Hit);
             bool dead = victim.TakeDamage(damage);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
@@ -742,6 +775,7 @@ namespace Game.Module.InGame
             // 맞았으면 무조건 반응한다. 사거리가 탐지 거리보다 긴 호스트(히트맨 357)로
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
+            victim.SetState(EnemyState.Hit);
             bool dead = victim.TakeDamage(shot.Damage);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
             if (shot.LifestealPercent > 0 && _host != null)
@@ -802,22 +836,48 @@ namespace Game.Module.InGame
             PublishHp();
         }
 
+        /// <summary>
+        /// 사격 대상 선택 (기획서 A 3-3 Target Type).
+        /// 호스트마다 "누구를 먼저 때리는가"가 다르면 같은 화력도 다른 교전이 된다.
+        /// 체력 기준으로 고를 때도 사거리 밖은 후보가 아니므로 거리를 함께 본다.
+        /// </summary>
         private Unit Nearest(Vector2 from)
         {
+            var rule = _host != null && _host.Profile != null
+                ? _host.Profile.Targeting : TargetType.Nearest;
+
             Unit best = null;
             float bestD = float.MaxValue;
+            int bestHp = rule == TargetType.LowestHp ? int.MaxValue : int.MinValue;
+
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
                 float d = Vector2.Distance(from, e.Position);
-                if (d < bestD) { bestD = d; best = e; }
+
+                bool better;
+                switch (rule)
+                {
+                    case TargetType.LowestHp:
+                        better = e.Hp < bestHp || (e.Hp == bestHp && d < bestD);
+                        break;
+                    case TargetType.HighestHp:
+                        better = e.Hp > bestHp || (e.Hp == bestHp && d < bestD);
+                        break;
+                    default:
+                        better = d < bestD;
+                        break;
+                }
+                if (!better) continue;
+                best = e; bestD = d; bestHp = e.Hp;
             }
             return best;
         }
 
         private void KillEnemy(Unit u)
         {
+            u.SetState(EnemyState.Dead);
             if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
@@ -843,13 +903,23 @@ namespace Game.Module.InGame
             _possessTarget = null;
             if (_host == null && _ghost != null)
             {
-                float best = _config.PossessRange;
+                // 기획서 A 4-3 — 우선순위가 높은 적을 먼저 잡는다. 같으면 가까운 쪽.
+                // 사거리는 적마다 다를 수 있다(PossessRange 0 이면 전역 기본값).
+                int bestPri = int.MinValue;
+                float bestD = float.MaxValue;
                 for (int i = 0; i < _enemies.Count; i++)
                 {
                     var e = _enemies[i];
                     if (e == null || !e.IsPossessable) continue;
+
+                    float range = e.PossessRange > 0f ? e.PossessRange : _config.PossessRange;
                     float d = Vector2.Distance(_ghost.Position, e.Position);
-                    if (d <= best) { best = d; _possessTarget = e; }
+                    if (d > range) continue;
+
+                    if (e.PossessPriority < bestPri) continue;
+                    if (e.PossessPriority == bestPri && d >= bestD) continue;
+
+                    bestPri = e.PossessPriority; bestD = d; _possessTarget = e;
                 }
             }
             for (int i = 0; i < _enemies.Count; i++)
@@ -885,6 +955,10 @@ namespace Game.Module.InGame
                         _config.HostAttackInterval * (entry?.IntervalMul ?? 1f),
                         new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
+
+            // 기획서 A 3-3 — 빼앗은 몸은 온전하지 않다. 최대 체력의 70%로 시작한다.
+            // 이게 없으면 교체가 곧 완전 회복이라, 몸을 갈아타는 데 대가가 없어진다.
+            _host.SetHpPercent(_config.HostStartHpPercent);
 
             // 기획서 A 02 — 빙의 직후 무적(0.35) + 호스트 진입 무적(0.5). 몸을 얻는 순간이
             // 가장 취약한 지점이라, 여기서 맞으면 빙의 자체가 손해가 된다.

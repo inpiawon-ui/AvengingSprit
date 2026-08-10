@@ -45,6 +45,11 @@ namespace Game.Character
         [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
         [SerializeField] private float _attackResumeSeconds = 0.12f;
 
+        [Tooltip("빙의한 호스트가 최대 체력의 몇 %로 시작하는가 (기획서 A 3-3). " +
+                 "몸을 뺏어도 온전한 몸이 아니라는 뜻 — 교체가 공짜가 아니게 만든다.")]
+        [Range(10, 100)]
+        [SerializeField] private int _hostStartHpPercent = 70;
+
         [Header("호스트 — 표시 스탯(0~100) → 전투 수치 환산")]
         [SerializeField] private float _hostHpPerPoint = 6f;
         [SerializeField] private int _hostHpBase = 60;
@@ -95,6 +100,7 @@ namespace Game.Character
 
         public int StagesPerChapter => Mathf.Max(1, _stagesPerChapter);
         public float ExitTouchRadius => _exitTouchRadius;
+        public int HostStartHpPercent => Mathf.Clamp(_hostStartHpPercent, 10, 100);
 
         public int GhostHpMax => _ghostHpMax;
         public float GhostMoveSpeed => _ghostMoveSpeed;

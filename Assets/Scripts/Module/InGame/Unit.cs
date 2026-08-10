@@ -5,6 +5,29 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>전투 필드 위의 개체 한 기. 고스트·호스트·적·보스가 모두 이 한 종류다.</summary>
+    /// <summary>
+    /// 적 행동 상태 (기획서 A 4-1 적 상태 흐름).
+    ///   Idle → Detect → Approach → Attack → Cooldown → (Hit) → Dead
+    /// Hit 는 흐름의 단계가 아니라 어느 상태에서든 끼어드는 반응이다.
+    /// </summary>
+    public enum EnemyState
+    {
+        /// <summary>순찰·대기. 아직 플레이어를 못 봤다</summary>
+        Idle,
+        /// <summary>플레이어를 감지했다</summary>
+        Detect,
+        /// <summary>사거리 안으로 접근 중</summary>
+        Approach,
+        /// <summary>공격 중</summary>
+        Attack,
+        /// <summary>공격 후 대기</summary>
+        Cooldown,
+        /// <summary>피격 반응</summary>
+        Hit,
+        /// <summary>사망 처리</summary>
+        Dead,
+    }
+
     public enum UnitSide
     {
         Player,
@@ -62,6 +85,30 @@ namespace Game.Module.InGame
         /// 적이 왔다 갔다 하며 어그로가 끊긴 것처럼 보인다.
         /// </summary>
         public bool IsAggro { get; set; }
+
+        /// <summary>
+        /// 적 행동 상태 (기획서 A 4-1). 지금은 표시·디버그용이지만, 상태를 이름으로
+        /// 들고 있어야 나중에 AI 타입별로 분기를 넣을 자리가 생긴다.
+        /// 살아 있는 일반 적은 언제든 빙의 대상이 되므로(`IsPossessable`),
+        /// 기획서의 POSSESSABLE 은 별도 상태가 아니라 이 플래그로 표현한다.
+        /// </summary>
+        public EnemyState State { get; private set; } = EnemyState.Idle;
+
+        /// <summary>빙의 우선순위. 높을수록 먼저 잡힌다 (기획서 A 4-3).</summary>
+        public int PossessPriority { get; set; }
+
+        /// <summary>이 적에게 빙의할 수 있는 거리. 0 이면 전역 기본값을 쓴다.</summary>
+        public float PossessRange { get; set; }
+
+        public void SetState(EnemyState s)
+        {
+            if (Side != UnitSide.Enemy) return;
+            State = s;
+        }
+
+        /// <summary>최대 체력 대비 비율로 현재 체력을 정한다. 빙의 시작 체력(70%)에 쓴다.</summary>
+        public void SetHpPercent(int percent)
+            => Hp = Mathf.Clamp(Mathf.RoundToInt(HpMax * percent / 100f), 1, HpMax);
 
         public void Setup(UnitSide side, string key, string displayName, Sprite sprite,
                           int hp, int atk, float moveSpeed, float attackRange,

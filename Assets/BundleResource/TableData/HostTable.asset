@@ -30,6 +30,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 1
+    _targetType: 0
+    _possessPriority: 2
     _ultimateKey: blade_storm
     _unlockType: 0
     _unlockChapter: 0
@@ -51,6 +54,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _possessPriority: 3
     _ultimateKey: bullet_hell
     _unlockType: 1
     _unlockChapter: 1
@@ -72,6 +78,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 2
+    _possessPriority: 4
     _ultimateKey: elemental_nova
     _unlockType: 1
     _unlockChapter: 1
@@ -93,6 +102,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 1
+    _targetType: 1
+    _possessPriority: 4
     _ultimateKey: shadow_burst
     _unlockType: 1
     _unlockChapter: 1
@@ -114,6 +126,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _possessPriority: 3
     _ultimateKey: tommy_barrage
     _unlockType: 2
     _unlockChapter: 1
@@ -135,6 +150,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 1
+    _possessPriority: 5
     _ultimateKey: perfect_kill
     _unlockType: 1
     _unlockChapter: 2
@@ -156,6 +174,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 2
+    _possessPriority: 3
     _ultimateKey: astral_form
     _unlockType: 1
     _unlockChapter: 2
@@ -177,6 +198,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 2
+    _possessPriority: 5
     _ultimateKey: dragon_breath
     _unlockType: 1
     _unlockChapter: 2
@@ -198,6 +222,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 2
+    _possessPriority: 4
     _ultimateKey: system_override
     _unlockType: 2
     _unlockChapter: 2
@@ -219,6 +246,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 45
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 1
+    _possessPriority: 4
     _ultimateKey: absolute_zero
     _unlockType: 1
     _unlockChapter: 3
@@ -240,6 +270,9 @@ MonoBehaviour:
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 1
+    _moveAttack: 1
+    _targetType: 0
+    _possessPriority: 3
     _ultimateKey: grand_slam
     _unlockType: 1
     _unlockChapter: 3
@@ -261,6 +294,9 @@ MonoBehaviour:
     _lifestealPercent: 35
     _slowPercent: 0
     _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 1
+    _possessPriority: 5
     _ultimateKey: blood_tornado
     _unlockType: 2
     _unlockChapter: 3
