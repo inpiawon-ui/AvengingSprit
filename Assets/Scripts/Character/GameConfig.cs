@@ -18,12 +18,25 @@ namespace Game.Character
         [SerializeField] private int _bossEveryStages = 3;
 
         [Header("고스트")]
-        [SerializeField] private int _ghostHpMax = 120;
+        [SerializeField] private int _ghostHpMax = 100;
         [SerializeField] private float _ghostMoveSpeed = 320f;
         [SerializeField] private float _possessRange = 110f;
 
         [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
         [SerializeField] private float _ghostDamageScale = 0.22f;
+
+        [Tooltip("유령 상태에서 초당 깎이는 체력. 호스트가 살아 있는 동안에는 멈춘다. " +
+                 "Ghost HP 를 '남은 시간'으로 만들어, 빙의를 미루는 것 자체에 대가를 붙인다.")]
+        [SerializeField] private float _ghostDrainPerSecond = 3f;
+
+        [Tooltip("호스트를 잃은 직후 무적·주변 감속이 유지되는 시간. 이 동안에는 자연 감소도 멈춘다.")]
+        [SerializeField] private float _ghostProtectSeconds = 1f;
+
+        [Tooltip("보호 시간 동안 주변 적이 느려지는 비율(%).")]
+        [SerializeField] private int _protectSlowPercent = 50;
+
+        [Tooltip("빙의 직후 무적 시간. 기획서의 빙의 무적(0.35)과 호스트 진입 무적(0.5)을 이어 붙인 값.")]
+        [SerializeField] private float _possessInvulnSeconds = 0.85f;
 
         [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
         [SerializeField] private float _attackResumeSeconds = 0.12f;
@@ -81,6 +94,10 @@ namespace Game.Character
 
         public int GhostHpMax => _ghostHpMax;
         public float GhostMoveSpeed => _ghostMoveSpeed;
+        public float GhostDrainPerSecond => _ghostDrainPerSecond;
+        public float GhostProtectSeconds => _ghostProtectSeconds;
+        public int ProtectSlowPercent => _protectSlowPercent;
+        public float PossessInvulnSeconds => _possessInvulnSeconds;
         public float PossessRange => _possessRange;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 

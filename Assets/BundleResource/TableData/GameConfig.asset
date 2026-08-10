@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.GameConfig
   _roomsPerStage: 6
   _bossEveryStages: 3
-  _ghostHpMax: 120
+  _ghostHpMax: 100
   _ghostMoveSpeed: 320
   _possessRange: 110
   _ghostDamageScale: 0.22
+  _ghostDrainPerSecond: 3
+  _ghostProtectSeconds: 1
+  _protectSlowPercent: 50
+  _possessInvulnSeconds: 0.85
   _attackResumeSeconds: 0.12
   _hostHpPerPoint: 6
   _hostHpBase: 60

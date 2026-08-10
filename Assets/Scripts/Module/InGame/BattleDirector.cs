@@ -45,6 +45,10 @@ namespace Game.Module.InGame
 
         private int _roomIndex = -1;
         private int _ghostHp;
+        /// <summary>유령 자연 감소의 소수점 이월. 프레임마다 반올림하면 3/초가 안 맞는다.</summary>
+        private float _drainCarry;
+        private float _invuln;
+        private float _ghostProtect;
         private float _ultimateCharge;
         private bool _running;
         private Unit _possessTarget;
@@ -271,6 +275,9 @@ namespace Game.Module.InGame
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             float dt = Time.deltaTime;
 
+            TickGhostState(dt);
+            if (!_running) return;       // 자연 감소로 소멸했을 수 있다
+
             _ultimateCharge = Mathf.Min(_ultimateCharge + dt * _buffs.UltimateChargeMul,
                                         _config.UltimateChargeSeconds);
 
@@ -285,6 +292,40 @@ namespace Game.Module.InGame
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
+
+        /// <summary>무적 중인가. 빙의 직후와 호스트 상실 직후의 보호 시간을 함께 본다.</summary>
+        private bool IsInvulnerable => _invuln > 0f || _ghostProtect > 0f;
+
+        /// <summary>
+        /// 유령 상태의 시간 규칙 (기획서 A 1-2 · 1-3).
+        ///
+        /// Ghost HP 는 체력이 아니라 **남은 시간**이다. 유령으로 떠 있는 동안 초당 깎이므로,
+        /// "안전한 곳에서 기다린다"가 공짜가 아니게 된다. 호스트가 살아 있으면 멈춘다 —
+        /// 몸을 얻은 상태가 곧 시계를 멈춘 상태다.
+        ///
+        /// 호스트를 잃은 직후에는 보호 시간이 붙는다. 그 순간은 적 한복판이라,
+        /// 보호가 없으면 다시 빙의할 틈 없이 연쇄로 죽는다.
+        /// </summary>
+        private void TickGhostState(float dt)
+        {
+            if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
+
+            if (_ghostProtect > 0f)
+            {
+                _ghostProtect = Mathf.Max(0f, _ghostProtect - dt);
+                return;                       // 보호 중에는 자연 감소도 멈춘다
+            }
+            if (_host != null) return;        // 몸이 있으면 시계가 멈춘다
+
+            _drainCarry += _config.GhostDrainPerSecond * dt;
+            int whole = Mathf.FloorToInt(_drainCarry);
+            if (whole <= 0) return;
+
+            _drainCarry -= whole;
+            _ghostHp = Mathf.Max(0, _ghostHp - whole);
+            PublishHp();
+            if (_ghostHp == 0) Finish(false);
+        }
 
         private void TickPlayer(float dt)
         {
@@ -712,6 +753,7 @@ namespace Game.Module.InGame
 
         private void DamagePlayer(int amount)
         {
+            if (IsInvulnerable) return;
             if (_host != null)
             {
                 if (_host.TakeDamage(amount)) LoseHost();
@@ -726,6 +768,19 @@ namespace Game.Module.InGame
             if (_ghostHp == 0) Finish(false);
         }
 
+        /// <summary>보호 시간 동안 근처 적을 늦춘다. 범위는 빙의 사거리의 두 배로 잡는다.</summary>
+        private void SlowNearbyEnemies(Vector2 center)
+        {
+            float r = _config.PossessRange * 2f;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive) continue;
+                if (Vector2.Distance(e.Position, center) > r) continue;
+                e.ApplySlow(_config.ProtectSlowPercent, _config.GhostProtectSeconds);
+            }
+        }
+
         private void LoseHost()
         {
             var pos = _host.Position;
@@ -735,6 +790,13 @@ namespace Game.Module.InGame
 
             _ghost.gameObject.SetActive(true);
             _ghost.Position = pos;
+
+            // 기획서 A 1-3 — 호스트를 잃은 자리는 적 한복판이다. 보호가 없으면
+            // 다시 빙의할 틈 없이 연쇄로 죽는다. 무적과 함께 주변을 늦춘다.
+            _ghostProtect = _config.GhostProtectSeconds;
+            _drainCarry = 0f;
+            SlowNearbyEnemies(pos);
+
             _bus.Publish(new HostLostEvent { LostHostKey = key });
             PublishHp();
         }
@@ -822,6 +884,11 @@ namespace Game.Module.InGame
                         _config.HostAttackInterval * (entry?.IntervalMul ?? 1f),
                         new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
+
+            // 기획서 A 02 — 빙의 직후 무적(0.35) + 호스트 진입 무적(0.5). 몸을 얻는 순간이
+            // 가장 취약한 지점이라, 여기서 맞으면 빙의 자체가 손해가 된다.
+            _invuln = _config.PossessInvulnSeconds;
+            _ghostProtect = 0f;
 
             _bus.Publish(new PossessedEvent
             {
