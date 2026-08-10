@@ -124,11 +124,46 @@ namespace Game.Editor
                 Debug.Log("[UIAssetPipeline] 새 낱장 없음 — 리팩만 한다.");
             }
 
+            foreach (var p in Directory.GetFiles(AtlasDir, "*.spriteatlasv2"))
+                DedupePackables(p.Replace('\\', '/'));
+
             // 대상이 없어도 리팩은 항상 한다. 기존 PNG 를 덮어썼을 때
             // (재납품·재정렬) 아틀라스 안의 그림이 옛 것으로 남는 것을 막는다.
             PackAtlases();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 아틀라스의 Objects for Packing 에서 중복을 걷어낸다.
+        ///
+        /// `SpriteAtlasAsset.Add()` 는 이미 들어 있는지 보지 않고 그냥 덧붙인다.
+        /// 그래서 파이프라인을 돌릴 때마다 같은 폴더가 한 줄씩 쌓인다 —
+        /// 실제로 `hostselectpanel` 에 30줄까지 늘어나 있었다.
+        /// 팩 결과물은 같지만 목록을 읽을 수 없게 되고 팩 시간도 늘어난다.
+        /// </summary>
+        private static bool DedupePackables(string atlasPath)
+        {
+            var loaded = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasPath);
+            if (loaded == null) return false;
+
+            var packables = SpriteAtlasExtensions.GetPackables(loaded);
+            if (packables == null || packables.Length == 0) return false;
+
+            var distinct = packables.Where(o => o != null).Distinct().ToArray();
+            if (distinct.Length == packables.Length) return false;
+
+            var asset = SpriteAtlasAsset.Load(atlasPath);
+            if (asset == null) return false;
+
+            asset.Remove(packables);      // 중복분까지 통째로 걷어낸 뒤
+            asset.Add(distinct);          // 하나씩만 다시 넣는다
+            SpriteAtlasAsset.Save(asset, atlasPath);
+            AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
+
+            Debug.Log($"[UIAssetPipeline] {Path.GetFileNameWithoutExtension(atlasPath)} "
+                      + $"PackingSource {packables.Length} → {distinct.Length} (중복 제거)");
+            return true;
         }
 
         /// <summary>
@@ -232,6 +267,7 @@ namespace Game.Editor
 
                 SpriteAtlasAsset.Save(atlas, atlasPath);
                 AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
+                DedupePackables(atlasPath);
 
                 // 팩킹·텍스처 설정은 Importer 경유 (SpriteAtlasAsset 쪽은 obsolete)
                 if (AssetImporter.GetAtPath(atlasPath) is SpriteAtlasImporter imp)
