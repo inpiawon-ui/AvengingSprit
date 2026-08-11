@@ -693,12 +693,15 @@ namespace Game.Module.InGame
 
         private float CurrentSpeed => MoveSpeed * (1f - _slowPercent / 100f);
 
-        public void MoveToward(Vector2 target, float dt)
+        /// <summary>이번 프레임에 움직일 거리. 지형지물을 타고 미끄러지려면 부르는 쪽이 필요하다.</summary>
+        public Vector2 StepToward(Vector2 target, float dt)
         {
             var d = target - Position;
             float len = d.magnitude;
-            if (len < 0.001f) return;
-            Position += d / len * CurrentSpeed * dt;
+            if (len < 0.001f) return Vector2.zero;
+            return d / len * CurrentSpeed * dt;
         }
+
+        public void MoveToward(Vector2 target, float dt) => Position += StepToward(target, dt);
     }
 }

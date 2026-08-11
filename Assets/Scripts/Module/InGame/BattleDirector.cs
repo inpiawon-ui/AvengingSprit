@@ -155,6 +155,7 @@ namespace Game.Module.InGame
         /// <summary>카메라가 따라붙는 속도. 즉시 붙이면 걸음마다 화면이 튄다.</summary>
         private const float CameraFollow = 8f;
 
+        private RectTransform _floor;
         private float _pxPerMeter = 1f;
         private Vector2 _roomSize;      // 픽셀
         private float _scroll;
@@ -202,6 +203,17 @@ namespace Game.Module.InGame
 
             // 방이 창보다 크므로 잘라 내야 한다. 없으면 화면 밖 적이 상단 HUD 위에 그려진다.
             if (_field.GetComponent<RectMask2D>() == null) _field.gameObject.AddComponent<RectMask2D>();
+
+            // 바닥도 방의 일부다. 바닥만 제자리에 두면 카메라가 움직이는 것이 아니라
+            // **물건들이 미끄러지는 것**으로 보인다 — 기준이 없으면 이동을 읽을 수 없다.
+            var floorT = _field.Find("RoomFloor") as RectTransform;
+            if (floorT != null)
+            {
+                _floor = floorT;
+                var img = _floor.GetComponent<Image>();
+                // 세로로 길어진 방을 늘려 채우면 바닥 무늬가 뭉개진다. 타일로 반복한다.
+                if (img != null) img.type = Image.Type.Tiled;
+            }
             _pxPerMeter = _field.rect.width / RoomMeterWidth;
             SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
@@ -497,33 +509,78 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>발밑 판정 상자. 몸 전체로 보면 머리가 기둥에 걸려 못 지나간다.</summary>
+        private static Vector2 FootHalf(Unit u)
+        {
+            var h = ((RectTransform)u.transform).sizeDelta * 0.5f;
+            return new Vector2(h.x * 0.55f, h.y * 0.22f);
+        }
+
+        private bool BlockedAt(Vector2 pos, Vector2 half)
+        {
+            var foot = new Vector2(pos.x, pos.y - half.y);
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (!o.BlocksMove) continue;
+                if (Mathf.Abs(foot.x - o.Bounds.center.x) < o.Bounds.width * 0.5f + half.x &&
+                    Mathf.Abs(foot.y - o.Bounds.center.y) < o.Bounds.height * 0.5f + half.y)
+                    return true;
+            }
+            return false;
+        }
+
         /// <summary>
-        /// 막힌 것 안으로 들어가면 밀어낸다. 가장 얕게 겹친 축으로 빼내야
-        /// 모서리에서 반대편으로 튀어 나가지 않는다.
+        /// 막힌 것을 타고 미끄러지며 움직인다.
+        ///
+        /// 먼저 밀어 넣고 빠져나오게 하면 입력과 밀어내기가 매 프레임 싸워서
+        /// 벽에 붙었을 때 캐릭터가 떨린다. 아예 **들어가지 않게** 하는 편이 낫다.
+        /// 대각선이 막히면 x 만, 그것도 막히면 y 만 시도한다 — 벽을 따라 흐른다.
+        /// </summary>
+        private Vector2 SlideMove(Unit u, Vector2 from, Vector2 delta)
+        {
+            if (_obstacles.Count == 0) return from + delta;
+            var half = FootHalf(u);
+
+            var p = from + delta;
+            if (!BlockedAt(p, half)) return p;
+
+            var px = new Vector2(from.x + delta.x, from.y);
+            if (!BlockedAt(px, half)) return px;
+
+            var py = new Vector2(from.x, from.y + delta.y);
+            if (!BlockedAt(py, half)) return py;
+
+            return from;
+        }
+
+        /// <summary>
+        /// 이미 막힌 것 안에 있으면 밀어낸다. 스폰이나 순간이동으로 갇힌 경우의 구제책이다.
+        /// 평소 이동은 `SlideMove` 가 애초에 들어가지 않게 막는다.
+        /// 가장 얕게 겹친 축으로 빼야 모서리에서 반대편으로 튀지 않는다.
         /// </summary>
         private void ResolveObstacles(Unit u)
         {
             if (_obstacles.Count == 0 || u == null) return;
-            var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
-            // 발밑으로 판정한다. 몸 전체로 보면 머리가 기둥에 걸려 못 지나간다.
-            half = new Vector2(half.x * 0.55f, half.y * 0.22f);
+            var half = FootHalf(u);
             var p = u.Position;
-            var foot = new Vector2(p.x, p.y - half.y);
+            if (!BlockedAt(p, half)) return;
 
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
                 if (!o.BlocksMove) continue;
 
+                var foot = new Vector2(p.x, p.y - half.y);
                 float dx = foot.x - o.Bounds.center.x;
                 float dy = foot.y - o.Bounds.center.y;
                 float ox = o.Bounds.width * 0.5f + half.x - Mathf.Abs(dx);
                 float oy = o.Bounds.height * 0.5f + half.y - Mathf.Abs(dy);
                 if (ox <= 0f || oy <= 0f) continue;
 
-                if (ox < oy) p.x += Mathf.Sign(dx) * ox;
-                else p.y += Mathf.Sign(dy) * oy;
-                foot = new Vector2(p.x, p.y - half.y);
+                // 정확히 중심에 겹치면 부호가 0 이라 방향을 못 정한다. 아래로 밀어낸다.
+                if (ox < oy) p.x += (dx >= 0f ? 1f : -1f) * ox;
+                else p.y += (dy >= 0f ? 1f : -1f) * oy;
             }
             u.Position = p;
         }
@@ -558,6 +615,14 @@ namespace Game.Module.InGame
             AddDepth(_host);
             for (int i = 0; i < _enemies.Count; i++) AddDepth(_enemies[i]);
             for (int i = 0; i < _dying.Count; i++) AddDepth(_dying[i]);
+            // 문은 정렬에서 빼면 순서가 매 프레임 밀려 깜빡인다. 늘 맨 뒤에 둔다 —
+            // 방 위쪽 끝에 있어 무엇을 가릴 일이 없다.
+            for (int i = 0; i < _exits.Count; i++)
+                if (_exits[i].View != null)
+                {
+                    _depthT.Add(_exits[i].View);
+                    _depthY.Add(float.MaxValue);
+                }
 
             // 삽입 정렬 — 항목이 스무 개 남짓이고 프레임마다 거의 정렬돼 있다.
             for (int i = 1; i < _depthT.Count; i++)
@@ -619,8 +684,17 @@ namespace Game.Module.InGame
             _unitLayer.anchorMin = _unitLayer.anchorMax = new Vector2(0f, 1f);
             _unitLayer.pivot = new Vector2(0f, 1f);
             _unitLayer.sizeDelta = _roomSize;
-            _unitLayer.anchoredPosition = Vector2.zero;
             _scroll = 0f;
+            // 방 크기가 바뀌면 탄·숫자 레이어도 같은 크기·같은 자리여야 한다
+            if (_shotLayer != null) _shotLayer.sizeDelta = _roomSize;
+            if (_textLayer != null) _textLayer.sizeDelta = _roomSize;
+            if (_floor != null)
+            {
+                _floor.anchorMin = _floor.anchorMax = new Vector2(0f, 1f);
+                _floor.pivot = new Vector2(0f, 1f);
+                _floor.sizeDelta = _roomSize;
+            }
+            ApplyScroll();
         }
 
         /// <summary>
@@ -634,8 +708,24 @@ namespace Game.Module.InGame
             if (a == null || _unitLayer == null) return;
 
             _scroll = Mathf.Lerp(_scroll, WantScroll(a), 1f - Mathf.Exp(-CameraFollow * dt));
+            ApplyScroll();
+        }
+
+        /// <summary>
+        /// 스크롤을 세 레이어에 함께 먹인다.
+        ///
+        /// 탄·피해 수치는 유닛보다 위에 그리려고 **형제 레이어**로 뽑아 놨다.
+        /// 그래서 유닛 레이어만 밀면 탄과 숫자가 그 자리에 남아 캐릭터와 따로 논다 —
+        /// 방이 화면보다 길어진 뒤로 최대 400px 까지 어긋났다.
+        /// </summary>
+        private void ApplyScroll()
+        {
             // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다
-            _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
+            var at = new Vector2(0f, Mathf.Round(_scroll));
+            _unitLayer.anchoredPosition = at;
+            if (_shotLayer != null) _shotLayer.anchoredPosition = at;
+            if (_textLayer != null) _textLayer.anchoredPosition = at;
+            if (_floor != null) _floor.anchoredPosition = at;
         }
 
         private float WantScroll(Unit a)
@@ -655,7 +745,7 @@ namespace Game.Module.InGame
             var a = Avatar;
             if (a == null || _unitLayer == null) return;
             _scroll = WantScroll(a);
-            _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
+            ApplyScroll();
         }
 
         /// <summary>
@@ -1198,12 +1288,13 @@ namespace Game.Module.InGame
             if (!moving) me.SetMoving(false);
             if (moving)
             {
-                var p = me.Position + MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt;
+                // 막힌 것을 타고 미끄러진다. 밀어 넣고 빼내면 벽에서 캐릭터가 떨린다.
+                var p = SlideMove(me, me.Position,
+                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt);
                 var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
                 p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
                 p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
                 me.Position = p;
-                ResolveObstacles(me);   // 기둥·바리케이드를 통과하지 않는다
 
                 // 걷는 쪽을 바라본다. 아래 `return` 때문에 이동 중에는 조준 쪽
                 // 방향 전환에 도달하지 못하므로, 여기서 돌려 주지 않으면
@@ -1314,7 +1405,7 @@ namespace Game.Module.InGame
                 if (d > e.AttackRange)
                 {
                     e.SetState(EnemyState.Approach);
-                    e.MoveToward(me.Position, dt);
+                    e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
                     e.SetMoving(true);
                 }
                 else if (e.TickAttack(dt))
@@ -1362,7 +1453,7 @@ namespace Game.Module.InGame
 
             e.Position += push.normalized * (e.MoveSpeed * SeparationSpeedRatio) * dt;
             ClampToField(e);
-            ResolveObstacles(e);
+            ResolveObstacles(e);   // 스폰이나 밀림으로 갇힌 경우의 구제책
         }
 
         // ── 보스 ─────────────────────────────────────────────────
