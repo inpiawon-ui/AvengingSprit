@@ -88,6 +88,25 @@ namespace Game.Character
         [Tooltip("Scope 가 HostOnly 일 때만 쓴다")]
         [SerializeField] private string _hostKey;
 
+        [Header("정본 대조 (BUFF_DB)")]
+        [Tooltip("정본 BuffID(BUF_U01 …). 비어 있으면 우리 쪽에서만 있는 버프다")]
+        [SerializeField] private string _canonId;
+        [Tooltip("정본 Effect 원문. 구현 여부와 무관하게 그대로 담아 둔다 — " +
+                 "나중에 시스템이 붙을 때 무엇을 만들어야 하는지가 여기 적혀 있다")]
+        [SerializeField] private string _canonEffect;
+        [Tooltip("정본 Pool — Universal / Tag / Synergy / AttackStyle")]
+        [SerializeField] private string _pool;
+        [Tooltip("이 챕터부터 뽑힌다. 정본 CH1/CH2/CH3 열")]
+        [SerializeField] private int _fromChapter = 1;
+        [Tooltip("정본 Weight — 뽑힐 가중치")]
+        [SerializeField] private float _weight = 1f;
+        [Tooltip("지금 실제로 동작하는가.
+" +
+                 "정본 효과는 산문이라(예: 표식 대상 명중 시 릴레이 탄 1발) 표식·장판·저주 같은 " +
+                 "시스템이 있어야 구현된다. 아직 없는 것은 꺼 두고 풀에서 뺀다 — " +
+                 "고르면 아무 일도 안 일어나는 카드가 3택1 에 섞이면 선택 자체가 거짓이 된다.")]
+        [SerializeField] private bool _implemented = true;
+
         public string BuffKey => _buffKey;
         public string NameKr => _nameKr;
         public string Description => _description;
@@ -98,6 +117,12 @@ namespace Game.Character
         public BuffScope Scope => _scope;
         public BuffTag Tag => _tag;
         public string HostKey => _hostKey;
+        public string CanonId => _canonId;
+        public string CanonEffect => _canonEffect;
+        public string Pool => _pool;
+        public int FromChapter => Mathf.Max(1, _fromChapter);
+        public float Weight => _weight <= 0f ? 1f : _weight;
+        public bool Implemented => _implemented;
 
         /// <summary>지금 이 호스트를 쓰는 동안 켜져 있는가. 호스트가 없으면 범용만 켜진다.</summary>
         public bool IsActiveFor(HostEntry host) => _scope switch
@@ -146,7 +171,7 @@ namespace Game.Character
         /// 고르는 순간 꺼져 있어서, 3택1 이 사실상 2택이 되어 버린다.
         /// </summary>
         public void Draw(List<BuffEntry> into, int count, HashSet<string> exclude,
-                         System.Random rng, HostEntry host = null)
+                         System.Random rng, HostEntry host = null, int chapter = 1)
         {
             into.Clear();
             _common.Clear(); _tag.Clear(); _hostOnly.Clear();
@@ -155,6 +180,11 @@ namespace Game.Character
             {
                 var e = _entries[i];
                 if (exclude != null && exclude.Contains(e.BuffKey)) continue;
+                // 아직 동작하지 않는 버프는 뽑지 않는다. 고르면 아무 일도 안 일어나는
+                // 카드가 섞이면 3택1 이라는 선택 자체가 거짓이 된다.
+                if (!e.Implemented) continue;
+                // 정본은 챕터마다 열리는 풀이 다르다(BUFF_DB 의 CH1/CH2/CH3 열)
+                if (e.FromChapter > chapter) continue;
                 switch (e.Scope)
                 {
                     case BuffScope.Common: _common.Add(e); break;

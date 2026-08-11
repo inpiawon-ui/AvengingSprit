@@ -1866,7 +1866,8 @@ namespace Game.Module.InGame
         private void OfferBuff()
         {
             if (_awaitingBuff) return;
-            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile);
+            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile,
+                             _player != null ? _player.CurrentChapter : 1);
             if (_offer.Count == 0) return;
 
             _awaitingBuff = true;

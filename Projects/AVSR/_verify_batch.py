@@ -12,6 +12,7 @@
 import io
 import os
 import sys
+from collections import deque
 
 from PIL import Image, ImageDraw
 
@@ -38,6 +39,7 @@ TOL_FOOT_Y = 1
 TOL_HEAD = 3
 TOL_HEAD_WALK = 3  # 걷기는 상하 흔들림을 허용한다
 TOL_HEAD_X = 3     # 걷기 몸통 흔들림. 머리 중심으로 잰다
+HOLE_MAX = 3.0     # 몸 안 구멍 비율(%). idle 실측이 0.1~0.6% 다
 
 
 def metrics(im):
@@ -54,6 +56,43 @@ def metrics(im):
     semi = sum(1 for x, y in pts if 8 < px[x, y][3] < 248)
     return ((min(feet) + max(feet)) / 2, y1, y0, len(pts), semi,
             (min(head) + max(head)) / 2)
+
+
+def holes(im):
+    """몸 안에 뚫린 투명 구멍의 비율(%).
+
+    반투명 검사만으로는 못 잡는다. 알파가 0과 255뿐이어도 몸 한가운데가
+    송송 뚫려 있으면 화면에서 배경이 비쳐 그림이 삭은 것처럼 보인다.
+    실제로 샐러맨더 동작 35장이 몸의 8~45%가 구멍인 채로 검수를 통과했다.
+
+    테두리에서 이어지는 투명은 바깥이다. 거기서 못 닿는 투명만 구멍으로 센다.
+    """
+    px = im.load()
+    w, h = im.size
+    seen = [[False] * h for _ in range(w)]
+    q = deque()
+    for x in range(w):
+        for y in (0, h - 1):
+            if px[x, y][3] <= 8 and not seen[x][y]:
+                seen[x][y] = True
+                q.append((x, y))
+    for y in range(h):
+        for x in (0, w - 1):
+            if px[x, y][3] <= 8 and not seen[x][y]:
+                seen[x][y] = True
+                q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < w and 0 <= ny < h and not seen[nx][ny] and px[nx, ny][3] <= 8:
+                seen[nx][ny] = True
+                q.append((nx, ny))
+
+    inner = sum(1 for y in range(h) for x in range(w)
+                if px[x, y][3] <= 8 and not seen[x][y])
+    opaque = sum(1 for y in range(h) for x in range(w) if px[x, y][3] > 8)
+    return inner / max(1, opaque) * 100
 
 
 def palette(im):
@@ -116,6 +155,12 @@ def check(key):
 
             if semi:
                 fails.append(f'{tag} 반투명 {semi}px (이진 알파여야 한다)')
+
+            # 몸에 구멍이 뚫렸는가. idle 은 0.1~0.6% 가 정상 범위다(눈·입 같은 실제 구멍).
+            # 그보다 크면 그림이 삭은 것이라 화면에서 배경이 비친다.
+            hole = holes(im)
+            if hole > HOLE_MAX:
+                fails.append(f'{tag} 몸에 구멍 {hole:.1f}% — 배경이 비친다')
 
             # 가로 기준은 동작마다 다르다. 하나로 재면 멀쩡한 것을 반려한다.
             #   공격·피격 — 발을 붙인 채 상체만 움직이니 **발 중심**
