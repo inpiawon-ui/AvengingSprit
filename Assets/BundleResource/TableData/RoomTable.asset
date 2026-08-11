@@ -1,0 +1,1631 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29c4d3a029e93ce4d999bb97e0429729, type: 3}
+  m_Name: RoomTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.RoomTable
+  _contractVersion: 1.5.0
+  _rooms:
+  - _roomId: CH1_N00
+    _chapter: 1
+    _type: Gate
+    _route: MAIN
+    _intent: "Possession Gate: \uC9C1\uC811 \uC774\uB3D9\uD574 \uCCAB Host \uC120\uD0DD"
+    _isChapterStart: 1
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N01
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH1_N01
+    _chapter: 1
+    _type: Open Arena
+    _route: MAIN
+    _intent: "\uC774\uB3D9/\uC815\uC9C0 \uC790\uB3D9\uACF5\uACA9 \uD559\uC2B5"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N02
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N01_W1_1
+      _actorId: E001
+      _at: {x: 2, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N01_W1_2
+      _actorId: E001
+      _at: {x: 6.4, y: 7.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N01_W1_3
+      _actorId: E002
+      _at: {x: 4.2, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E001x2,E002x1
+      _clearRule: Clear Gate
+  - _roomId: CH1_N02
+    _chapter: 1
+    _type: Lane
+    _route: MAIN
+    _intent: "\uC6D0\uAC70\uB9AC/\uADFC\uC811 \uD63C\uD569\uACFC \uC720\uC9C0 \uAC00\uCE58"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N03
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N02_W1_1
+      _actorId: E001
+      _at: {x: 2.12, y: 6.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N02_W1_2
+      _actorId: E001
+      _at: {x: 6.52, y: 7.3}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N02_W1_3
+      _actorId: E002
+      _at: {x: 2.12, y: 10.3}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N02_W1_4
+      _actorId: E004
+      _at: {x: 6.52, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E001x2,E002x1,E004x1
+      _clearRule: Clear Gate
+  - _roomId: CH1_N03
+    _chapter: 1
+    _type: Pillar
+    _route: MAIN
+    _intent: "\uCCAB Tactical Possession \uC548\uC804 \uAE30\uD68C"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N04
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N03_W1_1
+      _actorId: E004
+      _at: {x: 1.28, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N03_W1_2
+      _actorId: E002
+      _at: {x: 6.88, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N03_W1_3
+      _actorId: E002
+      _at: {x: 4.08, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N03_W1_4
+      _actorId: E001
+      _at: {x: 1.28, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E004x1,E002x2,E001x1
+      _clearRule: Clear Gate
+  - _roomId: CH1_N04
+    _chapter: 1
+    _type: Crossfire
+    _route: MAIN
+    _intent: "\uD0C4\uB9C9 \uC0AC\uC774 Safe Zone \uC77D\uAE30"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N05
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N04_W1_1
+      _actorId: E001
+      _at: {x: 1, y: 6.7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N04_W1_2
+      _actorId: E001
+      _at: {x: 7.4, y: 7.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N04_W1_3
+      _actorId: E001
+      _at: {x: 1, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N04_W1_4
+      _actorId: E004
+      _at: {x: 7.4, y: 11.6}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N04_W1_5
+      _actorId: E010
+      _at: {x: 4.2, y: 9.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E001x3,E004x1,E010x1
+      _clearRule: Clear Gate
+  - _roomId: CH1_N05
+    _chapter: 1
+    _type: Recovery
+    _route: MAIN
+    _intent: "Ghost HP/Host HP \uC790\uC6D0 \uC120\uD0DD"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N06
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH1_N06
+    _chapter: 1
+    _type: Hazard Lane
+    _route: MAIN
+    _intent: "Salamander \uC870\uAC74 \uBE59\uC758\xB7Burn \uC18C\uAC1C"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N07
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N06_W1_1
+      _actorId: E003
+      _at: {x: 1.38, y: 6.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N06_W1_2
+      _actorId: E002
+      _at: {x: 6.78, y: 7.1}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N06_W1_3
+      _actorId: E002
+      _at: {x: 1.88, y: 10.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N06_W1_4
+      _actorId: E001
+      _at: {x: 6.28, y: 11.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N06_W1_5
+      _actorId: E001
+      _at: {x: 4.08, y: 8.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E003x1,E002x2,E001x2
+      _clearRule: Clear Gate
+  - _roomId: CH1_N07
+    _chapter: 1
+    _type: Split Arena
+    _route: MAIN
+    _intent: "\uCCAB Directed Synergy: Mark\u2192Ninja"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N08
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N07_W1_1
+      _actorId: E011
+      _at: {x: 1.5, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N07_W1_2
+      _actorId: E001
+      _at: {x: 6.9, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N07_W1_3
+      _actorId: E001
+      _at: {x: 1.8, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N07_W1_4
+      _actorId: E002
+      _at: {x: 6.6, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N07_W1_5
+      _actorId: E002
+      _at: {x: 3.1, y: 9.3}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E011x1,E001x2,E002x2
+      _clearRule: Clear Gate
+  - _roomId: CH1_N08
+    _chapter: 1
+    _type: Elite Arena
+    _route: MAIN
+    _intent: "Elite: Enforcer\uC640 Host \uC720\uC9C0/\uAD50\uCCB4 \uAC80\uC99D"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N09
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N08_W1_1
+      _actorId: EL01
+      _at: {x: 4.32, y: 9.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N08_W1_2
+      _actorId: E001
+      _at: {x: 1.52, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N08_W1_3
+      _actorId: E001
+      _at: {x: 7.12, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N08_W1_4
+      _actorId: E002
+      _at: {x: 1.92, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N08_W1_5
+      _actorId: E002
+      _at: {x: 6.72, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: EL01x1,E002x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E001x2
+      _clearRule: Clear Gate
+  - _roomId: CH1_N09
+    _chapter: 1
+    _type: Build Check
+    _route: MAIN
+    _intent: "Boss \uC804 \uCD5C\uC885 Buff\uC640 Host \uACF5\uAE09"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH1_N10
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH1_N09_W1_1
+      _actorId: E005
+      _at: {x: 1.88, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N09_W1_2
+      _actorId: E001
+      _at: {x: 6.28, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N09_W1_3
+      _actorId: E001
+      _at: {x: 4.08, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH1_N09_W1_4
+      _actorId: E015
+      _at: {x: 1.88, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E005x1,E001x2,E015x1
+      _clearRule: Clear Gate
+  - _roomId: CH1_N10
+    _chapter: 1
+    _type: Boss Arena
+    _route: MAIN
+    _intent: "Robot Snakes: \uBE4C\uB4DC \uAC80\uC99D\u2192\uAD50\uCCB4 \uAE30\uD68C\u2192\uD53C\uB0A0\uB808"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 16
+    _cameraMode: CENTER_LOCK
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 15.2}
+    _nextRoomIds: []
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: B01
+    _bossAt: {x: 4.2, y: 11.8}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH2_N00
+    _chapter: 2
+    _type: Gate
+    _route: MAIN
+    _intent: "Unlocked Pool 3Role Host \uC120\uD0DD"
+    _isChapterStart: 1
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N01
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH2_N01
+    _chapter: 2
+    _type: Pillar
+    _route: MAIN
+    _intent: "Shield/Armor \uD63C\uD569 \uB3C4\uC785"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N02
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N01_W1_1
+      _actorId: E017
+      _at: {x: 1.28, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N01_W1_2
+      _actorId: E007
+      _at: {x: 6.88, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N01_W1_3
+      _actorId: E007
+      _at: {x: 4.08, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N01_W1_4
+      _actorId: E002
+      _at: {x: 1.28, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N01_W1_5
+      _actorId: E002
+      _at: {x: 6.88, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E017x1,E007x2,E002x2
+      _clearRule: Clear Gate
+  - _roomId: CH2_N02
+    _chapter: 2
+    _type: Crossfire
+    _route: MAIN
+    _intent: "Condition Possession \uC9C4\uD589 UI"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N03
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N02_W1_1
+      _actorId: E008
+      _at: {x: 1, y: 6.7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N02_W1_2
+      _actorId: E018
+      _at: {x: 7.4, y: 7.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N02_W1_3
+      _actorId: E018
+      _at: {x: 1, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N02_W1_4
+      _actorId: E001
+      _at: {x: 7.4, y: 11.6}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N02_W1_5
+      _actorId: E001
+      _at: {x: 4.2, y: 9.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E008x1,E001x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E018x2
+      _clearRule: Clear Gate
+  - _roomId: CH2_N03
+    _chapter: 2
+    _type: Route Choice
+    _route: MAIN
+    _intent: "\uC548\uC804 \uD68C\uBCF5 vs \uACE0\uC704\uD5D8 Host Opportunity"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 0, y: 13.4}
+    _nextRoomIds:
+    - CH2_N04A
+    - CH2_N04B
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH2_N04A
+    _chapter: 2
+    _type: Hazard
+    _route: RISK
+    _intent: "\uACE0\uC704\uD5D8: Medium/Vampire \uACF5\uAE09"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N05
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N04A_W1_1
+      _actorId: E012
+      _at: {x: 1.38, y: 6.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04A_W1_2
+      _actorId: E014
+      _at: {x: 6.78, y: 7.1}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04A_W1_3
+      _actorId: E002
+      _at: {x: 1.88, y: 10.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04A_W1_4
+      _actorId: E002
+      _at: {x: 6.28, y: 11.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04A_W1_5
+      _actorId: E018
+      _at: {x: 4.08, y: 8.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E012x1,E002x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E014x1,E018x1
+      _clearRule: Clear Gate
+  - _roomId: CH2_N04B
+    _chapter: 2
+    _type: Recovery
+    _route: SAFE
+    _intent: "\uC800\uC704\uD5D8: \uD68C\uBCF5 \uB300\uC2E0 \uBCF4\uC0C1 \uAC10\uC18C"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N05
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N04B_W1_1
+      _actorId: E006
+      _at: {x: 2, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04B_W1_2
+      _actorId: E001
+      _at: {x: 6.4, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04B_W1_3
+      _actorId: E001
+      _at: {x: 4.2, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N04B_W1_4
+      _actorId: E009
+      _at: {x: 2, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves: []
+  - _roomId: CH2_N05
+    _chapter: 2
+    _type: Siege
+    _route: MERGE
+    _intent: "\uC124\uCE58\uBB3C/\uC7A5\uD310 \uB204\uC801 \uC720\uC9C0 \uAC00\uCE58"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N06
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N05_W1_1
+      _actorId: E007
+      _at: {x: 1.42, y: 8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N05_W1_2
+      _actorId: E007
+      _at: {x: 7.22, y: 8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N05_W1_3
+      _actorId: E005
+      _at: {x: 2.32, y: 11.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH2_N05_W2_4
+      _actorId: E017
+      _at: {x: 6.32, y: 11.4}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH2_N05_W2_5
+      _actorId: E018
+      _at: {x: 4.32, y: 9.8}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH2_N05_W2_6
+      _actorId: E018
+      _at: {x: 4.32, y: 12.6}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E007x2,E017x1
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E005x1,E018x2
+      _clearRule: Clear Gate
+  - _roomId: CH2_N06
+    _chapter: 2
+    _type: Elite Arena
+    _route: MAIN
+    _intent: "Elite Shield Captain: Break/Back \uC591\uB9BD"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N07
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N06_W1_1
+      _actorId: EL02
+      _at: {x: 4.08, y: 9.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N06_W1_2
+      _actorId: E007
+      _at: {x: 1.28, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N06_W1_3
+      _actorId: E007
+      _at: {x: 6.88, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N06_W1_4
+      _actorId: E002
+      _at: {x: 1.68, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: EL02x1,E002x1
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E007x2
+      _clearRule: Clear Gate
+  - _roomId: CH2_N07
+    _chapter: 2
+    _type: Open Arena
+    _route: MAIN
+    _intent: "Vampire sustain\uC640 Host \uC720\uC9C0 \uD310\uB2E8"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N08
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH2_N07_W1_1
+      _actorId: E014
+      _at: {x: 2, y: 7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N07_W1_2
+      _actorId: E006
+      _at: {x: 6.4, y: 7.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N07_W1_3
+      _actorId: E006
+      _at: {x: 4.2, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N07_W1_4
+      _actorId: E001
+      _at: {x: 1.4, y: 11.6}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH2_N07_W1_5
+      _actorId: E001
+      _at: {x: 6.9, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E014x1,E001x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E006x2
+      _clearRule: Clear Gate
+  - _roomId: CH2_N08
+    _chapter: 2
+    _type: Build Choice
+    _route: MAIN
+    _intent: "Tag Build 2\uB2E8\uACC4 \uC644\uC131"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH2_N09
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH2_N09
+    _chapter: 2
+    _type: Boss Arena
+    _route: MAIN
+    _intent: "Demolisher: Shield cycle\uACFC switch window"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 16
+    _cameraMode: CENTER_LOCK
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 15.2}
+    _nextRoomIds: []
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: B02
+    _bossAt: {x: 4.2, y: 11.8}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH3_N00
+    _chapter: 3
+    _type: Gate
+    _route: MAIN
+    _intent: 12 Host Pool 3Role weighted selection
+    _isChapterStart: 1
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N01
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH3_N01
+    _chapter: 3
+    _type: Split Arena
+    _route: MAIN
+    _intent: "Mixed pressure \uBCF8\uAC8C\uC784 \uC2DC\uC791"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N02
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N01_W1_1
+      _actorId: E013
+      _at: {x: 1.62, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N01_W1_2
+      _actorId: E006
+      _at: {x: 7.02, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N01_W1_3
+      _actorId: E002
+      _at: {x: 1.92, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N01_W2_4
+      _actorId: E002
+      _at: {x: 6.72, y: 11.2}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N01_W2_5
+      _actorId: E018
+      _at: {x: 3.22, y: 9.3}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N01_W2_6
+      _actorId: E018
+      _at: {x: 5.42, y: 9.3}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E013x1,E002x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E006x1,E018x2
+      _clearRule: Clear Gate
+  - _roomId: CH3_N02
+    _chapter: 3
+    _type: Hazard Crossfire
+    _route: MAIN
+    _intent: "Gimmick+Trait \uACB0\uD569"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N03
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N02_W1_1
+      _actorId: E012
+      _at: {x: 0.88, y: 6.7}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N02_W1_2
+      _actorId: E014
+      _at: {x: 7.28, y: 7.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N02_W1_3
+      _actorId: E007
+      _at: {x: 0.88, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N02_W1_4
+      _actorId: E007
+      _at: {x: 7.28, y: 11.6}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N02_W1_5
+      _actorId: E018
+      _at: {x: 4.08, y: 9.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E012x1,E007x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E014x1,E018x1
+      _clearRule: Clear Gate
+  - _roomId: CH3_N03
+    _chapter: 3
+    _type: Route Choice
+    _route: MAIN
+    _intent: "\uD604\uC7AC Host/Build/Ghost HP \uAE30\uBC18 \uC120\uD0DD"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 0, y: 13.4}
+    _nextRoomIds:
+    - CH3_N04A
+    - CH3_N04B
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH3_N04A
+    _chapter: 3
+    _type: Lane Siege
+    _route: MAINTAIN
+    _intent: "\uC720\uC9C0 \uCE5C\uD654: Ult/Deploy \uB204\uC801 \uBCF4\uC0C1"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N05
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N04A_W1_1
+      _actorId: E013
+      _at: {x: 1.42, y: 8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04A_W1_2
+      _actorId: E013
+      _at: {x: 7.22, y: 8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04A_W1_3
+      _actorId: E017
+      _at: {x: 2.32, y: 11.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04A_W1_4
+      _actorId: E007
+      _at: {x: 6.32, y: 11.4}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04A_W1_5
+      _actorId: E007
+      _at: {x: 4.32, y: 9.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E013x2,E007x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E017x1
+      _clearRule: Clear Gate
+  - _roomId: CH3_N04B
+    _chapter: 3
+    _type: Host Gauntlet
+    _route: SWITCH
+    _intent: "\uAD50\uCCB4 \uCE5C\uD654: \uC870\uAC74 Host \uC5F0\uC18D \uAE30\uD68C"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N05
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N04B_W1_1
+      _actorId: E003
+      _at: {x: 1.38, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04B_W1_2
+      _actorId: E011
+      _at: {x: 6.78, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04B_W1_3
+      _actorId: E014
+      _at: {x: 1.68, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04B_W1_4
+      _actorId: E002
+      _at: {x: 6.48, y: 11.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N04B_W1_5
+      _actorId: E002
+      _at: {x: 2.98, y: 9.3}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E003x1,E014x1
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E011x1,E002x2
+      _clearRule: Clear Gate
+  - _roomId: CH3_N05
+    _chapter: 3
+    _type: Recovery Choice
+    _route: MERGE
+    _intent: "Ghost \uD68C\uBCF5 vs Rare Buff"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N06
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH3_N06
+    _chapter: 3
+    _type: Elite Arena
+    _route: MAIN
+    _intent: 'Elite Arc Warden: Control immunity windows'
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N07
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N06_W1_1
+      _actorId: EL03
+      _at: {x: 4.32, y: 9.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N06_W1_2
+      _actorId: E010
+      _at: {x: 1.52, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N06_W1_3
+      _actorId: E018
+      _at: {x: 7.12, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N06_W1_4
+      _actorId: E018
+      _at: {x: 1.92, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: EL03x1,E018x2
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E010x1
+      _clearRule: Clear Gate
+  - _roomId: CH3_N07
+    _chapter: 3
+    _type: Labyrinth
+    _route: MAIN
+    _intent: "\uBCBD \uBC18\uC0AC\xB7\uC9C0\uD615 \uC2DC\uB108\uC9C0 \uD655\uC778"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N08
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N07_W1_1
+      _actorId: E012
+      _at: {x: 1.18, y: 6.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N07_W1_2
+      _actorId: E015
+      _at: {x: 6.98, y: 7.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N07_W1_3
+      _actorId: E015
+      _at: {x: 2.08, y: 10.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N07_W2_4
+      _actorId: E013
+      _at: {x: 6.08, y: 11.4}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N07_W2_5
+      _actorId: E002
+      _at: {x: 4.08, y: 8.6}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    - _wave: 2
+      _spawnId: SP_CH3_N07_W2_6
+      _actorId: E002
+      _at: {x: 4.08, y: 12.2}
+      _facing: S
+      _delaySeconds: 2
+      _trigger: WAVE_CLEAR
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E012x1,E013x1
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E015x2,E002x2
+      _clearRule: Clear Gate
+  - _roomId: CH3_N08
+    _chapter: 3
+    _type: Final Trial
+    _route: MAIN
+    _intent: "Dragoon \uC870\uAC74\uACFC \uD6A8\uACFC \uACC4\uC2B9 \uD53C\uB0A0\uB808
+      \uC900\uBE44"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N09
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns:
+    - _wave: 1
+      _spawnId: SP_CH3_N08_W1_1
+      _actorId: E016
+      _at: {x: 4.2, y: 9.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N08_W1_2
+      _actorId: E003
+      _at: {x: 1.4, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N08_W1_3
+      _actorId: E008
+      _at: {x: 7, y: 7.2}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    - _wave: 1
+      _spawnId: SP_CH3_N08_W1_4
+      _actorId: E017
+      _at: {x: 1.8, y: 11.8}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_START
+      _telegraph: RING_0.8S
+    _waves:
+    - _index: 1
+      _startDelay: 0
+      _composition: E016x1,E008x1
+      _clearRule: Next Wave
+    - _index: 2
+      _startDelay: 3
+      _composition: E003x1,E017x1
+      _clearRule: Clear Gate
+  - _roomId: CH3_N09
+    _chapter: 3
+    _type: Boss Prep
+    _route: MAIN
+    _intent: "Boss \uC9C4\uC785 Host/\uD68C\uBCF5/Build \uCD5C\uC885 \uACB0\uC815"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 14
+    _cameraMode: VERTICAL_FOLLOW
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 13.4}
+    _nextRoomIds:
+    - CH3_N10
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: 
+    _bossAt: {x: 0, y: 0}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
+  - _roomId: CH3_N10
+    _chapter: 3
+    _type: Boss Arena
+    _route: MAIN
+    _intent: "Python: \uB3C5\uAD6C\uB984\xB7\uC9C0\uBA74\xB7\uBBF8\uB2C8\uC5B8 \uBCF5\uD569
+      \uC2DC\uD5D8"
+    _isChapterStart: 0
+    _width: 8.4
+    _height: 16
+    _cameraMode: CENTER_LOCK
+    _entry: {x: 4.2, y: 0.8}
+    _exit: {x: 4.2, y: 15.2}
+    _nextRoomIds: []
+    _unlockRule: ROOM_CLEAR_OR_INTERACTION
+    _bossId: B03
+    _bossAt: {x: 4.2, y: 11.8}
+    _playerSpawn: {x: 4.2, y: 1.7}
+    _spawns: []
+    _waves: []
