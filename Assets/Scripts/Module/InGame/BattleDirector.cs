@@ -503,7 +503,21 @@ namespace Game.Module.InGame
             TickExit();
 
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
-            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
+            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff)
+            {
+                // ⚠ 진단용 — "적이 남았는데 클리어가 뜬다"는 제보를 추적한다.
+                //    화면에 보이는데 목록에서 빠진 몸이 있는지 함께 남긴다.
+                int alive = 0;
+                var layer = _unitLayer;
+                for (int i = 0; i < layer.childCount; i++)
+                {
+                    var u = layer.GetChild(i).GetComponent<Unit>();
+                    if (u != null && u.Side == UnitSide.Enemy && u.IsAlive) alive++;
+                }
+                Debug.Log($"[Battle] 룸 클리어 판정 — 방 {_roomIndex}({_roomKind}) "
+                          + $"목록 {_enemies.Count} / 화면에 살아있는 적 {alive} / 쓰러지는 중 {_dying.Count}");
+                OnRoomCleared();
+            }
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -1088,6 +1102,7 @@ namespace Game.Module.InGame
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
+            ShowDamage(victim.Position, shot.Damage, toEnemy: true);
             bool dead = victim.TakeDamage(shot.Damage);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
             if (shot.LifestealPercent > 0 && _host != null)
@@ -1417,6 +1432,7 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null) continue;
+                ShowDamage(e.Position, _config.UltimateDamage, toEnemy: true);
                 if (e.TakeDamage(_config.UltimateDamage)) KillEnemy(e);
                 else if (e.IsBoss)
                     _bus.Publish(new BossHpChangedEvent { BossHp = e.Hp, BossHpMax = e.HpMax });
