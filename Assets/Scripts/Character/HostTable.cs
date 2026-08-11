@@ -112,6 +112,10 @@ namespace Game.Character
         [SerializeField] private BuffTag _tag = BuffTag.None;
 
         [Header("적으로 등장할 때")]
+        [Tooltip("정본의 EnemyID(E001 …). 방 데이터의 스폰이 이 ID 로 배우를 가리킨다.\n" +
+                 "대조표: Projects/AVSR/AVSR_Roster.md")]
+        [SerializeField] private string _enemyId;
+
         [Tooltip("빙의 우선순위. 높을수록 먼저 잡힌다. 같으면 가까운 쪽 (기획서 A 4-3)")]
         [SerializeField] private int _possessPriority;
 
@@ -152,6 +156,7 @@ namespace Game.Character
         public bool MoveAttack => _moveAttack;
         public TargetType Targeting => _targetType;
         public BuffTag Tag => _tag;
+        public string EnemyId => _enemyId;
         public int PossessPriority => _possessPriority;
         public PossessKind PossessKind => _possessKind;
         public int PossessHpPercent => Mathf.Clamp(_possessHpPercent, 1, 100);

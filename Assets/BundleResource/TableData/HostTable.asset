@@ -33,6 +33,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E001
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
@@ -60,6 +61,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E004
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
@@ -87,6 +89,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E003
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
@@ -114,6 +117,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E010
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
@@ -141,6 +145,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E011
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
@@ -168,6 +173,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E007
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
@@ -195,6 +201,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E008
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 45
@@ -222,6 +229,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E009
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
@@ -249,6 +257,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E014
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 35
@@ -276,6 +285,7 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
+    _enemyId: E015
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100

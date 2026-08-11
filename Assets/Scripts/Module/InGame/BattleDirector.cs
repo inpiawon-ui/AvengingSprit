@@ -169,6 +169,8 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
 
+            try { _rooms = await res.LoadAsync<RoomTable>("TableData/RoomTable"); }
+            catch (Exception e) { Debug.LogWarning($"[Battle] RoomTable 없음 — 절차적 생성으로 간다. {e.Message}"); }
             try { _bossTable = await res.LoadAsync<BossTable>("TableData/BossTable"); }
             catch (Exception e) { Debug.LogError($"[Battle] BossTable 로드 실패 — {e.Message}"); }
             try { _buffTable = await res.LoadAsync<BuffTable>("TableData/BuffTable"); }
@@ -240,6 +242,78 @@ namespace Game.Module.InGame
                 return;
             }
             EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position, 100);
+        }
+
+        // ── 정본 방 ───────────────────────────────────────────────
+        // 절차적 생성과 나란히 둔다. `_canonRoomId` 가 가리키는 방이 테이블에 있으면
+        // 그 방을 쓰고, 없으면 예전 방식으로 만든다. 34방을 한 번에 갈아 끼우면
+        // 어디서 깨졌는지 알 수 없어서, 한 방씩 옮겨 붙인다.
+        private const string FirstCanonRoom = "CH1_N01";
+
+        private RoomTable _rooms;
+        private RoomEntry _canonRoom;
+        private string _canonRoomId = FirstCanonRoom;
+        private readonly HashSet<string> _missingActors = new();
+
+        /// <summary>정본 좌표(미터, 좌하단 기준) → 우리 좌표(픽셀, 좌상단 기준 · 아래가 음수).</summary>
+        private Vector2 ToPixels(Vector2 meters)
+            => new(meters.x * _pxPerMeter, -(_roomSize.y - meters.y * _pxPerMeter));
+
+        private static RoomKind KindOfCanon(RoomEntry room)
+            => room.IsBoss ? RoomKind.Boss
+             : room.Type != null && room.Type.StartsWith("Elite") ? RoomKind.Elite
+             : room.Type != null && room.Type.StartsWith("Recovery") ? RoomKind.Rest
+             : RoomKind.Normal;
+
+        /// <summary>
+        /// 정본 EnemyID(E001 …) 로 프로필을 찾는다.
+        /// 아직 그림이 없는 배우는 대역을 세운다 — null 로 두면 **보이지 않는 적**이 되어
+        /// 방이 클리어되지 않는다. 무엇이 대역인지는 한 번만 알린다.
+        /// </summary>
+        private HostEntry ActorProfile(string actorId, IReadOnlyList<HostEntry> hosts)
+        {
+            for (int i = 0; i < hosts.Count; i++)
+                if (hosts[i].EnemyId == actorId) return hosts[i];
+
+            if (_missingActors.Add(actorId))
+                Debug.LogWarning($"[Battle] {actorId} 의 그림이 아직 없다 — 대역으로 세운다");
+            return hosts.Count > 0 ? hosts[0] : null;
+        }
+
+        /// <summary>
+        /// 정본 방 하나를 세운다. 스폰 출처는 `layout.enemySpawns` 하나뿐이다(SPAWN_SRC_01).
+        ///
+        /// 지연 스폰·트리거 스폰은 아직 다루지 않는다. `ROOM_START` 가 아닌 줄은
+        /// 건너뛰지 말고 함께 세운다 — 안 그러면 방이 영영 클리어되지 않는다.
+        /// 웨이브는 그다음 단계다.
+        /// </summary>
+        private void SpawnCanonRoom(RoomEntry room)
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return;
+
+            var spawns = room.Spawns;
+            for (int i = 0; i < spawns.Count; i++)
+            {
+                var s = spawns[i];
+                var e = ActorProfile(s.ActorId, hosts);
+                if (e == null) continue;
+
+                var u = NewUnit($"Enemy_{s.ActorId}_{s.SpawnId}");
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
+                        _config.EnemyHp(e.Hp),
+                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                        _config.EnemySpeed(e.Spd),
+                        _config.EnemyAttackRange * e.RangeMul,
+                        _config.EnemyAttackInterval * e.IntervalMul,
+                        new Vector2(84f, 78f), isBoss: false, profile: e);
+                u.Position = ToPixels(s.At);
+                u.PossessPriority = e.PossessPriority;
+                u.PossessRange = 0f;
+                u.SetState(EnemyState.Idle);
+                ApplyFacingSprites(u, e.HostKey);
+                _enemies.Add(u);
+            }
         }
 
         /// <summary>
@@ -407,11 +481,15 @@ namespace Game.Module.InGame
             _roomIndex = index;
             DespawnExit();
             _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
-            _roomKind = KindOf(index);
+            // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
+            // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
+            _canonRoom = _rooms != null ? _rooms.Get(_canonRoomId) : null;
+            _roomKind = _canonRoom != null ? KindOfCanon(_canonRoom) : KindOf(index);
             bool isBoss = _roomKind == RoomKind.Boss;
 
             // 정본은 보스방만 세로가 16 m 다. 방마다 높이가 달라질 수 있어 여기서 정한다.
-            SetRoomSize(isBoss ? BossRoomMeterHeight : RoomMeterHeight);
+            SetRoomSize(_canonRoom != null ? _canonRoom.Height
+                      : isBoss ? BossRoomMeterHeight : RoomMeterHeight);
 
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
@@ -469,6 +547,11 @@ namespace Game.Module.InGame
                 PublishHp();
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
+            else if (_canonRoom != null)
+            {
+                SpawnCanonRoom(_canonRoom);
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
             else
             {
                 bool elite = _roomKind == RoomKind.Elite;
@@ -497,6 +580,21 @@ namespace Game.Module.InGame
                     _enemies.Add(u);
                 }
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
+
+            // 정본 방은 들어서는 자리가 정해져 있다(layout.playerSpawns).
+            // 방마다 입구 위치가 달라 여기서 옮겨 놓지 않으면 벽 속에서 시작한다.
+            if (_canonRoom != null)
+            {
+                var a = Avatar;
+                if (a != null)
+                {
+                    a.Position = ToPixels(_canonRoom.PlayerSpawn);
+                    // 새 방에 들어선 순간 화면이 흐르지 않게 카메라를 바로 붙인다
+                    _scroll = Mathf.Clamp(-a.Position.y - _field.rect.height * 0.5f,
+                                          0f, Mathf.Max(0f, _roomSize.y - _field.rect.height));
+                    _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
+                }
             }
 
             _bus.Publish(new RoomEnteredEvent
@@ -1653,8 +1751,10 @@ namespace Game.Module.InGame
             _exit.anchorMin = _exit.anchorMax = new Vector2(0f, 1f);
             _exit.pivot = new Vector2(0.5f, 0.5f);
             _exit.sizeDelta = new Vector2(120f, 132f);
-            // 정본의 출구는 방 위쪽 끝(14 m 방에서 y=13.4)이다
-            _exit.anchoredPosition = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f);
+            // 정본 방은 출구 자리가 정해져 있다(entryExit). 없으면 방 위쪽 끝에 둔다.
+            _exit.anchoredPosition = _canonRoom != null
+                ? ToPixels(_canonRoom.Exit)
+                : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f);
 
             var img = go.GetComponent<Image>();
             img.sprite = GetSprite("exitportal");
@@ -1683,6 +1783,9 @@ namespace Game.Module.InGame
             // 도달 스테이지를 갱신한다 — 호스트 해금 조건이 이 값을 본다.
             if (_player != null)
                 _player.SetProgress(_player.CurrentChapter, _roomIndex + 2);
+            // 정본 경로를 따라간다. 갈림길은 아직 첫 갈래만 간다 — 선택 UI 는 다음 단계다.
+            if (_canonRoom != null)
+                _canonRoomId = _canonRoom.NextRoomIds.Count > 0 ? _canonRoom.NextRoomIds[0] : null;
             EnterRoom(_roomIndex + 1);
         }
 
