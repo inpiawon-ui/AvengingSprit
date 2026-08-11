@@ -56,8 +56,11 @@ namespace Game.Character
         [Tooltip("전술 빙의 재사용 대기(초). 정본 잠금값 8. 이게 없으면 매 적마다 갈아타는 게 최적해가 된다.")]
         [SerializeField] private float _tacticalCooldownSeconds = 8f;
         [Tooltip("몸을 입은 채 뺏을 수 있는 거리. 유령 사거리(110)를 그대로 쓰면 " +
-                 "호스트는 265 밖에서 쏘고 있어 버튼이 영영 안 켜진다. 교전 거리에 맞춘다.")]
-        [SerializeField] private float _tacticalPossessRange = 280f;
+                 "호스트는 265 밖에서 쏘고 있어 버튼이 영영 안 켜진다.\n" +
+                 "전술 빙의를 막는 것은 거리가 아니라 값(Ghost HP·쿨다운)이어야 한다. " +
+                 "걸어가야 뺏을 수 있으면 유령 시절의 번거로움이 그대로 돌아온다. " +
+                 "방(720×800) 폭을 중앙에서 덮되 먼 구석은 움직여야 닿는 값.")]
+        [SerializeField] private float _tacticalPossessRange = 460f;
 
         [Header("긴급 호스트 (기획서 A 8-3)")]
         [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
