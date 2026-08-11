@@ -105,6 +105,8 @@ namespace Game.Module.Events
     public struct BuffOfferEvent : IEvent
     {
         public string[] OfferedKeys;
+        /// <summary>이번에 오른 레벨. 화면이 "무엇 때문에 열렸는지"를 말할 수 있어야 한다.</summary>
+        public int Level;
     }
 
     /// <summary>버프를 골랐다. 화면을 닫고 다음 룸으로 넘어간다.</summary>

@@ -362,10 +362,16 @@ namespace Game.Module.InGame
 
         private static float Ratio(int v, int max) => max > 0 ? Mathf.Clamp01((float)v / max) : 0f;
 
-        // ── 룸 클리어 버프 3택1 ──────────────────────────────────
+        // ── 레벨업 버프 3택1 ─────────────────────────────────────
+        // ⚠ 이 창은 방을 비워서 열리는 게 아니라 **레벨이 올라서** 열린다(기획서 A 5-2).
+        //    제목이 `ROOM CLEAR` 로 박혀 있어서, 방에 적이 남았는데 클리어가 떴다는
+        //    오해를 샀다. 무엇 때문에 열렸는지는 화면이 말해야 한다.
         private void OnBuffOffer(BuffOfferEvent e)
         {
             if (_buffTable == null || e.OfferedKeys == null) return;
+
+            _ui.SetText("BuffTitleText", "LEVEL UP");
+            _ui.SetText("BuffSubText", $"Lv.{e.Level} · 하나를 선택하세요");
 
             for (int i = 0; i < BuffCardCount; i++)
             {

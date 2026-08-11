@@ -137,11 +137,12 @@ add('UltimateCooldown', (0, 0, 122, 140), 'UltimateButton', 'IMG', local=True)
 add('PossessButton',  (445, 855, 110, 136), 'ControlGroup', 'BTN')
 
 
-# ── 룸 클리어 버프 3택1 (기본 숨김, 코드가 켠다) ────────────────────
-# 로그라이크 축 — 룸마다 런 한정 빌드를 쌓는다 (GameComposition 콘텐츠 5).
+# ── 레벨업 버프 3택1 (기본 숨김, 코드가 켠다) ──────────────────────
+# 로그라이크 축 — 잡는 만큼 런 한정 빌드를 쌓는다 (기획서 A 5-2).
+# 제목·부제는 코드가 레벨을 넣어 덮어쓴다. 여기 값은 편집기에서 보이는 기본값.
 add('BuffChoicePanel', (0, 0, 576, 1024), ROOT, 'IMG')          # 딤 + 입력 차단
 add('BuffTitleText',   (88, 250, 400, 40), 'BuffChoicePanel', 'TMP',
-    text='ROOM CLEAR', size=cap(26), align='C', color=HOST_C)
+    text='LEVEL UP', size=cap(26), align='C', color=HOST_C)
 add('BuffSubText',     (88, 296, 400, 24), 'BuffChoicePanel', 'TMP',
     text='하나를 선택하세요', size=cap(13), align='C', color=MUTED)
 for i in range(3):

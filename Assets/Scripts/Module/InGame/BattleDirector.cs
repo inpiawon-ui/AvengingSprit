@@ -503,21 +503,7 @@ namespace Game.Module.InGame
             TickExit();
 
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
-            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff)
-            {
-                // ⚠ 진단용 — "적이 남았는데 클리어가 뜬다"는 제보를 추적한다.
-                //    화면에 보이는데 목록에서 빠진 몸이 있는지 함께 남긴다.
-                int alive = 0;
-                var layer = _unitLayer;
-                for (int i = 0; i < layer.childCount; i++)
-                {
-                    var u = layer.GetChild(i).GetComponent<Unit>();
-                    if (u != null && u.Side == UnitSide.Enemy && u.IsAlive) alive++;
-                }
-                Debug.Log($"[Battle] 룸 클리어 판정 — 방 {_roomIndex}({_roomKind}) "
-                          + $"목록 {_enemies.Count} / 화면에 살아있는 적 {alive} / 쓰러지는 중 {_dying.Count}");
-                OnRoomCleared();
-            }
+            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -1253,7 +1239,7 @@ namespace Game.Module.InGame
             _awaitingBuff = true;
             var keys = new string[_offer.Count];
             for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
-            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys });
+            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys, Level = _level });
         }
 
         /// <summary>
