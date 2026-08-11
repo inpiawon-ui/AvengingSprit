@@ -103,6 +103,20 @@ namespace Game.Module.Events
     }
 
     /// <summary>
+    /// 유지 훅이 쌓이거나 사라졌다. 무엇을 버리게 되는지가 보여야
+    /// 교체를 망설이게 된다 (정본 RequiredFeedback — HUD meter required).
+    /// </summary>
+    public struct MaintainChangedEvent : IEvent
+    {
+        /// <summary>훅 이름(표식 릴레이·콤보 미터…). 비어 있으면 몸이 없다.</summary>
+        public string HookName;
+        public int Stack;
+        public int MaxStack;
+        /// <summary>다음 단계까지 0~1</summary>
+        public float Progress;
+    }
+
+    /// <summary>
     /// 보스가 다음 페이즈로 넘어갔다. 행동이 바뀌는 순간이라 화면이 알려야 한다.
     /// </summary>
     public struct BossPhaseEvent : IEvent

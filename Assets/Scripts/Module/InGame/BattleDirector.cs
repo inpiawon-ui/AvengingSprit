@@ -84,6 +84,23 @@ namespace Game.Module.InGame
         private Unit _possessTarget;
         private bool _hadPossessTarget;
         private bool _hadPossessBlocked;
+
+        // ── 유지 훅 ───────────────────────────────────────────────
+        // 정본이 "fun-critical" 로 못박은 장치다. 몸을 오래 탈수록 그 몸에서만
+        // 쌓이는 것이 생기고, 갈아타면 사라진다.
+        //
+        // 이게 없으면 전술 빙의는 **비용만 있고 잃는 게 없는** 선택이 된다.
+        // 값을 내는 쪽만 있으면 "안 바꾸는" 것이 언제나 정답이라, 물음 자체가 성립하지 않는다.
+        //
+        // 정본은 훅의 **이름**만 준다(표식 릴레이·콤보 미터…). 실제 효과는 그 몸의
+        // 시그니처를 구현해야 나오므로, 지금은 공통 규칙 하나로 대신한다 —
+        // 명중이 쌓이면 단계가 오르고 단계마다 피해가 는다. 모양은 같다.
+        private const int MaintainMaxStack = 3;
+        private const int MaintainHitsPerStack = 8;
+        private const float MaintainDamagePerStack = 0.12f;
+
+        private int _maintainHits;
+        private int _maintainStack;
         private float _tacticalCooldown;
         private int _tacticalShown = -1;
 
@@ -1560,7 +1577,7 @@ namespace Game.Module.InGame
                     if (e == null || !e.IsAlive) continue;
                     if (Vector2.Distance(e.Position, attacker.Position) > reach) continue;
                     Burst(e.Position, true);
-                    HitEnemyWith(e, Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul), p);
+                    HitEnemyWith(e, Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul), p);
                     if (!hitAll) break;
                 }
                 return;
@@ -1584,6 +1601,7 @@ namespace Game.Module.InGame
         {
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
+            AddMaintain();
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
@@ -1617,7 +1635,8 @@ namespace Game.Module.InGame
             // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
             // 방향 스프라이트를 그린 의미가 없다.
             shot.Fire(attacker.MuzzlePosition, target.Position, speed,
-                      fromPlayer ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul) : attacker.Atk,
+                      fromPlayer ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul)
+                                 : attacker.Atk,
                       fromPlayer, target, _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
                       _config.ShotLifeSeconds,
@@ -1694,6 +1713,7 @@ namespace Game.Module.InGame
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
+            AddMaintain();
             ShowDamage(victim.Position, shot.Damage, toEnemy: true);
             bool dead = victim.TakeDamage(shot.Damage);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
@@ -1753,6 +1773,7 @@ namespace Game.Module.InGame
             _ghostProtect = _config.GhostProtectSeconds;
             _drainCarry = 0f;
             _buffs.SetHost(null);
+            ResetMaintain();
             SlowNearbyEnemies(pos);
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
@@ -2002,6 +2023,40 @@ namespace Game.Module.InGame
         /// 지금 전술 빙의를 낼 수 있는가 (정본 TC_POS_D 의 선행 조건).
         /// 대상 유무는 보지 않는다 — 그건 부르는 쪽이 따로 본다.
         /// </summary>
+        /// <summary>유지 단계로 얻는 피해 배율. 몸을 갈아타면 1로 돌아간다.</summary>
+        private float MaintainDamageMul => 1f + _maintainStack * MaintainDamagePerStack;
+
+        /// <summary>명중을 쌓는다. 단계가 오르면 알린다.</summary>
+        private void AddMaintain()
+        {
+            if (_host == null || _maintainStack >= MaintainMaxStack) return;
+            _maintainHits++;
+            if (_maintainHits < MaintainHitsPerStack) { PublishMaintain(); return; }
+            _maintainHits = 0;
+            _maintainStack++;
+            PublishMaintain();
+        }
+
+        /// <summary>몸이 바뀌면 쌓은 것이 사라진다 (정본 OnSwitchRule — Switch clears active meter).</summary>
+        private void ResetMaintain()
+        {
+            _maintainHits = 0;
+            _maintainStack = 0;
+            PublishMaintain();
+        }
+
+        private void PublishMaintain()
+        {
+            _bus.Publish(new MaintainChangedEvent
+            {
+                HookName = _host != null && _host.Profile != null ? _host.Profile.MaintainHook : null,
+                Stack = _maintainStack,
+                MaxStack = MaintainMaxStack,
+                Progress = _maintainStack >= MaintainMaxStack
+                    ? 1f : (float)_maintainHits / MaintainHitsPerStack,
+            });
+        }
+
         private bool CanSwitch =>
             _tacticalCooldown <= 0f && _ghostHp > _config.TacticalGhostCost;
 
@@ -2089,6 +2144,7 @@ namespace Game.Module.InGame
             _emergencyWait = 0f;
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
             _buffs.SetHost(entry);
+            ResetMaintain();     // 새 몸에는 앞 몸에서 쌓은 것이 따라오지 않는다
 
             _bus.Publish(new PossessedEvent
             {

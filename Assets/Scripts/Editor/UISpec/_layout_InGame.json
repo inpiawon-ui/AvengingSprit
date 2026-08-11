@@ -263,6 +263,37 @@
    "color": "#F2F4F8"
   },
   {
+   "name": "MaintainBarBg",
+   "parent": "TopHudGroup",
+   "create": "IMG",
+   "x": 140.0,
+   "y": 195.0,
+   "w": 147.5,
+   "h": 10.0
+  },
+  {
+   "name": "MaintainBarFill",
+   "parent": "MaintainBarBg",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 147.5,
+   "h": 10.0,
+   "local": true
+  },
+  {
+   "name": "MaintainText",
+   "parent": "TopHudGroup",
+   "create": "TMP",
+   "x": 297.5,
+   "y": 187.5,
+   "w": 250.0,
+   "h": 25.0,
+   "size": 23.2,
+   "align": "L",
+   "color": "#F0B428"
+  },
+  {
    "name": "StageText",
    "parent": "TopHudGroup",
    "create": "TMP",

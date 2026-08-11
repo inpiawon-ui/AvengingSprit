@@ -54,6 +54,7 @@ namespace Game.Module.InGame
         private Image _possessButtonImage;
         private Image _possessCooldown;
         private int _possessCost;
+        private const float MaintainBarWidth = 147.5f;
         private BuffTable _buffTable;
         private string _bossName = "BOSS";
         private int _bossPhase = 1;
@@ -123,6 +124,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(
                 e => SetPossessState(e.HasTarget, e.GhostCost, e.Blocked)));
             _tokens.Add(bus.Subscribe<TacticalCooldownEvent>(OnTacticalCooldown));
+            _tokens.Add(bus.Subscribe<MaintainChangedEvent>(OnMaintain));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
         }
@@ -385,6 +387,22 @@ namespace Game.Module.InGame
         }
 
         private void SetPossessReady(bool ready) => SetPossessState(ready, 0, false);
+
+        /// <summary>
+        /// 유지 훅 표시. 무엇이 얼마나 쌓였는지가 보여야 교체할 때 무엇을 버리는지 안다.
+        /// 몸이 없으면 감춘다 — 유령 상태에는 쌓을 것이 없다.
+        /// </summary>
+        private void OnMaintain(MaintainChangedEvent e)
+        {
+            bool has = !string.IsNullOrEmpty(e.HookName);
+            _ui.SetActive("MaintainBarBg", has);
+            if (!has) { _ui.SetText("MaintainText", string.Empty); return; }
+
+            // 단계가 다 차면 게이지를 가득 채워 둔다 — 더 쌓을 게 없다는 표시다.
+            _ui.SetFill("MaintainBarFill", e.Progress, MaintainBarWidth);
+            _ui.SetText("MaintainText",
+                        e.Stack > 0 ? $"{e.HookName}  ×{e.Stack}" : e.HookName);
+        }
 
         /// <summary>
         /// 전술 빙의 쿨다운. 남은 초와 차오르는 덮개를 함께 보여준다.

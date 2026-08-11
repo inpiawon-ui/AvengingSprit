@@ -128,6 +128,11 @@ namespace Game.Character
         [Range(0, 100)]
         [SerializeField] private int _possessHpPercent = 50;
 
+        [Header("유지 훅 (정본 HOST_MAINTAIN_HOOK)")]
+        [Tooltip("이 몸을 계속 탔을 때 쌓이는 것의 이름. 정본 MaintainHook. " +
+                 "화면에 이름이 보여야 무엇을 버리는지 알고 교체를 망설인다.")]
+        [SerializeField] private string _maintainHook;
+
         [Header("얼티밋")]
         [SerializeField] private string _ultimateKey;
 
@@ -157,6 +162,7 @@ namespace Game.Character
         public TargetType Targeting => _targetType;
         public BuffTag Tag => _tag;
         public string EnemyId => _enemyId;
+        public string MaintainHook => _maintainHook;
         public int PossessPriority => _possessPriority;
         public PossessKind PossessKind => _possessKind;
         public int PossessHpPercent => Mathf.Clamp(_possessHpPercent, 1, 100);

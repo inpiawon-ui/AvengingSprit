@@ -113,6 +113,13 @@ add('HostHpText',     (238, 104, 86, 24), 'TopHudGroup', 'TMP',
 add('HostNameText',   (112, 132, 230, 20), 'TopHudGroup', 'TMP',
     size=cap(15), align='L', color=WHITE)
 
+# 유지 훅 — 이 몸을 계속 타서 쌓인 것. 정본이 "HUD meter 필수" 로 못박았다.
+# 무엇을 버리게 되는지가 안 보이면 교체를 망설일 이유가 없다.
+add('MaintainBarBg',  (112, 156, 118, 8), 'TopHudGroup', 'IMG')
+add('MaintainBarFill', (0, 0, 118, 8), 'MaintainBarBg', 'IMG', local=True)
+add('MaintainText',   (238, 150, 200, 20), 'TopHudGroup', 'TMP',
+    size=cap(13), align='L', color=HOST_C)
+
 # 2행 오른쪽 — 방 표기 (목업 concept 시트의 `STAGE 7`) 와 보스 게이지
 add('StageText',      (352, 80, 218, 22), 'TopHudGroup', 'TMP',
     size=cap(16), align='C', color=WHITE)
