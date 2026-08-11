@@ -73,6 +73,7 @@ namespace Game.Module.InGame
         [SerializeField] private Vector2 _playerSpawn;
         [SerializeField] private SpawnEntry[] _spawns = Array.Empty<SpawnEntry>();
         [SerializeField] private WaveEntry[] _waves = Array.Empty<WaveEntry>();
+        [SerializeField] private ObjectEntry[] _objects = Array.Empty<ObjectEntry>();
 
         public string RoomId => _roomId;
         public int Chapter => _chapter;
@@ -95,6 +96,32 @@ namespace Game.Module.InGame
         public Vector2 PlayerSpawn => _playerSpawn;
         public IReadOnlyList<SpawnEntry> Spawns => _spawns;
         public IReadOnlyList<WaveEntry> Waves => _waves;
+        public IReadOnlyList<ObjectEntry> Objects => _objects;
+
+        /// <summary>
+        /// 이 방의 마지막 웨이브 번호. **스폰만 보고 센다.**
+        ///
+        /// 정본의 웨이브 표에는 2웨이브라고 적혀 있는데 실제 스폰은 1웨이브뿐인 방이
+        /// 10개 있다(CH1_N08 등). 표를 믿으면 그 방들은 아무도 안 나오는 빈 웨이브를
+        /// 기다리며 몇 초씩 멈춘다. 스폰이 유일한 런타임 출처다(SPAWN_SRC_01).
+        /// 웨이브 표는 시작 지연 값만 쓴다.
+        /// </summary>
+        public int LastWave
+        {
+            get
+            {
+                int n = 1;
+                for (int i = 0; i < _spawns.Length; i++) n = Mathf.Max(n, _spawns[i].Wave);
+                return n;
+            }
+        }
+
+        public WaveEntry Wave(int index)
+        {
+            for (int i = 0; i < _waves.Length; i++)
+                if (_waves[i].Index == index) return _waves[i];
+            return null;
+        }
 
         /// <summary>보스 방인가. 정본의 타입 문자열은 "Boss Arena" 다.</summary>
         public bool IsBoss => !string.IsNullOrEmpty(_bossId);
@@ -126,6 +153,52 @@ namespace Game.Module.InGame
         public float DelaySeconds => _delaySeconds;
         public string Trigger => _trigger;
         public string Telegraph => _telegraph;
+    }
+
+    /// <summary>
+    /// 방 안의 지형지물. 정본 `layout.objects` 한 줄이다.
+    ///
+    /// 이것이 없으면 `Pillar`·`Hazard Lane` 같은 방 이름이 이름값을 못 한다 —
+    /// 전부 빈 사각형이 되어 방마다 다른 점이 적 배치뿐이게 된다.
+    /// </summary>
+    [Serializable]
+    public sealed class ObjectEntry
+    {
+        [SerializeField] private string _objectId;
+        [Tooltip("PILLAR · BARRICADE · LOW_COVER · HAZARD · DIVIDER · RICOCHET_WALL")]
+        [SerializeField] private string _kind;
+        [Tooltip("중심 좌표(미터)")]
+        [SerializeField] private Vector2 _at;
+        [Tooltip("가로·세로 크기(미터)")]
+        [SerializeField] private Vector2 _size;
+
+        [SerializeField] private bool _blocksMove;
+        [SerializeField] private bool _blocksShot;
+        [SerializeField] private bool _blocksSight;
+        [Tooltip("부술 수 있는가. 정본에서 바리케이드만 true 다")]
+        [SerializeField] private bool _destructible;
+
+        [Header("해저드")]
+        [Tooltip("NONE 이면 해저드가 아니다")]
+        [SerializeField] private string _hazardKind;
+        [SerializeField] private int _hazardDamage;
+        [SerializeField] private float _hazardTick;
+
+        [Tooltip("정본 14열. 종류마다 고정값(기둥 0.45 · 바리케이드 0.5 · 해저드 0.8)인데 " +
+                 "계약에 이름이 없어 뜻을 확정하지 못했다. 담아만 두고 쓰지 않는다.")]
+        [SerializeField] private float _unnamed;
+
+        public string ObjectId => _objectId;
+        public string Kind => _kind;
+        public Vector2 At => _at;
+        public Vector2 Size => _size;
+        public bool BlocksMove => _blocksMove;
+        public bool BlocksShot => _blocksShot;
+        public bool BlocksSight => _blocksSight;
+        public bool Destructible => _destructible;
+        public bool IsHazard => !string.IsNullOrEmpty(_hazardKind) && _hazardKind != "NONE";
+        public int HazardDamage => _hazardDamage;
+        public float HazardTick => _hazardTick <= 0f ? 1f : _hazardTick;
     }
 
     [Serializable]

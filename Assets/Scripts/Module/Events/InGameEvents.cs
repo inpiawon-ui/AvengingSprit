@@ -103,6 +103,16 @@ namespace Game.Module.Events
     }
 
     /// <summary>
+    /// 새 웨이브가 나왔다. 방을 비운 줄 알았는데 또 나오는 것이므로,
+    /// 알리지 않으면 버그로 보인다.
+    /// </summary>
+    public struct WaveStartedEvent : IEvent
+    {
+        public int Wave;
+        public int WaveTotal;
+    }
+
+    /// <summary>
     /// 전술 빙의 쿨다운이 흐른다. 남은 시간이 보이지 않으면 눌러 보고 나서야
     /// 못 쓴다는 것을 알게 된다.
     /// </summary>

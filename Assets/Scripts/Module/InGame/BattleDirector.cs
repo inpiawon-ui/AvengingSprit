@@ -253,6 +253,8 @@ namespace Game.Module.InGame
         private RoomTable _rooms;
         private RoomEntry _canonRoom;
         private string _canonRoomId = FirstCanonRoom;
+        private int _wave = 1;
+        private float _waveDelay = -1f;
         private readonly HashSet<string> _missingActors = new();
 
         /// <summary>정본 좌표(미터, 좌하단 기준) → 우리 좌표(픽셀, 좌상단 기준 · 아래가 음수).</summary>
@@ -281,13 +283,10 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 정본 방 하나를 세운다. 스폰 출처는 `layout.enemySpawns` 하나뿐이다(SPAWN_SRC_01).
-        ///
-        /// 지연 스폰·트리거 스폰은 아직 다루지 않는다. `ROOM_START` 가 아닌 줄은
-        /// 건너뛰지 말고 함께 세운다 — 안 그러면 방이 영영 클리어되지 않는다.
-        /// 웨이브는 그다음 단계다.
+        /// 정본 방의 웨이브 하나를 세운다. 스폰 출처는 `layout.enemySpawns` 하나뿐이다
+        /// (SPAWN_SRC_01). 웨이브 1은 방에 들어서는 즉시, 그다음은 앞 웨이브를 비운 뒤 나온다.
         /// </summary>
-        private void SpawnCanonRoom(RoomEntry room)
+        private void SpawnWave(RoomEntry room, int wave)
         {
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return;
@@ -296,13 +295,17 @@ namespace Game.Module.InGame
             for (int i = 0; i < spawns.Count; i++)
             {
                 var s = spawns[i];
+                if (s.Wave != wave) continue;
                 var e = ActorProfile(s.ActorId, hosts);
                 if (e == null) continue;
 
+                // 엘리트는 정본에서 별도 ID(EL01…)로 온다. 수가 적은 대신 하나하나가 세다.
+                bool elite = s.ActorId != null && s.ActorId.StartsWith("EL");
                 var u = NewUnit($"Enemy_{s.ActorId}_{s.SpawnId}");
                 u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
-                        _config.EnemyHp(e.Hp),
-                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                        Mathf.RoundToInt(_config.EnemyHp(e.Hp) * (elite ? _config.EliteHpMul : 1f)),
+                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul
+                                         * (elite ? _config.EliteAtkMul : 1f)),
                         _config.EnemySpeed(e.Spd),
                         _config.EnemyAttackRange * e.RangeMul,
                         _config.EnemyAttackInterval * e.IntervalMul,
@@ -314,6 +317,167 @@ namespace Game.Module.InGame
                 ApplyFacingSprites(u, e.HostKey);
                 _enemies.Add(u);
             }
+            _wave = wave;
+        }
+
+        /// <summary>
+        /// 다음 웨이브를 부른다. 앞 웨이브를 다 비우면 잠깐 뜸을 들인 뒤 나온다 —
+        /// 비우자마자 곧바로 쏟아지면 방을 정리했다는 감각이 사라진다.
+        /// 아직 남은 웨이브가 있으면 true(= 방이 아직 안 끝났다).
+        /// </summary>
+        private bool TickWave(float dt)
+        {
+            if (_canonRoom == null || _wave >= _canonRoom.LastWave) return false;
+            if (_enemies.Count > 0) { _waveDelay = -1f; return true; }
+
+            if (_waveDelay < 0f)
+            {
+                var next = _canonRoom.Wave(_wave + 1);
+                _waveDelay = next != null ? Mathf.Max(0.4f, next.StartDelay) : 1f;
+            }
+            _waveDelay -= dt;
+            if (_waveDelay > 0f) return true;
+
+            _waveDelay = -1f;
+            SpawnWave(_canonRoom, _wave + 1);
+            _bus.Publish(new WaveStartedEvent { Wave = _wave, WaveTotal = _canonRoom.LastWave });
+            return true;
+        }
+
+        // ── 지형지물 ──────────────────────────────────────────────
+        // 이게 없으면 `Pillar`·`Hazard Lane` 같은 방 이름이 이름값을 못 한다.
+        // 방마다 다른 점이 적 배치뿐이게 되어 34방이 다 같은 방으로 느껴진다.
+
+        private sealed class Obstacle
+        {
+            public Rect Bounds;          // 픽셀. 중심이 아니라 좌상단 기준(우리 좌표계)
+            public bool BlocksMove;
+            public bool BlocksShot;
+            public bool IsHazard;
+            public int Damage;
+            public float Tick;
+            public GameObject View;
+        }
+
+        private readonly List<Obstacle> _obstacles = new();
+        private readonly Dictionary<Unit, float> _hazardTimer = new();
+
+        private static readonly Dictionary<string, Color> ObstacleColor = new()
+        {
+            { "PILLAR",        new Color(0.34f, 0.31f, 0.42f, 1f) },
+            { "BARRICADE",     new Color(0.40f, 0.33f, 0.28f, 1f) },
+            { "LOW_COVER",     new Color(0.30f, 0.34f, 0.40f, 1f) },
+            { "DIVIDER",       new Color(0.28f, 0.27f, 0.36f, 1f) },
+            { "RICOCHET_WALL", new Color(0.44f, 0.44f, 0.52f, 1f) },
+            { "HAZARD",        new Color(0.86f, 0.34f, 0.18f, 0.45f) },
+        };
+
+        private void ClearObstacles()
+        {
+            for (int i = 0; i < _obstacles.Count; i++)
+                if (_obstacles[i].View != null) Destroy(_obstacles[i].View);
+            _obstacles.Clear();
+            _hazardTimer.Clear();
+        }
+
+        private void SpawnObstacles(RoomEntry room)
+        {
+            var list = room.Objects;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var o = list[i];
+                var center = ToPixels(o.At);
+                var size = o.Size * _pxPerMeter;
+                var rect = new Rect(center.x - size.x * 0.5f, center.y - size.y * 0.5f,
+                                    size.x, size.y);
+
+                var go = new GameObject($"Obj_{o.Kind}_{o.ObjectId}",
+                                        typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(_unitLayer, false);
+                var rt = (RectTransform)go.transform;
+                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.sizeDelta = size;
+                rt.anchoredPosition = center;
+                rt.SetAsFirstSibling();      // 유닛보다 뒤에 깔린다
+
+                var img = go.GetComponent<Image>();
+                img.color = ObstacleColor.TryGetValue(o.Kind ?? "", out var c)
+                    ? c : new Color(0.33f, 0.32f, 0.40f, 1f);
+                img.raycastTarget = false;
+
+                _obstacles.Add(new Obstacle
+                {
+                    Bounds = rect, BlocksMove = o.BlocksMove, BlocksShot = o.BlocksShot,
+                    IsHazard = o.IsHazard, Damage = o.HazardDamage, Tick = o.HazardTick,
+                    View = go,
+                });
+            }
+        }
+
+        /// <summary>
+        /// 막힌 것 안으로 들어가면 밀어낸다. 가장 얕게 겹친 축으로 빼내야
+        /// 모서리에서 반대편으로 튀어 나가지 않는다.
+        /// </summary>
+        private void ResolveObstacles(Unit u)
+        {
+            if (_obstacles.Count == 0 || u == null) return;
+            var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
+            // 발밑으로 판정한다. 몸 전체로 보면 머리가 기둥에 걸려 못 지나간다.
+            half = new Vector2(half.x * 0.55f, half.y * 0.22f);
+            var p = u.Position;
+            var foot = new Vector2(p.x, p.y - half.y);
+
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (!o.BlocksMove) continue;
+
+                float dx = foot.x - o.Bounds.center.x;
+                float dy = foot.y - o.Bounds.center.y;
+                float ox = o.Bounds.width * 0.5f + half.x - Mathf.Abs(dx);
+                float oy = o.Bounds.height * 0.5f + half.y - Mathf.Abs(dy);
+                if (ox <= 0f || oy <= 0f) continue;
+
+                if (ox < oy) p.x += Mathf.Sign(dx) * ox;
+                else p.y += Mathf.Sign(dy) * oy;
+                foot = new Vector2(p.x, p.y - half.y);
+            }
+            u.Position = p;
+        }
+
+        /// <summary>해저드 위에 서 있으면 주기적으로 깎인다.</summary>
+        private void TickHazards(float dt)
+        {
+            if (_obstacles.Count == 0) return;
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (!o.IsHazard || o.Damage <= 0) continue;
+                Burn(o, Avatar, dt);
+                for (int e = 0; e < _enemies.Count; e++) Burn(o, _enemies[e], dt);
+            }
+        }
+
+        private void Burn(Obstacle o, Unit u, float dt)
+        {
+            if (u == null || !u.IsAlive || u.IsDying) return;
+            var foot = new Vector2(u.Position.x,
+                                   u.Position.y - ((RectTransform)u.transform).sizeDelta.y * 0.4f);
+            if (!o.Bounds.Contains(foot))
+            {
+                _hazardTimer.Remove(u);
+                return;
+            }
+
+            _hazardTimer.TryGetValue(u, out float t);
+            t -= dt;
+            if (t > 0f) { _hazardTimer[u] = t; return; }
+
+            // 처음 밟는 순간 바로 한 번 아프게 한다. 그래야 밟았다는 것을 안다.
+            _hazardTimer[u] = o.Tick;
+            if (u == _host || u == _ghost) DamagePlayer(o.Damage);
+            else { u.TakeDamage(o.Damage); ShowDamage(u.Position, o.Damage, true); }
         }
 
         /// <summary>
@@ -578,6 +742,10 @@ namespace Game.Module.InGame
             for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Despawn();
 
             _boss = null;
+            _wave = 1;
+            _waveDelay = -1f;
+            ClearObstacles();
+            if (_canonRoom != null) SpawnObstacles(_canonRoom);
 
             // 이전 룸의 탄이 다음 룸까지 날아가 첫 적을 때리는 일을 막는다
             for (int i = 0; i < _shots.Count; i++) _shots[i].Despawn();
@@ -623,7 +791,7 @@ namespace Game.Module.InGame
             }
             else if (_canonRoom != null)
             {
-                SpawnCanonRoom(_canonRoom);
+                SpawnWave(_canonRoom, 1);
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else
@@ -699,6 +867,14 @@ namespace Game.Module.InGame
         }
 
         /// <summary>필드 밖으로 나가지 않게 잘라낸다. 밀림·돌진이 벽을 넘지 않게.</summary>
+        /// <summary>탄이 엄폐물에 막히는가.</summary>
+        private bool BlockedByCover(Vector2 at)
+        {
+            for (int i = 0; i < _obstacles.Count; i++)
+                if (_obstacles[i].BlocksShot && _obstacles[i].Bounds.Contains(at)) return true;
+            return false;
+        }
+
         private void ClampToField(Unit u)
         {
             var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
@@ -728,6 +904,7 @@ namespace Game.Module.InGame
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
+            TickHazards(dt);
             TickDamageTexts(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
@@ -737,7 +914,9 @@ namespace Game.Module.InGame
             TickExit();
 
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
-            if (_enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
+            // 웨이브가 남아 있으면 방을 비운 것이 아니다.
+            bool waveLeft = TickWave(dt);
+            if (!waveLeft && _enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -872,6 +1051,7 @@ namespace Game.Module.InGame
                 p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
                 p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
                 me.Position = p;
+                ResolveObstacles(me);   // 기둥·바리케이드를 통과하지 않는다
 
                 // 걷는 쪽을 바라본다. 아래 `return` 때문에 이동 중에는 조준 쪽
                 // 방향 전환에 도달하지 못하므로, 여기서 돌려 주지 않으면
@@ -1025,6 +1205,7 @@ namespace Game.Module.InGame
 
             e.Position += push.normalized * (e.MoveSpeed * SeparationSpeedRatio) * dt;
             ClampToField(e);
+            ResolveObstacles(e);
         }
 
         // ── 보스 ─────────────────────────────────────────────────
@@ -1145,6 +1326,7 @@ namespace Game.Module.InGame
                 u.Position = boss.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * SummonRadius;
                 u.IsAggro = true;   // 불러낸 것들은 기다리지 않는다
                 ClampToField(u);
+                ResolveObstacles(u);
                 _enemies.Add(u);
             }
         }
@@ -1303,6 +1485,10 @@ namespace Game.Module.InGame
                 if (!p.IsActive) continue;
 
                 if (!p.Tick(dt)) { p.Despawn(); continue; }
+
+                // 엄폐물에 막힌다. 이게 없으면 기둥이 그림일 뿐이라
+                // 뒤에 숨는 것이 아무 의미가 없다.
+                if (BlockedByCover(p.Position)) { p.Despawn(); continue; }
 
                 if (p.Damage <= 0) continue;   // 근접 타격 섬광 — 수명만 흘려보낸다
 
@@ -1803,7 +1989,8 @@ namespace Game.Module.InGame
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
             // 레벨업 중에도 방이 이미 비었을 수 있다 — 그때는 고른 뒤에 출구를 연다.
-            if (_enemies.Count == 0 && _exit == null && !IsLastRoom)
+            if (_enemies.Count == 0 && _exit == null && !IsLastRoom
+                && (_canonRoom == null || _wave >= _canonRoom.LastWave))
                 SpawnExit();
         }
 

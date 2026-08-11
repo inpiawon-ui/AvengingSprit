@@ -33,6 +33,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH1_N01
     _chapter: 1
     _type: Open Arena
@@ -80,6 +81,7 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E001x2,E002x1
       _clearRule: Clear Gate
+    _objects: []
   - _roomId: CH1_N02
     _chapter: 1
     _type: Lane
@@ -135,6 +137,31 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E001x2,E002x1,E004x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_2_A
+      _kind: BARRICADE
+      _at: {x: 2.1, y: 8.6}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
+    - _objectId: OBJ_2_B
+      _kind: BARRICADE
+      _at: {x: 6.3, y: 10.4}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
   - _roomId: CH1_N03
     _chapter: 1
     _type: Pillar
@@ -190,6 +217,31 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E004x1,E002x2,E001x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_3_A
+      _kind: PILLAR
+      _at: {x: 2.2, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_3_B
+      _kind: PILLAR
+      _at: {x: 6.2, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH1_N04
     _chapter: 1
     _type: Crossfire
@@ -253,6 +305,31 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E001x3,E004x1,E010x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_4_A
+      _kind: LOW_COVER
+      _at: {x: 2.2, y: 8.5}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: OBJ_4_B
+      _kind: LOW_COVER
+      _at: {x: 6.2, y: 10.1}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH1_N05
     _chapter: 1
     _type: Recovery
@@ -272,6 +349,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH1_N06
     _chapter: 1
     _type: Hazard Lane
@@ -335,6 +413,31 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E003x1,E002x2,E001x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_6_A
+      _kind: HAZARD
+      _at: {x: 2.1, y: 9}
+      _size: {x: 1.3, y: 1.8}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: FIRE_OR_ARC
+      _hazardDamage: 8
+      _hazardTick: 1.5
+      _unnamed: 0.8
+    - _objectId: OBJ_6_B
+      _kind: HAZARD
+      _at: {x: 6.3, y: 10.6}
+      _size: {x: 1.3, y: 1.8}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: FIRE_OR_ARC
+      _hazardDamage: 8
+      _hazardTick: 1.5
+      _unnamed: 0.8
   - _roomId: CH1_N07
     _chapter: 1
     _type: Split Arena
@@ -398,6 +501,19 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E011x1,E001x2,E002x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_7_A
+      _kind: DIVIDER
+      _at: {x: 4.2, y: 8.8}
+      _size: {x: 0.7, y: 3.2}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH1_N08
     _chapter: 1
     _type: Elite Arena
@@ -465,6 +581,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E001x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_8_A
+      _kind: PILLAR
+      _at: {x: 2.7, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_8_B
+      _kind: PILLAR
+      _at: {x: 5.7, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH1_N09
     _chapter: 1
     _type: Build Check
@@ -520,6 +661,7 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E005x1,E001x2,E015x1
       _clearRule: Clear Gate
+    _objects: []
   - _roomId: CH1_N10
     _chapter: 1
     _type: Boss Arena
@@ -538,6 +680,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH2_N00
     _chapter: 2
     _type: Gate
@@ -557,6 +700,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH2_N01
     _chapter: 2
     _type: Pillar
@@ -620,6 +764,31 @@ MonoBehaviour:
       _startDelay: 0
       _composition: E017x1,E007x2,E002x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_12_A
+      _kind: PILLAR
+      _at: {x: 2.2, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_12_B
+      _kind: PILLAR
+      _at: {x: 6.2, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH2_N02
     _chapter: 2
     _type: Crossfire
@@ -687,6 +856,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E018x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_13_A
+      _kind: LOW_COVER
+      _at: {x: 2.2, y: 8.5}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: OBJ_13_B
+      _kind: LOW_COVER
+      _at: {x: 6.2, y: 10.1}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH2_N03
     _chapter: 2
     _type: Route Choice
@@ -707,6 +901,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH2_N04A
     _chapter: 2
     _type: Hazard
@@ -774,6 +969,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E014x1,E018x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_15_A
+      _kind: HAZARD
+      _at: {x: 2.1, y: 9}
+      _size: {x: 1.3, y: 1.8}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: FIRE_OR_ARC
+      _hazardDamage: 8
+      _hazardTick: 1.5
+      _unnamed: 0.8
+    - _objectId: OBJ_15_B
+      _kind: HAZARD
+      _at: {x: 6.3, y: 10.6}
+      _size: {x: 1.3, y: 1.8}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: FIRE_OR_ARC
+      _hazardDamage: 8
+      _hazardTick: 1.5
+      _unnamed: 0.8
   - _roomId: CH2_N04B
     _chapter: 2
     _type: Recovery
@@ -825,6 +1045,7 @@ MonoBehaviour:
       _trigger: ROOM_START
       _telegraph: RING_0.8S
     _waves: []
+    _objects: []
   - _roomId: CH2_N05
     _chapter: 2
     _type: Siege
@@ -900,6 +1121,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E005x1,E018x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_17_A
+      _kind: BARRICADE
+      _at: {x: 2.1, y: 8.6}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
+    - _objectId: OBJ_17_B
+      _kind: BARRICADE
+      _at: {x: 6.3, y: 10.4}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
   - _roomId: CH2_N06
     _chapter: 2
     _type: Elite Arena
@@ -959,6 +1205,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E007x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_18_A
+      _kind: PILLAR
+      _at: {x: 2.2, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_18_B
+      _kind: PILLAR
+      _at: {x: 6.2, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH2_N07
     _chapter: 2
     _type: Open Arena
@@ -1026,6 +1297,7 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E006x2
       _clearRule: Clear Gate
+    _objects: []
   - _roomId: CH2_N08
     _chapter: 2
     _type: Build Choice
@@ -1045,6 +1317,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH2_N09
     _chapter: 2
     _type: Boss Arena
@@ -1063,6 +1336,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH3_N00
     _chapter: 3
     _type: Gate
@@ -1082,6 +1356,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH3_N01
     _chapter: 3
     _type: Split Arena
@@ -1157,6 +1432,19 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E006x1,E018x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_23_A
+      _kind: DIVIDER
+      _at: {x: 4.2, y: 8.8}
+      _size: {x: 0.7, y: 3.2}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH3_N02
     _chapter: 3
     _type: Hazard Crossfire
@@ -1224,6 +1512,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E014x1,E018x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_24_A
+      _kind: LOW_COVER
+      _at: {x: 2.2, y: 8.5}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: OBJ_24_B
+      _kind: LOW_COVER
+      _at: {x: 6.2, y: 10.1}
+      _size: {x: 1.4, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH3_N03
     _chapter: 3
     _type: Route Choice
@@ -1244,6 +1557,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH3_N04A
     _chapter: 3
     _type: Lane Siege
@@ -1311,6 +1625,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E017x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_26_A
+      _kind: BARRICADE
+      _at: {x: 2.1, y: 8.6}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
+    - _objectId: OBJ_26_B
+      _kind: BARRICADE
+      _at: {x: 6.3, y: 10.4}
+      _size: {x: 2, y: 0.6}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 1
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.5
   - _roomId: CH3_N04B
     _chapter: 3
     _type: Host Gauntlet
@@ -1378,6 +1717,19 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E011x1,E002x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_27_A
+      _kind: DIVIDER
+      _at: {x: 4.2, y: 8.8}
+      _size: {x: 0.7, y: 3.2}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH3_N05
     _chapter: 3
     _type: Recovery Choice
@@ -1397,6 +1749,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH3_N06
     _chapter: 3
     _type: Elite Arena
@@ -1456,6 +1809,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E010x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_29_A
+      _kind: PILLAR
+      _at: {x: 2.7, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_29_B
+      _kind: PILLAR
+      _at: {x: 5.7, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH3_N07
     _chapter: 3
     _type: Labyrinth
@@ -1531,6 +1909,43 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E015x2,E002x2
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_30_A
+      _kind: RICOCHET_WALL
+      _at: {x: 2, y: 7.8}
+      _size: {x: 0.5, y: 3}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: OBJ_30_B
+      _kind: RICOCHET_WALL
+      _at: {x: 6.4, y: 9.8}
+      _size: {x: 0.5, y: 3}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: OBJ_30_C
+      _kind: RICOCHET_WALL
+      _at: {x: 4.2, y: 11.7}
+      _size: {x: 2, y: 0.5}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
   - _roomId: CH3_N08
     _chapter: 3
     _type: Final Trial
@@ -1591,6 +2006,31 @@ MonoBehaviour:
       _startDelay: 3
       _composition: E003x1,E017x1
       _clearRule: Clear Gate
+    _objects:
+    - _objectId: OBJ_31_A
+      _kind: PILLAR
+      _at: {x: 2.45, y: 8.1}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
+    - _objectId: OBJ_31_B
+      _kind: PILLAR
+      _at: {x: 5.95, y: 9.6}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0.45
   - _roomId: CH3_N09
     _chapter: 3
     _type: Boss Prep
@@ -1610,6 +2050,7 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []
   - _roomId: CH3_N10
     _chapter: 3
     _type: Boss Arena
@@ -1629,3 +2070,4 @@ MonoBehaviour:
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
+    _objects: []

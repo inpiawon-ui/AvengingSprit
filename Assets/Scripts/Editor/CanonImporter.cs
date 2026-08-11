@@ -66,6 +66,7 @@ namespace Game.EditorTools
 
             Directory.CreateDirectory(OutDir);
             var table = ScriptableObject.CreateInstance<RoomTable>();
+            table.name = "RoomTable";   // 비어 있으면 파일명과 다르다는 경고가 뜬다
             SetField(table, "_contractVersion", (string)json["schemaVersion"] ?? "");
             SetField(table, "_rooms", rooms.ToArray());
 
@@ -82,7 +83,10 @@ namespace Game.EditorTools
             RegisterAddressable(OutPath, Address);
 
             int spawnTotal = rooms.Sum(r => ((SpawnEntry[])GetField(r, "_spawns")).Length);
-            Debug.Log($"[Canon] 방 {rooms.Count}개 · 스폰 {spawnTotal}개 → {OutPath} "
+            int objTotal = rooms.Sum(r => ((ObjectEntry[])GetField(r, "_objects")).Length);
+            int waveTotal = rooms.Sum(r => ((WaveEntry[])GetField(r, "_waves")).Length);
+            Debug.Log($"[Canon] 방 {rooms.Count}개 · 스폰 {spawnTotal}개 · 웨이브 {waveTotal}개 "
+                      + $"· 지형지물 {objTotal}개 → {OutPath} "
                       + $"(주소 {Address}, 경고 {warnings.Count}건)");
         }
 
@@ -97,6 +101,7 @@ namespace Game.EditorTools
             var playerSpawns = Rows(layout["playerSpawns"]);
             var enemySpawns = Rows(layout["enemySpawns"]);
             var bossLayouts = Rows(layout["bossLayouts"]);
+            var objects = Rows(layout["objects"]);
             var entryExit = Rows(json["entryExit"]);
             var waves = Rows(json["waves"]);
 
@@ -213,11 +218,44 @@ namespace Game.EditorTools
                 }
                 SetField(room, "_waves", wl.ToArray());
 
+                // 지형지물. 계약에 스키마가 없는 컬렉션이라 열 위치로 읽는다.
+                //   [RoomID, ObjectID, Kind, X, Y, W, H,
+                //    BlocksMove, BlocksShot, BlocksSight, Destructible,
+                //    HazardKind, HazardDamage, HazardTick, ?, Note]
+                var ol = new List<ObjectEntry>();
+                foreach (var r in objects)
+                {
+                    if (Str(r[0]) != id) continue;
+                    var e = new ObjectEntry();
+                    SetField(e, "_objectId", Str(r[1]));
+                    SetField(e, "_kind", Str(r[2]));
+                    SetField(e, "_at", new Vector2(Num(r[3]), Num(r[4])));
+                    SetField(e, "_size", new Vector2(Num(r[5]), Num(r[6])));
+                    SetField(e, "_blocksMove", Bool(r[7]));
+                    SetField(e, "_blocksShot", Bool(r[8]));
+                    SetField(e, "_blocksSight", Bool(r[9]));
+                    SetField(e, "_destructible", Bool(r[10]));
+                    SetField(e, "_hazardKind", Str(r[11]));
+                    SetField(e, "_hazardDamage", (int)Num(r[12]));
+                    SetField(e, "_hazardTick", Num(r[13]));
+                    SetField(e, "_unnamed", r.Length > 14 ? Num(r[14]) : 0f);
+                    ol.Add(e);
+                }
+                SetField(room, "_objects", ol.ToArray());
+
                 // 방 타입은 22가지나 되고 이름만으로는 전투 방인지 알 수 없다
                 // (Recovery·Route Choice·Build Choice 는 원래 적이 없다).
                 // 대신 **웨이브가 있는데 스폰이 없는** 경우만 잡는다 — 그건 자기모순이다.
                 if (wl.Count > 0 && list.Count == 0)
                     warnings.Add($"{id}({Str(lay[2])}): 웨이브는 있는데 적 스폰이 없다");
+
+                // 웨이브 표와 실제 스폰이 어긋나는 방. 정본 자체의 불일치라 고치지 않고
+                // 알리기만 한다 — 런타임은 스폰만 보므로 동작에는 영향이 없다.
+                int wTable = wl.Count == 0 ? 1 : wl.Max(w => (int)GetField(w, "_index"));
+                int wSpawn = list.Count == 0 ? 1 : list.Max(s => (int)GetField(s, "_wave"));
+                if (wTable > wSpawn)
+                    warnings.Add($"{id}: 웨이브 표는 {wTable}웨이브인데 스폰은 {wSpawn}웨이브뿐이다 "
+                                 + "— 스폰을 따른다");
 
                 result.Add(room);
             }
@@ -295,6 +333,11 @@ namespace Game.EditorTools
         // 여기서 흡수하지 않으면 임포트가 그 한 줄에서 죽는다.
         private static string Str(JToken t)
             => t == null || t.Type == JTokenType.Null ? string.Empty : t.ToString();
+
+        private static bool Bool(JToken t)
+            => t != null && t.Type != JTokenType.Null
+               && (t.Type == JTokenType.Boolean ? (bool)t
+                   : bool.TryParse(t.ToString(), out var b) && b);
 
         private static float Num(JToken t)
         {
