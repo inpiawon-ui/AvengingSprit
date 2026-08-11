@@ -91,7 +91,28 @@ namespace Game.Module.InGame
         private const float EnemyBandTop = 0.06f;
         private const float EnemyBandBottom = 0.44f;
         /// <summary>플레이어 시작 높이. 적 띠 끝과 탐지 거리보다 멀어야 첫 프레임에 안 달려든다.</summary>
-        private const float PlayerStartY = 0.80f;
+        private const float PlayerStartY = 0.88f;
+
+        // ── 방 규격 · 세로 따라가는 카메라 ────────────────────────
+        // 정본의 방은 **8.4 × 14 m** 이고 34방 전부 카메라 모드가 `VERTICAL_FOLLOW` 다
+        // (보스방만 16 m). 가로는 화면에 다 들어가고 세로가 화면보다 길다.
+        //
+        // 이걸 한 화면에 눌러 담으면 세로 거리가 0.67배로 찌그러져 사거리·회피 간격이
+        // 전부 달라진다. 정본 좌표를 쓰는 의미가 사라지므로, 방을 실제 크기로 두고
+        // 카메라가 따라간다.
+        //
+        // `RoomField` 가 보이는 창(뷰포트)이고 `UnitLayer` 가 방 전체다.
+        // 창은 그대로 두고 방을 세로로 밀어 카메라를 흉내낸다.
+        private const float RoomMeterWidth = 8.4f;
+        private const float RoomMeterHeight = 14f;
+        private const float BossRoomMeterHeight = 16f;
+
+        /// <summary>카메라가 따라붙는 속도. 즉시 붙이면 걸음마다 화면이 튄다.</summary>
+        private const float CameraFollow = 8f;
+
+        private float _pxPerMeter = 1f;
+        private Vector2 _roomSize;      // 픽셀
+        private float _scroll;
         /// <summary>밀어내기 속도 — 이동 속도 대비. 너무 크면 서로 튕겨 나간다.</summary>
         private const float SeparationSpeedRatio = 0.55f;
 
@@ -133,6 +154,11 @@ namespace Game.Module.InGame
         {
             _field = field;
             _unitLayer = unitLayer;
+
+            // 방이 창보다 크므로 잘라 내야 한다. 없으면 화면 밖 적이 상단 HUD 위에 그려진다.
+            if (_field.GetComponent<RectMask2D>() == null) _field.gameObject.AddComponent<RectMask2D>();
+            _pxPerMeter = _field.rect.width / RoomMeterWidth;
+            SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
             CoreModule.TryGet(out _player);
 
@@ -188,7 +214,7 @@ namespace Game.Module.InGame
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
                          new Vector2(72f, 90f));
-            _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * PlayerStartY);
+            _ghost.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * PlayerStartY);
             PublishHp();
         }
 
@@ -214,6 +240,40 @@ namespace Game.Module.InGame
                 return;
             }
             EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position, 100);
+        }
+
+        /// <summary>
+        /// 방 크기를 정한다. 가로는 늘 화면 폭(8.4 m)이고 세로만 방마다 다르다.
+        /// `UnitLayer` 를 방 크기로 키우고 위쪽에 붙인다 — 좌표계가 위에서 아래로
+        /// 음수인 채 그대로 유지되도록.
+        /// </summary>
+        private void SetRoomSize(float meterHeight)
+        {
+            _roomSize = new Vector2(RoomMeterWidth * _pxPerMeter, meterHeight * _pxPerMeter);
+            _unitLayer.anchorMin = _unitLayer.anchorMax = new Vector2(0f, 1f);
+            _unitLayer.pivot = new Vector2(0f, 1f);
+            _unitLayer.sizeDelta = _roomSize;
+            _unitLayer.anchoredPosition = Vector2.zero;
+            _scroll = 0f;
+        }
+
+        /// <summary>
+        /// 세로 카메라. 창은 고정이고 방을 민다.
+        /// 플레이어를 창 한가운데 두되 방의 위아래 끝을 넘어가지 않는다 —
+        /// 넘어가면 방 밖의 빈 공간이 보인다.
+        /// </summary>
+        private void TickCamera(float dt)
+        {
+            var a = Avatar;
+            if (a == null || _unitLayer == null) return;
+
+            float viewH = _field.rect.height;
+            float max = Mathf.Max(0f, _roomSize.y - viewH);
+            float want = Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f, max);
+
+            _scroll = Mathf.Lerp(_scroll, want, 1f - Mathf.Exp(-CameraFollow * dt));
+            // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다
+            _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
         }
 
         private Unit NewUnit(string name)
@@ -350,6 +410,9 @@ namespace Game.Module.InGame
             _roomKind = KindOf(index);
             bool isBoss = _roomKind == RoomKind.Boss;
 
+            // 정본은 보스방만 세로가 16 m 다. 방마다 높이가 달라질 수 있어 여기서 정한다.
+            SetRoomSize(isBoss ? BossRoomMeterHeight : RoomMeterHeight);
+
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
             _enemies.Clear();
@@ -387,7 +450,7 @@ namespace Game.Module.InGame
                            _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
                            _config.BossAttackRange, _config.BossAttackInterval,
                            new Vector2(160f, 160f), isBoss: true);
-                boss.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.2f);
+                boss.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
@@ -453,7 +516,7 @@ namespace Game.Module.InGame
         /// </summary>
         private Vector2 SpawnSlot(int i, int count)
         {
-            float w = _field.rect.width, h = _field.rect.height;
+            float w = _roomSize.x, h = _roomSize.y;
             int cols = Mathf.Min(3, Mathf.Max(1, count));
             int rows = Mathf.CeilToInt(count / (float)cols);
 
@@ -476,8 +539,8 @@ namespace Game.Module.InGame
         {
             var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
             var p = u.Position;
-            p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
-            p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
+            p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
+            p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
             u.Position = p;
         }
 
@@ -502,6 +565,8 @@ namespace Game.Module.InGame
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
             TickDamageTexts(dt);
+            // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
+            TickCamera(dt);
             RefreshPossessTarget();
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
@@ -640,8 +705,8 @@ namespace Game.Module.InGame
             {
                 var p = me.Position + MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt;
                 var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
-                p.x = Mathf.Clamp(p.x, half.x, _field.rect.width - half.x);
-                p.y = Mathf.Clamp(p.y, -_field.rect.height + half.y, -half.y);
+                p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
+                p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
                 me.Position = p;
 
                 // 걷는 쪽을 바라본다. 아래 `return` 때문에 이동 중에는 조준 쪽
@@ -876,7 +941,7 @@ namespace Game.Module.InGame
             // 보스 탄은 **화면 끝까지 나가야 한다.** 수명이 짧으면 중간에 사라져
             // 보스에게서 멀찍이 떨어진 곳이 안전지대가 되고, 탄막을 피할 이유가 없어진다.
             float speed = _config.ShotSpeedEnemy;
-            float reach = new Vector2(_field.rect.width, _field.rect.height).magnitude;
+            float reach = _roomSize.magnitude;
             float life = reach / Mathf.Max(1f, speed) + 0.25f;
 
             for (int i = 0; i < count; i++)
@@ -1588,7 +1653,8 @@ namespace Game.Module.InGame
             _exit.anchorMin = _exit.anchorMax = new Vector2(0f, 1f);
             _exit.pivot = new Vector2(0.5f, 0.5f);
             _exit.sizeDelta = new Vector2(120f, 132f);
-            _exit.anchoredPosition = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * 0.16f);
+            // 정본의 출구는 방 위쪽 끝(14 m 방에서 y=13.4)이다
+            _exit.anchoredPosition = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f);
 
             var img = go.GetComponent<Image>();
             img.sprite = GetSprite("exitportal");
