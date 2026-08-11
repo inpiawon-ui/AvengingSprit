@@ -18,6 +18,10 @@ namespace Game.User
         int StaminaMax { get; }
         int Gold { get; }
         int Gem { get; }
+        /// <summary>보스를 잡아 얻는 영구 재화. 유령 본체를 강화한다 (정본 Growth Runtime).</summary>
+        int SpiritCore { get; }
+        /// <summary>호스트를 써서 쌓이는 영구 재화. 그 몸을 더 능숙하게 만든다.</summary>
+        int HostMemory { get; }
 
         int GhostLevel { get; }
         int GhostExp { get; }
@@ -57,5 +61,9 @@ namespace Game.User
         /// `cleared` 일 때만 스테이지를 전진시킨다 — 실패는 진행도를 건드리지 않는다.
         /// </summary>
         UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared);
+
+        /// <summary>정본 REWARD_DB 를 반영하는 확장형. 영구 재화는 실패해도 남는다.</summary>
+        UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared,
+                                      int spiritCore, int hostMemory, int gem);
     }
 }

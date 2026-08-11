@@ -171,5 +171,9 @@ namespace Game.Module.Events
         public bool IsCleared;
         public int RewardGold;
         public int RewardGhostExp;
+        /// <summary>영구 재화 — 런이 끝나도 남는다 (정본 Growth Runtime).</summary>
+        public int RewardSpiritCore;
+        public int RewardHostMemory;
+        public int RewardGem;
     }
 }

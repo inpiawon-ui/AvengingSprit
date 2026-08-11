@@ -35,6 +35,12 @@ namespace Game.User
         public int gold;
         public int gem;
 
+        // 정본 성장 재화 (Growth Runtime — Gold / Spirit Core / Host Memory / Gem).
+        // 런이 끝나면 빌드·호스트·아이템·시너지는 사라지고 이 둘은 남는다.
+        // 남는 것이 없으면 실패한 런이 통째로 버려진 시간이 된다.
+        public int spiritCore;      // 보스를 잡아 얻는다. 유령 본체를 영구 강화
+        public int hostMemory;      // 호스트를 써서 쌓인다. 그 몸을 더 능숙하게 만든다
+
         [Header("선택")]
         public string selectedHostId = string.Empty;
 

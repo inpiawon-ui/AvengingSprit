@@ -235,6 +235,7 @@ namespace Game.Module.InGame
         {
             _ghostHp = GhostHpMax;
             _tacticalCooldown = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
+            _eliteRoomsCleared = 0;
             _tacticalShown = -1;
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
@@ -278,6 +279,8 @@ namespace Game.Module.InGame
         private RoomEntry _canonRoom;
         private string _canonRoomId = FirstCanonRoom;
         private int _wave = 1;
+        /// <summary>이번 런에서 비운 정예 방 수. 정본 R_ELITE 가 여기에 붙는다.</summary>
+        private int _eliteRoomsCleared;
         private float _waveDelay = -1f;
         private readonly HashSet<string> _missingActors = new();
 
@@ -2176,6 +2179,7 @@ namespace Game.Module.InGame
         private void OnRoomCleared()
         {
             // 마지막 스테이지 = 보스방. 보스를 잡으면 **챕터 클리어**로 끝난다.
+            if (_roomKind == RoomKind.Elite) _eliteRoomsCleared++;
             bool isLast = IsLastRoom;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
@@ -2301,11 +2305,33 @@ namespace Game.Module.InGame
             _running = false;
             // 보상은 **통과한 스테이지 수** 기준. 챕터를 끝냈으면 전부 통과한 것이다.
             int stages = cleared ? RoomTotal : Mathf.Max(0, _roomIndex);
+
+            // 정본 REWARD_DB — 방마다 골드가 조금씩 붙고, 정예방은 스피릿 코어와
+            // 호스트 메모리를 준다. 챕터를 끝내면 큰 몫이 따로 온다.
+            //   R_STD  방당 Gold 10
+            //   R_ELITE 정예방 Gold 25 · Core 2 · Memory 1
+            //   R_CH1  챕터 클리어 Gold 120 · Core 4 · EXP 5
+            int gold = stages * 10 + _eliteRoomsCleared * 15;
+            int core = _eliteRoomsCleared * 2;
+            int memory = _eliteRoomsCleared;
+            int gem = 0;
+            if (cleared)
+            {
+                int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+                gold += ch == 1 ? 120 : ch == 2 ? 180 : 260;
+                core += ch == 1 ? 4 : ch == 2 ? 6 : 9;
+                memory += ch == 1 ? 0 : ch == 2 ? 2 : 4;
+                gem += ch == 3 ? 20 : 0;
+            }
+
             _bus.Publish(new StageFinishedEvent
             {
                 IsCleared = cleared,
-                RewardGold = _config.RewardGold(stages),
+                RewardGold = gold,
                 RewardGhostExp = _config.RewardGhostExp(stages),
+                RewardSpiritCore = core,
+                RewardHostMemory = memory,
+                RewardGem = gem,
             });
         }
 

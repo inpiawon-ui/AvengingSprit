@@ -35,6 +35,8 @@ namespace Game.User
         public int StaminaMax => _data?.staminaMax ?? 0;
         public int Gold       => _data?.gold       ?? 0;
         public int Gem        => _data?.gem        ?? 0;
+        public int SpiritCore => _data?.spiritCore ?? 0;
+        public int HostMemory => _data?.hostMemory ?? 0;
 
         public int GhostLevel  => _data?.ghostLevel  ?? 1;
         public int GhostExp    => _data?.ghostExp    ?? 0;
@@ -146,11 +148,24 @@ namespace Game.User
             });
         }
 
-        public async UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared)
+        public UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared)
+            => GrantStageRewardAsync(gold, ghostExp, cleared, 0, 0, 0);
+
+        /// <summary>
+        /// 런의 결과를 반영한다. 정본 REWARD_DB 는 방·정예·챕터마다 다른 재화를 준다 —
+        /// 골드만 주면 보스를 잡을 이유가 "다음 방으로 간다" 뿐이게 된다.
+        /// </summary>
+        public async UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared,
+                                                   int spiritCore, int hostMemory, int gem)
         {
             if (_data == null) return;
 
             _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
+            _data.gem = Mathf.Max(0, _data.gem + Mathf.Max(0, gem));
+            // 영구 재화는 실패한 런에서도 남긴다. 정본이 "Run 은 끝나지만 Ghost 의 성장은
+            // 계속된다" 를 성장 시스템의 한 줄 요지로 세웠다.
+            _data.spiritCore = Mathf.Max(0, _data.spiritCore + Mathf.Max(0, spiritCore));
+            _data.hostMemory = Mathf.Max(0, _data.hostMemory + Mathf.Max(0, hostMemory));
             PublishCurrency();
 
             // 고스트 EXP — 넘치면 레벨업하고 남은 양을 이월한다

@@ -501,7 +501,9 @@ namespace Game.Module.InGame
         private async UniTaskVoid GoLobbyAsync(StageFinishedEvent e)
         {
             if (_player != null && _player.IsReady && e.RewardGold > 0)
-                await _player.GrantStageRewardAsync(e.RewardGold, e.RewardGhostExp, e.IsCleared);
+                await _player.GrantStageRewardAsync(e.RewardGold, e.RewardGhostExp, e.IsCleared,
+                                                    e.RewardSpiritCore, e.RewardHostMemory,
+                                                    e.RewardGem);
 
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
