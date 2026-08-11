@@ -142,6 +142,10 @@ namespace Game.Module.InGame
             _frameTimer = 0f;
             _shownFrame = -1;
             _shownIndex = -1;
+            _moving = false;
+            _walkPhase = 0f;
+            _dying = false;
+            _deathTimer = 0f;
             _body.transform.localScale = Vector3.one;
             _body.preserveAspect = true;
             _body.raycastTarget = false;
@@ -232,15 +236,27 @@ namespace Game.Module.InGame
         public const int FrameAtk1 = 1;
         public const int FrameAtk2 = 2;
         public const int FrameHit = 3;
+        public const int FrameWalk1 = 4;
+        public const int FrameWalk2 = 5;
+        public const int FrameDie1 = 6;
+        public const int FrameDie2 = 7;
 
         /// <summary>파일명 접미. idle 은 접미가 없어 null 이다.</summary>
-        public static readonly string[] FrameSuffix = { null, "atk1", "atk2", "hit" };
+        public static readonly string[] FrameSuffix =
+            { null, "atk1", "atk2", "hit", "walk1", "walk2", "die1", "die2" };
 
         // 연출 길이. 합(0.17초)이 어떤 호스트의 공격 간격보다도 짧아야 한다 —
         // 길면 다음 발사가 이전 동작을 자르고 들어와 반동이 안 보인다.
         private const float Atk1Seconds = 0.07f;
         private const float Atk2Seconds = 0.10f;
         private const float HitSeconds = 0.12f;   // 붉은 점멸과 같은 길이. 색과 자세가 따로 놀면 어색하다
+
+        // 걸음 한 짝의 길이. 두 장이 번갈아 도므로 한 걸음 주기는 이 값의 2배다.
+        private const float WalkFrameSeconds = 0.14f;
+
+        // 사망. die2 는 페이드가 끝날 때까지 머무르므로 따로 길이를 두지 않는다.
+        private const float Die1Seconds = 0.16f;
+        private const float DeathFadeSeconds = 0.50f;
 
         private readonly Sprite[][] _frames = new Sprite[FrameSuffix.Length][];
         private Sprite _baseSprite;
@@ -251,6 +267,14 @@ namespace Game.Module.InGame
         private float _frameTimer;
         private int _shownFrame = -1, _shownIndex = -1;
         private bool _shownFlip;
+
+        private bool _moving;        // 이번 프레임에 움직였나 — 걷기 재생 조건
+        private float _walkPhase;
+        private bool _dying;
+        private float _deathTimer;
+
+        /// <summary>사망 연출이 도는 중. 이 동안에는 표적·충돌에서 빠져 있어야 한다.</summary>
+        public bool IsDying => _dying;
 
         public bool HasFacing => _frames[FrameIdle] != null;
 
@@ -293,13 +317,10 @@ namespace Game.Module.InGame
         /// 공격·피격 벌이 없으면 그 동작에서도 idle 을 쓴다. 캐릭터를 한 종씩
         /// 채워 넣을 수 있어야 해서, 없는 쪽이 깨지면 안 된다.
         /// </summary>
-        public void SetFacingSprites(Sprite[] idle, Sprite[] atk1 = null,
-                                     Sprite[] atk2 = null, Sprite[] hit = null)
+        public void SetFacingSprites(Sprite[][] sets)
         {
-            _frames[FrameIdle] = Validate(idle);
-            _frames[FrameAtk1] = Validate(atk1);
-            _frames[FrameAtk2] = Validate(atk2);
-            _frames[FrameHit] = Validate(hit);
+            for (int f = 0; f < _frames.Length; f++)
+                _frames[f] = sets != null && f < sets.Length ? Validate(sets[f]) : null;
             _shownFrame = -1;   // 다음 Apply 에서 반드시 다시 그리게 한다
         }
 
@@ -314,6 +335,7 @@ namespace Game.Module.InGame
         /// <summary>사격 동작을 시작한다. 피격 중이면 무시한다 — 맞은 게 더 급한 정보다.</summary>
         public void PlayAttack()
         {
+            if (_dying) return;
             if (_frame == FrameHit && _frameTimer > 0f) return;
             _frame = FrameAtk1;
             _frameTimer = Atk1Seconds;
@@ -323,21 +345,98 @@ namespace Game.Module.InGame
         /// <summary>피격 동작을 시작한다. 사격 중이어도 끊고 들어간다.</summary>
         public void PlayHit()
         {
+            if (_dying) return;
             _frame = FrameHit;
             _frameTimer = HitSeconds;
             Apply();
         }
 
-        /// <summary>동작을 진행시킨다. atk1 → atk2 → idle 순으로 되돌아간다.</summary>
+        /// <summary>
+        /// 이번 프레임에 움직였는지 알려준다. 걷기는 시간이 아니라 **실제 이동**에
+        /// 매여야 한다 — 멈춰 서서 다리만 젓는 그림이 나오면 안 된다.
+        /// </summary>
+        public void SetMoving(bool moving)
+        {
+            if (!moving) _walkPhase = 0f;   // 멈추면 처음 걸음부터 다시 시작
+            _moving = moving;
+        }
+
+        /// <summary>
+        /// 동작을 진행시킨다.
+        /// 공격·피격은 한 번 재생하고 끝나며, 그 뒤에는 이동 중이면 걷기가,
+        /// 아니면 idle 이 깔린다.
+        /// </summary>
         public void TickAnim(float dt)
         {
-            if (_frame == FrameIdle) return;
-            _frameTimer -= dt;
-            if (_frameTimer > 0f) return;
+            if (_dying) return;   // 사망은 TickDeath 가 따로 돈다
 
-            if (_frame == FrameAtk1) { _frame = FrameAtk2; _frameTimer = Atk2Seconds; }
-            else { _frame = FrameIdle; _frameTimer = 0f; }
+            // 한 번짜리 동작(공격·피격)이 재생 중이면 그게 우선이다.
+            if (_frameTimer > 0f)
+            {
+                _frameTimer -= dt;
+                if (_frameTimer > 0f) return;
+                if (_frame == FrameAtk1) { _frame = FrameAtk2; _frameTimer = Atk2Seconds; Apply(); return; }
+                _frameTimer = 0f;
+            }
+
+            if (_moving)
+            {
+                _walkPhase += dt;
+                // 두 장을 번갈아 돌린다. 나머지 연산이라 위상이 커져도 안전하다.
+                bool second = (int)(_walkPhase / WalkFrameSeconds) % 2 == 1;
+                _frame = second ? FrameWalk2 : FrameWalk1;
+            }
+            else
+            {
+                _frame = FrameIdle;
+            }
             Apply();
+        }
+
+        /// <summary>
+        /// 사망 연출을 시작한다. 사망 그림이 없으면 false — 부르는 쪽이
+        /// 예전처럼 바로 없애면 된다. 캐릭터를 한 종씩 채워 넣어야 해서
+        /// 그림이 없는 종이 깨지면 안 된다.
+        /// </summary>
+        public bool BeginDeath()
+        {
+            if (_frames[FrameDie1] == null || _frames[FrameDie2] == null) return false;
+
+            _dying = true;
+            _deathTimer = 0f;
+            _frame = FrameDie1;
+            _frameTimer = 0f;
+            _moving = false;
+
+            // 죽은 몸은 더 이상 정보가 아니다. 체력바·빙의 표식·사격 링을 지운다.
+            if (_hpBarBg != null) _hpBarBg.gameObject.SetActive(false);
+            if (_possessMark != null) _possessMark.gameObject.SetActive(false);
+            if (_fireRing != null) _fireRing.gameObject.SetActive(false);
+
+            Apply();
+            return true;
+        }
+
+        /// <summary>사망 연출을 진행시킨다. 다 끝났으면 true — 그때 없앤다.</summary>
+        public bool TickDeath(float dt)
+        {
+            if (!_dying) return true;
+            _deathTimer += dt;
+
+            if (_deathTimer >= Die1Seconds && _frame == FrameDie1)
+            {
+                _frame = FrameDie2;
+                Apply();
+            }
+
+            // die2 로 넘어간 뒤부터 서서히 사라진다.
+            if (_body != null && _deathTimer > Die1Seconds)
+            {
+                float t = Mathf.Clamp01((_deathTimer - Die1Seconds) / DeathFadeSeconds);
+                var c = _body.color;
+                _body.color = new Color(c.r, c.g, c.b, 1f - t);
+            }
+            return _deathTimer >= Die1Seconds + DeathFadeSeconds;
         }
 
         /// <summary>현재 (프레임 × 방향) 을 화면에 반영한다. 바뀐 게 없으면 아무것도 하지 않는다.</summary>
@@ -426,7 +525,8 @@ namespace Game.Module.InGame
         /// <summary>피격 점멸. 스프라이트를 건드리지 않고 틴트만 흔든다.</summary>
         public void TickFlash(float dt)
         {
-            if (_body == null) return;
+            // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
+            if (_body == null || _dying) return;
             if (_flashTimer <= 0f)
             {
                 if (!_telegraph) _body.color = Color.white;

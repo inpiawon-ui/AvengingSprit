@@ -50,6 +50,12 @@ namespace Game.Module.InGame
         private readonly List<Unit> _enemies = new();
         private readonly List<Unit> _dead = new();   // 정리용 재사용 버퍼 (hot path 할당 금지)
 
+        /// <summary>
+        /// 사망 연출이 도는 몸. `_enemies` 에서는 이미 빠져 있어 표적도 충돌도 되지 않고,
+        /// 그림만 남아 쓰러지다 사라진다. 연출이 끝나면 여기서 빼고 없앤다.
+        /// </summary>
+        private readonly List<Unit> _dying = new();
+
         private const int MaxShots = 64;
         private readonly List<Projectile> _shots = new();
         private RectTransform _shotLayer;
@@ -273,12 +279,11 @@ namespace Game.Module.InGame
         /// </summary>
         private void ApplyFacingSprites(Unit u, string key)
         {
-            var idle = FrameSet(key, null);
-            if (idle == null) return;   // 방향 그림이 없는 종은 지금 그림 그대로 둔다
-            u.SetFacingSprites(idle,
-                               FrameSet(key, Unit.FrameSuffix[Unit.FrameAtk1]),
-                               FrameSet(key, Unit.FrameSuffix[Unit.FrameAtk2]),
-                               FrameSet(key, Unit.FrameSuffix[Unit.FrameHit]));
+            var sets = new Sprite[Unit.FrameSuffix.Length][];
+            for (int f = 0; f < sets.Length; f++)
+                sets[f] = FrameSet(key, Unit.FrameSuffix[f]);
+            if (sets[Unit.FrameIdle] == null) return;   // 방향 그림이 없는 종은 지금 그림 그대로 둔다
+            u.SetFacingSprites(sets);
         }
 
         /// <summary>한 동작의 방향 5장. 하나라도 없으면 null — 반쪽짜리는 안 쓴다.</summary>
@@ -328,6 +333,12 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
             _enemies.Clear();
+
+            // 이전 방에서 쓰러지던 몸은 여기서 끊는다. 안 그러면 새 방 바닥에
+            // 앞 방 시체가 남아 페이드된다.
+            for (int i = 0; i < _dying.Count; i++)
+                if (_dying[i] != null) Destroy(_dying[i].gameObject);
+            _dying.Clear();
 
             _boss = null;
 
@@ -466,6 +477,8 @@ namespace Game.Module.InGame
             TickEnemies(dt);
             TickShots(dt);
             CleanupDead();
+            // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
+            TickDying(dt);
             RefreshPossessTarget();
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
@@ -581,6 +594,7 @@ namespace Game.Module.InGame
             //    이동과 공격이 배타적이어야 "자리를 잡을까 딜을 넣을까"의 긴장이 생긴다.
             //    이걸 없애면 조작이 그냥 산책이 된다.
             bool moving = MoveInput.sqrMagnitude > 0.0001f;
+            if (!moving) me.SetMoving(false);
             if (moving)
             {
                 var p = me.Position + MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt;
@@ -595,6 +609,7 @@ namespace Game.Module.InGame
                 // 이동 중 사격이 되는 호스트는 아래에서 조준 방향이 덮어쓴다 —
                 // 겨누는 쪽이 걷는 쪽보다 우선이다.
                 me.SetFacing(MoveInput);
+                me.SetMoving(true);
 
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
                 // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
@@ -691,14 +706,17 @@ namespace Game.Module.InGame
                 {
                     e.SetState(EnemyState.Approach);
                     e.MoveToward(me.Position, dt);
+                    e.SetMoving(true);
                 }
                 else if (e.TickAttack(dt))
                 {
+                    e.SetMoving(false);
                     e.SetState(EnemyState.Attack);
                     PerformAttack(e, me, false);
                 }
                 else
                 {
+                    e.SetMoving(false);
                     e.SetState(EnemyState.Cooldown);
                 }
 
@@ -1095,7 +1113,7 @@ namespace Game.Module.InGame
         {
             var pos = _host.Position;
             var key = _host.Key;
-            Destroy(_host.gameObject);
+            Retire(_host);       // 몸은 쓰러진다 — 유령이 그 자리에서 빠져나온다
             _host = null;
 
             _ghost.gameObject.SetActive(true);
@@ -1157,7 +1175,7 @@ namespace Game.Module.InGame
             if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
-            Destroy(u.gameObject);
+            Retire(u);
 
             GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
         }
@@ -1201,6 +1219,31 @@ namespace Game.Module.InGame
             _bus.Publish(new BuffOfferEvent { OfferedKeys = keys });
         }
 
+        /// <summary>
+        /// 몸을 화면에서 물린다. 사망 그림이 있으면 쓰러지는 연출을 돌리고,
+        /// 없으면 예전처럼 바로 없앤다 — 캐릭터를 한 종씩 채워 넣는 중이라
+        /// 그림이 없는 종이 멈춰 있으면 안 된다.
+        /// </summary>
+        private void Retire(Unit u)
+        {
+            if (u == null) return;
+            if (u.BeginDeath()) _dying.Add(u);
+            else Destroy(u.gameObject);
+        }
+
+        /// <summary>쓰러지는 중인 몸을 진행시키고, 다 사라진 것을 치운다.</summary>
+        private void TickDying(float dt)
+        {
+            for (int i = _dying.Count - 1; i >= 0; i--)
+            {
+                var u = _dying[i];
+                if (u == null) { _dying.RemoveAt(i); continue; }
+                if (!u.TickDeath(dt)) continue;
+                _dying.RemoveAt(i);
+                Destroy(u.gameObject);
+            }
+        }
+
         private void CleanupDead()
         {
             _dead.Clear();
@@ -1209,7 +1252,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _dead.Count; i++)
             {
                 _enemies.Remove(_dead[i]);
-                if (_dead[i] != null) Destroy(_dead[i].gameObject);
+                if (_dead[i] != null) Retire(_dead[i]);
             }
             _dead.Clear();
         }
