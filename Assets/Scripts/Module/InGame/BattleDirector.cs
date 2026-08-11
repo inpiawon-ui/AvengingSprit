@@ -362,6 +362,25 @@ namespace Game.Module.InGame
         private readonly List<Obstacle> _obstacles = new();
         private readonly Dictionary<Unit, float> _hazardTimer = new();
 
+        /// <summary>
+        /// 그림이 발자국보다 위로 더 솟는 높이(픽셀).
+        ///
+        /// 쿼터뷰라 기둥은 바닥에 찍힌 넓이보다 위로 훨씬 높다. 그림을 충돌 사각형에
+        /// 딱 맞추면 기둥이 납작한 타일이 되어 "가릴 수 있는 것"으로 안 보인다.
+        /// 그림 캔버스는 `발자국 + 솟음` 이고, 캔버스 아래쪽이 발자국과 맞물린다.
+        ///
+        /// 해저드는 0이다. 불길이 사각형 밖으로 나가면 어디까지가 아픈 자리인지 흐려진다.
+        /// </summary>
+        private static readonly Dictionary<string, float> ObstacleRise = new()
+        {
+            { "PILLAR",        114f },
+            { "DIVIDER",        70f },
+            { "RICOCHET_WALL",  90f },
+            { "BARRICADE",      55f },
+            { "LOW_COVER",      34f },
+            { "HAZARD",          0f },
+        };
+
         private static readonly Dictionary<string, Color> ObstacleColor = new()
         {
             { "PILLAR",        new Color(0.34f, 0.31f, 0.42f, 1f) },
@@ -391,19 +410,32 @@ namespace Game.Module.InGame
                 var rect = new Rect(center.x - size.x * 0.5f, center.y - size.y * 0.5f,
                                     size.x, size.y);
 
+                // 그림은 발자국보다 위로 솟는다. 아래쪽을 발자국에 맞물려 놓아야
+                // 발밑이 어긋나지 않는다.
+                float rise = ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f;
+                var viewSize = new Vector2(size.x, size.y + rise);
+                var viewCenter = new Vector2(center.x, center.y + rise * 0.5f);
+
                 var go = new GameObject($"Obj_{o.Kind}_{o.ObjectId}",
                                         typeof(RectTransform), typeof(Image));
                 go.transform.SetParent(_unitLayer, false);
                 var rt = (RectTransform)go.transform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.sizeDelta = size;
-                rt.anchoredPosition = center;
-                rt.SetAsFirstSibling();      // 유닛보다 뒤에 깔린다
+                rt.sizeDelta = viewSize;
+                rt.anchoredPosition = viewCenter;
 
                 var img = go.GetComponent<Image>();
-                img.color = ObstacleColor.TryGetValue(o.Kind ?? "", out var c)
-                    ? c : new Color(0.33f, 0.32f, 0.40f, 1f);
+                // 같은 종류라도 세로벽·가로벽처럼 비율이 다른 것이 있다(RICOCHET_WALL).
+                // 한 장으로 돌려쓰면 늘어나 픽셀이 뭉개지므로 방향별로 찾아본다.
+                string kind = (o.Kind ?? "").ToLowerInvariant();
+                var sprite = GetSprite($"obj_{kind}_{(size.y >= size.x ? "v" : "h")}")
+                             ?? GetSprite($"obj_{kind}");
+                img.sprite = sprite;
+                img.color = sprite != null
+                    ? Color.white
+                    : ObstacleColor.TryGetValue(o.Kind ?? "", out var c)   // 그림 오기 전 자리표시자
+                        ? c : new Color(0.33f, 0.32f, 0.40f, 1f);
                 img.raycastTarget = false;
 
                 _obstacles.Add(new Obstacle
@@ -444,6 +476,52 @@ namespace Game.Module.InGame
                 foot = new Vector2(p.x, p.y - half.y);
             }
             u.Position = p;
+        }
+
+        // 앞뒤 정렬 — 발밑이 아래인 것이 위에 그려진다.
+        // 쿼터뷰라 기둥이 항상 뒤에 깔리면 기둥 앞에 선 캐릭터까지 기둥에 가려진다.
+        // 매 프레임 새 리스트를 만들면 hot path 할당이 되므로 버퍼를 재사용한다.
+        private readonly List<Transform> _depthT = new();
+        private readonly List<float> _depthY = new();
+
+        private void AddDepth(Unit u)
+        {
+            if (u == null || !u.gameObject.activeSelf) return;
+            _depthT.Add(u.transform);
+            _depthY.Add(u.Position.y - ((RectTransform)u.transform).sizeDelta.y * 0.5f);
+        }
+
+        private void SortDepth()
+        {
+            if (_obstacles.Count == 0) return;   // 지형지물이 없으면 정렬할 이유가 없다
+
+            _depthT.Clear();
+            _depthY.Clear();
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (o.View == null) continue;
+                _depthT.Add(o.View.transform);
+                _depthY.Add(o.Bounds.yMin);      // 발자국의 아래 변
+            }
+            AddDepth(_ghost);
+            AddDepth(_host);
+            for (int i = 0; i < _enemies.Count; i++) AddDepth(_enemies[i]);
+            for (int i = 0; i < _dying.Count; i++) AddDepth(_dying[i]);
+
+            // 삽입 정렬 — 항목이 스무 개 남짓이고 프레임마다 거의 정렬돼 있다.
+            for (int i = 1; i < _depthT.Count; i++)
+            {
+                var t = _depthT[i]; float y = _depthY[i];
+                int j = i - 1;
+                while (j >= 0 && _depthY[j] < y)   // 큰 값(위쪽)이 앞으로
+                {
+                    _depthT[j + 1] = _depthT[j]; _depthY[j + 1] = _depthY[j]; j--;
+                }
+                _depthT[j + 1] = t; _depthY[j + 1] = y;
+            }
+            for (int i = 0; i < _depthT.Count; i++)
+                if (_depthT[i].GetSiblingIndex() != i) _depthT[i].SetSiblingIndex(i);
         }
 
         /// <summary>해저드 위에 서 있으면 주기적으로 깎인다.</summary>
@@ -905,6 +983,7 @@ namespace Game.Module.InGame
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
             TickHazards(dt);
+            SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
             TickDamageTexts(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
