@@ -23,6 +23,9 @@ MonoBehaviour:
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
   _hostStartHpPercent: 70
+  _tacticalGhostCost: 6
+  _tacticalCooldownSeconds: 8
+  _tacticalPossessRange: 280
   _emergencyDelaySeconds: 1
   _emergencyHostHpPercent: 30
   _emergencyGhostCost: 20

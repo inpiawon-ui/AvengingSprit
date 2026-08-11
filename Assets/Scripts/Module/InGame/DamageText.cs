@@ -57,11 +57,15 @@ namespace Game.Module.InGame
         /// 숫자가 완전히 겹치지 않도록 가로로 조금씩 흩어 놓는다.
         /// </summary>
         public void Show(Vector2 at, int damage, Color color)
+            => Show(at, damage.ToString(), color);
+
+        /// <summary>피해 말고도 띄울 것이 있다 — 전술 빙의로 나간 Ghost HP 같은 것.</summary>
+        public void Show(Vector2 at, string text, Color color)
         {
             _origin = at;
             _drift = Random.Range(-10f, 10f);
             _life = LifeSeconds;
-            _tmp.text = damage.ToString();
+            _tmp.text = text;
             _tmp.color = color;
             gameObject.SetActive(true);
             Apply();

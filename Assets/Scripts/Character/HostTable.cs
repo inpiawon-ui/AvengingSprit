@@ -43,6 +43,22 @@ namespace Game.Character
     /// 사격 대상을 고르는 규칙 (기획서 A 3-3 Target Type).
     /// 호스트마다 "누구를 먼저 때리는가"가 다르면, 같은 화력이라도 교전 그림이 달라진다.
     /// </summary>
+    /// <summary>
+    /// 몸을 빼앗을 수 있는 방식 (정본 POSSESSION_MATRIX).
+    ///
+    /// 전부 즉시면 "가장 센 몸으로 갈아탄다"가 언제나 정답이 된다.
+    /// 어떤 몸은 먼저 두들겨 놔야 열린다 — 그래서 지금 이 몸으로 싸울 이유가 생긴다.
+    /// </summary>
+    public enum PossessKind
+    {
+        /// <summary>조건 없이 바로 (갱스터·폭력배·구루·야구선수)</summary>
+        Immediate = 0,
+        /// <summary>조건을 채워야 열린다</summary>
+        Condition = 1,
+        /// <summary>절대 못 뺏는다 (방패병·센서드론·보스)</summary>
+        NotPossessable = 2,
+    }
+
     public enum TargetType
     {
         /// <summary>가장 가까운 적. 기본값</summary>
@@ -99,6 +115,15 @@ namespace Game.Character
         [Tooltip("빙의 우선순위. 높을수록 먼저 잡힌다. 같으면 가까운 쪽 (기획서 A 4-3)")]
         [SerializeField] private int _possessPriority;
 
+        [Tooltip("빙의 방식 (정본 POSSESSION_MATRIX)")]
+        [SerializeField] private PossessKind _possessKind = PossessKind.Immediate;
+
+        [Tooltip("Condition 일 때 — 체력이 이 % 이하로 떨어져야 열린다.\n" +
+                 "정본의 조건은 화상3·빙결·장갑파괴 같은 상태이상인데 아직 그 시스템이 없다. " +
+                 "지금은 전부 체력 임계로 대신 판정한다 — '먼저 두들겨 놔야 열린다'는 모양은 같다.")]
+        [Range(0, 100)]
+        [SerializeField] private int _possessHpPercent = 50;
+
         [Header("얼티밋")]
         [SerializeField] private string _ultimateKey;
 
@@ -128,6 +153,8 @@ namespace Game.Character
         public TargetType Targeting => _targetType;
         public BuffTag Tag => _tag;
         public int PossessPriority => _possessPriority;
+        public PossessKind PossessKind => _possessKind;
+        public int PossessHpPercent => Mathf.Clamp(_possessHpPercent, 1, 100);
 
         /// <summary>호스트 선택·인게임 HUD 에 쓰는 짧은 교전 스타일 문구.</summary>
         public string AttackText => _attackKind switch

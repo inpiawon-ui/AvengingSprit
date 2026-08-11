@@ -38,18 +38,23 @@ namespace Game.Editor
         //
         // ⚠ `fighter`(E002/H02)는 CH1 두 번째로 흔한 적인데 그림이 아직 없다.
         //    그림이 오면 이 배열에 추가한다 — 없는 채로 넣으면 보이지 않는 적이 된다.
+        // 마지막 두 칸은 빙의 방식과 체력 임계다(정본 POSSESSION_MATRIX).
+        // 정본 조건은 상태이상(화상3·빙결·장갑파괴)인데 그 시스템이 아직 없다.
+        // 지금은 체력 임계로 대신 판정하고, 조건이 셀수록 임계를 낮게 잡았다.
+        //   갱스터·폭력배·구루·야구선수 = 즉시 (정본 Immediate)
+        //   ArmorBreak AND Burn3 처럼 둘 다 요구하는 것은 더 낮은 임계로 옮겼다
         private static readonly object[][] Hosts =
         {
-            new object[]{ "gangster",         "GANGSTER",         "갱스터",        "확산 사수",     70, 76, 64, 58, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "tommy_barrage",   HostUnlockType.Owned,            0, 0 },
-            new object[]{ "thug",             "THUG",             "폭력배",        "중화기 사수",   80, 85, 55, 45, AttackKind.Rapid,  1, 0f,  1.0f, 0.4f,  0.48f, 0, 0, false, "bullet_hell",     HostUnlockType.Owned,            0, 0 },
-            new object[]{ "salamander",       "SALAMANDER",       "샐러맨더",      "화염 돌파",     95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath",   HostUnlockType.Owned,            0, 0 },
-            new object[]{ "white_wizard",     "WHITE WIZARD",     "화이트 위저드", "둔화 제어",     58, 88, 62, 55, AttackKind.Pierce, 1, 0f,  1.3f, 1.35f, 1.75f, 0, 0, false, "elemental_nova",  HostUnlockType.Owned,            0, 0 },
-            new object[]{ "ninja",            "NINJA",            "닌자",          "순간 폭발",     66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f,  0.6f, 0, 0, false, "shadow_burst",    HostUnlockType.Owned,            0, 0 },
-            new object[]{ "assault_gangster", "ASSAULT GANGSTER", "어설트 갱스터", "관통 레이저",   70, 78, 65, 55, AttackKind.Pierce, 1, 0f,  1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm",     HostUnlockType.ChapterBossClear, 1, 0 },
-            new object[]{ "robot",            "ROBOT",            "로봇",          "배치 테크",     82, 72, 60, 50, AttackKind.Pierce, 1, 0f,  1.1f, 1.0f,  1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 1, 0 },
-            new object[]{ "guru",             "GURU",             "구루",          "부양 서포트",   76, 52, 70, 74, AttackKind.Pulse,  1, 0f,  0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form",     HostUnlockType.ChapterBossClear, 1, 0 },
-            new object[]{ "vampire",          "VAMPIRE",          "흡혈귀",        "흡혈 지속",     74, 82, 76, 66, AttackKind.Melee,  1, 0f,  0.5f, 0.7f,  1.05f, 35, 0, false, "blood_tornado",   HostUnlockType.ChapterBossClear, 1, 0 },
-            new object[]{ "baseball",         "BASEBALL PLAYER",  "야구선수",      "탄환 반사",     78, 66, 72, 70, AttackKind.Melee,  1, 0f,  0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam",      HostUnlockType.ChapterBossClear, 2, 0 },
+            new object[]{ "gangster",         "GANGSTER",         "갱스터",        "확산 사수",     70, 76, 64, 58, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "tommy_barrage",   HostUnlockType.Owned,            0, 0, PossessKind.Immediate, 100 },
+            new object[]{ "thug",             "THUG",             "폭력배",        "중화기 사수",   80, 85, 55, 45, AttackKind.Rapid,  1, 0f,  1.0f, 0.4f,  0.48f, 0, 0, false, "bullet_hell",     HostUnlockType.Owned,            0, 0, PossessKind.Immediate, 100 },
+            new object[]{ "salamander",       "SALAMANDER",       "샐러맨더",      "화염 돌파",     95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath",   HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 },
+            new object[]{ "white_wizard",     "WHITE WIZARD",     "화이트 위저드", "둔화 제어",     58, 88, 62, 55, AttackKind.Pierce, 1, 0f,  1.3f, 1.35f, 1.75f, 0, 0, false, "elemental_nova",  HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 },
+            new object[]{ "ninja",            "NINJA",            "닌자",          "순간 폭발",     66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f,  0.6f, 0, 0, false, "shadow_burst",    HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 },
+            new object[]{ "assault_gangster", "ASSAULT GANGSTER", "어설트 갱스터", "관통 레이저",   70, 78, 65, 55, AttackKind.Pierce, 1, 0f,  1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm",     HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50 },
+            new object[]{ "robot",            "ROBOT",            "로봇",          "배치 테크",     82, 72, 60, 50, AttackKind.Pierce, 1, 0f,  1.1f, 1.0f,  1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 45 },
+            new object[]{ "guru",             "GURU",             "구루",          "부양 서포트",   76, 52, 70, 74, AttackKind.Pulse,  1, 0f,  0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form",     HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Immediate, 100 },
+            new object[]{ "vampire",          "VAMPIRE",          "흡혈귀",        "흡혈 지속",     74, 82, 76, 66, AttackKind.Melee,  1, 0f,  0.5f, 0.7f,  1.05f, 35, 0, false, "blood_tornado",   HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 35 },
+            new object[]{ "baseball",         "BASEBALL PLAYER",  "야구선수",      "탄환 반사",     78, 66, 72, 70, AttackKind.Melee,  1, 0f,  0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam",      HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Immediate, 100 },
         };
 
 
@@ -126,6 +131,7 @@ namespace Game.Editor
                 Set(e, "_reflectsShots", h[16]);
                 Set(e, "_ultimateKey", h[17]);
                 Set(e, "_unlockType", h[18]); Set(e, "_unlockChapter", h[19]); Set(e, "_unlockStage", h[20]);
+                Set(e, "_possessKind", h[21]); Set(e, "_possessHpPercent", h[22]);
                 return e;
             }).ToArray();
             Set(host, "_entries", entries);

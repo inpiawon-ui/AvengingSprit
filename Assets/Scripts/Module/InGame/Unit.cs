@@ -73,8 +73,51 @@ namespace Game.Module.InGame
             set => _rect.anchoredPosition = value;
         }
 
-        /// <summary>호스트가 될 수 있는 적인가. 보스는 빙의 대상이 아니다.</summary>
-        public bool IsPossessable => Side == UnitSide.Enemy && !IsBoss && IsAlive;
+        /// <summary>
+        /// 지금 이 몸을 빼앗을 수 있는가 (정본 POSSESSION_MATRIX).
+        ///
+        /// 보스는 언제나 불가다. 나머지는 프로필의 방식을 따른다 —
+        /// 즉시면 바로, 조건부면 체력을 임계 아래로 깎아 놔야 열린다.
+        /// 프로필이 없는 적(임시 스프라이트 등)은 즉시로 본다. 못 뺏는 적이
+        /// 조용히 늘어나면 방이 통째로 막힌다.
+        /// </summary>
+        public bool IsPossessable
+        {
+            get
+            {
+                if (Side != UnitSide.Enemy || IsBoss || !IsAlive || _dying) return false;
+                if (Profile == null) return true;
+                return Profile.PossessKind switch
+                {
+                    Game.Character.PossessKind.NotPossessable => false,
+                    Game.Character.PossessKind.Condition => HpPercent <= Profile.PossessHpPercent,
+                    _ => true,
+                };
+            }
+        }
+
+        /// <summary>빙의 조건이 걸려 있는 적인가. 표식을 어떻게 그릴지가 갈린다.</summary>
+        public bool HasPossessCondition =>
+            Profile != null && Profile.PossessKind == Game.Character.PossessKind.Condition;
+
+        /// <summary>
+        /// 조건 진행도 0~1. 체력이 임계에 닿으면 1이다.
+        /// 표식의 게이지가 이 값을 그린다 — 얼마나 더 때려야 열리는지가 보여야
+        /// "왜 안 잡히지"가 "조금만 더"가 된다.
+        /// </summary>
+        public float PossessProgress
+        {
+            get
+            {
+                if (!HasPossessCondition) return 1f;
+                int gate = Profile.PossessHpPercent;
+                if (gate >= 100) return 1f;
+                // 100% → 0, 임계 → 1
+                return Mathf.Clamp01((100f - HpPercent) / (100f - gate));
+            }
+        }
+
+        private float HpPercent => HpMax > 0 ? Hp * 100f / HpMax : 0f;
 
         /// <summary>공격 방식 데이터. 보스는 null (기본 단발).</summary>
         public Game.Character.HostEntry Profile { get; private set; }
@@ -193,9 +236,51 @@ namespace Game.Module.InGame
             return img;
         }
 
-        public void SetPossessMark(bool on)
+        /// <summary>빙의 표식 상태 (정본 POSSESSION_MATRIX 의 UI 3단).</summary>
+        public enum PossessMark
         {
-            if (_possessMark != null) _possessMark.gameObject.SetActive(on);
+            /// <summary>표식 없음</summary>
+            None,
+            /// <summary>조건이 안 찼다 — 회색. 게이지가 얼마나 남았는지 보여준다</summary>
+            Progress,
+            /// <summary>지금 뺏을 수 있다 — 보라</summary>
+            Ready,
+        }
+
+        private Image _possessMeter;
+
+        /// <summary>
+        /// 빙의 표식을 그린다. 조건부 적은 **잠긴 상태도 보여야** 한다 —
+        /// 아무 표시가 없으면 "왜 안 잡히지"로 끝나고, 게이지가 보이면 "조금만 더"가 된다.
+        /// </summary>
+        public void SetPossessMark(PossessMark state, float progress = 1f)
+        {
+            if (_possessMark == null) return;
+            bool on = state != PossessMark.None;
+            if (_possessMark.gameObject.activeSelf != on) _possessMark.gameObject.SetActive(on);
+            if (!on) return;
+
+            _possessMark.color = state == PossessMark.Ready
+                ? new Color(0.62f, 0.45f, 1f, 0.95f)      // 보라 — 지금 누르면 된다
+                : new Color(0.55f, 0.58f, 0.66f, 0.75f);  // 회색 — 아직 잠겼다
+
+            if (_possessMeter == null)
+            {
+                var size = ((RectTransform)_possessMark.transform).sizeDelta;
+                _possessMeter = GetOrCreate("PossessMeter", size, Vector2.zero,
+                                            _possessMark.transform);
+                _possessMeter.type = Image.Type.Filled;
+                _possessMeter.fillMethod = Image.FillMethod.Radial360;
+                _possessMeter.fillOrigin = (int)Image.Origin360.Top;
+            }
+            bool showMeter = state == PossessMark.Progress;
+            if (_possessMeter.gameObject.activeSelf != showMeter)
+                _possessMeter.gameObject.SetActive(showMeter);
+            if (showMeter)
+            {
+                _possessMeter.fillAmount = Mathf.Clamp01(progress);
+                _possessMeter.color = new Color(0.72f, 0.58f, 1f, 0.9f);
+            }
         }
 
         /// <summary>

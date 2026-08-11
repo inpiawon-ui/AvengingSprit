@@ -1295,6 +1295,8 @@ namespace Game.Module.InGame
         // 화면이 숫자로 덮였을 때 상황 판단이 안 된다.
         private static readonly Color DamageToEnemy = new(1f, 0.95f, 0.75f, 1f);
         private static readonly Color DamageToPlayer = new(1f, 0.42f, 0.38f, 1f);
+        // 유령 HP 색(#5AC8F0)과 같은 계열. 피해 숫자와 섞이면 안 된다 — 성격이 다른 값이다.
+        private static readonly Color GhostCostColor = new(0.35f, 0.78f, 0.94f, 1f);
 
         private const int MaxDamageTexts = 24;
 
@@ -1319,6 +1321,15 @@ namespace Game.Module.InGame
             var t = RentDamageText();
             if (t == null) return;
             t.Show(at, damage, toEnemy ? DamageToEnemy : DamageToPlayer);
+        }
+
+        /// <summary>전술 빙의로 나간 Ghost HP. 유령 색으로 띄워 피해 숫자와 구분한다.</summary>
+        private void ShowGhostCost(Vector2 at, int cost)
+        {
+            if (cost <= 0) return;
+            var t = RentDamageText();
+            if (t == null) return;
+            t.Show(at, $"-{cost}", GhostCostColor);
         }
 
         private void TickDamageTexts(float dt)
@@ -1361,7 +1372,12 @@ namespace Game.Module.InGame
                     var e = _enemies[i];
                     if (e == null || !e.IsPossessable) continue;
 
-                    float range = e.PossessRange > 0f ? e.PossessRange : _config.PossessRange;
+                    // 사거리가 유령과 호스트에서 다르다. 유령은 몸에 달라붙어야 하지만,
+                    // 호스트는 265 밖에서 쏘고 있어 유령 사거리(110)로는 버튼이 영영 안 켜진다.
+                    // 전술 빙의가 실제로 눌리는 선택지가 되려면 교전 거리에서 닿아야 한다.
+                    float range = _host != null ? _config.TacticalPossessRange
+                                : e.PossessRange > 0f ? e.PossessRange
+                                : _config.PossessRange;
                     float d = Vector2.Distance(from.Position, e.Position);
                     if (d > range) continue;
 
@@ -1371,8 +1387,17 @@ namespace Game.Module.InGame
                     bestPri = e.PossessPriority; bestD = d; _possessTarget = e;
                 }
             }
+            // 표식은 대상에만 찍지 않는다. 조건부 적은 **잠긴 것도 보여야** 어느 놈을
+            // 먼저 두들겨야 하는지 알 수 있다.
             for (int i = 0; i < _enemies.Count; i++)
-                if (_enemies[i] != null) _enemies[i].SetPossessMark(_enemies[i] == _possessTarget);
+            {
+                var e = _enemies[i];
+                if (e == null) continue;
+                if (e == _possessTarget) e.SetPossessMark(Unit.PossessMark.Ready);
+                else if (e.HasPossessCondition && e.IsAlive && !e.IsDying)
+                    e.SetPossessMark(Unit.PossessMark.Progress, e.PossessProgress);
+                else e.SetPossessMark(Unit.PossessMark.None);
+            }
 
             bool has = _possessTarget != null;
             int cost = _host != null ? _config.TacticalGhostCost : 0;
@@ -1426,6 +1451,10 @@ namespace Game.Module.InGame
                 _ghostHp = Mathf.Max(1, _ghostHp - _config.TacticalGhostCost);
                 _tacticalCooldown = _config.TacticalCooldownSeconds;
                 _tacticalShown = -1;
+
+                // 값을 치렀다는 것이 화면에서 보여야 한다. 상단 숫자만 바뀌면
+                // 100 중 6이라 눈치채지 못한다 — 버린 몸 자리에 띄운다.
+                ShowGhostCost(_host.Position, _config.TacticalGhostCost);
 
                 // 버린 몸은 그 자리에 쓰러진다. 경험치는 주지 않는다 —
                 // 죽인 것이 아니라 놓아준 것이고, 값을 치른 쪽은 나다.

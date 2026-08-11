@@ -55,6 +55,9 @@ namespace Game.Character
         [SerializeField] private int _tacticalGhostCost = 6;
         [Tooltip("전술 빙의 재사용 대기(초). 정본 잠금값 8. 이게 없으면 매 적마다 갈아타는 게 최적해가 된다.")]
         [SerializeField] private float _tacticalCooldownSeconds = 8f;
+        [Tooltip("몸을 입은 채 뺏을 수 있는 거리. 유령 사거리(110)를 그대로 쓰면 " +
+                 "호스트는 265 밖에서 쏘고 있어 버튼이 영영 안 켜진다. 교전 거리에 맞춘다.")]
+        [SerializeField] private float _tacticalPossessRange = 280f;
 
         [Header("긴급 호스트 (기획서 A 8-3)")]
         [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
@@ -140,6 +143,7 @@ namespace Game.Character
         public int EmergencyGhostCost => Mathf.Max(0, _emergencyGhostCost);
         public int TacticalGhostCost => Mathf.Max(0, _tacticalGhostCost);
         public float TacticalCooldownSeconds => Mathf.Max(0f, _tacticalCooldownSeconds);
+        public float TacticalPossessRange => _tacticalPossessRange;
         public int EliteEnemyCount => Mathf.Max(1, _eliteEnemyCount);
         public float EliteHpMul => _eliteHpMul;
         public float EliteAtkMul => _eliteAtkMul;

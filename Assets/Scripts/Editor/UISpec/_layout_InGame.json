@@ -384,6 +384,16 @@
    "h": 170.0
   },
   {
+   "name": "PossessCooldown",
+   "parent": "PossessButton",
+   "create": "IMG",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 137.5,
+   "h": 170.0,
+   "local": true
+  },
+  {
    "name": "PossessCooldownText",
    "parent": "PossessButton",
    "create": "TMP",

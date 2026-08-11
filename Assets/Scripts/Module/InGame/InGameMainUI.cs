@@ -52,6 +52,7 @@ namespace Game.Module.InGame
         private Vector2 _dpadHome;
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
+        private Image _possessCooldown;
         private int _possessCost;
         private BuffTable _buffTable;
         private string _bossName = "BOSS";
@@ -77,6 +78,18 @@ namespace Game.Module.InGame
                 _ultimateCooldown.raycastTarget = false;
             }
             _possessButtonImage = _ui.Get<Image>("PossessButton");
+            _possessCooldown = _ui.Get<Image>("PossessCooldown");
+            if (_possessCooldown != null)
+            {
+                // 얼티밋과 같은 방식 — 아래에서 차오르는 덮개. 숫자만으로는
+                // 얼마나 남았는지 감이 안 온다.
+                _possessCooldown.type = Image.Type.Filled;
+                _possessCooldown.fillMethod = Image.FillMethod.Vertical;
+                _possessCooldown.fillOrigin = (int)Image.OriginVertical.Top;
+                _possessCooldown.color = new Color(0.05f, 0.06f, 0.12f, 0.72f);
+                _possessCooldown.raycastTarget = false;
+                _possessCooldown.fillAmount = 0f;
+            }
 
             HookDPad();
             _ui.OnClick("PossessButton", () => _battle?.TryPossess());
@@ -373,11 +386,16 @@ namespace Game.Module.InGame
 
         private void SetPossessReady(bool ready) => SetPossessState(ready, 0, false);
 
-        /// <summary>전술 빙의 쿨다운. 남은 초를 버튼에 겹쳐 쓴다.</summary>
+        /// <summary>
+        /// 전술 빙의 쿨다운. 남은 초와 차오르는 덮개를 함께 보여준다.
+        /// 숫자만으로는 "얼마나 남았나"가 손에 안 잡히고, 덮개만으로는 정확한 값을 모른다.
+        /// </summary>
         private void OnTacticalCooldown(TacticalCooldownEvent e)
         {
             _ui.SetText("PossessCooldownText",
                         e.Remain > 0f ? Mathf.CeilToInt(e.Remain).ToString() : string.Empty);
+            if (_possessCooldown != null)
+                _possessCooldown.fillAmount = e.Total > 0f ? Mathf.Clamp01(e.Remain / e.Total) : 0f;
         }
 
         private void RefreshCurrency()
