@@ -1,0 +1,43 @@
+{
+  "status": "READY FOR DEVELOPER TECHNICAL QA",
+  "counts": {
+    "rooms": 34,
+    "routes": 36,
+    "conditions": 25,
+    "attackProfiles": 30,
+    "maintainHooks": 12,
+    "projectiles": 24,
+    "prefabs": 65,
+    "classes": 37,
+    "designExpectations": 82,
+    "playtestMetrics": 8,
+    "smokeTests": 38,
+    "files": 73
+  },
+  "checks": {
+    "duplicateIds": 0,
+    "routeErrors": 0,
+    "spawnBoundsErrors": 0,
+    "spawnReferenceErrors": 0,
+    "conditionSchemaErrors": 0,
+    "bossPossessableErrors": 0,
+    "ch1BaseballResidualErrors": 0,
+    "h16MinChapterErrors": 0,
+    "s01BaseActivationErrors": 0,
+    "ch1TagBuffUnlockErrors": 0,
+    "hostFeelDuplicateErrors": 0,
+    "bossPhaseBehaviorErrors": 0,
+    "possessionBalanceErrors": 0,
+    "spawnSourceErrors": 0,
+    "spawnCount": 104,
+    "spawnUniqueCoordinates": 74,
+    "possessableNullHostErrors": 0,
+    "invalidCandidateHostRefErrors": 0,
+    "e015MinChapterErrors": 0,
+    "gateDisplayNameErrors": 0,
+    "contractSchemaErrors": 0,
+    "baseballFirstPlayable": "CH3_N07",
+    "tacticalDefault": "B: Cost 6 / CD 8",
+    "unityExecution": "NOT EXECUTED"
+  }
+}

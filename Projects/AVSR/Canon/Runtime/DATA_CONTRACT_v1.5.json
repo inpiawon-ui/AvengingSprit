@@ -1,0 +1,3005 @@
+{
+  "contractVersion": "1.5.0",
+  "generatedAt": "2026-08-10",
+  "sourceFlow": "MASTER XLSX -> Export Validator -> Runtime JSON",
+  "runtimeSourceOfTruth": "CH01_03_RUNTIME_DATA_v1.5.json",
+  "spawnPolicy": {
+    "singleRuntimeSource": "layout.enemySpawns",
+    "legacyTopLevelSpawns": "REMOVED",
+    "importerRule": "Never import a top-level spawns collection"
+  },
+  "coordinateSystem": {
+    "origin": "BOTTOM_LEFT",
+    "width": 8.4,
+    "height": 14,
+    "bossHeight": 16,
+    "units": "meters"
+  },
+  "idPolicy": {
+    "runtimeIdOnly": true,
+    "displayNameSeparated": true,
+    "gateHostRef": "HostID or HostPoolID only"
+  },
+  "enums": {
+    "PossessionType": [
+      "Immediate",
+      "Condition",
+      "NotPossessable"
+    ],
+    "ConditionLogic": [
+      "NONE",
+      "AND",
+      "OR"
+    ],
+    "EnemyEndReason": [
+      "Killed",
+      "Possessed",
+      "Despawned",
+      "RoomCleanup",
+      "Scripted"
+    ],
+    "SpawnTrigger": [
+      "ROOM_START",
+      "TIME",
+      "ENEMY_COUNT_BELOW",
+      "WAVE_CLEAR",
+      "ELITE_HP",
+      "BOSS_PHASE",
+      "INTERACTION"
+    ],
+    "RoomState": [
+      "Loading",
+      "Entering",
+      "IntroSafe",
+      "Combat",
+      "WaveTransition",
+      "Clear",
+      "Reward",
+      "ExitOpen",
+      "Leaving"
+    ],
+    "GhostState": [
+      "GhostSpawn",
+      "Protection",
+      "TargetSearch",
+      "PossessionReady",
+      "PossessionTravel",
+      "HostSpawn"
+    ],
+    "ExecutionStatus": [
+      "NOT STARTED",
+      "NOT EXECUTED",
+      "PASS",
+      "FAIL",
+      "BLOCKED"
+    ]
+  },
+  "requiredCollections": [
+    "chapters",
+    "rooms",
+    "routes",
+    "entryExit",
+    "layout.enemySpawns",
+    "layout.candidates",
+    "hostPools",
+    "waves",
+    "conditions",
+    "hosts",
+    "enemies",
+    "elites",
+    "bosses",
+    "attacks",
+    "projectiles",
+    "statuses",
+    "aiProfiles",
+    "buffs",
+    "buffUnlockPolicy",
+    "synergies",
+    "maintainHooks",
+    "possessionBalanceVariants",
+    "bossPhases",
+    "designExpectations",
+    "playtestMetrics",
+    "prefabRegistry",
+    "navProfiles",
+    "colliderProfiles",
+    "saveContract"
+  ],
+  "collectionSchemas": {
+    "chapters": {
+      "representation": "objectRecord",
+      "fields": [
+        {
+          "name": "chapterId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "targetMinutes",
+          "type": "array",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "startNodeId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "bossId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "unlock",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "clearRewardId",
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "rooms": {
+      "representation": "objectRecord",
+      "fields": [
+        {
+          "name": "chapter",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "roomId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "route",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "expectedSeconds",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "threatBudget",
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "composition",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "hostOpportunity",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "recommendedHost",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "maintain",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "switch",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "condition",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "reward",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "recovery",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ghostPressure",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "difficulty",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "layoutRef",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "qaRisk",
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "routes": {
+      "representation": "objectRecord",
+      "fields": [
+        {
+          "name": "chapterId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "roomId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "exitId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "nextRoomId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "routeCondition",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "exitPosition",
+          "type": "object",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "exitFacing",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "gatePrefabId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "unlockCondition",
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "entryExit": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "RoomID",
+        "EntryPointID",
+        "EntryX",
+        "EntryY",
+        "EntryFacing",
+        "EntryTriggerID",
+        "ExitPointID",
+        "ExitX",
+        "ExitY",
+        "ExitFacing",
+        "GateState",
+        "NextRoomID",
+        "UnlockRule"
+      ],
+      "fields": [
+        {
+          "name": "RoomID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EntryPointID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EntryX",
+          "index": 2,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EntryY",
+          "index": 3,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EntryFacing",
+          "index": 4,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EntryTriggerID",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExitPointID",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExitX",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExitY",
+          "index": 8,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExitFacing",
+          "index": 9,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "GateState",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "NextRoomID",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "UnlockRule",
+          "index": 12,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "hosts": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "HostID",
+        "HostName",
+        "Role",
+        "PossessionType",
+        "PossessionCondition",
+        "MinChapter",
+        "Enabled",
+        "MaintainHook"
+      ],
+      "fields": [
+        {
+          "name": "HostID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostName",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Role",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionType",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionCondition",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinChapter",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Enabled",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaintainHook",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "enemies": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "EnemyID",
+        "EnemyName",
+        "Originality",
+        "CombatRole",
+        "MoveSpeed",
+        "MaxHP",
+        "AttackDamage",
+        "EngageSpeed",
+        "AttackRange",
+        "AttackInterval",
+        "Telegraph",
+        "AttackStyle",
+        "AIPattern",
+        "CombatPurpose",
+        "PossessionType",
+        "PossessionCondition",
+        "HostID",
+        "BuffTag",
+        "CounterTag",
+        "EXP",
+        "Drop",
+        "PossessPriority",
+        "Biome",
+        "MinChapter",
+        "Difficulty"
+      ],
+      "fields": [
+        {
+          "name": "EnemyID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnemyName",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Originality",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CombatRole",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MoveSpeed",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxHP",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackDamage",
+          "index": 6,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EngageSpeed",
+          "index": 7,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackRange",
+          "index": 8,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackInterval",
+          "index": 9,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackStyle",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AIPattern",
+          "index": 12,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CombatPurpose",
+          "index": 13,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionType",
+          "index": 14,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionCondition",
+          "index": 15,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostID",
+          "index": 16,
+          "type": "string",
+          "required": false,
+          "default": null
+        },
+        {
+          "name": "BuffTag",
+          "index": 17,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CounterTag",
+          "index": 18,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EXP",
+          "index": 19,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Drop",
+          "index": 20,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessPriority",
+          "index": 21,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Biome",
+          "index": 22,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinChapter",
+          "index": 23,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Difficulty",
+          "index": 24,
+          "type": "integer",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "waves": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "RoomID",
+        "WaveIndex",
+        "StartDelay",
+        "Composition",
+        "ThreatBudget",
+        "ClearRule",
+        "FallbackRule"
+      ],
+      "fields": [
+        {
+          "name": "RoomID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "WaveIndex",
+          "index": 1,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "StartDelay",
+          "index": 2,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Composition",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ThreatBudget",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ClearRule",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "FallbackRule",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "layout.enemySpawns": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "RoomID",
+        "WaveIndex",
+        "SpawnGroupID",
+        "SpawnID",
+        "ActorID",
+        "X",
+        "Y",
+        "Facing",
+        "DelaySec",
+        "Trigger",
+        "Telegraph",
+        "MinCount",
+        "MaxAlive",
+        "CombatRole",
+        "SpawnRadius",
+        "SpawnClass",
+        "ValidationRule"
+      ],
+      "fields": [
+        {
+          "name": "RoomID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "WaveIndex",
+          "index": 1,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SpawnGroupID",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SpawnID",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ActorID",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "X",
+          "index": 5,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Y",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Facing",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "DelaySec",
+          "index": 8,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Trigger",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinCount",
+          "index": 11,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxAlive",
+          "index": 12,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CombatRole",
+          "index": 13,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SpawnRadius",
+          "index": 14,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SpawnClass",
+          "index": 15,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ValidationRule",
+          "index": 16,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "layout.candidates": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "CandidateID",
+        "RoomID",
+        "EnemyID",
+        "HostRefID",
+        "PossessionType",
+        "PossessionCondition",
+        "X",
+        "Y",
+        "ReadyWindowSec",
+        "SwitchValue",
+        "MaintainValue",
+        "Payoff",
+        "Priority",
+        "CommitmentWindowSec",
+        "FallbackRule"
+      ],
+      "fields": [
+        {
+          "name": "CandidateID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RoomID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnemyID",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostRefID",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionType",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionCondition",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "X",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Y",
+          "index": 7,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ReadyWindowSec",
+          "index": 8,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SwitchValue",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaintainValue",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Payoff",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Priority",
+          "index": 12,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CommitmentWindowSec",
+          "index": 13,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "FallbackRule",
+          "index": 14,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "hostPools": {
+      "representation": "objectRecord",
+      "fields": [
+        {
+          "name": "hostPoolId",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "selectionCount",
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "selectionRule",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "eligibleHostIds",
+          "type": "array",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "unlockRule",
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "fallbackHostIds",
+          "type": "array",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "elites": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "EliteID",
+        "EliteName",
+        "Originality",
+        "MinChapter",
+        "MaxHP",
+        "AttackDamage",
+        "MoveSpeed",
+        "AIPattern",
+        "Telegraph",
+        "BreakWindow",
+        "PossessionType",
+        "MinionPool",
+        "EXP",
+        "Drop",
+        "Counterplay"
+      ],
+      "fields": [
+        {
+          "name": "EliteID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EliteName",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Originality",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinChapter",
+          "index": 3,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxHP",
+          "index": 4,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackDamage",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MoveSpeed",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AIPattern",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BreakWindow",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PossessionType",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinionPool",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EXP",
+          "index": 12,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Drop",
+          "index": 13,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Counterplay",
+          "index": 14,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "bosses": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "BossID",
+        "BossName",
+        "Originality",
+        "MinChapter",
+        "MaxHP",
+        "AttackDamage",
+        "LegacyPhase",
+        "LegacyPattern",
+        "Telegraph",
+        "MoveSpeed",
+        "Arena",
+        "MinionPool",
+        "LegacyPhaseRule",
+        "FavorableTags",
+        "MaintainValue",
+        "SwitchWindow",
+        "SynergyPayoff",
+        "EnrageRule",
+        "Reward",
+        "FailSafe"
+      ],
+      "fields": [
+        {
+          "name": "BossID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BossName",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Originality",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinChapter",
+          "index": 3,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxHP",
+          "index": 4,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackDamage",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "LegacyPhase",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "LegacyPattern",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MoveSpeed",
+          "index": 9,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Arena",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinionPool",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "LegacyPhaseRule",
+          "index": 12,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "FavorableTags",
+          "index": 13,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaintainValue",
+          "index": 14,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SwitchWindow",
+          "index": 15,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SynergyPayoff",
+          "index": 16,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnrageRule",
+          "index": 17,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Reward",
+          "index": 18,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "FailSafe",
+          "index": 19,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "conditions": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "GroupID",
+        "OwnerType",
+        "OwnerID",
+        "Logic",
+        "ConditionType",
+        "Threshold",
+        "Stack",
+        "SourceTag",
+        "Note"
+      ],
+      "fields": [
+        {
+          "name": "GroupID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OwnerType",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OwnerID",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Logic",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ConditionType",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Threshold",
+          "index": 5,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Stack",
+          "index": 6,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SourceTag",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Note",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "attacks": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "ProfileID",
+        "OwnerID",
+        "OwnerType",
+        "AttackMode",
+        "Range",
+        "Interval",
+        "CanMoveAttack",
+        "TargetMode",
+        "ProjectileProfileID",
+        "UltimateID",
+        "Role",
+        "Source",
+        "StopToFire",
+        "Windup",
+        "ProjectileSpeed",
+        "BurstLength",
+        "RecoilPause",
+        "MoveSpeed",
+        "AreaShape",
+        "MaintainHook"
+      ],
+      "fields": [
+        {
+          "name": "ProfileID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OwnerID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OwnerType",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackMode",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Range",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Interval",
+          "index": 5,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CanMoveAttack",
+          "index": 6,
+          "type": "boolean",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "TargetMode",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ProjectileProfileID",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "UltimateID",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Role",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Source",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "StopToFire",
+          "index": 12,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Windup",
+          "index": 13,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ProjectileSpeed",
+          "index": 14,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BurstLength",
+          "index": 15,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RecoilPause",
+          "index": 16,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MoveSpeed",
+          "index": 17,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AreaShape",
+          "index": 18,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaintainHook",
+          "index": 19,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "projectiles": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "ProjectileID",
+        "OwnerID",
+        "Mode",
+        "Speed",
+        "Range",
+        "Count",
+        "BounceCount",
+        "TeamRule",
+        "HitLayer",
+        "VFXID",
+        "SFXID"
+      ],
+      "fields": [
+        {
+          "name": "ProjectileID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OwnerID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Mode",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Speed",
+          "index": 3,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Range",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Count",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BounceCount",
+          "index": 6,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "TeamRule",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HitLayer",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "VFXID",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SFXID",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "statuses": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "StatusID",
+        "Name",
+        "Duration",
+        "MaxStack",
+        "RefreshRule",
+        "Effect",
+        "EventHook"
+      ],
+      "fields": [
+        {
+          "name": "StatusID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Name",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Duration",
+          "index": 2,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxStack",
+          "index": 3,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RefreshRule",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Effect",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EventHook",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "aiProfiles": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "AIProfileID",
+        "EnemyID",
+        "Role",
+        "Pattern",
+        "MoveSpeed",
+        "AttackRange",
+        "StoppingDistance",
+        "NavigationMode",
+        "Steering",
+        "Telegraph",
+        "MaxConcurrent",
+        "Purpose"
+      ],
+      "fields": [
+        {
+          "name": "AIProfileID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnemyID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Role",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Pattern",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MoveSpeed",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackRange",
+          "index": 5,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "StoppingDistance",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "NavigationMode",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Steering",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaxConcurrent",
+          "index": 10,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Purpose",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "bossPhases": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "BossID",
+        "RoomID",
+        "Phase",
+        "HPStart",
+        "HPEnd",
+        "AttackPattern",
+        "Telegraph",
+        "ArenaBehavior",
+        "Trigger",
+        "MinionPool",
+        "CandidateRule",
+        "SwitchWindowCount",
+        "PhasePurpose"
+      ],
+      "fields": [
+        {
+          "name": "BossID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RoomID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Phase",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HPStart",
+          "index": 3,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HPEnd",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AttackPattern",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Telegraph",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ArenaBehavior",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Trigger",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MinionPool",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CandidateRule",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SwitchWindowCount",
+          "index": 11,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PhasePurpose",
+          "index": 12,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "buffs": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "BuffID",
+        "Name",
+        "Pool",
+        "Tag",
+        "Effect",
+        "Rarity",
+        "Condition",
+        "State",
+        "Compatibility",
+        "CH1",
+        "CH2",
+        "CH3",
+        "Weight",
+        "HostChangeRule",
+        "UnlockRule"
+      ],
+      "fields": [
+        {
+          "name": "BuffID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Name",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Pool",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Tag",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Effect",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Rarity",
+          "index": 5,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Condition",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "State",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Compatibility",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CH1",
+          "index": 9,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CH2",
+          "index": 10,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CH3",
+          "index": 11,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Weight",
+          "index": 12,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostChangeRule",
+          "index": 13,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "UnlockRule",
+          "index": 14,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "buffUnlockPolicy": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "Milestone",
+        "PoolOrFeature",
+        "State",
+        "Rule"
+      ],
+      "fields": [
+        {
+          "name": "Milestone",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PoolOrFeature",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "State",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Rule",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "synergies": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "SynergyID",
+        "PreviousHostID",
+        "CurrentHostID",
+        "Trigger",
+        "PersistentEffect",
+        "TransformRule",
+        "BehaviorChange",
+        "Duration",
+        "RoomExample",
+        "BaseActivation",
+        "RequiredBuffID",
+        "EnhancementBuffID",
+        "EnhancementEffect"
+      ],
+      "fields": [
+        {
+          "name": "SynergyID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PreviousHostID",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CurrentHostID",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Trigger",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PersistentEffect",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "TransformRule",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BehaviorChange",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Duration",
+          "index": 7,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RoomExample",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BaseActivation",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RequiredBuffID",
+          "index": 10,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnhancementBuffID",
+          "index": 11,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EnhancementEffect",
+          "index": 12,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "maintainHooks": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "HostID",
+        "HostName",
+        "MaintainHook",
+        "SignatureSeed",
+        "RuntimeBehavior",
+        "OnSwitchRule",
+        "RequiredFeedback"
+      ],
+      "fields": [
+        {
+          "name": "HostID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostName",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MaintainHook",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SignatureSeed",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RuntimeBehavior",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "OnSwitchRule",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RequiredFeedback",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "possessionBalanceVariants": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "VariantID",
+        "TacticalCost",
+        "Cooldown",
+        "DeathCost",
+        "GhostDrainPerSec",
+        "Intent",
+        "Risk",
+        "P0Use"
+      ],
+      "fields": [
+        {
+          "name": "VariantID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "TacticalCost",
+          "index": 1,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Cooldown",
+          "index": 2,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "DeathCost",
+          "index": 3,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "GhostDrainPerSec",
+          "index": 4,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Intent",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Risk",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "P0Use",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "designExpectations": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "RoomID",
+        "Scenario",
+        "ExpectedClearTimeSec",
+        "ExpectedDamageBand",
+        "ExpectedSwitches",
+        "ExpectedGhostCost",
+        "DecisionIntent",
+        "Confidence",
+        "EvidenceType"
+      ],
+      "fields": [
+        {
+          "name": "RoomID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Scenario",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExpectedClearTimeSec",
+          "index": 2,
+          "type": "integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExpectedDamageBand",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExpectedSwitches",
+          "index": 4,
+          "type": "integer|string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ExpectedGhostCost",
+          "index": 5,
+          "type": "integer|string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "DecisionIntent",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Confidence",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EvidenceType",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "playtestResults": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "SessionID",
+        "BuildID",
+        "VariantID",
+        "RoomID",
+        "HostStart",
+        "HostEnd",
+        "ClearTimeSec",
+        "DamageTaken",
+        "TacticalCount",
+        "GhostHPBeforeSwitch",
+        "Survived10s",
+        "SynergyTriggers",
+        "Result",
+        "Notes"
+      ],
+      "fields": [
+        {
+          "name": "SessionID",
+          "index": 0,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "BuildID",
+          "index": 1,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "VariantID",
+          "index": 2,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "RoomID",
+          "index": 3,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostStart",
+          "index": 4,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HostEnd",
+          "index": 5,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ClearTimeSec",
+          "index": 6,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "DamageTaken",
+          "index": 7,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "TacticalCount",
+          "index": 8,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "GhostHPBeforeSwitch",
+          "index": 9,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Survived10s",
+          "index": 10,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "SynergyTriggers",
+          "index": 11,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Result",
+          "index": 12,
+          "type": "any",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Notes",
+          "index": 13,
+          "type": "any",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "playtestMetrics": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "MetricID",
+        "Metric",
+        "Unit",
+        "Segment",
+        "EventSource",
+        "Purpose"
+      ],
+      "fields": [
+        {
+          "name": "MetricID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Metric",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Unit",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Segment",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "EventSource",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Purpose",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "prefabRegistry": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "RuntimeID",
+        "Type",
+        "DisplayName",
+        "PrefabID",
+        "AddressableKey",
+        "FallbackPrefabID",
+        "ResourceNeed",
+        "ValidationStatus",
+        "Note"
+      ],
+      "fields": [
+        {
+          "name": "RuntimeID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Type",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "DisplayName",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PrefabID",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AddressableKey",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "FallbackPrefabID",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ResourceNeed",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ValidationStatus",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Note",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "navProfiles": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "ProfileID",
+        "ActorType",
+        "Radius",
+        "Speed",
+        "StoppingDistance",
+        "Separation",
+        "AvoidancePriority",
+        "AreaMask",
+        "MovementRule",
+        "Scope"
+      ],
+      "fields": [
+        {
+          "name": "ProfileID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "ActorType",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Radius",
+          "index": 2,
+          "type": "number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Speed",
+          "index": 3,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "StoppingDistance",
+          "index": 4,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Separation",
+          "index": 5,
+          "type": "number|integer",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AvoidancePriority",
+          "index": 6,
+          "type": "integer|number",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "AreaMask",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "MovementRule",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Scope",
+          "index": 9,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "colliderProfiles": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "ProfileID",
+        "PrefabType",
+        "Shape",
+        "Width",
+        "Height",
+        "PhysicsLayer",
+        "HurtboxLayer",
+        "CollidesWith",
+        "Note"
+      ],
+      "fields": [
+        {
+          "name": "ProfileID",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PrefabType",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Shape",
+          "index": 2,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Width",
+          "index": 3,
+          "type": "number|integer|string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Height",
+          "index": 4,
+          "type": "number|string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "PhysicsLayer",
+          "index": 5,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "HurtboxLayer",
+          "index": 6,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "CollidesWith",
+          "index": 7,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Note",
+          "index": 8,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "layerMatrix": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "LayerA",
+        "LayerB",
+        "Collide",
+        "Purpose"
+      ],
+      "fields": [
+        {
+          "name": "LayerA",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "LayerB",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Collide",
+          "index": 2,
+          "type": "boolean",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Purpose",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    },
+    "saveContract": {
+      "representation": "positionalArray",
+      "fieldOrder": [
+        "Field",
+        "Type",
+        "Default",
+        "Purpose",
+        "Validation"
+      ],
+      "fields": [
+        {
+          "name": "Field",
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Type",
+          "index": 1,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Default",
+          "index": 2,
+          "type": "integer|string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Purpose",
+          "index": 3,
+          "type": "string",
+          "required": true,
+          "default": null
+        },
+        {
+          "name": "Validation",
+          "index": 4,
+          "type": "string",
+          "required": true,
+          "default": null
+        }
+      ]
+    }
+  }
+}
