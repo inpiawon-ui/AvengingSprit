@@ -149,6 +149,7 @@ namespace Game.Module.InGame
             _shotLayer.sizeDelta = _unitLayer.sizeDelta;
 
             SpawnGhost();
+            EnterStartHost();
             EnterRoom(0);
             _running = true;
         }
@@ -163,6 +164,30 @@ namespace Game.Module.InGame
                          new Vector2(72f, 90f));
             _ghost.Position = new Vector2(_field.rect.width * 0.5f, -_field.rect.height * PlayerStartY);
             PublishHp();
+        }
+
+        /// <summary>
+        /// 로비에서 고른 호스트를 입고 시작한다.
+        /// 캐릭터를 골라 놓고 유령으로 떨어지면 그 선택이 화면에 나타나지 않는다.
+        ///
+        /// 빼앗은 몸(빙의 70%)과 달리 **체력은 가득** 채운다 — 훔친 몸이 아니라
+        /// 데려온 몸이다. 몸을 잃으면 그때부터 유령이 되고, 기존 흐름(빙의·긴급 투입)이
+        /// 그대로 이어진다.
+        ///
+        /// 고른 호스트가 없으면(데이터 미준비 등) 아무것도 하지 않는다 —
+        /// 유령으로 시작하던 예전 흐름 그대로다.
+        /// </summary>
+        private void EnterStartHost()
+        {
+            var entry = PickPlayerHost();
+            if (entry == null)
+            {
+                // 조용히 유령으로 시작하면 "왜 내 캐릭터가 아니지"의 원인을 못 찾는다.
+                Debug.LogWarning("[Battle] 고른 호스트를 못 찾아 유령으로 시작한다 — "
+                                 + $"유저데이터 준비={_player != null && _player.IsReady}");
+                return;
+            }
+            EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position, 100);
         }
 
         private Unit NewUnit(string name)
@@ -221,7 +246,7 @@ namespace Game.Module.InGame
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
 
             // 빙의로 몸을 갈아타도 로비에서 고른 호스트는 긴급 투입으로 나올 수 있다.
-            var emergency = PickEmergencyHost();
+            var emergency = PickPlayerHost();
             if (emergency != null) keys.Add(emergency.HostKey);
 
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
@@ -510,7 +535,7 @@ namespace Game.Module.InGame
                 return;
             }
 
-            var entry = PickEmergencyHost();
+            var entry = PickPlayerHost();
             if (entry == null) { Finish(false); return; }
 
             _emergencyUsedThisRoom = true;
@@ -532,8 +557,11 @@ namespace Game.Module.InGame
             return false;
         }
 
-        /// <summary>긴급 호스트로 쓸 몸. 로비에서 고른 호스트를 우선한다.</summary>
-        private HostEntry PickEmergencyHost()
+        /// <summary>
+        /// 플레이어가 데려온 몸. 로비에서 고른 호스트를 우선한다.
+        /// 런 시작 몸과 긴급 투입 몸이 같은 것을 쓴다 — 고른 캐릭터가 곧 내 캐릭터다.
+        /// </summary>
+        private HostEntry PickPlayerHost()
         {
             if (_player == null || !_player.IsReady) return null;
             var picked = _player.GetHost(_player.SelectedHostId);
