@@ -255,6 +255,39 @@ namespace Game.Module.InGame
         public bool HasFacing => _frames[FrameIdle] != null;
 
         /// <summary>
+        /// 방향별 총구 위치. 몸 중심 기준이고, 캔버스 크기로 나눠 둬서 표시 크기가
+        /// 달라도 따라간다. 순서는 `FacingSuffix` 와 같다.
+        ///
+        /// 조준 방향으로 일정 거리 미는 방식은 안 된다 — 방향마다 총구가 다른 데 있다.
+        /// `s` 는 총이 화면 앞쪽으로 단축돼 몸 한가운데에 가깝고, `n` 은 총열이 등 뒤로
+        /// 가려져 오른쪽 어깨 옆에서 나온다. 람보 `atk1` 의 화염 중심을 실측한 값이다.
+        /// </summary>
+        private static readonly Vector2[] MuzzleOffset =
+        {
+            new(0.00f,  0.03f),   // s  ↓ 몸 중앙
+            new(0.47f, -0.11f),   // se ↘
+            new(0.43f, -0.02f),   // e  →
+            new(0.46f,  0.26f),   // ne ↗ 총을 들어 올려 높다
+            new(0.18f,  0.20f),   // n  ↑ 오른쪽 어깨 옆
+        };
+
+        /// <summary>
+        /// 탄이 나가는 지점. 몸 한가운데에서 나오면 총을 들고 있는 의미가 없다.
+        /// 방향 스프라이트가 없는 캐릭터는 몸 중심을 그대로 쓴다 — 어느 손에 무기를
+        /// 들었는지 알 수 없어서, 어림한 위치로 밀면 오히려 더 어긋난다.
+        /// </summary>
+        public Vector2 MuzzlePosition
+        {
+            get
+            {
+                if (_facingIndex < 0 || _rect == null) return Position;
+                var o = MuzzleOffset[_facingIndex];
+                var size = _rect.sizeDelta;
+                return Position + new Vector2((_facingFlip ? -o.x : o.x) * size.x, o.y * size.y);
+            }
+        }
+
+        /// <summary>
         /// 방향 스프라이트를 넘겨준다. 한 벌(5장) 중 하나라도 비면 그 벌은 통째로 버린다 —
         /// 섞이면 방향마다 다른 그림이 나와서 더 이상하다.
         /// 공격·피격 벌이 없으면 그 동작에서도 idle 을 쓴다. 캐릭터를 한 종씩

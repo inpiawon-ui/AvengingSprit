@@ -975,7 +975,9 @@ namespace Game.Module.InGame
                           * (snipe ? 1.6f : 1f)
                           * (fromPlayer ? _buffs.ShotSpeedMul : 1f);
 
-            shot.Fire(attacker.Position, target.Position, speed,
+            // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
+            // 방향 스프라이트를 그린 의미가 없다.
+            shot.Fire(attacker.MuzzlePosition, target.Position, speed,
                       fromPlayer ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul) : attacker.Atk,
                       fromPlayer, target, _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
