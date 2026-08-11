@@ -341,13 +341,41 @@ namespace Game.Module.InGame
             var a = Avatar;
             if (a == null || _unitLayer == null) return;
 
-            float viewH = _field.rect.height;
-            float max = Mathf.Max(0f, _roomSize.y - viewH);
-            float want = Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f, max);
-
-            _scroll = Mathf.Lerp(_scroll, want, 1f - Mathf.Exp(-CameraFollow * dt));
+            _scroll = Mathf.Lerp(_scroll, WantScroll(a), 1f - Mathf.Exp(-CameraFollow * dt));
             // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다
             _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
+        }
+
+        private float WantScroll(Unit a)
+        {
+            float viewH = _field.rect.height;
+            return Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f,
+                               Mathf.Max(0f, _roomSize.y - viewH));
+        }
+
+        /// <summary>
+        /// 방에 들어선 순간의 화면. 흘러가면 안 된다 —
+        /// `SetRoomSize` 가 0으로 돌려놓은 뒤 부드럽게 따라가면 방마다 화면이
+        /// 위에서 아래로 주르륵 미끄러진다("갑자기 내려갔다 올라오는" 것의 정체).
+        /// </summary>
+        private void SnapCamera()
+        {
+            var a = Avatar;
+            if (a == null || _unitLayer == null) return;
+            _scroll = WantScroll(a);
+            _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
+        }
+
+        /// <summary>
+        /// 지금 창에 보이는가. 방이 화면보다 길어져 생긴 판정이다.
+        /// 가장자리에서 깜빡이지 않도록 한 칸 여유를 둔다.
+        /// </summary>
+        private bool IsOnScreen(Unit u)
+        {
+            if (u == null) return false;
+            const float Margin = 60f;
+            float y = u.Position.y + _scroll;      // 창 기준 좌표(0 이 위, 아래로 음수)
+            return y <= Margin && y >= -_field.rect.height - Margin;
         }
 
         private Unit NewUnit(string name)
@@ -410,17 +438,36 @@ namespace Game.Module.InGame
             if (emergency != null) keys.Add(emergency.HostKey);
 
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
-            if (hosts != null && hosts.Count > 0)
+            if (hosts == null || hosts.Count == 0) return keys;
+
+            // 정본 경로가 있으면 그 길에 실제로 나오는 배우만 미리 받는다.
+            // 전부 받으면 쓰지도 않을 아틀라스가 딸려 온다.
+            if (_rooms != null && _rooms.Get(FirstCanonRoom) != null)
             {
-                // 방 종류(일반·정예)에 따라 마릿수가 달라지므로 둘 중 많은 쪽까지 훑는다.
-                for (int index = 0; index < _config.StagesPerChapter; index++)
+                var id = FirstCanonRoom;
+                int guard = 0;
+                while (!string.IsNullOrEmpty(id) && guard++ < 64)
                 {
-                    int count = Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index));
-                    for (int i = 0; i < count; i++)
+                    var room = _rooms.Get(id);
+                    if (room == null) break;
+                    for (int i = 0; i < room.Spawns.Count; i++)
                     {
-                        var key = EnemyAt(hosts, index, i).HostKey;
-                        if (!keys.Contains(key)) keys.Add(key);
+                        var e = ActorProfile(room.Spawns[i].ActorId, hosts);
+                        if (e != null && !keys.Contains(e.HostKey)) keys.Add(e.HostKey);
                     }
+                    id = room.NextRoomIds.Count > 0 ? room.NextRoomIds[0] : null;
+                }
+                return keys;
+            }
+
+            // 방 종류(일반·정예)에 따라 마릿수가 달라지므로 둘 중 많은 쪽까지 훑는다.
+            for (int index = 0; index < _config.StagesPerChapter; index++)
+            {
+                int count = Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index));
+                for (int i = 0; i < count; i++)
+                {
+                    var key = EnemyAt(hosts, index, i).HostKey;
+                    if (!keys.Contains(key)) keys.Add(key);
                 }
             }
             return keys;
@@ -465,6 +512,33 @@ namespace Game.Module.InGame
         /// 스테이지 번호로 갈라 준다 — 지금은 3스테이지라 경우의 수가 적다.
         /// 챕터가 길어지면 방 구성표를 데이터로 빼야 한다.
         /// </summary>
+        /// <summary>
+        /// 이 챕터의 방 수. 정본 경로를 따라가면 CH1 은 10방이다 —
+        /// `StagesPerChapter`(3) 는 절차적 생성 시절의 값이라 진행 표시가 어긋난다.
+        /// </summary>
+        private int RoomTotal
+        {
+            get
+            {
+                if (_rooms == null) return _config.StagesPerChapter;
+                int n = 0;
+                var id = FirstCanonRoom;
+                while (!string.IsNullOrEmpty(id) && n < 64)
+                {
+                    var r = _rooms.Get(id);
+                    if (r == null) break;
+                    n++;
+                    id = r.NextRoomIds.Count > 0 ? r.NextRoomIds[0] : null;
+                }
+                return n > 0 ? n : _config.StagesPerChapter;
+            }
+        }
+
+        /// <summary>정본 경로의 끝(보스를 잡은 방)인가.</summary>
+        private bool IsLastRoom =>
+            _canonRoom != null ? _canonRoom.IsChapterEnd
+                               : _roomIndex >= _config.StagesPerChapter - 1;
+
         private RoomKind KindOf(int index)
         {
             int last = _config.StagesPerChapter - 1;
@@ -584,22 +658,14 @@ namespace Game.Module.InGame
 
             // 정본 방은 들어서는 자리가 정해져 있다(layout.playerSpawns).
             // 방마다 입구 위치가 달라 여기서 옮겨 놓지 않으면 벽 속에서 시작한다.
-            if (_canonRoom != null)
-            {
-                var a = Avatar;
-                if (a != null)
-                {
-                    a.Position = ToPixels(_canonRoom.PlayerSpawn);
-                    // 새 방에 들어선 순간 화면이 흐르지 않게 카메라를 바로 붙인다
-                    _scroll = Mathf.Clamp(-a.Position.y - _field.rect.height * 0.5f,
-                                          0f, Mathf.Max(0f, _roomSize.y - _field.rect.height));
-                    _unitLayer.anchoredPosition = new Vector2(0f, Mathf.Round(_scroll));
-                }
-            }
+            var avatar = Avatar;
+            if (avatar != null && _canonRoom != null)
+                avatar.Position = ToPixels(_canonRoom.PlayerSpawn);
+            SnapCamera();
 
             _bus.Publish(new RoomEnteredEvent
             {
-                RoomIndex = index, RoomTotal = _config.StagesPerChapter,
+                RoomIndex = index, RoomTotal = RoomTotal,
                 IsBossRoom = isBoss, Kind = _roomKind,
             });
         }
@@ -892,7 +958,9 @@ namespace Game.Module.InGame
 
                 if (!e.IsAggro)
                 {
-                    if (d > _config.EnemyDetectRange)
+                    // 화면 밖에서는 깨어나지 않는다. 정본의 `NO_OFFSCREEN_TELEGRAPH` —
+                    // 보이지도 않는 곳에서 예고 없이 날아오는 공격은 피할 방법이 없다.
+                    if (d > _config.EnemyDetectRange || !IsOnScreen(e))
                     {
                         e.SetState(EnemyState.Idle);
                         Separate(e, i, dt);
@@ -1357,6 +1425,9 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
+                // 화면 밖은 겨누지 않는다. 방이 화면보다 길어진 뒤로 안 보이는 적을 향해
+                // 쏘는 일이 생겼다 — 플레이어에게는 허공에 대고 쏘는 것으로 보인다.
+                if (!IsOnScreen(e)) continue;
                 float d = Vector2.Distance(from, e.Position);
 
                 bool better;
@@ -1697,7 +1768,7 @@ namespace Game.Module.InGame
         private void OnRoomCleared()
         {
             // 마지막 스테이지 = 보스방. 보스를 잡으면 **챕터 클리어**로 끝난다.
-            bool isLast = _roomIndex >= _config.StagesPerChapter - 1;
+            bool isLast = IsLastRoom;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
 
@@ -1732,7 +1803,7 @@ namespace Game.Module.InGame
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
             // 레벨업 중에도 방이 이미 비었을 수 있다 — 그때는 고른 뒤에 출구를 연다.
-            if (_enemies.Count == 0 && _exit == null && _roomIndex < _config.StagesPerChapter - 1)
+            if (_enemies.Count == 0 && _exit == null && !IsLastRoom)
                 SpawnExit();
         }
 
@@ -1796,7 +1867,7 @@ namespace Game.Module.InGame
             if (!_running) return;
             _running = false;
             // 보상은 **통과한 스테이지 수** 기준. 챕터를 끝냈으면 전부 통과한 것이다.
-            int stages = cleared ? _config.StagesPerChapter : Mathf.Max(0, _roomIndex);
+            int stages = cleared ? RoomTotal : Mathf.Max(0, _roomIndex);
             _bus.Publish(new StageFinishedEvent
             {
                 IsCleared = cleared,
