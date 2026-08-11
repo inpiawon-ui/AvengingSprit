@@ -36,12 +36,14 @@ TAG_BUFFS = [
 
 HOST_BUFFS = [
     # (key, 이름, 설명, kind, value, hostKey, color)
-    ('host_ninja_star',   '표창 강화',   '닌자 — 탄 +2발',        6,  2, 'ninja',      '#3A5CD8'),
-    ('host_dragon_breath', '브레스 폭발', '드래곤 — 피해 +55%',    0, 55, 'dragon',     '#F07028'),
-    ('host_robot_missile', '미사일 강화', '로봇 — 간격 -30%',      1, 30, 'robot',      '#9AA4B4'),
-    ('host_amazon_spear', '창 투척 강화', '아마조네스 — 사거리 +45%', 2, 45, 'amazoness', '#D8A828'),
-    ('host_vampire_leech', '피의 갈증',  '흡혈귀 — 흡혈 +20%',    8, 20, 'vampire',    '#A02838'),
-    ('host_hitman_snipe', '정밀 사격',   '히트맨 — 피해 +70%',    0, 70, 'hitman',     '#C8C8D0'),
+    # hostKey 는 정본 슬러그다 — `AVSR_Roster.md` 참조. 폐기된 아마조네스·히트맨 전용 버프는
+    # 갱스터·어설트갱스터로 옮겼다. 버프 자체를 지우면 방마다 나오는 선택지가 3장에서 줄어든다.
+    ('host_ninja_star',    '표창 강화',   '닌자 — 탄 +2발',              6,  2, 'ninja',            '#3A5CD8'),
+    ('host_dragon_breath', '브레스 폭발', '샐러맨더 — 피해 +55%',        0, 55, 'salamander',       '#F07028'),
+    ('host_robot_missile', '미사일 강화', '로봇 — 간격 -30%',            1, 30, 'robot',            '#9AA4B4'),
+    ('host_gangster_mark', '표식 릴레이', '갱스터 — 사거리 +45%',        2, 45, 'gangster',         '#D8A828'),
+    ('host_vampire_leech', '피의 갈증',   '흡혈귀 — 흡혈 +20%',          8, 20, 'vampire',          '#A02838'),
+    ('host_laser_focus',   '집속 레이저', '어설트 갱스터 — 피해 +70%',   0, 70, 'assault_gangster', '#C8C8D0'),
 ]
 
 

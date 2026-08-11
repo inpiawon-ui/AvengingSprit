@@ -27,20 +27,29 @@ namespace Game.Editor
         //
         // 배율은 GameConfig 의 기본 사거리·간격·피해에 곱한다. 역할 문구와 일치시킨다.
         // 예) 히트맨 "정밀 저격" = 사거리 1.7배 · 간격 1.7배(느림) · 피해 2.4배
+        // 키·이름·등장 챕터는 정본을 따른다 — `Projects/AVSR/AVSR_Roster.md` (정본 JSON 에서 자동 생성).
+        // 목업에만 있던 5종(아마조네스·히트맨·설녀·적닌자·녹마법사)은 폐기했다(확정 #10).
+        //
+        // 수치는 아직 우리가 튜닝한 값이다. 정본의 ATTACK_PROFILE(사거리·간격·모드)로
+        // 교체하는 것은 임포터가 선 뒤에 한다 — 지금 바꾸면 플레이 검증 기준이 사라진다.
+        //
+        // 해금은 정본 MinChapter 를 따라 **챕터 클리어**로 통일했다.
+        // 옛 StageReach 값(5·12·20 등)은 StagesPerChapter=3 에서 영원히 닿지 않았다.
+        //
+        // ⚠ `fighter`(E002/H02)는 CH1 두 번째로 흔한 적인데 그림이 아직 없다.
+        //    그림이 오면 이 배열에 추가한다 — 없는 채로 넣으면 보이지 않는 적이 된다.
         private static readonly object[][] Hosts =
         {
-            new object[]{ "amazoness",  "AMAZONESS",   "아마조네스", "고속 근거리",   72, 68, 82, 90, AttackKind.Melee, 1, 0f, 0.45f, 0.55f, 0.8f, 0, 0, false, "blade_storm",     HostUnlockType.Owned,            0,  0 },
-            new object[]{ "rambo",      "RAMBO",       "람보",       "중화기 사수",   80, 85, 55, 45, AttackKind.Rapid, 1, 0f, 1.0f, 0.4f, 0.48f, 0, 0, false, "bullet_hell",     HostUnlockType.StageReach,       1,  5 },
-            new object[]{ "wizard",     "WIZARD",      "마법사",     "마법 원거리",   58, 88, 62, 55, AttackKind.Pierce, 1, 0f, 1.3f, 1.35f, 1.75f, 0, 0, false, "elemental_nova",  HostUnlockType.StageReach,       1, 12 },
-            new object[]{ "ninja",      "NINJA",       "닌자",       "밸런스 어쌔신", 66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f, 0.6f, 0, 0, false, "shadow_burst",    HostUnlockType.StageReach,       1, 20 },
-            new object[]{ "mafia",      "MAFIA",       "마피아",     "확산 사수",     70, 76, 64, 58, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "tommy_barrage",   HostUnlockType.ChapterBossClear, 1,  0 },
-            new object[]{ "hitman",     "HITMAN",      "히트맨",     "정밀 저격",     60, 92, 68, 62, AttackKind.Snipe, 1, 0f, 1.7f, 1.7f, 2.4f, 0, 0, false, "perfect_kill",    HostUnlockType.StageReach,       2,  8 },
-            new object[]{ "yogamaster", "YOGA MASTER", "요가마스터", "부양 서포트",   76, 52, 70, 74, AttackKind.Pulse, 1, 0f, 0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form",     HostUnlockType.StageReach,       2, 15 },
-            new object[]{ "dragon",     "DRAGON",      "드래곤",     "헤비 탱크",     95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath",   HostUnlockType.StageReach,       2, 22 },
-            new object[]{ "robot",      "ROBOT",       "로봇",       "테크 밸런스",   82, 72, 60, 50, AttackKind.Pierce, 1, 0f, 1.1f, 1.0f, 1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 2,  0 },
-            new object[]{ "snowwoman",  "SNOW WOMAN",  "설녀",       "얼음 컨트롤",   62, 70, 74, 68, AttackKind.Single, 1, 0f, 1.05f, 0.9f, 0.85f, 0, 45, false, "absolute_zero",   HostUnlockType.StageReach,       3,  8 },
-            new object[]{ "slugger",    "SLUGGER",     "슬러거",     "탄환 반사",     78, 66, 72, 70, AttackKind.Melee, 1, 0f, 0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam",      HostUnlockType.StageReach,       3, 15 },
-            new object[]{ "vampire",    "VAMPIRE",     "흡혈귀",     "흡혈 전투",     74, 82, 76, 66, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "blood_tornado",   HostUnlockType.ChapterBossClear, 3,  0 },
+            new object[]{ "gangster",         "GANGSTER",         "갱스터",        "확산 사수",     70, 76, 64, 58, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "tommy_barrage",   HostUnlockType.Owned,            0, 0 },
+            new object[]{ "thug",             "THUG",             "폭력배",        "중화기 사수",   80, 85, 55, 45, AttackKind.Rapid,  1, 0f,  1.0f, 0.4f,  0.48f, 0, 0, false, "bullet_hell",     HostUnlockType.Owned,            0, 0 },
+            new object[]{ "salamander",       "SALAMANDER",       "샐러맨더",      "화염 돌파",     95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath",   HostUnlockType.Owned,            0, 0 },
+            new object[]{ "white_wizard",     "WHITE WIZARD",     "화이트 위저드", "둔화 제어",     58, 88, 62, 55, AttackKind.Pierce, 1, 0f,  1.3f, 1.35f, 1.75f, 0, 0, false, "elemental_nova",  HostUnlockType.Owned,            0, 0 },
+            new object[]{ "ninja",            "NINJA",            "닌자",          "순간 폭발",     66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f,  0.6f, 0, 0, false, "shadow_burst",    HostUnlockType.Owned,            0, 0 },
+            new object[]{ "assault_gangster", "ASSAULT GANGSTER", "어설트 갱스터", "관통 레이저",   70, 78, 65, 55, AttackKind.Pierce, 1, 0f,  1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm",     HostUnlockType.ChapterBossClear, 1, 0 },
+            new object[]{ "robot",            "ROBOT",            "로봇",          "배치 테크",     82, 72, 60, 50, AttackKind.Pierce, 1, 0f,  1.1f, 1.0f,  1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 1, 0 },
+            new object[]{ "guru",             "GURU",             "구루",          "부양 서포트",   76, 52, 70, 74, AttackKind.Pulse,  1, 0f,  0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form",     HostUnlockType.ChapterBossClear, 1, 0 },
+            new object[]{ "vampire",          "VAMPIRE",          "흡혈귀",        "흡혈 지속",     74, 82, 76, 66, AttackKind.Melee,  1, 0f,  0.5f, 0.7f,  1.05f, 35, 0, false, "blood_tornado",   HostUnlockType.ChapterBossClear, 1, 0 },
+            new object[]{ "baseball",         "BASEBALL PLAYER",  "야구선수",      "탄환 반사",     78, 66, 72, 70, AttackKind.Melee,  1, 0f,  0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam",      HostUnlockType.ChapterBossClear, 2, 0 },
         };
 
 
@@ -87,18 +96,16 @@ namespace Game.Editor
         // ultimateKey, 영문명, 한글명, 설명
         private static readonly string[][] Ultimates =
         {
-            new[]{ "blade_storm",     "BLADE STORM",     "블레이드 스톰",   "광역 검격, 3초 지속" },
+            new[]{ "tommy_barrage",   "TOMMY BARRAGE",   "토미 내리사격",   "광각 확산, 높은 경직" },
             new[]{ "bullet_hell",     "BULLET HELL",     "불릿 헬",         "전화면 제압 사격, 5초 지속" },
+            new[]{ "dragon_breath",   "DRAGON BREATH",   "드래곤 브레스",   "지속 화염 원뿔, 화상 DoT" },
             new[]{ "elemental_nova",  "ELEMENTAL NOVA",  "엘리멘탈 노바",   "360° AoE, 보스에게 2배 피해" },
             new[]{ "shadow_burst",    "SHADOW BURST",    "섀도우 버스트",   "순간이동 연격 + 무적 프레임" },
-            new[]{ "tommy_barrage",   "TOMMY BARRAGE",   "토미 내리사격",   "광각 확산, 높은 경직" },
-            new[]{ "perfect_kill",    "PERFECT KILL",    "퍼펙트 킬",       "관통탄, 일반 적 원샷" },
-            new[]{ "astral_form",     "ASTRAL FORM",     "아스트랄 폼",     "위상 이탈, 무적 + 재생 8초" },
-            new[]{ "dragon_breath",   "DRAGON BREATH",   "드래곤 브레스",   "지속 화염 원뿔, 화상 DoT" },
+            new[]{ "laser_storm",     "LASER STORM",     "레이저 스톰",     "관통 광선을 전방으로 난사, 4초 지속" },
             new[]{ "system_override", "SYSTEM OVERRIDE", "시스템 오버라이드","자동조준 터렛 6초 배치" },
-            new[]{ "absolute_zero",   "ABSOLUTE ZERO",   "절대영도",        "화면 내 모든 적 4초 빙결" },
-            new[]{ "grand_slam",      "GRAND SLAM",      "그랜드 슬램",     "모든 탄환을 3배 피해로 반사" },
+            new[]{ "astral_form",     "ASTRAL FORM",     "아스트랄 폼",     "위상 이탈, 무적 + 재생 8초" },
             new[]{ "blood_tornado",   "BLOOD TORNADO",   "블러드 토네이도", "회오리 공격이 HP 흡수" },
+            new[]{ "grand_slam",      "GRAND SLAM",      "그랜드 슬램",     "모든 탄환을 3배 피해로 반사" },
         };
 
         [MenuItem("Tools/Game/Create Asset Tables")]

@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: UltimateTable
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.UltimateTable
   _entries:
-  - _ultimateKey: blade_storm
-    _nameEn: BLADE STORM
-    _nameKr: "\uBE14\uB808\uC774\uB4DC \uC2A4\uD1B0"
-    _description: "\uAD11\uC5ED \uAC80\uACA9, 3\uCD08 \uC9C0\uC18D"
+  - _ultimateKey: tommy_barrage
+    _nameEn: TOMMY BARRAGE
+    _nameKr: "\uD1A0\uBBF8 \uB0B4\uB9AC\uC0AC\uACA9"
+    _description: "\uAD11\uAC01 \uD655\uC0B0, \uB192\uC740 \uACBD\uC9C1"
   - _ultimateKey: bullet_hell
     _nameEn: BULLET HELL
     _nameKr: "\uBD88\uB9BF \uD5EC"
     _description: "\uC804\uD654\uBA74 \uC81C\uC555 \uC0AC\uACA9, 5\uCD08 \uC9C0\uC18D"
+  - _ultimateKey: dragon_breath
+    _nameEn: DRAGON BREATH
+    _nameKr: "\uB4DC\uB798\uACE4 \uBE0C\uB808\uC2A4"
+    _description: "\uC9C0\uC18D \uD654\uC5FC \uC6D0\uBFD4, \uD654\uC0C1 DoT"
   - _ultimateKey: elemental_nova
     _nameEn: ELEMENTAL NOVA
     _nameKr: "\uC5D8\uB9AC\uBA58\uD0C8 \uB178\uBC14"
@@ -29,47 +33,24 @@ MonoBehaviour:
     _nameEn: SHADOW BURST
     _nameKr: "\uC100\uB3C4\uC6B0 \uBC84\uC2A4\uD2B8"
     _description: "\uC21C\uAC04\uC774\uB3D9 \uC5F0\uACA9 + \uBB34\uC801 \uD504\uB808\uC784"
-  - _ultimateKey: tommy_barrage
-    _nameEn: TOMMY BARRAGE
-    _nameKr: "\uD1A0\uBBF8 \uB0B4\uB9AC\uC0AC\uACA9"
-    _description: "\uAD11\uAC01 \uD655\uC0B0, \uB192\uC740 \uACBD\uC9C1"
-  - _ultimateKey: perfect_kill
-    _nameEn: PERFECT KILL
-    _nameKr: "\uD37C\uD399\uD2B8 \uD0AC"
-    _description: "\uAD00\uD1B5\uD0C4, \uC77C\uBC18 \uC801 \uC6D0\uC0F7"
-  - _ultimateKey: astral_form
-    _nameEn: ASTRAL FORM
-    _nameKr: "\uC544\uC2A4\uD2B8\uB784 \uD3FC"
-    _description: "\uC704\uC0C1 \uC774\uD0C8, \uBB34\uC801 + \uC7AC\uC0DD 8\uCD08"
-  - _ultimateKey: dragon_breath
-    _nameEn: DRAGON BREATH
-    _nameKr: "\uB4DC\uB798\uACE4 \uBE0C\uB808\uC2A4"
-    _description: "\uC9C0\uC18D \uD654\uC5FC \uC6D0\uBFD4, \uD654\uC0C1 DoT"
+  - _ultimateKey: laser_storm
+    _nameEn: LASER STORM
+    _nameKr: "\uB808\uC774\uC800 \uC2A4\uD1B0"
+    _description: "\uAD00\uD1B5 \uAD11\uC120\uC744 \uC804\uBC29\uC73C\uB85C \uB09C\uC0AC,
+      4\uCD08 \uC9C0\uC18D"
   - _ultimateKey: system_override
     _nameEn: SYSTEM OVERRIDE
     _nameKr: "\uC2DC\uC2A4\uD15C \uC624\uBC84\uB77C\uC774\uB4DC"
     _description: "\uC790\uB3D9\uC870\uC900 \uD130\uB81B 6\uCD08 \uBC30\uCE58"
-  - _ultimateKey: absolute_zero
-    _nameEn: ABSOLUTE ZERO
-    _nameKr: "\uC808\uB300\uC601\uB3C4"
-    _description: "\uD654\uBA74 \uB0B4 \uBAA8\uB4E0 \uC801 4\uCD08 \uBE59\uACB0"
-  - _ultimateKey: grand_slam
-    _nameEn: GRAND SLAM
-    _nameKr: "\uADF8\uB79C\uB4DC \uC2AC\uB7A8"
-    _description: "\uBAA8\uB4E0 \uD0C4\uD658\uC744 3\uBC30 \uD53C\uD574\uB85C \uBC18\uC0AC"
+  - _ultimateKey: astral_form
+    _nameEn: ASTRAL FORM
+    _nameKr: "\uC544\uC2A4\uD2B8\uB784 \uD3FC"
+    _description: "\uC704\uC0C1 \uC774\uD0C8, \uBB34\uC801 + \uC7AC\uC0DD 8\uCD08"
   - _ultimateKey: blood_tornado
     _nameEn: BLOOD TORNADO
     _nameKr: "\uBE14\uB7EC\uB4DC \uD1A0\uB124\uC774\uB3C4"
     _description: "\uD68C\uC624\uB9AC \uACF5\uACA9\uC774 HP \uD761\uC218"
-  - _ultimateKey: laser_storm
-    _nameEn: LASER STORM
-    _nameKr: "\uB808\uC774\uC800 \uC2A4\uD1B0"
-    _description: "\uAD00\uD1B5 \uAD11\uC120\uC744 \uC804\uBC29\uC73C\uB85C \uB09C\uC0AC, 4\uCD08 \uC9C0\uC18D"
-  - _ultimateKey: verdant_gale
-    _nameEn: VERDANT GALE
-    _nameKr: "\uD478\uB978 \uC9C8\uD48D"
-    _description: "\uAC00\uC2DC \uD3ED\uD48D\uC73C\uB85C \uC8FC\uBCC0\uC744 \uBB36\uACE0 \uC9C0\uC18D \uD53C\uD574"
-  - _ultimateKey: crimson_fang
-    _nameEn: CRIMSON FANG
-    _nameKr: "\uD54F\uBE5B \uC1A1\uACF3\uB2C8"
-    _description: "\uC794\uC0C1\uC744 \uB0A8\uAE30\uBA70 \uB3CC\uC9C4, \uACBD\uB85C\uC758 \uC801\uC744 \uBCA0\uC5B4\uB0B8\uB2E4"
+  - _ultimateKey: grand_slam
+    _nameEn: GRAND SLAM
+    _nameKr: "\uADF8\uB79C\uB4DC \uC2AC\uB7A8"
+    _description: "\uBAA8\uB4E0 \uD0C4\uD658\uC744 3\uBC30 \uD53C\uD574\uB85C \uBC18\uC0AC"
