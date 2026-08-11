@@ -58,16 +58,21 @@ namespace Game.Module.InGame
 
         [Header("출입")]
         [SerializeField] private Vector2 _entry;
-        [SerializeField] private Vector2 _exit;
-        [Tooltip("다음 방. 갈래가 둘이면 두 개다(CH2_N03 → N04A · N04B).\n" +
+        [Tooltip("출구. 갈래가 둘이면 두 개다(CH2_N03 → N04A · N04B).\n" +
                  "비어 있으면 챕터의 끝이다(정본의 CHAPTER_CLEAR·GAME_SLICE_CLEAR).")]
-        [SerializeField] private string[] _nextRoomIds = Array.Empty<string>();
+        [SerializeField] private ExitEntry[] _exits = Array.Empty<ExitEntry>();
         [SerializeField] private string _unlockRule;
 
         [Header("보스 (보스방만)")]
         [Tooltip("정본 layout.bossLayouts. 보스는 enemySpawns 에 없다 — 페이즈별로 자리가 다르다")]
         [SerializeField] private string _bossId;
+        [SerializeField] private string _bossName;
         [SerializeField] private Vector2 _bossAt;
+        [SerializeField] private int _bossHp;
+        [SerializeField] private int _bossAtk;
+        [SerializeField] private float _bossMoveSpeed;
+        [Tooltip("페이즈가 바뀌는 체력 비율. 정본 bossPhases 의 HPStart 를 내림차순으로 담는다")]
+        [SerializeField] private float[] _bossPhaseGates = Array.Empty<float>();
 
         [Header("스폰")]
         [SerializeField] private Vector2 _playerSpawn;
@@ -85,14 +90,21 @@ namespace Game.Module.InGame
         public float Height => _height;
         public string CameraMode => _cameraMode;
         public Vector2 Entry => _entry;
-        public Vector2 Exit => _exit;
-        public IReadOnlyList<string> NextRoomIds => _nextRoomIds;
+        public IReadOnlyList<ExitEntry> Exits => _exits;
         public string UnlockRule => _unlockRule;
         public string BossId => _bossId;
+        public string BossName => _bossName;
         public Vector2 BossAt => _bossAt;
+        public int BossHp => _bossHp;
+        public int BossAtk => _bossAtk;
+        public float BossMoveSpeed => _bossMoveSpeed;
+        public IReadOnlyList<float> BossPhaseGates => _bossPhaseGates;
 
         /// <summary>더 갈 곳이 없는 방. 챕터의 마지막이다.</summary>
-        public bool IsChapterEnd => _nextRoomIds == null || _nextRoomIds.Length == 0;
+        public bool IsChapterEnd => _exits == null || _exits.Length == 0;
+
+        /// <summary>갈림길인가. 정본에서는 챕터마다 한 번씩 나온다(CH2_N03 · CH3_N03).</summary>
+        public bool IsBranch => _exits != null && _exits.Length > 1;
         public Vector2 PlayerSpawn => _playerSpawn;
         public IReadOnlyList<SpawnEntry> Spawns => _spawns;
         public IReadOnlyList<WaveEntry> Waves => _waves;
@@ -153,6 +165,19 @@ namespace Game.Module.InGame
         public float DelaySeconds => _delaySeconds;
         public string Trigger => _trigger;
         public string Telegraph => _telegraph;
+    }
+
+    /// <summary>출구 하나. 갈림길 방은 이것이 둘이고, 어느 쪽으로 나가느냐가 곧 선택이다.</summary>
+    [Serializable]
+    public sealed class ExitEntry
+    {
+        [SerializeField] private string _exitId;
+        [SerializeField] private Vector2 _at;
+        [SerializeField] private string _nextRoomId;
+
+        public string ExitId => _exitId;
+        public Vector2 At => _at;
+        public string NextRoomId => _nextRoomId;
     }
 
     /// <summary>

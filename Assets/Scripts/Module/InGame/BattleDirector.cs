@@ -71,7 +71,14 @@ namespace Game.Module.InGame
         private float _drainCarry;
         private float _invuln;
         private float _ghostProtect;
-        private RectTransform _exit;
+        /// <summary>열린 문 하나. 갈림길 방은 둘이고 어느 쪽으로 나가느냐가 곧 선택이다.</summary>
+        private sealed class ExitGate
+        {
+            public RectTransform View;
+            public string NextRoomId;
+        }
+
+        private readonly List<ExitGate> _exits = new();
         private float _ultimateCharge;
         private bool _running;
         private Unit _possessTarget;
@@ -697,7 +704,7 @@ namespace Game.Module.InGame
                         var e = ActorProfile(room.Spawns[i].ActorId, hosts);
                         if (e != null && !keys.Contains(e.HostKey)) keys.Add(e.HostKey);
                     }
-                    id = room.NextRoomIds.Count > 0 ? room.NextRoomIds[0] : null;
+                    id = room.Exits.Count > 0 ? room.Exits[0].NextRoomId : null;
                 }
                 return keys;
             }
@@ -770,7 +777,7 @@ namespace Game.Module.InGame
                     var r = _rooms.Get(id);
                     if (r == null) break;
                     n++;
-                    id = r.NextRoomIds.Count > 0 ? r.NextRoomIds[0] : null;
+                    id = r.Exits.Count > 0 ? r.Exits[0].NextRoomId : null;
                 }
                 return n > 0 ? n : _config.StagesPerChapter;
             }
@@ -840,23 +847,33 @@ namespace Game.Module.InGame
                 int chapter = _player != null ? _player.CurrentChapter : 1;
                 var def = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
 
+                // 정본 보스가 있으면 이름·체력·공격력·이동속도를 그대로 쓴다.
+                // 우리 BossTable 은 배율표라 절대값이 없다 — 정본 쪽이 단일 출처다.
+                bool canon = _canonRoom != null && _canonRoom.IsBoss;
+                string bossName = canon ? _canonRoom.BossName : def?.NameEn ?? "BOSS";
+
                 var boss = NewUnit("Boss");
-                boss.Setup(UnitSide.Enemy, def?.BossKey ?? "boss", def?.NameKr ?? "BOSS",
+                boss.Setup(UnitSide.Enemy,
+                           canon ? _canonRoom.BossId.ToLowerInvariant() : def?.BossKey ?? "boss",
+                           canon ? _canonRoom.BossName : def?.NameKr ?? "BOSS",
                            UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss")),
-                           Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
-                           Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
-                           _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
+                           canon ? _canonRoom.BossHp
+                                 : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
+                           canon ? _canonRoom.BossAtk
+                                 : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
+                           canon ? _canonRoom.BossMoveSpeed * _pxPerMeter
+                                 : _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
                            _config.BossAttackRange, _config.BossAttackInterval,
                            new Vector2(160f, 160f), isBoss: true);
-                boss.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
+                boss.Position = canon ? ToPixels(_canonRoom.BossAt)
+                                      : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
                 _bus.Publish(new BossHpChangedEvent
                 {
                     BossHp = boss.Hp, BossHpMax = boss.HpMax,
-                    BossName = def != null ? $"{def.NameEn}" : "BOSS",
-                    Phase = 1,
+                    BossName = bossName, Phase = 1,
                 });
             }
             else if (_roomKind == RoomKind.Rest)
@@ -995,7 +1012,7 @@ namespace Game.Module.InGame
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
             // 웨이브가 남아 있으면 방을 비운 것이 아니다.
             bool waveLeft = TickWave(dt);
-            if (!waveLeft && _enemies.Count == 0 && _exit == null && !_awaitingBuff) OnRoomCleared();
+            if (!waveLeft && _enemies.Count == 0 && _exits.Count == 0 && !_awaitingBuff) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -2068,7 +2085,7 @@ namespace Game.Module.InGame
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
             // 레벨업 중에도 방이 이미 비었을 수 있다 — 그때는 고른 뒤에 출구를 연다.
-            if (_enemies.Count == 0 && _exit == null && !IsLastRoom
+            if (_enemies.Count == 0 && _exits.Count == 0 && !IsLastRoom
                 && (_canonRoom == null || _wave >= _canonRoom.LastWave))
                 SpawnExit();
         }
@@ -2081,49 +2098,73 @@ namespace Game.Module.InGame
         private void SpawnExit()
         {
             DespawnExit();
-            var go = new GameObject("Exit", typeof(RectTransform), typeof(Image));
-            go.transform.SetParent(_unitLayer, false);
 
-            _exit = (RectTransform)go.transform;
-            _exit.anchorMin = _exit.anchorMax = new Vector2(0f, 1f);
-            _exit.pivot = new Vector2(0.5f, 0.5f);
-            _exit.sizeDelta = new Vector2(120f, 132f);
-            // 정본 방은 출구 자리가 정해져 있다(entryExit). 없으면 방 위쪽 끝에 둔다.
-            _exit.anchoredPosition = _canonRoom != null
-                ? ToPixels(_canonRoom.Exit)
-                : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f);
+            // 갈림길 방은 문이 둘이다(CH2_N03 · CH3_N03). 어느 문으로 걸어 나가느냐가
+            // 곧 선택이므로, 팝업을 띄우지 않고 문을 둘 다 세운다 — 걸어서 고른다.
+            if (_canonRoom != null && _canonRoom.Exits.Count > 0)
+            {
+                for (int i = 0; i < _canonRoom.Exits.Count; i++)
+                {
+                    var x = _canonRoom.Exits[i];
+                    _exits.Add(NewExit(ToPixels(x.At), x.NextRoomId));
+                }
+            }
+            else
+            {
+                _exits.Add(NewExit(new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f), null));
+            }
+
+            _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
+        }
+
+        private ExitGate NewExit(Vector2 at, string nextRoomId)
+        {
+            var go = new GameObject($"Exit_{nextRoomId ?? "next"}",
+                                    typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(120f, 132f);
+            rt.anchoredPosition = at;
 
             var img = go.GetComponent<Image>();
             img.sprite = GetSprite("exitportal");
             img.raycastTarget = false;
             img.preserveAspect = true;
-
-            _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
+            return new ExitGate { View = rt, NextRoomId = nextRoomId };
         }
 
         private void DespawnExit()
         {
-            if (_exit == null) return;
-            Destroy(_exit.gameObject);
-            _exit = null;
+            for (int i = 0; i < _exits.Count; i++)
+                if (_exits[i].View != null) Destroy(_exits[i].View.gameObject);
+            _exits.Clear();
         }
 
         /// <summary>출구에 닿았으면 다음 스테이지로 넘어간다.</summary>
         private void TickExit()
         {
-            if (_exit == null) return;
+            if (_exits.Count == 0) return;
             var me = Avatar;
             if (me == null) return;
-            if (Vector2.Distance(me.Position, _exit.anchoredPosition) > _config.ExitTouchRadius) return;
 
-            DespawnExit();
-            // 도달 스테이지를 갱신한다 — 호스트 해금 조건이 이 값을 본다.
-            if (_player != null)
-                _player.SetProgress(_player.CurrentChapter, _roomIndex + 2);
-            // 정본 경로를 따라간다. 갈림길은 아직 첫 갈래만 간다 — 선택 UI 는 다음 단계다.
-            if (_canonRoom != null)
-                _canonRoomId = _canonRoom.NextRoomIds.Count > 0 ? _canonRoom.NextRoomIds[0] : null;
-            EnterRoom(_roomIndex + 1);
+            for (int i = 0; i < _exits.Count; i++)
+            {
+                var gate = _exits[i];
+                if (gate.View == null) continue;
+                if (Vector2.Distance(me.Position, gate.View.anchoredPosition)
+                    > _config.ExitTouchRadius) continue;
+
+                // 어느 문으로 나갔는지가 곧 경로 선택이다.
+                if (_canonRoom != null) _canonRoomId = gate.NextRoomId;
+                DespawnExit();
+                // 도달 스테이지를 갱신한다 — 호스트 해금 조건이 이 값을 본다.
+                if (_player != null)
+                    _player.SetProgress(_player.CurrentChapter, _roomIndex + 2);
+                EnterRoom(_roomIndex + 1);
+                return;
+            }
         }
 
         private int GhostHpMax => _config.GhostHpMax + _buffs.GhostHpBonus;

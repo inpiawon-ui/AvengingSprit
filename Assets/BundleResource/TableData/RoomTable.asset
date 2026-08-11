@@ -24,12 +24,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N01
+    _exits:
+    - _exitId: EX_CH1_N00_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N01
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -44,12 +50,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N02
+    _exits:
+    - _exitId: EX_CH1_N01_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N02
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -92,12 +104,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N03
+    _exits:
+    - _exitId: EX_CH1_N02_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N03
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -172,12 +190,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N04
+    _exits:
+    - _exitId: EX_CH1_N03_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N04
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -252,12 +276,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N05
+    _exits:
+    - _exitId: EX_CH1_N04_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N05
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -340,12 +370,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N06
+    _exits:
+    - _exitId: EX_CH1_N05_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N06
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -360,12 +396,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N07
+    _exits:
+    - _exitId: EX_CH1_N06_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N07
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -448,12 +490,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N08
+    _exits:
+    - _exitId: EX_CH1_N07_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N08
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -524,12 +572,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N09
+    _exits:
+    - _exitId: EX_CH1_N08_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N09
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -616,12 +670,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH1_N10
+    _exits:
+    - _exitId: EX_CH1_N09_MAIN
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH1_N10
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -672,11 +732,17 @@ MonoBehaviour:
     _height: 16
     _cameraMode: CENTER_LOCK
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 15.2}
-    _nextRoomIds: []
+    _exits: []
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: B01
+    _bossName: Robot Snakes
     _bossAt: {x: 4.2, y: 11.8}
+    _bossHp: 5200
+    _bossAtk: 20
+    _bossMoveSpeed: 3.2
+    _bossPhaseGates:
+    - 0.7
+    - 0.35
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -691,12 +757,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N01
+    _exits:
+    - _exitId: EX_CH2_N00
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N01
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -711,12 +783,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N02
+    _exits:
+    - _exitId: EX_CH2_N01
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N02
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -799,12 +877,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N03
+    _exits:
+    - _exitId: EX_CH2_N02
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N03
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -891,13 +975,21 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 0, y: 13.4}
-    _nextRoomIds:
-    - CH2_N04A
-    - CH2_N04B
+    _exits:
+    - _exitId: EX_CH2_N03_A
+      _at: {x: 2.1, y: 13.4}
+      _nextRoomId: CH2_N04A
+    - _exitId: EX_CH2_N03_B
+      _at: {x: 6.3, y: 13.4}
+      _nextRoomId: CH2_N04B
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -912,12 +1004,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N05
+    _exits:
+    - _exitId: EX_CH2_N04A
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N05
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1004,12 +1102,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N05
+    _exits:
+    - _exitId: EX_CH2_N04B
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N05
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1056,12 +1160,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N06
+    _exits:
+    - _exitId: EX_CH2_N05
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N06
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1156,12 +1266,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N07
+    _exits:
+    - _exitId: EX_CH2_N06
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N07
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1240,12 +1356,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N08
+    _exits:
+    - _exitId: EX_CH2_N07
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N08
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1308,12 +1430,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH2_N09
+    _exits:
+    - _exitId: EX_CH2_N08
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH2_N09
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1328,11 +1456,17 @@ MonoBehaviour:
     _height: 16
     _cameraMode: CENTER_LOCK
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 15.2}
-    _nextRoomIds: []
+    _exits: []
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: B02
+    _bossName: Demolisher
     _bossAt: {x: 4.2, y: 11.8}
+    _bossHp: 8200
+    _bossAtk: 26
+    _bossMoveSpeed: 4
+    _bossPhaseGates:
+    - 0.65
+    - 0.3
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1347,12 +1481,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N01
+    _exits:
+    - _exitId: EX_CH3_N00
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N01
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1367,12 +1507,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N02
+    _exits:
+    - _exitId: EX_CH3_N01
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N02
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1455,12 +1601,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N03
+    _exits:
+    - _exitId: EX_CH3_N02
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N03
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1547,13 +1699,21 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 0, y: 13.4}
-    _nextRoomIds:
-    - CH3_N04A
-    - CH3_N04B
+    _exits:
+    - _exitId: EX_CH3_N03_A
+      _at: {x: 2.1, y: 13.4}
+      _nextRoomId: CH3_N04A
+    - _exitId: EX_CH3_N03_B
+      _at: {x: 6.3, y: 13.4}
+      _nextRoomId: CH3_N04B
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1568,12 +1728,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N05
+    _exits:
+    - _exitId: EX_CH3_N04A
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N05
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1660,12 +1826,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N05
+    _exits:
+    - _exitId: EX_CH3_N04B
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N05
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1740,12 +1912,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N06
+    _exits:
+    - _exitId: EX_CH3_N05
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N06
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1760,12 +1938,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N07
+    _exits:
+    - _exitId: EX_CH3_N06
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N07
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1844,12 +2028,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N08
+    _exits:
+    - _exitId: EX_CH3_N07
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N08
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1957,12 +2147,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N09
+    _exits:
+    - _exitId: EX_CH3_N08
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N09
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -2041,12 +2237,18 @@ MonoBehaviour:
     _height: 14
     _cameraMode: VERTICAL_FOLLOW
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 13.4}
-    _nextRoomIds:
-    - CH3_N10
+    _exits:
+    - _exitId: EX_CH3_N09
+      _at: {x: 4.2, y: 13.4}
+      _nextRoomId: CH3_N10
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: 
+    _bossName: 
     _bossAt: {x: 0, y: 0}
+    _bossHp: 0
+    _bossAtk: 0
+    _bossMoveSpeed: 0
+    _bossPhaseGates: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -2062,11 +2264,17 @@ MonoBehaviour:
     _height: 16
     _cameraMode: CENTER_LOCK
     _entry: {x: 4.2, y: 0.8}
-    _exit: {x: 4.2, y: 15.2}
-    _nextRoomIds: []
+    _exits: []
     _unlockRule: ROOM_CLEAR_OR_INTERACTION
     _bossId: B03
+    _bossName: Python
     _bossAt: {x: 4.2, y: 11.8}
+    _bossHp: 11500
+    _bossAtk: 30
+    _bossMoveSpeed: 3
+    _bossPhaseGates:
+    - 0.7
+    - 0.35
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []

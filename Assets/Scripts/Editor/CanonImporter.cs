@@ -102,12 +102,16 @@ namespace Game.EditorTools
             var enemySpawns = Rows(layout["enemySpawns"]);
             var bossLayouts = Rows(layout["bossLayouts"]);
             var objects = Rows(layout["objects"]);
+            var bosses = Rows(json["bosses"]);
+            var bossPhases = Rows(json["bossPhases"]);
             var entryExit = Rows(json["entryExit"]);
             var waves = Rows(json["waves"]);
 
             var eeF = Fields(schema, "entryExit");
             var spF = Fields(schema, "layout.enemySpawns");
             var wvF = Fields(schema, "waves");
+            var boF = Fields(schema, "bosses");
+            var phF = Fields(schema, "bossPhases");
 
             // 살아 있는 배우 ID — 스폰이 가리키는 대상이 실재하는지 본다
             var actors = new HashSet<string>();
@@ -157,8 +161,7 @@ namespace Game.EditorTools
                 else
                 {
                     SetField(room, "_entry", new Vector2(F(ee, eeF, "EntryX"), F(ee, eeF, "EntryY")));
-                    SetField(room, "_exit", new Vector2(F(ee, eeF, "ExitX"), F(ee, eeF, "ExitY")));
-                    SetField(room, "_nextRoomIds", NextRooms(S(ee, eeF, "NextRoomID")));
+                    SetField(room, "_exits", Exits(ee, eeF, errors, id));
                     SetField(room, "_unlockRule", S(ee, eeF, "UnlockRule"));
                 }
 
@@ -167,8 +170,28 @@ namespace Game.EditorTools
                 var boss = bossLayouts.FirstOrDefault(r => Str(r[0]) == id);
                 if (boss != null)
                 {
-                    SetField(room, "_bossId", Str(boss[1]));
+                    string bossId = Str(boss[1]);
+                    SetField(room, "_bossId", bossId);
+                    SetField(room, "_bossName", Str(boss[2]));
                     SetField(room, "_bossAt", new Vector2(Num(boss[5]), Num(boss[6])));
+
+                    var def = bosses.FirstOrDefault(r => Str(r[0]) == bossId);
+                    if (def == null) errors.Add($"{id}: 보스 {bossId} 가 bosses 에 없다");
+                    else
+                    {
+                        SetField(room, "_bossHp", (int)F(def, boF, "MaxHP"));
+                        SetField(room, "_bossAtk", (int)F(def, boF, "AttackDamage"));
+                        SetField(room, "_bossMoveSpeed", F(def, boF, "MoveSpeed"));
+                    }
+
+                    // 페이즈가 바뀌는 체력 비율. P1 의 시작(1.0)은 문턱이 아니라 시작점이라 뺀다.
+                    var gates = bossPhases
+                        .Where(r => S(r, phF, "BossID") == bossId)
+                        .Select(r => F(r, phF, "HPStart"))
+                        .Where(v => v > 0f && v < 1f)
+                        .OrderByDescending(v => v)
+                        .ToArray();
+                    SetField(room, "_bossPhaseGates", gates);
                 }
 
                 // 플레이어 스폰 — 스키마가 없는 컬렉션이라 위치로 읽는다
@@ -264,9 +287,9 @@ namespace Game.EditorTools
             foreach (var r in result)
             {
                 var id = (string)GetField(r, "_roomId");
-                foreach (var next in (string[])GetField(r, "_nextRoomIds"))
-                    if (!seen.Contains(next))
-                        errors.Add($"{id}: 다음 방 {next} 이 없다");
+                foreach (var x in (ExitEntry[])GetField(r, "_exits"))
+                    if (!seen.Contains(x.NextRoomId))
+                        errors.Add($"{id}: 다음 방 {x.NextRoomId} 이 없다");
             }
             return result;
         }
@@ -281,14 +304,49 @@ namespace Game.EditorTools
         private static readonly string[] Terminals =
             { "CHAPTER_CLEAR", "GAME_SLICE_CLEAR", "" };
 
-        private static string[] NextRooms(string raw)
+        /// <summary>
+        /// 출구를 푼다. 정본은 갈림길을 파이프로 한 칸에 담는다.
+        ///   ExitPointID `EX_A|EX_B` · ExitX `2.1|6.3` · NextRoomID `N04A|N04B`
+        /// 세 칸의 갈래 수가 맞아야 짝이 지어진다 — 어긋나면 어느 문이 어디로
+        /// 가는지 알 수 없으므로 오류다.
+        /// 끝 방(CHAPTER_CLEAR)은 출구가 없다.
+        /// </summary>
+        private static ExitEntry[] Exits(JToken[] ee, string[] f,
+                                         List<string> errors, string roomId)
         {
-            if (string.IsNullOrEmpty(raw)) return Array.Empty<string>();
-            return raw.Split('|')
-                      .Select(s => s.Trim())
-                      .Where(s => !Terminals.Contains(s))
-                      .ToArray();
+            var ids = Split(S(ee, f, "ExitPointID"));
+            var xs = Split(S(ee, f, "ExitX"));
+            var nexts = Split(S(ee, f, "NextRoomID"));
+            float y = F(ee, f, "ExitY");
+
+            var live = nexts.Where(n => !Terminals.Contains(n)).ToArray();
+            if (live.Length == 0) return Array.Empty<ExitEntry>();
+
+            if (xs.Length != nexts.Length)
+            {
+                errors.Add($"{roomId}: 출구 좌표 {xs.Length}개인데 다음 방 {nexts.Length}개다");
+                return Array.Empty<ExitEntry>();
+            }
+
+            var result = new List<ExitEntry>();
+            for (int i = 0; i < nexts.Length; i++)
+            {
+                if (Terminals.Contains(nexts[i])) continue;
+                var e = new ExitEntry();
+                SetField(e, "_exitId", i < ids.Length ? ids[i] : $"EX_{roomId}_{i}");
+                SetField(e, "_at", new Vector2(
+                    float.TryParse(xs[i], NumberStyles.Float, CultureInfo.InvariantCulture,
+                                   out var x) ? x : 0f, y));
+                SetField(e, "_nextRoomId", nexts[i]);
+                result.Add(e);
+            }
+            return result.ToArray();
         }
+
+        private static string[] Split(string raw)
+            => string.IsNullOrEmpty(raw)
+               ? Array.Empty<string>()
+               : raw.Split('|').Select(v => v.Trim()).ToArray();
 
         // ── 스키마 기반 접근 ────────────────────────────────────
         // 런타임 JSON 의 여러 컬렉션은 **이름 없는 위치 기반 배열**이다.
