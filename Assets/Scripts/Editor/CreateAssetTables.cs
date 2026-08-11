@@ -105,21 +105,60 @@ namespace Game.Editor
                 } },
         };
 
-        // buffKey, 한글명, 설명, 종류, 값, 중복가능, 강조색
+        // buffKey, 한글명, 설명, 종류, 값, 중복가능, 강조색,
+        // [정본] BuffID, 효과 원문, Pool, 등장 챕터, 가중치, 구현 여부
+        //
+        // 정본 BUFF_DB 24종을 **전부** 담는다. 그중 우리 시스템으로 실제 동작하는 것은
+        // 6종뿐이다 — 나머지는 표식·화상·빙결·저주·도탄·설치물 같은 시스템이 있어야 산다.
+        // 미구현은 마지막 칸을 false 로 두어 3택1 풀에서 뺀다. 고르면 아무 일도
+        // 일어나지 않는 카드가 섞이면 선택 자체가 거짓이 된다.
+        //
+        // 효과 원문을 그대로 담아 두는 이유: 나중에 그 시스템을 만들 때 무엇을 만들어야
+        // 하는지가 여기 적혀 있다. 이름만 남기면 다시 정본을 뒤져야 한다.
+        //
+        // 우리가 쓰던 것도 남긴다. 정본에서 지금 살릴 수 있는 것이 6종뿐이라 갈아치우면
+        // 뽑히는 카드가 6장이 되어 3택1 이 사실상 의미가 없어진다. 시스템이 붙는 대로
+        // 정본 것을 켜고 우리 것을 하나씩 뺀다.
         private static readonly object[][] Buffs =
         {
-            new object[]{ "atk_up",     "공격력 강화", "피해량 +25%",            BuffKind.Attack,         25, true,  "#E8604A" },
-            new object[]{ "aspd_up",    "연사 강화",   "발사 간격 -18%",         BuffKind.AttackSpeed,    18, true,  "#F0B428" },
-            new object[]{ "range_up",   "사거리 강화", "사거리 +25%",            BuffKind.Range,          25, true,  "#4AA8E8" },
-            new object[]{ "move_up",    "질주",        "이동 속도 +18%",         BuffKind.MoveSpeed,      18, true,  "#5CC850" },
-            new object[]{ "ghost_hp",   "영혼 강화",   "고스트 최대 체력 +40",   BuffKind.GhostHp,        40, true,  "#5AC8F0" },
-            new object[]{ "heal",       "응급 회복",   "호스트 체력 40% 회복",   BuffKind.Heal,           40, true,  "#8CD048" },
-            new object[]{ "multishot",  "다중 사격",   "탄 +1 발",               BuffKind.MultiShot,       1, true,  "#C98CF0" },
-            new object[]{ "pierce",     "관통탄",      "탄이 적을 관통한다",      BuffKind.Pierce,          1, false, "#A0E0FF" },
-            new object[]{ "lifesteal",  "흡혈",        "피해의 15% 회복",        BuffKind.Lifesteal,      15, true,  "#E04A7A" },
-            new object[]{ "slow",       "서리",        "명중 시 둔화 25%",       BuffKind.Slow,           25, true,  "#7ED8F0" },
-            new object[]{ "ult_charge", "얼티밋 충전", "충전 속도 +30%",         BuffKind.UltimateCharge, 30, true,  "#F07828" },
-            new object[]{ "shot_speed", "탄속 강화",   "탄속 +30%",              BuffKind.ShotSpeed,      30, true,  "#F2F4F8" },
+            // ── 우리 것 (정본 대응 없음) ───────────────────────
+            new object[]{ "atk_up", "공격력 강화", "피해량 +25%", BuffKind.Attack, 25, true, "#E8604A", "", "", "", 1, 1.0f, true },
+            new object[]{ "aspd_up", "연사 강화", "발사 간격 -18%", BuffKind.AttackSpeed, 18, true, "#F0B428", "", "", "", 1, 1.0f, true },
+            new object[]{ "range_up", "사거리 강화", "사거리 +25%", BuffKind.Range, 25, true, "#4AA8E8", "", "", "", 1, 1.0f, true },
+            new object[]{ "move_up", "질주", "이동 속도 +18%", BuffKind.MoveSpeed, 18, true, "#5CC850", "", "", "", 1, 1.0f, true },
+            new object[]{ "heal", "응급 회복", "호스트 체력 40% 회복", BuffKind.Heal, 40, true, "#8CD048", "", "", "", 1, 1.0f, true },
+            new object[]{ "multishot", "다중 사격", "탄 +1 발", BuffKind.MultiShot, 1, true, "#C98CF0", "", "", "", 1, 1.0f, true },
+            new object[]{ "pierce", "관통탄", "탄이 적을 관통한다", BuffKind.Pierce, 1, false, "#A0E0FF", "", "", "", 1, 1.0f, true },
+            new object[]{ "lifesteal", "흡혈", "피해의 15% 회복", BuffKind.Lifesteal, 15, true, "#E04A7A", "", "", "", 1, 1.0f, true },
+            new object[]{ "slow", "서리", "명중 시 둔화 25%", BuffKind.Slow, 25, true, "#7ED8F0", "", "", "", 1, 1.0f, true },
+            new object[]{ "ult_charge", "얼티밋 충전", "충전 속도 +30%", BuffKind.UltimateCharge, 30, true, "#F07828", "", "", "", 1, 1.0f, true },
+            new object[]{ "shot_speed", "탄속 강화", "탄속 +30%", BuffKind.ShotSpeed, 30, true, "#F2F4F8", "", "", "", 1, 1.0f, true },
+
+            // ── 정본 BUFF_DB 24종 ─────────────────────────────
+            new object[]{ "vital_shell", "생명의 껍질", "호스트 최대 체력 +12%", BuffKind.HostMaxHp, 12, true, "#E8604A", "BUF_U01", "Max HP +12%", "Universal", 1, 1.0f, true },
+            new object[]{ "spirit_reserve", "영혼 예비", "고스트 최대 체력 +8", BuffKind.GhostHp, 8, true, "#5AC8F0", "BUF_U02", "Ghost HP max +8 and heal 4", "Universal", 1, 0.8f, true },
+            new object[]{ "quick_reset", "빠른 재정비", "정지 → 발사 지연 -0.03초", BuffKind.StopDelay, 3, true, "#5CC850", "BUF_U03", "Stop-Attack delay -0.03s", "Universal", 1, 0.9f, true },
+            new object[]{ "focused_soul", "집중한 영혼", "같은 적 4회 명중 시 피해 +6%", BuffKind.Attack, 6, true, "#E8604A", "BUF_U04", "same target 4 hits: damage +6% stack max3", "Universal", 1, 0.9f, false },
+            new object[]{ "wide_echo", "넓은 울림", "광역 반경 +10%", BuffKind.Range, 10, true, "#4AA8E8", "BUF_U05", "AoE radius +10%", "Universal", 1, 0.8f, false },
+            new object[]{ "tactical_mercy", "전술적 자비", "전술 빙의 비용 -2", BuffKind.TacticalCost, 2, false, "#A886FF", "BUF_U06", "first tactical cost per room -2", "Universal", 2, 0.7f, true },
+            new object[]{ "marked_payload", "표식 탄두", "표식 대상 명중 시 릴레이 탄 +1", BuffKind.Attack, 0, true, "#F0B428", "BUF_T01", "Mark consume: Relay Bullet +1", "Tag", 2, 1.0f, false },
+            new object[]{ "burning_circuit", "타오르는 회로", "화상3이 주변에 1중첩 번짐", BuffKind.Attack, 0, true, "#F07828", "BUF_T02", "Burn3 spreads 1 stack nearby", "Tag", 2, 0.9f, false },
+            new object[]{ "cold_geometry", "차가운 기하", "둔화 장판 가장자리가 지속 피해", BuffKind.Slow, 0, true, "#7ED8F0", "BUF_T03", "Slow field edges deal tick damage", "Tag", 2, 0.9f, false },
+            new object[]{ "blood_debt", "피의 부채", "흡혈 초과분이 고스트 체력으로", BuffKind.Lifesteal, 0, true, "#E04A7A", "BUF_T04", "Leech overheal to Ghost HP, room cap2", "Tag", 2, 0.8f, false },
+            new object[]{ "bank_shot", "뱅크 샷", "첫 도탄이 60% 피해로 복제", BuffKind.Attack, 0, true, "#C98CF0", "BUF_T05", "first bounce duplicates at 60% damage", "Tag", 2, 0.9f, false },
+            new object[]{ "smart_deployment", "스마트 배치", "설치물 재조준 25% 빠르게", BuffKind.Attack, 0, true, "#9AA4B4", "BUF_T06", "deployables retarget 25% faster", "Tag", 2, 0.8f, false },
+            new object[]{ "fire_firmware", "화염 펌웨어", "로봇 설치물이 화염·과열을 물려받는다", BuffKind.Attack, 0, false, "#F07828", "BUF_S01", "Robot deployables inherit Fire and Overheat", "Synergy", 2, 1.0f, false },
+            new object[]{ "arcane_execution", "비전 처형", "빙결·표식 대상에 순간이동 폭발 연쇄", BuffKind.Attack, 0, false, "#A886FF", "BUF_S02", "Frozen/Marked target blink detonation chains", "Synergy", 2, 1.0f, false },
+            new object[]{ "crimson_combo", "핏빛 연격", "흡혈 표식이 콤보 마무리마다 회복", BuffKind.Lifesteal, 0, false, "#E04A7A", "BUF_S03", "Leech marks heal on each combo finisher", "Synergy", 2, 0.9f, false },
+            new object[]{ "mine_alchemy", "지뢰 연금술", "지뢰가 빙결 룬으로 바뀐다", BuffKind.Slow, 0, false, "#7ED8F0", "BUF_S04", "Mine seed becomes Freeze Rune", "Synergy", 2, 0.9f, false },
+            new object[]{ "curse_inferno", "저주 화염", "저주 회로가 네이팜 기둥으로", BuffKind.Attack, 0, false, "#F07828", "BUF_S05", "Curse circuit becomes napalm pillars", "Synergy", 3, 0.9f, false },
+            new object[]{ "guarded_rush", "수호 돌진", "가드 오라를 태워 장갑 돌진", BuffKind.DamageReduction, 0, false, "#5CC850", "BUF_S06", "consume Guard aura for armored dash", "Synergy", 2, 0.8f, false },
+            new object[]{ "last_magazine", "마지막 탄창", "마지막 탄·마무리 +25%", BuffKind.Attack, 25, true, "#E8604A", "BUF_A01", "last shot/finisher +25%", "AttackStyle", 1, 0.8f, false },
+            new object[]{ "persistent_field", "지속하는 장판", "장판 지속 +2초", BuffKind.Range, 0, true, "#4AA8E8", "BUF_A02", "fields +2s, max unchanged", "AttackStyle", 2, 0.8f, false },
+            new object[]{ "return_path", "귀환 경로", "되돌아오는 탄이 50% 피해", BuffKind.Attack, 0, true, "#A0E0FF", "BUF_A03", "returning projectile deals 50%", "AttackStyle", 2, 0.7f, false },
+            new object[]{ "heavy_frame", "중장 프레임", "받는 피해 -10%", BuffKind.DamageReduction, 10, true, "#9AA4B4", "BUF_A04", "damage taken -10%, move -4%", "AttackStyle", 2, 0.7f, true },
+            new object[]{ "quick_hands", "빠른 손", "공격 간격 -7%", BuffKind.AttackSpeed, 7, true, "#F0B428", "BUF_A05", "attack interval -7%", "AttackStyle", 1, 0.9f, true },
+            new object[]{ "safe_exit", "안전한 이탈", "전술 빙의 직후 0.6초 무적", BuffKind.SwitchShield, 60, false, "#A886FF", "BUF_A06", "0.6s shield after tactical exit", "AttackStyle", 2, 0.7f, true },
         };
 
         // ultimateKey, 영문명, 한글명, 설명
@@ -203,6 +242,9 @@ namespace Game.Editor
                 Set(e, "_buffKey", b[0]); Set(e, "_nameKr", b[1]); Set(e, "_description", b[2]);
                 Set(e, "_kind", b[3]); Set(e, "_value", b[4]);
                 Set(e, "_stackable", b[5]); Set(e, "_colorHex", b[6]);
+                Set(e, "_canonId", b[7]); Set(e, "_canonEffect", b[8]);
+                Set(e, "_pool", b[9]); Set(e, "_fromChapter", b[10]);
+                Set(e, "_weight", b[11]); Set(e, "_implemented", b[12]);
                 return e;
             }).ToArray();
             Set(buff, "_entries", bEntries);

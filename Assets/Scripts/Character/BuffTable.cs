@@ -34,6 +34,18 @@ namespace Game.Character
         UltimateCharge,
         /// <summary>탄속 +n%</summary>
         ShotSpeed,
+
+        // ── 정본 BUFF_DB 를 받으면서 생긴 종류 ────────────────────
+        /// <summary>호스트 최대 체력 +n% (정본 BUF_U01 Vital Shell)</summary>
+        HostMaxHp,
+        /// <summary>정지 → 발사 지연 -n/100 초 (정본 BUF_U03 Quick Reset)</summary>
+        StopDelay,
+        /// <summary>전술 빙의 비용 -n (정본 BUF_U06 Tactical Mercy)</summary>
+        TacticalCost,
+        /// <summary>받는 피해 -n% (정본 BUF_A04 Heavy Frame)</summary>
+        DamageReduction,
+        /// <summary>전술 빙의 직후 무적 +n/100 초 (정본 BUF_A06 Safe Exit)</summary>
+        SwitchShield,
     }
 
     /// <summary>
@@ -100,8 +112,7 @@ namespace Game.Character
         [SerializeField] private int _fromChapter = 1;
         [Tooltip("정본 Weight — 뽑힐 가중치")]
         [SerializeField] private float _weight = 1f;
-        [Tooltip("지금 실제로 동작하는가.
-" +
+        [Tooltip("지금 실제로 동작하는가. " +
                  "정본 효과는 산문이라(예: 표식 대상 명중 시 릴레이 탄 1발) 표식·장판·저주 같은 " +
                  "시스템이 있어야 구현된다. 아직 없는 것은 꺼 두고 풀에서 뺀다 — " +
                  "고르면 아무 일도 안 일어나는 카드가 3택1 에 섞이면 선택 자체가 거짓이 된다.")]

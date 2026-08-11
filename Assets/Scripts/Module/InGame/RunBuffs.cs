@@ -28,6 +28,18 @@ namespace Game.Module.InGame
         public float ShotSpeedMul { get; private set; } = 1f;
         public float UltimateChargeMul { get; private set; } = 1f;
         public int GhostHpBonus { get; private set; }
+
+        // ── 정본 BUFF_DB 에서 온 것들 ────────────────────────────
+        /// <summary>호스트 최대 체력 배율 (BUF_U01)</summary>
+        public float HostHpMul { get; private set; } = 1f;
+        /// <summary>정지 → 발사 지연에서 깎을 초 (BUF_U03)</summary>
+        public float StopDelayCut { get; private set; }
+        /// <summary>전술 빙의 비용에서 깎을 값 (BUF_U06)</summary>
+        public int TacticalCostCut { get; private set; }
+        /// <summary>받는 피해 배율. 여러 장 겹쳐도 0 이 되지 않게 곱으로 쌓는다 (BUF_A04)</summary>
+        public float DamageTakenMul { get; private set; } = 1f;
+        /// <summary>전술 빙의 직후 추가 무적 초 (BUF_A06)</summary>
+        public float SwitchShieldSeconds { get; private set; }
         public int ExtraShots { get; private set; }
         public int LifestealPercent { get; private set; }
         public int SlowPercent { get; private set; }
@@ -83,6 +95,9 @@ namespace Game.Module.InGame
             AttackMul = IntervalMul = RangeMul = MoveMul = ShotSpeedMul = UltimateChargeMul = 1f;
             GhostHpBonus = ExtraShots = LifestealPercent = SlowPercent = 0;
             Pierce = false;
+            HostHpMul = DamageTakenMul = 1f;
+            StopDelayCut = SwitchShieldSeconds = 0f;
+            TacticalCostCut = 0;
 
             for (int i = 0; i < _taken.Count; i++)
             {
@@ -105,6 +120,14 @@ namespace Game.Module.InGame
                     case BuffKind.Slow:           SlowPercent = Mathf.Min(80, SlowPercent + e.Value); break;
                     case BuffKind.Pierce:         Pierce = true; break;
                     case BuffKind.Heal:           break;   // 즉발 — BattleDirector 가 처리
+
+                    // 정본 BUFF_DB 에서 온 것들
+                    case BuffKind.HostMaxHp:       HostHpMul += v; break;
+                    case BuffKind.StopDelay:       StopDelayCut += e.Value / 100f; break;
+                    case BuffKind.TacticalCost:    TacticalCostCut += e.Value; break;
+                    // 여러 장 겹쳐도 무적이 되지 않게 곱으로 쌓는다
+                    case BuffKind.DamageReduction: DamageTakenMul *= 1f - v; break;
+                    case BuffKind.SwitchShield:    SwitchShieldSeconds += e.Value / 100f; break;
                 }
             }
         }

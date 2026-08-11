@@ -23,6 +23,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: aspd_up
     _nameKr: "\uC5F0\uC0AC \uAC15\uD654"
     _description: "\uBC1C\uC0AC \uAC04\uACA9 -18%"
@@ -33,6 +42,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: range_up
     _nameKr: "\uC0AC\uAC70\uB9AC \uAC15\uD654"
     _description: "\uC0AC\uAC70\uB9AC +25%"
@@ -43,6 +61,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: move_up
     _nameKr: "\uC9C8\uC8FC"
     _description: "\uC774\uB3D9 \uC18D\uB3C4 +18%"
@@ -53,16 +80,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-  - _buffKey: ghost_hp
-    _nameKr: "\uC601\uD63C \uAC15\uD654"
-    _description: "\uACE0\uC2A4\uD2B8 \uCD5C\uB300 \uCCB4\uB825 +40"
-    _kind: 4
-    _value: 40
-    _stackable: 1
-    _colorHex: '#5AC8F0'
     _scope: 0
     _tag: 0
     _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: heal
     _nameKr: "\uC751\uAE09 \uD68C\uBCF5"
     _description: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 40% \uD68C\uBCF5"
@@ -73,6 +99,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: multishot
     _nameKr: "\uB2E4\uC911 \uC0AC\uACA9"
     _description: "\uD0C4 +1 \uBC1C"
@@ -83,6 +118,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: pierce
     _nameKr: "\uAD00\uD1B5\uD0C4"
     _description: "\uD0C4\uC774 \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4"
@@ -93,6 +137,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: lifesteal
     _nameKr: "\uD761\uD608"
     _description: "\uD53C\uD574\uC758 15% \uD68C\uBCF5"
@@ -103,6 +156,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: slow
     _nameKr: "\uC11C\uB9AC"
     _description: "\uBA85\uC911 \uC2DC \uB454\uD654 25%"
@@ -113,6 +175,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: ult_charge
     _nameKr: "\uC5BC\uD2F0\uBC0B \uCDA9\uC804"
     _description: "\uCDA9\uC804 \uC18D\uB3C4 +30%"
@@ -123,6 +194,15 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
   - _buffKey: shot_speed
     _nameKr: "\uD0C4\uC18D \uAC15\uD654"
     _description: "\uD0C4\uC18D +30%"
@@ -133,3 +213,633 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: 
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
+  - _buffKey: vital_shell
+    _nameKr: "\uC0DD\uBA85\uC758 \uAECD\uC9C8"
+    _description: "\uD638\uC2A4\uD2B8 \uCD5C\uB300 \uCCB4\uB825 +12%"
+    _kind: 12
+    _value: 12
+    _stackable: 1
+    _colorHex: '#E8604A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U01
+    _canonEffect: Max HP +12%
+    _pool: Universal
+    _fromChapter: 1
+    _weight: 1
+    _implemented: 1
+  - _buffKey: spirit_reserve
+    _nameKr: "\uC601\uD63C \uC608\uBE44"
+    _description: "\uACE0\uC2A4\uD2B8 \uCD5C\uB300 \uCCB4\uB825 +8"
+    _kind: 4
+    _value: 8
+    _stackable: 1
+    _colorHex: '#5AC8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U02
+    _canonEffect: Ghost HP max +8 and heal 4
+    _pool: Universal
+    _fromChapter: 1
+    _weight: 0.8
+    _implemented: 1
+  - _buffKey: quick_reset
+    _nameKr: "\uBE60\uB978 \uC7AC\uC815\uBE44"
+    _description: "\uC815\uC9C0 \u2192 \uBC1C\uC0AC \uC9C0\uC5F0 -0.03\uCD08"
+    _kind: 13
+    _value: 3
+    _stackable: 1
+    _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U03
+    _canonEffect: Stop-Attack delay -0.03s
+    _pool: Universal
+    _fromChapter: 1
+    _weight: 0.9
+    _implemented: 1
+  - _buffKey: focused_soul
+    _nameKr: "\uC9D1\uC911\uD55C \uC601\uD63C"
+    _description: "\uAC19\uC740 \uC801 4\uD68C \uBA85\uC911 \uC2DC \uD53C\uD574 +6%"
+    _kind: 0
+    _value: 6
+    _stackable: 1
+    _colorHex: '#E8604A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U04
+    _canonEffect: 'same target 4 hits: damage +6% stack max3'
+    _pool: Universal
+    _fromChapter: 1
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: wide_echo
+    _nameKr: "\uB113\uC740 \uC6B8\uB9BC"
+    _description: "\uAD11\uC5ED \uBC18\uACBD +10%"
+    _kind: 2
+    _value: 10
+    _stackable: 1
+    _colorHex: '#4AA8E8'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U05
+    _canonEffect: AoE radius +10%
+    _pool: Universal
+    _fromChapter: 1
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: tactical_mercy
+    _nameKr: "\uC804\uC220\uC801 \uC790\uBE44"
+    _description: "\uC804\uC220 \uBE59\uC758 \uBE44\uC6A9 -2"
+    _kind: 14
+    _value: 2
+    _stackable: 0
+    _colorHex: '#A886FF'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_U06
+    _canonEffect: first tactical cost per room -2
+    _pool: Universal
+    _fromChapter: 2
+    _weight: 0.7
+    _implemented: 1
+  - _buffKey: marked_payload
+    _nameKr: "\uD45C\uC2DD \uD0C4\uB450"
+    _description: "\uD45C\uC2DD \uB300\uC0C1 \uBA85\uC911 \uC2DC \uB9B4\uB808\uC774
+      \uD0C4 +1"
+    _kind: 0
+    _value: 0
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T01
+    _canonEffect: 'Mark consume: Relay Bullet +1'
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 1
+    _implemented: 0
+  - _buffKey: burning_circuit
+    _nameKr: "\uD0C0\uC624\uB974\uB294 \uD68C\uB85C"
+    _description: "\uD654\uC0C13\uC774 \uC8FC\uBCC0\uC5D0 1\uC911\uCCA9 \uBC88\uC9D0"
+    _kind: 0
+    _value: 0
+    _stackable: 1
+    _colorHex: '#F07828'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T02
+    _canonEffect: Burn3 spreads 1 stack nearby
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: cold_geometry
+    _nameKr: "\uCC28\uAC00\uC6B4 \uAE30\uD558"
+    _description: "\uB454\uD654 \uC7A5\uD310 \uAC00\uC7A5\uC790\uB9AC\uAC00 \uC9C0\uC18D
+      \uD53C\uD574"
+    _kind: 9
+    _value: 0
+    _stackable: 1
+    _colorHex: '#7ED8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T03
+    _canonEffect: Slow field edges deal tick damage
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: blood_debt
+    _nameKr: "\uD53C\uC758 \uBD80\uCC44"
+    _description: "\uD761\uD608 \uCD08\uACFC\uBD84\uC774 \uACE0\uC2A4\uD2B8 \uCCB4\uB825\uC73C\uB85C"
+    _kind: 8
+    _value: 0
+    _stackable: 1
+    _colorHex: '#E04A7A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T04
+    _canonEffect: Leech overheal to Ghost HP, room cap2
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: bank_shot
+    _nameKr: "\uBC45\uD06C \uC0F7"
+    _description: "\uCCAB \uB3C4\uD0C4\uC774 60% \uD53C\uD574\uB85C \uBCF5\uC81C"
+    _kind: 0
+    _value: 0
+    _stackable: 1
+    _colorHex: '#C98CF0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T05
+    _canonEffect: first bounce duplicates at 60% damage
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: smart_deployment
+    _nameKr: "\uC2A4\uB9C8\uD2B8 \uBC30\uCE58"
+    _description: "\uC124\uCE58\uBB3C \uC7AC\uC870\uC900 25% \uBE60\uB974\uAC8C"
+    _kind: 0
+    _value: 0
+    _stackable: 1
+    _colorHex: '#9AA4B4'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_T06
+    _canonEffect: deployables retarget 25% faster
+    _pool: Tag
+    _fromChapter: 2
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: fire_firmware
+    _nameKr: "\uD654\uC5FC \uD38C\uC6E8\uC5B4"
+    _description: "\uB85C\uBD07 \uC124\uCE58\uBB3C\uC774 \uD654\uC5FC\xB7\uACFC\uC5F4\uC744
+      \uBB3C\uB824\uBC1B\uB294\uB2E4"
+    _kind: 0
+    _value: 0
+    _stackable: 0
+    _colorHex: '#F07828'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S01
+    _canonEffect: Robot deployables inherit Fire and Overheat
+    _pool: Synergy
+    _fromChapter: 2
+    _weight: 1
+    _implemented: 0
+  - _buffKey: arcane_execution
+    _nameKr: "\uBE44\uC804 \uCC98\uD615"
+    _description: "\uBE59\uACB0\xB7\uD45C\uC2DD \uB300\uC0C1\uC5D0 \uC21C\uAC04\uC774\uB3D9
+      \uD3ED\uBC1C \uC5F0\uC1C4"
+    _kind: 0
+    _value: 0
+    _stackable: 0
+    _colorHex: '#A886FF'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S02
+    _canonEffect: Frozen/Marked target blink detonation chains
+    _pool: Synergy
+    _fromChapter: 2
+    _weight: 1
+    _implemented: 0
+  - _buffKey: crimson_combo
+    _nameKr: "\uD54F\uBE5B \uC5F0\uACA9"
+    _description: "\uD761\uD608 \uD45C\uC2DD\uC774 \uCF64\uBCF4 \uB9C8\uBB34\uB9AC\uB9C8\uB2E4
+      \uD68C\uBCF5"
+    _kind: 8
+    _value: 0
+    _stackable: 0
+    _colorHex: '#E04A7A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S03
+    _canonEffect: Leech marks heal on each combo finisher
+    _pool: Synergy
+    _fromChapter: 2
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: mine_alchemy
+    _nameKr: "\uC9C0\uB8B0 \uC5F0\uAE08\uC220"
+    _description: "\uC9C0\uB8B0\uAC00 \uBE59\uACB0 \uB8EC\uC73C\uB85C \uBC14\uB010\uB2E4"
+    _kind: 9
+    _value: 0
+    _stackable: 0
+    _colorHex: '#7ED8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S04
+    _canonEffect: Mine seed becomes Freeze Rune
+    _pool: Synergy
+    _fromChapter: 2
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: curse_inferno
+    _nameKr: "\uC800\uC8FC \uD654\uC5FC"
+    _description: "\uC800\uC8FC \uD68C\uB85C\uAC00 \uB124\uC774\uD31C \uAE30\uB465\uC73C\uB85C"
+    _kind: 0
+    _value: 0
+    _stackable: 0
+    _colorHex: '#F07828'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S05
+    _canonEffect: Curse circuit becomes napalm pillars
+    _pool: Synergy
+    _fromChapter: 3
+    _weight: 0.9
+    _implemented: 0
+  - _buffKey: guarded_rush
+    _nameKr: "\uC218\uD638 \uB3CC\uC9C4"
+    _description: "\uAC00\uB4DC \uC624\uB77C\uB97C \uD0DC\uC6CC \uC7A5\uAC11 \uB3CC\uC9C4"
+    _kind: 15
+    _value: 0
+    _stackable: 0
+    _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_S06
+    _canonEffect: consume Guard aura for armored dash
+    _pool: Synergy
+    _fromChapter: 2
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: last_magazine
+    _nameKr: "\uB9C8\uC9C0\uB9C9 \uD0C4\uCC3D"
+    _description: "\uB9C8\uC9C0\uB9C9 \uD0C4\xB7\uB9C8\uBB34\uB9AC +25%"
+    _kind: 0
+    _value: 25
+    _stackable: 1
+    _colorHex: '#E8604A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A01
+    _canonEffect: last shot/finisher +25%
+    _pool: AttackStyle
+    _fromChapter: 1
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: persistent_field
+    _nameKr: "\uC9C0\uC18D\uD558\uB294 \uC7A5\uD310"
+    _description: "\uC7A5\uD310 \uC9C0\uC18D +2\uCD08"
+    _kind: 2
+    _value: 0
+    _stackable: 1
+    _colorHex: '#4AA8E8'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A02
+    _canonEffect: fields +2s, max unchanged
+    _pool: AttackStyle
+    _fromChapter: 2
+    _weight: 0.8
+    _implemented: 0
+  - _buffKey: return_path
+    _nameKr: "\uADC0\uD658 \uACBD\uB85C"
+    _description: "\uB418\uB3CC\uC544\uC624\uB294 \uD0C4\uC774 50% \uD53C\uD574"
+    _kind: 0
+    _value: 0
+    _stackable: 1
+    _colorHex: '#A0E0FF'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A03
+    _canonEffect: returning projectile deals 50%
+    _pool: AttackStyle
+    _fromChapter: 2
+    _weight: 0.7
+    _implemented: 0
+  - _buffKey: heavy_frame
+    _nameKr: "\uC911\uC7A5 \uD504\uB808\uC784"
+    _description: "\uBC1B\uB294 \uD53C\uD574 -10%"
+    _kind: 15
+    _value: 10
+    _stackable: 1
+    _colorHex: '#9AA4B4'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A04
+    _canonEffect: damage taken -10%, move -4%
+    _pool: AttackStyle
+    _fromChapter: 2
+    _weight: 0.7
+    _implemented: 1
+  - _buffKey: quick_hands
+    _nameKr: "\uBE60\uB978 \uC190"
+    _description: "\uACF5\uACA9 \uAC04\uACA9 -7%"
+    _kind: 1
+    _value: 7
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A05
+    _canonEffect: attack interval -7%
+    _pool: AttackStyle
+    _fromChapter: 1
+    _weight: 0.9
+    _implemented: 1
+  - _buffKey: safe_exit
+    _nameKr: "\uC548\uC804\uD55C \uC774\uD0C8"
+    _description: "\uC804\uC220 \uBE59\uC758 \uC9C1\uD6C4 0.6\uCD08 \uBB34\uC801"
+    _kind: 16
+    _value: 60
+    _stackable: 0
+    _colorHex: '#A886FF'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: BUF_A06
+    _canonEffect: 0.6s shield after tactical exit
+    _pool: AttackStyle
+    _fromChapter: 2
+    _weight: 0.7
+    _implemented: 1
+  - _buffKey: tag_shot_dmg
+    _nameKr: "\uD0C4\uD658 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD53C\uD574 +30%"
+    _kind: 0
+    _value: 30
+    _stackable: 1
+    _colorHex: #F0B428
+    _scope: 1
+    _tag: 1
+    _hostKey: 
+  - _buffKey: tag_shot_multi
+    _nameKr: "\uD0C4\uD658 \uB2E4\uBC1C"
+    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD0C4 +1\uBC1C"
+    _kind: 6
+    _value: 1
+    _stackable: 1
+    _colorHex: #F0B428
+    _scope: 1
+    _tag: 1
+    _hostKey: 
+  - _buffKey: tag_melee_dmg
+    _nameKr: "\uADFC\uC811 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD53C\uD574 +35%"
+    _kind: 0
+    _value: 35
+    _stackable: 1
+    _colorHex: #E8404A
+    _scope: 1
+    _tag: 2
+    _hostKey: 
+  - _buffKey: tag_melee_leech
+    _nameKr: "\uADFC\uC811 \uD761\uD608"
+    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD761\uD608 +12%"
+    _kind: 8
+    _value: 12
+    _stackable: 1
+    _colorHex: #E8404A
+    _scope: 1
+    _tag: 2
+    _hostKey: 
+  - _buffKey: tag_magic_dmg
+    _nameKr: "\uB9C8\uBC95 \uD53C\uD574 \uC99D\uAC00"
+    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uD53C\uD574 +32%"
+    _kind: 0
+    _value: 32
+    _stackable: 1
+    _colorHex: #8A46D8
+    _scope: 1
+    _tag: 3
+    _hostKey: 
+  - _buffKey: tag_magic_range
+    _nameKr: "\uB9C8\uBC95 \uC0AC\uAC70\uB9AC"
+    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +30%"
+    _kind: 2
+    _value: 30
+    _stackable: 1
+    _colorHex: #8A46D8
+    _scope: 1
+    _tag: 3
+    _hostKey: 
+  - _buffKey: tag_deploy_dmg
+    _nameKr: "\uC124\uCE58\uBB3C \uAC15\uD654"
+    _description: "\uC124\uCE58 \uACC4\uC5F4 \uD53C\uD574 +40%"
+    _kind: 0
+    _value: 40
+    _stackable: 1
+    _colorHex: #4AA8E8
+    _scope: 1
+    _tag: 4
+    _hostKey: 
+  - _buffKey: tag_deploy_rate
+    _nameKr: "\uC124\uCE58 \uAC00\uB3D9\uB960"
+    _description: "\uC124\uCE58 \uACC4\uC5F4 \uAC04\uACA9 -20%"
+    _kind: 1
+    _value: 20
+    _stackable: 1
+    _colorHex: #4AA8E8
+    _scope: 1
+    _tag: 4
+    _hostKey: 
+  - _buffKey: tag_breath_range
+    _nameKr: "\uBE0C\uB808\uC2A4 \uBC94\uC704"
+    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +35%"
+    _kind: 2
+    _value: 35
+    _stackable: 1
+    _colorHex: #F07028
+    _scope: 1
+    _tag: 5
+    _hostKey: 
+  - _buffKey: tag_breath_dmg
+    _nameKr: "\uBE0C\uB808\uC2A4 \uAC15\uD654"
+    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uD53C\uD574 +38%"
+    _kind: 0
+    _value: 38
+    _stackable: 1
+    _colorHex: #F07028
+    _scope: 1
+    _tag: 5
+    _hostKey: 
+  - _buffKey: host_ninja_star
+    _nameKr: "\uD45C\uCC3D \uAC15\uD654"
+    _description: "\uB2CC\uC790 \u2014 \uD0C4 +2\uBC1C"
+    _kind: 6
+    _value: 2
+    _stackable: 1
+    _colorHex: #3A5CD8
+    _scope: 2
+    _tag: 0
+    _hostKey: ninja
+  - _buffKey: host_dragon_breath
+    _nameKr: "\uBE0C\uB808\uC2A4 \uD3ED\uBC1C"
+    _description: "\uC0D0\uB7EC\uB9E8\uB354 \u2014 \uD53C\uD574 +55%"
+    _kind: 0
+    _value: 55
+    _stackable: 1
+    _colorHex: #F07028
+    _scope: 2
+    _tag: 0
+    _hostKey: salamander
+  - _buffKey: host_robot_missile
+    _nameKr: "\uBBF8\uC0AC\uC77C \uAC15\uD654"
+    _description: "\uB85C\uBD07 \u2014 \uAC04\uACA9 -30%"
+    _kind: 1
+    _value: 30
+    _stackable: 1
+    _colorHex: #9AA4B4
+    _scope: 2
+    _tag: 0
+    _hostKey: robot
+  - _buffKey: host_gangster_mark
+    _nameKr: "\uD45C\uC2DD \uB9B4\uB808\uC774"
+    _description: "\uAC31\uC2A4\uD130 \u2014 \uC0AC\uAC70\uB9AC +45%"
+    _kind: 2
+    _value: 45
+    _stackable: 1
+    _colorHex: #D8A828
+    _scope: 2
+    _tag: 0
+    _hostKey: gangster
+  - _buffKey: host_vampire_leech
+    _nameKr: "\uD53C\uC758 \uAC08\uC99D"
+    _description: "\uD761\uD608\uADC0 \u2014 \uD761\uD608 +20%"
+    _kind: 8
+    _value: 20
+    _stackable: 1
+    _colorHex: #A02838
+    _scope: 2
+    _tag: 0
+    _hostKey: vampire
+  - _buffKey: host_laser_focus
+    _nameKr: "\uC9D1\uC18D \uB808\uC774\uC800"
+    _description: "\uC5B4\uC124\uD2B8 \uAC31\uC2A4\uD130 \u2014 \uD53C\uD574 +70%"
+    _kind: 0
+    _value: 70
+    _stackable: 1
+    _colorHex: #C8C8D0
+    _scope: 2
+    _tag: 0
+    _hostKey: assault_gangster

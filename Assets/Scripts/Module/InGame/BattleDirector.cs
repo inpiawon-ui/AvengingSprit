@@ -1203,7 +1203,8 @@ namespace Game.Module.InGame
             // 멈춘 직후 아주 짧게 준비 시간을 둔다. 없으면 톡톡 끊어 눌러도 손해가 없어
             // 멈춤의 대가가 사라진다.
             _stopTimer += dt;
-            if (_stopTimer < _config.AttackResumeSeconds) { IsFiring = false; return; }
+            if (_stopTimer < Mathf.Max(0.02f, _config.AttackResumeSeconds - _buffs.StopDelayCut))
+            { IsFiring = false; return; }
 
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
             if (_host == null) { IsFiring = false; return; }
@@ -1731,6 +1732,9 @@ namespace Game.Module.InGame
         private void DamagePlayer(int amount)
         {
             if (IsInvulnerable) return;
+            // 받는 피해 감소(정본 BUF_A04). 0 이 되지 않게 최소 1 은 남긴다 —
+            // 무적이 되어 버리면 버프가 아니라 버그로 보인다.
+            amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.DamageTakenMul));
             var hitAt = Avatar != null ? Avatar.Position : Vector2.zero;
             if (_host != null)
             {
@@ -2011,7 +2015,7 @@ namespace Game.Module.InGame
             }
 
             bool has = _possessTarget != null;
-            int cost = _host != null ? _config.TacticalGhostCost : 0;
+            int cost = _host != null ? TacticalCost : 0;
             bool blocked = has && _host != null && !CanSwitch;
             if (has == _hadPossessTarget && blocked == _hadPossessBlocked) return;
 
@@ -2061,8 +2065,11 @@ namespace Game.Module.InGame
             });
         }
 
-        private bool CanSwitch =>
-            _tacticalCooldown <= 0f && _ghostHp > _config.TacticalGhostCost;
+        /// <summary>지금 전술 빙의에 나갈 Ghost HP. 버프로 깎일 수 있다(정본 BUF_U06).</summary>
+        private int TacticalCost =>
+            Mathf.Max(1, _config.TacticalGhostCost - _buffs.TacticalCostCut);
+
+        private bool CanSwitch => _tacticalCooldown <= 0f && _ghostHp > TacticalCost;
 
         // ─────────────────────────────────────────────────────────
         /// <summary>
@@ -2093,13 +2100,13 @@ namespace Game.Module.InGame
 
             if (tactical)
             {
-                _ghostHp = Mathf.Max(1, _ghostHp - _config.TacticalGhostCost);
+                _ghostHp = Mathf.Max(1, _ghostHp - TacticalCost);
                 _tacticalCooldown = _config.TacticalCooldownSeconds;
                 _tacticalShown = -1;
 
                 // 값을 치렀다는 것이 화면에서 보여야 한다. 상단 숫자만 바뀌면
                 // 100 중 6이라 눈치채지 못한다 — 버린 몸 자리에 띄운다.
-                ShowGhostCost(_host.Position, _config.TacticalGhostCost);
+                ShowGhostCost(_host.Position, TacticalCost);
 
                 // 버린 몸은 그 자리에 쓰러진다. 경험치는 주지 않는다 —
                 // 죽인 것이 아니라 놓아준 것이고, 값을 치른 쪽은 나다.
@@ -2128,7 +2135,8 @@ namespace Game.Module.InGame
             _host = NewUnit($"Host_{key}");
             _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
                         UnitGet(key),
-                        entry != null ? _config.HostHp(entry.Hp) : 100,
+                        Mathf.RoundToInt((entry != null ? _config.HostHp(entry.Hp) : 100)
+                                         * _buffs.HostHpMul),
                         entry != null ? Mathf.RoundToInt(_config.HostAtk(entry.Atk) * entry.DamageMul) : 10,
                         entry != null ? _config.HostSpeed(entry.Spd) : 180f,
                         _config.HostAttackRange * (entry?.RangeMul ?? 1f),
@@ -2143,7 +2151,7 @@ namespace Game.Module.InGame
 
             // 기획서 A 02 — 빙의 직후 무적(0.35) + 호스트 진입 무적(0.5). 몸을 얻는 순간이
             // 가장 취약한 지점이라, 여기서 맞으면 빙의 자체가 손해가 된다.
-            _invuln = _config.PossessInvulnSeconds;
+            _invuln = _config.PossessInvulnSeconds + _buffs.SwitchShieldSeconds;
             _ghostProtect = 0f;
             _emergencyWait = 0f;
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
