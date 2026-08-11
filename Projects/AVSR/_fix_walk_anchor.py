@@ -1,4 +1,11 @@
-"""걷기 2프레임의 가로 흔들림을 잡는다. 그림은 건드리지 않고 평행이동만 한다.
+"""동작 프레임의 가로 어긋남을 잡는다. 그림은 건드리지 않고 평행이동만 한다.
+
+기준이 동작마다 다르다.
+  걷기        발이 번갈아 벌어지는 게 정상이다. 흔들리면 안 되는 건 몸통 →
+              **머리 밴드(위 20줄)의 가로 중심**을 그 방향 idle 과 맞춘다
+  공격·피격   발을 붙인 채 상체만 움직이는 동작이다 → **발 중심**을 48 로 맞춘다
+
+하나의 기준으로 전부 재면 멀쩡한 것을 반려하거나 어긋난 것을 놓친다.
 
 걷기는 **발이 움직이고 몸통은 제자리**여야 한다. 실제 이동은 트랜스폼이 하므로
 스프라이트 안에서 몸통이 좌우로 흔들리면 걸을 때마다 캐릭터가 비틀거린다.
@@ -27,8 +34,11 @@ UNIT = os.path.join(ROOT, 'Assets', 'BaseResource', 'Unit')
 
 DIRS = ['s', 'se', 'e', 'ne', 'n']
 WALK = ['walk1', 'walk2']
+PLANTED = ['atk1', 'atk2', 'hit']     # 발을 붙이고 하는 동작
 HEAD_BAND = 20
-DEADZONE = 3      # 3px 이하는 그냥 둔다. 눈에 안 보이는 것까지 옮기면 그림만 상한다
+FOOT_BAND = 6
+ANCHOR = 48
+DEADZONE = 1      # 1px 이하는 그냥 둔다. 눈에 안 보이는 것까지 옮기면 그림만 상한다
 
 
 def find(key, name):
@@ -37,6 +47,18 @@ def find(key, name):
         if os.path.exists(p):
             return p
     return None
+
+
+def foot_center(im):
+    px = im.load()
+    w, h = im.size
+    pts = [(x, y) for y in range(h) for x in range(w) if px[x, y][3] > 8]
+    if not pts:
+        return None, None, None
+    y1 = max(p[1] for p in pts)
+    feet = [x for x, y in pts if y >= y1 - FOOT_BAND]
+    return ((min(feet) + max(feet)) / 2,
+            min(p[0] for p in pts), max(p[0] for p in pts))
 
 
 def head_center(im):
@@ -68,7 +90,7 @@ def main():
                 continue
             ref = head_center(Image.open(base).convert('RGBA'))[0]
 
-            for f in WALK:
+            for f in WALK + PLANTED:
                 name = f'unit_{key}_{d}_{f}.png'
                 p = find(key, name)
                 if p is None:
@@ -78,11 +100,15 @@ def main():
                     shutil.copy2(p, raw)      # 원본 1회 보관 — 재실행해도 누적 이동 없음
 
                 im = Image.open(raw).convert('RGBA')
-                hc, x0, x1 = head_center(im)
-                dx = int(round(ref - hc))
+                walk = f in WALK
+                want = ref if walk else ANCHOR
+                cur, x0, x1 = (head_center if walk else foot_center)(im)
+                dx = int(round(want - cur))
+                label = '머리중심' if walk else '발중심'
+
                 if abs(dx) <= DEADZONE:
                     shutil.copy2(raw, p)
-                    print(f'  {d}_{f}: 머리중심 {hc:5.1f} (idle {ref:.1f})  그대로')
+                    print(f'  {d}_{f}: {label} {cur:5.1f} (기준 {want:.1f})  그대로')
                     continue
                 if x0 + dx < 0 or x1 + dx > im.size[0] - 1:
                     shutil.copy2(raw, p)
@@ -92,8 +118,8 @@ def main():
                 out = Image.new('RGBA', im.size, (0, 0, 0, 0))
                 out.paste(im, (dx, 0), im)
                 out.save(p)
-                print(f'  {d}_{f}: 머리중심 {hc:5.1f} → {head_center(out)[0]:.1f}  '
-                      f'이동 {dx:+d}px')
+                after = (head_center if walk else foot_center)(out)[0]
+                print(f'  {d}_{f}: {label} {cur:5.1f} → {after:.1f}  이동 {dx:+d}px')
 
 
 if __name__ == '__main__':

@@ -36,8 +36,6 @@ namespace Game.Editor
         // 해금은 정본 MinChapter 를 따라 **챕터 클리어**로 통일했다.
         // 옛 StageReach 값(5·12·20 등)은 StagesPerChapter=3 에서 영원히 닿지 않았다.
         //
-        // ⚠ `fighter`(E002/H02)는 CH1 두 번째로 흔한 적인데 그림이 아직 없다.
-        //    그림이 오면 이 배열에 추가한다 — 없는 채로 넣으면 보이지 않는 적이 된다.
         // 마지막 세 칸은 빙의 방식 · 체력 임계 · 정본 EnemyID 다(정본 POSSESSION_MATRIX).
         // EnemyID 는 방 데이터의 스폰이 배우를 가리키는 열쇠다 — AVSR_Roster.md 대조표.
         // 정본 조건은 상태이상(화상3·빙결·장갑파괴)인데 그 시스템이 아직 없다.
@@ -48,6 +46,7 @@ namespace Game.Editor
         {
             new object[]{ "gangster",         "GANGSTER",         "갱스터",        "확산 사수",     70, 76, 64, 58, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "tommy_barrage",   HostUnlockType.Owned,            0, 0, PossessKind.Immediate, 100 , "E001" },
             new object[]{ "thug",             "THUG",             "폭력배",        "중화기 사수",   80, 85, 55, 45, AttackKind.Rapid,  1, 0f,  1.0f, 0.4f,  0.48f, 0, 0, false, "bullet_hell",     HostUnlockType.Owned,            0, 0, PossessKind.Immediate, 100 , "E004" },
+            new object[]{ "fighter",          "FIGHTER",          "파이터",        "돌진 근접",     68, 70, 84, 88, AttackKind.Melee,  1, 0f,  0.45f, 0.55f, 0.8f, 0, 0, false, "rush_combo",      HostUnlockType.Owned,            0, 0, PossessKind.Condition, 40 , "E002" },
             new object[]{ "salamander",       "SALAMANDER",       "샐러맨더",      "화염 돌파",     95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath",   HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 , "E003" },
             new object[]{ "white_wizard",     "WHITE WIZARD",     "화이트 위저드", "둔화 제어",     58, 88, 62, 55, AttackKind.Pierce, 1, 0f,  1.3f, 1.35f, 1.75f, 0, 0, false, "elemental_nova",  HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 , "E010" },
             new object[]{ "ninja",            "NINJA",            "닌자",          "순간 폭발",     66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f,  0.6f, 0, 0, false, "shadow_burst",    HostUnlockType.Owned,            0, 0, PossessKind.Condition, 50 , "E011" },
@@ -104,6 +103,7 @@ namespace Game.Editor
         {
             new[]{ "tommy_barrage",   "TOMMY BARRAGE",   "토미 내리사격",   "광각 확산, 높은 경직" },
             new[]{ "bullet_hell",     "BULLET HELL",     "불릿 헬",         "전화면 제압 사격, 5초 지속" },
+            new[]{ "rush_combo",      "RUSH COMBO",      "러시 콤보",       "연속 돌진 타격, 마지막 일격에 경직" },
             new[]{ "dragon_breath",   "DRAGON BREATH",   "드래곤 브레스",   "지속 화염 원뿔, 화상 DoT" },
             new[]{ "elemental_nova",  "ELEMENTAL NOVA",  "엘리멘탈 노바",   "360° AoE, 보스에게 2배 피해" },
             new[]{ "shadow_burst",    "SHADOW BURST",    "섀도우 버스트",   "순간이동 연격 + 무적 프레임" },

@@ -63,6 +63,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8de5103b0449c7a45ae6296e6b9a5fa6
+    m_Address: atlas/unit_fighter
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 97966df8434287d438d0878c93e36919
     m_Address: atlas/unit_baseball
     m_ReadOnly: 0

@@ -69,6 +69,34 @@ MonoBehaviour:
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
+  - _hostKey: fighter
+    _nameEn: FIGHTER
+    _nameKr: "\uD30C\uC774\uD130"
+    _role: "\uB3CC\uC9C4 \uADFC\uC811"
+    _hp: 68
+    _atk: 70
+    _spd: 84
+    _dash: 88
+    _attackKind: 0
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 0.45
+    _intervalMul: 0.55
+    _damageMul: 0.8
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E002
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 40
+    _ultimateKey: rush_combo
+    _unlockType: 0
+    _unlockChapter: 0
+    _unlockStage: 0
   - _hostKey: salamander
     _nameEn: SALAMANDER
     _nameKr: "\uC0D0\uB7EC\uB9E8\uB354"

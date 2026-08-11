@@ -644,7 +644,11 @@ namespace Game.Module.InGame
         private Sprite UnitGet(string key, string suffix = null)
         {
             if (key == null || !_unitAtlas.TryGetValue(key, out var atlas) || atlas == null) return null;
-            return atlas.GetSprite(suffix == null ? $"unit_{key}" : $"unit_{key}_{suffix}");
+            if (suffix != null) return atlas.GetSprite($"unit_{key}_{suffix}");
+
+            // 방향 없는 기본 그림은 방향 5장이 붙기 전 한 프레임 동안만 쓰인다.
+            // 없으면 정면(s)으로 대신한다 — 이것 때문에 통째로 안 보이면 손해가 크다.
+            return atlas.GetSprite($"unit_{key}") ?? atlas.GetSprite($"unit_{key}_s");
         }
 
         /// <summary>
