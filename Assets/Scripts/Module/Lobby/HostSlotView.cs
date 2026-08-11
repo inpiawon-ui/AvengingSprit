@@ -55,8 +55,9 @@ namespace Game.Module.Lobby
             {
                 _portrait.sprite = portrait;
                 _portrait.enabled = portrait != null;
-                // 잠금 셀은 실루엣 — 원본 형태를 남기되 검게 눌러 식별만 되게 한다
-                _portrait.color = unlocked ? Color.white : new Color(0.10f, 0.10f, 0.14f, 1f);
+                // 잠금 칸은 **회색본 스프라이트**가 들어온다. 여기서 다시 눌러 어둡게 하면
+                // 누구인지 안 보여서, 잠금 칸이 다음 목표를 알려 주는 역할을 못 한다.
+                _portrait.color = Color.white;
             }
             if (_nameText != null)
                 _nameText.text = unlocked ? entry.NameKr : "???";

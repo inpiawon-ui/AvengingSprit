@@ -145,6 +145,22 @@ namespace Game.Module.Lobby
             }
         }
 
+        /// <summary>
+        /// 잠금 상태에 맞는 초상. 잠긴 칸은 **회색본**을 쓴다.
+        ///
+        /// 예전에는 원본을 거의 검정으로 눌러 실루엣만 남겼는데, 그러면 누구인지
+        /// 안 보여서 "다음 목표 확인"이라는 잠금 칸의 역할이 죽는다. 색 틴트로는
+        /// 어두워질 뿐 채도가 안 빠지므로(곱셈이다) 회색본을 따로 구워 뒀다.
+        ///
+        /// 회색본이 없으면 원본으로 떨어진다 — 캐릭터를 추가하는 중에 칸이
+        /// 비어 버리는 것보다 색이 남는 편이 낫다.
+        /// </summary>
+        private Sprite Portrait(string prefix, string hostKey, bool unlocked)
+        {
+            if (unlocked) return GetSprite($"{prefix}_{hostKey}");
+            return GetSprite($"{prefix}_{hostKey}_locked") ?? GetSprite($"{prefix}_{hostKey}");
+        }
+
         private void RefreshSlots()
         {
             var hosts = _player.AllHosts;
@@ -152,7 +168,8 @@ namespace Game.Module.Lobby
             {
                 var e = hosts[i];
                 bool unlocked = _player.IsHostUnlocked(e);
-                _slots[i].Bind(e, GetSprite($"hostslotportrait_{e.HostKey}"), unlocked, OnSlotClicked);
+                _slots[i].Bind(e, Portrait("hostslotportrait", e.HostKey, unlocked),
+                               unlocked, OnSlotClicked);
                 _slots[i].SetSelected(e.HostKey == _selectedKey);
             }
         }
@@ -184,8 +201,8 @@ namespace Game.Module.Lobby
             var portrait = _ui.Get<Image>("HostPortraitImage");
             if (portrait != null)
             {
-                portrait.sprite = GetSprite($"hostportraitimage_{e.HostKey}");
-                portrait.color = unlocked ? Color.white : new Color(0.10f, 0.10f, 0.14f, 1f);
+                portrait.sprite = Portrait("hostportraitimage", e.HostKey, unlocked);
+                portrait.color = Color.white;   // 회색 처리는 스프라이트 자체가 한다
             }
             _ui.SetActive("HostDetailLockIcon", !unlocked);
 

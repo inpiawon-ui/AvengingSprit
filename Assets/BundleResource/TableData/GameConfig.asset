@@ -32,7 +32,7 @@ MonoBehaviour:
   _restGhostHeal: 30
   _expPerEnemy: 10
   _expPerBoss: 60
-  _expToLevelBase: 30
+  _expToLevelBase: 40
   _expGrowthPercent: 45
   _attackResumeSeconds: 0.12
   _hostHpPerPoint: 6
