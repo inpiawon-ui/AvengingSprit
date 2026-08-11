@@ -96,6 +96,20 @@ namespace Game.Module.Events
     public struct PossessTargetChangedEvent : IEvent
     {
         public bool HasTarget;
+        /// <summary>지금 누르면 나갈 Ghost HP. 0 이면 공짜(유령 상태에서의 빙의)다.</summary>
+        public int GhostCost;
+        /// <summary>대상은 있는데 지금은 못 누른다 — 쿨다운 또는 Ghost HP 부족.</summary>
+        public bool Blocked;
+    }
+
+    /// <summary>
+    /// 전술 빙의 쿨다운이 흐른다. 남은 시간이 보이지 않으면 눌러 보고 나서야
+    /// 못 쓴다는 것을 알게 된다.
+    /// </summary>
+    public struct TacticalCooldownEvent : IEvent
+    {
+        public float Remain;
+        public float Total;
     }
 
     /// <summary>

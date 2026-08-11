@@ -76,6 +76,9 @@ namespace Game.Module.InGame
         private bool _running;
         private Unit _possessTarget;
         private bool _hadPossessTarget;
+        private bool _hadPossessBlocked;
+        private float _tacticalCooldown;
+        private int _tacticalShown = -1;
 
         private float _stopTimer;
 
@@ -179,6 +182,8 @@ namespace Game.Module.InGame
         private void SpawnGhost()
         {
             _ghostHp = GhostHpMax;
+            _tacticalCooldown = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
+            _tacticalShown = -1;
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
@@ -524,6 +529,24 @@ namespace Game.Module.InGame
         private void TickGhostState(float dt)
         {
             if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
+
+            // 전술 빙의 쿨다운은 몸 안에 있든 밖에 있든 흐른다.
+            // 유령일 때 멈추면 죽고 나서 기다리는 것이 이득이 된다.
+            if (_tacticalCooldown > 0f)
+            {
+                _tacticalCooldown = Mathf.Max(0f, _tacticalCooldown - dt);
+                // 매 프레임 발행하지 않는다 — 0.1초 눈금이 바뀔 때만. 표시는 그걸로 충분하다.
+                if (_tacticalCooldown == 0f ||
+                    Mathf.FloorToInt(_tacticalCooldown * 10f) != _tacticalShown)
+                {
+                    _tacticalShown = Mathf.FloorToInt(_tacticalCooldown * 10f);
+                    _bus.Publish(new TacticalCooldownEvent
+                    {
+                        Remain = _tacticalCooldown, Total = _config.TacticalCooldownSeconds,
+                    });
+                }
+                if (_tacticalCooldown == 0f) RefreshPossessTarget();
+            }
 
             if (_ghostProtect > 0f)
             {
@@ -1316,11 +1339,18 @@ namespace Game.Module.InGame
             _dead.Clear();
         }
 
-        /// <summary>빙의 가능 대상 갱신. 고스트 상태에서만 의미가 있다.</summary>
+        /// <summary>
+        /// 빙의 가능 대상 갱신. 유령일 때와 몸을 입고 있을 때 **둘 다** 의미가 있다.
+        ///
+        /// 유령이면 공짜다 — 몸이 없으니 다른 선택지가 없다.
+        /// 몸이 있으면 전술 빙의다 — Ghost HP 를 내고 살아 있는 몸을 버린다.
+        /// 기준점도 다르다. 유령은 유령 자리에서, 호스트는 호스트 자리에서 잰다.
+        /// </summary>
         private void RefreshPossessTarget()
         {
             _possessTarget = null;
-            if (_host == null && _ghost != null)
+            var from = Avatar;
+            if (from != null && !_awaitingBuff)
             {
                 // 기획서 A 4-3 — 우선순위가 높은 적을 먼저 잡는다. 같으면 가까운 쪽.
                 // 사거리는 적마다 다를 수 있다(PossessRange 0 이면 전역 기본값).
@@ -1332,7 +1362,7 @@ namespace Game.Module.InGame
                     if (e == null || !e.IsPossessable) continue;
 
                     float range = e.PossessRange > 0f ? e.PossessRange : _config.PossessRange;
-                    float d = Vector2.Distance(_ghost.Position, e.Position);
+                    float d = Vector2.Distance(from.Position, e.Position);
                     if (d > range) continue;
 
                     if (e.PossessPriority < bestPri) continue;
@@ -1345,15 +1375,44 @@ namespace Game.Module.InGame
                 if (_enemies[i] != null) _enemies[i].SetPossessMark(_enemies[i] == _possessTarget);
 
             bool has = _possessTarget != null;
-            if (has == _hadPossessTarget) return;
+            int cost = _host != null ? _config.TacticalGhostCost : 0;
+            bool blocked = has && _host != null && !CanSwitch;
+            if (has == _hadPossessTarget && blocked == _hadPossessBlocked) return;
+
             _hadPossessTarget = has;
-            _bus.Publish(new PossessTargetChangedEvent { HasTarget = has });
+            _hadPossessBlocked = blocked;
+            _bus.Publish(new PossessTargetChangedEvent
+            {
+                HasTarget = has, GhostCost = cost, Blocked = blocked,
+            });
         }
 
+        /// <summary>
+        /// 지금 전술 빙의를 낼 수 있는가 (정본 TC_POS_D 의 선행 조건).
+        /// 대상 유무는 보지 않는다 — 그건 부르는 쪽이 따로 본다.
+        /// </summary>
+        private bool CanSwitch =>
+            _tacticalCooldown <= 0f && _ghostHp > _config.TacticalGhostCost;
+
         // ─────────────────────────────────────────────────────────
+        /// <summary>
+        /// 몸을 빼앗는다. 두 갈래다.
+        ///
+        /// **유령일 때** — 공짜다. 몸이 없으니 다른 선택지가 없고, 여기에 값을 매기면
+        /// 죽은 뒤에 벌을 두 번 주는 셈이 된다.
+        ///
+        /// **몸을 입고 있을 때(전술 빙의)** — Ghost HP 를 내고 쿨다운을 문다.
+        /// 이 게임이 묻는 질문이 여기서 나온다. 지금 이 몸을 계속 굴릴 것인가,
+        /// 값을 내고 저 몸으로 갈아탈 것인가. 값이 없으면 항상 갈아타는 것이 정답이 되고,
+        /// 쿨다운이 없으면 적을 만날 때마다 갈아타는 것이 정답이 된다. 둘 다 있어야
+        /// 유지와 교체가 같이 성립한다.
+        /// </summary>
         public void TryPossess()
         {
-            if (!_running || _host != null || _possessTarget == null) return;
+            if (!_running || _possessTarget == null || _awaitingBuff) return;
+
+            bool tactical = _host != null;
+            if (tactical && !CanSwitch) return;
 
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
@@ -1361,6 +1420,24 @@ namespace Game.Module.InGame
             _enemies.Remove(target);
             Destroy(target.gameObject);
             _possessTarget = null;
+
+            if (tactical)
+            {
+                _ghostHp = Mathf.Max(1, _ghostHp - _config.TacticalGhostCost);
+                _tacticalCooldown = _config.TacticalCooldownSeconds;
+                _tacticalShown = -1;
+
+                // 버린 몸은 그 자리에 쓰러진다. 경험치는 주지 않는다 —
+                // 죽인 것이 아니라 놓아준 것이고, 값을 치른 쪽은 나다.
+                var old = _host;
+                _host = null;
+                Retire(old);
+
+                _bus.Publish(new TacticalCooldownEvent
+                {
+                    Remain = _tacticalCooldown, Total = _config.TacticalCooldownSeconds,
+                });
+            }
 
             EnterHost(entry, target.Key, target.DisplayName, pos, _config.HostStartHpPercent);
         }

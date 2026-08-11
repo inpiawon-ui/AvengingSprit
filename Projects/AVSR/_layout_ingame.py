@@ -135,6 +135,12 @@ add('DPadKnob',       (38, 38, 64, 64), 'DPadBase', 'IMG', local=True)
 add('UltimateButton', (324, 854, 122, 140), 'ControlGroup', 'BTN')
 add('UltimateCooldown', (0, 0, 122, 140), 'UltimateButton', 'IMG', local=True)
 add('PossessButton',  (445, 855, 110, 136), 'ControlGroup', 'BTN')
+# 전술 빙의는 값이 붙는다(Ghost HP 6 · 쿨다운 8초). 값이 안 보이면 눌러 보고 나서야
+# 못 쓴다는 걸 알게 되므로 버튼 위에 겹쳐 쓴다. 유령 상태의 빙의는 공짜라 둘 다 빈 문자열.
+add('PossessCooldownText', (0, 40, 110, 48), 'PossessButton', 'TMP', local=True,
+    text='', size=cap(28), align='C', color=WHITE)
+add('PossessCostText',     (0, 100, 110, 26), 'PossessButton', 'TMP', local=True,
+    text='', size=cap(14), align='C', color=GHOST_C)
 
 
 # ── 레벨업 버프 3택1 (기본 숨김, 코드가 켠다) ──────────────────────

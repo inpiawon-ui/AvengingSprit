@@ -50,6 +50,12 @@ namespace Game.Character
         [Range(10, 100)]
         [SerializeField] private int _hostStartHpPercent = 70;
 
+        [Header("전술 빙의 — 살아 있는 몸을 버리고 갈아탄다 (정본 constants)")]
+        [Tooltip("살아 있는 호스트를 두고 다른 몸으로 갈아탈 때 내는 Ghost HP. 정본 잠금값 6.")]
+        [SerializeField] private int _tacticalGhostCost = 6;
+        [Tooltip("전술 빙의 재사용 대기(초). 정본 잠금값 8. 이게 없으면 매 적마다 갈아타는 게 최적해가 된다.")]
+        [SerializeField] private float _tacticalCooldownSeconds = 8f;
+
         [Header("긴급 호스트 (기획서 A 8-3)")]
         [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
         [SerializeField] private float _emergencyDelaySeconds = 1f;
@@ -132,6 +138,8 @@ namespace Game.Character
         public float EmergencyDelaySeconds => _emergencyDelaySeconds;
         public int EmergencyHostHpPercent => Mathf.Clamp(_emergencyHostHpPercent, 5, 100);
         public int EmergencyGhostCost => Mathf.Max(0, _emergencyGhostCost);
+        public int TacticalGhostCost => Mathf.Max(0, _tacticalGhostCost);
+        public float TacticalCooldownSeconds => Mathf.Max(0f, _tacticalCooldownSeconds);
         public int EliteEnemyCount => Mathf.Max(1, _eliteEnemyCount);
         public float EliteHpMul => _eliteHpMul;
         public float EliteAtkMul => _eliteAtkMul;

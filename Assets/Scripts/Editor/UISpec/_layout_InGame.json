@@ -384,6 +384,34 @@
    "h": 170.0
   },
   {
+   "name": "PossessCooldownText",
+   "parent": "PossessButton",
+   "create": "TMP",
+   "x": 0.0,
+   "y": 50.0,
+   "w": 137.5,
+   "h": 60.0,
+   "text": "",
+   "size": 50.0,
+   "align": "C",
+   "color": "#F2F4F8",
+   "local": true
+  },
+  {
+   "name": "PossessCostText",
+   "parent": "PossessButton",
+   "create": "TMP",
+   "x": 0.0,
+   "y": 125.0,
+   "w": 137.5,
+   "h": 32.5,
+   "text": "",
+   "size": 25.0,
+   "align": "C",
+   "color": "#5AC8F0",
+   "local": true
+  },
+  {
    "name": "BuffChoicePanel",
    "parent": "InGameMainUI",
    "create": "IMG",
@@ -400,7 +428,7 @@
    "y": 312.5,
    "w": 500.0,
    "h": 50.0,
-   "text": "ROOM CLEAR",
+   "text": "LEVEL UP",
    "size": 46.4,
    "align": "C",
    "color": "#F0B428"

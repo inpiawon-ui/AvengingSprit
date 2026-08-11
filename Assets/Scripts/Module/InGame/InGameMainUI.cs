@@ -52,6 +52,7 @@ namespace Game.Module.InGame
         private Vector2 _dpadHome;
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
+        private int _possessCost;
         private BuffTable _buffTable;
         private string _bossName = "BOSS";
         private int _bossPhase = 1;
@@ -106,7 +107,9 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(OnExitOpened));
             _tokens.Add(bus.Subscribe<RunExpChangedEvent>(OnExpChanged));
             _tokens.Add(bus.Subscribe<EmergencyHostEvent>(OnEmergencyHost));
-            _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(e => SetPossessReady(e.HasTarget)));
+            _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(
+                e => SetPossessState(e.HasTarget, e.GhostCost, e.Blocked)));
+            _tokens.Add(bus.Subscribe<TacticalCooldownEvent>(OnTacticalCooldown));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
         }
@@ -344,13 +347,37 @@ namespace Game.Module.InGame
             _ui.SetFill("ExpBarFill", Ratio(e.Exp, e.ExpToNext), ExpBarWidth);
         }
 
-        /// <summary>빙의 가능할 때만 버튼을 밝힌다. 목업의 발광 상태를 알파로 흉내낸다.</summary>
-        private void SetPossessReady(bool ready)
+        /// <summary>
+        /// 빙의 버튼 상태. 세 가지를 구분해야 한다.
+        ///   대상 없음   — 꺼짐(회색)
+        ///   누를 수 있음 — 켜짐. 값이 있으면 값을 함께 보여준다
+        ///   대상은 있는데 못 누름 — 켜지되 눌리지 않고, 이유(쿨다운·HP)를 보여준다
+        /// 마지막을 그냥 회색으로 두면 "왜 안 되지"만 남는다.
+        /// </summary>
+        private void SetPossessState(bool hasTarget, int cost, bool blocked)
         {
+            _possessCost = cost;
+            bool usable = hasTarget && !blocked;
+
             var btn = _ui.Get<Button>("PossessButton");
-            if (btn != null) btn.interactable = ready;
+            if (btn != null) btn.interactable = usable;
             if (_possessButtonImage != null)
-                _possessButtonImage.color = ready ? Color.white : new Color(0.45f, 0.45f, 0.5f, 1f);
+                _possessButtonImage.color =
+                    usable ? Color.white
+                    : hasTarget ? new Color(0.85f, 0.55f, 0.55f, 1f)   // 대상은 있는데 값이 모자라다
+                    : new Color(0.45f, 0.45f, 0.5f, 1f);
+
+            // 전술 빙의(값이 붙는 교체)일 때만 값을 적는다. 유령 상태의 빙의는 공짜다.
+            _ui.SetText("PossessCostText", hasTarget && cost > 0 ? $"-{cost}" : string.Empty);
+        }
+
+        private void SetPossessReady(bool ready) => SetPossessState(ready, 0, false);
+
+        /// <summary>전술 빙의 쿨다운. 남은 초를 버튼에 겹쳐 쓴다.</summary>
+        private void OnTacticalCooldown(TacticalCooldownEvent e)
+        {
+            _ui.SetText("PossessCooldownText",
+                        e.Remain > 0f ? Mathf.CeilToInt(e.Remain).ToString() : string.Empty);
         }
 
         private void RefreshCurrency()
