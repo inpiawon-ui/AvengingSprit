@@ -48,6 +48,27 @@ def palette(im):
             for y in range(h) for x in range(w) if px[x, y][3] > 8}
 
 
+def novel_area(im, base_pal):
+    """정본에 없는 색이 차지하는 **면적** 비율.
+
+    고유 색 개수로 재면 안 된다. 총구 화염은 픽셀 몇십 개인데 그라데이션이
+    잘게 쪼개져 있어서, 색 가짓수로 세면 56% 로 부풀어 멀쩡한 그림을 반려한다.
+    실제로 그 일이 있었다. 다른 인물인지 보려는 것이므로 면적으로 재는 게 맞다.
+    """
+    px = im.load()
+    w, h = im.size
+    tot = novel = 0
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if a <= 8:
+                continue
+            tot += 1
+            if (r >> 5, g >> 5, b >> 5) not in base_pal:
+                novel += 1
+    return novel / max(1, tot)
+
+
 def main():
     fail = []
     print(f'{"파일":<24}{"크기":<10}{"발밑":>5}{"발중심":>7}{"머리":>5}'
@@ -69,7 +90,7 @@ def main():
             if m is None:
                 fail.append(f'{name}: 불투명 픽셀 없음')
                 continue
-            novel = len(palette(m['im']) - bpal) / max(1, len(palette(m['im'])))
+            novel = novel_area(m['im'], bpal)
             print(f'{name:<24}{str(m["size"]):<10}{m["foot"]:>5}{m["fc"]:>7.1f}'
                   f'{m["top"]:>5}{m["x1"]-m["x0"]+1:>5}{m["semi"]:>7}{novel*100:>7.1f}')
 
@@ -88,8 +109,10 @@ def main():
                 fail.append(f'{name}: 캔버스 가장자리에 닿음 — 잘렸을 수 있다')
             if m['semi'] > 0:
                 fail.append(f'{name}: 반투명 픽셀 {m["semi"]}개')
-            if novel > 0.35:
-                fail.append(f'{name}: 정본에 없는 색 {novel*100:.0f}%')
+            # 면적 기준. 화염은 몇십 픽셀이라 1~3% 수준이고,
+            # 다른 인물이면 옷·피부가 통째로 달라 훨씬 크게 나온다.
+            if novel > 0.12:
+                fail.append(f'{name}: 정본에 없는 색이 면적의 {novel*100:.0f}%')
 
     print('\n반려' if fail else '\n수치 통과 — 눈으로 확인할 것')
     for x in fail:
