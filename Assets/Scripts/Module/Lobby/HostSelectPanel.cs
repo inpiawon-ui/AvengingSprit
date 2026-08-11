@@ -127,7 +127,7 @@ namespace Game.Module.Lobby
             _ui.SetText("HostUpgradeSubText", "능력치 · ULTIMATE · 숙련도");
         }
 
-        /// <summary>설계서의 `HostSlot` 1칸을 12개로 복제해 그리드를 만든다.</summary>
+        /// <summary>설계서의 `HostSlot` 1칸을 호스트 수만큼 복제해 그리드를 만든다.</summary>
         private void BuildGrid()
         {
             var grid = _ui.Find("HostGrid");
@@ -142,8 +142,8 @@ namespace Game.Module.Lobby
             var selected = GetSprite("hostslotframe_selected");
             var locked   = GetSprite("hostslotframe_locked");
 
-            // 템플릿은 그리드에서 빼둔다. 자식으로 남기면 GridLayoutGroup 이 13칸으로 계산해
-            // 4행이 되고 마지막 줄이 잘린다.
+            // 템플릿은 그리드에서 빼둔다. 자식으로 남기면 GridLayoutGroup 이 한 칸을
+            // 더 세어 행이 하나 늘고 마지막 줄이 잘린다.
             template.SetParent(transform, false);
             template.gameObject.SetActive(false);
 

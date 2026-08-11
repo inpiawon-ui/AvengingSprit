@@ -23,9 +23,12 @@ IN = os.path.join(HERE, '_exchange', 'in')
 X0, Y0, W, H = 122, 232, 96, 88
 PX, PY = 105, 131
 SLOTS = {
-    'amazoness': (0, 0), 'rambo': (0, 1), 'wizard': (1, 0), 'ninja': (1, 2),
-    'mafia': (2, 1), 'hitman': (2, 2), 'yogamaster': (3, 0), 'dragon': (3, 1),
-    'robot': (3, 2), 'snowwoman': (4, 0), 'slugger': (4, 1), 'vampire': (4, 2),
+    # 목업 15칸 = 3열 5행. 표 순서가 곧 격자 순서다(#1 부터 좌→우, 위→아래).
+    'amazoness': (0, 0), 'rambo': (0, 1), 'rambo_laser': (0, 2),
+    'wizard': (1, 0), 'wizard_green': (1, 1), 'ninja': (1, 2),
+    'ninja_red': (2, 0), 'mafia': (2, 1), 'hitman': (2, 2),
+    'yogamaster': (3, 0), 'dragon': (3, 1), 'robot': (3, 2),
+    'snowwoman': (4, 0), 'slugger': (4, 1), 'vampire': (4, 2),
 }
 
 DIRS = ['s', 'se', 'e', 'ne', 'n']
@@ -80,7 +83,9 @@ def geometry(im):
     ys = [p[1] for p in pts]
     xs = [p[0] for p in pts]
     y1 = max(ys)
-    feet = [x for x, y in pts if y >= y1 - 14]
+    # 바닥 6줄만 본다. 14줄로 보면 드래곤 꼬리·흡혈귀 망토가 발로 잡혀
+    # 실제보다 크게 어긋난 것으로 나온다(보정 도구 `_fix_anchor.py` 와 같은 기준).
+    feet = [x for x, y in pts if y >= y1 - 6]
     semi = sum(1 for x, y in pts if px[x, y][3] < 248)
     return dict(size=im.size, top=min(ys), foot=y1, fc=(min(feet) + max(feet)) / 2,
                 x0=min(xs), x1=max(xs), semi=semi)

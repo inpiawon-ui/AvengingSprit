@@ -63,6 +63,31 @@ MonoBehaviour:
     _unlockType: 0
     _unlockChapter: 1
     _unlockStage: 5
+  - _hostKey: rambo_laser
+    _nameEn: RAMBO LASER
+    _nameKr: "\uB78C\uBCF4(\uB808\uC774\uC800)"
+    _role: "\uAD00\uD1B5 \uB808\uC774\uC800 \uC0AC\uC218"
+    _hp: 70
+    _atk: 78
+    _spd: 65
+    _dash: 55
+    _attackKind: 4
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 3.3
+    _intervalMul: 0.7
+    _damageMul: 0.9
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 1
+    _possessPriority: 3
+    _ultimateKey: laser_storm
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 8
   - _hostKey: wizard
     _nameEn: WIZARD
     _nameKr: "\uB9C8\uBC95\uC0AC"
@@ -88,6 +113,31 @@ MonoBehaviour:
     _unlockType: 1
     _unlockChapter: 1
     _unlockStage: 12
+  - _hostKey: wizard_green
+    _nameEn: WIZARD GREEN
+    _nameKr: "\uB9C8\uBC95\uC0AC(\uB179\uC0C9)"
+    _role: "\uAD11\uC5ED \uC790\uC5F0 \uB9C8\uBC95"
+    _hp: 62
+    _atk: 80
+    _spd: 58
+    _dash: 50
+    _attackKind: 3
+    _shotCount: 5
+    _spreadDegrees: 34
+    _rangeMul: 3.0
+    _intervalMul: 1.1
+    _damageMul: 0.55
+    _lifestealPercent: 0
+    _slowPercent: 20
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 2
+    _tag: 3
+    _possessPriority: 4
+    _ultimateKey: verdant_gale
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 16
   - _hostKey: ninja
     _nameEn: NINJA
     _nameKr: "\uB2CC\uC790"
@@ -113,6 +163,31 @@ MonoBehaviour:
     _unlockType: 1
     _unlockChapter: 1
     _unlockStage: 20
+  - _hostKey: ninja_red
+    _nameEn: NINJA RED
+    _nameKr: "\uB2CC\uC790(\uC801\uC0C9)"
+    _role: "\uACE0\uC18D \uD45C\uCC3D \uD22C\uCC99"
+    _hp: 62
+    _atk: 70
+    _spd: 92
+    _dash: 95
+    _attackKind: 2
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 2.4
+    _intervalMul: 0.45
+    _damageMul: 0.42
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 1
+    _targetType: 1
+    _tag: 1
+    _possessPriority: 4
+    _ultimateKey: crimson_fang
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 25
   - _hostKey: mafia
     _nameEn: MAFIA
     _nameKr: "\uB9C8\uD53C\uC544"

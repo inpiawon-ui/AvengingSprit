@@ -69,6 +69,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d457d478f762c94e88aa0d573f65b42
+    m_Address: atlas/unit_rambo_laser
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8e63d543e9106e54893210be2582fcd2
     m_Address: atlas/unit_snowwoman
     m_ReadOnly: 0
@@ -89,6 +95,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ae8abf13517673147b65d4d5f4dbd6b4
     m_Address: atlas/unit_dragon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b173de556bb25d049921f94d540c835b
+    m_Address: atlas/unit_wizard_green
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bcd0c47703736924b83d868e10ac9ccc
+    m_Address: atlas/unit_ninja_red
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
