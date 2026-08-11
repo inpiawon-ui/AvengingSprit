@@ -19,6 +19,10 @@ ProjCode: AVSR
 활성화일: 2026-08-07
 ```
 
+> **기획 정본**: [`Projects/AVSR/Canon/`](../../Projects/AVSR/Canon/README.md) — Developer Handoff v1.5 (2026-08-11 채택)
+> 문서가 서로 다르면 **`Canon/Runtime/*.json` 이 이긴다.** 우선순위·이관 계획은
+> [`Projects/AVSR/AVSR_Decisions.md`](../../Projects/AVSR/AVSR_Decisions.md) 10절 참조.
+>
 > **확정 컨셉**: [`Template/Game_Concept.md`](../../Template/Game_Concept.md)
 > **디자인 레퍼런스**: `Projects/AVSR/Reference/` (제안서 PDF 추출본 — 목업 5종·호스트 12종·슬라이드 10p)
 >
