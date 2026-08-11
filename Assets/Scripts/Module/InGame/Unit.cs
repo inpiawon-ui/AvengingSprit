@@ -266,12 +266,15 @@ namespace Game.Module.InGame
 
             if (_possessMeter == null)
             {
+                // 원형 게이지로 두면 그림이 없는 지금은 그냥 회색 사각형으로 보인다.
+                // 가로 막대는 그림 없이도 게이지로 읽힌다 — 표식 아래에 얇게 깐다.
                 var size = ((RectTransform)_possessMark.transform).sizeDelta;
-                _possessMeter = GetOrCreate("PossessMeter", size, Vector2.zero,
+                _possessMeter = GetOrCreate("PossessMeter", new Vector2(size.x * 1.4f, 3f),
+                                            new Vector2(0f, -size.y * 0.65f),
                                             _possessMark.transform);
                 _possessMeter.type = Image.Type.Filled;
-                _possessMeter.fillMethod = Image.FillMethod.Radial360;
-                _possessMeter.fillOrigin = (int)Image.Origin360.Top;
+                _possessMeter.fillMethod = Image.FillMethod.Horizontal;
+                _possessMeter.fillOrigin = (int)Image.OriginHorizontal.Left;
             }
             bool showMeter = state == PossessMark.Progress;
             if (_possessMeter.gameObject.activeSelf != showMeter)

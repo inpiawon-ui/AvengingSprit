@@ -73,6 +73,7 @@ namespace Game.Module.InGame
         [SerializeField] private float _bossMoveSpeed;
         [Tooltip("페이즈가 바뀌는 체력 비율. 정본 bossPhases 의 HPStart 를 내림차순으로 담는다")]
         [SerializeField] private float[] _bossPhaseGates = Array.Empty<float>();
+        [SerializeField] private BossPhaseEntry[] _bossPhases = Array.Empty<BossPhaseEntry>();
 
         [Header("스폰")]
         [SerializeField] private Vector2 _playerSpawn;
@@ -99,6 +100,14 @@ namespace Game.Module.InGame
         public int BossAtk => _bossAtk;
         public float BossMoveSpeed => _bossMoveSpeed;
         public IReadOnlyList<float> BossPhaseGates => _bossPhaseGates;
+        public IReadOnlyList<BossPhaseEntry> BossPhases => _bossPhases;
+
+        public BossPhaseEntry BossPhase(int phase)
+        {
+            for (int i = 0; i < _bossPhases.Length; i++)
+                if (_bossPhases[i].Phase == phase) return _bossPhases[i];
+            return null;
+        }
 
         /// <summary>더 갈 곳이 없는 방. 챕터의 마지막이다.</summary>
         public bool IsChapterEnd => _exits == null || _exits.Length == 0;
@@ -165,6 +174,37 @@ namespace Game.Module.InGame
         public float DelaySeconds => _delaySeconds;
         public string Trigger => _trigger;
         public string Telegraph => _telegraph;
+    }
+
+    /// <summary>
+    /// 보스 페이즈 하나. 정본 `bossPhases` 한 줄이다.
+    ///
+    /// 정본이 가장 세게 못박은 것이 "페이즈마다 **행동이** 바뀐다" 는 것이다 —
+    /// 수치만 올라가는 것은 페이즈가 아니라고 못박혀 있다.
+    /// </summary>
+    [Serializable]
+    public sealed class BossPhaseEntry
+    {
+        [SerializeField] private int _phase;
+        [Tooltip("이 페이즈가 시작되는 체력 비율. P1 은 1.0")]
+        [SerializeField] private float _hpStart = 1f;
+        [Tooltip("정본 AttackPattern 문자열. 지금은 표시·기록용이고 구현은 아래 값들로 흉내낸다")]
+        [SerializeField] private string _pattern;
+        [Tooltip("예고 시간(초). 정본 Telegraph 문구에서 뽑아낸 값")]
+        [SerializeField] private float _telegraphSeconds = 0.45f;
+        [Tooltip("이 페이즈에 부르는 잡몹. 비어 있으면 안 부른다")]
+        [SerializeField] private string[] _minionPool = Array.Empty<string>();
+        [Tooltip("정본 SwitchWindowCount — 이 페이즈가 만들어야 하는 교체 기회의 수")]
+        [SerializeField] private int _switchWindows;
+        [SerializeField] private string _arenaBehavior;
+
+        public int Phase => _phase;
+        public float HpStart => _hpStart;
+        public string Pattern => _pattern;
+        public float TelegraphSeconds => _telegraphSeconds <= 0f ? 0.45f : _telegraphSeconds;
+        public IReadOnlyList<string> MinionPool => _minionPool;
+        public int SwitchWindows => _switchWindows;
+        public string ArenaBehavior => _arenaBehavior;
     }
 
     /// <summary>출구 하나. 갈림길 방은 이것이 둘이고, 어느 쪽으로 나가느냐가 곧 선택이다.</summary>

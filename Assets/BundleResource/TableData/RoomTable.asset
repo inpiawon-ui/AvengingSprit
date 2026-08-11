@@ -36,6 +36,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -62,6 +63,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -116,6 +118,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -202,6 +205,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -288,6 +292,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -382,6 +387,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -408,6 +414,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -502,6 +509,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -584,6 +592,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -682,6 +691,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -743,6 +753,30 @@ MonoBehaviour:
     _bossPhaseGates:
     - 0.7
     - 0.35
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: "BurrowTrack\u2192SinglePopLaser"
+      _telegraphSeconds: 0.85
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: Single snake follows player then fires one lane
+    - _phase: 2
+      _hpStart: 0.7
+      _pattern: "DualSnakeSplit\u2192AlternatingLasers"
+      _telegraphSeconds: 0.75
+      _minionPool:
+      - E001
+      - E002
+      _switchWindows: 1
+      _arenaBehavior: Arena splits into two moving snake lanes
+    - _phase: 3
+      _hpStart: 0.35
+      _pattern: "CrossBurrow\u2192ResidualLaserGrid"
+      _telegraphSeconds: 1
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: Crossing snakes leave 2.5s residual laser zones
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -769,6 +803,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -795,6 +830,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -889,6 +925,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -990,6 +1027,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1016,6 +1054,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1114,6 +1153,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1172,6 +1212,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1278,6 +1319,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1368,6 +1410,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1442,6 +1485,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1467,6 +1511,31 @@ MonoBehaviour:
     _bossPhaseGates:
     - 0.65
     - 0.3
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: "ShieldedCrusher\u2192SingleLaneSlam"
+      _telegraphSeconds: 0.9
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: Shielded boss anchors center; one crusher lane
+    - _phase: 2
+      _hpStart: 0.65
+      _pattern: "ConveyorReverse\u2192MinionPressure"
+      _telegraphSeconds: 1
+      _minionPool:
+      - E002
+      - E007
+      - E008
+      _switchWindows: 1
+      _arenaBehavior: Conveyor direction reverses; side minions create switch window
+    - _phase: 3
+      _hpStart: 0.3
+      _pattern: "DoubleCrusher\u2192DebrisSweep"
+      _telegraphSeconds: 0.8
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: Two crusher origins alternate with moving debris
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1493,6 +1562,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1519,6 +1589,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1613,6 +1684,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1714,6 +1786,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1740,6 +1813,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1838,6 +1912,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -1924,6 +1999,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -1950,6 +2026,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -2040,6 +2117,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -2159,6 +2237,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns:
     - _wave: 1
@@ -2249,6 +2328,7 @@ MonoBehaviour:
     _bossAtk: 0
     _bossMoveSpeed: 0
     _bossPhaseGates: []
+    _bossPhases: []
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []
@@ -2275,6 +2355,31 @@ MonoBehaviour:
     _bossPhaseGates:
     - 0.7
     - 0.35
+    _bossPhases:
+    - _phase: 1
+      _hpStart: 1
+      _pattern: "StaticVenomCloud\u2192BiteLine"
+      _telegraphSeconds: 1
+      _minionPool: []
+      _switchWindows: 0
+      _arenaBehavior: Three fixed clouds create readable pockets
+    - _phase: 2
+      _hpStart: 0.7
+      _pattern: "MovingCloud\u2192BurrowStrike"
+      _telegraphSeconds: 0.45
+      _minionPool:
+      - E009
+      - E014
+      _switchWindows: 1
+      _arenaBehavior: Clouds move vertically while Python strikes from flank
+    - _phase: 3
+      _hpStart: 0.35
+      _pattern: "FloorSweep\u2192AddChain\u2192EnrageBite"
+      _telegraphSeconds: 1.1
+      _minionPool:
+      - E002
+      _switchWindows: 1
+      _arenaBehavior: Floor sweep alternates with add chain and fast bite
     _playerSpawn: {x: 4.2, y: 1.7}
     _spawns: []
     _waves: []

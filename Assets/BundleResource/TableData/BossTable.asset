@@ -29,6 +29,24 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 135
       _damageMul: 1
+    - _pattern: 2
+      _fromPhase: 2
+      _cooldown: 6
+      _shotCount: 1
+      _spreadDegrees: 0
+      _damageMul: 1.2
+    - _pattern: 0
+      _fromPhase: 2
+      _cooldown: 4.2
+      _shotCount: 7
+      _spreadDegrees: 180
+      _damageMul: 0.9
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 5
+      _shotCount: 12
+      _spreadDegrees: 360
+      _damageMul: 0.8
   - _bossKey: iron_claw
     _chapter: 2
     _nameEn: IRON CLAW
@@ -45,6 +63,24 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 135
       _damageMul: 1
+    - _pattern: 2
+      _fromPhase: 2
+      _cooldown: 5
+      _shotCount: 1
+      _spreadDegrees: 0
+      _damageMul: 1.3
+    - _pattern: 4
+      _fromPhase: 2
+      _cooldown: 3.6
+      _shotCount: 3
+      _spreadDegrees: 10
+      _damageMul: 0.7
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 4.4
+      _shotCount: 14
+      _spreadDegrees: 360
+      _damageMul: 0.85
   - _bossKey: overlord
     _chapter: 3
     _nameEn: OVERLORD
@@ -57,7 +93,25 @@ MonoBehaviour:
     _moves:
     - _pattern: 0
       _fromPhase: 1
-      _cooldown: 3
-      _shotCount: 5
-      _spreadDegrees: 135
+      _cooldown: 2.8
+      _shotCount: 7
+      _spreadDegrees: 150
       _damageMul: 1
+    - _pattern: 3
+      _fromPhase: 2
+      _cooldown: 9
+      _shotCount: 2
+      _spreadDegrees: 0
+      _damageMul: 1
+    - _pattern: 4
+      _fromPhase: 2
+      _cooldown: 3.2
+      _shotCount: 4
+      _spreadDegrees: 12
+      _damageMul: 0.75
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 3.8
+      _shotCount: 16
+      _spreadDegrees: 360
+      _damageMul: 0.9

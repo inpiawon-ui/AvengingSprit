@@ -874,6 +874,14 @@ namespace Game.Module.InGame
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
+                if (canon)
+                {
+                    // 문턱과 예고 시간은 보스마다 다르다 — 정본 값을 그대로 넣는다
+                    var tel = new List<float>();
+                    for (int i = 0; i < _canonRoom.BossPhases.Count; i++)
+                        tel.Add(_canonRoom.BossPhases[i].TelegraphSeconds);
+                    _brain.SetCanonPhases(_canonRoom.BossPhaseGates, tel);
+                }
                 _bus.Publish(new BossHpChangedEvent
                 {
                     BossHp = boss.Hp, BossHpMax = boss.HpMax,
@@ -1309,15 +1317,73 @@ namespace Game.Module.InGame
         }
 
         // ── 보스 ─────────────────────────────────────────────────
+
+        /// <summary>
+        /// 페이즈가 바뀌는 순간에 하는 일.
+        ///
+        /// 정본이 가장 세게 못박은 것이 "페이즈마다 **행동이** 바뀐다"는 것이다.
+        /// 수치만 오르는 것은 페이즈가 아니라고 적혀 있다. 지금 우리가 데이터에서
+        /// 그대로 살릴 수 있는 것은 둘이다 —
+        ///   · **잡몹 소환**(MinionPool). 정본은 이것을 "교체 창"이라고 부른다.
+        ///     보스는 빙의할 수 없으니, 몸을 갈아탈 기회는 이때 부르는 잡몹뿐이다.
+        ///   · **예고 시간**. 페이즈마다 다르고, 피할 수 있느냐를 가르는 값이다.
+        ///
+        /// 이름 붙은 패턴(BurrowTrack·ConveyorReverse 등)은 그림과 함께 와야 해서
+        /// 아직 우리 볼리로 흉내낸다. 페이즈마다 탄 수·확산·간격이 갈리게 해 뒀다.
+        /// </summary>
+        private void EnterBossPhase(Unit boss, int phase)
+        {
+            var def = _canonRoom != null ? _canonRoom.BossPhase(phase) : null;
+            if (def == null) return;
+
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || def.MinionPool.Count == 0) return;
+
+            // 보스 좌우로 벌려 세운다. 보스 위에 겹치면 누가 누군지 안 보인다.
+            for (int i = 0; i < def.MinionPool.Count; i++)
+            {
+                var e = ActorProfile(def.MinionPool[i], hosts);
+                if (e == null) continue;
+
+                var u = NewUnit($"Minion_{def.MinionPool[i]}_P{phase}");
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
+                        _config.EnemyHp(e.Hp),
+                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
+                        _config.EnemySpeed(e.Spd),
+                        _config.EnemyAttackRange * e.RangeMul,
+                        _config.EnemyAttackInterval * e.IntervalMul,
+                        new Vector2(84f, 78f), isBoss: false, profile: e);
+
+                float side = i % 2 == 0 ? -1f : 1f;
+                float row = i / 2 * 90f;
+                u.Position = new Vector2(
+                    Mathf.Clamp(boss.Position.x + side * 210f, 60f, _roomSize.x - 60f),
+                    Mathf.Clamp(boss.Position.y - 130f - row, -_roomSize.y + 60f, -60f));
+                u.PossessPriority = e.PossessPriority;
+                u.IsAggro = true;          // 불러낸 것들은 기다리지 않는다
+                u.SetState(EnemyState.Detect);
+                ApplyFacingSprites(u, e.HostKey);
+                _enemies.Add(u);
+            }
+
+            _bus.Publish(new BossPhaseEvent
+            {
+                Phase = phase, Pattern = def.Pattern, MinionCount = def.MinionPool.Count,
+            });
+        }
+
         private void TickBoss(Unit boss, Unit me, float dt)
         {
             int before = _brain.Phase;
             _brain.UpdatePhase((float)boss.Hp / boss.HpMax);
             if (_brain.Phase != before)
+            {
                 _bus.Publish(new BossHpChangedEvent
                 {
                     BossHp = boss.Hp, BossHpMax = boss.HpMax, Phase = _brain.Phase,
                 });
+                EnterBossPhase(boss, _brain.Phase);
+            }
 
             // 돌진 중에는 다른 행동을 하지 않는다. 접촉하면 피해를 주고 멈춘다.
             if (_brain.ChargeLeft > 0f)

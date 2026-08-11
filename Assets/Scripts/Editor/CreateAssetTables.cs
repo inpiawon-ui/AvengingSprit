@@ -65,19 +65,43 @@ namespace Game.Editor
         // 지금은 3체 모두 **5발 135° 부채꼴을 3초마다** 쏘는 것 하나뿐이다.
         // BossBrain 은 여러 행동을 쿨다운으로 돌리고 페이즈(60%/30%)마다 레퍼토리를
         // 늘리는 구조를 그대로 갖고 있다 — 여기 배열에 줄을 더하면 바로 살아난다.
+        // bossKey, 챕터, 영문명, 한글명, 스프라이트, HP배율, ATK배율, 이동배율, 페이즈쿨다운배율
+        // 패턴: (종류, 시작페이즈, 쿨다운, 탄수, 확산각, 피해배율)
+        //
+        // 체력·공격력·이동속도·페이즈 문턱·예고 시간은 이제 **정본에서** 읽는다
+        // (RoomTable.BossHp/BossAtk/BossPhaseGates). 여기 배율은 정본 방이 없을 때의
+        // 대비책으로만 남는다.
+        //
+        // 여기서 정하는 것은 **레퍼토리**다. 정본이 못박은 것은 "페이즈마다 행동이
+        // 바뀐다 — 수치만 오르는 것은 페이즈가 아니다" 이므로, 페이즈가 오를 때마다
+        // 새 행동이 열리게 짰다.
+        //   P1  읽을 수 있는 부채꼴 하나. 패턴을 배우는 구간
+        //   P2  부채꼴이 넓어지고 **돌진**이 열린다. 자리를 지킬 수 없게 만든다
+        //   P3  사방 탄막이 열린다. 붙어서도 떨어져서도 안전한 곳이 없다
+        // 이름 붙은 정본 패턴(BurrowTrack·ConveyorReverse 등)은 그림과 함께 와야 해서
+        // 아직 이 원시 동작으로 흉내낸다.
         private static readonly object[][] Bosses =
         {
             new object[]{ "mad_doctor", 1, "MAD DOCTOR", "매드 닥터", "unit_boss", 1.00f, 1.00f, 1.00f, 0.80f,
                 new object[][] {
-                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.Volley,  1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.Charge,  2, 6.0f, 1,   0f, 1.2f },
+                    new object[]{ BossPattern.Volley,  2, 4.2f, 7, 180f, 0.9f },
+                    new object[]{ BossPattern.Ring,    3, 5.0f, 12, 360f, 0.8f },
                 } },
             new object[]{ "iron_claw",  2, "IRON CLAW",  "아이언 클로", "unit_boss", 1.25f, 1.15f, 1.30f, 0.75f,
                 new object[][] {
-                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.Volley,     1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.Charge,     2, 5.0f, 1,   0f, 1.3f },
+                    new object[]{ BossPattern.AimedBurst, 2, 3.6f, 3,  10f, 0.7f },
+                    new object[]{ BossPattern.Ring,       3, 4.4f, 14, 360f, 0.85f },
                 } },
             new object[]{ "overlord",   3, "OVERLORD",   "오버로드",   "unit_boss", 1.55f, 1.30f, 0.95f, 0.72f,
                 new object[][] {
-                    new object[]{ BossPattern.Volley, 1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.Volley,     1, 2.8f, 7, 150f, 1.0f },
+                    new object[]{ BossPattern.Summon,     2, 9.0f, 2,   0f, 1.0f },
+                    new object[]{ BossPattern.AimedBurst, 2, 3.2f, 4,  12f, 0.75f },
+                    new object[]{ BossPattern.Ring,       3, 3.8f, 16, 360f, 0.9f },
                 } },
         };
 

@@ -103,6 +103,17 @@ namespace Game.Module.Events
     }
 
     /// <summary>
+    /// 보스가 다음 페이즈로 넘어갔다. 행동이 바뀌는 순간이라 화면이 알려야 한다.
+    /// </summary>
+    public struct BossPhaseEvent : IEvent
+    {
+        public int Phase;
+        /// <summary>정본 AttackPattern 문자열. 표시·기록용.</summary>
+        public string Pattern;
+        public int MinionCount;
+    }
+
+    /// <summary>
     /// 새 웨이브가 나왔다. 방을 비운 줄 알았는데 또 나오는 것이므로,
     /// 알리지 않으면 버그로 보인다.
     /// </summary>

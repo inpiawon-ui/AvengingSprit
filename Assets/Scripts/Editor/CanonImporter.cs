@@ -192,6 +192,23 @@ namespace Game.EditorTools
                         .OrderByDescending(v => v)
                         .ToArray();
                     SetField(room, "_bossPhaseGates", gates);
+
+                    var phases = new List<BossPhaseEntry>();
+                    foreach (var r in bossPhases.Where(r => S(r, phF, "BossID") == bossId))
+                    {
+                        var e = new BossPhaseEntry();
+                        // Phase 는 "P1" 형태다. 숫자만 뽑는다.
+                        SetField(e, "_phase", PhaseNumber(S(r, phF, "Phase")));
+                        SetField(e, "_hpStart", F(r, phF, "HPStart"));
+                        SetField(e, "_pattern", S(r, phF, "AttackPattern"));
+                        SetField(e, "_telegraphSeconds", TelegraphSeconds(S(r, phF, "Telegraph")));
+                        SetField(e, "_minionPool", Pool(S(r, phF, "MinionPool")));
+                        SetField(e, "_switchWindows", (int)F(r, phF, "SwitchWindowCount"));
+                        SetField(e, "_arenaBehavior", S(r, phF, "ArenaBehavior"));
+                        phases.Add(e);
+                    }
+                    SetField(room, "_bossPhases", phases.OrderBy(x => x.Phase).ToArray());
+                    if (phases.Count == 0) warnings.Add($"{id}: 보스 {bossId} 의 페이즈가 없다");
                 }
 
                 // 플레이어 스폰 — 스키마가 없는 컬렉션이라 위치로 읽는다
@@ -342,6 +359,33 @@ namespace Game.EditorTools
             }
             return result.ToArray();
         }
+
+        /// <summary>"P2" → 2. 숫자가 없으면 1.</summary>
+        private static int PhaseNumber(string raw)
+        {
+            var digits = new string((raw ?? "").Where(char.IsDigit).ToArray());
+            return int.TryParse(digits, out var n) && n > 0 ? n : 1;
+        }
+
+        /// <summary>
+        /// 예고 시간을 문구에서 뽑는다 — "Ground crack line 0.85s" → 0.85.
+        /// 정본이 예고를 산문으로 적어 놔서 이 숫자만 건져 쓴다. 예고 길이는
+        /// 피할 수 있느냐를 가르는 값이라 눈대중으로 정하면 안 된다.
+        /// </summary>
+        private static float TelegraphSeconds(string raw)
+        {
+            if (string.IsNullOrEmpty(raw)) return 0.45f;
+            var m = System.Text.RegularExpressions.Regex.Match(raw, @"([0-9]*\.?[0-9]+)\s*s");
+            return m.Success && float.TryParse(m.Groups[1].Value, NumberStyles.Float,
+                                               CultureInfo.InvariantCulture, out var v)
+                ? v : 0.45f;
+        }
+
+        /// <summary>"E001/E002" → ["E001","E002"]. NONE 은 빈 목록.</summary>
+        private static string[] Pool(string raw)
+            => string.IsNullOrEmpty(raw) || raw == "NONE"
+               ? Array.Empty<string>()
+               : raw.Split('/').Select(v => v.Trim()).Where(v => v.Length > 0).ToArray();
 
         private static string[] Split(string raw)
             => string.IsNullOrEmpty(raw)

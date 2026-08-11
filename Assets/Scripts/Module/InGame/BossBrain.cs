@@ -12,10 +12,16 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed class BossBrain
     {
-        /// <summary>페이즈 경계 — 체력 비율이 이 값 아래로 내려가면 다음 페이즈다.</summary>
-        private static readonly float[] PhaseThresholds = { 0.60f, 0.30f };
+        /// <summary>
+        /// 페이즈 경계 — 체력 비율이 이 값 아래로 내려가면 다음 페이즈다.
+        /// 정본이 보스마다 따로 정해 뒀다(B01 0.7/0.35 · B02 0.65/0.3). 없으면 이 기본값.
+        /// </summary>
+        private static readonly float[] DefaultThresholds = { 0.60f, 0.30f };
 
-        private const float TelegraphSeconds = 0.45f;
+        private const float DefaultTelegraph = 0.45f;
+
+        private float[] _thresholds = DefaultThresholds;
+        private float[] _telegraphs;          // 페이즈별 예고 시간(1-base 를 0-base 로)
 
         private BossEntry _entry;
         private readonly List<float> _timers = new();
@@ -31,6 +37,18 @@ namespace Game.Module.InGame
         /// <summary>돌진 남은 시간. 0 보다 크면 이동 대신 돌진 중이다.</summary>
         public float ChargeLeft { get; private set; }
         public Vector2 ChargeDir { get; private set; }
+
+        /// <summary>
+        /// 정본 페이즈를 붙인다. 문턱과 예고 시간이 보스마다 다르다 —
+        /// 예고 길이는 피할 수 있느냐를 가르는 값이라 한 값으로 뭉뚱그리면 안 된다.
+        /// </summary>
+        public void SetCanonPhases(IReadOnlyList<float> gates, IReadOnlyList<float> telegraphs)
+        {
+            _thresholds = gates != null && gates.Count > 0
+                ? System.Linq.Enumerable.ToArray(gates) : DefaultThresholds;
+            _telegraphs = telegraphs != null && telegraphs.Count > 0
+                ? System.Linq.Enumerable.ToArray(telegraphs) : null;
+        }
 
         public void Setup(BossEntry entry)
         {
@@ -51,8 +69,8 @@ namespace Game.Module.InGame
         public void UpdatePhase(float hpRatio)
         {
             int p = 1;
-            for (int i = 0; i < PhaseThresholds.Length; i++)
-                if (hpRatio <= PhaseThresholds[i]) p = i + 2;
+            for (int i = 0; i < _thresholds.Length; i++)
+                if (hpRatio <= _thresholds[i]) p = i + 2;
             Phase = p;
         }
 
@@ -87,7 +105,8 @@ namespace Game.Module.InGame
 
                 _timers[i] = CooldownOf(m);
                 Pending = m;
-                TelegraphLeft = TelegraphSeconds;
+                TelegraphLeft = _telegraphs != null && Phase - 1 < _telegraphs.Length
+                    ? _telegraphs[Phase - 1] : DefaultTelegraph;
                 return null;   // 이번 프레임은 예고만 — 피할 시간을 준다
             }
             return null;
