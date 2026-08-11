@@ -7,6 +7,7 @@ using Game.User;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.EventBus;
 using GameFramework.Core.Module.Resource;
+using TMPro;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
@@ -55,6 +56,10 @@ namespace Game.Module.InGame
         /// 그림만 남아 쓰러지다 사라진다. 연출이 끝나면 여기서 빼고 없앤다.
         /// </summary>
         private readonly List<Unit> _dying = new();
+
+        /// <summary>피해 수치. 탄과 같은 풀 방식 — 타격마다 만들면 교전 중 GC 가 튄다.</summary>
+        private readonly List<DamageText> _damageTexts = new();
+        private RectTransform _textLayer;
 
         private const int MaxShots = 64;
         private readonly List<Projectile> _shots = new();
@@ -153,6 +158,16 @@ namespace Game.Module.InGame
             _shotLayer.pivot = _unitLayer.pivot;
             _shotLayer.anchoredPosition = _unitLayer.anchoredPosition;
             _shotLayer.sizeDelta = _unitLayer.sizeDelta;
+
+            // 피해 수치는 탄보다 위에 그린다 — 탄에 가리면 읽을 수 없다.
+            var textGo = new GameObject("DamageTextLayer", typeof(RectTransform));
+            textGo.transform.SetParent(_unitLayer.parent, false);
+            _textLayer = (RectTransform)textGo.transform;
+            _textLayer.anchorMin = _unitLayer.anchorMin;
+            _textLayer.anchorMax = _unitLayer.anchorMax;
+            _textLayer.pivot = _unitLayer.pivot;
+            _textLayer.anchoredPosition = _unitLayer.anchoredPosition;
+            _textLayer.sizeDelta = _unitLayer.sizeDelta;
 
             SpawnGhost();
             EnterStartHost();
@@ -340,6 +355,8 @@ namespace Game.Module.InGame
                 if (_dying[i] != null) Destroy(_dying[i].gameObject);
             _dying.Clear();
 
+            for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Despawn();
+
             _boss = null;
 
             // 이전 룸의 탄이 다음 룸까지 날아가 첫 적을 때리는 일을 막는다
@@ -479,6 +496,7 @@ namespace Game.Module.InGame
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
+            TickDamageTexts(dt);
             RefreshPossessTarget();
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
@@ -964,6 +982,7 @@ namespace Game.Module.InGame
         {
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
+            ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
@@ -1082,14 +1101,17 @@ namespace Game.Module.InGame
         private void DamagePlayer(int amount)
         {
             if (IsInvulnerable) return;
+            var hitAt = Avatar != null ? Avatar.Position : Vector2.zero;
             if (_host != null)
             {
+                ShowDamage(hitAt, amount, toEnemy: false);
                 if (_host.TakeDamage(amount)) LoseHost();
                 else PublishHp();
                 return;
             }
             // 유령은 싸울 수 없다. 원피해를 그대로 받으면 빙의하기 전에 소멸한다.
             int reduced = _config.GhostDamage(amount);
+            ShowDamage(hitAt, reduced, toEnemy: false);   // 감소 후 값이라야 체력바와 맞는다
             _ghostHp = Mathf.Max(0, _ghostHp - reduced);
             _ghost.TakeDamage(reduced);
             PublishHp();
@@ -1242,6 +1264,42 @@ namespace Game.Module.InGame
                 _dying.RemoveAt(i);
                 Destroy(u.gameObject);
             }
+        }
+
+        // ── 피해 수치 ──────────────────────────────────────────────
+        // 색은 "누가 맞았나"로 나눈다. 내가 때린 것과 내가 맞은 것이 같은 색이면
+        // 화면이 숫자로 덮였을 때 상황 판단이 안 된다.
+        private static readonly Color DamageToEnemy = new(1f, 0.95f, 0.75f, 1f);
+        private static readonly Color DamageToPlayer = new(1f, 0.42f, 0.38f, 1f);
+
+        private const int MaxDamageTexts = 24;
+
+        private DamageText RentDamageText()
+        {
+            for (int i = 0; i < _damageTexts.Count; i++)
+                if (!_damageTexts[i].IsActive) return _damageTexts[i];
+
+            if (_damageTexts.Count >= MaxDamageTexts) return null;   // 폭주 방지 상한
+            var go = new GameObject("DamageText", typeof(RectTransform));
+            go.transform.SetParent(_textLayer, false);
+            var t = go.AddComponent<DamageText>();
+            t.Init(TMP_Settings.defaultFontAsset);
+            _damageTexts.Add(t);
+            return t;
+        }
+
+        /// <summary>맞은 자리에 피해 수치를 띄운다. 풀이 다 차면 조용히 넘어간다.</summary>
+        private void ShowDamage(Vector2 at, int damage, bool toEnemy)
+        {
+            if (damage <= 0) return;
+            var t = RentDamageText();
+            if (t == null) return;
+            t.Show(at, damage, toEnemy ? DamageToEnemy : DamageToPlayer);
+        }
+
+        private void TickDamageTexts(float dt)
+        {
+            for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Tick(dt);
         }
 
         private void CleanupDead()
