@@ -46,7 +46,7 @@ namespace Game.Module.Lobby
         }
 
         public void Bind(HostEntry entry, Sprite portrait, bool unlocked,
-                         System.Action<string> onClick)
+                         Material grayMaterial, System.Action<string> onClick)
         {
             HostKey = entry.HostKey;
             IsUnlocked = unlocked;
@@ -55,9 +55,10 @@ namespace Game.Module.Lobby
             {
                 _portrait.sprite = portrait;
                 _portrait.enabled = portrait != null;
-                // 잠금 칸은 **회색본 스프라이트**가 들어온다. 여기서 다시 눌러 어둡게 하면
+                // 잠금 칸은 회색 머티리얼로 그린다. 예전처럼 색을 눌러 어둡게 하면
                 // 누구인지 안 보여서, 잠금 칸이 다음 목표를 알려 주는 역할을 못 한다.
                 _portrait.color = Color.white;
+                _portrait.material = grayMaterial;   // 해금이면 null — 기본 UI 머티리얼
             }
             if (_nameText != null)
                 _nameText.text = unlocked ? entry.NameKr : "???";

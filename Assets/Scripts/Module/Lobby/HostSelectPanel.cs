@@ -26,12 +26,20 @@ namespace Game.Module.Lobby
     public sealed class HostSelectPanel : MonoBehaviour
     {
         private const string AtlasAddress = "atlas/hostselectpanel";
+
+        /// <summary>
+        /// 잠긴 초상을 회색으로 그리는 머티리얼.
+        /// `Image.color` 로는 안 된다 — 곱셈이라 어두워질 뿐 채도가 그대로다.
+        /// 회색본 PNG 를 굽는 방법도 있지만 아틀라스가 8MB 늘어난다. 셰이더는 공짜다.
+        /// </summary>
+        private const string GrayMaterialAddress = "material/uigrayscale";
         private const float StatBarWidth = 122f;   // 목업 실측 — StatBarBg 폭
         private const int MaxStat = 100;
 
         private UIBinder _ui;
         private IPlayerDataService _player;
         private SpriteAtlas _atlas;
+        private Material _grayMaterial;
 
         private readonly List<HostSlotView> _slots = new();
         private readonly List<IDisposable> _tokens = new();
@@ -94,6 +102,13 @@ namespace Game.Module.Lobby
                 catch (Exception e) { Debug.LogError($"[HostSelect] 아틀라스 로드 실패 — {e.Message}"); }
             }
 
+            if (_grayMaterial == null)
+            {
+                // 못 불러와도 화면은 뜬다 — 잠금 칸이 색을 유지할 뿐이다.
+                try { _grayMaterial = await CoreModule.Get<IResourceManager>().LoadAsync<Material>(GrayMaterialAddress); }
+                catch (Exception e) { Debug.LogWarning($"[HostSelect] 회색 머티리얼 로드 실패 — {e.Message}"); }
+            }
+
             if (!_built) BuildGrid();
             _built = true;
 
@@ -145,22 +160,6 @@ namespace Game.Module.Lobby
             }
         }
 
-        /// <summary>
-        /// 잠금 상태에 맞는 초상. 잠긴 칸은 **회색본**을 쓴다.
-        ///
-        /// 예전에는 원본을 거의 검정으로 눌러 실루엣만 남겼는데, 그러면 누구인지
-        /// 안 보여서 "다음 목표 확인"이라는 잠금 칸의 역할이 죽는다. 색 틴트로는
-        /// 어두워질 뿐 채도가 안 빠지므로(곱셈이다) 회색본을 따로 구워 뒀다.
-        ///
-        /// 회색본이 없으면 원본으로 떨어진다 — 캐릭터를 추가하는 중에 칸이
-        /// 비어 버리는 것보다 색이 남는 편이 낫다.
-        /// </summary>
-        private Sprite Portrait(string prefix, string hostKey, bool unlocked)
-        {
-            if (unlocked) return GetSprite($"{prefix}_{hostKey}");
-            return GetSprite($"{prefix}_{hostKey}_locked") ?? GetSprite($"{prefix}_{hostKey}");
-        }
-
         private void RefreshSlots()
         {
             var hosts = _player.AllHosts;
@@ -168,8 +167,8 @@ namespace Game.Module.Lobby
             {
                 var e = hosts[i];
                 bool unlocked = _player.IsHostUnlocked(e);
-                _slots[i].Bind(e, Portrait("hostslotportrait", e.HostKey, unlocked),
-                               unlocked, OnSlotClicked);
+                _slots[i].Bind(e, GetSprite($"hostslotportrait_{e.HostKey}"),
+                               unlocked, unlocked ? null : _grayMaterial, OnSlotClicked);
                 _slots[i].SetSelected(e.HostKey == _selectedKey);
             }
         }
@@ -201,10 +200,13 @@ namespace Game.Module.Lobby
             var portrait = _ui.Get<Image>("HostPortraitImage");
             if (portrait != null)
             {
-                portrait.sprite = Portrait("hostportraitimage", e.HostKey, unlocked);
-                portrait.color = Color.white;   // 회색 처리는 스프라이트 자체가 한다
+                portrait.sprite = GetSprite($"hostportraitimage_{e.HostKey}");
+                portrait.color = Color.white;
+                portrait.material = unlocked ? null : _grayMaterial;
             }
-            _ui.SetActive("HostDetailLockIcon", !unlocked);
+            // 상세 미리보기에는 자물쇠를 얹지 않는다 — 그림을 가리고, 잠긴 것은
+            // 회색과 `???` 로 이미 충분히 읽힌다. 자물쇠는 목록 칸에만 둔다.
+            _ui.SetActive("HostDetailLockIcon", false);
 
             SetStat("HP",   e.Hp,   unlocked);
             SetStat("ATK",  e.Atk,  unlocked);
