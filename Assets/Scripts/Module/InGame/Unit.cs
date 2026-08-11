@@ -253,6 +253,46 @@ namespace Game.Module.InGame
         /// 빙의 표식을 그린다. 조건부 적은 **잠긴 상태도 보여야** 한다 —
         /// 아무 표시가 없으면 "왜 안 잡히지"로 끝나고, 게이지가 보이면 "조금만 더"가 된다.
         /// </summary>
+        // ── 표식 (정본 시너지 S01) ────────────────────────────
+        // 갱스터가 때린 적에 남는다. **몸을 갈아타도 사라지지 않는다** —
+        // 그게 시너지의 전부다. 이전 몸이 만든 것을 다음 몸이 물려받는다.
+        private float _markTimer;
+        private Image _markView;
+
+        public bool IsMarked => _markTimer > 0f;
+
+        public void SetMark(float seconds)
+        {
+            _markTimer = Mathf.Max(_markTimer, seconds);
+            ShowMark(true);
+        }
+
+        public void ClearMark()
+        {
+            _markTimer = 0f;
+            ShowMark(false);
+        }
+
+        public void TickMark(float dt)
+        {
+            if (_markTimer <= 0f) return;
+            _markTimer -= dt;
+            if (_markTimer <= 0f) ShowMark(false);
+        }
+
+        private void ShowMark(bool on)
+        {
+            if (_markView == null)
+            {
+                if (!on) return;
+                var size = _rect.sizeDelta;
+                _markView = GetOrCreate("Mark", new Vector2(20f, 20f),
+                                        new Vector2(size.x * 0.28f, size.y * 0.42f));
+                _markView.color = new Color(1f, 0.35f, 0.30f, 0.95f);
+            }
+            if (_markView.gameObject.activeSelf != on) _markView.gameObject.SetActive(on);
+        }
+
         public void SetPossessMark(PossessMark state, float progress = 1f)
         {
             if (_possessMark == null) return;

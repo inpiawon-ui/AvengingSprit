@@ -101,6 +101,27 @@ namespace Game.Module.InGame
 
         private int _maintainHits;
         private int _maintainStack;
+
+        // ── 시너지 S01 · 갱스터 → 닌자 ────────────────────────────
+        // 정본이 "버프 없이 항상 발동(ALWAYS_BASE)" 으로 못박은 대표 사례다.
+        // 갱스터로 표식을 찍고 닌자로 갈아타면 표식 대상에 순간이동 처형이 나간다.
+        //
+        // 시너지는 **단방향**이다. 갱스터 → 닌자는 되고 닌자 → 갱스터는 안 된다.
+        // 이전 몸이 세상에 남긴 것을 다음 몸이 물려받는 구조라 방향이 뒤집히면 성립하지 않는다.
+        //
+        // 표식은 적에게 붙는다. 몸을 갈아타도 사라지지 않아야 시너지가 성립한다 —
+        // 유지 훅(내 몸에 쌓이는 것)은 교체하면 사라지지만, 세상에 남긴 것은 남는다.
+        private const string SynergyMarkSource = "gangster";
+        private const string SynergyMarkReceiver = "ninja";
+        private const string SynergyS01 = "S01";
+        private const float MarkSeconds = 6f;
+        private const float BlinkRangeMul = 2.2f;      // 순간이동이라 평소 사거리보다 멀리 닿는다
+        private const float BlinkDamageMul = 2.5f;
+        private const float BlinkAoeRadius = 150f;
+        private const float BlinkCooldown = 1.6f;
+
+        private float _blinkCooldown;
+        private readonly HashSet<string> _synergySeen = new();
         private float _tacticalCooldown;
         private int _tacticalShown = -1;
 
@@ -236,6 +257,8 @@ namespace Game.Module.InGame
             _ghostHp = GhostHpMax;
             _tacticalCooldown = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
             _eliteRoomsCleared = 0;
+            _synergySeen.Clear();
+            _blinkCooldown = 0f;
             _tacticalShown = -1;
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
@@ -1031,6 +1054,7 @@ namespace Game.Module.InGame
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
+            for (int i = 0; i < _enemies.Count; i++) _enemies[i]?.TickMark(dt);
             TickHazards(dt);
             SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
             TickDamageTexts(dt);
@@ -1208,6 +1232,10 @@ namespace Game.Module.InGame
 
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
             if (_host == null) { IsFiring = false; return; }
+
+            // 시너지가 평소 사격보다 먼저다. 앞 몸이 남긴 표식이 있으면
+            // 그것을 쓰는 것이 이 조합을 만든 이유다.
+            if (TryBlinkExecution(_host, dt)) { IsFiring = true; return; }
 
             var target = Nearest(_host.Position);
 
@@ -1606,6 +1634,7 @@ namespace Game.Module.InGame
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
             AddMaintain();
+            TryMark(victim);
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
@@ -1718,6 +1747,7 @@ namespace Game.Module.InGame
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
             AddMaintain();
+            TryMark(victim);
             ShowDamage(victim.Position, shot.Damage, toEnemy: true);
             bool dead = victim.TakeDamage(shot.Damage);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
@@ -2033,6 +2063,73 @@ namespace Game.Module.InGame
         /// </summary>
         /// <summary>유지 단계로 얻는 피해 배율. 몸을 갈아타면 1로 돌아간다.</summary>
         private float MaintainDamageMul => 1f + _maintainStack * MaintainDamagePerStack;
+
+        /// <summary>
+        /// 갱스터가 때린 적에 표식을 남긴다. 갱스터의 유지 훅이 "표식 릴레이" 인 것과
+        /// 같은 뿌리다 — 이 몸이 세상에 남기는 흔적이 곧 다음 몸의 재료가 된다.
+        /// </summary>
+        private void TryMark(Unit victim)
+        {
+            if (victim == null || _host == null) return;
+            if (_host.Key != SynergyMarkSource) return;
+            victim.SetMark(MarkSeconds);
+        }
+
+        /// <summary>
+        /// 닌자로 갈아탄 뒤 표식이 남은 적이 있으면 순간이동 처형이 나간다.
+        /// 발동했으면 true — 그 프레임의 평소 사격은 건너뛴다.
+        /// </summary>
+        private bool TryBlinkExecution(Unit me, float dt)
+        {
+            if (_blinkCooldown > 0f) { _blinkCooldown -= dt; return false; }
+            if (me == null || _host == null || _host.Key != SynergyMarkReceiver) return false;
+
+            Unit target = null;
+            float best = float.MaxValue;
+            float reach = _host.AttackRange * BlinkRangeMul;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsDying || !e.IsMarked) continue;
+                if (!IsOnScreen(e)) continue;
+                float d = Vector2.Distance(me.Position, e.Position);
+                if (d > reach || d >= best) continue;
+                best = d; target = e;
+            }
+            if (target == null) return false;
+
+            _blinkCooldown = BlinkCooldown;
+            target.ClearMark();
+
+            // 대상 바로 앞으로 붙는다. 겹쳐 서면 누가 누군지 안 보인다.
+            var dir = (me.Position - target.Position).normalized;
+            if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
+            me.Position = target.Position + dir * 70f;
+            me.SetFacing(target.Position - me.Position);
+            me.PlayAttack();
+
+            int dmg = Mathf.RoundToInt(me.Atk * _buffs.AttackMul * MaintainDamageMul * BlinkDamageMul);
+            HitEnemyWith(target, dmg, _host.Profile);
+
+            // 표식 폭발 — 주변까지 함께 맞는다. 정본 "추가 피해 및 범위 데미지".
+            for (int i = _enemies.Count - 1; i >= 0; i--)
+            {
+                var e = _enemies[i];
+                if (e == null || e == target || !e.IsAlive || e.IsDying) continue;
+                if (Vector2.Distance(e.Position, target.Position) > BlinkAoeRadius) continue;
+                HitEnemyWith(e, Mathf.RoundToInt(dmg * 0.5f), _host.Profile);
+            }
+
+            _bus.Publish(new SynergyTriggeredEvent
+            {
+                SynergyId = SynergyS01,
+                Name = "마크 폭발",
+                FromHostKey = SynergyMarkSource,
+                ToHostKey = SynergyMarkReceiver,
+                FirstTime = _synergySeen.Add(SynergyS01),
+            });
+            return true;
+        }
 
         /// <summary>명중을 쌓는다. 단계가 오르면 알린다.</summary>
         private void AddMaintain()

@@ -103,6 +103,20 @@ namespace Game.Module.Events
     }
 
     /// <summary>
+    /// 시너지가 터졌다. 이전 호스트가 남긴 것을 지금 호스트가 이어받아 발동한 순간이다.
+    /// 처음 보는 조합이면 도감에 새로 오른다.
+    /// </summary>
+    public struct SynergyTriggeredEvent : IEvent
+    {
+        public string SynergyId;
+        public string Name;
+        public string FromHostKey;
+        public string ToHostKey;
+        /// <summary>이번 런에서 처음 터졌는가. 화면에 크게 알릴지가 갈린다.</summary>
+        public bool FirstTime;
+    }
+
+    /// <summary>
     /// 유지 훅이 쌓이거나 사라졌다. 무엇을 버리게 되는지가 보여야
     /// 교체를 망설이게 된다 (정본 RequiredFeedback — HUD meter required).
     /// </summary>
