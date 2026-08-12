@@ -6,8 +6,10 @@ using Game.Module.Events;
 using GameFramework.Core.Base;
 using GameFramework.Core.Common;
 using GameFramework.Core.Module.EventBus;
+using GameFramework.Core.Module.Resource;
 using GameFramework.Core.Module.Scene;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace Game.Module.Title
 {
@@ -19,9 +21,18 @@ namespace Game.Module.Title
     {
         private const float BlinkPeriod = 1.1f;
 
+        /// <summary>로고 색이 한 단계 넘어가는 간격. 원작 기판은 약 8프레임(60Hz)마다 바꾼다.</summary>
+        private const float LogoCycleSeconds = 8f / 60f;
+        private const int LogoFrames = 6;
+        private const string AtlasAddress = "atlas/titlemainui";
+
         private UIBinder _ui;
         private IDisposable _startToken;
         private Transform _tapText;
+        private UnityEngine.UI.Image _logo;
+        private readonly Sprite[] _logoSprites = new Sprite[LogoFrames];
+        private float _logoTimer;
+        private int _logoIndex;
         private bool _transitioning;
 
         private void Awake()
@@ -30,11 +41,42 @@ namespace Game.Module.Title
             _tapText = _ui.Find("TapToStartText");
 
             _ui.SetText("TapToStartText", "TAP TO START");
+            _ui.SetText("SubtitleText", "RE:BORN");
             _ui.SetText("CopyrightText", "©1991 JALECO / CITY CONNECTION");
             _ui.SetText("VersionText", $"v{Application.version}");
 
+            var logoTransform = _ui.Find("TitleLogo");
+            if (logoTransform != null) _logo = logoTransform.GetComponent<UnityEngine.UI.Image>();
+            LoadLogoFramesAsync().Forget(); // fire-and-forget: 못 불러와도 타이틀은 뜬다
+
             _ui.OnClick("TouchArea", OnTapped);
             gameObject.AddComponent<BackButtonRouter>();
+        }
+
+        /// <summary>
+        /// 원작 타이틀 로고는 색이 순환한다. 시트에 들어 있는 6장은 서로 다른 그림이 아니라
+        /// **같은 로고의 색만 바뀐 것**이라 순서대로 갈아 끼우면 그대로 재현된다.
+        ///
+        /// 6장을 프리팹 인스펙터에 물려 두지 않고 아틀라스에서 이름으로 꺼낸다 —
+        /// 배열을 노출하면 리소스를 다시 뽑을 때마다 손으로 다시 물려야 한다.
+        /// </summary>
+        private async UniTaskVoid LoadLogoFramesAsync()
+        {
+            if (_logo == null) return;
+
+            SpriteAtlas atlas;
+            try { atlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress); }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Title] 아틀라스 로드 실패 — 로고 색 순환 없이 진행한다: {e.Message}");
+                return;
+            }
+
+            for (int i = 0; i < LogoFrames; i++)
+                _logoSprites[i] = atlas.GetSprite($"titlelogo_{i}");
+
+            // 0번을 못 찾으면 프리팹이 들고 있던 것을 그대로 쓴다.
+            if (_logoSprites[0] == null) _logoSprites[0] = _logo.sprite;
         }
 
         /// <summary>타이틀에는 되돌아갈 화면이 없다 — 라우터가 종료 확인을 띄운다.</summary>
@@ -54,6 +96,8 @@ namespace Game.Module.Title
 
         private void Update()
         {
+            CycleLogo();
+
             if (_tapText == null) return;
             // 아케이드식 점멸 프롬프트. 알파만 흔들어 도트를 건드리지 않는다.
             float a = Mathf.PingPong(Time.unscaledTime / BlinkPeriod, 1f);
@@ -64,6 +108,20 @@ namespace Game.Module.Title
                 c.a = Mathf.Lerp(0.25f, 1f, a);
                 tmp.color = c;
             }
+        }
+
+        private void CycleLogo()
+        {
+            if (_logo == null || _logoSprites[LogoFrames - 1] == null) return;
+
+            _logoTimer += Time.unscaledDeltaTime;
+            if (_logoTimer < LogoCycleSeconds) return;
+
+            // 프레임이 밀렸을 때 한 칸씩만 넘기면 색 순환이 느려진다. 밀린 만큼 건너뛴다.
+            int steps = (int)(_logoTimer / LogoCycleSeconds);
+            _logoTimer -= steps * LogoCycleSeconds;
+            _logoIndex = (_logoIndex + steps) % LogoFrames;
+            _logo.sprite = _logoSprites[_logoIndex];
         }
 
         private void OnTapped()

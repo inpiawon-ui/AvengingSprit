@@ -134,7 +134,12 @@ namespace Game.EditorTools
 
                     // 공백은 잉크가 있어도 공백으로 둔다 — 시트의 0x20 칸에 잡티가 있다.
                     bool blank = code == 0x20 || maxX < 0;
-                    float advance = blank ? Cell * 0.6f : maxX - minX + 2;
+
+                    // 원작은 **고정폭** 폰트다. 칸 하나가 곧 한 글자 자리다.
+                    // 잉크 폭으로 좁히면(`maxX-minX+2`) 왼쪽 여백이 큰 글자에서
+                    // 이송폭이 시작 위치보다 작아져 **다음 글자를 파고든다** —
+                    // `:` 는 시작이 4, 이송이 3 이라 `RE:BORN` 의 B 와 겹쳤다.
+                    float advance = Cell;
 
                     var metrics = new GlyphMetrics(
                         blank ? 0f : maxX - minX + 1, blank ? 0f : maxY - minY + 1,
