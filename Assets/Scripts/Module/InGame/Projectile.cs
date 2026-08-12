@@ -40,6 +40,15 @@ namespace Game.Module.InGame
         public bool HasHit(Unit u) => _alreadyHit.Contains(u);
         public void MarkHit(Unit u) => _alreadyHit.Add(u);
 
+        /// <summary>
+        /// 탄 그림을 갈아 끼운다. 탄은 풀에서 돌려 쓰므로 태어날 때 정한 그림을
+        /// 계속 쓰면 **직전에 쏜 무기의 탄이 그대로 나간다.** 발사할 때마다 정한다.
+        /// </summary>
+        public void SetSprite(Sprite sprite)
+        {
+            if (sprite != null && _image != null) _image.sprite = sprite;
+        }
+
         public void Init(Sprite sprite)
         {
             _rect = (RectTransform)transform;

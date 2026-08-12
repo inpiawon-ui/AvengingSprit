@@ -1614,6 +1614,7 @@ namespace Game.Module.InGame
                 float off = count == 1 ? 0f : -spanDeg * 0.5f + spanDeg * i / (count - 1);
                 var shot = RentShot();
                 if (shot == null) return;
+                shot.SetSprite(ShotSpriteOf(from));
                 shot.Fire(from.Position, at, speed, damage,
                           false, null, _config.ShotSize * 1.15f, ShotBossColor,
                           life, angleOffsetDeg: off);
@@ -1761,6 +1762,7 @@ namespace Game.Module.InGame
         {
             var shot = RentShot();
             if (shot == null) return;
+            shot.SetSprite(ShotSpriteOf(attacker));
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -1783,6 +1785,42 @@ namespace Game.Module.InGame
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
+        /// <summary>
+        /// 캐릭터 키 → 탄 그림 이름. 무기가 다른데 탄이 같으면 화면에서 무엇이
+        /// 날아오는지 읽히지 않는다 — 레이저도 수류탄도 서리도 노란 총알이었다.
+        ///
+        /// 캐릭터마다 한 장씩 두지 않고 **무기 계열로 묶는다.** 21종이면 21장을
+        /// 그려야 하지만 계열로 묶으면 8장이면 되고, 그래도 읽히는 데는 충분하다.
+        /// 근접(amazon·amazon_elite·baseball·vampire)은 탄이 없어 여기 없다.
+        /// </summary>
+        private static readonly Dictionary<string, string> ShotKind = new()
+        {
+            { "gangster", "bullet" }, { "thug", "bullet" }, { "hopper", "bullet" },
+            { "hopper_smg", "bullet" }, { "commando_mg", "bullet" },
+            { "commando_laser", "laser" },
+            { "commando_grenade", "grenade" },
+            { "salamander", "flame" }, { "dragoon", "flame" },
+            { "dragon_blue", "frost" }, { "snowwoman", "frost" },
+            { "ninja", "shuriken" }, { "ninja_chain", "shuriken" },
+            { "white_wizard", "magic" }, { "medium", "magic" },
+            { "guru", "pulse" }, { "robot", "pulse" },
+        };
+
+        /// <summary>캐릭터별 탄 그림. 아직 안 온 것은 기본 탄으로 떨어진다.</summary>
+        private readonly Dictionary<string, Sprite> _shotSprite = new();
+
+        private Sprite ShotSpriteOf(Unit u)
+        {
+            var key = u != null ? u.Key : null;
+            if (key == null) return GetSprite("shot");
+            if (_shotSprite.TryGetValue(key, out var cached)) return cached;
+
+            var s = ShotKind.TryGetValue(key, out var kind) ? GetSprite($"shot_{kind}") : null;
+            s ??= GetSprite("shot");
+            _shotSprite[key] = s;
+            return s;
+        }
+
         private Projectile RentShot()
         {
             for (int i = 0; i < _shots.Count; i++)
