@@ -66,6 +66,22 @@ namespace Game.Character
         Ricochet,
         /// <summary>튕긴 뒤의 탄이 피해 n% 로 때린다 (정본 BUF_A03 Return Path)</summary>
         ReturnDamage,
+
+        /// <summary>
+        /// 스스로는 아무 효과가 없고 **시너지를 여는 열쇠**다 (정본 BUFF_GATED).
+        /// 짝이 맞는 몸으로 갈아타야 비로소 무언가 일어난다 —
+        /// 그래서 "이 버프를 뽑았으니 그 몸을 찾아야 한다" 는 계획이 생긴다.
+        /// </summary>
+        SynergyGate,
+
+        /// <summary>범위 효과 반경 +n% (정본 BUF_U05 Wide Echo)</summary>
+        AoeRadius,
+        /// <summary>표식 폭발이 n 명 더 번지고 반경이 커진다 (정본 BUF_T01 Marked Payload)</summary>
+        MarkPayload,
+        /// <summary>흡혈 초과분이 고스트 체력으로 간다. 방마다 n 회 (정본 BUF_T04 Blood Debt)</summary>
+        BloodDebt,
+        /// <summary>확산의 마지막 탄이 피해 +n% (정본 BUF_A01 Last Magazine)</summary>
+        LastShot,
     }
 
     /// <summary>

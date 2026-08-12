@@ -257,7 +257,7 @@ MonoBehaviour:
   - _buffKey: wide_echo
     _nameKr: "\uB113\uC740 \uC6B8\uB9BC"
     _description: "\uAD11\uC5ED \uBC18\uACBD +10%"
-    _kind: 2
+    _kind: 25
     _value: 10
     _stackable: 1
     _colorHex: '#4AA8E8'
@@ -269,7 +269,7 @@ MonoBehaviour:
     _pool: Universal
     _fromChapter: 1
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: tactical_mercy
     _nameKr: "\uC804\uC220\uC801 \uC790\uBE44"
     _description: "\uC804\uC220 \uBE59\uC758 \uBE44\uC6A9 -2"
@@ -290,9 +290,9 @@ MonoBehaviour:
     _nameKr: "\uD45C\uC2DD \uD0C4\uB450"
     _description: "\uD45C\uC2DD \uB300\uC0C1 \uBA85\uC911 \uC2DC \uB9B4\uB808\uC774
       \uD0C4 +1"
-    _kind: 0
-    _value: 0
-    _stackable: 1
+    _kind: 26
+    _value: 1
+    _stackable: 0
     _colorHex: '#F0B428'
     _scope: 0
     _tag: 0
@@ -302,7 +302,7 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 1
-    _implemented: 0
+    _implemented: 1
   - _buffKey: burning_circuit
     _nameKr: "\uD0C0\uC624\uB974\uB294 \uD68C\uB85C"
     _description: "\uD654\uC0C1 3\uB2E8\uACC4\uAC00 \uC8FC\uBCC0\uC73C\uB85C \uBC88\uC9C4\uB2E4"
@@ -339,9 +339,9 @@ MonoBehaviour:
   - _buffKey: blood_debt
     _nameKr: "\uD53C\uC758 \uBD80\uCC44"
     _description: "\uD761\uD608 \uCD08\uACFC\uBD84\uC774 \uACE0\uC2A4\uD2B8 \uCCB4\uB825\uC73C\uB85C"
-    _kind: 8
-    _value: 0
-    _stackable: 1
+    _kind: 27
+    _value: 2
+    _stackable: 0
     _colorHex: '#E04A7A'
     _scope: 0
     _tag: 0
@@ -351,13 +351,13 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: bank_shot
     _nameKr: "\uBC45\uD06C \uC0F7"
-    _description: "\uCCAB \uB3C4\uD0C4\uC774 60% \uD53C\uD574\uB85C \uBCF5\uC81C"
-    _kind: 0
-    _value: 0
-    _stackable: 1
+    _description: "\uD0C4\uC774 \uBCBD\uC5D0\uC11C \uD55C \uBC88 \uD295\uAE34\uB2E4"
+    _kind: 22
+    _value: 1
+    _stackable: 0
     _colorHex: '#C98CF0'
     _scope: 0
     _tag: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: smart_deployment
     _nameKr: "\uC2A4\uB9C8\uD2B8 \uBC30\uCE58"
     _description: "\uC124\uCE58\uBB3C \uC7AC\uC870\uC900 25% \uBE60\uB974\uAC8C"
@@ -403,9 +403,9 @@ MonoBehaviour:
     _implemented: 0
   - _buffKey: arcane_execution
     _nameKr: "\uBE44\uC804 \uCC98\uD615"
-    _description: "\uBE59\uACB0\xB7\uD45C\uC2DD \uB300\uC0C1\uC5D0 \uC21C\uAC04\uC774\uB3D9
-      \uD3ED\uBC1C \uC5F0\uC1C4"
-    _kind: 0
+    _description: "\uD654\uC774\uD2B8\uC704\uC800\uB4DC\u2192\uB2CC\uC790: \uBE59\uACB0
+      \uB300\uC0C1\uB3C4 \uCC98\uD615 \uC5F0\uC1C4"
+    _kind: 24
     _value: 0
     _stackable: 0
     _colorHex: '#A886FF'
@@ -417,12 +417,12 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 2
     _weight: 1
-    _implemented: 0
+    _implemented: 1
   - _buffKey: crimson_combo
     _nameKr: "\uD54F\uBE5B \uC5F0\uACA9"
-    _description: "\uD761\uD608 \uD45C\uC2DD\uC774 \uCF64\uBCF4 \uB9C8\uBB34\uB9AC\uB9C8\uB2E4
+    _description: "\uD761\uD608\uADC0\u2192\uC544\uB9C8\uC874: \uADFC\uC811 \uB9C8\uBB34\uB9AC\uB9C8\uB2E4
       \uD68C\uBCF5"
-    _kind: 8
+    _kind: 24
     _value: 0
     _stackable: 0
     _colorHex: '#E04A7A'
@@ -434,7 +434,7 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 2
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: mine_alchemy
     _nameKr: "\uC9C0\uB8B0 \uC5F0\uAE08\uC220"
     _description: "\uC9C0\uB8B0\uAC00 \uBE59\uACB0 \uB8EC\uC73C\uB85C \uBC14\uB010\uB2E4"
@@ -453,8 +453,9 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: curse_inferno
     _nameKr: "\uC800\uC8FC \uD654\uC5FC"
-    _description: "\uC800\uC8FC \uD68C\uB85C\uAC00 \uB124\uC774\uD31C \uAE30\uB465\uC73C\uB85C"
-    _kind: 0
+    _description: "\uC601\uB9E4\u2192\uB4DC\uB77C\uAD70: \uC800\uC8FC \uAC78\uB9B0
+      \uC801\uC774 \uC8FD\uC73C\uBA74 \uBD88\uAE30\uB465"
+    _kind: 24
     _value: 0
     _stackable: 0
     _colorHex: '#F07828'
@@ -466,11 +467,12 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 3
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: guarded_rush
     _nameKr: "\uC218\uD638 \uB3CC\uC9C4"
-    _description: "\uAC00\uB4DC \uC624\uB77C\uB97C \uD0DC\uC6CC \uC7A5\uAC11 \uB3CC\uC9C4"
-    _kind: 15
+    _description: "\uAD6C\uB8E8\u2192\uC544\uB9C8\uC874: \uB300\uC2DC \uC911 \uBC1B\uB294
+      \uD53C\uD574 \uC808\uBC18"
+    _kind: 24
     _value: 0
     _stackable: 0
     _colorHex: '#5CC850'
@@ -482,11 +484,11 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 2
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: last_magazine
     _nameKr: "\uB9C8\uC9C0\uB9C9 \uD0C4\uCC3D"
     _description: "\uB9C8\uC9C0\uB9C9 \uD0C4\xB7\uB9C8\uBB34\uB9AC +25%"
-    _kind: 0
+    _kind: 28
     _value: 25
     _stackable: 1
     _colorHex: '#E8604A'
@@ -498,7 +500,7 @@ MonoBehaviour:
     _pool: AttackStyle
     _fromChapter: 1
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: persistent_field
     _nameKr: "\uC9C0\uC18D\uD558\uB294 \uC7A5\uD310"
     _description: "\uC7A5\uD310\uC774 2\uCD08 \uB354 \uB0A8\uB294\uB2E4"
@@ -518,9 +520,9 @@ MonoBehaviour:
   - _buffKey: return_path
     _nameKr: "\uADC0\uD658 \uACBD\uB85C"
     _description: "\uB418\uB3CC\uC544\uC624\uB294 \uD0C4\uC774 50% \uD53C\uD574"
-    _kind: 0
-    _value: 0
-    _stackable: 1
+    _kind: 23
+    _value: 50
+    _stackable: 0
     _colorHex: '#A0E0FF'
     _scope: 0
     _tag: 0
@@ -530,7 +532,7 @@ MonoBehaviour:
     _pool: AttackStyle
     _fromChapter: 2
     _weight: 0.7
-    _implemented: 0
+    _implemented: 1
   - _buffKey: heavy_frame
     _nameKr: "\uC911\uC7A5 \uD504\uB808\uC784"
     _description: "\uBC1B\uB294 \uD53C\uD574 -10%"

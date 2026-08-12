@@ -64,12 +64,32 @@ namespace Game.Module.InGame
 
         /// <summary>튕긴 탄의 피해 비율 % (정본 BUF_A03). 0 이면 이 버프가 없다</summary>
         public int ReturnDamagePercent { get; private set; }
+
+        /// <summary>범위 효과 반경 배수 (정본 BUF_U05)</summary>
+        public float AoeMul { get; private set; } = 1f;
+
+        /// <summary>표식 폭발이 더 번지는 수 (정본 BUF_T01)</summary>
+        public int MarkPayload { get; private set; }
+
+        /// <summary>흡혈 초과분이 고스트로 가는 방당 횟수 (정본 BUF_T04)</summary>
+        public int BloodDebtPerRoom { get; private set; }
+
+        /// <summary>확산 마지막 탄의 추가 피해 비율 (정본 BUF_A01)</summary>
+        public float LastShotBonus { get; private set; }
         public bool Pierce { get; private set; }
 
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
         public HashSet<string> ExcludedKeys { get; } = new();
 
         public int Count => _taken.Count;
+
+        /// <summary>이 버프를 갖고 있는가. 시너지 개방 조건 판정에 쓴다.</summary>
+        public bool Has(string buffKey)
+        {
+            for (int i = 0; i < _taken.Count; i++)
+                if (_taken[i].BuffKey == buffKey) return true;
+            return false;
+        }
 
         /// <summary>지금 켜져 있는 버프 수. 꺼진 것(안 맞는 몸)은 세지 않는다.</summary>
         public int ActiveCount
@@ -119,6 +139,11 @@ namespace Game.Module.InGame
             HostHpMul = DamageTakenMul = 1f;
             StopDelayCut = SwitchShieldSeconds = 0f;
             TacticalCostCut = 0;
+            BurnSpreads = MinesFreeze = false;
+            FocusPerStack = FieldExtraSeconds = LastShotBonus = 0f;
+            SlowFieldEdgeDamage = Bounces = ReturnDamagePercent = 0;
+            MarkPayload = BloodDebtPerRoom = 0;
+            AoeMul = 1f;
 
             for (int i = 0; i < _taken.Count; i++)
             {
@@ -156,6 +181,11 @@ namespace Game.Module.InGame
                     case BuffKind.FreezeRune:      MinesFreeze = true; break;
                     case BuffKind.Ricochet:        Bounces += e.Value; break;
                     case BuffKind.ReturnDamage:    ReturnDamagePercent = Mathf.Max(ReturnDamagePercent, e.Value); break;
+                    case BuffKind.SynergyGate:     break;   // 효과는 시너지 쪽에 있다
+                    case BuffKind.AoeRadius:       AoeMul += v; break;
+                    case BuffKind.MarkPayload:     MarkPayload += e.Value; break;
+                    case BuffKind.BloodDebt:       BloodDebtPerRoom += e.Value; break;
+                    case BuffKind.LastShot:        LastShotBonus += v; break;
                 }
             }
         }

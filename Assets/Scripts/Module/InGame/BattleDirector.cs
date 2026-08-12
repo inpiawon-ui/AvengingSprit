@@ -957,6 +957,7 @@ namespace Game.Module.InGame
             _roomIndex = index;
             DespawnExit();
             ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
+            _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
             // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
             // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
@@ -1162,6 +1163,7 @@ namespace Game.Module.InGame
             TickEnemies(dt);
             TickShots(dt);
             TickFields(dt);
+            TickSynergy(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -1812,10 +1814,13 @@ namespace Game.Module.InGame
                     float span = kind == AttackKind.Spread ? p.SpreadDegrees : 0f;
                     if (extra > 0) span = Mathf.Max(span, 10f * (n - 1));
 
+                    // 정본 BUF_A01 마지막 탄창 — 확산의 **마지막 한 발**이 더 아프다.
+                    // 마지막 발만 강하면 "다 맞히는 것" 이 아니라 "끝까지 붙어 있는 것" 이 이득이 된다.
                     for (int i = 0; i < n; i++)
                     {
                         float off = n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
-                        FireShot(attacker, target, fromPlayer, off);
+                        FireShot(attacker, target, fromPlayer, off,
+                                 lastShot: fromPlayer && i == n - 1);
                     }
                     break;
                 }
@@ -1823,6 +1828,15 @@ namespace Game.Module.InGame
         }
 
         /// <summary>근접·광역은 탄을 쓰지 않고 즉시 판정한다. 대신 타격 위치에 섬광만 남긴다.</summary>
+        /// <summary>근접으로 마무리했다. 시너지 계기이자 회복 시점이다.</summary>
+        private void OnMeleeFinish(Unit attacker)
+        {
+            FireSynergy(SynergyTrigger.OnMeleeFinish, attacker.Key);
+            if (!SynergyOn(SynergyKind.HealFinisher) || _host == null) return;
+            _host.Heal(Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * HealFinisherPercent / 100f)));
+            PublishHp();
+        }
+
         private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll)
         {
             var p = attacker.Profile;
@@ -1835,7 +1849,10 @@ namespace Game.Module.InGame
                 {
                     var s = _shots[i];
                     if (!s.IsActive || s.FromPlayer == fromPlayer) continue;
-                    if (Vector2.Distance(s.Position, attacker.Position) <= reach) s.Despawn();
+                    if (Vector2.Distance(s.Position, attacker.Position) > reach) continue;
+                    // 지우지 말고 **되받아친다.** 도탄이 생기기 전에는 지우는 수밖에
+                    // 없었지만, 이제 방향을 뒤집으면 진짜 반사가 된다.
+                    if (!s.Bounce((s.Position - attacker.Position).normalized)) s.Despawn();
                 }
             }
 
@@ -1847,7 +1864,11 @@ namespace Game.Module.InGame
                     if (e == null || !e.IsAlive) continue;
                     if (Vector2.Distance(e.Position, attacker.Position) > reach) continue;
                     Burst(e.Position, true);
+                    bool wasAlive = e.IsAlive;
                     HitEnemyWith(e, Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul), p);
+                    // 정본 S04 흡혈 마무리 — 근접으로 끝냈을 때만 회복이 터진다.
+                    // 흡혈을 쌓는 몸과 터뜨리는 몸이 달라 **갈아타야만** 성립한다.
+                    if (wasAlive && !e.IsAlive) OnMeleeFinish(attacker);
                     if (!hitAll) break;
                 }
                 return;
@@ -1886,9 +1907,10 @@ namespace Game.Module.InGame
             // BUF_S04 를 고르면 그 지뢰가 빙결 룬이 된다.
             if (kind == "grenade")
             {
-                SpawnField(victim.Position, MineRadius, MineSeconds,
-                           _buffs.MinesFreeze ? FieldEffect.Freeze : FieldEffect.Damage,
-                           _buffs.MinesFreeze ? 0 : MineDamagePerTick, fromPlayer: true);
+                bool freeze = _buffs.MinesFreeze || SynergyOn(SynergyKind.FreezeRune);
+                SpawnField(victim.Position, MineRadius * _buffs.AoeMul, MineSeconds,
+                           freeze ? FieldEffect.Freeze : FieldEffect.Damage,
+                           freeze ? 0 : MineDamagePerTick, fromPlayer: true);
                 return;
             }
 
@@ -1903,7 +1925,7 @@ namespace Game.Module.InGame
                     victim.ApplyCurse(sec);
                     // 마법사는 발밑에 둔화 장판을 남긴다 — 정본의 "장판 제어" 훅이다.
                     // 이것이 있어야 BUF_T03(가장자리 피해)이 걸 곳을 갖는다.
-                    SpawnField(victim.Position, SlowFieldRadius, SlowFieldSeconds,
+                    SpawnField(victim.Position, SlowFieldRadius * _buffs.AoeMul, SlowFieldSeconds,
                                FieldEffect.Slow, 0, fromPlayer: true);
                     break;
             }
@@ -2101,7 +2123,7 @@ namespace Game.Module.InGame
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
             if (slow > 0) victim.ApplySlow(slow, _config.SlowSeconds);
             if (steal > 0 && _host != null)
-                _host.Heal(Mathf.Max(1, damage * steal / 100));
+                Leech(Mathf.Max(1, damage * steal / 100));
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -2114,7 +2136,8 @@ namespace Game.Module.InGame
         // 보스 탄은 잡몹과 색을 나눈다 — 화면이 탄으로 덮이면 무엇을 피해야 할지 안 보인다
         private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
 
-        private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg)
+        private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg,
+                              bool lastShot = false)
         {
             var shot = RentShot();
             if (shot == null) return;
@@ -2129,8 +2152,10 @@ namespace Game.Module.InGame
             // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
             // 방향 스프라이트를 그린 의미가 없다.
             shot.Fire(attacker.MuzzlePosition, target.Position, speed,
-                      fromPlayer ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul)
-                                 : attacker.Atk,
+                      fromPlayer
+                          ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul
+                                             * (lastShot ? 1f + _buffs.LastShotBonus : 1f))
+                          : attacker.Atk,
                       fromPlayer, target, _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
                       _config.ShotLifeSeconds,
@@ -2298,7 +2323,7 @@ namespace Game.Module.InGame
             bool dead = victim.TakeDamage(dmg);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
             if (shot.LifestealPercent > 0 && _host != null)
-                _host.Heal(Mathf.Max(1, shot.Damage * shot.LifestealPercent / 100));
+                Leech(Mathf.Max(1, shot.Damage * shot.LifestealPercent / 100));
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -2311,6 +2336,9 @@ namespace Game.Module.InGame
             // 받는 피해 감소(정본 BUF_A04). 0 이 되지 않게 최소 1 은 남긴다 —
             // 무적이 되어 버리면 버프가 아니라 버그로 보인다.
             amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.DamageTakenMul));
+            // 정본 S06 수호 돌진 — 구루의 가드 오라를 대시에 실어 나른다
+            if (SynergyOn(SynergyKind.ArmoredDash))
+                amount = Mathf.Max(1, Mathf.RoundToInt(amount * ArmoredDashDamageMul));
             var hitAt = Avatar != null ? Avatar.Position : Vector2.zero;
             if (_host != null)
             {
@@ -2408,6 +2436,7 @@ namespace Game.Module.InGame
         private void KillEnemy(Unit u)
         {
             u.SetState(EnemyState.Dead);
+            TryFirePillar(u);   // 저주가 걸린 채 죽으면 그 자리에서 불기둥 (S05)
             if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
@@ -2614,6 +2643,81 @@ namespace Game.Module.InGame
         /// 갱스터가 때린 적에 표식을 남긴다. 갱스터의 유지 훅이 "표식 릴레이" 인 것과
         /// 같은 뿌리다 — 이 몸이 세상에 남기는 흔적이 곧 다음 몸의 재료가 된다.
         /// </summary>
+        // ── 시너지 (정본 SYNERGY 표) ──────────────────────────────
+        //
+        // 시너지는 한 캐릭터가 잘나서가 아니라 **무엇을 버리고 무엇으로 갈아탔는가**에서
+        // 나온다. 그래야 몸을 바꾸는 것이 손해 계산이 아니라 선택이 된다.
+
+        private const float ArmoredDashDamageMul = 0.5f;
+        private const float HealFinisherPercent = 25f;
+
+        private string _prevHostKey;
+        private SynergyKind _synergyKind;
+        private float _synergyTimer;
+
+        private bool SynergyOn(SynergyKind k) => _synergyTimer > 0f && _synergyKind == k;
+
+        private void TickSynergy(float dt)
+        {
+            if (_synergyTimer > 0f) _synergyTimer -= dt;
+        }
+
+        /// <summary>계기가 왔을 때 짝이 맞는 시너지를 켠다.</summary>
+        private void FireSynergy(SynergyTrigger trigger, string toKey)
+        {
+            if (_prevHostKey == null || toKey == null) return;
+            var rules = SynergyTable.Rules;
+            for (int i = 0; i < rules.Length; i++)
+            {
+                var r = rules[i];
+                if (r.Trigger != trigger || r.From != _prevHostKey || r.To != toKey) continue;
+                // 개방 조건이 걸린 시너지는 그 버프를 뽑아야 열린다(정본 BUFF_GATED)
+                if (r.GateBuff != null && !_buffs.Has(r.GateBuff)) continue;
+
+                _synergyKind = r.Kind;
+                _synergyTimer = r.Seconds;
+                _bus.Publish(new SynergyTriggeredEvent
+                {
+                    SynergyId = r.Id,
+                    Name = SynergyTable.NameOf(r.Kind),
+                    FromHostKey = r.From,
+                    ToHostKey = r.To,
+                    FirstTime = _synergySeen.Add(r.Id),
+                });
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 저주가 걸린 채 죽으면 그 자리에서 불기둥이 솟는다 (정본 S05 저주 화염).
+        /// 저주를 거는 것과 태우는 것이 서로 다른 몸이라 **갈아타야만** 성립한다.
+        /// </summary>
+        private void TryFirePillar(Unit victim)
+        {
+            if (!SynergyOn(SynergyKind.FirePillarCircuit) || victim.CurseStack <= 0) return;
+            SpawnField(victim.Position, 140f * _buffs.AoeMul, 3f, FieldEffect.Burn, 5, fromPlayer: true);
+        }
+
+        /// <summary>
+        /// 흡혈. 정본 BUF_T04 피의 부채는 **넘치는 만큼을 고스트 체력으로** 돌린다.
+        /// 방마다 횟수를 막는 이유는 정본 그대로다 — 안 막으면 잡몹 많은 방에서
+        /// 고스트가 무한정 회복되어 유령 시계의 압박이 사라진다.
+        /// </summary>
+        private void Leech(int amount)
+        {
+            if (_host == null || amount <= 0) return;
+            int room = _host.HpMax - _host.Hp;
+            _host.Heal(amount);
+            int over = amount - room;
+            if (over <= 0) return;
+            if (_buffs.BloodDebtPerRoom <= 0 || _bloodDebtUsed >= _buffs.BloodDebtPerRoom) return;
+            _bloodDebtUsed++;
+            _ghostHp = Mathf.Min(_config.GhostHpMax, _ghostHp + over);
+            PublishHp();
+        }
+
+        private int _bloodDebtUsed;
+
         private void TryMark(Unit victim)
         {
             if (victim == null || _host == null) return;
@@ -2636,7 +2740,10 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying || !e.IsMarked) continue;
+                // 정본 S07 — 빙결 연쇄. 표식뿐 아니라 얼어붙은 적도 처형 지점이 된다.
+                bool anchor = e.IsMarked
+                              || (SynergyOn(SynergyKind.FrozenBlinkChain) && e.IsFrozen);
+                if (e == null || !e.IsAlive || e.IsDying || !anchor) continue;
                 if (!IsOnScreen(e)) continue;
                 float d = Vector2.Distance(me.Position, e.Position);
                 if (d > reach || d >= best) continue;
@@ -2658,12 +2765,17 @@ namespace Game.Module.InGame
             HitEnemyWith(target, dmg, _host.Profile);
 
             // 표식 폭발 — 주변까지 함께 맞는다. 정본 "추가 피해 및 범위 데미지".
-            for (int i = _enemies.Count - 1; i >= 0; i--)
+            // 정본 BUF_T01 표식 탄두는 여기서 **번지는 수와 반경**을 늘린다.
+            float aoe = BlinkAoeRadius * _buffs.AoeMul * (1f + _buffs.MarkPayload * 0.25f);
+            int spread = 0;
+            int spreadMax = 3 + _buffs.MarkPayload;
+            for (int i = _enemies.Count - 1; i >= 0 && spread < spreadMax; i--)
             {
                 var e = _enemies[i];
                 if (e == null || e == target || !e.IsAlive || e.IsDying) continue;
-                if (Vector2.Distance(e.Position, target.Position) > BlinkAoeRadius) continue;
+                if (Vector2.Distance(e.Position, target.Position) > aoe) continue;
                 HitEnemyWith(e, Mathf.RoundToInt(dmg * 0.5f), _host.Profile);
+                spread++;
             }
 
             _bus.Publish(new SynergyTriggeredEvent
@@ -2787,6 +2899,11 @@ namespace Game.Module.InGame
                         new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
             ApplyFacingSprites(_host, key);
+
+            // 이전 몸이 무엇이었는지가 시너지의 전부다. 새 몸을 세운 **뒤에** 던져야
+            // 시너지가 새 몸의 능력치를 보고 켜진다.
+            FireSynergy(SynergyTrigger.OnSwitch, key);
+            _prevHostKey = key;
 
             // 기획서 A 3-3 — 빼앗은 몸은 온전하지 않다. 최대 체력의 70%로 시작한다.
             // 이게 없으면 교체가 곧 완전 회복이라, 몸을 갈아타는 데 대가가 없어진다.
