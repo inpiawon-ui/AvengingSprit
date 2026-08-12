@@ -227,6 +227,7 @@ namespace Game.Module.InGame
             CoreModule.TryGet(out _player);
 
             var res = CoreModule.Get<IResourceManager>();
+            await LoadPanelAtlasAsync(res);
             try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress); }
             catch (Exception e) { Debug.LogError($"[Battle] 아틀라스 로드 실패 — {e.Message}"); }
             try { _config = await res.LoadAsync<GameConfig>("TableData/GameConfig"); }
@@ -930,6 +931,30 @@ namespace Game.Module.InGame
         public Sprite UnitSprite(string hostKey) => UnitGet(hostKey);
 
         /// <summary>
+        /// 그 몸의 얼티밋 아이콘. 인게임 버튼이 21종 다 같은 그림을 쓰고 있어서
+        /// 어떤 얼티밋을 들고 있는지가 화면에 안 보였다.
+        ///
+        /// 아이콘은 호스트 선택 화면 아틀라스에 있다. 인게임에서 쓰려면 그 아틀라스를
+        /// 함께 올려야 하므로 여기서 늦게 한 번만 불러온다.
+        /// </summary>
+        public Sprite UltimateIcon(string hostKey)
+            => _panelAtlas != null && hostKey != null
+                ? _panelAtlas.GetSprite($"ultimateicon_{hostKey}") : null;
+
+        private SpriteAtlas _panelAtlas;
+
+        private async UniTask LoadPanelAtlasAsync(IResourceManager res)
+        {
+            if (_panelAtlas != null) return;
+            try { _panelAtlas = await res.LoadAsync<SpriteAtlas>("atlas/hostselectpanel"); }
+            catch (Exception e)
+            {
+                // 없어도 게임은 돈다 — 버튼이 기본 그림으로 남을 뿐이다
+                Debug.LogWarning($"[Battle] 얼티밋 아이콘 아틀라스 로드 실패 — {e.Message}");
+            }
+        }
+
+        /// <summary>
         /// 이 스테이지가 어떤 방인가 (기획서 A 06 ROOM TYPE).
         ///
         /// 마지막은 항상 보스다. 그 앞은 한 챕터 안에서 같은 방만 반복되지 않게
@@ -1391,9 +1416,11 @@ namespace Game.Module.InGame
             // 조준이 먼저 보이고 사격이 뒤따라야 "겨눈다"는 느낌이 난다.
             if (target != null) _host.SetFacing(target.Position - _host.Position);
 
+            // 근접은 붙어야 때린다 — 적과 같은 규칙이다. 전역 사거리를 900 으로
+            // 올려 두어서 그대로 두면 아마존 주먹이 방 건너편까지 닿는다.
             bool inRange = target != null &&
                            Vector2.Distance(_host.Position, target.Position)
-                               <= _host.AttackRange * _buffs.RangeMul;
+                               <= EffectiveRange(_host) * _buffs.RangeMul;
             IsFiring = inRange;
             if (!inRange) return;
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
@@ -1527,7 +1554,6 @@ namespace Game.Module.InGame
 
         /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
         private const int ShotsBeforeMove = 2;
-        private const float MeleeReach = 90f;
         private const float RepositionDistance = 190f;
 
         private static bool IsMelee(Unit e)
@@ -1541,7 +1567,8 @@ namespace Game.Module.InGame
         /// 근접은 데이터의 사거리를 쓰지 않는다 — 전역 사거리를 900 으로 올려 두어서
         /// 그대로 두면 주먹이 방 건너편까지 닿는다.
         /// </summary>
-        private float EffectiveRange(Unit e) => IsMelee(e) ? MeleeReach : e.AttackRange;
+        private float EffectiveRange(Unit e)
+            => IsMelee(e) ? _config.MeleeAttackRange : e.AttackRange;
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —

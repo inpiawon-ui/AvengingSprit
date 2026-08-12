@@ -97,7 +97,10 @@ namespace Game.Character
         [SerializeField] private int _hostAtkBase = 6;
         [SerializeField] private float _hostSpeedPerPoint = 2.4f;
         [SerializeField] private float _hostSpeedBase = 140f;
-        [SerializeField] private float _hostAttackRange = 265f;
+        // ⚠ 적 사거리와 **같은 값**을 쓴다. 한쪽만 올리면 그쪽이 일방적으로 때린다 —
+        //    적을 900 으로 올렸을 때 내 몸은 265 라 갱스터로 아무것도 못 쐈다.
+        //    편의 차이는 여기가 아니라 **캐릭터의 RangeMul** 로만 나야 한다.
+        [SerializeField] private float _hostAttackRange = 900f;
         [SerializeField] private float _hostAttackInterval = 0.55f;
 
         [Header("적")]
@@ -112,6 +115,17 @@ namespace Game.Character
         [Tooltip("이 거리 안에 들어오면 플레이어를 인지하고 달려든다. 밖이면 제자리 대기.")]
         [SerializeField] private float _enemyDetectRange = 300f;
         [Tooltip("이보다 가까운 적끼리 서로 밀어낸다. 0 이면 겹쳐서 한 마리처럼 보인다.")]
+        /// <summary>
+        /// 근접이 때릴 수 있는 거리. **근접이냐 원거리냐로 갈리고**, 원거리는
+        /// 캐릭터의 RangeMul 을 쓴다. 사거리를 편(적/나)으로 나누지 않는 이유는
+        /// 한쪽만 올리면 그쪽이 일방적으로 때리기 때문이다.
+        ///
+        /// ⚠ 90 아래로 내리면 **닿지 않는다.** 적 그림이 84, 내 그림이 96 이라
+        ///    맞붙었을 때 중심 사이가 이미 90 이고, 겹침 방지(EnemySeparation 82)가
+        ///    그보다 가까이 붙는 것을 막는다. 50 으로 두면 서로 파고들어야만 닿는다.
+        /// </summary>
+        [SerializeField] private float _meleeAttackRange = 92f;
+
         [SerializeField] private float _enemySeparation = 82f;
         [SerializeField] private int _enemiesPerRoomMin = 4;
         [SerializeField] private int _enemiesPerRoomMax = 7;
@@ -184,6 +198,7 @@ namespace Game.Character
 
         public float EnemyAttackRange => _enemyAttackRange;
         public float EnemyDetectRange => _enemyDetectRange;
+        public float MeleeAttackRange => _meleeAttackRange;
         public float EnemySeparation => _enemySeparation;
         public float EnemyAttackInterval => _enemyAttackInterval;
         public int EnemiesPerRoom(int roomIndex)

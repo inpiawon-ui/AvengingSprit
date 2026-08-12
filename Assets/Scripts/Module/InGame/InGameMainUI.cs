@@ -328,6 +328,15 @@ namespace Game.Module.InGame
                 portrait.preserveAspect = true;
                 portrait.gameObject.SetActive(portrait.sprite != null);
             }
+            // 얼티밋 버튼도 그 몸의 것으로 바꾼다. 21종이 같은 그림이면
+            // 무엇을 들고 있는지가 화면에 안 보인다.
+            var ult = _ui.Get<Image>("UltimateIcon");
+            if (ult != null && _battle != null)
+            {
+                ult.sprite = _battle.UltimateIcon(e.PossessedHostKey);
+                ult.enabled = ult.sprite != null;
+            }
+
             SetPossessReady(false);
         }
 
