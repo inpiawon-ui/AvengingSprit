@@ -375,10 +375,12 @@ namespace Game.Module.InGame
         public const int FrameWalk2 = 5;
         public const int FrameDie1 = 6;
         public const int FrameDie2 = 7;
+        /// <summary>영혼이 몸에 들어오는 순간의 자세. 그림이 없으면 idle 로 대신한다.</summary>
+        public const int FramePossess = 8;
 
         /// <summary>파일명 접미. idle 은 접미가 없어 null 이다.</summary>
         public static readonly string[] FrameSuffix =
-            { null, "atk1", "atk2", "hit", "walk1", "walk2", "die1", "die2" };
+            { null, "atk1", "atk2", "hit", "walk1", "walk2", "die1", "die2", "possess" };
 
         // 연출 길이. 합(0.17초)이 어떤 호스트의 공격 간격보다도 짧아야 한다 —
         // 길면 다음 발사가 이전 동작을 자르고 들어와 반동이 안 보인다.
@@ -501,9 +503,25 @@ namespace Game.Module.InGame
         /// 공격·피격은 한 번 재생하고 끝나며, 그 뒤에는 이동 중이면 걷기가,
         /// 아니면 idle 이 깔린다.
         /// </summary>
+        /// <summary>
+        /// 영혼이 들어오는 동안 이 자세로 굳는다. 채널이 끝날 때까지 다른 동작이 덮지 않는다 —
+        /// 몸을 빼앗기는 중인데 걷거나 쏘면 무슨 일이 벌어지는지 안 읽힌다.
+        /// </summary>
+        public void HoldPossessed(bool on)
+        {
+            _possessHold = on;
+            if (!on) return;
+            _frame = FramePossess;
+            _frameTimer = 0f;
+            Apply();
+        }
+
+        private bool _possessHold;
+
         public void TickAnim(float dt)
         {
             if (_dying) return;   // 사망은 TickDeath 가 따로 돈다
+            if (_possessHold) return;
 
             // 한 번짜리 동작(공격·피격)이 재생 중이면 그게 우선이다.
             if (_frameTimer > 0f)

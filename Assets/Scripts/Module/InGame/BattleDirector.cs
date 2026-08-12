@@ -61,6 +61,10 @@ namespace Game.Module.InGame
         private readonly List<DamageText> _damageTexts = new();
         private RectTransform _textLayer;
 
+        /// <summary>탄이 터지는 그림. 탄과 같은 풀 방식이다.</summary>
+        private const int MaxImpacts = 24;
+        private readonly List<Impact> _impacts = new();
+
         private const int MaxShots = 64;
         private readonly List<Projectile> _shots = new();
         private RectTransform _shotLayer;
@@ -1030,6 +1034,14 @@ namespace Game.Module.InGame
             _dying.Clear();
 
             for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Despawn();
+            for (int i = 0; i < _impacts.Count; i++) _impacts[i].gameObject.SetActive(false);
+
+            // 빙의가 도는 중에 방이 바뀌면 빼앗기던 몸이 그대로 남는다.
+            // 적 목록에서는 이미 빠져 있어서 아무도 치워 주지 않는다.
+            if (_channelBody != null) { Destroy(_channelBody.gameObject); _channelBody = null; }
+            _channel = 0f;
+            _channelEntry = null;
+            if (_ghost != null) _ghost.transform.localScale = Vector3.one;
 
             _boss = null;
             _wave = 1;
@@ -1228,6 +1240,7 @@ namespace Game.Module.InGame
             TickHazards(dt);
             SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
             TickDamageTexts(dt);
+            for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
             RefreshPossessTarget();
@@ -1238,7 +1251,10 @@ namespace Game.Module.InGame
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
             // 웨이브가 남아 있으면 방을 비운 것이 아니다.
             bool waveLeft = TickWave(dt);
-            if (!waveLeft && _enemies.Count == 0 && _exits.Count == 0 && !_awaitingBuff) OnRoomCleared();
+            // 빙의 중에는 방을 닫지 않는다 — 빼앗기는 몸은 이미 적 목록에서 빠져 있어서
+            // 마지막 한 마리를 빼앗는 순간 방이 클리어된 것으로 보인다.
+            if (!waveLeft && _enemies.Count == 0 && _exits.Count == 0
+                && !_awaitingBuff && !IsChanneling) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -2013,7 +2029,7 @@ namespace Game.Module.InGame
                 float off = count == 1 ? 0f : -spanDeg * 0.5f + spanDeg * i / (count - 1);
                 var shot = RentShot();
                 if (shot == null) return;
-                shot.SetSprite(ShotSpriteOf(from));
+                shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from));
                 shot.Fire(from.Position, at, speed, damage,
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
@@ -2570,7 +2586,7 @@ namespace Game.Module.InGame
         {
             var shot = RentShot();
             if (shot == null) return;
-            shot.SetSprite(ShotSpriteOf(attacker));
+            shot.SetSprite(ShotSpriteOf(attacker), ShotKindOf(attacker));
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -2624,6 +2640,33 @@ namespace Game.Module.InGame
 
         /// <summary>캐릭터별 탄 그림. 아직 안 온 것은 기본 탄으로 떨어진다.</summary>
         private readonly Dictionary<string, Sprite> _shotSprite = new();
+
+        /// <summary>탄 종류 이름. 없는 배우는 null — 기본 그림을 쓴다.</summary>
+        private static string ShotKindOf(Unit u)
+            => u != null && u.Key != null && ShotKind.TryGetValue(u.Key, out var k) ? k : null;
+
+        /// <summary>
+        /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —
+        /// 8종을 한 번에 받지 못해도 받은 것부터 보이게 한다.
+        /// </summary>
+        private void SpawnImpact(Vector2 at, string kind)
+        {
+            var first = GetSprite(kind != null ? $"impact_{kind}_1" : "impact_1")
+                        ?? GetSprite("impact_1");
+            if (first == null) return;
+            var second = GetSprite(kind != null ? $"impact_{kind}_2" : "impact_2")
+                         ?? GetSprite("impact_2");
+
+            for (int i = 0; i < _impacts.Count; i++)
+                if (!_impacts[i].IsActive) { _impacts[i].Play(at, first, second); return; }
+
+            if (_impacts.Count >= MaxImpacts) return;   // 화면이 터짐으로 덮이지 않게 상한을 둔다
+            var go = new GameObject($"Impact_{_impacts.Count}", typeof(RectTransform));
+            var im = go.AddComponent<Impact>();
+            im.Cache(_shotLayer, _config.ShotSize * 2.4f);
+            _impacts.Add(im);
+            im.Play(at, first, second);
+        }
 
         private Sprite ShotSpriteOf(Unit u)
         {
@@ -2713,6 +2756,7 @@ namespace Game.Module.InGame
                     var hit = HitEnemy(p.Position, p);
                     if (hit == null) continue;
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
+                    SpawnImpact(p.Position, p.Kind);
                     ApplyShotHit(hit, p);
                 }
                 else
@@ -2720,6 +2764,7 @@ namespace Game.Module.InGame
                     if (me == null) { p.Despawn(); continue; }
                     if (Vector2.Distance(p.Position, me.Position) > _config.ShotHitRadius) continue;
                     p.Despawn();
+                    SpawnImpact(p.Position, p.Kind);
                     DamagePlayer(p.Damage);
                 }
             }
@@ -3280,6 +3325,13 @@ namespace Game.Module.InGame
         private Game.Character.HostEntry _channelEntry;
         private string _channelKey, _channelName;
 
+        /// <summary>
+        /// 빼앗기는 중인 몸. 채널이 끝날 때까지 **지우지 않고** 그 자리에 세워 둔다 —
+        /// 지워 버리면 영혼이 빈 바닥으로 빨려 들어가는 그림이 되고,
+        /// 몸이 저항하는 자세를 보여 줄 자리가 없다.
+        /// </summary>
+        private Unit _channelBody;
+
         /// <summary>빙의가 들어가는 중인가. 이 동안은 조작을 받지 않는다.</summary>
         public bool IsChanneling => _channel > 0f;
 
@@ -3301,6 +3353,11 @@ namespace Game.Module.InGame
 
             _channel = 0f;
             if (_ghost != null) _ghost.transform.localScale = Vector3.one;
+
+            // 이제야 옛 몸을 치운다. 그 자리에 내 몸이 선다.
+            if (_channelBody != null) Destroy(_channelBody.gameObject);
+            _channelBody = null;
+
             EnterHost(_channelEntry, _channelKey, _channelName, _channelTo,
                       _config.HostStartHpPercent);
             _channelEntry = null;
@@ -3316,8 +3373,13 @@ namespace Game.Module.InGame
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
             var pos = target.Position;
+
+            // 적 목록에서만 빼고 **지우지는 않는다.** 채널이 도는 동안 그 자리에서
+            // 빼앗기는 자세로 굳어 있어야 한다. 총알·AI 는 목록을 보므로 더는 안 건드린다.
             _enemies.Remove(target);
-            Destroy(target.gameObject);
+            target.CancelWindup();
+            target.HoldPossessed(true);
+            _channelBody = target;
             _possessTarget = null;
 
             if (tactical)

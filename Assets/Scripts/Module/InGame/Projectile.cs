@@ -50,9 +50,16 @@ namespace Game.Module.InGame
         /// 탄 그림을 갈아 끼운다. 탄은 풀에서 돌려 쓰므로 태어날 때 정한 그림을
         /// 계속 쓰면 **직전에 쏜 무기의 탄이 그대로 나간다.** 발사할 때마다 정한다.
         /// </summary>
-        public void SetSprite(Sprite sprite)
+        /// <summary>
+        /// 탄 종류(`bullet`·`laser`…). 맞았을 때 터지는 그림을 고르는 데 쓴다.
+        /// 스프라이트 이름에서 되짚으면 아틀라스 이름 규칙에 묶여 깨지기 쉽다.
+        /// </summary>
+        public string Kind { get; private set; }
+
+        public void SetSprite(Sprite sprite, string kind = null)
         {
             if (sprite != null && _image != null) _image.sprite = sprite;
+            Kind = kind;
         }
 
         public void Init(Sprite sprite)
