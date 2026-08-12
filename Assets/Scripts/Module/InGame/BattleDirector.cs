@@ -3374,6 +3374,12 @@ namespace Game.Module.InGame
             var entry = _player.GetHost(target.Key);
             var pos = target.Position;
 
+            // ⚠ 영혼이 출발하는 자리는 **지금 내가 서 있는 자리**다.
+            //   `_ghost` 는 몸을 탄 동안 꺼져 있어 좌표가 마지막으로 유령이었던 곳
+            //   (방에 들어온 자리) 에 멈춰 있다. 그걸 그대로 쓰면 몸을 갈아탈 때마다
+            //   영혼이 방 입구 바닥에서 날아온다.
+            var from = Avatar != null ? Avatar.Position : _ghost.Position;
+
             // 적 목록에서만 빼고 **지우지는 않는다.** 채널이 도는 동안 그 자리에서
             // 빼앗기는 자세로 굳어 있어야 한다. 총알·AI 는 목록을 보므로 더는 안 건드린다.
             _enemies.Remove(target);
@@ -3410,8 +3416,10 @@ namespace Game.Module.InGame
             // 처음 빙의라면 원래 영혼이었다 — 어느 쪽이든 여기서 영혼을 켜고 날려 보낸다.
             _ghost.gameObject.SetActive(true);
             _ghost.transform.localScale = Vector3.one;
+            _ghost.Position = from;      // 켜기 전에 옛 좌표를 버린다
+            _ghost.SetFacing(pos - from);
 
-            _channelFrom = _ghost.Position;
+            _channelFrom = from;
             _channelTo = pos;
             _channelEntry = entry;
             _channelKey = target.Key;
