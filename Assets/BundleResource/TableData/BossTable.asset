@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: BossTable
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.BossTable
   _entries:
-  - _bossKey: mad_doctor
+  - _bossKey: robot_snakes
     _chapter: 1
-    _nameEn: MAD DOCTOR
-    _nameKr: "\uB9E4\uB4DC \uB2E5\uD130"
-    _spriteName: unit_boss
+    _nameEn: ROBOT SNAKES
+    _nameKr: "\uB85C\uBD07 \uC2A4\uB124\uC774\uD06C"
+    _spriteName: unit_robot_snakes
     _hpMul: 1
     _atkMul: 1
     _moveSpeedMul: 1
@@ -47,11 +47,11 @@ MonoBehaviour:
       _shotCount: 12
       _spreadDegrees: 360
       _damageMul: 0.8
-  - _bossKey: iron_claw
+  - _bossKey: demolisher
     _chapter: 2
-    _nameEn: IRON CLAW
-    _nameKr: "\uC544\uC774\uC5B8 \uD074\uB85C"
-    _spriteName: unit_boss
+    _nameEn: DEMOLISHER
+    _nameKr: "\uB370\uBAB0\uB9AC\uC154"
+    _spriteName: unit_demolisher
     _hpMul: 1.25
     _atkMul: 1.15
     _moveSpeedMul: 1.3
@@ -81,11 +81,11 @@ MonoBehaviour:
       _shotCount: 14
       _spreadDegrees: 360
       _damageMul: 0.85
-  - _bossKey: overlord
+  - _bossKey: python
     _chapter: 3
-    _nameEn: OVERLORD
-    _nameKr: "\uC624\uBC84\uB85C\uB4DC"
-    _spriteName: unit_boss
+    _nameEn: PYTHON
+    _nameKr: "\uD30C\uC774\uC36C"
+    _spriteName: unit_python
     _hpMul: 1.55
     _atkMul: 1.3
     _moveSpeedMul: 0.95

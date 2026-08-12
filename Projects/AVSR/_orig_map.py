@@ -31,7 +31,7 @@ SHEET = {
     'vampire':          'Enemies - Vampire',
 
     'robot_snakes':     'Bosses - Robot Snakes',
-    'crusher':          'Bosses - Crusher',
+    'demolisher':       'Bosses - Crusher',   # 정본 이름은 Demolisher 다
     'python':           'Bosses - Python',
     'guardian':         'Bosses - Guardian',
     'kingpin':          'Bosses - Kingpin',

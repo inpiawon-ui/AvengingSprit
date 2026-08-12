@@ -818,6 +818,8 @@ namespace Game.Module.InGame
             int chapter = _player != null ? _player.CurrentChapter : 1;
             var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
+            // 보스 그림은 아직 3체 중 어느 것도 안 왔다. 대체용 임시 그림을 함께 올려 둔다.
+            keys.Add("boss");
 
             // 빙의로 몸을 갈아타도 로비에서 고른 호스트는 긴급 투입으로 나올 수 있다.
             var emergency = PickPlayerHost();
@@ -993,7 +995,7 @@ namespace Game.Module.InGame
                 boss.Setup(UnitSide.Enemy,
                            canon ? _canonRoom.BossId.ToLowerInvariant() : def?.BossKey ?? "boss",
                            canon ? _canonRoom.BossName : def?.NameKr ?? "BOSS",
-                           UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss")),
+                           UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss")) ?? UnitGet("boss"),
                            canon ? _canonRoom.BossHp
                                  : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
                            canon ? _canonRoom.BossAtk
