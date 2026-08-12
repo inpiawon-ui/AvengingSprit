@@ -396,7 +396,10 @@ namespace Game.Module.InGame
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
                         EnemyIntervalOf(e),
-                        new Vector2(84f, 78f), isBoss: false, profile: e);
+                        // 엘리트는 캔버스가 한 등급 크다(128×128). 잡몹 상자에 넣으면
+                        // 캔버스 여백까지 줄어 엘리트가 잡몹보다 작아 보인다.
+                        elite ? new Vector2(128f, 128f) : new Vector2(84f, 78f),
+                        isBoss: false, profile: e);
                 u.Position = ToPixels(s.At);
                 u.PossessPriority = e.PossessPriority;
                 u.PossessRange = 0f;
@@ -3373,12 +3376,29 @@ namespace Game.Module.InGame
         /// <summary>축소 그림이 없을 때 스케일로 줄이는 끝값.</summary>
         private const float ShrinkEnd = 0.15f;
 
+        /// <summary>부푸는 구간의 끝(진행도). 여기까지 커지고 그 뒤로 줄어든다.</summary>
+        private const float SwellEnd = 0.18f;
+
+        /// <summary>몸에 닿는 시점(진행도). 이 뒤는 제자리에서 빨려 들어가는 시간이다.</summary>
+        private const float SuckStart = 0.85f;
+
         /// <summary>
         /// 지금 진행도에 맞는 영혼 축소 그림. 아직 안 들어왔으면 null —
         /// 그때는 부르는 쪽이 스케일로 줄인다.
         /// </summary>
         private Sprite ShrinkFrame(float t)
             => UnitGet("ghost", t < 0.45f ? "shrink1" : t < 0.75f ? "shrink2" : "shrink3");
+
+        /// <summary>
+        /// 빼앗기는 몸의 자세. 원작은 **정면 2 장**만 그려 두었다 — 방향이 없다.
+        /// 몸을 빼앗기는 순간에는 어느 쪽을 보고 있었는지가 중요하지 않고,
+        /// 정면으로 팔을 벌린 그 자세 자체가 신호다.
+        /// </summary>
+        private Sprite PossessedFrame(string key, float t)
+            => UnitGet(key, (int)(t / PossessFlipSeconds) % 2 == 0 ? "possess1" : "possess2");
+
+        /// <summary>두 장을 번갈아 넘기는 간격. 원작처럼 빠르게 떤다.</summary>
+        private const float PossessFlipSeconds = 0.09f;
 
         private void TickPossessChannel(float dt)
         {
@@ -3389,14 +3409,17 @@ namespace Game.Module.InGame
 
             if (_ghost != null)
             {
-                _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, t * t);
+                // 몸에는 **일찍** 닿는다(85%). 나머지 15% 는 제자리에서 쏙 빨려 들어가는 시간이다 —
+                // 도착과 사라짐이 같은 순간이면 "들어갔다"가 아니라 "없어졌다"로 보인다.
+                float travel = Mathf.Clamp01(t / SuckStart);
+                _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, travel * travel);
 
-                // 앞의 1/4 동안 몸에서 빠져나오며 부풀고, 나머지에서 빨려 들어가며 줄어든다.
-                // 처음부터 줄기만 하면 "나왔다"가 안 보이고 그냥 사라지는 것으로 읽힌다.
+                // 빠져나오며 한 번 부푼다. 처음부터 줄기만 하면 "나왔다"가 안 보인다.
                 float swell = _config.PossessGhostSwell;
-                float scale = t < 0.25f
-                    ? Mathf.Lerp(1f, swell, t / 0.25f)
-                    : Mathf.Lerp(swell, ShrinkEnd, (t - 0.25f) / 0.75f);
+                float scale = t < SwellEnd
+                    ? Mathf.Lerp(1f, swell, t / SwellEnd)
+                    : Mathf.Lerp(swell, ShrinkEnd,
+                                 Mathf.SmoothStep(0f, 1f, (t - SwellEnd) / (1f - SwellEnd)));
 
                 // 정본 축소 그림(3장)이 있으면 그것으로 줄인다 — 스케일로 줄이면
                 // 픽셀이 뭉개져 도트가 아니라 흐릿한 얼룩이 된다.
@@ -3404,10 +3427,22 @@ namespace Game.Module.InGame
                 if (frame != null)
                 {
                     _ghost.SetSpriteOverride(frame);
-                    // 그림이 크기를 이미 담고 있으므로 부푸는 것만 남기고 축소는 그림에 맡긴다
-                    scale = t < 0.25f ? scale : swell;
+                    // 그림이 크기를 담고 있으므로 부푸는 것만 남긴다
+                    scale = t < SwellEnd ? scale : swell;
                 }
+
+                // 마지막 한 순간 — 몸 속으로 쏙
+                if (t > SuckStart)
+                    scale = Mathf.Lerp(scale, 0.02f, (t - SuckStart) / (1f - SuckStart));
+
                 _ghost.transform.localScale = Vector3.one * scale;
+            }
+
+            // 빼앗기는 몸이 정면으로 팔을 벌린 채 떤다. 그림이 없으면 그냥 서 있는다.
+            if (_channelBody != null)
+            {
+                var pose = PossessedFrame(_channelBody.Key, _channelTotal - _channel);
+                if (pose != null) _channelBody.SetSpriteOverride(pose);
             }
 
             if (_channel > 0f) return;

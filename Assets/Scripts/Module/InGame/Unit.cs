@@ -375,12 +375,10 @@ namespace Game.Module.InGame
         public const int FrameWalk2 = 5;
         public const int FrameDie1 = 6;
         public const int FrameDie2 = 7;
-        /// <summary>영혼이 몸에 들어오는 순간의 자세. 그림이 없으면 idle 로 대신한다.</summary>
-        public const int FramePossess = 8;
 
         /// <summary>파일명 접미. idle 은 접미가 없어 null 이다.</summary>
         public static readonly string[] FrameSuffix =
-            { null, "atk1", "atk2", "hit", "walk1", "walk2", "die1", "die2", "possess" };
+            { null, "atk1", "atk2", "hit", "walk1", "walk2", "die1", "die2" };
 
         // 연출 길이. 합(0.17초)이 어떤 호스트의 공격 간격보다도 짧아야 한다 —
         // 길면 다음 발사가 이전 동작을 자르고 들어와 반동이 안 보인다.
@@ -506,14 +504,15 @@ namespace Game.Module.InGame
         /// <summary>
         /// 영혼이 들어오는 동안 이 자세로 굳는다. 채널이 끝날 때까지 다른 동작이 덮지 않는다 —
         /// 몸을 빼앗기는 중인데 걷거나 쏘면 무슨 일이 벌어지는지 안 읽힌다.
+        ///
+        /// 자세 그림은 **방향이 없다.** 원작이 정면 2 장 한 벌로만 그려 두었으므로
+        /// 부르는 쪽이 `SetSpriteOverride` 로 그 두 장을 번갈아 넣는다.
         /// </summary>
         public void HoldPossessed(bool on)
         {
             _possessHold = on;
-            if (!on) return;
-            _frame = FramePossess;
+            if (!on) SetSpriteOverride(null);
             _frameTimer = 0f;
-            Apply();
         }
 
         private bool _possessHold;

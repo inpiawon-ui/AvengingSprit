@@ -1133,7 +1133,7 @@ MonoBehaviour:
     _canonHostMoveSpeed: 0
     _canonHostShotSpeed: 0
     _actorOnly: 1
-    _spriteKey: amazon_elite
+    _spriteKey: 
     _ultimateKey: 
     _unlockType: 0
     _unlockChapter: 0

@@ -458,7 +458,8 @@ namespace Game.EditorTools
 
             // 엘리트는 정본에 교전 프로필이 없다 — 근접 둘은 파이터(AP_E002),
             // 원거리 하나는 화이트위저드(AP_E010) 값을 빌린다.
-            new("EL01", "actor_enforcer",      "집행자",     "amazon_elite", 1.2f, 1.15f, true),
+            // 제 그림이 들어왔다 — 더는 남의 그림을 빌리지 않는다
+            new("EL01", "actor_enforcer",      "집행자",     "",             1.2f, 1.15f, true),
             new("EL02", "actor_shield_captain","방패 대장",  "amazon_elite", 1.2f, 1.15f, true),
             new("EL03", "actor_arc_warden",    "아크 워든",  "white_wizard", 6.2f, 2.0f, false),
         };
