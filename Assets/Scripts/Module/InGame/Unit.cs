@@ -660,11 +660,14 @@ namespace Game.Module.InGame
             if (_body == null || _dying) return;
             if (_flashTimer <= 0f)
             {
-                if (!_telegraph) _body.color = Color.white;
+                // 예고 중에는 예고색이 이긴다. 그 다음이 상태이상, 없으면 흰색.
+                if (_telegraph) return;
+                _body.color = TryStatusTint(out var tint) ? tint : Color.white;
                 return;
             }
             _flashTimer -= dt;
-            _body.color = _flashTimer > 0f ? new Color(1f, 0.45f, 0.45f, 1f) : Color.white;
+            if (_flashTimer > 0f) { _body.color = new Color(1f, 0.45f, 0.45f, 1f); return; }
+            _body.color = TryStatusTint(out var back) ? back : Color.white;
         }
 
         /// <summary>
@@ -677,6 +680,97 @@ namespace Game.Module.InGame
             if (_body == null) return;
             if (on) _body.color = new Color(1f, 0.86f, 0.35f, 1f);
             else if (_flashTimer <= 0f) _body.color = Color.white;
+        }
+
+        // ── 상태이상 ──────────────────────────────────────────────
+        //
+        // 정본 버프 24종 중 17종이 이것이 없어서 꺼져 있었다. 세 가지만 있으면
+        // 그중 상당수가 살아난다 — 화상(지속 피해) · 빙결(둔화·정지) · 저주(받는 피해 증가).
+        //
+        // 지속 피해를 유닛이 스스로 깎지 않는다. 죽음 처리·보상·피해 숫자가 전부
+        // BattleDirector 에 있어서, 여기서 깎으면 죽어도 아무 일도 안 일어난다.
+        // 이 클래스는 **얼마를 깎아야 하는지만 알려주고** 실제 피해는 부르는 쪽이 준다.
+
+        public const int StatusMaxStack = 3;
+
+        private float _burnTimer, _burnAccum;
+        private int _burnStack;
+        private float _curseTimer;
+        private int _curseStack;
+        private float _freezeTimer;
+
+        public int BurnStack => _burnStack;
+        public int CurseStack => _curseStack;
+        public bool IsFrozen => _freezeTimer > 0f;
+
+        /// <summary>저주 배수 — 받는 피해가 단계마다 늘어난다.</summary>
+        public float CurseDamageMul => 1f + _curseStack * CursePerStack;
+
+        private const float CursePerStack = 0.15f;
+        private const float BurnDamagePerStackPerSecond = 6f;
+        private const int FreezeSlowPercent = 55;
+
+        public void ApplyBurn(float seconds)
+        {
+            _burnStack = Mathf.Min(StatusMaxStack, _burnStack + 1);
+            _burnTimer = Mathf.Max(_burnTimer, seconds);
+        }
+
+        public void ApplyCurse(float seconds)
+        {
+            _curseStack = Mathf.Min(StatusMaxStack, _curseStack + 1);
+            _curseTimer = Mathf.Max(_curseTimer, seconds);
+        }
+
+        /// <summary>빙결. 둔화를 겸하므로 기존 둔화 경로를 함께 쓴다.</summary>
+        public void ApplyFreeze(float seconds)
+        {
+            _freezeTimer = Mathf.Max(_freezeTimer, seconds);
+            ApplySlow(FreezeSlowPercent, seconds);
+        }
+
+        /// <summary>
+        /// 상태이상 시간을 흘린다. 이번 프레임에 줘야 할 화상 피해를 돌려준다(없으면 0).
+        /// 소수 피해가 사라지지 않도록 누적해 두었다가 1 이상이 될 때만 떨어뜨린다 —
+        /// 매 프레임 1씩 주면 화상이 초당 60 이 된다.
+        /// </summary>
+        public int TickStatus(float dt)
+        {
+            if (_curseTimer > 0f)
+            {
+                _curseTimer -= dt;
+                if (_curseTimer <= 0f) _curseStack = 0;
+            }
+            if (_freezeTimer > 0f) _freezeTimer -= dt;
+
+            if (_burnTimer <= 0f) return 0;
+            _burnTimer -= dt;
+            if (_burnTimer <= 0f) { _burnStack = 0; _burnAccum = 0f; return 0; }
+
+            _burnAccum += BurnDamagePerStackPerSecond * _burnStack * dt;
+            if (_burnAccum < 1f) return 0;
+            int give = Mathf.FloorToInt(_burnAccum);
+            _burnAccum -= give;
+            return give;
+        }
+
+        public void ClearStatus()
+        {
+            _burnTimer = _curseTimer = _freezeTimer = _burnAccum = 0f;
+            _burnStack = _curseStack = 0;
+        }
+
+        /// <summary>
+        /// 상태이상 색. 피격 점멸과 빙의 표시가 이미 몸 색을 쓰므로 그 둘이 없을 때만 칠한다.
+        /// 색이 겹치면 무엇이 걸렸는지도, 맞았는지도 안 보인다.
+        /// </summary>
+        public bool TryStatusTint(out Color color)
+        {
+            if (_burnStack > 0) { color = new Color(1f, 0.55f, 0.25f, 1f); return true; }
+            if (_freezeTimer > 0f) { color = new Color(0.55f, 0.85f, 1f, 1f); return true; }
+            if (_curseStack > 0) { color = new Color(0.72f, 0.45f, 1f, 1f); return true; }
+            color = Color.white;
+            return false;
         }
 
         /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>

@@ -239,10 +239,11 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: focused_soul
     _nameKr: "\uC9D1\uC911\uD55C \uC601\uD63C"
-    _description: "\uAC19\uC740 \uC801 4\uD68C \uBA85\uC911 \uC2DC \uD53C\uD574 +6%"
-    _kind: 0
+    _description: "\uAC19\uC740 \uC801 4\uD68C \uBA85\uC911\uB9C8\uB2E4 \uD53C\uD574
+      +6% (3\uB2E8\uACC4)"
+    _kind: 18
     _value: 6
-    _stackable: 1
+    _stackable: 0
     _colorHex: '#E8604A'
     _scope: 0
     _tag: 0
@@ -252,7 +253,7 @@ MonoBehaviour:
     _pool: Universal
     _fromChapter: 1
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: wide_echo
     _nameKr: "\uB113\uC740 \uC6B8\uB9BC"
     _description: "\uAD11\uC5ED \uBC18\uACBD +10%"
@@ -304,10 +305,10 @@ MonoBehaviour:
     _implemented: 0
   - _buffKey: burning_circuit
     _nameKr: "\uD0C0\uC624\uB974\uB294 \uD68C\uB85C"
-    _description: "\uD654\uC0C13\uC774 \uC8FC\uBCC0\uC5D0 1\uC911\uCCA9 \uBC88\uC9D0"
-    _kind: 0
-    _value: 0
-    _stackable: 1
+    _description: "\uD654\uC0C1 3\uB2E8\uACC4\uAC00 \uC8FC\uBCC0\uC73C\uB85C \uBC88\uC9C4\uB2E4"
+    _kind: 17
+    _value: 1
+    _stackable: 0
     _colorHex: '#F07828'
     _scope: 0
     _tag: 0
@@ -317,7 +318,7 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: cold_geometry
     _nameKr: "\uCC28\uAC00\uC6B4 \uAE30\uD558"
     _description: "\uB454\uD654 \uC7A5\uD310 \uAC00\uC7A5\uC790\uB9AC\uAC00 \uC9C0\uC18D

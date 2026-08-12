@@ -43,6 +43,12 @@ namespace Game.Module.InGame
         public int ExtraShots { get; private set; }
         public int LifestealPercent { get; private set; }
         public int SlowPercent { get; private set; }
+
+        /// <summary>화상 3단계가 주변으로 옮는가 (정본 BUF_T02)</summary>
+        public bool BurnSpreads { get; private set; }
+
+        /// <summary>같은 적 연속 명중 1단계당 피해 증가분. 0 이면 이 버프가 없다 (정본 BUF_U04)</summary>
+        public float FocusPerStack { get; private set; }
         public bool Pierce { get; private set; }
 
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
@@ -128,6 +134,8 @@ namespace Game.Module.InGame
                     // 여러 장 겹쳐도 무적이 되지 않게 곱으로 쌓는다
                     case BuffKind.DamageReduction: DamageTakenMul *= 1f - v; break;
                     case BuffKind.SwitchShield:    SwitchShieldSeconds += e.Value / 100f; break;
+                    case BuffKind.BurnSpread:      BurnSpreads = true; break;
+                    case BuffKind.FocusedSoul:     FocusPerStack += e.Value / 100f; break;
                 }
             }
         }

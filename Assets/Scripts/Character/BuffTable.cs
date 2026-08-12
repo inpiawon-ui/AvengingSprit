@@ -46,6 +46,12 @@ namespace Game.Character
         DamageReduction,
         /// <summary>전술 빙의 직후 무적 +n/100 초 (정본 BUF_A06 Safe Exit)</summary>
         SwitchShield,
+
+        // ── 상태이상이 생기면서 살아난 종류 ────────────────────────
+        /// <summary>화상 3단계가 주변으로 1단계 옮는다 (정본 BUF_T02 Burning Circuit)</summary>
+        BurnSpread,
+        /// <summary>같은 적을 연속으로 때리면 피해 +n% (최대 3단계) (정본 BUF_U04 Focused Soul)</summary>
+        FocusedSoul,
     }
 
     /// <summary>

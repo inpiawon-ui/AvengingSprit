@@ -1363,6 +1363,7 @@ namespace Game.Module.InGame
 
         private void TickEnemies(float dt)
         {
+            if (_burnSpreadTimer > 0f) _burnSpreadTimer -= dt;
             var me = Avatar;
             if (me == null) return;
             for (int i = 0; i < _enemies.Count; i++)
@@ -1372,6 +1373,23 @@ namespace Game.Module.InGame
                 e.TickFlash(dt);
                 e.TickAnim(dt);
                 e.TickSlow(dt);
+
+                // 화상 피해는 유닛이 스스로 깎지 않는다 — 죽음 처리·보상·피해 숫자가
+                // 전부 여기 있어서, 저쪽에서 깎으면 죽어도 아무 일도 안 일어난다.
+                int burn = e.TickStatus(dt);
+                if (burn > 0)
+                {
+                    // 정본 BUF_T02 — 3단계 화상이 주변으로 옮는다.
+                    // 화상 틱은 3단계에서 0.06초마다 떨어지므로 그대로 두면 초당 열몇 번
+                    // 옮는다. 초에 한 번으로 묶는다.
+                    if (_buffs.BurnSpreads && e.BurnStack >= Unit.StatusMaxStack)
+                        SpreadBurn(e);
+
+                    ShowDamage(e.Position, burn, toEnemy: true);
+                    if (e.TakeDamage(burn)) { KillEnemy(e); continue; }
+                    if (e.IsBoss)
+                        _bus.Publish(new BossHpChangedEvent { BossHp = e.Hp, BossHpMax = e.HpMax });
+                }
 
                 // 기획서 A 1-1 — 유령은 **적과 충돌하지 않고 표적도 되지 않는다.**
                 // 몸이 없는 동안에는 적도 보스도 쫓거나 때리지 않는다. 유령 상태의
@@ -1733,14 +1751,80 @@ namespace Game.Module.InGame
                    fromPlayer ? ShotPlayerColor : ShotEnemyColor, 0.12f);
         }
 
+        /// <summary>
+        /// 무기 계열이 곧 원소다. 불을 뿜는 캐릭터가 화상을 걸고, 냉기가 빙결을,
+        /// 마법이 저주를 건다. 탄 그림을 나눈 그 표(`ShotKind`)를 그대로 쓴다 —
+        /// 표를 둘로 두면 "레이저인데 화상이 걸리는" 어긋남이 반드시 생긴다.
+        /// </summary>
+        private static readonly Dictionary<string, string> StatusOfKind = new()
+        {
+            { "flame", "burn" }, { "frost", "freeze" }, { "magic", "curse" },
+        };
+
+        private void InflictStatus(Unit victim, HostEntry p)
+        {
+            var key = p?.HostKey;
+            if (key == null || !ShotKind.TryGetValue(key, out var kind)) return;
+            if (!StatusOfKind.TryGetValue(kind, out var status)) return;
+
+            float sec = _config.SlowSeconds;   // 둔화와 같은 지속시간을 쓴다
+            switch (status)
+            {
+                case "burn":   victim.ApplyBurn(sec); break;
+                case "freeze": victim.ApplyFreeze(sec); break;
+                case "curse":  victim.ApplyCurse(sec); break;
+            }
+        }
+
+        // ── 정본 BUF_T02 화상 전이 ────────────────────────────────
+        private const float BurnSpreadRadius = 150f;
+        private const float BurnSpreadInterval = 1.0f;
+        private float _burnSpreadTimer;
+
+        private void SpreadBurn(Unit source)
+        {
+            if (_burnSpreadTimer > 0f) return;
+            _burnSpreadTimer = BurnSpreadInterval;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var o = _enemies[i];
+                if (o == null || o == source || !o.IsAlive) continue;
+                if ((o.Position - source.Position).sqrMagnitude > BurnSpreadRadius * BurnSpreadRadius) continue;
+                o.ApplyBurn(_config.SlowSeconds);
+            }
+        }
+
+        // ── 정본 BUF_U04 집중한 영혼 ──────────────────────────────
+        //
+        // "같은 표적 4회 명중마다 피해 +6%, 3단계까지". 표적을 바꾸면 처음부터다.
+        // 누구를 몇 번 때렸는지만 들고 있으면 되므로 유닛 참조 하나와 정수 하나로 족하다 —
+        // 적마다 카운터를 달면 죽을 때마다 정리해야 한다.
+        private const int FocusHitsPerStack = 4;
+        private Unit _focusTarget;
+        private int _focusHits;
+
+        private float FocusMul(Unit victim)
+        {
+            if (_buffs.FocusPerStack <= 0f) return 1f;
+            if (_focusTarget != victim) { _focusTarget = victim; _focusHits = 0; }
+            _focusHits++;
+            int stack = Mathf.Min(Unit.StatusMaxStack, _focusHits / FocusHitsPerStack);
+            return 1f + stack * _buffs.FocusPerStack;
+        }
+
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
             AddMaintain();
             TryMark(victim);
+            // 저주는 받는 피해를 늘린다. 표시되는 숫자도 늘어난 값이어야 —
+            // 저주를 걸어 놓고 숫자가 그대로면 걸린 줄 모른다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.CurseDamageMul));
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * FocusMul(victim)));
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
+            InflictStatus(victim, p);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
             if (slow > 0) victim.ApplySlow(slow, _config.SlowSeconds);
