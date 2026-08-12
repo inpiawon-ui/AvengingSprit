@@ -15,6 +15,18 @@ MonoBehaviour:
   m_GroupName: tabledata
   m_GUID: bf4716c092e6c334b8ba88aec823916a
   m_SerializeEntries:
+  - m_GUID: 30827235e278c9942a23b381ef6ee0c4
+    m_Address: TableData/BuffTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49828203da53a9b489520d704cdd06b7
+    m_Address: TableData/HostTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8ab0c492a328e314f92d49e92a660041
     m_Address: TableData/GameConfig
     m_ReadOnly: 0
@@ -25,6 +37,18 @@ MonoBehaviour:
     m_Address: TableData/RoomTable
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c64e017ececb1474bb0208dfecbbd377
+    m_Address: TableData/BossTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da90110f6c9271d43bf25f1a72561906
+    m_Address: TableData/UltimateTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}

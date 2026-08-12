@@ -64,6 +64,7 @@ namespace Game.Module.InGame
         private const int MaxShots = 64;
         private readonly List<Projectile> _shots = new();
         private RectTransform _shotLayer;
+        private RectTransform _fieldLayer;
 
         private int _roomIndex = -1;
         private int _ghostHp;
@@ -236,6 +237,18 @@ namespace Game.Module.InGame
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
+
+            // 장판은 바닥에 깔린다 — 유닛보다 **아래**다. 위에 그리면 캐릭터가
+            // 장판에 잠겨 어디 서 있는지 안 보인다.
+            var fieldGo = new GameObject("FieldLayer", typeof(RectTransform));
+            fieldGo.transform.SetParent(_unitLayer.parent, false);
+            _fieldLayer = (RectTransform)fieldGo.transform;
+            _fieldLayer.anchorMin = _unitLayer.anchorMin;
+            _fieldLayer.anchorMax = _unitLayer.anchorMax;
+            _fieldLayer.pivot = _unitLayer.pivot;
+            _fieldLayer.anchoredPosition = _unitLayer.anchoredPosition;
+            _fieldLayer.sizeDelta = _unitLayer.sizeDelta;
+            _fieldLayer.SetSiblingIndex(_unitLayer.GetSiblingIndex());
 
             // 탄은 유닛보다 위에 그린다 — 유닛 뒤로 숨으면 피격 판단이 안 보인다
             var shotGo = new GameObject("ShotLayer", typeof(RectTransform));
@@ -725,6 +738,7 @@ namespace Game.Module.InGame
             _unitLayer.anchoredPosition = at;
             if (_shotLayer != null) _shotLayer.anchoredPosition = at;
             if (_textLayer != null) _textLayer.anchoredPosition = at;
+            if (_fieldLayer != null) _fieldLayer.anchoredPosition = at;
             if (_floor != null) _floor.anchoredPosition = at;
         }
 
@@ -942,6 +956,7 @@ namespace Game.Module.InGame
         {
             _roomIndex = index;
             DespawnExit();
+            ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
             _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
             // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
             // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
@@ -1146,6 +1161,7 @@ namespace Game.Module.InGame
             SyncFireRing();
             TickEnemies(dt);
             TickShots(dt);
+            TickFields(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -1765,6 +1781,17 @@ namespace Game.Module.InGame
         {
             var key = p?.HostKey;
             if (key == null || !ShotKind.TryGetValue(key, out var kind)) return;
+
+            // 수류탄은 상태이상 대신 **터진 자리에 장판**을 남긴다 — 정본의 "지뢰 네트워크".
+            // BUF_S04 를 고르면 그 지뢰가 빙결 룬이 된다.
+            if (kind == "grenade")
+            {
+                SpawnField(victim.Position, MineRadius, MineSeconds,
+                           _buffs.MinesFreeze ? FieldEffect.Freeze : FieldEffect.Damage,
+                           _buffs.MinesFreeze ? 0 : MineDamagePerTick, fromPlayer: true);
+                return;
+            }
+
             if (!StatusOfKind.TryGetValue(kind, out var status)) return;
 
             float sec = _config.SlowSeconds;   // 둔화와 같은 지속시간을 쓴다
@@ -1772,8 +1799,138 @@ namespace Game.Module.InGame
             {
                 case "burn":   victim.ApplyBurn(sec); break;
                 case "freeze": victim.ApplyFreeze(sec); break;
-                case "curse":  victim.ApplyCurse(sec); break;
+                case "curse":
+                    victim.ApplyCurse(sec);
+                    // 마법사는 발밑에 둔화 장판을 남긴다 — 정본의 "장판 제어" 훅이다.
+                    // 이것이 있어야 BUF_T03(가장자리 피해)이 걸 곳을 갖는다.
+                    SpawnField(victim.Position, SlowFieldRadius, SlowFieldSeconds,
+                               FieldEffect.Slow, 0, fromPlayer: true);
+                    break;
             }
+        }
+
+        private const float MineRadius = 110f;
+        private const float MineSeconds = 3.0f;
+        private const int MineDamagePerTick = 6;
+        private const float SlowFieldRadius = 130f;
+        private const float SlowFieldSeconds = 2.5f;
+
+        // ── 장판 ──────────────────────────────────────────────────
+        //
+        // 정본에서 이것 하나가 여러 갈래를 막고 있었다 — 버프 4종과 보스 패턴 둘이
+        // 전부 "바닥에 깔린 지속 영역" 을 전제한다.
+
+        private const int MaxFields = 24;
+        private const int FieldSlowPercent = 45;
+        private readonly List<Field> _fields = new();
+
+        private static readonly Color FieldColorDamage = new(1f, 0.45f, 0.20f, 0.32f);
+        private static readonly Color FieldColorSlow   = new(0.45f, 0.70f, 1f, 0.28f);
+        private static readonly Color FieldColorBurn   = new(1f, 0.55f, 0.18f, 0.34f);
+        private static readonly Color FieldColorFreeze = new(0.60f, 0.90f, 1f, 0.32f);
+        private static readonly Color FieldColorCurse  = new(0.66f, 0.35f, 1f, 0.32f);
+
+        private static Color ColorOf(FieldEffect e) => e switch
+        {
+            FieldEffect.Slow   => FieldColorSlow,
+            FieldEffect.Burn   => FieldColorBurn,
+            FieldEffect.Freeze => FieldColorFreeze,
+            FieldEffect.Curse  => FieldColorCurse,
+            _                  => FieldColorDamage,
+        };
+
+        /// <summary>장판을 깐다. 자리가 없으면 가장 오래된 것을 밀어낸다.</summary>
+        private Field SpawnField(Vector2 at, float radius, float seconds,
+                                 FieldEffect effect, int damagePerTick, bool fromPlayer)
+        {
+            Field f = null;
+            for (int i = 0; i < _fields.Count; i++)
+                if (!_fields[i].IsActive) { f = _fields[i]; break; }
+
+            if (f == null)
+            {
+                if (_fields.Count >= MaxFields) { f = _fields[0]; f.Despawn(); }
+                else
+                {
+                    var go = new GameObject("Field", typeof(RectTransform));
+                    go.transform.SetParent(_fieldLayer, false);
+                    f = go.AddComponent<Field>();
+                    f.Init(GetSprite("field") ?? GetSprite("shot"));
+                    _fields.Add(f);
+                }
+            }
+
+            // 정본 BUF_A02 — 장판이 더 오래 남는다
+            f.Spawn(at, radius, seconds + _buffs.FieldExtraSeconds,
+                    effect, damagePerTick, fromPlayer, ColorOf(effect));
+            return f;
+        }
+
+        private void TickFields(float dt)
+        {
+            for (int i = 0; i < _fields.Count; i++)
+            {
+                var f = _fields[i];
+                if (!f.IsActive || !f.Tick(dt)) continue;
+
+                if (f.FromPlayer)
+                {
+                    for (int j = 0; j < _enemies.Count; j++)
+                    {
+                        var e = _enemies[j];
+                        if (e == null || !e.IsAlive || !f.Contains(e.Position)) continue;
+                        ApplyField(f, e, toEnemy: true);
+                    }
+                }
+                else
+                {
+                    var me = Avatar;
+                    if (me != null && me.IsAlive && f.Contains(me.Position))
+                        ApplyField(f, me, toEnemy: false);
+                }
+            }
+        }
+
+        private void ApplyField(Field f, Unit u, bool toEnemy)
+        {
+            switch (f.Effect)
+            {
+                case FieldEffect.Slow:
+                    u.ApplySlow(FieldSlowPercent, 0.8f);
+                    // 정본 BUF_T03 — 둔화 장판 가장자리가 피해를 준다.
+                    // 가장자리로 한정하는 이유는 "안에 있으면 아프다" 가 아니라
+                    // "들어오고 나갈 때 아프다" 라야 자리를 잡을 이유가 생기기 때문이다.
+                    if (_buffs.SlowFieldEdgeDamage > 0 && toEnemy)
+                    {
+                        float d = (u.Position - f.Center).magnitude;
+                        if (d > f.Radius * 0.7f) HurtByField(u, _buffs.SlowFieldEdgeDamage, toEnemy);
+                    }
+                    break;
+                case FieldEffect.Burn:   u.ApplyBurn(1.2f); break;
+                case FieldEffect.Freeze: u.ApplyFreeze(1.2f); break;
+                case FieldEffect.Curse:  u.ApplyCurse(1.2f); break;
+            }
+            if (f.DamagePerTick > 0) HurtByField(u, f.DamagePerTick, toEnemy);
+        }
+
+        private void HurtByField(Unit u, int damage, bool toEnemy)
+        {
+            if (damage <= 0) return;
+            if (toEnemy)
+            {
+                ShowDamage(u.Position, damage, toEnemy: true);
+                if (u.TakeDamage(damage)) { KillEnemy(u); return; }
+                if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = u.Hp, BossHpMax = u.HpMax });
+            }
+            else
+            {
+                DamagePlayer(damage);   // 감소·유령 전환까지 이쪽이 다 처리한다
+            }
+        }
+
+        private void ClearFields()
+        {
+            for (int i = 0; i < _fields.Count; i++) _fields[i]?.Despawn();
         }
 
         // ── 정본 BUF_T02 화상 전이 ────────────────────────────────

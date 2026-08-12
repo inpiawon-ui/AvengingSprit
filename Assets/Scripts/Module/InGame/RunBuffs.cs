@@ -49,6 +49,15 @@ namespace Game.Module.InGame
 
         /// <summary>같은 적 연속 명중 1단계당 피해 증가분. 0 이면 이 버프가 없다 (정본 BUF_U04)</summary>
         public float FocusPerStack { get; private set; }
+
+        /// <summary>장판이 더 오래 남는다 (정본 BUF_A02)</summary>
+        public float FieldExtraSeconds { get; private set; }
+
+        /// <summary>둔화 장판 가장자리 피해 (정본 BUF_T03)</summary>
+        public int SlowFieldEdgeDamage { get; private set; }
+
+        /// <summary>지뢰가 빙결 룬이 된다 (정본 BUF_S04)</summary>
+        public bool MinesFreeze { get; private set; }
         public bool Pierce { get; private set; }
 
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
@@ -136,6 +145,9 @@ namespace Game.Module.InGame
                     case BuffKind.SwitchShield:    SwitchShieldSeconds += e.Value / 100f; break;
                     case BuffKind.BurnSpread:      BurnSpreads = true; break;
                     case BuffKind.FocusedSoul:     FocusPerStack += e.Value / 100f; break;
+                    case BuffKind.FieldDuration:   FieldExtraSeconds += e.Value / 10f; break;
+                    case BuffKind.SlowFieldEdge:   SlowFieldEdgeDamage += e.Value; break;
+                    case BuffKind.FreezeRune:      MinesFreeze = true; break;
                 }
             }
         }

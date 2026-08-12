@@ -52,6 +52,14 @@ namespace Game.Character
         BurnSpread,
         /// <summary>같은 적을 연속으로 때리면 피해 +n% (최대 3단계) (정본 BUF_U04 Focused Soul)</summary>
         FocusedSoul,
+
+        // ── 장판이 생기면서 살아난 종류 ────────────────────────────
+        /// <summary>장판 지속시간 +n/10 초 (정본 BUF_A02 Persistent Field)</summary>
+        FieldDuration,
+        /// <summary>둔화 장판 가장자리가 초당 n 피해 (정본 BUF_T03 Cold Geometry)</summary>
+        SlowFieldEdge,
+        /// <summary>지뢰가 빙결 룬이 된다 (정본 BUF_S04 Mine Alchemy)</summary>
+        FreezeRune,
     }
 
     /// <summary>

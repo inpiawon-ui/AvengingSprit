@@ -323,9 +323,9 @@ MonoBehaviour:
     _nameKr: "\uCC28\uAC00\uC6B4 \uAE30\uD558"
     _description: "\uB454\uD654 \uC7A5\uD310 \uAC00\uC7A5\uC790\uB9AC\uAC00 \uC9C0\uC18D
       \uD53C\uD574"
-    _kind: 9
-    _value: 0
-    _stackable: 1
+    _kind: 20
+    _value: 8
+    _stackable: 0
     _colorHex: '#7ED8F0'
     _scope: 0
     _tag: 0
@@ -335,7 +335,7 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: blood_debt
     _nameKr: "\uD53C\uC758 \uBD80\uCC44"
     _description: "\uD761\uD608 \uCD08\uACFC\uBD84\uC774 \uACE0\uC2A4\uD2B8 \uCCB4\uB825\uC73C\uB85C"
@@ -438,8 +438,8 @@ MonoBehaviour:
   - _buffKey: mine_alchemy
     _nameKr: "\uC9C0\uB8B0 \uC5F0\uAE08\uC220"
     _description: "\uC9C0\uB8B0\uAC00 \uBE59\uACB0 \uB8EC\uC73C\uB85C \uBC14\uB010\uB2E4"
-    _kind: 9
-    _value: 0
+    _kind: 21
+    _value: 1
     _stackable: 0
     _colorHex: '#7ED8F0'
     _scope: 0
@@ -450,7 +450,7 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 2
     _weight: 0.9
-    _implemented: 0
+    _implemented: 1
   - _buffKey: curse_inferno
     _nameKr: "\uC800\uC8FC \uD654\uC5FC"
     _description: "\uC800\uC8FC \uD68C\uB85C\uAC00 \uB124\uC774\uD31C \uAE30\uB465\uC73C\uB85C"
@@ -501,10 +501,10 @@ MonoBehaviour:
     _implemented: 0
   - _buffKey: persistent_field
     _nameKr: "\uC9C0\uC18D\uD558\uB294 \uC7A5\uD310"
-    _description: "\uC7A5\uD310 \uC9C0\uC18D +2\uCD08"
-    _kind: 2
-    _value: 0
-    _stackable: 1
+    _description: "\uC7A5\uD310\uC774 2\uCD08 \uB354 \uB0A8\uB294\uB2E4"
+    _kind: 19
+    _value: 20
+    _stackable: 0
     _colorHex: '#4AA8E8'
     _scope: 0
     _tag: 0
@@ -514,7 +514,7 @@ MonoBehaviour:
     _pool: AttackStyle
     _fromChapter: 2
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: return_path
     _nameKr: "\uADC0\uD658 \uACBD\uB85C"
     _description: "\uB418\uB3CC\uC544\uC624\uB294 \uD0C4\uC774 50% \uD53C\uD574"
