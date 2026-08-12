@@ -89,7 +89,7 @@ MonoBehaviour:
     _canonShotCount: 1
     _canonHostRange: 0
     _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
+    _canonHostMoveSpeed: 4.8
     _canonHostShotSpeed: 0
     _actorOnly: 0
     _spriteKey: 
@@ -173,7 +173,7 @@ MonoBehaviour:
     _canonShotCount: 1
     _canonHostRange: 0
     _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
+    _canonHostMoveSpeed: 4.8
     _canonHostShotSpeed: 0
     _actorOnly: 0
     _spriteKey: 
@@ -467,7 +467,7 @@ MonoBehaviour:
     _canonShotCount: 1
     _canonHostRange: 0
     _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
+    _canonHostMoveSpeed: 4.6
     _canonHostShotSpeed: 0
     _actorOnly: 0
     _spriteKey: 

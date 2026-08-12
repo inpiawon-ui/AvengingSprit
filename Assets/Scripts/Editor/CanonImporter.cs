@@ -626,29 +626,34 @@ namespace Game.EditorTools
                     // 내가 탔을 때의 값 — 정본이 이 몸에 호스트 프로필을 준 경우만
                     var hostId = S(row, enF, "HostID");
                     if (!string.IsNullOrEmpty(hostId) && hostId != "None"
-                        && byOwner.TryGetValue($"HOST:{hostId}", out var hr)
-                        && SameReachClass(e, S(hr, atF, "AttackMode")))
+                        && byOwner.TryGetValue($"HOST:{hostId}", out var hr))
                     {
-                        SetField(e, "_canonHostRange", F(hr, atF, "Range"));
-                        SetField(e, "_canonHostInterval", F(hr, atF, "Interval"));
+                        // 이동속도는 근접/원거리와 상관이 없다. 프로필이 안 맞아도 이건 쓴다 —
+                        // 안 쓰면 적 걸음(1.0~2.5m/s)으로 조종하게 되어 다른 몸의 절반도 못 간다.
                         SetField(e, "_canonHostMoveSpeed", F(hr, atF, "MoveSpeed"));
 
-                        // 탄 수는 내가 탔을 때만 정본을 따른다. 적은 정본이 전부 1 발이고,
-                        // 우리 쪽 확산(폭력배 5 발 등)은 그 몸의 정체성이라 지운다면 그림이 죽는다.
-                        if (shots.TryGetValue(hostId, out var hp))
+                        if (SameReachClass(e, S(hr, atF, "AttackMode")))
                         {
-                            SetField(e, "_canonHostShotSpeed", F(hp, prF, "Speed"));
-                            int n = (int)F(hp, prF, "Count");
-                            if (n > 0) SetField(e, "_shotCount", n);
+                            SetField(e, "_canonHostRange", F(hr, atF, "Range"));
+                            SetField(e, "_canonHostInterval", F(hr, atF, "Interval"));
+
+                            // 탄 수는 내가 탔을 때만 정본을 따른다. 적은 정본이 전부 1 발이고,
+                            // 우리 쪽 확산(폭력배 5 발 등)은 그 몸의 정체성이라 지운다면 그림이 죽는다.
+                            if (shots.TryGetValue(hostId, out var hp))
+                            {
+                                SetField(e, "_canonHostShotSpeed", F(hp, prF, "Speed"));
+                                int n = (int)F(hp, prF, "Count");
+                                if (n > 0) SetField(e, "_shotCount", n);
+                            }
                         }
-                    }
-                    else
-                    {
-                        // 안 맞는 프로필이 예전 실행 때 들어가 있을 수 있다. 지워야 자기 값으로 돌아간다.
-                        SetField(e, "_canonHostRange", 0f);
-                        SetField(e, "_canonHostInterval", 0f);
-                        SetField(e, "_canonHostMoveSpeed", 0f);
-                        SetField(e, "_canonHostShotSpeed", 0f);
+                        else
+                        {
+                            // 격이 안 맞는 프로필이 예전 실행 때 들어가 있을 수 있다.
+                            // 지워야 그 배우 자신의 교전값으로 돌아간다.
+                            SetField(e, "_canonHostRange", 0f);
+                            SetField(e, "_canonHostInterval", 0f);
+                            SetField(e, "_canonHostShotSpeed", 0f);
+                        }
                     }
                 }
                 else if (elites.TryGetValue(id, out var er))

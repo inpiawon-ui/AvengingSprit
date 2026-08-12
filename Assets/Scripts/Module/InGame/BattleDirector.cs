@@ -1609,10 +1609,12 @@ namespace Game.Module.InGame
             => e == null ? 10 : e.HasCanon ? e.CanonAtk
                                            : Mathf.RoundToInt(_config.HostAtk(e.Atk) * e.DamageMul);
 
+        // 이동속도만은 교전 프로필이 안 맞아도 호스트 값을 쓴다 — 근접이냐 원거리냐와
+        // 상관없는 값이라, 적 걸음으로 조종하게 두면 그 몸만 못 쓰게 된다.
         private float HostSpeedOf(HostEntry e)
             => e == null ? 180f
-             : e.HasCanonHost ? e.CanonHostMoveSpeed * _pxPerMeter
-             : e.HasCanon     ? e.CanonMoveSpeed * _pxPerMeter
+             : e.CanonHostMoveSpeed > 0f ? e.CanonHostMoveSpeed * _pxPerMeter
+             : e.HasCanon                ? e.CanonMoveSpeed * _pxPerMeter
              : _config.HostSpeed(e.Spd);
 
         // 호스트 프로필이 없으면 그 배우가 적일 때 쓰던 값을 그대로 쓴다.
