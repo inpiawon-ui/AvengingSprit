@@ -117,6 +117,20 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
+        /// 적 탄을 **내 탄으로 돌린다** (슬러거 그랜드 슬램).
+        /// 방향을 뒤집고 주인을 바꾼다 — 지우는 것과 달리 화면의 탄이 그대로 자산이 된다.
+        /// </summary>
+        public void TurnFriendly(float damageMul)
+        {
+            _fromPlayer = true;
+            _dir = -_dir;
+            _damage = Mathf.Max(1, Mathf.RoundToInt(_damage * damageMul));
+            _alreadyHit.Clear();
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+        }
+
+        /// <summary>
         /// 벽에 튕긴다. 남은 횟수가 없으면 false — 부르는 쪽이 없앤다.
         /// <paramref name="normal"/> 은 부딪힌 면의 바깥 방향이다.
         ///

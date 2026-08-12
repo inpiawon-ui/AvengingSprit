@@ -593,9 +593,17 @@ namespace Game.Module.InGame
         /// 바라보는 방향을 정한다. 8방향으로 반올림해 다섯 장 + 반전으로 표현한다.
         /// 방향이 안 바뀌면 아무것도 하지 않는다 — 매 프레임 스프라이트를 갈면 낭비다.
         /// </summary>
+        /// <summary>
+        /// 지금 바라보는 방향(단위 벡터). 얼티밋처럼 "앞쪽" 을 써야 하는 연출이 쓴다.
+        /// 방향 스프라이트가 8칸이라 정확한 각도가 아니라 **보이는 대로의 방향**이다 —
+        /// 그림과 어긋나면 등 뒤로 불을 뿜는 그림이 된다.
+        /// </summary>
+        public Vector2 Facing { get; private set; } = Vector2.down;
+
         public void SetFacing(Vector2 dir)
         {
             if (_frames[FrameIdle] == null || dir.sqrMagnitude < 0.0001f) return;
+            Facing = dir.normalized;
 
             // 화면 좌표계라 위쪽이 +y 다. 오른쪽(→)을 0 도로 두고 8칸으로 나눈다.
             float deg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;

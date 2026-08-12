@@ -1167,6 +1167,7 @@ namespace Game.Module.InGame
             TickSynergy(dt);
             TickDeploy(dt);
             TickDeployables(dt);
+            TickUltimate(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -1740,11 +1741,21 @@ namespace Game.Module.InGame
             }
         }
 
-        private void FireFan(Unit from, Vector2 at, int count, float spanDeg, int damage)
+        /// <summary>
+        /// 부채꼴로 흩뿌린다. 보스 패턴과 플레이어 얼티밋이 함께 쓴다.
+        ///
+        /// ⚠ <paramref name="fromPlayer"/> 를 반드시 넘긴다. 이 값이 틀리면 **내가 쏜 탄이
+        ///    나를 때린다** — 부채꼴의 시작점이 곧 내 자리라 16발이 그 자리에서 전부
+        ///    나에게 꽂힌다. 실제로 얼티밋을 붙이다가 한 번 그렇게 만들었다.
+        /// </summary>
+        private void FireFan(Unit from, Vector2 at, int count, float spanDeg, int damage,
+                             bool fromPlayer = false)
         {
-            // 보스 탄은 **화면 끝까지 나가야 한다.** 수명이 짧으면 중간에 사라져
-            // 보스에게서 멀찍이 떨어진 곳이 안전지대가 되고, 탄막을 피할 이유가 없어진다.
-            float speed = _config.ShotSpeedEnemy;
+            // 탄은 **화면 끝까지 나가야 한다.** 수명이 짧으면 중간에 사라져
+            // 멀찍이 떨어진 곳이 안전지대가 되고, 탄막을 피할 이유가 없어진다.
+            float speed = fromPlayer
+                ? _config.ShotSpeedPlayer * _buffs.ShotSpeedMul
+                : _config.ShotSpeedEnemy;
             float reach = _roomSize.magnitude;
             float life = reach / Mathf.Max(1f, speed) + 0.25f;
 
@@ -1755,8 +1766,10 @@ namespace Game.Module.InGame
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(from));
                 shot.Fire(from.Position, at, speed, damage,
-                          false, null, _config.ShotSize * 1.15f, ShotBossColor,
-                          life, angleOffsetDeg: off);
+                          fromPlayer, null, _config.ShotSize * 1.15f,
+                          fromPlayer ? ShotPlayerColor : ShotBossColor,
+                          life, angleOffsetDeg: off,
+                          bounces: fromPlayer ? _buffs.Bounces : 0);
             }
         }
 
@@ -3041,21 +3054,199 @@ namespace Game.Module.InGame
             PublishHp();
         }
 
+        // ── 얼티밋 ────────────────────────────────────────────────
+        //
+        // 지금까지는 **21종이 전부 같은 전체 광역**이었다. 얼티밋은 그 몸을 고른
+        // 이유가 가장 크게 드러나는 자리인데, 다 같으면 몸이 아니라 게이지를 쓰는 것이 된다.
+        // 정본 11종에 각각 제 행동을 준다 — 전부 이미 있는 시스템(장판·상태이상·
+        // 설치물·도탄·무적) 위에 세웠다.
+
+        private string _ultKey;          // 지금 도는 지속형 얼티밋
+        private float _ultTimer;
+        private float _ultTick;
+
+        private const float UltRegenInterval = 0.5f;
+
         public void TryUltimate()
         {
             if (!_running || _ultimateCharge < _config.UltimateChargeSeconds) return;
-            _ultimateCharge = 0f;
+            var me = Avatar;
+            if (me == null) return;
 
-            // 화면 전체 광역. 오토어택 게임이라 위치를 고르는 조작을 넣지 않는다.
-            for (int i = _enemies.Count - 1; i >= 0; i--)
+            _ultimateCharge = 0f;
+            int dmg = _config.UltimateDamage;
+            string key = _host?.Profile?.UltimateKey;
+
+            switch (key)
+            {
+                // 광각 확산 + 경직. 정면을 쓸어버리는 대신 등 뒤는 그대로 열려 있다.
+                case "tommy_barrage":
+                    FireFan(me, me.Position + me.Facing * 400f, 16, 150f, dmg / 3, fromPlayer: true);
+                    foreach (var e in EnemiesInRange(me.Position, 520f)) e.ApplySlow(60, 2.0f);
+                    break;
+
+                // 지속형 — 끝날 때까지 자리를 지키면 이득이 커진다.
+                case "bullet_hell":   BeginUltimate(key, 5f); break;
+                case "laser_storm":   BeginUltimate(key, 4f); break;
+                case "dragon_breath": BeginUltimate(key, 3f); break;
+                case "blood_tornado": BeginUltimate(key, 4f); break;
+
+                // 위상 이탈 — 때리는 것이 아니라 버티는 얼티밋이다.
+                case "astral_form":
+                    BeginUltimate(key, 8f);
+                    _invuln = Mathf.Max(_invuln, 8f);
+                    break;
+
+                // 자동조준 터렛 배치. 설치물이 생겼으니 정본 그대로 나온다.
+                case "system_override":
+                    SpawnDeployable(me.Position + new Vector2(-90f, 0f));
+                    SpawnDeployable(me.Position + new Vector2(90f, 0f));
+                    break;
+
+                // 연속 돌진. 가까운 넷을 차례로 찍고 마지막 일격에 경직을 남긴다.
+                case "rush_combo":  BlinkStrikes(me, 4, dmg, slowLast: true); break;
+
+                // 순간이동 연격 + 무적 프레임.
+                case "shadow_burst":
+                    BlinkStrikes(me, 3, Mathf.RoundToInt(dmg * 1.2f), slowLast: false);
+                    _invuln = Mathf.Max(_invuln, 1.2f);
+                    break;
+
+                // 360도 광역. 보스에게 두 배 — 정본이 못박은 유일한 보스 특효다.
+                case "elemental_nova":
+                {
+                    var list = EnemiesInRange(me.Position, 9999f);
+                    for (int i = 0; i < list.Count; i++)
+                        HitEnemyWith(list[i], list[i].IsBoss ? dmg * 2 : dmg, _host?.Profile);
+                    break;
+                }
+
+                // 모든 적 탄을 3배 피해로 되받아친다.
+                case "grand_slam":
+                {
+                    int n = 0;
+                    for (int i = 0; i < _shots.Count; i++)
+                    {
+                        var sh = _shots[i];
+                        if (!sh.IsActive || sh.FromPlayer) continue;
+                        sh.TurnFriendly(3f);
+                        n++;
+                    }
+                    // 되받을 탄이 없으면 아무 일도 안 일어난다 — 그때는 근처를 후려친다
+                    if (n == 0)
+                    {
+                        var list = EnemiesInRange(me.Position, 420f);
+                        for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, _host?.Profile);
+                    }
+                    break;
+                }
+
+                default:
+                {
+                    var list = EnemiesInRange(me.Position, 9999f);
+                    for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, _host?.Profile);
+                    break;
+                }
+            }
+        }
+
+        private void BeginUltimate(string key, float seconds)
+        {
+            _ultKey = key;
+            _ultTimer = seconds;
+            _ultTick = 0f;
+        }
+
+        /// <summary>지속형 얼티밋을 흘린다.</summary>
+        private void TickUltimate(float dt)
+        {
+            if (_ultTimer <= 0f) return;
+            _ultTimer -= dt;
+            var me = Avatar;
+            if (me == null) { _ultTimer = 0f; return; }
+
+            _ultTick -= dt;
+            if (_ultTick > 0f) return;
+
+            int dmg = _config.UltimateDamage;
+            switch (_ultKey)
+            {
+                case "bullet_hell":
+                    _ultTick = 0.22f;
+                    FireFan(me, me.Position + me.Facing * 400f, 10, 360f, dmg / 4, fromPlayer: true);
+                    break;
+
+                case "laser_storm":
+                    _ultTick = 0.18f;
+                    FireFan(me, me.Position + me.Facing * 400f, 3, 14f, dmg / 3, fromPlayer: true);
+                    break;
+
+                case "dragon_breath":
+                    // 원뿔로 불장판을 세 겹 깐다. 화상은 장판이 알아서 건다.
+                    _ultTick = 0.35f;
+                    for (int i = -1; i <= 1; i++)
+                    {
+                        var dir = (Vector2)(Quaternion.Euler(0f, 0f, i * 22f) * (Vector3)me.Facing);
+                        SpawnField(me.Position + dir * 190f, 110f * _buffs.AoeMul,
+                                   1.6f, FieldEffect.Burn, Mathf.Max(1, dmg / 8), fromPlayer: true);
+                    }
+                    break;
+
+                case "blood_tornado":
+                {
+                    _ultTick = 0.4f;
+                    var list = EnemiesInRange(me.Position, 260f * _buffs.AoeMul);
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        HitEnemyWith(list[i], Mathf.Max(1, dmg / 5), _host?.Profile);
+                        Leech(Mathf.Max(1, dmg / 10));
+                    }
+                    break;
+                }
+
+                case "astral_form":
+                    _ultTick = UltRegenInterval;
+                    if (_host != null)
+                    {
+                        _host.Heal(Mathf.Max(1, _host.HpMax / 40));
+                        PublishHp();
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>가까운 적을 차례로 찍으며 순간이동한다.</summary>
+        private void BlinkStrikes(Unit me, int count, int damage, bool slowLast)
+        {
+            for (int n = 0; n < count; n++)
+            {
+                var target = NearestEnemy(me.Position, 9999f);
+                if (target == null) return;
+                var dir = (me.Position - target.Position).normalized;
+                if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
+                me.Position = target.Position + dir * 70f;
+                me.SetFacing(target.Position - me.Position);
+                me.PlayAttack();
+                if (n == count - 1 && slowLast) target.ApplySlow(70, 2.0f);
+                HitEnemyWith(target, damage, _host?.Profile);
+            }
+        }
+
+        /// <summary>반경 안의 살아 있는 적. 순회 중 죽어도 안전하도록 버퍼에 담아 준다.</summary>
+        private readonly List<Unit> _rangeBuffer = new();
+
+        private List<Unit> EnemiesInRange(Vector2 at, float radius)
+        {
+            _rangeBuffer.Clear();
+            float r2 = radius * radius;
+            for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null) continue;
-                ShowDamage(e.Position, _config.UltimateDamage, toEnemy: true);
-                if (e.TakeDamage(_config.UltimateDamage)) KillEnemy(e);
-                else if (e.IsBoss)
-                    _bus.Publish(new BossHpChangedEvent { BossHp = e.Hp, BossHpMax = e.HpMax });
+                if (e == null || !e.IsAlive || e.IsDying) continue;
+                if ((e.Position - at).sqrMagnitude > r2) continue;
+                _rangeBuffer.Add(e);
             }
+            return _rangeBuffer;
         }
 
         private void OnRoomCleared()
