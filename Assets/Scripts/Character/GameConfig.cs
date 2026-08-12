@@ -55,6 +55,12 @@ namespace Game.Character
         /// </summary>
         [SerializeField] private float _possessZoom = 1.12f;
 
+        /// <summary>
+        /// 빙의 시작 순간 영혼이 얼마나 부푸는가. 몸에서 빠져나오는 것이 보여야 해서
+        /// 한 번 커졌다가 몸으로 빨려 들어가며 작아진다.
+        /// </summary>
+        [SerializeField] private float _possessGhostSwell = 1.6f;
+
         [SerializeField] private float _possessInvulnSeconds = 0.85f;
 
         [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
@@ -202,6 +208,7 @@ namespace Game.Character
         public float PossessInvulnSeconds => _possessInvulnSeconds;
         public float PossessChannelSeconds => _possessChannelSeconds;
         public float PossessZoom => Mathf.Max(1f, _possessZoom);
+        public float PossessGhostSwell => Mathf.Max(1f, _possessGhostSwell);
         public float PossessRange => _possessRange;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 

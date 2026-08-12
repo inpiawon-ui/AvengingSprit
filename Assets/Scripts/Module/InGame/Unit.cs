@@ -592,9 +592,32 @@ namespace Game.Module.InGame
             return _deathTimer >= Die1Seconds + DeathFadeSeconds;
         }
 
+        /// <summary>
+        /// 방향·프레임 체계를 통째로 무시하고 이 한 장만 그린다.
+        /// 빙의 연출처럼 **방향이 없는 동작**에 쓴다 — null 을 넣으면 원래대로 돌아간다.
+        /// </summary>
+        public void SetSpriteOverride(Sprite s)
+        {
+            _override = s;
+            if (_body == null) return;
+            if (s != null)
+            {
+                _body.sprite = s;
+                // 반전이 걸려 있으면 연출 그림까지 뒤집힌다. 여기서 풀어 준다.
+                var sc = _body.transform.localScale;
+                _body.transform.localScale = new Vector3(Mathf.Abs(sc.x), sc.y, sc.z);
+                return;
+            }
+            _shownFrame = -1;   // 다음 Apply 가 반드시 다시 그리게 한다
+            Apply();
+        }
+
+        private Sprite _override;
+
         /// <summary>현재 (프레임 × 방향) 을 화면에 반영한다. 바뀐 게 없으면 아무것도 하지 않는다.</summary>
         private void Apply()
         {
+            if (_override != null) return;   // 연출 그림이 쥐고 있는 동안은 건드리지 않는다
             if (_body == null || _facingIndex < 0 || _frames[FrameIdle] == null) return;
 
             // 그 동작의 그림이 없으면 idle 로 대신한다 — 없는 채로 두면 빈 칸이 된다.

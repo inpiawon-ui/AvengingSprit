@@ -1072,7 +1072,11 @@ namespace Game.Module.InGame
             if (_channelBody != null) { Destroy(_channelBody.gameObject); _channelBody = null; }
             _channel = 0f;
             _channelEntry = null;
-            if (_ghost != null) _ghost.transform.localScale = Vector3.one;
+            if (_ghost != null)
+            {
+                _ghost.transform.localScale = Vector3.one;
+                _ghost.SetSpriteOverride(null);
+            }
 
             _boss = null;
             _wave = 1;
@@ -3366,6 +3370,16 @@ namespace Game.Module.InGame
         /// <summary>빙의가 들어가는 중인가. 이 동안은 조작을 받지 않는다.</summary>
         public bool IsChanneling => _channel > 0f;
 
+        /// <summary>축소 그림이 없을 때 스케일로 줄이는 끝값.</summary>
+        private const float ShrinkEnd = 0.15f;
+
+        /// <summary>
+        /// 지금 진행도에 맞는 영혼 축소 그림. 아직 안 들어왔으면 null —
+        /// 그때는 부르는 쪽이 스케일로 줄인다.
+        /// </summary>
+        private Sprite ShrinkFrame(float t)
+            => UnitGet("ghost", t < 0.45f ? "shrink1" : t < 0.75f ? "shrink2" : "shrink3");
+
         private void TickPossessChannel(float dt)
         {
             if (_channel <= 0f) return;
@@ -3375,15 +3389,35 @@ namespace Game.Module.InGame
 
             if (_ghost != null)
             {
-                // 몸 쪽으로 빨려 들어가며 작아진다
                 _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, t * t);
-                _ghost.transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.15f, t);
+
+                // 앞의 1/4 동안 몸에서 빠져나오며 부풀고, 나머지에서 빨려 들어가며 줄어든다.
+                // 처음부터 줄기만 하면 "나왔다"가 안 보이고 그냥 사라지는 것으로 읽힌다.
+                float swell = _config.PossessGhostSwell;
+                float scale = t < 0.25f
+                    ? Mathf.Lerp(1f, swell, t / 0.25f)
+                    : Mathf.Lerp(swell, ShrinkEnd, (t - 0.25f) / 0.75f);
+
+                // 정본 축소 그림(3장)이 있으면 그것으로 줄인다 — 스케일로 줄이면
+                // 픽셀이 뭉개져 도트가 아니라 흐릿한 얼룩이 된다.
+                var frame = ShrinkFrame(t);
+                if (frame != null)
+                {
+                    _ghost.SetSpriteOverride(frame);
+                    // 그림이 크기를 이미 담고 있으므로 부푸는 것만 남기고 축소는 그림에 맡긴다
+                    scale = t < 0.25f ? scale : swell;
+                }
+                _ghost.transform.localScale = Vector3.one * scale;
             }
 
             if (_channel > 0f) return;
 
             _channel = 0f;
-            if (_ghost != null) _ghost.transform.localScale = Vector3.one;
+            if (_ghost != null)
+            {
+                _ghost.transform.localScale = Vector3.one;
+                _ghost.SetSpriteOverride(null);
+            }
 
             // 이제야 옛 몸을 치운다. 그 자리에 내 몸이 선다.
             if (_channelBody != null) Destroy(_channelBody.gameObject);
