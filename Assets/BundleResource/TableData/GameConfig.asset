@@ -44,8 +44,9 @@ MonoBehaviour:
   _hostAtkBase: 6
   _hostSpeedPerPoint: 2.4
   _hostSpeedBase: 140
-  _hostAttackRange: 265
+  _hostAttackRange: 900
   _hostAttackInterval: 0.55
+  _meleeAttackRange: 92
   _enemyHpScale: 0.55
   _enemyAtkScale: 0.7
   _enemySpeedScale: 0.62
