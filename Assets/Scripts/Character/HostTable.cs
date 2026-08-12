@@ -137,8 +137,12 @@ namespace Game.Character
         [Tooltip("정본 enemies.MaxHP. 0 이면 정본에 없는 창작 배우라 표시 스탯 공식으로 되돌아간다.")]
         [SerializeField] private int _canonHp;
         [SerializeField] private int _canonAtk;
-        [Tooltip("m/s. 픽셀 변환은 방 크기에서 나온 ppm 으로 배틀에서 한다")]
+        [Tooltip("m/s. 정본 MoveSpeed — 아직 안 싸울 때의 걸음. 픽셀 변환은 배틀의 ppm 이 한다")]
         [SerializeField] private float _canonMoveSpeed;
+        [Tooltip("m/s. 정본 EngageSpeed — 싸우러 다가올 때의 속도. " +
+                 "정본이 두 열을 따로 준다. MoveSpeed(1.0~2.5)만 쓰면 내가 3.4~5.2 라 " +
+                 "적이 영영 못 따라온다 — 근접은 한 번도 닿지 못한다.")]
+        [SerializeField] private float _canonEngageSpeed;
         [Tooltip("m. 정본 attacks 의 AP_E### 사거리 — 적으로 나올 때")]
         [SerializeField] private float _canonRange;
         [SerializeField] private float _canonInterval;
@@ -148,6 +152,12 @@ namespace Game.Character
                  "내가 탔을 때의 탄 수는 ShotCount 쪽이다. 한 칸을 같이 쓰면 " +
                  "적 갱스터까지 3발을 쏜다.")]
         [SerializeField] private int _canonShotCount;
+        [Tooltip("초. 정본 aiProfiles 의 Telegraph — 때리기 전에 자세를 잡는 시간. " +
+                 "이게 없으면 예고 없이 맞아서 피할 방법이 없다. 정본 NO_OFFSCREEN_TELEGRAPH 와 같은 취지다.")]
+        [SerializeField] private float _canonTelegraph;
+        [Tooltip("정본 aiProfiles 의 MaxConcurrent — 이 종류가 **동시에** 때릴 수 있는 최대 마릿수. " +
+                 "제한이 없으면 방 안 전원이 같은 순간에 쏴서 근접으로는 들어갈 틈이 없다.")]
+        [SerializeField] private int _canonMaxConcurrent;
 
         [Header("정본 실수치 — 내가 이 몸을 탔을 때 (attacks AP_H##)")]
         [Tooltip("정본은 같은 배우라도 적일 때와 내가 탔을 때 교전값을 따로 준다. " +
@@ -221,12 +231,17 @@ namespace Game.Character
         public int CanonHp => _canonHp;
         public int CanonAtk => _canonAtk;
         public float CanonMoveSpeed => _canonMoveSpeed;
+        /// <summary>싸우러 올 때의 속도. 없으면(엘리트) MoveSpeed 가 이미 그 값이다.</summary>
+        public float CanonEngageSpeed => _canonEngageSpeed > 0f ? _canonEngageSpeed : _canonMoveSpeed;
         public float CanonRange => _canonRange;
         public float CanonInterval => _canonInterval;
         public float CanonHostRange => _canonHostRange;
         public float CanonHostInterval => _canonHostInterval;
         public float CanonHostMoveSpeed => _canonHostMoveSpeed;
         public float CanonShotSpeed => _canonShotSpeed;
+        public float CanonTelegraph => _canonTelegraph;
+        /// <summary>동시에 때릴 수 있는 마릿수. 0 이면 제한 없음.</summary>
+        public int CanonMaxConcurrent => _canonMaxConcurrent;
         /// <summary>적으로 나올 때의 탄 수. 0 이면 정본에 없다는 뜻이라 ShotCount 로 되돌아간다.</summary>
         public int EnemyShotCount => _canonShotCount > 0 ? _canonShotCount : ShotCount;
         public float CanonHostShotSpeed => _canonHostShotSpeed;

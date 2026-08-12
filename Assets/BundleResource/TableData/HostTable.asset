@@ -41,10 +41,13 @@ MonoBehaviour:
     _canonHp: 90
     _canonAtk: 11
     _canonMoveSpeed: 1.2
+    _canonEngageSpeed: 3.8
     _canonRange: 6.5
     _canonInterval: 1.45
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.45
+    _canonMaxConcurrent: 4
     _canonHostRange: 6.8
     _canonHostInterval: 1.15
     _canonHostMoveSpeed: 4.1
@@ -83,10 +86,13 @@ MonoBehaviour:
     _canonHp: 120
     _canonAtk: 9
     _canonMoveSpeed: 1.5
+    _canonEngageSpeed: 4.2
     _canonRange: 5.5
     _canonInterval: 0.38
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.5
+    _canonMaxConcurrent: 3
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 4.8
@@ -125,10 +131,13 @@ MonoBehaviour:
     _canonHp: 105
     _canonAtk: 13
     _canonMoveSpeed: 1
+    _canonEngageSpeed: 4.8
     _canonRange: 1.2
     _canonInterval: 1.15
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.35
+    _canonMaxConcurrent: 4
     _canonHostRange: 1.45
     _canonHostInterval: 0.78
     _canonHostMoveSpeed: 4.8
@@ -167,10 +176,13 @@ MonoBehaviour:
     _canonHp: 145
     _canonAtk: 15
     _canonMoveSpeed: 1.7
+    _canonEngageSpeed: 4.9
     _canonRange: 1.5
     _canonInterval: 1.35
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.4
+    _canonMaxConcurrent: 2
     _canonHostRange: 1.45
     _canonHostInterval: 0.78
     _canonHostMoveSpeed: 4.8
@@ -209,10 +221,13 @@ MonoBehaviour:
     _canonHp: 85
     _canonAtk: 10
     _canonMoveSpeed: 1.4
+    _canonEngageSpeed: 0
     _canonRange: 6.2
     _canonInterval: 1.2
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 6.4
     _canonHostInterval: 1
     _canonHostMoveSpeed: 4.6
@@ -251,10 +266,13 @@ MonoBehaviour:
     _canonHp: 95
     _canonAtk: 7
     _canonMoveSpeed: 1.6
+    _canonEngageSpeed: 0
     _canonRange: 5.2
     _canonInterval: 0.42
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 5.6
     _canonHostInterval: 0.42
     _canonHostMoveSpeed: 4.5
@@ -293,10 +311,13 @@ MonoBehaviour:
     _canonHp: 145
     _canonAtk: 9
     _canonMoveSpeed: 1.3
+    _canonEngageSpeed: 0
     _canonRange: 6.8
     _canonInterval: 0.45
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 7
     _canonHostInterval: 0.45
     _canonHostMoveSpeed: 3.5
@@ -335,10 +356,13 @@ MonoBehaviour:
     _canonHp: 135
     _canonAtk: 10
     _canonMoveSpeed: 1.6
+    _canonEngageSpeed: 3.8
     _canonRange: 7
     _canonInterval: 0.7
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.45
+    _canonMaxConcurrent: 3
     _canonHostRange: 6.8
     _canonHostInterval: 1.15
     _canonHostMoveSpeed: 4.1
@@ -377,10 +401,13 @@ MonoBehaviour:
     _canonHp: 135
     _canonAtk: 18
     _canonMoveSpeed: 1.9
+    _canonEngageSpeed: 3.5
     _canonRange: 6.8
     _canonInterval: 2.4
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.8
+    _canonMaxConcurrent: 2
     _canonHostRange: 5.8
     _canonHostInterval: 1.65
     _canonHostMoveSpeed: 3.7
@@ -419,10 +446,13 @@ MonoBehaviour:
     _canonHp: 170
     _canonAtk: 16
     _canonMoveSpeed: 1.8
+    _canonEngageSpeed: 3.2
     _canonRange: 3
     _canonInterval: 1.8
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.65
+    _canonMaxConcurrent: 2
     _canonHostRange: 3.6
     _canonHostInterval: 1.85
     _canonHostMoveSpeed: 3.4
@@ -461,10 +491,13 @@ MonoBehaviour:
     _canonHp: 260
     _canonAtk: 21
     _canonMoveSpeed: 2.5
+    _canonEngageSpeed: 3.2
     _canonRange: 4.2
     _canonInterval: 2
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.8
+    _canonMaxConcurrent: 1
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 4.6
@@ -503,10 +536,13 @@ MonoBehaviour:
     _canonHp: 175
     _canonAtk: 15
     _canonMoveSpeed: 1.7
+    _canonEngageSpeed: 0
     _canonRange: 3.2
     _canonInterval: 1.85
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 3.4
     _canonHostInterval: 1.7
     _canonHostMoveSpeed: 3.5
@@ -545,10 +581,13 @@ MonoBehaviour:
     _canonHp: 125
     _canonAtk: 8
     _canonMoveSpeed: 1.4
+    _canonEngageSpeed: 3.2
     _canonRange: 1.3
     _canonInterval: 1.25
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.4
+    _canonMaxConcurrent: 2
     _canonHostRange: 1.8
     _canonHostInterval: 1.05
     _canonHostMoveSpeed: 4
@@ -587,10 +626,13 @@ MonoBehaviour:
     _canonHp: 145
     _canonAtk: 15
     _canonMoveSpeed: 1.8
+    _canonEngageSpeed: 3.2
     _canonRange: 6.2
     _canonInterval: 2
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.75
+    _canonMaxConcurrent: 2
     _canonHostRange: 6.3
     _canonHostInterval: 1.72
     _canonHostMoveSpeed: 3.5
@@ -629,10 +671,13 @@ MonoBehaviour:
     _canonHp: 165
     _canonAtk: 17
     _canonMoveSpeed: 2
+    _canonEngageSpeed: 3.4
     _canonRange: 7
     _canonInterval: 2.1
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.65
+    _canonMaxConcurrent: 2
     _canonHostRange: 5.8
     _canonHostInterval: 1.9
     _canonHostMoveSpeed: 3.4
@@ -671,10 +716,13 @@ MonoBehaviour:
     _canonHp: 110
     _canonAtk: 19
     _canonMoveSpeed: 1.7
+    _canonEngageSpeed: 5.2
     _canonRange: 5
     _canonInterval: 1.2
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.3
+    _canonMaxConcurrent: 2
     _canonHostRange: 5.5
     _canonHostInterval: 0.92
     _canonHostMoveSpeed: 5.2
@@ -713,10 +761,13 @@ MonoBehaviour:
     _canonHp: 120
     _canonAtk: 17
     _canonMoveSpeed: 1.8
+    _canonEngageSpeed: 0
     _canonRange: 1.8
     _canonInterval: 0.95
     _canonShotSpeed: 0
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 1.9
     _canonHostInterval: 0.85
     _canonHostMoveSpeed: 5
@@ -755,10 +806,13 @@ MonoBehaviour:
     _canonHp: 220
     _canonAtk: 17
     _canonMoveSpeed: 2.2
+    _canonEngageSpeed: 3.4
     _canonRange: 7.5
     _canonInterval: 1.9
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.7
+    _canonMaxConcurrent: 2
     _canonHostRange: 6.5
     _canonHostInterval: 1.35
     _canonHostMoveSpeed: 3.6
@@ -797,10 +851,13 @@ MonoBehaviour:
     _canonHp: 130
     _canonAtk: 14
     _canonMoveSpeed: 1.5
+    _canonEngageSpeed: 4.4
     _canonRange: 6.5
     _canonInterval: 1.45
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.45
+    _canonMaxConcurrent: 3
     _canonHostRange: 6.7
     _canonHostInterval: 1.55
     _canonHostMoveSpeed: 4.4
@@ -839,10 +896,13 @@ MonoBehaviour:
     _canonHp: 130
     _canonAtk: 12
     _canonMoveSpeed: 1.7
+    _canonEngageSpeed: 0
     _canonRange: 6
     _canonInterval: 1.85
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0
+    _canonMaxConcurrent: 0
     _canonHostRange: 6.2
     _canonHostInterval: 1.6
     _canonHostMoveSpeed: 3.8
@@ -881,10 +941,13 @@ MonoBehaviour:
     _canonHp: 180
     _canonAtk: 14
     _canonMoveSpeed: 1.9
+    _canonEngageSpeed: 4
     _canonRange: 6
     _canonInterval: 1.55
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.5
+    _canonMaxConcurrent: 2
     _canonHostRange: 6
     _canonHostInterval: 1.28
     _canonHostMoveSpeed: 4.2
@@ -923,10 +986,13 @@ MonoBehaviour:
     _canonHp: 155
     _canonAtk: 18
     _canonMoveSpeed: 2.1
+    _canonEngageSpeed: 3.6
     _canonRange: 8
     _canonInterval: 2.2
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.9
+    _canonMaxConcurrent: 2
     _canonHostRange: 5.8
     _canonHostInterval: 1.65
     _canonHostMoveSpeed: 3.7
@@ -965,10 +1031,13 @@ MonoBehaviour:
     _canonHp: 190
     _canonAtk: 13
     _canonMoveSpeed: 1.9
+    _canonEngageSpeed: 3
     _canonRange: 1.5
     _canonInterval: 1.3
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.45
+    _canonMaxConcurrent: 2
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 0
@@ -1007,10 +1076,13 @@ MonoBehaviour:
     _canonHp: 65
     _canonAtk: 8
     _canonMoveSpeed: 1.1
+    _canonEngageSpeed: 4.6
     _canonRange: 6
     _canonInterval: 1.6
     _canonShotSpeed: 8.5
     _canonShotCount: 1
+    _canonTelegraph: 0.55
+    _canonMaxConcurrent: 3
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 0
@@ -1049,10 +1121,13 @@ MonoBehaviour:
     _canonHp: 900
     _canonAtk: 18
     _canonMoveSpeed: 4
+    _canonEngageSpeed: 0
     _canonRange: 1.2
     _canonInterval: 1.15
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.9
+    _canonMaxConcurrent: 1
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 0
@@ -1091,10 +1166,13 @@ MonoBehaviour:
     _canonHp: 1350
     _canonAtk: 22
     _canonMoveSpeed: 3.4
+    _canonEngageSpeed: 0
     _canonRange: 1.2
     _canonInterval: 1.15
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.7
+    _canonMaxConcurrent: 1
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 0
@@ -1133,10 +1211,13 @@ MonoBehaviour:
     _canonHp: 1800
     _canonAtk: 25
     _canonMoveSpeed: 3.6
+    _canonEngageSpeed: 0
     _canonRange: 6.2
     _canonInterval: 2
     _canonShotSpeed: 0
     _canonShotCount: 0
+    _canonTelegraph: 0.8
+    _canonMaxConcurrent: 1
     _canonHostRange: 0
     _canonHostInterval: 0
     _canonHostMoveSpeed: 0

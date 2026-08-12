@@ -1202,6 +1202,10 @@ namespace Game.Module.InGame
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             float dt = Time.deltaTime;
 
+            // 빙의가 들어가는 중이면 다른 것은 멈추지 않되 조작만 잠근다 —
+            // 0.35 초 동안 영혼이 몸으로 빨려 들어가는 것을 보여 준다.
+            TickPossessChannel(dt);
+
             TickGhostState(dt);
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
@@ -1357,6 +1361,10 @@ namespace Game.Module.InGame
             me.TickFlash(dt);
             me.TickAnim(dt);
 
+            // 빙의가 들어가는 중에는 조작을 받지 않는다. 안 막으면 조이스틱이
+            // 빨려 들어가는 연출과 서로 자리를 다툰다.
+            if (IsChanneling) return;
+
             // ⚠️ 이것이 없으면 **갇힌다.** `SlideMove` 는 막힌 곳에 "들어가지 않게" 막는
             //    방식이라, 어쩌다 안에 들어간 뒤에는 어느 쪽으로도 못 나온다 —
             //    모든 후보 위치가 똑같이 막힌 것으로 판정되어 제자리를 돌려준다.
@@ -1372,19 +1380,23 @@ namespace Game.Module.InGame
             if (moving)
             {
                 // 막힌 것을 타고 미끄러진다. 밀어 넣고 빼내면 벽에서 캐릭터가 떨린다.
+                var before = me.Position;
                 var p = SlideMove(me, me.Position,
                                   MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt);
                 var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
                 p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
                 p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
                 me.Position = p;
+                var moved = p - before;
 
                 // 걷는 쪽을 바라본다. 아래 `return` 때문에 이동 중에는 조준 쪽
                 // 방향 전환에 도달하지 못하므로, 여기서 돌려 주지 않으면
                 // 이동 중에는 방향이 통째로 멈춘다.
                 // 이동 중 사격이 되는 호스트는 아래에서 조준 방향이 덮어쓴다 —
                 // 겨누는 쪽이 걷는 쪽보다 우선이다.
-                me.SetFacing(MoveInput);
+                // 민 방향이 아니라 **실제로 간 방향**으로 돈다. 벽에 스쳐 미끄러질 때
+                // 민 쪽을 보면 벽을 향해 옆걸음질하는 그림이 된다.
+                me.SetFacing(moved.sqrMagnitude > 0.0001f ? moved : MoveInput);
                 me.SetMoving(true);
 
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
@@ -1519,9 +1531,22 @@ namespace Game.Module.InGame
 
                 if (d > reach)
                 {
+                    e.CancelWindup();   // 사거리 밖으로 밀려났으면 자세를 푼다
                     e.SetState(EnemyState.Approach);
                     e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
                     e.SetMoving(true);
+                }
+                // 자세를 잡는 중 — 아직 안 때린다. 이 틈이 피하거나 파고들 시간이다
+                else if (e.IsWindingUp)
+                {
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Attack);
+                    if (e.TickWindup(dt))
+                    {
+                        PerformAttack(e, me, false);
+                        if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
+                            e.BeginReposition(PickRepositionSpot(e, me));
+                    }
                 }
                 else if (e.IsRepositioning)
                 {
@@ -1535,11 +1560,20 @@ namespace Game.Module.InGame
                 {
                     e.SetMoving(false);
                     e.SetState(EnemyState.Attack);
-                    PerformAttack(e, me, false);
 
-                    // 원거리만 옮긴다. 근접은 붙어 있는 것이 일이다
-                    if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
-                        e.BeginReposition(PickRepositionSpot(e, me));
+                    float windup = e.Profile?.CanonTelegraph ?? 0f;
+                    if (windup > 0f && CanStartAttack(e))
+                    {
+                        e.BeginWindup(windup);
+                    }
+                    else if (windup <= 0f)
+                    {
+                        // 정본에 예고가 없는 배우는 예전처럼 바로 때린다
+                        PerformAttack(e, me, false);
+                        if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
+                            e.BeginReposition(PickRepositionSpot(e, me));
+                    }
+                    // 동시 공격 수가 찼으면 이번 차례는 거른다 — 다음 간격에 다시 본다
                 }
                 else
                 {
@@ -1552,6 +1586,32 @@ namespace Game.Module.InGame
         }
 
         // ── 적 행동 거리 ──────────────────────────────────────────
+
+        /// <summary>
+        /// 지금 때리기 시작해도 되는가.
+        ///
+        /// 정본은 배우마다 **동시에 때릴 수 있는 마릿수**(MaxConcurrent 1~4)를 정해 둔다.
+        /// 제한이 없으면 방 안 전원이 같은 순간에 쏴서, 근접으로는 들어갈 틈이 아예 없다.
+        /// 순서를 정하지 않고 먼저 준비를 시작한 쪽이 자리를 차지한다 — 나머지는 다음 간격에
+        /// 다시 본다. 그래야 사격이 한 덩어리가 아니라 물결처럼 나뉜다.
+        ///
+        /// 마릿수가 한 자릿수라 매번 세도 된다. 목록을 따로 들고 있으면 죽거나 빙의로
+        /// 편이 바뀔 때마다 어긋난다.
+        /// </summary>
+        private bool CanStartAttack(Unit e)
+        {
+            int cap = e.Profile?.CanonMaxConcurrent ?? 0;
+            if (cap <= 0) return true;
+
+            int busy = 0;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var o = _enemies[i];
+                if (o == e || o == null || !o.IsAlive) continue;
+                if (o.Key == e.Key && o.IsWindingUp && ++busy >= cap) return false;
+            }
+            return true;
+        }
 
         /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
         private const int ShotsBeforeMove = 2;
@@ -1590,8 +1650,11 @@ namespace Game.Module.InGame
             => e.HasCanon ? e.CanonAtk
                           : Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul);
 
+        // 적은 늘 싸우러 오는 중이다 — 정본의 EngageSpeed 를 쓴다.
+        // MoveSpeed(1.0~2.5m/s)는 교전 전의 걸음이라, 그걸 쓰면 내(3.4~5.2)가 뒤로 걷기만 해도
+        // 영영 안 잡힌다. 근접 적은 한 번도 닿지 못하고 과녁이 된다.
         private float EnemySpeedOf(HostEntry e)
-            => e.HasCanon ? e.CanonMoveSpeed * _pxPerMeter : _config.EnemySpeed(e.Spd);
+            => e.HasCanon ? e.CanonEngageSpeed * _pxPerMeter : _config.EnemySpeed(e.Spd);
 
         private float EnemyRangeOf(HostEntry e)
             => e.HasCanon ? e.CanonRange * _pxPerMeter : _config.EnemyAttackRange * e.RangeMul;
@@ -3206,9 +3269,46 @@ namespace Game.Module.InGame
         /// 쿨다운이 없으면 적을 만날 때마다 갈아타는 것이 정답이 된다. 둘 다 있어야
         /// 유지와 교체가 같이 성립한다.
         /// </summary>
+        // ── 빙의 연출 ────────────────────────────────────────────
+        //
+        // 정본 `PossessionChannel` 0.35 초. 원작도 영혼이 **작아지면서 몸으로 빨려 들어간다**.
+        // 즉시 갈아타면 몸을 빼앗았다는 감각이 없다 — 화면이 그냥 바뀔 뿐이다.
+
+        private float _channel;                 // 남은 시간
+        private float _channelTotal;
+        private Vector2 _channelFrom, _channelTo;
+        private Game.Character.HostEntry _channelEntry;
+        private string _channelKey, _channelName;
+
+        /// <summary>빙의가 들어가는 중인가. 이 동안은 조작을 받지 않는다.</summary>
+        public bool IsChanneling => _channel > 0f;
+
+        private void TickPossessChannel(float dt)
+        {
+            if (_channel <= 0f) return;
+
+            _channel -= dt;
+            float t = _channelTotal <= 0f ? 1f : 1f - Mathf.Clamp01(_channel / _channelTotal);
+
+            if (_ghost != null)
+            {
+                // 몸 쪽으로 빨려 들어가며 작아진다
+                _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, t * t);
+                _ghost.transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.15f, t);
+            }
+
+            if (_channel > 0f) return;
+
+            _channel = 0f;
+            if (_ghost != null) _ghost.transform.localScale = Vector3.one;
+            EnterHost(_channelEntry, _channelKey, _channelName, _channelTo,
+                      _config.HostStartHpPercent);
+            _channelEntry = null;
+        }
+
         public void TryPossess()
         {
-            if (!_running || _possessTarget == null || _awaitingBuff) return;
+            if (!_running || _possessTarget == null || _awaitingBuff || IsChanneling) return;
 
             bool tactical = _host != null;
             if (tactical && !CanSwitch) return;
@@ -3242,7 +3342,22 @@ namespace Game.Module.InGame
                 });
             }
 
-            EnterHost(entry, target.Key, target.DisplayName, pos, _config.HostStartHpPercent);
+            // 몸에 들어가는 것은 채널이 끝난 뒤다. 지금은 영혼이 빨려 들어가기 시작한다.
+            //
+            // 전술 빙의였다면 위에서 이미 옛 몸을 놓아주었으므로 지금 나는 영혼이다.
+            // 처음 빙의라면 원래 영혼이었다 — 어느 쪽이든 여기서 영혼을 켜고 날려 보낸다.
+            _ghost.gameObject.SetActive(true);
+            _ghost.transform.localScale = Vector3.one;
+
+            _channelFrom = _ghost.Position;
+            _channelTo = pos;
+            _channelEntry = entry;
+            _channelKey = target.Key;
+            _channelName = target.DisplayName;
+            _channelTotal = _channel = _config.PossessChannelSeconds;
+
+            // 채널 시간이 0 이면 예전처럼 즉시 들어간다
+            if (_channel <= 0f) TickPossessChannel(0f);
         }
 
         /// <summary>

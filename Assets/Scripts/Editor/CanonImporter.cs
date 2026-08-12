@@ -550,6 +550,11 @@ namespace Game.EditorTools
             var shots = new Dictionary<string, JToken[]>();
             foreach (var r in Rows(json["projectiles"])) shots[S(r, prF, "OwnerID")] = r;
 
+            // 예고 시간·동시 공격 수는 aiProfiles 에 있다
+            var aiF = Fields(schema, "aiProfiles");
+            var ai = new Dictionary<string, JToken[]>();
+            foreach (var r in Rows(json["aiProfiles"])) ai[S(r, aiF, "EnemyID")] = r;
+
             var list = new List<Game.Character.HostEntry>(
                 (Game.Character.HostEntry[])GetField(table, "_entries"));
 
@@ -614,6 +619,12 @@ namespace Game.EditorTools
                     SetField(e, "_canonHp", (int)F(row, enF, "MaxHP"));
                     SetField(e, "_canonAtk", (int)F(row, enF, "AttackDamage"));
                     SetField(e, "_canonMoveSpeed", F(row, enF, "MoveSpeed"));
+                    SetField(e, "_canonEngageSpeed", F(row, enF, "EngageSpeed"));
+                    if (ai.TryGetValue(id, out var ar))
+                    {
+                        SetField(e, "_canonTelegraph", TelegraphSeconds(S(ar, aiF, "Telegraph")));
+                        SetField(e, "_canonMaxConcurrent", (int)F(ar, aiF, "MaxConcurrent"));
+                    }
                     // 사거리·간격의 권위는 attacks 다. enemies 에도 같은 열이 있지만
                     // 교전 프로필이 있는 쪽이 조준·탄속까지 함께 정한다.
                     SetField(e, "_canonRange", F(row, enF, "AttackRange"));
@@ -689,6 +700,11 @@ namespace Game.EditorTools
                     SetField(e, "_canonAtk", (int)F(er, elF, "AttackDamage"));
                     SetField(e, "_canonMoveSpeed", F(er, elF, "MoveSpeed"));
                     possess = S(er, elF, "PossessionType");
+
+                    // 엘리트도 예고가 있다 — elites 표의 Telegraph 칸이다.
+                    // 한 방에 한 마리뿐이라 동시 공격 수는 1 로 둔다.
+                    SetField(e, "_canonTelegraph", TelegraphSeconds(S(er, elF, "Telegraph")));
+                    SetField(e, "_canonMaxConcurrent", 1);
 
                     // 엘리트는 정본에 교전 프로필이 없어 자동 판정이 안 걸린다.
                     // 여기서 안 정하면 기본값(근접)에 원거리 사거리가 붙는다.

@@ -50,6 +50,15 @@ namespace Game.Module.InGame
         private RectTransform _knob;
         private Vector2 _knobHome;
         private Vector2 _dpadHome;
+
+        /// <summary>
+        /// 손가락을 처음 댄 지점(부모 로컬). **방향은 여기서부터 잰다.**
+        ///
+        /// 패드 그림은 화면 밖으로 나가지 않게 잘라내므로, 화면 가장자리를 누르면
+        /// 패드 중심이 손가락과 어긋난다. 그 중심에서 방향을 재면 아래쪽(엄지 자리)을
+        /// 눌렀을 때 위로 밀어도 아래로 읽힌다 — 손가락 자리에서 재야 맞는다.
+        /// </summary>
+        private Vector2 _padOrigin;
         private Image _ultimateCooldown;
         private Image _possessButtonImage;
         private Image _possessCooldown;
@@ -240,6 +249,9 @@ namespace Game.Module.InGame
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     parent, e.position, e.pressEventCamera, out var local)) return;
 
+            // 방향의 기준점은 자르기 전의 **손가락 자리**다
+            _padOrigin = local;
+
             var ps = parent.rect.size;
             var pp = parent.pivot;
             // 앵커 (0,1)(부모 좌상단)의 부모 로컬 좌표
@@ -247,29 +259,33 @@ namespace Game.Module.InGame
 
             var size = _dpad.rect.size;
             var pivot = _dpad.pivot;
-            // 패드 피벗이 어디든 중심이 터치 지점에 오게 한다
-            var pivotPos = local + new Vector2((pivot.x - 0.5f) * size.x,
-                                               (pivot.y - 0.5f) * size.y);
 
-            var pos = pivotPos - anchor;
-            pos.x = Mathf.Clamp(pos.x, PadMargin, ps.x - size.x - PadMargin);
-            pos.y = Mathf.Clamp(pos.y, -(ps.y - size.y - PadMargin), -PadMargin);
-            _dpad.anchoredPosition = pos;
+            // ⚠️ 자르기는 **중심** 기준으로 한다. 예전에는 피벗 위치를 좌상단 기준
+            //    범위에 밀어 넣어서, 피벗이 가운데인 패드는 반 칸씩 밀린 자리에 놓였다.
+            var half = size * 0.5f;
+            var c = local;
+            c.x = Mathf.Clamp(c.x, -pp.x * ps.x + half.x + PadMargin,
+                                   (1f - pp.x) * ps.x - half.x - PadMargin);
+            c.y = Mathf.Clamp(c.y, -pp.y * ps.y + half.y + PadMargin,
+                                   (1f - pp.y) * ps.y - half.y - PadMargin);
+
+            // 패드 피벗이 어디든 중심이 c 에 오게 한다
+            var pivotPos = c + new Vector2((pivot.x - 0.5f) * size.x,
+                                           (pivot.y - 0.5f) * size.y);
+            _dpad.anchoredPosition = pivotPos - anchor;
         }
 
         private void OnPadDrag(PointerEventData e)
         {
+            var parent = _dpad.parent as RectTransform;
+            if (parent == null) return;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    _dpad, e.position, e.pressEventCamera, out var local)) return;
+                    parent, e.position, e.pressEventCamera, out var local)) return;
 
-            // ⚠️ 패드 피벗은 좌상단이다. 로컬 원점이 중심이 아니므로 중심을 빼줘야 한다.
-            //    빼지 않으면 어디를 눌러도 우하단 최대 속도가 된다.
-            var size = _dpad.rect.size;
-            var pivot = _dpad.pivot;
-            var center = new Vector2((0.5f - pivot.x) * size.x, (0.5f - pivot.y) * size.y);
-            float radius = size.x * KnobTravelRatio;
-
-            var dir = Vector2.ClampMagnitude((local - center) / radius, 1f);
+            // 손가락을 처음 댄 자리에서 잰다. 패드 그림은 잘려서 옮겨졌을 수 있으므로
+            // 그림의 중심을 기준으로 삼으면 방향이 어긋난다.
+            float radius = _dpad.rect.size.x * KnobTravelRatio;
+            var dir = Vector2.ClampMagnitude((local - _padOrigin) / radius, 1f);
             if (_knob != null) _knob.anchoredPosition = _knobHome + dir * radius;
 
             // 데드존 — 미세한 흔들림으로 이동 판정이 서면 사격이 영영 재개되지 않는다

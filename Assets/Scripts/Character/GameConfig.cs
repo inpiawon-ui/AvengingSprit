@@ -40,6 +40,13 @@ namespace Game.Character
         [SerializeField] private int _protectSlowPercent = 50;
 
         [Tooltip("빙의 직후 무적 시간. 기획서의 빙의 무적(0.35)과 호스트 진입 무적(0.5)을 이어 붙인 값.")]
+        /// <summary>
+        /// 빙의가 몸에 닿기까지 걸리는 시간(정본 PossessionChannel 0.35 초).
+        /// 즉시 갈아타면 몸을 빼앗았다는 감각이 없다 — 원작도 영혼이 작아지며 빨려 들어간다.
+        /// 0 으로 두면 예전처럼 즉시 들어간다.
+        /// </summary>
+        [SerializeField] private float _possessChannelSeconds = 0.35f;
+
         [SerializeField] private float _possessInvulnSeconds = 0.85f;
 
         [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
@@ -185,6 +192,7 @@ namespace Game.Character
         public float GhostProtectSeconds => _ghostProtectSeconds;
         public int ProtectSlowPercent => _protectSlowPercent;
         public float PossessInvulnSeconds => _possessInvulnSeconds;
+        public float PossessChannelSeconds => _possessChannelSeconds;
         public float PossessRange => _possessRange;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 

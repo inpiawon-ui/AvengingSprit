@@ -665,6 +665,41 @@ namespace Game.Module.InGame
             return true;
         }
 
+        // ── 공격 예고 ────────────────────────────────────────────
+        //
+        // 정본은 적마다 예고 시간을 준다(0.3~0.9초). 이게 없으면 사거리에 들어선
+        // 순간 맞아서 **피할 방법이 없다.** 근접으로 파고들 틈이 생기지 않는다.
+
+        private float _windupTimer;
+
+        /// <summary>지금 자세를 잡는 중인가. 이 동안은 안 쏘고, 노란 틴트로 보인다.</summary>
+        public bool IsWindingUp => _windupTimer > 0f;
+
+        public void BeginWindup(float seconds)
+        {
+            _windupTimer = Mathf.Max(0.01f, seconds);
+            SetTelegraph(true);
+        }
+
+        /// <summary>예고를 진행시킨다. 이번 프레임에 끝났으면 true — 그때 때린다.</summary>
+        public bool TickWindup(float dt)
+        {
+            if (_windupTimer <= 0f) return false;
+            _windupTimer -= dt;
+            if (_windupTimer > 0f) return false;
+            _windupTimer = 0f;
+            SetTelegraph(false);
+            return true;
+        }
+
+        /// <summary>예고를 중간에 접는다 — 대상이 사라지거나 사거리 밖으로 나갔을 때.</summary>
+        public void CancelWindup()
+        {
+            if (_windupTimer <= 0f) return;
+            _windupTimer = 0f;
+            SetTelegraph(false);
+        }
+
         /// <summary>피격 점멸. 스프라이트를 건드리지 않고 틴트만 흔든다.</summary>
         public void TickFlash(float dt)
         {
