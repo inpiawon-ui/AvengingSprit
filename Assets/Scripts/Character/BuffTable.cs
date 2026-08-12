@@ -60,6 +60,12 @@ namespace Game.Character
         SlowFieldEdge,
         /// <summary>지뢰가 빙결 룬이 된다 (정본 BUF_S04 Mine Alchemy)</summary>
         FreezeRune,
+
+        // ── 도탄이 생기면서 살아난 종류 ────────────────────────────
+        /// <summary>탄이 벽에서 n 번 튕긴다 (정본 BUF_T05 Bank Shot 의 바탕)</summary>
+        Ricochet,
+        /// <summary>튕긴 뒤의 탄이 피해 n% 로 때린다 (정본 BUF_A03 Return Path)</summary>
+        ReturnDamage,
     }
 
     /// <summary>

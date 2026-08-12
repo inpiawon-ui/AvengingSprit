@@ -2069,6 +2069,17 @@ namespace Game.Module.InGame
             return 1f + stack * _buffs.FocusPerStack;
         }
 
+        /// <summary>
+        /// 튕긴 뒤의 탄이 주는 피해. 정본 BUF_A03 은 50% 로 못박았고,
+        /// 버프가 없으면 튕긴 탄은 **피해가 없다** — 그냥 다 때리면 벽이 공짜 이득이 된다.
+        /// </summary>
+        private int BouncedDamage(Projectile shot, int damage)
+        {
+            if (!shot.HasBounced) return damage;
+            if (_buffs.ReturnDamagePercent <= 0) return 0;
+            return Mathf.Max(1, damage * _buffs.ReturnDamagePercent / 100);
+        }
+
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
             victim.IsAggro = true;
@@ -2126,7 +2137,12 @@ namespace Game.Module.InGame
                       pierce: (p != null && p.Kind == AttackKind.Pierce) || (fromPlayer && _buffs.Pierce),
                       slowPercent: (p?.SlowPercent ?? 0) + (fromPlayer ? _buffs.SlowPercent : 0),
                       lifestealPercent: (p?.LifestealPercent ?? 0) + (fromPlayer ? _buffs.LifestealPercent : 0),
-                      angleOffsetDeg: angleOffsetDeg);
+                      angleOffsetDeg: angleOffsetDeg,
+                      // 슬러거는 탄을 되받아치는 것이 정체성이다(`ReflectsShots`).
+                      // 그 몸에 들어가면 쏘는 탄도 튕긴다 — 버프 없이도 한 번은 튕긴다.
+                      bounces: fromPlayer
+                          ? _buffs.Bounces + ((p != null && p.ReflectsShots) ? 1 : 0)
+                          : 0);
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
@@ -2180,6 +2196,38 @@ namespace Game.Module.InGame
             return p;
         }
 
+        /// <summary>
+        /// 방 네 벽에서 튕긴다. 튕겼으면 true.
+        /// 벽 안쪽으로 한 칸 밀어 넣어 같은 프레임에 두 번 튕기는 것을 막는다.
+        /// </summary>
+        private bool BounceOffWalls(Projectile p)
+        {
+            var q = p.Position;
+            Vector2 n = Vector2.zero;
+            if (q.x <= 0f) n = Vector2.right;
+            else if (q.x >= _roomSize.x) n = Vector2.left;
+            else if (q.y >= 0f) n = Vector2.down;
+            else if (q.y <= -_roomSize.y) n = Vector2.up;
+            if (n == Vector2.zero) return false;
+            return p.Bounce(n);
+        }
+
+        /// <summary>부딪힌 엄폐물에서 되튕길 방향. 얕게 겹친 축으로 튕겨야 자연스럽다.</summary>
+        private Vector2 BounceNormalFromCover(Vector2 at)
+        {
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (!o.BlocksShot || !o.Bounds.Contains(at)) continue;
+                float dx = at.x - o.Bounds.center.x;
+                float dy = at.y - o.Bounds.center.y;
+                float ox = o.Bounds.width * 0.5f - Mathf.Abs(dx);
+                float oy = o.Bounds.height * 0.5f - Mathf.Abs(dy);
+                return ox < oy ? new Vector2(Mathf.Sign(dx), 0f) : new Vector2(0f, Mathf.Sign(dy));
+            }
+            return Vector2.up;
+        }
+
         private void TickShots(float dt)
         {
             var me = Avatar;
@@ -2190,9 +2238,18 @@ namespace Game.Module.InGame
 
                 if (!p.Tick(dt)) { p.Despawn(); continue; }
 
+                // 방 벽에서 튕긴다. 도탄이 없는 탄은 그냥 밖으로 나가 수명으로 사라진다 —
+                // 벽에서 없애 버리면 화면 끝에서 탄이 뚝 끊겨 어색하다.
+                if (p.BouncesLeft > 0 && !BounceOffWalls(p)) { }
+
                 // 엄폐물에 막힌다. 이게 없으면 기둥이 그림일 뿐이라
                 // 뒤에 숨는 것이 아무 의미가 없다.
-                if (BlockedByCover(p.Position)) { p.Despawn(); continue; }
+                if (BlockedByCover(p.Position))
+                {
+                    // 도탄이 남아 있으면 기둥에서도 튕긴다. 정본 "도탄 벽" 지형지물이
+                    // 이 경로를 쓴다 — 기둥이 막기만 하는 것이 아니라 되돌려 준다.
+                    if (!p.Bounce(BounceNormalFromCover(p.Position))) { p.Despawn(); continue; }
+                }
 
                 if (p.Damage <= 0) continue;   // 근접 타격 섬광 — 수명만 흘려보낸다
 
@@ -2234,8 +2291,11 @@ namespace Game.Module.InGame
             victim.SetState(EnemyState.Hit);
             AddMaintain();
             TryMark(victim);
-            ShowDamage(victim.Position, shot.Damage, toEnemy: true);
-            bool dead = victim.TakeDamage(shot.Damage);
+            int dmg = BouncedDamage(shot, shot.Damage);
+            if (dmg <= 0) return;   // 버프 없이 튕긴 탄은 스쳐 지나간다
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.CurseDamageMul));
+            ShowDamage(victim.Position, dmg, toEnemy: true);
+            bool dead = victim.TakeDamage(dmg);
             if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
             if (shot.LifestealPercent > 0 && _host != null)
                 _host.Heal(Mathf.Max(1, shot.Damage * shot.LifestealPercent / 100));

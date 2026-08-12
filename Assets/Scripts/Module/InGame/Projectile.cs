@@ -34,6 +34,12 @@ namespace Game.Module.InGame
         public Vector2 Position => _rect.anchoredPosition;
 
         public bool Pierce { get; private set; }
+
+        /// <summary>남은 도탄 횟수. 0 이면 벽에 닿는 순간 사라진다.</summary>
+        public int BouncesLeft { get; private set; }
+
+        /// <summary>도탄을 한 번이라도 했는가 (정본 BUF_T05 뱅크 샷의 조건).</summary>
+        public bool HasBounced { get; private set; }
         public int SlowPercent { get; private set; }
         public int LifestealPercent { get; private set; }
 
@@ -64,9 +70,11 @@ namespace Game.Module.InGame
         public void Fire(Vector2 from, Vector2 to, float speed, int damage,
                          bool fromPlayer, Unit target, float size, Color color, float life,
                          bool pierce = false, int slowPercent = 0, int lifestealPercent = 0,
-                         float angleOffsetDeg = 0f)
+                         float angleOffsetDeg = 0f, int bounces = 0)
         {
             Pierce = pierce;
+            BouncesLeft = bounces;
+            HasBounced = false;
             SlowPercent = slowPercent;
             LifestealPercent = lifestealPercent;
             _alreadyHit.Clear();
@@ -106,6 +114,25 @@ namespace Game.Module.InGame
             _rect.anchoredPosition += _dir * _speed * dt;
             _life -= dt;
             return _life > 0f;
+        }
+
+        /// <summary>
+        /// 벽에 튕긴다. 남은 횟수가 없으면 false — 부르는 쪽이 없앤다.
+        /// <paramref name="normal"/> 은 부딪힌 면의 바깥 방향이다.
+        ///
+        /// 튕긴 뒤 **맞은 목록을 비운다.** 안 그러면 되돌아온 탄이 방금 지나친 적을
+        /// 그냥 통과한다 — 도탄의 재미는 왔던 길을 다시 훑는 데 있다.
+        /// </summary>
+        public bool Bounce(Vector2 normal)
+        {
+            if (BouncesLeft <= 0) return false;
+            BouncesLeft--;
+            HasBounced = true;
+            _dir = Vector2.Reflect(_dir, normal).normalized;
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+            _alreadyHit.Clear();
+            return true;
         }
     }
 }

@@ -58,6 +58,12 @@ namespace Game.Module.InGame
 
         /// <summary>지뢰가 빙결 룬이 된다 (정본 BUF_S04)</summary>
         public bool MinesFreeze { get; private set; }
+
+        /// <summary>탄이 벽에서 튕기는 횟수 (정본 BUF_T05)</summary>
+        public int Bounces { get; private set; }
+
+        /// <summary>튕긴 탄의 피해 비율 % (정본 BUF_A03). 0 이면 이 버프가 없다</summary>
+        public int ReturnDamagePercent { get; private set; }
         public bool Pierce { get; private set; }
 
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
@@ -148,6 +154,8 @@ namespace Game.Module.InGame
                     case BuffKind.FieldDuration:   FieldExtraSeconds += e.Value / 10f; break;
                     case BuffKind.SlowFieldEdge:   SlowFieldEdgeDamage += e.Value; break;
                     case BuffKind.FreezeRune:      MinesFreeze = true; break;
+                    case BuffKind.Ricochet:        Bounces += e.Value; break;
+                    case BuffKind.ReturnDamage:    ReturnDamagePercent = Mathf.Max(ReturnDamagePercent, e.Value); break;
                 }
             }
         }
