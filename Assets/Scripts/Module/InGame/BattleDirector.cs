@@ -1003,7 +1003,10 @@ namespace Game.Module.InGame
                            canon ? _canonRoom.BossMoveSpeed * _pxPerMeter
                                  : _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
                            _config.BossAttackRange, _config.BossAttackInterval,
-                           new Vector2(160f, 160f), isBoss: true);
+                           // 보스 그림은 256×256 캔버스다(닿는 선 y=232). 160 상자에 넣으면
+                           // 캔버스 여백까지 함께 줄어 보스가 잡몹보다 작아진다.
+                           // 캔버스 크기를 그대로 쓴다 — 방 폭 720 의 약 1/3 이다.
+                           new Vector2(256f, 256f), isBoss: true);
                 boss.Position = canon ? ToPixels(_canonRoom.BossAt)
                                       : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
                 _enemies.Add(boss);
@@ -1282,6 +1285,13 @@ namespace Game.Module.InGame
             if (me == null) return;
             me.TickFlash(dt);
             me.TickAnim(dt);
+
+            // ⚠️ 이것이 없으면 **갇힌다.** `SlideMove` 는 막힌 곳에 "들어가지 않게" 막는
+            //    방식이라, 어쩌다 안에 들어간 뒤에는 어느 쪽으로도 못 나온다 —
+            //    모든 후보 위치가 똑같이 막힌 것으로 판정되어 제자리를 돌려준다.
+            //    적과 소환물에는 이 구제책이 걸려 있었는데 플레이어만 빠져 있었다.
+            //    빙의 교체·밀림·방 진입 스폰으로 겹치면 그 판이 끝난다.
+            ResolveObstacles(me);
 
             // ⚠️ 궁수의 전설 규칙 — **움직이는 동안에는 쏘지 않는다.**
             //    이동과 공격이 배타적이어야 "자리를 잡을까 딜을 넣을까"의 긴장이 생긴다.

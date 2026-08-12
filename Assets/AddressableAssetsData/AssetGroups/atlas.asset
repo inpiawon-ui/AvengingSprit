@@ -75,6 +75,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42fcb383c1f987a4eacd90f3a013ea0a
+    m_Address: atlas/unit_demolisher
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4865145c909e3544da6c952c5d2c48be
+    m_Address: atlas/unit_robot_snakes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 504922eb1f982224a9a4e049d7be2072
     m_Address: atlas/unit_dragoon
     m_ReadOnly: 0
@@ -89,6 +101,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6106939e511c4a348ad87ba2134c7c08
     m_Address: atlas/unit_boss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6851c326f528c0e479b96a6594b1a5df
+    m_Address: atlas/unit_python
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
