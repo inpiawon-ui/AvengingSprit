@@ -41,11 +41,19 @@ namespace Game.Character
 
         [Tooltip("빙의 직후 무적 시간. 기획서의 빙의 무적(0.35)과 호스트 진입 무적(0.5)을 이어 붙인 값.")]
         /// <summary>
-        /// 빙의가 몸에 닿기까지 걸리는 시간(정본 PossessionChannel 0.35 초).
-        /// 즉시 갈아타면 몸을 빼앗았다는 감각이 없다 — 원작도 영혼이 작아지며 빨려 들어간다.
+        /// 빙의가 몸에 닿기까지 걸리는 시간.
+        ///
+        /// 정본은 0.35 초인데 **그 길이로는 빙의한 느낌이 안 난다.** 한 호흡이 필요해서
+        /// 두 배로 늘렸다 — 이 게임의 이름값이 걸린 동작이라 정본보다 연출을 우선한다.
         /// 0 으로 두면 예전처럼 즉시 들어간다.
         /// </summary>
-        [SerializeField] private float _possessChannelSeconds = 0.35f;
+        [SerializeField] private float _possessChannelSeconds = 0.7f;
+
+        /// <summary>
+        /// 빙의하는 동안 화면이 얼마나 당겨지는가. 1 이면 당기지 않는다.
+        /// 크게 주면 방 밖이 보인다 — 방 화면에 마스크가 없다.
+        /// </summary>
+        [SerializeField] private float _possessZoom = 1.12f;
 
         [SerializeField] private float _possessInvulnSeconds = 0.85f;
 
@@ -193,6 +201,7 @@ namespace Game.Character
         public int ProtectSlowPercent => _protectSlowPercent;
         public float PossessInvulnSeconds => _possessInvulnSeconds;
         public float PossessChannelSeconds => _possessChannelSeconds;
+        public float PossessZoom => Mathf.Max(1f, _possessZoom);
         public float PossessRange => _possessRange;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 

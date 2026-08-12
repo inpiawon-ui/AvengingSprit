@@ -734,6 +734,37 @@ namespace Game.Module.InGame
 
             _scroll = Mathf.Lerp(_scroll, WantScroll(a), 1f - Mathf.Exp(-CameraFollow * dt));
             ApplyScroll();
+            TickZoom(dt);
+        }
+
+        // ── 빙의 줌 ──────────────────────────────────────────────
+        //
+        // 빙의하는 동안 화면을 살짝 당긴다. 이 게임의 이름값이 걸린 동작인데
+        // 아무 변화 없이 캐릭터만 바뀌면 그냥 조작 하나로 읽힌다.
+
+        private const float ZoomSpeed = 9f;
+
+        private float _zoom = 1f;
+        private Vector2 _fieldHome;
+        private bool _fieldHomeSet;
+
+        private void TickZoom(float dt)
+        {
+            if (_field == null || _config == null) return;
+            if (!_fieldHomeSet) { _fieldHome = _field.anchoredPosition; _fieldHomeSet = true; }
+
+            float want = IsChanneling ? _config.PossessZoom : 1f;
+            _zoom = Mathf.Lerp(_zoom, want, 1f - Mathf.Exp(-ZoomSpeed * dt));
+            if (Mathf.Abs(_zoom - 1f) < 0.0005f) _zoom = 1f;
+
+            _field.localScale = new Vector3(_zoom, _zoom, 1f);
+
+            // 방 화면의 피벗이 좌상단이라 그냥 키우면 오른쪽 아래로 밀려난다.
+            // 가운데가 제자리에 있도록 되돌린다.
+            float k = _zoom - 1f;
+            var size = _field.rect.size;
+            _field.anchoredPosition = _fieldHome + new Vector2(-k * size.x * 0.5f,
+                                                                k * size.y * 0.5f);
         }
 
         /// <summary>
