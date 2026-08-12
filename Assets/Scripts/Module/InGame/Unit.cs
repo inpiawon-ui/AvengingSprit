@@ -286,9 +286,12 @@ namespace Game.Module.InGame
             {
                 if (!on) return;
                 var size = _rect.sizeDelta;
-                _markView = GetOrCreate("Mark", new Vector2(20f, 20f),
+                _markView = GetOrCreate("Mark", new Vector2(15f, 15f),
                                         new Vector2(size.x * 0.28f, size.y * 0.42f));
                 _markView.color = new Color(1f, 0.35f, 0.30f, 0.95f);
+                // 스프라이트가 없으면 Image 는 정사각형을 그린다. 그대로 두면 표식이
+                // 아니라 그리다 만 흰(붉은) 네모로 보인다. 45° 돌려 마름모로 읽히게 한다.
+                _markView.transform.localRotation = Quaternion.Euler(0f, 0f, 45f);
             }
             if (_markView.gameObject.activeSelf != on) _markView.gameObject.SetActive(on);
         }

@@ -10,14 +10,15 @@ namespace Game.Editor
     /// UI 프리팹의 모든 TMP 컴포넌트에 `FontPolicy` 를 적용한다.
     ///
     /// 확정 사항 9 — 영문·숫자·타이틀은 비트맵 픽셀, 한글 본문은 고딕 벡터.
-    /// 픽셀 폰트 파일이 아직 없으므로 현재는 전부 고딕으로 떨어지고,
-    /// 픽셀 대상만 자간을 벌려 임시로 아케이드 톤을 낸다.
-    /// 폰트를 `PixelFontPath` 에 넣고 다시 실행하면 그때부터 적용된다.
+    ///
+    /// ⚠ 이 도구는 **프리팹의 폰트를 통째로 덮어쓴다.** 픽셀 폰트를 확보하기 전에는
+    ///   `PixelArcade SDF` 라는 없는 파일을 가리키고 있어서, 실행하면 원작 도트
+    ///   폰트를 지우고 전부 고딕으로 되돌려 놓았다. 실제 경로로 고쳤다.
     /// </summary>
     public static class ApplyFonts
     {
         private const string GothicPath = "Assets/BaseResource/Fonts/NotoSansKR SDF.asset";
-        private const string PixelFontPath = "Assets/BaseResource/Fonts/PixelArcade SDF.asset";
+        private const string PixelFontPath = "Assets/BaseResource/Fonts/OriginalPixel SDF.asset";
 
         // ⚠️ 화면을 추가하면 여기에도 넣어야 한다. InGameMainUI 가 빠져 있어서
         //    인게임 글자만 외곽선도 볼드도 없이 남아 있었다 — 실기에서 안 읽혔다.
@@ -55,7 +56,10 @@ namespace Game.Editor
                 foreach (var t in texts)
                 {
                     FontPolicy.Apply(t, pixel, gothic);
-                    ApplyEffect(t, gothic);
+                    // 도트 폰트는 비트맵이라 SDF 머티리얼을 씌우면 글자가 뭉개진다.
+                    // 외곽선·그림자 속성도 비트맵 셰이더에는 아예 없다.
+                    if (t.font == pixel) t.fontSharedMaterial = pixel.material;
+                    else ApplyEffect(t, gothic);
                     if (FontPolicy.RoleOf(t.gameObject.name) == FontRole.Pixel) pixelCount++;
                     total++;
                 }

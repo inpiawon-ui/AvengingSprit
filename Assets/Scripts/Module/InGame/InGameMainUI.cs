@@ -309,7 +309,9 @@ namespace Game.Module.InGame
             if (!string.IsNullOrEmpty(e.BossName)) _bossName = e.BossName;
             if (e.Phase > 0) _bossPhase = e.Phase;
             if (!string.IsNullOrEmpty(e.BossName) || e.Phase > 0)
-                _ui.SetText("BossLabel", _bossPhase > 1 ? $"{_bossName}  PHASE {_bossPhase}" : _bossName);
+                // 도트 폰트는 고정폭이라 기존 고딕보다 훨씬 넓다. `PHASE 2` 를 그대로 붙이면
+                // 이름과 합쳐 273px 칸을 넘어 화면 밖으로 잘린다. 페이즈는 `P2` 로 줄인다.
+                _ui.SetText("BossLabel", _bossPhase > 1 ? $"{_bossName} P{_bossPhase}" : _bossName);
         }
 
         private void OnPossessed(PossessedEvent e)
@@ -346,8 +348,11 @@ namespace Game.Module.InGame
                 RoomKind.Rest => "REST",
                 _ => null,
             };
-            string stage = $"STAGE {e.RoomIndex + 1} / {e.RoomTotal}";
-            _ui.SetText("StageText", kind == null ? stage : $"{kind}  ·  {stage}");
+            // 보스방은 바로 옆에 보스 이름표가 뜬다. `BOSS ·` 를 덧붙이면 같은 말을
+            // 두 번 하면서 칸만 넘친다(도트 폰트가 고정폭이라 여유가 없다).
+            string stage = $"STAGE {e.RoomIndex + 1}/{e.RoomTotal}";
+            _ui.SetText("StageText",
+                        kind == null || e.Kind == RoomKind.Boss ? stage : $"{kind} · {stage}");
         }
 
         private void OnEmergencyHost(EmergencyHostEvent e)

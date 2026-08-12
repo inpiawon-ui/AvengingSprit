@@ -21,11 +21,22 @@ namespace Game.Module.Common.UI
     ///    (`UISpec/_layout_{화면}.json`, 생성기 `Projects/AVSR/_layout_{화면}.py`)이
     ///    단일 출처다. 두 곳에서 같은 속성을 쓰면 실행 순서에 따라 결과가 뒤집힌다.
     ///
-    /// ⚠️ 픽셀 폰트 파일이 아직 없다. 확보 전까지 두 역할 모두 고딕으로 떨어진다.
+    /// 픽셀 폰트는 원작 시트에서 구운 `OriginalPixel SDF` 다. ASCII 만 있고 한글이
+    /// 없어서, 한글은 이 폰트의 대체(fallback)로 걸린 고딕이 받는다.
     /// </summary>
     public static class FontPolicy
     {
-        /// <summary>영문·숫자만 담는 요소. 픽셀 폰트 대상이다.</summary>
+        /// <summary>
+        /// 영문·숫자만 담는 요소. 픽셀 폰트 대상이다.
+        ///
+        /// ⚠️ 이 목록은 **프리팹의 현재 상태와 같아야 한다.** 두 곳이 갈라지면
+        ///    `Tools/Game/Apply Fonts To UI Prefabs` 를 한 번 돌리는 것만으로
+        ///    화면이 조용히 바뀐다. 실제로 한 번 겪었다 — 이 목록이 없는 폰트를
+        ///    가리키고 있어서 도구를 돌리면 전부 고딕으로 되돌아갔다.
+        ///
+        /// 한글이 섞이는 요소는 넣지 않는다(챕터 이름·보스 한글명·"능력치" 등).
+        /// 대체 폰트로 떨어지긴 하지만 한 낱말 안에서 서체가 갈려 보기 나쁘다.
+        /// </summary>
         private static readonly HashSet<string> PixelElements = new()
         {
             // 재화·수치
@@ -33,15 +44,20 @@ namespace Game.Module.Common.UI
             "ProgressText", "StatValueText", "ContinueCostText", "OwnedHostCountText",
             "BattlePassExpText", "DailyLoginDayText", "EventTimerText",
             // 영문 라벨
-            "GhostLabelText", "ChapterNumberText", "ChapterNameText",
-            "BossLabel", "BossNameText", "ProgressLabel", "StatGroupLabel", "StatLabelText",
-            "UltimateLabel", "UltimateNameText", "HostNameEnText",
-            "HostListTitleText", "TapToStartText", "VersionText",
-            "ContinueButtonText",
+            "GhostLabelText", "ChapterNumberText",
+            "BossLabel", "ProgressLabel", "StatLabelText",
+            "UltimateLabel", "HostNameEnText",
+            "HostListTitleText", "TapToStartText", "VersionText", "CopyrightText",
+            "SubtitleText",
             "MissionTabLabel", "AchievementTabLabel", "RankingTabLabel",
             "InventoryTabLabel", "FriendsTabLabel",
             "HostButtonTitleText", "ChapterButtonTitleText", "ShopButtonTitleText",
             "BattlePassTitleText", "BattlePassSeasonText", "EventTitleText", "DailyLoginTitleText",
+            // 인게임 HUD — 전부 영문 라벨과 숫자다
+            "GhostLabel", "GhostHpText", "LevelText",
+            "HostLabel", "HostHpText", "MaintainText",
+            "StageText", "BossHpText", "BuffTitleText",
+            "PossessCooldownText", "PossessCostText",
         };
 
         public static FontRole RoleOf(string elementName)
