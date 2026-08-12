@@ -82,6 +82,12 @@ namespace Game.Character
         BloodDebt,
         /// <summary>확산의 마지막 탄이 피해 +n% (정본 BUF_A01 Last Magazine)</summary>
         LastShot,
+
+        // ── 설치물이 생기면서 살아난 종류 ──────────────────────────
+        /// <summary>포탑 재조준(발사 간격)이 n% 빨라진다 (정본 BUF_T06 Smart Deployment)</summary>
+        DeployRetarget,
+        /// <summary>포탑이 불을 물려받는다 (정본 BUF_S01 Fire Firmware)</summary>
+        DeployFire,
     }
 
     /// <summary>

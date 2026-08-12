@@ -29,6 +29,10 @@ namespace Game.Module.InGame
         ArmoredDash,
         /// <summary>빙결된 적까지 순간이동 처형이 이어진다 (S07)</summary>
         FrozenBlinkChain,
+        /// <summary>포탑이 네이팜을 쏜다 — 쏜 자리에 불장판 (S03)</summary>
+        NapalmTurret,
+        /// <summary>포탑 탄이 벽에서 튕긴다 (S08)</summary>
+        BounceTurret,
     }
 
     /// <summary>
@@ -58,11 +62,9 @@ namespace Game.Module.InGame
     }
 
     /// <summary>
-    /// 정본 SYNERGY 8종 중 **지금 시스템으로 실제 동작하는 6종**.
+    /// 정본 SYNERGY 8종. 전부 실제로 동작한다.
     ///
-    /// 빠진 둘(S03 네이팜 터렛 · S08 도탄 터렛)은 설치물(터렛)이 있어야 한다.
-    /// 설치물이 없는데 표에만 넣으면 "켜졌다고 뜨는데 아무 일도 안 일어나는" 시너지가 된다 —
-    /// 버프에서 이미 같은 실수를 걸러 냈으므로 여기서도 넣지 않는다.
+    /// 설치물이 붙으면서 마지막 둘(S03·S08)까지 들어와 **정본 8종이 전부 산다.**
     /// </summary>
     public static class SynergyTable
     {
@@ -80,6 +82,10 @@ namespace Game.Module.InGame
                 SynergyKind.ArmoredDash,       8f,  "guarded_rush"),
             new("S07", "white_wizard",      "ninja",        SynergyTrigger.OnSwitch,
                 SynergyKind.FrozenBlinkChain,  8f,  "arcane_execution"),
+            new("S03", "robot",             "dragoon",      SynergyTrigger.OnSwitch,
+                SynergyKind.NapalmTurret,     12f,  "fire_firmware"),
+            new("S08", "baseball",          "robot",        SynergyTrigger.OnSwitch,
+                SynergyKind.BounceTurret,     10f,  "bank_shot"),
         };
 
         public static string NameOf(SynergyKind k) => k switch
@@ -90,6 +96,8 @@ namespace Game.Module.InGame
             SynergyKind.FirePillarCircuit => "저주 화염",
             SynergyKind.ArmoredDash       => "수호 돌진",
             SynergyKind.FrozenBlinkChain  => "빙결 연쇄",
+            SynergyKind.NapalmTurret      => "네이팜 터렛",
+            SynergyKind.BounceTurret      => "도탄 터렛",
             _                             => "시너지",
         };
     }

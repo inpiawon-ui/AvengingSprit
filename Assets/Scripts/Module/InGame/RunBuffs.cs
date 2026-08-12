@@ -76,6 +76,12 @@ namespace Game.Module.InGame
 
         /// <summary>확산 마지막 탄의 추가 피해 비율 (정본 BUF_A01)</summary>
         public float LastShotBonus { get; private set; }
+
+        /// <summary>포탑 발사 간격 감소 비율 (정본 BUF_T06)</summary>
+        public float DeployRetargetCut { get; private set; }
+
+        /// <summary>포탑이 불을 물려받는가 (정본 BUF_S01)</summary>
+        public bool DeployablesBurn { get; private set; }
         public bool Pierce { get; private set; }
 
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
@@ -143,6 +149,8 @@ namespace Game.Module.InGame
             FocusPerStack = FieldExtraSeconds = LastShotBonus = 0f;
             SlowFieldEdgeDamage = Bounces = ReturnDamagePercent = 0;
             MarkPayload = BloodDebtPerRoom = 0;
+            DeployRetargetCut = 0f;
+            DeployablesBurn = false;
             AoeMul = 1f;
 
             for (int i = 0; i < _taken.Count; i++)
@@ -186,6 +194,8 @@ namespace Game.Module.InGame
                     case BuffKind.MarkPayload:     MarkPayload += e.Value; break;
                     case BuffKind.BloodDebt:       BloodDebtPerRoom += e.Value; break;
                     case BuffKind.LastShot:        LastShotBonus += v; break;
+                    case BuffKind.DeployRetarget:  DeployRetargetCut = Mathf.Min(0.7f, DeployRetargetCut + v); break;
+                    case BuffKind.DeployFire:      DeployablesBurn = true; break;
                 }
             }
         }

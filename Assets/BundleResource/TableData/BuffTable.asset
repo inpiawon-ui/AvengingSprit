@@ -371,8 +371,8 @@ MonoBehaviour:
   - _buffKey: smart_deployment
     _nameKr: "\uC2A4\uB9C8\uD2B8 \uBC30\uCE58"
     _description: "\uC124\uCE58\uBB3C \uC7AC\uC870\uC900 25% \uBE60\uB974\uAC8C"
-    _kind: 0
-    _value: 0
+    _kind: 29
+    _value: 25
     _stackable: 1
     _colorHex: '#9AA4B4'
     _scope: 0
@@ -383,13 +383,13 @@ MonoBehaviour:
     _pool: Tag
     _fromChapter: 2
     _weight: 0.8
-    _implemented: 0
+    _implemented: 1
   - _buffKey: fire_firmware
     _nameKr: "\uD654\uC5FC \uD38C\uC6E8\uC5B4"
     _description: "\uB85C\uBD07 \uC124\uCE58\uBB3C\uC774 \uD654\uC5FC\xB7\uACFC\uC5F4\uC744
       \uBB3C\uB824\uBC1B\uB294\uB2E4"
-    _kind: 0
-    _value: 0
+    _kind: 30
+    _value: 1
     _stackable: 0
     _colorHex: '#F07828'
     _scope: 0
@@ -400,7 +400,7 @@ MonoBehaviour:
     _pool: Synergy
     _fromChapter: 2
     _weight: 1
-    _implemented: 0
+    _implemented: 1
   - _buffKey: arcane_execution
     _nameKr: "\uBE44\uC804 \uCC98\uD615"
     _description: "\uD654\uC774\uD2B8\uC704\uC800\uB4DC\u2192\uB2CC\uC790: \uBE59\uACB0

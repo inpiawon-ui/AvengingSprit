@@ -958,6 +958,7 @@ namespace Game.Module.InGame
             DespawnExit();
             ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
+            ClearDeployables();   // 포탑도 방을 따라오지 않는다
             _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
             // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
             // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
@@ -1164,6 +1165,8 @@ namespace Game.Module.InGame
             TickShots(dt);
             TickFields(dt);
             TickSynergy(dt);
+            TickDeploy(dt);
+            TickDeployables(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -1936,6 +1939,116 @@ namespace Game.Module.InGame
         private const int MineDamagePerTick = 6;
         private const float SlowFieldRadius = 130f;
         private const float SlowFieldSeconds = 2.5f;
+
+        // ── 설치물(자동 포탑) ──────────────────────────────────────
+        //
+        // 정본에서 마지막까지 남아 있던 구멍. 로봇의 정체성("배치 네트워크")이자
+        // 버프 2종·시너지 2종이 여기 매여 있었다.
+
+        private const int MaxDeployables = 4;
+        private const float DeploySeconds = 8f;
+        private const float DeployRange = 420f;
+        private const float DeployFireInterval = 0.85f;
+        private const float DeployCooldown = 4.5f;
+        private const string DeployHostKey = "robot";
+
+        private readonly List<Deployable> _deployables = new();
+        private float _deployCooldown;
+
+        /// <summary>
+        /// 로봇의 몸일 때만 포탑이 나간다. 쿨다운으로 저절로 깔린다 —
+        /// 버튼을 하나 더 두면 조작이 늘고, 이 게임의 조작은 이동과 사격 둘뿐이다.
+        /// </summary>
+        private void TickDeploy(float dt)
+        {
+            if (_deployCooldown > 0f) _deployCooldown -= dt;
+
+            var me = Avatar;
+            if (me == null || _host == null || _host.Key != DeployHostKey) return;
+            if (_deployCooldown > 0f) return;
+
+            int alive = 0;
+            for (int i = 0; i < _deployables.Count; i++) if (_deployables[i].IsActive) alive++;
+            if (alive >= 2) return;   // 화면이 포탑으로 덮이면 무엇이 적인지 안 보인다
+
+            _deployCooldown = DeployCooldown;
+            SpawnDeployable(me.Position);
+        }
+
+        private void SpawnDeployable(Vector2 at)
+        {
+            Deployable d = null;
+            for (int i = 0; i < _deployables.Count; i++)
+                if (!_deployables[i].IsActive) { d = _deployables[i]; break; }
+
+            if (d == null)
+            {
+                if (_deployables.Count >= MaxDeployables) { d = _deployables[0]; d.Despawn(); }
+                else
+                {
+                    var go = new GameObject("Deployable", typeof(RectTransform));
+                    go.transform.SetParent(_unitLayer, false);
+                    d = go.AddComponent<Deployable>();
+                    d.Init(null, new Vector2(56f, 56f));
+                    _deployables.Add(d);
+                }
+            }
+
+            // 전용 그림이 아직 없다. 로봇을 줄여 쓴다 — 무엇이 놓았는지는 읽힌다.
+            d.SetSprite(UnitGet(DeployHostKey, "s") ?? UnitGet(DeployHostKey));
+
+            // 정본 BUF_T06 스마트 배치 — 재조준이 빨라진다(= 발사 간격이 준다)
+            float interval = DeployFireInterval * (1f - _buffs.DeployRetargetCut);
+            d.Spawn(at, DeploySeconds, DeployRange,
+                    Mathf.RoundToInt(_host.Atk * _buffs.AttackMul * 0.6f),
+                    Mathf.Max(0.25f, interval));
+        }
+
+        private void TickDeployables(float dt)
+        {
+            for (int i = 0; i < _deployables.Count; i++)
+            {
+                var d = _deployables[i];
+                if (!d.IsActive || !d.Tick(dt)) continue;
+
+                var target = NearestEnemy(d.Position, d.Range);
+                if (target == null) continue;
+
+                var shot = RentShot();
+                if (shot == null) continue;
+                shot.SetSprite(GetSprite("shot_pulse") ?? GetSprite("shot"));
+                shot.Fire(d.Position, target.Position, _config.ShotSpeedPlayer * _buffs.ShotSpeedMul, d.Damage,
+                          fromPlayer: true, target, _config.ShotSize, ShotPlayerColor,
+                          _config.ShotLifeSeconds,
+                          // 정본 S08 도탄 터렛 — 포탑 탄도 튕긴다
+                          bounces: SynergyOn(SynergyKind.BounceTurret) ? 1 : 0);
+
+                // 정본 S01/S03 — 로봇 포탑이 불을 물려받는다. 쏜 자리에 불장판이 남는다.
+                if (SynergyOn(SynergyKind.NapalmTurret) || _buffs.DeployablesBurn)
+                    SpawnField(target.Position, 90f * _buffs.AoeMul, 2f,
+                               FieldEffect.Burn, 3, fromPlayer: true);
+            }
+        }
+
+        private Unit NearestEnemy(Vector2 from, float range)
+        {
+            Unit best = null;
+            float bestD = range;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsDying) continue;
+                float d = Vector2.Distance(from, e.Position);
+                if (d > bestD) continue;
+                bestD = d; best = e;
+            }
+            return best;
+        }
+
+        private void ClearDeployables()
+        {
+            for (int i = 0; i < _deployables.Count; i++) _deployables[i]?.Despawn();
+        }
 
         // ── 장판 ──────────────────────────────────────────────────
         //
