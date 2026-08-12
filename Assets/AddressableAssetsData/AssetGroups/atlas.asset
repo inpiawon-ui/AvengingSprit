@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: atlas
   m_GUID: c75b0115ab861994c9299430cfe51ad6
   m_SerializeEntries:
+  - m_GUID: 0374fa318f54f4b43b5b053c36b4962e
+    m_Address: atlas/unit_medium
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 053333da1522ced46a5bd4200340179e
     m_Address: atlas/unit_thug
     m_ReadOnly: 0
@@ -33,14 +39,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 24acb747346710149887b9a5b34207f8
+    m_Address: atlas/unit_hopper
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b5c0417af46f8948902c6db4a79c3cf
+    m_Address: atlas/unit_amazon_elite
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31c71bc3917c5f240aaa8fe349c7c21c
+    m_Address: atlas/unit_commando_mg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 370c9b6577eeda248b408e6b66ea29c9
     m_Address: atlas/lobbymainui
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a1c645d0a949594ea958d3d400d8135
+    m_Address: atlas/unit_ninja_chain
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3e526f6dc68d1d845bd2925a7d95086e
     m_Address: atlas/unit_ninja
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 504922eb1f982224a9a4e049d7be2072
+    m_Address: atlas/unit_dragoon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ef0e524fdbe34149805896e535abf41
+    m_Address: atlas/unit_amazon
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -69,6 +111,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e63d543e9106e54893210be2582fcd2
+    m_Address: atlas/unit_snowwoman
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 97966df8434287d438d0878c93e36919
     m_Address: atlas/unit_baseball
     m_ReadOnly: 0
@@ -77,6 +125,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9a9a09c8fe3a10247910beafb282d3e5
     m_Address: atlas/unit_robot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c05cc5a4b46fead4088deae4e7cf571a
+    m_Address: atlas/unit_commando_grenade
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -99,8 +153,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1f98eb393a72ed43a956f3b487acc18
+    m_Address: atlas/unit_dragon_blue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e392cd2af6417b24696414d46edf0d62
     m_Address: atlas/unit_ghost
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec31de62ef14a894d9348b916185d545
+    m_Address: atlas/unit_hopper_smg
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -113,6 +179,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f008486b76a109f49a60ab1426524c6c
     m_Address: atlas/titlemainui
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1f65579228820742aff466ab8d49e4b
+    m_Address: atlas/unit_commando_laser
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

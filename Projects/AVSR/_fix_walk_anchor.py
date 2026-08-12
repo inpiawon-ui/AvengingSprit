@@ -38,6 +38,11 @@ PLANTED = ['atk1', 'atk2', 'hit']     # 발을 붙이고 하는 동작
 HEAD_BAND = 20
 FOOT_BAND = 6
 ANCHOR = 48
+ELITE_ANCHOR = 64      # 엘리트는 캔버스 128 이라 반전축도 64 다
+
+
+def anchor_of(key):
+    return ELITE_ANCHOR if key.endswith('_elite') else ANCHOR
 DEADZONE = 1      # 1px 이하는 그냥 둔다. 눈에 안 보이는 것까지 옮기면 그림만 상한다
 
 
@@ -95,13 +100,19 @@ def main():
                 p = find(key, name)
                 if p is None:
                     continue
+                # 원본 보관 — 재실행해도 이동이 누적되지 않게 하려는 것이다.
+                #
+                # ⚠ 납품이 갱신되면 **옛 백업을 버려야 한다.** 그러지 않으면 새 그림 위에
+                #    옛 그림을 덮어써서 납품을 통째로 되돌린다. 실제로 샐러맨더 25장이
+                #    구멍 있는 옛 파일로 되돌아갔다. 현재 파일이 백업보다 새로우면
+                #    새 납품이므로 백업을 다시 만든다.
                 raw = os.path.join(bak, name)
-                if not os.path.exists(raw):
-                    shutil.copy2(p, raw)      # 원본 1회 보관 — 재실행해도 누적 이동 없음
+                if not os.path.exists(raw) or os.path.getmtime(p) > os.path.getmtime(raw) + 1:
+                    shutil.copy2(p, raw)
 
                 im = Image.open(raw).convert('RGBA')
                 walk = f in WALK
-                want = ref if walk else ANCHOR
+                want = ref if walk else anchor_of(key)
                 cur, x0, x1 = (head_center if walk else foot_center)(im)
                 dx = int(round(want - cur))
                 label = '머리중심' if walk else '발중심'

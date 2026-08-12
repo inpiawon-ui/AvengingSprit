@@ -16,6 +16,8 @@ from collections import deque
 
 from PIL import Image, ImageDraw
 
+import _orig_map
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,14 +25,22 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 IN = os.path.join(HERE, '_exchange', 'in')
 UNIT = os.path.join(ROOT, 'Assets', 'BaseResource', 'Unit')
 OUT = os.path.join(HERE, '_exchange', 'out', '_verify')
+ORIG = os.path.join(HERE, 'Reference', 'Original')
 
 DIRS = ['s', 'se', 'e', 'ne', 'n']
 FRAMES = ['atk1', 'atk2', 'hit', 'walk1', 'walk2', 'die1', 'die2']
 
+# 엘리트는 한 등급 크다. 규격이 통째로 1.33배다.
 SIZE = 96
 ANCHOR = 48        # 발 중심. 좌우 반전축이라 캔버스 중심이어야 한다
 FOOT_Y = 87        # 발밑
 HEAD_Y = 12        # 머리끝
+ELITE = (128, 64, 118, 16)
+
+
+def spec(key):
+    """(캔버스, 발중심x, 발밑y, 머리끝y)"""
+    return ELITE if key.endswith('_elite') else (SIZE, ANCHOR, FOOT_Y, HEAD_Y)
 FOOT_BAND = 6      # 발 판정 높이. 14줄로 보면 꼬리·망토가 발로 잡힌다
 
 # 허용 편차 — 넘으면 반려
@@ -40,6 +50,15 @@ TOL_HEAD = 3
 TOL_HEAD_WALK = 3  # 걷기는 상하 흔들림을 허용한다
 TOL_HEAD_X = 3     # 걷기 몸통 흔들림. 머리 중심으로 잰다
 HOLE_MAX = 3.0     # 몸 안 구멍 비율(%). idle 실측이 0.1~0.6% 다
+PALETTE_MAX = 0.06 # 원작에서 먼 색의 면적 비율. 총구 화염 정도만 허용한다
+
+# 원작 색에서 이만큼 안이면 같은 색으로 본다(RGB 거리).
+#
+# 해상도가 2배가 되면 음영이 더 필요하다. 원작 색 사이의 중간 톤을 못 쓰게 하면
+# "퀄만 더 좋게" 라는 요구와 정면으로 충돌한다. 실제로 전 캐릭터가 공통 외곽선
+# #181820 하나를 쓰는데, 원작 최암부와 거리 28~39 로 사실상 같은 색이다.
+# 새 **색상**을 막는 것이 목적이지 새 **음영**을 막는 것이 아니다.
+PALETTE_NEAR = 56.0
 
 
 def metrics(im):
@@ -107,6 +126,60 @@ def palette(im):
     return s
 
 
+def origin_palette(key):
+    """
+    원작 시트의 색 전부. **이것이 그 캐릭터가 쓸 수 있는 색의 전부다.**
+
+    지금까지는 우리 idle 을 기준으로 삼았는데, 그 idle 자체가 원작을 안 보고
+    그린 것이라 기준이 될 수 없었다(폭력배 21색·갱스터 74색·샐러맨더 84색).
+    원작에 충실하다는 것은 사실상 색이 같다는 뜻이므로 원작을 기준으로 삼는다.
+
+    시트가 없는 캐릭터(정본 신규)는 None — 그때는 idle 기준으로 물러선다.
+    """
+    sheet = _orig_map.SHEET.get(key)
+    if not sheet:
+        return None
+    p = os.path.join(ORIG, sheet + '.png')
+    if not os.path.exists(p):
+        return None
+
+    im = Image.open(p).convert('RGB')
+    px = im.load()
+    w, h = im.size
+    # 네 모서리에서 가장 흔한 색 = 배경 키
+    from collections import Counter
+    c = Counter()
+    for x, y in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)):
+        c[px[x, y]] += 1
+    key_rgb = c.most_common(1)[0][0]
+
+    # 오른쪽 아래 "Ripped by" 표는 캐릭터 색이 아니다
+    y0, x0 = int(h * 0.78), int(w * 0.60)
+    used = Counter()
+    for y in range(h):
+        for x in range(w):
+            if y >= y0 and x >= x0:
+                continue
+            p2 = px[x, y]
+            if p2 != key_rgb:
+                used[p2] += 1
+    return {rgb for rgb, n in used.items() if n >= 8}
+
+
+_near_cache = {}
+
+
+def far_from(rgb, palette):
+    """원작 팔레트의 어느 색과도 멀면 True — 그때만 새 색으로 친다."""
+    hit = _near_cache.get(rgb)
+    if hit is None:
+        best = min((rgb[0] - p[0]) ** 2 + (rgb[1] - p[1]) ** 2 + (rgb[2] - p[2]) ** 2
+                   for p in palette)
+        hit = best > PALETTE_NEAR * PALETTE_NEAR
+        _near_cache[rgb] = hit
+    return hit
+
+
 def load(key, d, frame=None):
     n = f'unit_{key}_{d}' + (f'_{frame}' if frame else '') + '.png'
     for base in (IN, os.path.join(UNIT, key)):
@@ -118,6 +191,8 @@ def load(key, d, frame=None):
 
 def check(key):
     print(f'\n{"="*74}\n{key}\n{"="*74}')
+    canvas, anchor, foot_y, head_y = spec(key)
+    _near_cache.clear()
     fails = []
     idle = {}
     for d in DIRS:
@@ -131,21 +206,35 @@ def check(key):
         print('  idle 이 모자라 비교 기준을 못 세운다')
         return fails
 
-    base_pal = set()
-    for d in idle:
-        base_pal |= idle[d][2]
-    print(f'  idle 팔레트 {len(base_pal)}색')
+    # 원작 팔레트가 있으면 그것이 기준이다. 없으면 우리 idle 로 물러선다.
+    origin = origin_palette(key)
+    if origin:
+        base_pal = origin
+        print(f'  원작 팔레트 {len(base_pal)}색 기준')
+    else:
+        base_pal = set()
+        for d in idle:
+            base_pal |= idle[d][2]
+        print(f'  원작 시트 없음 — idle 팔레트 {len(base_pal)}색 기준')
 
     for d in DIRS:
-        im0, m0, _ = idle[d]
+        im0, m0, ipal = idle[d]
+        # idle 자체도 원작 팔레트를 지켜야 한다. 지금까지는 idle 이 기준이라 검사에서 빠져 있었다.
+        if origin:
+            px0 = im0.load()
+            n0 = sum(1 for y in range(canvas) for x in range(canvas) if px0[x, y][3] > 8)
+            bad0 = sum(1 for y in range(canvas) for x in range(canvas)
+                       if px0[x, y][3] > 8 and far_from(px0[x, y][:3], origin))
+            if bad0 / max(1, n0) > PALETTE_MAX:
+                fails.append(f'{d}_idle 팔레트 밖 색 {bad0/n0*100:.1f}%')
         for f in FRAMES:
             im, p = load(key, d, f)
             tag = f'{d}_{f}'
             if im is None:
                 fails.append(f'{tag} 없음')
                 continue
-            if im.size != (SIZE, SIZE):
-                fails.append(f'{tag} 크기 {im.size}')
+            if im.size != (canvas, canvas):
+                fails.append(f'{tag} 크기 {im.size} (기준 {canvas})')
                 continue
             m = metrics(im)
             if m is None:
@@ -170,12 +259,12 @@ def check(key):
                 if abs(hx - m0[5]) > TOL_HEAD_X:
                     fails.append(f'{tag} 머리중심 {hx:.1f} (idle {m0[5]:.1f}) — 걸을 때 몸이 흔들린다')
             elif not f.startswith('die'):
-                if abs(fx - ANCHOR) > TOL_FOOT_X:
-                    fails.append(f'{tag} 발중심 {fx:.1f} (기준 {ANCHOR})')
+                if abs(fx - anchor) > TOL_FOOT_X:
+                    fails.append(f'{tag} 발중심 {fx:.1f} (기준 {anchor})')
 
             if f.startswith('die'):
-                if fy != FOOT_Y:
-                    fails.append(f'{tag} 발밑 {fy} (기준 {FOOT_Y}) — 시체가 바닥에서 뜬다')
+                if fy != foot_y:
+                    fails.append(f'{tag} 발밑 {fy} (기준 {foot_y}) — 시체가 바닥에서 뜬다')
             elif abs(fy - m0[1]) > TOL_FOOT_Y:
                 fails.append(f'{tag} 발밑 {fy} (idle {m0[1]})')
 
@@ -185,10 +274,10 @@ def check(key):
 
             # 새 색은 면적으로 잰다. 색 가짓수로 재면 5px짜리 총구 화염이 56% 로 나온다.
             px = im.load()
-            novel = sum(1 for y in range(SIZE) for x in range(SIZE)
-                        if px[x, y][3] > 8 and px[x, y][:3] not in base_pal)
-            if novel / max(1, n) > 0.06:
-                fails.append(f'{tag} idle 밖 색 {novel/n*100:.1f}%')
+            novel = sum(1 for y in range(canvas) for x in range(canvas)
+                        if px[x, y][3] > 8 and far_from(px[x, y][:3], base_pal))
+            if novel / max(1, n) > PALETTE_MAX:
+                fails.append(f'{tag} 팔레트 밖 색 {novel/n*100:.1f}%')
 
         # 공격 2프레임이 실제로 다른가 — 팔만 까딱하는 것을 잡는다
         a1, _ = load(key, d, 'atk1')
