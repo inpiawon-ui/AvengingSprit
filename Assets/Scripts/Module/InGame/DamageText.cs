@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
 
 namespace Game.Module.InGame
 {
@@ -20,6 +21,7 @@ namespace Game.Module.InGame
 
         private RectTransform _rect;
         private TextMeshProUGUI _tmp;
+        private TextMeshProUGUI _shadow;   // 도트 폰트일 때만 — 아래 12번 주석
         private Vector2 _origin;
         private float _drift;
         private float _life;
@@ -33,23 +35,50 @@ namespace Game.Module.InGame
             _rect.pivot = new Vector2(0.5f, 0.5f);
             _rect.sizeDelta = new Vector2(120f, 32f);
 
-            _tmp = gameObject.AddComponent<TextMeshProUGUI>();
-            if (font != null) _tmp.font = font;
-            _tmp.alignment = TextAlignmentOptions.Center;
-            _tmp.enableWordWrapping = false;
-            _tmp.raycastTarget = false;
-            _tmp.fontStyle = FontStyles.Bold;
-            _tmp.fontSize = 26f;
-
             // 어두운 던전 바닥 위에 얹히므로 외곽선이 없으면 숫자가 묻힌다.
-            // ⚠ `_OutlineWidth` 는 글자 안쪽을 파먹는다. `_FaceDilate` 를 먼저 키워
-            //    두께를 확보하지 않으면 획이 가늘어져 오히려 안 읽힌다.
-            var mat = _tmp.fontMaterial;   // 인스턴스 — 공유 머티리얼을 건드리면 다른 UI 까지 변한다
-            mat.SetFloat(ShaderUtilities.ID_FaceDilate, 0.2f);
-            mat.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.15f);
-            mat.SetColor(ShaderUtilities.ID_OutlineColor, Color.black);
+            //
+            // 원작 도트 폰트는 **비트맵**이라 SDF 셰이더가 아니다 — 외곽선 속성이 아예
+            // 없다. 대신 검은 글자를 한 칸 어긋나게 깔아 같은 효과를 낸다.
+            // UGUI 는 부모를 먼저 그리므로 **뿌리에 그림자**, 자식에 본 글자를 둔다.
+            bool bitmap = font != null && font.atlasRenderMode == GlyphRenderMode.RASTER;
+
+            if (bitmap)
+            {
+                _shadow = Setup(gameObject.AddComponent<TextMeshProUGUI>(), font);
+                _shadow.color = Color.black;
+
+                var face = new GameObject("Face", typeof(RectTransform));
+                var fr = (RectTransform)face.transform;
+                fr.SetParent(transform, false);
+                fr.anchorMin = fr.anchorMax = fr.pivot = new Vector2(0.5f, 0.5f);
+                fr.sizeDelta = _rect.sizeDelta;
+                fr.anchoredPosition = new Vector2(-1f, 1f);   // 그림자가 오른쪽 아래로 보이게
+                _tmp = Setup(face.AddComponent<TextMeshProUGUI>(), font);
+            }
+            else
+            {
+                _tmp = Setup(gameObject.AddComponent<TextMeshProUGUI>(), font);
+
+                // ⚠ `_OutlineWidth` 는 글자 안쪽을 파먹는다. `_FaceDilate` 를 먼저 키워
+                //    두께를 확보하지 않으면 획이 가늘어져 오히려 안 읽힌다.
+                var mat = _tmp.fontMaterial;   // 인스턴스 — 공유 머티리얼을 건드리면 다른 UI 까지 변한다
+                mat.SetFloat(ShaderUtilities.ID_FaceDilate, 0.2f);
+                mat.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.15f);
+                mat.SetColor(ShaderUtilities.ID_OutlineColor, Color.black);
+            }
 
             gameObject.SetActive(false);
+        }
+
+        private static TextMeshProUGUI Setup(TextMeshProUGUI tmp, TMP_FontAsset font)
+        {
+            if (font != null) tmp.font = font;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.enableWordWrapping = false;
+            tmp.raycastTarget = false;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.fontSize = 26f;
+            return tmp;
         }
 
         /// <summary>
@@ -67,6 +96,7 @@ namespace Game.Module.InGame
             _life = LifeSeconds;
             _tmp.text = text;
             _tmp.color = color;
+            if (_shadow != null) _shadow.text = text;
             gameObject.SetActive(true);
             Apply();
         }
@@ -102,6 +132,7 @@ namespace Game.Module.InGame
             var c = _tmp.color;
             c.a = t < FadeFrom ? 1f : 1f - (t - FadeFrom) / (1f - FadeFrom);
             _tmp.color = c;
+            if (_shadow != null) _shadow.color = new Color(0f, 0f, 0f, c.a);
         }
     }
 }
