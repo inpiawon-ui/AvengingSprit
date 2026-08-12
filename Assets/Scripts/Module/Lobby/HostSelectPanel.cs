@@ -224,6 +224,9 @@ namespace Game.Module.Lobby
             if (icon != null)
             {
                 icon.sprite = GetSprite($"ultimateicon_{e.HostKey}");
+                // 아직 아이콘이 없는 호스트가 있다. 스프라이트가 비면 Image 는 흰 사각형을
+                // 그리므로 그대로 두면 빈칸이 아니라 **덜 만든 티**가 난다.
+                icon.enabled = icon.sprite != null;
                 icon.color = unlocked ? Color.white : new Color(0.10f, 0.10f, 0.14f, 1f);
             }
 

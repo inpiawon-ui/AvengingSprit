@@ -63,8 +63,12 @@
 | ~~21~~ | ~~`dragon_blue`~~ | Enemies - Dragon (Blue) | 40 | **완료** |
 | ~~22~~ | ~~`ghost`~~ | Playable Characters - Ghost | 40 | 우리 플레이어 본체 |
 | 23~28 | 보스 6종 | Bosses - * | 별도 | **먼저 손대지 마라** — 따로 지시한다 |
-| 29 | UI · 폰트 · 타이틀 | Miscellaneous - * | 별도 | 따로 지시한다 |
+| ~~29~~ | ~~UI · 폰트 · 타이틀~~ | Miscellaneous - * | 별도 | **완료** — 우리가 시트에서 직접 뽑았다 |
 | 30 | `obj_ricochet_wall_v` | — | 1 | 재작업(아래) |
+| **31** | **얼티밋 아이콘 12종** | — | 12 | **지금 이것부터** — [`WORKORDER_16_ULTIMATE.md`](WORKORDER_16_ULTIMATE.md) |
+
+> **31번은 캐릭터 규격(96×96)이 아니다.** 64×64 UI 아이콘이고 앵커·기준이 따로 있다.
+> 반드시 `WORKORDER_16_ULTIMATE.md` 를 열고 시작한다.
 
 **정본에만 있고 원작 시트가 없는 둘** — `shield_trooper`·`sensor_drone` 은
 정본이 RE:BORN 신규로 표기한 것이라 원작 앵커가 없다. 나중에 따로 설계해 지시한다.
