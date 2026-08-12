@@ -785,6 +785,33 @@ namespace Game.Module.InGame
             return false;
         }
 
+        // ── 원거리 재배치 ─────────────────────────────────────────
+        //
+        // 두 번 쏘고 한 번 옮긴다. 가만히 서서 계속 쏘면 붙박인 과녁이 되고,
+        // 계속 쫓아오면 붙어 버려 사거리의 의미가 없다.
+
+        private int _shotsSinceMove;
+
+        public bool IsRepositioning { get; private set; }
+        public Vector2 RepositionTarget { get; private set; }
+
+        /// <summary>한 발 쐈다고 세고, 옮길 차례면 true.</summary>
+        public bool CountShotAndNeedsMove(int shotsPerMove)
+        {
+            _shotsSinceMove++;
+            if (_shotsSinceMove < shotsPerMove) return false;
+            _shotsSinceMove = 0;
+            return true;
+        }
+
+        public void BeginReposition(Vector2 target)
+        {
+            IsRepositioning = true;
+            RepositionTarget = target;
+        }
+
+        public void EndReposition() => IsRepositioning = false;
+
         /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>
         public void ApplySlow(int percent, float seconds)
         {

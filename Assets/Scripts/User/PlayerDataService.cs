@@ -73,9 +73,19 @@ namespace Game.User
         public UniTask SaveAsync()
             => _data == null ? UniTask.CompletedTask : _repo.SaveAsync(_data).AsUniTask();
 
+        /// <summary>
+        /// 해금 조건을 무시하고 전부 열어 둔다 — **테스트용**이다.
+        /// 21종을 다 만져 봐야 밸런스를 판단할 수 있는데, 정상 진행으로는
+        /// 챕터를 깨야 열려서 확인에 며칠이 걸린다.
+        ///
+        /// ⚠ 출시 전에 반드시 false 로 되돌린다. 켜 두면 해금이라는 성장 축이 통째로 사라진다.
+        /// </summary>
+        public const bool UnlockAllForTest = true;
+
         public bool IsHostUnlocked(HostEntry host)
         {
             if (host == null) return false;
+            if (UnlockAllForTest) return true;
             return host.UnlockType switch
             {
                 HostUnlockType.Owned => true,

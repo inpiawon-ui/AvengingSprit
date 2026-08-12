@@ -887,16 +887,16 @@ namespace Game.Module.InGame
         /// 12종을 한 번에 만들지 않고 한 종씩 넣어 볼 수 있어야 해서 이렇게 둔다.
         /// </summary>
         /// <summary>
-        /// 걷기 그림을 쓰지 않는 종.
+        /// 걷기 그림을 쓰지 않는 종. 지금은 비어 있다.
         ///
-        /// `medium` 은 로브를 입은 종이라 다리가 없다. 그래서 걷기를 **로브가 벌어지는
-        /// 것**으로 그렸는데, 실루엣이 통째로 바뀌어 걷는 것이 아니라 몸이 변형되는
-        /// 것으로 보인다. 다시 그릴 때까지 서 있는 그림으로 움직인다 —
-        /// 로브 종은 미끄러지듯 움직이는 편이 오히려 자연스럽다.
+        /// `medium` 이 한때 여기 있었다 — 로브 종이라 걷기를 "로브가 벌어지는 것" 으로
+        /// 그려서 실루엣이 통째로 바뀌었다. 재작업분(큐 38)이 실루엣을 그대로 두고
+        /// 아랫단만 물결치게 고쳐 와서 뺐다.
         ///
-        /// ⚠ 임시다. 재작업분이 들어오면 이 목록에서 빼라 (큐 38).
+        /// 같은 사고가 또 나면 여기에 넣고 재작업을 걸면 된다 — 그림 하나 때문에
+        /// 그 캐릭터를 통째로 못 쓰게 두지 않기 위한 자리다.
         /// </summary>
-        private static readonly HashSet<string> NoWalkFrames = new() { "medium" };
+        private static readonly HashSet<string> NoWalkFrames = new();
 
         private void ApplyFacingSprites(Unit u, string key)
         {
@@ -1481,20 +1481,37 @@ namespace Game.Module.InGame
                 // 상태를 이름으로 들고 있어야 AI 타입별 분기를 넣을 자리가 생긴다.
                 e.SetFacing(me.Position - e.Position);   // 적도 플레이어를 바라본다
 
-                // 사거리 안이면 **다가오지 않고 그 자리에서 쏜다.** 사거리를 방 크기로
-                // 잡아 두었으므로(EnemyAttackRange) 사실상 보이는 순간부터 쏜다.
-                // 몰려와서 붙는 것보다 흩어져서 쏘는 쪽이 피할 자리를 남긴다.
-                if (d > e.AttackRange)
+                // 근접과 원거리는 다르게 움직인다.
+                //
+                //   근접  붙어야 때린다. 사거리가 짧으므로 계속 쫓는다
+                //   원거리 **두 번 쏘고 한 번 자리를 옮긴다.** 가만히 서서 계속 쏘면
+                //          한 자리에 붙박여 있어 피하기만 하면 되는 과녁이 되고,
+                //          계속 쫓아오면 붙어 버려 사거리의 의미가 없다
+                float reach = EffectiveRange(e);
+
+                if (d > reach)
                 {
                     e.SetState(EnemyState.Approach);
                     e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
                     e.SetMoving(true);
+                }
+                else if (e.IsRepositioning)
+                {
+                    // 자리를 옮기는 중 — 쏘지 않는다. 이 틈이 곧 반격할 틈이다
+                    e.SetState(EnemyState.Cooldown);
+                    e.Position = SlideMove(e, e.Position, e.StepToward(e.RepositionTarget, dt));
+                    e.SetMoving(true);
+                    if (Vector2.Distance(e.Position, e.RepositionTarget) < 24f) e.EndReposition();
                 }
                 else if (e.TickAttack(dt))
                 {
                     e.SetMoving(false);
                     e.SetState(EnemyState.Attack);
                     PerformAttack(e, me, false);
+
+                    // 원거리만 옮긴다. 근접은 붙어 있는 것이 일이다
+                    if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
+                        e.BeginReposition(PickRepositionSpot(e, me));
                 }
                 else
                 {
@@ -1504,6 +1521,43 @@ namespace Game.Module.InGame
 
                 Separate(e, i, dt);
             }
+        }
+
+        // ── 적 행동 거리 ──────────────────────────────────────────
+
+        /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
+        private const int ShotsBeforeMove = 2;
+        private const float MeleeReach = 90f;
+        private const float RepositionDistance = 190f;
+
+        private static bool IsMelee(Unit e)
+        {
+            var k = e.Profile?.Kind;
+            return k == AttackKind.Melee || k == AttackKind.Pulse;
+        }
+
+        /// <summary>
+        /// 실제로 때릴 수 있는 거리.
+        /// 근접은 데이터의 사거리를 쓰지 않는다 — 전역 사거리를 900 으로 올려 두어서
+        /// 그대로 두면 주먹이 방 건너편까지 닿는다.
+        /// </summary>
+        private float EffectiveRange(Unit e) => IsMelee(e) ? MeleeReach : e.AttackRange;
+
+        /// <summary>
+        /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —
+        /// 뒤로 물러나면 도망으로 보이고, 앞으로 가면 근접과 다를 바가 없다.
+        /// </summary>
+        private Vector2 PickRepositionSpot(Unit e, Unit me)
+        {
+            var toMe = me.Position - e.Position;
+            var side = new Vector2(-toMe.y, toMe.x).normalized;
+            if (((e.GetInstanceID() + _roomIndex) & 1) == 0) side = -side;
+
+            var spot = e.Position + side * RepositionDistance;
+            var half = FootHalf(e);
+            spot.x = Mathf.Clamp(spot.x, half.x, _roomSize.x - half.x);
+            spot.y = Mathf.Clamp(spot.y, -_roomSize.y + half.y, -half.y);
+            return spot;
         }
 
         /// <summary>
