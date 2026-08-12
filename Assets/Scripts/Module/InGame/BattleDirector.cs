@@ -299,7 +299,7 @@ namespace Game.Module.InGame
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
-                         new Vector2(72f, 90f));
+                         UnitBox(72f, 90f));
             _ghost.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * PlayerStartY);
             PublishHp();
         }
@@ -398,7 +398,7 @@ namespace Game.Module.InGame
                         EnemyIntervalOf(e),
                         // 엘리트는 캔버스가 한 등급 크다(128×128). 잡몹 상자에 넣으면
                         // 캔버스 여백까지 줄어 엘리트가 잡몹보다 작아 보인다.
-                        elite ? new Vector2(128f, 128f) : new Vector2(84f, 78f),
+                        UnitBox(elite ? 128f : 84f, elite ? 128f : 78f),
                         isBoss: false, profile: e);
                 u.Position = ToPixels(s.At);
                 u.PossessPriority = e.PossessPriority;
@@ -1122,7 +1122,7 @@ namespace Game.Module.InGame
                            // 보스 그림은 256×256 캔버스다(닿는 선 y=232). 160 상자에 넣으면
                            // 캔버스 여백까지 함께 줄어 보스가 잡몹보다 작아진다.
                            // 캔버스 크기를 그대로 쓴다 — 방 폭 720 의 약 1/3 이다.
-                           new Vector2(256f, 256f), isBoss: true);
+                           UnitBox(256f, 256f), isBoss: true);
                 boss.Position = canon ? ToPixels(_canonRoom.BossAt)
                                       : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
                 _enemies.Add(boss);
@@ -1172,7 +1172,7 @@ namespace Game.Module.InGame
                             EnemySpeedOf(e),
                             EnemyRangeOf(e),
                             EnemyIntervalOf(e),
-                            new Vector2(84f, 78f), isBoss: false, profile: e);
+                            UnitBox(84f, 78f), isBoss: false, profile: e);
                     u.Position = SpawnSlot(i, count);
                     // 기획서 A 4-3 — 빙의 우선순위·사거리는 적마다 다를 수 있다.
                     // 사거리 0 은 "전역 기본값을 쓴다"는 뜻이다.
@@ -1697,6 +1697,13 @@ namespace Game.Module.InGame
         // 거리·속도는 정본이 미터 단위다. 방 크기에서 얻은 _pxPerMeter 로 환산한다.
         // ─────────────────────────────────────────
 
+        /// <summary>
+        /// 화면에 세울 상자 크기. 그림은 그대로 두고 상자만 키운다 —
+        /// 기준값(84·96·128·256)은 그림 캔버스에서 온 것이라 여기서 한 번에 곱한다.
+        /// </summary>
+        private Vector2 UnitBox(float w, float h)
+            => new(w * _config.UnitScale, h * _config.UnitScale);
+
         private int EnemyHpOf(HostEntry e)
             => e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp);
 
@@ -1847,7 +1854,7 @@ namespace Game.Module.InGame
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
                         EnemyIntervalOf(e),
-                        new Vector2(84f, 78f), isBoss: false, profile: e);
+                        UnitBox(84f, 78f), isBoss: false, profile: e);
 
                 float side = i % 2 == 0 ? -1f : 1f;
                 float row = i / 2 * 90f;
@@ -2093,7 +2100,7 @@ namespace Game.Module.InGame
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
                         EnemyIntervalOf(e),
-                        new Vector2(78f, 72f), isBoss: false, profile: e);
+                        UnitBox(78f, 72f), isBoss: false, profile: e);
 
                 // 보스(160px)와 겹치지 않게 바깥에 원형으로 흩는다
                 float a = (i / (float)count) * Mathf.PI * 2f + _enemies.Count * 0.7f;
@@ -2890,6 +2897,10 @@ namespace Game.Module.InGame
             _host = null;
 
             _ghost.gameObject.SetActive(true);
+            // 빙의 연출이 줄여 놓은 크기·그림을 되돌린다. 안 되돌리면 몸을 잃고
+            // 유령으로 나올 때 **콩알만 한 채로** 남는다.
+            _ghost.transform.localScale = Vector3.one;
+            _ghost.SetSpriteOverride(null);
             _ghost.Position = pos;
 
             // 기획서 A 1-3 — 호스트를 잃은 자리는 적 한복판이다. 보호가 없으면
@@ -3547,7 +3558,7 @@ namespace Game.Module.InGame
                         HostSpeedOf(entry),
                         HostRangeOf(entry),
                         HostIntervalOf(entry),
-                        new Vector2(96f, 92f), isBoss: false, profile: entry);
+                        UnitBox(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
             ApplyFacingSprites(_host, key);
 

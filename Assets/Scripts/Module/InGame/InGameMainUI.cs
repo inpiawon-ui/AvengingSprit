@@ -69,9 +69,49 @@ namespace Game.Module.InGame
         private int _bossPhase = 1;
         private bool _finished;
 
+        // ── 진입 가림막 ──────────────────────────────────────────
+        //
+        // 씬이 바뀌는 것과 전투 준비가 끝나는 것은 다른 순간이다. 아틀라스·테이블을
+        // 받아 오는 동안 방은 텅 비어 있어서, 그 사이가 흰 화면으로 보였다.
+        // 준비가 끝날 때까지 덮어 두고 걷어 낸다.
+
+        private const float CoverFadeSeconds = 0.22f;
+        private Image _cover;
+
+        private void MakeCover()
+        {
+            var go = new GameObject("BootCover", typeof(RectTransform));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(transform, false);
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+            rt.SetAsLastSibling();          // 무엇보다 위에 덮는다
+
+            _cover = go.AddComponent<Image>();
+            _cover.color = new Color(0.02f, 0.03f, 0.06f, 1f);
+            _cover.raycastTarget = true;    // 준비 전 조작을 먹지 않게 막는다
+        }
+
+        private async UniTask RemoveCoverAsync()
+        {
+            if (_cover == null) return;
+            float t = CoverFadeSeconds;
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+                var c = _cover.color;
+                _cover.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(t / CoverFadeSeconds));
+                await UniTask.Yield();
+            }
+            Destroy(_cover.gameObject);
+            _cover = null;
+        }
+
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            MakeCover();
             CoreModule.TryGet(out _player);
             gameObject.AddComponent<BackButtonRouter>();
 
@@ -153,6 +193,7 @@ namespace Game.Module.InGame
             if (field == null || layer == null)
             {
                 Debug.LogError("[InGame] RoomField / UnitLayer 가 없습니다.");
+                await RemoveCoverAsync();   // 실패해도 가림막은 걷는다 — 남으면 화면이 잠긴다
                 return;
             }
             _battle = gameObject.AddComponent<BattleDirector>();
@@ -163,6 +204,7 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[InGame] BuffTable 로드 실패 — {e.Message}"); }
 
             RefreshCurrency();
+            await RemoveCoverAsync();   // 여기까지 와야 방에 그림이 다 올라와 있다
         }
 
         private void Update()

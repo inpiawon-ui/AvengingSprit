@@ -145,6 +145,15 @@ namespace Game.Character
         ///    맞붙었을 때 중심 사이가 이미 90 이고, 겹침 방지(EnemySeparation 82)가
         ///    그보다 가까이 붙는 것을 막는다. 50 으로 두면 서로 파고들어야만 닿는다.
         /// </summary>
+        /// <summary>
+        /// 화면 위 캐릭터 크기 배수. 그림 자체를 다시 그리지 않고 상자만 키운다.
+        ///
+        /// 이 값을 올리면 **닿는 거리도 같이 커져야 한다** — 근접 사거리와 겹침 방지는
+        /// 그림 크기에서 나온 값이라, 크기만 키우면 서로 파고들어야만 주먹이 닿는다.
+        /// 그래서 두 값에 이 배수를 함께 곱한다.
+        /// </summary>
+        [SerializeField] private float _unitScale = 1.5f;
+
         [SerializeField] private float _meleeAttackRange = 92f;
 
         [SerializeField] private float _enemySeparation = 82f;
@@ -222,8 +231,10 @@ namespace Game.Character
 
         public float EnemyAttackRange => _enemyAttackRange;
         public float EnemyDetectRange => _enemyDetectRange;
-        public float MeleeAttackRange => _meleeAttackRange;
-        public float EnemySeparation => _enemySeparation;
+        public float UnitScale => Mathf.Max(0.1f, _unitScale);
+        /// <summary>그림 크기에 맞춰 커진 근접 사거리.</summary>
+        public float MeleeAttackRange => _meleeAttackRange * UnitScale;
+        public float EnemySeparation => _enemySeparation * UnitScale;
         public float EnemyAttackInterval => _enemyAttackInterval;
         public int EnemiesPerRoom(int roomIndex)
             => Mathf.Clamp(_enemiesPerRoomMin + roomIndex / 2, _enemiesPerRoomMin, _enemiesPerRoomMax);

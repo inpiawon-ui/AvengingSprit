@@ -3,6 +3,7 @@ using Game.Module.Common;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Data;
 using GameFramework.Core.Module.Input;
+using GameFramework.Core.Module.Loading;
 using GameFramework.Core.Module.Network;
 using GameFramework.Core.Module.Scene;
 using UnityEngine;
@@ -29,6 +30,9 @@ namespace Game.Module.Boot
             RegisterModule(new DataModule());
             // 입력 — 뒤로가기(ESC·안드로이드 백) 처리에 필요하다.
             RegisterModule(new InputModule());
+            // 로딩 가림막 — 씬 전환을 `LoadingStyle.Overlay` 로 요청하면서 이 모듈을
+            // 등록하지 않아, 가림막 없이 전환돼 인게임 진입 순간 흰 화면이 보였다.
+            RegisterModule(new LoadingModule());
 
             // NetworkModule은 [Module(Layer = ModuleLayer.Core)] 어트리뷰트로
             // base.RegisterModules()의 자동 스캔에서 등록됨 — 수동 등록 불필요
