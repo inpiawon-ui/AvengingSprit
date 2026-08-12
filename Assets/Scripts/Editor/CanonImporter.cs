@@ -488,6 +488,24 @@ namespace Game.EditorTools
         };
 
         /// <summary>
+        /// 정본을 일부러 따르지 않는 몸. **여기 있는 것만 예외**이고 나머지는 전부 정본이다.
+        ///
+        /// 정본은 배우의 교전 방식을 문자열로만 주는데, 그림이 이미 나온 뒤라
+        /// 데이터와 그림이 어긋나는 자리가 생긴다. 그때는 그림 쪽을 따른다 —
+        /// 수치는 고칠 수 있지만 그려 놓은 동작은 못 바꾼다.
+        ///
+        /// 값: 교전 방식, 적으로 나올 때의 사거리(m).
+        /// 사거리를 같이 안 내리면 근접 판정에 원거리 사거리가 붙어 멀리서 주먹이 닿는다.
+        /// </summary>
+        private static readonly Dictionary<string, (Game.Character.AttackKind Kind, float RangeM)>
+            KindOverrides = new()
+        {
+            // 정본 E006 Master Fighter 는 PROJECTILE 3.5m 인데 우리 아마존 정예 그림은
+            // 도끼를 든 근접이다. 파이터(E002 1.2m)보다 한 뼘 긴 1.5m 로 둔다.
+            ["amazon_elite"] = (Game.Character.AttackKind.Melee, 1.5f),
+        };
+
+        /// <summary>
         /// 정본의 호스트 프로필(AP_H##)을 이 몸에 써도 되는가.
         ///
         /// 정본은 배우 여럿이 호스트 하나를 나눠 쓰게 짰다 — 폭력배(E004)와 드래군(E016)이
@@ -538,6 +556,7 @@ namespace Game.EditorTools
             int patched = 0, added = 0, derived = 0;
             var missing = new List<string>();
             var flipped = new List<string>();
+            var overrode = new List<string>();
 
             foreach (var stand in StandIns)
             {
@@ -607,14 +626,22 @@ namespace Game.EditorTools
                     // 교전 거리의 격(근접/원거리)은 그 배우 자신의 프로필이 정한다.
                     // 우리가 흡혈귀·야구선수를 근접으로 적어 뒀는데 정본은 둘 다 원거리다.
                     // 그대로 두면 근접 판정에 사거리 514px 이 붙어 방 건너편을 주먹으로 때린다.
-                    if (byOwner.TryGetValue($"ENEMY:{id}", out var er2)
-                        && !SameReachClass(e, S(er2, atF, "AttackMode")))
+                    var key = (string)GetField(e, "_hostKey");
+                    if (KindOverrides.TryGetValue(key, out var ov))
+                    {
+                        // 일부러 정본을 안 따르는 자리 — 자동 판정보다 먼저 본다
+                        SetField(e, "_attackKind", ov.Kind);
+                        SetField(e, "_canonRange", ov.RangeM);
+                        overrode.Add(key);
+                    }
+                    else if (byOwner.TryGetValue($"ENEMY:{id}", out var er2)
+                             && !SameReachClass(e, S(er2, atF, "AttackMode")))
                     {
                         bool canonMelee = S(er2, atF, "AttackMode") == "MELEE";
                         SetField(e, "_attackKind",
                                  canonMelee ? Game.Character.AttackKind.Melee
                                             : Game.Character.AttackKind.Single);
-                        flipped.Add($"{(string)GetField(e, "_hostKey")}→{(canonMelee ? "근접" : "원거리")}");
+                        flipped.Add($"{key}→{(canonMelee ? "근접" : "원거리")}");
                     }
 
                     if (shots.TryGetValue(id, out var ep))
@@ -693,6 +720,9 @@ namespace Game.EditorTools
                       + $" · 정본에 없어 형제 값에서 맞춘 창작 몸 {derived}종"
                       + (flipped.Count > 0
                          ? $" · 교전 거리의 격을 정본에 맞춘 몸: {string.Join(", ", flipped)}"
+                         : "")
+                      + (overrode.Count > 0
+                         ? $" · 일부러 정본을 안 따르는 몸: {string.Join(", ", overrode)}"
                          : "")
                       + (missing.Count > 0
                          ? $" · 아무 값도 못 준 몸 {missing.Count}종: {string.Join(", ", missing)}"

@@ -147,7 +147,7 @@ MonoBehaviour:
     _atk: 84
     _spd: 72
     _dash: 70
-    _attackKind: 1
+    _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 0.5
@@ -167,12 +167,12 @@ MonoBehaviour:
     _canonHp: 145
     _canonAtk: 15
     _canonMoveSpeed: 1.7
-    _canonRange: 3.5
+    _canonRange: 1.5
     _canonInterval: 1.35
     _canonShotSpeed: 8.5
     _canonShotCount: 1
-    _canonHostRange: 0
-    _canonHostInterval: 0
+    _canonHostRange: 1.45
+    _canonHostInterval: 0.78
     _canonHostMoveSpeed: 4.8
     _canonHostShotSpeed: 0
     _actorOnly: 0
