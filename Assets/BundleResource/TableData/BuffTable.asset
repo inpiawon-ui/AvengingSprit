@@ -23,9 +23,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -39,9 +36,6 @@ MonoBehaviour:
     _value: 18
     _stackable: 1
     _colorHex: '#F0B428'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -61,9 +55,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -77,9 +68,6 @@ MonoBehaviour:
     _value: 18
     _stackable: 1
     _colorHex: '#5CC850'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -99,9 +87,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -115,9 +100,6 @@ MonoBehaviour:
     _value: 1
     _stackable: 1
     _colorHex: '#C98CF0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -137,9 +119,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -153,9 +132,6 @@ MonoBehaviour:
     _value: 15
     _stackable: 1
     _colorHex: '#E04A7A'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -175,9 +151,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -191,9 +164,6 @@ MonoBehaviour:
     _value: 30
     _stackable: 1
     _colorHex: '#F07828'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -213,9 +183,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: 
     _canonEffect: 
     _pool: 
@@ -229,9 +196,6 @@ MonoBehaviour:
     _value: 12
     _stackable: 1
     _colorHex: '#E8604A'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -251,9 +215,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_U02
     _canonEffect: Ghost HP max +8 and heal 4
     _pool: Universal
@@ -267,9 +228,6 @@ MonoBehaviour:
     _value: 3
     _stackable: 1
     _colorHex: '#5CC850'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -289,9 +247,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_U04
     _canonEffect: 'same target 4 hits: damage +6% stack max3'
     _pool: Universal
@@ -308,9 +263,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_U05
     _canonEffect: AoE radius +10%
     _pool: Universal
@@ -324,9 +276,6 @@ MonoBehaviour:
     _value: 2
     _stackable: 0
     _colorHex: '#A886FF'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -347,9 +296,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_T01
     _canonEffect: 'Mark consume: Relay Bullet +1'
     _pool: Tag
@@ -363,9 +309,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 1
     _colorHex: '#F07828'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -386,9 +329,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_T03
     _canonEffect: Slow field edges deal tick damage
     _pool: Tag
@@ -402,9 +342,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 1
     _colorHex: '#E04A7A'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -424,9 +361,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_T05
     _canonEffect: first bounce duplicates at 60% damage
     _pool: Tag
@@ -440,9 +374,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 1
     _colorHex: '#9AA4B4'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -463,9 +394,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_S01
     _canonEffect: Robot deployables inherit Fire and Overheat
     _pool: Synergy
@@ -480,9 +408,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 0
     _colorHex: '#A886FF'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -503,9 +428,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_S03
     _canonEffect: Leech marks heal on each combo finisher
     _pool: Synergy
@@ -519,9 +441,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 0
     _colorHex: '#7ED8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -541,9 +460,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_S05
     _canonEffect: Curse circuit becomes napalm pillars
     _pool: Synergy
@@ -557,9 +473,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 0
     _colorHex: '#5CC850'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -579,9 +492,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_A01
     _canonEffect: last shot/finisher +25%
     _pool: AttackStyle
@@ -595,9 +505,6 @@ MonoBehaviour:
     _value: 0
     _stackable: 1
     _colorHex: '#4AA8E8'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -617,9 +524,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_A03
     _canonEffect: returning projectile deals 50%
     _pool: AttackStyle
@@ -633,9 +537,6 @@ MonoBehaviour:
     _value: 10
     _stackable: 1
     _colorHex: '#9AA4B4'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _scope: 0
     _tag: 0
     _hostKey: 
@@ -655,9 +556,6 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_A05
     _canonEffect: attack interval -7%
     _pool: AttackStyle
@@ -674,172 +572,9 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _scope: 0
-    _tag: 0
-    _hostKey: 
     _canonId: BUF_A06
     _canonEffect: 0.6s shield after tactical exit
     _pool: AttackStyle
     _fromChapter: 2
     _weight: 0.7
     _implemented: 1
-  - _buffKey: tag_shot_dmg
-    _nameKr: "\uD0C4\uD658 \uD53C\uD574 \uC99D\uAC00"
-    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD53C\uD574 +30%"
-    _kind: 0
-    _value: 30
-    _stackable: 1
-    _colorHex: #F0B428
-    _scope: 1
-    _tag: 1
-    _hostKey: 
-  - _buffKey: tag_shot_multi
-    _nameKr: "\uD0C4\uD658 \uB2E4\uBC1C"
-    _description: "\uD0C4\uD658 \uACC4\uC5F4 \uD0C4 +1\uBC1C"
-    _kind: 6
-    _value: 1
-    _stackable: 1
-    _colorHex: #F0B428
-    _scope: 1
-    _tag: 1
-    _hostKey: 
-  - _buffKey: tag_melee_dmg
-    _nameKr: "\uADFC\uC811 \uD53C\uD574 \uC99D\uAC00"
-    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD53C\uD574 +35%"
-    _kind: 0
-    _value: 35
-    _stackable: 1
-    _colorHex: #E8404A
-    _scope: 1
-    _tag: 2
-    _hostKey: 
-  - _buffKey: tag_melee_leech
-    _nameKr: "\uADFC\uC811 \uD761\uD608"
-    _description: "\uADFC\uC811 \uACC4\uC5F4 \uD761\uD608 +12%"
-    _kind: 8
-    _value: 12
-    _stackable: 1
-    _colorHex: #E8404A
-    _scope: 1
-    _tag: 2
-    _hostKey: 
-  - _buffKey: tag_magic_dmg
-    _nameKr: "\uB9C8\uBC95 \uD53C\uD574 \uC99D\uAC00"
-    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uD53C\uD574 +32%"
-    _kind: 0
-    _value: 32
-    _stackable: 1
-    _colorHex: #8A46D8
-    _scope: 1
-    _tag: 3
-    _hostKey: 
-  - _buffKey: tag_magic_range
-    _nameKr: "\uB9C8\uBC95 \uC0AC\uAC70\uB9AC"
-    _description: "\uB9C8\uBC95 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +30%"
-    _kind: 2
-    _value: 30
-    _stackable: 1
-    _colorHex: #8A46D8
-    _scope: 1
-    _tag: 3
-    _hostKey: 
-  - _buffKey: tag_deploy_dmg
-    _nameKr: "\uC124\uCE58\uBB3C \uAC15\uD654"
-    _description: "\uC124\uCE58 \uACC4\uC5F4 \uD53C\uD574 +40%"
-    _kind: 0
-    _value: 40
-    _stackable: 1
-    _colorHex: #4AA8E8
-    _scope: 1
-    _tag: 4
-    _hostKey: 
-  - _buffKey: tag_deploy_rate
-    _nameKr: "\uC124\uCE58 \uAC00\uB3D9\uB960"
-    _description: "\uC124\uCE58 \uACC4\uC5F4 \uAC04\uACA9 -20%"
-    _kind: 1
-    _value: 20
-    _stackable: 1
-    _colorHex: #4AA8E8
-    _scope: 1
-    _tag: 4
-    _hostKey: 
-  - _buffKey: tag_breath_range
-    _nameKr: "\uBE0C\uB808\uC2A4 \uBC94\uC704"
-    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uC0AC\uAC70\uB9AC +35%"
-    _kind: 2
-    _value: 35
-    _stackable: 1
-    _colorHex: #F07028
-    _scope: 1
-    _tag: 5
-    _hostKey: 
-  - _buffKey: tag_breath_dmg
-    _nameKr: "\uBE0C\uB808\uC2A4 \uAC15\uD654"
-    _description: "\uBE0C\uB808\uC2A4 \uACC4\uC5F4 \uD53C\uD574 +38%"
-    _kind: 0
-    _value: 38
-    _stackable: 1
-    _colorHex: #F07028
-    _scope: 1
-    _tag: 5
-    _hostKey: 
-  - _buffKey: host_ninja_star
-    _nameKr: "\uD45C\uCC3D \uAC15\uD654"
-    _description: "\uB2CC\uC790 \u2014 \uD0C4 +2\uBC1C"
-    _kind: 6
-    _value: 2
-    _stackable: 1
-    _colorHex: #3A5CD8
-    _scope: 2
-    _tag: 0
-    _hostKey: ninja
-  - _buffKey: host_dragon_breath
-    _nameKr: "\uBE0C\uB808\uC2A4 \uD3ED\uBC1C"
-    _description: "\uC0D0\uB7EC\uB9E8\uB354 \u2014 \uD53C\uD574 +55%"
-    _kind: 0
-    _value: 55
-    _stackable: 1
-    _colorHex: #F07028
-    _scope: 2
-    _tag: 0
-    _hostKey: salamander
-  - _buffKey: host_robot_missile
-    _nameKr: "\uBBF8\uC0AC\uC77C \uAC15\uD654"
-    _description: "\uB85C\uBD07 \u2014 \uAC04\uACA9 -30%"
-    _kind: 1
-    _value: 30
-    _stackable: 1
-    _colorHex: #9AA4B4
-    _scope: 2
-    _tag: 0
-    _hostKey: robot
-  - _buffKey: host_gangster_mark
-    _nameKr: "\uD45C\uC2DD \uB9B4\uB808\uC774"
-    _description: "\uAC31\uC2A4\uD130 \u2014 \uC0AC\uAC70\uB9AC +45%"
-    _kind: 2
-    _value: 45
-    _stackable: 1
-    _colorHex: #D8A828
-    _scope: 2
-    _tag: 0
-    _hostKey: gangster
-  - _buffKey: host_vampire_leech
-    _nameKr: "\uD53C\uC758 \uAC08\uC99D"
-    _description: "\uD761\uD608\uADC0 \u2014 \uD761\uD608 +20%"
-    _kind: 8
-    _value: 20
-    _stackable: 1
-    _colorHex: #A02838
-    _scope: 2
-    _tag: 0
-    _hostKey: vampire
-  - _buffKey: host_laser_focus
-    _nameKr: "\uC9D1\uC18D \uB808\uC774\uC800"
-    _description: "\uC5B4\uC124\uD2B8 \uAC31\uC2A4\uD130 \u2014 \uD53C\uD574 +70%"
-    _kind: 0
-    _value: 70
-    _stackable: 1
-    _colorHex: #C8C8D0
-    _scope: 2
-    _tag: 0
-    _hostKey: assault_gangster

@@ -39,29 +39,29 @@
 
 | # | 슬러그 | 원작 시트 | 장수 | 상태 |
 |---|---|---|--:|---|
-| 1 | `gangster` | Enemies - Gangster (Gun) | 40 | 재작업(원작 기준) |
-| 2 | `amazon` | Enemies - Amazon | 40 | 폐기했던 것 복귀 |
-| 3 | `thug` | Enemies - Gangster (Tommy Gun) | 40 | 재작업(원작 기준) |
-| 4 | `salamander` | Enemies - Dragon (Green) | 40 | 구멍 반려분 재작업 |
-| 5 | `white_wizard` | Enemies - Magician (Light) | 40 | 납품분 원작 대조 후 판단 |
-| 6 | `ninja` | Enemies - Ninja (Shuriken) | 40 | |
-| 7 | `baseball` | Enemies - Slugger | 40 | |
-| 8 | `commando_grenade` | Enemies - Commando (Grenade) | 40 | |
-| 9 | `amazon_elite` | Enemies - Amazon Elite | 40 | 엘리트 — 캔버스 128×128 |
+| ~~1~~ | ~~`gangster`~~ | Enemies - Gangster (Gun) | 40 | 재작업(원작 기준) |
+| ~~2~~ | ~~`amazon`~~ | Enemies - Amazon | 40 | 폐기했던 것 복귀 |
+| ~~3~~ | ~~`thug`~~ | Enemies - Gangster (Tommy Gun) | 40 | 재작업(원작 기준) |
+| ~~4~~ | ~~`salamander`~~ | Enemies - Dragon (Green) | 40 | 구멍 반려분 재작업 |
+| ~~5~~ | ~~`white_wizard`~~ | Enemies - Magician (Light) | 40 | 납품분 원작 대조 후 판단 |
+| ~~6~~ | ~~`ninja`~~ | Enemies - Ninja (Shuriken) | 40 | **완료** |
+| ~~7~~ | ~~`baseball`~~ | Enemies - Slugger | 40 | **완료** |
+| ~~8~~ | ~~`commando_grenade`~~ | Enemies - Commando (Grenade) | 40 | **완료** |
+| ~~9~~ | ~~`amazon_elite`~~ | Enemies - Amazon Elite | 40 | 엘리트 — 캔버스 128×128 |
 | — | ↑ **여기까지 CH1 완성** | | | |
-| 10 | `commando_laser` | Enemies - Commando (Laser) | 40 | |
-| 11 | `robot` | Enemies - Robot | 40 | |
-| 12 | `guru` | Enemies - Guru | 40 | **부양 · 아래 별항** |
-| 13 | `vampire` | Enemies - Vampire | 40 | |
-| 14 | `hopper` | Enemies - Hopper (Gun) | 40 | |
-| 15 | `hopper_smg` | Enemies - Hopper (Sub-Machine Gun) | 40 | |
-| 16 | `commando_mg` | Enemies - Commando (Machine Gun) | 40 | |
-| 17 | `snowwoman` | Enemies - SnowWoman | 40 | 폐기했던 것 복귀 |
-| 18 | `ninja_chain` | Enemies - Ninja (Chain) | 40 | 폐기했던 것 복귀 |
-| 19 | `medium` | Enemies - Magician (Dark) | 40 | |
-| 20 | `dragoon` | Enemies - Dragon (Red) | 40 | |
-| 21 | `dragon_blue` | Enemies - Dragon (Blue) | 40 | |
-| 22 | `ghost` | Playable Characters - Ghost | 40 | 우리 플레이어 본체 |
+| ~~10~~ | ~~`commando_laser`~~ | Enemies - Commando (Laser) | 40 | **완료** |
+| ~~11~~ | ~~`robot`~~ | Enemies - Robot | 40 | **완료** |
+| ~~12~~ | ~~`guru`~~ | Enemies - Guru | 40 | **부양 · 아래 별항** |
+| ~~13~~ | ~~`vampire`~~ | Enemies - Vampire | 40 | **완료** |
+| ~~14~~ | ~~`hopper`~~ | Enemies - Hopper (Gun) | 40 | **완료** |
+| ~~15~~ | ~~`hopper_smg`~~ | Enemies - Hopper (Sub-Machine Gun) | 40 | **완료** |
+| ~~16~~ | ~~`commando_mg`~~ | Enemies - Commando (Machine Gun) | 40 | **완료** |
+| ~~17~~ | ~~`snowwoman`~~ | Enemies - SnowWoman | 40 | 폐기했던 것 복귀 |
+| ~~18~~ | ~~`ninja_chain`~~ | Enemies - Ninja (Chain) | 40 | 폐기했던 것 복귀 |
+| ~~19~~ | ~~`medium`~~ | Enemies - Magician (Dark) | 40 | **완료** |
+| ~~20~~ | ~~`dragoon`~~ | Enemies - Dragon (Red) | 40 | **완료** |
+| ~~21~~ | ~~`dragon_blue`~~ | Enemies - Dragon (Blue) | 40 | **완료** |
+| ~~22~~ | ~~`ghost`~~ | Playable Characters - Ghost | 40 | 우리 플레이어 본체 |
 | 23~28 | 보스 6종 | Bosses - * | 별도 | **먼저 손대지 마라** — 따로 지시한다 |
 | 29 | UI · 폰트 · 타이틀 | Miscellaneous - * | 별도 | 따로 지시한다 |
 | 30 | `obj_ricochet_wall_v` | — | 1 | 재작업(아래) |

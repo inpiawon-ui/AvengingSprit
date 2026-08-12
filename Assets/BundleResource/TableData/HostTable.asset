@@ -16,17 +16,17 @@ MonoBehaviour:
   - _hostKey: gangster
     _nameEn: GANGSTER
     _nameKr: "\uAC31\uC2A4\uD130"
-    _role: "\uD655\uC0B0 \uC0AC\uC218"
+    _role: "\uB2E8\uBC1C \uC815\uBC00"
     _hp: 70
     _atk: 76
     _spd: 64
     _dash: 58
-    _attackKind: 3
-    _shotCount: 5
-    _spreadDegrees: 34
-    _rangeMul: 0.7
-    _intervalMul: 1.05
-    _damageMul: 0.5
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 1
+    _intervalMul: 0.9
+    _damageMul: 1
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
@@ -45,17 +45,17 @@ MonoBehaviour:
   - _hostKey: thug
     _nameEn: THUG
     _nameKr: "\uD3ED\uB825\uBC30"
-    _role: "\uC911\uD654\uAE30 \uC0AC\uC218"
+    _role: "\uD655\uC0B0 \uC81C\uC555"
     _hp: 80
-    _atk: 85
-    _spd: 55
-    _dash: 45
-    _attackKind: 2
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 0.4
-    _damageMul: 0.48
+    _atk: 70
+    _spd: 60
+    _dash: 50
+    _attackKind: 3
+    _shotCount: 5
+    _spreadDegrees: 34
+    _rangeMul: 0.7
+    _intervalMul: 1.05
+    _damageMul: 0.5
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
@@ -71,9 +71,9 @@ MonoBehaviour:
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
-  - _hostKey: fighter
-    _nameEn: FIGHTER
-    _nameKr: "\uD30C\uC774\uD130"
+  - _hostKey: amazon
+    _nameEn: AMAZON
+    _nameKr: "\uC544\uB9C8\uC874"
     _role: "\uB3CC\uC9C4 \uADFC\uC811"
     _hp: 68
     _atk: 70
@@ -97,6 +97,180 @@ MonoBehaviour:
     _possessHpPercent: 40
     _maintainHook: "\uCF64\uBCF4 \uBBF8\uD130"
     _ultimateKey: rush_combo
+    _unlockType: 0
+    _unlockChapter: 0
+    _unlockStage: 0
+  - _hostKey: amazon_elite
+    _nameEn: AMAZON ELITE
+    _nameKr: "\uC544\uB9C8\uC874 \uC815\uC608"
+    _role: "\uC911\uC7A5 \uADFC\uC811"
+    _hp: 96
+    _atk: 84
+    _spd: 72
+    _dash: 70
+    _attackKind: 0
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 0.5
+    _intervalMul: 0.7
+    _damageMul: 1.2
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E006
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 40
+    _maintainHook: "\uCF64\uBCF4 \uBBF8\uD130"
+    _ultimateKey: rush_combo
+    _unlockType: 2
+    _unlockChapter: 1
+    _unlockStage: 0
+  - _hostKey: hopper
+    _nameEn: HOPPER
+    _nameKr: "\uD638\uD37C"
+    _role: "\uB3C4\uC57D \uC0AC\uC218"
+    _hp: 62
+    _atk: 68
+    _spd: 88
+    _dash: 92
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 0.95
+    _intervalMul: 0.8
+    _damageMul: 0.85
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: 
+    _possessPriority: 0
+    _possessKind: 0
+    _possessHpPercent: 100
+    _maintainHook: "\uB3C4\uC57D \uC5F0\uC0AC"
+    _ultimateKey: bullet_hell
+    _unlockType: 0
+    _unlockChapter: 0
+    _unlockStage: 0
+  - _hostKey: hopper_smg
+    _nameEn: HOPPER SMG
+    _nameKr: "\uD638\uD37C(\uAE30\uAD00\uB2E8\uCD1D)"
+    _role: "\uB3C4\uC57D \uC5F0\uC0AC"
+    _hp: 64
+    _atk: 66
+    _spd: 86
+    _dash: 90
+    _attackKind: 2
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 0.9
+    _intervalMul: 0.4
+    _damageMul: 0.45
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: 
+    _possessPriority: 0
+    _possessKind: 0
+    _possessHpPercent: 100
+    _maintainHook: "\uB3C4\uC57D \uC5F0\uC0AC"
+    _ultimateKey: bullet_hell
+    _unlockType: 0
+    _unlockChapter: 0
+    _unlockStage: 0
+  - _hostKey: commando_mg
+    _nameEn: COMMANDO MG
+    _nameKr: "\uCF54\uB9CC\uB3C4(\uAE30\uAD00\uCD1D)"
+    _role: "\uC911\uD654\uAE30 \uC0AC\uC218"
+    _hp: 82
+    _atk: 78
+    _spd: 56
+    _dash: 46
+    _attackKind: 2
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 1
+    _intervalMul: 0.4
+    _damageMul: 0.48
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: 
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 50
+    _maintainHook: "\uC81C\uC555 \uC0AC\uACA9"
+    _ultimateKey: bullet_hell
+    _unlockType: 2
+    _unlockChapter: 1
+    _unlockStage: 0
+  - _hostKey: commando_laser
+    _nameEn: COMMANDO LASER
+    _nameKr: "\uCF54\uB9CC\uB3C4(\uB808\uC774\uC800)"
+    _role: "\uAD00\uD1B5 \uB808\uC774\uC800"
+    _hp: 70
+    _atk: 78
+    _spd: 65
+    _dash: 55
+    _attackKind: 4
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 1.45
+    _intervalMul: 0.7
+    _damageMul: 0.9
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E007
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 50
+    _maintainHook: "\uC9D1\uC18D \uB808\uC774\uC800"
+    _ultimateKey: laser_storm
+    _unlockType: 2
+    _unlockChapter: 1
+    _unlockStage: 0
+  - _hostKey: commando_grenade
+    _nameEn: COMMANDO GRENADE
+    _nameKr: "\uCF54\uB9CC\uB3C4(\uC218\uB958\uD0C4)"
+    _role: "\uACE1\uC0AC \uC9C0\uC5ED"
+    _hp: 74
+    _atk: 82
+    _spd: 58
+    _dash: 48
+    _attackKind: 3
+    _shotCount: 3
+    _spreadDegrees: 22
+    _rangeMul: 1.2
+    _intervalMul: 1.35
+    _damageMul: 1.3
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E005
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 45
+    _maintainHook: "\uC9C0\uB8B0 \uB124\uD2B8\uC6CC\uD06C"
+    _ultimateKey: bullet_hell
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
@@ -129,6 +303,93 @@ MonoBehaviour:
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
+  - _hostKey: dragoon
+    _nameEn: DRAGOON
+    _nameKr: "\uB4DC\uB77C\uAD70"
+    _role: "\uB124\uC774\uD31C \uB9C8\uBB34\uB9AC"
+    _hp: 110
+    _atk: 92
+    _spd: 44
+    _dash: 40
+    _attackKind: 3
+    _shotCount: 3
+    _spreadDegrees: 14
+    _rangeMul: 0.55
+    _intervalMul: 0.95
+    _damageMul: 0.62
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E016
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 25
+    _maintainHook: "\uD6A8\uACFC \uACC4\uC2B9 \uD53C\uB2C8\uC154"
+    _ultimateKey: dragon_breath
+    _unlockType: 2
+    _unlockChapter: 2
+    _unlockStage: 0
+  - _hostKey: dragon_blue
+    _nameEn: DRAGON BLUE
+    _nameKr: "\uCCAD\uB8E1"
+    _role: "\uB0C9\uAE30 \uBE0C\uB808\uC2A4"
+    _hp: 92
+    _atk: 78
+    _spd: 46
+    _dash: 42
+    _attackKind: 3
+    _shotCount: 3
+    _spreadDegrees: 12
+    _rangeMul: 0.5
+    _intervalMul: 0.85
+    _damageMul: 0.52
+    _lifestealPercent: 0
+    _slowPercent: 30
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: 
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 50
+    _maintainHook: "\uB0C9\uAE30 \uCD95\uC801"
+    _ultimateKey: dragon_breath
+    _unlockType: 2
+    _unlockChapter: 2
+    _unlockStage: 0
+  - _hostKey: guru
+    _nameEn: GURU
+    _nameKr: "\uAD6C\uB8E8"
+    _role: "\uBD80\uC591 \uC11C\uD3EC\uD2B8"
+    _hp: 76
+    _atk: 52
+    _spd: 70
+    _dash: 74
+    _attackKind: 6
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 0.55
+    _intervalMul: 1.25
+    _damageMul: 0.95
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E009
+    _possessPriority: 0
+    _possessKind: 0
+    _possessHpPercent: 100
+    _maintainHook: "\uAC00\uB4DC \uC624\uB77C"
+    _ultimateKey: astral_form
+    _unlockType: 2
+    _unlockChapter: 1
+    _unlockStage: 0
   - _hostKey: white_wizard
     _nameEn: WHITE WIZARD
     _nameKr: "\uD654\uC774\uD2B8 \uC704\uC800\uB4DC"
@@ -144,7 +405,7 @@ MonoBehaviour:
     _intervalMul: 1.35
     _damageMul: 1.75
     _lifestealPercent: 0
-    _slowPercent: 0
+    _slowPercent: 25
     _reflectsShots: 0
     _moveAttack: 0
     _targetType: 0
@@ -157,6 +418,35 @@ MonoBehaviour:
     _ultimateKey: elemental_nova
     _unlockType: 0
     _unlockChapter: 0
+    _unlockStage: 0
+  - _hostKey: medium
+    _nameEn: MEDIUM
+    _nameKr: "\uC601\uB9E4"
+    _role: "\uC800\uC8FC \uD68C\uB85C"
+    _hp: 62
+    _atk: 86
+    _spd: 58
+    _dash: 52
+    _attackKind: 4
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 1.25
+    _intervalMul: 1.4
+    _damageMul: 1.6
+    _lifestealPercent: 0
+    _slowPercent: 0
+    _reflectsShots: 0
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E012
+    _possessPriority: 0
+    _possessKind: 1
+    _possessHpPercent: 45
+    _maintainHook: "\uC800\uC8FC \uD68C\uB85C"
+    _ultimateKey: elemental_nova
+    _unlockType: 2
+    _unlockChapter: 2
     _unlockStage: 0
   - _hostKey: ninja
     _nameEn: NINJA
@@ -187,32 +477,32 @@ MonoBehaviour:
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
-  - _hostKey: assault_gangster
-    _nameEn: ASSAULT GANGSTER
-    _nameKr: "\uC5B4\uC124\uD2B8 \uAC31\uC2A4\uD130"
-    _role: "\uAD00\uD1B5 \uB808\uC774\uC800"
+  - _hostKey: ninja_chain
+    _nameEn: NINJA CHAIN
+    _nameKr: "\uB2CC\uC790(\uC0AC\uC2AC)"
+    _role: "\uC0AC\uC2AC \uADFC\uC811"
     _hp: 70
     _atk: 78
-    _spd: 65
-    _dash: 55
-    _attackKind: 4
+    _spd: 82
+    _dash: 86
+    _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1.45
-    _intervalMul: 0.7
-    _damageMul: 0.9
+    _rangeMul: 0.6
+    _intervalMul: 0.65
+    _damageMul: 1.1
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E007
+    _enemyId: 
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
-    _maintainHook: "\uC9D1\uC18D \uB808\uC774\uC800"
-    _ultimateKey: laser_storm
+    _maintainHook: "\uCC98\uD615 \uBAA8\uBA58\uD140"
+    _ultimateKey: shadow_burst
     _unlockType: 2
     _unlockChapter: 1
     _unlockStage: 0
@@ -245,34 +535,63 @@ MonoBehaviour:
     _unlockType: 2
     _unlockChapter: 1
     _unlockStage: 0
-  - _hostKey: guru
-    _nameEn: GURU
-    _nameKr: "\uAD6C\uB8E8"
-    _role: "\uBD80\uC591 \uC11C\uD3EC\uD2B8"
-    _hp: 76
-    _atk: 52
-    _spd: 70
-    _dash: 74
-    _attackKind: 6
+  - _hostKey: baseball
+    _nameEn: SLUGGER
+    _nameKr: "\uC2AC\uB7EC\uAC70"
+    _role: "\uD0C4\uD658 \uBC18\uC0AC"
+    _hp: 78
+    _atk: 66
+    _spd: 72
+    _dash: 70
+    _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 0.55
-    _intervalMul: 1.25
-    _damageMul: 0.95
+    _rangeMul: 0.6
+    _intervalMul: 0.75
+    _damageMul: 1.35
     _lifestealPercent: 0
     _slowPercent: 0
+    _reflectsShots: 1
+    _moveAttack: 0
+    _targetType: 0
+    _tag: 0
+    _enemyId: E015
+    _possessPriority: 0
+    _possessKind: 0
+    _possessHpPercent: 100
+    _maintainHook: "\uBC14\uC6B4\uC2A4 \uACBD\uB85C"
+    _ultimateKey: grand_slam
+    _unlockType: 2
+    _unlockChapter: 2
+    _unlockStage: 0
+  - _hostKey: snowwoman
+    _nameEn: SNOW WOMAN
+    _nameKr: "\uC124\uB140"
+    _role: "\uBE59\uACB0 \uC81C\uC5B4"
+    _hp: 62
+    _atk: 70
+    _spd: 74
+    _dash: 68
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
+    _rangeMul: 1.05
+    _intervalMul: 0.9
+    _damageMul: 0.85
+    _lifestealPercent: 0
+    _slowPercent: 45
     _reflectsShots: 0
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E009
+    _enemyId: 
     _possessPriority: 0
-    _possessKind: 0
-    _possessHpPercent: 100
-    _maintainHook: "\uAC00\uB4DC \uC624\uB77C"
-    _ultimateKey: astral_form
+    _possessKind: 1
+    _possessHpPercent: 50
+    _maintainHook: "\uBE59\uACB0 \uC7A5\uD310"
+    _ultimateKey: elemental_nova
     _unlockType: 2
-    _unlockChapter: 1
+    _unlockChapter: 2
     _unlockStage: 0
   - _hostKey: vampire
     _nameEn: VAMPIRE
@@ -302,33 +621,4 @@ MonoBehaviour:
     _ultimateKey: blood_tornado
     _unlockType: 2
     _unlockChapter: 1
-    _unlockStage: 0
-  - _hostKey: baseball
-    _nameEn: BASEBALL PLAYER
-    _nameKr: "\uC57C\uAD6C\uC120\uC218"
-    _role: "\uD0C4\uD658 \uBC18\uC0AC"
-    _hp: 78
-    _atk: 66
-    _spd: 72
-    _dash: 70
-    _attackKind: 0
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 0.6
-    _intervalMul: 0.75
-    _damageMul: 1.35
-    _lifestealPercent: 0
-    _slowPercent: 0
-    _reflectsShots: 1
-    _moveAttack: 0
-    _targetType: 0
-    _tag: 0
-    _enemyId: E015
-    _possessPriority: 0
-    _possessKind: 0
-    _possessHpPercent: 100
-    _maintainHook: "\uBC14\uC6B4\uC2A4 \uACBD\uB85C"
-    _ultimateKey: grand_slam
-    _unlockType: 2
-    _unlockChapter: 2
     _unlockStage: 0
