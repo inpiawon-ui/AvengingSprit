@@ -22,6 +22,7 @@ MonoBehaviour:
   _ghostProtectSeconds: 1
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
+  _attackResumeSeconds: 0.12
   _hostStartHpPercent: 70
   _tacticalGhostCost: 6
   _tacticalCooldownSeconds: 8
@@ -37,7 +38,6 @@ MonoBehaviour:
   _expPerBoss: 60
   _expToLevelBase: 40
   _expGrowthPercent: 45
-  _attackResumeSeconds: 0.12
   _hostHpPerPoint: 6
   _hostHpBase: 60
   _hostAtkPerPoint: 0.32
@@ -49,7 +49,7 @@ MonoBehaviour:
   _enemyHpScale: 0.55
   _enemyAtkScale: 0.7
   _enemySpeedScale: 0.62
-  _enemyAttackRange: 60
+  _enemyAttackRange: 900
   _enemyAttackInterval: 1.1
   _enemyDetectRange: 300
   _enemySeparation: 82

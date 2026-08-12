@@ -886,12 +886,28 @@ namespace Game.Module.InGame
         /// 없는 방향만 원래 그림으로 나오면 캐릭터가 방향마다 바뀌어 보인다.
         /// 12종을 한 번에 만들지 않고 한 종씩 넣어 볼 수 있어야 해서 이렇게 둔다.
         /// </summary>
+        /// <summary>
+        /// 걷기 그림을 쓰지 않는 종.
+        ///
+        /// `medium` 은 로브를 입은 종이라 다리가 없다. 그래서 걷기를 **로브가 벌어지는
+        /// 것**으로 그렸는데, 실루엣이 통째로 바뀌어 걷는 것이 아니라 몸이 변형되는
+        /// 것으로 보인다. 다시 그릴 때까지 서 있는 그림으로 움직인다 —
+        /// 로브 종은 미끄러지듯 움직이는 편이 오히려 자연스럽다.
+        ///
+        /// ⚠ 임시다. 재작업분이 들어오면 이 목록에서 빼라 (큐 38).
+        /// </summary>
+        private static readonly HashSet<string> NoWalkFrames = new() { "medium" };
+
         private void ApplyFacingSprites(Unit u, string key)
         {
             var sets = new Sprite[Unit.FrameSuffix.Length][];
             for (int f = 0; f < sets.Length; f++)
                 sets[f] = FrameSet(key, Unit.FrameSuffix[f]);
             if (sets[Unit.FrameIdle] == null) return;   // 방향 그림이 없는 종은 지금 그림 그대로 둔다
+
+            if (NoWalkFrames.Contains(key))
+                sets[Unit.FrameWalk1] = sets[Unit.FrameWalk2] = null;
+
             u.SetFacingSprites(sets);
         }
 
@@ -1447,7 +1463,11 @@ namespace Game.Module.InGame
                 {
                     // 화면 밖에서는 깨어나지 않는다. 정본의 `NO_OFFSCREEN_TELEGRAPH` —
                     // 보이지도 않는 곳에서 예고 없이 날아오는 공격은 피할 방법이 없다.
-                    if (d > _config.EnemyDetectRange || !IsOnScreen(e))
+                    //
+                    // 거리는 더 이상 보지 않는다. 화면에 보이면 곧 싸움이다 —
+                    // 탐지 거리를 두면 방에 들어가서 한참을 걸어가야 교전이 시작되고,
+                    // 그 사이가 그냥 빈 시간이 된다.
+                    if (!IsOnScreen(e))
                     {
                         e.SetState(EnemyState.Idle);
                         Separate(e, i, dt);
@@ -1461,6 +1481,9 @@ namespace Game.Module.InGame
                 // 상태를 이름으로 들고 있어야 AI 타입별 분기를 넣을 자리가 생긴다.
                 e.SetFacing(me.Position - e.Position);   // 적도 플레이어를 바라본다
 
+                // 사거리 안이면 **다가오지 않고 그 자리에서 쏜다.** 사거리를 방 크기로
+                // 잡아 두었으므로(EnemyAttackRange) 사실상 보이는 순간부터 쏜다.
+                // 몰려와서 붙는 것보다 흩어져서 쏘는 쪽이 피할 자리를 남긴다.
                 if (d > e.AttackRange)
                 {
                     e.SetState(EnemyState.Approach);
@@ -3121,7 +3144,10 @@ namespace Game.Module.InGame
         public void TryUltimate()
         {
             if (!_running || _ultimateCharge < _config.UltimateChargeSeconds) return;
-            var me = Avatar;
+            // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 얼티밋은 뚫려 있어서,
+            // 몸이 없는 상태로 화면 전체를 쓸어버릴 수 있었다.
+            // 게이지는 그대로 둔다 — 몸을 얻으면 그때 쓴다.
+            var me = _host;
             if (me == null) return;
 
             _ultimateCharge = 0f;

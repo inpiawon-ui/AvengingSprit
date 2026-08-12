@@ -193,19 +193,23 @@ namespace Game.Module.InGame
             _body.preserveAspect = true;
             _body.raycastTarget = false;
 
-            // 적만 머리 위 체력바를 단다. 플레이어 체력은 상단 HUD 가 담당한다.
-            if (side == UnitSide.Enemy)
+            // 플레이어도 머리 위에 단다. 상단 HUD 에도 있지만 교전 중에는 시선이
+            // 캐릭터에 있어서, 위를 봐야 남은 체력을 아는 것은 늦다.
             {
                 var barSize = new Vector2(size.x * 0.7f, 5f);
                 var barPos = new Vector2(0f, size.y * 0.5f + 6f);
                 _hpBarBg = GetOrCreate("HpBarBg", barSize, barPos);
                 _hpBarBg.color = new Color(0.06f, 0.07f, 0.10f, 0.9f);
                 _hpBarFill = GetOrCreate("HpBarFill", barSize, barPos, _hpBarBg.transform);
-                _hpBarFill.color = new Color(0.85f, 0.20f, 0.16f, 1f);
+                // 편을 색으로 가른다 — 붉은 바가 둘이면 누구 체력인지 헷갈린다
+                _hpBarFill.color = side == UnitSide.Enemy
+                    ? new Color(0.85f, 0.20f, 0.16f, 1f)
+                    : new Color(0.35f, 0.85f, 0.40f, 1f);
                 ((RectTransform)_hpBarFill.transform).pivot = new Vector2(0f, 0.5f);
                 ((RectTransform)_hpBarFill.transform).anchoredPosition = new Vector2(-barSize.x * 0.5f, 0f);
 
-                if (!isBoss)
+                // 빙의 표식은 **적에게만** 단다. 내 몸에 "뺏을 수 있다" 표시가 뜨면 거짓말이다.
+                if (!isBoss && side == UnitSide.Enemy)
                 {
                     _possessMark = GetOrCreate("PossessMark", new Vector2(18f, 18f),
                                                new Vector2(0f, size.y * 0.5f + 20f));

@@ -104,7 +104,10 @@ namespace Game.Character
         [SerializeField] private float _enemyHpScale = 0.55f;
         [SerializeField] private float _enemyAtkScale = 0.7f;
         [SerializeField] private float _enemySpeedScale = 0.62f;
-        [SerializeField] private float _enemyAttackRange = 150f;
+        // 화면에 보이면 곧 사거리 안이다. 150 이던 것을 900 으로 올렸다 —
+        // 짧으면 적이 붙으러 걸어오는 동안이 빈 시간이 되고, 다 붙고 나면
+        // 한 덩어리가 되어 피할 자리가 없다. 흩어져서 쏘는 쪽이 낫다.
+        [SerializeField] private float _enemyAttackRange = 900f;
         [SerializeField] private float _enemyAttackInterval = 1.1f;
         [Tooltip("이 거리 안에 들어오면 플레이어를 인지하고 달려든다. 밖이면 제자리 대기.")]
         [SerializeField] private float _enemyDetectRange = 300f;
