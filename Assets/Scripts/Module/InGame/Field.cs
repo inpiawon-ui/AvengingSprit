@@ -64,6 +64,16 @@ namespace Game.Module.InGame
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// ⚠ 그림을 깔 때마다 정한다. 장판도 풀에서 돌려 쓰므로 태어날 때 정하면
+        ///    직전 효과의 그림이 그대로 남는다. 없으면 감춘다.
+        /// </summary>
+        public void SetSprite(Sprite sprite)
+        {
+            _image.sprite = sprite;
+            _image.enabled = sprite != null;
+        }
+
         public void Spawn(Vector2 at, float radius, float seconds, FieldEffect effect,
                           int damagePerTick, bool fromPlayer, Color color)
         {

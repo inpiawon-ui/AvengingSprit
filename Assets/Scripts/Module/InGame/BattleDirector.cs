@@ -157,6 +157,8 @@ namespace Game.Module.InGame
         private const float CameraFollow = 8f;
 
         private RectTransform _floor;
+        private Image _floorImage;
+        private Sprite _defaultFloor;
         private float _pxPerMeter = 1f;
         private Vector2 _roomSize;      // 픽셀
         private float _scroll;
@@ -211,9 +213,13 @@ namespace Game.Module.InGame
             if (floorT != null)
             {
                 _floor = floorT;
-                var img = _floor.GetComponent<Image>();
+                _floorImage = _floor.GetComponent<Image>();
                 // 세로로 길어진 방을 늘려 채우면 바닥 무늬가 뭉개진다. 타일로 반복한다.
-                if (img != null) img.type = Image.Type.Tiled;
+                if (_floorImage != null)
+                {
+                    _floorImage.type = Image.Type.Tiled;
+                    _defaultFloor = _floorImage.sprite;
+                }
             }
             _pxPerMeter = _field.rect.width / RoomMeterWidth;
             SetRoomSize(RoomMeterHeight);
@@ -957,6 +963,7 @@ namespace Game.Module.InGame
             _roomIndex = index;
             DespawnExit();
             ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
+            ApplyRoomFloor();
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
             _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
@@ -1972,6 +1979,28 @@ namespace Game.Module.InGame
         /// 로봇의 몸일 때만 포탑이 나간다. 쿨다운으로 저절로 깔린다 —
         /// 버튼을 하나 더 두면 조작이 늘고, 이 게임의 조작은 이동과 사격 둘뿐이다.
         /// </summary>
+        /// <summary>
+        /// 보스방은 제 바닥을 쓴다. 원작에서도 보스마다 아레나가 따로 있다 —
+        /// 같은 던전 바닥 위에서 싸우면 "여기가 그 방" 이라는 느낌이 안 난다.
+        /// 전용 바닥이 아직 없으면 기본 바닥으로 돌아간다.
+        /// </summary>
+        private void ApplyRoomFloor()
+        {
+            if (_floorImage == null) return;
+            var key = _canonRoom != null && _canonRoom.IsBoss
+                ? $"roomfloor_{BossKeyOfChapter()}"
+                : null;
+            var art = key != null ? GetSprite(key) : null;
+            _floorImage.sprite = art ?? _defaultFloor;
+        }
+
+        private string BossKeyOfChapter()
+        {
+            int chapter = _player != null ? _player.CurrentChapter : 1;
+            var def = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
+            return def != null ? def.BossKey : "robot_snakes";
+        }
+
         private void TickDeploy(float dt)
         {
             if (_deployCooldown > 0f) _deployCooldown -= dt;
@@ -2078,6 +2107,19 @@ namespace Game.Module.InGame
         private static readonly Color FieldColorFreeze = new(0.60f, 0.90f, 1f, 0.32f);
         private static readonly Color FieldColorCurse  = new(0.66f, 0.35f, 1f, 0.32f);
 
+        /// <summary>
+        /// 효과별 장판 그림 이름. 전용 그림이 없으면 흰 원판(`field`)에 색만 입혀 쓴다 —
+        /// 그림이 오는 대로 저절로 갈아 끼워진다.
+        /// </summary>
+        private static string FieldSpriteOf(FieldEffect e) => e switch
+        {
+            FieldEffect.Slow   => "field_slow",
+            FieldEffect.Burn   => "field_burn",
+            FieldEffect.Freeze => "field_freeze",
+            FieldEffect.Curse  => "field_curse",
+            _                  => "field_damage",
+        };
+
         private static Color ColorOf(FieldEffect e) => e switch
         {
             FieldEffect.Slow   => FieldColorSlow,
@@ -2103,14 +2145,23 @@ namespace Game.Module.InGame
                     var go = new GameObject("Field", typeof(RectTransform));
                     go.transform.SetParent(_fieldLayer, false);
                     f = go.AddComponent<Field>();
-                    f.Init(GetSprite("field") ?? GetSprite("shot"));
+                    f.Init(null);
                     _fields.Add(f);
                 }
             }
 
+            // ⚠ 그림은 **깔 때마다** 정한다. 장판도 풀에서 돌려 쓰므로 태어날 때 정하면
+            //    직전 효과의 그림이 그대로 남는다(탄·포탑에서 이미 두 번 겪었다).
+            var art = GetSprite(FieldSpriteOf(effect));
+            // 전용 그림이 없으면 흰 원판에 색을 입힌다. 색까지 없으면 그리지 않는다 —
+            // 흰 네모가 바닥에 깔리는 것보다 아무것도 없는 편이 낫다.
+            bool generic = art == null;
+            f.SetSprite(art ?? GetSprite("field"));
+
             // 정본 BUF_A02 — 장판이 더 오래 남는다
             f.Spawn(at, radius, seconds + _buffs.FieldExtraSeconds,
-                    effect, damagePerTick, fromPlayer, ColorOf(effect));
+                    effect, damagePerTick, fromPlayer,
+                    generic ? ColorOf(effect) : Color.white);
             return f;
         }
 
