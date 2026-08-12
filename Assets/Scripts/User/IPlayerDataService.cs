@@ -41,6 +41,9 @@ namespace Game.User
         bool IsHostUnlocked(HostEntry host);
 
         IReadOnlyList<HostEntry> AllHosts { get; }
+
+        /// <summary>호스트 선택 화면에 내보낼 몸. 전투 전용 배우(방패병·센서드론·엘리트)는 빠진다.</summary>
+        IReadOnlyList<HostEntry> PlayableHosts { get; }
         HostEntry GetHost(string hostKey);
         UltimateEntry GetUltimate(string ultimateKey);
 

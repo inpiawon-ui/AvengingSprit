@@ -147,7 +147,7 @@ namespace Game.Module.Lobby
             template.SetParent(transform, false);
             template.gameObject.SetActive(false);
 
-            var hosts = _player.AllHosts;
+            var hosts = _player.PlayableHosts;
             for (int i = 0; i < hosts.Count; i++)
             {
                 var go = Instantiate(template.gameObject, grid);
@@ -162,7 +162,7 @@ namespace Game.Module.Lobby
 
         private void RefreshSlots()
         {
-            var hosts = _player.AllHosts;
+            var hosts = _player.PlayableHosts;
             for (int i = 0; i < _slots.Count && i < hosts.Count; i++)
             {
                 var e = hosts[i];
@@ -257,7 +257,7 @@ namespace Game.Module.Lobby
         {
             _ui.SetText("TipText",
                 "HOST마다 이동속도, 대시(회피) 속도, 공격 방식이 다릅니다.\n다양한 HOST를 경험해 보세요!");
-            _ui.SetText("OwnedHostCountText", $"보유 HOST  {_player.OwnedHostCount}/{_player.AllHosts.Count}");
+            _ui.SetText("OwnedHostCountText", $"보유 HOST  {_player.OwnedHostCount}/{_player.PlayableHosts.Count}");
             _ui.SetText("HostListTitleText", "HOST LIST");
         }
 

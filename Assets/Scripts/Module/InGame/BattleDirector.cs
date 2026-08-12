@@ -384,19 +384,20 @@ namespace Game.Module.InGame
                 // 엘리트는 정본에서 별도 ID(EL01…)로 온다. 수가 적은 대신 하나하나가 세다.
                 bool elite = s.ActorId != null && s.ActorId.StartsWith("EL");
                 var u = NewUnit($"Enemy_{s.ActorId}_{s.SpawnId}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
-                        Mathf.RoundToInt(_config.EnemyHp(e.Hp) * (elite ? _config.EliteHpMul : 1f)),
-                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul
-                                         * (elite ? _config.EliteAtkMul : 1f)),
-                        _config.EnemySpeed(e.Spd),
-                        _config.EnemyAttackRange * e.RangeMul,
-                        _config.EnemyAttackInterval * e.IntervalMul,
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                        // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
+                        // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
+                        Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)),
+                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)),
+                        EnemySpeedOf(e),
+                        EnemyRangeOf(e),
+                        EnemyIntervalOf(e),
                         new Vector2(84f, 78f), isBoss: false, profile: e);
                 u.Position = ToPixels(s.At);
                 u.PossessPriority = e.PossessPriority;
                 u.PossessRange = 0f;
                 u.SetState(EnemyState.Idle);
-                ApplyFacingSprites(u, e.HostKey);
+                ApplyFacingSprites(u, e.SpriteKey);
                 _enemies.Add(u);
             }
             _wave = wave;
@@ -844,7 +845,7 @@ namespace Game.Module.InGame
 
             // 빙의로 몸을 갈아타도 로비에서 고른 호스트는 긴급 투입으로 나올 수 있다.
             var emergency = PickPlayerHost();
-            if (emergency != null) keys.Add(emergency.HostKey);
+            if (emergency != null) keys.Add(emergency.SpriteKey);
 
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return keys;
@@ -862,7 +863,7 @@ namespace Game.Module.InGame
                     for (int i = 0; i < room.Spawns.Count; i++)
                     {
                         var e = ActorProfile(room.Spawns[i].ActorId, hosts);
-                        if (e != null && !keys.Contains(e.HostKey)) keys.Add(e.HostKey);
+                        if (e != null && !keys.Contains(e.SpriteKey)) keys.Add(e.SpriteKey);
                     }
                     id = room.Exits.Count > 0 ? room.Exits[0].NextRoomId : null;
                 }
@@ -875,7 +876,7 @@ namespace Game.Module.InGame
                 int count = Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index));
                 for (int i = 0; i < count; i++)
                 {
-                    var key = EnemyAt(hosts, index, i).HostKey;
+                    var key = EnemyAt(hosts, index, i).SpriteKey;
                     if (!keys.Contains(key)) keys.Add(key);
                 }
             }
@@ -1115,12 +1116,12 @@ namespace Game.Module.InGame
                     var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
                     // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
                     // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
-                    u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
-                            Mathf.RoundToInt(_config.EnemyHp(e.Hp) * (elite ? _config.EliteHpMul : 1f)),
-                            Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul * (elite ? _config.EliteAtkMul : 1f)),
-                            _config.EnemySpeed(e.Spd),
-                            _config.EnemyAttackRange * e.RangeMul,
-                            _config.EnemyAttackInterval * e.IntervalMul,
+                    u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                            Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
+                            Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
+                            EnemySpeedOf(e),
+                            EnemyRangeOf(e),
+                            EnemyIntervalOf(e),
                             new Vector2(84f, 78f), isBoss: false, profile: e);
                     u.Position = SpawnSlot(i, count);
                     // 기획서 A 4-3 — 빙의 우선순위·사거리는 적마다 다를 수 있다.
@@ -1128,7 +1129,7 @@ namespace Game.Module.InGame
                     u.PossessPriority = e.PossessPriority;
                     u.PossessRange = 0f;
                     u.SetState(EnemyState.Idle);
-                    ApplyFacingSprites(u, e.HostKey);
+                    ApplyFacingSprites(u, e.SpriteKey);
                     _enemies.Add(u);
                 }
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
@@ -1564,11 +1565,83 @@ namespace Game.Module.InGame
 
         /// <summary>
         /// 실제로 때릴 수 있는 거리.
-        /// 근접은 데이터의 사거리를 쓰지 않는다 — 전역 사거리를 900 으로 올려 두어서
-        /// 그대로 두면 주먹이 방 건너편까지 닿는다.
+        ///
+        /// 정본 사거리는 근접도 1.2~1.8m(103~155px)라 그대로 쓰면 된다. 다만 그림 크기
+        /// 때문에 맞붙어도 중심 사이가 90px 이라, 그보다 짧은 값이 들어오면 영영 닿지
+        /// 않는다 — 근접에만 바닥을 깔아 준다.
         /// </summary>
         private float EffectiveRange(Unit e)
-            => IsMelee(e) ? _config.MeleeAttackRange : e.AttackRange;
+            => IsMelee(e) ? Mathf.Max(e.AttackRange, _config.MeleeAttackRange) : e.AttackRange;
+
+        // ─────────────────────────────────────────
+        // 정본 실수치 해석
+        //
+        // 정본(CH01_03_RUNTIME_DATA)은 배우마다 HP·공격력·이동속도·사거리·간격을
+        // 실제 값으로 준다. 그 값이 있으면 **그대로** 쓴다.
+        // 정본에 없는 창작 배우만 예전의 "표시 스탯 × 배율" 공식으로 되돌아간다.
+        //
+        // 거리·속도는 정본이 미터 단위다. 방 크기에서 얻은 _pxPerMeter 로 환산한다.
+        // ─────────────────────────────────────────
+
+        private int EnemyHpOf(HostEntry e)
+            => e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp);
+
+        private int EnemyAtkOf(HostEntry e)
+            => e.HasCanon ? e.CanonAtk
+                          : Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul);
+
+        private float EnemySpeedOf(HostEntry e)
+            => e.HasCanon ? e.CanonMoveSpeed * _pxPerMeter : _config.EnemySpeed(e.Spd);
+
+        private float EnemyRangeOf(HostEntry e)
+            => e.HasCanon ? e.CanonRange * _pxPerMeter : _config.EnemyAttackRange * e.RangeMul;
+
+        private float EnemyIntervalOf(HostEntry e)
+            => e.HasCanon ? e.CanonInterval : _config.EnemyAttackInterval * e.IntervalMul;
+
+        // 내가 탄 몸. 정본은 같은 배우라도 **적일 때와 내가 탔을 때 교전값을 따로** 준다
+        // (attacks 의 AP_E### / AP_H##). 체력·공격력은 몸 자체의 것이라 적일 때와 같다.
+
+        private int HostHpOf(HostEntry e)
+            => e == null ? 100 : e.HasCanon ? e.CanonHp : _config.HostHp(e.Hp);
+
+        private int HostAtkOf(HostEntry e)
+            => e == null ? 10 : e.HasCanon ? e.CanonAtk
+                                           : Mathf.RoundToInt(_config.HostAtk(e.Atk) * e.DamageMul);
+
+        private float HostSpeedOf(HostEntry e)
+            => e == null ? 180f
+             : e.HasCanonHost ? e.CanonHostMoveSpeed * _pxPerMeter
+             : e.HasCanon     ? e.CanonMoveSpeed * _pxPerMeter
+             : _config.HostSpeed(e.Spd);
+
+        // 호스트 프로필이 없으면 그 배우가 적일 때 쓰던 값을 그대로 쓴다.
+        // 예전 공식(전역 900 × 배율)으로 돌아가면 정본 배우들과 격이 어긋난다.
+        private float HostRangeOf(HostEntry e)
+            => e == null ? _config.HostAttackRange
+             : e.HasCanonHost ? e.CanonHostRange * _pxPerMeter
+             : e.HasCanon     ? e.CanonRange * _pxPerMeter
+             : _config.HostAttackRange * e.RangeMul;
+
+        /// <summary>
+        /// 탄속. 정본은 배우마다 다르게 준다 — 닌자 탄이 12.5m/s, 잡몹이 8.5m/s 다.
+        /// 전부 같은 속도로 날면 "저 탄은 빠르니 지금 피해야 한다" 는 판단이 안 생긴다.
+        /// </summary>
+        private float ShotSpeedOf(HostEntry e, bool fromPlayer)
+        {
+            float mps = e == null ? 0f
+                      : fromPlayer ? (e.CanonHostShotSpeed > 0f ? e.CanonHostShotSpeed
+                                                                : e.CanonShotSpeed)
+                      : e.CanonShotSpeed;
+            return mps > 0f ? mps * _pxPerMeter
+                            : fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy;
+        }
+
+        private float HostIntervalOf(HostEntry e)
+            => e == null ? _config.HostAttackInterval
+             : e.HasCanonHost ? e.CanonHostInterval
+             : e.HasCanon     ? e.CanonInterval
+             : _config.HostAttackInterval * e.IntervalMul;
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —
@@ -1649,12 +1722,12 @@ namespace Game.Module.InGame
                 if (e == null) continue;
 
                 var u = NewUnit($"Minion_{def.MinionPool[i]}_P{phase}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
-                        _config.EnemyHp(e.Hp),
-                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
-                        _config.EnemySpeed(e.Spd),
-                        _config.EnemyAttackRange * e.RangeMul,
-                        _config.EnemyAttackInterval * e.IntervalMul,
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                        EnemyHpOf(e),
+                        EnemyAtkOf(e),
+                        EnemySpeedOf(e),
+                        EnemyRangeOf(e),
+                        EnemyIntervalOf(e),
                         new Vector2(84f, 78f), isBoss: false, profile: e);
 
                 float side = i % 2 == 0 ? -1f : 1f;
@@ -1665,7 +1738,7 @@ namespace Game.Module.InGame
                 u.PossessPriority = e.PossessPriority;
                 u.IsAggro = true;          // 불러낸 것들은 기다리지 않는다
                 u.SetState(EnemyState.Detect);
-                ApplyFacingSprites(u, e.HostKey);
+                ApplyFacingSprites(u, e.SpriteKey);
                 _enemies.Add(u);
             }
 
@@ -1895,12 +1968,12 @@ namespace Game.Module.InGame
             {
                 var e = hosts[(_enemies.Count * 3 + i * 7) % hosts.Count];
                 var u = NewUnit($"Minion_{e.HostKey}_{_enemies.Count}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.HostKey),
-                        Mathf.Max(1, Mathf.RoundToInt(_config.EnemyHp(e.Hp) * 0.6f)),
-                        Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul),
-                        _config.EnemySpeed(e.Spd),
-                        _config.EnemyAttackRange * e.RangeMul,
-                        _config.EnemyAttackInterval * e.IntervalMul,
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                        Mathf.Max(1, Mathf.RoundToInt(EnemyHpOf(e) * 0.6f)),
+                        EnemyAtkOf(e),
+                        EnemySpeedOf(e),
+                        EnemyRangeOf(e),
+                        EnemyIntervalOf(e),
                         new Vector2(78f, 72f), isBoss: false, profile: e);
 
                 // 보스(160px)와 겹치지 않게 바깥에 원형으로 흩는다
@@ -1937,9 +2010,19 @@ namespace Game.Module.InGame
                 {
                     // 다중 사격 버프는 확산이 아닌 방식에도 탄을 더한다 (플레이어 한정)
                     int extra = fromPlayer ? _buffs.ExtraShots : 0;
-                    int n = (kind == AttackKind.Spread ? p.ShotCount : 1) + extra;
+                    // 정본 projectiles 는 확산이 아닌 몸에도 탄 수를 준다 (갱스터 3발).
+                    // 확산일 때만 세면 그 값이 버려진다.
+                    int shots = p == null ? 1 : fromPlayer ? p.ShotCount : p.EnemyShotCount;
+                    int n = shots + extra;
                     float span = kind == AttackKind.Spread ? p.SpreadDegrees : 0f;
+                    // 확산이 아닌데 탄이 여럿이면 좁게 흩는다 — 0 이면 전부 겹쳐 한 발로 보인다
+                    if (span <= 0f && n > 1) span = 8f * (n - 1);
                     if (extra > 0) span = Mathf.Max(span, 10f * (n - 1));
+
+                    // 정본은 공격력을 **한 번의 공격**에 준다. 탄 수는 따로 적혀 있으므로
+                    // 나눠 실어야 탄 수가 그대로 화력 배수가 되지 않는다 — 확산은 맞히기
+                    // 쉬운 대신 한 발이 약한 것이 맞다.
+                    int split = Mathf.Max(1, shots);
 
                     // 정본 BUF_A01 마지막 탄창 — 확산의 **마지막 한 발**이 더 아프다.
                     // 마지막 발만 강하면 "다 맞히는 것" 이 아니라 "끝까지 붙어 있는 것" 이 이득이 된다.
@@ -1947,7 +2030,7 @@ namespace Game.Module.InGame
                     {
                         float off = n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
                         FireShot(attacker, target, fromPlayer, off,
-                                 lastShot: fromPlayer && i == n - 1);
+                                 lastShot: fromPlayer && i == n - 1, split: split);
                     }
                     break;
                 }
@@ -2418,7 +2501,7 @@ namespace Game.Module.InGame
         private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
 
         private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg,
-                              bool lastShot = false)
+                              bool lastShot = false, int split = 1)
         {
             var shot = RentShot();
             if (shot == null) return;
@@ -2426,7 +2509,7 @@ namespace Game.Module.InGame
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
-            float speed = (fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy)
+            float speed = ShotSpeedOf(p, fromPlayer)
                           * (snipe ? 1.6f : 1f)
                           * (fromPlayer ? _buffs.ShotSpeedMul : 1f);
 
@@ -2434,9 +2517,10 @@ namespace Game.Module.InGame
             // 방향 스프라이트를 그린 의미가 없다.
             shot.Fire(attacker.MuzzlePosition, target.Position, speed,
                       fromPlayer
-                          ? Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul
-                                             * (lastShot ? 1f + _buffs.LastShotBonus : 1f))
-                          : attacker.Atk,
+                          ? Mathf.Max(1, Mathf.RoundToInt(
+                                attacker.Atk * _buffs.AttackMul * MaintainDamageMul
+                                * (lastShot ? 1f + _buffs.LastShotBonus : 1f) / split))
+                          : Mathf.Max(1, Mathf.RoundToInt(attacker.Atk / (float)split)),
                       fromPlayer, target, _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
                       _config.ShotLifeSeconds,
@@ -3171,12 +3255,11 @@ namespace Game.Module.InGame
             _host = NewUnit($"Host_{key}");
             _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
                         UnitGet(key),
-                        Mathf.RoundToInt((entry != null ? _config.HostHp(entry.Hp) : 100)
-                                         * _buffs.HostHpMul),
-                        entry != null ? Mathf.RoundToInt(_config.HostAtk(entry.Atk) * entry.DamageMul) : 10,
-                        entry != null ? _config.HostSpeed(entry.Spd) : 180f,
-                        _config.HostAttackRange * (entry?.RangeMul ?? 1f),
-                        _config.HostAttackInterval * (entry?.IntervalMul ?? 1f),
+                        Mathf.RoundToInt(HostHpOf(entry) * _buffs.HostHpMul),
+                        HostAtkOf(entry),
+                        HostSpeedOf(entry),
+                        HostRangeOf(entry),
+                        HostIntervalOf(entry),
                         new Vector2(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
             ApplyFacingSprites(_host, key);

@@ -82,6 +82,8 @@ namespace Game.EditorTools
             AssetDatabase.Refresh();
             RegisterAddressable(OutPath, Address);
 
+            PatchHosts(json, schema);
+
             int spawnTotal = rooms.Sum(r => ((SpawnEntry[])GetField(r, "_spawns")).Length);
             int objTotal = rooms.Sum(r => ((ObjectEntry[])GetField(r, "_objects")).Length);
             int waveTotal = rooms.Sum(r => ((WaveEntry[])GetField(r, "_waves")).Length);
@@ -409,6 +411,287 @@ namespace Game.EditorTools
                 result[kv.Key] = fs.Select(f => (string)(f["name"] ?? f) ?? "").ToArray();
             }
             return result;
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // HostTable 에 정본 실수치를 밀어넣는다.
+        //
+        // 예전에는 표시 스탯(0~100)에 배율을 곱해 전투 수치를 만들었다. 그 결과 정본이
+        // 90 이라 한 갱스터의 체력이 264 가 되는 식으로 전 배우가 2~3배 어긋나 있었다.
+        // 이제 정본 값을 **그대로** 쓴다.
+        //
+        // 손으로 정한 것(이름·그림·얼티밋·해금 조건)은 건드리지 않는다. 정본이
+        // 권위를 갖는 열만 덮어쓴다.
+        // ─────────────────────────────────────────────────────────
+
+        private const string HostPath = OutDir + "/HostTable.asset";
+
+        /// <summary>
+        /// 정본에 있지만 우리 테이블에 자리가 없던 배우. 없으면 대역으로 서서
+        /// 다른 배우의 수치로 싸운다 — 방패병이 갱스터 체력으로 나오는 식이다.
+        ///
+        /// 그림이 아직 없어 다른 몸의 그림을 빌린다(SpriteKey). 빌릴 그림조차 없으면
+        /// 통째로 안 보여서 방이 끝나지 않으므로 반드시 채운다.
+        /// </summary>
+        private readonly struct StandIn
+        {
+            public readonly string ActorId, HostKey, NameKr, SpriteKey;
+            /// <summary>정본은 엘리트에게 교전 프로필(attacks)을 주지 않는다. 가장 가까운 배우의 값을 빌린다.</summary>
+            public readonly float Range, Interval;
+            /// <summary>근접인가. 안 정하면 기본값이 근접이라 사거리 531px 짜리 주먹이 나온다.</summary>
+            public readonly bool Melee;
+
+            public StandIn(string actorId, string hostKey, string nameKr, string spriteKey,
+                           float range, float interval, bool melee)
+            {
+                ActorId = actorId; HostKey = hostKey; NameKr = nameKr; SpriteKey = spriteKey;
+                Range = range; Interval = interval; Melee = melee;
+            }
+        }
+
+        private static readonly StandIn[] StandIns =
+        {
+            // 정본 enemies 에 있고 교전 프로필도 있다 — Range/Interval 은 attacks 에서 온다
+            new("E013", "actor_missile_merc", "미사일 용병", "commando_grenade", 0f, 0f, false),
+            new("E017", "actor_shield_trooper", "방패병",     "amazon_elite",     0f, 0f, true),
+            new("E018", "actor_sensor_drone",  "센서 드론",   "robot",            0f, 0f, false),
+
+            // 엘리트는 정본에 교전 프로필이 없다 — 근접 둘은 파이터(AP_E002),
+            // 원거리 하나는 화이트위저드(AP_E010) 값을 빌린다.
+            new("EL01", "actor_enforcer",      "집행자",     "amazon_elite", 1.2f, 1.15f, true),
+            new("EL02", "actor_shield_captain","방패 대장",  "amazon_elite", 1.2f, 1.15f, true),
+            new("EL03", "actor_arc_warden",    "아크 워든",  "white_wizard", 6.2f, 2.0f, false),
+        };
+
+        /// <summary>
+        /// 정본에 없는 창작 몸. **정본이 아니다** — 다만 그대로 두면 예전 공식이 돌아
+        /// 체력이 정본 배우의 2~3배가 되어 같은 방에 세울 수가 없다.
+        /// 가장 가까운 정본 형제의 값에서 성격만큼만 비틀어 같은 격에 맞춘 것이다.
+        ///
+        /// 순서: HP, 공격력, 이동(m/s), 사거리(m), 간격(s), 탄속(m/s),
+        ///       내 사거리(m), 내 간격(s), 내 이동(m/s)
+        /// </summary>
+        private static readonly Dictionary<string, float[]> Derived = new()
+        {
+            // 갱스터(E001 90/11/1.2/6.5/1.45) 기준 — 더 가볍고 빠르다
+            ["hopper"]      = new[] { 85f, 10f, 1.4f, 6.2f, 1.20f, 8.5f, 6.4f, 1.00f, 4.6f },
+            // 폭력배(E004 120/9/1.5/5.5/0.38) 기준 — 연사형
+            ["hopper_smg"]  = new[] { 95f,  7f, 1.6f, 5.2f, 0.42f, 8.5f, 5.6f, 0.42f, 4.5f },
+            // 돌격 갱스터(E007 135/10/1.6/7.0/0.7) 기준 — 중화기라 느리고 두껍다
+            ["commando_mg"] = new[] { 145f, 9f, 1.3f, 6.8f, 0.45f, 8.5f, 7.0f, 0.45f, 3.5f },
+            // 살라만더(E003 170/16/1.8/3.0/1.8) 기준 — 같은 브레스, 냉기
+            ["dragon_blue"] = new[] { 175f, 15f, 1.7f, 3.2f, 1.85f, 8.5f, 3.4f, 1.70f, 3.5f },
+            // 닌자(E011 110/19/1.7/5.0/1.2) 기준 — 사슬이라 근접
+            ["ninja_chain"] = new[] { 120f, 17f, 1.8f, 1.8f, 0.95f, 0f,   1.9f, 0.85f, 5.0f },
+            // 화이트위저드(E010 145/15/1.8/6.2/2.0) 기준 — 제어형
+            ["snowwoman"]   = new[] { 130f, 12f, 1.7f, 6.0f, 1.85f, 8.5f, 6.2f, 1.60f, 3.8f },
+        };
+
+        /// <summary>
+        /// 정본의 호스트 프로필(AP_H##)을 이 몸에 써도 되는가.
+        ///
+        /// 정본은 배우 여럿이 호스트 하나를 나눠 쓰게 짰다 — 폭력배(E004)와 드래군(E016)이
+        /// 근접 호스트(H02·H20)에 물려 있다. 그대로 가져오면 산탄과 브레스의 사거리가
+        /// 1.45m 가 되어 총을 든 채 붙어야 쏜다. 교전 거리의 격이 다르면 안 쓴다.
+        /// 그때는 그 배우 자신의 값(적으로 나올 때의 값)을 내가 탔을 때도 쓴다.
+        /// </summary>
+        private static bool SameReachClass(Game.Character.HostEntry e, string canonMode)
+        {
+            var kind = (Game.Character.AttackKind)GetField(e, "_attackKind");
+            bool oursMelee = kind is Game.Character.AttackKind.Melee
+                                  or Game.Character.AttackKind.Pulse;
+            bool canonMelee = canonMode == "MELEE";
+            return oursMelee == canonMelee;
+        }
+
+        private static void PatchHosts(JObject json, Dictionary<string, string[]> schema)
+        {
+            var table = AssetDatabase.LoadAssetAtPath<Game.Character.HostTable>(HostPath);
+            if (table == null)
+            {
+                Debug.LogWarning($"[Canon] HostTable 없음 — 정본 수치를 적용하지 못했다: {HostPath}");
+                return;
+            }
+
+            var enF = Fields(schema, "enemies");
+            var elF = Fields(schema, "elites");
+            var atF = Fields(schema, "attacks");
+
+            var enemies = new Dictionary<string, JToken[]>();
+            foreach (var r in Rows(json["enemies"])) enemies[Str(r[0])] = r;
+            var elites = new Dictionary<string, JToken[]>();
+            foreach (var r in Rows(json["elites"])) elites[Str(r[0])] = r;
+
+            // 같은 배우라도 적일 때(AP_E###)와 내가 탔을 때(AP_H##)의 교전값이 다르다
+            var byOwner = new Dictionary<string, JToken[]>();
+            foreach (var r in Rows(json["attacks"]))
+                byOwner[$"{S(r, atF, "OwnerType")}:{S(r, atF, "OwnerID")}"] = r;
+
+            // 탄속·탄 수는 projectiles 가 권위다. 주인 ID 로 찾는다.
+            var prF = Fields(schema, "projectiles");
+            var shots = new Dictionary<string, JToken[]>();
+            foreach (var r in Rows(json["projectiles"])) shots[S(r, prF, "OwnerID")] = r;
+
+            var list = new List<Game.Character.HostEntry>(
+                (Game.Character.HostEntry[])GetField(table, "_entries"));
+
+            int patched = 0, added = 0, derived = 0;
+            var missing = new List<string>();
+            var flipped = new List<string>();
+
+            foreach (var stand in StandIns)
+            {
+                if (list.Exists(x => (string)GetField(x, "_enemyId") == stand.ActorId)) continue;
+                var made = new Game.Character.HostEntry();
+                SetField(made, "_hostKey", stand.HostKey);
+                SetField(made, "_nameEn", stand.ActorId);
+                SetField(made, "_nameKr", stand.NameKr);
+                SetField(made, "_role", "전투 전용");
+                SetField(made, "_enemyId", stand.ActorId);
+                SetField(made, "_spriteKey", stand.SpriteKey);
+                SetField(made, "_actorOnly", true);
+                SetField(made, "_attackKind", stand.Melee ? Game.Character.AttackKind.Melee
+                                                          : Game.Character.AttackKind.Single);
+                // 표시 스탯은 정본 실수치가 있으면 쓰이지 않는다. 0 이면 UI 가 빈 막대를 그리므로 중간값을 둔다.
+                SetField(made, "_hp", 50); SetField(made, "_atk", 50);
+                SetField(made, "_spd", 50); SetField(made, "_dash", 50);
+                if (stand.Range > 0f)
+                {
+                    SetField(made, "_canonRange", stand.Range);
+                    SetField(made, "_canonInterval", stand.Interval);
+                }
+                list.Add(made);
+                added++;
+            }
+
+            foreach (var e in list)
+            {
+                var id = (string)GetField(e, "_enemyId");
+                if (string.IsNullOrEmpty(id))
+                {
+                    var hk = (string)GetField(e, "_hostKey");
+                    if (Derived.TryGetValue(hk, out var v))
+                    {
+                        SetField(e, "_canonHp", (int)v[0]);
+                        SetField(e, "_canonAtk", (int)v[1]);
+                        SetField(e, "_canonMoveSpeed", v[2]);
+                        SetField(e, "_canonRange", v[3]);
+                        SetField(e, "_canonInterval", v[4]);
+                        SetField(e, "_canonShotSpeed", v[5]);
+                        SetField(e, "_canonShotCount", 1);
+                        SetField(e, "_canonHostRange", v[6]);
+                        SetField(e, "_canonHostInterval", v[7]);
+                        SetField(e, "_canonHostMoveSpeed", v[8]);
+                        SetField(e, "_canonHostShotSpeed", v[5]);
+                        derived++;
+                    }
+                    else missing.Add(hk);
+                    continue;
+                }
+
+                string possess;
+                if (enemies.TryGetValue(id, out var row))
+                {
+                    SetField(e, "_canonHp", (int)F(row, enF, "MaxHP"));
+                    SetField(e, "_canonAtk", (int)F(row, enF, "AttackDamage"));
+                    SetField(e, "_canonMoveSpeed", F(row, enF, "MoveSpeed"));
+                    // 사거리·간격의 권위는 attacks 다. enemies 에도 같은 열이 있지만
+                    // 교전 프로필이 있는 쪽이 조준·탄속까지 함께 정한다.
+                    SetField(e, "_canonRange", F(row, enF, "AttackRange"));
+                    SetField(e, "_canonInterval", F(row, enF, "AttackInterval"));
+                    // 정본 0.16~1.0 을 정수 칸에 담는다. 순서만 지키면 되므로 100 배한다.
+                    SetField(e, "_possessPriority",
+                             Mathf.RoundToInt(F(row, enF, "PossessPriority") * 100f));
+                    possess = S(row, enF, "PossessionType");
+
+                    // 교전 거리의 격(근접/원거리)은 그 배우 자신의 프로필이 정한다.
+                    // 우리가 흡혈귀·야구선수를 근접으로 적어 뒀는데 정본은 둘 다 원거리다.
+                    // 그대로 두면 근접 판정에 사거리 514px 이 붙어 방 건너편을 주먹으로 때린다.
+                    if (byOwner.TryGetValue($"ENEMY:{id}", out var er2)
+                        && !SameReachClass(e, S(er2, atF, "AttackMode")))
+                    {
+                        bool canonMelee = S(er2, atF, "AttackMode") == "MELEE";
+                        SetField(e, "_attackKind",
+                                 canonMelee ? Game.Character.AttackKind.Melee
+                                            : Game.Character.AttackKind.Single);
+                        flipped.Add($"{(string)GetField(e, "_hostKey")}→{(canonMelee ? "근접" : "원거리")}");
+                    }
+
+                    if (shots.TryGetValue(id, out var ep))
+                    {
+                        SetField(e, "_canonShotSpeed", F(ep, prF, "Speed"));
+                        SetField(e, "_canonShotCount", Mathf.Max(1, (int)F(ep, prF, "Count")));
+                    }
+
+                    // 내가 탔을 때의 값 — 정본이 이 몸에 호스트 프로필을 준 경우만
+                    var hostId = S(row, enF, "HostID");
+                    if (!string.IsNullOrEmpty(hostId) && hostId != "None"
+                        && byOwner.TryGetValue($"HOST:{hostId}", out var hr)
+                        && SameReachClass(e, S(hr, atF, "AttackMode")))
+                    {
+                        SetField(e, "_canonHostRange", F(hr, atF, "Range"));
+                        SetField(e, "_canonHostInterval", F(hr, atF, "Interval"));
+                        SetField(e, "_canonHostMoveSpeed", F(hr, atF, "MoveSpeed"));
+
+                        // 탄 수는 내가 탔을 때만 정본을 따른다. 적은 정본이 전부 1 발이고,
+                        // 우리 쪽 확산(폭력배 5 발 등)은 그 몸의 정체성이라 지운다면 그림이 죽는다.
+                        if (shots.TryGetValue(hostId, out var hp))
+                        {
+                            SetField(e, "_canonHostShotSpeed", F(hp, prF, "Speed"));
+                            int n = (int)F(hp, prF, "Count");
+                            if (n > 0) SetField(e, "_shotCount", n);
+                        }
+                    }
+                    else
+                    {
+                        // 안 맞는 프로필이 예전 실행 때 들어가 있을 수 있다. 지워야 자기 값으로 돌아간다.
+                        SetField(e, "_canonHostRange", 0f);
+                        SetField(e, "_canonHostInterval", 0f);
+                        SetField(e, "_canonHostMoveSpeed", 0f);
+                        SetField(e, "_canonHostShotSpeed", 0f);
+                    }
+                }
+                else if (elites.TryGetValue(id, out var er))
+                {
+                    SetField(e, "_canonHp", (int)F(er, elF, "MaxHP"));
+                    SetField(e, "_canonAtk", (int)F(er, elF, "AttackDamage"));
+                    SetField(e, "_canonMoveSpeed", F(er, elF, "MoveSpeed"));
+                    possess = S(er, elF, "PossessionType");
+
+                    // 엘리트는 정본에 교전 프로필이 없어 자동 판정이 안 걸린다.
+                    // 여기서 안 정하면 기본값(근접)에 원거리 사거리가 붙는다.
+                    var st = Array.Find(StandIns, x => x.ActorId == id);
+                    if (st.ActorId != null)
+                    {
+                        SetField(e, "_attackKind", st.Melee ? Game.Character.AttackKind.Melee
+                                                            : Game.Character.AttackKind.Single);
+                        SetField(e, "_canonRange", st.Range);
+                        SetField(e, "_canonInterval", st.Interval);
+                    }
+                }
+                else { missing.Add(id); continue; }
+
+                // "Not Possessable" 처럼 띄어쓰기가 섞여 온다 — 공백을 지우고 본다
+                var p = possess.Replace(" ", "");
+                SetField(e, "_possessKind",
+                    p == "NotPossessable" ? Game.Character.PossessKind.NotPossessable
+                  : p == "Condition"      ? Game.Character.PossessKind.Condition
+                                          : Game.Character.PossessKind.Immediate);
+                patched++;
+            }
+
+            SetField(table, "_entries", list.ToArray());
+            EditorUtility.SetDirty(table);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log($"[Canon] 호스트 {patched}종에 정본 실수치 적용 · 전투 전용 배우 {added}종 추가"
+                      + $" · 정본에 없어 형제 값에서 맞춘 창작 몸 {derived}종"
+                      + (flipped.Count > 0
+                         ? $" · 교전 거리의 격을 정본에 맞춘 몸: {string.Join(", ", flipped)}"
+                         : "")
+                      + (missing.Count > 0
+                         ? $" · 아무 값도 못 준 몸 {missing.Count}종: {string.Join(", ", missing)}"
+                         : ""));
         }
 
         private static string[] Fields(Dictionary<string, string[]> schema, string name)

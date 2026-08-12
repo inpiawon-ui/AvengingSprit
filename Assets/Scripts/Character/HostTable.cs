@@ -133,6 +133,39 @@ namespace Game.Character
                  "화면에 이름이 보여야 무엇을 버리는지 알고 교체를 망설인다.")]
         [SerializeField] private string _maintainHook;
 
+        [Header("정본 실수치 — CanonImporter 가 덮어쓴다. 손으로 고치지 않는다")]
+        [Tooltip("정본 enemies.MaxHP. 0 이면 정본에 없는 창작 배우라 표시 스탯 공식으로 되돌아간다.")]
+        [SerializeField] private int _canonHp;
+        [SerializeField] private int _canonAtk;
+        [Tooltip("m/s. 픽셀 변환은 방 크기에서 나온 ppm 으로 배틀에서 한다")]
+        [SerializeField] private float _canonMoveSpeed;
+        [Tooltip("m. 정본 attacks 의 AP_E### 사거리 — 적으로 나올 때")]
+        [SerializeField] private float _canonRange;
+        [SerializeField] private float _canonInterval;
+        [Tooltip("m/s. 정본 projectiles 의 탄속")]
+        [SerializeField] private float _canonShotSpeed;
+        [Tooltip("정본 projectiles 의 탄 수 — 적으로 나올 때. 정본은 적을 전부 1발로 둔다. " +
+                 "내가 탔을 때의 탄 수는 ShotCount 쪽이다. 한 칸을 같이 쓰면 " +
+                 "적 갱스터까지 3발을 쏜다.")]
+        [SerializeField] private int _canonShotCount;
+
+        [Header("정본 실수치 — 내가 이 몸을 탔을 때 (attacks AP_H##)")]
+        [Tooltip("정본은 같은 배우라도 적일 때와 내가 탔을 때 교전값을 따로 준다. " +
+                 "0 이면 이 몸에 해당하는 호스트 프로필이 정본에 없다는 뜻이다.")]
+        [SerializeField] private float _canonHostRange;
+        [SerializeField] private float _canonHostInterval;
+        [SerializeField] private float _canonHostMoveSpeed;
+        [SerializeField] private float _canonHostShotSpeed;
+
+        [Tooltip("정본에는 있지만 플레이어가 고를 수 없는 배우 (방패병·센서드론·엘리트). " +
+                 "전투에서는 세우되 호스트 선택 화면에는 내보내지 않는다.")]
+        [SerializeField] private bool _actorOnly;
+
+        [Tooltip("그림 아틀라스 키. 비어 있으면 HostKey 를 쓴다.\n" +
+                 "아직 제 그림이 없는 배우가 다른 몸의 그림을 빌려 설 때만 채운다 — " +
+                 "비워 두면 아틀라스를 못 찾아 **보이지 않는 적**이 되고 방이 안 끝난다.")]
+        [SerializeField] private string _spriteKey;
+
         [Header("얼티밋")]
         [SerializeField] private string _ultimateKey;
 
@@ -179,6 +212,26 @@ namespace Game.Character
             AttackKind.Pulse  => "주위 광역",
             _ => string.Empty,
         };
+
+        /// <summary>정본에 실수치가 있는가. 없으면 표시 스탯 × 배율 공식으로 되돌아간다.</summary>
+        public bool HasCanon => _canonHp > 0;
+        /// <summary>내가 탔을 때의 정본 교전값이 있는가.</summary>
+        public bool HasCanonHost => _canonHostRange > 0f;
+
+        public int CanonHp => _canonHp;
+        public int CanonAtk => _canonAtk;
+        public float CanonMoveSpeed => _canonMoveSpeed;
+        public float CanonRange => _canonRange;
+        public float CanonInterval => _canonInterval;
+        public float CanonHostRange => _canonHostRange;
+        public float CanonHostInterval => _canonHostInterval;
+        public float CanonHostMoveSpeed => _canonHostMoveSpeed;
+        public float CanonShotSpeed => _canonShotSpeed;
+        /// <summary>적으로 나올 때의 탄 수. 0 이면 정본에 없다는 뜻이라 ShotCount 로 되돌아간다.</summary>
+        public int EnemyShotCount => _canonShotCount > 0 ? _canonShotCount : ShotCount;
+        public float CanonHostShotSpeed => _canonHostShotSpeed;
+        public bool ActorOnly => _actorOnly;
+        public string SpriteKey => string.IsNullOrEmpty(_spriteKey) ? _hostKey : _spriteKey;
 
         public string UltimateKey => _ultimateKey;
         public HostUnlockType UnlockType => _unlockType;

@@ -15,14 +15,14 @@ MonoBehaviour:
   _stagesPerChapter: 3
   _exitTouchRadius: 70
   _ghostHpMax: 100
-  _ghostMoveSpeed: 320
+  _ghostMoveSpeed: 446
   _possessRange: 110
   _ghostDamageScale: 0.22
   _ghostDrainPerSecond: 2
   _ghostProtectSeconds: 1
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
-  _attackResumeSeconds: 0.12
+  _attackResumeSeconds: 0.15
   _hostStartHpPercent: 70
   _tacticalGhostCost: 6
   _tacticalCooldownSeconds: 8

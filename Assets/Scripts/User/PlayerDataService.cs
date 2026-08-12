@@ -49,6 +49,27 @@ namespace Game.User
         public IReadOnlyList<HostEntry> AllHosts
             => _hosts != null ? _hosts.Entries : System.Array.Empty<HostEntry>();
 
+        /// <summary>
+        /// 호스트 선택 화면에 내보낼 몸. 방패병·센서드론·엘리트처럼 정본이 배우로만 쓰는 행은 뺀다.
+        /// 전투는 그 배우들도 세워야 하므로 <see cref="AllHosts"/> 는 전부 그대로 준다.
+        /// </summary>
+        public IReadOnlyList<HostEntry> PlayableHosts
+        {
+            get
+            {
+                if (_hosts == null) return System.Array.Empty<HostEntry>();
+                if (_playable != null) return _playable;
+
+                var all = _hosts.Entries;
+                _playable = new List<HostEntry>(all.Count);
+                for (int i = 0; i < all.Count; i++)
+                    if (!all[i].ActorOnly) _playable.Add(all[i]);
+                return _playable;
+            }
+        }
+
+        private List<HostEntry> _playable;
+
         public string SelectedHostId
         {
             get
@@ -109,7 +130,7 @@ namespace Game.User
             {
                 if (_hosts == null) return 0;
                 int n = 0;
-                var list = _hosts.Entries;
+                var list = PlayableHosts;
                 for (int i = 0; i < list.Count; i++)
                     if (IsHostUnlocked(list[i])) n++;
                 return n;
