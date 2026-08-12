@@ -1583,6 +1583,8 @@ namespace Game.Module.InGame
                 return;
             }
 
+            TickBossPending(dt);
+
             var move = _brain.Tick(dt);
 
             // 예고 중에는 제자리에서 번쩍인다. 피할 시간을 주지 않으면 패턴이 아니라 사고다.
@@ -1604,6 +1606,100 @@ namespace Game.Module.InGame
         private void PulseTelegraph(Unit boss)
         {
             boss.SetTelegraph(Mathf.Repeat(_telegraphPulse, 0.16f) < 0.08f);
+        }
+
+        // ── 정본이 이름 붙인 보스 패턴 셋 ─────────────────────────
+        //
+        // 지금까지는 셋 다 "부채꼴·돌진·링" 으로 흉내만 냈다. 수치만 다른 같은 패턴은
+        // 정본이 못박은 "페이즈마다 행동이 바뀐다" 를 만족하지 못한다.
+
+        private const int LaneCount = 3;
+        private const float CrackSeconds = 0.85f;   // 정본 B01 예고 0.85초
+        private const float BeamSeconds = 0.7f;
+        private const float SlamSeconds = 1.0f;     // 정본 B02 예고 1.0초
+        private const float ShieldSeconds = 4.0f;
+        private const float VenomSeconds = 5.0f;
+
+        private int _laneParity;                    // 번갈아 — 쓸 때마다 줄이 바뀐다
+        private float _pendingTimer;
+        private int _pendingDamage;
+        private Vector2 _pendingAt;
+        private bool _pendingIsBeam;
+        private int _pendingLane = -1;
+
+        /// <summary>보스 실드가 남은 시간. 0 보다 크면 받는 피해가 줄어든다.</summary>
+        private float _bossShield;
+        private const float BossShieldDamageMul = 0.45f;
+
+        /// <summary>
+        /// 번갈아 솟는 레이저. 바닥에 **금이 먼저 간다** — 어디서 솟는지 안 보이면
+        /// 예고가 아니라 사고다. 금이 사라지는 순간 그 자리에서 광선이 솟는다.
+        /// </summary>
+        private void PopupLaser(int damage)
+        {
+            _laneParity = 1 - _laneParity;
+            float laneW = _roomSize.x / LaneCount;
+            for (int i = _laneParity; i < LaneCount; i += 2)
+            {
+                float x = laneW * (i + 0.5f);
+                SpawnField(new Vector2(x, -_roomSize.y * 0.5f), laneW * 0.42f,
+                           CrackSeconds, FieldEffect.Damage, 0, fromPlayer: false);
+            }
+            _pendingIsBeam = true;
+            _pendingLane = _laneParity;
+            _pendingDamage = damage;
+            _pendingTimer = CrackSeconds;
+        }
+
+        /// <summary>
+        /// 실드를 두르고 내려찍는다. 실드 동안 피해가 줄어드는 것이 핵심이다 —
+        /// "지금은 때릴 때가 아니라 피할 때" 라는 구간을 만든다.
+        /// </summary>
+        private void ShieldCycle(Unit boss, Unit me, int damage)
+        {
+            _bossShield = ShieldSeconds;
+            boss.SetTelegraph(true);
+            SpawnField(me.Position, 150f, SlamSeconds, FieldEffect.Damage, 0, fromPlayer: false);
+            _pendingIsBeam = false;
+            _pendingAt = me.Position;
+            _pendingDamage = damage;
+            _pendingTimer = SlamSeconds;
+        }
+
+        /// <summary>독구름. 플레이어가 선 자리를 물들여 그 자리를 못 쓰게 만든다.</summary>
+        private void VenomCloud(Unit me, int count)
+        {
+            int n = Mathf.Clamp(count, 1, 2);
+            for (int i = 0; i < n; i++)
+            {
+                var off = i == 0 ? Vector2.zero
+                                 : new Vector2(UnityEngine.Random.Range(-160f, 160f), UnityEngine.Random.Range(-160f, 160f));
+                SpawnField(me.Position + off, 150f, VenomSeconds,
+                           FieldEffect.Curse, 4, fromPlayer: false);
+            }
+        }
+
+        private void TickBossPending(float dt)
+        {
+            if (_bossShield > 0f) _bossShield -= dt;
+            if (_pendingTimer <= 0f) return;
+            _pendingTimer -= dt;
+            if (_pendingTimer > 0f) return;
+
+            if (_pendingIsBeam)
+            {
+                float laneW = _roomSize.x / LaneCount;
+                for (int i = _pendingLane; i < LaneCount; i += 2)
+                    SpawnField(new Vector2(laneW * (i + 0.5f), -_roomSize.y * 0.5f),
+                               laneW * 0.42f, BeamSeconds, FieldEffect.Damage,
+                               _pendingDamage, fromPlayer: false);
+            }
+            else
+            {
+                SpawnField(_pendingAt, 150f, 0.35f, FieldEffect.Damage,
+                           _pendingDamage, fromPlayer: false);
+            }
+            _pendingLane = -1;
         }
 
         private void ExecuteBossMove(Unit boss, Unit me, BossMove m)
@@ -1632,6 +1728,10 @@ namespace Game.Module.InGame
                 case BossPattern.Summon:
                     SummonMinions(boss, m.ShotCount);
                     break;
+
+                case BossPattern.PopupLaser:  PopupLaser(dmg); break;
+                case BossPattern.ShieldCycle: ShieldCycle(boss, me, dmg); break;
+                case BossPattern.VenomCloud:  VenomCloud(me, m.ShotCount); break;
             }
         }
 
@@ -1979,6 +2079,10 @@ namespace Game.Module.InGame
             // 저주를 걸어 놓고 숫자가 그대로면 걸린 줄 모른다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.CurseDamageMul));
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * FocusMul(victim)));
+            // 실드 순환(정본 B02) — 이 구간에는 때려도 잘 안 들어간다.
+            // 그래야 "지금은 피할 때" 라는 구간이 생긴다.
+            if (victim.IsBoss && _bossShield > 0f)
+                damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
             InflictStatus(victim, p);

@@ -20,6 +20,27 @@ namespace Game.Character
         Summon,
         /// <summary>조준 연사. 짧은 간격으로 직선탄</summary>
         AimedBurst,
+
+        // ── 정본이 이름 붙인 패턴 ──────────────────────────────────
+        // 여기까지는 "탄을 몇 발 어느 각도로" 였다. 아래 셋은 보스마다 다른
+        // **자리 싸움**을 만든다 — 무엇을 피하느냐가 보스마다 달라진다.
+
+        /// <summary>
+        /// 번갈아 솟는 레이저 (정본 B01 Alternating Pop-up Laser).
+        /// 바닥에 금이 갔다가 그 줄에서 세로 광선이 솟는다. 쓸 때마다 줄이 바뀐다.
+        /// </summary>
+        PopupLaser,
+
+        /// <summary>
+        /// 실드 순환 + 내려찍기 (정본 B02 Crusher + Shield Cycle).
+        /// 일정 시간 받는 피해가 줄고, 그동안 플레이어 자리에 그림자를 깔았다가 찍는다.
+        /// </summary>
+        ShieldCycle,
+
+        /// <summary>
+        /// 독구름 (정본 B03 Venom Clouds). 플레이어 자리 주변에 저주 장판을 남긴다.
+        /// </summary>
+        VenomCloud,
     }
 
     [Serializable]

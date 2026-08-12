@@ -88,14 +88,16 @@ namespace Game.Editor
         {
             new object[]{ "robot_snakes", 1, "ROBOT SNAKES", "로봇 스네이크", "unit_robot_snakes", 1.00f, 1.00f, 1.00f, 0.80f,
                 new object[][] {
-                    new object[]{ BossPattern.Volley,  1, 3.0f, 5, 135f, 1.0f },
-                    new object[]{ BossPattern.Charge,  2, 6.0f, 1,   0f, 1.2f },
+                    new object[]{ BossPattern.Volley,     1, 3.4f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.PopupLaser, 1, 5.0f, 1,   0f, 1.1f },
+                    new object[]{ BossPattern.Charge,     2, 6.0f, 1,   0f, 1.2f },
                     new object[]{ BossPattern.Volley,  2, 4.2f, 7, 180f, 0.9f },
                     new object[]{ BossPattern.Ring,    3, 5.0f, 12, 360f, 0.8f },
                 } },
             new object[]{ "demolisher",  2, "DEMOLISHER", "데몰리셔",     "unit_demolisher", 1.25f, 1.15f, 1.30f, 0.75f,
                 new object[][] {
                     new object[]{ BossPattern.Volley,     1, 3.0f, 5, 135f, 1.0f },
+                    new object[]{ BossPattern.ShieldCycle, 1, 7.0f, 1,   0f, 1.4f },
                     new object[]{ BossPattern.Charge,     2, 5.0f, 1,   0f, 1.3f },
                     new object[]{ BossPattern.AimedBurst, 2, 3.6f, 3,  10f, 0.7f },
                     new object[]{ BossPattern.Ring,       3, 4.4f, 14, 360f, 0.85f },
@@ -103,6 +105,7 @@ namespace Game.Editor
             new object[]{ "python",      3, "PYTHON",     "파이썬",       "unit_python", 1.55f, 1.30f, 0.95f, 0.72f,
                 new object[][] {
                     new object[]{ BossPattern.Volley,     1, 2.8f, 7, 150f, 1.0f },
+                    new object[]{ BossPattern.VenomCloud, 1, 6.0f, 2,   0f, 1.0f },
                     new object[]{ BossPattern.Summon,     2, 9.0f, 2,   0f, 1.0f },
                     new object[]{ BossPattern.AimedBurst, 2, 3.2f, 4,  12f, 0.75f },
                     new object[]{ BossPattern.Ring,       3, 3.8f, 16, 360f, 0.9f },
