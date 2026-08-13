@@ -2707,8 +2707,10 @@ namespace Game.Module.InGame
         private void Explode(Projectile shot)
         {
             var at = shot.Position;
-            SpawnImpact(at, shot.Kind);
             float r = BlastRadius * (shot.FromPlayer ? _buffs.AoeMul : 1f);
+            // 불덩이가 피해 반경과 같은 크기로 뜬다. 그림이 반경보다 작으면
+            // "안 맞았는데 맞았다" 로 읽히고, 크면 그 반대가 된다.
+            SpawnImpact(at, shot.Kind, r * 2f);
 
             if (!shot.FromPlayer)
             {
@@ -2724,13 +2726,6 @@ namespace Game.Module.InGame
                 if (Vector2.Distance(at, e.Position) > r) continue;
                 ApplyShotHit(e, shot);
             }
-
-            // 정본 "지뢰 네트워크" — 터진 자리에 잠깐 남는다. 맞은 적이 없어도 남긴다.
-            // 지뢰는 던진 자리를 통제하는 것이지 명중의 보상이 아니다.
-            bool freeze = _buffs.MinesFreeze || SynergyOn(SynergyKind.FreezeRune);
-            SpawnField(at, MineRadius * _buffs.AoeMul, MineSeconds,
-                       freeze ? FieldEffect.Freeze : FieldEffect.Damage,
-                       freeze ? 0 : MineDamagePerTick, fromPlayer: true);
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
@@ -2770,26 +2765,48 @@ namespace Game.Module.InGame
         /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —
         /// 8종을 한 번에 받지 못해도 받은 것부터 보이게 한다.
         /// </summary>
-        private void SpawnImpact(Vector2 at, string kind)
+        private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
-            var first = GetSprite(kind != null ? $"impact_{kind}_1" : "impact_1")
-                        ?? GetSprite("impact_1");
-            if (first == null) return;
-            var second = GetSprite(kind != null ? $"impact_{kind}_2" : "impact_2")
-                         ?? GetSprite("impact_2");
+            var frames = ImpactFrames(kind);
+            if (frames == null) return;
+            // 터짐 그림은 48 캔버스라 탄(24)보다 여백이 크다. 상자를 탄과 같은 값으로
+            // 두면 화면에서 탄보다 조금 큰 정도로 보인다 — 그게 기본이다.
+            if (size <= 0f) size = _config.ShotSize;
 
             for (int i = 0; i < _impacts.Count; i++)
-                if (!_impacts[i].IsActive) { _impacts[i].Play(at, first, second); return; }
+                if (!_impacts[i].IsActive) { _impacts[i].Play(at, frames, size); return; }
 
             if (_impacts.Count >= MaxImpacts) return;   // 화면이 터짐으로 덮이지 않게 상한을 둔다
             var go = new GameObject($"Impact_{_impacts.Count}", typeof(RectTransform));
             var im = go.AddComponent<Impact>();
-            // 터짐 그림은 48 캔버스라 탄(24)보다 여백이 크다. 상자를 같은 값으로 두면
-            // 화면에서 탄보다 조금 큰 정도로 보인다 — 2.4 배를 곱하면 화면을 덮는다.
-            im.Cache(_shotLayer, _config.ShotSize);
+            im.Cache(_shotLayer, size);
             _impacts.Add(im);
-            im.Play(at, first, second);
+            im.Play(at, frames, size);
         }
+
+        /// <summary>터짐 그림 여러 장. 종류마다 장 수가 다르다 — 수류탄 폭발은 원작이 5장이다.</summary>
+        private Sprite[] ImpactFrames(string kind)
+        {
+            if (kind != null && _impactSprite.TryGetValue(kind, out var cached)) return cached;
+
+            var list = new List<Sprite>(5);
+            for (int i = 1; i <= 8; i++)
+            {
+                var s = GetSprite(kind != null ? $"impact_{kind}_{i}" : $"impact_{i}");
+                if (s == null) break;
+                list.Add(s);
+            }
+            if (list.Count == 0)
+            {
+                var fallback = GetSprite("impact_1");
+                if (fallback != null) list.Add(fallback);
+            }
+            var frames = list.Count > 0 ? list.ToArray() : null;
+            if (kind != null) _impactSprite[kind] = frames;
+            return frames;
+        }
+
+        private readonly Dictionary<string, Sprite[]> _impactSprite = new();
 
         /// <summary>
         /// 그 몸의 탄 그림 여러 장. 원작이 날아가는 동안 보여 주는 장면들이다 —
@@ -2932,7 +2949,9 @@ namespace Game.Module.InGame
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive) continue;
                 if (shot.Pierce && shot.HasHit(e)) continue;
-                if (Vector2.Distance(at, e.Position) <= _config.ShotHitRadius) return e;
+                // 몸통 반경 + 탄 반경. 중심끼리의 고정 거리로 재면 몸이 커진 만큼
+                // 어깨를 지나는 탄이 통과한다 — 관통탄이 앞사람만 맞히던 원인이다.
+                if (Vector2.Distance(at, e.Position) <= e.BodyRadius + _config.ShotHitRadius) return e;
             }
             return null;
         }

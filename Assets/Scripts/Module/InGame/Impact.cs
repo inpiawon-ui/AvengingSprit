@@ -4,12 +4,14 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 탄이 맞은 자리에서 터지는 그림. 두 장을 짧게 넘기고 사라진다.
+    /// 탄이 맞은 자리에서 터지는 그림. 짧게 넘기고 사라진다.
     ///
     /// 맞았다는 것이 숫자로만 나오면 어디서 맞았는지가 안 보인다 —
     /// 탄이 사라지는 것과 피해 숫자가 뜨는 것 사이에 아무 일도 안 일어나서,
     /// 탄이 그냥 없어진 것처럼 읽힌다.
     ///
+    /// 장 수는 종류마다 다르다. 총알 자국은 두 장이면 되지만 수류탄 폭발은
+    /// 원작이 다섯 장을 쓴다 — 불덩이가 부풀고, 하얗게 타고, 흩어진다.
     /// 그림이 없으면 아무것도 하지 않는다. 한 종씩 채워 넣을 수 있어야 한다.
     /// </summary>
     public sealed class Impact : MonoBehaviour
@@ -18,9 +20,9 @@ namespace Game.Module.InGame
 
         private RectTransform _rect;
         private Image _image;
-        private Sprite _second;
+        private Sprite[] _frames;
         private float _timer;
-        private bool _swapped;
+        private int _index;
 
         public bool IsActive => gameObject.activeSelf;
 
@@ -38,15 +40,20 @@ namespace Game.Module.InGame
             gameObject.SetActive(false);
         }
 
-        public void Play(Vector2 at, Sprite first, Sprite second)
+        /// <summary>
+        /// <paramref name="size"/> 는 화면에 그려질 상자 크기다. 폭발은 피해 반경만큼
+        /// 커야 한다 — 그림이 반경보다 작으면 "안 맞았는데 맞았다" 로 읽힌다.
+        /// </summary>
+        public void Play(Vector2 at, Sprite[] frames, float size)
         {
-            if (first == null) return;
+            if (frames == null || frames.Length == 0 || frames[0] == null) return;
             _rect.anchoredPosition = at;
-            _image.sprite = first;
+            _rect.sizeDelta = new Vector2(size, size);
+            _frames = frames;
+            _index = 0;
+            _image.sprite = frames[0];
             _image.color = Color.white;
-            _second = second;
             _timer = FrameSeconds;
-            _swapped = false;
             gameObject.SetActive(true);
         }
 
@@ -56,15 +63,14 @@ namespace Game.Module.InGame
             _timer -= dt;
             if (_timer > 0f) return;
 
-            // 둘째 장이 없으면 한 장짜리로 끝낸다 — 반쪽만 온 납품에도 깨지지 않는다
-            if (!_swapped && _second != null)
+            _index++;
+            if (_frames == null || _index >= _frames.Length || _frames[_index] == null)
             {
-                _swapped = true;
-                _image.sprite = _second;
-                _timer = FrameSeconds;
+                gameObject.SetActive(false);
                 return;
             }
-            gameObject.SetActive(false);
+            _image.sprite = _frames[_index];
+            _timer += FrameSeconds;
         }
     }
 }

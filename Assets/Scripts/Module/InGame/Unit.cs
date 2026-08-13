@@ -67,6 +67,15 @@ namespace Game.Module.InGame
         public bool IsBoss { get; private set; }
         public bool IsAlive => Hp > 0;
 
+        /// <summary>
+        /// 탄이 닿았다고 볼 몸통 반경. 몸이 1.5배로 커졌는데 명중 판정은
+        /// 중심에서 34픽셀로 고정이라, 어깨를 지나가는 탄이 그냥 통과했다.
+        /// 관통탄이 앞사람만 맞히던 것도 같은 이유다 — 뒷사람이 조금만 비껴 서면
+        /// 중심에서 34픽셀 안에 들어오지 않는다.
+        /// 그림에는 여백이 있으므로 폭의 절반을 그대로 쓰지 않고 조금 좁게 잡는다.
+        /// </summary>
+        public float BodyRadius => _rect.sizeDelta.x * 0.42f;
+
         public Vector2 Position
         {
             get => _rect.anchoredPosition;
