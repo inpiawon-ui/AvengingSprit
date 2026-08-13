@@ -53,7 +53,13 @@ namespace Game.EditorTools
             // 아틀라스는 픽셀 그대로 읽어야 한다. 압축·밉맵이 켜져 있으면 글자가 뭉개진다.
             var imp = (TextureImporter)AssetImporter.GetAtPath(AtlasPath);
             imp.textureType = TextureImporterType.Default;
-            imp.filterMode = FilterMode.Point;
+
+            // ⚠️ **Point 로 두면 안 된다.** 9px 비트맵 폰트인데 화면에 정수배로 그려지는
+            //    보장이 없다 — 캔버스가 720 기준을 화면 폭에 맞춰 늘이므로 배율이
+            //    0.4·1.5 처럼 소수가 된다. Point 로 그 배율을 태우면 픽셀 줄이 통째로
+            //    빠져서 `H` 의 가운데 가로줄이 사라져 `II` 로, `S` 가 `3` 으로 읽힌다.
+            //    Bilinear 는 살짝 무를 뿐 획을 잃지 않는다 — 또렷함보다 글자가 맞는 게 먼저다.
+            imp.filterMode = FilterMode.Bilinear;
             imp.mipmapEnabled = false;
             // 144x36 은 2의 거듭제곱이 아니다. 기본값(ToNearest)이면 128x32 로 줄여 버려
             // 9px 격자가 통째로 어긋난다.

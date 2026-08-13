@@ -1,0 +1,10 @@
+# ninja log v5
+33	1767	8082908783936492	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	b6f511b0c3bec4fe
+45	1802	8082908784302120	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	b06903347d3e7ebf
+12	1838	8082908784641909	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	59eb63955f6dee99
+80	1897	8082908785248922	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	345e7a66d67da07f
+22	1922	8082908785471548	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	e1922a10ccf24f1e
+68	2021	8082908786469465	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	d378a4a098d29abf
+55	2207	8082908788354505	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	5c5f805e73207cfe
+1	2330	8082908789535042	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	a602431e5e9d82d
+2330	2454	8082908790811287	C:/won/UnityProject/AvengingSprit/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2q6vp4d3/obj/arm64-v8a/libgame.so	26358b9fa9965ee9

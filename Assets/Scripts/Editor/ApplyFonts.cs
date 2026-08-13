@@ -94,10 +94,16 @@ namespace Game.Editor
         // ⚠️ TMP 의 _OutlineWidth 는 바깥으로 자라지 않고 **글자 안쪽을 깎는다.**
         //    두껍게 주면 획이 사라진다. _FaceDilate 로 살을 먼저 붙이고 외곽선은 얇게 준다.
         //
-        // 외곽선은 전부 0.15 로 통일한다. 등급별로 0.05~0.12 를 나눠 줬더니 인게임
-        // HUD 처럼 어두운 배경에 작게 얹히는 글자가 읽히지 않았다. 두께를 하나로
-        // 맞추고, 등급 차이는 그림자로만 둔다.
-        private const float OutlineW = 0.15f;
+        // 0.15 로 통일했더니 **한글이 뭉갰다.** 한글은 획이 1~2px 라 그 두께면
+        // 외곽선이 획을 통째로 먹는다. 획을 남기는 선에서 가장 두꺼운 값이 0.08 이다.
+        // 어두운 배경에서의 가독성은 외곽선이 아니라 그림자로 받는다.
+        private const float OutlineW = 0.08f;
+
+        /// <summary>
+        /// 외곽선이 깎아 먹을 만큼만 살을 붙인다. 외곽선에 비례해 붙이던 것을
+        /// 고정값으로 바꿨다 — 비례로 두면 굵은 글자가 서로 들러붙는다.
+        /// </summary>
+        private const float FaceDilate = 0.05f;
 
         // 목업 실측 — 하단 3버튼 타이틀은 버튼 색과 같은 글로우를 두르고 있다.
         private static readonly Fx Title = new("Title", OutlineW, 0.95f);
@@ -163,7 +169,7 @@ namespace Game.Editor
             }
 
             // 외곽선이 획을 깎아 먹지 않도록 글자를 먼저 살찌운다
-            mat.SetFloat(ShaderUtilities.ID_FaceDilate, fx.Outline * 0.9f);
+            mat.SetFloat(ShaderUtilities.ID_FaceDilate, FaceDilate);
             mat.EnableKeyword(ShaderUtilities.Keyword_Outline);
             mat.SetFloat(ShaderUtilities.ID_OutlineWidth, fx.Outline);
             mat.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0.02f, 0.03f, 0.06f, 1f));
@@ -171,10 +177,12 @@ namespace Game.Editor
             // 하드 드롭섀도 — 목업은 흐린 그림자가 아니라 또렷하게 어긋난 그림자다
             mat.EnableKeyword(ShaderUtilities.Keyword_Underlay);
             mat.SetColor(ShaderUtilities.ID_UnderlayColor, new Color(0f, 0f, 0f, fx.Shadow));
-            mat.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 1.0f);
-            mat.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -1.0f);
-            mat.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.2f);
-            mat.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.05f);
+            // ⚠ 그림자도 얇아야 한다. 0.2 로 부풀린 그림자를 1px 어긋나게 두면
+            //   작은 글자에서는 그림자가 글자만큼 굵어져 **겹쳐 보이는 잔상**이 된다.
+            mat.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.6f);
+            mat.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.6f);
+            mat.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.05f);
+            mat.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.10f);
 
             if (fx.Glow != null && ColorUtility.TryParseHtmlString(fx.Glow, out var glow))
             {
