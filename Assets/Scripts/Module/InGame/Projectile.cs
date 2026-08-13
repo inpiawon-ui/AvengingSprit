@@ -81,6 +81,49 @@ namespace Game.Module.InGame
         private float _size;
         private float _spawnTimer;
 
+        // ── 던지는 탄 ────────────────────────────────────────────
+        //
+        // 수류탄은 곧게 날지 않는다. 기둥을 넘겨 던지고, 사람이 아니라 **땅**을 노린다.
+        // 그래서 나는 동안은 아무것도 맞히지 않고 떨어진 자리에서 터진다.
+        // 화면에서 포물선으로 보여야 "던졌다"가 읽힌다 — 곧게 가면 느린 총알이다.
+
+        private const float LobSpinPerSecond = 540f;
+
+        private Vector2 _lobFrom, _lobTo;
+        private float _lobSeconds, _lobElapsed, _lobHeight;
+
+        public bool IsLob => _lobSeconds > 0f;
+
+        /// <summary>땅에 닿았는가. 부르는 쪽이 이걸 보고 터뜨린다.</summary>
+        public bool HasLanded { get; private set; }
+
+        /// <summary>
+        /// 곧게 날던 탄을 던지는 탄으로 바꾼다. <see cref="Fire"/> **뒤에** 부른다 —
+        /// Fire 가 피해·색·수명을 정하고, 여기서 궤적만 갈아 끼운다.
+        /// </summary>
+        public void Lob(Vector2 landing, float seconds, float arcHeight)
+        {
+            _lobFrom = _rect.anchoredPosition;
+            _lobTo = landing;
+            _lobSeconds = Mathf.Max(0.05f, seconds);
+            _lobElapsed = 0f;
+            _lobHeight = arcHeight;
+            HasLanded = false;
+            // 진행 방향으로 눕히지 않는다. 던진 물건은 돌면서 간다.
+            _rect.localEulerAngles = Vector3.zero;
+        }
+
+        private void TickLob(float dt)
+        {
+            _lobElapsed += dt;
+            float t = Mathf.Clamp01(_lobElapsed / _lobSeconds);
+            // 땅 위의 자리는 곧게 간다. 눈에 보이는 높이만 포물선이다.
+            var ground = Vector2.Lerp(_lobFrom, _lobTo, t);
+            _rect.anchoredPosition = ground + Vector2.up * (4f * _lobHeight * t * (1f - t));
+            _rect.localEulerAngles += new Vector3(0f, 0f, LobSpinPerSecond * dt);
+            if (t >= 1f) HasLanded = true;
+        }
+
         public void SetSprite(Sprite sprite, string kind = null)
             => SetSprite(sprite == null ? null : new[] { sprite }, kind);
 
@@ -142,6 +185,8 @@ namespace Game.Module.InGame
             _rect.anchoredPosition = from;
             _size = size;
             _spawnTimer = 0f;
+            _lobSeconds = 0f;      // 풀에서 온 탄이 직전의 포물선을 물려받지 않게
+            HasLanded = false;
             float born = size * SpawnStartScale;
             _rect.sizeDelta = new Vector2(born, born);
             var d = to - from;
@@ -178,7 +223,8 @@ namespace Game.Module.InGame
         /// <summary>이동시킨다. 수명이 다하면 false.</summary>
         public bool Tick(float dt)
         {
-            _rect.anchoredPosition += _dir * _speed * dt;
+            if (IsLob) TickLob(dt);
+            else _rect.anchoredPosition += _dir * _speed * dt;
             TickFrames(dt);
             TickGrow(dt);
             _life -= dt;

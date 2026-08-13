@@ -2637,7 +2637,8 @@ namespace Game.Module.InGame
         {
             var shot = RentShot();
             if (shot == null) return;
-            shot.SetSprite(ShotSpriteOf(attacker), ShotKindOf(attacker));
+            var kind = ShotKindOf(attacker);
+            shot.SetSprite(ShotSpriteOf(attacker), kind);
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -2665,6 +2666,71 @@ namespace Game.Module.InGame
                       bounces: fromPlayer
                           ? _buffs.Bounces + ((p != null && p.ReflectsShots) ? 1 : 0)
                           : 0);
+
+            if (kind == "grenade") ThrowAsGrenade(shot, attacker.MuzzlePosition,
+                                                  target.Position, angleOffsetDeg, speed);
+        }
+
+        // ── 던지는 탄(수류탄) ────────────────────────────────────
+        //
+        // 사람이 아니라 땅을 노린다. 나는 동안은 아무것도 맞히지 않고 —
+        // 그래서 기둥을 넘어간다 — 떨어진 자리 반경 안의 모두를 때린다.
+        // 빗나가도 발밑이면 아프고, 대신 날아오는 게 보이므로 피할 수 있다.
+
+        private const float LobMinSeconds = 0.35f;
+        private const float LobMaxSeconds = 0.95f;
+        private const float LobArcRatio = 0.30f;    // 던진 거리에 비례한 높이
+        private const float LobMinArc = 60f;
+        private const float LobMaxArc = 200f;
+        private const float BlastRadius = 130f;     // 탄 명중 반경(34)보다 훨씬 넓다
+
+        private void ThrowAsGrenade(Projectile shot, Vector2 from, Vector2 at,
+                                    float angleOffsetDeg, float speed)
+        {
+            var d = at - from;
+            if (Mathf.Abs(angleOffsetDeg) > 0.01f)
+            {
+                // 여러 발을 던지면 **떨어지는 자리**가 벌어져야 한다.
+                // 곧게 나는 탄처럼 진행 방향만 틀면 결국 같은 곳에 떨어진다.
+                float r = angleOffsetDeg * Mathf.Deg2Rad;
+                float cos = Mathf.Cos(r), sin = Mathf.Sin(r);
+                d = new Vector2(d.x * cos - d.y * sin, d.x * sin + d.y * cos);
+            }
+            var landing = from + d;
+            float dist = d.magnitude;
+            shot.Lob(landing,
+                     Mathf.Clamp(dist / Mathf.Max(1f, speed), LobMinSeconds, LobMaxSeconds),
+                     Mathf.Clamp(dist * LobArcRatio, LobMinArc, LobMaxArc));
+        }
+
+        /// <summary>떨어진 자리에서 터진다. 반경 안은 모두 맞는다.</summary>
+        private void Explode(Projectile shot)
+        {
+            var at = shot.Position;
+            SpawnImpact(at, shot.Kind);
+            float r = BlastRadius * (shot.FromPlayer ? _buffs.AoeMul : 1f);
+
+            if (!shot.FromPlayer)
+            {
+                var me = Avatar;
+                if (me != null && Vector2.Distance(at, me.Position) <= r) DamagePlayer(shot.Damage);
+                return;
+            }
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive) continue;
+                if (Vector2.Distance(at, e.Position) > r) continue;
+                ApplyShotHit(e, shot);
+            }
+
+            // 정본 "지뢰 네트워크" — 터진 자리에 잠깐 남는다. 맞은 적이 없어도 남긴다.
+            // 지뢰는 던진 자리를 통제하는 것이지 명중의 보상이 아니다.
+            bool freeze = _buffs.MinesFreeze || SynergyOn(SynergyKind.FreezeRune);
+            SpawnField(at, MineRadius * _buffs.AoeMul, MineSeconds,
+                       freeze ? FieldEffect.Freeze : FieldEffect.Damage,
+                       freeze ? 0 : MineDamagePerTick, fromPlayer: true);
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
@@ -2813,6 +2879,16 @@ namespace Game.Module.InGame
                 if (!p.IsActive) continue;
 
                 if (!p.Tick(dt)) { p.Despawn(); continue; }
+
+                // 던진 탄은 공중에 있다 — 벽도 기둥도 사람도 스쳐 지나간다.
+                // 떨어진 그 순간에만 일이 벌어진다.
+                if (p.IsLob)
+                {
+                    if (!p.HasLanded) continue;
+                    Explode(p);
+                    p.Despawn();
+                    continue;
+                }
 
                 // 방 벽에서 튕긴다. 도탄이 없는 탄은 그냥 밖으로 나가 수명으로 사라진다 —
                 // 벽에서 없애 버리면 화면 끝에서 탄이 뚝 끊겨 어색하다.
