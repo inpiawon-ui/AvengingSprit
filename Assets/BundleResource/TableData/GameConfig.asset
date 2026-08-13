@@ -63,7 +63,7 @@ MonoBehaviour:
   _bossAttackInterval: 1.6
   _shotSpeedPlayer: 720
   _shotSpeedEnemy: 420
-  _shotSize: 26
+  _shotSize: 104
   _shotHitRadius: 34
   _shotLifeSeconds: 1.6
   _slowSeconds: 1.6

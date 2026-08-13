@@ -2714,7 +2714,9 @@ namespace Game.Module.InGame
             if (_impacts.Count >= MaxImpacts) return;   // 화면이 터짐으로 덮이지 않게 상한을 둔다
             var go = new GameObject($"Impact_{_impacts.Count}", typeof(RectTransform));
             var im = go.AddComponent<Impact>();
-            im.Cache(_shotLayer, _config.ShotSize * 2.4f);
+            // 터짐 그림은 48 캔버스라 탄(24)보다 여백이 크다. 상자를 같은 값으로 두면
+            // 화면에서 탄보다 조금 큰 정도로 보인다 — 2.4 배를 곱하면 화면을 덮는다.
+            im.Cache(_shotLayer, _config.ShotSize);
             _impacts.Add(im);
             im.Play(at, first, second);
         }
