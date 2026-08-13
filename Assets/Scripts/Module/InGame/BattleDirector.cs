@@ -2221,6 +2221,9 @@ namespace Game.Module.InGame
         {
             var v = RentShot();
             if (v == null) return;
+            // 풀에서 꺼낸 탄은 **직전에 쏜 무기의 그림**을 그대로 들고 있다.
+            // 근접 타격 표시는 원작 그림이 아니므로 기본 탄으로 되돌리고 색조를 입힌다.
+            v.SetSprite(ShotFrames(null));
             v.Fire(at, at + Vector2.up, 0f, 0, fromPlayer, null,
                    _config.ShotSize * 2.2f,
                    fromPlayer ? ShotPlayerColor : ShotEnemyColor, 0.12f);
@@ -2373,7 +2376,8 @@ namespace Game.Module.InGame
 
                 var shot = RentShot();
                 if (shot == null) continue;
-                shot.SetSprite(GetSprite("shot_pulse") ?? GetSprite("shot"));
+                // `shot_pulse` 한 장짜리 이름은 없다 — 원작 그림은 shot_pulse_1..4 다.
+                shot.SetSprite(ShotFrames("pulse"), "pulse");
                 shot.Fire(d.Position, target.Position, _config.ShotSpeedPlayer * _buffs.ShotSpeedMul, d.Damage,
                           fromPlayer: true, target, _config.ShotSize, ShotPlayerColor,
                           _config.ShotLifeSeconds,

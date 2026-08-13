@@ -66,10 +66,20 @@ namespace Game.Module.InGame
         /// <summary>장 수와 무관하게 이 시간 안에 다 자란다.</summary>
         private const float SpawnAnimSeconds = 0.2f;
 
+        /// <summary>
+        /// 태어날 때의 크기 비율. 그림만으로는 커지는 게 거의 안 보인다 —
+        /// 눈덩이는 3장 중 첫 장만 작고(16→24), 총알·레이저는 아예 한 장뿐이다.
+        /// 상자 크기를 같이 키워야 "작은 것이 커진다"가 눈에 들어온다.
+        /// </summary>
+        private const float SpawnStartScale = 0.5f;
+
         private Sprite[] _frames;
         private float _frameSeconds;
         private float _frameTimer;
         private int _frameIndex;
+
+        private float _size;
+        private float _spawnTimer;
 
         public void SetSprite(Sprite sprite, string kind = null)
             => SetSprite(sprite == null ? null : new[] { sprite }, kind);
@@ -96,6 +106,16 @@ namespace Game.Module.InGame
             _image.sprite = _frames[_frameIndex];
         }
 
+        /// <summary>다 자랄 때까지만 상자를 키운다.</summary>
+        private void TickGrow(float dt)
+        {
+            if (_spawnTimer >= SpawnAnimSeconds) return;
+            _spawnTimer += dt;
+            float t = Mathf.Clamp01(_spawnTimer / SpawnAnimSeconds);
+            float s = _size * Mathf.Lerp(SpawnStartScale, 1f, Mathf.SmoothStep(0f, 1f, t));
+            _rect.sizeDelta = new Vector2(s, s);
+        }
+
         public void Init(Sprite sprite)
         {
             _rect = (RectTransform)transform;
@@ -120,7 +140,10 @@ namespace Game.Module.InGame
             LifestealPercent = lifestealPercent;
             _alreadyHit.Clear();
             _rect.anchoredPosition = from;
-            _rect.sizeDelta = new Vector2(size, size);
+            _size = size;
+            _spawnTimer = 0f;
+            float born = size * SpawnStartScale;
+            _rect.sizeDelta = new Vector2(born, born);
             var d = to - from;
             _dir = d.sqrMagnitude < 0.0001f ? Vector2.up : d.normalized;
             if (Mathf.Abs(angleOffsetDeg) > 0.01f)
@@ -137,7 +160,10 @@ namespace Game.Module.InGame
             _fromPlayer = fromPlayer;
             _target = target;
             _life = life;
-            _image.color = color;
+            // 원작 그림에는 색을 입히지 않는다. 눈덩이는 하얗고, 불은 주황이다 —
+            // 곱셈 색조를 씌우면 눈덩이가 노래진다.
+            // 아군·적군 구분용 색조는 그림 없는 기본 탄(Kind 없음)에만 남긴다.
+            _image.color = Kind != null ? Color.white : color;
             IsActive = true;
             gameObject.SetActive(true);
         }
@@ -154,6 +180,7 @@ namespace Game.Module.InGame
         {
             _rect.anchoredPosition += _dir * _speed * dt;
             TickFrames(dt);
+            TickGrow(dt);
             _life -= dt;
             return _life > 0f;
         }
