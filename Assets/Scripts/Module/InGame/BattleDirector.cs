@@ -3416,9 +3416,6 @@ namespace Game.Module.InGame
         /// <summary>축소 그림이 없을 때 스케일로 줄이는 끝값.</summary>
         private const float ShrinkEnd = 0.15f;
 
-        /// <summary>부푸는 구간의 끝(진행도). 여기까지 커지고 그 뒤로 줄어든다.</summary>
-        private const float SwellEnd = 0.18f;
-
         /// <summary>몸에 닿는 시점(진행도). 이 뒤는 제자리에서 빨려 들어가는 시간이다.</summary>
         private const float SuckStart = 0.85f;
 
@@ -3454,22 +3451,12 @@ namespace Game.Module.InGame
                 float travel = Mathf.Clamp01(t / SuckStart);
                 _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, travel * travel);
 
-                // 빠져나오며 한 번 부푼다. 처음부터 줄기만 하면 "나왔다"가 안 보인다.
-                float swell = _config.PossessGhostSwell;
-                float scale = t < SwellEnd
-                    ? Mathf.Lerp(1f, swell, t / SwellEnd)
-                    : Mathf.Lerp(swell, ShrinkEnd,
-                                 Mathf.SmoothStep(0f, 1f, (t - SwellEnd) / (1f - SwellEnd)));
-
-                // 정본 축소 그림(3장)이 있으면 그것으로 줄인다 — 스케일로 줄이면
-                // 픽셀이 뭉개져 도트가 아니라 흐릿한 얼룩이 된다.
+                // 축소 그림(3장)이 크기를 담고 있으므로 스케일은 건드리지 않는다.
+                // 그림이 아직 없을 때만 스케일로 줄인다 — 픽셀이 뭉개지지만 없는 것보다 낫다.
+                float scale = 1f;
                 var frame = ShrinkFrame(t);
-                if (frame != null)
-                {
-                    _ghost.SetSpriteOverride(frame);
-                    // 그림이 크기를 담고 있으므로 부푸는 것만 남긴다
-                    scale = t < SwellEnd ? scale : swell;
-                }
+                if (frame != null) _ghost.SetSpriteOverride(frame);
+                else scale = Mathf.Lerp(1f, ShrinkEnd, Mathf.SmoothStep(0f, 1f, t));
 
                 // 마지막 한 순간 — 몸 속으로 쏙
                 if (t > SuckStart)
