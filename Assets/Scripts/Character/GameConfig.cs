@@ -64,7 +64,9 @@ namespace Game.Character
         [SerializeField] private float _possessInvulnSeconds = 0.85f;
 
         [Tooltip("멈춘 뒤 사격이 시작되기까지의 시간. 궁수의 전설 규칙 — 이동 중에는 쏘지 않는다.")]
-        [SerializeField] private float _attackResumeSeconds = 0.12f;
+        // 정본은 0.15 인데 손에서는 뜸을 들이는 것으로 느껴진다.
+        // "멈춰야 쏜다" 규칙은 유지하되 멈춘 뒤의 기다림만 줄인다.
+        [SerializeField] private float _attackResumeSeconds = 0.06f;
 
         [Tooltip("빙의한 호스트가 최대 체력의 몇 %로 시작하는가 (기획서 A 3-3). " +
                  "몸을 뺏어도 온전한 몸이 아니라는 뜻 — 교체가 공짜가 아니게 만든다.")]

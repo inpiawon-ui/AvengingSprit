@@ -608,7 +608,13 @@ namespace Game.Module.InGame
                 return;
             }
             _shownFrame = -1;   // 다음 Apply 가 반드시 다시 그리게 한다
-            Apply();
+
+            // ⚠ `Apply` 는 방향 그림 세트가 없으면 **아무것도 하지 않고 돌아간다.**
+            //    그러면 연출 그림이 그대로 남는다 — 유령이 몸을 잃고 나올 때
+            //    빙의 축소 3번째 장(콩알)인 채로 서 있었다.
+            //    되돌릴 곳이 없으면 처음 받은 그림으로 직접 돌려놓는다.
+            if (_frames[FrameIdle] != null && _facingIndex >= 0) Apply();
+            else if (_baseSprite != null) _body.sprite = _baseSprite;
         }
 
         private Sprite _override;

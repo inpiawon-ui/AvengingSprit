@@ -22,7 +22,7 @@ MonoBehaviour:
   _ghostProtectSeconds: 1
   _protectSlowPercent: 50
   _possessInvulnSeconds: 0.85
-  _attackResumeSeconds: 0.15
+  _attackResumeSeconds: 0.06
   _hostStartHpPercent: 70
   _tacticalGhostCost: 6
   _tacticalCooldownSeconds: 8
