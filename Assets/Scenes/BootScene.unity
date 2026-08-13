@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 380171188}
   - component: {fileID: 380171187}
+  - component: {fileID: 380171189}
   m_Layer: 0
   m_Name: GameLauncher
   m_TagString: Untagged
@@ -165,6 +166,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &380171189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380171186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b60b3055c4fbe94984eaa04a294cf66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Boot.TimeScaleTuner
+  _timeScale: 1
+  _enableHotkeys: 1
+  _presets:
+  - 0
+  - 0.25
+  - 0.5
+  - 1
+  - 2
+  - 4
 --- !u!1 &1398473621
 GameObject:
   m_ObjectHideFlags: 0

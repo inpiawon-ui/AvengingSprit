@@ -24,7 +24,7 @@ namespace Game.Character
         [Header("고스트")]
         [SerializeField] private int _ghostHpMax = 100;
         [SerializeField] private float _ghostMoveSpeed = 320f;
-        [SerializeField] private float _possessRange = 110f;
+        [SerializeField] private float _possessRange = 165f;   // 110 → 1.5배. 붙어야 겨우 잡혔다
 
         [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
         [SerializeField] private float _ghostDamageScale = 0.22f;
