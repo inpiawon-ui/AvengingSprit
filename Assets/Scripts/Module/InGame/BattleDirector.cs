@@ -2229,54 +2229,12 @@ namespace Game.Module.InGame
                    fromPlayer ? ShotPlayerColor : ShotEnemyColor, 0.12f);
         }
 
-        /// <summary>
-        /// 무기 계열이 곧 원소다. 불을 뿜는 캐릭터가 화상을 걸고, 냉기가 빙결을,
-        /// 마법이 저주를 건다. 탄 그림을 나눈 그 표(`ShotKind`)를 그대로 쓴다 —
-        /// 표를 둘로 두면 "레이저인데 화상이 걸리는" 어긋남이 반드시 생긴다.
-        /// </summary>
-        private static readonly Dictionary<string, string> StatusOfKind = new()
-        {
-            { "flame", "burn" }, { "frost", "freeze" }, { "magic", "curse" },
-        };
-
-        private void InflictStatus(Unit victim, HostEntry p)
-        {
-            var key = p?.HostKey;
-            if (key == null || !ShotKind.TryGetValue(key, out var kind)) return;
-
-            // 수류탄은 상태이상 대신 **터진 자리에 장판**을 남긴다 — 정본의 "지뢰 네트워크".
-            // BUF_S04 를 고르면 그 지뢰가 빙결 룬이 된다.
-            if (kind == "grenade")
-            {
-                bool freeze = _buffs.MinesFreeze || SynergyOn(SynergyKind.FreezeRune);
-                SpawnField(victim.Position, MineRadius * _buffs.AoeMul, MineSeconds,
-                           freeze ? FieldEffect.Freeze : FieldEffect.Damage,
-                           freeze ? 0 : MineDamagePerTick, fromPlayer: true);
-                return;
-            }
-
-            if (!StatusOfKind.TryGetValue(kind, out var status)) return;
-
-            float sec = _config.SlowSeconds;   // 둔화와 같은 지속시간을 쓴다
-            switch (status)
-            {
-                case "burn":   victim.ApplyBurn(sec); break;
-                case "freeze": victim.ApplyFreeze(sec); break;
-                case "curse":
-                    victim.ApplyCurse(sec);
-                    // 마법사는 발밑에 둔화 장판을 남긴다 — 정본의 "장판 제어" 훅이다.
-                    // 이것이 있어야 BUF_T03(가장자리 피해)이 걸 곳을 갖는다.
-                    SpawnField(victim.Position, SlowFieldRadius * _buffs.AoeMul, SlowFieldSeconds,
-                               FieldEffect.Slow, 0, fromPlayer: true);
-                    break;
-            }
-        }
-
-        private const float MineRadius = 110f;
-        private const float MineSeconds = 3.0f;
-        private const int MineDamagePerTick = 6;
-        private const float SlowFieldRadius = 130f;
-        private const float SlowFieldSeconds = 2.5f;
+        // 무기 계열마다 원소가 붙던 표(`StatusOfKind`)는 뺐다.
+        // 정본에 그런 규칙이 없다 — 정본은 화상·빙결·저주를 **버프가 켜 줄 때만** 건다
+        // (BUF_T02 살라만더·드라군 / BUF_T03 백마법사·영매 / BUF_S05 영매·드라군).
+        // 기본 공격이 항상 원소를 묻히면 그 버프 여섯 개가 팔 물건을 잃는다.
+        // 상태이상 자체(ApplyBurn·ApplyFreeze·ApplyCurse)는 장판·얼티밋이 계속 쓴다.
+        // 버프로 다시 잇는 것은 추가 기획이 나온 뒤에 한다.
 
         // ── 설치물(자동 포탑) ──────────────────────────────────────
         //
@@ -2614,7 +2572,6 @@ namespace Game.Module.InGame
                 damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
-            InflictStatus(victim, p);
             int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
             int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
             if (slow > 0) victim.ApplySlow(slow, _config.SlowSeconds);
@@ -3355,11 +3312,27 @@ namespace Game.Module.InGame
         /// 방마다 횟수를 막는 이유는 정본 그대로다 — 안 막으면 잡몹 많은 방에서
         /// 고스트가 무한정 회복되어 유령 시계의 압박이 사라진다.
         /// </summary>
+        /// <summary>회복 숫자. 피해와 헷갈리지 않게 초록으로 띄운다.</summary>
+        private static readonly Color HealColor = new(0.45f, 1f, 0.55f, 1f);
+
         private void Leech(int amount)
         {
             if (_host == null || amount <= 0) return;
             int room = _host.HpMax - _host.Hp;
             _host.Heal(amount);
+
+            // 체력은 실제로 올라가는데 상단 체력바가 안 움직여서 "흡혈이 안 된다" 로 보였다.
+            // Unit.Heal 은 발밑 막대만 고친다. HUD 는 이 이벤트로만 갱신된다.
+            PublishHp();
+
+            // 한 방에 도는 양이 두어 점이라 체력바만으로는 눈에 안 띈다. 숫자로 띄운다.
+            int healed = Mathf.Min(amount, room);
+            if (healed > 0)
+            {
+                var t = RentDamageText();
+                if (t != null) t.Show(_host.Position, $"+{healed}", HealColor);
+            }
+
             int over = amount - room;
             if (over <= 0) return;
             if (_buffs.BloodDebtPerRoom <= 0 || _bloodDebtUsed >= _buffs.BloodDebtPerRoom) return;
