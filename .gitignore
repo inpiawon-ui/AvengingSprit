@@ -41,6 +41,12 @@ sysinfo.txt
 *.aab
 *.unitypackage
 *.app
+/Build/
+# 안드로이드 IL2CPP 중간 산출물 — 첫 빌드 뒤 5만 개 넘게 생긴다
+/.utmp/
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+# 에디터에서 찍은 확인용 스크린샷
+/Assets/Screenshots/
 
 # Claude Code
 CLAUDE.local.md
