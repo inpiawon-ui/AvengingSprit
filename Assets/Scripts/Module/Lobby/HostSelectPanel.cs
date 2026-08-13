@@ -36,10 +36,20 @@ namespace Game.Module.Lobby
         private const float StatBarWidth = 122f;   // 목업 실측 — StatBarBg 폭
         private const int MaxStat = 100;
 
+        /// <summary>
+        /// 그리드가 보이는 높이. 목업의 `624` 는 12칸(3×4) 기준이었다.
+        /// 그리드 아래(패널 y 819~1090)는 비어 있고 버튼은 전부 오른쪽에 있으므로,
+        /// TipBar(y 1098) 바로 위까지 내려 한 화면에 다섯 줄 반을 보인다.
+        /// </summary>
+        private const float GridViewHeight = 890f;
+
+        private const float ScrollbarWidth = 5f;   // 그리드 오른쪽 여백 6.2px 안에 들어가야 한다
+
         private UIBinder _ui;
         private IPlayerDataService _player;
         private SpriteAtlas _atlas;
         private Material _grayMaterial;
+        private ScrollRect _scroll;
 
         private readonly List<HostSlotView> _slots = new();
         private readonly List<IDisposable> _tokens = new();
@@ -114,6 +124,7 @@ namespace Game.Module.Lobby
 
             _selectedKey = _player.SelectedHostId;
             RefreshSlots();
+            ScrollToSelected();
             RefreshDetail(_selectedKey);
             RefreshFooter();
 
@@ -130,13 +141,15 @@ namespace Game.Module.Lobby
         /// <summary>설계서의 `HostSlot` 1칸을 호스트 수만큼 복제해 그리드를 만든다.</summary>
         private void BuildGrid()
         {
-            var grid = _ui.Find("HostGrid");
+            var grid = _ui.Find("HostGrid") as RectTransform;
             var template = _ui.Find("HostSlot");
             if (grid == null || template == null)
             {
                 Debug.LogError("[HostSelect] HostGrid 또는 HostSlot 이 없습니다.");
                 return;
             }
+
+            _scroll = WrapGridInScroll(grid);
 
             var normal   = GetSprite("hostslotframe");
             var selected = GetSprite("hostslotframe_selected");
@@ -158,6 +171,130 @@ namespace Game.Module.Lobby
                 view.SetFrameSprites(normal, selected, locked);
                 _slots.Add(view);
             }
+        }
+
+        /// <summary>
+        /// `HostGrid` 를 세로 스크롤 안으로 집어넣는다.
+        ///
+        /// 목업은 12칸으로 그려졌는데 정본 호스트가 21종이다. 그대로 두면 5행부터
+        /// 패널 밖으로 밀려 **마지막 줄(흡혈귀)은 화면에 아예 없다.**
+        /// 칸을 줄여 욱여넣는 대신 스크롤을 붙인다 — 호스트가 더 늘어도 레이아웃을
+        /// 다시 건드릴 일이 없다.
+        ///
+        /// 프리팹을 고치지 않고 런타임에 감싸는 이유: `HostGrid` 라는 이름이 곧
+        /// 바인딩 키다. 프리팹에서 계층을 갈아엎으면 이름 규약이 흔들린다.
+        /// </summary>
+        private static ScrollRect WrapGridInScroll(RectTransform grid)
+        {
+            var existing = grid.GetComponentInParent<ScrollRect>();
+            if (existing != null) return existing;   // 이미 감쌌다
+
+            var scrollGo = new GameObject("HostGridScroll", typeof(RectTransform), typeof(ScrollRect));
+            var root = (RectTransform)scrollGo.transform;
+            root.SetParent(grid.parent, false);
+            root.SetSiblingIndex(grid.GetSiblingIndex());
+            root.anchorMin = grid.anchorMin;
+            root.anchorMax = grid.anchorMax;
+            root.pivot = grid.pivot;
+            root.anchoredPosition = grid.anchoredPosition;
+            root.sizeDelta = new Vector2(grid.sizeDelta.x, GridViewHeight);
+
+            // Viewport 에는 RectMask2D 만 둔다 (05_prefabs 규약 — Image 금지).
+            var viewGo = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
+            var viewport = (RectTransform)viewGo.transform;
+            viewport.SetParent(root, false);
+            Stretch(viewport);
+
+            grid.SetParent(viewport, false);
+            grid.anchorMin = new Vector2(0f, 1f);
+            grid.anchorMax = new Vector2(1f, 1f);
+            grid.pivot = new Vector2(0.5f, 1f);
+            grid.anchoredPosition = Vector2.zero;
+            grid.sizeDelta = new Vector2(0f, grid.sizeDelta.y);
+
+            // 행이 늘면 내용 높이도 따라 늘어야 스크롤 범위가 맞는다
+            grid.gameObject.AddComponent<ContentSizeFitter>().verticalFit
+                = ContentSizeFitter.FitMode.PreferredSize;
+
+            var scroll = scrollGo.GetComponent<ScrollRect>();
+            scroll.content = grid;
+            scroll.viewport = viewport;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Elastic;
+            scroll.elasticity = 0.1f;
+            scroll.scrollSensitivity = 40f;
+            scroll.verticalScrollbar = BuildScrollbar(root);
+            scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+            return scroll;
+        }
+
+        /// <summary>
+        /// 고른 몸이 스크롤 밖에 있으면 아무것도 안 고른 것처럼 보인다. 보이는 자리로 끌어온다.
+        /// </summary>
+        private void ScrollToSelected()
+        {
+            if (_scroll == null || _scroll.content == null || _scroll.viewport == null) return;
+
+            int index = -1;
+            for (int i = 0; i < _slots.Count; i++)
+                if (_slots[i].HostKey == _selectedKey) { index = i; break; }
+            if (index < 0) return;
+
+            Canvas.ForceUpdateCanvases();   // ContentSizeFitter 가 높이를 잡은 뒤라야 잴 수 있다
+            float span = _scroll.content.rect.height - _scroll.viewport.rect.height;
+            if (span <= 0f) return;         // 다 보인다 — 움직일 이유가 없다
+
+            var slot = (RectTransform)_slots[index].transform;
+            float top = -slot.anchoredPosition.y;   // 내용 위쪽에서 잰 거리
+            float offset = Mathf.Clamp(
+                top - (_scroll.viewport.rect.height - slot.rect.height) * 0.5f, 0f, span);
+            _scroll.verticalNormalizedPosition = 1f - offset / span;
+        }
+
+        /// <summary>
+        /// 그리드 오른쪽 여백에 세우는 가는 막대.
+        /// 손을 대지 않아도 보여야 하므로 자동 숨김을 쓰지 않는다.
+        /// </summary>
+        private static Scrollbar BuildScrollbar(RectTransform root)
+        {
+            var barGo = new GameObject("HostGridScrollbar",
+                typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+            var bar = (RectTransform)barGo.transform;
+            bar.SetParent(root, false);
+            bar.anchorMin = new Vector2(1f, 0f);
+            bar.anchorMax = new Vector2(1f, 1f);
+            bar.pivot = new Vector2(0f, 0.5f);
+            bar.anchoredPosition = new Vector2(1f, 0f);
+            bar.sizeDelta = new Vector2(ScrollbarWidth, 0f);
+            barGo.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.10f);
+
+            var areaGo = new GameObject("SlidingArea", typeof(RectTransform));
+            var area = (RectTransform)areaGo.transform;
+            area.SetParent(bar, false);
+            Stretch(area);
+
+            var handleGo = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+            var handle = (RectTransform)handleGo.transform;
+            handle.SetParent(area, false);
+            handle.sizeDelta = Vector2.zero;
+            var handleImage = handleGo.GetComponent<Image>();
+            handleImage.color = new Color(1f, 0.84f, 0.35f, 0.85f);
+
+            var scrollbar = barGo.GetComponent<Scrollbar>();
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+            scrollbar.handleRect = handle;
+            scrollbar.targetGraphic = handleImage;
+            return scrollbar;
+        }
+
+        private static void Stretch(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = Vector2.zero;
         }
 
         private void RefreshSlots()

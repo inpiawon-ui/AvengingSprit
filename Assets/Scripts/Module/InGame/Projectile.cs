@@ -56,14 +56,18 @@ namespace Game.Module.InGame
         /// </summary>
         public string Kind { get; private set; }
 
-        // ── 비행 애니메이션 ──────────────────────────────────────
+        // ── 태어나는 애니메이션 ──────────────────────────────────
         //
-        // 원작 탄은 날아가는 동안 움직인다 — 표창은 돌고, 수류탄은 구르고,
-        // 눈덩이·화염·마법 구슬은 커진다. 한 장만 쓰면 날아가는 돌멩이가 된다.
+        // 원작 탄 그림은 반복 동작이 아니라 **태어나는 모습**이다 —
+        // 눈덩이는 작은 것이 커지고, 화염은 피어난다.
+        // 그래서 한 번만 돌리고 다 자란 마지막 장에서 멈춘다.
+        // 계속 돌리면 커졌다 작아졌다 덜렁거린다.
 
-        private const float FrameSeconds = 0.07f;
+        /// <summary>장 수와 무관하게 이 시간 안에 다 자란다.</summary>
+        private const float SpawnAnimSeconds = 0.2f;
 
         private Sprite[] _frames;
+        private float _frameSeconds;
         private float _frameTimer;
         private int _frameIndex;
 
@@ -74,19 +78,21 @@ namespace Game.Module.InGame
         {
             _frames = frames != null && frames.Length > 0 ? frames : null;
             _frameIndex = 0;
-            _frameTimer = FrameSeconds;
+            _frameSeconds = _frames == null ? 0f : SpawnAnimSeconds / _frames.Length;
+            _frameTimer = _frameSeconds;
             if (_frames != null && _image != null) _image.sprite = _frames[0];
             Kind = kind;
         }
 
-        /// <summary>한 장짜리면 아무것도 하지 않는다.</summary>
+        /// <summary>한 장짜리거나 이미 다 자랐으면 아무것도 하지 않는다.</summary>
         private void TickFrames(float dt)
         {
-            if (_frames == null || _frames.Length < 2 || _image == null) return;
+            if (_frames == null || _image == null) return;
+            if (_frameIndex >= _frames.Length - 1) return;   // 마지막 장에서 멈춘다
             _frameTimer -= dt;
             if (_frameTimer > 0f) return;
-            _frameTimer = FrameSeconds;
-            _frameIndex = (_frameIndex + 1) % _frames.Length;
+            _frameTimer += _frameSeconds;
+            _frameIndex++;
             _image.sprite = _frames[_frameIndex];
         }
 

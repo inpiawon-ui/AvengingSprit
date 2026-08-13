@@ -2684,7 +2684,7 @@ namespace Game.Module.InGame
             { "white_wizard", "magic" }, { "medium", "magic" },
             { "guru", "pulse" }, { "robot", "pulse" },
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
-            { "vampire", "drain" },     // 원작의 금빛 마름모 (흡혈 탄)
+            { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
             { "baseball", "bullet" },   // 원작에 던지는 공이 없다 — 작은 공으로 대신한다
             { "amazon_elite", "bullet" },
         };
