@@ -89,6 +89,7 @@ namespace Game.Module.InGame
         private Unit _possessTarget;
         private bool _hadPossessTarget;
         private bool _hadPossessBlocked;
+        private int _hadPossessCost = -1;
 
         // ── 유지 훅 ───────────────────────────────────────────────
         // 정본이 "fun-critical" 로 못박은 장치다. 몸을 오래 탈수록 그 몸에서만
@@ -1326,7 +1327,7 @@ namespace Game.Module.InGame
                     _tacticalShown = Mathf.FloorToInt(_tacticalCooldown * 10f);
                     _bus.Publish(new TacticalCooldownEvent
                     {
-                        Remain = _tacticalCooldown, Total = _config.TacticalCooldownSeconds,
+                        Remain = _tacticalCooldown, Total = _config.RepossessLockSeconds,
                     });
                 }
                 if (_tacticalCooldown == 0f) RefreshPossessTarget();
@@ -2986,6 +2987,12 @@ namespace Game.Module.InGame
             Retire(_host);       // 몸은 쓰러진다 — 유령이 그 자리에서 빠져나온다
             _host = null;
 
+            // 기획서 1-2 A — 몸을 잃는 값(-20%)이 놓아주는 값(-15%)보다 커야
+            // "죽기 전에 버리고 나온다" 가 선택지가 된다.
+            int cost = Mathf.Max(1, GhostHpMax * _config.GhostDeathCostPercent / 100);
+            _ghostHp = Mathf.Max(1, _ghostHp - cost);
+            ShowGhostCost(pos, cost);
+
             _ghost.gameObject.SetActive(true);
             // 빙의 연출이 줄여 놓은 크기·그림을 되돌린다. 안 되돌리면 몸을 잃고
             // 유령으로 나올 때 **콩알만 한 채로** 남는다.
@@ -3195,7 +3202,9 @@ namespace Game.Module.InGame
         {
             _possessTarget = null;
             var from = Avatar;
-            if (from != null && !_awaitingBuff)
+            // 기획서 1-7 — 몸을 타고 있는 동안에는 다른 몸을 노리지 않는다.
+            // 그때 이 버튼은 탈출이고, 대상 표식도 뜨면 안 된다.
+            if (from != null && !_awaitingBuff && _host == null)
             {
                 // 기획서 A 4-3 — 우선순위가 높은 적을 먼저 잡는다. 같으면 가까운 쪽.
                 // 사거리는 적마다 다를 수 있다(PossessRange 0 이면 전역 기본값).
@@ -3233,12 +3242,17 @@ namespace Game.Module.InGame
                 else e.SetPossessMark(Unit.PossessMark.None);
             }
 
-            bool has = _possessTarget != null;
-            int cost = _host != null ? TacticalCost : 0;
-            bool blocked = has && _host != null && !CanSwitch;
-            if (has == _hadPossessTarget && blocked == _hadPossessBlocked) return;
+            // 몸이 있으면 버튼은 언제나 누를 수 있는 **탈출**이다. 값(-15%)을 함께 적는다.
+            bool has = _host != null || _possessTarget != null;
+            int cost = _host != null
+                ? Mathf.Max(1, GhostHpMax * _config.GhostLeaveCostPercent / 100) : 0;
+            // 놓아준 직후의 짧은 잠금 동안에는 대상이 있어도 못 누른다.
+            bool blocked = _host == null && _tacticalCooldown > 0f;
+            if (has == _hadPossessTarget && cost == _hadPossessCost
+                && blocked == _hadPossessBlocked) return;
 
             _hadPossessTarget = has;
+            _hadPossessCost = cost;
             _hadPossessBlocked = blocked;
             _bus.Publish(new PossessTargetChangedEvent
             {
@@ -3567,12 +3581,67 @@ namespace Game.Module.InGame
             _channelEntry = null;
         }
 
+        /// <summary>
+        /// 몸을 스스로 놓아준다 (기획서 1-1 A · 자발적 탈출).
+        ///
+        /// 놓아준 몸은 **쓰러지지 않는다.** 지금 체력·상태 그대로 적으로 돌아가
+        /// 곧바로 나를 공격한다. 그래야 "버리고 도망친다"가 대가를 갖는다.
+        /// 그리고 그 몸은 이 방에서 다시 탈 수 없다 — 한 몸을 무한히 재활용하면
+        /// 탈출 비용이 무의미해진다.
+        /// </summary>
+        private void LeaveHost()
+        {
+            var body = _host;
+            if (body == null) return;
+
+            var pos = body.Position;
+            var key = body.Key;
+
+            int cost = Mathf.Max(1, GhostHpMax * _config.GhostLeaveCostPercent / 100);
+            _ghostHp = Mathf.Max(1, _ghostHp - cost);   // 탈출로 소멸하지는 않는다
+            ShowGhostCost(pos, cost);
+
+            _host = null;
+            body.BecomeEnemy();
+            body.BanRepossess();
+            body.SetPossessMark(Unit.PossessMark.None);
+            _enemies.Add(body);
+
+            _ghost.gameObject.SetActive(true);
+            _ghost.transform.localScale = Vector3.one;
+            _ghost.SetSpriteOverride(null);
+            _ghost.Position = pos;
+
+            // 놓아준 자리도 적 한복판이다. 몸을 잃었을 때와 같은 보호를 준다 —
+            // 없으면 탈출이 곧 자살이라 이 선택지가 죽는다.
+            _ghostProtect = _config.GhostProtectSeconds;
+            _drainCarry = 0f;
+            _buffs.SetHost(null);
+            ResetMaintain();
+            SlowNearbyEnemies(pos);
+
+            // 놓아주자마자 옆 몸으로 갈아타면 탈출이 그냥 순간이동이 된다.
+            // 짧게 잠근다 — 빙의 버튼의 덮개가 차오르는 동안이 그 시간이다.
+            _tacticalCooldown = _config.RepossessLockSeconds;
+            _tacticalShown = -1;
+            _bus.Publish(new TacticalCooldownEvent
+            {
+                Remain = _tacticalCooldown, Total = _config.RepossessLockSeconds,
+            });
+
+            _bus.Publish(new HostLostEvent { LostHostKey = key });
+            PublishHp();
+        }
+
         public void TryPossess()
         {
-            if (!_running || _possessTarget == null || _awaitingBuff || IsChanneling) return;
+            if (!_running || _awaitingBuff || IsChanneling) return;
 
-            bool tactical = _host != null;
-            if (tactical && !CanSwitch) return;
+            // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다.
+            // 몸이 있을 때 이 버튼은 **탈출**이다.
+            if (_host != null) { LeaveHost(); return; }
+
+            if (_possessTarget == null || _tacticalCooldown > 0f) return;
 
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
@@ -3592,32 +3661,8 @@ namespace Game.Module.InGame
             _channelBody = target;
             _possessTarget = null;
 
-            if (tactical)
-            {
-                _ghostHp = Mathf.Max(1, _ghostHp - TacticalCost);
-                _tacticalCooldown = _config.TacticalCooldownSeconds;
-                _tacticalShown = -1;
-
-                // 값을 치렀다는 것이 화면에서 보여야 한다. 상단 숫자만 바뀌면
-                // 100 중 6이라 눈치채지 못한다 — 버린 몸 자리에 띄운다.
-                ShowGhostCost(_host.Position, TacticalCost);
-
-                // 버린 몸은 그 자리에 쓰러진다. 경험치는 주지 않는다 —
-                // 죽인 것이 아니라 놓아준 것이고, 값을 치른 쪽은 나다.
-                var old = _host;
-                _host = null;
-                Retire(old);
-
-                _bus.Publish(new TacticalCooldownEvent
-                {
-                    Remain = _tacticalCooldown, Total = _config.TacticalCooldownSeconds,
-                });
-            }
-
-            // 몸에 들어가는 것은 채널이 끝난 뒤다. 지금은 영혼이 빨려 들어가기 시작한다.
-            //
-            // 전술 빙의였다면 위에서 이미 옛 몸을 놓아주었으므로 지금 나는 영혼이다.
-            // 처음 빙의라면 원래 영혼이었다 — 어느 쪽이든 여기서 영혼을 켜고 날려 보낸다.
+            // 여기 도달했다는 것은 내가 지금 영혼이라는 뜻이다 —
+            // 몸이 있으면 위에서 탈출로 갈라져 나갔다.
             _ghost.gameObject.SetActive(true);
             _ghost.transform.localScale = Vector3.one;
             _ghost.Position = from;      // 켜기 전에 옛 좌표를 버린다

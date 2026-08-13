@@ -90,10 +90,36 @@ namespace Game.Module.InGame
         /// 프로필이 없는 적(임시 스프라이트 등)은 즉시로 본다. 못 뺏는 적이
         /// 조용히 늘어나면 방이 통째로 막힌다.
         /// </summary>
+        /// <summary>
+        /// 이 방에서는 다시 빙의할 수 없는 몸 (기획서 1-4 · 1-7).
+        /// 스스로 빠져나온 몸이 여기 해당한다 — 놓아준 몸을 곧바로 다시 타면
+        /// 탈출 비용(-15%)이 무의미해지고 한 몸을 무한히 재활용하게 된다.
+        /// 방이 끝나면 유닛이 통째로 사라지므로 따로 초기화할 것이 없다.
+        /// </summary>
+        public bool RepossessBanned { get; private set; }
+
+        public void BanRepossess() => RepossessBanned = true;
+
+        /// <summary>
+        /// 내가 놓아준 몸이 적으로 돌아간다 (기획서 1-4 A).
+        /// 체력·상태는 그대로 두고 편만 바꾼다 — 놓아준 순간의 몸 그대로여야
+        /// "내가 쓰던 몸이 나를 쫓아온다" 가 성립한다.
+        /// </summary>
+        public void BecomeEnemy()
+        {
+            Side = UnitSide.Enemy;
+            IsAggro = true;          // 놓아주자마자 나를 공격한다
+            HoldPossessed(false);
+            SetFiring(false);
+            SetState(EnemyState.Idle);
+            RefreshHpBar();
+        }
+
         public bool IsPossessable
         {
             get
             {
+                if (RepossessBanned) return false;
                 if (Side != UnitSide.Enemy || IsBoss || !IsAlive || _dying) return false;
                 if (Profile == null) return true;
                 return Profile.PossessKind switch

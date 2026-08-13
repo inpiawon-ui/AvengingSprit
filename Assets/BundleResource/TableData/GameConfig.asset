@@ -17,6 +17,9 @@ MonoBehaviour:
   _ghostHpMax: 100
   _ghostMoveSpeed: 446
   _possessRange: 165
+  _ghostLeaveCostPercent: 15
+  _ghostDeathCostPercent: 20
+  _repossessLockSeconds: 1.2
   _ghostDamageScale: 0.22
   _ghostDrainPerSecond: 2
   _ghostProtectSeconds: 1

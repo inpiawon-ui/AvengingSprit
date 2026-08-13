@@ -454,7 +454,7 @@ namespace Game.Module.InGame
                     : hasTarget ? new Color(0.85f, 0.55f, 0.55f, 1f)   // 대상은 있는데 값이 모자라다
                     : new Color(0.45f, 0.45f, 0.5f, 1f);
 
-            // 전술 빙의(값이 붙는 교체)일 때만 값을 적는다. 유령 상태의 빙의는 공짜다.
+            // 몸을 놓아줄 때만 값이 붙는다. 유령 상태의 빙의는 공짜다.
             _ui.SetText("PossessCostText", hasTarget && cost > 0 ? $"-{cost}" : string.Empty);
         }
 

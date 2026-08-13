@@ -26,6 +26,15 @@ namespace Game.Character
         [SerializeField] private float _ghostMoveSpeed = 320f;
         [SerializeField] private float _possessRange = 165f;   // 110 → 1.5배. 붙어야 겨우 잡혔다
 
+        [Tooltip("스스로 몸을 놓아줄 때 치르는 Ghost HP (최대치 대비 %). 기획서 1-2 A")]
+        [SerializeField] private int _ghostLeaveCostPercent = 15;
+
+        [Tooltip("몸이 죽어서 유령이 될 때 치르는 Ghost HP (최대치 대비 %). 기획서 1-2 A")]
+        [SerializeField] private int _ghostDeathCostPercent = 20;
+
+        [Tooltip("놓아준 뒤 다시 빙의할 수 있게 되기까지. 빙의 버튼의 덮개가 이걸 보여준다.")]
+        [SerializeField] private float _repossessLockSeconds = 1.2f;
+
         [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
         [SerializeField] private float _ghostDamageScale = 0.22f;
 
@@ -226,6 +235,9 @@ namespace Game.Character
         public float PossessChannelSeconds => _possessChannelSeconds;
         public float PossessZoom => Mathf.Max(1f, _possessZoom);
         public float PossessRange => _possessRange;
+        public int GhostLeaveCostPercent => _ghostLeaveCostPercent;
+        public int GhostDeathCostPercent => _ghostDeathCostPercent;
+        public float RepossessLockSeconds => _repossessLockSeconds;
         public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 
         public float AttackResumeSeconds => _attackResumeSeconds;
