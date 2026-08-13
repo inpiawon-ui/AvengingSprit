@@ -414,7 +414,7 @@ MonoBehaviour:
     _canonHostShotSpeed: 7
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: bullet_hell
+    _ultimateKey: grenade_barrage
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0

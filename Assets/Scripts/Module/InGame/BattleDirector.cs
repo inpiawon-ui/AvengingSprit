@@ -3739,6 +3739,10 @@ namespace Game.Module.InGame
                     foreach (var e in EnemiesInRange(me.Position, 520f)) e.ApplySlow(60, 2.0f);
                     break;
 
+                // 주위 적 하나하나에 폭탄 두 발씩. 사방으로 뿌리면 빈 벽에도 나가지만
+                // 사람마다 찍으면 한 발도 안 버린다 — 둘러싸일수록 이득이 커진다.
+                case "grenade_barrage": BeginGrenadeBarrage(me); break;
+
                 // 지속형 — 끝날 때까지 자리를 지키면 이득이 커진다.
                 case "bullet_hell":   BeginUltimate(key, 5f); break;
                 case "laser_storm":   BeginUltimate(key, 4f); break;
@@ -3811,6 +3815,64 @@ namespace Game.Module.InGame
             _ultTick = 0f;
         }
 
+        // ── 수류탄 세례 ──────────────────────────────────────────
+        //
+        // 코만도는 폭탄을 던지는 몸인데 얼티밋이 총알을 사방으로 뿌리고 있었다.
+        // 사방으로 뿌리면 빈 벽에도 나간다. 사람마다 두 발씩 찍으면 한 발도 안 버리고,
+        // 둘러싸일수록 이득이 커진다 — 폭탄병의 판타지가 그것이다.
+
+        private const float BarrageRange = 760f;
+        private const float BarrageInterval = 0.09f;   // 던지는 간격 — 연사로 읽혀야 한다
+        private const int BarrageShotsEach = 2;
+        private const int BarrageMaxShots = 16;        // 화면이 폭탄으로 덮이지 않게
+
+        private readonly List<Unit> _barrageQueue = new();
+
+        private void BeginGrenadeBarrage(Unit me)
+        {
+            _barrageQueue.Clear();
+            var list = EnemiesInRange(me.Position, BarrageRange);
+            // 가까운 적부터. 한 번에 다 안 던져지면 붙은 놈이 먼저 맞아야 한다.
+            list.Sort((a, b) => (a.Position - me.Position).sqrMagnitude
+                        .CompareTo((b.Position - me.Position).sqrMagnitude));
+            for (int round = 0; round < BarrageShotsEach; round++)
+                for (int i = 0; i < list.Count && _barrageQueue.Count < BarrageMaxShots; i++)
+                    _barrageQueue.Add(list[i]);
+
+            if (_barrageQueue.Count == 0) return;
+            BeginUltimate("grenade_barrage", _barrageQueue.Count * BarrageInterval + 0.05f);
+        }
+
+        private void ThrowBarrageGrenade(Unit me)
+        {
+            if (_barrageQueue.Count == 0) { _ultTimer = 0f; return; }
+            var target = _barrageQueue[0];
+            _barrageQueue.RemoveAt(0);
+
+            // 겨냥해 둔 놈이 이미 죽었으면 살아 있는 가장 가까운 놈으로 돌린다.
+            // 죽은 자리에 던지면 마지막 몇 발이 허공에 터진다.
+            if (target == null || !target.IsAlive || target.IsDying)
+                target = NearestEnemy(me.Position, BarrageRange);
+            if (target == null) { _barrageQueue.Clear(); _ultTimer = 0f; return; }
+
+            var shot = RentShot();
+            if (shot == null) return;
+            shot.SetSprite(ShotFrames("grenade"), "grenade");
+            me.SetFacing(target.Position - me.Position);
+            me.PlayAttack();
+
+            var from = me.MuzzlePosition;
+            // 한 사람에게 두 발이 정확히 겹쳐 떨어지면 두 번째가 안 보인다. 조금 흩는다.
+            float jitter = (_barrageQueue.Count % 2 == 0 ? 1f : -1f) * 26f;
+            var at = target.Position + new Vector2(jitter, jitter * 0.5f);
+
+            shot.Fire(from, at, _config.ShotSpeedPlayer,
+                      Mathf.Max(1, _config.UltimateDamage / BarrageShotsEach),
+                      fromPlayer: true, target, _config.ShotSize,
+                      ShotPlayerColor, _config.ShotLifeSeconds);
+            ThrowAsGrenade(shot, from, at, 0f, _config.ShotSpeedPlayer);
+        }
+
         /// <summary>지속형 얼티밋을 흘린다.</summary>
         private void TickUltimate(float dt)
         {
@@ -3825,6 +3887,11 @@ namespace Game.Module.InGame
             int dmg = _config.UltimateDamage;
             switch (_ultKey)
             {
+                case "grenade_barrage":
+                    _ultTick = BarrageInterval;
+                    ThrowBarrageGrenade(me);
+                    break;
+
                 case "bullet_hell":
                     _ultTick = 0.22f;
                     FireFan(me, me.Position + me.Facing * 400f, 10, 360f, dmg / 4, fromPlayer: true);

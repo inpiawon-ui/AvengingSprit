@@ -48,7 +48,7 @@ namespace Game.Editor
             new object[]{ "hopper_smg", "HOPPER SMG", "호퍼(기관단총)", "도약 연사", 64, 66, 86, 90, AttackKind.Rapid, 1, 0f, 0.9f, 0.4f, 0.45f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "", "도약 연사" },
             new object[]{ "commando_mg", "COMMANDO MG", "코만도(기관총)", "중화기 사수", 82, 78, 56, 46, AttackKind.Rapid, 1, 0f, 1.0f, 0.4f, 0.48f, 0, 0, false, "bullet_hell", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "제압 사격" },
             new object[]{ "commando_laser", "COMMANDO LASER", "코만도(레이저)", "관통 레이저", 70, 78, 65, 55, AttackKind.Pierce, 1, 0f, 1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "E007", "집속 레이저" },
-            new object[]{ "commando_grenade", "COMMANDO GRENADE", "코만도(수류탄)", "곡사 지역", 74, 82, 58, 48, AttackKind.Spread, 3, 22f, 1.2f, 1.35f, 1.3f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 45, "E005", "지뢰 네트워크" },
+            new object[]{ "commando_grenade", "COMMANDO GRENADE", "코만도(수류탄)", "곡사 지역", 74, 82, 58, 48, AttackKind.Spread, 3, 22f, 1.2f, 1.35f, 1.3f, 0, 0, false, "grenade_barrage", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 45, "E005", "지뢰 네트워크" },
             new object[]{ "salamander", "SALAMANDER", "샐러맨더", "화염 돌파", 95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E003", "열기 · 장갑 용해" },
             new object[]{ "dragoon", "DRAGOON", "드라군", "네이팜 마무리", 110, 92, 44, 40, AttackKind.Spread, 3, 14f, 0.55f, 0.95f, 0.62f, 0, 0, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 25, "E016", "효과 계승 피니셔" },
             new object[]{ "dragon_blue", "DRAGON BLUE", "청룡", "냉기 브레스", 92, 78, 46, 42, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 30, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 50, "", "냉기 축적" },
@@ -173,6 +173,7 @@ namespace Game.Editor
         {
             new[]{ "tommy_barrage",   "TOMMY BARRAGE",   "토미 내리사격",   "광각 확산, 높은 경직" },
             new[]{ "bullet_hell",     "BULLET HELL",     "불릿 헬",         "전화면 제압 사격, 5초 지속" },
+            new[]{ "grenade_barrage", "GRENADE BARRAGE", "수류탄 세례",     "주위 적 하나하나에 폭탄 두 발씩" },
             new[]{ "rush_combo",      "RUSH COMBO",      "러시 콤보",       "연속 돌진 타격, 마지막 일격에 경직" },
             new[]{ "dragon_breath",   "DRAGON BREATH",   "드래곤 브레스",   "지속 화염 원뿔, 화상 DoT" },
             new[]{ "elemental_nova",  "ELEMENTAL NOVA",  "엘리멘탈 노바",   "360° AoE, 보스에게 2배 피해" },

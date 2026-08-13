@@ -21,6 +21,10 @@ MonoBehaviour:
     _nameEn: BULLET HELL
     _nameKr: "\uBD88\uB9BF \uD5EC"
     _description: "\uC804\uD654\uBA74 \uC81C\uC555 \uC0AC\uACA9, 5\uCD08 \uC9C0\uC18D"
+  - _ultimateKey: grenade_barrage
+    _nameEn: GRENADE BARRAGE
+    _nameKr: "수류탄 세례"
+    _description: "주위 적 하나하나에 폭탄 두 발씩"
   - _ultimateKey: rush_combo
     _nameEn: RUSH COMBO
     _nameKr: "\uB7EC\uC2DC \uCF64\uBCF4"
