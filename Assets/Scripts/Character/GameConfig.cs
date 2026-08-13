@@ -152,6 +152,15 @@ namespace Game.Character
         /// 그림 크기에서 나온 값이라, 크기만 키우면 서로 파고들어야만 주먹이 닿는다.
         /// 그래서 두 값에 이 배수를 함께 곱한다.
         /// </summary>
+        /// <summary>
+        /// 내가 탄 몸의 발사 간격 배수. **적에게는 안 걸린다.**
+        ///
+        /// 정본 간격(0.78~1.9 초)은 적이 쓰기엔 맞지만 내가 쓰기엔 느리다 —
+        /// 이 게임은 멈춰야 쏘는 규칙이라, 멈춘 김에 몇 발 나가야 멈출 맛이 난다.
+        /// 캐릭터 사이의 빠르고 느린 차이는 비율이라 그대로 유지된다.
+        /// </summary>
+        [SerializeField] private float _hostAttackSpeedMul = 0.6f;
+
         [SerializeField] private float _unitScale = 1.5f;
 
         [SerializeField] private float _meleeAttackRange = 92f;
@@ -231,6 +240,7 @@ namespace Game.Character
 
         public float EnemyAttackRange => _enemyAttackRange;
         public float EnemyDetectRange => _enemyDetectRange;
+        public float HostAttackSpeedMul => Mathf.Clamp(_hostAttackSpeedMul, 0.1f, 3f);
         public float UnitScale => Mathf.Max(0.1f, _unitScale);
         /// <summary>그림 크기에 맞춰 커진 근접 사거리.</summary>
         public float MeleeAttackRange => _meleeAttackRange * UnitScale;

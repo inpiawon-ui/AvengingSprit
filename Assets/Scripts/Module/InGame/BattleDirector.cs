@@ -1763,11 +1763,13 @@ namespace Game.Module.InGame
                             : fromPlayer ? _config.ShotSpeedPlayer : _config.ShotSpeedEnemy;
         }
 
+        // 내 손맛만 당긴다 — 적 간격은 정본 그대로 둔다.
         private float HostIntervalOf(HostEntry e)
-            => e == null ? _config.HostAttackInterval
-             : e.HasCanonHost ? e.CanonHostInterval
-             : e.HasCanon     ? e.CanonInterval
-             : _config.HostAttackInterval * e.IntervalMul;
+            => _config.HostAttackSpeedMul *
+               (e == null ? _config.HostAttackInterval
+              : e.HasCanonHost ? e.CanonHostInterval
+              : e.HasCanon     ? e.CanonInterval
+              : _config.HostAttackInterval * e.IntervalMul);
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —
@@ -2681,6 +2683,10 @@ namespace Game.Module.InGame
             { "ninja", "shuriken" }, { "ninja_chain", "shuriken" },
             { "white_wizard", "magic" }, { "medium", "magic" },
             { "guru", "pulse" }, { "robot", "pulse" },
+            // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
+            { "vampire", "drain" },     // 원작의 금빛 마름모 (흡혈 탄)
+            { "baseball", "bullet" },   // 원작에 던지는 공이 없다 — 작은 공으로 대신한다
+            { "amazon_elite", "bullet" },
         };
 
         /// <summary>캐릭터별 탄 그림. 아직 안 온 것은 기본 탄으로 떨어진다.</summary>
