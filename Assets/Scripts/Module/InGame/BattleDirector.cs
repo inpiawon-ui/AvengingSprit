@@ -2081,6 +2081,11 @@ namespace Game.Module.InGame
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
                           life, angleOffsetDeg: off,
+                          // 얼티밋 탄에도 버프가 실려야 한다. 여기만 빠져 있어서
+                          // 흡혈 카드를 먹고 얼티밋을 쓰면 한 방울도 안 돌았다.
+                          slowPercent: fromPlayer ? _buffs.SlowPercent : 0,
+                          lifestealPercent: fromPlayer ? _buffs.LifestealPercent : 0,
+                          pierce: fromPlayer && _buffs.Pierce,
                           bounces: fromPlayer ? _buffs.Bounces : 0);
             }
         }
@@ -3839,10 +3844,13 @@ namespace Game.Module.InGame
             float jitter = (_barrageQueue.Count % 2 == 0 ? 1f : -1f) * 26f;
             var at = target.Position + new Vector2(jitter, jitter * 0.5f);
 
+            var prof = _host?.Profile;
             shot.Fire(from, at, _config.ShotSpeedPlayer,
                       Mathf.Max(1, _config.UltimateDamage / BarrageShotsEach),
                       fromPlayer: true, target, _config.ShotSize,
-                      ShotPlayerColor, _config.ShotLifeSeconds);
+                      ShotPlayerColor, _config.ShotLifeSeconds,
+                      slowPercent: (prof?.SlowPercent ?? 0) + _buffs.SlowPercent,
+                      lifestealPercent: (prof?.LifestealPercent ?? 0) + _buffs.LifestealPercent);
             ThrowAsGrenade(shot, from, at, 0f, _config.ShotSpeedPlayer);
         }
 
