@@ -159,7 +159,7 @@ namespace Game.Character
         /// 이 게임은 멈춰야 쏘는 규칙이라, 멈춘 김에 몇 발 나가야 멈출 맛이 난다.
         /// 캐릭터 사이의 빠르고 느린 차이는 비율이라 그대로 유지된다.
         /// </summary>
-        [SerializeField] private float _hostAttackSpeedMul = 0.6f;
+        [SerializeField] private float _hostAttackSpeedMul = 0.3f;
 
         [SerializeField] private float _unitScale = 1.5f;
 
