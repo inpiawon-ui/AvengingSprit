@@ -56,10 +56,38 @@ namespace Game.Module.InGame
         /// </summary>
         public string Kind { get; private set; }
 
+        // ── 비행 애니메이션 ──────────────────────────────────────
+        //
+        // 원작 탄은 날아가는 동안 움직인다 — 표창은 돌고, 수류탄은 구르고,
+        // 눈덩이·화염·마법 구슬은 커진다. 한 장만 쓰면 날아가는 돌멩이가 된다.
+
+        private const float FrameSeconds = 0.07f;
+
+        private Sprite[] _frames;
+        private float _frameTimer;
+        private int _frameIndex;
+
         public void SetSprite(Sprite sprite, string kind = null)
+            => SetSprite(sprite == null ? null : new[] { sprite }, kind);
+
+        public void SetSprite(Sprite[] frames, string kind = null)
         {
-            if (sprite != null && _image != null) _image.sprite = sprite;
+            _frames = frames != null && frames.Length > 0 ? frames : null;
+            _frameIndex = 0;
+            _frameTimer = FrameSeconds;
+            if (_frames != null && _image != null) _image.sprite = _frames[0];
             Kind = kind;
+        }
+
+        /// <summary>한 장짜리면 아무것도 하지 않는다.</summary>
+        private void TickFrames(float dt)
+        {
+            if (_frames == null || _frames.Length < 2 || _image == null) return;
+            _frameTimer -= dt;
+            if (_frameTimer > 0f) return;
+            _frameTimer = FrameSeconds;
+            _frameIndex = (_frameIndex + 1) % _frames.Length;
+            _image.sprite = _frames[_frameIndex];
         }
 
         public void Init(Sprite sprite)
@@ -119,6 +147,7 @@ namespace Game.Module.InGame
         public bool Tick(float dt)
         {
             _rect.anchoredPosition += _dir * _speed * dt;
+            TickFrames(dt);
             _life -= dt;
             return _life > 0f;
         }

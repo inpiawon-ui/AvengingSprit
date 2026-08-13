@@ -2690,7 +2690,7 @@ namespace Game.Module.InGame
         };
 
         /// <summary>캐릭터별 탄 그림. 아직 안 온 것은 기본 탄으로 떨어진다.</summary>
-        private readonly Dictionary<string, Sprite> _shotSprite = new();
+        private readonly Dictionary<string, Sprite[]> _shotSprite = new();
 
         /// <summary>탄 종류 이름. 없는 배우는 null — 기본 그림을 쓴다.</summary>
         private static string ShotKindOf(Unit u)
@@ -2721,16 +2721,37 @@ namespace Game.Module.InGame
             im.Play(at, first, second);
         }
 
-        private Sprite ShotSpriteOf(Unit u)
+        /// <summary>
+        /// 그 몸의 탄 그림 여러 장. 원작이 날아가는 동안 보여 주는 장면들이다 —
+        /// 표창은 2장(회전), 수류탄·미사일은 4장, 눈덩이·화염·구슬은 3장(커짐).
+        /// 없으면 기본 탄 한 장으로 떨어진다.
+        /// </summary>
+        private Sprite[] ShotSpriteOf(Unit u)
         {
             var key = u != null ? u.Key : null;
-            if (key == null) return GetSprite("shot");
+            if (key == null) return ShotFrames(null);
             if (_shotSprite.TryGetValue(key, out var cached)) return cached;
 
-            var s = ShotKind.TryGetValue(key, out var kind) ? GetSprite($"shot_{kind}") : null;
-            s ??= GetSprite("shot");
-            _shotSprite[key] = s;
-            return s;
+            var frames = ShotFrames(ShotKind.TryGetValue(key, out var kind) ? kind : null);
+            _shotSprite[key] = frames;
+            return frames;
+        }
+
+        private Sprite[] ShotFrames(string kind)
+        {
+            var list = new List<Sprite>(4);
+            for (int i = 1; i <= 8; i++)
+            {
+                var s = GetSprite(kind != null ? $"shot_{kind}_{i}" : $"shot_{i}");
+                if (s == null) break;
+                list.Add(s);
+            }
+            if (list.Count == 0)
+            {
+                var fallback = GetSprite("shot_1") ?? GetSprite("shot");
+                if (fallback != null) list.Add(fallback);
+            }
+            return list.Count > 0 ? list.ToArray() : null;
         }
 
         private Projectile RentShot()
