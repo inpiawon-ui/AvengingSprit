@@ -246,9 +246,10 @@ namespace Game.Module.InGame
                 // 빙의 표식은 **적에게만** 단다. 내 몸에 "뺏을 수 있다" 표시가 뜨면 거짓말이다.
                 if (!isBoss && side == UnitSide.Enemy)
                 {
-                    _possessMark = GetOrCreate("PossessMark", new Vector2(18f, 18f),
-                                               new Vector2(0f, size.y * 0.5f + 20f));
-                    _possessMark.color = new Color(0.55f, 0.80f, 1f, 0.95f);
+                    // 그림이 32px 로 그려져 있다. 그 크기 그대로 써야 링이 흐려지지 않는다.
+                    _possessMark = GetOrCreate("PossessMark", new Vector2(MarkSize, MarkSize),
+                                               new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f));
+                    _possessMark.preserveAspect = true;
                     _possessMark.gameObject.SetActive(false);
                 }
             }
@@ -275,16 +276,26 @@ namespace Game.Module.InGame
             return img;
         }
 
-        /// <summary>빙의 표식 상태 (정본 POSSESSION_MATRIX 의 UI 3단).</summary>
+        /// <summary>
+        /// 빙의 표식 상태 (기획서 1-5 A · 아이콘 4종).
+        /// 색만으로 갈라 두면 교전 중에 못 읽는다 — 그림도 상태마다 다르다.
+        /// </summary>
         public enum PossessMark
         {
             /// <summary>표식 없음</summary>
             None,
-            /// <summary>조건이 안 찼다 — 회색. 게이지가 얼마나 남았는지 보여준다</summary>
-            Progress,
-            /// <summary>지금 뺏을 수 있다 — 보라</summary>
+            /// <summary>빙의 가능 — 파란 조준 링</summary>
             Ready,
+            /// <summary>선택 후보 — 지금 버튼이 노리는 몸. 금색</summary>
+            Target,
+            /// <summary>재빙의 불가 — 이 방에서 내가 버린 몸. 붉은 X</summary>
+            Banned,
+            /// <summary>빙의 불가 — 조건이 아직 안 찼다. 회색 자물쇠 + 게이지</summary>
+            Locked,
         }
+
+        /// <summary>표식 그림의 원본 크기. 이 값으로 띄워야 링이 또렷하다.</summary>
+        private const float MarkSize = 32f;
 
         private Image _possessMeter;
 
@@ -335,30 +346,35 @@ namespace Game.Module.InGame
             if (_markView.gameObject.activeSelf != on) _markView.gameObject.SetActive(on);
         }
 
-        public void SetPossessMark(PossessMark state, float progress = 1f)
+        /// <param name="icon">상태에 맞는 그림. null 이면 색만으로 버틴다(아틀라스 로드 전).</param>
+        /// <param name="scale">표식 배율. 고스트일 때 120% 로 키운다 (기획서 1-5 B).</param>
+        public void SetPossessMark(PossessMark state, Sprite icon = null,
+                                   float progress = 1f, float scale = 1f)
         {
             if (_possessMark == null) return;
             bool on = state != PossessMark.None;
             if (_possessMark.gameObject.activeSelf != on) _possessMark.gameObject.SetActive(on);
             if (!on) return;
 
-            _possessMark.color = state == PossessMark.Ready
-                ? new Color(0.62f, 0.45f, 1f, 0.95f)      // 보라 — 지금 누르면 된다
-                : new Color(0.55f, 0.58f, 0.66f, 0.75f);  // 회색 — 아직 잠겼다
+            _possessMark.sprite = icon;
+            // 그림이 있으면 색을 입히지 않는다 — 아이콘이 이미 상태색을 갖고 있다.
+            _possessMark.color = icon != null ? Color.white : FallbackColor(state);
+            _possessMark.transform.localScale = Vector3.one * scale;
 
             if (_possessMeter == null)
             {
                 // 원형 게이지로 두면 그림이 없는 지금은 그냥 회색 사각형으로 보인다.
                 // 가로 막대는 그림 없이도 게이지로 읽힌다 — 표식 아래에 얇게 깐다.
                 var size = ((RectTransform)_possessMark.transform).sizeDelta;
-                _possessMeter = GetOrCreate("PossessMeter", new Vector2(size.x * 1.4f, 3f),
-                                            new Vector2(0f, -size.y * 0.65f),
+                _possessMeter = GetOrCreate("PossessMeter", new Vector2(size.x * 0.8f, 3f),
+                                            new Vector2(0f, -size.y * 0.55f),
                                             _possessMark.transform);
                 _possessMeter.type = Image.Type.Filled;
                 _possessMeter.fillMethod = Image.FillMethod.Horizontal;
                 _possessMeter.fillOrigin = (int)Image.OriginHorizontal.Left;
             }
-            bool showMeter = state == PossessMark.Progress;
+            // 게이지는 잠긴 몸에만 붙는다. "얼마나 더 때려야 열리는가"가 그 표식의 전부다.
+            bool showMeter = state == PossessMark.Locked;
             if (_possessMeter.gameObject.activeSelf != showMeter)
                 _possessMeter.gameObject.SetActive(showMeter);
             if (showMeter)
@@ -367,6 +383,15 @@ namespace Game.Module.InGame
                 _possessMeter.color = new Color(0.72f, 0.58f, 1f, 0.9f);
             }
         }
+
+        /// <summary>그림이 아직 없을 때 쓰는 색. 상태를 못 읽는 것보다는 낫다.</summary>
+        private static Color FallbackColor(PossessMark state) => state switch
+        {
+            PossessMark.Target => new Color(1f, 0.78f, 0.23f, 0.95f),
+            PossessMark.Banned => new Color(0.91f, 0.28f, 0.24f, 0.95f),
+            PossessMark.Locked => new Color(0.55f, 0.58f, 0.66f, 0.75f),
+            _ => new Color(0.37f, 0.78f, 1f, 0.95f),
+        };
 
         /// <summary>
         /// 사격 중 표시. 궁수의 전설은 "멈춰야 쏜다"가 규칙이라 지금 쏘는 중인지가

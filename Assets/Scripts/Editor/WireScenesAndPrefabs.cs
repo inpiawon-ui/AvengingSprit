@@ -128,7 +128,7 @@ namespace Game.Editor
             {
                 var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
                 var loaders = Object.FindObjectsByType<Game.Module.Common.SceneUILoader>(
-                    FindObjectsInactive.Include, FindObjectsSortMode.None);
+                    FindObjectsInactive.Include);
                 foreach (var l in loaders)
                 {
                     var so = new SerializedObject(l);

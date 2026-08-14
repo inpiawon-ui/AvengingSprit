@@ -6,6 +6,7 @@ using Game.Module.Events;
 using Game.User;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.EventBus;
+using GameFramework.Core.Module.Loading;
 using GameFramework.Core.Module.Resource;
 using TMPro;
 using UnityEngine;
@@ -43,6 +44,7 @@ namespace Game.Module.InGame
         private GameConfig _config;
         private IPlayerDataService _player;
         private SpriteAtlas _atlas;                                        // HUD·탄·바닥
+        private ILoadingManager _loading;                                  // 씬 전환 가림막
         private readonly Dictionary<string, SpriteAtlas> _unitAtlas = new();  // 캐릭터 키 → 아틀라스
         private IEventBus _bus;
 
@@ -230,11 +232,14 @@ namespace Game.Module.InGame
             SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
             CoreModule.TryGet(out _player);
+            // 가림막. 없으면(모듈 미등록) 그냥 예전처럼 조용히 로드한다.
+            CoreModule.TryGet(out _loading);
 
             var res = CoreModule.Get<IResourceManager>();
             await LoadPanelAtlasAsync(res);
             try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress); }
             catch (Exception e) { Debug.LogError($"[Battle] 아틀라스 로드 실패 — {e.Message}"); }
+            CachePossessMarkSprites();
             try { _config = await res.LoadAsync<GameConfig>("TableData/GameConfig"); }
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
@@ -285,6 +290,14 @@ namespace Game.Module.InGame
             SpawnGhost();
             EnterStartHost();
             EnterRoom(0);
+
+            // 첫 방까지 다 세운 **뒤에** 걷는다. 씬이 올라온 순간 걷으면
+            // 빈 바닥이 잠깐 보였다가 캐릭터가 나타난다.
+            //
+            // 걷힐 때까지 **기다렸다가** 전투를 연다. 가림막은 막대를 100%까지 채우느라
+            // 잠깐 더 떠 있는데, 그동안 `_running` 이 켜져 있으면 적이 가림막 뒤에서
+            // 달려들고 Ghost HP 도 깎인다 — 보지도 못한 전투가 먼저 시작된다.
+            if (_loading != null) await _loading.HideAsync();
             _running = true;
         }
 
@@ -830,6 +843,19 @@ namespace Game.Module.InGame
 
         private Sprite GetSprite(string n) => _atlas != null ? _atlas.GetSprite(n) : null;
 
+        // 빙의 표식 그림 4종 (기획서 1-5 A). `SpriteAtlas.GetSprite` 는 부를 때마다
+        // 새 Sprite 를 만들어 준다 — 매 프레임 부르면 그대로 쌓인다. 한 번만 받아 둔다.
+        private Sprite _markReady, _markTarget, _markBanned, _markLocked, _markArrow;
+
+        private void CachePossessMarkSprites()
+        {
+            _markReady = GetSprite("possessmark_ready");
+            _markTarget = GetSprite("possessmark_target");
+            _markBanned = GetSprite("possessmark_banned");
+            _markLocked = GetSprite("possessmark_locked");
+            _markArrow = GetSprite("possessmark_arrow");
+        }
+
         /// <summary>스프라이트 이름 → 캐릭터 아틀라스 키. `unit_boss` → `boss`.</summary>
         private static string UnitKeyOf(string spriteName)
             => spriteName != null && spriteName.StartsWith("unit_") ? spriteName.Substring(5) : spriteName;
@@ -849,10 +875,14 @@ namespace Game.Module.InGame
         /// 이 런에서 쓸 캐릭터 아틀라스를 미리 올린다.
         /// 스폰은 동기 코드라 이 시점에 다 올라와 있어야 한다 — 늦으면 그림 없이 스폰된다.
         /// </summary>
-        private async UniTask LoadUnitAtlasesAsync(IResourceManager res, IEnumerable<string> keys)
+        private async UniTask LoadUnitAtlasesAsync(IResourceManager res, List<string> keys)
         {
-            foreach (var key in keys)
+            for (int i = 0; i < keys.Count; i++)
             {
+                var key = keys[i];
+                // 여기가 진입 시 검은 화면의 정체다 — 한 캐릭터가 아틀라스 하나라
+                // 스무 장 가까이 순서대로 올린다. 몇 장째인지 가림막에 보여 준다.
+                ReportLoading(i, keys.Count);
                 if (string.IsNullOrEmpty(key) || _unitAtlas.ContainsKey(key)) continue;
                 try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key); }
                 catch (Exception e)
@@ -861,6 +891,20 @@ namespace Game.Module.InGame
                     Debug.LogError($"[Battle] 캐릭터 아틀라스 로드 실패 unit_{key} — {e.Message}");
                 }
             }
+            ReportLoading(keys.Count, keys.Count);
+        }
+
+        /// <summary>
+        /// 가림막에 캐릭터 로드 진행을 알린다. 씬 로드가 앞 60%를 쓰므로 뒤 40%가 우리 몫이다
+        /// (`Game.Module.Common.LoadingFlowModule.SceneLoadShare`).
+        /// </summary>
+        private void ReportLoading(int done, int total)
+        {
+            if (_loading == null || total <= 0) return;
+            float t = Mathf.Clamp01((float)done / total);
+            _loading.SetProgress(Game.Module.Common.LoadingFlowModule.SceneLoadShare
+                                 + (1f - Game.Module.Common.LoadingFlowModule.SceneLoadShare) * t);
+            // 몇 장째인지는 막대와 퍼센트가 말한다. 가운데 한 줄은 가림막이 알아서 굴린다.
         }
 
         /// <summary>
@@ -1780,7 +1824,9 @@ namespace Game.Module.InGame
         {
             var toMe = me.Position - e.Position;
             var side = new Vector2(-toMe.y, toMe.x).normalized;
-            if (((e.GetInstanceID() + _roomIndex) & 1) == 0) side = -side;
+            // 개체마다 좌우를 갈라 놓기만 하면 된다. EntityId 를 int 로 캐스팅하는 것은
+            // 이미 폐기 예정이라 해시로 받는다 — 값의 의미는 안 쓰고 홀짝만 본다.
+            if (((e.GetEntityId().GetHashCode() + _roomIndex) & 1) == 0) side = -side;
 
             var spot = e.Position + side * RepositionDistance;
             var half = FootHalf(e);
@@ -2077,7 +2123,8 @@ namespace Game.Module.InGame
                 float off = count == 1 ? 0f : -spanDeg * 0.5f + spanDeg * i / (count - 1);
                 var shot = RentShot();
                 if (shot == null) return;
-                shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from));
+                shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from),
+                               LoopsFrames(ShotKindOf(from)));
                 shot.Fire(from.Position, at, speed, damage,
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
@@ -2148,10 +2195,17 @@ namespace Game.Module.InGame
                     // 확산일 때만 세면 그 값이 버려진다.
                     int shots = p == null ? 1 : fromPlayer ? p.ShotCount : p.EnemyShotCount;
                     int n = shots + extra;
+
+                    // 부채꼴로 흩을 것인가, 한 줄로 늘어세울 것인가.
+                    //
+                    // 확산(Spread)과 다중 사격 버프는 **넓게 덮는 것**이 값어치라 부채꼴이다.
+                    // 그 밖에 몸이 원래부터 여러 발을 쏘는 경우(흡혈귀 박쥐 2발·갱스터 3발)는
+                    // 줄로 세운다. 좁은 부채꼴(8°)로 흩어 봐야 탄 상자가 104px 이라 서로
+                    // 겹쳐서 한 덩어리로 보였다 — 박쥐 두 마리가 박쥐 하나로 뭉쳤다.
+                    // 각도를 겹치지 않을 만큼(24° 이상) 벌리면 이번엔 조준한 적을 둘 다 빗나간다.
+                    bool fan = kind == AttackKind.Spread || extra > 0;
                     float span = kind == AttackKind.Spread ? p.SpreadDegrees : 0f;
-                    // 확산이 아닌데 탄이 여럿이면 좁게 흩는다 — 0 이면 전부 겹쳐 한 발로 보인다
-                    if (span <= 0f && n > 1) span = 8f * (n - 1);
-                    if (extra > 0) span = Mathf.Max(span, 10f * (n - 1));
+                    if (fan && span <= 0f && n > 1) span = 10f * (n - 1);
 
                     // 정본은 공격력을 **한 번의 공격**에 준다. 탄 수는 따로 적혀 있으므로
                     // 나눠 실어야 탄 수가 그대로 화력 배수가 되지 않는다 — 확산은 맞히기
@@ -2160,11 +2214,15 @@ namespace Game.Module.InGame
 
                     // 정본 BUF_A01 마지막 탄창 — 확산의 **마지막 한 발**이 더 아프다.
                     // 마지막 발만 강하면 "다 맞히는 것" 이 아니라 "끝까지 붙어 있는 것" 이 이득이 된다.
+                    // 줄로 세울 때의 간격. 탄 상자만큼 벌리면 그림이 서로 닿지 않는다.
+                    float gap = _config.ShotSize * TrailGapRatio;
+
                     for (int i = 0; i < n; i++)
                     {
-                        float off = n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
+                        float off = !fan || n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
                         FireShot(attacker, target, fromPlayer, off,
-                                 lastShot: fromPlayer && i == n - 1, split: split);
+                                 lastShot: fromPlayer && i == n - 1, split: split,
+                                 trailBack: fan ? 0f : i * gap);
                     }
                     break;
                 }
@@ -2595,13 +2653,21 @@ namespace Game.Module.InGame
         // 보스 탄은 잡몹과 색을 나눈다 — 화면이 탄으로 덮이면 무엇을 피해야 할지 안 보인다
         private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
 
+        /// <summary>한 줄로 늘어세울 때 탄 사이 간격(탄 상자 대비). 1.0 이면 딱 붙는다.</summary>
+        private const float TrailGapRatio = 1.25f;
+
+        /// <param name="trailBack">
+        /// 발사 지점을 조준 방향의 **뒤로** 이 만큼 물린다. 같은 방향으로 같은 속도로
+        /// 날아가므로 앞뒤 간격이 그대로 유지된다 — 한 줄로 늘어서 날아간다.
+        /// 각도를 벌리는 것과 달리 조준이 흐트러지지 않는다.
+        /// </param>
         private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg,
-                              bool lastShot = false, int split = 1)
+                              bool lastShot = false, int split = 1, float trailBack = 0f)
         {
             var shot = RentShot();
             if (shot == null) return;
             var kind = ShotKindOf(attacker);
-            shot.SetSprite(ShotSpriteOf(attacker), kind);
+            shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -2611,7 +2677,14 @@ namespace Game.Module.InGame
 
             // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
             // 방향 스프라이트를 그린 의미가 없다.
-            shot.Fire(attacker.MuzzlePosition, target.Position, speed,
+            var muzzle = attacker.MuzzlePosition;
+            if (trailBack > 0f)
+            {
+                var aim = target.Position - muzzle;
+                if (aim.sqrMagnitude > 0.0001f) muzzle -= aim.normalized * trailBack;
+            }
+
+            shot.Fire(muzzle, target.Position, speed,
                       fromPlayer
                           ? Mathf.Max(1, Mathf.RoundToInt(
                                 attacker.Atk * _buffs.AttackMul * MaintainDamageMul
@@ -2630,8 +2703,9 @@ namespace Game.Module.InGame
                           ? _buffs.Bounces + ((p != null && p.ReflectsShots) ? 1 : 0)
                           : 0);
 
-            if (kind == "grenade") ThrowAsGrenade(shot, attacker.MuzzlePosition,
-                                                  target.Position, angleOffsetDeg, speed);
+            // 던지는 탄도 물린 자리에서 출발해야 앞뒤 간격이 유지된다
+            if (kind == "grenade") ThrowAsGrenade(shot, muzzle, target.Position,
+                                                  angleOffsetDeg, speed);
         }
 
         // ── 던지는 탄(수류탄) ────────────────────────────────────
@@ -2723,6 +2797,17 @@ namespace Game.Module.InGame
         /// <summary>탄 종류 이름. 없는 배우는 null — 기본 그림을 쓴다.</summary>
         private static string ShotKindOf(Unit u)
             => u != null && u.Key != null && ShotKind.TryGetValue(u.Key, out var k) ? k : null;
+
+        /// <summary>
+        /// 여러 장이 **반복 동작**인 탄. 나머지는 태어나는 모습(작은 것이 커진다)이라
+        /// 한 번만 넘기고 멈춘다.
+        ///
+        /// 박쥐는 원작 시트의 `Bats` 2장 — 날개 편 것과 접은 것이다. 멈춰 세우면
+        /// 날개를 접은 채 미끄러져 가고, 그게 "박쥐가 안 난다"로 보인다.
+        /// 표창(회전 2장)·수류탄(회전 4장)도 같다 — 던진 물건은 돌면서 간다.
+        /// </summary>
+        private static bool LoopsFrames(string kind)
+            => kind == "drain" || kind == "shuriken" || kind == "grenade";
 
         /// <summary>
         /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —
@@ -2968,9 +3053,18 @@ namespace Game.Module.InGame
         }
 
         /// <summary>보호 시간 동안 근처 적을 늦춘다. 범위는 빙의 사거리의 두 배로 잡는다.</summary>
+        /// <summary>
+        /// 몸을 잃거나 놓아준 자리의 보호 슬로우 반경.
+        ///
+        /// 예전에는 `PossessRange * 2` 였다. 빙의 사거리를 1.9m → 5m 로 넓히면서
+        /// 이 값이 따라 커지면 방 전체가 슬로우에 걸린다 — 보호가 아니라 무적이 된다.
+        /// 사거리와 무관한 값으로 떼어내고, 예전 반경(165×2)을 그대로 유지한다.
+        /// </summary>
+        private const float ProtectSlowRadius = 330f;
+
         private void SlowNearbyEnemies(Vector2 center)
         {
-            float r = _config.PossessRange * 2f;
+            float r = ProtectSlowRadius;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
@@ -3230,17 +3324,7 @@ namespace Game.Module.InGame
                     bestPri = e.PossessPriority; bestD = d; _possessTarget = e;
                 }
             }
-            // 표식은 대상에만 찍지 않는다. 조건부 적은 **잠긴 것도 보여야** 어느 놈을
-            // 먼저 두들겨야 하는지 알 수 있다.
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null) continue;
-                if (e == _possessTarget) e.SetPossessMark(Unit.PossessMark.Ready);
-                else if (e.HasPossessCondition && e.IsAlive && !e.IsDying)
-                    e.SetPossessMark(Unit.PossessMark.Progress, e.PossessProgress);
-                else e.SetPossessMark(Unit.PossessMark.None);
-            }
+            RefreshPossessMarks(from);
 
             // 몸이 있으면 버튼은 언제나 누를 수 있는 **탈출**이다. 값(-15%)을 함께 적는다.
             bool has = _host != null || _possessTarget != null;
@@ -3258,6 +3342,192 @@ namespace Game.Module.InGame
             {
                 HasTarget = has, GhostCost = cost, Blocked = blocked,
             });
+        }
+
+        // ── 빙의 표식 (기획서 1-5) ────────────────────────────────
+        //
+        // 표식은 **사거리 안 후보에게만**, 가까운 순으로 최대 5개까지 뜬다.
+        // 방 하나에 열 마리가 서 있는데 전부 조준 링을 달면 표식이 적을 덮어
+        // "누구를 뺏을까"가 아니라 "누가 누구지"가 된다.
+
+        /// <summary>한 번에 띄우는 표식 수 (기획서 1-5 B).</summary>
+        private const int MaxPossessMarks = 5;
+
+        /// <summary>고스트일 때 표식 배율 (기획서 1-5 B · 120%).</summary>
+        private const float GhostMarkScale = 1.2f;
+
+        private readonly Unit[] _markSlot = new Unit[MaxPossessMarks];
+        private readonly float[] _markDist = new float[MaxPossessMarks];
+        private int _markCount;
+
+        private void RefreshPossessMarks(Unit from)
+        {
+            _markCount = 0;
+            if (from != null && !_awaitingBuff) CollectMarks(from);
+            RefreshPossessArrows(from);
+
+            // 고스트일 때 크게. 몸이 없을 때가 "어디로 들어갈까"를 고르는 시간이다.
+            float scale = _host == null ? GhostMarkScale : 1f;
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null) continue;
+
+                if (!IsMarked(e)) { e.SetPossessMark(Unit.PossessMark.None); continue; }
+
+                if (e == _possessTarget)
+                    e.SetPossessMark(Unit.PossessMark.Target, _markTarget, 1f, scale);
+                else if (e.RepossessBanned)
+                    e.SetPossessMark(Unit.PossessMark.Banned, _markBanned, 1f, scale);
+                else if (!e.IsPossessable)
+                    e.SetPossessMark(Unit.PossessMark.Locked, _markLocked, e.PossessProgress, scale);
+                else
+                    e.SetPossessMark(Unit.PossessMark.Ready, _markReady, 1f, scale);
+            }
+        }
+
+        private void CollectMarks(Unit from)
+        {
+            // 조준 중인 몸은 거리와 무관하게 자리를 차지한다 — 우선순위 규칙(A 4-3)으로
+            // 뽑힌 대상이 여섯 번째로 가까웠다는 이유로 금색 링이 사라지면 거짓말이 된다.
+            if (_possessTarget != null) InsertMark(_possessTarget, -1f);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || e == _possessTarget) continue;
+                if (!e.IsAlive || e.IsDying || e.IsBoss) continue;
+
+                // 뺏을 수 있거나, 뺏었다가 버렸거나, 조건이 안 찼거나 — 셋 다 알려줄 값이 있다.
+                // 그 밖(보스·빙의 불가 종류)은 표식을 달아 봐야 화면만 시끄럽다.
+                if (!e.IsPossessable && !e.RepossessBanned && !e.HasPossessCondition) continue;
+
+                // 몸을 입고 있는 동안에는 다른 몸을 노리지 않는다(1-7). 그래도 조건부 적의
+                // 잠금 표식은 남긴다 — 지금 두들기는 놈이 언제 열리는지가 다음 수다.
+                if (_host != null && !e.HasPossessCondition) continue;
+
+                float range = _host != null ? _config.TacticalPossessRange
+                            : e.PossessRange > 0f ? e.PossessRange
+                            : _config.PossessRange;
+                float d = Vector2.Distance(from.Position, e.Position);
+                if (d > range) continue;          // 사거리를 벗어나면 아이콘이 사라진다
+
+                InsertMark(e, d);
+            }
+        }
+
+        /// <summary>가까운 순으로 끼워 넣는다. 뒤로 밀려 5개를 넘으면 버린다.</summary>
+        private void InsertMark(Unit e, float d)
+        {
+            int at = _markCount;
+            while (at > 0 && _markDist[at - 1] > d) at--;
+            if (at >= MaxPossessMarks) return;
+
+            for (int i = Mathf.Min(_markCount, MaxPossessMarks - 1); i > at; i--)
+            {
+                _markSlot[i] = _markSlot[i - 1];
+                _markDist[i] = _markDist[i - 1];
+            }
+            _markSlot[at] = e;
+            _markDist[at] = d;
+            if (_markCount < MaxPossessMarks) _markCount++;
+        }
+
+        private bool IsMarked(Unit e)
+        {
+            for (int i = 0; i < _markCount; i++)
+                if (_markSlot[i] == e) return true;
+            return false;
+        }
+
+        // ── 화면 밖 후보 화살표 (기획서 1-5 B) ────────────────────
+        //
+        // 방이 화면보다 길어서(14 m 방 · 9.3 m 창) 뺏을 몸이 창 밖에 있을 수 있다.
+        // 고스트는 초당 3씩 깎이는 중이라 "어디로 가야 몸이 있는가" 를 모르면
+        // 그 시간이 그대로 손해다. 창 가장자리에 방향만 찍어 준다.
+        //
+        // 세로로만 스크롤하므로 화살표는 위·아래 둘뿐이다. 방향마다 **가장 가까운
+        // 한 기**만 가리킨다 — 여럿 띄우면 가장자리가 화살표 띠가 된다.
+
+        private RectTransform _arrowLayer;
+        private Image _arrowUp, _arrowDown;
+
+        /// <summary>화살표를 창 가장자리에서 얼마나 안쪽에 둘 것인가.</summary>
+        private const float ArrowEdgeInset = 30f;
+
+        private void RefreshPossessArrows(Unit from)
+        {
+            Unit up = null, down = null;
+            float bestUp = float.MaxValue, bestDown = float.MaxValue;
+
+            // 몸을 입고 있으면 몸을 찾을 이유가 없다. 표식과 같은 규칙(1-7)이다.
+            if (from != null && _host == null && !_awaitingBuff && _running)
+            {
+                for (int i = 0; i < _enemies.Count; i++)
+                {
+                    var e = _enemies[i];
+                    if (e == null || !e.IsPossessable) continue;
+                    if (IsOnScreen(e)) continue;
+
+                    float d = Vector2.Distance(from.Position, e.Position);
+                    bool above = e.Position.y + _scroll > 0f;   // 창 위쪽으로 벗어났다
+                    if (above) { if (d < bestUp) { bestUp = d; up = e; } }
+                    else if (d < bestDown) { bestDown = d; down = e; }
+                }
+            }
+
+            SetArrow(ref _arrowUp, up, true);
+            SetArrow(ref _arrowDown, down, false);
+        }
+
+        private void SetArrow(ref Image view, Unit at, bool up)
+        {
+            if (at == null)
+            {
+                if (view != null && view.gameObject.activeSelf) view.gameObject.SetActive(false);
+                return;
+            }
+            if (view == null) view = NewArrow(up);
+            if (!view.gameObject.activeSelf) view.gameObject.SetActive(true);
+
+            // 가로는 대상이 있는 쪽, 세로는 창의 위·아래 끝.
+            float w = _field.rect.width, h = _field.rect.height;
+            float x = Mathf.Clamp(at.Position.x, ArrowEdgeInset, w - ArrowEdgeInset);
+            ((RectTransform)view.transform).anchoredPosition =
+                new Vector2(x, up ? -ArrowEdgeInset : -(h - ArrowEdgeInset));
+        }
+
+        private Image NewArrow(bool up)
+        {
+            if (_arrowLayer == null)
+            {
+                // 창에 붙는다 — 방(UnitLayer)에 붙이면 스크롤을 따라 같이 흘러가 버린다.
+                var layer = new GameObject("PossessArrows", typeof(RectTransform));
+                _arrowLayer = (RectTransform)layer.transform;
+                _arrowLayer.SetParent(_field, false);
+                _arrowLayer.anchorMin = _arrowLayer.anchorMax = new Vector2(0f, 1f);
+                _arrowLayer.pivot = new Vector2(0f, 1f);
+                _arrowLayer.anchoredPosition = Vector2.zero;
+                _arrowLayer.sizeDelta = _field.rect.size;
+            }
+
+            var go = new GameObject(up ? "ArrowUp" : "ArrowDown",
+                                    typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(_arrowLayer, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(32f, 32f);
+            // 그림은 위를 향한 한 장뿐이다. 아래쪽은 뒤집어 쓴다.
+            if (!up) rt.localRotation = Quaternion.Euler(0f, 0f, 180f);
+
+            var img = go.GetComponent<Image>();
+            img.sprite = _markArrow;
+            img.raycastTarget = false;
+            img.preserveAspect = true;
+            if (_markArrow == null) img.color = new Color(0.37f, 0.78f, 1f, 0.95f);
+            return img;
         }
 
         /// <summary>
@@ -3880,7 +4150,7 @@ namespace Game.Module.InGame
 
             var shot = RentShot();
             if (shot == null) return;
-            shot.SetSprite(ShotFrames("grenade"), "grenade");
+            shot.SetSprite(ShotFrames("grenade"), "grenade", LoopsFrames("grenade"));
             me.SetFacing(target.Position - me.Position);
             me.PlayAttack();
 

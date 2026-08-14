@@ -24,7 +24,11 @@ namespace Game.Character
         [Header("고스트")]
         [SerializeField] private int _ghostHpMax = 100;
         [SerializeField] private float _ghostMoveSpeed = 320f;
-        [SerializeField] private float _possessRange = 165f;   // 110 → 1.5배. 붙어야 겨우 잡혔다
+        // 165px(1.9m) 은 몸에 거의 달라붙어야 잡혔다. 기획 슬라이드 1-5 의 10m 는 반대로
+        // 방(8.4×14m) 을 통째로 덮어 "어디서든 아무나" 가 된다. 그 사이를 잡은 값이다.
+        // 720px = 8.4m 이므로 1m = 85.7px.
+        [Tooltip("고스트 빙의 사거리(px). 5.0m — 기획서 1-5 의 초기 테스트값 10m 를 절반으로.")]
+        [SerializeField] private float _possessRange = 429f;    // 5.0m
 
         [Tooltip("스스로 몸을 놓아줄 때 치르는 Ghost HP (최대치 대비 %). 기획서 1-2 A")]
         [SerializeField] private int _ghostLeaveCostPercent = 15;

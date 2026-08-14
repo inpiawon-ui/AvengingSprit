@@ -74,7 +74,7 @@ namespace Game.Module.InGame
         {
             if (font != null) tmp.font = font;
             tmp.alignment = TextAlignmentOptions.Center;
-            tmp.enableWordWrapping = false;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.raycastTarget = false;
             tmp.fontStyle = FontStyles.Bold;
             tmp.fontSize = 26f;

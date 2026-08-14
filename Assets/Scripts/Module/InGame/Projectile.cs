@@ -73,10 +73,18 @@ namespace Game.Module.InGame
         /// </summary>
         private const float SpawnStartScale = 0.5f;
 
+        /// <summary>
+        /// 다만 **전부** 태어나는 모습은 아니다. 원작 시트의 박쥐 2장(날개 편 것 /
+        /// 접은 것)과 표창 2장(회전)은 반복 동작이다 — 한 번만 넘기고 멈추면
+        /// 날개를 접은 채 날아가는 박쥐가 된다. 그런 종류는 계속 돌린다.
+        /// </summary>
+        private const float LoopFrameSeconds = 0.08f;
+
         private Sprite[] _frames;
         private float _frameSeconds;
         private float _frameTimer;
         private int _frameIndex;
+        private bool _loopFrames;
 
         private float _size;
         private float _spawnTimer;
@@ -127,25 +135,33 @@ namespace Game.Module.InGame
         public void SetSprite(Sprite sprite, string kind = null)
             => SetSprite(sprite == null ? null : new[] { sprite }, kind);
 
-        public void SetSprite(Sprite[] frames, string kind = null)
+        /// <param name="loop">반복 동작인가(박쥐 날갯짓·표창 회전). false 면 태어나는 모습.</param>
+        public void SetSprite(Sprite[] frames, string kind = null, bool loop = false)
         {
             _frames = frames != null && frames.Length > 0 ? frames : null;
-            _frameIndex = 0;
-            _frameSeconds = _frames == null ? 0f : SpawnAnimSeconds / _frames.Length;
+            _loopFrames = loop;
+            // 반복 동작은 **마지막 장에서 시작한다.** 원작 박쥐 시트는 1번이 편 날개,
+            // 2번이 접은 날개다. 1번부터 돌리면 편 채로 태어나 접었다 펴는 것이
+            // 반 박자 늦게 읽힌다 — 접은 채 나와 펴면서 날아가야 "퍼덕인다"가 된다.
+            // 회전(표창·수류탄)은 어느 장에서 시작하든 같다.
+            _frameIndex = loop && _frames != null ? _frames.Length - 1 : 0;
+            _frameSeconds = _frames == null ? 0f
+                          : loop ? LoopFrameSeconds
+                                 : SpawnAnimSeconds / _frames.Length;
             _frameTimer = _frameSeconds;
-            if (_frames != null && _image != null) _image.sprite = _frames[0];
+            if (_frames != null && _image != null) _image.sprite = _frames[_frameIndex];
             Kind = kind;
         }
 
-        /// <summary>한 장짜리거나 이미 다 자랐으면 아무것도 하지 않는다.</summary>
+        /// <summary>한 장짜리거나 (반복이 아닌데) 이미 다 자랐으면 아무것도 하지 않는다.</summary>
         private void TickFrames(float dt)
         {
-            if (_frames == null || _image == null) return;
-            if (_frameIndex >= _frames.Length - 1) return;   // 마지막 장에서 멈춘다
+            if (_frames == null || _image == null || _frames.Length < 2) return;
+            if (!_loopFrames && _frameIndex >= _frames.Length - 1) return;   // 마지막 장에서 멈춘다
             _frameTimer -= dt;
             if (_frameTimer > 0f) return;
             _frameTimer += _frameSeconds;
-            _frameIndex++;
+            _frameIndex = _loopFrames ? (_frameIndex + 1) % _frames.Length : _frameIndex + 1;
             _image.sprite = _frames[_frameIndex];
         }
 

@@ -101,7 +101,9 @@ namespace Game.User
         ///
         /// ⚠ 출시 전에 반드시 false 로 되돌린다. 켜 두면 해금이라는 성장 축이 통째로 사라진다.
         /// </summary>
-        public const bool UnlockAllForTest = true;
+        // `const` 로 두면 컴파일러가 아래 분기를 통째로 죽은 코드로 판정해
+        // CS0162 경고가 뜬다. 끄고 켜는 시험용 스위치이므로 static readonly 로 둔다.
+        public static readonly bool UnlockAllForTest = true;
 
         public bool IsHostUnlocked(HostEntry host)
         {

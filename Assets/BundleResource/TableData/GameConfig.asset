@@ -16,7 +16,7 @@ MonoBehaviour:
   _exitTouchRadius: 70
   _ghostHpMax: 100
   _ghostMoveSpeed: 446
-  _possessRange: 165
+  _possessRange: 429
   _ghostLeaveCostPercent: 15
   _ghostDeathCostPercent: 20
   _repossessLockSeconds: 1.2

@@ -120,7 +120,7 @@ namespace Game.Module.Common.UI
         /// <summary>씬에 이미 쓰이는 한글 폰트를 재사용한다(전용 에셋 참조를 만들지 않기 위함).</summary>
         private static TMP_FontAsset FindFont()
         {
-            var any = UnityEngine.Object.FindFirstObjectByType<TextMeshProUGUI>(FindObjectsInactive.Include);
+            var any = UnityEngine.Object.FindAnyObjectByType<TextMeshProUGUI>(FindObjectsInactive.Include);
             if (any != null && any.font != null) return any.font;
             return TMP_Settings.defaultFontAsset;
         }

@@ -174,7 +174,8 @@ MonoBehaviour:
   - m_GUID: e00cde0c989417e4f80153eaa879cab3
     m_Address: atlas/unit_actor_enforcer
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e1f98eb393a72ed43a956f3b487acc18
     m_Address: atlas/unit_dragon_blue
@@ -184,6 +185,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e392cd2af6417b24696414d46edf0d62
     m_Address: atlas/unit_ghost
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9875d47f0f36a1418121a8b5bd33973
+    m_Address: atlas/loading
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
