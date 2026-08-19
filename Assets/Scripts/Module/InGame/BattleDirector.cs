@@ -1336,8 +1336,11 @@ namespace Game.Module.InGame
             bool waveLeft = TickWave(dt);
             // 빙의 중에는 방을 닫지 않는다 — 빼앗기는 몸은 이미 적 목록에서 빠져 있어서
             // 마지막 한 마리를 빼앗는 순간 방이 클리어된 것으로 보인다.
+            TickPendingLevelUp(dt);
+            // 레벨업 팝업이 대기 중이면 출구를 먼저 열지 않는다 —
+            // 고르기도 전에 다음 방으로 갈 수 있으면 성장이 선택이 아니라 사고가 된다.
             if (!waveLeft && _enemies.Count == 0 && _exits.Count == 0
-                && !_awaitingBuff && !IsChanneling) OnRoomCleared();
+                && !_awaitingBuff && !HasPendingLevelUp && !IsChanneling) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
@@ -2975,7 +2978,7 @@ namespace Game.Module.InGame
                     var hit = HitEnemy(p.Position, p);
                     if (hit == null) continue;
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
-                    SpawnImpact(p.Position, p.Kind);
+                    SpawnImpact(ImpactPointOn(hit, p.Position), p.Kind);
                     ApplyShotHit(hit, p);
                 }
                 else
@@ -2983,10 +2986,22 @@ namespace Game.Module.InGame
                     if (me == null) { p.Despawn(); continue; }
                     if (Vector2.Distance(p.Position, me.Position) > _config.ShotHitRadius) continue;
                     p.Despawn();
-                    SpawnImpact(p.Position, p.Kind);
+                    SpawnImpact(ImpactPointOn(me, p.Position), p.Kind);
                     DamagePlayer(p.Damage);
                 }
             }
+        }
+
+        /// <summary>
+        /// 터지는 자리는 **맞은 몸 위**다. 탄이 있던 자리에 터뜨리면 몸에서 떨어져 터진다 —
+        /// 명중 판정을 몸통 반경(53) + 탄 반경(34) 으로 넓히면서 최대 87픽셀까지 벌어졌다.
+        /// 몸 중심에서 탄이 온 쪽으로 조금 당겨, 어느 쪽에서 맞았는지도 함께 읽히게 한다.
+        /// </summary>
+        private static Vector2 ImpactPointOn(Unit victim, Vector2 shotAt)
+        {
+            if (victim == null) return shotAt;
+            return victim.Position
+                 + Vector2.ClampMagnitude(shotAt - victim.Position, victim.BodyRadius * 0.5f);
         }
 
         /// <summary>탄이 닿은 적. 관통탄은 이미 때린 대상을 건너뛴다.</summary>
@@ -3180,6 +3195,37 @@ namespace Game.Module.InGame
             _exp -= need;
             _level++;
             PublishExp(_config.ExpToNext(_level));
+
+            // 바로 띄우지 않는다. 마지막 한 대를 때린 순간 팝업이 뜨면
+            // **적이 죽기도 전에 먼저 뜬 것처럼** 보인다.
+            // 방이 실제로 비고(쓰러지는 연출까지) 잠깐 뒤에 띄운다.
+            _pendingLevelUps++;
+        }
+
+        /// <summary>방이 비기를 기다렸다가 레벨업 3택1 을 띄운다.</summary>
+        private const float BuffOfferDelay = 1.0f;
+
+        private int _pendingLevelUps;
+        private float _buffOfferTimer;
+
+        private bool HasPendingLevelUp => _pendingLevelUps > 0;
+
+        private void TickPendingLevelUp(float dt)
+        {
+            if (_pendingLevelUps <= 0 || _awaitingBuff) return;
+
+            // 살아 있는 적도, 쓰러지는 중인 몸도 없어야 "다 죽었다" 이다.
+            if (_enemies.Count > 0 || _dying.Count > 0 || IsChanneling)
+            {
+                _buffOfferTimer = BuffOfferDelay;
+                return;
+            }
+
+            _buffOfferTimer -= dt;
+            if (_buffOfferTimer > 0f) return;
+
+            _pendingLevelUps--;
+            _buffOfferTimer = BuffOfferDelay;
             OfferBuff();
         }
 
