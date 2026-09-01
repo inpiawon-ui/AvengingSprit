@@ -1,0 +1,6 @@
+roomfloor_crusher.png	720x936	mean_luma=40.18
+roomfloor_guardian.png	720x936	mean_luma=43.98
+roomfloor_python.png	720x936	mean_luma=33.79
+roomfloor_kingpin.png	720x936	mean_luma=33.60
+roomfloor_robot_snakes.png	720x936	mean_luma=34.03
+roomfloor_sludge.png	720x936	mean_luma=48.20

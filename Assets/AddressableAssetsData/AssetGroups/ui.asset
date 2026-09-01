@@ -21,6 +21,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_ingame
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7707ced5a6811ab4bbf1c1c01365ed63
+    m_Address: UI/Opening/OpeningMainUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cdefceab91ae8e54b89565965d6e4c69
     m_Address: UI/Lobby/HostSelectPanel
     m_ReadOnly: 0

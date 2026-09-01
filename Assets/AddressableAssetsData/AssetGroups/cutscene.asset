@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: cutscene
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: cutscene
+  m_GUID: 78df35ab90870dc4dbbd75942f8d792e
+  m_SerializeEntries:
+  - m_GUID: 067dc5f067f25094d865c995e20b8365
+    m_Address: cutscene/cut_start_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1fbaf2e45b9806041bdab80f6624141c
+    m_Address: cutscene/cut_prologue_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2587527ca0d83e94f941dd290046a59f
+    m_Address: cutscene/cut_prologue_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25e1aa19884cde647b9deb0f58c2ddbe
+    m_Address: cutscene/cut_prologue_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3df6ff34c8855f343b614c9c49318c53
+    m_Address: cutscene/cut_start_11
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5135fd66b768fbc47b6864336d7f732c
+    m_Address: cutscene/cut_prologue_6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c26a896ba1da7d4d9d2b189fdc6486c
+    m_Address: cutscene/cut_start_5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7282803da2cce0345b4e984f248c1ebb
+    m_Address: cutscene/cut_prologue_5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76011b1f7a5d9604191582f4ddc849a1
+    m_Address: cutscene/cut_start_9
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 770c2d0c30b097048ac2d666d971d9e4
+    m_Address: cutscene/cut_start_6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 86d1c4bb1c66f3d45aab8a76fccd2ad0
+    m_Address: cutscene/cut_start_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c97a0b0aace66848839fa96175d7dd3
+    m_Address: cutscene/cut_prologue_7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e91478317efac14bbab4f5f3bc06787
+    m_Address: cutscene/cut_start_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a53c767e8216b4142963932dc109230e
+    m_Address: cutscene/cut_start_10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6fe62bb32e476b4e87760ac208e462f
+    m_Address: cutscene/cut_start_7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cda4406175dc2f54e946a62033b6a58d
+    m_Address: cutscene/cut_prologue_8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd6297799e5b6d34aaba7dcdf28d5597
+    m_Address: cutscene/cut_prologue_9
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1303233bd0cd254ea162ce84a1f703a
+    m_Address: cutscene/cut_start_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e92d83fdae50e28459208a549d2a39ec
+    m_Address: cutscene/cut_start_8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f80cb2fb2650f4f469f16d94171872e3
+    m_Address: cutscene/cut_prologue_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fa298fe03bd750e4586279333070b2a1, type: 2}
+    - {fileID: 11400000, guid: 0a534db039542c24c9bad0334b415412, type: 2}

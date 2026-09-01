@@ -1,0 +1,260 @@
+// 보스 6종 × 패턴 4개 = 24                                 v1.0 (2026-08-31)
+// 정본 BOSS_RUNTIME.json · BOSS_ATTACK_RUNTIME.json 을 10 × 13 m 아레나에 맞춰 수치화한 것.
+//
+// ⚠ 지금 BossTable.asset 에는 보스가 3명뿐이고 그림 배정도 정본과 어긋나 있다.
+//   6명으로 늘리고 아래 sprite 로 바로잡는다. guardian · kingpin · sludge 는
+//   그림 21장씩 이미 들어와 있는데 아무 데서도 안 쓴다.
+//
+// 피해는 「보스 공격력 ×배율」이다. 호스트 스킬을 「평타 ×배율」로 적은 것과 같은 형식.
+// 예고 telegraph 는 정본 값 그대로. 지금 BossMove 에 그 칸이 없어 새로 만들어야 한다.
+//
+// 페이즈: P1 패턴 2개 → P2 3개 → P3 4개. HP 가 줄어서 세지는 게 아니라 할 줄 아는 게 는다.
+//   게이트는 현행 그대로 HP 60% / 30%.
+
+// ── 공간 기본형 6종 ────────────────────────────────────────────
+// 24개 패턴은 전부 이 여섯의 매개변수 조합이다. 여섯만 만들면 24개가 데이터가 된다.
+const SHAPES = {
+  ARC:  '부채꼴 — 각도 · 반경 · 바라보는 방향',
+  LINE: '직선 — 폭 · 길이 · 방향',
+  LANE: '줄 — 방을 n등분해 일부 줄만 위험',
+  ZONE: '구역 — 안전한 곳이 정해져 있고 그것이 움직인다',
+  DASH: '돌진 — 접촉 피해 + 벽 충돌',
+  MARK: '표식 — 대상을 지정하고 지연 후 그 자리를 친다',
+};
+// ── 상태 3종 ───────────────────────────────────────────────────
+const STATES = {
+  GUARD: '정면 피해 감소 · 반사',
+  SPLIT: '분열체 — 코어를 안 부수면 본체가 회복',
+  TWIN:  '머리 둘 — HP 를 나눠 갖고 따로 움직인다',
+};
+
+module.exports = [
+{
+  id:'B01', key:'crusher', ko:'크러셔', en:'Crusher', sprite:'unit_crusher',
+  room:'CH1 006', gate:'MID', hp:1650, atk:18, move:'느린 추격 + 크게 커밋하는 돌진',
+  line:'크게 커밋한다',
+  wall:null,   // 「안 되는 구간」 — 첫 보스라 없다
+  wallNote:'첫 보스다. 못 하는 것을 만들지 않는다 — 여기서는 예고를 읽는 법만 배운다.',
+  chance:'돌진이 벽에 박히면 **자기가 2.5초 기절**한다. 그 충격으로 벽에서 아마존 하나가 떨어져 나온다',
+  hosts:'아마존 · 아마존 정예 · 구루',
+  arena:'금 간 바닥 — 진각이 지나간 자리에 금이 남아 다음 진각의 위치를 알려준다',
+  brk:{ cause:'돌진을 옆으로 피했다', open:'벽에 박고 **2.5초 기절**', sec:2.5, note:'그 충격으로 벽에서 아마존 하나가 떨어진다 — 딜 타임이자 빙의 기회다' },
+  moves:[
+    { p:1, name:'진각', en:'Quake Fist', cool:8, tel:1.25, dmg:0.94, shape:'ARC',
+      spec:'자기 앞 반경 2.5 m · 정면 180° 반원',
+      counter:'뒤로 돌아라 — 등 뒤 반원은 안전하다',
+      draw:{t:'arc', deg:180, r:2.5},
+      dodge:{k:'BACK'}, pAt:[5,7.5] },
+    { p:1, name:'벽 돌진', en:'Wall Charge', cool:11, tel:1.5, dmg:1.33, shape:'DASH',
+      spec:'방향을 고정하고 5.5배속. 몸이 스치면 맞는다 · 폭 3.6 m',
+      counter:'옆으로 비켜라 — 비키면 보스가 벽에 박고 2.5초 기절한다',
+      draw:{t:'dash', w:3.6},
+      dodge:{k:'SIDE'}, pAt:[5,5] },
+    { p:2, name:'파편 부채꼴', en:'Debris Fan', cool:10, tel:1.1, dmg:0.72, shape:'ARC',
+      spec:'파편 7발 · 부채꼴 100° · 발 사이 간격 16.7°',
+      counter:'틈으로 걸어라 — 5 m 에서 발 간격 1.45 m, 몸(0.7 m)이 지나간다',
+      draw:{t:'fan', n:7, deg:100, r:6},
+      dodge:{k:'GAP', to:[5,3.4]}, pAt:[5,4.5] },
+    { p:3, name:'이중 진각', en:'Double Quake', cool:14, tel:1.0, dmg:1.06, shape:'ARC',
+      spec:'왼쪽 반원 → 0.6초 뒤 오른쪽 반원. 번갈아 찍는다',
+      counter:'반대 줄로 — 첫 번째를 피한 쪽이 두 번째에 맞는 자리다',
+      draw:{t:'halves'},
+      dodge:{k:'SIDE'}, pAt:[4,7.8] },
+  ],
+},
+{
+  id:'B02', key:'guardian', ko:'가디언', en:'Guardian', sprite:'unit_guardian',
+  room:'CH1 012', gate:'FINAL', hp:2400, atk:22, move:'방패를 든 쪽으로만 도는 선회',
+  line:'앞이 막혀 있다',
+  wall:'반사선 — 원거리는 4초간 손을 놔야 한다',
+  wallNote:'정면 120° 는 상시 피해 감소 70%. 그냥 쏘면 안 들어가고, 반사선 중에 쏘면 2배로 돌아온다.',
+  chance:'방패가 깨지면 **격투 호스트**가 튀어나온다 — 정면을 못 뚫는 문제의 답을 보스가 직접 준다',
+  hosts:'슬러거 · 사신 · 닌자(사슬)',
+  arena:'도는 방패 각 + 등 뒤 안전 원뿔',
+  state:'GUARD',
+  brk:{ cause:'방패 행진을 벽으로 유인했다', open:'**2초 경직** → 방패가 깨진다', sec:2.0, note:'방패가 깨져야 정면 감소 70% 가 30% 로 내려간다. 이 보스는 브레이크를 못 내면 딜이 안 들어간다' },
+  moves:[
+    { p:1, name:'이지스 스윕', en:'Aegis Sweep', cool:7, tel:1.0, dmg:0.82, shape:'ARC',
+      spec:'방패로 정면 120° · 반경 3.0 m 를 쓸어낸다',
+      counter:'등 뒤로 돌아라 — 뒤쪽 90° 원뿔은 피해 감소가 없다',
+      draw:{t:'arc', deg:120, r:3.0, safeRear:90},
+      dodge:{k:'BACK'}, pAt:[5,7.2] },
+    { p:1, name:'방패 행진', en:'Shield March', cool:12, tel:1.4, dmg:0.73, shape:'LINE',
+      spec:'방패를 밀고 직선으로 4초간 전진 · 폭 3.6 m. 밀리면 벽에 낀다',
+      counter:'벽으로 유인해라 — 벽에 닿으면 2초 경직한다',
+      draw:{t:'line', w:3.6, len:7},
+      dodge:{k:'SIDE'}, pAt:[5,5.5] },
+    { p:2, name:'반사선', en:'Reflective Line', cool:10, tel:1.3, dmg:0.91, shape:'LINE',
+      spec:'4초간 방패가 번쩍인다. 정면 120° 로 들어온 내 탄이 2배로 되돌아온다 · 근접 타격은 반사되지 않는다',
+      counter:'번쩍이는 동안 쏘지 마라 — 붙어서 때리거나 뒤로 돌거나',
+      draw:{t:'arc', deg:120, r:8, reflect:true},
+      dodge:{k:'HOLD'}, pAt:[5,4] },
+    { p:3, name:'깨진 이지스 돌진', en:'Broken Aegis Rush', cool:9, tel:0.9, dmg:1.14, shape:'DASH',
+      spec:'방패가 깨진 뒤 쓴다. 정면 감소 70% → 30% 로 약해지고 대신 돌진이 붙는다',
+      counter:'뒤쪽 틈으로 통과해라',
+      draw:{t:'dash', w:3.0},
+      dodge:{k:'BACK'}, pAt:[5,5] },
+  ],
+},
+{
+  id:'B03', key:'kingpin', ko:'킹핀', en:'Kingpin', sprite:'unit_kingpin',
+  room:'CH2 008', gate:'MID', hp:3150, atk:25, move:'엄폐물 사이를 옮겨 다닌다',
+  line:'선을 끊어라',
+  wall:'처형 표식 — 표식이 걸린 몸으로는 못 산다',
+  wallNote:'표식은 「지금 입고 있는 몸」에 걸린다. 구역을 벗어나거나 **몸을 갈아타야** 한다.',
+  chance:'재장전 중인 **사수 몸**. 3점사 뒤 1.8초가 비고, 그때가 붙을 틈이자 갈아탈 틈이다',
+  hosts:'갱스터 · 코만도(기관총) · 폭력배',
+  arena:'교차 사선 + 표식 처형 구역',
+  brk:{ cause:'3점사를 버텼다', open:'**1.8초 재장전**', sec:1.8, note:'재장전 중인 사수를 빼앗을 수 있다. 짧은 대신 자주 온다' },
+  moves:[
+    { p:1, name:'교차사격 지휘', en:'Crossfire Command', cool:9, tel:1.35, dmg:0.88, shape:'LINE',
+      spec:'방 양 끝에 부하 2기를 세우고 둘을 잇는 직선으로 쏜다 · 폭 1.2 m. 선이 바닥에 먼저 그려진다',
+      counter:'선을 끊어라 — 선 밖으로 나가거나 부하 하나를 죽인다',
+      draw:{t:'crossline'},
+      dodge:{k:'PERP'}, pAt:[5,6.5] },
+    { p:1, name:'처형 표식', en:'Execution Mark', cool:13, tel:1.8, dmg:1.24, shape:'MARK',
+      spec:'지금 입고 있는 몸에 표식. 3초 뒤 표식 자리 반경 2.0 m 에 처형 사격. 예고 1.8초는 24개 중 가장 길다',
+      counter:'표식 구역을 벗어나거나 **몸을 갈아타라** — 갈아타면 표식이 버려진 몸에 남는다',
+      draw:{t:'mark', r:2.0},
+      dodge:{k:'SWAP', to:[5,3]}, pAt:[5,5.5] },
+    { p:2, name:'엄폐 이동 사격', en:'Cover-to-Cover Burst', cool:8, tel:1.0, dmg:0.72, shape:'LINE',
+      spec:'엄폐물 뒤로 순간 이동한 뒤 3점사. 쏘고 나면 1.8초 재장전 — 이 틈이 빙의 기회다',
+      counter:'재장전 틈에 붙어라',
+      draw:{t:'burst', n:3},
+      dodge:{k:'CLOSE', to:[2.5,7.5]}, pAt:[5.5,4.5] },
+    { p:3, name:'전탄 개방', en:'All Guns Open', cool:15, tel:1.2, dmg:1.12, shape:'ZONE',
+      spec:'엄폐물 네 곳에서 동시에 쏜다. 안전한 엄폐가 하나뿐이고 매번 바뀐다',
+      counter:'엄폐 사이를 돌아라',
+      draw:{t:'cover', n:4, safe:1},
+      dodge:{k:'ZONE', to:[7.5,8.5]}, pAt:[5,6.5] },
+  ],
+},
+{
+  id:'B04', key:'python', ko:'파이썬', en:'Python', sprite:'unit_python',
+  room:'CH2 016', gate:'FINAL', hp:4300, atk:29, move:'아레나 가장자리를 감고 돈다',
+  line:'방이 좁아진다',
+  wall:'조임 나선 — 이동 수단이 없으면 못 빠진다',
+  wallNote:'고리가 3초에 걸쳐 반경 4.5 → 1.5 m 로 조여든다. 틈은 하나뿐이고 시계방향으로 돈다.',
+  chance:'허물이 벗겨질 때 안에서 **포로 몸**이 풀려난다',
+  hosts:'아마존 · 호퍼 · 호퍼(기관단총)',
+  arena:'조여드는 고리 + 시간 맞춰 열리는 틈',
+  brk:{ cause:'조임 나선의 틈으로 빠져나왔다', open:'고리가 풀리며 **2.2초 경직**', sec:2.2, note:'못 빠져나오면 경직도 없다 — 대응 실패가 딜 손실로 바로 이어지는 유일한 보스' },
+  moves:[
+    { p:1, name:'조임 나선', en:'Constrict Spiral', cool:12, tel:1.6, dmg:0.83, shape:'ZONE',
+      spec:'고리가 3초에 걸쳐 반경 4.5 → 1.5 m 로 조여든다 · 틈 하나가 시계방향으로 돈다',
+      counter:'틈으로 대시 — 걸어서는 틈을 따라잡기 빠듯하다',
+      draw:{t:'ring', rOut:4.5, rIn:1.5, gapDeg:50},
+      dodge:{k:'GAP', to:[7.4,4.8]}, pAt:[5,6.5] },
+    { p:1, name:'독 자국', en:'Venom Spit Trail', cool:9, tel:1.1, dmg:0.59, shape:'ZONE',
+      spec:'지나간 자리에 독 웅덩이 · 반경 1.2 m · 6초 · 초당 피해',
+      counter:'웅덩이가 생기기 전에 가로질러라',
+      draw:{t:'trail', r:1.2, n:4},
+      dodge:{k:'PERP'}, pAt:[4.5,6] },
+    { p:2, name:'꼬리 관문', en:'Tail Gate', cool:10, tel:1.25, dmg:0.93, shape:'LINE',
+      spec:'꼬리로 방을 한쪽에서 반대쪽까지 쓸어낸다 · 폭 2.0 m. 방향이 예고로 보인다',
+      counter:'쓸어오는 방향을 읽고 반대편으로 미리 가라',
+      draw:{t:'sweep', w:2.0},
+      dodge:{k:'SIDE'}, pAt:[5,6.5] },
+    { p:3, name:'탈피 광란', en:'Shed Skin Frenzy', cool:16, tel:1.0, dmg:1.17, shape:'DASH',
+      spec:'허물을 벗고 속도 1.5배. 벗은 허물이 방에 남아 **엄폐물**이 된다',
+      counter:'허물을 엄폐로 써라 — 이 방 유일한 지형이다',
+      draw:{t:'shed'},
+      dodge:{k:'ZONE', to:[3,8.5]}, pAt:[5,5] },
+  ],
+},
+{
+  id:'B05', key:'robot_snakes', ko:'로봇 스네이크', en:'Robot Snakes', sprite:'unit_robot_snakes',
+  room:'CH3 010', gate:'MID', hp:5200, atk:33, move:'레일 위 머리 둘이 따로 논다',
+  line:'둘을 동시에 못 본다',
+  wall:'트윈 오버로드 — 딜이 모자라면 한 머리를 못 끊는다',
+  wallNote:'P3 전에 한 머리를 죽여 놓지 않으면 서 있을 자리가 없다. 이 게임 유일한 딜 체크.',
+  chance:'머리 하나가 멈추면 **수리 유닛**이 온다',
+  hosts:'코만도(기관총) · 갱스터 · 코만도(레이저)',
+  arena:'번갈아 막히는 줄 + 케이블 위험',
+  state:'TWIN',
+  brk:{ cause:'두 머리 사이에 서서 로켓을 유도했다', open:'맞은 머리가 **3초 정지**', sec:3.0, note:'보스가 보스를 때린 것이라 브레이크가 가장 길다. 정지한 머리 옆이 트윈 오버로드의 안전지대이기도 하다' },
+  moves:[
+    { p:1, name:'교대 레일', en:'Alternating Rail', cool:8, tel:1.15, dmg:0.85, shape:'LANE',
+      spec:'방을 세로 3줄로 나누고 번갈아 두 줄에서 광선이 솟는다 · 바닥에 금이 먼저 간다',
+      counter:'줄을 바꿔라',
+      draw:{t:'lane', n:3, active:[0,2]},
+      dodge:{k:'SIDE'}, pAt:[5,6], impl:'PopupLaser 로 이미 구현돼 있다' },
+    { p:1, name:'케이블 쓸기', en:'Cable Sweep', cool:11, tel:1.35, dmg:0.73, shape:'LINE',
+      spec:'두 머리를 잇는 케이블이 팽팽해지며 쓸어낸다. 두 머리 사이가 전부 위험',
+      counter:'관절에서 교차해라 — 케이블이 머리에 붙는 지점은 판정이 없다',
+      draw:{t:'cable'},
+      dodge:{k:'ZONE', to:[2.6,8.5]}, pAt:[5,8.5] },
+    { p:2, name:'자기 유도 로켓', en:'Magnetized Rockets', cool:13, tel:1.5, dmg:0.94, shape:'LINE',
+      spec:'한 머리가 로켓을 쏘는데 다른 머리 쪽으로 휘어간다',
+      counter:'반대 머리로 유인해라 — **보스가 보스를 때리게 만든다**',
+      draw:{t:'homing'},
+      dodge:{k:'ZONE', to:[5,6.2]}, pAt:[5,4] },
+    { p:3, name:'트윈 오버로드', en:'Twin Overload', cool:18, tel:1.2, dmg:1.15, shape:'ZONE',
+      spec:'두 머리가 동시에 방 전체를 지진다. 안전지대는 **정지한 머리 옆 1.5 m** 뿐',
+      counter:'한 머리를 먼저 끊어라',
+      draw:{t:'overload', r:1.5},
+      dodge:{k:'ZONE', to:[7.4,8.5]}, pAt:[4,6] },
+  ],
+},
+{
+  id:'B06', key:'sludge', ko:'슬러지', en:'Sludge', sprite:'unit_sludge',
+  room:'CH3 020', gate:'FINAL', hp:6900, atk:37, move:'깨끗한 바닥 쪽으로 흘러간다',
+  line:'설 곳이 사라진다',
+  wall:'최종 용해 — 버티는 몸이 아니면 이동만으로 못 견딘다',
+  wallNote:'깨끗한 섬 하나만 남고 2초마다 자리를 옮긴다. 섬 밖은 초당 피해다.',
+  chance:'코어가 드러나면 굳었다 풀리는 **생존자 몸**',
+  hosts:'구루 · 흡혈귀 · 로봇',
+  arena:'바닥이 계속 다시 그려진다 — 안전한 섬이 돌아간다',
+  state:'SPLIT',
+  brk:{ cause:'분열 코어 3개를 다 부쉈다', open:'본체 **코어 노출 4초**', sec:4.0, note:'못 부수면 본체가 회복한다. 부수면 가장 긴 브레이크가 열린다 — 최종 보스답게 손해와 이득이 둘 다 크다' },
+  moves:[
+    { p:1, name:'독성 붕괴', en:'Toxic Collapse', cool:10, tel:1.4, dmg:0.78, shape:'ZONE',
+      spec:'방 바닥이 4분면으로 갈라지고 하나씩 무너진다. 안전한 분면이 회전한다',
+      counter:'안전지대를 따라 돌아라',
+      draw:{t:'quad', safe:1},
+      dodge:{k:'ZONE', to:[7,4]}, pAt:[3.5,8.5] },
+    { p:1, name:'슬러지 손', en:'Sludge Hand', cool:8, tel:1.05, dmg:0.68, shape:'LINE',
+      spec:'몸에서 팔이 뻗어 나온다 · 폭 1.2 m · 길이 6.0 m',
+      counter:'직각으로 피해라',
+      draw:{t:'line', w:1.2, len:6},
+      dodge:{k:'PERP'}, pAt:[5,6] },
+    { p:2, name:'오염 분열', en:'Contaminated Split', cool:14, tel:1.7, dmg:0.89, shape:'ZONE',
+      spec:'분열체 3기를 뱉는다. 각각 코어가 있고 **10초 안에 안 부수면 본체로 돌아가 HP 를 회복**한다',
+      counter:'분열 코어를 부숴라 — 이 게임 유일한 회복 저지 구간이다',
+      draw:{t:'split', n:3},
+      dodge:{k:'CLOSE', to:[5,5.5]}, pAt:[5,3.5] },
+    { p:3, name:'최종 용해', en:'Final Dissolution', cool:20, tel:1.25, dmg:1.14, shape:'ZONE',
+      spec:'방 전체가 오염되고 깨끗한 섬 하나만 남는다. 섬이 2초마다 자리를 옮긴다 · 섬 밖은 초당 피해',
+      counter:'섬 순환을 따라가라',
+      draw:{t:'island', r:1.8},
+      dodge:{k:'ZONE', to:[4,6]}, pAt:[6,7] },
+  ],
+},
+];
+
+// ── 예고 4겹 ───────────────────────────────────────────────────
+// 지금은 몸이 노랗게 깜빡이는 것 하나뿐이라 24개 패턴이 예고 때 전부 똑같이 보인다.
+// 못 읽는 것은 대응할 수 없다 — 이 넷이 없으면 위 24개 대응법이 전부 무의미해진다.
+const TELEGRAPH = {
+  body:  { what:'누가 시작했나', how:'`unit_{보스}_s_tell` 프레임 + 몸 색. **6종 전부 이미 들어와 있는데 코드에서 한 번도 안 쓴다**' },
+  floor: { what:'어디가 맞나',   how:'위험 구역을 바닥에 미리 그린다. **예고를 그리는 도형과 판정하는 도형이 같은 것이어야 한다** — 그래야 “피했는데 맞았다”가 구조적으로 불가능해진다' },
+  arrow: { what:'어디로 가라',   how:'안전한 쪽으로 화살표. 위험만 그리면 “저기 맞겠네”고, 안전을 그려야 “저기로 가면 되네”가 된다' },
+  label: { what:'무엇인가',      how:'패턴 이름 + 예고 게이지. **처음 보는 패턴에만** 뜬다 — 한 번 본 뒤에는 바닥과 화살표만 남는다' },
+};
+
+// 회피 방향 8종 — 화살표가 가리키는 것
+const DODGE = {
+  BACK:  '뒤로 — 보스 등 뒤로 돈다',
+  SIDE:  '옆으로 — 좌우 아무 쪽이나',
+  GAP:   '틈으로 — 표시된 한 곳으로',
+  PERP:  '직각으로 — 공격선에 수직으로',
+  ZONE:  '안전지대로 — 초록 구역으로',
+  CLOSE: '붙어라 — 지금은 도망칠 때가 아니다',
+  SWAP:  '몸을 갈아타라 — 이 게임에서 여기 한 곳뿐',
+  HOLD:  '쏘지 마라 — 방향이 아니라 손을 놓는 것',
+};
+
+module.exports.TELEGRAPH = TELEGRAPH;
+module.exports.DODGE = DODGE;
+module.exports.SHAPES = SHAPES;
+module.exports.STATES = STATES;
