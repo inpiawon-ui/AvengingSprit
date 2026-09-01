@@ -14,15 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.HostTable
   _entries:
   - _hostKey: gangster
-    _nameEn: GANGSTER
+    _nameEn: "GANGSTER \u2014 GUN"
     _nameKr: "\uAC31\uC2A4\uD130"
-    _role: "\uB2E8\uBC1C \uC815\uBC00"
-    _hp: 70
-    _atk: 76
-    _spd: 64
-    _dash: 58
+    _hp: 69
+    _atk: 81
+    _spd: 75
+    _atkSpeed: 66
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 2
     _attackKind: 1
-    _shotCount: 3
+    _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 1
     _intervalMul: 0.9
@@ -33,42 +35,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E001
-    _possessPriority: 100
+    _enemyId: EN_10
+    _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uD45C\uC2DD \uB9B4\uB808\uC774"
-    _canonHp: 90
-    _canonAtk: 11
-    _canonMoveSpeed: 1.2
-    _canonEngageSpeed: 3.8
-    _canonRange: 6.5
-    _canonInterval: 1.45
-    _canonShotSpeed: 8.5
+    _canonHp: 81
+    _canonAtk: 9
+    _canonMoveSpeed: 4.368
+    _canonEngageSpeed: 3.7128
+    _canonRange: 7.5
+    _canonInterval: 1.1346154
+    _canonShotSpeed: 6.298
     _canonShotCount: 1
-    _canonTelegraph: 0.45
-    _canonMaxConcurrent: 4
-    _canonHostRange: 6.8
-    _canonHostInterval: 1.15
-    _canonHostMoveSpeed: 4.1
-    _canonHostShotSpeed: 11
+    _canonTelegraph: 0.59
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 136
+    _canonHostAtk: 18
+    _canonHostRange: 7.5
+    _canonHostInterval: 1.5
+    _canonHostMoveSpeed: 4.368
+    _canonHostShotSpeed: 9.4
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: tommy_barrage
-    _unlockType: 0
-    _unlockChapter: 0
+    _activeSkillKey: psg_h10
+    _activeSkillCooldown: 14
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
+    _unlockType: 2
+    _unlockChapter: 1
     _unlockStage: 0
   - _hostKey: thug
-    _nameEn: THUG
+    _nameEn: "GANGSTER \u2014 TOMMY GUN"
     _nameKr: "\uD3ED\uB825\uBC30"
-    _role: "\uD655\uC0B0 \uC81C\uC555"
-    _hp: 80
-    _atk: 70
-    _spd: 60
-    _dash: 50
-    _attackKind: 3
-    _shotCount: 5
-    _spreadDegrees: 34
+    _hp: 73
+    _atk: 71
+    _spd: 71
+    _atkSpeed: 94
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 0
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
     _rangeMul: 0.7
     _intervalMul: 1.05
     _damageMul: 0.5
@@ -78,39 +89,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E004
-    _possessPriority: 65
+    _enemyId: EN_11
+    _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uC81C\uC555 \uC0AC\uACA9"
-    _canonHp: 120
+    _canonHp: 90
     _canonAtk: 9
-    _canonMoveSpeed: 1.5
-    _canonEngageSpeed: 4.2
-    _canonRange: 5.5
-    _canonInterval: 0.38
-    _canonShotSpeed: 8.5
+    _canonMoveSpeed: 4.1159997
+    _canonEngageSpeed: 3.4986
+    _canonRange: 7
+    _canonInterval: 0.9259259
+    _canonShotSpeed: 4.69
     _canonShotCount: 1
     _canonTelegraph: 0.5
-    _canonMaxConcurrent: 3
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 4.8
-    _canonHostShotSpeed: 0
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 145
+    _canonHostAtk: 8
+    _canonHostRange: 7
+    _canonHostInterval: 0.66
+    _canonHostMoveSpeed: 4.1159997
+    _canonHostShotSpeed: 7
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: bullet_hell
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h11
+    _activeSkillCooldown: 8
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 3
   - _hostKey: amazon
     _nameEn: AMAZON
     _nameKr: "\uC544\uB9C8\uC874"
-    _role: "\uB3CC\uC9C4 \uADFC\uC811"
-    _hp: 68
-    _atk: 70
-    _spd: 84
-    _dash: 88
+    _hp: 81
+    _atk: 73
+    _spd: 73
+    _atkSpeed: 72
+    _critPercent: 10
+    _primaryStatA: 5
+    _primaryStatB: 3
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
@@ -123,39 +143,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E002
-    _possessPriority: 90
+    _enemyId: EN_01
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 40
     _maintainHook: "\uCF64\uBCF4 \uBBF8\uD130"
-    _canonHp: 105
-    _canonAtk: 13
-    _canonMoveSpeed: 1
-    _canonEngageSpeed: 4.8
-    _canonRange: 1.2
-    _canonInterval: 1.15
-    _canonShotSpeed: 0
-    _canonShotCount: 0
-    _canonTelegraph: 0.35
-    _canonMaxConcurrent: 4
-    _canonHostRange: 1.45
-    _canonHostInterval: 0.78
-    _canonHostMoveSpeed: 4.8
-    _canonHostShotSpeed: 0
+    _canonHp: 60
+    _canonAtk: 8
+    _canonMoveSpeed: 4.284
+    _canonEngageSpeed: 3.6413999
+    _canonRange: 2.8
+    _canonInterval: 0.98
+    _canonShotSpeed: 4.69
+    _canonShotCount: 1
+    _canonTelegraph: 0.49
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 159
+    _canonHostAtk: 8
+    _canonHostRange: 1.4
+    _canonHostInterval: 0.55
+    _canonHostMoveSpeed: 4.284
+    _canonHostShotSpeed: 7
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: rush_combo
+    _activeSkillKey: psg_h01
+    _activeSkillCooldown: 8
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
     _unlockType: 0
     _unlockChapter: 0
     _unlockStage: 0
   - _hostKey: amazon_elite
     _nameEn: AMAZON ELITE
     _nameKr: "\uC544\uB9C8\uC874 \uC815\uC608"
-    _role: "\uC911\uC7A5 \uADFC\uC811"
-    _hp: 96
-    _atk: 84
-    _spd: 72
-    _dash: 70
+    _hp: 95
+    _atk: 81
+    _spd: 66
+    _atkSpeed: 59
+    _critPercent: 10
+    _primaryStatA: 0
+    _primaryStatB: 1
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
@@ -168,39 +197,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E006
-    _possessPriority: 40
+    _enemyId: EN_02
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 40
     _maintainHook: "\uCF64\uBCF4 \uBBF8\uD130"
-    _canonHp: 145
-    _canonAtk: 15
-    _canonMoveSpeed: 1.7
-    _canonEngageSpeed: 4.9
-    _canonRange: 1.5
-    _canonInterval: 1.35
-    _canonShotSpeed: 8.5
+    _canonHp: 66
+    _canonAtk: 8
+    _canonMoveSpeed: 3.8639998
+    _canonEngageSpeed: 3.2844
+    _canonRange: 5.8
+    _canonInterval: 1.1923077
+    _canonShotSpeed: 5.092
     _canonShotCount: 1
-    _canonTelegraph: 0.4
+    _canonTelegraph: 0.62
     _canonMaxConcurrent: 2
-    _canonHostRange: 1.45
-    _canonHostInterval: 0.78
-    _canonHostMoveSpeed: 4.8
-    _canonHostShotSpeed: 0
+    _canonHoming: 0
+    _canonHostHp: 187
+    _canonHostAtk: 11
+    _canonHostRange: 1.6
+    _canonHostInterval: 0.7
+    _canonHostMoveSpeed: 3.8639998
+    _canonHostShotSpeed: 7.6
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: rush_combo
+    _activeSkillKey: psg_h02
+    _activeSkillCooldown: 28
+    _passiveSkillKey: psv_counter
+    _grade: 1
+    _levelStats: []
     _unlockType: 2
     _unlockChapter: 1
     _unlockStage: 0
   - _hostKey: hopper
-    _nameEn: HOPPER
+    _nameEn: "HOOPER \u2014 GUN"
     _nameKr: "\uD638\uD37C"
-    _role: "\uB3C4\uC57D \uC0AC\uC218"
-    _hp: 62
-    _atk: 68
+    _hp: 66
+    _atk: 76
     _spd: 88
-    _dash: 92
+    _atkSpeed: 71
+    _critPercent: 10
+    _primaryStatA: 2
+    _primaryStatB: 5
     _attackKind: 1
     _shotCount: 1
     _spreadDegrees: 0
@@ -213,42 +251,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_13
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uB3C4\uC57D \uC5F0\uC0AC"
-    _canonHp: 85
-    _canonAtk: 10
-    _canonMoveSpeed: 1.4
-    _canonEngageSpeed: 0
-    _canonRange: 6.2
-    _canonInterval: 1.2
-    _canonShotSpeed: 8.5
+    _canonHp: 73
+    _canonAtk: 9
+    _canonMoveSpeed: 5.1239996
+    _canonEngageSpeed: 4.3554
+    _canonRange: 7.8
+    _canonInterval: 1.14
+    _canonShotSpeed: 5.494
     _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 6.4
-    _canonHostInterval: 1
-    _canonHostMoveSpeed: 4.6
-    _canonHostShotSpeed: 8.5
+    _canonTelegraph: 0.57
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 131
+    _canonHostAtk: 17
+    _canonHostRange: 7.8
+    _canonHostInterval: 1.4
+    _canonHostMoveSpeed: 5.1239996
+    _canonHostShotSpeed: 8.2
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: bullet_hell
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h13
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_momentum
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 7
   - _hostKey: hopper_smg
-    _nameEn: HOPPER SMG
+    _nameEn: "HOOPER \u2014 SUBMACHINE GUN"
     _nameKr: "\uD638\uD37C(\uAE30\uAD00\uB2E8\uCD1D)"
-    _role: "\uB3C4\uC57D \uC5F0\uC0AC"
-    _hp: 64
-    _atk: 66
-    _spd: 86
-    _dash: 90
+    _hp: 63
+    _atk: 68
+    _spd: 92
+    _atkSpeed: 99
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 5
     _attackKind: 2
-    _shotCount: 1
-    _spreadDegrees: 0
+    _shotCount: 2
+    _spreadDegrees: 8
     _rangeMul: 0.9
     _intervalMul: 0.4
     _damageMul: 0.45
@@ -258,42 +305,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_14
     _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uB3C4\uC57D \uC5F0\uC0AC"
-    _canonHp: 95
-    _canonAtk: 7
-    _canonMoveSpeed: 1.6
-    _canonEngageSpeed: 0
-    _canonRange: 5.2
-    _canonInterval: 0.42
-    _canonShotSpeed: 8.5
-    _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 5.6
+    _canonHp: 81
+    _canonAtk: 9
+    _canonMoveSpeed: 5.376
+    _canonEngageSpeed: 4.5696
+    _canonRange: 6.8
+    _canonInterval: 0.82692313
+    _canonShotSpeed: 5.8960004
+    _canonShotCount: 2
+    _canonTelegraph: 0.43
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 125
+    _canonHostAtk: 5
+    _canonHostRange: 7
     _canonHostInterval: 0.42
-    _canonHostMoveSpeed: 4.5
-    _canonHostShotSpeed: 8.5
+    _canonHostMoveSpeed: 5.376
+    _canonHostShotSpeed: 8.8
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: bullet_hell
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h14
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_overheat
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 9
   - _hostKey: commando_mg
-    _nameEn: COMMANDO MG
+    _nameEn: "COMMANDO \u2014 MACHINE GUN"
     _nameKr: "\uCF54\uB9CC\uB3C4(\uAE30\uAD00\uCD1D)"
-    _role: "\uC911\uD654\uAE30 \uC0AC\uC218"
-    _hp: 82
-    _atk: 78
-    _spd: 56
-    _dash: 46
+    _hp: 73
+    _atk: 69
+    _spd: 72
+    _atkSpeed: 99
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 1
     _attackKind: 2
-    _shotCount: 1
-    _spreadDegrees: 0
+    _shotCount: 2
+    _spreadDegrees: 8
     _rangeMul: 1
     _intervalMul: 0.4
     _damageMul: 0.48
@@ -303,41 +359,50 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_05
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uC81C\uC555 \uC0AC\uACA9"
-    _canonHp: 145
-    _canonAtk: 9
-    _canonMoveSpeed: 1.3
-    _canonEngageSpeed: 0
-    _canonRange: 6.8
-    _canonInterval: 0.45
-    _canonShotSpeed: 8.5
-    _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 7
-    _canonHostInterval: 0.45
-    _canonHostMoveSpeed: 3.5
-    _canonHostShotSpeed: 8.5
+    _canonHp: 60
+    _canonAtk: 8
+    _canonMoveSpeed: 4.2
+    _canonEngageSpeed: 3.57
+    _canonRange: 7.2
+    _canonInterval: 0.92
+    _canonShotSpeed: 6.298
+    _canonShotCount: 2
+    _canonTelegraph: 0.46
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 145
+    _canonHostAtk: 6
+    _canonHostRange: 7.2
+    _canonHostInterval: 0.5
+    _canonHostMoveSpeed: 4.2
+    _canonHostShotSpeed: 9.4
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: bullet_hell
-    _unlockType: 2
+    _activeSkillKey: psg_h05
+    _activeSkillCooldown: 14
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
     _unlockChapter: 1
-    _unlockStage: 0
+    _unlockStage: 4
   - _hostKey: commando_laser
-    _nameEn: COMMANDO LASER
+    _nameEn: "COMMANDO \u2014 LASER"
     _nameKr: "\uCF54\uB9CC\uB3C4(\uB808\uC774\uC800)"
-    _role: "\uAD00\uD1B5 \uB808\uC774\uC800"
-    _hp: 70
-    _atk: 78
-    _spd: 65
-    _dash: 55
+    _hp: 68
+    _atk: 84
+    _spd: 72
+    _atkSpeed: 56
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 4
     _attackKind: 4
-    _shotCount: 3
+    _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 1.45
     _intervalMul: 0.7
@@ -348,42 +413,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E007
-    _possessPriority: 52
+    _enemyId: EN_04
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uC9D1\uC18D \uB808\uC774\uC800"
-    _canonHp: 135
-    _canonAtk: 10
-    _canonMoveSpeed: 1.6
-    _canonEngageSpeed: 3.8
-    _canonRange: 7
-    _canonInterval: 0.7
-    _canonShotSpeed: 8.5
+    _canonHp: 81
+    _canonAtk: 8
+    _canonMoveSpeed: 4.2
+    _canonEngageSpeed: 3.57
+    _canonRange: 8.2
+    _canonInterval: 1.3214285
+    _canonShotSpeed: 5.8960004
     _canonShotCount: 1
-    _canonTelegraph: 0.45
-    _canonMaxConcurrent: 3
-    _canonHostRange: 6.8
-    _canonHostInterval: 1.15
-    _canonHostMoveSpeed: 4.1
-    _canonHostShotSpeed: 11
+    _canonTelegraph: 0.74
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 133
+    _canonHostAtk: 5
+    _canonHostRange: 8.2
+    _canonHostInterval: 0.48
+    _canonHostMoveSpeed: 4.2
+    _canonHostShotSpeed: 8.8
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: laser_storm
+    _activeSkillKey: psg_h04
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
     _unlockType: 2
-    _unlockChapter: 1
+    _unlockChapter: 2
     _unlockStage: 0
   - _hostKey: commando_grenade
-    _nameEn: COMMANDO GRENADE
+    _nameEn: "COMMANDO \u2014 BOMB"
     _nameKr: "\uCF54\uB9CC\uB3C4(\uC218\uB958\uD0C4)"
-    _role: "\uACE1\uC0AC \uC9C0\uC5ED"
-    _hp: 74
-    _atk: 82
-    _spd: 58
-    _dash: 48
+    _hp: 72
+    _atk: 79
+    _spd: 71
+    _atkSpeed: 52
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 2
     _attackKind: 3
     _shotCount: 1
-    _spreadDegrees: 22
+    _spreadDegrees: 0
     _rangeMul: 1.2
     _intervalMul: 1.35
     _damageMul: 1.3
@@ -393,42 +467,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E005
-    _possessPriority: 48
+    _enemyId: EN_03
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 45
     _maintainHook: "\uC9C0\uB8B0 \uB124\uD2B8\uC6CC\uD06C"
-    _canonHp: 135
-    _canonAtk: 18
-    _canonMoveSpeed: 1.9
-    _canonEngageSpeed: 3.5
-    _canonRange: 6.8
-    _canonInterval: 2.4
-    _canonShotSpeed: 8.5
+    _canonHp: 74
+    _canonAtk: 8
+    _canonMoveSpeed: 4.1159997
+    _canonEngageSpeed: 3.4986
+    _canonRange: 7
+    _canonInterval: 1.5
+    _canonShotSpeed: 5.494
     _canonShotCount: 1
-    _canonTelegraph: 0.8
+    _canonTelegraph: 0.81
     _canonMaxConcurrent: 2
-    _canonHostRange: 5.8
+    _canonHoming: 0
+    _canonHostHp: 142
+    _canonHostAtk: 14
+    _canonHostRange: 5.5
     _canonHostInterval: 1.65
-    _canonHostMoveSpeed: 3.7
-    _canonHostShotSpeed: 7
+    _canonHostMoveSpeed: 4.1159997
+    _canonHostShotSpeed: 8.2
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: grenade_barrage
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h03
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 3
   - _hostKey: salamander
-    _nameEn: SALAMANDER
+    _nameEn: "DRAGON \u2014 GREEN"
     _nameKr: "\uC0D0\uB7EC\uB9E8\uB354"
-    _role: "\uD654\uC5FC \uB3CC\uD30C"
-    _hp: 95
-    _atk: 80
-    _spd: 42
-    _dash: 38
+    _hp: 85
+    _atk: 73
+    _spd: 65
+    _atkSpeed: 62
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 0
     _attackKind: 3
-    _shotCount: 2
-    _spreadDegrees: 12
+    _shotCount: 1
+    _spreadDegrees: 0
     _rangeMul: 0.5
     _intervalMul: 0.85
     _damageMul: 0.52
@@ -438,42 +521,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E003
-    _possessPriority: 55
+    _enemyId: EN_08
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uC5F4\uAE30 \xB7 \uC7A5\uAC11 \uC6A9\uD574"
-    _canonHp: 170
-    _canonAtk: 16
-    _canonMoveSpeed: 1.8
-    _canonEngageSpeed: 3.2
-    _canonRange: 3
-    _canonInterval: 1.8
-    _canonShotSpeed: 8.5
+    _canonHp: 99
+    _canonAtk: 9
+    _canonMoveSpeed: 3.7799997
+    _canonEngageSpeed: 3.213
+    _canonRange: 6.5
+    _canonInterval: 1.3571428
+    _canonShotSpeed: 5.494
     _canonShotCount: 1
-    _canonTelegraph: 0.65
+    _canonTelegraph: 0.76
     _canonMaxConcurrent: 2
-    _canonHostRange: 3.6
-    _canonHostInterval: 1.85
-    _canonHostMoveSpeed: 3.4
-    _canonHostShotSpeed: 9
+    _canonHoming: 0
+    _canonHostHp: 168
+    _canonHostAtk: 12
+    _canonHostRange: 5
+    _canonHostInterval: 1.4
+    _canonHostMoveSpeed: 3.7799997
+    _canonHostShotSpeed: 8.2
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: dragon_breath
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h08
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_scorch
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 2
   - _hostKey: dragoon
-    _nameEn: DRAGOON
+    _nameEn: "DRAGON \u2014 RED"
     _nameKr: "\uB4DC\uB77C\uAD70"
-    _role: "\uB124\uC774\uD31C \uB9C8\uBB34\uB9AC"
-    _hp: 110
-    _atk: 92
-    _spd: 44
-    _dash: 40
+    _hp: 89
+    _atk: 83
+    _spd: 63
+    _atkSpeed: 53
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 2
     _attackKind: 3
-    _shotCount: 3
-    _spreadDegrees: 14
+    _shotCount: 1
+    _spreadDegrees: 0
     _rangeMul: 0.55
     _intervalMul: 0.95
     _damageMul: 0.62
@@ -483,42 +575,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E016
-    _possessPriority: 16
+    _enemyId: EN_09
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 25
     _maintainHook: "\uD6A8\uACFC \uACC4\uC2B9 \uD53C\uB2C8\uC154"
-    _canonHp: 260
-    _canonAtk: 21
-    _canonMoveSpeed: 2.5
-    _canonEngageSpeed: 3.2
-    _canonRange: 4.2
-    _canonInterval: 2
-    _canonShotSpeed: 8.5
+    _canonHp: 73
+    _canonAtk: 9
+    _canonMoveSpeed: 3.6959999
+    _canonEngageSpeed: 3.1416
+    _canonRange: 4.8
+    _canonInterval: 1.66
+    _canonShotSpeed: 5.8960004
     _canonShotCount: 1
-    _canonTelegraph: 0.8
-    _canonMaxConcurrent: 1
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 4.6
-    _canonHostShotSpeed: 0
+    _canonTelegraph: 0.83
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 176
+    _canonHostAtk: 13
+    _canonHostRange: 4.5
+    _canonHostInterval: 1.55
+    _canonHostMoveSpeed: 3.6959999
+    _canonHostShotSpeed: 8.8
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: dragon_breath
-    _unlockType: 2
+    _activeSkillKey: psg_h09
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
     _unlockChapter: 2
-    _unlockStage: 0
+    _unlockStage: 2
   - _hostKey: dragon_blue
-    _nameEn: DRAGON BLUE
+    _nameEn: "DRAGON \u2014 BLUE"
     _nameKr: "\uCCAD\uB8E1"
-    _role: "\uB0C9\uAE30 \uBE0C\uB808\uC2A4"
-    _hp: 92
-    _atk: 78
-    _spd: 46
-    _dash: 42
-    _attackKind: 3
-    _shotCount: 3
-    _spreadDegrees: 12
+    _hp: 81
+    _atk: 71
+    _spd: 66
+    _atkSpeed: 68
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 4
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
     _rangeMul: 0.5
     _intervalMul: 0.85
     _damageMul: 0.52
@@ -528,39 +629,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_07
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uB0C9\uAE30 \uCD95\uC801"
-    _canonHp: 175
-    _canonAtk: 15
-    _canonMoveSpeed: 1.7
-    _canonEngageSpeed: 0
-    _canonRange: 3.2
-    _canonInterval: 1.85
-    _canonShotSpeed: 8.5
+    _canonHp: 74
+    _canonAtk: 8
+    _canonMoveSpeed: 3.8639998
+    _canonEngageSpeed: 3.2844
+    _canonRange: 6.2
+    _canonInterval: 1.2222222
+    _canonShotSpeed: 5.092
     _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 3.4
-    _canonHostInterval: 1.7
-    _canonHostMoveSpeed: 3.5
-    _canonHostShotSpeed: 8.5
+    _canonTelegraph: 0.66
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 159
+    _canonHostAtk: 11
+    _canonHostRange: 5.2
+    _canonHostInterval: 1.3
+    _canonHostMoveSpeed: 3.8639998
+    _canonHostShotSpeed: 7.6
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: dragon_breath
-    _unlockType: 2
-    _unlockChapter: 2
-    _unlockStage: 0
+    _activeSkillKey: psg_h07
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_weaken
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 11
   - _hostKey: guru
     _nameEn: GURU
     _nameKr: "\uAD6C\uB8E8"
-    _role: "\uBD80\uC591 \uC11C\uD3EC\uD2B8"
-    _hp: 76
-    _atk: 52
-    _spd: 70
-    _dash: 74
+    _hp: 81
+    _atk: 63
+    _spd: 78
+    _atkSpeed: 59
+    _critPercent: 10
+    _primaryStatA: 0
+    _primaryStatB: 5
     _attackKind: 6
     _shotCount: 1
     _spreadDegrees: 0
@@ -573,39 +683,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E009
-    _possessPriority: 32
+    _enemyId: EN_12
+    _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uAC00\uB4DC \uC624\uB77C"
-    _canonHp: 125
-    _canonAtk: 8
-    _canonMoveSpeed: 1.4
-    _canonEngageSpeed: 3.2
-    _canonRange: 1.3
-    _canonInterval: 1.25
-    _canonShotSpeed: 0
-    _canonShotCount: 0
-    _canonTelegraph: 0.4
+    _canonHp: 99
+    _canonAtk: 9
+    _canonMoveSpeed: 4.536
+    _canonEngageSpeed: 3.8555999
+    _canonRange: 4.2
+    _canonInterval: 1.1964285
+    _canonShotSpeed: 5.092
+    _canonShotCount: 1
+    _canonTelegraph: 0.67
     _canonMaxConcurrent: 2
-    _canonHostRange: 1.8
-    _canonHostInterval: 1.05
-    _canonHostMoveSpeed: 4
-    _canonHostShotSpeed: 0
+    _canonHoming: 0
+    _canonHostHp: 159
+    _canonHostAtk: 13
+    _canonHostRange: 2
+    _canonHostInterval: 0.85
+    _canonHostMoveSpeed: 4.536
+    _canonHostShotSpeed: 7.6
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: astral_form
-    _unlockType: 2
-    _unlockChapter: 1
-    _unlockStage: 0
+    _activeSkillKey: psg_h12
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 2
+    _unlockStage: 5
   - _hostKey: white_wizard
-    _nameEn: WHITE WIZARD
+    _nameEn: "MAGICIAN \u2014 LIGHT"
     _nameKr: "\uD654\uC774\uD2B8 \uC704\uC800\uB4DC"
-    _role: "\uB454\uD654 \uC81C\uC5B4"
-    _hp: 58
-    _atk: 88
-    _spd: 62
-    _dash: 55
+    _hp: 71
+    _atk: 75
+    _spd: 73
+    _atkSpeed: 63
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 4
     _attackKind: 4
     _shotCount: 1
     _spreadDegrees: 0
@@ -618,39 +737,48 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E010
-    _possessPriority: 45
+    _enemyId: EN_16
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uC7A5\uD310 \uC81C\uC5B4"
-    _canonHp: 145
-    _canonAtk: 15
-    _canonMoveSpeed: 1.8
-    _canonEngageSpeed: 3.2
-    _canonRange: 6.2
-    _canonInterval: 2
-    _canonShotSpeed: 8.5
+    _canonHp: 116
+    _canonAtk: 11
+    _canonMoveSpeed: 4.284
+    _canonEngageSpeed: 3.6413999
+    _canonRange: 8
+    _canonInterval: 1.2321428
+    _canonShotSpeed: 4.69
     _canonShotCount: 1
-    _canonTelegraph: 0.75
+    _canonTelegraph: 0.69
     _canonMaxConcurrent: 2
-    _canonHostRange: 6.3
-    _canonHostInterval: 1.72
-    _canonHostMoveSpeed: 3.5
-    _canonHostShotSpeed: 6.8
+    _canonHoming: 0
+    _canonHostHp: 139
+    _canonHostAtk: 15
+    _canonHostRange: 8
+    _canonHostInterval: 1.45
+    _canonHostMoveSpeed: 4.284
+    _canonHostShotSpeed: 7
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: elemental_nova
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h16
+    _activeSkillCooldown: 20
+    _passiveSkillKey: psv_weaken
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 2
   - _hostKey: medium
-    _nameEn: MEDIUM
+    _nameEn: "MAGICIAN \u2014 DARK"
     _nameKr: "\uC601\uB9E4"
-    _role: "\uC800\uC8FC \uD68C\uB85C"
-    _hp: 62
-    _atk: 86
-    _spd: 58
-    _dash: 52
+    _hp: 65
+    _atk: 82
+    _spd: 69
+    _atkSpeed: 55
+    _critPercent: 10
+    _primaryStatA: 3
+    _primaryStatB: 4
     _attackKind: 4
     _shotCount: 1
     _spreadDegrees: 0
@@ -663,42 +791,51 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E012
-    _possessPriority: 28
+    _enemyId: EN_15
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 45
     _maintainHook: "\uC800\uC8FC \uD68C\uB85C"
-    _canonHp: 165
-    _canonAtk: 17
-    _canonMoveSpeed: 2
-    _canonEngageSpeed: 3.4
-    _canonRange: 7
-    _canonInterval: 2.1
-    _canonShotSpeed: 8.5
+    _canonHp: 90
+    _canonAtk: 9
+    _canonMoveSpeed: 4.0319996
+    _canonEngageSpeed: 3.4271998
+    _canonRange: 7.2
+    _canonInterval: 1.4444443
+    _canonShotSpeed: 6.298
     _canonShotCount: 1
-    _canonTelegraph: 0.65
+    _canonTelegraph: 0.78
     _canonMaxConcurrent: 2
-    _canonHostRange: 5.8
-    _canonHostInterval: 1.9
-    _canonHostMoveSpeed: 3.4
-    _canonHostShotSpeed: 6.2
+    _canonHoming: 0
+    _canonHostHp: 128
+    _canonHostAtk: 6
+    _canonHostRange: 7.2
+    _canonHostInterval: 0.58
+    _canonHostMoveSpeed: 4.0319996
+    _canonHostShotSpeed: 9.4
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: elemental_nova
-    _unlockType: 2
+    _activeSkillKey: psg_h15
+    _activeSkillCooldown: 14
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
     _unlockChapter: 2
-    _unlockStage: 0
+    _unlockStage: 12
   - _hostKey: ninja
-    _nameEn: NINJA
+    _nameEn: "NINJA \u2014 SHURIKEN"
     _nameKr: "\uB2CC\uC790"
-    _role: "\uC21C\uAC04 \uD3ED\uBC1C"
-    _hp: 66
-    _atk: 74
-    _spd: 88
-    _dash: 92
-    _attackKind: 3
-    _shotCount: 2
-    _spreadDegrees: 16
+    _hp: 62
+    _atk: 72
+    _spd: 91
+    _atkSpeed: 94
+    _critPercent: 10
+    _primaryStatA: 2
+    _primaryStatB: 3
+    _attackKind: 1
+    _shotCount: 1
+    _spreadDegrees: 0
     _rangeMul: 0.9
     _intervalMul: 0.8
     _damageMul: 0.6
@@ -708,40 +845,49 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E011
-    _possessPriority: 42
+    _enemyId: EN_18
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uCC98\uD615 \uBAA8\uBA58\uD140"
-    _canonHp: 110
-    _canonAtk: 19
-    _canonMoveSpeed: 1.7
-    _canonEngageSpeed: 5.2
-    _canonRange: 5
-    _canonInterval: 1.2
-    _canonShotSpeed: 8.5
+    _canonHp: 96
+    _canonAtk: 11
+    _canonMoveSpeed: 5.292
+    _canonEngageSpeed: 4.4982
+    _canonRange: 7
+    _canonInterval: 0.9038462
+    _canonShotSpeed: 5.494
     _canonShotCount: 1
-    _canonTelegraph: 0.3
+    _canonTelegraph: 0.47
     _canonMaxConcurrent: 2
-    _canonHostRange: 5.5
-    _canonHostInterval: 0.92
-    _canonHostMoveSpeed: 5.2
-    _canonHostShotSpeed: 12.5
+    _canonHoming: 0
+    _canonHostHp: 122
+    _canonHostAtk: 7
+    _canonHostRange: 7
+    _canonHostInterval: 0.58
+    _canonHostMoveSpeed: 5.292
+    _canonHostShotSpeed: 8.2
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: shadow_burst
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _activeSkillKey: psg_h18
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 3
   - _hostKey: ninja_chain
-    _nameEn: NINJA CHAIN
+    _nameEn: "NINJA \u2014 CHAIN"
     _nameKr: "\uB2CC\uC790(\uC0AC\uC2AC)"
-    _role: "\uC0AC\uC2AC \uADFC\uC811"
-    _hp: 70
+    _hp: 72
     _atk: 78
-    _spd: 82
-    _dash: 86
-    _attackKind: 0
+    _spd: 84
+    _atkSpeed: 71
+    _critPercent: 10
+    _primaryStatA: 4
+    _primaryStatB: 3
+    _attackKind: 6
     _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 0.6
@@ -753,41 +899,50 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_17
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uCC98\uD615 \uBAA8\uBA58\uD140"
-    _canonHp: 120
-    _canonAtk: 17
-    _canonMoveSpeed: 1.8
-    _canonEngageSpeed: 0
-    _canonRange: 1.8
-    _canonInterval: 0.95
-    _canonShotSpeed: 0
+    _canonHp: 85
+    _canonAtk: 11
+    _canonMoveSpeed: 4.8719997
+    _canonEngageSpeed: 4.1412
+    _canonRange: 4.2
+    _canonInterval: 1.08
+    _canonShotSpeed: 5.092
     _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 1.9
-    _canonHostInterval: 0.85
-    _canonHostMoveSpeed: 5
-    _canonHostShotSpeed: 0
+    _canonTelegraph: 0.54
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 142
+    _canonHostAtk: 10
+    _canonHostRange: 2.2
+    _canonHostInterval: 0.65
+    _canonHostMoveSpeed: 4.8719997
+    _canonHostShotSpeed: 7.6
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: shadow_burst
-    _unlockType: 2
-    _unlockChapter: 1
-    _unlockStage: 0
+    _activeSkillKey: psg_h17
+    _activeSkillCooldown: 14
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 2
   - _hostKey: robot
     _nameEn: ROBOT
     _nameKr: "\uB85C\uBD07"
-    _role: "\uBC30\uCE58 \uD14C\uD06C"
-    _hp: 82
+    _hp: 92
     _atk: 72
-    _spd: 60
-    _dash: 50
+    _spd: 62
+    _atkSpeed: 60
+    _critPercent: 10
+    _primaryStatA: 0
+    _primaryStatB: 1
     _attackKind: 4
-    _shotCount: 2
+    _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 1.1
     _intervalMul: 1
@@ -798,40 +953,49 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E008
-    _possessPriority: 35
+    _enemyId: EN_19
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 45
     _maintainHook: "\uBC30\uCE58 \uB124\uD2B8\uC6CC\uD06C"
-    _canonHp: 220
-    _canonAtk: 17
-    _canonMoveSpeed: 2.2
-    _canonEngageSpeed: 3.4
-    _canonRange: 7.5
-    _canonInterval: 1.9
-    _canonShotSpeed: 8.5
+    _canonHp: 106
+    _canonAtk: 11
+    _canonMoveSpeed: 3.6119998
+    _canonEngageSpeed: 3.0702
+    _canonRange: 8.2
+    _canonInterval: 1.3518518
+    _canonShotSpeed: 5.8960004
     _canonShotCount: 1
-    _canonTelegraph: 0.7
+    _canonTelegraph: 0.73
     _canonMaxConcurrent: 2
-    _canonHostRange: 6.5
-    _canonHostInterval: 1.35
-    _canonHostMoveSpeed: 3.6
-    _canonHostShotSpeed: 8.5
+    _canonHoming: 0
+    _canonHostHp: 182
+    _canonHostAtk: 16
+    _canonHostRange: 8.2
+    _canonHostInterval: 1.55
+    _canonHostMoveSpeed: 3.6119998
+    _canonHostShotSpeed: 8.8
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: system_override
-    _unlockType: 2
-    _unlockChapter: 1
-    _unlockStage: 0
+    _activeSkillKey: psg_h19
+    _activeSkillCooldown: 20
+    _passiveSkillKey: psv_spare_circuit
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 5
   - _hostKey: baseball
-    _nameEn: SLUGGER
+    _nameEn: BASEBALL PLAYER
     _nameKr: "\uC2AC\uB7EC\uAC70"
-    _role: "\uD0C4\uD658 \uBC18\uC0AC"
     _hp: 78
-    _atk: 66
-    _spd: 72
-    _dash: 70
-    _attackKind: 1
+    _atk: 82
+    _spd: 73
+    _atkSpeed: 68
+    _critPercent: 10
+    _primaryStatA: 0
+    _primaryStatB: 2
+    _attackKind: 6
     _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 0.6
@@ -843,40 +1007,49 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E015
-    _possessPriority: 44
+    _enemyId: EN_20
+    _possessPriority: 0
     _possessKind: 0
     _possessHpPercent: 100
     _maintainHook: "\uBC14\uC6B4\uC2A4 \uACBD\uB85C"
-    _canonHp: 130
-    _canonAtk: 14
-    _canonMoveSpeed: 1.5
-    _canonEngageSpeed: 4.4
-    _canonRange: 6.5
-    _canonInterval: 1.45
-    _canonShotSpeed: 8.5
+    _canonHp: 116
+    _canonAtk: 11
+    _canonMoveSpeed: 4.284
+    _canonEngageSpeed: 3.6413999
+    _canonRange: 3.5
+    _canonInterval: 1.0178571
+    _canonShotSpeed: 6.298
     _canonShotCount: 1
-    _canonTelegraph: 0.45
-    _canonMaxConcurrent: 3
-    _canonHostRange: 6.7
-    _canonHostInterval: 1.55
-    _canonHostMoveSpeed: 4.4
-    _canonHostShotSpeed: 8
+    _canonTelegraph: 0.57
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 153
+    _canonHostAtk: 12
+    _canonHostRange: 1.7
+    _canonHostInterval: 0.8
+    _canonHostMoveSpeed: 4.284
+    _canonHostShotSpeed: 9.4
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: grand_slam
-    _unlockType: 2
-    _unlockChapter: 2
-    _unlockStage: 0
+    _activeSkillKey: psg_h20
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_reflect
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 7
   - _hostKey: snowwoman
     _nameEn: SNOW WOMAN
     _nameKr: "\uC124\uB140"
-    _role: "\uBE59\uACB0 \uC81C\uC5B4"
-    _hp: 62
-    _atk: 70
-    _spd: 74
-    _dash: 68
-    _attackKind: 1
+    _hp: 68
+    _atk: 68
+    _spd: 79
+    _atkSpeed: 66
+    _critPercent: 10
+    _primaryStatA: 2
+    _primaryStatB: 1
+    _attackKind: 3
     _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 1.05
@@ -888,41 +1061,50 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: 
+    _enemyId: EN_21
     _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 50
     _maintainHook: "\uBE59\uACB0 \uC7A5\uD310"
-    _canonHp: 130
-    _canonAtk: 12
-    _canonMoveSpeed: 1.7
-    _canonEngageSpeed: 0
-    _canonRange: 6
-    _canonInterval: 1.85
-    _canonShotSpeed: 8.5
+    _canonHp: 85
+    _canonAtk: 11
+    _canonMoveSpeed: 4.62
+    _canonEngageSpeed: 3.927
+    _canonRange: 6.8
+    _canonInterval: 1.42
+    _canonShotSpeed: 4.69
     _canonShotCount: 1
-    _canonTelegraph: 0
-    _canonMaxConcurrent: 0
-    _canonHostRange: 6.2
-    _canonHostInterval: 1.6
-    _canonHostMoveSpeed: 3.8
-    _canonHostShotSpeed: 8.5
+    _canonTelegraph: 0.71
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 133
+    _canonHostAtk: 12
+    _canonHostRange: 5.5
+    _canonHostInterval: 1.45
+    _canonHostMoveSpeed: 4.62
+    _canonHostShotSpeed: 7
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: elemental_nova
-    _unlockType: 2
-    _unlockChapter: 2
-    _unlockStage: 0
+    _activeSkillKey: psg_h21
+    _activeSkillCooldown: 14
+    _passiveSkillKey: psv_weaken
+    _grade: 0
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 9
   - _hostKey: vampire
     _nameEn: VAMPIRE
     _nameKr: "\uD761\uD608\uADC0"
-    _role: "\uD761\uD608 \uC9C0\uC18D"
-    _hp: 74
-    _atk: 82
-    _spd: 76
-    _dash: 66
+    _hp: 76
+    _atk: 72
+    _spd: 75
+    _atkSpeed: 69
+    _critPercent: 10
+    _primaryStatA: 0
+    _primaryStatB: 1
     _attackKind: 1
-    _shotCount: 2
+    _shotCount: 1
     _spreadDegrees: 0
     _rangeMul: 0.5
     _intervalMul: 0.7
@@ -933,298 +1115,143 @@ MonoBehaviour:
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E014
-    _possessPriority: 33
+    _enemyId: EN_22
+    _possessPriority: 0
     _possessKind: 1
     _possessHpPercent: 35
     _maintainHook: "\uD761\uD608 \uACBD\uC81C"
-    _canonHp: 180
-    _canonAtk: 14
-    _canonMoveSpeed: 1.9
-    _canonEngageSpeed: 4
-    _canonRange: 6
-    _canonInterval: 1.55
-    _canonShotSpeed: 8.5
+    _canonHp: 96
+    _canonAtk: 11
+    _canonMoveSpeed: 4.368
+    _canonEngageSpeed: 3.7128
+    _canonRange: 7
+    _canonInterval: 1.25
+    _canonShotSpeed: 5.092
     _canonShotCount: 1
-    _canonTelegraph: 0.5
+    _canonTelegraph: 0.65
     _canonMaxConcurrent: 2
-    _canonHostRange: 6
-    _canonHostInterval: 1.28
-    _canonHostMoveSpeed: 4.2
-    _canonHostShotSpeed: 9.2
+    _canonHoming: 0
+    _canonHostHp: 151
+    _canonHostAtk: 16
+    _canonHostRange: 7
+    _canonHostInterval: 1.3
+    _canonHostMoveSpeed: 4.368
+    _canonHostShotSpeed: 7.6
     _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: blood_tornado
-    _unlockType: 2
-    _unlockChapter: 1
-    _unlockStage: 0
-  - _hostKey: actor_missile_merc
-    _nameEn: E013
-    _nameKr: "\uBBF8\uC0AC\uC77C \uC6A9\uBCD1"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
+    _activeSkillKey: psg_h22
+    _activeSkillCooldown: 20
+    _passiveSkillKey: psv_leech
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 10
+  - _hostKey: commando_missile
+    _nameEn: "COMMANDO \u2014 MISSILE"
+    _nameKr: "\uCF54\uB9CC\uB3C4(\uBBF8\uC0AC\uC77C)"
+    _hp: 71
+    _atk: 86
+    _spd: 68
+    _atkSpeed: 49
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 4
     _attackKind: 1
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
+    _rangeMul: 0.5
+    _intervalMul: 0.7
+    _damageMul: 1.05
     _lifestealPercent: 0
     _slowPercent: 0
     _reflectsShots: 0
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: E013
-    _possessPriority: 30
+    _enemyId: EN_06
+    _possessPriority: 0
     _possessKind: 1
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 155
-    _canonAtk: 18
-    _canonMoveSpeed: 2.1
-    _canonEngageSpeed: 3.6
-    _canonRange: 8
-    _canonInterval: 2.2
-    _canonShotSpeed: 8.5
-    _canonShotCount: 1
-    _canonTelegraph: 0.9
-    _canonMaxConcurrent: 2
-    _canonHostRange: 5.8
-    _canonHostInterval: 1.65
-    _canonHostMoveSpeed: 3.7
-    _canonHostShotSpeed: 7
-    _actorOnly: 1
-    _spriteKey: commando_grenade
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
-  - _hostKey: actor_shield_trooper
-    _nameEn: E017
-    _nameKr: "\uBC29\uD328\uBCD1"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
-    _attackKind: 0
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
-    _lifestealPercent: 0
-    _slowPercent: 0
-    _reflectsShots: 0
-    _moveAttack: 0
-    _targetType: 0
-    _tag: 0
-    _enemyId: E017
-    _possessPriority: 38
-    _possessKind: 2
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 190
-    _canonAtk: 13
-    _canonMoveSpeed: 1.9
-    _canonEngageSpeed: 3
-    _canonRange: 1.5
-    _canonInterval: 1.3
-    _canonShotSpeed: 0
-    _canonShotCount: 0
-    _canonTelegraph: 0.45
-    _canonMaxConcurrent: 2
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
-    _canonHostShotSpeed: 0
-    _actorOnly: 1
-    _spriteKey: amazon_elite
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
-  - _hostKey: actor_sensor_drone
-    _nameEn: E018
-    _nameKr: "\uC13C\uC11C \uB4DC\uB860"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
-    _attackKind: 1
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
-    _lifestealPercent: 0
-    _slowPercent: 0
-    _reflectsShots: 0
-    _moveAttack: 0
-    _targetType: 0
-    _tag: 0
-    _enemyId: E018
-    _possessPriority: 50
-    _possessKind: 2
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 65
+    _possessHpPercent: 35
+    _maintainHook: "\uD3ED\uBC1C \uBC18\uACBD"
+    _canonHp: 66
     _canonAtk: 8
-    _canonMoveSpeed: 1.1
-    _canonEngageSpeed: 4.6
-    _canonRange: 6
-    _canonInterval: 1.6
-    _canonShotSpeed: 8.5
+    _canonMoveSpeed: 3.9479997
+    _canonEngageSpeed: 3.3558
+    _canonRange: 8.5
+    _canonInterval: 1.7500001
+    _canonShotSpeed: 4.69
     _canonShotCount: 1
-    _canonTelegraph: 0.55
-    _canonMaxConcurrent: 3
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
-    _canonHostShotSpeed: 0
-    _actorOnly: 1
-    _spriteKey: robot
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
-  - _hostKey: actor_enforcer
-    _nameEn: EL01
-    _nameKr: "\uC9D1\uD589\uC790"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
-    _attackKind: 0
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
-    _lifestealPercent: 0
-    _slowPercent: 0
-    _reflectsShots: 0
-    _moveAttack: 0
-    _targetType: 0
-    _tag: 0
-    _enemyId: EL01
-    _possessPriority: 0
-    _possessKind: 2
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 900
-    _canonAtk: 18
-    _canonMoveSpeed: 4
-    _canonEngageSpeed: 0
-    _canonRange: 1.2
-    _canonInterval: 1.15
-    _canonShotSpeed: 0
-    _canonShotCount: 0
     _canonTelegraph: 0.9
-    _canonMaxConcurrent: 1
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
-    _canonHostShotSpeed: 0
-    _actorOnly: 1
+    _canonMaxConcurrent: 2
+    _canonHoming: 0.25
+    _canonHostHp: 139
+    _canonHostAtk: 20
+    _canonHostRange: 8.5
+    _canonHostInterval: 1.7
+    _canonHostMoveSpeed: 3.9479997
+    _canonHostShotSpeed: 7
+    _actorOnly: 0
     _spriteKey: 
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
-  - _hostKey: actor_shield_captain
-    _nameEn: EL02
-    _nameKr: "\uBC29\uD328 \uB300\uC7A5"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
+    _activeSkillKey: psg_h06
+    _activeSkillCooldown: 20
+    _passiveSkillKey: 
+    _grade: 1
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 1
+    _unlockStage: 6
+  - _hostKey: death
+    _nameEn: DEATH
+    _nameKr: "\uC0AC\uC2E0"
+    _hp: 86
+    _atk: 91
+    _spd: 66
+    _atkSpeed: 49
+    _critPercent: 10
+    _primaryStatA: 1
+    _primaryStatB: 2
     _attackKind: 0
     _shotCount: 1
     _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
-    _lifestealPercent: 0
+    _rangeMul: 0.5
+    _intervalMul: 0.7
+    _damageMul: 1.05
+    _lifestealPercent: 35
     _slowPercent: 0
     _reflectsShots: 0
     _moveAttack: 0
     _targetType: 0
     _tag: 0
-    _enemyId: EL02
+    _enemyId: EN_23
     _possessPriority: 0
-    _possessKind: 2
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 1350
-    _canonAtk: 22
-    _canonMoveSpeed: 3.4
-    _canonEngageSpeed: 0
-    _canonRange: 1.2
-    _canonInterval: 1.15
-    _canonShotSpeed: 0
-    _canonShotCount: 0
-    _canonTelegraph: 0.7
-    _canonMaxConcurrent: 1
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
-    _canonHostShotSpeed: 0
-    _actorOnly: 1
-    _spriteKey: amazon_elite
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
-  - _hostKey: actor_arc_warden
-    _nameEn: EL03
-    _nameKr: "\uC544\uD06C \uC6CC\uB4E0"
-    _role: "\uC804\uD22C \uC804\uC6A9"
-    _hp: 50
-    _atk: 50
-    _spd: 50
-    _dash: 50
-    _attackKind: 1
-    _shotCount: 1
-    _spreadDegrees: 0
-    _rangeMul: 1
-    _intervalMul: 1
-    _damageMul: 1
-    _lifestealPercent: 0
-    _slowPercent: 0
-    _reflectsShots: 0
-    _moveAttack: 0
-    _targetType: 0
-    _tag: 0
-    _enemyId: EL03
-    _possessPriority: 0
-    _possessKind: 2
-    _possessHpPercent: 50
-    _maintainHook: 
-    _canonHp: 1800
-    _canonAtk: 25
-    _canonMoveSpeed: 3.6
-    _canonEngageSpeed: 0
-    _canonRange: 6.2
-    _canonInterval: 2
-    _canonShotSpeed: 0
-    _canonShotCount: 0
-    _canonTelegraph: 0.8
-    _canonMaxConcurrent: 1
-    _canonHostRange: 0
-    _canonHostInterval: 0
-    _canonHostMoveSpeed: 0
-    _canonHostShotSpeed: 0
-    _actorOnly: 1
-    _spriteKey: white_wizard
-    _ultimateKey: 
-    _unlockType: 0
-    _unlockChapter: 0
-    _unlockStage: 0
+    _possessKind: 1
+    _possessHpPercent: 35
+    _maintainHook: "\uD761\uD608 \uACBD\uC81C"
+    _canonHp: 106
+    _canonAtk: 11
+    _canonMoveSpeed: 3.8639998
+    _canonEngageSpeed: 3.2844
+    _canonRange: 4.8
+    _canonInterval: 1.462963
+    _canonShotSpeed: 5.494
+    _canonShotCount: 1
+    _canonTelegraph: 0.79
+    _canonMaxConcurrent: 2
+    _canonHoming: 0
+    _canonHostHp: 170
+    _canonHostAtk: 11
+    _canonHostRange: 1.8
+    _canonHostInterval: 0.75
+    _canonHostMoveSpeed: 3.8639998
+    _canonHostShotSpeed: 8.2
+    _actorOnly: 0
+    _spriteKey: 
+    _activeSkillKey: psg_h23
+    _activeSkillCooldown: 28
+    _passiveSkillKey: psv_leech
+    _grade: 2
+    _levelStats: []
+    _unlockType: 1
+    _unlockChapter: 3
+    _unlockStage: 12

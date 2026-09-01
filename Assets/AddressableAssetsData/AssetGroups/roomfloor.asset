@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: roomfloor
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: roomfloor
+  m_GUID: 6b563c62c73d72542bf230ee54efe68f
+  m_SerializeEntries:
+  - m_GUID: 0af878ee926543142b32c9e1d6602c0c
+    m_Address: roomfloor/roomfloor_python
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d15adb8223558040ba92d6be35304fe
+    m_Address: roomfloor/roomfloor_robot_snakes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12d9efdf2aec6ee4ca87dc8403996f0a
+    m_Address: roomfloor/roomfloor_ch2_offset_cover
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1aaf807b5bb14654a880771427d8abfa
+    m_Address: roomfloor/roomfloor_env_rooftop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e859844733eea04eafffe854a279b43
+    m_Address: roomfloor/roomfloor_ch1_pillar_cross
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 34fbe961938d17e46b7592692f7e27ae
+    m_Address: roomfloor/roomfloor_ch3_twin_platform
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4461864c7bf376348bc55a01ff740b6c
+    m_Address: roomfloor/roomfloor_ch2_ring
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44ca4bb978ba1f14ab412bab6b09aa58
+    m_Address: roomfloor/roomfloor_env_refinery
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 482b4d86d6629ac4d83bfd6a7bc9f34d
+    m_Address: roomfloor/roomfloor_ch1_offset_cover
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4919b4bb6498c0e47854b10f3bf0265e
+    m_Address: roomfloor/roomfloor_ch2_pillar_cross
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5608a564d115d3a40976fb12ca80a4dd
+    m_Address: roomfloor/roomfloor_ch1_ring
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 560a410c398a95c48ac88bb64219e618
+    m_Address: roomfloor/roomfloor_env_junkyard
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64e7749c93808294cab00f2f5387950d
+    m_Address: roomfloor/roomfloor_ch3_lane_wide
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6cf95a37556d63f4baa082b3209ed9e1
+    m_Address: roomfloor/roomfloor_ch3_split_level
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7642cb008cdbc3e4dbaa8ea0539b3bf6
+    m_Address: roomfloor/roomfloor_ch1_lane_wide
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7aadd202cfc48ef47babdad431a40107
+    m_Address: roomfloor/roomfloor_ch1_split_level
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e4e4f650a418f142893e2f10311ce32
+    m_Address: roomfloor/roomfloor_ch3_offset_cover
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 919ecb89747bfaa4ab6886156e45a0dc
+    m_Address: roomfloor/roomfloor_ch3_pillar_cross
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f5f68c190a78e340a6bd6e3273f6879
+    m_Address: roomfloor/roomfloor_env_missile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3d030505bb43b0428e198ebbe29785f
+    m_Address: roomfloor/roomfloor_guardian
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0dad463fb6deac4ebba40bb34ab4110
+    m_Address: roomfloor/roomfloor_ch2_twin_platform
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bec60900ce87aa84e814a176a57fa37e
+    m_Address: roomfloor/roomfloor_env_holding
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2f653a29ef1bb740a844831a9a16b47
+    m_Address: roomfloor/roomfloor_kingpin
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c39a63fc2f6aa1f4ab15c63494a6dd4b
+    m_Address: roomfloor/roomfloor_ch2_lane_wide
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc9422f29bd1d4442a3076dc1a25ae56
+    m_Address: roomfloor/roomfloor_ch1_twin_platform
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d195de5e70443a34b9718e156e26f0c6
+    m_Address: roomfloor/roomfloor_crusher
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d29c592cb08598f4e817a7413c0ea3bd
+    m_Address: roomfloor/roomfloor_env_street
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e34bc5fd8633ef34da62b061816a9e01
+    m_Address: roomfloor/roomfloor_sludge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e80cdd5f75abe37499b8f5d57ab136a1
+    m_Address: roomfloor/roomfloor_ch3_ring
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f93956444259eb041b04aef0ca2504a3
+    m_Address: roomfloor/roomfloor_ch2_split_level
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f4e859ebd85ecb845bb22abe351d7c81, type: 2}
+    - {fileID: 11400000, guid: 5d011316acee79c4c98e720fb3cd53cb, type: 2}

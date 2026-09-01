@@ -949,7 +949,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC721\uC131 \xB7 ULTIMATE \xB7 \uB3C4\uAC10"
+  m_text: "\uC721\uC131 \xB7 액티브 스킬 \xB7 \uB3C4\uAC10"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a11cb69ee9108e245a192bc9cfa5c1e5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e70d8f5890d4fcc46a55872addf6c2cc, type: 2}

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678e6cd138c3537479bc5c2449e20078, type: 3}
+  m_Name: PassiveSkillTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Character.PassiveSkillTable
+  _entries:
+  - _passiveSkillKey: psv_counter
+    _nameEn: REVERSAL STANCE
+    _nameKr: "\uC5ED\uC804\uC758 \uC790\uC138"
+    _description: "\uC274\uB4DC\uAC00 \uB0A8\uC544 \uC788\uB294 \uB3D9\uC548 \uACF5\uACA9\uB825
+      +15%"
+    _kind: 0
+    _chancePercent: 0
+  - _passiveSkillKey: psv_reflect
+    _nameEn: BAT REFLECT
+    _nameKr: "\uD0C4 \uBC18\uC0AC"
+    _description: "\uADFC\uC811 \uC0AC\uAC70\uB9AC \uC548\uC758 \uC801 \uD0C4\uC744
+      \uB418\uBC1B\uC544\uCE5C\uB2E4"
+    _kind: 1
+    _chancePercent: 40
+  - _passiveSkillKey: psv_leech
+    _nameEn: BLOOD LEECH
+    _nameKr: "\uD761\uD608"
+    _description: "\uACF5\uACA9 \uC801\uC911 \uC2DC \uC900 \uD53C\uD574\uC758 50%\uB97C
+      \uD68C\uBCF5\uD55C\uB2E4"
+    _kind: 1
+    _chancePercent: 25
+  - _passiveSkillKey: psv_scorch
+    _nameEn: SCORCH
+    _nameKr: "\uC791\uC5F4"
+    _description: "\uD654\uC0C1 \uC911\uC778 \uC801\uC5D0\uAC8C \uC8FC\uB294 \uD53C\uD574
+      +20%"
+    _kind: 0
+    _chancePercent: 0
+  - _passiveSkillKey: psv_weaken
+    _nameEn: WEAKEN
+    _nameKr: "\uC57D\uD654"
+    _description: "\uBA85\uC911\uD55C \uC801\uC758 \uC774\uB3D9 \u221240% \xB7 \uACF5\uACA9
+      \uAC04\uACA9 +40%, 1.5\uCD08"
+    _kind: 1
+    _chancePercent: 35
+  - _passiveSkillKey: psv_overheat
+    _nameEn: OVERHEAT
+    _nameKr: "\uD0C4\uCC3D \uACFC\uC5F4"
+    _description: "\uC5F0\uC18D \uBA85\uC911 8\uD0C0\uB9C8\uB2E4 \uB2E4\uC74C 1\uBC1C
+      \uD53C\uD574 3\uBC30"
+    _kind: 0
+    _chancePercent: 0
+  - _passiveSkillKey: psv_momentum
+    _nameEn: MOMENTUM
+    _nameKr: "\uD0C4\uB825"
+    _description: "\uC774\uB3D9 \uC9C1\uD6C4 \uCCAB \uBC1C \uD53C\uD574 +25%"
+    _kind: 0
+    _chancePercent: 0
+  - _passiveSkillKey: psv_spare_circuit
+    _nameEn: SPARE CIRCUIT
+    _nameKr: "\uC608\uBE44 \uD68C\uB85C"
+    _description: "\uD3EC\uD0D1\uC774 \uC0B4\uC544 \uC788\uB294 \uB3D9\uC548 \uC790\uAE30
+      \uACF5\uACA9 \uAC04\uACA9 \u221215%"
+    _kind: 0
+    _chancePercent: 0

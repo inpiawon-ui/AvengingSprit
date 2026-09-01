@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 70ef5c5b22f3cb74dad27c93348f3fc1
+    m_Address: TableData/EventTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8ab0c492a328e314f92d49e92a660041
     m_Address: TableData/GameConfig
     m_ReadOnly: 0
@@ -36,7 +42,14 @@ MonoBehaviour:
   - m_GUID: 9197fd04ac9eea54193c853668c91f40
     m_Address: TableData/RoomTable
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f992a8e2d4de3e4ba9d8796c208ca62
+    m_Address: TableData/EvolutionTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c64e017ececb1474bb0208dfecbbd377
     m_Address: TableData/BossTable
@@ -45,7 +58,18 @@ MonoBehaviour:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: da90110f6c9271d43bf25f1a72561906
-    m_Address: TableData/UltimateTable
+    m_Address: TableData/ActiveSkillTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1de37824661c5e4c851889248761291
+    m_Address: TableData/PassiveSkillTable
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ee3bbf389d59fdc4a9a4937f6dafbb5b
+    m_Address: TableData/ShopTable
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_tabledata
