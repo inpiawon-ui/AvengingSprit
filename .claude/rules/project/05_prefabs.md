@@ -59,10 +59,45 @@ alwaysApply: true
 - `UI Scale Mode`: **Scale With Screen Size**
 - `Reference Resolution`: constants.md 3절의 기준 해상도 값
 - `Screen Match Mode`: **Match Width Or Height**
-- `Match` 값은 **런타임에 화면 비율에 따라 자동 조정**한다. 고정값으로 설정하지 않는다.
-  - 화면 비율 ≥ 1.778 (16:9 이상, 예: 21:9) → `match = 1` (Height 기준, 콘텐츠 좌우 여백)
-  - 화면 비율 < 1.778 (16:9 미만, 예: 태블릿 4:3) → `match = 0` (Width 기준, 콘텐츠 상하 여백)
-- 이 조정은 `SafeArea.cs` 컴포넌트가 `GetComponentInParent<CanvasScaler>()`로 자동 처리한다.
+- `Match` 값은 **런타임에 자동 조정**한다. 고정값으로 설정하지 않는다.
+
+### 규칙은 하나 — 다 들어오는 쪽으로 맞춘다 (contain)
+
+가로·세로 배율을 각각 재고 **작은 쪽**을 고른다. 그러면 기준 해상도의 모든 칸이 화면 안에 남는다.
+
+```
+scaleByWidth  = Screen.width  / referenceResolution.x
+scaleByHeight = Screen.height / referenceResolution.y
+
+scaleByHeight < scaleByWidth  →  match = 1 (Height 기준, 콘텐츠 좌우 여백)
+그 외                          →  match = 0 (Width  기준, 콘텐츠 상하 여백)
+```
+
+| 기기 | match | 보이는 칸 | 결과 |
+|---|---|---|---|
+| 폰 16:9 720×1280 | 0 | 720 × 1280 | 안 잘림 |
+| 폰 20:9 1080×2400 | 0 | 720 × 1600 | 안 잘림 (세로 여유) |
+| 태블릿 4:3 768×1024 | **1** | 960 × 1280 | 안 잘림 (좌우 여백) |
+| 태블릿 16:10 1200×1920 | **1** | 800 × 1280 | 안 잘림 |
+
+> ⚠ **비율 문턱값(1.778 등)으로 가르지 않는다.**
+>
+> 예전 규약은 「비율 < 1.778 (태블릿 4:3) → match = 0」이었는데 **이대로 하면 화면이 잘린다.**
+> 태블릿에서 `match = 0` 은 상하 여백이 아니라 **상하 잘림**이다 —
+> 콘텐츠(720×1280)가 화면(768×1024)보다 상대적으로 더 길쭉하기 때문이다.
+>
+> ```
+> 가로에 맞추면  배율 768÷720 = 1.067
+>               세로로 보이는 칸 = 1024÷1.067 = 960
+>               1280 중 320칸이 아래로 잘려 나간다
+> ```
+>
+> 게다가 구현이 비율을 `width/height` 로 재고 있어서 세로 화면에서는 언제나 0.5625 였다 —
+> 문턱을 넘을 수가 없어 **갈림길 자체가 죽어 있었다.** 두 실수가 겹쳐 태블릿에서 아래가 잘렸다.
+> 배율을 직접 비교하면 문턱값도 화면 방향도 따질 필요가 없다.
+
+- 이 조정은 `SafeArea.cs` 의 `ApplyCanvasMatch()` 가 `GetComponentInParent<CanvasScaler>()` 로 자동 처리한다.
+- 기준 해상도는 **스케일러에서 읽는다.** 코드에 720×1280 을 다시 적지 않는다 — 두 곳에 있으면 한쪽이 낡는다.
 - 씬에 SafeAreaPanel을 추가할 때 반드시 `SafeArea` 컴포넌트를 부착한다.
 
 ## RectTransform 기준
