@@ -12,9 +12,6 @@ namespace Game.Module.Common
     [RequireComponent(typeof(RectTransform))]
     public sealed class SafeArea : MonoBehaviour
     {
-        // 16:9(가로) 기준 비율. 이 값 이상이면 Height 기준(match=1), 미만이면 Width 기준(match=0).
-        private const float LandscapeRatioThreshold = 1.778f;
-
         private RectTransform _rectTransform;
         private CanvasScaler _canvasScaler;
 
@@ -56,7 +53,24 @@ namespace Game.Module.Common
             ApplySafeAreaRect();
         }
 
-        // 화면 비율에 따라 CanvasScaler Match를 조정한다. 고정값으로 두지 않는 이유는 05_prefabs 참조.
+        // ── CanvasScaler Match 자동 조정 ──────────────────────────
+        //
+        // 규칙은 하나다 — **화면에 다 들어오는 쪽으로 맞춘다(contain).**
+        // 가로·세로 배율 중 **작은 쪽**을 고르면 기준 해상도의 모든 칸이 화면 안에 남는다.
+        //
+        // ⚠ 예전에는 `Screen.width / Screen.height >= 1.778` 로 갈랐는데 두 가지가 틀렸다.
+        //
+        //   ① 세로 화면에서 `width/height` 는 0.5625 다. 1.778 을 넘을 수가 없어
+        //      **언제나 match = 0(Width 기준)** 이었다. 갈림길이 아예 죽어 있었다.
+        //
+        //   ② 그 match = 0 이 태블릿에서 화면을 자른다.
+        //        기준 720×1280 · 태블릿 768×1024
+        //        가로로 맞추면 배율 768/720 = 1.067 → 세로로 보이는 칸은 1024/1.067 = 960
+        //        **1280 중 320 칸이 아래로 잘려 나간다.** "밑이 짤린다" 가 이것이다.
+        //        세로로 맞추면 배율 1024/1280 = 0.8 → 가로 960 칸, 좌우에 여백만 생긴다.
+        //
+        // 폰(16:9~20:9)은 세로 배율이 더 커서 예전처럼 match = 0 그대로다 — 달라지지 않는다.
+        // 바뀌는 것은 화면이 기준보다 **덜 길쭉한** 기기(태블릿·폴더블)뿐이다.
         private void ApplyCanvasMatch()
         {
             if (_canvasScaler == null)
@@ -64,8 +78,17 @@ namespace Game.Module.Common
                 return;
             }
 
-            float screenRatio = (float)Screen.width / Screen.height;
-            _canvasScaler.matchWidthOrHeight = screenRatio >= LandscapeRatioThreshold ? 1f : 0f;
+            Vector2 reference = _canvasScaler.referenceResolution;
+            if (reference.x <= 0f || reference.y <= 0f || Screen.width <= 0 || Screen.height <= 0)
+            {
+                return;
+            }
+
+            float scaleByWidth = Screen.width / reference.x;
+            float scaleByHeight = Screen.height / reference.y;
+
+            // 세로가 더 빠듯하면 세로로 맞춘다(match = 1) — 그래야 아래가 안 잘린다.
+            _canvasScaler.matchWidthOrHeight = scaleByHeight < scaleByWidth ? 1f : 0f;
         }
 
         // Screen.safeArea(픽셀)를 0~1 앵커로 변환해 패널이 안전 영역만 채우도록 한다.

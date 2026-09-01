@@ -181,6 +181,15 @@ namespace Game.Editor
                 found = FindByName(root, it.name);
             }
 
+            // 이미 있는 노드라도 **표가 말하는 부모 밑으로 옮긴다.**
+            // 안 옮기면 표에서 계층을 바꿔도 프리팹은 옛 자리에 남는다 —
+            // 카드 이름·설명이 카드가 아니라 패널 밑에 붙어 세 장이 겹쳐 보였다.
+            if (found != null && !string.IsNullOrEmpty(it.parent))
+            {
+                var want = FindByName(root, it.parent);
+                if (want != null && found.parent != want) found.SetParent(want, false);
+            }
+
             if (found == null)
             {
                 if (string.IsNullOrEmpty(it.create) || string.IsNullOrEmpty(it.parent)) return result;

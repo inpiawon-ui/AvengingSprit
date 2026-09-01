@@ -16,7 +16,7 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 전투 진행 전체를 맡는다 — 룸 생성, 유닛 AI, 빙의, 얼티밋, 종료 판정.
+    /// 전투 진행 전체를 맡는다 — 룸 생성, 유닛 AI, 빙의, 액티브 스킬, 종료 판정.
     ///
     /// 게임 흐름(GameComposition 4절)
     ///   룸 입장 → 오토어택 교전 → [호스트 사망] 고스트 복귀 → 재빙의
@@ -25,7 +25,7 @@ namespace Game.Module.InGame
     /// 상태는 전부 이 클래스가 들고, 화면 표시는 이벤트로만 흘려보낸다.
     /// UI 가 이 클래스를 직접 참조하지 않아야 룸 로직을 UI 없이 테스트할 수 있다.
     /// </summary>
-    public sealed class BattleDirector : MonoBehaviour
+    public sealed partial class BattleDirector : MonoBehaviour
     {
         private const string AtlasAddress = "atlas/ingamemainui";
 
@@ -78,15 +78,36 @@ namespace Game.Module.InGame
         private float _drainCarry;
         private float _invuln;
         private float _ghostProtect;
-        /// <summary>열린 문 하나. 갈림길 방은 둘이고 어느 쪽으로 나가느냐가 곧 선택이다.</summary>
+        /// <summary>문 하나. 갈림길 방은 둘이고 어느 쪽으로 나가느냐가 곧 선택이다.</summary>
         private sealed class ExitGate
         {
             public RectTransform View;
+            public Image Img;
             public string NextRoomId;
+            public GameObject Label;
         }
 
         private readonly List<ExitGate> _exits = new();
-        private float _ultimateCharge;
+
+        // ── 문은 처음부터 서 있다 ────────────────────────────────
+        //
+        // 예전에는 방을 다 정리해야 문이 **허공에서 생겼다.** 그래서 처음 하는 사람은
+        // "이 방을 어떻게 끝내는지" 자체를 몰랐다. 목표가 안 보이는 방을 헤매게 된다.
+        //
+        // 이제 들어서는 순간부터 닫힌 문이 보이고, 방을 비우면 열리는 것을 보여 준다.
+        //   진입   저기로 나가는구나
+        //   전투   아직 아니구나
+        //   클리어 지금이구나
+
+        /// <summary>문이 열려 있는가. 닫혀 있으면 닿아도 안 넘어간다.</summary>
+        private bool _exitOpen;
+
+        /// <summary>여는 연출이 시작되고 지난 시간. 음수면 아직 안 열렸다.</summary>
+        private float _exitOpenTime = -1f;
+
+        /// <summary>닫힘 → open1 → open2 → 열림. 네 장을 이 시간에 걸쳐 넘긴다.</summary>
+        private const float ExitOpenSeconds = 0.5f;
+        private float _skillCooldown;
         private bool _running;
         private Unit _possessTarget;
         private bool _hadPossessTarget;
@@ -103,35 +124,8 @@ namespace Game.Module.InGame
         // 정본은 훅의 **이름**만 준다(표식 릴레이·콤보 미터…). 실제 효과는 그 몸의
         // 시그니처를 구현해야 나오므로, 지금은 공통 규칙 하나로 대신한다 —
         // 명중이 쌓이면 단계가 오르고 단계마다 피해가 는다. 모양은 같다.
-        private const int MaintainMaxStack = 3;
-        private const int MaintainHitsPerStack = 8;
-        private const float MaintainDamagePerStack = 0.12f;
-
-        private int _maintainHits;
-        private int _maintainStack;
-
-        // ── 시너지 S01 · 갱스터 → 닌자 ────────────────────────────
-        // 정본이 "버프 없이 항상 발동(ALWAYS_BASE)" 으로 못박은 대표 사례다.
-        // 갱스터로 표식을 찍고 닌자로 갈아타면 표식 대상에 순간이동 처형이 나간다.
-        //
-        // 시너지는 **단방향**이다. 갱스터 → 닌자는 되고 닌자 → 갱스터는 안 된다.
-        // 이전 몸이 세상에 남긴 것을 다음 몸이 물려받는 구조라 방향이 뒤집히면 성립하지 않는다.
-        //
-        // 표식은 적에게 붙는다. 몸을 갈아타도 사라지지 않아야 시너지가 성립한다 —
-        // 유지 훅(내 몸에 쌓이는 것)은 교체하면 사라지지만, 세상에 남긴 것은 남는다.
-        private const string SynergyMarkSource = "gangster";
-        private const string SynergyMarkReceiver = "ninja";
-        private const string SynergyS01 = "S01";
-        private const float MarkSeconds = 6f;
-        private const float BlinkRangeMul = 2.2f;      // 순간이동이라 평소 사거리보다 멀리 닿는다
-        private const float BlinkDamageMul = 2.5f;
-        private const float BlinkAoeRadius = 150f;
-        private const float BlinkCooldown = 1.6f;
-
-        private float _blinkCooldown;
-        private readonly HashSet<string> _synergySeen = new();
-        private float _tacticalCooldown;
-        private int _tacticalShown = -1;
+        private float _repossessLock;
+        private int _repossessLockShown = -1;
 
         private float _stopTimer;
 
@@ -156,19 +150,52 @@ namespace Game.Module.InGame
         //
         // `RoomField` 가 보이는 창(뷰포트)이고 `UnitLayer` 가 방 전체다.
         // 창은 그대로 두고 방을 세로로 밀어 카메라를 흉내낸다.
-        private const float RoomMeterWidth = 8.4f;
-        private const float RoomMeterHeight = 14f;
-        private const float BossRoomMeterHeight = 16f;
+        // 정본 v3.3 의 방은 폭 24~32 m 다. 세로 화면에 안 들어가서 1/4 로 줄였고,
+        // **전 방 같은 폭**으로 통일했다 — 방마다 폭이 다르면 픽셀/미터가 달라져
+        // 캐릭터 크기가 방을 넘을 때마다 변한다.
+        /// <summary>
+        /// 방 폭(미터). 8 → 15 → **10**. 15 로 넓혔더니 방이 화면(720px)보다 넓어져
+        /// 가로 스크롤이 생겼고, 오른쪽에 뭐가 있는지 보려면 찾아다녀야 했다.
+        /// 세로 스크롤만 남긴다 — **방 폭 = 화면 폭**이라 가로는 한눈에 다 들어온다.
+        ///
+        /// 왜 하필 10 인가. 화면에 보이는 유닛 수는 미터값과 **무관하다**
+        /// (유닛 144px · 화면 720px → 항상 5 기 폭). 미터값이 정하는 것은
+        /// 정본의 미터 수치가 픽셀로 얼마나 크게 보이느냐 하나뿐이다.
+        ///
+        ///     10 m → 72 px/m → 유닛 한 기 = 2.0 m(사람 크기) · 최대 사거리 8.5 m = 화면의 85%
+        ///      8 m → 90 px/m → 유닛 한 기 = 1.6 m 이지만 8.5 m 사거리가 화면을 넘는다
+        ///     15 m → 48 px/m → 유닛 한 기 = 3.0 m — 근접 사거리(2.8 m)보다 몸이 커진다
+        /// </summary>
+        private const float RoomMeterWidth = 10f;
 
-        /// <summary>카메라가 따라붙는 속도. 즉시 붙이면 걸음마다 화면이 튄다.</summary>
-        private const float CameraFollow = 8f;
+        /// <summary>
+        /// 화면에 보이는 폭. **방 폭과 같게 유지한다** — 다르게 두면 가로 스크롤이 살아난다.
+        /// `WantScroll` 의 x 는 `Min(0, viewW - roomW)` 로 잠기므로 둘이 같으면 항상 0 이다.
+        /// </summary>
+        private const float ViewMeterWidth = RoomMeterWidth;
+        // 방 세로도 **전 방 고정**이다(`RoomImporterV33.RoomHeight` 와 같은 값).
+        // 화면에 보이는 높이가 약 11 m 라, 13 m 면 조금만 올라가도 방이 한눈에 들어온다.
+        // 예전에는 14~28 m 였고 그러면 방 하나가 두세 화면이라 뭐가 있는지 모르고 올라갔다.
+        private const float RoomMeterHeight = 13f;
+        private const float BossRoomMeterHeight = 13f;
+
+        // ⚠ 카메라는 **즉시** 따라간다. 보간을 넣지 않는다.
+        //
+        //   예전에는 지수 보간(시정수 125 ms)으로 부드럽게 붙였는데, 그러면 움직일 때마다
+        //   화면이 한 박자 늦게 따라오고 멈추면 뒤늦게 밀려와 **흔들리는 것처럼** 보인다.
+        //   조이스틱으로 직접 모는 게임에서 이 지연은 부드러움이 아니라 무게추가 된다.
+        //
+        //   "즉시 붙이면 걸음마다 튄다"고 걱정해 넣었던 것인데, 실제 원인은 보간이 아니라
+        //   `ApplyScroll` 의 픽셀 반올림이다. 그쪽은 도트를 또렷하게 두기 위해 필요하고
+        //   1 px 이라 눈에 띄지 않는다.
 
         private RectTransform _floor;
         private Image _floorImage;
         private Sprite _defaultFloor;
         private float _pxPerMeter = 1f;
         private Vector2 _roomSize;      // 픽셀
-        private float _scroll;
+        /// <summary>창을 방 위에서 얼마나 밀어 놓았는가. x 는 가로, y 는 세로다.</summary>
+        private Vector2 _scroll;
         /// <summary>밀어내기 속도 — 이동 속도 대비. 너무 크면 서로 튕겨 나간다.</summary>
         private const float SeparationSpeedRatio = 0.55f;
 
@@ -181,6 +208,8 @@ namespace Game.Module.InGame
         private BuffTable _buffTable;
         private readonly RunBuffs _buffs = new();
         private readonly List<BuffEntry> _offer = new();
+        /// <summary>슬롯이 찼을 때 쓰는 제외 목록. 매번 새로 만들지 않으려고 들고 있는다.</summary>
+        private readonly HashSet<string> _slotFilter = new();
         private readonly System.Random _rng = new();
         private bool _awaitingBuff;
 
@@ -190,19 +219,38 @@ namespace Game.Module.InGame
 
         /// <summary>빙의할 대상이 하나도 없는 상태가 이어진 시간 (기획서 A 8-3).</summary>
         private float _emergencyWait;
-        private bool _emergencyUsedThisRoom;
         private RoomKind _roomKind = RoomKind.Normal;
 
         /// <summary>이 런에 쌓인 버프. 스테이지를 나가면 사라진다.</summary>
         public RunBuffs Buffs => _buffs;
         public bool IsAwaitingBuff => _awaitingBuff;
 
+        /// <summary>이 카드의 지금 레벨. 안 가졌으면 0. (UI 가 "Lv.2 → Lv.3" 를 그린다)</summary>
+        public int CardLevel(string cardKey) => _buffs.LevelOf(cardKey);
+
+        public int BuildSlotsUsed => _buffs.SlotsUsed;
+        public int BuildSlotsMax => RunBuffs.BuildSlots;
+
         public Vector2 MoveInput { get; set; }
 
         /// <summary>지금 사격 중인가. 멈춰서 사거리 안에 적이 있을 때만 true (궁수의 전설 규칙).</summary>
         public bool IsFiring { get; private set; }
-        public float UltimateRatio => _config == null ? 0f
-            : Mathf.Clamp01(_ultimateCharge / _config.UltimateChargeSeconds);
+        public float SkillCooldownRatio => _config == null ? 0f
+            : Mathf.Clamp01(_skillCooldown / SkillCooldownOf(_host?.Profile));
+
+        /// <summary>
+        /// 지금 탄 몸의 액티브 스킬 쿨(초).
+        ///
+        /// **우선순위를 정하는 자리는 여기 하나뿐이다** — 호스트 표에 값이 있으면 그것,
+        /// 없으면 `GameConfig` 기본값. 사거리·간격에서 `_canonHost*` 가 조용히 먼저 먹어
+        /// 배율 칸이 통째로 죽어 있던 일을 되풀이하지 않는다(`AVSR_JobClasses.md` §6).
+        /// </summary>
+        private float SkillCooldownOf(HostEntry e)
+        {
+            float fallback = _config != null ? _config.ActiveSkillCooldownSeconds : 14f;
+            if (fallback <= 0f) fallback = 14f;
+            return e == null ? fallback : e.ActiveSkillCooldown(fallback);
+        }
         public bool CanPossess => _host == null && _possessTarget != null;
         public bool IsRunning => _running;
 
@@ -228,7 +276,8 @@ namespace Game.Module.InGame
                     _defaultFloor = _floorImage.sprite;
                 }
             }
-            _pxPerMeter = _field.rect.width / RoomMeterWidth;
+            // 화면 폭이 8 m 를 담는다. 방이 15 m 라 나머지는 카메라가 따라가며 보여 준다.
+            _pxPerMeter = _field.rect.width / ViewMeterWidth;
             SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
             CoreModule.TryGet(out _player);
@@ -244,16 +293,36 @@ namespace Game.Module.InGame
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
 
-            try { _rooms = await res.LoadAsync<RoomTable>("TableData/RoomTable"); }
-            catch (Exception e) { Debug.LogWarning($"[Battle] RoomTable 없음 — 절차적 생성으로 간다. {e.Message}"); }
-            try { _bossTable = await res.LoadAsync<BossTable>("TableData/BossTable"); }
-            catch (Exception e) { Debug.LogError($"[Battle] BossTable 로드 실패 — {e.Message}"); }
-            try { _buffTable = await res.LoadAsync<BuffTable>("TableData/BuffTable"); }
-            catch (Exception e) { Debug.LogError($"[Battle] BuffTable 로드 실패 — {e.Message}"); }
+            // ⚠ **`_config` 을 읽은 뒤에** 넣는다. `CachePossessMarkSprites` 안에 두었더니
+            //   그 함수가 표보다 먼저 도는 자리라 부팅 때마다 NullReference 로 터졌다.
+            Unit.SetShieldRule(_config.ShieldHoldSeconds, _config.ShieldDecayPerSecond);
+
+            // ⚠ 여섯 표를 **한꺼번에** 띄운다. 순서대로 await 하면 로드 시간이 그대로 더해진다 —
+            //   서로 기다릴 이유가 없는 것들이다(`GameConfig` 만 앞에서 먼저 확인한다).
+            await UniTask.WhenAll(
+                LoadTableAsync<RoomTable>(res, "TableData/RoomTable",
+                    t => _rooms = t, "RoomTable 없음 — 절차적 생성으로 간다", warnOnly: true),
+                LoadTableAsync<BossTable>(res, "TableData/BossTable",
+                    t => _bossTable = t, "BossTable 로드 실패"),
+                LoadTableAsync<BuffTable>(res, "TableData/BuffTable",
+                    t => _buffTable = t, "BuffTable 로드 실패"),
+                LoadTableAsync<EventTable>(res, "TableData/EventTable",
+                    t => _eventTable = t, "EventTable 없음 — 이벤트 방은 그냥 지나간다", warnOnly: true),
+                LoadTableAsync<ShopTable>(res, "TableData/ShopTable",
+                    t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true));
+            try { _evolutionTable = await res.LoadAsync<EvolutionTable>("TableData/EvolutionTable"); }
+            catch (Exception e) { Debug.LogWarning($"[Battle] EvolutionTable 없음 — 진화 없이 돈다. {e.Message}"); }
 
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
+            _eventsUsed.Clear();
+            _runGold = 0;     // 판 골드도 런 한정이다
+            _evolutions.Clear();
+            _evoCooldown.Clear();
+            _possessReachMul = 0f;
+            _shopDiscount = 0;
+            _bossShieldBreak = false;
 
             // 장판은 바닥에 깔린다 — 유닛보다 **아래**다. 위에 그리면 캐릭터가
             // 장판에 잠겨 어디 서 있는지 안 보인다.
@@ -289,6 +358,9 @@ namespace Game.Module.InGame
 
             SpawnGhost();
             EnterStartHost();
+            // 첫 방은 유저 진행도가 정해진 **뒤에** 잡는다 —
+            // 챕터마다 첫 방 ID 가 다르다(ROOM_CH1_001 · CH2_001 · CH3_001).
+            _canonRoomId = FirstCanonRoom;
             EnterRoom(0);
 
             // 첫 방까지 다 세운 **뒤에** 걷는다. 씬이 올라온 순간 걷으면
@@ -297,6 +369,21 @@ namespace Game.Module.InGame
             // 걷힐 때까지 **기다렸다가** 전투를 연다. 가림막은 막대를 100%까지 채우느라
             // 잠깐 더 떠 있는데, 그동안 `_running` 이 켜져 있으면 적이 가림막 뒤에서
             // 달려들고 Ghost HP 도 깎인다 — 보지도 못한 전투가 먼저 시작된다.
+            // ⚠ 방을 **세우는 것**과 방이 **그려지는 것**은 다르다.
+            //   `EnterRoom` 은 오브젝트를 만들 뿐이고, 실제 그림은 다음 렌더에서 나온다.
+            //   그 전에 가림막을 걷으면 검은 화면이 한 박자 보인다.
+            //   두 프레임을 넘겨 레이아웃·캔버스가 한 번 돌게 한 뒤에 걷는다.
+            //   그리고 **바닥 그림이 실제로 걸릴 때까지** 기다린다. 바닥은 따로 읽어 오므로
+            //   이걸 안 기다리면 방이 반만 그려진 화면이 잠깐 드러난다.
+            //   못 읽는 바닥(아직 안 온 그림)에 매달려 멎지 않도록 2 초에서 끊는다.
+            await UniTask.WhenAny(
+                UniTask.WaitUntil(() => _floorPending == 0,
+                                  cancellationToken: this.GetCancellationTokenOnDestroy()),
+                UniTask.Delay(2000, cancellationToken: this.GetCancellationTokenOnDestroy()));
+
+            await UniTask.NextFrame(this.GetCancellationTokenOnDestroy());
+            await UniTask.NextFrame(this.GetCancellationTokenOnDestroy());
+
             if (_loading != null) await _loading.HideAsync();
             _running = true;
         }
@@ -305,11 +392,9 @@ namespace Game.Module.InGame
         private void SpawnGhost()
         {
             _ghostHp = GhostHpMax;
-            _tacticalCooldown = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
+            _repossessLock = 0f;      // 런은 언제나 교체 가능한 상태로 시작한다
             _eliteRoomsCleared = 0;
-            _synergySeen.Clear();
-            _blinkCooldown = 0f;
-            _tacticalShown = -1;
+            _repossessLockShown = -1;
             _ghost = NewUnit("Ghost");
             _ghost.Setup(UnitSide.Player, "ghost", "GHOST", UnitGet("ghost"),
                          GhostHpMax, 0, _config.GhostMoveSpeed, 0f, 1f,
@@ -346,26 +431,46 @@ namespace Game.Module.InGame
         // 절차적 생성과 나란히 둔다. `_canonRoomId` 가 가리키는 방이 테이블에 있으면
         // 그 방을 쓰고, 없으면 예전 방식으로 만든다. 34방을 한 번에 갈아 끼우면
         // 어디서 깨졌는지 알 수 없어서, 한 방씩 옮겨 붙인다.
-        private const string FirstCanonRoom = "CH1_N01";
+        /// <summary>
+        /// 이 챕터의 첫 방. 정본 v3.3 은 챕터마다 `ROOM_CH{n}_001` 로 시작한다.
+        /// (예전 34방 체계는 `CH1_N01` 이었다 — ID 가 통째로 바뀌었다.)
+        /// </summary>
+        private string FirstCanonRoom
+            => $"ROOM_CH{Mathf.Clamp(_player != null && _player.IsReady ? _player.CurrentChapter : 1, 1, 3)}_001";
 
         private RoomTable _rooms;
+        private EventTable _eventTable;
+        private ShopTable _shopTable;
+        private EvolutionTable _evolutionTable;
         private RoomEntry _canonRoom;
-        private string _canonRoomId = FirstCanonRoom;
-        private int _wave = 1;
+        private string _canonRoomId;
         /// <summary>이번 런에서 비운 정예 방 수. 정본 R_ELITE 가 여기에 붙는다.</summary>
         private int _eliteRoomsCleared;
-        private float _waveDelay = -1f;
+
         private readonly HashSet<string> _missingActors = new();
 
         /// <summary>정본 좌표(미터, 좌하단 기준) → 우리 좌표(픽셀, 좌상단 기준 · 아래가 음수).</summary>
         private Vector2 ToPixels(Vector2 meters)
             => new(meters.x * _pxPerMeter, -(_roomSize.y - meters.y * _pxPerMeter));
 
+        /// <summary>
+        /// 정본 v3.3 방 타입 → 우리 방 종류.
+        /// SHOP·EVENT 는 아직 화면이 없다. 적이 없는 방이라는 점은 REST 와 같으므로
+        /// 그 자리를 빌린다 — 그래야 지나갈 수 있다. 화면이 생기면 갈라낸다.
+        /// </summary>
         private static RoomKind KindOfCanon(RoomEntry room)
-            => room.IsBoss ? RoomKind.Boss
-             : room.Type != null && room.Type.StartsWith("Elite") ? RoomKind.Elite
-             : room.Type != null && room.Type.StartsWith("Recovery") ? RoomKind.Rest
-             : RoomKind.Normal;
+        {
+            if (room.IsBoss) return RoomKind.Boss;
+            return (room.Type ?? string.Empty).ToUpperInvariant() switch
+            {
+                "BOSS"  => RoomKind.Boss,
+                "ELITE" => RoomKind.Elite,
+                "EVENT" => RoomKind.Event,
+                "SHOP" => RoomKind.Shop,
+                "REST" => RoomKind.Rest,
+                _       => RoomKind.Normal,
+            };
+        }
 
         /// <summary>
         /// 정본 EnemyID(E001 …) 로 프로필을 찾는다.
@@ -374,8 +479,23 @@ namespace Game.Module.InGame
         /// </summary>
         private HostEntry ActorProfile(string actorId, IReadOnlyList<HostEntry> hosts)
         {
+            if (string.IsNullOrEmpty(actorId)) return hosts.Count > 0 ? hosts[0] : null;
+
+            // 정본 v3.3 스폰은 **우리 슬러그**를 들고 있다(임포터가 EN_xx 를 풀어 넣었다).
+            // 예전 34방 데이터는 정본 EnemyID(E001…) 였으므로 둘 다 본다.
+            for (int i = 0; i < hosts.Count; i++)
+                if (hosts[i].HostKey == actorId) return hosts[i];
             for (int i = 0; i < hosts.Count; i++)
                 if (hosts[i].EnemyId == actorId) return hosts[i];
+
+            // ⚠ 잡몹은 `HostTable` 에 없다 — `CreateTrash` 로 코드가 만든다.
+            //   그러니 여기서 못 찾는 것이 **정상**이고, 경고할 일이 아니다.
+            //   예전에는 그냥 경고를 뱉어서 "해골·박쥐·폐품사수의 그림이 아직 없다" 는
+            //   줄이 매 판 찍혔고, 실제로는 셋 다 그림이 멀쩡히 붙어 있는데도
+            //   그 로그만 보고 리소스를 다시 발주할 뻔했다.
+            if (TrashByKey(actorId, 1) != null || TrashByKey(actorId, 2) != null
+                || TrashByKey(actorId, 3) != null)
+                return hosts.Count > 0 ? hosts[0] : null;
 
             if (_missingActors.Add(actorId))
                 Debug.LogWarning($"[Battle] {actorId} 의 그림이 아직 없다 — 대역으로 세운다");
@@ -383,26 +503,91 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 정본 방의 웨이브 하나를 세운다. 스폰 출처는 `layout.enemySpawns` 하나뿐이다
-        /// (SPAWN_SRC_01). 웨이브 1은 방에 들어서는 즉시, 그다음은 앞 웨이브를 비운 뒤 나온다.
+        /// 방에 설 적을 **한꺼번에** 세운다. 들어서는 순간 전부 서 있다.
+        ///
+        /// ⚠ 증원(웨이브)은 없다. 두 번 만들었다가 두 번 다 지웠다 —
+        ///   방을 비운 순간 허공에서 적이 나오면, 빙의할 몸이 방금 다 죽은 상태라
+        ///   유령으로 새 무리를 맞게 되어 대응할 방법이 없다.
         /// </summary>
-        private void SpawnWave(RoomEntry room, int wave)
+        private void SpawnRoom(RoomEntry room)
         {
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return;
 
             var spawns = room.Spawns;
+
+            // ── 이 웨이브에서 어느 자리가 몸인가 ─────────────────────
+            //
+            // 정본은 두 방향으로 극단이다. 33 개 방 중 15 개는 숙주를 **한 자리도**
+            // 안 찍었고, 반대로 `ROOM_CH1_001` 은 네 자리가 **전부** 숙주다.
+            // 그 방이 곧 "다 엘리트라 의미가 없는" 화면이다 — 전원이 빼앗을 수 있는
+            // 몸이면 빼앗는 것이 선택이 아니라 기본값이 된다.
+            //
+            // 그래서 아래 두 값 사이로 조인다. 부족하면 승격하고, 넘치면 잡몹으로 돌린다.
+            _hostSlots.Clear();
+            for (int i = 0; i < spawns.Count; i++)
+                if (spawns[i].IsPossessionTarget) _hostSlots.Add(i);
+
+            if (_hostSlots.Count == 0)
+            {
+                // 승격 — 정본이 몸을 안 남긴 방. `PossessPriority` 가 높은 자리를 고른다.
+                int bestPri = int.MinValue, at = -1;
+                for (int i = 0; i < spawns.Count; i++)
+                {
+                    var cand = ActorProfile(spawns[i].ActorId, hosts);
+                    if (cand == null ||
+                        cand.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
+                    if (cand.PossessPriority > bestPri) { bestPri = cand.PossessPriority; at = i; }
+                }
+                if (at >= 0) _hostSlots.Add(at);
+            }
+            else while (_hostSlots.Count > MaxHostsPerWave)
+            {
+                // 강등 — 우선순위가 가장 낮은 자리부터 잡몹으로 돌린다.
+                int worst = 0, worstPri = int.MaxValue;
+                for (int k = 0; k < _hostSlots.Count; k++)
+                {
+                    var cand = ActorProfile(spawns[_hostSlots[k]].ActorId, hosts);
+                    int pri = cand != null ? cand.PossessPriority : int.MinValue;
+                    if (pri < worstPri) { worstPri = pri; worst = k; }
+                }
+                _hostSlots.RemoveAt(worst);
+            }
+
+            // 잡몹 회전을 방마다 다른 자리에서 시작한다.
+            //
+            // 늘 0 에서 시작하면 목록의 **뒤쪽이 작은 방에서 영영 안 나온다** —
+            // 폐품 사수가 목록 셋째라, 잡몹이 둘뿐인 방에서는 한 번도 안 섰다.
+            // 첫 방만은 0 으로 고정한다. 근접 둘로 기본을 먼저 가르치는 자리다.
+            int roomNo = RoomNumberOf(_canonRoom != null ? _canonRoom.RoomId : null);
+            int trashSeq = roomNo <= 1 ? 0 : roomNo;
+            int spawned = 0;
             for (int i = 0; i < spawns.Count; i++)
             {
                 var s = spawns[i];
-                if (s.Wave != wave) continue;
-                var e = ActorProfile(s.ActorId, hosts);
+
+                // 테스트 모드 — 방마다 **한 기만** 세운다. 배치·진행을 끝까지 훑을 때 쓴다.
+                if (OneEnemyPerRoom && spawned >= 1) continue;
+                spawned++;
+
+                // 엘리트는 **배정표가 찍는다.** 정본 별도 ID(EL01…)를 보던 시절과 다르다 —
+                // 이제 자리도 배우도 레이아웃이 정하므로 ID 로는 구별할 수 없다.
+                bool elite = s.Elite;
+
+                // 이 자리가 몸인가, 잡몹인가.
+                // 엘리트는 그 자체가 관문이라 잡몹으로 바꾸지 않는다.
+                bool isHost = elite || _hostSlots.Contains(i);
+                int chapterNo = _player != null ? _player.CurrentChapter : 1;
+                // 방 데이터가 이 자리의 잡몹을 지정했으면 그대로 세운다(손으로 짠 레이아웃).
+                // 안 지정했으면 예전대로 목록을 돌려 쓴다 — 절차 생성 방이 그렇다.
+                var e = isHost ? ActorProfile(s.ActorId, hosts)
+                               : (TrashForSlot(s.ActorId, chapterNo, trashSeq++)
+                                  ?? TrashAt(trashSeq++, chapterNo));
                 if (e == null) continue;
 
-                // 엘리트는 정본에서 별도 ID(EL01…)로 온다. 수가 적은 대신 하나하나가 세다.
-                bool elite = s.ActorId != null && s.ActorId.StartsWith("EL");
-                var u = NewUnit($"Enemy_{s.ActorId}_{s.SpawnId}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                var u = NewUnit(isHost ? $"Enemy_{s.ActorId}_{s.SpawnId}"
+                                       : $"Trash_{e.HostKey}_{s.SpawnId}");
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, TrashSprite(e),
                         // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
                         // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
                         Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)),
@@ -410,18 +595,67 @@ namespace Game.Module.InGame
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
                         EnemyIntervalOf(e),
-                        // 엘리트는 캔버스가 한 등급 크다(128×128). 잡몹 상자에 넣으면
-                        // 캔버스 여백까지 줄어 엘리트가 잡몹보다 작아 보인다.
-                        UnitBox(elite ? 128f : 84f, elite ? 128f : 78f),
+                        // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
+                        // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
+                        // 엘리트뿐 아니라 **집행자**도 128 캔버스다.
+                        elite || e.HostKey == TrashEnforcerKey
+                            ? UnitBox(128f, 128f) : UnitBox(84f, 78f),
                         isBoss: false, profile: e);
                 u.Position = ToPixels(s.At);
+                ClearOfCover(u);
+                // 정본이 `POSSESSION_TARGET` 으로 찍은 자리(와 승격한 한 자리)만
+                // 빼앗을 수 있는 몸이다. 나머지는 잡몹 — 두들겨도 경직이 쌓이지 않는다.
+                if (isHost && !elite) { u.MarkAsHostBody(); u.MarkAsNextBody(); }
+                if (elite) u.MarkAsElite();
                 u.PossessPriority = e.PossessPriority;
                 u.PossessRange = 0f;
                 u.SetState(EnemyState.Idle);
+                // 풀에서 돌려 쓰므로 앞 방의 도약 단계가 남아 있을 수 있다.
+                u.ResetPattern();
                 ApplyFacingSprites(u, e.SpriteKey);
                 _enemies.Add(u);
             }
-            _wave = wave;
+            EnsureHostBodies();
+
+            // 방마다 무엇이 섰는지 한 줄로 남긴다. "적용이 안 된 것 같다" 는 말을
+            // 추측으로 되받지 않으려면, 화면 대신 콘솔이 답하게 해야 한다.
+            int nHost = 0, nMelee = 0, nRanged = 0;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var u = _enemies[i];
+                if (u == null || !u.IsAlive) continue;
+                if (u.IsHostBody) nHost++;
+                else if (IsRangedTrashKey(u.Key)) nRanged++;
+                else nMelee++;
+            }
+            Debug.Log($"[방] {room.RoomId} — 숙주 {nHost} · 근접 {nMelee} · 원거리 {nRanged}");
+        }
+
+        /// <summary>
+        /// 방에 빼앗을 수 있는 몸이 한 기도 없으면 하나를 승격한다.
+        ///
+        /// 정본 `ROOM_SPAWN` 은 33 개 방 중 **15 개에 `POSSESSION_TARGET` 을 찍지 않았다.**
+        /// 그 방에 몸 없이 들어가면 아무것도 할 수 없이 죽는다 — 대응할 방법이 없는
+        /// 죽음은 난이도가 아니라 고장이다. 그래서 최소 1 기는 보장한다.
+        ///
+        /// 고르는 기준은 정본의 `PossessPriority` 다. 정본이 "이 방에서는 이놈"이라고
+        /// 말해 두지 않았을 뿐, 어떤 놈이 몸으로 쓸 만한지는 이미 적어 두었다.
+        /// </summary>
+        private void EnsureHostBodies()
+        {
+            int have = 0, best = -1;
+            float bestScore = float.NegativeInfinity;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsBoss) continue;
+                if (e.Side != UnitSide.Enemy) continue;
+                if (e.IsHostBody) { have++; continue; }
+                if (e.Profile != null &&
+                    e.Profile.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
+                if (e.PossessPriority > bestScore) { bestScore = e.PossessPriority; best = i; }
+            }
+            if (have == 0 && best >= 0) { _enemies[best].MarkAsHostBody(); _enemies[best].MarkAsNextBody(); }
         }
 
         /// <summary>
@@ -429,35 +663,35 @@ namespace Game.Module.InGame
         /// 비우자마자 곧바로 쏟아지면 방을 정리했다는 감각이 사라진다.
         /// 아직 남은 웨이브가 있으면 true(= 방이 아직 안 끝났다).
         /// </summary>
-        private bool TickWave(float dt)
-        {
-            if (_canonRoom == null || _wave >= _canonRoom.LastWave) return false;
-            if (_enemies.Count > 0) { _waveDelay = -1f; return true; }
-
-            if (_waveDelay < 0f)
-            {
-                var next = _canonRoom.Wave(_wave + 1);
-                _waveDelay = next != null ? Mathf.Max(0.4f, next.StartDelay) : 1f;
-            }
-            _waveDelay -= dt;
-            if (_waveDelay > 0f) return true;
-
-            _waveDelay = -1f;
-            SpawnWave(_canonRoom, _wave + 1);
-            _bus.Publish(new WaveStartedEvent { Wave = _wave, WaveTotal = _canonRoom.LastWave });
-            return true;
-        }
-
         // ── 지형지물 ──────────────────────────────────────────────
         // 이게 없으면 `Pillar`·`Hazard Lane` 같은 방 이름이 이름값을 못 한다.
         // 방마다 다른 점이 적 배치뿐이게 되어 34방이 다 같은 방으로 느껴진다.
 
         private sealed class Obstacle
         {
+            // ⚠ 판정이 **둘**이다. 하나로 쓰면 둘 중 하나가 반드시 틀린다.
+            //
+            //   Bounds     — **몸이 부딪히는** 상자. 그림보다 작을 수 있다.
+            //                블록은 세로 0.7 칸이라 한 칸짜리 통로를 걸어 지나갈 수 있다.
+            //   ShotBounds — **탄이 막히는** 상자. 언제나 그림 발자국 그대로다.
+            //                여기까지 줄이면 눈에는 벽인데 탄이 통과해 버린다.
             public Rect Bounds;          // 픽셀. 중심이 아니라 좌상단 기준(우리 좌표계)
+            public Rect ShotBounds;      // 그림 발자국 전체 — 탄 차폐·스폰 밀어내기용
             public bool BlocksMove;
             public bool BlocksShot;
+            public bool BlocksEnemyShot;
+
+            // ── 움직이거나 상태가 바뀌는 것들 ──────────────────
+            public string Kind;          // CRATE · TIMED_SPIKE · ROTATING_BLADE · SWING_HAMMER
+            public Image Img;            // 매 프레임 그림을 갈아 끼운다
+            public Sprite[] Frames;      // 애니메이션 장면
+            public float Phase;          // 방마다·물건마다 어긋나게 시작한다
+            public Rect Home;            // 움직이는 것의 원래 자리(왕복·회전의 기준)
+            public int Hp;               // 부술 수 있는 것만 0 보다 크다
+            public RectTransform View2;  // 축·사슬처럼 따라다니는 두 번째 그림
             public bool IsHazard;
+            /// <summary>지금 아픈 상태인가. 가시가 내려가 있는 동안은 false 다.</summary>
+            public bool HazardOn = true;
             public int Damage;
             public float Tick;
             public GameObject View;
@@ -477,13 +711,70 @@ namespace Game.Module.InGame
         /// </summary>
         private static readonly Dictionary<string, float> ObstacleRise = new()
         {
-            { "PILLAR",        114f },
+            // ⚠ 아래 넷은 **시안을 재서** 나온 값이다(`_exchange/out/30_tile/tile_concept.png`).
+            //   시안 바닥 타일 32.6 px 를 자로 삼아 오브젝트 높이를 재고 우리 72 px 로 환산했다.
+            { "PILLAR",         94f },   // 부서진 석조 기둥 — 그림 72×166
             { "DIVIDER",        70f },
             { "RICOCHET_WALL",  90f },
-            { "BARRICADE",      55f },
-            { "LOW_COVER",      34f },
+            { "BARRICADE",      30f },   // 파이프 난간 — 그림 216×102
+            { "LOW_COVER",      30f },   // 파이프 다발 — 그림 216×102
             { "HAZARD",          0f },
+            // 격자 블록. 발자국 1×1 m(72×72 px) 위로 한 뼘 솟는다 —
+            // 납작하면 바닥 무늬로 보이고, 너무 높으면 뒤가 안 보인다.
+            { "BLOCK",          30f },   // 72×72 발자국 + 윗면 30 = 그림 72×102
+            // 새로 들어온 넷. 바닥에 눕는 것(가시)은 0, 서 있는 것은 캔버스에서 뺀 값이다.
+            { "CRATE",          60f },   // 철제 상자 — 그림 144×132 · 발자국 2×1 칸
+            // 도형을 둘 늘렸다. 맵마다 **쓰는 도형 조합**이 달라야 실루엣이 달라진다 —
+            // 같은 네모를 색만 바꾸면 아무리 다른 물건이어도 같아 보인다.
+            { "BULK",           94f },   // 큰 덩어리 — 그림 144×238 · 발자국 2×2 칸
+            { "RAIL",           30f },   // 세로로 긴 것 — 그림 72×174 · 발자국 1×2 칸
+            { "TIMED_SPIKE",     0f },   // 바닥 배수구 — 그림 144×144 · 바닥에 눕는다
+            { "ROTATING_BLADE",  0f },   // 바닥을 스치듯 돈다
+            { "SWING_HAMMER",   54f },
         };
+
+        /// <summary>
+        /// 판정 상자 / 그림 발자국 비율. 없으면 1 — 그림 그대로 막는다.
+        ///
+        /// 격자 블록만 줄인다. 블록 사이 **한 칸짜리 통로**를 지나가야 하는데
+        /// 발자국을 꽉 채워 막으면 몸이 안 들어간다.
+        ///
+        /// ── 값을 어떻게 정했나 ──────────────────────────────────
+        /// 두 값을 동시에 만족해야 한다. 발판 반크기를 `h`, 배율을 `s` 라 하면
+        ///
+        ///   통로 폭   = 144 − 2(36s + h)     ← 클수록 지나가기 쉽다
+        ///   벽 안전여유 = 36s + h − 36        ← 0 이하면 **벽을 통과**한다
+        ///
+        /// 둘이 정확히 반대로 움직이므로 통로는 72 px 를 절대 못 넘는다.
+        /// 가로·세로 발판이 다르므로(25.2 · 15.46) 배율도 달라야 같은 통로 폭이 나온다.
+        ///
+        ///   가로 0.50 → 통로 57.6 px · 여유 7.2 px
+        ///   세로 0.70 → 통로 62.7 px · 여유 4.7 px
+        ///
+        /// ⚠ 가로를 안 줄이면(1.0) 나란히 선 블록 사이 통로가 **21.6 px** 밖에 안 된다.
+        ///   눈에는 한 칸이 뻥 뚫려 보이는데 몸이 안 들어간다 — 실제로 그렇게 막혔었다.
+        /// </summary>
+        private static readonly Dictionary<string, Vector2> ObstacleFootScale = new()
+        {
+            // 지금은 비어 있다 — `ObstacleViewScale` 로 물건 자체를 줄였으므로
+            // 판정을 또 줄일 이유가 없다. **보이는 것이 곧 막는 것**이다.
+            // 그림은 그대로 두고 판정만 줄여야 하는 물건이 생기면 여기에 적는다.
+        };
+
+        /// <summary>
+        /// 장애물을 칸보다 작게 그린다. **모든 종류에 걸린다.**
+        ///
+        /// 0.7 — 한 칸(72 px)짜리가 **50.4 px** 로 줄고 칸마다 21.6 px 여백이 남는다.
+        /// 판정만 줄였을 때는 화면이 그대로라 통로가 눈에 안 보였다. 물건이 줄어야
+        /// "여기가 지나갈 수 있는 자리"가 그림으로 읽힌다.
+        ///
+        /// 발자국·솟음·판정이 **한꺼번에** 이 배율을 먹는다(`SpawnObstacles`) —
+        /// 보이는 것이 곧 막는 것이다. 셋 중 하나만 줄이면 또 어긋난다.
+        ///
+        /// 원본 그림을 70 %로 줄여 그리므로 도트가 조금 물러진다.
+        /// 통로가 보이는 값이 그 대가보다 크다고 판단했다.
+        /// </summary>
+        private const float ObstacleViewScale = 0.7f;
 
         private static readonly Dictionary<string, Color> ObstacleColor = new()
         {
@@ -493,7 +784,122 @@ namespace Game.Module.InGame
             { "DIVIDER",       new Color(0.28f, 0.27f, 0.36f, 1f) },
             { "RICOCHET_WALL", new Color(0.44f, 0.44f, 0.52f, 1f) },
             { "HAZARD",        new Color(0.86f, 0.34f, 0.18f, 0.45f) },
+            { "BLOCK",         new Color(0.78f, 0.85f, 0.86f, 1f) },
+            // 그림이 없을 때 쓰는 자리표시자 색. 파일이 들어오면 자동으로 그림이 이긴다.
+            { "CRATE",          new Color(0.52f, 0.38f, 0.22f, 1f) },
+            { "BULK",           new Color(0.44f, 0.40f, 0.34f, 1f) },
+            { "RAIL",           new Color(0.38f, 0.40f, 0.46f, 1f) },
+            { "TIMED_SPIKE",    new Color(0.72f, 0.66f, 0.30f, 0.75f) },
+            { "ROTATING_BLADE", new Color(0.78f, 0.78f, 0.84f, 0.95f) },
+            { "SWING_HAMMER",   new Color(0.62f, 0.60f, 0.66f, 0.95f) },
         };
+
+#if UNITY_EDITOR
+        // ── 판정 상자 보기 (F1) ───────────────────────────────────
+        //
+        // 초록 = 몸이 부딪히는 상자 · 노랑 = 탄이 막히는 상자 · 빨강 = 캐릭터 발판.
+        // 셋이 다르다는 것을 눈으로 봐야 "왜 안 지나가는지"를 두 번 묻지 않게 된다.
+
+        private bool _showHitBoxes;
+        private readonly List<Image> _hitBoxViews = new();
+
+        private Image MakeHitBox(Color c)
+        {
+            var go = new GameObject("HitBox", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            var img = go.GetComponent<Image>();
+            img.color = c; img.raycastTarget = false;
+            go.transform.SetAsLastSibling();
+            return img;
+        }
+
+        private void RebuildHitBoxView()
+        {
+            for (int i = 0; i < _hitBoxViews.Count; i++)
+                if (_hitBoxViews[i] != null) Destroy(_hitBoxViews[i].gameObject);
+            _hitBoxViews.Clear();
+            if (!_showHitBoxes) return;
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                _hitBoxViews.Add(MakeHitBox(new Color(1f, 0.85f, 0.1f, 0.22f)));   // 탄
+                _hitBoxViews.Add(MakeHitBox(new Color(0.2f, 1f, 0.4f, 0.30f)));    // 몸
+            }
+            _hitBoxViews.Add(MakeHitBox(new Color(1f, 0.2f, 0.2f, 0.55f)));        // 발판
+        }
+
+        private void TickHitBoxView()
+        {
+            if (_hitBoxViews.Count != _obstacles.Count * 2 + 1) { RebuildHitBoxView(); return; }
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                Put(_hitBoxViews[i * 2],     _obstacles[i].ShotBounds);
+                Put(_hitBoxViews[i * 2 + 1], _obstacles[i].Bounds);
+            }
+            var me = Avatar;
+            var foot = _hitBoxViews[_hitBoxViews.Count - 1];
+            if (me == null) { foot.enabled = false; return; }
+            foot.enabled = true;
+            var half = FootHalf(me);
+            var c = new Vector2(me.Position.x, me.Position.y - FootDrop(me));
+            Put(foot, new Rect(c.x - half.x, c.y - half.y, half.x * 2f, half.y * 2f));
+
+            static void Put(Image img, Rect r)
+            {
+                if (img == null) return;
+                var rt = img.rectTransform;
+                rt.sizeDelta = new Vector2(r.width, r.height);
+                rt.anchoredPosition = r.center;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// 지금 무대의 장애물 그림. 없으면 **연구소 세트로 떨어진다.**
+        ///
+        /// 배경이 무대마다 바뀌는데 장애물이 전부 연구소 것이면 방이 따로 논다.
+        /// 그렇다고 다섯 무대 × 일곱 종류를 한꺼번에 받을 수도 없으므로,
+        /// **온 것부터 쓰고 안 온 것은 연구소 것으로 버틴다.**
+        ///
+        ///   `obj_junkyard_block_1`  ← 무대 것이 있으면 이걸 쓰고
+        ///   `obj_block_1`           ← 없으면 이것 (연구소 · 지금 다 있는 세트)
+        /// </summary>
+        private Sprite EnvSprite(string baseName)
+        {
+            if (!baseName.StartsWith("obj_")) return GetSprite(baseName);
+            string tail = baseName.Substring(4);
+
+            // ① 이 무대 것
+            if (!string.IsNullOrEmpty(_floorEnv))
+            {
+                var s = GetSprite("obj_" + _floorEnv + "_" + tail);
+                if (s != null) return s;
+            }
+            // ② 연구소(기본) 것
+            var baseSprite = GetSprite(baseName);
+            if (baseSprite != null) return baseSprite;
+
+            // ③ ⚠ 도중에 생긴 도형(`bulk`·`rail`)은 **기본형이 아예 없다.**
+            //    그대로 두면 그림 없이 색 사각형만 뜬다. 아무 무대 것이라도 빌려 온다 —
+            //    색이 안 맞는 것이 빈 상자보다 낫다. 그 무대 그림이 오면 자동으로 ①이 이긴다.
+            for (int i = 0; i < FallbackEnvs.Length; i++)
+            {
+                var s = GetSprite("obj_" + FallbackEnvs[i] + "_" + tail);
+                if (s != null) return s;
+            }
+            return null;
+        }
+
+        /// <summary>기본형이 없는 도형을 빌려 올 무대 순서. 밝고 중립적인 것부터.</summary>
+        private static readonly string[] FallbackEnvs =
+        {
+            "holding", "rooftop", "refinery", "missile", "street", "junkyard",
+        };
+
+        /// <summary>지금 방의 무대 이름(`junkyard` 등). 연구소는 빈 문자열이다.</summary>
+        private string _floorEnv = string.Empty;
 
         private void ClearObstacles()
         {
@@ -510,15 +916,34 @@ namespace Game.Module.InGame
             {
                 var o = list[i];
                 var center = ToPixels(o.At);
-                var size = o.Size * _pxPerMeter;
-                var rect = new Rect(center.x - size.x * 0.5f, center.y - size.y * 0.5f,
-                                    size.x, size.y);
+
+                // ⚠ **물건 자체를 줄인다.** 판정만 줄이면 눈에는 아무 변화가 없다 —
+                //   그림은 칸을 꽉 채운 채 몸만 몰래 지나가서, 왜 지나가는지·왜 안 지나가는지
+                //   화면만 봐서는 알 수가 없다. 칸에 여백이 보여야 통로가 통로로 읽힌다.
+                const float vs = ObstacleViewScale;
+                var size = o.Size * _pxPerMeter * vs;
+
+                // 판정은 그림 그대로다. **보이는 것이 곧 막는 것**이어야 한다.
+                var hit = ObstacleFootScale.TryGetValue(o.Kind ?? "", out var fs)
+                    ? new Vector2(size.x * fs.x, size.y * fs.y) : size;
+                var rect = new Rect(center.x - hit.x * 0.5f, center.y - hit.y * 0.5f,
+                                    hit.x, hit.y);
+                var shotRect = new Rect(center.x - size.x * 0.5f, center.y - size.y * 0.5f,
+                                        size.x, size.y);
 
                 // 그림은 발자국보다 위로 솟는다. 아래쪽을 발자국에 맞물려 놓아야
-                // 발밑이 어긋나지 않는다.
-                float rise = ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f;
+                // 발밑이 어긋나지 않는다. 물건을 줄였으면 솟음도 같은 비율로 줄인다 —
+                // 안 줄이면 납작한 발자국 위에 예전 높이가 얹혀 비율이 무너진다.
+                float rise = (ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f) * vs;
                 var viewSize = new Vector2(size.x, size.y + rise);
                 var viewCenter = new Vector2(center.x, center.y + rise * 0.5f);
+
+                // ⚠ 정수 픽셀에 앉힌다. 72 px/m 로 떨어지는 값이라도 부동소수 나눗셈에서
+                //   0.0001 이 남고, 그 반 픽셀 때문에 블록을 옆으로 이어 붙였을 때
+                //   경계에 실금이 생기거나 한 줄이 두 번 그려진다.
+                viewSize = new Vector2(Mathf.Round(viewSize.x), Mathf.Round(viewSize.y));
+                viewCenter = new Vector2(Mathf.Round(viewCenter.x * 2f) * 0.5f,
+                                         Mathf.Round(viewCenter.y * 2f) * 0.5f);
 
                 var go = new GameObject($"Obj_{o.Kind}_{o.ObjectId}",
                                         typeof(RectTransform), typeof(Image));
@@ -530,11 +955,27 @@ namespace Game.Module.InGame
                 rt.anchoredPosition = viewCenter;
 
                 var img = go.GetComponent<Image>();
-                // 같은 종류라도 세로벽·가로벽처럼 비율이 다른 것이 있다(RICOCHET_WALL).
-                // 한 장으로 돌려쓰면 늘어나 픽셀이 뭉개지므로 방향별로 찾아본다.
+                // 같은 종류라도 크기가 제각각이다. 한 장으로 돌려쓰면 늘어나 뭉개지므로
+                // **화면에 놓일 크기와 이름이 같은 그림**을 먼저 찾는다(`obj_pillar_234x348`).
+                // 없으면 방향별(RICOCHET_WALL 의 v/h), 그것도 없으면 종류 기본 한 장.
                 string kind = (o.Kind ?? "").ToLowerInvariant();
-                var sprite = GetSprite($"obj_{kind}_{(size.y >= size.x ? "v" : "h")}")
-                             ?? GetSprite($"obj_{kind}");
+                string art = SpritePrefixOf(o.Kind);
+                Sprite sprite;
+                if (o.Kind == "BLOCK")
+                {
+                    // 격자 블록은 세 장이 거의 같고 잔무늬만 다르다. 한 장만 쓰면
+                    // 벽이 인쇄물처럼 보이므로 **자리로** 골라 섞는다 —
+                    // 자리가 같으면 늘 같은 그림이라 방을 다시 들어와도 안 바뀐다.
+                    int pick = Mathf.Abs(Mathf.RoundToInt(o.At.x * 7f + o.At.y * 13f)) % BlockVariants + 1;
+                    sprite = EnvSprite($"obj_block_{pick}") ?? EnvSprite("obj_block_1");
+                }
+                else
+                {
+                    sprite = EnvSprite($"{art}_{Mathf.RoundToInt(viewSize.x)}x{Mathf.RoundToInt(viewSize.y)}")
+                             ?? EnvSprite($"{art}_{(size.y >= size.x ? "v" : "h")}")
+                             ?? EnvSprite($"{art}_1")     // 여러 장짜리는 첫 장을 기본으로
+                             ?? EnvSprite(art);
+                }
                 img.sprite = sprite;
                 img.color = sprite != null
                     ? Color.white
@@ -542,25 +983,211 @@ namespace Game.Module.InGame
                         ? c : new Color(0.33f, 0.32f, 0.40f, 1f);
                 img.raycastTarget = false;
 
-                _obstacles.Add(new Obstacle
+                var ob = new Obstacle
                 {
-                    Bounds = rect, BlocksMove = o.BlocksMove, BlocksShot = o.BlocksShot,
+                    Bounds = rect, ShotBounds = shotRect,
+                    BlocksMove = o.BlocksMove, BlocksShot = o.BlocksShot,
+                    BlocksEnemyShot = o.BlocksEnemyShot,
                     IsHazard = o.IsHazard, Damage = o.HazardDamage, Tick = o.HazardTick,
-                    View = go,
-                });
+                    View = go, Kind = o.Kind, Img = img, Home = rect,
+                    // 같은 방의 같은 종류가 한 박자로 움직이면 기계처럼 보인다.
+                    // 자리로 위상을 어긋내면 방 전체가 살아 있는 것처럼 읽힌다.
+                    Phase = Mathf.Repeat((center.x * 0.013f + center.y * 0.021f), 1f),
+                };
+                SetupMoving(ob, kind);
+                _obstacles.Add(ob);
             }
         }
 
-        /// <summary>발밑 판정 상자. 몸 전체로 보면 머리가 기둥에 걸려 못 지나간다.</summary>
+        // ── 움직이는 지형지물 ────────────────────────────────────
+        //
+        // 정본이 30개 방에 `TIMED_HAZARD`·`ROTATING_HAZARD` 를 적어 두었는데
+        // 이름만 저장하고 거동은 없었다. 배치가 전부 정적이면 한 번 파악한 방은
+        // 두 번째부터 아무 판단도 필요 없어진다. 시간 축은 여기서 생긴다.
+
+        private const float SpikeCycle = 2.0f;     // 들어감 → 솟음 → 들어감 한 바퀴
+        private const float BladeTurn = 2.6f;      // 톱날 한 바퀴
+        private const float BladeRadius = 2.2f;    // 축에서 날까지(미터)
+        private const float HammerCycle = 3.0f;    // 추가 왕복 한 바퀴
+        private const float HammerTravel = 3.4f;   // 왕복 폭(미터)
+        private const int CrateHp = 40;
+
+        /// <summary>
+        /// 종류 이름 → 그림 파일 접두사.
+        ///
+        /// 종류 이름은 거동을 말하고(`ROTATING_BLADE` = 도는 것), 파일 이름은 물건을
+        /// 말한다(`obj_blade` = 톱날). 둘이 꼭 같을 필요는 없어서 여기서 이어 준다.
+        /// </summary>
+        /// <summary>격자 블록 그림 장수. 잔무늬만 다른 세 장을 자리로 골라 섞는다.</summary>
+        private const int BlockVariants = 3;
+
+        private static string SpritePrefixOf(string kind) => kind switch
+        {
+            "ROTATING_BLADE" => "obj_blade",
+            "SWING_HAMMER"   => "obj_hammer",
+            _                => "obj_" + (kind ?? string.Empty).ToLowerInvariant(),
+        };
+
+        /// <summary>종류마다 필요한 준비물을 챙긴다. 정적인 것은 그냥 지나간다.</summary>
+        private void SetupMoving(Obstacle ob, string kind)
+        {
+            string art = SpritePrefixOf(ob.Kind);
+            switch (ob.Kind)
+            {
+                case "CRATE":
+                    ob.Hp = CrateHp;
+                    ob.Frames = Frames3(art);
+                    break;
+
+                case "TIMED_SPIKE":
+                    ob.Frames = Frames3(art);
+                    // 가시는 **솟아 있을 때만** 아프다. 판정은 매 프레임 켜고 끈다.
+                    ob.IsHazard = true;
+                    if (ob.Damage <= 0) ob.Damage = 8;
+                    if (ob.Tick <= 0f) ob.Tick = 0.6f;
+                    break;
+
+                case "ROTATING_BLADE":
+                {
+                    ob.Frames = new[]
+                    {
+                        GetSprite($"{art}_1"), GetSprite($"{art}_2"),
+                        GetSprite($"{art}_3"), GetSprite($"{art}_4"),
+                    };
+                    ob.IsHazard = true;
+                    if (ob.Damage <= 0) ob.Damage = 10;
+                    if (ob.Tick <= 0f) ob.Tick = 0.5f;
+                    // 축은 제자리에 박혀 있고 날만 돈다. 축이 없으면 무엇을 중심으로
+                    // 도는지 안 보여서 날이 허공에 떠 있는 것처럼 읽힌다.
+                    ob.View2 = MakeExtra("Axis", $"{art}_axis", ob.Home.center, 54f);
+                    break;
+                }
+
+                case "SWING_HAMMER":
+                    ob.Frames = new[] { GetSprite(art) };
+                    ob.IsHazard = true;
+                    if (ob.Damage <= 0) ob.Damage = 12;
+                    if (ob.Tick <= 0f) ob.Tick = 0.7f;
+                    break;
+            }
+        }
+
+        private Sprite[] Frames3(string prefix)
+            => new[] { GetSprite($"{prefix}_1"), GetSprite($"{prefix}_2"), GetSprite($"{prefix}_3") };
+
+        /// <summary>축·사슬처럼 본체를 따라다니는 보조 그림 한 장.</summary>
+        private RectTransform MakeExtra(string name, string sprite, Vector2 at, float size)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(size, size);
+            rt.anchoredPosition = at;
+            var img = go.GetComponent<Image>();
+            img.sprite = GetSprite(sprite);
+            img.enabled = img.sprite != null;
+            img.raycastTarget = false;
+            rt.SetAsFirstSibling();          // 날 뒤에 깔린다
+            return rt;
+        }
+
+        /// <summary>
+        /// 엄폐물 안에 선 몸을 밖으로 밀어낸다. **세우는 순간에만** 쓴다.
+        ///
+        /// ⚠ 정본 스폰 자리 345개 중 121개가 엄폐물 사각형 안이다. 정본은 방 한가운데
+        ///   부근에 적을 세우는데(x≈4 m), 엄폐물 자리는 정본에 없어서 내가 만들었고
+        ///   그것도 한가운데에 놓았기 때문이다. 겹치면 이렇게 된다:
+        ///
+        ///     · 적이 기둥 속에 서 있어 **기둥 위에 체력바만 뜬다** — 건물에 HP 가 달린 것처럼 보인다
+        ///     · 내 탄이 기둥의 `BlocksShot` 에 먼저 먹혀 **적에게 닿지 않는다**
+        ///     · 그래서 죽지 않고, `_enemies` 가 비지 않아 **방이 영영 클리어되지 않는다**
+        ///
+        ///   실제로 ROOM_CH1_002(스테이지 2/12)가 이 경우다 — 적 3기가 전부 기둥 속이었다.
+        ///
+        /// `ResolveObstacles` 로는 모자란다. 그쪽은 **발밑**만 빼내므로 몸 중심이 사각형
+        /// 모서리에 걸린 채 남고, 탄 판정은 중심을 향하므로 여전히 먹힌다.
+        /// 여기서는 중심까지 확실히 빼내고 여유를 조금 더 둔다.
+        /// </summary>
+        private void ClearOfCover(Unit u)
+        {
+            if (u == null || _obstacles.Count == 0) return;
+            const float Margin = 8f;   // 모서리에 딱 붙으면 반올림에 따라 다시 먹힌다
+
+            var p = u.Position;
+            for (int pass = 0; pass < 4; pass++)   // 밀어낸 자리가 또 다른 엄폐물일 수 있다
+            {
+                bool moved = false;
+                for (int i = 0; i < _obstacles.Count; i++)
+                {
+                    var o = _obstacles[i];
+                    if (!o.BlocksMove && !o.BlocksShot) continue;   // 해저드는 밟아도 된다
+                    // 여기서는 **그림 전체**로 본다. 몸이 지나갈 길(`Bounds`)만 피하면
+                    // 적이 블록 그림 속에 반쯤 파묻힌 채 서서 탄이 안 닿는다.
+                    if (!o.ShotBounds.Contains(p)) continue;
+
+                    float dx = p.x - o.ShotBounds.center.x;
+                    float dy = p.y - o.ShotBounds.center.y;
+                    float ox = o.ShotBounds.width * 0.5f - Mathf.Abs(dx) + Margin;
+                    float oy = o.ShotBounds.height * 0.5f - Mathf.Abs(dy) + Margin;
+
+                    // 얕게 걸린 축으로 뺀다. 정확히 중심이면 부호가 0 이라 방향을 정해 준다.
+                    if (ox <= oy) p.x += (dx >= 0f ? 1f : -1f) * ox;
+                    else p.y += (dy >= 0f ? 1f : -1f) * oy;
+                    moved = true;
+                }
+                if (!moved) break;
+            }
+
+            u.Position = p;
+            ClampToField(u);
+        }
+
+        /// <summary>
+        /// 발밑 판정 상자의 **반크기**. 몸 전체로 보면 머리가 기둥에 걸려 못 지나간다.
+        ///
+        /// 가로는 그림의 **절반**이다. 블록 한 칸(72 px) 틈을 지나가야 하는데
+        /// 예전 값(0.55 → 그림의 55 %, 55 px)은 틈에 겨우 들어가 벽을 스치듯 비벼야 했다.
+        /// 절반(50 px)이면 좌우로 11 px 씩 남아 그냥 걸어서 통과한다.
+        ///
+        /// 세로는 그림의 32 %다. 이보다 얇게 잡으면 세로로 쌓인 블록 사이
+        /// 0.3 칸(21.6 px) 틈에 몸이 끼어 **벽을 통과**한다(`ObstacleFootScale` 주석 참조).
+        /// </summary>
         private static Vector2 FootHalf(Unit u)
         {
             var h = ((RectTransform)u.transform).sizeDelta * 0.5f;
-            return new Vector2(h.x * 0.55f, h.y * 0.22f);
+            return new Vector2(Mathf.Max(h.x * 0.5f,  MinFootHalfX),
+                               Mathf.Max(h.y * 0.32f, MinFootHalfY));
         }
 
-        private bool BlockedAt(Vector2 pos, Vector2 half)
+        /// <summary>
+        /// 발판 반크기의 **하한**. `ObstacleViewScale` 과 짝을 이룬다 —
+        /// 블록 배율이 `s` 일 때 `36s + 발판반크기 > 36` 이어야
+        /// 나란히 붙은 블록 사이로 **벽을 통과**하지 않는다.
+        ///
+        ///   배율 0.7 → 발판 반크기가 10.8 px 를 넘어야 한다
+        ///
+        /// 그림이 작은 유닛은 비율로만 잡으면 이 선에 가까워진다.
+        /// 배율을 건드릴 때 이 두 값도 같이 본다.
+        /// </summary>
+        private const float MinFootHalfX = 21f;
+        private const float MinFootHalfY = 14f;
+
+        /// <summary>
+        /// 그림 가운데에서 발판 가운데까지의 거리.
+        ///
+        /// ⚠ 예전에는 발판을 `pos.y - 발판반높이` 에 놓았다. 그러면 상자가 **가슴께**에 걸린다 —
+        ///   깊이 정렬은 그림 밑변을 발밑으로 보는데 충돌만 48 px 위를 보고 있었다.
+        ///   눈으로 발끝을 틈에 맞춰도 가슴이 먼저 막혀 "보이는데 안 들어가는" 상태가 됐다.
+        ///   이제 둘 다 **그림 밑변**을 기준으로 한다.
+        /// </summary>
+        private static float FootDrop(Unit u)
+            => ((RectTransform)u.transform).sizeDelta.y * 0.5f - FootHalf(u).y;
+
+        private bool BlockedAt(Vector2 pos, Vector2 half, float drop)
         {
-            var foot = new Vector2(pos.x, pos.y - half.y);
+            var foot = new Vector2(pos.x, pos.y - drop);
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
@@ -583,15 +1210,16 @@ namespace Game.Module.InGame
         {
             if (_obstacles.Count == 0) return from + delta;
             var half = FootHalf(u);
+            float drop = FootDrop(u);
 
             var p = from + delta;
-            if (!BlockedAt(p, half)) return p;
+            if (!BlockedAt(p, half, drop)) return p;
 
             var px = new Vector2(from.x + delta.x, from.y);
-            if (!BlockedAt(px, half)) return px;
+            if (!BlockedAt(px, half, drop)) return px;
 
             var py = new Vector2(from.x, from.y + delta.y);
-            if (!BlockedAt(py, half)) return py;
+            if (!BlockedAt(py, half, drop)) return py;
 
             return from;
         }
@@ -605,15 +1233,16 @@ namespace Game.Module.InGame
         {
             if (_obstacles.Count == 0 || u == null) return;
             var half = FootHalf(u);
+            float drop = FootDrop(u);
             var p = u.Position;
-            if (!BlockedAt(p, half)) return;
+            if (!BlockedAt(p, half, drop)) return;
 
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
                 if (!o.BlocksMove) continue;
 
-                var foot = new Vector2(p.x, p.y - half.y);
+                var foot = new Vector2(p.x, p.y - drop);
                 float dx = foot.x - o.Bounds.center.x;
                 float dy = foot.y - o.Bounds.center.y;
                 float ox = o.Bounds.width * 0.5f + half.x - Mathf.Abs(dx);
@@ -633,11 +1262,19 @@ namespace Game.Module.InGame
         private readonly List<Transform> _depthT = new();
         private readonly List<float> _depthY = new();
 
+        /// <summary>
+        /// 캐릭터 그림 아래에 비어 있는 띠. 96 px 캔버스에서 발끝 아래로 8 px 이 늘 남는다
+        /// (아마존·유령·해골·박쥐 전부 같다). 캔버스 밑변을 발밑으로 쓰면 그만큼
+        /// **실제보다 앞에 있는 것으로** 줄을 서서, 지형지물과 앞뒤가 한 뼘씩 어긋난다.
+        /// </summary>
+        private const float UnitFootPadRatio = 8f / 96f;
+
         private void AddDepth(Unit u)
         {
             if (u == null || !u.gameObject.activeSelf) return;
+            var size = ((RectTransform)u.transform).sizeDelta;
             _depthT.Add(u.transform);
-            _depthY.Add(u.Position.y - ((RectTransform)u.transform).sizeDelta.y * 0.5f);
+            _depthY.Add(u.Position.y - size.y * 0.5f + size.y * UnitFootPadRatio);
         }
 
         private void SortDepth()
@@ -651,7 +1288,11 @@ namespace Game.Module.InGame
                 var o = _obstacles[i];
                 if (o.View == null) continue;
                 _depthT.Add(o.View.transform);
-                _depthY.Add(o.Bounds.yMin);      // 발자국의 아래 변
+                // ⚠ **바닥에 눕는 것은 언제나 맨 뒤다.** 가시판·불길처럼 솟음이 0 인 물건은
+                //   바닥에 그린 무늬지 서 있는 물건이 아니다. 발자국 아래 변으로 줄을 세우면
+                //   그 위에 선 캐릭터가 판보다 뒤로 밀려 **판에 파묻힌다.**
+                float oRise = ObstacleRise.TryGetValue(o.Kind ?? "", out var orv) ? orv : 0f;
+                _depthY.Add(oRise <= 0f ? float.MaxValue : o.ShotBounds.yMin);
             }
             AddDepth(_ghost);
             AddDepth(_host);
@@ -682,13 +1323,120 @@ namespace Game.Module.InGame
         }
 
         /// <summary>해저드 위에 서 있으면 주기적으로 깎인다.</summary>
+        /// <summary>
+        /// 움직이거나 상태가 바뀌는 지형지물을 한 프레임 진행시킨다.
+        ///
+        /// 판정 사각형(`Bounds`)까지 함께 옮긴다 — 그림만 움직이고 판정이 제자리에 있으면
+        /// 보이는 것과 맞는 것이 어긋나서 "왜 맞았는지 모르겠다" 가 된다.
+        /// </summary>
+        private void TickMovingObstacles(float dt)
+        {
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (o.Kind == null || o.View == null) continue;
+                var rt = (RectTransform)o.View.transform;
+
+                switch (o.Kind)
+                {
+                    case "TIMED_SPIKE":
+                    {
+                        // 0 → 1 → 0 을 오간다. 솟은 동안(0.55 이상)만 아프다.
+                        float t = Mathf.Repeat(Time.time / SpikeCycle + o.Phase, 1f);
+                        float up = t < 0.5f ? t * 2f : (1f - t) * 2f;
+                        SetFrame(o, up < 0.2f ? 0 : up < 0.75f ? 1 : 2);
+                        // ⚠ `Damage` 를 끄고 켜면 안 된다. 내려간 동안 0 으로 덮어쓴 뒤
+                        //   올라올 때 `Max(1, 0)` 이 되어 **한 번 내려갔다 오면 피해가 1 로 굳는다.**
+                        //   원래 값은 그대로 두고 **켜짐 여부만** 따로 든다.
+                        o.HazardOn = up >= 0.55f;
+                        break;
+                    }
+
+                    case "ROTATING_BLADE":
+                    {
+                        // 축을 중심으로 돈다. 그림은 22.5도씩 네 장이라 90도가 한 바퀴다.
+                        float t = Mathf.Repeat(Time.time / BladeTurn + o.Phase, 1f);
+                        float ang = t * Mathf.PI * 2f;
+                        float rad = BladeRadius * _pxPerMeter;
+                        var c = o.Home.center + new Vector2(Mathf.Cos(ang), Mathf.Sin(ang)) * rad;
+                        MoveObstacle(o, rt, c);
+                        SetFrame(o, Mathf.FloorToInt(Mathf.Repeat(t * 16f, 4f)));
+                        break;
+                    }
+
+                    case "SWING_HAMMER":
+                    {
+                        // 두 점을 오간다. 끝에서 잠깐 멎어야 "돌아온다" 가 읽힌다 —
+                        // 등속으로 왕복하면 언제 방향이 바뀌는지 안 보인다.
+                        float t = Mathf.Repeat(Time.time / HammerCycle + o.Phase, 1f);
+                        float e = Mathf.SmoothStep(0f, 1f, t < 0.5f ? t * 2f : (1f - t) * 2f);
+                        float span = HammerTravel * _pxPerMeter;
+                        var c = o.Home.center + new Vector2(0f, -span * 0.5f + span * e);
+                        MoveObstacle(o, rt, c);
+                        break;
+                    }
+
+                    case "CRATE":
+                        // 남은 체력에 따라 금이 간다. 부서지는 것은 맞을 때 처리한다.
+                        SetFrame(o, o.Hp > CrateHp / 2 ? 0 : 1);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>판정과 그림을 함께 옮긴다. 축·사슬 같은 보조 그림도 따라간다.</summary>
+        private void MoveObstacle(Obstacle o, RectTransform rt, Vector2 center)
+        {
+            o.Bounds = new Rect(center.x - o.Home.width * 0.5f,
+                                center.y - o.Home.height * 0.5f,
+                                o.Home.width, o.Home.height);
+            // ⚠ 탄 상자도 같이 옮긴다. 하나만 옮기면 그림은 도는데 탄은 제자리를 막는다.
+            o.ShotBounds = new Rect(center.x - o.ShotBounds.width * 0.5f,
+                                    center.y - o.ShotBounds.height * 0.5f,
+                                    o.ShotBounds.width, o.ShotBounds.height);
+            float rise = ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f;
+            rt.anchoredPosition = new Vector2(center.x, center.y + rise * 0.5f);
+        }
+
+        private static void SetFrame(Obstacle o, int index)
+        {
+            if (o.Img == null || o.Frames == null || o.Frames.Length == 0) return;
+            var sp = o.Frames[Mathf.Clamp(index, 0, o.Frames.Length - 1)];
+            if (sp == null || o.Img.sprite == sp) return;
+            o.Img.sprite = sp;
+            o.Img.color = Color.white;
+        }
+
+        /// <summary>
+        /// 부술 수 있는 것에 탄이 맞았다. 부서졌으면 true —
+        /// 그 자리에서 길이 열린다. 막다른 곳을 내가 뚫어 만드는 것이 이 물건의 값어치다.
+        /// </summary>
+        private bool DamageCrate(Vector2 at, int damage)
+        {
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                var o = _obstacles[i];
+                if (o.Kind != "CRATE" || o.Hp <= 0 || !o.ShotBounds.Contains(at)) continue;
+                o.Hp -= Mathf.Max(1, damage);
+                ShowDamage(at, damage, toEnemy: true);
+                if (o.Hp > 0) return true;
+
+                SetFrame(o, 2);
+                if (o.View != null) Destroy(o.View);
+                if (o.View2 != null) Destroy(o.View2.gameObject);
+                _obstacles.RemoveAt(i);
+                return true;
+            }
+            return false;
+        }
+
         private void TickHazards(float dt)
         {
             if (_obstacles.Count == 0) return;
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
-                if (!o.IsHazard || o.Damage <= 0) continue;
+                if (!o.IsHazard || !o.HazardOn || o.Damage <= 0) continue;
                 Burn(o, Avatar, dt);
                 for (int e = 0; e < _enemies.Count; e++) Burn(o, _enemies[e], dt);
             }
@@ -697,9 +1445,10 @@ namespace Game.Module.InGame
         private void Burn(Obstacle o, Unit u, float dt)
         {
             if (u == null || !u.IsAlive || u.IsDying) return;
-            var foot = new Vector2(u.Position.x,
-                                   u.Position.y - ((RectTransform)u.transform).sizeDelta.y * 0.4f);
-            if (!o.Bounds.Contains(foot))
+            // 밟았는지는 **이동 판정과 같은 발밑**으로 본다. 여기만 다른 값을 쓰면
+            // 눈에는 판 위에 서 있는데 안 아프거나, 비켰는데 계속 아프다.
+            var foot = new Vector2(u.Position.x, u.Position.y - FootDrop(u));
+            if (!o.ShotBounds.Contains(foot))
             {
                 _hazardTimer.Remove(u);
                 return;
@@ -726,7 +1475,7 @@ namespace Game.Module.InGame
             _unitLayer.anchorMin = _unitLayer.anchorMax = new Vector2(0f, 1f);
             _unitLayer.pivot = new Vector2(0f, 1f);
             _unitLayer.sizeDelta = _roomSize;
-            _scroll = 0f;
+            _scroll = Vector2.zero;
             // 방 크기가 바뀌면 탄·숫자 레이어도 같은 크기·같은 자리여야 한다
             if (_shotLayer != null) _shotLayer.sizeDelta = _roomSize;
             if (_textLayer != null) _textLayer.sizeDelta = _roomSize;
@@ -749,7 +1498,7 @@ namespace Game.Module.InGame
             var a = Avatar;
             if (a == null || _unitLayer == null) return;
 
-            _scroll = Mathf.Lerp(_scroll, WantScroll(a), 1f - Mathf.Exp(-CameraFollow * dt));
+            _scroll = WantScroll(a);   // 지연 없음 — 위 주석 참조
             ApplyScroll();
             TickZoom(dt);
         }
@@ -794,7 +1543,7 @@ namespace Game.Module.InGame
         private void ApplyScroll()
         {
             // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다
-            var at = new Vector2(0f, Mathf.Round(_scroll));
+            var at = new Vector2(Mathf.Round(_scroll.x), Mathf.Round(_scroll.y));
             _unitLayer.anchoredPosition = at;
             if (_shotLayer != null) _shotLayer.anchoredPosition = at;
             if (_textLayer != null) _textLayer.anchoredPosition = at;
@@ -802,11 +1551,16 @@ namespace Game.Module.InGame
             if (_floor != null) _floor.anchoredPosition = at;
         }
 
-        private float WantScroll(Unit a)
+        private Vector2 WantScroll(Unit a)
         {
-            float viewH = _field.rect.height;
-            return Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f,
-                               Mathf.Max(0f, _roomSize.y - viewH));
+            float viewW = _field.rect.width, viewH = _field.rect.height;
+            // 가로는 **음수 방향**으로 민다. 방 좌표는 오른쪽이 +x 인데 창을 왼쪽으로
+            // 밀어야 오른쪽이 보인다. 세로와 부호가 반대라 헷갈리기 쉬운 자리다.
+            float x = Mathf.Clamp(-a.Position.x + viewW * 0.5f,
+                                  Mathf.Min(0f, viewW - _roomSize.x), 0f);
+            float y = Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f,
+                                  Mathf.Max(0f, _roomSize.y - viewH));
+            return new Vector2(x, y);
         }
 
         /// <summary>
@@ -830,8 +1584,10 @@ namespace Game.Module.InGame
         {
             if (u == null) return false;
             const float Margin = 60f;
-            float y = u.Position.y + _scroll;      // 창 기준 좌표(0 이 위, 아래로 음수)
-            return y <= Margin && y >= -_field.rect.height - Margin;
+            float y = u.Position.y + _scroll.y;    // 창 기준 좌표(0 이 위, 아래로 음수)
+            float x = u.Position.x + _scroll.x;    // 창 기준 좌표(0 이 왼쪽)
+            return y <= Margin && y >= -_field.rect.height - Margin
+                && x >= -Margin && x <= _field.rect.width + Margin;
         }
 
         private Unit NewUnit(string name)
@@ -846,21 +1602,47 @@ namespace Game.Module.InGame
         // 빙의 표식 그림 4종 (기획서 1-5 A). `SpriteAtlas.GetSprite` 는 부를 때마다
         // 새 Sprite 를 만들어 준다 — 매 프레임 부르면 그대로 쌓인다. 한 번만 받아 둔다.
         private Sprite _markReady, _markTarget, _markBanned, _markLocked, _markArrow;
+        private Sprite _markNextBody1, _markNextBody2;
+
+        /// <summary>다음 몸 표식은 두 장을 번갈아 보여 준다. 가만히 있으면 눈에 안 들어온다.</summary>
+        private const float NextBodyBlink = 0.4f;
 
         private void CachePossessMarkSprites()
         {
+            Unit.SetShieldFillSprite(GetSprite("hostshieldfill"));
+
             _markReady = GetSprite("possessmark_ready");
             _markTarget = GetSprite("possessmark_target");
             _markBanned = GetSprite("possessmark_banned");
             _markLocked = GetSprite("possessmark_locked");
             _markArrow = GetSprite("possessmark_arrow");
+            _markNextBody1 = GetSprite("possessmark_nextbody_1");
+            _markNextBody2 = GetSprite("possessmark_nextbody_2");
+
+            // 문 4장도 여기서 한 번만 받는다. 여는 연출이 매 프레임 그림을 바꾸므로
+            // 그때마다 GetSprite 를 부르면 0.5 초 동안 새 Sprite 가 30개 쌓인다.
+            _exitClosed = GetSprite(ExitClosedKey);
+            _exitOpen1 = GetSprite(ExitOpen1Key);
+            _exitOpen2 = GetSprite(ExitOpen2Key);
+            _exitOpened = GetSprite(ExitOpenKey);
         }
+
+        private Sprite _exitClosed, _exitOpen1, _exitOpen2, _exitOpened;
 
         /// <summary>스프라이트 이름 → 캐릭터 아틀라스 키. `unit_boss` → `boss`.</summary>
         private static string UnitKeyOf(string spriteName)
             => spriteName != null && spriteName.StartsWith("unit_") ? spriteName.Substring(5) : spriteName;
 
         /// <summary>캐릭터 스프라이트 조회. 아틀라스가 안 올라와 있으면 null 이다.</summary>
+        /// <summary>
+        /// 잡몹 그림. 방향 5장짜리 전용 아틀라스가 먼저고, 없으면 공용 아틀라스를 본다.
+        ///
+        /// 십자 포탑이 그렇다 — 그림(`obj_turret`)이 무대 소품으로 이미 `ingamemainui`
+        /// 아틀라스에 들어 있다. 안 움직이고 방향도 없으니 방향 5장을 새로 그릴 이유가 없다.
+        /// </summary>
+        private Sprite TrashSprite(HostEntry e)
+            => e == null ? null : UnitGet(e.SpriteKey) ?? GetSprite(e.SpriteKey);
+
         private Sprite UnitGet(string key, string suffix = null)
         {
             if (key == null || !_unitAtlas.TryGetValue(key, out var atlas) || atlas == null) return null;
@@ -875,23 +1657,56 @@ namespace Game.Module.InGame
         /// 이 런에서 쓸 캐릭터 아틀라스를 미리 올린다.
         /// 스폰은 동기 코드라 이 시점에 다 올라와 있어야 한다 — 늦으면 그림 없이 스폰된다.
         /// </summary>
+        /// <summary>한 번에 띄우는 아틀라스 수. 너무 크게 잡으면 진행 표시가 뭉텅이로 뛴다.</summary>
+        private const int AtlasBatch = 5;
+
+        /// <summary>
+        /// 표 하나를 띄운다. 실패해도 판을 멈추지 않는다 —
+        /// 없는 표는 그 기능만 빠지고 나머지는 돈다.
+        /// </summary>
+        private static async UniTask LoadTableAsync<T>(IResourceManager res, string address,
+                                                       Action<T> assign, string failMessage,
+                                                       bool warnOnly = false) where T : UnityEngine.Object
+        {
+            try { assign(await res.LoadAsync<T>(address)); }
+            catch (Exception e)
+            {
+                if (warnOnly) Debug.LogWarning($"[Battle] {failMessage}. {e.Message}");
+                else Debug.LogError($"[Battle] {failMessage} — {e.Message}");
+            }
+        }
+
         private async UniTask LoadUnitAtlasesAsync(IResourceManager res, List<string> keys)
         {
-            for (int i = 0; i < keys.Count; i++)
+            // ⚠ **한 장씩 기다리면 안 된다.** 캐릭터 하나가 아틀라스 하나라
+            //   스무 장 가까이 되는데, 순서대로 await 하면 그 시간이 전부 더해진다
+            //   (한 장 0.2초면 스무 장에 4초). 진입 시 검은 화면의 정체가 이것이었다.
+            //   다섯 장씩 한꺼번에 띄우고 그 묶음만 기다린다.
+            var batch = new List<UniTask>(AtlasBatch);
+            for (int i = 0; i < keys.Count; i += AtlasBatch)
             {
-                var key = keys[i];
-                // 여기가 진입 시 검은 화면의 정체다 — 한 캐릭터가 아틀라스 하나라
-                // 스무 장 가까이 순서대로 올린다. 몇 장째인지 가림막에 보여 준다.
-                ReportLoading(i, keys.Count);
-                if (string.IsNullOrEmpty(key) || _unitAtlas.ContainsKey(key)) continue;
-                try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key); }
-                catch (Exception e)
+                batch.Clear();
+                int end = Mathf.Min(i + AtlasBatch, keys.Count);
+                for (int j = i; j < end; j++)
                 {
-                    // 한 종이 없다고 런을 멈추지 않는다 — 그 캐릭터만 그림 없이 나온다.
-                    Debug.LogError($"[Battle] 캐릭터 아틀라스 로드 실패 unit_{key} — {e.Message}");
+                    var key = keys[j];
+                    if (string.IsNullOrEmpty(key) || _unitAtlas.ContainsKey(key)) continue;
+                    batch.Add(LoadOneUnitAtlasAsync(res, key));
                 }
+                if (batch.Count > 0) await UniTask.WhenAll(batch);
+                ReportLoading(end, keys.Count);
             }
             ReportLoading(keys.Count, keys.Count);
+        }
+
+        private async UniTask LoadOneUnitAtlasAsync(IResourceManager res, string key)
+        {
+            try { _unitAtlas[key] = await res.LoadAsync<SpriteAtlas>(UnitAtlasPrefix + key); }
+            catch (Exception e)
+            {
+                // 한 종이 없다고 런을 멈추지 않는다 — 그 캐릭터만 그림 없이 나온다.
+                Debug.LogError($"[Battle] 캐릭터 아틀라스 로드 실패 unit_{key} — {e.Message}");
+            }
         }
 
         /// <summary>
@@ -915,16 +1730,325 @@ namespace Game.Module.InGame
         private static HostEntry EnemyAt(IReadOnlyList<HostEntry> hosts, int index, int i)
             => hosts[(i * 5 + index * 3 + 1) % hosts.Count];
 
+        // ─────────────────────────────────────────────────────────
+        // 잡몹
+        //
+        // 정본 `ROOM_SPAWN` 은 자리마다 역할을 적어 두었다 —
+        // `POSSESSION_TARGET`(46) 은 빼앗을 몸, `STANDARD`·`REINFORCEMENT`(299) 는 그냥 적이다.
+        // 그런데 정본 `ENEMY_RUNTIME` 의 적 23종은 **전부 호스트 23종과 1:1** 이라,
+        // 역할이 뭐든 화면에는 사람 모양 엘리트만 나왔다. 뺏을 수 있는 놈과 없는 놈이
+        // 똑같이 생겨서 구별이 안 되고, 그래서 "다 엘리트라 의미가 없는" 화면이 됐다.
+        //
+        // 이제 `POSSESSION_TARGET` 만 원래 배우로 세우고, 나머지는 잡몹으로 바꾼다.
+        // 사람 = 빼앗을 수 있다 / 뼈·짐승 = 없다. 실루엣만으로 갈린다.
+        // ─────────────────────────────────────────────────────────
+
+        private const string TrashSkeletonKey = "skeleton";
+        private const string TrashBatKey = "bat";
+
+        /// <summary>세 기 중 한 기를 박쥐로. 나머지는 해골이다.</summary>
+        private const int BatEveryNth = 3;
+
+        private static HostEntry s_skeleton;
+        private static HostEntry s_bat;
+
+        /// <summary>
+        /// 해골 — 벽. 느리고 약하지만 길을 막는다.
+        /// 유령이 됐을 때 이 벽을 뚫고 다음 숙주까지 가야 한다.
+        /// </summary>
+        private static HostEntry Skeleton => s_skeleton ??= HostEntry.CreateTrash(
+            TrashSkeletonKey, "해골", AttackKind.Melee,
+            hp: 28, atk: 6, moveMps: 1.2f, engageMps: 2.4f,
+            rangeMeters: 1.4f, interval: 1.4f, telegraph: 0.45f);
+
+        /// <summary>
+        /// 박쥐 — 추격. 몸이 있을 땐 성가신 정도지만,
+        /// 유령이 되면 도주선을 끝까지 따라붙는 진짜 위협이다.
+        /// </summary>
+        private static HostEntry Bat => s_bat ??= HostEntry.CreateTrash(
+            TrashBatKey, "박쥐", AttackKind.Melee,
+            hp: 18, atk: 4, moveMps: 2.6f, engageMps: 4.6f,
+            rangeMeters: 1.2f, interval: 0.9f, telegraph: 0.25f);
+
+        private const string TrashEnforcerKey = "actor_enforcer";
+        private static HostEntry s_enforcer;
+
+        /// <summary>
+        /// 집행자 — 무겁다. 느리지만 한 대가 아프고 잘 안 죽는다.
+        ///
+        /// 그림 40장이 **이미 프로젝트에 들어와 있었는데 아무 데서도 안 쓰고 있었다.**
+        /// 캔버스가 128×128 로 해골·박쥐(96)보다 한 등급 크다 — 줄이지 않고 그대로 쓴다.
+        /// 덩치가 곧 "저건 밀고 들어오는 놈" 이라는 신호가 된다.
+        /// </summary>
+        private static HostEntry Enforcer => s_enforcer ??= HostEntry.CreateTrash(
+            TrashEnforcerKey, "집행자", AttackKind.Melee,
+            hp: 52, atk: 9, moveMps: 1.0f, engageMps: 2.0f,
+            rangeMeters: 1.6f, interval: 1.7f, telegraph: 0.6f);
+
+        private const string TrashGunnerKey = "scrapgunner";
+        private static HostEntry s_gunner;
+
+        /// <summary>
+        /// 폐품 사수 — **첫 원거리 잡몹**이다.
+        ///
+        /// 그 전까지 잡몹은 해골·박쥐 둘뿐이었고 **둘 다 근접**이라, 방에 들어가면
+        /// 언제나 "달려오는 것을 상대하는" 한 가지 문제만 나왔다. 쏘는 놈이 섞이면
+        /// 붙는 것과 피하는 것을 동시에 해야 한다 — 엄폐물이 그제서야 값을 가진다.
+        ///
+        /// 사거리 5.2 m 는 **숙주 원거리(7.0~8.5 m)보다 짧다.** 잡몹이 숙주보다 멀리
+        /// 쏘면 몸을 빼앗을 이유가 줄어든다. 예비동작 0.75초로 길게 잡아 피할 틈을 남긴다.
+        /// </summary>
+        private static HostEntry Scrapgunner => s_gunner ??= HostEntry.CreateTrash(
+            TrashGunnerKey, "폐품 사수", AttackKind.Single,
+            hp: 24, atk: 7, moveMps: 1.4f, engageMps: 2.2f,
+            rangeMeters: 5.2f, interval: 1.9f, telegraph: 0.75f);
+
+        private const string TrashWardenKey = "roadwarden";
+        private const string TrashCoilKey = "coilwalker";
+        private static HostEntry s_warden, s_coil;
+
+        /// <summary>
+        /// 순찰기 — CH2 원거리. 미사일 기지와 밤거리를 같이 도는 경광등 로봇.
+        ///
+        /// 폐품 사수보다 **무겁고 느리지만 한 발이 세다.** 챕터가 깊어질수록
+        /// 쏘는 놈이 강해지되, 예비동작은 그대로 길게 둔다 —
+        /// 원거리가 늘어난 만큼 피할 틈까지 줄면 화면이 탄으로 덮인다.
+        /// </summary>
+        private static HostEntry Roadwarden => s_warden ??= HostEntry.CreateTrash(
+            TrashWardenKey, "순찰기", AttackKind.Single,
+            hp: 34, atk: 9, moveMps: 1.1f, engageMps: 1.9f,
+            rangeMeters: 5.6f, interval: 1.8f, telegraph: 0.75f,
+            // 자리를 지키고 각도로 덮는다(FAN). 사거리 5.6 m 에 40° 면 부채꼴 끝 폭이
+            // 약 3.8 m — 방 폭의 3분의 1이다. 정면이면 2발, 옆으로 비키면 1발.
+            shotCount: 3, spreadDegrees: 40f);
+
+        /// <summary>
+        /// 코일 보행기 — CH3 원거리. 옥상과 정유소의 삼각다리 자동기계.
+        ///
+        /// 셋 중 가장 **멀리서 자주** 쏜다. 대신 제일 물러서 붙으면 금방 부서진다 —
+        /// 3챕터쯤이면 "쏘는 놈부터 끊는다" 가 몸에 배어 있어야 한다.
+        /// </summary>
+        private static HostEntry Coilwalker => s_coil ??= HostEntry.CreateTrash(
+            TrashCoilKey, "코일 보행기", AttackKind.Single,
+            hp: 26, atk: 10, moveMps: 1.6f, engageMps: 2.4f,
+            rangeMeters: 6.2f, interval: 2.4f, telegraph: 0.7f);
+
+        /// <summary>
+        /// 챕터마다 잡몹 **짝이 달라진다.**
+        ///
+        /// 예전에는 세 챕터가 전부 해골·박쥐 둘만 썼다 — 20시간을 가도 같은 둘이
+        /// 같은 방식으로 달려오니 챕터가 깊어진 느낌이 안 났다.
+        ///
+        ///   CH1  해골 · 박쥐 · 폐품 사수      벽 · 추격 · 사격 — 셋을 다 배우는 자리
+        ///   CH2  집행자 · 박쥐 · 순찰기        벽이 무거워지고 사격도 세진다
+        ///   CH3  집행자 · 해골 · 코일 보행기   둘 다 벽인데 멀리서 쏘는 놈까지 붙는다
+        ///
+        /// 순서대로 돌려 쓰므로 **목록에 몇 번 넣었는지가 곧 등장 비율**이다.
+        /// CH1 은 셋이 고르게 나와 원거리가 셋에 하나꼴이다 —
+        /// 방 하나에 4~7기가 서므로 쏘는 놈이 한둘 섞인다.
+        ///
+        /// CH2·CH3 원거리는 아직 그림이 없다(43차 발주 진행 중).
+        /// 오면 그 챕터 목록에 한 자리 넣으면 그만이다.
+        private static HostEntry[] TrashPool(int chapter) => chapter switch
+        {
+            1 => new[] { Skeleton, Bat, Scrapgunner },
+            2 => new[] { Enforcer, Bat, Roadwarden },
+            _ => new[] { Enforcer, Skeleton, Coilwalker, Cross },
+        };
+
+        private static HostEntry TrashAt(int i, int chapter)
+        {
+            var pool = TrashPool(chapter);
+            return pool[i % pool.Length];
+        }
+
+        /// <summary>
+        /// 방 데이터가 **이 자리에 무엇을 세울지 직접 적어 둔** 경우.
+        ///
+        /// 손으로 짠 레이아웃(`RoomLayoutTable`)은 자리마다 역할이 있다 —
+        /// RANGED 자리는 쏘는 놈이어야 그 자리가 의미를 갖는다. 회전 목록으로 채우면
+        /// 원거리 자리에 근접 해골이 서서 방 설계가 통째로 무너진다.
+        ///
+        /// ⚠ **그 챕터에 나오는 잡몹만** 받는다. 그림을 미리 올리는 목록이
+        ///   `TrashKeysFor(chapter)` 라, 목록에 없는 놈을 세우면 그림 없이 선다.
+        ///   CH2·CH3 레이아웃 배정이 끝나면 이 제한이 저절로 풀린다.
+        /// </summary>
+        private static HostEntry TrashByKey(string key, int chapter)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            var allow = TrashKeysFor(chapter);
+            for (int i = 0; i < allow.Length; i++)
+            {
+                if (allow[i] != key) continue;
+                return key == TrashSkeletonKey ? Skeleton
+                     : key == TrashBatKey      ? Bat
+                     : key == TrashGunnerKey   ? Scrapgunner
+                     : key == TrashEnforcerKey ? Enforcer
+                     : key == TrashWardenKey   ? Roadwarden
+                     : key == TrashCoilKey     ? Coilwalker
+                     : key == TrashCrossKey    ? Cross
+                     : null;
+            }
+            return null;
+        }
+
+        /// <summary>쏘는 잡몹인가. 자리를 대체할 때 **역할**을 살리려고 본다.</summary>
+        private static bool IsRangedTrashKey(string key)
+            => key == TrashGunnerKey || key == TrashWardenKey
+            || key == TrashCoilKey || key == TrashCrossKey;
+
+        /// <summary>
+        /// 이 자리에 세울 잡몹. 방 데이터가 지정한 키를 **그 챕터 것으로 갈아 끼운다.**
+        ///
+        /// ⚠ `AVSR_RoomSpawnRoles.js` 의 유닛 키는 **CH1 기준**이다. CH2·CH3 방에
+        ///   그대로 쓰면 폐품 사수가 서서 그림이 없다. 그렇다고 회전 목록에 맡기면
+        ///   **자리의 뜻이 사라진다** — RANGED 자리에 근접 해골이 서면
+        ///   손으로 짠 레이아웃이 통째로 무의미해진다.
+        ///
+        ///   그래서 키가 아니라 **역할**로 대체한다.
+        ///     FRONT · FLANK (근접 키) → 그 챕터 근접
+        ///     RANGED · BACK (원거리 키) → 그 챕터 원거리
+        /// </summary>
+        private static HostEntry TrashForSlot(string key, int chapter, int seq)
+        {
+            var exact = TrashByKey(key, chapter);
+            if (exact != null) return exact;
+            if (string.IsNullOrEmpty(key)) return null;   // 지정 없음 — 회전 목록에 맡긴다
+
+            bool wantRanged = IsRangedTrashKey(key);
+            var pool = TrashPool(chapter);
+            // 같은 역할끼리만 돌려 쓴다. 여럿이면 등장 비율이 목록에 든 수만큼이다.
+            int n = 0;
+            for (int i = 0; i < pool.Length; i++)
+                if (IsRangedTrashKey(pool[i].HostKey) == wantRanged) n++;
+            if (n == 0) return null;
+
+            int pick = ((seq % n) + n) % n;
+            for (int i = 0; i < pool.Length; i++)
+            {
+                if (IsRangedTrashKey(pool[i].HostKey) != wantRanged) continue;
+                if (pick-- == 0) return pool[i];
+            }
+            return null;
+        }
+
+        /// <summary>이 챕터에 나오는 잡몹 그림 목록. 안 나오는 것은 안 올린다.</summary>
+        private static string[] TrashKeysFor(int chapter) => chapter switch
+        {
+            1 => new[] { TrashSkeletonKey, TrashBatKey, TrashGunnerKey },
+            2 => new[] { TrashBatKey, TrashEnforcerKey, TrashWardenKey },
+            _ => new[] { TrashSkeletonKey, TrashEnforcerKey, TrashCoilKey, TrashCrossKey },
+        };
+
+        /// <summary>
+        /// 한 웨이브에 세우는 몸의 최대 수. 넘치는 자리는 잡몹으로 돌린다.
+        /// 전원이 빼앗을 수 있는 몸이면 빼앗는 것이 선택이 아니라 기본값이 된다.
+        /// </summary>
+        private const int MaxHostsPerWave = 2;
+
+        /// <summary>
+        /// 방마다 적을 **한 기만** 세운다. 배치·진행을 빠르게 훑어보기 위한 테스트 스위치다.
+        ///
+        /// 에디터 메뉴 `Tools/Game/테스트 — 방당 몹 1기` 로 켜고 끈다.
+        /// 빌드에는 없다(`UNITY_EDITOR` 밖에서는 언제나 false) — 켜 둔 채 나가는 사고를 막는다.
+        /// </summary>
+        /// <summary>
+        /// CH1 열두 방 안에서 **여섯 테마를 차례로** 보여 준다.
+        /// 배경만 확인하려고 48방을 끝까지 깨지 않아도 되게 하는 스위치다.
+        ///
+        /// 에디터 메뉴 `Tools/Game/테스트 — 1챕터에서 테마 6종 다 보기` 로 켜고 끈다.
+        /// 빌드에는 없다.
+        /// </summary>
+        public static bool CycleThemesInChapter1
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.CycleThemesCh1", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.CycleThemesCh1", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        public static bool OneEnemyPerRoom
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.OneEnemyPerRoom", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.OneEnemyPerRoom", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>
+        /// **방 1~6 에 보스를 하나씩 세운다.** 여섯 보스를 한 판에서 차례로 보기 위한
+        /// 테스트 스위치다 — 정상 진행으로는 여섯째 보스까지 48방을 깨야 한다.
+        ///
+        ///   001 크러셔 · 002 가디언 · 003 킹핀 · 004 파이썬 · 005 로봇스네이크 · 006 슬러지
+        ///
+        /// 방 데이터(`RoomTable`)는 건드리지 않는다. `BossTable` 이 체력·공격력·패턴을
+        /// 다 들고 있으므로 그것만 읽어 세운다 — 껐다 켜는 것으로 원래대로 돌아간다.
+        ///
+        /// 에디터 메뉴 `Tools/Game/테스트 — 방 1~6 에 보스 하나씩` 로 켜고 끈다.
+        /// 빌드에는 없다(`UNITY_EDITOR` 밖에서는 언제나 false).
+        /// </summary>
+        public static bool BossPerRoomTest
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossPerRoomTest", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossPerRoomTest", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>테스트 모드에서 이 방이 세울 보스. 아니면 null.</summary>
+        private BossEntry TestBossFor(int index)
+        {
+            if (!BossPerRoomTest || _bossTable == null) return null;
+            var all = _bossTable.Entries;
+            return index >= 0 && index < all.Count ? all[index] : null;
+        }
+
+        /// <summary>이번 웨이브에서 몸이 될 스폰 인덱스. 매번 재사용한다(hot path 는 아니지만 습관).</summary>
+        private readonly List<int> _hostSlots = new();
+
         /// <summary>이 런이 건드릴 수 있는 캐릭터 키를 모은다.</summary>
         private List<string> RunUnitKeys()
         {
-            var keys = new List<string> { "ghost" };
-
             int chapter = _player != null ? _player.CurrentChapter : 1;
+
+            // 잡몹은 모든 방에 나오지만 **챕터마다 짝이 다르다**(`TrashAt`).
+            // 셋을 다 올리면 그 챕터에 안 나오는 그림까지 메모리에 든다.
+            var keys = new List<string> { "ghost" };
+            // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
+            //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
+            foreach (var k in TrashKeysFor(chapter))
+                if (k != TrashCrossKey) keys.Add(k);
             var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
-            // 보스 그림은 아직 3체 중 어느 것도 안 왔다. 대체용 임시 그림을 함께 올려 둔다.
+            // 그림이 하나도 안 걸렸을 때를 위한 마지막 대비책
             keys.Add("boss");
+
+            // 이 챕터에서 만날 보스는 **둘**이다(중간·최종). 방마다 다른 몸이므로
+            // 챕터 대표 하나만 올리면 나머지 하나가 흰 사각형으로 선다.
+            // 아직 안 온 보스는 빌려 쓸 몸까지 함께 올린다.
+            if (_rooms != null)
+                for (int i = 0; i < _rooms.Rooms.Count; i++)
+                {
+                    var r = _rooms.Rooms[i];
+                    // ⚠ 챕터로 거르지 않는다. 한 런이 1→2→3 을 이어서 가므로
+                    //   현재 챕터의 보스만 올리면 다음 챕터 보스가 흰 사각형으로 선다.
+                    if (r == null || !r.IsBoss) continue;
+                    // `BossStand` 가 곧 "아직 그림이 없는 보스" 목록이다 —
+                    // 제 이름과 다른 몸을 돌려주면 그 보스는 아직 그림이 없다는 뜻이다.
+                    // 없는 아틀라스를 미리 부르면 로드 실패가 콘솔에 쌓인다.
+                    var slug = BossSlug(r.BossId);
+                    var key = BossStand(slug);
+                    if (!keys.Contains(key)) keys.Add(key);
+                }
 
             // 빙의로 몸을 갈아타도 로비에서 고른 호스트는 긴급 투입으로 나올 수 있다.
             var emergency = PickPlayerHost();
@@ -1015,13 +2139,17 @@ namespace Game.Module.InGame
         public Sprite UnitSprite(string hostKey) => UnitGet(hostKey);
 
         /// <summary>
-        /// 그 몸의 얼티밋 아이콘. 인게임 버튼이 21종 다 같은 그림을 쓰고 있어서
-        /// 어떤 얼티밋을 들고 있는지가 화면에 안 보였다.
+        /// 그 몸의 액티브 스킬 아이콘. 인게임 버튼이 21종 다 같은 그림을 쓰고 있어서
+        /// 어떤 액티브 스킬을 들고 있는지가 화면에 안 보였다.
         ///
         /// 아이콘은 호스트 선택 화면 아틀라스에 있다. 인게임에서 쓰려면 그 아틀라스를
         /// 함께 올려야 하므로 여기서 늦게 한 번만 불러온다.
         /// </summary>
-        public Sprite UltimateIcon(string hostKey)
+        /// <summary>이 챕터·방의 무대 이름. 값은 `GameConfig` 가 갖는다.</summary>
+        public string StageNameOf(int chapter, int room)
+            => _config != null ? _config.StageNameOf(chapter, room) : string.Empty;
+
+        public Sprite ActiveSkillIcon(string hostKey)
             => _panelAtlas != null && hostKey != null
                 ? _panelAtlas.GetSprite($"ultimateicon_{hostKey}") : null;
 
@@ -1034,7 +2162,7 @@ namespace Game.Module.InGame
             catch (Exception e)
             {
                 // 없어도 게임은 돈다 — 버튼이 기본 그림으로 남을 뿐이다
-                Debug.LogWarning($"[Battle] 얼티밋 아이콘 아틀라스 로드 실패 — {e.Message}");
+                Debug.LogWarning($"[Battle] 액티브 스킬 아이콘 아틀라스 로드 실패 — {e.Message}");
             }
         }
 
@@ -1049,20 +2177,33 @@ namespace Game.Module.InGame
         /// 이 챕터의 방 수. 정본 경로를 따라가면 CH1 은 10방이다 —
         /// `StagesPerChapter`(3) 는 절차적 생성 시절의 값이라 진행 표시가 어긋난다.
         /// </summary>
+        /// <summary>
+        /// 이 챕터가 몇 방짜리인가.
+        ///
+        /// ⚠ 갈림길 때문에 **고정값이 아니다.** 어느 문으로 갔느냐에 따라
+        ///   CH2 는 13~15방, CH3 는 16~18방으로 달라진다. 그래서 처음 방부터 세지 않고
+        ///   **지금 서 있는 방에서 앞을 센 뒤 지나온 수를 더한다.**
+        ///   문을 고를 때마다 총계가 갱신되므로 "12/15" 가 거짓말이 되지 않는다.
+        ///   앞을 볼 때는 첫 번째 문을 따라간다 — 아직 안 고른 갈림길은 알 수 없다.
+        /// </summary>
         private int RoomTotal
         {
             get
             {
                 if (_rooms == null) return _config.StagesPerChapter;
-                int n = 0;
-                var id = FirstCanonRoom;
-                while (!string.IsNullOrEmpty(id) && n < 64)
+
+                int passed = _canonRoom != null ? Mathf.Max(0, _roomIndex) : 0;
+                var id = _canonRoom != null ? _canonRoom.RoomId : FirstCanonRoom;
+
+                int ahead = 0;
+                while (!string.IsNullOrEmpty(id) && ahead < 64)
                 {
                     var r = _rooms.Get(id);
                     if (r == null) break;
-                    n++;
+                    ahead++;
                     id = r.Exits.Count > 0 ? r.Exits[0].NextRoomId : null;
                 }
+                int n = passed + ahead;
                 return n > 0 ? n : _config.StagesPerChapter;
             }
         }
@@ -1087,16 +2228,35 @@ namespace Game.Module.InGame
         {
             _roomIndex = index;
             DespawnExit();
+            _exitOpen = false;
+            _exitOpenTime = -1f;
             ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
-            ApplyRoomFloor();
+            ClearGoldPiles();   // 못 걷고 나간 골드가 다음 방 바닥에 남지 않게
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
-            _emergencyUsedThisRoom = false;   // 긴급 호스트는 방마다 한 번 (기획서 A 8-3)
+            _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
+            _barrier = 0;
+            _barrierUsedThisRoom = false;   // 위기 방벽은 방마다 한 번 (C018)
+            _fightReward = null;            // 지난 방 매복 삯을 들고 넘어가지 않는다
+            // 이벤트·상점은 창을 닫아야 출구가 열리므로 정상 진행에서는 이미 비어 있다.
+            // 그래도 여기서 지운다 — 죽어서 방을 벗어나는 길이 따로 있고,
+            // 남아 있으면 다음 방에서 지난 방 창이 살아 있는 것처럼 보인다.
+            _event = null;
+            _eventDone = false;
+            _shopOpen = false;
+            _shopOffers.Clear();
             // 정본 방이 있으면 그것이 이긴다. 없으면 예전 절차적 생성으로 돌아간다 —
             // 34방을 한 번에 갈아 끼우지 않고 한 방씩 옮겨 붙이기 위해서다.
             _canonRoom = _rooms != null ? _rooms.Get(_canonRoomId) : null;
             _roomKind = _canonRoom != null ? KindOfCanon(_canonRoom) : KindOf(index);
+            // 테스트 — 방 1~6 을 통째로 보스방으로 돌린다.
+            var testBoss = TestBossFor(index);
+            if (testBoss != null) _roomKind = RoomKind.Boss;
             bool isBoss = _roomKind == RoomKind.Boss;
+
+            // ⚠ 반드시 `_canonRoom` 을 정한 **뒤에** 부른다. 앞에서 부르면 바닥이
+            //   지난 방의 템플릿으로 정해진다 — 방마다 한 칸씩 밀린 그림이 깔린다.
+            ApplyRoomFloor();
 
             // 정본은 보스방만 세로가 16 m 다. 방마다 높이가 달라질 수 있어 여기서 정한다.
             SetRoomSize(_canonRoom != null ? _canonRoom.Height
@@ -1127,8 +2287,6 @@ namespace Game.Module.InGame
             }
 
             _boss = null;
-            _wave = 1;
-            _waveDelay = -1f;
             ClearObstacles();
             if (_canonRoom != null) SpawnObstacles(_canonRoom);
 
@@ -1145,21 +2303,39 @@ namespace Game.Module.InGame
             if (isBoss)
             {
                 int chapter = _player != null ? _player.CurrentChapter : 1;
-                var def = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
 
                 // 정본 보스가 있으면 이름·체력·공격력·이동속도를 그대로 쓴다.
                 // 우리 BossTable 은 배율표라 절대값이 없다 — 정본 쪽이 단일 출처다.
-                bool canon = _canonRoom != null && _canonRoom.IsBoss;
+                // 테스트 모드면 방 데이터를 무시하고 표에 적힌 보스를 그대로 세운다.
+                var forced = TestBossFor(index);
+                bool canon = forced == null && _canonRoom != null && _canonRoom.IsBoss;
+
+                // ⚠ 그림도 행동 목록도 **방이 든 보스**로 고른다.
+                //   예전에는 그림만 방이 고르고 행동은 `ForChapter(chapter)` 가 골랐다 —
+                //   챕터당 엔트리가 하나뿐이라 **CH1 006 과 012 가 같은 패턴으로 싸웠다.**
+                //   보이는 몸과 하는 짓이 갈라져 있었던 것이다.
+                //   아직 그림이 안 온 보스는 형제 몸을 빌린다(`BossStand`).
+                string bossKey = forced != null ? forced.BossKey
+                               : canon ? BossSlug(_canonRoom.BossId) : null;
+                var def = forced ?? (_bossTable == null ? null
+                        : _bossTable.ByKey(bossKey) ?? _bossTable.ForChapter(chapter));
+                if (string.IsNullOrEmpty(bossKey)) bossKey = def?.BossKey ?? "boss";
                 string bossName = canon ? _canonRoom.BossName : def?.NameEn ?? "BOSS";
+                var bossArt = UnitGet(bossKey)
+                           ?? UnitGet(BossStand(bossKey))
+                           ?? UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss"))
+                           ?? UnitGet("boss");
 
                 var boss = NewUnit("Boss");
                 boss.Setup(UnitSide.Enemy,
-                           canon ? _canonRoom.BossId.ToLowerInvariant() : def?.BossKey ?? "boss",
+                           bossKey,
                            canon ? _canonRoom.BossName : def?.NameKr ?? "BOSS",
-                           UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss")) ?? UnitGet("boss"),
+                           bossArt,
                            canon ? _canonRoom.BossHp
+                                 : def != null && def.HasCanonStats ? def.CanonHp
                                  : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
                            canon ? _canonRoom.BossAtk
+                                 : def != null && def.HasCanonStats ? def.CanonAtk
                                  : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
                            canon ? _canonRoom.BossMoveSpeed * _pxPerMeter
                                  : _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
@@ -1168,6 +2344,9 @@ namespace Game.Module.InGame
                            // 캔버스 여백까지 함께 줄어 보스가 잡몹보다 작아진다.
                            // 캔버스 크기를 그대로 쓴다 — 방 폭 720 의 약 1/3 이다.
                            UnitBox(256f, 256f), isBoss: true);
+                ApplyFacingSprites(boss, UnitGet(bossKey) != null ? bossKey : BossStand(bossKey));
+                // 예고 프레임. 6종 다 들어와 있고 없으면 조용히 색만 바뀐다.
+                boss.SetTellSprite(UnitGet(bossKey, "s_tell") ?? UnitGet(BossStand(bossKey), "s_tell"));
                 boss.Position = canon ? ToPixels(_canonRoom.BossAt)
                                       : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
                 _enemies.Add(boss);
@@ -1180,6 +2359,8 @@ namespace Game.Module.InGame
                     for (int i = 0; i < _canonRoom.BossPhases.Count; i++)
                         tel.Add(_canonRoom.BossPhases[i].TelegraphSeconds);
                     _brain.SetCanonPhases(_canonRoom.BossPhaseGates, tel);
+                    // 보스마다 제 공격 4가지 (정본 BOSS_ATTACK_RUNTIME)
+                    _brain.SetCanonMoves(_canonRoom.BossMoves);
                 }
                 _bus.Publish(new BossHpChangedEvent
                 {
@@ -1187,61 +2368,124 @@ namespace Game.Module.InGame
                     BossName = bossName, Phase = 1,
                 });
             }
+            else if (_roomKind == RoomKind.Event)
+            {
+                // 이벤트 방 — 적이 없다. 대신 값을 묻는다.
+                OfferEvent();
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
+            else if (_roomKind == RoomKind.Shop)
+            {
+                // 상점 — 모아 둔 골드를 쓰는 자리.
+                OpenShop();
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
             else if (_roomKind == RoomKind.Rest)
             {
                 // 회복 방 — 적이 없다. 들어서는 순간 Ghost HP 를 돌려주고 출구를 연다.
                 // 유령 상태의 시계가 계속 도는 게임이라, 쉬어 가는 방이 곧 보상이다.
-                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + _config.RestGhostHeal);
+                // 정본 v3.3 REST_MASTER — 챕터가 깊어질수록 덜 돌려준다.
+                //   CH1 Host 25% / Ghost 22%   CH2 22 / 20   CH3 19 / 18
+                int restCh = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+                int hostPct  = restCh == 1 ? 25 : restCh == 2 ? 22 : 19;
+                int ghostPct = restCh == 1 ? 22 : restCh == 2 ? 20 : 18;
+
+                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * ghostPct / 100);
+                if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * hostPct / 100));
                 PublishHp();
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else if (_canonRoom != null)
             {
-                SpawnWave(_canonRoom, 1);
+                SpawnRoom(_canonRoom);
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else
             {
                 bool elite = _roomKind == RoomKind.Elite;
-                int count = elite ? _config.EliteEnemyCount : _config.EnemiesPerRoom(index);
-                for (int i = 0; i < count; i++)
-                {
-                    // 방마다 등장 조합이 달라지도록 룸 인덱스를 섞어 넣는다
-                    var e = EnemyAt(hosts, index, i);
-                    var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
-                    // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
-                    // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
-                    u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
-                            Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
-                            Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
-                            EnemySpeedOf(e),
-                            EnemyRangeOf(e),
-                            EnemyIntervalOf(e),
-                            UnitBox(84f, 78f), isBoss: false, profile: e);
-                    u.Position = SpawnSlot(i, count);
-                    // 기획서 A 4-3 — 빙의 우선순위·사거리는 적마다 다를 수 있다.
-                    // 사거리 0 은 "전역 기본값을 쓴다"는 뜻이다.
-                    u.PossessPriority = e.PossessPriority;
-                    u.PossessRange = 0f;
-                    u.SetState(EnemyState.Idle);
-                    ApplyFacingSprites(u, e.SpriteKey);
-                    _enemies.Add(u);
-                }
+                SpawnProcedural(elite ? _config.EliteEnemyCount : _config.EnemiesPerRoom(index),
+                                elite, index);
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
+
+            // 방 골드를 이 방 적 머릿수로 나눈다. 적을 **세운 뒤에** 해야 머릿수를 안다.
+            PrepareGoldDrops();
+            ResetEnemySkills();
+            ClearDanger();
+            ClearBossState();
+            // ⚠ 방을 넘어가도 꺼야 한다. 몸을 바꿀 때만 끄면 **지연 폭발이 앞 방 좌표에서**
+            //   터지고, 표식 전이가 새 방까지 이어진다.
+            ClearSkillState();
+
+            // 챕터를 넘었으면 진행도를 올린다. 한 런이 1→2→3 을 이어서 가므로
+            // 여기서 안 올리면 3챕터를 걸어도 계속 1챕터로 기록된다 —
+            // 호스트 해금 조건이 이 값을 본다.
+            if (_canonRoom != null && _player != null && _canonRoom.Chapter > _player.CurrentChapter)
+                _player.SetProgress(_canonRoom.Chapter, 1);
+
+            // 나갈 문을 **닫힌 채로** 미리 세운다. 위 분기에서 이미 문을 연 방
+            // (회복·상점처럼 들어서자마자 볼일이 끝나는 방)은 건드리지 않는다.
+            if (!_exitOpen) PlaceClosedExit();
 
             // 정본 방은 들어서는 자리가 정해져 있다(layout.playerSpawns).
             // 방마다 입구 위치가 달라 여기서 옮겨 놓지 않으면 벽 속에서 시작한다.
             var avatar = Avatar;
             if (avatar != null && _canonRoom != null)
+            {
                 avatar.Position = ToPixels(_canonRoom.PlayerSpawn);
+                ClearOfCover(avatar);   // 입구 자리도 엄폐물과 겹칠 수 있다
+            }
             SnapCamera();
 
+            int ch = _canonRoom != null ? Mathf.Clamp(_canonRoom.Chapter, 1, 3) : 1;
             _bus.Publish(new RoomEnteredEvent
             {
                 RoomIndex = index, RoomTotal = RoomTotal,
+                Chapter = ch,
+                StageInChapter = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : index + 1,
+                ChapterTotal = ch == 1 ? Ch1RoomCount : ch == 2 ? Ch2RoomCount : Ch3RoomCount,
                 IsBossRoom = isBoss, Kind = _roomKind,
             });
+        }
+
+        /// <summary>
+        /// 정본 스폰표가 없는 자리에 적을 세운다. 방 인덱스를 섞어 넣어
+        /// 방마다 조합이 달라진다. 정본 방이 없던 시절의 생성 경로였는데,
+        /// 지금은 **이벤트 방의 매복**도 이 길을 쓴다 — 매복에는 스폰표가 없다.
+        /// </summary>
+        private void SpawnProcedural(int count, bool elite, int seed)
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                var e = EnemyAt(hosts, seed, i);
+                var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
+                // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
+                // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
+                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                        Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
+                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
+                        EnemySpeedOf(e),
+                        EnemyRangeOf(e),
+                        EnemyIntervalOf(e),
+                        UnitBox(84f, 78f), isBoss: false, profile: e);
+                u.Position = SpawnSlot(i, count);
+                ClearOfCover(u);
+                // 기획서 A 4-3 — 빙의 우선순위·사거리는 적마다 다를 수 있다.
+                // 사거리 0 은 "전역 기본값을 쓴다"는 뜻이다.
+                u.PossessPriority = e.PossessPriority;
+                u.PossessRange = 0f;
+                u.SetState(EnemyState.Idle);
+                // 절차 생성 방에는 정본 `POSSESSION_TARGET` 이 없다.
+                // 네 기에 한 기꼴로 숙주를 둔다 — 정본 비율(13%)보다 후하지만,
+                // 절차 방은 정본 방과 달리 구제 신호가 기댈 배치 정보가 없다.
+                if (i % 4 == 0) { u.MarkAsHostBody(); u.MarkAsNextBody(); }
+                ApplyFacingSprites(u, e.SpriteKey);
+                _enemies.Add(u);
+            }
+            EnsureHostBodies();
         }
 
         /// <summary>필드 상단 절반에 고르게 흩어 놓는다. 플레이어 시작 위치와 겹치지 않게 한다.</summary>
@@ -1273,26 +2517,94 @@ namespace Game.Module.InGame
         }
 
         /// <summary>필드 밖으로 나가지 않게 잘라낸다. 밀림·돌진이 벽을 넘지 않게.</summary>
-        /// <summary>탄이 엄폐물에 막히는가.</summary>
-        private bool BlockedByCover(Vector2 at)
+        /// <summary>
+        /// 탄이 엄폐물에 막히는가. **누가 쏜 탄이냐에 따라 다르다.**
+        ///
+        /// 낮은 엄폐물(낮은 벽·바리케이드)은 적 탄이 넘어간다. 숨어도 맞는다는 뜻이고,
+        /// 그 대신 내가 쏠 자리를 찾아 움직이게 만든다. 키 큰 것(기둥)만 양쪽을 다 막는다.
+        /// </summary>
+        private bool BlockedByCover(Vector2 at, bool fromPlayer)
         {
+            // 적 탄은 **지형을 통과한다.**
+            //
+            // 지형이 촘촘해질수록 엄폐 뒤에 붙어 서서 아무것도 안 하는 것이 최적이 된다 —
+            // 적이 못 쏘고 나는 나가서 쏘면 되니까. 그러면 지형이 전술이 아니라 은신처가 된다.
+            // 막히는 쪽은 **내 탄만**이다. 그래야 지형이 "어디에 숨을까"가 아니라
+            // "어디서 쏠 수 있을까"를 묻는 물건이 된다.
+            if (!fromPlayer) return false;
+
             for (int i = 0; i < _obstacles.Count; i++)
-                if (_obstacles[i].BlocksShot && _obstacles[i].Bounds.Contains(at)) return true;
+            {
+                var o = _obstacles[i];
+                if (!o.BlocksShot) continue;
+                // ⚠ `Bounds` 가 아니라 `ShotBounds` 다. `Bounds` 는 몸이 지나갈 길을 내려고
+                //   줄여 놓은 상자라, 그것으로 탄을 막으면 벽 위아래로 탄이 새 나간다.
+                if (o.ShotBounds.Contains(at)) return true;
+            }
             return false;
         }
 
+        /// <summary>
+        /// 방 테두리(미터). 레이아웃이 비워 두는 폭과 같다 —
+        /// 배경 그림의 벽이 그려지는 자리라 몸이 거기 올라가면 벽을 밟고 선 것처럼 보인다.
+        /// </summary>
+        private const float RoomEdgeMeters = 1f;
+
+        /// <summary>
+        /// 방 안에 가둔다.
+        ///
+        /// ⚠ 예전에는 방 **전체**(0~폭, 0~높이)로 잘랐다. 그런데 배경 그림은 바깥 1 m 가
+        ///   벽이고 위쪽은 문 구역이라, 그대로 두면 **벽 위로 걸어 올라가고 문을 지나쳐
+        ///   화면 끝까지** 갔다. 레이아웃이 비워 두는 폭과 같은 값으로 조인다.
+        ///
+        /// 위쪽은 **문 자리에서 멈춘다.** 문을 지나칠 수 있으면 나가는 자리가 어디인지
+        /// 흐려지고, 열리기 전에도 그 위에 서 있게 된다.
+        /// </summary>
         private void ClampToField(Unit u)
         {
+            if (u != null) u.Position = ClampedInField(u, u.Position);
+        }
+
+        /// <summary>
+        /// 방 안으로 접은 자리. **걸어가는 쪽도 대시도 전부 이 함수를 지난다.**
+        ///
+        /// ⚠ 예전에는 이동 코드가 `ClampToField` 를 안 부르고 **자기 자리에서 따로**
+        ///   방 전체(0~폭, 0~높이)로 잘랐다. 그래서 여기 값을 고쳐도 플레이어는
+        ///   그대로 벽 위로 걸어 나갔다 — 판정이 두 곳에 있으면 반드시 한쪽이 낡는다.
+        /// </summary>
+        private Vector2 ClampedInField(Unit u, Vector2 p)
+        {
+            if (u == null) return p;
             var half = ((RectTransform)u.transform).sizeDelta * 0.5f;
-            var p = u.Position;
-            p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
-            p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
-            u.Position = p;
+            float edge = RoomEdgeMeters * _pxPerMeter;
+
+            p.x = Mathf.Clamp(p.x, edge + half.x, _roomSize.x - edge - half.x);
+            p.y = Mathf.Clamp(p.y, -_roomSize.y + edge + half.y, TopLimitFor(half.y));
+            return p;
+        }
+
+        /// <summary>
+        /// 위로 갈 수 있는 한계(픽셀, 음수). 문이 서 있으면 그 자리, 없으면 테두리 안쪽.
+        /// </summary>
+        private float TopLimitFor(float halfY)
+        {
+            if (_exits.Count > 0 && _exits[0]?.View != null)
+                return Mathf.Min(-halfY, _exits[0].View.anchoredPosition.y);
+            return -(RoomEdgeMeters * _pxPerMeter) - halfY;
         }
 
         // ─────────────────────────────────────────────────────────
         private void Update()
         {
+#if UNITY_EDITOR
+            // F1 — 판정 상자 보기. "눈에는 뚫려 보이는데 안 들어간다"를 말로 주고받으면
+            // 매번 계측을 다시 하게 된다. 그냥 보이게 해 두는 편이 빠르다.
+            // ⚠ 이 프로젝트는 새 Input System 이다. `UnityEngine.Input` 은 예외를 던진다.
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.f1Key.wasPressedThisFrame)
+            { _showHitBoxes = !_showHitBoxes; RebuildHitBoxView(); }
+            if (_showHitBoxes) TickHitBoxView();
+#endif
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
             float dt = Time.deltaTime;
@@ -1304,46 +2616,153 @@ namespace Game.Module.InGame
             TickGhostState(dt);
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
-            _ultimateCharge = Mathf.Min(_ultimateCharge + dt * _buffs.UltimateChargeMul,
-                                        _config.UltimateChargeSeconds);
+            _skillCooldown = Mathf.Min(_skillCooldown + dt * _buffs.ActiveSkillChargeMul,
+                                       SkillCooldownOf(_host?.Profile));
 
             TickPlayer(dt);
+            TickAfterimages(dt);
             SyncFireRing();
             TickEnemies(dt);
             TickShots(dt);
             TickFields(dt);
-            TickSynergy(dt);
             TickDeploy(dt);
             TickDeployables(dt);
-            TickUltimate(dt);
+            TickEchoBlasts(dt);
+            TickEvolutions(dt);
+            if (_overchargeTimer > 0f) _overchargeTimer -= dt;
+            if (_afterimageTimer > 0f) _afterimageTimer -= dt;
+            CheckCrisisBarrier();   // 위기는 피격뿐 아니라 화상·장판으로도 온다
+            TickSkillEffect(dt);
+            TickBreak(dt);
+            TickGuard(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
             for (int i = 0; i < _enemies.Count; i++) _enemies[i]?.TickMark(dt);
+            TickMovingObstacles(dt);
             TickHazards(dt);
             SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
             TickDamageTexts(dt);
+            TickGoldPiles(dt);
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
+            TickStatusFx(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
+            // 빙의 조건이 "몸이 있느냐" 로 갈린다. 판정 직전에 채워야 한 프레임도 안 어긋난다.
+            Unit.PlayerHasHost = _host != null;
             RefreshPossessTarget();
+            TickRescue(dt);
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
+            TickExitOpen(dt);
             TickExit();
 
             // 출구가 이미 열려 있으면 다시 클리어 처리하지 않는다
-            // 웨이브가 남아 있으면 방을 비운 것이 아니다.
-            bool waveLeft = TickWave(dt);
             // 빙의 중에는 방을 닫지 않는다 — 빼앗기는 몸은 이미 적 목록에서 빠져 있어서
             // 마지막 한 마리를 빼앗는 순간 방이 클리어된 것으로 보인다.
+            if (_combatStep > 0f) _combatStep -= dt;
             TickPendingLevelUp(dt);
             // 레벨업 팝업이 대기 중이면 출구를 먼저 열지 않는다 —
             // 고르기도 전에 다음 방으로 갈 수 있으면 성장이 선택이 아니라 사고가 된다.
-            if (!waveLeft && _enemies.Count == 0 && _exits.Count == 0
+            // ⚠ 조건은 `_exits.Count == 0` 이 아니라 **`!_exitOpen`** 이다.
+            //   문은 이제 방에 들어서는 순간부터 닫힌 채로 서 있으므로 `_exits` 는
+            //   처음부터 비어 있지 않다. 예전 조건을 그대로 두면 방이 영영 안 끝난다.
+            if (_enemies.Count == 0 && !_exitOpen
                 && !_awaitingBuff && !HasPendingLevelUp && !IsChanneling) OnRoomCleared();
         }
 
         private Unit Avatar => _host != null ? _host : _ghost;
+
+        // ── 확률 효과 ─────────────────────────────────────────
+        //
+        // 판을 뒤집는 효과(흡혈·스턴·둔화·반사)는 **확률로만** 터진다.
+        // 무조건 들어가면 그 몸이 언제나 정답이 되어 빙의할 이유가 사라진다.
+        // 실제로 흡혈은 매 타격마다 피해의 35% 가 들어와서 흡혈귀·사신이
+        // 사실상 죽지 않았다 — 기댓값을 12.5% 로 낮추고 대신 크게 터뜨린다.
+        //
+        // 평타의 **모양**(관통·착탄 범위·탄 수)은 확률이 아니다. 그건 효과가
+        // 아니라 그 직업의 사거리 개념이라, 터졌다 말았다 하면 조준을 못 한다.
+        private const int   LeechChance        = 25;    // %
+        private const int   LeechPercent       = 50;    // 발동 시 준 피해의 이만큼 회복
+        private const int   SlowChance         = 35;
+        private const int   SlowProcPercent    = 40;
+        private const float SlowProcSeconds    = 1.5f;
+        private const int   ReflectChance      = 40;
+        private const int   StunChance         = 12;    // 격투 직업
+        private const float StunProcSeconds    = 0.8f;
+
+        /// <summary>백분율 굴림. 방 뽑기와 같은 난수를 쓴다.</summary>
+        private bool Roll(int percent) => percent > 0 && _rng.Next(100) < percent;
+
+        // ── 직업 ──────────────────────────────────────────────
+        //
+        // 표에 직업 칸을 따로 만들지 않는다. 평타 방식과 사거리에서 그대로 나오는데
+        // 칸을 더 두면 표와 실제가 어긋날 자리가 하나 더 생긴다.
+        //
+        //   격투   근접·광역          1.4 ~ 2.2 m   탄이 없다
+        //   중거리 확산·단발          4.5 ~ 5.5 m   착탄 범위로 여럿을 친다
+        //   관통   관통               7.2 ~ 8.2 m   줄지어 선 것을 뚫는다
+        //   원거리 나머지             7.0 ~ 8.5 m   한 명씩 정확히
+        private enum HostJob { Melee, Mid, Ranged, Pierce }
+
+        /// <summary>중거리와 원거리를 가르는 선. 격투 최대 2.2m 와는 두 칸 넘게 벌어져 있다.</summary>
+        private const float MidRangeMeters = 6.0f;
+
+        private static HostJob JobOf(HostEntry e)
+        {
+            if (e == null) return HostJob.Ranged;
+            if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return HostJob.Melee;
+            if (e.Kind == AttackKind.Pierce) return HostJob.Pierce;
+            return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters
+                 ? HostJob.Mid : HostJob.Ranged;
+        }
+
+        /// <summary>
+        /// 격투 직업의 상시 규칙 — 때릴 때마다 쉴드, 그리고 확률 스턴.
+        ///
+        /// 스턴은 **빼앗을 수 없는 적에게만** 건다. 빙의로 열리는 몸까지 굳히면
+        /// "굳혀 놓고 갈아탄다" 가 언제나 정답이 되고, 빙의 연출 0.7초 + 무적 1.25초와
+        /// 겹쳐서 근접이 아무 위험 없이 몸을 갈아입는다.
+        /// </summary>
+        /// <summary>
+        /// 약화를 걸고 **터진 것을 보여 준다.**
+        ///
+        /// 확률 효과는 보이지 않으면 안 되는 것과 같다(`AVSR_JobClasses.md` §4).
+        /// 흡혈·스턴·쉴드는 그림이 붙었는데 약화만 빠져 있었다 —
+        /// 35% 로 터지는데 화면에 아무 일도 안 일어나 "안 되는 것" 으로 보였다.
+        ///
+        /// `fx_slow_1~3` 이 아직 없으면 `PlayFx` 가 조용히 넘어간다(오류 아님).
+        /// 그림이 들어오는 순간 저절로 켜진다.
+        /// </summary>
+        private void ApplySlowProc(Unit victim)
+        {
+            if (victim == null) return;
+            victim.ApplySlow(SlowProcPercent, SlowProcSeconds);
+            SpawnFx("slow", victim.Position, StunFxSize);
+        }
+
+        private void MeleeJobProc(Unit victim, HostEntry p)
+        {
+            if (JobOf(p) != HostJob.Melee) return;
+
+            var me = Avatar;
+            if (me != null)
+            {
+                // 구루 결계는 획득량을 두 배로 만들고, 아마존 정예의 불굴은 상한을 푼다.
+                int gain = Mathf.Max(1, me.HpMax * _config.ShieldPerHitPercent / 100)
+                         * (_wardSeconds > 0f ? 2 : 1);
+                int cap = IsShieldUncapped ? me.HpMax : me.HpMax * _config.ShieldCapPercent / 100;
+                me.AddShield(gain, cap);
+            }
+
+            // ⚠ `IsPossessable` 로 거르면 안 된다. 그 값은 **지금 이 순간 탈 수 있는가**라
+            //    내가 이미 몸을 쓰고 있으면 숙주까지 전부 false 가 된다 — 결국 굳히면
+            //    안 될 몸을 굳힌다. 물어야 할 것은 "빼앗을 여지가 있는 몸인가" 쪽이다.
+            //    보스는 위쪽 `TickBoss` 가 먼저 가로채므로 굳혀 봐야 무시된다.
+            if (victim == null || !victim.IsAlive || victim.IsBoss
+                || victim.HasPossessCondition) return;
+            if (Roll(StunChance)) victim.ApplyStun(StunProcSeconds);
+        }
 
         /// <summary>무적 중인가. 빙의 직후와 호스트 상실 직후의 보호 시간을 함께 본다.</summary>
         private bool IsInvulnerable => _invuln > 0f || _ghostProtect > 0f;
@@ -1364,20 +2783,20 @@ namespace Game.Module.InGame
 
             // 전술 빙의 쿨다운은 몸 안에 있든 밖에 있든 흐른다.
             // 유령일 때 멈추면 죽고 나서 기다리는 것이 이득이 된다.
-            if (_tacticalCooldown > 0f)
+            if (_repossessLock > 0f)
             {
-                _tacticalCooldown = Mathf.Max(0f, _tacticalCooldown - dt);
+                _repossessLock = Mathf.Max(0f, _repossessLock - dt);
                 // 매 프레임 발행하지 않는다 — 0.1초 눈금이 바뀔 때만. 표시는 그걸로 충분하다.
-                if (_tacticalCooldown == 0f ||
-                    Mathf.FloorToInt(_tacticalCooldown * 10f) != _tacticalShown)
+                if (_repossessLock == 0f ||
+                    Mathf.FloorToInt(_repossessLock * 10f) != _repossessLockShown)
                 {
-                    _tacticalShown = Mathf.FloorToInt(_tacticalCooldown * 10f);
-                    _bus.Publish(new TacticalCooldownEvent
+                    _repossessLockShown = Mathf.FloorToInt(_repossessLock * 10f);
+                    _bus.Publish(new RepossessLockEvent
                     {
-                        Remain = _tacticalCooldown, Total = _config.RepossessLockSeconds,
+                        Remain = _repossessLock, Total = _config.RepossessLockSeconds,
                     });
                 }
-                if (_tacticalCooldown == 0f) RefreshPossessTarget();
+                if (_repossessLock == 0f) RefreshPossessTarget();
             }
 
             if (_ghostProtect > 0f)
@@ -1397,34 +2816,117 @@ namespace Game.Module.InGame
             if (_ghostHp == 0) Finish(false);
         }
 
+        // ─────────────────────────────────────────────────────────
+        // 구조 신호
+        //
+        // 몸이 터졌는데 방에 빼앗을 몸이 없으면 **대응할 방법이 없는 죽음**이 된다.
+        // 그건 난이도가 아니라 고장이다. 그래서 유령이 된 지 몇 초 뒤,
+        // 방 위쪽에서 숙주 한 기가 걸어 들어온다.
+        //
+        // 긴급 호스트(아래)와 다르다. 긴급 호스트는 **제자리에서 몸을 준다** —
+        // 유령 구간이 즉시 끝나 버려서 쫓기는 맛이 없다. 구조 신호는 목표를 놓아 줄 뿐,
+        // 잡몹 사이를 뚫고 가서 경직시켜 빼앗는 것은 플레이어 몫이다.
+        // ─────────────────────────────────────────────────────────
+
+        /// <summary>몸을 잃고 이만큼 지나면 숙주가 들어온다(초).</summary>
+        private const float RescueDelaySeconds = 3f;
+
+        /// <summary>연달아 불러들이지 못하게 하는 간격(초).</summary>
+        private const float RescueCooldownSeconds = 20f;
+
+        private float _rescueWait;
+        private float _rescueCool;
+
+        private void TickRescue(float dt)
+        {
+            if (_rescueCool > 0f) _rescueCool = Mathf.Max(0f, _rescueCool - dt);
+
+            // 몸이 있거나, 빼앗을 몸이 이미 방에 있으면 구조할 이유가 없다.
+            if (_host != null || _awaitingBuff || HasFutureHost()) { _rescueWait = 0f; return; }
+            // 보스방은 긴급 호스트가 맡는다. 보스와 싸우는 중에 몸이 걸어 들어오면
+            // 보스 패턴과 구조 목표가 화면에서 서로를 가린다.
+            if (_boss != null) { _rescueWait = 0f; return; }
+
+            _rescueWait += dt;
+            if (_rescueWait < RescueDelaySeconds || _rescueCool > 0f) return;
+            _rescueWait = 0f;
+            _rescueCool = RescueCooldownSeconds;
+            SpawnRescueHost();
+        }
+
+        /// <summary>
+        /// 숙주 한 기를 방 위쪽에 세운다. 플레이어와 출구 사이라야 의미가 있다 —
+        /// 뒤쪽에 놓으면 왔던 길을 되돌아가야 해서 쫓기는 방향이 뒤집힌다.
+        /// </summary>
+        private void SpawnRescueHost()
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return;
+
+            var e = EnemyAt(hosts, _roomIndex, _enemies.Count);
+            var u = NewUnit($"RescueHost_{e.HostKey}");
+            u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                    Mathf.RoundToInt(EnemyHpOf(e)), Mathf.RoundToInt(EnemyAtkOf(e)),
+                    EnemySpeedOf(e), EnemyRangeOf(e), EnemyIntervalOf(e),
+                    UnitBox(84f, 78f), isBoss: false, profile: e);
+            u.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.12f);
+            ClearOfCover(u);
+            u.MarkAsHostBody();
+            u.MarkAsNextBody();
+            u.PossessPriority = e.PossessPriority;
+            u.PossessRange = 0f;
+            u.SetState(EnemyState.Idle);
+            ApplyFacingSprites(u, e.SpriteKey);
+            _enemies.Add(u);
+        }
+
         /// <summary>
         /// 긴급 호스트 (기획서 A 8-3).
         ///
         /// 빙의할 몸이 하나도 없으면 시계만 도는 상태가 된다 — 특히 보스방은 보스가
         /// 빙의 대상이 아니라(A 1-4) 손쓸 방법이 아예 없다. 1초를 기다린 뒤 몸을 하나
         /// 만들어 준다. 대신 값이 비싸다 — Ghost HP 를 추가로 깎고, 시작 체력이 30%다.
-        /// **구제책이지 선택지가 아니다.** 방마다 한 번뿐이고, 못 쓰면 그대로 패배다.
+        /// **구제책이지 선택지가 아니다.** 값은 Ghost HP 로 내고, 그 피가 다하면 끝이다.
         /// </summary>
         private void TickEmergency(float dt)
         {
             if (_host != null || _awaitingBuff) { _emergencyWait = 0f; return; }
-            if (_possessTarget != null || HasPossessableTarget()) { _emergencyWait = 0f; return; }
+            if (_possessTarget != null || HasFutureHost()) { _emergencyWait = 0f; return; }
+
+            // ⚠ 적이 없는 방에서는 이 구제책이 **사형선고**가 된다.
+            //   정본 v3.3 의 48방 중 15방(SHOP·EVENT·REST)은 적이 0기다.
+            //   유령으로 그 방에 들어서면 빙의할 몸이 없다는 이유로 1초 뒤 패배한다.
+            //   방을 비운 직후도 마찬가지다 — 출구가 열려 있는데 걸어가다 진다.
+            //   빙의할 몸이 없는 것이 문제가 되려면 **싸울 상대가 있어야** 한다.
+            if (_enemies.Count == 0) { _emergencyWait = 0f; return; }
 
             _emergencyWait += dt;
             if (_emergencyWait < _config.EmergencyDelaySeconds) return;
             _emergencyWait = 0f;
 
-            // 기획서 A 8-1 — 빙의 대상이 없고 긴급 호스트도 못 쓰면 그 자리에서 진다.
-            if (_emergencyUsedThisRoom || _ghostHp <= _config.EmergencyGhostCost)
-            {
-                Finish(false);
-                return;
-            }
+            // ⚠ 구제에 실패했다고 **그 자리에서 죽이지 않는다.**
+            //   유령의 Ghost HP 는 체력이 아니라 남은 시간이다(기획서 A 1-2).
+            //   그런데 여기서 바로 지게 해 두면, 보스방처럼 빼앗을 몸이 없는 방에서
+            //   몸을 잃는 순간 **체력이 가득해도 즉사**한다. 긴급 호스트를 이미 쓴
+            //   방이면 더 확실하게 죽는다 — 실제로 그렇게 나갔다.
+            //
+            //   구제는 구제일 뿐이고, 지는 조건은 시간이 다하는 것 하나다.
+            //   못 구했으면 유령으로 떠 있게 두고 다음 기회를 다시 본다 —
+            //   보스가 잡몹을 부르거나, 빼앗을 몸이 다시 생길 수 있다.
+            // 피가 있으면 몇 번이든 부활한다.
+            //
+            // ⚠ 방마다 한 번으로 묶어 두었더니, 보스방처럼 긴 방에서 두 번째로 몸을
+            //   잃으면 손쓸 방법이 아예 없었다 — 빙의할 몸도 없고(보스는 대상이 아니다)
+            //   구제도 이미 썼으니, 유령으로 떠서 시계가 다 돌기를 기다리는 것 말고는
+            //   할 수 있는 것이 없다. 그건 게임이 아니라 대기다.
+            //
+            //   값은 **Ghost HP 로 낸다.** 낼 수 있는 만큼 내는 것이지 횟수를 세는 것이
+            //   아니다. 한 번에 20 이 나가므로 무한히 버티지 못한다 — 그게 상한이다.
+            if (_ghostHp <= _config.EmergencyGhostCost) return;
 
             var entry = PickPlayerHost();
-            if (entry == null) { Finish(false); return; }
+            if (entry == null) return;
 
-            _emergencyUsedThisRoom = true;
             _ghostHp = Mathf.Max(1, _ghostHp - _config.EmergencyGhostCost);
 
             EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position,
@@ -1435,11 +2937,30 @@ namespace Game.Module.InGame
             });
         }
 
-        /// <summary>살아 있는 빙의 가능 적이 방에 남아 있는가. 사거리는 보지 않는다.</summary>
-        private bool HasPossessableTarget()
+        /// <summary>
+        /// **앞으로** 빼앗을 수 있는 몸이 방에 있는가.
+        ///
+        /// `IsPossessable` 은 "지금 당장 탈 수 있는가" 라서 체력 문턱을 함께 본다 —
+        /// 23종 중 17종이 25~50% 아래로 떨어져야 탈 수 있다.
+        /// 긴급 호스트의 판단에 그 값을 쓰면 **멀쩡한 적이 가득한 방도 "몸이 없는 방"**
+        /// 이 된다. 실제로 그래서 몸을 잃은 지 1초 만에 같은 몸이 되살아났다 —
+        /// 사장님이 "죽었는데 살아난다" 고 본 것이 이것이다.
+        ///
+        /// 여기서 물어야 할 것은 "지금 탈 수 있나" 가 아니라 **"깎으면 탈 수 있나"** 다.
+        /// 깎아서 탈 수 있는 몸이 하나라도 있으면 구제할 이유가 없다 — 깎으면 된다.
+        /// </summary>
+        private bool HasFutureHost()
         {
             for (int i = 0; i < _enemies.Count; i++)
-                if (_enemies[i] != null && _enemies[i].IsPossessable) return true;
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsBoss) continue;
+                if (e.Side != UnitSide.Enemy || e.RepossessBanned) continue;
+                if (!e.IsHostBody) continue;      // 잡몹은 아무리 깎아도 몸이 되지 않는다
+                if (e.Profile != null &&
+                    e.Profile.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
+                return true;
+            }
             return false;
         }
 
@@ -1450,6 +2971,19 @@ namespace Game.Module.InGame
         private HostEntry PickPlayerHost()
         {
             if (_player == null || !_player.IsReady) return null;
+
+            // ⚠ **입었던 몸이 먼저다.** 이 판에서 한 번이라도 몸을 입었으면
+            //   그 몸이 구제책이 된다.
+            //
+            //   아래 `StartAsGhost` 규칙만 있을 때, 유령으로 시작한 판은 **끝까지**
+            //   구제를 못 받았다 — 12번째 보스방에서 몸을 잃어도 마찬가지였다.
+            //   그 규칙이 말하려던 것은 "**첫 몸**은 직접 빼앗아라" 였지
+            //   "이 판 내내 구제 없다" 가 아니다.
+            if (_lastHostEntry != null) return _lastHostEntry;
+
+            // 유령으로 골라 들어왔고 아직 한 번도 몸을 안 입었다 —
+            // 1번 방에서 직접 빼앗는다. 원작이 그랬다.
+            if (_player.StartAsGhost) return null;
             var picked = _player.GetHost(_player.SelectedHostId);
             if (picked != null) return picked;
             var all = _player.AllHosts;
@@ -1460,12 +2994,27 @@ namespace Game.Module.InGame
         {
             var me = Avatar;
             if (me == null) return;
+            // 점멸을 그리기 **전에** 알려 준다 — 한 프레임 늦으면 켜지는 순간이 씹힌다.
+            me.SetInvulnerable(IsInvulnerable);
+            // 몸을 갈아타면 아바타가 바뀐다. 물려받지 못한 쪽에 점멸이 남으면
+            // 쓰지도 않는 몸이 계속 깜빡인다.
+            if (_ghost != null && _ghost != me) _ghost.SetInvulnerable(false);
+            if (_host != null && _host != me) _host.SetInvulnerable(false);
             me.TickFlash(dt);
             me.TickAnim(dt);
+            // 쉴드는 싸우는 동안의 보상이다 — 손을 놓으면 2초 뒤부터 녹는다.
+            me.TickShield(dt);
 
             // 빙의가 들어가는 중에는 조작을 받지 않는다. 안 막으면 조이스틱이
             // 빨려 들어가는 연출과 서로 자리를 다툰다.
             if (IsChanneling) return;
+
+            // 돌진하는 동안도 마찬가지다. 조작을 같이 받으면 걷는 힘과 돌진이
+            // 서로 자리를 당겨 경로가 휘고, 3 m 를 갔는지 알 수 없게 된다.
+            if (IsDashing) { TickDash(dt, me); return; }
+
+            // 호퍼의 도약도 같다. 뛰는 동안 걸어지면 포물선이 휘어 어디에 떨어질지 모른다.
+            if (IsSlamming) { TickSlam(dt); return; }
 
             // ⚠️ 이것이 없으면 **갇힌다.** `SlideMove` 는 막힌 곳에 "들어가지 않게" 막는
             //    방식이라, 어쩌다 안에 들어간 뒤에는 어느 쪽으로도 못 나온다 —
@@ -1484,10 +3033,9 @@ namespace Game.Module.InGame
                 // 막힌 것을 타고 미끄러진다. 밀어 넣고 빼내면 벽에서 캐릭터가 떨린다.
                 var before = me.Position;
                 var p = SlideMove(me, me.Position,
-                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul) * dt);
-                var half = me.GetComponent<RectTransform>().sizeDelta * 0.5f;
-                p.x = Mathf.Clamp(p.x, half.x, _roomSize.x - half.x);
-                p.y = Mathf.Clamp(p.y, -_roomSize.y + half.y, -half.y);
+                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul) * dt);
+                // 테두리·문 한계는 `ClampedInField` 한 곳이 갖는다.
+                p = ClampedInField(me, p);
                 me.Position = p;
                 var moved = p - before;
 
@@ -1521,10 +3069,6 @@ namespace Game.Module.InGame
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
             if (_host == null) { IsFiring = false; return; }
 
-            // 시너지가 평소 사격보다 먼저다. 앞 몸이 남긴 표식이 있으면
-            // 그것을 쓰는 것이 이 조합을 만든 이유다.
-            if (TryBlinkExecution(_host, dt)) { IsFiring = true; return; }
-
             var target = Nearest(_host.Position);
 
             // 노리는 쪽을 바라본다. 사거리 밖이라 아직 안 쏘더라도 몸은 돌려 둔다 —
@@ -1533,14 +3077,25 @@ namespace Game.Module.InGame
 
             // 근접은 붙어야 때린다 — 적과 같은 규칙이다. 전역 사거리를 900 으로
             // 올려 두어서 그대로 두면 아마존 주먹이 방 건너편까지 닿는다.
+            //
+            // ⚠ **가장자리까지 잰다.** 여기가 예전에 중심에서 중심까지였다 —
+            //   그런데 실제 피해를 주는 `MeleeStrike` 는 이미 `EdgeDistance` 로 바뀌어 있어,
+            //   **판정이 두 곳에서 서로 다른 자를 쓰고 있었다.**
+            //
+            //   보스는 상자가 256px(반경 107.5)이고 아마존 사거리는 101px 이다.
+            //   중심으로 재면 101 ≤ 107.5 이라 **보스 중심 안으로 들어가야** 이 문이 열린다.
+            //   몸에 딱 붙어 서도 안 열리니, 안쪽 판정이 아무리 관대해도 한 번도 안 불린다 —
+            //   "붙어 있는데 딜이 안 들어간다" 가 그것이다.
             bool inRange = target != null &&
-                           Vector2.Distance(_host.Position, target.Position)
+                           EdgeDistance(_host, target)
                                <= EffectiveRange(_host) * _buffs.RangeMul;
             IsFiring = inRange;
             if (!inRange) return;
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
-            if (!_host.TickAttack(dt, _buffs.IntervalMul)) return;
+            if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
+            // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
+            if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
         }
 
         private void SyncFireRing()
@@ -1560,6 +3115,9 @@ namespace Game.Module.InGame
                 e.TickFlash(dt);
                 e.TickAnim(dt);
                 e.TickSlow(dt);
+                e.TickStun(dt);
+                e.TickAmp(dt);
+                e.TickStagger(dt);   // 몰아치지 않으면 식는다
 
                 // 화상 피해는 유닛이 스스로 깎지 않는다 — 죽음 처리·보상·피해 숫자가
                 // 전부 여기 있어서, 저쪽에서 깎으면 죽어도 아무 일도 안 일어난다.
@@ -1578,23 +3136,34 @@ namespace Game.Module.InGame
                         _bus.Publish(new BossHpChangedEvent { BossHp = e.Hp, BossHpMax = e.HpMax });
                 }
 
-                // 기획서 A 1-1 — 유령은 **적과 충돌하지 않고 표적도 되지 않는다.**
-                // 몸이 없는 동안에는 적도 보스도 쫓거나 때리지 않는다. 유령 상태의
-                // 압박은 맞아 죽는 것이 아니라 초당 깎이는 시계(A 1-2)에서 온다.
-                // 이미 날아가고 있는 탄은 그대로 맞는다 — 그건 조준이 아니라 잔탄이다.
+                // ⚠ **몸이 없으면 아무도 유령을 표적으로 잡지 않는다.**
                 //
-                // 보스방에서 특히 중요하다. 보스는 빙의 대상이 아니라(A 1-4) 몸을 잃으면
-                // 반격 수단이 없다. 계속 맞으면 전투가 아니라 처형이 된다.
+                // 유령은 맞지 않는다(A 1-2 — Ghost HP 는 체력이 아니라 남은 시간이다).
+                // 그런데 적이 계속 쫓아와 때리는 시늉을 하면, 화면에서는 맞고 있는 것으로
+                // 보이고 마침 시계가 줄어들고 있어서 "맞아서 닳는다" 로 읽힌다.
+                // 판정을 막는 것만으로는 부족하다 — 표적으로 잡는 것 자체를 끊는다.
+                //
+                // 유령 구간의 압박은 **시계**다. 초당 감소와 몸을 잃을 때의 20% 가
+                // 그 값을 치른다. 쫓기는 것이 아니라 서두르는 것이 이 구간의 문제다.
                 if (_host == null)
                 {
                     e.IsAggro = false;
                     e.SetState(EnemyState.Idle);
-                    if (!e.IsBoss) Separate(e, i, dt);
                     continue;
                 }
 
                 // 보스는 쿨다운으로 여러 패턴을 돌린다 — 잡몹 AI 를 태우지 않는다
                 if (e.IsBoss) { TickBoss(e, me, dt); continue; }
+
+                // 굳어 있는 동안은 다가오지도 때리지도 않는다.
+                // 자세도 함께 푼다 — 안 그러면 풀리는 순간 예고 없이 맞는다.
+                if (e.IsStunned)
+                {
+                    e.CancelWindup();
+                    e.SetMoving(false);
+                    Separate(e, i, dt);
+                    continue;
+                }
 
                 float d = Vector2.Distance(e.Position, me.Position);
 
@@ -1623,6 +3192,25 @@ namespace Game.Module.InGame
                 // 상태를 이름으로 들고 있어야 AI 타입별 분기를 넣을 자리가 생긴다.
                 e.SetFacing(me.Position - e.Position);   // 적도 플레이어를 바라본다
 
+                // ── 행동 패턴 ────────────────────────────────────
+                //
+                // ⚠ 여기가 예전에는 `IsMelee(e)` 하나로 갈렸다. 근접/원거리 둘뿐이라
+                //   새 행동을 넣을 자리가 없었다 — 이제 패턴이 자리를 차지하고,
+                //   `true` 를 돌려주면 아래 상태기를 통째로 건너뛴다.
+                var pattern = PatternOf(e);
+
+                // 적 호스트의 액티브 스킬이 패턴보다 먼저다. 시전 중에는 안 움직인다.
+                if (TickEnemySkill(e, me, dt)) { Separate(e, i, dt); continue; }
+
+                if (pattern == EnemyPattern.Cross)
+                { TickCross(e, dt); Separate(e, i, dt); continue; }
+
+                if (pattern == EnemyPattern.Vault)
+                { TickVault(e, me, dt); Separate(e, i, dt); continue; }
+
+                if (pattern == EnemyPattern.Hop && TickHop(e, me, d, dt))
+                { Separate(e, i, dt); continue; }
+
                 // 근접과 원거리는 다르게 움직인다.
                 //
                 //   근접  붙어야 때린다. 사거리가 짧으므로 계속 쫓는다
@@ -1634,6 +3222,16 @@ namespace Game.Module.InGame
                 if (d > reach)
                 {
                     e.CancelWindup();   // 사거리 밖으로 밀려났으면 자세를 푼다
+
+                    // ⚠ 옆걸음도 함께 접는다.
+                    //   옆걸음 목표는 **때리던 그 순간의 내 자리**를 기준으로 잡은 것이다.
+                    //   그 사이 내가 달아나면 목표가 낡는다. 그런데 예전에는 여기서
+                    //   접지 않아, 쫓아와서 사거리에 들어오는 순간 낡은 자리로 되돌아갔다 —
+                    //   그 자리는 이미 내 뒤쪽이라 **쫓다 말고 도망치는 것처럼** 보였고,
+                    //   되돌아갔다 다시 쫓기를 반복해 영영 때리지 못했다.
+                    //   붙어야 할 때는 붙는 것이 먼저다.
+                    e.EndReposition();
+
                     e.SetState(EnemyState.Approach);
                     e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
                     e.SetMoving(true);
@@ -1646,7 +3244,8 @@ namespace Game.Module.InGame
                     if (e.TickWindup(dt))
                     {
                         PerformAttack(e, me, false);
-                        if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
+                        if (pattern == EnemyPattern.Strafe
+                            && e.CountShotAndNeedsMove(ShotsBeforeMove))
                             e.BeginReposition(PickRepositionSpot(e, me));
                     }
                 }
@@ -1672,7 +3271,8 @@ namespace Game.Module.InGame
                     {
                         // 정본에 예고가 없는 배우는 예전처럼 바로 때린다
                         PerformAttack(e, me, false);
-                        if (!IsMelee(e) && e.CountShotAndNeedsMove(ShotsBeforeMove))
+                        if (pattern == EnemyPattern.Strafe
+                            && e.CountShotAndNeedsMove(ShotsBeforeMove))
                             e.BeginReposition(PickRepositionSpot(e, me));
                     }
                     // 동시 공격 수가 찼으면 이번 차례는 거른다 — 다음 간격에 다시 본다
@@ -1705,12 +3305,16 @@ namespace Game.Module.InGame
             int cap = e.Profile?.CanonMaxConcurrent ?? 0;
             if (cap <= 0) return true;
 
+            // ⚠ 예전에는 `o.Key == e.Key` 로 **같은 종끼리만** 셌다.
+            //   방에 수류탄병 3 · 아마존 2 · 기관총 2 처럼 섞여 있으면 종마다 따로
+            //   상한을 먹어서 사실상 제한이 없었다 — 11기 방에서 전원이 동시에 쏘고 있었다.
+            //   상한은 **방 전체 기준**이어야 "지금 나를 노리는 것은 둘" 이 성립한다.
             int busy = 0;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var o = _enemies[i];
                 if (o == e || o == null || !o.IsAlive) continue;
-                if (o.Key == e.Key && o.IsWindingUp && ++busy >= cap) return false;
+                if (o.IsWindingUp && ++busy >= cap) return false;
             }
             return true;
         }
@@ -1768,18 +3372,86 @@ namespace Game.Module.InGame
         private float EnemyRangeOf(HostEntry e)
             => e.HasCanon ? e.CanonRange * _pxPerMeter : _config.EnemyAttackRange * e.RangeMul;
 
+        /// <summary>
+        /// 적이 얼마나 자주 때리는가. 정본 값에 **2배**를 곱해 절반 빈도로 늦춘다.
+        ///
+        /// 지형이 촘촘해지고 적 탄이 지형을 통과하게 되면서, 정본 간격 그대로는
+        /// 피할 창이 남지 않는다. 한 방을 더 아프게 하되 **덜 자주** 오는 쪽이
+        /// 읽히고 피할 수 있는 싸움이 된다.
+        /// </summary>
+        private const float EnemyIntervalScale = 2f;
+
         private float EnemyIntervalOf(HostEntry e)
-            => e.HasCanon ? e.CanonInterval : _config.EnemyAttackInterval * e.IntervalMul;
+            => (e.HasCanon ? e.CanonInterval : _config.EnemyAttackInterval * e.IntervalMul)
+               * EnemyIntervalScale;
 
         // 내가 탄 몸. 정본은 같은 배우라도 **적일 때와 내가 탔을 때 교전값을 따로** 준다
         // (attacks 의 AP_E### / AP_H##). 체력·공격력은 몸 자체의 것이라 적일 때와 같다.
 
+        // ── 고스트 Lv 인계 ────────────────────────────────────
+        //
+        // **고스트 본체의 능력치는 의미가 없다.** 유령은 싸우지 않는다 —
+        // 15초 시계를 들고 다음 몸까지 가는 것이 전부다.
+        // 그래서 Lv 는 고스트가 **들고 다니다가 빙의하는 순간 그 몸에 얹는다.**
+        //
+        // ⚠ 고스트 HP(100)·감소 속도(초당 6.7)에는 **붙이지 않는다.**
+        //   그 시계가 이 게임의 심장이라, 레벨로 늘어나면
+        //   "몸을 안 갈아타도 버틴다" 가 되어 빙의를 고를 이유가 사라진다.
+        //
+        // HP 와 ATK 를 다르게 올리는 것도 같은 이유다. 둘 다 2.5배면 실질 전투력이
+        // 여섯 배가 된다 — 2.5배 오래 버티면서 2.5배 빨리 죽인다.
+        // **레벨은 생존을 사고, 화력은 몸이 판다.**
+        // ⚠ 아래 두 배율은 **임시 폴백**이다. 호스트 표(`_levelStats`)에 값이 들어오면
+        //   저절로 죽는다. 배율 하나를 전원에게 곱하면 23명이 같은 비율로 커져서
+        //   성장해도 몸끼리의 관계가 안 변한다 — 그래서 표가 정답이다.
+        private const float GhostHpPerLevel = 0.03f;
+        private const float GhostAtkPerLevel = 0.016f;
+
+        /// <summary>지금 고스트 Lv. 저장이 없으면 1 이다. 상한은 `GameConfig` 가 갖는다.</summary>
+        private int GhostLevel
+            => _player == null ? 1 : Mathf.Clamp(_player.GhostLevel, 1, _player.GhostLevelMax);
+
+        private float GhostHpMul  => 1f + GhostHpPerLevel  * (GhostLevel - 1);
+        private float GhostAtkMul => 1f + GhostAtkPerLevel * (GhostLevel - 1);
+
+        /// <summary>
+        /// 이 레벨에서 이 몸의 체력.
+        ///
+        /// **호스트가 가진 레벨 표가 먼저다.** 표가 있으면 그대로 읽고,
+        /// 비어 있으면 임시로 배율을 곱한다 — 표 값이 아직 안 정해졌기 때문이다.
+        /// 표가 채워지는 순간 배율 경로는 저절로 죽는다.
+        /// </summary>
+        private int LeveledHp(HostEntry e)
+        {
+            if (e != null && e.HasLevelStats)
+            {
+                var st = e.StatAt(GhostLevel);
+                if (st.Hp > 0) return st.Hp;
+            }
+            return Mathf.RoundToInt(HostHpOf(e) * GhostHpMul);
+        }
+
+        private int LeveledAtk(HostEntry e)
+        {
+            if (e != null && e.HasLevelStats)
+            {
+                var st = e.StatAt(GhostLevel);
+                if (st.Atk > 0) return st.Atk;
+            }
+            return Mathf.Max(1, Mathf.RoundToInt(HostAtkOf(e) * GhostAtkMul));
+        }
+
         private int HostHpOf(HostEntry e)
-            => e == null ? 100 : e.HasCanon ? e.CanonHp : _config.HostHp(e.Hp);
+            => e == null ? 100
+             : e.CanonHostHp > 0 ? e.CanonHostHp
+             : e.HasCanon        ? e.CanonHp
+             : _config.HostHp(e.Hp);
 
         private int HostAtkOf(HostEntry e)
-            => e == null ? 10 : e.HasCanon ? e.CanonAtk
-                                           : Mathf.RoundToInt(_config.HostAtk(e.Atk) * e.DamageMul);
+            => e == null ? 10
+             : e.CanonHostAtk > 0 ? e.CanonHostAtk
+             : e.HasCanon         ? e.CanonAtk
+             : Mathf.RoundToInt(_config.HostAtk(e.Atk) * e.DamageMul);
 
         // 이동속도만은 교전 프로필이 안 맞아도 호스트 값을 쓴다 — 근접이냐 원거리냐와
         // 상관없는 값이라, 적 걸음으로 조종하게 두면 그 몸만 못 쓰게 된다.
@@ -1831,11 +3503,9 @@ namespace Game.Module.InGame
             // 이미 폐기 예정이라 해시로 받는다 — 값의 의미는 안 쓰고 홀짝만 본다.
             if (((e.GetEntityId().GetHashCode() + _roomIndex) & 1) == 0) side = -side;
 
-            var spot = e.Position + side * RepositionDistance;
-            var half = FootHalf(e);
-            spot.x = Mathf.Clamp(spot.x, half.x, _roomSize.x - half.x);
-            spot.y = Mathf.Clamp(spot.y, -_roomSize.y + half.y, -half.y);
-            return spot;
+            // 옮겨 갈 자리도 같은 한계를 지킨다. 여기만 방 전체로 두면
+            // 적이 테두리 위로 걸어 올라가 벽에 붙어 선다.
+            return ClampedInField(e, e.Position + side * RepositionDistance);
         }
 
         /// <summary>
@@ -1943,7 +3613,12 @@ namespace Game.Module.InGame
             if (_brain.ChargeLeft > 0f)
             {
                 boss.Position += _brain.ChargeDir * (boss.MoveSpeed * ChargeSpeedMul) * dt;
-                if (Vector2.Distance(boss.Position, me.Position) <= _config.ShotHitRadius * 1.6f)
+                // 유령은 보스 돌진도 통과한다. 여기서 멈춰 세우면 유령을 벽 삼아
+                // 보스를 세울 수 있게 되어, 맞지도 않는 몸이 방패가 된다.
+                // 보스 **몸이 스치면** 맞는다. 중심까지 54px 을 요구하면 보스가 나를
+                // 밟고 지나가도 안 맞는다 — 256px 짜리 몸이 통째로 무해해진다.
+                if (_host != null
+                    && EdgeDistance(me, boss) <= _config.ShotHitRadius * 1.6f)
                 {
                     DamagePlayer(Mathf.RoundToInt(boss.Atk * _chargeDamageMul));
                     _brain.BeginCharge(Vector2.zero, 0f);
@@ -1956,19 +3631,34 @@ namespace Game.Module.InGame
             var move = _brain.Tick(dt);
 
             // 예고 중에는 제자리에서 번쩍인다. 피할 시간을 주지 않으면 패턴이 아니라 사고다.
-            if (_brain.IsTelegraphing) { _telegraphPulse += dt; PulseTelegraph(boss); return; }
+            if (_brain.IsTelegraphing)
+            {
+                _telegraphPulse += dt;
+                PulseTelegraph(boss);
+                // 예고가 막 시작된 프레임에 도형을 **한 번** 굳힌다.
+                if (_dangerMove != _brain.Pending) BeginDanger(boss, me, _brain.Pending);
+                TickDanger(dt);
+                return;
+            }
 
             if (move == null)
             {
                 // 쿨다운 대기 중에는 천천히 접근만 한다
+                // ⚠ 여기는 **중심 거리 그대로** 둔다.
+                //   `BossAttackRange`(260px = 3.6m)는 애초에 큰 몸을 전제로 중심에서
+                //   잰 값이다. 여기에 덩치 초과분(78px)을 더했더니 보스가 338px 밖에서
+                //   멈춰 서서 다가오질 않았다 — 사거리를 두 번 센 셈이다.
+                //   덩치 보정이 필요한 쪽은 **내가 보스를 때릴 때**지 그 반대가 아니다.
                 if (Vector2.Distance(boss.Position, me.Position) > boss.AttackRange)
                     boss.MoveToward(me.Position, dt);
                 boss.SetTelegraph(false);
+                ClearDanger();
                 return;
             }
 
             boss.SetTelegraph(false);
-            ExecuteBossMove(boss, me, move);
+            // 도형이 있는 패턴은 **그려 둔 그것**으로 친다. 없는 것만 옛 경로로 간다.
+            if (!StrikeDanger(boss, me, move)) ExecuteBossMove(boss, me, move);
         }
 
         private void PulseTelegraph(Unit boss)
@@ -2025,7 +3715,11 @@ namespace Game.Module.InGame
         /// </summary>
         private void ShieldCycle(Unit boss, Unit me, int damage)
         {
-            _bossShield = ShieldSeconds;
+            // 정본 EV_CH3_03 보스 대비 — 사 둔 파쇄가 첫 방어막을 그냥 없앤다.
+            // 한 번만 쓴다. 없애 놓고도 내려찍기는 그대로 온다 —
+            // 산 것은 방어막을 깨는 수단이지 안전이 아니다.
+            if (_bossShieldBreak) { _bossShieldBreak = false; _bossShield = 0f; }
+            else _bossShield = ShieldSeconds;
             boss.SetTelegraph(true);
             SpawnField(me.Position, 150f, SlamSeconds, FieldEffect.Damage, 0, fromPlayer: false);
             _pendingIsBeam = false;
@@ -2104,11 +3798,11 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 부채꼴로 흩뿌린다. 보스 패턴과 플레이어 얼티밋이 함께 쓴다.
+        /// 부채꼴로 흩뿌린다. 보스 패턴과 플레이어 액티브 스킬이 함께 쓴다.
         ///
         /// ⚠ <paramref name="fromPlayer"/> 를 반드시 넘긴다. 이 값이 틀리면 **내가 쏜 탄이
         ///    나를 때린다** — 부채꼴의 시작점이 곧 내 자리라 16발이 그 자리에서 전부
-        ///    나에게 꽂힌다. 실제로 얼티밋을 붙이다가 한 번 그렇게 만들었다.
+        ///    나에게 꽂힌다. 실제로 액티브 스킬을 붙이다가 한 번 그렇게 만들었다.
         /// </summary>
         private void FireFan(Unit from, Vector2 at, int count, float spanDeg, int damage,
                              bool fromPlayer = false)
@@ -2132,8 +3826,8 @@ namespace Game.Module.InGame
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
                           life, angleOffsetDeg: off,
-                          // 얼티밋 탄에도 버프가 실려야 한다. 여기만 빠져 있어서
-                          // 흡혈 카드를 먹고 얼티밋을 쓰면 한 방울도 안 돌았다.
+                          // 액티브 스킬 탄에도 버프가 실려야 한다. 여기만 빠져 있어서
+                          // 흡혈 카드를 먹고 액티브 스킬을 쓰면 한 방울도 안 돌았다.
                           slowPercent: fromPlayer ? _buffs.SlowPercent : 0,
                           lifestealPercent: fromPlayer ? _buffs.LifestealPercent : 0,
                           pierce: fromPlayer && _buffs.Pierce,
@@ -2180,6 +3874,22 @@ namespace Game.Module.InGame
             // 여기 한 곳에서 켜야 근접·원거리·보스가 따로 놀지 않는다.
             attacker.PlayAttack();
 
+            // 이번 공격에 실리는 패시브 배수를 여기서 **한 번** 잡는다.
+            // ⚠ 복제(C032)는 다시 잡지 않는다 — 같은 프레임의 같은 공격이다.
+            if (!_echoing) BeginSwing(fromPlayer);
+
+            // C032 영혼 복제 — 8타째면 이 공격을 한 번 더 낸다.
+            // 자세를 다시 잡지 않고 **같은 프레임에** 한 번 더 내보낸다.
+            if (fromPlayer && CountEcho())
+            {
+                _echoing = true;
+                PerformAttack(attacker, target, true);
+                _echoing = false;
+            }
+
+            // C030 유령 포대 — 복제된 공격은 세지 않는다(유효 기본 공격이 아니다)
+            if (fromPlayer && !_echoing) TryGhostTurret(attacker);
+
             var p = attacker.Profile;
             var kind = p?.Kind ?? AttackKind.Single;
 
@@ -2192,23 +3902,35 @@ namespace Game.Module.InGame
 
                 default:
                 {
-                    // 다중 사격 버프는 확산이 아닌 방식에도 탄을 더한다 (플레이어 한정)
-                    int extra = fromPlayer ? _buffs.ExtraShots : 0;
+                    // 다중 사격 버프는 확산이 아닌 방식에도 탄을 더한다 (플레이어 한정).
+                    // 카드 한 장 = 한 발. 확률이 아니라 **항상** 붙는다.
+                    int extra = fromPlayer ? _buffs.ExtraShots + SprayExtraShots : 0;
                     // 정본 projectiles 는 확산이 아닌 몸에도 탄 수를 준다 (갱스터 3발).
                     // 확산일 때만 세면 그 값이 버려진다.
                     int shots = p == null ? 1 : fromPlayer ? p.ShotCount : p.EnemyShotCount;
-                    int n = shots + extra;
+                    // 한 번에 나가는 탄에 상한을 둔다. 수치 하나가 어긋나도 화면이
+                    // 탄으로 덮이거나 줄이 방 밖까지 뻗지 않게 하는 마지막 방어선이다.
+                    int n = Mathf.Clamp(shots + extra, 1, MaxShotsPerVolley);
 
-                    // 부채꼴로 흩을 것인가, 한 줄로 늘어세울 것인가.
+                    // ⚠ **여러 발이면 언제나 부채꼴이다.**
                     //
-                    // 확산(Spread)과 다중 사격 버프는 **넓게 덮는 것**이 값어치라 부채꼴이다.
-                    // 그 밖에 몸이 원래부터 여러 발을 쏘는 경우(흡혈귀 박쥐 2발·갱스터 3발)는
-                    // 줄로 세운다. 좁은 부채꼴(8°)로 흩어 봐야 탄 상자가 104px 이라 서로
-                    // 겹쳐서 한 덩어리로 보였다 — 박쥐 두 마리가 박쥐 하나로 뭉쳤다.
-                    // 각도를 겹치지 않을 만큼(24° 이상) 벌리면 이번엔 조준한 적을 둘 다 빗나간다.
-                    bool fan = kind == AttackKind.Spread || extra > 0;
-                    float span = kind == AttackKind.Spread ? p.SpreadDegrees : 0f;
-                    if (fan && span <= 0f && n > 1) span = 10f * (n - 1);
+                    // 예전에는 몸이 원래부터 다연발이면(코만도 기관총 2발) 한 줄로
+                    // 앞뒤로 세우고, `추가 발사` 카드로 늘어난 것만 부채꼴로 벌렸다.
+                    // 그런데 줄로 세운 두 발은 화면에서 **한 줄기로 보인다.** 그러다
+                    // 카드를 한 장 먹는 순간 전체가 부채꼴로 바뀌어, 2발이 3발이 되는 것이
+                    // 1발이 3발이 된 것처럼 읽혔다 — "왜 두 발이 늘어나냐" 는 말이 그것이다.
+                    //
+                    // 몇 발을 쏘는 몸인지가 늘 보여야 카드를 먹었을 때의 변화도 정직해진다.
+                    bool fan = n > 1;
+
+                    // 벌리는 각도. 확산 몸은 정본 값을 쓰고, 카드로 늘어난 몸은 발당 14°.
+                    // 8° 는 탄 상자(104px)가 겹쳐 한 덩어리로 보이고, 24° 를 넘기면
+                    // 조준한 적을 양쪽 다 빗나간다. 그 사이 값이다.
+                    float span = kind == AttackKind.Spread && p.SpreadDegrees > 0f
+                               ? p.SpreadDegrees : 0f;
+                    if (fan && n > 1) span = Mathf.Max(span, ExtraFanDegrees * (n - 1));
+                    // 난사(폭력배)는 각도를 스스로 정한다 — Lv6~10 에 20° 가 40° 로 벌어진다
+                    if (fromPlayer && SprayExtraShots > 0) span = Mathf.Max(span, SprayDegrees);
 
                     // 정본은 공격력을 **한 번의 공격**에 준다. 탄 수는 따로 적혀 있으므로
                     // 나눠 실어야 탄 수가 그대로 화력 배수가 되지 않는다 — 확산은 맞히기
@@ -2217,15 +3939,17 @@ namespace Game.Module.InGame
 
                     // 정본 BUF_A01 마지막 탄창 — 확산의 **마지막 한 발**이 더 아프다.
                     // 마지막 발만 강하면 "다 맞히는 것" 이 아니라 "끝까지 붙어 있는 것" 이 이득이 된다.
-                    // 줄로 세울 때의 간격. 탄 상자만큼 벌리면 그림이 서로 닿지 않는다.
-                    float gap = _config.ShotSize * TrailGapRatio;
-
                     for (int i = 0; i < n; i++)
                     {
                         float off = !fan || n == 1 ? 0f : -span * 0.5f + span * i / (n - 1);
+                        // 부채꼴은 총구 한 점에서 시작하므로 태어나는 순간에는 전부 겹친다.
+                        // 조준선과 **직각으로** 조금씩 밀어 두면 나가는 순간부터 갈라져 보인다.
+                        float side = !fan || n == 1
+                            ? 0f
+                            : (i - (n - 1) * 0.5f) * _config.ShotSize * FanSideRatio;
                         FireShot(attacker, target, fromPlayer, off,
                                  lastShot: fromPlayer && i == n - 1, split: split,
-                                 trailBack: fan ? 0f : i * gap);
+                                 sideOffset: side);
                     }
                     break;
                 }
@@ -2236,11 +3960,34 @@ namespace Game.Module.InGame
         /// <summary>근접으로 마무리했다. 시너지 계기이자 회복 시점이다.</summary>
         private void OnMeleeFinish(Unit attacker)
         {
-            FireSynergy(SynergyTrigger.OnMeleeFinish, attacker.Key);
-            if (!SynergyOn(SynergyKind.HealFinisher) || _host == null) return;
-            _host.Heal(Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * HealFinisherPercent / 100f)));
             PublishHp();
         }
+
+        // ── 덩치 보정 ────────────────────────────────────────────
+        //
+        // 거리 판정이 전부 **중심에서 중심까지**였다. 잡몹은 상자가 84px 라 큰 차이가
+        // 없지만 보스는 256px 다 — 반경 108px 인데 아마존 근접 사거리가 101px 이라,
+        // **보스 몸 안으로 7px 들어가야 때려졌다.** "완전 겹쳐야 맞는다" 가 그 증상이다.
+        //
+        // 탄은 이미 `e.BodyRadius` 를 보고 가장자리를 재고 있었다. 근접과 보스 패턴만
+        // 빠져 있었으므로 같은 방식으로 맞춘다.
+        //
+        // ⚠ 반경을 통째로 빼지 않는다. 그러면 **모든 근접이 한 뼘씩 길어져** 잡몹전까지
+        //   같이 바뀐다. 기준 크기를 넘는 **초과분만** 준다 —
+        //   보통 몸끼리는 지금과 똑같고, 덩치 큰 것만 가장자리가 제자리를 찾는다.
+
+        /// <summary>기준 몸 반경(px). 잡몹·호스트 상자(84)의 반경이다.</summary>
+        private const float StandardBodyRadius = 84f * 0.42f;
+
+        /// <summary>기준보다 큰 만큼. 큰 몸은 그만큼 가장자리가 멀리 있다.</summary>
+        private static float BodyExcess(Unit u)
+            => u == null ? 0f : Mathf.Max(0f, u.BodyRadius - StandardBodyRadius);
+
+        /// <summary><paramref name="to"/> 의 **몸 가장자리**까지의 거리.</summary>
+        private static float EdgeDistance(Unit from, Unit to)
+            => from == null || to == null
+             ? float.MaxValue
+             : Vector2.Distance(from.Position, to.Position) - BodyExcess(to);
 
         private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll)
         {
@@ -2248,7 +3995,7 @@ namespace Game.Module.InGame
             float reach = attacker.AttackRange * (fromPlayer ? _buffs.RangeMul : 1f);
 
             // 슬러거 "탄환 반사" — 휘두르는 범위 안의 적 탄을 지운다
-            if (p != null && p.ReflectsShots)
+            if (p != null && p.ReflectsShots && (IsReflectingAll || Roll(ReflectChance)))
             {
                 for (int i = 0; i < _shots.Count; i++)
                 {
@@ -2257,7 +4004,10 @@ namespace Game.Module.InGame
                     if (Vector2.Distance(s.Position, attacker.Position) > reach) continue;
                     // 지우지 말고 **되받아친다.** 도탄이 생기기 전에는 지우는 수밖에
                     // 없었지만, 이제 방향을 뒤집으면 진짜 반사가 된다.
-                    if (!s.Bounce((s.Position - attacker.Position).normalized)) s.Despawn();
+                    // 지속 중이면 **되돌려 보내는** 것이 아니라 내 탄으로 만든다 —
+                    // 튕기기만 하면 원래 쏜 적이 자기 탄에 안 맞는다.
+                    if (IsReflectingAll && fromPlayer) ReflectShot(s);
+                    else if (!s.Bounce((s.Position - attacker.Position).normalized)) s.Despawn();
                 }
             }
 
@@ -2267,10 +4017,12 @@ namespace Game.Module.InGame
                 {
                     var e = _enemies[i];
                     if (e == null || !e.IsAlive) continue;
-                    if (Vector2.Distance(e.Position, attacker.Position) > reach) continue;
+                    // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
+                    if (EdgeDistance(attacker, e) > reach) continue;
                     Burst(e.Position, true);
                     bool wasAlive = e.IsAlive;
-                    HitEnemyWith(e, Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * MaintainDamageMul), p);
+                    HitEnemyWith(e,
+                        Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)), p);
                     // 정본 S04 흡혈 마무리 — 근접으로 끝냈을 때만 회복이 터진다.
                     // 흡혈을 쌓는 몸과 터뜨리는 몸이 달라 **갈아타야만** 성립한다.
                     if (wasAlive && !e.IsAlive) OnMeleeFinish(attacker);
@@ -2279,7 +4031,10 @@ namespace Game.Module.InGame
                 return;
             }
 
+            // 유령에게는 근접도 헛손질이다. 때리는 시늉(`Burst`)까지 지우면 적이
+            // 멈춰 선 것처럼 보이므로 **휘두르기는 남기고 명중만 없앤다.**
             Burst(target.Position, false);
+            if (_host == null) return;
             DamagePlayer(attacker.Atk);
         }
 
@@ -2300,7 +4055,7 @@ namespace Game.Module.InGame
         // 정본에 그런 규칙이 없다 — 정본은 화상·빙결·저주를 **버프가 켜 줄 때만** 건다
         // (BUF_T02 살라만더·드라군 / BUF_T03 백마법사·영매 / BUF_S05 영매·드라군).
         // 기본 공격이 항상 원소를 묻히면 그 버프 여섯 개가 팔 물건을 잃는다.
-        // 상태이상 자체(ApplyBurn·ApplyFreeze·ApplyCurse)는 장판·얼티밋이 계속 쓴다.
+        // 상태이상 자체(ApplyBurn·ApplyFreeze·ApplyCurse)는 장판·액티브 스킬이 계속 쓴다.
         // 버프로 다시 잇는 것은 추가 기획이 나온 뒤에 한다.
 
         // ── 설치물(자동 포탑) ──────────────────────────────────────
@@ -2330,19 +4085,289 @@ namespace Game.Module.InGame
         private void ApplyRoomFloor()
         {
             if (_floorImage == null) return;
-            var key = _canonRoom != null && _canonRoom.IsBoss
-                ? $"roomfloor_{BossKeyOfChapter()}"
-                : null;
-            var art = key != null ? GetSprite(key) : null;
-            _floorImage.sprite = art ?? _defaultFloor;
+
+            // 일반 방 바닥은 **챕터마다 심리스 타일 한 장**이다.
+            //
+            // 예전에는 방 한 칸을 통째로 그린 큰 그림을 챕터 × 템플릿(18장) 썼다.
+            // 그런데 그 그림들은 90° 수직 탑뷰에 어둡기만 하고 격자가 없어서
+            // **어디로 가고 있는지가 화면에서 안 읽혔다.** 큰 그림은 방 높이가
+            // 바뀔 때마다 늘어나 뭉개지기도 했다.
+            //
+            // 작은 체크무늬 타일을 반복하면 격자가 살아나 이동감이 생기고,
+            // 48방을 3장으로 덮는다. 아틀라스에 들어 있어 따로 물고 있을 필요도 없다.
+            int chapter = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+
+
+
+            // ── 지금은 **모든 방이 같은 배경 한 장**을 쓴다 ────────────────
+            //
+            // 챕터 × 템플릿 18장이 이미 있지만 전부 못 쓴다:
+            //   · 크기가 720×1530 (또는 보스 1260) 이다. 방은 936 이라 세로로 61 % 로
+            //     **눌려서** 정사각 타일이 납작한 직사각형이 되고 원이 타원이 된다.
+            //   · 평균 명도가 8~26 이다. 화면이 새까매서 어디로 가는지 안 읽힌다.
+            //     (규격이 맞는 twin_platform 은 33.6 · 상위10% 50.8)
+            //
+            // 그래서 규격·격자·밝기가 모두 맞는 한 장을 전 방에 깐다.
+            // **새 배경이 오면** `InterimRoomFloor` 를 지우고 아래 두 줄의 주석을 푼다 —
+            // 그때 확인할 것은 캔버스 720×936 · 바닥 줄눈 36 px · 안쪽 (72,144)~(648,864) 이다.
+            // 배경이 다 온 챕터는 **방마다 제 지형 배경**을 쓴다.
+            // 아직 안 온 챕터·보스방은 통과한 CH1 배경 한 장으로 버틴다.
+            // 새 배경이 오면 `FloorReadyChapters` 를 올리면 그만이다.
+            //
+            // ⚠ 챕터는 **방이 들고 있는 값**을 쓴다. 플레이어 진행도(`CurrentChapter`)로 읽으면
+            //   방과 어긋날 수 있고(디버그로 방을 건너뛸 때 실제로 CH2 방이 CH1 배경을 받았다),
+            //   무엇보다 배경은 **그 방의 성질**이지 플레이어의 상태가 아니다.
+            //
+            // ⚠ 보스방을 여기서 빼면 안 된다. 보스 전용 바닥은 아직 720×1260 이라
+            //   936 방에 눌려 들어가고 평균 명도도 8~29 라 화면이 새까매진다.
+            string floorKey = FloorKeyOf(_canonRoom, chapter);
+            // 장애물도 같은 무대 것을 찾도록 이름만 떼어 둔다.
+            // `roomfloor_env_junkyard` → `junkyard`, 연구소(`roomfloor_ch1_*`)는 빈 값.
+            const string EnvPrefix = "roomfloor_env_";
+            _floorEnv = floorKey.StartsWith(EnvPrefix) ? floorKey.Substring(EnvPrefix.Length) : string.Empty;
+            LoadRoomFloorAsync(floorKey).Forget();   // fire-and-forget
+            return;
+
+#pragma warning disable CS0162
+            var tile = GetSprite($"floor_tile_ch{chapter}");
+            if (tile != null)
+            {
+                SetFloorTile(tile);
+                // 보스방만 전용 바닥을 덮어쓴다 — 아래로 계속 간다.
+                if (_canonRoom == null || !_canonRoom.IsBoss) { _floorKey = null; return; }
+            }
+
+            string key = null, fallback = null;
+            // 보스 전용 바닥이 먼저다. 아직 안 온 보스는 제 챕터 바닥으로 떨어진다 —
+            // 여기서 되돌아갈 곳이 없으면 보스방만 회색 격자 위에서 싸우게 된다.
+            if (_canonRoom != null && _canonRoom.IsBoss)
+            {
+                fallback = key;
+                key = $"roomfloor_{BossSlug(_canonRoom.BossId)}";
+            }
+            LoadRoomFloorAsync(key, fallback).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
+#pragma warning restore CS0162
         }
 
-        private string BossKeyOfChapter()
+        // ── 방 바닥 ──────────────────────────────────────────────
+        //
+        // 바닥은 스프라이트가 아니라 **화면 한 장짜리 배경**이라 아틀라스에 넣지 않는다.
+        // 720×1530 무압축 한 장이 4MB 를 넘으므로 18장을 묶으면 챕터마다 수십 MB 가
+        // 상주한다. 대신 방마다 한 장씩 불러오고 **직전 것을 놓아 준다** —
+        // 어느 순간에도 살아 있는 바닥은 한 장이다.
+        //
+        // 불러오는 동안에는 지난 방 바닥을 그대로 둔다. 먼저 지우면 방을 넘길 때마다
+        // 바닥이 한 번 깜빡인다.
+
+        private const string RoomFloorPrefix = "roomfloor/";
+
+        /// <summary>
+        /// 새 배경이 다 올 때까지 **모든 방이 함께 쓰는 배경**.
+        /// 규격(720×936) · 바닥 줄눈 36 px · 밝기가 모두 맞는 유일한 한 장이다.
+        /// 나머지 17 장이 규격에 맞춰 다시 오면 이 상수와 `ApplyRoomFloor` 의 임시 분기를 지운다.
+        /// </summary>
+        private const string InterimRoomFloor = "roomfloor_ch1_twin_platform";
+
+        /// <summary>
+        /// 지형 배경 6종이 **다 들어온 챕터까지의 번호**. 여기까지는 방마다 제 배경을 쓴다.
+        /// 그 위 챕터는 아직 그림이 없어 `InterimRoomFloor` 한 장으로 버틴다.
+        /// CH2 6장이 들어오면 2, CH3 까지 오면 3 으로 올린다.
+        /// </summary>
+        private const int FloorReadyChapters = 1;
+
+        /// <summary>
+        /// 이 방이 쓸 배경.
+        ///
+        /// ── 왜 지형(Template)이 아니라 무대(Environment)로 나누나 ──────────
+        /// 지형별로 배경을 따로 그려 봤더니 **화면에서 구별이 안 됐다.**
+        /// CH1 여섯 장을 재 보면 서로 평균 픽셀차가 0.09~3.37 이다
+        /// (`pillar_cross` 는 `twin_platform` 과 사실상 같은 그림이다).
+        /// 반면 무대가 바뀌면 14~25 로 벌어진다. 눈에 보이는 축은 무대뿐이다.
+        ///
+        /// ── 스테이지 6구간 ────────────────────────────────────────
+        /// 원작이 스테이지 6곳이다. 우리 48방을 **챕터 3개 × 앞뒤**로 갈라
+        /// 여섯 구간을 만들고, 구간마다 무대를 바꾼다. 원작 순서를 따른다.
+        ///
+        ///   1  CH1 001~006   유령 연구소            (우리 설정 · 이야기의 출발)
+        ///   2  CH1 007~012   쓰레기 집적장          (원작 1)
+        ///   3  CH2 001~008   미사일 저장·정비 기지  (원작 2)
+        ///   4  CH2 009~016   밤의 도시 거리         (원작 3)
+        ///   5  CH3 001~010   밤의 공중기지 옥상     (원작 4)
+        ///   6  CH3 011~020   야간 정유소·굴뚝       (원작 6)
+        ///   보스 6방         포로 수용실·빙의 코어  (원작 5) — 챕터와 무관한 전용 아레나
+        ///
+        /// 지형 차이는 배경이 아니라 그 위에 얹히는 장애물 배치가 만든다.
+        /// </summary>
+        private static string FloorKeyOf(RoomEntry room, int fallbackChapter)
         {
-            int chapter = _player != null ? _player.CurrentChapter : 1;
-            var def = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
-            return def != null ? def.BossKey : "robot_snakes";
+            if (room == null) return InterimRoomFloor;
+
+            // 보스는 챕터와 무관하게 전용 아레나로 간다. 무게가 다른 자리다.
+            if (room.IsBoss) return BossArenaFloor;
+
+            int ch = Mathf.Clamp(room.Chapter, 1, 3);
+
+            // 방 번호로 챕터의 앞·뒤를 가른다. `ROOM_CH2_007` → 7.
+            // 깊이 값을 따로 들고 있지 않으므로 ID 가 가장 확실한 순서다.
+            int no = RoomNumberOf(room.RoomId);
+            int total = ch == 1 ? Ch1RoomCount : ch == 2 ? Ch2RoomCount : Ch3RoomCount;
+            bool late = no > total / 2;
+            int stage = (ch - 1) * 2 + (late ? 2 : 1);   // 1~6
+
+            // ── 테스트 — CH1 한 챕터에서 여섯 테마를 다 보여 준다 ──────────
+            //
+            // 평소 배치대로면 6구간을 다 보려면 **48방을 끝까지 깨야 한다.**
+            // 배경만 훑어보고 싶을 때 그건 너무 멀다. 이 스위치를 켜면
+            // CH1 12방 안에서 여섯 테마가 차례로 나온다 — 한 챕터만 깨면 다 본다.
+            //
+            // ⚠ CH1 의 보스는 006 · 012 다. 보스는 위에서 이미 전용 아레마로 빠졌으므로
+            //   006 을 건너뛴 만큼 번호를 하나 당겨야 007 이 6번째 테마가 된다.
+            if (CycleThemesInChapter1 && ch == 1)
+            {
+                int i = no - 1 - (no > 6 ? 1 : 0);
+                stage = i % 6 + 1;
+            }
+
+            return StageFloorKey(stage, room);
         }
+
+        /// <summary>구간 번호 → 배경. 실제 배치와 테스트 배치가 **같은 표**를 쓴다.</summary>
+        private static string StageFloorKey(int stage, RoomEntry room) => stage switch
+        {
+            // 1구간만 지형별 여섯 장이 이미 통과했다 — 그대로 쓴다.
+            1 => !string.IsNullOrEmpty(room.Template)
+                 ? $"roomfloor_ch1_{room.Template.ToLowerInvariant()}"
+                 : InterimRoomFloor,
+            2 => "roomfloor_env_junkyard",
+            3 => "roomfloor_env_missile",
+            4 => "roomfloor_env_street",
+            5 => "roomfloor_env_rooftop",
+            _ => "roomfloor_env_refinery",
+        };
+
+        private const string BossArenaFloor = "roomfloor_env_holding";
+        private const int Ch1RoomCount = 12;
+        private const int Ch2RoomCount = 16;
+        private const int Ch3RoomCount = 20;
+
+        /// <summary>`ROOM_CH2_007` → 7. 못 읽으면 0 이라 앞 구간으로 떨어진다.</summary>
+        private static int RoomNumberOf(string roomId)
+            => roomId != null && roomId.Length >= 3
+               && int.TryParse(roomId.Substring(roomId.Length - 3), out int n) ? n : 0;
+        private string _floorKey;        // 지금 띄우려는 바닥
+        private string _floorHeld;       // 실제로 메모리에 물고 있는 주소
+
+        /// <summary>
+        /// 지금 바닥을 읽는 중인 횟수. 0 이면 화면에 걸릴 것이 다 걸렸다는 뜻이다.
+        ///
+        /// ⚠ 바닥은 fire-and-forget 으로 읽는다. 그대로 두면 **가림막이 바닥보다 먼저 걷혀**
+        ///   방이 반만 그려진 화면이 잠깐 보인다. 부팅에서 이 값이 0 이 될 때까지 기다린다.
+        /// </summary>
+        private int _floorPending;
+
+        private async UniTaskVoid LoadRoomFloorAsync(string key, string fallback = null)
+        {
+            if (key == _floorKey) return;   // 같은 템플릿이 이어지면 다시 읽지 않는다
+            _floorKey = key;
+
+            if (string.IsNullOrEmpty(key)) { SetFloorSprite(null); return; }
+
+            _floorPending++;
+            try
+            {
+                var address = RoomFloorPrefix + key;
+                Sprite art = null;
+                try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
+                catch (Exception) { /* 아직 안 온 바닥이다. */ }
+
+                if (art == null && !string.IsNullOrEmpty(fallback))
+                {
+                    address = RoomFloorPrefix + fallback;
+                    try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
+                    catch (Exception) { /* 이것도 없으면 기본 바닥으로 떨어진다. */ }
+                }
+
+                // 기다리는 사이에 방이 또 바뀌었으면 이 결과는 버린다.
+                // 방금 물어 온 것도 놓아 줘야 한다 — 안 그러면 빨리 넘길수록 쌓인다.
+                if (_floorKey != key || _floorImage == null)
+                {
+                    // ⚠ **지금 화면이 쓰고 있는 주소면 놓지 않는다.** 방을 빠르게 넘기면
+                    //   같은 주소를 두 번 읽는 일이 생기는데, 늦게 끝난 쪽이 그것을 놓아 버리면
+                    //   참조가 0 이 되어 그림이 사라지고 다음 로드부터 계속 실패한다.
+                    //   (방 48개를 연속으로 넘겨 보다가 실제로 그렇게 됐다.)
+                    if (art != null && address != _floorHeld)
+                        CoreModule.Get<IResourceManager>().Release(address);
+                    return;
+                }
+
+                SetFloorSprite(art);
+
+                // 새 바닥이 걸린 **뒤에** 지난 것을 놓는다. 먼저 놓으면 한 프레임 빈다.
+                var old = _floorHeld;
+                _floorHeld = art != null ? address : null;
+                if (old != null && old != _floorHeld) CoreModule.Get<IResourceManager>().Release(old);
+            }
+            finally { _floorPending--; }   // 도중에 return 해도 반드시 내려간다
+        }
+
+        private void SetFloorSprite(Sprite art)
+        {
+            if (_floorImage == null) return;
+            if (art != null)
+            {
+                // 전용 바닥은 방 한 칸을 통째로 그린 그림이라 늘려서 채운다.
+                _floorImage.sprite = art;
+                _floorImage.type = Image.Type.Simple;
+                return;
+            }
+            // ⚠ 못 읽었을 때 기대는 곳은 **챕터 타일**이다.
+            //   예전에는 720×900 자리표시자 한 장(`roomfloor.png`)을 물고 있었는데,
+            //   그 한 장이 인게임 아틀라스를 2048 에서 못 벗어나게 붙들고 있었다.
+            //   타일은 이미 아틀라스에 있으므로 따로 지고 갈 것이 없다.
+            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            _floorImage.sprite = GetSprite($"floor_tile_ch{ch}") ?? _defaultFloor;
+            _floorImage.type = Image.Type.Tiled;
+        }
+
+        /// <summary>챕터 바닥 타일을 반복해서 깐다. 방이 아무리 길어도 무늬가 안 늘어난다.</summary>
+        private void SetFloorTile(Sprite tile)
+        {
+            if (_floorImage == null) return;
+            _floorImage.sprite = tile;
+            _floorImage.type = Image.Type.Tiled;
+        }
+
+        /// <summary>
+        /// 정본 보스 ID → 바닥 그림 이름.
+        ///
+        /// ⚠ 챕터로 고르면 안 된다. 챕터마다 보스가 **둘**이라(중간·최종)
+        ///   챕터 기준으로 찾으면 두 방이 같은 바닥을 쓰고, 그나마도
+        ///   `BossTable` 에 없는 보스는 엉뚱한 이름으로 떨어진다.
+        ///   방이 제 보스를 들고 있으므로 그것을 그대로 쓴다.
+        /// </summary>
+        /// <summary>
+        /// 정본 보스 ID → 우리 키. 그림 이름과 바닥 이름이 같은 슬러그를 쓴다 —
+        /// 둘이 어긋나면 어느 쪽이 진짜인지 코드를 읽어야만 알 수 있게 된다.
+        /// </summary>
+        private static string BossSlug(string bossId) => bossId switch
+        {
+            "B01" => "crusher",
+            "B02" => "guardian",
+            "B03" => "kingpin",
+            "B04" => "python",
+            "B05" => "robot_snakes",
+            "B06" => "sludge",
+            _ => "boss",
+        };
+
+        /// <summary>
+        /// 그림이 아직 안 온 보스가 빌려 쓸 몸.
+        ///
+        /// 지금은 여섯 보스가 전부 제 그림을 갖고 있어 비어 있다.
+        /// 빌릴 것이 생기면 여기 한 줄을 더한다 — 이 표가 곧
+        /// "아직 그림이 없는 보스" 목록이라, 미리 올리는 쪽도 이것을 보고 판단한다.
+        /// </summary>
+        private static string BossStand(string slug) => slug;
 
         private void TickDeploy(float dt)
         {
@@ -2352,15 +4377,26 @@ namespace Game.Module.InGame
             if (me == null || _host == null || _host.Key != DeployHostKey) return;
             if (_deployCooldown > 0f) return;
 
-            int alive = 0;
-            for (int i = 0; i < _deployables.Count; i++) if (_deployables[i].IsActive) alive++;
-            if (alive >= 2) return;   // 화면이 포탑으로 덮이면 무엇이 적인지 안 보인다
+            if (AliveDeployables(ghostly: false) >= 2) return;   // 화면이 포탑으로 덮이면 무엇이 적인지 안 보인다
 
             _deployCooldown = DeployCooldown;
             SpawnDeployable(me.Position);
         }
 
-        private void SpawnDeployable(Vector2 at)
+        private int AliveDeployables(bool ghostly)
+        {
+            int n = 0;
+            for (int i = 0; i < _deployables.Count; i++)
+            {
+                var d = _deployables[i];
+                if (d != null && d.IsActive && d.Ghostly == ghostly) n++;
+            }
+            return n;
+        }
+
+        private void SpawnDeployable(Vector2 at, bool ghostly = false,
+                                     float seconds = DeploySeconds, float range = DeployRange,
+                                     int damage = -1, float fireInterval = -1f)
         {
             Deployable d = null;
             for (int i = 0; i < _deployables.Count; i++)
@@ -2380,13 +4416,20 @@ namespace Game.Module.InGame
             }
 
             // 전용 그림이 아직 없다. 로봇을 줄여 쓴다 — 무엇이 놓았는지는 읽힌다.
-            d.SetSprite(UnitGet(DeployHostKey, "s") ?? UnitGet(DeployHostKey));
+            // 유령 포대는 고스트를 쓴다. 로봇 몸이 아닐 때도 나오므로 로봇 그림을 쓰면
+            // "저 로봇은 어디서 났나" 가 된다.
+            d.SetSprite(ghostly
+                ? UnitGet("ghost", "s") ?? UnitGet("ghost")
+                : UnitGet(DeployHostKey, "s") ?? UnitGet(DeployHostKey));
 
             // 정본 BUF_T06 스마트 배치 — 재조준이 빨라진다(= 발사 간격이 준다)
-            float interval = DeployFireInterval * (1f - _buffs.DeployRetargetCut);
-            d.Spawn(at, DeploySeconds, DeployRange,
-                    Mathf.RoundToInt(_host.Atk * _buffs.AttackMul * 0.6f),
-                    Mathf.Max(0.25f, interval));
+            float interval = fireInterval > 0f
+                ? fireInterval
+                : DeployFireInterval * (1f - _buffs.DeployRetargetCut);
+            int atk = damage >= 0
+                ? damage
+                : Mathf.RoundToInt(_host.Atk * _buffs.AttackMul * 0.6f);
+            d.Spawn(at, seconds, range, atk, Mathf.Max(0.25f, interval), ghostly);
         }
 
         private void TickDeployables(float dt)
@@ -2407,10 +4450,10 @@ namespace Game.Module.InGame
                           fromPlayer: true, target, _config.ShotSize, ShotPlayerColor,
                           _config.ShotLifeSeconds,
                           // 정본 S08 도탄 터렛 — 포탑 탄도 튕긴다
-                          bounces: SynergyOn(SynergyKind.BounceTurret) ? 1 : 0);
+                          bounces: 0);
 
                 // 정본 S01/S03 — 로봇 포탑이 불을 물려받는다. 쏜 자리에 불장판이 남는다.
-                if (SynergyOn(SynergyKind.NapalmTurret) || _buffs.DeployablesBurn)
+                if (_buffs.DeployablesBurn)
                     SpawnField(target.Position, 90f * _buffs.AoeMul, 2f,
                                FieldEffect.Burn, 3, fromPlayer: true);
             }
@@ -2424,7 +4467,10 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || e.IsDying) continue;
-                float d = Vector2.Distance(from, e.Position);
+                // 가장자리까지 잰다 — 거리를 재는 자는 온 코드에서 하나여야 한다.
+                // 스킬이 "반경 안 최근접" 을 물을 때 보스만 72px 멀리 있는 것으로 세면,
+                // 코앞의 보스를 두고 뒤쪽 잡몹에게 사슬이 날아간다.
+                float d = Vector2.Distance(from, e.Position) - BodyExcess(e);
                 if (d > bestD) continue;
                 bestD = d; best = e;
             }
@@ -2549,9 +4595,18 @@ namespace Game.Module.InGame
                         if (d > f.Radius * 0.7f) HurtByField(u, _buffs.SlowFieldEdgeDamage, toEnemy);
                     }
                     break;
-                case FieldEffect.Burn:   u.ApplyBurn(1.2f); break;
-                case FieldEffect.Freeze: u.ApplyFreeze(1.2f); break;
-                case FieldEffect.Curse:  u.ApplyCurse(1.2f); break;
+                case FieldEffect.Burn:
+                    u.ApplyBurn(1.2f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Burn, 1.2f);
+                    break;
+                case FieldEffect.Freeze:
+                    u.ApplyFreeze(1.2f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Freeze, 1.2f);
+                    break;
+                case FieldEffect.Curse:
+                    u.ApplyCurse(1.2f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Curse, 1.2f);
+                    break;
             }
             if (f.DamagePerTick > 0) HurtByField(u, f.DamagePerTick, toEnemy);
         }
@@ -2603,6 +4658,705 @@ namespace Game.Module.InGame
         private Unit _focusTarget;
         private int _focusHits;
 
+        /// <summary>
+        /// 정본 v2.3 카드가 붙이는 피해 보정. 곱으로 쌓는다.
+        ///   C002 정밀 조준 — 살아 있는 적이 **하나뿐일 때만**
+        ///   C003 마무리 본능 — 상대 체력이 낮을수록 (30% 이하에서 최대)
+        ///   C015 보스 압축 — 보스에게
+        /// </summary>
+        private float CardDamageMul(Unit victim)
+        {
+            float m = 1f;
+
+            if (_buffs.SingleTargetBonus > 0f)
+            {
+                int alive = 0;
+                for (int i = 0; i < _enemies.Count && alive < 2; i++)
+                {
+                    var e = _enemies[i];
+                    if (e != null && e.IsAlive && !e.IsDying) alive++;
+                }
+                if (alive == 1) m *= 1f + _buffs.SingleTargetBonus;
+            }
+
+            if (_buffs.ExecuteBonus > 0f && victim.HpMax > 0)
+            {
+                // 체력 30% 이하에서 계수가 다 실린다. 그 위로는 비례해서 줄어든다.
+                float hp = (float)victim.Hp / victim.HpMax;
+                float t = Mathf.Clamp01((0.7f - hp) / 0.4f);
+                m *= 1f + _buffs.ExecuteBonus * t;
+            }
+
+            if (_buffs.BossBonus > 0f && victim.IsBoss) m *= 1f + _buffs.BossBonus;
+
+            if (_buffs.SustainBonus > 0f)
+            {
+                // 같은 대상 1~4타 = 25/50/75/100%. 대상이 바뀌거나 1.5초가 비면 초기화된다.
+                if (_sustainTarget != victim || Time.time - _sustainAt > SustainGapSeconds)
+                { _sustainTarget = victim; _sustainHits = 0; }
+                _sustainAt = Time.time;
+                _sustainHits = Mathf.Min(_sustainHits + 1, SustainMaxHits);
+                m *= 1f + _buffs.SustainBonus * _sustainHits / SustainMaxHits;
+            }
+
+            return m;
+        }
+
+        // ── C005 연속 압박 ───────────────────────────────────────
+        private const int SustainMaxHits = 4;
+        private const float SustainGapSeconds = 1.5f;
+        private Unit _sustainTarget;
+        private int _sustainHits;
+        private float _sustainAt;
+
+        // ── C032 영혼 복제 ───────────────────────────────────────
+        //
+        // 유효 **기본 공격** 8회마다 직전 공격을 한 번 더 낸다.
+        // 복제된 공격은 카운터를 올리지 않는다 — 안 막으면 8타마다 무한히 늘어난다
+        // (정본 PROC 규칙: NoRecursiveProc).
+        private const int EchoEveryHits = 8;
+        private int _echoHits;
+        private bool _echoing;
+
+        /// <summary>기본 공격 한 번을 셌다. 8회째면 true — 부르는 쪽이 한 번 더 낸다.</summary>
+        private bool CountEcho()
+        {
+            if (_buffs.EchoPercent <= 0f || _echoing) return false;
+            if (++_echoHits < EchoEveryHits) return false;
+            _echoHits = 0;
+            return true;
+        }
+
+        // ── C030 유령 포대 ───────────────────────────────────────
+        //
+        // 유효 기본 공격 8회마다 3초짜리 포대 1기가 선다. 로봇의 설치물과 같은
+        // 구조를 쓰지만 **로봇 몸이 아닐 때도** 나와야 하므로 수를 따로 센다.
+        // C032 와 주기가 같지만 카운터는 나눠 둔다 — 하나만 든 판에서
+        // 다른 카드의 진행도를 빌려 쓰게 되면 8타가 8타가 아니게 된다.
+        private const int TurretEveryHits = 8;
+        private const float TurretSeconds = 3f;
+        private const float TurretInterval = 0.75f;
+        private const float TurretRangeMeters = 11f;
+        private int _turretHits;
+
+        private void TryGhostTurret(Unit attacker)
+        {
+            if (_buffs.GhostTurretPercent <= 0f || attacker == null) return;
+            if (++_turretHits < TurretEveryHits) return;
+            _turretHits = 0;
+            if (AliveDeployables(ghostly: true) >= 1) return;   // 정본 max=1
+
+            int atk = Mathf.Max(1, Mathf.RoundToInt(
+                attacker.Atk * _buffs.AttackMul * _buffs.GhostTurretPercent));
+            SpawnDeployable(attacker.Position, ghostly: true,
+                            seconds: TurretSeconds, range: TurretRangeMeters * _pxPerMeter,
+                            damage: atk, fireInterval: TurretInterval);
+        }
+
+        // ── C013 폭발 메아리 ─────────────────────────────────────
+        //
+        // 터진 자리에서 잠깐 뒤 한 번 더 터진다. 같은 프레임에 두 번 때리면
+        // 그냥 "피해가 는 것"이라 카드가 눈에 안 보인다 — 늦게 와야 메아리로 읽힌다.
+        // 2차 충격은 다시 메아리치지 않는다(정본 PROC 규칙: NoRecursiveProc).
+        private const float EchoBlastDelay = 0.3f;
+        private const float EchoBlastRadiusRatio = 0.72f;
+
+        private struct EchoBlast
+        {
+            public Vector2 At;
+            public float Radius;
+            public int Damage;
+            public float Delay;
+            public string Kind;
+        }
+
+        private readonly List<EchoBlast> _echoBlasts = new();
+
+        private void QueueEchoBlast(Vector2 at, float radius, int damage, string kind)
+        {
+            if (_buffs.ExplosiveEchoPercent <= 0f) return;
+            int dmg = Mathf.RoundToInt(damage * _buffs.ExplosiveEchoPercent);
+            if (dmg <= 0) return;
+            _echoBlasts.Add(new EchoBlast
+            {
+                At = at,
+                Radius = radius * EchoBlastRadiusRatio,
+                Damage = dmg,
+                Delay = EchoBlastDelay,
+                Kind = kind,
+            });
+        }
+
+        private void TickEchoBlasts(float dt)
+        {
+            for (int i = _echoBlasts.Count - 1; i >= 0; i--)
+            {
+                var b = _echoBlasts[i];
+                b.Delay -= dt;
+                if (b.Delay > 0f) { _echoBlasts[i] = b; continue; }
+
+                _echoBlasts.RemoveAt(i);
+                SpawnImpact(b.At, b.Kind, b.Radius * 2f);
+                for (int k = 0; k < _enemies.Count; k++)
+                {
+                    var e = _enemies[k];
+                    if (e == null || !e.IsAlive) continue;
+                    if (Vector2.Distance(b.At, e.Position) > b.Radius) continue;
+                    e.IsAggro = true;
+                    HurtByField(e, b.Damage, toEnemy: true);
+                }
+            }
+        }
+
+        // ── 진화 ─────────────────────────────────────────────────
+        //
+        // 카드도 액티브 스킬도 아니다. **카드 두 장을 재료로 삼아 얻는 별개의 공격**이고,
+        // 얻어도 재료 카드는 그대로 남는다(정본 `ingredients retained`).
+        // 버튼이 없다 — 제 쿨다운으로 알아서 나간다(`INDEPENDENT_COOLDOWN`).
+        // 그래서 액티브 스킬처럼 "언제 쓸까" 를 묻지 않고, 빌드가 완성됐다는 사실 자체가 보상이다.
+
+        private readonly List<EvolutionEntry> _evolutions = new();
+        private readonly List<float> _evoCooldown = new();
+        private readonly List<string> _evoMaterial = new();
+
+        public IReadOnlyList<EvolutionEntry> Evolutions => _evolutions;
+
+        private bool OwnsCard(string key) => !string.IsNullOrEmpty(key) && _buffs.LevelOf(key) > 0;
+
+        /// <summary>재료가 다 모였으면 진화를 준다. 슬롯(3칸)이 차 있으면 넘어간다.</summary>
+        private void TryCompleteEvolution()
+        {
+            if (_evolutionTable == null) return;
+            if (_evolutions.Count >= _evolutionTable.MaxSlots) return;
+
+            _evoOwned.Clear();
+            for (int i = 0; i < _evolutions.Count; i++) _evoOwned.Add(_evolutions[i].EvolutionId);
+
+            var ready = _evolutionTable.FindReady(OwnsCard, _evoOwned);
+            if (ready == null) return;
+
+            _evolutions.Add(ready);
+            // 첫 발이 바로 나가지 않게 절반쯤 돌려놓고 시작한다 —
+            // 얻자마자 터지면 무엇 때문에 터졌는지 안 보인다.
+            _evoCooldown.Add(ready.Cooldown * 0.5f);
+
+            _bus.Publish(new EvolutionGainedEvent
+            {
+                EvolutionId = ready.EvolutionId,
+                NameKr = ready.NameKr,
+                SlotsUsed = _evolutions.Count,
+                SlotsMax = _evolutionTable.MaxSlots,
+            });
+        }
+
+        private readonly List<string> _evoOwned = new();
+
+        /// <summary>이 카드가 지금 진화를 완성시키는 재료인가.</summary>
+        private bool IsEvolutionMaterial(string buffKey)
+        {
+            RefreshEvolutionMaterials();
+            return _evoMaterial.Contains(buffKey);
+        }
+
+        private void RefreshEvolutionMaterials()
+        {
+            if (_evolutionTable == null) { _evoMaterial.Clear(); return; }
+            _evoOwned.Clear();
+            for (int i = 0; i < _evolutions.Count; i++) _evoOwned.Add(_evolutions[i].EvolutionId);
+            _evolutionTable.CollectMissing(_evoMaterial, OwnsCard, _evoOwned);
+        }
+
+        /// <summary>
+        /// 3택1에 재료 카드를 **반드시 한 장 끼워 넣는다** (정본: 1인 100% 확정).
+        /// 이미 들어 있으면 그대로 두고, 없으면 가장 덜 쓸모 있는 칸을 바꾼다.
+        /// 이것이 없으면 진화는 운으로만 완성되고, 레시피를 아는 것이 의미를 잃는다.
+        /// </summary>
+        private void InjectEvolutionMaterial(HashSet<string> exclude)
+        {
+            if (_buffTable == null || _evolutionTable == null) return;
+            if (_evolutions.Count >= _evolutionTable.MaxSlots) return;
+
+            RefreshEvolutionMaterials();
+            if (_evoMaterial.Count == 0) return;
+
+            for (int i = 0; i < _offer.Count; i++)
+                if (_evoMaterial.Contains(_offer[i].BuffKey)) return;   // 이미 들어 있다
+
+            // 뽑을 수 있는 재료 중 하나를 고른다
+            BuffEntry pick = null;
+            int seen = 0;
+            for (int i = 0; i < _evoMaterial.Count; i++)
+            {
+                var e = _buffTable.Get(_evoMaterial[i]);
+                if (e == null || !e.Implemented) continue;
+                if (exclude != null && exclude.Contains(e.BuffKey)) continue;
+                if (_rng.Next(++seen) == 0) pick = e;
+            }
+            if (pick == null) return;
+
+            // 마지막 칸을 바꾼다. 앞칸을 밀어내면 목록이 매번 같은 자리에서 흔들린다.
+            _offer[_offer.Count - 1] = pick;
+        }
+
+        // ── 진화 발동 ────────────────────────────────────────────
+        //
+        // 정본 11종의 `AttackType` 을 5가지 거동으로 묶어 두었다(`EvolutionKind`).
+        // 수치(쿨다운·계수·타수·탄수·사거리·반경·지속)는 정본 값을 그대로 쓴다 —
+        // 무엇으로 보이느냐만 묶었고 얼마나 세냐는 묶지 않았다.
+
+        private void TickEvolutions(float dt)
+        {
+            if (_evolutions.Count == 0) return;
+            var me = Avatar;
+            if (me == null || _host == null) return;   // 유령은 공격하지 않는다
+
+            for (int i = 0; i < _evolutions.Count; i++)
+            {
+                _evoCooldown[i] -= dt;
+                if (_evoCooldown[i] > 0f) continue;
+
+                var e = _evolutions[i];
+                _evoCooldown[i] = e.Cooldown;
+                FireEvolution(e, me);
+            }
+        }
+
+        private void FireEvolution(EvolutionEntry e, Unit me)
+        {
+            float range = e.RangeMeters * _pxPerMeter;
+            var target = NearestEnemy(me.Position, range);
+            var dir = target != null
+                ? (target.Position - me.Position).normalized
+                : me.Facing;
+            if (dir.sqrMagnitude < 0.0001f) dir = Vector2.up;
+
+            int dmg = Mathf.Max(1, Mathf.RoundToInt(
+                me.Atk * _buffs.AttackMul * e.DamageCoef));
+            float speed = e.ProjectileSpeed * _pxPerMeter;
+
+            switch (e.Kind)
+            {
+                case EvolutionKind.PiercingLane:
+                    // 앞으로 꿰뚫는다. 관통 99 라 줄에 선 것을 전부 지난다.
+                    FireEvolutionShot(me, dir, speed, dmg, e, pierce: true);
+                    break;
+
+                case EvolutionKind.ConeBurst:
+                {
+                    // 부채꼴. 탄이 하나면 넓게 한 발, 여럿이면 벌려 쏜다.
+                    int n = Mathf.Max(3, e.ProjectileCount);
+                    for (int k = 0; k < n; k++)
+                    {
+                        float a = Mathf.Lerp(-38f, 38f, n == 1 ? 0.5f : k / (float)(n - 1));
+                        FireEvolutionShot(me, Rotate(dir, a), speed, dmg, e, pierce: e.Pierce > 0);
+                    }
+                    if (e.RadiusMeters > 0f && target != null)
+                        SpawnField(target.Position, e.RadiusMeters * _pxPerMeter,
+                                   Mathf.Max(1f, e.DurationSeconds), FieldEffect.Burn,
+                                   Mathf.Max(1, dmg / 6), fromPlayer: true);
+                    break;
+                }
+
+                case EvolutionKind.Orbit:
+                {
+                    // 사방으로 흩어진다
+                    int n = Mathf.Clamp(e.ProjectileCount, 4, 12);
+                    for (int k = 0; k < n; k++)
+                    {
+                        float a = 360f * k / n;
+                        FireEvolutionShot(me, Rotate(Vector2.up, a), speed, dmg, e,
+                                          pierce: e.Pierce > 0);
+                    }
+                    break;
+                }
+
+                case EvolutionKind.Field:
+                {
+                    // 바닥에 남는다. 대상이 없으면 발밑에 깐다.
+                    var at = target != null ? target.Position : me.Position;
+                    var effect = (e.StatusType ?? string.Empty).ToUpperInvariant() switch
+                    {
+                        var t when t.Contains("FREEZE") || t.Contains("CHILL") => FieldEffect.Freeze,
+                        var t when t.Contains("CURSE") || t.Contains("SIGIL") => FieldEffect.Curse,
+                        var t when t.Contains("BURN") || t.Contains("FLAME") => FieldEffect.Burn,
+                        _ => FieldEffect.Damage,
+                    };
+                    SpawnField(at, Mathf.Max(60f, e.RadiusMeters * _pxPerMeter),
+                               Mathf.Max(1f, e.DurationSeconds), effect,
+                               Mathf.Max(1, dmg / Mathf.Max(1, e.HitCount)), fromPlayer: true);
+                    break;
+                }
+
+                case EvolutionKind.Turret:
+                    // 대신 쏘아 주는 것을 놓는다. 로봇 포탑과 같은 길을 쓴다.
+                    SpawnDeployable(me.Position, ghostly: true,
+                                    seconds: Mathf.Max(2f, e.DurationSeconds),
+                                    range: range,
+                                    damage: Mathf.Max(1, dmg),
+                                    fireInterval: Mathf.Max(0.2f,
+                                        e.DurationSeconds / Mathf.Max(1, e.HitCount)));
+                    break;
+            }
+        }
+
+        private void FireEvolutionShot(Unit me, Vector2 dir, float speed, int dmg,
+                                       EvolutionEntry e, bool pierce)
+        {
+            var shot = RentShot();
+            if (shot == null) return;
+
+            // 진화마다 제 탄 그림이 있다(shot_evo01~11, 3장 회전 루프).
+            // 터짐은 제 것이 없어 모티프 몸의 터짐을 빌린다 — 낫은 표창, 업화는 불꽃.
+            var frames = ShotFrames(EvoShotKey(e)) ?? ShotFrames("pulse");
+            shot.SetSprite(frames, EvoImpactKind(e), loop: true);
+            shot.Fire(me.Position, me.Position + dir * 100f, speed, dmg,
+                      fromPlayer: true, null, _config.ShotSize * 1.35f, ShotPlayerColor,
+                      _config.ShotLifeSeconds, pierce: pierce, bounces: e.Bounce);
+            if (e.Homing > 0f) shot.SetHoming(e.Homing);
+        }
+
+        /// <summary>진화 탄 그림 이름. `EVO01` -> `evo01` -> `shot_evo01_1..3`.</summary>
+        private static string EvoShotKey(EvolutionEntry e)
+            => string.IsNullOrEmpty(e.EvolutionId) ? null : e.EvolutionId.ToLowerInvariant();
+
+        /// <summary>
+        /// 터짐 그림은 진화 전용이 없다. 모티프가 쓰던 것을 그대로 빌린다 —
+        /// 색과 재질이 이미 맞아 있어 따로 그릴 이유가 없다.
+        /// </summary>
+        private static string EvoImpactKind(EvolutionEntry e) => e.EvolutionId switch
+        {
+            "EVO01" => "shuriken",   // 낫 - 쇠붙이가 스치는 자국
+            "EVO02" => "flame",
+            "EVO03" => "shuriken",
+            "EVO04" => "bullet",     // 야구공 - 딱 맞는 한 점
+            "EVO05" => "grenade",
+            "EVO06" => "frost",
+            "EVO07" => "grenade",
+            "EVO08" => "frost",
+            "EVO09" => "magic",
+            "EVO10" => "grenade",
+            "EVO11" => "laser",
+            _ => "pulse",
+        };
+
+        private static Vector2 Rotate(Vector2 v, float deg)
+        {
+            float r = deg * Mathf.Deg2Rad;
+            float c = Mathf.Cos(r), s = Mathf.Sin(r);
+            return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
+        }
+
+        // ── 상점 방 ──────────────────────────────────────────────
+        //
+        // 이벤트가 "운을 걸겠는가" 라면 상점은 "모아 둔 것을 지금 쓰겠는가" 다.
+        // 값이 정확히 붙어 있고 살 수 있는 수가 정해져 있다(정본: 판당 2회, 카드 1장).
+        // 무제한이면 골드를 아낄 이유가 사라지고 방마다 들르는 정산소가 된다.
+
+        private readonly List<ShopOffer> _shopOffers = new();
+        private ShopChapter _shopRules;
+        private int _shopBought, _shopCardsBought;
+        private bool _shopOpen;
+
+        public bool IsShopOpen => _shopOpen;
+
+        private void OpenShop()
+        {
+            _shopOpen = false;
+            _shopOffers.Clear();
+            if (_shopTable == null || _buffTable == null) { SpawnExit(); return; }
+
+            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            _shopRules = _shopTable.ForChapter(ch);
+            if (_shopRules == null) { SpawnExit(); return; }
+
+            _shopBought = _shopCardsBought = 0;
+
+            // 못 올리는 카드는 진열하지 않는다 — 살 수는 있는데 아무 일도 안 일어나면
+            // 값이 거짓이 된다. 슬롯이 다 찼으면 이미 가진 것만 판다.
+            _shopFilter.Clear();
+            foreach (var k in _buffs.ExcludedKeys) _shopFilter.Add(k);
+            if (_buffs.SlotsFull)
+                for (int i = 0; i < _buffTable.Entries.Count; i++)
+                {
+                    var e = _buffTable.Entries[i];
+                    if (_buffs.LevelOf(e.BuffKey) == 0) _shopFilter.Add(e.BuffKey);
+                }
+
+            _shopTable.Draw(_shopOffers, ch, Mathf.Max(1, _shopRules.OfferCount), _shopFilter, _rng);
+            _shopOpen = true;
+            PublishShop();
+        }
+
+        private readonly HashSet<string> _shopFilter = new();
+
+        private void PublishShop()
+        {
+            int n = _shopOffers.Count + 1;   // 마지막 칸은 회복이다
+            var names = new string[n];
+            var descs = new string[n];
+            var prices = new int[n];
+            var can = new bool[n];
+
+            for (int i = 0; i < _shopOffers.Count; i++)
+            {
+                var o = _shopOffers[i];
+                var card = _buffTable.Get(o.BuffKey);
+                int lv = _buffs.LevelOf(o.BuffKey);
+                names[i] = card != null
+                    ? (lv > 0 ? $"{card.NameKr}  Lv.{lv}→{Mathf.Min(lv + 1, card.MaxLevel)}" : card.NameKr)
+                    : o.CardId;
+                descs[i] = card != null ? card.Description : string.Empty;
+                prices[i] = PriceOf(o);
+                can[i] = CanBuyCard(o);
+            }
+
+            int heal = _shopOffers.Count;
+            names[heal] = "치료";
+            descs[heal] = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
+            prices[heal] = _shopRules.HealPrice;
+            can[heal] = _shopBought < _shopRules.TotalPurchaseLimit
+                     && _runGold >= _shopRules.HealPrice;
+
+            _bus.Publish(new ShopOpenedEvent
+            {
+                Names = names, Descs = descs, Prices = prices, CanBuy = can,
+                Gold = _runGold,
+                LimitLine = $"남은 구매 {_shopRules.TotalPurchaseLimit - _shopBought}회"
+                          + $" · 카드 {_shopRules.CardPurchaseLimit - _shopCardsBought}장",
+            });
+        }
+
+        /// <summary>암시장 연줄(EV_CH2_05)이 붙어 있으면 그만큼 싸다. 최소 1 골드는 받는다.</summary>
+        private int PriceOf(ShopOffer o)
+            => _shopDiscount <= 0 ? o.Price
+             : Mathf.Max(1, Mathf.RoundToInt(o.Price * (100 - _shopDiscount) / 100f));
+
+        private bool CanBuyCard(ShopOffer o)
+            => _shopBought < _shopRules.TotalPurchaseLimit
+            && _shopCardsBought < _shopRules.CardPurchaseLimit
+            && _runGold >= PriceOf(o);
+
+        /// <summary>진열대에서 하나를 산다. UI 가 호출한다.</summary>
+        public void BuyShopItem(int index)
+        {
+            if (!_shopOpen || _shopRules == null) return;
+            if (index < 0 || index > _shopOffers.Count) return;
+
+            string line;
+            if (index == _shopOffers.Count)
+            {
+                if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
+                if (_runGold < _shopRules.HealPrice) return;
+                AddRunGold(-_shopRules.HealPrice);
+                _shopBought++;
+
+                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * _shopRules.GhostHealPct / 100);
+                if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * _shopRules.HostHealPct / 100));
+                PublishHp();
+                line = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
+            }
+            else
+            {
+                var o = _shopOffers[index];
+                if (!CanBuyCard(o)) return;
+                var card = _buffTable.Get(o.BuffKey);
+                if (card == null) return;
+
+                AddRunGold(-PriceOf(o));
+                _shopBought++;
+                _shopCardsBought++;
+                _buffs.Apply(card);
+                _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
+
+                // 산 물건은 진열대에서 뺀다. 남겨 두면 다 산 뒤에도 값이 붙어 있어
+                // 아직 살 수 있는 것처럼 보인다.
+                _shopOffers.RemoveAt(index);
+                line = $"{card.NameKr} 구입";
+            }
+
+            _bus.Publish(new ShopPurchasedEvent { Index = index, ResultLine = line });
+            PublishShop();
+        }
+
+        /// <summary>상점을 닫고 나간다. UI 가 호출한다.</summary>
+        public void CloseShop()
+        {
+            if (!_shopOpen) return;
+            _shopOpen = false;
+            _shopOffers.Clear();
+            SpawnExit();
+        }
+
+        // ── C031 과충전 회로 ─────────────────────────────────────
+        //
+        // 전기의 정체성은 "튄다" 다. 맞은 대상에게 한 번 더 넣는 것만으로는
+        // 그냥 공격력 증가라 카드가 눈에 안 보인다 — 옆 사람까지 감전돼야
+        // 화면에서 무슨 일이 났는지 읽힌다.
+        //
+        // "제한된"(정본) 은 재사용 대기로 푼다. 매 타격마다 터지면 연사 호스트가
+        // 화면을 전기로 덮는다.
+        private const float OverchargeCooldown = 0.55f;
+        private const float OverchargeArcRange = 220f;
+        private float _overchargeTimer;
+
+        private void Overcharge(Unit victim, int hitDamage)
+        {
+            if (_buffs.OverchargePercent <= 0f || _overchargeTimer > 0f) return;
+            if (victim == null) return;
+
+            int spark = Mathf.Max(1, Mathf.RoundToInt(hitDamage * _buffs.OverchargePercent));
+            _overchargeTimer = OverchargeCooldown;
+
+            if (victim.IsAlive)
+            {
+                ShowDamage(victim.Position, spark, toEnemy: true);
+                SpawnImpact(victim.Position, "pulse");
+                if (victim.TakeDamage(spark)) { KillEnemy(victim); }
+                else if (victim.IsBoss)
+                    _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
+            }
+
+            // 옆으로 한 번 튄다. 맞은 당사자는 건너뛴다.
+            Unit arc = null;
+            float best = OverchargeArcRange;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || e == victim || !e.IsAlive || e.IsDying) continue;
+                float d = Vector2.Distance(victim.Position, e.Position);
+                if (d > best) continue;
+                best = d; arc = e;
+            }
+            if (arc == null) return;
+
+            arc.IsAggro = true;
+            SpawnImpact(arc.Position, "pulse");
+            HurtByField(arc, spark, toEnemy: true);
+        }
+
+        // ── C014 연쇄 번짐 ───────────────────────────────────────
+        //
+        // 상태이상을 **건 그 순간** 옆으로 옮긴다. 이미 있던 화상 전이(BUF_T02)는
+        // 화상만, 그것도 계속 도는 방식이었다. 이쪽은 세 가지 모두를 한 번만 옮긴다 —
+        // 계속 돌면 방 하나가 통째로 얼어붙는다.
+        private const float StatusChainRadius = 170f;
+
+        private enum StatusKind { Burn, Freeze, Curse }
+
+        private void ChainStatus(Unit from, StatusKind kind, float seconds)
+        {
+            if (_buffs.StatusChainPercent <= 0 || from == null) return;
+            if (_rng.Next(100) >= _buffs.StatusChainPercent) return;
+
+            Unit near = null;
+            float best = StatusChainRadius;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || e == from || !e.IsAlive || e.IsDying) continue;
+                float d = Vector2.Distance(from.Position, e.Position);
+                if (d > best) continue;
+                best = d; near = e;
+            }
+            if (near == null) return;
+
+            switch (kind)
+            {
+                case StatusKind.Burn:   near.ApplyBurn(seconds); break;
+                case StatusKind.Freeze: near.ApplyFreeze(seconds); break;
+                case StatusKind.Curse:  near.ApplyCurse(seconds); break;
+            }
+        }
+
+        // ── C018 위기 방벽 ───────────────────────────────────────
+        //
+        // 체력이 위험해지는 **그 순간** 한 번 선다. 방마다 한 번뿐이라
+        // 아껴 쓸 수도, 믿고 밀어붙일 수도 있다.
+        private const int CrisisHpPercent = 30;
+        private int _barrier;
+        private bool _barrierUsedThisRoom;
+
+        public int Barrier => _barrier;
+
+        /// <summary>위기에 들어섰는지 본다. 들어섰으면 방벽을 세운다.</summary>
+        private void CheckCrisisBarrier()
+        {
+            if (_buffs.CrisisBarrierPercent <= 0f || _barrierUsedThisRoom) return;
+
+            int hp, hpMax;
+            if (_host != null) { hp = _host.Hp; hpMax = _host.HpMax; }
+            else { hp = _ghostHp; hpMax = GhostHpMax; }
+            if (hpMax <= 0 || hp * 100 > hpMax * CrisisHpPercent) return;
+
+            _barrierUsedThisRoom = true;
+            _barrier = Mathf.Max(1, Mathf.RoundToInt(hpMax * _buffs.CrisisBarrierPercent));
+
+            // 방벽이 섰다는 것이 화면에 남아야 한다. 체력바만 보고 있으면
+            // 다음 한 방을 왜 안 맞았는지 알 수 없다.
+            var t = RentDamageText();
+            if (t != null && Avatar != null) t.Show(Avatar.Position, $"방벽 {_barrier}", HealColor);
+        }
+
+        /// <summary>방벽이 먼저 받아 낸다. 남은 피해만 돌려준다.</summary>
+        private int AbsorbWithBarrier(int amount)
+        {
+            if (_barrier <= 0 || amount <= 0) return amount;
+            int taken = Mathf.Min(_barrier, amount);
+            _barrier -= taken;
+            return amount - taken;
+        }
+
+        // ── C023 회피 잔상 ───────────────────────────────────────
+        //
+        // 이 게임에 회피 동작이 없다. 그래서 "위험 회피"(정본)의 실체를
+        // **스쳐 지나간 탄**으로 정한다 — 몸에 닿을 뻔했는데 맞지 않고 지나가
+        // 수명을 다한 탄. 실제로 아슬아슬하게 움직였을 때만 일어난다.
+        private const float GrazeRadiusMul = 2.6f;   // 명중 반경의 몇 배까지를 "스쳤다" 로 볼지
+        private const float AfterimageCooldown = 1.1f;
+        private float _afterimageTimer;
+
+        private void FireAfterimage()
+        {
+            if (_buffs.AfterimagePercent <= 0f || _afterimageTimer > 0f) return;
+            var me = Avatar;
+            if (me == null) return;
+
+            var target = NearestEnemy(me.Position, _config.EnemyDetectRange * 1.5f);
+            if (target == null) return;
+
+            var shot = RentShot();
+            if (shot == null) return;
+            _afterimageTimer = AfterimageCooldown;
+
+            int dmg = Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * _buffs.AfterimagePercent));
+            shot.SetSprite(ShotFrames("pulse"), "pulse");
+            shot.Fire(me.Position, target.Position, _config.ShotSpeedPlayer * _buffs.ShotSpeedMul, dmg,
+                      fromPlayer: true, target, _config.ShotSize, ShotPlayerColor,
+                      _config.ShotLifeSeconds, bounces: 0);
+        }
+
+        /// <summary>C025·C026·C027 각인 — 기본 공격에 상태이상을 얹는다.</summary>
+        private void ApplyImprints(Unit victim)
+        {
+            if (victim == null || !victim.IsAlive) return;
+            float sec = _config.SlowSeconds;
+            if (_buffs.FlameImprint > 0 && _rng.Next(100) < _buffs.FlameImprint)
+            { victim.ApplyBurn(sec); ChainStatus(victim, StatusKind.Burn, sec); }
+            if (_buffs.FrostImprint > 0 && _rng.Next(100) < _buffs.FrostImprint)
+            { victim.ApplyFreeze(sec); ChainStatus(victim, StatusKind.Freeze, sec); }
+            if (_buffs.CurseImprint > 0 && _rng.Next(100) < _buffs.CurseImprint)
+            { victim.ApplyCurse(sec); ChainStatus(victim, StatusKind.Curse, sec); }
+        }
+
+        // ── C024 전투 스텝 ───────────────────────────────────────
+        //
+        // 기본 공격을 끝낸 뒤 1.2초 동안 이동이 빨라진다. 지속시간만 갱신되고
+        // 배율은 겹치지 않는다 — 겹치면 연사 호스트가 계속 달린다.
+        private const float CombatStepSeconds = 1.2f;
+        private float _combatStep;
+
+        private float CombatStepMul => _combatStep > 0f ? 1f + _buffs.CombatStepBonus : 1f;
+
         private float FocusMul(Unit victim)
         {
             if (_buffs.FocusPerStack <= 0f) return 1f;
@@ -2627,23 +5381,42 @@ namespace Game.Module.InGame
         {
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
-            AddMaintain();
-            TryMark(victim);
             // 저주는 받는 피해를 늘린다. 표시되는 숫자도 늘어난 값이어야 —
             // 저주를 걸어 놓고 숫자가 그대로면 걸린 줄 모른다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.CurseDamageMul));
+            // 표식·저주 증폭. 상태이상 저주와 **다른 층**이다 —
+            // 저것은 관통 평타가 쌓는 것이고, 이것은 액티브 스킬이 거는 것이다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.AmpDamageMul));
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * ScorchMul(victim)));
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * FocusMul(victim)));
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * CardDamageMul(victim)));
+            // C004 갑옷 분쇄 — 원거리(`ApplyShotHit`)와 같은 규칙. 근접·액티브 스킬도
+            // 플레이어 공격이므로 여기서 빠지면 근접 호스트만 이 카드를 못 쓴다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
+            if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
+            ApplyImprints(victim);
             // 실드 순환(정본 B02) — 이 구간에는 때려도 잘 안 들어간다.
             // 그래야 "지금은 피할 때" 라는 구간이 생긴다.
             if (victim.IsBoss && _bossShield > 0f)
                 damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
+            // 가디언 정면 감소 · 취약 창 보너스. 둘 다 보스에게만 붙는다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * GuardMul(victim) * BreakMul(victim)));
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
-            int slow = (p?.SlowPercent ?? 0) + _buffs.SlowPercent;
-            int steal = (p?.LifestealPercent ?? 0) + _buffs.LifestealPercent;
-            if (slow > 0) victim.ApplySlow(slow, _config.SlowSeconds);
-            if (steal > 0 && _host != null)
-                Leech(Mathf.Max(1, damage * steal / 100));
+            // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
+            // 터졌는지 아닌지가 읽혀야지, 25% 냐 45% 냐는 화면에서 구별되지 않는다.
+            if (((p?.SlowPercent ?? 0) + _buffs.SlowPercent) > 0 && Roll(SlowChance))
+                ApplySlowProc(victim);
+            // 혈갈이 도는 동안은 확률이 아니라 확정이고, 도는 양도 배율이 붙는다.
+            if (((p?.LifestealPercent ?? 0) + _buffs.LifestealPercent) > 0 && _host != null
+                && (IsDrainForced || Roll(LeechChance)))
+                Leech(Mathf.Max(1, Mathf.RoundToInt(damage * LeechPercent / 100f * DrainMul)));
+
+            MeleeJobProc(victim, p);
+
+            // C031 과충전 — 맞은 자리에서 전기가 튄다. 이 경로는 전부 플레이어 공격이다
+            // (근접 타격과 액티브 스킬). 적 공격은 `DamagePlayer` 로 간다.
+            Overcharge(victim, damage);
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -2656,16 +5429,17 @@ namespace Game.Module.InGame
         // 보스 탄은 잡몹과 색을 나눈다 — 화면이 탄으로 덮이면 무엇을 피해야 할지 안 보인다
         private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
 
-        /// <summary>한 줄로 늘어세울 때 탄 사이 간격(탄 상자 대비). 1.0 이면 딱 붙는다.</summary>
-        private const float TrailGapRatio = 1.25f;
+        /// <summary>한 번에 나가는 탄 수 상한. 수치가 어긋났을 때의 마지막 방어선이다.</summary>
+        private const int MaxShotsPerVolley = 8;
 
-        /// <param name="trailBack">
-        /// 발사 지점을 조준 방향의 **뒤로** 이 만큼 물린다. 같은 방향으로 같은 속도로
-        /// 날아가므로 앞뒤 간격이 그대로 유지된다 — 한 줄로 늘어서 날아간다.
-        /// 각도를 벌리는 것과 달리 조준이 흐트러지지 않는다.
-        /// </param>
+        /// <summary>여러 발을 벌리는 각도(발당). 8°는 겹치고 24°는 빗나간다.</summary>
+        private const float ExtraFanDegrees = 14f;
+
+        /// <summary>부채꼴 탄을 조준선과 직각으로 밀어 두는 폭(탄 상자 대비).</summary>
+        private const float FanSideRatio = 0.5f;
+
         private void FireShot(Unit attacker, Unit target, bool fromPlayer, float angleOffsetDeg,
-                              bool lastShot = false, int split = 1, float trailBack = 0f)
+                              bool lastShot = false, int split = 1, float sideOffset = 0f)
         {
             var shot = RentShot();
             if (shot == null) return;
@@ -2681,22 +5455,29 @@ namespace Game.Module.InGame
             // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
             // 방향 스프라이트를 그린 의미가 없다.
             var muzzle = attacker.MuzzlePosition;
-            if (trailBack > 0f)
+            if (sideOffset != 0f)
             {
                 var aim = target.Position - muzzle;
-                if (aim.sqrMagnitude > 0.0001f) muzzle -= aim.normalized * trailBack;
+                if (aim.sqrMagnitude > 0.0001f)
+                {
+                    var f = aim.normalized;
+                    // 조준선의 법선. 부채꼴 탄이 총구 한 점에서 겹쳐 태어나지 않게 민다.
+                    muzzle += new Vector2(-f.y, f.x) * sideOffset;
+                }
             }
 
             shot.Fire(muzzle, target.Position, speed,
                       fromPlayer
                           ? Mathf.Max(1, Mathf.RoundToInt(
-                                attacker.Atk * _buffs.AttackMul * MaintainDamageMul
+                                attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)
                                 * (lastShot ? 1f + _buffs.LastShotBonus : 1f) / split))
                           : Mathf.Max(1, Mathf.RoundToInt(attacker.Atk / (float)split)),
-                      fromPlayer, target, _config.ShotSize,
+                      fromPlayer, target,
+                      fromPlayer ? _config.ShotSize * BeamWidthMul : _config.ShotSize,
                       fromPlayer ? ShotPlayerColor : ShotEnemyColor,
                       _config.ShotLifeSeconds,
-                      pierce: (p != null && p.Kind == AttackKind.Pierce) || (fromPlayer && _buffs.Pierce),
+                      pierce: (p != null && p.Kind == AttackKind.Pierce)
+                              || (fromPlayer && (_buffs.Pierce || IsPierceGranted)),
                       slowPercent: (p?.SlowPercent ?? 0) + (fromPlayer ? _buffs.SlowPercent : 0),
                       lifestealPercent: (p?.LifestealPercent ?? 0) + (fromPlayer ? _buffs.LifestealPercent : 0),
                       angleOffsetDeg: angleOffsetDeg,
@@ -2705,6 +5486,11 @@ namespace Game.Module.InGame
                       bounces: fromPlayer
                           ? _buffs.Bounces + ((p != null && p.ReflectsShots) ? 1 : 0)
                           : 0);
+
+            if (fromPlayer && _buffs.HomingStrength > 0f) shot.SetHoming(_buffs.HomingStrength);
+            // 정본이 유도라고 적은 적만 휜다(지금은 코만도(미사일) 하나).
+            // 나머지는 쏜 방향으로 끝까지 직진한다.
+            else if (!fromPlayer && p != null && p.CanonHoming > 0f) shot.SetHoming(p.CanonHoming);
 
             // 던지는 탄도 물린 자리에서 출발해야 앞뒤 간격이 유지된다
             if (kind == "grenade") ThrowAsGrenade(shot, muzzle, target.Position,
@@ -2747,7 +5533,8 @@ namespace Game.Module.InGame
         private void Explode(Projectile shot)
         {
             var at = shot.Position;
-            float r = BlastRadius * (shot.FromPlayer ? _buffs.AoeMul : 1f);
+            float r = (shot.BlastRadiusOverride > 0f ? shot.BlastRadiusOverride : BlastRadius)
+                    * (shot.FromPlayer ? _buffs.AoeMul : 1f);
             // 불덩이가 피해 반경과 같은 크기로 뜬다. 그림이 반경보다 작으면
             // "안 맞았는데 맞았다" 로 읽히고, 크면 그 반대가 된다.
             SpawnImpact(at, shot.Kind, r * 2f);
@@ -2766,6 +5553,8 @@ namespace Game.Module.InGame
                 if (Vector2.Distance(at, e.Position) > r) continue;
                 ApplyShotHit(e, shot);
             }
+
+            QueueEchoBlast(at, r, shot.Damage, shot.Kind);
         }
 
         /// <summary>풀에서 하나 꺼낸다. 매 발마다 GameObject 를 만들면 교전 중 GC 가 튄다.</summary>
@@ -2783,6 +5572,10 @@ namespace Game.Module.InGame
             { "hopper_smg", "bullet" }, { "commando_mg", "bullet" },
             { "commando_laser", "laser" },
             { "commando_grenade", "grenade" },
+            // ⚠ 여기가 비어 있어서 미사일 코만도가 **딱총을 쐈다.** 표에 없는 배우는
+            //   `ShotFrames(null)` 로 떨어져 기본 탄 한 장(`shot_1`)이 나간다.
+            //   정본에서 유일한 유도탄(CanonHoming 0.25)인데 화면에서는 점이었다.
+            { "commando_missile", "missile" },
             { "salamander", "flame" }, { "dragoon", "flame" },
             { "dragon_blue", "frost" }, { "snowwoman", "frost" },
             { "ninja", "shuriken" }, { "ninja_chain", "shuriken" },
@@ -2792,6 +5585,11 @@ namespace Game.Module.InGame
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
             { "baseball", "bullet" },   // 원작에 던지는 공이 없다 — 작은 공으로 대신한다
             { "amazon_elite", "bullet" },
+            // 첫 원거리 잡몹. 전용 탄이 없으면 흰 점으로 나가서
+            // 무엇이 날아오는지 안 보인다.
+            { TrashGunnerKey, TrashGunnerKey },
+            { TrashWardenKey, TrashWardenKey },
+            { TrashCoilKey,   TrashCoilKey },
         };
 
         /// <summary>캐릭터별 탄 그림. 아직 안 온 것은 기본 탄으로 떨어진다.</summary>
@@ -2809,13 +5607,104 @@ namespace Game.Module.InGame
         /// 날개를 접은 채 미끄러져 가고, 그게 "박쥐가 안 난다"로 보인다.
         /// 표창(회전 2장)·수류탄(회전 4장)도 같다 — 던진 물건은 돌면서 간다.
         /// </summary>
+        /// 미사일 4장도 반복이다 — 몸통은 네 장 모두 같고 **꼬리불만 뛴다.**
+        /// 한 번만 넘기면 꼬리가 가장 긴 4번에서 굳은 채로 날아간다.
         private static bool LoopsFrames(string kind)
-            => kind == "drain" || kind == "shuriken" || kind == "grenade";
+            => kind == "drain" || kind == "shuriken" || kind == "grenade" || kind == "missile";
 
         /// <summary>
         /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —
         /// 8종을 한 번에 받지 못해도 받은 것부터 보이게 한다.
         /// </summary>
+        // ── 상태 표시(fx_*) ───────────────────────────────────
+        //
+        // 착탄(`impact_*`)과 이름을 나눠 둔다 — 이쪽은 탄이 맞은 자리가 아니라
+        // **몸 위에서** 벌어지는 일이라, 몸을 따라다니고 상태가 풀릴 때까지 돈다.
+        private readonly Dictionary<string, Sprite[]> _fxSprite = new();
+
+        private Sprite[] FxFrames(string name)
+        {
+            if (_fxSprite.TryGetValue(name, out var cached)) return cached;
+            var list = new List<Sprite>(4);
+            for (int i = 1; i <= 8; i++)
+            {
+                var sp = GetSprite($"fx_{name}_{i}");
+                if (sp == null) break;
+                list.Add(sp);
+            }
+            var frames = list.Count > 0 ? list.ToArray() : null;
+            _fxSprite[name] = frames;   // 없으면 null 을 넣어 둔다 — 매 프레임 다시 찾지 않게
+            return frames;
+        }
+
+        /// <summary>한 번 보여 주고 끝나는 표시(흡혈).</summary>
+        private void SpawnFx(string name, Vector2 at, float size)
+            => PlayFx(name, at, size, loop: false);
+
+        /// <summary>돌아가는 표시를 하나 얻는다. 상태가 풀릴 때 <see cref="Impact.Stop"/> 로 돌려준다.</summary>
+        private Impact TakeLoopFx(string name, Vector2 at, float size)
+            => PlayFx(name, at, size, loop: true);
+
+        private Impact PlayFx(string name, Vector2 at, float size, bool loop)
+        {
+            var frames = FxFrames(name);
+            if (frames == null) return null;
+
+            for (int i = 0; i < _impacts.Count; i++)
+                if (!_impacts[i].IsActive) { _impacts[i].Play(at, frames, size, loop); return _impacts[i]; }
+
+            if (_impacts.Count >= MaxImpacts) return null;
+            var go = new GameObject($"Impact_{_impacts.Count}", typeof(RectTransform));
+            var im = go.AddComponent<Impact>();
+            im.Cache(_shotLayer, size);
+            _impacts.Add(im);
+            im.Play(at, frames, size, loop);
+            return im;
+        }
+
+        /// <summary>스턴 표시는 정수리 위에 뜬다. 그림 아래 절반이 비어 있어 얼굴을 가리지 않는다.</summary>
+        private const float StunFxSize = 48f;
+        private const float StunFxLift = 52f;
+        private const float ShieldFxSize = 96f;
+
+        private readonly Dictionary<Unit, Impact> _stunFx = new();
+        private readonly List<Unit> _stunFxDone = new();
+        private Impact _shieldFx;
+
+        /// <summary>
+        /// 굳은 몸 위에 표시를 띄우고, 풀린 몸의 표시는 거둔다.
+        /// 쉴드 링은 내 몸 하나뿐이라 따로 들고 있는다.
+        /// </summary>
+        private void TickStatusFx(float dt)
+        {
+            _stunFxDone.Clear();
+            foreach (var kv in _stunFx)
+            {
+                var u = kv.Key;
+                if (u == null || !u.IsAlive || !u.IsStunned) { kv.Value?.Stop(); _stunFxDone.Add(u); continue; }
+                kv.Value?.MoveTo(u.Position + Vector2.up * StunFxLift);
+            }
+            for (int i = 0; i < _stunFxDone.Count; i++) _stunFx.Remove(_stunFxDone[i]);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || !e.IsStunned || _stunFx.ContainsKey(e)) continue;
+                var fx = TakeLoopFx("stun", e.Position + Vector2.up * StunFxLift, StunFxSize);
+                if (fx != null) _stunFx[e] = fx;
+            }
+
+            var me = Avatar;
+            bool wantShield = me != null && me.IsAlive && me.Shield > 0;
+            if (wantShield)
+            {
+                if (_shieldFx == null || !_shieldFx.IsActive)
+                    _shieldFx = TakeLoopFx("shield", me.Position, ShieldFxSize);
+                _shieldFx?.MoveTo(me.Position);
+            }
+            else if (_shieldFx != null) { _shieldFx.Stop(); _shieldFx = null; }
+        }
+
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
             var frames = ImpactFrames(kind);
@@ -2875,8 +5764,15 @@ namespace Game.Module.InGame
             return frames;
         }
 
+        private readonly Dictionary<string, Sprite[]> _kindShotSprite = new();
+
         private Sprite[] ShotFrames(string kind)
         {
+            // `SpriteAtlas.GetSprite` 는 부를 때마다 새 Sprite 를 만든다(876행 주석 참조).
+            // 진화 원형탄은 한 번에 12발까지 나가므로 부를 때마다 만들면 그대로 쌓인다.
+            var cacheKey = kind ?? string.Empty;
+            if (_kindShotSprite.TryGetValue(cacheKey, out var hit)) return hit;
+
             var list = new List<Sprite>(4);
             for (int i = 1; i <= 8; i++)
             {
@@ -2889,7 +5785,9 @@ namespace Game.Module.InGame
                 var fallback = GetSprite("shot_1") ?? GetSprite("shot");
                 if (fallback != null) list.Add(fallback);
             }
-            return list.Count > 0 ? list.ToArray() : null;
+            var frames = list.Count > 0 ? list.ToArray() : null;
+            _kindShotSprite[cacheKey] = frames;
+            return frames;
         }
 
         private Projectile RentShot()
@@ -2928,11 +5826,11 @@ namespace Game.Module.InGame
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
-                if (!o.BlocksShot || !o.Bounds.Contains(at)) continue;
-                float dx = at.x - o.Bounds.center.x;
-                float dy = at.y - o.Bounds.center.y;
-                float ox = o.Bounds.width * 0.5f - Mathf.Abs(dx);
-                float oy = o.Bounds.height * 0.5f - Mathf.Abs(dy);
+                if (!o.BlocksShot || !o.ShotBounds.Contains(at)) continue;
+                float dx = at.x - o.ShotBounds.center.x;
+                float dy = at.y - o.ShotBounds.center.y;
+                float ox = o.ShotBounds.width * 0.5f - Mathf.Abs(dx);
+                float oy = o.ShotBounds.height * 0.5f - Mathf.Abs(dy);
                 return ox < oy ? new Vector2(Mathf.Sign(dx), 0f) : new Vector2(0f, Mathf.Sign(dy));
             }
             return Vector2.up;
@@ -2946,7 +5844,15 @@ namespace Game.Module.InGame
                 var p = _shots[i];
                 if (!p.IsActive) continue;
 
-                if (!p.Tick(dt)) { p.Despawn(); continue; }
+                if (!p.Tick(dt))
+                {
+                    // 수명을 다했다. 오는 길에 몸을 스쳤다면 그것이 곧 "피한 것"이다.
+                    if (p.GrazedPlayer) FireAfterimage();
+                    // 아무것도 못 맞히고 사라진 내 탄 = 빗나감. 과열 카운터를 되돌린다.
+                    if (p.FromPlayer && !p.HasHitAnything) ResetOverheat();
+                    p.Despawn();
+                    continue;
+                }
 
                 // 던진 탄은 공중에 있다 — 벽도 기둥도 사람도 스쳐 지나간다.
                 // 떨어진 그 순간에만 일이 벌어진다.
@@ -2958,13 +5864,25 @@ namespace Game.Module.InGame
                     continue;
                 }
 
+                // 가디언 「반사선」 — 정면으로 들어온 내 탄을 되돌려 보낸다.
+                // ⚠ 탄만 반사된다. 근접 타격은 그대로 들어간다(정본) —
+                //   그래서 이 4초 동안의 답이 "붙어서 때리거나 뒤로 돌거나" 가 된다.
+                if (p.FromPlayer && IsReflectLine && _boss != null && TryGuardReflect(_boss, p))
+                    continue;
+
                 // 방 벽에서 튕긴다. 도탄이 없는 탄은 그냥 밖으로 나가 수명으로 사라진다 —
                 // 벽에서 없애 버리면 화면 끝에서 탄이 뚝 끊겨 어색하다.
                 if (p.BouncesLeft > 0 && !BounceOffWalls(p)) { }
 
                 // 엄폐물에 막힌다. 이게 없으면 기둥이 그림일 뿐이라
                 // 뒤에 숨는 것이 아무 의미가 없다.
-                if (BlockedByCover(p.Position))
+                // 부술 수 있는 것이 먼저다. 막히기 전에 때려야 뚫린다.
+                if (p.FromPlayer && p.Damage > 0 && DamageCrate(p.Position, p.Damage))
+                {
+                    if (!p.Pierce) { p.Despawn(); continue; }
+                }
+
+                if (BlockedByCover(p.Position, p.FromPlayer))
                 {
                     // 도탄이 남아 있으면 기둥에서도 튕긴다. 정본 "도탄 벽" 지형지물이
                     // 이 경로를 쓴다 — 기둥이 막기만 하는 것이 아니라 되돌려 준다.
@@ -2980,11 +5898,26 @@ namespace Game.Module.InGame
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
                     SpawnImpact(ImpactPointOn(hit, p.Position), p.Kind);
                     ApplyShotHit(hit, p);
+                    SplashAround(hit, p);
                 }
                 else
                 {
                     if (me == null) { p.Despawn(); continue; }
-                    if (Vector2.Distance(p.Position, me.Position) > _config.ShotHitRadius) continue;
+                    float d = Vector2.Distance(p.Position, me.Position);
+                    if (d > _config.ShotHitRadius)
+                    {
+                        // 맞지는 않았지만 몸을 스쳤다. 표시만 해 두고 지나 보낸다 —
+                        // 여기서 바로 잔상을 내면 아직 피한 것이 아니다(뒤에서 맞을 수 있다).
+                        if (_buffs.AfterimagePercent > 0f
+                            && d <= _config.ShotHitRadius * GrazeRadiusMul) p.GrazedPlayer = true;
+                        continue;
+                    }
+                    // ⚠ **유령은 탄이 통과한다.** `DamagePlayer` 가 피해를 막고는 있었지만
+                    //   탄이 여기서 사라지고 명중 이펙트까지 터져서, 화면에는 유령이
+                    //   계속 맞고 있는 것으로 보였다 — 마침 Ghost HP 는 시계로 줄고 있어서
+                    //   "맞아서 닳는다" 로 읽힌다. 판정 자체를 지나가게 한다.
+                    if (_host == null) continue;
+
                     p.Despawn();
                     SpawnImpact(ImpactPointOn(me, p.Position), p.Kind);
                     DamagePlayer(p.Damage);
@@ -3019,52 +5952,123 @@ namespace Game.Module.InGame
             return null;
         }
 
+        /// <summary>중거리 직업의 착탄 범위. 한 칸(=오브젝트 한 칸)이 함께 터진다.</summary>
+        private const float MidSplashMeters = 1.0f;
+
+        /// <summary>
+        /// 맞은 **그 자리에서** 한 칸이 함께 터진다.
+        ///
+        /// 수류탄과 일부러 다르게 뒀다 — 수류탄은 포물선으로 **던지는** 것이라 기둥을
+        /// 넘어가고 땅에 떨어질 때 1.8칸이 터진다. 브레스는 앞으로 뻗는 것이라
+        /// 기둥에 막히고 첫 대상에서 1칸이 터진다. 같은 범위 공격인데 쓰는 자리가 갈린다.
+        ///
+        /// 중거리의 DPS 를 넷 중 가장 낮게(8.5) 잡아 둔 것이 이것 때문이다 —
+        /// 한 발이 여럿을 때리므로 한 명 기준으로는 낮아야 한다.
+        /// </summary>
+        private void SplashAround(Unit center, Projectile shot)
+        {
+            if (center == null || shot == null || _host == null) return;
+            if (JobOf(_host.Profile) != HostJob.Mid) return;
+
+            float r = MidSplashMeters * _pxPerMeter;
+            SpawnImpact(center.Position, shot.Kind, r * 2f);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e == center) continue;
+                if (Vector2.Distance(center.Position, e.Position) > r) continue;
+                ApplyShotHit(e, shot);
+            }
+        }
+
         private void ApplyShotHit(Unit victim, Projectile shot)
         {
             // 맞았으면 무조건 반응한다. 사거리가 탐지 거리보다 긴 호스트(히트맨 357)로
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
             victim.SetState(EnemyState.Hit);
-            AddMaintain();
-            TryMark(victim);
             int dmg = BouncedDamage(shot, shot.Damage);
             if (dmg <= 0) return;   // 버프 없이 튕긴 탄은 스쳐 지나간다
+
+            // 패시브 · 탄창 과열(호퍼 기관단총) — 연속 명중 N타마다 다음 1발이 3배.
+            // ⚠ **세는 것은 명중한 순간**이고, 터지는 것은 그 다음 발이다.
+            //   같은 발에 세고 터뜨리면 8타째가 곧 3배가 되어 "다음 1발" 이 사라진다.
+            if (shot.FromPlayer)
+            {
+                if (_overheatArmed)
+                {
+                    _overheatArmed = false;
+                    dmg = Mathf.RoundToInt(dmg * OverheatMul);
+                }
+                CountOverheat();
+            }
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.CurseDamageMul));
-            ShowDamage(victim.Position, dmg, toEnemy: true);
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.AmpDamageMul));
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * ScorchMul(victim)));
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * GuardMul(victim) * BreakMul(victim)));
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
+            // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
+            // 겹은 때린 다음에 쌓는다. 먼저 쌓으면 첫 타부터 보너스가 붙어
+            // "반복 공격이 약화시킨다" 가 아니라 그냥 공격력 증가가 된다.
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
+            if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
+            ApplyImprints(victim);
+
+            // 치명타는 **맨 마지막에** 곱한다. 다른 보정(저주·갑옷 분쇄·카드)을
+            // 다 태운 값에 얹어야 "크게 터진 한 방" 이 실제로 크다.
+            bool crit = shot.FromPlayer && RollCrit();
+            if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CritMultiplier));
+
+            ShowDamage(victim.Position, dmg, toEnemy: true, crit);
             bool dead = victim.TakeDamage(dmg);
-            if (shot.SlowPercent > 0) victim.ApplySlow(shot.SlowPercent, _config.SlowSeconds);
-            if (shot.LifestealPercent > 0 && _host != null)
-                Leech(Mathf.Max(1, shot.Damage * shot.LifestealPercent / 100));
+            if (shot.SlowPercent > 0 && Roll(SlowChance))
+                ApplySlowProc(victim);
+            if (shot.LifestealPercent > 0 && _host != null && Roll(LeechChance))
+                Leech(Mathf.Max(1, shot.Damage * LeechPercent / 100));
+
+            // C031 과충전 — 맞은 자리에서 전기가 튄다. 죽은 뒤에도 옆으로는 튄다.
+            if (shot.FromPlayer) Overcharge(victim, dmg);
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
                 _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
         }
 
+        /// <summary>
+        /// 몸을 입고 있을 때 **조건부 적의 잠금 표식**을 그려 줄 거리.
+        /// 빙의 사거리가 아니다 — 갈아탈 수 없으므로 뺏는 데는 안 쓰인다.
+        /// 호스트는 265 밖에서 쏘고 있어 유령 사거리(110)로는 표식이 영영 안 뜬다.
+        /// </summary>
+        private const float MarkShowRange = 460f;
+
         private void DamagePlayer(int amount)
         {
             if (IsInvulnerable) return;
+
+            // ⚠ **유령은 적 공격을 받지 않는다.** 몸이 없는 동안 줄어드는 것은
+            //   시계(자연 감소)와 몸을 잃고 놓아주는 값뿐이다.
+            //   유령 구간에서 맞아 죽으면 "빼앗을 몸을 찾는 시간" 이 위험 회피 시간으로
+            //   바뀌어, 이 게임이 묻는 질문(어느 몸을 언제 탈까)이 사라진다.
+            //
+            //   ⚠ 방벽(`AbsorbWithBarrier`)보다 **먼저** 빠져나간다. 뒤에 두면
+            //     맞지도 않는 피해에 방벽이 닳아 없어진다.
+            if (_host == null) return;
+
             // 받는 피해 감소(정본 BUF_A04). 0 이 되지 않게 최소 1 은 남긴다 —
             // 무적이 되어 버리면 버프가 아니라 버그로 보인다.
             amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.DamageTakenMul));
-            // 정본 S06 수호 돌진 — 구루의 가드 오라를 대시에 실어 나른다
-            if (SynergyOn(SynergyKind.ArmoredDash))
-                amount = Mathf.Max(1, Mathf.RoundToInt(amount * ArmoredDashDamageMul));
-            var hitAt = Avatar != null ? Avatar.Position : Vector2.zero;
-            if (_host != null)
-            {
-                ShowDamage(hitAt, amount, toEnemy: false);
-                if (_host.TakeDamage(amount)) LoseHost();
-                else PublishHp();
-                return;
-            }
-            // 유령은 싸울 수 없다. 원피해를 그대로 받으면 빙의하기 전에 소멸한다.
-            int reduced = _config.GhostDamage(amount);
-            ShowDamage(hitAt, reduced, toEnemy: false);   // 감소 후 값이라야 체력바와 맞는다
-            _ghostHp = Mathf.Max(0, _ghostHp - reduced);
-            _ghost.TakeDamage(reduced);
-            PublishHp();
-            if (_ghostHp == 0) Finish(false);
+            // 구루 수호 결계 — 카드 감소와 **곱해진다.** 더하면 −50% 두 장에 무적이 된다.
+            if (WardReduce > 0f)
+                amount = Mathf.Max(1, Mathf.RoundToInt(amount * (1f - WardReduce)));
+
+            // C018 위기 방벽 — 남아 있으면 이쪽이 먼저 받는다. 다 막았으면 끝이다.
+            amount = AbsorbWithBarrier(amount);
+            if (amount <= 0) return;
+
+            ShowDamage(Avatar != null ? Avatar.Position : Vector2.zero, amount, toEnemy: false);
+            if (_host.TakeDamage(amount)) LoseHost();
+            else PublishHp();
         }
 
         /// <summary>보호 시간 동안 근처 적을 늦춘다. 범위는 빙의 사거리의 두 배로 잡는다.</summary>
@@ -3096,6 +6100,9 @@ namespace Game.Module.InGame
             Retire(_host);       // 몸은 쓰러진다 — 유령이 그 자리에서 빠져나온다
             _host = null;
 
+            // 쓰다 잃은 몸이 가장 많이 준다. 타 본 값이다.
+            GrantShards(key, lost: true);
+
             // 기획서 1-2 A — 몸을 잃는 값(-20%)이 놓아주는 값(-15%)보다 커야
             // "죽기 전에 버리고 나온다" 가 선택지가 된다.
             int cost = Mathf.Max(1, GhostHpMax * _config.GhostDeathCostPercent / 100);
@@ -3114,7 +6121,6 @@ namespace Game.Module.InGame
             _ghostProtect = _config.GhostProtectSeconds;
             _drainCarry = 0f;
             _buffs.SetHost(null);
-            ResetMaintain();
             SlowNearbyEnemies(pos);
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
@@ -3142,7 +6148,9 @@ namespace Game.Module.InGame
                 // 화면 밖은 겨누지 않는다. 방이 화면보다 길어진 뒤로 안 보이는 적을 향해
                 // 쏘는 일이 생겼다 — 플레이어에게는 허공에 대고 쏘는 것으로 보인다.
                 if (!IsOnScreen(e)) continue;
-                float d = Vector2.Distance(from, e.Position);
+                // 여기도 가장자리다. 중심으로 재면 **덩치 큰 놈이 항상 멀어 보여**,
+                // 코앞의 보스를 두고 뒤쪽 잡몹을 겨눈다.
+                float d = Vector2.Distance(from, e.Position) - BodyExcess(e);
 
                 bool better;
                 switch (rule)
@@ -3163,16 +6171,232 @@ namespace Game.Module.InGame
             return best;
         }
 
+        // ── 파편 ─────────────────────────────────────────────
+        //
+        // **죽이면 1 · 빙의해 쓰다가 잃으면 3.**
+        //
+        // 이 차등이 설계의 핵심이다. "죽이면만 나온다" 가 되면 파밍이 빙의를 벌줘서
+        // 플레이어가 이 게임의 핵심 재미를 스스로 피하게 된다.
+        // 몸을 쓰다 잃는 쪽이 더 많이 줘야 "타 보고 배운다" 가 이득이 된다.
+        // 값은 `PlayerDataService.ShardDrop` 이 등급에서 뽑는다 —
+        // 일반 1/3 · 정예 2/6 · 희귀 10/30. 여기서 상수로 박지 않는다.
+
+        /// <summary>
+        /// 파편은 **그 호스트 것만** 쌓인다. 잡몹·보스는 빼앗을 몸이 아니므로 안 준다.
+        /// 지급 창구를 하나로 두어 두 경로가 어긋나지 않게 한다.
+        /// </summary>
+        private void GrantShards(string hostKey, bool lost)
+        {
+            if (_player == null || string.IsNullOrEmpty(hostKey)) return;
+            // 호스트 표에 없는 키(해골·박쥐 같은 잡몹)는 거른다.
+            if (_player.GetHost(hostKey) == null) return;
+            _player.AddShards(hostKey, _player.ShardDropFor(hostKey, lost));
+        }
+
         private void KillEnemy(Unit u)
         {
             u.SetState(EnemyState.Dead);
-            TryFirePillar(u);   // 저주가 걸린 채 죽으면 그 자리에서 불기둥 (S05)
+            // ⚠ **목록에서 빼기 전에** 옮긴다. 뺀 뒤에 부르면 옆 사람을 찾는
+            //   `EnemiesInRange` 가 이미 죽은 자리를 기준으로 도는 것은 같지만,
+            //   전이 대상 후보에서 자기 자신을 빼려고 목록 조작에 기대게 된다.
+            TransferMark(u);
+            SpreadCurse(u);
+            // C017 생명 회수 — 잡을 때마다 최대 체력의 몇 %를 돌려받는다
+            if (_buffs.RegenPercentPerKill > 0 && _host != null)
+                Leech(Mathf.Max(1, _host.HpMax * _buffs.RegenPercentPerKill / 100));
             if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
             Retire(u);
 
             GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+            // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다.
+            if (!u.IsBoss) GrantShards(u.Key, lost: false);
+
+            DropGold(u);
+        }
+
+        // ── 바닥에 떨어지는 골드 ─────────────────────────────────
+        //
+        // 방 보상 골드를 **적 머릿수로 나눠** 죽은 자리마다 떨어뜨린다. 방을 다 비우면
+        // 흩어져 있던 것이 한꺼번에 플레이어에게 빨려 들어온다.
+        //
+        // 방을 비운 순간 숫자만 올리면 어느 적이 얼마를 줬는지가 안 보이고,
+        // 남은 놈을 마저 잡을 이유도 화면에 안 나온다. 바닥에 쌓여 있어야
+        // "저기 아직 있다" 가 보인다.
+        //
+        // ⚠ **총액은 정본 그대로다**(`ROOM_REWARD.Gold`). 나누기만 하고 더 주지 않는다 —
+        //   연출 때문에 밸런스가 움직이면 표를 못 믿게 된다.
+
+        private readonly List<GoldPile> _goldPiles = new();
+        private Sprite _goldSprite;
+        private bool _goldCollecting;   // 방이 비어 빨려 들어가는 중
+        private int _goldCollected;     // 이번에 모은 액수
+
+        // ── 몹에 따라 다르게 떨군다 ─────────────────────────────
+        //
+        // 머릿수로 똑같이 나누면 **해골 한 마리와 엘리트 한 마리가 같은 값**이 된다.
+        // 뚫고 들어가야 하는 것이 더 줘야 그 자리로 갈 이유가 생긴다.
+        //
+        // ⚠ 총액은 여전히 정본(`ROOM_REWARD.Gold`) 그대로다. 비율만 바꾼다 —
+        //   연출 때문에 밸런스가 움직이면 표를 못 믿게 된다.
+        //   남은 액수를 남은 가중치로 나눠 주므로 마지막 한 마리에서 딱 떨어진다.
+
+        private int _goldPool;          // 아직 안 나눠 준 액수
+        private int _goldWeightLeft;    // 아직 안 죽은 것들의 가중치 합
+
+        /// <summary>이 몹이 가져가는 몫. 잡몹 1 · 빼앗을 몸 2 · 엘리트 4 · 보스 8.</summary>
+        private static int GoldWeightOf(Unit u)
+            => u == null ? 1
+             : u.IsBoss ? 8
+             : u.IsElite ? 4
+             : u.IsHostBody ? 2
+             : 1;
+
+        /// <summary>몫이 클수록 여러 무더기로 흩어진다. 많이 떨군 것이 눈에도 많아야 한다.</summary>
+        private static int GoldPilesFor(Unit u)
+            => u == null ? 3
+             : u.IsBoss ? 10
+             : u.IsElite ? 6
+             : u.IsHostBody ? 4
+             : 3;
+
+        /// <summary>바닥 골드 그림 크기(px).</summary>
+        private const float GoldPileSize = 28f;
+
+        /// <summary>
+        /// 이 방의 골드를 **가중치 합**으로 나눌 준비를 한다. 방에 들어설 때 한 번 센다.
+        /// 적이 없는 방이면 나눌 것도 없다 — 그때는 방을 비울 때 통째로 들어간다.
+        /// </summary>
+        private void PrepareGoldDrops()
+        {
+            _goldPool = 0;
+            _goldWeightLeft = 0;
+            _goldCollected = 0;
+            _goldCollecting = false;
+
+            int gold = _canonRoom != null ? _canonRoom.Gold : 0;
+            if (gold <= 0 || _enemies.Count == 0) return;
+
+            int weight = 0;
+            for (int i = 0; i < _enemies.Count; i++) weight += GoldWeightOf(_enemies[i]);
+            if (weight <= 0) return;
+
+            _goldPool = gold;
+            _goldWeightLeft = weight;
+        }
+
+        /// <summary>흩어지는 무더기 수의 흔들림. 매번 같은 수면 기계처럼 보인다.</summary>
+        private const int GoldPileJitter = 1;
+
+        private void DropGold(Unit u)
+        {
+            if (u == null || _goldPool <= 0 || _goldWeightLeft <= 0) return;
+
+            int w = GoldWeightOf(u);
+            // ⚠ **남은 것을 남은 가중치로 나눈다.** 처음에 한 번 나눠 두면 반올림이
+            //   쌓여 마지막에 남거나 모자란다. 이렇게 하면 마지막 한 마리에서 딱 떨어진다.
+            int amount = w >= _goldWeightLeft
+                       ? _goldPool
+                       : Mathf.Max(1, Mathf.RoundToInt((float)_goldPool * w / _goldWeightLeft));
+            amount = Mathf.Min(amount, _goldPool);
+
+            _goldPool -= amount;
+            _goldWeightLeft -= w;
+            if (amount <= 0) return;
+
+            // ⚠ **한 마리에서 여러 무더기가 흩어진다.** 하나만 떨구면
+            //   "떨어졌다" 가 아니라 "숫자가 하나 붙었다" 로 보인다.
+            //   액수가 무더기 수보다 적으면 그 수만큼만 떨군다 — 0 짜리는 안 만든다.
+            int want = GoldPilesFor(u) + _rng.Next(-GoldPileJitter, GoldPileJitter + 1);
+            int piles = Mathf.Clamp(want, 1, amount);
+
+            for (int i = 0; i < piles; i++)
+            {
+                // 나눈 나머지는 앞쪽 무더기에 한 닢씩 얹는다 — **총액은 그대로다.**
+                int share = amount / piles + (i < amount % piles ? 1 : 0);
+                var pile = RentGoldPile();
+                if (pile == null) return;
+                pile.Drop(u.Position, share);
+            }
+        }
+
+        private GoldPile RentGoldPile()
+        {
+            for (int i = 0; i < _goldPiles.Count; i++)
+                if (!_goldPiles[i].IsActive) return _goldPiles[i];
+
+            if (_fieldLayer == null || _goldPiles.Count >= MaxGoldPiles) return null;
+            if (_goldSprite == null) _goldSprite = GetSprite("goldicon");
+            if (_goldSprite == null) return null;
+
+            var g = GoldPile.Create(_fieldLayer, _goldSprite,
+                                    new Vector2(GoldPileSize, GoldPileSize));
+            _goldPiles.Add(g);
+            return g;
+        }
+
+        /// <summary>
+        /// 한 방에 놓을 수 있는 무더기 수.
+        /// 한 마리가 3~4개를 떨구고 방에 최대 9기가 서므로 40 이면 남는다.
+        /// </summary>
+        private const int MaxGoldPiles = 40;
+
+        /// <summary>방이 비었다. 바닥에 남은 것을 전부 플레이어에게 보낸다.</summary>
+        private void CollectGoldPiles()
+        {
+            var me = Avatar;
+            if (me == null) { GiveCollectedGold(true); return; }
+
+            bool any = false;
+            for (int i = 0; i < _goldPiles.Count; i++)
+            {
+                if (!_goldPiles[i].IsActive) continue;
+                _goldPiles[i].FlyTo(me.Position);
+                any = true;
+            }
+
+            if (!any) { GiveCollectedGold(true); return; }
+            _goldCollecting = true;
+            _goldCollected = 0;
+        }
+
+        private void TickGoldPiles(float dt)
+        {
+            var me = Avatar;
+            Vector2 at = me != null ? me.Position : Vector2.zero;
+
+            bool anyLeft = false;
+            for (int i = 0; i < _goldPiles.Count; i++)
+            {
+                var g = _goldPiles[i];
+                if (!g.IsActive) continue;
+                int amount = g.Amount;
+                if (g.Tick(dt, at)) _goldCollected += amount;
+                else anyLeft = true;
+            }
+
+            // 마지막 한 닢이 닿은 프레임에 한꺼번에 넣는다. 닿을 때마다 넣으면
+            // HUD 동전이 여러 번 나뉘어 날아 산만해진다.
+            if (_goldCollecting && !anyLeft) GiveCollectedGold(false);
+        }
+
+        /// <summary>모은 것을 판 골드에 넣는다. 여기서부터는 HUD 동전이 이어받는다.</summary>
+        private void GiveCollectedGold(bool useRoomTotal)
+        {
+            _goldCollecting = false;
+            int amount = useRoomTotal
+                ? (_canonRoom != null ? _canonRoom.Gold : 0)   // 적이 없던 방
+                : _goldCollected;
+            _goldCollected = 0;
+            if (amount > 0) AddRunGoldAtPlayer(amount);
+        }
+
+        private void ClearGoldPiles()
+        {
+            for (int i = 0; i < _goldPiles.Count; i++) _goldPiles[i].Despawn();
+            _goldCollecting = false;
+            _goldCollected = 0;
         }
 
         // ── 런 레벨 ──────────────────────────────────────────────
@@ -3202,8 +6426,14 @@ namespace Game.Module.InGame
             _pendingLevelUps++;
         }
 
-        /// <summary>방이 비기를 기다렸다가 레벨업 3택1 을 띄운다.</summary>
-        private const float BuffOfferDelay = 1.0f;
+        /// <summary>
+        /// 방이 비기를 기다렸다가 레벨업 3택1 을 띄운다. 1.0 → 0.5 → 0.1 로 줄였다.
+        ///
+        /// 이 뜸은 "적이 죽기도 전에 팝업이 먼저 뜬 것처럼" 보이지 않게 하려는 것이다.
+        /// 쓰러지는 연출은 `_dying` 이 따로 붙잡고 있으므로(아래 `TickPendingLevelUp`),
+        /// 여기서 더 기다릴 이유가 없다 — 기다린 만큼 그냥 멈춰 있는 시간이다.
+        /// </summary>
+        private const float BuffOfferDelay = 0.1f;
 
         private int _pendingLevelUps;
         private float _buffOfferTimer;
@@ -3236,14 +6466,40 @@ namespace Game.Module.InGame
         private void OfferBuff()
         {
             if (_awaitingBuff) return;
-            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile,
+
+            // 빌드 슬롯이 다 찼으면 **가진 카드만** 올린다 (정본 v2.3 BUILD_SLOT_INITIAL = 8).
+            // 안 그러면 9번째 카드를 골라 놓고 슬롯이 없어 버려지는 일이 생긴다.
+            var exclude = _buffs.ExcludedKeys;
+            if (_buffs.SlotsFull)
+            {
+                _slotFilter.Clear();
+                for (int i = 0; i < _buffTable.Entries.Count; i++)
+                {
+                    var e = _buffTable.Entries[i];
+                    if (_buffs.LevelOf(e.BuffKey) == 0) _slotFilter.Add(e.BuffKey);
+                }
+                foreach (var k in exclude) _slotFilter.Add(k);
+                exclude = _slotFilter;
+            }
+
+            _buffTable?.Draw(_offer, 3, exclude, _rng, _host?.Profile,
                              _player != null ? _player.CurrentChapter : 1);
             if (_offer.Count == 0) return;
 
+            InjectEvolutionMaterial(exclude);
+
             _awaitingBuff = true;
             var keys = new string[_offer.Count];
-            for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
-            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys, Level = _level });
+            var mats = new bool[_offer.Count];
+            for (int i = 0; i < _offer.Count; i++)
+            {
+                keys[i] = _offer[i].BuffKey;
+                mats[i] = IsEvolutionMaterial(_offer[i].BuffKey);
+            }
+            _bus.Publish(new BuffOfferEvent
+            {
+                OfferedKeys = keys, Level = _level, IsEvolutionMaterial = mats,
+            });
         }
 
         /// <summary>
@@ -3297,11 +6553,35 @@ namespace Game.Module.InGame
 
         /// <summary>맞은 자리에 피해 수치를 띄운다. 풀이 다 차면 조용히 넘어간다.</summary>
         private void ShowDamage(Vector2 at, int damage, bool toEnemy)
+            => ShowDamage(at, damage, toEnemy, false);
+
+        private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit)
         {
             if (damage <= 0) return;
             var t = RentDamageText();
             if (t == null) return;
-            t.Show(at, damage, toEnemy ? DamageToEnemy : DamageToPlayer);
+            t.Show(at, damage, crit ? CritDamageColor : toEnemy ? DamageToEnemy : DamageToPlayer, crit);
+        }
+
+        /// <summary>치명타 숫자 색. 평타(흰색)와 한눈에 갈려야 한다.</summary>
+        private static readonly Color CritDamageColor = new(1f, 0.83f, 0.29f, 1f);
+
+        // ── 치명타 ──────────────────────────────────────────────
+        //
+        // ⚠ 확률 효과 5종(흡혈·스턴·약화·반사·쉴드)과 **다른 층**이다.
+        //   그쪽은 패시브 스킬이고 이쪽은 스탯이라, 몸을 바꾸면 값이 통째로 바뀐다.
+
+        /// <summary>지금 몸의 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
+        private float CritPercent =>
+            HostStats.CritPercent(_config, _host?.Profile, GhostLevel,
+                                  _player != null ? _player.GhostLevelMax : 50);
+
+        private float CritMultiplier => _config != null ? _config.CritMultiplier : 2f;
+
+        private bool RollCrit()
+        {
+            float p = CritPercent;
+            return p > 0f && _rng.NextDouble() * 100.0 < p;
         }
 
         /// <summary>전술 빙의로 나간 Ghost HP. 유령 색으로 띄워 피해 숫자와 구분한다.</summary>
@@ -3355,12 +6635,10 @@ namespace Game.Module.InGame
                     var e = _enemies[i];
                     if (e == null || !e.IsPossessable) continue;
 
-                    // 사거리가 유령과 호스트에서 다르다. 유령은 몸에 달라붙어야 하지만,
-                    // 호스트는 265 밖에서 쏘고 있어 유령 사거리(110)로는 버튼이 영영 안 켜진다.
-                    // 전술 빙의가 실제로 눌리는 선택지가 되려면 교전 거리에서 닿아야 한다.
-                    float range = _host != null ? _config.TacticalPossessRange
-                                : e.PossessRange > 0f ? e.PossessRange
-                                : _config.PossessRange;
+                    // 몸을 입은 채로는 갈아탈 수 없다(전술 빙의 폐기). 여기 오는 것은
+                    // 언제나 유령이므로 사거리도 하나뿐이다.
+                    float range = (e.PossessRange > 0f ? e.PossessRange
+                                : _config.PossessRange) * PossessReachMul;
                     float d = Vector2.Distance(from.Position, e.Position);
                     if (d > range) continue;
 
@@ -3377,7 +6655,7 @@ namespace Game.Module.InGame
             int cost = _host != null
                 ? Mathf.Max(1, GhostHpMax * _config.GhostLeaveCostPercent / 100) : 0;
             // 놓아준 직후의 짧은 잠금 동안에는 대상이 있어도 못 누른다.
-            bool blocked = _host == null && _tacticalCooldown > 0f;
+            bool blocked = _host == null && _repossessLock > 0f;
             if (has == _hadPossessTarget && cost == _hadPossessCost
                 && blocked == _hadPossessBlocked) return;
 
@@ -3424,6 +6702,13 @@ namespace Game.Module.InGame
 
                 if (e == _possessTarget)
                     e.SetPossessMark(Unit.PossessMark.Target, _markTarget, 1f, scale);
+                // 정본이 "네 다음 몸" 으로 찍어 둔 적(`POSSESSION_TARGET`). 아직 못 타더라도
+                // **죽이지 말고 남겨 두라**는 뜻이라, 잠금 표식과 다른 것을 달아야 한다.
+                else if (e.IsNextBody && !e.RepossessBanned && _markNextBody1 != null)
+                    e.SetPossessMark(Unit.PossessMark.Locked,
+                        Mathf.Repeat(Time.time, NextBodyBlink * 2f) < NextBodyBlink
+                            ? _markNextBody1 : _markNextBody2,
+                        e.IsPossessable ? 1f : e.PossessProgress, scale);
                 else if (e.RepossessBanned)
                     e.SetPossessMark(Unit.PossessMark.Banned, _markBanned, 1f, scale);
                 else if (!e.IsPossessable)
@@ -3451,11 +6736,13 @@ namespace Game.Module.InGame
 
                 // 몸을 입고 있는 동안에는 다른 몸을 노리지 않는다(1-7). 그래도 조건부 적의
                 // 잠금 표식은 남긴다 — 지금 두들기는 놈이 언제 열리는지가 다음 수다.
-                if (_host != null && !e.HasPossessCondition) continue;
+                if (_host != null && !e.HasPossessCondition && !e.IsNextBody) continue;
 
-                float range = _host != null ? _config.TacticalPossessRange
+                // 몸을 입은 동안에는 **잠금 표식만** 그린다 — 갈아탈 수는 없다.
+                // 이때는 교전 거리에서 보여야 "저놈이 언제 열리는지" 가 다음 수가 된다.
+                float range = (_host != null ? MarkShowRange
                             : e.PossessRange > 0f ? e.PossessRange
-                            : _config.PossessRange;
+                            : _config.PossessRange) * PossessReachMul;
                 float d = Vector2.Distance(from.Position, e.Position);
                 if (d > range) continue;          // 사거리를 벗어나면 아이콘이 사라진다
 
@@ -3517,7 +6804,7 @@ namespace Game.Module.InGame
                     if (IsOnScreen(e)) continue;
 
                     float d = Vector2.Distance(from.Position, e.Position);
-                    bool above = e.Position.y + _scroll > 0f;   // 창 위쪽으로 벗어났다
+                    bool above = e.Position.y + _scroll.y > 0f;   // 창 위쪽으로 벗어났다
                     if (above) { if (d < bestUp) { bestUp = d; up = e; } }
                     else if (d < bestDown) { bestDown = d; down = e; }
                 }
@@ -3580,68 +6867,16 @@ namespace Game.Module.InGame
         /// 지금 전술 빙의를 낼 수 있는가 (정본 TC_POS_D 의 선행 조건).
         /// 대상 유무는 보지 않는다 — 그건 부르는 쪽이 따로 본다.
         /// </summary>
-        /// <summary>유지 단계로 얻는 피해 배율. 몸을 갈아타면 1로 돌아간다.</summary>
-        private float MaintainDamageMul => 1f + _maintainStack * MaintainDamagePerStack;
+        /// <summary>
+        /// 복제된 공격의 피해 비율. 정본 C032 는 35~55% 다 —
+        /// 온전한 한 방이 공짜로 더 나가면 8타마다 화력이 두 배가 된다.
+        /// </summary>
+        private float EchoMul => _echoing ? Mathf.Max(0.05f, _buffs.EchoPercent) : 1f;
 
         /// <summary>
         /// 갱스터가 때린 적에 표식을 남긴다. 갱스터의 유지 훅이 "표식 릴레이" 인 것과
         /// 같은 뿌리다 — 이 몸이 세상에 남기는 흔적이 곧 다음 몸의 재료가 된다.
         /// </summary>
-        // ── 시너지 (정본 SYNERGY 표) ──────────────────────────────
-        //
-        // 시너지는 한 캐릭터가 잘나서가 아니라 **무엇을 버리고 무엇으로 갈아탔는가**에서
-        // 나온다. 그래야 몸을 바꾸는 것이 손해 계산이 아니라 선택이 된다.
-
-        private const float ArmoredDashDamageMul = 0.5f;
-        private const float HealFinisherPercent = 25f;
-
-        private string _prevHostKey;
-        private SynergyKind _synergyKind;
-        private float _synergyTimer;
-
-        private bool SynergyOn(SynergyKind k) => _synergyTimer > 0f && _synergyKind == k;
-
-        private void TickSynergy(float dt)
-        {
-            if (_synergyTimer > 0f) _synergyTimer -= dt;
-        }
-
-        /// <summary>계기가 왔을 때 짝이 맞는 시너지를 켠다.</summary>
-        private void FireSynergy(SynergyTrigger trigger, string toKey)
-        {
-            if (_prevHostKey == null || toKey == null) return;
-            var rules = SynergyTable.Rules;
-            for (int i = 0; i < rules.Length; i++)
-            {
-                var r = rules[i];
-                if (r.Trigger != trigger || r.From != _prevHostKey || r.To != toKey) continue;
-                // 개방 조건이 걸린 시너지는 그 버프를 뽑아야 열린다(정본 BUFF_GATED)
-                if (r.GateBuff != null && !_buffs.Has(r.GateBuff)) continue;
-
-                _synergyKind = r.Kind;
-                _synergyTimer = r.Seconds;
-                _bus.Publish(new SynergyTriggeredEvent
-                {
-                    SynergyId = r.Id,
-                    Name = SynergyTable.NameOf(r.Kind),
-                    FromHostKey = r.From,
-                    ToHostKey = r.To,
-                    FirstTime = _synergySeen.Add(r.Id),
-                });
-                return;
-            }
-        }
-
-        /// <summary>
-        /// 저주가 걸린 채 죽으면 그 자리에서 불기둥이 솟는다 (정본 S05 저주 화염).
-        /// 저주를 거는 것과 태우는 것이 서로 다른 몸이라 **갈아타야만** 성립한다.
-        /// </summary>
-        private void TryFirePillar(Unit victim)
-        {
-            if (!SynergyOn(SynergyKind.FirePillarCircuit) || victim.CurseStack <= 0) return;
-            SpawnField(victim.Position, 140f * _buffs.AoeMul, 3f, FieldEffect.Burn, 5, fromPlayer: true);
-        }
-
         /// <summary>
         /// 흡혈. 정본 BUF_T04 피의 부채는 **넘치는 만큼을 고스트 체력으로** 돌린다.
         /// 방마다 횟수를 막는 이유는 정본 그대로다 — 안 막으면 잡몹 많은 방에서
@@ -3655,6 +6890,9 @@ namespace Game.Module.InGame
             if (_host == null || amount <= 0) return;
             int room = _host.HpMax - _host.Hp;
             _host.Heal(amount);
+
+            // 확률로만 터지므로 **터진 것이 보여야** 한다. 안 보이면 그냥 안 되는 것과 같다.
+            SpawnFx("leech", _host.Position, StunFxSize);
 
             // 체력은 실제로 올라가는데 상단 체력바가 안 움직여서 "흡혈이 안 된다" 로 보였다.
             // Unit.Heal 은 발밑 막대만 고친다. HUD 는 이 이벤트로만 갱신된다.
@@ -3678,114 +6916,6 @@ namespace Game.Module.InGame
 
         private int _bloodDebtUsed;
 
-        private void TryMark(Unit victim)
-        {
-            if (victim == null || _host == null) return;
-            if (_host.Key != SynergyMarkSource) return;
-            victim.SetMark(MarkSeconds);
-        }
-
-        /// <summary>
-        /// 닌자로 갈아탄 뒤 표식이 남은 적이 있으면 순간이동 처형이 나간다.
-        /// 발동했으면 true — 그 프레임의 평소 사격은 건너뛴다.
-        /// </summary>
-        private bool TryBlinkExecution(Unit me, float dt)
-        {
-            if (_blinkCooldown > 0f) { _blinkCooldown -= dt; return false; }
-            if (me == null || _host == null || _host.Key != SynergyMarkReceiver) return false;
-
-            Unit target = null;
-            float best = float.MaxValue;
-            float reach = _host.AttackRange * BlinkRangeMul;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                // 정본 S07 — 빙결 연쇄. 표식뿐 아니라 얼어붙은 적도 처형 지점이 된다.
-                bool anchor = e.IsMarked
-                              || (SynergyOn(SynergyKind.FrozenBlinkChain) && e.IsFrozen);
-                if (e == null || !e.IsAlive || e.IsDying || !anchor) continue;
-                if (!IsOnScreen(e)) continue;
-                float d = Vector2.Distance(me.Position, e.Position);
-                if (d > reach || d >= best) continue;
-                best = d; target = e;
-            }
-            if (target == null) return false;
-
-            _blinkCooldown = BlinkCooldown;
-            target.ClearMark();
-
-            // 대상 바로 앞으로 붙는다. 겹쳐 서면 누가 누군지 안 보인다.
-            var dir = (me.Position - target.Position).normalized;
-            if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
-            me.Position = target.Position + dir * 70f;
-            me.SetFacing(target.Position - me.Position);
-            me.PlayAttack();
-
-            int dmg = Mathf.RoundToInt(me.Atk * _buffs.AttackMul * MaintainDamageMul * BlinkDamageMul);
-            HitEnemyWith(target, dmg, _host.Profile);
-
-            // 표식 폭발 — 주변까지 함께 맞는다. 정본 "추가 피해 및 범위 데미지".
-            // 정본 BUF_T01 표식 탄두는 여기서 **번지는 수와 반경**을 늘린다.
-            float aoe = BlinkAoeRadius * _buffs.AoeMul * (1f + _buffs.MarkPayload * 0.25f);
-            int spread = 0;
-            int spreadMax = 3 + _buffs.MarkPayload;
-            for (int i = _enemies.Count - 1; i >= 0 && spread < spreadMax; i--)
-            {
-                var e = _enemies[i];
-                if (e == null || e == target || !e.IsAlive || e.IsDying) continue;
-                if (Vector2.Distance(e.Position, target.Position) > aoe) continue;
-                HitEnemyWith(e, Mathf.RoundToInt(dmg * 0.5f), _host.Profile);
-                spread++;
-            }
-
-            _bus.Publish(new SynergyTriggeredEvent
-            {
-                SynergyId = SynergyS01,
-                Name = "마크 폭발",
-                FromHostKey = SynergyMarkSource,
-                ToHostKey = SynergyMarkReceiver,
-                FirstTime = _synergySeen.Add(SynergyS01),
-            });
-            return true;
-        }
-
-        /// <summary>명중을 쌓는다. 단계가 오르면 알린다.</summary>
-        private void AddMaintain()
-        {
-            if (_host == null || _maintainStack >= MaintainMaxStack) return;
-            _maintainHits++;
-            if (_maintainHits < MaintainHitsPerStack) { PublishMaintain(); return; }
-            _maintainHits = 0;
-            _maintainStack++;
-            PublishMaintain();
-        }
-
-        /// <summary>몸이 바뀌면 쌓은 것이 사라진다 (정본 OnSwitchRule — Switch clears active meter).</summary>
-        private void ResetMaintain()
-        {
-            _maintainHits = 0;
-            _maintainStack = 0;
-            PublishMaintain();
-        }
-
-        private void PublishMaintain()
-        {
-            _bus.Publish(new MaintainChangedEvent
-            {
-                HookName = _host != null && _host.Profile != null ? _host.Profile.MaintainHook : null,
-                Stack = _maintainStack,
-                MaxStack = MaintainMaxStack,
-                Progress = _maintainStack >= MaintainMaxStack
-                    ? 1f : (float)_maintainHits / MaintainHitsPerStack,
-            });
-        }
-
-        /// <summary>지금 전술 빙의에 나갈 Ghost HP. 버프로 깎일 수 있다(정본 BUF_U06).</summary>
-        private int TacticalCost =>
-            Mathf.Max(1, _config.TacticalGhostCost - _buffs.TacticalCostCut);
-
-        private bool CanSwitch => _tacticalCooldown <= 0f && _ghostHp > TacticalCost;
-
         // ─────────────────────────────────────────────────────────
         /// <summary>
         /// 몸을 빼앗는다. 두 갈래다.
@@ -3793,11 +6923,9 @@ namespace Game.Module.InGame
         /// **유령일 때** — 공짜다. 몸이 없으니 다른 선택지가 없고, 여기에 값을 매기면
         /// 죽은 뒤에 벌을 두 번 주는 셈이 된다.
         ///
-        /// **몸을 입고 있을 때(전술 빙의)** — Ghost HP 를 내고 쿨다운을 문다.
-        /// 이 게임이 묻는 질문이 여기서 나온다. 지금 이 몸을 계속 굴릴 것인가,
-        /// 값을 내고 저 몸으로 갈아탈 것인가. 값이 없으면 항상 갈아타는 것이 정답이 되고,
-        /// 쿨다운이 없으면 적을 만날 때마다 갈아타는 것이 정답이 된다. 둘 다 있어야
-        /// 유지와 교체가 같이 성립한다.
+        /// **몸을 입고 있을 때** — 갈아탈 수 없다. 그 버튼은 **탈출**이다.
+        /// 전술 교체는 폐기했다 — 몸을 고르는 판단이 "지금 갈아탈까" 로 바뀌면
+        /// 뺏은 몸을 끝까지 쓰는 맛이 사라진다.
         /// </summary>
         // ── 빙의 연출 ────────────────────────────────────────────
         //
@@ -3933,16 +7061,15 @@ namespace Game.Module.InGame
             _ghostProtect = _config.GhostProtectSeconds;
             _drainCarry = 0f;
             _buffs.SetHost(null);
-            ResetMaintain();
             SlowNearbyEnemies(pos);
 
             // 놓아주자마자 옆 몸으로 갈아타면 탈출이 그냥 순간이동이 된다.
             // 짧게 잠근다 — 빙의 버튼의 덮개가 차오르는 동안이 그 시간이다.
-            _tacticalCooldown = _config.RepossessLockSeconds;
-            _tacticalShown = -1;
-            _bus.Publish(new TacticalCooldownEvent
+            _repossessLock = _config.RepossessLockSeconds;
+            _repossessLockShown = -1;
+            _bus.Publish(new RepossessLockEvent
             {
-                Remain = _tacticalCooldown, Total = _config.RepossessLockSeconds,
+                Remain = _repossessLock, Total = _config.RepossessLockSeconds,
             });
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
@@ -3957,7 +7084,7 @@ namespace Game.Module.InGame
             // 몸이 있을 때 이 버튼은 **탈출**이다.
             if (_host != null) { LeaveHost(); return; }
 
-            if (_possessTarget == null || _tacticalCooldown > 0f) return;
+            if (_possessTarget == null || _repossessLock > 0f) return;
 
             var target = _possessTarget;
             var entry = _player.GetHost(target.Key);
@@ -3999,16 +7126,25 @@ namespace Game.Module.InGame
         /// 몸을 입는다. 일반 빙의와 긴급 호스트가 같은 길을 쓴다 —
         /// 시작 체력만 다르고 나머지(무적·버프 재계산·표시)는 똑같아야 한다.
         /// </summary>
+        /// <summary>
+        /// 이 판에서 마지막으로 입었던 몸. 긴급 호스트가 돌아갈 자리다.
+        /// 판이 끝날 때까지 남는다 — 몸을 잃어도 지워지지 않는다.
+        /// </summary>
+        private HostEntry _lastHostEntry;
+
         private void EnterHost(HostEntry entry, string key, string fallbackName,
                                Vector2 pos, int startHpPercent)
         {
+            if (entry != null) _lastHostEntry = entry;
+            _dashTime = 0f;   // 몸이 바뀌면 돌진도 끊는다
             _ghost.gameObject.SetActive(false);
 
             _host = NewUnit($"Host_{key}");
             _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
                         UnitGet(key),
-                        Mathf.RoundToInt(HostHpOf(entry) * _buffs.HostHpMul),
-                        HostAtkOf(entry),
+                        // 고스트가 들고 온 Lv 로 이 몸의 능력치를 정한다.
+                        Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul),
+                        LeveledAtk(entry),
                         HostSpeedOf(entry),
                         HostRangeOf(entry),
                         HostIntervalOf(entry),
@@ -4016,10 +7152,6 @@ namespace Game.Module.InGame
             _host.Position = pos;
             ApplyFacingSprites(_host, key);
 
-            // 이전 몸이 무엇이었는지가 시너지의 전부다. 새 몸을 세운 **뒤에** 던져야
-            // 시너지가 새 몸의 능력치를 보고 켜진다.
-            FireSynergy(SynergyTrigger.OnSwitch, key);
-            _prevHostKey = key;
 
             // 기획서 A 3-3 — 빼앗은 몸은 온전하지 않다. 최대 체력의 70%로 시작한다.
             // 이게 없으면 교체가 곧 완전 회복이라, 몸을 갈아타는 데 대가가 없어진다.
@@ -4032,266 +7164,275 @@ namespace Game.Module.InGame
             _emergencyWait = 0f;
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
             _buffs.SetHost(entry);
-            ResetMaintain();     // 새 몸에는 앞 몸에서 쌓은 것이 따라오지 않는다
+
+            // ⚠ 쿨 게이지를 **가득 채운 채로** 시작한다. 0 에서 시작하면 뺏자마자
+            //   8~28초 동안 버튼이 덮개에 가려져 "고장난 버튼" 으로 보인다.
+            //   몸을 뺏는 순간이 이 게임에서 가장 쓰고 싶은 순간이기도 하다.
+            _skillCooldown = SkillCooldownOf(entry);
+            // ⚠ 지속형 스킬은 **몸에 붙은 것**이지 판에 붙은 것이 아니다.
+            //   안 끄면 오버히트를 켜고 다른 몸으로 갈아타는 것이 이득이 된다.
+            ClearSkillState();
 
             _bus.Publish(new PossessedEvent
             {
                 PossessedHostKey = key,
-                // 어떤 몸을 뺏었는지가 곧 빌드다 — 교전 스타일을 함께 보여준다
-                DisplayName = entry != null ? $"{entry.NameEn}  ·  {entry.AttackText}" : fallbackName,
+                DisplayNameEn = entry != null ? ShortNameEn(entry.NameEn) : fallbackName,
+                DisplayNameKr = entry != null ? entry.NameKr : string.Empty,
+                Mastery = _player != null && key != null ? _player.GetMastery(key) : 0,
                 HostHpMax = _host.HpMax,
             });
             PublishHp();
         }
 
-        // ── 얼티밋 ────────────────────────────────────────────────
+        // ── 액티브 스킬 ────────────────────────────────────────────────
         //
-        // 지금까지는 **21종이 전부 같은 전체 광역**이었다. 얼티밋은 그 몸을 고른
-        // 이유가 가장 크게 드러나는 자리인데, 다 같으면 몸이 아니라 게이지를 쓰는 것이 된다.
-        // 정본 11종에 각각 제 행동을 준다 — 전부 이미 있는 시스템(장판·상태이상·
-        // 설치물·도탄·무적) 위에 세웠다.
+        // 몸 하나에 스킬 하나. 실제 동작은 `BattleDirector.Skills.cs` 에 있다 —
+        // 여기는 **쓸 수 있는가**(쿨·유령·봉인)만 묻고 넘긴다.
+        //
+        // 한때 21종이 전부 같은 전체 광역이었고, 그다음엔 정본 11종을 23명이 나눠 썼다.
+        // 액티브 스킬은 그 몸을 고른 이유가 가장 크게 드러나는 자리인데,
+        // 겹쳐 쓰면 몸이 아니라 게이지를 쓰는 것이 된다.
 
-        private string _ultKey;          // 지금 도는 지속형 얼티밋
-        private float _ultTimer;
-        private float _ultTick;
+        /// <summary>이 몸의 스킬이 봉인돼 있는가 (숙련도 0).</summary>
+        public bool IsSkillSealed(string hostKey)
+            => _player != null && !string.IsNullOrEmpty(hostKey) && _player.IsSkillSealed(hostKey);
 
-        private const float UltRegenInterval = 0.5f;
-
-        public void TryUltimate()
+        public void TryActiveSkill()
         {
-            if (!_running || _ultimateCharge < _config.UltimateChargeSeconds) return;
-            // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 얼티밋은 뚫려 있어서,
+            if (!_running || _skillCooldown < SkillCooldownOf(_host?.Profile)) return;
+            // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 액티브 스킬은 뚫려 있어서,
             // 몸이 없는 상태로 화면 전체를 쓸어버릴 수 있었다.
             // 게이지는 그대로 둔다 — 몸을 얻으면 그때 쓴다.
             var me = _host;
             if (me == null) return;
+            // 봉인(숙련도 0)이면 스킬이 안 나간다. 몸은 그대로 쓴다 — 평타만 남는다.
+            if (IsSkillSealed(me.Key)) return;
 
-            _ultimateCharge = 0f;
-            int dmg = _config.UltimateDamage;
-            string key = _host?.Profile?.UltimateKey;
-
-            switch (key)
-            {
-                // 광각 확산 + 경직. 정면을 쓸어버리는 대신 등 뒤는 그대로 열려 있다.
-                case "tommy_barrage":
-                    FireFan(me, me.Position + me.Facing * 400f, 16, 150f, dmg / 3, fromPlayer: true);
-                    foreach (var e in EnemiesInRange(me.Position, 520f)) e.ApplySlow(60, 2.0f);
-                    break;
-
-                // 주위 적 하나하나에 폭탄 두 발씩. 사방으로 뿌리면 빈 벽에도 나가지만
-                // 사람마다 찍으면 한 발도 안 버린다 — 둘러싸일수록 이득이 커진다.
-                case "grenade_barrage": BeginGrenadeBarrage(me); break;
-
-                // 지속형 — 끝날 때까지 자리를 지키면 이득이 커진다.
-                case "bullet_hell":   BeginUltimate(key, 5f); break;
-                case "laser_storm":   BeginUltimate(key, 4f); break;
-                case "dragon_breath": BeginUltimate(key, 3f); break;
-                case "blood_tornado": BeginUltimate(key, 4f); break;
-
-                // 위상 이탈 — 때리는 것이 아니라 버티는 얼티밋이다.
-                case "astral_form":
-                    BeginUltimate(key, 8f);
-                    _invuln = Mathf.Max(_invuln, 8f);
-                    break;
-
-                // 자동조준 터렛 배치. 설치물이 생겼으니 정본 그대로 나온다.
-                case "system_override":
-                    SpawnDeployable(me.Position + new Vector2(-90f, 0f));
-                    SpawnDeployable(me.Position + new Vector2(90f, 0f));
-                    break;
-
-                // 연속 돌진. 가까운 넷을 차례로 찍고 마지막 일격에 경직을 남긴다.
-                case "rush_combo":  BlinkStrikes(me, 4, dmg, slowLast: true); break;
-
-                // 순간이동 연격 + 무적 프레임.
-                case "shadow_burst":
-                    BlinkStrikes(me, 3, Mathf.RoundToInt(dmg * 1.2f), slowLast: false);
-                    _invuln = Mathf.Max(_invuln, 1.2f);
-                    break;
-
-                // 360도 광역. 보스에게 두 배 — 정본이 못박은 유일한 보스 특효다.
-                case "elemental_nova":
-                {
-                    var list = EnemiesInRange(me.Position, 9999f);
-                    for (int i = 0; i < list.Count; i++)
-                        HitEnemyWith(list[i], list[i].IsBoss ? dmg * 2 : dmg, _host?.Profile);
-                    break;
-                }
-
-                // 모든 적 탄을 3배 피해로 되받아친다.
-                case "grand_slam":
-                {
-                    int n = 0;
-                    for (int i = 0; i < _shots.Count; i++)
-                    {
-                        var sh = _shots[i];
-                        if (!sh.IsActive || sh.FromPlayer) continue;
-                        sh.TurnFriendly(3f);
-                        n++;
-                    }
-                    // 되받을 탄이 없으면 아무 일도 안 일어난다 — 그때는 근처를 후려친다
-                    if (n == 0)
-                    {
-                        var list = EnemiesInRange(me.Position, 420f);
-                        for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, _host?.Profile);
-                    }
-                    break;
-                }
-
-                default:
-                {
-                    var list = EnemiesInRange(me.Position, 9999f);
-                    for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, _host?.Profile);
-                    break;
-                }
-            }
+            _skillCooldown = 0f;
+            CastHostSkill(me);
         }
 
-        private void BeginUltimate(string key, float seconds)
-        {
-            _ultKey = key;
-            _ultTimer = seconds;
-            _ultTick = 0f;
-        }
-
-        // ── 수류탄 세례 ──────────────────────────────────────────
+        // ── 돌풍 돌진 (아마존) ───────────────────────────────────
         //
-        // 코만도는 폭탄을 던지는 몸인데 얼티밋이 총알을 사방으로 뿌리고 있었다.
-        // 사방으로 뿌리면 빈 벽에도 나간다. 사람마다 두 발씩 찍으면 한 발도 안 버리고,
-        // 둘러싸일수록 이득이 커진다 — 폭탄병의 판타지가 그것이다.
+        // 짧은 직선 대시. **진입기**다 — 원거리 밭을 가로질러 붙는 것이 목적이지
+        // 피해가 목적이 아니다.
+        //
+        // ⚠ 지형을 통과한다(PD 결정). 그래서 `SlideMove` 를 쓰지 않는다 —
+        //   그건 막힌 것을 타고 미끄러지는 함수라, 기둥 앞에서 대시가 멈춘다.
+        //   직선 이동 + 방 경계 클램프면 끝이고, 오브젝트 충돌을 안 보므로 더 단순하다.
+        //
+        // ⚠ 넉백은 넣지 않는다(PD 결정). 밀어내면 붙으려고 쓴 기술이
+        //   적을 떼어 놓는 기술이 된다.
 
-        private const float BarrageRange = 760f;
-        private const float BarrageInterval = 0.09f;   // 던지는 간격 — 연사로 읽혀야 한다
-        private const int BarrageShotsEach = 2;
-        private const int BarrageMaxShots = 16;        // 화면이 폭탄으로 덮이지 않게
+        private const float GaleDashMeters = 3.0f;    // 대시 거리
+        private const float GaleDashWidthMeters = 0.8f; // 경로 판정 폭
+        private const float GaleDashSeconds = 0.15f;  // 이동에 걸리는 시간
 
-        private readonly List<Unit> _barrageQueue = new();
-
-        private void BeginGrenadeBarrage(Unit me)
+        /// <summary>`GANGSTER — GUN` → `GANGSTER`. HUD 이름줄에는 몸 이름만 넣는다.</summary>
+        private static string ShortNameEn(string nameEn)
         {
-            _barrageQueue.Clear();
-            var list = EnemiesInRange(me.Position, BarrageRange);
-            // 가까운 적부터. 한 번에 다 안 던져지면 붙은 놈이 먼저 맞아야 한다.
-            list.Sort((a, b) => (a.Position - me.Position).sqrMagnitude
-                        .CompareTo((b.Position - me.Position).sqrMagnitude));
-            for (int round = 0; round < BarrageShotsEach; round++)
-                for (int i = 0; i < list.Count && _barrageQueue.Count < BarrageMaxShots; i++)
-                    _barrageQueue.Add(list[i]);
-
-            if (_barrageQueue.Count == 0) return;
-            BeginUltimate("grenade_barrage", _barrageQueue.Count * BarrageInterval + 0.05f);
+            if (string.IsNullOrEmpty(nameEn)) return string.Empty;
+            int cut = nameEn.IndexOf('—');
+            if (cut < 0) cut = nameEn.IndexOf('(');
+            return (cut > 0 ? nameEn.Substring(0, cut) : nameEn).Trim();
         }
 
-        private void ThrowBarrageGrenade(Unit me)
+        private void GaleDash(Unit me)
         {
-            if (_barrageQueue.Count == 0) { _ultTimer = 0f; return; }
-            var target = _barrageQueue[0];
-            _barrageQueue.RemoveAt(0);
-
-            // 겨냥해 둔 놈이 이미 죽었으면 살아 있는 가장 가까운 놈으로 돌린다.
-            // 죽은 자리에 던지면 마지막 몇 발이 허공에 터진다.
-            if (target == null || !target.IsAlive || target.IsDying)
-                target = NearestEnemy(me.Position, BarrageRange);
-            if (target == null) { _barrageQueue.Clear(); _ultTimer = 0f; return; }
-
-            var shot = RentShot();
-            if (shot == null) return;
-            shot.SetSprite(ShotFrames("grenade"), "grenade", LoopsFrames("grenade"));
-            me.SetFacing(target.Position - me.Position);
-            me.PlayAttack();
-
-            var from = me.MuzzlePosition;
-            // 한 사람에게 두 발이 정확히 겹쳐 떨어지면 두 번째가 안 보인다. 조금 흩는다.
-            float jitter = (_barrageQueue.Count % 2 == 0 ? 1f : -1f) * 26f;
-            var at = target.Position + new Vector2(jitter, jitter * 0.5f);
-
-            var prof = _host?.Profile;
-            shot.Fire(from, at, _config.ShotSpeedPlayer,
-                      Mathf.Max(1, _config.UltimateDamage / BarrageShotsEach),
-                      fromPlayer: true, target, _config.ShotSize,
-                      ShotPlayerColor, _config.ShotLifeSeconds,
-                      slowPercent: (prof?.SlowPercent ?? 0) + _buffs.SlowPercent,
-                      lifestealPercent: (prof?.LifestealPercent ?? 0) + _buffs.LifestealPercent);
-            ThrowAsGrenade(shot, from, at, 0f, _config.ShotSpeedPlayer);
-        }
-
-        /// <summary>지속형 얼티밋을 흘린다.</summary>
-        private void TickUltimate(float dt)
-        {
-            if (_ultTimer <= 0f) return;
-            _ultTimer -= dt;
-            var me = Avatar;
-            if (me == null) { _ultTimer = 0f; return; }
-
-            _ultTick -= dt;
-            if (_ultTick > 0f) return;
-
-            int dmg = _config.UltimateDamage;
-            switch (_ultKey)
+            // 방향 — 걷는 중이면 걷던 쪽, 서 있으면 가장 가까운 적 쪽.
+            Vector2 dir = MoveInput.sqrMagnitude > 0.0001f ? MoveInput.normalized : Vector2.zero;
+            if (dir == Vector2.zero)
             {
-                case "grenade_barrage":
-                    _ultTick = BarrageInterval;
-                    ThrowBarrageGrenade(me);
-                    break;
+                var near = NearestEnemy(me.Position);
+                dir = near != null ? (near.Position - me.Position).normalized : me.Facing;
+            }
+            if (dir == Vector2.zero) dir = Vector2.right;
 
-                case "bullet_hell":
-                    _ultTick = 0.22f;
-                    FireFan(me, me.Position + me.Facing * 400f, 10, 360f, dmg / 4, fromPlayer: true);
-                    break;
+            var from = me.Position;
+            var to = from + dir * (GaleDashMeters * _pxPerMeter);
 
-                case "laser_storm":
-                    _ultTick = 0.18f;
-                    FireFan(me, me.Position + me.Facing * 400f, 3, 14f, dmg / 3, fromPlayer: true);
-                    break;
+            // 지형은 통과하지만 **방 밖으로는 못 나간다.** 걸어갈 때와 같은 한계다 —
+            // 대시만 벽을 넘으면 "걸어서는 못 가는데 대시로는 가는" 자리가 생긴다.
+            to = ClampedInField(me, to);
 
-                case "dragon_breath":
-                    // 원뿔로 불장판을 세 겹 깐다. 화상은 장판이 알아서 건다.
-                    _ultTick = 0.35f;
-                    for (int i = -1; i <= 1; i++)
-                    {
-                        var dir = (Vector2)(Quaternion.Euler(0f, 0f, i * 22f) * (Vector3)me.Facing);
-                        SpawnField(me.Position + dir * 190f, 110f * _buffs.AoeMul,
-                                   1.6f, FieldEffect.Burn, Mathf.Max(1, dmg / 8), fromPlayer: true);
-                    }
-                    break;
+            // ⚠ **자리를 바로 옮기지 않는다.** 예전에는 여기서 `me.Position = to` 를 해서
+            //   한 프레임에 3 m 를 건너뛰었다 — 잔상과 먼지를 아무리 얹어도 화면에는
+            //   순간이동으로 보인다. "빠르게 이동하는 기술" 이 아니라 "사라졌다 나타나는
+            //   기술" 이 되어, 어디를 지나갔는지(=경로 위의 적을 왜 때렸는지)가 안 읽힌다.
+            //   자리는 `TickDash` 가 0.15초에 걸쳐 옮긴다. 피해 판정은 아래에서 경로
+            //   전체를 한 번에 보므로, 이동이 늦어져도 맞는 적은 그대로다.
+            _dashFrom = from;
+            _dashTo = to;
+            _dashTime = GaleDashSeconds;
+            me.SetFacing(dir);
 
-                case "blood_tornado":
-                {
-                    _ultTick = 0.4f;
-                    var list = EnemiesInRange(me.Position, 260f * _buffs.AoeMul);
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        HitEnemyWith(list[i], Mathf.Max(1, dmg / 5), _host?.Profile);
-                        Leech(Mathf.Max(1, dmg / 10));
-                    }
-                    break;
-                }
+            // 경로 위의 적을 **한 번씩만** 때린다. 폭 안에 들어오면 통과해도 맞는다.
+            int dmg = Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * GaleDashDamageMul));
+            float halfWidth = GaleDashWidthMeters * 0.5f * _pxPerMeter;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive) continue;
+                if (DistanceToSegment(e.Position, from, to) > halfWidth) continue;
+                HitEnemyWith(e, dmg, _host?.Profile);
+            }
 
-                case "astral_form":
-                    _ultTick = UltRegenInterval;
-                    if (_host != null)
-                    {
-                        _host.Heal(Mathf.Max(1, _host.HpMax / 40));
-                        PublishHp();
-                    }
-                    break;
+            // Lv5 부터 **도착 후** 무적. "돌진 중" 으로 두면 0.15초라 맞을 일이 없어
+            // 효과가 없다 — 원거리 밭에 뛰어든 직후가 실제로 필요한 구간이다.
+            float after = GaleDashInvulnSeconds;
+            if (after > 0f) _invuln = Mathf.Max(_invuln, GaleDashSeconds + after);
+
+            SpawnAfterimages(me, from, to);
+            // 출발 먼지. 도착 먼지는 실제로 도착했을 때(`TickDash`) 터진다 —
+            // 여기서 같이 터뜨리면 아직 가지도 않은 자리에 먼지가 먼저 핀다.
+            PlayFx("dash", from, GaleDashFxSize, loop: false);
+        }
+
+        // ── 돌진 이동 ────────────────────────────────────────────
+
+        private Vector2 _dashFrom, _dashTo;
+        private float _dashTime;
+
+        /// <summary>돌진하는 중인가. 이 동안은 조작을 받지 않는다.</summary>
+        private bool IsDashing => _dashTime > 0f;
+
+        /// <summary>
+        /// 돌진을 한 프레임 옮긴다.
+        ///
+        /// 감속 곡선이다 — 등속으로 가면 미끄러지는 것처럼 보이고, 가속이면 마지막에
+        /// 튀어나간다. 차고 나갔다가 멈춰 서는 것이 이 기술의 그림이다.
+        /// </summary>
+        private void TickDash(float dt, Unit me)
+        {
+            _dashTime -= dt;
+            if (_dashTime > 0f)
+            {
+                float k = 1f - Mathf.Clamp01(_dashTime / GaleDashSeconds);
+                me.Position = Vector2.Lerp(_dashFrom, _dashTo, k * (2f - k));   // 감속
+                return;
+            }
+
+            _dashTime = 0f;
+            me.Position = _dashTo;
+            PlayFx("dash", _dashTo, GaleDashFxSize, loop: false);
+        }
+
+        /// <summary>돌진 먼지 크기(px). 그림은 48 캔버스다.</summary>
+        private const float GaleDashFxSize = 48f;
+
+        /// <summary>
+        /// 대시 피해 배율. 숙련도 Lv1 ×1.5 → Lv4 ×2.2 (`SkillScaling` 의 기본 구간).
+        /// 표에 값이 없으면 Lv1 값으로 떨어진다.
+        /// </summary>
+        private float GaleDashDamageMul
+        {
+            get
+            {
+                var sc = ActiveScalingOf(_host?.Profile);
+                if (sc == null || sc.Value.IsEmpty) return 1.5f;
+                return sc.Value.BaseAt(HostMastery);
             }
         }
 
-        /// <summary>가까운 적을 차례로 찍으며 순간이동한다.</summary>
-        private void BlinkStrikes(Unit me, int count, int damage, bool slowLast)
+        /// <summary>
+        /// 도착 후 무적 시간(초). **Lv5 미만이면 0** — 특수 효과는 그때 열린다.
+        /// Lv5 1.0초 → Lv10 2.0초.
+        /// </summary>
+        private float GaleDashInvulnSeconds
         {
-            for (int n = 0; n < count; n++)
+            get
             {
-                var target = NearestEnemy(me.Position, 9999f);
-                if (target == null) return;
-                var dir = (me.Position - target.Position).normalized;
-                if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
-                me.Position = target.Position + dir * 70f;
-                me.SetFacing(target.Position - me.Position);
-                me.PlayAttack();
-                if (n == count - 1 && slowLast) target.ApplySlow(70, 2.0f);
-                HitEnemyWith(target, damage, _host?.Profile);
+                int lv = HostMastery;
+                if (lv < SkillScaling.SpecLevel) return 0f;
+                var sc = ActiveScalingOf(_host?.Profile);
+                if (sc == null || sc.Value.IsEmpty) return 1f;
+                return sc.Value.SpecAt(lv, MasteryMaxOrDefault);
+            }
+        }
+
+        /// <summary>지금 몸의 숙련도. 저장이 없으면 0(봉인)이다.</summary>
+        private int HostMastery
+            => _player != null && _host != null ? _player.GetMastery(_host.Key) : 0;
+
+        private int MasteryMaxOrDefault => _player != null ? _player.MasteryMax : 10;
+
+        /// <summary>그 몸의 액티브 스킬 성장 수치. 표가 없으면 null.</summary>
+        private SkillScaling? ActiveScalingOf(HostEntry e)
+        {
+            if (e == null || _player == null) return null;
+            var skill = _player.GetActiveSkill(e.ActiveSkillKey);
+            return skill != null ? skill.Scaling : (SkillScaling?)null;
+        }
+
+        /// <summary>점에서 선분까지의 최단 거리. 경로 판정에 쓴다.</summary>
+        private static float DistanceToSegment(Vector2 p, Vector2 a, Vector2 b)
+        {
+            var ab = b - a;
+            float len2 = ab.sqrMagnitude;
+            if (len2 < 0.0001f) return Vector2.Distance(p, a);
+            float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / len2);
+            return Vector2.Distance(p, a + ab * t);
+        }
+
+        /// <summary>가장 가까운 살아 있는 적. 없으면 null.</summary>
+        private Unit NearestEnemy(Vector2 at)
+        {
+            Unit best = null; float bestD = float.MaxValue;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive) continue;
+                float d = Vector2.Distance(at, e.Position);
+                if (d >= bestD) continue;
+                bestD = d; best = e;
+            }
+            return best;
+        }
+
+        // ── 잔상 ────────────────────────────────────────────────
+        //
+        // 대시가 0.15초라 **지나간 자리가 안 보인다.** 잔상 세 장이 경로를 그려 줘야
+        // "훅 갔다" 가 읽힌다. 그림은 필요 없다 — 몸 그림을 복제해 청록으로 눕힌다.
+
+        private const int AfterimageCount = 3;
+        private const float AfterimageLife = 0.2f;
+        private static readonly float[] AfterimageAlpha = { 0.60f, 0.35f, 0.15f };
+
+        private readonly List<Afterimage> _afterimages = new();
+
+        private void SpawnAfterimages(Unit me, Vector2 from, Vector2 to)
+        {
+            var sprite = me.BodySprite;
+            if (sprite == null) return;
+            var size = me.GetComponent<RectTransform>().sizeDelta;
+
+            for (int i = 0; i < AfterimageCount; i++)
+            {
+                var img = RentAfterimage();
+                if (img == null) return;
+                // 출발점에서 도착점 사이를 고르게 나눈다 — 앞쪽이 진하다.
+                float t = (i + 1) / (float)(AfterimageCount + 1);
+                img.Play(sprite, Vector2.Lerp(from, to, t), size, me.BodyFlipX,
+                         AfterimageAlpha[i], AfterimageLife);
+            }
+        }
+
+        private Afterimage RentAfterimage()
+        {
+            for (int i = 0; i < _afterimages.Count; i++)
+                if (!_afterimages[i].IsPlaying) return _afterimages[i];
+            if (_unitLayer == null) return null;
+            var a = Afterimage.Create(_unitLayer);
+            _afterimages.Add(a);
+            return a;
+        }
+
+        private void TickAfterimages(float dt)
+        {
+            for (int i = 0; i < _afterimages.Count; i++)
+            {
+                _afterimages[i].Tick(dt);
+                _afterimages[i].Refresh();
             }
         }
 
@@ -4314,6 +7455,23 @@ namespace Game.Module.InGame
 
         private void OnRoomCleared()
         {
+            // 매복을 걸고 싸운 방이면 여기서 삯을 치른다.
+            // 3택1 이 뜨면 `_awaitingBuff` 때문에 출구가 뒤로 밀린다 — 아래 흐름 그대로다.
+            PayFightReward();
+
+            // 정본 ROOM_REWARD — 방 몫의 골드는 이미 **적을 잡을 때마다 바닥에 떨어져 있다.**
+            // 방이 비었으니 흩어진 것을 한꺼번에 걷는다. 다 모이면 `GiveCollectedGold` 가
+            // 판 골드에 넣고, 거기서부터 HUD 동전이 이어받는다.
+            CollectGoldPiles();
+
+            // 정본 ROOM_REWARD.HealPct — 방을 비우면 돌려받는다.
+            //
+            // ⚠ 이 값이 붙은 방은 원래 **회복 방**이었다. 그 방을 전투방으로 돌려세우면서
+            //   들어서자마자 회복해 주던 길이 사라졌는데, 회복을 통째로 없애면
+            //   열두 방을 도는 동안 돌려받을 자리가 하나도 없다.
+            //   싸워서 비운 대가로 돌려주는 쪽으로 옮긴다 — 값은 정본 그대로다.
+            if (_canonRoom != null && _canonRoom.HealPct > 0) HealOnClear(_canonRoom.HealPct);
+
             // 마지막 스테이지 = 보스방. 보스를 잡으면 **챕터 클리어**로 끝난다.
             if (_roomKind == RoomKind.Elite) _eliteRoomsCleared++;
             bool isLast = IsLastRoom;
@@ -4323,6 +7481,394 @@ namespace Game.Module.InGame
             // 버프는 이제 **레벨업**에서 나온다(기획서 A 5-2). 방을 비운 것만으로는
             // 주지 않는다 — 잡는 만큼 성장하는 쪽이 교전을 피하지 않게 만든다.
             SpawnExit();
+        }
+
+        /// <summary>
+        /// 방을 비운 대가로 돌려받는다. 호스트와 고스트를 같은 비율로 올린다.
+        /// </summary>
+        private void HealOnClear(int percent)
+        {
+            _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * percent / 100);
+            if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * percent / 100));
+            PublishHp();
+        }
+
+        // ── 판 골드 ──────────────────────────────────────────────
+        //
+        // 로비의 골드와 다른 주머니다. 방을 비울 때마다 들어오고 이벤트·상점에서
+        // 나간다. 판이 끝나면 남은 만큼이 보상에 얹힌다 —
+        // 안 쓰고 아낀 것이 손해가 되면 아무도 안 쓴다.
+
+        private int _runGold;
+        public int RunGold => _runGold;
+
+        private void AddRunGold(int amount) => AddRunGold(amount, Vector2.zero, false);
+
+        /// <summary>골드가 **누구 자리에서** 들어왔는지까지 알린다. 그 자리에서 동전이 튄다.</summary>
+        private void AddRunGoldAtPlayer(int amount)
+        {
+            var a = Avatar;
+            if (a == null) { AddRunGold(amount); return; }
+            AddRunGold(amount, a.Position, true);
+        }
+
+        private void AddRunGold(int amount, Vector2 fieldAt, bool hasAt)
+        {
+            if (amount == 0) return;
+            _runGold = Mathf.Max(0, _runGold + amount);
+
+            // 자리는 **들어올 때만** 붙는다. 상점에서 나가는 골드까지 동전이 튀면
+            // 쓴 것과 번 것이 화면에서 같아 보인다.
+            bool gain = amount > 0 && hasAt;
+            _bus.Publish(new RunGoldChangedEvent
+            {
+                Gold = _runGold,
+                Delta = amount,
+                SourceWorld = gain ? FieldToWorld(fieldAt) : default,
+                HasSource = gain,
+            });
+
+            if (gain) ShowGoldGain(fieldAt, amount);
+        }
+
+        /// <summary>획득 수치. 피해 숫자와 같은 풀을 쓰되 금색이라 한눈에 갈린다.</summary>
+        private static readonly Color GoldGainColor = new(1f, 0.78f, 0.25f, 1f);
+
+        private void ShowGoldGain(Vector2 at, int amount)
+        {
+            var t = RentDamageText();
+            if (t == null) return;
+            t.Show(at, $"+{amount}", GoldGainColor);
+        }
+
+        /// <summary>
+        /// 필드 좌표 → 월드 좌표.
+        ///
+        /// `_textLayer` 의 자식은 앵커 (0,1) 규약이라(<see cref="DamageText"/>) 기준점이
+        /// 부모 rect 의 **좌상단**이다. HUD 는 다른 가지에 있어서 이 변환 없이는
+        /// 동전이 날아갈 목적지를 서로 말할 수 없다.
+        /// </summary>
+        private Vector3 FieldToWorld(Vector2 at)
+        {
+            if (_textLayer == null) return Vector3.zero;
+            var r = _textLayer.rect;
+            return _textLayer.TransformPoint(new Vector2(r.xMin + at.x, r.yMax + at.y));
+        }
+
+        // ── 이벤트 방 ────────────────────────────────────────────
+        //
+        // 전투가 없는 대신 자원에 값을 매기는 자리다. 골드·호스트 체력·고스트 체력을
+        // 내주고 카드나 회복을 받는다. 정본은 전부 판당 한 번씩만 나온다.
+
+        private readonly HashSet<string> _eventsUsed = new();
+        private EventEntry _event;
+        private bool _eventDone;
+
+        public EventEntry PendingEvent => _event;
+
+        /// <summary>
+        /// 이벤트 방을 그냥 지나가게 한다. 이벤트 스테이지를 따로 다시 잡기로 해서
+        /// 지금은 팝업을 띄우지 않는다 — 표를 다시 세우면 이 한 줄만 false 로 돌린다.
+        /// </summary>
+        private static readonly bool EventOffersDisabled = true;
+
+        private void OfferEvent()
+        {
+            _event = null;
+            _eventDone = false;
+            if (EventOffersDisabled) { SpawnExit(); return; }
+            if (_eventTable == null) { SpawnExit(); return; }
+
+            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            _event = _eventTable.Draw(ch, _eventsUsed, _rng);
+            if (_event == null) { SpawnExit(); return; }   // 이 챕터 것을 다 봤다
+
+            _eventsUsed.Add(_event.EventId);
+            _bus.Publish(new EventOfferEvent
+            {
+                EventId = _event.EventId,
+                Title = _event.TitleKr,
+                Body = _event.BodyKr,
+                AcceptLabel = _event.AcceptKr,
+                DeclineLabel = _event.DeclineKr,
+                CostLabel = CostLabelOf(_event),
+                CanAfford = CanAfford(_event) && CanReceive(_event),
+                BlockedReason = BlockedReasonOf(_event),
+            });
+        }
+
+        private static string CostLabelOf(EventEntry e) => e.CostType switch
+        {
+            EventCost.Gold => $"골드 {e.CostValue}",
+            EventCost.GhostHp => $"고스트 체력 {e.CostValue}%",
+            EventCost.HostHp => $"호스트 체력 {e.CostValue}%",
+            _ => string.Empty,
+        };
+
+        private bool CanAfford(EventEntry e) => e.CostType switch
+        {
+            EventCost.Gold => _runGold >= e.CostValue,
+            // 체력을 다 내주고 그 자리에서 죽는 선택지는 주지 않는다.
+            // 값을 치르는 순간 지는 거래는 거래가 아니다.
+            EventCost.GhostHp => _ghostHp > GhostHpMax * e.CostValue / 100,
+            EventCost.HostHp => _host != null && _host.Hp > _host.HpMax * e.CostValue / 100,
+            _ => true,
+        };
+
+        /// <summary>
+        /// 지금 이 보상을 실제로 받을 수 있는가.
+        ///
+        /// ⚠ `HostHeal` 은 몸이 없으면 아무 일도 안 일어난다. 그런데 값은 먼저 치러진다 —
+        ///   유령 상태로 사당(EV_CH1_01)을 받으면 **골드 18 만 나가고 끝**이었다.
+        ///   돈을 내고 나서야 "몸이 없어 받을 수 없었다" 를 알려 주는 건 거래가 아니다.
+        ///   고를 수 없게 막고, 왜 못 고르는지 팝업에 적어 준다.
+        /// </summary>
+        private bool CanReceive(EventEntry e) => e.RewardType switch
+        {
+            EventReward.HostHeal => _host != null,
+            _ => true,
+        };
+
+        private string BlockedReasonOf(EventEntry e)
+            => !CanReceive(e) ? "몸이 없어 받을 수 없다"
+             : !CanAfford(e) ? "값을 치를 수 없다"
+             : string.Empty;
+
+        /// <summary>이벤트를 받아들이거나 지나친다. UI 가 호출한다.</summary>
+        public void ResolveEvent(bool accept)
+        {
+            if (_event == null || _eventDone) return;
+            var e = _event;
+            _eventDone = true;
+
+            string line;
+            if (!accept || !CanAfford(e) || !CanReceive(e))
+            {
+                // 등을 돌려도 받는 것이 있는 이벤트가 있다 (정본의 `..._OR_...`)
+                line = e.HasDeclineReward
+                    ? GiveReward(e.DeclineReward, e.DeclineValue, e.RewardRarity, e.RewardKey)
+                    : "지나쳤다.";
+            }
+            else if (e.FightFirst)
+            {
+                // 받아들였으면 먼저 싸운다. 보상은 방을 비운 뒤에 온다 —
+                // 이기기 전에 주면 그건 도전이 아니라 그냥 상자다.
+                PayCost(e);
+                _fightReward = e;
+                SpawnProcedural(e.FightCount, e.FightElite, _roomIndex * 7 + 3);
+                line = e.FightElite ? "정예가 앞을 막는다." : "매복이다.";
+            }
+            else
+            {
+                PayCost(e);
+                // 확률이 걸린 것은 빗나갈 수 있다. 빗나가면 뒷쪽 보상으로 떨어진다 —
+                // 값만 치르고 빈손이면 그건 선택이 아니라 벌이다.
+                bool hit = e.ChancePercent <= 0 || _rng.Next(100) < e.ChancePercent;
+                line = hit
+                    ? GiveReward(e.RewardType, e.RewardValue, e.RewardRarity, e.RewardKey)
+                    : e.HasDeclineReward
+                        ? "빗나갔다. " + GiveReward(e.DeclineReward, e.DeclineValue, e.RewardRarity, e.RewardKey)
+                        : "빗나갔다.";
+                if (hit && e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += $" · 골드 +{e.ExtraGold}"; }
+            }
+
+            _bus.Publish(new EventResolvedEvent { EventId = e.EventId, Accepted = accept, ResultLine = line });
+            _event = null;
+
+            // 싸움이 시작됐으면 출구는 적을 다 잡은 뒤에 열린다.
+            // 3택1 이 떴으면 그것을 고른 뒤에 열린다 (`ChooseBuff` 가 연다).
+            if (_fightReward == null && !_awaitingBuff) SpawnExit();
+        }
+
+        /// <summary>매복·도전을 이겼을 때 줄 것. 싸우는 동안 여기 들고 있는다.</summary>
+        private EventEntry _fightReward;
+
+        /// <summary>매복을 이겼다. 걸려 있던 보상을 준다.</summary>
+        private void PayFightReward()
+        {
+            var e = _fightReward;
+            if (e == null) return;
+            _fightReward = null;
+
+            string line = GiveReward(e.RewardType, e.RewardValue, e.RewardRarity, e.RewardKey);
+            if (e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += $" · 골드 +{e.ExtraGold}"; }
+            _bus.Publish(new EventResolvedEvent { EventId = e.EventId, Accepted = true, ResultLine = line });
+        }
+
+        private void PayCost(EventEntry e)
+        {
+            switch (e.CostType)
+            {
+                case EventCost.Gold:
+                    AddRunGold(-e.CostValue);
+                    break;
+                case EventCost.GhostHp:
+                    _ghostHp = Mathf.Max(1, _ghostHp - GhostHpMax * e.CostValue / 100);
+                    PublishHp();
+                    break;
+                case EventCost.HostHp:
+                    if (_host != null)
+                    {
+                        // 여기서 죽지는 않는다. `TakeDamage` 를 쓰면 몸을 잃는 흐름을
+                        // 타게 되는데, 거래로 몸이 죽는 것은 이 방의 약속이 아니다.
+                        _host.SpendHp(_host.HpMax * e.CostValue / 100);
+                        PublishHp();
+                    }
+                    break;
+            }
+        }
+
+        private string GiveReward(EventReward kind, int value, CardRarity rarity, string key = null)
+        {
+            switch (kind)
+            {
+                case EventReward.HostHeal:
+                    if (_host == null) return "몸이 없어 받을 수 없었다.";
+                    _host.Heal(Mathf.Max(1, _host.HpMax * value / 100));
+                    PublishHp();
+                    return $"호스트 체력 {value}% 회복";
+
+                case EventReward.GhostHeal:
+                    _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * value / 100);
+                    PublishHp();
+                    return $"고스트 체력 {value}% 회복";
+
+                case EventReward.Gold:
+                    AddRunGoldAtPlayer(value);
+                    return $"골드 +{value}";
+
+                case EventReward.CardGrant:
+                {
+                    var card = DrawCardOfRarity(rarity);
+                    if (card == null) return "가져갈 것이 남아 있지 않았다.";
+                    _buffs.Apply(card);
+                    _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
+                    return $"{card.NameKr} 획득";
+                }
+
+                case EventReward.CardOffer:
+                    OfferBuff();
+                    return _awaitingBuff ? "카드를 고른다" : "고를 것이 남아 있지 않았다.";
+
+                case EventReward.UpgradeCard:
+                {
+                    var up = PickUpgradable();
+                    if (up == null) return "벼릴 것이 없었다.";
+                    int lv = _buffs.LevelOf(up.BuffKey);
+                    _buffs.Apply(up);
+                    _bus.Publish(new BuffChosenEvent { ChosenKey = up.BuffKey, TotalBuffCount = _buffs.Count });
+                    return $"{up.NameKr} Lv.{lv} → Lv.{_buffs.LevelOf(up.BuffKey)}";
+                }
+
+                case EventReward.PossessReach:
+                    _possessReachMul += value / 100f;
+                    return $"빙의 사거리 +{value}%";
+
+                case EventReward.ShopDiscount:
+                    _shopDiscount = Mathf.Clamp(_shopDiscount + value, 0, 80);
+                    return $"상점 카드 값 {_shopDiscount}% 할인";
+
+                case EventReward.BossShieldBreak:
+                    _bossShieldBreak = true;
+                    return "다음 보스의 방어막을 한 번 깬다";
+
+                case EventReward.SpawnHost:
+                    return SpawnPossessableHost(key);
+            }
+            return string.Empty;
+        }
+
+        // ── 이벤트가 남기는 판 단위 효과 ─────────────────────────
+        //
+        // 카드가 아니라 **그 판에만 붙는 상태**다. 카드 슬롯(8칸)을 먹지 않으므로
+        // 이벤트를 밟을 이유가 카드 말고도 생긴다.
+
+        private float _possessReachMul;   // 빙의 사거리 증가분 (0.35 = +35%)
+        private int _shopDiscount;        // 상점 카드 할인율(%)
+        private bool _bossShieldBreak;    // 다음 보스 방어막 1회 무효
+
+        public float PossessReachMul => 1f + _possessReachMul;
+        public int ShopDiscount => _shopDiscount;
+        public bool HasBossShieldBreak => _bossShieldBreak;
+
+        /// <summary>
+        /// 레벨을 올릴 수 있는 카드 중 **가장 낮은 것**을 고른다.
+        /// 제일 높은 것을 올리면 이미 센 쪽만 더 세지고, 무작위로 고르면
+        /// 값을 치른 결과를 스스로 설명하지 못한다.
+        /// </summary>
+        private BuffEntry PickUpgradable()
+        {
+            if (_buffTable == null) return null;
+            BuffEntry best = null;
+            int bestLv = int.MaxValue;
+            var list = _buffTable.Entries;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var e = list[i];
+                if (e == null) continue;
+                int lv = _buffs.LevelOf(e.BuffKey);
+                if (lv <= 0 || lv >= e.MaxLevel) continue;
+                if (lv >= bestLv) continue;
+                bestLv = lv; best = e;
+            }
+            return best;
+        }
+
+        /// <summary>
+        /// 빼앗을 수 있는 몸 하나를 세운다. 싸우라고 부른 것이 아니라
+        /// **가져가라고 놓아 둔 것**이라 먼저 덤비지 않는다.
+        /// </summary>
+        private string SpawnPossessableHost(string hostKey)
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || string.IsNullOrEmpty(hostKey)) return "아무도 오지 않았다.";
+
+            HostEntry def = null;
+            for (int i = 0; i < hosts.Count; i++)
+                if (hosts[i].HostKey == hostKey) { def = hosts[i]; break; }
+            if (def == null) return "아무도 오지 않았다.";
+
+            var u = NewUnit($"Event_{hostKey}");
+            u.Setup(UnitSide.Enemy, def.HostKey, def.NameKr, UnitGet(def.SpriteKey),
+                    EnemyHpOf(def), EnemyAtkOf(def), EnemySpeedOf(def),
+                    EnemyRangeOf(def), EnemyIntervalOf(def),
+                    UnitBox(84f, 78f), isBoss: false, profile: def);
+            var me = Avatar;
+            u.Position = me != null ? me.Position + new Vector2(0f, 260f) : SpawnSlot(0, 1);
+            ClampToField(u);
+            u.PossessPriority = def.PossessPriority;
+            u.PossessRange = 0f;
+            u.IsAggro = false;   // 먼저 덤비지 않는다
+            u.SetState(EnemyState.Idle);
+            ApplyFacingSprites(u, def.SpriteKey);
+            _enemies.Add(u);
+            return $"{def.NameKr} 이(가) 나타났다";
+        }
+
+        /// <summary>
+        /// 그 등급에서 아직 안 가진(또는 더 올릴 수 있는) 카드 하나를 뽑는다.
+        /// 없으면 한 단계 낮은 등급으로 내려간다 — 등급이 높을수록 수가 적어
+        /// 후보가 금방 마르는데, 그때 빈손으로 돌려보내면 값을 치른 보람이 없다.
+        /// </summary>
+        private BuffEntry DrawCardOfRarity(CardRarity want)
+        {
+            if (_buffTable == null) return null;
+            for (int r = (int)want; r >= 0; r--)
+            {
+                BuffEntry pick = null;
+                int seen = 0;
+                var list = _buffTable.Entries;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var e = list[i];
+                    if (e == null || !e.Implemented || (int)e.Rarity != r) continue;
+                    if (_buffs.ExcludedKeys.Contains(e.BuffKey)) continue;
+                    if (_buffs.SlotsFull && _buffs.LevelOf(e.BuffKey) == 0) continue;
+                    if (_rng.Next(++seen) == 0) pick = e;
+                }
+                if (pick != null) return pick;
+            }
+            return null;
         }
 
         /// <summary>제시된 3장 중 하나를 고른다. UI 가 호출한다.</summary>
@@ -4350,10 +7896,16 @@ namespace Game.Module.InGame
             _awaitingBuff = false;
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
-            // 레벨업 중에도 방이 이미 비었을 수 있다 — 그때는 고른 뒤에 출구를 연다.
-            if (_enemies.Count == 0 && _exits.Count == 0 && !IsLastRoom
-                && (_canonRoom == null || _wave >= _canonRoom.LastWave))
-                SpawnExit();
+
+            // 방금 고른 카드로 재료가 다 모였을 수 있다
+            TryCompleteEvolution();
+
+            // ⚠ 여기서 출구를 직접 열지 않는다.
+            //   방이 이미 비었으면 다음 프레임의 `Tick` 이 `OnRoomCleared` 를 부른다 —
+            //   골드·정예 집계·매복 삯이 전부 그 안에 있다.
+            //   예전에는 여기서 `SpawnExit()` 를 바로 불렀는데, 그러면 출구가 열려 버려
+            //   `Tick` 의 조건(지금은 `!_exitOpen`)이 깨지고 **방 클리어가 통째로 건너뛰어졌다.**
+            //   레벨업이 뜬 방에서만 골드가 안 들어오던 원인이다.
         }
 
         // ── 출구 ─────────────────────────────────────────────────
@@ -4361,29 +7913,97 @@ namespace Game.Module.InGame
         // 걸어서 통과해야 넘어가므로, 다 잡은 뒤에도 한 번 더 판단할 여지가 생긴다
         // (남은 Ghost HP 를 보고 쉬어 갈지 바로 갈지 — 시계가 계속 도는 상태다).
 
+        /// <summary>
+        /// 방에 들어서면서 문을 **닫힌 채로** 세운다.
+        /// 닫힌 그림이 아직 없으면 아무것도 세우지 않는다 — 열린 문을 미리 보여 주면
+        /// 걸어가 봤자 안 열려서 고장으로 읽힌다.
+        /// </summary>
+        private void PlaceClosedExit()
+        {
+            _exitOpen = false;
+            _exitOpenTime = -1f;
+            if (_exitClosed == null) { DespawnExit(); return; }
+            BuildExitGates();
+            ApplyExitSprite();
+        }
+
+        /// <summary>문을 연다. 방을 비웠거나 방의 볼일이 끝났을 때 부른다.</summary>
         private void SpawnExit()
+        {
+            if (_exitOpen) return;              // 이미 열린 문을 다시 열지 않는다
+            _exitOpen = true;
+
+            // 닫힌 채로 세워 둔 문이 있으면 그것을 연다. 없으면 지금 세운다
+            // (닫힌 그림이 아직 없는 동안의 예전 동작 그대로).
+            if (_exits.Count == 0) BuildExitGates();
+            _exitOpenTime = _exitClosed != null ? 0f : -1f;
+            ApplyExitSprite();
+
+            if (_exits.Count > 0) _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
+        }
+
+        // 65° 기준으로 다시 그린 문(26차). 예전 `exitportal*` 은 벽에 난 문을
+        // 정면에서 본 그림이라 바닥과 따로 놀았다 — 파일을 통째로 갈았다.
+        private const string ExitClosedKey = "exitgate_closed";
+        private const string ExitOpen1Key = "exitgate_open1";
+        private const string ExitOpen2Key = "exitgate_open2";
+        private const string ExitOpenKey = "exitgate_open";
+
+        /// <summary>지금 상태에 맞는 그림을 문 전부에 바른다.</summary>
+        private void ApplyExitSprite()
+        {
+            Sprite sprite = !_exitOpen ? _exitClosed
+                          : _exitOpenTime < 0f ? _exitOpened
+                          : _exitOpenTime < ExitOpenSeconds * 0.34f ? _exitOpen1
+                          : _exitOpenTime < ExitOpenSeconds * 0.67f ? _exitOpen2
+                          : _exitOpened;
+            // 중간 그림이 아직 안 왔으면 건너뛰고 열린 그림을 쓴다 — 없는 장에서 멈추면
+            // 문이 사라진 것처럼 보인다.
+            if (sprite == null) sprite = _exitOpened;
+            for (int i = 0; i < _exits.Count; i++)
+            {
+                if (_exits[i].Img == null) continue;
+                _exits[i].Img.sprite = sprite;
+                // 팻말은 열린 뒤에만 읽을 수 있으면 된다. 닫힌 문에 길 안내를 붙여 두면
+                // 아직 고를 수 없는 것을 고르라고 보여 주는 셈이다.
+                if (_exits[i].Label != null) _exits[i].Label.SetActive(_exitOpen);
+            }
+        }
+
+        /// <summary>여는 연출을 진행시킨다.</summary>
+        private void TickExitOpen(float dt)
+        {
+            if (!_exitOpen || _exitOpenTime < 0f || _exitOpenTime >= ExitOpenSeconds) return;
+            _exitOpenTime += dt;
+            ApplyExitSprite();
+        }
+
+        private void BuildExitGates()
         {
             DespawnExit();
 
-            // 갈림길 방은 문이 둘이다(CH2_N03 · CH3_N03). 어느 문으로 걸어 나가느냐가
-            // 곧 선택이므로, 팝업을 띄우지 않고 문을 둘 다 세운다 — 걸어서 고른다.
+            // ⚠ **갈림길은 없다. 문은 하나다.**
+            //   임포터가 첫 갈래만 굽는다(`WriteExits`). 문이 둘 서면 그 앞이 고르는
+            //   화면이 되고, 그런 선택지는 지금 기획에 없다.
             if (_canonRoom != null && _canonRoom.Exits.Count > 0)
             {
-                for (int i = 0; i < _canonRoom.Exits.Count; i++)
-                {
-                    var x = _canonRoom.Exits[i];
-                    _exits.Add(NewExit(ToPixels(x.At), x.NextRoomId));
-                }
+                var x = _canonRoom.Exits[0];
+                _exits.Add(NewExit(ToPixels(x.At), x.NextRoomId));
+            }
+            else if (_canonRoom == null)
+            {
+                // 정본 경로가 없을 때(절차적 생성)만 이름 없는 문을 세운다.
+                _exits.Add(NewExit(new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f), null));
             }
             else
             {
-                _exits.Add(NewExit(new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.05f), null));
+                // 정본 방인데 문이 없다 = **챕터 끝**이다. 여기서 문을 세우면
+                // 아무 데도 가지 않는 문이 되고, 걸어 들어가면 정본을 벗어나
+                // 절차적으로 만든 방으로 떨어진다. 끝은 `Finish` 가 처리한다.
             }
-
-            _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
         }
 
-        private ExitGate NewExit(Vector2 at, string nextRoomId)
+        private ExitGate NewExit(Vector2 at, string nextRoomId, string label = null)
         {
             var go = new GameObject($"Exit_{nextRoomId ?? "next"}",
                                     typeof(RectTransform), typeof(Image));
@@ -4391,14 +8011,49 @@ namespace Game.Module.InGame
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(120f, 132f);
+            // 새 문 그림은 216×180 px (가로 3 m · 세로 2.5 m). 그림 비율 그대로 둔다 —
+            // 늘리면 좌우 기둥이 블록과 다른 두께가 되어 같은 돌로 안 보인다.
+            rt.sizeDelta = new Vector2(216f, 180f);
             rt.anchoredPosition = at;
 
             var img = go.GetComponent<Image>();
-            img.sprite = GetSprite("exitportal");
+            img.sprite = _exitOpened;   // 상태에 맞는 그림은 ApplyExitSprite 가 바른다
             img.raycastTarget = false;
             img.preserveAspect = true;
-            return new ExitGate { View = rt, NextRoomId = nextRoomId };
+
+            GameObject labelGo = null;
+            if (!string.IsNullOrEmpty(label)) labelGo = AttachExitLabel(rt, label);
+            return new ExitGate { View = rt, Img = img, NextRoomId = nextRoomId, Label = labelGo };
+        }
+
+        /// <summary>
+        /// 문에 팻말을 붙인다.
+        ///
+        /// ⚠ 문 **위**가 아니라 아래다. 출구는 방 맨 위(높이-0.6m)에 서므로
+        ///   위에 붙이면 방 밖으로 나가 잘린다. 실제로 그렇게 만들었다가
+        ///   세 문이 다 무명으로 보였다.
+        /// </summary>
+        private GameObject AttachExitLabel(RectTransform gate, string text)
+        {
+            var go = new GameObject("Label", typeof(RectTransform));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(gate, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            // 문 사이 간격(3갈래 기준 202px)보다 좁게 잡는다
+            rt.sizeDelta = new Vector2(180f, 54f);
+            rt.anchoredPosition = new Vector2(0f, -2f);
+
+            var tmp = go.AddComponent<TextMeshProUGUI>();
+            tmp.text = text;
+            tmp.fontSize = 18f;
+            tmp.alignment = TextAlignmentOptions.Top;
+            tmp.color = new Color(0.90f, 0.86f, 0.70f);
+            tmp.raycastTarget = false;
+            tmp.enableWordWrapping = true;
+            tmp.lineSpacing = -12f;
+            tmp.font = TMP_Settings.defaultFontAsset;   // 피해 숫자와 같은 폰트를 쓴다
+            return go;
         }
 
         private void DespawnExit()
@@ -4412,6 +8067,7 @@ namespace Game.Module.InGame
         private void TickExit()
         {
             if (_exits.Count == 0) return;
+            if (!_exitOpen) return;        // 닫힌 문은 서 있기만 한다 — 닿아도 안 넘어간다
             var me = Avatar;
             if (me == null) return;
 
@@ -4447,7 +8103,9 @@ namespace Game.Module.InGame
             //   R_STD  방당 Gold 10
             //   R_ELITE 정예방 Gold 25 · Core 2 · Memory 1
             //   R_CH1  챕터 클리어 Gold 120 · Core 4 · EXP 5
-            int gold = stages * 10 + _eliteRoomsCleared * 15;
+            // 판에서 모은 골드가 정산의 축이다. 방마다 붙는 정본 값이라
+            // 통과한 방 수에 비례한다 — 여기에 정예·챕터 클리어 몫이 얹힌다.
+            int gold = _runGold + _eliteRoomsCleared * 15;
             int core = _eliteRoomsCleared * 2;
             int memory = _eliteRoomsCleared;
             int gem = 0;

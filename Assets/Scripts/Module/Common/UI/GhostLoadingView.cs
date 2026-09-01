@@ -68,6 +68,12 @@ namespace Game.Module.Common.UI
         /// <summary>100%를 채운 뒤 눈에 남기는 시간. 차자마자 사라지면 채운 것을 못 본다.</summary>
         private const float FullHoldSeconds = 0.2f;
 
+        /// <summary>
+        /// 걷히는 데 걸리는 시간. 뚝 끄면 검은 틈이 한 박자 보인다 —
+        /// 서서히 투명해지는 동안 뒤 화면이 비쳐 나오면 그 틈이 사라진다.
+        /// </summary>
+        private const float FadeOutSeconds = 0.35f;
+
         private static readonly Color Backdrop = new(0.027f, 0.035f, 0.063f, 1f);
         private static readonly Color Band = new(0.055f, 0.082f, 0.145f, 1f);
         private static readonly Color BarBack = new(0.086f, 0.106f, 0.161f, 1f);
@@ -98,7 +104,7 @@ namespace Game.Module.Common.UI
             "머리 위 금색 조준 링이 지금 빙의 버튼이 노리는 몸이다.",
             "빙의 표식은 가까운 순으로 다섯까지만 뜬다. 나머지는 사거리 밖이다.",
             "붉은 X 가 붙은 몸은 내가 버린 몸이다. 이 방에서는 다시 못 탄다.",
-            "얼티밋은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 필살기를 쓰는지다.",
+            "액티브 스킬은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 액티브 스킬를 쓰는지다.",
             "주위에 뺏을 몸이 하나도 없으면 잠시 뒤 몸 하나가 던져진다. 대신 값이 비싸다.",
             "화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.",
         };
@@ -169,6 +175,7 @@ namespace Game.Module.Common.UI
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+            if (_group != null) _group.alpha = 1f;   // 지난번 페이드아웃 값이 남아 있을 수 있다
 
             _shownAt = Time.unscaledTime;
             _hiding = false;
@@ -229,7 +236,26 @@ namespace Game.Module.Common.UI
             await UniTask.Delay(System.TimeSpan.FromSeconds(FullHoldSeconds),
                                 DelayType.UnscaledDeltaTime, cancellationToken: token);
 
+            // ⚠ 그냥 끄면 **검은 화면이 한 박자 보인다.**
+            //   가림막이 사라진 프레임과 뒤 화면이 처음 그려지는 프레임이 어긋나기 때문이다.
+            //   뒤 화면이 이미 그려진 것을 확인한 뒤(한 프레임 넘기고) 서서히 걷는다 —
+            //   페이드 중에는 뒤가 비쳐 보이므로 검은 틈이 생길 자리가 없다.
+            await UniTask.NextFrame(cancellationToken: token);
+
+            if (_group != null)
+            {
+                float t = 0f;
+                while (t < FadeOutSeconds)
+                {
+                    t += Time.unscaledDeltaTime;
+                    _group.alpha = Mathf.Clamp01(1f - t / FadeOutSeconds);
+                    await UniTask.NextFrame(cancellationToken: token);
+                }
+                _group.alpha = 0f;
+            }
+
             gameObject.SetActive(false);
+            if (_group != null) _group.alpha = 1f;   // 다음 전환을 위해 되돌려 둔다
         }
 
         public void UpdateProgress(float value)

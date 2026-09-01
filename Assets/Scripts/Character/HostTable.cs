@@ -4,6 +4,32 @@ using UnityEngine;
 
 namespace Game.Character
 {
+    /// <summary>
+    /// 몸의 등급. 정본 `statTier` 와 같다. 로비에서 데려오는 골드 값이 이걸로 갈린다.
+    /// </summary>
+    public enum HostGrade { B, A, S }
+
+    /// <summary>
+    /// 성장하는 능력치 여섯. **순서가 곧 `GameConfig` 성장폭 배열의 첨자다** —
+    /// 여기를 바꾸면 그 배열도 함께 바꿔야 한다.
+    ///
+    /// ⚠ `_possessHpPercent`(빙의 시작 HP%)는 여기 넣지 않는다. 나머지는
+    ///   "이 몸의 능력" 인데 그것만 "뺏을 때의 조건" 이라 층이 다르다.
+    ///   뺏으면 HP 바에 바로 보이므로 미리 알려 줄 이유도 없다.
+    /// </summary>
+    public enum HostStat { Hp, Atk, Crit, AtkSpeed, Range, MoveSpeed }
+
+    /// <summary>
+    /// 레벨 한 칸의 능력치. `HostEntry._levelStats` 의 원소다.
+    /// 고스트 Lv 가 인덱스이므로 **모든 몸이 같은 길이**를 갖는다.
+    /// </summary>
+    [Serializable]
+    public struct HostLevelStat
+    {
+        public int Hp;
+        public int Atk;
+    }
+
     /// <summary>호스트 해금 조건 유형. 잠금 셀 문구를 규격화하기 위해 2종으로만 제한한다.</summary>
     public enum HostUnlockType
     {
@@ -79,13 +105,25 @@ namespace Game.Character
         [SerializeField] private string _hostKey;
         [SerializeField] private string _nameEn;
         [SerializeField] private string _nameKr;
-        [SerializeField] private string _role;
 
-        [Header("표시 스탯 (0~100)")]
+        [Header("표시 스탯")]
         [SerializeField] private int _hp;
         [SerializeField] private int _atk;
+        [Tooltip("이동속도 (0~100).")]
         [SerializeField] private int _spd;
-        [SerializeField] private int _dash;
+        // ⚠ 예전 이름은 `_dash` 였다. 대시 스탯인 줄 알았지만 정본 임포터가
+        //   **공격속도**(`atkSpeedIndex`)를 넣고 있었다 — 라벨과 값이 어긋나
+        //   유저가 보던 `DASH 66` 이 실은 공격속도였다. 이름을 값에 맞췄다.
+        [Tooltip("공격속도 (0~100). 클수록 빠르다.")]
+        [SerializeField] private int _atkSpeed;
+
+        [Tooltip("치명타 확률 시작값(%). 배율은 전역 고정이라 GameConfig 가 갖는다.")]
+        [Range(0, 100)]
+        [SerializeField] private int _critPercent = 10;
+
+        [Header("주 성장 스탯 2개 — 크게 오른다. 나머지 넷은 작게 오른다.")]
+        [SerializeField] private HostStat _primaryStatA = HostStat.Hp;
+        [SerializeField] private HostStat _primaryStatB = HostStat.Atk;
 
         [Header("공격 방식")]
         [SerializeField] private AttackKind _attackKind;
@@ -162,6 +200,19 @@ namespace Game.Character
         [Header("정본 실수치 — 내가 이 몸을 탔을 때 (attacks AP_H##)")]
         [Tooltip("정본은 같은 배우라도 적일 때와 내가 탔을 때 교전값을 따로 준다. " +
                  "0 이면 이 몸에 해당하는 호스트 프로필이 정본에 없다는 뜻이다.")]
+        // ⚠ 같은 배우라도 **내가 탔을 때와 적일 때 체력·공격력이 다르다.**
+        //   정본 HOST_MASTER 는 지수(hpIndex 94~132)와 기준값(hp 142 / atk 14)으로 주고,
+        //   ENEMY_RUNTIME 은 절대값(85~166 / 8~11)으로 준다. 서로 다른 표다.
+        //   예전에는 칸이 하나뿐이라 적 값이 호스트 값까지 덮어써서, 내 몸이
+        //   의도한 체력의 절반으로 돌아다녔다 — 방을 도저히 못 버티던 원인이다.
+        /// <summary>
+        /// 적으로 나올 때 탄이 얼마나 휘는가. 0 이면 직진.
+        /// 정본이 `PrimaryTrait: HOMING` 이라고 못박은 종만 0 이 아니다 —
+        /// 지금은 코만도(미사일) 하나뿐이다("readable homing" = 눈에 보이게 천천히).
+        /// </summary>
+        [SerializeField] private float _canonHoming;
+        [SerializeField] private int _canonHostHp;
+        [SerializeField] private int _canonHostAtk;
         [SerializeField] private float _canonHostRange;
         [SerializeField] private float _canonHostInterval;
         [SerializeField] private float _canonHostMoveSpeed;
@@ -176,22 +227,143 @@ namespace Game.Character
                  "비워 두면 아틀라스를 못 찾아 **보이지 않는 적**이 되고 방이 안 끝난다.")]
         [SerializeField] private string _spriteKey;
 
-        [Header("얼티밋")]
-        [SerializeField] private string _ultimateKey;
+        [Header("액티브 스킬")]
+        [SerializeField] private string _activeSkillKey;
+
+        /// <summary>
+        /// 이 몸의 액티브 스킬 쿨다운(초). 티어는 4단이다 —
+        /// **T1 8 · T2 14 · T3 20 · T4 28.** 현행 14초가 T2 자리라 절반은 그대로다.
+        ///
+        /// 세기 조절 손잡이는 **쿨 하나뿐이다**(설계안 §3-1). 센 스킬은 쿨이 길다.
+        /// 피해·지속·쿨을 전부 따로 만지면 어느 것이 센지 표에서 안 읽힌다.
+        ///
+        /// ⚠ **0 이면 `GameConfig` 기본값으로 떨어진다.** 사거리·간격에서 `_canonHost*`
+        ///   계열이 항상 먼저 먹어 배율 칸이 통째로 죽어 있던 함정이 있었다
+        ///   (`AVSR_JobClasses.md` §6). 그 일을 되풀이하지 않도록 우선순위를
+        ///   **여기 한 곳에만** 적는다 — 읽는 쪽은 `ActiveSkillCooldown(fallback)` 하나다.
+        /// </summary>
+        [SerializeField] private float _activeSkillCooldown;
+
+        /// <summary>
+        /// 이 몸의 패시브 스킬 키. **비어 있으면 패시브가 없다(12명).**
+        ///
+        /// 액티브는 23명 전원이 하나씩 갖지만 패시브는 11명뿐이라
+        /// 표를 나눠 뒀다(`PassiveSkillTable`). 여기는 그 표를 가리키는 키만 든다.
+        ///
+        /// ⚠ 숙련도 0(봉인)이면 액티브와 **함께** 잠긴다 — 둘은 같이 열린다.
+        ///   잠금 판정은 `IPlayerDataService.IsSkillSealed(hostKey)` 한 곳이다.
+        /// </summary>
+        [SerializeField] private string _passiveSkillKey;
+
+        /// <summary>
+        /// 이 몸의 등급. 정본 `statTier` 를 그대로 받는다 — **S 1명 · A 11명 · B 11명.**
+        ///
+        /// 로비에서 **데려오는 값(골드)** 이 이 등급으로 갈린다.
+        /// 숙련도에 비례시키지 않는다 — 키운 몸일수록 비싸지면
+        /// 공들인 쪽이 벌을 받아 진입 장벽만 높아진다.
+        /// </summary>
+        [SerializeField] private HostGrade _grade = HostGrade.B;
+
+        /// <summary>
+        /// **레벨별 능력치.** 고스트 Lv 가 그대로 이 배열의 인덱스가 된다
+        /// (`_levelStats[0]` = Lv1).
+        ///
+        /// ⚠ 고스트에는 스탯이 없다. 고스트가 주는 것은 **레벨**뿐이고,
+        ///   그 레벨에서 HP·ATK 가 얼마인지는 **이 표가** 정한다.
+        ///
+        ///     고스트 Lv20 → 아마존에 빙의 → 아마존 Lv20 스탯
+        ///     고스트 Lv20 → 구루에  빙의 → 구루  Lv20 스탯
+        ///
+        ///   배율 하나를 전원에게 곱하면 23명이 같은 비율로 커져서
+        ///   성장해도 **몸끼리의 관계가 안 변한다.** 그래서 몸마다 표를 갖는다.
+        ///
+        ///   호스트마다 레벨을 따로 쌓게 만들지도 않는다 — "키운 몸이 방에 없다 →
+        ///   Lv1 몸을 탄다 → 죽는다 → 빙의를 피한다" 가 되어 핵심 재미가 죽는다.
+        ///
+        /// **비어 있으면** 레벨과 무관하게 정본 기본값(`_canonHost*`)을 쓴다.
+        /// 값이 정해지기 전까지는 그 상태다.
+        /// </summary>
+        [SerializeField] private HostLevelStat[] _levelStats = Array.Empty<HostLevelStat>();
 
         [Header("해금 조건")]
         [SerializeField] private HostUnlockType _unlockType;
         [SerializeField] private int _unlockChapter;
         [SerializeField] private int _unlockStage;
 
+        /// <summary>
+        /// 잡몹 한 종을 만든다. **호스트 테이블에는 들어가지 않는다** —
+        /// 로비 선택지에도, 정본 `HOST_MASTER` 에도 없는 배우다.
+        ///
+        /// 잡몹은 빼앗을 수 없는 적이다(`NotPossessable`). 그런데 전투 코드는
+        /// 근접·사거리·간격 같은 값을 전부 `HostEntry` 에서 읽는다 — 프로필이 null 이면
+        /// `IsMelee` 가 false 로 떨어져 근접 잡몹이 원거리처럼 굴게 된다.
+        /// 그래서 데이터만 채운 껍데기 하나를 만들어 쥐여 준다.
+        /// </summary>
+        /// <summary>유령 자신의 키. 목록 맨 앞에 서는 "몸 없이 들어간다" 칸이다.</summary>
+        public const string GhostKey = "ghost";
+
+        /// <summary>
+        /// 목록에 세우는 **유령 칸**.
+        ///
+        /// 버튼을 따로 두지 않고 호스트 목록 맨 앞에 넣는다 —
+        /// 고르는 자리가 하나면 "무엇을 데려갈까" 가 한 번의 판단이 된다.
+        /// 몸이 아니므로 스킬도 등급값도 없다. 골드가 들지 않는다.
+        /// </summary>
+        public static HostEntry CreateGhost() => new HostEntry
+        {
+            _hostKey = GhostKey,
+            _nameKr = "유령",
+            _nameEn = "GHOST",
+            _spriteKey = GhostKey,
+            _unlockType = HostUnlockType.Owned,
+            _grade = HostGrade.B,
+        };
+
+        /// <summary>이 칸이 유령인가. 몸값·스킬·숙련도가 전부 없다.</summary>
+        public bool IsGhost => _hostKey == GhostKey;
+
+        public static HostEntry CreateTrash(string key, string nameKr, AttackKind kind,
+                                            int hp, int atk, float moveMps, float engageMps,
+                                            float rangeMeters, float interval, float telegraph,
+                                            int shotCount = 1, float spreadDegrees = 0f)
+        {
+            return new HostEntry
+            {
+                _hostKey = key,
+                _nameKr = nameKr,
+                _nameEn = key,
+                _spriteKey = key,
+                _attackKind = kind,
+                _possessKind = PossessKind.NotPossessable,
+                _canonHp = hp,
+                _canonAtk = atk,
+                _canonMoveSpeed = moveMps,
+                _canonEngageSpeed = engageMps,
+                _canonRange = rangeMeters,
+                _canonInterval = interval,
+                _canonTelegraph = telegraph,
+                // 부채꼴로 쏘는 잡몹(순찰기)은 여기서 발수를 받는다.
+                // ⚠ 발당 피해는 `PerformAttack` 의 `split` 이 알아서 나눈다 —
+                //   탄 수가 그대로 화력 배수가 되지 않는다.
+                _canonShotCount = Mathf.Max(1, shotCount),
+                _spreadDegrees = spreadDegrees,
+                _canonMaxConcurrent = 0,   // 잡몹은 물량이 정체다 — 동시 공격을 막지 않는다
+            };
+        }
+
         public string HostKey => _hostKey;
         public string NameEn  => _nameEn;
         public string NameKr  => _nameKr;
-        public string Role    => _role;
         public int Hp   => _hp;
         public int Atk  => _atk;
         public int Spd  => _spd;
-        public int Dash => _dash;
+        public int AtkSpeed => _atkSpeed;
+        public int CritPercent => _critPercent;
+        public HostStat PrimaryStatA => _primaryStatA;
+        public HostStat PrimaryStatB => _primaryStatB;
+
+        /// <summary>이 스탯이 이 몸의 주 성장 스탯인가.</summary>
+        public bool IsPrimary(HostStat stat) => _primaryStatA == stat || _primaryStatB == stat;
         public AttackKind Kind => _attackKind;
         public int ShotCount => Mathf.Max(1, _shotCount);
         public float SpreadDegrees => _spreadDegrees;
@@ -235,6 +407,9 @@ namespace Game.Character
         public float CanonEngageSpeed => _canonEngageSpeed > 0f ? _canonEngageSpeed : _canonMoveSpeed;
         public float CanonRange => _canonRange;
         public float CanonInterval => _canonInterval;
+        public float CanonHoming => _canonHoming;
+        public int CanonHostHp => _canonHostHp;
+        public int CanonHostAtk => _canonHostAtk;
         public float CanonHostRange => _canonHostRange;
         public float CanonHostInterval => _canonHostInterval;
         public float CanonHostMoveSpeed => _canonHostMoveSpeed;
@@ -248,7 +423,36 @@ namespace Game.Character
         public bool ActorOnly => _actorOnly;
         public string SpriteKey => string.IsNullOrEmpty(_spriteKey) ? _hostKey : _spriteKey;
 
-        public string UltimateKey => _ultimateKey;
+        public string ActiveSkillKey => _activeSkillKey;
+
+        /// <summary>
+        /// 이 몸의 쿨다운. 표에 값이 없으면(0) <paramref name="fallback"/> 을 쓴다.
+        /// **쿨을 읽는 곳은 여기 하나뿐이다** — 두 곳에서 각자 판단하면 어긋난다.
+        /// </summary>
+        public float ActiveSkillCooldown(float fallback)
+            => _activeSkillCooldown > 0f ? _activeSkillCooldown : fallback;
+
+        /// <summary>패시브 스킬 키. 비어 있으면 이 몸에는 패시브가 없다.</summary>
+        public string PassiveSkillKey => _passiveSkillKey;
+
+        public HostGrade Grade => _grade;
+
+        /// <summary>레벨 표가 채워져 있는가. 비었으면 정본 기본값으로 떨어진다.</summary>
+        public bool HasLevelStats => _levelStats != null && _levelStats.Length > 0;
+
+        /// <summary>
+        /// 이 레벨의 능력치. 표 범위를 넘으면 **마지막 칸**을 쓴다 —
+        /// 상한을 넘겼다고 스탯이 0 이 되면 안 된다.
+        /// </summary>
+        public HostLevelStat StatAt(int level)
+        {
+            if (!HasLevelStats) return default;
+            int i = Mathf.Clamp(level - 1, 0, _levelStats.Length - 1);
+            return _levelStats[i];
+        }
+
+        /// <summary>패시브를 가진 몸인가. 23명 중 11명만 true 다.</summary>
+        public bool HasPassiveSkill => !string.IsNullOrEmpty(_passiveSkillKey);
         public HostUnlockType UnlockType => _unlockType;
         public int UnlockChapter => _unlockChapter;
         public int UnlockStage   => _unlockStage;
@@ -290,14 +494,6 @@ namespace Game.Character
         public HostEntry GetAt(int index)
             => index >= 0 && index < _entries.Length ? _entries[index] : null;
 
-        /// <summary>시작 보유 호스트. 신규 유저의 기본 선택 대상이다.</summary>
-        public HostEntry FirstOwned()
-        {
-            for (int i = 0; i < _entries.Length; i++)
-                if (_entries[i].UnlockType == HostUnlockType.Owned)
-                    return _entries[i];
-            return _entries.Length > 0 ? _entries[0] : null;
-        }
 
         private Dictionary<string, HostEntry> BuildIndex()
         {

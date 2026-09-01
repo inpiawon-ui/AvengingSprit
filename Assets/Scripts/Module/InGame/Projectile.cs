@@ -35,6 +35,43 @@ namespace Game.Module.InGame
 
         public bool Pierce { get; private set; }
 
+        /// <summary>
+        /// 이 탄만의 폭발 반경(px). 0 이면 공통값을 쓴다.
+        ///
+        /// 스킬이 던지는 폭탄은 반경이 제각각이다(융단 폭격 1.8 m · 다중 유도 1.0 m).
+        /// 공통값 하나로 두면 두 스킬이 화면에서 구별되지 않는다.
+        /// </summary>
+        public float BlastRadiusOverride { get; private set; }
+
+        public void SetBlastRadius(float px) => BlastRadiusOverride = Mathf.Max(0f, px);
+
+        /// <summary>되받아친 탄에 관통을 준다(슬러거 Lv5).</summary>
+        public void GrantPierce() => Pierce = true;
+
+        /// <summary>
+        /// 내 탄을 **적 편으로** 돌린다 (가디언 반사선).
+        /// <see cref="TurnFriendly"/> 의 반대다 — 그쪽은 적 탄을 내 것으로 만든다.
+        /// </summary>
+        public void TurnHostile(float damageMul)
+        {
+            _fromPlayer = false;
+            _dir = -_dir;
+            _damage = Mathf.Max(1, Mathf.RoundToInt(_damage * damageMul));
+            _alreadyHit.Clear();
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+        }
+
+        /// <summary>이 탄이 하나라도 맞혔는가. 연속 명중 카운터가 읽는다.</summary>
+        public bool HasHitAnything => _alreadyHit.Count > 0;
+
+        /// <summary>
+        /// 이 탄이 플레이어를 **스쳤지만 맞히지는 못했는가** (C023 회피 잔상).
+        /// 회피 시스템이 따로 없는 게임이라, "피했다"의 실체는 이것뿐이다 —
+        /// 몸에 닿을 뻔한 탄이 그대로 지나가 수명을 다한 순간.
+        /// </summary>
+        public bool GrazedPlayer { get; set; }
+
         /// <summary>남은 도탄 횟수. 0 이면 벽에 닿는 순간 사라진다.</summary>
         public int BouncesLeft { get; private set; }
 
@@ -96,6 +133,25 @@ namespace Game.Module.InGame
         // 화면에서 포물선으로 보여야 "던졌다"가 읽힌다 — 곧게 가면 느린 총알이다.
 
         private const float LobSpinPerSecond = 540f;
+
+        // ── C009 유도 보정 ───────────────────────────────────────
+        //
+        // 원래 이 게임의 탄은 유도하지 않는다(전탄 명중이 보장되면 회피가 무의미해진다).
+        // 카드를 골랐을 때만 켠다 — 그 선택의 값이 곧 "빗나가지 않는다" 다.
+        private float _homing;
+
+        public void SetHoming(float strength) => _homing = Mathf.Max(0f, strength);
+
+        private void TickHoming(float dt)
+        {
+            if (_homing <= 0f || _target == null || !_target.IsAlive) return;
+            var want = (_target.Position - _rect.anchoredPosition);
+            if (want.sqrMagnitude < 0.0001f) return;
+            // 초당 최대 이만큼(라디안) 꺾인다. 세기 1.0 이면 반 바퀴 가까이 돈다.
+            _dir = Vector2.Lerp(_dir, want.normalized, Mathf.Clamp01(_homing * dt * 6f)).normalized;
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+        }
 
         private Vector2 _lobFrom, _lobTo;
         private float _lobSeconds, _lobElapsed, _lobHeight;
@@ -202,7 +258,9 @@ namespace Game.Module.InGame
             _size = size;
             _spawnTimer = 0f;
             _lobSeconds = 0f;      // 풀에서 온 탄이 직전의 포물선을 물려받지 않게
+            BlastRadiusOverride = 0f;   // 반경도 마찬가지다 — 쏠 때마다 다시 정한다
             HasLanded = false;
+            _homing = 0f;          // 유도도 마찬가지다 — 쏠 때마다 다시 정한다
             float born = size * SpawnStartScale;
             _rect.sizeDelta = new Vector2(born, born);
             var d = to - from;
@@ -225,6 +283,7 @@ namespace Game.Module.InGame
             // 곱셈 색조를 씌우면 눈덩이가 노래진다.
             // 아군·적군 구분용 색조는 그림 없는 기본 탄(Kind 없음)에만 남긴다.
             _image.color = Kind != null ? Color.white : color;
+            GrazedPlayer = false;   // 풀에서 돌려 쓰므로 지난 판정을 지운다
             IsActive = true;
             gameObject.SetActive(true);
         }
@@ -240,7 +299,7 @@ namespace Game.Module.InGame
         public bool Tick(float dt)
         {
             if (IsLob) TickLob(dt);
-            else _rect.anchoredPosition += _dir * _speed * dt;
+            else { TickHoming(dt); _rect.anchoredPosition += _dir * _speed * dt; }
             TickFrames(dt);
             TickGrow(dt);
             _life -= dt;

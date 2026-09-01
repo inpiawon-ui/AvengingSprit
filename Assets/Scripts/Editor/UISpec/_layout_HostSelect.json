@@ -417,32 +417,32 @@
    "color": "#F2F4F8"
   },
   {
-   "name": "UltimateCard",
+   "name": "ActiveSkillCard",
    "x": 430,
    "y": 822,
    "w": 263,
    "h": 150
   },
   {
-   "name": "UltimateLabel",
+   "name": "ActiveSkillLabel",
    "x": 442,
    "y": 830,
    "w": 130,
    "h": 20,
-   "text": "ULTIMATE",
+   "text": "ACTIVE SKILL",
    "size": 15.1,
    "align": "L",
    "color": "#C98CF0"
   },
   {
-   "name": "UltimateIcon",
+   "name": "ActiveSkillIcon",
    "x": 442,
    "y": 856,
    "w": 62,
    "h": 68
   },
   {
-   "name": "UltimateNameText",
+   "name": "ActiveSkillNameText",
    "x": 512,
    "y": 856,
    "w": 170,
@@ -452,7 +452,7 @@
    "color": "#F0B428"
   },
   {
-   "name": "UltimateDescText",
+   "name": "ActiveSkillDescText",
    "x": 512,
    "y": 884,
    "w": 170,

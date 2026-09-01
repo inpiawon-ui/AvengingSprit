@@ -274,6 +274,35 @@ namespace Game.Editor
         /// 폴더를 PackingSource 로 잡으므로, 새 프레임을 폴더에 떨어뜨리고
         /// 이 메뉴만 돌리면 자동으로 수록된다.
         /// </summary>
+        /// <summary>
+        /// 카드 아이콘 36장을 아틀라스 하나로 묶는다 (정본 v2.3 카드 32 + 등급 테두리 4).
+        /// 캐릭터와 달리 한 장짜리 UI 그림이라 종별로 나눌 이유가 없다.
+        /// </summary>
+        [MenuItem("Tools/Game/카드 아틀라스 만들기")]
+        public static void BuildCardAtlas()
+        {
+            const string CardRes = "Assets/BaseResource/Card";
+            if (!AssetDatabase.IsValidFolder(CardRes))
+            {
+                Debug.LogError($"[UIAssetPipeline] 카드 폴더 없음: {CardRes}");
+                return;
+            }
+            EnsureFolder(AtlasDir);
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null) { Debug.LogError("[UIAssetPipeline] Addressable 설정 없음"); return; }
+
+            var group = settings.FindGroup(AtlasGroup) ?? settings.CreateGroup(
+                AtlasGroup, false, false, true, null,
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema),
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema));
+            if (!settings.GetLabels().Contains(AtlasLabel)) settings.AddLabel(AtlasLabel);
+
+            BuildOneAtlas("card", CardRes, settings, group, 2048);
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[UIAssetPipeline] 카드 아틀라스 갱신");
+        }
+
         [MenuItem("Tools/Game/Build Unit Atlases")]
         public static void BuildUnitAtlases()
         {

@@ -660,7 +660,7 @@
    ]
   },
   {
-   "name": "UltimateCard",
+   "name": "ActiveSkillCard",
    "parentIdx": 19,
    "comp": "ImageSliced",
    "stretch": false,
@@ -673,7 +673,7 @@
    ]
   },
   {
-   "name": "UltimateLabel",
+   "name": "ActiveSkillLabel",
    "parentIdx": 51,
    "comp": "TMP",
    "stretch": false,
@@ -686,7 +686,7 @@
    ]
   },
   {
-   "name": "UltimateIcon",
+   "name": "ActiveSkillIcon",
    "parentIdx": 51,
    "comp": "Image",
    "stretch": false,
@@ -699,7 +699,7 @@
    ]
   },
   {
-   "name": "UltimateNameText",
+   "name": "ActiveSkillNameText",
    "parentIdx": 51,
    "comp": "TMP",
    "stretch": false,
@@ -712,7 +712,7 @@
    ]
   },
   {
-   "name": "UltimateDescText",
+   "name": "ActiveSkillDescText",
    "parentIdx": 51,
    "comp": "TMP",
    "stretch": false,

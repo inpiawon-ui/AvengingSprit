@@ -46,7 +46,7 @@ namespace Game.Module.Common.UI
             // 영문 라벨
             "GhostLabelText", "ChapterNumberText",
             "BossLabel", "ProgressLabel", "StatLabelText",
-            "UltimateLabel", "HostNameEnText",
+            "ActiveSkillLabel", "HostNameEnText",
             "HostListTitleText", "TapToStartText", "VersionText", "CopyrightText",
             "SubtitleText",
             "MissionTabLabel", "AchievementTabLabel", "RankingTabLabel",

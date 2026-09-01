@@ -39,8 +39,6 @@ namespace Game.Character
         [Tooltip("놓아준 뒤 다시 빙의할 수 있게 되기까지. 빙의 버튼의 덮개가 이걸 보여준다.")]
         [SerializeField] private float _repossessLockSeconds = 1.2f;
 
-        [Tooltip("유령 상태에서 받는 피해 배율. 1.0 이면 적 4기에 1.6초 만에 소멸해 빙의할 틈이 없다.")]
-        [SerializeField] private float _ghostDamageScale = 0.22f;
 
         [Tooltip("유령 상태에서 초당 깎이는 체력. 호스트가 살아 있는 동안에는 멈춘다. " +
                  "Ghost HP 를 '남은 시간'으로 만들어, 빙의를 미루는 것 자체에 대가를 붙인다.")]
@@ -81,18 +79,6 @@ namespace Game.Character
         [Range(10, 100)]
         [SerializeField] private int _hostStartHpPercent = 70;
 
-        [Header("전술 빙의 — 살아 있는 몸을 버리고 갈아탄다 (정본 constants)")]
-        [Tooltip("살아 있는 호스트를 두고 다른 몸으로 갈아탈 때 내는 Ghost HP. 정본 잠금값 6.")]
-        [SerializeField] private int _tacticalGhostCost = 6;
-        [Tooltip("전술 빙의 재사용 대기(초). 정본 잠금값 8. 이게 없으면 매 적마다 갈아타는 게 최적해가 된다.")]
-        [SerializeField] private float _tacticalCooldownSeconds = 8f;
-        [Tooltip("몸을 입은 채 뺏을 수 있는 거리. 유령 사거리(110)를 그대로 쓰면 " +
-                 "호스트는 265 밖에서 쏘고 있어 버튼이 영영 안 켜진다.\n" +
-                 "전술 빙의를 막는 것은 거리가 아니라 값(Ghost HP·쿨다운)이어야 한다. " +
-                 "걸어가야 뺏을 수 있으면 유령 시절의 번거로움이 그대로 돌아온다. " +
-                 "방(720×800) 폭을 중앙에서 덮되 먼 구석은 움직여야 닿는 값.")]
-        [SerializeField] private float _tacticalPossessRange = 460f;
-
         [Header("긴급 호스트 (기획서 A 8-3)")]
         [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
         [SerializeField] private float _emergencyDelaySeconds = 1f;
@@ -120,6 +106,16 @@ namespace Game.Character
         [SerializeField] private int _expToLevelBase = 30;
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
+
+        [Header("격투 쉴드 — 때릴 때마다 차고, 손을 놓으면 녹는다")]
+        [Tooltip("타격당 차는 양 (최대 HP의 %)")]
+        [SerializeField] private int _shieldPerHitPercent = 3;
+        [Tooltip("쌓을 수 있는 상한 (최대 HP의 %)")]
+        [SerializeField] private int _shieldCapPercent = 30;
+        [Tooltip("마지막 타격 후 그대로 버티는 시간(초)")]
+        [SerializeField] private float _shieldHoldSeconds = 0.6f;
+        [Tooltip("그 뒤 녹는 속도 (최대 HP의 %/초)")]
+        [SerializeField] private int _shieldDecayPercentPerSecond = 12;
 
         [Header("호스트 — 표시 스탯(0~100) → 전투 수치 환산")]
         [SerializeField] private float _hostHpPerPoint = 6f;
@@ -198,9 +194,11 @@ namespace Game.Character
         [Tooltip("둔화 지속 시간 (설녀 명중 시)")]
         [SerializeField] private float _slowSeconds = 1.6f;
 
-        [Header("얼티밋")]
-        [SerializeField] private float _ultimateChargeSeconds = 14f;
-        [SerializeField] private int _ultimateDamage = 140;
+        [Header("액티브 스킬")]
+        [Tooltip("호스트 표(`HostTable._activeSkillCooldown`)에 값이 없을 때만 쓰는 기본값. " +
+                 "쿨 차등은 호스트 표가 정한다 — 여기서 전원을 같은 값으로 묶지 않는다.")]
+        [SerializeField] private float _activeSkillCooldownSeconds = 14f;
+        [SerializeField] private int _activeSkillDamage = 140;
 
         [Header("보상")]
         [SerializeField] private int _rewardGoldPerRoom = 120;
@@ -212,9 +210,6 @@ namespace Game.Character
         public float EmergencyDelaySeconds => _emergencyDelaySeconds;
         public int EmergencyHostHpPercent => Mathf.Clamp(_emergencyHostHpPercent, 5, 100);
         public int EmergencyGhostCost => Mathf.Max(0, _emergencyGhostCost);
-        public int TacticalGhostCost => Mathf.Max(0, _tacticalGhostCost);
-        public float TacticalCooldownSeconds => Mathf.Max(0f, _tacticalCooldownSeconds);
-        public float TacticalPossessRange => _tacticalPossessRange;
         public int EliteEnemyCount => Mathf.Max(1, _eliteEnemyCount);
         public float EliteHpMul => _eliteHpMul;
         public float EliteAtkMul => _eliteAtkMul;
@@ -242,12 +237,18 @@ namespace Game.Character
         public int GhostLeaveCostPercent => _ghostLeaveCostPercent;
         public int GhostDeathCostPercent => _ghostDeathCostPercent;
         public float RepossessLockSeconds => _repossessLockSeconds;
-        public int GhostDamage(int raw) => Mathf.Max(1, Mathf.RoundToInt(raw * _ghostDamageScale));
 
         public float AttackResumeSeconds => _attackResumeSeconds;
 
         public float HostAttackRange => _hostAttackRange;
         public float HostAttackInterval => _hostAttackInterval;
+        public int ShieldPerHitPercent => Mathf.Max(0, _shieldPerHitPercent);
+        public int ShieldCapPercent => Mathf.Max(0, _shieldCapPercent);
+        public float ShieldHoldSeconds => Mathf.Max(0f, _shieldHoldSeconds);
+
+        /// <summary>초당 녹는 비율(0~1). 0 이면 안 녹는다.</summary>
+        public float ShieldDecayPerSecond => Mathf.Max(0, _shieldDecayPercentPerSecond) / 100f;
+
         public int HostHp(int statHp) => _hostHpBase + Mathf.RoundToInt(statHp * _hostHpPerPoint);
         public int HostAtk(int statAtk) => _hostAtkBase + Mathf.RoundToInt(statAtk * _hostAtkPerPoint);
         public float HostSpeed(int statSpd) => _hostSpeedBase + statSpd * _hostSpeedPerPoint;
@@ -279,10 +280,148 @@ namespace Game.Character
         public float ShotLifeSeconds => _shotLifeSeconds;
         public float SlowSeconds => _slowSeconds <= 0f ? 1.6f : _slowSeconds;
 
-        public float UltimateChargeSeconds => _ultimateChargeSeconds;
-        public int UltimateDamage => _ultimateDamage;
+        public float ActiveSkillCooldownSeconds => _activeSkillCooldownSeconds;
+        public int ActiveSkillDamage => _activeSkillDamage;
 
         public int RewardGold(int rooms) => _rewardGoldPerRoom * rooms;
         public int RewardGhostExp(int rooms) => _rewardGhostExpPerRoom * rooms;
+
+        // ── 성장 — 숙련도 · 파편 · 고스트 레벨 ────────────────────
+        //
+        // ⚠ 이 값들은 **여기에만** 있어야 한다. 예전에 코드 상수로 두었던 탓에
+        //   숫자 하나 바꾸려면 컴파일을 다시 해야 했다. 밸런스는 플레이하며 잡는다.
+
+        [Header("성장 — 숙련도 · 파편")]
+        [Tooltip("숙련도 Lv1~10 을 얻는 데 드는 파편(일반 등급 기준). 한 번도 내려가지 않는다. Lv5(특수 효과 해제)와 Lv10 에서만 크게 튄다 — 문턱이 숫자에서 읽혀야 한다.")]
+        [SerializeField] private int[] _shardCurve = { 8, 12, 16, 20, 35, 40, 46, 52, 58, 90 };
+
+        [Tooltip("등급별 요구량 배수. 순서는 HostGrade — B / A / S. 드문 몸일수록 한 단계가 비싸다.")]
+        [SerializeField] private float[] _gradeMultiplier = { 1.0f, 1.4f, 2.0f };
+
+        [Tooltip("파편 드롭. x = 그냥 죽였을 때, y = 빙의해 쓰다가 잃었을 때. 잃었을 때가 반드시 더 커야 한다 — 반대면 파밍이 빙의를 벌줘서 플레이어가 핵심 재미를 스스로 피한다.")]
+        [SerializeField] private Vector2Int[] _dropByFrequency =
+            { new Vector2Int(1, 3), new Vector2Int(2, 6), new Vector2Int(10, 30) };
+
+        [Tooltip("고스트 레벨 상한.")]
+        [SerializeField] private int _ghostLevelMax = 50;
+
+        // ── 스탯 성장 ────────────────────────────────────────────
+        //
+        // 배열 첨자는 `HostStat` 순서다 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed.
+        //
+        // ⚠ 치명타만 단위가 다르다. 나머지 다섯은 **만렙에서의 배율**이고
+        //   치명타는 **레벨당 더하는 %p** 다. 확률을 배율로 키우면 Lv10 에
+        //   100% 를 넘어 버려서, 같은 배열에 넣되 뜻은 갈라 둔다.
+
+        [Header("스탯 성장 — 주/부 성장폭")]
+        [Tooltip("주 성장 스탯의 폭. HP·ATK·공속·사거리·이속은 만렙 배율, 치명타는 레벨당 %p.")]
+        [SerializeField] private float[] _statGrowthPrimary   = { 2.4f, 2.0f, 2.5f, 1.35f, 1.15f, 1.20f };
+
+        [Tooltip("부 성장 스탯의 폭. 같은 규칙이다.")]
+        [SerializeField] private float[] _statGrowthSecondary = { 1.6f, 1.6f, 1.0f, 1.05f, 1.05f, 1.05f };
+
+        [Tooltip("치명타 피해 배율. 전역 고정이며 스탯이 아니다.")]
+        [SerializeField] private float _critMultiplier = 2.0f;
+
+        [Header("사거리 밴드 — 직업 순서: 격투 · 중거리 · 원거리 · 관통")]
+        [Tooltip("성장한 사거리의 직업별 상한(m). 이걸 넘으면 직업 판정이 흔들린다.")]
+        [SerializeField] private float[] _rangeGrowthMax = { 2.8f, 5.9f, 9.5f, 9.2f };
+
+        public float CritMultiplier => _critMultiplier;
+
+        /// <summary>
+        /// 이 스탯의 성장폭. 주 성장 스탯이면 크게, 아니면 작게.
+        /// 배열이 짧으면 1(=안 자람)로 떨어진다.
+        /// </summary>
+        public float StatGrowth(HostStat stat, bool primary)
+        {
+            var a = primary ? _statGrowthPrimary : _statGrowthSecondary;
+            int i = (int)stat;
+            return a == null || i < 0 || i >= a.Length ? 1f : a[i];
+        }
+
+        /// <summary>
+        /// 직업별 사거리 성장 상한(m).
+        ///
+        /// ⚠ 중거리는 **5.9** 다. 직업 판정 경계가 6.0 이라 여기 닿으면
+        ///   성장한 몸이 원거리로 재분류되어 착탄 범위(중거리 상시 규칙)가 사라진다.
+        /// </summary>
+        // ── 무대 이름 ────────────────────────────────────────────
+        //
+        // 챕터 하나가 무대 하나가 아니다. 원작이 스테이지 6곳이라 48방을
+        // **챕터 3개 × 앞뒤**로 갈라 여섯 구간을 만들었다 — 화면에 뜨는 이름도
+        // 그 구간을 따라간다. 챕터당 하나로 묶으면 방을 절반 지나며 무대가
+        // 바뀌는데 이름만 그대로라 어긋난다.
+
+        [System.Serializable]
+        public struct StageName
+        {
+            [Tooltip("몇 챕터인가 (1~3).")]
+            public int Chapter;
+            [Tooltip("이 방 번호부터 이 이름을 쓴다.")]
+            public int FromRoom;
+            [Tooltip("화면에 뜨는 무대 이름.")]
+            public string NameKr;
+        }
+
+        [Header("무대 이름 — 챕터 × 방 번호 구간")]
+        [SerializeField] private StageName[] _stageNames =
+        {
+            new StageName { Chapter = 1, FromRoom = 1,  NameKr = "유령 연구소" },
+            new StageName { Chapter = 1, FromRoom = 7,  NameKr = "쓰레기 집적장" },
+            new StageName { Chapter = 2, FromRoom = 1,  NameKr = "미사일 저장기지" },
+            new StageName { Chapter = 2, FromRoom = 9,  NameKr = "밤의 도시 거리" },
+            new StageName { Chapter = 3, FromRoom = 1,  NameKr = "밤의 공중기지 옥상" },
+            new StageName { Chapter = 3, FromRoom = 11, NameKr = "야간 정유소" },
+        };
+
+        /// <summary>이 챕터·방 번호의 무대 이름. 못 찾으면 빈 문자열.</summary>
+        public string StageNameOf(int chapter, int room)
+        {
+            if (_stageNames == null) return string.Empty;
+            string found = string.Empty;
+            for (int i = 0; i < _stageNames.Length; i++)
+            {
+                var e = _stageNames[i];
+                if (e.Chapter != chapter || room < e.FromRoom) continue;
+                found = e.NameKr;   // 조건을 만족하는 **마지막** 것이 지금 구간이다
+            }
+            return found;
+        }
+
+        public float RangeGrowthMax(int jobIndex)
+            => _rangeGrowthMax == null || _rangeGrowthMax.Length == 0
+                ? 99f
+                : _rangeGrowthMax[Mathf.Clamp(jobIndex, 0, _rangeGrowthMax.Length - 1)];
+
+        [Tooltip("고스트 레벨업 골드 = 기본 + 증가폭 × (레벨 - 1).")]
+        [SerializeField] private int _ghostLevelCostBase = 200;
+        [SerializeField] private int _ghostLevelCostStep = 60;
+
+        public int GhostLevelMax => Mathf.Max(1, _ghostLevelMax);
+
+        public int GhostLevelCost(int level)
+            => _ghostLevelCostBase + _ghostLevelCostStep * Mathf.Max(0, level - 1);
+
+        /// <summary>숙련도 <paramref name="level"/> → 다음 단계 비용 (등급 배수 전).</summary>
+        public int ShardCurveAt(int level)
+            => _shardCurve == null || level < 0 || level >= _shardCurve.Length ? 0 : _shardCurve[level];
+
+        public int MasteryMax => _shardCurve?.Length ?? 0;
+
+        /// <summary>등급별 요구량 배수. 표가 짧으면 마지막 칸을 쓴다.</summary>
+        public float GradeMultiplier(HostGrade grade)
+        {
+            if (_gradeMultiplier == null || _gradeMultiplier.Length == 0) return 1f;
+            int i = Mathf.Clamp((int)grade, 0, _gradeMultiplier.Length - 1);
+            return _gradeMultiplier[i];
+        }
+
+        /// <summary>드롭 단계 → (죽였을 때, 잃었을 때).</summary>
+        public Vector2Int DropAt(int tier)
+        {
+            if (_dropByFrequency == null || _dropByFrequency.Length == 0) return new Vector2Int(1, 3);
+            return _dropByFrequency[Mathf.Clamp(tier, 0, _dropByFrequency.Length - 1)];
+        }
     }
 }

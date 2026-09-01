@@ -46,6 +46,14 @@ namespace Game.Module.InGame
         private Image _body;
         private Image _hpBarBg;
         private Image _hpBarFill;
+
+        /// <summary>체력 바 위에 겹쳐 그리는 쉴드. 체력보다 먼저 깎이므로 위에 얹는다.</summary>
+        private Image _shieldBarFill;
+
+        /// <summary>쉴드 채움 그림(`hostshieldfill`). 배틀이 한 번 넣어 준다.</summary>
+        private static Sprite s_shieldFillSprite;
+
+        public static void SetShieldFillSprite(Sprite s) => s_shieldFillSprite = s;
         private Image _possessMark;
         private Image _fireRing;
 
@@ -98,6 +106,97 @@ namespace Game.Module.InGame
         /// </summary>
         public bool RepossessBanned { get; private set; }
 
+        /// <summary>정본이 "다음 몸" 으로 찍어 둔 적인가. 스폰할 때 정해진다.</summary>
+        public bool IsNextBody { get; private set; }
+        public void MarkAsNextBody() => IsNextBody = true;
+
+        // ─────────────────────────────────────────────────────────
+        // 숙주와 잡몹
+        //
+        // 정본 ROOM_SPAWN 은 345 자리 중 46 자리(13%)에만 `POSSESSION_TARGET` 을
+        // 찍어 두었다. 나머지는 빼앗을 수 없는 적이다.
+        // 예전에는 이 표시를 **머리 위 표식에만** 쓰고 실제 판정은 하지 않아서
+        // 방에 있는 적을 아무나 다 뺏을 수 있었다. 몸이 널려 있으니 죽지 않고,
+        // 죽지 않으니 빙의가 판단이 아니라 습관이 됐다.
+        // ─────────────────────────────────────────────────────────
+
+        /// <summary>빼앗을 수 있는 몸인가. 스폰할 때 정해지고 이후 바뀌지 않는다.</summary>
+        public bool IsHostBody { get; private set; }
+        public void MarkAsHostBody() => IsHostBody = true;
+
+        /// <summary>엘리트인가. 수가 적은 대신 하나하나가 세고, 떨구는 것도 많다.</summary>
+        public bool IsElite { get; private set; }
+        public void MarkAsElite() => IsElite = true;
+
+        // ─────────────────────────────────────────────────────────
+        // 경직 — 빙의의 조건
+        //
+        // 예전 조건은 "체력을 25~50% 아래로 깎기" 였다. 그러면 **빼앗기와 죽이기가
+        // 같은 행동**이 되고, 거기까지 깎았으면 한 대 더 때려 죽이는 쪽이 이득이라
+        // 빼앗을 이유가 사라진다.
+        //
+        // 경직은 체력과 무관하다. 짧은 시간에 몰아쳐야 차고, 손을 놓으면 식는다.
+        // 체력 100% 인 몸도 잘 두들기면 빼앗을 수 있고, 체력 10% 인 몸도 게이지를
+        // 못 채우면 못 빼앗는다. 이래야 "잡을까 뺏을까" 가 매번 판단이 된다.
+        // ─────────────────────────────────────────────────────────
+
+        /// <summary>경직에 필요한 누적 피해 = 최대 체력의 이 비율.</summary>
+        private const float StaggerNeedRatio = 0.35f;
+
+        /// <summary>게이지가 가득 찬 뒤 빙의를 받아 주는 시간(초).</summary>
+        private const float StaggerWindowSeconds = 1.5f;
+
+        /// <summary>때리기를 멈추면 초당 이만큼(최대 체력 대비 비율) 식는다.</summary>
+        private const float StaggerDecayRatio = 0.12f;
+
+        /// <summary>경직이 풀린 뒤 다시 채울 수 없는 시간(초). 무한 경직을 막는다.</summary>
+        private const float StaggerCooldownSeconds = 2.0f;
+
+        private float _stagger;         // 누적 피해(체력 단위)
+        private float _staggerWindow;   // 남은 창 시간
+        private float _staggerCool;     // 남은 재충전 금지 시간
+
+        /// <summary>지금 경직 중인가 — 이 동안에만 빙의가 들어간다.</summary>
+        public bool IsStaggered => _staggerWindow > 0f;
+
+        /// <summary>
+        /// 게이지 0~1. 머리 위 표식이 이 값을 그린다.
+        /// 몸이 없을 때는 경직이 조건이 아니므로 항상 가득 찬 것으로 보인다 —
+        /// 채울 수 없는 게이지를 보여 주면 "왜 안 잡히지" 가 된다.
+        /// </summary>
+        public float StaggerProgress
+            => IsStaggered || !PlayerHasHost
+             ? 1f : Mathf.Clamp01(_stagger / Mathf.Max(1f, HpMax * StaggerNeedRatio));
+
+        /// <summary>
+        /// 게이지를 식히고 창을 닫는다. 매 프레임 부른다.
+        /// </summary>
+        public void TickStagger(float dt)
+        {
+            if (_staggerWindow > 0f)
+            {
+                _staggerWindow -= dt;
+                if (_staggerWindow <= 0f)
+                {
+                    _staggerWindow = 0f;
+                    _stagger = 0f;
+                    _staggerCool = StaggerCooldownSeconds;
+                }
+                return;
+            }
+
+            if (_staggerCool > 0f) { _staggerCool = Mathf.Max(0f, _staggerCool - dt); return; }
+            if (_stagger > 0f) _stagger = Mathf.Max(0f, _stagger - HpMax * StaggerDecayRatio * dt);
+        }
+
+        /// <summary>경직을 강제로 푼다. 몸을 빼앗은 직후에 부른다.</summary>
+        public void ClearStagger()
+        {
+            _stagger = 0f;
+            _staggerWindow = 0f;
+            _staggerCool = 0f;
+        }
+
         public void BanRepossess() => RepossessBanned = true;
 
         /// <summary>
@@ -115,42 +214,53 @@ namespace Game.Module.InGame
             RefreshHpBar();
         }
 
+        /// <summary>
+        /// 지금 몸을 입고 있는가. `BattleDirector` 가 매 프레임 채워 넣는다.
+        ///
+        /// ⚠ 경직을 **몸이 없을 때까지** 요구하면 게임이 잠긴다.
+        ///   유령은 공격할 수 없으므로(`BattleDirector` 의 사격 경로가 `_host == null` 에서
+        ///   곧바로 돌아온다) 경직을 만들 수단 자체가 없다. 몸을 잃는 순간
+        ///   **영원히 아무것도 탈 수 없는 상태**가 된다.
+        ///
+        ///   그래서 경직은 **갈아타기의 조건**이지 빙의 전체의 조건이 아니다.
+        ///     몸이 없다 → 숙주면 즉시 탄다. 15 초 시계 앞에서 망설일 여유가 없다
+        ///     몸이 있다 → 경직시켜야 갈아탄다. 이쪽은 구제가 아니라 선택이다
+        /// </summary>
+        public static bool PlayerHasHost;
+
+        /// <summary>
+        /// 지금 이 순간 빼앗을 수 있는가.
+        /// **숙주로 찍힌 몸**이어야 하고, 몸을 입고 있다면 **경직 중**이기까지 해야 한다.
+        /// </summary>
         public bool IsPossessable
         {
             get
             {
                 if (RepossessBanned) return false;
                 if (Side != UnitSide.Enemy || IsBoss || !IsAlive || _dying) return false;
-                if (Profile == null) return true;
-                return Profile.PossessKind switch
-                {
-                    Game.Character.PossessKind.NotPossessable => false,
-                    Game.Character.PossessKind.Condition => HpPercent <= Profile.PossessHpPercent,
-                    _ => true,
-                };
+                if (!IsHostBody) return false;                       // 잡몹은 못 뺏는다
+                if (Profile != null &&
+                    Profile.PossessKind == Game.Character.PossessKind.NotPossessable) return false;
+                return !PlayerHasHost || IsStaggered;
             }
         }
 
-        /// <summary>빙의 조건이 걸려 있는 적인가. 표식을 어떻게 그릴지가 갈린다.</summary>
-        public bool HasPossessCondition =>
-            Profile != null && Profile.PossessKind == Game.Character.PossessKind.Condition;
+        /// <summary>
+        /// 빼앗을 여지가 있는 몸인가 — 지금은 못 타더라도 두들기면 열린다.
+        /// 표식을 띄울지 말지가 이 값으로 갈린다.
+        /// </summary>
+        public bool HasPossessCondition
+            => IsHostBody && Side == UnitSide.Enemy && !IsBoss && IsAlive && !_dying
+               && !RepossessBanned
+               && (Profile == null ||
+                   Profile.PossessKind != Game.Character.PossessKind.NotPossessable);
 
         /// <summary>
-        /// 조건 진행도 0~1. 체력이 임계에 닿으면 1이다.
+        /// 조건 진행도 0~1. 이제 체력이 아니라 **경직 게이지**다.
         /// 표식의 게이지가 이 값을 그린다 — 얼마나 더 때려야 열리는지가 보여야
         /// "왜 안 잡히지"가 "조금만 더"가 된다.
         /// </summary>
-        public float PossessProgress
-        {
-            get
-            {
-                if (!HasPossessCondition) return 1f;
-                int gate = Profile.PossessHpPercent;
-                if (gate >= 100) return 1f;
-                // 100% → 0, 임계 → 1
-                return Mathf.Clamp01((100f - HpPercent) / (100f - gate));
-            }
-        }
+        public float PossessProgress => HasPossessCondition ? StaggerProgress : 0f;
 
         private float HpPercent => HpMax > 0 ? Hp * 100f / HpMax : 0f;
 
@@ -242,6 +352,22 @@ namespace Game.Module.InGame
                     : new Color(0.35f, 0.85f, 0.40f, 1f);
                 ((RectTransform)_hpBarFill.transform).pivot = new Vector2(0f, 0.5f);
                 ((RectTransform)_hpBarFill.transform).anchoredPosition = new Vector2(-barSize.x * 0.5f, 0f);
+
+                // ⚠ 쉴드 바는 체력 바 **위에 따로** 띄운다. 예전에는 같은 자리에
+                //   같은 크기로 덮여 있어서 "쉴드가 생겼다" 가 아니라
+                //   "체력 바 색이 변했다" 로 읽혔다.
+                //   같은 굵기면 체력 바가 둘로 보이므로 60% 로 얇게 한다 —
+                //   얇아야 "체력에 덧붙은 것" 으로 읽힌다.
+                var shieldSize = new Vector2(barSize.x, barSize.y * ShieldBarHeightRatio);
+                var shieldPos = new Vector2(barPos.x,
+                                            barPos.y + barSize.y * 0.5f + shieldSize.y * 0.5f + ShieldBarGap);
+                _shieldBarFill = GetOrCreate("ShieldBarFill", shieldSize, shieldPos);
+                if (s_shieldFillSprite != null) _shieldBarFill.sprite = s_shieldFillSprite;
+                else _shieldBarFill.color = new Color(0.125f, 0.878f, 0.910f, 1f);
+                ((RectTransform)_shieldBarFill.transform).pivot = new Vector2(0f, 0.5f);
+                ((RectTransform)_shieldBarFill.transform).anchoredPosition =
+                    new Vector2(shieldPos.x - shieldSize.x * 0.5f, shieldPos.y);
+                _shieldBarFill.gameObject.SetActive(false);
 
                 // 빙의 표식은 **적에게만** 단다. 내 몸에 "뺏을 수 있다" 표시가 뜨면 거짓말이다.
                 if (!isBoss && side == UnitSide.Enemy)
@@ -474,24 +600,12 @@ namespace Game.Module.InGame
         public bool HasFacing => _frames[FrameIdle] != null;
 
         /// <summary>
-        /// 방향별 총구 위치. 몸 중심 기준이고, 캔버스 크기로 나눠 둬서 표시 크기가
-        /// 달라도 따라간다. 순서는 `FacingSuffix` 와 같다.
-        ///
-        /// 조준 방향으로 일정 거리 미는 방식은 안 된다 — 방향마다 총구가 다른 데 있다.
-        /// `s` 는 총이 화면 앞쪽으로 단축돼 몸 한가운데에 가깝고, `n` 은 총열이 등 뒤로
-        /// 가려져 오른쪽 어깨 옆에서 나온다. 람보 `atk1` 의 화염 중심을 실측한 값이다.
-        /// </summary>
-        private static readonly Vector2[] MuzzleOffset =
-        {
-            new(0.00f,  0.03f),   // s  ↓ 몸 중앙
-            new(0.47f, -0.11f),   // se ↘
-            new(0.43f, -0.02f),   // e  →
-            new(0.46f,  0.26f),   // ne ↗ 총을 들어 올려 높다
-            new(0.18f,  0.20f),   // n  ↑ 오른쪽 어깨 옆
-        };
-
-        /// <summary>
         /// 탄이 나가는 지점. 몸 한가운데에서 나오면 총을 들고 있는 의미가 없다.
+        ///
+        /// ⚠ 자리는 <see cref="MuzzleTable"/> 이 갖는다 — **캐릭터마다 다르다.**
+        ///   예전에는 람보 하나를 재서 23종에 같은 값을 썼는데, 코만도는 총구가
+        ///   그 절반 거리에 있어 탄이 몸 옆 허공에서 튀어나왔다.
+        ///
         /// 방향 스프라이트가 없는 캐릭터는 몸 중심을 그대로 쓴다 — 어느 손에 무기를
         /// 들었는지 알 수 없어서, 어림한 위치로 밀면 오히려 더 어긋난다.
         /// </summary>
@@ -500,7 +614,7 @@ namespace Game.Module.InGame
             get
             {
                 if (_facingIndex < 0 || _rect == null) return Position;
-                var o = MuzzleOffset[_facingIndex];
+                var o = MuzzleTable.Get(Key, _facingIndex);
                 var size = _rect.sizeDelta;
                 return Position + new Vector2((_facingFlip ? -o.x : o.x) * size.x, o.y * size.y);
             }
@@ -704,7 +818,7 @@ namespace Game.Module.InGame
         /// 방향이 안 바뀌면 아무것도 하지 않는다 — 매 프레임 스프라이트를 갈면 낭비다.
         /// </summary>
         /// <summary>
-        /// 지금 바라보는 방향(단위 벡터). 얼티밋처럼 "앞쪽" 을 써야 하는 연출이 쓴다.
+        /// 지금 바라보는 방향(단위 벡터). 액티브 스킬처럼 "앞쪽" 을 써야 하는 연출이 쓴다.
         /// 방향 스프라이트가 8칸이라 정확한 각도가 아니라 **보이는 대로의 방향**이다 —
         /// 그림과 어긋나면 등 뒤로 불을 뿜는 그림이 된다.
         /// </summary>
@@ -742,14 +856,51 @@ namespace Game.Module.InGame
         public bool TakeDamage(int amount)
         {
             if (!IsAlive) return false;
-            Hp = Mathf.Max(0, Hp - Mathf.Max(1, amount));
+            int dealt = Mathf.Max(1, amount);
+
+            // 쉴드가 먼저 깎인다. 다 막아 내면 체력은 건드리지 않는다 —
+            // 그래야 격투가 "맞으면서 들어간" 값을 실제로 돌려받는다.
+            if (_shield > 0)
+            {
+                int absorbed = Mathf.Min(_shield, dealt);
+                _shield -= absorbed;
+                dealt -= absorbed;
+                if (dealt <= 0)
+                {
+                    RefreshHpBar();
+                    _flashTimer = HitSeconds;
+                    PlayHit();
+                    return false;
+                }
+            }
+
+            Hp = Mathf.Max(0, Hp - dealt);
             RefreshHpBar();
             _flashTimer = HitSeconds;
             PlayHit();          // 틴트와 자세를 같은 자리에서 시작해야 따로 놀지 않는다
+
+            // 숙주만 경직이 쌓인다. 잡몹은 아무리 때려도 빼앗을 몸이 되지 않는다.
+            if (IsHostBody && Hp > 0 && _staggerWindow <= 0f && _staggerCool <= 0f)
+            {
+                _stagger += dealt;
+                if (_stagger >= HpMax * StaggerNeedRatio) _staggerWindow = StaggerWindowSeconds;
+            }
             return Hp == 0;
         }
 
         public void Heal(int amount) { Hp = Mathf.Min(HpMax, Hp + amount); RefreshHpBar(); }
+
+        /// <summary>
+        /// 대가로 체력을 낸다. **여기서는 죽지 않는다** — 최소 1 은 남는다.
+        /// `TakeDamage` 를 쓰면 몸을 잃는 흐름을 타는데, 거래로 몸이 죽는 것은
+        /// 이벤트 방의 약속이 아니다.
+        /// </summary>
+        public void SpendHp(int amount)
+        {
+            if (amount <= 0) return;
+            Hp = Mathf.Max(1, Hp - amount);
+            RefreshHpBar();
+        }
 
         private void RefreshHpBar()
         {
@@ -757,6 +908,15 @@ namespace Game.Module.InGame
             var rt = (RectTransform)_hpBarFill.transform;
             float full = _hpBarBg.rectTransform.sizeDelta.x;
             rt.sizeDelta = new Vector2(full * ((float)Hp / HpMax), rt.sizeDelta.y);
+
+            if (_shieldBarFill == null) return;
+            bool on = _shield > 0 && HpMax > 0;
+            _shieldBarFill.gameObject.SetActive(on);
+            if (!on) return;
+            // 쉴드는 체력과 같은 자에 잰다 — 최대 체력의 몇 할인지가 바로 보여야
+            // "한 대는 더 버틴다" 가 읽힌다.
+            var srt = (RectTransform)_shieldBarFill.transform;
+            srt.sizeDelta = new Vector2(full * Mathf.Min(1f, (float)_shield / HpMax), srt.sizeDelta.y);
         }
 
         /// <summary>
@@ -767,7 +927,8 @@ namespace Game.Module.InGame
         {
             _attackTimer -= dt;
             if (_attackTimer > 0f) return false;
-            _attackTimer = AttackInterval * Mathf.Max(0.05f, intervalMul);
+            // 약화가 걸려 있으면 손도 같이 느려진다 — 이동만 깎으면 원거리에겐 무효였다.
+            _attackTimer = AttackInterval * Mathf.Max(0.05f, intervalMul) * SlowAttackMul;
             return true;
         }
 
@@ -806,11 +967,46 @@ namespace Game.Module.InGame
             SetTelegraph(false);
         }
 
+        // ── 무적 점멸 ─────────────────────────────────────────────
+        //
+        // 무적은 **화면에 안 보이면 없는 것과 같다.** 빙의 직후 2.5초를 줘도
+        // 그걸 모르면 그냥 웅크리고 있게 되고, 그러면 준 만큼 손해가 된다.
+        // 켜져 있는 동안 몸이 깜빡여야 "지금은 맞아도 된다" 가 읽힌다.
+
+        /// <summary>한 번 깜빡이는 데 걸리는 시간(초). 켜짐·꺼짐 각각 절반씩.</summary>
+        private const float InvulnBlinkSeconds = 0.16f;
+
+        private bool _invulnerable;
+        private float _invulnPhase;
+
+        /// <summary>무적 상태를 켜고 끈다. 매 프레임 불러도 된다.</summary>
+        public void SetInvulnerable(bool on)
+        {
+            if (_invulnerable == on) return;
+            _invulnerable = on;
+            _invulnPhase = 0f;
+        }
+
         /// <summary>피격 점멸. 스프라이트를 건드리지 않고 틴트만 흔든다.</summary>
         public void TickFlash(float dt)
         {
             // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
             if (_body == null || _dying) return;
+
+            if (_invulnerable)
+            {
+                // 예고(보스 패턴)만은 무적 위에 남긴다 — 피할 시간을 알리는 색이라
+                // 이쪽이 지워지면 패턴이 사고가 된다.
+                if (_telegraph) return;
+                _invulnPhase += dt;
+                bool lit = Mathf.Repeat(_invulnPhase, InvulnBlinkSeconds) < InvulnBlinkSeconds * 0.5f;
+                // 밝게 뜬 반 박자 / 반쯤 비치는 반 박자. 색이 아니라 **투명도**가 흔들려야
+                // 상태이상 틴트(화상·빙결)와 겹쳐도 무적이라는 것이 따로 읽힌다.
+                _body.color = lit ? new Color(1f, 1f, 1f, 1f)
+                                  : new Color(0.75f, 0.92f, 1f, 0.35f);
+                return;
+            }
+
             if (_flashTimer <= 0f)
             {
                 // 예고 중에는 예고색이 이긴다. 그 다음이 상태이상, 없으면 흰색.
@@ -827,12 +1023,38 @@ namespace Game.Module.InGame
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.
         /// 피격 점멸과 같은 틴트를 쓰므로 켜져 있는 동안은 점멸이 덮어쓰지 않는다.
         /// </summary>
+        // ── 예고 프레임 ──────────────────────────────────────────
+        //
+        // 색만 바꾸면 24개 패턴이 예고 때 전부 똑같이 보인다. **누가 시작했나**를
+        // 알리는 것이 예고 4겹의 첫 겹이고, 그림이 이미 6종 들어와 있다
+        // (`unit_{보스}_s_tell`) — 코드가 한 번도 안 불렀을 뿐이다.
+
+        private Sprite _tellSprite;
+        private Sprite _tellRestore;
+
+        /// <summary>예고할 때 갈아 끼울 그림. 없으면 예전처럼 색만 바뀐다.</summary>
+        public void SetTellSprite(Sprite s) => _tellSprite = s;
+
         public void SetTelegraph(bool on)
         {
             _telegraph = on;
             if (_body == null) return;
-            if (on) _body.color = new Color(1f, 0.86f, 0.35f, 1f);
-            else if (_flashTimer <= 0f) _body.color = Color.white;
+
+            if (on)
+            {
+                _body.color = new Color(1f, 0.86f, 0.35f, 1f);
+                // ⚠ 되돌릴 그림을 **켤 때** 기억한다. 끌 때 정하면 이미 예고 그림이라
+                //   예고 그림으로 되돌아가 영영 안 풀린다.
+                if (_tellSprite != null && _body.sprite != _tellSprite)
+                {
+                    _tellRestore = _body.sprite;
+                    _body.sprite = _tellSprite;
+                }
+                return;
+            }
+
+            if (_flashTimer <= 0f) _body.color = Color.white;
+            if (_tellRestore != null) { _body.sprite = _tellRestore; _tellRestore = null; }
         }
 
         // ── 상태이상 ──────────────────────────────────────────────
@@ -858,6 +1080,30 @@ namespace Game.Module.InGame
 
         /// <summary>저주 배수 — 받는 피해가 단계마다 늘어난다.</summary>
         public float CurseDamageMul => 1f + _curseStack * CursePerStack;
+
+        // ── C004 갑옷 분쇄 ───────────────────────────────────────
+        //
+        // 저주와 달리 **때린 쪽이 아니라 맞은 쪽에 쌓인다.** 대상을 바꿔도
+        // 그 대상의 겹은 그대로 남아 있어, 오래 붙어 싸운 보스가 뒤로 갈수록 무너진다.
+        // 상태이상이 아니라 물리적으로 갑옷이 벗겨진 것이므로 화상·저주와 따로 센다.
+
+        public const int ArmorBreakMaxStack = 5;
+        private const float ArmorBreakFadeSeconds = 3f;
+
+        private int _armorBreak;
+        private float _armorBreakTimer;
+
+        public int ArmorBreakStack => _armorBreak;
+
+        public void AddArmorBreak()
+        {
+            _armorBreak = Mathf.Min(ArmorBreakMaxStack, _armorBreak + 1);
+            _armorBreakTimer = ArmorBreakFadeSeconds;
+        }
+
+        /// <summary>겹당 늘어나는 피해 배수. 겹이 없으면 1 이다.</summary>
+        public float ArmorBreakMul(float perStack)
+            => _armorBreak > 0 ? 1f + _armorBreak * perStack : 1f;
 
         private const float CursePerStack = 0.15f;
         private const float BurnDamagePerStackPerSecond = 6f;
@@ -889,6 +1135,14 @@ namespace Game.Module.InGame
         /// </summary>
         public int TickStatus(float dt)
         {
+            // 때리기를 멈추면 벗겨 놓은 갑옷이 도로 붙는다 — 안 그러면
+            // 한 번 5겹을 쌓아 둔 보스가 방이 끝날 때까지 그대로다.
+            if (_armorBreakTimer > 0f)
+            {
+                _armorBreakTimer -= dt;
+                if (_armorBreakTimer <= 0f) _armorBreak = 0;
+            }
+
             if (_curseTimer > 0f)
             {
                 _curseTimer -= dt;
@@ -953,6 +1207,242 @@ namespace Game.Module.InGame
 
         public void EndReposition() => IsRepositioning = false;
 
+        // ── 쉴드 ─────────────────────────────────────────────
+        //
+        // 격투 직업이 때릴 때마다 쌓는다. 근접은 사거리를 버리고 들어가는 몸이라
+        // 맞는 것이 전제다 — 때린 만큼 돌려받지 못하면 그냥 손해만 보는 직업이 된다.
+        private int _shield;
+
+        public int Shield => _shield;
+
+        /// <summary>지금 그리고 있는 몸 그림. 잔상이 이걸 복제한다.</summary>
+        public Sprite BodySprite => _body != null ? _body.sprite : null;
+
+        /// <summary>몸 그림의 좌우 반전 여부. 잔상이 같은 쪽을 봐야 한다.</summary>
+        public bool BodyFlipX => _body != null && _body.transform.localScale.x < 0f;
+
+        // ── 쉴드 감쇠 ────────────────────────────────────────
+        //
+        // 쉴드는 **싸우는 동안의 보상**이지 들고 다니는 자원이 아니다.
+        // 예전에는 `TakeDamage` 로만 깎여서, 한 번 30% 를 채우면 방을 나가도
+        // 그대로 들고 갔다 — 다음 방을 30% 더 두꺼운 몸으로 시작하는 셈이다.
+        //
+        // ⚠ **단순 시간 감쇠로 만들지 않는다.** 격투 6명의 획득 속도가 공격
+        //   간격 때문에 1.5배 차이난다(아마존 5.45%/초 · 구루 3.53%/초).
+        //   초당 일정량을 그냥 깎으면 느린 몸은 순증이 거의 0 이라 못 쌓는다 —
+        //   같은 직업인데 느린 쪽만 벌을 받는다.
+        //   그래서 **마지막 타격 후 경과 시간**을 기준으로 깎는다. 싸우는 동안은
+        //   줄지 않으므로 획득 속도 차이가 감쇠에 영향을 주지 않는다.
+        // ⚠ 유지·감소 값은 **`GameConfig` 가 갖는다.** 여기 상수로 두었더니
+        //   "쉴드가 너무 오래 간다" 를 고치는 데 컴파일이 필요했다.
+        //   부팅 때 `SetShieldRule` 로 한 번 받아 둔다 — 스프라이트와 같은 방식이다.
+        private static float s_shieldHoldSeconds = 0.6f;
+        private static float s_shieldDecayPerSecond = 0.12f;
+
+        /// <summary>쉴드 유지·감소 규칙. 전투가 시작될 때 표에서 받아 넣는다.</summary>
+        public static void SetShieldRule(float holdSeconds, float decayPerSecond)
+        {
+            s_shieldHoldSeconds = Mathf.Max(0f, holdSeconds);
+            s_shieldDecayPerSecond = Mathf.Max(0f, decayPerSecond);
+        }
+
+        private const float ShieldBarHeightRatio = 0.6f;  // 체력 바 대비 굵기
+        private const float ShieldBarGap = 2f;            // 체력 바와의 간격(px)
+
+        private float _shieldIdle;      // 마지막 타격 후 경과 시간
+        private float _shieldDecayCarry; // 소수점 이월 — 초당 5% 가 1 미만이어도 언젠가 깎인다
+
+        public void AddShield(int amount, int cap)
+        {
+            if (amount <= 0 || cap <= 0) return;
+            _shield = Mathf.Min(cap, _shield + amount);
+            _shieldIdle = 0f;            // 때렸으니 유지 시간이 처음부터 다시 간다
+            _shieldDecayCarry = 0f;
+            RefreshHpBar();
+        }
+
+        /// <summary>
+        /// 쉴드를 시간에 따라 깎는다. 마지막 타격 후 <see cref="ShieldHoldSeconds"/> 동안은
+        /// 그대로 두고, 그 뒤부터 초당 최대 HP의 일정 비율씩 녹인다.
+        /// </summary>
+        public void TickShield(float dt)
+        {
+            if (_shield <= 0 || HpMax <= 0) return;
+
+            _shieldIdle += dt;
+            if (_shieldIdle < s_shieldHoldSeconds) return;
+
+            _shieldDecayCarry += HpMax * s_shieldDecayPerSecond * dt;
+            int whole = Mathf.FloorToInt(_shieldDecayCarry);
+            if (whole <= 0) return;
+
+            _shieldDecayCarry -= whole;
+            _shield = Mathf.Max(0, _shield - whole);
+            RefreshHpBar();
+        }
+
+        public void ClearShield()
+        {
+            _shield = 0;
+            _shieldIdle = 0f;
+            _shieldDecayCarry = 0f;
+            RefreshHpBar();
+        }
+
+        // ── 피해 증폭 (갱스터 표식 · 영매 저주) ──────────────────
+        //
+        // 두 몸이 같은 층을 쓴다. **곱연산으로 겹치고 상한은 +150%** 다.
+        // 합연산이면 둘을 겹칠 이유가 "숫자가 커져서" 뿐이지만, 곱연산이면
+        // 표식 위에 저주를 얹는 것이 각각을 두 번 거는 것보다 이득이 된다 —
+        // 두 몸을 번갈아 빙의할 이유가 그것이다.
+        //
+        // ⚠ 상한이 없으면 저주가 전염으로 무한히 번지는 Lv5 이후에
+        //   잡몹 하나가 열 겹을 뒤집어쓴다. +150% 에서 자른다.
+
+        private const float AmpMaxMul = 2.5f;      // +150%
+        private const int AmpSlots = 4;
+
+        private readonly float[] _ampMul = new float[AmpSlots];
+        private readonly float[] _ampTimer = new float[AmpSlots];
+
+        /// <summary>받는 피해 배수. 표식·저주가 겹치면 곱해지고 +150% 에서 멈춘다.</summary>
+        public float AmpDamageMul
+        {
+            get
+            {
+                float m = 1f;
+                for (int i = 0; i < AmpSlots; i++)
+                    if (_ampTimer[i] > 0f) m *= _ampMul[i];
+                return Mathf.Min(m, AmpMaxMul);
+            }
+        }
+
+        /// <summary>증폭이 하나라도 걸려 있는가. 머리 위 표식을 띄울지 결정한다.</summary>
+        public bool HasAmp
+        {
+            get
+            {
+                for (int i = 0; i < AmpSlots; i++) if (_ampTimer[i] > 0f) return true;
+                return false;
+            }
+        }
+
+        /// <summary>이 증폭에 남은 시간. 전이할 때 시간을 승계하려고 읽는다.</summary>
+        public float AmpSecondsLeft
+        {
+            get
+            {
+                float t = 0f;
+                for (int i = 0; i < AmpSlots; i++) if (_ampTimer[i] > t) t = _ampTimer[i];
+                return t;
+            }
+        }
+
+        /// <summary>
+        /// 증폭을 건다. `percent` 30 이면 받는 피해 ×1.3.
+        ///
+        /// 같은 세기가 이미 걸려 있으면 **시간만 새로 고친다.** 칸을 따로 쓰면
+        /// 표식을 두 번 건 것만으로 ×1.69 가 되어, 한 대상을 계속 찍는 것이
+        /// 여럿에게 퍼뜨리는 것보다 이득이 된다 — 이 스킬의 뜻과 반대다.
+        /// </summary>
+        public void ApplyAmp(int percent, float seconds)
+        {
+            if (percent <= 0 || seconds <= 0f) return;
+            float mul = 1f + percent * 0.01f;
+
+            for (int i = 0; i < AmpSlots; i++)
+                if (_ampTimer[i] > 0f && Mathf.Abs(_ampMul[i] - mul) < 0.001f)
+                { _ampTimer[i] = Mathf.Max(_ampTimer[i], seconds); return; }
+
+            int slot = -1;
+            float weakest = float.MaxValue;
+            for (int i = 0; i < AmpSlots; i++)
+            {
+                if (_ampTimer[i] <= 0f) { slot = i; break; }
+                if (_ampMul[i] < weakest) { weakest = _ampMul[i]; slot = i; }
+            }
+            // 칸이 다 찼으면 가장 약한 것을 밀어낸다. 새 것이 더 약하면 버린다.
+            if (_ampTimer[slot] > 0f && _ampMul[slot] >= mul) return;
+            _ampMul[slot] = mul;
+            _ampTimer[slot] = seconds;
+        }
+
+        public void TickAmp(float dt)
+        {
+            for (int i = 0; i < AmpSlots; i++)
+                if (_ampTimer[i] > 0f) _ampTimer[i] -= dt;
+        }
+
+        public void ClearAmp()
+        {
+            for (int i = 0; i < AmpSlots; i++) { _ampTimer[i] = 0f; _ampMul[i] = 1f; }
+        }
+
+        // ── 그림만 띄우기 (VAULT 체공) ───────────────────────────
+        //
+        // 자리(`Position`)는 그대로 두고 **그림만** 위로 올린다. 자리를 옮기면
+        // 거리 판정·정렬·분리 밀기가 전부 공중의 좌표를 보게 되어,
+        // 떠 있는 동안 옆 사람이 그 자리를 비켜 준다 — 착지할 곳이 사라진다.
+        // 바닥에 남는 그림자가 곧 실제 자리다.
+
+        private float _spriteLift;
+
+        public void SetSpriteLift(float pixels)
+        {
+            if (Mathf.Approximately(_spriteLift, pixels)) return;
+            _spriteLift = pixels;
+            if (_body != null)
+                _body.rectTransform.anchoredPosition = new Vector2(0f, pixels);
+        }
+
+        // ── 행동 패턴의 제 상태 ──────────────────────────────────
+        //
+        // 도약·체공·포탑 회전은 **적마다 따로** 흘러야 한다. 감독이 딕셔너리로
+        // 들고 있으면 죽거나 빙의로 편이 바뀔 때마다 정리해야 하고, 한 번 빠뜨리면
+        // 죽은 몸의 타이머가 계속 돈다. 몸에 붙여 두면 몸과 함께 사라진다.
+        //
+        // ⚠ 값의 뜻은 **패턴마다 다르다.** 여기서 이름을 뜻으로 짓지 않는 이유다 —
+        //   `PatternPhase` 는 HOP 에겐 멈춤/웅크림/도약이고 VAULT 에겐 네 단계다.
+        //   뜻은 `BattleDirector.Patterns.cs` 의 각 패턴이 갖는다.
+
+        public int PatternPhase { get; set; }
+        public float PatternTimer { get; set; }
+        public Vector2 PatternFrom { get; set; }
+        public Vector2 PatternTo { get; set; }
+
+        /// <summary>십자 포탑의 발사 축(도). 쏠 때마다 45° 돈다.</summary>
+        public float PatternAngle { get; set; }
+
+        public void ResetPattern()
+        {
+            PatternPhase = 0;
+            PatternTimer = 0f;
+            PatternFrom = PatternTo = Position;
+            PatternAngle = 0f;
+            SetSpriteLift(0f);
+        }
+
+        // ── 스턴 ─────────────────────────────────────────────
+        //
+        // 굳어 있는 동안은 다가오지도 때리지도 않는다. 맞은 자세로 세워 두면
+        // 새 그림 없이도 "멈췄다" 가 읽힌다.
+        private float _stunTimer;
+
+        public bool IsStunned => _stunTimer > 0f;
+
+        public void ApplyStun(float seconds)
+        {
+            if (seconds <= 0f) return;
+            _stunTimer = Mathf.Max(_stunTimer, seconds);
+            PlayHit();
+        }
+
+        public void TickStun(float dt)
+        {
+            if (_stunTimer <= 0f) return;
+            _stunTimer -= dt;
+        }
+
         /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>
         public void ApplySlow(int percent, float seconds)
         {
@@ -969,6 +1459,21 @@ namespace Game.Module.InGame
         }
 
         private float CurrentSpeed => MoveSpeed * (1f - _slowPercent / 100f);
+
+        /// <summary>
+        /// 약화가 공격 간격을 늘리는 배율.
+        ///
+        /// ⚠ 예전에는 약화가 **이동속도만** 깎았다. 그런데 원거리 적은 사거리 안에 들어오면
+        ///   거의 움직이지 않는다(`BattleDirector.TickEnemies` — 두 번 쏘고 한 번만 옮긴다).
+        ///   그래서 35% 확률로 터져 봐야 **사실상 아무 일도 안 일어났다.**
+        ///   느려지는 만큼 손도 느려져야 "약해졌다" 가 된다.
+        ///
+        /// 최대 약화(-40%)에서 간격 +40%. 설계값은 `BattleDirector.SlowProcPercent` 가 정한다.
+        /// </summary>
+        public float SlowAttackMul => 1f + _slowPercent / 100f;
+
+        /// <summary>약화가 걸려 있는가. 설녀의 파쇄가 두 배가 되는 조건이다.</summary>
+        public bool IsSlowed => _slowPercent > 0;
 
         /// <summary>이번 프레임에 움직일 거리. 지형지물을 타고 미끄러지려면 부르는 쪽이 필요하다.</summary>
         public Vector2 StepToward(Vector2 target, float dt)

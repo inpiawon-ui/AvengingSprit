@@ -30,8 +30,8 @@ namespace Game.Character
         Lifesteal,
         /// <summary>명중 시 둔화 n%</summary>
         Slow,
-        /// <summary>얼티밋 충전 +n%</summary>
-        UltimateCharge,
+        /// <summary>액티브 스킬 충전 +n%</summary>
+        ActiveSkillCharge,
         /// <summary>탄속 +n%</summary>
         ShotSpeed,
 
@@ -40,8 +40,6 @@ namespace Game.Character
         HostMaxHp,
         /// <summary>정지 → 발사 지연 -n/100 초 (정본 BUF_U03 Quick Reset)</summary>
         StopDelay,
-        /// <summary>전술 빙의 비용 -n (정본 BUF_U06 Tactical Mercy)</summary>
-        TacticalCost,
         /// <summary>받는 피해 -n% (정본 BUF_A04 Heavy Frame)</summary>
         DamageReduction,
         /// <summary>전술 빙의 직후 무적 +n/100 초 (정본 BUF_A06 Safe Exit)</summary>
@@ -67,12 +65,6 @@ namespace Game.Character
         /// <summary>튕긴 뒤의 탄이 피해 n% 로 때린다 (정본 BUF_A03 Return Path)</summary>
         ReturnDamage,
 
-        /// <summary>
-        /// 스스로는 아무 효과가 없고 **시너지를 여는 열쇠**다 (정본 BUFF_GATED).
-        /// 짝이 맞는 몸으로 갈아타야 비로소 무언가 일어난다 —
-        /// 그래서 "이 버프를 뽑았으니 그 몸을 찾아야 한다" 는 계획이 생긴다.
-        /// </summary>
-        SynergyGate,
 
         /// <summary>범위 효과 반경 +n% (정본 BUF_U05 Wide Echo)</summary>
         AoeRadius,
@@ -88,6 +80,44 @@ namespace Game.Character
         DeployRetarget,
         /// <summary>포탑이 불을 물려받는다 (정본 BUF_S01 Fire Firmware)</summary>
         DeployFire,
+
+        // ── 정본 v2.3 카드에서 새로 온 것 ────────────────────────
+        /// <summary>C002 정밀 조준 — 유효 타깃이 **하나뿐일 때만** 피해 증가</summary>
+        SingleTarget,
+        /// <summary>C003 마무리 본능 — 체력이 낮은 적에게 피해 증가</summary>
+        Execute,
+        /// <summary>C015 보스 압축 — 보스에게 주는 피해 증가</summary>
+        BossFocus,
+        /// <summary>C017 생명 회수 — 적을 잡을 때마다 회복</summary>
+        Regen,
+        /// <summary>C024 전투 스텝 — 기본 공격 직후 1.2초 이동 속도 증가</summary>
+        CombatStep,
+        /// <summary>C025 냉기 각인 — 기본 공격에 빙결 부여</summary>
+        FrostImprint,
+        /// <summary>C026 화염 각인 — 기본 공격에 화상 부여</summary>
+        FlameImprint,
+        /// <summary>C027 저주 각인 — 기본 공격에 저주 부여</summary>
+        CurseImprint,
+        /// <summary>C005 연속 압박 — 같은 적을 연속으로 때릴수록 피해 증가(4타 최대)</summary>
+        SustainStack,
+        /// <summary>C009 유도 보정 — 탄이 대상을 쫓아간다</summary>
+        Homing,
+        /// <summary>C032 영혼 복제 — 유효 기본공격 8회마다 직전 공격을 한 번 복제</summary>
+        SpectralEcho,
+        /// <summary>C013 폭발 메아리 — 폭발이 끝난 자리에 축소된 2차 충격</summary>
+        ExplosiveEcho,
+        /// <summary>C030 유령 포대 — 유효 기본공격 8회마다 포대 1기를 3초간 소환</summary>
+        GhostTurret,
+        /// <summary>C004 갑옷 분쇄 — 때린 적이 받는 피해가 쌓여서 늘어난다</summary>
+        ArmorBreak,
+        /// <summary>C014 연쇄 번짐 — 걸린 상태이상이 옆 적으로 번진다</summary>
+        StatusChain,
+        /// <summary>C018 위기 방벽 — 체력이 위험해지면 방벽이 한 번 선다</summary>
+        CrisisBarrier,
+        /// <summary>C023 회피 잔상 — 아슬아슬하게 피하면 잔상이 반격한다</summary>
+        Afterimage,
+        /// <summary>C031 과충전 회로 — 명중이 전기를 튀긴다</summary>
+        Overcharge,
     }
 
     /// <summary>
@@ -104,6 +134,18 @@ namespace Game.Character
         Tag,
         /// <summary>지정한 호스트를 쓸 때만 활성</summary>
         HostOnly,
+    }
+
+    /// <summary>
+    /// 카드 등급 (정본 v2.3). 뽑힐 확률과 테두리 색을 가른다.
+    ///   COMMON 8종 60% · RARE 12종 28% · EPIC 8종 9.5% · LEGENDARY 4종 2.5%
+    /// </summary>
+    public enum CardRarity
+    {
+        Common,
+        Rare,
+        Epic,
+        Legendary,
     }
 
     /// <summary>호스트 계열 태그. 태그형 버프가 어느 몸에 붙는지를 가른다.</summary>
@@ -148,12 +190,21 @@ namespace Game.Character
         [Tooltip("정본 Effect 원문. 구현 여부와 무관하게 그대로 담아 둔다 — " +
                  "나중에 시스템이 붙을 때 무엇을 만들어야 하는지가 여기 적혀 있다")]
         [SerializeField] private string _canonEffect;
-        [Tooltip("정본 Pool — Universal / Tag / Synergy / AttackStyle")]
+        [Tooltip("정본 Pool — Universal / Tag / AttackStyle")]
         [SerializeField] private string _pool;
         [Tooltip("이 챕터부터 뽑힌다. 정본 CH1/CH2/CH3 열")]
         [SerializeField] private int _fromChapter = 1;
         [Tooltip("정본 Weight — 뽑힐 가중치")]
         [SerializeField] private float _weight = 1f;
+        [Header("정본 v2.3 카드")]
+        [Tooltip("정본 CardID (C001 …). 아이콘 이름도 이것을 따른다 — card_c001")]
+        [SerializeField] private string _cardId;
+        [SerializeField] private CardRarity _rarity = CardRarity.Common;
+        [Tooltip("정본 분류 — ATTACK / PROJECTILE / AREA / SURVIVAL / MOBILITY / UTILITY / SPECIAL")]
+        [SerializeField] private string _category;
+        [Tooltip("레벨 1~5 의 수치. 같은 카드를 다시 고르면 레벨이 오른다(최대 5).")]
+        [SerializeField] private int[] _levelValues = Array.Empty<int>();
+
         [Tooltip("지금 실제로 동작하는가. " +
                  "정본 효과는 산문이라(예: 표식 대상 명중 시 릴레이 탄 1발) 표식·장판·저주 같은 " +
                  "시스템이 있어야 구현된다. 아직 없는 것은 꺼 두고 풀에서 뺀다 — " +
@@ -176,6 +227,28 @@ namespace Game.Character
         public int FromChapter => Mathf.Max(1, _fromChapter);
         public float Weight => _weight <= 0f ? 1f : _weight;
         public bool Implemented => _implemented;
+
+        public string CardId => _cardId;
+        public CardRarity Rarity => _rarity;
+        public string Category => _category;
+        public int MaxLevel => _levelValues != null && _levelValues.Length > 0 ? _levelValues.Length : 1;
+
+        /// <summary>이 레벨에서의 수치. 레벨표가 없으면 예전 단일 값으로 떨어진다.</summary>
+        public int ValueAt(int level)
+        {
+            if (_levelValues == null || _levelValues.Length == 0) return _value;
+            return _levelValues[Mathf.Clamp(level, 1, _levelValues.Length) - 1];
+        }
+
+        /// <summary>등급별 뽑힐 무게. 정본 v2.3 05_RARITY_POOL.</summary>
+        public static float WeightOf(CardRarity r) => r switch
+        {
+            CardRarity.Common    => 60.0f,
+            CardRarity.Rare      => 28.0f,
+            CardRarity.Epic      => 9.5f,
+            CardRarity.Legendary => 2.5f,
+            _                    => 1f,
+        };
 
         /// <summary>지금 이 호스트를 쓰는 동안 켜져 있는가. 호스트가 없으면 범용만 켜진다.</summary>
         public bool IsActiveFor(HostEntry host) => _scope switch
@@ -227,34 +300,42 @@ namespace Game.Character
                          System.Random rng, HostEntry host = null, int chapter = 1)
         {
             into.Clear();
-            _common.Clear(); _tag.Clear(); _hostOnly.Clear();
+            _draw.Clear();
 
             for (int i = 0; i < _entries.Length; i++)
             {
                 var e = _entries[i];
                 if (exclude != null && exclude.Contains(e.BuffKey)) continue;
-                // 아직 동작하지 않는 버프는 뽑지 않는다. 고르면 아무 일도 안 일어나는
+                // 아직 동작하지 않는 카드는 뽑지 않는다. 고르면 아무 일도 안 일어나는
                 // 카드가 섞이면 3택1 이라는 선택 자체가 거짓이 된다.
                 if (!e.Implemented) continue;
-                // 정본은 챕터마다 열리는 풀이 다르다(BUFF_DB 의 CH1/CH2/CH3 열)
                 if (e.FromChapter > chapter) continue;
-                switch (e.Scope)
-                {
-                    case BuffScope.Common: _common.Add(e); break;
-                    case BuffScope.Tag: if (e.IsActiveFor(host)) _tag.Add(e); break;
-                    case BuffScope.HostOnly: if (e.IsActiveFor(host)) _hostOnly.Add(e); break;
-                }
+                if (!e.IsActiveFor(host)) continue;
+                _draw.Add(e);
             }
 
-            for (int i = 0; i < count; i++)
+            // 등급 가중 추첨 (정본 v2.3 — 60 / 28 / 9.5 / 2.5).
+            // 등급 안에서는 균등하다. 가중치를 등급에만 두는 이유는,
+            // 카드마다 가중치를 또 주면 "왜 이건 안 나오지" 를 아무도 설명 못 하기 때문이다.
+            for (int i = 0; i < count && _draw.Count > 0; i++)
             {
-                var pool = PickPool(rng);
-                if (pool == null) return;                 // 셋 다 비었다
-                int k = rng.Next(pool.Count);
-                into.Add(pool[k]);
-                pool.RemoveAt(k);
+                float total = 0f;
+                for (int k = 0; k < _draw.Count; k++) total += BuffEntry.WeightOf(_draw[k].Rarity);
+
+                float roll = (float)rng.NextDouble() * total;
+                int pick = _draw.Count - 1;
+                for (int k = 0; k < _draw.Count; k++)
+                {
+                    roll -= BuffEntry.WeightOf(_draw[k].Rarity);
+                    if (roll > 0f) continue;
+                    pick = k; break;
+                }
+                into.Add(_draw[pick]);
+                _draw.RemoveAt(pick);
             }
         }
+
+        private readonly List<BuffEntry> _draw = new();
 
         private List<BuffEntry> PickPool(System.Random rng)
         {

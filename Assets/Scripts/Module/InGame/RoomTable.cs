@@ -51,10 +51,23 @@ namespace Game.Module.InGame
         [SerializeField] private bool _isChapterStart;
 
         [Header("방 크기 (미터). 정본 layout.layouts")]
+        /// <summary>
+        /// 이 방의 지형지물을 **손으로 배치했는가.**
+        ///
+        /// 정본(ROOM_GEOMETRY)은 `Template` 과 `CoverCount` 만 줄 뿐 엄폐물의 자리·크기·종류를
+        /// 주지 않는다. 그래서 임포터가 자동으로 만들어 넣는데, 맵툴에서 손으로 고친 방까지
+        /// 다시 덮으면 작업이 통째로 날아간다. 이 표시가 켜진 방은 임포터가 지형지물을 건드리지 않는다.
+        /// (스폰·웨이브·보상 같은 **정본이 실제로 주는 값**은 그대로 갱신된다.)
+        /// </summary>
+        [SerializeField] private bool _handEdited;
+
         [SerializeField] private float _width = 8.4f;
         [SerializeField] private float _height = 14f;
         [Tooltip("VERTICAL_FOLLOW 면 방이 화면보다 높아 카메라가 세로로 따라간다")]
         [SerializeField] private string _cameraMode;
+        [Tooltip("정본 v3.3 지오메트리 템플릿 — TWIN_PLATFORM / RING / OFFSET_COVER / " +
+                 "SPLIT_LEVEL / PILLAR_CROSS / LANE_WIDE. 바닥 그림을 고르는 데 쓴다")]
+        [SerializeField] private string _template;
 
         [Header("출입")]
         [SerializeField] private Vector2 _entry;
@@ -75,10 +88,21 @@ namespace Game.Module.InGame
         [SerializeField] private float[] _bossPhaseGates = Array.Empty<float>();
         [SerializeField] private BossPhaseEntry[] _bossPhases = Array.Empty<BossPhaseEntry>();
 
+        // 정본 v2.3 BOSS_ATTACK_RUNTIME — 보스마다 제 공격 4가지.
+        // 이것이 없으면 `BossTable`(챕터당 하나)의 목록을 쓰게 되어
+        // **같은 챕터의 중간 보스와 최종 보스가 똑같이 싸운다.**
+        [SerializeField] private Game.Character.BossMove[] _bossMoves =
+            Array.Empty<Game.Character.BossMove>();
+
         [Header("스폰")]
+        // 정본 v3.3 ROOM_REWARD — 방마다 붙는 보상.
+        // 이것이 있어야 판 안에서 쓸 골드가 생기고, 이벤트·상점이 값을 가진다.
+        [SerializeField] private int _gold;
+        [SerializeField] private int _exp;
+        [SerializeField] private int _healPct;
+
         [SerializeField] private Vector2 _playerSpawn;
         [SerializeField] private SpawnEntry[] _spawns = Array.Empty<SpawnEntry>();
-        [SerializeField] private WaveEntry[] _waves = Array.Empty<WaveEntry>();
         [SerializeField] private ObjectEntry[] _objects = Array.Empty<ObjectEntry>();
 
         public string RoomId => _roomId;
@@ -87,9 +111,11 @@ namespace Game.Module.InGame
         public string Route => _route;
         public string Intent => _intent;
         public bool IsChapterStart => _isChapterStart;
+        public bool HandEdited => _handEdited;
         public float Width => _width;
         public float Height => _height;
         public string CameraMode => _cameraMode;
+        public string Template => _template;
         public Vector2 Entry => _entry;
         public IReadOnlyList<ExitEntry> Exits => _exits;
         public string UnlockRule => _unlockRule;
@@ -101,6 +127,7 @@ namespace Game.Module.InGame
         public float BossMoveSpeed => _bossMoveSpeed;
         public IReadOnlyList<float> BossPhaseGates => _bossPhaseGates;
         public IReadOnlyList<BossPhaseEntry> BossPhases => _bossPhases;
+        public IReadOnlyList<Game.Character.BossMove> BossMoves => _bossMoves;
 
         public BossPhaseEntry BossPhase(int phase)
         {
@@ -114,35 +141,12 @@ namespace Game.Module.InGame
 
         /// <summary>갈림길인가. 정본에서는 챕터마다 한 번씩 나온다(CH2_N03 · CH3_N03).</summary>
         public bool IsBranch => _exits != null && _exits.Length > 1;
+        public int Gold => _gold;
+        public int Exp => _exp;
+        public int HealPct => _healPct;
         public Vector2 PlayerSpawn => _playerSpawn;
         public IReadOnlyList<SpawnEntry> Spawns => _spawns;
-        public IReadOnlyList<WaveEntry> Waves => _waves;
         public IReadOnlyList<ObjectEntry> Objects => _objects;
-
-        /// <summary>
-        /// 이 방의 마지막 웨이브 번호. **스폰만 보고 센다.**
-        ///
-        /// 정본의 웨이브 표에는 2웨이브라고 적혀 있는데 실제 스폰은 1웨이브뿐인 방이
-        /// 10개 있다(CH1_N08 등). 표를 믿으면 그 방들은 아무도 안 나오는 빈 웨이브를
-        /// 기다리며 몇 초씩 멈춘다. 스폰이 유일한 런타임 출처다(SPAWN_SRC_01).
-        /// 웨이브 표는 시작 지연 값만 쓴다.
-        /// </summary>
-        public int LastWave
-        {
-            get
-            {
-                int n = 1;
-                for (int i = 0; i < _spawns.Length; i++) n = Mathf.Max(n, _spawns[i].Wave);
-                return n;
-            }
-        }
-
-        public WaveEntry Wave(int index)
-        {
-            for (int i = 0; i < _waves.Length; i++)
-                if (_waves[i].Index == index) return _waves[i];
-            return null;
-        }
 
         /// <summary>보스 방인가. 정본의 타입 문자열은 "Boss Arena" 다.</summary>
         public bool IsBoss => !string.IsNullOrEmpty(_bossId);
@@ -155,7 +159,8 @@ namespace Game.Module.InGame
     [Serializable]
     public sealed class SpawnEntry
     {
-        [SerializeField] private int _wave;
+        [Tooltip("엘리트인가. 수가 적은 대신 하나하나가 세다")]
+        [SerializeField] private bool _elite;
         [SerializeField] private string _spawnId;
         [Tooltip("E001 · EL01 · B01 같은 정본 ID")]
         [SerializeField] private string _actorId;
@@ -166,13 +171,27 @@ namespace Game.Module.InGame
         [SerializeField] private string _trigger;
         [SerializeField] private string _telegraph;
 
-        public int Wave => _wave;
+        /// <summary>
+        /// 엘리트인가. 예전에는 <c>ActorId</c> 가 <c>EL</c> 로 시작하는지로 봤다 —
+        /// 정본이 엘리트를 별도 ID(EL01…)로 줬기 때문이다. 이제 자리는 배정표가
+        /// 정하고 배우는 잡몹·호스트 키라, **표시를 따로 들고 있어야** 한다.
+        /// </summary>
+        public bool Elite => _elite;
         public string SpawnId => _spawnId;
         public string ActorId => _actorId;
         public Vector2 At => _at;
         public string Facing => _facing;
         public float DelaySeconds => _delaySeconds;
         public string Trigger => _trigger;
+
+        /// <summary>
+        /// 정본이 "이놈이 네 다음 몸이다" 라고 찍어 둔 자리인가 (`POSSESSION_TARGET`).
+        ///
+        /// 정본은 46기를 이렇게 찍어 두었고 **전부 웨이브 1**에 있다. 증원(139기)에는
+        /// 하나도 없다 — 실수가 아니라 "증원 오기 전에 몸을 갈아타 둬라" 는 뜻이다.
+        /// 그 의도가 화면에 안 보이면 증원은 그냥 기습이 된다.
+        /// </summary>
+        public bool IsPossessionTarget => _trigger == "POSSESSION_TARGET";
         public string Telegraph => _telegraph;
     }
 
@@ -211,6 +230,14 @@ namespace Game.Module.InGame
     [Serializable]
     public sealed class ExitEntry
     {
+        // 정본 ROUTE 의 `RouteArchetype` 과 점수. 갈림길에서 **문 위에 적어 준다** —
+        // 둘 다 똑같이 생긴 문이면 고르는 것이 아니라 찍는 것이 된다.
+        [SerializeField] private string _archetype;
+        [SerializeField] private int _risk;
+        [SerializeField] private int _reward;
+        [SerializeField] private int _recovery;
+        [SerializeField] private int _build;
+
         [SerializeField] private string _exitId;
         [SerializeField] private Vector2 _at;
         [SerializeField] private string _nextRoomId;
@@ -218,6 +245,11 @@ namespace Game.Module.InGame
         public string ExitId => _exitId;
         public Vector2 At => _at;
         public string NextRoomId => _nextRoomId;
+        public string Archetype => _archetype;
+        public int Risk => _risk;
+        public int Reward => _reward;
+        public int Recovery => _recovery;
+        public int Build => _build;
     }
 
     /// <summary>
@@ -239,6 +271,18 @@ namespace Game.Module.InGame
 
         [SerializeField] private bool _blocksMove;
         [SerializeField] private bool _blocksShot;
+        /// <summary>
+        /// **적** 탄도 막는가. 꺼져 있으면 적 탄만 넘어간다.
+        ///
+        /// 궁수의 전설 엄폐물 설계의 핵심이 이 비대칭이다 —
+        /// "적 투사체는 대부분 장애물을 넘어가지만 플레이어의 화살은 넘어가지 못한다".
+        /// 그래야 엄폐물이 **숨는 곳**이 아니라 **쏠 자리를 찾게 만드는 것**이 된다.
+        /// 양쪽 다 막으면 그냥 벽이라, 뒤에 붙어 서 있기만 하면 끝난다.
+        ///
+        /// 키 큰 것(기둥·칸막이·상자)은 켠다. 낮은 것(낮은 벽·바리케이드)은 끈다.
+        /// </summary>
+        [SerializeField] private bool _blocksEnemyShot = true;
+
         [SerializeField] private bool _blocksSight;
         [Tooltip("부술 수 있는가. 정본에서 바리케이드만 true 다")]
         [SerializeField] private bool _destructible;
@@ -259,6 +303,7 @@ namespace Game.Module.InGame
         public Vector2 Size => _size;
         public bool BlocksMove => _blocksMove;
         public bool BlocksShot => _blocksShot;
+        public bool BlocksEnemyShot => _blocksEnemyShot;
         public bool BlocksSight => _blocksSight;
         public bool Destructible => _destructible;
         public bool IsHazard => !string.IsNullOrEmpty(_hazardKind) && _hazardKind != "NONE";
@@ -266,18 +311,4 @@ namespace Game.Module.InGame
         public float HazardTick => _hazardTick <= 0f ? 1f : _hazardTick;
     }
 
-    [Serializable]
-    public sealed class WaveEntry
-    {
-        [SerializeField] private int _index;
-        [SerializeField] private float _startDelay;
-        [Tooltip("E001x2,E002x1 — 검증용. 실제 스폰은 SpawnEntry 가 만든다")]
-        [SerializeField] private string _composition;
-        [SerializeField] private string _clearRule;
-
-        public int Index => _index;
-        public float StartDelay => _startDelay;
-        public string Composition => _composition;
-        public string ClearRule => _clearRule;
-    }
 }

@@ -19,6 +19,15 @@ namespace Game.Module.InGame
         private const float FadeFrom = 0.55f;     // 수명의 이 지점부터 흐려진다
         private const float PopScale = 1.35f;     // 뜨는 순간 살짝 커졌다 제자리로
 
+        // ── 치명타 ──────────────────────────────────────────────
+        //
+        // 확률로 터지는 것은 **터진 게 보여야 한다.** 숫자만 커지면 그냥
+        // 센 적을 만난 것처럼 읽힌다 — 색·크기·팝 셋을 함께 키운다.
+        private const float CritFontSize = 38f;
+        private const float CritPopScale = 1.9f;
+
+        private bool _crit;
+
         private RectTransform _rect;
         private TextMeshProUGUI _tmp;
         private TextMeshProUGUI _shadow;   // 도트 폰트일 때만 — 아래 12번 주석
@@ -86,11 +95,20 @@ namespace Game.Module.InGame
         /// 숫자가 완전히 겹치지 않도록 가로로 조금씩 흩어 놓는다.
         /// </summary>
         public void Show(Vector2 at, int damage, Color color)
-            => Show(at, damage.ToString(), color);
+            => Show(at, damage.ToString(), color, crit: false);
+
+        /// <summary>치명타는 크게, 더 크게 터지며 뜬다.</summary>
+        public void Show(Vector2 at, int damage, Color color, bool crit)
+            => Show(at, damage.ToString(), color, crit);
 
         /// <summary>피해 말고도 띄울 것이 있다 — 전술 빙의로 나간 Ghost HP 같은 것.</summary>
-        public void Show(Vector2 at, string text, Color color)
+        public void Show(Vector2 at, string text, Color color) => Show(at, text, color, false);
+
+        public void Show(Vector2 at, string text, Color color, bool crit)
         {
+            _crit = crit;
+            _tmp.fontSize = crit ? CritFontSize : 26f;
+            if (_shadow != null) _shadow.fontSize = _tmp.fontSize;
             _origin = at;
             _drift = Random.Range(-10f, 10f);
             _life = LifeSeconds;
@@ -126,7 +144,8 @@ namespace Game.Module.InGame
             _rect.anchoredPosition = new Vector2(
                 Mathf.Round(_origin.x + _drift), Mathf.Round(_origin.y + rise));
 
-            float pop = t < 0.2f ? Mathf.Lerp(PopScale, 1f, t / 0.2f) : 1f;
+            float peak = _crit ? CritPopScale : PopScale;
+            float pop = t < 0.2f ? Mathf.Lerp(peak, 1f, t / 0.2f) : 1f;
             _rect.localScale = new Vector3(pop, pop, 1f);
 
             var c = _tmp.color;

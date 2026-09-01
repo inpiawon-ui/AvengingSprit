@@ -15,7 +15,9 @@ namespace Game.User
     [Serializable]
     public sealed class UserData
     {
-        public const int CurrentSaveVersion = 1;
+        // v2 — 호스트 숙련도·파편 추가. 기존 저장(v1)은 두 배열이 비어 있으므로
+        //      전원 봉인(숙련도 0)으로 읽힌다. 잃는 값이 없어 마이그레이션 코드가 필요 없다.
+        public const int CurrentSaveVersion = 2;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -40,6 +42,31 @@ namespace Game.User
         // 남는 것이 없으면 실패한 런이 통째로 버려진 시간이 된다.
         public int spiritCore;      // 보스를 잡아 얻는다. 유령 본체를 영구 강화
         public int hostMemory;      // 호스트를 써서 쌓인다. 그 몸을 더 능숙하게 만든다
+
+        // ── 호스트 숙련도 · 파편 ─────────────────────────────
+        //
+        // **능력치는 고스트, 스킬은 호스트.** 이 분리를 바꾸면 안 된다 —
+        // 이 게임은 방 구성을 못 고르는데 강제로 몸을 갈아탄다. 호스트가 능력치를
+        // 쥐면 "안 키운 몸 탔다가 죽는다 → 빙의를 피한다" 가 되어 핵심 재미가 죽는다.
+        //
+        //   숙련도 0      봉인 — **빙의는 되고 스킬만 안 나온다**(평타뿐)
+        //   숙련도 1      봉인 해제 · 액티브 + 패시브 동시 개방
+        //   숙련도 1~4    수치 상승
+        //   숙련도 5      특수 효과 해제
+        //   숙련도 6~10   특수 효과 수치 상승
+        //
+        // ⚠ 봉인된 몸도 빙의는 된다. 막으면 봉인된 적만 있는 방에서
+        //   손쓸 도리 없이 죽는다.
+        //
+        // 두 배열은 **짝으로 움직인다** — `hostKeys[i]` 의 값이 같은 첨자에 들어간다.
+        // JsonUtility 가 Dictionary 를 직렬화하지 못해 나란한 배열로 둔다.
+        //
+        // ⚠ 해금 목록(`unlockedHostKeys`)은 **저장하지 않는다.**
+        //   숙련도 ≥ 1 이 곧 해제라 매번 평가한다 — 저장하면 두 값이 어긋난다.
+        [Header("호스트 숙련도 · 파편")]
+        public string[] hostKeys = Array.Empty<string>();
+        public int[] hostMastery = Array.Empty<int>();
+        public int[] hostShards = Array.Empty<int>();
 
         [Header("선택")]
         public string selectedHostId = string.Empty;

@@ -27,6 +27,13 @@ namespace Game.Module.InGame
         public float FireInterval { get; private set; }
         public bool IsActive => _life > 0f;
 
+        /// <summary>
+        /// 로봇이 놓은 포탑인가, C030 이 불러낸 유령 포대인가.
+        /// 둘은 같은 방식으로 쏘지만 **동시에 살아 있을 수 있는 수가 따로**다 —
+        /// 한 통에 세면 로봇을 탄 판에서 카드가 일을 못 한다.
+        /// </summary>
+        public bool Ghostly { get; private set; }
+
         public void Init(Sprite sprite, Vector2 size)
         {
             _rect = (RectTransform)transform;
@@ -53,8 +60,10 @@ namespace Game.Module.InGame
             _image.enabled = sprite != null;
         }
 
-        public void Spawn(Vector2 at, float seconds, float range, int damage, float fireInterval)
+        public void Spawn(Vector2 at, float seconds, float range, int damage, float fireInterval,
+                          bool ghostly = false)
         {
+            Ghostly = ghostly;
             Position = at;
             _rect.anchoredPosition = new Vector2(Mathf.Round(at.x), Mathf.Round(at.y));
             _life = seconds;

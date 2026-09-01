@@ -26,13 +26,29 @@ namespace Game.Module.InGame
         private BossEntry _entry;
         private readonly List<float> _timers = new();
 
+        /// <summary>
+        /// 실제로 굴리는 공격 목록.
+        ///
+        /// 기본값은 `BossTable` 의 것이지만, 정본 방이 제 목록을 들고 있으면
+        /// 그쪽이 이긴다 — `BossTable` 은 챕터당 하나뿐이라 같은 챕터의
+        /// 보스 둘이 똑같이 싸우게 된다.
+        /// </summary>
+        private IReadOnlyList<BossMove> _moves;
+
         public int Phase { get; private set; } = 1;
         public BossEntry Entry => _entry;
 
         /// <summary>지금 예고 중인 행동. null 이면 대기.</summary>
         public BossMove Pending { get; private set; }
         public float TelegraphLeft { get; private set; }
+
+        /// <summary>이번 예고의 전체 길이. 게이지가 얼마나 찼는지 재는 데 쓴다.</summary>
+        public float TelegraphTotal { get; private set; }
         public bool IsTelegraphing => Pending != null && TelegraphLeft > 0f;
+
+        /// <summary>예고가 얼마나 찼는가 (0 → 1). 1 에 닿는 순간 터진다.</summary>
+        public float TelegraphProgress
+            => TelegraphTotal <= 0f ? 1f : 1f - Mathf.Clamp01(TelegraphLeft / TelegraphTotal);
 
         /// <summary>돌진 남은 시간. 0 보다 크면 이동 대신 돌진 중이다.</summary>
         public float ChargeLeft { get; private set; }
@@ -44,11 +60,24 @@ namespace Game.Module.InGame
         /// </summary>
         public void SetCanonPhases(IReadOnlyList<float> gates, IReadOnlyList<float> telegraphs)
         {
-            _thresholds = gates != null && gates.Count > 0
-                ? System.Linq.Enumerable.ToArray(gates) : DefaultThresholds;
+            // ⚠ 정본 문턱은 `1 / 0.6 / 0.3` 처럼 온다. 앞의 `1` 은 전환점이 아니라
+            //   **P1 이 시작되는 지점**이다. 그대로 문턱으로 쓰면 체력이 가득한 순간에도
+            //   `1 <= 1` 이 참이라 시작부터 P2 가 되고, 마지막에는 있지도 않은 P4 에 닿는다.
+            //   전환점만 남긴다.
+            _thresholds = DefaultThresholds;
+            if (gates != null && gates.Count > 0)
+            {
+                _gateBuffer.Clear();
+                for (int i = 0; i < gates.Count; i++)
+                    if (gates[i] < 1f) _gateBuffer.Add(gates[i]);
+                if (_gateBuffer.Count > 0) _thresholds = _gateBuffer.ToArray();
+            }
+
             _telegraphs = telegraphs != null && telegraphs.Count > 0
                 ? System.Linq.Enumerable.ToArray(telegraphs) : null;
         }
+
+        private readonly List<float> _gateBuffer = new();
 
         public void Setup(BossEntry entry)
         {
@@ -59,10 +88,24 @@ namespace Game.Module.InGame
             ChargeLeft = 0f;
             _timers.Clear();
             if (entry == null) return;
-            for (int i = 0; i < entry.Moves.Count; i++)
+            SetMoves(entry.Moves);
+        }
+
+        /// <summary>정본 방이 제 공격 목록을 들고 있으면 그것으로 갈아 끼운다.</summary>
+        public void SetCanonMoves(IReadOnlyList<BossMove> moves)
+        {
+            if (moves == null || moves.Count == 0) return;
+            SetMoves(moves);
+        }
+
+        private void SetMoves(IReadOnlyList<BossMove> moves)
+        {
+            _moves = moves;
+            _timers.Clear();
+            for (int i = 0; i < moves.Count; i++)
             {
                 // 시작하자마자 전탄이 동시에 나가지 않게 초기 쿨다운을 어긋나게 준다
-                _timers.Add(entry.Moves[i].Cooldown * (0.35f + 0.25f * i));
+                _timers.Add(moves[i].Cooldown * (0.35f + 0.25f * i));
             }
         }
 
@@ -84,7 +127,7 @@ namespace Game.Module.InGame
         /// </summary>
         public BossMove Tick(float dt)
         {
-            if (_entry == null) return null;
+            if (_entry == null || _moves == null) return null;
             if (ChargeLeft > 0f) ChargeLeft -= dt;
 
             if (Pending != null)
@@ -98,15 +141,22 @@ namespace Game.Module.InGame
 
             for (int i = 0; i < _timers.Count; i++)
             {
-                var m = _entry.Moves[i];
+                var m = _moves[i];
                 if (m.FromPhase > Phase) continue;
                 _timers[i] -= dt;
                 if (_timers[i] > 0f) continue;
 
                 _timers[i] = CooldownOf(m);
                 Pending = m;
-                TelegraphLeft = _telegraphs != null && Phase - 1 < _telegraphs.Length
-                    ? _telegraphs[Phase - 1] : DefaultTelegraph;
+                // ⚠ **패턴이 제 예고 시간을 들고 있으면 그것이 이긴다.**
+                //   페이즈 하나로 뭉뚱그리면 24개가 전부 같은 길이로 예고한다 —
+                //   예고 길이는 피할 수 있느냐를 가르는 값이라 패턴마다 달라야 한다.
+                //   킹핀 「처형 표식」 1.8초가 24개 중 가장 길고, 그 길이 자체가
+                //   "몸을 갈아탈 시간을 준다" 는 뜻이다.
+                TelegraphLeft = m.HasTelegraph ? m.TelegraphSeconds
+                    : _telegraphs != null && Phase - 1 < _telegraphs.Length
+                        ? _telegraphs[Phase - 1] : DefaultTelegraph;
+                TelegraphTotal = TelegraphLeft;
                 return null;   // 이번 프레임은 예고만 — 피할 시간을 준다
             }
             return null;

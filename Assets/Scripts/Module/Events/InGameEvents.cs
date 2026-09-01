@@ -17,14 +17,95 @@ namespace Game.Module.Events
         Elite,
         /// <summary>회복·보상 — 적이 없다</summary>
         Rest,
+        /// <summary>이벤트 — 적이 없다. 대신 값을 묻는다</summary>
+        Event,
+        /// <summary>상점 — 모아 둔 골드를 쓰는 자리</summary>
+        Shop,
         /// <summary>보스</summary>
         Boss,
     }
 
+    /// <summary>이벤트 방에 들어섰다. UI 가 선택 창을 띄운다.</summary>
+    public struct EventOfferEvent : IEvent
+    {
+        public string EventId;
+        public string Title;
+        public string Body;
+        public string AcceptLabel;
+        public string DeclineLabel;
+        /// <summary>대가 한 줄. 없으면 빈 문자열이다.</summary>
+        public string CostLabel;
+        /// <summary>대가를 못 치를 때 false — UI 가 수락 버튼을 잠근다.</summary>
+        public bool CanAfford;
+
+        /// <summary>못 고르는 이유. 비어 있으면 고를 수 있다.</summary>
+        public string BlockedReason;
+    }
+
+    /// <summary>이벤트가 끝났다. 무슨 일이 있었는지 한 줄로 알린다.</summary>
+    public struct EventResolvedEvent : IEvent
+    {
+        public string EventId;
+        public bool Accepted;
+        public string ResultLine;
+    }
+
+    /// <summary>상점에 들어섰다. UI 가 진열대를 띄운다.</summary>
+    public struct ShopOpenedEvent : IEvent
+    {
+        /// <summary>진열된 물건 이름 (마지막 칸은 회복이다)</summary>
+        public string[] Names;
+        public string[] Descs;
+        public int[] Prices;
+        /// <summary>각 칸을 지금 살 수 있는가 (골드·구매 한도까지 본 결과)</summary>
+        public bool[] CanBuy;
+        public int Gold;
+        public string LimitLine;
+    }
+
+    /// <summary>상점에서 하나를 샀다.</summary>
+    public struct ShopPurchasedEvent : IEvent
+    {
+        public int Index;
+        public string ResultLine;
+    }
+
+    /// <summary>진화를 하나 얻었다. 재료 카드는 그대로 남는다.</summary>
+    public struct EvolutionGainedEvent : IEvent
+    {
+        public string EvolutionId;
+        public string NameKr;
+        public int SlotsUsed;
+        public int SlotsMax;
+    }
+
+    /// <summary>판 안에서 쓰는 골드가 바뀌었다.</summary>
+    public struct RunGoldChangedEvent : IEvent
+    {
+        public int Gold;
+        public int Delta;
+
+        /// <summary>
+        /// 골드가 **어디서** 나왔는가 (월드 좌표). 동전이 그 자리에서 튀어
+        /// HUD 로 날아간다 — 숫자만 늘면 무엇을 얻었는지가 안 읽힌다.
+        ///
+        /// 상점처럼 나가는 골드에는 자리가 없다(<see cref="HasSource"/> = false).
+        /// 화면 좌표가 아니라 **월드 좌표**로 넘긴다 — 캔버스 렌더 모드가 바뀌어도
+        /// 받는 쪽에서 `InverseTransformPoint` 한 번이면 끝난다.
+        /// </summary>
+        public UnityEngine.Vector3 SourceWorld;
+        public bool HasSource;
+    }
+
     public struct RoomEnteredEvent : IEvent
     {
-        public int RoomIndex;
-        public int RoomTotal;
+        public int RoomIndex;      // 런 전체에서 몇 번째 방인가 (0-based)
+        public int RoomTotal;      // 런 전체 방 수
+        // 화면에는 **챕터와 그 안의 순번**을 보여 준다.
+        // 런 통짜 번호(45 중 13)만 보이면 챕터가 어디서 갈리는지 알 수가 없다.
+        public int Chapter;        // 1~3
+        public int StageInChapter; // 챕터 안에서 몇 번째 방인가 (1-based)
+        public int ChapterTotal;   // 이 챕터의 방 수
         public bool IsBossRoom;
         public RoomKind Kind;
     }
@@ -61,7 +142,12 @@ namespace Game.Module.Events
     public struct PossessedEvent : IEvent
     {
         public string PossessedHostKey;
-        public string DisplayName;
+        /// <summary>영문 이름 — HUD 큰 글씨. 무기 구분은 붙이지 않는다.</summary>
+        public string DisplayNameEn;
+        /// <summary>한글 이름 — 영문 아래 작은 줄.</summary>
+        public string DisplayNameKr;
+        /// <summary>이 몸의 숙련도. HUD 의 LV 배지가 이 값을 쓴다.</summary>
+        public int Mastery;
         public int HostHpMax;
     }
 
@@ -102,33 +188,6 @@ namespace Game.Module.Events
         public bool Blocked;
     }
 
-    /// <summary>
-    /// 시너지가 터졌다. 이전 호스트가 남긴 것을 지금 호스트가 이어받아 발동한 순간이다.
-    /// 처음 보는 조합이면 도감에 새로 오른다.
-    /// </summary>
-    public struct SynergyTriggeredEvent : IEvent
-    {
-        public string SynergyId;
-        public string Name;
-        public string FromHostKey;
-        public string ToHostKey;
-        /// <summary>이번 런에서 처음 터졌는가. 화면에 크게 알릴지가 갈린다.</summary>
-        public bool FirstTime;
-    }
-
-    /// <summary>
-    /// 유지 훅이 쌓이거나 사라졌다. 무엇을 버리게 되는지가 보여야
-    /// 교체를 망설이게 된다 (정본 RequiredFeedback — HUD meter required).
-    /// </summary>
-    public struct MaintainChangedEvent : IEvent
-    {
-        /// <summary>훅 이름(표식 릴레이·콤보 미터…). 비어 있으면 몸이 없다.</summary>
-        public string HookName;
-        public int Stack;
-        public int MaxStack;
-        /// <summary>다음 단계까지 0~1</summary>
-        public float Progress;
-    }
 
     /// <summary>
     /// 보스가 다음 페이즈로 넘어갔다. 행동이 바뀌는 순간이라 화면이 알려야 한다.
@@ -142,20 +201,10 @@ namespace Game.Module.Events
     }
 
     /// <summary>
-    /// 새 웨이브가 나왔다. 방을 비운 줄 알았는데 또 나오는 것이므로,
-    /// 알리지 않으면 버그로 보인다.
-    /// </summary>
-    public struct WaveStartedEvent : IEvent
-    {
-        public int Wave;
-        public int WaveTotal;
-    }
-
-    /// <summary>
     /// 전술 빙의 쿨다운이 흐른다. 남은 시간이 보이지 않으면 눌러 보고 나서야
     /// 못 쓴다는 것을 알게 된다.
     /// </summary>
-    public struct TacticalCooldownEvent : IEvent
+    public struct RepossessLockEvent : IEvent
     {
         public float Remain;
         public float Total;
@@ -167,6 +216,12 @@ namespace Game.Module.Events
     /// </summary>
     public struct BuffOfferEvent : IEvent
     {
+        /// <summary>
+        /// 각 칸이 **진화 재료**인가. UI 가 금테를 두른다.
+        /// 정본: 재료 카드는 3택1에 100% 끼워 넣고 눈에 띄게 표시한다.
+        /// </summary>
+        public bool[] IsEvolutionMaterial;
+
         public string[] OfferedKeys;
         /// <summary>이번에 오른 레벨. 화면이 "무엇 때문에 열렸는지"를 말할 수 있어야 한다.</summary>
         public int Level;

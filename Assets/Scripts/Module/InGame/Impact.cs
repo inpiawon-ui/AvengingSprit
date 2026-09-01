@@ -16,13 +16,31 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed class Impact : MonoBehaviour
     {
+        /// <summary>터짐 한 장의 시간. 짧게 튀어야 타격으로 읽힌다.</summary>
         private const float FrameSeconds = 0.06f;
+
+        /// <summary>
+        /// **상태 표시**(쉴드·스턴) 한 장의 시간.
+        ///
+        /// 터짐과 같은 0.06 초로 돌리면 초당 16장이라 화면이 정신없다. 이건 터지는 게
+        /// 아니라 **켜져 있다**를 알리는 것이라, 느리게 숨 쉬듯 도는 편이 읽힌다.
+        /// </summary>
+        private const float LoopFrameSeconds = 0.45f;
+
+        private float Step => _loop ? LoopFrameSeconds : FrameSeconds;
 
         private RectTransform _rect;
         private Image _image;
         private Sprite[] _frames;
         private float _timer;
         private int _index;
+
+        /// <summary>
+        /// 상태 표시(스턴 회전·쉴드 깜빡임)는 **끝나지 않는다.** 상태가 풀릴 때까지
+        /// 돌아야 하므로 마지막 장에서 꺼지지 않고 첫 장으로 돌아간다.
+        /// 터짐(`impact_*`)은 한 번 보여 주고 끝이라 기본값은 false 다.
+        /// </summary>
+        private bool _loop;
 
         public bool IsActive => gameObject.activeSelf;
 
@@ -44,7 +62,7 @@ namespace Game.Module.InGame
         /// <paramref name="size"/> 는 화면에 그려질 상자 크기다. 폭발은 피해 반경만큼
         /// 커야 한다 — 그림이 반경보다 작으면 "안 맞았는데 맞았다" 로 읽힌다.
         /// </summary>
-        public void Play(Vector2 at, Sprite[] frames, float size)
+        public void Play(Vector2 at, Sprite[] frames, float size, bool loop = false)
         {
             if (frames == null || frames.Length == 0 || frames[0] == null) return;
             _rect.anchoredPosition = at;
@@ -53,8 +71,22 @@ namespace Game.Module.InGame
             _index = 0;
             _image.sprite = frames[0];
             _image.color = Color.white;
-            _timer = FrameSeconds;
+            _timer = Step;
+            _loop = loop;
             gameObject.SetActive(true);
+        }
+
+        /// <summary>돌고 있는 표시를 몸을 따라 옮긴다.</summary>
+        public void MoveTo(Vector2 at)
+        {
+            if (IsActive) _rect.anchoredPosition = at;
+        }
+
+        /// <summary>상태가 풀렸다. 돌던 것을 세우고 자리를 풀에 돌려준다.</summary>
+        public void Stop()
+        {
+            _loop = false;
+            gameObject.SetActive(false);
         }
 
         public void Tick(float dt)
@@ -66,11 +98,15 @@ namespace Game.Module.InGame
             _index++;
             if (_frames == null || _index >= _frames.Length || _frames[_index] == null)
             {
-                gameObject.SetActive(false);
-                return;
+                if (!_loop || _frames == null || _frames.Length == 0 || _frames[0] == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                _index = 0;   // 상태 표시는 첫 장으로 돌아가 계속 돈다
             }
             _image.sprite = _frames[_index];
-            _timer += FrameSeconds;
+            _timer += Step;
         }
     }
 }

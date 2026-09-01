@@ -37,15 +37,68 @@ namespace Game.User
         UniTask LoadAsync();
         UniTask SaveAsync();
 
-        /// <summary>진행도로 해금 여부를 평가한다. 저장하지 않고 매번 계산한다.</summary>
+        /// <summary>
+        /// 봉인에서 풀렸는가 — **숙련도 ≥ 1 이 곧 해제다.** 저장하지 않고 매번 평가한다.
+        /// 로비에서 고를 수 있는가를 뜻하며, 전장에서의 빙의 가능 여부와는 다르다.
+        /// </summary>
         bool IsHostUnlocked(HostEntry host);
+
+        /// <summary>그 몸의 숙련도 Lv (0 = 봉인). 스킬은 이 값만 본다.</summary>
+        int GetMastery(string hostKey);
+
+        /// <summary>
+        /// 그 몸의 **스킬이** 봉인돼 있는가(숙련도 0). 몸을 쓰는 것 자체는 막지 않는다.
+        /// </summary>
+        bool IsSkillSealed(string hostKey);
+
+        /// <summary>이번 판을 유령으로 시작하는가. 판 한정 — 저장하지 않는다.</summary>
+        bool StartAsGhost { get; set; }
+
+        /// <summary>이 몸을 데려갈 골드가 있는가.</summary>
+        bool CanAffordHost(HostEntry host);
+
+        /// <summary>몸값을 치른다. 판을 시작하는 순간 한 번만 부른다.</summary>
+        bool PayHostEntry(HostEntry host);
+
+        /// <summary>다음 고스트 레벨을 살 골드가 있는가.</summary>
+        bool CanBuyGhostLevel { get; }
+
+        /// <summary>골드로 다음 고스트 레벨을 산다.</summary>
+        bool BuyGhostLevel();
+
+        /// <summary>그 몸의 파편 수.</summary>
+        int GetShards(string hostKey);
+
+        /// <summary>그 몸을 잡거나 잃었을 때 나오는 파편 수. 등급이 값을 정한다.</summary>
+        int ShardDropFor(string hostKey, bool lostWhilePossessing);
+
+        /// <summary>숙련도 상한. `GameConfig` 의 파편 곡선 길이가 곧 상한이다.</summary>
+        int MasteryMax { get; }
+
+        /// <summary>이 몸의 다음 단계에 드는 파편 (등급 배수 포함). 0 이면 만렙.</summary>
+        int MasteryCost(string hostKey);
+
+        /// <summary>고스트 레벨 상한.</summary>
+        int GhostLevelMax { get; }
+
+        /// <summary>Lv → 다음 레벨 골드. 0 이면 상한.</summary>
+        int GhostLevelCost(int level);
+
+        /// <summary>파편을 준다.</summary>
+        void AddShards(string hostKey, int amount);
+
+        /// <summary>파편을 쓰고 숙련도를 한 단계 올린다. 봉인 해제도 같은 동작이다.</summary>
+        bool SpendShards(string hostKey, int cost);
 
         IReadOnlyList<HostEntry> AllHosts { get; }
 
         /// <summary>호스트 선택 화면에 내보낼 몸. 전투 전용 배우(방패병·센서드론·엘리트)는 빠진다.</summary>
         IReadOnlyList<HostEntry> PlayableHosts { get; }
         HostEntry GetHost(string hostKey);
-        UltimateEntry GetUltimate(string ultimateKey);
+        ActiveSkillEntry GetActiveSkill(string activeSkillKey);
+
+        /// <summary>패시브 스킬 조회. 없으면 null — 23명 중 12명은 패시브가 없다.</summary>
+        PassiveSkillEntry GetPassiveSkill(string passiveSkillKey);
 
         /// <summary>보유 호스트 수 / 전체. 하단 `보유 HOST n/12` 표시용.</summary>
         int OwnedHostCount { get; }

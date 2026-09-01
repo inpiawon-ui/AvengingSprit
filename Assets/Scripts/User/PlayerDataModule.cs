@@ -22,7 +22,9 @@ namespace Game.User
     public sealed class PlayerDataModule : IModule
     {
         private const string HostTableAddress     = "TableData/HostTable";
-        private const string UltimateTableAddress = "TableData/UltimateTable";
+        private const string ActiveSkillTableAddress = "TableData/ActiveSkillTable";
+        private const string PassiveSkillTableAddress = "TableData/PassiveSkillTable";
+        private const string GameConfigAddress   = "TableData/GameConfig";
 
         private PlayerDataService _service;
 
@@ -50,11 +52,16 @@ namespace Game.User
         {
             var res = CoreModule.Get<IResourceManager>();
             HostTable hosts = null;
-            UltimateTable ultimates = null;
+            ActiveSkillTable activeSkills = null;
+            PassiveSkillTable passiveSkills = null;
             try
             {
                 hosts = await res.LoadAsync<HostTable>(HostTableAddress);
-                ultimates = await res.LoadAsync<UltimateTable>(UltimateTableAddress);
+                activeSkills = await res.LoadAsync<ActiveSkillTable>(ActiveSkillTableAddress);
+                // 패시브는 아직 표가 없을 수 있다. 없다고 로비가 멈추면 안 되므로
+                // 실패해도 null 로 두고 넘어간다 — 카드는 "패시브 없음" 으로 그린다.
+                try { passiveSkills = await res.LoadAsync<PassiveSkillTable>(PassiveSkillTableAddress); }
+                catch { passiveSkills = null; }
             }
             catch (Exception e)
             {
@@ -70,7 +77,13 @@ namespace Game.User
 
             var bus  = CoreModule.Get<IEventBus>();
             var data = CoreModule.Get<IDataManager>();
-            _service = new PlayerDataService(new LocalUserDataRepository(data), bus, hosts, ultimates);
+            GameConfig config = null;
+            // 성장 수치(파편 곡선·등급 배수·드롭·고스트 상한)의 단일 출처다.
+            // 없어도 로비는 돌아간다 — 안전한 기본값으로 떨어진다.
+            try { config = await res.LoadAsync<GameConfig>(GameConfigAddress); }
+            catch (Exception e) { Debug.LogWarning($"[PlayerDataModule] GameConfig 없음 — 기본값으로 간다. {e.Message}"); }
+
+            _service = new PlayerDataService(new LocalUserDataRepository(data), bus, hosts, activeSkills, passiveSkills, config);
             CoreModule.Unregister<IPlayerDataService>();
             CoreModule.Register<IPlayerDataService>(_service);
 

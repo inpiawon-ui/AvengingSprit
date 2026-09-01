@@ -86,8 +86,7 @@ namespace Game.EditorTools
 
             int spawnTotal = rooms.Sum(r => ((SpawnEntry[])GetField(r, "_spawns")).Length);
             int objTotal = rooms.Sum(r => ((ObjectEntry[])GetField(r, "_objects")).Length);
-            int waveTotal = rooms.Sum(r => ((WaveEntry[])GetField(r, "_waves")).Length);
-            Debug.Log($"[Canon] 방 {rooms.Count}개 · 스폰 {spawnTotal}개 · 웨이브 {waveTotal}개 "
+            Debug.Log($"[Canon] 방 {rooms.Count}개 · 스폰 {spawnTotal}개 "
                       + $"· 지형지물 {objTotal}개 → {OutPath} "
                       + $"(주소 {Address}, 경고 {warnings.Count}건)");
         }
@@ -234,7 +233,6 @@ namespace Game.EditorTools
                                    + $"({x:0.##}, {y:0.##}) / {w}×{h}");
 
                     var s = new SpawnEntry();
-                    SetField(s, "_wave", (int)F(r, spF, "WaveIndex"));
                     SetField(s, "_spawnId", S(r, spF, "SpawnID"));
                     SetField(s, "_actorId", actor);
                     SetField(s, "_at", new Vector2(x, y));
@@ -245,20 +243,6 @@ namespace Game.EditorTools
                     list.Add(s);
                 }
                 SetField(room, "_spawns", list.ToArray());
-
-                // 웨이브
-                var wl = new List<WaveEntry>();
-                foreach (var r in waves)
-                {
-                    if (S(r, wvF, "RoomID") != id) continue;
-                    var e = new WaveEntry();
-                    SetField(e, "_index", (int)F(r, wvF, "WaveIndex"));
-                    SetField(e, "_startDelay", F(r, wvF, "StartDelay"));
-                    SetField(e, "_composition", S(r, wvF, "Composition"));
-                    SetField(e, "_clearRule", S(r, wvF, "ClearRule"));
-                    wl.Add(e);
-                }
-                SetField(room, "_waves", wl.ToArray());
 
                 // 지형지물. 계약에 스키마가 없는 컬렉션이라 열 위치로 읽는다.
                 //   [RoomID, ObjectID, Kind, X, Y, W, H,
@@ -285,19 +269,6 @@ namespace Game.EditorTools
                 }
                 SetField(room, "_objects", ol.ToArray());
 
-                // 방 타입은 22가지나 되고 이름만으로는 전투 방인지 알 수 없다
-                // (Recovery·Route Choice·Build Choice 는 원래 적이 없다).
-                // 대신 **웨이브가 있는데 스폰이 없는** 경우만 잡는다 — 그건 자기모순이다.
-                if (wl.Count > 0 && list.Count == 0)
-                    warnings.Add($"{id}({Str(lay[2])}): 웨이브는 있는데 적 스폰이 없다");
-
-                // 웨이브 표와 실제 스폰이 어긋나는 방. 정본 자체의 불일치라 고치지 않고
-                // 알리기만 한다 — 런타임은 스폰만 보므로 동작에는 영향이 없다.
-                int wTable = wl.Count == 0 ? 1 : wl.Max(w => (int)GetField(w, "_index"));
-                int wSpawn = list.Count == 0 ? 1 : list.Max(s => (int)GetField(s, "_wave"));
-                if (wTable > wSpawn)
-                    warnings.Add($"{id}: 웨이브 표는 {wTable}웨이브인데 스폰은 {wSpawn}웨이브뿐이다 "
-                                 + "— 스폰을 따른다");
 
                 result.Add(room);
             }
@@ -420,7 +391,7 @@ namespace Game.EditorTools
         // 90 이라 한 갱스터의 체력이 264 가 되는 식으로 전 배우가 2~3배 어긋나 있었다.
         // 이제 정본 값을 **그대로** 쓴다.
         //
-        // 손으로 정한 것(이름·그림·얼티밋·해금 조건)은 건드리지 않는다. 정본이
+        // 손으로 정한 것(이름·그림·액티브 스킬·해금 조건)은 건드리지 않는다. 정본이
         // 권위를 갖는 열만 덮어쓴다.
         // ─────────────────────────────────────────────────────────
 
@@ -571,7 +542,6 @@ namespace Game.EditorTools
                 SetField(made, "_hostKey", stand.HostKey);
                 SetField(made, "_nameEn", stand.ActorId);
                 SetField(made, "_nameKr", stand.NameKr);
-                SetField(made, "_role", "전투 전용");
                 SetField(made, "_enemyId", stand.ActorId);
                 SetField(made, "_spriteKey", stand.SpriteKey);
                 SetField(made, "_actorOnly", true);
@@ -579,7 +549,7 @@ namespace Game.EditorTools
                                                           : Game.Character.AttackKind.Single);
                 // 표시 스탯은 정본 실수치가 있으면 쓰이지 않는다. 0 이면 UI 가 빈 막대를 그리므로 중간값을 둔다.
                 SetField(made, "_hp", 50); SetField(made, "_atk", 50);
-                SetField(made, "_spd", 50); SetField(made, "_dash", 50);
+                SetField(made, "_spd", 50); SetField(made, "_atkSpeed", 50);
                 if (stand.Range > 0f)
                 {
                     SetField(made, "_canonRange", stand.Range);
