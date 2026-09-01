@@ -1,0 +1,799 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "finalLockStatus": "PASS",
+  "validationStatus": "PASS",
+  "files": [
+    {
+      "fileName": "B01_Crusher.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B01_Crusher.svg",
+      "checksum": "6e51fb5f97b18d3474a0ad5ce302e71b0547667a5f98f332a470892b79d89e43",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "B02_Guardian.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B02_Guardian.svg",
+      "checksum": "59602e3a1bbd4867656f65d6a2904e784992db8a396dc4e0d7225ef12f6788b0",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "B03_Kingpin.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B03_Kingpin.svg",
+      "checksum": "7ae7deff23f98c0330b83a255107c67c9a6f37b1a5a5807a5ef7fa18a60807bd",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "B04_Python.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B04_Python.svg",
+      "checksum": "0bb6edd9904e9e17a028907739519117428c586397a739a227093dcf17afdac2",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "B05_Robot_Snakes.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B05_Robot_Snakes.svg",
+      "checksum": "6e9aae776ee8f3d5785dd6da81571efa0bdca1d82e6ab3040df5f3979273e972",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "B06_Sludge.svg",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/B06_Sludge.svg",
+      "checksum": "5313fcd83f3a430826e65dee4e2b668af2296075f13041b42044de11121a7d85",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "BOSS_PROGRESSION_OVERVIEW.md",
+      "version": "v3.3",
+      "purpose": "BOSS_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "BOSS_DESIGN_BOOK/BOSS_PROGRESSION_OVERVIEW.md",
+      "checksum": "45ca1994ef4b72dc6825b2773c404749f57514cce68752977a08b2db2207fc67",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "CARD_ACQUISITION_GUIDE.md",
+      "version": "v3.3",
+      "purpose": "GUIDES",
+      "status": "ACTIVE",
+      "relativePath": "GUIDES/CARD_ACQUISITION_GUIDE.md",
+      "checksum": "c662692b457658e2333845d95c990cce931430f78ad0e43c58ea55d9e32c76d6",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "UNITY_HANDOFF.md",
+      "version": "v3.3",
+      "purpose": "GUIDES",
+      "status": "ACTIVE",
+      "relativePath": "GUIDES/UNITY_HANDOFF.md",
+      "checksum": "da42ff6213d6713b9de094f995f61b92b678d61e6089f82f13f1968293dc1834",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "CHAPTER_ROUTE_MAPS.md",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/CHAPTER_ROUTE_MAPS.md",
+      "checksum": "3d64ce21b73ec3c80672a4ad811d8c64c4624601c3ef5dc3fe01fba43a365ce6",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_001.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_001.svg",
+      "checksum": "29190a111953198c18e0b9fdb16327c6b591542a19ba83580da004642f3bb3e0",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_002.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_002.svg",
+      "checksum": "f0613fc5ef741b9e564d1fa8f192fd0612f4f09e97acdd00b9f643c6dafd7315",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_003.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_003.svg",
+      "checksum": "a2bff572c81437a8de75ba19c98cca30b8cb5cf935f65642ccbff3fd9f89f5ab",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_004.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_004.svg",
+      "checksum": "147aa2d5e7ccd6011ce3e6e38d67528ec1f8e042812c1a1eea57f5b6f5fb7f01",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_005.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_005.svg",
+      "checksum": "094619cecd80f6c7c593cb7e5eb3df1dd603a28ae4cbd298ff90c6b0f34ac360",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_006.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_006.svg",
+      "checksum": "233223adc352d7daf46d20a2202c0b2daea8bd01d8c95cede6d41079bccdd1a5",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_007.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_007.svg",
+      "checksum": "c68fffccc84b4439496a49e83b9dbd326260b26801969683b1a5df3e574f1f21",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_008.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_008.svg",
+      "checksum": "e9e709a4aabd2b17ec57716093c37098831ff582aa545b846e2e3990fbea21a0",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_009.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_009.svg",
+      "checksum": "50182f5199ab29fa6696ed38a9b35f7b552dc8c17683dbefea6fcbe0e490bb95",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_010.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_010.svg",
+      "checksum": "9a0d40f78ef92c7047b6dcba4c076450f8fcc1db2af261ff0d36adf7da619a25",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_011.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_011.svg",
+      "checksum": "40af066b1a8ea39076c98d8ad8be6d91f7ffc0bde92f92deb486960f21e5aca4",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH1_012.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH1_012.svg",
+      "checksum": "ead94c792c78539a179ee875f23676711ef5a46d79048f16dec6c3bb3ec03f55",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_001.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_001.svg",
+      "checksum": "275241022bb19de16203a7ca46b2b17497cdd51186379348e692d4f5c992bb53",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_002.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_002.svg",
+      "checksum": "c1bf29a26e1f009979d3787a400fe9743a2acbbe141714242e81e8bcb90d0979",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_003.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_003.svg",
+      "checksum": "51287d76d6ad6d06bef9fcb5b62a345dd1635c42d22530302511df7cdd9ed4f2",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_004.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_004.svg",
+      "checksum": "63880aff48962fb966e0876bfc600ae19b91d9b7e9895336968270ebbbf1f6e8",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_005.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_005.svg",
+      "checksum": "9cb866c43c368f8894ef4624367de9f8adfa31637ac8a74ee731244ce57a7946",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_006.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_006.svg",
+      "checksum": "b45f438e6224fb49d01f6c4dbd08cf83ce2da54ee51ac5b38f77a82206f60755",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_007.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_007.svg",
+      "checksum": "e512e20a978ddfc9d973a5e125d928ade7e819b72c06dec8e187ba44273f1cda",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_008.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_008.svg",
+      "checksum": "49cc0b1c42e3d52bc4907c763e5d76c2b33edc73ce7ee3937bef6a70cabc64cd",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_009.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_009.svg",
+      "checksum": "223e8a692d537eac382a09c6df3fa586970e921761c2b757efd6129161a90c30",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_010.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_010.svg",
+      "checksum": "34dec28e8a744baa6b58a4f0c2ee90cd06bb0a9cf82ec9760bae514e2c318091",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_011.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_011.svg",
+      "checksum": "5acac4ecb76641da1f848f8694dc375da4319e59f2c122aa0bfd8f494cb48955",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_012.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_012.svg",
+      "checksum": "ece4698d855b050cc5ea2bc5bb5309183d4cf115f906766559875c2493fbcdb5",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_013.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_013.svg",
+      "checksum": "ee86aabd0b91cfe0ab9716591b8158003b50492a232fa22c4cd3e32f6170c4b4",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_014.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_014.svg",
+      "checksum": "4c6d1c20c16fe541c53132425146e494bf531e24f772376a4498f84094c9da0f",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_015.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_015.svg",
+      "checksum": "3297786194a8dbce05c60de7e3fde72cab9fe5c7a75ff0f3644adbf624d44f28",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH2_016.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH2_016.svg",
+      "checksum": "e3ed41fb653eb6c8ee08143d09889ebc883019f108264517ece6d0eedc325de1",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_001.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_001.svg",
+      "checksum": "ed83626cf24fc1d238938fbe3248503894f097cb7ca5a8baf569bdb5c4d1499a",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_002.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_002.svg",
+      "checksum": "de9c3d77b8b2c2f1488768b5bbc88b75cf547e6405d8cdbaa99bf628ddfb57a0",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_003.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_003.svg",
+      "checksum": "e97597ef4823ee7a3e6743706acefee872c6228fbe7cd54c74d7bda6e090ed91",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_004.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_004.svg",
+      "checksum": "6abf3fa03555c5002616f10ed215edd898cdf7e45bf31be53229c2a2bb9bb884",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_005.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_005.svg",
+      "checksum": "c41e83a01af7a8bcc1645dc2ed16aed2103d5e340ed21233449a494d0ba9dc92",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_006.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_006.svg",
+      "checksum": "dda40b066a1d1040c58243cf8ecd1ef4e90773cc82b5d9ff9579a9f20138d108",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_007.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_007.svg",
+      "checksum": "3433202d8b9b8b2599f941d834a460d0e481c523ed697b3c3bdb81f764c27c0f",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_008.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_008.svg",
+      "checksum": "c37936b6291c6dcf542308e2683b0f3f1d73c859188b5ca75e62d526b85e5738",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_009.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_009.svg",
+      "checksum": "0baa39526ac44c9fdfef4211c48ee2cb79ea95f6eece6c532066fb1ddd8e102c",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_010.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_010.svg",
+      "checksum": "ca8870ac008044e11672278224f9d7f46bc88a169784446b28f9c4fcd18b1887",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_011.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_011.svg",
+      "checksum": "e3e728858ffea1307619f65c3eb61e2155b02e922c6459e6a49952e1a2059548",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_012.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_012.svg",
+      "checksum": "5e468801171ba5781271aabf48dd94041520826cf9e1ab4f1f0cb1052b484929",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_013.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_013.svg",
+      "checksum": "d31a4157cefd21a894f63a430f99edd9d291c2446c8c376aacd6cb0a0c2c3249",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_014.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_014.svg",
+      "checksum": "532dc5f5ed4889f4bf113dc773bf4ac7fd235a358290682549a0977583373033",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_015.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_015.svg",
+      "checksum": "e06106b8e8b63278a19568c7f1abe38dff9a3f98e06cb9f9456371198979f101",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_016.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_016.svg",
+      "checksum": "9339d5a6a220f7a97f50969bc55daadfcd2d2843eea5f5a6c361169321ce15b4",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_017.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_017.svg",
+      "checksum": "e5ce58ab7a4c860672d4baa9ea6a3c3b919490c441c86680102f79b1d5d172e2",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_018.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_018.svg",
+      "checksum": "7fcf7d821f753a1bfa6b82b70772bbed24100fb93dc1cd9f650413f1cd2a352a",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_019.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_019.svg",
+      "checksum": "9c9957fbc9804d75fa4b16d873c013329164c671ea9fb1076aeea22c02e4fac0",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "ROOM_CH3_020.svg",
+      "version": "v3.3",
+      "purpose": "LEVEL_DESIGN_BOOK",
+      "status": "ACTIVE",
+      "relativePath": "LEVEL_DESIGN_BOOK/ROOM_CH3_020.svg",
+      "checksum": "8de11a8605e19fe7edb6905fd33091789e0b74f002bc3ef4fee4daede143f510",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "CARD_BUILD_EVOLUTION_MASTER_v2.3_CHAPTER_SYNC.xlsx",
+      "version": "v2.3",
+      "purpose": "MASTER",
+      "status": "ACTIVE",
+      "relativePath": "MASTER/CARD_BUILD_EVOLUTION_MASTER_v2.3_CHAPTER_SYNC.xlsx",
+      "checksum": "ca6c5b54480dc614443219400f34ecc6fedc930bb40d779401b1beea47184aea",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "CARD_BUILD_EVOLUTION_MASTER_v2.3_CHAPTER_SYNC.xlsx.inspect.ndjson",
+      "version": "v2.3",
+      "purpose": "MASTER",
+      "status": "ACTIVE",
+      "relativePath": "MASTER/CARD_BUILD_EVOLUTION_MASTER_v2.3_CHAPTER_SYNC.xlsx.inspect.ndjson",
+      "checksum": "21c4708b202e9449cebdc3905e483eb8bebd0c7d9c3c65fad6e2384ff8e1bd35",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "CH01_03_VERTICAL_SLICE_MASTER_v3.3_FINAL_LOCK.xlsx",
+      "version": "v3.3",
+      "purpose": "MASTER",
+      "status": "ACTIVE",
+      "relativePath": "MASTER/CH01_03_VERTICAL_SLICE_MASTER_v3.3_FINAL_LOCK.xlsx",
+      "checksum": "18bfe88fecb5820b5a29dadfef51fe63e3bbc4315f0b50957cc53253022c7db7",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "CH01_03_VERTICAL_SLICE_MASTER_v3.3_FINAL_LOCK.xlsx.inspect.ndjson",
+      "version": "v3.3",
+      "purpose": "MASTER",
+      "status": "ACTIVE",
+      "relativePath": "MASTER/CH01_03_VERTICAL_SLICE_MASTER_v3.3_FINAL_LOCK.xlsx.inspect.ndjson",
+      "checksum": "03ff3e3fdb37abdbbdc7be80dbc2156269126197bb1ccf5453f3823f5ea0417e",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "CROSS_FILE_VALIDATION_REPORT.json",
+      "version": "v3.3",
+      "purpose": "REPORTS",
+      "status": "ACTIVE",
+      "relativePath": "REPORTS/CROSS_FILE_VALIDATION_REPORT.json",
+      "checksum": "3908aac1fa724cd72987de7bc2823c793dd6b0459ddb3a6c975434483dadbb1b",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "FINAL_LOCK_REPORT.md",
+      "version": "v3.3",
+      "purpose": "REPORTS",
+      "status": "ACTIVE",
+      "relativePath": "REPORTS/FINAL_LOCK_REPORT.md",
+      "checksum": "9320049d10e4f81d666c074fa5a6d7395612c2f1e2910b6dc6d5f007b9e84f5c",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "PRODUCTION_FEASIBILITY.md",
+      "version": "v3.3",
+      "purpose": "REPORTS",
+      "status": "ACTIVE",
+      "relativePath": "REPORTS/PRODUCTION_FEASIBILITY.md",
+      "checksum": "229542fac3d7c75a87c6894176311fa85dae4ca5d91c4804606204e187241deb",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "SIMULATION_REPORT.md",
+      "version": "v3.3",
+      "purpose": "REPORTS",
+      "status": "ACTIVE",
+      "relativePath": "REPORTS/SIMULATION_REPORT.md",
+      "checksum": "c49cc4d15f785bc4c5a02ca75d11b889c83c47f67f739cc425adbe042c31f336",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "version": "v3.3",
+      "purpose": "SOURCE",
+      "status": "ACTIVE",
+      "relativePath": "SOURCE/Arcade - Avenging Spirit - Enemies(3).zip",
+      "checksum": "f66600a50fff4b466c8e384f926b60b1df07e70e6cce68f1f061201bb0fce840",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "RESOURCE_ARCHIVE_MANIFEST.json",
+      "version": "v3.3",
+      "purpose": "SOURCE",
+      "status": "ACTIVE",
+      "relativePath": "SOURCE/RESOURCE_ARCHIVE_MANIFEST.json",
+      "checksum": "cd0c259655a2f254179cbda51eda45536c9b66a93b553419e460b4d8c3604f7b",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "SOURCE_TRACEABILITY.md",
+      "version": "v3.3",
+      "purpose": "SOURCE",
+      "status": "ACTIVE",
+      "relativePath": "SOURCE/SOURCE_TRACEABILITY.md",
+      "checksum": "ed95be4512497182314ed1fe3ddfcb1fc092de6def4269ed5e2e920775574e2d",
+      "sourceOfTruthFlag": false
+    },
+    {
+      "fileName": "BOSS_ATTACK_RUNTIME.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/BOSS_ATTACK_RUNTIME.json",
+      "checksum": "71321f0a859fc7ed3a072717aa89287b09012c2d9d0490228c469c2a9256f233",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "BOSS_EVOLUTION_COMPATIBILITY.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/BOSS_EVOLUTION_COMPATIBILITY.json",
+      "checksum": "3a4afdbab7e1af383dbad67c051368e031f1fa04e903fa87ce8ad4be1071b73e",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "BOSS_HOST_COMPATIBILITY.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/BOSS_HOST_COMPATIBILITY.json",
+      "checksum": "ac8217ee67bd09bc1107d79a10fff54cabb58e30e75ab4a003bf5c02fb930666",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "BOSS_RUNTIME.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/BOSS_RUNTIME.json",
+      "checksum": "9bc5d1ca3e24c59adc4198eebbb3ffd8af757e8c6f68cd8c9a5eb753643b6ba0",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "CARD_ACQUISITION_TABLES.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/CARD_ACQUISITION_TABLES.json",
+      "checksum": "6f811e4a2b5563b4e53ceb14609f7734aa2253fb98fecb9995cc6f1bfdff9c11",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ELITE_RUNTIME.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ELITE_RUNTIME.json",
+      "checksum": "e0c8d9c44c15b44311f7868d46b75160234cbfb8c224029a06d898011e52b8b0",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ENEMY_RUNTIME.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ENEMY_RUNTIME.json",
+      "checksum": "3417666f910ed8c28ca4b7ae74610664ae06edcf4c92ad66d00bbd32b774c44d",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "EVENT_MASTER.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/EVENT_MASTER.json",
+      "checksum": "ecf55be588fd3165180995aff465b61c7bb7df5921aa21d0bca983da9665e1c9",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "EVENT_POOL.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/EVENT_POOL.json",
+      "checksum": "e4b0e8760e8598f92476f1c5aa6cf658aab7bdf82123c45cafa6ee23f7b0f908",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "RESOURCE_CENSUS.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/RESOURCE_CENSUS.json",
+      "checksum": "549c0b62f106de60ac516f2cb1e97b8c5dd3b731cebfbc0d1c8a43a4250335cf",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "REST_MASTER.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/REST_MASTER.json",
+      "checksum": "deb8bdc5bd1aebe2b8dad993959e849e3c2e3872786c54e24d9fa10ffac9ebe7",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_GEOMETRY.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_GEOMETRY.json",
+      "checksum": "a5e77ff885263b490dd539947b0b23a7166856c84807ba789c211c3dea5c9d18",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_MASTER.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_MASTER.json",
+      "checksum": "9fadb2a93ddac9bfd34110f75c83d3c41bad34c9a9d5be64559c7ddb40011d96",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_REWARD.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_REWARD.json",
+      "checksum": "bc606fadd77c0d837f6df36ea58f79e3a3c68c3474e7dd49b20b4cb9095514db",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_ROUTE.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_ROUTE.json",
+      "checksum": "c6658d6e182a534b92fa0360510cb0c014656cf09422101368aae2d19c3dd6b1",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_SPAWN.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_SPAWN.json",
+      "checksum": "fc2c9657a457474ad472d9cadefa8cd4fe2bd11693f14dc25d79f11c4b9c2ee5",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "ROOM_WAVE.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/ROOM_WAVE.json",
+      "checksum": "aadf8f13934858bb3535739788f7205ac3d04975c437852c4a9fb0b508d35660",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "SHOP_INVENTORY.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/SHOP_INVENTORY.json",
+      "checksum": "5e316c00ceea0095d159e960df014fa624dad6a79aca85e4a84527b08cde8881",
+      "sourceOfTruthFlag": true
+    },
+    {
+      "fileName": "SHOP_MASTER.json",
+      "version": "v3.3",
+      "purpose": "UNITY_RUNTIME",
+      "status": "ACTIVE",
+      "relativePath": "UNITY_RUNTIME/SHOP_MASTER.json",
+      "checksum": "05a5dfdf4ab87fc5ec1671e4e7b99c1f1acff2afa115062944bf6ccf20a8fdcc",
+      "sourceOfTruthFlag": true
+    }
+  ]
+}

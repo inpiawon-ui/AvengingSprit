@@ -1,0 +1,71 @@
+{
+  "validatedAt": "2026-08-19T22:30:00+09:00",
+  "scope": "ACTUAL STAGED PACKAGE; all XLSX cells + runtime JSON + graph traversal + Boss rooms + 138/66 matrices + visuals + original 39-entry ZIP",
+  "status": "PASS",
+  "critical": {
+    "DuplicateID": 0,
+    "MissingRef": 0,
+    "StaleRef": 0,
+    "ValueMismatch": 0,
+    "RouteError": 0,
+    "TraversalMismatch": 0,
+    "BossRoomMismatch": 0,
+    "BossHostMatrixMissing": 0,
+    "BossEvolutionMatrixMissing": 0,
+    "CoordinateMismatch": 0,
+    "HiddenHostRuntimeRef": 0,
+    "DeprecatedSystemRef": 0,
+    "VisualMismatch": 0,
+    "ChapterHostLeak": 0,
+    "IdenticalWaveClone": 0,
+    "ShopRarityMismatch": 0,
+    "BuildSlotOverflow": 0,
+    "BossPatternClone": 0,
+    "ResourceArchiveMismatch": 0,
+    "ResourceMappingMissing": 0,
+    "ResourceMappingDuplicate": 0,
+    "HiddenResourceRuntimeUse": 0
+  },
+  "counts": {
+    "rooms": 48,
+    "routes": 48,
+    "spawns": 345,
+    "bosses": 6,
+    "bossHostCases": 138,
+    "bossEvolutionCases": 66,
+    "archiveEntries": 39,
+    "activeResourceMappings": 29,
+    "hiddenExcludedResources": 2,
+    "roomPages": 48,
+    "bossPages": 6,
+    "multiWaveRooms": 19,
+    "identicalWaveRooms": 0,
+    "traversal": {
+      "CH1": {
+        "min": 11,
+        "max": 12,
+        "avg": 11.5,
+        "pathCount": 2
+      },
+      "CH2": {
+        "min": 13,
+        "max": 15,
+        "avg": 14,
+        "pathCount": 6
+      },
+      "CH3": {
+        "min": 16,
+        "max": 18,
+        "avg": 17,
+        "pathCount": 12
+      }
+    },
+    "fullTraversal": {
+      "min": 40,
+      "max": 45,
+      "avg": 42.5
+    }
+  },
+  "notes": [],
+  "finalLockStatus": "PASS — CH1–3 DATA / LEVEL DESIGN FINAL LOCK; approved for Unity implementation"
+}

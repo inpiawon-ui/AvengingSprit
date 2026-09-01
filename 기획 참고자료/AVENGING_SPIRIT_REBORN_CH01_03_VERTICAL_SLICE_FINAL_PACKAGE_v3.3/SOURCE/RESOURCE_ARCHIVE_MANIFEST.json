@@ -1,0 +1,319 @@
+{
+  "archive": "Arcade - Avenging Spirit - Enemies(3).zip",
+  "entryCount": 39,
+  "integrity": "PASS",
+  "entries": [
+    {
+      "entryNo": 1,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Green).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H08",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 2,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Red).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H09",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 3,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Gangster (Gun).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H10",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 4,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Gangster (Tommy Gun).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H11",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 5,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Guru.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H12",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 6,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Hopper (Gun).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H13",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 7,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Hopper (Sub-Machine Gun).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H14",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 8,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Magician (Dark).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H15",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 9,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Magician (Light).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H16",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 10,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Ninja (Chain).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H17",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 11,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Ninja (Shuriken).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H18",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 12,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Robot.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H19",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 13,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Slugger.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H20",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 14,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - SnowWoman.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H21",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 15,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Vampire.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H22",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 16,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Crusher.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B01",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 17,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Guardian.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B02",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 18,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Kingpin.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B03",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 19,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Python.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B04",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 20,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Robot Snakes.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B05",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 21,
+      "archiveEntry": "Arcade - Avenging Spirit - Bosses - Sludge.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "B06",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 22,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Death.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H23",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 23,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Fonts.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 24,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - HUD.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 25,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Items & GO! Sign.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 26,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Prologue.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 27,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Stage End Cutscenes.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 28,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Start Cutscene.png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 29,
+      "archiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Title Screen (USA_JPN).png",
+      "classification": "SUPPORT_ART",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 30,
+      "archiveEntry": "Arcade - Avenging Spirit - Unused Content - Super Human.png",
+      "classification": "HIDDEN_EXCLUDED",
+      "mappedRuntimeID": "H25",
+      "runtimeUse": "EXCLUDED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 31,
+      "archiveEntry": "Arcade - Avenging Spirit - Playable Characters - Ghost.png",
+      "classification": "CORE_GHOST",
+      "mappedRuntimeID": "",
+      "runtimeUse": "INDEXED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 32,
+      "archiveEntry": "Arcade - Avenging Spirit - Playable Characters - Miss Darling _ Gennifer (The Girlfriend).png",
+      "classification": "HIDDEN_EXCLUDED",
+      "mappedRuntimeID": "H24",
+      "runtimeUse": "EXCLUDED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 33,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Amazon.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H01",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 34,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Amazon Elite.png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H02",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 35,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Grenade).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H03",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 36,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Laser).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H04",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 37,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Machine Gun).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H05",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 38,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Missiles Pack).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H06",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    },
+    {
+      "entryNo": 39,
+      "archiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Blue).png",
+      "classification": "ACTIVE_RUNTIME",
+      "mappedRuntimeID": "H07",
+      "runtimeUse": "USED",
+      "integrity": "VERIFIED"
+    }
+  ]
+}

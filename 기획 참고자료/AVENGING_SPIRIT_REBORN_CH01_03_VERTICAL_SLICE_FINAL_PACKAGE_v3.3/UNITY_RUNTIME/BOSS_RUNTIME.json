@@ -1,0 +1,89 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "BossID": "B01",
+      "Name": "Crusher",
+      "Chapter": "CH1",
+      "Gate": "MID",
+      "HP": 1650,
+      "Damage": 18,
+      "Signature": "Quake Fist",
+      "Counterplay": "STEP_BEHIND",
+      "RecommendedHosts": "H01|H02|H05",
+      "MovementModel": "Slow pursuit + committed charges",
+      "ArenaPressure": "Cracked floor lanes",
+      "PossessionOpportunity": "Stunned H01 after missed charge"
+    },
+    {
+      "BossID": "B02",
+      "Name": "Guardian",
+      "Chapter": "CH1",
+      "Gate": "FINAL",
+      "HP": 2400,
+      "Damage": 22,
+      "Signature": "Aegis Sweep",
+      "Counterplay": "CIRCLE_TO_BACK",
+      "RecommendedHosts": "H03|H04|H07",
+      "MovementModel": "Shield-facing pivot",
+      "ArenaPressure": "Rotating shield arc + safe rear cone",
+      "PossessionOpportunity": "H07 add after shield break"
+    },
+    {
+      "BossID": "B03",
+      "Name": "Kingpin",
+      "Chapter": "CH2",
+      "Gate": "MID",
+      "HP": 3150,
+      "Damage": 25,
+      "Signature": "Crossfire Command",
+      "Counterplay": "BREAK_FIRE_LINE",
+      "RecommendedHosts": "H08|H11|H14",
+      "MovementModel": "Retreats between cover nodes",
+      "ArenaPressure": "Crossfire lanes + marked execution zone",
+      "PossessionOpportunity": "H11 gunner add during reload"
+    },
+    {
+      "BossID": "B04",
+      "Name": "Python",
+      "Chapter": "CH2",
+      "Gate": "FINAL",
+      "HP": 4300,
+      "Damage": 29,
+      "Signature": "Constrict Spiral",
+      "Counterplay": "DASH_THROUGH_GAP",
+      "RecommendedHosts": "H09|H12|H15",
+      "MovementModel": "Coils around arena perimeter",
+      "ArenaPressure": "Shrinking ring with timed gap",
+      "PossessionOpportunity": "H12 captive released after coil break"
+    },
+    {
+      "BossID": "B05",
+      "Name": "Robot Snakes",
+      "Chapter": "CH3",
+      "Gate": "MID",
+      "HP": 5200,
+      "Damage": 33,
+      "Signature": "Alternating Rail",
+      "Counterplay": "SWITCH_LANE",
+      "RecommendedHosts": "H16|H18|H20",
+      "MovementModel": "Two linked heads on separate rails",
+      "ArenaPressure": "Alternating lane denial + cable hazard",
+      "PossessionOpportunity": "H19 repair unit after head disable"
+    },
+    {
+      "BossID": "B06",
+      "Name": "Sludge",
+      "Chapter": "CH3",
+      "Gate": "FINAL",
+      "HP": 6900,
+      "Damage": 37,
+      "Signature": "Toxic Collapse",
+      "Counterplay": "ROTATE_SAFE_ZONE",
+      "RecommendedHosts": "H17|H21|H23",
+      "MovementModel": "Amorphous flow toward clean ground",
+      "ArenaPressure": "Persistent sludge reshapes safe islands",
+      "PossessionOpportunity": "H21 frozen survivor after core expose"
+    }
+  ]
+}

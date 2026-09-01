@@ -1,0 +1,315 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "RuntimeID": "H01",
+      "ResourceName": "H01",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Amazon.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H02",
+      "ResourceName": "H02",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Amazon Elite.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H03",
+      "ResourceName": "H03",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Grenade).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H04",
+      "ResourceName": "H04",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Laser).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H05",
+      "ResourceName": "H05",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Machine Gun).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H06",
+      "ResourceName": "H06",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Commando (Missiles Pack).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H07",
+      "ResourceName": "H07",
+      "Category": "HOST_CH1",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Blue).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H08",
+      "ResourceName": "H08",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Green).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H09",
+      "ResourceName": "H09",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Dragon (Red).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H10",
+      "ResourceName": "H10",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Gangster (Gun).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H11",
+      "ResourceName": "H11",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Gangster (Tommy Gun).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H12",
+      "ResourceName": "H12",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Guru.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H13",
+      "ResourceName": "H13",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Hopper (Gun).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H14",
+      "ResourceName": "H14",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Hopper (Sub-Machine Gun).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H15",
+      "ResourceName": "H15",
+      "Category": "HOST_CH2",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Magician (Dark).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H16",
+      "ResourceName": "H16",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Magician (Light).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H17",
+      "ResourceName": "H17",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Ninja (Chain).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H18",
+      "ResourceName": "H18",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Ninja (Shuriken).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H19",
+      "ResourceName": "H19",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Robot.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H20",
+      "ResourceName": "H20",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Slugger.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H21",
+      "ResourceName": "H21",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - SnowWoman.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H22",
+      "ResourceName": "H22",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Enemies - Vampire.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H23",
+      "ResourceName": "H23",
+      "Category": "HOST_CH3",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Miscellaneous - Death.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B01",
+      "ResourceName": "Crusher",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Crusher.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B02",
+      "ResourceName": "Guardian",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Guardian.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B03",
+      "ResourceName": "Kingpin",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Kingpin.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B04",
+      "ResourceName": "Python",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Python.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B05",
+      "ResourceName": "Robot Snakes",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Robot Snakes.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "B06",
+      "ResourceName": "Sludge",
+      "Category": "BOSS",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Bosses - Sludge.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "ACTIVE",
+      "QA Note": "1:1 original ZIP mapping; runtime-enabled"
+    },
+    {
+      "RuntimeID": "H24",
+      "ResourceName": "Miss Darling / Gennifer",
+      "Category": "HIDDEN_HOST",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Playable Characters - Miss Darling _ Gennifer (The Girlfriend).png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "EXCLUDED",
+      "QA Note": "Original asset present; intentionally excluded from CH1–3 runtime"
+    },
+    {
+      "RuntimeID": "H25",
+      "ResourceName": "Super Human",
+      "Category": "HIDDEN_HOST",
+      "ExpectedArchive": "Arcade - Avenging Spirit - Enemies(3).zip",
+      "ArchiveEntry": "Arcade - Avenging Spirit - Unused Content - Super Human.png",
+      "SourceStatus": "VERIFIED",
+      "RuntimeStatus": "EXCLUDED",
+      "QA Note": "Original asset present; intentionally excluded from CH1–3 runtime"
+    }
+  ]
+}

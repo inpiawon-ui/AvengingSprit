@@ -1,0 +1,29 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "EliteID": "EL_CH1_01",
+      "Chapter": "CH1",
+      "BaseEnemy": "EN_05",
+      "Modifier": "BERSERK",
+      "TelegraphBonusSec": 0.2,
+      "RewardTable": "ELITE_RW_CH1"
+    },
+    {
+      "EliteID": "EL_CH2_01",
+      "Chapter": "CH2",
+      "BaseEnemy": "EN_12",
+      "Modifier": "WARDEN",
+      "TelegraphBonusSec": 0.15,
+      "RewardTable": "ELITE_RW_CH2"
+    },
+    {
+      "EliteID": "EL_CH3_01",
+      "Chapter": "CH3",
+      "BaseEnemy": "EN_20",
+      "Modifier": "VOID",
+      "TelegraphBonusSec": 0.1,
+      "RewardTable": "ELITE_RW_CH3"
+    }
+  ]
+}

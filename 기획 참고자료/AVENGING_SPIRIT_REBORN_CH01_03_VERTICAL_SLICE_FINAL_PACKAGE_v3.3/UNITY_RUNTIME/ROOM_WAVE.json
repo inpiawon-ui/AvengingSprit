@@ -1,0 +1,525 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "WaveID": "WAVE_CH1_001_1",
+      "RoomID": "ROOM_CH1_001",
+      "Wave": 1,
+      "EnemyCount": 4,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D1"
+    },
+    {
+      "WaveID": "WAVE_CH1_002_1",
+      "RoomID": "ROOM_CH1_002",
+      "Wave": 1,
+      "EnemyCount": 5,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D1"
+    },
+    {
+      "WaveID": "WAVE_CH1_002_2",
+      "RoomID": "ROOM_CH1_002",
+      "Wave": 2,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH1_D1"
+    },
+    {
+      "WaveID": "WAVE_CH1_003_1",
+      "RoomID": "ROOM_CH1_003",
+      "Wave": 1,
+      "EnemyCount": 3,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D1"
+    },
+    {
+      "WaveID": "WAVE_CH1_003_2",
+      "RoomID": "ROOM_CH1_003",
+      "Wave": 2,
+      "EnemyCount": 4,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH1_D1"
+    },
+    {
+      "WaveID": "WAVE_CH1_005_1",
+      "RoomID": "ROOM_CH1_005",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D2"
+    },
+    {
+      "WaveID": "WAVE_CH1_005_2",
+      "RoomID": "ROOM_CH1_005",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH1_D2"
+    },
+    {
+      "WaveID": "WAVE_CH1_006_1",
+      "RoomID": "ROOM_CH1_006",
+      "Wave": 1,
+      "EnemyCount": 4,
+      "EliteCount": 0,
+      "BossID": "B01",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D2"
+    },
+    {
+      "WaveID": "WAVE_CH1_008_1",
+      "RoomID": "ROOM_CH1_008",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D3"
+    },
+    {
+      "WaveID": "WAVE_CH1_008_2",
+      "RoomID": "ROOM_CH1_008",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH1_D3"
+    },
+    {
+      "WaveID": "WAVE_CH1_010_1",
+      "RoomID": "ROOM_CH1_010",
+      "Wave": 1,
+      "EnemyCount": 5,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D2"
+    },
+    {
+      "WaveID": "WAVE_CH1_010_2",
+      "RoomID": "ROOM_CH1_010",
+      "Wave": 2,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH1_D2"
+    },
+    {
+      "WaveID": "WAVE_CH1_011_1",
+      "RoomID": "ROOM_CH1_011",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D3"
+    },
+    {
+      "WaveID": "WAVE_CH1_011_2",
+      "RoomID": "ROOM_CH1_011",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH1_D3"
+    },
+    {
+      "WaveID": "WAVE_CH1_012_1",
+      "RoomID": "ROOM_CH1_012",
+      "Wave": 1,
+      "EnemyCount": 5,
+      "EliteCount": 0,
+      "BossID": "B02",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH1_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_001_1",
+      "RoomID": "ROOM_CH2_001",
+      "Wave": 1,
+      "EnemyCount": 5,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D2"
+    },
+    {
+      "WaveID": "WAVE_CH2_001_2",
+      "RoomID": "ROOM_CH2_001",
+      "Wave": 2,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH2_D2"
+    },
+    {
+      "WaveID": "WAVE_CH2_002_1",
+      "RoomID": "ROOM_CH2_002",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D2"
+    },
+    {
+      "WaveID": "WAVE_CH2_002_2",
+      "RoomID": "ROOM_CH2_002",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH2_D2"
+    },
+    {
+      "WaveID": "WAVE_CH2_004_1",
+      "RoomID": "ROOM_CH2_004",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_004_2",
+      "RoomID": "ROOM_CH2_004",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_006_1",
+      "RoomID": "ROOM_CH2_006",
+      "Wave": 1,
+      "EnemyCount": 5,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_008_1",
+      "RoomID": "ROOM_CH2_008",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "B03",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_009_1",
+      "RoomID": "ROOM_CH2_009",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D4"
+    },
+    {
+      "WaveID": "WAVE_CH2_011_1",
+      "RoomID": "ROOM_CH2_011",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_011_2",
+      "RoomID": "ROOM_CH2_011",
+      "Wave": 2,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_012_1",
+      "RoomID": "ROOM_CH2_012",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D4"
+    },
+    {
+      "WaveID": "WAVE_CH2_014_1",
+      "RoomID": "ROOM_CH2_014",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_014_2",
+      "RoomID": "ROOM_CH2_014",
+      "Wave": 2,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH2_D3"
+    },
+    {
+      "WaveID": "WAVE_CH2_016_1",
+      "RoomID": "ROOM_CH2_016",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "B04",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH2_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_001_1",
+      "RoomID": "ROOM_CH3_001",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_001_2",
+      "RoomID": "ROOM_CH3_001",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_002_1",
+      "RoomID": "ROOM_CH3_002",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_002_2",
+      "RoomID": "ROOM_CH3_002",
+      "Wave": 2,
+      "EnemyCount": 8,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_004_1",
+      "RoomID": "ROOM_CH3_004",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_004_2",
+      "RoomID": "ROOM_CH3_004",
+      "Wave": 2,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH3_D3"
+    },
+    {
+      "WaveID": "WAVE_CH3_006_1",
+      "RoomID": "ROOM_CH3_006",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_008_1",
+      "RoomID": "ROOM_CH3_008",
+      "Wave": 1,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_008_2",
+      "RoomID": "ROOM_CH3_008",
+      "Wave": 2,
+      "EnemyCount": 9,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "FLANK_REINFORCEMENT_PLUS_ZONER_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_009_1",
+      "RoomID": "ROOM_CH3_009",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_010_1",
+      "RoomID": "ROOM_CH3_010",
+      "Wave": 1,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "B05",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D5"
+    },
+    {
+      "WaveID": "WAVE_CH3_011_1",
+      "RoomID": "ROOM_CH3_011",
+      "Wave": 1,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_011_2",
+      "RoomID": "ROOM_CH3_011",
+      "Wave": 2,
+      "EnemyCount": 9,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_013_1",
+      "RoomID": "ROOM_CH3_013",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_013_2",
+      "RoomID": "ROOM_CH3_013",
+      "Wave": 2,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_015_1",
+      "RoomID": "ROOM_CH3_015",
+      "Wave": 1,
+      "EnemyCount": 7,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D5"
+    },
+    {
+      "WaveID": "WAVE_CH3_017_1",
+      "RoomID": "ROOM_CH3_017",
+      "Wave": 1,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_017_2",
+      "RoomID": "ROOM_CH3_017",
+      "Wave": 2,
+      "EnemyCount": 9,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_018_1",
+      "RoomID": "ROOM_CH3_018",
+      "Wave": 1,
+      "EnemyCount": 6,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D4"
+    },
+    {
+      "WaveID": "WAVE_CH3_019_1",
+      "RoomID": "ROOM_CH3_019",
+      "Wave": 1,
+      "EnemyCount": 8,
+      "EliteCount": 0,
+      "BossID": "",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D5"
+    },
+    {
+      "WaveID": "WAVE_CH3_019_2",
+      "RoomID": "ROOM_CH3_019",
+      "Wave": 2,
+      "EnemyCount": 9,
+      "EliteCount": 1,
+      "BossID": "",
+      "DelaySec": 2.5,
+      "CompositionID": "BACKLINE_PRESSURE_PLUS_HUNTER_CH3_D5"
+    },
+    {
+      "WaveID": "WAVE_CH3_020_1",
+      "RoomID": "ROOM_CH3_020",
+      "Wave": 1,
+      "EnemyCount": 9,
+      "EliteCount": 0,
+      "BossID": "B06",
+      "DelaySec": 0,
+      "CompositionID": "FRONTLINE_PLUS_RANGED_CH3_D5"
+    }
+  ]
+}

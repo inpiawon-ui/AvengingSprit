@@ -1,0 +1,44 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "ShopID": "SHOP_CH1_01",
+      "Chapter": "CH1",
+      "OfferCount": 3,
+      "OfferPoolID": "POOL_CH1",
+      "PriceCurveID": "PRICE_CH1",
+      "CardRarityTableID": "RARITY_CH1",
+      "HostHeal": 35,
+      "GhostHeal": 25,
+      "SeedStream": "SHOP_STREAM",
+      "TotalPurchaseLimit": 2,
+      "CardPurchaseLimit": 1
+    },
+    {
+      "ShopID": "SHOP_CH2_01",
+      "Chapter": "CH2",
+      "OfferCount": 3,
+      "OfferPoolID": "POOL_CH2",
+      "PriceCurveID": "PRICE_CH2",
+      "CardRarityTableID": "RARITY_CH2",
+      "HostHeal": 30,
+      "GhostHeal": 22,
+      "SeedStream": "SHOP_STREAM",
+      "TotalPurchaseLimit": 2,
+      "CardPurchaseLimit": 1
+    },
+    {
+      "ShopID": "SHOP_CH3_01",
+      "Chapter": "CH3",
+      "OfferCount": 3,
+      "OfferPoolID": "POOL_CH3",
+      "PriceCurveID": "PRICE_CH3",
+      "CardRarityTableID": "RARITY_CH3",
+      "HostHeal": 25,
+      "GhostHeal": 18,
+      "SeedStream": "SHOP_STREAM",
+      "TotalPurchaseLimit": 2,
+      "CardPurchaseLimit": 1
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "AttackID": "B01_ATK_1",
+      "BossID": "B01",
+      "Name": "Quake Fist",
+      "CooldownSec": 8,
+      "Damage": 17,
+      "TelegraphSec": 1.25,
+      "Counterplay": "STEP_BEHIND",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B01_ATK_2",
+      "BossID": "B01",
+      "Name": "Wall Charge",
+      "CooldownSec": 11,
+      "Damage": 24,
+      "TelegraphSec": 1.5,
+      "Counterplay": "SIDE_STEP; WALL_STUN",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B01_ATK_3",
+      "BossID": "B01",
+      "Name": "Debris Fan",
+      "CooldownSec": 10,
+      "Damage": 13,
+      "TelegraphSec": 1.1,
+      "Counterplay": "USE_GAPS",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B01_ATK_4",
+      "BossID": "B01",
+      "Name": "Double Quake",
+      "CooldownSec": 14,
+      "Damage": 19,
+      "TelegraphSec": 1,
+      "Counterplay": "ALTERNATE_LANES",
+      "Phase": "P3"
+    },
+    {
+      "AttackID": "B02_ATK_1",
+      "BossID": "B02",
+      "Name": "Aegis Sweep",
+      "CooldownSec": 7,
+      "Damage": 18,
+      "TelegraphSec": 1,
+      "Counterplay": "CIRCLE_REAR",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B02_ATK_2",
+      "BossID": "B02",
+      "Name": "Shield March",
+      "CooldownSec": 12,
+      "Damage": 16,
+      "TelegraphSec": 1.4,
+      "Counterplay": "BAIT_TO_WALL",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B02_ATK_3",
+      "BossID": "B02",
+      "Name": "Reflective Line",
+      "CooldownSec": 10,
+      "Damage": 20,
+      "TelegraphSec": 1.3,
+      "Counterplay": "STOP_FIRE_DURING_FLASH",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B02_ATK_4",
+      "BossID": "B02",
+      "Name": "Broken Aegis Rush",
+      "CooldownSec": 9,
+      "Damage": 25,
+      "TelegraphSec": 0.9,
+      "Counterplay": "PASS_THROUGH_REAR_GAP",
+      "Phase": "P3"
+    },
+    {
+      "AttackID": "B03_ATK_1",
+      "BossID": "B03",
+      "Name": "Crossfire Command",
+      "CooldownSec": 9,
+      "Damage": 22,
+      "TelegraphSec": 1.35,
+      "Counterplay": "BREAK_MARKED_LINE",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B03_ATK_2",
+      "BossID": "B03",
+      "Name": "Execution Mark",
+      "CooldownSec": 13,
+      "Damage": 31,
+      "TelegraphSec": 1.8,
+      "Counterplay": "SWAP_HOST_OR_LEAVE_ZONE",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B03_ATK_3",
+      "BossID": "B03",
+      "Name": "Cover-to-Cover Burst",
+      "CooldownSec": 8,
+      "Damage": 18,
+      "TelegraphSec": 1,
+      "Counterplay": "CHASE_RELOAD_WINDOW",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B03_ATK_4",
+      "BossID": "B03",
+      "Name": "All Guns Open",
+      "CooldownSec": 15,
+      "Damage": 28,
+      "TelegraphSec": 1.2,
+      "Counterplay": "ROTATE_BETWEEN_COVER",
+      "Phase": "P3"
+    },
+    {
+      "AttackID": "B04_ATK_1",
+      "BossID": "B04",
+      "Name": "Constrict Spiral",
+      "CooldownSec": 12,
+      "Damage": 24,
+      "TelegraphSec": 1.6,
+      "Counterplay": "DASH_THROUGH_GAP",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B04_ATK_2",
+      "BossID": "B04",
+      "Name": "Venom Spit Trail",
+      "CooldownSec": 9,
+      "Damage": 17,
+      "TelegraphSec": 1.1,
+      "Counterplay": "CROSS_BEFORE_POOL_FORMS",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B04_ATK_3",
+      "BossID": "B04",
+      "Name": "Tail Gate",
+      "CooldownSec": 10,
+      "Damage": 27,
+      "TelegraphSec": 1.25,
+      "Counterplay": "READ_SWEEP_DIRECTION",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B04_ATK_4",
+      "BossID": "B04",
+      "Name": "Shed Skin Frenzy",
+      "CooldownSec": 16,
+      "Damage": 34,
+      "TelegraphSec": 1,
+      "Counterplay": "USE_SHED_SKIN_COVER",
+      "Phase": "P3"
+    },
+    {
+      "AttackID": "B05_ATK_1",
+      "BossID": "B05",
+      "Name": "Alternating Rail",
+      "CooldownSec": 8,
+      "Damage": 28,
+      "TelegraphSec": 1.15,
+      "Counterplay": "SWITCH_LANE",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B05_ATK_2",
+      "BossID": "B05",
+      "Name": "Cable Sweep",
+      "CooldownSec": 11,
+      "Damage": 24,
+      "TelegraphSec": 1.35,
+      "Counterplay": "CROSS_AT_JOINT",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B05_ATK_3",
+      "BossID": "B05",
+      "Name": "Magnetized Rockets",
+      "CooldownSec": 13,
+      "Damage": 31,
+      "TelegraphSec": 1.5,
+      "Counterplay": "BAIT_OPPOSITE_HEAD",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B05_ATK_4",
+      "BossID": "B05",
+      "Name": "Twin Overload",
+      "CooldownSec": 18,
+      "Damage": 38,
+      "TelegraphSec": 1.2,
+      "Counterplay": "DISABLE_ONE_HEAD_FIRST",
+      "Phase": "P3"
+    },
+    {
+      "AttackID": "B06_ATK_1",
+      "BossID": "B06",
+      "Name": "Toxic Collapse",
+      "CooldownSec": 10,
+      "Damage": 29,
+      "TelegraphSec": 1.4,
+      "Counterplay": "ROTATE_SAFE_ZONE",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B06_ATK_2",
+      "BossID": "B06",
+      "Name": "Sludge Hand",
+      "CooldownSec": 8,
+      "Damage": 25,
+      "TelegraphSec": 1.05,
+      "Counterplay": "DODGE_PERPENDICULAR",
+      "Phase": "ALL"
+    },
+    {
+      "AttackID": "B06_ATK_3",
+      "BossID": "B06",
+      "Name": "Contaminated Split",
+      "CooldownSec": 14,
+      "Damage": 33,
+      "TelegraphSec": 1.7,
+      "Counterplay": "KILL_SPLIT_CORE",
+      "Phase": "P2+"
+    },
+    {
+      "AttackID": "B06_ATK_4",
+      "BossID": "B06",
+      "Name": "Final Dissolution",
+      "CooldownSec": 20,
+      "Damage": 42,
+      "TelegraphSec": 1.25,
+      "Counterplay": "FOLLOW_CLEAN_ISLAND_CYCLE",
+      "Phase": "P3"
+    }
+  ]
+}

@@ -1,0 +1,1247 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "BossID": "B01",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B01",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "Stunned H01 after missed charge",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B02",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H07 add after shield break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B03",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H11 gunner add during reload",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B04",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H12 captive released after coil break",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B05",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H19 repair unit after head disable",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H01",
+      "EnemyRole": "MELEE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H02",
+      "EnemyRole": "VANGUARD_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H03",
+      "EnemyRole": "ARTILLERY_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H04",
+      "EnemyRole": "LINE_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H05",
+      "EnemyRole": "SUPPRESSION_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H06",
+      "EnemyRole": "MISSILE_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H07",
+      "EnemyRole": "LANE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H08",
+      "EnemyRole": "CORROSION_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H09",
+      "EnemyRole": "CONE_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H10",
+      "EnemyRole": "EXECUTION_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H11",
+      "EnemyRole": "SWEEP_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H12",
+      "EnemyRole": "SHOCKWAVE_CONTROLLER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H13",
+      "EnemyRole": "MOBILE_MARKSMAN",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H14",
+      "EnemyRole": "FLANKING_GUNNER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H15",
+      "EnemyRole": "CURSE_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H16",
+      "EnemyRole": "REFRACT_SNIPER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H17",
+      "EnemyRole": "CHAIN_PULLER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H18",
+      "EnemyRole": "RICOCHET_SKIRMISHER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H19",
+      "EnemyRole": "ROCKET_HUNTER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H20",
+      "EnemyRole": "HEAVY_BRUISER",
+      "Rating": "NORMAL",
+      "DamageWindow": "Standard telegraph windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H21",
+      "EnemyRole": "SLOW_ZONER",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H22",
+      "EnemyRole": "LEECH_HUNTER",
+      "Rating": "LIMITED",
+      "DamageWindow": "Disciplined burst windows",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "No hard counter; possession/ultimate timing required"
+    },
+    {
+      "BossID": "B06",
+      "HostID": "H23",
+      "EnemyRole": "REAPER_VANGUARD",
+      "Rating": "GOOD",
+      "DamageWindow": "Frequent safe uptime",
+      "PossessionOpportunity": "H21 frozen survivor after core expose",
+      "ImplementationNote": "Full core kit functional"
+    }
+  ]
+}
