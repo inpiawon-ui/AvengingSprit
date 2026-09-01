@@ -25,6 +25,15 @@ namespace Game.Module.Opening
         /// </summary>
         public float AutoSeconds;
 
+        /// <summary>
+        /// 관 안에 유령을 얹는가. 켜면 <see cref="Energy"/> 만큼 진한 유령이
+        /// 그림 위에서 네 프레임으로 돈다.
+        /// </summary>
+        public bool Ghost;
+
+        /// <summary>남은 에너지(0~1). 유령의 진하기가 된다.</summary>
+        public float Energy;
+
         public bool HasArt => !string.IsNullOrEmpty(Key);
         public bool HasLine => !string.IsNullOrEmpty(Line);
         public bool IsAuto => AutoSeconds > 0f;
@@ -82,20 +91,33 @@ namespace Game.Module.Opening
             new() { Key = "cut_start_3", Line = "내 유령 에너지 연구를 캐내려고\n딸을 납치해 몸값을 요구했다네." },
 
             // ── 관이 비는 것을 보여 준다 ───────────────────────────
-            // ⚠ 이 두 장이 **이 게임의 HP 설명**이다. 넘기지 말고 자동으로 이어 붙인다 —
-            //   파랑에서 초록으로 넘어가는 것을 보아야 "줄어든다" 가 읽힌다.
-            new() { Key = "cut_start_4", Line = "자네의 에너지는 한정돼 있네.", AutoSeconds = TubeDrain },
-            new() { Key = "cut_start_5", Line = "자네의 에너지는 한정돼 있네." },
-
-            // 관 안의 유령이 돈다. 네 장이 진하기가 같고 자세만 다르다 —
-            // 흐려지는 것은 코드가 알파로 만든다(본편 HUD 게이지가 같은 코드를 쓴다).
-            new() { Key = "cut_start_6", AutoSeconds = GhostFrame },
-            new() { Key = "cut_start_7", AutoSeconds = GhostFrame },
-            new() { Key = "cut_start_8", AutoSeconds = GhostFrame },
-            new() { Key = "cut_start_9", AutoSeconds = GhostFrame * 4f },
+            //
+            // ⚠ 이 두 장이 **이 게임의 HP 설명**이다. 원작은 패널 하나다 —
+            //   검은 배경 + 초록 후광 + 관, 그리고 **그 안에 유령**.
+            //   한때 관(4·5)과 유령(6~9)을 갈라 두어 관이 비어 보였다.
+            //   유령은 컷이 아니라 **관 위에 얹는 겹**이다.
+            //
+            // 파랑에서 초록으로 넘어가며 유령이 옅어진다.
+            // 흐려지는 것은 코드가 알파로 만든다 — 본편 HUD 게이지가 같은 함수를 쓴다.
+            new() { Key = "cut_start_4", Line = "자네의 에너지는 한정돼 있네.",
+                    Ghost = true, Energy = 1f, AutoSeconds = TubeDrain },
+            new() { Key = "cut_start_5", Line = "자네의 에너지는 한정돼 있네.",
+                    Ghost = true, Energy = 0.25f },
 
             new() { Key = "cut_start_10", Line = "부탁하네. 내 딸을 구해 주게!" },
         };
+
+        /// <summary>
+        /// 관 안에서 도는 유령 네 장. **투명 배경 PNG** 라 관 위에 그대로 얹힌다.
+        /// 네 장이 진하기가 같고 자세만 다르다 — 옅어지는 것은 알파가 만든다.
+        /// </summary>
+        public static readonly string[] GhostFrames =
+        {
+            "cut_start_6", "cut_start_7", "cut_start_8", "cut_start_9",
+        };
+
+        /// <summary>유령 한 프레임이 머무는 시간.</summary>
+        public const float GhostFrameSeconds = GhostFrame;
 
         /// <summary>프롤로그 → 시작 컷신을 이어 붙인 전체 순서.</summary>
         public static OpeningCut[] All()

@@ -54,6 +54,10 @@ namespace Game.Module.Opening
         private UIBinder _ui;
         private Image _cut;          // 앞 겹 — 지금 컷
         private Image _cutBack;      // 뒷 겹 — 지나가는 컷을 받쳐 준다
+        private Image _ghost;        // 관 안 유령 — 컷 위에 얹는다
+        private Sprite[] _ghostFrames;
+        private float _ghostTimer;
+        private int _ghostIndex;
         private CanvasGroup _cutGroup;
         private Transform _box;
         private CanvasGroup _boxGroup;
@@ -79,6 +83,8 @@ namespace Game.Module.Opening
             }
             var backT = _ui.Find("CutImageBack");
             if (backT != null) _cutBack = backT.GetComponent<Image>();
+            var ghostT = _ui.Find("GhostImage");
+            if (ghostT != null) _ghost = ghostT.GetComponent<Image>();
 
             _box = _ui.Find("TextBox");
             if (_box != null)
@@ -105,9 +111,76 @@ namespace Game.Module.Opening
                 if (_fadeLeft <= 0f && _cutBack != null) _cutBack.enabled = false;
             }
 
+            TickGhost(Time.deltaTime);
+
             if (_autoLeft <= 0f) return;
             _autoLeft -= Time.deltaTime;
             if (_autoLeft <= 0f) Next();
+        }
+
+        /// <summary>
+        /// 관 안 유령을 돌린다. 네 장이 같은 자리·같은 진하기라 자세만 바뀐다 —
+        /// **옅어지는 것은 알파가 만든다.**
+        /// </summary>
+        private void TickGhost(float dt)
+        {
+            if (_ghost == null || !_ghost.enabled || _ghostFrames == null) return;
+            _ghostTimer -= dt;
+            if (_ghostTimer > 0f) return;
+            _ghostTimer = OpeningCuts.GhostFrameSeconds;
+            _ghostIndex = (_ghostIndex + 1) % _ghostFrames.Length;
+            var s = _ghostFrames[_ghostIndex];
+            if (s != null) _ghost.sprite = s;
+        }
+
+        /// <summary>
+        /// 관 안 유령을 켜거나 끈다.
+        ///
+        /// 네 장은 **투명 배경 PNG** 라 그림 위에 그대로 얹힌다 — 경계가 이미 관 안쪽이다.
+        /// 진하기는 <see cref="OpeningCuts.GhostAlpha"/> 하나로 정한다.
+        /// 본편 HUD 게이지도 같은 함수를 쓴다 — 여기서 본 것을 거기서 바로 읽게 하려면
+        /// 두 곳이 같은 값이어야 한다.
+        /// </summary>
+        private async UniTaskVoid ApplyGhostAsync(OpeningCut cut)
+        {
+            if (_ghost == null) return;
+
+            if (!cut.Ghost)
+            {
+                _ghost.enabled = false;
+                return;
+            }
+
+            if (_ghostFrames == null)
+            {
+                if (!CoreModule.TryGet<IResourceManager>(out var res)) return;
+                var frames = new Sprite[OpeningCuts.GhostFrames.Length];
+                for (int i = 0; i < frames.Length; i++)
+                {
+                    try
+                    {
+                        frames[i] = await res.LoadAsync<Sprite>(
+                            AddressPrefix + OpeningCuts.GhostFrames[i], gameObject.scene.name);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning($"[오프닝] 유령 프레임 못 불러옴: {OpeningCuts.GhostFrames[i]} — {e.Message}");
+                    }
+                }
+                if (this == null) return;
+                _ghostFrames = frames;
+            }
+
+            // 불러오는 사이에 넘어갔을 수 있다.
+            if (_index < 0 || _index >= _cuts.Length || !_cuts[_index].Ghost) return;
+
+            _ghostIndex = 0;
+            _ghostTimer = OpeningCuts.GhostFrameSeconds;
+            if (_ghostFrames[0] != null) _ghost.sprite = _ghostFrames[0];
+            var c = Color.white;
+            c.a = OpeningCuts.GhostAlpha(cut.Energy);
+            _ghost.color = c;
+            _ghost.enabled = true;
         }
 
         // ── 넘기기 ───────────────────────────────────────────────
@@ -137,7 +210,8 @@ namespace Game.Module.Opening
             if (_box != null) _box.gameObject.SetActive(cut.HasLine);
             if (cut.HasLine) _ui.SetText("LineText", cut.Line);
 
-            ShowArtAsync(cut).Forget();   // fire-and-forget: 그림이 한 프레임 늦어도 된다
+            ShowArtAsync(cut).Forget();     // fire-and-forget: 그림이 한 프레임 늦어도 된다
+            ApplyGhostAsync(cut).Forget();  // fire-and-forget: 유령도 마찬가지다
         }
 
         /// <summary>
@@ -223,9 +297,18 @@ namespace Game.Module.Opening
 
         private void Release()
         {
-            if (string.IsNullOrEmpty(_heldAddress)) return;
-            if (CoreModule.TryGet<IResourceManager>(out var res)) res.Release(_heldAddress);
+            if (!CoreModule.TryGet<IResourceManager>(out var res)) { _heldAddress = null; return; }
+            if (!string.IsNullOrEmpty(_heldAddress)) res.Release(_heldAddress);
             _heldAddress = null;
+        }
+
+        /// <summary>유령 네 장을 놓아 준다. 오프닝이 끝날 때만 부른다.</summary>
+        private void ReleaseGhost()
+        {
+            if (_ghostFrames == null) return;
+            _ghostFrames = null;
+            if (!CoreModule.TryGet<IResourceManager>(out var res)) return;
+            foreach (var k in OpeningCuts.GhostFrames) res.Release(AddressPrefix + k);
         }
 
         // ── 끝 ───────────────────────────────────────────────────
@@ -252,6 +335,7 @@ namespace Game.Module.Opening
             PlayerPrefs.SetInt(SeenKey, 1);
             PlayerPrefs.Save();
             Release();
+            ReleaseGhost();
             GoLobbyAsync().Forget();   // fire-and-forget: 씬 전환을 기다릴 일이 없다
         }
 
@@ -271,6 +355,6 @@ namespace Game.Module.Opening
             return true;
         }
 
-        private void OnDestroy() => Release();
+        private void OnDestroy() { Release(); ReleaseGhost(); }
     }
 }

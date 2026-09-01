@@ -63,7 +63,10 @@ namespace Game.EditorTools
                     ti.spriteImportMode = SpriteImportMode.Single;
                     ti.filterMode = FilterMode.Point;      // 픽셀아트
                     ti.mipmapEnabled = false;
-                    ti.alphaIsTransparency = false;        // 불투명 배경이다
+                    // ⚠ 컷 대부분은 불투명이지만 **관 안 유령 네 장은 투명 배경**이다.
+                    //   켜 두면 Unity 가 투명한 자리의 색을 이웃에서 번지게 채워
+                    //   가장자리에 검은 테가 생기지 않는다. 불투명 그림에는 영향이 없다.
+                    ti.alphaIsTransparency = true;
                     ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
                     {
                         name = "DefaultTexturePlatform",

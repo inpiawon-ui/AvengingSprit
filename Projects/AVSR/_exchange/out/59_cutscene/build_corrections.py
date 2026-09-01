@@ -68,7 +68,8 @@ ghost=Image.merge("RGBA",(*rgb.split(),alpha))
 box=alpha.getbbox(); crop=ghost.crop(box); w,h=crop.size; center=(320,330); dst=(center[0]-w//2,center[1]-h//2)
 poses=[crop,ImageOps.mirror(crop),crop.rotate(4,resample=PY,expand=False),ImageOps.mirror(crop).rotate(-4,resample=PY,expand=False)]
 for i,pose in enumerate(poses,6):
-  frame=Image.new("RGBA",(640,640),(0,0,0,0)); frame.paste(pose,dst,pose); frame.save(IN/f"cut_start_{i}.png",optimize=True)
+  pb=pose.getchannel("A").getbbox(); visible=pose.crop(pb).resize((w,h),PY)
+  frame=Image.new("RGBA",(640,640),(0,0,0,0)); frame.paste(visible,dst,visible); frame.save(IN/f"cut_start_{i}.png",optimize=True)
 
 # Contact sheet and numeric checks.
 names=["cut_start_1","cut_start_10","cut_start_3","cut_start_4","cut_start_5","cut_start_6","cut_start_7","cut_start_8","cut_start_9"]
