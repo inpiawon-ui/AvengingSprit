@@ -108,12 +108,19 @@ namespace Game.Module.Opening
         };
 
         /// <summary>
-        /// 관 안에서 도는 유령 네 장. **투명 배경 PNG** 라 관 위에 그대로 얹힌다.
-        /// 네 장이 진하기가 같고 자세만 다르다 — 옅어지는 것은 알파가 만든다.
+        /// 관 안에서 도는 유령 세 장. **본편 유령 스프라이트 그대로다.**
+        ///
+        /// ⚠ 한때 컷신용으로 따로 받은 네 장(`cut_start_6~9`)을 썼는데
+        ///   윤곽선이 없어 뿌옇고 관보다 커서 유리 밖으로 삐져나왔다.
+        ///   본편 `unit_ghost_s` 는 검은 윤곽선에 주황 입까지 또렷하고,
+        ///   무엇보다 **플레이어가 곧 조종할 그 유령**이다 —
+        ///   오프닝에서 본 것이 그대로 게임에 나오는 것이 맞다.
+        ///
+        /// 대기 → 걷기1 → 걷기2 로 돌면 관 안에서 떠 있는 것처럼 보인다.
         /// </summary>
         public static readonly string[] GhostFrames =
         {
-            "cut_start_6", "cut_start_7", "cut_start_8", "cut_start_9",
+            "unit_ghost_s", "unit_ghost_s_walk1", "unit_ghost_s_walk2",
         };
 
         /// <summary>유령 한 프레임이 머무는 시간.</summary>

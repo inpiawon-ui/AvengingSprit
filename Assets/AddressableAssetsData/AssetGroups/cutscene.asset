@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_cutscene
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18cf192433eab3d4d89d3289c1655186
+    m_Address: cutscene/unit_ghost_s_walk2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_cutscene
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1fbaf2e45b9806041bdab80f6624141c
     m_Address: cutscene/cut_prologue_4
     m_ReadOnly: 0
@@ -63,14 +69,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_cutscene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 76011b1f7a5d9604191582f4ddc849a1
-    m_Address: cutscene/cut_start_9
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_cutscene
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 770c2d0c30b097048ac2d666d971d9e4
-    m_Address: cutscene/cut_start_6
+  - m_GUID: 7aae50cbecd77e942a7585006c66a0f3
+    m_Address: cutscene/unit_ghost_s_walk1
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_cutscene
@@ -99,12 +99,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_cutscene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b6fe62bb32e476b4e87760ac208e462f
-    m_Address: cutscene/cut_start_7
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_cutscene
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cda4406175dc2f54e946a62033b6a58d
     m_Address: cutscene/cut_prologue_8
     m_ReadOnly: 0
@@ -123,8 +117,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_cutscene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e92d83fdae50e28459208a549d2a39ec
-    m_Address: cutscene/cut_start_8
+  - m_GUID: f496a323c3af4194a8d6e8c363d983c1
+    m_Address: cutscene/unit_ghost_s
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_cutscene
