@@ -72,15 +72,55 @@ namespace Game.Character
     /// 같은 기본형 안의 변주. 그리는 방법이 갈리는 지점이다.
     /// 이름은 `AVSR_Bosses.js` 의 `draw.t` 를 그대로 옮긴 것이다.
     /// </summary>
+    /// <summary>
+    /// 패턴 하나하나의 이름. **24개 패턴에 24개 값**이 일대일로 붙는다.
+    ///
+    /// ⚠ 예전에는 `Arc`·`Halves`·`Cable` 처럼 **모양만 가리키는** 20개를 24패턴이
+    ///   나눠 썼다. 그래서 `CheckBreak` 이 `case BossDraw.Dash` 하나로 크러셔 돌진과
+    ///   가디언 머리 물기를 같이 잡았고, 도형을 만들 때도 어느 보스 것인지 알 수 없었다.
+    ///   **패턴마다 제 이름을 갖는다.** 값 하나가 곧 패턴 하나다.
+    ///
+    /// 이름은 `_exchange/out/42_jobs/AVSR_Bosses.js` 의 `en` 을 그대로 옮긴 것이다.
+    /// </summary>
     public enum BossDraw
     {
         None,
-        Arc, Halves, Fan,                    // Arc
-        Line, CrossLine, Burst, Sweep, Cable, Homing,   // Line
-        Lane,                                // Lane
-        Ring, Trail, Cover, Quad, Split, Overload, Island,   // Zone
-        Dash, Shed,                          // Dash
-        Mark,                                // Mark
+
+        // ── B01 크러셔 — 쓰레기를 씹는 기계 ─────────────────────
+        Crush,           // 압착 — 아치형 입이 앞을 내려찍는다
+        WreckingBall,    // 쇠사슬 파괴구 — 원 궤도. 안쪽이 안전하다
+        Conveyor,        // 컨베이어 가동 — 바닥 세 줄 중 둘이 흐른다
+        ShieldUp,        // 방패 전개 — 정면을 막고 압착을 두 번
+
+        // ── B02 가디언 — 마디를 하나씩 끊어라 ───────────────────
+        SegmentThrust,   // 마디 돌진 — 길이가 남은 마디 수를 따른다
+        SegmentLaunch,   // 마디 사출 — 마디 둘을 떼어 굴린다
+        CoilWall,        // 똬리 — 원형 벽. 틈으로 들어가면 머리가 있다
+        HeadBite,        // 머리 물기 — 마디가 적을수록 빠르다
+
+        // ── B04 파이썬 — 벽에서 나온다 ──────────────────────────
+        WallBurst,       // 벽 돌파 — 나올 자리는 벽의 금으로만 안다
+        VenomCloud,      // 독구름 — 퍼진다. 다 퍼지면 방 절반이다
+        BodyCross,       // 몸통 가로지르기 — 벽에서 벽으로 한 줄
+        TripleBurst,     // 세 갈래 돌파 — 안 겹치는 자리가 하나뿐
+
+        // ── B03 킹핀 — 하늘에 떠 있다 ───────────────────────────
+        MissileSalvo,    // 미사일 일제 — 착탄 원 다섯
+        ExecutionLock,   // 처형 조준 — 몸을 갈아타야 벗는다
+        StrafingRun,     // 저공 활강 — 이때만 근접이 닿는다
+        BoosterDrop,     // 부스터 강하 — 그림자 예고 후 내려찍는다
+
+        // ── B05 로봇 스네이크 — 구멍에서 나온다 ─────────────────
+        HatchOpen,       // 구멍 개방 — 덮개가 열리는 것이 곧 예고다
+        RailLaser,       // 레이저 — 조준선이 먼저 그려진다
+        DebrisFall,      // 천장 파편 — 그림자 다섯
+        FullEmergence,   // 일제 출현 — 안 솟은 구멍 하나가 안전지대
+
+        // ── B06 슬러지 — 위에서 떨어진다 ────────────────────────
+        Emerge,          // 솟아오름 — 바닥이 부풀어 예고한다
+        Spit,            // 뱉기 — 웅덩이가 남아 다음을 못 피하게 한다
+        CeilingCling,    // 천장 붙기 — 몸이 사라지고 그림자만 남는다
+        CeilingSpread,   // 천장 확산 — 깨끗한 자리가 옮겨 다닌다
     }
 
     /// <summary>
@@ -110,15 +150,25 @@ namespace Game.Character
     }
 
     /// <summary>보스가 걸치는 상태. 패턴과 달리 켜져 있는 동안 계속 작용한다.</summary>
+    /// <summary>
+    /// 보스가 **방과 맺는 관계**. 넷은 그냥 서서 싸우지 않는다.
+    ///
+    /// ⚠ 예전 값(`Guard`·`Twin`·`Split`)은 원작 그림을 안 보고 지은 것이라 지웠다 —
+    ///   가디언은 방패병이 아니라 **지네**고, 로봇 스네이크는 머리 둘이 아니라
+    ///   **바닥 구멍 여섯**이며, 슬러지는 분열하는 게 아니라 **천장에 붙는다.**
+    /// </summary>
     public enum BossState
     {
+        /// <summary>방 안에 서서 싸운다 — 크러셔 · 킹핀</summary>
         None,
-        /// <summary>정면 피해 감소 · 반사 — 가디언</summary>
-        Guard,
-        /// <summary>머리 둘 — HP 를 나눠 갖고 따로 움직인다 — 로봇 스네이크</summary>
-        Twin,
-        /// <summary>분열체 — 코어를 안 부수면 본체가 회복 — 슬러지</summary>
-        Split,
+        /// <summary>마디 여덟. 마디를 3 이하로 끊기 전까지 머리가 무적이다 — 가디언</summary>
+        Segments,
+        /// <summary>방 안에 없다. 벽 뒤에 있다가 뚫고 나온다 — 파이썬</summary>
+        Walls,
+        /// <summary>본체가 없다. 바닥 구멍 여섯에서 번갈아 솟는다 — 로봇 스네이크</summary>
+        Holes,
+        /// <summary>천장에 붙는다. 붙은 동안은 그림자만 보인다 — 슬러지</summary>
+        Ceiling,
     }
 
     [Serializable]

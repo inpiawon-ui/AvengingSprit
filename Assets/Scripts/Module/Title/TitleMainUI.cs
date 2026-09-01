@@ -137,11 +137,19 @@ namespace Game.Module.Title
             GoLobbyAsync().Forget(); // fire-and-forget: 씬 전환 완료를 기다릴 필요가 없다
         }
 
+        /// <summary>
+        /// 시작을 눌렀다. **첫 실행이면 오프닝을 먼저 보여 준다.**
+        ///
+        /// 오프닝은 「왜 유령인가 · 왜 싸우는가 · 에너지가 한정돼 있다」 세 가지를
+        /// 말하는 화면이라, 그 셋을 모르는 채로 로비에 들어가면 호스트를 고를 이유가 없다.
+        /// 한 번 본 사람은 바로 로비로 간다 — 두 번째부터는 아는 이야기다.
+        /// </summary>
         private async UniTaskVoid GoLobbyAsync()
         {
+            bool seen = PlayerPrefs.GetInt(Opening.OpeningMainUI.SeenKey, 0) != 0;
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
-                SceneName = SceneNames.Lobby,
+                SceneName = seen ? SceneNames.Lobby : SceneNames.Opening,
                 LoadingStyle = LoadingStyle.Overlay,
             });
         }

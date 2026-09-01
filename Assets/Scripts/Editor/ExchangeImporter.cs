@@ -30,6 +30,7 @@ namespace Game.EditorTools
         private const string BaseRes = "Assets/BaseResource";
         private const string UnitRes = "Assets/BaseResource/Unit";
         private const string RoomFloorRes = "Assets/BundleResource/RoomFloor";
+        private const string CutsceneRes = "Assets/BundleResource/Cutscene";
         private const string DefaultRes = "Assets/BaseResource/InGameMainUI";
         private const string HostSelectRes = "Assets/BaseResource/HostSelectPanel";
         private const string AtlasDir = "Assets/BundleResource/Atlas";
@@ -112,9 +113,14 @@ namespace Game.EditorTools
             if (name.StartsWith("loadingbackground")) return true;
 
             // 방 바닥은 `BundleResource/RoomFloor/` 가 정본이다. `BaseResource` 쪽 사본은
-            // 아틀라스에 들어가 자리만 먹는다(720×1260 두 장).
-            if (name == "roomfloor_python.png" || name == "roomfloor_robot_snakes.png"
-                || name == "roomfloor_demolisher.png" || name == "roomfloor.png") return true;
+            // 아틀라스에 들어가 자리만 먹었다.
+            //
+            // ⚠ 한때 `roomfloor_python` · `roomfloor_robot_snakes` 도 여기서 막았다.
+            //   그때는 그 두 장이 규격 미달(720×1260)인 옛 사본이었기 때문인데,
+            //   58차에서 720×936 으로 다시 받으면서 **그 두 장이 정본이 됐다.**
+            //   규칙을 남겨 두면 새 정본이 영영 안 들어온다 — 실제로 4장만 반영됐다.
+            //   막는 이유가 사라지면 규칙도 같이 지운다.
+            if (name == "roomfloor_demolisher.png" || name == "roomfloor.png") return true;
 
             // 컨셉 시안은 **고를 때 보는 그림**이지 게임 에셋이 아니다.
             // 고른 것은 `roomfloor_env_*` 로 따로 들어간다.
@@ -127,7 +133,7 @@ namespace Game.EditorTools
         private static Dictionary<string, List<string>> IndexProject()
         {
             var map = new Dictionary<string, List<string>>();
-            foreach (var root in new[] { BaseRes, RoomFloorRes })
+            foreach (var root in new[] { BaseRes, RoomFloorRes, CutsceneRes })
             {
                 if (!Directory.Exists(root)) continue;
                 foreach (var p in Directory.GetFiles(root, "*.png", SearchOption.AllDirectories))
@@ -163,6 +169,11 @@ namespace Game.EditorTools
             }
 
             if (name.StartsWith("roomfloor_")) return new[] { $"{RoomFloorRes}/{name}" };
+
+            // 컷신은 **화면 한 장짜리**라 아틀라스에 넣지 않는다. 640×640 스무 장을 묶으면
+            // 오프닝에만 쓰는 그림이 판 내내 메모리에 상주한다. 방 바닥과 같은 규칙 —
+            // 한 장씩 불러오고 넘어가면 놓아 준다.
+            if (name.StartsWith("cut_")) return new[] { $"{CutsceneRes}/{name}" };
 
             // 인게임 HUD 부품·이펙트 — 새 이름은 `existing` 이 못 잡아 기본값으로 흐른다.
             if (name.StartsWith("hud_") || name.StartsWith("fx_"))

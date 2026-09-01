@@ -52,6 +52,13 @@ namespace Game.Module.InGame
             _danger = DangerShape.From(m, boss.Position, dir,
                                        me != null ? me.Position : boss.Position,
                                        _roomSize, _pxPerMeter, _dangerTick);
+
+            // ⚠ 「마디 돌진」만 길이가 **지금 남은 마디 수**를 따라간다.
+            //   표에 적힌 7.2 m 는 마디 8개일 때의 값이다. 마디를 끊을수록 짧아진다 —
+            //   여기서 한 번만 고쳐 두면 그린 것과 때리는 것이 같이 짧아진다.
+            if (m.Draw == BossDraw.SegmentThrust && IsSegmented)
+                _danger.Length = Mathf.Max(_pxPerMeter, SegmentsLeft * 0.9f * _pxPerMeter);
+
             if (_danger.IsNone) return;
 
             _dangerMove = m;
@@ -115,22 +122,16 @@ namespace Game.Module.InGame
             bool playerHit = me != null && _danger.Contains(me.Position, _roomSize);
             if (playerHit) DamagePlayer(dmg);
 
-            // 같은 도형으로 적도 맞는다. 「자기 유도 로켓」이 다른 머리를 때리는 것이
-            // 이 게임 유일한 "보스가 보스를 때리는" 구간이다.
-            if (m.Draw == BossDraw.Homing)
+            // 「마디 사출」로 굴러간 마디는 잡몹도 친다 — 방을 굴러다니는 물건이라
+            // 누구 편인지 가리지 않는다. 이 게임에서 보스 공격이 적을 맞히는 유일한 자리다.
+            if (m.Draw == BossDraw.SegmentLaunch)
                 for (int i = _enemies.Count - 1; i >= 0; i--)
                 {
                     var e = _enemies[i];
                     if (e == null || !e.IsAlive || e == boss) continue;
                     if (!_danger.Contains(e.Position, _roomSize)) continue;
                     HitEnemyWith(e, dmg, null);
-                    _homingHitAlly = true;
                 }
-
-            // 가디언 「반사선」은 때리는 패턴이 아니라 **4초짜리 상태**다.
-            // 도는 동안 정면으로 들어온 내 탄이 2배로 돌아온다.
-            if (m.Draw == BossDraw.Arc && m.Shape == BossShape.Line)
-                _reflectLineLeft = ReflectLineSeconds;
 
             PlayDangerImpact(m);
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
@@ -145,13 +146,17 @@ namespace Game.Module.InGame
         /// <summary>도형이 터진 자리에 표시를 남긴다. 무엇이 지나갔는지 보여야 한다.</summary>
         private void PlayDangerImpact(BossMove m)
         {
-            string fx = m.Shape switch
+            // 무엇이 지나갔는지 보여야 한다. 도형이 아니라 **패턴**으로 고른다 —
+            // 같은 원이라도 독구름과 파괴구는 다른 것이 터져야 읽힌다.
+            string fx = m.Draw switch
             {
-                BossShape.Arc => "burst",
-                BossShape.Dash => "slam",
-                BossShape.Mark => "burst",
-                BossShape.Zone => m.Draw == BossDraw.Trail || m.Draw == BossDraw.Split
-                                ? "lava" : "shatter",
+                BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
+                    or BossDraw.BoosterDrop or BossDraw.Emerge => "slam",
+                BossDraw.VenomCloud or BossDraw.Spit
+                    or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
+                BossDraw.Conveyor or BossDraw.SegmentLaunch
+                    or BossDraw.DebrisFall or BossDraw.HatchOpen
+                    or BossDraw.FullEmergence => "shatter",
                 _ => "burst",
             };
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);

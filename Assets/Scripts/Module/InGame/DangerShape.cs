@@ -43,19 +43,132 @@ namespace Game.Module.InGame
             Outside,
         }
 
+        /// <summary>
+        /// 도형이 **여럿일 때** 어디에 놓이는가.
+        ///
+        /// 24개 중 일곱이 도형 하나로 안 된다 — 미사일 5발 · 천장 파편 5 · 그림자 3 ·
+        /// 구멍 2와 5 · 세 갈래 3 · 마디 2. 그렇다고 도형 목록을 들고 다니면
+        /// 발화마다 힙을 할당하게 되므로, **자리를 계산으로 낸다.**
+        ///
+        /// ⚠ 그래서 <see cref="Contains"/> 와 <see cref="Outline"/> 이 **같은 함수**
+        ///   (<c>CenterOf</c>·<c>BandOf</c>)로 i번째 자리를 구한다.
+        ///   여기가 갈라지면 "그린 자리와 맞는 자리가 다르다" 가 다시 살아난다.
+        /// </summary>
+        public enum Spread
+        {
+            /// <summary>하나뿐이다.</summary>
+            None,
+            /// <summary>부채꼴로 흩뿌린다 — <see cref="Origin"/> 에서 <see cref="Dir"/> 쪽으로
+            /// <see cref="Length"/> 만큼 떨어진 호 위에 <see cref="Degrees"/> 폭으로 늘어선다.</summary>
+            Fan,
+            /// <summary>방 안에 흩어진다. <see cref="Tick"/> 이 자리를 정한다.</summary>
+            Scatter,
+            /// <summary>바닥 구멍 여섯 곳 중 <see cref="Count"/> 곳. 로봇 스네이크 전용.</summary>
+            Holes,
+            /// <summary>벽에서 방을 가로지르는 띠 여럿. 파이썬 「세 갈래 돌파」.</summary>
+            Walls,
+        }
+
         public Kind Shape;
         public Vector2 Origin;      // 중심(px). Band 는 시작점
         public Vector2 Dir;         // 바라보는 방향(정규화). Wedge·Band 가 쓴다
-        public float Degrees;       // Wedge 의 벌어진 각
+        public float Degrees;       // Wedge 의 벌어진 각 · Fan 의 벌어진 폭
         public float Radius;        // Wedge·Disc·Ring 바깥 · Outside 안전 반경(px)
         public float Inner;         // Ring 안쪽 반경(px)
-        public float Width, Length; // Band(px)
+        public float Width, Length; // Band(px) · Fan 은 Length 가 흩뿌리는 거리
         public float GapDegrees;    // Ring 의 틈
         public float GapCenterDeg;  // 틈이 지금 어디에 있는가(도). 돌아간다
         public int Lanes;           // Lanes 의 줄 수 · Quads 는 4 고정
         public int LaneMask;        // 위험한 줄/분면의 비트
 
+        public Spread Layout;       // 여럿일 때의 배치
+        public int Count;           // 도형 개수. 0·1 이면 하나
+        public int Tick;            // 흩뿌림·구멍 고르기의 씨앗. 쓸 때마다 자리가 바뀐다
+
         public bool IsNone => Shape == Kind.None;
+
+        /// <summary>실제로 그릴 도형 수. 배치가 없으면 언제나 하나다.</summary>
+        private int Repeats => Layout == Spread.None || Count <= 1 ? 1 : Count;
+
+        // ── 바닥 구멍 여섯 (로봇 스네이크) ─────────────────────────
+        //
+        // ⚠ **바닥 그림에 픽셀로 박혀 있는 자리다** (58차 발주 · 720×936 기준
+        //   (180,288) (360,252) (540,288) (180,576) (360,612) (540,576)).
+        //   여기서는 방 크기에 대한 비율로 들고 있어야 방 크기가 바뀌어도 그림과 안 어긋난다.
+        //   그림과 코드가 같은 자를 쓰지 않으면 "구멍은 저기 그려져 있는데 뱀은 여기서 나온다".
+        private static readonly Vector2[] HoleAt =
+        {
+            new(0.25f, 0.3077f), new(0.50f, 0.2692f), new(0.75f, 0.3077f),
+            new(0.25f, 0.6154f), new(0.50f, 0.6538f), new(0.75f, 0.6154f),
+        };
+
+        /// <summary>i번째 도형의 중심. **판정과 그리기가 이 함수 하나를 같이 쓴다.**</summary>
+        private Vector2 CenterOf(int i, Vector2 roomSize)
+        {
+            switch (Layout)
+            {
+                case Spread.Fan:
+                {
+                    // 가운데를 0 으로 두고 좌우로 벌린다. 하나면 정면 하나.
+                    float half = Degrees * 0.5f;
+                    float t = Count <= 1 ? 0.5f : (float)i / (Count - 1);
+                    var dir = Rotate(Dir, Mathf.Lerp(-half, half, t));
+                    return Origin + dir * Length;
+                }
+
+                case Spread.Scatter:
+                {
+                    // 결정적 흩뿌림 — 같은 tick·같은 i 면 언제나 같은 자리다.
+                    // 난수를 쓰면 그릴 때와 때릴 때 자리가 달라진다.
+                    int h = Hash(Tick * 31 + i);
+                    float fx = (h & 0xFFFF) / 65535f;
+                    float fy = ((h >> 16) & 0xFFFF) / 65535f;
+                    // 가장자리에 붙으면 피할 자리가 없다. 안쪽 15~85% 에만 떨군다.
+                    return new Vector2(Mathf.Lerp(0.15f, 0.85f, fx) * roomSize.x,
+                                       -Mathf.Lerp(0.15f, 0.85f, fy) * roomSize.y);
+                }
+
+                case Spread.Holes:
+                {
+                    var h = HoleAt[(Tick + i) % HoleAt.Length];
+                    return new Vector2(h.x * roomSize.x, -h.y * roomSize.y);
+                }
+
+                default:
+                    return Origin;
+            }
+        }
+
+        /// <summary>i번째 띠의 시작점과 방향. 벽에서 들어와 방을 가로지른다.</summary>
+        private void BandOf(int i, Vector2 roomSize, out Vector2 from, out Vector2 dir)
+        {
+            if (Layout != Spread.Walls) { from = Origin; dir = Dir; return; }
+
+            // 네 벽을 돌아가며 쓴다. tick 이 시작 벽을 옮겨 매번 다른 조합이 된다.
+            int wall = (Tick + i * 1) & 3;
+            float t = Count <= 1 ? 0.5f : Mathf.Lerp(0.25f, 0.75f, (float)i / (Count - 1));
+            switch (wall)
+            {
+                case 0: from = new Vector2(0f, -roomSize.y * t);          dir = Vector2.right; break;
+                case 1: from = new Vector2(roomSize.x * t, 0f);           dir = Vector2.down;  break;
+                case 2: from = new Vector2(roomSize.x, -roomSize.y * t);  dir = Vector2.left;  break;
+                default: from = new Vector2(roomSize.x * t, -roomSize.y); dir = Vector2.up;    break;
+            }
+        }
+
+        /// <summary>자리를 흩뿌리는 데 쓰는 결정적 해시. 난수가 아니라야 그린 자리와 맞는다.</summary>
+        private static int Hash(int n)
+        {
+            unchecked
+            {
+                n = (n ^ 61) ^ (n >> 16);
+                n += n << 3;
+                n ^= n >> 4;
+                n *= 0x27d4eb2d;
+                n ^= n >> 15;
+                return n & 0x7FFFFFFF;
+            }
+        }
 
         // ═══════════════════════════════════════════════════════════
         //  판정 — 이 점이 위험한가
@@ -83,15 +196,27 @@ namespace Game.Module.InGame
 
                 case Kind.Band:
                 {
-                    var to = p - Origin;
-                    float along = Vector2.Dot(to, Dir);
-                    if (along < 0f || along > Length) return false;
-                    var side = new Vector2(-Dir.y, Dir.x);
-                    return Mathf.Abs(Vector2.Dot(to, side)) <= Width * 0.5f;
+                    // 여럿이면 하나라도 닿으면 맞은 것이다.
+                    for (int i = 0; i < Repeats; i++)
+                    {
+                        BandOf(i, roomSize, out var from, out var dir);
+                        float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
+                        var to = p - from;
+                        float along = Vector2.Dot(to, dir);
+                        if (along < 0f || along > len) continue;
+                        var side = new Vector2(-dir.y, dir.x);
+                        if (Mathf.Abs(Vector2.Dot(to, side)) <= Width * 0.5f) return true;
+                    }
+                    return false;
                 }
 
                 case Kind.Disc:
-                    return (p - Origin).sqrMagnitude <= Radius * Radius;
+                {
+                    float rr = Radius * Radius;
+                    for (int i = 0; i < Repeats; i++)
+                        if ((p - CenterOf(i, roomSize)).sqrMagnitude <= rr) return true;
+                    return false;
+                }
 
                 case Kind.Ring:
                 {
@@ -148,13 +273,23 @@ namespace Game.Module.InGame
             switch (Shape)
             {
                 case Kind.Wedge: AddWedge(verts, tris, Origin, Dir, Degrees, Radius, 0f); break;
-                case Kind.Disc:  AddWedge(verts, tris, Origin, Vector2.right, 360f, Radius, 0f); break;
+
+                case Kind.Disc:
+                    // ⚠ `Contains` 와 같은 `CenterOf` 를 돈다. 자리를 여기서 따로 구하지 마라.
+                    for (int i = 0; i < Repeats; i++)
+                        AddWedge(verts, tris, CenterOf(i, roomSize), Vector2.right, 360f, Radius, 0f);
+                    break;
 
                 case Kind.Band:
                 {
-                    var side = new Vector2(-Dir.y, Dir.x) * (Width * 0.5f);
-                    var far = Origin + Dir * Length;
-                    Quad(verts, tris, Origin - side, Origin + side, far + side, far - side);
+                    for (int i = 0; i < Repeats; i++)
+                    {
+                        BandOf(i, roomSize, out var from, out var dir);
+                        float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
+                        var side = new Vector2(-dir.y, dir.x) * (Width * 0.5f);
+                        var far = from + dir * len;
+                        Quad(verts, tris, from - side, from + side, far + side, far - side);
+                    }
                     break;
                 }
 
@@ -289,8 +424,12 @@ namespace Game.Module.InGame
         /// <summary>
         /// 패턴 하나를 이 방의 도형으로 바꾼다.
         ///
-        /// `BossDraw` 20종이 여기서 위 8가지 도형으로 접힌다 — 24개 패턴이
-        /// 서로 다르게 **보이는** 것은 매개변수가 다르기 때문이지 도형이 20가지라서가 아니다.
+        /// **24개 패턴에 24개 가지**다. 예전에는 도형 이름 20개를 24패턴이 나눠 써서
+        /// 어느 보스 것인지 알 수 없었는데, 이제 한 가지가 한 패턴이다 —
+        /// 그래서 여기서 그 패턴만의 매개변수를 정확히 넣을 수 있다.
+        ///
+        /// ⚠ 여기서 만든 도형이 **그리기와 판정 양쪽에 그대로** 쓰인다.
+        ///   "예고보다 조금 크게" 같은 보정을 여기 넣지 마라 — 넣는 순간 둘이 갈라진다.
         /// </summary>
         public static DangerShape From(BossMove m, Vector2 bossAt, Vector2 dir,
                                        Vector2 playerAt, Vector2 roomSize, float px, int tick)
@@ -299,97 +438,202 @@ namespace Game.Module.InGame
             if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
             dir = dir.normalized;
 
-            var s = new DangerShape { Origin = bossAt, Dir = dir };
+            var s = new DangerShape { Origin = bossAt, Dir = dir, Tick = tick };
+            float R = m.RadiusMeters * px;      // 반경
+            float W = m.WidthMeters * px;       // 폭
+            float L = m.LengthMeters * px;      // 길이
+            float toPlayer = (playerAt - bossAt).magnitude;
 
             switch (m.Draw)
             {
-                // ── 부채꼴 ────────────────────────────────────────
-                case BossDraw.Arc:
-                case BossDraw.Fan:
+                // ═══ B01 크러셔 ═══════════════════════════════════
+                // 아치형 입이 자기 앞을 내려찍는다. 뒤로 돌면 안 닿는다.
+                case BossDraw.Crush:
+                case BossDraw.ShieldUp:
                     s.Shape = Kind.Wedge;
-                    s.Degrees = m.Degrees > 0f ? m.Degrees : 90f;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
+                    s.Degrees = m.Degrees > 0f ? m.Degrees : 180f;
+                    s.Radius = Mathf.Max(1f, R);
                     break;
 
-                // 왼쪽 반원 → 오른쪽 반원. 어느 쪽 차례인지는 `tick` 이 정한다.
-                case BossDraw.Halves:
-                    s.Shape = Kind.Wedge;
-                    s.Degrees = 180f;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
-                    s.Dir = Rotate(dir, (tick & 1) == 0 ? 90f : -90f);
-                    break;
-
-                // ── 직선 ──────────────────────────────────────────
-                case BossDraw.Line:
-                case BossDraw.Sweep:
-                case BossDraw.Cable:
-                case BossDraw.Homing:
-                case BossDraw.CrossLine:
-                case BossDraw.Burst:
-                    s.Shape = Kind.Band;
-                    s.Width = Mathf.Max(1f, m.WidthMeters * px);
-                    s.Length = Mathf.Max(1f, m.LengthMeters * px);
-                    break;
-
-                // ── 돌진 — 띠지만 플레이어 쪽으로 방을 가로지른다 ──
-                case BossDraw.Dash:
-                case BossDraw.Shed:
-                    s.Shape = Kind.Band;
-                    s.Width = Mathf.Max(1f, m.WidthMeters * px);
-                    s.Length = roomSize.magnitude;
-                    break;
-
-                // ── 표식 — 지금 있는 자리를 찍는다 ─────────────────
-                case BossDraw.Mark:
-                    s.Shape = Kind.Disc;
-                    s.Origin = playerAt;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
-                    break;
-
-                // ── 고리 ──────────────────────────────────────────
-                case BossDraw.Ring:
+                // 파괴구가 원 궤도를 돈다. **안쪽이 안전하다** — 파고들어야 산다.
+                case BossDraw.WreckingBall:
                     s.Shape = Kind.Ring;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
+                    s.Radius = Mathf.Max(1f, R);
                     s.Inner = Mathf.Max(0f, m.InnerRadiusMeters * px);
-                    s.GapDegrees = m.GapDegrees > 0f ? m.GapDegrees : 50f;
-                    // 틈이 시계방향으로 돈다 — 쓸 때마다 자리가 바뀐다
-                    s.GapCenterDeg = tick * 70f % 360f;
+                    s.GapDegrees = 0f;          // 틈 없이 한 바퀴 — 빠질 곳은 안쪽뿐이다
                     break;
 
-                // ── 자리에 남는 웅덩이 ────────────────────────────
-                case BossDraw.Trail:
-                case BossDraw.Split:
-                    s.Shape = Kind.Disc;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
-                    break;
-
-                // ── 줄 ────────────────────────────────────────────
-                case BossDraw.Lane:
+                // 바닥 세 줄 중 둘이 흐른다. 멈춘 줄로 옮겨야 한다.
+                case BossDraw.Conveyor:
                 {
                     s.Shape = Kind.Lanes;
                     s.Lanes = Mathf.Max(2, m.Lanes);
-                    // 번갈아 — 홀수 줄과 짝수 줄이 교대로 위험해진다
-                    int mask = 0;
-                    for (int i = 0; i < s.Lanes; i++)
-                        if ((i & 1) == (tick & 1)) mask |= 1 << i;
-                    s.LaneMask = mask;
+                    // 멈춘 줄 하나가 돌아간다. 세 줄이면 매번 다른 줄이 안전해진다.
+                    int safe = tick % s.Lanes;
+                    s.LaneMask = ((1 << s.Lanes) - 1) & ~(1 << safe);
                     break;
                 }
 
-                // ── 사분면 ────────────────────────────────────────
-                case BossDraw.Quad:
-                case BossDraw.Cover:
-                    s.Shape = Kind.Quads;
-                    // 안전한 분면 하나만 빼고 전부 위험하다. 그 하나가 돌아간다.
-                    s.LaneMask = 0b1111 & ~(1 << (tick & 3));
+                // ═══ B02 가디언 ═══════════════════════════════════
+                // 몸을 늘려 찌른다. 길이가 남은 마디 수를 따라간다.
+                case BossDraw.SegmentThrust:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
                     break;
 
-                // ── 섬 하나만 안전 ────────────────────────────────
-                case BossDraw.Island:
-                case BossDraw.Overload:
+                // 마디 둘을 떼어 굴린다. 튕겨 다니므로 자리가 매번 다르다.
+                case BossDraw.SegmentLaunch:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Scatter;
+                    s.Count = Mathf.Max(1, m.Lanes);
+                    break;
+
+                // 몸을 말아 원형 벽. **머리가 그 안에 있다** — 틈으로 들어가는 것이 답이다.
+                case BossDraw.CoilWall:
+                    s.Shape = Kind.Ring;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Inner = Mathf.Max(0f, m.InnerRadiusMeters * px);
+                    s.GapDegrees = m.GapDegrees > 0f ? m.GapDegrees : 60f;
+                    s.GapCenterDeg = tick * 70f % 360f;
+                    break;
+
+                // 머리만 길게 뻗어 문다.
+                case BossDraw.HeadBite:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
+                    break;
+
+                // ═══ B04 파이썬 ═══════════════════════════════════
+                // **벽에서 나온다.** 보스 자리가 아니라 벽에서 시작하는 것이 이 보스의 전부다.
+                case BossDraw.WallBurst:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
+                    s.Layout = Spread.Walls;
+                    s.Count = 1;
+                    break;
+
+                // 독구름은 퍼진다. **다 퍼진 크기로 그린다** —
+                // 지금 크기로 그리면 "피한 자리로 구름이 따라온다" 가 된다.
+                case BossDraw.VenomCloud:
+                    s.Shape = Kind.Disc;
+                    s.Origin = playerAt;
+                    s.Radius = Mathf.Max(1f, R);
+                    break;
+
+                // 벽에서 벽으로 몸통이 한 줄을 지나간다.
+                case BossDraw.BodyCross:
+                {
+                    s.Shape = Kind.Lanes;
+                    s.Lanes = Mathf.Max(2, m.Lanes);
+                    s.LaneMask = 1 << (tick % s.Lanes);   // 한 줄만 위험하다
+                    break;
+                }
+
+                // 벽 세 곳에서 동시에. 안 겹치는 자리가 하나뿐이다.
+                case BossDraw.TripleBurst:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
+                    s.Layout = Spread.Walls;
+                    s.Count = Mathf.Max(2, m.Lanes);
+                    break;
+
+                // ═══ B03 킹핀 ═════════════════════════════════════
+                // 미사일 다섯이 부채꼴로 떨어진다. 원과 원 사이로 빠진다.
+                case BossDraw.MissileSalvo:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Fan;
+                    s.Count = Mathf.Max(2, m.Lanes);
+                    s.Degrees = 60f;
+                    s.Length = Mathf.Max(px, toPlayer);   // 플레이어 거리에 흩뿌린다
+                    break;
+
+                // **지금 입고 있는 몸**에 표식. 몸을 갈아타면 표식이 버려진 몸에 남는다.
+                case BossDraw.ExecutionLock:
+                    s.Shape = Kind.Disc;
+                    s.Origin = playerAt;
+                    s.Radius = Mathf.Max(1f, R);
+                    break;
+
+                // 탈것으로 방을 가로지른다. **이때만 근접이 닿는다.**
+                case BossDraw.StrafingRun:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = roomSize.magnitude;
+                    break;
+
+                // 위로 사라졌다가 그림자 자리로 내려찍는다.
+                case BossDraw.BoosterDrop:
+                    s.Shape = Kind.Disc;
+                    s.Origin = playerAt;
+                    s.Radius = Mathf.Max(1f, R);
+                    break;
+
+                // ═══ B05 로봇 스네이크 ════════════════════════════
+                // **덮개가 열리는 것이 곧 예고다.** 자리는 바닥에 박혀 있다.
+                case BossDraw.HatchOpen:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Holes;
+                    s.Count = Mathf.Max(1, m.Lanes);
+                    break;
+
+                // 나온 머리가 빔을 쏜다. 조준선이 먼저 그려진다.
+                case BossDraw.RailLaser:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
+                    break;
+
+                // 천장에서 파편 다섯. 그림자 밖으로.
+                case BossDraw.DebrisFall:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Scatter;
+                    s.Count = Mathf.Max(2, m.Lanes);
+                    break;
+
+                // 구멍 여섯 중 다섯이 솟는다. **안 솟은 하나 위가 유일한 안전지대다.**
+                case BossDraw.FullEmergence:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Holes;
+                    s.Count = Mathf.Clamp(m.Lanes, 1, 5);   // 여섯을 다 채우면 피할 곳이 없다
+                    break;
+
+                // ═══ B06 슬러지 ═══════════════════════════════════
+                // 가라앉았다 다른 자리에서 솟는다. 바닥이 부풀어 예고한다.
+                case BossDraw.Emerge:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Scatter;
+                    s.Count = 1;
+                    break;
+
+                // 덩어리를 뱉는다. 직각으로 피한다.
+                case BossDraw.Spit:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(1f, L);
+                    break;
+
+                // 몸이 사라지고 **그림자 셋**만 남는다. 그림자를 보고 미리 비킨다.
+                case BossDraw.CeilingCling:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Scatter;
+                    s.Count = Mathf.Max(2, m.Lanes);
+                    break;
+
+                // 천장 전체로 퍼진다. **깨끗한 자리 하나만 남고 그것이 옮겨 다닌다.**
+                case BossDraw.CeilingSpread:
                     s.Shape = Kind.Outside;
-                    s.Radius = Mathf.Max(1f, m.RadiusMeters * px);
-                    // 섬이 2초마다 자리를 옮긴다 — 방 안을 도는 네 자리
+                    s.Radius = Mathf.Max(1f, R);
                     s.Origin = IslandAt(tick, roomSize);
                     break;
 

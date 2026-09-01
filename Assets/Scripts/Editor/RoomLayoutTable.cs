@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Game.EditorTools
 {
     /// <summary>
-    /// 손으로 짠 방 레이아웃 12종과 30방 배정표. 지형 좌표·적 자리·방 종류를 함께 갖는다.
+    /// 손으로 짠 방 레이아웃 12종과 60방 배정표. 지형 좌표·적 자리·방 종류를 함께 갖는다.
     ///
     /// 그 전에는 <c>RoomImporterV33</c> 이 지형을 **절차적으로 생성**했다 — 패턴 6종을
     /// 방 ID 해시로 고르고, 밴드마다 찍고, 좌우를 뒤집었다. 결과는 방마다 물건 15~25개에
@@ -379,40 +379,64 @@ namespace Game.EditorTools
         // ── 조합 이름 ────────────────────────────────────────────
         //
         // 배정표가 쓰는 값이자 `LeadTags`·`RestTags` 가 `StartsWith` 로 가르는 접두사다.
-        // 정본 조합 ID 는 뒤에 난이도가 붙는다(`FRONTLINE_CH1_D1`) — 앞부분만 본다.
         private const string Frontline = "FRONTLINE";
         private const string Flank     = "FLANK";
         private const string Backline  = "BACKLINE";
 
-        // ── 30방 배정표 (v3.0 · 챕터당 10방) ─────────────────────
+        // ── 60방 배정표 (v4.0 · 6챕터 × 10방) ────────────────────
         //
         // ⚠ **이 표가 정본보다 우선한다.** 방 종류·적 수·엘리트 수·조합을 여기서 읽는다.
+        //   정본(CH1 12 · CH2 16 · CH3 20 = 48방)에는 챕터가 셋뿐이라
+        //   4~6챕터는 정본에 아예 없다. **이 표가 유일한 출처다.**
         //
-        // 정본은 CH1 12 · CH2 16 · CH3 20 이었다. 챕터마다 길이가 달라
-        // 3챕터가 1챕터의 두 배 가까이 길었다 — 뒤로 갈수록 한 판이 늘어진다.
-        // **챕터당 10방으로 통일했다.**
+        // ── 왜 6챕터인가 ─────────────────────────────────────────
+        // 원작 어벤징 스피릿이 정확히 6스테이지다
+        // (근거: `Reference/Original/Miscellaneous - Stage End Cutscenes.png` 컷신 6장).
+        // 우리 무대 6종이 그 6스테이지고, **챕터 하나 = 무대 하나**다.
         //
-        //   001~004  전투 4
-        //   005      중간 보스
-        //   006~008  전투 3
-        //   009      엘리트 관문
-        //   010      최종 보스
+        //   CH1 쓰레기장 · CH2 미사일기지 · CH3 밤거리
+        //   CH4 옥상     · CH5 연구소     · CH6 정유소
         //
-        // 보스 6은 하나도 안 버렸다. 버린 것은 전투방 18개뿐이다.
+        // 3챕터일 때는 무대가 6이고 챕터가 3이라 **챕터를 반으로 갈라** 여섯을
+        // 만들어야 했다. 방 번호가 하나 밀리면 배경도 같이 밀리는 계산이었다.
+        // 챕터=무대가 되면서 그 계산이 통째로 사라졌다.
         //
-        // 난이도 사다리: A → B → E → J → D → C → K → G → H → L → I → F
-        // 같은 레이아웃이 **챕터 경계를 넘어서도** 연달아 나오지 않는다.
+        // ── 방 구조는 챕터마다 같다 ───────────────────────────────
         //
-        // 무대(그림)는 **방 번호**가 정한다 — 레이아웃이 아니다.
-        //   각 챕터 001~005 앞 무대 · 006~010 뒤 무대
+        //   001 002 003  전투
+        //   004          이벤트 — 「몸」   (중간 보스 직전이라 상태를 고친다)
+        //   005          중간 보스 — 호스트 대장 1 + 부하 3
+        //   006          전투
+        //   007          이벤트 — 「판돈」 (최종까지 3방, 지금 안 걸면 늦는다)
+        //   008          전투
+        //   009          엘리트
+        //   010          최종 보스 — 원작 보스
+        //
+        // ⚠ **전투방은 여섯이고 레이아웃 창도 여섯이다.** 딱 맞는다.
+        //   005(중간 보스)는 창에서 빼고 **F 모서리 요새 고정**이다 —
+        //   네 모서리에만 덩어리가 있고 가운데가 트여 있어 대장 1 + 부하 3 이 서기에 넓고,
+        //   **챕터마다 같아야 「아 중간 보스방이구나」가 읽힌다.**
+        //   그래서 F 는 난이도 사다리에서 빠졌다.
+        //
+        // 난이도 사다리: A → B → E → J → D → C → K → G → H → L → I
+        //   챕터마다 여섯씩 창을 옮겨 간다. A 는 CH1 에만, I 는 CH6 에만 나온다.
+
+        /// <summary>이벤트 방이 뽑는 풀. 자리마다 성격이 다르다.</summary>
+        public const string PoolBody  = "BODY";    // 004 — 몸 상태를 고친다
+        public const string PoolStake = "STAKE";   // 007 — 최종 보스에 걸 판돈
+
+        /// <summary>중간 보스 방은 챕터마다 같은 모양이다.</summary>
+        public const string MidBossLayout = "F";
+        public const string MidBossFloor  = "roomfloor_env_holding";
 
         public sealed class RoomPlan
         {
-            public string LayoutId;    // null 이면 보스 아레나
-            public string Type;        // COMBAT · TUTORIAL · ELITE · BOSS
-            public int Count;          // 이 방에 서는 적 수 (엘리트 포함)
+            public string LayoutId;    // null 이면 지형을 얹지 않는다 (최종 보스 아레나)
+            public string Type;        // TUTORIAL · COMBAT · EVENT · MIDBOSS · ELITE · BOSS
+            public int Count;          // 이 방에 서는 적 수 (엘리트·부하 포함)
             public int Elite;          // 그중 엘리트 수
             public string Comp;        // 조합
+            public string Pool;        // EVENT 일 때만 — 뽑을 이벤트 풀
         }
 
         private static readonly Dictionary<int, RoomPlan[]> Chapters = new()
@@ -420,41 +444,80 @@ namespace Game.EditorTools
             [1] = new RoomPlan[]
             {
                 new() { LayoutId = "A", Type = "TUTORIAL", Count = 4, Elite = 0, Comp = Backline },   // 01
-                new() { LayoutId = "B", Type = "COMBAT", Count = 4, Elite = 0, Comp = Frontline },   // 02
+                new() { LayoutId = "B", Type = "COMBAT", Count = 5, Elite = 0, Comp = Frontline },   // 02
                 new() { LayoutId = "E", Type = "COMBAT", Count = 5, Elite = 0, Comp = Flank },   // 03
-                new() { LayoutId = "J", Type = "COMBAT", Count = 5, Elite = 0, Comp = Backline },   // 04
-                new() { Type = "BOSS" },   // 05 중간 보스
-                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Flank },   // 06
-                new() { LayoutId = "C", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 07
-                new() { LayoutId = "K", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 08
-                new() { LayoutId = "G", Type = "ELITE", Count = 8, Elite = 1, Comp = Flank },   // 09
-                new() { Type = "BOSS" },   // 10 최종 보스
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Flank },   // 05 중간 보스 — 대장 1 + 부하 3
+                new() { LayoutId = "J", Type = "COMBAT", Count = 6, Elite = 0, Comp = Flank },   // 06
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 08
+                new() { LayoutId = "C", Type = "ELITE", Count = 6, Elite = 1, Comp = Flank },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
             },
             [2] = new RoomPlan[]
             {
-                new() { LayoutId = "H", Type = "COMBAT", Count = 5, Elite = 0, Comp = Frontline },   // 01
-                new() { LayoutId = "L", Type = "COMBAT", Count = 5, Elite = 0, Comp = Flank },   // 02
-                new() { LayoutId = "I", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 03
-                new() { LayoutId = "F", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 04
-                new() { Type = "BOSS" },   // 05 중간 보스
-                new() { LayoutId = "A", Type = "COMBAT", Count = 7, Elite = 0, Comp = Backline },   // 06
-                new() { LayoutId = "B", Type = "COMBAT", Count = 7, Elite = 0, Comp = Frontline },   // 07
-                new() { LayoutId = "E", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 08
-                new() { LayoutId = "J", Type = "ELITE", Count = 9, Elite = 1, Comp = Backline },   // 09
-                new() { Type = "BOSS" },   // 10 최종 보스
+                new() { LayoutId = "B", Type = "COMBAT", Count = 5, Elite = 0, Comp = Frontline },   // 01
+                new() { LayoutId = "E", Type = "COMBAT", Count = 5, Elite = 0, Comp = Flank },   // 02
+                new() { LayoutId = "J", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 03
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Backline },   // 05 중간 보스 — 대장 1 + 부하 3
+                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 06
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "C", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 08
+                new() { LayoutId = "K", Type = "ELITE", Count = 7, Elite = 1, Comp = Backline },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
             },
             [3] = new RoomPlan[]
             {
-                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Flank },   // 01
-                new() { LayoutId = "C", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 02
-                new() { LayoutId = "K", Type = "COMBAT", Count = 7, Elite = 0, Comp = Frontline },   // 03
-                new() { LayoutId = "G", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 04
-                new() { Type = "BOSS" },   // 05 중간 보스
+                new() { LayoutId = "E", Type = "COMBAT", Count = 5, Elite = 0, Comp = Flank },   // 01
+                new() { LayoutId = "J", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 02
+                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 03
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Frontline },   // 05 중간 보스 — 대장 1 + 부하 3
+                new() { LayoutId = "C", Type = "COMBAT", Count = 7, Elite = 0, Comp = Frontline },   // 06
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "K", Type = "COMBAT", Count = 7, Elite = 0, Comp = Backline },   // 08
+                new() { LayoutId = "G", Type = "ELITE", Count = 7, Elite = 1, Comp = Frontline },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
+            },
+            [4] = new RoomPlan[]
+            {
+                new() { LayoutId = "J", Type = "COMBAT", Count = 6, Elite = 0, Comp = Backline },   // 01
+                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 02
+                new() { LayoutId = "C", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 03
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Flank },   // 05 중간 보스 — 대장 1 + 부하 3
+                new() { LayoutId = "K", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 06
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "G", Type = "COMBAT", Count = 7, Elite = 0, Comp = Frontline },   // 08
+                new() { LayoutId = "H", Type = "ELITE", Count = 8, Elite = 1, Comp = Flank },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
+            },
+            [5] = new RoomPlan[]
+            {
+                new() { LayoutId = "D", Type = "COMBAT", Count = 6, Elite = 0, Comp = Frontline },   // 01
+                new() { LayoutId = "C", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 02
+                new() { LayoutId = "K", Type = "COMBAT", Count = 7, Elite = 0, Comp = Backline },   // 03
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Backline },   // 05 중간 보스 — 대장 1 + 부하 3
+                new() { LayoutId = "G", Type = "COMBAT", Count = 7, Elite = 0, Comp = Backline },   // 06
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "H", Type = "COMBAT", Count = 8, Elite = 0, Comp = Flank },   // 08
+                new() { LayoutId = "L", Type = "ELITE", Count = 8, Elite = 1, Comp = Backline },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
+            },
+            [6] = new RoomPlan[]
+            {
+                new() { LayoutId = "C", Type = "COMBAT", Count = 7, Elite = 0, Comp = Flank },   // 01
+                new() { LayoutId = "K", Type = "COMBAT", Count = 7, Elite = 0, Comp = Backline },   // 02
+                new() { LayoutId = "G", Type = "COMBAT", Count = 8, Elite = 0, Comp = Frontline },   // 03
+                new() { Type = "EVENT", Pool = PoolBody },    // 04 이벤트 — 몸
+                new() { LayoutId = MidBossLayout, Type = "MIDBOSS", Count = 4, Elite = 0, Comp = Frontline },   // 05 중간 보스 — 대장 1 + 부하 3
                 new() { LayoutId = "H", Type = "COMBAT", Count = 8, Elite = 0, Comp = Frontline },   // 06
-                new() { LayoutId = "L", Type = "COMBAT", Count = 8, Elite = 0, Comp = Flank },   // 07
-                new() { LayoutId = "I", Type = "COMBAT", Count = 8, Elite = 0, Comp = Backline },   // 08
-                new() { LayoutId = "F", Type = "ELITE", Count = 10, Elite = 1, Comp = Frontline },   // 09
-                new() { Type = "BOSS" },   // 10 최종 보스
+                new() { Type = "EVENT", Pool = PoolStake },   // 07 이벤트 — 판돈
+                new() { LayoutId = "L", Type = "COMBAT", Count = 8, Elite = 0, Comp = Backline },   // 08
+                new() { LayoutId = "I", Type = "ELITE", Count = 8, Elite = 1, Comp = Frontline },   // 09
+                new() { Type = "BOSS" },                              // 10 최종 보스
             },
         };
 
@@ -477,7 +540,7 @@ namespace Game.EditorTools
         //
         // 같은 레이아웃에 조합만 바꿔 끼우면 **다른 방이 된다.** 앞줄부터 채운 방과
         // 측면부터 채운 방은 적이 서는 자리가 통째로 달라서, 지형이 같아도
-        // 걸어 들어갔을 때 읽히는 것이 다르다. 30방을 12종으로 채우는 힘이 여기서 나온다.
+        // 걸어 들어갔을 때 읽히는 것이 다르다. 60방을 12종으로 채우는 힘이 여기서 나온다.
 
         /// <summary>이 조합의 **선두 태그 둘**. 이 둘을 번갈아 가져간다.</summary>
         private static string[] LeadTags(string composition)

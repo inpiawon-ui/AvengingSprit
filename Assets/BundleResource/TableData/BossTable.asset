@@ -15,7 +15,7 @@ MonoBehaviour:
   _entries:
   - _bossKey: crusher
     _chapter: 1
-    _roomNo: 6
+    _roomNo: 10
     _nameEn: Crusher
     _nameKr: "\uD06C\uB7EC\uC154"
     _spriteName: unit_crusher
@@ -27,17 +27,17 @@ MonoBehaviour:
     _canonAtk: 18
     _state: 0
     _breakSeconds: 2.5
-    _breakCause: "\uB3CC\uC9C4\uC744 \uC606\uC73C\uB85C \uD53C\uD588\uB2E4"
+    _breakCause: "\uD30C\uAD34\uAD6C\uAC00 \uD5DB\uB3CC\uC544 \uBCBD\uC744 \uB54C\uB838\uB2E4"
     _moves:
-    - _pattern: 0
+    - _pattern: 2
       _fromPhase: 1
       _cooldown: 8
       _shotCount: 5
       _spreadDegrees: 180
       _damageMul: 0.94
       _telegraphSeconds: 1.25
-      _nameKr: "\uC9C4\uAC01"
-      _nameEn: Quake Fist
+      _nameKr: "\uC555\uCC29"
+      _nameEn: Crush
       _shape: 0
       _draw: 1
       _dodge: 0
@@ -49,59 +49,59 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 2
+    - _pattern: 1
       _fromPhase: 1
       _cooldown: 11
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1.33
       _telegraphSeconds: 1.5
-      _nameKr: "\uBCBD \uB3CC\uC9C4"
-      _nameEn: Wall Charge
-      _shape: 4
-      _draw: 18
-      _dodge: 1
+      _nameKr: "\uC1E0\uC0AC\uC2AC \uD30C\uAD34\uAD6C"
+      _nameEn: WreckingBall
+      _shape: 3
+      _draw: 2
+      _dodge: 5
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 3.6
+      _radiusMeters: 3.5
+      _widthMeters: 0
       _lengthMeters: 0
-      _innerRadiusMeters: 0
+      _innerRadiusMeters: 1.5
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 0
+    - _pattern: 5
       _fromPhase: 2
       _cooldown: 10
-      _shotCount: 7
-      _spreadDegrees: 100
+      _shotCount: 3
+      _spreadDegrees: 0
       _damageMul: 0.72
       _telegraphSeconds: 1.1
-      _nameKr: "\uD30C\uD3B8 \uBD80\uCC44\uAF34"
-      _nameEn: Debris Fan
-      _shape: 0
+      _nameKr: "\uCEE8\uBCA0\uC774\uC5B4 \uAC00\uB3D9"
+      _nameEn: Conveyor
+      _shape: 2
       _draw: 3
-      _dodge: 2
-      _degrees: 100
-      _radiusMeters: 6
+      _dodge: 1
+      _degrees: 0
+      _radiusMeters: 0
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
-      _lanes: 7
-      _safeAtMeters: {x: 5, y: 3.4}
-    - _pattern: 0
+      _lanes: 3
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 6
       _fromPhase: 3
       _cooldown: 14
       _shotCount: 5
-      _spreadDegrees: 180
+      _spreadDegrees: 120
       _damageMul: 1.06
       _telegraphSeconds: 1
-      _nameKr: "\uC774\uC911 \uC9C4\uAC01"
-      _nameEn: Double Quake
+      _nameKr: "\uBC29\uD328 \uC804\uAC1C"
+      _nameEn: ShieldUp
       _shape: 0
-      _draw: 2
-      _dodge: 1
-      _degrees: 180
+      _draw: 4
+      _dodge: 0
+      _degrees: 120
       _radiusMeters: 2.5
       _widthMeters: 0
       _lengthMeters: 0
@@ -110,8 +110,8 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
   - _bossKey: guardian
-    _chapter: 1
-    _roomNo: 12
+    _chapter: 2
+    _roomNo: 10
     _nameEn: Guardian
     _nameKr: "\uAC00\uB514\uC5B8"
     _spriteName: unit_guardian
@@ -122,25 +122,26 @@ MonoBehaviour:
     _canonHp: 2400
     _canonAtk: 22
     _state: 1
-    _breakSeconds: 2
-    _breakCause: "\uBC29\uD328 \uD589\uC9C4\uC744 \uBCBD\uC73C\uB85C \uC720\uC778\uD588\uB2E4"
+    _breakSeconds: 0
+    _breakCause: "\uB9C8\uB514\uB97C 3\uAC1C \uC774\uD558\uB85C \uB04A\uC5C8\uB2E4
+      \u2014 \uBA38\uB9AC \uBB34\uC801\uC774 \uC601\uAD6C\uD788 \uD480\uB9B0\uB2E4"
     _moves:
-    - _pattern: 0
+    - _pattern: 2
       _fromPhase: 1
       _cooldown: 7
       _shotCount: 5
-      _spreadDegrees: 120
+      _spreadDegrees: 0
       _damageMul: 0.82
       _telegraphSeconds: 1
-      _nameKr: "\uC774\uC9C0\uC2A4 \uC2A4\uC715"
-      _nameEn: Aegis Sweep
-      _shape: 0
-      _draw: 1
-      _dodge: 0
-      _degrees: 120
-      _radiusMeters: 3
-      _widthMeters: 0
-      _lengthMeters: 0
+      _nameKr: "\uB9C8\uB514 \uB3CC\uC9C4"
+      _nameEn: SegmentThrust
+      _shape: 1
+      _draw: 5
+      _dodge: 3
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 1.4
+      _lengthMeters: 7.2
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
@@ -148,41 +149,41 @@ MonoBehaviour:
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 12
-      _shotCount: 5
+      _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.73
       _telegraphSeconds: 1.4
-      _nameKr: "\uBC29\uD328 \uD589\uC9C4"
-      _nameEn: Shield March
-      _shape: 1
-      _draw: 4
+      _nameKr: "\uB9C8\uB514 \uC0AC\uCD9C"
+      _nameEn: SegmentLaunch
+      _shape: 3
+      _draw: 6
       _dodge: 1
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 3.6
-      _lengthMeters: 7
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 0
-      _fromPhase: 2
-      _cooldown: 10
-      _shotCount: 5
-      _spreadDegrees: 120
-      _damageMul: 0.91
-      _telegraphSeconds: 1.3
-      _nameKr: "\uBC18\uC0AC\uC120"
-      _nameEn: Reflective Line
-      _shape: 1
-      _draw: 1
-      _dodge: 7
-      _degrees: 120
-      _radiusMeters: 8
+      _radiusMeters: 1.4
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
+      _lanes: 2
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 1
+      _fromPhase: 2
+      _cooldown: 10
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.91
+      _telegraphSeconds: 1.3
+      _nameKr: "\uB62C\uB9AC"
+      _nameEn: CoilWall
+      _shape: 3
+      _draw: 7
+      _dodge: 2
+      _degrees: 0
+      _radiusMeters: 3.5
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 2.6
+      _gapDegrees: 60
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
     - _pattern: 2
@@ -192,22 +193,119 @@ MonoBehaviour:
       _spreadDegrees: 0
       _damageMul: 1.14
       _telegraphSeconds: 0.9
-      _nameKr: "\uAE68\uC9C4 \uC774\uC9C0\uC2A4 \uB3CC\uC9C4"
-      _nameEn: Broken Aegis Rush
+      _nameKr: "\uBA38\uB9AC \uBB3C\uAE30"
+      _nameEn: HeadBite
       _shape: 4
-      _draw: 18
-      _dodge: 0
+      _draw: 8
+      _dodge: 1
       _degrees: 0
       _radiusMeters: 0
-      _widthMeters: 3
+      _widthMeters: 1.6
+      _lengthMeters: 6
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+  - _bossKey: python
+    _chapter: 3
+    _roomNo: 10
+    _nameEn: Python
+    _nameKr: "\uD30C\uC774\uC36C"
+    _spriteName: unit_python
+    _hpMul: 1.55
+    _atkMul: 1.3
+    _moveSpeedMul: 0.95
+    _phaseCooldownMul: 0.72
+    _canonHp: 3150
+    _canonAtk: 25
+    _state: 2
+    _breakSeconds: 3
+    _breakCause: "\uBA38\uB9AC\uAC00 \uB098\uC628 \uC9C1\uD6C4 1.2\uCD08 \uC548\uC5D0
+      \uB54C\uB838\uB2E4"
+    _moves:
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 12
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.83
+      _telegraphSeconds: 1.6
+      _nameKr: "\uBCBD \uB3CC\uD30C"
+      _nameEn: WallBurst
+      _shape: 1
+      _draw: 9
+      _dodge: 3
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 1.8
+      _lengthMeters: 6
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 7
+      _fromPhase: 1
+      _cooldown: 9
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.59
+      _telegraphSeconds: 1.1
+      _nameKr: "\uB3C5\uAD6C\uB984"
+      _nameEn: VenomCloud
+      _shape: 3
+      _draw: 10
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 3.2
+      _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 5
+      _fromPhase: 2
+      _cooldown: 10
+      _shotCount: 4
+      _spreadDegrees: 0
+      _damageMul: 0.93
+      _telegraphSeconds: 1.25
+      _nameKr: "\uBAB8\uD1B5 \uAC00\uB85C\uC9C0\uB974\uAE30"
+      _nameEn: BodyCross
+      _shape: 2
+      _draw: 11
+      _dodge: 1
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 2.4
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 4
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 4
+      _fromPhase: 3
+      _cooldown: 16
+      _shotCount: 3
+      _spreadDegrees: 0
+      _damageMul: 1.17
+      _telegraphSeconds: 1
+      _nameKr: "\uC138 \uAC08\uB798 \uB3CC\uD30C"
+      _nameEn: TripleBurst
+      _shape: 1
+      _draw: 12
+      _dodge: 2
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 1.8
+      _lengthMeters: 6
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 3
+      _safeAtMeters: {x: 0, y: 0}
   - _bossKey: kingpin
-    _chapter: 2
-    _roomNo: 8
+    _chapter: 4
+    _roomNo: 10
     _nameEn: Kingpin
     _nameKr: "\uD0B9\uD540"
     _spriteName: unit_kingpin
@@ -215,11 +313,12 @@ MonoBehaviour:
     _atkMul: 1.3
     _moveSpeedMul: 0.95
     _phaseCooldownMul: 0.72
-    _canonHp: 3150
-    _canonAtk: 25
+    _canonHp: 4300
+    _canonAtk: 29
     _state: 0
-    _breakSeconds: 1.8
-    _breakCause: "3\uC810\uC0AC\uB97C \uBC84\uD17C\uB2E4"
+    _breakSeconds: 2
+    _breakCause: "\uC800\uACF5 \uD65C\uAC15\uC744 \uC625\uC0C1 \uAD6C\uC870\uBB3C
+      \uCABD\uC73C\uB85C \uC720\uC778\uD588\uB2E4"
     _moves:
     - _pattern: 4
       _fromPhase: 1
@@ -228,30 +327,30 @@ MonoBehaviour:
       _spreadDegrees: 0
       _damageMul: 0.88
       _telegraphSeconds: 1.35
-      _nameKr: "\uAD50\uCC28\uC0AC\uACA9 \uC9C0\uD718"
-      _nameEn: Crossfire Command
-      _shape: 1
-      _draw: 5
-      _dodge: 3
+      _nameKr: "\uBBF8\uC0AC\uC77C \uC77C\uC81C"
+      _nameEn: MissileSalvo
+      _shape: 3
+      _draw: 13
+      _dodge: 1
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.2
-      _lengthMeters: 10
+      _radiusMeters: 1.2
+      _widthMeters: 0
+      _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
-      _lanes: 0
+      _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 0
+    - _pattern: 4
       _fromPhase: 1
       _cooldown: 13
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1.24
       _telegraphSeconds: 1.8
-      _nameKr: "\uCC98\uD615 \uD45C\uC2DD"
-      _nameEn: Execution Mark
+      _nameKr: "\uCC98\uD615 \uC870\uC900"
+      _nameEn: ExecutionLock
       _shape: 5
-      _draw: 20
+      _draw: 14
       _dodge: 6
       _degrees: 0
       _radiusMeters: 2
@@ -260,145 +359,49 @@ MonoBehaviour:
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
-      _safeAtMeters: {x: 5, y: 3}
-    - _pattern: 4
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 2
       _fromPhase: 2
       _cooldown: 8
-      _shotCount: 3
+      _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.72
       _telegraphSeconds: 1
-      _nameKr: "\uC5C4\uD3D0 \uC774\uB3D9 \uC0AC\uACA9"
-      _nameEn: Cover-to-Cover Burst
-      _shape: 1
-      _draw: 6
-      _dodge: 5
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.2
-      _lengthMeters: 10
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 3
-      _safeAtMeters: {x: 2.5, y: 7.5}
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 15
-      _shotCount: 4
-      _spreadDegrees: 0
-      _damageMul: 1.12
-      _telegraphSeconds: 1.2
-      _nameKr: "\uC804\uD0C4 \uAC1C\uBC29"
-      _nameEn: All Guns Open
-      _shape: 3
-      _draw: 13
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 5
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 4
-      _safeAtMeters: {x: 7.5, y: 8.5}
-  - _bossKey: python
-    _chapter: 2
-    _roomNo: 16
-    _nameEn: Python
-    _nameKr: "\uD30C\uC774\uC36C"
-    _spriteName: unit_python
-    _hpMul: 1.55
-    _atkMul: 1.3
-    _moveSpeedMul: 0.95
-    _phaseCooldownMul: 0.72
-    _canonHp: 4300
-    _canonAtk: 29
-    _state: 0
-    _breakSeconds: 2.2
-    _breakCause: "\uC870\uC784 \uB098\uC120\uC758 \uD2C8\uC73C\uB85C \uBE60\uC838\uB098\uC654\uB2E4"
-    _moves:
-    - _pattern: 1
-      _fromPhase: 1
-      _cooldown: 12
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.83
-      _telegraphSeconds: 1.6
-      _nameKr: "\uC870\uC784 \uB098\uC120"
-      _nameEn: Constrict Spiral
-      _shape: 3
-      _draw: 11
-      _dodge: 2
-      _degrees: 0
-      _radiusMeters: 4.5
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 1.5
-      _gapDegrees: 50
-      _lanes: 0
-      _safeAtMeters: {x: 7.4, y: 4.8}
-    - _pattern: 7
-      _fromPhase: 1
-      _cooldown: 9
-      _shotCount: 4
-      _spreadDegrees: 0
-      _damageMul: 0.59
-      _telegraphSeconds: 1.1
-      _nameKr: "\uB3C5 \uC790\uAD6D"
-      _nameEn: Venom Spit Trail
-      _shape: 3
-      _draw: 12
-      _dodge: 3
-      _degrees: 0
-      _radiusMeters: 1.2
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 4
-      _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 4
-      _fromPhase: 2
-      _cooldown: 10
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.93
-      _telegraphSeconds: 1.25
-      _nameKr: "\uAF2C\uB9AC \uAD00\uBB38"
-      _nameEn: Tail Gate
-      _shape: 1
-      _draw: 7
+      _nameKr: "\uC800\uACF5 \uD65C\uAC15"
+      _nameEn: StrafingRun
+      _shape: 4
+      _draw: 15
       _dodge: 1
       _degrees: 0
       _radiusMeters: 0
-      _widthMeters: 2
+      _widthMeters: 3
       _lengthMeters: 10
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 2
+    - _pattern: 1
       _fromPhase: 3
-      _cooldown: 16
+      _cooldown: 15
       _shotCount: 5
       _spreadDegrees: 0
-      _damageMul: 1.17
-      _telegraphSeconds: 1
-      _nameKr: "\uD0C8\uD53C \uAD11\uB780"
-      _nameEn: Shed Skin Frenzy
-      _shape: 4
-      _draw: 19
+      _damageMul: 1.12
+      _telegraphSeconds: 1.2
+      _nameKr: "\uBD80\uC2A4\uD130 \uAC15\uD558"
+      _nameEn: BoosterDrop
+      _shape: 3
+      _draw: 16
       _dodge: 4
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 3
+      _radiusMeters: 3
+      _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
-      _safeAtMeters: {x: 3, y: 8.5}
+      _safeAtMeters: {x: 0, y: 0}
   - _bossKey: robot_snakes
-    _chapter: 3
+    _chapter: 5
     _roomNo: 10
     _nameEn: Robot Snakes
     _nameKr: "\uB85C\uBD07 \uC2A4\uB124\uC774\uD06C"
@@ -409,82 +412,22 @@ MonoBehaviour:
     _phaseCooldownMul: 0.72
     _canonHp: 5200
     _canonAtk: 33
-    _state: 2
-    _breakSeconds: 3
-    _breakCause: "\uB450 \uBA38\uB9AC \uC0AC\uC774\uC5D0 \uC11C\uC11C \uB85C\uCF13\uC744
-      \uC720\uB3C4\uD588\uB2E4"
+    _state: 3
+    _breakSeconds: 4
+    _breakCause: "\uB098\uC628 \uBA38\uB9AC\uB97C \uB418\uB4E4\uC5B4\uAC00\uAE30
+      \uC804\uC5D0 \uB54C\uB838\uB2E4"
     _moves:
     - _pattern: 5
       _fromPhase: 1
       _cooldown: 8
-      _shotCount: 3
+      _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.85
       _telegraphSeconds: 1.15
-      _nameKr: "\uAD50\uB300 \uB808\uC77C"
-      _nameEn: Alternating Rail
+      _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
+      _nameEn: HatchOpen
       _shape: 2
-      _draw: 10
-      _dodge: 1
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 3
-      _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 4
-      _fromPhase: 1
-      _cooldown: 11
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.73
-      _telegraphSeconds: 1.35
-      _nameKr: "\uCF00\uC774\uBE14 \uC4F8\uAE30"
-      _nameEn: Cable Sweep
-      _shape: 1
-      _draw: 8
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.2
-      _lengthMeters: 10
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 2.6, y: 8.5}
-    - _pattern: 4
-      _fromPhase: 2
-      _cooldown: 13
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.94
-      _telegraphSeconds: 1.5
-      _nameKr: "\uC790\uAE30 \uC720\uB3C4 \uB85C\uCF13"
-      _nameEn: Magnetized Rockets
-      _shape: 1
-      _draw: 9
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1
-      _lengthMeters: 10
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 5, y: 6.2}
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 18
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 1.15
-      _telegraphSeconds: 1.2
-      _nameKr: "\uD2B8\uC708 \uC624\uBC84\uB85C\uB4DC"
-      _nameEn: Twin Overload
-      _shape: 3
-      _draw: 16
+      _draw: 17
       _dodge: 4
       _degrees: 0
       _radiusMeters: 1.5
@@ -492,11 +435,71 @@ MonoBehaviour:
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
+      _lanes: 2
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 5
+      _fromPhase: 1
+      _cooldown: 11
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.73
+      _telegraphSeconds: 1.35
+      _nameKr: "\uB808\uC774\uC800"
+      _nameEn: RailLaser
+      _shape: 1
+      _draw: 18
+      _dodge: 3
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 0.8
+      _lengthMeters: 13
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
       _lanes: 0
-      _safeAtMeters: {x: 7.4, y: 8.5}
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 4
+      _fromPhase: 2
+      _cooldown: 13
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.94
+      _telegraphSeconds: 1.5
+      _nameKr: "\uCC9C\uC7A5 \uD30C\uD3B8"
+      _nameEn: DebrisFall
+      _shape: 3
+      _draw: 19
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.2
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 5
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 18
+      _shotCount: 6
+      _spreadDegrees: 0
+      _damageMul: 1.15
+      _telegraphSeconds: 1.2
+      _nameKr: "\uC77C\uC81C \uCD9C\uD604"
+      _nameEn: FullEmergence
+      _shape: 3
+      _draw: 20
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.5
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 6
+      _safeAtMeters: {x: 0, y: 0}
   - _bossKey: sludge
-    _chapter: 3
-    _roomNo: 20
+    _chapter: 6
+    _roomNo: 10
     _nameEn: Sludge
     _nameKr: "\uC2AC\uB7EC\uC9C0"
     _spriteName: unit_sludge
@@ -506,9 +509,10 @@ MonoBehaviour:
     _phaseCooldownMul: 0.72
     _canonHp: 6900
     _canonAtk: 37
-    _state: 3
-    _breakSeconds: 4
-    _breakCause: "\uBD84\uC5F4 \uCF54\uC5B4 3\uAC1C\uB97C \uB2E4 \uBD80\uC248\uB2E4"
+    _state: 4
+    _breakSeconds: 3.5
+    _breakCause: "\uCC9C\uC7A5\uC5D0 \uBD99\uC740 \uB3D9\uC548 \uC544\uB798\uC5D0\uC11C
+      \uB54C\uB824 \uB5A8\uC5B4\uB728\uB838\uB2E4"
     _moves:
     - _pattern: 1
       _fromPhase: 1
@@ -517,70 +521,50 @@ MonoBehaviour:
       _spreadDegrees: 0
       _damageMul: 0.78
       _telegraphSeconds: 1.4
-      _nameKr: "\uB3C5\uC131 \uBD95\uAD34"
-      _nameEn: Toxic Collapse
+      _nameKr: "\uC19F\uC544\uC624\uB984"
+      _nameEn: Emerge
       _shape: 3
-      _draw: 14
+      _draw: 21
       _dodge: 4
       _degrees: 0
-      _radiusMeters: 5
+      _radiusMeters: 2
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
-      _safeAtMeters: {x: 7, y: 4}
-    - _pattern: 4
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 7
       _fromPhase: 1
       _cooldown: 8
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.68
       _telegraphSeconds: 1.05
-      _nameKr: "\uC2AC\uB7EC\uC9C0 \uC190"
-      _nameEn: Sludge Hand
+      _nameKr: "\uBC49\uAE30"
+      _nameEn: Spit
       _shape: 1
-      _draw: 4
+      _draw: 22
       _dodge: 3
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.2
-      _lengthMeters: 6
+      _radiusMeters: 1.5
+      _widthMeters: 1.5
+      _lengthMeters: 8
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-    - _pattern: 7
+    - _pattern: 4
       _fromPhase: 2
       _cooldown: 14
       _shotCount: 3
       _spreadDegrees: 0
       _damageMul: 0.89
       _telegraphSeconds: 1.7
-      _nameKr: "\uC624\uC5FC \uBD84\uC5F4"
-      _nameEn: Contaminated Split
+      _nameKr: "\uCC9C\uC7A5 \uBD99\uAE30"
+      _nameEn: CeilingCling
       _shape: 3
-      _draw: 15
-      _dodge: 5
-      _degrees: 0
-      _radiusMeters: 5
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 3
-      _safeAtMeters: {x: 5, y: 5.5}
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 20
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 1.14
-      _telegraphSeconds: 1.25
-      _nameKr: "\uCD5C\uC885 \uC6A9\uD574"
-      _nameEn: Final Dissolution
-      _shape: 3
-      _draw: 17
+      _draw: 23
       _dodge: 4
       _degrees: 0
       _radiusMeters: 1.8
@@ -588,5 +572,25 @@ MonoBehaviour:
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
+      _lanes: 3
+      _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 7
+      _fromPhase: 3
+      _cooldown: 20
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 1.14
+      _telegraphSeconds: 1.25
+      _nameKr: "\uCC9C\uC7A5 \uD655\uC0B0"
+      _nameEn: CeilingSpread
+      _shape: 3
+      _draw: 24
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.6
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
       _lanes: 0
-      _safeAtMeters: {x: 4, y: 6}
+      _safeAtMeters: {x: 0, y: 0}

@@ -116,30 +116,17 @@ namespace Game.EditorTools
             _ => throw new Exception($"[보스] 모르는 shape: {s}"),
         };
 
-        private static int DrawOf(string s) => s switch
-        {
-            "arc" => (int)BossDraw.Arc,
-            "halves" => (int)BossDraw.Halves,
-            "fan" => (int)BossDraw.Fan,
-            "line" => (int)BossDraw.Line,
-            "crossline" => (int)BossDraw.CrossLine,
-            "burst" => (int)BossDraw.Burst,
-            "sweep" => (int)BossDraw.Sweep,
-            "cable" => (int)BossDraw.Cable,
-            "homing" => (int)BossDraw.Homing,
-            "lane" => (int)BossDraw.Lane,
-            "ring" => (int)BossDraw.Ring,
-            "trail" => (int)BossDraw.Trail,
-            "cover" => (int)BossDraw.Cover,
-            "quad" => (int)BossDraw.Quad,
-            "split" => (int)BossDraw.Split,
-            "overload" => (int)BossDraw.Overload,
-            "island" => (int)BossDraw.Island,
-            "dash" => (int)BossDraw.Dash,
-            "shed" => (int)BossDraw.Shed,
-            "mark" => (int)BossDraw.Mark,
-            _ => throw new Exception($"[보스] 모르는 draw: {s}"),
-        };
+        /// <summary>
+        /// 패턴 이름 → <see cref="BossDraw"/>.
+        ///
+        /// 표(`BossDefTable`)의 `Draw` 는 열거형 이름과 **글자까지 같게** 적는다.
+        /// 그래서 손으로 24줄을 옮겨 적지 않는다 — 옮겨 적으면 한 줄이 틀려도 안 보인다.
+        /// 못 알아본 이름은 던진다. 조용히 0(`None`)이 되면 예고가 통째로 안 그려진다.
+        /// </summary>
+        private static int DrawOf(string s)
+            => Enum.TryParse<BossDraw>(s, out var d) && d != BossDraw.None
+             ? (int)d
+             : throw new Exception($"[보스] 모르는 draw: {s}");
 
         private static int DodgeOf(string s) => s switch
         {
@@ -154,31 +141,37 @@ namespace Game.EditorTools
             _ => throw new Exception($"[보스] 모르는 dodge: {s}"),
         };
 
-        private static int StateOf(string s) => s switch
-        {
-            "GUARD" => (int)BossState.Guard,
-            "TWIN" => (int)BossState.Twin,
-            "SPLIT" => (int)BossState.Split,
-            _ => (int)BossState.None,
-        };
+        private static int StateOf(string s)
+            => Enum.TryParse<BossState>(s, out var v) ? (int)v : (int)BossState.None;
 
         /// <summary>
-        /// 새 도형을 아직 안 그리는 자리를 위한 옛 패턴.
-        /// 도형이 다 붙으면 이 매핑은 지운다 — 그때까지의 대역이다.
+        /// 도형이 아직 안 붙은 패턴이 떨어질 옛 거동.
+        ///
+        /// `StrikeDanger` 가 도형으로 때리지 못했을 때만 여기로 온다.
+        /// 24개 전부 도형을 갖게 되면 이 표는 지운다 — 그때까지의 대역이다.
         /// </summary>
         private static BossPattern LegacyOf(string draw) => draw switch
         {
-            "dash" or "shed" => BossPattern.Charge,
-            "lane" => BossPattern.PopupLaser,
-            "trail" or "split" => BossPattern.VenomCloud,
-            "ring" or "quad" or "island" or "overload" or "cover" => BossPattern.Ring,
-            "crossline" or "burst" or "cable" or "homing" or "line" or "sweep"
+            "Crush" or "SegmentThrust" or "HeadBite" or "StrafingRun" or "WallBurst"
+                => BossPattern.Charge,
+            "HatchOpen" or "RailLaser" or "BodyCross" or "Conveyor"
+                => BossPattern.PopupLaser,
+            "VenomCloud" or "Spit" or "CeilingSpread"
+                => BossPattern.VenomCloud,
+            "WreckingBall" or "CoilWall" or "BoosterDrop" or "Emerge" or "FullEmergence"
+                => BossPattern.Ring,
+            "TripleBurst" or "MissileSalvo" or "ExecutionLock" or "DebrisFall"
+                or "CeilingCling" or "SegmentLaunch"
                 => BossPattern.AimedBurst,
+            "ShieldUp" => BossPattern.ShieldCycle,
             _ => BossPattern.Volley,
         };
 
-        private static int ShotsOf(BossDefTable.Move m)
-            => m.Draw == "fan" ? 7 : m.Draw == "burst" ? 3 : m.Lanes > 0 ? m.Lanes : 5;
+        /// <summary>
+        /// 옛 거동이 쏠 발수. `Lanes` 가 곧 **도형 개수**이므로 그대로 쓴다 —
+        /// 미사일 5발·파편 5개·그림자 3개가 전부 이 값이다.
+        /// </summary>
+        private static int ShotsOf(BossDefTable.Move m) => m.Lanes > 0 ? m.Lanes : 5;
 
         // ── SerializedProperty 잔손질 ────────────────────────────
         private static void Set(SerializedProperty p, string n, string v)

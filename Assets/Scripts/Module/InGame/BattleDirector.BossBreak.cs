@@ -26,12 +26,6 @@ namespace Game.Module.InGame
         private float _breakLeft;
         private Unit _breakBoss;
 
-        /// <summary>가디언 방패가 깨졌는가. 깨져야 정면 감소가 70% → 30% 로 내려간다.</summary>
-        private bool _guardBroken;
-
-        /// <summary>이번 「자기 유도 로켓」이 다른 머리를 맞혔는가.</summary>
-        private bool _homingHitAlly;
-
         private bool IsBossBroken => _breakLeft > 0f && _breakBoss != null;
 
         /// <summary>취약 창 배수. 안 열려 있으면 1배.</summary>
@@ -51,9 +45,6 @@ namespace Game.Module.InGame
             boss.ApplyStun(sec);
             boss.SetTelegraph(false);
             ClearDanger();
-
-            // 가디언만 브레이크가 **필수**다. 이걸 못 내면 딜이 아예 안 들어간다.
-            if (def != null && def.State == BossState.Guard) _guardBroken = true;
 
             PlayFx("burst", boss.Position, 216f, loop: false);
             SpawnBreakBody(boss);
@@ -124,118 +115,141 @@ namespace Game.Module.InGame
         /// <summary>
         /// 패턴이 끝난 직후 취약 창 조건을 본다.
         /// <paramref name="playerHit"/> 는 이번 패턴이 플레이어를 맞혔는가.
+        ///
+        /// ⚠ 여섯이 **서로 다른 것을 요구한다.** 전부 "피하면 열림" 으로 만들면
+        ///   보스가 여섯인 이유가 사라진다 — 벽으로 유인하고, 마디를 끊고,
+        ///   나온 순간을 노리고, 구조물에 걸고, 되들어가기 전에 때리고, 떨어뜨린다.
         /// </summary>
         private void CheckBreak(Unit boss, BossMove m, bool playerHit)
         {
-            if (boss == null || m == null || IsBossBroken) { _homingHitAlly = false; return; }
+            if (boss == null || m == null || IsBossBroken) return;
             var def = _brain != null ? _brain.Entry : null;
-            if (def == null || !def.HasBreak) { _homingHitAlly = false; return; }
+            if (def == null || !def.HasBreak) return;
 
             switch (m.Draw)
             {
-                // 크러셔 「벽 돌진」 — 옆으로 피하면 보스가 벽에 박는다
-                case BossDraw.Dash:
-                    if (!playerHit && BossAtWall(boss)) OpenBreak(boss, "돌진이 벽에 박혔다");
+                // ── 크러셔 — 파괴구가 헛돌아 벽을 때렸다 ──────────
+                // 원 궤도 안쪽으로 파고들면(플레이어를 못 맞히면) 사슬이 벽을 친다.
+                case BossDraw.WreckingBall:
+                    if (!playerHit && BossAtWall(boss)) OpenBreak(boss, "파괴구가 벽에 박혔다");
                     break;
 
-                // 가디언 「방패 행진」 — 벽으로 유인하면 낀다
-                case BossDraw.Line when def.State == BossState.Guard:
-                    if (BossAtWall(boss)) OpenBreak(boss, "방패 행진이 벽에 걸렸다");
+                // ── 킹핀 — 활강을 옥상 구조물 쪽으로 유인했다 ─────
+                // 떠 있는 동안은 근접이 안 닿는다. 끌어내리는 방법이 이것뿐이다.
+                case BossDraw.StrafingRun:
+                    if (!playerHit && BossAtWall(boss)) OpenBreak(boss, "활강이 구조물에 걸렸다");
                     break;
 
-                // 킹핀 「엄폐 이동 사격」 — 3점사 뒤에는 반드시 재장전한다.
-                // 조건이 없는 유일한 브레이크다. 짧은 대신 자주 온다.
-                case BossDraw.Burst:
-                    OpenBreak(boss, "3점사 뒤 재장전");
+                // ── 파이썬 — 나온 직후에 때렸다 ───────────────────
+                // 머리가 벽 밖에 나와 있는 짧은 동안만 창이 열린다.
+                // 못 때리면 되들어가고 아무 일도 안 생긴다.
+                case BossDraw.WallBurst:
+                case BossDraw.TripleBurst:
+                    if (_bossExposedHit) OpenBreak(boss, "나온 머리를 제때 때렸다");
                     break;
 
-                // 파이썬 「조임 나선」 — 틈으로 빠져나왔을 때만 열린다.
-                // ⚠ 못 빠져나오면 경직도 없다 — 대응 실패가 딜 손실로 바로 이어지는
-                //   유일한 보스다. 여기에 자비를 넣으면 이 보스의 질문이 사라진다.
-                case BossDraw.Ring:
-                    if (!playerHit) OpenBreak(boss, "조임 나선의 틈으로 빠져나왔다");
+                // ── 로봇 스네이크 — 되들어가기 전에 때렸다 ────────
+                case BossDraw.HatchOpen:
+                case BossDraw.FullEmergence:
+                    if (_bossExposedHit) OpenBreak(boss, "솟은 머리를 되들어가기 전에 때렸다");
                     break;
 
-                // 로봇 스네이크 「자기 유도 로켓」 — 다른 머리에 맞혔을 때.
-                // 보스가 보스를 때린 것이라 브레이크가 가장 길다(3초).
-                case BossDraw.Homing:
-                    if (_homingHitAlly) OpenBreak(boss, "로켓을 다른 머리로 유도했다");
+                // ── 슬러지 — 천장에 붙은 것을 떨어뜨렸다 ──────────
+                case BossDraw.CeilingCling:
+                case BossDraw.CeilingSpread:
+                    if (_bossExposedHit) OpenBreak(boss, "천장에 붙은 것을 떨어뜨렸다");
                     break;
             }
-            _homingHitAlly = false;
+            _bossExposedHit = false;
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  GUARD — 앞이 막혀 있다 (가디언)
+        //  가디언 — 마디 여덟
         // ═══════════════════════════════════════════════════════════
         //
-        // 정면 120° 는 상시 피해 감소 70%. 그냥 쏘면 안 들어가고,
-        // 「반사선」이 도는 4초 동안 정면으로 쏘면 2배로 되돌아온다.
+        // ⚠ 원작 가디언은 **지네**다. 예전 코드는 정본 텍스트만 보고 방패병으로 만들어
+        //   정면 120° 피해 감소와 반사선을 붙여 놨는데, 원작 시트에 방패가 없다.
+        //   그 코드는 가리킬 보스가 없어져 통째로 지웠다.
         //
-        // ⚠ **이 보스만 브레이크가 필수다.** 방패를 깨야 70% 가 30% 로 내려간다 —
-        //   원거리로 정면만 두들기면 영영 안 죽는다. 그것이 이 보스의 질문이다.
+        // 몸통 마디 8개가 각각 HP 200 · 머리 800 = 합 2400 (보스 HP 그대로).
+        // **마디가 3 이하로 줄기 전까지 머리는 열리지 않는다.**
+        // 마디를 끊을수록 짧아지고 빨라진다 — 편하게 만든 만큼 위험해진다.
 
-        private const float GuardConeDegrees = 120f;
-        private const float GuardReduceIntact = 0.70f;
-        private const float GuardReduceBroken = 0.30f;
-        private const float ReflectLineSeconds = 4f;
+        private const int SegmentCount = 8;
+        private const int SegmentHp = 200;
 
-        private float _reflectLineLeft;
+        private int _segmentsLeft = SegmentCount;
+        private int _segmentDamage;
 
-        /// <summary>「반사선」이 도는 동안인가.</summary>
-        private bool IsReflectLine => _reflectLineLeft > 0f;
+        /// <summary>남은 마디 수. 「마디 돌진」의 길이가 이 값을 따라간다.</summary>
+        public int SegmentsLeft => _segmentsLeft;
 
-        private void TickGuard(float dt)
-        {
-            if (_reflectLineLeft > 0f) _reflectLineLeft -= dt;
-        }
+        /// <summary>이 보스가 마디를 가진 보스인가.</summary>
+        private bool IsSegmented
+            => _brain != null && _brain.Entry != null && _brain.Entry.State == BossState.Segments;
 
         /// <summary>
-        /// 가디언 정면으로 들어온 피해에 곱하는 값. 다른 보스는 언제나 1배.
+        /// 보스가 맞았다. 마디부터 깎이고, 3 이하로 줄면 머리가 **영구히** 열린다.
         ///
-        /// 방향은 **때린 몸의 자리**로 잰다. 탄이든 근접이든 결국 내가 선 쪽에서 오므로,
-        /// 탄마다 방향을 따로 들고 다니지 않아도 같은 답이 나온다.
+        /// 오토어택이라 플레이어가 조준할 대상을 고르지 않는다 — 그래서 마디와 머리를
+        /// 다른 표적으로 두지 않고 **한 HP 풀에서 앞쪽 1600 을 마디로** 본다.
+        /// 화면에서는 마디가 하나씩 떨어져 나가는 것으로 읽힌다.
         /// </summary>
-        private float GuardMul(Unit victim)
+        private void NoteBossDamage(Unit victim, int damage)
         {
-            if (victim == null || !victim.IsBoss) return 1f;
-            var def = _brain != null ? _brain.Entry : null;
-            if (def == null || def.State != BossState.Guard) return 1f;
+            if (victim == null || !victim.IsBoss || damage <= 0) return;
 
-            var from = Avatar;
-            if (from == null) return 1f;
-            var to = from.Position - victim.Position;
-            if (to.sqrMagnitude < 0.0001f) return 1f;
-            // 등 뒤에서는 감소가 없다 — 돌아 들어가는 것이 답이다.
-            if (Vector2.Angle(victim.Facing, to) > GuardConeDegrees * 0.5f) return 1f;
+            // 나와 있는 동안 맞았는가 — 파이썬·로봇스네이크·슬러지의 취약 창 조건이다.
+            if (_bossExposed) _bossExposedHit = true;
 
-            return 1f - (_guardBroken ? GuardReduceBroken : GuardReduceIntact);
+            if (!IsSegmented || _segmentsLeft <= 0) return;
+
+            _segmentDamage += damage;
+            int left = SegmentCount - _segmentDamage / SegmentHp;
+            if (left >= _segmentsLeft) return;
+
+            _segmentsLeft = Mathf.Max(0, left);
+            PlayFx("shatter", victim.Position, 96f, loop: false);
+
+            // 3 이하가 되는 순간 머리가 열린다. 시간제가 아니라 **영구**다.
+            if (_segmentsLeft <= 3 && !_headOpen)
+            {
+                _headOpen = true;
+                Debug.Log($"[보스] 가디언 머리 무적 해제 — 마디 {_segmentsLeft} 남음");
+                OpenBreak(victim, $"마디를 {_segmentsLeft} 개로 끊었다");
+            }
         }
 
-        /// <summary>
-        /// 가디언이 되받아칠 탄인가. **근접 타격은 반사되지 않는다**(정본) —
-        /// 그래서 「반사선」 중에는 붙어서 때리거나 뒤로 도는 것이 답이 된다.
-        /// </summary>
-        private bool TryGuardReflect(Unit boss, Projectile shot)
-        {
-            if (!IsReflectLine || boss == null || shot == null || !shot.FromPlayer) return false;
-            var to = shot.Position - boss.Position;
-            if (to.sqrMagnitude < 0.0001f) return false;
-            if (Vector2.Angle(boss.Facing, to) > GuardConeDegrees * 0.5f) return false;
+        /// <summary>가디언 머리가 열렸는가. 한 번 열리면 안 닫힌다.</summary>
+        private bool _headOpen;
 
-            shot.TurnHostile(2f);   // 되돌아오는 탄은 두 배로 아프다
-            PlayFx("reflect", shot.Position, 64f, loop: false);
-            return true;
-        }
+        // ═══════════════════════════════════════════════════════════
+        //  나와 있는 동안만 맞는 보스들
+        // ═══════════════════════════════════════════════════════════
+        //
+        // 파이썬은 벽 뒤에, 로봇 스네이크는 구멍 안에, 슬러지는 천장에 있다.
+        // **나와 있는 동안에만 맞고, 그때 때린 것이 취약 창을 연다.**
+        //
+        // ⚠ 이 게임은 오토어택이다. 노출 시간이 곧 전투 길이라서
+        //   비율을 기획이 못 박아 뒀다 — 파이썬 55% · 로봇 스네이크 100%.
+        //   (로봇 스네이크는 5200 HP 라 55% 면 전투가 두 배로 길어진다)
+
+        private bool _bossExposed = true;
+        private bool _bossExposedHit;
+
+        /// <summary>지금 보스를 때릴 수 있는가. 숨어 있는 동안은 조준에서도 뺀다.</summary>
+        public bool IsBossExposed => _bossExposed;
 
         /// <summary>방을 나가거나 보스가 죽으면 걸려 있던 것을 전부 끈다.</summary>
         private void ClearBossState()
         {
             _breakLeft = 0f;
             _breakBoss = null;
-            _guardBroken = false;
-            _reflectLineLeft = 0f;
-            _homingHitAlly = false;
+            _segmentsLeft = SegmentCount;
+            _segmentDamage = 0;
+            _headOpen = false;
+            _bossExposed = true;
+            _bossExposedHit = false;
         }
     }
 }

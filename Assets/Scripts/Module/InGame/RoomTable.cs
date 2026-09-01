@@ -94,6 +94,31 @@ namespace Game.Module.InGame
         [SerializeField] private Game.Character.BossMove[] _bossMoves =
             Array.Empty<Game.Character.BossMove>();
 
+        [Header("중간 보스 (방 005)")]
+        /// <summary>
+        /// 중간 보스 **대장의 호스트 키**. 비어 있으면 중간 보스 방이 아니다.
+        ///
+        /// ⚠ 최종 보스와 달리 `_bossId` 를 쓰지 않는다. `IsBoss` 가 켜지면
+        ///   전용 아레나 바닥으로 빠지는데, 중간 보스 방은 **레이아웃 F + 포로 수용실 바닥**
+        ///   으로 챕터마다 같은 모양이어야 한다.
+        ///
+        /// 대장은 새 패턴을 갖지 않는다 — **자기 액티브 스킬을 그대로 쓴다.**
+        /// 크기 1.8배 · HP 3배 · 공격력 1.4배 · 그 방에서는 빙의 불가.
+        /// 부하 3을 전부 잡으면 대장이 3초 경직한다 —
+        /// **대장은 못 뺏고 부하는 뺏을 수 있으니, 부하를 빼앗아 대장을 치는 전투가 된다.**
+        /// 원작 보스 6종이 전부 빙의 불가라 보스전에서 코어 루프가 끊기는데, 이 방이 그 반대다.
+        /// </summary>
+        [SerializeField] private string _midBossKey;
+
+        [Header("이벤트 (방 004 · 007)")]
+        /// <summary>
+        /// 이 이벤트 방이 뽑는 풀. `BODY`(004) 또는 `STAKE`(007).
+        ///
+        /// 자리마다 성격이 다르다 — 004 는 중간 보스 직전이라 **몸 상태를 고치는** 것이고,
+        /// 007 은 최종까지 세 방 남은 자리라 **판돈을 거는** 것이다.
+        /// </summary>
+        [SerializeField] private string _eventPool;
+
         [Header("스폰")]
         // 정본 v3.3 ROOM_REWARD — 방마다 붙는 보상.
         // 이것이 있어야 판 안에서 쓸 골드가 생기고, 이벤트·상점이 값을 가진다.
@@ -148,8 +173,23 @@ namespace Game.Module.InGame
         public IReadOnlyList<SpawnEntry> Spawns => _spawns;
         public IReadOnlyList<ObjectEntry> Objects => _objects;
 
-        /// <summary>보스 방인가. 정본의 타입 문자열은 "Boss Arena" 다.</summary>
+        /// <summary>
+        /// **최종** 보스 방인가 (방 010).
+        /// 중간 보스 방(005)은 여기 걸리지 않는다 — <see cref="IsMidBoss"/> 를 쓴다.
+        /// </summary>
         public bool IsBoss => !string.IsNullOrEmpty(_bossId);
+
+        /// <summary>중간 보스 대장의 호스트 키. 없으면 빈 문자열.</summary>
+        public string MidBossKey => _midBossKey;
+
+        /// <summary>중간 보스 방인가 (방 005).</summary>
+        public bool IsMidBoss => !string.IsNullOrEmpty(_midBossKey);
+
+        /// <summary>이벤트 방이 뽑을 풀 (`BODY` · `STAKE`). 없으면 빈 문자열.</summary>
+        public string EventPool => _eventPool;
+
+        /// <summary>이벤트 방인가 (방 004 · 007).</summary>
+        public bool IsEvent => !string.IsNullOrEmpty(_eventPool);
     }
 
     /// <summary>

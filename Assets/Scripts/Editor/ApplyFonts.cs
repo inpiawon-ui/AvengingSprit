@@ -28,6 +28,7 @@ namespace Game.Editor
             "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab",
             "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab",
             "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
+            "Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab",
         };
 
         [MenuItem("Tools/Game/Apply Fonts To UI Prefabs")]

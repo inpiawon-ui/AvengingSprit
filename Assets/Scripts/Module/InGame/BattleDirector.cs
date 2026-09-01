@@ -2634,7 +2634,6 @@ namespace Game.Module.InGame
             CheckCrisisBarrier();   // 위기는 피격뿐 아니라 화상·장판으로도 온다
             TickSkillEffect(dt);
             TickBreak(dt);
-            TickGuard(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -5399,8 +5398,10 @@ namespace Game.Module.InGame
             // 그래야 "지금은 피할 때" 라는 구간이 생긴다.
             if (victim.IsBoss && _bossShield > 0f)
                 damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
-            // 가디언 정면 감소 · 취약 창 보너스. 둘 다 보스에게만 붙는다.
-            damage = Mathf.Max(1, Mathf.RoundToInt(damage * GuardMul(victim) * BreakMul(victim)));
+            // 취약 창 보너스. 보스에게만 붙는다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * BreakMul(victim)));
+            // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
+            NoteBossDamage(victim, damage);
             ShowDamage(victim.Position, damage, toEnemy: true);
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
@@ -5864,12 +5865,6 @@ namespace Game.Module.InGame
                     continue;
                 }
 
-                // 가디언 「반사선」 — 정면으로 들어온 내 탄을 되돌려 보낸다.
-                // ⚠ 탄만 반사된다. 근접 타격은 그대로 들어간다(정본) —
-                //   그래서 이 4초 동안의 답이 "붙어서 때리거나 뒤로 돌거나" 가 된다.
-                if (p.FromPlayer && IsReflectLine && _boss != null && TryGuardReflect(_boss, p))
-                    continue;
-
                 // 방 벽에서 튕긴다. 도탄이 없는 탄은 그냥 밖으로 나가 수명으로 사라진다 —
                 // 벽에서 없애 버리면 화면 끝에서 탄이 뚝 끊겨 어색하다.
                 if (p.BouncesLeft > 0 && !BounceOffWalls(p)) { }
@@ -6006,7 +6001,8 @@ namespace Game.Module.InGame
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.CurseDamageMul));
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.AmpDamageMul));
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * ScorchMul(victim)));
-            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * GuardMul(victim) * BreakMul(victim)));
+            dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * BreakMul(victim)));
+            NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
             // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
             // 겹은 때린 다음에 쌓는다. 먼저 쌓으면 첫 타부터 보너스가 붙어

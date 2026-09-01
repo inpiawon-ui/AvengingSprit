@@ -5,6 +5,7 @@ namespace Game.Module.Common
     {
         public const string Boot   = "BootScene";
         public const string Title  = "TitleScene";
+        public const string Opening = "OpeningScene";
         public const string Lobby  = "LobbyScene";
         public const string InGame = "GameScene";
     }
