@@ -181,10 +181,12 @@ namespace Game.Module.Opening
         }
 
         /// <summary>
-        /// 오프닝이 끝났다. **바로 전투로 간다.**
+        /// 오프닝이 끝났다. **로비로 간다.**
         ///
-        /// 로비를 거치지 않는다 — 컷신이 「딸을 구해 주게」로 끝나는데 그다음이
-        /// 호스트 고르는 화면이면 그 말이 갈 곳을 잃는다.
+        /// ⚠ 한때 전투로 바로 보냈다. 컷신이 「딸을 구해 주게」로 끝나니 그대로
+        ///   싸우러 가는 것이 자연스럽다고 봤는데, 그러면 **어떤 몸으로 들어갈지
+        ///   고르는 자리가 통째로 없어진다.** 로비가 호스트를 고르는 화면이다.
+        ///   오프닝은 이야기의 문이지 전투의 문이 아니다.
         /// </summary>
         private void Finish()
         {
@@ -193,14 +195,14 @@ namespace Game.Module.Opening
             PlayerPrefs.SetInt(SeenKey, 1);
             PlayerPrefs.Save();
             Release();
-            GoBattleAsync().Forget();   // fire-and-forget: 씬 전환을 기다릴 일이 없다
+            GoLobbyAsync().Forget();   // fire-and-forget: 씬 전환을 기다릴 일이 없다
         }
 
-        private async UniTaskVoid GoBattleAsync()
+        private async UniTaskVoid GoLobbyAsync()
         {
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
-                SceneName = SceneNames.InGame,
+                SceneName = SceneNames.Lobby,
                 LoadingStyle = LoadingStyle.Overlay,
             });
         }
