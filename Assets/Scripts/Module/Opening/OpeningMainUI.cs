@@ -29,6 +29,18 @@ namespace Game.Module.Opening
         /// <summary>본 적 있는가. 한 번 보면 다음부터 안 뜬다.</summary>
         public const string SeenKey = "AVSR.OpeningSeen";
 
+        /// <summary>
+        /// **지금은 매번 뜬다.** 본 기록을 무시한다.
+        ///
+        /// 오프닝을 만드는 동안은 확인할 때마다 다시 봐야 하는데, 한 번 건너뛰면
+        /// 기록이 남아 그다음부터 안 떠서 "오프닝이 안 나온다" 로 보인다 —
+        /// 실제로 그렇게 한 번 헤맸다.
+        ///
+        /// ⚠ **정상 동작(첫 실행에만)으로 돌리려면 이 한 줄을 `false` 로 바꾼다.**
+        ///   사용자가 "이제 꺼도 된다" 고 할 때까지 `true` 로 둔다 (2026-09-01 지시).
+        /// </summary>
+        public const bool AlwaysShow = true;
+
         private const string AddressPrefix = "cutscene/";
 
         /// <summary>컷이 바뀔 때 그림이 스며드는 시간. 딱 끊으면 슬라이드처럼 보인다.</summary>

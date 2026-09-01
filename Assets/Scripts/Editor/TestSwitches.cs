@@ -18,6 +18,7 @@ namespace Game.EditorTools
         private const string OneEnemyMenu = "Tools/Game/테스트 — 방당 몹 1기";
         private const string ThemeMenu    = "Tools/Game/테스트 — 1챕터에서 테마 6종 다 보기";
         private const string BossMenu     = "Tools/Game/테스트 — 방 1~6 에 보스 하나씩";
+        private const string OpeningMenu  = "Tools/Game/테스트 — 오프닝 다시 보기";
 
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
@@ -60,6 +61,34 @@ namespace Game.EditorTools
         private static bool ToggleBossRoomsValidate()
         {
             Menu.SetChecked(BossMenu, BattleDirector.BossPerRoomTest);
+            return true;
+        }
+
+        // ── 오프닝 다시 보기 ────────────────────────────────────
+        //
+        // 오프닝은 **첫 실행에만** 뜨고, 한 번 보거나 건너뛰면 `PlayerPrefs` 에
+        // 표시가 남아 다음부터 타이틀에서 바로 로비로 간다.
+        //
+        // ⚠ 그 표시는 **플레이를 멈춰도 남는다.** 확인하다 한 번 건너뛰면
+        //   그다음부터 오프닝이 안 떠서 "안 나온다" 로 보인다 — 실제로 그렇게 헤맸다.
+        //   이 메뉴로 지운다.
+        //
+        // `EditorPrefs` 가 아니라 `PlayerPrefs` 다. 게임이 읽는 값이라 여기 있어야 한다.
+
+        [MenuItem(OpeningMenu)]
+        private static void ReplayOpening()
+        {
+            PlayerPrefs.DeleteKey(Game.Module.Opening.OpeningMainUI.SeenKey);
+            PlayerPrefs.Save();
+            Debug.Log("[테스트] 오프닝 본 기록을 지웠다 — 다음 시작에 다시 뜬다");
+        }
+
+        [MenuItem(OpeningMenu, true)]
+        private static bool ReplayOpeningValidate()
+        {
+            // 체크 표시가 곧 "지금 오프닝이 뜨는 상태인가" 다.
+            Menu.SetChecked(OpeningMenu,
+                PlayerPrefs.GetInt(Game.Module.Opening.OpeningMainUI.SeenKey, 0) == 0);
             return true;
         }
 

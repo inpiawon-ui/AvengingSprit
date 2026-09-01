@@ -146,7 +146,10 @@ namespace Game.Module.Title
         /// </summary>
         private async UniTaskVoid GoLobbyAsync()
         {
-            bool seen = PlayerPrefs.GetInt(Opening.OpeningMainUI.SeenKey, 0) != 0;
+            // ⚠ `AlwaysShow` 가 켜져 있는 동안은 본 기록을 무시하고 매번 띄운다.
+            //   만드는 중이라 확인할 때마다 봐야 한다. 끄는 방법은 그 상수 주석에 있다.
+            bool seen = !Opening.OpeningMainUI.AlwaysShow
+                     && PlayerPrefs.GetInt(Opening.OpeningMainUI.SeenKey, 0) != 0;
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
                 SceneName = seen ? SceneNames.Lobby : SceneNames.Opening,
