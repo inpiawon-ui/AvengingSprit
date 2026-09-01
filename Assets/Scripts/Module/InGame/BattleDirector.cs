@@ -2634,6 +2634,9 @@ namespace Game.Module.InGame
             CheckCrisisBarrier();   // 위기는 피격뿐 아니라 화상·장판으로도 온다
             TickSkillEffect(dt);
             TickBreak(dt);
+            // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
+            TickBossPresence(dt);
+            TickBossMinions(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -4458,6 +4461,17 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>
+        /// 조준에 잡히는 몸인가.
+        ///
+        /// ⚠ **숨은 보스는 빠진다.** 벽 뒤·구멍 안에 있는 것을 계속 쏘면
+        ///   탄이 허공으로 나가고, 오토어택이라 플레이어가 그것을 못 바꾼다.
+        ///   조준을 세는 자리가 셋(`Nearest`·`NearestEnemy` 둘)이라 한 함수로 묶는다 —
+        ///   따로 두면 한 곳만 고쳐진다.
+        /// </summary>
+        private bool Targetable(Unit e)
+            => e != null && e.IsAlive && !e.IsDying && !e.IsHidden;
+
         private Unit NearestEnemy(Vector2 from, float range)
         {
             Unit best = null;
@@ -4465,7 +4479,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying) continue;
+                if (!Targetable(e)) continue;
                 // 가장자리까지 잰다 — 거리를 재는 자는 온 코드에서 하나여야 한다.
                 // 스킬이 "반경 안 최근접" 을 물을 때 보스만 72px 멀리 있는 것으로 세면,
                 // 코앞의 보스를 두고 뒤쪽 잡몹에게 사슬이 날아간다.
@@ -5398,6 +5412,9 @@ namespace Game.Module.InGame
             // 그래야 "지금은 피할 때" 라는 구간이 생긴다.
             if (victim.IsBoss && _bossShield > 0f)
                 damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
+            // ⚠ 숨어 있는 보스는 안 맞는다. 벽 뒤·구멍 안에 있는 것을 때릴 수는 없다.
+            if (victim.IsBoss && !_bossExposed) return;
+
             // 취약 창 보너스. 보스에게만 붙는다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * BreakMul(victim)));
             // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
@@ -6001,6 +6018,7 @@ namespace Game.Module.InGame
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.CurseDamageMul));
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.AmpDamageMul));
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * ScorchMul(victim)));
+            if (victim.IsBoss && !_bossExposed) return;   // 숨어 있으면 안 맞는다
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * BreakMul(victim)));
             NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
@@ -6140,7 +6158,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive) continue;
+                if (!Targetable(e)) continue;
                 // 화면 밖은 겨누지 않는다. 방이 화면보다 길어진 뒤로 안 보이는 적을 향해
                 // 쏘는 일이 생겼다 — 플레이어에게는 허공에 대고 쏘는 것으로 보인다.
                 if (!IsOnScreen(e)) continue;
@@ -7442,7 +7460,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying) continue;
+                if (!Targetable(e)) continue;
                 if ((e.Position - at).sqrMagnitude > r2) continue;
                 _rangeBuffer.Add(e);
             }

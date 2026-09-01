@@ -43,11 +43,17 @@ namespace Game.Module.Opening
 
         private const string AddressPrefix = "cutscene/";
 
-        /// <summary>컷이 바뀔 때 그림이 스며드는 시간. 딱 끊으면 슬라이드처럼 보인다.</summary>
+        /// <summary>
+        /// 컷이 바뀔 때 새 그림이 스며드는 시간.
+        ///
+        /// ⚠ **연속 프레임(발포·유령)에는 안 쓴다.** 0.13초짜리 프레임에 0.18초 페이드를
+        ///   걸면 그림이 뜨기도 전에 다음 장으로 넘어가 화면이 깜박인다.
+        /// </summary>
         private const float FadeSeconds = 0.18f;
 
         private UIBinder _ui;
-        private Image _cut;
+        private Image _cut;          // 앞 겹 — 지금 컷
+        private Image _cutBack;      // 뒷 겹 — 지나가는 컷을 받쳐 준다
         private CanvasGroup _cutGroup;
         private Transform _box;
         private CanvasGroup _boxGroup;
@@ -71,6 +77,8 @@ namespace Game.Module.Opening
                 _cut = cutT.GetComponent<Image>();
                 _cutGroup = cutT.GetComponent<CanvasGroup>() ?? cutT.gameObject.AddComponent<CanvasGroup>();
             }
+            var backT = _ui.Find("CutImageBack");
+            if (backT != null) _cutBack = backT.GetComponent<Image>();
 
             _box = _ui.Find("TextBox");
             if (_box != null)
@@ -93,6 +101,8 @@ namespace Game.Module.Opening
                 float t = Mathf.Clamp01(1f - _fadeLeft / FadeSeconds);
                 if (_cutGroup != null) _cutGroup.alpha = t;
                 if (_boxGroup != null) _boxGroup.alpha = t;
+                // 새 그림이 다 스며들었으면 받쳐 주던 겹을 내린다.
+                if (_fadeLeft <= 0f && _cutBack != null) _cutBack.enabled = false;
             }
 
             if (_autoLeft <= 0f) return;
@@ -118,7 +128,10 @@ namespace Game.Module.Opening
 
             var cut = _cuts[_index];
             _autoLeft = cut.AutoSeconds;
-            _fadeLeft = FadeSeconds;
+
+            // ⚠ **여기서 페이드를 시작하지 않는다.** 그림은 비동기로 온다 —
+            //   도착 전에 알파를 0 으로 떨어뜨리면 옛 그림이 흐려졌다가 새 그림이
+            //   튀어나온다. 페이드는 그림이 실제로 바뀌는 순간(`ShowArtAsync`)에 건다.
 
             // 글상자 — 대사가 없는 컷은 아예 숨긴다. 빈 상자가 떠 있으면 화면을 먹는다.
             if (_box != null) _box.gameObject.SetActive(cut.HasLine);
@@ -128,10 +141,24 @@ namespace Game.Module.Opening
         }
 
         /// <summary>
+        /// 이 컷이 **연속 프레임**인가. 발포 5장·유령 4장처럼 앞뒤가 같은 장면이면
+        /// 겹쳐 넘기지 않고 그냥 갈아 끼운다 — 0.13초짜리에 0.18초 페이드를 걸면
+        /// 그림이 뜨기도 전에 다음 장이라 화면이 깜박인다.
+        ///
+        /// 판단 기준은 **앞 컷도 자동이었는가** 다. 연속 프레임의 첫 장은
+        /// 새 장면이므로 겹쳐 들어오고, 둘째 장부터 갈아 끼운다.
+        /// </summary>
+        private bool IsSameShot(int index)
+            => index > 0 && _cuts[index].IsAuto && _cuts[index - 1].IsAuto;
+
+        /// <summary>
         /// 이 컷의 그림을 띄운다.
         ///
         /// ⚠ **먼저 놓고 나서 부르지 않는다.** 놓아 버리면 새 그림이 오는 동안 화면이
         ///   한 번 비어 깜빡인다. 새것을 받은 다음에 지난 것을 놓는다.
+        ///
+        /// ⚠ 그림이 **실제로 바뀌는 순간**에만 페이드를 건다. 넘기자마자 걸면
+        ///   아직 옛 그림인 채로 흐려졌다가 새 그림이 튀어나온다.
         /// </summary>
         private async UniTaskVoid ShowArtAsync(OpeningCut cut)
         {
@@ -139,7 +166,12 @@ namespace Game.Module.Opening
 
             if (!cut.HasArt)
             {
+                // 그림 없는 컷(암전). 겹쳐 넘길 것이 없으니 그냥 끈다.
+                if (_cutBack != null) _cutBack.enabled = false;
                 _cut.enabled = false;
+                if (_cutGroup != null) _cutGroup.alpha = 1f;
+                _fadeLeft = 0f;
+                if (_boxGroup != null) _boxGroup.alpha = 1f;
                 Release();
                 return;
             }
@@ -158,8 +190,33 @@ namespace Game.Module.Opening
             string previous = _heldAddress;
             _heldAddress = address;
 
-            if (sprite != null) { _cut.sprite = sprite; _cut.enabled = true; }
-            else _cut.enabled = false;
+            if (sprite == null) { _cut.enabled = false; return; }
+
+            if (IsSameShot(_index))
+            {
+                // 같은 장면의 다음 프레임 — 갈아 끼우기만 한다.
+                if (_cutBack != null) _cutBack.enabled = false;
+                _fadeLeft = 0f;
+                if (_cutGroup != null) _cutGroup.alpha = 1f;
+                if (_boxGroup != null) _boxGroup.alpha = 1f;
+                _cut.sprite = sprite;
+                _cut.enabled = true;
+            }
+            else
+            {
+                // 새 장면 — 지나가는 그림을 뒤에 받쳐 두고 그 위로 스며들게 한다.
+                // 검은 화면을 거치지 않으므로 끊겨 보이지 않는다.
+                if (_cutBack != null && _cut.enabled && _cut.sprite != null)
+                {
+                    _cutBack.sprite = _cut.sprite;
+                    _cutBack.enabled = true;
+                }
+                _cut.sprite = sprite;
+                _cut.enabled = true;
+                _fadeLeft = FadeSeconds;
+                if (_cutGroup != null) _cutGroup.alpha = 0f;
+                if (_boxGroup != null) _boxGroup.alpha = 0f;
+            }
 
             if (!string.IsNullOrEmpty(previous) && previous != address) res.Release(previous);
         }

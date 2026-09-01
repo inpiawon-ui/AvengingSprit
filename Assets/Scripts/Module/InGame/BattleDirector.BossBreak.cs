@@ -236,9 +236,169 @@ namespace Game.Module.InGame
 
         private bool _bossExposed = true;
         private bool _bossExposedHit;
+        private float _presenceLeft;
 
         /// <summary>지금 보스를 때릴 수 있는가. 숨어 있는 동안은 조준에서도 뺀다.</summary>
         public bool IsBossExposed => _bossExposed;
+
+        // 파이썬 — 벽 뒤. 나와 있는 동안만 맞는다.
+        //   기획이 못 박은 값: **노출 55% 이상.** 2.5 / (2.5 + 1.5) = 62.5%.
+        private const float PythonOutSeconds = 2.5f;
+        private const float PythonInSeconds  = 1.5f;
+
+        // 로봇 스네이크 — 구멍. **항상 하나는 나와 있다(100%).**
+        //   5200 HP 라 55% 면 전투가 두 배로 길어진다. 대신 자리가 계속 바뀐다.
+        private const float SnakeHopSeconds = 3.0f;
+
+        /// <summary>이 보스가 숨는 보스인가.</summary>
+        private bool HidesAway
+        {
+            get
+            {
+                var def = _brain != null ? _brain.Entry : null;
+                if (def == null) return false;
+                return def.State == BossState.Walls
+                    || def.State == BossState.Holes
+                    || def.State == BossState.Ceiling;
+            }
+        }
+
+        /// <summary>
+        /// 보스가 어디에 있는가를 굴린다.
+        ///
+        /// ⚠ **취약 창이 안 열려 있을 때만 돈다.** 취약 창은 "때릴 시간" 이라
+        ///   그동안 보스가 숨어 버리면 창을 열어 준 의미가 없다.
+        /// </summary>
+        private void TickBossPresence(float dt)
+        {
+            var boss = _boss;
+            if (boss == null || !boss.IsAlive) return;
+            var def = _brain != null ? _brain.Entry : null;
+            if (def == null || !HidesAway) { Show(boss); return; }
+            if (IsBossBroken) { Show(boss); return; }
+
+            switch (def.State)
+            {
+                // ── 파이썬 — 벽 뒤에 있다가 뚫고 나온다 ───────────
+                case BossState.Walls:
+                    _presenceLeft -= dt;
+                    if (_presenceLeft > 0f) break;
+                    if (_bossExposed) { Hide(boss, shadow: false); _presenceLeft = PythonInSeconds; }
+                    else
+                    {
+                        // 나올 자리는 매번 다르다. 어디서 나올지 모르는 것이 이 보스다.
+                        boss.Position = ClampedInField(boss, WallSpot());
+                        Show(boss);
+                        _presenceLeft = PythonOutSeconds;
+                    }
+                    break;
+
+                // ── 로봇 스네이크 — 구멍을 옮겨 다닌다. 늘 나와 있다 ──
+                case BossState.Holes:
+                    Show(boss);
+                    _presenceLeft -= dt;
+                    if (_presenceLeft > 0f) break;
+                    _presenceLeft = SnakeHopSeconds;
+                    _dangerTick++;                       // 다음 구멍
+                    boss.Position = ClampedInField(boss, HoleSpot(_dangerTick));
+                    PlayFx("shatter", boss.Position, 120f, loop: false);
+                    break;
+
+                // ── 슬러지 — 천장 패턴 동안만 위에 있다 ────────────
+                case BossState.Ceiling:
+                {
+                    bool onCeiling = _dangerMove != null
+                        && (_dangerMove.Draw == BossDraw.CeilingCling
+                         || _dangerMove.Draw == BossDraw.CeilingSpread);
+                    if (onCeiling) Hide(boss, shadow: true);   // 그림자만 남는다
+                    else Show(boss);
+                    break;
+                }
+            }
+        }
+
+        private void Show(Unit boss)
+        {
+            if (_bossExposed && !boss.IsHidden) return;
+            _bossExposed = true;
+            boss.SetHidden(false);
+        }
+
+        private void Hide(Unit boss, bool shadow)
+        {
+            _bossExposed = false;
+            boss.SetHidden(true, shadow);
+        }
+
+        /// <summary>파이썬이 나오는 벽 앞자리. 네 벽을 돌아가며 쓴다.</summary>
+        private Vector2 WallSpot()
+        {
+            float inset = 1.6f * _pxPerMeter;
+            switch (_rng.Next(4))
+            {
+                case 0:  return new Vector2(inset, -_roomSize.y * Rand01(0.25f, 0.75f));
+                case 1:  return new Vector2(_roomSize.x - inset, -_roomSize.y * Rand01(0.25f, 0.75f));
+                case 2:  return new Vector2(_roomSize.x * Rand01(0.25f, 0.75f), -inset);
+                default: return new Vector2(_roomSize.x * Rand01(0.25f, 0.75f), -_roomSize.y + inset);
+            }
+        }
+
+        /// <summary>
+        /// 구멍 여섯 중 하나.
+        /// ⚠ <see cref="DangerShape"/> 와 **같은 표**를 쓴다 — 바닥 그림에 픽셀로 박힌 자리다.
+        ///   여기서 따로 계산하면 뱀이 구멍 아닌 데서 솟는다.
+        /// </summary>
+        private Vector2 HoleSpot(int tick) => DangerShape.HoleAtRoom(tick, _roomSize);
+
+        private float Rand01(float a, float b) => Mathf.Lerp(a, b, (float)_rng.NextDouble());
+
+        // ── 숨는 보스 방에는 잡몹이 상시 둘 ──────────────────────
+        //
+        // 보스가 벽 뒤·구멍 안·천장에 있는 동안 방에 때릴 것이 하나도 없으면
+        // **그냥 기다리는 시간**이 된다. 오토어택이라 플레이어가 할 일이 없다.
+        //
+        // 잡몹이 있으면 그동안 싸울 것이 생기고, **빙의도 같이 산다** —
+        // 「그때 빼앗는다」가 이 세 보스의 취약 창 설명이기도 하다.
+
+        private const int BossRoomMinions = 2;
+        private const float MinionRefillSeconds = 8f;
+
+        private float _minionRefillLeft;
+
+        private void TickBossMinions(float dt)
+        {
+            if (_boss == null || !_boss.IsAlive || !HidesAway) return;
+
+            int alive = 0;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e != null && e.IsAlive && !e.IsDying && e != _boss) alive++;
+            }
+            if (alive >= BossRoomMinions) { _minionRefillLeft = MinionRefillSeconds; return; }
+
+            _minionRefillLeft -= dt;
+            if (_minionRefillLeft > 0f) return;
+            _minionRefillLeft = MinionRefillSeconds;
+
+            int chapter = _canonRoom != null ? _canonRoom.Chapter
+                        : (_player != null ? _player.CurrentChapter : 1);
+            var profile = TrashAt(_dangerTick + alive, chapter);
+            if (profile == null) return;
+
+            var u = NewUnit($"BossMinion_{profile.HostKey}");
+            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, TrashSprite(profile),
+                    EnemyHpOf(profile), EnemyAtkOf(profile), EnemySpeedOf(profile),
+                    EnemyRangeOf(profile), EnemyIntervalOf(profile),
+                    UnitBox(84f, 78f), isBoss: false, profile: profile);
+            // 보스 옆이 아니라 **방 가장자리**에서 온다. 보스에 겹쳐 세우면
+            // 보스가 나오는 순간 겹쳐 보이고, 예고 도형도 가린다.
+            u.Position = ClampedInField(u, WallSpot());
+            u.IsAggro = true;
+            u.ResetPattern();
+            ApplyFacingSprites(u, profile.SpriteKey);
+            _enemies.Add(u);
+        }
 
         /// <summary>방을 나가거나 보스가 죽으면 걸려 있던 것을 전부 끈다.</summary>
         private void ClearBossState()

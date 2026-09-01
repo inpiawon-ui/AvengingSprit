@@ -1395,6 +1395,48 @@ namespace Game.Module.InGame
                 _body.rectTransform.anchoredPosition = new Vector2(0f, pixels);
         }
 
+        // ── 숨기 — 벽 뒤 · 구멍 안 · 천장 ────────────────────────
+        //
+        // 보스 셋은 방에 늘 서 있지 않는다. 파이썬은 벽 뒤에, 로봇 스네이크는
+        // 구멍 안에, 슬러지는 천장에 있다. **숨어 있는 동안은 때릴 수 없다.**
+        //
+        // ⚠ 자리(`Position`)는 그대로 둔다. 화면 밖으로 옮기면 거리 판정·정렬이
+        //   전부 그 좌표를 보게 되고, 다시 나올 때 엉뚱한 데서 나온다.
+        //   **몸 그림만 끄고 바닥에 그림자를 남긴다** — 그림자가 "저기 있다" 를 말한다.
+
+        private Image _shadow;
+
+        /// <summary>숨어 있는가. 숨어 있으면 조준에서도 빠지고 피해도 안 들어간다.</summary>
+        public bool IsHidden { get; private set; }
+
+        /// <summary>
+        /// 몸을 숨기거나 드러낸다.
+        /// <paramref name="showShadow"/> 가 켜져 있으면 바닥에 그림자를 남긴다 —
+        /// 슬러지 천장 구간이 그렇다. 벽·구멍은 아예 안 보이는 것이 맞다.
+        /// </summary>
+        public void SetHidden(bool hidden, bool showShadow = false)
+        {
+            IsHidden = hidden;
+            if (_body != null) _body.enabled = !hidden;
+
+            if (!hidden || !showShadow)
+            {
+                if (_shadow != null) _shadow.enabled = false;
+                return;
+            }
+
+            if (_shadow == null)
+            {
+                var half = ((RectTransform)transform).sizeDelta;
+                // 납작한 타원. 몸보다 작고 바닥에 붙는다.
+                _shadow = GetOrCreate("Shadow", new Vector2(half.x * 0.72f, half.y * 0.26f),
+                                      new Vector2(0f, -half.y * 0.34f));
+                _shadow.color = new Color(0f, 0f, 0f, 0.45f);
+                _shadow.transform.SetAsFirstSibling();   // 몸보다 뒤에 그린다
+            }
+            _shadow.enabled = true;
+        }
+
         // ── 행동 패턴의 제 상태 ──────────────────────────────────
         //
         // 도약·체공·포탑 회전은 **적마다 따로** 흘러야 한다. 감독이 딕셔너리로

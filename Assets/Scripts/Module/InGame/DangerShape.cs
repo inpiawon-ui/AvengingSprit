@@ -102,6 +102,16 @@ namespace Game.Module.InGame
             new(0.25f, 0.6154f), new(0.50f, 0.6538f), new(0.75f, 0.6154f),
         };
 
+        /// <summary>
+        /// 구멍 i번째의 방 좌표. **로봇 스네이크 본체도 이 함수로 자리를 잡는다** —
+        /// 예고 도형과 몸이 다른 표를 쓰면 뱀이 구멍 아닌 데서 솟는다.
+        /// </summary>
+        public static Vector2 HoleAtRoom(int index, Vector2 roomSize)
+        {
+            var h = HoleAt[((index % HoleAt.Length) + HoleAt.Length) % HoleAt.Length];
+            return new Vector2(h.x * roomSize.x, -h.y * roomSize.y);
+        }
+
         /// <summary>i번째 도형의 중심. **판정과 그리기가 이 함수 하나를 같이 쓴다.**</summary>
         private Vector2 CenterOf(int i, Vector2 roomSize)
         {
@@ -129,10 +139,7 @@ namespace Game.Module.InGame
                 }
 
                 case Spread.Holes:
-                {
-                    var h = HoleAt[(Tick + i) % HoleAt.Length];
-                    return new Vector2(h.x * roomSize.x, -h.y * roomSize.y);
-                }
+                    return HoleAtRoom(Tick + i, roomSize);
 
                 default:
                     return Origin;
