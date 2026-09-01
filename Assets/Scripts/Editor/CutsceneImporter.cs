@@ -30,6 +30,15 @@ namespace Game.EditorTools
         /// 폐기된 컷. 납품 폴더에는 남아 있지만 게임이 안 쓴다 —
         /// 관 안 유령을 본편 스프라이트로 바꾸면서 가리킬 자리가 없어졌다.
         /// </summary>
+        /// <summary>
+        /// 폐기된 컷인가. **납품 반영 툴(`ExchangeImporter`)도 이걸 묻는다.**
+        ///
+        /// ⚠ 목록을 두 곳에 두면 한쪽만 늘어난다 — 실제로 그랬다.
+        ///   여기서는 걸렀는데 납품 반영 쪽이 몰라서 폐기한 컷 다섯 장이 되살아났다.
+        /// </summary>
+        public static bool IsRetired(string nameWithoutExtension)
+            => Retired.Contains(nameWithoutExtension);
+
         private static readonly HashSet<string> Retired = new()
         {
             "cut_start_6", "cut_start_7", "cut_start_8", "cut_start_9",

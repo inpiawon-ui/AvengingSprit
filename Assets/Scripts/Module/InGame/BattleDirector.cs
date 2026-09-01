@@ -2349,6 +2349,11 @@ namespace Game.Module.InGame
                 boss.SetTellSprite(UnitGet(bossKey, "s_tell") ?? UnitGet(BossStand(bossKey), "s_tell"));
                 boss.Position = canon ? ToPixels(_canonRoom.BossAt)
                                       : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
+
+                // 레일 보스는 **처음 선 높이**가 곧 레일 높이다. 숫자를 따로 적지 않는다 —
+                // 적어 두면 방 크기가 바뀔 때 한쪽만 낡는다.
+                _bossOnRail = RailBosses.Contains(bossKey);
+                _bossRailY = boss.Position.y;
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
@@ -3156,7 +3161,7 @@ namespace Game.Module.InGame
                 //
                 //   기준점은 `Avatar` 다 — 몸이 있으면 그 몸, 없으면 유령.
                 //   보스는 "지금 내가 서 있는 자리" 를 겨눈다.
-                if (e.IsBoss) { TickBoss(e, Avatar, dt); continue; }
+                if (e.IsBoss) { TickBoss(e, Avatar, dt); StayOnRail(e); continue; }
 
                 // ⚠ **몸이 없으면 아무도 유령을 표적으로 잡지 않는다.**
                 if (_host == null)
@@ -4168,6 +4173,28 @@ namespace Game.Module.InGame
         ///
         /// ⚠ 없는 세트는 `EnvSprite` 가 알아서 기본형으로 떨어뜨린다. 여기서 걱정하지 않는다.
         /// </summary>
+        // ── 레일 보스 ────────────────────────────────────────────
+        //
+        // 크러셔는 **걷지 않는다.** 원작 시트의 조립도를 보면 가로 대들보에 세로 기둥이
+        // 매달리고 그 끝에 헤드가 달린다 — 갠트리 크레인이라 좌우로만 미끄러진다.
+        // 다가와서 때리는 보스로 만들면 첫 보스가 그냥 큰 잡몹이 된다.
+        //
+        // ⚠ 이동 경로가 한 곳이 아니다(접근·돌진·패턴). 들어가는 자리를 다 막는 대신
+        //   **나가는 자리 한 곳**에서 높이를 되돌린다. 새 이동이 생겨도 안 샌다.
+        private static readonly HashSet<string> RailBosses = new() { "crusher" };
+
+        private bool _bossOnRail;
+        private float _bossRailY;
+
+        /// <summary>레일 보스를 제 높이에 붙들어 둔다. 가로로는 자유롭다.</summary>
+        private void StayOnRail(Unit boss)
+        {
+            if (!_bossOnRail || boss == null) return;
+            var p = boss.Position;
+            if (Mathf.Approximately(p.y, _bossRailY)) return;
+            boss.Position = new Vector2(p.x, _bossRailY);
+        }
+
         private static string BossEnvOf(string slug) => slug switch
         {
             "crusher"      => "junkyard",

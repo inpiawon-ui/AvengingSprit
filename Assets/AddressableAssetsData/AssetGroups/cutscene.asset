@@ -111,12 +111,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_cutscene
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e1303233bd0cd254ea162ce84a1f703a
-    m_Address: cutscene/cut_start_3
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_cutscene
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f496a323c3af4194a8d6e8c363d983c1
     m_Address: cutscene/unit_ghost_s
     m_ReadOnly: 0

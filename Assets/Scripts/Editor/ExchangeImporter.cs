@@ -101,6 +101,15 @@ namespace Game.EditorTools
         /// </summary>
         private static bool IsSuperseded(string name)
         {
+            // ⚠ 부르는 쪽이 `unit_crusher_s.png` 처럼 **확장자를 붙여** 넘긴다.
+            //   아래 규칙은 대부분 `StartsWith` 라 그래도 걸렸지만, 이름을 통째로
+            //   비교하는 규칙은 조용히 안 걸린다 — 실제로 크러셔가 그렇게 새 나갔다.
+            //   여기서 한 번 벗겨 두면 어느 방식으로 적어도 걸린다.
+            name = Path.GetFileNameWithoutExtension(name);
+
+            // 컷신 폐기 목록은 `CutsceneImporter` 가 단일 출처다. 여기 또 적지 않는다.
+            if (CutsceneImporter.IsRetired(name)) return true;
+
             // 빙의 자세는 **방향이 없다**(19차 정정). `_s_possess` 같은 방향형은 폐기본이고
             // `_possess1` · `_possess2` 두 장만 쓴다.
             if (name.StartsWith("unit_") && name.Contains("_possess")
@@ -111,6 +120,17 @@ namespace Game.EditorTools
             // 혼자 두 배로 불린다(8 MB → 32 MB). 지워도 이 폴더에 남아 있어서
             // 툴을 돌릴 때마다 되살아났다 — 여기서 끊는다.
             if (name.StartsWith("loadingbackground")) return true;
+
+            // 61차 크러셔 본체는 **발주가 틀려서** 폐기됐다.
+            //
+            // 「크러셔는 얼굴이 없다」로 발주했는데, 원작 시트의 `Body` 조각을 확대하면
+            // 파란 창 둘 · 격자 물린 주황 아치 입 · 위쪽 주황 램프가 다 있다.
+            // 지금 `BaseResource/Unit/crusher/` 에 있는 것이 그것을 정면으로 옮긴 정본이다.
+            // 막지 않으면 툴을 돌릴 때마다 **맞는 그림을 틀린 그림이 덮어쓴다.**
+            //
+            // ⚠ 크러셔 본체를 다시 받게 되면 **이 줄을 지운다.** 이유가 사라지면 규칙도 간다
+            //   (`roomfloor_python` 때와 같다 — 아래 참조).
+            if (name == "unit_crusher_s") return true;
 
             // 방 바닥은 `BundleResource/RoomFloor/` 가 정본이다. `BaseResource` 쪽 사본은
             // 아틀라스에 들어가 자리만 먹었다.
