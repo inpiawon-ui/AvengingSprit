@@ -98,6 +98,22 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 보스 패턴 이름표 다시 보기 ────────────────────────────
+        //
+        // 이름표는 **처음 보는 패턴에만** 뜬다(정본 예고 4겹 ④). 한 번 보면
+        // 기록이 남아 다음부터 회피 한마디만 뜬다.
+        //
+        // ⚠ 그 기록은 플레이를 멈춰도 남는다. 확인하다 24패턴을 한 바퀴 돌면
+        //   그다음부터 이름이 안 떠서 "이름표가 안 나온다" 로 보인다.
+        private const string PatternMenu = "Tools/Game/테스트 — 보스 패턴 이름표 다시 보기";
+
+        [MenuItem(PatternMenu)]
+        private static void ForgetPatterns()
+        {
+            BattleDirector.ForgetSeenPatterns();
+            Debug.Log("[테스트] 본 패턴 기록을 지웠다 — 24패턴 이름표가 다시 한 번씩 뜬다");
+        }
+
         // ── 파편 지급 ────────────────────────────────────────────
         //
         // 봉인 하나를 풀려면 그 호스트를 여러 판에 걸쳐 만나야 한다(해제 10개).

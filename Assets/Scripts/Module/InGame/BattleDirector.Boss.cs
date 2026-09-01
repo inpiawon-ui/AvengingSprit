@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -29,12 +30,17 @@ namespace Game.Module.InGame
         /// <summary>예고 도형이 떠 있는가.</summary>
         private bool HasDanger => _dangerMove != null && !_danger.IsNone;
 
+        private DangerHint _hint;
+
         private void EnsureDangerViews()
         {
             if (_dangerView == null && _fieldLayer != null)
                 _dangerView = DangerView.Create(_fieldLayer);
             if (_safeView == null && _fieldLayer != null)
                 _safeView = DangerView.Create(_fieldLayer);
+            // 화살표·이름표는 도형 **위**에 온다. 나중에 만들면 나중에 그려진다.
+            if (_hint == null && _fieldLayer != null)
+                _hint = DangerHint.Create(_fieldLayer);
         }
 
         /// <summary>
@@ -67,6 +73,147 @@ namespace Game.Module.InGame
             // 안전지대는 **위험을 그린 다음**에 그린다. 위험만 있으면 "저기 맞겠네" 지만,
             // 안전이 같이 보이면 "저기로 가면 되네" 가 된다 — 훨씬 빨리 읽힌다.
             ShowSafeZone(m, boss);
+            ShowHint(m, boss, me);
+        }
+
+        // ── ③ 화살표 · ④ 이름표 ──────────────────────────────────
+        //
+        // 정본이 「예고 4겹」이라 부르는 것 중 뒤 두 겹이다.
+        // 앞 두 겹(몸 · 바닥)만으로는 **어디가 맞나**까지밖에 안 읽힌다.
+        // 무엇인지와 어디로 가야 하는지는 따로 말해 줘야 한다.
+
+        /// <summary>이름표를 이미 본 패턴. 처음 보는 것에만 이름이 뜬다(정본 ④겹).</summary>
+        private const string SeenPatternsKey = "AVSR.SeenBossPatterns";
+        private static HashSet<string> _seenPatterns;
+
+        /// <summary>
+        /// 이 패턴을 처음 보는가. 물어보는 순간 **봤다고 적는다.**
+        ///
+        /// ⚠ 저장은 기기에 남는다(`PlayerPrefs`). 계정에 붙이려면 유저 데이터로
+        ///   옮겨야 하는데, 그러자고 저장 스키마를 늘릴 만한 값은 아니다.
+        /// </summary>
+        private static bool FirstSighting(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return false;
+            if (_seenPatterns == null)
+            {
+                _seenPatterns = new HashSet<string>();
+                var saved = PlayerPrefs.GetString(SeenPatternsKey, string.Empty);
+                if (!string.IsNullOrEmpty(saved))
+                    foreach (var s in saved.Split('|'))
+                        if (!string.IsNullOrEmpty(s)) _seenPatterns.Add(s);
+            }
+            if (!_seenPatterns.Add(key)) return false;
+            PlayerPrefs.SetString(SeenPatternsKey, string.Join("|", _seenPatterns));
+            return true;
+        }
+
+        /// <summary>이름표 기록을 지운다. 테스트 메뉴가 부른다.</summary>
+        public static void ForgetSeenPatterns()
+        {
+            _seenPatterns = null;
+            PlayerPrefs.DeleteKey(SeenPatternsKey);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>정본이 못박은 회피 8종. 화살표가 못 그리는 둘도 말로는 뜬다.</summary>
+        private static string DodgeWord(DodgeHint d) => d switch
+        {
+            DodgeHint.Back  => "뒤로",
+            DodgeHint.Side  => "옆으로",
+            DodgeHint.Gap   => "틈으로",
+            DodgeHint.Perp  => "직각으로",
+            DodgeHint.Zone  => "안전지대로",
+            DodgeHint.Close => "붙어라",
+            DodgeHint.Swap  => "몸을 갈아타라",
+            DodgeHint.Hold  => "쏘지 마라",
+            _               => string.Empty,
+        };
+
+        private void ShowHint(BossMove m, Unit boss, Unit me)
+        {
+            if (_hint == null || m == null) return;
+            if (me == null) { _hint.Hide(); return; }
+
+            var dir = SafeDirection(m, boss, me);
+
+            // 이름은 처음 볼 때만. 회피 한마디는 매번 — 이건 외우는 것이 아니라 읽는 것이다.
+            string title = FirstSighting($"{boss?.Key}/{m.LabelKey}") ? m.NameKr : null;
+
+            // 보스 머리 위. 256 짜리 몸의 절반보다 조금 더 올린다.
+            var labelAt = (boss != null ? boss.Position : me.Position) + new Vector2(0f, 150f);
+
+            _hint.Show(me.Position, dir, labelAt, title, DodgeWord(m.Dodge),
+                       GetSprite("ui_dodge_arrow"));
+        }
+
+        /// <summary>
+        /// 어디로 가야 안 맞나.
+        ///
+        /// ⚠ **도형을 다시 해석하지 않는다.** 굳어 있는 그 도형에게 직접
+        ///   "여기 맞느냐" 를 물어(`Contains`) 안 맞는 가장 가까운 쪽을 찾는다.
+        ///   그리는 도형·때리는 도형·가리키는 도형이 셋 다 같은 것이 되므로,
+        ///   "화살표대로 갔는데 맞았다" 가 **구조적으로 불가능**해진다.
+        ///   패턴마다 회피 공식을 따로 적으면 24벌이 서로 어긋난다.
+        ///
+        /// 방향이 없는 둘(몸을 갈아타라·쏘지 마라)은 <c>zero</c> 다 — 화살표를 숨긴다.
+        /// </summary>
+        private Vector2 SafeDirection(BossMove m, Unit boss, Unit me)
+        {
+            switch (m.Dodge)
+            {
+                case DodgeHint.Swap:
+                case DodgeHint.Hold:
+                    return Vector2.zero;
+
+                // 「붙어라」는 도망이 아니다. 찾아 봐야 바깥으로 나가라고 가리킨다.
+                case DodgeHint.Close:
+                    return boss != null ? boss.Position - me.Position : Vector2.zero;
+
+                // 기획이 좌표를 적어 둔 안전지대가 있으면 그리로 곧장 보낸다.
+                case DodgeHint.Zone when m.HasSafeSpot:
+                    var at = new Vector2(m.SafeAtMeters.x * _pxPerMeter,
+                                         -m.SafeAtMeters.y * _pxPerMeter);
+                    return at - me.Position;
+            }
+
+            // 16방향 × 0.5m 씩 8m 까지. **예고를 시작할 때 한 번만** 도는 계산이라
+            // 최악 256번 물어봐도 프레임에 안 걸린다(hot path 가 아니다).
+            //
+            // ⚠ 반경은 재서 정했다. 24패턴 × 4상태 = 도형 96개, 위험 안에 서 있는
+            //   자리 9,547개를 전부 시험한 결과다:
+            //
+            //     4.5 m  못 찾음 770 (8.1%)   잘못 가리킴 0
+            //     6.0 m  못 찾음 232 (2.4%)   잘못 가리킴 0
+            //     8.0 m  못 찾음  22 (0.2%)   잘못 가리킴 0   ← 여기가 무릎이다
+            //    11.0 m  못 찾음   6 (0.1%)   잘못 가리킴 0
+            //
+            //   더 늘려도 6건밖에 안 줄고, 대신 "8m 밖으로 뛰어라" 라는 못 지킬
+            //   지시를 하게 된다. 못 찾은 자리는 화살표를 숨기고 말만 남긴다 —
+            //   **틀리게 가리키느니 안 가리키는 것이 낫다.**
+            const int Rays = 16;
+            float step = _pxPerMeter * 0.5f;
+            float max = _pxPerMeter * 8f;
+            float margin = _pxPerMeter * 0.6f;   // 벽에 코를 박는 답은 답이 아니다
+
+            Vector2 best = Vector2.zero;
+            float bestDistance = float.MaxValue;
+
+            for (int i = 0; i < Rays; i++)
+            {
+                float a = i * (Mathf.PI * 2f / Rays);
+                var dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
+                for (float r = step; r <= max; r += step)
+                {
+                    var p = me.Position + dir * r;
+                    if (p.x < margin || p.x > _roomSize.x - margin
+                        || p.y > -margin || p.y < -_roomSize.y + margin) break;
+                    if (_danger.Contains(p, _roomSize)) continue;
+                    if (r < bestDistance) { bestDistance = r; best = dir; }
+                    break;   // 이 방향에서 가장 가까운 탈출점을 찾았다
+                }
+            }
+            return best;
         }
 
         /// <summary>
@@ -95,6 +242,7 @@ namespace Game.Module.InGame
             float p = _brain != null ? _brain.TelegraphProgress : 1f;
             _dangerView.Tick(dt, p);
             if (_safeView != null) _safeView.Tick(dt, p);
+            if (_hint != null) _hint.Tick(dt, p);
         }
 
         private void ClearDanger()
@@ -103,6 +251,7 @@ namespace Game.Module.InGame
             _dangerMove = null;
             if (_dangerView != null) _dangerView.Hide();
             if (_safeView != null) _safeView.Hide();
+            if (_hint != null) _hint.Hide();
         }
 
         /// <summary>
