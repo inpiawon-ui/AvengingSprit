@@ -1,0 +1,322 @@
+[
+ {
+  "name": "HostDetailFrame",
+  "x": 420,
+  "y": 250,
+  "w": 283,
+  "h": 737,
+  "kind": "Image",
+  "tag": "BOX",
+  "note": "카드 배경"
+ },
+ {
+  "name": "HostNameEnText",
+  "x": 430,
+  "y": 268,
+  "w": 263,
+  "h": 28,
+  "kind": "Text",
+  "tag": "",
+  "note": "AMAZON"
+ },
+ {
+  "name": "HostNameKrText",
+  "x": 430,
+  "y": 300,
+  "w": 170,
+  "h": 24,
+  "kind": "Text",
+  "tag": "MOVE",
+  "note": "아마존 — 폭을 줄여 배지 자리를 낸다"
+ },
+ {
+  "name": "JobBadge",
+  "x": 605,
+  "y": 300,
+  "w": 88,
+  "h": 24,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "직업 배지 배경"
+ },
+ {
+  "name": "JobBadgeText",
+  "x": 605,
+  "y": 300,
+  "w": 88,
+  "h": 24,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "격투"
+ },
+ {
+  "name": "JobRuleText",
+  "x": 430,
+  "y": 328,
+  "w": 263,
+  "h": 34,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "직업 상시 규칙 (최대 2줄)"
+ },
+ {
+  "name": "HostPortraitImage",
+  "x": 528,
+  "y": 370,
+  "w": 64,
+  "h": 76,
+  "kind": "Image",
+  "tag": "MOVE",
+  "note": "초상 — 80×96 에서 축소"
+ },
+ {
+  "name": "StatGroupLabel",
+  "x": 440,
+  "y": 456,
+  "w": 120,
+  "h": 20,
+  "kind": "Text",
+  "tag": "MOVE",
+  "note": "능력치"
+ },
+ {
+  "name": "StatRow_HP",
+  "x": 437,
+  "y": 480,
+  "w": 250,
+  "h": 30,
+  "kind": "Group",
+  "tag": "MOVE",
+  "note": "아이콘 + 라벨 + 바 + 숫자"
+ },
+ {
+  "name": "StatRow_ATK",
+  "x": 437,
+  "y": 512,
+  "w": 250,
+  "h": 30,
+  "kind": "Group",
+  "tag": "MOVE",
+  "note": ""
+ },
+ {
+  "name": "StatRow_SPD",
+  "x": 437,
+  "y": 544,
+  "w": 250,
+  "h": 30,
+  "kind": "Group",
+  "tag": "MOVE",
+  "note": ""
+ },
+ {
+  "name": "StatRow_DASH",
+  "x": 437,
+  "y": 576,
+  "w": 250,
+  "h": 30,
+  "kind": "Group",
+  "tag": "MOVE",
+  "note": ""
+ },
+ {
+  "name": "ActiveSkillCard",
+  "x": 430,
+  "y": 618,
+  "w": 263,
+  "h": 150,
+  "kind": "Image",
+  "tag": "BOX",
+  "note": "액티브 스킬 상자"
+ },
+ {
+  "name": "ActiveSkillLabel",
+  "x": 442,
+  "y": 626,
+  "w": 130,
+  "h": 18,
+  "kind": "Text",
+  "tag": "",
+  "note": "ACTIVE SKILL"
+ },
+ {
+  "name": "ActiveSkillCooldownText",
+  "x": 566,
+  "y": 626,
+  "w": 116,
+  "h": 18,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "쿨 8초 — 우측 정렬"
+ },
+ {
+  "name": "ActiveSkillIcon",
+  "x": 442,
+  "y": 650,
+  "w": 56,
+  "h": 56,
+  "kind": "Image",
+  "tag": "",
+  "note": ""
+ },
+ {
+  "name": "ActiveSkillSealIcon",
+  "x": 442,
+  "y": 650,
+  "w": 56,
+  "h": 56,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "봉인 자물쇠 — 아이콘 위에 덮는다"
+ },
+ {
+  "name": "ActiveSkillNameText",
+  "x": 506,
+  "y": 652,
+  "w": 176,
+  "h": 24,
+  "kind": "Text",
+  "tag": "",
+  "note": "발키리 돌진"
+ },
+ {
+  "name": "ActiveSkillDescText",
+  "x": 442,
+  "y": 712,
+  "w": 240,
+  "h": 48,
+  "kind": "Text",
+  "tag": "MOVE",
+  "note": "설명 2줄"
+ },
+ {
+  "name": "PassiveSkillCard",
+  "x": 430,
+  "y": 778,
+  "w": 263,
+  "h": 124,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "패시브 스킬 상자"
+ },
+ {
+  "name": "PassiveSkillLabel",
+  "x": 442,
+  "y": 786,
+  "w": 130,
+  "h": 18,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "PASSIVE SKILL"
+ },
+ {
+  "name": "PassiveSkillChanceText",
+  "x": 566,
+  "y": 786,
+  "w": 116,
+  "h": 18,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "25% — 확률형만. 상시형은 빈칸"
+ },
+ {
+  "name": "PassiveSkillIcon",
+  "x": 442,
+  "y": 810,
+  "w": 44,
+  "h": 44,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": ""
+ },
+ {
+  "name": "PassiveSkillSealIcon",
+  "x": 442,
+  "y": 810,
+  "w": 44,
+  "h": 44,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "봉인 자물쇠"
+ },
+ {
+  "name": "PassiveSkillNameText",
+  "x": 494,
+  "y": 812,
+  "w": 188,
+  "h": 22,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "흡혈"
+ },
+ {
+  "name": "PassiveSkillDescText",
+  "x": 442,
+  "y": 858,
+  "w": 240,
+  "h": 36,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "설명 2줄"
+ },
+ {
+  "name": "MasteryGroup",
+  "x": 430,
+  "y": 912,
+  "w": 263,
+  "h": 62,
+  "kind": "Group",
+  "tag": "NEW",
+  "note": "숙련도 · 파편"
+ },
+ {
+  "name": "MasteryLabel",
+  "x": 442,
+  "y": 918,
+  "w": 120,
+  "h": 18,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "숙련도"
+ },
+ {
+  "name": "MasteryValueText",
+  "x": 573,
+  "y": 918,
+  "w": 110,
+  "h": 18,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "Lv 3 / 10 — 우측 정렬"
+ },
+ {
+  "name": "ShardBarBg",
+  "x": 442,
+  "y": 942,
+  "w": 239,
+  "h": 10,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "파편 진행 바"
+ },
+ {
+  "name": "ShardBarFill",
+  "x": 442,
+  "y": 942,
+  "w": 239,
+  "h": 10,
+  "kind": "Image",
+  "tag": "NEW",
+  "note": "채움 (좌측 pivot)"
+ },
+ {
+  "name": "ShardText",
+  "x": 442,
+  "y": 956,
+  "w": 239,
+  "h": 16,
+  "kind": "Text",
+  "tag": "NEW",
+  "note": "파편 18 / 26"
+ }
+]

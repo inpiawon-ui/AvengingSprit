@@ -1,0 +1,665 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B01",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "GOOD",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B02",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "GOOD",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B03",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "GOOD",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B04",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "GOOD",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B05",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO01",
+      "EvolutionName": "Reaper Circuit",
+      "AttackType": "CROSSING_SCYTHE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "BOSS_HURTBOX_RETURN_CAP",
+      "BossHitCap": 3,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO02",
+      "EvolutionName": "Inferno Dragon Breath",
+      "AttackType": "EDGE_CONE_BURST",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CONE_CONTRACT_TO_BOSS",
+      "BossHitCap": 4,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO03",
+      "EvolutionName": "Phantom Shuriken",
+      "AttackType": "ORBIT_RELEASE",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_REMAINING_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO04",
+      "EvolutionName": "Ghost Grand Slam",
+      "AttackType": "RICOCHET_BALL",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "BOSS_REPEAT_CONTACT_CAP",
+      "BossHitCap": 2,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO05",
+      "EvolutionName": "Automatic Rocket Battery",
+      "AttackType": "TEMP_SUSTAIN_SUPPORT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "DUAL_PODS_FOCUS_BOSS",
+      "BossHitCap": 12,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO06",
+      "EvolutionName": "Whiteout Blizzard",
+      "AttackType": "MOVING_CONTROL_STORM",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ANCHOR_ON_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO07",
+      "EvolutionName": "Spectral Missile Swarm",
+      "AttackType": "SCREEN_SALVO_BURST",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "ALL_ARCS_CONVERGE_BOSS",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO08",
+      "EvolutionName": "Glacial Dragon Breath",
+      "AttackType": "PIERCING_FROST_LANE",
+      "Rating": "GOOD",
+      "BossFallbackRule": "CHILL_THEN_CRYSTAL_DIRECT",
+      "BossHitCap": 7,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO09",
+      "EvolutionName": "Abyss Sigil",
+      "AttackType": "SIGIL_PILLAR",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "SIGIL_ALWAYS_RESOLVES_PILLAR",
+      "BossHitCap": 5,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO10",
+      "EvolutionName": "Auto Bombardment",
+      "AttackType": "SEQUENTIAL_BOMBARDMENT",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "CIRCLES_COMPRESS_TO_BOSS",
+      "BossHitCap": 8,
+      "ValidationNote": "Native pattern or fallback validated"
+    },
+    {
+      "BossID": "B06",
+      "EvolutionID": "EVO11",
+      "EvolutionName": "Prism Laser Array",
+      "AttackType": "PIERCING_SWEEP",
+      "Rating": "NORMAL",
+      "BossFallbackRule": "TRACK_BOSS_CENTER",
+      "BossHitCap": 10,
+      "ValidationNote": "Native pattern or fallback validated"
+    }
+  ]
+}

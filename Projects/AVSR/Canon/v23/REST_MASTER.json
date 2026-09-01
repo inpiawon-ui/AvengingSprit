@@ -1,0 +1,29 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "RestID": "REST_CH1_01",
+      "Chapter": "CH1",
+      "HostHealPct": 25,
+      "GhostHealPct": 22,
+      "EvolutionResolve": 1,
+      "SeedStream": "REST_STREAM"
+    },
+    {
+      "RestID": "REST_CH2_01",
+      "Chapter": "CH2",
+      "HostHealPct": 22,
+      "GhostHealPct": 20,
+      "EvolutionResolve": 1,
+      "SeedStream": "REST_STREAM"
+    },
+    {
+      "RestID": "REST_CH3_01",
+      "Chapter": "CH3",
+      "HostHealPct": 19,
+      "GhostHealPct": 18,
+      "EvolutionResolve": 1,
+      "SeedStream": "REST_STREAM"
+    }
+  ]
+}

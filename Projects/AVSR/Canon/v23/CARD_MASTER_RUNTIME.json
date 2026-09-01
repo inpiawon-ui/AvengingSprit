@@ -1,0 +1,1285 @@
+{
+  "version": "v2.2 FINAL LOCK",
+  "cards": [
+    {
+      "cardId": "C001",
+      "nameKr": "공격 증폭",
+      "nameEn": "Attack Amplifier",
+      "rarity": "COMMON",
+      "category": "ATTACK",
+      "trait": "ATTACK",
+      "subTrait": "POWER",
+      "effect": "기본 공격 피해 계수를 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "BaseDamage*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "POWER"
+        },
+        {
+          "level": 2,
+          "value": 14,
+          "unit": "POWER"
+        },
+        {
+          "level": 3,
+          "value": 20,
+          "unit": "POWER"
+        },
+        {
+          "level": 4,
+          "value": 26,
+          "unit": "POWER"
+        },
+        {
+          "level": 5,
+          "value": 32,
+          "unit": "POWER"
+        }
+      ]
+    },
+    {
+      "cardId": "C002",
+      "nameKr": "정밀 조준",
+      "nameEn": "Precision Focus",
+      "rarity": "COMMON",
+      "category": "ATTACK",
+      "trait": "ATTACK",
+      "subTrait": "SINGLE_TARGET",
+      "effect": "기본 공격이 단 하나의 유효 타깃에 해결될 때 해당 단일 타깃 피해만 강화한다.",
+      "unlock": "DEFAULT",
+      "bossRule": "FULL",
+      "runtimeFormula": "IF(ValidTargetCount==1,QualifyingBasicAttackDamage*(1+Value/100),QualifyingBasicAttackDamage)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 6,
+          "unit": "SINGLE_TARGET_DAMAGE_%"
+        },
+        {
+          "level": 2,
+          "value": 11,
+          "unit": "SINGLE_TARGET_DAMAGE_%"
+        },
+        {
+          "level": 3,
+          "value": 16,
+          "unit": "SINGLE_TARGET_DAMAGE_%"
+        },
+        {
+          "level": 4,
+          "value": 21,
+          "unit": "SINGLE_TARGET_DAMAGE_%"
+        },
+        {
+          "level": 5,
+          "value": 26,
+          "unit": "SINGLE_TARGET_DAMAGE_%"
+        }
+      ]
+    },
+    {
+      "cardId": "C003",
+      "nameKr": "마무리 본능",
+      "nameEn": "Execution Instinct",
+      "rarity": "RARE",
+      "category": "ATTACK",
+      "trait": "ATTACK",
+      "subTrait": "EXECUTION",
+      "effect": "약해진 적에 대한 마무리 피해 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "Damage*ExecuteModifier(targetHP)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 10,
+          "unit": "EXECUTION"
+        },
+        {
+          "level": 2,
+          "value": 18,
+          "unit": "EXECUTION"
+        },
+        {
+          "level": 3,
+          "value": 26,
+          "unit": "EXECUTION"
+        },
+        {
+          "level": 4,
+          "value": 34,
+          "unit": "EXECUTION"
+        },
+        {
+          "level": 5,
+          "value": 42,
+          "unit": "EXECUTION"
+        }
+      ]
+    },
+    {
+      "cardId": "C004",
+      "nameKr": "갑옷 분쇄",
+      "nameEn": "Armor Breaker",
+      "rarity": "EPIC",
+      "category": "ATTACK",
+      "trait": "ATTACK",
+      "subTrait": "ARMOR_BREAK",
+      "effect": "반복 공격이 방어 효율을 약화",
+      "unlock": "RESEARCH_ATTACK_2",
+      "bossRule": "Y",
+      "runtimeFormula": "ArmorMultiplier(target,Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 5,
+          "unit": "ARMOR_BREAK"
+        },
+        {
+          "level": 2,
+          "value": 9,
+          "unit": "ARMOR_BREAK"
+        },
+        {
+          "level": 3,
+          "value": 13,
+          "unit": "ARMOR_BREAK"
+        },
+        {
+          "level": 4,
+          "value": 17,
+          "unit": "ARMOR_BREAK"
+        },
+        {
+          "level": 5,
+          "value": 21,
+          "unit": "ARMOR_BREAK"
+        }
+      ]
+    },
+    {
+      "cardId": "C005",
+      "nameKr": "연속 압박",
+      "nameEn": "Sustained Pressure",
+      "rarity": "RARE",
+      "category": "ATTACK",
+      "trait": "ATTACK",
+      "subTrait": "SUSTAIN_STACK",
+      "effect": "같은 타깃에 성공한 기본 공격이 4회까지 누적된다. 타깃 변경 또는 기여 공백 1.5초 초과 시 초기화.",
+      "unlock": "DEFAULT",
+      "bossRule": "FULL",
+      "runtimeFormula": "Bonus=Value*Clamp(ConsecutiveSameTargetHits,1,4)/4; Reset(TargetChanged OR GapSec>1.5)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 6,
+          "unit": "MAX_SUSTAIN_DAMAGE_%"
+        },
+        {
+          "level": 2,
+          "value": 10,
+          "unit": "MAX_SUSTAIN_DAMAGE_%"
+        },
+        {
+          "level": 3,
+          "value": 14,
+          "unit": "MAX_SUSTAIN_DAMAGE_%"
+        },
+        {
+          "level": 4,
+          "value": 18,
+          "unit": "MAX_SUSTAIN_DAMAGE_%"
+        },
+        {
+          "level": 5,
+          "value": 22,
+          "unit": "MAX_SUSTAIN_DAMAGE_%"
+        }
+      ]
+    },
+    {
+      "cardId": "C006",
+      "nameKr": "가속 탄체",
+      "nameEn": "Accelerated Shot",
+      "rarity": "COMMON",
+      "category": "PROJECTILE",
+      "trait": "PROJECTILE",
+      "subTrait": "SPEED",
+      "effect": "투사체 속도와 유효 명중 안정성 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "ProjectileSpeed*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 10,
+          "unit": "SPEED"
+        },
+        {
+          "level": 2,
+          "value": 18,
+          "unit": "SPEED"
+        },
+        {
+          "level": 3,
+          "value": 26,
+          "unit": "SPEED"
+        },
+        {
+          "level": 4,
+          "value": 34,
+          "unit": "SPEED"
+        },
+        {
+          "level": 5,
+          "value": 42,
+          "unit": "SPEED"
+        }
+      ]
+    },
+    {
+      "cardId": "C007",
+      "nameKr": "추가 발사",
+      "nameEn": "Twin Payload",
+      "rarity": "RARE",
+      "category": "PROJECTILE",
+      "trait": "PROJECTILE",
+      "subTrait": "MULTISHOT",
+      "effect": "원래 발사 형태를 보존한 보조 탄체 추가",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "SpawnAdapterExtraProjectile(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 12,
+          "unit": "MULTISHOT"
+        },
+        {
+          "level": 2,
+          "value": 18,
+          "unit": "MULTISHOT"
+        },
+        {
+          "level": 3,
+          "value": 24,
+          "unit": "MULTISHOT"
+        },
+        {
+          "level": 4,
+          "value": 30,
+          "unit": "MULTISHOT"
+        },
+        {
+          "level": 5,
+          "value": 36,
+          "unit": "MULTISHOT"
+        }
+      ]
+    },
+    {
+      "cardId": "C008",
+      "nameKr": "관통 코어",
+      "nameEn": "Piercing Core",
+      "rarity": "RARE",
+      "category": "PROJECTILE",
+      "trait": "PROJECTILE",
+      "subTrait": "PIERCE",
+      "effect": "직선 공격의 관통 가치 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "PierceCount+Value",
+      "levels": [
+        {
+          "level": 1,
+          "value": 1,
+          "unit": "PIERCE"
+        },
+        {
+          "level": 2,
+          "value": 1,
+          "unit": "PIERCE"
+        },
+        {
+          "level": 3,
+          "value": 2,
+          "unit": "PIERCE"
+        },
+        {
+          "level": 4,
+          "value": 2,
+          "unit": "PIERCE"
+        },
+        {
+          "level": 5,
+          "value": 3,
+          "unit": "PIERCE"
+        }
+      ]
+    },
+    {
+      "cardId": "C009",
+      "nameKr": "유도 보정",
+      "nameEn": "Guidance Kernel",
+      "rarity": "EPIC",
+      "category": "PROJECTILE",
+      "trait": "PROJECTILE",
+      "subTrait": "HOMING",
+      "effect": "빗나가기 쉬운 탄체에 제한 유도 부여",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "HomingStrength=Adapter(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 12,
+          "unit": "HOMING"
+        },
+        {
+          "level": 2,
+          "value": 20,
+          "unit": "HOMING"
+        },
+        {
+          "level": 3,
+          "value": 28,
+          "unit": "HOMING"
+        },
+        {
+          "level": 4,
+          "value": 36,
+          "unit": "HOMING"
+        },
+        {
+          "level": 5,
+          "value": 44,
+          "unit": "HOMING"
+        }
+      ]
+    },
+    {
+      "cardId": "C010",
+      "nameKr": "반사 궤도",
+      "nameEn": "Ghost Ricochet",
+      "rarity": "LEGENDARY",
+      "category": "PROJECTILE",
+      "trait": "PROJECTILE",
+      "subTrait": "RICOCHET",
+      "effect": "유효 타깃 사이에 한 번 반사하는 유령 탄체 생성",
+      "unlock": "HOST_H20_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "RicochetAdapter(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 35,
+          "unit": "RICOCHET"
+        },
+        {
+          "level": 2,
+          "value": 45,
+          "unit": "RICOCHET"
+        },
+        {
+          "level": 3,
+          "value": 55,
+          "unit": "RICOCHET"
+        },
+        {
+          "level": 4,
+          "value": 65,
+          "unit": "RICOCHET"
+        },
+        {
+          "level": 5,
+          "value": 75,
+          "unit": "RICOCHET"
+        }
+      ]
+    },
+    {
+      "cardId": "C011",
+      "nameKr": "확장 충격",
+      "nameEn": "Expanded Impact",
+      "rarity": "COMMON",
+      "category": "AREA",
+      "trait": "AREA",
+      "subTrait": "RADIUS",
+      "effect": "공격의 유효 범위를 확대",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "AreaRadius*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "RADIUS"
+        },
+        {
+          "level": 2,
+          "value": 14,
+          "unit": "RADIUS"
+        },
+        {
+          "level": 3,
+          "value": 20,
+          "unit": "RADIUS"
+        },
+        {
+          "level": 4,
+          "value": 26,
+          "unit": "RADIUS"
+        },
+        {
+          "level": 5,
+          "value": 32,
+          "unit": "RADIUS"
+        }
+      ]
+    },
+    {
+      "cardId": "C012",
+      "nameKr": "잔류 지대",
+      "nameEn": "Lingering Field",
+      "rarity": "RARE",
+      "category": "AREA",
+      "trait": "AREA",
+      "subTrait": "DURATION",
+      "effect": "유효 지역 공격이 짧은 잔류 효과를 남김",
+      "unlock": "RESEARCH_AREA_1 OR HOST_H15_LV7 OR HOST_H21_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "FieldDuration*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 12,
+          "unit": "DURATION"
+        },
+        {
+          "level": 2,
+          "value": 20,
+          "unit": "DURATION"
+        },
+        {
+          "level": 3,
+          "value": 28,
+          "unit": "DURATION"
+        },
+        {
+          "level": 4,
+          "value": 36,
+          "unit": "DURATION"
+        },
+        {
+          "level": 5,
+          "value": 44,
+          "unit": "DURATION"
+        }
+      ]
+    },
+    {
+      "cardId": "C013",
+      "nameKr": "폭발 메아리",
+      "nameEn": "Blast Echo",
+      "rarity": "EPIC",
+      "category": "AREA",
+      "trait": "AREA",
+      "subTrait": "EXPLOSIVE",
+      "effect": "폭발 종료점에 축소된 후속 충격 발생",
+      "unlock": "HOST_H03_LV7 OR HOST_H06_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "EchoDamage=SourceDamage*Value",
+      "levels": [
+        {
+          "level": 1,
+          "value": 20,
+          "unit": "EXPLOSIVE"
+        },
+        {
+          "level": 2,
+          "value": 28,
+          "unit": "EXPLOSIVE"
+        },
+        {
+          "level": 3,
+          "value": 36,
+          "unit": "EXPLOSIVE"
+        },
+        {
+          "level": 4,
+          "value": 44,
+          "unit": "EXPLOSIVE"
+        },
+        {
+          "level": 5,
+          "value": 52,
+          "unit": "EXPLOSIVE"
+        }
+      ]
+    },
+    {
+      "cardId": "C014",
+      "nameKr": "연쇄 번짐",
+      "nameEn": "Chain Spread",
+      "rarity": "EPIC",
+      "category": "AREA",
+      "trait": "AREA",
+      "subTrait": "CHAIN",
+      "effect": "상태/지역 효과가 인접한 유효 타깃으로 제한 전파",
+      "unlock": "RESEARCH_AREA_2",
+      "bossRule": "Y",
+      "runtimeFormula": "ChainAdapter(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 18,
+          "unit": "CHAIN"
+        },
+        {
+          "level": 2,
+          "value": 25,
+          "unit": "CHAIN"
+        },
+        {
+          "level": 3,
+          "value": 32,
+          "unit": "CHAIN"
+        },
+        {
+          "level": 4,
+          "value": 39,
+          "unit": "CHAIN"
+        },
+        {
+          "level": 5,
+          "value": 46,
+          "unit": "CHAIN"
+        }
+      ]
+    },
+    {
+      "cardId": "C015",
+      "nameKr": "보스 압축",
+      "nameEn": "Boss Compression",
+      "rarity": "RARE",
+      "category": "AREA",
+      "trait": "AREA",
+      "subTrait": "BOSS_CONVERT",
+      "effect": "주변 대상이 없으면 광역 가치를 보스 중심 피해로 변환",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "BossAreaAdapter(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 18,
+          "unit": "BOSS_CONVERT"
+        },
+        {
+          "level": 2,
+          "value": 24,
+          "unit": "BOSS_CONVERT"
+        },
+        {
+          "level": 3,
+          "value": 30,
+          "unit": "BOSS_CONVERT"
+        },
+        {
+          "level": 4,
+          "value": 36,
+          "unit": "BOSS_CONVERT"
+        },
+        {
+          "level": 5,
+          "value": 42,
+          "unit": "BOSS_CONVERT"
+        }
+      ]
+    },
+    {
+      "cardId": "C016",
+      "nameKr": "유령 갑주",
+      "nameEn": "Spirit Armor",
+      "rarity": "COMMON",
+      "category": "SURVIVAL",
+      "trait": "SURVIVAL",
+      "subTrait": "MITIGATION",
+      "effect": "받는 피해를 완화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "IncomingDamage*(1-Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 5,
+          "unit": "MITIGATION"
+        },
+        {
+          "level": 2,
+          "value": 8,
+          "unit": "MITIGATION"
+        },
+        {
+          "level": 3,
+          "value": 11,
+          "unit": "MITIGATION"
+        },
+        {
+          "level": 4,
+          "value": 14,
+          "unit": "MITIGATION"
+        },
+        {
+          "level": 5,
+          "value": 17,
+          "unit": "MITIGATION"
+        }
+      ]
+    },
+    {
+      "cardId": "C017",
+      "nameKr": "생명 회수",
+      "nameEn": "Life Recovery",
+      "rarity": "COMMON",
+      "category": "SURVIVAL",
+      "trait": "SURVIVAL",
+      "subTrait": "RECOVERY",
+      "effect": "전투 성과가 제한 회복으로 전환",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "RecoverOnCombatEvent(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 3,
+          "unit": "RECOVERY"
+        },
+        {
+          "level": 2,
+          "value": 5,
+          "unit": "RECOVERY"
+        },
+        {
+          "level": 3,
+          "value": 7,
+          "unit": "RECOVERY"
+        },
+        {
+          "level": 4,
+          "value": 9,
+          "unit": "RECOVERY"
+        },
+        {
+          "level": 5,
+          "value": 11,
+          "unit": "RECOVERY"
+        }
+      ]
+    },
+    {
+      "cardId": "C018",
+      "nameKr": "위기 방벽",
+      "nameEn": "Crisis Barrier",
+      "rarity": "RARE",
+      "category": "SURVIVAL",
+      "trait": "SURVIVAL",
+      "subTrait": "LOW_HP",
+      "effect": "위기 상태 진입 시 일시 보호",
+      "unlock": "RESEARCH_SURVIVAL_1",
+      "bossRule": "Y",
+      "runtimeFormula": "BarrierOnCrisis(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 12,
+          "unit": "LOW_HP"
+        },
+        {
+          "level": 2,
+          "value": 18,
+          "unit": "LOW_HP"
+        },
+        {
+          "level": 3,
+          "value": 24,
+          "unit": "LOW_HP"
+        },
+        {
+          "level": 4,
+          "value": 30,
+          "unit": "LOW_HP"
+        },
+        {
+          "level": 5,
+          "value": 36,
+          "unit": "LOW_HP"
+        }
+      ]
+    },
+    {
+      "cardId": "C019",
+      "nameKr": "흡수 변환",
+      "nameEn": "Leech Conversion",
+      "rarity": "EPIC",
+      "category": "SURVIVAL",
+      "trait": "SURVIVAL",
+      "subTrait": "LEECH",
+      "effect": "유효 피해 일부를 회복 가치로 변환",
+      "unlock": "HOST_H22_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "Heal=Damage*Value capped",
+      "levels": [
+        {
+          "level": 1,
+          "value": 2,
+          "unit": "LEECH"
+        },
+        {
+          "level": 2,
+          "value": 3,
+          "unit": "LEECH"
+        },
+        {
+          "level": 3,
+          "value": 4,
+          "unit": "LEECH"
+        },
+        {
+          "level": 4,
+          "value": 5,
+          "unit": "LEECH"
+        },
+        {
+          "level": 5,
+          "value": 6,
+          "unit": "LEECH"
+        }
+      ]
+    },
+    {
+      "cardId": "C020",
+      "nameKr": "불굴",
+      "nameEn": "Lasting Body",
+      "rarity": "RARE",
+      "category": "SURVIVAL",
+      "trait": "SURVIVAL",
+      "subTrait": "MAX_HP",
+      "effect": "현재 Host 최대 HP와 회복 한도를 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "HostMaxHP*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 7,
+          "unit": "MAX_HP"
+        },
+        {
+          "level": 2,
+          "value": 12,
+          "unit": "MAX_HP"
+        },
+        {
+          "level": 3,
+          "value": 17,
+          "unit": "MAX_HP"
+        },
+        {
+          "level": 4,
+          "value": 22,
+          "unit": "MAX_HP"
+        },
+        {
+          "level": 5,
+          "value": 27,
+          "unit": "MAX_HP"
+        }
+      ]
+    },
+    {
+      "cardId": "C021",
+      "nameKr": "유령 가속",
+      "nameEn": "Ghost Acceleration",
+      "rarity": "COMMON",
+      "category": "MOBILITY",
+      "trait": "MOBILITY",
+      "subTrait": "MOVE",
+      "effect": "이동 속도 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "MoveSpeed*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 5,
+          "unit": "MOVE"
+        },
+        {
+          "level": 2,
+          "value": 9,
+          "unit": "MOVE"
+        },
+        {
+          "level": 3,
+          "value": 13,
+          "unit": "MOVE"
+        },
+        {
+          "level": 4,
+          "value": 17,
+          "unit": "MOVE"
+        },
+        {
+          "level": 5,
+          "value": 21,
+          "unit": "MOVE"
+        }
+      ]
+    },
+    {
+      "cardId": "C022",
+      "nameKr": "퀵 셋업",
+      "nameEn": "Quick Setup",
+      "rarity": "RARE",
+      "category": "MOBILITY",
+      "trait": "MOBILITY",
+      "subTrait": "QUICK_SETUP",
+      "effect": "이동을 멈춘 뒤 첫 기본 공격의 선딜을 단축한다. 이동 중 공격·자동 이동·빙의 이동 변경은 금지.",
+      "unlock": "RESEARCH_MOBILITY_1",
+      "bossRule": "FULL",
+      "runtimeFormula": "Windup=max(BaseWindup*(1-Value/100),0.18s,BaseWindup*0.55)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 10,
+          "unit": "FIRST_ATTACK_WINDUP_REDUCTION_%"
+        },
+        {
+          "level": 2,
+          "value": 16,
+          "unit": "FIRST_ATTACK_WINDUP_REDUCTION_%"
+        },
+        {
+          "level": 3,
+          "value": 22,
+          "unit": "FIRST_ATTACK_WINDUP_REDUCTION_%"
+        },
+        {
+          "level": 4,
+          "value": 28,
+          "unit": "FIRST_ATTACK_WINDUP_REDUCTION_%"
+        },
+        {
+          "level": 5,
+          "value": 34,
+          "unit": "FIRST_ATTACK_WINDUP_REDUCTION_%"
+        }
+      ]
+    },
+    {
+      "cardId": "C023",
+      "nameKr": "회피 잔상",
+      "nameEn": "Evasive Afterimage",
+      "rarity": "EPIC",
+      "category": "MOBILITY",
+      "trait": "MOBILITY",
+      "subTrait": "DODGE",
+      "effect": "위험 회피 직후 잔상이 보조 공격",
+      "unlock": "HOST_H13_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "AfterimageAttack(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 22,
+          "unit": "DODGE"
+        },
+        {
+          "level": 2,
+          "value": 30,
+          "unit": "DODGE"
+        },
+        {
+          "level": 3,
+          "value": 38,
+          "unit": "DODGE"
+        },
+        {
+          "level": 4,
+          "value": 46,
+          "unit": "DODGE"
+        },
+        {
+          "level": 5,
+          "value": 54,
+          "unit": "DODGE"
+        }
+      ]
+    },
+    {
+      "cardId": "C024",
+      "nameKr": "전투 스텝",
+      "nameEn": "Combat Step",
+      "rarity": "RARE",
+      "category": "MOBILITY",
+      "trait": "MOBILITY",
+      "subTrait": "COMBAT_STEP",
+      "effect": "기본 공격 완료 후 1.2초 동안 이동 속도가 증가한다. 방향은 플레이어가 제어하며 대시·접근·강제이동은 없다.",
+      "unlock": "DEFAULT",
+      "bossRule": "FULL",
+      "runtimeFormula": "OnBasicAttackComplete=>MoveSpeed*(1+Value/100) for 1.2s; RefreshDurationOnly",
+      "levels": [
+        {
+          "level": 1,
+          "value": 6,
+          "unit": "POST_ATTACK_MOVE_SPEED_%"
+        },
+        {
+          "level": 2,
+          "value": 10,
+          "unit": "POST_ATTACK_MOVE_SPEED_%"
+        },
+        {
+          "level": 3,
+          "value": 14,
+          "unit": "POST_ATTACK_MOVE_SPEED_%"
+        },
+        {
+          "level": 4,
+          "value": 18,
+          "unit": "POST_ATTACK_MOVE_SPEED_%"
+        },
+        {
+          "level": 5,
+          "value": 22,
+          "unit": "POST_ATTACK_MOVE_SPEED_%"
+        }
+      ]
+    },
+    {
+      "cardId": "C025",
+      "nameKr": "냉기 각인",
+      "nameEn": "Frost Imprint",
+      "rarity": "RARE",
+      "category": "UTILITY",
+      "trait": "UTILITY",
+      "subTrait": "ICE",
+      "effect": "공격에 보스 안전형 둔화/냉기 기여 부여",
+      "unlock": "HOST_H07_LV7 OR HOST_H21_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "ApplyChill(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "ICE"
+        },
+        {
+          "level": 2,
+          "value": 13,
+          "unit": "ICE"
+        },
+        {
+          "level": 3,
+          "value": 18,
+          "unit": "ICE"
+        },
+        {
+          "level": 4,
+          "value": 23,
+          "unit": "ICE"
+        },
+        {
+          "level": 5,
+          "value": 28,
+          "unit": "ICE"
+        }
+      ]
+    },
+    {
+      "cardId": "C026",
+      "nameKr": "화염 각인",
+      "nameEn": "Flame Imprint",
+      "rarity": "RARE",
+      "category": "UTILITY",
+      "trait": "UTILITY",
+      "subTrait": "FIRE",
+      "effect": "공격에 보스 안전형 화상 기여 부여",
+      "unlock": "HOST_H09_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "ApplyBurn(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "FIRE"
+        },
+        {
+          "level": 2,
+          "value": 13,
+          "unit": "FIRE"
+        },
+        {
+          "level": 3,
+          "value": 18,
+          "unit": "FIRE"
+        },
+        {
+          "level": 4,
+          "value": 23,
+          "unit": "FIRE"
+        },
+        {
+          "level": 5,
+          "value": 28,
+          "unit": "FIRE"
+        }
+      ]
+    },
+    {
+      "cardId": "C027",
+      "nameKr": "저주 각인",
+      "nameEn": "Curse Imprint",
+      "rarity": "EPIC",
+      "category": "UTILITY",
+      "trait": "UTILITY",
+      "subTrait": "CURSE",
+      "effect": "우선 타깃에 약화 저주를 부여",
+      "unlock": "HOST_H15_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "ApplyCurse(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 6,
+          "unit": "CURSE"
+        },
+        {
+          "level": 2,
+          "value": 10,
+          "unit": "CURSE"
+        },
+        {
+          "level": 3,
+          "value": 14,
+          "unit": "CURSE"
+        },
+        {
+          "level": 4,
+          "value": 18,
+          "unit": "CURSE"
+        },
+        {
+          "level": 5,
+          "value": 22,
+          "unit": "CURSE"
+        }
+      ]
+    },
+    {
+      "cardId": "C028",
+      "nameKr": "통제 파동",
+      "nameEn": "Control Pulse",
+      "rarity": "COMMON",
+      "category": "UTILITY",
+      "trait": "UTILITY",
+      "subTrait": "CONTROL",
+      "effect": "공격의 경직·밀어내기·상태 제어 기여 강화",
+      "unlock": "DEFAULT",
+      "bossRule": "Y",
+      "runtimeFormula": "ControlPower*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "CONTROL"
+        },
+        {
+          "level": 2,
+          "value": 14,
+          "unit": "CONTROL"
+        },
+        {
+          "level": 3,
+          "value": 20,
+          "unit": "CONTROL"
+        },
+        {
+          "level": 4,
+          "value": 26,
+          "unit": "CONTROL"
+        },
+        {
+          "level": 5,
+          "value": 32,
+          "unit": "CONTROL"
+        }
+      ]
+    },
+    {
+      "cardId": "C029",
+      "nameKr": "필살기 공명",
+      "nameEn": "Finisher Resonance",
+      "rarity": "EPIC",
+      "category": "UTILITY",
+      "trait": "UTILITY",
+      "subTrait": "PILSALGI",
+      "effect": "전투 기여가 필살기 충전에 더 효율적으로 반영",
+      "unlock": "RESEARCH_UTILITY_2",
+      "bossRule": "Y",
+      "runtimeFormula": "PilsalgiGain*(1+Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 8,
+          "unit": "PILSALGI"
+        },
+        {
+          "level": 2,
+          "value": 13,
+          "unit": "PILSALGI"
+        },
+        {
+          "level": 3,
+          "value": 18,
+          "unit": "PILSALGI"
+        },
+        {
+          "level": 4,
+          "value": 23,
+          "unit": "PILSALGI"
+        },
+        {
+          "level": 5,
+          "value": 28,
+          "unit": "PILSALGI"
+        }
+      ]
+    },
+    {
+      "cardId": "C030",
+      "nameKr": "유령 포대",
+      "nameEn": "Spectral Turret",
+      "rarity": "LEGENDARY",
+      "category": "SPECIAL",
+      "trait": "SPECIAL",
+      "subTrait": "DEPLOY",
+      "effect": "유효 기본 공격 8회마다 유령 포대 1기를 3초간 소환해 가장 가까운 유효 적을 0.75초 간격으로 공격한다.",
+      "unlock": "HOST_H19_LV7",
+      "bossRule": "FULL",
+      "runtimeFormula": "Every8ValidBasicAttacks=>SpawnTurret(duration=3s,interval=0.75s,speed=14m/s,range=11m,max=1)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 22,
+          "unit": "TURRET_SHOT_ATK_%"
+        },
+        {
+          "level": 2,
+          "value": 27,
+          "unit": "TURRET_SHOT_ATK_%"
+        },
+        {
+          "level": 3,
+          "value": 32,
+          "unit": "TURRET_SHOT_ATK_%"
+        },
+        {
+          "level": 4,
+          "value": 37,
+          "unit": "TURRET_SHOT_ATK_%"
+        },
+        {
+          "level": 5,
+          "value": 42,
+          "unit": "TURRET_SHOT_ATK_%"
+        }
+      ]
+    },
+    {
+      "cardId": "C031",
+      "nameKr": "과충전 회로",
+      "nameEn": "Overcharge Circuit",
+      "rarity": "LEGENDARY",
+      "category": "SPECIAL",
+      "trait": "SPECIAL",
+      "subTrait": "ELECTRIC",
+      "effect": "공격 이벤트가 제한된 전기 보조 타격을 생성",
+      "unlock": "HOST_H04_LV7",
+      "bossRule": "Y",
+      "runtimeFormula": "ElectricProc(Value)",
+      "levels": [
+        {
+          "level": 1,
+          "value": 20,
+          "unit": "ELECTRIC"
+        },
+        {
+          "level": 2,
+          "value": 28,
+          "unit": "ELECTRIC"
+        },
+        {
+          "level": 3,
+          "value": 36,
+          "unit": "ELECTRIC"
+        },
+        {
+          "level": 4,
+          "value": 44,
+          "unit": "ELECTRIC"
+        },
+        {
+          "level": 5,
+          "value": 52,
+          "unit": "ELECTRIC"
+        }
+      ]
+    },
+    {
+      "cardId": "C032",
+      "nameKr": "영혼 복제",
+      "nameEn": "Spectral Echo",
+      "rarity": "LEGENDARY",
+      "category": "SPECIAL",
+      "trait": "SPECIAL",
+      "subTrait": "ECHO",
+      "effect": "유효 기본 공격 8회마다 직전 기본 공격 프로필을 유령 잔상이 1회 복제한다. 기본 공격 외 모든 피해원은 복제 불가.",
+      "unlock": "RESEARCH_SPECIAL_3",
+      "bossRule": "FULL",
+      "runtimeFormula": "Every8ValidBasicAttacks=>Echo(LastWhitelistedBasicAttackProfile,Value%); NoRecursiveProc",
+      "levels": [
+        {
+          "level": 1,
+          "value": 35,
+          "unit": "ECHO_DAMAGE_%"
+        },
+        {
+          "level": 2,
+          "value": 40,
+          "unit": "ECHO_DAMAGE_%"
+        },
+        {
+          "level": 3,
+          "value": 45,
+          "unit": "ECHO_DAMAGE_%"
+        },
+        {
+          "level": 4,
+          "value": 50,
+          "unit": "ECHO_DAMAGE_%"
+        },
+        {
+          "level": 5,
+          "value": 55,
+          "unit": "ECHO_DAMAGE_%"
+        }
+      ]
+    }
+  ]
+}

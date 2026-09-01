@@ -1,0 +1,109 @@
+{
+  "version": "v2.2 FINAL LOCK",
+  "starterMasteryReplacement": {
+    "H18": {
+      "level": 7,
+      "bonus": "EVO03 projectile speed +8%"
+    },
+    "H23": {
+      "level": 7,
+      "bonus": "EVO01 cooldown -5%"
+    }
+  },
+  "recipeAccess": [
+    {
+      "evolutionId": "EVO01",
+      "recipeUnlockedAt": "STARTER_RECIPE",
+      "cardAAvailableAt": "DEFAULT",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "NEW ACCOUNT · BOTH INGREDIENTS DEFAULT",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO02",
+      "recipeUnlockedAt": "HOST_H09_LV7",
+      "cardAAvailableAt": "HOST_H09_LV7",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO03",
+      "recipeUnlockedAt": "STARTER_RECIPE",
+      "cardAAvailableAt": "DEFAULT",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "NEW ACCOUNT · BOTH INGREDIENTS DEFAULT",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO04",
+      "recipeUnlockedAt": "HOST_H20_LV7",
+      "cardAAvailableAt": "HOST_H20_LV7",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO05",
+      "recipeUnlockedAt": "HOST_H19_LV7",
+      "cardAAvailableAt": "HOST_H19_LV7",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO06",
+      "recipeUnlockedAt": "HOST_H21_LV7",
+      "cardAAvailableAt": "HOST_H07_LV7 OR HOST_H21_LV7",
+      "cardBAvailableAt": "RESEARCH_AREA_1 OR HOST_H15_LV7 OR HOST_H21_LV7",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO07",
+      "recipeUnlockedAt": "HOST_H06_LV7",
+      "cardAAvailableAt": "DEFAULT",
+      "cardBAvailableAt": "HOST_H03_LV7 OR HOST_H06_LV7",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO08",
+      "recipeUnlockedAt": "HOST_H07_LV7",
+      "cardAAvailableAt": "HOST_H07_LV7 OR HOST_H21_LV7",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO09",
+      "recipeUnlockedAt": "HOST_H15_LV7",
+      "cardAAvailableAt": "HOST_H15_LV7",
+      "cardBAvailableAt": "RESEARCH_AREA_1 OR HOST_H15_LV7 OR HOST_H21_LV7",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO10",
+      "recipeUnlockedAt": "HOST_H03_LV7",
+      "cardAAvailableAt": "HOST_H03_LV7 OR HOST_H06_LV7",
+      "cardBAvailableAt": "DEFAULT",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    },
+    {
+      "evolutionId": "EVO11",
+      "recipeUnlockedAt": "HOST_H04_LV7",
+      "cardAAvailableAt": "DEFAULT",
+      "cardBAvailableAt": "HOST_H04_LV7",
+      "earliestRealCompletionState": "MOTIF HOST MASTERY Lv7 · BOTH INGREDIENTS AVAILABLE",
+      "qa": "PASS · NO MANDATORY CROSS-HOST LOCK"
+    }
+  ],
+  "bmPolicy": {
+    "paidRecipeUnlock": false,
+    "paidIngredientGuarantee": false,
+    "cashOnlyEvolution": false,
+    "goldAccelerationAllowed": true
+  }
+}

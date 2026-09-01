@@ -1,0 +1,485 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "GeometryID": "GEO_CH1_001",
+      "RoomID": "ROOM_CH1_001",
+      "Template": "TWIN_PLATFORM",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_002",
+      "RoomID": "ROOM_CH1_002",
+      "Template": "RING",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_003",
+      "RoomID": "ROOM_CH1_003",
+      "Template": "OFFSET_COVER",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_004",
+      "RoomID": "ROOM_CH1_004",
+      "Template": "SPLIT_LEVEL",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_005",
+      "RoomID": "ROOM_CH1_005",
+      "Template": "PILLAR_CROSS",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_006",
+      "RoomID": "ROOM_CH1_006",
+      "Template": "TWIN_PLATFORM",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_007",
+      "RoomID": "ROOM_CH1_007",
+      "Template": "TWIN_PLATFORM",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_008",
+      "RoomID": "ROOM_CH1_008",
+      "Template": "SPLIT_LEVEL",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_009",
+      "RoomID": "ROOM_CH1_009",
+      "Template": "OFFSET_COVER",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_010",
+      "RoomID": "ROOM_CH1_010",
+      "Template": "LANE_WIDE",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_011",
+      "RoomID": "ROOM_CH1_011",
+      "Template": "TWIN_PLATFORM",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH1_012",
+      "RoomID": "ROOM_CH1_012",
+      "Template": "RING",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_001",
+      "RoomID": "ROOM_CH2_001",
+      "Template": "RING",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_002",
+      "RoomID": "ROOM_CH2_002",
+      "Template": "OFFSET_COVER",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_003",
+      "RoomID": "ROOM_CH2_003",
+      "Template": "SPLIT_LEVEL",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_004",
+      "RoomID": "ROOM_CH2_004",
+      "Template": "PILLAR_CROSS",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_005",
+      "RoomID": "ROOM_CH2_005",
+      "Template": "PILLAR_CROSS",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_006",
+      "RoomID": "ROOM_CH2_006",
+      "Template": "RING",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_007",
+      "RoomID": "ROOM_CH2_007",
+      "Template": "RING",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_008",
+      "RoomID": "ROOM_CH2_008",
+      "Template": "SPLIT_LEVEL",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_009",
+      "RoomID": "ROOM_CH2_009",
+      "Template": "PILLAR_CROSS",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_010",
+      "RoomID": "ROOM_CH2_010",
+      "Template": "LANE_WIDE",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_011",
+      "RoomID": "ROOM_CH2_011",
+      "Template": "TWIN_PLATFORM",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_012",
+      "RoomID": "ROOM_CH2_012",
+      "Template": "OFFSET_COVER",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_013",
+      "RoomID": "ROOM_CH2_013",
+      "Template": "RING",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_014",
+      "RoomID": "ROOM_CH2_014",
+      "Template": "SPLIT_LEVEL",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_015",
+      "RoomID": "ROOM_CH2_015",
+      "Template": "SPLIT_LEVEL",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH2_016",
+      "RoomID": "ROOM_CH2_016",
+      "Template": "TWIN_PLATFORM",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_001",
+      "RoomID": "ROOM_CH3_001",
+      "Template": "OFFSET_COVER",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_002",
+      "RoomID": "ROOM_CH3_002",
+      "Template": "SPLIT_LEVEL",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_003",
+      "RoomID": "ROOM_CH3_003",
+      "Template": "LANE_WIDE",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_004",
+      "RoomID": "ROOM_CH3_004",
+      "Template": "PILLAR_CROSS",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_005",
+      "RoomID": "ROOM_CH3_005",
+      "Template": "TWIN_PLATFORM",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_006",
+      "RoomID": "ROOM_CH3_006",
+      "Template": "OFFSET_COVER",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_007",
+      "RoomID": "ROOM_CH3_007",
+      "Template": "RING",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 1,
+      "Hazard": "NONE",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_008",
+      "RoomID": "ROOM_CH3_008",
+      "Template": "LANE_WIDE",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_009",
+      "RoomID": "ROOM_CH3_009",
+      "Template": "PILLAR_CROSS",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_010",
+      "RoomID": "ROOM_CH3_010",
+      "Template": "RING",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_011",
+      "RoomID": "ROOM_CH3_011",
+      "Template": "RING",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_012",
+      "RoomID": "ROOM_CH3_012",
+      "Template": "RING",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_013",
+      "RoomID": "ROOM_CH3_013",
+      "Template": "SPLIT_LEVEL",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_014",
+      "RoomID": "ROOM_CH3_014",
+      "Template": "SPLIT_LEVEL",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_015",
+      "RoomID": "ROOM_CH3_015",
+      "Template": "TWIN_PLATFORM",
+      "Width": 24,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_016",
+      "RoomID": "ROOM_CH3_016",
+      "Template": "PILLAR_CROSS",
+      "Width": 28,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "TIMED_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_017",
+      "RoomID": "ROOM_CH3_017",
+      "Template": "RING",
+      "Width": 32,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_018",
+      "RoomID": "ROOM_CH3_018",
+      "Template": "OFFSET_COVER",
+      "Width": 24,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_019",
+      "RoomID": "ROOM_CH3_019",
+      "Template": "LANE_WIDE",
+      "Width": 28,
+      "Height": 17,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    },
+    {
+      "GeometryID": "GEO_CH3_020",
+      "RoomID": "ROOM_CH3_020",
+      "Template": "PILLAR_CROSS",
+      "Width": 32,
+      "Height": 14,
+      "CoverCount": 2,
+      "Hazard": "ROTATING_HAZARD",
+      "Rule": "Spawn safe radius 3.0m; exit telegraph 1.5s"
+    }
+  ]
+}

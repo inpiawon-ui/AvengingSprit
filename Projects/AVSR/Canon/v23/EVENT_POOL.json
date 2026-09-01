@@ -1,0 +1,95 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_01",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_02",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_03",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_04",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_05",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH1",
+      "EventID": "EV_CH1_06",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_01",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_02",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_03",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_04",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_05",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH2",
+      "EventID": "EV_CH2_06",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_01",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_02",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_03",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_04",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_05",
+      "Weight": 1
+    },
+    {
+      "PoolID": "EVENT_POOL_CH3",
+      "EventID": "EV_CH3_06",
+      "Weight": 1
+    }
+  ]
+}

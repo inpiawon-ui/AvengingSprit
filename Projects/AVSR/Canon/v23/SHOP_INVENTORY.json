@@ -1,0 +1,365 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C001",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C002",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C003",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C005",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C006",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C007",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C008",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C011",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C015",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C016",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C017",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C020",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C021",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C024",
+      "Price": 66,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH1",
+      "CardID": "C028",
+      "Price": 42,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C003",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C004",
+      "Price": 104,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "RESEARCH_ATTACK_2",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C005",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C008",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C009",
+      "Price": 104,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C011",
+      "Price": 48,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C012",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "RESEARCH_AREA_1 OR HOST_H15_LV7 OR HOST_H21_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C013",
+      "Price": 104,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "HOST_H03_LV7 OR HOST_H06_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C015",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C018",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "RESEARCH_SURVIVAL_1",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C022",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "RESEARCH_MOBILITY_1",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C024",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C025",
+      "Price": 72,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "HOST_H07_LV7 OR HOST_H21_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH2",
+      "CardID": "C028",
+      "Price": 48,
+      "ActualRarity": "COMMON",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C004",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "RESEARCH_ATTACK_2",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C009",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "DEFAULT",
+      "RuntimeEligibility": "ALWAYS"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C010",
+      "Price": 157,
+      "ActualRarity": "LEGENDARY",
+      "UnlockRequirement": "HOST_H20_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C012",
+      "Price": 78,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "RESEARCH_AREA_1 OR HOST_H15_LV7 OR HOST_H21_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C013",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "HOST_H03_LV7 OR HOST_H06_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C014",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "RESEARCH_AREA_2",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C018",
+      "Price": 78,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "RESEARCH_SURVIVAL_1",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C019",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "HOST_H22_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C023",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "HOST_H13_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C025",
+      "Price": 78,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "HOST_H07_LV7 OR HOST_H21_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C026",
+      "Price": 78,
+      "ActualRarity": "RARE",
+      "UnlockRequirement": "HOST_H09_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C027",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "HOST_H15_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C029",
+      "Price": 110,
+      "ActualRarity": "EPIC",
+      "UnlockRequirement": "RESEARCH_UTILITY_2",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C030",
+      "Price": 157,
+      "ActualRarity": "LEGENDARY",
+      "UnlockRequirement": "HOST_H19_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C031",
+      "Price": 157,
+      "ActualRarity": "LEGENDARY",
+      "UnlockRequirement": "HOST_H04_LV7",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    },
+    {
+      "PoolID": "POOL_CH3",
+      "CardID": "C032",
+      "Price": 157,
+      "ActualRarity": "LEGENDARY",
+      "UnlockRequirement": "RESEARCH_SPECIAL_3",
+      "RuntimeEligibility": "ONLY_IF_META_UNLOCKED"
+    }
+  ]
+}

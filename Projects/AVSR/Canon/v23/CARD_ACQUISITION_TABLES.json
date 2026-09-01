@@ -1,0 +1,40 @@
+{
+  "version": "v3.3 FINAL LOCK",
+  "data": [
+    {
+      "source": "LEVELUP_SELECTION",
+      "baseCard": "Y",
+      "freeThreeChoice": "Y",
+      "goldCost": "N",
+      "evolutionBehavior": "Resolve READY after choice"
+    },
+    {
+      "source": "ELITE_SELECTION",
+      "baseCard": "Y",
+      "freeThreeChoice": "Y",
+      "goldCost": "N",
+      "evolutionBehavior": "Resolve READY after choice"
+    },
+    {
+      "source": "EVENT_SELECTION",
+      "baseCard": "Y",
+      "freeThreeChoice": "Y",
+      "goldCost": "Conditional",
+      "evolutionBehavior": "Resolve READY after choice"
+    },
+    {
+      "source": "SHOP_CARD_OFFER",
+      "baseCard": "Y",
+      "freeThreeChoice": "N",
+      "goldCost": "Y",
+      "evolutionBehavior": "One base card only"
+    },
+    {
+      "source": "EVOLUTION_RESOLUTION",
+      "baseCard": "N",
+      "freeThreeChoice": "N",
+      "goldCost": "N",
+      "evolutionBehavior": "Resolve already READY recipe only"
+    }
+  ]
+}

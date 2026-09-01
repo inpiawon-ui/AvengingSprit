@@ -1,0 +1,120 @@
+{
+  "version": "v2.2 FINAL LOCK",
+  "maxEvolutionSlots": 3,
+  "starterRecipeIds": [
+    "RCP_EVO01",
+    "RCP_EVO03"
+  ],
+  "recipes": [
+    {
+      "evolutionId": "EVO01",
+      "recipeId": "RCP_EVO01",
+      "cardA": "C003",
+      "cardB": "C011",
+      "unlock": "STARTER_RECIPE",
+      "condition": "Owned(C003) AND Owned(C011) AND RecipeUnlocked(EVO01)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO02",
+      "recipeId": "RCP_EVO02",
+      "cardA": "C026",
+      "cardB": "C011",
+      "unlock": "HOST_H09_LV7",
+      "condition": "Owned(C026) AND Owned(C011) AND RecipeUnlocked(EVO02)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO03",
+      "recipeId": "RCP_EVO03",
+      "cardA": "C007",
+      "cardB": "C009",
+      "unlock": "STARTER_RECIPE",
+      "condition": "Owned(C007) AND Owned(C009) AND RecipeUnlocked(EVO03)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO04",
+      "recipeId": "RCP_EVO04",
+      "cardA": "C010",
+      "cardB": "C001",
+      "unlock": "HOST_H20_LV7",
+      "condition": "Owned(C010) AND Owned(C001) AND RecipeUnlocked(EVO04)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO05",
+      "recipeId": "RCP_EVO05",
+      "cardA": "C030",
+      "cardB": "C009",
+      "unlock": "HOST_H19_LV7",
+      "condition": "Owned(C030) AND Owned(C009) AND RecipeUnlocked(EVO05)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO06",
+      "recipeId": "RCP_EVO06",
+      "cardA": "C025",
+      "cardB": "C012",
+      "unlock": "HOST_H21_LV7",
+      "condition": "Owned(C025) AND Owned(C012) AND RecipeUnlocked(EVO06)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO07",
+      "recipeId": "RCP_EVO07",
+      "cardA": "C007",
+      "cardB": "C013",
+      "unlock": "HOST_H06_LV7",
+      "condition": "Owned(C007) AND Owned(C013) AND RecipeUnlocked(EVO07)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO08",
+      "recipeId": "RCP_EVO08",
+      "cardA": "C025",
+      "cardB": "C008",
+      "unlock": "HOST_H07_LV7",
+      "condition": "Owned(C025) AND Owned(C008) AND RecipeUnlocked(EVO08)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO09",
+      "recipeId": "RCP_EVO09",
+      "cardA": "C027",
+      "cardB": "C012",
+      "unlock": "HOST_H15_LV7",
+      "condition": "Owned(C027) AND Owned(C012) AND RecipeUnlocked(EVO09)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO10",
+      "recipeId": "RCP_EVO10",
+      "cardA": "C013",
+      "cardB": "C011",
+      "unlock": "HOST_H03_LV7",
+      "condition": "Owned(C013) AND Owned(C011) AND RecipeUnlocked(EVO10)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    },
+    {
+      "evolutionId": "EVO11",
+      "recipeId": "RCP_EVO11",
+      "cardA": "C008",
+      "cardB": "C031",
+      "unlock": "HOST_H04_LV7",
+      "condition": "Owned(C008) AND Owned(C031) AND RecipeUnlocked(EVO11)",
+      "acquisition": "NEXT_VALID_CARD_SELECTION: reserve 1 Evolution candidate slot; ingredients retained",
+      "ingredientsConsumed": false
+    }
+  ]
+}

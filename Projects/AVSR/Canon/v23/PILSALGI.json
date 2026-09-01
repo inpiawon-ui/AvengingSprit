@@ -1,0 +1,205 @@
+{
+ "version": "v2.2 FINAL LOCK",
+ "ultimates": [
+  {
+   "ultimateId": "PSG_H01",
+   "hostId": "H01",
+   "nameKr": "발키리 돌진",
+   "nameEn": "Valkyrie Rush",
+   "fantasy": "A high-speed unarmed rush ends in the Amazon's signature flying kick.",
+   "damageCoef": 4.8
+  },
+  {
+   "ultimateId": "PSG_H02",
+   "hostId": "H02",
+   "nameKr": "여왕의 충격파",
+   "nameEn": "Amazon Sonic Break",
+   "fantasy": "A sequence of elite kicks launches a giant sonic crescent through the lane.",
+   "damageCoef": 5.4
+  },
+  {
+   "ultimateId": "PSG_H03",
+   "hostId": "H03",
+   "nameKr": "전면 폭격",
+   "nameEn": "Carpet Bombardment",
+   "fantasy": "A vertical sequence of original-style bombs erases a combat lane.",
+   "damageCoef": 5.4
+  },
+  {
+   "ultimateId": "PSG_H04",
+   "hostId": "H04",
+   "nameKr": "궤도 레이저",
+   "nameEn": "Orbital Laser",
+   "fantasy": "A giant beam tracks the dominant threat and sweeps the lane once.",
+   "damageCoef": 6
+  },
+  {
+   "ultimateId": "PSG_H05",
+   "hostId": "H05",
+   "nameKr": "무한 탄창",
+   "nameEn": "Endless Magazine",
+   "fantasy": "The machine gun becomes a sustained wall of lead with no reload break.",
+   "damageCoef": 5.6
+  },
+  {
+   "ultimateId": "PSG_H06",
+   "hostId": "H06",
+   "nameKr": "미사일 포화",
+   "nameEn": "Missile Saturation",
+   "fantasy": "A fan of intelligent missiles hunts every major threat.",
+   "damageCoef": 6.2
+  },
+  {
+   "ultimateId": "PSG_H07",
+   "hostId": "H07",
+   "nameKr": "빙룡의 숨결",
+   "nameEn": "Glacial Breath",
+   "fantasy": "A sustained blue-dragon breath freezes the entire forward lane.",
+   "damageCoef": 4.8
+  },
+  {
+   "ultimateId": "PSG_H08",
+   "hostId": "H08",
+   "nameKr": "독룡의 늪",
+   "nameEn": "Corrosive Mire",
+   "fantasy": "Green breath floods a large zone with corrosive dragon fire.",
+   "damageCoef": 4.5
+  },
+  {
+   "ultimateId": "PSG_H09",
+   "hostId": "H09",
+   "nameKr": "적룡의 업화",
+   "nameEn": "Red Dragon Inferno",
+   "fantasy": "A circular firestorm erupts from the red dragon, then surges forward.",
+   "damageCoef": 6.4
+  },
+  {
+   "ultimateId": "PSG_H10",
+   "hostId": "H10",
+   "nameKr": "처형의 여섯 발",
+   "nameEn": "Six-Round Verdict",
+   "fantasy": "Six deliberate pistol shots snap between the highest-priority targets.",
+   "damageCoef": 5.2
+  },
+  {
+   "ultimateId": "PSG_H11",
+   "hostId": "H11",
+   "nameKr": "거리의 탄막",
+   "nameEn": "Street Barrage",
+   "fantasy": "The Tommy Gun sweeps three lanes with sustained fire.",
+   "damageCoef": 5.8
+  },
+  {
+   "ultimateId": "PSG_H12",
+   "hostId": "H12",
+   "nameKr": "천공장",
+   "nameEn": "Heaven Palm Mandala",
+   "fantasy": "Guru rises within a spiritual mandala and releases layered palm shockwaves that clear space.",
+   "damageCoef": 4.2
+  },
+  {
+   "ultimateId": "PSG_H13",
+   "hostId": "H13",
+   "nameKr": "도약 사격",
+   "nameEn": "Phantom Angle Shot",
+   "fantasy": "An anchored acrobatic projection creates precise firing angles without moving the player body.",
+   "damageCoef": 5
+  },
+  {
+   "ultimateId": "PSG_H14",
+   "hostId": "H14",
+   "nameKr": "크로스 파이어",
+   "nameEn": "Phantom Crossfire",
+   "fantasy": "Anchored afterimage Hoopers surround the firing lane with rapid SMG crossfire.",
+   "damageCoef": 5.4
+  },
+  {
+   "ultimateId": "PSG_H15",
+   "hostId": "H15",
+   "nameKr": "심연 의식",
+   "nameEn": "Abyss Ritual",
+   "fantasy": "Dark sigils connect and collapse into an abyssal strike.",
+   "damageCoef": 6
+  },
+  {
+   "ultimateId": "PSG_H16",
+   "hostId": "H16",
+   "nameKr": "성광의 문",
+   "nameEn": "Gate of Refraction",
+   "fantasy": "A radiant gate fires prism lances that pierce once and refract across the battlefield.",
+   "damageCoef": 5.4
+  },
+  {
+   "ultimateId": "PSG_H17",
+   "hostId": "H17",
+   "nameKr": "사슬 난무",
+   "nameEn": "Chain Tempest",
+   "fantasy": "A spinning chain storm drags minor threats inward and shreds the center.",
+   "damageCoef": 5.8
+  },
+  {
+   "ultimateId": "PSG_H18",
+   "hostId": "H18",
+   "nameKr": "환영 수리검",
+   "nameEn": "Phantom Shuriken",
+   "fantasy": "A giant returning shuriken carves a readable figure-eight through the room.",
+   "damageCoef": 5.6
+  },
+  {
+   "ultimateId": "PSG_H19",
+   "hostId": "H19",
+   "nameKr": "기계 군단",
+   "nameEn": "Machine Legion",
+   "fantasy": "The Robot unfolds multiple original-style rocket pods and fires a synchronized salvo.",
+   "damageCoef": 6.2
+  },
+  {
+   "ultimateId": "PSG_H20",
+   "hostId": "H20",
+   "nameKr": "유령 홈런",
+   "nameEn": "Ghost Home Run",
+   "fantasy": "A giant spectral ball ricochets through every major threat before returning.",
+   "damageCoef": 5.9
+  },
+  {
+   "ultimateId": "PSG_H21",
+   "hostId": "H21",
+   "nameKr": "설녀의 폭설",
+   "nameEn": "Whiteout",
+   "fantasy": "A mobile blizzard follows the Snow Woman and repeatedly freezes lanes.",
+   "damageCoef": 4.6
+  },
+  {
+   "ultimateId": "PSG_H22",
+   "hostId": "H22",
+   "nameKr": "진홍의 밤",
+   "nameEn": "Crimson Night",
+   "fantasy": "A flock of blood bats drains the battlefield and returns as one healing wave.",
+   "damageCoef": 5
+  },
+  {
+   "ultimateId": "PSG_H23",
+   "hostId": "H23",
+   "nameKr": "사신의 수확",
+   "nameEn": "Death Harvest",
+   "fantasy": "A colossal scythe crosses the room and returns with the souls it touched.",
+   "damageCoef": 7
+  },
+  {
+   "ultimateId": "PSG_H24",
+   "hostId": "H24",
+   "nameKr": "구원의 레이저",
+   "nameEn": "Rescue Laser Array",
+   "fantasy": "Jennifer reproduces her original laser attack as a rapid crossing array.",
+   "damageCoef": 5.6
+  },
+  {
+   "ultimateId": "PSG_H25",
+   "hostId": "H25",
+   "nameKr": "초인의 일격",
+   "nameEn": "Superhuman Impact",
+   "fantasy": "A superhuman punch launches the original giant fireball across the full room.",
+   "damageCoef": 7.4
+  }
+ ]
+}

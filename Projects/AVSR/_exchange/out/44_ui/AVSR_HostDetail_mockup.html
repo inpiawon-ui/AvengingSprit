@@ -1,0 +1,73 @@
+<title>호스트 상세 카드 구조</title>
+<style>
+:root{--bg:#0f1319;--fg:#e8edf5;--dim:#8b97a8;--line:#242c38;--new:#f0b428;--move:#5fd2d6}
+*{box-sizing:border-box}
+body{margin:0;padding:28px;background:var(--bg);color:var(--fg);
+ font:14px/1.6 "Pretendard","Malgun Gothic",system-ui,sans-serif}
+h1{font-size:20px;margin:0 0 4px}
+p.sub{color:var(--dim);margin:0 0 24px}
+.wrap{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+.card{position:relative;width:283px;height:737px;
+ background:#161c26;border:2px solid #2e3746;flex:0 0 auto}
+.b{position:absolute;font-size:9px;line-height:1.1;overflow:hidden}
+.b span{display:block;padding:1px 3px;white-space:nowrap;font-family:ui-monospace,monospace}
+.legend{display:flex;gap:16px;margin:12px 0 0;font-size:12px;color:var(--dim)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+table{border-collapse:collapse;font-size:12px;min-width:520px}
+th,td{border-bottom:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
+th{color:var(--dim);font-weight:600;white-space:nowrap}
+td:nth-child(n+2):nth-child(-n+5){text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+code{color:var(--fg);font-family:ui-monospace,monospace;font-size:11px}
+.note{max-width:560px;color:var(--dim);font-size:13px;margin-top:20px}
+</style>
+<h1>호스트 상세 카드 — 구조 레이아웃</h1>
+<p class="sub">720×1280 기준 · 카드 x 420~703 · y 250~987
+ · 좌상단 원점 · <b>구조만이다. 색·재질·폰트는 디자인이 정한다.</b></p>
+<div class="wrap">
+ <div>
+  <div class="card"><div class="b" style="left:0px;top:0px;width:283px;height:737px;border:1px dashed #7a8699;z-index:1"><span style="color:#7a8699">HostDetailFrame</span></div><div class="b" style="left:10px;top:18px;width:263px;height:28px;border:1px solid #8fa0b8;z-index:2"><span style="color:#8fa0b8">HostNameEnText</span></div><div class="b" style="left:10px;top:50px;width:170px;height:24px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">HostNameKrText</span></div><div class="b" style="left:185px;top:50px;width:88px;height:24px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">JobBadge</span></div><div class="b" style="left:185px;top:50px;width:88px;height:24px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">JobBadgeText</span></div><div class="b" style="left:10px;top:78px;width:263px;height:34px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">JobRuleText</span></div><div class="b" style="left:108px;top:120px;width:64px;height:76px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">HostPortraitImage</span></div><div class="b" style="left:20px;top:206px;width:120px;height:20px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">StatGroupLabel</span></div><div class="b" style="left:17px;top:230px;width:250px;height:30px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">StatRow_HP</span></div><div class="b" style="left:17px;top:262px;width:250px;height:30px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">StatRow_ATK</span></div><div class="b" style="left:17px;top:294px;width:250px;height:30px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">StatRow_SPD</span></div><div class="b" style="left:17px;top:326px;width:250px;height:30px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">StatRow_DASH</span></div><div class="b" style="left:10px;top:368px;width:263px;height:150px;border:1px dashed #7a8699;z-index:1"><span style="color:#7a8699">ActiveSkillCard</span></div><div class="b" style="left:22px;top:376px;width:130px;height:18px;border:1px solid #8fa0b8;z-index:2"><span style="color:#8fa0b8">ActiveSkillLabel</span></div><div class="b" style="left:146px;top:376px;width:116px;height:18px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">ActiveSkillCooldownText</span></div><div class="b" style="left:22px;top:400px;width:56px;height:56px;border:1px solid #8fa0b8;z-index:2"><span style="color:#8fa0b8">ActiveSkillIcon</span></div><div class="b" style="left:22px;top:400px;width:56px;height:56px;border:1px dashed #f0b428;z-index:3"><span style="color:#f0b428">ActiveSkillSealIcon</span></div><div class="b" style="left:86px;top:402px;width:176px;height:24px;border:1px solid #8fa0b8;z-index:2"><span style="color:#8fa0b8">ActiveSkillNameText</span></div><div class="b" style="left:22px;top:462px;width:240px;height:48px;border:1px solid #5fd2d6;z-index:2"><span style="color:#5fd2d6">ActiveSkillDescText</span></div><div class="b" style="left:10px;top:528px;width:263px;height:124px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillCard</span></div><div class="b" style="left:22px;top:536px;width:130px;height:18px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillLabel</span></div><div class="b" style="left:146px;top:536px;width:116px;height:18px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillChanceText</span></div><div class="b" style="left:22px;top:560px;width:44px;height:44px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillIcon</span></div><div class="b" style="left:22px;top:560px;width:44px;height:44px;border:1px dashed #f0b428;z-index:3"><span style="color:#f0b428">PassiveSkillSealIcon</span></div><div class="b" style="left:74px;top:562px;width:188px;height:22px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillNameText</span></div><div class="b" style="left:22px;top:608px;width:240px;height:36px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">PassiveSkillDescText</span></div><div class="b" style="left:10px;top:662px;width:263px;height:62px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">MasteryGroup</span></div><div class="b" style="left:22px;top:668px;width:120px;height:18px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">MasteryLabel</span></div><div class="b" style="left:153px;top:668px;width:110px;height:18px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">MasteryValueText</span></div><div class="b" style="left:22px;top:692px;width:239px;height:10px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">ShardBarBg</span></div><div class="b" style="left:22px;top:692px;width:239px;height:10px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">ShardBarFill</span></div><div class="b" style="left:22px;top:706px;width:239px;height:16px;border:1px solid #f0b428;z-index:2"><span style="color:#f0b428">ShardText</span></div></div>
+  <div class="legend">
+   <span><i style="background:var(--new)"></i>신규</span>
+   <span><i style="background:var(--move)"></i>자리 이동</span>
+   <span><i style="background:#8fa0b8"></i>기존</span>
+   <span><i style="background:#7a8699"></i>컨테이너</span>
+  </div>
+ </div>
+ <table>
+  <tr><th>name</th><th>x</th><th>y</th><th>w</th><th>h</th><th>종류</th><th>구분</th><th>내용</th></tr>
+  <tr><td><code>HostDetailFrame</code></td><td>420</td><td>250</td><td>283</td><td>737</td><td>Image</td><td>BOX</td><td>카드 배경</td></tr>
+<tr><td><code>HostNameEnText</code></td><td>430</td><td>268</td><td>263</td><td>28</td><td>Text</td><td>—</td><td>AMAZON</td></tr>
+<tr><td><code>HostNameKrText</code></td><td>430</td><td>300</td><td>170</td><td>24</td><td>Text</td><td>MOVE</td><td>아마존 — 폭을 줄여 배지 자리를 낸다</td></tr>
+<tr><td><code>JobBadge</code></td><td>605</td><td>300</td><td>88</td><td>24</td><td>Image</td><td>NEW</td><td>직업 배지 배경</td></tr>
+<tr><td><code>JobBadgeText</code></td><td>605</td><td>300</td><td>88</td><td>24</td><td>Text</td><td>NEW</td><td>격투</td></tr>
+<tr><td><code>JobRuleText</code></td><td>430</td><td>328</td><td>263</td><td>34</td><td>Text</td><td>NEW</td><td>직업 상시 규칙 (최대 2줄)</td></tr>
+<tr><td><code>HostPortraitImage</code></td><td>528</td><td>370</td><td>64</td><td>76</td><td>Image</td><td>MOVE</td><td>초상 — 80×96 에서 축소</td></tr>
+<tr><td><code>StatGroupLabel</code></td><td>440</td><td>456</td><td>120</td><td>20</td><td>Text</td><td>MOVE</td><td>능력치</td></tr>
+<tr><td><code>StatRow_HP</code></td><td>437</td><td>480</td><td>250</td><td>30</td><td>Group</td><td>MOVE</td><td>아이콘 + 라벨 + 바 + 숫자</td></tr>
+<tr><td><code>StatRow_ATK</code></td><td>437</td><td>512</td><td>250</td><td>30</td><td>Group</td><td>MOVE</td><td></td></tr>
+<tr><td><code>StatRow_SPD</code></td><td>437</td><td>544</td><td>250</td><td>30</td><td>Group</td><td>MOVE</td><td></td></tr>
+<tr><td><code>StatRow_DASH</code></td><td>437</td><td>576</td><td>250</td><td>30</td><td>Group</td><td>MOVE</td><td></td></tr>
+<tr><td><code>ActiveSkillCard</code></td><td>430</td><td>618</td><td>263</td><td>150</td><td>Image</td><td>BOX</td><td>액티브 스킬 상자</td></tr>
+<tr><td><code>ActiveSkillLabel</code></td><td>442</td><td>626</td><td>130</td><td>18</td><td>Text</td><td>—</td><td>ACTIVE SKILL</td></tr>
+<tr><td><code>ActiveSkillCooldownText</code></td><td>566</td><td>626</td><td>116</td><td>18</td><td>Text</td><td>NEW</td><td>쿨 8초 — 우측 정렬</td></tr>
+<tr><td><code>ActiveSkillIcon</code></td><td>442</td><td>650</td><td>56</td><td>56</td><td>Image</td><td>—</td><td></td></tr>
+<tr><td><code>ActiveSkillSealIcon</code></td><td>442</td><td>650</td><td>56</td><td>56</td><td>Image</td><td>NEW</td><td>봉인 자물쇠 — 아이콘 위에 덮는다</td></tr>
+<tr><td><code>ActiveSkillNameText</code></td><td>506</td><td>652</td><td>176</td><td>24</td><td>Text</td><td>—</td><td>발키리 돌진</td></tr>
+<tr><td><code>ActiveSkillDescText</code></td><td>442</td><td>712</td><td>240</td><td>48</td><td>Text</td><td>MOVE</td><td>설명 2줄</td></tr>
+<tr><td><code>PassiveSkillCard</code></td><td>430</td><td>778</td><td>263</td><td>124</td><td>Image</td><td>NEW</td><td>패시브 스킬 상자</td></tr>
+<tr><td><code>PassiveSkillLabel</code></td><td>442</td><td>786</td><td>130</td><td>18</td><td>Text</td><td>NEW</td><td>PASSIVE SKILL</td></tr>
+<tr><td><code>PassiveSkillChanceText</code></td><td>566</td><td>786</td><td>116</td><td>18</td><td>Text</td><td>NEW</td><td>25% — 확률형만. 상시형은 빈칸</td></tr>
+<tr><td><code>PassiveSkillIcon</code></td><td>442</td><td>810</td><td>44</td><td>44</td><td>Image</td><td>NEW</td><td></td></tr>
+<tr><td><code>PassiveSkillSealIcon</code></td><td>442</td><td>810</td><td>44</td><td>44</td><td>Image</td><td>NEW</td><td>봉인 자물쇠</td></tr>
+<tr><td><code>PassiveSkillNameText</code></td><td>494</td><td>812</td><td>188</td><td>22</td><td>Text</td><td>NEW</td><td>흡혈</td></tr>
+<tr><td><code>PassiveSkillDescText</code></td><td>442</td><td>858</td><td>240</td><td>36</td><td>Text</td><td>NEW</td><td>설명 2줄</td></tr>
+<tr><td><code>MasteryGroup</code></td><td>430</td><td>912</td><td>263</td><td>62</td><td>Group</td><td>NEW</td><td>숙련도 · 파편</td></tr>
+<tr><td><code>MasteryLabel</code></td><td>442</td><td>918</td><td>120</td><td>18</td><td>Text</td><td>NEW</td><td>숙련도</td></tr>
+<tr><td><code>MasteryValueText</code></td><td>573</td><td>918</td><td>110</td><td>18</td><td>Text</td><td>NEW</td><td>Lv 3 / 10 — 우측 정렬</td></tr>
+<tr><td><code>ShardBarBg</code></td><td>442</td><td>942</td><td>239</td><td>10</td><td>Image</td><td>NEW</td><td>파편 진행 바</td></tr>
+<tr><td><code>ShardBarFill</code></td><td>442</td><td>942</td><td>239</td><td>10</td><td>Image</td><td>NEW</td><td>채움 (좌측 pivot)</td></tr>
+<tr><td><code>ShardText</code></td><td>442</td><td>956</td><td>239</td><td>16</td><td>Text</td><td>NEW</td><td>파편 18 / 26</td></tr>
+ </table>
+</div>
+<p class="note">요소 이름 = 프리팹 GameObject 이름 = 클라 바인딩 키. <b>이름과 계층은 바꾸지 않는다</b> —
+그 이름이 곧 코드가 찾는 키다. 좌표는 구조가 들어간다는 것을 확인한 값이지 미학적 최종값이 아니다.</p>

@@ -1,0 +1,73 @@
+{
+  "version": "v2.2 FINAL LOCK",
+  "rules": [
+    {
+      "ruleId": "PROC_BASIC_ATTACK_COUNT",
+      "definition": "Basic attack contribution increments once per resolved player Basic Attack profile",
+      "persistenceCap": "Player-owned Build persists across Host switch; counter persists",
+      "bossGhost": "Offensive counters pause in Ghost",
+      "exclusion": "Turret/Echo/Evolution/Ultimate/status/environment do not increment"
+    },
+    {
+      "ruleId": "C002_SINGLE_TARGET",
+      "definition": "ValidTargetCount at resolution equals 1",
+      "persistenceCap": "Only qualifying single-target portion gains bonus",
+      "bossGhost": "FULL",
+      "exclusion": "Multi-target portions unchanged"
+    },
+    {
+      "ruleId": "C005_SAME_TARGET",
+      "definition": "Same TargetRuntimeID; hits 1–4 map 25/50/75/100%",
+      "persistenceCap": "Reset on target change or contribution gap >1.5s",
+      "bossGhost": "FULL",
+      "exclusion": "No hidden interpolation"
+    },
+    {
+      "ruleId": "C022_STOP_FIRST_ATTACK",
+      "definition": "First Basic Attack after MovementState transitions Moving→Stopped",
+      "persistenceCap": "Minimum wind-up=max(0.18s,55% base)",
+      "bossGhost": "FULL",
+      "exclusion": "Never permits moving attack"
+    },
+    {
+      "ruleId": "C024_ATTACK_COMPLETE",
+      "definition": "After BasicAttackComplete, 1.2s player-directed Move Speed buff",
+      "persistenceCap": "Refresh duration only",
+      "bossGhost": "FULL",
+      "exclusion": "No dash/auto approach"
+    },
+    {
+      "ruleId": "C030_TURRET",
+      "definition": "Every 8 valid Basic Attacks",
+      "persistenceCap": "3s; 0.75s; 14m/s; 11m; max 1; pooled",
+      "bossGhost": "FULL; target boss when sole valid enemy",
+      "exclusion": "Turret attacks trigger no cards and no counters"
+    },
+    {
+      "ruleId": "C032_ECHO",
+      "definition": "Every 8 valid Basic Attacks; copy immediately preceding whitelisted profile",
+      "persistenceCap": "ECHO_WHITELIST=BASIC_ATTACK_PROFILE",
+      "bossGhost": "FULL",
+      "exclusion": "BLACKLIST=EVOLUTION|PILSALGI|TURRET|PROC|ECHO|STATUS_TICK|ENVIRONMENT; no recursion"
+    },
+    {
+      "ruleId": "EVOLUTION_STATE",
+      "definition": "Recipe completion reserves one candidate slot on next valid selection",
+      "persistenceCap": "Evolution automatic attack persists through Host switch",
+      "bossGhost": "Offensive Evolution paused in Ghost",
+      "exclusion": "Max 3 owned Evolutions; full-slot uses replace/skip choice"
+    }
+  ],
+  "echoWhitelist": [
+    "BASIC_ATTACK_PROFILE"
+  ],
+  "echoBlacklist": [
+    "EVOLUTION",
+    "PILSALGI",
+    "TURRET_SHOT",
+    "OTHER_PROC",
+    "ECHO",
+    "STATUS_TICK",
+    "ENVIRONMENTAL_DAMAGE"
+  ]
+}
