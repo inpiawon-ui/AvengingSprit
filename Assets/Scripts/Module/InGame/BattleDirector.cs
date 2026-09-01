@@ -4129,36 +4129,55 @@ namespace Game.Module.InGame
             //   방과 어긋날 수 있고(디버그로 방을 건너뛸 때 실제로 CH2 방이 CH1 배경을 받았다),
             //   무엇보다 배경은 **그 방의 성질**이지 플레이어의 상태가 아니다.
             //
-            // ⚠ 보스방을 여기서 빼면 안 된다. 보스 전용 바닥은 아직 720×1260 이라
-            //   936 방에 눌려 들어가고 평균 명도도 8~29 라 화면이 새까매진다.
+            // ⚠ 예전에는 보스방도 공용 아레나 한 장으로 보냈다. 보스 전용 바닥이
+            //   720×1260 이라 936 방에 눌려 들어가고 명도도 8~29 라 새까맸기 때문이다.
+            //   **58차에 여섯 장이 720×936 으로 다시 왔다** — 명도 33.6~48.2 로
+            //   지금 쓰는 무대 배경들과 같은 수준이다. 막을 이유가 없어졌으므로 막지 않는다.
             string floorKey = FloorKeyOf(_canonRoom, chapter);
+
             // 장애물도 같은 무대 것을 찾도록 이름만 떼어 둔다.
             // `roomfloor_env_junkyard` → `junkyard`, 연구소(`roomfloor_ch1_*`)는 빈 값.
+            //
+            // ⚠ 보스방은 바닥 이름이 `roomfloor_crusher` 라 여기서 무대를 못 뽑는다.
+            //   그렇다고 빈 값으로 두면 쓰레기장 한복판에서 연구소 상자와 싸우게 된다.
+            //   보스는 제 무대를 알고 있으므로(원작 스테이지) 그것으로 뽑는다.
             const string EnvPrefix = "roomfloor_env_";
-            _floorEnv = floorKey.StartsWith(EnvPrefix) ? floorKey.Substring(EnvPrefix.Length) : string.Empty;
-            LoadRoomFloorAsync(floorKey).Forget();   // fire-and-forget
-            return;
+            _floorEnv = _canonRoom != null && _canonRoom.IsBoss
+                        ? BossEnvOf(BossSlug(_canonRoom.BossId))
+                        : floorKey.StartsWith(EnvPrefix) ? floorKey.Substring(EnvPrefix.Length) : string.Empty;
 
-#pragma warning disable CS0162
-            var tile = GetSprite($"floor_tile_ch{chapter}");
-            if (tile != null)
-            {
-                SetFloorTile(tile);
-                // 보스방만 전용 바닥을 덮어쓴다 — 아래로 계속 간다.
-                if (_canonRoom == null || !_canonRoom.IsBoss) { _floorKey = null; return; }
-            }
-
-            string key = null, fallback = null;
-            // 보스 전용 바닥이 먼저다. 아직 안 온 보스는 제 챕터 바닥으로 떨어진다 —
-            // 여기서 되돌아갈 곳이 없으면 보스방만 회색 격자 위에서 싸우게 된다.
-            if (_canonRoom != null && _canonRoom.IsBoss)
-            {
-                fallback = key;
-                key = $"roomfloor_{BossSlug(_canonRoom.BossId)}";
-            }
-            LoadRoomFloorAsync(key, fallback).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
-#pragma warning restore CS0162
+            // 보스 전용 바닥이 없으면 공용 아레나로 떨어진다 — 보스방만 회색 격자 위에서
+            // 싸우는 일이 없도록. 일반 방은 떨어질 곳이 따로 없다.
+            string fallback = _canonRoom != null && _canonRoom.IsBoss ? BossArenaFloor : null;
+            LoadRoomFloorAsync(floorKey, fallback).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
         }
+
+        /// <summary>
+        /// 보스가 서 있는 무대. **소품이 여기서 갈린다.**
+        ///
+        /// 보스 아레나는 배경이 보스마다 따로 있어(`roomfloor_crusher`) 이름에서
+        /// 무대를 뽑을 수가 없다. 원작 스테이지 순서가 곧 답이다 —
+        /// 크러셔가 선 곳이 원작 1스테이지 쓰레기 집적장이고, 우리 `junkyard` 가 그것이다.
+        ///
+        ///   크러셔      원작 1  쓰레기 집적장        junkyard
+        ///   가디언      원작 2  미사일 저장·정비     missile
+        ///   파이썬      원작 3  밤의 도시 거리       street
+        ///   킹핀        원작 4  공중기지 옥상        rooftop
+        ///   로봇 스네이크 원작 5  포로 수용실         holding
+        ///   슬러지      원작 6  야간 정유소          refinery
+        ///
+        /// ⚠ 없는 세트는 `EnvSprite` 가 알아서 기본형으로 떨어뜨린다. 여기서 걱정하지 않는다.
+        /// </summary>
+        private static string BossEnvOf(string slug) => slug switch
+        {
+            "crusher"      => "junkyard",
+            "guardian"     => "missile",
+            "python"       => "street",
+            "kingpin"      => "rooftop",
+            "robot_snakes" => "holding",
+            "sludge"       => "refinery",
+            _              => string.Empty,
+        };
 
         // ── 방 바닥 ──────────────────────────────────────────────
         //
@@ -4213,8 +4232,11 @@ namespace Game.Module.InGame
         {
             if (room == null) return InterimRoomFloor;
 
-            // 보스는 챕터와 무관하게 전용 아레나로 간다. 무게가 다른 자리다.
-            if (room.IsBoss) return BossArenaFloor;
+            // 보스는 챕터와 무관하게 **제 전용 바닥**으로 간다. 무게가 다른 자리다.
+            //
+            // 여섯 장이 다 와 있다(720×936). 아직 안 온 보스가 생기면
+            // `LoadRoomFloorAsync` 의 대비책이 공용 아레나로 떨어뜨린다.
+            if (room.IsBoss) return $"roomfloor_{BossSlug(room.BossId)}";
 
             int ch = Mathf.Clamp(room.Chapter, 1, 3);
 
