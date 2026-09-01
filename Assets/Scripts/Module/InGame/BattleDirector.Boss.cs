@@ -346,7 +346,10 @@ namespace Game.Module.InGame
         {
             if (_orbitBall != null || _fieldLayer == null) return;
 
-            _orbitChain = MakeOrbitPart("OrbitChain", GetSprite("obj_hammer_chain"), new Vector2(0f, 0.5f));
+            // ⚠ 사슬은 **한쪽 끝이 보스에 박혀 있어야** 한다. 피벗을 위쪽 가운데로 두면
+            //   기본 상태에서 아래로 늘어지고, 그 아래 방향을 공 쪽으로 돌리면 된다.
+            //   가운데 피벗으로 두면 보스를 중심으로 막대가 도는 이상한 그림이 된다.
+            _orbitChain = MakeOrbitPart("OrbitChain", GetSprite("obj_hammer_chain"), new Vector2(0.5f, 1f));
             _orbitBall  = MakeOrbitPart("OrbitBall",  GetSprite("obj_hammer"),       new Vector2(0.5f, 0.5f));
 
             RectTransform MakeOrbitPart(string name, Sprite art, Vector2 pivot)
@@ -391,17 +394,53 @@ namespace Game.Module.InGame
 
             _orbitBall.anchoredPosition = at;
 
-            // 사슬은 보스에서 공까지 늘어난다. 위쪽(0,0.5) 기준이라 세로로 늘리고 돌린다.
+            // 사슬은 보스에서 공까지 늘어난다.
+            // 피벗이 위쪽 가운데라 회전 0 일 때 **아래(0,-1)** 로 뻗는다.
+            // 그 아래를 방향 dir 에 맞추는 각은 (각도 + 90°) 다 —
+            //   회전 θ 에서 아래는 (sinθ, -cosθ) 이고, θ = α + 90° 이면
+            //   (sin(α+90), -cos(α+90)) = (cosα, sinα) = dir 이 된다.
             _orbitChain.anchoredPosition = boss.Position;
             _orbitChain.sizeDelta = new Vector2(_pxPerMeter * 0.35f, _orbitRadius);
-            _orbitChain.localRotation = Quaternion.Euler(0f, 0f, _orbitAngle - 90f);
+            _orbitChain.localRotation = Quaternion.Euler(0f, 0f, _orbitAngle + 90f);
         }
+
+        /// <summary>
+        /// 때린 뒤에도 잠깐 남는 시간. 0 이면 **맞는 순간 공이 사라져** 아무 일도
+        /// 없었던 것처럼 보인다 — 휘두른 것이 끝까지 보여야 맞았다고 읽힌다.
+        /// </summary>
+        private const float OrbitFollowThrough = 0.35f;
+
+        private float _orbitLinger;
 
         private void EndOrbit()
         {
-            _orbitOn = false;
+            // 예고가 끝나서 지우는 것이면 곧바로 끄지 않고 잠깐 더 돈다.
+            if (_orbitOn) { _orbitOn = false; _orbitLinger = OrbitFollowThrough; return; }
+            if (_orbitLinger > 0f) return;
             if (_orbitBall != null) _orbitBall.gameObject.SetActive(false);
             if (_orbitChain != null) _orbitChain.gameObject.SetActive(false);
+        }
+
+        /// <summary>남은 여운을 굴린다. 매 프레임 부른다.</summary>
+        private void TickOrbitLinger(float dt)
+        {
+            if (_orbitLinger <= 0f) return;
+            _orbitLinger -= dt;
+            // 여운 동안에도 계속 돈다 — 멈춰 서면 그게 더 이상하다.
+            if (_boss != null)
+            {
+                _orbitAngle += 540f * dt;
+                float rad = _orbitAngle * Mathf.Deg2Rad;
+                var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+                _orbitBall.anchoredPosition = _boss.Position + dir * _orbitRadius;
+                _orbitChain.anchoredPosition = _boss.Position;
+                _orbitChain.localRotation = Quaternion.Euler(0f, 0f, _orbitAngle + 90f);
+            }
+            if (_orbitLinger <= 0f)
+            {
+                if (_orbitBall != null) _orbitBall.gameObject.SetActive(false);
+                if (_orbitChain != null) _orbitChain.gameObject.SetActive(false);
+            }
         }
 
         private void TickDanger(float dt)

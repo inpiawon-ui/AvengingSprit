@@ -2662,6 +2662,7 @@ namespace Game.Module.InGame
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
             TickBossPresence(dt);
             TickConveyor(dt);      // 벨트는 패턴이 끝난 뒤에도 12초 더 돈다
+            TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
             TickBossMinions(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
