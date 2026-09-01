@@ -116,12 +116,16 @@ namespace Game.Module.Opening
         ///   무엇보다 **플레이어가 곧 조종할 그 유령**이다 —
         ///   오프닝에서 본 것이 그대로 게임에 나오는 것이 맞다.
         ///
-        /// 대기 → 걷기1 → 걷기2 로 돌면 관 안에서 떠 있는 것처럼 보인다.
+        /// ⚠ **걷기 프레임은 안 쓴다.** `_walk1`·`_walk2` 는 걸을 때 꼬리가 좌우로
+        ///   크게 흔들리도록 그린 것이라, 관 안에 갇힌 유령에 붙이면 꼬리가
+        ///   옆으로 삐져나가 펄럭이는 것처럼 보인다.
+        ///   **떠 있는 느낌은 위아래로 살짝 흔드는 것**으로 만든다 — 그림 한 장이면 된다.
         /// </summary>
-        public static readonly string[] GhostFrames =
-        {
-            "unit_ghost_s", "unit_ghost_s_walk1", "unit_ghost_s_walk2",
-        };
+        public static readonly string[] GhostFrames = { "unit_ghost_s" };
+
+        /// <summary>관 안 유령이 위아래로 흔들리는 폭(px)과 한 번 오가는 시간.</summary>
+        public const float GhostBobPixels = 7f;
+        public const float GhostBobSeconds = 1.6f;
 
         /// <summary>유령 한 프레임이 머무는 시간.</summary>
         public const float GhostFrameSeconds = GhostFrame;

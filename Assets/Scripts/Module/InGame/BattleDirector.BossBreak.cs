@@ -381,19 +381,31 @@ namespace Game.Module.InGame
             if (_minionRefillLeft > 0f) return;
             _minionRefillLeft = MinionRefillSeconds;
 
-            int chapter = _canonRoom != null ? _canonRoom.Chapter
-                        : (_player != null ? _player.CurrentChapter : 1);
-            var profile = TrashAt(_dangerTick + alive, chapter);
+            // ⚠ **호스트 몸이어야 한다.** 잡몹(해골·박쥐)은 아무리 깎아도 못 뺏는다
+            //   (`Unit.IsHostBody` — "잡몹은 못 뺏는다").
+            //   여기 잡몹을 세워 놨더니 보스가 숨은 동안 때릴 것은 생겼는데
+            //   **빼앗을 것이 없었다** — 「그때 빼앗는다」가 이 세 보스의 취약 창 설명인데
+            //   정작 빼앗을 몸을 안 준 셈이다.
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return;
+            HostEntry profile = null;
+            for (int i = 0; i < hosts.Count; i++)
+            {
+                var h = hosts[(_dangerTick + alive + i) % hosts.Count];
+                if (h != null && !h.IsGhost) { profile = h; break; }
+            }
             if (profile == null) return;
 
             var u = NewUnit($"BossMinion_{profile.HostKey}");
-            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, TrashSprite(profile),
+            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, UnitGet(profile.SpriteKey),
                     EnemyHpOf(profile), EnemyAtkOf(profile), EnemySpeedOf(profile),
                     EnemyRangeOf(profile), EnemyIntervalOf(profile),
                     UnitBox(84f, 78f), isBoss: false, profile: profile);
             // 보스 옆이 아니라 **방 가장자리**에서 온다. 보스에 겹쳐 세우면
             // 보스가 나오는 순간 겹쳐 보이고, 예고 도형도 가린다.
             u.Position = ClampedInField(u, WallSpot());
+            u.MarkAsHostBody();          // 이게 있어야 빼앗을 수 있다
+            u.PossessPriority = profile.PossessPriority;
             u.IsAggro = true;
             u.ResetPattern();
             ApplyFacingSprites(u, profile.SpriteKey);

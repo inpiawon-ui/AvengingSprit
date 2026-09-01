@@ -38,11 +38,12 @@ namespace Game.EditorTools
         /// <summary>본편 유령이 사는 곳. 관 안 유령을 여기서 가져온다.</summary>
         private const string GhostDir = "Assets/BaseResource/Unit/ghost";
 
-        /// <summary>관 안에서 도는 세 프레임. 남쪽(정면) 대기·걷기 둘이다.</summary>
-        public static readonly string[] GhostFrames =
-        {
-            "unit_ghost_s", "unit_ghost_s_walk1", "unit_ghost_s_walk2",
-        };
+        /// <summary>
+        /// 관 안 유령. 정면 대기 한 장이면 된다 —
+        /// 걷기 프레임은 꼬리가 좌우로 크게 흔들려 관 안에서 펄럭이는 것처럼 보인다.
+        /// 떠 있는 느낌은 코드가 위아래로 살짝 흔들어 만든다.
+        /// </summary>
+        public static readonly string[] GhostFrames = { "unit_ghost_s" };
 
         [MenuItem("Tools/Game/컷신 임포트 (cut_*)")]
         public static void Import()
