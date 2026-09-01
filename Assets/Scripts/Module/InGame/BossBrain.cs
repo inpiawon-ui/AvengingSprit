@@ -102,11 +102,23 @@ namespace Game.Module.InGame
         {
             _moves = moves;
             _timers.Clear();
+            // ⚠ 첫 쿨다운을 **제 쿨다운에 비례해서** 주면 안 된다.
+            //
+            //   예전: `Cooldown * (0.35 + 0.25 * i)`
+            //     압착   8s × 0.35 = 2.8s  + 예고 1.25s → 첫 공격이 4.05초
+            //     파괴구 11s × 0.60 = 6.6s + 예고 1.50s → 둘째가 8.1초
+            //
+            //   그런데 첫 보스는 그 전에 죽는다. **보스가 한 대도 못 치고 끝난다** —
+            //   실제로 "공격 한 번도 못 하고 맞기만 하다 끝났다" 는 보고가 왔다.
+            //   쿨다운이 긴 패턴일수록 첫 등장이 늦어지는 것도 거꾸로다.
+            //   느린 패턴일수록 한 번은 보여 줘야 무엇인지 배울 수 있다.
+            //
+            //   지금: 첫 것은 곧바로, 나머지는 일정한 간격으로 벌린다.
+            //   쿨다운 길이와 무관하므로 어떤 보스든 **1초 안에 첫 예고가 뜬다.**
+            const float FirstMove = 1.0f;
+            const float MoveGap = 1.8f;
             for (int i = 0; i < moves.Count; i++)
-            {
-                // 시작하자마자 전탄이 동시에 나가지 않게 초기 쿨다운을 어긋나게 준다
-                _timers.Add(moves[i].Cooldown * (0.35f + 0.25f * i));
-            }
+                _timers.Add(FirstMove + MoveGap * i);
         }
 
         public void UpdatePhase(float hpRatio)
@@ -119,7 +131,8 @@ namespace Game.Module.InGame
 
         /// <summary>페이즈가 오를수록 쿨다운이 짧아진다.</summary>
         private float CooldownOf(BossMove m)
-            => m.Cooldown * Mathf.Pow(_entry.PhaseCooldownMul, Phase - 1);
+            => m.Cooldown * Mathf.Pow(_entry.PhaseCooldownMul, Phase - 1)
+               * BattleDirector.BossCooldownMul;   // 테스트 스위치. 평소엔 1
 
         /// <summary>
         /// 쿨다운을 굴리고, 실행할 행동이 정해지면 예고를 시작한다.

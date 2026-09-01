@@ -2004,6 +2004,31 @@ namespace Game.Module.InGame
 #endif
         }
 
+        /// <summary>
+        /// 보스 패턴 쿨다운에 곱하는 값. 1 이면 정본 그대로다.
+        ///
+        /// 정본 쿨은 8~20초라 **한 판에 네 패턴을 다 보기가 어렵다.**
+        /// 첫 보스는 그 전에 죽어서 두 개만 보고 끝난다 — 확인이 안 된다.
+        /// 이 스위치를 켜면 절반으로 줄어 한 판에 다 나온다.
+        ///
+        /// ⚠ **정본 값을 고치는 것이 아니다.** `BossDefTable` 의 숫자는 그대로 있고
+        ///   여기서만 곱한다. 끄면 즉시 정본 속도로 돌아온다. 빌드에는 없다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 쿨 절반` 으로 켜고 끈다.
+        /// </summary>
+        public static bool BossHalfCooldown
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossHalfCooldown", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossHalfCooldown", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>보스 두뇌가 쿨다운에 곱하는 값. 스위치가 꺼져 있으면 1 이다.</summary>
+        public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
+
         /// <summary>테스트 모드에서 이 방이 세울 보스. 아니면 null.</summary>
         private BossEntry TestBossFor(int index)
         {
@@ -3655,16 +3680,39 @@ namespace Game.Module.InGame
 
             if (move == null)
             {
+                boss.SetTelegraph(false);
+                ClearDanger();
+
+                // ⚠ **패턴 사이에 아무것도 안 하면 안 된다.**
+                //
+                //   패턴 쿨은 8~20초다. 그동안 보스가 걸어오기만 하면 화면에서는
+                //   "보스가 가만히 서서 맞기만 한다" 로 보인다 — 실제로 그 보고가 왔다.
+                //   `BossAttackInterval` 을 `Setup` 에 넣어 두고도 아무도 안 썼다.
+                //
+                //   잡몹과 같은 자(`TickAttack`)를 쓰되 **평타는 근접으로 고정**한다.
+                //   `PerformAttack` 은 `Profile` 을 보는데 보스는 그것이 없어
+                //   기본값(단발 사격)으로 떨어진다 — 크레인이 총을 쏘게 된다.
+                if (me != null && Vector2.Distance(boss.Position, me.Position) <= boss.AttackRange)
+                {
+                    boss.SetMoving(false);
+                    if (boss.TickAttack(dt))
+                    {
+                        boss.SetState(EnemyState.Attack);
+                        boss.PlayAttack(BossBasicAttackHold);
+                        MeleeStrike(boss, me, fromPlayer: false, hitAll: false);
+                    }
+                    return;
+                }
+                boss.TickAttack(dt);   // 다가오는 동안에도 간격은 돈다
+
                 // 쿨다운 대기 중에는 천천히 접근만 한다
                 // ⚠ 여기는 **중심 거리 그대로** 둔다.
                 //   `BossAttackRange`(260px = 3.6m)는 애초에 큰 몸을 전제로 중심에서
                 //   잰 값이다. 여기에 덩치 초과분(78px)을 더했더니 보스가 338px 밖에서
                 //   멈춰 서서 다가오질 않았다 — 사거리를 두 번 센 셈이다.
                 //   덩치 보정이 필요한 쪽은 **내가 보스를 때릴 때**지 그 반대가 아니다.
-                if (Vector2.Distance(boss.Position, me.Position) > boss.AttackRange)
+                if (me != null && Vector2.Distance(boss.Position, me.Position) > boss.AttackRange)
                     boss.MoveToward(me.Position, dt);
-                boss.SetTelegraph(false);
-                ClearDanger();
                 return;
             }
 

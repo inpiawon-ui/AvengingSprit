@@ -98,6 +98,26 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 보스 쿨 절반 ─────────────────────────────────────────
+        //
+        // 정본 쿨은 8~20초다. 한 판에 네 패턴을 다 보기가 어렵고,
+        // 첫 보스는 그 전에 죽어서 두 개만 보고 끝난다 — 확인 자체가 안 된다.
+        //
+        // ⚠ **정본 값을 고치는 것이 아니다.** `BossDefTable` 숫자는 그대로 있고
+        //   `BossBrain.CooldownOf` 가 곱할 때만 반으로 준다. 끄면 즉시 원래대로다.
+        private const string BossCoolMenu = "Tools/Game/테스트 — 보스 쿨 절반";
+
+        [MenuItem(BossCoolMenu)]
+        private static void ToggleBossCooldown()
+            => BattleDirector.BossHalfCooldown = !BattleDirector.BossHalfCooldown;
+
+        [MenuItem(BossCoolMenu, true)]
+        private static bool ToggleBossCooldownValidate()
+        {
+            Menu.SetChecked(BossCoolMenu, BattleDirector.BossHalfCooldown);
+            return true;
+        }
+
         // ── 보스 패턴 이름표 다시 보기 ────────────────────────────
         //
         // 이름표는 **처음 보는 패턴에만** 뜬다(정본 예고 4겹 ④). 한 번 보면

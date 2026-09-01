@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Module.InGame
 {
@@ -74,6 +75,9 @@ namespace Game.Module.InGame
             // 안전이 같이 보이면 "저기로 가면 되네" 가 된다 — 훨씬 빨리 읽힌다.
             ShowSafeZone(m, boss);
             ShowHint(m, boss, me);
+
+            // 쇠사슬 파괴구만 휘두르는 물건이 따로 있다. 나머지는 바닥 도형으로 읽힌다.
+            if (m.Draw == BossDraw.WreckingBall) BeginOrbit(boss, _danger.Radius);
         }
 
         // ── ③ 화살표 · ④ 이름표 ──────────────────────────────────
@@ -247,8 +251,14 @@ namespace Game.Module.InGame
         //   여기가 그 자리다. 도형·피해는 위에서 끝났고, **그 패턴을 그 패턴답게
         //   만드는 것**만 여기서 더한다.
 
-        /// <summary>보스 공격 동작을 끄는 배수. 0.17초 → 0.68초.</summary>
+        /// <summary>보스 패턴 동작을 끄는 배수. 0.17초 → 0.68초.</summary>
         private const float BossAttackHold = 4f;
+
+        /// <summary>
+        /// 평타 동작을 끄는 배수. 패턴보다 짧다 — 평타가 패턴만큼 길면
+        /// 무엇이 큰 것인지 구별이 안 된다.
+        /// </summary>
+        private const float BossBasicAttackHold = 2f;
 
         private void ApplyMoveEffect(Unit boss, Unit me, BossMove m)
         {
@@ -313,6 +323,87 @@ namespace Game.Module.InGame
             me.Position = p;
         }
 
+        // ── 휘두르는 물건 ────────────────────────────────────────
+        //
+        // 「붙어라」가 말이 되려면 **무엇에 안 닿는지가 보여야 한다.**
+        // 지금은 바닥에 도넛만 뜨고 휘두르는 것이 없어서, 화살표가 보스를 가리키며
+        // 「붙어라」라고만 하는 꼴이었다 — 무엇에 붙으라는 건지 알 수가 없다.
+        //
+        // ⚠ **판정은 여전히 바닥 도넛이다.** 공은 왜 그 도넛인지를 보여 줄 뿐이고,
+        //   공을 따라 때리게 만들면 「그린 것 = 맞는 것」이 깨진다.
+        //   원작 시트에도 사슬과 공이 따로 있고 위험 범위는 그 궤도다.
+        //
+        // 그림은 이미 프로젝트에 있는 것을 쓴다 — `obj_hammer` 와 `obj_hammer_chain`.
+        // 새로 받지 않는다.
+
+        private const float OrbitTurns = 2f;      // 정본 「2바퀴」
+
+        private RectTransform _orbitBall, _orbitChain;
+        private float _orbitRadius, _orbitAngle;
+        private bool _orbitOn;
+
+        private void EnsureOrbit()
+        {
+            if (_orbitBall != null || _fieldLayer == null) return;
+
+            _orbitChain = MakeOrbitPart("OrbitChain", GetSprite("obj_hammer_chain"), new Vector2(0f, 0.5f));
+            _orbitBall  = MakeOrbitPart("OrbitBall",  GetSprite("obj_hammer"),       new Vector2(0.5f, 0.5f));
+
+            RectTransform MakeOrbitPart(string name, Sprite art, Vector2 pivot)
+            {
+                var go = new GameObject(name, typeof(RectTransform));
+                var rt = (RectTransform)go.transform;
+                rt.SetParent(_fieldLayer, false);
+                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = pivot;
+                var img = go.AddComponent<Image>();
+                img.raycastTarget = false;
+                img.sprite = art;
+                img.enabled = art != null;
+                img.preserveAspect = true;
+                go.SetActive(false);
+                return rt;
+            }
+        }
+
+        private void BeginOrbit(Unit boss, float radiusPx)
+        {
+            EnsureOrbit();
+            if (_orbitBall == null) return;
+            _orbitOn = true;
+            _orbitRadius = radiusPx;
+            _orbitAngle = 0f;
+            _orbitBall.sizeDelta = new Vector2(_pxPerMeter, _pxPerMeter);
+            _orbitBall.gameObject.SetActive(true);
+            _orbitChain.gameObject.SetActive(true);
+            TickOrbit(boss, 0f, 0f);
+        }
+
+        /// <param name="progress">예고 진행도 0~1. 이 사이에 <see cref="OrbitTurns"/> 바퀴를 돈다.</param>
+        private void TickOrbit(Unit boss, float dt, float progress)
+        {
+            if (!_orbitOn || _orbitBall == null || boss == null) return;
+
+            _orbitAngle = progress * OrbitTurns * 360f;
+            float rad = _orbitAngle * Mathf.Deg2Rad;
+            var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+            var at = boss.Position + dir * _orbitRadius;
+
+            _orbitBall.anchoredPosition = at;
+
+            // 사슬은 보스에서 공까지 늘어난다. 위쪽(0,0.5) 기준이라 세로로 늘리고 돌린다.
+            _orbitChain.anchoredPosition = boss.Position;
+            _orbitChain.sizeDelta = new Vector2(_pxPerMeter * 0.35f, _orbitRadius);
+            _orbitChain.localRotation = Quaternion.Euler(0f, 0f, _orbitAngle - 90f);
+        }
+
+        private void EndOrbit()
+        {
+            _orbitOn = false;
+            if (_orbitBall != null) _orbitBall.gameObject.SetActive(false);
+            if (_orbitChain != null) _orbitChain.gameObject.SetActive(false);
+        }
+
         private void TickDanger(float dt)
         {
             if (_dangerView == null) return;
@@ -320,6 +411,7 @@ namespace Game.Module.InGame
             _dangerView.Tick(dt, p);
             if (_safeView != null) _safeView.Tick(dt, p);
             if (_hint != null) _hint.Tick(dt, p);
+            TickOrbit(_boss, dt, p);
         }
 
         private void ClearDanger()
@@ -329,6 +421,7 @@ namespace Game.Module.InGame
             if (_dangerView != null) _dangerView.Hide();
             if (_safeView != null) _safeView.Hide();
             if (_hint != null) _hint.Hide();
+            EndOrbit();
         }
 
         /// <summary>
