@@ -132,6 +132,17 @@ namespace Game.EditorTools
             //   (`roomfloor_python` 때와 같다 — 아래 참조).
             if (name == "unit_crusher_s") return true;
 
+            // 62차 크러셔 방향 두 장(`ne`·`n`)도 **그 폐기본을 보고 그렸다.**
+            // 색 구성을 재면 폐기본과 같은 계열이고 정본 정면과 다르다:
+            //   현재 정면 s   주황 17.9% · 파랑 11.0%
+            //   폐기 61차 s   주황 14.8% · 파랑  4.8%
+            //   납품 ne       주황 14.5% · 파랑  4.9%   ← 폐기본 쪽이다
+            //   납품 n        주황 14.4% · 파랑  0.1%
+            // 이대로 넣으면 보스가 **돌 때마다 다른 기계로 변한다.**
+            //
+            // ⚠ 정면 기준으로 다시 받으면 이 두 줄을 지운다.
+            if (name == "unit_crusher_ne" || name == "unit_crusher_n") return true;
+
             // 방 바닥은 `BundleResource/RoomFloor/` 가 정본이다. `BaseResource` 쪽 사본은
             // 아틀라스에 들어가 자리만 먹었다.
             //
