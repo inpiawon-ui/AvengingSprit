@@ -236,6 +236,83 @@ namespace Game.Module.InGame
             _safeView.Show(safe, _roomSize, GetSprite("fx_safe_hatch"), safe: true);
         }
 
+        // ── 패턴의 효과 ──────────────────────────────────────────
+        //
+        // ⚠ 24패턴을 도형 체계로 옮기면서 **효과가 옛 코드에 남겨졌다.**
+        //   `StrikeDanger` 가 도형 있는 패턴을 전부 처리하고 `true` 를 돌려주므로
+        //   효과가 들어 있던 `ExecuteBossMove` 는 한 번도 안 돈다 —
+        //   도형과 피해만 남고 나머지가 통째로 떨어져 나갔다.
+        //   방패 전개가 방어막을 안 걸고, 컨베이어가 안 끌어당긴 것이 그래서다.
+        //
+        //   여기가 그 자리다. 도형·피해는 위에서 끝났고, **그 패턴을 그 패턴답게
+        //   만드는 것**만 여기서 더한다.
+
+        /// <summary>보스 공격 동작을 끄는 배수. 0.17초 → 0.68초.</summary>
+        private const float BossAttackHold = 4f;
+
+        private void ApplyMoveEffect(Unit boss, Unit me, BossMove m)
+        {
+            switch (m.Draw)
+            {
+                // 붉은 방패판을 정면에 세운다 · 4초간 피해 90% 감소
+                case BossDraw.ShieldUp:
+                    // 사 둔 파쇄가 첫 방어막을 그냥 없앤다(정본 EV_CH3_03).
+                    // 없애 놓고도 내려찍기는 그대로 온다 — 산 것은 깨는 수단이지 안전이 아니다.
+                    if (_bossShieldBreak) { _bossShieldBreak = false; _bossShield = 0f; }
+                    else _bossShield = ShieldSeconds;
+                    break;
+
+                // 바닥 세 줄 중 두 줄이 보스 쪽으로 흐른다 · 초당 1.5 m · 12초
+                case BossDraw.Conveyor:
+                    // ⚠ **예고 때 그린 그 도형을 그대로 들고 간다.** 다시 만들면
+                    //   "빨간 줄 위에 있는데 안 끌린다" 가 생긴다.
+                    _conveyor = _danger;
+                    _conveyorLeft = ConveyorSeconds;
+                    break;
+
+                // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
+                case BossDraw.Spit:
+                    SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
+                               PuddleSeconds, FieldEffect.Slow, 0, fromPlayer: false);
+                    break;
+            }
+        }
+
+        // ── 컨베이어 ─────────────────────────────────────────────
+        //
+        // 피해를 주는 층이 아니라 **설 자리를 빼앗는 층**이다.
+        // 정본이 「흐르는 동안 다른 패턴이 겹친다」고 적어 둔 것이 이 뜻이다 —
+        // 끌려가는 채로 압착을 피해야 한다.
+
+        private const float ConveyorSeconds = 12f;
+        private const float ConveyorMetersPerSecond = 1.5f;
+        private const float PuddleSeconds = 4f;
+
+        private DangerShape _conveyor;
+        private float _conveyorLeft;
+
+        private void TickConveyor(float dt)
+        {
+            if (_conveyorLeft <= 0f) return;
+            _conveyorLeft -= dt;
+            if (_conveyorLeft <= 0f) { _conveyor = default; return; }
+
+            var me = Avatar;
+            if (me == null || _boss == null) return;
+            if (!_conveyor.Contains(me.Position, _roomSize)) return;   // 멈춘 줄에 있으면 안 끌린다
+
+            var toBoss = _boss.Position - me.Position;
+            if (toBoss.sqrMagnitude < 1f) return;
+
+            var step = toBoss.normalized * (ConveyorMetersPerSecond * _pxPerMeter * dt);
+            var p = me.Position + step;
+            // 벨트가 벽 속으로 밀어 넣지는 않는다.
+            float edge = _pxPerMeter * 0.5f;
+            p.x = Mathf.Clamp(p.x, edge, _roomSize.x - edge);
+            p.y = Mathf.Clamp(p.y, -_roomSize.y + edge, -edge);
+            me.Position = p;
+        }
+
         private void TickDanger(float dt)
         {
             if (_dangerView == null) return;
@@ -282,6 +359,12 @@ namespace Game.Module.InGame
                     HitEnemyWith(e, dmg, null);
                 }
 
+            // ⚠ **몸이 무엇을 했는지 보여 준다.** 이게 없으면 바닥에만 도형이 뜨고
+            //   보스는 가만히 서 있는 것처럼 보인다 — 24패턴이 전부 그랬다.
+            //   잡몹 기준 0.17초는 256px 짜리 몸에 너무 짧아 길게 끈다.
+            boss.PlayAttack(BossAttackHold);
+
+            ApplyMoveEffect(boss, me, m);
             PlayDangerImpact(m);
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
             CheckBreak(boss, m, playerHit);

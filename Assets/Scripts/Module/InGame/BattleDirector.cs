@@ -2349,11 +2349,6 @@ namespace Game.Module.InGame
                 boss.SetTellSprite(UnitGet(bossKey, "s_tell") ?? UnitGet(BossStand(bossKey), "s_tell"));
                 boss.Position = canon ? ToPixels(_canonRoom.BossAt)
                                       : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
-
-                // 레일 보스는 **처음 선 높이**가 곧 레일 높이다. 숫자를 따로 적지 않는다 —
-                // 적어 두면 방 크기가 바뀔 때 한쪽만 낡는다.
-                _bossOnRail = RailBosses.Contains(bossKey);
-                _bossRailY = boss.Position.y;
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
@@ -2641,6 +2636,7 @@ namespace Game.Module.InGame
             TickBreak(dt);
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
             TickBossPresence(dt);
+            TickConveyor(dt);      // 벨트는 패턴이 끝난 뒤에도 12초 더 돈다
             TickBossMinions(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
@@ -3161,7 +3157,7 @@ namespace Game.Module.InGame
                 //
                 //   기준점은 `Avatar` 다 — 몸이 있으면 그 몸, 없으면 유령.
                 //   보스는 "지금 내가 서 있는 자리" 를 겨눈다.
-                if (e.IsBoss) { TickBoss(e, Avatar, dt); StayOnRail(e); continue; }
+                if (e.IsBoss) { TickBoss(e, Avatar, dt); continue; }
 
                 // ⚠ **몸이 없으면 아무도 유령을 표적으로 잡지 않는다.**
                 if (_host == null)
@@ -3701,9 +3697,35 @@ namespace Game.Module.InGame
         private bool _pendingIsBeam;
         private int _pendingLane = -1;
 
-        /// <summary>보스 실드가 남은 시간. 0 보다 크면 받는 피해가 줄어든다.</summary>
+        /// <summary>보스 실드가 남은 시간. 0 보다 크면 **정면에서 온 피해**가 줄어든다.</summary>
         private float _bossShield;
-        private const float BossShieldDamageMul = 0.45f;
+
+        /// <summary>
+        /// 방패에 막혔을 때 남는 피해. 정본 「피해 90% 감소」 그대로 0.10 이다.
+        ///
+        /// ⚠ 한때 0.45(55% 감소)였다. 정본과 다른 값을 쓸 이유가 없다.
+        /// </summary>
+        private const float BossShieldDamageMul = 0.10f;
+
+        /// <summary>방패가 막는 각도. 정본 「정면 120°」 — 반각 60° 안이면 막힌다.</summary>
+        private const float BossShieldHalfDegrees = 60f;
+
+        /// <summary>
+        /// 이 공격이 보스 방패에 막히는가.
+        ///
+        /// ⚠ **전방향으로 막으면 안 된다.** 정본이 정면 120° 라고 못박았고,
+        ///   회피 지시도 「뒤로 — 방패는 앞만 막는다」다. 전방향으로 90% 를 깎으면
+        ///   그 지시가 거짓말이 되고, 등 뒤로 도는 플레이가 보상받지 못한다.
+        /// </summary>
+        private bool BlockedByBossShield(Unit boss, Vector2 from)
+        {
+            if (_bossShield <= 0f) return false;
+            var facing = boss.Facing;
+            if (facing.sqrMagnitude < 0.0001f) return true;   // 방향을 모르면 막는 쪽으로
+            var toAttacker = from - boss.Position;
+            if (toAttacker.sqrMagnitude < 0.0001f) return true;
+            return Vector2.Angle(facing, toAttacker) <= BossShieldHalfDegrees;
+        }
 
         /// <summary>
         /// 번갈아 솟는 레이저. 바닥에 **금이 먼저 간다** — 어디서 솟는지 안 보이면
@@ -4168,32 +4190,33 @@ namespace Game.Module.InGame
         ///   가디언      원작 2  미사일 저장·정비     missile
         ///   파이썬      원작 3  밤의 도시 거리       street
         ///   킹핀        원작 4  공중기지 옥상        rooftop
-        ///   로봇 스네이크 원작 5  포로 수용실         holding
+        ///   로봇 스네이크 CH5   **연구소**          (접두어 없음 — 연구소가 기본 세트다)
+        ///
+        /// ⚠ CH5 를 한때 `holding`(포로 수용실)으로 적었다. 원작 스테이지 순서에서
+        ///   유추한 값이었는데 **정본 도면은 「연구소」라고 적어 놓았다.**
+        ///   유추가 정본을 이길 수 없다. 무대는 `AVSR_Bosses12.html` 챕터 머리글이 단일 출처다.
         ///   슬러지      원작 6  야간 정유소          refinery
         ///
         /// ⚠ 없는 세트는 `EnvSprite` 가 알아서 기본형으로 떨어뜨린다. 여기서 걱정하지 않는다.
         /// </summary>
-        // ── 레일 보스 ────────────────────────────────────────────
+        // ── 레일 보스는 지금 못 넣는다 ────────────────────────────
         //
-        // 크러셔는 **걷지 않는다.** 원작 시트의 조립도를 보면 가로 대들보에 세로 기둥이
-        // 매달리고 그 끝에 헤드가 달린다 — 갠트리 크레인이라 좌우로만 미끄러진다.
-        // 다가와서 때리는 보스로 만들면 첫 보스가 그냥 큰 잡몹이 된다.
+        // 「크러셔는 걷지 않고 위쪽 레일을 좌우로만 움직인다」를 한 번 넣어 봤다가 뺐다.
+        // 높이만 못 박는 것으로는 **안 된다.** 재 보면 이렇다:
         //
-        // ⚠ 이동 경로가 한 곳이 아니다(접근·돌진·패턴). 들어가는 자리를 다 막는 대신
-        //   **나가는 자리 한 곳**에서 높이를 되돌린다. 새 이동이 생겨도 안 샌다.
-        private static readonly HashSet<string> RailBosses = new() { "crusher" };
-
-        private bool _bossOnRail;
-        private float _bossRailY;
-
-        /// <summary>레일 보스를 제 높이에 붙들어 둔다. 가로로는 자유롭다.</summary>
-        private void StayOnRail(Unit boss)
-        {
-            if (!_bossOnRail || boss == null) return;
-            var p = boss.Position;
-            if (Mathf.Approximately(p.y, _bossRailY)) return;
-            boss.Position = new Vector2(p.x, _bossRailY);
-        }
+        //   보스가 서는 자리   y −131 px (방 맨 위)
+        //   플레이어          y −696 px
+        //   사이              565 px = 7.8 m
+        //   크러셔 패턴 반경   2.5 m(압착) · 3.5 m(파괴구)
+        //   AttackRange       260 px = 3.6 m
+        //
+        // 닿을 수가 없다. 게다가 접근 코드가 매 프레임 아래로 걸으려 하고 레일이 매 프레임
+        // 되돌리니, **걷는 동작만 제자리에서 돌았다** — 화면에서는 보스가 멈춰 서서
+        // 혼자 이상한 짓을 하는 것으로 보인다. 실제로 그렇게 보고가 들어왔다.
+        //
+        // 레일을 제대로 넣으려면 패턴을 **크레인 아래 바닥**에 조준하도록 다시 짜야 한다
+        // (지금은 전부 보스 몸을 중심으로 그린다). 그건 한 줄 제한이 아니라 설계 변경이라
+        // 기획에 되돌렸다. 그때까지 크러셔는 다른 보스와 같이 걸어서 다가온다.
 
         private static string BossEnvOf(string slug) => slug switch
         {
@@ -4201,7 +4224,7 @@ namespace Game.Module.InGame
             "guardian"     => "missile",
             "python"       => "street",
             "kingpin"      => "rooftop",
-            "robot_snakes" => "holding",
+            "robot_snakes" => string.Empty,   // 연구소 = 기본 세트(접두어 없음)
             "sludge"       => "refinery",
             _              => string.Empty,
         };
@@ -5466,9 +5489,9 @@ namespace Game.Module.InGame
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
             if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
             ApplyImprints(victim);
-            // 실드 순환(정본 B02) — 이 구간에는 때려도 잘 안 들어간다.
-            // 그래야 "지금은 피할 때" 라는 구간이 생긴다.
-            if (victim.IsBoss && _bossShield > 0f)
+            // 방패 전개 — 이 구간에는 **앞에서 때리면** 잘 안 들어간다.
+            // 그래야 "지금은 피할 때가 아니라 돌아갈 때" 라는 구간이 생긴다.
+            if (victim.IsBoss && Avatar != null && BlockedByBossShield(victim, Avatar.Position))
                 damage = Mathf.Max(1, Mathf.RoundToInt(damage * BossShieldDamageMul));
             // ⚠ 숨어 있는 보스는 안 맞는다. 벽 뒤·구멍 안에 있는 것을 때릴 수는 없다.
             if (victim.IsBoss && !_bossExposed) return;

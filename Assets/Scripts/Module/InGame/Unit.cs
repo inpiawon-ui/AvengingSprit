@@ -641,15 +641,28 @@ namespace Game.Module.InGame
             return five;
         }
 
-        /// <summary>사격 동작을 시작한다. 피격 중이면 무시한다 — 맞은 게 더 급한 정보다.</summary>
-        public void PlayAttack()
+        /// <summary>
+        /// 사격 동작을 시작한다. 피격 중이면 무시한다 — 맞은 게 더 급한 정보다.
+        /// </summary>
+        /// <param name="holdScale">
+        /// 두 프레임을 얼마나 길게 끌 것인가. 기본 1 이면 0.07 + 0.10 = 0.17 초다.
+        ///
+        /// ⚠ 잡몹 기준으로 정한 길이다. **보스한테는 너무 짧다.** 256px 짜리 몸이
+        ///   0.17초 만에 지나가면 무엇을 했는지 안 보이고, 바닥에 도형만 뜬 채
+        ///   보스는 가만히 서 있는 것처럼 읽힌다 — 실제로 그렇게 보고가 들어왔다.
+        /// </param>
+        public void PlayAttack(float holdScale = 1f)
         {
             if (_dying) return;
             if (_frame == FrameHit && _frameTimer > 0f) return;
             _frame = FrameAtk1;
-            _frameTimer = Atk1Seconds;
+            _frameTimer = Atk1Seconds * Mathf.Max(0.1f, holdScale);
+            _atkHoldScale = Mathf.Max(0.1f, holdScale);
             Apply();
         }
+
+        /// <summary>지금 재생 중인 공격 동작을 얼마나 끄는가. <see cref="PlayAttack"/> 가 정한다.</summary>
+        private float _atkHoldScale = 1f;
 
         /// <summary>피격 동작을 시작한다. 사격 중이어도 끊고 들어간다.</summary>
         public void PlayHit()
@@ -701,7 +714,7 @@ namespace Game.Module.InGame
             {
                 _frameTimer -= dt;
                 if (_frameTimer > 0f) return;
-                if (_frame == FrameAtk1) { _frame = FrameAtk2; _frameTimer = Atk2Seconds; Apply(); return; }
+                if (_frame == FrameAtk1) { _frame = FrameAtk2; _frameTimer = Atk2Seconds * _atkHoldScale; Apply(); return; }
                 _frameTimer = 0f;
             }
 
