@@ -33,7 +33,20 @@ namespace Game.EditorTools
         private static readonly HashSet<string> Retired = new()
         {
             "cut_start_6", "cut_start_7", "cut_start_8", "cut_start_9",
+
+            // 회상 컷. 원작은 **프롤로그 4번과 같은 그림을 색만 빼서** 다시 쓴다.
+            // 따로 받아 봤더니 자세도 인물도 조금씩 달라져 두 장이 서로 어긋났다.
+            // 같은 그림을 가리키면 그 어긋남이 생길 수가 없다 — `OpeningCuts.Sepia` 참조.
+            "cut_start_3",
         };
+
+        /// <summary>
+        /// 코드가 픽셀을 읽어야 하는 컷. 회상 컷을 만들 원본이다.
+        ///
+        /// ⚠ 읽기를 켜면 CPU 쪽에 사본이 하나 더 남는다(640×640 RGBA = 1.6 MB).
+        ///   그래서 **필요한 한 장에만** 켠다. 나머지는 GPU 에만 올라간다.
+        /// </summary>
+        private static readonly HashSet<string> Readable = new() { "cut_prologue_4" };
 
         /// <summary>본편 유령이 사는 곳. 관 안 유령을 여기서 가져온다.</summary>
         private const string GhostDir = "Assets/BaseResource/Unit/ghost";
@@ -111,6 +124,7 @@ namespace Game.EditorTools
                     //   켜 두면 Unity 가 투명한 자리의 색을 이웃에서 번지게 채워
                     //   가장자리에 검은 테가 생기지 않는다. 불투명 그림에는 영향이 없다.
                     ti.alphaIsTransparency = true;
+                    ti.isReadable = Readable.Contains(Path.GetFileNameWithoutExtension(path));
                     ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
                     {
                         name = "DefaultTexturePlatform",

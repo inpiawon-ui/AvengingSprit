@@ -34,6 +34,18 @@ namespace Game.Module.Opening
         /// <summary>남은 에너지(0~1). 유령의 진하기가 된다.</summary>
         public float Energy;
 
+        /// <summary>
+        /// 세피아 단색으로 깔 것인가. **회상이라는 뜻이다.**
+        ///
+        /// 원작 시작 컷신에서 납치 장면만 단색이다 — 지금 벌어지는 일이 아니라
+        /// 노인이 들려주는 지난 일이기 때문이다. 색을 빼는 것이 곧 시제 표시다.
+        ///
+        /// ⚠ 이 한 칸 덕분에 **그림을 새로 안 받는다.** 같은 장면이 프롤로그에
+        ///   이미 통과본으로 있고, 원작도 같은 그림을 색만 빼서 다시 쓴다.
+        ///   따로 그리면 두 장이 서로 조금씩 달라지고, 그 차이는 아무도 못 잡는다.
+        /// </summary>
+        public bool Sepia;
+
         public bool HasArt => !string.IsNullOrEmpty(Key);
         public bool HasLine => !string.IsNullOrEmpty(Line);
         public bool IsAuto => AutoSeconds > 0f;
@@ -88,7 +100,12 @@ namespace Game.Module.Opening
         {
             new() { Key = "cut_start_1", Line = "내가 자네를 불렀네." },
             new() { Key = "cut_start_2", Line = "그자들은 악의 비밀결사였어." },
-            new() { Key = "cut_start_3", Line = "내 유령 에너지 연구를 캐내려고\n딸을 납치해 몸값을 요구했다네." },
+            // ⚠ 3번은 **프롤로그 4번과 같은 그림**이다. 원작이 그렇다 —
+            //   같은 납치 장면을 색만 빼서 회상으로 다시 쓴다.
+            //   따로 그린 `cut_start_3` 을 받아 봤더니 자세도 인물도 조금씩 달라졌다.
+            //   같은 그림을 가리키면 그 어긋남이 **생길 수가 없다.**
+            new() { Key = "cut_prologue_4", Sepia = true,
+                    Line = "내 유령 에너지 연구를 캐내려고\n딸을 납치해 몸값을 요구했다네." },
 
             // ── 관이 비는 것을 보여 준다 ───────────────────────────
             //

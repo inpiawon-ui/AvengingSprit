@@ -266,6 +266,9 @@ namespace Game.Module.Opening
 
             if (sprite == null) { _cut.enabled = false; return; }
 
+            // 회상 컷은 색을 뺀다. 그림은 프롤로그 것 그대로다 — 원작도 그렇게 다시 쓴다.
+            if (cut.Sepia) sprite = SepiaOf(sprite, cut.Key);
+
             if (IsSameShot(_index))
             {
                 // 같은 장면의 다음 프레임 — 갈아 끼우기만 한다.
@@ -355,6 +358,98 @@ namespace Game.Module.Opening
             return true;
         }
 
-        private void OnDestroy() { Release(); ReleaseGhost(); }
+        private void OnDestroy() { Release(); ReleaseGhost(); DropSepia(); }
+
+        // ── 회상 컷 — 색을 뺀다 ──────────────────────────────────────
+        //
+        // 원작 시작 컷신에서 납치 장면만 단색이다. 지금 벌어지는 일이 아니라
+        // 노인이 들려주는 지난 일이라서다 — **색을 빼는 것이 곧 시제 표시**다.
+        //
+        // 그림을 따로 받지 않는 이유는 `OpeningCuts.Sepia` 주석에 적어 두었다.
+        // 여기서는 **어떤 색으로 빼느냐**만 정한다.
+        //
+        // ── 색은 상상하지 않고 원작에서 뽑았다 ──────────────────────
+        // `Reference/Original/Miscellaneous - Start Cutscene.png` 의 3번 컷
+        // 안쪽 100×100 을 세어 보면 색이 20개뿐이고, 자홍 테두리를 빼면
+        // 9단계가 하나의 사다리 위에 놓인다. 밝기(L)와 각 채널의 차가 **일정하다**:
+        //
+        //   L  75.9 → (90, 74, 49)     L +14.1 · −1.9 · −26.9
+        //   L 108.9 → (123,107, 82)    L +14.1 · −1.9 · −26.9
+        //   L 141.9 → (156,140,115)    L +14.1 · −1.9 · −26.9
+        //   L 191.3 → (206,189,165)    L +14.7 · −2.3 · −26.3
+        //
+        // 곱이 아니라 **더하기**다. 그래서 한 식으로 끝난다.
+        private const float SepiaR = 14.5f, SepiaG = -2f, SepiaB = -26.5f;
+
+        /// <summary>
+        /// 검정이 붉게 뜨는 것을 막는 문턱. 오프셋을 이 밝기까지 서서히 넣는다.
+        ///
+        /// ⚠ 그냥 더하면 배경 (0,0,0) 이 (15,0,0) 이 되어 **화면 전체가 검붉어진다.**
+        ///   원작의 가장 어두운 칸도 (8,8,0) 이라 거의 검정이다. 어두운 쪽은 빼 준다.
+        /// </summary>
+        private const float SepiaFloor = 40f;
+
+        private Texture2D _sepiaTex;
+        private Sprite _sepiaSprite;
+        private string _sepiaFor;
+
+        /// <summary>
+        /// 색을 뺀 한 장을 만들어 돌려준다. 같은 컷이면 만들어 둔 것을 그대로 준다.
+        ///
+        /// ⚠ 원본 텍스처는 건드리지 않는다 — 프롤로그에서 **컬러 그대로** 또 나온다.
+        /// </summary>
+        private Sprite SepiaOf(Sprite src, string key)
+        {
+            if (src == null) return null;
+            if (_sepiaFor == key && _sepiaSprite != null) return _sepiaSprite;
+
+            var tex = src.texture;
+            Color32[] px;
+            // 읽기 설정(`isReadable`)이 꺼져 있으면 예외가 난다.
+            // 그때는 **컬러로라도 보여 준다** — 빈 화면보다 낫다.
+            try { px = tex.GetPixels32(); }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[오프닝] 세피아 못 만듦({key}) — 컬러로 간다: {e.Message}");
+                return src;
+            }
+
+            for (int i = 0; i < px.Length; i++)
+            {
+                var c = px[i];
+                float l = 0.299f * c.r + 0.587f * c.g + 0.114f * c.b;
+                float f = Mathf.Min(1f, l * (1f / SepiaFloor));
+                px[i] = new Color32(
+                    (byte)Mathf.Clamp(l + SepiaR * f, 0f, 255f),
+                    (byte)Mathf.Clamp(l + SepiaG * f, 0f, 255f),
+                    (byte)Mathf.Clamp(l + SepiaB * f, 0f, 255f),
+                    c.a);
+            }
+
+            var copy = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Point,      // 픽셀아트 — 원본과 같은 설정
+                wrapMode = TextureWrapMode.Clamp,
+            };
+            copy.SetPixels32(px);
+            copy.Apply(false, false);
+
+            DropSepia();
+            _sepiaTex = copy;
+            _sepiaSprite = Sprite.Create(copy, new Rect(0f, 0f, copy.width, copy.height),
+                                         new Vector2(0.5f, 0.5f), src.pixelsPerUnit);
+            _sepiaFor = key;
+            return _sepiaSprite;
+        }
+
+        /// <summary>만들어 둔 세피아를 버린다. 이건 Addressable 이 아니라 우리가 만든 것이라 직접 지운다.</summary>
+        private void DropSepia()
+        {
+            if (_sepiaSprite != null) UnityEngine.Object.Destroy(_sepiaSprite);
+            if (_sepiaTex != null) UnityEngine.Object.Destroy(_sepiaTex);
+            _sepiaSprite = null;
+            _sepiaTex = null;
+            _sepiaFor = null;
+        }
     }
 }
