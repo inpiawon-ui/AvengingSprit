@@ -621,7 +621,8 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 방향 스프라이트를 넘겨준다.
+        /// 방향 스프라이트를 넘겨준다. 한 벌(5장) 중 하나라도 비면 그 벌은 통째로 버린다 —
+        /// 섞이면 방향마다 다른 그림이 나와서 더 이상하다.
         /// 공격·피격 벌이 없으면 그 동작에서도 idle 을 쓴다. 캐릭터를 한 종씩
         /// 채워 넣을 수 있어야 해서, 없는 쪽이 깨지면 안 된다.
         /// </summary>
@@ -633,43 +634,22 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 방향 한 벌을 다듬는다. **빈 방향은 이웃 방향으로 메운다.**
+        /// 방향 한 벌을 다듬는다. **하나라도 비면 그 벌은 통째로 버린다.**
         ///
-        /// ⚠ 예전에는 하나라도 비면 그 벌을 통째로 버렸다("섞이면 더 이상하다").
-        ///   그런데 **보스 여섯이 전부 `s`·`se`·`e` 석 장뿐이고 `ne`·`n` 이 없다.**
-        ///   그래서 여섯 보스 다 공격·이동·피격은 물론 방향 전환까지 통째로 꺼져,
-        ///   정지 그림 한 장으로 서 있었다 — "보스가 아무것도 안 한다" 가 이것이다.
+        /// ⚠ 이웃 방향으로 메우고 싶어지는 자리다. 한 번 그렇게 해 봤고 되돌렸다 —
+        ///   위를 보는 프레임에 옆을 보는 그림이 들어가면 **화면에서 바로 보인다.**
+        ///   모자란 것은 코드가 아니라 그림으로 채운다.
         ///
-        ///   방향이 하나도 없으면 그 벌은 없는 것이 맞다. 하지만 **몇 장은 있는데
-        ///   버리는 것**은 있는 그림까지 못 쓰게 만든다. 없는 쪽은 가장 가까운
-        ///   이웃(`n` → `ne` → `e`)에서 빌린다. 위를 보는 프레임이 옆을 보는 그림이
-        ///   되는 것은 어색하지만, **움직이지 않는 것보다 낫다.**
-        ///   빠진 그림이 오면 자동으로 제자리를 찾는다.
+        /// 지금 보스 여섯이 `ne`·`n` 이 없어 이 벌들이 다 버려지고 있다.
+        /// 그래서 보스가 정지 그림으로 서 있는데, **그것이 지금 상태의 정직한 모습**이다.
+        /// 120장 발주가 나가 있다.
         /// </summary>
         private static Sprite[] Validate(Sprite[] five)
         {
             if (five == null || five.Length != FacingSuffix.Length) return null;
-
-            int have = 0;
-            for (int i = 0; i < five.Length; i++) if (five[i] != null) have++;
-            if (have == 0) return null;          // 한 장도 없으면 이 벌은 없는 것이다
-            if (have == five.Length) return five;
-
-            // `s se e ne n` 순서라 앞쪽이 곧 이웃이다. 앞에서 뒤로 메운다.
-            var filled = new Sprite[five.Length];
-            Sprite last = null;
             for (int i = 0; i < five.Length; i++)
-            {
-                if (five[i] != null) last = five[i];
-                filled[i] = last;
-            }
-            // 앞쪽이 비어 있었다면 뒤에서 당겨 온다.
-            for (int i = five.Length - 1; i >= 0; i--)
-            {
-                if (filled[i] == null) filled[i] = last;
-                else last = filled[i];
-            }
-            return filled;
+                if (five[i] == null) return null;
+            return five;
         }
 
         /// <summary>
