@@ -414,16 +414,26 @@ namespace Game.Module.InGame
             //   정작 빼앗을 몸을 안 준 셈이다.
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return;
+
+            // ⚠ **그림이 올라와 있는 몸만 고른다.**
+            //   호스트는 23명인데 이 런에 아틀라스가 올라오는 것은 몇 종뿐이다
+            //   (`RunUnitKeys` — 그 챕터 잡몹 + 이 방 보스 + 내가 고른 몸).
+            //   아무나 고르면 `UnitGet` 이 null 을 돌려줘 **그림 없이 선다** —
+            //   화면에서는 깨진 사각형으로 보인다. 실제로 그렇게 나왔다.
             HostEntry profile = null;
             for (int i = 0; i < hosts.Count; i++)
             {
                 var h = hosts[(_dangerTick + alive + i) % hosts.Count];
-                if (h != null && !h.IsGhost) { profile = h; break; }
+                if (h == null || h.IsGhost) continue;
+                if (TrashSprite(h) == null) continue;   // 이 런에 그림이 없는 몸이다
+                profile = h;
+                break;
             }
+            // 올라온 몸이 하나도 없으면 **세우지 않는다.** 깨진 그림을 세우느니 안 세운다.
             if (profile == null) return;
 
             var u = NewUnit($"BossMinion_{profile.HostKey}");
-            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, UnitGet(profile.SpriteKey),
+            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, TrashSprite(profile),
                     EnemyHpOf(profile), EnemyAtkOf(profile), EnemySpeedOf(profile),
                     EnemyRangeOf(profile), EnemyIntervalOf(profile),
                     UnitBox(84f, 78f), isBoss: false, profile: profile);

@@ -926,12 +926,24 @@ namespace Game.Module.InGame
             _hazardTimer.Clear();
         }
 
+        /// <summary>
+        /// 보스방에서 치우는 지형지물.
+        ///
+        /// 상자는 **일반 방에서 엄폐물**이지만 보스방에서는 방해만 된다 —
+        /// 예고 도형이 상자에 가려 어디가 위험한지 안 보이고,
+        /// 「뒤로 돌아라」·「붙어라」 같은 지시를 상자가 막아 못 지키게 만든다.
+        /// 기둥·바리케이드처럼 **읽히는 큰 것**은 남긴다. 그건 지형이다.
+        /// </summary>
+        private static bool ClearedInBossRoom(string kind) => kind == "CRATE";
+
         private void SpawnObstacles(RoomEntry room)
         {
+            bool bossRoom = _roomKind == RoomKind.Boss;
             var list = room.Objects;
             for (int i = 0; i < list.Count; i++)
             {
                 var o = list[i];
+                if (bossRoom && ClearedInBossRoom(o.Kind)) continue;
                 var center = ToPixels(o.At);
 
                 // ⚠ **물건 자체를 줄인다.** 판정만 줄이면 눈에는 아무 변화가 없다 —
