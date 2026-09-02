@@ -571,10 +571,9 @@ namespace Game.Module.InGame
             //   자리도 크기도 똑같다 — pos (388, -106) · size (326, 118).
             //   보스방에서 둘 다 켜 두면 챕터 판이 보스 체력 위에 겹쳐 그려져
             //   이름이 "…SHER" 로 잘리고 남은 체력 숫자가 통째로 가려진다.
-            //   유령일 때는 챕터 칸이 가운데로 옮겨 가면서 절반만 겹쳐 더 눈에 띄었다.
-            _bossBarShown = show;
+            //   유령일 때는 HOST 칸이 빠져 남은 것이 가운데로 오면서 절반만 겹쳐
+            //   더 눈에 띄었다.
             _ui.SetActive("ChapterGroup", !show);
-            PlaceTopRight();
 
             if (!show) return;
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
@@ -617,7 +616,6 @@ namespace Game.Module.InGame
             // 액티브 스킬 버튼도 그 몸의 것으로 바꾼다. 23종이 같은 그림이면
             // 무엇을 들고 있는지가 화면에 안 보인다.
             SetSkillButton(e.PossessedHostKey);
-            LayoutForHost(true);
             SetPossessReady(false);
         }
 
@@ -677,77 +675,25 @@ namespace Game.Module.InGame
             _ui.SetActive("HostPortraitFrame", false);
             _ui.SetActive("HostPortraitImage", false);
             SetSkillButton(null);
-            LayoutForHost(false);
         }
 
-        // ── 칸이 비면 남은 것이 가운데로 온다 ──────────────────────
+        // ── 칸이 비면 남은 것이 저절로 가운데로 온다 ───────────────
         //
         // 몸이 없으면 HOST 칸과 액티브 스킬 버튼이 함께 사라진다. 그 자리를 빈 채로
-        // 두면 화면 한쪽이 뜯겨 나간 것처럼 보인다 — 남은 것을 가운데로 옮긴다.
+        // 두면 화면 한쪽이 뜯겨 나간 것처럼 보인다.
         //
-        // ⚠ 좌표를 코드에 적지 않는다. **부팅 때 프리팹의 자리를 그대로 읽어 두고**
-        //   거기서 계산한다. 그래야 나중에 프리팹 배치를 다시 잡아도 이 코드가 안 깨진다.
-
-        private RectTransform _chapterBox, _bossBox, _skillBtn, _possessBtn;
-        private Vector2 _chapterHome, _skillHome, _possessHome;
-        private bool _layoutHomeRead;
-        private bool _bossBarShown;
-        private bool _hasHostForLayout;
-
-        /// <summary>
-        /// 상단 오른쪽 칸의 주인을 자리에 놓는다.
-        ///
-        /// 그 칸에는 **둘 중 하나만** 산다 — 평소엔 CHAPTER, 보스방이면 보스 체력.
-        /// 몸이 없으면 왼쪽 HOST 칸이 통째로 빠지므로, 그 칸의 주인이 누구든
-        /// 가로 가운데로 옮긴다. 한쪽만 옮기면 보스방에서 화면이 한쪽으로 쏠린다.
-        /// </summary>
-        private void PlaceTopRight()
-        {
-            ReadLayoutHome();
-            var box = _bossBarShown ? _bossBox : _chapterBox;
-            if (box == null) return;
-
-            var parent = box.parent as RectTransform;
-            float centerX = parent != null
-                ? (parent.rect.width - box.sizeDelta.x) * 0.5f : _chapterHome.x;
-            box.anchoredPosition = _hasHostForLayout
-                ? _chapterHome : new Vector2(centerX, _chapterHome.y);
-        }
-
-        private void ReadLayoutHome()
-        {
-            if (_layoutHomeRead) return;
-            _layoutHomeRead = true;
-            _chapterBox = _ui.Find("ChapterGroup") as RectTransform;
-            _bossBox    = _ui.Find("BossGroup") as RectTransform;
-            _skillBtn   = _ui.Find("SkillButton") as RectTransform;
-            _possessBtn = _ui.Find("PossessButton") as RectTransform;
-            if (_chapterBox != null) _chapterHome = _chapterBox.anchoredPosition;
-            if (_skillBtn   != null) _skillHome   = _skillBtn.anchoredPosition;
-            if (_possessBtn != null) _possessHome = _possessBtn.anchoredPosition;
-        }
-
-        /// <summary>
-        /// 몸의 유무에 따라 두 자리를 옮긴다.
-        ///
-        ///   호스트 없음 → CHAPTER 칸이 상단 가운데로, 빙의 버튼이 두 버튼 자리 가운데로
-        ///   호스트 있음 → 둘 다 프리팹의 원래 자리로
-        /// </summary>
-        private void LayoutForHost(bool hasHost)
-        {
-            ReadLayoutHome();
-
-            _hasHostForLayout = hasHost;
-            PlaceTopRight();
-
-            if (_possessBtn != null)
-            {
-                // 버튼이 하나면 두 자리의 한가운데. 둘이면 각자 자리로.
-                float midX = (_skillHome.x + _possessHome.x) * 0.5f;
-                _possessBtn.anchoredPosition = hasHost
-                    ? _possessHome : new Vector2(midX, _possessHome.y);
-            }
-        }
+        // ⚠ **좌표를 코드로 계산하지 않는다.** 프리팹의 두 줄이 각각
+        //   `HorizontalLayoutGroup`(childAlignment = UpperCenter)을 달고 있어서,
+        //   자식을 끄면 남은 것이 스스로 가운데로 온다.
+        //
+        //     HudRow2    CurrentHostPanel · ChapterGroup · BossGroup
+        //     ButtonRow  SkillButton · PossessButton
+        //
+        //   예전에는 여기서 부모 폭을 재고 절반을 빼서 직접 옮겼는데, 그러면
+        //   **같은 자리를 두 곳에서 정하게 된다** — 프리팹을 다시 잡을 때마다
+        //   이 코드가 조용히 어긋난다. 실제로 챕터 칸과 보스 체력이 같은 자리에
+        //   겹쳐 있는데도 코드가 한쪽만 옮겨 절반씩 포개져 있었다.
+        //   지금은 켜고 끄기만 하면 된다.
 
         /// <summary>봉인된 스킬 아이콘 색. 끄지 않고 눌러서 "있는데 잠겼다" 로 읽힌다.</summary>
         private static readonly Color SealedSkillTint = new(0.38f, 0.40f, 0.48f, 1f);
