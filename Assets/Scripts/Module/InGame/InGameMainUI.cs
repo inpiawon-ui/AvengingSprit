@@ -30,7 +30,7 @@ namespace Game.Module.InGame
         // (_layout_ingame.py 의 목업 좌표 × 1.25)
         private const float GhostBarWidth = 148f;   // 프리팹 GhostHpBarBg 폭
         private const float HostBarWidth = 118f;    // 프리팹 HostHpBarBg 폭
-        private const float BossBarWidth = 272.5f;  // 218 × 1.25
+        private const float BossBarWidth = 640f;    // 프리팹 BossHpBarBg 폭
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
@@ -570,11 +570,8 @@ namespace Game.Module.InGame
             // ⚠ **챕터 칸은 끄지 않는다.** 상단 오른쪽은 챕터 정보 자리다.
             //   한때 여기서 껐다가 "왜 보스 HP 로 바뀌었냐" 는 지적을 받았다 —
             //   보스 체력은 챕터 정보를 밀어내는 것이 아니다.
-            //
-            //   다만 프리팹에서 `BossGroup` 이 `ChapterGroup` 과 자리·크기가
-            //   똑같아(pos 388,-106 · size 326,118) 보스방에서 두 판이 겹친다.
-            //   보스 체력을 어디에 둘지는 **아직 안 정했다** — 정해지면 여기가 아니라
-            //   프리팹 자리를 옮겨서 푼다.
+            //   겹치던 것은 코드가 아니라 **프리팹 자리**로 풀었다:
+            //   보스 체력은 상단 HUD 아래 제 줄(가로 696)로 내려갔다.
 
             if (!show) return;
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
