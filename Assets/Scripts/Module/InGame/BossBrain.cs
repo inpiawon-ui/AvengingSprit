@@ -157,7 +157,6 @@ namespace Game.Module.InGame
         public BossMove Tick(float dt)
         {
             if (_entry == null || _moves == null) return null;
-            if (ChargeLeft > 0f) ChargeLeft -= dt;
 
             if (Pending != null)
             {
@@ -189,6 +188,21 @@ namespace Game.Module.InGame
                 return null;   // 이번 프레임은 예고만 — 피할 시간을 준다
             }
             return null;
+        }
+
+        /// <summary>
+        /// 돌진 시계만 따로 굴린다.
+        ///
+        /// ⚠⚠ **`Tick` 안에 두면 안 된다.** 부르는 쪽(`TickBoss`)은 돌진 중이면
+        ///   `Tick` 을 부르기 **전에** 돌아간다 — 다른 행동을 겹치지 않게 하려고 그렇게
+        ///   짜여 있다. 그래서 시계가 `Tick` 안에 있으면 **한 번도 줄지 않는다.**
+        ///   `ChargeLeft` 가 영영 양수로 남아 보스가 돌진 상태에 갇힌다:
+        ///   벽까지 밀려간 뒤 그 자리에서 아무것도 안 한다.
+        ///   실제로 크러셔가 첫 돌진 뒤 (192, -743) 에 붙어 굳었다.
+        /// </summary>
+        public void TickCharge(float dt)
+        {
+            if (ChargeLeft > 0f) ChargeLeft -= dt;
         }
 
         public void BeginCharge(Vector2 dir, float seconds)

@@ -131,6 +131,16 @@ namespace Game.Module.InGame
 
         private const float ChargeSeconds = 0.9f;
         private const float ChargeSpeedMul = 5.5f;
+
+        /// <summary>크러셔 돌진은 두 배로 빠르다(기획 2026-09-02).</summary>
+        private const float RamSpeedBoost = 2f;
+
+        /// <summary>
+        /// 지금 돌진의 속도 배수. **자가 하나여야 한다** —
+        /// 달린 거리(`TickBoss`)와 달릴 시간(`ApplyMoveEffect`)이 같은 값을 봐야
+        /// 그려 둔 줄 끝에 정확히 선다. 두 곳에 따로 적으면 줄과 몸이 어긋난다.
+        /// </summary>
+        private float _chargeSpeedMul = ChargeSpeedMul;
         private const int MaxRoomUnits = 14;
         private const float SummonRadius = 200f;
 
@@ -3698,10 +3708,12 @@ namespace Game.Module.InGame
             // 돌진 중에는 다른 행동을 하지 않는다. 접촉하면 피해를 주고 멈춘다.
             if (_brain.ChargeLeft > 0f)
             {
+                // ⚠ 아래에서 `_brain.Tick` 을 부르지 않고 돌아가므로 **여기서** 줄여야 한다.
+                _brain.TickCharge(dt);
                 // ⚠ 방 안에 붙들어 둔다. 그냥 더하면 보스가 벽을 뚫고 나가 화면 밖에서
                 //   패턴을 계속 돌린다 — 무엇에 맞는지 알 수 없게 된다.
                 boss.Position = ClampedInField(
-                    boss, boss.Position + _brain.ChargeDir * (boss.MoveSpeed * ChargeSpeedMul) * dt);
+                    boss, boss.Position + _brain.ChargeDir * (boss.MoveSpeed * _chargeSpeedMul) * dt);
                 // 유령은 보스 돌진도 통과한다. 여기서 멈춰 세우면 유령을 벽 삼아
                 // 보스를 세울 수 있게 되어, 맞지도 않는 몸이 방패가 된다.
                 // 보스 **몸이 스치면** 맞는다. 중심까지 54px 을 요구하면 보스가 나를
@@ -3925,6 +3937,7 @@ namespace Game.Module.InGame
 
                 case BossPattern.Charge:
                     _chargeDamageMul = m.DamageMul;
+                    _chargeSpeedMul = ChargeSpeedMul;
                     _brain.BeginCharge(me.Position - boss.Position, ChargeSeconds);
                     break;
 

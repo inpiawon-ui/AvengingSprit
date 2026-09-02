@@ -146,6 +146,21 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>
+        /// 터진 자리 — 표시(임팩트)를 남길 곳.
+        ///
+        /// ⚠ <see cref="Origin"/> 을 쓰면 안 된다. 흩뿌리는 도형에서 `Origin` 은
+        ///   **보스 자리**이고 실제 도형은 저 멀리 있다 — 미사일이 내 발밑에 떨어졌는데
+        ///   폭발은 보스 몸에서 터졌다. 화면에서는 "예고만 하고 아무 일도 안 났다" 가 된다.
+        /// </summary>
+        public Vector2 ImpactAt(Vector2 roomSize)
+        {
+            if (Shape != Kind.Band) return CenterOf(0, roomSize);
+            BandOf(0, roomSize, out var from, out var dir);
+            float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
+            return from + dir * (len * 0.5f);
+        }
+
         /// <summary>i번째 띠의 시작점과 방향. 벽에서 들어와 방을 가로지른다.</summary>
         private void BandOf(int i, Vector2 roomSize, out Vector2 from, out Vector2 dir)
         {

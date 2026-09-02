@@ -294,7 +294,8 @@ namespace Game.Module.InGame
                     //   고정 0.9초로 뒀더니 70px/s × 5.5 = 385px/s 라 584px 짜리 줄의
                     //   60% 에서 멈췄다 — 화면에서는 "가다 말았다" 로 보인다.
                     //   줄 끝까지 가야 그린 것과 간 것이 같아진다.
-                    float rammed = Mathf.Max(1f, boss.MoveSpeed * ChargeSpeedMul);
+                    _chargeSpeedMul = ChargeSpeedMul * RamSpeedBoost;
+                    float rammed = Mathf.Max(1f, boss.MoveSpeed * _chargeSpeedMul);
                     _brain.BeginCharge(_danger.Dir, Mathf.Clamp(_danger.Length / rammed, 0.3f, 3f));
                     // 「이동하고 또 공격」 — 밀고 들어온 자리에서 한 발 쏜다.
                     QueueFollowUp(BossDraw.MissileSalvo, 1);
@@ -694,8 +695,9 @@ namespace Game.Module.InGame
                 _ => "burst",
             };
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
-            var im = PlayFx(fx, _danger.Origin, size, loop: false);
-            Debug.Log($"[진단:임팩트] {fx} 크기={size:0} 자리={_danger.Origin} 생성={(im != null)}");
+            var at = _danger.ImpactAt(_roomSize);
+            var im = PlayFx(fx, at, size, loop: false);
+            Debug.Log($"[진단:임팩트] {fx} 크기={size:0} 자리={at} 생성={(im != null)}");
         }
     }
 }
