@@ -6458,7 +6458,11 @@ namespace Game.Module.InGame
             // C017 생명 회수 — 잡을 때마다 최대 체력의 몇 %를 돌려받는다
             if (_buffs.RegenPercentPerKill > 0 && _host != null)
                 Leech(Mathf.Max(1, _host.HpMax * _buffs.RegenPercentPerKill / 100));
-            if (u.IsBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
+            if (u.IsBoss)
+            {
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
+                ClearBossVisuals();   // 예고 도형·화살표·파괴구·방패판을 한꺼번에 거둔다
+            }
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
             Retire(u);

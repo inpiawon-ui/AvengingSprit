@@ -627,6 +627,32 @@ namespace Game.Module.InGame
             TickLamp(_boss, p);
         }
 
+        /// <summary>
+        /// 보스가 죽었다 — **화면에 남은 보스 것을 전부 지운다.**
+        ///
+        /// ⚠ `ClearDanger` 만으로는 안 된다. 셋이 따로 살아 있다:
+        ///   · 파괴구는 예고가 끝나도 잠깐 더 도는 여운(`_orbitLinger`)이 있고
+        ///   · 방패판은 예고가 아니라 `_bossShield` 초 동안 서 있고
+        ///   · 이어지는 타격(`_followUp`)은 **보스가 없어도** 예고를 한 번 더 띄운다
+        ///   시체도 없는 방에 도형과 화살표가 남으면 "아직 뭐가 오나" 로 읽힌다.
+        /// </summary>
+        private void ClearBossVisuals()
+        {
+            ClearDanger();
+            ClearFollowUp();
+
+            // 여운을 건너뛰고 곧바로 거둔다 — `EndOrbit` 은 여운을 새로 켠다.
+            _orbitLinger = 0f;
+            if (_orbitBall != null) _orbitBall.gameObject.SetActive(false);
+            if (_orbitChain != null) _orbitChain.gameObject.SetActive(false);
+
+            _bossShield = 0f;
+            TickBossShieldView();
+
+            // 돌진 중에 죽으면 시체가 계속 밀려간다.
+            if (_brain != null) _brain.BeginCharge(Vector2.zero, 0f);
+        }
+
         private void ClearDanger()
         {
             _danger = default;
@@ -698,11 +724,15 @@ namespace Game.Module.InGame
 
         private const float MissileArcRatio = 0.22f;   // 포물선 높이 = 거리 x 이 값
 
-        /// <summary>부채꼴을 몇 발로 채우는가. 180도면 30도마다 한 발이다.</summary>
-        private const float WedgeShotSpacingDeg = 30f;
+        /// <summary>
+        /// 부채꼴을 몇 발로 채우는가 — 이 각도마다 한 발.
+        /// 30도였을 때 120도 부채꼴이 5발이라 **면이 아니라 선 다섯 개**로 보였다.
+        /// 15도면 9발이라 면이 채워진다.
+        /// </summary>
+        private const float WedgeShotSpacingDeg = 15f;
 
         /// <summary>한 번에 띄우는 탄의 상한. 넘치면 화면이 탄으로 덮인다.</summary>
-        private const int MaxFlight = 12;
+        private const int MaxFlight = 16;
 
         /// <summary>날아가는 것 한 발.</summary>
         private sealed class Flight
