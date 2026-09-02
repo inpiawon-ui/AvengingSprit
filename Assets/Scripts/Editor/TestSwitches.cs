@@ -98,6 +98,49 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 보스 하나만 계속 ─────────────────────────────────────
+        //
+        // 방 1~6 에 여섯을 순서대로 세우면 **여섯째를 보려고 다섯 방을 깨야 한다.**
+        // 하나를 오래 들여다보려면 그 하나가 어느 방에서든 나와야 한다.
+        // 「순서대로」로 되돌리면 원래대로 여섯이 차례로 선다.
+
+        private const string PickMenu = "Tools/Game/테스트 — 보스 고정/";
+
+        [MenuItem(PickMenu + "순서대로 (1~6방)")]      private static void PickAll()     => Pick(0);
+        [MenuItem(PickMenu + "1 크러셔")]              private static void Pick1()       => Pick(1);
+        [MenuItem(PickMenu + "2 가디언")]              private static void Pick2()       => Pick(2);
+        [MenuItem(PickMenu + "3 파이썬")]              private static void Pick3()       => Pick(3);
+        [MenuItem(PickMenu + "4 킹핀")]                private static void Pick4()       => Pick(4);
+        [MenuItem(PickMenu + "5 로봇 스네이크")]        private static void Pick5()       => Pick(5);
+        [MenuItem(PickMenu + "6 슬러지")]              private static void Pick6()       => Pick(6);
+
+        [MenuItem(PickMenu + "순서대로 (1~6방)", true)] private static bool VAll()  => Mark(0);
+        [MenuItem(PickMenu + "1 크러셔", true)]         private static bool V1()    => Mark(1);
+        [MenuItem(PickMenu + "2 가디언", true)]         private static bool V2()    => Mark(2);
+        [MenuItem(PickMenu + "3 파이썬", true)]         private static bool V3()    => Mark(3);
+        [MenuItem(PickMenu + "4 킹핀", true)]           private static bool V4()    => Mark(4);
+        [MenuItem(PickMenu + "5 로봇 스네이크", true)]   private static bool V5()    => Mark(5);
+        [MenuItem(PickMenu + "6 슬러지", true)]         private static bool V6()    => Mark(6);
+
+        private static readonly string[] PickNames =
+        { "순서대로 (1~6방)", "1 크러셔", "2 가디언", "3 파이썬", "4 킹핀", "5 로봇 스네이크", "6 슬러지" };
+
+        private static void Pick(int n)
+        {
+            BattleDirector.BossPickIndex = n;
+            // 켜 두지 않으면 아무 일도 안 일어난다 — 고른 순간 같이 켠다.
+            BattleDirector.BossPerRoomTest = true;
+            Debug.Log(n == 0
+                ? "[테스트] 보스 순서대로 — 방 1~6 에 여섯이 차례로 선다"
+                : $"[테스트] 보스 고정: {PickNames[n]} — 어느 방이든 이 보스만 나온다");
+        }
+
+        private static bool Mark(int n)
+        {
+            Menu.SetChecked(PickMenu + PickNames[n], BattleDirector.BossPickIndex == n);
+            return true;
+        }
+
         // ── 보스 쿨 절반 ─────────────────────────────────────────
         //
         // 정본 쿨은 8~20초다. 한 판에 네 패턴을 다 보기가 어렵고,

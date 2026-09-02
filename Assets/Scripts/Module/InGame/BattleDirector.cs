@@ -2046,11 +2046,33 @@ namespace Game.Module.InGame
         /// <summary>보스 두뇌가 쿨다운에 곱하는 값. 스위치가 꺼져 있으면 1 이다.</summary>
         public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
 
+        /// <summary>
+        /// 한 보스만 계속 세운다. 0 이면 방 순서대로 여섯을 돌린다.
+        ///
+        /// 순서대로만 되면 **여섯째 보스를 보려고 다섯 방을 깨야 한다.**
+        /// 하나를 오래 들여다보려면 그 하나가 계속 나와야 한다.
+        /// </summary>
+        public static int BossPickIndex
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetInt("AVSR.BossPickIndex", 0);
+            set => UnityEditor.EditorPrefs.SetInt("AVSR.BossPickIndex", value);
+#else
+            get => 0;
+            set { }
+#endif
+        }
+
         /// <summary>테스트 모드에서 이 방이 세울 보스. 아니면 null.</summary>
         private BossEntry TestBossFor(int index)
         {
             if (!BossPerRoomTest || _bossTable == null) return null;
             var all = _bossTable.Entries;
+
+            // 하나를 골라 뒀으면 **어느 방이든** 그 보스다.
+            int pick = BossPickIndex;
+            if (pick >= 1 && pick <= all.Count) return all[pick - 1];
+
             return index >= 0 && index < all.Count ? all[index] : null;
         }
 
