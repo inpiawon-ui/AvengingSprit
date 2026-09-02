@@ -2761,6 +2761,7 @@ namespace Game.Module.InGame
             TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
             TickBossMinions(dt);
             TickFollowUp(dt);      // 방패 전개가 부른 압착 두 번
+            TickMissileFlight(dt);  // 미사일은 예고 내내 날아온다
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -3779,7 +3780,14 @@ namespace Game.Module.InGame
                 //   잡몹과 같은 자(`TickAttack`)를 쓰되 **평타는 근접으로 고정**한다.
                 //   `PerformAttack` 은 `Profile` 을 보는데 보스는 그것이 없어
                 //   기본값(단발 사격)으로 떨어진다 — 크레인이 총을 쏘게 된다.
-                if (me != null && Vector2.Distance(boss.Position, me.Position) <= boss.AttackRange)
+                // ⚠ **유령한테는 주먹을 휘두르지 않는다.**
+                //   유령은 맞지 않는다(A 1-2 — Ghost HP 는 체력이 아니라 남은 시간이다).
+                //   그런데 보스가 계속 후려치는 시늉을 하면 화면에서는 맞고 있는 것으로
+                //   보이고, 마침 시계가 줄고 있어서 "맞아서 닳는다" 로 읽힌다.
+                //   **패턴은 계속 돈다** — 그쪽은 바닥에 그려 놓고 치는 것이라
+                //   유령이 그 위에 서 있어도 `DamagePlayer` 가 걸러 낸다.
+                if (_host != null && me != null
+                    && Vector2.Distance(boss.Position, me.Position) <= boss.AttackRange)
                 {
                     boss.SetMoving(false);
                     if (boss.TickAttack(dt))

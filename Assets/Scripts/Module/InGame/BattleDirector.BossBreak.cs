@@ -68,6 +68,11 @@ namespace Game.Module.InGame
         /// </summary>
         private void SpawnBreakBody(Unit boss)
         {
+            // ⚠ **몸을 부르는 곳이 두 군데였다.** 체력 문턱(`TickBossMinions`)만 막았더니
+            //   여기가 계속 불렀다 — 크러셔의 취약 창 조건이 「벽에 닿음」이라
+            //   7초마다 돌진해 벽을 찍을 때마다 한 기씩 섰다. 같은 스위치를 따른다.
+            if (NoBossMinions) return;
+
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return;
 
