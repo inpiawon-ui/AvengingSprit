@@ -697,12 +697,23 @@ namespace Game.Module.InGame
 
         private const float MissileArcRatio = 0.22f;   // 포물선 높이 = 거리 × 이 값
 
-        private RectTransform _missileRt;
-        private Image _missileImg;
-        private Sprite[] _missileFrames;
-        private Vector2 _missileFrom, _missileTo;
-        private float _missileLeft, _missileTotal;
+        /// <summary>날아오는 것 한 발. 도형 하나에 탄 하나가 붙는다.</summary>
+        private sealed class MissileFlight
+        {
+            public RectTransform Rt;
+            public Image Img;
+            public Vector2 From, To;
+        }
 
+        private readonly List<MissileFlight> _missiles = new();
+        private Sprite[] _missileFrames;
+        private float _missileLeft, _missileTotal;
+        private int _missileFlying;
+
+        /// <summary>
+        /// 예고에 들어 있는 도형 **하나마다 탄 하나**를 띄운다.
+        /// 부채꼴 세 발이면 세 발이 각자 제 착탄점으로 난다.
+        /// </summary>
         private void BeginMissileFlight(Unit boss, float seconds)
         {
             if (_shotLayer == null || boss == null)
@@ -734,61 +745,79 @@ namespace Game.Module.InGame
                 return;
             }
 
-            if (_missileRt == null)
-            {
-                var go = new GameObject("BossMissile", typeof(RectTransform));
-                _missileRt = (RectTransform)go.transform;
-                _missileRt.SetParent(_shotLayer, false);
-                _missileRt.anchorMin = _missileRt.anchorMax = new Vector2(0f, 1f);
-                _missileRt.pivot = new Vector2(0.5f, 0.5f);
-                _missileRt.sizeDelta = new Vector2(48f, 48f);
-                _missileImg = go.AddComponent<Image>();
-                _missileImg.raycastTarget = false;
-            }
-
-            _missileFrom = boss.Position;
-            _missileTo = _danger.ImpactAt(_roomSize);
+            _missileFlying = Mathf.Max(1, _danger.PieceCount);
             _missileTotal = Mathf.Max(0.05f, seconds);
             _missileLeft = _missileTotal;
-            _missileImg.sprite = _missileFrames[0];
-            _missileRt.gameObject.SetActive(true);
-            TickMissileFlight(0f);   // 첫 프레임부터 제자리에 — 한 프레임 (0,0) 에 뜨는 것을 막는다
-            Debug.Log($"[진단:비행] {_missileFrames.Length}프레임 {_missileFrom} → {_missileTo} "
-                      + $"{_missileTotal:0.00}초 활성={_missileRt.gameObject.activeInHierarchy}");
+
+            while (_missiles.Count < _missileFlying) _missiles.Add(NewMissile());
+            for (int i = 0; i < _missiles.Count; i++)
+            {
+                var f = _missiles[i];
+                bool on = i < _missileFlying;
+                f.Rt.gameObject.SetActive(on);
+                if (!on) continue;
+                f.From = boss.Position;
+                f.To = _danger.PieceAt(i, _roomSize);   // 터지는 자리와 **같은 함수**다
+                f.Img.sprite = _missileFrames[0];
+            }
+            TickMissileFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
+
+            Debug.Log($"[진단:비행] {_missileFlying}발 {_missileFrames.Length}프레임 "
+                      + $"{_missiles[0].From} → {_missiles[0].To} {_missileTotal:0.00}초 "
+                      + $"활성={_missiles[0].Rt.gameObject.activeInHierarchy}");
+        }
+
+        private MissileFlight NewMissile()
+        {
+            var go = new GameObject("BossMissile", typeof(RectTransform));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(_shotLayer, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(48f, 48f);
+            var img = go.AddComponent<Image>();
+            img.raycastTarget = false;
+            return new MissileFlight { Rt = rt, Img = img };
         }
 
         private void EndMissileFlight()
         {
             _missileLeft = 0f;
-            if (_missileRt != null) _missileRt.gameObject.SetActive(false);
+            for (int i = 0; i < _missiles.Count; i++)
+                if (_missiles[i].Rt != null) _missiles[i].Rt.gameObject.SetActive(false);
         }
 
         /// <summary>지금 t 에서의 자리. 포물선을 그린다 — 직선이면 바닥을 기는 것으로 보인다.</summary>
-        private Vector2 MissileAt(float t)
+        private static Vector2 MissileAt(MissileFlight f, float t)
         {
-            var p = Vector2.Lerp(_missileFrom, _missileTo, t);
-            float lift = (_missileTo - _missileFrom).magnitude * MissileArcRatio;
+            var p = Vector2.Lerp(f.From, f.To, t);
+            float lift = (f.To - f.From).magnitude * MissileArcRatio;
             return p + new Vector2(0f, lift * 4f * t * (1f - t));
         }
 
         private void TickMissileFlight(float dt)
         {
-            if (_missileLeft <= 0f || _missileRt == null) return;
+            if (_missileLeft <= 0f || _missiles.Count == 0) return;
             _missileLeft -= dt;
 
             float t = Mathf.Clamp01(1f - _missileLeft / _missileTotal);
-            var at = MissileAt(t);
-            _missileRt.anchoredPosition = at;
+            int frame = _missileFrames != null && _missileFrames.Length > 1
+                ? Mathf.Min(_missileFrames.Length - 1, (int)(t * _missileFrames.Length)) : 0;
 
-            // 진행 방향으로 코를 든다. 탄 그림은 오른쪽을 보고 있다(`Projectile` 과 같은 규약).
-            var ahead = MissileAt(Mathf.Min(1f, t + 0.03f)) - at;
-            if (ahead.sqrMagnitude > 0.0001f)
-                _missileRt.localEulerAngles =
-                    new Vector3(0f, 0f, Mathf.Atan2(ahead.y, ahead.x) * Mathf.Rad2Deg);
+            for (int i = 0; i < _missileFlying && i < _missiles.Count; i++)
+            {
+                var f = _missiles[i];
+                var at = MissileAt(f, t);
+                f.Rt.anchoredPosition = at;
 
-            if (_missileFrames.Length > 1)
-                _missileImg.sprite = _missileFrames[
-                    Mathf.Min(_missileFrames.Length - 1, (int)(t * _missileFrames.Length))];
+                // 진행 방향으로 코를 든다. 탄 그림은 오른쪽을 본다(`Projectile` 과 같은 규약).
+                var ahead = MissileAt(f, Mathf.Min(1f, t + 0.03f)) - at;
+                if (ahead.sqrMagnitude > 0.0001f)
+                    f.Rt.localEulerAngles =
+                        new Vector3(0f, 0f, Mathf.Atan2(ahead.y, ahead.x) * Mathf.Rad2Deg);
+
+                if (_missileFrames != null) f.Img.sprite = _missileFrames[frame];
+            }
 
             if (_missileLeft <= 0f) EndMissileFlight();
         }

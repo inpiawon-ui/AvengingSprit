@@ -153,6 +153,15 @@ namespace Game.Module.InGame
         ///   **보스 자리**이고 실제 도형은 저 멀리 있다 — 미사일이 내 발밑에 떨어졌는데
         ///   폭발은 보스 몸에서 터졌다. 화면에서는 "예고만 하고 아무 일도 안 났다" 가 된다.
         /// </summary>
+        /// <summary>이 예고에 들어 있는 도형의 개수. 미사일 세 발이면 3 이다.</summary>
+        public int PieceCount => Repeats;
+
+        /// <summary>
+        /// i번째 도형의 중심. **날아오는 것을 그 자리로 보내려고** 밖에서 묻는다 —
+        /// 탄이 도착하는 자리와 터지는 자리가 같아야 한다(<see cref="CenterOf"/> 하나만 본다).
+        /// </summary>
+        public Vector2 PieceAt(int i, Vector2 roomSize) => CenterOf(i, roomSize);
+
         public Vector2 ImpactAt(Vector2 roomSize)
         {
             if (Shape != Kind.Band) return CenterOf(0, roomSize);

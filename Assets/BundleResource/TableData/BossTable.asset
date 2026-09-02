@@ -32,7 +32,7 @@ MonoBehaviour:
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 2
-      _shotCount: 1
+      _shotCount: 3
       _spreadDegrees: 0
       _damageMul: 1
       _telegraphSeconds: 1
@@ -47,7 +47,7 @@ MonoBehaviour:
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
-      _lanes: 1
+      _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
     - _pattern: 1
       _fromPhase: 1
