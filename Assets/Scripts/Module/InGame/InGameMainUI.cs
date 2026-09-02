@@ -566,6 +566,16 @@ namespace Game.Module.InGame
         {
             bool show = e.BossHpMax > 0;
             _ui.SetActive("BossGroup", show);
+
+            // ⚠ **둘은 같은 칸이다.** 프리팹에서 `ChapterGroup` 과 `BossGroup` 이
+            //   자리도 크기도 똑같다 — pos (388, -106) · size (326, 118).
+            //   보스방에서 둘 다 켜 두면 챕터 판이 보스 체력 위에 겹쳐 그려져
+            //   이름이 "…SHER" 로 잘리고 남은 체력 숫자가 통째로 가려진다.
+            //   유령일 때는 챕터 칸이 가운데로 옮겨 가면서 절반만 겹쳐 더 눈에 띄었다.
+            _bossBarShown = show;
+            _ui.SetActive("ChapterGroup", !show);
+            PlaceTopRight();
+
             if (!show) return;
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
             _ui.SetFill("BossHpBarFill", Ratio(e.BossHp, e.BossHpMax), BossBarWidth);
@@ -678,15 +688,38 @@ namespace Game.Module.InGame
         // ⚠ 좌표를 코드에 적지 않는다. **부팅 때 프리팹의 자리를 그대로 읽어 두고**
         //   거기서 계산한다. 그래야 나중에 프리팹 배치를 다시 잡아도 이 코드가 안 깨진다.
 
-        private RectTransform _chapterBox, _skillBtn, _possessBtn;
+        private RectTransform _chapterBox, _bossBox, _skillBtn, _possessBtn;
         private Vector2 _chapterHome, _skillHome, _possessHome;
         private bool _layoutHomeRead;
+        private bool _bossBarShown;
+        private bool _hasHostForLayout;
+
+        /// <summary>
+        /// 상단 오른쪽 칸의 주인을 자리에 놓는다.
+        ///
+        /// 그 칸에는 **둘 중 하나만** 산다 — 평소엔 CHAPTER, 보스방이면 보스 체력.
+        /// 몸이 없으면 왼쪽 HOST 칸이 통째로 빠지므로, 그 칸의 주인이 누구든
+        /// 가로 가운데로 옮긴다. 한쪽만 옮기면 보스방에서 화면이 한쪽으로 쏠린다.
+        /// </summary>
+        private void PlaceTopRight()
+        {
+            ReadLayoutHome();
+            var box = _bossBarShown ? _bossBox : _chapterBox;
+            if (box == null) return;
+
+            var parent = box.parent as RectTransform;
+            float centerX = parent != null
+                ? (parent.rect.width - box.sizeDelta.x) * 0.5f : _chapterHome.x;
+            box.anchoredPosition = _hasHostForLayout
+                ? _chapterHome : new Vector2(centerX, _chapterHome.y);
+        }
 
         private void ReadLayoutHome()
         {
             if (_layoutHomeRead) return;
             _layoutHomeRead = true;
             _chapterBox = _ui.Find("ChapterGroup") as RectTransform;
+            _bossBox    = _ui.Find("BossGroup") as RectTransform;
             _skillBtn   = _ui.Find("SkillButton") as RectTransform;
             _possessBtn = _ui.Find("PossessButton") as RectTransform;
             if (_chapterBox != null) _chapterHome = _chapterBox.anchoredPosition;
@@ -704,15 +737,8 @@ namespace Game.Module.InGame
         {
             ReadLayoutHome();
 
-            if (_chapterBox != null)
-            {
-                // HOST 칸이 빠지면 상단이 통째로 남는다 — 가로 가운데로 옮긴다.
-                var parent = _chapterBox.parent as RectTransform;
-                float centerX = parent != null
-                    ? (parent.rect.width - _chapterBox.sizeDelta.x) * 0.5f : _chapterHome.x;
-                _chapterBox.anchoredPosition = hasHost
-                    ? _chapterHome : new Vector2(centerX, _chapterHome.y);
-            }
+            _hasHostForLayout = hasHost;
+            PlaceTopRight();
 
             if (_possessBtn != null)
             {
