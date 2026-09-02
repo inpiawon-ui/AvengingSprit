@@ -2663,6 +2663,7 @@ namespace Game.Module.InGame
             TickBossPresence(dt);
             TickConveyor(dt);      // 벨트는 패턴이 끝난 뒤에도 12초 더 돈다
             TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
+            TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
             TickBossMinions(dt);
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.

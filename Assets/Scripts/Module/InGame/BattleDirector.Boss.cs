@@ -78,6 +78,10 @@ namespace Game.Module.InGame
 
             // 쇠사슬 파괴구만 휘두르는 물건이 따로 있다. 나머지는 바닥 도형으로 읽힌다.
             if (m.Draw == BossDraw.WreckingBall) BeginOrbit(boss, _danger.Radius);
+
+            // 램프는 **패턴을 안 가린다.** 무엇이 오든 "온다" 를 알리는 것이라
+            // 크러셔의 네 패턴에 다 뜬다 — 원작이 그렇게 쓴다.
+            BeginLamp(boss);
         }
 
         // ── ③ 화살표 · ④ 이름표 ──────────────────────────────────
@@ -323,6 +327,114 @@ namespace Game.Module.InGame
             me.Position = p;
         }
 
+        // ── 방패판 ───────────────────────────────────────────────
+        //
+        // 방어막은 지금 **숫자로만** 있다. 앞에서 때리면 90% 가 깎이는데
+        // 화면에는 아무 표시가 없어서, 왜 안 들어가는지 알 수가 없다.
+        // 원작 시트의 붉은 판이 62차에 `obj_crusher_shield` 로 왔다.
+        //
+        // ⚠ 램프와 같은 규칙 — 보스 이름을 적지 않고 **`obj_{보스키}_shield` 를 묻는다.**
+        //   판이 없는 보스는 그냥 안 뜬다.
+
+        private RectTransform _shieldRt;
+        private Image _shieldImg;
+
+        private void TickBossShieldView()
+        {
+            bool on = _bossShield > 0f && _boss != null && _boss.IsAlive;
+            if (!on)
+            {
+                if (_shieldRt != null) _shieldRt.gameObject.SetActive(false);
+                return;
+            }
+
+            var art = GetSprite($"obj_{_boss.Key}_shield");
+            if (art == null) return;
+
+            if (_shieldRt == null)
+            {
+                var go = new GameObject("BossShield", typeof(RectTransform));
+                _shieldRt = (RectTransform)go.transform;
+                _shieldRt.SetParent(_fieldLayer, false);
+                _shieldRt.anchorMin = _shieldRt.anchorMax = new Vector2(0f, 1f);
+                _shieldRt.pivot = new Vector2(0.5f, 0.5f);
+                _shieldImg = go.AddComponent<Image>();
+                _shieldImg.raycastTarget = false;
+                _shieldImg.preserveAspect = true;
+            }
+            _shieldImg.sprite = art;
+            _shieldRt.gameObject.SetActive(true);
+
+            // **보스가 보는 쪽**에 세운다. 정면 120° 만 막으므로 판이 선 쪽이
+            // 곧 안 들어가는 쪽이어야 한다 — 등 뒤로 돌라는 지시가 그림과 맞아야 한다.
+            var facing = _boss.Facing;
+            if (facing.sqrMagnitude < 0.0001f) facing = Vector2.down;
+            facing = facing.normalized;
+            float side = _pxPerMeter * 2f;
+            _shieldRt.sizeDelta = new Vector2(side, side);
+            _shieldRt.anchoredPosition = _boss.Position + facing * (_pxPerMeter * 1.6f);
+            _shieldRt.localRotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg + 90f);
+        }
+
+        // ── 경고 램프 — 원작에 내장된 예고 ────────────────────────
+        //
+        // 정본: 「이 보스는 예고가 그림에 내장돼 있다 — 등이 한 칸씩 차오르고
+        //        다 차면 온다. 예고 4겹의 「몸」 겹을 원작이 이미 풀어 놨다」
+        //
+        // 원작 시트의 Light 5프레임이 그것이고, 62차에 `fx_crusher_lamp_1~5` 로 왔다.
+        //
+        // ⚠ 크러셔로 못 박지 않는다. **`fx_{보스키}_lamp_1` 이 있으면 켠다** —
+        //   다른 보스에 램프가 오면 코드를 안 고쳐도 그대로 돈다.
+        //   이름으로 물어보는 것이 이름을 적어 두는 것보다 오래 간다.
+
+        private const int LampSteps = 5;
+
+        private RectTransform _lampRt;
+        private Image _lampImg;
+        private string _lampKey;      // 지금 램프를 쓰는 보스. 없으면 이 보스는 램프가 없다
+
+        private void BeginLamp(Unit boss)
+        {
+            _lampKey = null;
+            if (boss == null || _fieldLayer == null) return;
+            if (GetSprite($"fx_{boss.Key}_lamp_1") == null) return;   // 램프가 없는 보스다
+
+            if (_lampRt == null)
+            {
+                var go = new GameObject("BossLamp", typeof(RectTransform));
+                _lampRt = (RectTransform)go.transform;
+                _lampRt.SetParent(_fieldLayer, false);
+                _lampRt.anchorMin = _lampRt.anchorMax = new Vector2(0f, 1f);
+                _lampRt.pivot = new Vector2(0.5f, 0.5f);
+                _lampRt.sizeDelta = new Vector2(72f, 72f);
+                _lampImg = go.AddComponent<Image>();
+                _lampImg.raycastTarget = false;
+                _lampImg.preserveAspect = true;
+            }
+            _lampKey = boss.Key;
+            _lampRt.gameObject.SetActive(true);
+            TickLamp(boss, 0f);
+        }
+
+        /// <param name="progress">예고 진행도 0~1. 다 차면 온다.</param>
+        private void TickLamp(Unit boss, float progress)
+        {
+            if (_lampKey == null || _lampRt == null || boss == null) return;
+            int step = Mathf.Clamp(Mathf.FloorToInt(progress * LampSteps) + 1, 1, LampSteps);
+            var art = GetSprite($"fx_{_lampKey}_lamp_{step}");
+            if (art != null) _lampImg.sprite = art;
+            _lampImg.enabled = art != null;
+            // 몸 위에 얹는다. 이름표(150)보다 낮게 둬서 글자를 가리지 않는다.
+            _lampRt.anchoredPosition = boss.Position + new Vector2(0f, 108f);
+        }
+
+        private void EndLamp()
+        {
+            _lampKey = null;
+            if (_lampRt != null) _lampRt.gameObject.SetActive(false);
+        }
+
         // ── 휘두르는 물건 ────────────────────────────────────────
         //
         // 「붙어라」가 말이 되려면 **무엇에 안 닿는지가 보여야 한다.**
@@ -349,8 +461,12 @@ namespace Game.Module.InGame
             // ⚠ 사슬은 **한쪽 끝이 보스에 박혀 있어야** 한다. 피벗을 위쪽 가운데로 두면
             //   기본 상태에서 아래로 늘어지고, 그 아래 방향을 공 쪽으로 돌리면 된다.
             //   가운데 피벗으로 두면 보스를 중심으로 막대가 도는 이상한 그림이 된다.
-            _orbitChain = MakeOrbitPart("OrbitChain", GetSprite("obj_hammer_chain"), new Vector2(0.5f, 1f));
-            _orbitBall  = MakeOrbitPart("OrbitBall",  GetSprite("obj_hammer"),       new Vector2(0.5f, 0.5f));
+            // 62차에 크러셔 전용 부품이 왔다. 없으면 예전에 빌려 쓰던 망치로 떨어진다 —
+            // 다른 보스가 파괴구를 쓰게 되면 제 부품이 올 때까지 그것으로 버틴다.
+            _orbitChain = MakeOrbitPart("OrbitChain",
+                GetSprite("obj_crusher_chain") ?? GetSprite("obj_hammer_chain"), new Vector2(0.5f, 1f));
+            _orbitBall  = MakeOrbitPart("OrbitBall",
+                GetSprite("obj_crusher_ball")  ?? GetSprite("obj_hammer"),       new Vector2(0.5f, 0.5f));
 
             RectTransform MakeOrbitPart(string name, Sprite art, Vector2 pivot)
             {
@@ -376,7 +492,9 @@ namespace Game.Module.InGame
             _orbitOn = true;
             _orbitRadius = radiusPx;
             _orbitAngle = 0f;
-            _orbitBall.sizeDelta = new Vector2(_pxPerMeter, _pxPerMeter);
+            // 파괴구는 1.5 m 짜리 쇳덩이다. 1 m 로 두면 3.5 m 궤도 위에서 점처럼 보인다.
+            float ball = _pxPerMeter * 1.5f;
+            _orbitBall.sizeDelta = new Vector2(ball, ball);
             _orbitBall.gameObject.SetActive(true);
             _orbitChain.gameObject.SetActive(true);
             TickOrbit(boss, 0f, 0f);
@@ -451,6 +569,7 @@ namespace Game.Module.InGame
             if (_safeView != null) _safeView.Tick(dt, p);
             if (_hint != null) _hint.Tick(dt, p);
             TickOrbit(_boss, dt, p);
+            TickLamp(_boss, p);
         }
 
         private void ClearDanger()
@@ -461,6 +580,7 @@ namespace Game.Module.InGame
             if (_safeView != null) _safeView.Hide();
             if (_hint != null) _hint.Hide();
             EndOrbit();
+            EndLamp();
         }
 
         /// <summary>
