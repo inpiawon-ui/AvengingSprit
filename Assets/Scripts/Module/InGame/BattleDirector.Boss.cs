@@ -70,6 +70,9 @@ namespace Game.Module.InGame
 
             _dangerMove = m;
             _dangerView.Show(_danger, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
+            Debug.Log($"[진단:예고] {m.NameKr} draw={m.Draw} kind={_danger.Shape} r={_danger.Radius:0} " +
+                      $"origin={_danger.Origin} 활성={_dangerView.gameObject.activeInHierarchy} " +
+                      $"컬링={_dangerView.canvasRenderer.cull} 크기={((RectTransform)_dangerView.transform).sizeDelta}");
 
             // 안전지대는 **위험을 그린 다음**에 그린다. 위험만 있으면 "저기 맞겠네" 지만,
             // 안전이 같이 보이면 "저기로 가면 되네" 가 된다 — 훨씬 빨리 읽힌다.
@@ -684,6 +687,7 @@ namespace Game.Module.InGame
             //   잡몹 기준 0.17초는 256px 짜리 몸에 너무 짧아 길게 끈다.
             boss.PlayAttack(BossAttackHold);
 
+            Debug.Log($"[진단:발동] {m.NameKr} 맞음={playerHit} 피해={dmg}");
             ApplyMoveEffect(boss, me, m);
             PlayDangerImpact(m);
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
@@ -712,7 +716,8 @@ namespace Game.Module.InGame
                 _ => "burst",
             };
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
-            PlayFx(fx, _danger.Origin, size, loop: false);
+            var im = PlayFx(fx, _danger.Origin, size, loop: false);
+            Debug.Log($"[진단:임팩트] {fx} 크기={size:0} 자리={_danger.Origin} 생성={(im != null)}");
         }
     }
 }

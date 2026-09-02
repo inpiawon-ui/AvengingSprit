@@ -182,9 +182,9 @@ namespace Game.Module.InGame
         /// ⚠ 예전 값 0.14 는 방 꼭대기였다. 크러셔의 패턴은 반경 1.2~2.5 m 인데
         ///   나(0.88)와 9.6 m 떨어져 있어 **바닥 도형이 나한테 닿을 수가 없었다.**
         ///   화면에서는 "보스가 위에서 혼자 뭘 한다" 로 보인다.
-        ///   2/3 지점이면 나와 2.8 m 다 — 패턴이 나를 덮는 거리.
+        ///   위에서 1/3(= 바닥에서 2/3 높이)이면 나와 7.1 m 다.
         /// </summary>
-        private const float BossStandY = 2f / 3f;
+        private const float BossStandY = 1f / 3f;
 
         /// <summary>보스 그림 배율. 256 캔버스가 방 폭의 1/3 이라 조금 줄인다.</summary>
         private const float BossScale = 0.9f;
