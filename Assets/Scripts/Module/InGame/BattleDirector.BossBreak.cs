@@ -387,7 +387,7 @@ namespace Game.Module.InGame
             //   골랐는데, 크러셔의 벨트가 돌진으로 바뀌자 그 조건이 통째로 꺼져
             //   80·50·30% 소환이 조용히 사라질 뻔했다. 조건이 패턴 이름에 매달려
             //   있었던 것이 문제다 — 몸이 필요한 이유는 패턴이 아니라 **빙의**다.
-            get => _boss != null && _boss.IsAlive;
+            get => !NoBossMinions && _boss != null && _boss.IsAlive;
         }
 
         private void TickBossMinions(float dt)

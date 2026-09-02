@@ -2082,6 +2082,26 @@ namespace Game.Module.InGame
         public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
 
         /// <summary>
+        /// 보스방에서 빼앗을 몸을 부르지 않는다.
+        ///
+        /// ⚠ **켜 두고 잊으면 안 된다.** 보스 여섯은 전부 빙의 불가라, 몸이 안 나오면
+        ///   보스방에서 코어 루프(몸을 빼앗아 싸운다)가 통째로 끊긴다.
+        ///   패턴 하나를 들여다볼 때 화면을 비우려고 잠깐 끄는 용도다.
+        ///
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스방 잔몹 끄기` 로 켜고 끈다. 빌드에는 없다.
+        /// </summary>
+        public static bool NoBossMinions
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.NoBossMinions", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.NoBossMinions", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>
         /// 한 보스만 계속 세운다. 0 이면 방 순서대로 여섯을 돌린다.
         ///
         /// 순서대로만 되면 **여섯째 보스를 보려고 다섯 방을 깨야 한다.**
