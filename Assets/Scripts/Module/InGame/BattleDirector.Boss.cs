@@ -705,7 +705,11 @@ namespace Game.Module.InGame
 
         private void BeginMissileFlight(Unit boss, float seconds)
         {
-            if (_shotLayer == null || boss == null) return;
+            if (_shotLayer == null || boss == null)
+            {
+                Debug.LogWarning($"[진단:비행] 못 띄움 — shotLayer={(_shotLayer != null)} boss={(boss != null)}");
+                return;
+            }
 
             if (_missileFrames == null)
             {
@@ -716,9 +720,19 @@ namespace Game.Module.InGame
                     if (sp == null) break;
                     list.Add(sp);
                 }
+                // 미사일 그림이 없으면 기본 탄으로라도 띄운다 — 안 보이는 것보다 낫다.
+                if (list.Count == 0)
+                {
+                    var fb = GetSprite("shot_1") ?? GetSprite("shot");
+                    if (fb != null) list.Add(fb);
+                }
                 _missileFrames = list.Count > 0 ? list.ToArray() : null;
             }
-            if (_missileFrames == null) return;   // 그림이 없으면 조용히 안 띄운다
+            if (_missileFrames == null)
+            {
+                Debug.LogWarning("[진단:비행] 탄 그림을 하나도 못 찾았다 — shot_missile_1 · shot_1 · shot");
+                return;
+            }
 
             if (_missileRt == null)
             {
@@ -739,6 +753,8 @@ namespace Game.Module.InGame
             _missileImg.sprite = _missileFrames[0];
             _missileRt.gameObject.SetActive(true);
             TickMissileFlight(0f);   // 첫 프레임부터 제자리에 — 한 프레임 (0,0) 에 뜨는 것을 막는다
+            Debug.Log($"[진단:비행] {_missileFrames.Length}프레임 {_missileFrom} → {_missileTo} "
+                      + $"{_missileTotal:0.00}초 활성={_missileRt.gameObject.activeInHierarchy}");
         }
 
         private void EndMissileFlight()

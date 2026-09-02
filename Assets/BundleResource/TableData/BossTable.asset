@@ -42,7 +42,7 @@ MonoBehaviour:
       _draw: 14
       _dodge: 1
       _degrees: 0
-      _radiusMeters: 2.5
+      _radiusMeters: 1.67
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
