@@ -3750,7 +3750,11 @@ namespace Game.Module.InGame
 
             TickBossPending(dt);
 
-            var move = _brain.Tick(dt);
+            // 두뇌가 거리를 보고 패턴을 고른다 — 붙으면 파괴구, 떨어지면 미사일·압착·돌진.
+            // 표적이 없으면 아주 먼 것으로 친다(붙어야 쓰는 패턴이 헛돌지 않게).
+            float distM = me != null
+                ? Vector2.Distance(boss.Position, me.Position) / _pxPerMeter : 999f;
+            var move = _brain.Tick(dt, distM);
 
             // 예고 중에는 제자리에서 번쩍인다. 피할 시간을 주지 않으면 패턴이 아니라 사고다.
             if (_brain.IsTelegraphing)

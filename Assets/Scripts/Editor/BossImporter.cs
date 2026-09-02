@@ -77,6 +77,10 @@ namespace Game.EditorTools
                     var safe = mp.FindPropertyRelative("_safeAtMeters");
                     if (safe != null) safe.vector2Value = new Vector2(m.SafeX, m.SafeY);
 
+                    SetEnum(mp, "_range", RangeOf(m.Range));
+                    SetFloat(mp, "_rangeMeters", m.RangeMeters);
+                    SetInt(mp, "_group", m.Group);
+
                     // 옛 8패턴 칸도 채워 둔다 — 새 도형을 아직 안 그리는 자리가 이것을 읽는다.
                     SetEnum(mp, "_pattern", (int)LegacyOf(m.Draw));
                     SetInt(mp, "_shotCount", ShotsOf(m));
@@ -117,6 +121,14 @@ namespace Game.EditorTools
         };
 
         /// <summary>
+        /// <summary>거리 조건 이름 → <see cref="MoveRange"/>. 빈 값이면 조건 없음.</summary>
+        private static int RangeOf(string s) => s switch
+        {
+            "NEAR" => (int)MoveRange.Near,
+            "FAR"  => (int)MoveRange.Far,
+            _      => (int)MoveRange.Any,
+        };
+
         /// 패턴 이름 → <see cref="BossDraw"/>.
         ///
         /// 표(`BossDefTable`)의 `Draw` 는 열거형 이름과 **글자까지 같게** 적는다.

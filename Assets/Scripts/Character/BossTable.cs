@@ -172,6 +172,23 @@ namespace Game.Character
         Ceiling,
     }
 
+    /// <summary>
+    /// 이 패턴을 **언제 쓰는가** — 거리 조건.
+    ///
+    /// 조건이 없으면 보스는 거리와 무관하게 순서대로 패턴을 돌린다. 그러면
+    /// 반경 3.5 m 짜리 파괴구를 8 m 밖에서 돌리고, 붙어 있는데 미사일을 쏜다 —
+    /// 화면에서는 "아무 때나 아무거나 한다" 로 보인다.
+    /// </summary>
+    public enum MoveRange
+    {
+        /// <summary>거리를 안 본다</summary>
+        Any,
+        /// <summary>붙어 있을 때만</summary>
+        Near,
+        /// <summary>떨어져 있을 때만</summary>
+        Far,
+    }
+
     [Serializable]
     public sealed class BossMove
     {
@@ -215,6 +232,14 @@ namespace Game.Character
         [Tooltip("안전지대 좌표(m, 방 기준). (0,0)이면 없다")]
         [SerializeField] private Vector2 _safeAtMeters;
 
+        [Header("고르는 조건")]
+        [Tooltip("거리 조건. Near 는 붙어 있을 때만, Far 는 떨어져 있을 때만 쓴다")]
+        [SerializeField] private MoveRange _range;
+        [Tooltip("가깝다/멀다를 가르는 거리(m). 0 이면 기본값을 쓴다")]
+        [SerializeField] private float _rangeMeters;
+        [Tooltip("같은 번호끼리 한 시계를 쓰고 번갈아 나간다. 0 이면 묶이지 않는다")]
+        [SerializeField] private int _group;
+
         public BossPattern Pattern => _pattern;
         public int FromPhase => Mathf.Max(1, _fromPhase);
         public float Cooldown => Mathf.Max(0.4f, _cooldown);
@@ -242,6 +267,15 @@ namespace Game.Character
         public int Lanes => Mathf.Max(0, _lanes);
         public Vector2 SafeAtMeters => _safeAtMeters;
         public bool HasSafeSpot => _safeAtMeters.sqrMagnitude > 0.01f;
+
+        public MoveRange Range => _range;
+        public float RangeMeters => _rangeMeters;
+
+        /// <summary>
+        /// 번갈아 쓰는 묶음 번호. 같은 번호끼리 **한 시계를 나눠 쓰고 차례로** 나간다.
+        /// 따로 두면 쿨이 같을 때 둘이 겹쳐 나가 "한 번에 두 개가 온다" 가 된다.
+        /// </summary>
+        public int Group => Mathf.Max(0, _group);
 
         /// <summary>이 패턴이 공간 데이터를 갖고 있는가. 없으면 옛 8패턴으로 돈다.</summary>
         public bool HasShape => _draw != BossDraw.None;

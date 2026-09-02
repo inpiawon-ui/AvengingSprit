@@ -31,7 +31,7 @@ MonoBehaviour:
     _moves:
     - _pattern: 4
       _fromPhase: 1
-      _cooldown: 2
+      _cooldown: 3
       _shotCount: 1
       _spreadDegrees: 0
       _damageMul: 1
@@ -49,6 +49,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 1
       _safeAtMeters: {x: 0, y: 0}
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 1
       _fromPhase: 1
       _cooldown: 3
@@ -69,29 +72,35 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 1
+      _rangeMeters: 4
+      _group: 0
     - _pattern: 2
       _fromPhase: 1
-      _cooldown: 5
+      _cooldown: 3
       _shotCount: 5
-      _spreadDegrees: 180
+      _spreadDegrees: 120
       _damageMul: 0.94
       _telegraphSeconds: 1
       _nameKr: "\uC555\uCC29"
       _nameEn: Crush
       _shape: 0
       _draw: 1
-      _dodge: 0
-      _degrees: 180
-      _radiusMeters: 2.5
+      _dodge: 1
+      _degrees: 120
+      _radiusMeters: 5.5
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 0
       _fromPhase: 1
-      _cooldown: 7
+      _cooldown: 5
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1
@@ -109,6 +118,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 2
+      _rangeMeters: 4
+      _group: 0
   - _bossKey: guardian
     _chapter: 2
     _roomNo: 10
@@ -146,6 +158,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 12
@@ -166,6 +181,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 1
       _fromPhase: 2
       _cooldown: 10
@@ -186,6 +204,9 @@ MonoBehaviour:
       _gapDegrees: 60
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 2
       _fromPhase: 3
       _cooldown: 9
@@ -206,6 +227,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
   - _bossKey: python
     _chapter: 3
     _roomNo: 10
@@ -243,6 +267,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 7
       _fromPhase: 1
       _cooldown: 9
@@ -263,6 +290,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 5
       _fromPhase: 2
       _cooldown: 10
@@ -283,6 +313,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 4
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 3
       _cooldown: 16
@@ -303,6 +336,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
   - _bossKey: kingpin
     _chapter: 4
     _roomNo: 10
@@ -340,6 +376,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 13
@@ -360,6 +399,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 2
       _fromPhase: 2
       _cooldown: 8
@@ -380,6 +422,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 1
       _fromPhase: 3
       _cooldown: 15
@@ -400,6 +445,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
   - _bossKey: robot_snakes
     _chapter: 5
     _roomNo: 10
@@ -437,6 +485,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 5
       _fromPhase: 1
       _cooldown: 11
@@ -457,6 +508,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 2
       _cooldown: 13
@@ -477,6 +531,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 1
       _fromPhase: 3
       _cooldown: 18
@@ -497,6 +554,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 6
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
   - _bossKey: sludge
     _chapter: 6
     _roomNo: 10
@@ -534,6 +594,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 7
       _fromPhase: 1
       _cooldown: 8
@@ -554,6 +617,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 2
       _cooldown: 14
@@ -574,6 +640,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 7
       _fromPhase: 3
       _cooldown: 20
@@ -594,3 +663,6 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 0
+      _group: 0

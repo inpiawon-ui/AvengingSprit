@@ -103,6 +103,7 @@ namespace Game.Module.InGame
         {
             _moves = moves;
             _timers.Clear();
+            _groupCursor.Clear();
             // ⚠ 첫 쿨다운을 **제 쿨다운에 비례해서** 주면 안 된다.
             //
             //   예전: `Cooldown * (0.35 + 0.25 * i)`
@@ -154,7 +155,7 @@ namespace Game.Module.InGame
         /// 쿨다운을 굴리고, 실행할 행동이 정해지면 예고를 시작한다.
         /// 예고가 끝난 프레임에 그 행동을 돌려준다(그 외에는 null).
         /// </summary>
-        public BossMove Tick(float dt)
+        public BossMove Tick(float dt, float distanceMeters)
         {
             if (_entry == null || _moves == null) return null;
 
@@ -171,11 +172,29 @@ namespace Game.Module.InGame
             {
                 var m = _moves[i];
                 if (m.FromPhase > Phase) continue;
+
+                // 거리 조건을 안 맞추면 **시계도 안 돈다.** 돌려 두면 조건이 맞는 순간
+                // 밀린 것들이 한꺼번에 터진다 — 붙었다 떨어지기만 해도 폭풍이 온다.
+                if (!InRange(m, distanceMeters)) continue;
+
                 _timers[i] -= dt;
                 if (_timers[i] > 0f) continue;
 
-                _timers[i] = CooldownOf(m);
-                Pending = m;
+                var pick = m;
+                if (m.Group > 0)
+                {
+                    int k = GroupPick(m.Group, distanceMeters);
+                    if (k < 0) { _timers[i] = CooldownOf(m); continue; }
+                    pick = _moves[k];
+                    // ⚠ 묶음 전체의 시계를 함께 감는다. 하나만 감으면 형제가 이미 0 이라
+                    //   **다음 프레임에 곧바로** 나간다 — 3초 간격이 0초가 된다.
+                    for (int j = 0; j < _timers.Count; j++)
+                        if (_moves[j].Group == m.Group) _timers[j] = CooldownOf(_moves[j]);
+                }
+                else _timers[i] = CooldownOf(m);
+
+                Pending = pick;
+                m = pick;
                 // ⚠ **패턴이 제 예고 시간을 들고 있으면 그것이 이긴다.**
                 //   페이즈 하나로 뭉뚱그리면 24개가 전부 같은 길이로 예고한다 —
                 //   예고 길이는 피할 수 있느냐를 가르는 값이라 패턴마다 달라야 한다.
@@ -203,6 +222,41 @@ namespace Game.Module.InGame
         public void TickCharge(float dt)
         {
             if (ChargeLeft > 0f) ChargeLeft -= dt;
+        }
+
+        /// <summary>가깝다/멀다를 가르는 기본 거리(m). 패턴이 제 값을 들고 있으면 그쪽이 이긴다.</summary>
+        private const float DefaultRangeMeters = 4f;
+
+        private static bool InRange(BossMove m, float distanceMeters)
+        {
+            if (m.Range == MoveRange.Any) return true;
+            float gate = m.RangeMeters > 0f ? m.RangeMeters : DefaultRangeMeters;
+            return m.Range == MoveRange.Near ? distanceMeters <= gate
+                                             : distanceMeters > gate;
+        }
+
+        private readonly Dictionary<int, int> _groupCursor = new();
+        private readonly List<int> _groupBuf = new();
+
+        /// <summary>
+        /// 이 묶음에서 **이번 차례**인 패턴. 조건을 못 맞추는 것은 건너뛴다.
+        /// 부를 때마다 차례가 한 칸 돈다 — 미사일 · 압착 · 미사일 · 압착 …
+        /// </summary>
+        private int GroupPick(int group, float distanceMeters)
+        {
+            _groupBuf.Clear();
+            for (int i = 0; i < _moves.Count; i++)
+            {
+                var m = _moves[i];
+                if (m.Group != group || m.FromPhase > Phase) continue;
+                if (!InRange(m, distanceMeters)) continue;
+                _groupBuf.Add(i);
+            }
+            if (_groupBuf.Count == 0) return -1;
+
+            _groupCursor.TryGetValue(group, out int c);
+            _groupCursor[group] = c + 1;
+            return _groupBuf[c % _groupBuf.Count];
         }
 
         public void BeginCharge(Vector2 dir, float seconds)

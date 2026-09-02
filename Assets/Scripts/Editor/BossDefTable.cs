@@ -42,6 +42,9 @@ namespace Game.EditorTools
             public float Degrees, Radius, Width, Length, InnerRadius, GapDegrees;
             public int Lanes;              // 줄 수 · 또는 **도형 개수**(미사일 5 · 그림자 3 …)
             public float SafeX, SafeY;     // 안전지대(m). 0 이면 없다
+            public string Range;           // "" · NEAR · FAR — 거리 조건
+            public float RangeMeters;      // 가깝다/멀다 문턱(m). 0 이면 기본 4 m
+            public int Group;              // 같은 번호끼리 한 시계로 번갈아 나간다
         }
 
         public sealed class Boss
@@ -72,43 +75,56 @@ namespace Game.EditorTools
                     State = "", BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
                     Moves = new Move[]
                     {
-                        // ⚠ 기획 2026-09-02(3차) — 크러셔는 이 넷을 쓴다.
-                        //   방패 전개만 뺀다. 예고는 넷 다 **1초**다.
-                        //     투사체 2s · 도는 것 3s · 범위 폭발 5s · 이동 7s
+                        // ⚠ 기획 2026-09-02(4차) — 거리로 갈린다.
+                        //     붙어 있으면(4 m 안)  파괴구만 돈다              쿨 3s
+                        //     떨어져 있으면(4 m 밖) 미사일 ↔ 압착 번갈아       쿨 3s (묶음 1)
+                        //                          돌진                     쿨 5s
+                        //   예고는 넷 다 1초.
 
-                        // 미사일 한 발이 내 자리에 떨어진다. **터지는 자리는 하나다.**
-                        // ⚠ `Lanes` 를 3 으로 두면 착탄 원이 셋이 된다 — 그것이 아니었다.
-                        //   부채꼴로 퍼지는 것은 압착이고, 그쪽은 탄이 그 면을 채운다.
-                        // ⚠ 반경 2.5 m 는 지름 5 m — 방 폭 10 m 의 절반이라 너무 컸다.
-                        //   2/3 로 줄인다. 1.67 m = 지름 3.3 m.
+                        // 미사일 한 발이 내 자리에 떨어진다. 터지는 자리는 하나다.
                         new() { Phase = 1, NameKr = "미사일", NameEn = "Missile",
-                                Cooldown = 2f, Telegraph = 1.0f, DamageMul = 1.0f,
+                                Cooldown = 3f, Telegraph = 1.0f, DamageMul = 1.0f,
                                 Shape = "Zone", Draw = "MissileSalvo", Dodge = "SIDE",
                                 Degrees = 0f, Radius = 1.67f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 1,
-                                SafeX = 0f, SafeY = 0f },
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "FAR", RangeMeters = 4f, Group = 1 },
+
                         // 쇠사슬 파괴구가 제 둘레를 돈다. **안쪽이 안전하다** — 파고들어야 산다.
+                        // 붙어 있을 때만 돈다. 8 m 밖에서 반경 3.5 m 를 돌려 봐야 아무 일도 안 난다.
                         new() { Phase = 1, NameKr = "쇠사슬 파괴구", NameEn = "WreckingBall",
                                 Cooldown = 3f, Telegraph = 1.0f, DamageMul = 0.94f,
                                 Shape = "Zone", Draw = "WreckingBall", Dodge = "CLOSE",
                                 Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 1.6f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f },
-                        // 아치형 입의 격자판이 제 앞 반경 2.5 m · 정면 180° 를 내려찍는다.
-                        // 「일정 범위에 터지는 것」 — 뒤로 돌면 안 닿는다.
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
+
+                        // 아치형 입이 앞을 부채꼴로 내려찍는다. 탄이 그 면을 채우며 날아간다.
+                        //
+                        // ⚠ **180° × 2.5 m 에서 120° × 5.5 m 로 바꿨다.**
+                        //   이 패턴은 이제 「4 m 밖에서 쓴다」인데, 반경 2.5 m 로는
+                        //   조건이 맞는 순간 이미 사거리 밖이라 **한 번도 못 맞힌다.**
+                        //   게다가 2.5 m = 180 px 인데 보스 몸 반지름이 115 px 이라
+                        //   탄이 몸에서 나오자마자 끝났다 — "끝까지 안 날아간다" 가 이것이다.
+                        //   각도를 좁혀 면적은 지키고 길이만 늘렸다. 옆으로 빠지면 산다.
                         new() { Phase = 1, NameKr = "압착", NameEn = "Crush",
-                                Cooldown = 5f, Telegraph = 1.0f, DamageMul = 0.94f,
-                                Shape = "Arc", Draw = "Crush", Dodge = "BACK",
-                                Degrees = 180f, Radius = 2.5f, Width = 0f, Length = 0f,
+                                Cooldown = 3f, Telegraph = 1.0f, DamageMul = 0.94f,
+                                Shape = "Arc", Draw = "Crush", Dodge = "SIDE",
+                                Degrees = 120f, Radius = 5.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f },
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "FAR", RangeMeters = 4f, Group = 1 },
+
                         // 나에게 붉은 줄을 긋고 그 줄을 타고 밀고 들어온다. 그리고 한 발 더.
+                        // 떨어져 있을 때만 — 붙어 있는데 돌진하면 지나쳐 버린다.
                         new() { Phase = 1, NameKr = "돌진", NameEn = "RamCharge",
-                                Cooldown = 7f, Telegraph = 1.0f, DamageMul = 1.0f,
+                                Cooldown = 5f, Telegraph = 1.0f, DamageMul = 1.0f,
                                 Shape = "Line", Draw = "RamCharge", Dodge = "PERP",
                                 Degrees = 0f, Radius = 0f, Width = 2.0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f },
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "FAR", RangeMeters = 4f, Group = 0 },
                     } },
 
             // ── 가디언 · 미사일기지 — 마디를 하나씩 끊어라 ───────────────────────
