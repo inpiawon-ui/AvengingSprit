@@ -567,13 +567,14 @@ namespace Game.Module.InGame
             bool show = e.BossHpMax > 0;
             _ui.SetActive("BossGroup", show);
 
-            // ⚠ **둘은 같은 칸이다.** 프리팹에서 `ChapterGroup` 과 `BossGroup` 이
-            //   자리도 크기도 똑같다 — pos (388, -106) · size (326, 118).
-            //   보스방에서 둘 다 켜 두면 챕터 판이 보스 체력 위에 겹쳐 그려져
-            //   이름이 "…SHER" 로 잘리고 남은 체력 숫자가 통째로 가려진다.
-            //   유령일 때는 HOST 칸이 빠져 남은 것이 가운데로 오면서 절반만 겹쳐
-            //   더 눈에 띄었다.
-            _ui.SetActive("ChapterGroup", !show);
+            // ⚠ **챕터 칸은 끄지 않는다.** 상단 오른쪽은 챕터 정보 자리다.
+            //   한때 여기서 껐다가 "왜 보스 HP 로 바뀌었냐" 는 지적을 받았다 —
+            //   보스 체력은 챕터 정보를 밀어내는 것이 아니다.
+            //
+            //   다만 프리팹에서 `BossGroup` 이 `ChapterGroup` 과 자리·크기가
+            //   똑같아(pos 388,-106 · size 326,118) 보스방에서 두 판이 겹친다.
+            //   보스 체력을 어디에 둘지는 **아직 안 정했다** — 정해지면 여기가 아니라
+            //   프리팹 자리를 옮겨서 푼다.
 
             if (!show) return;
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
@@ -686,8 +687,11 @@ namespace Game.Module.InGame
         //   `HorizontalLayoutGroup`(childAlignment = UpperCenter)을 달고 있어서,
         //   자식을 끄면 남은 것이 스스로 가운데로 온다.
         //
-        //     HudRow2    CurrentHostPanel · ChapterGroup · BossGroup
+        //     HudRow2    CurrentHostPanel · ChapterGroup
         //     ButtonRow  SkillButton · PossessButton
+        //
+        //   보스 체력(`BossGroup`)은 이 줄에 없다 — 챕터 칸과 나란히 서면 줄이
+        //   넘친다(374 + 326 + 326 > 720). 자리를 따로 잡아야 한다.
         //
         //   예전에는 여기서 부모 폭을 재고 절반을 빼서 직접 옮겼는데, 그러면
         //   **같은 자리를 두 곳에서 정하게 된다** — 프리팹을 다시 잡을 때마다
