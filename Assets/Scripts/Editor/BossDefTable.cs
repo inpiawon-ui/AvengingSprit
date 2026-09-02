@@ -76,15 +76,16 @@ namespace Game.EditorTools
                         //   방패 전개만 뺀다. 예고는 넷 다 **1초**다.
                         //     투사체 2s · 도는 것 3s · 범위 폭발 5s · 이동 7s
 
-                        // 미사일 **세 발이 부채꼴로** 나가 내 거리에 떨어진다(기획 2026-09-02).
-                        // ⚠ `Lanes` 가 곧 발 수다. 1 이면 정면 한 발이라 부채꼴이 안 보인다.
+                        // 미사일 한 발이 내 자리에 떨어진다. **터지는 자리는 하나다.**
+                        // ⚠ `Lanes` 를 3 으로 두면 착탄 원이 셋이 된다 — 그것이 아니었다.
+                        //   부채꼴로 퍼지는 것은 압착이고, 그쪽은 탄이 그 면을 채운다.
                         // ⚠ 반경 2.5 m 는 지름 5 m — 방 폭 10 m 의 절반이라 너무 컸다.
                         //   2/3 로 줄인다. 1.67 m = 지름 3.3 m.
                         new() { Phase = 1, NameKr = "미사일", NameEn = "Missile",
                                 Cooldown = 2f, Telegraph = 1.0f, DamageMul = 1.0f,
                                 Shape = "Zone", Draw = "MissileSalvo", Dodge = "SIDE",
                                 Degrees = 0f, Radius = 1.67f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 1,
                                 SafeX = 0f, SafeY = 0f },
                         // 쇠사슬 파괴구가 제 둘레를 돈다. **안쪽이 안전하다** — 파고들어야 산다.
                         new() { Phase = 1, NameKr = "쇠사슬 파괴구", NameEn = "WreckingBall",

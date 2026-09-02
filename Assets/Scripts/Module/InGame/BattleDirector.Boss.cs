@@ -82,9 +82,10 @@ namespace Game.Module.InGame
             // 쇠사슬 파괴구만 휘두르는 물건이 따로 있다. 나머지는 바닥 도형으로 읽힌다.
             if (m.Draw == BossDraw.WreckingBall) BeginOrbit(boss, _danger.Radius);
 
-            // 미사일은 **예고 내내 날아온다.** 도착하는 순간이 곧 착탄이다.
-            if (m.Draw == BossDraw.MissileSalvo)
-                BeginMissileFlight(boss, _brain != null ? _brain.TelegraphTotal : 1f);
+            // 위험한 면은 **탄으로 채운다.** 바닥에 원이나 부채꼴만 생겼다 터지면
+            // 무엇이 그것을 만들었는지 알 수 없다 — "예고만 하고 아무 일도 안 났다".
+            // 예고 시간과 정확히 같은 시간 동안 나므로 도착이 곧 발동이다.
+            BeginFlight(m, boss, _brain != null ? _brain.TelegraphTotal : 1f);
 
             // 램프는 **패턴을 안 가린다.** 무엇이 오든 "온다" 를 알리는 것이라
             // 크러셔의 네 패턴에 다 뜬다 — 원작이 그렇게 쓴다.
@@ -635,7 +636,7 @@ namespace Game.Module.InGame
             if (_hint != null) _hint.Hide();
             EndOrbit();
             EndLamp();
-            EndMissileFlight();
+            EndFlight();
         }
 
         /// <summary>
@@ -695,32 +696,76 @@ namespace Game.Module.InGame
         // 피해는 주지 않는다. 맞고 안 맞고는 **바닥 도형 하나가** 정한다(R1).
         // 이것을 탄으로 만들면 그리는 것과 때리는 것이 둘로 갈라진다.
 
-        private const float MissileArcRatio = 0.22f;   // 포물선 높이 = 거리 × 이 값
+        private const float MissileArcRatio = 0.22f;   // 포물선 높이 = 거리 x 이 값
 
-        /// <summary>날아오는 것 한 발. 도형 하나에 탄 하나가 붙는다.</summary>
-        private sealed class MissileFlight
+        /// <summary>부채꼴을 몇 발로 채우는가. 180도면 30도마다 한 발이다.</summary>
+        private const float WedgeShotSpacingDeg = 30f;
+
+        /// <summary>한 번에 띄우는 탄의 상한. 넘치면 화면이 탄으로 덮인다.</summary>
+        private const int MaxFlight = 12;
+
+        /// <summary>날아가는 것 한 발.</summary>
+        private sealed class Flight
         {
             public RectTransform Rt;
             public Image Img;
             public Vector2 From, To;
         }
 
-        private readonly List<MissileFlight> _missiles = new();
+        private readonly List<Flight> _flights = new();
+        private readonly List<Vector2> _flightTargets = new();
         private Sprite[] _missileFrames;
-        private float _missileLeft, _missileTotal;
-        private int _missileFlying;
+        private float _flightLeft, _flightTotal;
+        private int _flying;
 
         /// <summary>
-        /// 예고에 들어 있는 도형 **하나마다 탄 하나**를 띄운다.
-        /// 부채꼴 세 발이면 세 발이 각자 제 착탄점으로 난다.
+        /// 이 패턴에서 **탄이 어디로 날아가야 하는가**.
+        ///
+        /// 자리를 여기서 새로 지어내지 않는다. 굳어 있는 도형에게 묻는다 —
+        /// 탄이 도착하는 자리와 위험한 자리가 어긋나면
+        /// "빨간 데도 아닌 곳에서 터졌다" 가 된다.
         /// </summary>
-        private void BeginMissileFlight(Unit boss, float seconds)
+        private void FlightTargets(BossMove m)
         {
-            if (_shotLayer == null || boss == null)
+            _flightTargets.Clear();
+            switch (m.Draw)
             {
-                Debug.LogWarning($"[진단:비행] 못 띄움 — shotLayer={(_shotLayer != null)} boss={(boss != null)}");
-                return;
+                // 착탄 원 하나마다 탄 하나.
+                case BossDraw.MissileSalvo:
+                case BossDraw.DebrisFall:
+                case BossDraw.BoosterDrop:
+                    for (int i = 0; i < _danger.PieceCount && i < MaxFlight; i++)
+                        _flightTargets.Add(_danger.PieceAt(i, _roomSize));
+                    break;
+
+                // 부채꼴은 **면**이다. 탄 하나로는 그 면이 안 채워진다 —
+                // 부채꼴 각도를 따라 촘촘히 뿌려 면을 탄으로 덮는다.
+                case BossDraw.Crush:
+                case BossDraw.ShieldUp:
+                {
+                    float deg = _danger.Degrees > 0f ? _danger.Degrees : 180f;
+                    int n = Mathf.Clamp(Mathf.RoundToInt(deg / WedgeShotSpacingDeg) + 1, 2, MaxFlight);
+                    float half = deg * 0.5f;
+                    var d = _danger.Dir;
+                    for (int i = 0; i < n; i++)
+                    {
+                        float a = Mathf.Lerp(-half, half, (float)i / (n - 1)) * Mathf.Deg2Rad;
+                        var rot = new Vector2(d.x * Mathf.Cos(a) - d.y * Mathf.Sin(a),
+                                              d.x * Mathf.Sin(a) + d.y * Mathf.Cos(a));
+                        _flightTargets.Add(_danger.Origin + rot * _danger.Radius);
+                    }
+                    break;
+                }
             }
+        }
+
+        /// <summary>도형이 덮는 자리로 탄을 띄운다. 도착하는 순간이 곧 발동이다.</summary>
+        private void BeginFlight(BossMove m, Unit boss, float seconds)
+        {
+            if (_shotLayer == null || boss == null) return;
+
+            FlightTargets(m);
+            if (_flightTargets.Count == 0) return;
 
             if (_missileFrames == null)
             {
@@ -745,31 +790,31 @@ namespace Game.Module.InGame
                 return;
             }
 
-            _missileFlying = Mathf.Max(1, _danger.PieceCount);
-            _missileTotal = Mathf.Max(0.05f, seconds);
-            _missileLeft = _missileTotal;
+            _flying = Mathf.Min(_flightTargets.Count, MaxFlight);
+            _flightTotal = Mathf.Max(0.05f, seconds);
+            _flightLeft = _flightTotal;
 
-            while (_missiles.Count < _missileFlying) _missiles.Add(NewMissile());
-            for (int i = 0; i < _missiles.Count; i++)
+            while (_flights.Count < _flying) _flights.Add(NewFlight());
+            for (int i = 0; i < _flights.Count; i++)
             {
-                var f = _missiles[i];
-                bool on = i < _missileFlying;
+                var f = _flights[i];
+                bool on = i < _flying;
                 f.Rt.gameObject.SetActive(on);
                 if (!on) continue;
                 f.From = boss.Position;
-                f.To = _danger.PieceAt(i, _roomSize);   // 터지는 자리와 **같은 함수**다
+                f.To = _flightTargets[i];
                 f.Img.sprite = _missileFrames[0];
             }
-            TickMissileFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
+            TickFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
 
-            Debug.Log($"[진단:비행] {_missileFlying}발 {_missileFrames.Length}프레임 "
-                      + $"{_missiles[0].From} → {_missiles[0].To} {_missileTotal:0.00}초 "
-                      + $"활성={_missiles[0].Rt.gameObject.activeInHierarchy}");
+            Debug.Log($"[진단:비행] {m.NameKr} {_flying}발 {_missileFrames.Length}프레임 " +
+                      $"{_flights[0].From} -> {_flights[0].To} {_flightTotal:0.00}초 " +
+                      $"활성={_flights[0].Rt.gameObject.activeInHierarchy}");
         }
 
-        private MissileFlight NewMissile()
+        private Flight NewFlight()
         {
-            var go = new GameObject("BossMissile", typeof(RectTransform));
+            var go = new GameObject("BossShot", typeof(RectTransform));
             var rt = (RectTransform)go.transform;
             rt.SetParent(_shotLayer, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
@@ -777,41 +822,41 @@ namespace Game.Module.InGame
             rt.sizeDelta = new Vector2(48f, 48f);
             var img = go.AddComponent<Image>();
             img.raycastTarget = false;
-            return new MissileFlight { Rt = rt, Img = img };
+            return new Flight { Rt = rt, Img = img };
         }
 
-        private void EndMissileFlight()
+        private void EndFlight()
         {
-            _missileLeft = 0f;
-            for (int i = 0; i < _missiles.Count; i++)
-                if (_missiles[i].Rt != null) _missiles[i].Rt.gameObject.SetActive(false);
+            _flightLeft = 0f;
+            for (int i = 0; i < _flights.Count; i++)
+                if (_flights[i].Rt != null) _flights[i].Rt.gameObject.SetActive(false);
         }
 
         /// <summary>지금 t 에서의 자리. 포물선을 그린다 — 직선이면 바닥을 기는 것으로 보인다.</summary>
-        private static Vector2 MissileAt(MissileFlight f, float t)
+        private static Vector2 FlightAt(Flight f, float t)
         {
             var p = Vector2.Lerp(f.From, f.To, t);
             float lift = (f.To - f.From).magnitude * MissileArcRatio;
             return p + new Vector2(0f, lift * 4f * t * (1f - t));
         }
 
-        private void TickMissileFlight(float dt)
+        private void TickFlight(float dt)
         {
-            if (_missileLeft <= 0f || _missiles.Count == 0) return;
-            _missileLeft -= dt;
+            if (_flightLeft <= 0f || _flights.Count == 0) return;
+            _flightLeft -= dt;
 
-            float t = Mathf.Clamp01(1f - _missileLeft / _missileTotal);
+            float t = Mathf.Clamp01(1f - _flightLeft / _flightTotal);
             int frame = _missileFrames != null && _missileFrames.Length > 1
                 ? Mathf.Min(_missileFrames.Length - 1, (int)(t * _missileFrames.Length)) : 0;
 
-            for (int i = 0; i < _missileFlying && i < _missiles.Count; i++)
+            for (int i = 0; i < _flying && i < _flights.Count; i++)
             {
-                var f = _missiles[i];
-                var at = MissileAt(f, t);
+                var f = _flights[i];
+                var at = FlightAt(f, t);
                 f.Rt.anchoredPosition = at;
 
-                // 진행 방향으로 코를 든다. 탄 그림은 오른쪽을 본다(`Projectile` 과 같은 규약).
-                var ahead = MissileAt(f, Mathf.Min(1f, t + 0.03f)) - at;
+                // 진행 방향으로 코를 든다. 탄 그림은 오른쪽을 본다(Projectile 과 같은 규약).
+                var ahead = FlightAt(f, Mathf.Min(1f, t + 0.03f)) - at;
                 if (ahead.sqrMagnitude > 0.0001f)
                     f.Rt.localEulerAngles =
                         new Vector3(0f, 0f, Mathf.Atan2(ahead.y, ahead.x) * Mathf.Rad2Deg);
@@ -819,7 +864,7 @@ namespace Game.Module.InGame
                 if (_missileFrames != null) f.Img.sprite = _missileFrames[frame];
             }
 
-            if (_missileLeft <= 0f) EndMissileFlight();
+            if (_flightLeft <= 0f) EndFlight();
         }
 
         /// <summary>도형이 터진 자리에 표시를 남긴다. 무엇이 지나갔는지 보여야 한다.</summary>

@@ -2761,7 +2761,7 @@ namespace Game.Module.InGame
             TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
             TickBossMinions(dt);
             TickFollowUp(dt);      // 방패 전개가 부른 압착 두 번
-            TickMissileFlight(dt);  // 미사일은 예고 내내 날아온다
+            TickFlight(dt);        // 예고 내내 탄이 날아 도형을 채운다
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
