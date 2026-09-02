@@ -77,6 +77,7 @@ namespace Game.Module.InGame
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0f, 1f);
             rt.anchoredPosition = Vector2.zero;
+            // 크기는 `Show` 에서 방 크기로 채운다. 여기 0 으로 두면 안 보인다 — 아래 참조.
             rt.sizeDelta = Vector2.zero;
             go.SetActive(false);
             return v;
@@ -91,6 +92,26 @@ namespace Game.Module.InGame
             _safe = safe;
             _progress = 0f;
             _pulse = 0f;
+
+            // ⚠⚠ **이 한 줄이 없으면 도형이 아예 안 그려진다.**
+            //
+            //   방 화면(`_field`)에는 `RectMask2D` 가 붙어 있다(방이 창보다 길어서다).
+            //   `RectMask2D` 는 자기 밑의 `MaskableGraphic` 을 **잘라 내기 전에 통째로
+            //   버릴지부터 고른다** — `Cull(clipRect, valid)` 안에서
+            //   `clipRect.Overlaps(내 사각형)` 을 묻고, 겹치지 않으면 그리지 않는다.
+            //
+            //   그런데 이 오브젝트의 `sizeDelta` 는 0 이었다. 앵커·피벗이 (0,1) 이라
+            //   **방의 왼쪽 위 모서리에 찍힌 점 하나**가 내 사각형이다.
+            //   `Overlaps` 는 열린 구간 비교(`other.xMin < xMax`)라 경계에 딱 붙은 점은
+            //   겹치지 않는다 — 방 폭이 창 폭과 같아서 x 는 늘 정확히 경계였다.
+            //   **24개 패턴의 바닥 도형이 한 번도 그려지지 않은 진짜 이유가 이것이다.**
+            //   (화살표·이름표는 제 크기와 자리를 가진 `Image` 라 멀쩡히 떴다.
+            //    그래서 "화살표는 뜨는데 도형만 없다" 로 보였다.)
+            //
+            //   메시 좌표는 피벗 기준이라 크기를 채워도 **그림은 제자리다.**
+            var rt = rectTransform;
+            if (rt.sizeDelta != roomSize) rt.sizeDelta = roomSize;
+
             color = safe ? SafeTint : DangerTint;
             gameObject.SetActive(!shape.IsNone);
             SetVerticesDirty();

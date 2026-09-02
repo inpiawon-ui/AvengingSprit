@@ -176,6 +176,19 @@ namespace Game.Module.InGame
         // 방 세로도 **전 방 고정**이다(`RoomImporterV33.RoomHeight` 와 같은 값).
         // 화면에 보이는 높이가 약 11 m 라, 13 m 면 조금만 올라가도 방이 한눈에 들어온다.
         // 예전에는 14~28 m 였고 그러면 방 하나가 두세 화면이라 뭐가 있는지 모르고 올라갔다.
+        /// <summary>
+        /// 보스가 서는 자리 — 방 높이의 몇 배만큼 위에서 내려온 지점인가.
+        ///
+        /// ⚠ 예전 값 0.14 는 방 꼭대기였다. 크러셔의 패턴은 반경 1.2~2.5 m 인데
+        ///   나(0.88)와 9.6 m 떨어져 있어 **바닥 도형이 나한테 닿을 수가 없었다.**
+        ///   화면에서는 "보스가 위에서 혼자 뭘 한다" 로 보인다.
+        ///   2/3 지점이면 나와 2.8 m 다 — 패턴이 나를 덮는 거리.
+        /// </summary>
+        private const float BossStandY = 2f / 3f;
+
+        /// <summary>보스 그림 배율. 256 캔버스가 방 폭의 1/3 이라 조금 줄인다.</summary>
+        private const float BossScale = 0.9f;
+
         private const float RoomMeterHeight = 13f;
         private const float BossRoomMeterHeight = 13f;
 
@@ -2419,12 +2432,13 @@ namespace Game.Module.InGame
                            // 보스 그림은 256×256 캔버스다(닿는 선 y=232). 160 상자에 넣으면
                            // 캔버스 여백까지 함께 줄어 보스가 잡몹보다 작아진다.
                            // 캔버스 크기를 그대로 쓴다 — 방 폭 720 의 약 1/3 이다.
-                           UnitBox(256f, 256f), isBoss: true);
+                           UnitBox(256f * BossScale, 256f * BossScale), isBoss: true);
                 ApplyFacingSprites(boss, UnitGet(bossKey) != null ? bossKey : BossStand(bossKey));
                 // 예고 프레임. 6종 다 들어와 있고 없으면 조용히 색만 바뀐다.
                 boss.SetTellSprite(UnitGet(bossKey, "s_tell") ?? UnitGet(BossStand(bossKey), "s_tell"));
-                boss.Position = canon ? ToPixels(_canonRoom.BossAt)
-                                      : new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.14f);
+                // ⚠ 정본의 `BossAt` 도 안 쓴다. 정본 방은 세로 16 m 를 전제로 적힌 좌표라
+                //   13 m 방에 그대로 넣으면 보스가 천장에 붙는다. 자리는 한 곳에서 정한다.
+                boss.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * BossStandY);
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
@@ -3656,39 +3670,16 @@ namespace Game.Module.InGame
             var def = _canonRoom != null ? _canonRoom.BossPhase(phase) : null;
             if (def == null) return;
 
-            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
-            if (hosts == null || def.MinionPool.Count == 0) return;
-
-            // 보스 좌우로 벌려 세운다. 보스 위에 겹치면 누가 누군지 안 보인다.
-            for (int i = 0; i < def.MinionPool.Count; i++)
-            {
-                var e = ActorProfile(def.MinionPool[i], hosts);
-                if (e == null) continue;
-
-                var u = NewUnit($"Minion_{def.MinionPool[i]}_P{phase}");
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
-                        EnemyHpOf(e),
-                        EnemyAtkOf(e),
-                        EnemySpeedOf(e),
-                        EnemyRangeOf(e),
-                        EnemyIntervalOf(e),
-                        UnitBox(84f, 78f), isBoss: false, profile: e);
-
-                float side = i % 2 == 0 ? -1f : 1f;
-                float row = i / 2 * 90f;
-                u.Position = new Vector2(
-                    Mathf.Clamp(boss.Position.x + side * 210f, 60f, _roomSize.x - 60f),
-                    Mathf.Clamp(boss.Position.y - 130f - row, -_roomSize.y + 60f, -60f));
-                u.PossessPriority = e.PossessPriority;
-                u.IsAggro = true;          // 불러낸 것들은 기다리지 않는다
-                u.SetState(EnemyState.Detect);
-                ApplyFacingSprites(u, e.SpriteKey);
-                _enemies.Add(u);
-            }
+            // ⚠ **여기서 잡몹을 부르지 않는다.** 몸을 부르는 자리는 한 곳뿐이다 —
+            //   `TickBossMinions` 의 체력 80% · 50% · 30% 문턱(기획 2026-09-02).
+            //   페이즈 전환에서도 부르면 **두 곳이 따로 부른다** — 화면에서는
+            //   "갑자기 잔몹이 튀어나온다" 가 된다. 실제로 그 보고가 왔다.
+            //   게다가 이쪽은 `MarkAsHostBody` 를 안 붙여서 **빼앗을 수도 없는 몸**이었고,
+            //   아틀라스가 안 올라온 호스트를 골라 깨진 사각형으로 서기도 했다.
 
             _bus.Publish(new BossPhaseEvent
             {
-                Phase = phase, Pattern = def.Pattern, MinionCount = def.MinionPool.Count,
+                Phase = phase, Pattern = def.Pattern, MinionCount = 0,
             });
         }
 
@@ -3767,14 +3758,13 @@ namespace Game.Module.InGame
                 }
                 boss.TickAttack(dt);   // 다가오는 동안에도 간격은 돈다
 
-                // 쿨다운 대기 중에는 천천히 접근만 한다
-                // ⚠ 여기는 **중심 거리 그대로** 둔다.
-                //   `BossAttackRange`(260px = 3.6m)는 애초에 큰 몸을 전제로 중심에서
-                //   잰 값이다. 여기에 덩치 초과분(78px)을 더했더니 보스가 338px 밖에서
-                //   멈춰 서서 다가오질 않았다 — 사거리를 두 번 센 셈이다.
-                //   덩치 보정이 필요한 쪽은 **내가 보스를 때릴 때**지 그 반대가 아니다.
-                if (me != null && Vector2.Distance(boss.Position, me.Position) > boss.AttackRange)
-                    boss.MoveToward(me.Position, dt);
+                // ⚠ **보스는 쫓아오지 않는다.** 제자리에 선 기계다.
+                //
+                //   쫓아오게 뒀더니 예고와 예고 사이 내내 걸어다녀서, 어디에 무엇이
+                //   그려졌는지가 매 순간 어긋났다 — 보스가 화면 아무 데나 가 있으니
+                //   "쟤가 지금 뭘 하는 거냐" 가 된다. 자리가 고정돼야 패턴이 읽힌다.
+                //   붙고 떨어지는 것은 **내 몫**이다.
+                boss.SetMoving(false);
                 return;
             }
 
