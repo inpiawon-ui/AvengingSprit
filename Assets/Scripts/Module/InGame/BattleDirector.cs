@@ -3730,6 +3730,8 @@ namespace Game.Module.InGame
             if (_brain.IsTelegraphing)
             {
                 _telegraphPulse += dt;
+                // 자세는 예고 내내 한 번만 세운다. 색만 깜빡인다.
+                boss.SetTellPose(true);
                 PulseTelegraph(boss);
                 // 예고가 막 시작된 프레임에 도형을 **한 번** 굳힌다.
                 if (_dangerMove != _brain.Pending) BeginDanger(boss, me, _brain.Pending);
@@ -3740,6 +3742,7 @@ namespace Game.Module.InGame
             if (move == null)
             {
                 boss.SetTelegraph(false);
+                boss.SetTellPose(false);
                 ClearDanger();
 
                 // ⚠ **패턴 사이에 아무것도 안 하면 안 된다.**
@@ -3776,6 +3779,7 @@ namespace Game.Module.InGame
             }
 
             boss.SetTelegraph(false);
+            boss.SetTellPose(false);   // 때리는 순간에는 제 방향 자세로 돌아온다
             // 도형이 있는 패턴은 **그려 둔 그것**으로 친다. 없는 것만 옛 경로로 간다.
             if (!StrikeDanger(boss, me, move)) ExecuteBossMove(boss, me, move);
         }

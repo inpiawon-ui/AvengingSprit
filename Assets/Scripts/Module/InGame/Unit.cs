@@ -1059,25 +1059,45 @@ namespace Game.Module.InGame
         /// <summary>예고할 때 갈아 끼울 그림. 없으면 예전처럼 색만 바뀐다.</summary>
         public void SetTellSprite(Sprite s) => _tellSprite = s;
 
+        /// <summary>
+        /// 예고 **색**을 켜고 끈다. 부르는 쪽이 0.08초마다 뒤집어 깜빡임을 만든다.
+        ///
+        /// ⚠ **그림은 여기서 안 바꾼다.** 예전에는 켤 때마다 몸을 예고 그림으로 갈고
+        ///   끌 때마다 되돌렸는데, 0.08초마다 뒤집히므로 예고 1.25초 동안 **15번**
+        ///   왔다 갔다 했다 — 뒤를 보고 있다가 정면으로 튀었다가를 반복해서
+        ///   "애니메이션이 이상하다" 로 보였다. 자세는 <see cref="SetTellPose"/> 가
+        ///   예고 시작·끝에 **한 번씩만** 바꾼다.
+        /// </summary>
         public void SetTelegraph(bool on)
         {
             _telegraph = on;
             if (_body == null) return;
+            if (on) { _body.color = new Color(1f, 0.86f, 0.35f, 1f); return; }
+            if (_flashTimer <= 0f) _body.color = Color.white;
+        }
+
+        /// <summary>
+        /// 예고 자세. 예고가 도는 **동안 내내** 켜 두고 끝날 때 한 번 되돌린다.
+        ///
+        /// 예고 그림은 방향이 없는 한 장(`unit_{키}_s_tell`)이라, 켜 두면 예고 동안
+        /// 정면을 본다 — 「지금 힘을 모으는 중」으로 읽히므로 그것이 맞다.
+        /// 문제는 그 자세와 방향 자세를 **번갈아** 보여 준 것이었다.
+        /// </summary>
+        public void SetTellPose(bool on)
+        {
+            if (_body == null || _tellSprite == null) return;
 
             if (on)
             {
-                _body.color = new Color(1f, 0.86f, 0.35f, 1f);
                 // ⚠ 되돌릴 그림을 **켤 때** 기억한다. 끌 때 정하면 이미 예고 그림이라
                 //   예고 그림으로 되돌아가 영영 안 풀린다.
-                if (_tellSprite != null && _body.sprite != _tellSprite)
+                if (_body.sprite != _tellSprite)
                 {
                     _tellRestore = _body.sprite;
                     _body.sprite = _tellSprite;
                 }
                 return;
             }
-
-            if (_flashTimer <= 0f) _body.color = Color.white;
             if (_tellRestore != null) { _body.sprite = _tellRestore; _tellRestore = null; }
         }
 
