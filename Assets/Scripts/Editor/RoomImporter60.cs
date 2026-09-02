@@ -228,6 +228,13 @@ namespace Game.EditorTools
             exits.ClearArray();
             if (index + 1 >= defs.Length) return;
 
+            // ⚠ **보스 방(010)에는 출구가 없다.** `RoomEntry.IsChapterEnd` 가
+            //   「출구가 없는 방」으로 챕터의 끝을 판단하기 때문이다.
+            //   여기서 다음 챕터 001 로 이어 버리면 한 판에 60방을 내리 돌게 되고
+            //   챕터가 영영 안 오른다 — 실제로 그렇게 이어 놨었다.
+            //   챕터를 넘기는 것은 방 출구가 아니라 **보스를 잡은 결과**다.
+            if (defs[index].No == "010") return;
+
             var next = defs[index + 1];
             exits.InsertArrayElementAtIndex(0);
             var x = exits.GetArrayElementAtIndex(0);

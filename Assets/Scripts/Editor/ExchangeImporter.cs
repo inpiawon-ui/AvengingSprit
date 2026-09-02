@@ -132,17 +132,6 @@ namespace Game.EditorTools
             //   (`roomfloor_python` 때와 같다 — 아래 참조).
             if (name == "unit_crusher_s") return true;
 
-            // 62차 크러셔 `ne` 는 **각도가 반대쪽**이다.
-            //
-            // 이 프로젝트의 5방향은 `s → n` 으로 갈수록 얼굴이 사라진다
-            // (`baseball` 등 5방향이 다 있는 배우로 확인). 즉 `ne` 는 **3/4 뒷모습**인데,
-            // 납품본은 파란 창 둘이 정면을 보고 있어 사실상 `se` 와 같은 각도다.
-            //
-            // `n`(정후면)은 통과해서 안 막는다 — 회색 뒷면·경고등·위험줄만 남았다.
-            //
-            // ⚠ `ne` 를 다시 받으면 이 줄을 지운다.
-            if (name == "unit_crusher_ne") return true;
-
             // 방 바닥은 `BundleResource/RoomFloor/` 가 정본이다. `BaseResource` 쪽 사본은
             // 아틀라스에 들어가 자리만 먹었다.
             //

@@ -435,8 +435,18 @@ namespace Game.Module.InGame
         /// 이 챕터의 첫 방. 정본 v3.3 은 챕터마다 `ROOM_CH{n}_001` 로 시작한다.
         /// (예전 34방 체계는 `CH1_N01` 이었다 — ID 가 통째로 바뀌었다.)
         /// </summary>
+        /// <summary>
+        /// 이번 판이 시작하는 방.
+        ///
+        /// ⚠ 한때 챕터를 **1~3 으로 잘랐다.** 방이 3챕터뿐이던 시절의 값인데,
+        ///   6챕터가 되면서 CH4~6 을 고른 플레이어가 CH3_001 로 떨어졌다 —
+        ///   **챕터 4·5·6 의 보스에 도달할 방법이 아예 없었다.**
+        /// </summary>
         private string FirstCanonRoom
-            => $"ROOM_CH{Mathf.Clamp(_player != null && _player.IsReady ? _player.CurrentChapter : 1, 1, 3)}_001";
+            => $"ROOM_CH{Mathf.Clamp(_player != null && _player.IsReady ? _player.CurrentChapter : 1, 1, ChapterCount)}_001";
+
+        /// <summary>챕터 수. 정본 6챕터.</summary>
+        private const int ChapterCount = 6;
 
         private RoomTable _rooms;
         private EventTable _eventTable;
