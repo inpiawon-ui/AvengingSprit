@@ -110,6 +110,15 @@ namespace Game.Module.InGame
         /// </summary>
         [SerializeField] private string _midBossKey;
 
+        /// <summary>
+        /// 이 방이 깔 바닥. 배정표가 방마다 지정한다(`roomfloor_env_junkyard` 등).
+        ///
+        /// ⚠ 예전에는 코드가 **챕터로 유추**했다(`FloorKeyOf`). 3챕터일 때는 그럭저럭
+        ///   맞았지만 6챕터가 되면서 챕터가 1~3 으로 잘려 CH4~6 이 CH3 바닥을 받는다.
+        ///   유추가 배정표를 이길 수 없다 — 적혀 있으면 그것을 쓴다.
+        /// </summary>
+        [SerializeField] private string _floor;
+
         [Header("이벤트 (방 004 · 007)")]
         /// <summary>
         /// 이 이벤트 방이 뽑는 풀. `BODY`(004) 또는 `STAKE`(007).
@@ -181,6 +190,9 @@ namespace Game.Module.InGame
 
         /// <summary>중간 보스 대장의 호스트 키. 없으면 빈 문자열.</summary>
         public string MidBossKey => _midBossKey;
+
+        /// <summary>배정표가 정한 바닥. 비어 있으면 코드가 챕터로 유추한다.</summary>
+        public string Floor => _floor;
 
         /// <summary>중간 보스 방인가 (방 005).</summary>
         public bool IsMidBoss => !string.IsNullOrEmpty(_midBossKey);

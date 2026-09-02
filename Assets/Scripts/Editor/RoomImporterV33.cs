@@ -540,6 +540,13 @@ namespace Game.EditorTools
         ///   절차 생성 시절에는 좌표를 코드가 만들었으니 검사가 필요했지만,
         ///   지금은 사람이 정한 값이 들어온다.
         /// </summary>
+        /// <summary>
+        /// 60방 임포터가 같은 규칙으로 지형지물을 굽도록 열어 둔다.
+        /// 규격·차단·해저드를 두 곳에 적으면 두 임포터가 서로 다른 방을 굽는다.
+        /// </summary>
+        internal static void WriteObjectPublic(SerializedProperty objs, int n, RoomLayoutTable.Obj src)
+            => WriteObject(objs, n, src);
+
         private static void WriteObject(SerializedProperty objs, int n, RoomLayoutTable.Obj src)
         {
             objs.InsertArrayElementAtIndex(n);

@@ -4235,9 +4235,15 @@ namespace Game.Module.InGame
                         ? BossEnvOf(BossSlug(_canonRoom.BossId))
                         : floorKey.StartsWith(EnvPrefix) ? floorKey.Substring(EnvPrefix.Length) : string.Empty;
 
-            // 보스 전용 바닥이 없으면 공용 아레나로 떨어진다 — 보스방만 회색 격자 위에서
-            // 싸우는 일이 없도록. 일반 방은 떨어질 곳이 따로 없다.
-            string fallback = _canonRoom != null && _canonRoom.IsBoss ? BossArenaFloor : null;
+            // 못 찾은 바닥이 있을 때 떨어질 곳.
+            //   보스방  → 공용 아레나. 보스만 회색 격자 위에서 싸우는 일이 없도록
+            //   일반 방 → 통과한 배경 한 장(`InterimRoomFloor`)
+            //
+            // ⚠ 일반 방에도 대비책이 필요해졌다. 60방 배정이 CH5 에 `roomfloor_env_lab`
+            //   (연구소)를 쓰는데 **그 그림이 아직 없다**(8개 방). 대비책이 없으면
+            //   그 여덟 방이 지난 방 바닥을 그대로 달고 다닌다.
+            //   `InterimRoomFloor` 도 연구소 배경이라 자리는 맞는다 — 그림이 오면 자동으로 이긴다.
+            string fallback = _canonRoom != null && _canonRoom.IsBoss ? BossArenaFloor : InterimRoomFloor;
             LoadRoomFloorAsync(floorKey, fallback).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
         }
 
@@ -4343,6 +4349,11 @@ namespace Game.Module.InGame
         private static string FloorKeyOf(RoomEntry room, int fallbackChapter)
         {
             if (room == null) return InterimRoomFloor;
+
+            // ⚠ **배정표가 적어 뒀으면 그것이 이긴다.** 아래 유추는 3챕터 시절 것이라
+            //   챕터를 1~3 으로 자른다 — 6챕터에서는 CH4~6 이 CH3 바닥을 받는다.
+            //   배정표가 없는 방(절차 생성)만 유추로 내려간다.
+            if (!string.IsNullOrEmpty(room.Floor)) return room.Floor;
 
             // 보스는 챕터와 무관하게 **제 전용 바닥**으로 간다. 무게가 다른 자리다.
             //
