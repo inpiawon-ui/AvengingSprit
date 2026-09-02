@@ -72,27 +72,30 @@ namespace Game.EditorTools
                     State = "", BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
                     Moves = new Move[]
                     {
-                        // 기획 2026-09-02 — 미사일 한 번 쏘는 것, 쿨 5초
+                        // ⚠ 기획 2026-09-02(2차) — 크러셔는 이 셋만 쓴다.
+                        //   압착은 뺐다(반경만 미사일이 물려받는다). 방패 전개도 뺐다.
+                        //   예고는 셋 다 **1초**다 — 알람 뒤 1초에 터진다.
+
+                        // 미사일 한 발이 내 자리에 떨어진다. 반경은 압착이 쓰던 2.5 m.
                         new() { Phase = 1, NameKr = "미사일", NameEn = "Missile",
-                                Cooldown = 5f, Telegraph = 0.9f, DamageMul = 1.0f,
+                                Cooldown = 5f, Telegraph = 1.0f, DamageMul = 1.0f,
                                 Shape = "Zone", Draw = "MissileSalvo", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 1.2f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 2.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 1,
                                 SafeX = 0f, SafeY = 0f },
-                        // 출처 — 아치형 입의 격자판이 자기 앞 반경 2.5 m · 정면 180° 를 내려찍는다
-                        new() { Phase = 1, NameKr = "압착", NameEn = "Crush",
-                                Cooldown = 8f, Telegraph = 1.25f, DamageMul = 0.94f,
-                                Shape = "Arc", Draw = "Crush", Dodge = "BACK",
-                                Degrees = 180f, Radius = 2.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                        // 쇠사슬 파괴구가 제 둘레를 돈다. **안쪽이 안전하다** — 파고들어야 산다.
+                        new() { Phase = 1, NameKr = "쇠사슬 파괴구", NameEn = "WreckingBall",
+                                Cooldown = 8f, Telegraph = 1.0f, DamageMul = 0.94f,
+                                Shape = "Zone", Draw = "WreckingBall", Dodge = "CLOSE",
+                                Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,
+                                InnerRadius = 1.6f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f },
-                        // 기획 2026-09-02 — 당기는 것, 쿨 20초. 벨트 자체는 정본 그대로다
-                        // (바닥 세 줄 중 두 줄 · 초당 1.5 m · 12초)
-                        new() { Phase = 1, NameKr = "컨베이어 가동", NameEn = "Conveyor",
-                                Cooldown = 20f, Telegraph = 1.1f, DamageMul = 0.72f,
-                                Shape = "Lane", Draw = "Conveyor", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 0f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
+                        // 나에게 붉은 줄을 긋고 그 줄을 타고 밀고 들어온다. 그리고 한 발 더.
+                        new() { Phase = 1, NameKr = "돌진", NameEn = "RamCharge",
+                                Cooldown = 20f, Telegraph = 1.0f, DamageMul = 1.0f,
+                                Shape = "Line", Draw = "RamCharge", Dodge = "PERP",
+                                Degrees = 0f, Radius = 0f, Width = 2.0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f },
                     } },
 

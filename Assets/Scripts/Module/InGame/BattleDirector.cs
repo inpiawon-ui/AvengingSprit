@@ -2727,7 +2727,6 @@ namespace Game.Module.InGame
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
             TickMidBoss(dt);       // 부하가 다 죽으면 대장이 3초 굳는다
             TickBossPresence(dt);
-            TickConveyor(dt);      // 벨트는 패턴이 끝난 뒤에도 12초 더 돈다
             TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
             TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
             TickBossMinions(dt);
@@ -3699,7 +3698,10 @@ namespace Game.Module.InGame
             // 돌진 중에는 다른 행동을 하지 않는다. 접촉하면 피해를 주고 멈춘다.
             if (_brain.ChargeLeft > 0f)
             {
-                boss.Position += _brain.ChargeDir * (boss.MoveSpeed * ChargeSpeedMul) * dt;
+                // ⚠ 방 안에 붙들어 둔다. 그냥 더하면 보스가 벽을 뚫고 나가 화면 밖에서
+                //   패턴을 계속 돌린다 — 무엇에 맞는지 알 수 없게 된다.
+                boss.Position = ClampedInField(
+                    boss, boss.Position + _brain.ChargeDir * (boss.MoveSpeed * ChargeSpeedMul) * dt);
                 // 유령은 보스 돌진도 통과한다. 여기서 멈춰 세우면 유령을 벽 삼아
                 // 보스를 세울 수 있게 되어, 맞지도 않는 몸이 방패가 된다.
                 // 보스 **몸이 스치면** 맞는다. 중심까지 54px 을 요구하면 보스가 나를

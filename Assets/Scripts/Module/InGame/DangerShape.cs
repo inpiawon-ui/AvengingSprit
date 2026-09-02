@@ -470,6 +470,15 @@ namespace Game.Module.InGame
                     s.GapDegrees = 0f;          // 틈 없이 한 바퀴 — 빠질 곳은 안쪽뿐이다
                     break;
 
+                // 나에게 줄을 긋고 그 줄을 타고 밀고 들어온다.
+                // ⚠ 길이는 **적어도 나까지**다. 표에 적힌 길이가 짧으면 줄이 나에게
+                //   닿기도 전에 끊겨, 보스가 줄 밖으로 튀어나오는 것처럼 보인다.
+                case BossDraw.RamCharge:
+                    s.Shape = Kind.Band;
+                    s.Width = Mathf.Max(1f, W);
+                    s.Length = Mathf.Max(Mathf.Max(px, L), toPlayer + px);
+                    break;
+
                 // 바닥 세 줄 중 둘이 흐른다. 멈춘 줄로 옮겨야 한다.
                 case BossDraw.Conveyor:
                 {
@@ -555,7 +564,9 @@ namespace Game.Module.InGame
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
                     s.Layout = Spread.Fan;
-                    s.Count = Mathf.Max(2, m.Lanes);
+                    // ⚠ 하나도 허용한다. 예전 하한 2 는 「미사일 한 발」을 적을 수 없게 했다 —
+                    //   1 을 넣어도 2발이 떨어졌다. 하나면 부채꼴 한가운데, 곧 내 자리다.
+                    s.Count = Mathf.Max(1, m.Lanes);
                     s.Degrees = 60f;
                     s.Length = Mathf.Max(px, toPlayer);   // 플레이어 거리에 흩뿌린다
                     break;

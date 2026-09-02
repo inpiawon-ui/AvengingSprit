@@ -285,12 +285,19 @@ namespace Game.Module.InGame
                     QueueFollowUp(BossDraw.Crush, ShieldSlamCount);
                     break;
 
-                // 바닥 세 줄 중 두 줄이 보스 쪽으로 흐른다 · 초당 1.5 m · 12초
-                case BossDraw.Conveyor:
-                    // ⚠ **예고 때 그린 그 도형을 그대로 들고 간다.** 다시 만들면
-                    //   "빨간 줄 위에 있는데 안 끌린다" 가 생긴다.
-                    _conveyor = _danger;
-                    _conveyorLeft = ConveyorSeconds;
+                // 그어 둔 줄을 타고 밀고 들어온다 · 그리고 곧바로 한 번 더 친다
+                case BossDraw.RamCharge:
+                    // ⚠ **예고 때 그린 그 방향으로 간다.** 지금 내 자리를 다시 물으면
+                    //   "줄은 저기 그려졌는데 보스는 이리로 온다" 가 된다.
+                    _chargeDamageMul = m.DamageMul;
+                    // ⚠ 시간이 아니라 **그려 둔 줄의 길이**로 정한다.
+                    //   고정 0.9초로 뒀더니 70px/s × 5.5 = 385px/s 라 584px 짜리 줄의
+                    //   60% 에서 멈췄다 — 화면에서는 "가다 말았다" 로 보인다.
+                    //   줄 끝까지 가야 그린 것과 간 것이 같아진다.
+                    float rammed = Mathf.Max(1f, boss.MoveSpeed * ChargeSpeedMul);
+                    _brain.BeginCharge(_danger.Dir, Mathf.Clamp(_danger.Length / rammed, 0.3f, 3f));
+                    // 「이동하고 또 공격」 — 밀고 들어온 자리에서 한 발 쏜다.
+                    QueueFollowUp(BossDraw.MissileSalvo, 1);
                     break;
 
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
@@ -363,40 +370,11 @@ namespace Game.Module.InGame
             return null;
         }
 
-        // ── 컨베이어 ─────────────────────────────────────────────
-        //
-        // 피해를 주는 층이 아니라 **설 자리를 빼앗는 층**이다.
-        // 정본이 「흐르는 동안 다른 패턴이 겹친다」고 적어 둔 것이 이 뜻이다 —
-        // 끌려가는 채로 압착을 피해야 한다.
+        // ⚠ 컨베이어(끌어당기는 벨트)는 **없앴다.** 기획 2026-09-02 에서
+        //   크러셔의 세 번째 패턴이 「나에게 줄을 긋고 그 줄을 타고 밀고 들어온다」로
+        //   바뀌었다. 벨트를 남겨 두면 쓰지도 않는 12초짜리 상태가 매 방 돌아간다.
 
-        private const float ConveyorSeconds = 12f;
-        private const float ConveyorMetersPerSecond = 1.5f;
         private const float PuddleSeconds = 4f;
-
-        private DangerShape _conveyor;
-        private float _conveyorLeft;
-
-        private void TickConveyor(float dt)
-        {
-            if (_conveyorLeft <= 0f) return;
-            _conveyorLeft -= dt;
-            if (_conveyorLeft <= 0f) { _conveyor = default; return; }
-
-            var me = Avatar;
-            if (me == null || _boss == null) return;
-            if (!_conveyor.Contains(me.Position, _roomSize)) return;   // 멈춘 줄에 있으면 안 끌린다
-
-            var toBoss = _boss.Position - me.Position;
-            if (toBoss.sqrMagnitude < 1f) return;
-
-            var step = toBoss.normalized * (ConveyorMetersPerSecond * _pxPerMeter * dt);
-            var p = me.Position + step;
-            // 벨트가 벽 속으로 밀어 넣지는 않는다.
-            float edge = _pxPerMeter * 0.5f;
-            p.x = Mathf.Clamp(p.x, edge, _roomSize.x - edge);
-            p.y = Mathf.Clamp(p.y, -_roomSize.y + edge, -edge);
-            me.Position = p;
-        }
 
         // ── 방패판 ───────────────────────────────────────────────
         //
@@ -707,7 +685,7 @@ namespace Game.Module.InGame
             string fx = m.Draw switch
             {
                 BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
-                    or BossDraw.BoosterDrop or BossDraw.Emerge => "slam",
+                    or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge => "slam",
                 BossDraw.VenomCloud or BossDraw.Spit
                     or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
                 BossDraw.Conveyor or BossDraw.SegmentLaunch

@@ -91,6 +91,7 @@ namespace Game.Character
         WreckingBall,    // 쇠사슬 파괴구 — 원 궤도. 안쪽이 안전하다
         Conveyor,        // 컨베이어 가동 — 바닥 세 줄 중 둘이 흐른다
         ShieldUp,        // 방패 전개 — 정면을 막고 압착을 두 번
+        RamCharge,       // 돌진 — 나에게 붉은 줄을 긋고 그 줄을 타고 밀고 들어온다
 
         // ── B02 가디언 — 마디를 하나씩 끊어라 ───────────────────
         SegmentThrust,   // 마디 돌진 — 길이가 남은 마디 수를 따른다
