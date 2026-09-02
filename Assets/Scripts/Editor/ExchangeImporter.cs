@@ -132,16 +132,16 @@ namespace Game.EditorTools
             //   (`roomfloor_python` 때와 같다 — 아래 참조).
             if (name == "unit_crusher_s") return true;
 
-            // 62차 크러셔 방향 두 장(`ne`·`n`)도 **그 폐기본을 보고 그렸다.**
-            // 색 구성을 재면 폐기본과 같은 계열이고 정본 정면과 다르다:
-            //   현재 정면 s   주황 17.9% · 파랑 11.0%
-            //   폐기 61차 s   주황 14.8% · 파랑  4.8%
-            //   납품 ne       주황 14.5% · 파랑  4.9%   ← 폐기본 쪽이다
-            //   납품 n        주황 14.4% · 파랑  0.1%
-            // 이대로 넣으면 보스가 **돌 때마다 다른 기계로 변한다.**
+            // 62차 크러셔 `ne` 는 **각도가 반대쪽**이다.
             //
-            // ⚠ 정면 기준으로 다시 받으면 이 두 줄을 지운다.
-            if (name == "unit_crusher_ne" || name == "unit_crusher_n") return true;
+            // 이 프로젝트의 5방향은 `s → n` 으로 갈수록 얼굴이 사라진다
+            // (`baseball` 등 5방향이 다 있는 배우로 확인). 즉 `ne` 는 **3/4 뒷모습**인데,
+            // 납품본은 파란 창 둘이 정면을 보고 있어 사실상 `se` 와 같은 각도다.
+            //
+            // `n`(정후면)은 통과해서 안 막는다 — 회색 뒷면·경고등·위험줄만 남았다.
+            //
+            // ⚠ `ne` 를 다시 받으면 이 줄을 지운다.
+            if (name == "unit_crusher_ne") return true;
 
             // 방 바닥은 `BundleResource/RoomFloor/` 가 정본이다. `BaseResource` 쪽 사본은
             // 아틀라스에 들어가 자리만 먹었다.
@@ -151,7 +151,9 @@ namespace Game.EditorTools
             //   58차에서 720×936 으로 다시 받으면서 **그 두 장이 정본이 됐다.**
             //   규칙을 남겨 두면 새 정본이 영영 안 들어온다 — 실제로 4장만 반영됐다.
             //   막는 이유가 사라지면 규칙도 같이 지운다.
-            if (name == "roomfloor_demolisher.png" || name == "roomfloor.png") return true;
+            // ⚠ 위에서 확장자를 벗기므로 여기도 확장자 없이 비교한다.
+            //   `.png` 를 붙여 두면 영영 안 걸린다 — 실제로 한동안 죽어 있었다.
+            if (name == "roomfloor_demolisher" || name == "roomfloor") return true;
 
             // 컨셉 시안은 **고를 때 보는 그림**이지 게임 에셋이 아니다.
             // 고른 것은 `roomfloor_env_*` 로 따로 들어간다.

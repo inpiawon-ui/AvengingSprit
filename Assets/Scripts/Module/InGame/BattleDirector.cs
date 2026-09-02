@@ -525,8 +525,14 @@ namespace Game.Module.InGame
             //
             // 그래서 아래 두 값 사이로 조인다. 부족하면 승격하고, 넘치면 잡몹으로 돌린다.
             _hostSlots.Clear();
-            for (int i = 0; i < spawns.Count; i++)
-                if (spawns[i].IsPossessionTarget) _hostSlots.Add(i);
+            // ⚠ 중간 보스 방은 **부하가 전부 몸**이다.
+            //   정본: "대장은 못 뺏고 부하는 뺏을 수 있으니, 부하를 빼앗아 대장을 치는
+            //   전투가 된다." 여기서 한 자리라도 잡몹으로 돌리면 그 구조가 무너진다.
+            if (room.IsMidBoss)
+                for (int i = 0; i < spawns.Count; i++) _hostSlots.Add(i);
+            else
+                for (int i = 0; i < spawns.Count; i++)
+                    if (spawns[i].IsPossessionTarget) _hostSlots.Add(i);
 
             if (_hostSlots.Count == 0)
             {
@@ -541,7 +547,7 @@ namespace Game.Module.InGame
                 }
                 if (at >= 0) _hostSlots.Add(at);
             }
-            else while (_hostSlots.Count > MaxHostsPerWave)
+            else while (!room.IsMidBoss && _hostSlots.Count > MaxHostsPerWave)
             {
                 // 강등 — 우선순위가 가장 낮은 자리부터 잡몹으로 돌린다.
                 int worst = 0, worstPri = int.MaxValue;
@@ -616,6 +622,7 @@ namespace Game.Module.InGame
                 _enemies.Add(u);
             }
             EnsureHostBodies();
+            SpawnMidBoss(room, hosts);
 
             // 방마다 무엇이 섰는지 한 줄로 남긴다. "적용이 안 된 것 같다" 는 말을
             // 추측으로 되받지 않으려면, 화면 대신 콘솔이 답하게 해야 한다.
@@ -2660,6 +2667,7 @@ namespace Game.Module.InGame
             TickSkillEffect(dt);
             TickBreak(dt);
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
+            TickMidBoss(dt);       // 부하가 다 죽으면 대장이 3초 굳는다
             TickBossPresence(dt);
             TickConveyor(dt);      // 벨트는 패턴이 끝난 뒤에도 12초 더 돈다
             TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
@@ -3185,6 +3193,10 @@ namespace Game.Module.InGame
                 //   기준점은 `Avatar` 다 — 몸이 있으면 그 몸, 없으면 유령.
                 //   보스는 "지금 내가 서 있는 자리" 를 겨눈다.
                 if (e.IsBoss) { TickBoss(e, Avatar, dt); continue; }
+
+                // 부하를 다 잃은 대장은 3초 굳는다. 이 방의 유일한 취약 창이라
+                // 여기서 계속 때리면 창이 창이 아니게 된다.
+                if (e == _midBoss && IsMidBossStunned) { e.SetMoving(false); continue; }
 
                 // ⚠ **몸이 없으면 아무도 유령을 표적으로 잡지 않는다.**
                 if (_host == null)
