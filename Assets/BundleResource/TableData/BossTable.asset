@@ -82,13 +82,13 @@ MonoBehaviour:
       _spreadDegrees: 120
       _damageMul: 0.94
       _telegraphSeconds: 1
-      _nameKr: "\uC555\uCC29"
-      _nameEn: Crush
+      _nameKr: "\uBD80\uCC44\uAF34 \uC0AC\uACA9"
+      _nameEn: FanShot
       _shape: 0
       _draw: 1
       _dodge: 1
       _degrees: 120
-      _radiusMeters: 5.5
+      _radiusMeters: 2.5
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0

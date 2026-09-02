@@ -306,6 +306,20 @@ namespace Game.Module.InGame
                     QueueFollowUp(BossDraw.MissileSalvo, 1);
                     break;
 
+                // 부채꼴로 **진짜 탄**을 쏜다. 탄은 방 끝까지 날아간다.
+                //
+                // ⚠ 겨눈 방향은 **예고 때 굳힌 그 방향**이다(`_danger.Dir`).
+                //   여기서 지금 내 자리를 다시 물으면 "부채꼴은 저기 그려졌는데
+                //   탄은 이리로 온다" 가 된다.
+                case BossDraw.Crush:
+                {
+                    int dmg = Mathf.Max(1, Mathf.RoundToInt(boss.Atk * m.DamageMul));
+                    float deg = _danger.Degrees > 0f ? _danger.Degrees : 120f;
+                    var aimAt = boss.Position + _danger.Dir * (_roomSize.magnitude);
+                    FireFan(boss, aimAt, FanShotCount(deg), deg, dmg);
+                    break;
+                }
+
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
                 case BossDraw.Spit:
                     SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
@@ -680,7 +694,7 @@ namespace Game.Module.InGame
             // ⚠ 판정은 **그린 것과 같은 함수**다. 여기서 반경을 조금 키우거나
             //   "관대하게" 만들지 마라 — 그 순간 그림과 판정이 갈라진다.
             bool playerHit = me != null && _danger.Contains(me.Position, _roomSize);
-            if (playerHit) DamagePlayer(dmg);
+            if (playerHit && ShapeHurts(m.Draw)) DamagePlayer(dmg);
 
             // 「마디 사출」로 굴러간 마디는 잡몹도 친다 — 방을 굴러다니는 물건이라
             // 누구 편인지 가리지 않는다. 이 게임에서 보스 공격이 적을 맞히는 유일한 자리다.
@@ -724,12 +738,12 @@ namespace Game.Module.InGame
 
         private const float MissileArcRatio = 0.22f;   // 포물선 높이 = 거리 x 이 값
 
-        /// <summary>
-        /// 부채꼴을 몇 발로 채우는가 — 이 각도마다 한 발.
-        /// 30도였을 때 120도 부채꼴이 5발이라 **면이 아니라 선 다섯 개**로 보였다.
-        /// 15도면 9발이라 면이 채워진다.
-        /// </summary>
+        /// <summary>부채꼴을 몇 발로 채우는가 — 이 각도마다 한 발. 120도면 9발.</summary>
         private const float WedgeShotSpacingDeg = 15f;
+
+        /// <summary>이 부채꼴을 몇 발로 쏘는가.</summary>
+        private static int FanShotCount(float degrees)
+            => Mathf.Clamp(Mathf.RoundToInt(degrees / WedgeShotSpacingDeg) + 1, 2, 16);
 
         /// <summary>한 번에 띄우는 탄의 상한. 넘치면 화면이 탄으로 덮인다.</summary>
         private const int MaxFlight = 16;
@@ -768,24 +782,9 @@ namespace Game.Module.InGame
                         _flightTargets.Add(_danger.PieceAt(i, _roomSize));
                     break;
 
-                // 부채꼴은 **면**이다. 탄 하나로는 그 면이 안 채워진다 —
-                // 부채꼴 각도를 따라 촘촘히 뿌려 면을 탄으로 덮는다.
-                case BossDraw.Crush:
-                case BossDraw.ShieldUp:
-                {
-                    float deg = _danger.Degrees > 0f ? _danger.Degrees : 180f;
-                    int n = Mathf.Clamp(Mathf.RoundToInt(deg / WedgeShotSpacingDeg) + 1, 2, MaxFlight);
-                    float half = deg * 0.5f;
-                    var d = _danger.Dir;
-                    for (int i = 0; i < n; i++)
-                    {
-                        float a = Mathf.Lerp(-half, half, (float)i / (n - 1)) * Mathf.Deg2Rad;
-                        var rot = new Vector2(d.x * Mathf.Cos(a) - d.y * Mathf.Sin(a),
-                                              d.x * Mathf.Sin(a) + d.y * Mathf.Cos(a));
-                        _flightTargets.Add(_danger.Origin + rot * _danger.Radius);
-                    }
-                    break;
-                }
+                // ⚠ 부채꼴(압착)은 여기 없다. **진짜 탄이 나간다** —
+                //   `ApplyMoveEffect` 의 `FireFan` 이 방 끝까지 날아가는 탄을 쏜다.
+                //   장식 탄은 도착하면 사라지므로 화면 밖으로 못 나간다.
             }
         }
 
@@ -896,6 +895,17 @@ namespace Game.Module.InGame
 
             if (_flightLeft <= 0f) EndFlight();
         }
+
+        /// <summary>
+        /// 이 패턴은 **도형 자체가 때리는가**.
+        ///
+        /// ⚠ R1(그린 것이 곧 맞는 것)의 **유일한 예외**다. 부채꼴 사격은 도형이
+        ///   피해 범위가 아니라 **겨냥 표시**다 — 탄은 부채꼴을 지나 화면 밖까지 간다.
+        ///   그래서 도형으로 한 번, 탄으로 또 한 번 때리면 두 대 맞는다.
+        ///   때리는 것은 탄 하나뿐이고, 부채꼴은 "저쪽으로 간다" 를 말할 뿐이다.
+        ///   (기획 2026-09-02 — "부채꼴은 저 방향으로 나간다고만 알려주면 돼")
+        /// </summary>
+        private static bool ShapeHurts(BossDraw draw) => draw != BossDraw.Crush;
 
         /// <summary>도형이 터진 자리에 표시를 남긴다. 무엇이 지나갔는지 보여야 한다.</summary>
         private void PlayDangerImpact(BossMove m)

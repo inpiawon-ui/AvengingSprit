@@ -100,18 +100,16 @@ namespace Game.EditorTools
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "NEAR", RangeMeters = 4f, Group = 0 },
 
-                        // 아치형 입이 앞을 부채꼴로 내려찍는다. 탄이 그 면을 채우며 날아간다.
+                        // 부채꼴로 탄을 쏜다. **부채꼴은 겨냥 표시일 뿐이고** 탄은
+                        // 그 방향으로 방 끝까지 날아간다(기획 2026-09-02 5차).
                         //
-                        // ⚠ **180° × 2.5 m 에서 120° × 5.5 m 로 바꿨다.**
-                        //   이 패턴은 이제 「4 m 밖에서 쓴다」인데, 반경 2.5 m 로는
-                        //   조건이 맞는 순간 이미 사거리 밖이라 **한 번도 못 맞힌다.**
-                        //   게다가 2.5 m = 180 px 인데 보스 몸 반지름이 115 px 이라
-                        //   탄이 몸에서 나오자마자 끝났다 — "끝까지 안 날아간다" 가 이것이다.
-                        //   각도를 좁혀 면적은 지키고 길이만 늘렸다. 옆으로 빠지면 산다.
-                        new() { Phase = 1, NameKr = "압착", NameEn = "Crush",
+                        // ⚠ 그래서 반경을 다시 2.5 m 로 줄였다. 이 도형은 피해 범위가
+                        //   아니라 "저쪽으로 쏜다" 는 표시라 클 이유가 없다.
+                        //   때리는 것은 탄뿐이다(`ShapeHurts` 참조).
+                        new() { Phase = 1, NameKr = "부채꼴 사격", NameEn = "FanShot",
                                 Cooldown = 3f, Telegraph = 1.0f, DamageMul = 0.94f,
                                 Shape = "Arc", Draw = "Crush", Dodge = "SIDE",
-                                Degrees = 120f, Radius = 5.5f, Width = 0f, Length = 0f,
+                                Degrees = 120f, Radius = 2.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "FAR", RangeMeters = 4f, Group = 1 },
