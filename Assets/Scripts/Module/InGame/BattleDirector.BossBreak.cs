@@ -365,9 +365,35 @@ namespace Game.Module.InGame
 
         private float _minionRefillLeft;
 
+        /// <summary>
+        /// 이 보스 방에 빼앗을 몸이 계속 나와야 하는가.
+        ///
+        /// 숨는 보스 셋(파이썬·로봇스네이크·슬러지)은 **보스를 못 때리는 동안** 할 일이
+        /// 있어야 해서 몸이 나온다. 크러셔는 다른 이유다 —
+        /// 정본이 「컨베이어가 멈추면 딸려 오던 잡몹이 그 자리에 선다 · **그때 빼앗는다**」
+        /// 라고 적어 두었다. 벨트가 실어 나르는 것이 곧 몸이다.
+        ///
+        /// ⚠ 이것이 없으면 크러셔 방에 **빼앗을 몸이 하나도 없다.** 원작 보스 여섯이
+        ///   전부 빙의 불가라, 몸이 안 나오면 첫 보스방에서 코어 루프가 통째로 끊긴다.
+        /// </summary>
+        private bool WantsMinions
+        {
+            get
+            {
+                if (HidesAway) return true;
+                var def = _brain != null ? _brain.Entry : null;
+                if (def == null) return false;
+                // 컨베이어를 가진 보스 — 지금은 크러셔뿐이다.
+                // 이름을 적지 않고 **패턴으로** 판단한다. 벨트가 있으면 실어 나른다.
+                for (int i = 0; i < def.Moves.Count; i++)
+                    if (def.Moves[i].Draw == BossDraw.Conveyor) return true;
+                return false;
+            }
+        }
+
         private void TickBossMinions(float dt)
         {
-            if (_boss == null || !_boss.IsAlive || !HidesAway) return;
+            if (_boss == null || !_boss.IsAlive || !WantsMinions) return;
 
             int alive = 0;
             for (int i = 0; i < _enemies.Count; i++)

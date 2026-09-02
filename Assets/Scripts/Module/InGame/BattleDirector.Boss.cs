@@ -274,6 +274,12 @@ namespace Game.Module.InGame
                     // 없애 놓고도 내려찍기는 그대로 온다 — 산 것은 깨는 수단이지 안전이 아니다.
                     if (_bossShieldBreak) { _bossShieldBreak = false; _bossShield = 0f; }
                     else _bossShield = ShieldSeconds;
+
+                    // ⚠ 정본은 「4초간 정면 120° 피해 90% 감소 **+ 그동안 압착을 연달아 두 번**」이다.
+                    //   방어막만 걸면 이 구간이 **그냥 버티는 시간**이 된다 — 때려도 안 들어가는데
+                    //   맞을 일도 없으니 플레이어가 할 일이 없어진다.
+                    //   압착이 따라와야 "등 뒤로 돌아라" 가 지시가 된다.
+                    QueueFollowUp(BossDraw.Crush, ShieldSlamCount);
                     break;
 
                 // 바닥 세 줄 중 두 줄이 보스 쪽으로 흐른다 · 초당 1.5 m · 12초
@@ -290,6 +296,68 @@ namespace Game.Module.InGame
                                PuddleSeconds, FieldEffect.Slow, 0, fromPlayer: false);
                     break;
             }
+        }
+
+        // ── 이어지는 타격 ────────────────────────────────────────
+        //
+        // 패턴 하나가 **다른 패턴을 불러오는** 경우가 있다.
+        // 지금은 방패 전개가 압착을 두 번 부른다(정본 크러셔 P3).
+        //
+        // ⚠ 두뇌의 쿨다운을 건드리지 않는다. 쿨을 당기면 그 패턴의 다음 차례가
+        //   통째로 흐트러져 "왜 압착이 두 배로 오지" 가 된다.
+        //   여기서 **따로 세어 두고** 예고→타격을 한 번 더 돌린다.
+
+        /// <summary>방패 전개가 부르는 압착 횟수. 정본 「연달아 두 번」.</summary>
+        private const int ShieldSlamCount = 2;
+
+        /// <summary>이어지는 타격 사이의 간격. 예고를 읽을 시간은 남겨야 한다.</summary>
+        private const float FollowUpGap = 1.6f;
+
+        private BossDraw _followUpDraw;
+        private int _followUpLeft;
+        private float _followUpTimer;
+
+        private void QueueFollowUp(BossDraw draw, int times)
+        {
+            _followUpDraw = draw;
+            _followUpLeft = times;
+            _followUpTimer = FollowUpGap;
+        }
+
+        private void ClearFollowUp()
+        {
+            _followUpDraw = BossDraw.None;
+            _followUpLeft = 0;
+            _followUpTimer = 0f;
+        }
+
+        /// <summary>
+        /// 예약된 타격을 굴린다. 예고 중이면 기다린다 — 두 도형이 겹치면 못 읽는다.
+        /// </summary>
+        private void TickFollowUp(float dt)
+        {
+            if (_followUpLeft <= 0 || _boss == null || !_boss.IsAlive) return;
+            if (_brain != null && _brain.IsTelegraphing) return;   // 지금 다른 예고가 떠 있다
+
+            _followUpTimer -= dt;
+            if (_followUpTimer > 0f) return;
+
+            var move = MoveOf(_followUpDraw);
+            if (move == null) { ClearFollowUp(); return; }
+
+            _followUpLeft--;
+            _followUpTimer = FollowUpGap;
+            BeginDanger(_boss, Avatar, move);
+        }
+
+        /// <summary>이 보스의 목록에서 그 패턴을 찾는다. 없으면 null.</summary>
+        private BossMove MoveOf(BossDraw draw)
+        {
+            var entry = _brain != null ? _brain.Entry : null;
+            if (entry == null) return null;
+            for (int i = 0; i < entry.Moves.Count; i++)
+                if (entry.Moves[i].Draw == draw) return entry.Moves[i];
+            return null;
         }
 
         // ── 컨베이어 ─────────────────────────────────────────────
