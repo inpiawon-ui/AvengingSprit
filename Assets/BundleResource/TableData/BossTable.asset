@@ -31,7 +31,7 @@ MonoBehaviour:
     _moves:
     - _pattern: 4
       _fromPhase: 1
-      _cooldown: 5
+      _cooldown: 2
       _shotCount: 1
       _spreadDegrees: 0
       _damageMul: 1
@@ -51,7 +51,7 @@ MonoBehaviour:
       _safeAtMeters: {x: 0, y: 0}
     - _pattern: 1
       _fromPhase: 1
-      _cooldown: 8
+      _cooldown: 3
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.94
@@ -69,9 +69,29 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 5
+      _shotCount: 5
+      _spreadDegrees: 180
+      _damageMul: 0.94
+      _telegraphSeconds: 1
+      _nameKr: "\uC555\uCC29"
+      _nameEn: Crush
+      _shape: 0
+      _draw: 1
+      _dodge: 0
+      _degrees: 180
+      _radiusMeters: 2.5
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
     - _pattern: 0
       _fromPhase: 1
-      _cooldown: 20
+      _cooldown: 7
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1
