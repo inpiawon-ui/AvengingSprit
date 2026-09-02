@@ -361,9 +361,14 @@ namespace Game.Module.InGame
         // 「그때 빼앗는다」가 이 세 보스의 취약 창 설명이기도 하다.
 
         private const int BossRoomMinions = 2;
-        private const float MinionRefillSeconds = 8f;
 
-        private float _minionRefillLeft;
+        /// <summary>
+        /// 몸이 오는 보스 체력. 이 아래로 처음 내려갈 때 **한 번씩** 온다.
+        /// 시간제로 계속 채우면 방 내내 몸이 끊이지 않아 긴장이 사라진다.
+        /// </summary>
+        private static readonly float[] MinionWaveAt = { 0.80f, 0.50f, 0.30f };
+        private readonly bool[] _minionWaveDone = new bool[MinionWaveAt.Length];
+
 
         /// <summary>
         /// 이 보스 방에 빼앗을 몸이 계속 나와야 하는가.
@@ -395,17 +400,23 @@ namespace Game.Module.InGame
         {
             if (_boss == null || !_boss.IsAlive || !WantsMinions) return;
 
+            // ⚠ **시간이 아니라 보스 체력으로 부른다.**
+            //   예전에는 8초마다 머릿수를 채웠는데, 그러면 방 내내 몸이 끊이지 않아
+            //   "소환 타이밍이 너무 짧다" 가 된다. 세 번만 온다 — 80% · 50% · 30%.
+            //   보스를 깎는 것이 곧 몸을 부르는 것이라, 언제 오는지 읽을 수 있다.
+            float hp = _boss.HpMax > 0 ? (float)_boss.Hp / _boss.HpMax : 1f;
+            int wave = -1;
+            for (int i = 0; i < MinionWaveAt.Length; i++)
+                if (hp <= MinionWaveAt[i] && !_minionWaveDone[i]) { wave = i; break; }
+            if (wave < 0) return;
+            _minionWaveDone[wave] = true;
+
             int alive = 0;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e != null && e.IsAlive && !e.IsDying && e != _boss) alive++;
             }
-            if (alive >= BossRoomMinions) { _minionRefillLeft = MinionRefillSeconds; return; }
-
-            _minionRefillLeft -= dt;
-            if (_minionRefillLeft > 0f) return;
-            _minionRefillLeft = MinionRefillSeconds;
 
             // ⚠ **호스트 몸이어야 한다.** 잡몹(해골·박쥐)은 아무리 깎아도 못 뺏는다
             //   (`Unit.IsHostBody` — "잡몹은 못 뺏는다").
@@ -432,6 +443,14 @@ namespace Game.Module.InGame
             // 올라온 몸이 하나도 없으면 **세우지 않는다.** 깨진 그림을 세우느니 안 세운다.
             if (profile == null) return;
 
+            // 한 파도에 `BossRoomMinions` 만큼 세운다. 이미 서 있는 것은 빼고 센다.
+            int want = Mathf.Max(1, BossRoomMinions - alive);
+            for (int w = 0; w < want; w++) SpawnOneMinion(profile, w);
+            Debug.Log($"[보스] 몸 {want}기 — 체력 {hp * 100f:0}% ({MinionWaveAt[wave] * 100f:0}% 문턱)");
+        }
+
+        private void SpawnOneMinion(HostEntry profile, int seq)
+        {
             var u = NewUnit($"BossMinion_{profile.HostKey}");
             u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, TrashSprite(profile),
                     EnemyHpOf(profile), EnemyAtkOf(profile), EnemySpeedOf(profile),
@@ -439,7 +458,7 @@ namespace Game.Module.InGame
                     UnitBox(84f, 78f), isBoss: false, profile: profile);
             // 보스 옆이 아니라 **방 가장자리**에서 온다. 보스에 겹쳐 세우면
             // 보스가 나오는 순간 겹쳐 보이고, 예고 도형도 가린다.
-            u.Position = ClampedInField(u, WallSpot());
+            u.Position = ClampedInField(u, WallSpot() + new Vector2(seq * _pxPerMeter * 1.2f, 0f));
             u.MarkAsHostBody();          // 이게 있어야 빼앗을 수 있다
             u.PossessPriority = profile.PossessPriority;
             u.IsAggro = true;
@@ -456,6 +475,7 @@ namespace Game.Module.InGame
             _segmentsLeft = SegmentCount;
             _segmentDamage = 0;
             _headOpen = false;
+            for (int i = 0; i < _minionWaveDone.Length; i++) _minionWaveDone[i] = false;
             _bossExposed = true;
             _bossExposedHit = false;
         }

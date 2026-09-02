@@ -60,11 +60,25 @@ namespace Game.EditorTools
         {
 
             // ── 크러셔 · 쓰레기장 — 쓰레기를 씹는 기계 ─────────────────────────
+            // ⚠ **크러셔만 정본 도면과 다르다.** 2026-09-02 에 사용자가 직접 기획했다.
+            //   정본 4패턴(압착·쇠사슬 파괴구·컨베이어·방패 전개) 대신 셋을 쓴다 —
+            //   미사일(5초) · 부채꼴(현행) · 당기기(20초). 세 개가 다 P1 이라
+            //   첫 순간부터 셋이 같이 돈다("같이 써봐").
+            //
+            //   폐기한 둘은 코드가 남아 있다(쇠사슬 파괴구 궤도·방패판). 되돌리려면
+            //   아래 Move 두 개를 다시 넣으면 그대로 산다 — 지우지 않았다.
             new() { Key = "crusher", NameKr = "크러셔", NameEn = "Crusher", Sprite = "unit_crusher",
                     Chapter = 1, RoomNo = 10, Gate = "FINAL", Hp = 1650, Atk = 18,
                     State = "", BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
                     Moves = new Move[]
                     {
+                        // 기획 2026-09-02 — 미사일 한 번 쏘는 것, 쿨 5초
+                        new() { Phase = 1, NameKr = "미사일", NameEn = "Missile",
+                                Cooldown = 5f, Telegraph = 0.9f, DamageMul = 1.0f,
+                                Shape = "Zone", Draw = "MissileSalvo", Dodge = "SIDE",
+                                Degrees = 0f, Radius = 1.2f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 1,
+                                SafeX = 0f, SafeY = 0f },
                         // 출처 — 아치형 입의 격자판이 자기 앞 반경 2.5 m · 정면 180° 를 내려찍는다
                         new() { Phase = 1, NameKr = "압착", NameEn = "Crush",
                                 Cooldown = 8f, Telegraph = 1.25f, DamageMul = 0.94f,
@@ -72,26 +86,13 @@ namespace Game.EditorTools
                                 Degrees = 180f, Radius = 2.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f },
-                        // 출처 — 크레인 팔이 쇠사슬로 파괴구를 휘두른다 · 반경 3.5 m 원 궤도 · 안쪽 1.5 m 는 닿지 않는다
-                        new() { Phase = 1, NameKr = "쇠사슬 파괴구", NameEn = "WreckingBall",
-                                Cooldown = 11f, Telegraph = 1.5f, DamageMul = 1.33f,
-                                Shape = "Zone", Draw = "WreckingBall", Dodge = "CLOSE",
-                                Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 1.5f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f },
-                        // 출처 — 바닥 세 줄 중 두 줄이 보스 쪽으로 흐른다 · 초당 1.5 m 끌려간다 · 12초
-                        new() { Phase = 2, NameKr = "컨베이어 가동", NameEn = "Conveyor",
-                                Cooldown = 10f, Telegraph = 1.1f, DamageMul = 0.72f,
+                        // 기획 2026-09-02 — 당기는 것, 쿨 20초. 벨트 자체는 정본 그대로다
+                        // (바닥 세 줄 중 두 줄 · 초당 1.5 m · 12초)
+                        new() { Phase = 1, NameKr = "컨베이어 가동", NameEn = "Conveyor",
+                                Cooldown = 20f, Telegraph = 1.1f, DamageMul = 0.72f,
                                 Shape = "Lane", Draw = "Conveyor", Dodge = "SIDE",
                                 Degrees = 0f, Radius = 0f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
-                                SafeX = 0f, SafeY = 0f },
-                        // 출처 — 붉은 방패판을 정면에 세운다 · 4초간 정면 120° 피해 90% 감소 + 그동안 압착을 연달아 두 번
-                        new() { Phase = 3, NameKr = "방패 전개", NameEn = "ShieldUp",
-                                Cooldown = 14f, Telegraph = 1f, DamageMul = 1.06f,
-                                Shape = "Arc", Draw = "ShieldUp", Dodge = "BACK",
-                                Degrees = 120f, Radius = 2.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f },
                     } },
 

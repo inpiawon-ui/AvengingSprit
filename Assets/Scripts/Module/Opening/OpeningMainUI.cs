@@ -36,10 +36,11 @@ namespace Game.Module.Opening
         /// 기록이 남아 그다음부터 안 떠서 "오프닝이 안 나온다" 로 보인다 —
         /// 실제로 그렇게 한 번 헤맸다.
         ///
-        /// ⚠ **정상 동작(첫 실행에만)으로 돌리려면 이 한 줄을 `false` 로 바꾼다.**
-        ///   사용자가 "이제 꺼도 된다" 고 할 때까지 `true` 로 둔다 (2026-09-01 지시).
+        /// ⚠ 2026-09-02 에 껐다 — "이제 한 번만 보면 안 나오게" 지시.
+        ///   확인하다 다시 보려면 메뉴 `Tools/Game/테스트 — 오프닝 다시 보기` 로
+        ///   본 기록을 지운다. 이 상수를 다시 켤 일은 없다.
         /// </summary>
-        public const bool AlwaysShow = true;
+        public const bool AlwaysShow = false;
 
         private const string AddressPrefix = "cutscene/";
 

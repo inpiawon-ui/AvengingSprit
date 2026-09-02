@@ -83,6 +83,7 @@ namespace Game.Module.InGame
         {
             _entry = entry;
             Phase = 1;
+            _lowHp = false;
             Pending = null;
             TelegraphLeft = 0f;
             ChargeLeft = 0f;
@@ -123,15 +124,30 @@ namespace Game.Module.InGame
 
         public void UpdatePhase(float hpRatio)
         {
+            _lowHp = hpRatio <= LowHpAt;
             int p = 1;
             for (int i = 0; i < _thresholds.Length; i++)
                 if (hpRatio <= _thresholds[i]) p = i + 2;
             Phase = p;
         }
 
-        /// <summary>페이즈가 오를수록 쿨다운이 짧아진다.</summary>
+        /// <summary>체력 30% 아래에서 쿨이 반으로 준다. 마지막 구간이 제일 몰아친다.</summary>
+        private const float LowHpCooldownMul = 0.5f;
+
+        /// <summary>이 아래로 내려가면 몰아친다. 정본 P3 문턱과 같은 값이다.</summary>
+        private const float LowHpAt = 0.30f;
+
+        private bool _lowHp;
+
+        /// <summary>
+        /// 페이즈가 오를수록 쿨다운이 짧아지고, **체력 30% 아래에서 한 번 더 반으로 준다.**
+        ///
+        /// ⚠ 페이즈 배수와 따로 곱한다. 페이즈 배수는 보스마다 다른 값이라
+        ///   거기에 섞으면 "30% 아래에서 반" 이라는 규칙이 보스마다 달라진다.
+        /// </summary>
         private float CooldownOf(BossMove m)
             => m.Cooldown * Mathf.Pow(_entry.PhaseCooldownMul, Phase - 1)
+               * (_lowHp ? LowHpCooldownMul : 1f)
                * BattleDirector.BossCooldownMul;   // 테스트 스위치. 평소엔 1
 
         /// <summary>
