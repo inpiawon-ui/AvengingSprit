@@ -36,8 +36,30 @@ namespace Game.Module.InGame
         private float _pulse;
         private float _progress;
 
-        public override Texture mainTexture
-            => _hatch != null && _hatch.texture != null ? _hatch.texture : s_WhiteTexture;
+        /// <summary>
+        /// 빗금을 **타일로 쓸 수 있는가**.
+        ///
+        /// ⚠ 아틀라스에 묶인 스프라이트는 `.texture` 가 **아틀라스 한 장 전체**다.
+        ///   여기 UV 는 `좌표 ÷ 64` 라 720px 도형이면 0~11 까지 간다 —
+        ///   아틀라스 텍스처는 wrap 이 Clamp 라 1 을 넘는 순간 가장자리(투명)를
+        ///   계속 샘플한다. **도형이 그려지긴 하는데 통째로 투명해진다.**
+        ///   실제로 그래서 24패턴의 바닥 도형이 한 번도 안 보였다.
+        ///
+        ///   스프라이트 크기와 텍스처 크기가 같으면 아틀라스 밖(제 텍스처)이라
+        ///   타일이 제대로 돈다. 다르면 아틀라스다 — 그때는 **단색으로 칠한다.**
+        ///   무늬를 잃는 것이 안 보이는 것보다 낫다.
+        /// </summary>
+        private bool CanTile
+        {
+            get
+            {
+                if (_hatch == null || _hatch.texture == null) return false;
+                return Mathf.Approximately(_hatch.rect.width, _hatch.texture.width)
+                    && Mathf.Approximately(_hatch.rect.height, _hatch.texture.height);
+            }
+        }
+
+        public override Texture mainTexture => CanTile ? _hatch.texture : s_WhiteTexture;
 
         protected override void Awake()
         {
@@ -115,7 +137,9 @@ namespace Game.Module.InGame
                 var p = _verts[i];
                 // 빗금은 **화면에 고정**된 격자다. 도형을 따라 늘어나면 늘어난 티가 나고,
                 // 도형이 움직일 때 무늬가 같이 끌려가 어지럽다.
-                var uv = new Vector2(p.x / HatchPixels, p.y / HatchPixels);
+                // 타일을 못 쓰면 UV 를 한 점에 고정한다 — 흰 텍스처를 단색으로 칠한다.
+                var uv = CanTile ? new Vector2(p.x / HatchPixels, p.y / HatchPixels)
+                                 : new Vector2(0.5f, 0.5f);
                 vh.AddVert(p, c, uv);
             }
             for (int i = 0; i + 2 < _tris.Count; i += 3)
