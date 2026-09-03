@@ -788,7 +788,15 @@ namespace Game.Module.InGame
 
         private readonly List<Flight> _flights = new();
         private readonly List<Vector2> _flightTargets = new();
+
+        /// <summary>
+        /// 지금 날아가는 것의 그림. **보스가 바뀌면 다시 찾는다.**
+        ///
+        /// ⚠ 한 번 캐시하고 끝냈더니 크러셔 방에서 잡아 둔 미사일 그림이
+        ///   가디언 방까지 따라왔다 — 「마디 사출」인데 미사일이 날아갔다.
+        /// </summary>
         private Sprite[] _missileFrames;
+        private string _missileFramesFor;
         private float _flightLeft, _flightTotal;
         private int _flying;
 
@@ -832,8 +840,9 @@ namespace Game.Module.InGame
             FlightTargets(m);
             if (_flightTargets.Count == 0) return;
 
-            if (_missileFrames == null)
+            if (_missileFrames == null || _missileFramesFor != boss.Key)
             {
+                _missileFramesFor = boss.Key;
                 var list = new List<Sprite>(4);
 
                 // ⚠ **그 보스가 던지는 물건이 따로 있으면 그것을 쓴다.**
