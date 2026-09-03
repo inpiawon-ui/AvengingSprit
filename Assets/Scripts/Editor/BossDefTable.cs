@@ -141,13 +141,16 @@ namespace Game.EditorTools
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
                         // 출처 — 마디 2개를 떼어 굴린다 · 각 1.4 m · 3초간 방 안을 튕겨 다닌다
-                        // ⚠ 착탄 원 1.4 → 0.7 → **1.05 m** (기획 2026-09-03, 두 번 고침).
+                        // ⚠ 착탄 원 1.4 → 0.7 → 1.05 → **1.35 m** (기획 2026-09-03).
                         //   1.4 m 는 근접이 때리는 자리(1.34 m)를 통째로 삼켜 못 피했고,
-                        //   0.7 m 는 너무 작아 **아예 안 맞았다.** 1.05 m 가 중간이다.
+                        //   0.7 m 는 너무 작아 아예 안 맞았다. 1.05 로도 모자랐다 —
+                        //   착탄점이 내 자리 둘레 **2.5 m 안에 흩어지므로**
+                        //   (`DangerShape` SegmentLaunch · Spread.NearTarget)
+                        //   원이 작으면 흩어진 만큼 그냥 빗나간다.
                         new() { Phase = 1, NameKr = "마디 사출", NameEn = "SegmentLaunch",
                                 Cooldown = 1.5f, Telegraph = 1f, DamageMul = 0.73f,
                                 Shape = "Zone", Draw = "SegmentLaunch", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 1.05f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 1.35f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 2,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
