@@ -3943,6 +3943,12 @@ namespace Game.Module.InGame
                 if (def != null && def.Chases && me != null
                     && Vector2.Distance(boss.Position, me.Position) > ChaseStopMeters * _pxPerMeter)
                 {
+                    // ⚠⚠ **`SetMoving(true)` 이 없으면 걷기 그림이 한 번도 안 나온다.**
+                    //   `MoveToward` 는 자리만 옮긴다. 걷기는 시간이 아니라 실제
+                    //   이동에 매여 있어서(`Unit.SetMoving`) 이 줄이 빠지면 보스가
+                    //   미끄러지듯 정지 그림으로 다가온다 — 보스 6종 walk 시트
+                    //   60장이 통째로 죽어 있었다.
+                    boss.SetMoving(true);
                     boss.MoveToward(me.Position, dt);
                     return;
                 }
