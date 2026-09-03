@@ -20,6 +20,7 @@ namespace Game.EditorTools
         private const string BossMenu     = "Tools/Game/테스트 — 방 1~6 에 보스 하나씩";
         private const string OpeningMenu  = "Tools/Game/테스트 — 오프닝 다시 보기";
         private const string MinionMenu   = "Tools/Game/테스트 — 보스방 잔몹 끄기";
+        private const string BossHpMenu   = "Tools/Game/테스트 — 보스 체력 2배";
 
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
@@ -29,6 +30,23 @@ namespace Game.EditorTools
         private static bool ToggleOneEnemyValidate()
         {
             Menu.SetChecked(OneEnemyMenu, BattleDirector.OneEnemyPerRoom);
+            return true;
+        }
+
+        // ── 보스 체력 2배 ──────────────────────────────────────
+        //
+        // 페이즈 2·3 패턴은 체력 60%·30% 아래에서만 나온다. 정본 체력으로는
+        // 그 전에 보스가 죽어 네 패턴 중 둘만 보고 끝나는 일이 생긴다.
+        // 표 값은 그대로 두고 여기서만 곱한다.
+
+        [MenuItem(BossHpMenu)]
+        private static void ToggleBossHp()
+            => BattleDirector.BossDoubleHp = !BattleDirector.BossDoubleHp;
+
+        [MenuItem(BossHpMenu, true)]
+        private static bool ToggleBossHpValidate()
+        {
+            Menu.SetChecked(BossHpMenu, BattleDirector.BossDoubleHp);
             return true;
         }
 

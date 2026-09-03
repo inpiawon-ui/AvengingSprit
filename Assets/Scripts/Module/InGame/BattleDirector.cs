@@ -2082,6 +2082,31 @@ namespace Game.Module.InGame
         public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
 
         /// <summary>
+        /// 보스 체력 배수. 1 이면 표 그대로다.
+        ///
+        /// 페이즈 2·3 패턴은 체력이 60%·30% 아래로 내려가야 나온다. 그런데 가디언은
+        /// 머리가 열린 뒤 피해가 2배라 **실질 체력이 1700** 이고, 네 패턴을 보기 전에
+        /// 끝난다 — 실제로 「똬리」와 「머리 물기」를 못 보고 죽었다는 보고가 왔다.
+        ///
+        /// ⚠ **표 값을 고치는 것이 아니다.** `BossDefTable` 의 숫자는 그대로 있고
+        ///   여기서만 곱한다. 끄면 즉시 정본 체력으로 돌아온다. 빌드에는 없다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 체력 2배` 로 켜고 끈다.
+        /// </summary>
+        public static bool BossDoubleHp
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossDoubleHp", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossDoubleHp", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>보스 체력에 곱하는 값. 스위치가 꺼져 있으면 1 이다.</summary>
+        public static float BossHpMul => BossDoubleHp ? 2f : 1f;
+
+        /// <summary>
         /// 보스방에서 빼앗을 몸을 부르지 않는다.
         ///
         /// ⚠ **켜 두고 잊으면 안 된다.** 보스 여섯은 전부 빙의 불가라, 몸이 안 나오면
@@ -2450,9 +2475,10 @@ namespace Game.Module.InGame
                            bossKey,
                            canon ? _canonRoom.BossName : def?.NameKr ?? "BOSS",
                            bossArt,
-                           canon ? _canonRoom.BossHp
+                           Mathf.RoundToInt(BossHpMul * (
+                               canon ? _canonRoom.BossHp
                                  : def != null && def.HasCanonStats ? def.CanonHp
-                                 : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)),
+                                 : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)))),
                            canon ? _canonRoom.BossAtk
                                  : def != null && def.HasCanonStats ? def.CanonAtk
                                  : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
