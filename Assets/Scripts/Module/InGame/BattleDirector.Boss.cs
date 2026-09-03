@@ -76,9 +76,16 @@ namespace Game.Module.InGame
             // ⚠ 「마디 돌진」만 길이가 **지금 남은 마디 수**를 따라간다.
             //   표에 적힌 7.2 m 는 마디 8개일 때의 값이다. 마디를 끊을수록 짧아진다 —
             //   여기서 한 번만 고쳐 두면 그린 것과 때리는 것이 같이 짧아진다.
-            if (m.Draw == BossDraw.SegmentThrust && IsSegmented)
-                _danger.Length = Mathf.Max(HeadThrustMeters * _pxPerMeter,
-                                           SegmentsLeft * 0.9f * _pxPerMeter);
+            // ⚠ **줄은 언제나 나에게 닿아야 한다.**
+            //   마디 수만으로 길이를 정했더니 마디가 깎일수록 줄이 짧아져,
+            //   보스가 그 짧은 줄 끝까지 날아가고도 나한테 못 닿았다 —
+            //   실측: 마디 4개일 때 줄 259px 인데 나는 501px 밖이었다.
+            //   화면에서는 "날아오다 만다" 로 보인다.
+            //   마디 수는 이제 **최소 길이**만 정한다. 실제 길이는 나까지다.
+            if (m.Draw == BossDraw.SegmentThrust && IsSegmented && me != null)
+                _danger.Length = Mathf.Max(
+                    Mathf.Max(HeadThrustMeters * _pxPerMeter, SegmentsLeft * 0.9f * _pxPerMeter),
+                    (me.Position - boss.Position).magnitude + _pxPerMeter);
 
             if (_danger.IsNone) return;
 
@@ -377,16 +384,15 @@ namespace Game.Module.InGame
                 // 그어 둔 줄을 타고 **날아가 박는다.**
                 case BossDraw.SegmentThrust:
                 {
+                    // 그어 둔 **줄 끝까지** 간다. 나에게 닿으면 그때 아프고,
+                    // 멈추지 않고 뚫고 지나간다 — 줄에서 비켰으면 그냥 스쳐 간다.
                     var to = _danger.Dir * _danger.Length;
                     float speed = Mathf.Max(1f, boss.MoveSpeed * ChargeSpeedMul * BiteSpeedMul);
-                    float secs = Mathf.Clamp(to.magnitude / speed, 0.15f, 1.2f);
-                    _chargeDamageMul = 0f;                 // 달려가는 동안은 안 아프다. 무는 순간에만 아프다
+                    _chargeDamageMul = m.DamageMul;
                     _chargeSpeedMul = ChargeSpeedMul * BiteSpeedMul;
-                    _brain.BeginCharge(to, secs);
-                    _biteShape = _danger;
-                    _biteDamage = Mathf.Max(1, Mathf.RoundToInt(boss.Atk * m.DamageMul));
-                    _biteBoss = boss;
-                    _biteLeft = secs;
+                    _chargePierce = true;
+                    _chargeHitDone = false;
+                    _brain.BeginCharge(to, Mathf.Clamp(to.magnitude / speed, 0.15f, 1.5f));
                     break;
                 }
 
@@ -788,7 +794,7 @@ namespace Game.Module.InGame
 
             Debug.Log($"[진단:발동] {m.NameKr} 맞음={playerHit} 피해={dmg}");
             ApplyMoveEffect(boss, me, m);
-            PlayDangerImpact(m);
+            PlayDangerImpact(m, playerHit ? me : null);
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
             CheckBreak(boss, m, playerHit);
 
@@ -1045,7 +1051,14 @@ namespace Game.Module.InGame
         private const float BiteSpeedMul = 2f;
 
         /// <summary>도형이 터진 자리에 표시를 남긴다. 무엇이 지나갔는지 보여야 한다.</summary>
-        private void PlayDangerImpact(BossMove m)
+        /// <param name="victim">
+        /// 맞은 사람. null 이 아니면 **그 자리에서** 터뜨린다.
+        ///
+        /// ⚠ 도형 중심에서만 터뜨리면 보스 둘레를 덮는 패턴(똬리 등)은 언제나
+        ///   보스 발밑에서 터진다 — 나는 원 끄트머리에서 맞았는데 폭발은 저 위에서
+        ///   난다. 맞은 자리에서 터져야 "내가 맞았다" 가 읽힌다.
+        /// </param>
+        private void PlayDangerImpact(BossMove m, Unit victim)
         {
             // 무엇이 지나갔는지 보여야 한다. 도형이 아니라 **패턴**으로 고른다 —
             // 같은 원이라도 독구름과 파괴구는 다른 것이 터져야 읽힌다.
@@ -1061,7 +1074,7 @@ namespace Game.Module.InGame
                 _ => "burst",
             };
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
-            var at = _danger.ImpactAt(_roomSize);
+            var at = victim != null ? victim.Position : _danger.ImpactAt(_roomSize);
             var im = PlayFx(fx, at, size, loop: false);
             Debug.Log($"[진단:임팩트] {fx} 크기={size:0} 자리={at} 생성={(im != null)}");
         }

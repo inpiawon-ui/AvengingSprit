@@ -141,6 +141,12 @@ namespace Game.Module.InGame
         /// 그려 둔 줄 끝에 정확히 선다. 두 곳에 따로 적으면 줄과 몸이 어긋난다.
         /// </summary>
         private float _chargeSpeedMul = ChargeSpeedMul;
+
+        /// <summary>이번 돌진이 나를 **뚫고 지나가는가**. 아니면 닿는 자리에서 멈춘다.</summary>
+        private bool _chargePierce;
+
+        /// <summary>이번 돌진에서 이미 때렸는가. 뚫고 가는 동안 매 프레임 때리면 안 된다.</summary>
+        private bool _chargeHitDone;
         private const int MaxRoomUnits = 14;
         private const float SummonRadius = 200f;
 
@@ -3819,11 +3825,16 @@ namespace Game.Module.InGame
                 // 보스를 세울 수 있게 되어, 맞지도 않는 몸이 방패가 된다.
                 // 보스 **몸이 스치면** 맞는다. 중심까지 54px 을 요구하면 보스가 나를
                 // 밟고 지나가도 안 맞는다 — 256px 짜리 몸이 통째로 무해해진다.
-                if (_host != null
+                if (_host != null && !_chargeHitDone
                     && EdgeDistance(me, boss) <= _config.ShotHitRadius * 1.6f)
                 {
-                    DamagePlayer(Mathf.RoundToInt(boss.Atk * _chargeDamageMul));
-                    _brain.BeginCharge(Vector2.zero, 0f);
+                    _chargeHitDone = true;
+                    DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(boss.Atk * _chargeDamageMul)));
+
+                    // ⚠ **뚫고 가는 돌진은 여기서 안 멈춘다.**
+                    //   멈춰 세웠더니 보스가 나에게 닿자마자 그 자리에 서 버려서
+                    //   "날아오다 만다" 로 보였다. 그어 둔 줄 끝까지 가야 한 동작이다.
+                    if (!_chargePierce) _brain.BeginCharge(Vector2.zero, 0f);
                 }
                 return;
             }
@@ -4089,6 +4100,8 @@ namespace Game.Module.InGame
                 case BossPattern.Charge:
                     _chargeDamageMul = m.DamageMul;
                     _chargeSpeedMul = ChargeSpeedMul;
+                    _chargePierce = false;
+                    _chargeHitDone = false;
                     _brain.BeginCharge(me.Position - boss.Position, ChargeSeconds);
                     break;
 
