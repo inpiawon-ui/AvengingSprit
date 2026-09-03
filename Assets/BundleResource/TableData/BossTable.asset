@@ -158,16 +158,16 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 12
       _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.73
-      _telegraphSeconds: 1.4
+      _telegraphSeconds: 1
       _nameKr: "\uB9C8\uB514 \uC0AC\uCD9C"
       _nameEn: SegmentLaunch
       _shape: 3
@@ -182,7 +182,7 @@ MonoBehaviour:
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
     - _pattern: 1
       _fromPhase: 2
@@ -190,7 +190,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.91
-      _telegraphSeconds: 1.3
+      _telegraphSeconds: 1
       _nameKr: "\uB62C\uB9AC"
       _nameEn: CoilWall
       _shape: 3
@@ -204,8 +204,8 @@ MonoBehaviour:
       _gapDegrees: 60
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
+      _range: 1
+      _rangeMeters: 4
       _group: 0
     - _pattern: 2
       _fromPhase: 3
@@ -213,7 +213,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1.14
-      _telegraphSeconds: 0.9
+      _telegraphSeconds: 1
       _nameKr: "\uBA38\uB9AC \uBB3C\uAE30"
       _nameEn: HeadBite
       _shape: 4
@@ -227,9 +227,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
   - _bossKey: python
     _chapter: 3
     _roomNo: 10
@@ -253,7 +253,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.83
-      _telegraphSeconds: 1.6
+      _telegraphSeconds: 1
       _nameKr: "\uBCBD \uB3CC\uD30C"
       _nameEn: WallBurst
       _shape: 1
@@ -268,15 +268,15 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 7
       _fromPhase: 1
       _cooldown: 9
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.59
-      _telegraphSeconds: 1.1
+      _telegraphSeconds: 1
       _nameKr: "\uB3C5\uAD6C\uB984"
       _nameEn: VenomCloud
       _shape: 3
@@ -291,7 +291,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
     - _pattern: 5
       _fromPhase: 2
@@ -299,7 +299,7 @@ MonoBehaviour:
       _shotCount: 4
       _spreadDegrees: 0
       _damageMul: 0.93
-      _telegraphSeconds: 1.25
+      _telegraphSeconds: 1
       _nameKr: "\uBAB8\uD1B5 \uAC00\uB85C\uC9C0\uB974\uAE30"
       _nameEn: BodyCross
       _shape: 2
@@ -314,7 +314,7 @@ MonoBehaviour:
       _lanes: 4
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
     - _pattern: 4
       _fromPhase: 3
@@ -337,8 +337,8 @@ MonoBehaviour:
       _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
   - _bossKey: kingpin
     _chapter: 4
     _roomNo: 10
@@ -362,7 +362,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.88
-      _telegraphSeconds: 1.35
+      _telegraphSeconds: 1
       _nameKr: "\uBBF8\uC0AC\uC77C \uC77C\uC81C"
       _nameEn: MissileSalvo
       _shape: 3
@@ -376,9 +376,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 4
       _fromPhase: 1
       _cooldown: 13
@@ -400,7 +400,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
     - _pattern: 2
       _fromPhase: 2
@@ -422,16 +422,16 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 1
       _fromPhase: 3
       _cooldown: 15
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1.12
-      _telegraphSeconds: 1.2
+      _telegraphSeconds: 1
       _nameKr: "\uBD80\uC2A4\uD130 \uAC15\uD558"
       _nameEn: BoosterDrop
       _shape: 3
@@ -446,7 +446,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
   - _bossKey: robot_snakes
     _chapter: 5
@@ -471,7 +471,7 @@ MonoBehaviour:
       _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.85
-      _telegraphSeconds: 1.15
+      _telegraphSeconds: 1
       _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
       _nameEn: HatchOpen
       _shape: 2
@@ -486,15 +486,15 @@ MonoBehaviour:
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 5
       _fromPhase: 1
       _cooldown: 11
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.73
-      _telegraphSeconds: 1.35
+      _telegraphSeconds: 1
       _nameKr: "\uB808\uC774\uC800"
       _nameEn: RailLaser
       _shape: 1
@@ -508,8 +508,8 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
+      _range: 2
+      _rangeMeters: 4
       _group: 0
     - _pattern: 4
       _fromPhase: 2
@@ -517,7 +517,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.94
-      _telegraphSeconds: 1.5
+      _telegraphSeconds: 1
       _nameKr: "\uCC9C\uC7A5 \uD30C\uD3B8"
       _nameEn: DebrisFall
       _shape: 3
@@ -532,7 +532,7 @@ MonoBehaviour:
       _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
+      _rangeMeters: 4
       _group: 0
     - _pattern: 1
       _fromPhase: 3
@@ -540,7 +540,7 @@ MonoBehaviour:
       _shotCount: 6
       _spreadDegrees: 0
       _damageMul: 1.15
-      _telegraphSeconds: 1.2
+      _telegraphSeconds: 1
       _nameKr: "\uC77C\uC81C \uCD9C\uD604"
       _nameEn: FullEmergence
       _shape: 3
@@ -555,8 +555,8 @@ MonoBehaviour:
       _lanes: 6
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
   - _bossKey: sludge
     _chapter: 6
     _roomNo: 10
@@ -580,7 +580,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.78
-      _telegraphSeconds: 1.4
+      _telegraphSeconds: 1
       _nameKr: "\uC19F\uC544\uC624\uB984"
       _nameEn: Emerge
       _shape: 3
@@ -594,8 +594,8 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
+      _range: 1
+      _rangeMeters: 4
       _group: 0
     - _pattern: 7
       _fromPhase: 1
@@ -603,7 +603,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.68
-      _telegraphSeconds: 1.05
+      _telegraphSeconds: 1
       _nameKr: "\uBC49\uAE30"
       _nameEn: Spit
       _shape: 1
@@ -617,8 +617,8 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 0
+      _range: 2
+      _rangeMeters: 4
       _group: 0
     - _pattern: 4
       _fromPhase: 2
@@ -626,7 +626,7 @@ MonoBehaviour:
       _shotCount: 3
       _spreadDegrees: 0
       _damageMul: 0.89
-      _telegraphSeconds: 1.7
+      _telegraphSeconds: 1
       _nameKr: "\uCC9C\uC7A5 \uBD99\uAE30"
       _nameEn: CeilingCling
       _shape: 3
@@ -641,15 +641,15 @@ MonoBehaviour:
       _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
     - _pattern: 7
       _fromPhase: 3
       _cooldown: 20
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 1.14
-      _telegraphSeconds: 1.25
+      _telegraphSeconds: 1
       _nameKr: "\uCC9C\uC7A5 \uD655\uC0B0"
       _nameEn: CeilingSpread
       _shape: 3
@@ -664,5 +664,5 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
-      _rangeMeters: 0
-      _group: 0
+      _rangeMeters: 4
+      _group: 1
