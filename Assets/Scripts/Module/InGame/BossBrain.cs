@@ -121,6 +121,8 @@ namespace Game.Module.InGame
             const float MoveGap = 1.8f;
             for (int i = 0; i < moves.Count; i++)
                 _timers.Add(FirstMove + MoveGap * i);
+
+            CacheShapeReach();
         }
 
         public void UpdatePhase(float hpRatio)
@@ -227,12 +229,62 @@ namespace Game.Module.InGame
         /// <summary>가깝다/멀다를 가르는 기본 거리(m). 패턴이 제 값을 들고 있으면 그쪽이 이긴다.</summary>
         private const float DefaultRangeMeters = 4f;
 
-        private static bool InRange(BossMove m, float distanceMeters)
+        /// <summary>
+        /// 보스 근접 사거리(m). <see cref="MoveRange.OutOfMelee"/> 가 이 값을 문턱으로 쓴다.
+        /// 보스를 세울 때 한 번 넣어 준다 — 0 이면 기본 문턱으로 떨어진다.
+        /// </summary>
+        public float MeleeRangeMeters { get; set; }
+
+        /// <summary>
+        /// <see cref="MoveRange.InShape"/> 행동들의 반경 중 가장 큰 값.
+        /// <see cref="MoveRange.OutOfShapes"/> 가 이것을 문턱으로 쓴다 —
+        /// 반경을 표에서 고치면 조건이 저절로 따라와서 두 값이 어긋나지 않는다.
+        ///
+        /// ⚠ **지금 열린 페이즈의 것만 센다.** 아직 안 나오는 패턴의 반경까지 세면
+        ///   그 구간에 아무것도 안 나가는 죽은 띠가 생긴다 — 가디언은 「머리 물기」가
+        ///   P3 부터라, 전부 세면 P1·P2 에서 1.75~3.2 m 가 통째로 비어 버린다.
+        /// </summary>
+        private float _shapeReachMeters;
+        private int _shapeReachPhase = -1;
+
+        private void CacheShapeReach()
         {
-            if (m.Range == MoveRange.Any) return true;
-            float gate = m.RangeMeters > 0f ? m.RangeMeters : DefaultRangeMeters;
-            return m.Range == MoveRange.Near ? distanceMeters <= gate
-                                             : distanceMeters > gate;
+            _shapeReachPhase = Phase;
+            _shapeReachMeters = 0f;
+            if (_moves == null) return;
+            for (int i = 0; i < _moves.Count; i++)
+                if (_moves[i].Range == MoveRange.InShape && _moves[i].FromPhase <= Phase)
+                    _shapeReachMeters = Mathf.Max(_shapeReachMeters, _moves[i].RadiusMeters);
+        }
+
+        private bool InRange(BossMove m, float distanceMeters)
+        {
+            switch (m.Range)
+            {
+                case MoveRange.Any:
+                    return true;
+
+                // 제 도형 안에 들어왔는가. 반경이 0 이면 잴 것이 없으니 늘 통과시킨다.
+                case MoveRange.InShape:
+                    return m.RadiusMeters <= 0f || distanceMeters <= m.RadiusMeters;
+
+                // 붙어 있으면 평타로 충분하다. 떨어졌을 때만 거리를 좁힌다.
+                case MoveRange.OutOfMelee:
+                    return distanceMeters > (MeleeRangeMeters > 0f
+                                             ? MeleeRangeMeters : DefaultRangeMeters);
+
+                // 붙어서 쓰는 것들이 아무것도 안 닿는 거리에서만.
+                case MoveRange.OutOfShapes:
+                    if (_shapeReachPhase != Phase) CacheShapeReach();
+                    return distanceMeters > _shapeReachMeters;
+
+                default:
+                {
+                    float gate = m.RangeMeters > 0f ? m.RangeMeters : DefaultRangeMeters;
+                    return m.Range == MoveRange.Near ? distanceMeters <= gate
+                                                     : distanceMeters > gate;
+                }
+            }
         }
 
         private readonly Dictionary<int, int> _groupCursor = new();

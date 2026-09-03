@@ -142,7 +142,7 @@ MonoBehaviour:
     _moves:
     - _pattern: 2
       _fromPhase: 1
-      _cooldown: 7
+      _cooldown: 3
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.82
@@ -160,12 +160,12 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
+      _range: 4
+      _rangeMeters: 0
+      _group: 0
     - _pattern: 4
       _fromPhase: 1
-      _cooldown: 12
+      _cooldown: 2
       _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.73
@@ -183,12 +183,12 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
+      _range: 5
+      _rangeMeters: 0
       _group: 0
     - _pattern: 1
       _fromPhase: 1
-      _cooldown: 10
+      _cooldown: 3
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.91
@@ -199,19 +199,19 @@ MonoBehaviour:
       _draw: 8
       _dodge: 2
       _degrees: 0
-      _radiusMeters: 1.75
+      _radiusMeters: 2.625
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 1
-      _rangeMeters: 4
+      _range: 3
+      _rangeMeters: 0
       _group: 0
     - _pattern: 2
       _fromPhase: 3
-      _cooldown: 9
+      _cooldown: 2
       _shotCount: 5
       _spreadDegrees: 120
       _damageMul: 1.14
@@ -229,9 +229,9 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
+      _range: 3
+      _rangeMeters: 0
+      _group: 0
   - _bossKey: python
     _chapter: 3
     _roomNo: 10

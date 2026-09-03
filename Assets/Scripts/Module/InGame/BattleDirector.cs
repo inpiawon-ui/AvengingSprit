@@ -2548,6 +2548,9 @@ namespace Game.Module.InGame
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
+                // 「마디 돌진」의 조건(근접 사거리 밖)이 쓸 문턱. 보스 몸이 들고 있는
+                // 값을 그대로 넘긴다 — 여기서 다시 적으면 두 곳이 어긋난다.
+                _brain.MeleeRangeMeters = boss.AttackRange / _pxPerMeter;
                 if (canon)
                 {
                     // 문턱과 예고 시간은 보스마다 다르다 — 정본 값을 그대로 넣는다
@@ -3219,6 +3222,20 @@ namespace Game.Module.InGame
 
             // 호퍼의 도약도 같다. 뛰는 동안 걸어지면 포물선이 휘어 어디에 떨어질지 모른다.
             if (IsSlamming) { TickSlam(dt); return; }
+
+            // ⚠ **굳은 동안은 조작을 받지 않는다.**
+            //   스턴 장치(`Unit.ApplyStun`)는 원래 잡몹에만 걸렸다 — 시계를 굴리는 곳도
+            //   입력을 막는 곳도 적 쪽에만 있었다. 「똬리」가 나를 굳히게 되면서
+            //   플레이어 쪽에도 같은 것이 필요해졌다.
+            //   머리 위 별은 `TickStatusFx` 가 띄운다.
+            me.TickStun(dt);
+            if (me.IsStunned)
+            {
+                me.SetMoving(false);
+                IsFiring = false;
+                _stopTimer = 0f;
+                return;
+            }
 
             // ⚠️ 이것이 없으면 **갇힌다.** `SlideMove` 는 막힌 곳에 "들어가지 않게" 막는
             //    방식이라, 어쩌다 안에 들어간 뒤에는 어느 쪽으로도 못 나온다 —
@@ -6098,6 +6115,14 @@ namespace Game.Module.InGame
             }
 
             var me = Avatar;
+
+            // 별은 잡몹만 다는 것이 아니다. 내가 굳었을 때가 제일 알아야 할 때다.
+            if (me != null && me.IsAlive && me.IsStunned && !_stunFx.ContainsKey(me))
+            {
+                var mine = TakeLoopFx("stun", me.Position + Vector2.up * StunFxLift, StunFxSize);
+                if (mine != null) _stunFx[me] = mine;
+            }
+
             bool wantShield = me != null && me.IsAlive && me.Shield > 0;
             if (wantShield)
             {

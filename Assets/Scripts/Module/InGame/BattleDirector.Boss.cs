@@ -825,7 +825,13 @@ namespace Game.Module.InGame
             // ⚠ 판정은 **그린 것과 같은 함수**다. 여기서 반경을 조금 키우거나
             //   "관대하게" 만들지 마라 — 그 순간 그림과 판정이 갈라진다.
             bool playerHit = me != null && _danger.Contains(me.Position, _roomSize);
-            if (playerHit && ShapeHurts(m.Draw)) DamagePlayer(dmg);
+            if (playerHit && ShapeHurts(m.Draw))
+            {
+                DamagePlayer(dmg);
+                float stun = StunOnHitSeconds(m.Draw);
+                // 유령은 굳지 않는다. 맞지도 않는 몸을 붙들면 남은 시간만 깎인다.
+                if (stun > 0f && _host != null && me != null) me.ApplyStun(stun);
+            }
 
             // 「마디 사출」로 굴러간 마디는 잡몹도 친다 — 방을 굴러다니는 물건이라
             // 누구 편인지 가리지 않는다. 이 게임에서 보스 공격이 적을 맞히는 유일한 자리다.
@@ -1078,6 +1084,16 @@ namespace Game.Module.InGame
         /// 반대로 던지는 것(미사일·마디·파편)은 **물건이 실제로 떨어지므로**
         /// 빗나가도 그 자리에서 터져야 한다.
         /// </summary>
+        /// <summary>
+        /// 맞으면 몇 초 굳는가. 0 이면 안 굳는다.
+        ///
+        /// 「똬리」는 몸으로 감아 조이는 것이라 맞으면 잠깐 붙들린다(기획 2026-09-03).
+        /// 반경을 1.75 m 로 줄여 피할 수 있게 한 대신, **맞으면 대가가 크다**로
+        /// 균형을 잡는다 — 작아진 만큼 안 아프면 그냥 무시하고 때리게 된다.
+        /// </summary>
+        private static float StunOnHitSeconds(BossDraw draw)
+            => draw == BossDraw.CoilWall ? 1f : 0f;
+
         private static bool ImpactNeedsHit(BossDraw draw) => draw switch
         {
             BossDraw.HeadBite or BossDraw.CoilWall or BossDraw.SegmentThrust

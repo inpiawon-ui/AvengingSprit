@@ -134,38 +134,40 @@ namespace Game.EditorTools
                     {
                         // 출처 — 몸을 늘려 직선으로 찌른다 · 폭 1.4 m · 길이 = 남은 마디 수 × 0.9 m (8마디 = 7.2 m)
                         new() { Phase = 1, NameKr = "마디 돌진", NameEn = "SegmentThrust",
-                                Cooldown = 7f, Telegraph = 1f, DamageMul = 0.82f,
+                                Cooldown = 3f, Telegraph = 1f, DamageMul = 0.82f,
                                 Shape = "Line", Draw = "SegmentThrust", Dodge = "PERP",
                                 Degrees = 0f, Radius = 0f, Width = 1.4f, Length = 7.2f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
+                                Range = "OUTMELEE", RangeMeters = 0f, Group = 0 },
                         // 출처 — 마디 2개를 떼어 굴린다 · 각 1.4 m · 3초간 방 안을 튕겨 다닌다
                         // ⚠ 착탄 원을 반으로 줄였다 (1.4 → 0.7 m · 기획 2026-09-03).
                         //   근접 몸은 1.34 m 에서 때린다 — 원이 1.4 m 면 때리는 자리
                         //   전체가 착탄권이라 **때리면서 피한다** 가 성립하지 않았다.
                         new() { Phase = 1, NameKr = "마디 사출", NameEn = "SegmentLaunch",
-                                Cooldown = 12f, Telegraph = 1f, DamageMul = 0.73f,
+                                Cooldown = 2f, Telegraph = 1f, DamageMul = 0.73f,
                                 Shape = "Zone", Draw = "SegmentLaunch", Dodge = "SIDE",
                                 Degrees = 0f, Radius = 0.7f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 2,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
                         // 출처 — 몸을 말아 반경 3.5 m 원형 벽을 만든다 · 3초 · 마디 사이 틈으로 들어가면 머리를 때린다
                         // ⚠ 페이즈 2 가 아니라 **처음부터** 쓴다(기획 2026-09-03).
                         //   체력 60% 아래에서만 나오면 붙어 있는 동안 쓸 것이 사실상
                         //   마디 돌진 하나뿐이라 초반이 심심하다.
-                        // ⚠ 반경을 반으로 줄였다 (3.5 → 1.75 m · 기획 2026-09-03).
+                        // ⚠ 반경 3.5 → 1.75 → **2.625 m** (기획 2026-09-03, 두 번 고침).
                         //   근접 몸이 때리는 자리는 보스 중심에서 1.34 m 다. 3.5 m 원은
-                        //   그 자리를 한참 삼켜서 **물러날 곳이 없었다.**
-                        //   1.75 m 면 0.4 m 만 뒤로 빠지면 나간다 — 때리고 빠지고가 된다.
+                        //   그 자리를 한참 삼켜서 물러날 곳이 없었고, 반으로 줄인 1.75 m 는
+                        //   0.4 m 만 물러나면 빠져나가 너무 헐거웠다.
+                        //   2.625 m 면 때리던 자리에서 **1.3 m 를 빼야** 나간다 —
+                        //   한 걸음으로는 모자라고 두 걸음이면 되는 거리다.
                         new() { Phase = 1, NameKr = "똬리", NameEn = "CoilWall",
-                                Cooldown = 10f, Telegraph = 1f, DamageMul = 0.91f,
+                                Cooldown = 3f, Telegraph = 1f, DamageMul = 0.91f,
                                 Shape = "Zone", Draw = "CoilWall", Dodge = "GAP",
-                                Degrees = 0f, Radius = 1.75f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 2.625f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
+                                Range = "INSHAPE", RangeMeters = 0f, Group = 0 },
                         // 출처 — 머리만 몸에서 길게 뻗어 문다 · 최대 6 m · 마디가 적을수록 빠르다
                         // ⚠ 원작 값(폭 1.6 · 길이 6 m)은 「마디 돌진」(폭 1.4 · 길이 7.2 m)과
                         //   거의 같은 띠라 화면에서 둘을 구분할 수 없었다. 후반에 돌진이
@@ -173,7 +175,7 @@ namespace Game.EditorTools
                         //   보인다. **넓고 짧게** 바꿔 물어뜯는 것으로 읽히게 한다
                         //   (기획 2026-09-03).
                         new() { Phase = 3, NameKr = "머리 물기", NameEn = "HeadBite",
-                                Cooldown = 9f, Telegraph = 1f, DamageMul = 1.14f,
+                                Cooldown = 2f, Telegraph = 1f, DamageMul = 1.14f,
                                 Shape = "Dash", Draw = "HeadBite", Dodge = "SIDE",
                                 // ⚠ 반경은 쫓아와 멈추는 거리(3 m)보다 커야 한다.
                                 //   2.5 m 로 뒀더니 제자리에서 무는데 나는 3 m 밖이라
@@ -181,7 +183,7 @@ namespace Game.EditorTools
                                 Degrees = 120f, Radius = 3.2f, Width = 2.4f, Length = 4f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
+                                Range = "INSHAPE", RangeMeters = 0f, Group = 0 },
                     } },
 
             // ── 파이썬 · 밤거리 — 벽에서 나온다 ─────────────────────────────

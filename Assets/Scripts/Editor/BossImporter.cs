@@ -126,9 +126,12 @@ namespace Game.EditorTools
         /// <summary>거리 조건 이름 → <see cref="MoveRange"/>. 빈 값이면 조건 없음.</summary>
         private static int RangeOf(string s) => s switch
         {
-            "NEAR" => (int)MoveRange.Near,
-            "FAR"  => (int)MoveRange.Far,
-            _      => (int)MoveRange.Any,
+            "NEAR"       => (int)MoveRange.Near,
+            "FAR"        => (int)MoveRange.Far,
+            "INSHAPE"    => (int)MoveRange.InShape,
+            "OUTMELEE"   => (int)MoveRange.OutOfMelee,
+            "OUTSHAPES"  => (int)MoveRange.OutOfShapes,
+            _            => (int)MoveRange.Any,
         };
 
         /// 패턴 이름 → <see cref="BossDraw"/>.
