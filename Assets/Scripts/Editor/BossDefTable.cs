@@ -138,7 +138,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 0f, Width = 1.4f, Length = 7.2f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "FAR", RangeMeters = 4f, Group = 1 },
+                                Range = "", RangeMeters = 4f, Group = 1 },
                         // 출처 — 마디 2개를 떼어 굴린다 · 각 1.4 m · 3초간 방 안을 튕겨 다닌다
                         new() { Phase = 1, NameKr = "마디 사출", NameEn = "SegmentLaunch",
                                 Cooldown = 12f, Telegraph = 1f, DamageMul = 0.73f,
@@ -162,7 +162,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 0f, Width = 1.6f, Length = 6f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "FAR", RangeMeters = 4f, Group = 1 },
+                                Range = "", RangeMeters = 4f, Group = 1 },
                     } },
 
             // ── 파이썬 · 밤거리 — 벽에서 나온다 ─────────────────────────────
@@ -218,7 +218,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 1.2f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 5,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "FAR", RangeMeters = 4f, Group = 1 },
+                                Range = "", RangeMeters = 4f, Group = 1 },
                         // 출처 — 지금 입고 있는 몸에 조준 표식 · 3초 뒤 그 자리 반경 2.0 m 에 집중 사격
                         new() { Phase = 1, NameKr = "처형 조준", NameEn = "ExecutionLock",
                                 Cooldown = 13f, Telegraph = 1.8f, DamageMul = 1.24f,
@@ -266,7 +266,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 0f, Width = 0.8f, Length = 13f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "FAR", RangeMeters = 4f, Group = 0 },
+                                Range = "", RangeMeters = 4f, Group = 0 },
                         // 출처 — 천장에서 파편이 떨어진다 · 그림자 5개 · 각 반경 1.2 m · 1.5초 뒤 낙하
                         new() { Phase = 2, NameKr = "천장 파편", NameEn = "DebrisFall",
                                 Cooldown = 13f, Telegraph = 1f, DamageMul = 0.94f,
@@ -306,7 +306,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 1.5f, Width = 1.5f, Length = 8f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "FAR", RangeMeters = 4f, Group = 0 },
+                                Range = "", RangeMeters = 4f, Group = 0 },
                         // 출처 — 점프해 사라진다. 그림자 3개가 방을 돌아다니다 멈추고 1초 뒤 방울이 떨어진다 · 각 반경 1.8 m
                         new() { Phase = 2, NameKr = "천장 붙기", NameEn = "CeilingCling",
                                 Cooldown = 14f, Telegraph = 1f, DamageMul = 0.89f,

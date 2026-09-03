@@ -158,7 +158,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 2
+      _range: 0
       _rangeMeters: 4
       _group: 1
     - _pattern: 4
@@ -227,7 +227,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 2
+      _range: 0
       _rangeMeters: 4
       _group: 1
   - _bossKey: python
@@ -376,7 +376,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 5
       _safeAtMeters: {x: 0, y: 0}
-      _range: 2
+      _range: 0
       _rangeMeters: 4
       _group: 1
     - _pattern: 4
@@ -508,7 +508,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 2
+      _range: 0
       _rangeMeters: 4
       _group: 0
     - _pattern: 4
@@ -617,7 +617,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 2
+      _range: 0
       _rangeMeters: 4
       _group: 0
     - _pattern: 4
