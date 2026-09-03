@@ -223,8 +223,8 @@ MonoBehaviour:
       _dodge: 1
       _degrees: 0
       _radiusMeters: 0
-      _widthMeters: 1.6
-      _lengthMeters: 6
+      _widthMeters: 2.4
+      _lengthMeters: 4
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0

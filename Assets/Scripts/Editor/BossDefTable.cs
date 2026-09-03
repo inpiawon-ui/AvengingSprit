@@ -157,10 +157,15 @@ namespace Game.EditorTools
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "NEAR", RangeMeters = 4f, Group = 0 },
                         // 출처 — 머리만 몸에서 길게 뻗어 문다 · 최대 6 m · 마디가 적을수록 빠르다
+                        // ⚠ 원작 값(폭 1.6 · 길이 6 m)은 「마디 돌진」(폭 1.4 · 길이 7.2 m)과
+                        //   거의 같은 띠라 화면에서 둘을 구분할 수 없었다. 후반에 돌진이
+                        //   짧아지며 역전되는 것이 원작 의도지만 그 역전은 P3 에 가서야
+                        //   보인다. **넓고 짧게** 바꿔 물어뜯는 것으로 읽히게 한다
+                        //   (기획 2026-09-03).
                         new() { Phase = 3, NameKr = "머리 물기", NameEn = "HeadBite",
                                 Cooldown = 9f, Telegraph = 1f, DamageMul = 1.14f,
                                 Shape = "Dash", Draw = "HeadBite", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 0f, Width = 1.6f, Length = 6f,
+                                Degrees = 0f, Radius = 0f, Width = 2.4f, Length = 4f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "", RangeMeters = 4f, Group = 1 },
