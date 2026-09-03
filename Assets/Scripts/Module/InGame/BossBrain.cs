@@ -230,12 +230,6 @@ namespace Game.Module.InGame
         private const float DefaultRangeMeters = 4f;
 
         /// <summary>
-        /// 보스 근접 사거리(m). <see cref="MoveRange.OutOfMelee"/> 가 이 값을 문턱으로 쓴다.
-        /// 보스를 세울 때 한 번 넣어 준다 — 0 이면 기본 문턱으로 떨어진다.
-        /// </summary>
-        public float MeleeRangeMeters { get; set; }
-
-        /// <summary>
         /// <see cref="MoveRange.InShape"/> 행동들의 반경 중 가장 큰 값.
         /// <see cref="MoveRange.OutOfShapes"/> 가 이것을 문턱으로 쓴다 —
         /// 반경을 표에서 고치면 조건이 저절로 따라와서 두 값이 어긋나지 않는다.
@@ -267,11 +261,6 @@ namespace Game.Module.InGame
                 // 제 도형 안에 들어왔는가. 반경이 0 이면 잴 것이 없으니 늘 통과시킨다.
                 case MoveRange.InShape:
                     return m.RadiusMeters <= 0f || distanceMeters <= m.RadiusMeters;
-
-                // 붙어 있으면 평타로 충분하다. 떨어졌을 때만 거리를 좁힌다.
-                case MoveRange.OutOfMelee:
-                    return distanceMeters > (MeleeRangeMeters > 0f
-                                             ? MeleeRangeMeters : DefaultRangeMeters);
 
                 // 붙어서 쓰는 것들이 아무것도 안 닿는 거리에서만.
                 case MoveRange.OutOfShapes:

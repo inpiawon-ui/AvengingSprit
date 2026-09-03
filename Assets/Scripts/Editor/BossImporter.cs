@@ -129,7 +129,6 @@ namespace Game.EditorTools
             "NEAR"       => (int)MoveRange.Near,
             "FAR"        => (int)MoveRange.Far,
             "INSHAPE"    => (int)MoveRange.InShape,
-            "OUTMELEE"   => (int)MoveRange.OutOfMelee,
             "OUTSHAPES"  => (int)MoveRange.OutOfShapes,
             _            => (int)MoveRange.Any,
         };

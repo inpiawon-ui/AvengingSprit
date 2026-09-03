@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Game.Character;
+using Game.Module.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -828,9 +829,29 @@ namespace Game.Module.InGame
             if (playerHit && ShapeHurts(m.Draw))
             {
                 DamagePlayer(dmg);
+
                 float stun = StunOnHitSeconds(m.Draw);
                 // 유령은 굳지 않는다. 맞지도 않는 몸을 붙들면 남은 시간만 깎인다.
                 if (stun > 0f && _host != null && me != null) me.ApplyStun(stun);
+
+                // 피흡 — 유령을 문 것은 안 먹힌다. 유령은 피해를 안 입으므로
+                // 빨아들일 피가 없다(`DamagePlayer` 가 걸러 낸다).
+                float steal = LifestealOf(m.Draw);
+                if (steal > 0f && _host != null && boss != null && boss.IsAlive)
+                {
+                    int gain = Mathf.Max(1, Mathf.RoundToInt(dmg * steal));
+                    boss.Heal(gain);
+                    // 화면에 보여야 한다. 보스는 맞는 중이라 체력바만으로는
+                    // 회복분이 감소분에 묻혀 안 보인다.
+                    ShowHeal(boss.Position, gain);
+                    // 내 몸이 흡혈할 때 쓰는 것과 **같은 그림**을 쓴다(`Leech`).
+                    // 같은 일에는 같은 표시가 떠야 무엇인지 배운 것이 통한다.
+                    PlayFx("leech", boss.Position, 96f, loop: false);
+                    _bus.Publish(new BossHpChangedEvent
+                    {
+                        BossHp = boss.Hp, BossHpMax = boss.HpMax, Phase = _brain.Phase,
+                    });
+                }
             }
 
             // 「마디 사출」로 굴러간 마디는 잡몹도 친다 — 방을 굴러다니는 물건이라
@@ -1093,6 +1114,15 @@ namespace Game.Module.InGame
         /// </summary>
         private static float StunOnHitSeconds(BossDraw draw)
             => draw == BossDraw.CoilWall ? 1f : 0f;
+
+        /// <summary>
+        /// 맞히면 준 피해의 몇 할을 제 체력으로 가져가는가(피흡). 0 이면 안 가져간다.
+        ///
+        /// 「머리 물기」는 물어뜯는 동작이라 무는 만큼 배를 채운다(기획 2026-09-03).
+        /// 피하면 아무것도 못 먹으므로, 피하는 것 자체가 보스 체력을 깎는 셈이 된다.
+        /// </summary>
+        private static float LifestealOf(BossDraw draw)
+            => draw == BossDraw.HeadBite ? 0.10f : 0f;
 
         private static bool ImpactNeedsHit(BossDraw draw) => draw switch
         {

@@ -139,7 +139,7 @@ namespace Game.EditorTools
                                 Degrees = 0f, Radius = 0f, Width = 1.4f, Length = 7.2f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "OUTMELEE", RangeMeters = 0f, Group = 0 },
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
                         // 출처 — 마디 2개를 떼어 굴린다 · 각 1.4 m · 3초간 방 안을 튕겨 다닌다
                         // ⚠ 착탄 원을 반으로 줄였다 (1.4 → 0.7 m · 기획 2026-09-03).
                         //   근접 몸은 1.34 m 에서 때린다 — 원이 1.4 m 면 때리는 자리
@@ -174,7 +174,7 @@ namespace Game.EditorTools
                         //   짧아지며 역전되는 것이 원작 의도지만 그 역전은 P3 에 가서야
                         //   보인다. **넓고 짧게** 바꿔 물어뜯는 것으로 읽히게 한다
                         //   (기획 2026-09-03).
-                        new() { Phase = 3, NameKr = "머리 물기", NameEn = "HeadBite",
+                        new() { Phase = 1, NameKr = "머리 물기", NameEn = "HeadBite",
                                 Cooldown = 2f, Telegraph = 1f, DamageMul = 1.14f,
                                 Shape = "Dash", Draw = "HeadBite", Dodge = "SIDE",
                                 // ⚠ 반경은 쫓아와 멈추는 거리(3 m)보다 커야 한다.

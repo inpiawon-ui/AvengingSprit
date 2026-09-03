@@ -2548,9 +2548,6 @@ namespace Game.Module.InGame
                 _enemies.Add(boss);
                 _boss = boss;
                 _brain.Setup(def);
-                // 「마디 돌진」의 조건(근접 사거리 밖)이 쓸 문턱. 보스 몸이 들고 있는
-                // 값을 그대로 넘긴다 — 여기서 다시 적으면 두 곳이 어긋난다.
-                _brain.MeleeRangeMeters = boss.AttackRange / _pxPerMeter;
                 if (canon)
                 {
                     // 문턱과 예고 시간은 보스마다 다르다 — 정본 값을 그대로 넣는다
@@ -7012,6 +7009,21 @@ namespace Game.Module.InGame
             return p > 0f && _rng.NextDouble() * 100.0 < p;
         }
 
+        /// <summary>
+        /// 회복한 자리에 <c>+N</c> 을 띄운다.
+        ///
+        /// ⚠ 로그만으로는 **화면에서 회복이 안 보인다.** 보스는 맞는 중이라
+        ///   체력바가 계속 줄어서, 회복한 것이 그 감소분에 묻힌다 —
+        ///   숫자가 떠야 "물어서 채웠다" 가 읽힌다(기획 2026-09-03).
+        /// </summary>
+        private void ShowHeal(Vector2 at, int amount)
+        {
+            if (amount <= 0) return;
+            var t = RentDamageText();
+            if (t == null) return;
+            t.Show(at, $"+{amount}", HealColor);
+        }
+
         /// <summary>전술 빙의로 나간 Ghost HP. 유령 색으로 띄워 피해 숫자와 구분한다.</summary>
         private void ShowGhostCost(Vector2 at, int cost)
         {
@@ -7327,12 +7339,7 @@ namespace Game.Module.InGame
             PublishHp();
 
             // 한 방에 도는 양이 두어 점이라 체력바만으로는 눈에 안 띈다. 숫자로 띄운다.
-            int healed = Mathf.Min(amount, room);
-            if (healed > 0)
-            {
-                var t = RentDamageText();
-                if (t != null) t.Show(_host.Position, $"+{healed}", HealColor);
-            }
+            ShowHeal(_host.Position, Mathf.Min(amount, room));
 
             int over = amount - room;
             if (over <= 0) return;

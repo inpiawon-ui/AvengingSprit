@@ -183,7 +183,7 @@ MonoBehaviour:
       _gapDegrees: 0
       _lanes: 2
       _safeAtMeters: {x: 0, y: 0}
-      _range: 5
+      _range: 4
       _rangeMeters: 0
       _group: 0
     - _pattern: 1
@@ -210,7 +210,7 @@ MonoBehaviour:
       _rangeMeters: 0
       _group: 0
     - _pattern: 2
-      _fromPhase: 3
+      _fromPhase: 1
       _cooldown: 2
       _shotCount: 5
       _spreadDegrees: 120
