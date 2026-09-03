@@ -142,7 +142,7 @@ MonoBehaviour:
     _moves:
     - _pattern: 2
       _fromPhase: 1
-      _cooldown: 3
+      _cooldown: 4
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.82
@@ -165,7 +165,7 @@ MonoBehaviour:
       _group: 0
     - _pattern: 4
       _fromPhase: 1
-      _cooldown: 2
+      _cooldown: 1.5
       _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.73
@@ -176,7 +176,7 @@ MonoBehaviour:
       _draw: 7
       _dodge: 1
       _degrees: 0
-      _radiusMeters: 0.7
+      _radiusMeters: 1.05
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
       _group: 0
     - _pattern: 1
       _fromPhase: 1
-      _cooldown: 3
+      _cooldown: 2
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.91
@@ -208,7 +208,7 @@ MonoBehaviour:
       _safeAtMeters: {x: 0, y: 0}
       _range: 3
       _rangeMeters: 0
-      _group: 0
+      _group: 1
     - _pattern: 2
       _fromPhase: 1
       _cooldown: 2
@@ -231,7 +231,7 @@ MonoBehaviour:
       _safeAtMeters: {x: 0, y: 0}
       _range: 3
       _rangeMeters: 0
-      _group: 0
+      _group: 1
   - _bossKey: python
     _chapter: 3
     _roomNo: 10

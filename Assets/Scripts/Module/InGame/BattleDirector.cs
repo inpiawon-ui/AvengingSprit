@@ -6092,7 +6092,7 @@ namespace Game.Module.InGame
         ///   굳은 것은 조작이 안 먹는다는 뜻이라 **제일 먼저 보여야 하는 표시**다.
         /// </summary>
         private const float MyStunFxSize = 84f;
-        private const float MyStunFxLift = 92f;
+        private const float MyStunFxLift = 74f;   // 92 는 너무 떠 보였다
         private const float ShieldFxSize = 96f;
 
         private readonly Dictionary<Unit, Impact> _stunFx = new();

@@ -134,20 +134,20 @@ namespace Game.EditorTools
                     {
                         // 출처 — 몸을 늘려 직선으로 찌른다 · 폭 1.4 m · 길이 = 남은 마디 수 × 0.9 m (8마디 = 7.2 m)
                         new() { Phase = 1, NameKr = "마디 돌진", NameEn = "SegmentThrust",
-                                Cooldown = 3f, Telegraph = 1f, DamageMul = 0.82f,
+                                Cooldown = 4f, Telegraph = 1f, DamageMul = 0.82f,
                                 Shape = "Line", Draw = "SegmentThrust", Dodge = "PERP",
                                 Degrees = 0f, Radius = 0f, Width = 1.4f, Length = 7.2f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
                         // 출처 — 마디 2개를 떼어 굴린다 · 각 1.4 m · 3초간 방 안을 튕겨 다닌다
-                        // ⚠ 착탄 원을 반으로 줄였다 (1.4 → 0.7 m · 기획 2026-09-03).
-                        //   근접 몸은 1.34 m 에서 때린다 — 원이 1.4 m 면 때리는 자리
-                        //   전체가 착탄권이라 **때리면서 피한다** 가 성립하지 않았다.
+                        // ⚠ 착탄 원 1.4 → 0.7 → **1.05 m** (기획 2026-09-03, 두 번 고침).
+                        //   1.4 m 는 근접이 때리는 자리(1.34 m)를 통째로 삼켜 못 피했고,
+                        //   0.7 m 는 너무 작아 **아예 안 맞았다.** 1.05 m 가 중간이다.
                         new() { Phase = 1, NameKr = "마디 사출", NameEn = "SegmentLaunch",
-                                Cooldown = 2f, Telegraph = 1f, DamageMul = 0.73f,
+                                Cooldown = 1.5f, Telegraph = 1f, DamageMul = 0.73f,
                                 Shape = "Zone", Draw = "SegmentLaunch", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 0.7f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 1.05f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 2,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "OUTSHAPES", RangeMeters = 0f, Group = 0 },
@@ -161,13 +161,16 @@ namespace Game.EditorTools
                         //   0.4 m 만 물러나면 빠져나가 너무 헐거웠다.
                         //   2.625 m 면 때리던 자리에서 **1.3 m 를 빼야** 나간다 —
                         //   한 걸음으로는 모자라고 두 걸음이면 되는 거리다.
+                        // ⚠ 「머리 물기」와 **한 묶음(1)**이다. 둘 다 붙었을 때 쓰는 것이라
+                        //   각자 시계를 돌리면 2초마다 둘이 겹쳐 나간다 —
+                        //   묶으면 2초마다 **번갈아** 하나씩 나간다(기획 2026-09-03).
                         new() { Phase = 1, NameKr = "똬리", NameEn = "CoilWall",
-                                Cooldown = 3f, Telegraph = 1f, DamageMul = 0.91f,
+                                Cooldown = 2f, Telegraph = 1f, DamageMul = 0.91f,
                                 Shape = "Zone", Draw = "CoilWall", Dodge = "GAP",
                                 Degrees = 0f, Radius = 2.625f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 0f, Group = 0 },
+                                Range = "INSHAPE", RangeMeters = 0f, Group = 1 },
                         // 출처 — 머리만 몸에서 길게 뻗어 문다 · 최대 6 m · 마디가 적을수록 빠르다
                         // ⚠ 원작 값(폭 1.6 · 길이 6 m)은 「마디 돌진」(폭 1.4 · 길이 7.2 m)과
                         //   거의 같은 띠라 화면에서 둘을 구분할 수 없었다. 후반에 돌진이
@@ -183,7 +186,7 @@ namespace Game.EditorTools
                                 Degrees = 120f, Radius = 3.2f, Width = 2.4f, Length = 4f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 0f, Group = 0 },
+                                Range = "INSHAPE", RangeMeters = 0f, Group = 1 },
                     } },
 
             // ── 파이썬 · 밤거리 — 벽에서 나온다 ─────────────────────────────
