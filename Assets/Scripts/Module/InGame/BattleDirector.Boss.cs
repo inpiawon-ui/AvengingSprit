@@ -775,6 +775,12 @@ namespace Game.Module.InGame
             switch (m.Draw)
             {
                 // 착탄 원 하나마다 탄 하나.
+                //
+                // ⚠ 「마디 사출」이 여기 있어야 한다. 이 패턴의 정체가
+                //   **"마디 둘을 떼어 굴린다"** 인데, 바닥에 원 두 개만 그리고
+                //   말면 무엇이 떨어져 나갔는지 화면에 아무것도 안 남는다 —
+                //   보스가 가만히 있는데 바닥이 혼자 터지는 것으로 보인다.
+                case BossDraw.SegmentLaunch:
                 case BossDraw.MissileSalvo:
                 case BossDraw.DebrisFall:
                 case BossDraw.BoosterDrop:
