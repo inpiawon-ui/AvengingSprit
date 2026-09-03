@@ -26,6 +26,7 @@ MonoBehaviour:
     _canonHp: 1650
     _canonAtk: 18
     _state: 0
+    _chases: 0
     _breakSeconds: 2.5
     _breakCause: "\uD30C\uAD34\uAD6C\uAC00 \uD5DB\uB3CC\uC544 \uBCBD\uC744 \uB54C\uB838\uB2E4"
     _moves:
@@ -134,6 +135,7 @@ MonoBehaviour:
     _canonHp: 2400
     _canonAtk: 22
     _state: 1
+    _chases: 1
     _breakSeconds: 0
     _breakCause: "\uB9C8\uB514\uB97C 3\uAC1C \uC774\uD558\uB85C \uB04A\uC5C8\uB2E4
       \u2014 \uBA38\uB9AC \uBB34\uC801\uC774 \uC601\uAD6C\uD788 \uD480\uB9B0\uB2E4"
@@ -243,6 +245,7 @@ MonoBehaviour:
     _canonHp: 3150
     _canonAtk: 25
     _state: 2
+    _chases: 0
     _breakSeconds: 3
     _breakCause: "\uBA38\uB9AC\uAC00 \uB098\uC628 \uC9C1\uD6C4 1.2\uCD08 \uC548\uC5D0
       \uB54C\uB838\uB2E4"
@@ -352,6 +355,7 @@ MonoBehaviour:
     _canonHp: 4300
     _canonAtk: 29
     _state: 0
+    _chases: 1
     _breakSeconds: 2
     _breakCause: "\uC800\uACF5 \uD65C\uAC15\uC744 \uC625\uC0C1 \uAD6C\uC870\uBB3C
       \uCABD\uC73C\uB85C \uC720\uC778\uD588\uB2E4"
@@ -461,6 +465,7 @@ MonoBehaviour:
     _canonHp: 5200
     _canonAtk: 33
     _state: 3
+    _chases: 0
     _breakSeconds: 4
     _breakCause: "\uB098\uC628 \uBA38\uB9AC\uB97C \uB418\uB4E4\uC5B4\uAC00\uAE30
       \uC804\uC5D0 \uB54C\uB838\uB2E4"
@@ -570,6 +575,7 @@ MonoBehaviour:
     _canonHp: 6900
     _canonAtk: 37
     _state: 4
+    _chases: 0
     _breakSeconds: 3.5
     _breakCause: "\uCC9C\uC7A5\uC5D0 \uBD99\uC740 \uB3D9\uC548 \uC544\uB798\uC5D0\uC11C
       \uB54C\uB824 \uB5A8\uC5B4\uB728\uB838\uB2E4"

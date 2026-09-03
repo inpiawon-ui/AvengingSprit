@@ -54,6 +54,7 @@ namespace Game.EditorTools
             public string Gate;            // FINAL 뿐이다 (중간 보스는 이 표에 없다)
             public int Hp, Atk;
             public string State;           // Guard · Twin · Split · 빈 문자열
+            public bool Chases;            // 사거리 안까지 나를 쫓아오는가
             public float BreakSeconds;     // 취약 창 길이. 0 이면 시간제가 아니다(가디언)
             public string BreakCause;
             public Move[] Moves;
@@ -72,7 +73,7 @@ namespace Game.EditorTools
             //   아래 Move 두 개를 다시 넣으면 그대로 산다 — 지우지 않았다.
             new() { Key = "crusher", NameKr = "크러셔", NameEn = "Crusher", Sprite = "unit_crusher",
                     Chapter = 1, RoomNo = 10, Gate = "FINAL", Hp = 1650, Atk = 18,
-                    State = "", BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
+                    State = "", Chases = false, BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
                     Moves = new Move[]
                     {
                         // ⚠ 기획 2026-09-02(4차) — 거리로 갈린다.
@@ -128,7 +129,7 @@ namespace Game.EditorTools
             // ── 가디언 · 미사일기지 — 마디를 하나씩 끊어라 ───────────────────────
             new() { Key = "guardian", NameKr = "가디언", NameEn = "Guardian", Sprite = "unit_guardian",
                     Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 2400, Atk = 22,
-                    State = "Segments", BreakSeconds = 0.0f, BreakCause = "마디를 3개 이하로 끊었다 — 머리 무적이 영구히 풀린다",
+                    State = "Segments", Chases = true, BreakSeconds = 0.0f, BreakCause = "마디를 3개 이하로 끊었다 — 머리 무적이 영구히 풀린다",
                     Moves = new Move[]
                     {
                         // 출처 — 몸을 늘려 직선으로 찌른다 · 폭 1.4 m · 길이 = 남은 마디 수 × 0.9 m (8마디 = 7.2 m)
@@ -168,7 +169,7 @@ namespace Game.EditorTools
             // ── 파이썬 · 밤거리 — 벽에서 나온다 ─────────────────────────────
             new() { Key = "python", NameKr = "파이썬", NameEn = "Python", Sprite = "unit_python",
                     Chapter = 3, RoomNo = 10, Gate = "FINAL", Hp = 3150, Atk = 25,
-                    State = "Walls", BreakSeconds = 3.0f, BreakCause = "머리가 나온 직후 1.2초 안에 때렸다",
+                    State = "Walls", Chases = false, BreakSeconds = 3.0f, BreakCause = "머리가 나온 직후 1.2초 안에 때렸다",
                     Moves = new Move[]
                     {
                         // 출처 — 벽 한 곳에 금이 간 뒤 머리가 튀어나와 직선 6 m 를 훑는다 · 폭 1.8 m
@@ -208,7 +209,7 @@ namespace Game.EditorTools
             // ── 킹핀 · 옥상 — 하늘에 떠 있다 ──────────────────────────────
             new() { Key = "kingpin", NameKr = "킹핀", NameEn = "Kingpin", Sprite = "unit_kingpin",
                     Chapter = 4, RoomNo = 10, Gate = "FINAL", Hp = 4300, Atk = 29,
-                    State = "", BreakSeconds = 2.0f, BreakCause = "저공 활강을 옥상 구조물 쪽으로 유인했다",
+                    State = "", Chases = true, BreakSeconds = 2.0f, BreakCause = "저공 활강을 옥상 구조물 쪽으로 유인했다",
                     Moves = new Move[]
                     {
                         // 출처 — 미사일 5발을 부채꼴로 뿌린다 · 착탄 반경 1.2 m · 바닥에 착탄 원이 먼저 뜬다
@@ -248,7 +249,7 @@ namespace Game.EditorTools
             // ── 로봇 스네이크 · 연구소 — 구멍에서 나온다 ────────────────────────
             new() { Key = "robot_snakes", NameKr = "로봇 스네이크", NameEn = "Robot Snakes", Sprite = "unit_robot_snakes",
                     Chapter = 5, RoomNo = 10, Gate = "FINAL", Hp = 5200, Atk = 33,
-                    State = "Holes", BreakSeconds = 4.0f, BreakCause = "나온 머리를 되들어가기 전에 때렸다",
+                    State = "Holes", Chases = false, BreakSeconds = 4.0f, BreakCause = "나온 머리를 되들어가기 전에 때렸다",
                     Moves = new Move[]
                     {
                         // 출처 — 구멍 2개의 덮개가 열린다 — 이것이 예고다. 1.15초 뒤 그 구멍에서 머리가 솟는다 · 반경 1.5 m
@@ -288,7 +289,7 @@ namespace Game.EditorTools
             // ── 슬러지 · 정유소 — 위에서 떨어진다 ────────────────────────────
             new() { Key = "sludge", NameKr = "슬러지", NameEn = "Sludge", Sprite = "unit_sludge",
                     Chapter = 6, RoomNo = 10, Gate = "FINAL", Hp = 6900, Atk = 37,
-                    State = "Ceiling", BreakSeconds = 3.5f, BreakCause = "천장에 붙은 동안 아래에서 때려 떨어뜨렸다",
+                    State = "Ceiling", Chases = false, BreakSeconds = 3.5f, BreakCause = "천장에 붙은 동안 아래에서 때려 떨어뜨렸다",
                     Moves = new Move[]
                     {
                         // 출처 — 바닥으로 가라앉았다가 다른 자리에서 솟는다 · 솟는 자리 반경 2.0 m · 바닥이 부풀어 예고

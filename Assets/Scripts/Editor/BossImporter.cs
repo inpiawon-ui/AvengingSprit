@@ -46,6 +46,8 @@ namespace Game.EditorTools
                 SetInt(e, "_canonHp", d.Hp);
                 SetInt(e, "_canonAtk", d.Atk);
                 SetEnum(e, "_state", StateOf(d.State));
+                var ch = e.FindPropertyRelative("_chases");
+                if (ch != null) ch.boolValue = d.Chases;
                 SetFloat(e, "_breakSeconds", d.BreakSeconds);
                 Set(e, "_breakCause", d.BreakCause);
 

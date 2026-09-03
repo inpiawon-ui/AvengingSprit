@@ -63,6 +63,14 @@ namespace Game.Module.InGame
             Fan,
             /// <summary>방 안에 흩어진다. <see cref="Tick"/> 이 자리를 정한다.</summary>
             Scatter,
+            /// <summary>
+            /// **나를 중심으로** 흩어진다. <see cref="Origin"/> 이 내 자리이고
+            /// <see cref="Length"/> 가 흩뿌리는 반경이다.
+            ///
+            /// ⚠ `Scatter` 는 방 아무 데나 떨어진다 — 나를 겨누지 않으므로
+            ///   "이상한 데다 쏜다" 가 된다. 던지는 물건은 나를 향해야 의미가 있다.
+            /// </summary>
+            NearTarget,
             /// <summary>바닥 구멍 여섯 곳 중 <see cref="Count"/> 곳. 로봇 스네이크 전용.</summary>
             Holes,
             /// <summary>벽에서 방을 가로지르는 띠 여럿. 파이썬 「세 갈래 돌파」.</summary>
@@ -136,6 +144,19 @@ namespace Game.Module.InGame
                     // 가장자리에 붙으면 피할 자리가 없다. 안쪽 15~85% 에만 떨군다.
                     return new Vector2(Mathf.Lerp(0.15f, 0.85f, fx) * roomSize.x,
                                        -Mathf.Lerp(0.15f, 0.85f, fy) * roomSize.y);
+                }
+
+                case Spread.NearTarget:
+                {
+                    // 나를 가운데 두고 반경 `Length` 안에 흩뿌린다. 결정적이라
+                    // 그릴 때와 때릴 때 자리가 같다.
+                    int h = Hash(Tick * 31 + i);
+                    float ang = (h & 0xFFFF) / 65535f * 360f * Mathf.Deg2Rad;
+                    float rad = Mathf.Lerp(0.35f, 1f, ((h >> 16) & 0xFFFF) / 65535f) * Length;
+                    var at = Origin + new Vector2(Mathf.Cos(ang), Mathf.Sin(ang)) * rad;
+                    // 방 밖으로 나가면 피할 자리가 사라진다. 안쪽으로 밀어 넣는다.
+                    return new Vector2(Mathf.Clamp(at.x, Radius, roomSize.x - Radius),
+                                       Mathf.Clamp(at.y, -roomSize.y + Radius, -Radius));
                 }
 
                 case Spread.Holes:
@@ -522,11 +543,17 @@ namespace Game.Module.InGame
                     s.Length = Mathf.Max(1f, L);
                     break;
 
-                // 마디 둘을 떼어 굴린다. 튕겨 다니므로 자리가 매번 다르다.
+                // 마디 둘을 떼어 **나에게** 굴린다.
+                //
+                // ⚠ 예전에는 `Scatter`(방 아무 데나)였다. 보스와도 나와도 상관없는
+                //   자리에 떨어져서 "이상한 데다 쏜다" 가 됐다. 떼어 굴리는 물건은
+                //   던지는 대상이 있어야 한다 — 내 자리를 중심으로 2.5 m 안에 뿌린다.
                 case BossDraw.SegmentLaunch:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Scatter;
+                    s.Origin = playerAt;
+                    s.Layout = Spread.NearTarget;
+                    s.Length = 2.5f * px;
                     s.Count = Mathf.Max(1, m.Lanes);
                     break;
 

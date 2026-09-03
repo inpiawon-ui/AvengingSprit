@@ -309,6 +309,10 @@ namespace Game.Character
 
         [Header("상태 · 취약 창")]
         [SerializeField] private BossState _state;
+
+        [Tooltip("사거리 안에 들어올 때까지 나를 쫓아온다.\n" +
+                 "제자리에 박힌 기계(크러셔)는 끄고, 기어다니는 것(가디언)은 켠다")]
+        [SerializeField] private bool _chases;
         [Tooltip("브레이크가 열려 있는 시간(초). 0 이면 취약 창이 없다.")]
         [SerializeField] private float _breakSeconds;
         [Tooltip("무엇을 해야 열리는가 — 화면에 띄우지는 않고 개발용 설명이다.")]
@@ -330,6 +334,16 @@ namespace Game.Character
         public int CanonAtk => _canonAtk;
         public bool HasCanonStats => _canonHp > 0 && _canonAtk > 0;
         public BossState State => _state;
+
+        /// <summary>
+        /// 사거리 안으로 들어올 때까지 나를 쫓아오는가.
+        ///
+        /// ⚠ 이것이 없으면 **짧은 패턴이 영영 안 쓰인다.** 원거리 몸은 7.2 m 에서
+        ///   서서 쏘는데 보스가 제자리면, 반경 3.5 m 짜리 「똬리」는 조건이 맞는
+        ///   순간이 오지 않는다 — 예고만 뜨고 아무 일도 안 난다.
+        ///   거리 조건은 "안 닿으면 건너뛴다" 가 아니라 "닿을 때까지 간다" 여야 한다.
+        /// </summary>
+        public bool Chases => _chases;
         public float BreakSeconds => _breakSeconds;
         public bool HasBreak => _breakSeconds > 0f;
         public string BreakCause => _breakCause;

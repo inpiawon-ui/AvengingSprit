@@ -199,6 +199,14 @@ namespace Game.Module.InGame
         /// <summary>보스 그림 배율. 256 캔버스가 방 폭의 1/3 이라 조금 줄인다.</summary>
         private const float BossScale = 0.9f;
 
+        /// <summary>
+        /// 쫓아오는 보스가 멈춰 서는 거리(m).
+        ///
+        /// 거리 조건의 기준값(`BossMove.RangeMeters` 기본 4 m)과 같게 둔다 —
+        /// 여기까지 와야 「붙었을 때만 쓰는」 패턴이 실제로 조건을 만족한다.
+        /// </summary>
+        private const float ChaseStopMeters = 4f;
+
         private const float RoomMeterHeight = 13f;
         private const float BossRoomMeterHeight = 13f;
 
@@ -3843,12 +3851,25 @@ namespace Game.Module.InGame
                 }
                 boss.TickAttack(dt);   // 다가오는 동안에도 간격은 돈다
 
-                // ⚠ **보스는 쫓아오지 않는다.** 제자리에 선 기계다.
+                // ⚠ **쫓아오느냐는 보스마다 다르다.**
                 //
-                //   쫓아오게 뒀더니 예고와 예고 사이 내내 걸어다녀서, 어디에 무엇이
-                //   그려졌는지가 매 순간 어긋났다 — 보스가 화면 아무 데나 가 있으니
-                //   "쟤가 지금 뭘 하는 거냐" 가 된다. 자리가 고정돼야 패턴이 읽힌다.
-                //   붙고 떨어지는 것은 **내 몫**이다.
+                //   크러셔는 컨베이어에 박힌 압축기라 제자리가 맞다. 그런데 그것을
+                //   6종 공통으로 깔았더니 **짧은 패턴이 영영 안 쓰였다** —
+                //   원거리 몸은 7.2 m 에서 서서 쏘는데 보스가 안 오면
+                //   반경 3.5 m 짜리 「똬리」는 조건이 맞는 순간이 오지 않는다.
+                //   거리 조건은 "안 닿으면 건너뛴다" 가 아니라 **"닿을 때까지 간다"** 다.
+                //
+                //   `ChaseStopMeters` 까지만 간다. 몸이 겹칠 때까지 붙으면 누가 누군지
+                //   안 보이고, 그 거리가 곧 `RangeMeters`(가깝다의 기준)와 같아야
+                //   붙어서 쓰는 패턴이 실제로 쓰인다.
+                var def = _brain != null ? _brain.Entry : null;
+                if (def != null && def.Chases && me != null
+                    && Vector2.Distance(boss.Position, me.Position) > ChaseStopMeters * _pxPerMeter)
+                {
+                    boss.MoveToward(me.Position, dt);
+                    return;
+                }
+
                 boss.SetMoving(false);
                 return;
             }
