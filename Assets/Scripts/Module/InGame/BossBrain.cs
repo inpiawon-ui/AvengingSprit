@@ -148,10 +148,38 @@ namespace Game.Module.InGame
         /// ⚠ 페이즈 배수와 따로 곱한다. 페이즈 배수는 보스마다 다른 값이라
         ///   거기에 섞으면 "30% 아래에서 반" 이라는 규칙이 보스마다 달라진다.
         /// </summary>
+        /// <summary>
+        /// 쿨다운 하한 = **그 패턴의 예고 시간 + 이만큼.**
+        ///
+        /// ⚠⚠ **예고보다 쿨이 짧으면 안 된다.** 페이즈 배수와 30% 반감이 곱해지면
+        ///   예고 1초짜리 패턴의 쿨이 0.42초까지 내려간다 — 예고가 끝나기도 전에
+        ///   다음 것이 준비되어 쉬는 틈이 사라지고, 피할 자리를 찾을 시간이 없다.
+        ///   어떤 밸런스에서든 그것은 의도가 아니다(기획 2026-09-03).
+        ///   실측: 가디언 P3 에서 사출 0.42 · 똬리/물기 0.56 · 돌진 1.13초였다.
+        /// </summary>
+        private const float CooldownFloorGap = 0.5f;
+
+        /// <summary>
+        /// 이 패턴의 예고 시간. 패턴이 제 값을 들고 있으면 그것이 이기고,
+        /// 없으면 페이즈 기본값으로 내려간다.
+        ///
+        /// ⚠ 쿨 하한도 이 값을 쓴다 — **재는 자가 하나여야** 예고와 쿨이 어긋나지 않는다.
+        /// </summary>
+        private float TelegraphOf(BossMove m)
+            => m.HasTelegraph ? m.TelegraphSeconds
+             : _telegraphs != null && Phase - 1 < _telegraphs.Length
+                 ? _telegraphs[Phase - 1] : DefaultTelegraph;
+
         private float CooldownOf(BossMove m)
-            => m.Cooldown * Mathf.Pow(_entry.PhaseCooldownMul, Phase - 1)
-               * (_lowHp ? LowHpCooldownMul : 1f)
-               * BattleDirector.BossCooldownMul;   // 테스트 스위치. 평소엔 1
+        {
+            float cool = m.Cooldown * Mathf.Pow(_entry.PhaseCooldownMul, Phase - 1)
+                       * (_lowHp ? LowHpCooldownMul : 1f)
+                       * BattleDirector.BossCooldownMul;   // 테스트 스위치. 평소엔 1
+
+            // 하한은 **모든 배수를 곱한 뒤**에 건다. 시험 스위치로 반으로 줄여도
+            // 예고보다 짧아지는 일은 없어야 한다.
+            return Mathf.Max(cool, TelegraphOf(m) + CooldownFloorGap);
+        }
 
         /// <summary>
         /// 쿨다운을 굴리고, 실행할 행동이 정해지면 예고를 시작한다.
@@ -202,9 +230,7 @@ namespace Game.Module.InGame
                 //   예고 길이는 피할 수 있느냐를 가르는 값이라 패턴마다 달라야 한다.
                 //   킹핀 「처형 표식」 1.8초가 24개 중 가장 길고, 그 길이 자체가
                 //   "몸을 갈아탈 시간을 준다" 는 뜻이다.
-                TelegraphLeft = m.HasTelegraph ? m.TelegraphSeconds
-                    : _telegraphs != null && Phase - 1 < _telegraphs.Length
-                        ? _telegraphs[Phase - 1] : DefaultTelegraph;
+                TelegraphLeft = TelegraphOf(m);
                 TelegraphTotal = TelegraphLeft;
                 return null;   // 이번 프레임은 예고만 — 피할 시간을 준다
             }
