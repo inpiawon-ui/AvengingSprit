@@ -2101,7 +2101,7 @@ namespace Game.Module.InGame
         ///
         /// ⚠ **표 값을 고치는 것이 아니다.** `BossDefTable` 의 숫자는 그대로 있고
         ///   여기서만 곱한다. 끄면 즉시 정본 체력으로 돌아온다. 빌드에는 없다.
-        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 체력 2배` 로 켜고 끈다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 체력 10배` 로 켜고 끈다.
         /// </summary>
         public static bool BossDoubleHp
         {
@@ -2115,7 +2115,28 @@ namespace Game.Module.InGame
         }
 
         /// <summary>보스 체력에 곱하는 값. 스위치가 꺼져 있으면 1 이다.</summary>
-        public static float BossHpMul => BossDoubleHp ? 2f : 1f;
+        public static float BossHpMul => BossDoubleHp ? 10f : 1f;
+
+        /// <summary>
+        /// 보스가 **스스로는 아무것도 안 한다.** 스킬을 손으로 눌러 하나씩 볼 때 쓴다.
+        ///
+        /// 쿨다운이 돌면 확인하려는 패턴 위에 다른 패턴이 겹쳐서, 무엇을 보고 있는지
+        /// 알 수 없다. 켜 두면 쫓아오지도, 때리지도, 패턴을 고르지도 않는다 —
+        /// 시험 버튼(`BattleDirector.TestGui.cs`)으로 부른 것만 돈다.
+        ///
+        /// ⚠ 켜 둔 채로 잊으면 **보스가 영영 아무것도 안 한다.** 확인이 끝나면 끈다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 가만히 (버튼으로만)` 로 켜고 끈다.
+        /// </summary>
+        public static bool BossIdleOnly
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossIdleOnly", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossIdleOnly", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
 
         /// <summary>
         /// 보스방에서 빼앗을 몸을 부르지 않는다.
@@ -3800,6 +3821,32 @@ namespace Game.Module.InGame
             }
 
             TickBossPending(dt);
+
+            // ⚠ 시험 모드 — 스스로는 아무것도 안 한다. 버튼으로 부른 예고만 굴린다.
+            if (BossIdleOnly)
+            {
+                if (_brain.IsTelegraphing)
+                {
+                    _telegraphPulse += dt;
+                    boss.SetTellPose(true);
+                    PulseTelegraph(boss);
+                    if (_dangerMove != _brain.Pending) BeginDanger(boss, me, _brain.Pending);
+                    TickDanger(dt);
+                    // 예고가 다 찼는지는 여기서 직접 본다 — `_brain.Tick` 을 안 부르므로
+                    _brain.TickTelegraph(dt);
+                    return;
+                }
+                var fired = _brain.TakeReady();
+                if (fired != null)
+                {
+                    boss.SetTelegraph(false);
+                    boss.SetTellPose(false);
+                    if (!StrikeDanger(boss, me, fired)) ExecuteBossMove(boss, me, fired);
+                    return;
+                }
+                boss.SetMoving(false);
+                return;
+            }
 
             // 두뇌가 거리를 보고 패턴을 고른다 — 붙으면 파괴구, 떨어지면 미사일·압착·돌진.
             // 표적이 없으면 아주 먼 것으로 친다(붙어야 쓰는 패턴이 헛돌지 않게).

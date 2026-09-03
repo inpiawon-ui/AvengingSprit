@@ -264,6 +264,21 @@ namespace Game.Module.InGame
         /// 시험용 — 그 패턴의 예고를 지금 시작한다. 쿨다운을 건드리지 않는다.
         /// (`BattleDirector.TestGui.cs` 의 버튼이 부른다. 그 파일과 함께 지우면 된다)
         /// </summary>
+        /// <summary>시험 모드에서 예고 시계만 굴린다. 쿨다운은 안 돈다.</summary>
+        public void TickTelegraph(float dt)
+        {
+            if (Pending != null && TelegraphLeft > 0f) TelegraphLeft -= dt;
+        }
+
+        /// <summary>예고가 다 찼으면 그 패턴을 꺼내 준다. 아니면 null.</summary>
+        public BossMove TakeReady()
+        {
+            if (Pending == null || TelegraphLeft > 0f) return null;
+            var m = Pending;
+            Pending = null;
+            return m;
+        }
+
         public void TestBeginTelegraph(BossMove m)
         {
             if (m == null) return;
