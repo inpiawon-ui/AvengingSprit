@@ -675,10 +675,23 @@ namespace Game.Module.InGame
         /// <summary>지금 재생 중인 공격 동작을 얼마나 끄는가. <see cref="PlayAttack"/> 가 정한다.</summary>
         private float _atkHoldScale = 1f;
 
-        /// <summary>피격 동작을 시작한다. 사격 중이어도 끊고 들어간다.</summary>
+        /// <summary>
+        /// 피격 동작을 시작한다. 사격 중이어도 끊고 들어간다.
+        ///
+        /// ⚠⚠ **보스는 피격 자세를 안 잡는다.**
+        ///
+        ///   이 게임은 오토어택이라 보스는 **초당 여러 번** 맞는다. 한 번 맞을 때마다
+        ///   0.12초짜리 피격 자세가 들어오면 보스는 사실상 **내내 피격 자세**다.
+        ///   게다가 `PlayAttack` 은 피격 중이면 첫 줄에서 돌아가므로
+        ///   (`if (_frame == FrameHit && _frameTimer > 0f) return;`)
+        ///   **공격 동작이 아예 시작되지도 않는다.**
+        ///
+        ///   "보스가 공격 액션을 하나도 안 하고 쳐맞기만 한다" 의 정체가 이것이다.
+        ///   맞았다는 것은 붉은 틴트(`_flashTimer`)와 피해 숫자가 이미 말해 준다.
+        /// </summary>
         public void PlayHit()
         {
-            if (_dying) return;
+            if (_dying || IsBoss) return;
             _frame = FrameHit;
             _frameTimer = HitSeconds;
             Apply();
