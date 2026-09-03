@@ -1080,6 +1080,18 @@ namespace Game.Module.InGame
         public void SetTellSprites(Sprite[] five) => _tellSprites = five;
 
         /// <summary>
+        /// 방향 **없이** 프레임으로 도는 예고 자세. 있으면 방향별 정지 그림보다 이긴다.
+        ///
+        /// 제자리에서 하는 동작(가디언 「똬리」처럼 몸을 마는 것)은 위에서 보면
+        /// 어느 쪽을 보든 같은 그림이다. 방향축에 다섯 장을 쓰느니 그 자리에
+        /// **프레임**을 넣는 편이 훨씬 잘 읽힌다 — 조여드는 것이 보인다.
+        /// </summary>
+        private Sprite[] _tellFrames;
+
+        /// <summary>방향 없는 예고 자세 프레임. null 이면 방향별 정지 그림으로 돌아간다.</summary>
+        public void SetTellFrames(Sprite[] frames) => _tellFrames = frames;
+
+        /// <summary>
         /// 예고 **색**을 켜고 끈다. 부르는 쪽이 0.08초마다 뒤집어 깜빡임을 만든다.
         ///
         /// ⚠ **그림은 여기서 안 바꾼다.** 예전에는 켤 때마다 몸을 예고 그림으로 갈고
@@ -1103,15 +1115,32 @@ namespace Game.Module.InGame
         /// 정면을 본다 — 「지금 힘을 모으는 중」으로 읽히므로 그것이 맞다.
         /// 문제는 그 자세와 방향 자세를 **번갈아** 보여 준 것이었다.
         /// </summary>
-        public void SetTellPose(bool on)
+        /// <param name="progress">
+        /// 예고가 얼마나 찼는가(0 → 1). 프레임 자세는 이 값으로 장을 고른다 —
+        /// 제 시계를 따로 돌리면 예고가 끝나는 순간과 마지막 장이 어긋난다.
+        /// </param>
+        public void SetTellPose(bool on, float progress = 0f)
         {
             if (_body == null) return;
 
             if (on)
             {
-                // 지금 보는 방향의 예고 그림이 없으면 **자세를 안 바꾼다.**
-                var want = _tellSprites != null && _facingIndex >= 0
-                        && _facingIndex < _tellSprites.Length ? _tellSprites[_facingIndex] : null;
+                Sprite want = null;
+
+                // 프레임 자세가 있으면 그것이 이긴다. 마지막 장에서 **멈춘다** —
+                // 되돌아 풀리면 "조이다 말았다" 가 되어 터질 것 같지 않다.
+                if (_tellFrames != null && _tellFrames.Length > 0)
+                {
+                    int i = Mathf.Clamp(
+                        Mathf.FloorToInt(Mathf.Clamp01(progress) * _tellFrames.Length),
+                        0, _tellFrames.Length - 1);
+                    want = _tellFrames[i];
+                }
+                // 아니면 지금 보는 방향의 정지 그림. 그것도 없으면 **자세를 안 바꾼다.**
+                else if (_tellSprites != null && _facingIndex >= 0
+                      && _facingIndex < _tellSprites.Length)
+                    want = _tellSprites[_facingIndex];
+
                 if (want == null) return;
 
                 // ⚠ 되돌릴 그림을 **켤 때** 기억한다. 끌 때 정하면 이미 예고 그림이라

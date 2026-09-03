@@ -128,12 +128,47 @@ namespace Game.Module.InGame
         /// </summary>
         private static string PoseKeyOf(BossDraw draw) => draw switch
         {
-            BossDraw.CoilWall      => "coil",     // 몸을 만다
             BossDraw.SegmentThrust => "thrust",   // 스프링처럼 뒤로 감았다가 편다
             BossDraw.SegmentLaunch => "launch",   // 몸을 젖히고 꼬리 마디를 떼어 낸다
             BossDraw.HeadBite      => "bite",     // 머리를 젖히고 턱을 벌린다
             _ => null,
         };
+
+        /// <summary>
+        /// **방향 없이 프레임으로** 도는 예고 자세의 파일 접미. 없으면 null.
+        ///
+        /// 제자리에서 하는 동작만 여기 온다. 위에서 본 「똬리」는 어느 쪽을 보든
+        /// 같은 원이라 방향축이 아무 말도 안 해 준다 — 그 자리에 프레임을 넣으면
+        /// **조여드는 것**이 보인다(기획 2026-09-03).
+        /// 반대로 돌진·사출·물기는 상대 쪽을 향해야 하므로 방향축을 그대로 쓴다.
+        /// </summary>
+        private static string AnimPoseKeyOf(BossDraw draw) => draw switch
+        {
+            BossDraw.CoilWall => "coil",
+            _ => null,
+        };
+
+        /// <summary>프레임 자세는 예고마다 다시 찾지 않는다 — 한 번 찾아 두고 쓴다.</summary>
+        private readonly Dictionary<string, Sprite[]> _animPoseCache = new();
+        private readonly List<Sprite> _animPoseScratch = new();
+
+        /// <summary>`unit_{stand}_{pose}1..N` 을 끊기는 데까지 모은다. 없으면 null.</summary>
+        private Sprite[] AnimPoseFrames(string stand, string pose)
+        {
+            string key = stand + "/" + pose;
+            if (_animPoseCache.TryGetValue(key, out var got)) return got;
+
+            _animPoseScratch.Clear();
+            for (int i = 1; i <= 16; i++)
+            {
+                var sp = UnitGet(stand, $"{pose}{i}");
+                if (sp == null) break;
+                _animPoseScratch.Add(sp);
+            }
+            var frames = _animPoseScratch.Count > 0 ? _animPoseScratch.ToArray() : null;
+            _animPoseCache[key] = frames;
+            return frames;
+        }
 
         private readonly Sprite[] _poseBuffer = new Sprite[Unit.FacingSuffix.Length];
 
@@ -142,6 +177,13 @@ namespace Game.Module.InGame
         {
             if (boss == null) return;
             var stand = UnitGet(boss.Key) != null ? boss.Key : BossStand(boss.Key);
+
+            // 프레임 자세가 있으면 그쪽이 이긴다. 방향축은 아예 안 본다.
+            var anim = AnimPoseKeyOf(m.Draw);
+            var frames = anim == null ? null : AnimPoseFrames(stand, anim);
+            boss.SetTellFrames(frames);
+            if (frames != null) { boss.SetTellSprites(null); return; }
+
             var pose = PoseKeyOf(m.Draw);
 
             bool any = false;

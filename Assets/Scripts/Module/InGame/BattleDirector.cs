@@ -3854,7 +3854,7 @@ namespace Game.Module.InGame
                 if (_brain.IsTelegraphing)
                 {
                     _telegraphPulse += dt;
-                    boss.SetTellPose(true);
+                    boss.SetTellPose(true, _brain.TelegraphProgress);
                     PulseTelegraph(boss);
                     if (_dangerMove != _brain.Pending) BeginDanger(boss, me, _brain.Pending);
                     TickDanger(dt);
@@ -3885,7 +3885,7 @@ namespace Game.Module.InGame
             {
                 _telegraphPulse += dt;
                 // 자세는 예고 내내 한 번만 세운다. 색만 깜빡인다.
-                boss.SetTellPose(true);
+                boss.SetTellPose(true, _brain.TelegraphProgress);
                 PulseTelegraph(boss);
                 // 예고가 막 시작된 프레임에 도형을 **한 번** 굳힌다.
                 if (_dangerMove != _brain.Pending) BeginDanger(boss, me, _brain.Pending);
