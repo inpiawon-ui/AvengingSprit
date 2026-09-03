@@ -3741,6 +3741,19 @@ namespace Game.Module.InGame
 
         private void TickBoss(Unit boss, Unit me, float dt)
         {
+            // ⚠⚠ **보스도 나를 바라봐야 한다.**
+            //
+            //   `SetFacing` 이 잡몹 경로에만 있었다. 보스는 그 위에서 `continue` 로
+            //   빠져나가므로 **한 번도 불리지 않았다** — `_facingIndex` 가 영영 -1 이고,
+            //   `Unit.Apply()` 는 그 값이 음수면 첫 줄에서 돌아간다.
+            //   그래서 보스는 40장을 다 갖고도 `unit_{키}_s` 한 장만 쓴다.
+            //   공격·피격·걷기 그림이 전부 안 나온다. 실측: 가디언 8벌 5방향이
+            //   다 붙어 있는데 `_facingIndex = -1` 이었다.
+            //
+            //   예전에는 보스가 나를 쫓아다녔고 `MoveToward` 가 방향을 세워 줘서
+            //   가려져 있었다. 보스를 제자리에 세운 순간 드러났다.
+            if (me != null) boss.SetFacing(me.Position - boss.Position);
+
             int before = _brain.Phase;
             _brain.UpdatePhase((float)boss.Hp / boss.HpMax);
             if (_brain.Phase != before)
