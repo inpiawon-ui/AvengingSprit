@@ -557,26 +557,26 @@ namespace Game.Module.InGame
                     s.Count = Mathf.Max(1, m.Lanes);
                     break;
 
-                // 몸을 말아 원형 벽. **머리가 그 안에 있다** — 틈으로 들어가는 것이 답이다.
+                // 몸을 말아 제 둘레를 통째로 짓누른다.
+                //
+                // ⚠ 예전에는 **틈 있는 도넛**이었다(안쪽 안전 · 틈으로 파고들기).
+                //   화면에서는 "원 가운데가 비어 있다" 로 읽혀서 무엇을 하라는 건지
+                //   알 수 없었다. 기획 2026-09-03 — **틈도 구멍도 없는 꽉 찬 원**이다.
+                //   바깥으로 나가는 것이 답이다.
                 case BossDraw.CoilWall:
-                    s.Shape = Kind.Ring;
+                    s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Inner = Mathf.Max(0f, m.InnerRadiusMeters * px);
-                    s.GapDegrees = m.GapDegrees > 0f ? m.GapDegrees : 60f;
-                    s.GapCenterDeg = tick * 70f % 360f;
                     break;
 
-                // 달려가서 문다.
+                // **제자리에서** 앞을 물어뜯는다.
                 //
-                // ⚠ 예전에는 보스 자리에서 뻗는 띠였다. 그러면 「마디 돌진」과 같은
-                //   모양이고, 무엇보다 **제자리에서 무는 것**이 된다 — 무는 짐승이
-                //   가만히 서서 목만 늘리는 그림이었다.
-                //   지금은 **물 자리**를 그린다. 예고가 끝나면 보스가 그 자리로
-                //   달려가고, 도착하는 순간에 문다(`ApplyMoveEffect` · `TickBite`).
+                // ⚠ 달려가는 쪽은 「마디 돌진」이 가져갔다(기획 2026-09-03).
+                //   둘 다 달려가면 구분이 안 된다 — 하나는 날아와 박고, 하나는
+                //   제자리에서 문다.
                 case BossDraw.HeadBite:
-                    s.Shape = Kind.Disc;
-                    s.Origin = playerAt;
-                    s.Radius = Mathf.Max(px, W * 0.5f);
+                    s.Shape = Kind.Wedge;
+                    s.Degrees = m.Degrees > 0f ? m.Degrees : 120f;
+                    s.Radius = Mathf.Max(1f, R);
                     break;
 
 

@@ -202,8 +202,8 @@ MonoBehaviour:
       _radiusMeters: 3.5
       _widthMeters: 0
       _lengthMeters: 0
-      _innerRadiusMeters: 2.6
-      _gapDegrees: 60
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 1
@@ -213,7 +213,7 @@ MonoBehaviour:
       _fromPhase: 3
       _cooldown: 9
       _shotCount: 5
-      _spreadDegrees: 0
+      _spreadDegrees: 120
       _damageMul: 1.14
       _telegraphSeconds: 1
       _nameKr: "\uBA38\uB9AC \uBB3C\uAE30"
@@ -221,8 +221,8 @@ MonoBehaviour:
       _shape: 4
       _draw: 9
       _dodge: 1
-      _degrees: 0
-      _radiusMeters: 0
+      _degrees: 120
+      _radiusMeters: 3.2
       _widthMeters: 2.4
       _lengthMeters: 4
       _innerRadiusMeters: 0

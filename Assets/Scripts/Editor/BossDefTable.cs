@@ -156,7 +156,7 @@ namespace Game.EditorTools
                                 Cooldown = 10f, Telegraph = 1f, DamageMul = 0.91f,
                                 Shape = "Zone", Draw = "CoilWall", Dodge = "GAP",
                                 Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 2.6f, GapDegrees = 60f, Lanes = 0,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "NEAR", RangeMeters = 4f, Group = 0 },
                         // 출처 — 머리만 몸에서 길게 뻗어 문다 · 최대 6 m · 마디가 적을수록 빠르다
@@ -168,7 +168,10 @@ namespace Game.EditorTools
                         new() { Phase = 3, NameKr = "머리 물기", NameEn = "HeadBite",
                                 Cooldown = 9f, Telegraph = 1f, DamageMul = 1.14f,
                                 Shape = "Dash", Draw = "HeadBite", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 0f, Width = 2.4f, Length = 4f,
+                                // ⚠ 반경은 쫓아와 멈추는 거리(3 m)보다 커야 한다.
+                                //   2.5 m 로 뒀더니 제자리에서 무는데 나는 3 m 밖이라
+                                //   한 번도 안 닿았다 — 똬리와 똑같은 함정이다.
+                                Degrees = 120f, Radius = 3.2f, Width = 2.4f, Length = 4f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "", RangeMeters = 4f, Group = 1 },

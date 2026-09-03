@@ -1066,11 +1066,18 @@ namespace Game.Module.InGame
         // 알리는 것이 예고 4겹의 첫 겹이고, 그림이 이미 6종 들어와 있다
         // (`unit_{보스}_s_tell`) — 코드가 한 번도 안 불렀을 뿐이다.
 
-        private Sprite _tellSprite;
+        /// <summary>
+        /// 예고 자세 — **방향마다 한 장씩**. 없는 방향은 null 이다.
+        ///
+        /// ⚠ 예전에는 정면(`s_tell`) 한 장을 방향과 무관하게 썼다. 그래서 옆을 보던
+        ///   보스가 예고하는 순간 **정면으로 홱 돌았다.** 없는 방향은 아예 안 바꾼다 —
+        ///   틀린 방향을 보여 주느니 제 방향 정지 그림이 낫다(색은 그대로 깜빡인다).
+        /// </summary>
+        private Sprite[] _tellSprites;
         private Sprite _tellRestore;
 
-        /// <summary>예고할 때 갈아 끼울 그림. 없으면 예전처럼 색만 바뀐다.</summary>
-        public void SetTellSprite(Sprite s) => _tellSprite = s;
+        /// <summary>예고할 때 갈아 끼울 그림 5장(s·se·e·ne·n). 없는 칸은 null.</summary>
+        public void SetTellSprites(Sprite[] five) => _tellSprites = five;
 
         /// <summary>
         /// 예고 **색**을 켜고 끈다. 부르는 쪽이 0.08초마다 뒤집어 깜빡임을 만든다.
@@ -1098,16 +1105,21 @@ namespace Game.Module.InGame
         /// </summary>
         public void SetTellPose(bool on)
         {
-            if (_body == null || _tellSprite == null) return;
+            if (_body == null) return;
 
             if (on)
             {
+                // 지금 보는 방향의 예고 그림이 없으면 **자세를 안 바꾼다.**
+                var want = _tellSprites != null && _facingIndex >= 0
+                        && _facingIndex < _tellSprites.Length ? _tellSprites[_facingIndex] : null;
+                if (want == null) return;
+
                 // ⚠ 되돌릴 그림을 **켤 때** 기억한다. 끌 때 정하면 이미 예고 그림이라
                 //   예고 그림으로 되돌아가 영영 안 풀린다.
-                if (_body.sprite != _tellSprite)
+                if (_body.sprite != want)
                 {
-                    _tellRestore = _body.sprite;
-                    _body.sprite = _tellSprite;
+                    if (_tellRestore == null) _tellRestore = _body.sprite;
+                    _body.sprite = want;
                 }
                 return;
             }

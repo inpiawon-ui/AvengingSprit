@@ -334,10 +334,10 @@ namespace Game.Module.InGame
                     break;
                 }
 
-                // 그어 둔 자리로 달려가 문다.
-                case BossDraw.HeadBite:
+                // 그어 둔 줄을 타고 **날아가 박는다.**
+                case BossDraw.SegmentThrust:
                 {
-                    var to = _danger.Origin - boss.Position;
+                    var to = _danger.Dir * _danger.Length;
                     float speed = Mathf.Max(1f, boss.MoveSpeed * ChargeSpeedMul * BiteSpeedMul);
                     float secs = Mathf.Clamp(to.magnitude / speed, 0.15f, 1.2f);
                     _chargeDamageMul = 0f;                 // 달려가는 동안은 안 아프다. 무는 순간에만 아프다
@@ -349,6 +349,10 @@ namespace Game.Module.InGame
                     _biteLeft = secs;
                     break;
                 }
+
+                // 제자리에서 문다 — 달려가지 않는다. 도형이 그대로 때린다.
+                case BossDraw.HeadBite:
+                    break;
 
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
                 case BossDraw.Spit:
@@ -962,13 +966,13 @@ namespace Game.Module.InGame
         /// 「머리 물기」도 여기서 빠진다. 예고가 끝나는 순간이 아니라 **달려가 도착한
         /// 순간**에 물기 때문이다(<see cref="TickBite"/>).
         private static bool ShapeHurts(BossDraw draw)
-            => draw != BossDraw.Crush && draw != BossDraw.HeadBite;
+            => draw != BossDraw.Crush && draw != BossDraw.SegmentThrust;
 
-        // ── 달려가서 문다 ────────────────────────────────────────
+        // ── 날아가서 박는다 ──────────────────────────────────────
         //
-        // 예고 → 보스가 물 자리로 달려감 → 도착하는 순간에 문다.
+        // 예고 → 보스가 그어 둔 줄을 타고 날아감 → 닿는 순간에 박는다.
         // 셋을 한 동작으로 읽히게 하려면 피해도 **도착할 때** 나야 한다 —
-        // 예고 끝나자마자 때리면 "제자리에서 물었는데 나중에 달려온다" 가 된다.
+        // 예고 끝나자마자 때리면 "제자리에서 박았는데 나중에 날아온다" 가 된다.
 
         /// <summary>무는 순간까지 남은 시간. 0 보다 크면 달려가는 중이다.</summary>
         private float _biteLeft;
@@ -985,10 +989,10 @@ namespace Game.Module.InGame
             var boss = _biteBoss; _biteBoss = null;
             if (boss == null || !boss.IsAlive) return;
 
-            // ⚠ **자리를 비웠으면 물지 않는다.**
-            //   붉은 원은 "여기 위험하니 비켜라" 라고 말한 것이다. 비켰는데도 보스가
-            //   빈 자리를 물어뜯으면 그 말이 거짓이 된다 — 피한 보람이 화면에 없다.
-            //   물지 않고 도착만 하는 것이 곧 "헛물켰다" 는 표시다.
+            // ⚠ **줄에서 비켰으면 안 맞는다.**
+            //   붉은 줄은 "여기 위험하니 비켜라" 라고 말한 것이다. 비켰는데도 맞으면
+            //   그 말이 거짓이 된다 — 피한 보람이 화면에 없다.
+            //   그냥 지나가는 것이 곧 "헛쳤다" 는 표시다.
             var me = Avatar;
             if (me == null || !_biteShape.Contains(me.Position, _roomSize)) return;
 

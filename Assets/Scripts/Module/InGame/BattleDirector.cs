@@ -2523,7 +2523,15 @@ namespace Game.Module.InGame
                            UnitBox(256f * BossScale, 256f * BossScale), isBoss: true);
                 ApplyFacingSprites(boss, UnitGet(bossKey) != null ? bossKey : BossStand(bossKey));
                 // 예고 프레임. 6종 다 들어와 있고 없으면 조용히 색만 바뀐다.
-                boss.SetTellSprite(UnitGet(bossKey, "s_tell") ?? UnitGet(BossStand(bossKey), "s_tell"));
+                // 예고 자세를 **방향마다** 넘긴다. 없는 방향은 null 이고, 그 방향에서는
+                // 자세를 안 바꾼다 — 정면 한 장을 옆·뒤에도 쓰면 예고할 때마다 홱 돈다.
+                {
+                    var stand = UnitGet(bossKey) != null ? bossKey : BossStand(bossKey);
+                    var tells = new Sprite[Unit.FacingSuffix.Length];
+                    for (int i = 0; i < tells.Length; i++)
+                        tells[i] = UnitGet(stand, $"{Unit.FacingSuffix[i]}_tell");
+                    boss.SetTellSprites(tells);
+                }
                 // ⚠ 정본의 `BossAt` 도 안 쓴다. 정본 방은 세로 16 m 를 전제로 적힌 좌표라
                 //   13 m 방에 그대로 넣으면 보스가 천장에 붙는다. 자리는 한 곳에서 정한다.
                 boss.Position = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * BossStandY);
