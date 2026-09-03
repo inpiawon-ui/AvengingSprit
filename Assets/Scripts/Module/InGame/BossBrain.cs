@@ -259,6 +259,20 @@ namespace Game.Module.InGame
             return _groupBuf[c % _groupBuf.Count];
         }
 
+#if UNITY_EDITOR
+        /// <summary>
+        /// 시험용 — 그 패턴의 예고를 지금 시작한다. 쿨다운을 건드리지 않는다.
+        /// (`BattleDirector.TestGui.cs` 의 버튼이 부른다. 그 파일과 함께 지우면 된다)
+        /// </summary>
+        public void TestBeginTelegraph(BossMove m)
+        {
+            if (m == null) return;
+            Pending = m;
+            TelegraphLeft = m.HasTelegraph ? m.TelegraphSeconds : DefaultTelegraph;
+            TelegraphTotal = TelegraphLeft;
+        }
+#endif
+
         public void BeginCharge(Vector2 dir, float seconds)
         {
             ChargeDir = dir.sqrMagnitude < 0.0001f ? Vector2.down : dir.normalized;
