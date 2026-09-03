@@ -96,9 +96,6 @@ namespace Game.Module.InGame
             ApplyTellPose(boss, m);
 
             _dangerView.Show(_danger, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
-            Debug.Log($"[진단:예고] {m.NameKr} draw={m.Draw} kind={_danger.Shape} r={_danger.Radius:0} " +
-                      $"origin={_danger.Origin} 활성={_dangerView.gameObject.activeInHierarchy} " +
-                      $"컬링={_dangerView.canvasRenderer.cull} 크기={((RectTransform)_dangerView.transform).sizeDelta}");
 
             // 안전지대는 **위험을 그린 다음**에 그린다. 위험만 있으면 "저기 맞겠네" 지만,
             // 안전이 같이 보이면 "저기로 가면 되네" 가 된다 — 훨씬 빨리 읽힌다.
@@ -870,7 +867,6 @@ namespace Game.Module.InGame
             //   잡몹 기준 0.17초는 256px 짜리 몸에 너무 짧아 길게 끈다.
             boss.PlayAttack(BossAttackHold);
 
-            Debug.Log($"[진단:발동] {m.NameKr} 맞음={playerHit} 피해={dmg}");
             ApplyMoveEffect(boss, me, m);
 
             // ⚠ 「마디 돌진」은 여기서 안 터진다. 아직 날아가지도 않았다 —
@@ -1001,7 +997,6 @@ namespace Game.Module.InGame
             }
             if (_missileFrames == null)
             {
-                Debug.LogWarning("[진단:비행] 탄 그림을 하나도 못 찾았다 — shot_missile_1 · shot_1 · shot");
                 return;
             }
 
@@ -1021,10 +1016,6 @@ namespace Game.Module.InGame
                 f.Img.sprite = _missileFrames[0];
             }
             TickFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
-
-            Debug.Log($"[진단:비행] {m.NameKr} {_flying}발 {_missileFrames.Length}프레임 " +
-                      $"{_flights[0].From} -> {_flights[0].To} {_flightTotal:0.00}초 " +
-                      $"활성={_flights[0].Rt.gameObject.activeInHierarchy}");
         }
 
         private Flight NewFlight()
@@ -1205,7 +1196,6 @@ namespace Game.Module.InGame
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
             var at = victim != null ? victim.Position : _danger.ImpactAt(_roomSize);
             var im = PlayFx(fx, at, size, loop: false);
-            Debug.Log($"[진단:임팩트] {fx} 크기={size:0} 자리={at} 생성={(im != null)}");
         }
     }
 }

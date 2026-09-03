@@ -21,7 +21,6 @@ namespace Game.EditorTools
         private const string OpeningMenu  = "Tools/Game/테스트 — 오프닝 다시 보기";
         private const string MinionMenu   = "Tools/Game/테스트 — 보스방 잔몹 끄기";
         private const string BossHpMenu   = "Tools/Game/테스트 — 보스 체력 10배";
-        private const string IdleMenu     = "Tools/Game/테스트 — 보스 가만히 (버튼으로만)";
 
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
@@ -34,21 +33,6 @@ namespace Game.EditorTools
             return true;
         }
 
-        // ── 보스 가만히 ────────────────────────────────────────
-        //
-        // 스킬을 하나씩 눌러 보는 동안 쿨다운이 돌면 확인하려는 패턴 위에 다른
-        // 패턴이 겹친다. 켜 두면 보스가 스스로는 아무것도 안 한다.
-
-        [MenuItem(IdleMenu)]
-        private static void ToggleIdle()
-            => BattleDirector.BossIdleOnly = !BattleDirector.BossIdleOnly;
-
-        [MenuItem(IdleMenu, true)]
-        private static bool ToggleIdleValidate()
-        {
-            Menu.SetChecked(IdleMenu, BattleDirector.BossIdleOnly);
-            return true;
-        }
 
         // ── 보스 체력 10배 ─────────────────────────────────────
         //
