@@ -149,7 +149,10 @@ namespace Game.EditorTools
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "", RangeMeters = 4f, Group = 0 },
                         // 출처 — 몸을 말아 반경 3.5 m 원형 벽을 만든다 · 3초 · 마디 사이 틈으로 들어가면 머리를 때린다
-                        new() { Phase = 2, NameKr = "똬리", NameEn = "CoilWall",
+                        // ⚠ 페이즈 2 가 아니라 **처음부터** 쓴다(기획 2026-09-03).
+                        //   체력 60% 아래에서만 나오면 붙어 있는 동안 쓸 것이 사실상
+                        //   마디 돌진 하나뿐이라 초반이 심심하다.
+                        new() { Phase = 1, NameKr = "똬리", NameEn = "CoilWall",
                                 Cooldown = 10f, Telegraph = 1f, DamageMul = 0.91f,
                                 Shape = "Zone", Draw = "CoilWall", Dodge = "GAP",
                                 Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,

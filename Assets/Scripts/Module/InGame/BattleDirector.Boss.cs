@@ -976,11 +976,16 @@ namespace Game.Module.InGame
             var boss = _biteBoss; _biteBoss = null;
             if (boss == null || !boss.IsAlive) return;
 
-            boss.PlayAttack(BossAttackHold);
+            // ⚠ **자리를 비웠으면 물지 않는다.**
+            //   붉은 원은 "여기 위험하니 비켜라" 라고 말한 것이다. 비켰는데도 보스가
+            //   빈 자리를 물어뜯으면 그 말이 거짓이 된다 — 피한 보람이 화면에 없다.
+            //   물지 않고 도착만 하는 것이 곧 "헛물켰다" 는 표시다.
             var me = Avatar;
-            if (me != null && _biteShape.Contains(me.Position, _roomSize)) DamagePlayer(_biteDamage);
-            PlayFx("slam", _biteShape.Origin,
-                   Mathf.Max(96f, _biteShape.Radius), loop: false);
+            if (me == null || !_biteShape.Contains(me.Position, _roomSize)) return;
+
+            boss.PlayAttack(BossAttackHold);
+            DamagePlayer(_biteDamage);
+            PlayFx("slam", _biteShape.Origin, Mathf.Max(96f, _biteShape.Radius), loop: false);
         }
 
         /// <summary>물러날 곳을 남긴다 — 문 자리에 그대로 붙어 있으면 계속 물린다.</summary>

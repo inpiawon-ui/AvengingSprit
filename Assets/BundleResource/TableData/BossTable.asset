@@ -187,7 +187,7 @@ MonoBehaviour:
       _rangeMeters: 4
       _group: 0
     - _pattern: 1
-      _fromPhase: 2
+      _fromPhase: 1
       _cooldown: 10
       _shotCount: 5
       _spreadDegrees: 0
