@@ -836,10 +836,10 @@ namespace Game.Module.InGame
 
                 // 피흡 — 유령을 문 것은 안 먹힌다. 유령은 피해를 안 입으므로
                 // 빨아들일 피가 없다(`DamagePlayer` 가 걸러 낸다).
-                float steal = LifestealOf(m.Draw);
+                float steal = HealOnHitRatio(m.Draw);
                 if (steal > 0f && _host != null && boss != null && boss.IsAlive)
                 {
-                    int gain = Mathf.Max(1, Mathf.RoundToInt(dmg * steal));
+                    int gain = Mathf.Max(1, Mathf.RoundToInt(boss.HpMax * steal));
                     boss.Heal(gain);
                     // 화면에 보여야 한다. 보스는 맞는 중이라 체력바만으로는
                     // 회복분이 감소분에 묻혀 안 보인다.
@@ -1116,13 +1116,18 @@ namespace Game.Module.InGame
             => draw == BossDraw.CoilWall ? 1f : 0f;
 
         /// <summary>
-        /// 맞히면 준 피해의 몇 할을 제 체력으로 가져가는가(피흡). 0 이면 안 가져간다.
+        /// 맞히면 제 **최대 체력**의 몇 할을 되찾는가. 0 이면 안 되찾는다.
         ///
-        /// 「머리 물기」는 물어뜯는 동작이라 무는 만큼 배를 채운다(기획 2026-09-03).
+        /// 「머리 물기」는 물어뜯는 동작이라 무는 만큼 배를 채운다.
         /// 피하면 아무것도 못 먹으므로, 피하는 것 자체가 보스 체력을 깎는 셈이 된다.
+        ///
+        /// ⚠ **준 피해의 몇 할이 아니다.** 피해 기준으로 하면 25 × 10% = 2 라
+        ///   2400 짜리 몸에 0.08% 다 — 숫자는 뜨는데 승패에 아무 영향이 없었다.
+        ///   최대 체력 기준이라야 "안 피하면 안 죽는다" 가 성립한다
+        ///   (기획 2026-09-03 — 최대 체력의 5%).
         /// </summary>
-        private static float LifestealOf(BossDraw draw)
-            => draw == BossDraw.HeadBite ? 0.10f : 0f;
+        private static float HealOnHitRatio(BossDraw draw)
+            => draw == BossDraw.HeadBite ? 0.05f : 0f;
 
         private static bool ImpactNeedsHit(BossDraw draw) => draw switch
         {
