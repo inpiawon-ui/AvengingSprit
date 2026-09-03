@@ -2796,7 +2796,6 @@ namespace Game.Module.InGame
 
             TickPlayer(dt);
             TickAfterimages(dt);
-            SyncFireRing();
             TickEnemies(dt);
             TickShots(dt);
             TickFields(dt);
@@ -3293,11 +3292,6 @@ namespace Game.Module.InGame
             PerformAttack(_host, target, true);
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
-        }
-
-        private void SyncFireRing()
-        {
-            if (_host != null) _host.SetFiring(IsFiring);
         }
 
         private void TickEnemies(float dt)

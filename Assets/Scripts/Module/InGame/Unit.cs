@@ -55,7 +55,6 @@ namespace Game.Module.InGame
 
         public static void SetShieldFillSprite(Sprite s) => s_shieldFillSprite = s;
         private Image _possessMark;
-        private Image _fireRing;
 
         private float _attackTimer;
         private float _flashTimer;
@@ -209,7 +208,6 @@ namespace Game.Module.InGame
             Side = UnitSide.Enemy;
             IsAggro = true;          // 놓아주자마자 나를 공격한다
             HoldPossessed(false);
-            SetFiring(false);
             SetState(EnemyState.Idle);
             RefreshHpBar();
         }
@@ -522,23 +520,6 @@ namespace Game.Module.InGame
             _ => new Color(0.37f, 0.78f, 1f, 0.95f),
         };
 
-        /// <summary>
-        /// 사격 중 표시. 궁수의 전설은 "멈춰야 쏜다"가 규칙이라 지금 쏘는 중인지가
-        /// 한눈에 보여야 한다. 발밑 링을 켜서 알린다.
-        /// </summary>
-        public void SetFiring(bool on)
-        {
-            if (_fireRing == null)
-            {
-                if (!on) return;
-                _fireRing = GetOrCreate("FireRing", new Vector2(_rect.sizeDelta.x * 0.9f, 14f),
-                                        new Vector2(0f, -_rect.sizeDelta.y * 0.45f));
-                _fireRing.color = new Color(1f, 0.72f, 0.24f, 0.55f);
-                _fireRing.transform.SetAsFirstSibling();
-            }
-            if (_fireRing.gameObject.activeSelf != on) _fireRing.gameObject.SetActive(on);
-        }
-
         public void SetSprite(Sprite s)
         {
             if (_body != null) _body.sprite = s;
@@ -775,10 +756,9 @@ namespace Game.Module.InGame
             _frameTimer = 0f;
             _moving = false;
 
-            // 죽은 몸은 더 이상 정보가 아니다. 체력바·빙의 표식·사격 링을 지운다.
+            // 죽은 몸은 더 이상 정보가 아니다. 체력바·빙의 표식을 지운다.
             if (_hpBarBg != null) _hpBarBg.gameObject.SetActive(false);
             if (_possessMark != null) _possessMark.gameObject.SetActive(false);
-            if (_fireRing != null) _fireRing.gameObject.SetActive(false);
 
             Apply();
             return true;
