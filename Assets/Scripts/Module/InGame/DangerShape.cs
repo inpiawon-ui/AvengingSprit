@@ -553,7 +553,12 @@ namespace Game.Module.InGame
                     s.Radius = Mathf.Max(1f, R);
                     s.Origin = playerAt;
                     s.Layout = Spread.NearTarget;
-                    s.Length = 2.5f * px;
+                    // ⚠ 착탄점이 **내 자리 둘레 이만큼 안에** 흩어진다.
+                    //   흩어지는 폭이 착탄 원보다 훨씬 크면, 원을 아무리 키워도
+                    //   흩어진 만큼 그냥 빗나간다 — 쿨을 줄여 더 자주 쏴도 소용없다.
+                    //   2.5 → 2 m 로 좁혔다(기획 2026-09-03). 원(1.35 m)을 더 키우면
+                    //   피할 틈이 같이 사라지므로, 폭을 좁혀 명중률만 올린다.
+                    s.Length = 2f * px;
                     s.Count = Mathf.Max(1, m.Lanes);
                     break;
 
