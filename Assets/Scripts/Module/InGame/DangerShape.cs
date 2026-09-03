@@ -566,12 +566,19 @@ namespace Game.Module.InGame
                     s.GapCenterDeg = tick * 70f % 360f;
                     break;
 
-                // 머리만 길게 뻗어 문다.
+                // 달려가서 문다.
+                //
+                // ⚠ 예전에는 보스 자리에서 뻗는 띠였다. 그러면 「마디 돌진」과 같은
+                //   모양이고, 무엇보다 **제자리에서 무는 것**이 된다 — 무는 짐승이
+                //   가만히 서서 목만 늘리는 그림이었다.
+                //   지금은 **물 자리**를 그린다. 예고가 끝나면 보스가 그 자리로
+                //   달려가고, 도착하는 순간에 문다(`ApplyMoveEffect` · `TickBite`).
                 case BossDraw.HeadBite:
-                    s.Shape = Kind.Band;
-                    s.Width = Mathf.Max(1f, W);
-                    s.Length = Mathf.Max(1f, L);
+                    s.Shape = Kind.Disc;
+                    s.Origin = playerAt;
+                    s.Radius = Mathf.Max(px, W * 0.5f);
                     break;
+
 
                 // ═══ B04 파이썬 ═══════════════════════════════════
                 // **벽에서 나온다.** 보스 자리가 아니라 벽에서 시작하는 것이 이 보스의 전부다.

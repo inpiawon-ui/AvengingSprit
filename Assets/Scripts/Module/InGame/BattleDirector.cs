@@ -2796,6 +2796,7 @@ namespace Game.Module.InGame
             TickBossMinions(dt);
             TickFollowUp(dt);      // 방패 전개가 부른 압착 두 번
             TickFlight(dt);        // 예고 내내 탄이 날아 도형을 채운다
+            TickBite(dt);          // 달려가서 무는 것은 도착할 때 아프다
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);

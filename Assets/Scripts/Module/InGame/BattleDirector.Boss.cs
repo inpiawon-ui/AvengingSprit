@@ -334,6 +334,22 @@ namespace Game.Module.InGame
                     break;
                 }
 
+                // 그어 둔 자리로 달려가 문다.
+                case BossDraw.HeadBite:
+                {
+                    var to = _danger.Origin - boss.Position;
+                    float speed = Mathf.Max(1f, boss.MoveSpeed * ChargeSpeedMul * BiteSpeedMul);
+                    float secs = Mathf.Clamp(to.magnitude / speed, 0.15f, 1.2f);
+                    _chargeDamageMul = 0f;                 // 달려가는 동안은 안 아프다. 무는 순간에만 아프다
+                    _chargeSpeedMul = ChargeSpeedMul * BiteSpeedMul;
+                    _brain.BeginCharge(to, secs);
+                    _biteShape = _danger;
+                    _biteDamage = Mathf.Max(1, Mathf.RoundToInt(boss.Atk * m.DamageMul));
+                    _biteBoss = boss;
+                    _biteLeft = secs;
+                    break;
+                }
+
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
                 case BossDraw.Spit:
                     SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
@@ -819,7 +835,15 @@ namespace Game.Module.InGame
             if (_missileFrames == null)
             {
                 var list = new List<Sprite>(4);
-                for (int i = 1; i <= 8; i++)
+
+                // ⚠ **그 보스가 던지는 물건이 따로 있으면 그것을 쓴다.**
+                //   가디언 「마디 사출」은 떼어낸 **마디**가 굴러가는 것인데
+                //   미사일 그림이 날아가고 있었다 — 이름과 화면이 어긋난다.
+                //   `obj_{보스키}_shard` 가 있으면 그것, 없으면 미사일로 떨어진다.
+                var shard = boss != null ? GetSprite($"obj_{boss.Key}_shard") : null;
+                if (shard != null) list.Add(shard);
+
+                for (int i = 1; i <= 8 && list.Count == 0; i++)
                 {
                     var sp = GetSprite($"shot_missile_{i}");
                     if (sp == null) break;
@@ -925,7 +949,42 @@ namespace Game.Module.InGame
         ///   때리는 것은 탄 하나뿐이고, 부채꼴은 "저쪽으로 간다" 를 말할 뿐이다.
         ///   (기획 2026-09-02 — "부채꼴은 저 방향으로 나간다고만 알려주면 돼")
         /// </summary>
-        private static bool ShapeHurts(BossDraw draw) => draw != BossDraw.Crush;
+        ///
+        /// 「머리 물기」도 여기서 빠진다. 예고가 끝나는 순간이 아니라 **달려가 도착한
+        /// 순간**에 물기 때문이다(<see cref="TickBite"/>).
+        private static bool ShapeHurts(BossDraw draw)
+            => draw != BossDraw.Crush && draw != BossDraw.HeadBite;
+
+        // ── 달려가서 문다 ────────────────────────────────────────
+        //
+        // 예고 → 보스가 물 자리로 달려감 → 도착하는 순간에 문다.
+        // 셋을 한 동작으로 읽히게 하려면 피해도 **도착할 때** 나야 한다 —
+        // 예고 끝나자마자 때리면 "제자리에서 물었는데 나중에 달려온다" 가 된다.
+
+        /// <summary>무는 순간까지 남은 시간. 0 보다 크면 달려가는 중이다.</summary>
+        private float _biteLeft;
+        private DangerShape _biteShape;
+        private int _biteDamage;
+        private Unit _biteBoss;
+
+        private void TickBite(float dt)
+        {
+            if (_biteLeft <= 0f) return;
+            _biteLeft -= dt;
+            if (_biteLeft > 0f) return;
+
+            var boss = _biteBoss; _biteBoss = null;
+            if (boss == null || !boss.IsAlive) return;
+
+            boss.PlayAttack(BossAttackHold);
+            var me = Avatar;
+            if (me != null && _biteShape.Contains(me.Position, _roomSize)) DamagePlayer(_biteDamage);
+            PlayFx("slam", _biteShape.Origin,
+                   Mathf.Max(96f, _biteShape.Radius), loop: false);
+        }
+
+        /// <summary>물러날 곳을 남긴다 — 문 자리에 그대로 붙어 있으면 계속 물린다.</summary>
+        private const float BiteSpeedMul = 2f;
 
         /// <summary>도형이 터진 자리에 표시를 남긴다. 무엇이 지나갔는지 보여야 한다.</summary>
         private void PlayDangerImpact(BossMove m)
