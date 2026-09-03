@@ -372,12 +372,6 @@ namespace Game.Module.InGame
         /// <summary>보스 패턴 동작을 끄는 배수. 0.17초 → 0.68초.</summary>
         private const float BossAttackHold = 4f;
 
-        /// <summary>
-        /// 평타 동작을 끄는 배수. 패턴보다 짧다 — 평타가 패턴만큼 길면
-        /// 무엇이 큰 것인지 구별이 안 된다.
-        /// </summary>
-        private const float BossBasicAttackHold = 2f;
-
         private void ApplyMoveEffect(Unit boss, Unit me, BossMove m)
         {
             switch (m.Draw)

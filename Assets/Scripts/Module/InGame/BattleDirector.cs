@@ -3860,34 +3860,19 @@ namespace Game.Module.InGame
                 boss.SetTellPose(false);
                 ClearDanger();
 
-                // ⚠ **패턴 사이에 아무것도 안 하면 안 된다.**
+                // ⚠⚠ **보스에게 평타는 없다.**
                 //
-                //   패턴 쿨은 8~20초다. 그동안 보스가 걸어오기만 하면 화면에서는
-                //   "보스가 가만히 서서 맞기만 한다" 로 보인다 — 실제로 그 보고가 왔다.
-                //   `BossAttackInterval` 을 `Setup` 에 넣어 두고도 아무도 안 썼다.
+                //   한때 3.61 m 안에 들어오면 1.6초마다 후려치는 평타가 있었다.
+                //   패턴 쿨이 8~20초이던 시절, 그 빈 시간을 메우려고 넣은 것이다.
                 //
-                //   잡몹과 같은 자(`TickAttack`)를 쓰되 **평타는 근접으로 고정**한다.
-                //   `PerformAttack` 은 `Profile` 을 보는데 보스는 그것이 없어
-                //   기본값(단발 사격)으로 떨어진다 — 크레인이 총을 쏘게 된다.
-                // ⚠ **유령한테는 주먹을 휘두르지 않는다.**
-                //   유령은 맞지 않는다(A 1-2 — Ghost HP 는 체력이 아니라 남은 시간이다).
-                //   그런데 보스가 계속 후려치는 시늉을 하면 화면에서는 맞고 있는 것으로
-                //   보이고, 마침 시계가 줄고 있어서 "맞아서 닳는다" 로 읽힌다.
-                //   **패턴은 계속 돈다** — 그쪽은 바닥에 그려 놓고 치는 것이라
-                //   유령이 그 위에 서 있어도 `DamagePlayer` 가 걸러 낸다.
-                if (_host != null && me != null
-                    && Vector2.Distance(boss.Position, me.Position) <= boss.AttackRange)
-                {
-                    boss.SetMoving(false);
-                    if (boss.TickAttack(dt))
-                    {
-                        boss.SetState(EnemyState.Attack);
-                        boss.PlayAttack(BossBasicAttackHold);
-                        MeleeStrike(boss, me, fromPlayer: false, hitAll: false);
-                    }
-                    return;
-                }
-                boss.TickAttack(dt);   // 다가오는 동안에도 간격은 돈다
+                //   지금 가디언의 쿨은 2~4초라 빈 시간이 없고, 무엇보다 평타는
+                //   **예고도 도형도 없이 그냥 맞는** 유일한 공격이었다.
+                //   근접 몸은 1.34 m 에서 때리므로 평타 사거리 안에 늘 들어와 있어,
+                //   피할 방법 없이 초당 27씩 맞았다 — 예고와 패턴을 넣은 이유가
+                //   "맞고 안 맞고는 피했느냐가 정한다" 인데 그것을 정면으로 깼다.
+                //   (기획 2026-09-03 — "근접캐릭터는 이유 없이 그냥 맞아야돼")
+                //
+                //   보스가 주는 피해는 **바닥에 그린 것뿐**이다.
 
                 // ⚠ **쫓아오느냐는 보스마다 다르다.**
                 //
