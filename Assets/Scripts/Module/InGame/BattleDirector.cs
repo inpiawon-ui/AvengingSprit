@@ -6082,6 +6082,17 @@ namespace Game.Module.InGame
         /// <summary>스턴 표시는 정수리 위에 뜬다. 그림 아래 절반이 비어 있어 얼굴을 가리지 않는다.</summary>
         private const float StunFxSize = 48f;
         private const float StunFxLift = 52f;
+
+        /// <summary>
+        /// **내 몸 위의 별은 더 크고 더 높이 뜬다.**
+        ///
+        /// ⚠ 잡몹과 같은 48px·52px 로 띄웠더니 **통째로 묻혔다.** 내 몸 정수리에는
+        ///   이미 체력바가 걸려 있고 피해 숫자도 거기서 솟는다 — 별이 그 뒤에 깔려
+        ///   "굳었는데 아무 표시가 없다" 가 됐다(기획 2026-09-03).
+        ///   굳은 것은 조작이 안 먹는다는 뜻이라 **제일 먼저 보여야 하는 표시**다.
+        /// </summary>
+        private const float MyStunFxSize = 84f;
+        private const float MyStunFxLift = 92f;
         private const float ShieldFxSize = 96f;
 
         private readonly Dictionary<Unit, Impact> _stunFx = new();
@@ -6099,7 +6110,10 @@ namespace Game.Module.InGame
             {
                 var u = kv.Key;
                 if (u == null || !u.IsAlive || !u.IsStunned) { kv.Value?.Stop(); _stunFxDone.Add(u); continue; }
-                kv.Value?.MoveTo(u.Position + Vector2.up * StunFxLift);
+                // ⚠ 띄울 때 쓴 높이와 **같은 높이**로 따라다녀야 한다. 여기서만
+                //   잡몹 높이를 쓰면 다음 프레임에 별이 체력바 뒤로 내려앉는다.
+                kv.Value?.MoveTo(u.Position
+                    + Vector2.up * (u == Avatar ? MyStunFxLift : StunFxLift));
             }
             for (int i = 0; i < _stunFxDone.Count; i++) _stunFx.Remove(_stunFxDone[i]);
 
@@ -6116,7 +6130,7 @@ namespace Game.Module.InGame
             // 별은 잡몹만 다는 것이 아니다. 내가 굳었을 때가 제일 알아야 할 때다.
             if (me != null && me.IsAlive && me.IsStunned && !_stunFx.ContainsKey(me))
             {
-                var mine = TakeLoopFx("stun", me.Position + Vector2.up * StunFxLift, StunFxSize);
+                var mine = TakeLoopFx("stun", me.Position + Vector2.up * MyStunFxLift, MyStunFxSize);
                 if (mine != null) _stunFx[me] = mine;
             }
 
