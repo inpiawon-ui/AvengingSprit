@@ -202,10 +202,13 @@ namespace Game.Module.InGame
         /// <summary>
         /// 쫓아오는 보스가 멈춰 서는 거리(m).
         ///
-        /// 거리 조건의 기준값(`BossMove.RangeMeters` 기본 4 m)과 같게 둔다 —
-        /// 여기까지 와야 「붙었을 때만 쓰는」 패턴이 실제로 조건을 만족한다.
+        /// ⚠ 4 m 였다가 3 m 로 내렸다. 거리 조건의 기준값(4 m)에 맞췄더니
+        ///   **조건만 맞고 도형은 안 닿았다** — 가디언 「똬리」의 위험한 띠가
+        ///   2.6~3.5 m 라, 4 m 에 선 나는 바깥 0.5 m 밖에 서 있다.
+        ///   패턴은 뜨는데 절대 안 맞으니 화면에서는 "저건 왜 쓰는 거냐" 가 된다.
+        ///   **조건이 맞는 거리가 아니라 도형이 닿는 거리**까지 와야 한다.
         /// </summary>
-        private const float ChaseStopMeters = 4f;
+        private const float ChaseStopMeters = 3f;
 
         private const float RoomMeterHeight = 13f;
         private const float BossRoomMeterHeight = 13f;
