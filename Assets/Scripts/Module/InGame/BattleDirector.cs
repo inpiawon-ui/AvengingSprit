@@ -147,6 +147,10 @@ namespace Game.Module.InGame
 
         /// <summary>이번 돌진에서 이미 때렸는가. 뚫고 가는 동안 매 프레임 때리면 안 된다.</summary>
         private bool _chargeHitDone;
+
+        /// <summary>닿는 순간 터뜨릴 것. 예고 시점에 정해 둔다 — 그때는 도형이 없다.</summary>
+        private string _chargeFx = "slam";
+        private float _chargeFxSize = 144f;
         private const int MaxRoomUnits = 14;
         private const float SummonRadius = 200f;
 
@@ -3830,6 +3834,9 @@ namespace Game.Module.InGame
                 {
                     _chargeHitDone = true;
                     DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(boss.Atk * _chargeDamageMul)));
+                    // 터지는 것은 **닿은 자리**다. 도형 중심에서 터뜨리면 보스가
+                    // 출발한 자리에서 폭발이 나 무엇에 맞았는지 알 수 없다.
+                    PlayFx(_chargeFx, me.Position, _chargeFxSize, loop: false);
 
                     // ⚠ **뚫고 가는 돌진은 여기서 안 멈춘다.**
                     //   멈춰 세웠더니 보스가 나에게 닿자마자 그 자리에 서 버려서

@@ -120,13 +120,18 @@ namespace Game.Module.InGame
         /// <summary>
         /// 그 패턴만의 예고 자세 파일 접미. 없으면 null — 공용 `_tell` 을 쓴다.
         ///
-        /// 예고 자세는 보스당 방향별 한 장이라 네 패턴이 그것을 나눠 쓴다.
-        /// 「똬리」처럼 **자세 자체가 곧 설명**인 패턴만 제 그림을 갖는다 —
-        /// 몸을 마는 것을 정지 그림으로 안 보여 주면 원만 뜨고 만다.
+        /// ⚠ 처음에는 보스당 `_tell` 한 장을 네 패턴이 나눠 썼다. 그랬더니 **어느
+        ///   스킬을 쓰든 같은 자세**여서 "그냥 서 있다가 원만 뜬다" 로 보였다
+        ///   (기획 2026-09-03 — "스킬쓸때 애니메이션이 이상해").
+        ///   지금은 가디언 네 패턴이 저마다 제 자세를 갖는다. 파일이 아직 없는
+        ///   패턴은 공용 `_tell` 로 내려가고, 그것도 없으면 자세를 안 바꾼다.
         /// </summary>
         private static string PoseKeyOf(BossDraw draw) => draw switch
         {
-            BossDraw.CoilWall => "coil",
+            BossDraw.CoilWall      => "coil",     // 몸을 만다
+            BossDraw.SegmentThrust => "thrust",   // 스프링처럼 뒤로 감았다가 편다
+            BossDraw.SegmentLaunch => "launch",   // 몸을 젖히고 꼬리 마디를 떼어 낸다
+            BossDraw.HeadBite      => "bite",     // 머리를 젖히고 턱을 벌린다
             _ => null,
         };
 
@@ -392,6 +397,10 @@ namespace Game.Module.InGame
                     _chargeSpeedMul = ChargeSpeedMul * BiteSpeedMul;
                     _chargePierce = true;
                     _chargeHitDone = false;
+                    // 접촉하는 순간에는 `_danger` 가 이미 치워져 있다. 터뜨릴 것을
+                    // **지금** 챙겨 둬야 그때 같은 그림으로 터진다.
+                    _chargeFx = ImpactFxOf(m.Draw);
+                    _chargeFxSize = Mathf.Max(96f, _danger.Width);
                     _brain.BeginCharge(to, Mathf.Clamp(to.magnitude / speed, 0.15f, 1.5f));
                     break;
                 }
@@ -794,7 +803,12 @@ namespace Game.Module.InGame
 
             Debug.Log($"[진단:발동] {m.NameKr} 맞음={playerHit} 피해={dmg}");
             ApplyMoveEffect(boss, me, m);
-            PlayDangerImpact(m, playerHit ? me : null);
+
+            // ⚠ 「마디 돌진」은 여기서 안 터진다. 아직 날아가지도 않았다 —
+            //   터지는 것은 **몸이 나에게 닿는 순간**이다(`TickBoss` 의 돌진 분기).
+            if (m.Draw != BossDraw.SegmentThrust
+                && (playerHit || !ImpactNeedsHit(m.Draw)))
+                PlayDangerImpact(m, playerHit ? me : null);
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
             CheckBreak(boss, m, playerHit);
 
@@ -1009,10 +1023,25 @@ namespace Game.Module.InGame
         ///   (기획 2026-09-02 — "부채꼴은 저 방향으로 나간다고만 알려주면 돼")
         /// </summary>
         ///
-        /// 「머리 물기」도 여기서 빠진다. 예고가 끝나는 순간이 아니라 **달려가 도착한
-        /// 순간**에 물기 때문이다(<see cref="TickBite"/>).
+        /// 「마디 돌진」도 여기서 빠진다. 예고가 끝나는 순간이 아니라 **날아가 몸이
+        /// 닿는 순간**에 박기 때문이다(`TickBoss` 의 돌진 분기).
         private static bool ShapeHurts(BossDraw draw)
             => draw != BossDraw.Crush && draw != BossDraw.SegmentThrust;
+
+        /// <summary>
+        /// 이 패턴은 **맞았을 때만** 터지는가.
+        ///
+        /// 몸으로 하는 것(물기·똬리·돌진·압착·파괴구)은 빗나가면 아무 일도 안 난다 —
+        /// 허공에서 폭발이 나면 "피했는데 왜 터지지" 가 된다.
+        /// 반대로 던지는 것(미사일·마디·파편)은 **물건이 실제로 떨어지므로**
+        /// 빗나가도 그 자리에서 터져야 한다.
+        /// </summary>
+        private static bool ImpactNeedsHit(BossDraw draw) => draw switch
+        {
+            BossDraw.HeadBite or BossDraw.CoilWall or BossDraw.SegmentThrust
+              or BossDraw.Crush or BossDraw.WreckingBall or BossDraw.RamCharge => true,
+            _ => false,
+        };
 
         // ── 날아가서 박는다 ──────────────────────────────────────
         //
@@ -1058,21 +1087,28 @@ namespace Game.Module.InGame
         ///   보스 발밑에서 터진다 — 나는 원 끄트머리에서 맞았는데 폭발은 저 위에서
         ///   난다. 맞은 자리에서 터져야 "내가 맞았다" 가 읽힌다.
         /// </param>
+        /// <summary>
+        /// 무엇이 지나갔는지 보여 줄 이펙트 이름. 도형이 아니라 **패턴**으로 고른다 —
+        /// 같은 원이라도 독구름과 파괴구는 다른 것이 터져야 읽힌다.
+        /// </summary>
+        private static string ImpactFxOf(BossDraw draw) => draw switch
+        {
+            BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
+                or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge
+                or BossDraw.SegmentThrust => "slam",
+            BossDraw.VenomCloud or BossDraw.Spit
+                or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
+            BossDraw.Conveyor or BossDraw.SegmentLaunch
+                or BossDraw.DebrisFall or BossDraw.HatchOpen
+                or BossDraw.FullEmergence => "shatter",
+            _ => "burst",
+        };
+
         private void PlayDangerImpact(BossMove m, Unit victim)
         {
             // 무엇이 지나갔는지 보여야 한다. 도형이 아니라 **패턴**으로 고른다 —
             // 같은 원이라도 독구름과 파괴구는 다른 것이 터져야 읽힌다.
-            string fx = m.Draw switch
-            {
-                BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
-                    or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge => "slam",
-                BossDraw.VenomCloud or BossDraw.Spit
-                    or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
-                BossDraw.Conveyor or BossDraw.SegmentLaunch
-                    or BossDraw.DebrisFall or BossDraw.HatchOpen
-                    or BossDraw.FullEmergence => "shatter",
-                _ => "burst",
-            };
+            string fx = ImpactFxOf(m.Draw);
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
             var at = victim != null ? victim.Position : _danger.ImpactAt(_roomSize);
             var im = PlayFx(fx, at, size, loop: false);
