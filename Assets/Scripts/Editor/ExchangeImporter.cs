@@ -51,7 +51,7 @@ namespace Game.EditorTools
 
             foreach (var src in Directory.GetFiles(InDir, "*.png"))
             {
-                var name = Path.GetFileName(src);
+                var name = Normalize(Path.GetFileName(src));
                 if (name.StartsWith("_")) continue;      // 검증용 임시 파일
                 if (IsSuperseded(name)) continue;        // 폐기된 판본
 
@@ -90,6 +90,19 @@ namespace Game.EditorTools
         }
 
         // ─────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// 파일명을 프로젝트 규약으로 맞춘다.
+        ///
+        /// ⚠ 걷기 프레임을 코드는 `walk1`·`walk2` 로 찾는데(`Unit.FrameSuffix`)
+        ///   보스 그림이 계속 `move1`·`move2` 로 들어왔다. 잡몹·호스트 150장은
+        ///   전부 `walk` 라 아무도 눈치채지 못했고, **보스 걷기 벌이 통째로 null**
+        ///   이었다 — 파일은 있는데 코드가 그 이름을 한 번도 찾지 않았다.
+        ///   이름 하나 때문에 "리소스는 다 들어왔다" 가 거짓이 되는 자리라
+        ///   경계에서 한 번 바로잡는다.
+        /// </summary>
+        private static string Normalize(string name)
+            => name.Replace("_move1.", "_walk1.").Replace("_move2.", "_walk2.");
 
         /// <summary>
         /// 납품 폴더에 남아 있지만 **이미 폐기된 판본**. 다시 끌어오면 안 된다.
