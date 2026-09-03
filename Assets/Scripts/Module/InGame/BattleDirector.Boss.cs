@@ -83,6 +83,10 @@ namespace Game.Module.InGame
             if (_danger.IsNone) return;
 
             _dangerMove = m;
+
+            // 이 패턴만의 예고 자세가 있으면 그것으로, 없으면 공용 예고 자세로.
+            ApplyTellPose(boss, m);
+
             _dangerView.Show(_danger, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
             Debug.Log($"[진단:예고] {m.NameKr} draw={m.Draw} kind={_danger.Shape} r={_danger.Radius:0} " +
                       $"origin={_danger.Origin} 활성={_dangerView.gameObject.activeInHierarchy} " +
@@ -104,6 +108,42 @@ namespace Game.Module.InGame
             // 램프는 **패턴을 안 가린다.** 무엇이 오든 "온다" 를 알리는 것이라
             // 크러셔의 네 패턴에 다 뜬다 — 원작이 그렇게 쓴다.
             BeginLamp(boss);
+        }
+
+        /// <summary>
+        /// 그 패턴만의 예고 자세 파일 접미. 없으면 null — 공용 `_tell` 을 쓴다.
+        ///
+        /// 예고 자세는 보스당 방향별 한 장이라 네 패턴이 그것을 나눠 쓴다.
+        /// 「똬리」처럼 **자세 자체가 곧 설명**인 패턴만 제 그림을 갖는다 —
+        /// 몸을 마는 것을 정지 그림으로 안 보여 주면 원만 뜨고 만다.
+        /// </summary>
+        private static string PoseKeyOf(BossDraw draw) => draw switch
+        {
+            BossDraw.CoilWall => "coil",
+            _ => null,
+        };
+
+        private readonly Sprite[] _poseBuffer = new Sprite[Unit.FacingSuffix.Length];
+
+        /// <summary>이번 예고에 쓸 자세 5장을 골라 보스에게 넘긴다.</summary>
+        private void ApplyTellPose(Unit boss, BossMove m)
+        {
+            if (boss == null) return;
+            var stand = UnitGet(boss.Key) != null ? boss.Key : BossStand(boss.Key);
+            var pose = PoseKeyOf(m.Draw);
+
+            bool any = false;
+            for (int i = 0; i < _poseBuffer.Length; i++)
+            {
+                _poseBuffer[i] = pose == null ? null
+                    : UnitGet(stand, $"{Unit.FacingSuffix[i]}_{pose}");
+                if (_poseBuffer[i] != null) any = true;
+            }
+            if (!any)
+                for (int i = 0; i < _poseBuffer.Length; i++)
+                    _poseBuffer[i] = UnitGet(stand, $"{Unit.FacingSuffix[i]}_tell");
+
+            boss.SetTellSprites(_poseBuffer);
         }
 
         // ── ③ 화살표 · ④ 이름표 ──────────────────────────────────
