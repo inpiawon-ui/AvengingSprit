@@ -28,9 +28,22 @@ namespace Game.Module.InGame
 
         private bool IsBossBroken => _breakLeft > 0f && _breakBoss != null;
 
-        /// <summary>취약 창 배수. 안 열려 있으면 1배.</summary>
+        /// <summary>
+        /// 취약 창 배수. 안 열려 있으면 1배.
+        ///
+        /// ⚠ 가디언은 **시간제가 아니다**(`BreakSeconds = 0`). 마디를 3개 이하로
+        ///   끊으면 머리가 **영구히** 열린다 — 그 뒤로는 계속 이 배수를 받는다.
+        ///   이것이 없으면 `_headOpen` 을 세워 두기만 하고 아무도 안 읽어서,
+        ///   "마디를 끊어야 머리가 열린다" 는 이 보스의 정체성이 화면에서
+        ///   **아무 차이도 만들지 않는다.** 실제로 그 상태였다.
+        /// </summary>
         private float BreakMul(Unit victim)
-            => IsBossBroken && victim == _breakBoss ? BreakDamageMul : 1f;
+        {
+            if (victim == null) return 1f;
+            if (IsBossBroken && victim == _breakBoss) return BreakDamageMul;
+            if (_headOpen && victim.IsBoss && IsSegmented) return BreakDamageMul;
+            return 1f;
+        }
 
         private void OpenBreak(Unit boss, string why)
         {
@@ -183,6 +196,9 @@ namespace Game.Module.InGame
         private const int SegmentCount = 8;
         private const int SegmentHp = 200;
 
+        /// <summary>이 수 이하로 끊으면 머리가 열린다. 정본 「3개 이하」.</summary>
+        private const int HeadOpenAt = 3;
+
         private int _segmentsLeft = SegmentCount;
         private int _segmentDamage;
 
@@ -217,11 +233,20 @@ namespace Game.Module.InGame
             PlayFx("shatter", victim.Position, 96f, loop: false);
 
             // 3 이하가 되는 순간 머리가 열린다. 시간제가 아니라 **영구**다.
-            if (_segmentsLeft <= 3 && !_headOpen)
+            //
+            // ⚠ `OpenBreak` 를 부르지 않는다. 그쪽은 `BreakSeconds` 가 0 이면
+            //   맨 첫 줄에서 그냥 돌아간다 — 가디언은 0 이라 **한 번도 열린 적이 없었다.**
+            //   여기서 직접 연다. 여는 값은 `_headOpen` 이고 `BreakMul` 이 그것을 읽는다.
+            if (_segmentsLeft <= HeadOpenAt && !_headOpen)
             {
                 _headOpen = true;
-                Debug.Log($"[보스] 가디언 머리 무적 해제 — 마디 {_segmentsLeft} 남음");
-                OpenBreak(victim, $"마디를 {_segmentsLeft} 개로 끊었다");
+
+                // 눈에 보이는 순간이어야 한다. 숫자만 바뀌면 무슨 일이 났는지 모른다.
+                PlayFx("burst", victim.Position, 216f, loop: false);
+                var t = RentDamageText();
+                if (t != null) t.Show(victim.Position, "머리 노출", HealColor);
+                Debug.Log($"[보스] 가디언 머리 무적 해제 — 마디 {_segmentsLeft} 남음 "
+                          + $"· 이제부터 피해 {BreakDamageMul:0.#}배");
             }
         }
 
