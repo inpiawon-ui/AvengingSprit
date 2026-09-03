@@ -28,6 +28,19 @@ namespace Game.Module.InGame
         private BossMove _dangerMove;
         private int _dangerTick;          // 회전하는 것(틈·줄·분면·섬)의 차례
 
+        /// <summary>
+        /// 마디가 다 떨어졌을 때 「마디 돌진」이 갖는 최소 길이(m).
+        ///
+        /// ⚠ 하한이 1 m 였다. 마디는 8 × 200 = 1600 피해면 다 떨어지는데 보스 체력은
+        ///   2400(테스트 4800)이라, **싸움의 3분의 2 동안 돌진이 1 m 짜리 네모**였다 —
+        ///   보스 발밑만 덮으니 나한테 닿을 수가 없다. 화면에서는 "보스가 아무것도
+        ///   안 한다" 로 보인다. 실측: 마디 0개일 때 길이 72px, 표에 적힌 값은 518px.
+        ///
+        ///   마디가 없어도 **머리는 남아 있다.** 머리가 뻗는 길이를 하한으로 둔다.
+        ///   (「머리 물기」가 6 m 라 그보다는 짧아야 둘이 구분된다)
+        /// </summary>
+        private const float HeadThrustMeters = 3.6f;
+
         /// <summary>예고 도형이 떠 있는가.</summary>
         private bool HasDanger => _dangerMove != null && !_danger.IsNone;
 
@@ -64,7 +77,8 @@ namespace Game.Module.InGame
             //   표에 적힌 7.2 m 는 마디 8개일 때의 값이다. 마디를 끊을수록 짧아진다 —
             //   여기서 한 번만 고쳐 두면 그린 것과 때리는 것이 같이 짧아진다.
             if (m.Draw == BossDraw.SegmentThrust && IsSegmented)
-                _danger.Length = Mathf.Max(_pxPerMeter, SegmentsLeft * 0.9f * _pxPerMeter);
+                _danger.Length = Mathf.Max(HeadThrustMeters * _pxPerMeter,
+                                           SegmentsLeft * 0.9f * _pxPerMeter);
 
             if (_danger.IsNone) return;
 
