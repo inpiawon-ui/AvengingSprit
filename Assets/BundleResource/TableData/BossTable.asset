@@ -176,7 +176,7 @@ MonoBehaviour:
       _draw: 7
       _dodge: 1
       _degrees: 0
-      _radiusMeters: 1.4
+      _radiusMeters: 0.7
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
       _draw: 8
       _dodge: 2
       _degrees: 0
-      _radiusMeters: 3.5
+      _radiusMeters: 1.75
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0

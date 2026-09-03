@@ -326,6 +326,9 @@ namespace Game.Module.InGame
             for (int i = 0; i < _frames.Length; i++) _frames[i] = null;
             _facingIndex = -1;
             _facingFlip = false;
+            _breathePhase = 0f;
+            _breatheX = 1f;
+            _breatheY = 1f;
             _frame = FrameIdle;
             _frameTimer = 0f;
             _shownFrame = -1;
@@ -754,6 +757,7 @@ namespace Game.Module.InGame
                 _frame = FrameIdle;
             }
             Apply();
+            TickBreathe(dt);
         }
 
         /// <summary>
@@ -813,9 +817,8 @@ namespace Game.Module.InGame
             if (s != null)
             {
                 _body.sprite = s;
-                // 반전이 걸려 있으면 연출 그림까지 뒤집힌다. 여기서 풀어 준다.
-                var sc = _body.transform.localScale;
-                _body.transform.localScale = new Vector3(Mathf.Abs(sc.x), sc.y, sc.z);
+                // 반전이 걸려 있으면 연출 그림까지 뒤집힌다. ApplyBodyScale 이 풀어 준다.
+                ApplyBodyScale();
                 return;
             }
             _shownFrame = -1;   // 다음 Apply 가 반드시 다시 그리게 한다
@@ -844,10 +847,57 @@ namespace Game.Module.InGame
             _shownIndex = _facingIndex;
             _shownFlip = _facingFlip;
             _body.sprite = _frames[f][_facingIndex];
-            // 좌우 반전은 스케일로 준다. 부호만 바꾸므로 픽셀 정렬이 깨지지 않는다.
-            var s = _body.transform.localScale;
+            ApplyBodyScale();
+        }
+
+        // ── 숨쉬기 ───────────────────────────────────────────────
+        //
+        // 정지 그림 한 장으로 서 있으면 **죽은 것처럼 보인다.** 보스는 패턴 쿨
+        // 사이에 제자리에 서 있는 시간이 길어서 특히 그렇다(기획 2026-09-03 —
+        // "가만히 있으니깐 이상하자나").
+        //
+        // 그림을 더 받지 않고 **몸을 부풀렸다 줄인다.** 가로로 넓어질 때 세로로
+        // 살짝 낮아지는 짝(스쿼시)이라 부피가 도는 것으로 읽히고, 세로 변화가
+        // 절반이라 발이 바닥에서 뜨는 것이 거의 안 보인다.
+
+        private const float BreatheSeconds = 1.7f;    // 한 번 들이쉬고 내쉬는 데 걸리는 시간
+        private const float BreatheAmount = 0.035f;   // 가로로 최대 얼마나 부푸는가
+        private float _breathePhase;
+        private float _breatheX = 1f, _breatheY = 1f;
+
+        /// <summary>
+        /// 좌우 반전과 숨쉬기를 **한 군데서** 곱해 넣는다.
+        /// 둘을 따로 쓰면 나중에 쓴 쪽이 앞의 것을 지운다.
+        /// </summary>
+        private void ApplyBodyScale()
+        {
+            if (_body == null) return;
+            // 연출 그림(빙의 등)이 쥐고 있을 때는 반전을 풀어 준다 — 방향이 없는 그림이다.
+            bool flip = _facingFlip && _override == null;
             _body.transform.localScale =
-                new Vector3(_facingFlip ? -Mathf.Abs(s.x) : Mathf.Abs(s.x), s.y, s.z);
+                new Vector3(flip ? -_breatheX : _breatheX, _breatheY, 1f);
+        }
+
+        private void TickBreathe(float dt)
+        {
+            // 보스만 숨쉰다. 잡몹·호스트는 늘 움직이고 있어서 필요 없다.
+            bool idle = IsBoss && !_dying && !_possessHold && _override == null
+                     && !_moving && _frame == FrameIdle;
+
+            float x = 1f, y = 1f;
+            if (idle)
+            {
+                _breathePhase += dt;
+                float w = Mathf.Sin(_breathePhase * (Mathf.PI * 2f / BreatheSeconds));
+                x = 1f + w * BreatheAmount;
+                y = 1f - w * BreatheAmount * 0.5f;
+            }
+            else _breathePhase = 0f;
+
+            if (Mathf.Approximately(x, _breatheX) && Mathf.Approximately(y, _breatheY)) return;
+            _breatheX = x;
+            _breatheY = y;
+            ApplyBodyScale();
         }
 
         /// <summary>
