@@ -6989,6 +6989,8 @@ namespace Game.Module.InGame
             {
                 _boss = null;
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+                // 벽 보스는 제 죽는 연출이 따로 있다 — 그냥 두면 선 채로 투명해진다.
+                BeginPythonDeath(u);
             }
 
             if (u.BeginDeath()) _dying.Add(u);

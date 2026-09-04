@@ -647,7 +647,11 @@ namespace Game.Module.InGame
             if (art != null) _lampImg.sprite = art;
             _lampImg.enabled = art != null;
             // 몸 위에 얹는다. 이름표(150)보다 낮게 둬서 글자를 가리지 않는다.
-            _lampRt.anchoredPosition = boss.Position + new Vector2(0f, 108f);
+            //
+            // ⚠ **벽 보스만 아래에 단다.** 파이썬은 방 꼭대기 벽에 붙어 있어서
+            //   위에 달면 램프가 벽 그림 속으로 들어가고 체력 게이지에도 가린다 —
+            //   예고를 알리는 표시가 예고 때 안 보이는 셈이 된다.
+            _lampRt.anchoredPosition = boss.Position + new Vector2(0f, IsWallBoss ? -108f : 108f);
         }
 
         private void EndLamp()

@@ -88,6 +88,8 @@ namespace Game.Module.InGame
             _wallPhase = WallPhase.Slide;
             _wallTimer = 0f;
             _wallArch = -1;
+            _pyDying = null;
+            _pyBodySpeed = 1f;
             _pyOut = null;   // 방마다 아틀라스가 다시 올라온다
             _wallPhaseIndex = -1;             // 아래에서 반드시 한 번 걸리게 한다
             ApplyWallPhase(1);
@@ -217,8 +219,12 @@ namespace Game.Module.InGame
         {
             if (!IsPythonRoom) return;
             TickRubble(dt);
-            TickHeadLunge(dt, _boss);
-            TickBodyShove(dt);
+            TickPythonDeath(dt);
+            if (_pyDying == null)
+            {
+                TickHeadLunge(dt, _boss);
+                TickBodyShove(dt);
+            }
             if (_pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
             if (_pyBodySpeed <= 0f) return;
 
@@ -448,19 +454,21 @@ namespace Game.Module.InGame
             _wallTimer = 0f;
         }
 
-        /// <summary>
-        /// 지금 새 패턴을 시작해도 되는가.
-        /// 벽 보스가 아니면 늘 참이다 — 이 규칙은 파이썬 하나에만 건다.
-        /// </summary>
-        private bool CanWallBossAct
+        /// <summary>이 방의 보스가 벽에 붙어 사는 보스인가.</summary>
+        private bool IsWallBoss
         {
             get
             {
                 var def = _brain != null ? _brain.Entry : null;
-                if (def == null || def.State != BossState.Walls) return true;
-                return _wallPhase == WallPhase.Strike;
+                return def != null && def.State == BossState.Walls;
             }
         }
+
+        /// <summary>
+        /// 지금 새 패턴을 시작해도 되는가.
+        /// 벽 보스가 아니면 늘 참이다 — 이 규칙은 파이썬 하나에만 건다.
+        /// </summary>
+        private bool CanWallBossAct => !IsWallBoss || _wallPhase == WallPhase.Strike;
 
         // ── 머리 뻗기 ────────────────────────────────────────────
         //
@@ -588,6 +596,57 @@ namespace Game.Module.InGame
 
             _pyDeepClip.gameObject.SetActive(true);
             _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, depth);
+        }
+
+        // ── 죽음 ─────────────────────────────────────────────────
+        //
+        // 그냥 두면 머리가 `out4` 자세로 **선 채 투명해지기만 한다.**
+        // 방향별 die 그림은 있지만 옛 옆모습 시트라 벽 보스에 안 맞고,
+        // 어차피 연출 그림(`SetSpriteOverride`)이 쥐고 있어 나오지도 않는다.
+        //
+        // 대신 **들어가는 프레임(in1~4)을 죽는 데 쓴다** — 힘이 빠져 구멍으로
+        // 미끄러져 들어가는 것으로 읽힌다. 동시에 벽 뒤 몸이 멈추고,
+        // 아치에서 잔해가 떨어진다. 새 그림을 받지 않는다.
+        //
+        // 유닛 쪽 페이드가 0.16 + 0.50 = 0.66초라 그 안에 끝나야 한다.
+
+        private const float DeathSlipSeconds = 0.55f;
+
+        private Unit _pyDying;
+        private float _pyDeathTimer;
+
+        /// <summary>파이썬이 죽었다. 머리를 구멍으로 흘려 넣는다.</summary>
+        private void BeginPythonDeath(Unit boss)
+        {
+            if (boss == null || !IsPythonRoom) return;
+            _pyDying = boss;
+            _pyDeathTimer = 0f;
+            _lungeTimer = 0f;
+            _shoveTimer = 0f;
+            ShowNeck(0f);
+
+            // 벽이 버티지 못하고 아치마다 잔해가 떨어진다.
+            var live = LiveArches;
+            for (int i = 0; i < live.Length; i++)
+            {
+                var at = DangerShape.ArchAtRoom(live[i], _roomSize);
+                DropRubble(at + new Vector2(0f, -_pxPerMeter * 0.4f));
+                PlayFx("shatter", at, 120f, loop: false);
+            }
+        }
+
+        private void TickPythonDeath(float dt)
+        {
+            if (_pyDying == null) return;
+            _pyDeathTimer += dt;
+
+            // 몸이 서서히 멈춘다. 죽은 몸이 계속 흐르면 아직 살아 있는 것으로 보인다.
+            _pyBodySpeed = Mathf.Max(0f, 1f - _pyDeathTimer / DeathSlipSeconds);
+
+            if (_pyIn != null)
+                SetHeadFrame(_pyDying, _pyIn, _pyDeathTimer / DeathSlipSeconds);
+
+            if (_pyDeathTimer >= DeathSlipSeconds) _pyDying = null;
         }
 
         // ── 무너진 벽돌 ──────────────────────────────────────────
