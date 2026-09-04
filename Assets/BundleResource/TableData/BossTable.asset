@@ -132,7 +132,7 @@ MonoBehaviour:
     _atkMul: 1.15
     _moveSpeedMul: 1.3
     _phaseCooldownMul: 0.75
-    _canonHp: 2400
+    _canonHp: 1200
     _canonAtk: 66
     _state: 1
     _chases: 1

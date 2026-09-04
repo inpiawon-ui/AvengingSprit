@@ -136,7 +136,10 @@ namespace Game.EditorTools
                     //   ⚠ 평타를 없앴으므로(`TickBoss`) 이 값은 **오로지 스킬 피해**를
                     //     정한다. 스킬 피해 = 이 값 × 그 패턴의 DamageMul 이라,
                     //     여기만 만지면 넷이 같은 비율로 따라 움직인다.
-                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 2400, Atk = 66,
+                    // ⚠ 체력 2400 → **1200** (기획 2026-09-03). 2400 으로는 아마존이
+                    //   초당 62 로 27초를 때려야 30%(P3)에 닿아서, 페이즈가 바뀌기 전에
+                    //   이미 승부가 나 있었다 — P2·P3 를 겪지도 못하고 끝났다.
+                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 1200, Atk = 66,
                     State = "Segments", Chases = true, BreakSeconds = 0.0f, BreakCause = "마디를 3개 이하로 끊었다 — 머리 무적이 영구히 풀린다",
                     Moves = new Move[]
                     {
