@@ -135,7 +135,7 @@ MonoBehaviour:
     _canonHp: 1200
     _canonAtk: 66
     _state: 1
-    _chases: 1
+    _chases: 0
     _breakSeconds: 0
     _breakCause: "\uB9C8\uB514\uB97C 3\uAC1C \uC774\uD558\uB85C \uB04A\uC5C8\uB2E4
       \u2014 \uBA38\uB9AC \uBB34\uC801\uC774 \uC601\uAD6C\uD788 \uD480\uB9B0\uB2E4"
