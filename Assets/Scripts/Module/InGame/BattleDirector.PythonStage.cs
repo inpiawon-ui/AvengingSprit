@@ -121,6 +121,30 @@ namespace Game.Module.InGame
             _pyDeep = NewBodyRow(tiles, "Deep", _pyDeepClip);
             ShowDeepBody(false);
 
+            // 목 — 벽 아래 끝과 머리를 잇는다. 벽보다 **아래**에 만들어야
+            // 아치 안쪽에서 뻗어 나오는 것으로 보인다.
+            var nc = new GameObject("NeckClip", typeof(RectTransform), typeof(RectMask2D));
+            nc.transform.SetParent(_pyStage, false);
+            _neckClip = (RectTransform)nc.transform;
+            _neckClip.anchorMin = _neckClip.anchorMax = new Vector2(0f, 1f);
+            _neckClip.pivot = new Vector2(0.5f, 1f);
+            _neck = new Image[3];
+            for (int i = 0; i < _neck.Length; i++)
+            {
+                var ng = new GameObject($"Neck{i + 1}", typeof(RectTransform), typeof(Image));
+                ng.transform.SetParent(_neckClip, false);
+                var rt = (RectTransform)ng.transform;
+                rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                // 가로로 심리스한 몸통을 눕혀 세로 목으로 쓴다.
+                rt.localEulerAngles = new Vector3(0f, 0f, 90f);
+                var nimg = ng.GetComponent<Image>();
+                nimg.sprite = _pyBody1;
+                nimg.raycastTarget = false;
+                _neck[i] = nimg;
+            }
+            _neckClip.gameObject.SetActive(false);
+
             // 벽 — 몸통 위, 유닛 아래. **마지막에 만들어야** 몸통 두 줄보다 위에 온다.
             var wg = new GameObject("Wall", typeof(RectTransform), typeof(Image));
             wg.transform.SetParent(_pyStage, false);
@@ -172,6 +196,14 @@ namespace Game.Module.InGame
             }
             _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, DeepBodyMeters * _pxPerMeter);
             _pyDeepClip.anchoredPosition = new Vector2(0f, -band);
+
+            // 목 조각. 눕혀 놨으므로 가로가 길이, 세로가 굵기다.
+            for (int i = 0; i < _neck.Length; i++)
+            {
+                var rt = (RectTransform)_neck[i].transform;
+                rt.sizeDelta = new Vector2(tile, band);
+                rt.anchoredPosition = new Vector2(0f, -(i * tile + tile * 0.5f));
+            }
             var w = (RectTransform)_pyWall.transform;
             w.sizeDelta = new Vector2(_roomSize.x, band);
             w.anchoredPosition = Vector2.zero;
@@ -185,6 +217,8 @@ namespace Game.Module.InGame
         {
             if (!IsPythonRoom) return;
             TickRubble(dt);
+            TickHeadLunge(dt, _boss);
+            TickBodyShove(dt);
             if (_pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
             if (_pyBodySpeed <= 0f) return;
 
@@ -303,6 +337,9 @@ namespace Game.Module.InGame
         /// <summary>납품 규격 — 머리 그림의 꼭대기가 256 캔버스의 위에서 24 px 에 있다.</summary>
         private const float HeadTopPx = 24f;
 
+        /// <summary>납품 규격 — 다 나온 머리(out4)의 아래 끝이 캔버스 220 px 에 있다.</summary>
+        private const float HeadArtBottomPx = 220f;
+
         private WallPhase _wallPhase;
         private float _wallTimer;
         private int _wallArch = -1;
@@ -375,6 +412,7 @@ namespace Game.Module.InGame
                     // ⚠ 예고가 떠 있는 동안에는 안 들어간다. 그리다 만 도형을 두고
                     //   머리가 사라지면 무엇이 오는지 읽을 근거가 없어진다.
                     if (_brain != null && (_brain.IsTelegraphing || _dangerMove != null)) break;
+                    if (IsLunging || IsShoving) break;   // 뻗은 목·민 몸이 돌아오기 전에는 못 들어간다
                     _wallPhase = WallPhase.Retreat;
                     _wallTimer = 0f;
                     break;
@@ -422,6 +460,134 @@ namespace Game.Module.InGame
                 if (def == null || def.State != BossState.Walls) return true;
                 return _wallPhase == WallPhase.Strike;
             }
+        }
+
+        // ── 머리 뻗기 ────────────────────────────────────────────
+        //
+        // 예고만 뜨고 아무것도 안 움직이면 「경고만 뜨고 끝」이 된다.
+        // **머리가 그어 둔 띠 끝까지 실제로 내려갔다 돌아온다.**
+        //
+        // 목은 새 그림을 받지 않고 `obj_python_body` 를 **90° 눕혀** 잇는다 —
+        // 가로로 심리스한 몸통이라 세로로 세우면 그대로 이어지는 목이 된다.
+        // 굵기는 몸통 두께 그대로 1 m 이고, 머리(76~108 px)보다 살짝 좁아 자연스럽다.
+
+        private const float LungeOutSeconds = 0.12f;
+        private const float LungeHoldSeconds = 0.12f;
+        private const float LungeBackSeconds = 0.30f;
+
+        private float _lungeTimer;      // 0 이면 안 뻗고 있다
+        private float _lungeDepth;      // 이번에 내려갈 거리(px)
+        private RectTransform _neckClip;
+        private Image[] _neck;
+
+        /// <summary>지금 목을 뻗는 중인가. 이 동안에는 머리가 안 들어간다.</summary>
+        private bool IsLunging => _lungeTimer > 0f;
+
+        private float LungeTotal => LungeOutSeconds + LungeHoldSeconds + LungeBackSeconds;
+
+        /// <summary>
+        /// 머리 끝이 **띠의 끝**에 닿도록 내려갈 거리를 잰다.
+        /// 그린 것과 닿는 것이 같아야 한다(R1) — 눈대중으로 정하면 둘이 갈라진다.
+        /// </summary>
+        private float LungeDepthFor(float bandLengthPx)
+        {
+            float box = 256f * BossScale * _config.UnitScale;
+            float restTip = HeadY() + box * 0.5f - HeadArtBottomPx * (box / 256f);
+            float bandEnd = -(DangerShape.WallBandDepth(_roomSize) + bandLengthPx);
+            return Mathf.Max(0f, restTip - bandEnd);
+        }
+
+        private void BeginHeadLunge(float bandLengthPx)
+        {
+            _lungeDepth = LungeDepthFor(bandLengthPx);
+            _lungeTimer = LungeTotal;
+        }
+
+        /// <summary>지금 얼마나 내려가 있는가(px). 나갈 때 빠르고 돌아올 때 느리다.</summary>
+        private float LungeOffset()
+        {
+            float t = LungeTotal - _lungeTimer;                 // 시작부터 흐른 시간
+            if (t <= LungeOutSeconds)
+                return _lungeDepth * (t / LungeOutSeconds);
+            if (t <= LungeOutSeconds + LungeHoldSeconds)
+                return _lungeDepth;
+            float back = (t - LungeOutSeconds - LungeHoldSeconds) / LungeBackSeconds;
+            return _lungeDepth * (1f - Mathf.Clamp01(back));
+        }
+
+        private void TickHeadLunge(float dt, Unit boss)
+        {
+            if (!IsLunging) { ShowNeck(0f); return; }
+            _lungeTimer -= dt;
+            float off = _lungeTimer <= 0f ? 0f : LungeOffset();
+            if (boss != null && !boss.IsHidden)
+                boss.Position = new Vector2(boss.Position.x, HeadY() - off);
+            ShowNeck(off);
+            if (_lungeTimer <= 0f) { _lungeTimer = 0f; ShowNeck(0f); }
+        }
+
+        /// <summary>
+        /// 벽 아래 끝과 머리 사이를 목으로 잇는다.
+        /// 머리 그림 자체가 아치 안쪽을 이미 채우고 있으므로,
+        /// 그만큼 넘게 내려갔을 때만 목이 필요하다.
+        /// </summary>
+        private void ShowNeck(float offset)
+        {
+            if (_neckClip == null) return;
+            float box = 256f * BossScale * _config.UnitScale;
+            float scale = box / 256f;
+            float band = DangerShape.WallBandDepth(_roomSize);
+            float inArch = band - HeadTopPx * scale;
+            float len = offset - inArch;
+            if (len <= 1f) { _neckClip.gameObject.SetActive(false); return; }
+
+            _neckClip.gameObject.SetActive(true);
+            _neckClip.sizeDelta = new Vector2(band, len);
+            _neckClip.anchoredPosition = new Vector2(ArchX(WallArch), -band);
+        }
+
+        // ── 몸통 밀기 ────────────────────────────────────────────
+        //
+        // 벽 뒤에 있던 몸이 **방 안으로 밀고 들어왔다 물러난다.**
+        // P3 에서 늘 나와 있는 그 몸통 줄(`_pyDeepClip`)을 그대로 쓴다 —
+        // 깊이만 0 에서 도형 두께까지 밀었다 되돌린다.
+
+        private const float ShoveOutSeconds = 0.18f;
+        private const float ShoveHoldSeconds = 0.35f;
+        private const float ShoveBackSeconds = 0.45f;
+
+        private float _shoveTimer, _shoveDepth;
+
+        private bool IsShoving => _shoveTimer > 0f;
+        private float ShoveTotal => ShoveOutSeconds + ShoveHoldSeconds + ShoveBackSeconds;
+
+        private void BeginBodyShove(float depthPx)
+        {
+            _shoveDepth = Mathf.Max(_pxPerMeter, depthPx);
+            _shoveTimer = ShoveTotal;
+        }
+
+        private float ShoveOffset()
+        {
+            float t = ShoveTotal - _shoveTimer;
+            if (t <= ShoveOutSeconds) return _shoveDepth * (t / ShoveOutSeconds);
+            if (t <= ShoveOutSeconds + ShoveHoldSeconds) return _shoveDepth;
+            float back = (t - ShoveOutSeconds - ShoveHoldSeconds) / ShoveBackSeconds;
+            return _shoveDepth * (1f - Mathf.Clamp01(back));
+        }
+
+        private void TickBodyShove(float dt)
+        {
+            if (_pyDeepClip == null) return;
+            if (IsShoving) _shoveTimer = Mathf.Max(0f, _shoveTimer - dt);
+
+            // P3 는 평소에도 1 m 나와 있다. 미는 동안에는 둘 중 깊은 쪽을 쓴다.
+            float baseDepth = _wallPhaseIndex >= 2 ? DeepBodyMeters * _pxPerMeter : 0f;
+            float depth = Mathf.Max(baseDepth, IsShoving ? ShoveOffset() : 0f);
+            if (depth <= 1f) { _pyDeepClip.gameObject.SetActive(false); return; }
+
+            _pyDeepClip.gameObject.SetActive(true);
+            _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, depth);
         }
 
         // ── 무너진 벽돌 ──────────────────────────────────────────

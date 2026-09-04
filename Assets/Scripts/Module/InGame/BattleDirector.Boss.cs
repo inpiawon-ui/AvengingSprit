@@ -443,6 +443,16 @@ namespace Game.Module.InGame
                 case BossDraw.HeadBite:
                     break;
 
+                // 머리가 그어 둔 띠 **끝까지** 목을 뻗었다 되돌아온다.
+                case BossDraw.HeadLunge:
+                    BeginHeadLunge(_danger.Length);
+                    break;
+
+                // 벽이 통째로 방 안으로 밀려 들어왔다 물러난다.
+                case BossDraw.BodyShove:
+                    BeginBodyShove(_danger.Width);
+                    break;
+
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
                 case BossDraw.Spit:
                     SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
@@ -963,6 +973,7 @@ namespace Game.Module.InGame
                 case BossDraw.SegmentLaunch:
                 case BossDraw.MissileSalvo:
                 case BossDraw.DebrisFall:
+                case BossDraw.BrickFall:
                 case BossDraw.BoosterDrop:
                     for (int i = 0; i < _danger.PieceCount && i < MaxFlight; i++)
                         _flightTargets.Add(_danger.PieceAt(i, _roomSize));
@@ -993,6 +1004,16 @@ namespace Game.Module.InGame
                 //   `obj_{보스키}_shard` 가 있으면 그것, 없으면 미사일로 떨어진다.
                 var shard = boss != null ? GetSprite($"obj_{boss.Key}_shard") : null;
                 if (shard != null) list.Add(shard);
+
+                // 떨어지는 파편이 여러 장이면 그것을 프레임으로 쓴다 —
+                // 파이썬 「벽돌 낙하」의 `obj_python_rubble_1~3` 이 그렇다.
+                // 미사일 그림을 날리면 벽이 부서지는데 미사일이 날아온다.
+                for (int i = 1; i <= 8 && list.Count == 0 && boss != null; i++)
+                {
+                    var sp = GetSprite($"obj_{boss.Key}_rubble_{i}");
+                    if (sp == null) break;
+                    list.Add(sp);
+                }
 
                 for (int i = 1; i <= 8 && list.Count == 0; i++)
                 {
@@ -1198,8 +1219,10 @@ namespace Game.Module.InGame
             BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
                 or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge
                 or BossDraw.SegmentThrust => "slam",
-            BossDraw.VenomCloud or BossDraw.Spit
-                or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
+            // 파이썬 독은 제 그림이 있다(fx_venom_1~5). 용암을 쓰면 불로 보인다.
+            BossDraw.VenomCloud => "venom",
+            BossDraw.Spit or BossDraw.CeilingCling
+                or BossDraw.CeilingSpread => "lava",
             BossDraw.Conveyor or BossDraw.SegmentLaunch
                 or BossDraw.DebrisFall or BossDraw.HatchOpen
                 or BossDraw.BrickFall or BossDraw.FullEmergence => "shatter",
