@@ -245,6 +245,9 @@ namespace Game.Module.InGame
 
         private BossTable _bossTable;
         private readonly BossBrain _brain = new();
+
+        /// <summary>이 방에 서는 보스. 바닥·방 크기·무대가 모두 이 하나를 본다.</summary>
+        private BossEntry _roomBoss;
         private Unit _boss;
         private float _telegraphPulse;
         private float _chargeDamageMul = 1f;
@@ -1558,6 +1561,7 @@ namespace Game.Module.InGame
                 _floor.pivot = new Vector2(0f, 1f);
                 _floor.sizeDelta = _roomSize;
             }
+            LayoutPythonStage();
             ApplyScroll();
         }
 
@@ -1621,6 +1625,7 @@ namespace Game.Module.InGame
             if (_shotLayer != null) _shotLayer.anchoredPosition = at;
             if (_textLayer != null) _textLayer.anchoredPosition = at;
             if (_fieldLayer != null) _fieldLayer.anchoredPosition = at;
+            if (_pyStage != null) _pyStage.anchoredPosition = at;
             if (_floor != null) _floor.anchoredPosition = at;
         }
 
@@ -2186,6 +2191,16 @@ namespace Game.Module.InGame
         }
 
         /// <summary>테스트 모드에서 이 방이 세울 보스. 아니면 null.</summary>
+        /// <summary>이 방의 보스를 정한다. 테스트로 지정한 것이 있으면 그것이 이긴다.</summary>
+        private BossEntry ResolveBossDef(BossEntry forced)
+        {
+            if (forced != null) return forced;
+            if (_bossTable == null) return null;
+            string key = _canonRoom != null && _canonRoom.IsBoss ? BossSlug(_canonRoom.BossId) : null;
+            int chapter = _player != null ? _player.CurrentChapter : 1;
+            return _bossTable.ByKey(key) ?? _bossTable.ForChapter(chapter);
+        }
+
         private BossEntry TestBossFor(int index)
         {
             if (!BossPerRoomTest || _bossTable == null) return null;
@@ -2440,13 +2455,28 @@ namespace Game.Module.InGame
             if (testBoss != null) _roomKind = RoomKind.Boss;
             bool isBoss = _roomKind == RoomKind.Boss;
 
+            // ⚠ 이 방의 보스를 **여기서 한 번만** 정한다. 바닥·방 크기·무대가 모두 이것을 본다.
+            //   따로따로 구하면 어긋난다 — 실제로 테스트로 끼워 넣은 보스방에
+            //   그 방 원래 바닥(거리)이 깔려 파이썬이 길바닥에서 싸웠다.
+            _roomBoss = isBoss ? ResolveBossDef(testBoss) : null;
+
             // ⚠ 반드시 `_canonRoom` 을 정한 **뒤에** 부른다. 앞에서 부르면 바닥이
             //   지난 방의 템플릿으로 정해진다 — 방마다 한 칸씩 밀린 그림이 깔린다.
             ApplyRoomFloor();
 
             // 정본은 보스방만 세로가 16 m 다. 방마다 높이가 달라질 수 있어 여기서 정한다.
-            SetRoomSize(_canonRoom != null ? _canonRoom.Height
+            //
+            // ⚠ **벽 보스만 화면 한 판짜리 아레나**다. 벽은 방 꼭대기 2 m 를 가로지르는데
+            //   방이 13 m 면 카메라가 플레이어를 따라 내려가 벽이 화면 밖으로 나간다 —
+            //   벽이 안 보이면 머리가 허공에서 튀어나오는 것으로 보인다.
+            //   화면 높이를 그대로 쓰면 세로 스크롤이 0 이라 벽이 늘 붙어 있다.
+            SetRoomSize(_roomBoss != null && _roomBoss.State == BossState.Walls
+                        ? _field.rect.height / _pxPerMeter
+                      : _canonRoom != null ? _canonRoom.Height
                       : isBoss ? BossRoomMeterHeight : RoomMeterHeight);
+
+            // 무대는 방 크기가 정해진 **뒤에** 깐다 — 벽 폭이 방 폭이다.
+            ApplyPythonStage(_roomBoss);
 
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
@@ -2493,7 +2523,7 @@ namespace Game.Module.InGame
                 // 정본 보스가 있으면 이름·체력·공격력·이동속도를 그대로 쓴다.
                 // 우리 BossTable 은 배율표라 절대값이 없다 — 정본 쪽이 단일 출처다.
                 // 테스트 모드면 방 데이터를 무시하고 표에 적힌 보스를 그대로 세운다.
-                var forced = TestBossFor(index);
+                var forced = testBoss;
                 bool canon = forced == null && _canonRoom != null && _canonRoom.IsBoss;
 
                 // ⚠ 그림도 행동 목록도 **방이 든 보스**로 고른다.
@@ -2503,8 +2533,7 @@ namespace Game.Module.InGame
                 //   아직 그림이 안 온 보스는 형제 몸을 빌린다(`BossStand`).
                 string bossKey = forced != null ? forced.BossKey
                                : canon ? BossSlug(_canonRoom.BossId) : null;
-                var def = forced ?? (_bossTable == null ? null
-                        : _bossTable.ByKey(bossKey) ?? _bossTable.ForChapter(chapter));
+                var def = _roomBoss;
                 if (string.IsNullOrEmpty(bossKey)) bossKey = def?.BossKey ?? "boss";
                 string bossName = canon ? _canonRoom.BossName : def?.NameEn ?? "BOSS";
                 var bossArt = UnitGet(bossKey)
@@ -2832,6 +2861,7 @@ namespace Game.Module.InGame
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
             TickMidBoss(dt);       // 부하가 다 죽으면 대장이 3초 굳는다
             TickBossPresence(dt);
+            TickPythonStage(dt);   // 벽 뒤 몸통은 늘 흐른다
             TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
             TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
             TickBossMinions(dt);
@@ -4446,7 +4476,12 @@ namespace Game.Module.InGame
             //   720×1260 이라 936 방에 눌려 들어가고 명도도 8~29 라 새까맸기 때문이다.
             //   **58차에 여섯 장이 720×936 으로 다시 왔다** — 명도 33.6~48.2 로
             //   지금 쓰는 무대 배경들과 같은 수준이다. 막을 이유가 없어졌으므로 막지 않는다.
-            string floorKey = FloorKeyOf(_canonRoom, chapter);
+            // 정본이 보스방이라고 적어 두지 않았는데 보스가 서는 방(테스트로 끼워 넣은 방)은
+            // `FloorKeyOf` 가 그 방 원래 지형 바닥을 준다. 보스가 있으면 보스 바닥이 이긴다.
+            bool forcedBossRoom = _roomBoss != null && (_canonRoom == null || !_canonRoom.IsBoss);
+            string floorKey = forcedBossRoom
+                              ? $"roomfloor_{_roomBoss.BossKey}"
+                              : FloorKeyOf(_canonRoom, chapter);
 
             // 장애물도 같은 무대 것을 찾도록 이름만 떼어 둔다.
             // `roomfloor_env_junkyard` → `junkyard`, 연구소(`roomfloor_ch1_*`)는 빈 값.
@@ -4455,7 +4490,8 @@ namespace Game.Module.InGame
             //   그렇다고 빈 값으로 두면 쓰레기장 한복판에서 연구소 상자와 싸우게 된다.
             //   보스는 제 무대를 알고 있으므로(원작 스테이지) 그것으로 뽑는다.
             const string EnvPrefix = "roomfloor_env_";
-            _floorEnv = _canonRoom != null && _canonRoom.IsBoss
+            _floorEnv = forcedBossRoom ? BossEnvOf(_roomBoss.BossKey)
+                      : _canonRoom != null && _canonRoom.IsBoss
                         ? BossEnvOf(BossSlug(_canonRoom.BossId))
                         : floorKey.StartsWith(EnvPrefix) ? floorKey.Substring(EnvPrefix.Length) : string.Empty;
 

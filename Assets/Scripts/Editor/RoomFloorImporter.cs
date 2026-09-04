@@ -33,8 +33,8 @@ namespace Game.EditorTools
             var src = Path.Combine(root, InDir);
             if (!Directory.Exists(src)) { Debug.LogError($"[RoomFloor] 납품 폴더 없음: {src}"); return; }
 
+            // 새 납품이 없어도 그냥 지나가지 않는다 — 아래에서 폴더 전체에 주소를 다시 건다.
             var files = Directory.GetFiles(src, Prefix + "*.png");
-            if (files.Length == 0) { Debug.LogWarning("[RoomFloor] roomfloor_*.png 가 없다"); return; }
 
             EnsureFolder(ResDir);
 
@@ -56,9 +56,23 @@ namespace Game.EditorTools
                 typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema));
             if (!settings.GetLabels().Contains(Label)) settings.AddLabel(Label);
 
-            foreach (var path in copied)
+            // ⚠ 주소는 **폴더에 있는 것 전부**에 건다. 복사한 것만 걸면
+            //   다른 툴(`ExchangeImporter`)이 이 폴더에 넣어 둔 파일 —
+            //   파이썬 벽 3장이 그랬다 — 이 주소 없이 남아 런타임에 안 잡힌다.
+            var all = new List<string>(copied);
+            foreach (var f in Directory.GetFiles(Path.Combine(root, ResDir), "*.png"))
             {
-                if (AssetImporter.GetAtPath(path) is TextureImporter ti)
+                var rel = $"{ResDir}/{Path.GetFileName(f)}";
+                if (!all.Contains(rel)) all.Add(rel);
+            }
+
+            foreach (var path in all)
+            {
+                // 그림 설정은 **`roomfloor_` 배경에만** 건다.
+                // 여기 설정은 `alphaIsTransparency = false`(불투명 배경) 라서
+                // 벽처럼 구멍이 뚫린 그림에 걸면 아치가 막힌다.
+                if (Path.GetFileName(path).StartsWith(Prefix)
+                    && AssetImporter.GetAtPath(path) is TextureImporter ti)
                 {
                     ti.textureType = TextureImporterType.Sprite;
                     ti.spriteImportMode = SpriteImportMode.Single;
@@ -85,7 +99,7 @@ namespace Game.EditorTools
 
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[RoomFloor] 바닥 {copied.Count}장 → 주소 {Group}/roomfloor_ch#_템플릿");
+            Debug.Log($"[RoomFloor] 새로 들여온 바닥 {copied.Count}장 · 주소 걸린 것 {all.Count}장");
         }
 
         private static void EnsureFolder(string path)
