@@ -210,6 +210,14 @@ namespace Game.EditorTools
             // 한 장씩 불러오고 넘어가면 놓아 준다.
             if (name.StartsWith("cut_")) return new[] { $"{CutsceneRes}/{name}" };
 
+            // 방 크기 무대 장치 — 바닥과 같은 곳으로 간다.
+            //
+            // ⚠ 파이썬의 벽은 720×144 다. 아래 700px 방어에 걸려 그냥 튕겨 나갔다.
+            //   그 방어는 옳다(큰 그림이 UI 아틀라스를 4096 으로 밀어 올린다).
+            //   다만 이것은 **갈 자리가 분명한** 그림이라 여기서 먼저 잡아 준다 —
+            //   방마다 한 장씩 불러오고 넘어가면 놓아 주는, 방 바닥과 같은 규칙이다.
+            if (name.StartsWith("obj_python_wall")) return new[] { $"{RoomFloorRes}/{name}" };
+
             // 인게임 HUD 부품·이펙트 — 새 이름은 `existing` 이 못 잡아 기본값으로 흐른다.
             if (name.StartsWith("hud_") || name.StartsWith("fx_"))
                 return new[] { $"{DefaultRes}/{name}" };
