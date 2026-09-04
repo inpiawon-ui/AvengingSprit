@@ -3916,7 +3916,11 @@ namespace Game.Module.InGame
             // 표적이 없으면 아주 먼 것으로 친다(붙어야 쓰는 패턴이 헛돌지 않게).
             float distM = me != null
                 ? Vector2.Distance(boss.Position, me.Position) / _pxPerMeter : 999f;
-            var move = _brain.Tick(dt, distM);
+
+            // ⚠ **벽 보스는 나와 있는 동안에만 패턴을 고른다.**
+            //   벽 뒤에 있는 동안 예고가 뜨면 아무도 없는 자리에 도형이 그려지고,
+            //   나오기도 전에 때린다. 이 보스의 리듬 자체가 「나와 있을 때만」이다.
+            var move = _brain.Tick(dt, distM, CanWallBossAct);
 
             // 예고 중에는 제자리에서 번쩍인다. 피할 시간을 주지 않으면 패턴이 아니라 사고다.
             if (_brain.IsTelegraphing)
@@ -4947,8 +4951,14 @@ namespace Game.Module.InGame
         };
 
         /// <summary>장판을 깐다. 자리가 없으면 가장 오래된 것을 밀어낸다.</summary>
+        /// <param name="artKey">
+        /// 효과가 정한 그림 대신 쓸 이름. 같은 효과라도 **누가 깔았느냐에 따라**
+        /// 다른 것이 깔려야 읽히는 경우가 있다 — 파이썬 독 웅덩이가 저주 장판과
+        /// 같은 보라 원판이면 무엇에 서 있는지 알 수 없다.
+        /// </param>
         private Field SpawnField(Vector2 at, float radius, float seconds,
-                                 FieldEffect effect, int damagePerTick, bool fromPlayer)
+                                 FieldEffect effect, int damagePerTick, bool fromPlayer,
+                                 string artKey = null)
         {
             Field f = null;
             for (int i = 0; i < _fields.Count; i++)
@@ -4969,7 +4979,7 @@ namespace Game.Module.InGame
 
             // ⚠ 그림은 **깔 때마다** 정한다. 장판도 풀에서 돌려 쓰므로 태어날 때 정하면
             //    직전 효과의 그림이 그대로 남는다(탄·포탑에서 이미 두 번 겪었다).
-            var art = GetSprite(FieldSpriteOf(effect));
+            var art = GetSprite(artKey ?? FieldSpriteOf(effect));
             // 전용 그림이 없으면 흰 원판에 색을 입힌다. 색까지 없으면 그리지 않는다 —
             // 흰 네모가 바닥에 깔리는 것보다 아무것도 없는 편이 낫다.
             bool generic = art == null;

@@ -161,9 +161,8 @@ namespace Game.Module.InGame
                 // ── 파이썬 — 나온 직후에 때렸다 ───────────────────
                 // 머리가 벽 밖에 나와 있는 짧은 동안만 창이 열린다.
                 // 못 때리면 되들어가고 아무 일도 안 생긴다.
-                case BossDraw.WallBurst:
-                case BossDraw.TripleBurst:
-                    if (_bossExposedHit) OpenBreak(boss, "나온 머리를 제때 때렸다");
+                case BossDraw.HeadLunge:
+                    if (_bossExposedHit) OpenBreak(boss, "뻗은 목을 제때 때렸다");
                     break;
 
                 // ── 로봇 스네이크 — 되들어가기 전에 때렸다 ────────

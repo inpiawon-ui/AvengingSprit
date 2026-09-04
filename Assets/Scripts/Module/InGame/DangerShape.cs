@@ -73,8 +73,11 @@ namespace Game.Module.InGame
             NearTarget,
             /// <summary>바닥 구멍 여섯 곳 중 <see cref="Count"/> 곳. 로봇 스네이크 전용.</summary>
             Holes,
-            /// <summary>벽에서 방을 가로지르는 띠 여럿. 파이썬 「세 갈래 돌파」.</summary>
-            Walls,
+            /// <summary>
+            /// 위쪽 벽에 뚫린 **아치 네 곳**. 파이썬 전용.
+            /// ⚠ 자리는 벽 그림에 픽셀로 박혀 있다 — <see cref="ArchAtRoom"/> 하나만 본다.
+            /// </summary>
+            Arches,
         }
 
         public Kind Shape;
@@ -162,6 +165,9 @@ namespace Game.Module.InGame
                 case Spread.Holes:
                     return HoleAtRoom(Tick + i, roomSize);
 
+                case Spread.Arches:
+                    return ArchAtRoom(Tick + i, roomSize);
+
                 default:
                     return Origin;
             }
@@ -187,26 +193,41 @@ namespace Game.Module.InGame
         {
             if (Shape != Kind.Band) return CenterOf(0, roomSize);
             BandOf(0, roomSize, out var from, out var dir);
-            float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
-            return from + dir * (len * 0.5f);
+            return from + dir * (Length * 0.5f);
         }
 
-        /// <summary>i번째 띠의 시작점과 방향. 벽에서 들어와 방을 가로지른다.</summary>
+        /// <summary>i번째 띠의 시작점과 방향.</summary>
         private void BandOf(int i, Vector2 roomSize, out Vector2 from, out Vector2 dir)
         {
-            if (Layout != Spread.Walls) { from = Origin; dir = Dir; return; }
-
-            // 네 벽을 돌아가며 쓴다. tick 이 시작 벽을 옮겨 매번 다른 조합이 된다.
-            int wall = (Tick + i * 1) & 3;
-            float t = Count <= 1 ? 0.5f : Mathf.Lerp(0.25f, 0.75f, (float)i / (Count - 1));
-            switch (wall)
+            // 아치에서 나오는 띠는 **그 구멍에서 곧장 아래로** 간다.
+            if (Layout == Spread.Arches)
             {
-                case 0: from = new Vector2(0f, -roomSize.y * t);          dir = Vector2.right; break;
-                case 1: from = new Vector2(roomSize.x * t, 0f);           dir = Vector2.down;  break;
-                case 2: from = new Vector2(roomSize.x, -roomSize.y * t);  dir = Vector2.left;  break;
-                default: from = new Vector2(roomSize.x * t, -roomSize.y); dir = Vector2.up;    break;
+                from = ArchAtRoom(Tick + i, roomSize);
+                dir = Vector2.down;
+                return;
             }
+            from = Origin; dir = Dir;
         }
+
+        // ⚠ 아치 네 곳은 **벽 그림(720×144)에 픽셀로 박힌 자리**다.
+        //   구멍 x 30~150 · 210~330 · 390~510 · 570~690 → 가운데 90 · 270 · 450 · 630.
+        //   여기서 딴 값을 쓰면 머리가 벽을 뚫고 나온다.
+        //   `BattleDirector.PythonStage` 도 이 함수를 본다 — 표는 하나뿐이다.
+        private const float WallArtWidth = 720f;
+        private static readonly float[] ArchCenterPx = { 90f, 270f, 450f, 630f };
+
+        /// <summary>아치 개수.</summary>
+        public static int ArchCount => ArchCenterPx.Length;
+
+        /// <summary>i번째 아치의 입구 자리(방 좌표). 벽 아래쪽 끝에서 시작한다.</summary>
+        public static Vector2 ArchAtRoom(int i, Vector2 roomSize)
+        {
+            int k = ((i % ArchCenterPx.Length) + ArchCenterPx.Length) % ArchCenterPx.Length;
+            return new Vector2(roomSize.x * (ArchCenterPx[k] / WallArtWidth), -WallBandDepth(roomSize));
+        }
+
+        /// <summary>벽 띠의 두께(px). 그림이 720×144 이므로 방 폭의 1/5 이다.</summary>
+        public static float WallBandDepth(Vector2 roomSize) => roomSize.x * (144f / WallArtWidth);
 
         /// <summary>자리를 흩뿌리는 데 쓰는 결정적 해시. 난수가 아니라야 그린 자리와 맞는다.</summary>
         private static int Hash(int n)
@@ -252,10 +273,9 @@ namespace Game.Module.InGame
                     for (int i = 0; i < Repeats; i++)
                     {
                         BandOf(i, roomSize, out var from, out var dir);
-                        float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
                         var to = p - from;
                         float along = Vector2.Dot(to, dir);
-                        if (along < 0f || along > len) continue;
+                        if (along < 0f || along > Length) continue;
                         var side = new Vector2(-dir.y, dir.x);
                         if (Mathf.Abs(Vector2.Dot(to, side)) <= Width * 0.5f) return true;
                     }
@@ -337,9 +357,8 @@ namespace Game.Module.InGame
                     for (int i = 0; i < Repeats; i++)
                     {
                         BandOf(i, roomSize, out var from, out var dir);
-                        float len = Layout == Spread.Walls ? roomSize.magnitude : Length;
                         var side = new Vector2(-dir.y, dir.x) * (Width * 0.5f);
-                        var far = from + dir * len;
+                        var far = from + dir * Length;
                         Quad(verts, tris, from - side, from + side, far + side, far - side);
                     }
                     break;
@@ -586,40 +605,46 @@ namespace Game.Module.InGame
 
 
                 // ═══ B04 파이썬 ═══════════════════════════════════
-                // **벽에서 나온다.** 보스 자리가 아니라 벽에서 시작하는 것이 이 보스의 전부다.
-                case BossDraw.WallBurst:
+                // **나온 구멍에서 시작한다.** 보스 자리가 곧 그 구멍이다
+                // (`BattleDirector.PythonStage` 가 머리를 아치에 세워 둔다).
+
+                // 목을 곧장 아래로 뻗는다. 좌우로 비키면 지나간다.
+                case BossDraw.HeadLunge:
                     s.Shape = Kind.Band;
+                    s.Origin = new Vector2(bossAt.x, -WallBandDepth(roomSize));
+                    s.Dir = Vector2.down;
                     s.Width = Mathf.Max(1f, W);
                     s.Length = Mathf.Max(1f, L);
-                    s.Layout = Spread.Walls;
-                    s.Count = 1;
                     break;
 
-                // 독구름은 퍼진다. **다 퍼진 크기로 그린다** —
-                // 지금 크기로 그리면 "피한 자리로 구름이 따라온다" 가 된다.
+                // 독은 **내가 선 자리**에 떨어진다. 웅덩이가 남으므로
+                // 다 퍼진 크기로 그려야 "피한 자리로 구름이 따라온다" 가 안 된다.
                 case BossDraw.VenomCloud:
                     s.Shape = Kind.Disc;
                     s.Origin = playerAt;
                     s.Radius = Mathf.Max(1f, R);
                     break;
 
-                // 벽에서 벽으로 몸통이 한 줄을 지나간다.
-                case BossDraw.BodyCross:
+                // 벽이 부서져 방 안 세 곳에 떨어진다. 그림자 밖으로 나가면 된다.
+                case BossDraw.BrickFall:
+                    s.Shape = Kind.Disc;
+                    s.Radius = Mathf.Max(1f, R);
+                    s.Layout = Spread.Scatter;
+                    s.Count = Mathf.Max(1, m.Lanes);
+                    break;
+
+                // 벽 전체가 방 안으로 밀고 들어온다. **아래로 내려가는 것 말고는 없다.**
+                case BossDraw.BodyShove:
                 {
-                    s.Shape = Kind.Lanes;
-                    s.Lanes = Mathf.Max(2, m.Lanes);
-                    s.LaneMask = 1 << (tick % s.Lanes);   // 한 줄만 위험하다
+                    float depth = Mathf.Max(1f, W);
+                    float band = WallBandDepth(roomSize);
+                    s.Shape = Kind.Band;
+                    s.Origin = new Vector2(0f, -band - depth * 0.5f);
+                    s.Dir = Vector2.right;
+                    s.Width = depth;
+                    s.Length = roomSize.x;
                     break;
                 }
-
-                // 벽 세 곳에서 동시에. 안 겹치는 자리가 하나뿐이다.
-                case BossDraw.TripleBurst:
-                    s.Shape = Kind.Band;
-                    s.Width = Mathf.Max(1f, W);
-                    s.Length = Mathf.Max(1f, L);
-                    s.Layout = Spread.Walls;
-                    s.Count = Mathf.Max(2, m.Lanes);
-                    break;
 
                 // ═══ B03 킹핀 ═════════════════════════════════════
                 // 미사일 다섯이 부채꼴로 떨어진다. 원과 원 사이로 빠진다.

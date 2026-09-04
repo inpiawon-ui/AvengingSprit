@@ -252,96 +252,96 @@ MonoBehaviour:
     _moves:
     - _pattern: 2
       _fromPhase: 1
-      _cooldown: 12
+      _cooldown: 3
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.83
-      _telegraphSeconds: 1
-      _nameKr: "\uBCBD \uB3CC\uD30C"
-      _nameEn: WallBurst
+      _telegraphSeconds: 0.7
+      _nameKr: "\uBA38\uB9AC \uBED7\uAE30"
+      _nameEn: HeadLunge
       _shape: 1
       _draw: 10
       _dodge: 3
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.8
-      _lengthMeters: 6
+      _radiusMeters: 5
+      _widthMeters: 1.6
+      _lengthMeters: 5
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
+      _range: 3
+      _rangeMeters: 5
+      _group: 0
     - _pattern: 7
       _fromPhase: 1
-      _cooldown: 9
+      _cooldown: 4
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.59
-      _telegraphSeconds: 1
-      _nameKr: "\uB3C5\uAD6C\uB984"
-      _nameEn: VenomCloud
+      _telegraphSeconds: 0.9
+      _nameKr: "\uB3C5 \uBC49\uAE30"
+      _nameEn: VenomSpit
       _shape: 3
       _draw: 11
-      _dodge: 4
+      _dodge: 1
       _degrees: 0
-      _radiusMeters: 3.2
+      _radiusMeters: 2.5
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-    - _pattern: 5
-      _fromPhase: 2
-      _cooldown: 10
-      _shotCount: 4
+      _range: 4
+      _rangeMeters: 0
+      _group: 1
+    - _pattern: 4
+      _fromPhase: 1
+      _cooldown: 6
+      _shotCount: 3
       _spreadDegrees: 0
-      _damageMul: 0.93
+      _damageMul: 0.7
       _telegraphSeconds: 1
-      _nameKr: "\uBAB8\uD1B5 \uAC00\uB85C\uC9C0\uB974\uAE30"
-      _nameEn: BodyCross
-      _shape: 2
+      _nameKr: "\uBCBD\uB3CC \uB099\uD558"
+      _nameEn: BrickFall
+      _shape: 3
       _draw: 12
       _dodge: 1
       _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 2.4
+      _radiusMeters: 1.25
+      _widthMeters: 0
       _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 4
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-    - _pattern: 4
-      _fromPhase: 3
-      _cooldown: 16
-      _shotCount: 3
-      _spreadDegrees: 0
-      _damageMul: 1.17
-      _telegraphSeconds: 1
-      _nameKr: "\uC138 \uAC08\uB798 \uB3CC\uD30C"
-      _nameEn: TripleBurst
-      _shape: 1
-      _draw: 13
-      _dodge: 2
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.8
-      _lengthMeters: 6
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 3
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
+      _range: 4
+      _rangeMeters: 0
       _group: 1
+    - _pattern: 5
+      _fromPhase: 2
+      _cooldown: 5
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.93
+      _telegraphSeconds: 1
+      _nameKr: "\uBAB8\uD1B5 \uBC00\uAE30"
+      _nameEn: BodyShove
+      _shape: 1
+      _draw: 13
+      _dodge: 0
+      _degrees: 0
+      _radiusMeters: 2
+      _widthMeters: 2
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 3
+      _rangeMeters: 2
+      _group: 0
   - _bossKey: kingpin
     _chapter: 4
     _roomNo: 10

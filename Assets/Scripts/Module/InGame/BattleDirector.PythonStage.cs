@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
 using GameFramework.Core.Base;
@@ -65,6 +66,7 @@ namespace Game.Module.InGame
             if (!want)
             {
                 if (_pyStage != null) _pyStage.gameObject.SetActive(false);
+                ClearRubble();
                 ReleasePythonWall();
                 return;
             }
@@ -148,7 +150,9 @@ namespace Game.Module.InGame
         /// </summary>
         private void TickPythonStage(float dt)
         {
-            if (!IsPythonRoom || _pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
+            if (!IsPythonRoom) return;
+            TickRubble(dt);
+            if (_pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
             if (_pyBodySpeed <= 0f) return;
 
             _pyBodyTimer += dt * _pyBodySpeed;
@@ -270,6 +274,9 @@ namespace Game.Module.InGame
                 // ── 다 나와 있다. 때릴 수 있고, 이때 패턴이 나간다 ──
                 case WallPhase.Strike:
                     if (_wallTimer < StrikeSeconds) break;
+                    // ⚠ 예고가 떠 있는 동안에는 안 들어간다. 그리다 만 도형을 두고
+                    //   머리가 사라지면 무엇이 오는지 읽을 근거가 없어진다.
+                    if (_brain != null && (_brain.IsTelegraphing || _dangerMove != null)) break;
                     _wallPhase = WallPhase.Retreat;
                     _wallTimer = 0f;
                     break;
@@ -304,11 +311,88 @@ namespace Game.Module.InGame
             _wallTimer = 0f;
         }
 
+        /// <summary>
+        /// 지금 새 패턴을 시작해도 되는가.
+        /// 벽 보스가 아니면 늘 참이다 — 이 규칙은 파이썬 하나에만 건다.
+        /// </summary>
+        private bool CanWallBossAct
+        {
+            get
+            {
+                var def = _brain != null ? _brain.Entry : null;
+                if (def == null || def.State != BossState.Walls) return true;
+                return _wallPhase == WallPhase.Strike;
+            }
+        }
+
+        // ── 무너진 벽돌 ──────────────────────────────────────────
+        //
+        // 「벽돌 낙하」가 지나간 자리에 잔해가 남는다. **밟아도 아프지 않다** —
+        // 어디가 이미 무너졌는지를 보여 주는 표시다.
+        // (막는 엄폐물로 할지는 아직 안 정했다. 지금은 표시만 한다.)
+
+        private const float RubbleSeconds = 6f;
+        private const float RubbleFadeSeconds = 1f;
+        private const int MaxRubble = 12;
+
+        private readonly List<Image> _rubble = new();
+        private readonly List<float> _rubbleLeft = new();
+
+        private void DropRubble(Vector2 at)
+        {
+            var art = GetSprite($"obj_python_rubble_{_rng.Next(3) + 1}");
+            if (art == null || _fieldLayer == null) return;
+
+            int slot = -1;
+            for (int i = 0; i < _rubble.Count; i++)
+                if (!_rubble[i].gameObject.activeSelf) { slot = i; break; }
+
+            if (slot < 0 && _rubble.Count >= MaxRubble) slot = 0;   // 가장 오래된 것을 밀어낸다
+            if (slot < 0)
+            {
+                var go = new GameObject("Rubble", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(_fieldLayer, false);
+                var img = go.GetComponent<Image>();
+                img.raycastTarget = false;
+                _rubble.Add(img);
+                _rubbleLeft.Add(0f);
+                slot = _rubble.Count - 1;
+            }
+
+            var r = _rubble[slot];
+            var rt = (RectTransform)r.transform;
+            // 그림이 72×48 이다. 1 m 폭으로 방 좌표에 맞춰 놓는다.
+            rt.sizeDelta = new Vector2(_pxPerMeter, _pxPerMeter * (48f / 72f));
+            rt.anchoredPosition = at;
+            r.sprite = art;
+            r.color = Color.white;
+            r.gameObject.SetActive(true);
+            _rubbleLeft[slot] = RubbleSeconds;
+        }
+
+        private void TickRubble(float dt)
+        {
+            for (int i = 0; i < _rubble.Count; i++)
+            {
+                if (!_rubble[i].gameObject.activeSelf) continue;
+                _rubbleLeft[i] -= dt;
+                if (_rubbleLeft[i] <= 0f) { _rubble[i].gameObject.SetActive(false); continue; }
+                if (_rubbleLeft[i] >= RubbleFadeSeconds) continue;
+                var c = _rubble[i].color;
+                _rubble[i].color = new Color(c.r, c.g, c.b, _rubbleLeft[i] / RubbleFadeSeconds);
+            }
+        }
+
         private void SetHeadFrame(Unit boss, Sprite[] frames, float t)
         {
             if (frames == null) return;
             int i = Mathf.Clamp(Mathf.FloorToInt(t * frames.Length), 0, frames.Length - 1);
             if (frames[i] != null) boss.SetSpriteOverride(frames[i]);
+        }
+
+        private void ClearRubble()
+        {
+            for (int i = 0; i < _rubble.Count; i++) _rubble[i].gameObject.SetActive(false);
         }
 
         private void ReleasePythonWall()

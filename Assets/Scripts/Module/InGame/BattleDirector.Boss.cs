@@ -448,6 +448,22 @@ namespace Game.Module.InGame
                     SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
                                PuddleSeconds, FieldEffect.Slow, 0, fromPlayer: false);
                     break;
+
+                // 독 웅덩이 3초. **뱉은 자리에 남는 것이 이 패턴의 핵심이다** —
+                // 한 번 피해도 그 자리가 3초 동안 막혀 다음 패턴의 피할 곳이 줄어든다.
+                case BossDraw.VenomCloud:
+                    SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
+                               VenomPuddleSeconds, FieldEffect.Curse,
+                               Mathf.Max(1, Mathf.RoundToInt(boss.Atk * m.DamageMul * 0.25f)),
+                               fromPlayer: false, artKey: "field_venom");
+                    break;
+
+                // 떨어진 벽돌이 바닥에 남는다. 밟아도 아프지는 않다 —
+                // **어디가 이미 무너졌는지**를 보여 주는 표시다.
+                case BossDraw.BrickFall:
+                    for (int i = 0; i < _danger.PieceCount; i++)
+                        DropRubble(_danger.PieceAt(i, _roomSize));
+                    break;
             }
         }
 
@@ -518,6 +534,9 @@ namespace Game.Module.InGame
         //   바뀌었다. 벨트를 남겨 두면 쓰지도 않는 12초짜리 상태가 매 방 돌아간다.
 
         private const float PuddleSeconds = 4f;
+
+        /// <summary>파이썬 독 웅덩이가 남는 시간. 뱉는 쿨(4초)보다 짧아야 방이 안 잠긴다.</summary>
+        private const float VenomPuddleSeconds = 3f;
 
         // ── 방패판 ───────────────────────────────────────────────
         //
@@ -1097,8 +1116,12 @@ namespace Game.Module.InGame
         /// 반경을 1.75 m 로 줄여 피할 수 있게 한 대신, **맞으면 대가가 크다**로
         /// 균형을 잡는다 — 작아진 만큼 안 아프면 그냥 무시하고 때리게 된다.
         /// </summary>
-        private static float StunOnHitSeconds(BossDraw draw)
-            => draw == BossDraw.CoilWall ? 1f : 0f;
+        private static float StunOnHitSeconds(BossDraw draw) => draw switch
+        {
+            BossDraw.CoilWall => 1f,     // 똬리에 갇히면 1초
+            BossDraw.BrickFall => 0.6f,  // 벽돌에 깔리면 0.6초
+            _ => 0f,
+        };
 
         /// <summary>
         /// 맞히면 제 **최대 체력**의 몇 할을 되찾는가. 0 이면 안 되찾는다.
@@ -1117,7 +1140,8 @@ namespace Game.Module.InGame
         private static bool ImpactNeedsHit(BossDraw draw) => draw switch
         {
             BossDraw.HeadBite or BossDraw.CoilWall or BossDraw.SegmentThrust
-              or BossDraw.Crush or BossDraw.WreckingBall or BossDraw.RamCharge => true,
+              or BossDraw.Crush or BossDraw.WreckingBall or BossDraw.RamCharge
+              or BossDraw.HeadLunge or BossDraw.BodyShove => true,
             _ => false,
         };
 
@@ -1178,7 +1202,7 @@ namespace Game.Module.InGame
                 or BossDraw.CeilingCling or BossDraw.CeilingSpread => "lava",
             BossDraw.Conveyor or BossDraw.SegmentLaunch
                 or BossDraw.DebrisFall or BossDraw.HatchOpen
-                or BossDraw.FullEmergence => "shatter",
+                or BossDraw.BrickFall or BossDraw.FullEmergence => "shatter",
             _ => "burst",
         };
 

@@ -168,15 +168,15 @@ namespace Game.EditorTools
         /// </summary>
         private static BossPattern LegacyOf(string draw) => draw switch
         {
-            "Crush" or "SegmentThrust" or "HeadBite" or "StrafingRun" or "WallBurst"
+            "Crush" or "SegmentThrust" or "HeadBite" or "StrafingRun" or "HeadLunge"
                 => BossPattern.Charge,
-            "HatchOpen" or "RailLaser" or "BodyCross" or "Conveyor"
+            "HatchOpen" or "RailLaser" or "BodyShove" or "Conveyor"
                 => BossPattern.PopupLaser,
             "VenomCloud" or "Spit" or "CeilingSpread"
                 => BossPattern.VenomCloud,
             "WreckingBall" or "CoilWall" or "BoosterDrop" or "Emerge" or "FullEmergence"
                 => BossPattern.Ring,
-            "TripleBurst" or "MissileSalvo" or "ExecutionLock" or "DebrisFall"
+            "BrickFall" or "MissileSalvo" or "ExecutionLock" or "DebrisFall"
                 or "CeilingCling" or "SegmentLaunch"
                 => BossPattern.AimedBurst,
             "ShieldUp" => BossPattern.ShieldCycle,

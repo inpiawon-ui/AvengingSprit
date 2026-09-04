@@ -216,38 +216,41 @@ namespace Game.EditorTools
                     State = "Walls", Chases = false, BreakSeconds = 3.0f, BreakCause = "머리가 나온 직후 1.2초 안에 때렸다",
                     Moves = new Move[]
                     {
-                        // 출처 — 벽 한 곳에 금이 간 뒤 머리가 튀어나와 직선 6 m 를 훑는다 · 폭 1.8 m
-                        new() { Phase = 1, NameKr = "벽 돌파", NameEn = "WallBurst",
-                                Cooldown = 12f, Telegraph = 1f, DamageMul = 0.83f,
-                                Shape = "Line", Draw = "WallBurst", Dodge = "PERP",
-                                Degrees = 0f, Radius = 0f, Width = 1.8f, Length = 6f,
+                        // 나온 구멍에서 곧장 아래로 목을 뻗는다 · 띠 폭 1.6 m × 길이 5 m
+                        // 붙어 있을 때 쓰는 것 — 좌우로 비키면 지나간다.
+                        new() { Phase = 1, NameKr = "머리 뻗기", NameEn = "HeadLunge",
+                                Cooldown = 3f, Telegraph = 0.7f, DamageMul = 0.83f,
+                                Shape = "Line", Draw = "HeadLunge", Dodge = "PERP",
+                                Degrees = 0f, Radius = 5f, Width = 1.6f, Length = 5f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
-                        // 출처 — 머리가 독을 뿜는다 · 반경 2.2 m 로 시작해 6초 동안 3.2 m 까지 퍼진다
-                        new() { Phase = 1, NameKr = "독구름", NameEn = "VenomCloud",
-                                Cooldown = 9f, Telegraph = 1f, DamageMul = 0.59f,
-                                Shape = "Zone", Draw = "VenomCloud", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 3.2f, Width = 0f, Length = 0f,
+                                Range = "INSHAPE", RangeMeters = 5f, Group = 0 },
+                        // 독을 뱉는다 · 내 자리에 반경 2.5 m · 웅덩이가 3초 남는다
+                        new() { Phase = 1, NameKr = "독 뱉기", NameEn = "VenomSpit",
+                                Cooldown = 4f, Telegraph = 0.9f, DamageMul = 0.59f,
+                                // 안전지대를 그리지 않는 패턴이라 "안전지대로" 는 가리킬 곳이 없다
+                                Shape = "Zone", Draw = "VenomCloud", Dodge = "SIDE",
+                                Degrees = 0f, Radius = 2.5f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 벽에서 벽으로 몸통이 방을 가로지른다 · 폭 2.4 m · 가로 또는 세로 한 줄 · 2.5초
-                        new() { Phase = 2, NameKr = "몸통 가로지르기", NameEn = "BodyCross",
-                                Cooldown = 10f, Telegraph = 1f, DamageMul = 0.93f,
-                                Shape = "Lane", Draw = "BodyCross", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 0f, Width = 2.4f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 4,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 벽 세 곳에서 동시에 나온다 · 세 직선이 교차하고 안 겹치는 자리가 하나뿐
-                        new() { Phase = 3, NameKr = "세 갈래 돌파", NameEn = "TripleBurst",
-                                Cooldown = 16f, Telegraph = 1f, DamageMul = 1.17f,
-                                Shape = "Line", Draw = "TripleBurst", Dodge = "GAP",
-                                Degrees = 0f, Radius = 0f, Width = 1.8f, Length = 6f,
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
+                        // 벽이 부서져 방 안 세 곳에 떨어진다 · 반경 1.25 m · 맞으면 0.6초 굳는다
+                        new() { Phase = 1, NameKr = "벽돌 낙하", NameEn = "BrickFall",
+                                Cooldown = 6f, Telegraph = 1f, DamageMul = 0.7f,
+                                Shape = "Zone", Draw = "BrickFall", Dodge = "SIDE",
+                                Degrees = 0f, Radius = 1.25f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
+                        // 벽 전체가 방 안으로 2 m 밀고 들어온다 · 아래로 내려가는 것 말고는 없다
+                        new() { Phase = 2, NameKr = "몸통 밀기", NameEn = "BodyShove",
+                                Cooldown = 5f, Telegraph = 1f, DamageMul = 0.93f,
+                                // 방 폭을 다 덮으므로 옆으로는 못 피한다. 벽에서 멀어지는 수밖에 없다
+                                Shape = "Line", Draw = "BodyShove", Dodge = "BACK",
+                                Degrees = 0f, Radius = 2f, Width = 2f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "INSHAPE", RangeMeters = 2f, Group = 0 },
                     } },
 
             // ── 킹핀 · 옥상 — 하늘에 떠 있다 ──────────────────────────────

@@ -185,7 +185,17 @@ namespace Game.Module.InGame
         /// 쿨다운을 굴리고, 실행할 행동이 정해지면 예고를 시작한다.
         /// 예고가 끝난 프레임에 그 행동을 돌려준다(그 외에는 null).
         /// </summary>
-        public BossMove Tick(float dt, float distanceMeters)
+        /// <param name="canStart">
+        /// 새 패턴을 고를 수 있는가. 벽 보스처럼 **몸이 나와 있을 때만** 행동하는
+        /// 보스가 false 를 넘긴다. 이미 뜬 예고는 계속 돌아간다 — 예고 도중에
+        /// 끊으면 그려 둔 도형이 아무 일 없이 사라진다.
+        ///
+        /// ⚠ 시계는 **그동안에도 돈다.** 멈춰 두면 실질 쿨이 「숨은 시간 ÷ 나온 시간」
+        ///   배로 늘어난다 — 파이썬은 2.6초 중 1초만 나와 있어서 쿨 4초짜리가
+        ///   10초에 한 번 나갔다. 한꺼번에 터지는 일도 없다:
+        ///   `Pending` 은 언제나 하나뿐이라 나올 때마다 **한 개**가 나간다.
+        /// </param>
+        public BossMove Tick(float dt, float distanceMeters, bool canStart = true)
         {
             if (_entry == null || _moves == null) return null;
 
@@ -198,6 +208,7 @@ namespace Game.Module.InGame
                 return ready;
             }
 
+
             for (int i = 0; i < _timers.Count; i++)
             {
                 var m = _moves[i];
@@ -209,6 +220,10 @@ namespace Game.Module.InGame
 
                 _timers[i] -= dt;
                 if (_timers[i] > 0f) continue;
+
+                // 시계는 다 돌았지만 지금은 못 나간다(벽 보스가 숨어 있다).
+                // 0 인 채로 놔둬 **나오는 순간** 곧바로 나가게 한다.
+                if (!canStart) continue;
 
                 var pick = m;
                 if (m.Group > 0)
