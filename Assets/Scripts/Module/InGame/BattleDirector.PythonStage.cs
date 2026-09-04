@@ -72,6 +72,12 @@ namespace Game.Module.InGame
             EnsurePythonStage();
             _pyStage.gameObject.SetActive(true);
             LayoutPythonStage();
+            // 방에 들어오면 **벽 뒤에서 시작한다.** 처음부터 나와 있으면
+            // 어디서 나온 놈인지 못 보고 그냥 서 있는 보스가 된다.
+            _wallPhase = WallPhase.Slide;
+            _wallTimer = 0f;
+            _wallArch = -1;
+            _pyOut = null;   // 방마다 아틀라스가 다시 올라온다
             LoadPythonWallAsync().Forget();   // fire-and-forget: 벽 그림은 늦게 와도 무대는 먼저 선다
         }
 
@@ -169,6 +175,140 @@ namespace Game.Module.InGame
             }
             _pyWall.sprite = art;
             _pyWallHeld = address;
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // 나왔다 들어가는 주기
+        //
+        // 예전에는 **1.5초 사라졌다가 아무 벽 앞에 다시 나타났다.** 연출이 하나도 없어
+        // 순간이동으로 보였다("보스가 지금 자꾸 순간이동을 하는데 왜 하는거야?").
+        // 땅굴에 사는 놈이면 들어가는 것과 나오는 것이 보여야 한다.
+        //
+        //   나옴 0.4s → 물기·예고 1.0s → 들어감 0.4s → 벽 뒤 미끄러짐 0.8s → 반복
+        //
+        // 나와 있는 1.4초가 때릴 수 있는 시간이다(2.6초 중 54%).
+        // 그 앞머리 1.2초가 취약 창 조건이기도 하다 — `BreakCause` 참조.
+
+        private enum WallPhase { Emerge, Strike, Retreat, Slide }
+
+        private const float EmergeSeconds  = 0.4f;
+        private const float StrikeSeconds  = 1.0f;
+        private const float RetreatSeconds = 0.4f;
+        private const float SlideSeconds   = 0.8f;
+
+        /// <summary>숨어서 자리를 옮기는 동안 벽 뒤 몸이 빨라진다 — 그것이 이동으로 읽힌다.</summary>
+        private const float SlideBodySpeed = 3.5f;
+
+        // 벽 그림(720×144) 에 픽셀로 박힌 자리다. 여기서 딴 값을 쓰면 머리가 벽을 뚫고 나온다.
+        //   아치 구멍  x 30~150 · 210~330 · 390~510 · 570~690   y 24~144
+        private const float WallArtWidth = 720f;
+        private const float ArchTopPx = 24f;
+        private static readonly float[] ArchCenterPx = { 90f, 270f, 450f, 630f };
+
+        /// <summary>납품 규격 — 머리 그림의 꼭대기가 256 캔버스의 위에서 24 px 에 있다.</summary>
+        private const float HeadTopPx = 24f;
+
+        private WallPhase _wallPhase;
+        private float _wallTimer;
+        private int _wallArch = -1;
+        private Sprite[] _pyOut, _pyIn;
+
+        /// <summary>지금 머리가 나와 있는 아치. 스킬이 어디서 나가는지도 이 자리다.</summary>
+        private int WallArch => _wallArch < 0 ? 0 : _wallArch;
+
+        private float ArchX(int i) => _roomSize.x * (ArchCenterPx[i] / WallArtWidth);
+
+        /// <summary>
+        /// 머리 꼭대기(캔버스 24 px)가 아치 입구에 닿도록 유닛 중심을 내린다.
+        /// 유닛은 상자 한가운데가 좌표라서 그 절반만큼 더 내려가야 한다.
+        /// </summary>
+        private float HeadY()
+        {
+            float box = 256f * BossScale * _config.UnitScale;
+            float archTop = _roomSize.x * (ArchTopPx / WallArtWidth);
+            return -archTop - (box * 0.5f - HeadTopPx * (box / 256f));
+        }
+
+        private void EnsurePythonHeadFrames()
+        {
+            if (_pyOut != null) return;
+            _pyOut = new Sprite[4];
+            _pyIn = new Sprite[4];
+            for (int i = 0; i < 4; i++)
+            {
+                _pyOut[i] = UnitGet("python", $"s_out{i + 1}");
+                _pyIn[i] = UnitGet("python", $"s_in{i + 1}");
+            }
+        }
+
+        /// <summary>
+        /// 파이썬이 어디에 있는가. `TickBossPresence` 의 벽 보스 갈래가 이것만 부른다.
+        /// </summary>
+        private void TickPythonPresence(float dt, Unit boss)
+        {
+            EnsurePythonHeadFrames();
+            _wallTimer += dt;
+
+            switch (_wallPhase)
+            {
+                // ── 벽 뒤로 미끄러져 자리를 옮긴다 ────────────────
+                case WallPhase.Slide:
+                    _pyBodySpeed = SlideBodySpeed;
+                    if (_wallTimer < SlideSeconds) break;
+                    BeginEmerge(boss);
+                    break;
+
+                // ── 구멍에서 머리가 자라 나온다 ──────────────────
+                case WallPhase.Emerge:
+                    SetHeadFrame(boss, _pyOut, _wallTimer / EmergeSeconds);
+                    if (_wallTimer < EmergeSeconds) break;
+                    SetHeadFrame(boss, _pyOut, 1f);
+                    _wallPhase = WallPhase.Strike;
+                    _wallTimer = 0f;
+                    break;
+
+                // ── 다 나와 있다. 때릴 수 있고, 이때 패턴이 나간다 ──
+                case WallPhase.Strike:
+                    if (_wallTimer < StrikeSeconds) break;
+                    _wallPhase = WallPhase.Retreat;
+                    _wallTimer = 0f;
+                    break;
+
+                // ── 구멍으로 되돌아 들어간다 ────────────────────
+                case WallPhase.Retreat:
+                    SetHeadFrame(boss, _pyIn, _wallTimer / RetreatSeconds);
+                    if (_wallTimer < RetreatSeconds) break;
+                    Hide(boss, shadow: false);
+                    boss.SetSpriteOverride(null);
+                    _wallPhase = WallPhase.Slide;
+                    _wallTimer = 0f;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 다음 구멍을 고르고 머리를 그 자리에 놓는다.
+        /// **직전 구멍은 다시 고르지 않는다** — 같은 데서 두 번 나오면 옮긴 것이 안 읽힌다.
+        /// </summary>
+        private void BeginEmerge(Unit boss)
+        {
+            int next = _rng.Next(ArchCenterPx.Length);
+            if (next == _wallArch) next = (next + 1) % ArchCenterPx.Length;
+            _wallArch = next;
+
+            boss.Position = new Vector2(ArchX(_wallArch), HeadY());
+            _pyBodySpeed = 1f;
+            Show(boss);
+            SetHeadFrame(boss, _pyOut, 0f);
+            _wallPhase = WallPhase.Emerge;
+            _wallTimer = 0f;
+        }
+
+        private void SetHeadFrame(Unit boss, Sprite[] frames, float t)
+        {
+            if (frames == null) return;
+            int i = Mathf.Clamp(Mathf.FloorToInt(t * frames.Length), 0, frames.Length - 1);
+            if (frames[i] != null) boss.SetSpriteOverride(frames[i]);
         }
 
         private void ReleasePythonWall()

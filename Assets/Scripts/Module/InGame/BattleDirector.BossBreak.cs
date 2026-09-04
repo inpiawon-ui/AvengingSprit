@@ -271,11 +271,6 @@ namespace Game.Module.InGame
         /// <summary>지금 보스를 때릴 수 있는가. 숨어 있는 동안은 조준에서도 뺀다.</summary>
         public bool IsBossExposed => _bossExposed;
 
-        // 파이썬 — 벽 뒤. 나와 있는 동안만 맞는다.
-        //   기획이 못 박은 값: **노출 55% 이상.** 2.5 / (2.5 + 1.5) = 62.5%.
-        private const float PythonOutSeconds = 2.5f;
-        private const float PythonInSeconds  = 1.5f;
-
         // 로봇 스네이크 — 구멍. **항상 하나는 나와 있다(100%).**
         //   5200 HP 라 55% 면 전투가 두 배로 길어진다. 대신 자리가 계속 바뀐다.
         private const float SnakeHopSeconds = 3.0f;
@@ -309,18 +304,10 @@ namespace Game.Module.InGame
 
             switch (def.State)
             {
-                // ── 파이썬 — 벽 뒤에 있다가 뚫고 나온다 ───────────
+                // ── 파이썬 — 벽 구멍으로 나왔다 들어간다 ──────────
+                //    주기와 자리는 무대가 안다(`BattleDirector.PythonStage`).
                 case BossState.Walls:
-                    _presenceLeft -= dt;
-                    if (_presenceLeft > 0f) break;
-                    if (_bossExposed) { Hide(boss, shadow: false); _presenceLeft = PythonInSeconds; }
-                    else
-                    {
-                        // 나올 자리는 매번 다르다. 어디서 나올지 모르는 것이 이 보스다.
-                        boss.Position = ClampedInField(boss, WallSpot());
-                        Show(boss);
-                        _presenceLeft = PythonOutSeconds;
-                    }
+                    TickPythonPresence(dt, boss);
                     break;
 
                 // ── 로봇 스네이크 — 구멍을 옮겨 다닌다. 늘 나와 있다 ──
