@@ -6881,6 +6881,19 @@ namespace Game.Module.InGame
         private void Retire(Unit u)
         {
             if (u == null) return;
+
+            // ⚠ **보스가 죽으면 위쪽 체력 게이지를 내린다.**
+            //   게이지는 `BossHpMax == 0` 일 때만 숨는데(`InGameMainUI.OnBossHp`),
+            //   죽는 자리에서 그 신호를 아무도 안 보내고 있었다 — 보스가 사라진 뒤에도
+            //   0/1200 짜리 빈 게이지가 화면 위에 계속 남았다(기획 2026-09-03).
+            //   `_boss` 참조도 여기서 놓는다. 죽은 몸을 계속 들고 있으면
+            //   `TickBoss` 가 시체를 붙들고 패턴을 굴린다.
+            if (u == _boss)
+            {
+                _boss = null;
+                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+            }
+
             if (u.BeginDeath()) _dying.Add(u);
             else Destroy(u.gameObject);
         }
