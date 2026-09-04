@@ -367,6 +367,10 @@ namespace Game.Module.InGame
 
                 // ── 다 나와 있다. 때릴 수 있고, 이때 패턴이 나간다 ──
                 case WallPhase.Strike:
+                    // ⚠ 시험 모드에서는 **머리를 내놓은 채로 세워 둔다.**
+                    //   버튼을 누른 순간 벽 뒤에 있으면 아무도 없는 구멍에 도형이 그려진다.
+                    //   (한 번은 나왔다 서므로 나오는 연출도 그대로 볼 수 있다)
+                    if (BossIdleOnly) break;
                     if (_wallTimer < StrikeSeconds) break;
                     // ⚠ 예고가 떠 있는 동안에는 안 들어간다. 그리다 만 도형을 두고
                     //   머리가 사라지면 무엇이 오는지 읽을 근거가 없어진다.
