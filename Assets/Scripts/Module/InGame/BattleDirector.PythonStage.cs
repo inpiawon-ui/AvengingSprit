@@ -32,7 +32,6 @@ namespace Game.Module.InGame
     public sealed partial class BattleDirector
     {
         // 벽 3장은 720×144 라 아틀라스 밖이다. 방 바닥과 같은 그룹·같은 방식으로 낱장 로드한다.
-        private const string PythonWallKey = "obj_python_wall";
 
         /// <summary>벽 띠의 높이. 그림이 720×144 이고 방 폭이 10 m 이므로 정확히 2 m 다.</summary>
         private const float WallMeterHeight = 2f;
@@ -45,6 +44,16 @@ namespace Game.Module.InGame
 
         private RectTransform _pyStage;
         private Image[] _pyBody;
+        private Image[] _pyDeep;   // 벽 아래로 비어져 나온 몸통 — P3 에서만 보인다
+        private RectTransform _pyDeepClip;
+
+        // 몸통 그림(240×144)에서 **실제 몸은 y 36~108** 이다 — 위아래 36 px 은 비어 있다.
+        // 이 값을 모르면 벽 아래로 낸 몸이 바닥 한 줄만큼 떠서 벽과 안 붙어 보인다.
+        private const float BodyArtHeightPx = 144f;
+        private const float BodyArtTopPx = 36f;
+
+        /// <summary>벽 아래로 몸이 비어져 나오는 깊이. 그림의 몸 두께(72 px = 1 m)와 같다.</summary>
+        private const float DeepBodyMeters = 1f;
         private Image _pyWall;
         private Sprite _pyBody1, _pyBody2;
         private string _pyWallHeld;
@@ -80,7 +89,8 @@ namespace Game.Module.InGame
             _wallTimer = 0f;
             _wallArch = -1;
             _pyOut = null;   // 방마다 아틀라스가 다시 올라온다
-            LoadPythonWallAsync().Forget();   // fire-and-forget: 벽 그림은 늦게 와도 무대는 먼저 선다
+            _wallPhaseIndex = -1;             // 아래에서 반드시 한 번 걸리게 한다
+            ApplyWallPhase(1);
         }
 
         private void EnsurePythonStage()
@@ -97,24 +107,21 @@ namespace Game.Module.InGame
                 ? _fieldLayer.GetSiblingIndex() : 1);
 
             // 몸통 — 방 폭을 덮는 칸 수 + 1. 벽 뒤라 아치 구멍으로만 보인다.
-            int tiles = Mathf.CeilToInt(RoomMeterWidth / BodyTileMeters) + 1;
-            _pyBody = new Image[tiles];
             _pyBody1 = GetSprite("obj_python_body_1");
             _pyBody2 = GetSprite("obj_python_body_2");
-            for (int i = 0; i < tiles; i++)
-            {
-                var bg = new GameObject($"Body{i + 1}", typeof(RectTransform), typeof(Image));
-                bg.transform.SetParent(_pyStage, false);
-                var rt = (RectTransform)bg.transform;
-                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-                rt.pivot = new Vector2(0f, 1f);
-                var img = bg.GetComponent<Image>();
-                img.sprite = _pyBody1;
-                img.raycastTarget = false;
-                _pyBody[i] = img;
-            }
+            int tiles = Mathf.CeilToInt(RoomMeterWidth / BodyTileMeters) + 1;
+            _pyBody = NewBodyRow(tiles, "Body");
+            // 아래로 비어져 나온 몸. **잘라서** 낸다 — 그림은 한 줄 통째(2 m)라
+            // 그대로 두면 방 위쪽 4 m 가 벽과 몸으로 덮인다.
+            var clip = new GameObject("DeepClip", typeof(RectTransform), typeof(RectMask2D));
+            clip.transform.SetParent(_pyStage, false);
+            _pyDeepClip = (RectTransform)clip.transform;
+            _pyDeepClip.anchorMin = _pyDeepClip.anchorMax = new Vector2(0f, 1f);
+            _pyDeepClip.pivot = new Vector2(0f, 1f);
+            _pyDeep = NewBodyRow(tiles, "Deep", _pyDeepClip);
+            ShowDeepBody(false);
 
-            // 벽 — 몸통 위, 유닛 아래.
+            // 벽 — 몸통 위, 유닛 아래. **마지막에 만들어야** 몸통 두 줄보다 위에 온다.
             var wg = new GameObject("Wall", typeof(RectTransform), typeof(Image));
             wg.transform.SetParent(_pyStage, false);
             var wrt = (RectTransform)wg.transform;
@@ -122,6 +129,24 @@ namespace Game.Module.InGame
             wrt.pivot = new Vector2(0f, 1f);
             _pyWall = wg.GetComponent<Image>();
             _pyWall.raycastTarget = false;
+        }
+
+        private Image[] NewBodyRow(int tiles, string name, RectTransform parent = null)
+        {
+            var row = new Image[tiles];
+            for (int i = 0; i < tiles; i++)
+            {
+                var go = new GameObject($"{name}{i + 1}", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(parent != null ? parent : _pyStage, false);
+                var rt = (RectTransform)go.transform;
+                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0f, 1f);
+                var img = go.GetComponent<Image>();
+                img.sprite = _pyBody1;
+                img.raycastTarget = false;
+                row[i] = img;
+            }
+            return row;
         }
 
         /// <summary>방 크기가 정해진 뒤에 자리를 다시 잡는다.</summary>
@@ -138,7 +163,15 @@ namespace Game.Module.InGame
                 var rt = (RectTransform)_pyBody[i].transform;
                 rt.sizeDelta = new Vector2(tile, band);
                 rt.anchoredPosition = new Vector2(i * tile, 0f);
+
+                // 비어져 나온 쪽은 잘라 내는 틀 **안에서** 위로 올려 둔다 —
+                // 그림 위쪽 36 px 이 비어 있어 그대로 두면 벽과 몸 사이가 뜬다.
+                var drt = (RectTransform)_pyDeep[i].transform;
+                drt.sizeDelta = new Vector2(tile, band);
+                drt.anchoredPosition = new Vector2(i * tile, BodyArtTopPx * (band / BodyArtHeightPx));
             }
+            _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, DeepBodyMeters * _pxPerMeter);
+            _pyDeepClip.anchoredPosition = new Vector2(0f, -band);
             var w = (RectTransform)_pyWall.transform;
             w.sizeDelta = new Vector2(_roomSize.x, band);
             w.anchoredPosition = Vector2.zero;
@@ -160,13 +193,49 @@ namespace Game.Module.InGame
             _pyBodyTimer -= BodyIdleStepSeconds;
             _pyBodyFlip = !_pyBodyFlip;
             var art = _pyBodyFlip ? _pyBody2 : _pyBody1;
-            for (int i = 0; i < _pyBody.Length; i++) _pyBody[i].sprite = art;
+            for (int i = 0; i < _pyBody.Length; i++)
+            {
+                _pyBody[i].sprite = art;
+                _pyDeep[i].sprite = art;
+            }
         }
 
-        private async UniTaskVoid LoadPythonWallAsync()
+        /// <summary>
+        /// 페이즈가 바뀌면 벽이 한 칸씩 무너진다. 그림도 구멍 목록도 함께 바뀐다.
+        /// P3 에서는 몸통이 벽 아래로 한 줄 더 나와 방 안까지 들어온다.
+        /// </summary>
+        private void ApplyWallPhase(int phase)
         {
-            if (_pyWall == null || _pyWall.sprite != null) return;
-            var address = RoomFloorPrefix + PythonWallKey;
+            if (_pyStage == null || !IsPythonRoom) return;
+            int idx = Mathf.Clamp(phase - 1, 0, WallArtByPhase.Length - 1);
+            if (idx == _wallPhaseIndex && _pyWall != null && _pyWall.sprite != null) return;
+            _wallPhaseIndex = idx;
+
+            // 무너진 칸에 머리가 나와 있으면 다음에 나올 때 살아 있는 칸으로 옮긴다.
+            bool alive = false;
+            var live = LiveArches;
+            for (int i = 0; i < live.Length; i++) if (live[i] == _wallArch) alive = true;
+            if (!alive) _wallArch = -1;
+
+            LoadPythonWallAsync(WallArtByPhase[idx]).Forget();   // fire-and-forget: 늦게 와도 벽은 서 있다
+            ShowDeepBody(idx >= 2);
+        }
+
+        /// <summary>
+        /// 벽 아래로 몸통을 한 줄 더 깐다. P3 전용 —
+        /// 벽이 반쯤 무너져 **몸이 방 안까지 밀려 들어온 것**이 보여야 한다.
+        /// </summary>
+        private void ShowDeepBody(bool on)
+        {
+            if (_pyDeepClip == null) return;
+            _pyDeepClip.gameObject.SetActive(on);
+        }
+
+        private async UniTaskVoid LoadPythonWallAsync(string key)
+        {
+            if (_pyWall == null) return;
+            var address = RoomFloorPrefix + key;
+            if (address == _pyWallHeld) return;
             Sprite art = null;
             try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
             catch (Exception) { /* 아직 주소가 없으면 벽 없이 그냥 진행한다 */ }
@@ -178,7 +247,9 @@ namespace Game.Module.InGame
                 return;
             }
             _pyWall.sprite = art;
+            var old = _pyWallHeld;
             _pyWallHeld = address;
+            if (old != null) CoreModule.Get<IResourceManager>().Release(old);
         }
 
         // ─────────────────────────────────────────────────────────
@@ -203,11 +274,31 @@ namespace Game.Module.InGame
         /// <summary>숨어서 자리를 옮기는 동안 벽 뒤 몸이 빨라진다 — 그것이 이동으로 읽힌다.</summary>
         private const float SlideBodySpeed = 3.5f;
 
-        // 벽 그림(720×144) 에 픽셀로 박힌 자리다. 여기서 딴 값을 쓰면 머리가 벽을 뚫고 나온다.
-        //   아치 구멍  x 30~150 · 210~330 · 390~510 · 570~690   y 24~144
+        // ⚠ 아치의 **가로 자리는 `DangerShape.ArchAtRoom` 하나만 본다.** 표가 갈라지면
+        //   예고 도형과 머리가 다른 구멍을 가리킨다.
+        //   세로(입구 높이)는 그림 규격이라 여기 둔다 — 벽 720×144 의 위에서 24 px.
         private const float WallArtWidth = 720f;
         private const float ArchTopPx = 24f;
-        private static readonly float[] ArchCenterPx = { 90f, 270f, 450f, 630f };
+
+        // ── 페이즈마다 벽이 무너진다 ─────────────────────────────
+        //
+        // 어느 칸이 무너지는지는 **벽 그림에 박혀 있다.** 실측(알파 0 구간):
+        //   obj_python_wall         83~97 · 263~277 · 443~457 · 623~637   성한 네 칸
+        //   obj_python_wall_break1  셋째 칸(450) 둘레가 401~501 까지 통째로 뚫린다
+        //   obj_python_wall_break2  둘째·셋째(270·450)가 211~510 으로 함께 무너진다
+        //
+        // 무너진 칸에서는 머리가 안 나온다 — 거기는 이미 벽이 아니다.
+        private static readonly string[] WallArtByPhase =
+            { "obj_python_wall", "obj_python_wall_break1", "obj_python_wall_break2" };
+
+        private static readonly int[][] ArchesByPhase =
+        {
+            new[] { 0, 1, 2, 3 },
+            new[] { 0, 1, 3 },
+            new[] { 0, 3 },
+        };
+
+        private int _wallPhaseIndex;   // 0=성함 1=한 칸 무너짐 2=두 칸 무너짐
 
         /// <summary>납품 규격 — 머리 그림의 꼭대기가 256 캔버스의 위에서 24 px 에 있다.</summary>
         private const float HeadTopPx = 24f;
@@ -220,7 +311,10 @@ namespace Game.Module.InGame
         /// <summary>지금 머리가 나와 있는 아치. 스킬이 어디서 나가는지도 이 자리다.</summary>
         private int WallArch => _wallArch < 0 ? 0 : _wallArch;
 
-        private float ArchX(int i) => _roomSize.x * (ArchCenterPx[i] / WallArtWidth);
+        /// <summary>지금 페이즈에서 쓸 수 있는 아치 목록.</summary>
+        private int[] LiveArches => ArchesByPhase[Mathf.Clamp(_wallPhaseIndex, 0, ArchesByPhase.Length - 1)];
+
+        private float ArchX(int i) => DangerShape.ArchAtRoom(i, _roomSize).x;
 
         /// <summary>
         /// 머리 꼭대기(캔버스 24 px)가 아치 입구에 닿도록 유닛 중심을 내린다.
@@ -299,9 +393,10 @@ namespace Game.Module.InGame
         /// </summary>
         private void BeginEmerge(Unit boss)
         {
-            int next = _rng.Next(ArchCenterPx.Length);
-            if (next == _wallArch) next = (next + 1) % ArchCenterPx.Length;
-            _wallArch = next;
+            var live = LiveArches;
+            int k = _rng.Next(live.Length);
+            if (live.Length > 1 && live[k] == _wallArch) k = (k + 1) % live.Length;
+            _wallArch = live[k];
 
             boss.Position = new Vector2(ArchX(_wallArch), HeadY());
             _pyBodySpeed = 1f;

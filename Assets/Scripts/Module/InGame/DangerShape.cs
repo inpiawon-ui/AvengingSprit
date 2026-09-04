@@ -73,11 +73,6 @@ namespace Game.Module.InGame
             NearTarget,
             /// <summary>바닥 구멍 여섯 곳 중 <see cref="Count"/> 곳. 로봇 스네이크 전용.</summary>
             Holes,
-            /// <summary>
-            /// 위쪽 벽에 뚫린 **아치 네 곳**. 파이썬 전용.
-            /// ⚠ 자리는 벽 그림에 픽셀로 박혀 있다 — <see cref="ArchAtRoom"/> 하나만 본다.
-            /// </summary>
-            Arches,
         }
 
         public Kind Shape;
@@ -165,9 +160,6 @@ namespace Game.Module.InGame
                 case Spread.Holes:
                     return HoleAtRoom(Tick + i, roomSize);
 
-                case Spread.Arches:
-                    return ArchAtRoom(Tick + i, roomSize);
-
                 default:
                     return Origin;
             }
@@ -196,16 +188,9 @@ namespace Game.Module.InGame
             return from + dir * (Length * 0.5f);
         }
 
-        /// <summary>i번째 띠의 시작점과 방향.</summary>
+        /// <summary>i번째 띠의 시작점과 방향. 지금은 띠를 여럿 쓰는 패턴이 없다.</summary>
         private void BandOf(int i, Vector2 roomSize, out Vector2 from, out Vector2 dir)
         {
-            // 아치에서 나오는 띠는 **그 구멍에서 곧장 아래로** 간다.
-            if (Layout == Spread.Arches)
-            {
-                from = ArchAtRoom(Tick + i, roomSize);
-                dir = Vector2.down;
-                return;
-            }
             from = Origin; dir = Dir;
         }
 

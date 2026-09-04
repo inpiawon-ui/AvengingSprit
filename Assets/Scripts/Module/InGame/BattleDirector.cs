@@ -3812,6 +3812,10 @@ namespace Game.Module.InGame
         /// </summary>
         private void EnterBossPhase(Unit boss, int phase)
         {
+            // ⚠ 아래 조기 반환보다 **먼저** 부른다. 정본 방 정보가 없는 방
+            //   (테스트로 끼워 넣은 보스방)에서도 벽은 무너져야 한다.
+            ApplyWallPhase(phase);
+
             var def = _canonRoom != null ? _canonRoom.BossPhase(phase) : null;
             if (def == null) return;
 
