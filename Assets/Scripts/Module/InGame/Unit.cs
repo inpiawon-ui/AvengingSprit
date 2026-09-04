@@ -746,9 +746,15 @@ namespace Game.Module.InGame
         /// 예전처럼 바로 없애면 된다. 캐릭터를 한 종씩 채워 넣어야 해서
         /// 그림이 없는 종이 깨지면 안 된다.
         /// </summary>
-        public bool BeginDeath()
+        /// <param name="fadeOnly">
+        /// 쓰러지는 그림이 없어도 **사라지는 시간만은 준다.**
+        /// 죽는 연출을 밖에서 따로 그리는 경우에 쓴다 — 파이썬은 벽 구멍으로
+        /// 미끄러져 들어가는 것이 죽는 연출이라 방향별 die 그림이 아예 필요 없다.
+        /// 그림이 없다고 그 자리에서 없애 버리면 그 연출이 한 프레임도 못 돈다.
+        /// </param>
+        public bool BeginDeath(bool fadeOnly = false)
         {
-            if (_frames[FrameDie1] == null || _frames[FrameDie2] == null) return false;
+            if (!fadeOnly && (_frames[FrameDie1] == null || _frames[FrameDie2] == null)) return false;
 
             _dying = true;
             _deathTimer = 0f;

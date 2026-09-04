@@ -157,10 +157,34 @@ namespace Game.EditorTools
             //   `.png` 를 붙여 두면 영영 안 걸린다 — 실제로 한동안 죽어 있었다.
             if (name == "roomfloor_demolisher" || name == "roomfloor") return true;
 
+            // 가디언 피격 5장과 옛 예고 자세는 **쓰지 않기로 했다**(기획 2026-09-03 —
+            // "hit 은 그냥 지우고"). 보스는 `PlayHit` 이 첫 줄에서 돌아가므로 영영 안 뜨고,
+            // `unit_guardian_s_tell` 은 스킬별 예고 자세 15장으로 대체됐다.
+            // 지워도 이 폴더에 남아 있어 **툴을 돌릴 때마다 되살아났다** — 여기서 끊는다.
+            if (name.StartsWith("unit_guardian_") && name.EndsWith("_hit")) return true;
+            if (name == "unit_guardian_s_tell") return true;
+
+            // 파이썬은 **벽 보스**다(기획 2026-09-04). 방향도 걷기도 근접 공격도 없다 —
+            // 벽 구멍에서 머리만 내밀었다 들어가고, 그 그림은 `_s_out1~4` · `_s_in1~4` 뿐이다.
+            // 옛 옆모습 시트 40장은 코드가 한 번도 안 부르면서 유닛 아틀라스만 먹었다.
+            //
+            // ⚠ 남기는 것은 `unit_python_s` 하나. 연출 그림을 놓았을 때 돌아갈
+            //   바탕 그림(`Unit._baseSprite`)이라 이것까지 지우면 형제 보스 그림을 빌려 온다.
+            if (name.StartsWith("unit_python_") && !IsPythonKeeper(name)) return true;
+
             // 컨셉 시안은 **고를 때 보는 그림**이지 게임 에셋이 아니다.
             // 고른 것은 `roomfloor_env_*` 로 따로 들어간다.
             if (name.StartsWith("concept_")) return true;
 
+            return false;
+        }
+
+        /// <summary>파이썬에서 **지금 쓰는** 그림. 이 목록 밖은 전부 옛 옆모습 시트다.</summary>
+        private static bool IsPythonKeeper(string name)
+        {
+            if (name == "unit_python_s") return true;
+            for (int i = 1; i <= 4; i++)
+                if (name == $"unit_python_s_out{i}" || name == $"unit_python_s_in{i}") return true;
             return false;
         }
 

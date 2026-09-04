@@ -6993,7 +6993,9 @@ namespace Game.Module.InGame
                 BeginPythonDeath(u);
             }
 
-            if (u.BeginDeath()) _dying.Add(u);
+            // 벽 보스는 방향별 die 그림이 없다(있어도 옛 옆모습이라 안 쓴다).
+            // 사라지는 시간만 받아 그동안 제 연출을 돈다.
+            if (u.BeginDeath(fadeOnly: _pyDying == u)) _dying.Add(u);
             else Destroy(u.gameObject);
         }
 
