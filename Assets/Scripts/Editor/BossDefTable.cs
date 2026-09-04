@@ -128,10 +128,15 @@ namespace Game.EditorTools
 
             // ── 가디언 · 미사일기지 — 마디를 하나씩 끊어라 ───────────────────────
             new() { Key = "guardian", NameKr = "가디언", NameEn = "Guardian", Sprite = "unit_guardian",
-                    // ⚠ 공격력 22 → 44 (기획 2026-09-03). 붙어서 한 판 돌려 보니
-                    //   때리면서 차는 쉴드가 보스 피해를 거의 다 먹어서, 안 피하고
-                    //   버티기만 해도 견뎌졌다 — 피할 이유가 없으면 패턴이 장식이 된다.
-                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 2400, Atk = 44,
+                    // ⚠ 공격력 22 → 44 → **66** (기획 2026-09-03).
+                    //   붙어서 한 판 돌려 보니 때리면서 차는 쉴드가 보스 피해를 거의 다
+                    //   먹어서, 안 피하고 버티기만 해도 이겼다 — 피할 이유가 없으면
+                    //   패턴이 장식이 된다.
+                    //
+                    //   ⚠ 평타를 없앴으므로(`TickBoss`) 이 값은 **오로지 스킬 피해**를
+                    //     정한다. 스킬 피해 = 이 값 × 그 패턴의 DamageMul 이라,
+                    //     여기만 만지면 넷이 같은 비율로 따라 움직인다.
+                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 2400, Atk = 66,
                     State = "Segments", Chases = true, BreakSeconds = 0.0f, BreakCause = "마디를 3개 이하로 끊었다 — 머리 무적이 영구히 풀린다",
                     Moves = new Move[]
                     {
