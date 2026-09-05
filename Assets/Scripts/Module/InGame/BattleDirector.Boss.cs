@@ -1233,14 +1233,33 @@ namespace Game.Module.InGame
             _ => "burst",
         };
 
+        /// <summary>한 패턴이 한 번에 터뜨릴 수 있는 자리의 수. 이펙트 풀을 다 먹지 않게 막는다.</summary>
+        private const int MaxImpactPieces = 8;
+
         private void PlayDangerImpact(BossMove m, Unit victim)
         {
             // 무엇이 지나갔는지 보여야 한다. 도형이 아니라 **패턴**으로 고른다 —
             // 같은 원이라도 독구름과 파괴구는 다른 것이 터져야 읽힌다.
             string fx = ImpactFxOf(m.Draw);
             float size = Mathf.Max(96f, _danger.Radius > 0f ? _danger.Radius : _danger.Width);
-            var at = victim != null ? victim.Position : _danger.ImpactAt(_roomSize);
-            var im = PlayFx(fx, at, size, loop: false);
+
+            int pieces = Mathf.Max(1, _danger.PieceCount);
+
+            // 도형이 하나면 **맞은 자리**에서 터진다. 도형 중심에서 터뜨리면
+            // 나는 원 끄트머리에서 맞았는데 폭발은 저 위에서 난다.
+            if (pieces <= 1)
+            {
+                PlayFx(fx, victim != null ? victim.Position : _danger.ImpactAt(_roomSize),
+                       size, loop: false);
+                return;
+            }
+
+            // ⚠ **떨어지는 것이 여럿이면 여럿 다 터진다.** 예전에는 한 군데서만 터져서,
+            //   벽돌 셋이 떨어지는데 부서지는 자리는 하나뿐이었다.
+            //   그린 자리마다 무언가 도착했으므로 그 자리마다 흔적이 남아야 한다.
+            //   (맞은 사람 자리도 그 조각 중 하나라 따로 터뜨리지 않는다 — 두 번 터진다)
+            for (int i = 0; i < pieces && i < MaxImpactPieces; i++)
+                PlayFx(fx, _danger.PieceAt(i, _roomSize), size, loop: false);
         }
     }
 }
