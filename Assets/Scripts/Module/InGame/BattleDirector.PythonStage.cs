@@ -446,6 +446,8 @@ namespace Game.Module.InGame
             if (live.Length > 1 && live[k] == _wallArch) k = (k + 1) % live.Length;
             _wallArch = live[k];
 
+            // 머리 위 체력바는 벽 보스에서 방해만 된다 — 목을 뻗으면 목을 가로지른다.
+            boss.SetHpBarVisible(false);
             boss.Position = new Vector2(ArchX(_wallArch), HeadY());
             _pyBodySpeed = 1f;
             Show(boss);

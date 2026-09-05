@@ -793,6 +793,18 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
+        /// 머리 위 체력바를 켜고 끈다.
+        ///
+        /// 벽 보스(파이썬)는 방 꼭대기 벽에 붙어 있어서 이 바가 **평소엔 방 밖으로
+        /// 벗어나 안 보이다가, 목을 뻗어 머리가 내려가면 딸려 내려와 목을 가로지른다.**
+        /// 보스 체력은 위쪽 게이지가 따로 보여 주므로 이 바는 켤 이유가 없다.
+        /// </summary>
+        public void SetHpBarVisible(bool on)
+        {
+            if (_hpBarBg != null) _hpBarBg.gameObject.SetActive(on);
+        }
+
+        /// <summary>
         /// 방향·프레임 체계를 통째로 무시하고 이 한 장만 그린다.
         /// 빙의 연출처럼 **방향이 없는 동작**에 쓴다 — null 을 넣으면 원래대로 돌아간다.
         /// </summary>
