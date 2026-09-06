@@ -152,11 +152,9 @@ namespace Game.Module.InGame
                     if (!playerHit && BossAtWall(boss)) OpenBreak(boss, "파괴구가 벽에 박혔다");
                     break;
 
-                // ── 킹핀 — 활강을 옥상 구조물 쪽으로 유인했다 ─────
-                // 떠 있는 동안은 근접이 안 닿는다. 끌어내리는 방법이 이것뿐이다.
-                case BossDraw.StrafingRun:
-                    if (!playerHit && BossAtWall(boss)) OpenBreak(boss, "활강이 구조물에 걸렸다");
-                    break;
+                // ⚠ 킹핀 「저공 활강」은 여기 없다. 발동하는 순간에 보면 **출발한 자리**를
+                //   보게 된다 — 활강은 그 뒤에 날아간다. 날아가 멈춘 자리에서 보려고
+                //   `TickGlideBreak` 로 옮겼다.
 
                 // ── 파이썬 — 나온 직후에 때렸다 ───────────────────
                 // 머리가 벽 밖에 나와 있는 짧은 동안만 창이 열린다.

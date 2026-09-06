@@ -166,6 +166,32 @@ namespace Game.Module.InGame
             }
         }
 
+        // ── 활강이 구조물에 걸렸는가 ─────────────────────────────
+        //
+        // 정본 조건은 「저공 활강을 옥상 구조물 쪽으로 **유인했다**」다.
+        //
+        // ⚠ 예전에는 `CheckBreak` 가 **발동하는 순간** 이것을 봤다. 그런데 활강은
+        //   그 뒤에 날아가므로, 본 것은 **출발한 자리**였다.
+        //
+        // ⚠⚠ 그리고 **「벽에 닿았는가」만으로는 아무것도 못 가른다.** 활강의 띠 길이는
+        //     방 대각선이라 언제나 반대편 벽까지 간다 — 실측 두 번 다 (360, -743) 에서
+        //     멈췄고 창이 매번 열렸다.
+        //     가르는 것은 **피했느냐**다. 몸이 나를 스치고 지나갔으면 못 끌어내린 것이고,
+        //     비켜서 그냥 벽에 박았으면 그때가 끌어내린 순간이다.
+        //     (원래 코드에도 `!playerHit` 가 있었는데 옮기면서 빠뜨렸다)
+
+        private bool _glidePending;
+
+        private void TickGlideBreak()
+        {
+            if (!_glidePending || _brain == null) return;
+            if (_brain.ChargeLeft > 0f) return;         // 아직 날아가는 중
+            _glidePending = false;
+            if (_boss == null || !_boss.IsAlive) return;
+            if (_chargeHitDone) return;                 // 나를 스치고 갔다 — 못 끌어내렸다
+            if (BossAtWall(_boss)) OpenBreak(_boss, "활강이 구조물에 걸렸다");
+        }
+
         private void TickKingpinDrop(float dt)
         {
             if (_dropLeft <= 0f) return;
@@ -530,6 +556,8 @@ namespace Game.Module.InGame
                     float glide = Mathf.Max(1f, boss.MoveSpeed * _chargeSpeedMul);
                     _brain.BeginCharge(_danger.Dir,
                         Mathf.Clamp(_danger.Length / glide, 0.3f, 3f));
+                    // 취약 창은 **도착한 자리**에서 본다. 아래 `TickGlideBreak` 참조.
+                    _glidePending = true;
                     break;
                 }
 
