@@ -126,6 +126,10 @@ namespace Game.Module.InGame
         /// <summary>내려찍기까지 남은 시간. 이 동안 보스는 그림자만 남긴다.</summary>
         private float _dropLeft;
 
+        /// <summary>예고 앞부분 얼마 동안 **떠오르는 모습**을 보여 주고 나서 사라지는가.</summary>
+        private const float RiseShowRatio = 0.4f;
+        private float _riseLeft;
+
         private Impact _lockMark;
 
         private void BeginKingpinTell(Unit boss, BossMove m)
@@ -134,9 +138,12 @@ namespace Game.Module.InGame
             switch (m.Draw)
             {
                 // 위로 사라진다. 그림자만 남아 어디로 떨어질지 알린다.
+                //
+                // ⚠ **곧바로 숨기지 않는다.** 떠오르는 자세(`_rise`)를 잠깐 보여 준 뒤에
+                //   사라져야 "올라갔다" 로 읽힌다 — 처음부터 없으면 그냥 사라진 것이다.
                 case BossDraw.BoosterDrop:
                     _dropLeft = _brain != null ? _brain.TelegraphTotal : 1f;
-                    boss.SetHidden(true, showShadow: true);
+                    _riseLeft = _dropLeft * RiseShowRatio;
                     break;
 
                 // 겨눈 자리에 표식을 찍어 둔다. 예고 내내 떠 있어야
@@ -154,6 +161,7 @@ namespace Game.Module.InGame
             if (_dropLeft > 0f)
             {
                 _dropLeft = 0f;
+                _riseLeft = 0f;
                 if (boss != null && boss.IsAlive) boss.SetHidden(false);
             }
         }
@@ -161,6 +169,15 @@ namespace Game.Module.InGame
         private void TickKingpinDrop(float dt)
         {
             if (_dropLeft <= 0f) return;
+
+            // 떠오르는 모습을 보여 주는 동안은 아직 안 숨는다.
+            if (_riseLeft > 0f)
+            {
+                _riseLeft -= dt;
+                if (_riseLeft <= 0f && _boss != null && _boss.IsAlive)
+                    _boss.SetHidden(true, showShadow: true);
+            }
+
             _dropLeft -= dt;
             if (_dropLeft > 0f) return;
             _dropLeft = 0f;
@@ -181,6 +198,10 @@ namespace Game.Module.InGame
             BossDraw.SegmentThrust => "thrust",   // 스프링처럼 뒤로 감았다가 편다
             BossDraw.SegmentLaunch => "launch",   // 몸을 젖히고 꼬리 마디를 떼어 낸다
             BossDraw.HeadBite      => "bite",     // 머리를 젖히고 턱을 벌린다
+            BossDraw.MissileSalvo  => "salvo",    // 포드를 젖히고 발사구를 연다
+            BossDraw.ExecutionLock => "lock",     // 낮게 웅크리고 한 점을 겨눈다
+            BossDraw.StrafingRun   => "glide",    // 뒤로 빼며 스러스터에 힘을 모은다
+            BossDraw.BoosterDrop   => "rise",     // 아래로 불을 뿜으며 떠오른다
             _ => null,
         };
 
