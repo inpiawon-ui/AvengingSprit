@@ -996,7 +996,7 @@ namespace Game.Module.InGame
 
             // ⚠ 「마디 돌진」은 여기서 안 터진다. 아직 날아가지도 않았다 —
             //   터지는 것은 **몸이 나에게 닿는 순간**이다(`TickBoss` 의 돌진 분기).
-            if (m.Draw != BossDraw.SegmentThrust
+            if (m.Draw != BossDraw.SegmentThrust && m.Draw != BossDraw.StrafingRun
                 && (playerHit || !ImpactNeedsHit(m.Draw)))
                 PlayDangerImpact(m, playerHit ? me : null);
             // 예고 동안 띄워 둔 것(조준 표식·상승)을 여기서 거둔다.
@@ -1230,8 +1230,15 @@ namespace Game.Module.InGame
         ///
         /// 「마디 돌진」도 여기서 빠진다. 예고가 끝나는 순간이 아니라 **날아가 몸이
         /// 닿는 순간**에 박기 때문이다(`TickBoss` 의 돌진 분기).
+        ///
+        /// ⚠ 「저공 활강」도 같은 이유로 빠진다. 그냥 뒀더니 **두 번 맞았다** —
+        ///   예고가 끝나는 순간 띠로 한 번(21), 탈것이 지나가며 닿을 때 또 한 번(21).
+        ///   실측 42 = 정확히 두 배였다. 띠는 「이 줄로 지나간다」는 표시이고,
+        ///   때리는 것은 지나가는 몸 하나다.
         private static bool ShapeHurts(BossDraw draw)
-            => draw != BossDraw.Crush && draw != BossDraw.SegmentThrust;
+            => draw != BossDraw.Crush
+            && draw != BossDraw.SegmentThrust
+            && draw != BossDraw.StrafingRun;
 
         /// <summary>
         /// 이 패턴은 **맞았을 때만** 터지는가.
