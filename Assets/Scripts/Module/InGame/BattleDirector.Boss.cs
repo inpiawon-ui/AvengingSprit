@@ -113,6 +113,58 @@ namespace Game.Module.InGame
             // 램프는 **패턴을 안 가린다.** 무엇이 오든 "온다" 를 알리는 것이라
             // 크러셔의 네 패턴에 다 뜬다 — 원작이 그렇게 쓴다.
             BeginLamp(boss);
+
+            BeginKingpinTell(boss, m);
+        }
+
+        // ── 킹핀 — 떠올랐다 내려찍고, 표식을 찍는다 ──────────────
+        //
+        // 「부스터 강하」는 정본이 **화면 밖으로 상승했다가 그림자 예고 후 내려찍는다**
+        // 이고, 「처형 조준」은 **몸에 표식을 찍고 그 자리를 친다** 이다.
+        // 둘 다 예고 동안 화면에 아무것도 없어서 「원만 떴다 터진다」로 보였다.
+
+        /// <summary>내려찍기까지 남은 시간. 이 동안 보스는 그림자만 남긴다.</summary>
+        private float _dropLeft;
+
+        private Impact _lockMark;
+
+        private void BeginKingpinTell(Unit boss, BossMove m)
+        {
+            if (boss == null) return;
+            switch (m.Draw)
+            {
+                // 위로 사라진다. 그림자만 남아 어디로 떨어질지 알린다.
+                case BossDraw.BoosterDrop:
+                    _dropLeft = _brain != null ? _brain.TelegraphTotal : 1f;
+                    boss.SetHidden(true, showShadow: true);
+                    break;
+
+                // 겨눈 자리에 표식을 찍어 둔다. 예고 내내 떠 있어야
+                // "저기가 찍혔다 — 몸을 갈아타라" 가 읽힌다.
+                case BossDraw.ExecutionLock:
+                    _lockMark = PlayFx("mark", _danger.Origin, Mathf.Max(96f, _danger.Radius), loop: true);
+                    break;
+            }
+        }
+
+        /// <summary>표식·상승을 거둔다. 발동했든 보스가 죽었든 한 곳에서 끈다.</summary>
+        private void EndKingpinTell(Unit boss)
+        {
+            if (_lockMark != null) { _lockMark.Stop(); _lockMark = null; }
+            if (_dropLeft > 0f)
+            {
+                _dropLeft = 0f;
+                if (boss != null && boss.IsAlive) boss.SetHidden(false);
+            }
+        }
+
+        private void TickKingpinDrop(float dt)
+        {
+            if (_dropLeft <= 0f) return;
+            _dropLeft -= dt;
+            if (_dropLeft > 0f) return;
+            _dropLeft = 0f;
+            if (_boss != null && _boss.IsAlive) _boss.SetHidden(false);
         }
 
         /// <summary>
@@ -441,6 +493,31 @@ namespace Game.Module.InGame
 
                 // 제자리에서 문다 — 달려가지 않는다. 도형이 그대로 때린다.
                 case BossDraw.HeadBite:
+                    break;
+
+                // 탈것으로 방을 **가로질러 민다.** 그어 둔 띠 끝까지 가고,
+                // 닿아도 안 멈춘다 — 지나가는 것이 이 패턴이다.
+                // (이때만 근접이 닿는다는 것이 이 보스의 취약 창 조건이다)
+                case BossDraw.StrafingRun:
+                {
+                    _chargeDamageMul = m.DamageMul;
+                    _chargeSpeedMul = ChargeSpeedMul * RamSpeedBoost;
+                    _chargePierce = true;
+                    _chargeHitDone = false;
+                    _chargeFx = ImpactFxOf(m.Draw);
+                    _chargeFxSize = Mathf.Max(96f, _danger.Width);
+                    float glide = Mathf.Max(1f, boss.MoveSpeed * _chargeSpeedMul);
+                    _brain.BeginCharge(_danger.Dir,
+                        Mathf.Clamp(_danger.Length / glide, 0.3f, 3f));
+                    break;
+                }
+
+                // 위에서 **그림자 자리로 내려찍는다.** 예고 동안 올라가 있었으므로
+                // 여기서 그 자리에 다시 나타나야 한다 — 안 그러면 원만 터진다.
+                case BossDraw.BoosterDrop:
+                    boss.Position = ClampedInField(boss, _danger.Origin);
+                    EndKingpinTell(boss);
+                    PlayFx("slam", boss.Position, Mathf.Max(144f, _danger.Radius), loop: false);
                     break;
 
                 // 머리가 그어 둔 띠 **끝까지** 목을 뻗었다 되돌아온다.
@@ -901,6 +978,9 @@ namespace Game.Module.InGame
             if (m.Draw != BossDraw.SegmentThrust
                 && (playerHit || !ImpactNeedsHit(m.Draw)))
                 PlayDangerImpact(m, playerHit ? me : null);
+            // 예고 동안 띄워 둔 것(조준 표식·상승)을 여기서 거둔다.
+            if (m.Draw != BossDraw.BoosterDrop) EndKingpinTell(boss);
+
             // 무엇을 했느냐에 따라 취약 창이 열린다. 그냥 피한 것만으로는 안 열리는 보스가 있다.
             CheckBreak(boss, m, playerHit);
 
@@ -1172,7 +1252,8 @@ namespace Game.Module.InGame
         {
             BossDraw.HeadBite or BossDraw.CoilWall or BossDraw.SegmentThrust
               or BossDraw.Crush or BossDraw.WreckingBall or BossDraw.RamCharge
-              or BossDraw.HeadLunge or BossDraw.BodyShove => true,
+              or BossDraw.HeadLunge or BossDraw.BodyShove
+              or BossDraw.StrafingRun => true,
             _ => false,
         };
 

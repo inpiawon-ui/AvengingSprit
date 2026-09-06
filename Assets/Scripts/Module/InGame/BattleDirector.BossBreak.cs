@@ -297,6 +297,10 @@ namespace Game.Module.InGame
         {
             var boss = _boss;
             if (boss == null || !boss.IsAlive) return;
+            // ⚠ 「부스터 강하」로 올라가 있는 동안은 건드리지 않는다.
+            //   여기서 매 프레임 Show 를 부르면 올라가자마자 다시 내려앉는다.
+            if (_dropLeft > 0f) return;
+
             var def = _brain != null ? _brain.Entry : null;
             if (def == null || !HidesAway) { Show(boss); return; }
             if (IsBossBroken) { Show(boss); return; }

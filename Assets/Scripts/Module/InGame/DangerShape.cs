@@ -640,7 +640,9 @@ namespace Game.Module.InGame
                     // ⚠ 하나도 허용한다. 예전 하한 2 는 「미사일 한 발」을 적을 수 없게 했다 —
                     //   1 을 넣어도 2발이 떨어졌다. 하나면 부채꼴 한가운데, 곧 내 자리다.
                     s.Count = Mathf.Max(1, m.Lanes);
-                    s.Degrees = 60f;
+                    // ⚠ 60° 로 뒀더니 다섯 원(반경 1.2 m = 86 px)이 서로 겹쳐
+                    //   한 덩어리로 보였다 — 사이로 빠져나갈 틈이 없다.
+                    s.Degrees = 90f;
                     s.Length = Mathf.Max(px, toPlayer);   // 플레이어 거리에 흩뿌린다
                     break;
 
