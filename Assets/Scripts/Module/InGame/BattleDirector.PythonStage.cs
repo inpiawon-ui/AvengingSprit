@@ -259,6 +259,32 @@ namespace Game.Module.InGame
 
             LoadPythonWallAsync(WallArtByPhase[idx]).Forget();   // fire-and-forget: 늦게 와도 벽은 서 있다
             ShowDeepBody(idx >= 2);
+
+            // ⚠ 그림만 갈아 끼우면 성한 벽이 **한 프레임에 툭** 무너진 벽이 된다.
+            //   무너진 칸에서 파편이 터지고 잔해가 떨어져야 "지금 무너졌다" 가 읽힌다.
+            //   방에 처음 들어올 때(P1)는 무너진 것이 없으므로 건너뛴다.
+            if (idx > 0) PlayCollapse(idx);
+        }
+
+        /// <summary>
+        /// 이번 페이즈에 **새로 무너진 칸**에서 파편을 터뜨리고 잔해를 떨어뜨린다.
+        /// 지난 페이즈에 살아 있었는데 이번에 빠진 구멍이 곧 무너진 자리다.
+        /// </summary>
+        private void PlayCollapse(int idx)
+        {
+            var before = ArchesByPhase[idx - 1];
+            var after = ArchesByPhase[idx];
+            for (int i = 0; i < before.Length; i++)
+            {
+                bool stillThere = false;
+                for (int j = 0; j < after.Length; j++) if (after[j] == before[i]) stillThere = true;
+                if (stillThere) continue;
+
+                var at = DangerShape.ArchAtRoom(before[i], _roomSize);
+                PlayFx("shatter", at, 168f, loop: false);
+                DropRubble(at + new Vector2(-_pxPerMeter * 0.5f, -_pxPerMeter * 0.3f));
+                DropRubble(at + new Vector2(_pxPerMeter * 0.5f, -_pxPerMeter * 0.6f));
+            }
         }
 
         /// <summary>
