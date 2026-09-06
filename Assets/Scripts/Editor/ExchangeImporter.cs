@@ -179,12 +179,19 @@ namespace Game.EditorTools
             return false;
         }
 
-        /// <summary>파이썬에서 **지금 쓰는** 그림. 이 목록 밖은 전부 옛 옆모습 시트다.</summary>
+        /// <summary>
+        /// 파이썬에서 **지금 쓰는** 그림. 이 목록 밖은 전부 옛 옆모습 시트다.
+        ///
+        /// ⚠ 새 그림을 받으면 **여기부터 늘린다.** 안 늘리면 폐기로 걸러져
+        ///   납품이 조용히 사라진다 — 죽는 머리 4장이 그럴 뻔했다.
+        /// </summary>
         private static bool IsPythonKeeper(string name)
         {
             if (name == "unit_python_s") return true;
             for (int i = 1; i <= 4; i++)
-                if (name == $"unit_python_s_out{i}" || name == $"unit_python_s_in{i}") return true;
+                if (name == $"unit_python_s_out{i}"
+                 || name == $"unit_python_s_in{i}"
+                 || name == $"unit_python_s_die{i}") return true;
             return false;
         }
 

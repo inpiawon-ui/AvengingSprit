@@ -130,18 +130,19 @@ namespace Game.Module.InGame
             _neckClip = (RectTransform)nc.transform;
             _neckClip.anchorMin = _neckClip.anchorMax = new Vector2(0f, 1f);
             _neckClip.pivot = new Vector2(0.5f, 1f);
-            _neck = new Image[3];
+            var neckArt = GetSprite("obj_python_neck");
+            _neck = new Image[4];
             for (int i = 0; i < _neck.Length; i++)
             {
                 var ng = new GameObject($"Neck{i + 1}", typeof(RectTransform), typeof(Image));
                 ng.transform.SetParent(_neckClip, false);
                 var rt = (RectTransform)ng.transform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                // 가로로 심리스한 몸통을 눕혀 세로 목으로 쓴다.
-                rt.localEulerAngles = new Vector3(0f, 0f, 90f);
+                rt.pivot = new Vector2(0.5f, 0f);
+                rt.sizeDelta = new Vector2(NeckTilePx, NeckTilePx);
+                rt.anchoredPosition = new Vector2(0f, -i * NeckTilePx);
                 var nimg = ng.GetComponent<Image>();
-                nimg.sprite = _pyBody1;
+                nimg.sprite = neckArt;
                 nimg.raycastTarget = false;
                 _neck[i] = nimg;
             }
@@ -199,13 +200,6 @@ namespace Game.Module.InGame
             _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, DeepBodyMeters * _pxPerMeter);
             _pyDeepClip.anchoredPosition = new Vector2(0f, -band);
 
-            // 목 조각. 눕혀 놨으므로 가로가 길이, 세로가 굵기다.
-            for (int i = 0; i < _neck.Length; i++)
-            {
-                var rt = (RectTransform)_neck[i].transform;
-                rt.sizeDelta = new Vector2(tile, band);
-                rt.anchoredPosition = new Vector2(0f, -(i * tile + tile * 0.5f));
-            }
             var w = (RectTransform)_pyWall.transform;
             w.sizeDelta = new Vector2(_roomSize.x, band);
             w.anchoredPosition = Vector2.zero;
@@ -375,7 +369,7 @@ namespace Game.Module.InGame
         private WallPhase _wallPhase;
         private float _wallTimer;
         private int _wallArch = -1;
-        private Sprite[] _pyOut, _pyIn;
+        private Sprite[] _pyOut, _pyIn, _pyDie;
 
         /// <summary>지금 머리가 나와 있는 아치. 스킬이 어디서 나가는지도 이 자리다.</summary>
         private int WallArch => _wallArch < 0 ? 0 : _wallArch;
@@ -401,10 +395,12 @@ namespace Game.Module.InGame
             if (_pyOut != null) return;
             _pyOut = new Sprite[4];
             _pyIn = new Sprite[4];
+            _pyDie = new Sprite[4];
             for (int i = 0; i < 4; i++)
             {
                 _pyOut[i] = UnitGet("python", $"s_out{i + 1}");
                 _pyIn[i] = UnitGet("python", $"s_in{i + 1}");
+                _pyDie[i] = UnitGet("python", $"s_die{i + 1}");
             }
         }
 
@@ -503,9 +499,12 @@ namespace Game.Module.InGame
         // 예고만 뜨고 아무것도 안 움직이면 「경고만 뜨고 끝」이 된다.
         // **머리가 그어 둔 띠 끝까지 실제로 내려갔다 돌아온다.**
         //
-        // 목은 새 그림을 받지 않고 `obj_python_body` 를 **90° 눕혀** 잇는다 —
-        // 가로로 심리스한 몸통이라 세로로 세우면 그대로 이어지는 목이 된다.
-        // 굵기는 몸통 두께 그대로 1 m 이고, 머리(76~108 px)보다 살짝 좁아 자연스럽다.
+        // 목은 전용 그림 `obj_python_neck`(64×64)을 **세로로 이어 붙인다.**
+        // 위아래 줄이 맞물리는 심리스라 몇 장을 쌓아도 이음매가 안 보인다.
+        // 굵기는 그림 안에서 36 px(x 14~49) 이고, 머리 목(y24 에서 24 px)과 맞춘 값이다.
+        //
+        // ⚠ 예전에는 가로 몸통 그림을 90° 눕혀 썼다. 굵기가 72 px 로 두 배였고
+        //   색도 초록이라, 머리(주황 목)와 안 이어지고 덩어리가 뚝뚝 끊겨 보였다.
 
         private const float LungeOutSeconds = 0.12f;
         private const float LungeHoldSeconds = 0.12f;
@@ -513,6 +512,9 @@ namespace Game.Module.InGame
 
         private float _lungeTimer;      // 0 이면 안 뻗고 있다
         private float _lungeDepth;      // 이번에 내려갈 거리(px)
+        /// <summary>목 그림 한 장의 크기. 이만큼씩 세로로 쌓는다.</summary>
+        private const float NeckTilePx = 64f;
+
         private RectTransform _neckClip;
         private Image[] _neck;
 
@@ -578,7 +580,7 @@ namespace Game.Module.InGame
             if (len <= 1f) { _neckClip.gameObject.SetActive(false); return; }
 
             _neckClip.gameObject.SetActive(true);
-            _neckClip.sizeDelta = new Vector2(band, len);
+            _neckClip.sizeDelta = new Vector2(NeckTilePx, len);
             _neckClip.anchoredPosition = new Vector2(ArchX(WallArch), -band);
         }
 
@@ -632,9 +634,11 @@ namespace Game.Module.InGame
         // 방향별 die 그림은 있지만 옛 옆모습 시트라 벽 보스에 안 맞고,
         // 어차피 연출 그림(`SetSpriteOverride`)이 쥐고 있어 나오지도 않는다.
         //
-        // 대신 **들어가는 프레임(in1~4)을 죽는 데 쓴다** — 힘이 빠져 구멍으로
-        // 미끄러져 들어가는 것으로 읽힌다. 동시에 벽 뒤 몸이 멈추고,
-        // 아치에서 잔해가 떨어진다. 새 그림을 받지 않는다.
+        // **죽는 그림 `s_die1~4`** 를 쓴다 — 눈이 감기고 입이 벌어진 채 머리가 늘어진다.
+        // 동시에 벽 뒤 몸이 멈추고 아치에서 잔해가 떨어진다.
+        //
+        // ⚠ 한때 들어가는 프레임(in1~4)을 돌려썼다. 웃는 얼굴로 되들어가서
+        //   **죽은 것으로 안 보였다** — 이긴 순간인데 이겼다는 것이 안 읽혔다.
         //
         // 유닛 쪽 페이드가 0.16 + 0.50 = 0.66초라 그 안에 끝나야 한다.
 
@@ -671,8 +675,9 @@ namespace Game.Module.InGame
             // 몸이 서서히 멈춘다. 죽은 몸이 계속 흐르면 아직 살아 있는 것으로 보인다.
             _pyBodySpeed = Mathf.Max(0f, 1f - _pyDeathTimer / DeathSlipSeconds);
 
-            if (_pyIn != null)
-                SetHeadFrame(_pyDying, _pyIn, _pyDeathTimer / DeathSlipSeconds);
+            var frames = _pyDie != null && _pyDie[0] != null ? _pyDie : _pyIn;
+            if (frames != null)
+                SetHeadFrame(_pyDying, frames, _pyDeathTimer / DeathSlipSeconds);
 
             if (_pyDeathTimer >= DeathSlipSeconds) _pyDying = null;
         }

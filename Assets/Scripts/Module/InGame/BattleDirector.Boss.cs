@@ -1009,14 +1009,20 @@ namespace Game.Module.InGame
                 var shard = boss != null ? GetSprite($"obj_{boss.Key}_shard") : null;
                 if (shard != null) list.Add(shard);
 
-                // 떨어지는 파편이 여러 장이면 그것을 프레임으로 쓴다 —
-                // 파이썬 「벽돌 낙하」의 `obj_python_rubble_1~3` 이 그렇다.
+                // 그 보스가 **던지는 조각**이 여러 장이면 그것을 프레임으로 쓴다.
                 // 미사일 그림을 날리면 벽이 부서지는데 미사일이 날아온다.
-                for (int i = 1; i <= 8 && list.Count == 0 && boss != null; i++)
+                //
+                // ⚠ `_brick_` 이 먼저다. 바닥 잔해(`_rubble_`)는 바닥에 깔리라고 만든 것이라
+                //   바닥색과 같아 공중에서는 검은 네모로만 보인다 — 대역일 뿐이다.
+                foreach (var kind in new[] { "brick", "rubble" })
                 {
-                    var sp = GetSprite($"obj_{boss.Key}_rubble_{i}");
-                    if (sp == null) break;
-                    list.Add(sp);
+                    if (list.Count > 0 || boss == null) break;
+                    for (int i = 1; i <= 8; i++)
+                    {
+                        var sp = GetSprite($"obj_{boss.Key}_{kind}_{i}");
+                        if (sp == null) break;
+                        list.Add(sp);
+                    }
                 }
 
                 for (int i = 1; i <= 8 && list.Count == 0; i++)
