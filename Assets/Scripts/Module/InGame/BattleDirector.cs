@@ -2133,6 +2133,29 @@ namespace Game.Module.InGame
         public const float BossRandomEverySeconds = 2f;
 
         /// <summary>
+        /// **벽 보스의 머리를 계속 내놓는다.**
+        ///
+        /// 파이썬은 나왔다(0.4) → 때리고(1.0) → 들어갔다(0.4) → 미끄러진다(0.8) 를
+        /// 반복한다. 한 바퀴 2.6초 중 **패턴이 나갈 수 있는 것은 1초뿐**이라,
+        /// 쿨을 2초로 줄여도 실제 간격은 2.6~5초로 벌어진다.
+        /// 연출만 빠르게 훑어볼 때 이 스위치를 켜면 머리가 안 들어가고
+        /// 시계 그대로 나간다.
+        ///
+        /// ⚠ 이 리듬은 이 보스의 정체다. **확인용이지 기본값이 아니다.**
+        /// 에디터 메뉴 `Tools/Game/테스트 — 벽 보스 머리 계속 내놓기` 로 켜고 끈다.
+        /// </summary>
+        public static bool BossWallStayOut
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossWallStayOut", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossWallStayOut", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>
         /// 보스 체력 배수. 1 이면 표 그대로다.
         ///
         /// 페이즈 2·3 패턴은 체력이 60%·30% 아래로 내려가야 나온다. 그런데 가디언은

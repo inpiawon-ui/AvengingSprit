@@ -238,6 +238,25 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 벽 보스 머리 계속 내놓기 ──────────────────────────────
+        //
+        // 파이썬 한 바퀴는 2.6초인데 패턴이 나갈 수 있는 것은 1초(Strike)뿐이다.
+        // 쿨을 2초로 줄여도 실제 간격은 2.6~5초로 벌어진다 — 연출만 훑을 때 답답하다.
+        //
+        // ⚠ 그 리듬은 이 보스의 정체다. 확인용이지 기본값이 아니다.
+        private const string WallStayMenu = "Tools/Game/테스트 — 벽 보스 머리 계속 내놓기";
+
+        [MenuItem(WallStayMenu)]
+        private static void ToggleWallStay()
+            => BattleDirector.BossWallStayOut = !BattleDirector.BossWallStayOut;
+
+        [MenuItem(WallStayMenu, true)]
+        private static bool ToggleWallStayValidate()
+        {
+            Menu.SetChecked(WallStayMenu, BattleDirector.BossWallStayOut);
+            return true;
+        }
+
         // ── 보스 패턴 이름표 다시 보기 ────────────────────────────
         //
         // 이름표는 **처음 보는 패턴에만** 뜬다(정본 예고 4겹 ④). 한 번 보면
