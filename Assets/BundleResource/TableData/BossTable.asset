@@ -13,8 +13,118 @@ MonoBehaviour:
   m_Name: BossTable
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.BossTable
   _entries:
-  - _bossKey: crusher
+  - _bossKey: robot_snakes
     _chapter: 1
+    _roomNo: 10
+    _nameEn: Robot Snakes
+    _nameKr: "\uB85C\uBD07 \uC2A4\uB124\uC774\uD06C"
+    _spriteName: unit_robot_snakes
+    _hpMul: 1.55
+    _atkMul: 1.3
+    _moveSpeedMul: 0.95
+    _phaseCooldownMul: 0.72
+    _canonHp: 1650
+    _canonAtk: 18
+    _state: 3
+    _chases: 0
+    _breakSeconds: 4
+    _breakCause: "\uB098\uC628 \uBA38\uB9AC\uB97C \uB418\uB4E4\uC5B4\uAC00\uAE30
+      \uC804\uC5D0 \uB54C\uB838\uB2E4"
+    _moves:
+    - _pattern: 5
+      _fromPhase: 1
+      _cooldown: 8
+      _shotCount: 2
+      _spreadDegrees: 0
+      _damageMul: 0.85
+      _telegraphSeconds: 1
+      _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
+      _nameEn: HatchOpen
+      _shape: 2
+      _draw: 18
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.5
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 2
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 1
+    - _pattern: 5
+      _fromPhase: 1
+      _cooldown: 11
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.73
+      _telegraphSeconds: 1
+      _nameKr: "\uB808\uC774\uC800"
+      _nameEn: RailLaser
+      _shape: 1
+      _draw: 19
+      _dodge: 3
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 0.8
+      _lengthMeters: 13
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 0
+    - _pattern: 4
+      _fromPhase: 2
+      _cooldown: 13
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.94
+      _telegraphSeconds: 1
+      _nameKr: "\uCC9C\uC7A5 \uD30C\uD3B8"
+      _nameEn: DebrisFall
+      _shape: 3
+      _draw: 20
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.2
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 5
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 0
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 18
+      _shotCount: 6
+      _spreadDegrees: 0
+      _damageMul: 1.15
+      _telegraphSeconds: 1
+      _nameKr: "\uC77C\uC81C \uCD9C\uD604"
+      _nameEn: FullEmergence
+      _shape: 3
+      _draw: 21
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 1.5
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 6
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 1
+  - _bossKey: crusher
+    _chapter: 2
     _roomNo: 10
     _nameEn: Crusher
     _nameKr: "\uD06C\uB7EC\uC154"
@@ -23,8 +133,8 @@ MonoBehaviour:
     _atkMul: 1
     _moveSpeedMul: 1
     _phaseCooldownMul: 0.8
-    _canonHp: 1650
-    _canonAtk: 18
+    _canonHp: 2400
+    _canonAtk: 22
     _state: 0
     _chases: 0
     _breakSeconds: 2.5
@@ -122,116 +232,6 @@ MonoBehaviour:
       _range: 2
       _rangeMeters: 4
       _group: 0
-  - _bossKey: guardian
-    _chapter: 2
-    _roomNo: 10
-    _nameEn: Guardian
-    _nameKr: "\uAC00\uB514\uC5B8"
-    _spriteName: unit_guardian
-    _hpMul: 1.25
-    _atkMul: 1.15
-    _moveSpeedMul: 1.3
-    _phaseCooldownMul: 0.75
-    _canonHp: 1200
-    _canonAtk: 66
-    _state: 1
-    _chases: 0
-    _breakSeconds: 0
-    _breakCause: "\uB9C8\uB514\uB97C 3\uAC1C \uC774\uD558\uB85C \uB04A\uC5C8\uB2E4
-      \u2014 \uBA38\uB9AC \uBB34\uC801\uC774 \uC601\uAD6C\uD788 \uD480\uB9B0\uB2E4"
-    _moves:
-    - _pattern: 2
-      _fromPhase: 1
-      _cooldown: 4
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.82
-      _telegraphSeconds: 1
-      _nameKr: "\uB9C8\uB514 \uB3CC\uC9C4"
-      _nameEn: SegmentThrust
-      _shape: 1
-      _draw: 6
-      _dodge: 3
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 1.4
-      _lengthMeters: 7.2
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 4
-      _rangeMeters: 0
-      _group: 0
-    - _pattern: 4
-      _fromPhase: 1
-      _cooldown: 1.5
-      _shotCount: 2
-      _spreadDegrees: 0
-      _damageMul: 0.73
-      _telegraphSeconds: 1
-      _nameKr: "\uB9C8\uB514 \uC0AC\uCD9C"
-      _nameEn: SegmentLaunch
-      _shape: 3
-      _draw: 7
-      _dodge: 1
-      _degrees: 0
-      _radiusMeters: 1.35
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 2
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 4
-      _rangeMeters: 0
-      _group: 0
-    - _pattern: 1
-      _fromPhase: 1
-      _cooldown: 2
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.91
-      _telegraphSeconds: 1
-      _nameKr: "\uB62C\uB9AC"
-      _nameEn: CoilWall
-      _shape: 3
-      _draw: 8
-      _dodge: 2
-      _degrees: 0
-      _radiusMeters: 2.625
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 3
-      _rangeMeters: 0
-      _group: 1
-    - _pattern: 2
-      _fromPhase: 1
-      _cooldown: 2
-      _shotCount: 5
-      _spreadDegrees: 120
-      _damageMul: 1.14
-      _telegraphSeconds: 1
-      _nameKr: "\uBA38\uB9AC \uBB3C\uAE30"
-      _nameEn: HeadBite
-      _shape: 4
-      _draw: 9
-      _dodge: 1
-      _degrees: 120
-      _radiusMeters: 3.2
-      _widthMeters: 2.4
-      _lengthMeters: 4
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 3
-      _rangeMeters: 0
-      _group: 1
   - _bossKey: python
     _chapter: 3
     _roomNo: 10
@@ -342,228 +342,8 @@ MonoBehaviour:
       _range: 3
       _rangeMeters: 2
       _group: 0
-  - _bossKey: kingpin
-    _chapter: 4
-    _roomNo: 10
-    _nameEn: Kingpin
-    _nameKr: "\uD0B9\uD540"
-    _spriteName: unit_kingpin
-    _hpMul: 1.55
-    _atkMul: 1.3
-    _moveSpeedMul: 0.95
-    _phaseCooldownMul: 0.72
-    _canonHp: 4300
-    _canonAtk: 29
-    _state: 0
-    _chases: 1
-    _breakSeconds: 2
-    _breakCause: "\uC800\uACF5 \uD65C\uAC15\uC744 \uC625\uC0C1 \uAD6C\uC870\uBB3C
-      \uCABD\uC73C\uB85C \uC720\uC778\uD588\uB2E4"
-    _moves:
-    - _pattern: 4
-      _fromPhase: 1
-      _cooldown: 9
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.88
-      _telegraphSeconds: 1
-      _nameKr: "\uBBF8\uC0AC\uC77C \uC77C\uC81C"
-      _nameEn: MissileSalvo
-      _shape: 3
-      _draw: 14
-      _dodge: 1
-      _degrees: 0
-      _radiusMeters: 1.2
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 5
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
-    - _pattern: 4
-      _fromPhase: 1
-      _cooldown: 13
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 1.24
-      _telegraphSeconds: 1.8
-      _nameKr: "\uCC98\uD615 \uC870\uC900"
-      _nameEn: ExecutionLock
-      _shape: 5
-      _draw: 15
-      _dodge: 6
-      _degrees: 0
-      _radiusMeters: 2
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-    - _pattern: 2
-      _fromPhase: 2
-      _cooldown: 8
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.72
-      _telegraphSeconds: 1
-      _nameKr: "\uC800\uACF5 \uD65C\uAC15"
-      _nameEn: StrafingRun
-      _shape: 4
-      _draw: 16
-      _dodge: 1
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 3
-      _lengthMeters: 10
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 2
-      _rangeMeters: 4
-      _group: 1
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 15
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 1.12
-      _telegraphSeconds: 1
-      _nameKr: "\uBD80\uC2A4\uD130 \uAC15\uD558"
-      _nameEn: BoosterDrop
-      _shape: 3
-      _draw: 17
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 3
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-  - _bossKey: robot_snakes
-    _chapter: 5
-    _roomNo: 10
-    _nameEn: Robot Snakes
-    _nameKr: "\uB85C\uBD07 \uC2A4\uB124\uC774\uD06C"
-    _spriteName: unit_robot_snakes
-    _hpMul: 1.55
-    _atkMul: 1.3
-    _moveSpeedMul: 0.95
-    _phaseCooldownMul: 0.72
-    _canonHp: 5200
-    _canonAtk: 33
-    _state: 3
-    _chases: 0
-    _breakSeconds: 4
-    _breakCause: "\uB098\uC628 \uBA38\uB9AC\uB97C \uB418\uB4E4\uC5B4\uAC00\uAE30
-      \uC804\uC5D0 \uB54C\uB838\uB2E4"
-    _moves:
-    - _pattern: 5
-      _fromPhase: 1
-      _cooldown: 8
-      _shotCount: 2
-      _spreadDegrees: 0
-      _damageMul: 0.85
-      _telegraphSeconds: 1
-      _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
-      _nameEn: HatchOpen
-      _shape: 2
-      _draw: 18
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 1.5
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 2
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
-    - _pattern: 5
-      _fromPhase: 1
-      _cooldown: 11
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.73
-      _telegraphSeconds: 1
-      _nameKr: "\uB808\uC774\uC800"
-      _nameEn: RailLaser
-      _shape: 1
-      _draw: 19
-      _dodge: 3
-      _degrees: 0
-      _radiusMeters: 0
-      _widthMeters: 0.8
-      _lengthMeters: 13
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 0
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-    - _pattern: 4
-      _fromPhase: 2
-      _cooldown: 13
-      _shotCount: 5
-      _spreadDegrees: 0
-      _damageMul: 0.94
-      _telegraphSeconds: 1
-      _nameKr: "\uCC9C\uC7A5 \uD30C\uD3B8"
-      _nameEn: DebrisFall
-      _shape: 3
-      _draw: 20
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 1.2
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 5
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 0
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 18
-      _shotCount: 6
-      _spreadDegrees: 0
-      _damageMul: 1.15
-      _telegraphSeconds: 1
-      _nameKr: "\uC77C\uC81C \uCD9C\uD604"
-      _nameEn: FullEmergence
-      _shape: 3
-      _draw: 21
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 1.5
-      _widthMeters: 0
-      _lengthMeters: 0
-      _innerRadiusMeters: 0
-      _gapDegrees: 0
-      _lanes: 6
-      _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
   - _bossKey: sludge
-    _chapter: 6
+    _chapter: 4
     _roomNo: 10
     _nameEn: Sludge
     _nameKr: "\uC2AC\uB7EC\uC9C0"
@@ -572,8 +352,8 @@ MonoBehaviour:
     _atkMul: 1.3
     _moveSpeedMul: 0.95
     _phaseCooldownMul: 0.72
-    _canonHp: 6900
-    _canonAtk: 37
+    _canonHp: 4300
+    _canonAtk: 29
     _state: 4
     _chases: 0
     _breakSeconds: 3.5
@@ -672,3 +452,223 @@ MonoBehaviour:
       _range: 0
       _rangeMeters: 4
       _group: 1
+  - _bossKey: guardian
+    _chapter: 5
+    _roomNo: 10
+    _nameEn: Guardian
+    _nameKr: "\uAC00\uB514\uC5B8"
+    _spriteName: unit_guardian
+    _hpMul: 1.25
+    _atkMul: 1.15
+    _moveSpeedMul: 1.3
+    _phaseCooldownMul: 0.75
+    _canonHp: 5200
+    _canonAtk: 33
+    _state: 1
+    _chases: 0
+    _breakSeconds: 0
+    _breakCause: "\uB9C8\uB514\uB97C 3\uAC1C \uC774\uD558\uB85C \uB04A\uC5C8\uB2E4
+      \u2014 \uBA38\uB9AC \uBB34\uC801\uC774 \uC601\uAD6C\uD788 \uD480\uB9B0\uB2E4"
+    _moves:
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 4
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.82
+      _telegraphSeconds: 1
+      _nameKr: "\uB9C8\uB514 \uB3CC\uC9C4"
+      _nameEn: SegmentThrust
+      _shape: 1
+      _draw: 6
+      _dodge: 3
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 1.4
+      _lengthMeters: 7.2
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 4
+      _rangeMeters: 0
+      _group: 0
+    - _pattern: 4
+      _fromPhase: 1
+      _cooldown: 1.5
+      _shotCount: 2
+      _spreadDegrees: 0
+      _damageMul: 0.73
+      _telegraphSeconds: 1
+      _nameKr: "\uB9C8\uB514 \uC0AC\uCD9C"
+      _nameEn: SegmentLaunch
+      _shape: 3
+      _draw: 7
+      _dodge: 1
+      _degrees: 0
+      _radiusMeters: 1.35
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 2
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 4
+      _rangeMeters: 0
+      _group: 0
+    - _pattern: 1
+      _fromPhase: 1
+      _cooldown: 2
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.91
+      _telegraphSeconds: 1
+      _nameKr: "\uB62C\uB9AC"
+      _nameEn: CoilWall
+      _shape: 3
+      _draw: 8
+      _dodge: 2
+      _degrees: 0
+      _radiusMeters: 2.625
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 3
+      _rangeMeters: 0
+      _group: 1
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 2
+      _shotCount: 5
+      _spreadDegrees: 120
+      _damageMul: 1.14
+      _telegraphSeconds: 1
+      _nameKr: "\uBA38\uB9AC \uBB3C\uAE30"
+      _nameEn: HeadBite
+      _shape: 4
+      _draw: 9
+      _dodge: 1
+      _degrees: 120
+      _radiusMeters: 3.2
+      _widthMeters: 2.4
+      _lengthMeters: 4
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 3
+      _rangeMeters: 0
+      _group: 1
+  - _bossKey: kingpin
+    _chapter: 6
+    _roomNo: 10
+    _nameEn: Kingpin
+    _nameKr: "\uD0B9\uD540"
+    _spriteName: unit_kingpin
+    _hpMul: 1.55
+    _atkMul: 1.3
+    _moveSpeedMul: 0.95
+    _phaseCooldownMul: 0.72
+    _canonHp: 6900
+    _canonAtk: 37
+    _state: 0
+    _chases: 1
+    _breakSeconds: 2
+    _breakCause: "\uC800\uACF5 \uD65C\uAC15\uC744 \uC625\uC0C1 \uAD6C\uC870\uBB3C
+      \uCABD\uC73C\uB85C \uC720\uC778\uD588\uB2E4"
+    _moves:
+    - _pattern: 4
+      _fromPhase: 1
+      _cooldown: 9
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.88
+      _telegraphSeconds: 1
+      _nameKr: "\uBBF8\uC0AC\uC77C \uC77C\uC81C"
+      _nameEn: MissileSalvo
+      _shape: 3
+      _draw: 14
+      _dodge: 1
+      _degrees: 0
+      _radiusMeters: 1.2
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 5
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 1
+    - _pattern: 4
+      _fromPhase: 1
+      _cooldown: 13
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 1.24
+      _telegraphSeconds: 1.8
+      _nameKr: "\uCC98\uD615 \uC870\uC900"
+      _nameEn: ExecutionLock
+      _shape: 5
+      _draw: 15
+      _dodge: 6
+      _degrees: 0
+      _radiusMeters: 2
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 0
+    - _pattern: 2
+      _fromPhase: 2
+      _cooldown: 8
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 0.72
+      _telegraphSeconds: 1
+      _nameKr: "\uC800\uACF5 \uD65C\uAC15"
+      _nameEn: StrafingRun
+      _shape: 4
+      _draw: 16
+      _dodge: 1
+      _degrees: 0
+      _radiusMeters: 0
+      _widthMeters: 3
+      _lengthMeters: 10
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 2
+      _rangeMeters: 4
+      _group: 1
+    - _pattern: 1
+      _fromPhase: 3
+      _cooldown: 15
+      _shotCount: 5
+      _spreadDegrees: 0
+      _damageMul: 1.12
+      _telegraphSeconds: 1
+      _nameKr: "\uBD80\uC2A4\uD130 \uAC15\uD558"
+      _nameEn: BoosterDrop
+      _shape: 3
+      _draw: 17
+      _dodge: 4
+      _degrees: 0
+      _radiusMeters: 3
+      _widthMeters: 0
+      _lengthMeters: 0
+      _innerRadiusMeters: 0
+      _gapDegrees: 0
+      _lanes: 0
+      _safeAtMeters: {x: 0, y: 0}
+      _range: 0
+      _rangeMeters: 4
+      _group: 0
