@@ -1226,7 +1226,11 @@ namespace Game.Module.InGame
                 float side = (i - mid) * LaunchSpreadMeters * _pxPerMeter;
                 f.From = boss.Position + new Vector2(side, 0f);
                 f.To = _flightTargets[i];
-                f.ArcMul = 1f + (i - mid) * 0.45f;
+                // ⚠ `(i - mid)` 로 하면 **한쪽만 높이 뜬다.** 킹핀 미사일 5발이
+                //   왼쪽부터 0.1 · 0.55 · 1.0 · 1.45 · 1.9 배로 날아 부채꼴이
+                //   비뚤어졌다(실측 y −326 / −323 / −315 / −305 / −295).
+                //   가운데를 기준으로 **양쪽이 같이** 높아져야 부채꼴로 읽힌다.
+                f.ArcMul = 1f + Mathf.Abs(i - mid) * 0.3f;
                 f.Img.sprite = _missileFrames[0];
             }
             TickFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
