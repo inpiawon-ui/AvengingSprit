@@ -847,10 +847,15 @@ namespace Game.Module.InGame
                 //   깔렸다. 도형에게 물어야 그리는 자리와 남는 자리가 같아진다
                 //   (`ImpactAt` 주석의 "미사일이 내 발밑에 떨어졌는데 폭발은
                 //   보스 몸에서 터졌다" 와 같은 실수다).
+                // ⚠ 장판 그림도 제 것을 써야 한다. `FieldEffect.Slow` 의 기본 그림은
+                //   **하늘색 얼음판**이라 "끈적하다" 가 아니라 "얼었다" 로 보인다 —
+                //   느려지는 이유가 화면과 어긋난다(파이썬 독이 `field_venom` 을
+                //   따로 쓰는 것과 같은 이유다).
                 case BossDraw.Spit:
                     SpawnField(_danger.LandingAt(_roomSize),
                                Mathf.Max(_pxPerMeter, _danger.Radius),
-                               PuddleSeconds, FieldEffect.Slow, 0, fromPlayer: false);
+                               PuddleSeconds, FieldEffect.Slow, 0,
+                               fromPlayer: false, artKey: "field_sludge");
                     break;
 
                 // 독 웅덩이 3초. **뱉은 자리에 남는 것이 이 패턴의 핵심이다** —
