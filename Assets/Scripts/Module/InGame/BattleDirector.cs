@@ -3889,6 +3889,9 @@ namespace Game.Module.InGame
             });
         }
 
+        /// <summary>가려던 자리가 이만큼 넘게 잘리면 벽에 닿은 것으로 본다(제곱 픽셀).</summary>
+        private const float ChargeClampEpsilon = 0.25f;
+
         private void TickBoss(Unit boss, Unit me, float dt)
         {
             // ⚠⚠ **보스도 나를 바라봐야 한다.**
@@ -3922,8 +3925,22 @@ namespace Game.Module.InGame
                 _brain.TickCharge(dt);
                 // ⚠ 방 안에 붙들어 둔다. 그냥 더하면 보스가 벽을 뚫고 나가 화면 밖에서
                 //   패턴을 계속 돌린다 — 무엇에 맞는지 알 수 없게 된다.
-                boss.Position = ClampedInField(
-                    boss, boss.Position + _brain.ChargeDir * (boss.MoveSpeed * _chargeSpeedMul) * dt);
+                var want = boss.Position + _brain.ChargeDir * (boss.MoveSpeed * _chargeSpeedMul) * dt;
+                var got = ClampedInField(boss, want);
+                boss.Position = got;
+
+                // ⚠ **벽에 닿으면 거기서 끝이다.** 활강 시간은 그어 둔 띠 길이(방 대각선)로
+                //   잡는데 실제로 갈 수 있는 거리는 방 끝까지뿐이다. 그대로 두면
+                //   벽에 붙은 채로 남은 시간을 다 흘려보낸다 —
+                //   실측: 0.6초 만에 y −743 에 닿고 **1.0초를 더 서 있었다.**
+                //   화면에서는 "끝에 딱 서지 않고 미끄러진다" 로 보인다(기획 2026-09-07).
+                //
+                // ⚠ 간 거리를 **자리 두 개를 빼서** 재면 안 된다. 자리를 다시 읽는 값이
+                //   프레임에 따라 한 박자 늦어서, 멀쩡히 가는 중에도 "안 움직였다" 로
+                //   읽혀 1픽셀 만에 멈췄다. **가려던 자리가 잘렸는지**를 직접 본다.
+                if (_brain.ChargeLeft > 0f
+                    && (got - want).sqrMagnitude > ChargeClampEpsilon)
+                    _brain.BeginCharge(Vector2.zero, 0f);
                 // 유령은 보스 돌진도 통과한다. 여기서 멈춰 세우면 유령을 벽 삼아
                 // 보스를 세울 수 있게 되어, 맞지도 않는 몸이 방패가 된다.
                 // 보스 **몸이 스치면** 맞는다. 중심까지 54px 을 요구하면 보스가 나를
