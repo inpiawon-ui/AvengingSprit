@@ -381,8 +381,14 @@ namespace Game.Module.InGame
         private int _wallArch = -1;
         private Sprite[] _pyOut, _pyIn, _pyDie;
 
-        /// <summary>가로지를 때 쓰는 옆보기 머리 3장(입 다뭄 → 조금 → 활짝).</summary>
-        private Sprite[] _pyCross;
+        /// <summary>
+        /// 가로지를 때 쓰는 옆보기 머리.
+        ///
+        /// **정면 머리(`out4`)를 그대로 90° 돌려 만든 그림이다.** 새로 그리게 하면
+        /// 눈·입술·색이 조금씩 달라져 **다른 뱀**이 된다(2026-09-07 에 두 번 그랬다).
+        /// 돌리면 주둥이가 오른쪽, 주황 목마디가 왼쪽 — 몸이 따라오는 쪽으로 붙는다.
+        /// </summary>
+        private Sprite _pyCross;
 
         /// <summary>지금 머리가 나와 있는 아치. 스킬이 어디서 나가는지도 이 자리다.</summary>
         private int WallArch => _wallArch < 0 ? 0 : _wallArch;
@@ -406,8 +412,7 @@ namespace Game.Module.InGame
         private void EnsurePythonHeadFrames()
         {
             if (_pyOut != null) return;
-            _pyCross = new Sprite[3];
-            for (int i = 0; i < 3; i++) _pyCross[i] = UnitGet("python", $"e_cross{i + 1}");
+            _pyCross = UnitGet("python", "e_cross1");
             _pyOut = new Sprite[4];
             _pyIn = new Sprite[4];
             _pyDie = new Sprite[4];
@@ -708,7 +713,7 @@ namespace Game.Module.InGame
                 if (_shoveHead != null && _shoveHead.IsAlive)
                 {
                     _shoveHead.SetHidden(false);
-                    SetCrossFrame(_shoveHead, p);
+                    if (_pyCross != null) _shoveHead.SetSpriteOverride(_pyCross);
                     _shoveHead.Position = new Vector2(headX, _shoveY);
                 }
                 return;
@@ -918,18 +923,6 @@ namespace Game.Module.InGame
             SetHeadFrame(boss, _pyOut, Mathf.Clamp01(f) * 0.999f);
 
             if (_kickTimer <= 0f) { _kickTimer = 0f; SetHeadFrame(boss, _pyOut, 1f); }
-        }
-
-        /// <summary>
-        /// 지나가는 동안 입을 여닫는다. 한 번 지나가는 사이 두 번 문다 —
-        /// 그림이 세 장뿐이라 여닫이를 반복해야 살아 있는 것으로 보인다.
-        /// </summary>
-        private void SetCrossFrame(Unit boss, float progress)
-        {
-            if (_pyCross == null || _pyCross[0] == null) return;
-            float cycle = Mathf.Repeat(progress * 2f, 1f);          // 두 번 반복
-            int i = cycle < 0.34f ? 0 : cycle < 0.67f ? 1 : 2;      // 다뭄 → 조금 → 활짝
-            if (_pyCross[i] != null) boss.SetSpriteOverride(_pyCross[i]);
         }
 
         private void SetHeadFrame(Unit boss, Sprite[] frames, float t)

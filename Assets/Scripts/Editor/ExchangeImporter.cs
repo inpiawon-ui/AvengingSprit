@@ -193,10 +193,9 @@ namespace Game.EditorTools
                  || name == $"unit_python_s_in{i}"
                  || name == $"unit_python_s_die{i}") return true;
 
-            // 가로지를 때 쓰는 **옆보기 머리**. 정면 한 장으로는 진행 방향을
-            // 볼 수 없어 따로 받았다(옛 옆모습 시트와 이름이 겹치지 않는다).
-            for (int i = 1; i <= 4; i++)
-                if (name == $"unit_python_e_cross{i}") return true;
+            // 가로지를 때 쓰는 **옆보기 머리**. 정면 그림을 90° 돌려 만든 것이라
+            // 그림 자체는 원본과 같다(옛 옆모습 시트와 이름이 겹치지 않는다).
+            if (name == "unit_python_e_cross1") return true;
 
             return false;
         }
