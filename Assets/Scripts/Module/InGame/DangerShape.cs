@@ -610,19 +610,32 @@ namespace Game.Module.InGame
                     s.Radius = Mathf.Max(1f, R);
                     break;
 
-                // 벽이 부서져 방 안 세 곳에 떨어진다. 그림자 밖으로 나가면 된다.
+                // 벽이 부서져 **내 둘레** 세 곳에 떨어진다.
+                //
+                // ⚠ 예전에는 방 아무 데나(`Scatter`) 떨어뜨렸다. 내가 없는 데서
+                //   벽돌이 터지니 "어디다 쏘는 거지" 가 됐다 — 던지는 것은 나를
+                //   향해야 의미가 있다.
                 case BossDraw.BrickFall:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Scatter;
+                    s.Origin = playerAt;
+                    s.Layout = Spread.NearTarget;
+                    s.Length = Mathf.Max(1f, R) * 2.2f;
                     s.Count = Mathf.Max(1, m.Lanes);
                     break;
 
                 // 벽 전체가 방 안으로 밀고 들어온다. **아래로 내려가는 것 말고는 없다.**
+                //
+                // ⚠ 두께를 표 값(2 m)으로 못 박았더니 **내가 어디 서 있든 상관이 없었다** —
+                //   벽 근처가 아니면 애초에 닿지도 않아 피할 이유가 없다.
+                //   내가 선 자리까지 밀어야 「물러나야 산다」가 성립한다.
+                //   다만 방을 다 덮으면 갈 곳이 없으므로 60% 에서 끊는다.
                 case BossDraw.BodyShove:
                 {
-                    float depth = Mathf.Max(1f, W);
-                    float band = WallBandDepth(roomSize);
+                    float band0 = WallBandDepth(roomSize);
+                    float depth = Mathf.Clamp(-playerAt.y - band0 + Mathf.Max(1f, W) * 0.5f,
+                                              Mathf.Max(1f, W), roomSize.y * 0.6f);
+                    float band = band0;
                     s.Shape = Kind.Band;
                     s.Origin = new Vector2(0f, -band - depth * 0.5f);
                     s.Dir = Vector2.right;

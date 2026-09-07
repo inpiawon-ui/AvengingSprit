@@ -619,6 +619,13 @@ namespace Game.Module.InGame
             if (_pyDeepClip == null) return;
             if (IsShoving) _shoveTimer = Mathf.Max(0f, _shoveTimer - dt);
 
+            // ⚠ 미는 동안에는 **벽 뒤 몸을 끈다.** 둘 다 보이면 몸이 두 개인 것으로
+            //   보여서 "저 몸이 나온 것" 이라는 느낌이 안 산다.
+            bool hideBehind = IsShoving;
+            if (_pyBody != null)
+                for (int i = 0; i < _pyBody.Length; i++)
+                    if (_pyBody[i].enabled == hideBehind) _pyBody[i].enabled = !hideBehind;
+
             // P3 는 평소에도 1 m 나와 있다. 미는 동안에는 둘 중 깊은 쪽을 쓴다.
             float baseDepth = _wallPhaseIndex >= 2 ? DeepBodyMeters * _pxPerMeter : 0f;
             float depth = Mathf.Max(baseDepth, IsShoving ? ShoveOffset() : 0f);
@@ -738,6 +745,35 @@ namespace Game.Module.InGame
                 var c = _rubble[i].color;
                 _rubble[i].color = new Color(c.r, c.g, c.b, _rubbleLeft[i] / RubbleFadeSeconds);
             }
+        }
+
+        /// <summary>
+        /// 머리 뻗기는 **내가 선 x 축**에서 나와야 피할 수 있다.
+        /// 예고 전에 그 줄에 가장 가까운 구멍으로 옮긴다 — 구멍은 벽에 박혀 있어
+        /// 아무 데서나 나올 수는 없고, 그중 가장 가까운 곳을 고른다.
+        ///
+        /// ⚠ 도형을 만들기 **전에** 불러야 한다. 뒤에 옮기면 그린 줄과
+        ///   나온 자리가 갈라진다.
+        /// </summary>
+        private void AimPythonAtPlayer(Unit boss, Unit me, BossMove m)
+        {
+            if (!IsWallBoss || boss == null || me == null || m == null) return;
+            if (m.Draw != BossDraw.HeadLunge) return;
+            if (_wallPhase != WallPhase.Strike || boss.IsHidden) return;
+
+            var live = LiveArches;
+            int best = _wallArch < 0 ? live[0] : _wallArch;
+            float bestGap = float.MaxValue;
+            for (int i = 0; i < live.Length; i++)
+            {
+                float gap = Mathf.Abs(ArchX(live[i]) - me.Position.x);
+                if (gap >= bestGap) continue;
+                bestGap = gap; best = live[i];
+            }
+            if (best == _wallArch) return;
+
+            _wallArch = best;
+            boss.Position = new Vector2(ArchX(best), HeadY());
         }
 
         private void SetHeadFrame(Unit boss, Sprite[] frames, float t)

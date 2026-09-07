@@ -69,6 +69,10 @@ namespace Game.Module.InGame
             EnsureDangerViews();
             if (_dangerView == null) return;
 
+            // ⚠ 도형을 만들기 **전에** 자리를 잡아야 한다. 뒤에 옮기면
+            //   그린 자리와 나온 자리가 갈라진다.
+            AimPythonAtPlayer(boss, me, m);
+
             var dir = me != null ? (me.Position - boss.Position) : boss.Facing;
             _danger = DangerShape.From(m, boss.Position, dir,
                                        me != null ? me.Position : boss.Position,
@@ -1108,6 +1112,9 @@ namespace Game.Module.InGame
                 case BossDraw.DebrisFall:
                 case BossDraw.BrickFall:
                 case BossDraw.BoosterDrop:
+                // ⚠ 독도 **날아가야 한다.** 예고가 끝나는 순간 구름이 그냥 생기면
+                //   "뱉었다" 가 아니라 "저절로 피어났다" 로 보인다.
+                case BossDraw.VenomCloud:
                     for (int i = 0; i < _danger.PieceCount && i < MaxFlight; i++)
                         _flightTargets.Add(_danger.PieceAt(i, _roomSize));
                     break;
@@ -1126,9 +1133,14 @@ namespace Game.Module.InGame
             FlightTargets(m);
             if (_flightTargets.Count == 0) return;
 
-            if (_missileFrames == null || _missileFramesFor != boss.Key)
+            // ⚠ 캐시 열쇠는 **보스 + 패턴**이다. 보스 키만 쓰면 한 보스가 던지는
+            //   물건이 둘일 때 **먼저 나간 쪽 그림이 계속 쓰인다** —
+            //   파이썬에서 벽돌이 먼저 나가면 그 뒤 독까지 벽돌로 날아갔다.
+            //   (예전에 크러셔 미사일이 가디언 방까지 따라온 것과 같은 사고다)
+            string key = boss.Key + "/" + m.Draw;
+            if (_missileFrames == null || _missileFramesFor != key)
             {
-                _missileFramesFor = boss.Key;
+                _missileFramesFor = key;
                 var list = new List<Sprite>(4);
 
                 // ⚠ **그 보스가 던지는 물건이 따로 있으면 그것을 쓴다.**
@@ -1143,6 +1155,15 @@ namespace Game.Module.InGame
                 //
                 // ⚠ `_brick_` 이 먼저다. 바닥 잔해(`_rubble_`)는 바닥에 깔리라고 만든 것이라
                 //   바닥색과 같아 공중에서는 검은 네모로만 보인다 — 대역일 뿐이다.
+                // 뱉는 것은 뱉는 것 그림으로. 벽돌이 날아가면 독을 뱉은 것이 아니다.
+                if (m.Draw == BossDraw.VenomCloud && boss != null)
+                    for (int i = 1; i <= 8; i++)
+                    {
+                        var sp = GetSprite($"obj_{boss.Key}_spit_{i}");
+                        if (sp == null) break;
+                        list.Add(sp);
+                    }
+
                 foreach (var kind in new[] { "brick", "rubble" })
                 {
                     if (list.Count > 0 || boss == null) break;
