@@ -87,6 +87,16 @@ namespace Game.Module.InGame
 
         public Spread Layout;       // 여럿일 때의 배치
         public int Count;           // 도형 개수. 0·1 이면 하나
+
+        /// <summary>
+        /// <see cref="Spread.NearTarget"/> 이 조각을 떨구지 <b>않는</b> 안쪽 구멍.
+        /// <see cref="Length"/> 에 대한 비율이고, 0 이면 내 발밑까지 떨어진다.
+        ///
+        /// ⚠ 퍼짐(<see cref="Length"/>)만 넓히면 이 구멍도 같이 커져서
+        ///   <b>가만히 서 있으면 안 맞는 도넛</b>이 된다 — 넓힐 때는 여기를 같이 낮춘다.
+        ///   기본값 0.35 는 「마디 사출」·「벽돌 낙하」가 쓰던 값이다. 건드리지 않는다.
+        /// </summary>
+        public float SpreadInner;
         public int Tick;            // 흩뿌림·구멍 고르기의 씨앗. 쓸 때마다 자리가 바뀐다
 
         public bool IsNone => Shape == Kind.None;
@@ -126,7 +136,7 @@ namespace Game.Module.InGame
                     // 그릴 때와 때릴 때 자리가 같다.
                     int h = Hash(Tick * 31 + i);
                     float ang = (h & 0xFFFF) / 65535f * 360f * Mathf.Deg2Rad;
-                    float rad = Mathf.Lerp(0.35f, 1f, ((h >> 16) & 0xFFFF) / 65535f) * Length;
+                    float rad = Mathf.Lerp(SpreadInner, 1f, ((h >> 16) & 0xFFFF) / 65535f) * Length;
                     var at = Origin + new Vector2(Mathf.Cos(ang), Mathf.Sin(ang)) * rad;
                     // 방 밖으로 나가면 피할 자리가 사라진다. 안쪽으로 밀어 넣는다.
                     return new Vector2(Mathf.Clamp(at.x, Radius, roomSize.x - Radius),
@@ -469,6 +479,9 @@ namespace Game.Module.InGame
         /// </summary>
         public const float DangerScale = 2f / 3f;
 
+        /// <summary><see cref="SpreadInner"/> 의 기본값. 「마디 사출」·「벽돌 낙하」가 쓰던 값이다.</summary>
+        public const float DefaultSpreadInner = 0.35f;
+
         public static DangerShape From(BossMove m, Vector2 bossAt, Vector2 dir,
                                        Vector2 playerAt, Vector2 roomSize, float px, int tick)
         {
@@ -476,7 +489,11 @@ namespace Game.Module.InGame
             if (dir.sqrMagnitude < 0.0001f) dir = Vector2.down;
             dir = dir.normalized;
 
-            var s = new DangerShape { Origin = bossAt, Dir = dir, Tick = tick };
+            var s = new DangerShape
+            {
+                Origin = bossAt, Dir = dir, Tick = tick,
+                SpreadInner = DefaultSpreadInner,
+            };
             // ⚠ 표 값을 **여기 한 곳에서만** 줄인다. 패턴마다 흩어 놓으면
             //   나중에 되돌릴 때 빠뜨리는 자리가 생긴다.
             //   방 크기에서 나오는 값(머리 뻗기가 바닥까지, 몸통 밀기가 방 폭)은
@@ -713,12 +730,19 @@ namespace Game.Module.InGame
                 // ⚠ 퍼지는 폭은 조각 셋짜리(`BrickFall` 1.1배)보다 넓다. 다섯을
                 //   같은 폭에 넣으면 통째로 겹쳐 한 덩어리가 되고, 그러면 피할 틈이
                 //   아예 없어진다 — 넓혀야 사이에 설 자리가 생긴다.
+                //
+                // ⚠ 2배(116px)로는 아직 한 덩어리였다(실측 97%). **3.5배로 넓히되
+                //   안쪽 구멍을 0.35 → 0.15 로 같이 낮춘다.** 퍼짐만 넓히면
+                //   구멍(0.35×퍼짐)이 조각 반경을 넘어서서 **가만히 서 있으면
+                //   안 맞는 도넛**이 된다 — 3배만 넓혀도 명중률이 95% → 0% 로
+                //   떨어졌다(실측 2026-09-07). 둘은 같이 움직여야 한다.
                 case BossDraw.DebrisFall:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
                     s.Origin = playerAt;
                     s.Layout = Spread.NearTarget;
-                    s.Length = Mathf.Max(1f, R) * 2f;
+                    s.Length = Mathf.Max(1f, R) * 3.5f;
+                    s.SpreadInner = 0.15f;
                     s.Count = Mathf.Max(2, m.Lanes);
                     break;
 
