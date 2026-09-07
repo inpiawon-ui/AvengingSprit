@@ -596,6 +596,12 @@ namespace Game.Module.InGame
 
         private float _shoveTimer;
         private float _shoveY, _shoveLane;
+        /// <summary>
+        /// 가로지를 때 머리를 얼마나 돌리는가.
+        /// 정면 그림은 얼굴이 아래(-y)를 본다. +90° 면 오른쪽(+x)을 본다.
+        /// </summary>
+        private const float ShoveHeadDegrees = 90f;
+
         private Unit _shoveHead;
         private Vector2 _shoveHome;
 
@@ -658,18 +664,28 @@ namespace Game.Module.InGame
                 }
 
                 // 머리를 그 줄에 태워 앞장세운다.
+                //
+                // ⚠ 파이썬 머리는 **정면(s) 한 방향뿐**이다. 그대로 두면 오른쪽으로
+                //   가면서 얼굴은 아래를 본다. 탑뷰 그림이므로 90° 돌리면
+                //   얼굴이 진행 방향(오른쪽)을 보고, 목이 왼쪽 — 즉 몸이 따라오는
+                //   쪽으로 붙는다. 그림을 새로 받을 필요가 없다.
                 if (_shoveHead != null && _shoveHead.IsAlive)
                 {
                     _shoveHead.SetHidden(false);
+                    _shoveHead.SetBodyRotation(ShoveHeadDegrees);
                     _shoveHead.Position = new Vector2(headX, _shoveY);
                 }
                 return;
             }
 
-            // 지나간 뒤 — 머리를 제 구멍으로 돌려놓는다
+            // 지나간 뒤 — 머리를 제 구멍으로, 얼굴도 원래대로 돌려놓는다
             if (_shoveHead != null)
             {
-                if (_shoveHead.IsAlive) _shoveHead.Position = _shoveHome;
+                if (_shoveHead.IsAlive)
+                {
+                    _shoveHead.SetBodyRotation(0f);
+                    _shoveHead.Position = _shoveHome;
+                }
                 _shoveHead = null;
             }
 
