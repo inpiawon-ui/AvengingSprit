@@ -336,8 +336,37 @@ namespace Game.Module.InGame
         /// </summary>
         private const float MeltTickShare = 0.25f;
 
+        /// <summary>
+        /// 섬이 옮겨 간 뒤 **건너갈 시간**에 얹어 주는 여유.
+        ///
+        /// 딱 걸리는 시간만 주면 도착하는 순간 맞는다. 모서리를 돌거나 소품을
+        /// 피해 가면 직선 거리보다 멀다.
+        /// </summary>
+        private const float MeltCrossMargin = 0.25f;
+
         private float _meltLeft, _meltStepLeft, _meltTickLeft;
         private bool _melting;
+
+        /// <summary>
+        /// 여기서 저 섬까지 **걸어갈 시간**. 이만큼은 안 때린다.
+        ///
+        /// ⚠ 이게 없으면 **피할 수 없는 피해**가 된다. 섬은 순간이동으로 옮겨 가는데
+        ///   나는 걸어가야 하므로 언제나 한 박자 늦는다 — 섬 한가운데를 완벽히
+        ///   따라다녀도 옮겨 갈 때마다 한 대씩 맞았다(실측 2026-09-07: 섬 위 판정은
+        ///   3963프레임 내내 안전이었는데 HP 125 → 101).
+        ///
+        /// 내 **지금** 속도로 잰다. 느린 몸을 쓰거나 점액 웅덩이를 밟고 있으면
+        /// 그만큼 더 준다 — 느린 것이 곧 벌이 되면 안 된다.
+        /// </summary>
+        private float MeltCrossSeconds(Unit me, Vector2 from, Vector2 to)
+        {
+            if (me == null) return MeltTickSeconds;
+            float speed = Mathf.Max(1f, me.MoveSpeed);
+            float need = Vector2.Distance(from, to) / speed + MeltCrossMargin;
+            // 한 박자보다 짧게는 안 준다. 한 걸음 거리라도 반응할 틈은 있어야 한다.
+            // 옮겨 가는 주기보다 길게도 안 준다 — 그러면 영영 안 때린다.
+            return Mathf.Clamp(need, MeltTickSeconds, MeltStepSeconds);
+        }
 
         /// <summary>퍼져 있는 동안. 섬을 옮기고, 박자마다 섬 밖을 친다.</summary>
         private void TickMelt(float dt)
@@ -356,7 +385,10 @@ namespace Game.Module.InGame
             {
                 _meltStepLeft += MeltStepSeconds;
                 _dangerTick++;
+                var was = _danger.Origin;
                 MoveMeltIsland();
+                // 옮겨 간 만큼 **건너갈 시간**을 준다. 박자를 여기서 되돌린다.
+                _meltTickLeft = MeltCrossSeconds(Avatar, was, _danger.Origin);
             }
 
             // ② 박자마다 섬 밖을 친다.
@@ -1293,7 +1325,10 @@ namespace Game.Module.InGame
                 _melting = true;
                 _meltLeft = MeltSeconds;
                 _meltStepLeft = MeltStepSeconds;
-                _meltTickLeft = MeltTickSeconds;
+                // 첫 판정도 마찬가지다. 예고 동안 섬이 보이긴 했지만 방 반대편에
+                // 서 있었으면 걸어올 시간이 필요하다.
+                _meltTickLeft = MeltCrossSeconds(me, me != null ? me.Position : _danger.Origin,
+                                                 _danger.Origin);
                 boss.PlayAttack(BossAttackHold);
                 return true;                      // 아직 안 때린다
             }
