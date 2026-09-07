@@ -487,6 +487,15 @@ namespace Game.Module.InGame
         /// ⚠ 여기서 만든 도형이 **그리기와 판정 양쪽에 그대로** 쓰인다.
         ///   "예고보다 조금 크게" 같은 보정을 여기 넣지 마라 — 넣는 순간 둘이 갈라진다.
         /// </summary>
+        /// <summary>
+        /// 표에 적힌 반경·폭·길이에 곱하는 값.
+        ///
+        /// 정본 값이 화면에서 너무 컸다(기획 2026-09-07 — "범위를 다들 2/3 으로
+        /// 줄여줘 지금 범위가 너무 커"). 표를 24개 고치는 대신 여기서 한 번 곱한다 —
+        /// 되돌릴 때도 이 숫자 하나만 1 로 놓으면 된다.
+        /// </summary>
+        public const float DangerScale = 2f / 3f;
+
         public static DangerShape From(BossMove m, Vector2 bossAt, Vector2 dir,
                                        Vector2 playerAt, Vector2 roomSize, float px, int tick)
         {
@@ -495,9 +504,13 @@ namespace Game.Module.InGame
             dir = dir.normalized;
 
             var s = new DangerShape { Origin = bossAt, Dir = dir, Tick = tick };
-            float R = m.RadiusMeters * px;      // 반경
-            float W = m.WidthMeters * px;       // 폭
-            float L = m.LengthMeters * px;      // 길이
+            // ⚠ 표 값을 **여기 한 곳에서만** 줄인다. 패턴마다 흩어 놓으면
+            //   나중에 되돌릴 때 빠뜨리는 자리가 생긴다.
+            //   방 크기에서 나오는 값(머리 뻗기가 바닥까지, 몸통 밀기가 방 폭)은
+            //   여기를 안 거친다 — 그것은 크기가 아니라 **구조**라 줄이면 안 된다.
+            float R = m.RadiusMeters * px * DangerScale;      // 반경
+            float W = m.WidthMeters * px * DangerScale;       // 폭
+            float L = m.LengthMeters * px * DangerScale;      // 길이
             float toPlayer = (playerAt - bossAt).magnitude;
 
             switch (m.Draw)
@@ -515,7 +528,7 @@ namespace Game.Module.InGame
                 case BossDraw.WreckingBall:
                     s.Shape = Kind.Ring;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Inner = Mathf.Max(0f, m.InnerRadiusMeters * px);
+                    s.Inner = Mathf.Max(0f, m.InnerRadiusMeters * px * DangerScale);
                     s.GapDegrees = 0f;          // 틈 없이 한 바퀴 — 빠질 곳은 안쪽뿐이다
                     break;
 
