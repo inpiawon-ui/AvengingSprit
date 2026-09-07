@@ -953,7 +953,7 @@ namespace Game.Module.InGame
                 if (dealt <= 0)
                 {
                     RefreshHpBar();
-                    _flashTimer = HitSeconds;
+                    BeginHitFlash();
                     PlayHit();
                     return false;
                 }
@@ -961,7 +961,7 @@ namespace Game.Module.InGame
 
             Hp = Mathf.Max(0, Hp - dealt);
             RefreshHpBar();
-            _flashTimer = HitSeconds;
+            BeginHitFlash();
             PlayHit();          // 틴트와 자세를 같은 자리에서 시작해야 따로 놀지 않는다
 
             // 숙주만 경직이 쌓인다. 잡몹은 아무리 때려도 빼앗을 몸이 되지 않는다.
@@ -1072,9 +1072,41 @@ namespace Game.Module.InGame
             _invulnPhase = 0f;
         }
 
+        /// <summary>
+        /// 붉은 점멸이 끝나고 **다음 점멸까지 반드시 쉬는 시간.**
+        ///
+        /// ⚠ 이게 없으면 연사 앞에서 점멸이 한 번도 안 끊긴다. 실측 — 기관단총으로
+        ///   보스를 쏘는 동안 몸 색을 1385번 재 보니 1194번(86%)이 붉은색이었다.
+        ///   0.12초짜리 점멸이 0.056초 남았을 때 다음 탄이 다시 채워 넣어서,
+        ///   보스가 **제 색으로 보이는 순간이 아예 없었다** — 은색·연두인
+        ///   로봇 스네이크가 화면에서는 통째로 갈색이었다
+        ///   (기획 2026-09-07 — "보스가 왜 색이 바꼈어 원본으로 해줘").
+        ///   점멸은 「맞았다」를 알리는 것이지 몸 색을 갈아 치우는 것이 아니다.
+        ///
+        /// 점멸 시간의 **두 배**로 쉰다. 연사 앞에서 켜짐:꺼짐이 1:2 가 되어
+        /// 제 색이 확실히 이긴다 — 같은 길이(1:1)로 쉬었더니 44% 가 붉은색이라
+        /// 여전히 붉게 명멸하는 덩어리로 보였다.
+        /// </summary>
+        private const float FlashRestSeconds = HitSeconds * 2f;
+
+        /// <summary>0 보다 크면 아직 쉬는 중 — 맞아도 붉게 물들이지 않는다.</summary>
+        private float _flashRest;
+
+        /// <summary>맞았다. 쉬는 중이 아니면 붉은 점멸을 켠다.</summary>
+        private void BeginHitFlash()
+        {
+            if (_flashRest > 0f) return;
+            _flashTimer = HitSeconds;
+            _flashRest = HitSeconds + FlashRestSeconds;
+        }
+
         /// <summary>피격 점멸. 스프라이트를 건드리지 않고 틴트만 흔든다.</summary>
         public void TickFlash(float dt)
         {
+            // 쉬는 시계는 **무적·사망과 무관하게** 흐른다. 여기서 빠지면 그 동안
+            // 멈춰 있다가 풀리는 순간 다시 붙박이 붉은색이 된다.
+            if (_flashRest > 0f) _flashRest = Mathf.Max(0f, _flashRest - dt);
+
             // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
             if (_body == null || _dying) return;
 
