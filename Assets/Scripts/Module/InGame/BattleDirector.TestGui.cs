@@ -55,8 +55,6 @@ namespace Game.Module.InGame
             var def = _brain != null ? _brain.Entry : null;
             if (_boss == null || def == null || index < 0 || index >= def.Moves.Count) return;
 
-            _biteLeft = 0f;
-            _biteBoss = null;
             _brain.BeginCharge(Vector2.zero, 0f);
             ClearFollowUp();
             ClearDanger();

@@ -131,6 +131,36 @@ namespace Game.Module.InGame
             BeginLamp(boss);
 
             BeginKingpinTell(boss, m);
+            BeginBurrowTell(m);
+        }
+
+        // ── 로봇 스네이크 — 바닥을 뚫고 솟는다 ────────────────────
+        //
+        // 예고 동안 몸은 바닥 아래에 있고 **발밑이 네 장에 걸쳐 갈라진다.**
+        // 갈라진 그 자리에서 몸이 솟아야 "발밑을 뚫고 나왔다" 가 된다 —
+        // 아무 예고 없이 그 자리에 나타나면 "왜 저기 서 있지" 로 읽힌다
+        // (기획 2026-09-07 — "먼가를 부수고 구멍에서 올라오는 연출이 필요하고").
+
+        /// <summary>예고 동안 몸이 바닥 밑에 있는가. 몸을 감추는 판단은 <c>TickBossState</c> 가 본다.</summary>
+        private bool _burrowed;
+        private Impact _burrowCrack;
+
+        private void BeginBurrowTell(BossMove m)
+        {
+            if (m.Draw != BossDraw.BurrowStrike) return;
+
+            _burrowed = true;
+            // 균열은 **예고 시간에 정확히 걸쳐** 자라야 도착이 곧 발동으로 읽힌다.
+            _burrowCrack = PlayFx("burrow", _danger.Origin,
+                                  Mathf.Max(128f, _danger.Radius * 2f), loop: false,
+                                  over: _brain != null ? _brain.TelegraphTotal : 1f);
+        }
+
+        /// <summary>솟았거나 · 도형이 치워졌다. 갈라진 바닥을 거두고 몸을 되돌린다.</summary>
+        private void EndBurrowTell()
+        {
+            _burrowed = false;
+            if (_burrowCrack != null) { _burrowCrack.Stop(); _burrowCrack = null; }
         }
 
         // ── 킹핀 — 떠올랐다 내려찍고, 표식을 찍는다 ──────────────
@@ -631,6 +661,8 @@ namespace Game.Module.InGame
                 // "발밑에서 나왔다" 가 된다 — 원만 터지면 아무것도 안 한 것이다.
                 case BossDraw.BurrowStrike:
                     boss.Position = ClampedInField(boss, _danger.Origin);
+                    // ⚠ 갈라진 바닥을 **먼저** 거둔다. 남겨 두면 솟아오른 몸을 덮는다.
+                    EndBurrowTell();
                     boss.SetHidden(false);
                     PlayFx("shatter", boss.Position, Mathf.Max(120f, _danger.Radius), loop: false);
                     break;
@@ -1053,6 +1085,7 @@ namespace Game.Module.InGame
             EndOrbit();
             EndLamp();
             EndFlight();
+            EndBurrowTell();
         }
 
         /// <summary>
@@ -1555,39 +1588,6 @@ namespace Game.Module.InGame
               or BossDraw.BurrowStrike => true,
             _ => false,
         };
-
-        // ── 날아가서 박는다 ──────────────────────────────────────
-        //
-        // 예고 → 보스가 그어 둔 줄을 타고 날아감 → 닿는 순간에 박는다.
-        // 셋을 한 동작으로 읽히게 하려면 피해도 **도착할 때** 나야 한다 —
-        // 예고 끝나자마자 때리면 "제자리에서 박았는데 나중에 날아온다" 가 된다.
-
-        /// <summary>무는 순간까지 남은 시간. 0 보다 크면 달려가는 중이다.</summary>
-        private float _biteLeft;
-        private DangerShape _biteShape;
-        private int _biteDamage;
-        private Unit _biteBoss;
-
-        private void TickBite(float dt)
-        {
-            if (_biteLeft <= 0f) return;
-            _biteLeft -= dt;
-            if (_biteLeft > 0f) return;
-
-            var boss = _biteBoss; _biteBoss = null;
-            if (boss == null || !boss.IsAlive) return;
-
-            // ⚠ **줄에서 비켰으면 안 맞는다.**
-            //   붉은 줄은 "여기 위험하니 비켜라" 라고 말한 것이다. 비켰는데도 맞으면
-            //   그 말이 거짓이 된다 — 피한 보람이 화면에 없다.
-            //   그냥 지나가는 것이 곧 "헛쳤다" 는 표시다.
-            var me = Avatar;
-            if (me == null || !_biteShape.Contains(me.Position, _roomSize)) return;
-
-            boss.PlayAttack(BossAttackHold);
-            DamagePlayer(_biteDamage);
-            PlayFx("slam", _biteShape.Origin, Mathf.Max(96f, _biteShape.Radius), loop: false);
-        }
 
         /// <summary>물러날 곳을 남긴다 — 문 자리에 그대로 붙어 있으면 계속 물린다.</summary>
         private const float BiteSpeedMul = 2f;

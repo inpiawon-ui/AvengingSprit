@@ -2787,7 +2787,6 @@ namespace Game.Module.InGame
             TickBossMinions(dt);
             TickFollowUp(dt);      // 방패 전개가 부른 압착 두 번
             TickFlight(dt);        // 예고 내내 탄이 날아 도형을 채운다
-            TickBite(dt);          // 달려가서 무는 것은 도착할 때 아프다
             CleanupDead();
             // CleanupDead 다음에 돈다 — 이번 프레임에 죽은 몸도 바로 쓰러지기 시작한다.
             TickDying(dt);
@@ -5908,20 +5907,33 @@ namespace Game.Module.InGame
         private Impact TakeLoopFx(string name, Vector2 at, float size)
             => PlayFx(name, at, size, loop: true);
 
-        private Impact PlayFx(string name, Vector2 at, float size, bool loop)
+        /// <summary>
+        /// <paramref name="over"/> 를 주면 여러 장을 그 시간에 걸쳐 넘기고
+        /// **마지막 장에서 멈춰 선다**(예고 내내 자라는 바닥 균열). 거두는 것은 부른 쪽의 몫이다.
+        /// </summary>
+        private Impact PlayFx(string name, Vector2 at, float size, bool loop, float over = 0f)
         {
             var frames = FxFrames(name);
             if (frames == null) return null;
 
+            var im = FreeImpact(size);
+            if (im == null) return null;
+
+            if (over > 0f) im.PlayOver(at, frames, size, over);
+            else im.Play(at, frames, size, loop);
+            return im;
+        }
+
+        private Impact FreeImpact(float size)
+        {
             for (int i = 0; i < _impacts.Count; i++)
-                if (!_impacts[i].IsActive) { _impacts[i].Play(at, frames, size, loop); return _impacts[i]; }
+                if (!_impacts[i].IsActive) return _impacts[i];
 
             if (_impacts.Count >= MaxImpacts) return null;
             var go = new GameObject($"Impact_{_impacts.Count}", typeof(RectTransform));
             var im = go.AddComponent<Impact>();
             im.Cache(_shotLayer, size);
             _impacts.Add(im);
-            im.Play(at, frames, size, loop);
             return im;
         }
 

@@ -316,8 +316,10 @@ namespace Game.Module.InGame
                 //   내가 어디 있든 상관이 없어 쫓기는 느낌도 없었다.
                 //   고정 구멍을 버렸다(기획 2026-09-07) — 이제 자리를 옮기는 것은
                 //   「솟아오름」뿐이고, 그것은 **내 발밑**으로 온다.
+                //   솟아오름 예고 동안만 바닥 밑으로 들어간다 — 갈라지는 바닥만 남는다.
                 case BossState.Holes:
-                    Show(boss);
+                    if (_burrowed) Hide(boss, shadow: false);
+                    else Show(boss);
                     break;
 
                 // ── 슬러지 — 천장 패턴 동안만 위에 있다 ────────────

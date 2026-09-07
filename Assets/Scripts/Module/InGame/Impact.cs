@@ -27,7 +27,19 @@ namespace Game.Module.InGame
         /// </summary>
         private const float LoopFrameSeconds = 0.45f;
 
-        private float Step => _loop ? LoopFrameSeconds : FrameSeconds;
+        /// <summary>
+        /// 밖에서 정한 한 장의 시간. 0 이면 위의 기본값을 쓴다.
+        ///
+        /// 바닥이 갈라지는 예고처럼 **정해진 시간에 걸쳐** 넘겨야 하는 그림이 있다.
+        /// 0.06 초로 돌리면 예고가 1.15 초인데 그림은 0.24 초에 끝나 버려,
+        /// 남은 0.9 초 동안 아무 일도 안 일어난 것처럼 보인다.
+        /// </summary>
+        private float _step;
+
+        /// <summary>마지막 장에서 꺼지지 않고 **그대로 남는다.** 뚫린 구멍은 계속 뚫려 있어야 한다.</summary>
+        private bool _hold;
+
+        private float Step => _step > 0f ? _step : (_loop ? LoopFrameSeconds : FrameSeconds);
 
         private RectTransform _rect;
         private Image _image;
@@ -71,9 +83,24 @@ namespace Game.Module.InGame
             _index = 0;
             _image.sprite = frames[0];
             _image.color = Color.white;
-            _timer = Step;
             _loop = loop;
+            _step = 0f;
+            _hold = false;
+            _timer = Step;
             gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// 여러 장을 <paramref name="seconds"/> 에 걸쳐 넘기고 **마지막 장에서 멈춰 선다.**
+        /// 예고 내내 자라야 하는 그림(바닥 균열)에 쓴다. <see cref="Stop"/> 로 거둔다.
+        /// </summary>
+        public void PlayOver(Vector2 at, Sprite[] frames, float size, float seconds)
+        {
+            Play(at, frames, size, loop: false);
+            if (!IsActive) return;
+            _step = Mathf.Max(0.02f, seconds / Mathf.Max(1, frames.Length));
+            _hold = true;
+            _timer = _step;
         }
 
         /// <summary>돌고 있는 표시를 몸을 따라 옮긴다.</summary>
@@ -98,6 +125,9 @@ namespace Game.Module.InGame
             _index++;
             if (_frames == null || _index >= _frames.Length || _frames[_index] == null)
             {
+                // 다 갈라진 바닥은 그 자리에 남는다 — 거두는 것은 부른 쪽의 몫이다.
+                if (_hold) { _index = Mathf.Max(0, (_frames?.Length ?? 1) - 1); _timer = Step; return; }
+
                 if (!_loop || _frames == null || _frames.Length == 0 || _frames[0] == null)
                 {
                     gameObject.SetActive(false);
