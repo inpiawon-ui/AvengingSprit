@@ -198,12 +198,12 @@ namespace Game.Module.InGame
 
         private static string BossEnvOf(string slug) => slug switch
         {
-            "robot_snakes" => "junkyard",
-            "crusher"      => "missile",
-            "python"       => "street",
-            "sludge"       => "refinery",
-            "guardian"     => "holding",
-            "kingpin"      => "rooftop",
+            "robot_snakes" => "junkyard",   // CH1
+            "crusher"      => "missile",    // CH2
+            "python"       => "street",     // CH3
+            "sludge"       => "rooftop",    // CH4
+            "guardian"     => "lab",        // CH5
+            "kingpin"      => "refinery",   // CH6
             _              => string.Empty,
         };
 

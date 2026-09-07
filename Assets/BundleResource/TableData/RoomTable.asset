@@ -1240,8 +1240,8 @@ MonoBehaviour:
     _entry: {x: 5, y: 0.8}
     _exits: []
     _unlockRule: ROOM_CLEAR
-    _bossId: B01
-    _bossName: Crusher
+    _bossId: B05
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -1274,7 +1274,7 @@ MonoBehaviour:
       _arenaBehavior: 
     _bossMoves: []
     _midBossKey: 
-    _floor: roomfloor_crusher
+    _floor: roomfloor_robot_snakes
     _eventPool: 
     _gold: 120
     _exp: 200
@@ -1305,7 +1305,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_002
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -1487,7 +1487,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_003
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -1669,7 +1669,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_004
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -1872,7 +1872,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_005
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -1936,7 +1936,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_006
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -2089,7 +2089,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_007
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -2292,7 +2292,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_008
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -2356,7 +2356,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_009
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -2567,7 +2567,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH2_010
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Crusher
+    _bossName: Robot Snakes
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 1650
     _bossAtk: 18
@@ -2769,8 +2769,8 @@ MonoBehaviour:
     _entry: {x: 5, y: 0.8}
     _exits: []
     _unlockRule: ROOM_CLEAR
-    _bossId: B02
-    _bossName: Guardian
+    _bossId: B01
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -2803,7 +2803,7 @@ MonoBehaviour:
       _arenaBehavior: 
     _bossMoves: []
     _midBossKey: 
-    _floor: roomfloor_guardian
+    _floor: roomfloor_crusher
     _eventPool: 
     _gold: 162
     _exp: 270
@@ -2834,7 +2834,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_002
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3016,7 +3016,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_003
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3219,7 +3219,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_004
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3422,7 +3422,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_005
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3486,7 +3486,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_006
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3639,7 +3639,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_007
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3850,7 +3850,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_008
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -3914,7 +3914,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_009
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -4125,7 +4125,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH3_010
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Guardian
+    _bossName: Crusher
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 2400
     _bossAtk: 22
@@ -5909,8 +5909,8 @@ MonoBehaviour:
     _entry: {x: 5, y: 0.8}
     _exits: []
     _unlockRule: ROOM_CLEAR
-    _bossId: B03
-    _bossName: Kingpin
+    _bossId: B06
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -5943,7 +5943,7 @@ MonoBehaviour:
       _arenaBehavior: 
     _bossMoves: []
     _midBossKey: 
-    _floor: roomfloor_kingpin
+    _floor: roomfloor_sludge
     _eventPool: 
     _gold: 246
     _exp: 410
@@ -5974,7 +5974,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_002
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -6177,7 +6177,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_003
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -6388,7 +6388,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_004
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -6599,7 +6599,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_005
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -6663,7 +6663,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_006
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -6816,7 +6816,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_007
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -7014,7 +7014,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_008
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -7078,7 +7078,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_009
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -7310,7 +7310,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH5_010
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Kingpin
+    _bossName: Sludge
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 4300
     _bossAtk: 29
@@ -7520,8 +7520,8 @@ MonoBehaviour:
     _entry: {x: 5, y: 0.8}
     _exits: []
     _unlockRule: ROOM_CLEAR
-    _bossId: B05
-    _bossName: Robot Snakes
+    _bossId: B02
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -7554,7 +7554,7 @@ MonoBehaviour:
       _arenaBehavior: 
     _bossMoves: []
     _midBossKey: 
-    _floor: roomfloor_robot_snakes
+    _floor: roomfloor_guardian
     _eventPool: 
     _gold: 288
     _exp: 480
@@ -7585,7 +7585,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_002
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -7796,7 +7796,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_003
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8007,7 +8007,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_004
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8213,7 +8213,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_005
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8277,7 +8277,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_006
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8430,7 +8430,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_007
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8662,7 +8662,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_008
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8726,7 +8726,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_009
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -8945,7 +8945,7 @@ MonoBehaviour:
       _nextRoomId: ROOM_CH6_010
     _unlockRule: ROOM_CLEAR
     _bossId: 
-    _bossName: Robot Snakes
+    _bossName: Guardian
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 5200
     _bossAtk: 33
@@ -9168,8 +9168,8 @@ MonoBehaviour:
     _entry: {x: 5, y: 0.8}
     _exits: []
     _unlockRule: ROOM_CLEAR
-    _bossId: B06
-    _bossName: Sludge
+    _bossId: B03
+    _bossName: Kingpin
     _bossAt: {x: 5, y: 9.360001}
     _bossHp: 6900
     _bossAtk: 37
@@ -9202,7 +9202,7 @@ MonoBehaviour:
       _arenaBehavior: 
     _bossMoves: []
     _midBossKey: 
-    _floor: roomfloor_sludge
+    _floor: roomfloor_kingpin
     _eventPool: 
     _gold: 330
     _exp: 550
