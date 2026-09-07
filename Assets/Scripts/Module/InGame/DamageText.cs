@@ -26,7 +26,16 @@ namespace Game.Module.InGame
         private const float CritFontSize = 38f;
         private const float CritPopScale = 1.9f;
 
+        // ── 곁다리 수치 ─────────────────────────────────────────
+        //
+        // 피흡 같은 **덤 정보**는 작게 뜬다. 피해 숫자와 같은 26pt 로 띄웠더니
+        // 「물어뜯기」(쿨 2초)가 나올 때마다 `+825` 가 내가 맞은 `9` 를 통째로
+        // 덮었다 — 내가 몇 대 맞았는지가 화면에서 사라졌다(기획 2026-09-07).
+        private const float MinorFontSize = 16f;
+        private const float MinorPopScale = 1.1f;
+
         private bool _crit;
+        private bool _minor;
 
         private RectTransform _rect;
         private TextMeshProUGUI _tmp;
@@ -104,9 +113,20 @@ namespace Game.Module.InGame
         /// <summary>피해 말고도 띄울 것이 있다 — 전술 빙의로 나간 Ghost HP 같은 것.</summary>
         public void Show(Vector2 at, string text, Color color) => Show(at, text, color, false);
 
+        /// <summary>곁다리 수치(피흡 등) — 작게, 덜 튀게. 피해 숫자를 덮지 않는다.</summary>
+        public void ShowMinor(Vector2 at, string text, Color color)
+        {
+            Show(at, text, color, crit: false);
+            _minor = true;
+            _tmp.fontSize = MinorFontSize;
+            if (_shadow != null) _shadow.fontSize = MinorFontSize;
+            Apply();
+        }
+
         public void Show(Vector2 at, string text, Color color, bool crit)
         {
             _crit = crit;
+            _minor = false;
             _tmp.fontSize = crit ? CritFontSize : 26f;
             if (_shadow != null) _shadow.fontSize = _tmp.fontSize;
             _origin = at;
@@ -144,7 +164,7 @@ namespace Game.Module.InGame
             _rect.anchoredPosition = new Vector2(
                 Mathf.Round(_origin.x + _drift), Mathf.Round(_origin.y + rise));
 
-            float peak = _crit ? CritPopScale : PopScale;
+            float peak = _crit ? CritPopScale : _minor ? MinorPopScale : PopScale;
             float pop = t < 0.2f ? Mathf.Lerp(peak, 1f, t / 0.2f) : 1f;
             _rect.localScale = new Vector3(pop, pop, 1f);
 

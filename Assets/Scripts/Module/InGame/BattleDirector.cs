@@ -6905,12 +6905,20 @@ namespace Game.Module.InGame
         ///   체력바가 계속 줄어서, 회복한 것이 그 감소분에 묻힌다 —
         ///   숫자가 떠야 "물어서 채웠다" 가 읽힌다(기획 2026-09-03).
         /// </summary>
+        /// <summary>
+        /// 피흡이 뜨는 자리 — 몸 **오른쪽 위로 비켜** 세운다.
+        ///
+        /// 물린 자리와 문 자리는 붙어 있어서, 같은 점에 띄우면 회복 숫자가
+        /// 피해 숫자 위에 그대로 얹힌다(기획 2026-09-07 — "피흡 숫자 작게 빼줘").
+        /// </summary>
+        private static readonly Vector2 HealTextOffset = new(46f, 34f);
+
         private void ShowHeal(Vector2 at, int amount)
         {
             if (amount <= 0) return;
             var t = RentDamageText();
             if (t == null) return;
-            t.Show(at, $"+{amount}", HealColor);
+            t.ShowMinor(at + HealTextOffset, $"+{amount}", HealColor);
         }
 
         /// <summary>전술 빙의로 나간 Ghost HP. 유령 색으로 띄워 피해 숫자와 구분한다.</summary>
