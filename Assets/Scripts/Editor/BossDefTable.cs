@@ -71,8 +71,51 @@ namespace Game.EditorTools
             //
             //   폐기한 둘은 코드가 남아 있다(쇠사슬 파괴구 궤도·방패판). 되돌리려면
             //   아래 Move 두 개를 다시 넣으면 그대로 산다 — 지우지 않았다.
-            new() { Key = "crusher", NameKr = "크러셔", NameEn = "Crusher", Sprite = "unit_crusher",
+            new() { Key = "robot_snakes", NameKr = "로봇 스네이크", NameEn = "Robot Snakes", Sprite = "unit_robot_snakes",
                     Chapter = 1, RoomNo = 10, Gate = "FINAL", Hp = 1650, Atk = 18,
+                    State = "Holes", Chases = false, BreakSeconds = 4.0f, BreakCause = "나온 머리를 되들어가기 전에 때렸다",
+                    Moves = new Move[]
+                    {
+                        // 기획 2026-09-07 — 고정 구멍 6개를 버렸다. **내 발밑을 뚫고 솟는다.**
+                        //   전에는 바닥에 박힌 구멍에서 나와서, 내가 어디 있든 상관이 없었다.
+                        new() { Phase = 1, NameKr = "솟아오름", NameEn = "BurrowStrike",
+                                Cooldown = 8f, Telegraph = 1.15f, DamageMul = 0.85f,
+                                Shape = "Zone", Draw = "BurrowStrike", Dodge = "ZONE",
+                                Degrees = 0f, Radius = 1.5f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 1,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 0 },
+                        // 출처 — 나온 머리가 초록 빔을 쏜다 · 폭 0.8 m · 방 끝까지 · 조준선이 먼저 그려진다
+                        new() { Phase = 1, NameKr = "레이저", NameEn = "RailLaser",
+                                Cooldown = 11f, Telegraph = 1.35f, DamageMul = 0.73f,
+                                Shape = "Line", Draw = "RailLaser", Dodge = "PERP",
+                                Degrees = 0f, Radius = 0f, Width = 0.8f, Length = 13f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 0 },
+                        // 출처 — 천장에서 파편이 떨어진다 · 그림자 5개 · 각 반경 1.2 m · 1.5초 뒤 낙하
+                        new() { Phase = 2, NameKr = "천장 파편", NameEn = "DebrisFall",
+                                Cooldown = 13f, Telegraph = 1.5f, DamageMul = 0.94f,
+                                Shape = "Zone", Draw = "DebrisFall", Dodge = "ZONE",
+                                Degrees = 0f, Radius = 1.2f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 5,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 0 },
+                        // 기획 2026-09-07 — 「일제 출현」을 버리고 **기본 평타**를 넣었다.
+                        //   솟아오른 뱀이 내 곁에 있는데 2초에 한 번도 물지 않으면
+                        //   붙어 있는 것이 안 무섭다. P1 부터 나온다.
+                        new() { Phase = 1, NameKr = "물어뜯기", NameEn = "HeadBite",
+                                Cooldown = 2f, Telegraph = 0.45f, DamageMul = 0.5f,
+                                Shape = "Arc", Draw = "HeadBite", Dodge = "SIDE",
+                                Degrees = 120f, Radius = 2f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "NEAR", RangeMeters = 3f, Group = 0 },
+                    } },
+
+            // ── 슬러지 · 정유소 — 위에서 떨어진다 ────────────────────────────
+            new() { Key = "crusher", NameKr = "크러셔", NameEn = "Crusher", Sprite = "unit_crusher",
+                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 2400, Atk = 22,
                     State = "", Chases = false, BreakSeconds = 2.5f, BreakCause = "파괴구가 헛돌아 벽을 때렸다",
                     Moves = new Move[]
                     {
@@ -127,6 +170,87 @@ namespace Game.EditorTools
                     } },
 
             // ── 가디언 · 미사일기지 — 마디를 하나씩 끊어라 ───────────────────────
+            new() { Key = "python", NameKr = "파이썬", NameEn = "Python", Sprite = "unit_python",
+                    Chapter = 3, RoomNo = 10, Gate = "FINAL", Hp = 3150, Atk = 25,
+                    State = "Walls", Chases = false, BreakSeconds = 3.0f, BreakCause = "머리가 나온 직후 1.2초 안에 때렸다",
+                    Moves = new Move[]
+                    {
+                        // 나온 구멍에서 곧장 아래로 목을 뻗는다 · 띠 폭 1.6 m × 길이 5 m
+                        // 붙어 있을 때 쓰는 것 — 좌우로 비키면 지나간다.
+                        new() { Phase = 1, NameKr = "머리 뻗기", NameEn = "HeadLunge",
+                                Cooldown = 3f, Telegraph = 0.7f, DamageMul = 0.83f,
+                                Shape = "Line", Draw = "HeadLunge", Dodge = "PERP",
+                                Degrees = 0f, Radius = 5f, Width = 1.6f, Length = 5f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "INSHAPE", RangeMeters = 5f, Group = 0 },
+                        // 독을 뱉는다 · 내 자리에 반경 2.5 m · 웅덩이가 3초 남는다
+                        new() { Phase = 1, NameKr = "독 뱉기", NameEn = "VenomSpit",
+                                Cooldown = 4f, Telegraph = 0.9f, DamageMul = 0.59f,
+                                // 안전지대를 그리지 않는 패턴이라 "안전지대로" 는 가리킬 곳이 없다
+                                Shape = "Zone", Draw = "VenomCloud", Dodge = "SIDE",
+                                Degrees = 0f, Radius = 2.5f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
+                        // 벽이 부서져 방 안 세 곳에 떨어진다 · 반경 1.25 m · 맞으면 0.6초 굳는다
+                        new() { Phase = 1, NameKr = "벽돌 낙하", NameEn = "BrickFall",
+                                Cooldown = 6f, Telegraph = 1f, DamageMul = 0.7f,
+                                Shape = "Zone", Draw = "BrickFall", Dodge = "SIDE",
+                                Degrees = 0f, Radius = 1.25f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
+                        // 벽 전체가 방 안으로 2 m 밀고 들어온다 · 아래로 내려가는 것 말고는 없다
+                        new() { Phase = 2, NameKr = "몸통 밀기", NameEn = "BodyShove",
+                                Cooldown = 5f, Telegraph = 1f, DamageMul = 0.93f,
+                                // 방 폭을 다 덮으므로 옆으로는 못 피한다. 벽에서 멀어지는 수밖에 없다
+                                Shape = "Line", Draw = "BodyShove", Dodge = "BACK",
+                                Degrees = 0f, Radius = 2f, Width = 2f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "INSHAPE", RangeMeters = 2f, Group = 0 },
+                    } },
+
+            // ── 킹핀 · 옥상 — 하늘에 떠 있다 ──────────────────────────────
+            new() { Key = "sludge", NameKr = "슬러지", NameEn = "Sludge", Sprite = "unit_sludge",
+                    Chapter = 4, RoomNo = 10, Gate = "FINAL", Hp = 4300, Atk = 29,
+                    State = "Ceiling", Chases = false, BreakSeconds = 3.5f, BreakCause = "천장에 붙은 동안 아래에서 때려 떨어뜨렸다",
+                    Moves = new Move[]
+                    {
+                        // 출처 — 바닥으로 가라앉았다가 다른 자리에서 솟는다 · 솟는 자리 반경 2.0 m · 바닥이 부풀어 예고
+                        new() { Phase = 1, NameKr = "솟아오름", NameEn = "Emerge",
+                                Cooldown = 10f, Telegraph = 1f, DamageMul = 0.78f,
+                                Shape = "Zone", Draw = "Emerge", Dodge = "ZONE",
+                                Degrees = 0f, Radius = 2f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
+                        // 출처 — 끈적한 덩어리를 뱉는다 · 착탄 반경 1.5 m · 웅덩이 4초 · 밟으면 이동 속도 절반
+                        new() { Phase = 1, NameKr = "뱉기", NameEn = "Spit",
+                                Cooldown = 8f, Telegraph = 1f, DamageMul = 0.68f,
+                                Shape = "Line", Draw = "Spit", Dodge = "PERP",
+                                Degrees = 0f, Radius = 1.5f, Width = 1.5f, Length = 8f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 0 },
+                        // 출처 — 점프해 사라진다. 그림자 3개가 방을 돌아다니다 멈추고 1초 뒤 방울이 떨어진다 · 각 반경 1.8 m
+                        new() { Phase = 2, NameKr = "천장 붙기", NameEn = "CeilingCling",
+                                Cooldown = 14f, Telegraph = 1f, DamageMul = 0.89f,
+                                Shape = "Zone", Draw = "CeilingCling", Dodge = "ZONE",
+                                Degrees = 0f, Radius = 1.8f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 1 },
+                        // 출처 — 천장 전체로 퍼진다 · 방 전역에 방울 비 · 깨끗한 자리 하나만 남고 2초마다 옮겨 간다 · 8초
+                        new() { Phase = 3, NameKr = "천장 확산", NameEn = "CeilingSpread",
+                                Cooldown = 20f, Telegraph = 1f, DamageMul = 1.14f,
+                                Shape = "Zone", Draw = "CeilingSpread", Dodge = "ZONE",
+                                Degrees = 0f, Radius = 1.6f, Width = 0f, Length = 0f,
+                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
+                                SafeX = 0f, SafeY = 0f,
+                                Range = "", RangeMeters = 4f, Group = 1 },
+                    } },
             new() { Key = "guardian", NameKr = "가디언", NameEn = "Guardian", Sprite = "unit_guardian",
                     // ⚠ 공격력 22 → 44 → **66** (기획 2026-09-03).
                     //   붙어서 한 판 돌려 보니 때리면서 차는 쉴드가 보스 피해를 거의 다
@@ -136,10 +260,23 @@ namespace Game.EditorTools
                     //   ⚠ 평타를 없앴으므로(`TickBoss`) 이 값은 **오로지 스킬 피해**를
                     //     정한다. 스킬 피해 = 이 값 × 그 패턴의 DamageMul 이라,
                     //     여기만 만지면 넷이 같은 비율로 따라 움직인다.
-                    // ⚠ 체력 2400 → **1200** (기획 2026-09-03). 2400 으로는 아마존이
+                    // ⚠⚠ 아래 두 주석은 **CH2 시절(2400/22 기준)** 이야기다.
+                    //
+                    //   2026-09-07 에 보스 순서를 원작대로 바꾸면서 가디언이 CH5 로 갔다.
+                    //   HP·공격력은 보스가 아니라 **자리**를 따르는 값이라(정본 4절)
+                    //   5200/33 으로 다시 붙었다 — 그때의 튜닝(체력 ÷2 · 공격력 ×3)은
+                    //   **덮였다.**
+                    //
+                    //   그때 고친 이유는 그대로 살아 있다:
+                    //     · 체력이 높으면 페이즈가 바뀌기 전에 승부가 난다
+                    //     · 공격력이 낮으면 안 피하고 버티기만 해도 이긴다
+                    //   CH5 자리에서 다시 재 보고 결정해야 한다. 아직 안 쟀다.
+                    //
+                    // ── 아래는 그때의 기록 ────────────────────────────
+                    // ⚠ 체력 2400 → 1200 (기획 2026-09-03). 2400 으로는 아마존이
                     //   초당 62 로 27초를 때려야 30%(P3)에 닿아서, 페이즈가 바뀌기 전에
                     //   이미 승부가 나 있었다 — P2·P3 를 겪지도 못하고 끝났다.
-                    Chapter = 2, RoomNo = 10, Gate = "FINAL", Hp = 1200, Atk = 66,
+                    Chapter = 5, RoomNo = 10, Gate = "FINAL", Hp = 5200, Atk = 33,
                     // ⚠ **가디언은 쫓아가지 않는다** (기획 2026-09-03).
                     //   쫓아가면 3 m 에 붙어 버려서 붙어야 쓰는 둘(똬리·물기)만 돌고
                     //   떨어져야 쓰는 둘(마디 사출·마디 돌진)이 영영 조건을 못 맞춘다.
@@ -211,51 +348,8 @@ namespace Game.EditorTools
                     } },
 
             // ── 파이썬 · 밤거리 — 벽에서 나온다 ─────────────────────────────
-            new() { Key = "python", NameKr = "파이썬", NameEn = "Python", Sprite = "unit_python",
-                    Chapter = 3, RoomNo = 10, Gate = "FINAL", Hp = 3150, Atk = 25,
-                    State = "Walls", Chases = false, BreakSeconds = 3.0f, BreakCause = "머리가 나온 직후 1.2초 안에 때렸다",
-                    Moves = new Move[]
-                    {
-                        // 나온 구멍에서 곧장 아래로 목을 뻗는다 · 띠 폭 1.6 m × 길이 5 m
-                        // 붙어 있을 때 쓰는 것 — 좌우로 비키면 지나간다.
-                        new() { Phase = 1, NameKr = "머리 뻗기", NameEn = "HeadLunge",
-                                Cooldown = 3f, Telegraph = 0.7f, DamageMul = 0.83f,
-                                Shape = "Line", Draw = "HeadLunge", Dodge = "PERP",
-                                Degrees = 0f, Radius = 5f, Width = 1.6f, Length = 5f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 5f, Group = 0 },
-                        // 독을 뱉는다 · 내 자리에 반경 2.5 m · 웅덩이가 3초 남는다
-                        new() { Phase = 1, NameKr = "독 뱉기", NameEn = "VenomSpit",
-                                Cooldown = 4f, Telegraph = 0.9f, DamageMul = 0.59f,
-                                // 안전지대를 그리지 않는 패턴이라 "안전지대로" 는 가리킬 곳이 없다
-                                Shape = "Zone", Draw = "VenomCloud", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 2.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
-                        // 벽이 부서져 방 안 세 곳에 떨어진다 · 반경 1.25 m · 맞으면 0.6초 굳는다
-                        new() { Phase = 1, NameKr = "벽돌 낙하", NameEn = "BrickFall",
-                                Cooldown = 6f, Telegraph = 1f, DamageMul = 0.7f,
-                                Shape = "Zone", Draw = "BrickFall", Dodge = "SIDE",
-                                Degrees = 0f, Radius = 1.25f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "OUTSHAPES", RangeMeters = 0f, Group = 1 },
-                        // 벽 전체가 방 안으로 2 m 밀고 들어온다 · 아래로 내려가는 것 말고는 없다
-                        new() { Phase = 2, NameKr = "몸통 밀기", NameEn = "BodyShove",
-                                Cooldown = 5f, Telegraph = 1f, DamageMul = 0.93f,
-                                // 방 폭을 다 덮으므로 옆으로는 못 피한다. 벽에서 멀어지는 수밖에 없다
-                                Shape = "Line", Draw = "BodyShove", Dodge = "BACK",
-                                Degrees = 0f, Radius = 2f, Width = 2f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 2f, Group = 0 },
-                    } },
-
-            // ── 킹핀 · 옥상 — 하늘에 떠 있다 ──────────────────────────────
             new() { Key = "kingpin", NameKr = "킹핀", NameEn = "Kingpin", Sprite = "unit_kingpin",
-                    Chapter = 4, RoomNo = 10, Gate = "FINAL", Hp = 4300, Atk = 29,
+                    Chapter = 6, RoomNo = 10, Gate = "FINAL", Hp = 6900, Atk = 37,
                     State = "", Chases = true, BreakSeconds = 2.0f, BreakCause = "저공 활강을 옥상 구조물 쪽으로 유인했다",
                     Moves = new Move[]
                     {
@@ -294,84 +388,6 @@ namespace Game.EditorTools
                     } },
 
             // ── 로봇 스네이크 · 연구소 — 구멍에서 나온다 ────────────────────────
-            new() { Key = "robot_snakes", NameKr = "로봇 스네이크", NameEn = "Robot Snakes", Sprite = "unit_robot_snakes",
-                    Chapter = 5, RoomNo = 10, Gate = "FINAL", Hp = 5200, Atk = 33,
-                    State = "Holes", Chases = false, BreakSeconds = 4.0f, BreakCause = "나온 머리를 되들어가기 전에 때렸다",
-                    Moves = new Move[]
-                    {
-                        // 출처 — 구멍 2개의 덮개가 열린다 — 이것이 예고다. 1.15초 뒤 그 구멍에서 머리가 솟는다 · 반경 1.5 m
-                        new() { Phase = 1, NameKr = "구멍 개방", NameEn = "HatchOpen",
-                                Cooldown = 8f, Telegraph = 1f, DamageMul = 0.85f,
-                                Shape = "Lane", Draw = "HatchOpen", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 1.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 2,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
-                        // 출처 — 나온 머리가 초록 빔을 쏜다 · 폭 0.8 m · 방 끝까지 · 조준선이 먼저 그려진다
-                        new() { Phase = 1, NameKr = "레이저", NameEn = "RailLaser",
-                                Cooldown = 11f, Telegraph = 1f, DamageMul = 0.73f,
-                                Shape = "Line", Draw = "RailLaser", Dodge = "PERP",
-                                Degrees = 0f, Radius = 0f, Width = 0.8f, Length = 13f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 천장에서 파편이 떨어진다 · 그림자 5개 · 각 반경 1.2 m · 1.5초 뒤 낙하
-                        new() { Phase = 2, NameKr = "천장 파편", NameEn = "DebrisFall",
-                                Cooldown = 13f, Telegraph = 1f, DamageMul = 0.94f,
-                                Shape = "Zone", Draw = "DebrisFall", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 1.2f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 5,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 구멍 6개가 전부 열리고 다섯이 솟는다. 안 나오는 구멍이 하나뿐이고 그 위가 안전지대
-                        new() { Phase = 3, NameKr = "일제 출현", NameEn = "FullEmergence",
-                                Cooldown = 18f, Telegraph = 1f, DamageMul = 1.15f,
-                                Shape = "Zone", Draw = "FullEmergence", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 1.5f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 6,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
-                    } },
-
-            // ── 슬러지 · 정유소 — 위에서 떨어진다 ────────────────────────────
-            new() { Key = "sludge", NameKr = "슬러지", NameEn = "Sludge", Sprite = "unit_sludge",
-                    Chapter = 6, RoomNo = 10, Gate = "FINAL", Hp = 6900, Atk = 37,
-                    State = "Ceiling", Chases = false, BreakSeconds = 3.5f, BreakCause = "천장에 붙은 동안 아래에서 때려 떨어뜨렸다",
-                    Moves = new Move[]
-                    {
-                        // 출처 — 바닥으로 가라앉았다가 다른 자리에서 솟는다 · 솟는 자리 반경 2.0 m · 바닥이 부풀어 예고
-                        new() { Phase = 1, NameKr = "솟아오름", NameEn = "Emerge",
-                                Cooldown = 10f, Telegraph = 1f, DamageMul = 0.78f,
-                                Shape = "Zone", Draw = "Emerge", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 2f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 끈적한 덩어리를 뱉는다 · 착탄 반경 1.5 m · 웅덩이 4초 · 밟으면 이동 속도 절반
-                        new() { Phase = 1, NameKr = "뱉기", NameEn = "Spit",
-                                Cooldown = 8f, Telegraph = 1f, DamageMul = 0.68f,
-                                Shape = "Line", Draw = "Spit", Dodge = "PERP",
-                                Degrees = 0f, Radius = 1.5f, Width = 1.5f, Length = 8f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 0 },
-                        // 출처 — 점프해 사라진다. 그림자 3개가 방을 돌아다니다 멈추고 1초 뒤 방울이 떨어진다 · 각 반경 1.8 m
-                        new() { Phase = 2, NameKr = "천장 붙기", NameEn = "CeilingCling",
-                                Cooldown = 14f, Telegraph = 1f, DamageMul = 0.89f,
-                                Shape = "Zone", Draw = "CeilingCling", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 1.8f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 3,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
-                        // 출처 — 천장 전체로 퍼진다 · 방 전역에 방울 비 · 깨끗한 자리 하나만 남고 2초마다 옮겨 간다 · 8초
-                        new() { Phase = 3, NameKr = "천장 확산", NameEn = "CeilingSpread",
-                                Cooldown = 20f, Telegraph = 1f, DamageMul = 1.14f,
-                                Shape = "Zone", Draw = "CeilingSpread", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 1.6f, Width = 0f, Length = 0f,
-                                InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
-                                SafeX = 0f, SafeY = 0f,
-                                Range = "", RangeMeters = 4f, Group = 1 },
-                    } },
 
         };
     }

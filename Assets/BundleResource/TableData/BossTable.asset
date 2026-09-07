@@ -34,13 +34,13 @@ MonoBehaviour:
     - _pattern: 5
       _fromPhase: 1
       _cooldown: 8
-      _shotCount: 2
+      _shotCount: 1
       _spreadDegrees: 0
       _damageMul: 0.85
       _telegraphSeconds: 1.15
-      _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
-      _nameEn: HatchOpen
-      _shape: 2
+      _nameKr: "\uC19F\uC544\uC624\uB984"
+      _nameEn: BurrowStrike
+      _shape: 3
       _draw: 18
       _dodge: 4
       _degrees: 0
@@ -49,11 +49,11 @@ MonoBehaviour:
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
-      _lanes: 2
+      _lanes: 1
       _safeAtMeters: {x: 0, y: 0}
       _range: 0
       _rangeMeters: 4
-      _group: 1
+      _group: 0
     - _pattern: 5
       _fromPhase: 1
       _cooldown: 11
@@ -100,29 +100,29 @@ MonoBehaviour:
       _range: 0
       _rangeMeters: 4
       _group: 0
-    - _pattern: 1
-      _fromPhase: 3
-      _cooldown: 18
-      _shotCount: 6
-      _spreadDegrees: 0
-      _damageMul: 1.15
-      _telegraphSeconds: 1.2
-      _nameKr: "\uC77C\uC81C \uCD9C\uD604"
-      _nameEn: FullEmergence
-      _shape: 3
-      _draw: 21
-      _dodge: 4
-      _degrees: 0
-      _radiusMeters: 1.5
+    - _pattern: 2
+      _fromPhase: 1
+      _cooldown: 2
+      _shotCount: 5
+      _spreadDegrees: 120
+      _damageMul: 0.5
+      _telegraphSeconds: 0.45
+      _nameKr: "\uBB3C\uC5B4\uB72F\uAE30"
+      _nameEn: HeadBite
+      _shape: 0
+      _draw: 9
+      _dodge: 1
+      _degrees: 120
+      _radiusMeters: 2
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
-      _lanes: 6
+      _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
-      _range: 0
-      _rangeMeters: 4
-      _group: 1
+      _range: 1
+      _rangeMeters: 3
+      _group: 0
   - _bossKey: crusher
     _chapter: 2
     _roomNo: 10
