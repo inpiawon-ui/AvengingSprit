@@ -364,6 +364,16 @@ namespace Game.Module.InGame
                 for (int i = 0; i < _poseBuffer.Length; i++)
                     _poseBuffer[i] = UnitGet(stand, $"{Unit.FacingSuffix[i]}_tell");
 
+            // ⚠ 방향 하나만 그려진 예고 자세는 **한 번도 안 뜬다.**
+            //   로봇 스네이크는 `s_tell` 한 장뿐인데 늘 `se` 를 보고 있어서
+            //   빈 칸으로 떨어져 예고 자세가 통째로 죽어 있었다(2026-09-07 실측).
+            //   구멍에서 곧장 솟는 보스라 방향이 사실 없다 — 있는 한 장으로 채운다.
+            //   방향별로 다 그려진 보스(가디언·킹핀)는 위에서 이미 다 찼으므로 안 걸린다.
+            var only = UnitGet(stand, "s_tell");
+            if (only != null)
+                for (int i = 0; i < _poseBuffer.Length; i++)
+                    if (_poseBuffer[i] == null) _poseBuffer[i] = only;
+
             boss.SetTellSprites(_poseBuffer);
         }
 
@@ -1243,7 +1253,11 @@ namespace Game.Module.InGame
             if (_shotLayer == null || boss == null) return;
 
             FlightTargets(m);
-            if (_flightTargets.Count == 0) return;
+
+            // ⚠ 날아갈 것이 없으면 **개수를 0 으로 되돌리고** 나간다. 그냥 돌아가면
+            //   직전 패턴의 개수가 남아, 아무것도 안 나는 패턴이 "탄 5" 로 읽힌다
+            //   (2026-09-07 — 「일제 출현」이 미사일 5발을 쏘는 것으로 보였다).
+            if (_flightTargets.Count == 0) { _flying = 0; return; }
 
             // ⚠ 캐시 열쇠는 **보스 + 패턴**이다. 보스 키만 쓰면 한 보스가 던지는
             //   물건이 둘일 때 **먼저 나간 쪽 그림이 계속 쓰인다** —
@@ -1276,7 +1290,10 @@ namespace Game.Module.InGame
                         list.Add(sp);
                     }
 
-                foreach (var kind in new[] { "brick", "rubble" })
+                // ⚠ **여기 이름을 안 늘리면 새로 받은 그림이 영영 안 쓰인다.**
+                //   로봇 스네이크 파편을 `debris` 로 받아 놓고 목록에 안 넣어서,
+                //   그림이 프로젝트에 있는데도 미사일이 날아갔다(2026-09-07 실측).
+                foreach (var kind in new[] { "brick", "rubble", "debris" })
                 {
                     if (list.Count > 0 || boss == null) break;
                     for (int i = 1; i <= 8; i++)
