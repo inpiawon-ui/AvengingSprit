@@ -318,7 +318,7 @@ namespace Game.Module.InGame
                 //   「솟아오름」뿐이고, 그것은 **내 발밑**으로 온다.
                 //   솟아오름 예고 동안만 바닥 밑으로 들어간다 — 갈라지는 바닥만 남는다.
                 case BossState.Holes:
-                    if (_burrowed) Hide(boss, shadow: false);
+                    if (_sank) Hide(boss, shadow: false);
                     else Show(boss);
                     break;
 
@@ -328,7 +328,12 @@ namespace Game.Module.InGame
                     bool onCeiling = _dangerMove != null
                         && (_dangerMove.Draw == BossDraw.CeilingCling
                          || _dangerMove.Draw == BossDraw.CeilingSpread);
-                    if (onCeiling) Hide(boss, shadow: true);   // 그림자만 남는다
+                    // ⚠ 「솟아오름」도 몸이 안 보인다. 다만 **위가 아니라 아래**다 —
+                    //   천장에 붙은 것은 그림자를 남기지만(어디 있는지 보여야 한다),
+                    //   바닥에 가라앉은 것은 그림자도 없다. 남기면 부푸는 바닥 위에
+                    //   그림자가 겹쳐 "가라앉지 않았다" 로 보인다.
+                    if (_sank) Hide(boss, shadow: false);
+                    else if (onCeiling) Hide(boss, shadow: true);
                     else Show(boss);
                     break;
                 }

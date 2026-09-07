@@ -131,36 +131,49 @@ namespace Game.Module.InGame
             BeginLamp(boss);
 
             BeginKingpinTell(boss, m);
-            BeginBurrowTell(m);
+            BeginSinkTell(m);
         }
 
-        // ── 로봇 스네이크 — 바닥을 뚫고 솟는다 ────────────────────
+        // ── 바닥 밑에 있다가 발밑에서 솟는다 ─────────────────────
         //
-        // 예고 동안 몸은 바닥 아래에 있고 **발밑이 네 장에 걸쳐 갈라진다.**
-        // 갈라진 그 자리에서 몸이 솟아야 "발밑을 뚫고 나왔다" 가 된다 —
+        // 예고 동안 몸은 바닥 아래에 있고 **발밑이 네 장에 걸쳐 열린다.**
+        // 열린 그 자리에서 몸이 솟아야 "발밑을 뚫고 나왔다" 가 된다 —
         // 아무 예고 없이 그 자리에 나타나면 "왜 저기 서 있지" 로 읽힌다
         // (기획 2026-09-07 — "먼가를 부수고 구멍에서 올라오는 연출이 필요하고").
+        //
+        // 보스 둘이 같은 짓을 한다. **바닥이 무엇으로 열리느냐만 다르다.**
+        //   로봇 스네이크 「솟아오름」  쇠바닥이 갈라진다   `fx_burrow`
+        //   슬러지     「솟아오름」    바닥이 부풀어 오른다 `fx_bulge`
 
         /// <summary>예고 동안 몸이 바닥 밑에 있는가. 몸을 감추는 판단은 <c>TickBossState</c> 가 본다.</summary>
-        private bool _burrowed;
-        private Impact _burrowCrack;
+        private bool _sank;
+        private Impact _sinkTell;
 
-        private void BeginBurrowTell(BossMove m)
+        /// <summary>이 패턴이 바닥 밑에서 시작하는가. 그렇다면 바닥에 무엇을 띄우는가.</summary>
+        private static string SinkTellFxOf(BossDraw draw) => draw switch
         {
-            if (m.Draw != BossDraw.BurrowStrike) return;
+            BossDraw.BurrowStrike => "burrow",
+            BossDraw.Emerge       => "bulge",
+            _                     => null,
+        };
 
-            _burrowed = true;
-            // 균열은 **예고 시간에 정확히 걸쳐** 자라야 도착이 곧 발동으로 읽힌다.
-            _burrowCrack = PlayFx("burrow", _danger.Origin,
-                                  Mathf.Max(128f, _danger.Radius * 2f), loop: false,
-                                  over: _brain != null ? _brain.TelegraphTotal : 1f);
+        private void BeginSinkTell(BossMove m)
+        {
+            string fx = SinkTellFxOf(m.Draw);
+            if (fx == null) return;
+
+            _sank = true;
+            // 바닥은 **예고 시간에 정확히 걸쳐** 열려야 도착이 곧 발동으로 읽힌다.
+            _sinkTell = PlayFx(fx, _danger.Origin,
+                               Mathf.Max(128f, _danger.Radius * 2f), loop: false,
+                               over: _brain != null ? _brain.TelegraphTotal : 1f);
         }
 
-        /// <summary>솟았거나 · 도형이 치워졌다. 갈라진 바닥을 거두고 몸을 되돌린다.</summary>
-        private void EndBurrowTell()
+        /// <summary>솟았거나 · 도형이 치워졌다. 열린 바닥을 거두고 몸을 되돌린다.</summary>
+        private void EndSinkTell()
         {
-            _burrowed = false;
-            if (_burrowCrack != null) { _burrowCrack.Stop(); _burrowCrack = null; }
+            _sank = false;
+            if (_sinkTell != null) { _sinkTell.Stop(); _sinkTell = null; }
         }
 
         // ── 킹핀 — 떠올랐다 내려찍고, 표식을 찍는다 ──────────────
@@ -280,6 +293,9 @@ namespace Game.Module.InGame
         private float _lockShotLeft;
         private bool _lockShotFired;
 
+        /// <summary>이번 시전에서 이미 퍼졌는가. 남은 시간으로 판단하면 무한히 다시 시작한다.</summary>
+        private bool _meltDone;
+
         private void TickLockShot(float dt)
         {
             if (_lockShotLeft <= 0f) return;
@@ -290,6 +306,115 @@ namespace Game.Module.InGame
             // 보스가 죽었거나 도형이 이미 치워졌으면 아무 일도 없다.
             if (_boss == null || !_boss.IsAlive || !HasDanger) { ClearDanger(); return; }
             StrikeDanger(_boss, Avatar, _dangerMove);
+        }
+
+        // ── 슬러지 — 천장 전체로 퍼진다(「최종 용해」) ────────────
+        //
+        // 정본: *천장 전체로 퍼진다 · 방 전역에 방울 비 · 깨끗한 자리 하나만 남고
+        //       2초마다 옮겨 간다 · 8초*
+        //
+        // ⚠ 예전에는 **한 번 터지고 끝**이었다. 안전한 섬을 한 번 그려 놓고 즉시
+        //   판정해 버려서, 섬 밖에 서 있었으면 한 대 맞고 그것으로 끝났다 —
+        //   "옮겨 다니는 섬을 따라 뛰어다닌다" 는 이 패턴의 정체가 화면에 아예
+        //   없었다. 8초를 실제로 버텨야 3페이즈 마무리기로 읽힌다.
+
+        /// <summary>퍼져 있는 시간(정본 8초).</summary>
+        private const float MeltSeconds = 8f;
+
+        /// <summary>깨끗한 자리가 옮겨 가는 간격(정본 2초).</summary>
+        private const float MeltStepSeconds = 2f;
+
+        /// <summary>피해가 들어오는 박자. 이 초마다 한 번씩 판정한다.</summary>
+        private const float MeltTickSeconds = 1f;
+
+        /// <summary>
+        /// 한 박자에 들어오는 피해 = 표의 피해 × 이 값.
+        ///
+        /// 8초 × 1초 박자 = 여덟 번이다. 표의 피해를 그대로 여덟 번 주면 이 패턴
+        /// 하나로 죽는다. 0.25 로 두면 **끝까지 안 피했을 때** 표의 두 배,
+        /// 섬을 잘 따라다니면 0 이다 — 따라다닐 이유가 여기서 생긴다.
+        /// </summary>
+        private const float MeltTickShare = 0.25f;
+
+        private float _meltLeft, _meltStepLeft, _meltTickLeft;
+        private bool _melting;
+
+        /// <summary>퍼져 있는 동안. 섬을 옮기고, 박자마다 섬 밖을 친다.</summary>
+        private void TickMelt(float dt)
+        {
+            if (!_melting) return;
+
+            if (_boss == null || !_boss.IsAlive || !HasDanger) { EndMelt(); ClearDanger(); return; }
+
+            _meltLeft -= dt;
+
+            // ① 깨끗한 자리를 옮긴다 — 도형을 **다시 지어** 옮긴다.
+            //    자리를 여기서 새로 계산하지 않는다. `DangerShape` 가 섬 자리를
+            //    아는 유일한 곳이고, 두 곳에 적으면 그린 것과 안전한 곳이 갈라진다.
+            _meltStepLeft -= dt;
+            if (_meltStepLeft <= 0f && _meltLeft > 0f)
+            {
+                _meltStepLeft += MeltStepSeconds;
+                _dangerTick++;
+                MoveMeltIsland();
+            }
+
+            // ② 박자마다 섬 밖을 친다.
+            _meltTickLeft -= dt;
+            if (_meltTickLeft <= 0f)
+            {
+                _meltTickLeft += MeltTickSeconds;
+                var me = Avatar;
+                if (me != null && _danger.Contains(me.Position, _roomSize))
+                    DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(
+                        _boss.Atk * _dangerMove.DamageMul * MeltTickShare)));
+
+                // 방울 비 — 박자마다 섬 밖 아무 데나 몇 방울 떨어뜨린다.
+                // 이게 없으면 바닥만 붉고 **아무것도 안 떨어진다.**
+                RainMeltDrops();
+            }
+
+            // ③ 다 퍼졌다. 마지막 한 번은 평소 경로로 보내 취약 창까지 열리게 한다.
+            if (_meltLeft <= 0f)
+            {
+                EndMelt();
+                StrikeDanger(_boss, Avatar, _dangerMove);
+            }
+        }
+
+        private void EndMelt()
+        {
+            _melting = false;
+            _meltLeft = _meltStepLeft = _meltTickLeft = 0f;
+        }
+
+        /// <summary>섬을 다음 자리로. 판정과 그림이 같이 옮겨 간다.</summary>
+        private void MoveMeltIsland()
+        {
+            var me = Avatar;
+            var dir = me != null ? (me.Position - _boss.Position) : _boss.Facing;
+            _danger = DangerShape.From(_dangerMove, _boss.Position, dir,
+                                       me != null ? me.Position : _boss.Position,
+                                       _roomSize, _pxPerMeter, _dangerTick);
+            if (_dangerView != null)
+                _dangerView.Show(_danger, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
+            ShowSafeZone(_dangerMove, _boss);
+        }
+
+        /// <summary>섬 밖으로 방울 몇 개. 위험한 자리에만 떨어져야 거짓말이 안 된다.</summary>
+        private const int MeltDropsPerTick = 3;
+
+        private void RainMeltDrops()
+        {
+            for (int i = 0; i < MeltDropsPerTick; i++)
+            {
+                // 방 안에서 고르되 **섬 안이면 버린다.** 안전한 자리에 방울이
+                // 떨어지면 "저기도 위험한가" 로 읽혀 섬을 못 믿게 된다.
+                var at = new Vector2(Random.Range(0.08f, 0.92f) * _roomSize.x,
+                                     -Random.Range(0.08f, 0.92f) * _roomSize.y);
+                if (!_danger.Contains(at, _roomSize)) continue;
+                PlayFx("sludge_drop", at, 96f, loop: false);
+            }
         }
 
         private void TickKingpinDrop(float dt)
@@ -662,9 +787,18 @@ namespace Game.Module.InGame
                 case BossDraw.BurrowStrike:
                     boss.Position = ClampedInField(boss, _danger.Origin);
                     // ⚠ 갈라진 바닥을 **먼저** 거둔다. 남겨 두면 솟아오른 몸을 덮는다.
-                    EndBurrowTell();
+                    EndSinkTell();
                     boss.SetHidden(false);
                     PlayFx("shatter", boss.Position, Mathf.Max(120f, _danger.Radius), loop: false);
+                    break;
+
+                // 슬러지도 같다 — **부푼 자리를 뚫고 솟는다.** 다만 쇠바닥이 아니라
+                // 점액이 터진다. 몸이 실제로 그리로 와야 "발밑에서 나왔다" 가 된다.
+                case BossDraw.Emerge:
+                    boss.Position = ClampedInField(boss, _danger.Origin);
+                    EndSinkTell();
+                    boss.SetHidden(false);
+                    PlayFx("goo_burst", boss.Position, Mathf.Max(120f, _danger.Radius), loop: false);
                     break;
 
                 // 탈것으로 방을 **가로질러 민다.** 그어 둔 띠 끝까지 가고,
@@ -706,8 +840,16 @@ namespace Game.Module.InGame
                     break;
 
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반
+                //
+                // ⚠ 웅덩이는 **착탄점**에 남는다. `Origin` 을 쓰면 안 된다 —
+                //   띠(`Kind.Band`)에서 `Origin` 은 **뱉은 입**, 즉 보스 발밑이다.
+                //   그래서 뱉은 것은 저 앞으로 날아가는데 웅덩이는 보스 밑에
+                //   깔렸다. 도형에게 물어야 그리는 자리와 남는 자리가 같아진다
+                //   (`ImpactAt` 주석의 "미사일이 내 발밑에 떨어졌는데 폭발은
+                //   보스 몸에서 터졌다" 와 같은 실수다).
                 case BossDraw.Spit:
-                    SpawnField(_danger.Origin, Mathf.Max(_pxPerMeter, _danger.Radius),
+                    SpawnField(_danger.LandingAt(_roomSize),
+                               Mathf.Max(_pxPerMeter, _danger.Radius),
                                PuddleSeconds, FieldEffect.Slow, 0, fromPlayer: false);
                     break;
 
@@ -1085,7 +1227,9 @@ namespace Game.Module.InGame
             EndOrbit();
             EndLamp();
             EndFlight();
-            EndBurrowTell();
+            EndSinkTell();
+            EndMelt();
+            _meltDone = false;
         }
 
         /// <summary>
@@ -1127,6 +1271,25 @@ namespace Game.Module.InGame
                 if (_safeView != null) _safeView.Hide();
                 if (_hint != null) _hint.Hide();
                 EndKingpinTell(boss);
+                return true;                      // 아직 안 때린다
+            }
+
+            // ── 천장 확산 — 여기서 끝내지 않고 **8초 동안 퍼져 있는다** ──
+            //
+            // `ExecutionLock` 과 같은 짜임이다. 도형을 남긴 채 true 로 나가면
+            // 바깥이 예전 경로로 안 넘긴다. 다 퍼지면 `TickMelt` 가 이 함수를
+            // 한 번 더 불러 아래 평소 경로(판정 · 취약 창 · 정리)를 태운다.
+            //
+            // ⚠ 「퍼지는 중인가」를 남은 시간으로 판단하면 **영원히 다시 시작한다.**
+            //   0 이 된 순간 다시 이 문에 걸린다(`_lockShotFired` 와 같은 사고).
+            if (m.Draw == BossDraw.CeilingSpread && !_meltDone)
+            {
+                _meltDone = true;
+                _melting = true;
+                _meltLeft = MeltSeconds;
+                _meltStepLeft = MeltStepSeconds;
+                _meltTickLeft = MeltTickSeconds;
+                boss.PlayAttack(BossAttackHold);
                 return true;                      // 아직 안 때린다
             }
 
@@ -1281,8 +1444,19 @@ namespace Game.Module.InGame
                 // 「처형 조준」도 탄이 난다. 다만 **예고가 끝난 뒤** 난다 —
                 // 부르는 자리가 다를 뿐 갈 곳을 정하는 방식은 같다.
                 case BossDraw.ExecutionLock:
+                // ⚠ 슬러지 「천장 붙기」도 여기다. 그림자 셋만 뜨고 아무것도
+                //   안 떨어지면 "저 자국은 뭐지" 로 끝난다 — **방울이 실제로
+                //   천장에서 내려와야** 그림자가 예고로 읽힌다.
+                case BossDraw.CeilingCling:
                     for (int i = 0; i < _danger.PieceCount && i < MaxFlight; i++)
                         _flightTargets.Add(_danger.PieceAt(i, _roomSize));
+                    break;
+
+                // 「뱉기」는 띠라서 조각이 하나뿐이고, 그 하나가 **입**이다.
+                // `PieceAt(0)` 을 쓰면 보스 발밑으로 날아가 제자리를 맴돈다 —
+                // 도형에게 **착탄점**을 따로 물어야 한다.
+                case BossDraw.Spit:
+                    _flightTargets.Add(_danger.LandingAt(_roomSize));
                     break;
 
                 // ⚠ 부채꼴(압착)은 여기 없다. **진짜 탄이 나간다** —
@@ -1326,7 +1500,7 @@ namespace Game.Module.InGame
                 // ⚠ `_brick_` 이 먼저다. 바닥 잔해(`_rubble_`)는 바닥에 깔리라고 만든 것이라
                 //   바닥색과 같아 공중에서는 검은 네모로만 보인다 — 대역일 뿐이다.
                 // 뱉는 것은 뱉는 것 그림으로. 벽돌이 날아가면 독을 뱉은 것이 아니다.
-                if (m.Draw == BossDraw.VenomCloud && boss != null)
+                if ((m.Draw == BossDraw.VenomCloud || m.Draw == BossDraw.Spit) && boss != null)
                     for (int i = 1; i <= 8; i++)
                     {
                         var sp = GetSprite($"obj_{boss.Key}_spit_{i}");
@@ -1389,7 +1563,9 @@ namespace Game.Module.InGame
                 // ⚠ **천장에서 떨어지는 것은 천장에서 와야 한다.** 보스 몸에서
                 //   쏘면 뱀이 파편을 발사하는 것으로 보인다 — 이름과 화면이 어긋난다
                 //   (기획 2026-09-07 — "천장 파편은 어디 이상한 데로 쏘고 있고").
-                f.From = m.Draw == BossDraw.DebrisFall
+                // 슬러지 「천장 붙기」도 천장에서 온다 — 몸이 위에 붙어 있는데
+                // 방울이 바닥에서 솟으면 무엇이 떨어진 것인지 알 수 없다.
+                f.From = m.Draw == BossDraw.DebrisFall || m.Draw == BossDraw.CeilingCling
                     ? new Vector2(f.To.x, CeilingLaunchY)
                     : boss.Position + new Vector2(side, 0f);
                 // ⚠ `(i - mid)` 로 하면 **한쪽만 높이 뜬다.** 킹핀 미사일 5발이
@@ -1615,12 +1791,18 @@ namespace Game.Module.InGame
             // (기획 2026-09-07 — "물어뜯기도 맞았을때 연출이 나와야하는데").
             BossDraw.HeadBite => "bite",
             BossDraw.Crush or BossDraw.WreckingBall
-                or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge
+                or BossDraw.BoosterDrop or BossDraw.RamCharge
                 or BossDraw.SegmentThrust => "slam",
             // 파이썬 독은 제 그림이 있다(fx_venom_1~5). 용암을 쓰면 불로 보인다.
             BossDraw.VenomCloud => "venom",
-            BossDraw.Spit or BossDraw.CeilingCling
-                or BossDraw.CeilingSpread => "lava",
+            // 슬러지 넷은 전부 **점액**이다. `lava` 를 쓰면 불덩이가 튀어
+            // 끈적한 것이 아니라 타는 것으로 보인다.
+            //   솟아오름  터져 나오는 점액        `fx_goo_burst`
+            //   뱉기      바닥에 철퍽 터지는 것   `fx_goo_splat`
+            //   천장 둘   위에서 떨어진 방울      `fx_sludge_drop`
+            BossDraw.Emerge => "goo_burst",
+            BossDraw.Spit => "goo_splat",
+            BossDraw.CeilingCling or BossDraw.CeilingSpread => "sludge_drop",
             BossDraw.Conveyor or BossDraw.SegmentLaunch
                 or BossDraw.DebrisFall or BossDraw.BurrowStrike
                 or BossDraw.BrickFall => "shatter",

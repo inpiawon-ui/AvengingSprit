@@ -164,6 +164,21 @@ namespace Game.Module.InGame
         /// </summary>
         public Vector2 PieceAt(int i, Vector2 roomSize) => CenterOf(i, roomSize);
 
+        /// <summary>
+        /// 띠의 **끝**. 뱉은 것·던진 것이 떨어져 남는 자리다.
+        ///
+        /// ⚠ <see cref="ImpactAt"/> 와 다르다. 그쪽은 띠 **한가운데**로,
+        ///   「무엇이 지나갔는가」를 터뜨릴 자리다. 날아간 물건이 남기는 것은
+        ///   지나간 자리가 아니라 **닿은 자리**다 — 둘을 섞으면 뱉은 웅덩이가
+        ///   보스와 나 사이 허공에 깔린다.
+        /// </summary>
+        public Vector2 LandingAt(Vector2 roomSize)
+        {
+            if (Shape != Kind.Band) return CenterOf(0, roomSize);
+            BandOf(0, roomSize, out var from, out var dir);
+            return from + dir * Length;
+        }
+
         public Vector2 ImpactAt(Vector2 roomSize)
         {
             if (Shape != Kind.Band) return CenterOf(0, roomSize);
@@ -747,26 +762,45 @@ namespace Game.Module.InGame
                     break;
 
                 // ═══ B06 슬러지 ═══════════════════════════════════
-                // 가라앉았다 다른 자리에서 솟는다. 바닥이 부풀어 예고한다.
+                // 가라앉았다 **내가 선 자리로** 솟는다. 바닥이 부풀어 예고한다.
+                //
+                // ⚠ 전에는 `Scatter` 로 방 아무 데나 솟았다. 그러면 내가 어디 있든
+                //   상관이 없어서 「저기서 뭔가 올라오네」로 끝난다 — 비켜설 이유가
+                //   없으면 패턴이 장식이 된다. 「솟아오름(로봇 스네이크)」·「마디
+                //   사출」·「벽돌 낙하」·「천장 파편」이 전부 같은 병을 앓았고
+                //   같은 약을 썼다. **나를 쫓아와야 피할 이유가 생긴다.**
                 case BossDraw.Emerge:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Scatter;
+                    s.Origin = playerAt;
                     s.Count = 1;
                     break;
 
                 // 덩어리를 뱉는다. 직각으로 피한다.
+                //
+                // ⚠ 반경도 실어야 한다. 띠는 폭·길이로 판정하지만, 뱉은 것이
+                //   남기는 **웅덩이 크기**는 표의 반경(1.5 m)이 정한다. 안 실으면
+                //   `_danger.Radius` 가 0 이라 웅덩이가 기본값 1 m 로 쪼그라든다.
                 case BossDraw.Spit:
                     s.Shape = Kind.Band;
                     s.Width = Mathf.Max(1f, W);
                     s.Length = Mathf.Max(1f, L);
+                    s.Radius = Mathf.Max(1f, R);
                     break;
 
                 // 몸이 사라지고 **그림자 셋**만 남는다. 그림자를 보고 미리 비킨다.
+                //
+                // ⚠ `Scatter` 는 방 아무 데나라 셋 다 나와 상관없는 자리에 뜬다.
+                //   **내 둘레**로 뿌려야 "쫓아온다" 가 읽히고, 그래야 비킬 이유가
+                //   생긴다. 다만 퍼짐을 넓게 잡아 셋이 한 덩어리로 겹치지 않게 한다
+                //   — 「천장 파편」에서 겪은 그대로다(아래 `SpreadInner` 주석 참조).
                 case BossDraw.CeilingCling:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Scatter;
+                    s.Origin = playerAt;
+                    s.Layout = Spread.NearTarget;
+                    s.Length = Mathf.Max(1f, R) * 3.5f;
+                    s.SpreadInner = 0.15f;
                     s.Count = Mathf.Max(2, m.Lanes);
                     break;
 
