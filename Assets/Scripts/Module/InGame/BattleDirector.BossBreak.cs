@@ -314,6 +314,13 @@ namespace Game.Module.InGame
                 // ── 로봇 스네이크 — 구멍을 옮겨 다닌다. 늘 나와 있다 ──
                 case BossState.Holes:
                     Show(boss);
+
+                    // ⚠ **겨누는 동안에는 안 옮긴다.** 예고를 띄워 놓고 다른 구멍으로
+                    //   솟으면 그어 둔 줄이 낡는다 — 레이저 빔이 아무도 없는 구멍에서
+                    //   뻗어 나왔다(2026-09-07 실측: 빔 출발 (193,−288) · 뱀 (360,−252)).
+                    //   파이썬도 같은 이유로 예고 중에는 안 들어간다.
+                    if (_brain != null && (_brain.IsTelegraphing || _dangerMove != null)) break;
+
                     _presenceLeft -= dt;
                     if (_presenceLeft > 0f) break;
                     _presenceLeft = SnakeHopSeconds;
