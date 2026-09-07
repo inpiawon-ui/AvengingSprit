@@ -1060,6 +1060,17 @@ namespace Game.Module.InGame
                 _lockShotLeft = LockShotSeconds;
                 BeginFlight(m, boss, LockShotSeconds);
                 boss.PlayAttack(BossAttackHold);
+
+                // 탄이 떠나면 **조준은 끝났다.** 표식과 바닥 도형을 지운다 —
+                // 이제 어디로 오는지는 날아오는 탄이 말한다
+                // (기획 2026-09-07 — "미사일 나갈 때 저 타겟 얼럿을 지워").
+                //
+                // ⚠ `_danger` 자체는 남긴다. 닿을 때 그 도형으로 때린다 —
+                //   지우면 무엇에 맞았는지가 사라진다.
+                if (_dangerView != null) _dangerView.Hide();
+                if (_safeView != null) _safeView.Hide();
+                if (_hint != null) _hint.Hide();
+                EndKingpinTell(boss);
                 return true;                      // 아직 안 때린다
             }
 
