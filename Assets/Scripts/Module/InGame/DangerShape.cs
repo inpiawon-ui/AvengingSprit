@@ -696,12 +696,12 @@ namespace Game.Module.InGame
                     s.Shape = Kind.Band;
                     s.Width = Mathf.Max(1f, W);
                     s.Length = roomSize.magnitude;
-                    // **레일** 레이저다. 아무 각도로나 비스듬히 긋지 않는다 —
-                    // 위·아래·좌·우 중 가장 가까운 쪽으로 붙여 곧게 쏜다.
-                    // 비스듬한 줄은 어느 쪽으로 비켜야 하는지 한눈에 안 읽힌다.
-                    s.Dir = Mathf.Abs(dir.x) >= Mathf.Abs(dir.y)
-                        ? new Vector2(Mathf.Sign(dir.x), 0f)
-                        : new Vector2(0f, Mathf.Sign(dir.y));
+                    // 겨누는 곳은 **내가 선 자리**다. `dir` 이 이미 보스→나 방향이므로
+                    //   기본값(`s.Dir = dir`)을 그대로 쓴다.
+                    //
+                    // ⚠ 전에는 위·아래·좌·우 중 가까운 쪽으로 **꺾어 붙였다.** 그러면
+                    //   내가 비스듬히 서 있을 때 빔이 나를 비껴 지나간다 — 조준하는
+                    //   기술이 조준을 안 하는 꼴이 됐다(기획 2026-09-07). 버렸다.
                     break;
 
                 // 천장에서 파편 다섯. 그림자 밖으로.
