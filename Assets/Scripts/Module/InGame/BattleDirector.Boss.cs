@@ -612,6 +612,11 @@ namespace Game.Module.InGame
                 case BossDraw.HeadBite:
                     break;
 
+                // 빔이 그어 둔 띠를 그대로 태운다.
+                case BossDraw.RailLaser:
+                    BeginBeam(_danger);
+                    break;
+
                 // 탈것으로 방을 **가로질러 민다.** 그어 둔 띠 끝까지 가고,
                 // 닿아도 안 멈춘다 — 지나가는 것이 이 패턴이다.
                 // (이때만 근접이 닿는다는 것이 이 보스의 취약 창 조건이다)
@@ -1341,6 +1346,65 @@ namespace Game.Module.InGame
             var img = go.AddComponent<Image>();
             img.raycastTarget = false;
             return new Flight { Rt = rt, Img = img };
+        }
+
+        // ── 레일 레이저 — 쏘는 것이 화면에 보여야 한다 ──────────
+        //
+        // 예고 띠가 사라지고 피해만 들어갔다. 뱀은 가만히 있고 아무것도
+        // 안 쏘는 것으로 보였다(기획 2026-09-07 확인 — 실측 피해 24, 빔 0장).
+        //
+        // 빔은 **예고에 그린 그 띠 그대로** 그린다. 자리를 새로 지어내면
+        // 그린 것과 맞는 것이 갈라진다(R1).
+
+/// <summary>쏜 빔이 화면에 남는 시간. (플레이어 쪽 `BeamSeconds` 와는 다른 값이다)</summary>
+        private const float BossBeamSeconds = 0.22f;
+
+        private Image _beam;
+        private float _beamLeft;
+
+        private void BeginBeam(DangerShape shape)
+        {
+            if (_field == null) return;
+            var art = GetSprite("obj_robot_snakes_beam");
+            if (art == null) return;
+
+            if (_beam == null)
+            {
+                var go = new GameObject("Beam", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(_field, false);
+                var rt0 = (RectTransform)go.transform;
+                rt0.anchorMin = rt0.anchorMax = new Vector2(0f, 1f);
+                rt0.pivot = new Vector2(0.5f, 0f);      // 아래 끝이 기준 — 뿌리에서 뻗는다
+                _beam = go.GetComponent<Image>();
+                _beam.raycastTarget = false;
+                _beam.type = Image.Type.Tiled;          // 이어 붙는 그림이라 늘리지 않고 반복한다
+            }
+            _beam.sprite = art;
+            var rt = (RectTransform)_beam.transform;
+            rt.sizeDelta = new Vector2(Mathf.Max(8f, shape.Width), Mathf.Max(8f, shape.Length));
+            rt.anchoredPosition = shape.Origin;
+            // 띠가 향하는 쪽으로 세운다.
+            //
+            // ⚠ pivot 이 아래변(0.5, 0)이라 그림은 **제 위쪽(local +Y)으로 자란다.**
+            //   local +Y 는 안 돌렸을 때 세계의 +90° 를 가리키므로, 띠 방향에서
+            //   90° 를 **빼야** 한다. 더했더니 정반대로 뻗어 뱀 머리가 아니라
+            //   엉뚱한 구석에서 빔이 나왔다(실측 각 18° — 맞는 값은 −162°).
+            float deg = Mathf.Atan2(shape.Dir.y, shape.Dir.x) * Mathf.Rad2Deg - 90f;
+            rt.localEulerAngles = new Vector3(0f, 0f, deg);
+            _beam.gameObject.SetActive(true);
+            _beamLeft = BossBeamSeconds;
+        }
+
+        private void TickBeam(float dt)
+        {
+            if (_beamLeft <= 0f) return;
+            _beamLeft -= dt;
+            if (_beam == null) return;
+            // 끝으로 갈수록 옅어진다 — 툭 사라지면 있었는지도 모른다
+            var c = _beam.color;
+            c.a = Mathf.Clamp01(_beamLeft / BossBeamSeconds);
+            _beam.color = c;
+            if (_beamLeft <= 0f) { _beamLeft = 0f; _beam.gameObject.SetActive(false); }
         }
 
         private void EndFlight()
