@@ -696,6 +696,12 @@ namespace Game.Module.InGame
                     s.Shape = Kind.Band;
                     s.Width = Mathf.Max(1f, W);
                     s.Length = roomSize.magnitude;
+                    // **레일** 레이저다. 아무 각도로나 비스듬히 긋지 않는다 —
+                    // 위·아래·좌·우 중 가장 가까운 쪽으로 붙여 곧게 쏜다.
+                    // 비스듬한 줄은 어느 쪽으로 비켜야 하는지 한눈에 안 읽힌다.
+                    s.Dir = Mathf.Abs(dir.x) >= Mathf.Abs(dir.y)
+                        ? new Vector2(Mathf.Sign(dir.x), 0f)
+                        : new Vector2(0f, Mathf.Sign(dir.y));
                     break;
 
                 // 천장에서 파편 다섯. 그림자 밖으로.

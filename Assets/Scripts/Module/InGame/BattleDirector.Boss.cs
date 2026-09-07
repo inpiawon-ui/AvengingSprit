@@ -1202,6 +1202,9 @@ namespace Game.Module.InGame
         /// <summary>여럿이 함께 날 때 출발점을 좌우로 벌리는 폭(한 조각당).</summary>
         private const float LaunchSpreadMeters = 0.55f;
 
+        /// <summary>천장에서 떨어지는 것이 출발하는 높이. 방 위쪽 화면 밖이다.</summary>
+        private const float CeilingLaunchY = 80f;
+
         private readonly List<Flight> _flights = new();
         private readonly List<Vector2> _flightTargets = new();
 
@@ -1348,8 +1351,14 @@ namespace Game.Module.InGame
                 //   출발점을 입 너비만큼 벌리고 포물선 높이를 조각마다 달리한다.
                 float mid = (_flying - 1) * 0.5f;
                 float side = (i - mid) * LaunchSpreadMeters * _pxPerMeter;
-                f.From = boss.Position + new Vector2(side, 0f);
                 f.To = _flightTargets[i];
+
+                // ⚠ **천장에서 떨어지는 것은 천장에서 와야 한다.** 보스 몸에서
+                //   쏘면 뱀이 파편을 발사하는 것으로 보인다 — 이름과 화면이 어긋난다
+                //   (기획 2026-09-07 — "천장 파편은 어디 이상한 데로 쏘고 있고").
+                f.From = m.Draw == BossDraw.DebrisFall
+                    ? new Vector2(f.To.x, CeilingLaunchY)
+                    : boss.Position + new Vector2(side, 0f);
                 // ⚠ `(i - mid)` 로 하면 **한쪽만 높이 뜬다.** 킹핀 미사일 5발이
                 //   왼쪽부터 0.1 · 0.55 · 1.0 · 1.45 · 1.9 배로 날아 부채꼴이
                 //   비뚤어졌다(실측 y −326 / −323 / −315 / −305 / −295).
@@ -1540,7 +1549,10 @@ namespace Game.Module.InGame
             BossDraw.HeadBite or BossDraw.CoilWall or BossDraw.SegmentThrust
               or BossDraw.Crush or BossDraw.WreckingBall or BossDraw.RamCharge
               or BossDraw.HeadLunge or BossDraw.BodyShove
-              or BossDraw.StrafingRun => true,
+              or BossDraw.StrafingRun
+              // 뱀이 **나를 노리고** 솟은 것이라, 빗나갔으면 터질 것이 없다.
+              // 빈 바닥에서 폭발이 나면 "안 맞았는데 왜 터지지" 가 된다.
+              or BossDraw.BurrowStrike => true,
             _ => false,
         };
 
