@@ -217,6 +217,27 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 보스 스킬 2초마다 무작위 ──────────────────────────────
+        //
+        // 「스킬 버튼」(보스 아이들)은 **내가 고른 것**만 나오므로 네 연출이
+        // 실제 흐름 속에서 다 제대로 나오는지는 못 본다. 이 스위치는 보스가
+        // 스스로 돌되 쿨·거리·묶음을 무시하고 2초마다 하나를 뽑는다.
+        //
+        // ⚠ 표의 쿨 값을 2초로 낮추는 방식은 안 된다 — 넷이 동시에 0 이 되어
+        //   한 프레임에 연달아 나간다. 시계를 하나로 합쳐야 한다.
+        private const string BossRandomMenu = "Tools/Game/테스트 — 보스 스킬 2초마다 무작위";
+
+        [MenuItem(BossRandomMenu)]
+        private static void ToggleBossRandom()
+            => BattleDirector.BossRandomEvery2s = !BattleDirector.BossRandomEvery2s;
+
+        [MenuItem(BossRandomMenu, true)]
+        private static bool ToggleBossRandomValidate()
+        {
+            Menu.SetChecked(BossRandomMenu, BattleDirector.BossRandomEvery2s);
+            return true;
+        }
+
         // ── 보스 패턴 이름표 다시 보기 ────────────────────────────
         //
         // 이름표는 **처음 보는 패턴에만** 뜬다(정본 예고 4겹 ④). 한 번 보면

@@ -2108,6 +2108,31 @@ namespace Game.Module.InGame
         public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
 
         /// <summary>
+        /// **연출 확인용 — 네 패턴이 2초마다 무작위로 하나씩 나간다.**
+        ///
+        /// 패턴별 쿨(8~20초)·거리 조건·묶음을 전부 무시하고, 한 개의 시계만 굴려
+        /// 그때그때 하나를 뽑는다. 「스킬 버튼」(`BossIdleOnly`)은 무엇이 나올지
+        /// 내가 고르는 것이라 **조건대로 도는 흐름**은 확인할 수 없었다 —
+        /// 이 스위치는 보스가 스스로 돌되 네 개를 골고루 보여 준다.
+        ///
+        /// ⚠ 정본 값을 고치는 것이 아니다. 끄면 즉시 표대로 돌아온다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 스킬 2초마다 무작위` 로 켜고 끈다.
+        /// </summary>
+        public static bool BossRandomEvery2s
+        {
+#if UNITY_EDITOR
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossRandomEvery2s", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossRandomEvery2s", value);
+#else
+            get => false;
+            set { }
+#endif
+        }
+
+        /// <summary>위 스위치가 켜졌을 때 패턴 사이 간격(초).</summary>
+        public const float BossRandomEverySeconds = 2f;
+
+        /// <summary>
         /// 보스 체력 배수. 1 이면 표 그대로다.
         ///
         /// 페이즈 2·3 패턴은 체력이 60%·30% 아래로 내려가야 나온다. 그런데 가디언은
