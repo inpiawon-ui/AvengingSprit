@@ -627,6 +627,14 @@ namespace Game.Module.InGame
                     BeginBeam(_danger);
                     break;
 
+                // **그어 둔 자리를 뚫고 솟는다.** 몸이 실제로 그리로 와야
+                // "발밑에서 나왔다" 가 된다 — 원만 터지면 아무것도 안 한 것이다.
+                case BossDraw.BurrowStrike:
+                    boss.Position = ClampedInField(boss, _danger.Origin);
+                    boss.SetHidden(false);
+                    PlayFx("shatter", boss.Position, Mathf.Max(120f, _danger.Radius), loop: false);
+                    break;
+
                 // 탈것으로 방을 **가로질러 민다.** 그어 둔 띠 끝까지 가고,
                 // 닿아도 안 멈춘다 — 지나가는 것이 이 패턴이다.
                 // (이때만 근접이 닿는다는 것이 이 보스의 취약 창 조건이다)
@@ -1505,8 +1513,11 @@ namespace Game.Module.InGame
         /// </summary>
         private static float StunOnHitSeconds(BossDraw draw) => draw switch
         {
-            BossDraw.CoilWall => 1f,     // 똬리에 갇히면 1초
-            BossDraw.BrickFall => 0.6f,  // 벽돌에 깔리면 0.6초
+            BossDraw.CoilWall => 1f,       // 똬리에 갇히면 1초
+            BossDraw.BrickFall => 0.6f,    // 벽돌에 깔리면 0.6초
+            // 발밑이 뚫리며 튀어 올랐다. 넘어져 한 박자 못 움직인다
+            // (기획 2026-09-07 — "나타날 때 맞으면 스턴이 걸리고").
+            BossDraw.BurrowStrike => 0.8f,
             _ => 0f,
         };
 
@@ -1591,8 +1602,8 @@ namespace Game.Module.InGame
             BossDraw.Spit or BossDraw.CeilingCling
                 or BossDraw.CeilingSpread => "lava",
             BossDraw.Conveyor or BossDraw.SegmentLaunch
-                or BossDraw.DebrisFall or BossDraw.HatchOpen
-                or BossDraw.BrickFall or BossDraw.FullEmergence => "shatter",
+                or BossDraw.DebrisFall or BossDraw.BurrowStrike
+                or BossDraw.BrickFall => "shatter",
             _ => "burst",
         };
 

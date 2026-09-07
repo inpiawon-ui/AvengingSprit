@@ -163,9 +163,8 @@ namespace Game.Module.InGame
                     if (_bossExposedHit) OpenBreak(boss, "뻗은 목을 제때 때렸다");
                     break;
 
-                // ── 로봇 스네이크 — 되들어가기 전에 때렸다 ────────
-                case BossDraw.HatchOpen:
-                case BossDraw.FullEmergence:
+                // ── 로봇 스네이크 — 솟은 것을 되들어가기 전에 때렸다 ──
+                case BossDraw.BurrowStrike:
                     if (_bossExposedHit) OpenBreak(boss, "솟은 머리를 되들어가기 전에 때렸다");
                     break;
 
@@ -270,7 +269,6 @@ namespace Game.Module.InGame
 
         // 로봇 스네이크 — 구멍. **항상 하나는 나와 있다(100%).**
         //   5200 HP 라 55% 면 전투가 두 배로 길어진다. 대신 자리가 계속 바뀐다.
-        private const float SnakeHopSeconds = 3.0f;
 
         /// <summary>이 보스가 숨는 보스인가.</summary>
         private bool HidesAway
@@ -311,22 +309,15 @@ namespace Game.Module.InGame
                     TickPythonPresence(dt, boss);
                     break;
 
-                // ── 로봇 스네이크 — 구멍을 옮겨 다닌다. 늘 나와 있다 ──
+                // ── 로봇 스네이크 — 늘 나와 있다. 자리는 **솟아오름**이 정한다 ──
+                //
+                // ⚠ 전에는 3초마다 바닥 구멍 여섯을 돌며 **순간이동**했다.
+                //   솟고 들어가는 그림이 없어 그냥 튀어 다니는 것으로 보였고,
+                //   내가 어디 있든 상관이 없어 쫓기는 느낌도 없었다.
+                //   고정 구멍을 버렸다(기획 2026-09-07) — 이제 자리를 옮기는 것은
+                //   「솟아오름」뿐이고, 그것은 **내 발밑**으로 온다.
                 case BossState.Holes:
                     Show(boss);
-
-                    // ⚠ **겨누는 동안에는 안 옮긴다.** 예고를 띄워 놓고 다른 구멍으로
-                    //   솟으면 그어 둔 줄이 낡는다 — 레이저 빔이 아무도 없는 구멍에서
-                    //   뻗어 나왔다(2026-09-07 실측: 빔 출발 (193,−288) · 뱀 (360,−252)).
-                    //   파이썬도 같은 이유로 예고 중에는 안 들어간다.
-                    if (_brain != null && (_brain.IsTelegraphing || _dangerMove != null)) break;
-
-                    _presenceLeft -= dt;
-                    if (_presenceLeft > 0f) break;
-                    _presenceLeft = SnakeHopSeconds;
-                    _dangerTick++;                       // 다음 구멍
-                    boss.Position = ClampedInField(boss, HoleSpot(_dangerTick));
-                    PlayFx("shatter", boss.Position, 120f, loop: false);
                     break;
 
                 // ── 슬러지 — 천장 패턴 동안만 위에 있다 ────────────
@@ -367,13 +358,6 @@ namespace Game.Module.InGame
                 default: return new Vector2(_roomSize.x * Rand01(0.25f, 0.75f), -_roomSize.y + inset);
             }
         }
-
-        /// <summary>
-        /// 구멍 여섯 중 하나.
-        /// ⚠ <see cref="DangerShape"/> 와 **같은 표**를 쓴다 — 바닥 그림에 픽셀로 박힌 자리다.
-        ///   여기서 따로 계산하면 뱀이 구멍 아닌 데서 솟는다.
-        /// </summary>
-        private Vector2 HoleSpot(int tick) => DangerShape.HoleAtRoom(tick, _roomSize);
 
         private float Rand01(float a, float b) => Mathf.Lerp(a, b, (float)_rng.NextDouble());
 

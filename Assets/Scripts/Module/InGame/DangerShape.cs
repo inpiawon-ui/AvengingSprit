@@ -71,8 +71,6 @@ namespace Game.Module.InGame
             ///   "이상한 데다 쏜다" 가 된다. 던지는 물건은 나를 향해야 의미가 있다.
             /// </summary>
             NearTarget,
-            /// <summary>바닥 구멍 여섯 곳 중 <see cref="Count"/> 곳. 로봇 스네이크 전용.</summary>
-            Holes,
         }
 
         public Kind Shape;
@@ -95,28 +93,6 @@ namespace Game.Module.InGame
 
         /// <summary>실제로 그릴 도형 수. 배치가 없으면 언제나 하나다.</summary>
         private int Repeats => Layout == Spread.None || Count <= 1 ? 1 : Count;
-
-        // ── 바닥 구멍 여섯 (로봇 스네이크) ─────────────────────────
-        //
-        // ⚠ **바닥 그림에 픽셀로 박혀 있는 자리다** (58차 발주 · 720×936 기준
-        //   (180,288) (360,252) (540,288) (180,576) (360,612) (540,576)).
-        //   여기서는 방 크기에 대한 비율로 들고 있어야 방 크기가 바뀌어도 그림과 안 어긋난다.
-        //   그림과 코드가 같은 자를 쓰지 않으면 "구멍은 저기 그려져 있는데 뱀은 여기서 나온다".
-        private static readonly Vector2[] HoleAt =
-        {
-            new(0.25f, 0.3077f), new(0.50f, 0.2692f), new(0.75f, 0.3077f),
-            new(0.25f, 0.6154f), new(0.50f, 0.6538f), new(0.75f, 0.6154f),
-        };
-
-        /// <summary>
-        /// 구멍 i번째의 방 좌표. **로봇 스네이크 본체도 이 함수로 자리를 잡는다** —
-        /// 예고 도형과 몸이 다른 표를 쓰면 뱀이 구멍 아닌 데서 솟는다.
-        /// </summary>
-        public static Vector2 HoleAtRoom(int index, Vector2 roomSize)
-        {
-            var h = HoleAt[((index % HoleAt.Length) + HoleAt.Length) % HoleAt.Length];
-            return new Vector2(h.x * roomSize.x, -h.y * roomSize.y);
-        }
 
         /// <summary>i번째 도형의 중심. **판정과 그리기가 이 함수 하나를 같이 쓴다.**</summary>
         private Vector2 CenterOf(int i, Vector2 roomSize)
@@ -156,9 +132,6 @@ namespace Game.Module.InGame
                     return new Vector2(Mathf.Clamp(at.x, Radius, roomSize.x - Radius),
                                        Mathf.Clamp(at.y, -roomSize.y + Radius, -Radius));
                 }
-
-                case Spread.Holes:
-                    return HoleAtRoom(Tick + i, roomSize);
 
                 default:
                     return Origin;
@@ -703,19 +676,26 @@ namespace Game.Module.InGame
                     break;
 
                 // ═══ B05 로봇 스네이크 ════════════════════════════
-                // **덮개가 열리는 것이 곧 예고다.** 자리는 바닥에 박혀 있다.
-                case BossDraw.HatchOpen:
+                // **내가 선 자리를 뚫고 나온다.** 바닥에 구멍이 생기는 것이 예고다.
+                //
+                // ⚠ 전에는 바닥에 박힌 구멍 6개 중 몇을 골랐다. 그러면 내가 어디 있든
+                //   상관이 없어서 「저기서 뭔가 열리네」로 끝났다 —
+                //   버렸다(기획 2026-09-07). 나를 쫓아와야 비켜설 이유가 생긴다.
+                case BossDraw.BurrowStrike:
                     s.Shape = Kind.Disc;
+                    s.Origin = playerAt;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Holes;
-                    s.Count = Mathf.Max(1, m.Lanes);
                     break;
 
                 // 나온 머리가 빔을 쏜다. 조준선이 먼저 그려진다.
+                //
+                // ⚠ 길이는 **방 끝까지**다(정본). 표 값을 그대로 쓰면 범위 축소(2/3)에
+                //   같이 걸려 방 한복판에서 끊긴다 — 실측 624px, 방 대각선은 1181px.
+                //   이건 크기가 아니라 구조다.
                 case BossDraw.RailLaser:
                     s.Shape = Kind.Band;
                     s.Width = Mathf.Max(1f, W);
-                    s.Length = Mathf.Max(1f, L);
+                    s.Length = roomSize.magnitude;
                     break;
 
                 // 천장에서 파편 다섯. 그림자 밖으로.
@@ -724,14 +704,6 @@ namespace Game.Module.InGame
                     s.Radius = Mathf.Max(1f, R);
                     s.Layout = Spread.Scatter;
                     s.Count = Mathf.Max(2, m.Lanes);
-                    break;
-
-                // 구멍 여섯 중 다섯이 솟는다. **안 솟은 하나 위가 유일한 안전지대다.**
-                case BossDraw.FullEmergence:
-                    s.Shape = Kind.Disc;
-                    s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Holes;
-                    s.Count = Mathf.Clamp(m.Lanes, 1, 5);   // 여섯을 다 채우면 피할 곳이 없다
                     break;
 
                 // ═══ B06 슬러지 ═══════════════════════════════════

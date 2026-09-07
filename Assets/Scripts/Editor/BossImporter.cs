@@ -170,11 +170,11 @@ namespace Game.EditorTools
         {
             "Crush" or "SegmentThrust" or "HeadBite" or "StrafingRun" or "HeadLunge"
                 => BossPattern.Charge,
-            "HatchOpen" or "RailLaser" or "BodyShove" or "Conveyor"
+            "BurrowStrike" or "RailLaser" or "BodyShove" or "Conveyor"
                 => BossPattern.PopupLaser,
             "VenomCloud" or "Spit" or "CeilingSpread"
                 => BossPattern.VenomCloud,
-            "WreckingBall" or "CoilWall" or "BoosterDrop" or "Emerge" or "FullEmergence"
+            "WreckingBall" or "CoilWall" or "BoosterDrop" or "Emerge"
                 => BossPattern.Ring,
             "BrickFall" or "MissileSalvo" or "ExecutionLock" or "DebrisFall"
                 or "CeilingCling" or "SegmentLaunch"
