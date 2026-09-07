@@ -200,8 +200,8 @@ namespace Game.Module.InGame
             if (_entry == null || _moves == null) return null;
 
             // ⚠ 시험 시계는 **예고가 도는 동안에도** 줄어야 한다. 예고가 끝난 뒤에
-            //   재기 시작하면 실제 간격이 2초 + 예고(1초) = 3초가 된다.
-            bool randomMode = BattleDirector.BossRandomEvery2s;
+            //   재기 시작하면 실제 간격이 간격값 + 예고(1초) 가 된다.
+            bool randomMode = BattleDirector.BossRandomEvery;
             if (randomMode) _randomTimer -= dt;
 
             if (Pending != null)
@@ -259,12 +259,12 @@ namespace Game.Module.InGame
             return null;
         }
 
-        // ── 시험 — 2초마다 무작위 하나 ────────────────────────────
+        // ── 시험 — 일정 간격마다 무작위 하나 ──────────────────────
         //
         // 패턴별 쿨·거리·묶음을 전부 무시하고 **시계 하나**만 굴린다.
         // 조건대로 도는 흐름이 아니라 **네 연출이 다 제대로 나오는가**를 보는 모드다.
         //
-        // ⚠ 표의 쿨을 그대로 쓰면서 값만 2초로 낮출 수는 없다. 넷이 동시에 0 이 되어
+        // ⚠ 표의 쿨을 그대로 쓰면서 값만 낮출 수는 없다. 넷이 동시에 0 이 되어
         //   **한 프레임에 하나씩 연달아** 나가 버린다(시계를 각자 들고 있으므로).
         //   그래서 여기서는 시계를 하나로 합친다.
         private float _randomTimer;

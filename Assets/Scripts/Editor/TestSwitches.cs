@@ -217,31 +217,32 @@ namespace Game.EditorTools
             return true;
         }
 
-        // ── 보스 스킬 2초마다 무작위 ──────────────────────────────
+        // ── 보스 스킬 무작위로 3초마다 ────────────────────────────
         //
         // 「스킬 버튼」(보스 아이들)은 **내가 고른 것**만 나오므로 네 연출이
         // 실제 흐름 속에서 다 제대로 나오는지는 못 본다. 이 스위치는 보스가
-        // 스스로 돌되 쿨·거리·묶음을 무시하고 2초마다 하나를 뽑는다.
+        // 스스로 돌되 쿨·거리·묶음을 무시하고 일정 간격으로 하나를 뽑는다.
+        // 간격은 `BattleDirector.BossRandomEverySeconds`(3초) 한 곳에서 정한다.
         //
-        // ⚠ 표의 쿨 값을 2초로 낮추는 방식은 안 된다 — 넷이 동시에 0 이 되어
+        // ⚠ 표의 쿨 값을 낮추는 방식은 안 된다 — 넷이 동시에 0 이 되어
         //   한 프레임에 연달아 나간다. 시계를 하나로 합쳐야 한다.
-        private const string BossRandomMenu = "Tools/Game/테스트 — 보스 스킬 2초마다 무작위";
+        private const string BossRandomMenu = "Tools/Game/테스트 — 보스 스킬 무작위로 3초마다";
 
         [MenuItem(BossRandomMenu)]
         private static void ToggleBossRandom()
-            => BattleDirector.BossRandomEvery2s = !BattleDirector.BossRandomEvery2s;
+            => BattleDirector.BossRandomEvery = !BattleDirector.BossRandomEvery;
 
         [MenuItem(BossRandomMenu, true)]
         private static bool ToggleBossRandomValidate()
         {
-            Menu.SetChecked(BossRandomMenu, BattleDirector.BossRandomEvery2s);
+            Menu.SetChecked(BossRandomMenu, BattleDirector.BossRandomEvery);
             return true;
         }
 
         // ── 벽 보스 머리 계속 내놓기 ──────────────────────────────
         //
         // 파이썬 한 바퀴는 2.6초인데 패턴이 나갈 수 있는 것은 1초(Strike)뿐이다.
-        // 쿨을 2초로 줄여도 실제 간격은 2.6~5초로 벌어진다 — 연출만 훑을 때 답답하다.
+        // 시험 간격을 줄여도 실제 간격은 2.6~5초로 벌어진다 — 연출만 훑을 때 답답하다.
         //
         // ⚠ 그 리듬은 이 보스의 정체다. 확인용이지 기본값이 아니다.
         private const string WallStayMenu = "Tools/Game/테스트 — 벽 보스 머리 계속 내놓기";

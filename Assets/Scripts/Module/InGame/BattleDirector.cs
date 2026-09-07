@@ -2108,7 +2108,7 @@ namespace Game.Module.InGame
         public static float BossCooldownMul => BossHalfCooldown ? 0.5f : 1f;
 
         /// <summary>
-        /// **연출 확인용 — 네 패턴이 2초마다 무작위로 하나씩 나간다.**
+        /// **연출 확인용 — 네 패턴이 일정 간격으로 무작위로 하나씩 나간다.**
         ///
         /// 패턴별 쿨(8~20초)·거리 조건·묶음을 전부 무시하고, 한 개의 시계만 굴려
         /// 그때그때 하나를 뽑는다. 「스킬 버튼」(`BossIdleOnly`)은 무엇이 나올지
@@ -2116,28 +2116,33 @@ namespace Game.Module.InGame
         /// 이 스위치는 보스가 스스로 돌되 네 개를 골고루 보여 준다.
         ///
         /// ⚠ 정본 값을 고치는 것이 아니다. 끄면 즉시 표대로 돌아온다.
-        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 스킬 2초마다 무작위` 로 켜고 끈다.
+        /// 에디터 메뉴 `Tools/Game/테스트 — 보스 스킬 무작위로 3초마다` 로 켜고 끈다.
         /// </summary>
-        public static bool BossRandomEvery2s
+        public static bool BossRandomEvery
         {
 #if UNITY_EDITOR
-            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossRandomEvery2s", false);
-            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossRandomEvery2s", value);
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.BossRandomEvery", false);
+            set => UnityEditor.EditorPrefs.SetBool("AVSR.BossRandomEvery", value);
 #else
             get => false;
             set { }
 #endif
         }
 
-        /// <summary>위 스위치가 켜졌을 때 패턴 사이 간격(초).</summary>
-        public const float BossRandomEverySeconds = 2f;
+        /// <summary>
+        /// 위 스위치가 켜졌을 때 패턴 사이 간격(초).
+        ///
+        /// ⚠ 이름에 숫자를 박지 않는다. 2초로 시작했다가 **너무 잦아서** 3초로
+        ///   올렸는데, 이름이 `...Every2s` 였으면 그 순간부터 거짓말이 된다.
+        /// </summary>
+        public const float BossRandomEverySeconds = 3f;
 
         /// <summary>
         /// **벽 보스의 머리를 계속 내놓는다.**
         ///
         /// 파이썬은 나왔다(0.4) → 때리고(1.0) → 들어갔다(0.4) → 미끄러진다(0.8) 를
         /// 반복한다. 한 바퀴 2.6초 중 **패턴이 나갈 수 있는 것은 1초뿐**이라,
-        /// 쿨을 2초로 줄여도 실제 간격은 2.6~5초로 벌어진다.
+        /// 시험 간격을 줄여도 실제 간격은 2.6~5초로 벌어진다.
         /// 연출만 빠르게 훑어볼 때 이 스위치를 켜면 머리가 안 들어가고
         /// 시계 그대로 나간다.
         ///
