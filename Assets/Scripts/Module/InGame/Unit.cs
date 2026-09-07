@@ -867,17 +867,6 @@ namespace Game.Module.InGame
         /// 좌우 반전과 숨쉬기를 **한 군데서** 곱해 넣는다.
         /// 둘을 따로 쓰면 나중에 쓴 쪽이 앞의 것을 지운다.
         /// </summary>
-        /// <summary>
-        /// 몸 그림을 돌린다. **방향 그림이 한 장뿐인 탑뷰 유닛**이 진행 방향을
-        /// 보게 할 때 쓴다 — 파이썬은 정면(s) 한 방향뿐인데 가로로 지나가야 한다.
-        /// 0 이면 원래대로.
-        /// </summary>
-        public void SetBodyRotation(float degrees)
-        {
-            if (_body == null) return;
-            _body.transform.localEulerAngles = new Vector3(0f, 0f, degrees);
-        }
-
         private void ApplyBodyScale()
         {
             if (_body == null) return;

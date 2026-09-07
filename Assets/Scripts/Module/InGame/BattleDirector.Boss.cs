@@ -114,6 +114,13 @@ namespace Game.Module.InGame
             // 예고 시간과 정확히 같은 시간 동안 나므로 도착이 곧 발동이다.
             BeginFlight(m, boss, _brain != null ? _brain.TelegraphTotal : 1f);
 
+            // 물건이 **떠나는 순간** 머리가 한 번 휘둘러야 "뱉었다 · 던졌다" 로 읽힌다.
+            //
+            // ⚠ 발동 순간에 걸었더니 탄이 이미 다 날아간 뒤에 머리가 움직였다 —
+            //   탄은 예고 내내 날아가고 **도착이 곧 발동**이기 때문이다.
+            if (m.Draw == BossDraw.VenomCloud || m.Draw == BossDraw.BrickFall)
+                BeginHeadKick();
+
             // 램프는 **패턴을 안 가린다.** 무엇이 오든 "온다" 를 알리는 것이라
             // 크러셔의 네 패턴에 다 뜬다 — 원작이 그렇게 쓴다.
             BeginLamp(boss);
@@ -577,6 +584,7 @@ namespace Game.Module.InGame
                 case BossDraw.HeadLunge:
                     BeginHeadLunge(_danger.Length);
                     break;
+
 
                 // 머리가 앞장서 방을 가로지른다. 그린 줄 그대로.
                 case BossDraw.BodyShove:
@@ -1073,7 +1081,12 @@ namespace Game.Module.InGame
             public RectTransform Rt;
             public Image Img;
             public Vector2 From, To;
+            /// <summary>이 조각만의 포물선 높이 배율. 여럿이 같이 날 때 겹치지 않게 한다.</summary>
+            public float ArcMul;
         }
+
+        /// <summary>여럿이 함께 날 때 출발점을 좌우로 벌리는 폭(한 조각당).</summary>
+        private const float LaunchSpreadMeters = 0.55f;
 
         private readonly List<Flight> _flights = new();
         private readonly List<Vector2> _flightTargets = new();
@@ -1205,8 +1218,15 @@ namespace Game.Module.InGame
                 bool on = i < _flying;
                 f.Rt.gameObject.SetActive(on);
                 if (!on) continue;
-                f.From = boss.Position;
+                // ⚠ 셋을 **같은 점에서 같은 포물선**으로 쏘면 화면에서 한 덩어리로 보인다.
+                //   실측: 벽돌 3개가 (617,-123) (620,-124) (616,-123) — 3px 차이였다.
+                //   도착점만 흩어 놓아 봐야 날아가는 내내 겹쳐 있다.
+                //   출발점을 입 너비만큼 벌리고 포물선 높이를 조각마다 달리한다.
+                float mid = (_flying - 1) * 0.5f;
+                float side = (i - mid) * LaunchSpreadMeters * _pxPerMeter;
+                f.From = boss.Position + new Vector2(side, 0f);
                 f.To = _flightTargets[i];
+                f.ArcMul = 1f + (i - mid) * 0.45f;
                 f.Img.sprite = _missileFrames[0];
             }
             TickFlight(0f);   // 첫 프레임부터 제자리에 — (0,0) 에 한 프레임 뜨는 것을 막는다
@@ -1236,7 +1256,7 @@ namespace Game.Module.InGame
         private static Vector2 FlightAt(Flight f, float t)
         {
             var p = Vector2.Lerp(f.From, f.To, t);
-            float lift = (f.To - f.From).magnitude * MissileArcRatio;
+            float lift = (f.To - f.From).magnitude * MissileArcRatio * (f.ArcMul <= 0f ? 1f : f.ArcMul);
             return p + new Vector2(0f, lift * 4f * t * (1f - t));
         }
 

@@ -226,6 +226,8 @@ namespace Game.Module.InGame
             {
                 if (!IsShoving) TickHeadLunge(dt, _boss);
                 TickBodyShove(dt);
+                // 뻗는 중이거나 가로지르는 중에는 그쪽이 머리 그림을 쥔다
+                if (!IsShoving && !IsLunging) TickHeadKick(dt, _boss);
             }
             if (_pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
             if (_pyBodySpeed <= 0f) return;
@@ -379,6 +381,9 @@ namespace Game.Module.InGame
         private int _wallArch = -1;
         private Sprite[] _pyOut, _pyIn, _pyDie;
 
+        /// <summary>가로지를 때 쓰는 옆보기 머리 3장(입 다뭄 → 조금 → 활짝).</summary>
+        private Sprite[] _pyCross;
+
         /// <summary>지금 머리가 나와 있는 아치. 스킬이 어디서 나가는지도 이 자리다.</summary>
         private int WallArch => _wallArch < 0 ? 0 : _wallArch;
 
@@ -401,6 +406,8 @@ namespace Game.Module.InGame
         private void EnsurePythonHeadFrames()
         {
             if (_pyOut != null) return;
+            _pyCross = new Sprite[3];
+            for (int i = 0; i < 3; i++) _pyCross[i] = UnitGet("python", $"e_cross{i + 1}");
             _pyOut = new Sprite[4];
             _pyIn = new Sprite[4];
             _pyDie = new Sprite[4];
@@ -624,12 +631,6 @@ namespace Game.Module.InGame
 
         private float _shoveTimer;
         private float _shoveY, _shoveLane;
-        /// <summary>
-        /// 가로지를 때 머리를 얼마나 돌리는가.
-        /// 정면 그림은 얼굴이 아래(-y)를 본다. +90° 면 오른쪽(+x)을 본다.
-        /// </summary>
-        private const float ShoveHeadDegrees = 90f;
-
         private Unit _shoveHead;
         private Vector2 _shoveHome;
 
@@ -684,23 +685,30 @@ namespace Game.Module.InGame
                 _pyDeepClip.anchoredPosition = new Vector2(0f, _shoveY + _shoveLane * 0.5f);
 
                 // 몸은 머리 **뒤쪽**으로만 이어진다 — 머리보다 앞서 나가지 않는다.
+                //
+                // ⚠ 여기서 `lift` 를 쓰면 안 된다. 그것은 몸을 **벽 아래에 붙일 때**
+                //   그림 위쪽 여백(36px)을 걷어내는 보정값이다. 가로지를 때는 붙일
+                //   벽이 없는데 그대로 써서 몸통 줄이 머리보다 36px 위로 떠 있었다 —
+                //   화면에서는 머리와 몸이 어긋난 것으로 보였다.
+                //   지나갈 때는 줄 한가운데(클립 위쪽 = 0)에 그대로 놓는다.
                 for (int i = 0; i < _pyDeep.Length; i++)
                 {
                     var rt = (RectTransform)_pyDeep[i].transform;
-                    rt.sizeDelta = new Vector2(tile, band);
-                    rt.anchoredPosition = new Vector2(headX - tile * (i + 1), lift);
+                    rt.sizeDelta = new Vector2(tile, _shoveLane);
+                    rt.anchoredPosition = new Vector2(headX - tile * (i + 1), 0f);
                 }
 
                 // 머리를 그 줄에 태워 앞장세운다.
                 //
-                // ⚠ 파이썬 머리는 **정면(s) 한 방향뿐**이다. 그대로 두면 오른쪽으로
-                //   가면서 얼굴은 아래를 본다. 탑뷰 그림이므로 90° 돌리면
-                //   얼굴이 진행 방향(오른쪽)을 보고, 목이 왼쪽 — 즉 몸이 따라오는
-                //   쪽으로 붙는다. 그림을 새로 받을 필요가 없다.
+                // ⚠ 한때 정면(s) 그림을 90° 돌려 썼다. **그러면 안 된다.**
+                //   돌리면 얼굴의 명암이 몸통과 직각으로 어긋나고(몸은 등이 위·배가 아래,
+                //   머리는 배가 오른쪽), 머리 두께도 몸통의 절반이 된다 —
+                //   화면에서 머리와 몸이 따로 논다(기획 2026-09-07).
+                //   옆을 보는 머리 그림 3장을 따로 받았다. 지나가는 동안 입을 여닫는다.
                 if (_shoveHead != null && _shoveHead.IsAlive)
                 {
                     _shoveHead.SetHidden(false);
-                    _shoveHead.SetBodyRotation(ShoveHeadDegrees);
+                    SetCrossFrame(_shoveHead, p);
                     _shoveHead.Position = new Vector2(headX, _shoveY);
                 }
                 return;
@@ -711,7 +719,7 @@ namespace Game.Module.InGame
             {
                 if (_shoveHead.IsAlive)
                 {
-                    _shoveHead.SetBodyRotation(0f);
+                    SetHeadFrame(_shoveHead, _pyOut, 1f);
                     _shoveHead.Position = _shoveHome;
                 }
                 _shoveHead = null;
@@ -869,6 +877,59 @@ namespace Game.Module.InGame
 
             _wallArch = best;
             boss.Position = new Vector2(ArchX(best), HeadY());
+        }
+
+        // ── 스킬을 쓸 때의 머리 동작 ─────────────────────────────
+        //
+        // 파이썬은 **스킬 자세 그림이 없다.** 그래서 무슨 스킬을 써도 머리가
+        // `out4` 한 장으로 가만히 있었다 — 「경고만 뜨고 아무 일도 안 일어난다」의
+        // 정체가 이것이다.
+        //
+        // 다만 나오는 4단계(`out1~4`)가 곧 **머리가 구멍 안팎으로 오가는 그림**이다.
+        // 뒤로 뺐다(→ out1 쪽) 앞으로 내치면(→ out4) 「젖혔다 친다」가 된다.
+        // 새 그림 없이 있는 그림으로 진짜 동작을 만든다.
+
+        private const float KickBackSeconds = 0.12f;   // 뒤로 젖히는 시간
+        private const float KickHitSeconds = 0.10f;    // 앞으로 내치는 시간
+        /// <summary>젖힐 때 얼마나 들어가는가. 0 이면 구멍 속, 1 이면 다 나온 자리.</summary>
+        private const float KickDepth = 0.35f;
+
+        private float _kickTimer;
+
+        private float KickTotal => KickBackSeconds + KickHitSeconds;
+
+        /// <summary>스킬이 나가는 순간 머리를 한 번 휘두른다.</summary>
+        private void BeginHeadKick()
+        {
+            if (!IsWallBoss) return;
+            _kickTimer = KickTotal;
+        }
+
+        private void TickHeadKick(float dt, Unit boss)
+        {
+            if (_kickTimer <= 0f || boss == null || boss.IsHidden) return;
+            _kickTimer -= dt;
+
+            float t = KickTotal - _kickTimer;                       // 시작부터 흐른 시간
+            float f = t <= KickBackSeconds
+                ? Mathf.Lerp(1f, KickDepth, t / KickBackSeconds)    // 젖힌다 — 천천히
+                : Mathf.Lerp(KickDepth, 1f,
+                             (t - KickBackSeconds) / KickHitSeconds); // 친다 — 빠르게
+            SetHeadFrame(boss, _pyOut, Mathf.Clamp01(f) * 0.999f);
+
+            if (_kickTimer <= 0f) { _kickTimer = 0f; SetHeadFrame(boss, _pyOut, 1f); }
+        }
+
+        /// <summary>
+        /// 지나가는 동안 입을 여닫는다. 한 번 지나가는 사이 두 번 문다 —
+        /// 그림이 세 장뿐이라 여닫이를 반복해야 살아 있는 것으로 보인다.
+        /// </summary>
+        private void SetCrossFrame(Unit boss, float progress)
+        {
+            if (_pyCross == null || _pyCross[0] == null) return;
+            float cycle = Mathf.Repeat(progress * 2f, 1f);          // 두 번 반복
+            int i = cycle < 0.34f ? 0 : cycle < 0.67f ? 1 : 2;      // 다뭄 → 조금 → 활짝
+            if (_pyCross[i] != null) boss.SetSpriteOverride(_pyCross[i]);
         }
 
         private void SetHeadFrame(Unit boss, Sprite[] frames, float t)
