@@ -203,6 +203,42 @@ namespace Game.Module.InGame
             if (BossAtWall(_boss)) OpenBreak(_boss, "활강이 구조물에 걸렸다");
         }
 
+        // ── 처형 조준 — 예고 내내 따라온다 ──────────────────────
+        //
+        // 표식을 **쏘는 순간의 자리**에 못 박아 뒀더니 걸어 나가기만 하면 피해졌다.
+        // 이름이 「처형」인데 가장 쉬운 패턴이었다(기획 2026-09-07 —
+        // "없어질 때까지 따라가다가 마지막 위치로 날아가야 유도가 되는 느낌").
+        //
+        // 예고가 끝날 때까지 나를 쫓아오고, **사라진 그 자리**를 친다.
+        // 다만 내 발보다 조금 느리다 — 방향을 확 틀면 뒤에 처진다.
+        // 그것이 이 패턴의 답이다(그마저 늦으면 몸을 갈아타는 것이 답이다).
+
+        /// <summary>
+        /// 표식이 나를 쫓아오는 속도. **내 이동 속도**에 곱한다 —
+        /// 몸이 바뀌어도 난이도가 같으려면 절대값이 아니라 배수여야 한다.
+        ///
+        /// ⚠ 0.8 은 **못 피한다.** 예고 1.8초 내내 한 방향으로 달려도
+        ///   마지막 거리가 128px 이라 반경 144px 안이었다(실측).
+        ///   0.7 이면 벌어지는 속도가 초당 0.3×308=92px 라 1.8초에 166px —
+        ///   끝까지 달리면 겨우 빠져나간다. 그것이 이 패턴의 답이다.
+        /// </summary>
+        private const float LockFollowSpeedMul = 0.7f;
+
+        private void TickExecutionLock(float dt)
+        {
+            if (_lockMark == null || _brain == null || !_brain.IsTelegraphing) return;
+            if (_dangerMove == null || _dangerMove.Draw != BossDraw.ExecutionLock) return;
+
+            var me = Avatar;
+            if (me == null) return;
+
+            float speed = Mathf.Max(1f, me.MoveSpeed * LockFollowSpeedMul);
+            _danger.Origin = Vector2.MoveTowards(_danger.Origin, me.Position, speed * dt);
+
+            if (_dangerView != null) _dangerView.Reaim(_danger);
+            _lockMark.MoveTo(_danger.Origin);
+        }
+
         private void TickKingpinDrop(float dt)
         {
             if (_dropLeft <= 0f) return;

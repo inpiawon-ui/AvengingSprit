@@ -118,6 +118,20 @@ namespace Game.Module.InGame
             SetMaterialDirty();
         }
 
+        /// <summary>
+        /// 그리고 있던 도형의 **자리만** 갈아 끼운다.
+        ///
+        /// ⚠ `Show` 를 다시 부르면 안 된다 — 맥박(`_pulse`)과 진행도(`_progress`)를
+        ///   0 으로 되돌려서, 매 프레임 부르면 예고가 영영 빨라지지 않는다.
+        ///   따라다니는 예고(킹핀 「처형 조준」)가 이 자리를 쓴다.
+        /// </summary>
+        public void Reaim(DangerShape shape)
+        {
+            if (!IsShowing) return;
+            _shape = shape;
+            SetVerticesDirty();
+        }
+
         public void Hide()
         {
             _shape = default;
