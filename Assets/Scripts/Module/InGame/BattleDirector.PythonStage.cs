@@ -130,7 +130,13 @@ namespace Game.Module.InGame
             _neckClip = (RectTransform)nc.transform;
             _neckClip.anchorMin = _neckClip.anchorMax = new Vector2(0f, 1f);
             _neckClip.pivot = new Vector2(0.5f, 1f);
-            var neckArt = GetSprite("obj_python_neck");
+            // 굵기가 다른 세 장을 머리 쪽부터 벽 쪽으로 가늘게 깐다.
+            _neckArt = new[]
+            {
+                GetSprite("obj_python_neck_1"),   // 36 px — 머리 쪽
+                GetSprite("obj_python_neck_2"),   // 30 px — 가운데
+                GetSprite("obj_python_neck_3"),   // 24 px — 벽 쪽
+            };
             _neck = new Image[12];
             for (int i = 0; i < _neck.Length; i++)
             {
@@ -138,11 +144,13 @@ namespace Game.Module.InGame
                 ng.transform.SetParent(_neckClip, false);
                 var rt = (RectTransform)ng.transform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
-                rt.pivot = new Vector2(0.5f, 0f);
+                // ⚠ pivot 이 아래변(0)이면 조각이 제 칸보다 **한 칸 위**에 그려진다 —
+                //   0번은 통째로 위로 잘려 나가고 맨 아래 한 칸이 비어, 목이 머리에
+                //   안 닿고 끊겨 보였다. 위변(1)이어야 제 칸을 채운다.
+                rt.pivot = new Vector2(0.5f, 1f);
                 rt.sizeDelta = new Vector2(NeckTilePx, NeckTilePx);
                 rt.anchoredPosition = new Vector2(0f, -i * NeckTilePx);
                 var nimg = ng.GetComponent<Image>();
-                nimg.sprite = neckArt;
                 nimg.raycastTarget = false;
                 _neck[i] = nimg;
             }
@@ -499,9 +507,13 @@ namespace Game.Module.InGame
         // 예고만 뜨고 아무것도 안 움직이면 「경고만 뜨고 끝」이 된다.
         // **머리가 그어 둔 띠 끝까지 실제로 내려갔다 돌아온다.**
         //
-        // 목은 전용 그림 `obj_python_neck`(64×64)을 **세로로 이어 붙인다.**
+        // 목은 전용 그림 `obj_python_neck_1~3`(각 64×64)을 **세로로 이어 붙인다.**
         // 위아래 줄이 맞물리는 심리스라 몇 장을 쌓아도 이음매가 안 보인다.
-        // 굵기는 그림 안에서 36 px(x 14~49) 이고, 머리 목(y24 에서 24 px)과 맞춘 값이다.
+        //
+        // 굵기가 셋이다 — 머리 쪽 36 px, 가운데 30 px, 벽 쪽 24 px.
+        // **한 장을 반복하면 굵기가 일정해 고무호스로 보인다.** 뻗을수록 밑동이
+        // 가늘어져야 「잡아 늘였다」가 읽힌다. 길이에 상관없이 세 토막이
+        // 같은 비율을 차지하도록 매 프레임 나눠 준다.
         //
         // ⚠ 예전에는 가로 몸통 그림을 90° 눕혀 썼다. 굵기가 72 px 로 두 배였고
         //   색도 초록이라, 머리(주황 목)와 안 이어지고 덩어리가 뚝뚝 끊겨 보였다.
@@ -517,6 +529,8 @@ namespace Game.Module.InGame
 
         private RectTransform _neckClip;
         private Image[] _neck;
+        /// <summary>[0]=머리 쪽 굵은 것 … [2]=벽 쪽 가는 것.</summary>
+        private Sprite[] _neckArt;
 
         /// <summary>지금 목을 뻗는 중인가. 이 동안에는 머리가 안 들어간다.</summary>
         private bool IsLunging => _lungeTimer > 0f;
@@ -582,6 +596,20 @@ namespace Game.Module.InGame
             _neckClip.gameObject.SetActive(true);
             _neckClip.sizeDelta = new Vector2(NeckTilePx, len);
             _neckClip.anchoredPosition = new Vector2(ArchX(WallArch), -band);
+
+            // 위(i=0)가 벽, 아래가 머리다. 보이는 토막을 셋으로 갈라
+            // 벽 쪽부터 가는 것 → 굵은 것 순으로 깐다.
+            if (_neckArt == null) return;
+            int shown = Mathf.Clamp(Mathf.CeilToInt(len / NeckTilePx), 1, _neck.Length);
+            for (int i = 0; i < _neck.Length; i++)
+            {
+                if (i >= shown) { _neck[i].enabled = false; continue; }
+                // 벽에서 얼마나 내려왔는가 0~1 → 0 이면 벽 쪽(가는 것), 1 이면 머리 쪽(굵은 것)
+                float t = shown <= 1 ? 1f : i / (float)(shown - 1);
+                int art = t < 0.34f ? 2 : t < 0.67f ? 1 : 0;
+                _neck[i].sprite = _neckArt[art];
+                _neck[i].enabled = _neckArt[art] != null;
+            }
         }
 
         // ── 몸통 밀기 ────────────────────────────────────────────
