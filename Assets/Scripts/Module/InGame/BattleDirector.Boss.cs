@@ -578,9 +578,9 @@ namespace Game.Module.InGame
                     BeginHeadLunge(_danger.Length);
                     break;
 
-                // 내가 선 줄로 몸이 밀고 들어왔다 물러난다.
+                // 머리가 앞장서 방을 가로지른다. 그린 줄 그대로.
                 case BossDraw.BodyShove:
-                    BeginBodyShove(_danger.Origin.x, _danger.Width, _danger.Length);
+                    BeginBodyShove(boss, _danger.Origin.y, _danger.Width);
                     break;
 
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반

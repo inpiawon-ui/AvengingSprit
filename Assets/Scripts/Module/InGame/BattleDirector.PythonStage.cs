@@ -216,7 +216,7 @@ namespace Game.Module.InGame
             TickPythonDeath(dt);
             if (_pyDying == null)
             {
-                TickHeadLunge(dt, _boss);
+                if (!IsShoving) TickHeadLunge(dt, _boss);
                 TickBodyShove(dt);
             }
             if (_pyBody == null || _pyBody1 == null || _pyBody2 == null) return;
@@ -594,31 +594,31 @@ namespace Game.Module.InGame
         private const float ShoveHoldSeconds = 0.35f;
         private const float ShoveBackSeconds = 0.45f;
 
-        private float _shoveTimer, _shoveDepth;
-        private float _shoveX, _shoveLane;
+        private float _shoveTimer;
+        private float _shoveY, _shoveLane;
+        private Unit _shoveHead;
+        private Vector2 _shoveHome;
 
         private bool IsShoving => _shoveTimer > 0f;
         private float ShoveTotal => ShoveOutSeconds + ShoveHoldSeconds + ShoveBackSeconds;
 
-        /// <param name="x">밀고 나오는 줄의 한가운데(방 좌표).</param>
-        /// <param name="lanePx">그 줄의 폭. 그린 도형과 같은 값이어야 한다.</param>
-        /// <param name="depthPx">얼마나 깊이 미는가.</param>
-        private void BeginBodyShove(float x, float lanePx, float depthPx)
+        /// <param name="y">지나가는 줄의 한가운데(방 좌표).</param>
+        /// <param name="lanePx">그 줄의 두께. 그린 도형과 같은 값이어야 한다.</param>
+        private void BeginBodyShove(Unit boss, float y, float lanePx)
         {
-            _shoveX = x;
+            _shoveY = y;
             _shoveLane = Mathf.Max(_pxPerMeter, lanePx);
-            _shoveDepth = Mathf.Max(_pxPerMeter, depthPx);
             _shoveTimer = ShoveTotal;
+            _shoveHead = boss;
+            _shoveHome = boss != null ? boss.Position : Vector2.zero;
+            ShowNeck(0f);                 // 뻗은 목이 있으면 거둔다
         }
 
-        private float ShoveOffset()
-        {
-            float t = ShoveTotal - _shoveTimer;
-            if (t <= ShoveOutSeconds) return _shoveDepth * (t / ShoveOutSeconds);
-            if (t <= ShoveOutSeconds + ShoveHoldSeconds) return _shoveDepth;
-            float back = (t - ShoveOutSeconds - ShoveHoldSeconds) / ShoveBackSeconds;
-            return _shoveDepth * (1f - Mathf.Clamp01(back));
-        }
+        /// <summary>
+        /// 몸이 왼쪽 벽 밖에서 들어와 오른쪽 벽 밖으로 나가기까지의 진행도(0~1).
+        /// </summary>
+        private float ShoveProgress()
+            => Mathf.Clamp01((ShoveTotal - _shoveTimer) / ShoveTotal);
 
         private void TickBodyShove(float dt)
         {
@@ -632,18 +632,58 @@ namespace Game.Module.InGame
                 for (int i = 0; i < _pyBody.Length; i++)
                     if (_pyBody[i].enabled == hideBehind) _pyBody[i].enabled = !hideBehind;
 
-            // P3 는 평소에도 1 m 나와 있다. 미는 동안에는 둘 중 깊은 쪽을 쓴다.
-            float baseDepth = _wallPhaseIndex >= 2 ? DeepBodyMeters * _pxPerMeter : 0f;
-            float depth = Mathf.Max(baseDepth, IsShoving ? ShoveOffset() : 0f);
-            if (depth <= 1f) { _pyDeepClip.gameObject.SetActive(false); return; }
+            float band = WallMeterHeight * _pxPerMeter;
+            float tile = BodyTileMeters * _pxPerMeter;
+            float lift = BodyArtTopPx * (band / BodyArtHeightPx);
 
+            // ── 가로지르는 중 ────────────────────────────────
+            //
+            // **머리가 앞장서고 몸이 뒤를 따른다.** 몸만 지나가면 어디서 온 것인지
+            // 알 수 없다 — 얼굴이 먼저 보여야 「저놈이 지나간다」가 된다.
+            if (IsShoving)
+            {
+                float p = ShoveProgress();
+                float headX = -tile * 0.5f + (_roomSize.x + tile) * p;
+
+                _pyDeepClip.gameObject.SetActive(true);
+                _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, _shoveLane);
+                _pyDeepClip.anchoredPosition = new Vector2(0f, _shoveY + _shoveLane * 0.5f);
+
+                // 몸은 머리 **뒤쪽**으로만 이어진다 — 머리보다 앞서 나가지 않는다.
+                for (int i = 0; i < _pyDeep.Length; i++)
+                {
+                    var rt = (RectTransform)_pyDeep[i].transform;
+                    rt.sizeDelta = new Vector2(tile, band);
+                    rt.anchoredPosition = new Vector2(headX - tile * (i + 1), lift);
+                }
+
+                // 머리를 그 줄에 태워 앞장세운다.
+                if (_shoveHead != null && _shoveHead.IsAlive)
+                {
+                    _shoveHead.SetHidden(false);
+                    _shoveHead.Position = new Vector2(headX, _shoveY);
+                }
+                return;
+            }
+
+            // 지나간 뒤 — 머리를 제 구멍으로 돌려놓는다
+            if (_shoveHead != null)
+            {
+                if (_shoveHead.IsAlive) _shoveHead.Position = _shoveHome;
+                _shoveHead = null;
+            }
+
+            // ── P3 상시 노출 — 벽 아래에 붙어 있는다 ─────────
+            if (_wallPhaseIndex < 2) { _pyDeepClip.gameObject.SetActive(false); return; }
             _pyDeepClip.gameObject.SetActive(true);
-            // 미는 동안에는 **그 줄 폭만큼만** 보인다. P3 의 상시 노출은 방 전체다.
-            bool lane = IsShoving && _shoveLane > 0f;
-            _pyDeepClip.sizeDelta = new Vector2(lane ? _shoveLane : _roomSize.x, depth);
-            _pyDeepClip.anchoredPosition =
-                new Vector2(lane ? _shoveX - _shoveLane * 0.5f : 0f,
-                            -WallMeterHeight * _pxPerMeter);
+            _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, DeepBodyMeters * _pxPerMeter);
+            _pyDeepClip.anchoredPosition = new Vector2(0f, -band);
+            for (int i = 0; i < _pyDeep.Length; i++)
+            {
+                var rt = (RectTransform)_pyDeep[i].transform;
+                rt.sizeDelta = new Vector2(tile, band);
+                rt.anchoredPosition = new Vector2(i * tile, lift);
+            }
         }
 
         // ── 죽음 ─────────────────────────────────────────────────

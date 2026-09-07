@@ -635,23 +635,21 @@ namespace Game.Module.InGame
                     break;
 
                 // 벽 전체가 방 안으로 밀고 들어온다. **아래로 내려가는 것 말고는 없다.**
+                // 머리가 앞장서고 몸이 따라 **방을 가로지른다.** 가로 한 줄이다.
                 //
-                // ⚠ 처음에는 **방 폭을 통째로** 덮었다. 그러면 좌우로 갈 데가 없고
-                //   아래로만 도망쳐야 하는데, 깊이까지 내 자리에 맞추니
-                //   **피할 데가 아예 없었다**(기획 2026-09-07 — "어디로 피하냐").
-                //   벽에 뚫린 구멍은 여럿이므로, **내가 선 줄 하나**로만 밀고 나온다.
-                //   폭은 표 값(2 m), 깊이는 내가 선 자리까지 — 옆으로 비키면 산다.
+                // ⚠ 두 공격의 축이 갈려야 한다 — 「머리 뻗기」가 세로(내 x 줄)이므로
+                //   이쪽은 가로(내 y 줄)다. 하나는 좌우로, 하나는 위아래로 피하게 되어
+                //   서로 다른 문제가 된다.
+                //   한때 방 폭을 통째로 덮었고(피할 데 없음), 한때 세로로 만들었다
+                //   (머리 뻗기와 같은 축이라 구분이 안 됨). 둘 다 아니다.
                 case BossDraw.BodyShove:
                 {
-                    float band = WallBandDepth(roomSize);
                     float lane = Mathf.Max(1f, W);
-                    float depth = Mathf.Clamp(-playerAt.y - band + lane * 0.5f,
-                                              lane, roomSize.y - band);
                     s.Shape = Kind.Band;
-                    s.Origin = new Vector2(playerAt.x, -band);
-                    s.Dir = Vector2.down;
+                    s.Origin = new Vector2(0f, playerAt.y);
+                    s.Dir = Vector2.right;
                     s.Width = lane;
-                    s.Length = depth;
+                    s.Length = roomSize.x;
                     break;
                 }
 
