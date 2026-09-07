@@ -4600,16 +4600,19 @@ namespace Game.Module.InGame
         /// 무대를 뽑을 수가 없다. 원작 스테이지 순서가 곧 답이다 —
         /// 크러셔가 선 곳이 원작 1스테이지 쓰레기 집적장이고, 우리 `junkyard` 가 그것이다.
         ///
-        ///   크러셔      원작 1  쓰레기 집적장        junkyard
-        ///   가디언      원작 2  미사일 저장·정비     missile
-        ///   파이썬      원작 3  밤의 도시 거리       street
-        ///   킹핀        원작 4  공중기지 옥상        rooftop
-        ///   로봇 스네이크 CH5   **연구소**          (접두어 없음 — 연구소가 기본 세트다)
+        ///   CH1 로봇 스네이크   쓰레기 집적장        junkyard
+        ///   CH2 크러셔          미사일 저장·정비     missile
+        ///   CH3 파이썬          밤의 도시 거리       street
+        ///   CH4 슬러지          야간 정유소          refinery
+        ///   CH5 가디언          포로 수용실          holding
+        ///   CH6 킹핀            공중기지 옥상        rooftop
         ///
-        /// ⚠ CH5 를 한때 `holding`(포로 수용실)으로 적었다. 원작 스테이지 순서에서
-        ///   유추한 값이었는데 **정본 도면은 「연구소」라고 적어 놓았다.**
-        ///   유추가 정본을 이길 수 없다. 무대는 `AVSR_Bosses12.html` 챕터 머리글이 단일 출처다.
-        ///   슬러지      원작 6  야간 정유소          refinery
+        /// ⚠ 이 짝은 **사용자가 원작 스샷을 보고 확인해 준 것**이다(2026-09-07).
+        ///   그 전 값은 기획 문서가 스스로 "소거법"이라고 적어 둔 유추였고,
+        ///   실제로 절반이 틀렸다. 유추한 값을 정본처럼 쓰면 이렇게 된다.
+        ///
+        /// ⚠ `lab`(연구소)은 이제 어느 보스도 안 쓴다. 파일은 남겨 둔다 —
+        ///   일반 방 배경으로는 여전히 나온다.
         ///
         /// ⚠ 없는 세트는 `EnvSprite` 가 알아서 기본형으로 떨어뜨린다. 여기서 걱정하지 않는다.
         /// </summary>
@@ -4634,12 +4637,12 @@ namespace Game.Module.InGame
 
         private static string BossEnvOf(string slug) => slug switch
         {
-            "crusher"      => "junkyard",
-            "guardian"     => "missile",
+            "robot_snakes" => "junkyard",
+            "crusher"      => "missile",
             "python"       => "street",
-            "kingpin"      => "rooftop",
-            "robot_snakes" => string.Empty,   // 연구소 = 기본 세트(접두어 없음)
             "sludge"       => "refinery",
+            "guardian"     => "holding",
+            "kingpin"      => "rooftop",
             _              => string.Empty,
         };
 
