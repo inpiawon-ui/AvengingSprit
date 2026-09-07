@@ -705,10 +705,20 @@ namespace Game.Module.InGame
                     break;
 
                 // 천장에서 파편 다섯. 그림자 밖으로.
+                //
+                // ⚠ 예전에는 방 아무 데나(`Scatter`) 떨어뜨렸다. 내가 저 아래 있는데
+                //   파편 다섯이 보스 근처에서만 터져서 "어디 이상한 데로 쏜다" 가 됐다
+                //   (기획 2026-09-07). 「마디 사출」·「벽돌 낙하」와 같은 병이고
+                //   같은 약을 쓴다 — **내 자리**를 중심으로 뿌린다.
+                // ⚠ 퍼지는 폭은 조각 셋짜리(`BrickFall` 1.1배)보다 넓다. 다섯을
+                //   같은 폭에 넣으면 통째로 겹쳐 한 덩어리가 되고, 그러면 피할 틈이
+                //   아예 없어진다 — 넓혀야 사이에 설 자리가 생긴다.
                 case BossDraw.DebrisFall:
                     s.Shape = Kind.Disc;
                     s.Radius = Mathf.Max(1f, R);
-                    s.Layout = Spread.Scatter;
+                    s.Origin = playerAt;
+                    s.Layout = Spread.NearTarget;
+                    s.Length = Mathf.Max(1f, R) * 2f;
                     s.Count = Mathf.Max(2, m.Lanes);
                     break;
 

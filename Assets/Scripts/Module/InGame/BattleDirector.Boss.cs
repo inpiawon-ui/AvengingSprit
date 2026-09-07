@@ -1606,7 +1606,11 @@ namespace Game.Module.InGame
         /// </summary>
         private static string ImpactFxOf(BossDraw draw) => draw switch
         {
-            BossDraw.Crush or BossDraw.WreckingBall or BossDraw.HeadBite
+            // 물어뜯기는 제 그림이 있다(`fx_bite_1~4` — 금속 턱이 맞물리고 파편이 튄다).
+            // 「내려찍기」와 같은 `slam` 을 쓰면 물린 것이 아니라 밟힌 것으로 보인다
+            // (기획 2026-09-07 — "물어뜯기도 맞았을때 연출이 나와야하는데").
+            BossDraw.HeadBite => "bite",
+            BossDraw.Crush or BossDraw.WreckingBall
                 or BossDraw.BoosterDrop or BossDraw.Emerge or BossDraw.RamCharge
                 or BossDraw.SegmentThrust => "slam",
             // 파이썬 독은 제 그림이 있다(fx_venom_1~5). 용암을 쓰면 불로 보인다.
