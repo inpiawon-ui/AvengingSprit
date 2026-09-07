@@ -2914,6 +2914,7 @@ namespace Game.Module.InGame
             // 보스가 벽 뒤·구멍 안·천장에 있는 동안은 못 때린다. 그 주기를 여기서 돌린다.
             TickMidBoss(dt);       // 부하가 다 죽으면 대장이 3초 굳는다
             TickExecutionLock(dt); // 표식이 예고 내내 나를 쫓아온다
+            TickLockShot(dt);      // 표식이 사라지면 그 자리로 탄이 날아온다
             TickKingpinDrop(dt);   // 올라가 있는 시간은 예고 시간과 같다
             TickGlideBreak();      // 활강이 **멈춘 자리**에서 취약 창을 본다
             TickBossPresence(dt);

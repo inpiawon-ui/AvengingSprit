@@ -112,7 +112,12 @@ namespace Game.Module.InGame
             // 위험한 면은 **탄으로 채운다.** 바닥에 원이나 부채꼴만 생겼다 터지면
             // 무엇이 그것을 만들었는지 알 수 없다 — "예고만 하고 아무 일도 안 났다".
             // 예고 시간과 정확히 같은 시간 동안 나므로 도착이 곧 발동이다.
-            BeginFlight(m, boss, _brain != null ? _brain.TelegraphTotal : 1f);
+            // ⚠ 「처형 조준」만 여기서 안 쏜다. 그 패턴의 탄은 **예고가 끝난 뒤**
+            //   날아간다 — 표식이 사라지고 나서 날아오는 그 시간이 회피 창이다.
+            if (m.Draw != BossDraw.ExecutionLock)
+                BeginFlight(m, boss, _brain != null ? _brain.TelegraphTotal : 1f);
+            _lockShotLeft = 0f;
+            _lockShotFired = false;
 
             // 물건이 **떠나는 순간** 머리가 한 번 휘둘러야 "뱉었다 · 던졌다" 로 읽힌다.
             //
@@ -237,6 +242,24 @@ namespace Game.Module.InGame
 
             if (_dangerView != null) _dangerView.Reaim(_danger);
             _lockMark.MoveTo(_danger.Origin);
+        }
+
+        /// <summary>표식이 사라진 뒤 탄이 날아오는 시간. 이 동안이 회피 창이다.</summary>
+        private const float LockShotSeconds = 0.7f;
+
+        private float _lockShotLeft;
+        private bool _lockShotFired;
+
+        private void TickLockShot(float dt)
+        {
+            if (_lockShotLeft <= 0f) return;
+            _lockShotLeft -= dt;
+            if (_lockShotLeft > 0f) return;
+            _lockShotLeft = 0f;
+
+            // 보스가 죽었거나 도형이 이미 치워졌으면 아무 일도 없다.
+            if (_boss == null || !_boss.IsAlive || !HasDanger) { ClearDanger(); return; }
+            StrikeDanger(_boss, Avatar, _dangerMove);
         }
 
         private void TickKingpinDrop(float dt)
@@ -1019,6 +1042,27 @@ namespace Game.Module.InGame
         {
             if (!HasDanger || _dangerMove != m) { ClearDanger(); return false; }
 
+            // ── 처형 조준 — 예고가 끝나면 **미사일이 날아간다** ──
+            //
+            // 예고가 끝나는 순간 그 자리가 바로 터지면 피할 방법이 없다. 표식이
+            // 나를 쫓아오므로 예고 동안 벌어 둔 거리도 얼마 안 된다
+            // (기획 2026-09-07 — "저 얼럿이 사라지면 미사일이 나가라고.. 그래야 피하지").
+            //
+            // 표식이 사라진 자리로 탄이 날아오는 **그 시간**이 회피 창이다.
+            // 도형은 그대로 떠 있으므로 어디를 비켜야 하는지도 보인다(R1 유지).
+            //
+            // ⚠ 「쏘았는가」를 남은 시간으로 판단하면 **영원히 다시 쏜다.** 닿아서
+            //   0 이 된 순간 다시 이 문에 걸린다 — 실제로 무한히 돌았다.
+            //   쏘았다는 사실은 따로 기억한다.
+            if (m.Draw == BossDraw.ExecutionLock && !_lockShotFired)
+            {
+                _lockShotFired = true;
+                _lockShotLeft = LockShotSeconds;
+                BeginFlight(m, boss, LockShotSeconds);
+                boss.PlayAttack(BossAttackHold);
+                return true;                      // 아직 안 때린다
+            }
+
             int dmg = Mathf.RoundToInt(boss.Atk * m.DamageMul);
 
             // ⚠ 판정은 **그린 것과 같은 함수**다. 여기서 반경을 조금 키우거나
@@ -1164,6 +1208,9 @@ namespace Game.Module.InGame
                 // ⚠ 독도 **날아가야 한다.** 예고가 끝나는 순간 구름이 그냥 생기면
                 //   "뱉었다" 가 아니라 "저절로 피어났다" 로 보인다.
                 case BossDraw.VenomCloud:
+                // 「처형 조준」도 탄이 난다. 다만 **예고가 끝난 뒤** 난다 —
+                // 부르는 자리가 다를 뿐 갈 곳을 정하는 방식은 같다.
+                case BossDraw.ExecutionLock:
                     for (int i = 0; i < _danger.PieceCount && i < MaxFlight; i++)
                         _flightTargets.Add(_danger.PieceAt(i, _roomSize));
                     break;
