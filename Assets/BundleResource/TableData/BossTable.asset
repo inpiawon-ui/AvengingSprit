@@ -37,7 +37,7 @@ MonoBehaviour:
       _shotCount: 2
       _spreadDegrees: 0
       _damageMul: 0.85
-      _telegraphSeconds: 1
+      _telegraphSeconds: 1.15
       _nameKr: "\uAD6C\uBA4D \uAC1C\uBC29"
       _nameEn: HatchOpen
       _shape: 2
@@ -60,7 +60,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.73
-      _telegraphSeconds: 1
+      _telegraphSeconds: 1.35
       _nameKr: "\uB808\uC774\uC800"
       _nameEn: RailLaser
       _shape: 1
@@ -83,7 +83,7 @@ MonoBehaviour:
       _shotCount: 5
       _spreadDegrees: 0
       _damageMul: 0.94
-      _telegraphSeconds: 1
+      _telegraphSeconds: 1.5
       _nameKr: "\uCC9C\uC7A5 \uD30C\uD3B8"
       _nameEn: DebrisFall
       _shape: 3
@@ -106,7 +106,7 @@ MonoBehaviour:
       _shotCount: 6
       _spreadDegrees: 0
       _damageMul: 1.15
-      _telegraphSeconds: 1
+      _telegraphSeconds: 1.2
       _nameKr: "\uC77C\uC81C \uCD9C\uD604"
       _nameEn: FullEmergence
       _shape: 3
