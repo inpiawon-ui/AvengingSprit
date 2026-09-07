@@ -1431,14 +1431,18 @@ namespace Game.Module.InGame
 
         private void BeginBeam(DangerShape shape)
         {
-            if (_field == null) return;
+            if (_fieldLayer == null) return;
             var art = GetSprite("obj_robot_snakes_beam");
             if (art == null) return;
 
             if (_beam == null)
             {
                 var go = new GameObject("Beam", typeof(RectTransform), typeof(Image));
-                go.transform.SetParent(_field, false);
+                // ⚠ **`_fieldLayer` 다.** 예고 도형·보스·나 모두 여기 붙어 있고,
+                //   `shape.Origin` 도 이 판의 좌표다. 한 칸 위(`_field`)에 붙이면
+                //   `FieldLayer` 의 오프셋(0, 136)만큼 통째로 어긋나 —
+                //   빔이 예고선과 다른 자리에서 나간다(실측 136px 아래).
+                go.transform.SetParent(_fieldLayer, false);
                 var rt0 = (RectTransform)go.transform;
                 rt0.anchorMin = rt0.anchorMax = new Vector2(0f, 1f);
                 rt0.pivot = new Vector2(0.5f, 0f);      // 아래 끝이 기준 — 뿌리에서 뻗는다
