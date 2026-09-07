@@ -131,7 +131,7 @@ namespace Game.Module.InGame
             _neckClip.anchorMin = _neckClip.anchorMax = new Vector2(0f, 1f);
             _neckClip.pivot = new Vector2(0.5f, 1f);
             var neckArt = GetSprite("obj_python_neck");
-            _neck = new Image[4];
+            _neck = new Image[12];
             for (int i = 0; i < _neck.Length; i++)
             {
                 var ng = new GameObject($"Neck{i + 1}", typeof(RectTransform), typeof(Image));
@@ -595,12 +595,18 @@ namespace Game.Module.InGame
         private const float ShoveBackSeconds = 0.45f;
 
         private float _shoveTimer, _shoveDepth;
+        private float _shoveX, _shoveLane;
 
         private bool IsShoving => _shoveTimer > 0f;
         private float ShoveTotal => ShoveOutSeconds + ShoveHoldSeconds + ShoveBackSeconds;
 
-        private void BeginBodyShove(float depthPx)
+        /// <param name="x">밀고 나오는 줄의 한가운데(방 좌표).</param>
+        /// <param name="lanePx">그 줄의 폭. 그린 도형과 같은 값이어야 한다.</param>
+        /// <param name="depthPx">얼마나 깊이 미는가.</param>
+        private void BeginBodyShove(float x, float lanePx, float depthPx)
         {
+            _shoveX = x;
+            _shoveLane = Mathf.Max(_pxPerMeter, lanePx);
             _shoveDepth = Mathf.Max(_pxPerMeter, depthPx);
             _shoveTimer = ShoveTotal;
         }
@@ -632,7 +638,12 @@ namespace Game.Module.InGame
             if (depth <= 1f) { _pyDeepClip.gameObject.SetActive(false); return; }
 
             _pyDeepClip.gameObject.SetActive(true);
-            _pyDeepClip.sizeDelta = new Vector2(_roomSize.x, depth);
+            // 미는 동안에는 **그 줄 폭만큼만** 보인다. P3 의 상시 노출은 방 전체다.
+            bool lane = IsShoving && _shoveLane > 0f;
+            _pyDeepClip.sizeDelta = new Vector2(lane ? _shoveLane : _roomSize.x, depth);
+            _pyDeepClip.anchoredPosition =
+                new Vector2(lane ? _shoveX - _shoveLane * 0.5f : 0f,
+                            -WallMeterHeight * _pxPerMeter);
         }
 
         // ── 죽음 ─────────────────────────────────────────────────

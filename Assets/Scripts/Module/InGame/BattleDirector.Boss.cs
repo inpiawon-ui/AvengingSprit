@@ -578,9 +578,9 @@ namespace Game.Module.InGame
                     BeginHeadLunge(_danger.Length);
                     break;
 
-                // 벽이 통째로 방 안으로 밀려 들어왔다 물러난다.
+                // 내가 선 줄로 몸이 밀고 들어왔다 물러난다.
                 case BossDraw.BodyShove:
-                    BeginBodyShove(_danger.Width);
+                    BeginBodyShove(_danger.Origin.x, _danger.Width, _danger.Length);
                     break;
 
                 // 끈적한 덩어리 · 웅덩이 4초 · 밟으면 이동 속도 절반

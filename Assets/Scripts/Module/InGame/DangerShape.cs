@@ -594,13 +594,21 @@ namespace Game.Module.InGame
                 // (`BattleDirector.PythonStage` 가 머리를 아치에 세워 둔다).
 
                 // 목을 곧장 아래로 뻗는다. 좌우로 비키면 지나간다.
+                //
+                // ⚠ 길이를 표 값(5 m)으로 끊었더니 **방 한가운데서 멈췄다.**
+                //   아래쪽에 서 있으면 아예 닿지도 않아 피할 이유가 없다.
+                //   벽 아래 끝에서 **방 바닥까지** 간다 — 그래야 좌우로 비키는 것이
+                //   유일한 답이 된다.
                 case BossDraw.HeadLunge:
+                {
+                    float band = WallBandDepth(roomSize);
                     s.Shape = Kind.Band;
-                    s.Origin = new Vector2(bossAt.x, -WallBandDepth(roomSize));
+                    s.Origin = new Vector2(bossAt.x, -band);
                     s.Dir = Vector2.down;
                     s.Width = Mathf.Max(1f, W);
-                    s.Length = Mathf.Max(1f, L);
+                    s.Length = Mathf.Max(Mathf.Max(1f, L), roomSize.y - band);
                     break;
+                }
 
                 // 독은 **내가 선 자리**에 떨어진다. 웅덩이가 남으므로
                 // 다 퍼진 크기로 그려야 "피한 자리로 구름이 따라온다" 가 안 된다.
@@ -620,27 +628,30 @@ namespace Game.Module.InGame
                     s.Radius = Mathf.Max(1f, R);
                     s.Origin = playerAt;
                     s.Layout = Spread.NearTarget;
-                    s.Length = Mathf.Max(1f, R) * 2.2f;
+                    // ⚠ 2.2 배로 뿌렸더니 내 둘레라기엔 너무 헐거웠다.
+                    //   반경 하나 남짓 안에 떨어져야 "나를 노렸다" 로 읽힌다.
+                    s.Length = Mathf.Max(1f, R) * 1.1f;
                     s.Count = Mathf.Max(1, m.Lanes);
                     break;
 
                 // 벽 전체가 방 안으로 밀고 들어온다. **아래로 내려가는 것 말고는 없다.**
                 //
-                // ⚠ 두께를 표 값(2 m)으로 못 박았더니 **내가 어디 서 있든 상관이 없었다** —
-                //   벽 근처가 아니면 애초에 닿지도 않아 피할 이유가 없다.
-                //   내가 선 자리까지 밀어야 「물러나야 산다」가 성립한다.
-                //   다만 방을 다 덮으면 갈 곳이 없으므로 60% 에서 끊는다.
+                // ⚠ 처음에는 **방 폭을 통째로** 덮었다. 그러면 좌우로 갈 데가 없고
+                //   아래로만 도망쳐야 하는데, 깊이까지 내 자리에 맞추니
+                //   **피할 데가 아예 없었다**(기획 2026-09-07 — "어디로 피하냐").
+                //   벽에 뚫린 구멍은 여럿이므로, **내가 선 줄 하나**로만 밀고 나온다.
+                //   폭은 표 값(2 m), 깊이는 내가 선 자리까지 — 옆으로 비키면 산다.
                 case BossDraw.BodyShove:
                 {
-                    float band0 = WallBandDepth(roomSize);
-                    float depth = Mathf.Clamp(-playerAt.y - band0 + Mathf.Max(1f, W) * 0.5f,
-                                              Mathf.Max(1f, W), roomSize.y * 0.6f);
-                    float band = band0;
+                    float band = WallBandDepth(roomSize);
+                    float lane = Mathf.Max(1f, W);
+                    float depth = Mathf.Clamp(-playerAt.y - band + lane * 0.5f,
+                                              lane, roomSize.y - band);
                     s.Shape = Kind.Band;
-                    s.Origin = new Vector2(0f, -band - depth * 0.5f);
-                    s.Dir = Vector2.right;
-                    s.Width = depth;
-                    s.Length = roomSize.x;
+                    s.Origin = new Vector2(playerAt.x, -band);
+                    s.Dir = Vector2.down;
+                    s.Width = lane;
+                    s.Length = depth;
                     break;
                 }
 
