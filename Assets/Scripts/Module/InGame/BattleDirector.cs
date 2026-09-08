@@ -405,8 +405,21 @@ namespace Game.Module.InGame
 
             SpawnGhost();
             EnterStartHost();
-            // 첫 방은 유저 진행도가 정해진 **뒤에** 잡는다 —
-            // 챕터마다 첫 방 ID 가 다르다(ROOM_CH1_001 · CH2_001 · CH3_001).
+
+            // ⚠ **한 판은 언제나 1챕터 1스테이지에서 시작한다**(기획 2026-09-08).
+            //
+            //   예전에는 저장된 진행도가 가리키는 챕터의 첫 방에서 시작했다.
+            //   그런데 챕터를 올리는 자리가 아래 `EnterRoom` 하나뿐이라(방을
+            //   밟으면 올라간다) 한 번 올라간 진행도는 안 내려온다 — 시험 삼아
+            //   3챕터 방을 열어 본 것만으로 그 뒤 모든 판이 3챕터에서 시작했다.
+            //
+            //   진행도를 여기서 되돌린다. **격파 기록(`ClearedChapter`)은 안 건드린다** —
+            //   호스트 해금은 그것을 먼저 보므로 깨서 얻은 몸은 잠기지 않는다.
+            //   챕터를 쓰는 자리가 열다섯 곳인데(적 성장·보스 선택·아틀라스 …)
+            //   전부 이 값을 보므로, 여기 하나만 맞춰 두면 나머지가 따라온다.
+            if (_player != null && _player.IsReady && _player.CurrentChapter != 1)
+                _player.SetProgress(1, 1);
+
             _canonRoomId = FirstCanonRoom;
             EnterRoom(0);
 
@@ -489,8 +502,14 @@ namespace Game.Module.InGame
         ///   6챕터가 되면서 CH4~6 을 고른 플레이어가 CH3_001 로 떨어졌다 —
         ///   **챕터 4·5·6 의 보스에 도달할 방법이 아예 없었다.**
         /// </summary>
-        private string FirstCanonRoom
-            => $"ROOM_CH{Mathf.Clamp(_player != null && _player.IsReady ? _player.CurrentChapter : 1, 1, ChapterCount)}_001";
+        /// <summary>
+        /// 판이 시작하는 방. **언제나 1챕터 1스테이지다**(기획 2026-09-08).
+        ///
+        /// 진행도를 따라 시작 방을 옮기면, 한 번 올라간 진행도가 안 내려와서
+        /// 그 뒤로 앞 챕터를 다시는 못 본다. 시작은 고정하고, 챕터는 방을
+        /// 밟아 나가며 오른다(`EnterRoom`).
+        /// </summary>
+        private string FirstCanonRoom => "ROOM_CH1_001";
 
         /// <summary>챕터 수. 정본 6챕터.</summary>
         private const int ChapterCount = 6;
