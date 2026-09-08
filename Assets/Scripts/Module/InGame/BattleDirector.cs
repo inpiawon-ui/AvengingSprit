@@ -3576,16 +3576,22 @@ namespace Game.Module.InGame
         /// 정본 스탯(`HasCanon`)에도 곱한다 — 정본 표는 **그 적이 어떤 놈인가**를
         /// 적은 것이지 몇 번째 챕터에서 만나는가를 적은 것이 아니다.
         /// </summary>
-        private float EnemyGrowth()
+        private float EnemyGrowth()      // 공격력용
         {
-            int chapter = _runChapter;
             int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
-            return _config.EnemyChapterMul(chapter) * _config.EnemyRoomMul(roomNo);
+            return _config.EnemyChapterMul(_runChapter) * _config.EnemyRoomMul(roomNo);
+        }
+
+        /// <summary>체력용 배율. 챕터별 체력 손질이 더 곱해진다(1챕터는 절반).</summary>
+        private float EnemyHpGrowth()
+        {
+            int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
+            return _config.EnemyChapterHpMul(_runChapter) * _config.EnemyRoomMul(roomNo);
         }
 
         private int EnemyHpOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(
-                   (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp)) * EnemyGrowth()));
+                   (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp)) * EnemyHpGrowth()));
 
         private int EnemyAtkOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(

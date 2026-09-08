@@ -288,8 +288,25 @@ namespace Game.Character
         private static readonly float[] EnemyChapterMuls =
             { 1.00f, 1.45f, 1.91f, 2.61f, 3.15f, 4.18f };
 
+        /// <summary>
+        /// 체력에만 따로 곱하는 값. 공격력은 안 건드린다.
+        ///
+        /// ⚠ **1챕터는 절반이다**(기획 2026-09-08 — "1챕터 애들 피를 반으로 줄여봐
+        ///   잡는데 너무 오래 걸려"). 첫 챕터는 아직 레벨업 배율이 하나도 안 쌓인
+        ///   때라, 정본 체력 그대로면 한 마리 잡는 데 너무 오래 걸린다.
+        ///   **아픈 것은 그대로 두고 무른 것만** 만든다 — 체력만 줄이는 이유다.
+        /// </summary>
+        private static readonly float[] EnemyChapterHpTrims =
+            { 0.50f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f };
+
+        /// <summary>공격력에 쓰는 챕터 배율.</summary>
         public float EnemyChapterMul(int chapter)
             => EnemyChapterMuls[Mathf.Clamp(chapter, 1, EnemyChapterMuls.Length) - 1];
+
+        /// <summary>체력에 쓰는 챕터 배율. 위 배율에 챕터별 체력 손질을 곱한다.</summary>
+        public float EnemyChapterHpMul(int chapter)
+            => EnemyChapterMul(chapter)
+             * EnemyChapterHpTrims[Mathf.Clamp(chapter, 1, EnemyChapterHpTrims.Length) - 1];
 
         /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 001 은 1.00, 009 는 1.20.</summary>
         public float EnemyRoomMul(int roomNo)
