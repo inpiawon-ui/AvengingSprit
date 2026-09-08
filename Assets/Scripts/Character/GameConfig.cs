@@ -267,6 +267,37 @@ namespace Game.Character
         public int EnemyAtk(int statAtk) => Mathf.Max(1, Mathf.RoundToInt(HostAtk(statAtk) * _enemyAtkScale));
         public float EnemySpeed(int statSpd) => HostSpeed(statSpd) * _enemySpeedScale;
 
+        // ── 잡몹이 챕터·방을 따라 세진다 ────────────────────────────
+        //
+        // ⚠ 예전에는 **배우 스탯 하나로 끝**이었다. `EnemyHp`·`EnemyAtk` 가 챕터를
+        //   안 받아서, CH1 아마존과 CH6 아마존이 똑같이 체력 60 이었다.
+        //   그런데 보스는 챕터를 따라 오르고(아래 `BossHp`), 플레이어는 60방 내내
+        //   레벨업 배율(`RunBuffs`)을 쌓는다 — **잡몹만 제자리**라 후반 방이
+        //   허무해졌다(기획 2026-09-08).
+
+        /// <summary>
+        /// 챕터마다 잡몹이 세지는 배율.
+        ///
+        /// **정본 보스 체력 곡선을 그대로 쓴다.** `BossDefTable` 의
+        /// 1650 / 2400 / 3150 / 4300 / 5200 / 6900 을 CH1 로 나눈 값이다 —
+        /// 보스와 잡몹이 같은 속도로 세져야 방 난이도가 고르게 오른다.
+        ///
+        /// ⚠ 보스 표의 체력을 고치면 **여기도 같이 고친다.** 두 곡선이 갈라지면
+        ///   어떤 챕터는 보스만 세고 어떤 챕터는 잡몹만 세진다.
+        /// </summary>
+        private static readonly float[] EnemyChapterMuls =
+            { 1.00f, 1.45f, 1.91f, 2.61f, 3.15f, 4.18f };
+
+        public float EnemyChapterMul(int chapter)
+            => EnemyChapterMuls[Mathf.Clamp(chapter, 1, EnemyChapterMuls.Length) - 1];
+
+        /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 001 은 1.00, 009 는 1.20.</summary>
+        public float EnemyRoomMul(int roomNo)
+            => 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, 9) - 1) / 8f);
+
+        /// <summary>방 배율의 폭. 챕터 배율(최대 4.18배)에 비하면 양념이다.</summary>
+        private const float EnemyRoomMulSpan = 0.20f;
+
         public int BossHp(int chapter) => _bossHpBase + Mathf.Max(0, chapter - 1) * 400;
         public int BossAtk => _bossAtk;
         public float BossMoveSpeed => _bossMoveSpeed;

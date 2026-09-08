@@ -3531,12 +3531,31 @@ namespace Game.Module.InGame
         private Vector2 UnitBox(float w, float h)
             => new(w * _config.UnitScale, h * _config.UnitScale);
 
+        /// <summary>
+        /// 지금 방에서 잡몹에 붙는 배율. 챕터 곡선 × 방 곡선.
+        ///
+        /// ⚠ **여기 하나에서만 곱한다.** 스폰하는 자리가 여섯 곳인데(일반·정예·
+        ///   구조대·소환·이벤트 …) 거기서 각자 곱하면 한 곳을 빠뜨리고,
+        ///   그 방만 CH1 세기의 적이 서 있게 된다.
+        ///
+        /// 정본 스탯(`HasCanon`)에도 곱한다 — 정본 표는 **그 적이 어떤 놈인가**를
+        /// 적은 것이지 몇 번째 챕터에서 만나는가를 적은 것이 아니다.
+        /// </summary>
+        private float EnemyGrowth()
+        {
+            int chapter = _player != null && _player.IsReady ? _player.CurrentChapter : 1;
+            int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
+            return _config.EnemyChapterMul(chapter) * _config.EnemyRoomMul(roomNo);
+        }
+
         private int EnemyHpOf(HostEntry e)
-            => e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp);
+            => Mathf.Max(1, Mathf.RoundToInt(
+                   (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp)) * EnemyGrowth()));
 
         private int EnemyAtkOf(HostEntry e)
-            => e.HasCanon ? e.CanonAtk
-                          : Mathf.RoundToInt(_config.EnemyAtk(e.Atk) * e.DamageMul);
+            => Mathf.Max(1, Mathf.RoundToInt(
+                   (e.HasCanon ? e.CanonAtk
+                               : _config.EnemyAtk(e.Atk) * e.DamageMul) * EnemyGrowth()));
 
         // 적은 늘 싸우러 오는 중이다 — 정본의 EngageSpeed 를 쓴다.
         // MoveSpeed(1.0~2.5m/s)는 교전 전의 걸음이라, 그걸 쓰면 내(3.4~5.2)가 뒤로 걷기만 해도
