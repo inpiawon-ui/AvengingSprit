@@ -1070,6 +1070,9 @@ namespace Game.Module.InGame
                     // 자리로 위상을 어긋내면 방 전체가 살아 있는 것처럼 읽힌다.
                     Phase = Mathf.Repeat((center.x * 0.013f + center.y * 0.021f), 1f),
                 };
+                // 도랑은 **바닥에 파인 것**이다. 다른 소품·캐릭터보다 아래로 내린다 —
+                // 위에 있으면 도랑이 사람을 덮어 어디 서 있는지 안 보인다.
+                if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V") go.transform.SetAsFirstSibling();
                 SetupMoving(ob, kind);
                 _obstacles.Add(ob);
             }
@@ -1101,6 +1104,9 @@ namespace Game.Module.InGame
         {
             "ROTATING_BLADE" => "obj_blade",
             "SWING_HAMMER"   => "obj_hammer",
+            // 도랑은 가로·세로 두 장뿐이다. 접두사를 하나로 두면 바로 아래
+            // 크기 판정이 `_h`·`_v` 를 알아서 골라 준다 — 종류를 둘로 나눈 이유다.
+            "CHANNEL_H" or "CHANNEL_V" => "obj_channel",
             _                => "obj_" + (kind ?? string.Empty).ToLowerInvariant(),
         };
 
@@ -1513,8 +1519,13 @@ namespace Game.Module.InGame
             {
                 var o = _obstacles[i];
                 if (!o.IsHazard || !o.HazardOn || o.Damage <= 0) continue;
+                // ⚠ **적은 안 아프다.** 가시·톱니·용암은 플레이어에게만 판정한다(기획 2026-09-08).
+                //
+                //   적까지 아프면 방이 알아서 정리된다 — 가시밭에 몰아넣고 기다리는 것이
+                //   최적 수가 되어 「피해서 지나간다」라는 문제가 통째로 사라진다.
+                //   게다가 적은 지형을 보고 걷지 않으므로(추격만 한다) 제 발로 밟다가
+                //   죽어 나가, 배치가 난이도가 아니라 서비스가 된다.
                 Burn(o, Avatar, dt);
-                for (int e = 0; e < _enemies.Count; e++) Burn(o, _enemies[e], dt);
             }
         }
 
@@ -3382,6 +3393,15 @@ namespace Game.Module.InGame
 
                 float d = Vector2.Distance(e.Position, me.Position);
 
+                // 매복은 **깨어나기 전부터** 숨어 있어야 한다.
+                //
+                // 아래 탐지 관문은 화면에 들어와야 통과한다. 거기서 숨기면
+                // 한 프레임 보였다가 사라져 「숨었다」가 아니라 「깜빡였다」가 된다.
+                // 땅에서 나온 뒤(단계 2)에는 이 줄이 그냥 지나가고 평소 흐름을 탄다.
+                if (e.PatternPhase < 2 && PatternOf(e) == EnemyPattern.Ambush
+                    && TickAmbush(e, me, d, dt))
+                { Separate(e, i, dt); continue; }
+
                 // 탐지 — 들어오기 전에는 제자리에서 기다린다.
                 // 처음부터 전부 달려들면 방이 통째로 한 덩어리가 되어 몰려다닌다.
 
@@ -3424,6 +3444,14 @@ namespace Game.Module.InGame
                 { TickVault(e, me, dt); Separate(e, i, dt); continue; }
 
                 if (pattern == EnemyPattern.Hop && TickHop(e, me, d, dt))
+                { Separate(e, i, dt); continue; }
+
+                // 챕터가 깊어지며 붙는 세 가지. `false` 를 돌려주면 평소 흐름으로 내려간다 —
+                // 매복은 땅에서 나온 뒤, 3연발·회오리는 사거리 밖일 때가 그렇다.
+                if (pattern == EnemyPattern.Burst && TickBurst(e, me, d, dt))
+                { Separate(e, i, dt); continue; }
+
+                if (pattern == EnemyPattern.Spiral && TickSpiral(e, me, d, dt))
                 { Separate(e, i, dt); continue; }
 
                 // 근접과 원거리는 다르게 움직인다.

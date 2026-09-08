@@ -1,4 +1,4 @@
-using Game.Character;
+﻿using Game.Character;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -42,6 +42,18 @@ namespace Game.Module.InGame
             Vault,
             /// <summary>안 움직이고 조준도 없이 4방향 — 십자 포탑</summary>
             Cross,
+
+            // ── 챕터가 깊어지면 같은 몸이 다르게 싸운다 (2026-09-08) ──
+            //
+            // 잡몹이 여섯 종뿐이라 새 몸을 만들지 않고 **행동을 갈아 끼운다.**
+            // 5챕터의 순찰기는 2챕터의 순찰기와 같은 그림이지만 다른 적이다.
+
+            /// <summary>겨눈 선으로 0.14초 간격 3발 — 순찰기(CH4)</summary>
+            Burst,
+            /// <summary>땅에 숨어 있다가 다가오면 솟아오른다 — 해골(CH5+)</summary>
+            Ambush,
+            /// <summary>느린 회오리 한 발이 따라온다 — 순찰기(CH6)</summary>
+            Spiral,
         }
 
         /// <summary>
@@ -51,15 +63,35 @@ namespace Game.Module.InGame
         /// 그쪽은 플레이어가 탔을 때와 같은 방식으로 움직여야 "저 몸을 타면 저렇게 된다"가
         /// 미리 보인다. 잡몹은 탈 수 없으니 그 제약이 없다.
         /// </summary>
-        private static EnemyPattern PatternOf(Unit e)
+        /// <summary>
+        /// 같은 몸이 챕터에 따라 다르게 싸우기 시작하는 지점.
+        ///
+        /// 새 잡몹을 늘리는 대신 **행동을 바꾼다.** 그림이 같으니 플레이어는
+        /// "아는 놈" 이라고 생각하고 들어왔다가 한 번 당하고 다시 배운다.
+        /// </summary>
+        // ⚠ 챕터 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다.
+        //   처음엔 3연발을 폐품 사수(CH1 전용)에 붙였는데, 그러면 CH3 부터라는 말이
+        //   무색하게 **한 번도 안 나온다.** 순찰기는 CH2·CH4·CH6 에 있어서
+        //   부채꼴 → 3연발 → 회오리로 세 번 달라진다 — 같은 그림, 다른 적.
+        private const int BurstFromChapter  = 4;   // 순찰기 → 3연발
+        private const int AmbushFromChapter = 5;   // 해골   → 매복
+        private const int SpiralFromChapter = 6;   // 순찰기 → 회오리 유도탄
+
+        private EnemyPattern PatternOf(Unit e)
         {
             if (e == null) return EnemyPattern.Chase;
+            int ch = _runChapter;
             switch (e.Key)
             {
                 case TrashEnforcerKey: return EnemyPattern.Hop;
-                case TrashWardenKey:   return EnemyPattern.Fan;
                 case TrashCoilKey:     return EnemyPattern.Vault;
                 case TrashCrossKey:    return EnemyPattern.Cross;
+                case TrashWardenKey:
+                    return ch >= SpiralFromChapter ? EnemyPattern.Spiral
+                         : ch >= BurstFromChapter  ? EnemyPattern.Burst
+                         : EnemyPattern.Fan;
+                case TrashSkeletonKey:
+                    return ch >= AmbushFromChapter ? EnemyPattern.Ambush : EnemyPattern.Chase;
                 default:               return IsMelee(e) ? EnemyPattern.Chase : EnemyPattern.Strafe;
             }
         }
@@ -459,6 +491,203 @@ namespace Game.Module.InGame
                     FireFan(e, me.Position, 3, 24f, Mathf.Max(1, dmg / 2));
                     PlayFx("muzzle", e.MuzzlePosition, 48f, loop: false);
                     break;
+            }
+        }
+
+        // ===========================================================
+        //  BURST - 겨눈 선으로 3연발 (순찰기 · CH4)
+        // ===========================================================
+        //
+        // 동시에 세 발 뿌리는 확산과 다르다. **같은 선으로 시간차**라
+        // 옆으로 한 걸음만 비켜도 뒤 두 발이 빈다 - 대신 안 비키면 세 발을 다 맞는다.
+        //
+        // 주의: 겨냥은 **첫 발을 쏘기 직전 한 번**만 한다. 매 발마다 다시 겨누면
+        //   유도탄이 되어 비키는 것이 답이 아니게 된다.
+
+        private const float BurstIdleSeconds = 1.9f;
+        private const float BurstTellSeconds = 0.45f;
+        private const float BurstGapSeconds  = 0.14f;
+        private const int   BurstShots       = 3;
+
+        private bool TickBurst(Unit e, Unit me, float distance, float dt)
+        {
+            // 사거리 밖이면 평소 흐름(접근)에 맡긴다.
+            if (e.PatternPhase == 0 && distance > EffectiveRange(e))
+            {
+                e.PatternTimer = BurstIdleSeconds;
+                return false;
+            }
+
+            e.PatternTimer -= dt;
+            switch (e.PatternPhase)
+            {
+                case 0:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Detect);
+                    if (e.PatternTimer > 0f) return true;
+                    e.PatternPhase = 1;
+                    e.PatternTimer = BurstTellSeconds;
+                    e.SetTelegraph(true);
+                    return true;
+
+                case 1:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Attack);
+                    if (e.PatternTimer > 0f) return true;
+                    e.SetTelegraph(false);
+                    e.SetFacing(me.Position - e.Position);
+                    e.PatternTo = me.Position;   // 세 발이 갈 선을 여기서 못 박는다
+                    e.PatternAngle = 0f;         // 쏜 발 수를 센다
+                    e.PatternPhase = 2;
+                    e.PatternTimer = 0f;
+                    return true;
+
+                default:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Attack);
+                    if (e.PatternTimer > 0f) return true;
+                    FireAimed(e, e.PatternTo, 1f);
+                    e.PatternAngle += 1f;
+                    if (e.PatternAngle >= BurstShots)
+                    {
+                        e.PatternPhase = 0;
+                        e.PatternTimer = BurstIdleSeconds;
+                        return true;
+                    }
+                    e.PatternTimer = BurstGapSeconds;
+                    return true;
+            }
+        }
+
+        /// <summary>한 발을 겨눈 자리로 쏜다. 패턴들이 같은 자를 쓰게 여기 모아 둔다.</summary>
+        private void FireAimed(Unit e, Vector2 at, float speedMul,
+                               string kindOverride = null, float homing = 0f)
+        {
+            e.PlayAttack();
+            var dir = at - e.Position;
+            if (dir.sqrMagnitude < 0.0001f) dir = e.Facing;
+            dir = dir.normalized;
+
+            float reach = _roomSize.magnitude;
+            float speed = _config.ShotSpeedEnemy * Mathf.Max(0.1f, speedMul);
+            float life = reach / Mathf.Max(1f, speed) + 0.25f;
+
+            var shot = RentShot();
+            if (shot == null) return;
+            string kind = kindOverride ?? ShotKindOf(e);
+            shot.SetSprite(kindOverride != null ? ShotFrames(kindOverride) : ShotSpriteOf(e),
+                           kind, LoopsFrames(kind));
+            shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
+                      false, null, _config.ShotSize, ShotEnemyColor, life);
+            if (homing > 0f) shot.SetHoming(homing);
+        }
+
+        // ===========================================================
+        //  AMBUSH - 땅에 숨었다가 솟아오른다 (해골 · CH5+)
+        // ===========================================================
+        //
+        // 방에 들어설 때 이 놈은 화면에 없다. 다가가면 바닥이 갈라지고(예고)
+        // 그 다음에 나온다. 방을 한눈에 읽고 들어가는 습관을 한 번 깨는 자리다.
+        //
+        // 주의: 숨어 있는 동안 `IsHidden` 이 켜져 있으면 `Targetable` 이 걸러 내므로
+        //   **자동 조준이 안 보이는 것을 쏘지 않는다.** 그게 이 패턴의 전제다.
+        //
+        // 주의: 예고(0.55초)를 반드시 준다. 없으면 그냥 갑자기 맞는 것이고,
+        //   그건 어렵기만 하고 배울 것이 없다.
+
+        private const float AmbushTriggerMeters = 3.2f;
+        private const float AmbushTellSeconds   = 0.55f;
+
+        private int AliveEnemyCount()
+        {
+            int n = 0;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var u = _enemies[i];
+                if (u != null && u.IsAlive && !u.IsDying) n++;
+            }
+            return n;
+        }
+
+        private bool TickAmbush(Unit e, Unit me, float distance, float dt)
+        {
+            switch (e.PatternPhase)
+            {
+                case 0:
+                    e.SetHidden(true);
+                    e.SetMoving(false);
+                    e.IsAggro = false;
+                    // 거리로 깨운다. 다만 **마지막 하나 남았으면 거리와 무관하게** 나온다 —
+                    // 안 그러면 구석에 숨은 놈 하나 때문에 방이 영영 안 열린다.
+                    if (distance > Meters(AmbushTriggerMeters) && AliveEnemyCount() > 1) return true;
+                    e.PatternPhase = 1;
+                    e.PatternTimer = AmbushTellSeconds;
+                    PlayFx("burrow", e.Position, 96f, loop: false);   // 바닥이 갈라진다
+                    return true;
+
+                case 1:
+                    e.PatternTimer -= dt;
+                    e.SetMoving(false);
+                    if (e.PatternTimer > 0f) return true;
+                    e.SetHidden(false);
+                    e.IsAggro = true;
+                    e.SetState(EnemyState.Attack);
+                    PlayFx("bulge", e.Position, 128f, loop: false);
+                    e.PatternPhase = 2;
+                    return true;
+
+                default:
+                    return false;   // 한 번 나왔으면 평소대로 쫓는다
+            }
+        }
+
+        // ===========================================================
+        //  SPIRAL - 느린 회오리 한 발이 따라온다 (순찰기 · CH6)
+        // ===========================================================
+        //
+        // 부채꼴(FAN)의 반대다. 부채꼴은 **빠른 세 발을 넓게** 뿌려 서 있을 자리를 묻고,
+        // 회오리는 **느린 한 발이 따라와** 계속 움직이게 만든다.
+        // 엄폐물 뒤로 숨는 것이 처음으로 답이 되는 자리이기도 하다 -
+        // 탄이 느려서 지형을 낀 회전으로 떼어낼 수 있다.
+        //
+        // 주의: 유도를 세게 주면 절대 안 떨어지는 탄이 되어 회피가 사라진다.
+        //   0.55 는 "달리면 떨어지고 서 있으면 맞는" 세기다.
+
+        private const float SpiralIdleSeconds = 2.4f;
+        private const float SpiralTellSeconds = 0.7f;
+        private const float SpiralSpeedMul    = 0.55f;
+        private const float SpiralHoming      = 0.55f;
+
+        private bool TickSpiral(Unit e, Unit me, float distance, float dt)
+        {
+            if (e.PatternPhase == 0 && distance > EffectiveRange(e))
+            {
+                e.PatternTimer = SpiralIdleSeconds;
+                return false;
+            }
+
+            e.PatternTimer -= dt;
+            switch (e.PatternPhase)
+            {
+                case 0:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Detect);
+                    if (e.PatternTimer > 0f) return true;
+                    e.PatternPhase = 1;
+                    e.PatternTimer = SpiralTellSeconds;
+                    e.SetTelegraph(true);
+                    return true;
+
+                default:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Attack);
+                    if (e.PatternTimer > 0f) return true;
+                    e.SetTelegraph(false);
+                    e.SetFacing(me.Position - e.Position);
+                    FireAimed(e, me.Position, SpiralSpeedMul, "spiral", SpiralHoming);
+                    e.PatternPhase = 0;
+                    e.PatternTimer = SpiralIdleSeconds;
+                    return true;
             }
         }
     }

@@ -174,12 +174,41 @@ namespace Game.Module.InGame
             return null;
         }
 
-        /// <summary>이 챕터에 나오는 잡몹 그림 목록. 안 나오는 것은 안 올린다.</summary>
+        /// <summary>
+        /// 이 챕터에 나오는 잡몹 목록.
+        ///
+        /// ⚠ 이 값은 **방 표(`RoomTable`)가 실제로 부르는 이름과 같아야 한다.**
+        ///   여기 없는 이름이 표에 있으면 `TrashByKey` 가 빈손으로 돌아가고
+        ///   역할 대체(`TrashForSlot`)로 넘어가 배치가 뜻을 잃는다. 반대로
+        ///   여기에만 있고 표에 없는 이름은 **한 번도 안 나온다** — 그 몸에
+        ///   패턴을 붙여 봐야 게임에서 볼 수가 없다.
+        ///
+        ///   실측(2026-09-08) — 챕터별 잡몹 배치 수:
+        ///     CH1 폐품사수15 해골7 박쥐4
+        ///     CH2 순찰기15 집행자12 박쥐2
+        ///     CH3 집행자13 코일10 십자포탑7 해골2
+        ///     CH4 집행자9 코일8 순찰기7 박쥐6
+        ///     CH5 해골10 십자포탑8 코일7 집행자6
+        ///     CH6 해골12 집행자8 코일8 십자포탑6 순찰기4
+        ///
+        /// 같은 몸이 챕터에 따라 **다르게 싸운다**(`PatternOf`).
+        /// 챕터마다 새로 배울 것이 하나씩 붙는다:
+        ///     CH1 추격·옆걸음 사격          (튜토)
+        ///     CH2 부채꼴(순찰기)
+        ///     CH3 십자 포탑 · 도약 사격(코일)
+        ///     CH4 3연발(순찰기)
+        ///     CH5 매복(해골)
+        ///     CH6 회오리 유도탄(순찰기)
+        /// </summary>
         private static string[] TrashKeysFor(int chapter) => chapter switch
         {
             1 => new[] { TrashSkeletonKey, TrashBatKey, TrashGunnerKey },
             2 => new[] { TrashBatKey, TrashEnforcerKey, TrashWardenKey },
-            _ => new[] { TrashSkeletonKey, TrashEnforcerKey, TrashCoilKey, TrashCrossKey },
+            3 => new[] { TrashSkeletonKey, TrashEnforcerKey, TrashCoilKey, TrashCrossKey },
+            4 => new[] { TrashBatKey, TrashEnforcerKey, TrashCoilKey, TrashWardenKey },
+            5 => new[] { TrashSkeletonKey, TrashEnforcerKey, TrashCoilKey, TrashCrossKey },
+            _ => new[] { TrashSkeletonKey, TrashEnforcerKey, TrashCoilKey,
+                         TrashCrossKey, TrashWardenKey },
         };
 
         // ══ 보스가 서는 무대 (주석) ════════════════════════════════
