@@ -276,6 +276,18 @@ namespace Game.EditorTools
                 || name.StartsWith("icon_"))
                 return new[] { $"{HostSelectRes}/{name}" };
 
+            // 상점 팝업 부품 — 인게임 화면에서만 쓴다.
+            //
+            // ⚠ `shopframe` 은 620×700 이라 **아래 700px 방어에 걸려 튕겨 나갔다.**
+            //   그 방어는 720×1280 짜리 로딩 배경을 겨냥한 것이고, 이건 UI 액자다.
+            //   실측(2026-09-08): 이 아틀라스는 최대 4096 이고 지금 내용이 8.2M px²,
+            //   `shopframe` 은 434K px² 로 4096 한 장의 **2.6%** 다 — 페이지를 늘리지 않는다.
+            //   방어 주석이 말한 대로 "어디로 가야 할지는 사람이 정한다". 여기가 그 자리다.
+            if (name.StartsWith("shopframe") || name.StartsWith("shopitemslot")
+                || name.StartsWith("shopleavebutton") || name.StartsWith("shopdivider")
+                || name.StartsWith("buffcat_"))
+                return new[] { $"{DefaultRes}/{name}" };
+
             // ⚠ 이름을 모르는 큰 그림은 **아틀라스 폴더로 보내지 않는다.**
             //   UI 아틀라스는 작은 조각을 모으는 곳인데, 720 짜리 배경 한 장이 섞이면
             //   2048 로 안 끝나고 4096 으로 넘어가 용량이 네 배가 된다
