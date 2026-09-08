@@ -8061,9 +8061,9 @@ namespace Game.Module.InGame
             if (EventOffersDisabled) { SpawnExit(); return; }
             if (_eventTable == null) { SpawnExit(); return; }
 
-            int ch = Mathf.Clamp(_runChapter, 1, 3);
-            _event = _eventTable.Draw(ch, _eventsUsed, _rng);
-            if (_event == null) { SpawnExit(); return; }   // 이 챕터 것을 다 봤다
+            // 챕터를 가리지 않고 **18종 한 통**에서 뽑는다(`EventTable.Draw` 주석).
+            _event = _eventTable.Draw(_eventsUsed, _rng);
+            if (_event == null) { SpawnExit(); return; }   // 이 판에서 다 봤다
 
             _eventsUsed.Add(_event.EventId);
             _bus.Publish(new EventOfferEvent

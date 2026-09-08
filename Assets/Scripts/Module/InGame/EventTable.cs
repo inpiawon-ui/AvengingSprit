@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,18 +55,26 @@ namespace Game.Module.InGame
         public IReadOnlyList<EventEntry> Entries => _entries;
 
         /// <summary>
-        /// 이 챕터에서 아직 안 나온 이벤트 하나를 뽑는다.
+        /// 이 판에서 아직 안 나온 이벤트 하나를 뽑는다.
+        ///
         /// 정본은 전부 `OncePerRun` 이다 — 한 판에 같은 이벤트가 두 번 나오면
         /// 두 번째는 선택이 아니라 반복이 된다.
+        ///
+        /// ⚠ **챕터로 거르지 않는다.** 표에는 18종이 CH1~CH3 에만 6씩 들어 있어
+        ///   챕터로 거르면 CH4~6 이 빈손이 된다. 임시로 챕터를 1~3 으로 잘라
+        ///   막고 있었는데, 그러면 뒤 세 챕터가 CH3 것을 다시 뽑아 **재탕**이 된다.
+        ///   판마다 이벤트 방은 여섯 번뿐이므로 18종을 한 통으로 두면 겹치지 않는다.
+        ///   챕터별로 가를지는 나중에 정한다(기획 2026-09-08) — 그때 `Chapter` 를
+        ///   다시 보면 된다. 값은 그대로 들고 있다.
         /// </summary>
-        public EventEntry Draw(int chapter, ICollection<string> used, System.Random rng)
+        public EventEntry Draw(ICollection<string> used, System.Random rng)
         {
             EventEntry pick = null;
             int seen = 0;
             for (int i = 0; i < _entries.Length; i++)
             {
                 var e = _entries[i];
-                if (e == null || !e.Implemented || e.Chapter != chapter) continue;
+                if (e == null || !e.Implemented) continue;
                 if (used != null && used.Contains(e.EventId)) continue;
                 // 저수지 표본 추출 — 후보 수를 미리 세지 않고 한 번에 고른다
                 if (rng.Next(++seen) == 0) pick = e;
