@@ -191,7 +191,7 @@ namespace Game.Module.InGame
                 shopDim.raycastTarget = true;
             }
 
-            // 그림은 아틀라스가 온 뒤에 입힌다(`SkinShop`). 여기서는 단색만 깔아 둔다 —
+            // 그림은 아틀라스가 온 뒤에 입힌다(`SkinPopups`). 여기서는 단색만 깔아 둔다 —
             // 아틀라스 로드가 실패해도 창이 보이기는 해야 한다.
             var shopBox = _ui.Get<Image>("ShopBox");
             if (shopBox != null) shopBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
@@ -255,13 +255,13 @@ namespace Game.Module.InGame
             try { _cardAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/card"); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 카드 아틀라스 로드 실패 — {e.Message}"); }
 
-            // 상점 팝업 부품(액자·슬롯·버튼)과 특성 분류 아이콘이 여기 있다.
+            // 창 부품(상점·악마·제단 액자·칸·버튼)과 특성 분류 아이콘이 여기 있다.
             try { _uiAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/ingamemainui"); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 화면 아틀라스 로드 실패 — {e.Message}"); }
 
             // 아틀라스가 온 **뒤에** 껍데기를 입힌다. 먼저 부르면 그림이 아직 없어
             // 단색으로 남는다 — 화면이 한 번 초라했다가 안 바뀐다.
-            SkinShop();
+            SkinPopups();
 
             try { _buffTable = await CoreModule.Get<IResourceManager>().LoadAsync<BuffTable>("TableData/BuffTable"); }
             catch (Exception e) { Debug.LogError($"[InGame] BuffTable 로드 실패 — {e.Message}"); }
@@ -908,13 +908,16 @@ namespace Game.Module.InGame
             _ui.SetText("EventBodyText", e.Body);
             // 못 고르는 이유를 **누르기 전에** 적는다. 값이 모자란 것과
             // 몸이 없어 못 받는 것은 다른 이유라 문구도 달라야 한다.
-            _ui.SetText("EventCostText",
+            // ⚠ 줄표(`— ... —`)를 붙이지 않는다. 명판 그림(`eventcostpill`)이
+            //   양끝 해골 장식을 이미 갖고 있어 줄표까지 넣으면 두 겹이 된다.
+            string costLine =
                 !string.IsNullOrEmpty(e.BlockedReason)
                     ? (string.IsNullOrEmpty(e.CostLabel)
-                        ? $"— {e.BlockedReason} —"
-                        : $"— {e.CostLabel} ({e.BlockedReason}) —")
+                        ? e.BlockedReason
+                        : $"{e.CostLabel} · {e.BlockedReason}")
                 : string.IsNullOrEmpty(e.CostLabel) ? string.Empty
-                : $"— {e.CostLabel} —");
+                : e.CostLabel;
+            _ui.SetText("EventCostText", costLine);
 
             _ui.SetText("EventAcceptText", e.AcceptLabel);
             _ui.SetText("EventDeclineText",
@@ -925,6 +928,7 @@ namespace Game.Module.InGame
             _ui.SetActive("EventAcceptButton", true);
             _ui.SetActive("EventDeclineButton", true);
             _ui.SetActive("EventCostText", true);
+            _ui.SetActive("EventCostPill", !string.IsNullOrEmpty(costLine));
             _ui.SetActive("EventBodyText", true);
 
             // 값을 못 치르면 버튼을 잠근다. 눌러 놓고 아무 일도 안 일어나면
@@ -936,11 +940,13 @@ namespace Game.Module.InGame
                 acceptBtn.interactable = e.CanAfford;
                 if (e.CanAfford) acceptBtn.onClick.AddListener(() => Resolve(true));
             }
+            // 그림(`eventacceptbutton`)이 붙은 뒤로는 **색을 곱하기만 한다.**
+            // 예전처럼 금색을 칠하면 용암 그림이 통째로 노래진다.
             var acceptImg = _ui.Get<Image>("EventAcceptButton");
             if (acceptImg != null)
                 acceptImg.color = e.CanAfford
-                    ? new Color(0.941f, 0.706f, 0.157f, 1f)
-                    : new Color(0.35f, 0.33f, 0.26f, 1f);
+                    ? Color.white
+                    : new Color(0.45f, 0.42f, 0.42f, 1f);
 
             var declineBtn = _ui.Get<Button>("EventDeclineButton");
             if (declineBtn != null)
@@ -963,6 +969,7 @@ namespace Game.Module.InGame
         {
             _ui.SetText("ShrineTitleText", "회복의 제단");
             _ui.SetText("ShrineHintText", "하나만 가져갈 수 있다");
+            _ui.SetActive("ShrineHintPill", true);
             _ui.SetText("ShrineResultText", string.Empty);
             _ui.SetActive("ShrineResultText", false);
 
@@ -998,6 +1005,7 @@ namespace Game.Module.InGame
             _ui.SetActive("ShrineResultText", true);
             _ui.SetText("ShrineResultText", e.ResultLine);
             _ui.SetText("ShrineHintText", string.Empty);
+            _ui.SetActive("ShrineHintPill", false);   // 글자만 지우면 명판이 빈 채로 남는다
             CloseShrineLater().Forget();   // fire-and-forget: 결과를 읽을 틈만 준다
         }
 
@@ -1029,6 +1037,7 @@ namespace Game.Module.InGame
             // 즉시 닫으면 값을 치른 결과가 화면에 남지 않는다.
             _ui.SetActive("EventAcceptButton", false);
             _ui.SetActive("EventCostText", false);
+            _ui.SetActive("EventCostPill", false);
             _ui.SetText("EventResultText", e.ResultLine);
             _ui.SetActive("EventResultText", true);
 
@@ -1280,25 +1289,44 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 상점 창에 그림을 입힌다. **아틀라스가 온 뒤에** 한 번만 부른다.
+        /// 방에서 열리는 창 셋(상점·악마·제단)에 그림을 입힌다.
+        /// **아틀라스가 온 뒤에** 한 번만 부른다.
+        ///
+        /// 세 창이 같은 화면에 번갈아 뜨므로 한 자리에서 같이 입힌다 —
+        /// 따로 두면 한 창만 그림이 빠져도 눈에 안 띈다.
         ///
         /// ⚠ 그림을 물릴 때 `color` 를 흰색으로 되돌린다. 단색 시절의 색이 남아 있으면
         ///   그림에 그 색이 곱해져 칙칙해진다 — 액자가 회색으로 뜬다.
         /// </summary>
-        private void SkinShop()
+        private void SkinPopups()
         {
+            // 상점 「유령 노점」
             Skin("ShopBox", "shopframe");
             Skin("ShopLeaveButton", "shopleavebutton");
             for (int i = 0; i < ShopSlots; i++) Skin($"ShopItem{i}", "shopitemslot");
+
+            // 악마 「봉인된 궤짝」
+            Skin("EventBox", "eventframe");
+            Skin("EventCostPill", "eventcostpill");
+            Skin("EventAcceptButton", "eventacceptbutton");
+            Skin("EventDeclineButton", "eventdeclinebutton");
+
+            // 천사 「회복의 제단」
+            Skin("ShrineBox", "shrineframe");
+            Skin("ShrineHintPill", "shrinehintpill");
+            for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot");
 
             void Skin(string node, string art)
             {
                 var img = _ui.Get<Image>(node);
                 var sp = UiArt(art);
+                // 그림이 없으면 **손대지 않는다.** 명판은 꺼진 채로 시작하므로
+                // 여기서 켜지 않으면 빈 네모가 서지 않는다.
                 if (img == null || sp == null) return;
                 img.sprite = sp;
                 img.color = Color.white;
                 img.type = Image.Type.Simple;
+                img.enabled = true;
             }
         }
 

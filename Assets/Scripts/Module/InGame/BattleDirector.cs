@@ -8271,9 +8271,13 @@ namespace Game.Module.InGame
             _ => true,
         };
 
+        /// <summary>
+        /// 못 받는 이유. **짧게 적는다** — 대가 명판(256px)에 값과 나란히 들어간다.
+        /// 길게 적으면 명판 밖으로 두 줄이 되어 버튼 위로 흘러내린다.
+        /// </summary>
         private string BlockedReasonOf(EventEntry e)
-            => !CanReceive(e) ? "몸이 없어 받을 수 없다"
-             : !CanAfford(e) ? "값을 치를 수 없다"
+            => !CanReceive(e) ? "몸이 없다"
+             : !CanAfford(e) ? "치를 수 없다"
              : string.Empty;
 
         /// <summary>이벤트를 받아들이거나 지나친다. UI 가 호출한다.</summary>
