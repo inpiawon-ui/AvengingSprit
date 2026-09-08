@@ -550,10 +550,20 @@ namespace Game.Module.InGame
         /// SHOP·EVENT 는 아직 화면이 없다. 적이 없는 방이라는 점은 REST 와 같으므로
         /// 그 자리를 빌린다 — 그래야 지나갈 수 있다. 화면이 생기면 갈라낸다.
         /// </summary>
-        private static RoomKind KindOfCanon(RoomEntry room)
+        /// <summary>
+        /// 이벤트 방(004)이 회복 방으로 갈리는 문턱. 고스트 최대 체력의 몫이다.
+        ///
+        /// ⚠ 004 **바로 다음이 중간 보스**이고 그 대장은 빙의가 안 된다.
+        ///   체력이 바닥인 채로 이벤트만 뜨면 그 판은 거기서 끝난다 —
+        ///   고를 것이 남아 있어야 선택이지, 죽는 길 하나뿐이면 그건 벽이다.
+        ///   그래서 바닥일 때는 **묻지 말고 돌려준다**(기획 2026-09-08).
+        /// </summary>
+        private const float EventToRestHpRatio = 0.40f;
+
+        private RoomKind KindOfCanon(RoomEntry room)
         {
             if (room.IsBoss) return RoomKind.Boss;
-            return (room.Type ?? string.Empty).ToUpperInvariant() switch
+            var kind = (room.Type ?? string.Empty).ToUpperInvariant() switch
             {
                 "BOSS"  => RoomKind.Boss,
                 "ELITE" => RoomKind.Elite,
@@ -562,6 +572,10 @@ namespace Game.Module.InGame
                 "REST" => RoomKind.Rest,
                 _       => RoomKind.Normal,
             };
+            // 이벤트 방은 체력이 바닥이면 회복 제단으로 바뀐다. 위 주석 참조.
+            if (kind == RoomKind.Event && _ghostHp <= GhostHpMax * EventToRestHpRatio)
+                return RoomKind.Rest;
+            return kind;
         }
 
         /// <summary>
@@ -8032,10 +8046,13 @@ namespace Game.Module.InGame
         public EventEntry PendingEvent => _event;
 
         /// <summary>
-        /// 이벤트 방을 그냥 지나가게 한다. 이벤트 스테이지를 따로 다시 잡기로 해서
-        /// 지금은 팝업을 띄우지 않는다 — 표를 다시 세우면 이 한 줄만 false 로 돌린다.
+        /// 이벤트 방을 그냥 지나가게 하는 스위치.
+        ///
+        /// 예전에는 켜 둔 채였다 — 이벤트 방을 둘 자리가 없어서 표만 세워 두고
+        /// 팝업을 막았다. 이제 **004 가 이벤트 방**이라 자리가 생겼으므로 내린다
+        /// (기획 2026-09-08). `EventTable` 18종이 전부 `Implemented` 다.
         /// </summary>
-        private static readonly bool EventOffersDisabled = true;
+        private static readonly bool EventOffersDisabled = false;
 
         private void OfferEvent()
         {

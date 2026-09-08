@@ -218,8 +218,19 @@ namespace Game.EditorTools
 
             e.FindPropertyRelative("_gold").intValue = Mathf.RoundToInt(gold * chapterMul);
             e.FindPropertyRelative("_exp").intValue = Mathf.RoundToInt(exp * chapterMul);
-            // 회복은 이벤트 방만. 나머지는 방 자체가 보상이다.
-            e.FindPropertyRelative("_healPct").intValue = d.Kind == "이벤트" ? 15 : 0;
+            // ⚠ 회복은 **어느 방에도 얹지 않는다.**
+            //
+            //   예전에는 `이벤트` 에 15 를 줬다. 그때 원본의 `이벤트` 는 004 였고
+            //   004 는 실물에서 전투방으로 돌려세워져 있었다 — 그 15 는 「회복 방을
+            //   전투방으로 바꾼 대가」였지 이벤트의 몫이 아니었다.
+            //
+            //   이제 004 가 **진짜 이벤트 방**이 된다. 그런데 `OnRoomCleared` 는
+            //   「적 0 · 문 아직 안 열림」이면 도는 자리라 이벤트 방에서도 돈다 —
+            //   즉 이벤트 보상 위에 15% 가 한 번 더 얹힌다. 중복이다.
+            //
+            //   돌려받을 자리는 따로 생겼다. 004 는 고스트 체력이 40% 아래면
+            //   회복 제단(REST)으로 갈린다(`BattleDirector.KindOfCanon`).
+            e.FindPropertyRelative("_healPct").intValue = 0;
         }
 
         /// <summary>

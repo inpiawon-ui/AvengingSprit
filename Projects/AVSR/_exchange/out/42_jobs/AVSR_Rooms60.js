@@ -117,7 +117,7 @@ const ROOMS = [
     7.5,
     3.5,
     "FLANK",
-    "amazon",
+    "gangster",
     "H"
    ],
    [
@@ -157,7 +157,7 @@ const ROOMS = [
     5,
     10,
     "BACK",
-    "commando_grenade",
+    "amazon",
     "H"
    ],
    [
@@ -204,7 +204,7 @@ const ROOMS = [
     3,
     6.5,
     "FRONT",
-    "baseball",
+    "commando_grenade",
     "H"
    ],
    [
@@ -241,8 +241,7 @@ const ROOMS = [
   "ch": 1,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_junkyard",
-  "pool": "몸"
+  "floor": "roomfloor_env_junkyard"
  },
  {
   "ch": 1,
@@ -251,11 +250,11 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "baseball",
+  "captain": "salamander",
   "minions": 3,
   "minionFrom": [
+   "gangster",
    "amazon",
-   "commando_mg",
    "commando_grenade"
   ]
  },
@@ -273,15 +272,15 @@ const ROOMS = [
     8,
     5.5,
     "FLANK",
-    "baseball",
+    "salamander",
     "H"
    ],
    [
     3,
     7.5,
     "RANGED",
-    "commando_mg",
-    "H"
+    "scrapgunner",
+    "T"
    ],
    [
     6.5,
@@ -316,9 +315,8 @@ const ROOMS = [
  {
   "ch": 1,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_junkyard",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_junkyard"
  },
  {
   "ch": 1,
@@ -334,15 +332,15 @@ const ROOMS = [
     2.5,
     9.5,
     "BACK",
-    "commando_grenade",
+    "gangster",
     "H"
    ],
    [
     2.5,
     5.5,
     "FLANK",
-    "amazon",
-    "H"
+    "scrapgunner",
+    "T"
    ],
    [
     7.5,
@@ -388,15 +386,15 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "baseball",
+    "hopper",
     "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "commando_mg",
-    "H"
+    "scrapgunner",
+    "T"
    ],
    [
     2.5,
@@ -433,8 +431,8 @@ const ROOMS = [
   "ch": 1,
   "no": "010",
   "kind": "보스",
-  "floor": "roomfloor_crusher",
-  "boss": "crusher"
+  "floor": "roomfloor_robot_snakes",
+  "boss": "robot_snakes"
  },
  {
   "ch": 2,
@@ -450,15 +448,15 @@ const ROOMS = [
     5,
     10,
     "BACK",
-    "dragon_blue",
+    "amazon",
     "H"
    ],
    [
     2,
     7.5,
     "FLANK",
-    "actor_enforcer",
-    "T"
+    "hopper_smg",
+    "H"
    ],
    [
     8,
@@ -497,7 +495,7 @@ const ROOMS = [
     3,
     6.5,
     "FRONT",
-    "amazon",
+    "thug",
     "H"
    ],
    [
@@ -551,7 +549,7 @@ const ROOMS = [
     3,
     7.5,
     "RANGED",
-    "hopper",
+    "commando_mg",
     "H"
    ],
    [
@@ -588,8 +586,7 @@ const ROOMS = [
   "ch": 2,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_missile",
-  "pool": "몸"
+  "floor": "roomfloor_env_missile"
  },
  {
   "ch": 2,
@@ -598,16 +595,12 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "commando_missile",
+  "captain": "robot",
   "minions": 3,
   "minionFrom": [
    "amazon",
-   "baseball",
-   "commando_mg",
-   "commando_grenade",
-   "hopper",
-   "medium",
-   "dragon_blue"
+   "thug",
+   "commando_mg"
   ]
  },
  {
@@ -624,15 +617,15 @@ const ROOMS = [
     2.5,
     9.5,
     "BACK",
-    "commando_missile",
+    "robot",
     "H"
    ],
    [
     2.5,
     5.5,
     "FLANK",
-    "baseball",
-    "H"
+    "roadwarden",
+    "T"
    ],
    [
     7.5,
@@ -667,9 +660,8 @@ const ROOMS = [
  {
   "ch": 2,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_missile",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_missile"
  },
  {
   "ch": 2,
@@ -685,15 +677,15 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "amazon",
+    "guru",
     "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "medium",
-    "H"
+    "roadwarden",
+    "T"
    ],
    [
     2.5,
@@ -746,15 +738,15 @@ const ROOMS = [
     2,
     7,
     "FLANK",
-    "baseball",
+    "white_wizard",
     "H"
    ],
    [
     8,
     7,
     "RANGED",
-    "commando_grenade",
-    "H"
+    "actor_enforcer",
+    "T"
    ],
    [
     6.5,
@@ -798,8 +790,8 @@ const ROOMS = [
   "ch": 2,
   "no": "010",
   "kind": "보스",
-  "floor": "roomfloor_guardian",
-  "boss": "guardian"
+  "floor": "roomfloor_crusher",
+  "boss": "crusher"
  },
  {
   "ch": 3,
@@ -815,7 +807,7 @@ const ROOMS = [
     3,
     6.5,
     "FRONT",
-    "ninja_chain",
+    "snowwoman",
     "H"
    ],
    [
@@ -869,7 +861,7 @@ const ROOMS = [
     3,
     7.5,
     "RANGED",
-    "snowwoman",
+    "amazon",
     "H"
    ],
    [
@@ -923,7 +915,7 @@ const ROOMS = [
     2.5,
     5.5,
     "FLANK",
-    "amazon",
+    "snowwoman",
     "H"
    ],
    [
@@ -960,8 +952,7 @@ const ROOMS = [
   "ch": 3,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_street",
-  "pool": "몸"
+  "floor": "roomfloor_env_street"
  },
  {
   "ch": 3,
@@ -970,20 +961,12 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "ninja_chain",
+  "captain": "vampire",
   "minions": 3,
   "minionFrom": [
-   "amazon",
-   "baseball",
-   "commando_mg",
-   "commando_grenade",
-   "hopper",
-   "commando_missile",
-   "medium",
-   "dragon_blue",
-   "ninja",
    "snowwoman",
-   "white_wizard"
+   "ninja",
+   "amazon"
   ]
  },
  {
@@ -1000,15 +983,15 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "ninja_chain",
+    "vampire",
     "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "ninja",
-    "H"
+    "actor_enforcer",
+    "T"
    ],
    [
     2.5,
@@ -1050,9 +1033,8 @@ const ROOMS = [
  {
   "ch": 3,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_street",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_street"
  },
  {
   "ch": 3,
@@ -1068,15 +1050,15 @@ const ROOMS = [
     2,
     7,
     "FLANK",
-    "baseball",
+    "ninja",
     "H"
    ],
    [
     8,
     7,
     "RANGED",
-    "white_wizard",
-    "H"
+    "actor_enforcer",
+    "T"
    ],
    [
     6.5,
@@ -1129,15 +1111,15 @@ const ROOMS = [
     5,
     8.5,
     "BACK",
-    "commando_mg",
+    "ninja",
     "H"
    ],
    [
     1.5,
     5.5,
     "FLANK",
-    "amazon",
-    "H"
+    "turret_cross",
+    "T"
    ],
    [
     2.5,
@@ -1198,14 +1180,14 @@ const ROOMS = [
     8,
     5.5,
     "FLANK",
-    "actor_enforcer",
-    "T"
+    "baseball",
+    "H"
    ],
    [
     3,
     7.5,
     "RANGED",
-    "dragoon",
+    "hopper_smg",
     "H"
    ],
    [
@@ -1252,14 +1234,14 @@ const ROOMS = [
     2.5,
     9.5,
     "BACK",
-    "roadwarden",
-    "T"
+    "snowwoman",
+    "H"
    ],
    [
     2.5,
     5.5,
     "FLANK",
-    "guru",
+    "medium",
     "H"
    ],
    [
@@ -1306,14 +1288,14 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "actor_enforcer",
-    "T"
+    "white_wizard",
+    "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "thug",
+    "amazon",
     "H"
    ],
    [
@@ -1357,8 +1339,7 @@ const ROOMS = [
   "ch": 4,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_rooftop",
-  "pool": "몸"
+  "floor": "roomfloor_env_rooftop"
  },
  {
   "ch": 4,
@@ -1367,24 +1348,12 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "gangster",
+  "captain": "dragon_blue",
   "minions": 3,
   "minionFrom": [
-   "amazon",
    "baseball",
-   "commando_mg",
-   "commando_grenade",
-   "hopper",
-   "commando_missile",
-   "medium",
-   "dragon_blue",
-   "ninja_chain",
-   "ninja",
    "snowwoman",
-   "white_wizard",
-   "thug",
-   "guru",
-   "dragoon"
+   "white_wizard"
   ]
  },
  {
@@ -1401,14 +1370,14 @@ const ROOMS = [
     2,
     7,
     "FLANK",
-    "gangster",
+    "dragon_blue",
     "H"
    ],
    [
     8,
     7,
     "RANGED",
-    "dragon_blue",
+    "thug",
     "H"
    ],
    [
@@ -1451,9 +1420,8 @@ const ROOMS = [
  {
   "ch": 4,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_rooftop",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_rooftop"
  },
  {
   "ch": 4,
@@ -1469,14 +1437,14 @@ const ROOMS = [
     5,
     8.5,
     "BACK",
-    "hopper",
+    "ninja",
     "H"
    ],
    [
     1.5,
     5.5,
     "FLANK",
-    "ninja_chain",
+    "commando_laser",
     "H"
    ],
    [
@@ -1530,15 +1498,15 @@ const ROOMS = [
     3,
     3,
     "FRONT",
-    "baseball",
+    "ninja_chain",
     "H"
    ],
    [
     5,
     6,
     "RANGED",
-    "commando_missile",
-    "H"
+    "actor_enforcer",
+    "T"
    ],
    [
     7,
@@ -1589,8 +1557,8 @@ const ROOMS = [
   "ch": 4,
   "no": "010",
   "kind": "보스",
-  "floor": "roomfloor_kingpin",
-  "boss": "kingpin"
+  "floor": "roomfloor_sludge",
+  "boss": "sludge"
  },
  {
   "ch": 5,
@@ -1606,14 +1574,14 @@ const ROOMS = [
     2.5,
     9.5,
     "BACK",
-    "turret_cross",
-    "T"
+    "hopper_smg",
+    "H"
    ],
    [
     2.5,
     5.5,
     "FLANK",
-    "amazon_elite",
+    "snowwoman",
     "H"
    ],
    [
@@ -1660,14 +1628,14 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "skeleton",
-    "T"
+    "commando_laser",
+    "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "hopper_smg",
+    "guru",
     "H"
    ],
    [
@@ -1721,15 +1689,15 @@ const ROOMS = [
     2,
     7,
     "FLANK",
-    "amazon",
+    "white_wizard",
     "H"
    ],
    [
     8,
     7,
     "RANGED",
-    "turret_cross",
-    "T"
+    "commando_grenade",
+    "H"
    ],
    [
     6.5,
@@ -1772,8 +1740,7 @@ const ROOMS = [
   "ch": 5,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_lab",
-  "pool": "몸"
+  "floor": "roomfloor_env_lab"
  },
  {
   "ch": 5,
@@ -1782,28 +1749,12 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "robot",
+  "captain": "amazon_elite",
   "minions": 3,
   "minionFrom": [
-   "amazon",
-   "baseball",
-   "commando_mg",
-   "commando_grenade",
-   "hopper",
-   "commando_missile",
-   "medium",
-   "dragon_blue",
-   "ninja_chain",
-   "ninja",
-   "snowwoman",
-   "white_wizard",
-   "gangster",
-   "thug",
-   "guru",
-   "dragoon",
+   "hopper_smg",
    "commando_laser",
-   "amazon_elite",
-   "hopper_smg"
+   "white_wizard"
   ]
  },
  {
@@ -1820,14 +1771,14 @@ const ROOMS = [
     5,
     8.5,
     "BACK",
-    "robot",
+    "amazon_elite",
     "H"
    ],
    [
     1.5,
     5.5,
     "FLANK",
-    "guru",
+    "ninja_chain",
     "H"
    ],
    [
@@ -1870,9 +1821,8 @@ const ROOMS = [
  {
   "ch": 5,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_lab",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_lab"
  },
  {
   "ch": 5,
@@ -1888,14 +1838,14 @@ const ROOMS = [
     3,
     3,
     "FRONT",
-    "ninja_chain",
+    "ninja",
     "H"
    ],
    [
     5,
     6,
     "RANGED",
-    "commando_laser",
+    "dragon_blue",
     "H"
    ],
    [
@@ -1956,14 +1906,14 @@ const ROOMS = [
     2,
     6.5,
     "FLANK",
-    "baseball",
+    "commando_missile",
     "H"
    ],
    [
     5,
     8,
     "RANGED",
-    "medium",
+    "robot",
     "H"
    ],
    [
@@ -2015,8 +1965,8 @@ const ROOMS = [
   "ch": 5,
   "no": "010",
   "kind": "보스",
-  "floor": "roomfloor_robot_snakes",
-  "boss": "robot_snakes"
+  "floor": "roomfloor_guardian",
+  "boss": "guardian"
  },
  {
   "ch": 6,
@@ -2032,14 +1982,14 @@ const ROOMS = [
     5,
     3,
     "FRONT",
-    "skeleton",
-    "T"
+    "commando_grenade",
+    "H"
    ],
    [
     2.5,
     7.5,
     "RANGED",
-    "salamander",
+    "commando_mg",
     "H"
    ],
    [
@@ -2093,15 +2043,15 @@ const ROOMS = [
     2,
     7,
     "FLANK",
-    "death",
+    "snowwoman",
     "H"
    ],
    [
     8,
     7,
     "RANGED",
-    "coilwalker",
-    "T"
+    "guru",
+    "H"
    ],
    [
     6.5,
@@ -2154,7 +2104,7 @@ const ROOMS = [
     5,
     8.5,
     "BACK",
-    "vampire",
+    "thug",
     "H"
    ],
    [
@@ -2212,8 +2162,7 @@ const ROOMS = [
   "ch": 6,
   "no": "004",
   "kind": "이벤트",
-  "floor": "roomfloor_env_refinery",
-  "pool": "몸"
+  "floor": "roomfloor_env_refinery"
  },
  {
   "ch": 6,
@@ -2222,31 +2171,12 @@ const ROOMS = [
   "floor": "roomfloor_env_holding",
   "layout": "F",
   "layoutKo": "모서리 요새",
-  "captain": "salamander",
+  "captain": "medium",
   "minions": 3,
   "minionFrom": [
-   "amazon",
-   "baseball",
-   "commando_mg",
    "commando_grenade",
-   "hopper",
-   "commando_missile",
-   "medium",
-   "dragon_blue",
-   "ninja_chain",
-   "ninja",
    "snowwoman",
-   "white_wizard",
-   "gangster",
-   "thug",
-   "guru",
-   "dragoon",
-   "robot",
-   "commando_laser",
-   "amazon_elite",
-   "hopper_smg",
-   "vampire",
-   "death"
+   "thug"
   ]
  },
  {
@@ -2263,15 +2193,15 @@ const ROOMS = [
     3,
     3,
     "FRONT",
-    "salamander",
+    "medium",
     "H"
    ],
    [
     5,
     6,
     "RANGED",
-    "commando_grenade",
-    "H"
+    "skeleton",
+    "T"
    ],
    [
     7,
@@ -2320,9 +2250,8 @@ const ROOMS = [
  {
   "ch": 6,
   "no": "007",
-  "kind": "이벤트",
-  "floor": "roomfloor_env_refinery",
-  "pool": "판돈"
+  "kind": "상점",
+  "floor": "roomfloor_env_refinery"
  },
  {
   "ch": 6,
@@ -2345,8 +2274,8 @@ const ROOMS = [
     5,
     8,
     "RANGED",
-    "snowwoman",
-    "H"
+    "skeleton",
+    "T"
    ],
    [
     8,
@@ -2406,15 +2335,15 @@ const ROOMS = [
     5,
     10,
     "BACK",
-    "ninja",
+    "robot",
     "H"
    ],
    [
     2,
     7.5,
     "FLANK",
-    "amazon",
-    "H"
+    "coilwalker",
+    "T"
    ],
    [
     3.5,
@@ -2465,8 +2394,8 @@ const ROOMS = [
   "ch": 6,
   "no": "010",
   "kind": "보스",
-  "floor": "roomfloor_sludge",
-  "boss": "sludge"
+  "floor": "roomfloor_kingpin",
+  "boss": "kingpin"
  }
 ];
 
