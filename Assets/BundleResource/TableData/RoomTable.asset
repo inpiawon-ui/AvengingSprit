@@ -482,7 +482,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH1_004
     _chapter: 1
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -513,10 +513,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_junkyard
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 40
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -830,15 +830,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH1_007
     _chapter: 1
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uACC4\uB2E8"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: E
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -862,138 +862,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_junkyard
     _eventPool: 
-    _gold: 24
+    _gold: 0
     _exp: 40
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S01
-      _actorId: gangster
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S02
-      _actorId: scrapgunner
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S03
-      _actorId: scrapgunner
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S04
-      _actorId: skeleton
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S05
-      _actorId: scrapgunner
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH1_007_S06
-      _actorId: skeleton
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 2, y: 2.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_2
-      _kind: CRATE
-      _at: {x: 4, y: 5.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
-      _at: {x: 6, y: 8.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_4
-      _kind: PILLAR
-      _at: {x: 7.5, y: 3.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
-      _at: {x: 2.5, y: 9.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_6
-      _kind: BULK
-      _at: {x: 8, y: 6}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH1_008
     _chapter: 1
     _type: COMBAT
@@ -1035,7 +909,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH1_008_S01
-      _actorId: amazon
+      _actorId: gangster
       _at: {x: 2.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
@@ -1489,11 +1363,11 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_001_S02
-      _actorId: bat
+      _actorId: hopper_smg
       _at: {x: 2, y: 7.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_001_S03
@@ -1985,7 +1859,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH2_004
     _chapter: 2
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -2040,10 +1914,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_missile
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 54
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -2405,15 +2279,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH2_007
     _chapter: 2
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uC5C7\uAC08\uB9B0 \uBB38"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: J
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -2461,151 +2335,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_missile
     _eventPool: 
-    _gold: 32
+    _gold: 0
     _exp: 54
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S01
-      _actorId: guru
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S02
-      _actorId: roadwarden
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S03
-      _actorId: roadwarden
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S04
-      _actorId: actor_enforcer
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S05
-      _actorId: roadwarden
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH2_007_S06
-      _actorId: actor_enforcer
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 4.5, y: 4.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 4.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BARRICADE_3
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 8.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BARRICADE_4
-      _kind: BARRICADE
-      _at: {x: 5.5, y: 8.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_5
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_6
-      _kind: PILLAR
-      _at: {x: 8.5, y: 2.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_7
-      _kind: PILLAR
-      _at: {x: 1.5, y: 9.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH2_008
     _chapter: 2
     _type: COMBAT
@@ -2671,7 +2406,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH2_008_S01
-      _actorId: hopper_smg
+      _actorId: guru
       _at: {x: 5, y: 3}
       _facing: S
       _delaySeconds: 0
@@ -3682,7 +3417,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH3_004
     _chapter: 3
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -3737,10 +3472,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_street
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 68
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -4110,15 +3845,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH3_007
     _chapter: 3
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uC2ED\uC790 \uBD84\uB2E8"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: D
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -4166,151 +3901,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_street
     _eventPool: 
-    _gold: 41
+    _gold: 0
     _exp: 68
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S01
-      _actorId: ninja
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S02
-      _actorId: actor_enforcer
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S03
-      _actorId: actor_enforcer
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S04
-      _actorId: coilwalker
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S05
-      _actorId: actor_enforcer
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH3_007_S06
-      _actorId: coilwalker
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 5, y: 9}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_2
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
-      _at: {x: 3.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_4
-      _kind: PILLAR
-      _at: {x: 6.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_5
-      _kind: BULK
-      _at: {x: 5, y: 4}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_6
-      _kind: PILLAR
-      _at: {x: 2.5, y: 8.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_7
-      _kind: PILLAR
-      _at: {x: 7.5, y: 8.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH3_008
     _chapter: 3
     _type: COMBAT
@@ -4376,7 +3972,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH3_008_S01
-      _actorId: amazon
+      _actorId: ninja
       _at: {x: 2, y: 7}
       _facing: S
       _delaySeconds: 0
@@ -4857,7 +4453,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_001_S02
-      _actorId: medium
+      _actorId: hopper_smg
       _at: {x: 3, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -5060,7 +4656,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_002_S02
-      _actorId: amazon
+      _actorId: medium
       _at: {x: 2.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -5263,7 +4859,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_003_S02
-      _actorId: thug
+      _actorId: amazon
       _at: {x: 2.5, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -5403,7 +4999,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH4_004
     _chapter: 4
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -5458,10 +5054,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_rooftop
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 82
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -5691,7 +5287,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_006_S02
-      _actorId: commando_laser
+      _actorId: thug
       _at: {x: 8, y: 7}
       _facing: S
       _delaySeconds: 0
@@ -5831,15 +5427,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH4_007
     _chapter: 4
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uC911\uC559 \uC694\uC0C8"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: C
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -5887,151 +5483,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_rooftop
     _eventPool: 
-    _gold: 49
+    _gold: 0
     _exp: 82
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S01
-      _actorId: ninja
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S02
-      _actorId: actor_enforcer
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S03
-      _actorId: actor_enforcer
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S04
-      _actorId: coilwalker
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S05
-      _actorId: actor_enforcer
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_007_S06
-      _actorId: coilwalker
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 5, y: 7}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 5, y: 5}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
-      _at: {x: 3.5, y: 8.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_4
-      _kind: PILLAR
-      _at: {x: 6.5, y: 8.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
-      _at: {x: 3.5, y: 3.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_6
-      _kind: PILLAR
-      _at: {x: 6.5, y: 3.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_7
-      _kind: TIMED_SPIKE
-      _at: {x: 2, y: 6}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH4_008
     _chapter: 4
     _type: COMBAT
@@ -6097,7 +5554,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH4_008_S01
-      _actorId: hopper_smg
+      _actorId: ninja
       _at: {x: 5, y: 8.5}
       _facing: S
       _delaySeconds: 0
@@ -6105,11 +5562,11 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_008_S02
-      _actorId: roadwarden
+      _actorId: commando_laser
       _at: {x: 1.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_008_S03
@@ -6599,7 +6056,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S02
-      _actorId: guru
+      _actorId: snowwoman
       _at: {x: 2.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -6802,7 +6259,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_002_S02
-      _actorId: commando_grenade
+      _actorId: guru
       _at: {x: 2.5, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -7013,7 +6470,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_003_S02
-      _actorId: ninja_chain
+      _actorId: commando_grenade
       _at: {x: 8, y: 7}
       _facing: S
       _delaySeconds: 0
@@ -7153,7 +6610,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH5_004
     _chapter: 5
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -7208,10 +6665,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_lab
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 96
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -7441,7 +6898,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_006_S02
-      _actorId: dragon_blue
+      _actorId: ninja_chain
       _at: {x: 1.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -7568,15 +7025,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH5_007
     _chapter: 5
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uC0AC\uC120 \uBD84\uB2E8"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: K
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -7624,151 +7081,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_lab
     _eventPool: 
-    _gold: 58
+    _gold: 0
     _exp: 96
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S01
-      _actorId: ninja
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S02
-      _actorId: robot
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S03
-      _actorId: skeleton
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S04
-      _actorId: coilwalker
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S05
-      _actorId: skeleton
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH5_007_S06
-      _actorId: coilwalker
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 2, y: 9}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 4, y: 7}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_3
-      _kind: BULK
-      _at: {x: 6, y: 5}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_4
-      _kind: BULK
-      _at: {x: 8, y: 3}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_5
-      _kind: TIMED_SPIKE
-      _at: {x: 5, y: 9}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 8, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_7
-      _kind: CRATE
-      _at: {x: 2, y: 2.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH5_008
     _chapter: 5
     _type: COMBAT
@@ -7834,7 +7152,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH5_008_S01
-      _actorId: snowwoman
+      _actorId: ninja
       _at: {x: 3, y: 3}
       _facing: S
       _delaySeconds: 0
@@ -7842,11 +7160,11 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_008_S02
-      _actorId: skeleton
+      _actorId: dragon_blue
       _at: {x: 5, y: 6}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_008_S03
@@ -8072,13 +7390,13 @@ MonoBehaviour:
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
       _telegraph: 
-    - _elite: 0
+    - _elite: 1
       _spawnId: ROOM_CH5_009_S02
-      _actorId: skeleton
+      _actorId: robot
       _at: {x: 5, y: 8}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_009_S03
@@ -8357,7 +7675,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_001_S02
-      _actorId: guru
+      _actorId: commando_mg
       _at: {x: 2.5, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -8568,11 +7886,11 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_002_S02
-      _actorId: skeleton
+      _actorId: guru
       _at: {x: 8, y: 7}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_002_S03
@@ -8914,7 +8232,7 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH6_004
     _chapter: 6
-    _type: EVENT
+    _type: REST
     _route: MAIN
     _intent: 
     _isChapterStart: 0
@@ -8969,10 +8287,10 @@ MonoBehaviour:
     _bossMoves: []
     _midBossKey: 
     _floor: roomfloor_env_refinery
-    _eventPool: "\uBAB8"
+    _eventPool: 
     _gold: 0
-    _exp: 0
-    _healPct: 15
+    _exp: 110
+    _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
     _spawns: []
     _objects: []
@@ -9363,15 +8681,15 @@ MonoBehaviour:
       _unnamed: 0
   - _roomId: ROOM_CH6_007
     _chapter: 6
-    _type: COMBAT
+    _type: SHOP
     _route: MAIN
-    _intent: "\uC881\uC740 \uBB38"
+    _intent: 
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: G
+    _template: 
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -9419,138 +8737,12 @@ MonoBehaviour:
     _midBossKey: 
     _floor: roomfloor_env_refinery
     _eventPool: 
-    _gold: 66
+    _gold: 0
     _exp: 110
     _healPct: 0
     _playerSpawn: {x: 5, y: 1.7}
-    _spawns:
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S01
-      _actorId: amazon_elite
-      _at: {x: 2.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S02
-      _actorId: skeleton
-      _at: {x: 2.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S03
-      _actorId: skeleton
-      _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S04
-      _actorId: actor_enforcer
-      _at: {x: 7.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S05
-      _actorId: skeleton
-      _at: {x: 5, y: 10}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_007_S06
-      _actorId: actor_enforcer
-      _at: {x: 5, y: 2.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 7.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 7.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
-      _at: {x: 5, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: LOW_COVER_4
-      _kind: LOW_COVER
-      _at: {x: 3.5, y: 4.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
-      _at: {x: 7.5, y: 4.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 5, y: 2.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
+    _spawns: []
+    _objects: []
   - _roomId: ROOM_CH6_008
     _chapter: 6
     _type: COMBAT
@@ -9616,7 +8808,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH6_008_S01
-      _actorId: commando_mg
+      _actorId: amazon_elite
       _at: {x: 2, y: 6.5}
       _facing: S
       _delaySeconds: 0

@@ -2382,6 +2382,7 @@ namespace Game.Module.InGame
             _exitOpen = false;
             _exitOpenTime = -1f;
             ClearFields();   // 안 지우면 새 방 바닥에 지난 방 장판이 남는다
+            ClearRoomProp(); // 지난 방 제단·가판이 새 방 한복판에 남지 않게
             ClearGoldPiles();   // 못 걷고 나간 골드가 다음 방 바닥에 남지 않게
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
@@ -2551,23 +2552,20 @@ namespace Game.Module.InGame
             }
             else if (_roomKind == RoomKind.Shop)
             {
-                // 상점 — 모아 둔 골드를 쓰는 자리.
-                OpenShop();
+                // 상점 — 모아 둔 골드를 쓰는 자리. 가판에 다가서면 열린다.
+                // ⚠ 들어서자마자 열지 않는다. 그러면 방이 화면 한 장으로 끝나
+                //   「지나가는 복도」가 된다(`TickRoomProp` 주석 참조).
+                SpawnShopStall();
+                SpawnExit();
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else if (_roomKind == RoomKind.Rest)
             {
-                // 회복 방 — 적이 없다. 들어서는 순간 Ghost HP 를 돌려주고 출구를 연다.
+                // 회복 방 — 적이 없다. 가운데 제단에 다가서면 몸과 유령이 함께 찬다.
                 // 유령 상태의 시계가 계속 도는 게임이라, 쉬어 가는 방이 곧 보상이다.
-                // 정본 v3.3 REST_MASTER — 챕터가 깊어질수록 덜 돌려준다.
-                //   CH1 Host 25% / Ghost 22%   CH2 22 / 20   CH3 19 / 18
-                int restCh = Mathf.Clamp(_runChapter, 1, 3);
-                int hostPct  = restCh == 1 ? 25 : restCh == 2 ? 22 : 19;
-                int ghostPct = restCh == 1 ? 22 : restCh == 2 ? 20 : 18;
-
-                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * ghostPct / 100);
-                if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * hostPct / 100));
-                PublishHp();
+                // 돌려주는 양은 `UseHealShrine` 에 있다(정본 REST_MASTER).
+                SpawnHealShrine();
+                SpawnExit();
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else if (_canonRoom != null)
@@ -2812,6 +2810,7 @@ namespace Game.Module.InGame
             TickMidBoss(dt);       // 부하가 다 죽으면 대장이 3초 굳는다
             TickBeam(dt);          // 쏜 빔이 잠깐 남았다 옅어진다
             TickExecutionLock(dt); // 표식이 예고 내내 나를 쫓아온다
+            TickRoomProp();        // 회복 제단·상점 가판에 다가섰는가
             TickLockShot(dt);      // 표식이 사라지면 그 자리로 탄이 날아온다
             TickMelt(dt);          // 천장 확산 — 섬이 옮겨 다니는 8초
             TickKingpinDrop(dt);   // 올라가 있는 시간은 예고 시간과 같다

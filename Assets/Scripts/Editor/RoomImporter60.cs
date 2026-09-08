@@ -123,6 +123,8 @@ namespace Game.EditorTools
             "중간보스" => "MIDBOSS",
             "엘리트"   => "ELITE",
             "이벤트"   => "EVENT",
+            "회복"     => "REST",
+            "상점"     => "SHOP",
             _          => "COMBAT",
         };
 
@@ -200,6 +202,8 @@ namespace Game.EditorTools
                 "중간보스" => 80,
                 "엘리트"   => 60,
                 "이벤트"   => 0,
+                "회복"     => 0,
+                "상점"     => 0,
                 _          => 24,
             };
             int exp = d.Kind switch

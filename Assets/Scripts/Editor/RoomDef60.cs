@@ -96,9 +96,9 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 3.5f, Role = "FRONT", Unit = "skeleton", IsHost = false },
                     },
                     },
-            new() { Ch = 1, No = "004", Kind = "이벤트",
+            new() { Ch = 1, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_junkyard", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 1, No = "005", Kind = "중간보스",
@@ -121,19 +121,10 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 9.5f, Role = "BACK", Unit = "scrapgunner", IsHost = false },
                     },
                     },
-            new() { Ch = 1, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_junkyard", Layout = "E", LayoutKo = "계단",
-                    Comp = "FRONTLINE_PLUS_RANGED", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 1, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_junkyard", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "gangster", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "scrapgunner", IsHost = false },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "scrapgunner", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "skeleton", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "scrapgunner", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "skeleton", IsHost = false },
-                    },
                     },
             new() { Ch = 1, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_junkyard", Layout = "D", LayoutKo = "십자 분단",
@@ -141,7 +132,7 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "amazon", IsHost = true },
+                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "gangster", IsHost = true },
                         new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "scrapgunner", IsHost = false },
                         new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "scrapgunner", IsHost = false },
                         new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "skeleton", IsHost = false },
@@ -175,7 +166,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "amazon", IsHost = true },
-                        new() { X = 2f, Y = 7.5f, Role = "FLANK", Unit = "bat", IsHost = false },
+                        new() { X = 2f, Y = 7.5f, Role = "FLANK", Unit = "hopper_smg", IsHost = true },
                         new() { X = 8f, Y = 7.5f, Role = "FLANK", Unit = "bat", IsHost = false },
                         new() { X = 8f, Y = 10f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 5f, Y = 6f, Role = "RANGED", Unit = "roadwarden", IsHost = false },
@@ -208,9 +199,9 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 9.5f, Role = "BACK", Unit = "roadwarden", IsHost = false },
                     },
                     },
-            new() { Ch = 2, No = "004", Kind = "이벤트",
+            new() { Ch = 2, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_missile", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 2, No = "005", Kind = "중간보스",
@@ -233,19 +224,10 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                     },
                     },
-            new() { Ch = 2, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_missile", Layout = "J", LayoutKo = "엇갈린 문",
-                    Comp = "FLANK_REINFORCEMENT_PLUS_ZONER", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 2, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_missile", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "guru", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "roadwarden", IsHost = false },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "roadwarden", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "roadwarden", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
-                    },
                     },
             new() { Ch = 2, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_missile", Layout = "C", LayoutKo = "중앙 요새",
@@ -253,7 +235,7 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 5f, Y = 3f, Role = "FRONT", Unit = "hopper_smg", IsHost = true },
+                        new() { X = 5f, Y = 3f, Role = "FRONT", Unit = "guru", IsHost = true },
                         new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "roadwarden", IsHost = false },
                         new() { X = 2.5f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 7.5f, Y = 7.5f, Role = "RANGED", Unit = "roadwarden", IsHost = false },
@@ -323,9 +305,9 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                     },
                     },
-            new() { Ch = 3, No = "004", Kind = "이벤트",
+            new() { Ch = 3, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_street", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 3, No = "005", Kind = "중간보스",
@@ -349,19 +331,10 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 9.5f, Role = "BACK", Unit = "turret_cross", IsHost = false },
                     },
                     },
-            new() { Ch = 3, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_street", Layout = "D", LayoutKo = "십자 분단",
-                    Comp = "BACKLINE_PRESSURE_PLUS_HUNTER", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 3, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_street", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "ninja", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "coilwalker", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "coilwalker", IsHost = false },
-                    },
                     },
             new() { Ch = 3, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_street", Layout = "K", LayoutKo = "사선 분단",
@@ -369,7 +342,7 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 2f, Y = 7f, Role = "FLANK", Unit = "amazon", IsHost = true },
+                        new() { X = 2f, Y = 7f, Role = "FLANK", Unit = "ninja", IsHost = true },
                         new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 6.5f, Y = 2f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 5f, Y = 3f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
@@ -405,7 +378,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 8f, Y = 5.5f, Role = "FLANK", Unit = "baseball", IsHost = true },
-                        new() { X = 3f, Y = 7.5f, Role = "RANGED", Unit = "medium", IsHost = true },
+                        new() { X = 3f, Y = 7.5f, Role = "RANGED", Unit = "hopper_smg", IsHost = true },
                         new() { X = 6.5f, Y = 10f, Role = "FLANK", Unit = "bat", IsHost = false },
                         new() { X = 7f, Y = 7.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 8f, Y = 9.5f, Role = "BACK", Unit = "roadwarden", IsHost = false },
@@ -419,7 +392,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "snowwoman", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "amazon", IsHost = true },
+                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "medium", IsHost = true },
                         new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "coilwalker", IsHost = false },
                         new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "roadwarden", IsHost = false },
@@ -433,7 +406,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 5f, Y = 3f, Role = "FRONT", Unit = "white_wizard", IsHost = true },
-                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "thug", IsHost = true },
+                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "amazon", IsHost = true },
                         new() { X = 2.5f, Y = 2.5f, Role = "FRONT", Unit = "bat", IsHost = false },
                         new() { X = 7.5f, Y = 7.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 5f, Y = 1.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
@@ -441,9 +414,9 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 9.5f, Role = "BACK", Unit = "coilwalker", IsHost = false },
                     },
                     },
-            new() { Ch = 4, No = "004", Kind = "이벤트",
+            new() { Ch = 4, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_rooftop", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 4, No = "005", Kind = "중간보스",
@@ -459,7 +432,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2f, Y = 7f, Role = "FLANK", Unit = "dragon_blue", IsHost = true },
-                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "commando_laser", IsHost = true },
+                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "thug", IsHost = true },
                         new() { X = 6.5f, Y = 2f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 5f, Y = 3f, Role = "RANGED", Unit = "roadwarden", IsHost = false },
                         new() { X = 8.5f, Y = 1.5f, Role = "FLANK", Unit = "bat", IsHost = false },
@@ -467,19 +440,10 @@ namespace Game.EditorTools
                         new() { X = 5.5f, Y = 7.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                     },
                     },
-            new() { Ch = 4, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_rooftop", Layout = "C", LayoutKo = "중앙 요새",
-                    Comp = "FRONTLINE_PLUS_RANGED", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 4, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_rooftop", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "ninja", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "coilwalker", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "coilwalker", IsHost = false },
-                    },
                     },
             new() { Ch = 4, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_rooftop", Layout = "G", LayoutKo = "좁은 문",
@@ -487,8 +451,8 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 5f, Y = 8.5f, Role = "BACK", Unit = "hopper_smg", IsHost = true },
-                        new() { X = 1.5f, Y = 5.5f, Role = "FLANK", Unit = "roadwarden", IsHost = false },
+                        new() { X = 5f, Y = 8.5f, Role = "BACK", Unit = "ninja", IsHost = true },
+                        new() { X = 1.5f, Y = 5.5f, Role = "FLANK", Unit = "commando_laser", IsHost = true },
                         new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "roadwarden", IsHost = false },
                         new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "coilwalker", IsHost = false },
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "roadwarden", IsHost = false },
@@ -524,7 +488,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "hopper_smg", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "guru", IsHost = true },
+                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "snowwoman", IsHost = true },
                         new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "coilwalker", IsHost = false },
                         new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "turret_cross", IsHost = false },
@@ -538,7 +502,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 5f, Y = 3f, Role = "FRONT", Unit = "commando_laser", IsHost = true },
-                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "commando_grenade", IsHost = true },
+                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "guru", IsHost = true },
                         new() { X = 2.5f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 7.5f, Y = 7.5f, Role = "RANGED", Unit = "turret_cross", IsHost = false },
                         new() { X = 5f, Y = 1.5f, Role = "FRONT", Unit = "skeleton", IsHost = false },
@@ -553,7 +517,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2f, Y = 7f, Role = "FLANK", Unit = "white_wizard", IsHost = true },
-                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "ninja_chain", IsHost = true },
+                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "commando_grenade", IsHost = true },
                         new() { X = 6.5f, Y = 2f, Role = "FLANK", Unit = "skeleton", IsHost = false },
                         new() { X = 5f, Y = 3f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 8.5f, Y = 1.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
@@ -561,9 +525,9 @@ namespace Game.EditorTools
                         new() { X = 5.5f, Y = 7.5f, Role = "FRONT", Unit = "skeleton", IsHost = false },
                     },
                     },
-            new() { Ch = 5, No = "004", Kind = "이벤트",
+            new() { Ch = 5, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_lab", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 5, No = "005", Kind = "중간보스",
@@ -579,7 +543,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 5f, Y = 8.5f, Role = "BACK", Unit = "amazon_elite", IsHost = true },
-                        new() { X = 1.5f, Y = 5.5f, Role = "FLANK", Unit = "dragon_blue", IsHost = true },
+                        new() { X = 1.5f, Y = 5.5f, Role = "FLANK", Unit = "ninja_chain", IsHost = true },
                         new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "turret_cross", IsHost = false },
                         new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "coilwalker", IsHost = false },
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "turret_cross", IsHost = false },
@@ -587,19 +551,10 @@ namespace Game.EditorTools
                         new() { X = 7f, Y = 5.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                     },
                     },
-            new() { Ch = 5, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_lab", Layout = "K", LayoutKo = "사선 분단",
-                    Comp = "FLANK_REINFORCEMENT_PLUS_ZONER", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 5, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_lab", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "ninja", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "robot", IsHost = true },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "skeleton", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "coilwalker", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "skeleton", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "coilwalker", IsHost = false },
-                    },
                     },
             new() { Ch = 5, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_lab", Layout = "H", LayoutKo = "가시밭",
@@ -607,8 +562,8 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 3f, Y = 3f, Role = "FRONT", Unit = "snowwoman", IsHost = true },
-                        new() { X = 5f, Y = 6f, Role = "RANGED", Unit = "skeleton", IsHost = false },
+                        new() { X = 3f, Y = 3f, Role = "FRONT", Unit = "ninja", IsHost = true },
+                        new() { X = 5f, Y = 6f, Role = "RANGED", Unit = "dragon_blue", IsHost = true },
                         new() { X = 7f, Y = 3f, Role = "FRONT", Unit = "skeleton", IsHost = false },
                         new() { X = 5f, Y = 8.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 5f, Y = 10f, Role = "BACK", Unit = "turret_cross", IsHost = false },
@@ -624,7 +579,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2f, Y = 6.5f, Role = "FLANK", Unit = "commando_missile", IsHost = true },
-                        new() { X = 5f, Y = 8f, Role = "RANGED", Unit = "skeleton", IsHost = false },
+                        new() { X = 5f, Y = 8f, Role = "RANGED", Unit = "robot", IsHost = true },
                         new() { X = 8f, Y = 6.5f, Role = "FLANK", Unit = "skeleton", IsHost = false },
                         new() { X = 6.5f, Y = 7.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 3.5f, Y = 10f, Role = "BACK", Unit = "turret_cross", IsHost = false },
@@ -645,7 +600,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 5f, Y = 3f, Role = "FRONT", Unit = "commando_grenade", IsHost = true },
-                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "guru", IsHost = true },
+                        new() { X = 2.5f, Y = 7.5f, Role = "RANGED", Unit = "commando_mg", IsHost = true },
                         new() { X = 2.5f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
                         new() { X = 7.5f, Y = 7.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                         new() { X = 5f, Y = 1.5f, Role = "FRONT", Unit = "skeleton", IsHost = false },
@@ -660,7 +615,7 @@ namespace Game.EditorTools
                     Spawns = new Spawn[]
                     {
                         new() { X = 2f, Y = 7f, Role = "FLANK", Unit = "snowwoman", IsHost = true },
-                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "skeleton", IsHost = false },
+                        new() { X = 8f, Y = 7f, Role = "RANGED", Unit = "guru", IsHost = true },
                         new() { X = 6.5f, Y = 2f, Role = "FLANK", Unit = "skeleton", IsHost = false },
                         new() { X = 5f, Y = 3f, Role = "RANGED", Unit = "turret_cross", IsHost = false },
                         new() { X = 8.5f, Y = 1.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
@@ -684,9 +639,9 @@ namespace Game.EditorTools
                         new() { X = 5f, Y = 6.5f, Role = "RANGED", Unit = "coilwalker", IsHost = false },
                     },
                     },
-            new() { Ch = 6, No = "004", Kind = "이벤트",
+            new() { Ch = 6, No = "004", Kind = "회복",
                     Floor = "roomfloor_env_refinery", Layout = "", LayoutKo = "",
-                    Comp = "", Pool = "몸", Boss = "", Captain = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
                     },
             new() { Ch = 6, No = "005", Kind = "중간보스",
@@ -711,19 +666,10 @@ namespace Game.EditorTools
                         new() { X = 2.5f, Y = 6.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
                     },
                     },
-            new() { Ch = 6, No = "007", Kind = "전투",
-                    Floor = "roomfloor_env_refinery", Layout = "G", LayoutKo = "좁은 문",
-                    Comp = "BACKLINE_PRESSURE_PLUS_HUNTER", Pool = "", Boss = "", Captain = "",
+            new() { Ch = 6, No = "007", Kind = "상점",
+                    Floor = "roomfloor_env_refinery", Layout = "", LayoutKo = "",
+                    Comp = "", Pool = "", Boss = "", Captain = "",
                     Minions = 0, Elite = false,
-                    Spawns = new Spawn[]
-                    {
-                        new() { X = 2.5f, Y = 9.5f, Role = "BACK", Unit = "amazon_elite", IsHost = true },
-                        new() { X = 2.5f, Y = 5.5f, Role = "FLANK", Unit = "skeleton", IsHost = false },
-                        new() { X = 7.5f, Y = 9.5f, Role = "BACK", Unit = "skeleton", IsHost = false },
-                        new() { X = 7.5f, Y = 5.5f, Role = "FLANK", Unit = "actor_enforcer", IsHost = false },
-                        new() { X = 5.0f, Y = 10.0f, Role = "BACK", Unit = "skeleton", IsHost = false },
-                        new() { X = 5.0f, Y = 2.5f, Role = "FRONT", Unit = "actor_enforcer", IsHost = false },
-                    },
                     },
             new() { Ch = 6, No = "008", Kind = "전투",
                     Floor = "roomfloor_env_refinery", Layout = "L", LayoutKo = "네 귀퉁이 가시",
@@ -731,7 +677,7 @@ namespace Game.EditorTools
                     Minions = 0, Elite = false,
                     Spawns = new Spawn[]
                     {
-                        new() { X = 2f, Y = 6.5f, Role = "FLANK", Unit = "commando_mg", IsHost = true },
+                        new() { X = 2f, Y = 6.5f, Role = "FLANK", Unit = "amazon_elite", IsHost = true },
                         new() { X = 5f, Y = 8f, Role = "RANGED", Unit = "skeleton", IsHost = false },
                         new() { X = 8f, Y = 6.5f, Role = "FLANK", Unit = "skeleton", IsHost = false },
                         new() { X = 6.5f, Y = 7.5f, Role = "RANGED", Unit = "turret_cross", IsHost = false },
