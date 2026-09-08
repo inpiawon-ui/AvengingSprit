@@ -8453,7 +8453,7 @@ namespace Game.Module.InGame
             if (_canonRoom != null && _canonRoom.Exits.Count > 0)
             {
                 var x = _canonRoom.Exits[0];
-                _exits.Add(NewExit(ToPixels(x.At), x.NextRoomId));
+                _exits.Add(NewExit(ExitInField(ToPixels(x.At)), x.NextRoomId));
             }
             else if (_canonRoom == null)
             {
@@ -8466,6 +8466,24 @@ namespace Game.Module.InGame
                 // 아무 데도 가지 않는 문이 되고, 걸어 들어가면 정본을 벗어나
                 // 절차적으로 만든 방으로 떨어진다. 끝은 `Finish` 가 처리한다.
             }
+        }
+
+        /// <summary>
+        /// 문을 **방 안으로** 끌어들인다.
+        ///
+        /// ⚠ 보스 방은 아레나 높이가 따로 있어 표의 방 높이보다 낮을 수 있다.
+        ///   표는 문을 12.4 m 에 적어 두는데 파이썬 아레나는 11.1 m 라, 문이
+        ///   방 위쪽 **바깥**(y +92 px)에 서 버렸다. 플레이어는 방 끝까지 걸어가도
+        ///   닿을 수가 없어(터치 반경 70) **보스를 잡고도 방에서 못 나갔다**
+        ///   (2026-09-08 자동 플레이로 CH3 010 에서 걸렸다).
+        ///
+        ///   문은 언제나 걸어가 닿을 수 있어야 한다. 방 위 끝에서 한 걸음 안쪽으로 당긴다.
+        /// </summary>
+        private Vector2 ExitInField(Vector2 at)
+        {
+            const float Margin = 56f;   // 문 그림 절반보다 조금 안쪽
+            return new Vector2(Mathf.Clamp(at.x, Margin, _roomSize.x - Margin),
+                               Mathf.Clamp(at.y, -_roomSize.y + Margin, -Margin));
         }
 
         private ExitGate NewExit(Vector2 at, string nextRoomId, string label = null)
