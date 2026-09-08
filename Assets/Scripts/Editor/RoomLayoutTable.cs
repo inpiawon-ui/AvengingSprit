@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.EditorTools
@@ -368,6 +368,161 @@ namespace Game.EditorTools
                     new Slot(5f, 4f, "FRONT", Skeleton),
                     new Slot(6.5f, 7.5f, "RANGED", Gunner),
                     new Slot(3.5f, 7.5f, "BACK", Cgren),
+                },
+            },
+
+            // == 도랑 레이아웃 6종 (2026-09-08) =======================
+            //
+            // 도랑(`CHANNEL_H`·`CHANNEL_V`)은 **몸은 못 건너고 탄은 지나가는** 자리다.
+            //
+            // 주의: 낱개로 흩뿌리면 그냥 걸리적거리는 웅덩이가 된다. 아래 여섯은 전부
+            //   **길을 만든다** - 어디로 갈 수 있는지가 도랑의 배치로 정해지고,
+            //   그 길목에 가시·톱니·적을 놓아 「지나갈 것인가」를 묻는다.
+            //
+            //   조각 규격: 가로 2x1 m · 세로 1x2 m. 이어 붙여 긴 도랑을 만든다.
+            //   짝수 폭은 중심이 정수, 홀수 폭은 .5 에 앉는다(위 규약).
+
+            ["M"] = new Layout
+            {
+                // 가로 도랑이 방을 끊고 **가운데 2 m 만** 열려 있다.
+                // 아래 기둥 둘이 그 목으로 깔때기처럼 몰아넣는다.
+                Id = "M", NameKr = "좁은 목",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_H", 1f, 7.5f), new Obj("CHANNEL_H", 3f, 7.5f),
+                    new Obj("CHANNEL_H", 7f, 7.5f), new Obj("CHANNEL_H", 9f, 7.5f),
+                    new Obj("PILLAR", 3.5f, 4.5f), new Obj("PILLAR", 6.5f, 4.5f),
+                    new Obj("CRATE", 2f, 10.5f), new Obj("CRATE", 8f, 10.5f),
+                },
+                Slots = new[]
+                {
+                    new Slot(5f, 9.5f, "FRONT", Skeleton),
+                    new Slot(2f, 9f, "RANGED", Gunner),
+                    new Slot(8f, 9f, "RANGED", Gunner),
+                    new Slot(5f, 11.5f, "BACK", Cmg),
+                    new Slot(3f, 3f, "FLANK", Bat),
+                    new Slot(7f, 3f, "FLANK", Bat),
+                },
+            },
+
+            ["N"] = new Layout
+            {
+                // 세로 도랑이 방 한가운데를 갈라 **왼쪽 길·오른쪽 길** 둘이 된다.
+                // 어느 쪽으로 가느냐가 곧 어떤 적을 먼저 만나느냐다.
+                Id = "N", NameKr = "두 갈래",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_V", 4.5f, 5f), new Obj("CHANNEL_V", 4.5f, 7f),
+                    new Obj("CHANNEL_V", 4.5f, 9f),
+                    new Obj("BULK", 2f, 8f), new Obj("BULK", 8f, 8f),
+                    new Obj("CRATE", 2f, 3.5f), new Obj("CRATE", 8f, 3.5f),
+                },
+                Slots = new[]
+                {
+                    new Slot(2f, 10.5f, "RANGED", Gunner),
+                    new Slot(8f, 10.5f, "RANGED", Gunner),
+                    new Slot(2f, 6f, "FRONT", Skeleton),
+                    new Slot(8f, 6f, "FRONT", Bat),
+                    new Slot(5f, 11.5f, "BACK", Cgren),
+                    new Slot(5f, 3f, "FLANK", Skeleton),
+                },
+            },
+
+            ["O"] = new Layout
+            {
+                // **양쪽이 도랑, 가운데가 길.** 좁은 길 한복판에 가시를 놓아
+                // 「빨리 지날 것인가 기다릴 것인가」를 만든다.
+                // 원거리 적은 도랑 건너편에 세운다 - 탄은 도랑을 넘어오지만 몸은 못 온다.
+                Id = "O", NameKr = "가운데 길",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_V", 2.5f, 5f), new Obj("CHANNEL_V", 2.5f, 7f),
+                    new Obj("CHANNEL_V", 2.5f, 9f),
+                    new Obj("CHANNEL_V", 7.5f, 5f), new Obj("CHANNEL_V", 7.5f, 7f),
+                    new Obj("CHANNEL_V", 7.5f, 9f),
+                    new Obj("TIMED_SPIKE", 5f, 7f), new Obj("CRATE", 5f, 10.5f),
+                },
+                Slots = new[]
+                {
+                    new Slot(5f, 9.5f, "FRONT", Skeleton),
+                    new Slot(1.5f, 7f, "RANGED", Gunner),
+                    new Slot(8.5f, 7f, "RANGED", Gunner),
+                    new Slot(5f, 11.5f, "BACK", Cmg),
+                    new Slot(3.5f, 3f, "FLANK", Bat),
+                    new Slot(6.5f, 3f, "FLANK", Bat),
+                },
+            },
+
+            ["P"] = new Layout
+            {
+                // 가로 도랑 두 줄이 **열린 쪽을 서로 반대로** 두어 S 자로 지나가게 한다.
+                // 오른쪽으로 돌아 올라갔다가 다시 왼쪽으로 꺾어야 출구에 닿는다.
+                Id = "P", NameKr = "지그재그 물길",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_H", 1f, 5.5f), new Obj("CHANNEL_H", 3f, 5.5f),
+                    new Obj("CHANNEL_H", 5f, 5.5f),
+                    new Obj("CHANNEL_H", 5f, 9.5f), new Obj("CHANNEL_H", 7f, 9.5f),
+                    new Obj("CHANNEL_H", 9f, 9.5f),
+                    new Obj("PILLAR", 8.5f, 7.5f), new Obj("CRATE", 2f, 7.5f),
+                },
+                Slots = new[]
+                {
+                    new Slot(8f, 7.5f, "FRONT", Skeleton),
+                    new Slot(2f, 11f, "BACK", Cgren),
+                    new Slot(7f, 11f, "RANGED", Gunner),
+                    new Slot(3f, 7.5f, "RANGED", Gunner),
+                    new Slot(5f, 3f, "FLANK", Bat),
+                    new Slot(8f, 3.5f, "FLANK", Skeleton),
+                },
+            },
+
+            ["Q"] = new Layout
+            {
+                // ㄷ 자 도랑이 **가운데에 섬**을 만들고 아래로만 열려 있다.
+                // 섬 안에 톱니가 돈다 - 들어가면 빠져나올 길이 하나뿐이다.
+                Id = "Q", NameKr = "섬",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_H", 3f, 9.5f), new Obj("CHANNEL_H", 5f, 9.5f),
+                    new Obj("CHANNEL_H", 7f, 9.5f),
+                    new Obj("CHANNEL_V", 2.5f, 6f), new Obj("CHANNEL_V", 2.5f, 8f),
+                    new Obj("CHANNEL_V", 7.5f, 6f), new Obj("CHANNEL_V", 7.5f, 8f),
+                    new Obj("ROTATING_BLADE", 5f, 7f),
+                },
+                Slots = new[]
+                {
+                    new Slot(5f, 11f, "BACK", Cmg),
+                    new Slot(1.5f, 10.5f, "RANGED", Gunner),
+                    new Slot(8.5f, 10.5f, "RANGED", Gunner),
+                    new Slot(4f, 5f, "FRONT", Skeleton),
+                    new Slot(6f, 5f, "FRONT", Bat),
+                    new Slot(5f, 3f, "FLANK", Skeleton),
+                },
+            },
+
+            ["R"] = new Layout
+            {
+                // 마지막 챕터. **좌우가 통째로 용암**이고 가운데 넓은 회랑만 남는다.
+                // 회랑 안에 가시 둘과 톱니 하나 - 넓지만 안전한 자리는 계속 옮겨 간다.
+                Id = "R", NameKr = "용광로 회랑",
+                Objects = new[]
+                {
+                    new Obj("CHANNEL_V", 1.5f, 5f), new Obj("CHANNEL_V", 1.5f, 7f),
+                    new Obj("CHANNEL_V", 1.5f, 9f),
+                    new Obj("CHANNEL_V", 8.5f, 5f), new Obj("CHANNEL_V", 8.5f, 7f),
+                    new Obj("CHANNEL_V", 8.5f, 9f),
+                    new Obj("TIMED_SPIKE", 3f, 8f), new Obj("TIMED_SPIKE", 7f, 8f),
+                    new Obj("ROTATING_BLADE", 5f, 5f),
+                },
+                Slots = new[]
+                {
+                    new Slot(5f, 11f, "BACK", Cgren),
+                    new Slot(3f, 10.5f, "RANGED", Gunner),
+                    new Slot(7f, 10.5f, "RANGED", Gunner),
+                    new Slot(5f, 7.5f, "FRONT", Skeleton),
+                    new Slot(3.5f, 3f, "FLANK", Bat),
+                    new Slot(6.5f, 3f, "FLANK", Bat),
                 },
             },
 

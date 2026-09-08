@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Game.Module.InGame;
 using UnityEditor;
@@ -71,7 +71,7 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("_width").floatValue = RoomWidth;
                 e.FindPropertyRelative("_height").floatValue = RoomHeight;
                 e.FindPropertyRelative("_cameraMode").stringValue = "VERTICAL_FOLLOW";
-                e.FindPropertyRelative("_template").stringValue = d.Layout ?? string.Empty;
+                e.FindPropertyRelative("_template").stringValue = LayoutOf(d) ?? string.Empty;
                 e.FindPropertyRelative("_unlockRule").stringValue = "ROOM_CLEAR";
                 // 바닥은 배정표가 정한다. 코드가 챕터로 유추하면 CH4~6 이 어긋난다.
                 e.FindPropertyRelative("_floor").stringValue = d.Floor ?? string.Empty;
@@ -323,6 +323,55 @@ namespace Game.EditorTools
         }
 
         /// <summary>
+        /// 이 방이 쓸 레이아웃 글자.
+        ///
+        /// 굽는 원본(`RoomDef60`)은 레이아웃 12종만 알던 시절의 배정을 들고 있다.
+        /// 그 파일은 도구가 다시 구우므로 여기서 **덮어쓴다** — 원본을 고치면
+        /// 다음 납품에 조용히 사라진다.
+        ///
+        /// ── 왜 챕터마다 다르게 주는가 ─────────────────────────────
+        /// 위험물을 60방에 골고루 흩뿌리면 1챕터부터 가시를 밟는다. 챕터가
+        /// **무엇을 새로 배우는 자리**인지가 배치로 보여야 한다.
+        ///
+        ///   CH1  튜토리얼 — 위험물 0. 기둥·상자·엄폐물만
+        ///   CH2  가시(TIMED_SPIKE) 등장
+        ///   CH3  십자 포탑이 서기 시작 · **도랑을 처음 만난다**(M 좁은 목)
+        ///   CH4  도랑이 길을 가른다(N 두 갈래) · 가시가 늘어난다(H)
+        ///   CH5  양쪽 도랑 가운데 길(O) · 섬과 톱니(Q) · 네 귀퉁이 가시(L)
+        ///   CH6  지그재그 물길(P) · 톱니(I) · 용광로 회랑(R) · 섬(Q)
+        ///
+        /// ⚠ 005 는 여섯 챕터 모두 중간보스 방이라 늘 F(정적)다.
+        ///   보스급이 주인공인 자리에서 바닥까지 시끄러우면 패턴이 안 읽힌다.
+        /// </summary>
+        private static string LayoutOf(RoomDef60.Room d)
+        {
+            if (!string.IsNullOrEmpty(d.Boss)) return string.Empty;   // 보스는 전용 아레나
+            int ch = Mathf.Clamp(d.Ch, 1, 6);
+            return (ch, d.No) switch
+            {
+                (1, "001") => "A", (1, "002") => "B", (1, "003") => "E",
+                (1, "005") => "F", (1, "006") => "J", (1, "008") => "D", (1, "009") => "G",
+
+                (2, "001") => "B", (2, "002") => "E", (2, "003") => "J",
+                (2, "005") => "F", (2, "006") => "D", (2, "008") => "C", (2, "009") => "K",
+
+                (3, "001") => "E", (3, "002") => "J", (3, "003") => "D",
+                (3, "005") => "F", (3, "006") => "C", (3, "008") => "K", (3, "009") => "M",
+
+                (4, "001") => "J", (4, "002") => "D", (4, "003") => "C",
+                (4, "005") => "F", (4, "006") => "K", (4, "008") => "N", (4, "009") => "H",
+
+                (5, "001") => "D", (5, "002") => "C", (5, "003") => "K",
+                (5, "005") => "F", (5, "006") => "O", (5, "008") => "Q", (5, "009") => "L",
+
+                (6, "001") => "C", (6, "002") => "K", (6, "003") => "P",
+                (6, "005") => "F", (6, "006") => "I", (6, "008") => "R", (6, "009") => "Q",
+
+                _ => d.Layout,   // 회복(004)·상점(007) 은 원본대로 — 비어 있다
+            };
+        }
+
+        /// <summary>
         /// 지형지물. 이미 있는 레이아웃 12종에서 읽는다 — 새 지형을 만들지 않는다.
         /// 보스 방은 비운다: 전용 아레나가 제 자리를 갖고 있어 얹으면 패턴이 걸린다.
         /// </summary>
@@ -332,7 +381,7 @@ namespace Game.EditorTools
             objs.ClearArray();
             if (!string.IsNullOrEmpty(d.Boss) || string.IsNullOrEmpty(d.Layout)) return;
 
-            var layout = RoomLayoutTable.Get(d.Layout);
+            var layout = RoomLayoutTable.Get(LayoutOf(d));
             if (layout?.Objects == null) return;
 
             // ⚠ 규격·차단·해저드는 `RoomImporterV33.WriteObject` 가 이미 정해 둔 규칙이다.

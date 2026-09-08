@@ -1057,7 +1057,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: C
+    _template: G
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -1135,10 +1135,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 5, y: 7}
-      _size: {x: 2, y: 2}
+    - _objectId: BARRICADE_1
+      _kind: BARRICADE
+      _at: {x: 2.5, y: 7.5}
+      _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -1148,10 +1148,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 5, y: 5}
-      _size: {x: 2, y: 2}
+    - _objectId: BARRICADE_2
+      _kind: BARRICADE
+      _at: {x: 7.5, y: 7.5}
+      _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -1161,10 +1161,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
-      _at: {x: 3.5, y: 8.5}
-      _size: {x: 1, y: 1}
+    - _objectId: CRATE_3
+      _kind: CRATE
+      _at: {x: 5, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -1174,10 +1174,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_4
-      _kind: PILLAR
-      _at: {x: 6.5, y: 8.5}
-      _size: {x: 1, y: 1}
+    - _objectId: LOW_COVER_4
+      _kind: LOW_COVER
+      _at: {x: 3.5, y: 4.5}
+      _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -1189,7 +1189,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PILLAR_5
       _kind: PILLAR
-      _at: {x: 3.5, y: 3.5}
+      _at: {x: 7.5, y: 4.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -1200,10 +1200,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_6
-      _kind: PILLAR
-      _at: {x: 6.5, y: 3.5}
-      _size: {x: 1, y: 1}
+    - _objectId: CRATE_6
+      _kind: CRATE
+      _at: {x: 5, y: 2.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -1212,19 +1212,6 @@ MonoBehaviour:
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_7
-      _kind: TIMED_SPIKE
-      _at: {x: 2, y: 6}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
       _unnamed: 0
   - _roomId: ROOM_CH1_010
     _chapter: 1
@@ -4128,7 +4115,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: G
+    _template: M
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -4238,38 +4225,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 7.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 7.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
-      _at: {x: 5, y: 9.5}
+    - _objectId: CHANNEL_H_1
+      _kind: CHANNEL_H
+      _at: {x: 1, y: 7.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -4277,12 +4238,38 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: LOW_COVER_4
-      _kind: LOW_COVER
-      _at: {x: 3.5, y: 4.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_H_2
+      _kind: CHANNEL_H
+      _at: {x: 3, y: 7.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_3
+      _kind: CHANNEL_H
+      _at: {x: 7, y: 7.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_4
+      _kind: CHANNEL_H
+      _at: {x: 9, y: 7.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -4292,7 +4279,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PILLAR_5
       _kind: PILLAR
-      _at: {x: 7.5, y: 4.5}
+      _at: {x: 3.5, y: 4.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -4303,9 +4290,35 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
+    - _objectId: PILLAR_6
+      _kind: PILLAR
+      _at: {x: 6.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CRATE_7
       _kind: CRATE
-      _at: {x: 5, y: 2.5}
+      _at: {x: 2, y: 10.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CRATE_8
+      _kind: CRATE
+      _at: {x: 8, y: 10.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -5499,7 +5512,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: G
+    _template: N
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -5609,10 +5622,49 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 7.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_V_1
+      _kind: CHANNEL_V
+      _at: {x: 4.5, y: 5}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_2
+      _kind: CHANNEL_V
+      _at: {x: 4.5, y: 7}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_3
+      _kind: CHANNEL_V
+      _at: {x: 4.5, y: 9}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BULK_4
+      _kind: BULK
+      _at: {x: 2, y: 8}
+      _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -5622,49 +5674,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 7.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
-      _at: {x: 5, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: LOW_COVER_4
-      _kind: LOW_COVER
-      _at: {x: 3.5, y: 4.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
-      _at: {x: 7.5, y: 4.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BULK_5
+      _kind: BULK
+      _at: {x: 8, y: 8}
+      _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -5676,7 +5689,20 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CRATE_6
       _kind: CRATE
-      _at: {x: 5, y: 2.5}
+      _at: {x: 2, y: 3.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CRATE_7
+      _kind: CRATE
+      _at: {x: 8, y: 3.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -6835,7 +6861,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: G
+    _template: O
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -6945,12 +6971,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 7.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_V_1
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 5}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -6958,12 +6984,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 7.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_V_2
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 7}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -6971,48 +6997,74 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_3
+    - _objectId: CHANNEL_V_3
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 9}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_4
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 5}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_5
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 7}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_6
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 9}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: TIMED_SPIKE_7
+      _kind: TIMED_SPIKE
+      _at: {x: 5, y: 7}
+      _size: {x: 2, y: 2}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: SPIKE
+      _hazardDamage: 6
+      _hazardTick: 0.8
+      _unnamed: 0
+    - _objectId: CRATE_8
       _kind: CRATE
-      _at: {x: 5, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: LOW_COVER_4
-      _kind: LOW_COVER
-      _at: {x: 3.5, y: 4.5}
-      _size: {x: 3, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
-      _at: {x: 7.5, y: 4.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 10.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -7097,7 +7149,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: H
+    _template: Q
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -7215,51 +7267,25 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: TIMED_SPIKE_1
-      _kind: TIMED_SPIKE
-      _at: {x: 3, y: 8}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
+    - _objectId: CHANNEL_H_1
+      _kind: CHANNEL_H
+      _at: {x: 3, y: 9.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
       _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
       _unnamed: 0
-    - _objectId: TIMED_SPIKE_2
-      _kind: TIMED_SPIKE
-      _at: {x: 7, y: 8}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_3
-      _kind: TIMED_SPIKE
-      _at: {x: 5, y: 4}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: CRATE_4
-      _kind: CRATE
+    - _objectId: CHANNEL_H_2
+      _kind: CHANNEL_H
       _at: {x: 5, y: 9.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -7267,12 +7293,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_5
-      _kind: CRATE
-      _at: {x: 2, y: 5.5}
+    - _objectId: CHANNEL_H_3
+      _kind: CHANNEL_H
+      _at: {x: 7, y: 9.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -7280,12 +7306,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 8, y: 5.5}
-      _size: {x: 2, y: 1}
+    - _objectId: CHANNEL_V_4
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 6}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -7293,12 +7319,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_7
-      _kind: PILLAR
-      _at: {x: 2.5, y: 2.5}
-      _size: {x: 1, y: 1}
+    - _objectId: CHANNEL_V_5
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 8}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -7306,12 +7332,38 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_8
-      _kind: PILLAR
-      _at: {x: 7.5, y: 2.5}
-      _size: {x: 1, y: 1}
+    - _objectId: CHANNEL_V_6
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 6}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_7
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 8}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: ROTATING_BLADE_8
+      _kind: ROTATING_BLADE
+      _at: {x: 5, y: 7}
+      _size: {x: 2, y: 2}
+      _blocksMove: 0
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8034,7 +8086,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: G
+    _template: P
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -8152,12 +8204,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: BARRICADE_1
-      _kind: BARRICADE
-      _at: {x: 2.5, y: 7.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_H_1
+      _kind: CHANNEL_H
+      _at: {x: 1, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8165,12 +8217,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BARRICADE_2
-      _kind: BARRICADE
-      _at: {x: 7.5, y: 7.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_H_2
+      _kind: CHANNEL_H
+      _at: {x: 3, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8178,12 +8230,25 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
+    - _objectId: CHANNEL_H_3
+      _kind: CHANNEL_H
+      _at: {x: 5, y: 5.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_4
+      _kind: CHANNEL_H
       _at: {x: 5, y: 9.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8191,12 +8256,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: LOW_COVER_4
-      _kind: LOW_COVER
-      _at: {x: 3.5, y: 4.5}
-      _size: {x: 3, y: 1}
+    - _objectId: CHANNEL_H_5
+      _kind: CHANNEL_H
+      _at: {x: 7, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8204,9 +8269,22 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_5
+    - _objectId: CHANNEL_H_6
+      _kind: CHANNEL_H
+      _at: {x: 9, y: 9.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PILLAR_7
       _kind: PILLAR
-      _at: {x: 7.5, y: 4.5}
+      _at: {x: 8.5, y: 7.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8217,9 +8295,9 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
+    - _objectId: CRATE_8
       _kind: CRATE
-      _at: {x: 5, y: 2.5}
+      _at: {x: 2, y: 7.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8457,7 +8535,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: H
+    _template: I
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -8575,48 +8653,48 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: TIMED_SPIKE_1
-      _kind: TIMED_SPIKE
-      _at: {x: 3, y: 8}
+    - _objectId: ROTATING_BLADE_1
+      _kind: ROTATING_BLADE
+      _at: {x: 5, y: 6}
       _size: {x: 2, y: 2}
       _blocksMove: 0
       _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
       _unnamed: 0
-    - _objectId: TIMED_SPIKE_2
-      _kind: TIMED_SPIKE
-      _at: {x: 7, y: 8}
+    - _objectId: BULK_2
+      _kind: BULK
+      _at: {x: 2, y: 2}
       _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
+      _blocksMove: 1
+      _blocksShot: 1
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
       _unnamed: 0
-    - _objectId: TIMED_SPIKE_3
-      _kind: TIMED_SPIKE
-      _at: {x: 5, y: 4}
+    - _objectId: BULK_3
+      _kind: BULK
+      _at: {x: 8, y: 2}
       _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
+      _blocksMove: 1
+      _blocksShot: 1
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
       _unnamed: 0
     - _objectId: CRATE_4
       _kind: CRATE
-      _at: {x: 5, y: 9.5}
+      _at: {x: 5, y: 2.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8629,7 +8707,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CRATE_5
       _kind: CRATE
-      _at: {x: 2, y: 5.5}
+      _at: {x: 2, y: 9.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8640,23 +8718,23 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 8, y: 5.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_7
+    - _objectId: PILLAR_6
       _kind: PILLAR
-      _at: {x: 2.5, y: 2.5}
+      _at: {x: 3.5, y: 9.5}
       _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CRATE_7
+      _kind: CRATE
+      _at: {x: 8, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -8668,7 +8746,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PILLAR_8
       _kind: PILLAR
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 6.5, y: 9.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8753,7 +8831,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: L
+    _template: R
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -8871,64 +8949,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: TIMED_SPIKE_1
-      _kind: TIMED_SPIKE
-      _at: {x: 2, y: 9}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_2
-      _kind: TIMED_SPIKE
-      _at: {x: 8, y: 9}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_3
-      _kind: TIMED_SPIKE
-      _at: {x: 2, y: 4}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_4
-      _kind: TIMED_SPIKE
-      _at: {x: 8, y: 4}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: BULK_5
-      _kind: BULK
-      _at: {x: 5, y: 6}
-      _size: {x: 2, y: 2}
+    - _objectId: CHANNEL_V_1
+      _kind: CHANNEL_V
+      _at: {x: 1.5, y: 5}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8936,12 +8962,12 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
-      _kind: CRATE
-      _at: {x: 5, y: 9.5}
-      _size: {x: 2, y: 1}
+    - _objectId: CHANNEL_V_2
+      _kind: CHANNEL_V
+      _at: {x: 1.5, y: 7}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8949,12 +8975,90 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_7
-      _kind: CRATE
-      _at: {x: 5, y: 2.5}
-      _size: {x: 2, y: 1}
+    - _objectId: CHANNEL_V_3
+      _kind: CHANNEL_V
+      _at: {x: 1.5, y: 9}
+      _size: {x: 1, y: 2}
       _blocksMove: 1
-      _blocksShot: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_4
+      _kind: CHANNEL_V
+      _at: {x: 8.5, y: 5}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_5
+      _kind: CHANNEL_V
+      _at: {x: 8.5, y: 7}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_6
+      _kind: CHANNEL_V
+      _at: {x: 8.5, y: 9}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: TIMED_SPIKE_7
+      _kind: TIMED_SPIKE
+      _at: {x: 3, y: 8}
+      _size: {x: 2, y: 2}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: SPIKE
+      _hazardDamage: 6
+      _hazardTick: 0.8
+      _unnamed: 0
+    - _objectId: TIMED_SPIKE_8
+      _kind: TIMED_SPIKE
+      _at: {x: 7, y: 8}
+      _size: {x: 2, y: 2}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: SPIKE
+      _hazardDamage: 6
+      _hazardTick: 0.8
+      _unnamed: 0
+    - _objectId: ROTATING_BLADE_9
+      _kind: ROTATING_BLADE
+      _at: {x: 5, y: 5}
+      _size: {x: 2, y: 2}
+      _blocksMove: 0
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
@@ -8972,7 +9076,7 @@ MonoBehaviour:
     _width: 10
     _height: 13
     _cameraMode: VERTICAL_FOLLOW
-    _template: I
+    _template: Q
     _entry: {x: 5, y: 0.8}
     _exits:
     - _archetype: 
@@ -9090,11 +9194,11 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: ROTATING_BLADE_1
-      _kind: ROTATING_BLADE
-      _at: {x: 5, y: 6}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
+    - _objectId: CHANNEL_H_1
+      _kind: CHANNEL_H
+      _at: {x: 3, y: 9.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
       _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
@@ -9103,90 +9207,90 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 2, y: 2}
+    - _objectId: CHANNEL_H_2
+      _kind: CHANNEL_H
+      _at: {x: 5, y: 9.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_3
+      _kind: CHANNEL_H
+      _at: {x: 7, y: 9.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_4
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 6}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_5
+      _kind: CHANNEL_V
+      _at: {x: 2.5, y: 8}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_6
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 6}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_7
+      _kind: CHANNEL_V
+      _at: {x: 7.5, y: 8}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: ROTATING_BLADE_8
+      _kind: ROTATING_BLADE
+      _at: {x: 5, y: 7}
       _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: BULK_3
-      _kind: BULK
-      _at: {x: 8, y: 2}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_4
-      _kind: CRATE
-      _at: {x: 5, y: 2.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_5
-      _kind: CRATE
-      _at: {x: 2, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_6
-      _kind: PILLAR
-      _at: {x: 3.5, y: 9.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_7
-      _kind: CRATE
-      _at: {x: 8, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_8
-      _kind: PILLAR
-      _at: {x: 6.5, y: 9.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
+      _blocksMove: 0
+      _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -559,8 +559,9 @@ namespace Game.EditorTools
             o.FindPropertyRelative("_size").vector2Value = PropSize(kind);
 
             bool solid = PropSolid(kind);
-            o.FindPropertyRelative("_blocksMove").boolValue = solid;
-            o.FindPropertyRelative("_blocksShot").boolValue = solid;
+            bool channel = IsChannel(kind);
+            o.FindPropertyRelative("_blocksMove").boolValue = solid || channel;
+            o.FindPropertyRelative("_blocksShot").boolValue = solid;   // 도랑 위로는 탄이 지나간다
             // 적 탄은 지형을 통과한다 — 엄폐 뒤에 붙어 서는 것이 정답이 되면
             // 지형이 전술이 아니라 은신처가 된다. 막히는 것은 내 탄뿐이다.
             o.FindPropertyRelative("_blocksEnemyShot").boolValue = false;
@@ -696,6 +697,9 @@ namespace Game.EditorTools
             "ROTATING_BLADE" => new Vector2(2f, 2f),
             "BULK"        => new Vector2(2f, 2f),   // 큰 덩어리 — 시야를 크게 가린다
             "RAIL"        => new Vector2(1f, 2f),   // 세로로 긴 것
+            // 도랑 — 못 건너는 자리. 조각을 이어 붙여 긴 길을 만든다.
+            "CHANNEL_H"   => new Vector2(2f, 1f),   // 가로 토막
+            "CHANNEL_V"   => new Vector2(1f, 2f),   // 세로 토막
             _             => new Vector2(2f, 2f),   // TIMED_SPIKE — 바닥 배수구
         };
 
@@ -813,7 +817,17 @@ namespace Game.EditorTools
         }
 
         private static bool PropSolid(string kind)
-            => kind != "TIMED_SPIKE" && kind != "ROTATING_BLADE";
+            => kind != "TIMED_SPIKE" && kind != "ROTATING_BLADE" && !IsChannel(kind);
+
+        /// <summary>
+        /// 바닥에 파인 도랑인가.
+        ///
+        /// 엄폐물과 반대다 — **몸은 못 건너는데 탄은 위로 지나간다.**
+        /// 그래서 막힘 하나로 둘을 같이 정하는 `PropSolid` 에 넣을 수 없다.
+        /// 도랑이 탄까지 막으면 그냥 벽이고, 벽은 이미 `BULK` 가 한다.
+        /// </summary>
+        private static bool IsChannel(string kind)
+            => kind == "CHANNEL_H" || kind == "CHANNEL_V";
 
         /// <summary>가시판을 밟고 있을 때의 피해와 간격.</summary>
         private const int SpikeDamage = 6;
