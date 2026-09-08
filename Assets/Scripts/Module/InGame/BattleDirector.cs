@@ -2171,13 +2171,19 @@ namespace Game.Module.InGame
         {
             int chapter = _runChapter;
 
-            // 잡몹은 모든 방에 나오지만 **챕터마다 짝이 다르다**(`TrashAt`).
-            // 셋을 다 올리면 그 챕터에 안 나오는 그림까지 메모리에 든다.
+            // 잡몹은 챕터마다 짝이 다르다(`TrashKeysFor`). **여섯 챕터 것을 다 올린다.**
+            //
+            // ⚠ 예전에는 현재 챕터 것만 올렸다. 그런데 판은 언제나 CH1 에서 시작해
+            //   CH6 까지 **한 판으로 이어 간다** — 아틀라스를 올리는 자리는 판 시작
+            //   한 곳뿐이라, CH2 에 들어서면 순찰기·집행자가 **흰 사각형**으로 섰다
+            //   (2026-09-08 확인). 아래 보스 목록이 이미 같은 이유로 챕터를 안 가른다.
+            //   잡몹은 여섯 종뿐이고 챕터마다 셋씩 겹치므로 실제로 세 장이 더 붙는다.
             var keys = new List<string> { "ghost" };
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
-            foreach (var k in TrashKeysFor(chapter))
-                if (k != TrashCrossKey) keys.Add(k);
+            for (int c = 1; c <= ChapterCount; c++)
+                foreach (var k in TrashKeysFor(c))
+                    if (k != TrashCrossKey && !keys.Contains(k)) keys.Add(k);
             var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
             // 그림이 하나도 안 걸렸을 때를 위한 마지막 대비책
@@ -2610,13 +2616,13 @@ namespace Game.Module.InGame
             }
             SnapCamera();
 
-            int ch = _canonRoom != null ? Mathf.Clamp(_canonRoom.Chapter, 1, 3) : 1;
+            int ch = _canonRoom != null ? Mathf.Clamp(_canonRoom.Chapter, 1, ChapterCount) : _runChapter;
             _bus.Publish(new RoomEnteredEvent
             {
                 RoomIndex = index, RoomTotal = RoomTotal,
                 Chapter = ch,
                 StageInChapter = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : index + 1,
-                ChapterTotal = ch == 1 ? Ch1RoomCount : ch == 2 ? Ch2RoomCount : Ch3RoomCount,
+                ChapterTotal = ChapterRoomCount(ch),
                 IsBossRoom = isBoss, Kind = _roomKind,
             });
         }
@@ -4531,24 +4537,46 @@ namespace Game.Module.InGame
         // 기획에 되돌렸다. 그때까지 크러셔는 다른 보스와 같이 걸어서 다가온다.
 
 
-        /// <summary>구간 번호 → 배경. 실제 배치와 테스트 배치가 **같은 표**를 쓴다.</summary>
-        private static string StageFloorKey(int stage, RoomEntry room) => stage switch
+        /// <summary>
+        /// 챕터 → 배경. 실제 배치와 테스트 배치가 **같은 표**를 쓴다.
+        ///
+        /// ⚠ 예전에는 48방을 「챕터 3개 × 앞뒤」로 갈라 여섯 구간을 만들고 구간 번호를
+        ///   받았다. 방 표가 6챕터 60방으로 바뀌면서 **챕터 하나가 무대 하나**다.
+        ///   짝은 주장이 아니라 방 표에서 뽑았다 — 챕터별 일반 방 8개의 `_floor` 집계:
+        ///     CH1 junkyard · CH2 missile · CH3 street · CH4 rooftop · CH5 lab · CH6 refinery
+        /// </summary>
+        private static string ChapterFloorKey(int chapter, RoomEntry room) => chapter switch
         {
-            // 1구간만 지형별 여섯 장이 이미 통과했다 — 그대로 쓴다.
+            // CH1 만 지형별 여섯 장이 이미 통과했다 — 그대로 쓴다.
             1 => !string.IsNullOrEmpty(room.Template)
                  ? $"roomfloor_ch1_{room.Template.ToLowerInvariant()}"
-                 : InterimRoomFloor,
-            2 => "roomfloor_env_junkyard",
-            3 => "roomfloor_env_missile",
-            4 => "roomfloor_env_street",
-            5 => "roomfloor_env_rooftop",
+                 : "roomfloor_env_junkyard",
+            2 => "roomfloor_env_missile",
+            3 => "roomfloor_env_street",
+            4 => "roomfloor_env_rooftop",
+            5 => "roomfloor_env_lab",
             _ => "roomfloor_env_refinery",
         };
 
         private const string BossArenaFloor = "roomfloor_env_holding";
-        private const int Ch1RoomCount = 12;
-        private const int Ch2RoomCount = 16;
-        private const int Ch3RoomCount = 20;
+
+        /// <summary>
+        /// 이 챕터가 몇 방인가 — **방 표를 센다.**
+        ///
+        /// ⚠ 예전에는 12·16·20 을 상수로 박아 뒀다. 3챕터 48방 시절 값이다.
+        ///   방 표가 6챕터 60방(챕터마다 10방)으로 바뀐 뒤에도 상수는 그대로라
+        ///   HUD 가 계속 `02 / 12` 를 찍었다 — 실제로는 10방인데 12방이라 우겼고,
+        ///   진행 막대도 그만큼 덜 찼다. 세는 편이 낫다. 방을 더하거나 빼도 따라온다.
+        /// </summary>
+        private int ChapterRoomCount(int chapter)
+        {
+            if (_rooms == null) return _config.StagesPerChapter;
+            int n = 0;
+            var all = _rooms.Rooms;
+            for (int i = 0; i < all.Count; i++)
+                if (all[i].Chapter == chapter) n++;
+            return n > 0 ? n : _config.StagesPerChapter;
+        }
 
         /// <summary>`ROOM_CH2_007` → 7. 못 읽으면 0 이라 앞 구간으로 떨어진다.</summary>
         private static int RoomNumberOf(string roomId)

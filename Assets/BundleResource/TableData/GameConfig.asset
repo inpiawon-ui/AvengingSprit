@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f0efdb1087dee448140449bc0b52b1, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.GameConfig
-  _stagesPerChapter: 3
+  _stagesPerChapter: 10
   _exitTouchRadius: 70
   _ghostHpMax: 100
   _ghostMoveSpeed: 446
@@ -111,21 +111,21 @@ MonoBehaviour:
   _stageNames:
   - Chapter: 1
     FromRoom: 1
-    NameKr: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
-  - Chapter: 1
-    FromRoom: 7
     NameKr: "\uC4F0\uB808\uAE30 \uC9D1\uC801\uC7A5"
   - Chapter: 2
     FromRoom: 1
     NameKr: "\uBBF8\uC0AC\uC77C \uC800\uC7A5\uAE30\uC9C0"
-  - Chapter: 2
-    FromRoom: 9
-    NameKr: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
   - Chapter: 3
     FromRoom: 1
+    NameKr: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
+  - Chapter: 4
+    FromRoom: 1
     NameKr: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
-  - Chapter: 3
-    FromRoom: 11
+  - Chapter: 5
+    FromRoom: 1
+    NameKr: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
+  - Chapter: 6
+    FromRoom: 1
     NameKr: "\uC57C\uAC04 \uC815\uC720\uC18C"
   _ghostLevelCostBase: 200
   _ghostLevelCostStep: 60

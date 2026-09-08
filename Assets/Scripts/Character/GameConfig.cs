@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Character
 {
@@ -396,15 +396,19 @@ namespace Game.Character
         /// </summary>
         // ── 무대 이름 ────────────────────────────────────────────
         //
-        // 챕터 하나가 무대 하나가 아니다. 원작이 스테이지 6곳이라 48방을
-        // **챕터 3개 × 앞뒤**로 갈라 여섯 구간을 만들었다 — 화면에 뜨는 이름도
-        // 그 구간을 따라간다. 챕터당 하나로 묶으면 방을 절반 지나며 무대가
-        // 바뀌는데 이름만 그대로라 어긋난다.
+        // **챕터 하나가 무대 하나다.** 원작 스테이지가 6곳이고 우리도 챕터가 6개다.
+        //
+        // 예전에는 48방을 챕터 3개 × 앞뒤로 갈라 여섯 구간을 만들었다. 방 표가
+        // 6챕터 60방으로 바뀌면서 그 구간 나누기가 남아 CH1 2번 방에 「유령 연구소」
+        // 가 떴다 — 유령 연구소는 이제 CH5 다. 구간을 지우고 챕터에 맞춘다.
+        //
+        // 이름은 주장이 아니라 **방 표의 바닥에서 뽑았다**(챕터별 일반 방 8개 집계):
+        //   CH1 junkyard · CH2 missile · CH3 street · CH4 rooftop · CH5 lab · CH6 refinery
 
         [System.Serializable]
         public struct StageName
         {
-            [Tooltip("몇 챕터인가 (1~3).")]
+            [Tooltip("몇 챕터인가 (1~6).")]
             public int Chapter;
             [Tooltip("이 방 번호부터 이 이름을 쓴다.")]
             public int FromRoom;
@@ -415,12 +419,12 @@ namespace Game.Character
         [Header("무대 이름 — 챕터 × 방 번호 구간")]
         [SerializeField] private StageName[] _stageNames =
         {
-            new StageName { Chapter = 1, FromRoom = 1,  NameKr = "유령 연구소" },
-            new StageName { Chapter = 1, FromRoom = 7,  NameKr = "쓰레기 집적장" },
-            new StageName { Chapter = 2, FromRoom = 1,  NameKr = "미사일 저장기지" },
-            new StageName { Chapter = 2, FromRoom = 9,  NameKr = "밤의 도시 거리" },
-            new StageName { Chapter = 3, FromRoom = 1,  NameKr = "밤의 공중기지 옥상" },
-            new StageName { Chapter = 3, FromRoom = 11, NameKr = "야간 정유소" },
+            new StageName { Chapter = 1, FromRoom = 1, NameKr = "쓰레기 집적장" },
+            new StageName { Chapter = 2, FromRoom = 1, NameKr = "미사일 저장기지" },
+            new StageName { Chapter = 3, FromRoom = 1, NameKr = "밤의 도시 거리" },
+            new StageName { Chapter = 4, FromRoom = 1, NameKr = "밤의 공중기지 옥상" },
+            new StageName { Chapter = 5, FromRoom = 1, NameKr = "유령 연구소" },
+            new StageName { Chapter = 6, FromRoom = 1, NameKr = "야간 정유소" },
         };
 
         /// <summary>이 챕터·방 번호의 무대 이름. 못 찾으면 빈 문자열.</summary>

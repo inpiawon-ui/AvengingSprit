@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -271,30 +271,21 @@ namespace Game.Module.InGame
             // `LoadRoomFloorAsync` 의 대비책이 공용 아레나로 떨어뜨린다.
             if (room.IsBoss) return $"roomfloor_{BossSlug(room.BossId)}";
 
-            int ch = Mathf.Clamp(room.Chapter, 1, 3);
+            // **챕터 하나가 무대 하나다.** 예전에는 방 번호로 챕터의 앞·뒤를 갈라
+            // 여섯 구간을 만들었는데, 그건 48방·3챕터 시절 셈이다.
+            int ch = Mathf.Clamp(room.Chapter, 1, ChapterCount);
 
-            // 방 번호로 챕터의 앞·뒤를 가른다. `ROOM_CH2_007` → 7.
-            // 깊이 값을 따로 들고 있지 않으므로 ID 가 가장 확실한 순서다.
-            int no = RoomNumberOf(room.RoomId);
-            int total = ch == 1 ? Ch1RoomCount : ch == 2 ? Ch2RoomCount : Ch3RoomCount;
-            bool late = no > total / 2;
-            int stage = (ch - 1) * 2 + (late ? 2 : 1);   // 1~6
-
-            // ── 테스트 — CH1 한 챕터에서 여섯 테마를 다 보여 준다 ──────────
+            // ── 테스트 — CH1 한 챕터에서 여섯 무대를 다 보여 준다 ──────────
             //
-            // 평소 배치대로면 6구간을 다 보려면 **48방을 끝까지 깨야 한다.**
+            // 평소 배치대로면 여섯 무대를 다 보려면 **60방을 끝까지 깨야 한다.**
             // 배경만 훑어보고 싶을 때 그건 너무 멀다. 이 스위치를 켜면
-            // CH1 12방 안에서 여섯 테마가 차례로 나온다 — 한 챕터만 깨면 다 본다.
+            // CH1 열 방 안에서 여섯 무대가 차례로 나온다.
             //
-            // ⚠ CH1 의 보스는 006 · 012 다. 보스는 위에서 이미 전용 아레마로 빠졌으므로
-            //   006 을 건너뛴 만큼 번호를 하나 당겨야 007 이 6번째 테마가 된다.
+            // ⚠ CH1 의 보스는 010 이다. 보스는 위에서 이미 전용 아레나로 빠졌다.
             if (CycleThemesInChapter1 && ch == 1)
-            {
-                int i = no - 1 - (no > 6 ? 1 : 0);
-                stage = i % 6 + 1;
-            }
+                ch = (RoomNumberOf(room.RoomId) - 1) % ChapterCount + 1;
 
-            return StageFloorKey(stage, room);
+            return ChapterFloorKey(ch, room);
         }
     }
 }
