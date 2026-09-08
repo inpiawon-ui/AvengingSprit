@@ -417,8 +417,8 @@ namespace Game.Module.InGame
             //   호스트 해금은 그것을 먼저 보므로 깨서 얻은 몸은 잠기지 않는다.
             //   챕터를 쓰는 자리가 열다섯 곳인데(적 성장·보스 선택·아틀라스 …)
             //   전부 이 값을 보므로, 여기 하나만 맞춰 두면 나머지가 따라온다.
-            if (_player != null && _player.IsReady && _player.CurrentChapter != 1)
-                _player.SetProgress(1, 1);
+            _runChapter = 1;
+            _runStage = 1;
 
             _canonRoomId = FirstCanonRoom;
             EnterRoom(0);
@@ -510,6 +510,22 @@ namespace Game.Module.InGame
         /// 밟아 나가며 오른다(`EnterRoom`).
         /// </summary>
         private string FirstCanonRoom => "ROOM_CH1_001";
+
+        /// <summary>
+        /// 이 판이 지금 몇 챕터를 걷고 있는가. **저장에 안 쓴다.**
+        ///
+        /// 한 판은 1챕터에서 시작해 60방을 이어서 간다(기획 2026-09-08).
+        /// 걷는 동안의 챕터는 판이 끝나면 버릴 값이라 저장에 손대지 않는다 —
+        /// 예전에는 방을 밟을 때마다 `SetProgress` 로 저장에 써 넣었고,
+        /// 그래서 3챕터 방을 한 번 열어 본 것만으로 그 뒤 모든 판이
+        /// 3챕터에서 시작했다. 올라가는 길만 있고 내려오는 길이 없었다.
+        ///
+        /// 판이 끝날 때 **한 번만** 저장에 옮긴다(<see cref="Finish"/>).
+        /// </summary>
+        private int _runChapter = 1;
+
+        /// <summary>이 판에서 밟은 방 수. <see cref="_runChapter"/> 와 같이 저장에 안 쓴다.</summary>
+        private int _runStage = 1;
 
         /// <summary>챕터 수. 정본 6챕터.</summary>
         private const int ChapterCount = 6;
@@ -659,7 +675,7 @@ namespace Game.Module.InGame
                 // 이 자리가 몸인가, 잡몹인가.
                 // 엘리트는 그 자체가 관문이라 잡몹으로 바꾸지 않는다.
                 bool isHost = elite || _hostSlots.Contains(i);
-                int chapterNo = _player != null ? _player.CurrentChapter : 1;
+                int chapterNo = _runChapter;
                 // 방 데이터가 이 자리의 잡몹을 지정했으면 그대로 세운다(손으로 짠 레이아웃).
                 // 안 지정했으면 예전대로 목록을 돌려 쓴다 — 절차 생성 방이 그렇다.
                 var e = isHost ? ActorProfile(s.ActorId, hosts)
@@ -2131,7 +2147,7 @@ namespace Game.Module.InGame
             if (forced != null) return forced;
             if (_bossTable == null) return null;
             string key = _canonRoom != null && _canonRoom.IsBoss ? BossSlug(_canonRoom.BossId) : null;
-            int chapter = _player != null ? _player.CurrentChapter : 1;
+            int chapter = _runChapter;
             return _bossTable.ByKey(key) ?? _bossTable.ForChapter(chapter);
         }
 
@@ -2153,7 +2169,7 @@ namespace Game.Module.InGame
         /// <summary>이 런이 건드릴 수 있는 캐릭터 키를 모은다.</summary>
         private List<string> RunUnitKeys()
         {
-            int chapter = _player != null ? _player.CurrentChapter : 1;
+            int chapter = _runChapter;
 
             // 잡몹은 모든 방에 나오지만 **챕터마다 짝이 다르다**(`TrashAt`).
             // 셋을 다 올리면 그 챕터에 안 나오는 그림까지 메모리에 든다.
@@ -2452,7 +2468,7 @@ namespace Game.Module.InGame
 
             if (isBoss)
             {
-                int chapter = _player != null ? _player.CurrentChapter : 1;
+                int chapter = _runChapter;
 
                 // 정본 보스가 있으면 이름·체력·공격력·이동속도를 그대로 쓴다.
                 // 우리 BossTable 은 배율표라 절대값이 없다 — 정본 쪽이 단일 출처다.
@@ -2545,7 +2561,7 @@ namespace Game.Module.InGame
                 // 유령 상태의 시계가 계속 도는 게임이라, 쉬어 가는 방이 곧 보상이다.
                 // 정본 v3.3 REST_MASTER — 챕터가 깊어질수록 덜 돌려준다.
                 //   CH1 Host 25% / Ghost 22%   CH2 22 / 20   CH3 19 / 18
-                int restCh = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+                int restCh = Mathf.Clamp(_runChapter, 1, 3);
                 int hostPct  = restCh == 1 ? 25 : restCh == 2 ? 22 : 19;
                 int ghostPct = restCh == 1 ? 22 : restCh == 2 ? 20 : 18;
 
@@ -2579,8 +2595,8 @@ namespace Game.Module.InGame
             // 챕터를 넘었으면 진행도를 올린다. 한 런이 1→2→3 을 이어서 가므로
             // 여기서 안 올리면 3챕터를 걸어도 계속 1챕터로 기록된다 —
             // 호스트 해금 조건이 이 값을 본다.
-            if (_canonRoom != null && _player != null && _canonRoom.Chapter > _player.CurrentChapter)
-                _player.SetProgress(_canonRoom.Chapter, 1);
+            if (_canonRoom != null && _canonRoom.Chapter > _runChapter)
+                _runChapter = _canonRoom.Chapter;
 
             // 나갈 문을 **닫힌 채로** 미리 세운다. 위 분기에서 이미 문을 연 방
             // (회복·상점처럼 들어서자마자 볼일이 끝나는 방)은 건드리지 않는다.
@@ -3562,7 +3578,7 @@ namespace Game.Module.InGame
         /// </summary>
         private float EnemyGrowth()
         {
-            int chapter = _player != null && _player.IsReady ? _player.CurrentChapter : 1;
+            int chapter = _runChapter;
             int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
             return _config.EnemyChapterMul(chapter) * _config.EnemyRoomMul(roomNo);
         }
@@ -4432,7 +4448,7 @@ namespace Game.Module.InGame
             //
             // 작은 체크무늬 타일을 반복하면 격자가 살아나 이동감이 생기고,
             // 48방을 3장으로 덮는다. 아틀라스에 들어 있어 따로 물고 있을 필요도 없다.
-            int chapter = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            int chapter = Mathf.Clamp(_runChapter, 1, 3);
 
 
 
@@ -4603,7 +4619,7 @@ namespace Game.Module.InGame
             //   예전에는 720×900 자리표시자 한 장(`roomfloor.png`)을 물고 있었는데,
             //   그 한 장이 인게임 아틀라스를 2048 에서 못 벗어나게 붙들고 있었다.
             //   타일은 이미 아틀라스에 있으므로 따로 지고 갈 것이 없다.
-            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            int ch = Mathf.Clamp(_runChapter, 1, 3);
             _floorImage.sprite = GetSprite($"floor_tile_ch{ch}") ?? _defaultFloor;
             _floorImage.type = Image.Type.Tiled;
         }
@@ -5361,7 +5377,7 @@ namespace Game.Module.InGame
             _shopOffers.Clear();
             if (_shopTable == null || _buffTable == null) { SpawnExit(); return; }
 
-            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            int ch = Mathf.Clamp(_runChapter, 1, 3);
             _shopRules = _shopTable.ForChapter(ch);
             if (_shopRules == null) { SpawnExit(); return; }
 
@@ -6819,7 +6835,7 @@ namespace Game.Module.InGame
             }
 
             _buffTable?.Draw(_offer, 3, exclude, _rng, _host?.Profile,
-                             _player != null ? _player.CurrentChapter : 1);
+                             _runChapter);
             if (_offer.Count == 0) return;
 
             InjectEvolutionMaterial(exclude);
@@ -7950,7 +7966,7 @@ namespace Game.Module.InGame
             if (EventOffersDisabled) { SpawnExit(); return; }
             if (_eventTable == null) { SpawnExit(); return; }
 
-            int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+            int ch = Mathf.Clamp(_runChapter, 1, 3);
             _event = _eventTable.Draw(ch, _eventsUsed, _rng);
             if (_event == null) { SpawnExit(); return; }   // 이 챕터 것을 다 봤다
 
@@ -8454,7 +8470,7 @@ namespace Game.Module.InGame
                 DespawnExit();
                 // 도달 스테이지를 갱신한다 — 호스트 해금 조건이 이 값을 본다.
                 if (_player != null)
-                    _player.SetProgress(_player.CurrentChapter, _roomIndex + 2);
+                    _runStage = _roomIndex + 2;
                 EnterRoom(_roomIndex + 1);
                 return;
             }
@@ -8466,6 +8482,14 @@ namespace Game.Module.InGame
         {
             if (!_running) return;
             _running = false;
+
+            // ⚠ **판이 끝나는 지금, 딱 한 번 저장에 옮긴다.**
+            //   걷는 동안에는 `_runChapter`·`_runStage` 만 움직였다 —
+            //   방마다 저장을 건드리면 시험으로 열어 본 방까지 진행도에 박힌다.
+            //   호스트 해금(`ClearedChapter`·`ReachedStage`)이 이 값을 보므로
+            //   여기서 옮겨 줘야 걸어온 만큼이 기록된다.
+            if (_player != null && _player.IsReady)
+                _player.SetProgress(_runChapter, _runStage);
             // 보상은 **통과한 스테이지 수** 기준. 챕터를 끝냈으면 전부 통과한 것이다.
             int stages = cleared ? RoomTotal : Mathf.Max(0, _roomIndex);
 
@@ -8482,7 +8506,7 @@ namespace Game.Module.InGame
             int gem = 0;
             if (cleared)
             {
-                int ch = Mathf.Clamp(_player != null ? _player.CurrentChapter : 1, 1, 3);
+                int ch = Mathf.Clamp(_runChapter, 1, 3);
                 gold += ch == 1 ? 120 : ch == 2 ? 180 : 260;
                 core += ch == 1 ? 4 : ch == 2 ? 6 : 9;
                 memory += ch == 1 ? 0 : ch == 2 ? 2 : 4;

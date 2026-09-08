@@ -1238,7 +1238,15 @@ MonoBehaviour:
     _cameraMode: VERTICAL_FOLLOW
     _template: 
     _entry: {x: 5, y: 0.8}
-    _exits: []
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 12.4}
+      _nextRoomId: ROOM_CH2_001
     _unlockRule: ROOM_CLEAR
     _bossId: B05
     _bossName: Robot Snakes
@@ -2767,7 +2775,15 @@ MonoBehaviour:
     _cameraMode: VERTICAL_FOLLOW
     _template: 
     _entry: {x: 5, y: 0.8}
-    _exits: []
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 12.4}
+      _nextRoomId: ROOM_CH3_001
     _unlockRule: ROOM_CLEAR
     _bossId: B01
     _bossName: Crusher
@@ -4312,7 +4328,15 @@ MonoBehaviour:
     _cameraMode: VERTICAL_FOLLOW
     _template: 
     _entry: {x: 5, y: 0.8}
-    _exits: []
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 12.4}
+      _nextRoomId: ROOM_CH4_001
     _unlockRule: ROOM_CLEAR
     _bossId: B04
     _bossName: Python
@@ -5907,7 +5931,15 @@ MonoBehaviour:
     _cameraMode: VERTICAL_FOLLOW
     _template: 
     _entry: {x: 5, y: 0.8}
-    _exits: []
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 12.4}
+      _nextRoomId: ROOM_CH5_001
     _unlockRule: ROOM_CLEAR
     _bossId: B06
     _bossName: Sludge
@@ -7518,7 +7550,15 @@ MonoBehaviour:
     _cameraMode: VERTICAL_FOLLOW
     _template: 
     _entry: {x: 5, y: 0.8}
-    _exits: []
+    _exits:
+    - _archetype: 
+      _risk: 0
+      _reward: 0
+      _recovery: 0
+      _build: 0
+      _exitId: EXIT_MAIN
+      _at: {x: 5, y: 12.4}
+      _nextRoomId: ROOM_CH6_001
     _unlockRule: ROOM_CLEAR
     _bossId: B02
     _bossName: Guardian
