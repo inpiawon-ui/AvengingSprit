@@ -5406,6 +5406,30 @@ namespace Game.Module.InGame
 
         private readonly HashSet<string> _shopFilter = new();
 
+        /// <summary>
+        /// 특성 한 장이 쓸 아이콘 이름.
+        ///
+        /// 특성은 32종인데 아이콘은 **분류 7장**뿐이다(기획 2026-09-08 —
+        /// 먼저 7장으로 굴려 보고 겹쳐 보이면 그때 32장으로 늘린다).
+        /// 표의 `Category` 를 그대로 쓴다 — UI 에 분류를 다시 적지 않는다.
+        /// </summary>
+        private static string BuffIconOf(BuffEntry card)
+        {
+            if (card == null) return string.Empty;
+            var cat = (card.Category ?? string.Empty).ToUpperInvariant();
+            return cat switch
+            {
+                "ATTACK" => "buffcat_attack",
+                "PROJECTILE" => "buffcat_projectile",
+                "AREA" => "buffcat_area",
+                "SURVIVAL" => "buffcat_survival",
+                "UTILITY" => "buffcat_utility",
+                "MOBILITY" => "buffcat_mobility",
+                "SPECIAL" => "buffcat_special",
+                _ => string.Empty,
+            };
+        }
+
         private void PublishShop()
         {
             int n = _shopOffers.Count + 1;   // 마지막 칸은 회복이다
@@ -5413,6 +5437,7 @@ namespace Game.Module.InGame
             var descs = new string[n];
             var prices = new int[n];
             var can = new bool[n];
+            var icons = new string[n];
 
             for (int i = 0; i < _shopOffers.Count; i++)
             {
@@ -5425,6 +5450,7 @@ namespace Game.Module.InGame
                 descs[i] = card != null ? card.Description : string.Empty;
                 prices[i] = PriceOf(o);
                 can[i] = CanBuyCard(o);
+                icons[i] = BuffIconOf(card);
             }
 
             int heal = _shopOffers.Count;
@@ -5433,10 +5459,11 @@ namespace Game.Module.InGame
             prices[heal] = _shopRules.HealPrice;
             can[heal] = _shopBought < _shopRules.TotalPurchaseLimit
                      && _runGold >= _shopRules.HealPrice;
+            icons[heal] = "buffcat_survival";   // 회복은 생존 계열로 읽힌다
 
             _bus.Publish(new ShopOpenedEvent
             {
-                Names = names, Descs = descs, Prices = prices, CanBuy = can,
+                Names = names, Descs = descs, Prices = prices, CanBuy = can, Icons = icons,
                 Gold = _runGold,
                 LimitLine = $"남은 구매 {_shopRules.TotalPurchaseLimit - _shopBought}회"
                           + $" · 카드 {_shopRules.CardPurchaseLimit - _shopCardsBought}장",

@@ -59,6 +59,8 @@ namespace Game.Module.Events
         public int[] Prices;
         /// <summary>각 칸을 지금 살 수 있는가 (골드·구매 한도까지 본 결과)</summary>
         public bool[] CanBuy;
+        /// <summary>칸마다 쓸 아이콘 이름(`buffcat_attack` …). 없으면 빈 문자열.</summary>
+        public string[] Icons;
         public int Gold;
         public string LimitLine;
     }

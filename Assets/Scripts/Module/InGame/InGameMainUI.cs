@@ -178,6 +178,9 @@ namespace Game.Module.InGame
                 shopDim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
                 shopDim.raycastTarget = true;
             }
+
+            // 그림은 아틀라스가 온 뒤에 입힌다(`SkinShop`). 여기서는 단색만 깔아 둔다 —
+            // 아틀라스 로드가 실패해도 창이 보이기는 해야 한다.
             var shopBox = _ui.Get<Image>("ShopBox");
             if (shopBox != null) shopBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
             var leave = _ui.Get<Image>("ShopLeaveButton");
@@ -237,6 +240,14 @@ namespace Game.Module.InGame
             // 카드 문구는 테이블에서 읽는다 — 버프 정의를 UI 에 복제하지 않기 위함
             try { _cardAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/card"); }
             catch (Exception e) { Debug.LogWarning($"[InGameUI] 카드 아틀라스 로드 실패 — {e.Message}"); }
+
+            // 상점 팝업 부품(액자·슬롯·버튼)과 특성 분류 아이콘이 여기 있다.
+            try { _uiAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/ingamemainui"); }
+            catch (Exception e) { Debug.LogWarning($"[InGameUI] 화면 아틀라스 로드 실패 — {e.Message}"); }
+
+            // 아틀라스가 온 **뒤에** 껍데기를 입힌다. 먼저 부르면 그림이 아직 없어
+            // 단색으로 남는다 — 화면이 한 번 초라했다가 안 바뀐다.
+            SkinShop();
 
             try { _buffTable = await CoreModule.Get<IResourceManager>().LoadAsync<BuffTable>("TableData/BuffTable"); }
             catch (Exception e) { Debug.LogError($"[InGame] BuffTable 로드 실패 — {e.Message}"); }
@@ -988,8 +999,24 @@ namespace Game.Module.InGame
                 bool can = e.CanBuy[i];
                 var img = _ui.Get<Image>($"ShopItem{i}");
                 if (img != null)
-                    img.color = can ? new Color(0.16f, 0.19f, 0.26f, 1f)
-                                    : new Color(0.10f, 0.11f, 0.14f, 1f);
+                {
+                    // 못 사는 줄은 **회색 그림**으로 갈아 끼운다. 색만 어둡게 하면
+                    // 그림의 금색 테두리가 그대로 남아 살 수 있는 것처럼 보인다.
+                    var slotArt = UiArt(can ? "shopitemslot" : "shopitemslot_off");
+                    if (slotArt != null) { img.sprite = slotArt; img.color = Color.white; }
+                    else img.color = can ? new Color(0.16f, 0.19f, 0.26f, 1f)
+                                         : new Color(0.10f, 0.11f, 0.14f, 1f);
+                }
+
+                // 분류 아이콘 — 없으면 칸을 비운다(빈 네모를 세우지 않는다)
+                var icon = _ui.Get<Image>($"ShopItem{i}Icon");
+                if (icon != null)
+                {
+                    var ic = e.Icons != null && i < e.Icons.Length ? UiArt(e.Icons[i]) : null;
+                    icon.sprite = ic;
+                    icon.enabled = ic != null;
+                    if (ic != null) icon.color = can ? Color.white : new Color(0.45f, 0.45f, 0.5f, 1f);
+                }
                 // 값을 못 치르는 칸은 값도 흐리게 — 무엇이 모자란지가 값에 있다
                 var price = _ui.Get<TMPro.TMP_Text>($"ShopItem{i}Price");
                 if (price != null)
@@ -1164,6 +1191,34 @@ namespace Game.Module.InGame
         // 표에서 형제 순서를 지정할 방법이 없기 때문이다. 나머지(판때기·칩·아이콘)는
         // 전부 표가 만든 자리를 그대로 쓴다.
         private SpriteAtlas _cardAtlas;
+        private SpriteAtlas _uiAtlas;
+
+        /// <summary>화면 아틀라스에서 한 장. 없으면 null — 부르는 쪽이 단색으로 버틴다.</summary>
+        private Sprite UiArt(string key)
+            => _uiAtlas != null && !string.IsNullOrEmpty(key) ? _uiAtlas.GetSprite(key) : null;
+
+        /// <summary>
+        /// 상점 창에 그림을 입힌다. **아틀라스가 온 뒤에** 한 번만 부른다.
+        ///
+        /// ⚠ 그림을 물릴 때 `color` 를 흰색으로 되돌린다. 단색 시절의 색이 남아 있으면
+        ///   그림에 그 색이 곱해져 칙칙해진다 — 액자가 회색으로 뜬다.
+        /// </summary>
+        private void SkinShop()
+        {
+            Skin("ShopBox", "shopframe");
+            Skin("ShopLeaveButton", "shopleavebutton");
+            for (int i = 0; i < ShopSlots; i++) Skin($"ShopItem{i}", "shopitemslot");
+
+            void Skin(string node, string art)
+            {
+                var img = _ui.Get<Image>(node);
+                var sp = UiArt(art);
+                if (img == null || sp == null) return;
+                img.sprite = sp;
+                img.color = Color.white;
+                img.type = Image.Type.Simple;
+            }
+        }
 
         /// <summary>자리는 잡지 않는다 — 부르는 쪽이 아이콘에 맞춰 놓는다.</summary>
         private Image GetOrMakeCardImage(RectTransform card, string name)
