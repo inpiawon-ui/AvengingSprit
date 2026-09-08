@@ -298,7 +298,12 @@ namespace Game.Module.InGame
                     case BuffKind.SlowFieldEdge:   SlowFieldEdgeDamage += value; break;
                     case BuffKind.FreezeRune:      MinesFreeze = true; break;
                     case BuffKind.Ricochet:        Bounces += value; break;
-                    case BuffKind.ReturnDamage:    ReturnDamagePercent = Mathf.Max(ReturnDamagePercent, value); break;
+                    case BuffKind.ReturnDamage:
+                        // 튕긴 탄의 피해 % 와 **한 번 튕기는 것**을 같이 준다.
+                        // 피해만 주면 튕길 일이 없어 카드가 아무 일도 안 한다.
+                        ReturnDamagePercent = Mathf.Max(ReturnDamagePercent, value);
+                        Bounces = Mathf.Max(Bounces, 1);
+                        break;
                     case BuffKind.AoeRadius:       AoeMul += v; break;
                     case BuffKind.MarkPayload:     MarkPayload += value; break;
                     case BuffKind.BloodDebt:       BloodDebtPerRoom += value; break;

@@ -38,7 +38,7 @@ MonoBehaviour:
     _description: "\uAE30\uBCF8 \uACF5\uACA9\uC774 \uB2E8 \uD558\uB098\uC758 \uC720\uD6A8
       \uD0C0\uAE43\uC5D0 \uD574\uACB0\uB420 \uB54C \uD574\uB2F9 \uB2E8\uC77C \uD0C0\uAE43
       \uD53C\uD574\uB9CC \uAC15\uD654\uD55C\uB2E4."
-    _kind: 30
+    _kind: 29
     _value: 6
     _stackable: 1
     _colorHex: '#F0603C'
@@ -59,7 +59,7 @@ MonoBehaviour:
     _nameKr: "\uB9C8\uBB34\uB9AC \uBCF8\uB2A5"
     _description: "\uC57D\uD574\uC9C4 \uC801\uC5D0 \uB300\uD55C \uB9C8\uBB34\uB9AC
       \uD53C\uD574 \uAC15\uD654"
-    _kind: 31
+    _kind: 30
     _value: 10
     _stackable: 1
     _colorHex: '#F0603C'
@@ -80,7 +80,7 @@ MonoBehaviour:
     _nameKr: "\uAC11\uC637 \uBD84\uC1C4"
     _description: "\uBC18\uBCF5 \uACF5\uACA9\uC774 \uBC29\uC5B4 \uD6A8\uC728\uC744
       \uC57D\uD654"
-    _kind: 43
+    _kind: 42
     _value: 5
     _stackable: 1
     _colorHex: '#F0603C'
@@ -103,7 +103,7 @@ MonoBehaviour:
       \uACF5\uACA9\uC774 4\uD68C\uAE4C\uC9C0 \uB204\uC801\uB41C\uB2E4. \uD0C0\uAE43
       \uBCC0\uACBD \uB610\uB294 \uAE30\uC5EC \uACF5\uBC31 1.5\uCD08 \uCD08\uACFC
       \uC2DC \uCD08\uAE30\uD654."
-    _kind: 38
+    _kind: 37
     _value: 6
     _stackable: 1
     _colorHex: '#F0603C'
@@ -187,7 +187,7 @@ MonoBehaviour:
     _nameKr: "\uC720\uB3C4 \uBCF4\uC815"
     _description: "\uBE57\uB098\uAC00\uAE30 \uC26C\uC6B4 \uD0C4\uCCB4\uC5D0 \uC81C\uD55C
       \uC720\uB3C4 \uBD80\uC5EC"
-    _kind: 39
+    _kind: 38
     _value: 12
     _stackable: 1
     _colorHex: '#4CC8F0'
@@ -228,7 +228,7 @@ MonoBehaviour:
   - _buffKey: c011
     _nameKr: "\uD655\uC7A5 \uCDA9\uACA9"
     _description: "\uACF5\uACA9\uC758 \uC720\uD6A8 \uBC94\uC704\uB97C \uD655\uB300"
-    _kind: 24
+    _kind: 23
     _value: 8
     _stackable: 1
     _colorHex: '#B45CE0'
@@ -249,7 +249,7 @@ MonoBehaviour:
     _nameKr: "\uC794\uB958 \uC9C0\uB300"
     _description: "\uC720\uD6A8 \uC9C0\uC5ED \uACF5\uACA9\uC774 \uC9E7\uC740 \uC794\uB958
       \uD6A8\uACFC\uB97C \uB0A8\uAE40"
-    _kind: 19
+    _kind: 18
     _value: 12
     _stackable: 1
     _colorHex: '#B45CE0'
@@ -270,7 +270,7 @@ MonoBehaviour:
     _nameKr: "\uD3ED\uBC1C \uBA54\uC544\uB9AC"
     _description: "\uD3ED\uBC1C \uC885\uB8CC\uC810\uC5D0 \uCD95\uC18C\uB41C \uD6C4\uC18D
       \uCDA9\uACA9 \uBC1C\uC0DD"
-    _kind: 41
+    _kind: 40
     _value: 20
     _stackable: 1
     _colorHex: '#B45CE0'
@@ -291,7 +291,7 @@ MonoBehaviour:
     _nameKr: "\uC5F0\uC1C4 \uBC88\uC9D0"
     _description: "\uC0C1\uD0DC/\uC9C0\uC5ED \uD6A8\uACFC\uAC00 \uC778\uC811\uD55C
       \uC720\uD6A8 \uD0C0\uAE43\uC73C\uB85C \uC81C\uD55C \uC804\uD30C"
-    _kind: 44
+    _kind: 43
     _value: 18
     _stackable: 1
     _colorHex: '#B45CE0'
@@ -312,7 +312,7 @@ MonoBehaviour:
     _nameKr: "\uBCF4\uC2A4 \uC555\uCD95"
     _description: "\uC8FC\uBCC0 \uB300\uC0C1\uC774 \uC5C6\uC73C\uBA74 \uAD11\uC5ED
       \uAC00\uCE58\uB97C \uBCF4\uC2A4 \uC911\uC2EC \uD53C\uD574\uB85C \uBCC0\uD658"
-    _kind: 32
+    _kind: 31
     _value: 18
     _stackable: 1
     _colorHex: '#B45CE0'
@@ -332,7 +332,7 @@ MonoBehaviour:
   - _buffKey: c016
     _nameKr: "\uC720\uB839 \uAC11\uC8FC"
     _description: "\uBC1B\uB294 \uD53C\uD574\uB97C \uC644\uD654"
-    _kind: 15
+    _kind: 14
     _value: 5
     _stackable: 1
     _colorHex: '#5CC850'
@@ -353,7 +353,7 @@ MonoBehaviour:
     _nameKr: "\uC0DD\uBA85 \uD68C\uC218"
     _description: "\uC804\uD22C \uC131\uACFC\uAC00 \uC81C\uD55C \uD68C\uBCF5\uC73C\uB85C
       \uC804\uD658"
-    _kind: 33
+    _kind: 32
     _value: 3
     _stackable: 1
     _colorHex: '#5CC850'
@@ -373,7 +373,7 @@ MonoBehaviour:
   - _buffKey: c018
     _nameKr: "\uC704\uAE30 \uBC29\uBCBD"
     _description: "\uC704\uAE30 \uC0C1\uD0DC \uC9C4\uC785 \uC2DC \uC77C\uC2DC \uBCF4\uD638"
-    _kind: 45
+    _kind: 44
     _value: 12
     _stackable: 1
     _colorHex: '#5CC850'
@@ -478,7 +478,7 @@ MonoBehaviour:
     _nameKr: "\uD68C\uD53C \uC794\uC0C1"
     _description: "\uC704\uD5D8 \uD68C\uD53C \uC9C1\uD6C4 \uC794\uC0C1\uC774 \uBCF4\uC870
       \uACF5\uACA9"
-    _kind: 46
+    _kind: 45
     _value: 22
     _stackable: 1
     _colorHex: '#3CD8C0'
@@ -501,7 +501,7 @@ MonoBehaviour:
       \uC774\uB3D9 \uC18D\uB3C4\uAC00 \uC99D\uAC00\uD55C\uB2E4. \uBC29\uD5A5\uC740
       \uD50C\uB808\uC774\uC5B4\uAC00 \uC81C\uC5B4\uD558\uBA70 \uB300\uC2DC\xB7\uC811\uADFC\xB7\uAC15\uC81C\uC774\uB3D9\uC740
       \uC5C6\uB2E4."
-    _kind: 34
+    _kind: 33
     _value: 6
     _stackable: 1
     _colorHex: '#3CD8C0'
@@ -522,7 +522,7 @@ MonoBehaviour:
     _nameKr: "\uB0C9\uAE30 \uAC01\uC778"
     _description: "\uACF5\uACA9\uC5D0 \uBCF4\uC2A4 \uC548\uC804\uD615 \uB454\uD654/\uB0C9\uAE30
       \uAE30\uC5EC \uBD80\uC5EC"
-    _kind: 35
+    _kind: 34
     _value: 8
     _stackable: 1
     _colorHex: '#7C6CF0'
@@ -543,7 +543,7 @@ MonoBehaviour:
     _nameKr: "\uD654\uC5FC \uAC01\uC778"
     _description: "\uACF5\uACA9\uC5D0 \uBCF4\uC2A4 \uC548\uC804\uD615 \uD654\uC0C1
       \uAE30\uC5EC \uBD80\uC5EC"
-    _kind: 36
+    _kind: 35
     _value: 8
     _stackable: 1
     _colorHex: '#7C6CF0'
@@ -564,7 +564,7 @@ MonoBehaviour:
     _nameKr: "\uC800\uC8FC \uAC01\uC778"
     _description: "\uC6B0\uC120 \uD0C0\uAE43\uC5D0 \uC57D\uD654 \uC800\uC8FC\uB97C
       \uBD80\uC5EC"
-    _kind: 37
+    _kind: 36
     _value: 6
     _stackable: 1
     _colorHex: '#7C6CF0'
@@ -628,7 +628,7 @@ MonoBehaviour:
     _description: "\uC720\uD6A8 \uAE30\uBCF8 \uACF5\uACA9 8\uD68C\uB9C8\uB2E4 \uC720\uB839
       \uD3EC\uB300 1\uAE30\uB97C 3\uCD08\uAC04 \uC18C\uD658\uD574 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4
       \uC720\uD6A8 \uC801\uC744 0.75\uCD08 \uAC04\uACA9\uC73C\uB85C \uACF5\uACA9\uD55C\uB2E4."
-    _kind: 42
+    _kind: 41
     _value: 22
     _stackable: 1
     _colorHex: '#F0C038'
@@ -649,7 +649,7 @@ MonoBehaviour:
     _nameKr: "\uACFC\uCDA9\uC804 \uD68C\uB85C"
     _description: "\uACF5\uACA9 \uC774\uBCA4\uD2B8\uAC00 \uC81C\uD55C\uB41C \uC804\uAE30
       \uBCF4\uC870 \uD0C0\uACA9\uC744 \uC0DD\uC131"
-    _kind: 47
+    _kind: 46
     _value: 20
     _stackable: 1
     _colorHex: '#F0C038'
@@ -672,7 +672,7 @@ MonoBehaviour:
       \uAE30\uBCF8 \uACF5\uACA9 \uD504\uB85C\uD544\uC744 \uC720\uB839 \uC794\uC0C1\uC774
       1\uD68C \uBCF5\uC81C\uD55C\uB2E4. \uAE30\uBCF8 \uACF5\uACA9 \uC678 \uBAA8\uB4E0
       \uD53C\uD574\uC6D0\uC740 \uBCF5\uC81C \uBD88\uAC00."
-    _kind: 40
+    _kind: 39
     _value: 35
     _stackable: 1
     _colorHex: '#F0C038'

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Game.Character;
@@ -42,7 +42,11 @@ namespace Game.EditorTools
             ["C006"] = new(BuffKind.ShotSpeed),
             ["C007"] = new(BuffKind.MultiShot),
             ["C008"] = new(BuffKind.Pierce),
-            ["C010"] = new(BuffKind.Ricochet),
+            // ⚠ C010 은 `Ricochet` 이 아니다. 그 종류는 **튕기는 횟수**를 받는데
+            //   이 카드의 레벨값은 35/45/55/65/75 — 퍼센트다. 그대로 넣으면
+            //   탄이 벽에서 35번 튕겨 방을 영원히 돌아다닌다.
+            //   정본 문구는 "한 번 반사하는 탄체" 이고 숫자는 **튕긴 뒤의 피해 %** 다.
+            ["C010"] = new(BuffKind.ReturnDamage),
             ["C011"] = new(BuffKind.AoeRadius),
             ["C012"] = new(BuffKind.FieldDuration),
             ["C016"] = new(BuffKind.DamageReduction),
