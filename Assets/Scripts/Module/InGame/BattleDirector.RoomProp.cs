@@ -89,7 +89,7 @@ namespace Game.Module.InGame
             if (Vector2.Distance(me.Position, RoomPropAt()) > RoomPropTouchRadius) return;
 
             _roomPropUsed = true;
-            if (_roomKind == RoomKind.Rest) UseHealShrine();
+            if (_roomKind == RoomKind.Rest) OpenShrine();
             else if (_roomKind == RoomKind.Shop) OpenShop();
             else if (_roomKind == RoomKind.Event) OfferEvent();
 

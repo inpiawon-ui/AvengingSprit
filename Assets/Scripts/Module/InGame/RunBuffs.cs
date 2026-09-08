@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -40,6 +40,23 @@ namespace Game.Module.InGame
 
         /// <summary>지금 들고 있는 카드 목록(레벨 포함). UI 가 읽는다.</summary>
         public IReadOnlyDictionary<string, int> Levels => _level;
+
+        // == 회복 제단 몫 =============================================
+        //
+        // 제단은 카드가 아니다. `_taken` 에 없으므로 `Recompute` 가 다시 셀 때
+        // 사라진다 - 따로 쌓아 두고 마지막에 얹는다.
+        //
+        // 주의: 카드와 **같은 배율에 얹는다.** 제단 전용 배율을 따로 두면
+        //   같은 것을 재는 자가 둘이 되어 나중에 반드시 어긋난다.
+        private float _shrineAtk;        // %
+        private float _shrineInterval;   // %
+        private float _shrineRange;      // %
+        private float _shrineHostHp;     // %
+
+        public void AddShrineAtkPercent(int p)         { _shrineAtk += p; Recompute(); }
+        public void AddShrineAttackSpeedPercent(int p) { _shrineInterval += p; Recompute(); }
+        public void AddShrineRangePercent(int p)       { _shrineRange += p; Recompute(); }
+        public void AddShrineHostHpPercent(int p)      { _shrineHostHp += p; Recompute(); }
 
         public float AttackMul { get; private set; } = 1f;
         public float IntervalMul { get; private set; } = 1f;
@@ -180,6 +197,7 @@ namespace Game.Module.InGame
             _level.Clear();
             ExcludedKeys.Clear();
             _host = null;
+            _shrineAtk = _shrineInterval = _shrineRange = _shrineHostHp = 0f;
             Recompute();
         }
 
@@ -235,6 +253,13 @@ namespace Game.Module.InGame
             DeployRetargetCut = 0f;
             DeployablesBurn = false;
             AoeMul = 1f;
+
+            // 제단 몫을 먼저 얹고 그 위에 카드를 쌓는다. 순서는 상관없지만
+            // 여기 두면 「카드가 0장이어도 제단은 남는다」가 코드에서 보인다.
+            AttackMul += _shrineAtk / 100f;
+            IntervalMul = Mathf.Max(0.2f, IntervalMul - _shrineInterval / 100f);
+            RangeMul += _shrineRange / 100f;
+            HostHpMul += _shrineHostHp / 100f;
 
             for (int i = 0; i < _taken.Count; i++)
             {

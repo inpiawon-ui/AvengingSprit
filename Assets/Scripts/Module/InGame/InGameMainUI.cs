@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -205,6 +205,8 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
             _tokens.Add(bus.Subscribe<EventOfferEvent>(OnEventOffer));
+            _tokens.Add(bus.Subscribe<ShrineOpenedEvent>(OnShrineOpened));
+            _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
             _tokens.Add(bus.Subscribe<EvolutionGainedEvent>(OnEvolutionGained));
@@ -937,6 +939,60 @@ namespace Game.Module.InGame
 
             _ui.SetActive("EventPanel", true);
             _ui.Find("EventPanel")?.SetAsLastSibling();
+        }
+
+        /// <summary>
+        /// 회복 제단 — 셋 중 하나. **거절 버튼이 없다.**
+        /// 셋 다 공짜라 안 고를 이유가 없고, 안 고르는 길을 두면 그 자리가 통로가 된다.
+        /// </summary>
+        private const int ShrineChoiceCount = 3;
+
+        private void OnShrineOpened(ShrineOpenedEvent e)
+        {
+            _ui.SetText("ShrineTitleText", "회복의 제단");
+            _ui.SetText("ShrineHintText", "하나만 가져갈 수 있다");
+            _ui.SetText("ShrineResultText", string.Empty);
+            _ui.SetActive("ShrineResultText", false);
+
+            for (int i = 0; i < ShrineChoiceCount; i++)
+            {
+                bool has = e.Titles != null && i < e.Titles.Length;
+                _ui.SetActive($"ShrineChoice{i}", has);
+                if (!has) continue;
+                // 이름 한 줄, 그 아래 작은 글씨로 무엇을 주는지.
+                _ui.SetText($"ShrineChoice{i}Text",
+                            e.Titles[i] + System.Environment.NewLine
+                            + $"<size=70%>{e.Descs[i]}</size>");
+                var btn = _ui.Get<Button>($"ShrineChoice{i}");
+                if (btn == null) continue;
+                int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다
+                btn.onClick.RemoveAllListeners();
+                btn.interactable = true;
+                btn.onClick.AddListener(() => ChooseShrine(pick));
+            }
+            _ui.SetActive("ShrinePanel", true);
+            _ui.Find("ShrinePanel")?.SetAsLastSibling();
+        }
+
+        private void ChooseShrine(int index)
+        {
+            if (_battle == null) return;
+            _battle.ChooseShrine(index);
+        }
+
+        private void OnShrineResolved(ShrineResolvedEvent e)
+        {
+            for (int i = 0; i < ShrineChoiceCount; i++) _ui.SetActive($"ShrineChoice{i}", false);
+            _ui.SetActive("ShrineResultText", true);
+            _ui.SetText("ShrineResultText", e.ResultLine);
+            _ui.SetText("ShrineHintText", string.Empty);
+            CloseShrineLater().Forget();   // fire-and-forget: 결과를 읽을 틈만 준다
+        }
+
+        private async UniTaskVoid CloseShrineLater()
+        {
+            await UniTask.Delay(1200);
+            _ui.SetActive("ShrinePanel", false);
         }
 
         private void Resolve(bool accept)

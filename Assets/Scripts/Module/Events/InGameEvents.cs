@@ -1,4 +1,4 @@
-using GameFramework.Core.Common;
+﻿using GameFramework.Core.Common;
 
 namespace Game.Module.Events
 {
@@ -216,6 +216,22 @@ namespace Game.Module.Events
     /// 룸을 클리어해 버프 3택1을 제시한다. 선택 전까지 전투는 멈춘다.
     /// 배열 길이는 3이지만 남은 버프가 모자라면 더 짧을 수 있다.
     /// </summary>
+    /// <summary>
+    /// 회복 제단이 열렸다. **셋 중 하나를 고른다 — 거절은 없다.**
+    /// 셋 다 공짜라 안 고를 이유가 없고, 안 고르는 길을 두면 그 자리가 통로가 된다.
+    /// </summary>
+    public struct ShrineOpenedEvent : IEvent
+    {
+        public string[] Titles;
+        public string[] Descs;
+    }
+
+    /// <summary>제단에서 무엇을 받았는지 한 줄.</summary>
+    public struct ShrineResolvedEvent : IEvent
+    {
+        public string ResultLine;
+    }
+
     public struct BuffOfferEvent : IEvent
     {
         /// <summary>

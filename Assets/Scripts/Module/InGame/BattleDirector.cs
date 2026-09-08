@@ -419,6 +419,7 @@ namespace Game.Module.InGame
             //   전부 이 값을 보므로, 여기 하나만 맞춰 두면 나머지가 따라온다.
             _runChapter = 1;
             _runStage = 1;
+            _maxHpDebt = 0;   // 계약은 판 한정이다
 
             _canonRoomId = FirstCanonRoom;
             EnterRoom(0);
@@ -551,27 +552,24 @@ namespace Game.Module.InGame
         /// 그 자리를 빌린다 — 그래야 지나갈 수 있다. 화면이 생기면 갈라낸다.
         /// </summary>
         /// <summary>
-        /// 004 가 **천사만** 나오는 체력 문턱. 고스트 최대 체력의 몫이다.
+        /// 004 가 회복 제단으로 갈리는 체력 문턱. 고스트 최대 체력의 몫이다.
         ///
         /// ⚠ 004 **바로 다음이 중간 보스**이고 그 대장은 빙의가 안 된다.
-        ///   체력이 바닥인 채로 악마(대가형)만 뜨면 그 판은 거기서 끝난다 —
+        ///   체력이 바닥인 채로 대가형 이벤트만 뜨면 그 판은 거기서 끝난다 —
         ///   고를 것이 남아 있어야 선택이지, 죽는 길 하나뿐이면 그건 벽이다.
-        ///   그래서 바닥일 때는 **묻지 말고 천사를 세운다**(기획 2026-09-08).
+        ///
+        /// ⚠ 한때 「그 위는 회복/이벤트 반반 무작위」로 뒀다가 되돌렸다(2026-09-08 확정).
+        ///   무작위로 두면 **회복이 두 번 연달아 나오는 판**이 생기고, 그러면 이벤트
+        ///   25종을 돌리려고 004 를 이벤트 방으로 만든 뜻이 흐려진다.
+        ///   대가형(악마 계약)은 별도 방이 아니라 **이벤트 풀 안**에 들어간다.
         /// </summary>
-        private const float AngelOnlyHpRatio = 0.40f;
+        private const float RestHpRatio = 0.40f;
 
         /// <summary>
         /// 004 방이 무엇으로 열리는가.
         ///
-        ///   고스트 HP ≤ 40%  →  **천사만** (회복 제단)
-        ///   그 위             →  천사 / 악마 **반반 무작위**
-        ///
-        /// 천사는 `RoomKind.Rest`(회복 제단), 악마는 `RoomKind.Event`(이벤트 18종)다.
-        /// 방 종류를 새로 만들지 않는다 — 이미 둘 다 돌아가고 있고, 바뀌는 것은
-        /// **어느 쪽이 서느냐**뿐이다.
-        ///
-        /// ⚠ `_rng` 를 쓴다. 판 씨앗을 따르므로 같은 판을 다시 돌리면 같은 자리에
-        ///   같은 것이 선다 — 무작위지만 재현된다.
+        ///   고스트 HP ≤ 40%  →  회복 제단 (`RoomKind.Rest`)
+        ///   그 외             →  이벤트   (`RoomKind.Event`)
         /// </summary>
         private RoomKind KindOfCanon(RoomEntry room)
         {
@@ -585,9 +583,9 @@ namespace Game.Module.InGame
                 "REST" => RoomKind.Rest,
                 _       => RoomKind.Normal,
             };
-            if (kind != RoomKind.Event) return kind;
-            if (_ghostHp <= GhostHpMax * AngelOnlyHpRatio) return RoomKind.Rest;   // 천사만
-            return _rng.Next(2) == 0 ? RoomKind.Rest : RoomKind.Event;             // 반반
+            if (kind == RoomKind.Event && _ghostHp <= GhostHpMax * RestHpRatio)
+                return RoomKind.Rest;
+            return kind;
         }
 
         /// <summary>
@@ -7627,6 +7625,39 @@ namespace Game.Module.InGame
         /// </summary>
         private HostEntry _lastHostEntry;
 
+        // == 악마 계약 - 최대 체력 빚 =================================
+        //
+        // 계약은 지금 아픈 것이 아니라 **앞으로 빼앗을 모든 몸**을 작게 만든다.
+        // 그래서 몸에 붙이지 않고 판에 붙인다 - 몸을 갈아타도 따라온다.
+        //
+        // 주의: 하한이 없으면 계약을 살수록 몸이 종잇장이 되어 판이 끝난다.
+        //   원본의 40% 를 바닥으로 두고, 그 아래로 내려가는 계약은 `CanAfford` 가
+        //   아예 못 고르게 막는다 - 목록에서 빼는 것과 같은 효과다.
+
+        /// <summary>최대 체력 빚의 상한(%). 원본의 40% 가 바닥이므로 60 이 상한이다.</summary>
+        private const int MaxHpDebtCap = 60;
+
+        /// <summary>지금까지 판 계약의 합(%). 판 한정 - 로비로 나가면 사라진다.</summary>
+        private int _maxHpDebt;
+
+        /// <summary>빚을 더한다. 상한을 넘지 않는다.</summary>
+        private void AddMaxHpDebt(int percent)
+        {
+            _maxHpDebt = Mathf.Clamp(_maxHpDebt + Mathf.Max(0, percent), 0, MaxHpDebtCap);
+            // 이미 타고 있는 몸에도 그 자리에서 적용한다. 다음 몸까지 기다리게 하면
+            // 「계약했는데 아무 일도 안 일어났다」가 되고, 그건 대가로 안 읽힌다.
+            if (_host != null)
+            {
+                int want = Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * (1f - percent / 100f)));
+                _host.SetHpMax(want);
+                PublishHp();
+            }
+        }
+
+        /// <summary>빚을 뺀 최대 체력. 새 몸을 세울 때마다 여기를 지난다.</summary>
+        private int WithMaxHpDebt(int hpMax)
+            => Mathf.Max(1, Mathf.RoundToInt(hpMax * (1f - _maxHpDebt / 100f)));
+
         private void EnterHost(HostEntry entry, string key, string fallbackName,
                                Vector2 pos, int startHpPercent)
         {
@@ -7638,7 +7669,8 @@ namespace Game.Module.InGame
             _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
                         UnitGet(key),
                         // 고스트가 들고 온 Lv 로 이 몸의 능력치를 정한다.
-                        Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul),
+                        // 악마 계약을 샀으면 여기서 깎인다 - 몸이 아니라 판에 붙은 빚이다.
+                        WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul)),
                         LeveledAtk(entry),
                         HostSpeedOf(entry),
                         HostRangeOf(entry),
@@ -8095,21 +8127,38 @@ namespace Game.Module.InGame
             });
         }
 
-        private static string CostLabelOf(EventEntry e) => e.CostType switch
+        /// <summary>
+        /// 이벤트 골드값의 챕터 배율.
+        ///
+        /// 주의: 표 값은 **CH1 기준**이다. 이벤트를 챕터로 안 나누고 한 통에서 뽑기로
+        ///   하면서(2026-09-08), CH1 첫 방에 「골드 115」짜리가 뜰 수 있게 됐다.
+        ///   값을 챕터마다 적어 두는 대신 여기서 곱한다 - 표는 하나면 된다.
+        ///   상점 사다리(42-48-78)에 맞춘 임시값이고, 밸런스에서 확정한다.
+        /// </summary>
+        private static readonly float[] EventGoldMuls = { 1.0f, 1.4f, 1.9f, 2.5f, 3.2f, 4.0f };
+
+        private int EventGold(int baseValue)
+            => Mathf.RoundToInt(baseValue * EventGoldMuls[Mathf.Clamp(_runChapter, 1, 6) - 1]);
+
+        private string CostLabelOf(EventEntry e) => e.CostType switch
         {
-            EventCost.Gold => $"골드 {e.CostValue}",
+            EventCost.Gold => $"골드 {EventGold(e.CostValue)}",
             EventCost.GhostHp => $"고스트 체력 {e.CostValue}%",
             EventCost.HostHp => $"호스트 체력 {e.CostValue}%",
+            EventCost.MaxHp => $"최대 체력 -{e.CostValue}% (영구)",
             _ => string.Empty,
         };
 
         private bool CanAfford(EventEntry e) => e.CostType switch
         {
-            EventCost.Gold => _runGold >= e.CostValue,
+            EventCost.Gold => _runGold >= EventGold(e.CostValue),
             // 체력을 다 내주고 그 자리에서 죽는 선택지는 주지 않는다.
             // 값을 치르는 순간 지는 거래는 거래가 아니다.
             EventCost.GhostHp => _ghostHp > GhostHpMax * e.CostValue / 100,
             EventCost.HostHp => _host != null && _host.Hp > _host.HpMax * e.CostValue / 100,
+            // 하한(원본의 40%)을 뚫는 계약은 아예 못 고른다. 목록에서 빼는 것과 같다 -
+            // 계약을 셋 다 사면 스스로 멈춘다.
+            EventCost.MaxHp => _maxHpDebt + e.CostValue <= MaxHpDebtCap,
             _ => true,
         };
 
@@ -8213,6 +8262,9 @@ namespace Game.Module.InGame
                         PublishHp();
                     }
                     break;
+                case EventCost.MaxHp:
+                    AddMaxHpDebt(e.CostValue);
+                    break;
             }
         }
 
@@ -8232,16 +8284,31 @@ namespace Game.Module.InGame
                     return $"고스트 체력 {value}% 회복";
 
                 case EventReward.Gold:
-                    AddRunGoldAtPlayer(value);
-                    return $"골드 +{value}";
+                {
+                    // 대가와 같은 배율을 탄다. 한쪽만 곱하면 뒤 챕터의 거래가 한없이 남는다.
+                    int gold = EventGold(value);
+                    AddRunGoldAtPlayer(gold);
+                    return $"골드 +{gold}";
+                }
 
                 case EventReward.CardGrant:
                 {
-                    var card = DrawCardOfRarity(rarity);
-                    if (card == null) return "가져갈 것이 남아 있지 않았다.";
-                    _buffs.Apply(card);
-                    _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
-                    return $"{card.NameKr} 획득";
+                    // 이름이 박힌 카드가 있으면 그것을 준다 (`굶주림 → 흡혈 c019`).
+                    // 없으면 등급으로 뽑는다. `value` 는 장수다 — 0·1 은 한 장.
+                    int count = Mathf.Max(1, value);
+                    string last = null;
+                    for (int i = 0; i < count; i++)
+                    {
+                        var card = !string.IsNullOrEmpty(key) && i == 0
+                                 ? _buffTable?.Get(key)
+                                 : DrawCardOfRarity(rarity);
+                        if (card == null) break;
+                        _buffs.Apply(card);
+                        _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
+                        last = card.NameKr;
+                    }
+                    if (last == null) return "가져갈 것이 남아 있지 않았다.";
+                    return count > 1 ? $"카드 {count}장 획득" : $"{last} 획득";
                 }
 
                 case EventReward.CardOffer:

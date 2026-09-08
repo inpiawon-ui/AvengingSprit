@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -295,6 +295,18 @@ namespace Game.Module.InGame
         /// <summary>최대 체력 대비 비율로 현재 체력을 정한다. 빙의 시작 체력(70%)에 쓴다.</summary>
         public void SetHpPercent(int percent)
             => Hp = Mathf.Clamp(Mathf.RoundToInt(HpMax * percent / 100f), 1, HpMax);
+
+        /// <summary>
+        /// 최대 체력을 그 자리에서 줄인다 (악마 계약).
+        ///
+        /// 지금 체력이 새 상한을 넘으면 함께 내린다 — 안 그러면 막대가 가득 찬 채로
+        /// 최대치만 바뀌어 「깎였다」가 화면에서 안 읽힌다.
+        /// </summary>
+        public void SetHpMax(int value)
+        {
+            HpMax = Mathf.Max(1, value);
+            if (Hp > HpMax) Hp = HpMax;
+        }
 
         public void Setup(UnitSide side, string key, string displayName, Sprite sprite,
                           int hp, int atk, float moveSpeed, float attackRange,
