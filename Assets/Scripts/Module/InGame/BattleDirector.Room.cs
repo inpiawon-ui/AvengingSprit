@@ -101,9 +101,21 @@ namespace Game.Module.InGame
         ///   `TrashKeysFor(chapter)` 라, 목록에 없는 놈을 세우면 그림 없이 선다.
         ///   CH2·CH3 레이아웃 배정이 끝나면 이 제한이 저절로 풀린다.
         /// </summary>
+        /// <summary>
+        /// 방 표의 배우 이름 → 우리 잡몹 키.
+        ///
+        /// ⚠ 표는 십자 포탑을 `turret_cross` 라 부르는데 코드 키는 그림 이름을 따라
+        ///   `obj_turret` 이다. 이름이 안 맞아 `TrashByKey` 가 늘 빈손으로 돌아왔고,
+        ///   **21자리가 전부 역할 대체로 넘어가 근접 잡몹이 됐다**(2026-09-08 확인).
+        ///   CH3·CH5·CH6 에서 십자 포탑이 한 기도 안 서고 있었다.
+        /// </summary>
+        private static string TrashKeyAlias(string key)
+            => key == "turret_cross" ? TrashCrossKey : key;
+
         private static HostEntry TrashByKey(string key, int chapter)
         {
             if (string.IsNullOrEmpty(key)) return null;
+            key = TrashKeyAlias(key);
             var allow = TrashKeysFor(chapter);
             for (int i = 0; i < allow.Length; i++)
             {
@@ -143,7 +155,9 @@ namespace Game.Module.InGame
             if (exact != null) return exact;
             if (string.IsNullOrEmpty(key)) return null;   // 지정 없음 — 회전 목록에 맡긴다
 
-            bool wantRanged = IsRangedTrashKey(key);
+            // 대체할 때도 **표 이름 그대로 보면 안 된다.** 십자 포탑 자리가
+            // 원거리로 안 읽혀 근접이 들어서고 있었다.
+            bool wantRanged = IsRangedTrashKey(TrashKeyAlias(key));
             var pool = TrashPool(chapter);
             // 같은 역할끼리만 돌려 쓴다. 여럿이면 등장 비율이 목록에 든 수만큼이다.
             int n = 0;
