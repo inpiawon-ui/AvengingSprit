@@ -1,4 +1,4 @@
-using Game.Module.Events;
+﻿using Game.Module.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +31,13 @@ namespace Game.Module.InGame
 
         /// <summary>상점 가판을 세운다.</summary>
         private void SpawnShopStall() => SpawnRoomProp("obj_shop_stall", 224f, 192f);
+
+        /// <summary>
+        /// 악마의 제단을 세운다. 회복 제단(천사)과 **같은 크기**로 선다 —
+        /// 004 는 둘 중 하나가 서는 자리라, 크기가 다르면 어느 쪽이 왔는지가
+        /// 그림이 아니라 덩치로 먼저 읽힌다.
+        /// </summary>
+        private void SpawnDevilAltar() => SpawnRoomProp("obj_devil_altar", 192f, 192f);
 
         private void SpawnRoomProp(string artKey, float w, float h)
         {
@@ -84,6 +91,7 @@ namespace Game.Module.InGame
             _roomPropUsed = true;
             if (_roomKind == RoomKind.Rest) UseHealShrine();
             else if (_roomKind == RoomKind.Shop) OpenShop();
+            else if (_roomKind == RoomKind.Event) OfferEvent();
 
             // 다 쓴 물건은 흐릿하게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
             if (_roomPropImg != null) _roomPropImg.color = new Color(1f, 1f, 1f, 0.45f);

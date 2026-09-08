@@ -551,15 +551,28 @@ namespace Game.Module.InGame
         /// 그 자리를 빌린다 — 그래야 지나갈 수 있다. 화면이 생기면 갈라낸다.
         /// </summary>
         /// <summary>
-        /// 이벤트 방(004)이 회복 방으로 갈리는 문턱. 고스트 최대 체력의 몫이다.
+        /// 004 가 **천사만** 나오는 체력 문턱. 고스트 최대 체력의 몫이다.
         ///
         /// ⚠ 004 **바로 다음이 중간 보스**이고 그 대장은 빙의가 안 된다.
-        ///   체력이 바닥인 채로 이벤트만 뜨면 그 판은 거기서 끝난다 —
+        ///   체력이 바닥인 채로 악마(대가형)만 뜨면 그 판은 거기서 끝난다 —
         ///   고를 것이 남아 있어야 선택이지, 죽는 길 하나뿐이면 그건 벽이다.
-        ///   그래서 바닥일 때는 **묻지 말고 돌려준다**(기획 2026-09-08).
+        ///   그래서 바닥일 때는 **묻지 말고 천사를 세운다**(기획 2026-09-08).
         /// </summary>
-        private const float EventToRestHpRatio = 0.40f;
+        private const float AngelOnlyHpRatio = 0.40f;
 
+        /// <summary>
+        /// 004 방이 무엇으로 열리는가.
+        ///
+        ///   고스트 HP ≤ 40%  →  **천사만** (회복 제단)
+        ///   그 위             →  천사 / 악마 **반반 무작위**
+        ///
+        /// 천사는 `RoomKind.Rest`(회복 제단), 악마는 `RoomKind.Event`(이벤트 18종)다.
+        /// 방 종류를 새로 만들지 않는다 — 이미 둘 다 돌아가고 있고, 바뀌는 것은
+        /// **어느 쪽이 서느냐**뿐이다.
+        ///
+        /// ⚠ `_rng` 를 쓴다. 판 씨앗을 따르므로 같은 판을 다시 돌리면 같은 자리에
+        ///   같은 것이 선다 — 무작위지만 재현된다.
+        /// </summary>
         private RoomKind KindOfCanon(RoomEntry room)
         {
             if (room.IsBoss) return RoomKind.Boss;
@@ -572,10 +585,9 @@ namespace Game.Module.InGame
                 "REST" => RoomKind.Rest,
                 _       => RoomKind.Normal,
             };
-            // 이벤트 방은 체력이 바닥이면 회복 제단으로 바뀐다. 위 주석 참조.
-            if (kind == RoomKind.Event && _ghostHp <= GhostHpMax * EventToRestHpRatio)
-                return RoomKind.Rest;
-            return kind;
+            if (kind != RoomKind.Event) return kind;
+            if (_ghostHp <= GhostHpMax * AngelOnlyHpRatio) return RoomKind.Rest;   // 천사만
+            return _rng.Next(2) == 0 ? RoomKind.Rest : RoomKind.Event;             // 반반
         }
 
         /// <summary>
@@ -2577,8 +2589,12 @@ namespace Game.Module.InGame
             }
             else if (_roomKind == RoomKind.Event)
             {
-                // 이벤트 방 — 적이 없다. 대신 값을 묻는다.
-                OfferEvent();
+                // 악마의 제단 — 적이 없다. 대신 값을 묻는다.
+                // ⚠ 들어서자마자 묻지 않는다. 그러면 방이 화면 한 장으로 끝나
+                //   「지나가는 복도」가 된다 — 상점·회복과 같은 규칙이다.
+                //   제단에 다가서면 `TickRoomProp` 이 `OfferEvent` 를 부른다.
+                SpawnDevilAltar();
+                SpawnExit();
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else if (_roomKind == RoomKind.Shop)
