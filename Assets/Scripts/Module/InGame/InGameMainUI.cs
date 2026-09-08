@@ -1047,7 +1047,11 @@ namespace Game.Module.InGame
         // **다른 칸을 살 수 있는지도 함께 바뀌기** 때문이다. 산 칸만 고치면
         // 옆 칸이 아직 살 수 있는 것처럼 남는다.
 
-        private const int ShopSlots = 4;
+        /// <summary>
+        /// 진열 칸 수. 카드 3 · 몸 1 · 소모품 1 · 회복 1 = 여섯이다(기획 2026-09-08 §6).
+        /// 액자 목록 구간이 348px 라 한 칸 52px · 간격 58px 로 딱 여섯 줄이 들어간다.
+        /// </summary>
+        private const int ShopSlots = 6;
 
         private void OnShopOpened(ShopOpenedEvent e)
         {
@@ -1261,9 +1265,19 @@ namespace Game.Module.InGame
         private SpriteAtlas _cardAtlas;
         private SpriteAtlas _uiAtlas;
 
-        /// <summary>화면 아틀라스에서 한 장. 없으면 null — 부르는 쪽이 단색으로 버틴다.</summary>
+        /// <summary>
+        /// 화면 아틀라스에서 한 장. 없으면 null — 부르는 쪽이 단색으로 버틴다.
+        ///
+        /// `unit:` 으로 시작하면 **유닛 아틀라스**에서 꺼낸다. 상점이 파는 몸의 초상이
+        /// 그렇다 — UI 아틀라스에는 그 얼굴이 없어서 칸이 비어 있었다.
+        /// </summary>
         private Sprite UiArt(string key)
-            => _uiAtlas != null && !string.IsNullOrEmpty(key) ? _uiAtlas.GetSprite(key) : null;
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            if (key.StartsWith("unit:"))
+                return _battle != null ? _battle.UnitSprite(key.Substring(5)) : null;
+            return _uiAtlas != null ? _uiAtlas.GetSprite(key) : null;
+        }
 
         /// <summary>
         /// 상점 창에 그림을 입힌다. **아틀라스가 온 뒤에** 한 번만 부른다.

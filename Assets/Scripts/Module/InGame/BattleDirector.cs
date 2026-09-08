@@ -420,6 +420,7 @@ namespace Game.Module.InGame
             _runChapter = 1;
             _runStage = 1;
             _maxHpDebt = 0;   // 계약은 판 한정이다
+            ClearShopExtras();
 
             _canonRoomId = FirstCanonRoom;
             EnterRoom(0);
@@ -709,6 +710,7 @@ namespace Game.Module.InGame
 
                 var u = NewUnit(isHost ? $"Enemy_{s.ActorId}_{s.SpawnId}"
                                        : $"Trash_{e.HostKey}_{s.SpawnId}");
+                NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
                 u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, TrashSprite(e),
                         // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
                         // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
@@ -2616,6 +2618,8 @@ namespace Game.Module.InGame
             else if (_canonRoom != null)
             {
                 SpawnRoom(_canonRoom);
+                // 상점에서 사 둔 것은 **적이 설 때까지 기다렸다가** 터진다
+                // (`TickConsumable` 주석 참조). 여기서 따로 켤 것이 없다.
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else
@@ -2682,6 +2686,7 @@ namespace Game.Module.InGame
                 var u = NewUnit($"{(elite ? "Elite" : "Enemy")}_{e.HostKey}_{i}");
                 // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
                 // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
+                NoteMetHost(e);
                 u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
                         Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
                         Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
@@ -3097,6 +3102,7 @@ namespace Game.Module.InGame
 
             var e = EnemyAt(hosts, _roomIndex, _enemies.Count);
             var u = NewUnit($"RescueHost_{e.HostKey}");
+            NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
             u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
                     Mathf.RoundToInt(EnemyHpOf(e)), Mathf.RoundToInt(EnemyAtkOf(e)),
                     EnemySpeedOf(e), EnemyRangeOf(e), EnemyIntervalOf(e),
@@ -3347,8 +3353,13 @@ namespace Game.Module.InGame
         private void TickEnemies(float dt)
         {
             if (_burnSpreadTimer > 0f) _burnSpreadTimer -= dt;
+            TickBait(dt);
             var me = Avatar;
             if (me == null) return;
+            // 미끼가 서 있는 동안은 **그쪽으로 걷는다.** 공격까지 돌리지는 않는다 —
+            // 적의 공격은 언제나 플레이어에게 가도록 짜여 있어(`fromPlayer: false`)
+            // 편만 바꾸면 시늉만 하고 피해는 나에게 온다.
+            if (BaitActive) me = _baitUnit;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
@@ -4266,6 +4277,7 @@ namespace Game.Module.InGame
             {
                 var e = hosts[(_enemies.Count * 3 + i * 7) % hosts.Count];
                 var u = NewUnit($"Minion_{e.HostKey}_{_enemies.Count}");
+                NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
                 u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
                         Mathf.Max(1, Mathf.RoundToInt(EnemyHpOf(e) * 0.6f)),
                         EnemyAtkOf(e),
@@ -5472,6 +5484,17 @@ namespace Game.Module.InGame
 
             _shopBought = _shopCardsBought = 0;
 
+            // 이 판에서 만난 몸 중 지금 안 타고 있는 것 하나를 진열한다.
+            _hostOffers.Clear();
+            if (_player != null)
+                foreach (var key in _metHostKeys)
+                {
+                    if (_host != null && _host.Key == key) continue;
+                    var he = _player.GetHost(key);
+                    if (he != null && !he.IsGhost) { _hostOffers.Add(he); break; }
+                }
+            RollShopConsumable();
+
             // 못 올리는 카드는 진열하지 않는다 — 살 수는 있는데 아무 일도 안 일어나면
             // 값이 거짓이 된다. 슬롯이 다 찼으면 이미 가진 것만 판다.
             _shopFilter.Clear();
@@ -5504,9 +5527,26 @@ namespace Game.Module.InGame
             return string.IsNullOrEmpty(id) ? string.Empty : "buffcard_" + id.ToLowerInvariant();
         }
 
+        /// <summary>
+        /// 진열 순서. 이 순서가 곧 `BuyShopItem` 의 번호다 — 두 곳이 어긋나면
+        /// 「A 를 눌렀는데 B 가 팔린다」가 된다. 한 곳에서 세고 한 곳에서 판다.
+        ///
+        ///   0 ~ n-1  카드
+        ///   n        몸 (`_hostOffers` 가 비어 있으면 이 칸이 없다)
+        ///   n+1      소모품
+        ///   마지막   회복
+        /// </summary>
+        private int ShopHostIndex => _hostOffers.Count > 0 ? _shopOffers.Count : -1;
+        private int ShopConsumableIndex
+            => _shopConsumable == Consumable.None ? -1
+             : _shopOffers.Count + (_hostOffers.Count > 0 ? 1 : 0);
+        private int ShopHealIndex
+            => _shopOffers.Count + (_hostOffers.Count > 0 ? 1 : 0)
+             + (_shopConsumable == Consumable.None ? 0 : 1);
+
         private void PublishShop()
         {
-            int n = _shopOffers.Count + 1;   // 마지막 칸은 회복이다
+            int n = ShopHealIndex + 1;
             var names = new string[n];
             var descs = new string[n];
             var prices = new int[n];
@@ -5527,7 +5567,35 @@ namespace Game.Module.InGame
                 icons[i] = BuffIconOf(card);
             }
 
-            int heal = _shopOffers.Count;
+            int hostAt = ShopHostIndex;
+            if (hostAt >= 0)
+            {
+                var he = _hostOffers[0];
+                int price = HostPriceOf();
+                names[hostAt] = $"몸 — {he.NameKr}";
+                descs[hostAt] = "그 자리에서 이 몸을 빼앗는다";
+                prices[hostAt] = price;
+                can[hostAt] = _shopBought < _shopRules.TotalPurchaseLimit && _runGold >= price;
+                // ⚠ UI 아틀라스에는 몸의 초상이 없다(`hostportraitimage_*` 는 로비 쪽 그림이다).
+                //   `unit:` 을 붙여 **유닛 아틀라스에서 꺼내라**고 알린다 — HUD 초상과 같은 그림이다.
+                icons[hostAt] = "unit:" + he.HostKey;
+            }
+
+            int conAt = ShopConsumableIndex;
+            if (conAt >= 0)
+            {
+                int price = ConsumablePrice();
+                names[conAt] = ConsumableNameOf(_shopConsumable);
+                descs[conAt] = ConsumableDescOf(_shopConsumable);
+                prices[conAt] = price;
+                // 이미 하나 사 두었으면 또 못 산다. 두 개를 들고 다니면
+                // 다음 방에서 하나는 조용히 사라진다.
+                can[conAt] = _shopBought < _shopRules.TotalPurchaseLimit
+                          && _runGold >= price && _pendingConsumable == Consumable.None;
+                icons[conAt] = ConsumableIconOf(_shopConsumable);
+            }
+
+            int heal = ShopHealIndex;
             names[heal] = "치료";
             descs[heal] = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
             prices[heal] = _shopRules.HealPrice;
@@ -5558,10 +5626,37 @@ namespace Game.Module.InGame
         public void BuyShopItem(int index)
         {
             if (!_shopOpen || _shopRules == null) return;
-            if (index < 0 || index > _shopOffers.Count) return;
+            if (index < 0 || index > ShopHealIndex) return;
 
             string line;
-            if (index == _shopOffers.Count)
+            if (index == ShopHostIndex)
+            {
+                var he = _hostOffers[0];
+                int price = HostPriceOf();
+                if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
+                if (_runGold < price) return;
+                AddRunGold(-price);
+                _shopBought++;
+                _hostOffers.RemoveAt(0);
+                // 그 자리에서 몸을 갈아탄다. 상점 방에는 적이 없으므로
+                // 「뺏을 몸을 세워 두고 빙의」가 아니라 바로 입는다.
+                var at = Avatar != null ? Avatar.Position : Vector2.zero;
+                if (_host != null) LeaveHost();
+                EnterHost(he, he.HostKey, he.NameKr, at, 100);
+                line = $"{he.NameKr} 빙의";
+            }
+            else if (index == ShopConsumableIndex)
+            {
+                int price = ConsumablePrice();
+                if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
+                if (_runGold < price) return;
+                if (_pendingConsumable != Consumable.None) return;
+                AddRunGold(-price);
+                _shopBought++;
+                _pendingConsumable = _shopConsumable;
+                line = $"{ConsumableNameOf(_shopConsumable)} 구입 — 다음 방에서 열린다";
+            }
+            else if (index == ShopHealIndex)
             {
                 if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
                 if (_runGold < _shopRules.HealPrice) return;
