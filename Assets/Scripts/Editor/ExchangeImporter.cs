@@ -285,7 +285,7 @@ namespace Game.EditorTools
             //   방어 주석이 말한 대로 "어디로 가야 할지는 사람이 정한다". 여기가 그 자리다.
             if (name.StartsWith("shopframe") || name.StartsWith("shopitemslot")
                 || name.StartsWith("shopleavebutton") || name.StartsWith("shopdivider")
-                || name.StartsWith("buffcat_"))
+                || name.StartsWith("buffcard_"))
                 return new[] { $"{DefaultRes}/{name}" };
 
             // ⚠ 이름을 모르는 큰 그림은 **아틀라스 폴더로 보내지 않는다.**

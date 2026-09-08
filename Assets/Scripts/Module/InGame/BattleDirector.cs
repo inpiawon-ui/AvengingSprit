@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -5409,25 +5409,15 @@ namespace Game.Module.InGame
         /// <summary>
         /// 특성 한 장이 쓸 아이콘 이름.
         ///
-        /// 특성은 32종인데 아이콘은 **분류 7장**뿐이다(기획 2026-09-08 —
-        /// 먼저 7장으로 굴려 보고 겹쳐 보이면 그때 32장으로 늘린다).
-        /// 표의 `Category` 를 그대로 쓴다 — UI 에 분류를 다시 적지 않는다.
+        /// 정본 CardID 를 그대로 파일 이름으로 쓴다 — `C001` → `buffcard_c001`.
+        /// 처음에는 갈래 7장으로 굴렸는데 상점은 한 번에 네 장이라 같은 그림이
+        /// 겹쳐 떴다(2026-09-08). 32종에 32장을 붙인다.
         /// </summary>
         private static string BuffIconOf(BuffEntry card)
         {
             if (card == null) return string.Empty;
-            var cat = (card.Category ?? string.Empty).ToUpperInvariant();
-            return cat switch
-            {
-                "ATTACK" => "buffcat_attack",
-                "PROJECTILE" => "buffcat_projectile",
-                "AREA" => "buffcat_area",
-                "SURVIVAL" => "buffcat_survival",
-                "UTILITY" => "buffcat_utility",
-                "MOBILITY" => "buffcat_mobility",
-                "SPECIAL" => "buffcat_special",
-                _ => string.Empty,
-            };
+            var id = card.CardId;
+            return string.IsNullOrEmpty(id) ? string.Empty : "buffcard_" + id.ToLowerInvariant();
         }
 
         private void PublishShop()
@@ -5459,7 +5449,7 @@ namespace Game.Module.InGame
             prices[heal] = _shopRules.HealPrice;
             can[heal] = _shopBought < _shopRules.TotalPurchaseLimit
                      && _runGold >= _shopRules.HealPrice;
-            icons[heal] = "buffcat_survival";   // 회복은 생존 계열로 읽힌다
+            icons[heal] = "buffcard_heal";   // 회복은 카드가 아니라 상점 고유 칸이다
 
             _bus.Publish(new ShopOpenedEvent
             {
