@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -283,8 +283,16 @@ namespace Game.EditorTools
             //   실측(2026-09-08): 이 아틀라스는 최대 4096 이고 지금 내용이 8.2M px²,
             //   `shopframe` 은 434K px² 로 4096 한 장의 **2.6%** 다 — 페이지를 늘리지 않는다.
             //   방어 주석이 말한 대로 "어디로 가야 할지는 사람이 정한다". 여기가 그 자리다.
+            //
+            // 악마 「봉인된 궤짝」·천사 「회복의 제단」 액자도 같은 이유로 여기 적는다.
+            // 실측(2026-09-08): `eventframe` 620×792 = 491K px² · `shrineframe` 620×860 = 533K px².
+            // 둘을 더해도 4096 한 장의 6% 다 — 페이지를 늘리지 않는다.
             if (name.StartsWith("shopframe") || name.StartsWith("shopitemslot")
                 || name.StartsWith("shopleavebutton") || name.StartsWith("shopdivider")
+                || name.StartsWith("eventframe") || name.StartsWith("eventaccept")
+                || name.StartsWith("eventdecline") || name.StartsWith("eventcostpill")
+                || name.StartsWith("shrineframe") || name.StartsWith("shrinechoiceslot")
+                || name.StartsWith("shrinehintpill")
                 || name.StartsWith("buffcard_"))
                 return new[] { $"{DefaultRes}/{name}" };
 
