@@ -172,6 +172,18 @@ namespace Game.Module.InGame
             if (decline != null) decline.color = new Color(0.16f, 0.19f, 0.26f, 1f);
             _ui.SetActive("EventPanel", false);
 
+            // 제단 창도 같은 딤을 쓴다. `EventPanel` 을 복제해 만든 창이라 뿌리 이미지가
+            // **불투명 흰색**으로 남아 있었다 — 화면 전체가 하얗게 덮여 방도 HUD 도 안 보였다.
+            var shrineDim = _ui.Get<Image>("ShrinePanel");
+            if (shrineDim != null)
+            {
+                shrineDim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
+                shrineDim.raycastTarget = true;
+            }
+            var shrineBox = _ui.Get<Image>("ShrineBox");
+            if (shrineBox != null) shrineBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+            _ui.SetActive("ShrinePanel", false);
+
             var shopDim = _ui.Get<Image>("ShopPanel");
             if (shopDim != null)
             {
