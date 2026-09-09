@@ -19,7 +19,6 @@ namespace Game.EditorTools
         private const string ThemeMenu    = "Tools/Game/테스트 — 1챕터에서 테마 6종 다 보기";
         private const string BossMenu     = "Tools/Game/테스트 — 방 1~6 에 보스 하나씩";
         private const string OpeningMenu  = "Tools/Game/테스트 — 오프닝 다시 보기";
-        private const string MinionMenu   = "Tools/Game/테스트 — 보스방 잔몹 끄기";
         private const string BossHpMenu   = "Tools/Game/테스트 — 보스 체력 10배";
         private const string IdleMenu     = "Tools/Game/테스트 — 보스 가만히 (버튼으로만)";
 
@@ -65,25 +64,6 @@ namespace Game.EditorTools
         private static bool ToggleBossHpValidate()
         {
             Menu.SetChecked(BossHpMenu, BattleDirector.BossDoubleHp);
-            return true;
-        }
-
-        // ── 보스방 잔몹 끄기 ────────────────────────────────────
-        //
-        // 패턴 하나를 들여다볼 때 화면에 몸이 서 있으면 도형이 가려지고,
-        // 누구한테 맞았는지도 헷갈린다. 잠깐 비우는 스위치다.
-        //
-        // ⚠ **켜 둔 채로 잊으면 보스방이 못 깨는 방이 된다.** 보스 여섯은 전부
-        //   빙의 불가라, 몸이 없으면 내 몸이 죽는 순간 되찾을 것이 없다.
-
-        [MenuItem(MinionMenu)]
-        private static void ToggleMinions()
-            => BattleDirector.NoBossMinions = !BattleDirector.NoBossMinions;
-
-        [MenuItem(MinionMenu, true)]
-        private static bool ToggleMinionsValidate()
-        {
-            Menu.SetChecked(MinionMenu, BattleDirector.NoBossMinions);
             return true;
         }
 

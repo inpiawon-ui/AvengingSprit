@@ -60,7 +60,6 @@ namespace Game.Module.InGame
             ClearDanger();
 
             PlayFx("burst", boss.Position, 216f, loop: false);
-            SpawnBreakBody(boss);
             Debug.Log($"[보스] 취약 창 {sec:0.0}초 — {why}");
         }
 
@@ -69,51 +68,6 @@ namespace Game.Module.InGame
             if (_breakLeft <= 0f) return;
             _breakLeft -= dt;
             if (_breakLeft <= 0f) { _breakLeft = 0f; _breakBoss = null; }
-        }
-
-        /// <summary>
-        /// 열린 자리에 빼앗을 몸 하나.
-        ///
-        /// 보스는 빙의할 수 없으니 **몸을 갈아탈 기회는 이때 부르는 것뿐**이다 —
-        /// 회피와 빙의가 한 동작이 되는 지점이 여기다.
-        ///
-        /// ⚠ 이미 서 있으면 더 부르지 않는다. 취약 창마다 쌓이면 방이 몸으로 넘친다.
-        /// </summary>
-        private void SpawnBreakBody(Unit boss)
-        {
-            // ⚠ **몸을 부르는 곳이 두 군데였다.** 체력 문턱(`TickBossMinions`)만 막았더니
-            //   여기가 계속 불렀다 — 크러셔의 취약 창 조건이 「벽에 닿음」이라
-            //   7초마다 돌진해 벽을 찍을 때마다 한 기씩 섰다. 같은 스위치를 따른다.
-            if (NoBossMinions) return;
-
-            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
-            if (hosts == null || hosts.Count == 0) return;
-
-            for (int i = 0; i < _enemies.Count; i++)
-                if (_enemies[i] != null && _enemies[i].IsAlive && _enemies[i].IsHostBody) return;
-
-            HostEntry e = null;
-            var phase = _canonRoom != null ? _canonRoom.BossPhase(_brain != null ? _brain.Phase : 1) : null;
-            if (phase != null && phase.MinionPool.Count > 0)
-                e = ActorProfile(phase.MinionPool[0], hosts);
-            if (e == null)
-                for (int i = 0; i < hosts.Count; i++)
-                    if (!hosts[i].IsGhost) { e = hosts[i]; break; }
-            if (e == null) return;
-
-            var u = NewUnit($"BreakBody_{e.HostKey}");
-            u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
-                    EnemyHpOf(e), EnemyAtkOf(e), EnemySpeedOf(e),
-                    EnemyRangeOf(e), EnemyIntervalOf(e),
-                    UnitBox(84f, 78f), isBoss: false, profile: e);
-            u.Position = ClampedInField(u, boss.Position + new Vector2(180f, -120f));
-            u.MarkAsHostBody();
-            u.MarkAsNextBody();
-            u.PossessPriority = e.PossessPriority;
-            u.IsAggro = true;
-            u.ResetPattern();
-            ApplyFacingSprites(u, e.SpriteKey);
-            _enemies.Add(u);
         }
 
         // ── 조건 — 무엇을 해야 열리는가 ──────────────────────────
@@ -368,115 +322,6 @@ namespace Game.Module.InGame
 
         private float Rand01(float a, float b) => Mathf.Lerp(a, b, (float)_rng.NextDouble());
 
-        // ── 숨는 보스 방에는 잡몹이 상시 둘 ──────────────────────
-        //
-        // 보스가 벽 뒤·구멍 안·천장에 있는 동안 방에 때릴 것이 하나도 없으면
-        // **그냥 기다리는 시간**이 된다. 오토어택이라 플레이어가 할 일이 없다.
-        //
-        // 잡몹이 있으면 그동안 싸울 것이 생기고, **빙의도 같이 산다** —
-        // 「그때 빼앗는다」가 이 세 보스의 취약 창 설명이기도 하다.
-
-        private const int BossRoomMinions = 2;
-
-        /// <summary>
-        /// 몸이 오는 보스 체력. 이 아래로 처음 내려갈 때 **한 번씩** 온다.
-        /// 시간제로 계속 채우면 방 내내 몸이 끊이지 않아 긴장이 사라진다.
-        /// </summary>
-        private static readonly float[] MinionWaveAt = { 0.80f, 0.50f, 0.30f };
-        private readonly bool[] _minionWaveDone = new bool[MinionWaveAt.Length];
-
-
-        /// <summary>
-        /// 이 보스 방에 빼앗을 몸이 계속 나와야 하는가.
-        ///
-        /// 숨는 보스 셋(파이썬·로봇스네이크·슬러지)은 **보스를 못 때리는 동안** 할 일이
-        /// 있어야 해서 몸이 나온다. 크러셔는 다른 이유다 —
-        /// 정본이 「컨베이어가 멈추면 딸려 오던 잡몹이 그 자리에 선다 · **그때 빼앗는다**」
-        /// 라고 적어 두었다. 벨트가 실어 나르는 것이 곧 몸이다.
-        ///
-        /// ⚠ 이것이 없으면 크러셔 방에 **빼앗을 몸이 하나도 없다.** 원작 보스 여섯이
-        ///   전부 빙의 불가라, 몸이 안 나오면 첫 보스방에서 코어 루프가 통째로 끊긴다.
-        /// </summary>
-        private bool WantsMinions
-        {
-            // ⚠ **보스방 여섯 곳 모두 그렇다.** 예전에는 "컨베이어를 가진 보스" 로
-            //   골랐는데, 크러셔의 벨트가 돌진으로 바뀌자 그 조건이 통째로 꺼져
-            //   80·50·30% 소환이 조용히 사라질 뻔했다. 조건이 패턴 이름에 매달려
-            //   있었던 것이 문제다 — 몸이 필요한 이유는 패턴이 아니라 **빙의**다.
-            get => !NoBossMinions && _boss != null && _boss.IsAlive;
-        }
-
-        private void TickBossMinions(float dt)
-        {
-            if (_boss == null || !_boss.IsAlive || !WantsMinions) return;
-
-            // ⚠ **시간이 아니라 보스 체력으로 부른다.**
-            //   예전에는 8초마다 머릿수를 채웠는데, 그러면 방 내내 몸이 끊이지 않아
-            //   "소환 타이밍이 너무 짧다" 가 된다. 세 번만 온다 — 80% · 50% · 30%.
-            //   보스를 깎는 것이 곧 몸을 부르는 것이라, 언제 오는지 읽을 수 있다.
-            float hp = _boss.HpMax > 0 ? (float)_boss.Hp / _boss.HpMax : 1f;
-            int wave = -1;
-            for (int i = 0; i < MinionWaveAt.Length; i++)
-                if (hp <= MinionWaveAt[i] && !_minionWaveDone[i]) { wave = i; break; }
-            if (wave < 0) return;
-            _minionWaveDone[wave] = true;
-
-            int alive = 0;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e != null && e.IsAlive && !e.IsDying && e != _boss) alive++;
-            }
-
-            // ⚠ **호스트 몸이어야 한다.** 잡몹(해골·박쥐)은 아무리 깎아도 못 뺏는다
-            //   (`Unit.IsHostBody` — "잡몹은 못 뺏는다").
-            //   여기 잡몹을 세워 놨더니 보스가 숨은 동안 때릴 것은 생겼는데
-            //   **빼앗을 것이 없었다** — 「그때 빼앗는다」가 이 세 보스의 취약 창 설명인데
-            //   정작 빼앗을 몸을 안 준 셈이다.
-            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
-            if (hosts == null || hosts.Count == 0) return;
-
-            // ⚠ **그림이 올라와 있는 몸만 고른다.**
-            //   호스트는 23명인데 이 런에 아틀라스가 올라오는 것은 몇 종뿐이다
-            //   (`RunUnitKeys` — 그 챕터 잡몹 + 이 방 보스 + 내가 고른 몸).
-            //   아무나 고르면 `UnitGet` 이 null 을 돌려줘 **그림 없이 선다** —
-            //   화면에서는 깨진 사각형으로 보인다. 실제로 그렇게 나왔다.
-            HostEntry profile = null;
-            for (int i = 0; i < hosts.Count; i++)
-            {
-                var h = hosts[(_dangerTick + alive + i) % hosts.Count];
-                if (h == null || h.IsGhost) continue;
-                if (TrashSprite(h) == null) continue;   // 이 런에 그림이 없는 몸이다
-                profile = h;
-                break;
-            }
-            // 올라온 몸이 하나도 없으면 **세우지 않는다.** 깨진 그림을 세우느니 안 세운다.
-            if (profile == null) return;
-
-            // 한 파도에 `BossRoomMinions` 만큼 세운다. 이미 서 있는 것은 빼고 센다.
-            int want = Mathf.Max(1, BossRoomMinions - alive);
-            for (int w = 0; w < want; w++) SpawnOneMinion(profile, w);
-            Debug.Log($"[보스] 몸 {want}기 — 체력 {hp * 100f:0}% ({MinionWaveAt[wave] * 100f:0}% 문턱)");
-        }
-
-        private void SpawnOneMinion(HostEntry profile, int seq)
-        {
-            var u = NewUnit($"BossMinion_{profile.HostKey}");
-            u.Setup(UnitSide.Enemy, profile.HostKey, profile.NameKr, TrashSprite(profile),
-                    EnemyHpOf(profile), EnemyAtkOf(profile), EnemySpeedOf(profile),
-                    EnemyRangeOf(profile), EnemyIntervalOf(profile),
-                    UnitBox(84f, 78f), isBoss: false, profile: profile);
-            // 보스 옆이 아니라 **방 가장자리**에서 온다. 보스에 겹쳐 세우면
-            // 보스가 나오는 순간 겹쳐 보이고, 예고 도형도 가린다.
-            u.Position = ClampedInField(u, WallSpot() + new Vector2(seq * _pxPerMeter * 1.2f, 0f));
-            u.MarkAsHostBody();          // 이게 있어야 빼앗을 수 있다
-            u.PossessPriority = profile.PossessPriority;
-            u.IsAggro = true;
-            u.ResetPattern();
-            ApplyFacingSprites(u, profile.SpriteKey);
-            _enemies.Add(u);
-        }
-
         /// <summary>방을 나가거나 보스가 죽으면 걸려 있던 것을 전부 끈다.</summary>
         private void ClearBossState()
         {
@@ -485,7 +330,6 @@ namespace Game.Module.InGame
             _segmentsLeft = SegmentCount;
             _segmentDamage = 0;
             _headOpen = false;
-            for (int i = 0; i < _minionWaveDone.Length; i++) _minionWaveDone[i] = false;
             _bossExposed = true;
             _bossExposedHit = false;
         }
