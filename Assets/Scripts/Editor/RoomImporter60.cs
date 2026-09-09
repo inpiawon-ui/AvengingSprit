@@ -279,6 +279,7 @@ namespace Game.EditorTools
 
             bool elite = d.Kind == "엘리트";
             if (elite) eliteRooms++;
+            bool flipRoom = MirrorRoom(roomId);
 
             for (int i = 0; i < list.Length; i++)
             {
@@ -287,7 +288,9 @@ namespace Game.EditorTools
                 var p = arr.GetArrayElementAtIndex(i);
                 p.FindPropertyRelative("_spawnId").stringValue = $"{roomId}_S{i + 1:00}";
                 p.FindPropertyRelative("_actorId").stringValue = s.Unit;
-                p.FindPropertyRelative("_at").vector2Value = new Vector2(s.X, s.Y);
+                // 지형지물과 **같은 방향으로** 뒤집는다 (`MirrorRoom` 주석 참조)
+                p.FindPropertyRelative("_at").vector2Value =
+                    new Vector2(flipRoom ? MirrorX(s.X) : s.X, s.Y);
                 p.FindPropertyRelative("_facing").stringValue = "S";
                 p.FindPropertyRelative("_delaySeconds").floatValue = 0f;
                 // ⚠ 빙의 대상 표시는 **`_trigger` 다.** `RoomEntry.IsPossessionTarget` 이
@@ -386,6 +389,59 @@ namespace Game.EditorTools
         /// 지형지물. 이미 있는 레이아웃 12종에서 읽는다 — 새 지형을 만들지 않는다.
         /// 보스 방은 비운다: 전용 아레나가 제 자리를 갖고 있어 얹으면 패턴이 걸린다.
         /// </summary>
+        /// <summary>
+        /// 이 방을 좌우로 뒤집어 놓는가.
+        ///
+        /// 60방이 레이아웃 18종을 돌려쓴다. 같은 글자를 받은 방은 지형이 **한 픽셀도
+        /// 다르지 않아서**, 다른 챕터인데 같은 방을 또 걷는 것처럼 보였다 —
+        /// CH1 008 과 CH2 006 이 그랬다. 방 이름으로 좌우를 뒤집으면 종류가 두 배가 된다.
+        ///
+        /// ⚠ **지형지물과 적 자리를 함께 뒤집는다.** 한쪽만 뒤집으면 물건이 적 위에 얹힌다 —
+        ///   빈 자리를 찾아 앉혀 둔 여유가 통째로 무너진다.
+        /// </summary>
+        private static bool MirrorRoom(string roomId)
+        {
+            if (string.IsNullOrEmpty(roomId)) return false;
+            int h = 0;
+            for (int i = 0; i < roomId.Length; i++) h = h * 31 + roomId[i];
+            return (h & 1) != 0;
+        }
+
+        /// <summary>방 폭 10 m 를 기준으로 뒤집은 x.</summary>
+        private static float MirrorX(float x) => RoomWidth - x;
+
+        /// <summary>발자국 반지름(미터). `RoomImporterV33.PropSize` 와 같아야 한다.</summary>
+        private static Vector2 FootHalf(string kind) => kind switch
+        {
+            "PILLAR" => new Vector2(0.5f, 0.5f),
+            "CRATE" => new Vector2(1f, 0.5f),
+            "LOW_COVER" or "BARRICADE" => new Vector2(1.5f, 0.5f),
+            _ => new Vector2(1f, 1f),   // BULK · TIMED_SPIKE · ROTATING_BLADE · CHANNEL
+        };
+
+        /// <summary>바닥에 눕는 것은 뒤에 선 적을 안 가린다 — 자리를 다퉈도 된다.</summary>
+        private static bool LiesFlat(string kind)
+            => kind == "TIMED_SPIKE" || kind == "CHANNEL_H" || kind == "CHANNEL_V";
+
+        /// <summary>
+        /// 이 자리에 앉혀도 방 안에 들어오고 **적을 가리지 않는가.**
+        ///
+        /// 적 자리와 0.8 m 를 띄운다. 이 여유가 없으면 물건이 적 바로 앞에 서서
+        /// 적이 화면에서 사라진다 — CH1 008 · CH2 006 · CH2 008 이 그랬다.
+        /// 바닥에 눕는 것(도랑·가시)은 뒤를 안 가리므로 겹침만 본다.
+        /// </summary>
+        private static bool FitsOne(string kind, float x, float y, List<Vector2> taken)
+        {
+            var half = FootHalf(kind);
+            if (x - half.x < 0.4f || x + half.x > RoomWidth - 0.4f) return false;
+
+            float clear = LiesFlat(kind) ? 0.2f : 0.8f;
+            for (int k = 0; k < taken.Count; k++)
+                if (Mathf.Abs(taken[k].x - x) < half.x + clear
+                    && Mathf.Abs(taken[k].y - y) < half.y + clear) return false;
+            return true;
+        }
+
         private static void WriteObjects(SerializedProperty e, RoomDef60.Room d)
         {
             var objs = e.FindPropertyRelative("_objects");
@@ -395,10 +451,48 @@ namespace Game.EditorTools
             var layout = RoomLayoutTable.Get(LayoutOf(d));
             if (layout?.Objects == null) return;
 
-            // ⚠ 규격·차단·해저드는 `RoomImporterV33.WriteObject` 가 이미 정해 둔 규칙이다.
-            //   여기서 다시 정하면 두 임포터가 서로 다른 방을 굽게 된다 — 그것을 그대로 부른다.
+            string roomId = $"ROOM_CH{d.Ch}_{d.No}";
+            bool flip = MirrorRoom(roomId);
+
+            // ⚠ **표에 이미 적힌 적 자리를 읽는다.** 배정표(`d.Spawns`)를 보면 안 된다 —
+            //   중간보스 부하(`WriteMinions`)처럼 임포터가 따로 만들어 넣는 자리가 빠져 있어,
+            //   검사를 통과하고도 물건이 적 위에 앉았다. `WriteObjects` 는 `WriteSpawns`
+            //   다음에 도므로 이 시점에는 자리가 다 적혀 있다.
+            var taken = new List<Vector2>();
+            var written = e.FindPropertyRelative("_spawns");
+            for (int i = 0; i < written.arraySize; i++)
+                taken.Add(written.GetArrayElementAtIndex(i)
+                                 .FindPropertyRelative("_at").vector2Value);
+
+            // 같은 글자를 받은 방이 **한 픽셀도 다르지 않게** 나오던 것을 여기서 흩는다.
+            // 좌우 뒤집기만으로는 두 배뿐이라, 가로로 미는 폭까지 방 이름으로 고른다.
+            int seed = 0;
+            for (int i = 0; i < roomId.Length; i++) seed = seed * 31 + roomId[i];
+            var shifts = new[] { 0f, 1f, -1f, 2f, -2f, 3f, -3f };
+
+            // ⚠ **물건마다 따로 앉힌다.** 예전에는 「셋이 전부 맞는 밀기」를 찾았는데,
+            //   적이 방마다 예닐곱씩 서므로 그런 밀기가 거의 없어 방이 통째로 비었다.
+            //   하나씩 자리를 찾고, 끝내 못 앉히는 것만 뺀다 — 적을 가리느니 빼는 게 낫다.
+            int put = 0;
             for (int i = 0; i < layout.Objects.Length; i++)
-                RoomImporterV33.WriteObjectPublic(objs, i, layout.Objects[i]);
+            {
+                var o = layout.Objects[i];
+                float baseX = flip ? MirrorX(o.At.x) : o.At.x;
+                bool placed = false;
+                for (int k = 0; k < shifts.Length; k++)
+                {
+                    float dx = shifts[(Mathf.Abs(seed / 2) + i + k) % shifts.Length];
+                    if (!FitsOne(o.Kind, baseX + dx, o.At.y, taken)) continue;
+                    o.At = new Vector2(baseX + dx, o.At.y);
+                    placed = true;
+                    break;
+                }
+                if (!placed) continue;
+
+                // 앉힌 것도 자리를 차지한다 — 다음 물건이 그 위에 겹치지 않게.
+                taken.Add(o.At);
+                RoomImporterV33.WriteObjectPublic(objs, put++, o);
+            }
         }
     }
 }

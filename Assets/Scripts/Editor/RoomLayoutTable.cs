@@ -11,10 +11,19 @@ namespace Game.EditorTools
     /// 절반 이상이 1×1 블록이었고, **어느 방도 형태가 읽히지 않았다.**
     ///
     /// 정본은 오브젝트 좌표를 주지 않는다(<c>ROOM_GEOMETRY</c> 는 템플릿 이름과 개수뿐).
-    /// 그래서 이 표가 그 자리를 대신한다 — 물건 5~8개, 대칭·기하학.
+    /// 그래서 이 표가 그 자리를 대신한다 — 물건 2~3개, 대칭·기하학.
     ///
-    /// ⚠ **이 파일은 손으로 고치지 않는다.** `_exchange/out/42_jobs` 의 .js 세 개가 원본이고,
-    ///   그것을 옮겨 적은 것이다. 기획이 바뀌면 .js 를 받아 다시 옮긴다.
+    /// ⚠ **지형지물(Objects)만은 2026-09-09 에 여기서 다시 깎았다.** .js 원본보다 이쪽이 최신이다.
+    ///   방마다 5~8개가 서 있었고 12종을 60방이 돌려써서 **어느 방이나 똑같아 보였다**
+    ///   (CH1 008 과 CH2 006 은 배치가 한 픽셀도 다르지 않았다).
+    ///   게다가 `BULK`(2×2 발자국에 그림은 238px 로 솟는다)를 방 한가운데 세로로 쌓아 두고
+    ///   그 뒤에 적을 세워 **적이 아예 안 보였다.**
+    ///   2~3개로 줄이고, 솟는 것은 가운데 통로(x 3~7)에서 빼고,
+    ///   적 자리 열 곳 전부와 0.8 m 여유를 검사해 빈 자리에만 앉힌다.
+    ///   적 자리(Slots)는 .js 원본 그대로다.
+    ///
+    /// ⚠ 나머지(적 자리·방 배정)는 손으로 고치지 않는다. `_exchange/out/42_jobs` 의 .js 세 개가
+    ///   원본이고, 그것을 옮겨 적은 것이다. 기획이 바뀌면 .js 를 받아 다시 옮긴다.
     ///
     /// ⚠ **좌표는 이미 검증된 값이다.** 격자 정렬·범위·겹침을 전부 통과한 상태로 넘어온다.
     ///   홀수 폭은 x.5, 짝수 폭은 정수에 앉는다 — 반 칸이 섞이면 그 물건만 바닥 줄눈을
@@ -86,9 +95,8 @@ namespace Game.EditorTools
                 Id = "A", NameKr = "지그재그 관문",
                 Objects = new[]
                 {
-                    new Obj("BARRICADE", 3.5f, 8.5f), new Obj("PILLAR", 7.5f, 9.5f),
-                    new Obj("LOW_COVER", 6.5f, 5.5f), new Obj("PILLAR", 2.5f, 5.5f),
-                    new Obj("BARRICADE", 3.5f, 2.5f), new Obj("CRATE", 7f, 2.5f),
+                    new Obj("BARRICADE", 7.5f, 9.5f), new Obj("BARRICADE", 4.5f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -110,8 +118,9 @@ namespace Game.EditorTools
                 Id = "B", NameKr = "쌍기둥 통로",
                 Objects = new[]
                 {
-                    new Obj("BULK", 3f, 9f), new Obj("BULK", 7f, 9f), new Obj("BULK", 3f, 5f),
-                    new Obj("BULK", 7f, 5f), new Obj("CRATE", 5f, 7.5f), new Obj("CRATE", 5f, 2.5f),
+                    new Obj("PILLAR", 3.5f, 6.5f), new Obj("PILLAR", 8.5f, 5.5f),
+                    new Obj("CRATE", 2f, 9.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -133,9 +142,9 @@ namespace Game.EditorTools
                 Id = "C", NameKr = "중앙 요새",
                 Objects = new[]
                 {
-                    new Obj("BULK", 5f, 7f), new Obj("BULK", 5f, 5f), new Obj("PILLAR", 3.5f, 8.5f),
-                    new Obj("PILLAR", 6.5f, 8.5f), new Obj("PILLAR", 3.5f, 3.5f),
-                    new Obj("PILLAR", 6.5f, 3.5f), new Obj("TIMED_SPIKE", 2f, 6f),
+                    new Obj("CRATE", 5f, 6.5f), new Obj("PILLAR", 8.5f, 2.5f),
+                    new Obj("PILLAR", 6.5f, 4.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -157,10 +166,8 @@ namespace Game.EditorTools
                 Id = "D", NameKr = "십자 분단",
                 Objects = new[]
                 {
-                    new Obj("BULK", 5f, 9f), new Obj("CRATE", 5f, 6.5f),
-                    new Obj("PILLAR", 3.5f, 6.5f), new Obj("PILLAR", 6.5f, 6.5f),
-                    new Obj("BULK", 5f, 4f), new Obj("PILLAR", 2.5f, 8.5f),
-                    new Obj("PILLAR", 7.5f, 8.5f),
+                    new Obj("PILLAR", 4.5f, 6.5f), new Obj("PILLAR", 1.5f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -182,9 +189,9 @@ namespace Game.EditorTools
                 Id = "E", NameKr = "계단",
                 Objects = new[]
                 {
-                    new Obj("CRATE", 2f, 2.5f), new Obj("CRATE", 4f, 5.5f),
-                    new Obj("CRATE", 6f, 8.5f), new Obj("PILLAR", 7.5f, 3.5f),
-                    new Obj("PILLAR", 2.5f, 9.5f), new Obj("BULK", 8f, 6f),
+                    new Obj("CRATE", 8f, 6.5f), new Obj("CRATE", 2f, 2.5f),
+                    new Obj("CRATE", 7f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -206,8 +213,8 @@ namespace Game.EditorTools
                 Id = "F", NameKr = "모서리 요새",
                 Objects = new[]
                 {
-                    new Obj("BULK", 2f, 9f), new Obj("BULK", 8f, 9f), new Obj("BULK", 2f, 3f),
-                    new Obj("BULK", 8f, 3f), new Obj("CRATE", 5f, 6.5f),
+                    new Obj("CRATE", 6f, 6.5f), new Obj("CRATE", 2f, 8.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -229,9 +236,8 @@ namespace Game.EditorTools
                 Id = "G", NameKr = "좁은 문",
                 Objects = new[]
                 {
-                    new Obj("BARRICADE", 2.5f, 7.5f), new Obj("BARRICADE", 7.5f, 7.5f),
-                    new Obj("CRATE", 5f, 9.5f), new Obj("LOW_COVER", 3.5f, 4.5f),
-                    new Obj("PILLAR", 7.5f, 4.5f), new Obj("CRATE", 5f, 2.5f),
+                    new Obj("BARRICADE", 2.5f, 7.5f), new Obj("BARRICADE", 7.5f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -253,10 +259,9 @@ namespace Game.EditorTools
                 Id = "H", NameKr = "가시밭",
                 Objects = new[]
                 {
-                    new Obj("TIMED_SPIKE", 3f, 8f), new Obj("TIMED_SPIKE", 7f, 8f),
-                    new Obj("TIMED_SPIKE", 5f, 4f), new Obj("CRATE", 5f, 9.5f),
-                    new Obj("CRATE", 2f, 5.5f), new Obj("CRATE", 8f, 5.5f),
-                    new Obj("PILLAR", 2.5f, 2.5f), new Obj("PILLAR", 7.5f, 2.5f),
+                    new Obj("TIMED_SPIKE", 7f, 5f), new Obj("TIMED_SPIKE", 3f, 8f),
+                    new Obj("CRATE", 2f, 4.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -278,10 +283,9 @@ namespace Game.EditorTools
                 Id = "I", NameKr = "회전 관문",
                 Objects = new[]
                 {
-                    new Obj("ROTATING_BLADE", 5f, 6f), new Obj("BULK", 2f, 2f),
-                    new Obj("BULK", 8f, 2f), new Obj("CRATE", 5f, 2.5f), new Obj("CRATE", 2f, 9.5f),
-                    new Obj("PILLAR", 3.5f, 9.5f), new Obj("CRATE", 8f, 9.5f),
-                    new Obj("PILLAR", 6.5f, 9.5f),
+                    new Obj("ROTATING_BLADE", 6f, 6f), new Obj("PILLAR", 1.5f, 9.5f),
+                    new Obj("PILLAR", 1.5f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -303,10 +307,8 @@ namespace Game.EditorTools
                 Id = "J", NameKr = "엇갈린 문",
                 Objects = new[]
                 {
-                    new Obj("BARRICADE", 4.5f, 4.5f), new Obj("BARRICADE", 7.5f, 4.5f),
-                    new Obj("BARRICADE", 2.5f, 8.5f), new Obj("BARRICADE", 5.5f, 8.5f),
-                    new Obj("CRATE", 5f, 6.5f), new Obj("PILLAR", 8.5f, 2.5f),
-                    new Obj("PILLAR", 1.5f, 9.5f),
+                    new Obj("BARRICADE", 5.5f, 5.5f), new Obj("BARRICADE", 7.5f, 2.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -328,9 +330,9 @@ namespace Game.EditorTools
                 Id = "K", NameKr = "사선 분단",
                 Objects = new[]
                 {
-                    new Obj("BULK", 2f, 9f), new Obj("BULK", 4f, 7f), new Obj("BULK", 6f, 5f),
-                    new Obj("BULK", 8f, 3f), new Obj("TIMED_SPIKE", 5f, 9f),
-                    new Obj("CRATE", 8f, 9.5f), new Obj("CRATE", 2f, 2.5f),
+                    new Obj("BULK", 2f, 3f), new Obj("CRATE", 8f, 8.5f),
+                    new Obj("PILLAR", 1.5f, 9.5f)
+                
                 },
                 Slots = new[]
                 {
@@ -352,9 +354,9 @@ namespace Game.EditorTools
                 Id = "L", NameKr = "네 귀퉁이 가시",
                 Objects = new[]
                 {
-                    new Obj("TIMED_SPIKE", 2f, 9f), new Obj("TIMED_SPIKE", 8f, 9f),
-                    new Obj("TIMED_SPIKE", 2f, 4f), new Obj("TIMED_SPIKE", 8f, 4f),
-                    new Obj("BULK", 5f, 6f), new Obj("CRATE", 5f, 9.5f), new Obj("CRATE", 5f, 2.5f),
+                    new Obj("TIMED_SPIKE", 5f, 6f), new Obj("TIMED_SPIKE", 8f, 10f),
+                    new Obj("CRATE", 8f, 4.5f)
+                
                 },
                 Slots = new[]
                 {
