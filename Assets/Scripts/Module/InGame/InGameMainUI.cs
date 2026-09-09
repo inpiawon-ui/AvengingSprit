@@ -1230,41 +1230,12 @@ namespace Game.Module.InGame
             icon.enabled = art != null;
             icon.color = Color.white;
 
-            var frameArt = _cardAtlas != null ? _cardAtlas.GetSprite($"card_frame_{rarity}") : null;
+            // ⚠ 아이콘 둘레 꺾쇠는 **끈다.** 컨펌 시안(B 「돌 서판」)에는 없다 —
+            //   액자 안쪽 면 위에 상징만 놓인다. 꺾쇠를 그리면 시안보다 칸이 좁아 보이고,
+            //   상징이 커진 지금(160px)은 꺾쇠와 겹친다.
+            //   `card_frame_*` 그림은 그대로 두었다. 되살리려면 이 블록만 풀면 된다.
             var frame = GetOrMakeCardImage((RectTransform)icon.transform.parent, "IconFrame");
-            if (frame != null)
-            {
-                frame.sprite = frameArt;
-                frame.enabled = frameArt != null;
-                frame.color = Color.white;
-                frame.transform.SetSiblingIndex(0);   // 아이콘 뒤에
-                FitAroundIcon((RectTransform)frame.transform, (RectTransform)icon.transform);
-            }
-        }
-
-        /// <summary>테두리가 아이콘보다 이만큼 크다. 사방으로 반씩 나눠 커진다.</summary>
-        private const float IconFrameGrow = 16f;
-
-        /// <summary>
-        /// 테두리를 아이콘에 정확히 겹쳐 놓는다.
-        ///
-        /// ⚠ 예전에는 아이콘의 `anchoredPosition` 을 그대로 복사했는데,
-        ///   아이콘은 좌상단 앵커(0,1)이고 테두리는 가운데 앵커(0.5,1)로 만들어져
-        ///   같은 숫자가 **다른 곳을 가리켰다.** 아이콘 x=48 이 테두리에서는
-        ///   "카드 중앙에서 오른쪽으로 48" 이 되어 테두리만 옆으로 밀려 있었다.
-        ///   앵커·피벗까지 아이콘 것을 그대로 가져와 좌표계를 맞춘다.
-        /// </summary>
-        private static void FitAroundIcon(RectTransform frame, RectTransform icon)
-        {
-            frame.anchorMin = icon.anchorMin;
-            frame.anchorMax = icon.anchorMax;
-            frame.pivot = icon.pivot;
-            frame.sizeDelta = icon.sizeDelta + new Vector2(IconFrameGrow, IconFrameGrow);
-
-            // 피벗이 가운데가 아니면 커진 만큼 한쪽으로만 자란다. 그 절반을 되민다.
-            frame.anchoredPosition = icon.anchoredPosition
-                - new Vector2((0.5f - icon.pivot.x) * IconFrameGrow,
-                              (0.5f - icon.pivot.y) * IconFrameGrow);
+            if (frame != null) frame.enabled = false;
         }
 
         // ── 카드 그림 ────────────────────────────────────────────
