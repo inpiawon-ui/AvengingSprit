@@ -107,6 +107,10 @@ namespace Game.Character
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
 
+        [Header("잡몹 체력 — 전체 높이")]
+        [Tooltip("잡몹 체력 전체 배율. 챕터·방 배율에 더 곱한다 (보스 제외)")]
+        [SerializeField] private float _enemyHpMul = 2f;
+
         [Header("격투 쉴드 — 때릴 때마다 차고, 손을 놓으면 녹는다")]
         [Tooltip("타격당 차는 양 (최대 HP의 %) — 소수점을 쓴다. 3%는 너무 빨라 1.5%로 내렸다")]
         [SerializeField] private float _shieldPerHitPercent = 1.5f;
@@ -264,6 +268,17 @@ namespace Game.Character
         public int EnemiesPerRoom(int roomIndex)
             => Mathf.Clamp(_enemiesPerRoomMin + roomIndex / 2, _enemiesPerRoomMin, _enemiesPerRoomMax);
         public int EnemyHp(int statHp) => Mathf.Max(1, Mathf.RoundToInt(HostHp(statHp) * _enemyHpScale));
+
+        /// <summary>
+        /// 잡몹 체력 전체에 곱하는 값 (2026-09-09 — 「너무 약하다, 2배로」).
+        ///
+        /// 챕터·방 배율과 **따로** 둔다. 저 둘은 곡선(어느 챕터가 얼마나 센가)이고
+        /// 이건 높이(전체를 얼마나 단단하게 볼 것인가)다. 한 표에 섞으면
+        /// 곡선을 손볼 때마다 높이가 같이 흔들린다.
+        ///
+        /// ⚠ 보스는 안 걸린다 — `BossHp` 는 다른 길로 간다.
+        /// </summary>
+        public float EnemyHpMul => Mathf.Max(0.01f, _enemyHpMul);
         public int EnemyAtk(int statAtk) => Mathf.Max(1, Mathf.RoundToInt(HostAtk(statAtk) * _enemyAtkScale));
         public float EnemySpeed(int statSpd) => HostSpeed(statSpd) * _enemySpeedScale;
 

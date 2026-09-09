@@ -3652,7 +3652,8 @@ namespace Game.Module.InGame
 
         private int EnemyHpOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(
-                   (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp)) * EnemyHpGrowth()));
+                   (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp))
+                   * EnemyHpGrowth() * _config.EnemyHpMul));
 
         private int EnemyAtkOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(
