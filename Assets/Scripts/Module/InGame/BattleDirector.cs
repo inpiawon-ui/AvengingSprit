@@ -6731,6 +6731,12 @@ namespace Game.Module.InGame
             int amount = useRoomTotal
                 ? (_canonRoom != null ? _canonRoom.Gold : 0)   // 적이 없던 방
                 : _goldCollected;
+
+            // 마지막 한 마리를 **빼앗아서** 방이 비면 떨굴 몸이 남지 않는다.
+            // 그때 통에 남은 것은 갈 곳이 없으므로 여기서 함께 넣는다 —
+            // 방을 비웠으면 방 골드는 다 받는다는 규칙을 어느 길로 와도 지킨다.
+            if (!useRoomTotal && _goldPool > 0) { amount += _goldPool; _goldPool = 0; }
+
             _goldCollected = 0;
             if (amount > 0) AddRunGoldAtPlayer(amount);
         }
@@ -7460,6 +7466,13 @@ namespace Game.Module.InGame
             // 적 목록에서만 빼고 **지우지는 않는다.** 채널이 도는 동안 그 자리에서
             // 빼앗기는 자세로 굳어 있어야 한다. 총알·AI 는 목록을 보므로 더는 안 건드린다.
             _enemies.Remove(target);
+            // ⚠ **몫만 덜어 낸다 — 돈은 안 준다.** 이 몸은 죽은 게 아니라 빼앗긴 것이라
+            //   `DropGold` 를 안 탄다. 그런데 몫(가중치)은 방에 들어설 때 이미 세어 놨다.
+            //   빼 주지 않으면 남은 것들이 자기 몫만 떨구고 끝나, 빼앗은 몸이 들고 있던
+            //   만큼이 방 바닥에 나오지도 않고 사라진다.
+            //   실제로 24 골드짜리 첫 방에서 15 밖에 못 걷었다 — 몸을 뺏을수록 손해였다.
+            //   방 골드는 **방의 몫**이지 한 마리의 몫이 아니다.
+            _goldWeightLeft = Mathf.Max(0, _goldWeightLeft - GoldWeightOf(target));
             target.CancelWindup();
             target.HoldPossessed(true);
             _channelBody = target;
