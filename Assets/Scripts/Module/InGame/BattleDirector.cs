@@ -5228,6 +5228,8 @@ namespace Game.Module.InGame
         private readonly List<ShopOffer> _shopOffers = new();
         private ShopChapter _shopRules;
         private int _shopBought, _shopCardsBought;
+        /// <summary>이 상점에서 치료를 이미 샀는가. 한 번만 판다.</summary>
+        private bool _shopHealBought;
         private bool _shopOpen;
 
         public bool IsShopOpen => _shopOpen;
@@ -5243,6 +5245,7 @@ namespace Game.Module.InGame
             if (_shopRules == null) { SpawnExit(); return; }
 
             _shopBought = _shopCardsBought = 0;
+            _shopHealBought = false;
 
             // 이 판에서 만난 몸 중 지금 안 타고 있는 것 하나를 진열한다.
             _hostOffers.Clear();
@@ -5363,7 +5366,10 @@ namespace Game.Module.InGame
             names[heal] = "치료";
             descs[heal] = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
             prices[heal] = _shopRules.HealPrice;
-            can[heal] = _shopBought < _shopRules.TotalPurchaseLimit
+            // ⚠ 치료는 **한 번만** 판다. 카드·몸은 산 뒤 진열대에서 빠지고
+            //   소모품은 하나만 들 수 있는데, 치료만 한도가 남으면 두 번 살 수 있었다.
+            can[heal] = !_shopHealBought
+                     && _shopBought < _shopRules.TotalPurchaseLimit
                      && _runGold >= _shopRules.HealPrice;
             icons[heal] = "buffcard_heal";   // 회복은 카드가 아니라 상점 고유 칸이다
 
@@ -5422,10 +5428,12 @@ namespace Game.Module.InGame
             }
             else if (index == ShopHealIndex)
             {
+                if (_shopHealBought) return;
                 if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
                 if (_runGold < _shopRules.HealPrice) return;
                 AddRunGold(-_shopRules.HealPrice);
                 _shopBought++;
+                _shopHealBought = true;
 
                 _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * _shopRules.GhostHealPct / 100);
                 if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * _shopRules.HostHealPct / 100));

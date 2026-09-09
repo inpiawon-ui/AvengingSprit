@@ -45,12 +45,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9f992a8e2d4de3e4ba9d8796c208ca62
-    m_Address: TableData/EvolutionTable
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_tabledata
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c64e017ececb1474bb0208dfecbbd377
     m_Address: TableData/BossTable
     m_ReadOnly: 0

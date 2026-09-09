@@ -215,6 +215,8 @@ namespace Game.Module.Events
     {
         public string[] Titles;
         public string[] Descs;
+        /// <summary>칸마다 앞에 놓을 그림. 무엇을 주는지가 글보다 먼저 읽힌다.</summary>
+        public string[] Icons;
     }
 
     /// <summary>제단에서 무엇을 받았는지 한 줄.</summary>

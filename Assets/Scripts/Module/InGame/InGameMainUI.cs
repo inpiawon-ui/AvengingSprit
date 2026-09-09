@@ -982,6 +982,27 @@ namespace Game.Module.InGame
                 bool has = e.Titles != null && i < e.Titles.Length;
                 _ui.SetActive($"ShrineChoice{i}", has);
                 if (!has) continue;
+                // 칸 앞에 그림 하나 — 무엇을 주는지가 글보다 먼저 읽힌다.
+                var slot = _ui.Find($"ShrineChoice{i}") as RectTransform;
+                if (slot != null)
+                {
+                    var gi = GetOrMakeCardImage(slot, "GiftIcon");
+                    var key = e.Icons != null && i < e.Icons.Length ? e.Icons[i] : null;
+                    var sp2 = UiArt(key);
+                    if (gi != null)
+                    {
+                        var grt = (RectTransform)gi.transform;
+                        grt.anchorMin = grt.anchorMax = new Vector2(0f, 1f);
+                        grt.pivot = new Vector2(0f, 1f);
+                        grt.anchoredPosition = new Vector2(18f, -16f);
+                        grt.sizeDelta = new Vector2(64f, 64f);
+                        gi.sprite = sp2;
+                        gi.enabled = sp2 != null;
+                        gi.color = Color.white;
+                        gi.raycastTarget = false;
+                    }
+                }
+
                 // 이름 한 줄, 그 아래 무엇을 주는지.
                 //
                 // ⚠ 설명을 70% 로 줄였더니 **읽을 수가 없었다.** 칸 글꼴이 자동으로

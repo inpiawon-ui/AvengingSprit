@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Module.Events;
 using UnityEngine;
 
@@ -61,14 +61,31 @@ namespace Game.Module.InGame
             _                   => "멀리 닿는다",
         };
 
+        /// <summary>
+        /// 무엇을 주는가. **수치는 적지 않는다.**
+        ///
+        /// 「사거리 +25%」 처럼 숫자를 박아 두면 세 칸이 전부 숫자 비교가 되어
+        /// 큰 수만 고르게 된다. 무엇이 좋아지는지만 말하고, 얼마나는 몸으로 안다.
+        /// </summary>
         private static string ShrineDescOf(ShrineGift g) => g switch
         {
-            ShrineGift.FullHeal => "호스트 체력 전부 회복",
-            ShrineGift.SoulHeal => "고스트 체력 전부 회복",
-            ShrineGift.MaxHpUp  => $"뺏는 몸 최대 체력 +{ShrineMaxHpUpPercent}%",
-            ShrineGift.AtkUp    => $"공격력 +{ShrineAtkUpPercent}%",
-            ShrineGift.SpeedUp  => $"발사 간격 −{ShrineSpeedUpPercent}%",
-            _                   => $"사거리 +{ShrineRangeUpPercent}%",
+            ShrineGift.FullHeal => "호스트 체력을 가득 채운다",
+            ShrineGift.SoulHeal => "고스트 체력을 가득 채운다",
+            ShrineGift.MaxHpUp  => "뺏는 몸이 더 튼튼해진다",
+            ShrineGift.AtkUp    => "공격력이 오른다",
+            ShrineGift.SpeedUp  => "공격이 빨라진다",
+            _                   => "사거리가 늘어난다",
+        };
+
+        /// <summary>제단 선물의 아이콘. 뜻이 가장 가까운 카드 그림을 빌려 쓴다.</summary>
+        public static string ShrineIconOf(int index) => index switch
+        {
+            0 => "buffcard_heal",     // 몸을 아문다
+            1 => "buffcard_c017",     // 영혼을 채운다 — 생명 회수
+            2 => "buffcard_c020",     // 그릇을 넓힌다 — 불굴(최대 체력)
+            3 => "buffcard_c001",     // 힘을 받는다 — 공격 증폭
+            4 => "buffcard_c006",     // 손이 빨라진다 — 가속
+            _ => "buffcard_c011",     // 멀리 닿는다 — 확장
         };
 
         /// <summary>
@@ -99,12 +116,14 @@ namespace Game.Module.InGame
             _shrineOpen = true;
             var titles = new string[_shrineOffer.Count];
             var descs = new string[_shrineOffer.Count];
+            var icons = new string[_shrineOffer.Count];
             for (int i = 0; i < _shrineOffer.Count; i++)
             {
                 titles[i] = ShrineTitleOf(_shrineOffer[i]);
                 descs[i] = ShrineDescOf(_shrineOffer[i]);
+                icons[i] = ShrineIconOf((int)_shrineOffer[i]);
             }
-            _bus.Publish(new ShrineOpenedEvent { Titles = titles, Descs = descs });
+            _bus.Publish(new ShrineOpenedEvent { Titles = titles, Descs = descs, Icons = icons });
         }
 
         /// <summary>
@@ -130,7 +149,7 @@ namespace Game.Module.InGame
                     _host.Heal(_host.HpMax);
                     PublishHp();
                     ShowHeal(_host.Position, _host.HpMax);
-                    return "호스트 체력 전부 회복";
+                    return "호스트 체력을 가득 채웠다";
 
                 case ShrineGift.SoulHeal:
                 {
@@ -140,7 +159,7 @@ namespace Game.Module.InGame
                     var at = Avatar != null ? Avatar.Position : Vector2.zero;
                     PlayFx("heal_plus", at, 128f, loop: false);
                     ShowHeal(at, Mathf.Max(1, _ghostHp - before));
-                    return "고스트 체력 전부 회복";
+                    return "고스트 체력을 가득 채웠다";
                 }
 
                 // ⚠ 아래 셋은 **카드 통로를 그대로 탄다.** 제단 전용 배율을 따로 두면
@@ -152,19 +171,19 @@ namespace Game.Module.InGame
                         _host.SetHpMax(Mathf.RoundToInt(_host.HpMax * (1f + ShrineMaxHpUpPercent / 100f)));
                         PublishHp();
                     }
-                    return $"뺏는 몸 최대 체력 +{ShrineMaxHpUpPercent}%";
+                    return "뺏는 몸이 더 튼튼해졌다";
 
                 case ShrineGift.AtkUp:
                     _buffs.AddShrineAtkPercent(ShrineAtkUpPercent);
-                    return $"공격력 +{ShrineAtkUpPercent}%";
+                    return "공격력이 올랐다";
 
                 case ShrineGift.SpeedUp:
                     _buffs.AddShrineAttackSpeedPercent(ShrineSpeedUpPercent);
-                    return $"발사 간격 −{ShrineSpeedUpPercent}%";
+                    return "공격이 빨라졌다";
 
                 default:
                     _buffs.AddShrineRangePercent(ShrineRangeUpPercent);
-                    return $"사거리 +{ShrineRangeUpPercent}%";
+                    return "사거리가 늘어났다";
             }
         }
     }
