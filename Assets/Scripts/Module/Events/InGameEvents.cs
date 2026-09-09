@@ -72,15 +72,6 @@ namespace Game.Module.Events
         public string ResultLine;
     }
 
-    /// <summary>진화를 하나 얻었다. 재료 카드는 그대로 남는다.</summary>
-    public struct EvolutionGainedEvent : IEvent
-    {
-        public string EvolutionId;
-        public string NameKr;
-        public int SlotsUsed;
-        public int SlotsMax;
-    }
-
     /// <summary>판 안에서 쓰는 골드가 바뀌었다.</summary>
     public struct RunGoldChangedEvent : IEvent
     {
@@ -234,12 +225,6 @@ namespace Game.Module.Events
 
     public struct BuffOfferEvent : IEvent
     {
-        /// <summary>
-        /// 각 칸이 **진화 재료**인가. UI 가 금테를 두른다.
-        /// 정본: 재료 카드는 3택1에 100% 끼워 넣고 눈에 띄게 표시한다.
-        /// </summary>
-        public bool[] IsEvolutionMaterial;
-
         public string[] OfferedKeys;
         /// <summary>이번에 오른 레벨. 화면이 "무엇 때문에 열렸는지"를 말할 수 있어야 한다.</summary>
         public int Level;

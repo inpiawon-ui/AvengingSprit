@@ -14,345 +14,115 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Character.BuffTable
   _entries:
   - _buffKey: c001
-    _nameKr: "\uACF5\uACA9 \uC99D\uD3ED"
-    _description: "\uAE30\uBCF8 \uACF5\uACA9 \uD53C\uD574 \uACC4\uC218\uB97C \uAC15\uD654"
-    _kind: 0
-    _value: 8
+    _nameKr: "\uAC10\uC804"
+    _description: "\uBA85\uC911\uD558\uBA74 \uC804\uAE30\uAC00 \uD284\uB2E4. \uC606\uC5D0
+      \uC120 \uC801 \uD558\uB098\uC5D0\uAC8C\uB3C4 \uC62E\uACA8 \uBD99\uB294\uB2E4."
+    _kind: 46
+    _value: 25
     _stackable: 1
-    _colorHex: '#F0603C'
+    _colorHex: '#F0645A'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C001
-    _canonEffect: BaseDamage*(1+Value)
+    _canonId: 
+    _canonEffect: 
     _pool: ATTACK
     _fromChapter: 1
     _weight: 1
     _cardId: C001
-    _rarity: 0
+    _rarity: 2
     _category: ATTACK
-    _levelValues: 080000000e000000140000001a00000020000000
+    _levelValues: 19000000230000002d0000003700000041000000
     _implemented: 1
   - _buffKey: c002
-    _nameKr: "\uC815\uBC00 \uC870\uC900"
-    _description: "\uAE30\uBCF8 \uACF5\uACA9\uC774 \uB2E8 \uD558\uB098\uC758 \uC720\uD6A8
-      \uD0C0\uAE43\uC5D0 \uD574\uACB0\uB420 \uB54C \uD574\uB2F9 \uB2E8\uC77C \uD0C0\uAE43
-      \uD53C\uD574\uB9CC \uAC15\uD654\uD55C\uB2E4."
-    _kind: 29
-    _value: 6
+    _nameKr: "\uC131\uC7A5 \uAC00\uC18D"
+    _description: "\uC801\uC744 \uC7A1\uC544 \uC5BB\uB294 \uACBD\uD5D8\uCE58\uAC00
+      \uB298\uC5B4\uB09C\uB2E4."
+    _kind: 47
+    _value: 12
     _stackable: 1
-    _colorHex: '#F0603C'
+    _colorHex: '#F0F0F0'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C002
-    _canonEffect: IF(ValidTargetCount==1,QualifyingBasicAttackDamage*(1+Value/100),QualifyingBasicAttackDamage)
-    _pool: ATTACK
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
     _fromChapter: 1
     _weight: 1
     _cardId: C002
-    _rarity: 0
-    _category: ATTACK
-    _levelValues: 060000000b00000010000000150000001a000000
+    _rarity: 1
+    _category: UTILITY
+    _levelValues: 0c000000140000001c000000240000002c000000
     _implemented: 1
   - _buffKey: c003
-    _nameKr: "\uB9C8\uBB34\uB9AC \uBCF8\uB2A5"
-    _description: "\uC57D\uD574\uC9C4 \uC801\uC5D0 \uB300\uD55C \uB9C8\uBB34\uB9AC
-      \uD53C\uD574 \uAC15\uD654"
-    _kind: 30
-    _value: 10
-    _stackable: 1
-    _colorHex: '#F0603C'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C003
-    _canonEffect: Damage*ExecuteModifier(targetHP)
-    _pool: ATTACK
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C003
-    _rarity: 1
-    _category: ATTACK
-    _levelValues: 0a000000120000001a000000220000002a000000
-    _implemented: 1
-  - _buffKey: c004
-    _nameKr: "\uAC11\uC637 \uBD84\uC1C4"
-    _description: "\uBC18\uBCF5 \uACF5\uACA9\uC774 \uBC29\uC5B4 \uD6A8\uC728\uC744
-      \uC57D\uD654"
-    _kind: 42
-    _value: 5
-    _stackable: 1
-    _colorHex: '#F0603C'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C004
-    _canonEffect: ArmorMultiplier(target,Value)
-    _pool: ATTACK
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C004
-    _rarity: 2
-    _category: ATTACK
-    _levelValues: 05000000090000000d0000001100000015000000
-    _implemented: 1
-  - _buffKey: c005
-    _nameKr: "\uC5F0\uC18D \uC555\uBC15"
-    _description: "\uAC19\uC740 \uD0C0\uAE43\uC5D0 \uC131\uACF5\uD55C \uAE30\uBCF8
-      \uACF5\uACA9\uC774 4\uD68C\uAE4C\uC9C0 \uB204\uC801\uB41C\uB2E4. \uD0C0\uAE43
-      \uBCC0\uACBD \uB610\uB294 \uAE30\uC5EC \uACF5\uBC31 1.5\uCD08 \uCD08\uACFC
-      \uC2DC \uCD08\uAE30\uD654."
-    _kind: 37
-    _value: 6
-    _stackable: 1
-    _colorHex: '#F0603C'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C005
-    _canonEffect: Bonus=Value*Clamp(ConsecutiveSameTargetHits,1,4)/4; Reset(TargetChanged
-      OR GapSec>1.5)
-    _pool: ATTACK
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C005
-    _rarity: 1
-    _category: ATTACK
-    _levelValues: 060000000a0000000e0000001200000016000000
-    _implemented: 1
-  - _buffKey: c006
-    _nameKr: "\uAC00\uC18D \uD0C4\uCCB4"
-    _description: "\uD22C\uC0AC\uCCB4 \uC18D\uB3C4\uC640 \uC720\uD6A8 \uBA85\uC911
-      \uC548\uC815\uC131 \uAC15\uD654"
-    _kind: 11
-    _value: 10
-    _stackable: 1
-    _colorHex: '#4CC8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C006
-    _canonEffect: ProjectileSpeed*(1+Value)
-    _pool: PROJECTILE
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C006
-    _rarity: 0
-    _category: PROJECTILE
-    _levelValues: 0a000000120000001a000000220000002a000000
-    _implemented: 1
-  - _buffKey: c007
-    _nameKr: "\uCD94\uAC00 \uBC1C\uC0AC"
-    _description: "\uC6D0\uB798 \uBC1C\uC0AC \uD615\uD0DC\uB97C \uBCF4\uC874\uD55C
-      \uBCF4\uC870 \uD0C4\uCCB4 \uCD94\uAC00"
-    _kind: 6
-    _value: 12
-    _stackable: 1
-    _colorHex: '#4CC8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C007
-    _canonEffect: SpawnAdapterExtraProjectile(Value)
-    _pool: PROJECTILE
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C007
-    _rarity: 1
-    _category: PROJECTILE
-    _levelValues: 0c00000012000000180000001e00000024000000
-    _implemented: 1
-  - _buffKey: c008
-    _nameKr: "\uAD00\uD1B5 \uCF54\uC5B4"
-    _description: "\uC9C1\uC120 \uACF5\uACA9\uC758 \uAD00\uD1B5 \uAC00\uCE58 \uAC15\uD654"
-    _kind: 7
+    _nameKr: "\uC218\uD638 \uBC29\uD328"
+    _description: "\uBC29\uD328\uAC00 \uB0B4 \uC8FC\uC704\uB97C \uB3C8\uB2E4. \uC801\uC5D0
+      \uB2FF\uC73C\uBA74 \uD130\uC9C0\uACE0 8\uCD08 \uB4A4 \uB3CC\uC544\uC628\uB2E4."
+    _kind: 48
     _value: 1
-    _stackable: 1
-    _colorHex: '#4CC8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C008
-    _canonEffect: PierceCount+Value
-    _pool: PROJECTILE
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C008
-    _rarity: 1
-    _category: PROJECTILE
-    _levelValues: 0100000001000000020000000200000003000000
-    _implemented: 1
-  - _buffKey: c009
-    _nameKr: "\uC720\uB3C4 \uBCF4\uC815"
-    _description: "\uBE57\uB098\uAC00\uAE30 \uC26C\uC6B4 \uD0C4\uCCB4\uC5D0 \uC81C\uD55C
-      \uC720\uB3C4 \uBD80\uC5EC"
-    _kind: 38
-    _value: 12
-    _stackable: 1
-    _colorHex: '#4CC8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C009
-    _canonEffect: HomingStrength=Adapter(Value)
-    _pool: PROJECTILE
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C009
-    _rarity: 2
-    _category: PROJECTILE
-    _levelValues: 0c000000140000001c000000240000002c000000
-    _implemented: 1
-  - _buffKey: c010
-    _nameKr: "\uBC18\uC0AC \uADA4\uB3C4"
-    _description: "\uC720\uD6A8 \uD0C0\uAE43 \uC0AC\uC774\uC5D0 \uD55C \uBC88 \uBC18\uC0AC\uD558\uB294
-      \uC720\uB839 \uD0C4\uCCB4 \uC0DD\uC131"
-    _kind: 22
-    _value: 35
-    _stackable: 1
-    _colorHex: '#4CC8F0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C010
-    _canonEffect: RicochetAdapter(Value)
-    _pool: PROJECTILE
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C010
-    _rarity: 3
-    _category: PROJECTILE
-    _levelValues: 230000002d00000037000000410000004b000000
-    _implemented: 1
-  - _buffKey: c011
-    _nameKr: "\uD655\uC7A5 \uCDA9\uACA9"
-    _description: "\uACF5\uACA9\uC758 \uC720\uD6A8 \uBC94\uC704\uB97C \uD655\uB300"
-    _kind: 23
-    _value: 8
-    _stackable: 1
-    _colorHex: '#B45CE0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C011
-    _canonEffect: AreaRadius*(1+Value)
-    _pool: AREA
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C011
-    _rarity: 0
-    _category: AREA
-    _levelValues: 080000000e000000140000001a00000020000000
-    _implemented: 1
-  - _buffKey: c012
-    _nameKr: "\uC794\uB958 \uC9C0\uB300"
-    _description: "\uC720\uD6A8 \uC9C0\uC5ED \uACF5\uACA9\uC774 \uC9E7\uC740 \uC794\uB958
-      \uD6A8\uACFC\uB97C \uB0A8\uAE40"
-    _kind: 18
-    _value: 12
-    _stackable: 1
-    _colorHex: '#B45CE0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C012
-    _canonEffect: FieldDuration*(1+Value)
-    _pool: AREA
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C012
-    _rarity: 1
-    _category: AREA
-    _levelValues: 0c000000140000001c000000240000002c000000
-    _implemented: 1
-  - _buffKey: c013
-    _nameKr: "\uD3ED\uBC1C \uBA54\uC544\uB9AC"
-    _description: "\uD3ED\uBC1C \uC885\uB8CC\uC810\uC5D0 \uCD95\uC18C\uB41C \uD6C4\uC18D
-      \uCDA9\uACA9 \uBC1C\uC0DD"
-    _kind: 40
-    _value: 20
-    _stackable: 1
-    _colorHex: '#B45CE0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C013
-    _canonEffect: EchoDamage=SourceDamage*Value
-    _pool: AREA
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C013
-    _rarity: 2
-    _category: AREA
-    _levelValues: 140000001c000000240000002c00000034000000
-    _implemented: 1
-  - _buffKey: c014
-    _nameKr: "\uC5F0\uC1C4 \uBC88\uC9D0"
-    _description: "\uC0C1\uD0DC/\uC9C0\uC5ED \uD6A8\uACFC\uAC00 \uC778\uC811\uD55C
-      \uC720\uD6A8 \uD0C0\uAE43\uC73C\uB85C \uC81C\uD55C \uC804\uD30C"
-    _kind: 43
-    _value: 18
-    _stackable: 1
-    _colorHex: '#B45CE0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C014
-    _canonEffect: ChainAdapter(Value)
-    _pool: AREA
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C014
-    _rarity: 2
-    _category: AREA
-    _levelValues: 120000001900000020000000270000002e000000
-    _implemented: 1
-  - _buffKey: c015
-    _nameKr: "\uBCF4\uC2A4 \uC555\uCD95"
-    _description: "\uC8FC\uBCC0 \uB300\uC0C1\uC774 \uC5C6\uC73C\uBA74 \uAD11\uC5ED
-      \uAC00\uCE58\uB97C \uBCF4\uC2A4 \uC911\uC2EC \uD53C\uD574\uB85C \uBCC0\uD658"
-    _kind: 31
-    _value: 18
-    _stackable: 1
-    _colorHex: '#B45CE0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C015
-    _canonEffect: BossAreaAdapter(Value)
-    _pool: AREA
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C015
-    _rarity: 1
-    _category: AREA
-    _levelValues: 12000000180000001e000000240000002a000000
-    _implemented: 1
-  - _buffKey: c016
-    _nameKr: "\uC720\uB839 \uAC11\uC8FC"
-    _description: "\uBC1B\uB294 \uD53C\uD574\uB97C \uC644\uD654"
-    _kind: 14
-    _value: 5
     _stackable: 1
     _colorHex: '#5CC850'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C016
-    _canonEffect: IncomingDamage*(1-Value)
+    _canonId: 
+    _canonEffect: 
     _pool: SURVIVAL
     _fromChapter: 1
     _weight: 1
-    _cardId: C016
-    _rarity: 0
+    _cardId: C003
+    _rarity: 1
     _category: SURVIVAL
-    _levelValues: 05000000080000000b0000000e00000011000000
+    _levelValues: 0100000001000000020000000200000003000000
     _implemented: 1
-  - _buffKey: c017
-    _nameKr: "\uC0DD\uBA85 \uD68C\uC218"
-    _description: "\uC804\uD22C \uC131\uACFC\uAC00 \uC81C\uD55C \uD68C\uBCF5\uC73C\uB85C
-      \uC804\uD658"
+  - _buffKey: c004
+    _nameKr: "\uCC98\uD615"
+    _description: "\uCCB4\uB825\uC774 30% \uC544\uB798\uB85C \uB5A8\uC5B4\uC9C4 \uC801\uC744
+      \uD655\uB960\uB85C \uC989\uC0AC\uC2DC\uD0A8\uB2E4. \uBCF4\uC2A4\uC5D0\uAC8C\uB294
+      \uAC78\uB9AC\uC9C0 \uC54A\uB294\uB2E4."
+    _kind: 49
+    _value: 3
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C004
+    _rarity: 3
+    _category: ATTACK
+    _levelValues: 030000000500000007000000090000000c000000
+    _implemented: 1
+  - _buffKey: c005
+    _nameKr: "\uBC88\uAC1C \uC0AC\uC2AC"
+    _description: "\uC804\uAE30\uAC00 \uB354 \uBA40\uB9AC \uD284\uB2E4. \uC774\uBBF8
+      \uB9DE\uC740 \uC801\uC740 \uAC74\uB108\uB6F4\uB2E4."
+    _kind: 50
+    _value: 1
+    _stackable: 1
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C005
+    _rarity: 2
+    _category: AREA
+    _levelValues: 0100000001000000020000000200000003000000
+    _implemented: 1
+  - _buffKey: c006
+    _nameKr: "\uD761\uD63C"
+    _description: "\uC801\uC744 \uC7A1\uC744 \uB54C\uB9C8\uB2E4 \uCD5C\uB300 \uCCB4\uB825\uC758
+      \uC77C\uBD80\uB97C \uB3CC\uB824\uBC1B\uB294\uB2E4."
     _kind: 32
     _value: 3
     _stackable: 1
@@ -360,333 +130,95 @@ MonoBehaviour:
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C017
-    _canonEffect: RecoverOnCombatEvent(Value)
+    _canonId: 
+    _canonEffect: 
     _pool: SURVIVAL
     _fromChapter: 1
     _weight: 1
-    _cardId: C017
+    _cardId: C006
     _rarity: 0
     _category: SURVIVAL
     _levelValues: 030000000500000007000000090000000b000000
     _implemented: 1
-  - _buffKey: c018
-    _nameKr: "\uC704\uAE30 \uBC29\uBCBD"
-    _description: "\uC704\uAE30 \uC0C1\uD0DC \uC9C4\uC785 \uC2DC \uC77C\uC2DC \uBCF4\uD638"
-    _kind: 44
-    _value: 12
+  - _buffKey: c007
+    _nameKr: "\uCC30\uB098\uC758 \uBD88\uC0AC"
+    _description: "\uB9DE\uB294 \uC21C\uAC04 2\uCD08 \uB3D9\uC548 \uBB34\uC801\uC774
+      \uB41C\uB2E4. \uB808\uBCA8\uC774 \uC624\uB97C\uC218\uB85D \uC790\uC8FC \uAC78\uB9B0\uB2E4."
+    _kind: 51
+    _value: 30
     _stackable: 1
     _colorHex: '#5CC850'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C018
-    _canonEffect: BarrierOnCrisis(Value)
+    _canonId: 
+    _canonEffect: 
     _pool: SURVIVAL
     _fromChapter: 1
     _weight: 1
-    _cardId: C018
-    _rarity: 1
-    _category: SURVIVAL
-    _levelValues: 0c00000012000000180000001e00000024000000
-    _implemented: 1
-  - _buffKey: c019
-    _nameKr: "\uD761\uC218 \uBCC0\uD658"
-    _description: "\uC720\uD6A8 \uD53C\uD574 \uC77C\uBD80\uB97C \uD68C\uBCF5 \uAC00\uCE58\uB85C
-      \uBCC0\uD658"
-    _kind: 8
-    _value: 2
-    _stackable: 1
-    _colorHex: '#5CC850'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C019
-    _canonEffect: Heal=Damage*Value capped
-    _pool: SURVIVAL
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C019
+    _cardId: C007
     _rarity: 2
     _category: SURVIVAL
-    _levelValues: 0200000003000000040000000500000006000000
+    _levelValues: 1e0000001a00000016000000120000000e000000
     _implemented: 1
-  - _buffKey: c020
-    _nameKr: "\uBD88\uAD74"
-    _description: "\uD604\uC7AC Host \uCD5C\uB300 HP\uC640 \uD68C\uBCF5 \uD55C\uB3C4\uB97C
-      \uAC15\uD654"
-    _kind: 12
-    _value: 7
+  - _buffKey: c008
+    _nameKr: "\uCD94\uAC00 \uBC1C\uC0AC"
+    _description: "\uC3E0 \uB54C\uB9C8\uB2E4 \uD0C4\uC774 \uB354 \uB098\uAC04\uB2E4."
+    _kind: 6
+    _value: 1
     _stackable: 1
-    _colorHex: '#5CC850'
+    _colorHex: '#F0B428'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C020
-    _canonEffect: HostMaxHP*(1+Value)
-    _pool: SURVIVAL
+    _canonId: 
+    _canonEffect: 
+    _pool: PROJECTILE
     _fromChapter: 1
     _weight: 1
-    _cardId: C020
+    _cardId: C008
     _rarity: 1
-    _category: SURVIVAL
-    _levelValues: 070000000c00000011000000160000001b000000
+    _category: PROJECTILE
+    _levelValues: 0100000002000000030000000400000005000000
     _implemented: 1
-  - _buffKey: c021
-    _nameKr: "\uC720\uB839 \uAC00\uC18D"
-    _description: "\uC774\uB3D9 \uC18D\uB3C4 \uAC15\uD654"
-    _kind: 3
-    _value: 5
-    _stackable: 1
-    _colorHex: '#3CD8C0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C021
-    _canonEffect: MoveSpeed*(1+Value)
-    _pool: MOBILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C021
-    _rarity: 0
-    _category: MOBILITY
-    _levelValues: 05000000090000000d0000001100000015000000
-    _implemented: 1
-  - _buffKey: c022
-    _nameKr: "\uD035 \uC14B\uC5C5"
-    _description: "\uC774\uB3D9\uC744 \uBA48\uCD98 \uB4A4 \uCCAB \uAE30\uBCF8 \uACF5\uACA9\uC758
-      \uC120\uB51C\uC744 \uB2E8\uCD95\uD55C\uB2E4. \uC774\uB3D9 \uC911 \uACF5\uACA9\xB7\uC790\uB3D9
-      \uC774\uB3D9\xB7\uBE59\uC758 \uC774\uB3D9 \uBCC0\uACBD\uC740 \uAE08\uC9C0."
-    _kind: 13
-    _value: 10
-    _stackable: 1
-    _colorHex: '#3CD8C0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C022
-    _canonEffect: Windup=max(BaseWindup*(1-Value/100),0.18s,BaseWindup*0.55)
-    _pool: MOBILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C022
-    _rarity: 1
-    _category: MOBILITY
-    _levelValues: 0a00000010000000160000001c00000022000000
-    _implemented: 1
-  - _buffKey: c023
-    _nameKr: "\uD68C\uD53C \uC794\uC0C1"
-    _description: "\uC704\uD5D8 \uD68C\uD53C \uC9C1\uD6C4 \uC794\uC0C1\uC774 \uBCF4\uC870
-      \uACF5\uACA9"
-    _kind: 45
-    _value: 22
-    _stackable: 1
-    _colorHex: '#3CD8C0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C023
-    _canonEffect: AfterimageAttack(Value)
-    _pool: MOBILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C023
-    _rarity: 2
-    _category: MOBILITY
-    _levelValues: 160000001e000000260000002e00000036000000
-    _implemented: 1
-  - _buffKey: c024
-    _nameKr: "\uC804\uD22C \uC2A4\uD15D"
-    _description: "\uAE30\uBCF8 \uACF5\uACA9 \uC644\uB8CC \uD6C4 1.2\uCD08 \uB3D9\uC548
-      \uC774\uB3D9 \uC18D\uB3C4\uAC00 \uC99D\uAC00\uD55C\uB2E4. \uBC29\uD5A5\uC740
-      \uD50C\uB808\uC774\uC5B4\uAC00 \uC81C\uC5B4\uD558\uBA70 \uB300\uC2DC\xB7\uC811\uADFC\xB7\uAC15\uC81C\uC774\uB3D9\uC740
-      \uC5C6\uB2E4."
-    _kind: 33
-    _value: 6
-    _stackable: 1
-    _colorHex: '#3CD8C0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C024
-    _canonEffect: OnBasicAttackComplete=>MoveSpeed*(1+Value/100) for 1.2s; RefreshDurationOnly
-    _pool: MOBILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C024
-    _rarity: 1
-    _category: MOBILITY
-    _levelValues: 060000000a0000000e0000001200000016000000
-    _implemented: 1
-  - _buffKey: c025
-    _nameKr: "\uB0C9\uAE30 \uAC01\uC778"
-    _description: "\uACF5\uACA9\uC5D0 \uBCF4\uC2A4 \uC548\uC804\uD615 \uB454\uD654/\uB0C9\uAE30
-      \uAE30\uC5EC \uBD80\uC5EC"
-    _kind: 34
-    _value: 8
-    _stackable: 1
-    _colorHex: '#7C6CF0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C025
-    _canonEffect: ApplyChill(Value)
-    _pool: UTILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C025
-    _rarity: 1
-    _category: UTILITY
-    _levelValues: 080000000d00000012000000170000001c000000
-    _implemented: 1
-  - _buffKey: c026
+  - _buffKey: c009
     _nameKr: "\uD654\uC5FC \uAC01\uC778"
-    _description: "\uACF5\uACA9\uC5D0 \uBCF4\uC2A4 \uC548\uC804\uD615 \uD654\uC0C1
-      \uAE30\uC5EC \uBD80\uC5EC"
+    _description: "\uACF5\uACA9\uC5D0 \uD654\uC0C1\uC744 \uBD99\uC778\uB2E4."
     _kind: 35
     _value: 8
     _stackable: 1
-    _colorHex: '#7C6CF0'
+    _colorHex: '#F0F0F0'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C026
-    _canonEffect: ApplyBurn(Value)
+    _canonId: 
+    _canonEffect: 
     _pool: UTILITY
     _fromChapter: 1
     _weight: 1
-    _cardId: C026
+    _cardId: C009
     _rarity: 1
     _category: UTILITY
     _levelValues: 080000000d00000012000000170000001c000000
     _implemented: 1
-  - _buffKey: c027
-    _nameKr: "\uC800\uC8FC \uAC01\uC778"
-    _description: "\uC6B0\uC120 \uD0C0\uAE43\uC5D0 \uC57D\uD654 \uC800\uC8FC\uB97C
-      \uBD80\uC5EC"
-    _kind: 36
-    _value: 6
+  - _buffKey: c010
+    _nameKr: "\uAD81\uC9C0"
+    _description: "\uCCB4\uB825\uC774 \uC808\uBC18 \uC544\uB798\uB85C \uB5A8\uC5B4\uC9C0\uBA74
+      \uC8FC\uB294 \uD53C\uD574\uAC00 \uCEE4\uC9C4\uB2E4."
+    _kind: 52
+    _value: 15
     _stackable: 1
-    _colorHex: '#7C6CF0'
+    _colorHex: '#F0645A'
     _scope: 0
     _tag: 0
     _hostKey: 
-    _canonId: C027
-    _canonEffect: ApplyCurse(Value)
-    _pool: UTILITY
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
     _fromChapter: 1
     _weight: 1
-    _cardId: C027
-    _rarity: 2
-    _category: UTILITY
-    _levelValues: 060000000a0000000e0000001200000016000000
-    _implemented: 1
-  - _buffKey: c028
-    _nameKr: "\uD1B5\uC81C \uD30C\uB3D9"
-    _description: "\uACF5\uACA9\uC758 \uACBD\uC9C1\xB7\uBC00\uC5B4\uB0B4\uAE30\xB7\uC0C1\uD0DC
-      \uC81C\uC5B4 \uAE30\uC5EC \uAC15\uD654"
-    _kind: 9
-    _value: 8
-    _stackable: 1
-    _colorHex: '#7C6CF0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C028
-    _canonEffect: ControlPower*(1+Value)
-    _pool: UTILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C028
-    _rarity: 0
-    _category: UTILITY
-    _levelValues: 080000000e000000140000001a00000020000000
-    _implemented: 1
-  - _buffKey: c029
-    _nameKr: "\uD544\uC0B4\uAE30 \uACF5\uBA85"
-    _description: "\uC804\uD22C \uAE30\uC5EC\uAC00 \uD544\uC0B4\uAE30 \uCDA9\uC804\uC5D0
-      \uB354 \uD6A8\uC728\uC801\uC73C\uB85C \uBC18\uC601"
-    _kind: 10
-    _value: 8
-    _stackable: 1
-    _colorHex: '#7C6CF0'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C029
-    _canonEffect: PilsalgiGain*(1+Value)
-    _pool: UTILITY
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C029
-    _rarity: 2
-    _category: UTILITY
-    _levelValues: 080000000d00000012000000170000001c000000
-    _implemented: 1
-  - _buffKey: c030
-    _nameKr: "\uC720\uB839 \uD3EC\uB300"
-    _description: "\uC720\uD6A8 \uAE30\uBCF8 \uACF5\uACA9 8\uD68C\uB9C8\uB2E4 \uC720\uB839
-      \uD3EC\uB300 1\uAE30\uB97C 3\uCD08\uAC04 \uC18C\uD658\uD574 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4
-      \uC720\uD6A8 \uC801\uC744 0.75\uCD08 \uAC04\uACA9\uC73C\uB85C \uACF5\uACA9\uD55C\uB2E4."
-    _kind: 41
-    _value: 22
-    _stackable: 1
-    _colorHex: '#F0C038'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C030
-    _canonEffect: Every8ValidBasicAttacks=>SpawnTurret(duration=3s,interval=0.75s,speed=14m/s,range=11m,max=1)
-    _pool: SPECIAL
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C030
-    _rarity: 3
-    _category: SPECIAL
-    _levelValues: 160000001b00000020000000250000002a000000
-    _implemented: 1
-  - _buffKey: c031
-    _nameKr: "\uACFC\uCDA9\uC804 \uD68C\uB85C"
-    _description: "\uACF5\uACA9 \uC774\uBCA4\uD2B8\uAC00 \uC81C\uD55C\uB41C \uC804\uAE30
-      \uBCF4\uC870 \uD0C0\uACA9\uC744 \uC0DD\uC131"
-    _kind: 46
-    _value: 20
-    _stackable: 1
-    _colorHex: '#F0C038'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C031
-    _canonEffect: ElectricProc(Value)
-    _pool: SPECIAL
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C031
-    _rarity: 3
-    _category: SPECIAL
-    _levelValues: 140000001c000000240000002c00000034000000
-    _implemented: 1
-  - _buffKey: c032
-    _nameKr: "\uC601\uD63C \uBCF5\uC81C"
-    _description: "\uC720\uD6A8 \uAE30\uBCF8 \uACF5\uACA9 8\uD68C\uB9C8\uB2E4 \uC9C1\uC804
-      \uAE30\uBCF8 \uACF5\uACA9 \uD504\uB85C\uD544\uC744 \uC720\uB839 \uC794\uC0C1\uC774
-      1\uD68C \uBCF5\uC81C\uD55C\uB2E4. \uAE30\uBCF8 \uACF5\uACA9 \uC678 \uBAA8\uB4E0
-      \uD53C\uD574\uC6D0\uC740 \uBCF5\uC81C \uBD88\uAC00."
-    _kind: 39
-    _value: 35
-    _stackable: 1
-    _colorHex: '#F0C038'
-    _scope: 0
-    _tag: 0
-    _hostKey: 
-    _canonId: C032
-    _canonEffect: Every8ValidBasicAttacks=>Echo(LastWhitelistedBasicAttackProfile,Value%);
-      NoRecursiveProc
-    _pool: SPECIAL
-    _fromChapter: 1
-    _weight: 1
-    _cardId: C032
-    _rarity: 3
-    _category: SPECIAL
-    _levelValues: 23000000280000002d0000003200000037000000
+    _cardId: C010
+    _rarity: 1
+    _category: ATTACK
+    _levelValues: 0f00000019000000230000002d00000037000000
     _implemented: 1

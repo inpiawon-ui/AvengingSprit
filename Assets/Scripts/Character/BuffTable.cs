@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -118,6 +118,25 @@ namespace Game.Character
         Afterimage,
         /// <summary>C031 과충전 회로 — 명중이 전기를 튀긴다</summary>
         Overcharge,
+
+        // ── 새 카드 10종 (2026-09-09) ────────────────────────────
+        //
+        // ⚠ **반드시 끝에 붙인다.** 표(`BuffTable.asset`)는 이 열거형의 **번호**를
+        //   저장하므로, 중간에 하나만 끼워도 그 뒤가 전부 한 칸씩 밀려
+        //   카드가 이름과 다른 효과로 돌아간다. 실제로 그렇게 19종이 어긋난 적이 있다.
+
+        /// <summary>성장 가속 — EXP 획득 +n%</summary>
+        ExpGain,
+        /// <summary>수호 방패 — 내 주위를 도는 방패 n개</summary>
+        OrbitShield,
+        /// <summary>처형 — 약해진 적을 n% 확률로 즉사시킨다 (보스 제외)</summary>
+        Assassinate,
+        /// <summary>번개 사슬 — 전기 타격이 옆 적 n명에게 더 튄다</summary>
+        ChainLightning,
+        /// <summary>찰나의 불사 — 피격 시 2초 무적. 쿨 n초</summary>
+        GuardInvuln,
+        /// <summary>궁지 — 체력이 절반 아래면 피해 +n%</summary>
+        LowHpPower,
     }
 
     /// <summary>
@@ -240,13 +259,19 @@ namespace Game.Character
             return _levelValues[Mathf.Clamp(level, 1, _levelValues.Length) - 1];
         }
 
-        /// <summary>등급별 뽑힐 무게. 정본 v2.3 05_RARITY_POOL.</summary>
+        /// <summary>
+        /// 등급별 뽑힐 무게.
+        ///
+        /// 정본은 60/28/9.5/2.5 였지만 그건 **Common 8장** 기준이었다.
+        /// 지금 목록은 Common 이 한 장뿐이라 그대로 두면 그 한 장만 계속 나온다.
+        /// 카드 종류를 늘릴 때마다 등급별 장수를 보고 다시 봐야 하는 값이다.
+        /// </summary>
         public static float WeightOf(CardRarity r) => r switch
         {
-            CardRarity.Common    => 60.0f,
-            CardRarity.Rare      => 28.0f,
-            CardRarity.Epic      => 9.5f,
-            CardRarity.Legendary => 2.5f,
+            CardRarity.Common    => 45.0f,
+            CardRarity.Rare      => 30.0f,
+            CardRarity.Epic      => 18.0f,
+            CardRarity.Legendary =>  7.0f,
             _                    => 1f,
         };
 

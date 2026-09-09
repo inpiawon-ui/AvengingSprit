@@ -221,7 +221,6 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
-            _tokens.Add(bus.Subscribe<EvolutionGainedEvent>(OnEvolutionGained));
             _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(
                 e => _ui.SetText("ShopResultText", e.ResultLine)));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
@@ -798,13 +797,6 @@ namespace Game.Module.InGame
             => _ui.SetText("StageText", "출구가 열렸다 — 통과해서 다음 스테이지로");
 
         /// <summary>
-        /// 진화를 얻었다. 카드와 달리 **재료가 사라지지 않는다**는 것이
-        /// 곧바로 안 읽히므로 슬롯 수까지 함께 적는다.
-        /// </summary>
-        private void OnEvolutionGained(EvolutionGainedEvent e)
-            => _ui.SetText("StageText", $"진화 · {e.NameKr}  ({e.SlotsUsed}/{e.SlotsMax})");
-
-        /// <summary>
         /// 레벨 표기만 남긴다.
         ///
         /// ⚠ 경험치 바는 걷어냈다. **차오르지만 절대 안 오르는 바**였다 —
@@ -1153,8 +1145,6 @@ namespace Game.Module.InGame
                 var entry = _buffTable.Get(e.OfferedKeys[i]);
                 if (entry == null) { _ui.SetActive($"BuffCard{i}", false); continue; }
 
-                bool material = e.IsEvolutionMaterial != null
-                             && i < e.IsEvolutionMaterial.Length && e.IsEvolutionMaterial[i];
                 int lv = _battle != null ? _battle.CardLevel(entry.BuffKey) : 0;
 
                 // 칩 — 가진 카드면 레벨 변화, 새 카드면 등급. 목업 그대로.
@@ -1167,7 +1157,7 @@ namespace Game.Module.InGame
                 _ui.SetText($"BuffCard{i}Name", entry.NameKr);
                 _ui.SetText($"BuffCard{i}Desc", entry.Description);
 
-                SetCardArt(i, entry, material, lv > 0);
+                SetCardArt(i, entry, lv > 0);
 
                 // 매번 다른 카드가 오므로 이전 리스너를 지우고 새로 건다
                 var btn = _ui.Get<Button>($"BuffCard{i}");
@@ -1187,15 +1177,13 @@ namespace Game.Module.InGame
         /// 판때기·칩·아이콘테두리는 전부 **아틀라스에서 이름으로 꺼낸다.**
         /// 아직 안 온 것은 꽂지 않는다 — 대신 그리지 않는다.
         /// </summary>
-        private void SetCardArt(int i, BuffEntry entry, bool material, bool owned)
+        private void SetCardArt(int i, BuffEntry entry, bool owned)
         {
             string rarity = entry.Rarity.ToString().ToLowerInvariant();
 
-            // ① 판때기 — 진화 재료면 금테 판때기를 쓴다
+            // ① 판때기 — 등급별 액자
             var panel = _ui.Get<Image>($"BuffCard{i}");
-            var panelArt = _cardAtlas != null
-                ? _cardAtlas.GetSprite(material ? "cardpanel_evolution" : $"cardpanel_{rarity}")
-                : null;
+            var panelArt = _cardAtlas != null ? _cardAtlas.GetSprite($"cardpanel_{rarity}") : null;
             if (panel != null)
             {
                 panel.sprite = panelArt;

@@ -256,7 +256,6 @@ namespace Game.Module.InGame
         private readonly RunBuffs _buffs = new();
         private readonly List<BuffEntry> _offer = new();
         /// <summary>슬롯이 찼을 때 쓰는 제외 목록. 매번 새로 만들지 않으려고 들고 있는다.</summary>
-        private readonly HashSet<string> _slotFilter = new();
         private readonly System.Random _rng = new();
         private bool _awaitingBuff;
 
@@ -274,9 +273,6 @@ namespace Game.Module.InGame
 
         /// <summary>이 카드의 지금 레벨. 안 가졌으면 0. (UI 가 "Lv.2 → Lv.3" 를 그린다)</summary>
         public int CardLevel(string cardKey) => _buffs.LevelOf(cardKey);
-
-        public int BuildSlotsUsed => _buffs.SlotsUsed;
-        public int BuildSlotsMax => RunBuffs.BuildSlots;
 
         public Vector2 MoveInput { get; set; }
 
@@ -357,16 +353,11 @@ namespace Game.Module.InGame
                     t => _eventTable = t, "EventTable 없음 — 이벤트 방은 그냥 지나간다", warnOnly: true),
                 LoadTableAsync<ShopTable>(res, "TableData/ShopTable",
                     t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true));
-            try { _evolutionTable = await res.LoadAsync<EvolutionTable>("TableData/EvolutionTable"); }
-            catch (Exception e) { Debug.LogWarning($"[Battle] EvolutionTable 없음 — 진화 없이 돈다. {e.Message}"); }
-
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
             _eventsUsed.Clear();
             _runGold = 0;     // 판 골드도 런 한정이다
-            _evolutions.Clear();
-            _evoCooldown.Clear();
             _possessReachMul = 0f;
             _shopDiscount = 0;
             _bossShieldBreak = false;
@@ -420,6 +411,7 @@ namespace Game.Module.InGame
             _runChapter = 1;
             _runStage = 1;
             _maxHpDebt = 0;   // 계약은 판 한정이다
+            ClearCardRuntime();
             ClearShopExtras();
 
             _canonRoomId = FirstCanonRoom;
@@ -535,7 +527,6 @@ namespace Game.Module.InGame
         private RoomTable _rooms;
         private EventTable _eventTable;
         private ShopTable _shopTable;
-        private EvolutionTable _evolutionTable;
         private RoomEntry _canonRoom;
         private string _canonRoomId;
         /// <summary>이번 런에서 비운 정예 방 수. 정본 R_ELITE 가 여기에 붙는다.</summary>
@@ -2850,7 +2841,7 @@ namespace Game.Module.InGame
             TickDeploy(dt);
             TickDeployables(dt);
             TickEchoBlasts(dt);
-            TickEvolutions(dt);
+            TickCards(dt);
             if (_overchargeTimer > 0f) _overchargeTimer -= dt;
             if (_afterimageTimer > 0f) _afterimageTimer -= dt;
             CheckCrisisBarrier();   // 위기는 피격뿐 아니라 화상·장판으로도 온다
@@ -5079,7 +5070,7 @@ namespace Game.Module.InGame
         /// </summary>
         private float CardDamageMul(Unit victim)
         {
-            float m = 1f;
+            float m = GritDamageMul;   // 궁지 — 내 체력이 절반 아래면
 
             if (_buffs.SingleTargetBonus > 0f)
             {
@@ -5221,237 +5212,6 @@ namespace Game.Module.InGame
             }
         }
 
-        // ── 진화 ─────────────────────────────────────────────────
-        //
-        // 카드도 액티브 스킬도 아니다. **카드 두 장을 재료로 삼아 얻는 별개의 공격**이고,
-        // 얻어도 재료 카드는 그대로 남는다(정본 `ingredients retained`).
-        // 버튼이 없다 — 제 쿨다운으로 알아서 나간다(`INDEPENDENT_COOLDOWN`).
-        // 그래서 액티브 스킬처럼 "언제 쓸까" 를 묻지 않고, 빌드가 완성됐다는 사실 자체가 보상이다.
-
-        private readonly List<EvolutionEntry> _evolutions = new();
-        private readonly List<float> _evoCooldown = new();
-        private readonly List<string> _evoMaterial = new();
-
-        public IReadOnlyList<EvolutionEntry> Evolutions => _evolutions;
-
-        private bool OwnsCard(string key) => !string.IsNullOrEmpty(key) && _buffs.LevelOf(key) > 0;
-
-        /// <summary>재료가 다 모였으면 진화를 준다. 슬롯(3칸)이 차 있으면 넘어간다.</summary>
-        private void TryCompleteEvolution()
-        {
-            if (_evolutionTable == null) return;
-            if (_evolutions.Count >= _evolutionTable.MaxSlots) return;
-
-            _evoOwned.Clear();
-            for (int i = 0; i < _evolutions.Count; i++) _evoOwned.Add(_evolutions[i].EvolutionId);
-
-            var ready = _evolutionTable.FindReady(OwnsCard, _evoOwned);
-            if (ready == null) return;
-
-            _evolutions.Add(ready);
-            // 첫 발이 바로 나가지 않게 절반쯤 돌려놓고 시작한다 —
-            // 얻자마자 터지면 무엇 때문에 터졌는지 안 보인다.
-            _evoCooldown.Add(ready.Cooldown * 0.5f);
-
-            _bus.Publish(new EvolutionGainedEvent
-            {
-                EvolutionId = ready.EvolutionId,
-                NameKr = ready.NameKr,
-                SlotsUsed = _evolutions.Count,
-                SlotsMax = _evolutionTable.MaxSlots,
-            });
-        }
-
-        private readonly List<string> _evoOwned = new();
-
-        /// <summary>이 카드가 지금 진화를 완성시키는 재료인가.</summary>
-        private bool IsEvolutionMaterial(string buffKey)
-        {
-            RefreshEvolutionMaterials();
-            return _evoMaterial.Contains(buffKey);
-        }
-
-        private void RefreshEvolutionMaterials()
-        {
-            if (_evolutionTable == null) { _evoMaterial.Clear(); return; }
-            _evoOwned.Clear();
-            for (int i = 0; i < _evolutions.Count; i++) _evoOwned.Add(_evolutions[i].EvolutionId);
-            _evolutionTable.CollectMissing(_evoMaterial, OwnsCard, _evoOwned);
-        }
-
-        /// <summary>
-        /// 3택1에 재료 카드를 **반드시 한 장 끼워 넣는다** (정본: 1인 100% 확정).
-        /// 이미 들어 있으면 그대로 두고, 없으면 가장 덜 쓸모 있는 칸을 바꾼다.
-        /// 이것이 없으면 진화는 운으로만 완성되고, 레시피를 아는 것이 의미를 잃는다.
-        /// </summary>
-        private void InjectEvolutionMaterial(HashSet<string> exclude)
-        {
-            if (_buffTable == null || _evolutionTable == null) return;
-            if (_evolutions.Count >= _evolutionTable.MaxSlots) return;
-
-            RefreshEvolutionMaterials();
-            if (_evoMaterial.Count == 0) return;
-
-            for (int i = 0; i < _offer.Count; i++)
-                if (_evoMaterial.Contains(_offer[i].BuffKey)) return;   // 이미 들어 있다
-
-            // 뽑을 수 있는 재료 중 하나를 고른다
-            BuffEntry pick = null;
-            int seen = 0;
-            for (int i = 0; i < _evoMaterial.Count; i++)
-            {
-                var e = _buffTable.Get(_evoMaterial[i]);
-                if (e == null || !e.Implemented) continue;
-                if (exclude != null && exclude.Contains(e.BuffKey)) continue;
-                if (_rng.Next(++seen) == 0) pick = e;
-            }
-            if (pick == null) return;
-
-            // 마지막 칸을 바꾼다. 앞칸을 밀어내면 목록이 매번 같은 자리에서 흔들린다.
-            _offer[_offer.Count - 1] = pick;
-        }
-
-        // ── 진화 발동 ────────────────────────────────────────────
-        //
-        // 정본 11종의 `AttackType` 을 5가지 거동으로 묶어 두었다(`EvolutionKind`).
-        // 수치(쿨다운·계수·타수·탄수·사거리·반경·지속)는 정본 값을 그대로 쓴다 —
-        // 무엇으로 보이느냐만 묶었고 얼마나 세냐는 묶지 않았다.
-
-        private void TickEvolutions(float dt)
-        {
-            if (_evolutions.Count == 0) return;
-            var me = Avatar;
-            if (me == null || _host == null) return;   // 유령은 공격하지 않는다
-
-            for (int i = 0; i < _evolutions.Count; i++)
-            {
-                _evoCooldown[i] -= dt;
-                if (_evoCooldown[i] > 0f) continue;
-
-                var e = _evolutions[i];
-                _evoCooldown[i] = e.Cooldown;
-                FireEvolution(e, me);
-            }
-        }
-
-        private void FireEvolution(EvolutionEntry e, Unit me)
-        {
-            float range = e.RangeMeters * _pxPerMeter;
-            var target = NearestEnemy(me.Position, range);
-            var dir = target != null
-                ? (target.Position - me.Position).normalized
-                : me.Facing;
-            if (dir.sqrMagnitude < 0.0001f) dir = Vector2.up;
-
-            int dmg = Mathf.Max(1, Mathf.RoundToInt(
-                me.Atk * _buffs.AttackMul * e.DamageCoef));
-            float speed = e.ProjectileSpeed * _pxPerMeter;
-
-            switch (e.Kind)
-            {
-                case EvolutionKind.PiercingLane:
-                    // 앞으로 꿰뚫는다. 관통 99 라 줄에 선 것을 전부 지난다.
-                    FireEvolutionShot(me, dir, speed, dmg, e, pierce: true);
-                    break;
-
-                case EvolutionKind.ConeBurst:
-                {
-                    // 부채꼴. 탄이 하나면 넓게 한 발, 여럿이면 벌려 쏜다.
-                    int n = Mathf.Max(3, e.ProjectileCount);
-                    for (int k = 0; k < n; k++)
-                    {
-                        float a = Mathf.Lerp(-38f, 38f, n == 1 ? 0.5f : k / (float)(n - 1));
-                        FireEvolutionShot(me, Rotate(dir, a), speed, dmg, e, pierce: e.Pierce > 0);
-                    }
-                    if (e.RadiusMeters > 0f && target != null)
-                        SpawnField(target.Position, e.RadiusMeters * _pxPerMeter,
-                                   Mathf.Max(1f, e.DurationSeconds), FieldEffect.Burn,
-                                   Mathf.Max(1, dmg / 6), fromPlayer: true);
-                    break;
-                }
-
-                case EvolutionKind.Orbit:
-                {
-                    // 사방으로 흩어진다
-                    int n = Mathf.Clamp(e.ProjectileCount, 4, 12);
-                    for (int k = 0; k < n; k++)
-                    {
-                        float a = 360f * k / n;
-                        FireEvolutionShot(me, Rotate(Vector2.up, a), speed, dmg, e,
-                                          pierce: e.Pierce > 0);
-                    }
-                    break;
-                }
-
-                case EvolutionKind.Field:
-                {
-                    // 바닥에 남는다. 대상이 없으면 발밑에 깐다.
-                    var at = target != null ? target.Position : me.Position;
-                    var effect = (e.StatusType ?? string.Empty).ToUpperInvariant() switch
-                    {
-                        var t when t.Contains("FREEZE") || t.Contains("CHILL") => FieldEffect.Freeze,
-                        var t when t.Contains("CURSE") || t.Contains("SIGIL") => FieldEffect.Curse,
-                        var t when t.Contains("BURN") || t.Contains("FLAME") => FieldEffect.Burn,
-                        _ => FieldEffect.Damage,
-                    };
-                    SpawnField(at, Mathf.Max(60f, e.RadiusMeters * _pxPerMeter),
-                               Mathf.Max(1f, e.DurationSeconds), effect,
-                               Mathf.Max(1, dmg / Mathf.Max(1, e.HitCount)), fromPlayer: true);
-                    break;
-                }
-
-                case EvolutionKind.Turret:
-                    // 대신 쏘아 주는 것을 놓는다. 로봇 포탑과 같은 길을 쓴다.
-                    SpawnDeployable(me.Position, ghostly: true,
-                                    seconds: Mathf.Max(2f, e.DurationSeconds),
-                                    range: range,
-                                    damage: Mathf.Max(1, dmg),
-                                    fireInterval: Mathf.Max(0.2f,
-                                        e.DurationSeconds / Mathf.Max(1, e.HitCount)));
-                    break;
-            }
-        }
-
-        private void FireEvolutionShot(Unit me, Vector2 dir, float speed, int dmg,
-                                       EvolutionEntry e, bool pierce)
-        {
-            var shot = RentShot();
-            if (shot == null) return;
-
-            // 진화마다 제 탄 그림이 있다(shot_evo01~11, 3장 회전 루프).
-            // 터짐은 제 것이 없어 모티프 몸의 터짐을 빌린다 — 낫은 표창, 업화는 불꽃.
-            var frames = ShotFrames(EvoShotKey(e)) ?? ShotFrames("pulse");
-            shot.SetSprite(frames, EvoImpactKind(e), loop: true);
-            shot.Fire(me.Position, me.Position + dir * 100f, speed, dmg,
-                      fromPlayer: true, null, _config.ShotSize * 1.35f, ShotPlayerColor,
-                      _config.ShotLifeSeconds, pierce: pierce, bounces: e.Bounce);
-            if (e.Homing > 0f) shot.SetHoming(e.Homing);
-        }
-
-        /// <summary>진화 탄 그림 이름. `EVO01` -> `evo01` -> `shot_evo01_1..3`.</summary>
-        private static string EvoShotKey(EvolutionEntry e)
-            => string.IsNullOrEmpty(e.EvolutionId) ? null : e.EvolutionId.ToLowerInvariant();
-
-        /// <summary>
-        /// 터짐 그림은 진화 전용이 없다. 모티프가 쓰던 것을 그대로 빌린다 —
-        /// 색과 재질이 이미 맞아 있어 따로 그릴 이유가 없다.
-        /// </summary>
-        private static string EvoImpactKind(EvolutionEntry e) => e.EvolutionId switch
-        {
-            "EVO01" => "shuriken",   // 낫 - 쇠붙이가 스치는 자국
-            "EVO02" => "flame",
-            "EVO03" => "shuriken",
-            "EVO04" => "bullet",     // 야구공 - 딱 맞는 한 점
-            "EVO05" => "grenade",
-            "EVO06" => "frost",
-            "EVO07" => "grenade",
-            "EVO08" => "frost",
-            "EVO09" => "magic",
-            "EVO10" => "grenade",
-            "EVO11" => "laser",
-            _ => "pulse",
-        };
-
         private static Vector2 Rotate(Vector2 v, float deg)
         {
             float r = deg * Mathf.Deg2Rad;
@@ -5495,16 +5255,10 @@ namespace Game.Module.InGame
                 }
             RollShopConsumable();
 
-            // 못 올리는 카드는 진열하지 않는다 — 살 수는 있는데 아무 일도 안 일어나면
-            // 값이 거짓이 된다. 슬롯이 다 찼으면 이미 가진 것만 판다.
+            // 못 올리는 카드(5레벨을 다 찍은 것)는 진열하지 않는다 —
+            // 살 수는 있는데 아무 일도 안 일어나면 값이 거짓이 된다.
             _shopFilter.Clear();
             foreach (var k in _buffs.ExcludedKeys) _shopFilter.Add(k);
-            if (_buffs.SlotsFull)
-                for (int i = 0; i < _buffTable.Entries.Count; i++)
-                {
-                    var e = _buffTable.Entries[i];
-                    if (_buffs.LevelOf(e.BuffKey) == 0) _shopFilter.Add(e.BuffKey);
-                }
 
             _shopTable.Draw(_shopOffers, ch, Mathf.Max(1, _shopRules.OfferCount), _shopFilter, _rng);
             _shopOpen = true;
@@ -5711,6 +5465,7 @@ namespace Game.Module.InGame
         private const float OverchargeCooldown = 0.55f;
         private const float OverchargeArcRange = 220f;
         private float _overchargeTimer;
+        private readonly System.Collections.Generic.List<Unit> _chainHit = new();
 
         private void Overcharge(Unit victim, int hitDamage)
         {
@@ -5729,22 +5484,33 @@ namespace Game.Module.InGame
                     _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
             }
 
-            // 옆으로 한 번 튄다. 맞은 당사자는 건너뛴다.
-            Unit arc = null;
-            float best = OverchargeArcRange;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || e == victim || !e.IsAlive || e.IsDying) continue;
-                float d = Vector2.Distance(victim.Position, e.Position);
-                if (d > best) continue;
-                best = d; arc = e;
-            }
-            if (arc == null) return;
+            // 옆으로 튄다. 기본 1회, 「번개 사슬」이 있으면 그만큼 더 튄다.
+            // ⚠ 튄 곳은 다시 안 친다. 안 막으면 둘 사이를 오가며 무한히 튄다.
+            _chainHit.Clear();
+            _chainHit.Add(victim);
+            var from = victim;
 
-            arc.IsAggro = true;
-            SpawnImpact(arc.Position, "pulse");
-            HurtByField(arc, spark, toEnemy: true);
+            for (int hop = 0; hop <= _buffs.ExtraChains; hop++)
+            {
+                Unit arc = null;
+                float best = OverchargeArcRange;
+                for (int i = 0; i < _enemies.Count; i++)
+                {
+                    var e = _enemies[i];
+                    if (e == null || !e.IsAlive || e.IsDying) continue;
+                    if (_chainHit.Contains(e)) continue;
+                    float d = Vector2.Distance(from.Position, e.Position);
+                    if (d > best) continue;
+                    best = d; arc = e;
+                }
+                if (arc == null) return;
+
+                _chainHit.Add(arc);
+                arc.IsAggro = true;
+                SpawnImpact(arc.Position, "pulse");
+                HurtByField(arc, spark, toEnemy: true);
+                from = arc;
+            }
         }
 
         // ── C014 연쇄 번짐 ───────────────────────────────────────
@@ -5907,6 +5673,8 @@ namespace Game.Module.InGame
             // 플레이어 공격이므로 여기서 빠지면 근접 호스트만 이 카드를 못 쓴다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
             if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
+            // 처형 — 약해진 잡몹을 단칼에. 피해 계산을 다 마친 뒤에 본다.
+            if (TryAssassinate(victim)) { KillEnemy(victim); return; }
             ApplyImprints(victim);
             // 방패 전개 — 이 구간에는 **앞에서 때리면** 잘 안 들어간다.
             // 그래야 "지금은 피할 때가 아니라 돌아갈 때" 라는 구간이 생긴다.
@@ -6604,6 +6372,10 @@ namespace Game.Module.InGame
             //     맞지도 않는 피해에 방벽이 닳아 없어진다.
             if (_host == null) return;
 
+            // 찰나의 불사 — 맞는 그 순간 2초를 산다. 방벽보다 **먼저** 본다:
+            // 뒤에 두면 막아 낼 피해에 방벽이 먼저 닳는다.
+            if (TryGuardInvuln()) return;
+
             // 받는 피해 감소(정본 BUF_A04). 0 이 되지 않게 최소 1 은 남긴다 —
             // 무적이 되어 버리면 버프가 아니라 버그로 보인다.
             amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.DamageTakenMul));
@@ -6960,6 +6732,10 @@ namespace Game.Module.InGame
         private void GainExp(int amount)
         {
             if (amount <= 0) return;
+            // 성장 가속 — 얻는 경험치 자체를 늘린다. 필요량을 깎지 않는 이유는,
+            // 깎으면 이미 쌓인 경험치까지 소급돼 카드를 고른 순간 레벨이 튀기 때문이다.
+            if (_buffs.ExpGainMul > 1f)
+                amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.ExpGainMul));
             _exp += amount;
 
             int need = _config.ExpToNext(_level);
@@ -7020,39 +6796,18 @@ namespace Game.Module.InGame
         {
             if (_awaitingBuff) return;
 
-            // 빌드 슬롯이 다 찼으면 **가진 카드만** 올린다 (정본 v2.3 BUILD_SLOT_INITIAL = 8).
-            // 안 그러면 9번째 카드를 골라 놓고 슬롯이 없어 버려지는 일이 생긴다.
-            var exclude = _buffs.ExcludedKeys;
-            if (_buffs.SlotsFull)
-            {
-                _slotFilter.Clear();
-                for (int i = 0; i < _buffTable.Entries.Count; i++)
-                {
-                    var e = _buffTable.Entries[i];
-                    if (_buffs.LevelOf(e.BuffKey) == 0) _slotFilter.Add(e.BuffKey);
-                }
-                foreach (var k in exclude) _slotFilter.Add(k);
-                exclude = _slotFilter;
-            }
-
-            _buffTable?.Draw(_offer, 3, exclude, _rng, _host?.Profile,
+            // 뽑을 수 없는 카드는 **5레벨을 다 찍은 것뿐**이다(`RunBuffs.Apply`).
+            // 예전에는 그 위에 「서로 다른 카드 8종」 상한이 하나 더 있었는데,
+            // 화면에 아무 표시가 없어 8종을 채운 순간 새 카드가 조용히 사라졌다.
+            // 카드 종류가 적은 지금은 방해만 된다 — 종류가 크게 늘면 그때 다시 본다.
+            _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile,
                              _runChapter);
             if (_offer.Count == 0) return;
 
-            InjectEvolutionMaterial(exclude);
-
             _awaitingBuff = true;
             var keys = new string[_offer.Count];
-            var mats = new bool[_offer.Count];
-            for (int i = 0; i < _offer.Count; i++)
-            {
-                keys[i] = _offer[i].BuffKey;
-                mats[i] = IsEvolutionMaterial(_offer[i].BuffKey);
-            }
-            _bus.Publish(new BuffOfferEvent
-            {
-                OfferedKeys = keys, Level = _level, IsEvolutionMaterial = mats,
-            });
+            for (int i = 0; i < _offer.Count; i++) keys[i] = _offer[i].BuffKey;
+            _bus.Publish(new BuffOfferEvent { OfferedKeys = keys, Level = _level });
         }
 
         /// <summary>
@@ -8527,7 +8282,6 @@ namespace Game.Module.InGame
                     var e = list[i];
                     if (e == null || !e.Implemented || (int)e.Rarity != r) continue;
                     if (_buffs.ExcludedKeys.Contains(e.BuffKey)) continue;
-                    if (_buffs.SlotsFull && _buffs.LevelOf(e.BuffKey) == 0) continue;
                     if (_rng.Next(++seen) == 0) pick = e;
                 }
                 if (pick != null) return pick;
@@ -8560,9 +8314,6 @@ namespace Game.Module.InGame
             _awaitingBuff = false;
             _offer.Clear();
             _bus.Publish(new BuffChosenEvent { ChosenKey = buffKey, TotalBuffCount = _buffs.Count });
-
-            // 방금 고른 카드로 재료가 다 모였을 수 있다
-            TryCompleteEvolution();
 
             // ⚠ 여기서 출구를 직접 열지 않는다.
             //   방이 이미 비었으면 다음 프레임의 `Tick` 이 `OnRoomCleared` 를 부른다 —

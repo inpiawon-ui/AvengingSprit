@@ -22,17 +22,17 @@ namespace Game.Module.InGame
         private readonly Dictionary<string, int> _level = new();
         private HostEntry _host;
 
-        // ── 빌드 슬롯 (정본 v2.3 BUILD_SLOT_INITIAL = 8) ─────────
+        // ── 무엇이 3택1 에서 빠지는가 ────────────────────────────
         //
-        // 서로 다른 카드는 8종까지만 갖는다. **같은 카드는 슬롯을 더 쓰지 않는다** —
-        // 레벨이 오를 뿐이다. 이 제한이 없으면 다 주워 담게 되고,
-        // "무엇을 포기할까" 가 사라져 빌드가 성립하지 않는다.
-        public const int BuildSlots = 8;
+        // **5레벨을 다 찍은 카드뿐이다**(`Apply` 참조). 그 아래면 계속 후보에 남는다.
+        //
+        // 예전에는 그 위에 「서로 다른 카드 8종」 상한이 하나 더 있었다. 화면에
+        // 아무 표시가 없어서, 8종을 채운 순간부터 새 카드가 조용히 사라졌다 —
+        // 플레이어는 이유를 알 수 없었다. 카드 종류가 크게 늘어 「무엇을 포기할까」가
+        // 다시 필요해지면 그때 **표시와 함께** 되살린다.
 
-        /// <summary>지금 쓰는 슬롯 수 = 서로 다른 카드 수.</summary>
-        public int SlotsUsed => _level.Count;
-
-        public bool SlotsFull => _level.Count >= BuildSlots;
+        /// <summary>지금 들고 있는 서로 다른 카드 수. HUD 가 읽는다.</summary>
+        public int CardKinds => _level.Count;
 
         /// <summary>이 카드의 레벨. 없으면 0.</summary>
         public int LevelOf(string cardKey)
@@ -166,6 +166,21 @@ namespace Game.Module.InGame
         /// <summary>C031 과충전 회로 — 전기 한 방의 피해 비율(그 타격 대비)</summary>
         public float OverchargePercent { get; private set; }
 
+        // ── 새 카드 10종 (2026-09-09) ────────────────────────────
+
+        /// <summary>성장 가속 — EXP 획득 배율.</summary>
+        public float ExpGainMul { get; private set; } = 1f;
+        /// <summary>수호 방패 — 내 주위를 도는 방패 수.</summary>
+        public int OrbitShields { get; private set; }
+        /// <summary>처형 — 약해진 적을 즉사시킬 확률(%).</summary>
+        public int AssassinatePercent { get; private set; }
+        /// <summary>번개 사슬 — 전기 타격이 **더** 튀는 수. 기본 1회에 얹힌다.</summary>
+        public int ExtraChains { get; private set; }
+        /// <summary>찰나의 불사 — 피격 무적의 쿨다운(초). 0 이면 카드가 없다.</summary>
+        public float GuardCooldown { get; private set; }
+        /// <summary>궁지 — 체력이 절반 아래일 때 피해 배율.</summary>
+        public float GritMul { get; private set; } = 1f;
+
         /// <summary>중복 불가 버프의 키 모음. 다음 뽑기에서 제외한다.</summary>
         public HashSet<string> ExcludedKeys { get; } = new();
 
@@ -253,6 +268,12 @@ namespace Game.Module.InGame
             DeployRetargetCut = 0f;
             DeployablesBurn = false;
             AoeMul = 1f;
+            ExpGainMul = 1f;
+            OrbitShields = 0;
+            AssassinatePercent = 0;
+            ExtraChains = 0;
+            GuardCooldown = 0f;
+            GritMul = 1f;
 
             // 제단 몫을 먼저 얹고 그 위에 카드를 쌓는다. 순서는 상관없지만
             // 여기 두면 「카드가 0장이어도 제단은 남는다」가 코드에서 보인다.
@@ -330,6 +351,17 @@ namespace Game.Module.InGame
                     case BuffKind.CrisisBarrier:   CrisisBarrierPercent += v; break;
                     case BuffKind.Afterimage:      AfterimagePercent += v; break;
                     case BuffKind.Overcharge:      OverchargePercent += v; break;
+
+                    case BuffKind.ExpGain:         ExpGainMul += v; break;
+                    case BuffKind.OrbitShield:     OrbitShields += value; break;
+                    case BuffKind.Assassinate:     AssassinatePercent += value; break;
+                    case BuffKind.ChainLightning:  ExtraChains += value; break;
+                    // 쿨다운은 **낮을수록 좋다.** 더하지 않고 가장 낮은 값을 쓴다 —
+                    // 레벨표(30→14)가 이미 내려가는 값이라 합치면 0 이 되어 무적이 된다.
+                    case BuffKind.GuardInvuln:
+                        GuardCooldown = GuardCooldown <= 0f ? value : Mathf.Min(GuardCooldown, value);
+                        break;
+                    case BuffKind.LowHpPower:      GritMul += v; break;
                 }
             }
         }
