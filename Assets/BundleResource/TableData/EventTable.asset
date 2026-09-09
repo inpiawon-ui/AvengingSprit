@@ -448,7 +448,9 @@ MonoBehaviour:
   - _eventId: EV_DEAL_01
     _chapter: 1
     _titleKr: "\uD53C\uC758 \uACC4\uC57D"
-    _bodyKr: "\uC81C\uB2E8\uC774 \uC190\uBAA9\uC744 \uC7A1\uB294\uB2E4.\n\uB124 \uADF8\uB987\uC744 \uC601\uC601 \uC904\uC774\uB294 \uB300\uC2E0, \uC774 \uD310\uC5D0\uC11C \uAC00\uC7A5 \uD070 \uAC83\uC744 \uC900\uB2E4."
+    _bodyKr: "\uC81C\uB2E8\uC774 \uC190\uBAA9\uC744 \uC7A1\uB294\uB2E4.\n\uB124 \uADF8\uB987\uC744
+      \uC601\uC601 \uC904\uC774\uB294 \uB300\uC2E0, \uC774 \uD310\uC5D0\uC11C \uAC00\uC7A5
+      \uD070 \uAC83\uC744 \uC900\uB2E4."
     _costType: 4
     _costValue: 25
     _acceptKr: "\uD53C\uB97C \uB0B4\uC900\uB2E4"
@@ -470,7 +472,9 @@ MonoBehaviour:
   - _eventId: EV_DEAL_02
     _chapter: 1
     _titleKr: "\uAD11\uB780"
-    _bodyKr: "\uC18D\uC0AD\uC784\uC774 \uADC0\uB97C \uCC44\uC6B4\uB2E4.\n\uBAB8\uC774 \uC791\uC544\uC9C0\uB294 \uB9CC\uD07C \uC190\uC774 \uBE68\uB77C\uC9C4\uB2E4\uACE0 \uD55C\uB2E4."
+    _bodyKr: "\uC18D\uC0AD\uC784\uC774 \uADC0\uB97C \uCC44\uC6B4\uB2E4.\n\uBAB8\uC774
+      \uC791\uC544\uC9C0\uB294 \uB9CC\uD07C \uC190\uC774 \uBE68\uB77C\uC9C4\uB2E4\uACE0
+      \uD55C\uB2E4."
     _costType: 4
     _costValue: 25
     _acceptKr: "\uADC0\uB97C \uC5F0\uB2E4"
@@ -492,7 +496,8 @@ MonoBehaviour:
   - _eventId: EV_DEAL_04
     _chapter: 1
     _titleKr: "\uC601\uD63C \uC800\uB2F9"
-    _bodyKr: "\uC720\uB839\uC758 \uBAAB\uC744 \uB2F4\uBCF4\uB85C \uC7A1\uB294\uB2E4.\n\uC601\uD63C\uC774 \uC587\uC544\uC9C0\uC9C0\uB9CC \uC190\uC5D0\uB294 \uB458\uC774 \uB0A8\uB294\uB2E4."
+    _bodyKr: "\uC720\uB839\uC758 \uBAAB\uC744 \uB2F4\uBCF4\uB85C \uC7A1\uB294\uB2E4.\n\uC601\uD63C\uC774
+      \uC587\uC544\uC9C0\uC9C0\uB9CC \uC190\uC5D0\uB294 \uB458\uC774 \uB0A8\uB294\uB2E4."
     _costType: 2
     _costValue: 30
     _acceptKr: "\uC601\uD63C\uC744 \uB9E1\uAE34\uB2E4"
@@ -514,7 +519,9 @@ MonoBehaviour:
   - _eventId: EV_DEAL_06
     _chapter: 1
     _titleKr: "\uAD76\uC8FC\uB9BC"
-    _bodyKr: "\uAD76\uC8FC\uB9B0 \uAC83\uC774 \uC81C \uC774\uBE68\uC744 \uB0B4\uBBFC\uB2E4.\n\uADF8\uB987\uC744 \uC870\uAE08 \uB0B4\uC8FC\uBA74 \uB0A8\uC758 \uD53C\uB85C \uCC44\uC6B0\uB294 \uBC95\uC744 \uC54C\uB824 \uC900\uB2E4."
+    _bodyKr: "\uAD76\uC8FC\uB9B0 \uAC83\uC774 \uC81C \uC774\uBE68\uC744 \uB0B4\uBBFC\uB2E4.\n\uADF8\uB987\uC744
+      \uC870\uAE08 \uB0B4\uC8FC\uBA74 \uB0A8\uC758 \uD53C\uB85C \uCC44\uC6B0\uB294
+      \uBC95\uC744 \uC54C\uB824 \uC900\uB2E4."
     _costType: 4
     _costValue: 15
     _acceptKr: "\uC774\uBE68\uC744 \uBC1B\uB294\uB2E4"
@@ -522,7 +529,7 @@ MonoBehaviour:
     _rewardType: 4
     _rewardValue: 1
     _rewardRarity: 0
-    _rewardKey: c019
+    _rewardKey: c006
     _chancePercent: 0
     _hasDeclineReward: 0
     _declineReward: 2

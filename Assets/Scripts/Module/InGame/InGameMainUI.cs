@@ -233,8 +233,11 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
-            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(
-                e => _ui.SetText("ShopResultText", e.ResultLine)));
+            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(e =>
+            {
+                _ui.SetText("ShopResultText", e.ResultLine);
+                _ui.SetActive("ShopPanel", false);   // 하나 사면 닫는다
+            }));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
         }
 
@@ -909,7 +912,11 @@ namespace Game.Module.InGame
         private void OnEventOffer(EventOfferEvent e)
         {
             _ui.SetText("EventTitleText", e.Title);
-            _ui.SetText("EventBodyText", e.Body);
+            // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다.
+            // 받는 것을 금색 한 줄로 아래에 덧붙인다.
+            _ui.SetText("EventBodyText", string.IsNullOrEmpty(e.RewardLabel)
+                ? e.Body
+                : $"{e.Body}\n<color=#F5C044>보상 · {e.RewardLabel}</color>");
             // 못 고르는 이유를 **누르기 전에** 적는다. 값이 모자란 것과
             // 몸이 없어 못 받는 것은 다른 이유라 문구도 달라야 한다.
             // ⚠ 줄표(`— ... —`)를 붙이지 않는다. 명판 그림(`eventcostpill`)이

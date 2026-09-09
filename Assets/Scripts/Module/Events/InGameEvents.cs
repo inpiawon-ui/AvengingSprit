@@ -35,6 +35,7 @@ namespace Game.Module.Events
         public string DeclineLabel;
         /// <summary>대가 한 줄. 없으면 빈 문자열이다.</summary>
         public string CostLabel;
+        public string RewardLabel;
         /// <summary>대가를 못 치를 때 false — UI 가 수락 버튼을 잠근다.</summary>
         public bool CanAfford;
 
