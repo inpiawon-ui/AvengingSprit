@@ -33,6 +33,7 @@ namespace Game.EditorTools
         private const string CutsceneRes = "Assets/BundleResource/Cutscene";
         private const string DefaultRes = "Assets/BaseResource/InGameMainUI";
         private const string HostSelectRes = "Assets/BaseResource/HostSelectPanel";
+        private const string CardRes = "Assets/BaseResource/Card";
         private const string AtlasDir = "Assets/BundleResource/Atlas";
 
         [MenuItem("Tools/Game/납품 반영 (_exchange/in)")]
@@ -275,6 +276,16 @@ namespace Game.EditorTools
                 || name.StartsWith("staticon_")
                 || name.StartsWith("icon_"))
                 return new[] { $"{HostSelectRes}/{name}" };
+
+            // 레벨업 3택1 부품 — **카드 아틀라스**로 간다.
+            //
+            // ⚠ `cardpanel_*`·`card_frame_*`·`cardchip_*` 는 이미 그 폴더에 있어서
+            //   이름 색인(`IndexProject`)이 알아서 잡는다. 문제는 **처음 오는 이름**이다 —
+            //   `leveluptitle` 이 잡을 것이 없어 기본값(인게임)으로 흘렀고,
+            //   UI 는 카드 아틀라스에서 찾으므로 제목이 영영 안 붙었다.
+            if (name.StartsWith("cardpanel") || name.StartsWith("card_frame")
+                || name.StartsWith("cardchip") || name.StartsWith("leveluptitle"))
+                return new[] { $"{CardRes}/{name}" };
 
             // 상점 팝업 부품 — 인게임 화면에서만 쓴다.
             //

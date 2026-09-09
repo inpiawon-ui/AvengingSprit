@@ -1133,7 +1133,18 @@ namespace Game.Module.InGame
         {
             if (_buffTable == null || e.OfferedKeys == null) return;
 
-            _ui.SetText("BuffTitleText", "LEVEL UP!");
+            // 제목은 그림(`leveluptitle`)으로 간다. 게임 서체로는 시안의 두께와
+            // 광택이 안 나온다. 그림이 아직 없으면 글자가 대신 선다 —
+            // 둘을 같이 띄우면 겹쳐 보인다.
+            var titleArt = _ui.Get<Image>("BuffTitleArt");
+            var titleSprite = _cardAtlas != null ? _cardAtlas.GetSprite("leveluptitle") : null;
+            if (titleArt != null)
+            {
+                titleArt.sprite = titleSprite;
+                titleArt.enabled = titleSprite != null;
+                titleArt.color = Color.white;
+            }
+            _ui.SetText("BuffTitleText", titleSprite != null ? string.Empty : "LEVEL UP!");
             _ui.SetText("BuffSubText", "카드를 선택하세요");
 
             for (int i = 0; i < BuffCardCount; i++)
@@ -1204,9 +1215,11 @@ namespace Game.Module.InGame
             }
             var chipText = _ui.Get<TMPro.TMP_Text>($"BuffCard{i}ChipText");
             if (chipText != null)
-                // 칩 배경이 없으면 글자만 남으므로 밝은 색으로 띄운다
-                chipText.color = chipArt != null ? new Color(0.06f, 0.08f, 0.13f)
-                                                 : new Color(0.85f, 0.89f, 0.95f);
+                // ⚠ 명판 그림은 **어두운 돌**이다(실측 밝기 25/255). 예전에는 그림이
+                //   있으면 글자를 거의 검정으로 칠했는데, 그 위에서는 아예 안 보였다.
+                //   이미 가진 카드(레벨 표시)는 금빛으로 갈라 한눈에 구분되게 한다.
+                chipText.color = owned ? new Color(0.94f, 0.71f, 0.16f)
+                                       : new Color(0.88f, 0.92f, 0.98f);
 
             // ③ 아이콘 + 아이콘 테두리 (이미 있는 리소스)
             var icon = _ui.Get<Image>($"BuffCard{i}Icon");
