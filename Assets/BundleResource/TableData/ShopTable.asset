@@ -34,11 +34,32 @@ MonoBehaviour:
     _healPrice: 78
     _totalPurchaseLimit: 2
     _cardPurchaseLimit: 1
+  - _chapter: 4
+    _offerCount: 3
+    _hostHealPct: 22
+    _ghostHealPct: 16
+    _healPrice: 112
+    _totalPurchaseLimit: 2
+    _cardPurchaseLimit: 1
+  - _chapter: 5
+    _offerCount: 3
+    _hostHealPct: 20
+    _ghostHealPct: 15
+    _healPrice: 161
+    _totalPurchaseLimit: 2
+    _cardPurchaseLimit: 1
+  - _chapter: 6
+    _offerCount: 3
+    _hostHealPct: 18
+    _ghostHealPct: 14
+    _healPrice: 232
+    _totalPurchaseLimit: 2
+    _cardPurchaseLimit: 1
   _offers:
   - _chapter: 1
     _cardId: C001
     _buffKey: c001
-    _price: 42
+    _price: 66
   - _chapter: 1
     _cardId: C002
     _buffKey: c002
@@ -46,6 +67,10 @@ MonoBehaviour:
   - _chapter: 1
     _cardId: C003
     _buffKey: c003
+    _price: 42
+  - _chapter: 1
+    _cardId: C004
+    _buffKey: c004
     _price: 66
   - _chapter: 1
     _cardId: C005
@@ -62,39 +87,23 @@ MonoBehaviour:
   - _chapter: 1
     _cardId: C008
     _buffKey: c008
-    _price: 66
-  - _chapter: 1
-    _cardId: C011
-    _buffKey: c011
     _price: 42
   - _chapter: 1
-    _cardId: C015
-    _buffKey: c015
-    _price: 66
-  - _chapter: 1
-    _cardId: C016
-    _buffKey: c016
+    _cardId: C009
+    _buffKey: c009
     _price: 42
   - _chapter: 1
-    _cardId: C017
-    _buffKey: c017
+    _cardId: C010
+    _buffKey: c010
     _price: 42
-  - _chapter: 1
-    _cardId: C020
-    _buffKey: c020
-    _price: 66
-  - _chapter: 1
-    _cardId: C021
-    _buffKey: c021
-    _price: 42
-  - _chapter: 1
-    _cardId: C024
-    _buffKey: c024
-    _price: 66
-  - _chapter: 1
-    _cardId: C028
-    _buffKey: c028
-    _price: 42
+  - _chapter: 2
+    _cardId: C001
+    _buffKey: c001
+    _price: 72
+  - _chapter: 2
+    _cardId: C002
+    _buffKey: c002
+    _price: 72
   - _chapter: 2
     _cardId: C003
     _buffKey: c003
@@ -108,52 +117,56 @@ MonoBehaviour:
     _buffKey: c005
     _price: 72
   - _chapter: 2
+    _cardId: C006
+    _buffKey: c006
+    _price: 48
+  - _chapter: 2
+    _cardId: C007
+    _buffKey: c007
+    _price: 72
+  - _chapter: 2
     _cardId: C008
     _buffKey: c008
     _price: 72
   - _chapter: 2
     _cardId: C009
     _buffKey: c009
-    _price: 104
-  - _chapter: 2
-    _cardId: C011
-    _buffKey: c011
-    _price: 48
-  - _chapter: 2
-    _cardId: C012
-    _buffKey: c012
     _price: 72
   - _chapter: 2
-    _cardId: C013
-    _buffKey: c013
-    _price: 104
-  - _chapter: 2
-    _cardId: C015
-    _buffKey: c015
+    _cardId: C010
+    _buffKey: c010
     _price: 72
-  - _chapter: 2
-    _cardId: C018
-    _buffKey: c018
-    _price: 72
-  - _chapter: 2
-    _cardId: C022
-    _buffKey: c022
-    _price: 72
-  - _chapter: 2
-    _cardId: C024
-    _buffKey: c024
-    _price: 72
-  - _chapter: 2
-    _cardId: C025
-    _buffKey: c025
-    _price: 72
-  - _chapter: 2
-    _cardId: C028
-    _buffKey: c028
-    _price: 48
+  - _chapter: 3
+    _cardId: C001
+    _buffKey: c001
+    _price: 110
+  - _chapter: 3
+    _cardId: C002
+    _buffKey: c002
+    _price: 110
+  - _chapter: 3
+    _cardId: C003
+    _buffKey: c003
+    _price: 110
   - _chapter: 3
     _cardId: C004
     _buffKey: c004
+    _price: 157
+  - _chapter: 3
+    _cardId: C005
+    _buffKey: c005
+    _price: 110
+  - _chapter: 3
+    _cardId: C006
+    _buffKey: c006
+    _price: 78
+  - _chapter: 3
+    _cardId: C007
+    _buffKey: c007
+    _price: 110
+  - _chapter: 3
+    _cardId: C008
+    _buffKey: c008
     _price: 110
   - _chapter: 3
     _cardId: C009
@@ -162,56 +175,124 @@ MonoBehaviour:
   - _chapter: 3
     _cardId: C010
     _buffKey: c010
-    _price: 157
-  - _chapter: 3
-    _cardId: C012
-    _buffKey: c012
-    _price: 78
-  - _chapter: 3
-    _cardId: C013
-    _buffKey: c013
     _price: 110
-  - _chapter: 3
-    _cardId: C014
-    _buffKey: c014
-    _price: 110
-  - _chapter: 3
-    _cardId: C018
-    _buffKey: c018
-    _price: 78
-  - _chapter: 3
-    _cardId: C019
-    _buffKey: c019
-    _price: 110
-  - _chapter: 3
-    _cardId: C023
-    _buffKey: c023
-    _price: 110
-  - _chapter: 3
-    _cardId: C025
-    _buffKey: c025
-    _price: 78
-  - _chapter: 3
-    _cardId: C026
-    _buffKey: c026
-    _price: 78
-  - _chapter: 3
-    _cardId: C027
-    _buffKey: c027
-    _price: 110
-  - _chapter: 3
-    _cardId: C029
-    _buffKey: c029
-    _price: 110
-  - _chapter: 3
-    _cardId: C030
-    _buffKey: c030
-    _price: 157
-  - _chapter: 3
-    _cardId: C031
-    _buffKey: c031
-    _price: 157
-  - _chapter: 3
-    _cardId: C032
-    _buffKey: c032
-    _price: 157
+  - _chapter: 4
+    _cardId: C001
+    _buffKey: c001
+    _price: 158
+  - _chapter: 4
+    _cardId: C002
+    _buffKey: c002
+    _price: 158
+  - _chapter: 4
+    _cardId: C003
+    _buffKey: c003
+    _price: 158
+  - _chapter: 4
+    _cardId: C004
+    _buffKey: c004
+    _price: 226
+  - _chapter: 4
+    _cardId: C005
+    _buffKey: c005
+    _price: 158
+  - _chapter: 4
+    _cardId: C006
+    _buffKey: c006
+    _price: 112
+  - _chapter: 4
+    _cardId: C007
+    _buffKey: c007
+    _price: 158
+  - _chapter: 4
+    _cardId: C008
+    _buffKey: c008
+    _price: 158
+  - _chapter: 4
+    _cardId: C009
+    _buffKey: c009
+    _price: 158
+  - _chapter: 4
+    _cardId: C010
+    _buffKey: c010
+    _price: 158
+  - _chapter: 5
+    _cardId: C001
+    _buffKey: c001
+    _price: 228
+  - _chapter: 5
+    _cardId: C002
+    _buffKey: c002
+    _price: 228
+  - _chapter: 5
+    _cardId: C003
+    _buffKey: c003
+    _price: 228
+  - _chapter: 5
+    _cardId: C004
+    _buffKey: c004
+    _price: 326
+  - _chapter: 5
+    _cardId: C005
+    _buffKey: c005
+    _price: 228
+  - _chapter: 5
+    _cardId: C006
+    _buffKey: c006
+    _price: 161
+  - _chapter: 5
+    _cardId: C007
+    _buffKey: c007
+    _price: 228
+  - _chapter: 5
+    _cardId: C008
+    _buffKey: c008
+    _price: 228
+  - _chapter: 5
+    _cardId: C009
+    _buffKey: c009
+    _price: 228
+  - _chapter: 5
+    _cardId: C010
+    _buffKey: c010
+    _price: 228
+  - _chapter: 6
+    _cardId: C001
+    _buffKey: c001
+    _price: 328
+  - _chapter: 6
+    _cardId: C002
+    _buffKey: c002
+    _price: 328
+  - _chapter: 6
+    _cardId: C003
+    _buffKey: c003
+    _price: 328
+  - _chapter: 6
+    _cardId: C004
+    _buffKey: c004
+    _price: 469
+  - _chapter: 6
+    _cardId: C005
+    _buffKey: c005
+    _price: 328
+  - _chapter: 6
+    _cardId: C006
+    _buffKey: c006
+    _price: 232
+  - _chapter: 6
+    _cardId: C007
+    _buffKey: c007
+    _price: 328
+  - _chapter: 6
+    _cardId: C008
+    _buffKey: c008
+    _price: 328
+  - _chapter: 6
+    _cardId: C009
+    _buffKey: c009
+    _price: 328
+  - _chapter: 6
+    _cardId: C010
+    _buffKey: c010
+    _price: 328

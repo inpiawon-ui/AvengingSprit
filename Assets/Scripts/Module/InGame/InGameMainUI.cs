@@ -182,6 +182,18 @@ namespace Game.Module.InGame
             }
             var shrineBox = _ui.Get<Image>("ShrineBox");
             if (shrineBox != null) shrineBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+
+            // 제단 글자색 — **바닥색을 재서** 정한다.
+            // ⚠ 안내 문구가 청록(#8CCCC7)이었는데 명판 바닥도 어두운 청록(밝기 37)이라
+            //   글자가 바탕에 묻혔다. 청록 위에 청록을 얹고 있었다.
+            var shrineHint = _ui.Get<TMPro.TMP_Text>("ShrineHintText");
+            if (shrineHint != null) shrineHint.color = new Color(0.90f, 0.96f, 0.98f);
+            // 선택 칸은 반대로 **흰 대리석**(밝기 236)이다 — 짙은 글자라야 읽힌다.
+            for (int i = 0; i < ShrineChoiceCount; i++)
+            {
+                var ct = _ui.Get<TMPro.TMP_Text>($"ShrineChoice{i}Text");
+                if (ct != null) ct.color = new Color(0.07f, 0.16f, 0.21f);
+            }
             _ui.SetActive("ShrinePanel", false);
 
             var shopDim = _ui.Get<Image>("ShopPanel");
@@ -970,10 +982,15 @@ namespace Game.Module.InGame
                 bool has = e.Titles != null && i < e.Titles.Length;
                 _ui.SetActive($"ShrineChoice{i}", has);
                 if (!has) continue;
-                // 이름 한 줄, 그 아래 작은 글씨로 무엇을 주는지.
+                // 이름 한 줄, 그 아래 무엇을 주는지.
+                //
+                // ⚠ 설명을 70% 로 줄였더니 **읽을 수가 없었다.** 칸 글꼴이 자동으로
+                //   줄어드는데(최소 12) 거기에 70% 가 다시 곱해져 8px 까지 내려간다.
+                //   85% 로 올리고, 색도 이름과 갈라 놓는다 — 크기만으로 위계를
+                //   만들려니 둘 다 안 읽혔다.
                 _ui.SetText($"ShrineChoice{i}Text",
                             e.Titles[i] + System.Environment.NewLine
-                            + $"<size=70%>{e.Descs[i]}</size>");
+                            + $"<size=85%><color=#2E5666>{e.Descs[i]}</color></size>");
                 var btn = _ui.Get<Button>($"ShrineChoice{i}");
                 if (btn == null) continue;
                 int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다

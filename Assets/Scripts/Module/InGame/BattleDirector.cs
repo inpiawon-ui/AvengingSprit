@@ -5260,6 +5260,16 @@ namespace Game.Module.InGame
             _shopFilter.Clear();
             foreach (var k in _buffs.ExcludedKeys) _shopFilter.Add(k);
 
+            // ⚠ **표에 없는 카드도 뺀다.** 카드 목록을 갈면 상점 표가 옛 카드를
+            //   가리킨 채 남는다 — 실제로 32종을 10종으로 바꾼 뒤 상점 칸에
+            //   이름 대신 `C015` 가 떴다. 표를 다시 굽는 것이 정답이지만,
+            //   여기서도 막아 두면 표가 낡아도 없는 물건을 팔지는 않는다.
+            for (int i = 0; i < _shopTable.Offers.Count; i++)
+            {
+                var key = _shopTable.Offers[i].BuffKey;
+                if (_buffTable == null || _buffTable.Get(key) == null) _shopFilter.Add(key);
+            }
+
             _shopTable.Draw(_shopOffers, ch, Mathf.Max(1, _shopRules.OfferCount), _shopFilter, _rng);
             _shopOpen = true;
             PublishShop();
