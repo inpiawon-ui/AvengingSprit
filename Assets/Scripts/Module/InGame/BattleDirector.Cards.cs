@@ -83,8 +83,11 @@ namespace Game.Module.InGame
         // 방패는 닿으면 **터지고 잠시 뒤 돌아온다.** 안 없어지면 근접이 아예
         // 성립하지 않고, 영영 없어지면 방 하나 쓰고 끝나는 카드가 된다.
 
-        private const float ShieldOrbitRadiusMeters = 1.6f;
-        private const float ShieldOrbitDegPerSecond = 110f;
+        // 2026-09-09 — 반지름 1.6 m 는 몸에서 너무 떨어져 「내 방패」로 안 읽혔고,
+        // 110°/s 는 한 바퀴에 3.3 초라 반대편이 늘 비어 있었다.
+        // 1.05 m · 210°/s 로 좁히고 올린다 — 한 바퀴 1.7 초.
+        private const float ShieldOrbitRadiusMeters = 1.05f;
+        private const float ShieldOrbitDegPerSecond = 210f;
         private const float ShieldRespawnSeconds = 8f;
         private const float ShieldHitRadius = 46f;
         private const float ShieldDamageMul = 0.8f;
@@ -172,10 +175,104 @@ namespace Game.Module.InGame
             _shieldDownLeft.Clear();
         }
 
+        // ── 번개 줄기 — 「감전」이 어디로 튀었는지 보이게 ──────────
+        //
+        // 감전·번개 사슬은 계산은 맞는데 **화면에 아무것도 안 나갔다.** 맞은 자리에
+        // 작은 `pulse` 만 찍혀서, 옆 적이 왜 깎였는지 알 수가 없었다 —
+        // 「전기 스킬을 배웠는데 전기가 안 나간다」는 보고가 그래서 나왔다.
+        //
+        // 튄 두 점을 **줄기로 잇는다.** 지그재그 세 마디로 꺾어 번개로 읽히게 하고
+        // 짧게 번쩍였다 사라진다. 그림 파일 없이 흰 사각형을 돌려 늘여 쓴다.
+
+        private const float BoltSeconds = 0.16f;
+        private const float BoltThickness = 7f;
+        private const int BoltSegments = 3;
+        private const float BoltJitter = 14f;
+        private static readonly Color BoltColor = new(0.75f, 0.92f, 1f, 1f);
+
+        private readonly List<RectTransform> _bolts = new();
+        private readonly List<float> _boltLeft = new();
+
+        /// <summary>두 점을 번개로 잇는다. 지그재그라 마디마다 한 조각씩 쓴다.</summary>
+        private void DrawBolt(Vector2 from, Vector2 to)
+        {
+            var dir = (to - from);
+            if (dir.sqrMagnitude < 1f) return;
+            dir = dir.normalized;
+            var side = new Vector2(-dir.y, dir.x);
+
+            var prev = from;
+            for (int i = 1; i <= BoltSegments; i++)
+            {
+                var next = Vector2.Lerp(from, to, (float)i / BoltSegments);
+                // 마디를 진행 방향과 직각으로 흔든다. 마지막 마디는 정확히 목표에 닿는다.
+                if (i < BoltSegments)
+                    next += side * ((float)_rng.NextDouble() * 2f - 1f) * BoltJitter;
+                SpawnBoltPiece(prev, next);
+                prev = next;
+            }
+        }
+
+        private void SpawnBoltPiece(Vector2 a, Vector2 b)
+        {
+            int at = -1;
+            for (int i = 0; i < _bolts.Count; i++)
+                if (_boltLeft[i] <= 0f && _bolts[i] != null) { at = i; break; }
+
+            if (at < 0)
+            {
+                var go = new GameObject($"Bolt{_bolts.Count}", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(_unitLayer, false);
+                var made = (RectTransform)go.transform;
+                made.anchorMin = made.anchorMax = new Vector2(0f, 1f);
+                made.pivot = new Vector2(0f, 0.5f);   // 왼쪽 끝을 기준으로 늘인다
+                var made_img = go.GetComponent<Image>();
+                made_img.raycastTarget = false;
+                made_img.sprite = null;               // 그림 없이도 흰 사각형으로 그려진다
+                at = _bolts.Count;
+                _bolts.Add(made);
+                _boltLeft.Add(0f);
+            }
+
+            var rt = _bolts[at];
+            var d = b - a;
+            rt.gameObject.SetActive(true);
+            rt.anchoredPosition = a;
+            rt.sizeDelta = new Vector2(d.magnitude, BoltThickness);
+            rt.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+            rt.GetComponent<Image>().color = BoltColor;
+            _boltLeft[at] = BoltSeconds;
+        }
+
+        private void TickBolts(float dt)
+        {
+            for (int i = 0; i < _bolts.Count; i++)
+            {
+                if (_boltLeft[i] <= 0f) continue;
+                _boltLeft[i] -= dt;
+                var rt = _bolts[i];
+                if (rt == null) continue;
+                if (_boltLeft[i] <= 0f) { rt.gameObject.SetActive(false); continue; }
+                // 끝으로 갈수록 옅어진다 — 번쩍이고 사라지는 것으로 읽힌다
+                var c = BoltColor;
+                c.a = _boltLeft[i] / BoltSeconds;
+                rt.GetComponent<Image>().color = c;
+            }
+        }
+
+        private void ClearBolts()
+        {
+            for (int i = 0; i < _bolts.Count; i++)
+                if (_bolts[i] != null) Destroy(_bolts[i].gameObject);
+            _bolts.Clear();
+            _boltLeft.Clear();
+        }
+
         /// <summary>판이 새로 시작할 때. 방패는 방을 따라다니지만 판은 안 넘는다.</summary>
         private void ClearCardRuntime()
         {
             ClearOrbitShields();
+            ClearBolts();
             _guardCooldownLeft = 0f;
             _shieldAngle = 0f;
         }
@@ -184,6 +281,7 @@ namespace Game.Module.InGame
         {
             if (_guardCooldownLeft > 0f) _guardCooldownLeft -= dt;
             TickOrbitShields(dt);
+            TickBolts(dt);
         }
     }
 }

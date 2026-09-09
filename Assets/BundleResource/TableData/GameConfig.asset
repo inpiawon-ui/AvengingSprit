@@ -39,7 +39,7 @@ MonoBehaviour:
   _expPerBoss: 60
   _expToLevelBase: 40
   _expGrowthPercent: 45
-  _shieldPerHitPercent: 3
+  _shieldPerHitPercent: 1.5
   _shieldCapPercent: 30
   _shieldHoldSeconds: 1
   _shieldDecayPercentPerSecond: 12

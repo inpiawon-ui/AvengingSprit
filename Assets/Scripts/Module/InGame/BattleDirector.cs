@@ -108,6 +108,27 @@ namespace Game.Module.InGame
         /// <summary>닫힘 → open1 → open2 → 열림. 네 장을 이 시간에 걸쳐 넘긴다.</summary>
         private const float ExitOpenSeconds = 0.5f;
         private float _skillCooldown;
+
+        /// <summary>
+        /// 액티브 스킬은 **때려서** 찬다 (2026-09-09). 예전에는 시간이 알아서 채웠다.
+        ///
+        /// 시간제는 싸우든 안 싸우든 똑같이 차서, 스킬이 「내가 번 것」이 아니라
+        /// 「기다리면 오는 것」이었다. 가만히 서 있다가 꽉 차면 쓰는 것이 최적이 된다.
+        /// 때려서 채우면 붙어서 싸우는 쪽이 이득이 된다.
+        ///
+        /// 한 대에 <see cref="SkillHitsToFull"/> 분의 1 씩. 몸마다 쿨이 다르므로
+        /// 초가 아니라 **비율**로 채운다 — 쿨 긴 몸이 20대보다 더 맞아야 하면
+        /// 「이 몸은 스킬을 못 쓴다」가 되어 버린다.
+        /// </summary>
+        private const int SkillHitsToFull = 20;
+
+        private void ChargeSkillOnHit()
+        {
+            float full = SkillCooldownOf(_host?.Profile);
+            if (full <= 0f) return;
+            _skillCooldown = Mathf.Min(
+                _skillCooldown + full / SkillHitsToFull * _buffs.ActiveSkillChargeMul, full);
+        }
         private bool _running;
         private Unit _possessTarget;
         private bool _hadPossessTarget;
@@ -2132,26 +2153,6 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 보스방에서 빼앗을 몸을 부르지 않는다.
-        ///
-        /// ⚠ **켜 두고 잊으면 안 된다.** 보스 여섯은 전부 빙의 불가라, 몸이 안 나오면
-        ///   보스방에서 코어 루프(몸을 빼앗아 싸운다)가 통째로 끊긴다.
-        ///   패턴 하나를 들여다볼 때 화면을 비우려고 잠깐 끄는 용도다.
-        ///
-        /// 에디터 메뉴 `Tools/Game/테스트 — 보스방 잔몹 끄기` 로 켜고 끈다. 빌드에는 없다.
-        /// </summary>
-        public static bool NoBossMinions
-        {
-#if UNITY_EDITOR
-            get => UnityEditor.EditorPrefs.GetBool("AVSR.NoBossMinions", false);
-            set => UnityEditor.EditorPrefs.SetBool("AVSR.NoBossMinions", value);
-#else
-            get => false;
-            set { }
-#endif
-        }
-
-        /// <summary>
         /// 한 보스만 계속 세운다. 0 이면 방 순서대로 여섯을 돌린다.
         ///
         /// 순서대로만 되면 **여섯째 보스를 보려고 다섯 방을 깨야 한다.**
@@ -2830,8 +2831,6 @@ namespace Game.Module.InGame
             TickGhostState(dt);
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
-            _skillCooldown = Mathf.Min(_skillCooldown + dt * _buffs.ActiveSkillChargeMul,
-                                       SkillCooldownOf(_host?.Profile));
 
             TickPlayer(dt);
             TickAfterimages(dt);
@@ -2860,7 +2859,6 @@ namespace Game.Module.InGame
             TickPythonStage(dt);   // 벽 뒤 몸통은 늘 흐른다
             TickOrbitLinger(dt);   // 파괴구는 때린 뒤에도 잠깐 더 돈다
             TickBossShieldView();  // 방패판은 예고가 아니라 걸려 있는 4초 동안 서 있다
-            TickBossMinions(dt);
             TickFollowUp(dt);      // 방패 전개가 부른 압착 두 번
             TickFlight(dt);        // 예고 내내 탄이 날아 도형을 채운다
             CleanupDead();
@@ -2977,7 +2975,7 @@ namespace Game.Module.InGame
             if (me != null)
             {
                 // 구루 결계는 획득량을 두 배로 만들고, 아마존 정예의 불굴은 상한을 푼다.
-                int gain = Mathf.Max(1, me.HpMax * _config.ShieldPerHitPercent / 100)
+                int gain = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * _config.ShieldPerHitPercent / 100f))
                          * (_wardSeconds > 0f ? 2 : 1);
                 int cap = IsShieldUncapped ? me.HpMax : me.HpMax * _config.ShieldCapPercent / 100;
                 me.AddShield(gain, cap);
@@ -3862,12 +3860,9 @@ namespace Game.Module.InGame
             var def = _canonRoom != null ? _canonRoom.BossPhase(phase) : null;
             if (def == null) return;
 
-            // ⚠ **여기서 잡몹을 부르지 않는다.** 몸을 부르는 자리는 한 곳뿐이다 —
-            //   `TickBossMinions` 의 체력 80% · 50% · 30% 문턱(기획 2026-09-02).
-            //   페이즈 전환에서도 부르면 **두 곳이 따로 부른다** — 화면에서는
-            //   "갑자기 잔몹이 튀어나온다" 가 된다. 실제로 그 보고가 왔다.
-            //   게다가 이쪽은 `MarkAsHostBody` 를 안 붙여서 **빼앗을 수도 없는 몸**이었고,
-            //   아틀라스가 안 올라온 호스트를 골라 깨진 사각형으로 서기도 했다.
+            // ⚠ **보스방에는 잡몹을 세우지 않는다** (2026-09-09).
+            //   예고 도형이 가리고, 누구한테 맞았는지 헷갈린다.
+            //   보스방은 보스 하나만 선다 — 몸은 들고 들어가는 것이다.
 
             _bus.Publish(new BossPhaseEvent
             {
@@ -5459,8 +5454,15 @@ namespace Game.Module.InGame
                 line = $"{card.NameKr} 구입";
             }
 
+            // ⚠ **하나 사면 창이 닫힌다** (2026-09-09).
+            //   한 상점에서 두 번까지 살 수 있지만, 창을 열어 둔 채로 두면
+            //   "더 살 수 있나" 를 매번 눈으로 훑게 된다. 사는 순간 방으로 돌아가고,
+            //   더 사고 싶으면 가판에 다시 다가서면 된다 — 무엇을 샀는지도 그때 보인다.
+            // ⚠ **`PublishShop()` 을 부르지 않는다.** 저 발행이 진열을 다시 그리면서
+            //   방금 접은 창을 되살린다 — 실제로 그래서 안 닫혔다.
+            //   어차피 닫는 창이라 다시 그릴 것도 없다.
             _bus.Publish(new ShopPurchasedEvent { Index = index, ResultLine = line });
-            PublishShop();
+            CloseShop();
         }
 
         /// <summary>상점을 닫고 나간다. UI 가 호출한다.</summary>
@@ -5492,6 +5494,9 @@ namespace Game.Module.InGame
 
             int spark = Mathf.Max(1, Mathf.RoundToInt(hitDamage * _buffs.OverchargePercent));
             _overchargeTimer = OverchargeCooldown;
+
+            var me = Avatar;
+            if (me != null) DrawBolt(me.Position, victim.Position);
 
             if (victim.IsAlive)
             {
@@ -5525,6 +5530,7 @@ namespace Game.Module.InGame
 
                 _chainHit.Add(arc);
                 arc.IsAggro = true;
+                DrawBolt(from.Position, arc.Position);   // 어디로 튀었는지 줄기로 보여 준다
                 SpawnImpact(arc.Position, "pulse");
                 HurtByField(arc, spark, toEnemy: true);
                 from = arc;
@@ -5721,6 +5727,7 @@ namespace Game.Module.InGame
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 이 경로는 전부 플레이어 공격이다
             // (근접 타격과 액티브 스킬). 적 공격은 `DamagePlayer` 로 간다.
             Overcharge(victim, damage);
+            ChargeSkillOnHit();
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -6363,7 +6370,7 @@ namespace Game.Module.InGame
                 Leech(Mathf.Max(1, shot.Damage * LeechPercent / 100));
 
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 죽은 뒤에도 옆으로는 튄다.
-            if (shot.FromPlayer) Overcharge(victim, dmg);
+            if (shot.FromPlayer) { Overcharge(victim, dmg); ChargeSkillOnHit(); }
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -8003,6 +8010,7 @@ namespace Game.Module.InGame
                 AcceptLabel = _event.AcceptKr,
                 DeclineLabel = _event.DeclineKr,
                 CostLabel = CostLabelOf(_event),
+                RewardLabel = RewardLabelOf(_event),
                 CanAfford = CanAfford(_event) && CanReceive(_event),
                 BlockedReason = BlockedReasonOf(_event),
             });
@@ -8020,6 +8028,38 @@ namespace Game.Module.InGame
 
         private int EventGold(int baseValue)
             => Mathf.RoundToInt(baseValue * EventGoldMuls[Mathf.Clamp(_runChapter, 1, 6) - 1]);
+
+        /// <summary>
+        /// 무엇을 받는가. 「악마의 계약이 무슨 버프인지 하나도 모르겠다」는 보고를 받고
+        /// 붙였다 — 값(대가)만 적혀 있고 **받는 것이 화면에 없었다.**
+        /// 본문은 분위기를 적는 자리라 「가장 큰 것을 준다」 같은 말뿐이어서,
+        /// 무엇을 사는 거래인지 알 수가 없었다.
+        /// </summary>
+        private string RewardLabelOf(EventEntry e)
+        {
+            string many = e.RewardValue > 1 ? $" {e.RewardValue}장" : " 1장";
+            string grade = e.RewardRarity switch
+            {
+                CardRarity.Legendary => "전설",
+                CardRarity.Epic => "영웅",
+                CardRarity.Rare => "희귀",
+                _ => "일반",
+            };
+            return e.RewardType switch
+            {
+                EventReward.CardGrant => $"{grade} 카드{many}",
+                EventReward.CardOffer => $"{grade} 카드 3택 1",
+                EventReward.UpgradeCard => "가진 카드 한 장 레벨 +1",
+                EventReward.HostHeal => $"호스트 체력 {e.RewardValue}% 회복",
+                EventReward.GhostHeal => $"고스트 체력 {e.RewardValue}% 회복",
+                EventReward.Gold => $"골드 {EventGold(e.RewardValue)}",
+                EventReward.PossessReach => $"빙의 사거리 +{e.RewardValue}% (판 끝까지)",
+                EventReward.ShopDiscount => $"상점 값 -{e.RewardValue}% (판 끝까지)",
+                EventReward.BossShieldBreak => "다음 보스 방어막 한 번 무효",
+                EventReward.SpawnHost => "빼앗을 몸 하나가 나타난다",
+                _ => string.Empty,
+            };
+        }
 
         private string CostLabelOf(EventEntry e) => e.CostType switch
         {
@@ -8184,8 +8224,11 @@ namespace Game.Module.InGame
                     string last = null;
                     for (int i = 0; i < count; i++)
                     {
+                        // ⚠ 이름이 박힌 카드가 **없어진 카드**일 수 있다.
+                        //   실제로 「굶주림」이 지워진 `c019` 를 가리켜, 최대 체력을
+                        //   15% 내주고도 아무것도 안 주고 끝났다. 못 찾으면 등급으로 뽑는다.
                         var card = !string.IsNullOrEmpty(key) && i == 0
-                                 ? _buffTable?.Get(key)
+                                 ? (_buffTable?.Get(key) ?? DrawCardOfRarity(rarity))
                                  : DrawCardOfRarity(rarity);
                         if (card == null) break;
                         _buffs.Apply(card);

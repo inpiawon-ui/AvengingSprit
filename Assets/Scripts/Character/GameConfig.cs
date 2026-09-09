@@ -108,8 +108,8 @@ namespace Game.Character
         [SerializeField] private int _expGrowthPercent = 45;
 
         [Header("격투 쉴드 — 때릴 때마다 차고, 손을 놓으면 녹는다")]
-        [Tooltip("타격당 차는 양 (최대 HP의 %)")]
-        [SerializeField] private int _shieldPerHitPercent = 3;
+        [Tooltip("타격당 차는 양 (최대 HP의 %) — 소수점을 쓴다. 3%는 너무 빨라 1.5%로 내렸다")]
+        [SerializeField] private float _shieldPerHitPercent = 1.5f;
         [Tooltip("쌓을 수 있는 상한 (최대 HP의 %)")]
         [SerializeField] private int _shieldCapPercent = 30;
         [Tooltip("마지막 타격 후 그대로 버티는 시간(초)")]
@@ -242,7 +242,7 @@ namespace Game.Character
 
         public float HostAttackRange => _hostAttackRange;
         public float HostAttackInterval => _hostAttackInterval;
-        public int ShieldPerHitPercent => Mathf.Max(0, _shieldPerHitPercent);
+        public float ShieldPerHitPercent => Mathf.Max(0f, _shieldPerHitPercent);
         public int ShieldCapPercent => Mathf.Max(0, _shieldCapPercent);
         public float ShieldHoldSeconds => Mathf.Max(0f, _shieldHoldSeconds);
 

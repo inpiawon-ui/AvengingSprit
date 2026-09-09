@@ -15,8 +15,8 @@ MonoBehaviour:
   _entries:
   - _buffKey: c001
     _nameKr: "\uAC10\uC804"
-    _description: "\uBA85\uC911\uD558\uBA74 \uC804\uAE30\uAC00 \uD284\uB2E4. \uC606\uC5D0
-      \uC120 \uC801 \uD558\uB098\uC5D0\uAC8C\uB3C4 \uC62E\uACA8 \uBD99\uB294\uB2E4."
+    _description: "\uBA85\uC911\uD558\uBA74 \uC804\uAE30\uAC00 \uC606 \uC801\uC5D0\uAC8C
+      \uD284\uB2E4."
     _kind: 46
     _value: 25
     _stackable: 1
@@ -36,8 +36,7 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c002
     _nameKr: "\uC131\uC7A5 \uAC00\uC18D"
-    _description: "\uC801\uC744 \uC7A1\uC544 \uC5BB\uB294 \uACBD\uD5D8\uCE58\uAC00
-      \uB298\uC5B4\uB09C\uB2E4."
+    _description: "\uC5BB\uB294 \uACBD\uD5D8\uCE58\uAC00 \uB298\uC5B4\uB09C\uB2E4."
     _kind: 47
     _value: 12
     _stackable: 1
@@ -57,10 +56,9 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c003
     _nameKr: "\uC218\uD638 \uBC29\uD328"
-    _description: "\uBC29\uD328\uAC00 \uB0B4 \uC8FC\uC704\uB97C \uB3C8\uB2E4. \uC801\uC5D0
-      \uB2FF\uC73C\uBA74 \uD130\uC9C0\uACE0 8\uCD08 \uB4A4 \uB3CC\uC544\uC628\uB2E4."
+    _description: "\uBC29\uD328\uAC00 \uB0B4 \uC8FC\uC704\uB97C \uB3CC\uBA70 \uB9C9\uB294\uB2E4."
     _kind: 48
-    _value: 1
+    _value: 3
     _stackable: 1
     _colorHex: '#5CC850'
     _scope: 0
@@ -74,13 +72,11 @@ MonoBehaviour:
     _cardId: C003
     _rarity: 1
     _category: SURVIVAL
-    _levelValues: 0100000001000000020000000200000003000000
+    _levelValues: 0300000003000000040000000400000005000000
     _implemented: 1
   - _buffKey: c004
     _nameKr: "\uCC98\uD615"
-    _description: "\uCCB4\uB825\uC774 30% \uC544\uB798\uB85C \uB5A8\uC5B4\uC9C4 \uC801\uC744
-      \uD655\uB960\uB85C \uC989\uC0AC\uC2DC\uD0A8\uB2E4. \uBCF4\uC2A4\uC5D0\uAC8C\uB294
-      \uAC78\uB9AC\uC9C0 \uC54A\uB294\uB2E4."
+    _description: "\uBE48\uC0AC\uC778 \uC801\uC744 \uD655\uB960\uB85C \uC989\uC0AC\uC2DC\uD0A8\uB2E4."
     _kind: 49
     _value: 3
     _stackable: 1
@@ -100,8 +96,7 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c005
     _nameKr: "\uBC88\uAC1C \uC0AC\uC2AC"
-    _description: "\uC804\uAE30\uAC00 \uB354 \uBA40\uB9AC \uD284\uB2E4. \uC774\uBBF8
-      \uB9DE\uC740 \uC801\uC740 \uAC74\uB108\uB6F4\uB2E4."
+    _description: "\uC804\uAE30\uAC00 \uB354 \uC5EC\uB7EC \uBC88 \uD284\uB2E4."
     _kind: 50
     _value: 1
     _stackable: 1
@@ -121,8 +116,7 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c006
     _nameKr: "\uD761\uD63C"
-    _description: "\uC801\uC744 \uC7A1\uC744 \uB54C\uB9C8\uB2E4 \uCD5C\uB300 \uCCB4\uB825\uC758
-      \uC77C\uBD80\uB97C \uB3CC\uB824\uBC1B\uB294\uB2E4."
+    _description: "\uC801\uC744 \uC7A1\uC73C\uBA74 \uCCB4\uB825\uC744 \uB3CC\uB824\uBC1B\uB294\uB2E4."
     _kind: 32
     _value: 3
     _stackable: 1
@@ -142,8 +136,7 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c007
     _nameKr: "\uCC30\uB098\uC758 \uBD88\uC0AC"
-    _description: "\uB9DE\uB294 \uC21C\uAC04 2\uCD08 \uB3D9\uC548 \uBB34\uC801\uC774
-      \uB41C\uB2E4. \uB808\uBCA8\uC774 \uC624\uB97C\uC218\uB85D \uC790\uC8FC \uAC78\uB9B0\uB2E4."
+    _description: "\uB9DE\uB294 \uC21C\uAC04 2\uCD08 \uBB34\uC801\uC774 \uB41C\uB2E4."
     _kind: 51
     _value: 30
     _stackable: 1
@@ -203,8 +196,7 @@ MonoBehaviour:
     _implemented: 1
   - _buffKey: c010
     _nameKr: "\uAD81\uC9C0"
-    _description: "\uCCB4\uB825\uC774 \uC808\uBC18 \uC544\uB798\uB85C \uB5A8\uC5B4\uC9C0\uBA74
-      \uC8FC\uB294 \uD53C\uD574\uAC00 \uCEE4\uC9C4\uB2E4."
+    _description: "\uCCB4\uB825\uC774 \uC808\uBC18 \uC544\uB798\uBA74 \uC138\uC9C4\uB2E4."
     _kind: 52
     _value: 15
     _stackable: 1

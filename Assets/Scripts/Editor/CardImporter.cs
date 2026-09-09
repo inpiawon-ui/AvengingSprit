@@ -43,31 +43,31 @@ namespace Game.EditorTools
         {
             new("c001", "감전", BuffKind.Overcharge, CardRarity.Epic,
                 "ATTACK", new[] { 25, 35, 45, 55, 65 },
-                "명중하면 전기가 튄다. 옆에 선 적 하나에게도 옮겨 붙는다."),
+                "명중하면 전기가 옆 적에게 튄다."),
 
             new("c002", "성장 가속", BuffKind.ExpGain, CardRarity.Rare,
                 "UTILITY", new[] { 12, 20, 28, 36, 44 },
-                "적을 잡아 얻는 경험치가 늘어난다."),
+                "얻는 경험치가 늘어난다."),
 
             new("c003", "수호 방패", BuffKind.OrbitShield, CardRarity.Rare,
-                "SURVIVAL", new[] { 1, 1, 2, 2, 3 },
-                "방패가 내 주위를 돈다. 적에 닿으면 터지고 8초 뒤 돌아온다."),
+                "SURVIVAL", new[] { 3, 3, 4, 4, 5 },
+                "방패가 내 주위를 돌며 막는다."),
 
             new("c004", "처형", BuffKind.Assassinate, CardRarity.Legendary,
                 "ATTACK", new[] { 3, 5, 7, 9, 12 },
-                "체력이 30% 아래로 떨어진 적을 확률로 즉사시킨다. 보스에게는 걸리지 않는다."),
+                "빈사인 적을 확률로 즉사시킨다."),
 
             new("c005", "번개 사슬", BuffKind.ChainLightning, CardRarity.Epic,
                 "AREA", new[] { 1, 1, 2, 2, 3 },
-                "전기가 더 멀리 튄다. 이미 맞은 적은 건너뛴다."),
+                "전기가 더 여러 번 튄다."),
 
             new("c006", "흡혼", BuffKind.Regen, CardRarity.Common,
                 "SURVIVAL", new[] { 3, 5, 7, 9, 11 },
-                "적을 잡을 때마다 최대 체력의 일부를 돌려받는다."),
+                "적을 잡으면 체력을 돌려받는다."),
 
             new("c007", "찰나의 불사", BuffKind.GuardInvuln, CardRarity.Epic,
                 "SURVIVAL", new[] { 30, 26, 22, 18, 14 },
-                "맞는 순간 2초 동안 무적이 된다. 레벨이 오를수록 자주 걸린다."),
+                "맞는 순간 2초 무적이 된다."),
 
             new("c008", "추가 발사", BuffKind.MultiShot, CardRarity.Rare,
                 "PROJECTILE", new[] { 1, 2, 3, 4, 5 },
@@ -79,7 +79,7 @@ namespace Game.EditorTools
 
             new("c010", "궁지", BuffKind.LowHpPower, CardRarity.Rare,
                 "ATTACK", new[] { 15, 25, 35, 45, 55 },
-                "체력이 절반 아래로 떨어지면 주는 피해가 커진다."),
+                "체력이 절반 아래면 세진다."),
         };
 
         private static readonly System.Collections.Generic.Dictionary<string, string> CategoryColor = new()
