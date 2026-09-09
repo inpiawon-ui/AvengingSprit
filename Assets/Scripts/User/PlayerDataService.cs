@@ -123,7 +123,7 @@ namespace Game.User
         /// </summary>
         // `const` 로 두면 컴파일러가 아래 분기를 통째로 죽은 코드로 판정해
         // CS0162 경고가 뜬다. 끄고 켜는 시험용 스위치이므로 static readonly 로 둔다.
-        public static readonly bool UnlockAllForTest = false;
+        public static readonly bool UnlockAllForTest = true;   // ⚠ 임시 (2026-09-09) — 출시 전 false
 
         /// <summary>
         /// 이 몸을 **쓸 수 있는가.** 진행도로 평가하며 저장하지 않는다.
@@ -315,12 +315,25 @@ namespace Game.User
         //
         // ⚠ 숙련도에 비례시키지 않는다. 키운 몸일수록 비싸지면 공들인 쪽이
         //   벌을 받아 진입 장벽만 높아진다. **등급 셋으로만 가른다.**
-        public static int HostEntryCost(HostGrade grade) => grade switch
+        /// <summary>
+        /// ⚠ **임시로 전부 0 골드다** (2026-09-09). 21종을 다 만져 보려면 값이 걸림돌이라
+        ///   `UnlockAllForTest` 와 짝으로 열어 두었다. 출시 전 아래 원래 표로 되돌린다.
+        ///
+        ///   원래 값 — S 1000 · A 600 · 그 외 300
+        /// </summary>
+        public static int HostEntryCost(HostGrade grade)
         {
-            HostGrade.S => 1000,
-            HostGrade.A => 600,
-            _           => 300,
-        };
+            if (FreeHostsForTest) return 0;
+            return grade switch
+            {
+                HostGrade.S => 1000,
+                HostGrade.A => 600,
+                _           => 300,
+            };
+        }
+
+        /// <summary>⚠ 임시 (2026-09-09) — 몸 값을 0 으로. 출시 전 false 로 되돌린다.</summary>
+        public static readonly bool FreeHostsForTest = true;
 
         /// <summary>이 칸을 데려가는 값. **유령은 공짜다** — 몸이 아니다.</summary>
         public static int EntryCostOf(HostEntry host)
