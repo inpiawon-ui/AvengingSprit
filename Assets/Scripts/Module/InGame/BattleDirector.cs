@@ -3947,6 +3947,13 @@ namespace Game.Module.InGame
             TickBossPending(dt);
 
             // ⚠ 시험 모드 — 스스로는 아무것도 안 한다. 버튼으로 부른 예고만 굴린다.
+            //
+            // ⚠ **에디터 전용으로 감싼다.** 아래가 부르는 `BossBrain.TickTelegraph`·
+            //   `TakeReady` 가 `#if UNITY_EDITOR` 안에 있어서, 가드 없이 두면
+            //   에디터는 통과하고 **플레이어 빌드에서만** CS1061 로 터진다.
+            //   실제로 APK 빌드가 여기서 멈췄다 (`BossIdleOnly` 는 빌드에서 늘 false 라
+            //   죽은 분기인데, 죽었어도 컴파일은 돼야 한다).
+#if UNITY_EDITOR
             if (BossIdleOnly)
             {
                 if (_brain.IsTelegraphing)
@@ -3971,6 +3978,7 @@ namespace Game.Module.InGame
                 boss.SetMoving(false);
                 return;
             }
+#endif
 
             // 두뇌가 거리를 보고 패턴을 고른다 — 붙으면 파괴구, 떨어지면 미사일·압착·돌진.
             // 표적이 없으면 아주 먼 것으로 친다(붙어야 쓰는 패턴이 헛돌지 않게).
