@@ -977,7 +977,7 @@ namespace Game.Module.InGame
         private void OnShrineOpened(ShrineOpenedEvent e)
         {
             _ui.SetText("ShrineTitleText", "회복의 제단");
-            _ui.SetText("ShrineHintText", "고스트 피 20 을 바친다");
+            _ui.SetText("ShrineHintText", "하나만 가져갈 수 있다");
             _ui.SetActive("ShrineHintPill", true);
             _ui.SetText("ShrineResultText", string.Empty);
             _ui.SetActive("ShrineResultText", false);

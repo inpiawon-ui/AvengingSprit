@@ -39,17 +39,6 @@ namespace Game.Module.InGame
 
         private const int ShrinePickCount = 3;
 
-        /// <summary>
-        /// 제단에 바치는 고스트 체력 (2026-09-10).
-        ///
-        /// 예전에는 셋 다 공짜였다. 공짜면 「무엇을 고를까」만 남고 「고를까 말까」가
-        /// 없어서, 제단 방이 그냥 보상 창구가 된다. 값을 붙이면 몸이 성할 때는 받고
-        /// 영혼이 얇을 때는 지나치는 판단이 생긴다.
-        ///
-        /// ⚠ 이 값으로 죽지는 않는다 — 남은 체력보다 크면 1 은 남긴다(`PayShrineCost`).
-        ///   값을 치르는 순간 지는 선택지는 선택지가 아니다.
-        /// </summary>
-        private const int ShrineGhostCost = 20;
         private const int ShrineMaxHpUpPercent = 20;
         private const int ShrineAtkUpPercent = 25;
         private const int ShrineSpeedUpPercent = 18;
@@ -74,13 +63,10 @@ namespace Game.Module.InGame
         };
 
         /// <summary>
-        /// 무엇을 주는가. **받는 것의 수치는 적지 않는다.**
+        /// 무엇을 주는가. **수치는 적지 않는다.**
         ///
         /// 「사거리 +25%」 처럼 숫자를 박아 두면 세 칸이 전부 숫자 비교가 되어
         /// 큰 수만 고르게 된다. 무엇이 좋아지는지만 말하고, 얼마나는 몸으로 안다.
-        ///
-        /// ⚠ **치르는 값은 반대로 정확히 적는다.** 얼마를 내주는지 모르면
-        ///   고를까 말까를 판단할 수가 없다 — 받는 것은 느낌, 내는 것은 숫자다.
         /// </summary>
         private static string ShrineDescOf(ShrineGift g) => g switch
         {
@@ -142,33 +128,19 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 셋 중 하나를 골랐다. 고르는 순간 **고스트 체력을 바친다**.
-        ///
-        /// 거절 버튼은 두지 않았다 — 다가서지 않으면 그만이라, 방을 그냥 지나가는 것이
-        /// 곧 거절이다. 창 안에 「안 받는다」를 또 두면 누르는 손만 하나 더 는다.
+        /// 셋 중 하나를 골랐다. **거절은 없다** — 셋 다 공짜라 안 고를 이유가 없고,
+        /// 안 고르는 길을 두면 그 자리가 그냥 통로가 된다(기획 2026-09-08).
         /// </summary>
         public void ChooseShrine(int index)
         {
             if (!_shrineOpen || index < 0 || index >= _shrineOffer.Count) return;
             _shrineOpen = false;
-            PayShrineCost();
             string line = ApplyShrine(_shrineOffer[index]);
             _shrineOffer.Clear();
             _bus.Publish(new ShrineResolvedEvent { ResultLine = line });
             SpawnExit();
         }
 
-        /// <summary>
-        /// 제단 값을 치른다. **이걸로 죽지는 않는다** — 남은 것보다 크면 1 을 남긴다.
-        /// 값을 치르는 순간 지는 선택지는 선택지가 아니다(악마 계약의 `CanAfford` 와 같은 규칙).
-        /// </summary>
-        private void PayShrineCost()
-        {
-            int pay = Mathf.Min(ShrineGhostCost, Mathf.Max(0, _ghostHp - 1));
-            if (pay <= 0) return;
-            _ghostHp -= pay;
-            PublishHp();
-        }
 
         private string ApplyShrine(ShrineGift g)
         {

@@ -107,6 +107,12 @@ namespace Game.Character
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
 
+        [Header("잡몹 공격 속도")]
+        [Tooltip("공격 간격 배율. 정본 값에 곱한다 — 작을수록 자주 때린다")]
+        [SerializeField] private float _enemyIntervalMul = 0.85f;
+        [Tooltip("공격 예고(자세 잡는 시간) 배율. 작을수록 빨리 나가지만 피할 틈도 준다")]
+        [SerializeField] private float _enemyWindupMul = 0.7f;
+
         [Header("잡몹 체력 — 전체 높이")]
         [Tooltip("잡몹 체력 전체 배율. 챕터·방 배율에 더 곱한다 (보스 제외)")]
         [SerializeField] private float _enemyHpMul = 2f;
@@ -268,6 +274,24 @@ namespace Game.Character
         public int EnemiesPerRoom(int roomIndex)
             => Mathf.Clamp(_enemiesPerRoomMin + roomIndex / 2, _enemiesPerRoomMin, _enemiesPerRoomMax);
         public int EnemyHp(int statHp) => Mathf.Max(1, Mathf.RoundToInt(HostHp(statHp) * _enemyHpScale));
+
+        /// <summary>
+        /// 공격 간격 배율 (2026-09-10). 정본 값에 곱한다.
+        ///
+        /// 2.0(정본의 절반 빈도) → 1.34 → **0.85** 로 두 번 줄였다.
+        /// 지형이 촘촘하던 시절에 늦춰 둔 값인데, 방마다 물건 2~3개로 줄이고 나니
+        /// 그냥 느리기만 했다.
+        /// </summary>
+        public float EnemyIntervalMul => Mathf.Max(0.05f, _enemyIntervalMul);
+
+        /// <summary>
+        /// 공격 예고 배율 (2026-09-10).
+        ///
+        /// ⚠ **간격만 줄여서는 체감이 안 바뀐다.** 한 대에 걸리는 시간은
+        /// 「간격 + 예고」인데 예고가 0.4~0.8초라 갱스터 한 대가 2.11초였다.
+        /// 예고는 피할 틈이므로 0 으로 만들지 않는다 — 0.7 배까지만 줄인다.
+        /// </summary>
+        public float EnemyWindupMul => Mathf.Clamp(_enemyWindupMul, 0.1f, 1f);
 
         /// <summary>
         /// 잡몹 체력 전체에 곱하는 값 (2026-09-09 — 「너무 약하다, 2배로」).

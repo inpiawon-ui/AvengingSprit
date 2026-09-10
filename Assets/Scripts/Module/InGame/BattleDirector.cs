@@ -3552,7 +3552,9 @@ namespace Game.Module.InGame
                     e.SetMoving(false);
                     e.SetState(EnemyState.Attack);
 
-                    float windup = e.Profile?.CanonTelegraph ?? 0f;
+                    // 예고도 함께 줄인다 — 「간격 + 예고」가 한 대에 걸리는 시간이라
+                    // 간격만 줄이면 체감이 거의 안 바뀐다.
+                    float windup = (e.Profile?.CanonTelegraph ?? 0f) * _config.EnemyWindupMul;
                     if (windup > 0f && CanStartAttack(e))
                     {
                         e.BeginWindup(windup);
@@ -3710,25 +3712,18 @@ namespace Game.Module.InGame
             => e.HasCanon ? e.CanonRange * _pxPerMeter : _config.EnemyAttackRange * e.RangeMul;
 
         /// <summary>
-        /// 적이 얼마나 자주 때리는가. 정본 값에 이만큼을 곱한다.
-        ///
-        /// 예전에는 2배(정본의 절반 빈도)였다. 지형이 촘촘하고 적 탄이 지형을
-        /// 통과하던 시절, 정본 간격 그대로는 피할 창이 남지 않아서 늦춰 둔 값이다.
-        ///
-        /// 2026-09-10 — 지형을 방마다 2~3개로 줄이고 나니 이제는 **너무 느리다**
-        /// (「공격 딜레이가 너무 길다」). 1.5배 빠르게 = 2.0 × 0.67.
-        /// </summary>
-        private const float EnemyIntervalScale = 1.34f;
-
-        /// <summary>
         /// 엘리트는 거기서 한 번 더 줄인다. 「엘리트 방은 확실히 다른 방」이 되어야 한다 —
         /// 체력만 두꺼우면 시간만 오래 걸리는 방이지 어려운 방이 아니다.
         /// </summary>
         private const float EliteIntervalMul = 0.5f;
 
+        /// <summary>
+        /// 적이 얼마나 자주 때리는가. 배율은 `GameConfig` 에 있다 —
+        /// 두 번 다시 조정하게 되어 인스펙터에서 돌릴 수 있게 뺐다.
+        /// </summary>
         private float EnemyIntervalOf(HostEntry e, bool elite = false)
             => (e.HasCanon ? e.CanonInterval : _config.EnemyAttackInterval * e.IntervalMul)
-               * EnemyIntervalScale * (elite ? EliteIntervalMul : 1f);
+               * _config.EnemyIntervalMul * (elite ? EliteIntervalMul : 1f);
 
         // 내가 탄 몸. 정본은 같은 배우라도 **적일 때와 내가 탔을 때 교전값을 따로** 준다
         // (attacks 의 AP_E### / AP_H##). 체력·공격력은 몸 자체의 것이라 적일 때와 같다.
