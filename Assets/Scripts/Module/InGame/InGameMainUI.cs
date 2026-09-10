@@ -233,11 +233,9 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
-            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(e =>
-            {
-                _ui.SetText("ShopResultText", e.ResultLine);
-                _ui.SetActive("ShopPanel", false);   // 하나 사면 닫는다
-            }));
+            // 하나 사면 바로 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
+            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(
+                _ => _ui.SetActive("ShopPanel", false)));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
         }
 
@@ -979,7 +977,7 @@ namespace Game.Module.InGame
         private void OnShrineOpened(ShrineOpenedEvent e)
         {
             _ui.SetText("ShrineTitleText", "회복의 제단");
-            _ui.SetText("ShrineHintText", "하나만 가져갈 수 있다");
+            _ui.SetText("ShrineHintText", "고스트 피 20 을 바친다");
             _ui.SetActive("ShrineHintPill", true);
             _ui.SetText("ShrineResultText", string.Empty);
             _ui.SetActive("ShrineResultText", false);
@@ -1036,21 +1034,11 @@ namespace Game.Module.InGame
             _battle.ChooseShrine(index);
         }
 
+        // ⚠ 고르는 즉시 닫는다 (2026-09-10). 예전에는 결과 한 줄을 띄우고 1.2초 뒤에
+        //   닫았는데, 고른 뒤에 화면이 멈춰 있는 그 틈이 「끝난 건가?」로 읽혔다.
+        //   무엇을 받았는지는 HUD 체력·골드가 이미 말해 준다.
         private void OnShrineResolved(ShrineResolvedEvent e)
-        {
-            for (int i = 0; i < ShrineChoiceCount; i++) _ui.SetActive($"ShrineChoice{i}", false);
-            _ui.SetActive("ShrineResultText", true);
-            _ui.SetText("ShrineResultText", e.ResultLine);
-            _ui.SetText("ShrineHintText", string.Empty);
-            _ui.SetActive("ShrineHintPill", false);   // 글자만 지우면 명판이 빈 채로 남는다
-            CloseShrineLater().Forget();   // fire-and-forget: 결과를 읽을 틈만 준다
-        }
-
-        private async UniTaskVoid CloseShrineLater()
-        {
-            await UniTask.Delay(1200);
-            _ui.SetActive("ShrinePanel", false);
-        }
+            => _ui.SetActive("ShrinePanel", false);
 
         private void Resolve(bool accept)
         {
@@ -1058,34 +1046,11 @@ namespace Game.Module.InGame
             _battle.ResolveEvent(accept);
         }
 
+        // ⚠ 수락·거절 어느 쪽이든 **바로 닫는다** (2026-09-10).
+        //   예전에는 결과를 적고 버튼을 「계속」으로 바꿔 한 번 더 누르게 했다 —
+        //   같은 자리에서 두 번 확인시키는 셈이었다.
         private void OnEventResolved(EventResolvedEvent e)
-        {
-            // 보상이 3택1 이면 그 창이 바로 위에 뜬다. 이벤트 창을 남겨 두면
-            // 카드를 고르고 나서 "계속"을 한 번 더 눌러야 한다 — 같은 자리에서
-            // 두 번 확인시키지 않는다.
-            var offer = _ui.Find("BuffChoicePanel");
-            if (offer != null && offer.gameObject.activeSelf)
-            {
-                _ui.SetActive("EventPanel", false);
-                return;
-            }
-
-            // 창을 바로 닫지 않는다. 무엇을 얻었는지 한 줄 보여 주고 닫는다 —
-            // 즉시 닫으면 값을 치른 결과가 화면에 남지 않는다.
-            _ui.SetActive("EventAcceptButton", false);
-            _ui.SetActive("EventCostText", false);
-            _ui.SetActive("EventCostPill", false);
-            _ui.SetText("EventResultText", e.ResultLine);
-            _ui.SetActive("EventResultText", true);
-
-            _ui.SetText("EventDeclineText", "계속");
-            var btn = _ui.Get<Button>("EventDeclineButton");
-            if (btn != null)
-            {
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => _ui.SetActive("EventPanel", false));
-            }
-        }
+            => _ui.SetActive("EventPanel", false);
 
         // ── 상점 ─────────────────────────────────────────────────
         //
