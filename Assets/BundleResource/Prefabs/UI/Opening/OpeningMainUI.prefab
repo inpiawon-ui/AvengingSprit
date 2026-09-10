@@ -268,6 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4629358238470506091}
   - component: {fileID: 3930945161219016709}
+  - component: {fileID: 3767213014630968865}
   m_Layer: 0
   m_Name: OpeningMainUI
   m_TagString: Untagged
@@ -313,6 +314,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9916faac465ddb840b1871591af3f219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Opening.OpeningMainUI
+--- !u!114 &3767213014630968865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2421034000832274102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5493d8ef7f671ff49b8ec06a9012ea46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFit
+  _baseWidth: 720
 --- !u!1 &2696487365448162181
 GameObject:
   m_ObjectHideFlags: 0
