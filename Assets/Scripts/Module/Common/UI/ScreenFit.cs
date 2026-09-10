@@ -56,6 +56,16 @@ namespace Game.Module.Common.UI
         /// <summary>부모 크기에서 이만큼 안이면 「꽉 채운다」로 본다.</summary>
         private const float FullSlack = 32f;
 
+        /// <summary>
+        /// 동시에 부모의 이 비율 이상이어야 「꽉 채운다」로 본다.
+        ///
+        /// ⚠ 픽셀 여유(32)만 보면 **작은 부모에서 틀린다.** 팁바(높이 70) 안의 글자칸(50)이
+        ///   70−32=38 을 넘는다는 이유로 「채운다」가 되어 세로로 늘어났고,
+        ///   TMP 자동 크기가 글자를 키워 **줄바꿈이 통째로 달라졌다.**
+        ///   50/70 = 0.71 이라 비율로 보면 채우는 것이 아니다.
+        /// </summary>
+        private const float FullRatio = 0.9f;
+
         /// <summary>이만큼 안에 붙어 있으면 한 덩어리로 본다.</summary>
         private const float ClusterGap = 24f;
 
@@ -114,7 +124,18 @@ namespace Game.Module.Common.UI
         {
             if (_captured) return;
             _captured = true;
-            Scan((RectTransform)transform, _baseWidth, _baseHeight);
+
+            // ⚠ 기준은 **이 루트 자신의 그려진 크기**다. 9:16 캔버스 값을 그대로 쓰면
+            //   `~Panel` 처럼 화면보다 작은 판에서 어긋난다 — `HostSelectPanel` 은 높이가
+            //   1152 인데 1280 으로 재는 바람에 하단 팁바가 128 칸 위로 올라와
+            //   호스트 목록 마지막 줄을 덮었다.
+            //   늘어나는 축은 캔버스 기준을, 고정인 축은 제 크기를 쓴다.
+            var self = (RectTransform)transform;
+            bool stretchX = self.anchorMin.x < 0.01f && self.anchorMax.x > 0.99f;
+            bool stretchY = self.anchorMin.y < 0.01f && self.anchorMax.y > 0.99f;
+            Scan(self,
+                 stretchX ? _baseWidth : self.sizeDelta.x,
+                 stretchY ? _baseHeight : self.sizeDelta.y);
         }
 
         private void Scan(RectTransform parent, float baseW, float baseH)
@@ -173,7 +194,8 @@ namespace Game.Module.Common.UI
                 Min = min,
                 Size = size,
                 ParentBase = parentBase,
-                Full = stretched || size >= parentBase - FullSlack,
+                Full = stretched
+                       || (size >= parentBase - FullSlack && size >= parentBase * FullRatio),
             };
         }
 
