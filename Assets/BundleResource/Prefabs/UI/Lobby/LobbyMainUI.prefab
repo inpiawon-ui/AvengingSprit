@@ -3954,6 +3954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFit
   _baseWidth: 720
+  _baseHeight: 1280
 --- !u!1 &3482130658114064810
 GameObject:
   m_ObjectHideFlags: 0

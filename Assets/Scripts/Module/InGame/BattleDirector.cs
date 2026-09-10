@@ -342,6 +342,9 @@ namespace Game.Module.InGame
             }
             // 화면 폭이 8 m 를 담는다. 방이 15 m 라 나머지는 카메라가 따라가며 보여 준다.
             _pxPerMeter = _field.rect.width / ViewMeterWidth;
+            // ⚠ **방 크기를 정하기 전에** 그려진 높이를 떠 둔다. 뒤에 뜨면 이미 맞춘 값이
+            //   기준이 되어, 화면을 바꿀 때마다 창이 조금씩 커진다.
+            CaptureFieldBaseHeight();
             SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
             CoreModule.TryGet(out _player);
@@ -1681,6 +1684,8 @@ namespace Game.Module.InGame
                 _floor.sizeDelta = _roomSize;
             }
             LayoutPythonStage();
+            // 방이 바뀌면 창도 다시 잰다 — 보스방(16 m)은 더 보여 줄 수 있다.
+            FitFieldHeight();
             ApplyScroll();
         }
 
@@ -2919,6 +2924,7 @@ namespace Game.Module.InGame
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
 
+            TickFieldFit();   // 화면 비율이 바뀌면 창 높이를 다시 잰다
             TickShake(dt);
             TickHitStop();
 
