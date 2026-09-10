@@ -1003,11 +1003,23 @@ namespace Game.Module.InGame
         /// <summary>지금 방의 무대 이름(`junkyard` 등). 연구소는 빈 문자열이다.</summary>
         private string _floorEnv = string.Empty;
 
+        /// <summary>
+        /// 지형지물 그림자. `_obstacles` 와 따로 드는 이유는 `SortDepth` 에 넣지 않기
+        /// 위해서다 — 그림자는 늘 맨 뒤에 깔린 채 정렬에서 빠져 있어야 안 깜빡인다.
+        /// ⚠ 따로 들었으므로 **여기서 같이 지워야 한다.** 안 지우면 앞 방 그림자가
+        ///   새 방 바닥에 그대로 남는다(실제로 그랬다).
+        /// </summary>
+        private readonly List<GameObject> _obstacleShadows = new();
+
         private void ClearObstacles()
         {
             for (int i = 0; i < _obstacles.Count; i++)
                 if (_obstacles[i].View != null) Destroy(_obstacles[i].View);
             _obstacles.Clear();
+
+            for (int i = 0; i < _obstacleShadows.Count; i++)
+                if (_obstacleShadows[i] != null) Destroy(_obstacleShadows[i]);
+            _obstacleShadows.Clear();
             _hazardTimer.Clear();
         }
 
@@ -1020,6 +1032,45 @@ namespace Game.Module.InGame
         /// 기둥·바리케이드처럼 **읽히는 큰 것**은 남긴다. 그건 지형이다.
         /// </summary>
         private static bool ClearedInBossRoom(string kind) => kind == "CRATE";
+
+        /// <summary>그림자 크기 — 발자국 대비. 살짝 넓게 깔려야 바닥에 앉은 것으로 보인다.</summary>
+        private const float ObstacleShadowScale = 1.12f;
+
+        /// <summary>그림자 높이 — 쿼터뷰라 납작해야 바닥에 누운 것으로 읽힌다.</summary>
+        private const float ObstacleShadowFlatten = 0.45f;
+
+        private static readonly Color ObstacleShadowColor = new(0f, 0f, 0f, 0.42f);
+
+        /// <summary>
+        /// 지형지물 발밑에 타원 그림자를 깐다.
+        ///
+        /// 새 그림 없이 있는 것(`fx_shadow` 가 없으면 흰 사각형에 색만)으로 만든다 —
+        /// 이건 「무엇이 물건인가」를 가르는 표시지 장식이 아니다.
+        ///
+        /// ⚠ **캐릭터보다 뒤에 깔린다.** `SortDepth` 는 `_obstacles` 와 유닛만 줄을 세우므로,
+        ///   그림자는 거기 넣지 않고 만들 때 맨 뒤로 보낸다. 매 프레임 다시 정렬되지 않아
+        ///   깜빡이지도 않는다.
+        /// </summary>
+        private void SpawnObstacleShadow(string kind, Vector2 center, Vector2 size)
+        {
+            var go = new GameObject($"Shadow_{kind}", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(size.x * ObstacleShadowScale,
+                                       size.y * ObstacleShadowScale * ObstacleShadowFlatten);
+            // 발자국 아래쪽에 앉힌다 — 물건이 서 있는 자리가 곧 그림자 자리다.
+            rt.anchoredPosition = new Vector2(center.x, center.y - size.y * 0.5f
+                                              + rt.sizeDelta.y * 0.5f);
+
+            var img = go.GetComponent<Image>();
+            img.raycastTarget = false;
+            img.sprite = GetSprite("fx_shadow") ?? GetSprite("obj_shadow");
+            img.color = ObstacleShadowColor;
+            go.transform.SetAsFirstSibling();   // 바닥 바로 위, 모든 것보다 뒤
+            _obstacleShadows.Add(go);
+        }
 
         private void SpawnObstacles(RoomEntry room)
         {
@@ -1058,6 +1109,14 @@ namespace Game.Module.InGame
                 viewSize = new Vector2(Mathf.Round(viewSize.x), Mathf.Round(viewSize.y));
                 viewCenter = new Vector2(Mathf.Round(viewCenter.x * 2f) * 0.5f,
                                          Mathf.Round(viewCenter.y * 2f) * 0.5f);
+
+                // ⚠ **발밑에 그림자를 깐다** (2026-09-10).
+                //   바닥 그림에도 물건이 그려져 있어서, 우리가 세운 지형지물과
+                //   배경 무늬가 화면에서 구분이 안 됐다 — 그려진 것을 엄폐물로 알고
+                //   숨으려다 맞고, 진짜 엄폐물은 못 알아봤다.
+                //   그림자는 「이건 바닥에서 솟아 있다」를 한눈에 말해 준다.
+                //   눕는 것(도랑·가시판)에는 안 붙인다 — 솟은 것이 아니다.
+                if (rise > 0f) SpawnObstacleShadow(o.Kind, center, size);
 
                 var go = new GameObject($"Obj_{o.Kind}_{o.ObjectId}",
                                         typeof(RectTransform), typeof(Image));
@@ -6727,6 +6786,7 @@ namespace Game.Module.InGame
             //   액수가 무더기 수보다 적으면 그 수만큼만 떨군다 — 0 짜리는 안 만든다.
             int want = GoldPilesFor(u) + _rng.Next(-GoldPileJitter, GoldPileJitter + 1);
             int piles = Mathf.Clamp(want, 1, amount);
+            var me = Avatar;
 
             for (int i = 0; i < piles; i++)
             {
@@ -6735,7 +6795,17 @@ namespace Game.Module.InGame
                 var pile = RentGoldPile();
                 if (pile == null) return;
                 pile.Drop(u.Position, share);
+
+                // ⚠ **떨어지는 즉시 나에게 날아온다** (2026-09-10).
+                //   예전에는 방을 다 비운 뒤에야 한꺼번에 걷었다. 그러면 잡는 동안
+                //   바닥에 동전만 쌓이고 「번 느낌」이 방 끝까지 미뤄진다 —
+                //   보스방처럼 오래 싸우는 방에서는 특히 그렇다.
+                //   한 마리 잡을 때마다 그 자리에서 동전이 날아와야 잡은 값이 읽힌다.
+                if (me != null) pile.FlyTo(me.Position);
             }
+
+            // 날아오는 중인 것이 있으면 `TickGoldPiles` 가 닿는 순간 판 골드에 넣는다.
+            _goldCollecting = true;
         }
 
         private GoldPile RentGoldPile()

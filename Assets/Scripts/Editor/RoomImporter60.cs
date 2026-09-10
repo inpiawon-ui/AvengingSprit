@@ -290,7 +290,7 @@ namespace Game.EditorTools
                 p.FindPropertyRelative("_actorId").stringValue = s.Unit;
                 // 지형지물과 **같은 방향으로** 뒤집는다 (`MirrorRoom` 주석 참조)
                 p.FindPropertyRelative("_at").vector2Value =
-                    new Vector2(flipRoom ? MirrorX(s.X) : s.X, s.Y);
+                    PushOffEntrance(new Vector2(flipRoom ? MirrorX(s.X) : s.X, s.Y));
                 p.FindPropertyRelative("_facing").stringValue = "S";
                 p.FindPropertyRelative("_delaySeconds").floatValue = 0f;
                 // ⚠ 빙의 대상 표시는 **`_trigger` 다.** `RoomEntry.IsPossessionTarget` 이
@@ -440,6 +440,35 @@ namespace Game.EditorTools
                 if (Mathf.Abs(taken[k].x - x) < half.x + clear
                     && Mathf.Abs(taken[k].y - y) < half.y + clear) return false;
             return true;
+        }
+
+        /// <summary>플레이어가 들어서는 자리. `_playerSpawn` 과 같아야 한다.</summary>
+        private static readonly Vector2 EntranceAt = new Vector2(RoomWidth * 0.5f, 1.7f);
+
+        /// <summary>입구에서 이만큼(m)은 비워 둔다.</summary>
+        private const float EntranceClearMeters = 4.5f;
+
+        /// <summary>
+        /// 입구 코앞에 선 적을 위로 밀어낸다.
+        ///
+        /// 배정표에는 `(5, 1.5)` 처럼 **플레이어가 서는 자리(5, 1.7)** 와 겹치는 자리가 있다.
+        /// 방에 들어서자마자 몸이 겹친 채로 맞기 시작하면, 무엇이 있었는지 보기도 전에
+        /// 체력이 깎인다 — 대응할 방법이 없는 피해는 난이도가 아니라 고장이다.
+        ///
+        /// 좌우는 그대로 두고 **위로만** 민다. 좌우로 밀면 배치의 모양(가운데·측면)이
+        /// 무너지는데, 위로 미는 것은 「조금 멀리 세운다」로 끝난다.
+        /// </summary>
+        private static Vector2 PushOffEntrance(Vector2 at)
+        {
+            float dy = at.y - EntranceAt.y;
+            float dx = at.x - EntranceAt.x;
+            if (dx * dx + dy * dy >= EntranceClearMeters * EntranceClearMeters) return at;
+
+            // 입구에서 같은 x 로 EntranceClear 만큼 떨어진 y. 좌우로 벌어진 만큼은 덜 민다.
+            float need = Mathf.Sqrt(Mathf.Max(0f,
+                EntranceClearMeters * EntranceClearMeters - dx * dx));
+            float y = Mathf.Min(EntranceAt.y + need, RoomHeight - 2.0f);
+            return new Vector2(at.x, Mathf.Max(at.y, y));
         }
 
         private static void WriteObjects(SerializedProperty e, RoomDef60.Room d)

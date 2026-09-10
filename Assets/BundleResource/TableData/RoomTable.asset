@@ -56,7 +56,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_001_S01
       _actorId: gangster
-      _at: {x: 7.5, y: 3.5}
+      _at: {x: 7.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -101,7 +101,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: BARRICADE_2
       _kind: BARRICADE
-      _at: {x: 4.5, y: 2.5}
+      _at: {x: 7.5, y: 2.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -186,7 +186,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_002_S05
       _actorId: scrapgunner
-      _at: {x: 5, y: 6}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -289,7 +289,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_003_S03
       _actorId: skeleton
-      _at: {x: 2, y: 4.5}
+      _at: {x: 2, y: 5.054102}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -305,7 +305,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_003_S05
       _actorId: skeleton
-      _at: {x: 5, y: 3.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -313,7 +313,7 @@ MonoBehaviour:
     _objects:
     - _objectId: CRATE_1
       _kind: CRATE
-      _at: {x: 5, y: 6.5}
+      _at: {x: 8, y: 6.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -703,26 +703,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_008_S06
       _actorId: skeleton
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 5.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 7.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -777,7 +764,7 @@ MonoBehaviour:
     - _elite: 1
       _spawnId: ROOM_CH1_009_S01
       _actorId: hopper
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -793,7 +780,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_009_S03
       _actorId: bat
-      _at: {x: 2.5, y: 2.5}
+      _at: {x: 2.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -809,7 +796,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH1_009_S05
       _actorId: skeleton
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -825,7 +812,7 @@ MonoBehaviour:
     _objects:
     - _objectId: BARRICADE_1
       _kind: BARRICADE
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 6.5, y: 2.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -998,7 +985,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_001_S05
       _actorId: roadwarden
-      _at: {x: 5, y: 6}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1125,7 +1112,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_002_S03
       _actorId: actor_enforcer
-      _at: {x: 2, y: 4.5}
+      _at: {x: 2, y: 5.054102}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1141,7 +1128,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_002_S05
       _actorId: actor_enforcer
-      _at: {x: 5, y: 3.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1149,7 +1136,7 @@ MonoBehaviour:
     _objects:
     - _objectId: CRATE_1
       _kind: CRATE
-      _at: {x: 6, y: 6.5}
+      _at: {x: 8, y: 6.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -1162,7 +1149,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CRATE_2
       _kind: CRATE
-      _at: {x: 2, y: 2.5}
+      _at: {x: 5, y: 2.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -1595,26 +1582,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_006_S06
       _actorId: actor_enforcer
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 4.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 1.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -1757,7 +1731,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_008_S01
       _actorId: guru
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -1773,7 +1747,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_008_S03
       _actorId: actor_enforcer
-      _at: {x: 2.5, y: 2.5}
+      _at: {x: 2.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1789,7 +1763,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_008_S05
       _actorId: actor_enforcer
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1811,20 +1785,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
+    - _objectId: PILLAR_1
       _kind: PILLAR
       _at: {x: 8.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -1837,7 +1798,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
+    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 7.5, y: 4.5}
       _size: {x: 1, y: 1}
@@ -1932,7 +1893,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_009_S03
       _actorId: actor_enforcer
-      _at: {x: 3.5, y: 2}
+      _at: {x: 3.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1940,7 +1901,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_009_S04
       _actorId: roadwarden
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1948,7 +1909,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_009_S05
       _actorId: actor_enforcer
-      _at: {x: 1.5, y: 1.5}
+      _at: {x: 1.5, y: 4.528427}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -1972,7 +1933,7 @@ MonoBehaviour:
     _objects:
     - _objectId: BULK_1
       _kind: BULK
-      _at: {x: 8, y: 3}
+      _at: {x: 5, y: 3}
       _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
@@ -2155,7 +2116,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_001_S03
       _actorId: actor_enforcer
-      _at: {x: 2, y: 4.5}
+      _at: {x: 2, y: 5.054102}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2171,7 +2132,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_001_S05
       _actorId: actor_enforcer
-      _at: {x: 5, y: 3.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2192,7 +2153,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CRATE_2
       _kind: CRATE
-      _at: {x: 2, y: 2.5}
+      _at: {x: 4, y: 2.5}
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -2460,26 +2421,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_003_S06
       _actorId: actor_enforcer
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 4.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 3.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -2723,7 +2671,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_006_S01
       _actorId: vampire
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -2739,7 +2687,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_006_S03
       _actorId: actor_enforcer
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 7.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2755,7 +2703,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_006_S05
       _actorId: actor_enforcer
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2777,10 +2725,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
+    - _objectId: PILLAR_1
+      _kind: PILLAR
+      _at: {x: 4.5, y: 2.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -2792,20 +2740,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PILLAR_2
       _kind: PILLAR
-      _at: {x: 1.5, y: 2.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
-      _at: {x: 6.5, y: 4.5}
+      _at: {x: 3.5, y: 4.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -2962,7 +2897,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_008_S03
       _actorId: actor_enforcer
-      _at: {x: 3.5, y: 2}
+      _at: {x: 3.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2970,7 +2905,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_008_S04
       _actorId: coilwalker
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2978,7 +2913,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_008_S05
       _actorId: actor_enforcer
-      _at: {x: 1.5, y: 1.5}
+      _at: {x: 1.5, y: 4.528427}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3002,7 +2937,7 @@ MonoBehaviour:
     _objects:
     - _objectId: BULK_1
       _kind: BULK
-      _at: {x: 8, y: 3}
+      _at: {x: 6, y: 3}
       _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
@@ -3145,7 +3080,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_009_S06
       _actorId: actor_enforcer
-      _at: {x: 3, y: 5.5}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3153,7 +3088,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_009_S07
       _actorId: skeleton
-      _at: {x: 7, y: 5.5}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3519,26 +3454,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_002_S06
       _actorId: bat
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 4.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 2.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -3617,7 +3539,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_003_S01
       _actorId: white_wizard
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -3633,7 +3555,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_003_S03
       _actorId: bat
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 7.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3649,7 +3571,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_003_S05
       _actorId: actor_enforcer
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3671,20 +3593,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
+    - _objectId: PILLAR_1
       _kind: PILLAR
       _at: {x: 2.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -3697,7 +3606,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
+    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 2.5, y: 4.5}
       _size: {x: 1, y: 1}
@@ -3957,7 +3866,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_006_S03
       _actorId: actor_enforcer
-      _at: {x: 6.5, y: 2}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3965,7 +3874,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_006_S04
       _actorId: roadwarden
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3973,7 +3882,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_006_S05
       _actorId: bat
-      _at: {x: 8.5, y: 1.5}
+      _at: {x: 8.5, y: 4.528427}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -3997,7 +3906,7 @@ MonoBehaviour:
     _objects:
     - _objectId: BULK_1
       _kind: BULK
-      _at: {x: 2, y: 3}
+      _at: {x: 4, y: 3}
       _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
@@ -4204,7 +4113,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_008_S06
       _actorId: bat
-      _at: {x: 3, y: 5.5}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4212,7 +4121,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_008_S07
       _actorId: actor_enforcer
-      _at: {x: 7, y: 5.5}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4336,7 +4245,7 @@ MonoBehaviour:
     - _elite: 1
       _spawnId: ROOM_CH4_009_S01
       _actorId: ninja_chain
-      _at: {x: 7, y: 3}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -4344,7 +4253,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_009_S02
       _actorId: actor_enforcer
-      _at: {x: 5, y: 6}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4352,7 +4261,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH4_009_S03
       _actorId: actor_enforcer
-      _at: {x: 3, y: 3}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4400,19 +4309,6 @@ MonoBehaviour:
     _objects:
     - _objectId: TIMED_SPIKE_1
       _kind: TIMED_SPIKE
-      _at: {x: 3, y: 5}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: SPIKE
-      _hazardDamage: 6
-      _hazardTick: 0.8
-      _unnamed: 0
-    - _objectId: TIMED_SPIKE_2
-      _kind: TIMED_SPIKE
       _at: {x: 7, y: 8}
       _size: {x: 2, y: 2}
       _blocksMove: 0
@@ -4424,7 +4320,7 @@ MonoBehaviour:
       _hazardDamage: 6
       _hazardTick: 0.8
       _unnamed: 0
-    - _objectId: CRATE_3
+    - _objectId: CRATE_2
       _kind: CRATE
       _at: {x: 5, y: 4.5}
       _size: {x: 2, y: 1}
@@ -4607,26 +4503,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_001_S06
       _actorId: skeleton
-      _at: {x: 5, y: 2.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 4.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 1.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -4705,7 +4588,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_002_S01
       _actorId: commando_laser
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -4721,7 +4604,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_002_S03
       _actorId: actor_enforcer
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 7.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4737,7 +4620,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_002_S05
       _actorId: skeleton
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4759,20 +4642,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
+    - _objectId: PILLAR_1
       _kind: PILLAR
       _at: {x: 1.5, y: 2.5}
       _size: {x: 1, y: 1}
@@ -4785,7 +4655,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
+    - _objectId: PILLAR_2
       _kind: PILLAR
       _at: {x: 3.5, y: 4.5}
       _size: {x: 1, y: 1}
@@ -4880,7 +4750,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_003_S03
       _actorId: skeleton
-      _at: {x: 6.5, y: 2}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4888,7 +4758,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_003_S04
       _actorId: coilwalker
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4896,7 +4766,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_003_S05
       _actorId: actor_enforcer
-      _at: {x: 8.5, y: 1.5}
+      _at: {x: 8.5, y: 4.528427}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5228,7 +5098,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_006_S06
       _actorId: skeleton
-      _at: {x: 7, y: 5.5}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5236,7 +5106,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_006_S07
       _actorId: actor_enforcer
-      _at: {x: 3, y: 5.5}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5437,7 +5307,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_008_S01
       _actorId: ninja
-      _at: {x: 7, y: 3}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -5445,7 +5315,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_008_S02
       _actorId: dragon_blue
-      _at: {x: 5, y: 6}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -5453,7 +5323,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_008_S03
       _actorId: skeleton
-      _at: {x: 3, y: 3}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5540,7 +5410,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CHANNEL_V_4
       _kind: CHANNEL_V
-      _at: {x: 2.5, y: 6}
+      _at: {x: 1.5, y: 6}
       _size: {x: 1, y: 2}
       _blocksMove: 1
       _blocksShot: 0
@@ -5678,7 +5548,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_009_S07
       _actorId: actor_enforcer
-      _at: {x: 3.5, y: 2.5}
+      _at: {x: 3.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5686,7 +5556,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_009_S08
       _actorId: skeleton
-      _at: {x: 6.5, y: 2.5}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5694,7 +5564,7 @@ MonoBehaviour:
     _objects:
     - _objectId: TIMED_SPIKE_1
       _kind: TIMED_SPIKE
-      _at: {x: 4, y: 6}
+      _at: {x: 5, y: 6}
       _size: {x: 2, y: 2}
       _blocksMove: 0
       _blocksShot: 0
@@ -5861,7 +5731,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_001_S01
       _actorId: commando_grenade
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -5877,7 +5747,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_001_S03
       _actorId: actor_enforcer
-      _at: {x: 7.5, y: 2.5}
+      _at: {x: 7.5, y: 5.4416575}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5893,7 +5763,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_001_S05
       _actorId: skeleton
-      _at: {x: 5, y: 1.5}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -5915,10 +5785,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: CRATE_1
-      _kind: CRATE
-      _at: {x: 5, y: 6.5}
-      _size: {x: 2, y: 1}
+    - _objectId: PILLAR_1
+      _kind: PILLAR
+      _at: {x: 4.5, y: 2.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
@@ -5930,20 +5800,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PILLAR_2
       _kind: PILLAR
-      _at: {x: 1.5, y: 2.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
-      _at: {x: 6.5, y: 4.5}
+      _at: {x: 3.5, y: 4.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -6036,7 +5893,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_002_S03
       _actorId: skeleton
-      _at: {x: 6.5, y: 2}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6044,7 +5901,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_002_S04
       _actorId: turret_cross
-      _at: {x: 5, y: 3}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6052,7 +5909,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_002_S05
       _actorId: actor_enforcer
-      _at: {x: 8.5, y: 1.5}
+      _at: {x: 8.5, y: 4.528427}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6076,7 +5933,7 @@ MonoBehaviour:
     _objects:
     - _objectId: BULK_1
       _kind: BULK
-      _at: {x: 2, y: 3}
+      _at: {x: 5, y: 3}
       _size: {x: 2, y: 2}
       _blocksMove: 1
       _blocksShot: 1
@@ -6219,7 +6076,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_003_S06
       _actorId: skeleton
-      _at: {x: 7, y: 5.5}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6227,7 +6084,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_003_S07
       _actorId: actor_enforcer
-      _at: {x: 3, y: 5.5}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6498,7 +6355,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_006_S01
       _actorId: medium
-      _at: {x: 3, y: 3}
+      _at: {x: 3, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -6506,7 +6363,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_006_S02
       _actorId: skeleton
-      _at: {x: 5, y: 6}
+      _at: {x: 5, y: 6.2}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6514,7 +6371,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_006_S03
       _actorId: skeleton
-      _at: {x: 7, y: 3}
+      _at: {x: 7, y: 5.7311287}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6560,20 +6417,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: ROTATING_BLADE_1
-      _kind: ROTATING_BLADE
-      _at: {x: 7, y: 6}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: PILLAR_2
+    - _objectId: PILLAR_1
       _kind: PILLAR
       _at: {x: 3.5, y: 9.5}
       _size: {x: 1, y: 1}
@@ -6586,9 +6430,9 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
+    - _objectId: PILLAR_2
       _kind: PILLAR
-      _at: {x: 4.5, y: 2.5}
+      _at: {x: 2.5, y: 2.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -6777,7 +6621,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_008_S07
       _actorId: skeleton
-      _at: {x: 3.5, y: 2.5}
+      _at: {x: 3.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6785,7 +6629,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_008_S08
       _actorId: actor_enforcer
-      _at: {x: 6.5, y: 2.5}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6806,7 +6650,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CHANNEL_V_2
       _kind: CHANNEL_V
-      _at: {x: 3.5, y: 7}
+      _at: {x: 1.5, y: 9}
       _size: {x: 1, y: 2}
       _blocksMove: 1
       _blocksShot: 0
@@ -6819,7 +6663,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CHANNEL_V_3
       _kind: CHANNEL_V
-      _at: {x: 1.5, y: 9}
+      _at: {x: 8.5, y: 5}
       _size: {x: 1, y: 2}
       _blocksMove: 1
       _blocksShot: 0
@@ -6832,19 +6676,6 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CHANNEL_V_4
       _kind: CHANNEL_V
-      _at: {x: 6.5, y: 5}
-      _size: {x: 1, y: 2}
-      _blocksMove: 1
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CHANNEL_V_5
-      _kind: CHANNEL_V
       _at: {x: 8.5, y: 9}
       _size: {x: 1, y: 2}
       _blocksMove: 1
@@ -6856,18 +6687,18 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: ROTATING_BLADE_6
-      _kind: ROTATING_BLADE
-      _at: {x: 4, y: 5}
+    - _objectId: TIMED_SPIKE_5
+      _kind: TIMED_SPIKE
+      _at: {x: 3, y: 8}
       _size: {x: 2, y: 2}
       _blocksMove: 0
       _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
+      _hazardKind: SPIKE
+      _hazardDamage: 6
+      _hazardTick: 0.8
       _unnamed: 0
   - _roomId: ROOM_CH6_009
     _chapter: 6
@@ -6975,7 +6806,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_009_S06
       _actorId: coilwalker
-      _at: {x: 8, y: 5}
+      _at: {x: 8, y: 5.054102}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6983,7 +6814,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_009_S07
       _actorId: turret_cross
-      _at: {x: 2, y: 5}
+      _at: {x: 2, y: 5.054102}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -6991,7 +6822,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_009_S08
       _actorId: actor_enforcer
-      _at: {x: 6.5, y: 3.5}
+      _at: {x: 6.5, y: 5.9426403}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -7025,20 +6856,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: CHANNEL_V_3
       _kind: CHANNEL_V
-      _at: {x: 5.5, y: 6}
-      _size: {x: 1, y: 2}
-      _blocksMove: 1
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CHANNEL_V_4
-      _kind: CHANNEL_V
-      _at: {x: 3.5, y: 6}
+      _at: {x: 4.5, y: 6}
       _size: {x: 1, y: 2}
       _blocksMove: 1
       _blocksShot: 0
