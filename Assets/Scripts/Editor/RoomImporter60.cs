@@ -494,10 +494,18 @@ namespace Game.EditorTools
                                  .FindPropertyRelative("_at").vector2Value);
 
             // 같은 글자를 받은 방이 **한 픽셀도 다르지 않게** 나오던 것을 여기서 흩는다.
-            // 좌우 뒤집기만으로는 두 배뿐이라, 가로로 미는 폭까지 방 이름으로 고른다.
+            // 좌우 뒤집기만으로는 두 배뿐이라, 미는 폭까지 방 이름으로 고른다.
             int seed = 0;
             for (int i = 0; i < roomId.Length; i++) seed = seed * 31 + roomId[i];
             var shifts = new[] { 0f, 1f, -1f, 2f, -2f, 3f, -3f };
+
+            // ⚠ **세로로도 민다** (2026-09-10 — 「배치를 다양하게」).
+            //   가로로만 밀었더니 같은 글자를 받은 방들이 「같은 줄에 같은 높이로」
+            //   서 있어서, 좌우로 조금 옮겨도 한눈에 같은 방으로 읽혔다.
+            //   위아래로 한두 칸 옮기면 방의 인상이 실제로 달라진다.
+            //   ⚠ 아래로는 덜 민다 — 입구 쪽을 막으면 들어서자마자 갇힌다.
+            var lifts = new[] { 0f, 1f, 2f, -1f, 1.5f, -0.5f };
+            float dy = lifts[Mathf.Abs(seed / 7) % lifts.Length];
 
             // ⚠ **물건마다 따로 앉힌다.** 예전에는 「셋이 전부 맞는 밀기」를 찾았는데,
             //   적이 방마다 예닐곱씩 서므로 그런 밀기가 거의 없어 방이 통째로 비었다.
@@ -507,15 +515,26 @@ namespace Game.EditorTools
             {
                 var o = layout.Objects[i];
                 float baseX = flip ? MirrorX(o.At.x) : o.At.x;
+                float baseY = Mathf.Clamp(o.At.y + dy, 2.5f, RoomHeight - 3.0f);
                 bool placed = false;
                 for (int k = 0; k < shifts.Length; k++)
                 {
                     float dx = shifts[(Mathf.Abs(seed / 2) + i + k) % shifts.Length];
-                    if (!FitsOne(o.Kind, baseX + dx, o.At.y, taken)) continue;
-                    o.At = new Vector2(baseX + dx, o.At.y);
+                    if (!FitsOne(o.Kind, baseX + dx, baseY, taken)) continue;
+                    o.At = new Vector2(baseX + dx, baseY);
                     placed = true;
                     break;
                 }
+                // 올린 자리가 안 되면 원래 높이로 한 번 더 본다 — 빼는 것보다 낫다.
+                if (!placed)
+                    for (int k = 0; k < shifts.Length; k++)
+                    {
+                        float dx = shifts[(Mathf.Abs(seed / 2) + i + k) % shifts.Length];
+                        if (!FitsOne(o.Kind, baseX + dx, o.At.y, taken)) continue;
+                        o.At = new Vector2(baseX + dx, o.At.y);
+                        placed = true;
+                        break;
+                    }
                 if (!placed) continue;
 
                 // 앉힌 것도 자리를 차지한다 — 다음 물건이 그 위에 겹치지 않게.
