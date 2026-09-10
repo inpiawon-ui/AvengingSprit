@@ -22,6 +22,9 @@ namespace Game.EditorTools
     /// **버전은 구울 때마다 끝자리가 올라간다**(`BumpVersion`). 파일명이 버전을 따르므로
     /// 지난 빌드가 지워지지 않는다 — 폰에 든 것이 어느 빌드인지 알 수 있고,
     /// 문제가 생기면 직전 것으로 되돌려 볼 수 있다.
+    ///
+    /// 다만 **심볼 폴더는 최신 하나만 남긴다**(`SweepOldSymbolFolders`). 한 번에 836 MB 라
+    /// 몇 번만 구워도 몇 GB 가 된다. APK 는 그대로 쌓인다.
     /// </summary>
     public static class BuildApk
     {
@@ -115,6 +118,56 @@ namespace Game.EditorTools
             }
             Debug.Log($"[Build] 완료 — {apk} · {s.totalSize / 1024 / 1024}MB · "
                       + $"{s.totalTime.TotalMinutes:F1}분 · 경고 {s.totalWarnings}건");
+
+            SweepOldSymbolFolders(dir, version);
+        }
+
+        /// <summary>
+        /// 지난 버전의 심볼 폴더를 치운다.
+        ///
+        /// Unity 는 IL2CPP 빌드마다 `<이름>_BackUpThisFolder_ButDontShipItWithYourGame`
+        /// 를 새로 만든다. **한 번에 836 MB** 이고 자동으로 안 지워져서, 몇 번만 구우면
+        /// 몇 GB 가 쌓인다(실제로 일곱 개 5.8 GB 가 쌓였다).
+        ///
+        /// 크래시 로그를 사람이 읽을 수 있게 풀어 주는 심볼이라 **가장 최근 것 하나는
+        /// 남긴다** — 방금 만든 APK 에서 크래시가 나면 그게 필요하다.
+        ///
+        /// ⚠ **APK 는 건드리지 않는다.** 버전을 남겨 두는 것이 이 스크립트의 목적이다.
+        /// ⚠ 이름이 정확히 맞는 폴더만 지운다. 사람이 그 자리에 둔 다른 폴더까지
+        ///   쓸어 가면 안 된다.
+        /// </summary>
+        private static void SweepOldSymbolFolders(string dir, string keepVersion)
+        {
+            const string Suffix = "_BackUpThisFolder_ButDontShipItWithYourGame";
+            string keep = $"AVSR_{keepVersion}{Suffix}";
+
+            long freed = 0;
+            int n = 0;
+            foreach (var path in Directory.GetDirectories(dir))
+            {
+                var name = Path.GetFileName(path);
+                if (!name.EndsWith(Suffix, System.StringComparison.Ordinal)) continue;
+                if (name == keep) continue;
+
+                long size = 0;
+                try
+                {
+                    foreach (var f in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+                        size += new FileInfo(f).Length;
+                    Directory.Delete(path, true);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[Build] 심볼 폴더를 못 지웠다 — {name} · {e.Message}");
+                    continue;
+                }
+                freed += size;
+                n++;
+            }
+
+            if (n > 0)
+                Debug.Log($"[Build] 지난 심볼 폴더 {n}개 정리 — {freed / 1024 / 1024}MB 확보 "
+                          + $"(최신 {keep} 은 남긴다)");
         }
 
         /// <summary>
