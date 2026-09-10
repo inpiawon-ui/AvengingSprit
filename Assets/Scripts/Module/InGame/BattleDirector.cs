@@ -2432,6 +2432,7 @@ namespace Game.Module.InGame
             ClearGoldPiles();   // 못 걷고 나간 골드가 다음 방 바닥에 남지 않게
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
+            ClearAlly();          // 동료도 마찬가지 — 산 방에서만 같이 싸운다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
             _barrier = 0;
             _barrierUsedThisRoom = false;   // 위기 방벽은 방마다 한 번 (C018)
@@ -2848,6 +2849,7 @@ namespace Game.Module.InGame
 
 
             TickPlayer(dt);
+            TickAlly(dt);          // 상점에서 산 동료
             TickAfterimages(dt);
             TickEnemies(dt);
             TickShots(dt);
@@ -3360,10 +3362,6 @@ namespace Game.Module.InGame
             TickBait(dt);
             var me = Avatar;
             if (me == null) return;
-            // 미끼가 서 있는 동안은 **그쪽으로 걷는다.** 공격까지 돌리지는 않는다 —
-            // 적의 공격은 언제나 플레이어에게 가도록 짜여 있어(`fromPlayer: false`)
-            // 편만 바꾸면 시늉만 하고 피해는 나에게 온다.
-            if (BaitActive) me = _baitUnit;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
@@ -3801,13 +3799,26 @@ namespace Game.Module.InGame
              : e.HasCanon                ? e.CanonMoveSpeed * _pxPerMeter
              : _config.HostSpeed(e.Spd);
 
+        /// <summary>
+        /// 원거리 몸의 사거리 배율 (2026-09-10 — 「원거리 사거리 2배로, 근접은 제외」).
+        ///
+        /// ⚠ **근접에는 안 곱한다.** 근접의 사거리는 「붙어야 때린다」는 규칙 자체라
+        ///   늘리면 붙지 않고 때리게 되어 근접과 원거리의 구분이 사라진다.
+        /// </summary>
+        private const float RangedHostRangeMul = 2f;
+
         // 호스트 프로필이 없으면 그 배우가 적일 때 쓰던 값을 그대로 쓴다.
         // 예전 공식(전역 900 × 배율)으로 돌아가면 정본 배우들과 격이 어긋난다.
         private float HostRangeOf(HostEntry e)
-            => e == null ? _config.HostAttackRange
-             : e.HasCanonHost ? e.CanonHostRange * _pxPerMeter
-             : e.HasCanon     ? e.CanonRange * _pxPerMeter
-             : _config.HostAttackRange * e.RangeMul;
+        {
+            float r = e == null ? _config.HostAttackRange
+                    : e.HasCanonHost ? e.CanonHostRange * _pxPerMeter
+                    : e.HasCanon     ? e.CanonRange * _pxPerMeter
+                    : _config.HostAttackRange * e.RangeMul;
+
+            bool melee = e != null && (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse);
+            return melee ? r : r * RangedHostRangeMul;
+        }
 
         /// <summary>
         /// 탄속. 정본은 배우마다 다르게 준다 — 닌자 탄이 12.5m/s, 잡몹이 8.5m/s 다.
@@ -6448,6 +6459,10 @@ namespace Game.Module.InGame
             //   ⚠ 방벽(`AbsorbWithBarrier`)보다 **먼저** 빠져나간다. 뒤에 두면
             //     맞지도 않는 피해에 방벽이 닳아 없어진다.
             if (_host == null) return;
+
+            // 동료가 앞에 서 있으면 **동료가 대신 받는다** (`BattleDirector.Ally.cs`).
+            // 무적·방벽보다 먼저 본다 — 뒤에 두면 동료를 사 놓고도 내 방벽이 먼저 닳는다.
+            if (SoakWithAlly(amount)) return;
 
             // 찰나의 불사 — 맞는 그 순간 2초를 산다. 방벽보다 **먼저** 본다:
             // 뒤에 두면 막아 낼 피해에 방벽이 먼저 닳는다.

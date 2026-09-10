@@ -88,7 +88,17 @@ namespace Game.Module.InGame
         // 1.05 m · 210°/s 로 좁히고 올린다 — 한 바퀴 1.7 초.
         private const float ShieldOrbitRadiusMeters = 1.05f;
         private const float ShieldOrbitDegPerSecond = 210f;
-        private const float ShieldRespawnSeconds = 8f;
+        /// <summary>
+        /// 다 깨지고 나서 **한꺼번에** 돌아오기까지의 시간.
+        ///
+        /// 예전에는 하나씩 따로 8초를 셌다. 그러면 늘 한두 개만 도는 상태가 이어져
+        /// 「방패가 몇 개인지」가 화면에서 안 읽힌다. 셋이 다 깨져야 셋이 함께 온다 —
+        /// 있을 때는 온전하고 없을 때는 아예 없는 편이 판단하기 쉽다.
+        /// </summary>
+        private const float ShieldRespawnSeconds = 6f;
+
+        /// <summary>다 깨진 뒤 함께 돌아오기까지 남은 시간. 0 이면 서 있다.</summary>
+        private float _shieldWaveLeft;
         private const float ShieldHitRadius = 46f;
         private const float ShieldDamageMul = 0.8f;
 
@@ -101,10 +111,25 @@ namespace Game.Module.InGame
             int want = _buffs.OrbitShields;
             if (want <= 0) { ClearOrbitShields(); return; }
 
-            var me = Avatar;
-            if (me == null) { ClearOrbitShields(); return; }
+            // ⚠ **유령에게는 안 붙는다.** 몸이 없을 때 방패가 돌면 화면에서는
+            //   「죽었는데 방어막이 남아 있다」로 보인다. 방패는 몸에 딸린 것이다.
+            var me = _host;
+            if (me == null || !me.IsAlive) { HideOrbitShields(); return; }
 
             EnsureShieldViews(want);
+
+            // 다 깨져 있는 동안은 시계만 돈다. 다 차면 셋이 함께 선다.
+            if (_shieldWaveLeft > 0f)
+            {
+                _shieldWaveLeft -= dt;
+                if (_shieldWaveLeft > 0f)
+                {
+                    for (int i = 0; i < _shieldViews.Count; i++)
+                        if (_shieldViews[i] != null) _shieldViews[i].gameObject.SetActive(false);
+                    return;
+                }
+                for (int i = 0; i < _shieldDownLeft.Count; i++) _shieldDownLeft[i] = 0f;
+            }
             _shieldAngle = Mathf.Repeat(_shieldAngle + ShieldOrbitDegPerSecond * dt, 360f);
 
             float r = ShieldOrbitRadiusMeters * _pxPerMeter;
@@ -115,12 +140,9 @@ namespace Game.Module.InGame
                 var view = _shieldViews[i];
                 if (view == null) continue;
 
-                if (_shieldDownLeft[i] > 0f)
-                {
-                    _shieldDownLeft[i] -= dt;
-                    if (_shieldDownLeft[i] > 0f) { view.gameObject.SetActive(false); continue; }
-                    view.gameObject.SetActive(true);
-                }
+                // 깨진 것은 그대로 누워 있는다. 되살아나는 것은 **셋이 다 깨졌을 때**뿐이다.
+                if (_shieldDownLeft[i] > 0f) { view.gameObject.SetActive(false); continue; }
+                view.gameObject.SetActive(true);
 
                 float deg = _shieldAngle + 360f * i / want;
                 var at = me.Position + Rotate(Vector2.up, deg) * r;
@@ -135,11 +157,27 @@ namespace Game.Module.InGame
 
                     HitEnemyWith(e, dmg, null);
                     SpawnImpact(at, "pulse");
-                    _shieldDownLeft[i] = ShieldRespawnSeconds;
+                    _shieldDownLeft[i] = 1f;   // 「깨졌다」 표시. 시계는 아래에서 한꺼번에 센다
                     view.gameObject.SetActive(false);
                     break;
                 }
             }
+
+            // 다 깨졌으면 그때부터 함께 돌아올 시계를 켠다.
+            if (_shieldWaveLeft <= 0f)
+            {
+                bool allDown = true;
+                for (int i = 0; i < want && allDown; i++)
+                    if (_shieldDownLeft[i] <= 0f) allDown = false;
+                if (allDown) _shieldWaveLeft = ShieldRespawnSeconds;
+            }
+        }
+
+        /// <summary>그림만 감춘다 — 몸을 되찾으면 그대로 다시 선다.</summary>
+        private void HideOrbitShields()
+        {
+            for (int i = 0; i < _shieldViews.Count; i++)
+                if (_shieldViews[i] != null) _shieldViews[i].gameObject.SetActive(false);
         }
 
         private void EnsureShieldViews(int want)
@@ -298,6 +336,7 @@ namespace Game.Module.InGame
             ClearBolts();
             _guardCooldownLeft = 0f;
             _shieldAngle = 0f;
+            _shieldWaveLeft = 0f;
         }
 
         private void TickCards(float dt)

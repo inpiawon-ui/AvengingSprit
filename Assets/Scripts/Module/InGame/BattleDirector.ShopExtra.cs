@@ -66,7 +66,7 @@ namespace Game.Module.InGame
         // ── 소모품 ───────────────────────────────────────────────
 
         /// <summary>산 소모품. 다음 전투방이 열릴 때 하나가 터진다.</summary>
-        public enum Consumable { None, Bomb, Freeze, Bait }
+        public enum Consumable { None, Bomb, Freeze, Ally }
 
         // ⚠ 폭탄은 **방을 비우는 물건이 아니다.**
         //   처음에 60 · 반경 4.5 m 로 뒀더니 CH1 방이 통째로 지워졌다(잡몹 HP 9~31).
@@ -75,19 +75,16 @@ namespace Game.Module.InGame
         private const int BombDamage = 18;          // CH1 기준. 아래에서 챕터 성장이 곱해진다
         private const float BombRadiusMeters = 3.5f;
         private const float ConsumableFreezeSeconds = 5f;
-        private const float BaitSeconds = 5f;
 
         private Consumable _pendingConsumable;
         private Consumable _shopConsumable;         // 이번 상점이 진열한 것
 
-        private Unit _baitUnit;
-        private float _baitLeft;
 
         private static string ConsumableNameOf(Consumable c) => c switch
         {
             Consumable.Bomb   => "폭탄",
             Consumable.Freeze => "정지",
-            Consumable.Bait   => "미끼",
+            Consumable.Ally   => "동료",
             _                 => string.Empty,
         };
 
@@ -95,7 +92,7 @@ namespace Game.Module.InGame
         {
             Consumable.Bomb   => "다음 방이 열리면 광역 한 방",
             Consumable.Freeze => $"다음 방에서 적이 {ConsumableFreezeSeconds:0}초 멈춘다",
-            Consumable.Bait   => $"다음 방에서 적이 {BaitSeconds:0}초 동안 나 대신 미끼를 쫓는다",
+            Consumable.Ally   => "다음 방에서 몸 하나가 같이 싸운다",
             _                 => string.Empty,
         };
 
@@ -103,7 +100,7 @@ namespace Game.Module.InGame
         {
             Consumable.Bomb   => "buffcard_c013",   // 폭발 메아리
             Consumable.Freeze => "buffcard_c025",   // 냉기 각인
-            _                 => "buffcard_c030",   // 유령 포대
+            _                 => "buffcard_c030",   // 동료 — 유령 포대 그림을 빌린다
         };
 
         /// <summary>공용 카드의 1/3. 최소 10 골드는 받는다.</summary>
@@ -180,44 +177,14 @@ namespace Game.Module.InGame
                     break;
 
                 default:
-                {
-                    // 미끼 — 적 하나를 굳혀 세워 두고, 나머지가 그것을 쫓게 한다.
-                    // ⚠ 「내 편이 되어 같이 싸운다」로는 안 만들었다. 적의 공격은
-                    //   `PerformAttack(..., fromPlayer: false)` 로 **플레이어에게** 가도록
-                    //   짜여 있어, 편만 바꾸면 자기 편을 때리는 시늉만 하고 피해는
-                    //   나에게 온다. 끌어당기는 것까지가 지금 구조로 정직하게 되는 선이다.
-                    Unit pick = null;
-                    for (int i = 0; i < _enemies.Count; i++)
-                    {
-                        var e = _enemies[i];
-                        if (e == null || !e.IsAlive || e.IsDying || e.IsBoss) continue;
-                        pick = e; break;
-                    }
-                    if (pick == null) break;
-                    _baitUnit = pick;
-                    _baitLeft = BaitSeconds;
-                    pick.ApplyStun(BaitSeconds);
-                    PlayFx("mark", pick.Position, 128f, loop: true);
+                    // 동료 — 같이 싸우는 몸 하나를 세운다 (`BattleDirector.Ally.cs`).
+                    SpawnAlly();
                     break;
-                }
             }
         }
 
-        /// <summary>미끼가 서 있는 동안 적은 그쪽으로 걷는다. 다 되면 저절로 풀린다.</summary>
-        private void TickBait(float dt)
-        {
-            TickConsumable(dt);
-
-            if (_baitLeft <= 0f) return;
-            _baitLeft -= dt;
-            if (_baitUnit == null || !_baitUnit.IsAlive || _baitLeft <= 0f)
-            {
-                _baitLeft = 0f;
-                _baitUnit = null;
-            }
-        }
-
-        private bool BaitActive => _baitLeft > 0f && _baitUnit != null && _baitUnit.IsAlive;
+        /// <summary>산 소모품이 터질 때가 됐는지 본다. 예전 「미끼」 자리다.</summary>
+        private void TickBait(float dt) => TickConsumable(dt);
 
         // ── 판이 시작하면 전부 지운다 ────────────────────────────
         private void ClearShopExtras()
@@ -226,8 +193,6 @@ namespace Game.Module.InGame
             _hostOffers.Clear();
             _pendingConsumable = Consumable.None;
             _shopConsumable = Consumable.None;
-            _baitUnit = null;
-            _baitLeft = 0f;
         }
     }
 }
