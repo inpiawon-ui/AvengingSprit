@@ -27,9 +27,31 @@ namespace Game.EditorTools
     {
         private const string OutDir = "Build/Android";
 
+        /// <summary>
+        /// 직전 빌드가 끝난 시각(EditorPrefs). 연달아 부르는 것을 막는 데 쓴다.
+        ///
+        /// ⚠ 자동화(MCP)로 메뉴를 부르면 **응답이 늦어 타임아웃 → 재시도**가 일어난다.
+        ///   빌드는 몇 분씩 걸리므로 이 재시도가 그대로 두 번째·세 번째 빌드가 되어,
+        ///   같은 내용의 APK 가 버전만 올라간 채 여러 개 쌓였다(0.1.1·0.1.2·0.1.3).
+        /// </summary>
+        private const string LastBuildKey = "AVSR.LastApkBuildTicks";
+        private const int CooldownSeconds = 90;
+
         [MenuItem("Tools/Game/Build APK (테스트)")]
         public static void Run()
         {
+            var last = new System.DateTime(
+                System.Convert.ToInt64(EditorPrefs.GetString(LastBuildKey, "0")));
+            var since = (System.DateTime.UtcNow - last).TotalSeconds;
+            if (since < CooldownSeconds)
+            {
+                Debug.LogWarning($"[Build] {since:F0}초 전에 이미 구웠다 — 건너뛴다. "
+                                 + $"{CooldownSeconds}초 뒤에 다시 부르면 굽는다. "
+                                 + "(자동화 재시도로 같은 빌드가 여러 개 쌓이는 것을 막는다)");
+                return;
+            }
+            EditorPrefs.SetString(LastBuildKey, System.DateTime.UtcNow.Ticks.ToString());
+
             if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
             {
                 Debug.LogError("[Build] Android Build Support 가 없다. "
