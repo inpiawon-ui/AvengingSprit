@@ -18,6 +18,10 @@ namespace Game.EditorTools
     ///
     /// 서명은 안 건드린다. 키스토어를 지정하지 않으면 Unity 가 디버그 키로 서명한다 —
     /// 폰에 설치해 확인하는 데는 충분하고, 스토어 업로드용 키는 별도 절차다.
+    ///
+    /// **버전은 구울 때마다 끝자리가 올라간다**(`BumpVersion`). 파일명이 버전을 따르므로
+    /// 지난 빌드가 지워지지 않는다 — 폰에 든 것이 어느 빌드인지 알 수 있고,
+    /// 문제가 생기면 직전 것으로 되돌려 볼 수 있다.
     /// </summary>
     public static class BuildApk
     {
@@ -64,7 +68,13 @@ namespace Game.EditorTools
             var root = Directory.GetParent(Application.dataPath)!.FullName;
             var dir = Path.Combine(root, OutDir);
             Directory.CreateDirectory(dir);
-            var apk = Path.Combine(dir, $"AVSR_{PlayerSettings.bundleVersion}.apk");
+
+            // ⚠ **버전을 올리고 굽는다. 덮어쓰지 않는다.**
+            //   예전에는 `AVSR_0.1.0.apk` 한 이름으로만 나와서, 새로 구울 때마다
+            //   지난 것이 사라졌다 — 「이 폰에 있는 게 어느 빌드인지」를 알 수가 없고
+            //   문제가 생겨도 직전 것으로 되돌려 볼 수가 없었다.
+            string version = BumpVersion();
+            var apk = Path.Combine(dir, $"AVSR_{version}.apk");
 
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
@@ -83,6 +93,38 @@ namespace Game.EditorTools
             }
             Debug.Log($"[Build] 완료 — {apk} · {s.totalSize / 1024 / 1024}MB · "
                       + $"{s.totalTime.TotalMinutes:F1}분 · 경고 {s.totalWarnings}건");
+        }
+
+        /// <summary>
+        /// 끝자리를 하나 올리고 저장한다. `0.1.0` → `0.1.1` → `0.1.2` …
+        ///
+        /// `bundleVersionCode` 도 함께 올린다 — 안드로이드는 이 숫자로 새 버전인지를
+        /// 판단한다. 안 올리면 폰이 「같은 버전」으로 보고 덮어 설치를 거절한다.
+        ///
+        /// 자리 수가 셋이 아니거나 숫자가 아니면(예: `0.2-beta`) 손대지 않고 그대로 쓴다 —
+        /// 사람이 일부러 적어 둔 이름을 코드가 마음대로 바꾸지 않는다.
+        /// </summary>
+        private static string BumpVersion()
+        {
+            var cur = PlayerSettings.bundleVersion ?? string.Empty;
+            var parts = cur.Split('.');
+            if (parts.Length == 3
+                && int.TryParse(parts[0], out int major)
+                && int.TryParse(parts[1], out int minor)
+                && int.TryParse(parts[2], out int patch))
+            {
+                var next = $"{major}.{minor}.{patch + 1}";
+                PlayerSettings.bundleVersion = next;
+                PlayerSettings.Android.bundleVersionCode += 1;
+                AssetDatabase.SaveAssets();
+                Debug.Log($"[Build] 버전 {cur} → {next} "
+                          + $"(versionCode {PlayerSettings.Android.bundleVersionCode})");
+                return next;
+            }
+
+            Debug.LogWarning($"[Build] 버전 '{cur}' 은 x.y.z 꼴이 아니라 그대로 쓴다 — "
+                             + "덮어쓸 수 있으니 직접 확인한다.");
+            return cur;
         }
     }
 }
