@@ -151,6 +151,12 @@ namespace Game.Editor
             }
 
             AssetDatabase.SaveAssets();
+
+            // ⚠ 이 적용기는 모든 노드를 top-left 앵커로 정규화한다. 넓은 화면(태블릿)에서
+            //   UI 가 가운데 720 칸에만 몰리지 않게 잡아 둔 앵커도 같이 지워진다.
+            //   그래서 여기서 다시 잡는다 — 손으로 프리팹을 고쳐 두면 조용히 날아간다.
+            UIWideAnchors.Run();
+
             AssetDatabase.Refresh();
         }
 
