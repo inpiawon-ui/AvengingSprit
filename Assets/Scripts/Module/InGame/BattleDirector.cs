@@ -1738,8 +1738,11 @@ namespace Game.Module.InGame
         /// </summary>
         private void ApplyScroll()
         {
-            // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다
-            var at = new Vector2(Mathf.Round(_scroll.x), Mathf.Round(_scroll.y));
+            // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다.
+            // 화면 흔들림(`_shakeOffset`)은 여기에 얹는다 — 모든 레이어가 한 값을 쓰므로
+            // 여기 한 곳만 더하면 바닥·유닛·탄·글자가 통째로 같이 흔들린다.
+            var at = new Vector2(Mathf.Round(_scroll.x + _shakeOffset.x),
+                                 Mathf.Round(_scroll.y + _shakeOffset.y));
             _unitLayer.anchoredPosition = at;
             if (_shotLayer != null) _shotLayer.anchoredPosition = at;
             if (_textLayer != null) _textLayer.anchoredPosition = at;
@@ -2492,6 +2495,8 @@ namespace Game.Module.InGame
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
             ClearAlly();          // 동료도 마찬가지 — 산 방에서만 같이 싸운다
+            ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
+            ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
             _barrier = 0;
             _barrierUsedThisRoom = false;   // 위기 방벽은 방마다 한 번 (C018)
@@ -2720,6 +2725,13 @@ namespace Game.Module.InGame
                 avatar.Position = ToPixels(_canonRoom.PlayerSpawn);
                 ClearOfCover(avatar);   // 입구 자리도 엄폐물과 겹칠 수 있다
             }
+            // ⚠ **방에 들어선 직후 잠깐은 안 맞는다** (2026-09-10).
+            //   입구에서 적을 4.5 m 밀어냈지만, 원거리 적은 그보다 멀리서도 쏜다.
+            //   화면이 새 방으로 바뀌는 순간에 이미 날아오던 탄이 닿으면
+            //   「들어서자마자 맞았다」가 된다 — 무엇이 있었는지 보기도 전이다.
+            //   한 호흡만 준다. 길게 주면 그냥 걸어 들어가 때리는 방이 된다.
+            _invuln = Mathf.Max(_invuln, RoomEntryInvulnSeconds);
+
             SnapCamera();
 
             int ch = _canonRoom != null ? Mathf.Clamp(_canonRoom.Chapter, 1, ChapterCount) : _runChapter;
@@ -2906,6 +2918,9 @@ namespace Game.Module.InGame
             TickGhostState(dt);
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
+
+            TickShake(dt);
+            TickHitStop();
 
             TickPlayer(dt);
             TickAlly(dt);          // 상점에서 산 동료
@@ -3688,6 +3703,14 @@ namespace Game.Module.InGame
 
         /// <summary>화상 피해가 들어갈 때 피우는 불 크기(px).</summary>
         private const float BurnFxSize = 72f;
+
+        /// <summary>방에 들어선 직후 안 맞는 시간. 한 호흡만 준다.</summary>
+        private const float RoomEntryInvulnSeconds = 1.0f;
+
+        /// <summary>타격·피격 표시 크기(px). 예전 표시가 작아 때린 줄도 몰랐다.</summary>
+        private const float HitFxSize = 96f;
+        private const float HurtFxSize = 112f;
+        private const float CritFxSize = 150f;
 
         /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
         private const int ShotsBeforeMove = 2;
@@ -5834,6 +5857,8 @@ namespace Game.Module.InGame
             // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
             NoteBossDamage(victim, damage);
             ShowDamage(victim.Position, damage, toEnemy: true);
+            SpawnFx("hit", victim.Position, HitFxSize);
+            Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
             // 터졌는지 아닌지가 읽혀야지, 25% 냐 45% 냐는 화면에서 구별되지 않는다.
@@ -6015,11 +6040,13 @@ namespace Game.Module.InGame
             //   `ShotFrames(null)` 로 떨어져 기본 탄 한 장(`shot_1`)이 나간다.
             //   정본에서 유일한 유도탄(CanonHoming 0.25)인데 화면에서는 점이었다.
             { "commando_missile", "missile" },
-            { "salamander", "flame" }, { "dragoon", "flame" },
-            { "dragon_blue", "frost" }, { "snowwoman", "frost" },
-            { "ninja", "shuriken" }, { "ninja_chain", "shuriken" },
-            { "white_wizard", "magic" }, { "medium", "magic" },
-            { "guru", "pulse" }, { "robot", "pulse" },
+            // ⚠ 네 쌍이 둘씩 같은 그림을 쓰고 있었다 — 누가 쏜 것인지 구별이 안 됐다.
+            //   원작에서도 비슷하면 우리 쪽에서 색과 모양을 갈라 놓는다.
+            { "salamander", "flame" }, { "dragoon", "dragoon" },      // 불줄기 / 불덩이
+            { "dragon_blue", "frost" }, { "snowwoman", "frost" },     // 둘 다 냉기 — 그대로 둔다
+            { "ninja", "shuriken" }, { "ninja_chain", "chain" },      // 수리검 / 사슬낫
+            { "white_wizard", "magic" }, { "medium", "medium" },      // 별 마법 / 도깨비불
+            { "guru", "pulse" }, { "robot", "robot" },                // 둥근 파동 / 각진 전자탄
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
             { "baseball", "ball" },     // 야구공 — 붉은 실밥
@@ -6491,6 +6518,13 @@ namespace Game.Module.InGame
             if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CritMultiplier));
 
             ShowDamage(victim.Position, dmg, toEnemy: true, crit);
+            if (shot.FromPlayer)
+            {
+                SpawnFx(crit ? "crit" : "hit", victim.Position,
+                        crit ? CritFxSize : HitFxSize);
+                Shake(crit ? ShakeOnCrit : victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
+                if (crit) HitStop(HitStopOnCrit);
+            }
             bool dead = victim.TakeDamage(dmg);
             if (shot.SlowPercent > 0 && Roll(SlowChance))
                 ApplySlowProc(victim);
@@ -6544,7 +6578,10 @@ namespace Game.Module.InGame
             amount = AbsorbWithBarrier(amount);
             if (amount <= 0) return;
 
-            ShowDamage(Avatar != null ? Avatar.Position : Vector2.zero, amount, toEnemy: false);
+            var hurtAt = Avatar != null ? Avatar.Position : Vector2.zero;
+            ShowDamage(hurtAt, amount, toEnemy: false);
+            SpawnFx("hurt", hurtAt, HurtFxSize);
+            Shake(ShakeOnPlayerHurt);
             if (_host.TakeDamage(amount)) LoseHost();
             else PublishHp();
         }
@@ -6690,6 +6727,10 @@ namespace Game.Module.InGame
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
             Retire(u);
+
+            // 잡은 순간을 몸으로 알린다. 보스는 크게 — 한 판의 매듭이다.
+            Shake(u.IsBoss ? ShakeMaxPixels : ShakeOnKill);
+            if (u.IsBoss) HitStop(HitStopOnBossKill);
 
             GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
             // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다.
@@ -8516,6 +8557,10 @@ namespace Game.Module.InGame
 
             _buffs.Apply(e);
 
+            // ⚠ **실제로 붙은 뒤에** 보여 준다. 위 검사보다 앞에 두면 아무 일도 안 난
+            //   호출(빈 키·중복 클릭)에도 번쩍여서 「먹었나?」가 헷갈린다.
+            PlayUpgradeFx();
+
             // 즉발 효과 — 누적 배율이 아니라 그 자리에서 끝나는 것들
             if (e.Kind == BuffKind.GhostHp)
             {
@@ -8560,6 +8605,53 @@ namespace Game.Module.InGame
         }
 
         /// <summary>문을 연다. 방을 비웠거나 방의 볼일이 끝났을 때 부른다.</summary>
+        // ── 출구 안내 화살표 ─────────────────────────────────────
+        //
+        // 방을 비우면 문이 열리는데 **어디로 가야 하는지 화면에 표시가 없었다.**
+        // 위쪽 안내 문구는 글자라 전투 직후에는 눈에 안 들어온다.
+        // 문 위에 화살표를 띄워 둔다 — 문을 지나면 저절로 사라진다(방이 바뀐다).
+
+        private readonly List<Impact> _exitArrows = new();
+
+        /// <summary>
+        /// 화살표가 문에서 **방 안쪽으로** 이만큼(px) 떨어져 뜬다.
+        ///
+        /// ⚠ 92 px 로는 모자랐다. 방 위쪽은 화면에 다 안 들어와서, 화살표 몸통이
+        ///   상단 HUD 와 안내 문구 뒤로 숨고 **바닥 광채만** 보였다.
+        ///   문에서 한 칸 더 내려와야 화살표가 통째로 읽힌다.
+        /// </summary>
+        private const float ExitArrowLift = 180f;
+        private const float ExitArrowSize = 96f;
+
+        private void ShowExitArrows()
+        {
+            ClearExitArrows();
+            // ⚠ **문 바깥으로 밀면 안 된다.** 문은 방 가장자리에 붙어 있어서,
+            //   바깥으로 92 px 밀면 화살표가 방 밖으로 나가 상단 HUD 뒤에 숨는다 —
+            //   실제로 그렇게 짰다가 화면에 아무것도 안 떴다.
+            //   방 가운데를 향해(안쪽으로) 밀어야 문 앞에 선다. 문이 어느 벽에 붙어
+            //   있든(위·아래·좌·우) 같은 규칙 하나로 맞는다.
+            var center = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.5f);
+            for (int i = 0; i < _exits.Count; i++)
+            {
+                var view = _exits[i].View;
+                if (view == null) continue;
+                var inward = center - view.anchoredPosition;
+                var at = view.anchoredPosition
+                       + (inward.sqrMagnitude > 0.01f ? inward.normalized * ExitArrowLift : Vector2.zero);
+                // ⚠ 돌아가는 표시(`loop: true`)로 띄운다. 한 번 재생하고 끝나면
+                //   전투 중에 문이 열린 뒤 화살표가 사라져 다시 길을 잃는다.
+                var im = TakeLoopFx("exitarrow", at, ExitArrowSize);
+                if (im != null) _exitArrows.Add(im);
+            }
+        }
+
+        private void ClearExitArrows()
+        {
+            for (int i = 0; i < _exitArrows.Count; i++) _exitArrows[i]?.Stop();
+            _exitArrows.Clear();
+        }
+
         private void SpawnExit()
         {
             if (_exitOpen) return;              // 이미 열린 문을 다시 열지 않는다
@@ -8569,6 +8661,7 @@ namespace Game.Module.InGame
             // (닫힌 그림이 아직 없는 동안의 예전 동작 그대로).
             if (_exits.Count == 0) BuildExitGates();
             _exitOpenTime = _exitClosed != null ? 0f : -1f;
+            ShowExitArrows();
             ApplyExitSprite();
 
             if (_exits.Count > 0) _bus.Publish(new ExitOpenedEvent { StageIndex = _roomIndex });
@@ -8789,6 +8882,9 @@ namespace Game.Module.InGame
 
         private void PublishHp()
         {
+            // 고스트 머리 위 바를 실제 남은 값에 맞춘다. 안 맞추면 늘 가득 찬 채로 떠 있다.
+            if (_ghost != null) _ghost.SyncHp(_ghostHp);
+
             _bus.Publish(new CombatHpChangedEvent
             {
                 GhostHp = _ghostHp,

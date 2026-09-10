@@ -136,6 +136,7 @@ namespace Game.Module.InGame
             if (!_shrineOpen || index < 0 || index >= _shrineOffer.Count) return;
             _shrineOpen = false;
             string line = ApplyShrine(_shrineOffer[index]);
+            PlayUpgradeFx();   // 제단도 능력이 오르는 자리다 (`BattleDirector.Juice.cs`)
             _shrineOffer.Clear();
             _bus.Publish(new ShrineResolvedEvent { ResultLine = line });
             SpawnExit();
