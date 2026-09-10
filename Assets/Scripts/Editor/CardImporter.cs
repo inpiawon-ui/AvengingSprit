@@ -73,8 +73,11 @@ namespace Game.EditorTools
                 "PROJECTILE", new[] { 1, 2, 3, 4, 5 },
                 "쏠 때마다 탄이 더 나간다."),
 
+            // ⚠ 8~28% 였다. 「공격에 화상을 붙인다」고 적어 놓고 스무 대에 한두 번만
+            //   붙으니 카드를 먹은 줄도 몰랐다(2026-09-10 「화상 효과가 안 나온다」).
+            //   레벨 1 에서도 세 대에 한 번은 붙어야 「붙는 카드」로 읽힌다.
             new("c009", "화염 각인", BuffKind.FlameImprint, CardRarity.Rare,
-                "UTILITY", new[] { 8, 13, 18, 23, 28 },
+                "UTILITY", new[] { 30, 40, 50, 60, 70 },
                 "공격에 화상을 붙인다."),
 
             new("c010", "궁지", BuffKind.LowHpPower, CardRarity.Rare,

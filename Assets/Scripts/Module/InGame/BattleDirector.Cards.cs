@@ -184,18 +184,39 @@ namespace Game.Module.InGame
         // 튄 두 점을 **줄기로 잇는다.** 지그재그 세 마디로 꺾어 번개로 읽히게 하고
         // 짧게 번쩍였다 사라진다. 그림 파일 없이 흰 사각형을 돌려 늘여 쓴다.
 
-        private const float BoltSeconds = 0.16f;
-        private const float BoltThickness = 7f;
+        // 2026-09-10 — 흰 사각형을 늘여 쓰던 것을 **그림으로** 바꿨다.
+        // 「전기 느낌이 아니고 그냥 줄만 나가는 느낌」이라 `fx_bolt_1~4` 를 받았다.
+        // 넉 장을 조각마다 다르게 골라 쓰면 한 번 칠 때마다 다른 줄기가 된다.
+        private const float BoltSeconds = 0.22f;
+        private const float BoltThickness = 30f;   // 그림 세로 64 를 화면에 이만큼으로
         private const int BoltSegments = 3;
         private const float BoltJitter = 14f;
-        private static readonly Color BoltColor = new(0.75f, 0.92f, 1f, 1f);
+        private const int BoltFrameCount = 4;
+        private static readonly Color BoltColor = Color.white;
+
+        private Sprite[] _boltSprites;
+
+        /// <summary>번개 그림 넉 장. 한 번만 찾아 둔다 — 매번 찾으면 Sprite 가 쌓인다.</summary>
+        private Sprite BoltSprite(int i)
+        {
+            if (_boltSprites == null)
+            {
+                _boltSprites = new Sprite[BoltFrameCount];
+                for (int k = 0; k < BoltFrameCount; k++)
+                    _boltSprites[k] = GetSprite($"fx_bolt_{k + 1}");
+            }
+            return _boltSprites[Mathf.Abs(i) % BoltFrameCount];
+        }
 
         private readonly List<RectTransform> _bolts = new();
         private readonly List<float> _boltLeft = new();
 
         /// <summary>두 점을 번개로 잇는다. 지그재그라 마디마다 한 조각씩 쓴다.</summary>
+        private int _boltFrameSeed;
+
         private void DrawBolt(Vector2 from, Vector2 to)
         {
+            _boltFrameSeed++;   // 칠 때마다 다른 장에서 시작한다
             var dir = (to - from);
             if (dir.sqrMagnitude < 1f) return;
             dir = dir.normalized;
@@ -225,10 +246,9 @@ namespace Game.Module.InGame
                 go.transform.SetParent(_unitLayer, false);
                 var made = (RectTransform)go.transform;
                 made.anchorMin = made.anchorMax = new Vector2(0f, 1f);
-                made.pivot = new Vector2(0f, 0.5f);   // 왼쪽 끝을 기준으로 늘인다
+                made.pivot = new Vector2(0f, 0.5f);   // 왼쪽 끝·세로 가운데가 기준 (심이 지나는 줄)
                 var made_img = go.GetComponent<Image>();
                 made_img.raycastTarget = false;
-                made_img.sprite = null;               // 그림 없이도 흰 사각형으로 그려진다
                 at = _bolts.Count;
                 _bolts.Add(made);
                 _boltLeft.Add(0f);
@@ -240,7 +260,10 @@ namespace Game.Module.InGame
             rt.anchoredPosition = a;
             rt.sizeDelta = new Vector2(d.magnitude, BoltThickness);
             rt.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
-            rt.GetComponent<Image>().color = BoltColor;
+            var img = rt.GetComponent<Image>();
+            // 조각마다 다른 장을 쓴다 — 같은 장을 이어 붙이면 무늬가 반복돼 눈에 띈다.
+            img.sprite = BoltSprite(at + _boltFrameSeed);
+            img.color = BoltColor;
             _boltLeft[at] = BoltSeconds;
         }
 

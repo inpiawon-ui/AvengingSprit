@@ -178,7 +178,7 @@ MonoBehaviour:
     _nameKr: "\uD654\uC5FC \uAC01\uC778"
     _description: "\uACF5\uACA9\uC5D0 \uD654\uC0C1\uC744 \uBD99\uC778\uB2E4."
     _kind: 35
-    _value: 8
+    _value: 30
     _stackable: 1
     _colorHex: '#F0F0F0'
     _scope: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
     _cardId: C009
     _rarity: 1
     _category: UTILITY
-    _levelValues: 080000000d00000012000000170000001c000000
+    _levelValues: 1e00000028000000320000003c00000046000000
     _implemented: 1
   - _buffKey: c010
     _nameKr: "\uAD81\uC9C0"
