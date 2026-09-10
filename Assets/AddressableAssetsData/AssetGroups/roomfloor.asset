@@ -51,6 +51,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 373da58f59cfdb64aa8b0c6b43f0b0a3
+    m_Address: roomfloor/roomside_lab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3ea6030dfd7d48e49bfb0edd88dc1ad8
     m_Address: roomfloor/obj_python_wall
     m_ReadOnly: 0
@@ -111,6 +116,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6cc8c3ad4ac615b48b3d80b001803903
+    m_Address: roomfloor/roomside_junkyard
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6cf95a37556d63f4baa082b3209ed9e1
     m_Address: roomfloor/roomfloor_ch3_split_level
     m_ReadOnly: 0
@@ -141,11 +151,21 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7fd66156edb7bc547be6238fe36dda7a
+    m_Address: roomfloor/roomside_missile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 919ecb89747bfaa4ab6886156e45a0dc
     m_Address: roomfloor/roomfloor_ch3_pillar_cross
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91d5ea21e038e1a47af4b7cc86f98f8e
+    m_Address: roomfloor/roomside_rooftop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9f5f68c190a78e340a6bd6e3273f6879
     m_Address: roomfloor/roomfloor_env_missile
@@ -170,6 +190,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0d6b3d8f8702e24ba110897ef432824
+    m_Address: roomfloor/roomside_refinery
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2f653a29ef1bb740a844831a9a16b47
     m_Address: roomfloor/roomfloor_kingpin
@@ -206,6 +231,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e3fb6c15869c8eb498c383dbc5fa428d
+    m_Address: roomfloor/roomside_street
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e80cdd5f75abe37499b8f5d57ab136a1
     m_Address: roomfloor/roomfloor_ch3_ring

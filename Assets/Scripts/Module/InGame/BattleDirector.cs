@@ -4714,6 +4714,10 @@ namespace Game.Module.InGame
             //   `InterimRoomFloor` 도 연구소 배경이라 자리는 맞는다 — 그림이 오면 자동으로 이긴다.
             string fallback = _canonRoom != null && _canonRoom.IsBoss ? BossArenaFloor : InterimRoomFloor;
             LoadRoomFloorAsync(floorKey, fallback).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
+
+            // 넓은 화면에서 필드 옆에 남는 자리를 같은 무대의 벽으로 채운다
+            // (`BattleDirector.RoomSide.cs`). 폰에서는 남는 자리가 없어 저절로 꺼진다.
+            ApplyRoomSides(_floorEnv, chapter);
         }
 
         // ── 레일 보스는 지금 못 넣는다 ────────────────────────────
