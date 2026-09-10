@@ -1020,6 +1020,15 @@ namespace Game.Module.InGame
         /// 공격 쿨다운을 진행시키고, 이번 프레임에 때릴 수 있으면 true.
         /// `intervalMul` 은 런 버프(연사 강화) 배율이다 — 유닛 스탯은 건드리지 않는다.
         /// </summary>
+        /// <summary>
+        /// 이번 차례를 **버리지 않고** 조금 뒤에 다시 묻는다.
+        ///
+        /// 동시 공격 상한(`CanStartAttack`)에 걸려 못 때린 경우에 쓴다.
+        /// `TickAttack` 이 이미 간격을 채워 버렸으므로, 그대로 두면 한 간격을
+        /// 통째로 날린다 — 상한이 1인 배우는 그렇게 영영 못 때린다.
+        /// </summary>
+        public void RetryAttackSoon(float seconds) => _attackTimer = seconds;
+
         public bool TickAttack(float dt, float intervalMul = 1f)
         {
             _attackTimer -= dt;

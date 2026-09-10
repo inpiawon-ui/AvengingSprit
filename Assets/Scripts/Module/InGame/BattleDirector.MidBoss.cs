@@ -27,7 +27,15 @@ namespace Game.Module.InGame
     public sealed partial class BattleDirector
     {
         private const float MidBossScale = 1.8f;
-        private const int MidBossHpMul = 3;
+        /// <summary>
+        /// 대장 체력 배율. 2026-09-10 에 3 → 1.5 로 내렸다.
+        ///
+        /// ⚠ 이 값은 `EnemyHpOf` **위에** 곱해진다. 전날 잡몹 체력을 전체 2배로
+        ///   올리면서(`GameConfig.EnemyHpMul`) 대장도 같이 두 배가 됐다 —
+        ///   3배 × 2배 = 6배가 되어 「중간 보스 피가 너무 많다」가 됐다.
+        ///   여기서 절반으로 내려 예전 체감(3배)으로 돌린다.
+        /// </summary>
+        private const float MidBossHpMul = 1.5f;
         private const float MidBossAtkMul = 1.4f;
 
         /// <summary>부하를 다 잡았을 때 대장이 굳는 시간. 정본 3초.</summary>
@@ -72,7 +80,7 @@ namespace Game.Module.InGame
 
             var u = NewUnit($"MidBoss_{leader.HostKey}");
             u.Setup(UnitSide.Enemy, leader.HostKey, leader.NameKr, TrashSprite(leader),
-                    EnemyHpOf(leader) * MidBossHpMul,
+                    Mathf.RoundToInt(EnemyHpOf(leader) * MidBossHpMul),
                     Mathf.RoundToInt(EnemyAtkOf(leader) * MidBossAtkMul),
                     EnemySpeedOf(leader),
                     EnemyRangeOf(leader),

@@ -730,7 +730,7 @@ namespace Game.Module.InGame
                         Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)),
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
-                        EnemyIntervalOf(e),
+                        EnemyIntervalOf(e, elite),
                         // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
                         // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
                         // 엘리트뿐 아니라 **집행자**도 128 캔버스다.
@@ -1389,9 +1389,18 @@ namespace Game.Module.InGame
         /// </summary>
         private const float UnitFootPadRatio = 8f / 96f;
 
+        /// <summary>
+        /// 줄 세우기에 한 기를 넣는다.
+        ///
+        /// ⚠ **보스는 언제나 맨 뒤다.** 발밑으로 줄을 세우면 덩치(256px)가 커서
+        ///   플레이어보다 앞에 서는 순간이 생기고, 그러면 내 몸이 보스 그림에
+        ///   통째로 파묻혀 **어디 서 있는지 안 보인다.** 보스는 배경에 가까운
+        ///   큰 장치라 뒤에 두는 편이 늘 읽힌다.
+        /// </summary>
         private void AddDepth(Unit u)
         {
             if (u == null || !u.gameObject.activeSelf) return;
+            if (u.IsBoss) { _depthT.Add(u.transform); _depthY.Add(float.MaxValue); return; }
             var size = ((RectTransform)u.transform).sizeDelta;
             _depthT.Add(u.transform);
             _depthY.Add(u.Position.y - size.y * 0.5f + size.y * UnitFootPadRatio);
@@ -1399,8 +1408,10 @@ namespace Game.Module.InGame
 
         private void SortDepth()
         {
-            if (_obstacles.Count == 0) return;   // 지형지물이 없으면 정렬할 이유가 없다
-
+            // ⚠ **지형이 없어도 정렬한다.** 예전에는 `_obstacles.Count == 0` 이면 그냥
+            //   빠졌는데, 지형지물을 방마다 2~3개로 줄이면서 **물건이 0개인 방이 18곳**
+            //   생겼다. 그 방에서는 정렬이 통째로 안 돌아, 나중에 세운 출구 계단이
+            //   맨 앞에 그려져 **캐릭터를 덮었다**. 출구·보스 순서도 여기서 정해진다.
             _depthT.Clear();
             _depthY.Clear();
             for (int i = 0; i < _obstacles.Count; i++)
@@ -2684,7 +2695,7 @@ namespace Game.Module.InGame
                         Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
-                        EnemyIntervalOf(e),
+                        EnemyIntervalOf(e, elite),
                         UnitBox(84f, 78f), isBoss: false, profile: e);
                 u.Position = SpawnSlot(i, count);
                 ClearOfCover(u);
@@ -2822,6 +2833,10 @@ namespace Game.Module.InGame
 #endif
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
+
+            // ⚠ 임시 — WASD 이동 (`BattleDirector.Keyboard.cs`). 지울 때 이 줄도 함께.
+            TickKeyboardMove();
+
             float dt = Time.deltaTime;
 
             // 빙의가 들어가는 중이면 다른 것은 멈추지 않되 조작만 잠근다 —
@@ -3371,6 +3386,10 @@ namespace Game.Module.InGame
                     if (_buffs.BurnSpreads && e.BurnStack >= Unit.StatusMaxStack)
                         SpreadBurn(e);
 
+                    // ⚠ **불이 보여야 화상이다.** 표시가 몸 색뿐이었는데 그 색은
+                    //   피격 점멸이 쓰고 있으면 안 칠해진다 — 때리는 중에는 늘 점멸이라
+                    //   결국 한 번도 안 보였다. 피해가 들어가는 순간 불을 하나 피운다.
+                    SpawnFx("breath_fire", e.Position, BurnFxSize);
                     ShowDamage(e.Position, burn, toEnemy: true);
                     if (e.TakeDamage(burn)) { KillEnemy(e); continue; }
                     if (e.IsBoss)
@@ -3546,7 +3565,19 @@ namespace Game.Module.InGame
                             && e.CountShotAndNeedsMove(ShotsBeforeMove))
                             e.BeginReposition(PickRepositionSpot(e, me));
                     }
-                    // 동시 공격 수가 찼으면 이번 차례는 거른다 — 다음 간격에 다시 본다
+                    else
+                    {
+                        // ⚠ **동시 공격 상한에 걸린 차례를 그냥 버리면 안 된다.**
+                        //   `TickAttack` 은 true 를 돌려주는 순간 이미 간격을 다시 채웠다.
+                        //   여기서 아무것도 안 하고 빠지면 한 간격을 통째로 날리고,
+                        //   상한이 1인 배우(살라만더·집행자)는 앞사람이 자세를 잡고 있는 동안
+                        //   차례가 계속 날아가 **영영 안 때린다.**
+                        //   실제로 CH1 005 대장과 CH2 006 집행자가 그렇게 서 있었다.
+                        //
+                        //   자리가 날 때까지 **짧게 다시 본다.** 간격을 새로 채우지 않고
+                        //   조금 뒤에 한 번 더 묻는 것이라, 상한이 풀리는 즉시 때린다.
+                        e.RetryAttackSoon(AttackRetrySeconds);
+                    }
                 }
                 else
                 {
@@ -3589,6 +3620,15 @@ namespace Game.Module.InGame
             }
             return true;
         }
+
+        /// <summary>
+        /// 동시 공격 상한에 걸렸을 때 다시 묻기까지의 시간.
+        /// 간격(1~3초)보다 훨씬 짧아야 「자리가 나면 곧바로」가 된다.
+        /// </summary>
+        private const float AttackRetrySeconds = 0.15f;
+
+        /// <summary>화상 피해가 들어갈 때 피우는 불 크기(px).</summary>
+        private const float BurnFxSize = 72f;
 
         /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
         private const int ShotsBeforeMove = 2;
@@ -3670,17 +3710,25 @@ namespace Game.Module.InGame
             => e.HasCanon ? e.CanonRange * _pxPerMeter : _config.EnemyAttackRange * e.RangeMul;
 
         /// <summary>
-        /// 적이 얼마나 자주 때리는가. 정본 값에 **2배**를 곱해 절반 빈도로 늦춘다.
+        /// 적이 얼마나 자주 때리는가. 정본 값에 이만큼을 곱한다.
         ///
-        /// 지형이 촘촘해지고 적 탄이 지형을 통과하게 되면서, 정본 간격 그대로는
-        /// 피할 창이 남지 않는다. 한 방을 더 아프게 하되 **덜 자주** 오는 쪽이
-        /// 읽히고 피할 수 있는 싸움이 된다.
+        /// 예전에는 2배(정본의 절반 빈도)였다. 지형이 촘촘하고 적 탄이 지형을
+        /// 통과하던 시절, 정본 간격 그대로는 피할 창이 남지 않아서 늦춰 둔 값이다.
+        ///
+        /// 2026-09-10 — 지형을 방마다 2~3개로 줄이고 나니 이제는 **너무 느리다**
+        /// (「공격 딜레이가 너무 길다」). 1.5배 빠르게 = 2.0 × 0.67.
         /// </summary>
-        private const float EnemyIntervalScale = 2f;
+        private const float EnemyIntervalScale = 1.34f;
 
-        private float EnemyIntervalOf(HostEntry e)
+        /// <summary>
+        /// 엘리트는 거기서 한 번 더 줄인다. 「엘리트 방은 확실히 다른 방」이 되어야 한다 —
+        /// 체력만 두꺼우면 시간만 오래 걸리는 방이지 어려운 방이 아니다.
+        /// </summary>
+        private const float EliteIntervalMul = 0.5f;
+
+        private float EnemyIntervalOf(HostEntry e, bool elite = false)
             => (e.HasCanon ? e.CanonInterval : _config.EnemyAttackInterval * e.IntervalMul)
-               * EnemyIntervalScale;
+               * EnemyIntervalScale * (elite ? EliteIntervalMul : 1f);
 
         // 내가 탄 몸. 정본은 같은 배우라도 **적일 때와 내가 탔을 때 교전값을 따로** 준다
         // (attacks 의 AP_E### / AP_H##). 체력·공격력은 몸 자체의 것이라 적일 때와 같다.
