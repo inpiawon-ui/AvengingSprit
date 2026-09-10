@@ -2908,6 +2908,11 @@ namespace Game.Module.InGame
             { _showHitBoxes = !_showHitBoxes; RebuildHitBoxView(); }
             if (_showHitBoxes) TickHitBoxView();
 #endif
+            // ⚠ **판정보다 먼저 잰다.** 화면 비율은 게임이 멈춰 있어도 바뀔 수 있다.
+            //   아래 이른 반환 뒤에 두었다가, 3택1 창이 떠 있는 동안 태블릿으로 바꾸니
+            //   창 높이가 그대로라 필드와 조작바 사이가 검게 비었다.
+            TickFieldFit();
+
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
 
@@ -2924,7 +2929,6 @@ namespace Game.Module.InGame
             if (!_running) return;       // 자연 감소로 소멸했을 수 있다
 
 
-            TickFieldFit();   // 화면 비율이 바뀌면 창 높이를 다시 잰다
             TickShake(dt);
             TickHitStop();
 

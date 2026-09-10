@@ -32,23 +32,31 @@ namespace Game.Module.InGame
         /// <summary>그려진 필드 높이. 부팅 때 한 번 떠 둔다.</summary>
         private float _fieldBaseHeight;
 
-        /// <summary>마지막으로 맞춘 화면. 바뀔 때만 다시 잰다.</summary>
-        private Vector2Int _fieldFitScreen;
+        /// <summary>필드 윗변이 화면 위에서 얼마나 내려와 있나(= 상단 HUD 몫). 안 바뀐다.</summary>
+        private float _fieldTopOffset;
+
+        /// <summary>조작바 안쪽을 바닥에 붙여 놓았나. 한 번만 하면 된다.</summary>
+        private bool _controlPinned;
 
         /// <summary>부팅 때 그려진 높이를 떠 둔다. 이 값이 기준이라 한 번만 읽는다.</summary>
         private void CaptureFieldBaseHeight()
         {
             if (_fieldBaseHeight > 0f || _field == null) return;
             _fieldBaseHeight = _field.rect.height;
+            // 필드는 위에 못 박혀 있다(`aY = 1`, `pivot.y = 1`). 그 내려온 거리다.
+            _fieldTopOffset = -_field.anchoredPosition.y;
         }
 
-        /// <summary>화면이 바뀌었으면 필드 높이를 다시 잰다. 매 프레임 불러도 싸다.</summary>
-        private void TickFieldFit()
-        {
-            if (Screen.width == _fieldFitScreen.x && Screen.height == _fieldFitScreen.y) return;
-            _fieldFitScreen = new Vector2Int(Screen.width, Screen.height);
-            FitFieldHeight();
-        }
+        /// <summary>
+        /// 매 프레임 부른다. 값이 그대로면 안에서 바로 빠져나오므로 싸다.
+        ///
+        /// ⚠ **`Screen` 크기로 판단하면 안 된다.** 해상도가 바뀌는 그 프레임에는
+        ///   `Screen` 은 이미 새 값인데 캔버스 배율은 아직 옛 값이라, 부모 높이가
+        ///   한 프레임 동안 엉뚱하게 크게 읽힌다. 그때 한 번 재고 끝내면 그 값이 굳는다 —
+        ///   실제로 조작바가 화면 위로 튀어나올 만큼 커졌다(3000−230−936−20 = 1814).
+        ///   부모가 제 크기를 찾을 때까지 계속 보게 둔다.
+        /// </summary>
+        private void TickFieldFit() => FitFieldHeight();
 
         private void FitFieldHeight()
         {
@@ -91,7 +99,6 @@ namespace Game.Module.InGame
         private RectTransform _controlBar;
         private float _controlBarBaseHeight;
         private readonly List<(RectTransform Rect, float Bottom)> _controlItems = new();
-        private readonly Vector3[] _corners = new Vector3[4];
 
         private void CaptureControlBar(RectTransform parent)
         {
@@ -116,17 +123,16 @@ namespace Game.Module.InGame
             CaptureControlBar(parent);
             if (_controlBar == null || _controlBarBaseHeight <= 0f) return;
 
-            float scale = parent.lossyScale.y;
-            if (scale <= 0.0001f) return;
-
-            _field.GetWorldCorners(_corners);
-            float fieldBottom = _corners[0].y;
-            parent.GetWorldCorners(_corners);
-            float below = (fieldBottom - _corners[0].y) / scale;   // 필드 아래 남은 칸
-
+            // ⚠ **월드 좌표로 재지 않는다.** 창 높이를 방금 바꾼 그 프레임에는 월드 모서리가
+            //   아직 갱신 전이라, 한 번 크게 어긋난 값이 그대로 굳는다 —
+            //   실제로 조작바가 화면 위로 튀어나올 만큼 커졌다.
+            //   캔버스 값(부모 높이 · 필드 자리)만으로 셈한다.
+            float below = parent.rect.height - _fieldTopOffset - _field.rect.height;
             float want = Mathf.Max(_controlBarBaseHeight, below - ControlGapBase);
-            if (Mathf.Abs(_controlBar.rect.height - want) > 0.5f)
-                _controlBar.sizeDelta = new Vector2(_controlBar.sizeDelta.x, want);
+            bool changed = Mathf.Abs(_controlBar.rect.height - want) > 0.5f;
+            if (changed) _controlBar.sizeDelta = new Vector2(_controlBar.sizeDelta.x, want);
+            if (!changed && _controlPinned) return;
+            _controlPinned = true;
 
             for (int i = 0; i < _controlItems.Count; i++)
             {

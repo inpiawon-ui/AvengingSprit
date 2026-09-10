@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Module.Common.UI
 {
@@ -66,6 +67,17 @@ namespace Game.Module.Common.UI
         /// </summary>
         private const float FullRatio = 0.9f;
 
+        /// <summary>
+        /// 그리고 시작 변이 부모의 시작 변과 이만큼 안에 붙어 있어야 「꽉 채운다」다.
+        ///
+        /// ⚠ 크기만 보면 **부모 밖에 걸친 자식을 끌어다 붙인다.** 레이아웃 적용기가
+        ///   절대좌표로 찍기 때문에 자식이 부모 박스 밖에 놓이는 구조가 흔하다 —
+        ///   `HudRow2`(높이 118) 안의 호스트 칸은 **106 칸 아래**에 걸쳐 있는데,
+        ///   높이가 같다는 이유로 「채운다」가 되어 부모 박스로 끌려 올라갔다.
+        ///   그 바람에 호스트 체력 줄이 고스트 줄 위로 겹쳐 그려졌다.
+        /// </summary>
+        private const float FullAlign = 32f;
+
         /// <summary>이만큼 안에 붙어 있으면 한 덩어리로 본다.</summary>
         private const float ClusterGap = 24f;
 
@@ -97,6 +109,7 @@ namespace Game.Module.Common.UI
         private struct Entry
         {
             public RectTransform Rect;
+            public Transform Parent;   // 뜰 때의 부모. 바뀌면 손을 뗀다
             public Box X;
             public Box Y;
         }
@@ -140,6 +153,15 @@ namespace Game.Module.Common.UI
 
         private void Scan(RectTransform parent, float baseW, float baseH)
         {
+            // ⚠ **레이아웃 그룹이 맡은 자식은 건드리지 않는다.** `HudRow2` · `ButtonRow` 에
+            //   `HorizontalLayoutGroup` 이 붙어 있어서 자식 자리를 유니티가 매 프레임 다시 정한다.
+            //   여기서 앵커를 써 넣으면 둘이 서로 덮어쓰며 싸우고, 뜬 값을 「그린 값」이라고
+            //   붙잡아 두는 바람에 **호스트 줄이 고스트 줄로 올라가 겹쳐 그려졌다.**
+            //
+            //   대신 **그릇(그룹 자신)은 늘린다.** 그릇이 넓어지면 안쪽은 유니티가
+            //   알아서 다시 벌려 놓는다 — 그게 레이아웃 그룹을 쓰는 이유다.
+            if (parent.GetComponent<LayoutGroup>() != null) return;
+
             int from = _entries.Count;
 
             for (int i = 0; i < parent.childCount; i++)
@@ -156,6 +178,7 @@ namespace Game.Module.Common.UI
                 _entries.Add(new Entry
                 {
                     Rect = rt,
+                    Parent = rt.parent,
                     X = ReadBox(rt.anchorMin.x, rt.anchorMax.x, rt.pivot.x,
                                 rt.anchoredPosition.x, rt.sizeDelta.x, baseW),
                     Y = ReadBox(rt.anchorMin.y, rt.anchorMax.y, rt.pivot.y,
@@ -195,7 +218,9 @@ namespace Game.Module.Common.UI
                 Size = size,
                 ParentBase = parentBase,
                 Full = stretched
-                       || (size >= parentBase - FullSlack && size >= parentBase * FullRatio),
+                       || (size >= parentBase - FullSlack
+                           && size >= parentBase * FullRatio
+                           && Mathf.Abs(min) <= FullAlign),
             };
         }
 
@@ -311,6 +336,13 @@ namespace Game.Module.Common.UI
             {
                 var e = _entries[i];
                 if (e.Rect == null) continue;
+
+                // ⚠ **부모가 바뀐 놈은 놓아준다.** `InGameMainUI` 가 D패드를 `ControlGroup`
+                //   밖 루트로 꺼내는데, 그 뒤에 화면이 바뀌어 다시 적용하면 **새 부모(화면 전체)**
+                //   기준으로 좌표를 써서 D패드가 화면 맨 위 HUD 자리로 올라갔다.
+                //   게임 코드가 데려간 노드는 그쪽이 주인이다.
+                if (e.Rect.parent != e.Parent) continue;
+
                 ApplyAxis(e.Rect, e.X, horizontal: true);
                 ApplyAxis(e.Rect, e.Y, horizontal: false);
             }

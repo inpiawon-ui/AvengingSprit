@@ -513,6 +513,13 @@ namespace Game.Module.InGame
             int controlIndex = control != null ? control.GetSiblingIndex() + 1 : transform.childCount;
             _dpad.SetParent(transform, worldPositionStays: true);
             _dpad.SetSiblingIndex(controlIndex);
+
+            // ⚠ 루트로 올라온 패드를 **화면 아래-왼쪽**에 못 박는다.
+            //   올라오기 전 앵커는 조작바 기준이라, 그대로 두면 화면이 길어질 때
+            //   패드만 위에 남아 조작바에서 떨어진다(실제로 태블릿으로 바꾸니
+            //   패드가 화면 맨 위 HUD 자리로 올라갔다).
+            //   자리는 그대로 두고 앵커만 바꾼다.
+            PinToBottomLeft(_dpad);
             _dpadHome = _dpad.anchoredPosition;
 
             BuildTouchCatcher();
@@ -569,6 +576,23 @@ namespace Game.Module.InGame
             if (_battle != null) _battle.MoveInput = Vector2.zero;
         }
 
+        /// <summary>보이는 자리는 그대로 두고 앵커·피봇만 부모의 왼쪽-아래로 옮긴다.</summary>
+        private static void PinToBottomLeft(RectTransform rt)
+        {
+            if (rt.parent is not RectTransform parent) return;
+            var pc = new Vector3[4]; parent.GetWorldCorners(pc);
+            var c = new Vector3[4]; rt.GetWorldCorners(c);
+            float s = parent.lossyScale.x;
+            if (s <= 0.0001f) return;
+            float left = (c[0].x - pc[0].x) / s;
+            float bottom = (c[0].y - pc[0].y) / s;
+
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.zero;
+            rt.anchoredPosition = new Vector2(left + rt.rect.width * rt.pivot.x,
+                                              bottom + rt.rect.height * rt.pivot.y);
+        }
+
         /// <summary>패드 중심이 터치 지점에 오도록 옮긴다. 화면 밖으로 나가지 않게 잘라낸다.</summary>
         private void MovePadTo(PointerEventData e)
         {
@@ -582,8 +606,11 @@ namespace Game.Module.InGame
 
             var ps = parent.rect.size;
             var pp = parent.pivot;
-            // 앵커 (0,1)(부모 좌상단)의 부모 로컬 좌표
-            var anchor = new Vector2(-pp.x * ps.x, (1f - pp.y) * ps.y);
+            // ⚠ 앵커를 (0,1) 로 **못 박으면 안 된다.** 패드를 화면 아래에 붙이면
+            //   앵커가 (0,0) 이 되는데, 그때 이 값이 한 화면 높이만큼 어긋나
+            //   손가락을 대는 순간 패드가 위로 튄다. 지금 앵커에서 계산한다.
+            var am = _dpad.anchorMin;
+            var anchor = new Vector2((am.x - pp.x) * ps.x, (am.y - pp.y) * ps.y);
 
             var size = _dpad.rect.size;
             var pivot = _dpad.pivot;
