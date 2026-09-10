@@ -297,6 +297,22 @@ namespace Game.Module.InGame
             => Hp = Mathf.Clamp(Mathf.RoundToInt(HpMax * percent / 100f), 1, HpMax);
 
         /// <summary>
+        /// 체력을 그대로 맞춰 넣는다 — **고스트 전용**이다.
+        ///
+        /// 고스트의 체력은 `BattleDirector._ghostHp` 가 들고 시간으로 줄어든다.
+        /// 유닛 쪽 `Hp` 는 만든 뒤로 한 번도 안 바뀌어서, 머리 위 바가 늘 가득 차 있었다
+        /// (2026-09-10 「고스트일 때도 HP 게이지 보이게」).
+        /// 바깥에서 줄어든 값을 여기로 흘려 넣어 바가 따라오게 한다.
+        /// </summary>
+        public void SyncHp(int hp)
+        {
+            int next = Mathf.Clamp(hp, 0, HpMax);
+            if (next == Hp) return;
+            Hp = next;
+            RefreshHpBar();
+        }
+
+        /// <summary>
         /// 최대 체력을 그 자리에서 줄인다 (악마 계약).
         ///
         /// 지금 체력이 새 상한을 넘으면 함께 내린다 — 안 그러면 막대가 가득 찬 채로
@@ -726,6 +742,10 @@ namespace Game.Module.InGame
 
         public void TickAnim(float dt)
         {
+            // 딸피 점멸은 죽는 중에도 굳어 있는 중에도 멈추면 안 된다 —
+            // 「지금 위험하다」는 표시라 아래 이른 반환보다 먼저 돈다.
+            TickLowHpBlink();
+
             if (_dying) return;   // 사망은 TickDeath 가 따로 돈다
             if (_possessHold) return;
 
@@ -997,6 +1017,33 @@ namespace Game.Module.InGame
             if (amount <= 0) return;
             Hp = Mathf.Max(1, Hp - amount);
             RefreshHpBar();
+        }
+
+        /// <summary>이 아래로 내려가면 「딸피」 — 바가 점멸한다.</summary>
+        public const float LowHpRatio = 0.3f;
+
+        private const float LowHpBlinkPerSecond = 4.5f;
+
+        /// <summary>지금 딸피인가. 체력 바 점멸과 바깥(연출)이 함께 쓴다.</summary>
+        public bool IsLowHp => IsAlive && HpMax > 0 && (float)Hp / HpMax <= LowHpRatio;
+
+        /// <summary>
+        /// 딸피 점멸. 체력 바 색을 초당 몇 번 밝게 튕긴다.
+        ///
+        /// ⚠ **바를 껐다 켜지 않는다.** 껐다 켜면 「체력이 0 이 됐다」로 잘못 읽히고,
+        ///   깜빡이는 사이에 얼마 남았는지도 안 보인다. 색만 밝기를 오간다.
+        /// </summary>
+        private void TickLowHpBlink()
+        {
+            if (_hpBarFill == null) return;
+            var baseColor = Side == UnitSide.Enemy
+                ? new Color(0.85f, 0.20f, 0.16f, 1f)
+                : new Color(0.35f, 0.85f, 0.40f, 1f);
+
+            if (!IsLowHp) { _hpBarFill.color = baseColor; return; }
+
+            float k = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.PI * 2f * LowHpBlinkPerSecond);
+            _hpBarFill.color = Color.Lerp(baseColor, Color.white, k * 0.75f);
         }
 
         private void RefreshHpBar()

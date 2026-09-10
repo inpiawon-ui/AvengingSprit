@@ -23,7 +23,7 @@ namespace Game.Module.InGame
     /// D-패드는 목업(`ingame_hd_scene`)의 사각 패드를 따른다 — 미결 항목 #8 결정.
     /// 패드 영역을 드래그하면 중심 대비 방향이 이동 입력이 된다.
     /// </summary>
-    public sealed class InGameMainUI : MonoBehaviour, IBackTarget
+    public sealed partial class InGameMainUI : MonoBehaviour, IBackTarget
     {
         // 게이지 채우기 폭. 레이아웃 JSON 의 `*HpBarBg` 가로와 같아야 한다 —
         // 어긋나면 HP 가 가득 차도 바가 덜 차거나 넘친다.
@@ -234,8 +234,9 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
             // 하나 사면 바로 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
+            // 닫기 전에 **산 칸이 떠오르며 사라진다** — 어느 줄을 샀는지가 눈에 남게.
             _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(
-                _ => _ui.SetActive("ShopPanel", false)));
+                e => SellOffThenClose(e.Index, "ShopPanel")));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
         }
 
@@ -288,6 +289,50 @@ namespace Game.Module.InGame
                 _skillCooldownFill.fillAmount = 1f - _battle.SkillCooldownRatio;
 
             TickGoldFx(Time.deltaTime);
+            TickLowHpBlink();
+        }
+
+        // ── 딸피 점멸 ────────────────────────────────────────────
+        //
+        // `Unit` 쪽에도 같은 이름의 점멸이 있지만 그것은 **머리 위에 뜨는 바**를
+        // 칠한다. 내 몸에는 그 바가 안 붙는다 — 플레이어가 보는 것은 상단 HUD 뿐이라
+        // 정작 내가 죽기 직전인 것이 화면 어디에도 안 나타났다.
+        //
+        // ⚠ **바를 껐다 켜지 않는다.** 껐다 켜면 「0 이 됐다」로 잘못 읽힌다.
+        //   색만 흰 쪽으로 오간다 — 남은 길이는 계속 읽힌다.
+
+        /// <summary>이 비율 이하가 딸피. <see cref="Unit.LowHpRatio"/> 와 같은 자를 쓴다.</summary>
+        private const float HudLowHpBlinkPerSecond = 4.5f;
+
+        private Image _ghostFillImage;
+        private Image _hostFillImage;
+        private Color _ghostFillColor;
+        private Color _hostFillColor;
+        private float _ghostHpRatio = 1f;
+        private float _hostHpRatio = 1f;
+        private bool _hostBarShown;
+
+        private void TickLowHpBlink()
+        {
+            BlinkBar(ref _ghostFillImage, ref _ghostFillColor, "GhostHpBarFill", _ghostHpRatio, true);
+            BlinkBar(ref _hostFillImage, ref _hostFillColor, "HostHpBarFill", _hostHpRatio, _hostBarShown);
+        }
+
+        private void BlinkBar(ref Image img, ref Color baseColor, string name, float ratio, bool shown)
+        {
+            if (img == null)
+            {
+                var tr = _ui.Find(name);
+                if (tr == null) return;
+                img = tr.GetComponent<Image>();
+                if (img == null) return;
+                baseColor = img.color;   // 프리팹 색이 기준 — 코드에 색을 다시 적지 않는다
+            }
+
+            if (!shown || ratio > Unit.LowHpRatio || ratio <= 0f) { img.color = baseColor; return; }
+
+            float k = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.PI * 2f * HudLowHpBlinkPerSecond);
+            img.color = Color.Lerp(baseColor, Color.white, k * 0.8f);
         }
 
         // ── 골드 획득 연출 ───────────────────────────────────
@@ -587,16 +632,19 @@ namespace Game.Module.InGame
         private void OnHp(CombatHpChangedEvent e)
         {
             _ui.SetText("GhostHpText", $"{e.GhostHp}/{e.GhostHpMax}");
-            _ui.SetFill("GhostHpBarFill", Ratio(e.GhostHp, e.GhostHpMax), GhostBarWidth);
+            _ghostHpRatio = Ratio(e.GhostHp, e.GhostHpMax);
+            _ui.SetFill("GhostHpBarFill", _ghostHpRatio, GhostBarWidth);
 
             // ⚠ `e.HasHost` 만 보면 안 된다. 전투는 **유령도 몸으로 센다** —
             //   판이 유령으로 시작하면 이 값이 참으로 오고, HP 바가 매 프레임
             //   다시 켜져서 `ShowNoHost` 로 끈 것이 도로 살아난다.
-            _ui.SetActive("HostHpBarBg", e.HasHost && _hasRealHost);
+            _hostBarShown = e.HasHost && _hasRealHost;
+            _ui.SetActive("HostHpBarBg", _hostBarShown);
             _ui.SetActive("HostHpText", e.HasHost);
             if (!e.HasHost) return;
             _ui.SetText("HostHpText", $"{e.HostHp}/{e.HostHpMax}");
-            _ui.SetFill("HostHpBarFill", Ratio(e.HostHp, e.HostHpMax), HostBarWidth);
+            _hostHpRatio = Ratio(e.HostHp, e.HostHpMax);
+            _ui.SetFill("HostHpBarFill", _hostHpRatio, HostBarWidth);
         }
 
         private void OnBossHp(BossHpChangedEvent e)
@@ -964,7 +1012,7 @@ namespace Game.Module.InGame
                 declineBtn.onClick.AddListener(() => Resolve(false));
             }
 
-            _ui.SetActive("EventPanel", true);
+            SetPanel("EventPanel", true);
             _ui.Find("EventPanel")?.SetAsLastSibling();
         }
 
@@ -1024,7 +1072,7 @@ namespace Game.Module.InGame
                 btn.interactable = true;
                 btn.onClick.AddListener(() => ChooseShrine(pick));
             }
-            _ui.SetActive("ShrinePanel", true);
+            SetPanel("ShrinePanel", true);
             _ui.Find("ShrinePanel")?.SetAsLastSibling();
         }
 
@@ -1038,7 +1086,7 @@ namespace Game.Module.InGame
         //   닫았는데, 고른 뒤에 화면이 멈춰 있는 그 틈이 「끝난 건가?」로 읽혔다.
         //   무엇을 받았는지는 HUD 체력·골드가 이미 말해 준다.
         private void OnShrineResolved(ShrineResolvedEvent e)
-            => _ui.SetActive("ShrinePanel", false);
+            => SetPanel("ShrinePanel", false);
 
         private void Resolve(bool accept)
         {
@@ -1050,7 +1098,7 @@ namespace Game.Module.InGame
         //   예전에는 결과를 적고 버튼을 「계속」으로 바꿔 한 번 더 누르게 했다 —
         //   같은 자리에서 두 번 확인시키는 셈이었다.
         private void OnEventResolved(EventResolvedEvent e)
-            => _ui.SetActive("EventPanel", false);
+            => SetPanel("EventPanel", false);
 
         // ── 상점 ─────────────────────────────────────────────────
         //
@@ -1120,12 +1168,12 @@ namespace Game.Module.InGame
                 leaveBtn.onClick.RemoveAllListeners();
                 leaveBtn.onClick.AddListener(() =>
                 {
-                    _ui.SetActive("ShopPanel", false);
+                    SetPanel("ShopPanel", false);
                     if (_battle != null) _battle.CloseShop();
                 });
             }
 
-            _ui.SetActive("ShopPanel", true);
+            SetPanel("ShopPanel", true);
             _ui.Find("ShopPanel")?.SetAsLastSibling();
         }
 
@@ -1184,11 +1232,12 @@ namespace Game.Module.InGame
                 var btn = _ui.Get<Button>($"BuffCard{i}");
                 if (btn == null) continue;
                 var key = entry.BuffKey;
+                var slot = $"BuffCard{i}";   // 어느 칸을 튕길지 눌린 쪽이 알려 준다
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => OnBuffPicked(key));
+                btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
             }
 
-            _ui.SetActive("BuffChoicePanel", true);
+            SetPanel("BuffChoicePanel", true);
             _ui.Find("BuffChoicePanel")?.SetAsLastSibling();
         }
 
@@ -1327,9 +1376,15 @@ namespace Game.Module.InGame
 
         private void OnBuffPicked(string buffKey)
         {
-            _ui.SetActive("BuffChoicePanel", false);
+            // 효과는 바로 넣고, 창은 고른 칸을 한 번 튕긴 뒤 닫는다 —
+            // 연출을 기다렸다 넣으면 그 사이에 두 번 누를 수 있다.
             _battle?.ChooseBuff(buffKey);
+            PunchThenClose(_pickedSlot ?? "BuffCard0", "BuffChoicePanel");
+            _pickedSlot = null;
         }
+
+        /// <summary>방금 누른 카드 칸. 어느 칸을 튕길지 알아야 한다.</summary>
+        private string _pickedSlot;
 
         // ── 종료 ─────────────────────────────────────────────────
         private void OnStageFinished(StageFinishedEvent e)
