@@ -6001,8 +6001,14 @@ namespace Game.Module.InGame
         /// </summary>
         private static readonly Dictionary<string, string> ShotKind = new()
         {
-            { "gangster", "bullet" }, { "thug", "bullet" }, { "hopper", "bullet" },
-            { "hopper_smg", "bullet" }, { "commando_mg", "bullet" },
+            // ⚠ 예전에는 이 일곱이 **전부 `bullet` 한 장**이었다. 무엇이 날아오는지
+            //   구별이 안 되고 화면이 늘 같아 보였다(2026-09-10 「투사체가 다 똑같다」).
+            //   쏘는 물건이 다르면 탄도 달라야 한다.
+            { "gangster", "bullet" },       // 권총 — 기본 탄을 그대로 쓴다
+            { "thug", "thug" },             // 던지는 쇳조각
+            { "hopper", "bullet" },
+            { "hopper_smg", "smg" },        // 기관단총 — 작고 빠른 탄
+            { "commando_mg", "mg" },        // 기관총 — 길쭉한 예광탄
             { "commando_laser", "laser" },
             { "commando_grenade", "grenade" },
             // ⚠ 여기가 비어 있어서 미사일 코만도가 **딱총을 쐈다.** 표에 없는 배우는
@@ -6016,8 +6022,8 @@ namespace Game.Module.InGame
             { "guru", "pulse" }, { "robot", "pulse" },
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
-            { "baseball", "bullet" },   // 원작에 던지는 공이 없다 — 작은 공으로 대신한다
-            { "amazon_elite", "bullet" },
+            { "baseball", "ball" },     // 야구공 — 붉은 실밥
+            { "amazon_elite", "spear" }, // 던지는 창
             // 첫 원거리 잡몹. 전용 탄이 없으면 흰 점으로 나가서
             // 무엇이 날아오는지 안 보인다.
             { TrashGunnerKey, TrashGunnerKey },
