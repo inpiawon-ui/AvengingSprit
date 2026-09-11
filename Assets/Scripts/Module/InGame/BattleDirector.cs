@@ -3468,10 +3468,7 @@ namespace Game.Module.InGame
                     if (_buffs.BurnSpreads && e.BurnStack >= Unit.StatusMaxStack)
                         SpreadBurn(e);
 
-                    // ⚠ **불이 보여야 화상이다.** 표시가 몸 색뿐이었는데 그 색은
-                    //   피격 점멸이 쓰고 있으면 안 칠해진다 — 때리는 중에는 늘 점멸이라
-                    //   결국 한 번도 안 보였다. 피해가 들어가는 순간 불을 하나 피운다.
-                    SpawnFx("breath_fire", e.Position, BurnFxSize);
+                    // 불 그림은 여기서 피우지 않는다 — `TickStatusFx` 가 몸에 붙여 돌린다.
                     ShowDamage(e.Position, burn, toEnemy: true);
                     if (e.TakeDamage(burn)) { KillEnemy(e); continue; }
                     if (e.IsBoss)
@@ -3711,8 +3708,9 @@ namespace Game.Module.InGame
         /// </summary>
         private const float AttackRetrySeconds = 0.15f;
 
-        /// <summary>화상 피해가 들어갈 때 피우는 불 크기(px).</summary>
-        private const float BurnFxSize = 72f;
+        /// <summary>화상 걸린 몸에 붙어 도는 불 크기(px).</summary>
+        /// <remarks>불이 몸을 둘러야 한다. 잡몹 상자가 100 px 남짓(84 × 1.2)이라 그보다 조금 크게.</remarks>
+        private const float BurnFxSize = 112f;
 
         /// <summary>방에 들어선 직후 안 맞는 시간. 한 호흡만 준다.</summary>
         private const float RoomEntryInvulnSeconds = 1.0f;
@@ -6173,6 +6171,16 @@ namespace Game.Module.InGame
 
         private readonly Dictionary<Unit, Impact> _stunFx = new();
         private readonly List<Unit> _stunFxDone = new();
+
+        /// <summary>
+        /// 화상 불. **몸에 붙어서 화상이 풀릴 때까지 돈다.**
+        ///
+        /// ⚠ 예전에는 피해 틱마다 한 번짜리 불을 **그 자리에** 피웠다. 1단계만 걸려도
+        ///   초당 여섯 번이 겹쳐 뜨고, 적이 걸어가면 불이 제자리에 남아 뒤로 줄을 이었다 —
+        ///   몸이 타는 게 아니라 **누가 불을 뿜는 것처럼** 보였다(기획 2026-09-11).
+        /// </summary>
+        private readonly Dictionary<Unit, Impact> _burnFx = new();
+        private readonly List<Unit> _burnFxDone = new();
         private Impact _shieldFx;
 
         /// <summary>
@@ -6192,6 +6200,23 @@ namespace Game.Module.InGame
                     + Vector2.up * (u == Avatar ? MyStunFxLift : StunFxLift));
             }
             for (int i = 0; i < _stunFxDone.Count; i++) _stunFx.Remove(_stunFxDone[i]);
+
+            _burnFxDone.Clear();
+            foreach (var kv in _burnFx)
+            {
+                var u = kv.Key;
+                if (u == null || !u.IsAlive || u.BurnStack <= 0) { kv.Value?.Stop(); _burnFxDone.Add(u); continue; }
+                kv.Value?.MoveTo(u.Position);
+            }
+            for (int i = 0; i < _burnFxDone.Count; i++) _burnFx.Remove(_burnFxDone[i]);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.BurnStack <= 0 || _burnFx.ContainsKey(e)) continue;
+                var fx = TakeLoopFx("burn", e.Position, BurnFxSize);
+                if (fx != null) _burnFx[e] = fx;
+            }
 
             for (int i = 0; i < _enemies.Count; i++)
             {
