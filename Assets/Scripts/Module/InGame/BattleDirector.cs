@@ -1754,8 +1754,30 @@ namespace Game.Module.InGame
             if (_fieldLayer != null) _fieldLayer.anchoredPosition = at;
             if (_pyStage != null) _pyStage.anchoredPosition = at;
             if (_floor != null) _floor.anchoredPosition = at;
+            // 방 밖 그림도 방과 한 몸으로 움직인다 — 바닥은 방 아랫변 밑, 구름은 방 윗변 위.
+            if (_apron != null) _apron.anchoredPosition = new Vector2(at.x, at.y - _roomSize.y);
+            if (_cloud != null) _cloud.anchoredPosition = new Vector2(at.x, at.y - RoomCloudDrop);
         }
 
+        /// <summary>
+        /// 캐릭터를 창의 이 높이(위에서부터 비율)에 둔다 — 가운데보다 살짝 위.
+        /// 아래쪽 조작 버튼과 그것을 쥔 엄지에서 멀어진다(기획 2026-09-11, 궁수의 전설 방식).
+        /// </summary>
+        private const float CameraAnchor = 0.45f;
+
+        /// <summary>
+        /// 벽 보스 아레나는 카메라를 세운다. 벽이 방 꼭대기 2 m 를 가로지르는데
+        /// 카메라가 캐릭터를 따라 내려가면 벽이 화면 밖으로 나가 머리가 허공에서 튀어나온다.
+        /// </summary>
+        private bool CameraLocked => _roomBoss != null && _roomBoss.State == BossState.Walls;
+
+        /// <summary>
+        /// 카메라 자리. 캐릭터를 창 `CameraAnchor` 높이에 둔다.
+        ///
+        /// ⚠ 세로는 **방 밖까지** 민다 — 방이 창보다 짧아도 따라간다. 방 위 바깥은 구름,
+        ///   아래 바깥은 방 밖 바닥이 가리므로 **그 그림이 닿는 데까지만** 민다
+        ///   (`RoomCloudReach` · `RoomApronSize.y`). 더 밀면 그림 너머 빈칸이 보인다.
+        /// </summary>
         private Vector2 WantScroll(Unit a)
         {
             float viewW = _field.rect.width, viewH = _field.rect.height;
@@ -1763,8 +1785,11 @@ namespace Game.Module.InGame
             // 밀어야 오른쪽이 보인다. 세로와 부호가 반대라 헷갈리기 쉬운 자리다.
             float x = Mathf.Clamp(-a.Position.x + viewW * 0.5f,
                                   Mathf.Min(0f, viewW - _roomSize.x), 0f);
-            float y = Mathf.Clamp(-a.Position.y - viewH * 0.5f, 0f,
-                                  Mathf.Max(0f, _roomSize.y - viewH));
+            if (CameraLocked) return new Vector2(x, 0f);
+
+            float lo = -RoomCloudReach;                             // 방 윗변이 이만큼 내려온다
+            float hi = _roomSize.y - viewH + RoomApronSize.y;       // 방 아랫변이 이만큼 올라간다
+            float y = Mathf.Clamp(-a.Position.y - viewH * CameraAnchor, lo, Mathf.Max(lo, hi));
             return new Vector2(x, y);
         }
 
@@ -2537,8 +2562,12 @@ namespace Game.Module.InGame
             //   방이 13 m 면 카메라가 플레이어를 따라 내려가 벽이 화면 밖으로 나간다 —
             //   벽이 안 보이면 머리가 허공에서 튀어나오는 것으로 보인다.
             //   화면 높이를 그대로 쓰면 세로 스크롤이 0 이라 벽이 늘 붙어 있다.
+            //
+            // ⚠ 2026-09-11 에 필드가 화면 끝까지 늘었다(카메라 따라가기). 창 높이를 그대로 쓰면
+            //   방이 바닥 그림(936)보다 길어져 그 밑이 빈다 — 방 높이에서 자르고, 카메라는 세운다
+            //   (`CameraLocked`). 창이 방보다 짧은 화면이면 예전처럼 창 높이.
             SetRoomSize(_roomBoss != null && _roomBoss.State == BossState.Walls
-                        ? _field.rect.height / _pxPerMeter
+                        ? Mathf.Min(_field.rect.height, RoomMeterHeight * _pxPerMeter) / _pxPerMeter
                       : _canonRoom != null ? _canonRoom.Height
                       : isBoss ? BossRoomMeterHeight : RoomMeterHeight);
 
@@ -4736,6 +4765,10 @@ namespace Game.Module.InGame
             // 방 아래 남는 자리(조작 버튼이 떠 있는 곳)를 같은 무대의 「방 밖 바닥」으로 채운다
             // (`BattleDirector.RoomApron.cs`). 방이 창보다 길면 남는 자리가 없어 저절로 꺼진다.
             ApplyRoomApron(_floorEnv, chapter);
+
+            // 방 위 바깥(카메라가 문 앞까지 따라 올라가면 드러난다)은 구름으로 가린다
+            // (`BattleDirector.RoomCloud.cs`). 구름은 무대 공용 한 장.
+            ApplyRoomCloud(_floorEnv, chapter);
         }
 
         // ── 레일 보스는 지금 못 넣는다 ────────────────────────────
