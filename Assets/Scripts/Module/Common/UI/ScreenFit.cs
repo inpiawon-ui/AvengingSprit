@@ -109,22 +109,31 @@ namespace Game.Module.Common.UI
         private struct Entry
         {
             public RectTransform Rect;
-            public Transform Parent;   // 뜰 때의 부모. 바뀌면 손을 뗀다
+            public Transform Parent;      // 뜰 때의 부모. 바뀌면 손을 뗀다
             public Box X;
             public Box Y;
+            public bool Share;            // 부모의 남는 폭을 형제와 나눠 갖는다
+            public bool LayoutOwned;      // 자리는 레이아웃 그룹이 정한다 — 크기만 건드린다
         }
 
         private readonly List<Entry> _entries = new();
         private Vector2Int _lastScreen;
+        private Vector2 _lastRootSize;
         private bool _captured;
 
         private void Awake() => Capture();
 
         private void OnEnable() => Apply();
 
+        // ⚠ **화면 크기만 보면 안 된다.** 해상도가 바뀌는 프레임에는 `Screen` 은 이미 새 값인데
+        //   캔버스 배율은 아직 옛 값이라, 그때 한 번 맞추고 끝내면 **남는 폭이 0 으로 잡혀**
+        //   나눠 갖기로 한 판들이 그린 크기 그대로 남는다(실제로 왕복 후 되돌아갔다).
+        //   루트가 제 크기를 찾을 때까지 같이 본다.
         private void Update()
         {
-            if (Screen.width == _lastScreen.x && Screen.height == _lastScreen.y) return;
+            var self = (RectTransform)transform;
+            if (Screen.width == _lastScreen.x && Screen.height == _lastScreen.y
+                && (self.rect.size - _lastRootSize).sqrMagnitude < 0.01f) return;
             Apply();
         }
 
@@ -151,16 +160,16 @@ namespace Game.Module.Common.UI
                  stretchY ? _baseHeight : self.sizeDelta.y);
         }
 
-        private void Scan(RectTransform parent, float baseW, float baseH)
+        private void Scan(RectTransform parent, float baseW, float baseH, bool simpleSides = false)
         {
-            // ⚠ **레이아웃 그룹이 맡은 자식은 건드리지 않는다.** `HudRow2` · `ButtonRow` 에
+            // ⚠ **레이아웃 그룹이 맡은 자식의 자리는 건드리지 않는다.** `HudRow2` · `ButtonRow` 에
             //   `HorizontalLayoutGroup` 이 붙어 있어서 자식 자리를 유니티가 매 프레임 다시 정한다.
             //   여기서 앵커를 써 넣으면 둘이 서로 덮어쓰며 싸우고, 뜬 값을 「그린 값」이라고
             //   붙잡아 두는 바람에 **호스트 줄이 고스트 줄로 올라가 겹쳐 그려졌다.**
             //
-            //   대신 **그릇(그룹 자신)은 늘린다.** 그릇이 넓어지면 안쪽은 유니티가
-            //   알아서 다시 벌려 놓는다 — 그게 레이아웃 그룹을 쓰는 이유다.
-            if (parent.GetComponent<LayoutGroup>() != null) return;
+            //   다만 **크기**는 우리 몫이다. `ScreenFitShare` 가 붙은 판은 폭만 정해 주고
+            //   자리는 그룹에 맡긴다 — 그룹은 크기를 보고 알아서 벌려 놓는다.
+            bool parentIsLayout = parent.GetComponent<LayoutGroup>() != null;
 
             int from = _entries.Count;
 
@@ -175,10 +184,15 @@ namespace Game.Module.Common.UI
                 // (플레이 필드)이라, 여기서 다시 적으면 그쪽 계산을 덮어쓴다.
                 if (rt.GetComponent<ScreenFitLock>() != null) continue;
 
+                bool share = rt.GetComponent<ScreenFitShare>() != null;
+                if (parentIsLayout && !share) continue;   // 자리는 그룹 몫, 크기만 우리 몫
+
                 _entries.Add(new Entry
                 {
                     Rect = rt,
                     Parent = rt.parent,
+                    Share = share,
+                    LayoutOwned = parentIsLayout,
                     X = ReadBox(rt.anchorMin.x, rt.anchorMax.x, rt.pivot.x,
                                 rt.anchoredPosition.x, rt.sizeDelta.x, baseW),
                     Y = ReadBox(rt.anchorMin.y, rt.anchorMax.y, rt.pivot.y,
@@ -187,8 +201,8 @@ namespace Game.Module.Common.UI
             }
 
             int to = _entries.Count;
-            AssignSides(from, to, horizontal: true);
-            AssignSides(from, to, horizontal: false);
+            AssignSides(from, to, horizontal: true, simpleSides);
+            AssignSides(from, to, horizontal: false, simpleSides);
 
             // 커지는 놈 안쪽만 다시 본다. 박스가 그대로인 놈의 자식은 손댈 이유가 없다.
             //
@@ -198,10 +212,14 @@ namespace Game.Module.Common.UI
             for (int i = from; i < to; i++)
             {
                 var e = _entries[i];
-                if (!e.X.Full && !e.Y.Full) continue;
+                if (!e.X.Full && !e.Y.Full && !e.Share) continue;
                 Scan(e.Rect,
                      e.X.Full ? e.X.ParentBase : e.X.Size,
-                     e.Y.Full ? e.Y.ParentBase : e.Y.Size);
+                     e.Y.Full ? e.Y.ParentBase : e.Y.Size,
+                     // ⚠ 나눠 갖는 판 **안쪽은 낱개로** 좌/우를 가린다. 덩어리로 묶으면
+                     //   폭이 거의 다 차는 부제 글자 하나가 나머지를 통째로 끌고 가
+                     //   본문이 전부 오른쪽으로 밀린다.
+                     simpleSides || e.Share);
             }
         }
 
@@ -226,12 +244,29 @@ namespace Game.Module.Common.UI
 
         // ── 어느 변에 붙일지 정한다 ──────────────────────────────
 
-        private void AssignSides(int from, int to, bool horizontal)
+        private void AssignSides(int from, int to, bool horizontal, bool simpleSides)
         {
             var items = new List<int>();
             for (int i = from; i < to; i++)
                 if (!Axis(_entries[i], horizontal).Full) items.Add(i);
             if (items.Count == 0) return;
+
+            // 판 안쪽은 낱개로, **좌·우 둘로만** 가린다.
+            //
+            // ⚠ 가운데를 두면 안 된다. 판이 넓어질 때 가운데에 붙은 것들이 늘어난 폭의
+            //   절반만큼 같이 밀려서, 왼쪽 아이콘만 제자리에 남고 이름·체력 글자가
+            //   통째로 오른쪽으로 밀려났다. 판 안에서는 어느 변에 붙는지만 있으면 된다.
+            if (simpleSides)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    var b = Axis(_entries[items[i]], horizontal);
+                    if (b.ParentBase <= 0f) continue;
+                    float r = (b.Min + b.Size * 0.5f) / b.ParentBase;
+                    SetSide(items[i], horizontal, r > 1f - SideBias ? Side.Max : Side.Min);
+                }
+                return;
+            }
 
             // **다른 축이 겹치고** 이 축으로 가까우면 한 덩어리 (합집합 찾기)
             var group = new int[items.Count];
@@ -331,11 +366,13 @@ namespace Game.Module.Common.UI
         {
             Capture();
             _lastScreen = new Vector2Int(Screen.width, Screen.height);
+            _lastRootSize = ((RectTransform)transform).rect.size;
 
             for (int i = 0; i < _entries.Count; i++)
             {
                 var e = _entries[i];
                 if (e.Rect == null) continue;
+                if (e.Share) continue;   // 나눠 갖는 판은 아래에서 따로 잡는다
 
                 // ⚠ **부모가 바뀐 놈은 놓아준다.** `InGameMainUI` 가 D패드를 `ControlGroup`
                 //   밖 루트로 꺼내는데, 그 뒤에 화면이 바뀌어 다시 적용하면 **새 부모(화면 전체)**
@@ -345,6 +382,77 @@ namespace Game.Module.Common.UI
 
                 ApplyAxis(e.Rect, e.X, horizontal: true);
                 ApplyAxis(e.Rect, e.Y, horizontal: false);
+            }
+
+            // ⚠ **늘린 뒤에** 나눈다. 먼저 나누면 부모가 아직 그린 폭이라 남는 몫이 0 으로
+            //   잡히고, 판이 하나도 안 넓어진다.
+            ApplyShares();
+        }
+
+        // ── 남는 폭을 형제끼리 나눈다 ────────────────────────────
+        //
+        // 같은 부모 안의 `ScreenFitShare` 형제들이 **그린 폭의 비율대로** 늘어난 몫을 갖는다.
+        // 사이 간격은 그린 값을 그대로 지키므로, 줄 전체가 그린 모양 그대로 폭만 커진다.
+        //
+        // ⚠ 레이아웃 그룹이 맡은 줄에서는 **크기만** 정한다. 자리까지 잡으면 그룹과 싸운다 —
+        //   크기를 바꿔 주면 그룹이 알아서 벌려 놓는다.
+
+        private readonly List<int> _shareBuf = new();
+
+        private void ApplyShares()
+        {
+            for (int i = 0; i < _entries.Count; i++)
+            {
+                if (!_entries[i].Share || _entries[i].Rect == null) continue;
+                var parent = _entries[i].Rect.parent;
+                if (parent == null) continue;
+
+                // 같은 부모의 형제를 모은다 (앞에서 이미 처리한 무리는 건너뛴다)
+                bool first = true;
+                for (int k = 0; k < i; k++)
+                    if (_entries[k].Share && _entries[k].Rect != null && _entries[k].Rect.parent == parent)
+                    { first = false; break; }
+                if (!first) continue;
+
+                _shareBuf.Clear();
+                float sum = 0f;
+                for (int k = i; k < _entries.Count; k++)
+                {
+                    var e = _entries[k];
+                    if (!e.Share || e.Rect == null || e.Rect.parent != parent) continue;
+                    _shareBuf.Add(k);
+                    sum += e.X.Size;
+                }
+                if (_shareBuf.Count == 0 || sum <= 0f) continue;
+
+                if (parent is not RectTransform prt) continue;
+                float extra = prt.rect.width - _entries[_shareBuf[0]].X.ParentBase;
+                if (extra < 0f) extra = 0f;
+
+                // 그린 왼쪽 변 순서로 늘어놓는다
+                _shareBuf.Sort((a, b) => _entries[a].X.Min.CompareTo(_entries[b].X.Min));
+
+                float cursor = _entries[_shareBuf[0]].X.Min;
+                float prevAuthoredRight = cursor;
+                for (int n = 0; n < _shareBuf.Count; n++)
+                {
+                    var e = _entries[_shareBuf[n]];
+                    float gap = e.X.Min - prevAuthoredRight;     // 그린 간격은 그대로
+                    cursor += gap;
+                    float w = e.X.Size + extra * (e.X.Size / sum);
+
+                    e.Rect.sizeDelta = new Vector2(w, e.Rect.sizeDelta.y);
+                    if (!e.LayoutOwned)
+                    {
+                        e.Rect.anchorMin = new Vector2(0f, e.Rect.anchorMin.y);
+                        e.Rect.anchorMax = new Vector2(0f, e.Rect.anchorMax.y);
+                        e.Rect.pivot = new Vector2(0f, e.Rect.pivot.y);
+                        e.Rect.anchoredPosition = new Vector2(cursor, e.Rect.anchoredPosition.y);
+                    }
+
+                    prevAuthoredRight = e.X.Min + e.X.Size;
+                    cursor += w;
+                }
             }
         }
 

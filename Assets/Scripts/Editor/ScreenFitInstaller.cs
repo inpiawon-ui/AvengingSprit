@@ -23,6 +23,17 @@ namespace Game.Editor
             "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
         };
 
+        /// <summary>부모의 남는 폭을 형제와 나눠 갖는 판. 「프리팹 : 노드 이름」.</summary>
+        private static readonly (string prefab, string node)[] Shares =
+        {
+            // 상단 HUD 두 줄. 안 붙이면 1줄은 화면 끝까지 벌어지는데 2줄은 가로 레이아웃
+            // 그룹이 가운데로 모아 두어 **줄마다 끝이 안 맞는다.**
+            ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "PlayerSoulPanel"),
+            ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "RunResourcePanel"),
+            ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "CurrentHostPanel"),
+            ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "ChapterGroup"),
+        };
+
         /// <summary>폭을 늘리면 안 되는 판. 「프리팹 : 노드 이름」.</summary>
         private static readonly (string prefab, string node)[] Locks =
         {
@@ -34,7 +45,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/ScreenFit 달기")]
         public static void Run()
         {
-            int added = 0, locked = 0;
+            int added = 0, locked = 0, shared = 0;
 
             foreach (var path in Roots)
             {
@@ -59,12 +70,24 @@ namespace Game.Editor
                     }
                 }
 
+                foreach (var (p, node) in Shares)
+                {
+                    if (p != path) continue;
+                    var t = FindByName(root.transform, node);
+                    if (t == null) { Debug.LogWarning($"[ScreenFit] 나눌 노드 없음: {node}"); continue; }
+                    if (t.GetComponent<ScreenFitShare>() == null)
+                    {
+                        t.gameObject.AddComponent<ScreenFitShare>();
+                        shared++;
+                    }
+                }
+
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 PrefabUtility.UnloadPrefabContents(root);
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔다");
+            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로 했다");
         }
 
         private static Transform FindByName(Transform root, string name)

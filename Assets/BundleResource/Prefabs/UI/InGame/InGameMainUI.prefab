@@ -4232,6 +4232,7 @@ GameObject:
   - component: {fileID: 1891726646618836618}
   - component: {fileID: 4595330175489996524}
   - component: {fileID: 1436822441891085711}
+  - component: {fileID: 2601287409879153731}
   m_Layer: 0
   m_Name: PlayerSoulPanel
   m_TagString: Untagged
@@ -4307,6 +4308,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2601287409879153731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090694562345535008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
 --- !u!1 &2169663889338737218
 GameObject:
   m_ObjectHideFlags: 0
@@ -7597,6 +7610,7 @@ GameObject:
   - component: {fileID: 8777275614440580662}
   - component: {fileID: 7031203840439929742}
   - component: {fileID: 6064737674857502253}
+  - component: {fileID: 5752421590030819752}
   m_Layer: 0
   m_Name: CurrentHostPanel
   m_TagString: Untagged
@@ -7673,6 +7687,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5752421590030819752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598612734455944172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
 --- !u!1 &3630239282903980727
 GameObject:
   m_ObjectHideFlags: 0
@@ -10936,6 +10962,7 @@ GameObject:
   - component: {fileID: 7104498289074613371}
   - component: {fileID: 2725689177656589775}
   - component: {fileID: 117052213525963874}
+  - component: {fileID: 709221375209475843}
   m_Layer: 0
   m_Name: ChapterGroup
   m_TagString: Untagged
@@ -11008,6 +11035,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &709221375209475843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5648086517740614346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
 --- !u!1 &5703835307834345817
 GameObject:
   m_ObjectHideFlags: 0
@@ -11505,6 +11544,7 @@ GameObject:
   - component: {fileID: 3979944615245844757}
   - component: {fileID: 1375465193836373198}
   - component: {fileID: 901790293025593410}
+  - component: {fileID: 4748228967208384628}
   m_Layer: 0
   m_Name: RunResourcePanel
   m_TagString: Untagged
@@ -11573,6 +11613,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4748228967208384628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6316216838802880835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
 --- !u!1 &6398460745831808438
 GameObject:
   m_ObjectHideFlags: 0
