@@ -517,9 +517,9 @@ namespace Game.Module.InGame
 
             // 패드가 하단 `ControlGroup` 안에 있으면 그 좁은 영역 밖으로 못 나간다.
             // 화면 어디로든 따라가야 하므로 루트로 올리고, 조작 버튼보다는 아래에 둔다.
-            // ⚠ `ControlGroup` **뒤**로 보내면 안 된다. 그 안에 불투명한 격자 바닥
-            //   (`ControlGrid`, 720×230)이 깔려 있어서 패드가 통째로 가려진다.
-            //   조작 버튼보다는 아래, 격자보다는 위 — 그래서 바로 다음 자리다.
+            // ⚠ `ControlGroup` **뒤**로 보내면 안 된다. 그 안의 액션 액자·라벨보다 먼저 그려져
+            //   패드가 가려진다. 필드(방) 위에 떠 있어야 하므로 조작 묶음 바로 다음 자리다.
+            //   (예전엔 여기 불투명 격자판 `ControlGrid` 가 있었다 — 2026-09-11 걷었다.)
             var control = _ui.Find("ControlGroup");
             int controlIndex = control != null ? control.GetSiblingIndex() + 1 : transform.childCount;
             _dpad.SetParent(transform, worldPositionStays: true);

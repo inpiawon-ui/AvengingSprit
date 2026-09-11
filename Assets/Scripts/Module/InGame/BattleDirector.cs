@@ -342,9 +342,9 @@ namespace Game.Module.InGame
             }
             // 화면 폭이 8 m 를 담는다. 방이 15 m 라 나머지는 카메라가 따라가며 보여 준다.
             _pxPerMeter = _field.rect.width / ViewMeterWidth;
-            // ⚠ **방 크기를 정하기 전에** 그려진 높이를 떠 둔다. 뒤에 뜨면 이미 맞춘 값이
-            //   기준이 되어, 화면을 바꿀 때마다 창이 조금씩 커진다.
-            CaptureFieldBaseHeight();
+            // ⚠ **방 크기를 정하기 전에** 필드 윗변 자리(상단 HUD 몫)를 떠 둔다.
+            //   `SetRoomSize` 가 곧바로 창 높이를 맞추는데 그때 이 값이 있어야 한다.
+            CaptureFieldTop();
             SetRoomSize(RoomMeterHeight);
             _bus = CoreModule.Get<IEventBus>();
             CoreModule.TryGet(out _player);
@@ -4726,6 +4726,10 @@ namespace Game.Module.InGame
             // 넓은 화면에서 필드 옆에 남는 자리를 같은 무대의 벽으로 채운다
             // (`BattleDirector.RoomSide.cs`). 폰에서는 남는 자리가 없어 저절로 꺼진다.
             ApplyRoomSides(_floorEnv, chapter);
+
+            // 방 아래 남는 자리(조작 버튼이 떠 있는 곳)를 같은 무대의 「방 밖 바닥」으로 채운다
+            // (`BattleDirector.RoomApron.cs`). 방이 창보다 길면 남는 자리가 없어 저절로 꺼진다.
+            ApplyRoomApron(_floorEnv, chapter);
         }
 
         // ── 레일 보스는 지금 못 넣는다 ────────────────────────────

@@ -242,6 +242,13 @@ namespace Game.EditorTools
 
             if (name.StartsWith("roomfloor_")) return new[] { $"{RoomFloorRes}/{name}" };
 
+            // 방 **밖** 그림 — 좌우 벽(`roomside_`)과 방 아래 바닥(`roomapron_`).
+            // 방 바닥과 한 무대라 같은 곳에 두고 같은 규칙(한 장씩 불러오고 놓는다)을 쓴다.
+            // ⚠ 이 규칙이 없으면 처음 오는 `roomapron_` 은 `existing` 이 못 잡아
+            //   「UI 조각이 아니다」로 튕긴다(720 × 540).
+            if (name.StartsWith("roomside_") || name.StartsWith("roomapron_"))
+                return new[] { $"{RoomFloorRes}/{name}" };
+
             // 컷신은 **화면 한 장짜리**라 아틀라스에 넣지 않는다. 640×640 스무 장을 묶으면
             // 오프닝에만 쓰는 그림이 판 내내 메모리에 상주한다. 방 바닥과 같은 규칙 —
             // 한 장씩 불러오고 넘어가면 놓아 준다.

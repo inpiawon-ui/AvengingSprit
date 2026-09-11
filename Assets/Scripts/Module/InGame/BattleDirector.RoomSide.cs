@@ -56,6 +56,12 @@ namespace Game.Module.InGame
         /// <summary>지금 걸려 있는 무대. 같은 무대가 이어지면 다시 읽지 않는다.</summary>
         private string _sideEnv = string.Empty;
 
+        /// <summary>
+        /// 이 방이 원하는 무대. 폰에서는 벽을 안 켜므로 걸려 있는 것(`_sideEnv`)과 다를 수 있다 —
+        /// 화면이 넓어지는 순간 이것을 건다.
+        /// </summary>
+        private string _sideWantEnv = string.Empty;
+
         /// <summary>지금 들고 있는 주소. 새 것을 건 뒤에 이것을 놓는다.</summary>
         private string _sideHeld;
 
@@ -68,7 +74,19 @@ namespace Game.Module.InGame
             // 정본 층 배치(`roomfloor_ch1_*`)를 쓰는 방은 무대 이름이 비어 있다.
             // 그때는 챕터로 고른다 — 벽이 없는 방과 있는 방이 섞이면 그게 더 튄다.
             if (string.IsNullOrEmpty(env)) env = EnvOfChapter(chapter);
+            _sideWantEnv = env;
+            RefreshRoomSides();
+        }
 
+        /// <summary>
+        /// 화면 폭을 보고 벽을 켜고 끈다. 방에 들어설 때와 **화면 크기가 바뀔 때**(`FieldFit`) 부른다.
+        ///
+        /// ⚠ 방에 들어설 때만 보면 안 된다. 폰 폭으로 들어온 방에서 화면이 넓어지면
+        ///   (접는 폰을 펼치거나, 에디터에서 해상도를 바꾸면) 벽이 꺼진 채로 남아
+        ///   필드 양옆이 까맣게 빈다 — 실제로 태블릿으로 바꾸자 그랬다.
+        /// </summary>
+        private void RefreshRoomSides()
+        {
             EnsureRoomSides();
             if (_sideLeft == null) return;
 
@@ -80,9 +98,9 @@ namespace Game.Module.InGame
             if (!wide) return;
 
             LayoutRoomSides();
-            if (env == _sideEnv) return;
-            _sideEnv = env;
-            LoadRoomSideAsync(env).Forget();   // fire-and-forget: 벽은 한 프레임 늦어도 된다
+            if (_sideWantEnv == _sideEnv || string.IsNullOrEmpty(_sideWantEnv)) return;
+            _sideEnv = _sideWantEnv;
+            LoadRoomSideAsync(_sideEnv).Forget();   // fire-and-forget: 벽은 한 프레임 늦어도 된다
         }
 
         private static string EnvOfChapter(int chapter) => chapter switch
@@ -124,11 +142,19 @@ namespace Game.Module.InGame
             return rt;
         }
 
-        /// <summary>필드의 세로 자리를 그대로 따르고, 가로는 필드 양옆에 붙인다.</summary>
+        /// <summary>
+        /// 가로는 필드 양옆에 붙이고, 세로는 필드 윗변부터 **화면 아래 끝까지** 내린다.
+        ///
+        /// ⚠ 필드 높이만큼만 두면 안 된다. 필드가 방(936)에서 잘리고 그 밑에 방 밖 바닥
+        ///   (`RoomApron`)이 깔리는데, 벽이 필드 높이에서 끊기면 태블릿에서 그 옆이 빈다.
+        /// </summary>
         private void LayoutRoomSides()
         {
             if (_sideLeft == null || _field == null) return;
 
+            float height = _field.parent is RectTransform parent && _fieldTopOffset >= 0f
+                           ? parent.rect.height - _fieldTopOffset
+                           : _field.sizeDelta.y;
             float half = _field.rect.width * 0.5f;
             // 필드가 부모 가운데에 있다는 전제 — 그렇지 않으면 필드 중심을 기준으로 잡는다.
             float fieldCenterX = _field.anchoredPosition.x + _field.rect.width * (0.5f - _field.pivot.x);
@@ -138,7 +164,7 @@ namespace Game.Module.InGame
                 rt.anchorMin = new Vector2(0.5f, _field.anchorMin.y);
                 rt.anchorMax = new Vector2(0.5f, _field.anchorMax.y);
                 rt.pivot = new Vector2(0.5f, _field.pivot.y);
-                rt.sizeDelta = new Vector2(RoomSideWidth, _field.sizeDelta.y);
+                rt.sizeDelta = new Vector2(RoomSideWidth, height);
                 rt.anchoredPosition = new Vector2(
                     fieldCenterX + sign * (half + RoomSideWidth * 0.5f),
                     _field.anchoredPosition.y);
