@@ -1043,7 +1043,11 @@ namespace Game.Module.InGame
             if (!IsLowHp) { _hpBarFill.color = baseColor; return; }
 
             float k = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.PI * 2f * LowHpBlinkPerSecond);
-            _hpBarFill.color = Color.Lerp(baseColor, Color.white, k * 0.75f);
+            // 유령은 빨간 경고로 뛴다(HUD 와 같은 색). 흰색 쪽은 초록 바에서는 잘 보이지만
+            // 유령이 딸피일 때는 「곧 사라진다」가 더 급한 신호라 색부터 달라야 한다.
+            _hpBarFill.color = Key == "ghost"
+                ? Color.Lerp(new Color(0.42f, 0.04f, 0.04f, 1f), new Color(1f, 0.18f, 0.16f, 1f), k)
+                : Color.Lerp(baseColor, Color.white, k * 0.75f);
         }
 
         private void RefreshHpBar()

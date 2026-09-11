@@ -314,11 +314,20 @@ namespace Game.Module.InGame
 
         private void TickLowHpBlink()
         {
-            BlinkBar(ref _ghostFillImage, ref _ghostFillColor, "GhostHpBarFill", _ghostHpRatio, true);
-            BlinkBar(ref _hostFillImage, ref _hostFillColor, "HostHpBarFill", _hostHpRatio, _hostBarShown);
+            BlinkBar(ref _ghostFillImage, ref _ghostFillColor, "GhostHpBarFill", _ghostHpRatio, true, alarm: true);
+            BlinkBar(ref _hostFillImage, ref _hostFillColor, "HostHpBarFill", _hostHpRatio, _hostBarShown, alarm: false);
         }
 
-        private void BlinkBar(ref Image img, ref Color baseColor, string name, float ratio, bool shown)
+        /// <summary>
+        /// 딸피 경고 빨강. 유령 바는 흰색 쪽으로 뛰면 **오히려 옅어져** 눈에 덜 띄었다 —
+        /// 원래 색이 이미 붉은 주황이라, 흰색과 섞으면 분홍빛으로 흐려진다.
+        /// 어두운 빨강 ↔ 밝은 빨강을 오가게 해서 「위험」으로 읽히게 한다.
+        /// </summary>
+        private static readonly Color LowHpAlarmDark = new(0.42f, 0.04f, 0.04f, 1f);
+        private static readonly Color LowHpAlarmBright = new(1f, 0.18f, 0.16f, 1f);
+
+        private void BlinkBar(ref Image img, ref Color baseColor, string name, float ratio, bool shown,
+                              bool alarm)
         {
             if (img == null)
             {
@@ -332,7 +341,9 @@ namespace Game.Module.InGame
             if (!shown || ratio > Unit.LowHpRatio || ratio <= 0f) { img.color = baseColor; return; }
 
             float k = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.PI * 2f * HudLowHpBlinkPerSecond);
-            img.color = Color.Lerp(baseColor, Color.white, k * 0.8f);
+            img.color = alarm
+                ? Color.Lerp(LowHpAlarmDark, LowHpAlarmBright, k)
+                : Color.Lerp(baseColor, Color.white, k * 0.8f);
         }
 
         // ── 골드 획득 연출 ───────────────────────────────────
