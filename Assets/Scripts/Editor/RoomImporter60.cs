@@ -29,7 +29,18 @@ namespace Game.EditorTools
 
         /// <summary>방 규격. 한 화면에 들어와야 방을 보고 판단할 수 있다.</summary>
         private const float RoomWidth = 10f;
-        private const float RoomHeight = 13f;
+        private const float RoomHeight = 16f;
+
+        /// <summary>
+        /// 배정표(`RoomDef60`)·배치 틀(`RoomLayoutTable`)이 **쓰인 방 높이**. 그 숫자들은 13 m 방 기준이다.
+        ///
+        /// ⚠ 2026-09-11 에 방을 16 m 로 늘렸다(기획 — 배치를 더 넓게). 숫자를 그대로 쓰면 적·장애물이
+        ///   아래쪽 13 m 에 몰리고 문 아래 3 m 가 빈다 — `Spread` 로 가운데를 펼친다.
+        /// </summary>
+        private const float SourceHeight = 13f;
+
+        /// <summary>위쪽 문이 서는 구역(m). `RoomImporterV33.GateBandMeters` 와 같은 값.</summary>
+        private const float GateBandMeters = 2.5f;
 
         private const int RoomsPerChapter = 10;
 
@@ -109,11 +120,41 @@ namespace Game.EditorTools
             }
 
             so.ApplyModifiedPropertiesWithoutUndo();
+            int unblocked = UnblockRooms(table, so, rooms);
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
+            if (unblocked > 0) Debug.Log($"[60방] 막힌 방을 풀려고 물건 {unblocked}개를 뺐다");
 
             Debug.Log($"[60방] 방 {defs.Length} · 스폰 {spawns} — "
                       + $"보스 {bossRooms} · 중간보스 {midBossRooms} · 엘리트 {eliteRooms} · 이벤트 {eventRooms}");
+        }
+
+        /// <summary>
+        /// 입구에서 출구까지 못 가는 방에서 물건을 뺀다 — 막힌 방은 난이도가 아니라 고장이다.
+        ///
+        /// ⚠ 2026-09-11 방을 16 m 로 늘리고 물건 자리를 위아래로 더 찾게 했더니 CH6_009 에서
+        ///   수로 셋이 문 아래를 가로로 막았다. 물건은 하나씩 앉히므로 앉히는 중에는 길을 모른다 —
+        ///   다 앉힌 뒤 방 지도 창과 **같은 자**(`RoomMapWindow.Reachable`)로 잰다.
+        ///   뒤에 앉힌 것부터 「이것 하나 빼면 풀리나」를 보고, 풀리는 것 하나만 뺀다.
+        /// </summary>
+        private static int UnblockRooms(RoomTable table, SerializedObject so, SerializedProperty rooms)
+        {
+            int removed = 0;
+            for (int i = 0; i < rooms.arraySize; i++)
+            {
+                var objs = rooms.GetArrayElementAtIndex(i).FindPropertyRelative("_objects");
+                while (objs.arraySize > 0 && !RoomMapWindow.Reachable(table.Rooms[i]))
+                {
+                    int pick = objs.arraySize - 1;
+                    for (int k = objs.arraySize - 1; k >= 0; k--)
+                        if (RoomMapWindow.Reachable(table.Rooms[i], k)) { pick = k; break; }
+                    Debug.Log($"[60방] {table.Rooms[i].RoomId} 막힘 — 물건 {pick + 1}번째를 뺀다");
+                    objs.DeleteArrayElementAtIndex(pick);
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    removed++;
+                }
+            }
+            return removed;
         }
 
         /// <summary>배정표의 한글 종류 → 방 타입 문자열. `KindOfCanon` 이 이 값을 읽는다.</summary>
@@ -290,7 +331,7 @@ namespace Game.EditorTools
                 p.FindPropertyRelative("_actorId").stringValue = s.Unit;
                 // 지형지물과 **같은 방향으로** 뒤집는다 (`MirrorRoom` 주석 참조)
                 p.FindPropertyRelative("_at").vector2Value =
-                    PushOffEntrance(new Vector2(flipRoom ? MirrorX(s.X) : s.X, s.Y));
+                    PushOffEntrance(new Vector2(flipRoom ? MirrorX(s.X) : s.X, Spread(s.Y)));
                 p.FindPropertyRelative("_facing").stringValue = "S";
                 p.FindPropertyRelative("_delaySeconds").floatValue = 0f;
                 // ⚠ 빙의 대상 표시는 **`_trigger` 다.** `RoomEntry.IsPossessionTarget` 이
@@ -471,6 +512,39 @@ namespace Game.EditorTools
             return new Vector2(at.x, Mathf.Max(at.y, y));
         }
 
+        /// <summary>
+        /// 13 m 방 기준 높이를 16 m 방으로 **펼친다.** 입구(아래 1.7 m)와 문 구역(위 2.5 m)은 그대로 두고
+        /// 그 사이 싸움터만 늘린다 — 전부 같은 비율로 늘리면 입구 코앞이 벌어지고 문 구역이 좁아진다.
+        ///   입구 아래        그대로
+        ///   입구 ~ 문 구역   (13 m 의 8.8 m) → (16 m 의 11.8 m) 로 비례
+        ///   문 구역 안       위로 3 m 옮김(문과의 거리 그대로)
+        /// </summary>
+        private static float Spread(float y)
+        {
+            float e = EntranceAt.y;
+            float srcTop = SourceHeight - GateBandMeters;
+            float dstTop = RoomHeight - GateBandMeters;
+            if (y <= e) return y;
+            if (y >= srcTop) return y + (RoomHeight - SourceHeight);
+            return e + (y - e) * (dstTop - e) / (srcTop - e);
+        }
+
+        /// <summary>
+        /// 물건 자리를 타일에 앉힌다 — 펼치면 소수점이 생겨 바닥 줄눈을 가로지른다.
+        ///
+        /// ⚠ 앉히면 반 칸 올라갈 수 있다. 그러면 윗변이 **문 구역(위 2.5 m)** 으로 들어간다 —
+        ///   실제로 상자 3·가시판 1 이 윗변 14 m 로 문 구역을 0.5 m 먹었다. 앉힌 뒤 한 칸씩 내린다.
+        /// </summary>
+        private static Vector2 Snap(string kind, float x, float y)
+        {
+            var size = RoomImporterV33.PropSize(kind);
+            var at = RoomImporterV33.SnapToTiles(
+                new KeyValuePair<Vector2, Vector2>(new Vector2(x, y), size)).Key;
+            float top = RoomHeight - GateBandMeters;
+            while (at.y + size.y * 0.5f > top + 0.001f) at.y -= 1f;
+            return at;
+        }
+
         private static void WriteObjects(SerializedProperty e, RoomDef60.Room d)
         {
             var objs = e.FindPropertyRelative("_objects");
@@ -515,26 +589,28 @@ namespace Game.EditorTools
             {
                 var o = layout.Objects[i];
                 float baseX = flip ? MirrorX(o.At.x) : o.At.x;
-                float baseY = Mathf.Clamp(o.At.y + dy, 2.5f, RoomHeight - 3.0f);
+                // 13 m 기준 틀을 16 m 방으로 펼친 높이. 두 번째 자리로도 쓰므로 여기서도 조인다.
+                float srcY = Mathf.Clamp(Spread(o.At.y), 2.5f, RoomHeight - 3.0f);
+                float baseY = Mathf.Clamp(srcY + dy, 2.5f, RoomHeight - 3.0f);
+                // 올린 자리 → 원래 높이 → 그 위아래 한두 칸 순으로 본다 — 빼는 것보다 낫다.
+                //
+                // ⚠ 2026-09-11 16 m 로 펼친 뒤 앞의 두 높이만 봤더니 적 자리와 겹쳐
+                //   CH5_008 수로 · CH5_009 상자가 빠졌다. 방이 넓어졌는데 물건이 줄면 거꾸로다.
+                float[] heights = { baseY, srcY, srcY - 1f, srcY + 1f, srcY - 2f, srcY + 2f };
                 bool placed = false;
-                for (int k = 0; k < shifts.Length; k++)
+                for (int h = 0; h < heights.Length && !placed; h++)
                 {
-                    float dx = shifts[(Mathf.Abs(seed / 2) + i + k) % shifts.Length];
-                    if (!FitsOne(o.Kind, baseX + dx, baseY, taken)) continue;
-                    o.At = new Vector2(baseX + dx, baseY);
-                    placed = true;
-                    break;
-                }
-                // 올린 자리가 안 되면 원래 높이로 한 번 더 본다 — 빼는 것보다 낫다.
-                if (!placed)
+                    float y = Mathf.Clamp(heights[h], 2.5f, RoomHeight - 3.0f);
                     for (int k = 0; k < shifts.Length; k++)
                     {
                         float dx = shifts[(Mathf.Abs(seed / 2) + i + k) % shifts.Length];
-                        if (!FitsOne(o.Kind, baseX + dx, o.At.y, taken)) continue;
-                        o.At = new Vector2(baseX + dx, o.At.y);
+                        var at = Snap(o.Kind, baseX + dx, y);
+                        if (!FitsOne(o.Kind, at.x, at.y, taken)) continue;
+                        o.At = at;
                         placed = true;
                         break;
                     }
+                }
                 if (!placed) continue;
 
                 // 앉힌 것도 자리를 차지한다 — 다음 물건이 그 위에 겹치지 않게.

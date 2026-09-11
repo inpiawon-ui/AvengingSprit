@@ -241,8 +241,16 @@ namespace Game.Module.InGame
         /// </summary>
         private const float ChaseStopMeters = 3f;
 
-        private const float RoomMeterHeight = 13f;
-        private const float BossRoomMeterHeight = 13f;
+        // ⚠ 2026-09-11 에 13 m → **16 m** (기획 — 배치를 더 넓게). 60방 데이터(`RoomTable._height`)도 16 이고,
+        //   바닥 그림도 720 × 1152 로 이어 그려 다시 받았다. 여기 값은 정본 방이 없을 때의 기본값이다.
+        private const float RoomMeterHeight = 16f;
+        private const float BossRoomMeterHeight = 16f;
+
+        /// <summary>
+        /// 벽 보스(파이썬) 아레나 높이. **13 m 그대로** 둔다 — 카메라를 세우는 방이라(`CameraLocked`)
+        /// 16:9 화면(창 1050)에 방 전체가 들어와야 하고, 바닥 그림도 720 × 936 그대로 쓴다.
+        /// </summary>
+        private const float WallArenaMeterHeight = 13f;
 
         // ⚠ 카메라는 **즉시** 따라간다. 보간을 넣지 않는다.
         //
@@ -2567,7 +2575,7 @@ namespace Game.Module.InGame
             //   방이 바닥 그림(936)보다 길어져 그 밑이 빈다 — 방 높이에서 자르고, 카메라는 세운다
             //   (`CameraLocked`). 창이 방보다 짧은 화면이면 예전처럼 창 높이.
             SetRoomSize(_roomBoss != null && _roomBoss.State == BossState.Walls
-                        ? Mathf.Min(_field.rect.height, RoomMeterHeight * _pxPerMeter) / _pxPerMeter
+                        ? Mathf.Min(_field.rect.height, WallArenaMeterHeight * _pxPerMeter) / _pxPerMeter
                       : _canonRoom != null ? _canonRoom.Height
                       : isBoss ? BossRoomMeterHeight : RoomMeterHeight);
 

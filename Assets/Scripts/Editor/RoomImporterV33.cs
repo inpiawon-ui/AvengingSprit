@@ -690,7 +690,7 @@ namespace Game.EditorTools
         /// 칸 수는 **시안(`_exchange/out/30_tile/tile_concept.png`)을 재서** 정했다.
         /// 시안 바닥 타일이 32.6 px 이고 석조 블록 하나가 그 2칸이다 → 블록 = 우리 1칸.
         /// 나머지는 그 자로 잰 값이다: 파이프 다발·난간 6칸(=3), 상자 4×2칸(=2×1), 배수구 4×4칸(=2×2).
-        private static Vector2 PropSize(string kind) => kind switch
+        internal static Vector2 PropSize(string kind) => kind switch
         {
             "PILLAR"      => new Vector2(1f, 1f),   // 부서진 석조 기둥
             "LOW_COVER"   => new Vector2(3f, 1f),   // 누운 파이프 다발
@@ -713,7 +713,7 @@ namespace Game.EditorTools
         /// 가운데를 반올림하면 안 된다. 폭이 짝수(2 칸)인 물건은 가운데가 정수여야 하고
         /// 홀수(1 칸)인 물건은 가운데가 .5 여야 한다. 기준은 언제나 **변**이다.
         /// </summary>
-        private static KeyValuePair<Vector2, Vector2> SnapToTiles(
+        internal static KeyValuePair<Vector2, Vector2> SnapToTiles(
             KeyValuePair<Vector2, Vector2> spot)
         {
             var s = spot.Value;

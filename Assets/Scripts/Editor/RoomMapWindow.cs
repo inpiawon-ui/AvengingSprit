@@ -407,8 +407,9 @@ namespace Game.EditorTools
         /// <summary>
         /// 런타임과 같은 판정으로 방을 넓이우선 탐색한다.
         /// 몸은 **그림 중심** 좌표로 움직이고, 발판은 그림 밑변에 붙어 있다.
+        /// `skip` 번째 물건은 없는 셈 친다 — 임포터가 「이것 하나 빼면 풀리나」를 잴 때 쓴다.
         /// </summary>
-        private static bool Reachable(RoomEntry r)
+        internal static bool Reachable(RoomEntry r, int skip = -1)
         {
             const float Step = 0.25f;
             var cfg = AssetDatabase.LoadAssetAtPath<Game.Character.GameConfig>(
@@ -424,7 +425,7 @@ namespace Game.EditorTools
             for (int i = 0; i < r.Objects.Count; i++)
             {
                 var o = r.Objects[i];
-                if (!o.BlocksMove) continue;
+                if (i == skip || !o.BlocksMove) continue;
                 bx.Add(new Vector4(o.At.x, o.At.y,
                                    o.Size.x * ObstacleScale * 0.5f,
                                    o.Size.y * ObstacleScale * 0.5f));
