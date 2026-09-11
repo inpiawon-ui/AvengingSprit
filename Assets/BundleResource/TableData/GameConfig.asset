@@ -61,8 +61,8 @@ MonoBehaviour:
   _enemyAttackInterval: 1.1
   _enemyDetectRange: 300
   _hostAttackSpeedMul: 0.3
-  _unitScale: 1.05
-  _meleeAttackRange: 92
+  _unitScale: 1.2
+  _meleeAttackRange: 96.6
   _enemySeparation: 82
   _enemiesPerRoomMin: 4
   _enemiesPerRoomMax: 7

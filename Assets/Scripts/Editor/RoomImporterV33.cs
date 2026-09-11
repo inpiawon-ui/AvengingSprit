@@ -992,11 +992,27 @@ namespace Game.EditorTools
         //   · 좌표는 런타임과 같은 **그림 중심** 기준
         // 이 셋 중 하나라도 런타임과 어긋나면 검사가 거짓말을 한다.
 
-        private const float BodyW = 96f * 1.05f;      // 숙주 그림 폭 × UnitScale
-        private const float BodyH = 92f * 1.05f;
-        private const float FootHalfX = BodyW * 0.25f / 72f;          // m
-        private const float FootHalfY = BodyH * 0.16f / 72f;          // m
-        private const float FootDropM = (BodyH * 0.5f - BodyH * 0.16f) / 72f;
+        /// <summary>
+        /// 몸 크기는 `GameConfig.UnitScale` 에서 온다.
+        ///
+        /// ⚠ **숫자를 박아 두지 않는다.** 1.05 를 적어 두었더니, 몸을 1.2 로 키운 날
+        ///   이 검사만 옛 몸으로 걸어 보게 됐다 — 실제로는 막히는 방을 통과로 본다.
+        /// </summary>
+        private static float UnitScale
+        {
+            get
+            {
+                var cfg = AssetDatabase.LoadAssetAtPath<GameConfig>(
+                    "Assets/BundleResource/TableData/GameConfig.asset");
+                return cfg != null ? cfg.UnitScale : 1f;
+            }
+        }
+
+        private static readonly float BodyW = 96f * UnitScale;        // 숙주 그림 폭 × UnitScale
+        private static readonly float BodyH = 92f * UnitScale;
+        private static readonly float FootHalfX = BodyW * 0.25f / 72f;          // m
+        private static readonly float FootHalfY = BodyH * 0.16f / 72f;          // m
+        private static readonly float FootDropM = (BodyH * 0.5f - BodyH * 0.16f) / 72f;
         // 블록 축소 배율. `BattleDirector.ObstacleViewScale` 과 **같아야 한다** —
         // 어긋나면 이 검사가 통과시킨 방이 실제로는 막히거나, 그 반대가 된다.
         // (블록은 그림·판정이 같은 값으로 줄어든다. 보이는 것이 곧 막는 것.)

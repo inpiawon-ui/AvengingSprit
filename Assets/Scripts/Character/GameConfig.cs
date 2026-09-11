@@ -179,7 +179,15 @@ namespace Game.Character
 
         [SerializeField] private float _unitScale = 1.5f;
 
-        [SerializeField] private float _meleeAttackRange = 92f;
+        /// <summary>
+        /// 근접 사거리(px).
+        ///
+        /// ⚠ **`UnitScale` 을 곱하지 않는다.** 예전에는 「그림이 크면 팔도 길다」로 보고
+        ///   몸 크기에 묶어 두었는데, 그러면 **보기 좋으라고 몸만 키울 수가 없다** —
+        ///   1.05 → 1.2 로 올리는 순간 근접 사거리도 14 % 같이 늘어 난이도가 바뀐다.
+        ///   둘은 다른 이유로 정하는 값이라 따로 둔다.
+        /// </summary>
+        [SerializeField] private float _meleeAttackRange = 96.6f;
 
         [SerializeField] private float _enemySeparation = 82f;
         [SerializeField] private int _enemiesPerRoomMin = 4;
@@ -267,8 +275,8 @@ namespace Game.Character
         public float EnemyDetectRange => _enemyDetectRange;
         public float HostAttackSpeedMul => Mathf.Clamp(_hostAttackSpeedMul, 0.1f, 3f);
         public float UnitScale => Mathf.Max(0.1f, _unitScale);
-        /// <summary>그림 크기에 맞춰 커진 근접 사거리.</summary>
-        public float MeleeAttackRange => _meleeAttackRange * UnitScale;
+        /// <summary>근접 사거리. 몸 크기와 **따로** 간다 — 위 필드 주석 참고.</summary>
+        public float MeleeAttackRange => _meleeAttackRange;
         public float EnemySeparation => _enemySeparation * UnitScale;
         public float EnemyAttackInterval => _enemyAttackInterval;
         public int EnemiesPerRoom(int roomIndex)
