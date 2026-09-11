@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Game.Module.Common.UI;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Resource;
 using UnityEngine;
@@ -42,6 +43,12 @@ namespace Game.Module.InGame
         /// </summary>
         private const float RoomCloudReach = 560f;
 
+        /// <summary>
+        /// 구름 위쪽 끝의 색(곱). 아래 끝은 원래 색 그대로 — 위로 갈수록 어둡고 푸르게 가라앉아
+        /// **멀어지는 깊이**가 난다(기획 2026-09-11, 시안 「강」). 그림을 다시 받지 않고 꼭짓점 색으로 준다.
+        /// </summary>
+        private static readonly Color RoomCloudTopTint = new(0.28f, 0.30f, 0.38f, 1f);
+
         private const string RoomCloudPrefix = "roomfloor/roomcloud_";
         private const string RoomCloudCommon = "roomfloor/roomcloud";
 
@@ -80,6 +87,8 @@ namespace Game.Module.InGame
             _cloudImage = go.GetComponent<Image>();
             _cloudImage.raycastTarget = false;   // 조작을 가로채면 안 된다
             _cloudImage.enabled = false;         // 그림이 올 때까지 비워 둔다
+            // 위로 갈수록 가라앉는다 — 깊이감
+            go.AddComponent<VerticalGradient>().Set(RoomCloudTopTint, Color.white);
             ApplyScroll();
         }
 
