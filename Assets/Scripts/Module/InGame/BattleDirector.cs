@@ -1707,39 +1707,58 @@ namespace Game.Module.InGame
             var a = Avatar;
             if (a == null || _unitLayer == null) return;
 
+            TickZoom(dt);              // 줌을 먼저 — 카메라 범위가 줌에 따라 달라진다
             _scroll = WantScroll(a);   // 지연 없음 — 위 주석 참조
             ApplyScroll();
-            TickZoom(dt);
         }
 
-        // ── 빙의 줌 ──────────────────────────────────────────────
+        // ── 카메라 줌 ─────────────────────────────────────────────
         //
-        // 빙의하는 동안 화면을 살짝 당긴다. 이 게임의 이름값이 걸린 동작인데
-        // 아무 변화 없이 캐릭터만 바뀌면 그냥 조작 하나로 읽힌다.
+        // 화면 비율마다 기본 줌(`GameConfig.CameraZoomFor` — 9:16 폰 · 4:3 태블릿)이 있고,
+        // 빙의하는 동안은 그 위에 `PossessZoom` 만큼 더 당긴다. 빙의는 이 게임의 이름값이 걸린
+        // 동작이라 아무 변화 없이 캐릭터만 바뀌면 그냥 조작 하나로 읽힌다.
+        //
+        // ⚠ 2026-09-11 전에는 **창(`_field`)을 통째로** 키웠다. 창에 마스크가 걸려 있어 마스크까지
+        //   같이 커졌고, 줌 중심이 캐릭터가 아니라 창 가운데였다. 이제 창은 그대로 두고
+        //   방 레이어들만 캐릭터 자리(`ViewFocus`)를 중심으로 키운다 — `ApplyScroll` · `Place`.
 
         private const float ZoomSpeed = 9f;
 
         private float _zoom = 1f;
-        private Vector2 _fieldHome;
-        private bool _fieldHomeSet;
+
+        /// <summary>지금 가야 할 줌. 벽 보스는 카메라를 세우므로 당기지 않는다 — 벽이 화면 밖으로 나간다.</summary>
+        private float WantZoom()
+        {
+            if (_config == null || _field == null || CameraLocked) return 1f;
+            // 캔버스 값(부모 크기)으로 비율을 잰다. `Screen` 은 해상도가 바뀌는 프레임에 캔버스와 어긋난다.
+            var parent = _field.parent as RectTransform;
+            float aspect = parent != null && parent.rect.height > 0f
+                ? parent.rect.width / parent.rect.height : 9f / 16f;
+            float zoom = _config.CameraZoomFor(aspect);
+            return IsChanneling ? zoom * _config.PossessZoom : zoom;
+        }
 
         private void TickZoom(float dt)
         {
-            if (_field == null || _config == null) return;
-            if (!_fieldHomeSet) { _fieldHome = _field.anchoredPosition; _fieldHomeSet = true; }
-
-            float want = IsChanneling ? _config.PossessZoom : 1f;
+            float want = WantZoom();
             _zoom = Mathf.Lerp(_zoom, want, 1f - Mathf.Exp(-ZoomSpeed * dt));
-            if (Mathf.Abs(_zoom - 1f) < 0.0005f) _zoom = 1f;
+            if (Mathf.Abs(_zoom - want) < 0.0005f) _zoom = want;
+        }
 
-            _field.localScale = new Vector3(_zoom, _zoom, 1f);
+        /// <summary>
+        /// 줌의 중심 — 창 안에서 캐릭터가 서는 자리(창 왼쪽 위 기준, 아래로 음수).
+        /// 캐릭터는 줌이 바뀌어도 이 자리에 그대로 있고 둘레만 커진다.
+        /// </summary>
+        private Vector2 ViewFocus => new(_field.rect.width * 0.5f, -_field.rect.height * CameraAnchor);
 
-            // 방 화면의 피벗이 좌상단이라 그냥 키우면 오른쪽 아래로 밀려난다.
-            // 가운데가 제자리에 있도록 되돌린다.
-            float k = _zoom - 1f;
-            var size = _field.rect.size;
-            _field.anchoredPosition = _fieldHome + new Vector2(-k * size.x * 0.5f,
-                                                                k * size.y * 0.5f);
+        /// <summary>
+        /// 방 좌표 → 창 좌표(창 왼쪽 위 기준, 아래로 음수). 스크롤과 줌을 함께 먹인다.
+        /// 창에서 무엇이 어디 보이는지 따지는 곳(화면 밖 판정 · 빙의 화살표)은 전부 이것을 쓴다.
+        /// </summary>
+        private Vector2 RoomToView(Vector2 room)
+        {
+            var f = ViewFocus;
+            return f + _zoom * (room + _scroll - f);
         }
 
         /// <summary>
@@ -1754,17 +1773,31 @@ namespace Game.Module.InGame
             // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다.
             // 화면 흔들림(`_shakeOffset`)은 여기에 얹는다 — 모든 레이어가 한 값을 쓰므로
             // 여기 한 곳만 더하면 바닥·유닛·탄·글자가 통째로 같이 흔들린다.
-            var at = new Vector2(Mathf.Round(_scroll.x + _shakeOffset.x),
-                                 Mathf.Round(_scroll.y + _shakeOffset.y));
-            _unitLayer.anchoredPosition = at;
-            if (_shotLayer != null) _shotLayer.anchoredPosition = at;
-            if (_textLayer != null) _textLayer.anchoredPosition = at;
-            if (_fieldLayer != null) _fieldLayer.anchoredPosition = at;
-            if (_pyStage != null) _pyStage.anchoredPosition = at;
-            if (_floor != null) _floor.anchoredPosition = at;
+            var at = _scroll + _shakeOffset;
+            Place(_unitLayer, at);
+            Place(_shotLayer, at);
+            Place(_textLayer, at);
+            Place(_fieldLayer, at);
+            Place(_pyStage, at);
+            Place(_floor, at);
             // 방 밖 그림도 방과 한 몸으로 움직인다 — 바닥은 방 아랫변 밑, 구름은 방 윗변 위.
-            if (_apron != null) _apron.anchoredPosition = new Vector2(at.x, at.y - _roomSize.y);
-            if (_cloud != null) _cloud.anchoredPosition = new Vector2(at.x, at.y - RoomCloudDrop);
+            Place(_apron, new Vector2(at.x, at.y - _roomSize.y));
+            Place(_cloud, new Vector2(at.x, at.y - RoomCloudDrop));
+        }
+
+        /// <summary>
+        /// 방 레이어 하나를, 줌이 없을 때 있어야 할 자리(`at`)에서 **캐릭터 자리를 중심으로**
+        /// 줌만큼 당겨 놓는다. 레이어는 전부 창 왼쪽 위에 앵커가 걸려 있어 한 식으로 된다
+        /// (피벗은 달라도 된다 — 구름은 아래 피벗이다).
+        /// </summary>
+        private void Place(RectTransform layer, Vector2 at)
+        {
+            if (layer == null) return;
+            var f = ViewFocus;
+            var p = f + _zoom * (at - f);
+            // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다.
+            layer.anchoredPosition = new Vector2(Mathf.Round(p.x), Mathf.Round(p.y));
+            layer.localScale = new Vector3(_zoom, _zoom, 1f);
         }
 
         /// <summary>
@@ -1789,15 +1822,23 @@ namespace Game.Module.InGame
         private Vector2 WantScroll(Unit a)
         {
             float viewW = _field.rect.width, viewH = _field.rect.height;
+            // 줌이 걸리면 창에 담기는 방은 그만큼 좁다. 캐릭터 자리(`ViewFocus`)를 중심으로 당기므로
+            // 창의 네 변은 줌 없는 좌표로 f + (변 − f) ÷ 줌 자리다. 줌 1 이면 예전 범위와 같다.
+            var f = ViewFocus;
+            float z = Mathf.Max(_zoom, 0.01f);
+            float left = f.x - f.x / z, right = f.x + (viewW - f.x) / z;
+            float top = f.y - f.y / z, bottom = f.y - (viewH + f.y) / z;
+
             // 가로는 **음수 방향**으로 민다. 방 좌표는 오른쪽이 +x 인데 창을 왼쪽으로
             // 밀어야 오른쪽이 보인다. 세로와 부호가 반대라 헷갈리기 쉬운 자리다.
-            float x = Mathf.Clamp(-a.Position.x + viewW * 0.5f,
-                                  Mathf.Min(0f, viewW - _roomSize.x), 0f);
+            // 줌 1 이면 창 폭 = 방 폭이라 늘 0 — 당겼을 때만 좌우로 따라간다.
+            float xLo = right - _roomSize.x;
+            float x = Mathf.Clamp(f.x - a.Position.x, Mathf.Min(xLo, left), left);
             if (CameraLocked) return new Vector2(x, 0f);
 
-            float lo = -RoomCloudReach;                             // 방 윗변이 이만큼 내려온다
-            float hi = _roomSize.y - viewH + RoomApronSize.y;       // 방 아랫변이 이만큼 올라간다
-            float y = Mathf.Clamp(-a.Position.y - viewH * CameraAnchor, lo, Mathf.Max(lo, hi));
+            float lo = top - RoomCloudReach;                        // 방 윗변이 이만큼 내려온다
+            float hi = _roomSize.y + bottom + RoomApronSize.y;      // 방 아랫변이 이만큼 올라간다
+            float y = Mathf.Clamp(f.y - a.Position.y, lo, Mathf.Max(lo, hi));
             return new Vector2(x, y);
         }
 
@@ -1810,6 +1851,8 @@ namespace Game.Module.InGame
         {
             var a = Avatar;
             if (a == null || _unitLayer == null) return;
+            // 방에 들어선 순간은 줌도 제자리 — 방마다 스르륵 당겨지는 연출이 생기면 안 된다.
+            _zoom = WantZoom();
             _scroll = WantScroll(a);
             ApplyScroll();
         }
@@ -1822,10 +1865,9 @@ namespace Game.Module.InGame
         {
             if (u == null) return false;
             const float Margin = 60f;
-            float y = u.Position.y + _scroll.y;    // 창 기준 좌표(0 이 위, 아래로 음수)
-            float x = u.Position.x + _scroll.x;    // 창 기준 좌표(0 이 왼쪽)
-            return y <= Margin && y >= -_field.rect.height - Margin
-                && x >= -Margin && x <= _field.rect.width + Margin;
+            var v = RoomToView(u.Position);        // 창 기준 좌표(0 이 위, 아래로 음수 · 0 이 왼쪽)
+            return v.y <= Margin && v.y >= -_field.rect.height - Margin
+                && v.x >= -Margin && v.x <= _field.rect.width + Margin;
         }
 
         private Unit NewUnit(string name)
@@ -7465,7 +7507,7 @@ namespace Game.Module.InGame
                     if (IsOnScreen(e)) continue;
 
                     float d = Vector2.Distance(from.Position, e.Position);
-                    bool above = e.Position.y + _scroll.y > 0f;   // 창 위쪽으로 벗어났다
+                    bool above = RoomToView(e.Position).y > 0f;   // 창 위쪽으로 벗어났다
                     if (above) { if (d < bestUp) { bestUp = d; up = e; } }
                     else if (d < bestDown) { bestDown = d; down = e; }
                 }
@@ -7490,7 +7532,8 @@ namespace Game.Module.InGame
             // ⚠ 2026-09-11 에 필드가 화면 끝까지 내려가 창의 아래 끝이 엄지 밑이 됐다.
             //   거기 두면 아래 화살표가 D패드 밑에 깔려 안 보인다(실제로 16:9 에서 그랬다).
             float w = _field.rect.width, h = _field.rect.height;
-            float x = Mathf.Clamp(at.Position.x, ArrowEdgeInset, w - ArrowEdgeInset);
+            // 가로도 창 좌표로 — 줌을 당기면 좌우로도 스크롤된다.
+            float x = Mathf.Clamp(RoomToView(at.Position).x, ArrowEdgeInset, w - ArrowEdgeInset);
             ((RectTransform)view.transform).anchoredPosition =
                 new Vector2(x, up ? -ArrowEdgeInset : -(h - _controlBandHeight - ArrowEdgeInset));
         }

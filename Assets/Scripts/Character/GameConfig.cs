@@ -61,10 +61,23 @@ namespace Game.Character
         [SerializeField] private float _possessChannelSeconds = 0.7f;
 
         /// <summary>
-        /// 빙의하는 동안 화면이 얼마나 당겨지는가. 1 이면 당기지 않는다.
-        /// 크게 주면 방 밖이 보인다 — 방 화면에 마스크가 없다.
+        /// 빙의하는 동안 화면이 얼마나 **더** 당겨지는가. 1 이면 더 당기지 않는다.
+        /// 카메라 줌(`CameraZoomFor`) 위에 곱해진다 — 캐릭터를 중심으로 당긴다.
         /// </summary>
         [SerializeField] private float _possessZoom = 1.12f;
+
+        /// <summary>
+        /// 카메라 줌 — **폰 세로 9:16** 화면에서. 1 이면 당기지 않는다(방 폭이 창 폭에 꼭 찬다).
+        /// 캐릭터를 중심으로 당기고 따라가기 범위도 줌만큼 좁혀서, 당겨도 방 밖 빈칸은 안 보인다.
+        /// 플레이 중에 인스펙터에서 바꾸면 바로 반영된다.
+        /// </summary>
+        [SerializeField] private float _cameraZoomPhone = 1f;
+
+        /// <summary>
+        /// 카메라 줌 — **태블릿 4:3** 화면에서. 9:16 과 4:3 사이 비율은 두 값 사이를 잇고,
+        /// 9:16 보다 길쭉한 폰(20:9 등)은 9:16 값을 그대로 쓴다.
+        /// </summary>
+        [SerializeField] private float _cameraZoomTablet = 1f;
 
 
         [SerializeField] private float _possessInvulnSeconds = 0.85f;
@@ -251,6 +264,16 @@ namespace Game.Character
         public float PossessInvulnSeconds => _possessInvulnSeconds;
         public float PossessChannelSeconds => _possessChannelSeconds;
         public float PossessZoom => Mathf.Max(1f, _possessZoom);
+
+        /// <summary>
+        /// 화면 비율(가로 ÷ 세로)에 맞는 카메라 줌. 9:16 → 폰 값, 4:3 → 태블릿 값, 그 사이는 잇는다.
+        /// 1 아래로는 내리지 않는다 — 방 폭보다 넓게 보이면 방 옆 빈칸이 드러난다.
+        /// </summary>
+        public float CameraZoomFor(float aspect)
+        {
+            float t = Mathf.InverseLerp(9f / 16f, 3f / 4f, aspect);
+            return Mathf.Clamp(Mathf.Lerp(_cameraZoomPhone, _cameraZoomTablet, t), 1f, 2f);
+        }
         public float PossessRange => _possessRange;
         public int GhostLeaveCostPercent => _ghostLeaveCostPercent;
         public int GhostDeathCostPercent => _ghostDeathCostPercent;
