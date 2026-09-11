@@ -52,6 +52,12 @@ namespace Game.Module.InGame
         private Vector2 _dpadHome;
 
         /// <summary>
+        /// 화면 아래 끝에서 조작 버튼(D패드 · 빙의 버튼) 가장 높은 끝까지(캔버스 px).
+        /// 필드가 화면 끝까지 내려가 조작 버튼이 방 위에 뜨므로, 필드 쪽 표시가 이 띠를 피한다.
+        /// </summary>
+        private float _controlBandHeight;
+
+        /// <summary>
         /// 손가락을 처음 댄 지점(부모 로컬). **방향은 여기서부터 잰다.**
         ///
         /// 패드 그림은 화면 밖으로 나가지 않게 잘라내므로, 화면 가장자리를 누르면
@@ -259,6 +265,8 @@ namespace Game.Module.InGame
                 return;
             }
             _battle = gameObject.AddComponent<BattleDirector>();
+            // 조작 버튼 띠는 `Awake`(HookDPad)에서 이미 쟀다. 전투는 그보다 늦게 생기므로 여기서 넘긴다.
+            _battle.SetControlBand(_controlBandHeight);
             SetStaticLabels();
             // 판은 유령으로 시작한다 — HOST 칸과 스킬 버튼을 먼저 비워 둔다.
             ShowNoHost();
@@ -532,6 +540,12 @@ namespace Game.Module.InGame
             //   자리는 그대로 두고 앵커만 바꾼다.
             PinToBottomLeft(_dpad);
             _dpadHome = _dpad.anchoredPosition;
+
+            // 조작 버튼 띠 높이. **제자리(왼쪽 아래) 기준**으로 잰다 — 패드는 손가락을 따라 떠다니므로
+            // 지금 자리를 재면 누를 때마다 값이 흔들린다. D패드는 조작 묶음보다 위로 솟아 있어 둘 중 높은 쪽.
+            float padTop = _dpadHome.y + _dpad.rect.height * (1f - _dpad.pivot.y);
+            float groupTop = control is RectTransform group ? group.rect.height : 0f;
+            _controlBandHeight = Mathf.Max(padTop, groupTop);
 
             BuildTouchCatcher();
         }

@@ -7434,6 +7434,14 @@ namespace Game.Module.InGame
         /// <summary>화살표를 창 가장자리에서 얼마나 안쪽에 둘 것인가.</summary>
         private const float ArrowEdgeInset = 30f;
 
+        /// <summary>창 아래쪽을 조작 버튼이 덮는 높이. 인게임 UI 가 넘겨준다(`SetControlBand`).</summary>
+        private float _controlBandHeight;
+
+        /// <summary>
+        /// 조작 버튼(D패드 · 빙의 버튼) 띠의 높이를 받는다. 아래 빙의 화살표를 그 위에 띄운다.
+        /// </summary>
+        public void SetControlBand(float height) => _controlBandHeight = Mathf.Max(0f, height);
+
         private void RefreshPossessArrows(Unit from)
         {
             Unit up = null, down = null;
@@ -7469,11 +7477,14 @@ namespace Game.Module.InGame
             if (view == null) view = NewArrow(up);
             if (!view.gameObject.activeSelf) view.gameObject.SetActive(true);
 
-            // 가로는 대상이 있는 쪽, 세로는 창의 위·아래 끝.
+            // 가로는 대상이 있는 쪽, 세로는 창의 위 끝 · **조작 버튼 띠 바로 위**.
+            //
+            // ⚠ 2026-09-11 에 필드가 화면 끝까지 내려가 창의 아래 끝이 엄지 밑이 됐다.
+            //   거기 두면 아래 화살표가 D패드 밑에 깔려 안 보인다(실제로 16:9 에서 그랬다).
             float w = _field.rect.width, h = _field.rect.height;
             float x = Mathf.Clamp(at.Position.x, ArrowEdgeInset, w - ArrowEdgeInset);
             ((RectTransform)view.transform).anchoredPosition =
-                new Vector2(x, up ? -ArrowEdgeInset : -(h - ArrowEdgeInset));
+                new Vector2(x, up ? -ArrowEdgeInset : -(h - _controlBandHeight - ArrowEdgeInset));
         }
 
         private Image NewArrow(bool up)
