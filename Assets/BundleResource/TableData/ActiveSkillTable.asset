@@ -25,9 +25,8 @@ MonoBehaviour:
       _specValueMax: 2
   - _activeSkillKey: psg_h02
     _nameEn: Amazon Sonic Break
-    _nameKr: "\uBD88\uAD74"
-    _description: "\uBB34\uC801 2.5\uCD08 + \uC274\uB4DC \uC0C1\uD55C \uD574\uC81C.
-      \uD574\uC81C\uAC00 \uBB34\uC801\uBCF4\uB2E4 1.5\uCD08 \uB354 \uAC04\uB2E4."
+    _nameKr: "(\uBBF8\uC815)"
+    _description: "\uC2A4\uD0AC \uBCF4\uB958 \u2014 \uC815\uD574\uC9C0\uBA74 \uCC44\uC6B4\uB2E4."
     _scaling:
       _baseValue: 2.5
       _baseValueMax: 4

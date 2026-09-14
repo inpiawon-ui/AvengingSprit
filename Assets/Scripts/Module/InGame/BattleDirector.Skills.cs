@@ -228,9 +228,6 @@ namespace Game.Module.InGame
         private float _drainSeconds;        // 흡혈귀 — 흡혈 확정 · 회복 배율
         private float _drainMul = 2f;
 
-        private float _unbreakSeconds;      // 아마존 정예 — 쉴드 상한 해제
-        private float _unbreakInvuln;
-
         private float _cloneSeconds;        // 닌자(표창) — 분신
         private readonly List<Deployable> _clones = new();
 
@@ -241,9 +238,6 @@ namespace Game.Module.InGame
 
         /// <summary>구루 결계가 도는 동안의 피해 감소(0~1).</summary>
         private float WardReduce => _wardSeconds > 0f ? _wardReduce : 0f;
-
-        /// <summary>쉴드 상한이 풀려 있는가(아마존 정예).</summary>
-        private bool IsShieldUncapped => _unbreakSeconds > 0f;
 
         /// <summary>지속형 스킬의 시계를 한꺼번에 흘린다.</summary>
         private void TickSkillEffect(float dt)
@@ -260,7 +254,6 @@ namespace Game.Module.InGame
             TickPoise(dt);
             TickFrostBreath(dt);
             TickOverheatBlast(dt);
-            TickUnbreakable(dt);
             TickWardAura(dt);
             TickClones(dt);
             TickTurretHaste(dt);
@@ -277,7 +270,7 @@ namespace Game.Module.InGame
         {
             _hasteSeconds = _pierceSeconds = _beamSeconds = _spraySeconds = 0f;
             _reflectSeconds = _wardSeconds = _drainSeconds = 0f;
-            _cloneSeconds = _unbreakSeconds = _turretHasteSeconds = 0f;
+            _cloneSeconds = _turretHasteSeconds = 0f;
             _hasteMul = 1f;
             _beamWidth = 1f;
             _overheatHits = 0;
@@ -411,7 +404,8 @@ namespace Game.Module.InGame
                 //   예전의 「중거리 5 · 관통 4」 묶음은 폐기됐다 — 관통은 직업이 아니라
                 //   공격 종류(`AttackKind.Pierce`)다.
                 case "amazon":           AmazonLeapStrike(me);  break;
-                case "amazon_elite":     Unbreakable(me);       break;
+                // 아마존 정예는 **스킬 보류**다(확정본 2026-09-14). 아무 일도 안 한다.
+                case "amazon_elite":                            break;
                 case "baseball":         ReflectAll(me);        break;
                 case "death":            ReaperWindow(me);      break;
                 case "guru":             GuardianWard(me);      break;
@@ -447,49 +441,11 @@ namespace Game.Module.InGame
         //  격투 6종
         // ═══════════════════════════════════════════════════════════
 
-        // ── 아마존 정예 · 불굴 ───────────────────────────────────
+        // ── 아마존 정예 · (스킬 미정) ────────────────────────────
         //
-        // 무적 2.5초 + 쉴드 상한 해제 4초. **해제가 무적보다 길다** —
-        // 무적이 끝난 뒤에도 1.5초 동안 맞으면서 쉴드를 더 쌓을 수 있다.
-        // 그 1.5초가 이 스킬의 도박이다.
-        //
-        // Lv5 부터 끝날 때 쌓인 쉴드가 그대로 폭발이 된다.
-        // ⚠ 상한을 평타 ×10 에서 자른다. HP 를 주 스탯으로 올리면
-        //   쉴드 총량이 그대로 피해가 되어 한 방에 방이 비어 버린다.
-
-        private const float UnbreakRadiusMeters = 2.5f;
-        private const float UnbreakBlastCapMul = 10f;
-
-        private void Unbreakable(Unit me)
-        {
-            float invuln = BaseAxis(2.5f);          // Lv1 2.5 → Lv4 4.0초
-            _unbreakInvuln = invuln;
-            _unbreakSeconds = invuln + 1.5f;        // 상한 해제는 언제나 1.5초 더 간다
-            _invuln = Mathf.Max(_invuln, invuln);
-            PlayFx("shield", me.Position, 96f, loop: false);
-        }
-
-        private void TickUnbreakable(float dt)
-        {
-            if (_unbreakSeconds <= 0f) return;
-            float before = _unbreakSeconds;
-            _unbreakSeconds = Mathf.Max(0f, _unbreakSeconds - dt);
-            if (_unbreakSeconds > 0f || before <= 0f) return;
-
-            // 끝났다. Lv5 부터 쌓인 쉴드가 폭발이 된다.
-            var me = _host;
-            if (me == null || !SpecOpen) return;
-
-            float ratio = SpecAxis(1f);             // Lv5 100% → Lv10 200%
-            int blast = Mathf.RoundToInt(me.Shield * ratio);
-            blast = Mathf.Min(blast, SkillDamage(me, UnbreakBlastCapMul));
-            if (blast <= 0) return;
-
-            float r = Meters(UnbreakRadiusMeters) * _buffs.AoeMul;
-            var list = EnemiesInRange(me.Position, r);
-            for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], blast, me.Profile);
-            PlayFx("burst", me.Position, r * 2f, loop: false);
-        }
+        // 확정본 2026-09-14 에서 **보류**다. 이 자리에 있던 「불굴」(무적 2.5초 +
+        // 쉴드 상한 해제)은 확정 전에 임의로 잡아 둔 것이라 걷어냈다 —
+        // 스킬이 정해지면 그때 새로 쓴다. 지금 이 몸은 액티브가 없다.
 
         // ── 슬러거 · 전탄 반사 ───────────────────────────────────
         //
@@ -723,6 +679,16 @@ namespace Game.Module.InGame
         // ⚠ 발당 피해가 평타 그대로여야 한다. 그래서 `_buffs.ExtraShots` 와 같은 자리에
         //   얹는다 — 저기는 `split`(나누기)에 안 들어가는 자리다.
 
+        /// <summary>
+        /// 난사 동안 발사 간격을 얼마나 줄이는가(%).
+        ///
+        /// 3방향만 얹으면 1초에 15발이라 **평타가 조금 굵어진 것**으로 보였다.
+        /// 「난사」는 쏟아지는 것이 눈에 보여야 이름값을 한다 — 간격을 4분의 1로 줄여
+        /// 초당 60발쯤 나가게 한다. 발당 피해는 그대로이므로 화력이 아니라 **밀도**만 는다.
+        /// 따로 쏘는 루프를 만들지 않고 이미 있는 가속 한 곳(`GrantHaste`)을 쓴다.
+        /// </summary>
+        private const float SprayHastePercent = 75f;
+
         private void SprayFire(Unit me)
         {
             _spraySeconds = BaseAxis(1f);           // 명세 2026-09-14 — 1초간 3방향
@@ -730,6 +696,7 @@ namespace Game.Module.InGame
             _sprayShots = Mathf.Max(1, total - 1);  // 원래 1발에 얹는 몫
             _sprayDegrees = SpecOpen ? Mathf.Lerp(20f, 40f, Mathf.InverseLerp(3f, 7f, total)) : 20f;
             if (SpecOpen) _pierceSeconds = _spraySeconds;   // Lv5 — 탄이 관통
+            GrantHaste(SprayHastePercent, _spraySeconds);
             PlayFx("muzzle", me.MuzzlePosition, 48f, loop: false);
         }
 
