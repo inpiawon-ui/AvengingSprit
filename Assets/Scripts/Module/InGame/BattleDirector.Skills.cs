@@ -404,34 +404,37 @@ namespace Game.Module.InGame
             switch (me.Key)
             {
                 // ── 격투 6 ──
-                case "amazon":           GaleDash(me);          break;
+                //
+                // ⚠ 명세 2026-09-14 로 갈아 끼웠다. 그대로 둔 넷(아마존 정예 · 슬러거 ·
+                //   코만도(수류탄) · 로봇)만 예전 함수를 그대로 부른다.
+                case "amazon":           AmazonLeapStrike(me);  break;
                 case "amazon_elite":     Unbreakable(me);       break;
                 case "baseball":         ReflectAll(me);        break;
-                case "death":            SoulHarvest(me);       break;
+                case "death":            ReaperWindow(me);      break;
                 case "guru":             GuardianWard(me);      break;
-                case "ninja_chain":      ChainPull(me);         break;
+                case "ninja_chain":      ChainBind(me);         break;
 
                 // ── 중거리 5 ──
-                case "dragoon":          ExecutionBreath(me);   break;
-                case "salamander":       LavaField(me);         break;
-                case "dragon_blue":      FrostBreath(me);       break;
+                case "dragoon":          DragoonFireField(me);  break;
+                case "salamander":       SalamanderVenom(me);   break;
+                case "dragon_blue":      DragonSurge(me);       break;
                 case "commando_grenade": CarpetBomb(me);        break;
-                case "snowwoman":        FrostShatter(me);      break;
+                case "snowwoman":        SnowIceShell(me);      break;
 
                 // ── 원거리 8 ──
                 case "thug":             SprayFire(me);         break;
-                case "hopper_smg":       LeapFire(me);          break;
-                case "ninja":            ShadowClones(me);      break;
-                case "vampire":          BloodThirst(me);       break;
-                case "commando_mg":      Overheat(me);          break;
-                case "gangster":         MarkShot(me);          break;
-                case "hopper":           LeapSlam(me);          break;
-                case "commando_missile": MultiMissile(me);      break;
+                case "hopper_smg":       LeapFar(me);           break;
+                case "ninja":            NinjaCloneSkill(me);   break;
+                case "vampire":          VampireFeast(me);      break;
+                case "commando_mg":      CommandoBarrier(me);   break;
+                case "gangster":         GangsterMarkAll(me);   break;
+                case "hopper":           HopperCritSurge(me);   break;
+                case "commando_missile": MissileFan(me);        break;
 
                 // ── 관통 4 ──
-                case "medium":           CursePropagate(me);    break;
-                case "white_wizard":     RadiantBurst(me);      break;
-                case "commando_laser":   WideLaser(me);         break;
+                case "medium":           MediumGolem(me);       break;
+                case "white_wizard":     WizardFan(me);         break;
+                case "commando_laser":   LaserBounce(me);       break;
                 case "robot":            DeployTurret(me);      break;
 
                 // 표에 없는 몸(유령 등). 조용히 넘어간다 — 오류가 아니다.
@@ -565,7 +568,7 @@ namespace Game.Module.InGame
         private void GuardianWard(Unit me)
         {
             _wardReduce = BaseAxis(0.5f);           // Lv1 −50% → Lv4 −70%
-            _wardSeconds = SpecOpen ? SpecAxis(5f) : 5f;   // Lv5 5 → Lv10 8초
+            _wardSeconds = SpecOpen ? SpecAxis(3f) : 3f;   // 명세 2026-09-14 — 3초
             _wardTick = 0f;
             PlayFx("ward", me.Position, Meters(WardRadiusMeters) * 2f, loop: false);
         }
@@ -867,7 +870,7 @@ namespace Game.Module.InGame
 
         private void SprayFire(Unit me)
         {
-            _spraySeconds = BaseAxis(3f);           // Lv1 3 → Lv4 4.5초
+            _spraySeconds = BaseAxis(1f);           // 명세 2026-09-14 — 1초간 3방향
             int total = SpecOpen ? Mathf.RoundToInt(SpecAxis(3f)) : 3;   // Lv5 3 → Lv10 7발
             _sprayShots = Mathf.Max(1, total - 1);  // 원래 1발에 얹는 몫
             _sprayDegrees = SpecOpen ? Mathf.Lerp(20f, 40f, Mathf.InverseLerp(3f, 7f, total)) : 20f;
@@ -1302,7 +1305,7 @@ namespace Game.Module.InGame
         private void DeployTurret(Unit me)
         {
             float mul = BaseAxis(0.6f);             // Lv1 ×0.6 → Lv4 ×1.0
-            float seconds = SpecOpen ? SpecAxis(8f) : 8f;   // Lv5 8 → Lv10 14초
+            float seconds = SpecOpen ? SpecAxis(10f) : 10f;   // 명세 2026-09-14 — 10초
             int dmg = SkillDamage(me, mul);
 
             SpawnDeployable(me.Position, ghostly: false, seconds: seconds,

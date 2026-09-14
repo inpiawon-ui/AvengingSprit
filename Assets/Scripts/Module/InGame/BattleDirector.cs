@@ -3063,6 +3063,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
             TickStatusFx(dt);
             TickHostPassives(dt);
+            TickNewSkills(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
             // 빙의 조건이 "몸이 있느냐" 로 갈린다. 판정 직전에 채워야 한 프레임도 안 어긋난다.
@@ -3501,6 +3502,9 @@ namespace Game.Module.InGame
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
             if (_host == null) { IsFiring = false; return; }
 
+            // 설녀 — 얼음 안에서는 손도 멈춘다(명세: 맞지도 때리지도 않는다).
+            if (IsSelfFrozen) { IsFiring = false; return; }
+
             var target = Nearest(_host.Position);
 
             // 노리는 쪽을 바라본다. 사거리 밖이라 아직 안 쏘더라도 몸은 돌려 둔다 —
@@ -3593,7 +3597,7 @@ namespace Game.Module.InGame
                 if (e == _midBoss && IsMidBossStunned) { e.SetMoving(false); continue; }
 
                 // ⚠ **몸이 없으면 아무도 유령을 표적으로 잡지 않는다.**
-                if (_host == null)
+                if (_host == null || IsSelfFrozen)
                 {
                     e.IsAggro = false;
                     e.SetState(EnemyState.Idle);
@@ -5957,8 +5961,9 @@ namespace Game.Module.InGame
             if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
             // 상대 방어력(새 스탯). 코만도(수류탄)는 이 값을 절반 무시한다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.DamageTakenMul(ArmorIgnorePercent)));
-            // 설녀 — 얼려 놓은 적에게는 더 아프다.
+            // 설녀 — 얼려 놓은 적에게는 더 아프다. 닌자(사슬)는 묶어 놓은 적에게.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * FrozenBonusMul(victim)));
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * BindBonusMul(victim)));
             // 처형 — 약해진 잡몹을 단칼에. 피해 계산을 다 마친 뒤에 본다.
             if (TryAssassinate(victim)) { KillEnemy(victim); return; }
             ApplyImprints(victim);
@@ -6660,6 +6665,7 @@ namespace Game.Module.InGame
                 // 상대 방어력(새 스탯) · 얼어 있는 적 보너스. 근접 경로와 같은 규칙이다.
                 dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.DamageTakenMul(ArmorIgnorePercent)));
                 dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * FrozenBonusMul(victim)));
+                dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * BindBonusMul(victim)));
             }
             ApplyImprints(victim);
 
@@ -7286,7 +7292,8 @@ namespace Game.Module.InGame
 
         private bool RollCrit()
         {
-            float p = CritPercent;
+            // 호퍼 액티브가 도는 동안은 스탯을 보지 않는다 — 확률이 **고정**이다(명세).
+            float p = _critLockSeconds > 0f ? _critLockPercent : CritPercent;
             return p > 0f && _rng.NextDouble() * 100.0 < p;
         }
 

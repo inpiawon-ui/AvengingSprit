@@ -104,6 +104,9 @@ namespace Game.Module.InGame
         {
             if (_host == null || victim == null || !victim.IsAlive || victim.IsDying) return;
 
+            // 사신 액티브가 도는 동안은 때리는 것마다 즉사 판정을 굴린다(명세 — 3초).
+            if (TryReaperKill(victim)) return;
+
             switch (_host.Key)
             {
                 // 드라군 — 불이 붙는다. 이미 타고 있으면 시간만 늘어난다(중복 없음).
@@ -126,7 +129,8 @@ namespace Game.Module.InGame
 
                 // 청룡 — 옆 적에게 튄다. **튈 곳이 없으면 안 터진다**(명세).
                 case "dragon_blue":
-                    if (Roll(PassiveProcPercent)) ChainBolt(victim, damage);
+                    // 액티브가 도는 2초 동안은 확률을 보지 않는다 — 무조건 튄다(명세).
+                    if (_boltSurgeSeconds > 0f || Roll(PassiveProcPercent)) ChainBolt(victim, damage);
                     break;
 
                 // 설녀 — 얼린다. 보스는 안 걸린다(명세).
