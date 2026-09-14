@@ -403,10 +403,13 @@ namespace Game.Module.InGame
             if (me == null) return;
             switch (me.Key)
             {
-                // ── 격투 6 ──
+                // ── 근거리 6 ──
                 //
                 // ⚠ 명세 2026-09-14 로 갈아 끼웠다. 그대로 둔 넷(아마존 정예 · 슬러거 ·
                 //   코만도(수류탄) · 로봇)만 예전 함수를 그대로 부른다.
+                // ⚠ 직업은 **근거리 6 · 중거리 3 · 원거리 14** 셋이다(확정본 2026-09-14).
+                //   예전의 「중거리 5 · 관통 4」 묶음은 폐기됐다 — 관통은 직업이 아니라
+                //   공격 종류(`AttackKind.Pierce`)다.
                 case "amazon":           AmazonLeapStrike(me);  break;
                 case "amazon_elite":     Unbreakable(me);       break;
                 case "baseball":         ReflectAll(me);        break;
@@ -414,24 +417,22 @@ namespace Game.Module.InGame
                 case "guru":             GuardianWard(me);      break;
                 case "ninja_chain":      ChainBind(me);         break;
 
-                // ── 중거리 5 ──
+                // ── 중거리 3 (기관총 셋) ──
+                case "thug":             SprayFire(me);         break;
+                case "hopper_smg":       LeapFar(me);           break;
+                case "commando_mg":      CommandoBarrier(me);   break;
+
+                // ── 원거리 14 ──
                 case "dragoon":          DragoonFireField(me);  break;
                 case "salamander":       SalamanderVenom(me);   break;
                 case "dragon_blue":      DragonSurge(me);       break;
                 case "commando_grenade": CarpetBomb(me);        break;
                 case "snowwoman":        SnowIceShell(me);      break;
-
-                // ── 원거리 8 ──
-                case "thug":             SprayFire(me);         break;
-                case "hopper_smg":       LeapFar(me);           break;
                 case "ninja":            NinjaCloneSkill(me);   break;
                 case "vampire":          VampireFeast(me);      break;
-                case "commando_mg":      CommandoBarrier(me);   break;
                 case "gangster":         GangsterMarkAll(me);   break;
                 case "hopper":           HopperCritSurge(me);   break;
                 case "commando_missile": MissileFan(me);        break;
-
-                // ── 관통 4 ──
                 case "medium":           MediumGolem(me);       break;
                 case "white_wizard":     WizardFan(me);         break;
                 case "commando_laser":   LaserBounce(me);       break;
