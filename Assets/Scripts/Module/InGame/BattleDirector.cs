@@ -1399,6 +1399,8 @@ namespace Game.Module.InGame
         private Vector2 SlideMove(Unit u, Vector2 from, Vector2 delta)
         {
             if (_obstacles.Count == 0) return from + delta;
+            // 구루 패시브 — 걸어서 지나간다. 탄은 그대로 막힌다(이동만이다).
+            if (u == Avatar && HostIgnoresObstacles) return from + delta;
             var half = FootHalf(u);
             float drop = FootDrop(u);
 
@@ -3058,6 +3060,7 @@ namespace Game.Module.InGame
             TickGoldPiles(dt);
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
             TickStatusFx(dt);
+            TickHostPassives(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
             // 빙의 조건이 "몸이 있느냐" 로 갈린다. 판정 직전에 채워야 한 프레임도 안 어긋난다.
@@ -3539,6 +3542,7 @@ namespace Game.Module.InGame
                 e.TickAnim(dt);
                 e.TickSlow(dt);
                 e.TickStun(dt);
+                e.TickRoot(dt);
                 e.TickAmp(dt);
                 e.TickStagger(dt);   // 몰아치지 않으면 식는다
 
@@ -5947,6 +5951,10 @@ namespace Game.Module.InGame
             // 플레이어 공격이므로 여기서 빠지면 근접 호스트만 이 카드를 못 쓴다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
             if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
+            // 상대 방어력(새 스탯). 코만도(수류탄)는 이 값을 절반 무시한다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.DamageTakenMul(ArmorIgnorePercent)));
+            // 설녀 — 얼려 놓은 적에게는 더 아프다.
+            damage = Mathf.Max(1, Mathf.RoundToInt(damage * FrozenBonusMul(victim)));
             // 처형 — 약해진 잡몹을 단칼에. 피해 계산을 다 마친 뒤에 본다.
             if (TryAssassinate(victim)) { KillEnemy(victim); return; }
             ApplyImprints(victim);
@@ -5975,6 +5983,7 @@ namespace Game.Module.InGame
                 Leech(Mathf.Max(1, Mathf.RoundToInt(damage * LeechPercent / 100f * DrainMul)));
 
             MeleeJobProc(victim, p);
+            PassiveOnHit(victim, damage);
 
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 이 경로는 전부 플레이어 공격이다
             // (근접 타격과 액티브 스킬). 적 공격은 `DamagePlayer` 로 간다.
@@ -6642,12 +6651,19 @@ namespace Game.Module.InGame
             // "반복 공격이 약화시킨다" 가 아니라 그냥 공격력 증가가 된다.
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.ArmorBreakMul(_buffs.ArmorBreakPerStack)));
             if (_buffs.ArmorBreakPerStack > 0f) victim.AddArmorBreak();
+            if (shot.FromPlayer)
+            {
+                // 상대 방어력(새 스탯) · 얼어 있는 적 보너스. 근접 경로와 같은 규칙이다.
+                dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * victim.DamageTakenMul(ArmorIgnorePercent)));
+                dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * FrozenBonusMul(victim)));
+            }
             ApplyImprints(victim);
 
             // 치명타는 **맨 마지막에** 곱한다. 다른 보정(저주·갑옷 분쇄·카드)을
             // 다 태운 값에 얹어야 "크게 터진 한 방" 이 실제로 크다.
             bool crit = shot.FromPlayer && RollCrit();
-            if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CritMultiplier));
+            // 호퍼 패시브는 치명타 **피해**를 키운다. 확률은 스탯이 따로 갖는다.
+            if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * (CritMultiplier + CritDamageBonus)));
 
             ShowDamage(victim.Position, dmg, toEnemy: true, crit);
             if (shot.FromPlayer)
@@ -6664,7 +6680,7 @@ namespace Game.Module.InGame
                 Leech(Mathf.Max(1, shot.Damage * LeechPercent / 100));
 
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 죽은 뒤에도 옆으로는 튄다.
-            if (shot.FromPlayer) { Overcharge(victim, dmg); ChargeSkillOnHit(); }
+            if (shot.FromPlayer) { Overcharge(victim, dmg); ChargeSkillOnHit(); PassiveOnHit(victim, dmg); }
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -6691,6 +6707,14 @@ namespace Game.Module.InGame
             //     맞지도 않는 피해에 방벽이 닳아 없어진다.
             if (_host == null) return;
 
+            // 회피 — 깎는 것이 아니라 **없던 일**이 된다(닌자(사슬) 패시브).
+            // 동료·방벽보다 먼저 본다: 흘릴 피해에 동료가 맞거나 방벽이 닳으면 안 된다.
+            if (Avatar != null && Avatar.DodgePercent > 0 && Roll(Avatar.DodgePercent))
+            {
+                SpawnFx("dash", Avatar.Position, HurtFxSize);   // 잔상 — 흘렸다는 표시
+                return;
+            }
+
             // 동료가 앞에 서 있으면 **동료가 대신 받는다** (`BattleDirector.Ally.cs`).
             // 무적·방벽보다 먼저 본다 — 뒤에 두면 동료를 사 놓고도 내 방벽이 먼저 닳는다.
             if (SoakWithAlly(amount)) return;
@@ -6702,6 +6726,9 @@ namespace Game.Module.InGame
             // 받는 피해 감소(정본 BUF_A04). 0 이 되지 않게 최소 1 은 남긴다 —
             // 무적이 되어 버리면 버프가 아니라 버그로 보인다.
             amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.DamageTakenMul));
+            // 방어력(새 스탯 · 명세 2026-09-14). 카드 감소와 **곱해진다** — 더하면 두 겹에 무적이 된다.
+            if (Avatar != null)
+                amount = Mathf.Max(1, Mathf.RoundToInt(amount * Avatar.DamageTakenMul()));
             // 구루 수호 결계 — 카드 감소와 **곱해진다.** 더하면 −50% 두 장에 무적이 된다.
             if (WardReduce > 0f)
                 amount = Mathf.Max(1, Mathf.RoundToInt(amount * (1f - WardReduce)));
@@ -6868,6 +6895,7 @@ namespace Game.Module.InGame
             // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다.
             if (!u.IsBoss) GrantShards(u.Key, lost: false);
 
+            PassiveOnKill(u);
             DropGold(u);
         }
 
@@ -7907,6 +7935,8 @@ namespace Game.Module.InGame
             _emergencyWait = 0f;
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
             _buffs.SetHost(entry);
+            // 몸에 붙는 패시브(회피 · 방어력 · 이속 배수) — 명세 2026-09-14
+            ApplyHostPassives(_host, key);
 
             // ⚠ 쿨 게이지를 **가득 채운 채로** 시작한다. 0 에서 시작하면 뺏자마자
             //   8~28초 동안 버튼이 덮개에 가려져 "고장난 버튼" 으로 보인다.
@@ -8258,6 +8288,8 @@ namespace Game.Module.InGame
         private void AddRunGold(int amount, Vector2 fieldAt, bool hasAt)
         {
             if (amount == 0) return;
+            // 폭력배 패시브 — 이 몸으로 주우면 더 들어온다.
+            if (amount > 0) amount = Mathf.RoundToInt(amount * GoldGainMul);
             _runGold = Mathf.Max(0, _runGold + amount);
 
             // 자리는 **들어올 때만** 붙는다. 상점에서 나가는 골드까지 동전이 튀면

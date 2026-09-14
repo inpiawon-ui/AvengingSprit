@@ -69,6 +69,15 @@ namespace Game.Module.InGame
         public int HpMax { get; private set; }
         public int Atk { get; private set; }
         public float MoveSpeed { get; private set; }
+
+        /// <summary>
+        /// 이동속도에 곱하는 값. 몸에 붙는 패시브가 쓴다 —
+        /// 아마존은 쉴드가 찰수록, 닌자는 잡은 직후 잠깐 빨라진다.
+        /// 둔화(`_slowPercent`)와 **따로 곱한다**: 저쪽은 남이 거는 것이고 이것은 내 성질이다.
+        /// </summary>
+        public float SpeedMul { get; private set; } = 1f;
+
+        public void SetSpeedMul(float mul) => SpeedMul = Mathf.Clamp(mul, 0.2f, 3f);
         public float AttackRange { get; private set; }
         public float AttackInterval { get; private set; }
         public bool IsBoss { get; private set; }
@@ -1320,11 +1329,13 @@ namespace Game.Module.InGame
 
         private float _burnTimer, _burnAccum;
         private int _burnStack;
+        private float _poisonTimer, _poisonAccum;
         private float _curseTimer;
         private int _curseStack;
         private float _freezeTimer;
 
         public int BurnStack => _burnStack;
+        public bool IsPoisoned => _poisonTimer > 0f;
         public int CurseStack => _curseStack;
         public bool IsFrozen => _freezeTimer > 0f;
 
@@ -1357,12 +1368,28 @@ namespace Game.Module.InGame
 
         private const float CursePerStack = 0.15f;
         private const float BurnDamagePerStackPerSecond = 6f;
+
+        /// <summary>독이 초당 주는 피해. 화상보다 약한 대신 느려짐이 함께 간다.</summary>
+        private const float PoisonDamagePerSecond = 4f;
+
+        /// <summary>독이 함께 거는 둔화(%).</summary>
+        private const int PoisonSlowPercent = 25;
         private const int FreezeSlowPercent = 55;
 
         public void ApplyBurn(float seconds)
         {
             _burnStack = Mathf.Min(StatusMaxStack, _burnStack + 1);
             _burnTimer = Mathf.Max(_burnTimer, seconds);
+        }
+
+        /// <summary>
+        /// 독(샐러맨더). 화상과 **따로 센다** — 화상은 불, 독은 느려짐을 같이 건다.
+        /// 겹치지 않는다(명세 2026-09-14 「중복 안됨」) — 이미 걸려 있으면 시간만 늘린다.
+        /// </summary>
+        public void ApplyPoison(float seconds)
+        {
+            _poisonTimer = Mathf.Max(_poisonTimer, seconds);
+            ApplySlow(PoisonSlowPercent, seconds);
         }
 
         public void ApplyCurse(float seconds)
@@ -1400,20 +1427,39 @@ namespace Game.Module.InGame
             }
             if (_freezeTimer > 0f) _freezeTimer -= dt;
 
-            if (_burnTimer <= 0f) return 0;
+            // 독은 화상과 **따로 흐르고 피해는 합쳐서** 돌려준다. 부르는 쪽이 한 번만 깎으면 되게.
+            int total = 0;
+            if (_poisonTimer > 0f)
+            {
+                _poisonTimer -= dt;
+                if (_poisonTimer <= 0f) _poisonAccum = 0f;
+                else
+                {
+                    _poisonAccum += PoisonDamagePerSecond * dt;
+                    if (_poisonAccum >= 1f)
+                    {
+                        int p = Mathf.FloorToInt(_poisonAccum);
+                        _poisonAccum -= p;
+                        total += p;
+                    }
+                }
+            }
+
+            if (_burnTimer <= 0f) return total;
             _burnTimer -= dt;
-            if (_burnTimer <= 0f) { _burnStack = 0; _burnAccum = 0f; return 0; }
+            if (_burnTimer <= 0f) { _burnStack = 0; _burnAccum = 0f; return total; }
 
             _burnAccum += BurnDamagePerStackPerSecond * _burnStack * dt;
-            if (_burnAccum < 1f) return 0;
+            if (_burnAccum < 1f) return total;
             int give = Mathf.FloorToInt(_burnAccum);
             _burnAccum -= give;
-            return give;
+            return total + give;
         }
 
         public void ClearStatus()
         {
             _burnTimer = _curseTimer = _freezeTimer = _burnAccum = 0f;
+            _poisonTimer = _poisonAccum = _rootTimer = 0f;
             _burnStack = _curseStack = 0;
         }
 
@@ -1424,6 +1470,7 @@ namespace Game.Module.InGame
         public bool TryStatusTint(out Color color)
         {
             if (_burnStack > 0) { color = new Color(1f, 0.55f, 0.25f, 1f); return true; }
+            if (_poisonTimer > 0f) { color = new Color(0.45f, 1f, 0.55f, 1f); return true; }
             if (_freezeTimer > 0f) { color = new Color(0.55f, 0.85f, 1f, 1f); return true; }
             if (_curseStack > 0) { color = new Color(0.72f, 0.45f, 1f, 1f); return true; }
             color = Color.white;
@@ -1735,6 +1782,53 @@ namespace Game.Module.InGame
             _stunTimer -= dt;
         }
 
+        // ── 묶기 ─────────────────────────────────────────────
+        //
+        // 스턴과 다르다. **발만 묶고 손은 살려 둔다** — 닌자(사슬)가 방 전체를 묶는데
+        // 손까지 멈추면 5초 동안 아무 일도 안 벌어져 판이 죽는다.
+        private float _rootTimer;
+
+        public bool IsRooted => _rootTimer > 0f;
+
+        public void ApplyRoot(float seconds)
+        {
+            if (seconds <= 0f) return;
+            _rootTimer = Mathf.Max(_rootTimer, seconds);
+        }
+
+        public void TickRoot(float dt)
+        {
+            if (_rootTimer <= 0f) return;
+            _rootTimer -= dt;
+        }
+
+        // ── 회피 ─────────────────────────────────────────────
+        //
+        // 닌자(사슬) 패시브. 맞는 순간 굴려서 **통째로** 흘린다 — 깎는 것이 아니라 없던 일이 된다.
+        /// <summary>피해를 통째로 흘릴 확률(%). 0 이면 회피가 없다.</summary>
+        public int DodgePercent { get; private set; }
+
+        public void SetDodge(int percent) => DodgePercent = Mathf.Clamp(percent, 0, 90);
+
+        // ── 방어력 ───────────────────────────────────────────
+        //
+        // 받는 피해를 깎는 **새 스탯**(명세 2026-09-14). 상태이상이 아니라 몸의 성질이라
+        // 시간이 없다. 코만도(기관총)가 올리고, 코만도(수류탄)가 무시한다.
+        /// <summary>받는 피해를 줄이는 비율(%). 80 에서 자른다 — 무적을 스탯으로 만들지 않는다.</summary>
+        public int DefensePercent { get; private set; }
+
+        public void SetDefense(int percent) => DefensePercent = Mathf.Clamp(percent, 0, 80);
+
+        /// <summary>
+        /// 이 몸이 받는 피해에 곱할 배수. <paramref name="ignorePercent"/> 만큼 방어력을 무시한다.
+        /// </summary>
+        public float DamageTakenMul(int ignorePercent = 0)
+        {
+            if (DefensePercent <= 0) return 1f;
+            float def = DefensePercent * (1f - Mathf.Clamp(ignorePercent, 0, 100) / 100f);
+            return 1f - def / 100f;
+        }
+
         /// <summary>둔화 부여(설녀). 더 강한 둔화가 걸려 있으면 유지한다.</summary>
         public void ApplySlow(int percent, float seconds)
         {
@@ -1750,7 +1844,8 @@ namespace Game.Module.InGame
             if (_slowTimer <= 0f) _slowPercent = 0;
         }
 
-        private float CurrentSpeed => MoveSpeed * (1f - _slowPercent / 100f);
+        private float CurrentSpeed
+            => IsRooted ? 0f : MoveSpeed * SpeedMul * (1f - _slowPercent / 100f);
 
         /// <summary>
         /// 약화가 공격 간격을 늘리는 배율.
