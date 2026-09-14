@@ -44,6 +44,7 @@ namespace Game.Module.Lobby
         /// </summary>
         private const float RangeBarMax = 10f;    // m
         private const float RateBarMax  = 2f;     // 초당 공격 횟수
+        private const float DefenseGradeMax = 10f;   // 방어등급 1~10
 
         /// <summary>
         /// 그리드가 보이는 높이. 목업의 `624` 는 12칸(3×4) 기준이었다.
@@ -381,10 +382,14 @@ namespace Game.Module.Lobby
             // 회색과 `???` 로 이미 충분히 읽힌다. 자물쇠는 목록 칸에만 둔다.
             _ui.SetActive("HostDetailLockIcon", false);
 
-            // 여섯 칸. **전부 "길수록 강함"** 으로 방향을 맞춘다 —
+            // 일곱 칸. **전부 "길수록 강함"** 으로 방향을 맞춘다 —
             // 공격 간격(초)을 그대로 쓰면 낮을수록 좋은 값이라 바가 거꾸로 읽힌다.
             SetStat("HP",   e.Hp);
             SetStat("ATK",  e.Atk);
+            // 방어력은 표의 **등급 한 칸**에서 나온다(등급 1당 3% · 상한 80%).
+            // 바는 등급(1~10)으로 긋고 글자는 실제로 깎이는 비율을 적는다 —
+            // 등급만 적으면 "5등급이 몇 퍼센트인지"를 화면에서 알 수 없다.
+            SetStat("DEF",  e.DefenseGrade, $"{e.DefensePercent:0}%", DefenseGradeMax, e.DefenseGrade);
             SetStat("SPD",  e.Spd);
             SetStat("CRIT", Mathf.RoundToInt(CritPercentOf(e)), $"{CritPercentOf(e):0}%", 100f);
             SetStat("RNG",  0, $"{RangeOf(e):0.#}", RangeBarMax, RangeOf(e));
@@ -411,7 +416,7 @@ namespace Game.Module.Lobby
                 // 유령에게 있는 수치는 HP 하나뿐이다. 나머지를 `0` 으로 적으면
                 // **약한 몸**처럼 읽힌다 — 없는 값은 없다고 적는다.
                 SetStatText("HP", (_config != null ? _config.GhostHpMax : 100).ToString());
-                foreach (var n in new[] { "ATK", "SPD", "CRIT", "RNG", "RATE" }) SetStatText(n, "—");
+                foreach (var n in new[] { "ATK", "DEF", "SPD", "CRIT", "RNG", "RATE" }) SetStatText(n, "—");
                 SetStartCost(e, true);
                 var pb = _ui.Get<Button>("PossessStartButton");
                 if (pb != null) pb.interactable = true;
@@ -523,7 +528,7 @@ namespace Game.Module.Lobby
         /// <summary>
         /// 직업 배지와 상시 규칙.
         ///
-        /// **문구는 4벌뿐이다.** 같은 직업 여섯 명 카드에 같은 문장을 따로 적지 않는다.
+        /// **문구는 3벌뿐이다.** 같은 직업 여섯 명 카드에 같은 문장을 따로 적지 않는다.
         /// 직업은 테이블에 저장하지 않고 평타 방식 + 사거리에서 뽑아내므로
         /// (`BattleDirector.JobOf`), 여기서도 **그릴 때 계산**한다 — 어긋날 자리가 없다.
         /// </summary>
@@ -578,7 +583,7 @@ namespace Game.Module.Lobby
         // 늘 작은 칸으로 두면 있는 몸에서 글자가 칸 밖으로 흘러나온다.
         /// <summary>패시브 칸 높이. 설명이 두 줄인 몸(설녀·청룡 등)까지 들어간다.</summary>
         private const float PassiveHeight = 90f;
-        private const float PassiveTop = 561f;
+        private const float PassiveTop = 584f;   // 능력치가 일곱 칸이 되며 23 px 내려갔다
         private const float BlockGap = 8f;
 
         /// <summary>
@@ -728,7 +733,10 @@ namespace Game.Module.Lobby
         //
         // `BattleDirector.JobOf` 와 **같은 규칙**이다. 저 쪽은 전투용이라
         // 여기서 부를 수 없어 규칙만 옮겨 적는다 — 바뀌면 두 곳을 함께 고친다.
-        private enum HostJob { Melee, Mid, Ranged, Pierce }
+        // ⚠ 직업은 **셋**이다(확정본 2026-09-14) — 근거리 6 · 중거리 3 · 원거리 14.
+        //   예전의 「관통」은 직업에서 뺐다. 적을 뚫는 것은 직업이 아니라
+        //   그 몸이 든 무기의 성질(`AttackKind.Pierce`)이다.
+        private enum HostJob { Melee, Mid, Ranged }
 
         private const float MidRangeMeters = 6.0f;
 
@@ -749,48 +757,50 @@ namespace Game.Module.Lobby
         {
             if (e == null) return HostJob.Ranged;
             if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return HostJob.Melee;
-            if (e.Kind == AttackKind.Pierce) return HostJob.Pierce;
             return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters
                  ? HostJob.Mid : HostJob.Ranged;
         }
 
         private static string JobNameOf(HostJob j) => j switch
         {
-            HostJob.Melee  => "격투",
-            HostJob.Mid    => "중거리",
-            HostJob.Pierce => "관통",
-            _              => "원거리",
+            HostJob.Melee => "근거리",
+            HostJob.Mid   => "중거리",
+            _             => "원거리",
         };
 
         private static string JobSpriteOf(HostJob j) => j switch
         {
-            HostJob.Melee  => "melee",
-            HostJob.Mid    => "midrange",
-            HostJob.Pierce => "piercing",
-            _              => "ranged",
+            HostJob.Melee => "melee",
+            HostJob.Mid   => "midrange",
+            _             => "ranged",
         };
 
         /// <summary>
         /// 직업 특성의 **이름**. 규칙 한 줄만 있으면 "이게 이 몸의 무엇인지" 가
         /// 안 잡힌다 — 액티브·패시브처럼 이름이 붙어야 같은 층으로 읽힌다.
-        /// 네 벌뿐이며 직업에서 바로 나온다.
+        /// 세 벌뿐이며 직업에서 바로 나온다.
         /// </summary>
         private static string JobTraitNameOf(HostJob j) => j switch
         {
-            HostJob.Melee  => "치고 버틴다",
-            HostJob.Mid    => "닿는 자리마다",
-            HostJob.Pierce => "저 너머까지",
-            _              => "한 발씩 정확히",
+            HostJob.Melee => "치고 버틴다",
+            HostJob.Mid   => "붙어서 쏟는다",
+            _             => "거리를 두고 쏜다",
         };
 
-        /// <summary>직업 상시 규칙. 이 네 문장이 전부다.</summary>
+        /// <summary>
+        /// 직업 상시 규칙.
+        ///
+        /// ⚠ **상시 규칙이 있는 직업은 근거리 하나뿐이다**(확정본 2026-09-14).
+        ///   중거리의 착탄 범위(`SplashAround`)는 코드에서 걷어냈는데 이 문구만 남아
+        ///   "한 칸이 함께 터진다" 고 **없는 규칙을 알리고 있었다.**
+        ///   나머지 둘은 규칙 대신 무엇이 그 자리를 대신하는지를 적는다.
+        /// </summary>
         private static string JobRuleOf(HostJob j) => j switch
         {
-            HostJob.Melee  => "때릴 때마다 쉴드 (HP 3% · 최대 30%)\n"
-                            + "타격 시 12% 확률로 0.8초 스턴",
-            HostJob.Mid    => "평타가 맞은 자리에서 한 칸이 함께 터진다",
-            HostJob.Pierce => "직선 탄환이 적을 뚫고 뒤쪽까지 맞힌다",
-            _              => "직선 탄환이 목표 하나만 정확히 맞힌다",
+            HostJob.Melee => "때릴 때마다 쉴드 (HP 3% · 최대 30%)\n"
+                           + "타격 시 12% 확률로 0.8초 스턴",
+            HostJob.Mid   => "직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다",
+            _             => "직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다",
         };
 
         /// <summary>숫자가 아닌 것을 능력치 칸에 적는다 (유령의 `—` 등).</summary>
