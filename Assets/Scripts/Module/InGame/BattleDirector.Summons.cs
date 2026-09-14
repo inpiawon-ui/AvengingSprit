@@ -28,6 +28,8 @@ namespace Game.Module.InGame
         private const float SkullAtkPercent = 0.40f;
 
         // ── 골렘 — 영매 액티브 ─────────────────────────────────
+        /// <summary>골렘 그림 아틀라스 키(`atlas/unit_golem`). 잡몹 표에는 없는 몸이다.</summary>
+        private const string GolemKey = "golem";
         private const float GolemLifeSeconds = 15f;
         private const float GolemHpPercent = 0.60f;
         private const float GolemAtkPercent = 0.60f;
@@ -71,11 +73,16 @@ namespace Game.Module.InGame
             => SpawnSummon(TrashSkeletonKey, "해골", SkullHpPercent, SkullAtkPercent,
                            SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at);
 
-        /// <summary>영매 액티브 — 골렘. 해골보다 크고 오래 간다.</summary>
+        /// <summary>
+        /// 영매 액티브 — 골렘. 해골보다 크고 오래 간다.
+        ///
+        /// 제 그림이 들어오기 전에는 해골을 1.35 배로 키워 썼다. 이제 제 몸이 있으므로
+        /// **배율을 1 로 돌린다** — 골렘은 원래 어깨가 넓게 그려져 있어, 키우면
+        /// 해골 자리에 맞춰 두었던 크기만 두 번 곱해진다.
+        /// </summary>
         private void SummonGolem(Vector2 at)
-            => SpawnSummon(TrashSkeletonKey, "골렘", GolemHpPercent, GolemAtkPercent,
-                           GolemLifeSeconds, attacks: true, mobile: true, taunt: false,
-                           at: at, scale: 1.35f);
+            => SpawnSummon(GolemKey, "골렘", GolemHpPercent, GolemAtkPercent,
+                           GolemLifeSeconds, attacks: true, mobile: true, taunt: false, at: at);
 
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
         private void SummonClone(Vector2 at)
