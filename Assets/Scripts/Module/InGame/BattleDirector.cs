@@ -4864,10 +4864,9 @@ namespace Game.Module.InGame
         /// </summary>
         private static string ChapterFloorKey(int chapter, RoomEntry room) => chapter switch
         {
-            // CH1 만 지형별 여섯 장이 이미 통과했다 — 그대로 쓴다.
-            1 => !string.IsNullOrEmpty(room.Template)
-                 ? $"roomfloor_ch1_{room.Template.ToLowerInvariant()}"
-                 : "roomfloor_env_junkyard",
+            // ⚠ 예전에는 CH1 만 배치 글자별로 여섯 장(`roomfloor_ch1_*`)을 따로 깔았다.
+            //   그 여섯 장은 720×936 이라 16 m 방에서 세로로 늘어난다(2026-09-14) — 무대 한 장으로 통일한다.
+            1 => "roomfloor_env_junkyard",
             2 => "roomfloor_env_missile",
             3 => "roomfloor_env_street",
             4 => "roomfloor_env_rooftop",

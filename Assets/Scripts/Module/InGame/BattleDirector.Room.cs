@@ -263,11 +263,13 @@ namespace Game.Module.InGame
         private const string RoomFloorPrefix = "roomfloor/";
 
         /// <summary>
-        /// 새 배경이 다 올 때까지 **모든 방이 함께 쓰는 배경**.
-        /// 규격(720×936) · 바닥 줄눈 36 px · 밝기가 모두 맞는 유일한 한 장이다.
-        /// 나머지 17 장이 규격에 맞춰 다시 오면 이 상수와 `ApplyRoomFloor` 의 임시 분기를 지운다.
+        /// 방 표에 배경이 안 적힌 방(절차 생성 등)이 쓰는 **대비책 한 장**.
+        ///
+        /// ⚠ 2026-09-14 방이 16 m(1152 px)가 되면서 **936 짜리 옛 배경을 가리키면 안 된다** —
+        ///   바닥은 방 크기로 늘어나므로 936 을 깔면 무늬가 세로로 늘어진다.
+        ///   그래서 새로 그린 1152 배경 중 하나를 가리킨다.
         /// </summary>
-        private const string InterimRoomFloor = "roomfloor_ch1_twin_platform";
+        private const string InterimRoomFloor = "roomfloor_env_junkyard";
 
         /// <summary>
         /// 지형 배경 6종이 **다 들어온 챕터까지의 번호**. 여기까지는 방마다 제 배경을 쓴다.
