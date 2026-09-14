@@ -3123,16 +3123,18 @@ namespace Game.Module.InGame
         //   중거리 확산·단발          4.5 ~ 5.5 m   착탄 범위로 여럿을 친다
         //   관통   관통               7.2 ~ 8.2 m   줄지어 선 것을 뚫는다
         //   원거리 나머지             7.0 ~ 8.5 m   한 명씩 정확히
-        private enum HostJob { Melee, Mid, Ranged, Pierce }
+        // ⚠ 직업은 **셋**이다(확정본 2026-09-14) — 근거리 6 · 중거리 3 · 원거리 14.
+        //   「관통」은 직업에서 뺐다. 적을 뚫는 것은 무기의 성질(`AttackKind.Pierce`)이다.
+        //   로비(`HostSelectPanel.JobOf`)와 **같은 규칙**이다 — 바뀌면 두 곳을 함께 고친다.
+        private enum HostJob { Melee, Mid, Ranged }
 
-        /// <summary>중거리와 원거리를 가르는 선. 격투 최대 2.2m 와는 두 칸 넘게 벌어져 있다.</summary>
+        /// <summary>중거리와 원거리를 가르는 선. 근거리 최대 2.2m 와는 두 칸 넘게 벌어져 있다.</summary>
         private const float MidRangeMeters = 6.0f;
 
         private static HostJob JobOf(HostEntry e)
         {
             if (e == null) return HostJob.Ranged;
             if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return HostJob.Melee;
-            if (e.Kind == AttackKind.Pierce) return HostJob.Pierce;
             return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters
                  ? HostJob.Mid : HostJob.Ranged;
         }
