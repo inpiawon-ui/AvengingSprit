@@ -81,6 +81,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 40899c9cd157cbd4fa5fb9161f97b587
+    m_Address: atlas/unit_golem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4865145c909e3544da6c952c5d2c48be
     m_Address: atlas/unit_robot_snakes
     m_ReadOnly: 0
