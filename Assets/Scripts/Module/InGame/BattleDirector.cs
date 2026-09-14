@@ -2917,6 +2917,8 @@ namespace Game.Module.InGame
             // 막히는 쪽은 **내 탄만**이다. 그래야 지형이 "어디에 숨을까"가 아니라
             // "어디서 쏠 수 있을까"를 묻는 물건이 된다.
             if (!fromPlayer) return false;
+            // 패시브로 엄폐물을 통과하는 몸이 있다(명세 2026-09-14).
+            if (ShotIgnoresObstacles) return false;
 
             for (int i = 0; i < _obstacles.Count; i++)
             {

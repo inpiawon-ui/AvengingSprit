@@ -89,6 +89,15 @@ namespace Game.Module.InGame
         /// <summary>구루 — 걸어 다닐 때 장애물을 통과한다.</summary>
         private bool HostIgnoresObstacles => PassiveHostKey == "guru";
 
+        /// <summary>
+        /// 탄이 지형지물을 통과하는 몸 — 코만도(미사일) · 화이트 위저드 · 코만도(레이저).
+        /// 관통(적을 뚫는 것)은 무기 종류(`AttackKind.Pierce`)가 따로 갖는다. 이것은 **엄폐물** 쪽이다.
+        /// </summary>
+        private bool ShotIgnoresObstacles
+            => PassiveHostKey == "commando_missile"
+            || PassiveHostKey == "white_wizard"
+            || PassiveHostKey == "commando_laser";
+
         /// <summary>설녀 — 얼어 있는 적에게는 더 아프다. 얼리는 것과 한 쌍이다.</summary>
         private float FrozenBonusMul(Unit victim)
             => PassiveHostKey == "snowwoman" && victim != null && victim.IsFrozen
