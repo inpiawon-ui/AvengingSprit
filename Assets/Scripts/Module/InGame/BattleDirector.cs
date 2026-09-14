@@ -4738,6 +4738,9 @@ namespace Game.Module.InGame
         private const float DeployCooldown = 4.5f;
         private const string DeployHostKey = "robot";
 
+        /// <summary>포탑 그림. 무대 소품으로 이미 들어와 있는 삼각대 기관포다.</summary>
+        private const string TurretSpriteKey = "obj_turret";
+
         private readonly List<Deployable> _deployables = new();
         private float _deployCooldown;
 
@@ -5060,9 +5063,14 @@ namespace Game.Module.InGame
             // 전용 그림이 아직 없다. 로봇을 줄여 쓴다 — 무엇이 놓았는지는 읽힌다.
             // 유령 포대는 고스트를 쓴다. 로봇 몸이 아닐 때도 나오므로 로봇 그림을 쓰면
             // "저 로봇은 어디서 났나" 가 된다.
+            // ⚠ 포탑은 **포탑처럼 생겨야 한다.** 예전에는 놓은 사람(로봇) 그림을 줄여
+            //   썼는데, 로봇이 놓으면 작은 로봇이 서서 "내가 둘로 늘었나" 로 읽혔다.
+            //   삼각대 기관포 그림(`obj_turret`)이 이미 소품으로 들어와 있으므로 그것을 쓴다.
+            //   유령 포대는 그대로 고스트다 — 로봇 몸이 아닐 때도 나오는 물건이라
+            //   포탑 그림을 주면 "저 포탑은 어디서 났나" 가 된다.
             d.SetSprite(ghostly
                 ? UnitGet("ghost", "s") ?? UnitGet("ghost")
-                : UnitGet(DeployHostKey, "s") ?? UnitGet(DeployHostKey));
+                : GetSprite(TurretSpriteKey) ?? UnitGet(DeployHostKey, "s") ?? UnitGet(DeployHostKey));
 
             // 정본 BUF_T06 스마트 배치 — 재조준이 빨라진다(= 발사 간격이 준다)
             float interval = fireInterval > 0f

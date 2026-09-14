@@ -318,7 +318,15 @@ namespace Game.Module.InGame
             _alreadyHit.Clear();
             _rect.localEulerAngles =
                 new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+
+            // ⚠ **색을 바꾼다.** 되받아친 탄과 아직 날아오는 적 탄이 같은 그림이라,
+            //   화면만 보고는 어느 쪽이 내 것인지 알 수 없었다 — 반사가 터진 줄도 모른다.
+            //   방향이 뒤집힌 것만으로는 한눈에 안 읽힌다(탄이 빠르다).
+            if (_image != null) _image.color = ReflectedColor;
         }
+
+        /// <summary>되받아친 탄의 색. 흰빛이 도는 하늘색 — 적 탄의 붉은 계열과 갈린다.</summary>
+        private static readonly Color ReflectedColor = new(0.72f, 0.95f, 1f, 1f);
 
         /// <summary>
         /// 벽에 튕긴다. 남은 횟수가 없으면 false — 부르는 쪽이 없앤다.
