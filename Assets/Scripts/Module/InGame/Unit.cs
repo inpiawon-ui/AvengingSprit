@@ -358,6 +358,7 @@ namespace Game.Module.InGame
             _body = GetOrCreate("Body", size, Vector2.zero);
             _body.sprite = sprite;
             _baseSprite = sprite;
+            ApplyFloatShadow(size);
             for (int i = 0; i < _frames.Length; i++) _frames[i] = null;
             _facingIndex = -1;
             _facingFlip = false;
@@ -1732,6 +1733,91 @@ namespace Game.Module.InGame
                 _shadow.transform.SetAsFirstSibling();   // 몸보다 뒤에 그린다
             }
             _shadow.enabled = true;
+        }
+
+        // ── 떠 있는 몸의 그림자 ──────────────────────────────────
+        //
+        // 구루 · 설녀 · 흡혈귀 · 사신은 원작에서 바닥을 딛지 않는다.
+        // 그런데 탑다운에서는 **떠 있다는 것이 몸 그림만으로는 안 읽힌다** — 발밑이 비어 있어야
+        // "떠 있구나" 가 된다. 그림자가 그 역할을 한다.
+        //
+        // 위 `_shadow`(숨은 몸의 자리 표시)와 **필드를 나눈다.** 같이 쓰면 `SetHidden(false)` 가
+        // 떠 있는 몸의 그림자까지 꺼 버린다.
+        //
+        // 새 그림을 그리지 않는다 — 유니티 내장 원형 스프라이트를 납작하게 눌러 쓴다.
+
+        private static readonly string[] FloatingKeys = { "guru", "snowwoman", "vampire", "death" };
+
+        private Image _floatShadow;
+        private static Sprite s_roundSprite;
+
+        /// <summary>
+        /// 그림자에 쓸 원 한 장. **그림을 발주하지 않는다** — 단색 타원 하나에
+        /// 파일 · 임포트 설정 · 아틀라스 자리를 쓰는 것은 과하다.
+        ///
+        /// 가장자리를 흐리지 않고 Point 필터로 둔다 — 확정 #16(Point 필터 · 후처리 최소).
+        /// 흐린 그림자는 이 게임의 다른 그림과 따로 논다.
+        ///
+        /// 앱이 사는 동안 딱 한 장만 만들어 23명이 나눠 쓴다.
+        /// </summary>
+        private static Sprite RoundSprite()
+        {
+            if (s_roundSprite != null) return s_roundSprite;
+
+            const int N = 32;
+            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false);
+            tex.filterMode = FilterMode.Point;
+            tex.wrapMode = TextureWrapMode.Clamp;
+
+            var px = new Color32[N * N];
+            float r = (N - 1) * 0.5f;
+            var on = new Color32(255, 255, 255, 255);
+            var off = new Color32(255, 255, 255, 0);
+            for (int y = 0; y < N; y++)
+            {
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = (x - r) / r;
+                    float dy = (y - r) / r;
+                    px[y * N + x] = dx * dx + dy * dy <= 1f ? on : off;
+                }
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, false);
+
+            s_roundSprite = Sprite.Create(tex, new Rect(0f, 0f, N, N), new Vector2(0.5f, 0.5f), N);
+            s_roundSprite.name = "FloatShadowCircle";
+            return s_roundSprite;
+        }
+
+        private static bool IsFloatingKey(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return false;
+            for (int i = 0; i < FloatingKeys.Length; i++)
+                if (FloatingKeys[i] == key) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 떠 있는 몸이면 발밑에 그림자를 켠다. 몸을 세울 때마다 부른다 —
+        /// 유닛은 돌려 쓰므로(풀링) 같은 오브젝트가 다음에는 걸어 다니는 몸일 수 있다.
+        /// </summary>
+        private void ApplyFloatShadow(Vector2 size)
+        {
+            if (!IsFloatingKey(Key))
+            {
+                if (_floatShadow != null) _floatShadow.enabled = false;
+                return;
+            }
+
+            _floatShadow = GetOrCreate("FloatShadow",
+                                       new Vector2(size.x * 0.58f, size.y * 0.18f),
+                                       new Vector2(0f, -size.y * 0.44f));
+
+            _floatShadow.sprite = RoundSprite();
+            _floatShadow.color = new Color(0f, 0f, 0f, 0.38f);
+            _floatShadow.transform.SetAsFirstSibling();   // 몸보다 뒤에 그린다
+            _floatShadow.enabled = true;
         }
 
         // ── 행동 패턴의 제 상태 ──────────────────────────────────
