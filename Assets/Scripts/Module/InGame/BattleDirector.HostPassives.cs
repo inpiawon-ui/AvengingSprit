@@ -30,7 +30,12 @@ namespace Game.Module.InGame
         private const float PassiveAilmentSeconds = 3f;
 
         private const int NinjaChainDodgePercent = 10;      // 닌자(사슬)
-        private const int CommandoMgDefensePercent = 20;    // 코만도(기관총)
+
+        /// <summary>
+        /// 코만도(기관총) — 「기본 방어력 20% 증가」. 제 등급이 준 값에 **곱한다**.
+        /// 20%p 를 더하면 등급 9(27%)가 47% 가 되어 이 몸만 다른 게임을 한다.
+        /// </summary>
+        private const float CommandoMgDefenseBonus = 0.20f;
         private const int GrenadeArmorIgnorePercent = 50;   // 코만도(수류탄)
         private const int SnowFreezeChancePercent = 30;     // 설녀
         private const float FrozenExtraDamageMul = 1.3f;    // 얼어 있는 적에게
@@ -65,13 +70,26 @@ namespace Game.Module.InGame
         // ── 몸에 붙는 성질 ────────────────────────────────────
 
         /// <summary>몸을 입는 순간 그 몸의 성질을 넣는다(`EnterHost`).</summary>
-        private void ApplyHostPassives(Unit body, string key)
+        private void ApplyHostPassives(Unit body, string key, Game.Character.HostEntry entry)
         {
             if (body == null) return;
             body.SetDodge(key == "ninja_chain" ? NinjaChainDodgePercent : 0);
-            body.SetDefense(key == "commando_mg" ? CommandoMgDefensePercent : 0);
+            body.SetDefense(HostDefensePercent(key, entry));
             body.SetSpeedMul(1f);
             _ninjaKillSpeedTimer = 0f;
+        }
+
+        /// <summary>
+        /// 이 몸이 타고난 방어력(%). 출처는 **표의 등급 한 칸**이다(`HostEntry.DefensePercent`) —
+        /// 여기에 23줄을 또 적으면 표와 어긋난다.
+        /// 표에 없는 몸(잡몹 · 유령)은 0 이다.
+        /// </summary>
+        private int HostDefensePercent(string key, Game.Character.HostEntry entry)
+        {
+            if (entry == null) return 0;
+            float percent = entry.DefensePercent;
+            if (key == "commando_mg") percent *= 1f + CommandoMgDefenseBonus;
+            return Mathf.RoundToInt(percent);
         }
 
         /// <summary>코만도(수류탄) — 상대 방어력을 이만큼 무시한다.</summary>

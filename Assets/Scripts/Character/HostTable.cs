@@ -117,6 +117,13 @@ namespace Game.Character
         [Tooltip("공격속도 (0~100). 클수록 빠르다.")]
         [SerializeField] private int _atkSpeed;
 
+        // 방어력은 다른 표시 스탯과 달리 **등급 1~10** 으로 적는다.
+        // 23명을 한 장에 놓고 서로 견줘 매긴 값이라(명세 2026-09-14) 0~100 으로 늘리면
+        // 없는 정밀도가 생긴 것처럼 보인다. 실제 감소율은 아래 프로퍼티가 정한다.
+        [Tooltip("방어력 등급 1~10. 등급 하나가 받는 피해 3% 감소다.")]
+        [Range(1, 10)]
+        [SerializeField] private int _defenseGrade = 5;
+
         [Tooltip("치명타 확률 시작값(%). 배율은 전역 고정이라 GameConfig 가 갖는다.")]
         [Range(0, 100)]
         [SerializeField] private int _critPercent = 10;
@@ -436,6 +443,18 @@ namespace Game.Character
         public string PassiveSkillKey => _passiveSkillKey;
 
         public HostGrade Grade => _grade;
+
+        /// <summary>등급 하나가 깎는 피해 비율(%). 등급 10 이면 30% 다.</summary>
+        public const int DefensePercentPerGrade = 3;
+
+        /// <summary>방어력 등급 1~10.</summary>
+        public int DefenseGrade => Mathf.Clamp(_defenseGrade, 1, 10);
+
+        /// <summary>
+        /// 받는 피해를 깎는 비율(%). **등급을 실제 수치로 바꾸는 곳은 여기 하나뿐이다** —
+        /// 읽는 쪽마다 곱하면 한쪽만 고치고 나머지를 잊는다.
+        /// </summary>
+        public int DefensePercent => DefenseGrade * DefensePercentPerGrade;
 
         /// <summary>레벨 표가 채워져 있는가. 비었으면 정본 기본값으로 떨어진다.</summary>
         public bool HasLevelStats => _levelStats != null && _levelStats.Length > 0;

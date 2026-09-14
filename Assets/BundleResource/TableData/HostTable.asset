@@ -20,6 +20,7 @@ MonoBehaviour:
     _atk: 81
     _spd: 75
     _atkSpeed: 66
+    _defenseGrade: 3
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2
@@ -74,6 +75,7 @@ MonoBehaviour:
     _atk: 71
     _spd: 71
     _atkSpeed: 94
+    _defenseGrade: 5
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 0
@@ -128,6 +130,7 @@ MonoBehaviour:
     _atk: 73
     _spd: 73
     _atkSpeed: 72
+    _defenseGrade: 6
     _critPercent: 10
     _primaryStatA: 5
     _primaryStatB: 3
@@ -182,6 +185,7 @@ MonoBehaviour:
     _atk: 81
     _spd: 66
     _atkSpeed: 59
+    _defenseGrade: 9
     _critPercent: 10
     _primaryStatA: 0
     _primaryStatB: 1
@@ -236,6 +240,7 @@ MonoBehaviour:
     _atk: 76
     _spd: 88
     _atkSpeed: 71
+    _defenseGrade: 2
     _critPercent: 10
     _primaryStatA: 2
     _primaryStatB: 5
@@ -290,6 +295,7 @@ MonoBehaviour:
     _atk: 68
     _spd: 92
     _atkSpeed: 99
+    _defenseGrade: 3
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 5
@@ -344,6 +350,7 @@ MonoBehaviour:
     _atk: 69
     _spd: 72
     _atkSpeed: 99
+    _defenseGrade: 9
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 1
@@ -398,6 +405,7 @@ MonoBehaviour:
     _atk: 84
     _spd: 72
     _atkSpeed: 56
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 4
@@ -452,6 +460,7 @@ MonoBehaviour:
     _atk: 79
     _spd: 71
     _atkSpeed: 52
+    _defenseGrade: 6
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2
@@ -506,6 +515,7 @@ MonoBehaviour:
     _atk: 73
     _spd: 65
     _atkSpeed: 62
+    _defenseGrade: 7
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 0
@@ -560,6 +570,7 @@ MonoBehaviour:
     _atk: 83
     _spd: 63
     _atkSpeed: 53
+    _defenseGrade: 8
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2
@@ -614,6 +625,7 @@ MonoBehaviour:
     _atk: 71
     _spd: 66
     _atkSpeed: 68
+    _defenseGrade: 6
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 4
@@ -668,6 +680,7 @@ MonoBehaviour:
     _atk: 63
     _spd: 78
     _atkSpeed: 59
+    _defenseGrade: 10
     _critPercent: 10
     _primaryStatA: 0
     _primaryStatB: 5
@@ -722,6 +735,7 @@ MonoBehaviour:
     _atk: 75
     _spd: 73
     _atkSpeed: 63
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 4
@@ -776,6 +790,7 @@ MonoBehaviour:
     _atk: 82
     _spd: 69
     _atkSpeed: 55
+    _defenseGrade: 2
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 4
@@ -830,6 +845,7 @@ MonoBehaviour:
     _atk: 72
     _spd: 91
     _atkSpeed: 94
+    _defenseGrade: 2
     _critPercent: 10
     _primaryStatA: 2
     _primaryStatB: 3
@@ -884,6 +900,7 @@ MonoBehaviour:
     _atk: 78
     _spd: 84
     _atkSpeed: 71
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 4
     _primaryStatB: 3
@@ -938,6 +955,7 @@ MonoBehaviour:
     _atk: 72
     _spd: 62
     _atkSpeed: 60
+    _defenseGrade: 8
     _critPercent: 10
     _primaryStatA: 0
     _primaryStatB: 1
@@ -992,6 +1010,7 @@ MonoBehaviour:
     _atk: 82
     _spd: 73
     _atkSpeed: 68
+    _defenseGrade: 6
     _critPercent: 10
     _primaryStatA: 0
     _primaryStatB: 2
@@ -1046,6 +1065,7 @@ MonoBehaviour:
     _atk: 68
     _spd: 79
     _atkSpeed: 66
+    _defenseGrade: 6
     _critPercent: 10
     _primaryStatA: 2
     _primaryStatB: 1
@@ -1100,6 +1120,7 @@ MonoBehaviour:
     _atk: 72
     _spd: 75
     _atkSpeed: 69
+    _defenseGrade: 5
     _critPercent: 10
     _primaryStatA: 0
     _primaryStatB: 1
@@ -1154,6 +1175,7 @@ MonoBehaviour:
     _atk: 86
     _spd: 68
     _atkSpeed: 49
+    _defenseGrade: 5
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 4
@@ -1208,6 +1230,7 @@ MonoBehaviour:
     _atk: 91
     _spd: 66
     _atkSpeed: 49
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2

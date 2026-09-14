@@ -7962,7 +7962,7 @@ namespace Game.Module.InGame
             // 태그형·전용 버프는 쓰는 몸에 따라 켜지고 꺼진다 (기획서 A 5-4)
             _buffs.SetHost(entry);
             // 몸에 붙는 패시브(회피 · 방어력 · 이속 배수) — 명세 2026-09-14
-            ApplyHostPassives(_host, key);
+            ApplyHostPassives(_host, key, entry);
 
             // ⚠ 쿨 게이지를 **가득 채운 채로** 시작한다. 0 에서 시작하면 뺏자마자
             //   8~28초 동안 버튼이 덮개에 가려져 "고장난 버튼" 으로 보인다.

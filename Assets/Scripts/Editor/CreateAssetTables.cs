@@ -24,6 +24,7 @@ namespace Game.Editor
         // hostKey, 영문명, 한글명, 역할, HP, ATK, SPD, DASH,
         // 공격종류, 탄수, 확산각, 사거리배율, 간격배율, 피해배율, 흡혈%, 둔화%, 탄반사,
         // activeSkillKey, 해금유형, 챕터, 스테이지, 빙의방식, 빙의체력임계, 정본EnemyID, 유지훅
+        // , 액티브쿨(초), 방어력등급(1~10)
         //
         // **로스터는 원작 22종이다** (2026-08-12 전환). 대조표는
         // `Projects/AVSR/AVSR_Roster_Original.md`, 그림은 `Reference/Original/`.
@@ -40,33 +41,33 @@ namespace Game.Editor
         // 해금은 정본 MinChapter 를 따라 챕터 클리어로 통일했다.
         private static readonly object[][] Hosts =
         {
-            new object[]{ "gangster", "GANGSTER", "갱스터", "단발 정밀", 70, 76, 64, 58, AttackKind.Single, 1, 0f, 1.0f, 0.9f, 1.0f, 0, 0, false, "tommy_barrage", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "E001", "표식 릴레이" , 14f },
-            new object[]{ "thug", "THUG", "폭력배", "확산 제압", 80, 70, 60, 50, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "E004", "제압 사격" , 8f },
-            new object[]{ "amazon", "AMAZON", "아마존", "돌진 근접", 68, 70, 84, 88, AttackKind.Melee, 1, 0f, 0.45f, 0.55f, 0.8f, 0, 0, false, "rush_combo", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 40, "E002", "콤보 미터" , 8f },
-            new object[]{ "amazon_elite", "AMAZON ELITE", "아마존 정예", "중장 근접", 96, 84, 72, 70, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.2f, 0, 0, false, "rush_combo", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 40, "E006", "콤보 미터" , 28f },
-            new object[]{ "hopper", "HOPPER", "호퍼", "도약 사수", 62, 68, 88, 92, AttackKind.Single, 1, 0f, 0.95f, 0.8f, 0.85f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "", "도약 연사" , 14f },
-            new object[]{ "hopper_smg", "HOPPER SMG", "호퍼(기관단총)", "도약 연사", 64, 66, 86, 90, AttackKind.Rapid, 1, 0f, 0.9f, 0.4f, 0.45f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "", "도약 연사" , 14f },
-            new object[]{ "commando_mg", "COMMANDO MG", "코만도(기관총)", "중화기 사수", 82, 78, 56, 46, AttackKind.Rapid, 1, 0f, 1.0f, 0.4f, 0.48f, 0, 0, false, "bullet_hell", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "제압 사격" , 14f },
-            new object[]{ "commando_laser", "COMMANDO LASER", "코만도(레이저)", "관통 레이저", 70, 78, 65, 55, AttackKind.Pierce, 1, 0f, 1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "E007", "집속 레이저" , 20f },
-            new object[]{ "commando_grenade", "COMMANDO GRENADE", "코만도(수류탄)", "곡사 지역", 74, 82, 58, 48, AttackKind.Spread, 3, 22f, 1.2f, 1.35f, 1.3f, 0, 0, false, "grenade_barrage", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 45, "E005", "지뢰 네트워크" , 20f },
-            new object[]{ "salamander", "SALAMANDER", "샐러맨더", "화염 돌파", 95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E003", "열기 · 장갑 용해" , 14f },
-            new object[]{ "dragoon", "DRAGOON", "드라군", "네이팜 마무리", 110, 92, 44, 40, AttackKind.Spread, 3, 14f, 0.55f, 0.95f, 0.62f, 0, 0, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 25, "E016", "효과 계승 피니셔" , 20f },
-            new object[]{ "dragon_blue", "DRAGON BLUE", "청룡", "냉기 브레스", 92, 78, 46, 42, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 30, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 50, "", "냉기 축적" , 14f },
-            new object[]{ "guru", "GURU", "구루", "부양 서포트", 76, 52, 70, 74, AttackKind.Pulse, 1, 0f, 0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Immediate, 100, "E009", "가드 오라" , 20f },
-            new object[]{ "white_wizard", "WHITE WIZARD", "화이트 위저드", "둔화 제어", 58, 88, 62, 55, AttackKind.Pierce, 1, 0f, 1.3f, 1.35f, 1.75f, 0, 25, false, "elemental_nova", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E010", "장판 제어" , 20f },
-            new object[]{ "medium", "MEDIUM", "영매", "저주 회로", 62, 86, 58, 52, AttackKind.Pierce, 1, 0f, 1.25f, 1.4f, 1.6f, 0, 0, false, "elemental_nova", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 45, "E012", "저주 회로" , 14f },
-            new object[]{ "ninja", "NINJA", "닌자", "순간 폭발", 66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f, 0.6f, 0, 0, false, "shadow_burst", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E011", "처형 모멘텀" , 20f },
-            new object[]{ "ninja_chain", "NINJA CHAIN", "닌자(사슬)", "사슬 근접", 70, 78, 82, 86, AttackKind.Melee, 1, 0f, 0.6f, 0.65f, 1.1f, 0, 0, false, "shadow_burst", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "처형 모멘텀" , 14f },
-            new object[]{ "robot", "ROBOT", "로봇", "배치 테크", 82, 72, 60, 50, AttackKind.Pierce, 1, 0f, 1.1f, 1.0f, 1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 45, "E008", "배치 네트워크" , 20f },
-            new object[]{ "baseball", "SLUGGER", "슬러거", "탄환 반사", 78, 66, 72, 70, AttackKind.Melee, 1, 0f, 0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Immediate, 100, "E015", "바운스 경로" , 14f },
-            new object[]{ "snowwoman", "SNOW WOMAN", "설녀", "빙결 제어", 62, 70, 74, 68, AttackKind.Single, 1, 0f, 1.05f, 0.9f, 0.85f, 0, 45, false, "elemental_nova", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 50, "", "빙결 장판" , 14f },
-            new object[]{ "vampire", "VAMPIRE", "흡혈귀", "흡혈 지속", 74, 82, 76, 66, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "blood_tornado", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 35, "E014", "흡혈 경제" , 20f },
+            new object[]{ "gangster", "GANGSTER", "갱스터", "단발 정밀", 70, 76, 64, 58, AttackKind.Single, 1, 0f, 1.0f, 0.9f, 1.0f, 0, 0, false, "tommy_barrage", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "E001", "표식 릴레이" , 14f , 3 },
+            new object[]{ "thug", "THUG", "폭력배", "확산 제압", 80, 70, 60, 50, AttackKind.Spread, 5, 34f, 0.7f, 1.05f, 0.5f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "E004", "제압 사격" , 8f , 5 },
+            new object[]{ "amazon", "AMAZON", "아마존", "돌진 근접", 68, 70, 84, 88, AttackKind.Melee, 1, 0f, 0.45f, 0.55f, 0.8f, 0, 0, false, "rush_combo", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 40, "E002", "콤보 미터" , 8f , 6 },
+            new object[]{ "amazon_elite", "AMAZON ELITE", "아마존 정예", "중장 근접", 96, 84, 72, 70, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.2f, 0, 0, false, "rush_combo", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 40, "E006", "콤보 미터" , 28f , 9 },
+            new object[]{ "hopper", "HOPPER", "호퍼", "도약 사수", 62, 68, 88, 92, AttackKind.Single, 1, 0f, 0.95f, 0.8f, 0.85f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "", "도약 연사" , 14f , 2 },
+            new object[]{ "hopper_smg", "HOPPER SMG", "호퍼(기관단총)", "도약 연사", 64, 66, 86, 90, AttackKind.Rapid, 1, 0f, 0.9f, 0.4f, 0.45f, 0, 0, false, "bullet_hell", HostUnlockType.Owned, 0, 0, PossessKind.Immediate, 100, "", "도약 연사" , 14f , 3 },
+            new object[]{ "commando_mg", "COMMANDO MG", "코만도(기관총)", "중화기 사수", 82, 78, 56, 46, AttackKind.Rapid, 1, 0f, 1.0f, 0.4f, 0.48f, 0, 0, false, "bullet_hell", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "제압 사격" , 14f , 9 },
+            new object[]{ "commando_laser", "COMMANDO LASER", "코만도(레이저)", "관통 레이저", 70, 78, 65, 55, AttackKind.Pierce, 1, 0f, 1.45f, 0.7f, 0.9f, 0, 0, false, "laser_storm", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "E007", "집속 레이저" , 20f , 4 },
+            new object[]{ "commando_grenade", "COMMANDO GRENADE", "코만도(수류탄)", "곡사 지역", 74, 82, 58, 48, AttackKind.Spread, 3, 22f, 1.2f, 1.35f, 1.3f, 0, 0, false, "grenade_barrage", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 45, "E005", "지뢰 네트워크" , 20f , 6 },
+            new object[]{ "salamander", "SALAMANDER", "샐러맨더", "화염 돌파", 95, 80, 42, 38, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 0, false, "dragon_breath", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E003", "열기 · 장갑 용해" , 14f , 7 },
+            new object[]{ "dragoon", "DRAGOON", "드라군", "네이팜 마무리", 110, 92, 44, 40, AttackKind.Spread, 3, 14f, 0.55f, 0.95f, 0.62f, 0, 0, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 25, "E016", "효과 계승 피니셔" , 20f , 8 },
+            new object[]{ "dragon_blue", "DRAGON BLUE", "청룡", "냉기 브레스", 92, 78, 46, 42, AttackKind.Spread, 3, 12f, 0.5f, 0.85f, 0.52f, 0, 30, false, "dragon_breath", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 50, "", "냉기 축적" , 14f , 6 },
+            new object[]{ "guru", "GURU", "구루", "부양 서포트", 76, 52, 70, 74, AttackKind.Pulse, 1, 0f, 0.55f, 1.25f, 0.95f, 0, 0, false, "astral_form", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Immediate, 100, "E009", "가드 오라" , 20f , 10 },
+            new object[]{ "white_wizard", "WHITE WIZARD", "화이트 위저드", "둔화 제어", 58, 88, 62, 55, AttackKind.Pierce, 1, 0f, 1.3f, 1.35f, 1.75f, 0, 25, false, "elemental_nova", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E010", "장판 제어" , 20f , 4 },
+            new object[]{ "medium", "MEDIUM", "영매", "저주 회로", 62, 86, 58, 52, AttackKind.Pierce, 1, 0f, 1.25f, 1.4f, 1.6f, 0, 0, false, "elemental_nova", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 45, "E012", "저주 회로" , 14f , 2 },
+            new object[]{ "ninja", "NINJA", "닌자", "순간 폭발", 66, 74, 88, 92, AttackKind.Spread, 3, 16f, 0.9f, 0.8f, 0.6f, 0, 0, false, "shadow_burst", HostUnlockType.Owned, 0, 0, PossessKind.Condition, 50, "E011", "처형 모멘텀" , 20f , 2 },
+            new object[]{ "ninja_chain", "NINJA CHAIN", "닌자(사슬)", "사슬 근접", 70, 78, 82, 86, AttackKind.Melee, 1, 0f, 0.6f, 0.65f, 1.1f, 0, 0, false, "shadow_burst", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "처형 모멘텀" , 14f , 4 },
+            new object[]{ "robot", "ROBOT", "로봇", "배치 테크", 82, 72, 60, 50, AttackKind.Pierce, 1, 0f, 1.1f, 1.0f, 1.15f, 0, 0, false, "system_override", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 45, "E008", "배치 네트워크" , 20f , 8 },
+            new object[]{ "baseball", "SLUGGER", "슬러거", "탄환 반사", 78, 66, 72, 70, AttackKind.Melee, 1, 0f, 0.6f, 0.75f, 1.35f, 0, 0, true, "grand_slam", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Immediate, 100, "E015", "바운스 경로" , 14f , 6 },
+            new object[]{ "snowwoman", "SNOW WOMAN", "설녀", "빙결 제어", 62, 70, 74, 68, AttackKind.Single, 1, 0f, 1.05f, 0.9f, 0.85f, 0, 45, false, "elemental_nova", HostUnlockType.ChapterBossClear, 2, 0, PossessKind.Condition, 50, "", "빙결 장판" , 14f , 6 },
+            new object[]{ "vampire", "VAMPIRE", "흡혈귀", "흡혈 지속", 74, 82, 76, 66, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "blood_tornado", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 35, "E014", "흡혈 경제" , 20f , 5 },
             // ⚠ 이 둘이 **빠져 있었다.** 표에 21명뿐이라 사신·코만도(미사일)는
             //   생성기를 돌릴 때마다 사라졌다 — 그림·초상·아이콘은 다 있는데 행이 없었다.
-            new object[]{ "death", "DEATH", "사신", "수확 근접", 88, 92, 70, 62, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "psg_h23", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 35, "", "영혼 수확" , 28f },
+            new object[]{ "death", "DEATH", "사신", "수확 근접", 88, 92, 70, 62, AttackKind.Melee, 1, 0f, 0.5f, 0.7f, 1.05f, 35, 0, false, "psg_h23", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 35, "", "영혼 수확" , 28f , 4 },
             // ⚠ 흡혈 35 를 넣지 않는다. 표 끝 세 줄이 통째로 복사되며 미사일 발사기에
             //   흡혈이 붙어 있었고, 데이터 오류로 확인돼 제거했다.
-            new object[]{ "commando_missile", "COMMANDO MISSILE", "코만도(미사일)", "유도 폭격", 84, 86, 54, 44, AttackKind.Single, 1, 0f, 0.5f, 0.7f, 1.05f, 0, 0, false, "psg_h06", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "폭발 반경" , 20f },
+            new object[]{ "commando_missile", "COMMANDO MISSILE", "코만도(미사일)", "유도 폭격", 84, 86, 54, 44, AttackKind.Single, 1, 0f, 0.5f, 0.7f, 1.05f, 0, 0, false, "psg_h06", HostUnlockType.ChapterBossClear, 1, 0, PossessKind.Condition, 50, "", "폭발 반경" , 20f , 5 },
         };
 
         // bossKey, 챕터, 영문명, 한글명, 스프라이트, HP배율, ATK배율, 이동배율, 페이즈쿨다운배율
@@ -241,6 +242,8 @@ namespace Game.Editor
                 // ⚠ 이 줄이 없으면 생성기를 돌릴 때마다 쿨 차등이 0 으로 지워져
                 //   23명이 다시 전원 같은 쿨(GameConfig 기본값)로 돌아간다.
                 Set(e, "_activeSkillCooldown", h[25]);
+                // 방어력 등급 1~10 (명세 2026-09-14). 이 줄이 없으면 23명이 전원 기본값 5 로 평평해진다.
+                Set(e, "_defenseGrade", h[26]);
                 return e;
             }).ToArray();
             Set(host, "_entries", entries);
