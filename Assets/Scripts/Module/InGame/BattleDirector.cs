@@ -2577,6 +2577,7 @@ namespace Game.Module.InGame
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
             ClearAlly();          // 동료도 마찬가지 — 산 방에서만 같이 싸운다
+            ClearSummons();       // 불러낸 것들도 방을 넘어가지 않는다
             ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
             ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
@@ -3021,6 +3022,7 @@ namespace Game.Module.InGame
 
             TickPlayer(dt);
             TickAlly(dt);          // 상점에서 산 동료
+            TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);
             TickEnemies(dt);
             TickShots(dt);
@@ -3532,7 +3534,9 @@ namespace Game.Module.InGame
         {
             if (_burnSpreadTimer > 0f) _burnSpreadTimer -= dt;
             TickBait(dt);
-            var me = Avatar;
+            // 닌자 분신 — **도발**. 서 있는 동안 적은 분신을 쫓고 분신을 때린다(명세 2026-09-14).
+            // 보스는 빠진다 — 아래에서 `Avatar` 를 따로 넘긴다(바닥에 그려 놓고 치는 패턴이라).
+            var me = TauntUnit ?? Avatar;
             if (me == null) return;
             for (int i = 0; i < _enemies.Count; i++)
             {
@@ -6717,6 +6721,8 @@ namespace Game.Module.InGame
 
             // 동료가 앞에 서 있으면 **동료가 대신 받는다** (`BattleDirector.Ally.cs`).
             // 무적·방벽보다 먼저 본다 — 뒤에 두면 동료를 사 놓고도 내 방벽이 먼저 닳는다.
+            // 도발 중인 분신이 있으면 그쪽이 먼저 맞는다 — 방금 켠 것이 늘 서 있는 동료보다 우선이다.
+            if (SoakWithSummon(amount)) return;
             if (SoakWithAlly(amount)) return;
 
             // 찰나의 불사 — 맞는 그 순간 2초를 산다. 방벽보다 **먼저** 본다:

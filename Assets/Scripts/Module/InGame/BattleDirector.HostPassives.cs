@@ -15,8 +15,8 @@ namespace Game.Module.InGame
     ///   잡을 때   `PassiveOnKill`      — 처치 보상
     ///   매 프레임 `TickHostPassives`   — 상태에 따라 변하는 것(쉴드 이속 등)
     ///
-    /// ⚠ 소환 계열(사신 · 영매의 해골)은 여기 없다. 여러 마리를 데리고 다니는 구조가
-    ///   따로 필요해서 다음 조각에서 만든다 — 지금은 아무 일도 하지 않는다.
+    /// 소환 계열(사신 · 영매의 해골)은 여기서 부르고, 실제로 세우고 굴리는 것은
+    /// `BattleDirector.Summons.cs` 가 한다 — 여럿이 서고 시간이 지나면 사라지는 것들이다.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -39,6 +39,7 @@ namespace Game.Module.InGame
         private const int GangsterExecutePercent = 20;      // 갱스터 — 표식이 붙은 적에게
         private const float GangsterEliteHpCut = 0.5f;
         private const float GangsterBossHpCut = 0.3f;
+        private const int MediumSkullPercent = 30;          // 영매
         private const int RobotCoolProcPercent = 2;         // 로봇
         private const float RobotCoolGainSeconds = 1f;
         private const float ThugGoldBonus = 0.10f;          // 폭력배
@@ -232,7 +233,15 @@ namespace Game.Module.InGame
                     PlayFx("dash", _host.Position, 96f, loop: false);
                     break;
 
-                // ⚠ 사신 · 영매의 해골 소환은 아직 없다 — 소환물 구조를 만든 뒤에 붙인다.
+                // 사신 — 잡을 때마다 그 자리에서 해골이 일어선다(명세 — 확률 없음).
+                case "death":
+                    SummonSkull(victim.Position);
+                    break;
+
+                // 영매 — 30% 로 해골.
+                case "medium":
+                    if (Roll(MediumSkullPercent)) SummonSkull(victim.Position);
+                    break;
             }
         }
 
