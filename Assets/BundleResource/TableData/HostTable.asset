@@ -460,7 +460,7 @@ MonoBehaviour:
     _atk: 79
     _spd: 71
     _atkSpeed: 52
-    _defenseGrade: 6
+    _defenseGrade: 3
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2
@@ -492,9 +492,9 @@ MonoBehaviour:
     _canonTelegraph: 0.81
     _canonMaxConcurrent: 2
     _canonHoming: 0
-    _canonHostHp: 142
-    _canonHostAtk: 14
-    _canonHostRange: 5.5
+    _canonHostHp: 136
+    _canonHostAtk: 20
+    _canonHostRange: 7.4
     _canonHostInterval: 1.65
     _canonHostMoveSpeed: 4.1159997
     _canonHostShotSpeed: 8.2
@@ -515,7 +515,7 @@ MonoBehaviour:
     _atk: 73
     _spd: 65
     _atkSpeed: 62
-    _defenseGrade: 7
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 0
@@ -547,9 +547,9 @@ MonoBehaviour:
     _canonTelegraph: 0.76
     _canonMaxConcurrent: 2
     _canonHoming: 0
-    _canonHostHp: 168
-    _canonHostAtk: 12
-    _canonHostRange: 5
+    _canonHostHp: 151
+    _canonHostAtk: 17
+    _canonHostRange: 7.1
     _canonHostInterval: 1.4
     _canonHostMoveSpeed: 3.7799997
     _canonHostShotSpeed: 8.2
@@ -570,7 +570,7 @@ MonoBehaviour:
     _atk: 83
     _spd: 63
     _atkSpeed: 53
-    _defenseGrade: 8
+    _defenseGrade: 5
     _critPercent: 10
     _primaryStatA: 1
     _primaryStatB: 2
@@ -602,9 +602,9 @@ MonoBehaviour:
     _canonTelegraph: 0.83
     _canonMaxConcurrent: 2
     _canonHoming: 0
-    _canonHostHp: 176
-    _canonHostAtk: 13
-    _canonHostRange: 4.5
+    _canonHostHp: 151
+    _canonHostAtk: 19
+    _canonHostRange: 7
     _canonHostInterval: 1.55
     _canonHostMoveSpeed: 3.6959999
     _canonHostShotSpeed: 8.8
@@ -625,7 +625,7 @@ MonoBehaviour:
     _atk: 71
     _spd: 66
     _atkSpeed: 68
-    _defenseGrade: 6
+    _defenseGrade: 3
     _critPercent: 10
     _primaryStatA: 3
     _primaryStatB: 4
@@ -657,9 +657,9 @@ MonoBehaviour:
     _canonTelegraph: 0.66
     _canonMaxConcurrent: 2
     _canonHoming: 0
-    _canonHostHp: 159
-    _canonHostAtk: 11
-    _canonHostRange: 5.2
+    _canonHostHp: 144
+    _canonHostAtk: 16
+    _canonHostRange: 7.2
     _canonHostInterval: 1.3
     _canonHostMoveSpeed: 3.8639998
     _canonHostShotSpeed: 7.6
@@ -1065,7 +1065,7 @@ MonoBehaviour:
     _atk: 68
     _spd: 79
     _atkSpeed: 66
-    _defenseGrade: 6
+    _defenseGrade: 4
     _critPercent: 10
     _primaryStatA: 2
     _primaryStatB: 1
@@ -1098,8 +1098,8 @@ MonoBehaviour:
     _canonMaxConcurrent: 2
     _canonHoming: 0
     _canonHostHp: 133
-    _canonHostAtk: 12
-    _canonHostRange: 5.5
+    _canonHostAtk: 17
+    _canonHostRange: 7.3
     _canonHostInterval: 1.45
     _canonHostMoveSpeed: 4.62
     _canonHostShotSpeed: 7
