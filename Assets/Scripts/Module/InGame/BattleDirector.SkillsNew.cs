@@ -204,8 +204,15 @@ namespace Game.Module.InGame
             _invuln = Mathf.Max(_invuln, seconds);
             int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent));
             Leech(heal);
-            PlayFx("freeze", me.Position, 128f, loop: false);
+            // 얼음은 **버티는 내내** 서 있어야 한다 — 한 번 터지고 사라지면 무적인지 알 수 없다.
+            _iceFx?.Stop();
+            _iceFx = TakeLoopFx("iceblock", me.Position, IceShellFxSize);
         }
+
+        /// <summary>몸을 감싼 얼음. 스킬이 끝나면 거둔다.</summary>
+        private Impact _iceFx;
+
+        private const float IceShellFxSize = 128f;
 
         // ═══════════════════════════════════════════════════════════
         //  원거리
@@ -351,7 +358,13 @@ namespace Game.Module.InGame
             if (_boltSurgeSeconds > 0f) _boltSurgeSeconds -= dt;
             if (_bindBonusSeconds > 0f) _bindBonusSeconds -= dt;
             if (_critLockSeconds > 0f) _critLockSeconds -= dt;
-            if (_iceShellSeconds > 0f) _iceShellSeconds -= dt;
+            if (_iceShellSeconds > 0f)
+            {
+                _iceShellSeconds -= dt;
+                // 얼음은 몸을 따라다닌다. 끝나면 거둔다 — 안 거두면 방이 바뀌어도 남는다.
+                if (_iceFx != null && _host != null) _iceFx.MoveTo(_host.Position);
+                if (_iceShellSeconds <= 0f) { _iceFx?.Stop(); _iceFx = null; }
+            }
 
             // 쉴드는 시간이 지나면 걷힌다 — 안 걷으면 다음 방까지 들고 간다.
             if (_barrierSeconds > 0f)

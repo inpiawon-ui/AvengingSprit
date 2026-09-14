@@ -6006,6 +6006,19 @@ namespace Game.Module.InGame
 
         // ── 투사체 ────────────────────────────────────────────────
         private static readonly Color ShotPlayerColor = new(1f, 0.72f, 0.24f, 1f);
+
+        /// <summary>
+        /// 탄에 입힐 색. 플레이어 탄은 눈에 띄라고 주황으로 물들인다.
+        ///
+        /// ⚠ **제 색을 가진 그림은 물들이지 않는다.** 2026-09-14 샐러맨더 독불(초록)을 넣었는데
+        ///   주황이 곱해져 화면에서는 그대로 주황 불로 보였다 — 새 색이 들어간 의미가 없다.
+        /// </summary>
+        private static Color ShotTint(bool fromPlayer, string kind)
+        {
+            if (!fromPlayer) return ShotEnemyColor;
+            return kind == "venom" || kind == "thunder" || kind == "beam"
+                 ? Color.white : ShotPlayerColor;
+        }
         private static readonly Color ShotEnemyColor = new(0.55f, 0.78f, 1f, 1f);
         // 보스 탄은 잡몹과 색을 나눈다 — 화면이 탄으로 덮이면 무엇을 피해야 할지 안 보인다
         private static readonly Color ShotBossColor = new(1f, 0.36f, 0.30f, 1f);
@@ -6055,7 +6068,7 @@ namespace Game.Module.InGame
                           : Mathf.Max(1, Mathf.RoundToInt(attacker.Atk / (float)split)),
                       fromPlayer, target,
                       fromPlayer ? _config.ShotSize * BeamWidthMul : _config.ShotSize,
-                      fromPlayer ? ShotPlayerColor : ShotEnemyColor,
+                      ShotTint(fromPlayer, kind),
                       _config.ShotLifeSeconds,
                       pierce: (p != null && p.Kind == AttackKind.Pierce)
                               || (fromPlayer && (_buffs.Pierce || IsPierceGranted)),
@@ -6165,10 +6178,10 @@ namespace Game.Module.InGame
             { "commando_missile", "missile" },
             // ⚠ 네 쌍이 둘씩 같은 그림을 쓰고 있었다 — 누가 쏜 것인지 구별이 안 됐다.
             //   원작에서도 비슷하면 우리 쪽에서 색과 모양을 갈라 놓는다.
-            { "salamander", "flame" }, { "dragoon", "dragoon" },      // 불줄기 / 불덩이
-            { "dragon_blue", "frost" }, { "snowwoman", "frost" },     // 둘 다 냉기 — 그대로 둔다
+            { "salamander", "venom" }, { "dragoon", "dragoon" },      // 독불(2026-09-14 기획) / 불덩이
+            { "dragon_blue", "thunder" }, { "snowwoman", "frost" },   // 청룡은 번개(2026-09-14) · 설녀만 냉기
             { "ninja", "shuriken" }, { "ninja_chain", "chain" },      // 수리검 / 사슬낫
-            { "white_wizard", "magic" }, { "medium", "medium" },      // 별 마법 / 도깨비불
+            { "white_wizard", "beam" }, { "medium", "medium" },       // 일자 광탄(2026-09-14) / 도깨비불
             { "guru", "pulse" }, { "robot", "robot" },                // 둥근 파동 / 각진 전자탄
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
