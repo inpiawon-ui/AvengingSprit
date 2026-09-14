@@ -6556,7 +6556,6 @@ namespace Game.Module.InGame
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
                     SpawnImpact(ImpactPointOn(hit, p.Position), p.Kind);
                     ApplyShotHit(hit, p);
-                    SplashAround(hit, p);
                 }
                 else
                 {
@@ -6610,35 +6609,11 @@ namespace Game.Module.InGame
             return null;
         }
 
-        /// <summary>중거리 직업의 착탄 범위. 한 칸(=오브젝트 한 칸)이 함께 터진다.</summary>
-        private const float MidSplashMeters = 1.0f;
-
-        /// <summary>
-        /// 맞은 **그 자리에서** 한 칸이 함께 터진다.
-        ///
-        /// 수류탄과 일부러 다르게 뒀다 — 수류탄은 포물선으로 **던지는** 것이라 기둥을
-        /// 넘어가고 땅에 떨어질 때 1.8칸이 터진다. 브레스는 앞으로 뻗는 것이라
-        /// 기둥에 막히고 첫 대상에서 1칸이 터진다. 같은 범위 공격인데 쓰는 자리가 갈린다.
-        ///
-        /// 중거리의 DPS 를 넷 중 가장 낮게(8.5) 잡아 둔 것이 이것 때문이다 —
-        /// 한 발이 여럿을 때리므로 한 명 기준으로는 낮아야 한다.
-        /// </summary>
-        private void SplashAround(Unit center, Projectile shot)
-        {
-            if (center == null || shot == null || _host == null) return;
-            if (JobOf(_host.Profile) != HostJob.Mid) return;
-
-            float r = MidSplashMeters * _pxPerMeter;
-            SpawnImpact(center.Position, shot.Kind, r * 2f);
-
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || !e.IsAlive || e == center) continue;
-                if (Vector2.Distance(center.Position, e.Position) > r) continue;
-                ApplyShotHit(e, shot);
-            }
-        }
+        // ⚠ **중거리의 착탄 범위는 걷어냈다** (2026-09-14 결정).
+        //    「직업이 규칙을 하나씩 갖는다」를 그만두고, 차별화는 캐릭터의 스킬이 맡는다.
+        //    남은 직업 규칙은 **근거리의 쉴드 · 확률 스턴** 하나뿐이다.
+        //    범위가 필요한 몸은 제 스킬로 갖는다 — 수류탄의 포물선 투척은 여기와 무관하게
+        //    따로 살아 있다(기둥을 넘어가 1.8칸이 터지는 그것).
 
         private void ApplyShotHit(Unit victim, Projectile shot)
         {
