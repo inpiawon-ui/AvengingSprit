@@ -6279,6 +6279,9 @@ namespace Game.Module.InGame
 
         /// <summary>스턴 표시는 정수리 위에 뜬다. 그림 아래 절반이 비어 있어 얼굴을 가리지 않는다.</summary>
         private const float StunFxSize = 48f;
+
+        /// <summary>묶임 표시를 발밑으로 내리는 거리. 몸 한가운데 달면 체력바·피해 숫자와 겹친다.</summary>
+        private const float RootFxLift = 26f;
         private const float StunFxLift = 52f;
 
         /// <summary>
@@ -6305,6 +6308,19 @@ namespace Game.Module.InGame
         /// </summary>
         private readonly Dictionary<Unit, Impact> _burnFx = new();
         private readonly List<Unit> _burnFxDone = new();
+
+        /// <summary>
+        /// 독 · 묶임도 **몸에 붙어 돈다.** 화상과 같은 규칙이다 —
+        /// 걸린 순간 한 번 번쩍이고 마는 표시로는 **누가 걸렸는지**를 알 수 없다.
+        /// 새 그림 없이 있는 것을 쓴다(독 `fx_venom` · 사슬 `fx_chain`).
+        /// </summary>
+        private readonly Dictionary<Unit, Impact> _poisonFx = new();
+        private readonly List<Unit> _poisonFxDone = new();
+        private readonly Dictionary<Unit, Impact> _rootFx = new();
+        private readonly List<Unit> _rootFxDone = new();
+
+        private const float PoisonFxSize = 56f;
+        private const float RootFxSize = 64f;
         private Impact _shieldFx;
 
         /// <summary>
@@ -6348,6 +6364,45 @@ namespace Game.Module.InGame
                 if (e == null || !e.IsAlive || !e.IsStunned || _stunFx.ContainsKey(e)) continue;
                 var fx = TakeLoopFx("stun", e.Position + Vector2.up * StunFxLift, StunFxSize);
                 if (fx != null) _stunFx[e] = fx;
+            }
+
+            // ── 독 ─────────────────────────────────────────────
+            _poisonFxDone.Clear();
+            foreach (var kv in _poisonFx)
+            {
+                var u = kv.Key;
+                if (u == null || !u.IsAlive || !u.IsPoisoned) { kv.Value?.Stop(); _poisonFxDone.Add(u); continue; }
+                kv.Value?.MoveTo(u.Position);
+            }
+            for (int i = 0; i < _poisonFxDone.Count; i++) _poisonFx.Remove(_poisonFxDone[i]);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || !e.IsPoisoned || _poisonFx.ContainsKey(e)) continue;
+                var fx = TakeLoopFx("venom", e.Position, PoisonFxSize);
+                if (fx != null) _poisonFx[e] = fx;
+            }
+
+            // ── 묶임 ───────────────────────────────────────────
+            //
+            // 방 전체를 5초 묶는 기술이라 **누가 묶였는지**가 보여야 한다.
+            // 발을 묶은 것이므로 표시는 발밑에 단다.
+            _rootFxDone.Clear();
+            foreach (var kv in _rootFx)
+            {
+                var u = kv.Key;
+                if (u == null || !u.IsAlive || !u.IsRooted) { kv.Value?.Stop(); _rootFxDone.Add(u); continue; }
+                kv.Value?.MoveTo(u.Position - Vector2.up * RootFxLift);
+            }
+            for (int i = 0; i < _rootFxDone.Count; i++) _rootFx.Remove(_rootFxDone[i]);
+
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || !e.IsRooted || _rootFx.ContainsKey(e)) continue;
+                var fx = TakeLoopFx("chain", e.Position - Vector2.up * RootFxLift, RootFxSize);
+                if (fx != null) _rootFx[e] = fx;
             }
 
             var me = Avatar;
