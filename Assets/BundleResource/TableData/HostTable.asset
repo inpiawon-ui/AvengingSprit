@@ -109,7 +109,7 @@ MonoBehaviour:
     _canonHoming: 0
     _canonHostHp: 145
     _canonHostAtk: 8
-    _canonHostRange: 7
+    _canonHostRange: 5.8
     _canonHostInterval: 0.66
     _canonHostMoveSpeed: 4.1159997
     _canonHostShotSpeed: 7
@@ -329,7 +329,7 @@ MonoBehaviour:
     _canonHoming: 0
     _canonHostHp: 125
     _canonHostAtk: 5
-    _canonHostRange: 7
+    _canonHostRange: 5.4
     _canonHostInterval: 0.42
     _canonHostMoveSpeed: 5.376
     _canonHostShotSpeed: 8.8
@@ -384,7 +384,7 @@ MonoBehaviour:
     _canonHoming: 0
     _canonHostHp: 145
     _canonHostAtk: 6
-    _canonHostRange: 7.2
+    _canonHostRange: 5.6
     _canonHostInterval: 0.5
     _canonHostMoveSpeed: 4.2
     _canonHostShotSpeed: 9.4
