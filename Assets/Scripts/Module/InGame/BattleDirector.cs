@@ -2362,7 +2362,9 @@ namespace Game.Module.InGame
             //   한 곳뿐이라, CH2 에 들어서면 순찰기·집행자가 **흰 사각형**으로 섰다
             //   (2026-09-08 확인). 아래 보스 목록이 이미 같은 이유로 챕터를 안 가른다.
             //   잡몹은 여섯 종뿐이고 챕터마다 셋씩 겹치므로 실제로 세 장이 더 붙는다.
-            var keys = new List<string> { "ghost" };
+            // 골렘은 잡몹도 호스트도 아니다 — 영매가 **불러내는** 몸이라 방 어디에도 안 서 있다.
+            // 여기 안 넣으면 아틀라스가 안 올라오고, 그림이 없으면 소환 자체가 조용히 취소된다.
+            var keys = new List<string> { "ghost", GolemKey };
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
             for (int c = 1; c <= ChapterCount; c++)
@@ -3170,11 +3172,10 @@ namespace Game.Module.InGame
             var me = Avatar;
             if (me != null)
             {
-                // 구루 결계는 획득량을 두 배로 만들고, 아마존 정예의 불굴은 상한을 푼다.
+                // 구루 결계는 획득량을 두 배로 만든다.
                 int gain = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * _config.ShieldPerHitPercent / 100f))
                          * (_wardSeconds > 0f ? 2 : 1);
-                int cap = IsShieldUncapped ? me.HpMax : me.HpMax * _config.ShieldCapPercent / 100;
-                me.AddShield(gain, cap);
+                me.AddShield(gain, me.HpMax * _config.ShieldCapPercent / 100);
             }
 
             // ⚠ `IsPossessable` 로 거르면 안 된다. 그 값은 **지금 이 순간 탈 수 있는가**라
@@ -3990,26 +3991,21 @@ namespace Game.Module.InGame
              : e.HasCanon                ? e.CanonMoveSpeed * _pxPerMeter
              : _config.HostSpeed(e.Spd);
 
-        /// <summary>
-        /// 원거리 몸의 사거리 배율 (2026-09-10 — 「원거리 사거리 2배로, 근접은 제외」).
-        ///
-        /// ⚠ **근접에는 안 곱한다.** 근접의 사거리는 「붙어야 때린다」는 규칙 자체라
-        ///   늘리면 붙지 않고 때리게 되어 근접과 원거리의 구분이 사라진다.
-        /// </summary>
-        private const float RangedHostRangeMul = 2f;
-
         // 호스트 프로필이 없으면 그 배우가 적일 때 쓰던 값을 그대로 쓴다.
         // 예전 공식(전역 900 × 배율)으로 돌아가면 정본 배우들과 격이 어긋난다.
+        //
+        // ⚠ **표에 적힌 미터가 곧 게임에서의 미터다.** 예전에는 근접이 아닌 몸에
+        //   ×2 를 곱했다(2026-09-10 「원거리 사거리 2배로」). 그 탓에 확정본이 적은
+        //   드라군 7.0 m 가 판에서는 14.0 m 가 되어, 10×16 m 방을 원거리 열넷이
+        //   통째로 덮었다 — 근거리·중거리·원거리를 가른 의미가 사라졌다.
+        //   로비 상세 카드는 곱하지 않은 값을 보여 주고 있었으므로 화면과 판정도 어긋났다.
+        //   확정본 2026-09-14 기준으로 배율을 걷어낸다. 적이 쓰는 `EnemyRangeOf` 도
+        //   곱하지 않으므로, 같은 몸이면 내가 입든 적이 입든 사거리가 같아진다.
         private float HostRangeOf(HostEntry e)
-        {
-            float r = e == null ? _config.HostAttackRange
-                    : e.HasCanonHost ? e.CanonHostRange * _pxPerMeter
-                    : e.HasCanon     ? e.CanonRange * _pxPerMeter
-                    : _config.HostAttackRange * e.RangeMul;
-
-            bool melee = e != null && (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse);
-            return melee ? r : r * RangedHostRangeMul;
-        }
+            => e == null ? _config.HostAttackRange
+             : e.HasCanonHost ? e.CanonHostRange * _pxPerMeter
+             : e.HasCanon     ? e.CanonRange * _pxPerMeter
+             : _config.HostAttackRange * e.RangeMul;
 
         /// <summary>
         /// 탄속. 정본은 배우마다 다르게 준다 — 닌자 탄이 12.5m/s, 잡몹이 8.5m/s 다.
