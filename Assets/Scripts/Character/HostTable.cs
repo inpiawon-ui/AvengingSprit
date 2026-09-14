@@ -355,6 +355,10 @@ namespace Game.Character
                 _canonShotCount = Mathf.Max(1, shotCount),
                 _spreadDegrees = spreadDegrees,
                 _canonMaxConcurrent = 0,   // 잡몹은 물량이 정체다 — 동시 공격을 막지 않는다
+                // ⚠ 방어등급을 **여기서 정한다.** 안 적으면 필드 기본값 5(15%)를 물고 나와
+                //   해골 한 마리가 표에 있는 몸만큼 단단해진다 — 정한 값이 아니라 사고다.
+                //   잡몹은 물량이 정체이므로 가장 낮은 1등급(3%)이다.
+                _defenseGrade = TrashDefenseGrade,
             };
         }
 
@@ -446,6 +450,9 @@ namespace Game.Character
 
         /// <summary>등급 하나가 깎는 피해 비율(%). 등급 10 이면 30% 다.</summary>
         public const int DefensePercentPerGrade = 3;
+
+        /// <summary>잡몹의 방어등급. 잡는 맛이 죽지 않게 가장 낮은 칸이다.</summary>
+        public const int TrashDefenseGrade = 1;
 
         /// <summary>방어력 등급 1~10.</summary>
         public int DefenseGrade => Mathf.Clamp(_defenseGrade, 1, 10);
