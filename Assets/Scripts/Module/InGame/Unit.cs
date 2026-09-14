@@ -351,6 +351,14 @@ namespace Game.Module.InGame
             AttackInterval = attackInterval;
             IsBoss = isBoss;
 
+            // 방어력은 몸을 세울 때 정한다. 풀에서 돌려 쓰는 몸이라 여기서 안 넣으면
+            // 앞서 쓰던 값이 그대로 남는다. 플레이어가 입은 몸은 `ApplyHostPassives`
+            // 가 곧바로 덮어쓴다(코만도(기관총) 보정이 거기 있다).
+            SetDefense(side != UnitSide.Enemy ? 0
+                     : isBoss                 ? BossDefensePercent
+                     : profile != null        ? Mathf.RoundToInt(profile.DefensePercent)
+                                              : TrashDefensePercent);
+
             _rect.anchorMin = _rect.anchorMax = new Vector2(0f, 1f);
             _rect.pivot = new Vector2(0.5f, 0.5f);
             _rect.sizeDelta = size;
@@ -1904,6 +1912,15 @@ namespace Game.Module.InGame
         public int DefensePercent { get; private set; }
 
         public void SetDefense(int percent) => DefensePercent = Mathf.Clamp(percent, 0, 80);
+
+        /// <summary>
+        /// 표에 없는 잡몹의 방어력(1등급). 0 으로 두면 코만도(수류탄)의 「방어력 50% 무시」가
+        /// 잡몹 앞에서는 아무 일도 안 하는 글이 된다. 잡는 맛이 죽지 않게 낮게 잡는다.
+        /// </summary>
+        private const int TrashDefensePercent = 3;
+
+        /// <summary>보스의 방어력(8등급). 보스는 표가 아니라 `BossTable` 에서 오므로 등급 칸이 없다.</summary>
+        private const int BossDefensePercent = 24;
 
         /// <summary>
         /// 이 몸이 받는 피해에 곱할 배수. <paramref name="ignorePercent"/> 만큼 방어력을 무시한다.
