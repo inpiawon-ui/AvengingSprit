@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Character;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -31,6 +32,19 @@ namespace Game.Module.InGame
         /// <summary>골렘 그림 아틀라스 키(`atlas/unit_golem`). 잡몹 표에는 없는 몸이다.</summary>
         private const string GolemKey = "golem";
         private const float GolemLifeSeconds = 15f;
+
+        /// <summary>
+        /// 골렘의 몸값. **근접으로 때리는 몸**이다 — 주먹이 무기라 탄이 없다.
+        ///
+        /// 체력·공격력은 `SpawnSummon` 이 영매의 비율로 다시 계산하므로 여기 숫자는
+        /// 자리만 채운다. 실제로 쓰이는 것은 **공격 방식 · 사거리 · 간격**이다.
+        /// 해골(1.4 m)보다 조금 길고 훨씬 느리게 친다 — 덩치가 크고 한 대가 무겁다.
+        /// </summary>
+        private static HostEntry s_golem;
+        private static HostEntry GolemProfile => s_golem ??= HostEntry.CreateTrash(
+            GolemKey, "골렘", AttackKind.Melee,
+            hp: 60, atk: 12, moveMps: 1.0f, engageMps: 1.8f,
+            rangeMeters: 1.6f, interval: 1.6f, telegraph: 0.5f);
         private const float GolemHpPercent = 0.60f;
         private const float GolemAtkPercent = 0.60f;
 
@@ -71,7 +85,8 @@ namespace Game.Module.InGame
         /// <summary>사신 · 영매 — 죽은 자리에서 해골이 일어선다.</summary>
         private void SummonSkull(Vector2 at)
             => SpawnSummon(TrashSkeletonKey, "해골", SkullHpPercent, SkullAtkPercent,
-                           SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at);
+                           SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
+                           profile: Skeleton);
 
         /// <summary>
         /// 영매 액티브 — 골렘. 해골보다 크고 오래 간다.
@@ -82,7 +97,8 @@ namespace Game.Module.InGame
         /// </summary>
         private void SummonGolem(Vector2 at)
             => SpawnSummon(GolemKey, "골렘", GolemHpPercent, GolemAtkPercent,
-                           GolemLifeSeconds, attacks: true, mobile: true, taunt: false, at: at);
+                           GolemLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
+                           profile: GolemProfile);
 
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
         private void SummonClone(Vector2 at)
@@ -92,9 +108,14 @@ namespace Game.Module.InGame
                         attacks: false, mobile: false, taunt: true, at: at);
         }
 
+        /// <param name="profile">
+        /// 이 몸의 **싸우는 방식**. 넣지 않으면 공격 방식이 「기본 = 쏘기」로 떨어지고
+        /// 사거리·간격까지 불러낸 몸의 것을 물려받는다 — 그래서 골렘과 해골이
+        /// 영매의 탄을 대신 쏘고 있었다(2026-09-14). 때리는 몸에는 반드시 넣는다.
+        /// </param>
         private void SpawnSummon(string key, string name, float hpPercent, float atkPercent,
                                  float life, bool attacks, bool mobile, bool taunt,
-                                 Vector2 at, float scale = 1f)
+                                 Vector2 at, float scale = 1f, HostEntry profile = null)
         {
             if (_host == null) return;
 
@@ -106,9 +127,11 @@ namespace Game.Module.InGame
             var u = NewUnit($"Summon_{key}_{_summons.Count}");
             int hp = Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * hpPercent));
             int atk = Mathf.Max(0, Mathf.RoundToInt(_host.Atk * atkPercent));
+            float range = profile != null ? profile.CanonRange * _pxPerMeter : _host.AttackRange;
+            float interval = profile != null ? profile.CanonInterval : _host.AttackInterval;
             u.Setup(UnitSide.Player, key, name, art, hp, atk,
-                    _host.MoveSpeed * 0.9f, _host.AttackRange, _host.AttackInterval,
-                    UnitBox(96f * scale, 92f * scale), isBoss: false, profile: null);
+                    _host.MoveSpeed * 0.9f, range, interval,
+                    UnitBox(96f * scale, 92f * scale), isBoss: false, profile: profile);
             u.Position = ClampedInField(u, at);
             u.SetState(EnemyState.Idle);
             u.ResetPattern();
