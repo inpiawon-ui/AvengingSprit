@@ -4768,7 +4768,6 @@ namespace Game.Module.InGame
             int chapter = Mathf.Clamp(_runChapter, 1, 3);
 
 
-
             // ── 지금은 **모든 방이 같은 배경 한 장**을 쓴다 ────────────────
             //
             // 챕터 × 템플릿 18장이 이미 있지만 전부 못 쓴다:
@@ -8025,56 +8024,6 @@ namespace Game.Module.InGame
             return (cut > 0 ? nameEn.Substring(0, cut) : nameEn).Trim();
         }
 
-        private void GaleDash(Unit me)
-        {
-            // 방향 — 걷는 중이면 걷던 쪽, 서 있으면 가장 가까운 적 쪽.
-            Vector2 dir = MoveInput.sqrMagnitude > 0.0001f ? MoveInput.normalized : Vector2.zero;
-            if (dir == Vector2.zero)
-            {
-                var near = NearestEnemy(me.Position);
-                dir = near != null ? (near.Position - me.Position).normalized : me.Facing;
-            }
-            if (dir == Vector2.zero) dir = Vector2.right;
-
-            var from = me.Position;
-            var to = from + dir * (GaleDashMeters * _pxPerMeter);
-
-            // 지형은 통과하지만 **방 밖으로는 못 나간다.** 걸어갈 때와 같은 한계다 —
-            // 대시만 벽을 넘으면 "걸어서는 못 가는데 대시로는 가는" 자리가 생긴다.
-            to = ClampedInField(me, to);
-
-            // ⚠ **자리를 바로 옮기지 않는다.** 예전에는 여기서 `me.Position = to` 를 해서
-            //   한 프레임에 3 m 를 건너뛰었다 — 잔상과 먼지를 아무리 얹어도 화면에는
-            //   순간이동으로 보인다. "빠르게 이동하는 기술" 이 아니라 "사라졌다 나타나는
-            //   기술" 이 되어, 어디를 지나갔는지(=경로 위의 적을 왜 때렸는지)가 안 읽힌다.
-            //   자리는 `TickDash` 가 0.15초에 걸쳐 옮긴다. 피해 판정은 아래에서 경로
-            //   전체를 한 번에 보므로, 이동이 늦어져도 맞는 적은 그대로다.
-            _dashFrom = from;
-            _dashTo = to;
-            _dashTime = GaleDashSeconds;
-            me.SetFacing(dir);
-
-            // 경로 위의 적을 **한 번씩만** 때린다. 폭 안에 들어오면 통과해도 맞는다.
-            int dmg = Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * GaleDashDamageMul));
-            float halfWidth = GaleDashWidthMeters * 0.5f * _pxPerMeter;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || !e.IsAlive) continue;
-                if (DistanceToSegment(e.Position, from, to) > halfWidth) continue;
-                HitEnemyWith(e, dmg, _host?.Profile);
-            }
-
-            // Lv5 부터 **도착 후** 무적. "돌진 중" 으로 두면 0.15초라 맞을 일이 없어
-            // 효과가 없다 — 원거리 밭에 뛰어든 직후가 실제로 필요한 구간이다.
-            float after = GaleDashInvulnSeconds;
-            if (after > 0f) _invuln = Mathf.Max(_invuln, GaleDashSeconds + after);
-
-            SpawnAfterimages(me, from, to);
-            // 출발 먼지. 도착 먼지는 실제로 도착했을 때(`TickDash`) 터진다 —
-            // 여기서 같이 터뜨리면 아직 가지도 않은 자리에 먼지가 먼저 핀다.
-            PlayFx("dash", from, GaleDashFxSize, loop: false);
-        }
 
         // ── 돌진 이동 ────────────────────────────────────────────
 

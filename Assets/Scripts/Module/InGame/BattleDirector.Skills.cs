@@ -522,38 +522,6 @@ namespace Game.Module.InGame
         private const float HarvestRadiusMeters = 3.0f;
         private const float HarvestBossPercent = 0.08f;
 
-        private void SoulHarvest(Unit me)
-        {
-            float mul = BaseAxis(5f);               // Lv1 ×5.0 → Lv4 ×7.5
-            // Lv6~10 은 낫 피해에 얹는다 (+0% → +60%)
-            if (SpecOpen) mul *= 1f + SpecAxis(0f);
-
-            // Lv5 에 반경이 두 배가 된다. 자라는 값이 아니라 계단 하나다 —
-            // 그래서 표가 아니라 코드가 갖는다(`SkillScaling` 주석의 예외 둘 중 하나).
-            float r = Meters(SpecOpen ? HarvestRadiusMeters * 2f : HarvestRadiusMeters)
-                    * _buffs.AoeMul;
-
-            int dmg = SkillDamage(me, mul);
-            var list = EnemiesInRange(me.Position, r);
-            int killed = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                var e = list[i];
-                if (e == null || !e.IsAlive) continue;
-                int hit = dmg;
-                if (e.IsBoss) hit += Mathf.RoundToInt(e.Hp * HarvestBossPercent);
-                bool wasAlive = e.IsAlive;
-                HitEnemyWith(e, hit, me.Profile);
-                if (wasAlive && !e.IsAlive) killed++;
-            }
-
-            // 처치당 쿨이 돌아온다. 잡몹이 뭉친 곳에 쓰면 다음 낫이 훨씬 빨리 온다.
-            float back = (SpecOpen ? 5f : 3f) * killed;
-            if (back > 0f) _skillCooldown = Mathf.Min(SkillCooldownOf(me.Profile),
-                                                      _skillCooldown + back);
-            PlayFx("scythe", me.Position, r * 2f, loop: false);
-        }
-
         // ── 구루 · 수호 결계 ─────────────────────────────────────
         //
         // 격투 여섯 중 쉴드를 **가장 느리게** 쌓는 몸이다(공격 간격 0.85초).
@@ -601,42 +569,6 @@ namespace Game.Module.InGame
         private const float ChainLandMeters = 1.5f;
         private const float ChainDamageMul = 2.0f;
 
-        private void ChainPull(Unit me)
-        {
-            float reach = Meters(BaseAxis(5f));     // Lv1 5.0 → Lv4 7.0 m
-            float stun = SpecAxis(0.5f);            // Lv5 0.5 → Lv10 1.2초
-            int dmg = SkillDamage(me, ChainDamageMul);
-
-            var list = EnemiesInRange(me.Position, reach);
-            list.Sort((a, b) => (a.Position - me.Position).sqrMagnitude
-                                .CompareTo((b.Position - me.Position).sqrMagnitude));
-
-            int pulled = 0;
-            for (int i = 0; i < list.Count && pulled < ChainMaxTargets; i++)
-            {
-                var e = list[i];
-                if (e == null || !e.IsAlive) continue;
-
-                var dir = (e.Position - me.Position);
-                dir = dir.sqrMagnitude < 0.0001f ? me.Facing : dir.normalized;
-                PlayFx("chain", Vector2.Lerp(me.Position, e.Position, 0.5f), reach * 0.5f, false);
-
-                if (e.IsBoss)
-                {
-                    // 안 끌리는 대신 두 배로 맞는다.
-                    HitEnemyWith(e, dmg * 2, me.Profile);
-                }
-                else
-                {
-                    // 사슬도 적도 지형을 통과한다. 자리만 옮기고 방 밖으로만 안 나가게 한다.
-                    e.Position = ClampedInField(e, me.Position + dir * Meters(ChainLandMeters));
-                    HitEnemyWith(e, dmg, me.Profile);
-                    if (stun > 0f) e.ApplyStun(stun);
-                }
-                pulled++;
-            }
-        }
-
         // ═══════════════════════════════════════════════════════════
         //  중거리 5종
         // ═══════════════════════════════════════════════════════════
@@ -650,45 +582,6 @@ namespace Game.Module.InGame
         private const float DragoonConeMeters = 5.0f;
         private const float DragoonBossPercent = 0.08f;
 
-        private void ExecutionBreath(Unit me)
-        {
-            float mul = BaseAxis(3.5f);             // Lv1 ×3.5 → Lv4 ×5.0
-            float threshold = SpecOpen ? SpecAxis(0.30f) : 0.30f;   // Lv5 30% → Lv10 45%
-            int dmg = SkillDamage(me, mul);
-
-            var dir = AimDirection(me);
-            var hit = EnemiesInCone(me.Position, dir, DragoonConeDeg, Meters(DragoonConeMeters));
-            // ⚠ 목록을 그대로 돌면서 죽이면 안 된다. `KillEnemy` 가 `_enemies` 를 건드리는데
-            //   `_coneHits` 는 그 목록을 가리키는 별개의 버퍼라 안전하지만,
-            //   다음 스킬이 같은 버퍼를 쓰면 어긋난다 — 여기서 한 번 복사해 둔다.
-            var targets = new List<Unit>(hit);
-
-            int executed = 0;
-            for (int i = 0; i < targets.Count; i++)
-            {
-                var e = targets[i];
-                if (e == null || !e.IsAlive) continue;
-                int deal = dmg;
-                if (e.IsBoss) deal += Mathf.RoundToInt(e.HpMax * DragoonBossPercent);
-                HitEnemyWith(e, deal, me.Profile);
-
-                // 즉사 — 피해를 준 **뒤** 체력이 기준 아래면 그대로 끝낸다.
-                if (e.IsAlive && !e.IsBoss && e.Hp <= e.HpMax * threshold)
-                {
-                    HitEnemyWith(e, e.Hp, me.Profile);
-                    executed++;
-                }
-            }
-
-            // Lv5 — 즉사 1기당 쿨 −2초
-            if (SpecOpen && executed > 0)
-                _skillCooldown = Mathf.Min(SkillCooldownOf(me.Profile),
-                                           _skillCooldown + 2f * executed);
-
-            PlayFx("breath_fire", me.Position + dir * Meters(DragoonConeMeters * 0.5f),
-                   Meters(DragoonConeMeters), loop: false);
-        }
-
         // ── 샐러맨더 · 용암 지대 ─────────────────────────────────
         //
         // 장판을 먼저 깔고 평타로 마무리하는 것이 이 몸의 리듬이다.
@@ -696,24 +589,6 @@ namespace Game.Module.InGame
 
         private const float LavaThrowMeters = 5.5f;
         private const float LavaRadiusMeters = 2.0f;
-
-        private void LavaField(Unit me)
-        {
-            float perSecond = BaseAxis(0.5f);       // Lv1 ×0.5 → Lv4 ×0.9 (초당)
-            float seconds = SpecOpen ? SpecAxis(6f) : 6f;   // Lv5 6 → Lv10 10초
-            int tick = SkillDamage(me, perSecond * 0.5f);   // 장판은 0.5초 간격
-
-            var at = SkillTargetPoint(me, Meters(LavaThrowMeters));
-            SpawnField(at, Meters(LavaRadiusMeters) * _buffs.AoeMul, seconds,
-                       FieldEffect.Burn, tick, fromPlayer: true);
-
-            // Lv5 — 장판이 적을 따라 번진다. 첫 장판 안의 적 발밑에 작은 것을 하나씩 더.
-            if (!SpecOpen) return;
-            var list = EnemiesInRange(at, Meters(LavaRadiusMeters));
-            for (int i = 0; i < list.Count && i < 3; i++)
-                SpawnField(list[i].Position, Meters(LavaRadiusMeters * 0.6f) * _buffs.AoeMul,
-                           seconds * 0.5f, FieldEffect.Burn, tick, fromPlayer: true);
-        }
 
         // ── 청룡 · 냉기 브레스 ───────────────────────────────────
         //
@@ -723,17 +598,6 @@ namespace Game.Module.InGame
         private const float FrostConeDeg = 45f;
         private const float FrostConeMeters = 5.5f;
         private const float FrostTickGap = 0.15f;
-
-        private void FrostBreath(Unit me)
-        {
-            float perHit = BaseAxis(1.0f);          // Lv1 ×1.0 → Lv4 ×1.6
-            int ticks = SpecOpen ? Mathf.RoundToInt(SpecAxis(3f)) : 3;   // Lv5 3 → Lv10 6타
-            float slowSeconds = SpecOpen ? 6f : 3f; // Lv5 에 약화 지속이 두 배가 된다
-            _frostQueue = Mathf.Max(1, ticks);
-            _frostGap = 0f;
-            _frostDamage = SkillDamage(me, perHit);
-            _frostSlowSeconds = slowSeconds;
-        }
 
         private int _frostQueue;
         private float _frostGap;
@@ -824,16 +688,6 @@ namespace Game.Module.InGame
         private const float ShatterChainMeters = 1.5f;
         private const float FreezeSeconds = 0.5f;
 
-        private void FrostShatter(Unit me)
-        {
-            float mul = BaseAxis(2.5f);             // Lv1 ×2.5 → Lv4 ×3.8
-            int chains = SpecOpen ? Mathf.RoundToInt(SpecAxis(1f)) : 0;  // Lv5 1 → Lv10 3회
-            int dmg = SkillDamage(me, mul);
-
-            var at = SkillTargetPoint(me, Meters(ShatterRangeMeters));
-            Shatter(me, at, Meters(ShatterRadiusMeters), dmg, chains);
-        }
-
         private void Shatter(Unit me, Vector2 at, float radius, int dmg, int chainsLeft)
         {
             PlayFx("freeze", at, radius * 2f, loop: false);
@@ -886,30 +740,6 @@ namespace Game.Module.InGame
         private const float LeapFireBackMeters = 3.0f;
         private const float LeapFireAirSeconds = 0.5f;
 
-        private void LeapFire(Unit me)
-        {
-            // 뒤로 — 가장 가까운 적의 **반대쪽**. 벽에 막히면 옆으로 돈다.
-            var near = NearestEnemy(me.Position);
-            var away = near != null ? (me.Position - near.Position) : -me.Facing;
-            if (away.sqrMagnitude < 0.0001f) away = -me.Facing;
-            away = away.normalized;
-
-            var to = ClampedInField(me, me.Position + away * Meters(LeapFireBackMeters));
-            // 방 끝이라 뒤로 못 가면 옆으로 뛴다 — 안 움직이면 도약이 안 보인다.
-            if ((to - me.Position).sqrMagnitude < Meters(0.5f) * Meters(0.5f))
-                to = ClampedInField(me, me.Position
-                     + new Vector2(-away.y, away.x) * Meters(LeapFireBackMeters));
-
-            _dashFrom = me.Position;
-            _dashTo = to;
-            _dashTime = GaleDashSeconds;
-            _invuln = Mathf.Max(_invuln, LeapFireAirSeconds);
-            SpawnAfterimages(me, me.Position, to);
-            PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
-
-            GrantHaste(50f, BaseAxis(2.5f));        // Lv1 2.5 → Lv4 4.0초 동안 간격 절반
-        }
-
         // ── 닌자(표창) · 그림자 분신 ─────────────────────────────
         //
         // 순간이동이 적 **뒤로** 간다. 도망 기술이 아니라 들어가서 세 배로 쏟는 기술이다.
@@ -917,44 +747,6 @@ namespace Game.Module.InGame
 
         private const float BlinkBehindMeters = 1.5f;
         private const float CloneSideMeters = 1.5f;
-
-        private void ShadowClones(Unit me)
-        {
-            float dmgMul = BaseAxis(0.5f);          // Lv1 ×0.5 → Lv4 ×0.8
-            float seconds = SpecOpen ? SpecAxis(4f) : 4f;   // Lv5 4 → Lv10 8초
-            int count = SpecOpen ? 3 : 2;           // Lv5 — 분신 3체
-
-            // 순간이동 — 최근접 적 뒤. 없으면 이동 방향으로 4 m.
-            var near = NearestEnemy(me.Position);
-            Vector2 to;
-            if (near != null)
-            {
-                var behind = (near.Position - me.Position);
-                behind = behind.sqrMagnitude < 0.0001f ? me.Facing : behind.normalized;
-                to = near.Position + behind * Meters(BlinkBehindMeters);
-            }
-            else
-            {
-                var d = MoveInput.sqrMagnitude > 0.0001f ? MoveInput.normalized : me.Facing;
-                to = me.Position + d * Meters(4f);
-            }
-
-            PlayFx("smoke", me.Position, 96f, loop: false);
-            me.Position = ClampedInField(me, to);
-            PlayFx("smoke", me.Position, 96f, loop: false);
-
-            DespawnClones();
-            _cloneSeconds = seconds;
-            var side = new Vector2(-me.Facing.y, me.Facing.x);
-            int dmg = SkillDamage(me, dmgMul);
-            for (int i = 0; i < count; i++)
-            {
-                // 좌우로 벌린다. 셋이면 하나는 뒤에 선다.
-                var off = i == 0 ? side : i == 1 ? -side : -me.Facing;
-                var spot = ClampedInField(me, me.Position + off * Meters(CloneSideMeters));
-                SpawnClone(spot, seconds, dmg, me.AttackInterval);
-            }
-        }
 
         private void SpawnClone(Vector2 at, float seconds, int damage, float interval)
         {
@@ -979,38 +771,11 @@ namespace Game.Module.InGame
             _clones.Clear();
         }
 
-        // ── 흡혈귀 · 혈갈 ────────────────────────────────────────
-        //
-        // 원거리인데 쉴드를 얻는 유일한 몸이다. 감쇠 규칙은 격투와 똑같이 따른다 —
-        // 예외를 만들면 쉴드가 무엇인지가 몸마다 달라진다.
-
-        private void BloodThirst(Unit me)
-        {
-            _drainMul = BaseAxis(2f);               // Lv1 2배 → Lv4 3배
-            _drainSeconds = SpecOpen ? SpecAxis(5f) : 5f;   // Lv5 5 → Lv10 8초
-            PlayFx("drain", me.Position, 64f, loop: false);
-        }
-
         /// <summary>혈갈이 도는 동안의 회복 배율. 꺼져 있으면 1배다.</summary>
         private float DrainMul => _drainSeconds > 0f ? _drainMul : 1f;
 
         /// <summary>혈갈이 도는 동안은 흡혈이 확률이 아니라 확정이다.</summary>
         private bool IsDrainForced => _drainSeconds > 0f;
-
-        // ── 코만도(기관총) · 오버히트 ────────────────────────────
-        //
-        // 23명 중 가장 단순하다. 조건도 위치 선정도 없다 —
-        // 전부 어려우면 23명이 다 부담이 된다. 단순한 것 하나는 있어야 한다.
-
-        private void Overheat(Unit me)
-        {
-            float cut = BaseAxis(0.5f);             // Lv1 −50% → Lv4 −65%
-            float seconds = SpecOpen ? SpecAxis(5f) : 5f;   // Lv5 5 → Lv10 8초
-            GrantHaste(cut * 100f, seconds);
-            _pierceSeconds = seconds;
-            _overheatBlastAt = SpecOpen ? seconds : 0f;
-            PlayFx("muzzle", me.MuzzlePosition, 48f, loop: false);
-        }
 
         private float _overheatBlastAt;
 
@@ -1037,25 +802,6 @@ namespace Game.Module.InGame
         // 표식을 걸어 두고 다른 몸으로 갈아타도 표식은 남는다.
 
         private const float MarkTransferMeters = 5.0f;
-
-        private void MarkShot(Unit me)
-        {
-            float seconds = BaseAxis(6f);           // Lv1 6 → Lv4 10초
-            int percent = Mathf.RoundToInt((SpecOpen ? SpecAxis(0.30f) : 0.30f) * 100f);
-            if (percent <= 0) percent = 30;
-
-            var target = NearestEnemy(me.Position);
-            if (target == null) return;
-
-            HitEnemyWith(target, SkillDamage(me, 1f), me.Profile);
-            if (!target.IsAlive) return;
-
-            target.ApplyAmp(percent, seconds);
-            target.SetMark(seconds);
-            _markTransfersLeft = SpecOpen ? int.MaxValue : 1;   // Lv5 — 전이 무제한
-            _markPercent = percent;
-            PlayFx("mark", target.Position, 48f, loop: false);
-        }
 
         private int _markTransfersLeft;
         private int _markPercent = 30;
@@ -1085,30 +831,6 @@ namespace Game.Module.InGame
         private const float SlamAirSeconds = 0.6f;
         private const float SlamRadiusMeters = 2.5f;
         private const float SlamKnockMeters = 1.6f;
-
-        private void LeapSlam(Unit me)
-        {
-            float mul = BaseAxis(3f);               // Lv1 ×3.0 → Lv4 ×4.5
-            float stun = SpecAxis(0.4f);            // Lv5 0.4 → Lv10 1.0초
-
-            var near = NearestEnemy(me.Position);
-            Vector2 to = near != null
-                ? near.Position
-                : me.Position + (MoveInput.sqrMagnitude > 0.0001f
-                                 ? MoveInput.normalized : me.Facing) * Meters(SlamMaxMeters);
-
-            // 최대 5 m 까지만. 방 반대편으로 날아가면 "뛰었다" 가 아니라 순간이동이다.
-            var d = to - me.Position;
-            if (d.magnitude > Meters(SlamMaxMeters))
-                to = me.Position + d.normalized * Meters(SlamMaxMeters);
-
-            _slamTo = ClampedInField(me, to);
-            _slamTime = SlamAirSeconds;
-            _slamFrom = me.Position;
-            _slamDamage = SkillDamage(me, mul);
-            _slamStun = stun;
-            _invuln = Mathf.Max(_invuln, SlamAirSeconds);
-        }
 
         private Vector2 _slamFrom, _slamTo;
         private float _slamTime, _slamStun;
@@ -1163,27 +885,6 @@ namespace Game.Module.InGame
 
         private const int MissileShots = 5;
 
-        private void MultiMissile(Unit me)
-        {
-            float perShot = BaseAxis(1f);           // Lv1 ×1.0 → Lv4 ×1.5
-            int shots = SpecOpen ? Mathf.RoundToInt(SpecAxis(5f)) : MissileShots;   // 5 → 8발
-            int dmg = SkillDamage(me, perShot);
-            float radius = Meters(SpecOpen ? 1.8f : 1.0f);
-
-            var targets = EnemiesInRange(me.Position, Meters(9f));
-            for (int i = 0; i < shots; i++)
-            {
-                // 2기 이상이면 균등 분산, 1기면 집중.
-                var t = targets.Count > 0 ? targets[i % targets.Count] : null;
-                var at = t != null
-                       ? t.Position
-                       : ClampedInField(me, me.Position + Rotate(me.Facing, (i - shots * 0.5f) * 12f)
-                                        * Meters(6f));
-                ThrowSkillGrenade(me, at, dmg, radius);
-                PlayFx("missile_trail", me.MuzzlePosition, 24f, loop: false);
-            }
-        }
-
         // ═══════════════════════════════════════════════════════════
         //  관통 4종
         // ═══════════════════════════════════════════════════════════
@@ -1198,33 +899,6 @@ namespace Game.Module.InGame
         private const float CurseWidthMeters = 1.0f;
         private const float CurseLengthMeters = 7.2f;
         private const float CurseSeconds = 8f;
-
-        private void CursePropagate(Unit me)
-        {
-            int percent = Mathf.RoundToInt(BaseAxis(0.20f) * 100f);   // Lv1 20% → Lv4 35%
-            if (percent <= 0) percent = 20;
-            _curseSpreadMeters = SpecOpen ? SpecAxis(1f) : 1f;        // Lv5 1 → Lv10 2.5칸
-            _curseSpreadChains = SpecOpen;                            // Lv5 — 전염이 연쇄
-            _cursePercent = percent;
-
-            var dir = AimDirection(me);
-            var hit = EnemiesInPath(me.Position, dir, Meters(CurseLengthMeters),
-                                    Meters(CurseWidthMeters));
-            var list = new List<Unit>(hit);
-            int dmg = SkillDamage(me, 2f);
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                var e = list[i];
-                if (e == null || !e.IsAlive) continue;
-                HitEnemyWith(e, dmg, me.Profile);
-                if (!e.IsAlive) continue;
-                e.ApplyAmp(percent, CurseSeconds);
-                e.SetMark(CurseSeconds);
-            }
-            PlayFx("curse_beam", me.Position + dir * Meters(CurseLengthMeters * 0.5f),
-                   Meters(CurseLengthMeters), loop: false);
-        }
 
         private float _curseSpreadMeters;
         private bool _curseSpreadChains;
@@ -1255,41 +929,6 @@ namespace Game.Module.InGame
 
         private const float RadiantWidthMeters = 2.0f;
         private const float RadiantLengthMeters = 8.0f;
-
-        private void RadiantBurst(Unit me)
-        {
-            float mul = BaseAxis(2.5f);             // Lv1 ×2.5 → Lv4 ×3.8
-            float bonus = SpecOpen ? SpecAxis(0f) : 0f;   // Lv6~10 폭발 +0% → +80%
-
-            var dir = AimDirection(me);
-            float len = Meters(RadiantLengthMeters);
-            float wide = Meters(RadiantWidthMeters);
-
-            var hit = EnemiesInPath(me.Position, dir, len, wide);
-            var list = new List<Unit>(hit);
-            int dmg = SkillDamage(me, mul);
-            for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
-
-            int blast = SkillDamage(me, 2f * (1f + bonus));
-            ScheduleBlast(me.Position, dir, len, wide, blast, 1f);
-            if (SpecOpen) ScheduleBlast(me.Position, dir, len, wide, blast, 2f);  // Lv5 — 2회
-
-            PlayFx("holy_beam", me.Position + dir * (len * 0.5f), len, loop: false);
-        }
-
-        // ── 코만도(레이저) · 광폭 레이저 ─────────────────────────
-        //
-        // 관통 4명 중 유일하게 선을 **더 굵은 선**으로 해결한다.
-        // 면으로 바꾸는 대신 안 비켜지게 만든다.
-
-        private void WideLaser(Unit me)
-        {
-            float seconds = BaseAxis(4f);           // Lv1 4 → Lv4 6초
-            _beamWidth = SpecOpen ? SpecAxis(3f) : 3f;      // Lv5 3배 → Lv10 5배
-            _beamSeconds = seconds;
-            GrantHaste(66f, seconds);               // 0.48 → 0.16초
-            PlayFx("laser_wide", me.Position + me.Facing * Meters(4f), Meters(3f), loop: false);
-        }
 
         // ── 로봇 · 포탑 전개 ─────────────────────────────────────
         //

@@ -243,21 +243,3 @@ MonoBehaviour:
       _baseValueMax: 7.5
       _specValue: 0
       _specValueMax: 0.6
-  - _activeSkillKey: psg_h24
-    _nameEn: Rescue Laser Array
-    _nameKr: "\uAD6C\uC6D0\uC758 \uB808\uC774\uC800"
-    _description: "\uD53C\uD574 \uACC4\uC218 5.6"
-    _scaling:
-      _baseValue: 0
-      _baseValueMax: 0
-      _specValue: 0
-      _specValueMax: 0
-  - _activeSkillKey: psg_h25
-    _nameEn: Superhuman Impact
-    _nameKr: "\uCD08\uC778\uC758 \uC77C\uACA9"
-    _description: "\uD53C\uD574 \uACC4\uC218 7.4"
-    _scaling:
-      _baseValue: 0
-      _baseValueMax: 0
-      _specValue: 0
-      _specValueMax: 0

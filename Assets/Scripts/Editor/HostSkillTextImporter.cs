@@ -159,6 +159,22 @@ namespace Game.EditorTools
             }
             hostSo.ApplyModifiedPropertiesWithoutUndo();
 
+            // ── 주인 없는 액티브를 뺀다 ─────────────────────
+            //
+            // 어떤 호스트도 쓰지 않는 줄이 남아 있으면 강화 화면이 그것을 띄울 수 있고,
+            // 표를 읽는 사람도 "이건 누구 것인가" 를 매번 되묻게 된다.
+            var used = new HashSet<string>(activeKeyOf.Values);
+            int dropped = 0;
+            for (int i = actArr.arraySize - 1; i >= 0; i--)
+            {
+                var key = actArr.GetArrayElementAtIndex(i).FindPropertyRelative("_activeSkillKey").stringValue;
+                if (used.Contains(key)) continue;
+                Debug.Log($"[스킬 문구] 주인 없는 액티브 제거: {key}");
+                actArr.DeleteArrayElementAtIndex(i);
+                dropped++;
+            }
+            if (dropped > 0) actSo.ApplyModifiedPropertiesWithoutUndo();
+
             EditorUtility.SetDirty(hostTable);
             EditorUtility.SetDirty(activeTable);
             EditorUtility.SetDirty(passiveTable);
