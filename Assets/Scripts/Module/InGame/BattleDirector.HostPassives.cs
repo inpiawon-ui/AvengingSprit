@@ -247,8 +247,11 @@ namespace Game.Module.InGame
         // ⚠ 보스 · 원거리 몹은 안 민다. 근거리 몸이 때릴 때도 안 민다(그건 따로 정한다).
         // ⚠ 연사 몸(초당 수십 발)이 맞힐 때마다 밀면 근접 몹이 영영 못 온다 — **적마다 0.2초에 한 번**.
         private const float RangedKnockMeters = 1f;
-        /// <summary>밀린 뒤 맞은 자세로 서 있는 시간. 바로 걸어오면 순간이동처럼 보였다(기획 2026-09-16).</summary>
-        private const float RangedKnockHoldSeconds = 0.1f;
+        /// <summary>
+        /// 밀린 뒤 맞은 자세로 서 있는 시간. 바로 걸어오면 순간이동처럼 보였다(기획 2026-09-16).
+        /// 0.1초 → 1초로 늘려 시험 중(기획 2026-09-16 · 사용자가 직접 테스트).
+        /// </summary>
+        private const float RangedKnockHoldSeconds = 1f;
         private const float RangedKnockCooldown = 0.2f;
         private readonly System.Collections.Generic.Dictionary<Unit, float> _rangedKnockAt = new();
 
@@ -271,7 +274,7 @@ namespace Game.Module.InGame
             var push = away.normalized * Meters(RangedKnockMeters);
             victim.Position = ClampedInField(victim, SlideMove(victim, victim.Position, push));
             victim.CancelWindup();   // 휘두르던 자세는 풀린다 — 다시 붙어서 자세를 잡아야 한다
-            victim.HoldHit(RangedKnockHoldSeconds);   // 밀린 자리에서 0.1초 맞은 자세로 섰다가 움직인다
+            victim.HoldHit(RangedKnockHoldSeconds);   // 밀린 자리에서 잠깐 맞은 자세로 섰다가 움직인다
         }
 
         private static bool IsMeleeKind(Game.Character.AttackKind kind)
