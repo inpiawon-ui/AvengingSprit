@@ -120,6 +120,36 @@ namespace Game.EditorTools
                       + $"{s.totalTime.TotalMinutes:F1}분 · 경고 {s.totalWarnings}건");
 
             SweepOldSymbolFolders(dir, version);
+            MoveOlderApksAside(dir, version);
+        }
+
+        /// <summary>
+        /// 지난 APK 를 `old/` 로 옮긴다. **지우지 않는다.**
+        ///
+        /// 버전마다 파일이 남으니 폴더에 0.1.6 · 0.1.7 이 나란히 있어
+        /// 「어느 게 최신이냐」로 헷갈렸다(기획 2026-09-15). 최신 하나만 앞에 두고
+        /// 지난 것은 한 칸 안으로 넣는다 — 되돌려 볼 일이 생기면 거기서 꺼낸다.
+        /// </summary>
+        private static void MoveOlderApksAside(string dir, string keepVersion)
+        {
+            string keep = $"AVSR_{keepVersion}.apk";
+            string old = Path.Combine(dir, "old");
+            int n = 0;
+            foreach (var path in Directory.GetFiles(dir, "AVSR_*.apk"))
+            {
+                var name = Path.GetFileName(path);
+                if (name == keep) continue;
+                Directory.CreateDirectory(old);
+                var to = Path.Combine(old, name);
+                if (File.Exists(to))
+                {
+                    Debug.LogWarning($"[Build] old 에 {name} 이 이미 있어 안 옮겼다");
+                    continue;
+                }
+                try { File.Move(path, to); n++; }
+                catch (System.Exception e) { Debug.LogWarning($"[Build] {name} 을 old 로 못 옮겼다 · {e.Message}"); }
+            }
+            if (n > 0) Debug.Log($"[Build] 지난 APK {n}개를 old/ 로 옮겼다 — 앞에는 {keep} 하나만 남는다");
         }
 
         /// <summary>
