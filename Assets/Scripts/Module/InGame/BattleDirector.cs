@@ -5127,6 +5127,8 @@ namespace Game.Module.InGame
                           _config.ShotLifeSeconds,
                           // 정본 S08 도탄 터렛 — 포탑 탄도 튕긴다
                           bounces: 0);
+                // 포탑도 로봇의 미사일이다 — 몸이 쏘는 것과 똑같이 터진다(기획 2026-09-15).
+                shot.SetBlastRadius(Meters(RobotBlastMeters));
 
                 // 정본 S01/S03 — 로봇 포탑이 불을 물려받는다. 쏜 자리에 불장판이 남는다.
                 if (_buffs.DeployablesBurn)
@@ -6132,6 +6134,9 @@ namespace Game.Module.InGame
             //   빗나가면 그대로 날아가 수명으로 조용히 사라졌다 —
             //   화면에서는 「폭탄이 쭉 날아가 없어지는」 것으로 보였다(기획 2026-09-15).
             else if (kind == "missile") shot.SetBlastRadius(Meters(MissileBlastMeters));
+            // ⚠ **로봇 미사일은 뚫지 않고 터진다**(기획 2026-09-15). 표의 공격 종류가 관통이라 적을
+            //   뚫고 지나갔다 — 원작은 맞은 자리에서 크게 터진다. 반경이 있으면 명중 즉시 터진다.
+            else if (fromPlayer && attacker.Key == DeployHostKey) shot.SetBlastRadius(Meters(RobotBlastMeters));
         }
 
         // ── 던지는 탄(수류탄) ────────────────────────────────────
@@ -6145,6 +6150,8 @@ namespace Game.Module.InGame
         private const float LobArcRatio = 0.30f;    // 던진 거리에 비례한 높이
         private const float LobMinArc = 60f;
         private const float LobMaxArc = 200f;
+        /// <summary>로봇 미사일 폭발 반경(m). 코만도 미사일(1.9)보다 조금 작다 — 연사가 빠르다.</summary>
+        private const float RobotBlastMeters = 1.6f;
         private const float BlastRadius = 130f;     // 탄 명중 반경(34)보다 훨씬 넓다
 
         private void ThrowAsGrenade(Projectile shot, Vector2 from, Vector2 at,
@@ -6174,7 +6181,8 @@ namespace Game.Module.InGame
                     * (shot.FromPlayer ? _buffs.AoeMul : 1f);
             // 불덩이가 피해 반경과 같은 크기로 뜬다. 그림이 반경보다 작으면
             // "안 맞았는데 맞았다" 로 읽히고, 크면 그 반대가 된다.
-            SpawnImpact(at, shot.Kind, r * 2f);
+            // 로봇 미사일(`pulse` 탄)은 원작처럼 **큰 폭발**로 터진다 — 이름대로 찾으면 작은 섬광 두 장이다.
+            SpawnImpact(at, shot.Kind == "pulse" ? "grenade" : shot.Kind, r * 2f);
 
             if (!shot.FromPlayer)
             {

@@ -38,14 +38,14 @@ namespace Game.Module.InGame
         ///
         /// 체력·공격력은 `SpawnSummon` 이 영매의 비율로 다시 계산하므로 여기 숫자는
         /// 자리만 채운다. 실제로 쓰이는 것은 **공격 방식 · 사거리 · 간격**이다.
-        /// 해골(1.4 m)보다 조금 길고 훨씬 느리게 친다 — 덩치가 크고 한 대가 무겁다.
+        /// 해골(1.4 m)보다 조금 길다. 공격 간격은 1.6 → 0.8초로 **두 배 빠르게** 쳤다(기획 2026-09-15).
         /// </summary>
         private static HostEntry s_golem;
         private static HostEntry GolemProfile => s_golem ??= HostEntry.CreateTrash(
             GolemKey, "골렘", AttackKind.Melee,
             hp: 60, atk: 12, moveMps: 1.0f, engageMps: 1.8f,
-            rangeMeters: 1.6f, interval: 1.6f, telegraph: 0.5f);
-        private const float GolemHpPercent = 0.60f;
+            rangeMeters: 1.6f, interval: 0.8f, telegraph: 0.5f);
+        private const float GolemHpPercent = 1.20f;   // 기획 2026-09-15 — 체력 두 배
         private const float GolemAtkPercent = 0.60f;
 
         // ── 분신 — 닌자 액티브 ─────────────────────────────────

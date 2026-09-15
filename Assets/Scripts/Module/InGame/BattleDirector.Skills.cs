@@ -464,7 +464,7 @@ namespace Game.Module.InGame
 
         private void ReflectAll(Unit me)
         {
-            _reflectSeconds = BaseAxis(4f);         // Lv1 4 → Lv4 6초
+            _reflectSeconds = BaseAxis(5f);         // 표 성장 축 Lv1 5 → Lv4 7초 (기획 2026-09-15 +1초)
             _reflectMul = SpecOpen ? SpecAxis(2f) : 2f;   // Lv5 2배 → Lv10 4배
             _reflectPierce = SpecOpen;              // Lv5 부터 반사탄이 관통
             PlayFx("reflect", me.Position, 64f, loop: false);
@@ -518,10 +518,10 @@ namespace Game.Module.InGame
         private Impact _wardFx;
 
         /// <summary>
-        /// 캐릭터보다 **약간만** 크게. 176 은 방어막이 몸의 세 배 폭이라 캐릭터가 안 보였다
-        /// (기획 2026-09-15). 그림이 칸의 91% 를 채우고, 화면의 몸은 약 55×114 px 다.
+        /// **캐릭터보다 작게** — 136 의 절반(기획 2026-09-15 두 번째 조정).
+        /// 176 은 방어막이 몸의 세 배 폭이라 캐릭터가 안 보였고, 136 도 컸다.
         /// </summary>
-        private const float WardFxSize = 136f;
+        private const float WardFxSize = 68f;
 
         /// <summary>결계는 몸을 따라 움직인다. 서 있으라고 만든 스킬이 아니다.</summary>
         private void TickWardAura(float dt)

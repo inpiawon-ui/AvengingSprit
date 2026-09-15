@@ -63,8 +63,10 @@ namespace Game.Module.InGame
         private const float BindSeconds = 5f;
         private const float BindDamageMul = 1.3f;
         private const float VenomRadiusMeters = 5f;
+        /// <summary>독 지속에 얹는 시간. 표의 성장 축이 피해 계수와 같은 값(Lv1 0.5)이라 독이 0.5초뿐이었다.</summary>
+        private const float VenomExtraSeconds = 2f;
         private const float BoltSurgeSeconds = 2f;
-        private const int ChainHops = 10;                      // 기획 2026-09-15 — 「팅팅팅 10번」
+        private const int ChainHops = 20;                      // 기획 2026-09-15 — 10번 → 20번
         private const float ChainHopSeconds = 0.08f;           // 한 번에 다 그으면 여러 갈래로 보인다
         private const float ChainHopRangeMeters = 6f;
         private const float ChainHopDamageMul = 0.6f;          // 튕길 때마다 **같은** 피해
@@ -213,14 +215,18 @@ namespace Game.Module.InGame
             //   (기획 2026-09-15). 컷 네 장(`fx_lava_1~4`)을 장판 그림으로 넘겨 돌린다 —
             //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
             SpawnField(at, Meters(LavaRadiusMeters) * _buffs.AoeMul, 6f,
-                       FieldEffect.Burn, tick, fromPlayer: true, artKey: "lava");
+                       FieldEffect.Burn, tick, fromPlayer: true, artKey: "firefield");
+            // ⚠ `fx_lava` 는 불 둘레의 검붉은 얼룩이 **피웅덩이**로 읽혀 반려됐다(기획 2026-09-15).
+            //   영역 곳곳에서 불길이 솟고 바깥은 숯빛인 `fx_firefield_1~4` 로 바꾼다.
         }
 
         /// <summary>샐러맨더 — 둘레 5 m 에 독을 뱉는다. 걸린 적은 **무조건** 중독된다(명세).</summary>
         private void SalamanderVenom(Unit me)
         {
             float r = Meters(VenomRadiusMeters) * _buffs.AoeMul;
-            float seconds = BaseAxis(4f);            // Lv1 4 → Lv4 6초
+            // ⚠ `BaseAxis` 는 표의 성장 축을 돌려준다 — 피해 계수와 **같은 값**이라 표를 바꾸면 피해도 바뀐다.
+            //   독 시간만 2초를 더 얹는다(기획 2026-09-15).
+            float seconds = BaseAxis(4f) + VenomExtraSeconds;
             int dmg = SkillDamage(me, BaseAxis(1f));
             // ⚠ **적에게 독을 뱉어 묻힌다**(기획 2026-09-15). 예전에는 독 구름을 **내 몸에** 돌려서
             //   나에게 독을 뿜는 것처럼 보였다. 이제 둘레의 적마다 독침이 날아가고,
@@ -268,8 +274,9 @@ namespace Game.Module.InGame
             // ⚠ 예전에는 번개 한 덩이를 **제 발밑에** 띄웠다. 일자로 뜨고 적을 향하지도
             //   않아 무엇이 일어났는지 안 읽혔다(기획 2026-09-15).
             //   가까운 적 셋에게 **각각 줄기를 뻗었더니** 튕기는 게 아니라 여러 갈래로 쏘는 것으로
-            //   보였다(기획 2026-09-15). 이제 **적에서 적으로 10번** 튕겨 간다 — 한 번에 긋지 않고
-            //   0.08초마다 한 칸씩. 맞은 적을 다시 맞아도 된다(방금 맞은 적만 한 번 건너뛴다).
+            //   보였다(기획 2026-09-15). 이제 **적에서 적으로 20번** 튕겨 간다 — 한 번에 긋지 않고
+            //   0.08초마다 한 칸씩. 맞은 적을 다시 맞아도 되지만 방금 맞은 적은 건너뛴다 —
+            //   그래서 **몹이 하나뿐이면 한 번 쏘고 끝난다.**
             _chainHopsLeft = ChainHops;
             _chainHopTimer = 0f;
             _chainFrom = me.Position;
@@ -297,12 +304,10 @@ namespace Game.Module.InGame
                 float d = Vector2.Distance(e.Position, _chainFrom);
                 if (d <= best) { best = d; next = e; }
             }
-            // 튈 곳이 방금 맞은 적뿐이면 그 적을 한 번 더 때린다 — 혼자 남아도 10번은 다 들어간다.
-            bool again = next == null && _chainLast != null && Targetable(_chainLast);
-            if (again) next = _chainLast;
+            // 튈 곳이 방금 맞은 적뿐이면 **거기서 끝낸다**(기획 2026-09-15) — 몹이 하나면 한 번 쏘고 끝이다.
             if (next == null) { _chainHopsLeft = 0; return; }
 
-            PlayBolt(again && _host != null ? _host.Position : _chainFrom, next.Position);
+            PlayBolt(_chainFrom, next.Position);
             HitEnemyWith(next, _chainDamage, _chainProfile);
             _chainFrom = next.Position;
             _chainLast = next;
