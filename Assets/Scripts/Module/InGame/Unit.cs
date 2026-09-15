@@ -1221,8 +1221,8 @@ namespace Game.Module.InGame
                 _invulnPhase += dt;
                 // ⚠ 예전에는 흰색/반투명을 반 박자씩 오가는 **점멸**이었다.
                 //   맞아서 깜빡이는 것과 구별이 안 됐다(기획 2026-09-15).
-                //   지금은 **몸이 계속 비치고 윤곽만 빛난다** — 실체가 없다는 그림이다.
-                //   분신(청록 · 가만히)과도 갈린다: 이쪽은 흰빛이고 **숨을 쉰다.**
+                //   지금은 **몸은 그대로 두고 윤곽만 빛난다.**
+                //   분신(청록 · 비침 · 가만히)과도 갈린다: 이쪽은 불투명하고 테두리가 **숨을 쉰다.**
                 _body.color = InvulnBodyColor;
                 ShowInvulnAura(true);
                 return;
@@ -1249,8 +1249,14 @@ namespace Game.Module.InGame
         // 밝기가 천천히 오르내려서 「켜져 있다」가 읽힌다 —
         // 점멸처럼 껐다 켜지 않는다. 껐다 켜면 피격 점멸과 같아 보인다.
 
-        /// <summary>무적일 때 몸 색. 비치되 형태는 남는다.</summary>
-        private static readonly Color InvulnBodyColor = new(0.86f, 0.96f, 1f, 0.5f);
+        /// <summary>
+        /// 무적일 때 몸 색. **불투명해야 한다.**
+        ///
+        /// ⚠ 알파 0.5 로 비치게 했더니 뒤에 깐 흰 실루엣이 몸 전체로 비쳐 올라와
+        ///   캐릭터가 **허연 덩어리**로 보였다(기획 반려 2026-09-15). 윤곽은 몸이 가려야
+        ///   테두리로 남는다 — 몸은 막고, 살짝 차가운 빛만 얹는다.
+        /// </summary>
+        private static readonly Color InvulnBodyColor = new(0.9f, 0.97f, 1f, 1f);
 
         /// <summary>윤곽을 몸보다 몇 배 키울 것인가. 1.14 면 96px 몸에서 약 6px 테두리다.</summary>
         private const float InvulnAuraScale = 1.14f;
