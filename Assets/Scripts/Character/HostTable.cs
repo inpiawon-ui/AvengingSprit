@@ -124,7 +124,16 @@ namespace Game.Character
         [Range(1, 10)]
         [SerializeField] private int _defenseGrade = 5;
 
-        [Tooltip("치명타 확률 시작값(%). 배율은 전역 고정이라 GameConfig 가 갖는다.")]
+        // 치명타도 방어력과 같은 **등급 1~10** 이다.
+        // ⚠ 확정본(2026-09-14)은 치명타를 **성장 규칙으로만** 줬다 —
+        //   「Lv1 10% → 만렙 주 40% / 부 22%」. 즉 시작값 10% 는 23명 공통으로
+        //   못 박힌 값이고 몸마다 다른 시작값은 문서에 없었다.
+        //   그래서 이 칸은 **임의 배정**이다. 확정본에 수치가 오면 그대로 덮어쓴다.
+        [Tooltip("치명타 등급 1~10. 실제 확률은 GameConfig 곡선이 정한다.")]
+        [Range(1, 10)]
+        [SerializeField] private int _critGrade = 3;
+
+        [Tooltip("(폐기 예정) 치명타 확률 시작값(%). 등급으로 옮겼다 — _critGrade 를 쓴다.")]
         [Range(0, 100)]
         [SerializeField] private int _critPercent = 10;
 
@@ -481,14 +490,8 @@ namespace Game.Character
         /// <summary>공격속도 등급 1~10. 초당 때리는 횟수를 정한다.</summary>
         public int RateGrade => GradeOf(_atkSpeed);
 
-        /// <summary>
-        /// 치명타 등급 1~10.
-        ///
-        /// ⚠ 확정본의 `_critPercent` 는 **23명 전원 10 으로 같다** — 차등 자료가 없다.
-        ///   그래서 주 성장 스탯으로 가른다. 치명타를 주 스탯으로 든 몸이 잘 터진다.
-        ///   확정본에 칸이 생기면 이 규칙을 걷어내고 그 칸을 읽는다.
-        /// </summary>
-        public int CritGrade => IsPrimary(HostStat.Crit) ? 8 : 3;
+        /// <summary>치명타 등급 1~10.</summary>
+        public int CritGrade => Mathf.Clamp(_critGrade, 1, 10);
 
         /// <summary>
         /// 사거리 등급 1~10. 1.4 m 가 1 등급, 한 등급이 0.8 m 다.
