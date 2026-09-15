@@ -43,7 +43,7 @@ namespace Game.EditorTools
                      Cooldown = 28f, Base = 2.5f, BaseMax = 4f, Spec = 1f, SpecMax = 2f,
                      Confirmed = false },
             new() { HostKey = "baseball", NameKr = "슬러거", SkillNameKr = "전탄 반사",
-                     Cooldown = 14f, Base = 4f, BaseMax = 6f, Spec = 2f, SpecMax = 4f,
+                     Cooldown = 14f, Base = 5f, BaseMax = 7f, Spec = 2f, SpecMax = 4f,   // 반사 +1초 (2026-09-15)
                      Confirmed = false },
             new() { HostKey = "death", NameKr = "사신", SkillNameKr = "영혼 수확",
                      Cooldown = 28f, Base = 5f, BaseMax = 7.5f, Spec = 0f, SpecMax = 0.6f,

@@ -204,11 +204,11 @@ MonoBehaviour:
   - _activeSkillKey: psg_h20
     _nameEn: Ghost Home Run
     _nameKr: "\uC804\uD0C4 \uBC18\uC0AC"
-    _description: "4\uCD08\uAC04 \uB0A0\uC544\uC624\uB294 \uD0C4\uC744 \uB418\uBC1B\uC544\uCE5C\uB2E4.
+    _description: "5\uCD08\uAC04 \uB0A0\uC544\uC624\uB294 \uD0C4\uC744 \uB418\uBC1B\uC544\uCE5C\uB2E4.
       \uBC18\uC0AC\uD0C4\uC740 \uB354 \uC544\uD504\uB2E4."
     _scaling:
-      _baseValue: 4
-      _baseValueMax: 6
+      _baseValue: 5
+      _baseValueMax: 7
       _specValue: 2
       _specValueMax: 4
   - _activeSkillKey: psg_h21
