@@ -1,0 +1,521 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7d0bc704d35c84082f3740bbe39e4f, type: 3}
+  m_Name: SoundTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.SoundTable
+  _musicVolume: 0.7
+  _effectVolume: 1
+  _clips:
+  - _key: bgm_01
+    _address: Sounds/bgm_01
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 867120
+    _loopLengthSamples: 9317745
+    _volume: 1
+  - _key: bgm_02
+    _address: Sounds/bgm_02
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 799968
+    _loopLengthSamples: 9312900
+    _volume: 1
+  - _key: bgm_03
+    _address: Sounds/bgm_03
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 597840
+    _loopLengthSamples: 6145123
+    _volume: 1
+  - _key: bgm_04
+    _address: Sounds/bgm_04
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 148080
+    _loopLengthSamples: 11022758
+    _volume: 1
+  - _key: bgm_05
+    _address: Sounds/bgm_05
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 1058688
+    _loopLengthSamples: 3204150
+    _volume: 1
+  - _key: bgm_06
+    _address: Sounds/bgm_06
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 1015536
+    _loopLengthSamples: 5533532
+    _volume: 1
+  - _key: bgm_07
+    _address: Sounds/bgm_07
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: bgm_08
+    _address: Sounds/bgm_08
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 1148640
+    _loopLengthSamples: 2297083
+    _volume: 1
+  - _key: bgm_09
+    _address: Sounds/bgm_09
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 398256
+    _loopLengthSamples: 3452787
+    _volume: 1
+  - _key: bgm_10
+    _address: Sounds/bgm_10
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: bgm_11
+    _address: Sounds/bgm_11
+    _isMusic: 1
+    _loopWhole: 1
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: bgm_12
+    _address: Sounds/bgm_12
+    _isMusic: 1
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 377088
+    _loopLengthSamples: 3651572
+    _volume: 1
+  - _key: sfx_16
+    _address: Sounds/sfx_16
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_17
+    _address: Sounds/sfx_17
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_18
+    _address: Sounds/sfx_18
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 582384
+    _loopLengthSamples: 247166
+    _volume: 1
+  - _key: sfx_19
+    _address: Sounds/sfx_19
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_20
+    _address: Sounds/sfx_20
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 27504
+    _loopLengthSamples: 256152
+    _volume: 1
+  - _key: sfx_21
+    _address: Sounds/sfx_21
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_22
+    _address: Sounds/sfx_22
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_23
+    _address: Sounds/sfx_23
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_24
+    _address: Sounds/sfx_24
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_25
+    _address: Sounds/sfx_25
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_26
+    _address: Sounds/sfx_26
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_27
+    _address: Sounds/sfx_27
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_28
+    _address: Sounds/sfx_28
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_29
+    _address: Sounds/sfx_29
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_30
+    _address: Sounds/sfx_30
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_31
+    _address: Sounds/sfx_31
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_32
+    _address: Sounds/sfx_32
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_33
+    _address: Sounds/sfx_33
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_34
+    _address: Sounds/sfx_34
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_35
+    _address: Sounds/sfx_35
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_36
+    _address: Sounds/sfx_36
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_37
+    _address: Sounds/sfx_37
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  - _key: sfx_38
+    _address: Sounds/sfx_38
+    _isMusic: 0
+    _loopWhole: 0
+    _sampleRate: 48000
+    _loopStartSamples: 0
+    _loopLengthSamples: 0
+    _volume: 1
+  _cues:
+  - _cue: screen.title
+    _clipKey: bgm_01
+    _thenClipKey: 
+  - _cue: screen.opening
+    _clipKey: bgm_11
+    _thenClipKey: 
+  - _cue: screen.lobby
+    _clipKey: bgm_11
+    _thenClipKey: 
+  - _cue: stage.clear
+    _clipKey: bgm_07
+    _thenClipKey: 
+  - _cue: stage.fail
+    _clipKey: bgm_10
+    _thenClipKey: bgm_12
+  - _cue: chapter.1.normal
+    _clipKey: bgm_01
+    _thenClipKey: 
+  - _cue: chapter.1.boss
+    _clipKey: bgm_02
+    _thenClipKey: 
+  - _cue: chapter.2.normal
+    _clipKey: bgm_03
+    _thenClipKey: 
+  - _cue: chapter.2.boss
+    _clipKey: bgm_02
+    _thenClipKey: 
+  - _cue: chapter.3.normal
+    _clipKey: bgm_01
+    _thenClipKey: 
+  - _cue: chapter.3.boss
+    _clipKey: bgm_02
+    _thenClipKey: 
+  - _cue: chapter.4.normal
+    _clipKey: bgm_04
+    _thenClipKey: 
+  - _cue: chapter.4.boss
+    _clipKey: bgm_02
+    _thenClipKey: 
+  - _cue: chapter.5.normal
+    _clipKey: bgm_03
+    _thenClipKey: 
+  - _cue: chapter.5.boss
+    _clipKey: bgm_02
+    _thenClipKey: 
+  - _cue: chapter.6.normal
+    _clipKey: bgm_05
+    _thenClipKey: 
+  - _cue: chapter.6.boss
+    _clipKey: bgm_06
+    _thenClipKey: 
+  - _cue: ui.play
+    _clipKey: sfx_17
+    _thenClipKey: 
+  - _cue: run.gold
+    _clipKey: sfx_23
+    _thenClipKey: 
+  - _cue: run.card
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: run.shop
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: hit.enemy
+    _clipKey: sfx_19
+    _thenClipKey: 
+  - _cue: hit.reflect
+    _clipKey: sfx_27
+    _thenClipKey: 
+  - _cue: boss.down
+    _clipKey: sfx_20
+    _thenClipKey: 
+  - _cue: boss.RailLaser
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: boss.WreckingBall
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: boss.HeadLunge
+    _clipKey: sfx_36
+    _thenClipKey: 
+  - _cue: boss.Emerge
+    _clipKey: sfx_36
+    _thenClipKey: 
+  - _cue: host.gangster.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.gangster.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.thug.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.thug.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.hopper.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.hopper.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.hopper_smg.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.hopper_smg.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.commando_mg.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.commando_mg.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.commando_laser.attack
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: host.commando_laser.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.commando_missile.attack
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: host.commando_missile.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.commando_grenade.attack
+    _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: host.commando_grenade.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.robot.attack
+    _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: host.robot.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.salamander.attack
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: host.salamander.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.dragon_blue.attack
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: host.dragon_blue.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.dragoon.attack
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: host.dragoon.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.vampire.attack
+    _clipKey: sfx_37
+    _thenClipKey: 
+  - _cue: host.vampire.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.amazon.hurt
+    _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.amazon_elite.hurt
+    _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.white_wizard.hurt
+    _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.medium.hurt
+    _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.snowwoman.hurt
+    _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.ninja.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.guru.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.baseball.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.ninja_chain.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.death.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: skill.commando_grenade
+    _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: skill.commando_missile
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: skill.dragon_blue
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: skill.commando_laser
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: skill.baseball
+    _clipKey: sfx_27
+    _thenClipKey: 
+  - _cue: skill.vampire
+    _clipKey: sfx_37
+    _thenClipKey: 
+  _chapterMid:
+  - _chapter: 2
+    _fromRoom: 5
+    _toRoom: 9
+    _clipKey: bgm_08
+  - _chapter: 6
+    _fromRoom: 4
+    _toRoom: 6
+    _clipKey: bgm_08
+  - _chapter: 6
+    _fromRoom: 7
+    _toRoom: 9
+    _clipKey: bgm_09

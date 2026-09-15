@@ -39,6 +39,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d354cef7b7dbfc46a6884fcb0fbc143
+    m_Address: TableData/SoundTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8ab0c492a328e314f92d49e92a660041
     m_Address: TableData/GameConfig
     m_ReadOnly: 0

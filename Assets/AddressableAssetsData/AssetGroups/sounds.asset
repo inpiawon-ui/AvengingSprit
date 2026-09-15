@@ -1,0 +1,233 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: sounds
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: sounds
+  m_GUID: d894da8b55638c94a954df0985a07919
+  m_SerializeEntries:
+  - m_GUID: 0371ac12ee3072b44a475fb596598a14
+    m_Address: Sounds/bgm_09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09ce591e757139d4d8e5bc59fefaf849
+    m_Address: Sounds/bgm_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0a497e511608df645bfc7e3185c1c73c
+    m_Address: Sounds/bgm_10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13f3a3012816d2348ae8d527933e42c0
+    m_Address: Sounds/sfx_34
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19334850acd77644e9d314b0f61aaefa
+    m_Address: Sounds/sfx_36
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19ab1c5e1a5862f41ad1ca7f19fa2024
+    m_Address: Sounds/sfx_29
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ded777801e250343bed9634a980f9cf
+    m_Address: Sounds/bgm_11
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 200074ad23c60454392c435d75de5781
+    m_Address: Sounds/sfx_27
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33e41ac9afe377547baecbd3bed2168e
+    m_Address: Sounds/bgm_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dfe91430bd95a44eb2ccc9bf34a60fa
+    m_Address: Sounds/sfx_28
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e485c36f7eb623488c5cdfc31f37b92
+    m_Address: Sounds/sfx_18
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 541c73e0378e22541a9d5d36a67fb0d4
+    m_Address: Sounds/sfx_22
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e9aeae050b6dd3428832e3413b85bef
+    m_Address: Sounds/sfx_33
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 637d8e71ca9caa548b8b1fff17f666cc
+    m_Address: Sounds/sfx_30
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e8e40983e0f7a243806e8bea898ef91
+    m_Address: Sounds/sfx_32
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7235a1ab01fa71947b7bc9b79e666666
+    m_Address: Sounds/bgm_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7289a472595b232489531ba4ea41c5de
+    m_Address: Sounds/sfx_35
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73cd4ed4b2778b544b54e470d1d98e4b
+    m_Address: Sounds/bgm_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76e04a39a65340f409504479cb6d2ab8
+    m_Address: Sounds/sfx_16
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8dbd2d7198d22d44d8e8c3a6e0cb5f09
+    m_Address: Sounds/bgm_08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9842c8870c50aa344a2f9d09876fe717
+    m_Address: Sounds/bgm_12
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 98bbfd722a508424ab40179ee9e6a39d
+    m_Address: Sounds/sfx_23
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a50d6f407abdd464f99bde1f3fc898a1
+    m_Address: Sounds/sfx_17
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a838c65989aee4349b8790093016bd95
+    m_Address: Sounds/bgm_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a871b512d189662498ce77b6277722a6
+    m_Address: Sounds/sfx_26
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af69f2d6b2dfecb4dbf6317712967fc0
+    m_Address: Sounds/sfx_37
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b186f9ebe0ca428419b52e417c0b7caa
+    m_Address: Sounds/bgm_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b8207a7da8f552f4599f06f5f838eb06
+    m_Address: Sounds/sfx_21
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd4d149752f4f9d48962adf4eaefd358
+    m_Address: Sounds/sfx_25
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca0751ae2b584774bb46cb346a1eebba
+    m_Address: Sounds/sfx_31
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d13de41e5ffa17c4eb90781e64610dd4
+    m_Address: Sounds/sfx_20
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d523084e8763837449b8a2991a021a8c
+    m_Address: Sounds/bgm_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eafd019ef2ad78941af9f7754f75e624
+    m_Address: Sounds/sfx_24
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7021c9914716b0469719dcc618a2815
+    m_Address: Sounds/sfx_19
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fd406908840c171459aea1603819433c
+    m_Address: Sounds/sfx_38
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_sound
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9b3fdced175ae07498e39054cfa22b20, type: 2}
+    - {fileID: 11400000, guid: 9f55465459f93034fac5c8d56e752838, type: 2}
