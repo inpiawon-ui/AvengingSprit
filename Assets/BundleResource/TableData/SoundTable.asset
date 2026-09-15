@@ -371,6 +371,9 @@ MonoBehaviour:
   - _cue: boss.RailLaser
     _clipKey: sfx_32
     _thenClipKey: 
+  - _cue: boss.BurrowStrike
+    _clipKey: sfx_32
+    _thenClipKey: 
   - _cue: boss.WreckingBall
     _clipKey: sfx_29
     _thenClipKey: 
@@ -379,6 +382,15 @@ MonoBehaviour:
     _thenClipKey: 
   - _cue: boss.Emerge
     _clipKey: sfx_36
+    _thenClipKey: 
+  - _cue: boss.MissileSalvo
+    _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: boss.StrafingRun
+    _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: boss.BoosterDrop
+    _clipKey: sfx_38
     _thenClipKey: 
   - _cue: host.gangster.attack
     _clipKey: sfx_33
@@ -452,10 +464,10 @@ MonoBehaviour:
   - _cue: host.dragoon.hurt
     _clipKey: sfx_35
     _thenClipKey: 
-  - _cue: host.vampire.attack
+  - _cue: host.ninja_chain.attack
     _clipKey: sfx_37
     _thenClipKey: 
-  - _cue: host.vampire.hurt
+  - _cue: host.ninja_chain.hurt
     _clipKey: sfx_35
     _thenClipKey: 
   - _cue: host.amazon.hurt
@@ -482,7 +494,7 @@ MonoBehaviour:
   - _cue: host.baseball.hurt
     _clipKey: sfx_35
     _thenClipKey: 
-  - _cue: host.ninja_chain.hurt
+  - _cue: host.vampire.hurt
     _clipKey: sfx_35
     _thenClipKey: 
   - _cue: host.death.hurt
@@ -503,7 +515,7 @@ MonoBehaviour:
   - _cue: skill.baseball
     _clipKey: sfx_27
     _thenClipKey: 
-  - _cue: skill.vampire
+  - _cue: skill.ninja_chain
     _clipKey: sfx_37
     _thenClipKey: 
   _chapterMid:
