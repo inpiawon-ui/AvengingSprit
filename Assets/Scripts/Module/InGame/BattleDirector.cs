@@ -6153,7 +6153,7 @@ namespace Game.Module.InGame
         private static Color ShotTint(bool fromPlayer, string kind)
         {
             if (!fromPlayer) return ShotEnemyColor;
-            return kind == "venom" || kind == "thunder" || kind == "beam" || kind == "lightorb"
+            return kind == "venom" || kind == "thunder" || kind == "beam" || kind == "lightorb" || kind == "darkorb"
                  ? Color.white : ShotPlayerColor;
         }
         private static readonly Color ShotEnemyColor = new(0.55f, 0.78f, 1f, 1f);
@@ -6331,8 +6331,8 @@ namespace Game.Module.InGame
             { "salamander", "venom" }, { "dragoon", "dragoon" },      // 독불(2026-09-14 기획) / 불덩이
             { "dragon_blue", "thunder" }, { "snowwoman", "frost" },   // 청룡은 번개(2026-09-14) · 설녀만 냉기
             { "ninja", "shuriken" }, { "ninja_chain", "chain" },      // 수리검 / 사슬낫
-            // 라이트 매지션은 원작 「Magic Beam」 빛 구슬(2026-09-15 — 주황 막대가 원작과 달랐다) / 다크는 아직 도깨비불
-            { "white_wizard", "lightorb" }, { "medium", "medium" },
+            // 매지션 라이트 · 다크 — 원작 「Magic Beam」 빛 구슬(2026-09-15 — 주황 막대 · 도깨비불이 원작과 달랐다)
+            { "white_wizard", "lightorb" }, { "medium", "darkorb" },
             { "guru", "pulse" }, { "robot", "pulse" },                // 둥근 파동 / 로봇은 미사일(`shot_pulse` 가 미사일 그림 — 2026-09-15 되돌림)
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
@@ -6364,7 +6364,7 @@ namespace Game.Module.InGame
         /// 한 번만 넘기면 꼬리가 가장 긴 4번에서 굳은 채로 날아간다.
         private static bool LoopsFrames(string kind)
             => kind == "drain" || kind == "shuriken" || kind == "grenade" || kind == "missile"
-               || kind == "lightorb";   // 빛 구슬 4장 — 테가 일렁이며 날아간다
+               || kind == "lightorb" || kind == "darkorb";   // 빛 구슬 4장 — 테가 일렁이며 날아간다
 
         /// <summary>
         /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —
