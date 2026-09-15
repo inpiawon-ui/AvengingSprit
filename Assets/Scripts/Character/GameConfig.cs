@@ -120,6 +120,10 @@ namespace Game.Character
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
 
+        [Header("전투 전체 손 속도")]
+        [Tooltip("평타 속도 배수. 1 = 지금 속도, 0.7 = 0.7배로 느리게. 내 몸·잡몹·보스·불러낸 몸에 모두 걸린다")]
+        [SerializeField] private float _attackSpeedMul = 0.7f;
+
         [Header("잡몹 공격 속도")]
         [Tooltip("공격 간격 배율. 정본 값에 곱한다 — 작을수록 자주 때린다")]
         [SerializeField] private float _enemyIntervalMul = 0.85f;
@@ -297,6 +301,15 @@ namespace Game.Character
         public float EnemyAttackRange => _enemyAttackRange;
         public float EnemyDetectRange => _enemyDetectRange;
         public float HostAttackSpeedMul => Mathf.Clamp(_hostAttackSpeedMul, 0.1f, 3f);
+
+        /// <summary>
+        /// 전투 전체의 평타 속도 배수 (2026-09-15). 1 이 지금까지의 속도다.
+        ///
+        /// 몸마다 붙은 배율(`HostAttackSpeedMul` · `EnemyIntervalMul`)은 **그대로 두고**
+        /// 그 위에 한 번 더 곱한다 — 캐릭터끼리의 빠르고 느린 차이를 건드리지 않고
+        /// 전투 속도만 통째로 내리려면 자가 하나여야 한다.
+        /// </summary>
+        public float AttackSpeedMul => Mathf.Clamp(_attackSpeedMul, 0.1f, 3f);
         public float UnitScale => Mathf.Max(0.1f, _unitScale);
         /// <summary>근접 사거리. 몸 크기와 **따로** 간다 — 위 필드 주석 참고.</summary>
         public float MeleeAttackRange => _meleeAttackRange;

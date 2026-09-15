@@ -1098,12 +1098,22 @@ namespace Game.Module.InGame
         /// </summary>
         public void RetryAttackSoon(float seconds) => _attackTimer = seconds;
 
+        // ⚠ 전투 전체의 손 속도. 내 몸 · 잡몹 · 보스 · 불러낸 몸이 **모두 여기를 지난다** —
+        //   평타 간격을 다시 채우는 자리가 여기 하나뿐이라 전체를 한 번에 늦추려면 여기여야 한다.
+        //   캐릭터 사이의 빠르고 느린 차이는 비율이라 그대로 남는다.
+        //   값은 `GameConfig` 가 갖는다 — 쉴드 규칙과 같은 방식으로 부팅 때 받아 둔다.
+        private static float s_attackSpeedMul = 1f;
+
+        /// <summary>전투 전체의 평타 속도 배수(1 = 지금 속도, 0.7 = 0.7배로 느리게).</summary>
+        public static void SetAttackSpeed(float speedMul)
+            => s_attackSpeedMul = Mathf.Clamp(speedMul, 0.1f, 3f);
+
         public bool TickAttack(float dt, float intervalMul = 1f)
         {
             _attackTimer -= dt;
             if (_attackTimer > 0f) return false;
             // 약화가 걸려 있으면 손도 같이 느려진다 — 이동만 깎으면 원거리에겐 무효였다.
-            _attackTimer = AttackInterval * Mathf.Max(0.05f, intervalMul) * SlowAttackMul;
+            _attackTimer = AttackInterval * Mathf.Max(0.05f, intervalMul) * SlowAttackMul / s_attackSpeedMul;
             return true;
         }
 

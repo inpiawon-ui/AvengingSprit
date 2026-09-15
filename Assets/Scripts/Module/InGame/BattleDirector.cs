@@ -371,6 +371,7 @@ namespace Game.Module.InGame
             // ⚠ **`_config` 을 읽은 뒤에** 넣는다. `CachePossessMarkSprites` 안에 두었더니
             //   그 함수가 표보다 먼저 도는 자리라 부팅 때마다 NullReference 로 터졌다.
             Unit.SetShieldRule(_config.ShieldHoldSeconds, _config.ShieldDecayPerSecond);
+            Unit.SetAttackSpeed(_config.AttackSpeedMul);
 
             // ⚠ 여섯 표를 **한꺼번에** 띄운다. 순서대로 await 하면 로드 시간이 그대로 더해진다 —
             //   서로 기다릴 이유가 없는 것들이다(`GameConfig` 만 앞에서 먼저 확인한다).
