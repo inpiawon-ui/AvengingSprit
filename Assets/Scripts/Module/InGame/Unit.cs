@@ -507,20 +507,19 @@ namespace Game.Module.InGame
             if (_markTimer <= 0f) ShowMark(false);
         }
 
+        /// <summary>
+        /// 표식 표시. **그림은 여기서 그리지 않는다.**
+        ///
+        /// ⚠ 예전에는 15px 짜리 붉은 마름모(스프라이트 없는 Image 를 45° 돌린 것)를
+        ///   몸에 찍었다. 지금은 조준경 표적(`fx_mark`)이 몸에 붙어 도는데, 그 안에
+        ///   점이 하나 더 찍혀 있어 지저분했다(기획 2026-09-15).
+        ///   표식이 걸렸다는 **판정**은 `_markTimer` 가 그대로 쥐고 있다 —
+        ///   지운 것은 그림뿐이다.
+        /// </summary>
         private void ShowMark(bool on)
         {
-            if (_markView == null)
-            {
-                if (!on) return;
-                var size = _rect.sizeDelta;
-                _markView = GetOrCreate("Mark", new Vector2(15f, 15f),
-                                        new Vector2(size.x * 0.28f, size.y * 0.42f));
-                _markView.color = new Color(1f, 0.35f, 0.30f, 0.95f);
-                // 스프라이트가 없으면 Image 는 정사각형을 그린다. 그대로 두면 표식이
-                // 아니라 그리다 만 흰(붉은) 네모로 보인다. 45° 돌려 마름모로 읽히게 한다.
-                _markView.transform.localRotation = Quaternion.Euler(0f, 0f, 45f);
-            }
-            if (_markView.gameObject.activeSelf != on) _markView.gameObject.SetActive(on);
+            if (_markView != null && _markView.gameObject.activeSelf != on)
+                _markView.gameObject.SetActive(on);
         }
 
         /// <param name="icon">상태에 맞는 그림. null 이면 색만으로 버틴다(아틀라스 로드 전).</param>

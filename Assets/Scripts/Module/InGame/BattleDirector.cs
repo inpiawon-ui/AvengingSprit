@@ -3232,6 +3232,7 @@ namespace Game.Module.InGame
                 return;                       // 보호 중에는 자연 감소도 멈춘다
             }
             if (_host != null) return;        // 몸이 있으면 시계가 멈춘다
+            if (SandboxKeepsGhost) return;    // Sandbox — 지울 때 이 줄도 함께
 
             _drainCarry += _config.GhostDrainPerSecond * dt;
             int whole = Mathf.FloorToInt(_drainCarry);

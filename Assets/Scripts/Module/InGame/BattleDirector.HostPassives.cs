@@ -215,7 +215,11 @@ namespace Game.Module.InGame
         /// <summary>갱스터 — 표식이 붙은 적을 처형한다. 큰 몸은 죽지 않고 크게 깎인다.</summary>
         private void MarkExecute(Unit victim)
         {
-            PlayFx("mark", victim.Position, 72f, loop: false);
+            // 표적은 이미 몸에 붙어 돌고 있다 — 처형 순간에 하나 더 띄우면 겹친다.
+            // 처형은 **터짐**으로 보여 준다.
+            PlayFx("shatter", victim.Position, 120f, loop: false);
+            // Sandbox — 테스트 판에서는 즉사가 안 터진다 (지울 때 이 줄도 함께)
+            if (SandboxBlocksExecute) return;
             if (!victim.IsBoss && !victim.IsElite) { KillEnemy(victim); return; }
 
             float cut = victim.IsBoss ? GangsterBossHpCut : GangsterEliteHpCut;

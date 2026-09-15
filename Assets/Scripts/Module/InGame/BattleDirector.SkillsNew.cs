@@ -123,6 +123,7 @@ namespace Game.Module.InGame
         /// <summary>때릴 때마다 굴린다. 죽였으면 true — 부르는 쪽은 더 할 일이 없다.</summary>
         private bool TryReaperKill(Unit victim)
         {
+            if (SandboxBlocksExecute) return false;   // Sandbox — 지울 때 이 줄도 함께
             if (_reaperSeconds <= 0f || victim == null || !victim.IsAlive) return false;
 
             int percent = victim.IsBoss ? ReaperBossPercent

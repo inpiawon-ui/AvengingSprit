@@ -11,9 +11,10 @@ namespace Game.Module.InGame
     ///
     /// **지우는 법**: 이 파일을 지우고, 본문에서 `Sandbox` 를 검색해 나오는
     /// **네 줄**을 지우면 끝이다. 다른 자리에는 아무것도 안 남는다.
-    ///   · `BattleDirector.cs` `EnemyHpOf`            — 체력 곱하기
-    ///   · `BattleDirector.cs` `TryCastSkill`         — 게이지 안 깎기
-    ///   · `BattleDirector.cs` `SpawnProcedural` 두 곳 — 마릿수 고정
+    ///   · `BattleDirector.cs`              — 마릿수 2곳 · 체력 · 게이지 · 채우기 · 표시 · 유령시계
+    ///   · `BattleDirector.Cards.cs`        — 암살 차단
+    ///   · `BattleDirector.HostPassives.cs` — 표식 처형 차단
+    ///   · `BattleDirector.SkillsNew.cs`    — 사신 즉사 차단
     ///
     /// ⚠ 스위치는 `GameConfig` 에 있다(`_sandboxMode`). **기본은 꺼짐**이고,
     ///   켜져 있으면 인게임 좌상단에 빨간 글씨로 알린다 — 켠 채로 빌드하는 사고를 막는다.
@@ -37,6 +38,23 @@ namespace Game.Module.InGame
 
         /// <summary>게이지를 깎을 차례인가. 테스트 판에서는 안 깎는다 — 계속 쓸 수 있어야 한다.</summary>
         private bool SandboxKeepsGauge => Sandbox;
+
+        /// <summary>
+        /// 즉사를 막을 차례인가.
+        ///
+        /// ⚠ 체력을 200배로 불려도 **즉사는 체력을 안 본다.** 갱스터 표식 처형 ·
+        ///   사신의 시간 · 암살 카드는 그냥 죽인다 — 그래서 적이 계속 사라졌다
+        ///   (기획 2026-09-15). 테스트 판에서는 세 곳 모두 막는다.
+        /// </summary>
+        private bool SandboxBlocksExecute => Sandbox;
+
+        /// <summary>
+        /// 유령 시계를 멈출 차례인가.
+        ///
+        /// ⚠ 테스트 중에 몸을 갈아타려고 잠깐 유령으로 있으면 시계가 돌아
+        ///   「유령이 소멸했습니다」로 로비에 튕겼다. 연출을 보다 말게 된다.
+        /// </summary>
+        private bool SandboxKeepsGhost => Sandbox;
 
         /// <summary>
         /// 적 수를 다섯으로 **채운다.** 정본 방은 스폰 목록이 정해져 있어
@@ -78,11 +96,12 @@ namespace Game.Module.InGame
                 // ⚠ HUD 위에 올리면 「PLAYER SOUL」 글자와 겹쳐 둘 다 안 읽힌다(실측).
                 //   HUD 아래(280px)로 내려 방 왼쪽 위 구석에 붙인다.
                 _sandboxTag.anchoredPosition = new Vector2(12f, -292f);
-                _sandboxTag.sizeDelta = new Vector2(420f, 40f);
+                _sandboxTag.sizeDelta = new Vector2(200f, 34f);
 
                 var tmp = go.AddComponent<TMPro.TextMeshProUGUI>();
-                tmp.text = "● 테스트 판 — 적이 안 죽고 스킬이 계속 나간다";
-                tmp.fontSize = 22f;
+                // ⚠ 길게 적었더니 줄바꿈되어 방을 가렸다(실측). 한 줄로 줄인다.
+                tmp.text = "● 테스트 판";
+                tmp.fontSize = 24f;
                 tmp.color = new Color(1f, 0.32f, 0.32f, 1f);
                 tmp.raycastTarget = false;
             }

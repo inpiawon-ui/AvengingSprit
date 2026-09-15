@@ -43,6 +43,7 @@ namespace Game.Module.InGame
         /// <summary>즉사가 걸렸으면 true. 부르는 쪽이 곧바로 죽인다.</summary>
         private bool TryAssassinate(Unit victim)
         {
+            if (SandboxBlocksExecute) return false;   // Sandbox — 지울 때 이 줄도 함께
             if (_buffs.AssassinatePercent <= 0) return false;
             if (victim == null || !victim.IsAlive || victim.IsDying) return false;
             if (victim.IsBoss) return false;
