@@ -43,6 +43,8 @@ namespace Game.Module.InGame
         private float _chainHopTimer;
         private Vector2 _chainFrom;
         private Unit _chainLast;
+        // 이번 연쇄에서 이미 맞은 적. 안 맞은 적이 있으면 그쪽으로 먼저 튄다(기획 2026-09-15).
+        private readonly System.Collections.Generic.HashSet<Unit> _chainStruck = new();
         private int _chainDamage;
         private HostEntry _chainProfile;
 
@@ -275,12 +277,14 @@ namespace Game.Module.InGame
             //   않아 무엇이 일어났는지 안 읽혔다(기획 2026-09-15).
             //   가까운 적 셋에게 **각각 줄기를 뻗었더니** 튕기는 게 아니라 여러 갈래로 쏘는 것으로
             //   보였다(기획 2026-09-15). 이제 **적에서 적으로 20번** 튕겨 간다 — 한 번에 긋지 않고
-            //   0.08초마다 한 칸씩. 맞은 적을 다시 맞아도 되지만 방금 맞은 적은 건너뛴다 —
+            //   0.08초마다 한 칸씩. **아직 안 맞은 적이 사거리에 있으면 그쪽으로** 튄다(기획 2026-09-15).
+            //   다 맞았으면 맞은 적을 다시 맞아도 되지만 방금 맞은 적은 건너뛴다 —
             //   그래서 **몹이 하나뿐이면 한 번 쏘고 끝난다.**
             _chainHopsLeft = ChainHops;
             _chainHopTimer = 0f;
             _chainFrom = me.Position;
             _chainLast = null;
+            _chainStruck.Clear();
             _chainDamage = SkillDamage(me, ChainHopDamageMul * BaseAxis(1f));
             _chainProfile = me.Profile;
             if (NearestEnemy(me.Position, Meters(ChainHopRangeMeters)) == null)
@@ -295,15 +299,19 @@ namespace Game.Module.InGame
             if (_chainHopTimer > 0f) return;
             _chainHopTimer = ChainHopSeconds;
 
-            Unit next = null;
-            float best = Meters(ChainHopRangeMeters);
+            // ① 아직 안 맞은 적 중 가장 가까운 적 ② 없으면 방금 맞은 적만 빼고 가장 가까운 적
+            float range = Meters(ChainHopRangeMeters);
+            Unit next = null, fallback = null;
+            float best = range, bestFallback = range;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (!Targetable(e) || e == _chainLast) continue;
                 float d = Vector2.Distance(e.Position, _chainFrom);
-                if (d <= best) { best = d; next = e; }
+                if (d <= bestFallback) { bestFallback = d; fallback = e; }
+                if (!_chainStruck.Contains(e) && d <= best) { best = d; next = e; }
             }
+            if (next == null) next = fallback;
             // 튈 곳이 방금 맞은 적뿐이면 **거기서 끝낸다**(기획 2026-09-15) — 몹이 하나면 한 번 쏘고 끝이다.
             if (next == null) { _chainHopsLeft = 0; return; }
 
@@ -311,6 +319,7 @@ namespace Game.Module.InGame
             HitEnemyWith(next, _chainDamage, _chainProfile);
             _chainFrom = next.Position;
             _chainLast = next;
+            _chainStruck.Add(next);
             _chainHopsLeft--;
         }
 
