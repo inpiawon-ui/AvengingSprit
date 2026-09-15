@@ -120,6 +120,38 @@ namespace Game.Character
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
 
+        // ── 등급 1~10 → 실제 수치 ────────────────────────────────
+        //
+        // 확정본이 준 0~100 눈금은 `HostEntry` 가 등급으로 읽고, **수치로 바꾸는 곳은 여기 하나다.**
+        // 손잡이를 인스펙터로 뺀 이유는 하나 — 판을 보고 나서 다시 돌리게 되기 때문이다.
+        //
+        // ⚠ **공격력 등급은 초당 피해량(DPS)이다. 한 방 피해가 아니다.**
+        //   한 방 피해는 `DPS ÷ 초당 횟수` 로 나온다. 이렇게 묶지 않으면
+        //   공속이 빠른 몸이 공격력까지 같이 받아 **무조건 세진다** —
+        //   확정본이 공격력과 간격을 맞물려 둔 이유가 그것이다.
+
+        [Header("등급 곡선 — 체력")]
+        [Tooltip("1등급 체력")]  [SerializeField] private float _hpAtGrade1 = 105f;
+        [Tooltip("한 등급당 증가")] [SerializeField] private float _hpPerGrade = 10f;
+
+        [Header("등급 곡선 — 공격력(초당 피해량)")]
+        [Tooltip("1등급 DPS")]   [SerializeField] private float _dpsAtGrade1 = 22f;
+        [Tooltip("한 등급당 증가")] [SerializeField] private float _dpsPerGrade = 2.2f;
+
+        [Header("등급 곡선 — 공격속도(초당 횟수)")]
+        // 등급마다 **곱한다.** 더하기로 하면 1.37~5.56 회/초를 한 줄로 못 덮는다 —
+        // 낮은 쪽이 음수로 가거나 높은 쪽이 기관총으로 안 보이거나 둘 중 하나였다.
+        [Tooltip("1등급 초당 공격 횟수")] [SerializeField] private float _rateAtGrade1 = 0.85f;
+        [Tooltip("한 등급당 배수")]      [SerializeField] private float _ratePerGrade = 1.22f;
+
+        [Header("등급 곡선 — 이동속도(m/s)")]
+        [Tooltip("1등급 이동속도")] [SerializeField] private float _moveAtGrade1 = 3.0f;
+        [Tooltip("한 등급당 증가")]  [SerializeField] private float _movePerGrade = 0.22f;
+
+        [Header("등급 곡선 — 치명타(%)")]
+        [Tooltip("1등급 치명타율")] [SerializeField] private float _critAtGrade1 = 5f;
+        [Tooltip("한 등급당 증가")]  [SerializeField] private float _critPerGrade = 3f;
+
         [Header("전투 전체 손 속도")]
         [Tooltip("평타 속도 배수. 1 = 지금 속도, 0.7 = 0.7배로 느리게. 내 몸·잡몹·보스·불러낸 몸에 모두 걸린다")]
         [SerializeField] private float _attackSpeedMul = 0.7f;
@@ -301,6 +333,36 @@ namespace Game.Character
         public float EnemyAttackRange => _enemyAttackRange;
         public float EnemyDetectRange => _enemyDetectRange;
         public float HostAttackSpeedMul => Mathf.Clamp(_hostAttackSpeedMul, 0.1f, 3f);
+
+        // ── 등급 → 수치. 읽는 쪽은 전부 이 다섯 함수만 부른다 ──────
+
+        private static int G(int grade) => Mathf.Clamp(grade, 1, 10);
+
+        /// <summary>등급의 체력.</summary>
+        public int HpOfGrade(int grade) => Mathf.Max(1, Mathf.RoundToInt(_hpAtGrade1 + (G(grade) - 1) * _hpPerGrade));
+
+        /// <summary>등급의 **초당 피해량**. 한 방 피해가 아니다 — <see cref="AtkOfGrade"/> 참고.</summary>
+        public float DpsOfGrade(int grade) => Mathf.Max(1f, _dpsAtGrade1 + (G(grade) - 1) * _dpsPerGrade);
+
+        /// <summary>등급의 초당 공격 횟수.</summary>
+        public float RateOfGrade(int grade)
+            => Mathf.Max(0.05f, _rateAtGrade1 * Mathf.Pow(Mathf.Max(1.01f, _ratePerGrade), G(grade) - 1));
+
+        /// <summary>등급의 평타 간격(초). 초당 횟수의 역수다 — 자를 하나로 두려고 여기서만 뒤집는다.</summary>
+        public float IntervalOfGrade(int grade) => 1f / RateOfGrade(grade);
+
+        /// <summary>
+        /// 한 방 피해. **공격력 등급(DPS)을 공속 등급(횟수)으로 나눈 값**이다.
+        /// 빨리 때리는 몸은 한 방이 가볍고, 느린 몸은 한 방이 묵직하다 — 총량은 공격력 등급이 정한다.
+        /// </summary>
+        public int AtkOfGrade(int atkGrade, int rateGrade)
+            => Mathf.Max(1, Mathf.RoundToInt(DpsOfGrade(atkGrade) / RateOfGrade(rateGrade)));
+
+        /// <summary>등급의 이동속도(m/s).</summary>
+        public float MoveOfGrade(int grade) => Mathf.Max(0.1f, _moveAtGrade1 + (G(grade) - 1) * _movePerGrade);
+
+        /// <summary>등급의 치명타율(%).</summary>
+        public float CritOfGrade(int grade) => Mathf.Max(0f, _critAtGrade1 + (G(grade) - 1) * _critPerGrade);
 
         /// <summary>
         /// 전투 전체의 평타 속도 배수 (2026-09-15). 1 이 지금까지의 속도다.

@@ -457,6 +457,54 @@ namespace Game.Character
         /// <summary>방어력 등급 1~10.</summary>
         public int DefenseGrade => Mathf.Clamp(_defenseGrade, 1, 10);
 
+        // ── 등급 1~10 ────────────────────────────────────────────
+        //
+        // 확정본이 준 칸(`_hp` · `_atk` · `_spd` · `_atkSpeed`)은 **0~100 눈금**이다.
+        // 열로 나누면 그대로 1~10 등급이 된다 — 호퍼(기관단총) 공속 99 → 10,
+        // 코만도(미사일) 49 → 5. 즉 **등급표는 이미 확정본이 준 것**이고,
+        // 이쪽은 그 눈금을 등급으로 읽는 자리일 뿐이다.
+        //
+        // ⚠ 실제 수치로 바꾸는 곳은 여기가 아니라 `GameConfig` 의 곡선 하나다.
+        //   방어력이 `DefensePercent` 한 곳에서만 %로 바뀌는 것과 같은 규칙이다.
+
+        private static int GradeOf(int hundred) => Mathf.Clamp(Mathf.RoundToInt(hundred / 10f), 1, 10);
+
+        /// <summary>체력 등급 1~10.</summary>
+        public int HpGrade   => GradeOf(_hp);
+
+        /// <summary>공격력 등급 1~10. 초당 피해량(DPS)을 정한다 — 한 방 피해가 아니다.</summary>
+        public int AtkGrade  => GradeOf(_atk);
+
+        /// <summary>이동속도 등급 1~10.</summary>
+        public int SpdGrade  => GradeOf(_spd);
+
+        /// <summary>공격속도 등급 1~10. 초당 때리는 횟수를 정한다.</summary>
+        public int RateGrade => GradeOf(_atkSpeed);
+
+        /// <summary>
+        /// 치명타 등급 1~10.
+        ///
+        /// ⚠ 확정본의 `_critPercent` 는 **23명 전원 10 으로 같다** — 차등 자료가 없다.
+        ///   그래서 주 성장 스탯으로 가른다. 치명타를 주 스탯으로 든 몸이 잘 터진다.
+        ///   확정본에 칸이 생기면 이 규칙을 걷어내고 그 칸을 읽는다.
+        /// </summary>
+        public int CritGrade => IsPrimary(HostStat.Crit) ? 8 : 3;
+
+        /// <summary>
+        /// 사거리 등급 1~10. 1.4 m 가 1 등급, 한 등급이 0.8 m 다.
+        ///
+        /// ⚠ 사거리만은 **등급에서 되돌리지 않는다.** 직업(근거리·중거리·원거리)을
+        ///   가르는 값이라 0.4 m 만 어긋나도 판이 달라진다. 표시용으로만 쓴다.
+        /// </summary>
+        public int RangeGrade
+        {
+            get
+            {
+                float m = CanonHostRange > 0f ? CanonHostRange : CanonRange;
+                return Mathf.Clamp(Mathf.RoundToInt((m - 1.4f) / 0.8f) + 1, 1, 10);
+            }
+        }
+
         /// <summary>
         /// 받는 피해를 깎는 비율(%). **등급을 실제 수치로 바꾸는 곳은 여기 하나뿐이다** —
         /// 읽는 쪽마다 곱하면 한쪽만 고치고 나머지를 잊는다.

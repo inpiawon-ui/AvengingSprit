@@ -42,10 +42,13 @@ namespace Game.Character
         public static float CritPercent(GameConfig config, HostEntry host, int level, int levelMax)
         {
             if (config == null || host == null) return 0f;
+            // 시작값은 **등급**에서 나온다. 확정본의 `_critPercent` 가 23명 전원 10 으로
+            // 같아 차등이 없었다 — 등급이 그 자리를 대신한다(기획 2026-09-15).
+            float start = config.CritOfGrade(host.CritGrade);
             float atMax = config.StatGrowth(HostStat.Crit, host.IsPrimary(HostStat.Crit));
-            if (levelMax <= 1) return host.CritPercent;
+            if (levelMax <= 1) return start;
             float t = Mathf.Clamp01((float)(level - 1) / (levelMax - 1));
-            return Mathf.Clamp(Mathf.Lerp(host.CritPercent, atMax, t), 0f, 100f);
+            return Mathf.Clamp(Mathf.Lerp(start, Mathf.Max(start, atMax), t), 0f, 100f);
         }
 
         /// <summary>

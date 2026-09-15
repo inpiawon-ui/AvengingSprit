@@ -3972,25 +3972,34 @@ namespace Game.Module.InGame
             return Mathf.Max(1, Mathf.RoundToInt(HostAtkOf(e) * GhostAtkMul));
         }
 
-        private int HostHpOf(HostEntry e)
-            => e == null ? 100
-             : e.CanonHostHp > 0 ? e.CanonHostHp
-             : e.HasCanon        ? e.CanonHp
-             : _config.HostHp(e.Hp);
+        // ── 내가 입은 몸의 능력치는 전부 등급에서 나온다 (2026-09-15) ──
+        //
+        // ⚠ 예전에는 정본 절대값(`CanonHostHp` 등)을 그대로 썼다. 그래서 확정본이 준
+        //   0~100 눈금(`e.Hp` · `e.Atk` · `e.Spd` · `e.AtkSpeed`)이 **게임에 하나도 안 걸렸다** —
+        //   로비 표시에만 쓰이고 판은 정본으로 돌았다. 등급별 차등을 주려고 받은 값이
+        //   차등을 전혀 못 만들고 있었다(기획 2026-09-15).
+        //   이제 다섯 자리 전부 등급을 읽는다. 수치 곡선은 `GameConfig` 한 곳이다.
 
+        private int HostHpOf(HostEntry e)
+            => e == null ? 100 : _config.HpOfGrade(e.HpGrade);
+
+        // 한 방 피해는 **공격력 등급(DPS) ÷ 공속 등급(횟수) ÷ 한 번에 나가는 탄 수** 다.
+        // 공격력 등급만 보고 정하면 공속이 빠른 몸이 총량까지 같이 가져간다.
+        //
+        // ⚠ `DamageMul`(0.45~1.75)은 **더 이상 곱하지 않는다.** 그 칸은 정본 절대값과
+        //   짝이던 보정이라, 등급이 DPS 를 정하는 지금 다시 곱하면 등급이 무의미해진다 —
+        //   실제로 폭력배가 DPS 11.7, 화이트 위저드가 45.0 으로 네 배 가까이 벌어졌다.
+        //   대신 **탄 수로 나눈다.** 두 발씩 나가는 몸(호퍼SMG · 코만도MG)이
+        //   같은 등급으로 두 배를 때리면 안 된다.
         private int HostAtkOf(HostEntry e)
             => e == null ? 10
-             : e.CanonHostAtk > 0 ? e.CanonHostAtk
-             : e.HasCanon         ? e.CanonAtk
-             : Mathf.RoundToInt(_config.HostAtk(e.Atk) * e.DamageMul);
+             : Mathf.Max(1, Mathf.RoundToInt(
+                   _config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
 
         // 이동속도만은 교전 프로필이 안 맞아도 호스트 값을 쓴다 — 근접이냐 원거리냐와
         // 상관없는 값이라, 적 걸음으로 조종하게 두면 그 몸만 못 쓰게 된다.
         private float HostSpeedOf(HostEntry e)
-            => e == null ? 180f
-             : e.CanonHostMoveSpeed > 0f ? e.CanonHostMoveSpeed * _pxPerMeter
-             : e.HasCanon                ? e.CanonMoveSpeed * _pxPerMeter
-             : _config.HostSpeed(e.Spd);
+            => e == null ? 180f : _config.MoveOfGrade(e.SpdGrade) * _pxPerMeter;
 
         // 호스트 프로필이 없으면 그 배우가 적일 때 쓰던 값을 그대로 쓴다.
         // 예전 공식(전역 900 × 배율)으로 돌아가면 정본 배우들과 격이 어긋난다.
@@ -4023,12 +4032,19 @@ namespace Game.Module.InGame
         }
 
         // 내 손맛만 당긴다 — 적 간격은 정본 그대로 둔다.
+        //
+        // ⚠ `HostAttackSpeedMul`(정본 간격을 0.3 배로 깎던 손잡이)은 **더 이상 안 쓴다.**
+        //   등급이 초당 횟수를 직접 정하므로 그 위에 또 곱하면 자가 둘이 된다.
+        //   격투가가 초당 4.2 회를 때리던 원인이 그 이중 곱이었다(기획 2026-09-15).
+        //
+        // ⚠ **전역 손 속도(`AttackSpeedMul`)를 여기서 미리 되돌린다.** 그 손잡이는
+        //   적·보스·소환물의 속도를 한 번에 내리려고 둔 것이고, `Unit.TickAttack` 이
+        //   마지막에 나눈다. 호스트는 등급이 **최종** 초당 횟수를 정해야 하므로
+        //   (로비에 적힌 숫자가 곧 판에서 때리는 횟수여야 한다) 여기서 곱해 상쇄한다.
+        //   상쇄하지 않으면 로비가 2.8 회라고 적고 판은 1.96 회를 때린다 — 실측으로 확인했다.
         private float HostIntervalOf(HostEntry e)
-            => _config.HostAttackSpeedMul *
-               (e == null ? _config.HostAttackInterval
-              : e.HasCanonHost ? e.CanonHostInterval
-              : e.HasCanon     ? e.CanonInterval
-              : _config.HostAttackInterval * e.IntervalMul);
+            => e == null ? _config.HostAttackInterval
+             : _config.IntervalOfGrade(e.RateGrade) * _config.AttackSpeedMul;
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —

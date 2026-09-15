@@ -42,9 +42,8 @@ namespace Game.Module.Lobby
         /// HP·ATK·이속·치명타는 0~100 이라 그대로 그리면 되는데, 이 둘은 단위가
         /// 다르다(m · 초당 횟수). 바가 얼마나 찼는지를 말하려면 기준이 필요하다.
         /// </summary>
-        private const float RangeBarMax = 10f;    // m
-        private const float RateBarMax  = 2f;     // 초당 공격 횟수
-        private const float DefenseGradeMax = 10f;   // 방어등급 1~10
+        /// <summary>등급은 일곱 칸 모두 1~10 이다. 바는 이 값으로 가득 찬다.</summary>
+        private const float GradeMax = 10f;
 
         /// <summary>
         /// 그리드가 보이는 높이. 목업의 `624` 는 12칸(3×4) 기준이었다.
@@ -384,17 +383,19 @@ namespace Game.Module.Lobby
 
             // 일곱 칸. **전부 "길수록 강함"** 으로 방향을 맞춘다 —
             // 공격 간격(초)을 그대로 쓰면 낮을수록 좋은 값이라 바가 거꾸로 읽힌다.
-            SetStat("HP",   e.Hp);
-            SetStat("ATK",  e.Atk);
-            // 방어력은 표의 **등급 한 칸**에서 나온다(등급 1당 3% · 상한 80%).
-            // 바는 등급(1~10)으로 긋고 글자는 실제로 깎이는 비율을 적는다 —
-            // 등급만 적으면 "5등급이 몇 퍼센트인지"를 화면에서 알 수 없다.
-            SetStat("DEF",  e.DefenseGrade, $"{e.DefensePercent:0}%", DefenseGradeMax, e.DefenseGrade);
-            SetStat("SPD",  e.Spd);
-            SetStat("CRIT", Mathf.RoundToInt(CritPercentOf(e)), $"{CritPercentOf(e):0}%", 100f);
-            SetStat("RNG",  0, $"{RangeOf(e):0.#}", RangeBarMax, RangeOf(e));
+            // 일곱 칸 **전부 등급(1~10) 으로 바를 긋고, 글자는 그 등급의 실제 수치**를 적는다
+            // (기획 2026-09-15). 예전에는 바를 0~100 눈금으로 긋고 글자는 정본 절대값을
+            // 적었다 — 게임이 읽는 값과 화면이 적는 값이 서로 다른 자라서,
+            // 아마존이 화면에는 초당 1.8 회로 떠 있는데 판에서는 4.2 회를 때렸다.
+            // 이제 양쪽 다 `GameConfig` 의 등급 곡선 하나만 읽는다.
+            SetStat("HP",   e.HpGrade,      $"{_config.HpOfGrade(e.HpGrade)}",                GradeMax, e.HpGrade);
+            SetStat("ATK",  e.AtkGrade,     $"{AtkOf(e)}",                                    GradeMax, e.AtkGrade);
+            SetStat("DEF",  e.DefenseGrade, $"{e.DefensePercent:0}%",                         GradeMax, e.DefenseGrade);
+            SetStat("SPD",  e.SpdGrade,     $"{_config.MoveOfGrade(e.SpdGrade):0.0}",         GradeMax, e.SpdGrade);
+            SetStat("CRIT", e.CritGrade,    $"{CritPercentOf(e):0}%",                         GradeMax, e.CritGrade);
+            SetStat("RNG",  e.RangeGrade,   $"{RangeOf(e):0.#}",                              GradeMax, e.RangeGrade);
             // 소수 두 자리(`0.67`)면 `RATE` 라벨과 1px 겹친다. 한 자리로 충분하다.
-            SetStat("RATE", 0, $"{RateOf(e):0.0}", RateBarMax, RateOf(e));
+            SetStat("RATE", e.RateGrade,    $"{_config.RateOfGrade(e.RateGrade):0.0}",        GradeMax, e.RateGrade);
 
             // ⚠ 두 잠금은 다른 것이다.
             //   `unlocked`  이 몸을 쓸 수 있는가 (진행도)
@@ -806,6 +807,14 @@ namespace Game.Module.Lobby
         /// <summary>숫자가 아닌 것을 능력치 칸에 적는다 (유령의 `—` 등).</summary>
         private void SetStatText(string stat, string text) => SetStatCell(stat, text, 0f);
 
+        /// <summary>
+        /// 화면에 적는 한 방 피해. **`BattleDirector.HostAtkOf` 와 같은 식이어야 한다** —
+        /// 여기만 탄 수로 안 나누면 두 발씩 쏘는 몸이 카드에는 7, 판에서는 3 으로 뜬다.
+        /// </summary>
+        private int AtkOf(HostEntry e)
+            => Mathf.Max(1, Mathf.RoundToInt(
+                   _config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
+
         /// <summary>이 몸의 지금 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercentOf(HostEntry e)
             => HostStats.CritPercent(_config, e, _player.GhostLevel, _player.GhostLevelMax);
@@ -813,21 +822,6 @@ namespace Game.Module.Lobby
         /// <summary>이 몸의 지금 사거리(m). 직업 밴드 상한에서 잘린 값이다.</summary>
         private float RangeOf(HostEntry e)
             => HostStats.Range(_config, e, (int)JobOf(e), _player.GhostLevel, _player.GhostLevelMax);
-
-        /// <summary>
-        /// 초당 공격 횟수.
-        ///
-        /// ⚠ 간격(초)이 아니라 **횟수**로 보여 준다. 간격은 낮을수록 좋은 값이라
-        ///   여섯 칸 중 이 하나만 바가 거꾸로 읽힌다 — 짧은 바가 강한 몸이 된다.
-        /// </summary>
-        private float RateOf(HostEntry e)
-        {
-            float interval = e.CanonHostInterval;
-            if (interval <= 0f) return 0f;
-            float mul = HostStats.GrowthMul(_config, e, HostStat.AtkSpeed,
-                                            _player.GhostLevel, _player.GhostLevelMax);
-            return mul / interval;
-        }
 
         private void SetStat(string stat, int value)
             => SetStat(stat, value, value.ToString(), MaxStat, value);
