@@ -1213,22 +1213,25 @@ namespace Game.Module.InGame
             // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
             if (_body == null || _dying) return;
 
+            // 윤곽은 무적과 **따로** 켠다(기획 2026-09-15) — 스킬이 준 무적에만 그린다.
+            // 방 입장·빙의 직후·공중에 뜬 잡몹처럼 규칙상 무적인 것까지 그리면
+            // 화면 여기저기서 허연 테두리가 수시로 튀어 지저분했다.
+            if (_invulnAuraOn && !_telegraph)
+            {
+                _invulnPhase += dt;
+                ShowInvulnAura(true);
+            }
+            else ShowInvulnAura(false);
+
             if (_invulnerable)
             {
                 // 예고(보스 패턴)만은 무적 위에 남긴다 — 피할 시간을 알리는 색이라
                 // 이쪽이 지워지면 패턴이 사고가 된다.
                 if (_telegraph) return;
-                _invulnPhase += dt;
-                // ⚠ 예전에는 흰색/반투명을 반 박자씩 오가는 **점멸**이었다.
-                //   맞아서 깜빡이는 것과 구별이 안 됐다(기획 2026-09-15).
-                //   지금은 **몸은 그대로 두고 윤곽만 빛난다.**
-                //   분신(청록 · 비침 · 가만히)과도 갈린다: 이쪽은 불투명하고 테두리가 **숨을 쉰다.**
-                _body.color = InvulnBodyColor;
-                ShowInvulnAura(true);
+                // 몸 색은 건드리지 않는다. 맞아도 안 아프므로 붉은 점멸도 없다.
+                _body.color = TryStatusTint(out var still) ? still : RestColor;
                 return;
             }
-
-            ShowInvulnAura(false);
 
             if (_flashTimer <= 0f)
             {
@@ -1246,23 +1249,23 @@ namespace Game.Module.InGame
         //
         // 셰이더 없이 윤곽을 만든다. **같은 그림을 조금 키워 몸 뒤에 깔면**
         // 바깥으로 삐져나온 테두리가 곧 윤곽선이다. 그 테두리만 흰빛으로 칠한다.
-        // 밝기가 천천히 오르내려서 「켜져 있다」가 읽힌다 —
-        // 점멸처럼 껐다 켜지 않는다. 껐다 켜면 피격 점멸과 같아 보인다.
+        // **스킬 무적일 때만** 켜고 테두리가 깜빡인다(기획 2026-09-15).
+        // 몸 색은 건드리지 않으므로 피격 점멸(붉은 몸)과 섞이지 않는다.
 
-        /// <summary>
-        /// 무적일 때 몸 색. **불투명해야 한다.**
-        ///
-        /// ⚠ 알파 0.5 로 비치게 했더니 뒤에 깐 흰 실루엣이 몸 전체로 비쳐 올라와
-        ///   캐릭터가 **허연 덩어리**로 보였다(기획 반려 2026-09-15). 윤곽은 몸이 가려야
-        ///   테두리로 남는다 — 몸은 막고, 살짝 차가운 빛만 얹는다.
-        /// </summary>
-        private static readonly Color InvulnBodyColor = new(0.9f, 0.97f, 1f, 1f);
+        // ⚠ 무적일 때 몸을 반투명(0.5)으로 비치게 했더니 뒤에 깐 흰 실루엣이 몸 전체로 비쳐
+        //   캐릭터가 **허연 덩어리**로 보였다(기획 반려 2026-09-15). 무적이어도 몸 색은 그대로다.
+
+        /// <summary>스킬 무적 윤곽을 켜고 끈다. 매 프레임 불러도 된다.</summary>
+        public void SetInvulnAura(bool on) => _invulnAuraOn = on;
+
+        private bool _invulnAuraOn;
+
+        /// <summary>윤곽이 켜져 있는 반 박자(초). 기획 — 「아웃라인 깜빡이게」.</summary>
+        private const float InvulnAuraBlinkSeconds = 0.14f;
 
         /// <summary>윤곽을 몸보다 몇 배 키울 것인가. 1.14 면 96px 몸에서 약 6px 테두리다.</summary>
         private const float InvulnAuraScale = 1.14f;
 
-        /// <summary>윤곽 밝기가 한 번 왕복하는 시간.</summary>
-        private const float InvulnAuraSeconds = 0.7f;
 
         private Image _invulnAura;
 
@@ -1311,8 +1314,9 @@ namespace Game.Module.InGame
             // 몸이 좌우로 뒤집히면 윤곽도 뒤집는다.
             rt.localScale = new Vector3(_body != null ? Mathf.Sign(_body.transform.localScale.x) : 1f, 1f, 1f);
 
-            float t = Mathf.PingPong(_invulnPhase / InvulnAuraSeconds * 2f, 1f);
-            _invulnAura.color = new Color(0.75f, 0.95f, 1f, Mathf.Lerp(0.45f, 0.95f, t));
+            // 켜졌다 꺼졌다 **깜빡인다**(기획 2026-09-15).
+            bool lit = (int)(_invulnPhase / InvulnAuraBlinkSeconds) % 2 == 0;
+            _invulnAura.color = new Color(0.75f, 0.95f, 1f, lit ? 0.95f : 0f);
             if (!_invulnAura.gameObject.activeSelf) _invulnAura.gameObject.SetActive(true);
         }
 

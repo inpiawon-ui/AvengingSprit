@@ -271,6 +271,15 @@ namespace Game.Module.InGame
             _hasteSeconds = _pierceSeconds = _beamSeconds = _spraySeconds = 0f;
             _reflectSeconds = _wardSeconds = _drainSeconds = 0f;
             _cloneSeconds = _turretHasteSeconds = 0f;
+            // 정조준(호퍼)은 몸에 붙은 표시가 있다 — 안 끄면 갈아탄 다른 몸에 금빛 고리가 따라붙는다.
+            _critLockSeconds = 0f;
+            // 새 스킬의 지속 상태도 몸을 바꾸면 끊는다 — 설녀 얼음이 남아 갈아탄 몸의 손이 묶였다(2026-09-15).
+            _iceShellSeconds = 0f;
+            _iceFx?.Stop();
+            _iceFx = null;
+            _chainHopsLeft = 0;
+            for (int i = 0; i < _spits.Count; i++) _spits[i].Fx?.Stop();
+            _spits.Clear();
             _hasteMul = 1f;
             _beamWidth = 1f;
             _overheatHits = 0;
@@ -459,6 +468,8 @@ namespace Game.Module.InGame
             _reflectMul = SpecOpen ? SpecAxis(2f) : 2f;   // Lv5 2배 → Lv10 4배
             _reflectPierce = SpecOpen;              // Lv5 부터 반사탄이 관통
             PlayFx("reflect", me.Position, 64f, loop: false);
+            // 반사 중인 것이 **보여야 한다**(기획 2026-09-15). 방벽 쉴드에 가려 반사 상태인지 몰랐다.
+            StartSkillAura(ref _reflectAuraFx, "reflectaura");
         }
 
         /// <summary>날아온 적 탄을 되받아친다. 반사가 도는 동안 호출된다.</summary>
@@ -506,8 +517,11 @@ namespace Game.Module.InGame
         /// <summary>버티는 내내 몸에 붙어 도는 방어막.</summary>
         private Impact _wardFx;
 
-        /// <summary>몸통(약 144)보다 조금 크게 — 감싸되 가리지는 않는다.</summary>
-        private const float WardFxSize = 176f;
+        /// <summary>
+        /// 캐릭터보다 **약간만** 크게. 176 은 방어막이 몸의 세 배 폭이라 캐릭터가 안 보였다
+        /// (기획 2026-09-15). 그림이 칸의 91% 를 채우고, 화면의 몸은 약 55×114 px 다.
+        /// </summary>
+        private const float WardFxSize = 136f;
 
         /// <summary>결계는 몸을 따라 움직인다. 서 있으라고 만든 스킬이 아니다.</summary>
         private void TickWardAura(float dt)
@@ -613,7 +627,11 @@ namespace Game.Module.InGame
         // 상한은 던질 때 적용한다. 던진 뒤 세면 이미 날아간 탄을 못 되돌린다.
 
         private const int CarpetShots = 5;
-        private const float CarpetSpreadDeg = 60f;
+        /// <summary>이 거리 안에 적이 있으면 그 적을 가운데 두고 던진다.</summary>
+        private const float CarpetFocusMeters = 9.0f;
+        /// <summary>옆으로 한 발씩 벌리는 간격 · 앞뒤로 엇갈리는 거리.</summary>
+        private const float CarpetSideStepMeters = 1.3f;
+        private const float CarpetStaggerMeters = 0.5f;
         private const float CarpetRangeMeters = 6.0f;
         private const int CarpetMaxPerTarget = 2;
 
@@ -623,17 +641,25 @@ namespace Game.Module.InGame
             int shots = SpecOpen ? Mathf.RoundToInt(SpecAxis(5f)) : CarpetShots;  // 5 → 8발
             int dmg = SkillDamage(me, perShot);
 
-            var dir = AimDirection(me);
-            float reach = Meters(CarpetRangeMeters);
+            // ⚠ **표적 기준으로 퍼뜨린다**(기획 2026-09-15). 예전에는 바라보는 쪽 6 m 앞에
+            //   부채꼴로 떨궈서, 코앞에 적이 있어도 수류탄이 머리 위를 넘어 멀리 떨어졌다.
+            //   가까운 적이 있으면 그 적을 가운데 두고, 없으면 앞으로 던진다.
+            var focus = NearestEnemy(me.Position, Meters(CarpetFocusMeters));
+            var toFocus = focus != null ? focus.Position - me.Position : Vector2.zero;
+            var dir = toFocus.sqrMagnitude > 1f ? toFocus.normalized : AimDirection(me);
+            float reach = focus != null ? toFocus.magnitude : Meters(CarpetRangeMeters);
+            var side = new Vector2(-dir.y, dir.x);
 
             // 적마다 몇 발이 갈지 미리 센다. 같은 적을 겨눈 세 번째 발은 옆으로 밀어낸다.
             var quota = new Dictionary<Unit, int>();
             for (int i = 0; i < shots; i++)
             {
-                float off = shots == 1 ? 0f
-                          : -CarpetSpreadDeg * 0.5f + CarpetSpreadDeg * i / (shots - 1);
-                var d = Rotate(dir, off);
-                var at = ClampedInField(me, me.Position + d * reach);
+                // 표적(또는 앞 지점) 둘레에 **옆으로 한 줄**, 앞뒤로 살짝 엇갈려 떨어진다.
+                // 각도로 벌리면 가까운 적일수록 다섯 발이 한 점에 겹친다.
+                float k = shots == 1 ? 0f : i - (shots - 1) * 0.5f;
+                float stagger = (i % 2 == 0 ? 1f : -1f) * Meters(CarpetStaggerMeters);
+                var at = ClampedInField(me, me.Position + dir * (reach + stagger)
+                                            + side * (k * Meters(CarpetSideStepMeters)));
 
                 var near = NearestEnemy(at, Meters(1.8f));
                 if (near != null)

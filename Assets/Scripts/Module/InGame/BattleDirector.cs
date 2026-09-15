@@ -3208,6 +3208,7 @@ namespace Game.Module.InGame
         private void TickGhostState(float dt)
         {
             if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
+            if (_skillInvuln > 0f) _skillInvuln = Mathf.Max(0f, _skillInvuln - dt);
 
             // 전술 빙의 쿨다운은 몸 안에 있든 밖에 있든 흐른다.
             // 유령일 때 멈추면 죽고 나서 기다리는 것이 이득이 된다.
@@ -3426,10 +3427,13 @@ namespace Game.Module.InGame
             if (me == null) return;
             // 점멸을 그리기 **전에** 알려 준다 — 한 프레임 늦으면 켜지는 순간이 씹힌다.
             me.SetInvulnerable(IsInvulnerable);
+            // 윤곽은 **스킬이 준 무적**에만 켠다(기획 2026-09-15). 방 입장·빙의 직후·카드 무적까지
+            // 켜니 캐릭터가 수시로 허옇게 번쩍여 지저분했다 — 무적이라고 다 그리는 게 아니다.
+            me.SetInvulnAura(_skillInvuln > 0f);
             // 몸을 갈아타면 아바타가 바뀐다. 물려받지 못한 쪽에 점멸이 남으면
             // 쓰지도 않는 몸이 계속 깜빡인다.
-            if (_ghost != null && _ghost != me) _ghost.SetInvulnerable(false);
-            if (_host != null && _host != me) _host.SetInvulnerable(false);
+            if (_ghost != null && _ghost != me) { _ghost.SetInvulnerable(false); _ghost.SetInvulnAura(false); }
+            if (_host != null && _host != me) { _host.SetInvulnerable(false); _host.SetInvulnAura(false); }
             me.TickFlash(dt);
             me.TickAnim(dt);
             // 쉴드는 싸우는 동안의 보상이다 — 손을 놓으면 2초 뒤부터 녹는다.
@@ -3495,7 +3499,10 @@ namespace Game.Module.InGame
 
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
                 // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
-                bool moveAttack = _host != null && _host.Profile != null && _host.Profile.MoveAttack;
+                // 폭력배 난사 1초 동안은 **걸으면서도 쏜다**(기획 2026-09-15) —
+                // 쏟아붓는 기술이 걸음 한 번에 끊기면 난사가 아니라 멈춤 버튼이 된다.
+                bool moveAttack = (_host != null && _host.Profile != null && _host.Profile.MoveAttack)
+                               || _spraySeconds > 0f;
                 if (!moveAttack)
                 {
                     _stopTimer = 0f;
@@ -5228,13 +5235,16 @@ namespace Game.Module.InGame
 
             // ⚠ 그림은 **깔 때마다** 정한다. 장판도 풀에서 돌려 쓰므로 태어날 때 정하면
             //    직전 효과의 그림이 그대로 남는다(탄·포탑에서 이미 두 번 겪었다).
-            var art = GetSprite(artKey ?? FieldSpriteOf(effect));
+            // 이름이 컷 묶음(`fx_{artKey}_1~`)이면 그것부터 쓴다 — 드라군 불바다가 `lava` 로
+            // 부르는데 한 장짜리만 찾아서 **정지 그림**이 깔렸다(기획 2026-09-15).
+            var keyFrames = artKey != null ? FxFrames(artKey) : null;
+            var art = keyFrames != null ? keyFrames[0] : GetSprite(artKey ?? FieldSpriteOf(effect));
             // 전용 그림이 없으면 흰 원판에 색을 입힌다. 색까지 없으면 그리지 않는다 —
             // 흰 네모가 바닥에 깔리는 것보다 아무것도 없는 편이 낫다.
             bool generic = art == null;
             // 여러 장이 있으면 **돌린다.** `fx_lava_1~4` 처럼 컷이 갈린 장판은
             // 한 장만 깔면 타는 것이 아니라 붙여 놓은 그림이 된다.
-            var frames = generic ? null : FxFrames(artKey ?? FieldSpriteOf(effect));
+            var frames = generic ? null : keyFrames ?? FxFrames(artKey ?? FieldSpriteOf(effect));
             if (frames != null && frames.Length > 1) f.SetFrames(frames);
             else f.SetSprite(art ?? GetSprite("field"));
 
@@ -6218,7 +6228,7 @@ namespace Game.Module.InGame
             { "dragon_blue", "thunder" }, { "snowwoman", "frost" },   // 청룡은 번개(2026-09-14) · 설녀만 냉기
             { "ninja", "shuriken" }, { "ninja_chain", "chain" },      // 수리검 / 사슬낫
             { "white_wizard", "beam" }, { "medium", "medium" },       // 일자 광탄(2026-09-14) / 도깨비불
-            { "guru", "pulse" }, { "robot", "robot" },                // 둥근 파동 / 각진 전자탄
+            { "guru", "pulse" }, { "robot", "pulse" },                // 둥근 파동 / 로봇은 미사일(`shot_pulse` 가 미사일 그림 — 2026-09-15 되돌림)
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
             { "baseball", "ball" },     // 야구공 — 붉은 실밥
@@ -6654,6 +6664,17 @@ namespace Game.Module.InGame
                 }
                 else
                 {
+                    // ⚠ **도발 중인 소환수(골렘·분신)도 적 탄을 맞는다**(기획 2026-09-15). 탄이 플레이어하고만
+                    //   부딪혀서, 적이 골렘을 겨누고 쏜 탄이 골렘을 그대로 뚫고 지나갔다.
+                    var taunt = TauntUnit;
+                    if (taunt != null
+                        && Vector2.Distance(p.Position, taunt.Position) <= taunt.BodyRadius + _config.ShotHitRadius)
+                    {
+                        SpawnImpact(ImpactPointOn(taunt, p.Position), p.Kind);
+                        p.Despawn();
+                        SoakWithSummon(p.Damage);
+                        continue;
+                    }
                     if (me == null) { p.Despawn(); continue; }
                     float d = Vector2.Distance(p.Position, me.Position);
                     if (d > _config.ShotHitRadius)

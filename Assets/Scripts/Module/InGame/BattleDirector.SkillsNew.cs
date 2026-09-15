@@ -1,3 +1,4 @@
+using Game.Character;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -34,6 +35,25 @@ namespace Game.Module.InGame
         /// <summary>코만도(레이저) — 이 시간 동안 주변 적에게 번개가 계속 튄다.</summary>
         private float _bounceSeconds, _bounceTick;
 
+        /// <summary>호퍼(기관단총)·설녀 — **스킬이 준** 무적 시간. 이 동안만 몸 윤곽이 깜빡인다.</summary>
+        private float _skillInvuln;
+
+        /// <summary>청룡 — 적에서 적으로 튕겨 가는 번개. 남은 튕김 · 다음 튕김까지 · 지난 자리.</summary>
+        private int _chainHopsLeft;
+        private float _chainHopTimer;
+        private Vector2 _chainFrom;
+        private Unit _chainLast;
+        private int _chainDamage;
+        private HostEntry _chainProfile;
+
+        /// <summary>샐러맨더 — 날아가는 독침. 닿는 순간 피해와 중독이 들어간다.</summary>
+        private readonly System.Collections.Generic.List<(Impact Fx, Unit Target, Vector2 From, float T)> _spits = new();
+        private int _spitDamage;
+        private float _spitPoisonSeconds;
+
+        /// <summary>지속 중인 스킬 표시(슬러거 반사 · 호퍼 정조준). 몸을 따라 돈다.</summary>
+        private Impact _reflectAuraFx, _critAuraFx;
+
         // ── 수치 ─────────────────────────────────────────────
         private const float AmazonStrikeRadiusMeters = 2.5f;
         private const float AmazonStrikeMul = 3.0f;            // 명세 「300% 정도」
@@ -44,19 +64,29 @@ namespace Game.Module.InGame
         private const float BindDamageMul = 1.3f;
         private const float VenomRadiusMeters = 5f;
         private const float BoltSurgeSeconds = 2f;
-        private const float IceShellSeconds = 2f;
+        private const int ChainHops = 10;                      // 기획 2026-09-15 — 「팅팅팅 10번」
+        private const float ChainHopSeconds = 0.08f;           // 한 번에 다 그으면 여러 갈래로 보인다
+        private const float ChainHopRangeMeters = 6f;
+        private const float ChainHopDamageMul = 0.6f;          // 튕길 때마다 **같은** 피해
+        private const float SpitSeconds = 0.28f;               // 독침이 날아가는 시간
+        private const float SpitFxSize = 48f;
+        private const float SkillAuraFxSize = 184f;
+        private const float MissileFanHoming = 1.2f;           // 벌어진 자리에서 표적으로 모이는 휨
+        // ⚠ 아래 값은 **표가 비었을 때만** 쓰는 대비값이다. 실제 지속은 `BaseAxis` 가 액티브 스킬 표의
+        //   성장 축(psg_h21 `_scaling`)에서 읽는다 — 상수만 반으로 줄였더니 여전히 2.5초였다(2026-09-15).
+        //   반으로 줄인 값은 표(1.25~1.9)와 원천(`Editor/HostSkillTable.cs`)에 들어 있다.
+        private const float IceShellSeconds = 1f;
         private const float IceShellHealPercent = 0.30f;
         private const float SprayBurstSeconds = 1f;            // 명세 「1초간 3방향」
         private const float LeapFarInvulnSeconds = 2f;
         private const float VampireFeastPercentPerEnemy = 0.02f;
-        private const float VampireFeastRadiusMeters = 5f;
         private const float BarrierSeconds = 5f;
         private const float GangsterMarkSeconds = 3f;
         private const float CritLockSeconds = 5f;              // 명세에 시간이 없어 5초로 잡았다
         private const float CritLockPercent = 90f;             // 「90퍼 고정」
         private const int MissileFanShots = 8;
         /// <summary>발사 지점을 반원으로 벌리는 거리. 이만큼 떨어져 날아올라 한 점에서 모인다.</summary>
-        private const float MissileFanOutMeters = 1.6f;
+        private const float MissileFanOutMeters = 0.6f;
         /// <summary>미사일 한 발의 폭발 반경. 1.2 m 는 기본 폭발(130px)보다 작아 안 터진 것처럼 보였다.</summary>
         private const float MissileBlastMeters = 1.9f;
         private const float MissileFanSpreadDeg = 180f;        // 반원
@@ -179,9 +209,11 @@ namespace Game.Module.InGame
             int tick = SkillDamage(me, perSecond * 0.5f);     // 장판은 0.5초 간격
             var target = NearestEnemy(me.Position);
             var at = target != null ? target.Position : SkillTargetPoint(me, Meters(LavaThrowMeters));
+            // ⚠ 불바다는 **사는 내내 일렁인다.** 한 장짜리 `field_burn` 이 깔려 6초를 가만히 있었다
+            //   (기획 2026-09-15). 컷 네 장(`fx_lava_1~4`)을 장판 그림으로 넘겨 돌린다 —
+            //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
             SpawnField(at, Meters(LavaRadiusMeters) * _buffs.AoeMul, 6f,
-                       FieldEffect.Burn, tick, fromPlayer: true);
-            PlayFx("lava", at, Meters(LavaRadiusMeters) * 2f, loop: false);
+                       FieldEffect.Burn, tick, fromPlayer: true, artKey: "lava");
         }
 
         /// <summary>샐러맨더 — 둘레 5 m 에 독을 뱉는다. 걸린 적은 **무조건** 중독된다(명세).</summary>
@@ -190,23 +222,32 @@ namespace Game.Module.InGame
             float r = Meters(VenomRadiusMeters) * _buffs.AoeMul;
             float seconds = BaseAxis(4f);            // Lv1 4 → Lv4 6초
             int dmg = SkillDamage(me, BaseAxis(1f));
+            // ⚠ **적에게 독을 뱉어 묻힌다**(기획 2026-09-15). 예전에는 독 구름을 **내 몸에** 돌려서
+            //   나에게 독을 뿜는 것처럼 보였다. 이제 둘레의 적마다 독침이 날아가고,
+            //   닿는 순간 피해와 중독이 들어간다 — 누가 중독됐는지도 그 자리에서 읽힌다.
+            _spitDamage = dmg;
+            _spitPoisonSeconds = seconds;
+            var from = me.MuzzlePosition;
+            var frames = ShotFrames("venom");
             var list = EnemiesInRange(me.Position, r);
             for (int i = 0; i < list.Count; i++)
             {
-                var e = list[i];
-                HitEnemyWith(e, dmg, me.Profile);
-                if (!e.IsAlive) continue;
-                e.ApplyPoison(seconds);
-                // ⚠ 한 장을 반경만큼 늘리면 방을 덮는 흐릿한 덩어리가 된다(실제로 그랬다).
-                //   맞은 **몸마다 작게** 터뜨린다 — 누가 중독됐는지도 그래야 읽힌다.
-                PlayFx("venom", e.Position, 72f, loop: false);
+                var im = frames != null ? FreeImpact(SpitFxSize) : null;
+                if (im == null) { LandSpit(list[i]); continue; }   // 그림·자리가 없으면 바로 묻힌다
+                im.Play(from, frames, SpitFxSize, loop: true);
+                _spits.Add((im, list[i], from, 0f));
             }
-            // 내 자리의 독 구름은 **뿜는 내내 돈다.** 한 번 터지고 사라지면
-            // 「뿜었다」가 아니라 「터졌다」로 읽힌다. 크기도 천천히 오르내린다.
-            _venomFx?.Stop();
-            _venomFx = TakeLoopFx("venom", me.Position, VenomFxSize);
-            _venomFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-            _venomSeconds = seconds;
+        }
+
+        /// <summary>독침이 닿았다. 피해 · 중독 · 튀는 독.</summary>
+        private void LandSpit(Unit e)
+        {
+            if (e == null || !e.IsAlive || e.IsDying) return;
+            HitEnemyWith(e, _spitDamage, _host != null ? _host.Profile : null);
+            if (!e.IsAlive) return;
+            e.ApplyPoison(_spitPoisonSeconds);
+            // 맞은 **몸마다 작게** 터뜨린다 — 한 장을 반경만큼 늘리면 방을 덮는 흐릿한 덩어리가 된다.
+            PlayFx("venom", e.Position, 72f, loop: false);
         }
 
         // ── 흡혈귀 박쥐 ────────────────────────────────────────
@@ -214,15 +255,11 @@ namespace Game.Module.InGame
         // 머릿수만큼 날아갔다 **돌아온 뒤에** 피가 찬다.
         private const float BatFlySeconds = 0.9f;   // 가고 오는 데 걸리는 전체 시간
         private const float BatFxSize = 48f;
-        private const int BatMaxCount = 8;
+        private readonly System.Collections.Generic.List<Unit> _onScreenBuffer = new();
         private readonly System.Collections.Generic.List<(Impact Fx, Vector2 From, Vector2 To)> _batTargets = new();
         private float _batSeconds;
         private int _batHeal;
 
-        /// <summary>뿜는 동안 몸에 붙어 도는 독 구름.</summary>
-        private Impact _venomFx;
-        private float _venomSeconds;
-        private const float VenomFxSize = 200f;
 
         /// <summary>청룡 — 2초 동안 번개 튕김이 **반드시** 터진다.</summary>
         private void DragonSurge(Unit me)
@@ -230,10 +267,46 @@ namespace Game.Module.InGame
             _boltSurgeSeconds = BaseAxis(BoltSurgeSeconds);   // Lv1 2 → Lv4 3초
             // ⚠ 예전에는 번개 한 덩이를 **제 발밑에** 띄웠다. 일자로 뜨고 적을 향하지도
             //   않아 무엇이 일어났는지 안 읽혔다(기획 2026-09-15).
-            //   가까운 적 셋에게 **각각 줄기를 뻗는다.**
-            var near = EnemiesInRange(me.Position, Meters(BounceRangeMeters));
-            for (int i = 0; i < near.Count && i < 3; i++) PlayBolt(me.Position, near[i].Position);
-            if (near.Count == 0) PlayFx("crit", me.Position, 96f, loop: false);
+            //   가까운 적 셋에게 **각각 줄기를 뻗었더니** 튕기는 게 아니라 여러 갈래로 쏘는 것으로
+            //   보였다(기획 2026-09-15). 이제 **적에서 적으로 10번** 튕겨 간다 — 한 번에 긋지 않고
+            //   0.08초마다 한 칸씩. 맞은 적을 다시 맞아도 된다(방금 맞은 적만 한 번 건너뛴다).
+            _chainHopsLeft = ChainHops;
+            _chainHopTimer = 0f;
+            _chainFrom = me.Position;
+            _chainLast = null;
+            _chainDamage = SkillDamage(me, ChainHopDamageMul * BaseAxis(1f));
+            _chainProfile = me.Profile;
+            if (NearestEnemy(me.Position, Meters(ChainHopRangeMeters)) == null)
+            { _chainHopsLeft = 0; PlayFx("crit", me.Position, 96f, loop: false); }
+        }
+
+        /// <summary>청룡 번개 한 칸. 지난 자리에서 가장 가까운 적으로 뻗는다.</summary>
+        private void TickChain(float dt)
+        {
+            if (_chainHopsLeft <= 0) return;
+            _chainHopTimer -= dt;
+            if (_chainHopTimer > 0f) return;
+            _chainHopTimer = ChainHopSeconds;
+
+            Unit next = null;
+            float best = Meters(ChainHopRangeMeters);
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (!Targetable(e) || e == _chainLast) continue;
+                float d = Vector2.Distance(e.Position, _chainFrom);
+                if (d <= best) { best = d; next = e; }
+            }
+            // 튈 곳이 방금 맞은 적뿐이면 그 적을 한 번 더 때린다 — 혼자 남아도 10번은 다 들어간다.
+            bool again = next == null && _chainLast != null && Targetable(_chainLast);
+            if (again) next = _chainLast;
+            if (next == null) { _chainHopsLeft = 0; return; }
+
+            PlayBolt(again && _host != null ? _host.Position : _chainFrom, next.Position);
+            HitEnemyWith(next, _chainDamage, _chainProfile);
+            _chainFrom = next.Position;
+            _chainLast = next;
+            _chainHopsLeft--;
         }
 
         /// <summary>
@@ -245,6 +318,7 @@ namespace Game.Module.InGame
             float seconds = BaseAxis(IceShellSeconds);   // Lv1 2 → Lv4 3초
             _iceShellSeconds = seconds;
             _invuln = Mathf.Max(_invuln, seconds);
+            _skillInvuln = Mathf.Max(_skillInvuln, seconds);
             int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent));
             Leech(heal);
             // 얼음은 **버티는 내내** 서 있어야 한다 — 한 번 터지고 사라지면 무적인지 알 수 없다.
@@ -288,7 +362,10 @@ namespace Game.Module.InGame
             _dashTime = GaleDashSeconds;
             me.Position = _dashTo;
             SpawnAfterimages(me, _dashFrom, _dashTo);
-            _invuln = Mathf.Max(_invuln, BaseAxis(LeapFarInvulnSeconds));   // Lv1 2 → Lv4 3초
+            float invuln = BaseAxis(LeapFarInvulnSeconds);   // Lv1 2 → Lv4 3초
+            _invuln = Mathf.Max(_invuln, invuln);
+            // 스킬이 준 무적이다 — 이 동안만 몸 윤곽이 깜빡인다(기획 2026-09-15).
+            _skillInvuln = Mathf.Max(_skillInvuln, invuln);
             PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
         }
 
@@ -299,10 +376,15 @@ namespace Game.Module.InGame
             SummonClone(center);
         }
 
-        /// <summary>흡혈귀 — 둘레 5 m 의 **머릿수만큼** 돌려받는다. 몰린 곳에서 쓰는 기술이다.</summary>
+        /// <summary>흡혈귀 — 화면에 보이는 적 **머릿수만큼** 돌려받는다.</summary>
         private void VampireFeast(Unit me)
         {
-            var list = EnemiesInRange(me.Position, Meters(VampireFeastRadiusMeters));
+            // ⚠ **화면에 보이는 적 전부**에게 보낸다(기획 2026-09-15). 둘레 5 m 는 화면에 안 그려져
+            //   누구는 박쥐가 가고 누구는 안 가는 게 이상해 보였다. 회복도 그 머릿수로 센다.
+            var list = _onScreenBuffer;
+            list.Clear();
+            for (int i = 0; i < _enemies.Count; i++)
+                if (Targetable(_enemies[i]) && IsOnScreen(_enemies[i])) list.Add(_enemies[i]);
             if (list.Count == 0) { PlayFx("drain", me.Position, 64f, loop: false); return; }
 
             float per = VampireFeastPercentPerEnemy * BaseAxis(1f);   // Lv1 2% → Lv4 3%
@@ -313,7 +395,7 @@ namespace Game.Module.InGame
             _batHeal = heal;
             _batSeconds = BatFlySeconds;
             _batTargets.Clear();
-            for (int i = 0; i < list.Count && i < BatMaxCount; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 var im = FreeImpact(BatFxSize);
                 if (im == null) break;
@@ -359,6 +441,8 @@ namespace Game.Module.InGame
             _critLockSeconds = BaseAxis(CritLockSeconds);   // Lv1 5 → Lv4 7.5초
             _critLockPercent = CritLockPercent;
             PlayFx("crit", me.Position, 96f, loop: false);
+            // 지속 내내 **몸에 붙어 도는 표시**(기획 2026-09-15) — 시작 별 한 번으로는 켜져 있는지 몰랐다.
+            StartSkillAura(ref _critAuraFx, "critlock");
         }
 
         /// <summary>코만도(미사일) — 반원으로 퍼진 8발이 **한 대상**으로 모인다.</summary>
@@ -375,14 +459,34 @@ namespace Game.Module.InGame
                 //   쓰지 않아, 8발이 총구 한 점에서 같은 점으로 날아 완전히 겹쳤다 —
                 //   화면에서 두 발로 보였다(기획 2026-09-15).
                 //   반원으로 벌어졌다가 한 대상에서 모이는 것이 명세다.
-                var from = ClampedInField(me, me.Position
-                                            + Rotate(me.Facing, off) * Meters(MissileFanOutMeters));
-                var at = target != null
-                       ? target.Position
-                       : ClampedInField(me, me.Position + Rotate(me.Facing, off) * Meters(6f));
-                ThrowSkillGrenade(me, at, dmg, radius, from);
+                // ⚠ **몸 가까이에서 부채꼴로 뻗어 나갔다가 휘어 모인다**(기획 2026-09-15).
+                //   1.6 m 밖에서 출발시켰더니 옆에 붙은 적 몸 안에서 태어나 그 자리에서 다 터졌다.
+                //   출발은 몸 곁(0.6 m), 첫 방향은 제 각도, 표적 쪽으로는 유도가 휘어 준다.
+                var aim = target != null && (target.Position - me.Position).sqrMagnitude > 1f
+                        ? (target.Position - me.Position).normalized
+                        : me.Facing;
+                var fan = Rotate(aim, off);
+                var from = ClampedInField(me, me.Position + fan * Meters(MissileFanOutMeters));
+                var at = from + fan * Meters(6f);
+                FireSkillMissile(me, from, at, target, dmg, radius);
                 PlayFx("missile_trail", from, 32f, loop: false);
             }
+        }
+
+        /// <summary>
+        /// 코만도(미사일) 한 발 — **곧게 날아간다.** 수류탄처럼 포물선으로 던졌더니
+        /// 로켓이 아니라 폭탄을 던지는 것으로 보였다(기획 2026-09-15). 머리가 나는 쪽을 보고,
+        /// 벌어진 자리에서 표적으로 모이도록 조금 휘며, 닿거나 수명이 다하면 터진다.
+        /// </summary>
+        private void FireSkillMissile(Unit me, Vector2 from, Vector2 at, Unit target, int damage, float radius)
+        {
+            var shot = RentShot();
+            if (shot == null) return;
+            shot.SetSprite(ShotFrames("missile"), "missile", LoopsFrames("missile"));
+            shot.Fire(from, at, _config.ShotSpeedPlayer, damage, true, target,
+                      _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds);
+            shot.SetBlastRadius(radius);
+            if (target != null) shot.SetHoming(MissileFanHoming);
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -427,12 +531,31 @@ namespace Game.Module.InGame
         /// <summary>새 액티브의 지속 시간을 흘린다. `TickHostPassives` 옆에서 돈다.</summary>
         private void TickNewSkills(float dt)
         {
-            if (_venomSeconds > 0f)
+            for (int i = _spits.Count - 1; i >= 0; i--)
             {
-                _venomSeconds -= dt;
-                if (_venomFx != null && _host != null) _venomFx.MoveTo(_host.Position);
-                if (_venomSeconds <= 0f) { _venomFx?.Stop(); _venomFx = null; }
+                var (fx, target, from, t) = _spits[i];
+                t += dt / SpitSeconds;
+                bool gone = target == null || !target.IsAlive || target.IsDying;
+                if (gone || t >= 1f)
+                {
+                    fx?.Stop();
+                    _spits.RemoveAt(i);
+                    if (!gone) LandSpit(target);
+                    continue;
+                }
+                var to = target.Position;
+                if (fx != null)
+                {
+                    fx.MoveTo(Vector2.Lerp(from, to, t));
+                    var d = to - from;
+                    // 독침 그림은 가로로 길다 — 나는 쪽을 보게 돌린다.
+                    fx.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+                }
+                _spits[i] = (fx, target, from, t);
             }
+            TickChain(dt);
+            TickSkillAura(ref _reflectAuraFx, IsReflectingAll);
+            TickSkillAura(ref _critAuraFx, _critLockSeconds > 0f);
             for (int i = _markFx.Count - 1; i >= 0; i--)
             {
                 var (u, fx, life) = _markFx[i];
@@ -515,6 +638,22 @@ namespace Game.Module.InGame
 
         /// <summary>줄기 굵기(px). 그림이 192×64 라 세로 64 를 그대로 쓴다.</summary>
         private const float BoltBeamThickness = 64f;
+
+        /// <summary>지속 표시를 몸 위에 띄운다. 이미 떠 있으면 새로 건다.</summary>
+        private void StartSkillAura(ref Impact slot, string fx)
+        {
+            slot?.Stop();
+            var at = _host != null ? _host.Position : Vector2.zero;
+            slot = TakeLoopFx(fx, at, SkillAuraFxSize);
+        }
+
+        /// <summary>지속 중이면 몸을 따라가고, 끝나면 거둔다 — 안 거두면 방이 바뀌어도 남는다.</summary>
+        private void TickSkillAura(ref Impact slot, bool alive)
+        {
+            if (slot == null) return;
+            if (alive && _host != null) slot.MoveTo(_host.Position);
+            else { slot.Stop(); slot = null; }
+        }
 
         /// <summary>설녀가 얼음 안에 있는 동안은 손도 멈춘다(명세 — 공격도 못 한다).</summary>
         private bool IsSelfFrozen => _iceShellSeconds > 0f;

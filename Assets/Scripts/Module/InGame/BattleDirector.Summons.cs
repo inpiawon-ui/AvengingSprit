@@ -54,6 +54,7 @@ namespace Game.Module.InGame
         // 때리지도 움직이지도 않는다. **맞아 주는 것이 전부**다.
         private const float CloneLifeSeconds = 5f;
         private const float CloneHpPercent = 1.00f;
+        private const float CloneAtkPercent = 0.40f;   // 해골과 같은 몫
 
         private sealed class Summon
         {
@@ -90,6 +91,7 @@ namespace Game.Module.InGame
 
         /// <summary>
         /// 영매 액티브 — 골렘. 해골보다 크고 오래 간다.
+        /// **적이 골렘을 노리고 때린다**(도발 — 기획 2026-09-15). 안 그러면 몬스터가 골렘을 본체만체 지나쳤다.
         ///
         /// 제 그림이 들어오기 전에는 해골을 1.35 배로 키워 썼다. 이제 제 몸이 있으므로
         /// **배율을 1 로 돌린다** — 골렘은 원래 어깨가 넓게 그려져 있어, 키우면
@@ -97,15 +99,18 @@ namespace Game.Module.InGame
         /// </summary>
         private void SummonGolem(Vector2 at)
             => SpawnSummon(GolemKey, "골렘", GolemHpPercent, GolemAtkPercent,
-                           GolemLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
+                           GolemLifeSeconds, attacks: true, mobile: true, taunt: true, at: at,
                            profile: GolemProfile);
 
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
         private void SummonClone(Vector2 at)
         {
             string key = _host != null ? _host.Key : TrashSkeletonKey;
-            SpawnSummon(key, "분신", CloneHpPercent, 0f, CloneLifeSeconds,
-                        attacks: false, mobile: false, taunt: true, at: at);
+            // 분신도 **같이 싸운다**(기획 2026-09-15) — 서서 적을 끌기만 하면 멀뚱한 인형이다.
+            // 싸우는 방식은 닌자 것을 그대로 쓴다(표창).
+            SpawnSummon(key, "분신", CloneHpPercent, CloneAtkPercent, CloneLifeSeconds,
+                        attacks: true, mobile: false, taunt: true, at: at,
+                        profile: _host != null ? _host.Profile : null);
 
             // ⚠ 분신은 **닌자와 같은 그림**이다. 그냥 두면 화면에 닌자가 둘이라
             //   어느 쪽이 나인지 모른다(기획 2026-09-15). 색으로 가른다 —
