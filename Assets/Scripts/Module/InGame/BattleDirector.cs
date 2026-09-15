@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -3675,7 +3675,8 @@ namespace Game.Module.InGame
 
                 // 굳어 있는 동안은 다가오지도 때리지도 않는다.
                 // 자세도 함께 푼다 — 안 그러면 풀리는 순간 예고 없이 맞는다.
-                if (e.IsStunned)
+                // 넉백 뒤 피격 경직(0.1초)도 같다 — 이펙트만 안 뜬다.
+                if (e.IsStunned || e.IsHitHeld)
                 {
                     e.CancelWindup();
                     e.SetMoving(false);

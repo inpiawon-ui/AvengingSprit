@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -2018,8 +2018,27 @@ namespace Game.Module.InGame
 
         public void TickStun(float dt)
         {
+            if (_hitHoldTimer > 0f) _hitHoldTimer -= dt;
             if (_stunTimer <= 0f) return;
             _stunTimer -= dt;
+        }
+
+        // ── 피격 경직 ─────────────────────────────────────────
+        //
+        // 넉백으로 밀린 뒤 **아주 잠깐** 맞은 자세로 서 있는다(기획 2026-09-16).
+        // 밀리자마자 바로 걸어오면 순간이동하는 버그처럼 보였다.
+        // 스턴과 따로 둔다 — 스턴은 머리 위에 별(`stun` 이펙트)이 떠서 0.1초마다 깜빡이게 된다.
+        private float _hitHoldTimer;
+
+        /// <summary>피격 경직 중인가. 이 동안은 다가오지도 때리지도 않는다.</summary>
+        public bool IsHitHeld => _hitHoldTimer > 0f;
+
+        /// <summary>맞은 자세로 잠깐 세운다. 이미 더 길게 서 있으면 줄이지 않는다.</summary>
+        public void HoldHit(float seconds)
+        {
+            if (seconds <= 0f) return;
+            _hitHoldTimer = Mathf.Max(_hitHoldTimer, seconds);
+            PlayHit();
         }
 
         // ── 묶기 ─────────────────────────────────────────────
