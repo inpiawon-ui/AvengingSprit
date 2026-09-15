@@ -152,6 +152,15 @@ namespace Game.Character
         [Tooltip("1등급 치명타율")] [SerializeField] private float _critAtGrade1 = 5f;
         [Tooltip("한 등급당 증가")]  [SerializeField] private float _critPerGrade = 3f;
 
+        // ── 테스트 판 (2026-09-15) ────────────────────────────
+        //
+        // ⚠ **켜면 게임이 아니다.** 적이 안 죽고 스킬이 계속 나간다 —
+        //   연출을 눈으로 확인하려고 둔 스위치다. 빌드 전에 반드시 끈다.
+        //   구현은 `BattleDirector.Sandbox.cs` 한 파일에 모여 있다.
+        [Header("⚠ 테스트 판 — 빌드 전에 반드시 끈다")]
+        [Tooltip("켜면 방마다 적 5마리 · 체력 200배 · 스킬 게이지가 안 깎인다")]
+        [SerializeField] private bool _sandboxMode;
+
         [Header("전투 전체 손 속도")]
         [Tooltip("평타 속도 배수. 1 = 지금 속도, 0.7 = 0.7배로 느리게. 내 몸·잡몹·보스·불러낸 몸에 모두 걸린다")]
         [SerializeField] private float _attackSpeedMul = 0.7f;
@@ -363,6 +372,9 @@ namespace Game.Character
 
         /// <summary>등급의 치명타율(%).</summary>
         public float CritOfGrade(int grade) => Mathf.Max(0f, _critAtGrade1 + (G(grade) - 1) * _critPerGrade);
+
+        /// <summary>연출 확인용 테스트 판. 켜면 적이 안 죽고 스킬이 계속 나간다.</summary>
+        public bool SandboxMode => _sandboxMode;
 
         /// <summary>
         /// 전투 전체의 평타 속도 배수 (2026-09-15). 1 이 지금까지의 속도다.

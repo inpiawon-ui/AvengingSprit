@@ -372,6 +372,7 @@ namespace Game.Module.InGame
             //   그 함수가 표보다 먼저 도는 자리라 부팅 때마다 NullReference 로 터졌다.
             Unit.SetShieldRule(_config.ShieldHoldSeconds, _config.ShieldDecayPerSecond);
             Unit.SetAttackSpeed(_config.AttackSpeedMul);
+            EnsureSandboxTag();   // Sandbox — 지울 때 이 줄도 함께
 
             // ⚠ 여섯 표를 **한꺼번에** 띄운다. 순서대로 await 하면 로드 시간이 그대로 더해진다 —
             //   서로 기다릴 이유가 없는 것들이다(`GameConfig` 만 앞에서 먼저 확인한다).
@@ -2424,7 +2425,7 @@ namespace Game.Module.InGame
             // 방 종류(일반·정예)에 따라 마릿수가 달라지므로 둘 중 많은 쪽까지 훑는다.
             for (int index = 0; index < _config.StagesPerChapter; index++)
             {
-                int count = Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index));
+                int count = SandboxCount(Mathf.Max(_config.EliteEnemyCount, _config.EnemiesPerRoom(index)));
                 for (int i = 0; i < count; i++)
                 {
                     var key = EnemyAt(hosts, index, i).SpriteKey;
@@ -2783,10 +2784,12 @@ namespace Game.Module.InGame
             else
             {
                 bool elite = _roomKind == RoomKind.Elite;
-                SpawnProcedural(elite ? _config.EliteEnemyCount : _config.EnemiesPerRoom(index),
+                SpawnProcedural(SandboxCount(elite ? _config.EliteEnemyCount : _config.EnemiesPerRoom(index)),
                                 elite, index);
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
+
+            SandboxTopUp(index);   // Sandbox — 지울 때 이 줄도 함께
 
             // 방 골드를 이 방 적 머릿수로 나눈다. 적을 **세운 뒤에** 해야 머릿수를 안다.
             PrepareGoldDrops();
@@ -3884,9 +3887,9 @@ namespace Game.Module.InGame
         }
 
         private int EnemyHpOf(HostEntry e)
-            => Mathf.Max(1, Mathf.RoundToInt(
+            => SandboxHp(Mathf.Max(1, Mathf.RoundToInt(
                    (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp))
-                   * EnemyHpGrowth() * _config.EnemyHpMul));
+                   * EnemyHpGrowth() * _config.EnemyHpMul)));
 
         private int EnemyAtkOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(
@@ -8083,7 +8086,7 @@ namespace Game.Module.InGame
             // 봉인(숙련도 0)이면 스킬이 안 나간다. 몸은 그대로 쓴다 — 평타만 남는다.
             if (IsSkillSealed(me.Key)) return;
 
-            _skillCooldown = 0f;
+            if (!SandboxKeepsGauge) _skillCooldown = 0f;
             CastHostSkill(me);
         }
 
