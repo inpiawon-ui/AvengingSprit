@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 using Localize = Game.Module.Common.Localize;
+using GameSound = Game.Module.Common.GameSound;
 
 namespace Game.Module.InGame
 {
@@ -4574,6 +4575,8 @@ namespace Game.Module.InGame
             // 이번 공격에 실리는 패시브 배수를 여기서 **한 번** 잡는다.
             // ⚠ 복제(C032)는 다시 잡지 않는다 — 같은 프레임의 같은 공격이다.
             if (!_echoing) BeginSwing(fromPlayer);
+            // 평타 소리는 **내 몸만** 낸다. 적 수십이 쏘는 소리까지 내면 화면이 소리로 덮인다.
+            if (fromPlayer && !_echoing) GameSound.HostAttack(attacker.Key);
 
             // C032 영혼 복제 — 8타째면 이 공격을 한 번 더 낸다.
             // 자세를 다시 잡지 않고 **같은 프레임에** 한 번 더 내보낸다.
@@ -4703,6 +4706,7 @@ namespace Game.Module.InGame
                     // 없었지만, 이제 방향을 뒤집으면 진짜 반사가 된다.
                     // 지속 중이면 **되돌려 보내는** 것이 아니라 내 탄으로 만든다 —
                     // 튕기기만 하면 원래 쏜 적이 자기 탄에 안 맞는다.
+                    if (fromPlayer) GameSound.Cue("hit.reflect");
                     if (IsReflectingAll && fromPlayer) ReflectShot(s);
                     else if (!s.Bounce((s.Position - attacker.Position).normalized)) s.Despawn();
                 }
@@ -4717,6 +4721,7 @@ namespace Game.Module.InGame
                     // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
                     if (EdgeDistance(attacker, e) > reach) continue;
                     Burst(e.Position, true);
+                    GameSound.Cue("hit.enemy");
                     bool wasAlive = e.IsAlive;
                     HitEnemyWith(e,
                         Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)), p);
@@ -6791,6 +6796,7 @@ namespace Game.Module.InGame
             ShowDamage(victim.Position, dmg, toEnemy: true, crit);
             if (shot.FromPlayer)
             {
+                GameSound.Cue("hit.enemy");
                 SpawnFx(crit ? "crit" : "hit", victim.Position,
                         crit ? CritFxSize : HitFxSize);
                 Shake(crit ? ShakeOnCrit : victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
@@ -6875,6 +6881,7 @@ namespace Game.Module.InGame
             var hurtAt = Avatar != null ? Avatar.Position : Vector2.zero;
             ShowDamage(hurtAt, amount, toEnemy: false);
             SpawnFx("hurt", hurtAt, HurtFxSize);
+            GameSound.HostHurt(_host.Key);
             Shake(ShakeOnPlayerHurt);
             if (_host.TakeDamage(amount)) LoseHost();
             else PublishHp();
@@ -7017,6 +7024,9 @@ namespace Game.Module.InGame
             {
                 _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = u.HpMax });
                 ClearBossVisuals();   // 예고 도형·화살표·파괴구·방패판을 한꺼번에 거둔다
+                // 원작처럼 나던 소리를 전부 끊고 대폭발 한 번
+                GameSound.StopEffects();
+                GameSound.Cue("boss.down");
             }
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;

@@ -741,6 +741,9 @@ namespace Game.Module.InGame
 
         private void ApplyMoveEffect(Unit boss, Unit me, BossMove m)
         {
+            // 패턴이 터지는 순간의 소리. 표에 없는 패턴은 조용하다(가디언·킹핀 — 원작 미확인).
+            // 보스 패턴은 몇 초에 한 번이라 문자열을 만들어도 괜찮다.
+            global::Game.Module.Common.GameSound.Cue($"boss.{m.Draw}");
             switch (m.Draw)
             {
                 // 붉은 방패판을 정면에 세운다 · 4초간 피해 90% 감소

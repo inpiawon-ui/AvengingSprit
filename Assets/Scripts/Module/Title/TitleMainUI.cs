@@ -53,6 +53,7 @@ namespace Game.Module.Title
 
             _ui.OnClick("TouchArea", OnTapped);
             gameObject.AddComponent<BackButtonRouter>();
+            global::Game.Module.Common.GameSound.Music("screen.title");
         }
 
         /// <summary>

@@ -97,6 +97,7 @@ namespace Game.Module.Opening
             _ui.OnClick("SkipButton", Skip);
             _ui.OnClick("TouchArea", OnTapped);
             gameObject.AddComponent<BackButtonRouter>();
+            GameSound.Music("screen.opening");
 
             _cuts = OpeningCuts.All();
             Next();

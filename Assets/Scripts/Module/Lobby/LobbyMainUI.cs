@@ -96,6 +96,7 @@ namespace Game.Module.Lobby
             CoreModule.TryGet<IPlayerDataService>(out _player);
 
             gameObject.AddComponent<BackButtonRouter>();
+            global::Game.Module.Common.GameSound.Music("screen.lobby");
             _ui.SetText("VersionText", $"v{Application.version}");
 
             // 하단 바 — 누르면 그 칸이 켜진 채로 남는다
@@ -137,6 +138,7 @@ namespace Game.Module.Lobby
         {
             var mode = Modes[_modeIndex];
             if (!mode.Unlocked) { NotifyNotReady(mode.Name); return; }
+            global::Game.Module.Common.GameSound.Cue("ui.play");   // 원작 코인 투입음
             OpenHostSelect(true);
         }
 

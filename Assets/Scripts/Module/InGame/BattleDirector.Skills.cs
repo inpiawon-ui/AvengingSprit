@@ -403,6 +403,7 @@ namespace Game.Module.InGame
         private void CastHostSkill(Unit me)
         {
             if (me == null) return;
+            global::Game.Module.Common.GameSound.Skill(me.Key);
             switch (me.Key)
             {
                 // ── 근거리 6 ──
