@@ -25,6 +25,8 @@ MonoBehaviour:
   _protectSlowPercent: 50
   _possessChannelSeconds: 0.7
   _possessZoom: 1.12
+  _cameraZoomPhone: 1
+  _cameraZoomTablet: 1
   _possessInvulnSeconds: 1.25
   _attackResumeSeconds: 0.06
   _hostStartHpPercent: 70
@@ -39,8 +41,18 @@ MonoBehaviour:
   _expPerBoss: 60
   _expToLevelBase: 40
   _expGrowthPercent: 45
+  _hpAtGrade1: 105
+  _hpPerGrade: 10
+  _dpsAtGrade1: 22
+  _dpsPerGrade: 2.2
+  _rateAtGrade1: 0.85
+  _ratePerGrade: 1.22
+  _moveAtGrade1: 3
+  _movePerGrade: 0.22
+  _critAtGrade1: 5
+  _critPerGrade: 3
+  _sandboxMode: 0
   _sandboxNoExecute: 0
-  _sandboxMode: 1
   _attackSpeedMul: 0.7
   _enemyIntervalMul: 0.85
   _enemyWindupMul: 0.7
