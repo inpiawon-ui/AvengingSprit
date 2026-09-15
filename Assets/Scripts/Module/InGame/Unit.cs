@@ -342,6 +342,7 @@ namespace Game.Module.InGame
             // ⚠ 풀에서 돌려 쓰는 몸이다. 안 끄면 분신이 쓰던 몸을 물려받은
             //   잡몹이 계속 유령빛으로 서 있는다.
             IsPhantom = false;
+            if (_invulnAura != null) _invulnAura.gameObject.SetActive(false);
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -1219,13 +1220,16 @@ namespace Game.Module.InGame
                 // 이쪽이 지워지면 패턴이 사고가 된다.
                 if (_telegraph) return;
                 _invulnPhase += dt;
-                bool lit = Mathf.Repeat(_invulnPhase, InvulnBlinkSeconds) < InvulnBlinkSeconds * 0.5f;
-                // 밝게 뜬 반 박자 / 반쯤 비치는 반 박자. 색이 아니라 **투명도**가 흔들려야
-                // 상태이상 틴트(화상·빙결)와 겹쳐도 무적이라는 것이 따로 읽힌다.
-                _body.color = lit ? new Color(1f, 1f, 1f, 1f)
-                                  : new Color(0.75f, 0.92f, 1f, 0.35f);
+                // ⚠ 예전에는 흰색/반투명을 반 박자씩 오가는 **점멸**이었다.
+                //   맞아서 깜빡이는 것과 구별이 안 됐다(기획 2026-09-15).
+                //   지금은 **몸이 계속 비치고 윤곽만 빛난다** — 실체가 없다는 그림이다.
+                //   분신(청록 · 가만히)과도 갈린다: 이쪽은 흰빛이고 **숨을 쉰다.**
+                _body.color = InvulnBodyColor;
+                ShowInvulnAura(true);
                 return;
             }
+
+            ShowInvulnAura(false);
 
             if (_flashTimer <= 0f)
             {
@@ -1237,6 +1241,74 @@ namespace Game.Module.InGame
             _flashTimer -= dt;
             if (_flashTimer > 0f) { _body.color = new Color(1f, 0.45f, 0.45f, 1f); return; }
             _body.color = TryStatusTint(out var back) ? back : RestColor;
+        }
+
+        // ── 무적 — 비치는 몸과 빛나는 윤곽 ──────────────────────
+        //
+        // 셰이더 없이 윤곽을 만든다. **같은 그림을 조금 키워 몸 뒤에 깔면**
+        // 바깥으로 삐져나온 테두리가 곧 윤곽선이다. 그 테두리만 흰빛으로 칠한다.
+        // 밝기가 천천히 오르내려서 「켜져 있다」가 읽힌다 —
+        // 점멸처럼 껐다 켜지 않는다. 껐다 켜면 피격 점멸과 같아 보인다.
+
+        /// <summary>무적일 때 몸 색. 비치되 형태는 남는다.</summary>
+        private static readonly Color InvulnBodyColor = new(0.86f, 0.96f, 1f, 0.5f);
+
+        /// <summary>윤곽을 몸보다 몇 배 키울 것인가. 1.14 면 96px 몸에서 약 6px 테두리다.</summary>
+        private const float InvulnAuraScale = 1.14f;
+
+        /// <summary>윤곽 밝기가 한 번 왕복하는 시간.</summary>
+        private const float InvulnAuraSeconds = 0.7f;
+
+        private Image _invulnAura;
+
+        /// <summary>
+        /// 실루엣 재질. **한 장을 모두가 나눠 쓴다** — 유닛마다 만들면 드로우콜이 갈라지고
+        /// 풀에서 돌려 쓸 때마다 재질이 새로 생긴다.
+        /// 색은 `Image.color`(정점 색)로 주므로 재질을 공유해도 각자 다른 색이 나온다.
+        /// </summary>
+        private static Material s_silhouette;
+
+        private static Material SilhouetteMaterial()
+        {
+            if (s_silhouette != null) return s_silhouette;
+            var sh = Shader.Find("UI/Silhouette");
+            // 셰이더가 없으면 기본 재질로 떨어진다 — 윤곽이 흐릿해질 뿐 터지지는 않는다.
+            if (sh != null) s_silhouette = new Material(sh) { hideFlags = HideFlags.HideAndDontSave };
+            return s_silhouette;
+        }
+
+        private void ShowInvulnAura(bool on)
+        {
+            if (!on)
+            {
+                if (_invulnAura != null && _invulnAura.gameObject.activeSelf)
+                    _invulnAura.gameObject.SetActive(false);
+                return;
+            }
+
+            if (_invulnAura == null)
+            {
+                _invulnAura = GetOrCreate("InvulnAura", _rect.sizeDelta * InvulnAuraScale, Vector2.zero);
+                // ⚠ **몸보다 먼저 그려야** 뒤에 깔린다. 앞에 오면 몸을 덮어 흰 실루엣이 된다.
+                _invulnAura.transform.SetAsFirstSibling();
+                _invulnAura.preserveAspect = true;
+                // ⚠ `Image.color` 는 **곱하기**라 어두운 옷은 어떤 색을 곱해도 어둡다 —
+                //   그냥 키워 깔면 빛나는 테두리가 아니라 그림자가 된다(실측 2026-09-15).
+                //   알파만 읽고 RGB 를 버리는 셰이더로 **단색 실루엣**을 만든다.
+                _invulnAura.material = SilhouetteMaterial();
+            }
+
+            // 몸 그림이 방향·프레임마다 바뀐다. 윤곽도 같이 따라가야 한다.
+            _invulnAura.sprite = _body != null ? _body.sprite : null;
+            _invulnAura.enabled = _invulnAura.sprite != null;
+            var rt = (RectTransform)_invulnAura.transform;
+            rt.sizeDelta = _rect.sizeDelta * InvulnAuraScale;
+            // 몸이 좌우로 뒤집히면 윤곽도 뒤집는다.
+            rt.localScale = new Vector3(_body != null ? Mathf.Sign(_body.transform.localScale.x) : 1f, 1f, 1f);
+
+            float t = Mathf.PingPong(_invulnPhase / InvulnAuraSeconds * 2f, 1f);
+            _invulnAura.color = new Color(0.75f, 0.95f, 1f, Mathf.Lerp(0.45f, 0.95f, t));
+            if (!_invulnAura.gameObject.activeSelf) _invulnAura.gameObject.SetActive(true);
         }
 
         // ── 분신 ────────────────────────────────────────────────

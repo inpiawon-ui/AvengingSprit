@@ -56,6 +56,27 @@ namespace Game.Module.InGame
 
         public bool IsActive => gameObject.activeSelf;
 
+        // ── 숨쉬는 크기 ────────────────────────────────────────
+        //
+        // 돌아가는 표시(결계·얼음·표적)는 **가만히 있으면 붙여 놓은 그림처럼 보인다.**
+        // 크기를 천천히 오르내리면 살아 있는 것으로 읽힌다.
+        // 폭은 사장님 지정값 0.8 ~ 1.0 이 기본이다 — 더 벌리면 커졌다 작아지는 것이
+        // 아니라 튀는 것으로 보인다(기획 2026-09-15).
+
+        private float _pulseMin, _pulseMax, _pulseSeconds, _pulseTime;
+        private float _baseSize;
+
+        /// <summary>돌아가는 동안 크기를 <paramref name="min"/>~<paramref name="max"/> 사이로 천천히 오간다.</summary>
+        public void SetPulse(float min, float max, float seconds)
+        {
+            _pulseMin = Mathf.Max(0.05f, min);
+            _pulseMax = Mathf.Max(_pulseMin, max);
+            _pulseSeconds = Mathf.Max(0.1f, seconds);
+            _pulseTime = 0f;
+        }
+
+        private void ClearPulse() => _pulseSeconds = 0f;
+
         public void Cache(RectTransform parent, float size)
         {
             _rect = (RectTransform)transform;
@@ -79,6 +100,16 @@ namespace Game.Module.InGame
             if (frames == null || frames.Length == 0 || frames[0] == null) return;
             _rect.anchoredPosition = at;
             _rect.sizeDelta = new Vector2(size, size);
+            // ⚠ 풀에서 돌려 쓰는 자리다. 앞서 쓰던 맥박·줄기가 남으면
+            //   엉뚱한 그림이 숨을 쉬거나 기울어진 채로 뜬다.
+            _baseSize = size;
+            ClearPulse();
+            if (_isBeam)
+            {
+                _isBeam = false;
+                _image.preserveAspect = true;
+                _rect.localEulerAngles = Vector3.zero;
+            }
             _frames = frames;
             _index = 0;
             _image.sprite = frames[0];
@@ -103,6 +134,36 @@ namespace Game.Module.InGame
             _timer = _step;
         }
 
+        // ── 두 점을 잇는 줄기 ──────────────────────────────────
+        //
+        // 번개·연쇄 방전은 **어디서 어디로** 갔는지가 보여야 한다.
+        // 제자리에 한 덩이를 띄우면 "레이저는 저기 있는데 딴 놈이 맞는" 그림이 된다
+        // (기획 2026-09-15). 그림은 가로로 그려져 있고, 여기서 **늘이고 돌린다.**
+
+        /// <summary>
+        /// <paramref name="from"/> 에서 <paramref name="to"/> 까지 줄기를 그린다.
+        /// 그림은 가로 방향으로 그려져 있어야 한다 — 길이만큼 늘이고 각도만큼 돌린다.
+        /// </summary>
+        public void PlayBeam(Vector2 from, Vector2 to, Sprite[] frames, float thickness)
+        {
+            if (frames == null || frames.Length == 0 || frames[0] == null) return;
+            var d = to - from;
+            float len = d.magnitude;
+            if (len < 1f) return;
+
+            Play((from + to) * 0.5f, frames, thickness);
+            if (!IsActive) return;
+
+            // 줄기는 정사각형이 아니다. `Play` 가 맞춰 둔 정사각형을 여기서 덮어쓴다.
+            _image.preserveAspect = false;
+            _rect.sizeDelta = new Vector2(len, thickness);
+            _rect.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+            _isBeam = true;
+        }
+
+        /// <summary>줄기였던 자리를 되돌린다. 풀에서 돌려 쓰므로 반드시 필요하다.</summary>
+        private bool _isBeam;
+
         /// <summary>돌고 있는 표시를 몸을 따라 옮긴다.</summary>
         public void MoveTo(Vector2 at)
         {
@@ -113,12 +174,24 @@ namespace Game.Module.InGame
         public void Stop()
         {
             _loop = false;
+            ClearPulse();
             gameObject.SetActive(false);
         }
 
         public void Tick(float dt)
         {
             if (!IsActive) return;
+
+            if (_pulseSeconds > 0f && !_isBeam)
+            {
+                _pulseTime += dt;
+                // 0 → 1 → 0 을 왕복. 사인이 아니라 삼각파라 등속으로 오간다 —
+                // 사인은 양끝에서 멈칫해 「숨」이 아니라 「멈춤」으로 보인다.
+                float t = Mathf.PingPong(_pulseTime / _pulseSeconds * 2f, 1f);
+                float k = Mathf.Lerp(_pulseMin, _pulseMax, t);
+                _rect.sizeDelta = new Vector2(_baseSize * k, _baseSize * k);
+            }
+
             _timer -= dt;
             if (_timer > 0f) return;
 

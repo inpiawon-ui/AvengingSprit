@@ -5227,7 +5227,11 @@ namespace Game.Module.InGame
             // 전용 그림이 없으면 흰 원판에 색을 입힌다. 색까지 없으면 그리지 않는다 —
             // 흰 네모가 바닥에 깔리는 것보다 아무것도 없는 편이 낫다.
             bool generic = art == null;
-            f.SetSprite(art ?? GetSprite("field"));
+            // 여러 장이 있으면 **돌린다.** `fx_lava_1~4` 처럼 컷이 갈린 장판은
+            // 한 장만 깔면 타는 것이 아니라 붙여 놓은 그림이 된다.
+            var frames = generic ? null : FxFrames(artKey ?? FieldSpriteOf(effect));
+            if (frames != null && frames.Length > 1) f.SetFrames(frames);
+            else f.SetSprite(art ?? GetSprite("field"));
 
             // 정본 BUF_A02 — 장판이 더 오래 남는다
             f.Spawn(at, radius, seconds + _buffs.FieldExtraSeconds,
@@ -6109,6 +6113,10 @@ namespace Game.Module.InGame
             // 던지는 탄도 물린 자리에서 출발해야 앞뒤 간격이 유지된다
             if (kind == "grenade") ThrowAsGrenade(shot, muzzle, target.Position,
                                                   angleOffsetDeg, speed);
+            // ⚠ **미사일도 터진다.** 예전에는 폭발 반경이 없어 닿은 한 명만 때리고,
+            //   빗나가면 그대로 날아가 수명으로 조용히 사라졌다 —
+            //   화면에서는 「폭탄이 쭉 날아가 없어지는」 것으로 보였다(기획 2026-09-15).
+            else if (kind == "missile") shot.SetBlastRadius(Meters(MissileBlastMeters));
         }
 
         // ── 던지는 탄(수류탄) ────────────────────────────────────
@@ -6592,6 +6600,8 @@ namespace Game.Module.InGame
                     if (p.GrazedPlayer) FireAfterimage();
                     // 아무것도 못 맞히고 사라진 내 탄 = 빗나감. 과열 카운터를 되돌린다.
                     if (p.FromPlayer && !p.HasHitAnything) ResetOverheat();
+                    // 터지는 탄은 **땅에 떨어진 것**이다. 조용히 사라지면 안 된다.
+                    if (p.BlastRadiusOverride > 0f) Explode(p);
                     p.Despawn();
                     continue;
                 }
@@ -6631,6 +6641,8 @@ namespace Game.Module.InGame
                 {
                     var hit = HitEnemy(p.Position, p);
                     if (hit == null) continue;
+                    // 터지는 탄은 **닿은 자리에서 터진다.** 반경 안이 다 맞는다.
+                    if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
                     SpawnImpact(ImpactPointOn(hit, p.Position), p.Kind);
                     ApplyShotHit(hit, p);
@@ -6653,6 +6665,7 @@ namespace Game.Module.InGame
                     //   "맞아서 닳는다" 로 읽힌다. 판정 자체를 지나가게 한다.
                     if (_host == null) continue;
 
+                    if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
                     p.Despawn();
                     SpawnImpact(ImpactPointOn(me, p.Position), p.Kind);
                     DamagePlayer(p.Damage);
@@ -6769,6 +6782,16 @@ namespace Game.Module.InGame
         /// 호스트는 265 밖에서 쏘고 있어 유령 사거리(110)로는 표식이 영영 안 뜬다.
         /// </summary>
         private const float MarkShowRange = 460f;
+
+        // ── 무적이 보이게 ────────────────────────────────────────
+        //
+        // ⚠ 예전에는 무적이면 `return` 하고 끝이라 **화면에 아무 일도 안 일어났다.**
+        //   맞았는데 숫자가 안 뜨는 것과, 애초에 안 맞은 것이 구별되지 않았다 —
+        //   그래서 무적이 걸려 있는지조차 알 수 없었다(기획 2026-09-15).
+        //
+        //   **아무 일도 안 일어나는 것 자체가 무적의 효과다**(기획 2026-09-15).
+        //   숫자나 글자를 띄우지 않는다 — 대신 몸을 보면 알 수 있어야 한다.
+        //   표현은 `Unit` 쪽이다: 몸이 비치고 **윤곽만 빛난다.**
 
         private void DamagePlayer(int amount)
         {

@@ -495,12 +495,30 @@ namespace Game.Module.InGame
             _wardReduce = BaseAxis(0.5f);           // Lv1 −50% → Lv4 −70%
             _wardSeconds = SpecOpen ? SpecAxis(3f) : 3f;   // 명세 2026-09-14 — 3초
             _wardTick = 0f;
-            PlayFx("ward", me.Position, Meters(WardRadiusMeters) * 2f, loop: false);
+            // ⚠ 그림을 `ward`(얼음 결정)에서 `guard`(빛으로 짜인 방어막)로 바꾼다 —
+            //   얼음은 설녀의 것이라 둘이 구별되지 않았다(기획 2026-09-15).
+            //   그리고 **버티는 내내 돈다.** 한 번 터지고 사라지면 결계가 있는지 알 수 없다.
+            _wardFx?.Stop();
+            _wardFx = TakeLoopFx("guard", me.Position, WardFxSize);
+            _wardFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
         }
+
+        /// <summary>버티는 내내 몸에 붙어 도는 방어막.</summary>
+        private Impact _wardFx;
+
+        /// <summary>몸통(약 144)보다 조금 크게 — 감싸되 가리지는 않는다.</summary>
+        private const float WardFxSize = 176f;
 
         /// <summary>결계는 몸을 따라 움직인다. 서 있으라고 만든 스킬이 아니다.</summary>
         private void TickWardAura(float dt)
         {
+            // 그림은 Lv 와 무관하게 결계가 있는 동안 계속 돈다.
+            if (_wardFx != null)
+            {
+                if (_wardSeconds > 0f && _host != null) _wardFx.MoveTo(_host.Position);
+                else { _wardFx.Stop(); _wardFx = null; }
+            }
+
             if (_wardSeconds <= 0f || !SpecOpen) return;
             var me = _host;
             if (me == null) return;
@@ -909,18 +927,27 @@ namespace Game.Module.InGame
         private const float RobotTurretRangeMeters = 8.2f;
         private const float RobotTurretInterval = 1.0f;
 
+        /// <summary>포탑을 몸에서 옆으로 떼어 놓는 거리(m). 겹치면 누가 쏘는지 안 보인다.</summary>
+        private const float TurretSideMeters = 2f;
+
         private void DeployTurret(Unit me)
         {
             float mul = BaseAxis(0.6f);             // Lv1 ×0.6 → Lv4 ×1.0
             float seconds = SpecOpen ? SpecAxis(10f) : 10f;   // 명세 2026-09-14 — 10초
             int dmg = SkillDamage(me, mul);
 
-            SpawnDeployable(me.Position, ghostly: false, seconds: seconds,
+            // ⚠ **내 자리에 세우지 않는다.** `me.Position` 그대로 두었더니 포탑이 몸과
+            //   겹쳐서 누가 쏘는지 안 보였다(기획 2026-09-15). 바라보는 쪽의 **옆**에 세운다.
+            var side = new Vector2(-me.Facing.y, me.Facing.x);      // 바라보는 쪽의 직각
+            if (side.sqrMagnitude < 0.01f) side = Vector2.right;
+            side = side.normalized * Meters(TurretSideMeters);
+
+            SpawnDeployable(ClampedInField(me, me.Position + side), ghostly: false, seconds: seconds,
                             range: Meters(RobotTurretRangeMeters), damage: dmg,
                             fireInterval: RobotTurretInterval);
-            // Lv5 — 두 번째는 앞 2.0 m
+            // Lv5 — 두 번째는 **반대쪽 옆**. 양옆에 한 대씩 서야 좌우가 다 덮인다.
             if (SpecOpen)
-                SpawnDeployable(ClampedInField(me, me.Position + me.Facing * Meters(2f)),
+                SpawnDeployable(ClampedInField(me, me.Position - side),
                                 ghostly: false, seconds: seconds,
                                 range: Meters(RobotTurretRangeMeters), damage: dmg,
                                 fireInterval: RobotTurretInterval);
@@ -966,15 +993,21 @@ namespace Game.Module.InGame
         }
 
         /// <summary>스킬이 던지는 폭탄. 평타 수류탄과 달리 피해·반경을 직접 준다.</summary>
-        private void ThrowSkillGrenade(Unit me, Vector2 at, int damage, float radius)
+        /// <param name="from">
+        /// 던지는 자리. 비우면 총구다. 미사일 반원처럼 **여러 발을 벌려 쏠 때**만 넣는다 —
+        /// 한 점에서 같은 곳으로 던지면 전부 겹쳐 한 발로 보인다.
+        /// </param>
+        private void ThrowSkillGrenade(Unit me, Vector2 at, int damage, float radius,
+                                       Vector2? from = null)
         {
             var shot = RentShot();
             if (shot == null) return;
+            var origin = from ?? me.MuzzlePosition;
             shot.SetSprite(ShotSpriteOf(me), "grenade", LoopsFrames("grenade"));
-            shot.Fire(me.MuzzlePosition, at, _config.ShotSpeedPlayer, damage,
+            shot.Fire(origin, at, _config.ShotSpeedPlayer, damage,
                       true, null, _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds);
             shot.SetBlastRadius(radius);
-            ThrowAsGrenade(shot, me.MuzzlePosition, at, 0f, _config.ShotSpeedPlayer);
+            ThrowAsGrenade(shot, origin, at, 0f, _config.ShotSpeedPlayer);
         }
     }
 }

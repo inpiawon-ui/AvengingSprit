@@ -70,8 +70,31 @@ namespace Game.Module.InGame
         /// </summary>
         public void SetSprite(Sprite sprite)
         {
+            _frames = null;
             _image.sprite = sprite;
             _image.enabled = sprite != null;
+        }
+
+        // ── 돌아가는 장판 ──────────────────────────────────────
+        //
+        // 장판은 6초를 사는데 그림은 한 장이라 **깔린 순간부터 멈춰 있었다.**
+        // 불바다가 타는 것이 아니라 불 그림을 바닥에 붙여 놓은 것으로 보였다
+        // (기획 2026-09-15). 여러 장을 받으면 사는 내내 돌린다.
+
+        private const float FrameSeconds = 0.16f;
+        private Sprite[] _frames;
+        private float _frameTimer;
+        private int _frame;
+
+        /// <summary>여러 장으로 돌린다. 장판이 사는 내내 처음부터 끝까지 반복한다.</summary>
+        public void SetFrames(Sprite[] frames)
+        {
+            if (frames == null || frames.Length == 0 || frames[0] == null) { SetSprite(null); return; }
+            _frames = frames;
+            _frame = 0;
+            _frameTimer = FrameSeconds;
+            _image.sprite = frames[0];
+            _image.enabled = true;
         }
 
         public void Spawn(Vector2 at, float radius, float seconds, FieldEffect effect,
@@ -98,6 +121,17 @@ namespace Game.Module.InGame
             if (_life <= 0f) return false;
             _life -= dt;
             if (_life <= 0f) { Despawn(); return false; }
+
+            if (_frames != null)
+            {
+                _frameTimer -= dt;
+                if (_frameTimer <= 0f)
+                {
+                    _frameTimer += FrameSeconds;
+                    _frame = (_frame + 1) % _frames.Length;
+                    if (_frames[_frame] != null) _image.sprite = _frames[_frame];
+                }
+            }
 
             // 끝나기 전에 흐려진다 — 갑자기 사라지면 언제 안전해졌는지 알 수 없다
             var c = _base;
