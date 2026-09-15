@@ -88,13 +88,15 @@ namespace Game.Module.Common
             public readonly string Label;
             // 드물게 나고 꼭 들려야 하는 소리(스킬·보스 패턴·버튼). 간격 · 같은 소리 개수 제한을 안 받는다.
             public readonly bool Important;
+            public readonly float CutSeconds;   // 0 이면 끝까지
 
-            public EffectRef(AudioClip clip, float volume, string label, bool important)
+            public EffectRef(AudioClip clip, float volume, string label, bool important, float cutSeconds)
             {
                 Clip = clip;
                 Volume = volume;
                 Label = label;
                 Important = important;
+                CutSeconds = cutSeconds;
             }
         }
 
@@ -102,6 +104,9 @@ namespace Game.Module.Common
         private GameObject _root;
         private AudioSource _musicA, _musicB;
         private readonly AudioSource[] _voices = new AudioSource[EffectVoices];
+        private readonly float[] _voiceCutAt = new float[EffectVoices];    // 줄여 끄기 시작하는 시각(0 = 끝까지)
+        private readonly float[] _voiceVolume = new float[EffectVoices];
+        private const float EffectCutFadeSeconds = 0.25f;
 
         private readonly Dictionary<string, AudioClip> _loaded = new();
         private readonly Dictionary<AudioClip, float> _lastPlayed = new();
@@ -217,7 +222,7 @@ namespace Game.Module.Common
                               || cue.Cue.StartsWith("boss.", StringComparison.Ordinal)
                               || cue.Cue.StartsWith("ui.", StringComparison.Ordinal)
                               || cue.Cue.StartsWith("event.", StringComparison.Ordinal);
-                var fx = new EffectRef(clip, entry.Volume, cue.Cue, important);
+                var fx = new EffectRef(clip, entry.Volume, cue.Cue, important, cue.CutSeconds);
                 _effectCue[cue.Cue] = fx;
 
                 // host.{hostKey}.attack · host.{hostKey}.hurt · skill.{hostKey}
@@ -406,6 +411,8 @@ namespace Game.Module.Common
         {
             if (_root == null || !IsReady) return;
 
+            TickEffectCuts();
+
             if (!Mathf.Approximately(_fade, _fadeTarget))
                 _fade = Mathf.MoveTowards(_fade, _fadeTarget, Time.unscaledDeltaTime / MusicFadeSeconds);
 
@@ -481,6 +488,22 @@ namespace Game.Module.Common
             if (_skill.TryGetValue(hostKey, out var fx)) PlayEffect(fx);
         }
 
+        /// <summary>줄여 끄기로 한 효과음을 그 시각부터 짧게 페이드해 멈춘다.</summary>
+        private void TickEffectCuts()
+        {
+            float now = Time.unscaledTime;
+            for (int i = 0; i < _voices.Length; i++)
+            {
+                if (_voiceCutAt[i] <= 0f) continue;
+                var v = _voices[i];
+                if (v == null || !v.isPlaying) { _voiceCutAt[i] = 0f; continue; }
+                float over = now - _voiceCutAt[i];
+                if (over < 0f) continue;
+                if (over >= EffectCutFadeSeconds) { v.Stop(); _voiceCutAt[i] = 0f; continue; }
+                v.volume = _voiceVolume[i] * (1f - over / EffectCutFadeSeconds);
+            }
+        }
+
         public void StopAllEffects()
         {
             for (int i = 0; i < _voices.Length; i++)
@@ -500,23 +523,26 @@ namespace Game.Module.Common
             }
 
             int same = 0;
-            AudioSource free = null;
+            int free = -1;
             for (int i = 0; i < _voices.Length; i++)
             {
                 var v = _voices[i];
                 if (v.isPlaying) { if (v.clip == fx.Clip) same++; }
-                else if (free == null) free = v;
+                else if (free < 0) free = i;
             }
-            if ((!fx.Important && same >= SameEffectMaxVoices) || free == null)
+            if ((!fx.Important && same >= SameEffectMaxVoices) || free < 0)
             {
                 SkippedEffects++;
                 return;
             }
 
             _lastPlayed[fx.Clip] = now;
-            free.clip = fx.Clip;
-            free.volume = _table.EffectVolume * fx.Volume;
-            free.Play();
+            var voice = _voices[free];
+            voice.clip = fx.Clip;
+            _voiceVolume[free] = _table.EffectVolume * fx.Volume;
+            voice.volume = _voiceVolume[free];
+            _voiceCutAt[free] = fx.CutSeconds > 0f ? now + fx.CutSeconds : 0f;
+            voice.Play();
             PlayedEffects++;
             if (s_logPlays) Debug.Log($"[Sound] sfx {fx.Clip.name} ← {fx.Label}");
         }

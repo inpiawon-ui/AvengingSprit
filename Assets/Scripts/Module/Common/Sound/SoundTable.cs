@@ -55,19 +55,23 @@ namespace Game.Module.Common
         [SerializeField] private string _clipKey;
         [Tooltip("곡이 끝나면 이어서 틀 음원 키. 루프 지점이 없는 곡에만 쓴다.")]
         [SerializeField] private string _thenClipKey;
+        [Tooltip("효과음을 이 초에서 줄여 끈다. 0 이면 끝까지 튼다(보스 대폭발 6초 → 1.5초).")]
+        [SerializeField] private float _cutSeconds;
 
         public SoundCueEntry() { }
 
-        public SoundCueEntry(string cue, string clipKey, string thenClipKey = null)
+        public SoundCueEntry(string cue, string clipKey, string thenClipKey = null, float cutSeconds = 0f)
         {
             _cue = cue;
             _clipKey = clipKey;
             _thenClipKey = thenClipKey;
+            _cutSeconds = cutSeconds;
         }
 
         public string Cue => _cue;
         public string ClipKey => _clipKey;
         public string ThenClipKey => _thenClipKey;
+        public float CutSeconds => _cutSeconds;
     }
 
     /// <summary>

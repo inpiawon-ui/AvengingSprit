@@ -203,7 +203,7 @@ namespace Game.Editor
                 new("run.shop", "sfx_24"),                   // D4
                 new("hit.enemy", "sfx_19"),
                 new("hit.reflect", "sfx_27"),
-                new("boss.down", "sfx_20"),
+                new("boss.down", "sfx_20", null, 1.5f),      // 원작 대폭발 6초가 이상하게 오래 간다 → 1.5초에서 줄여 끔(기획 2026-09-15)
 
                 // ── 원작에 소리가 없던 순간 — 「없는 것보다 있는 게 낫다」(기획 2026-09-15) ──
                 //   원작이 한 번도 안 부른 음원을 파형(길이 · 밝기 · 모양)으로 골랐다. 귀로 확인 전이다.
@@ -291,9 +291,11 @@ namespace Game.Editor
 
         private static void Hosts(List<SoundCueEntry> list, string attack, string hurt, params string[] hostKeys)
         {
+            // ⚠ **평타 소리는 뺀다**(기획 2026-09-15 — 공격할 때 이상한 소리가 난다).
+            //   표에 적어 둔 공격음은 원작 대응 기록으로만 남긴다. 적중음(`hit.enemy`)과 피격음은 그대로다.
+            _ = attack;
             foreach (var key in hostKeys)
             {
-                if (attack != null) list.Add(new SoundCueEntry($"host.{key}.attack", attack));
                 if (hurt != null) list.Add(new SoundCueEntry($"host.{key}.hurt", hurt));
             }
         }
