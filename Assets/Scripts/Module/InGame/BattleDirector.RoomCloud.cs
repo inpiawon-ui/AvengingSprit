@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Game.Module.Common.UI;
 using GameFramework.Core.Base;
@@ -94,15 +93,13 @@ namespace Game.Module.InGame
 
         private async UniTaskVoid LoadRoomCloudAsync(string env)
         {
+            // 전용이 없는 무대가 보통이다 — 없는 주소를 그냥 물면 콘솔이 쌓인다(`LoadOptionalAsync` 참고).
             var address = RoomCloudPrefix + env;
-            Sprite art = null;
-            try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-            catch (Exception) { /* 전용이 없는 무대다 — 보통은 이쪽 */ }
+            var art = await LoadOptionalAsync<Sprite>(address);
             if (art == null)
             {
                 address = RoomCloudCommon;
-                try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-                catch (Exception) { /* 공용도 아직 없다. 비워 둔다. */ }
+                art = await LoadOptionalAsync<Sprite>(address);   // 공용도 아직 없으면 비워 둔다
             }
 
             if (_cloudEnv != env || _cloudImage == null)

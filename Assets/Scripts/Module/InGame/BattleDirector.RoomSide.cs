@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Resource;
@@ -174,9 +173,7 @@ namespace Game.Module.InGame
         private async UniTaskVoid LoadRoomSideAsync(string env)
         {
             var address = RoomSidePrefix + env;
-            Sprite art = null;
-            try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-            catch (Exception) { /* 아직 안 온 무대다. 벽 없이 간다. */ }
+            var art = await LoadOptionalAsync<Sprite>(address);   // 아직 안 온 무대면 벽 없이 간다
 
             // 기다리는 사이에 방이 또 바뀌었으면 이 결과는 버린다.
             if (_sideEnv != env || _sideLeftImage == null)

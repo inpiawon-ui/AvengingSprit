@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.Resource;
@@ -82,14 +81,11 @@ namespace Game.Module.InGame
         {
             // 무대 전용이 먼저, 없으면 공용.
             var address = RoomApronPrefix + env;
-            Sprite art = null;
-            try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-            catch (Exception) { /* 전용이 없는 무대다 */ }
+            var art = await LoadOptionalAsync<Sprite>(address);   // 전용이 없는 무대다
             if (art == null)
             {
                 address = RoomApronCommon;
-                try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-                catch (Exception) { /* 공용도 아직 없다. 비워 둔다. */ }
+                art = await LoadOptionalAsync<Sprite>(address);   // 공용도 아직 없으면 비워 둔다
             }
 
             // 기다리는 사이에 방이 또 바뀌었으면 이 결과는 버린다.

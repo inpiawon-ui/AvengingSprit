@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -306,9 +305,7 @@ namespace Game.Module.InGame
             if (_pyWall == null) return;
             var address = RoomFloorPrefix + key;
             if (address == _pyWallHeld) return;
-            Sprite art = null;
-            try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-            catch (Exception) { /* 아직 주소가 없으면 벽 없이 그냥 진행한다 */ }
+            var art = await LoadOptionalAsync<Sprite>(address);   // 아직 주소가 없으면 벽 없이 그냥 진행한다
             if (art == null) return;
             // 기다리는 사이에 방이 바뀌었으면 물지 않고 놓아 준다
             if (_pyWall == null || !IsPythonRoom)

@@ -4922,15 +4922,12 @@ namespace Game.Module.InGame
             try
             {
                 var address = RoomFloorPrefix + key;
-                Sprite art = null;
-                try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-                catch (Exception) { /* 아직 안 온 바닥이다. */ }
+                var art = await LoadOptionalAsync<Sprite>(address);   // 아직 안 온 바닥이다
 
                 if (art == null && !string.IsNullOrEmpty(fallback))
                 {
                     address = RoomFloorPrefix + fallback;
-                    try { art = await CoreModule.Get<IResourceManager>().LoadAsync<Sprite>(address); }
-                    catch (Exception) { /* 이것도 없으면 기본 바닥으로 떨어진다. */ }
+                    art = await LoadOptionalAsync<Sprite>(address);   // 이것도 없으면 기본 바닥으로 떨어진다
                 }
 
                 // 기다리는 사이에 방이 또 바뀌었으면 이 결과는 버린다.
