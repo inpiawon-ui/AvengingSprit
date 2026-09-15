@@ -14,7 +14,7 @@
       "sampleRate": 48000,
       "lengthSamples": 10184865,
       "lengthSec": 212.185,
-      "usage": "스테이지 1(건설 중인 철골 빌딩)·스테이지 3(밤거리·중식당) 일반 구간, 어트랙트 데모 곡. 루프곡. → 챕터 1·3 일반 구간, 타이틀 후보",
+      "usage": "스테이지 1(건설 중인 철골 빌딩)·스테이지 3(밤거리·중식당) 일반 구간, 어트랙트 데모 플레이. 루프곡. → 챕터 1·3 일반 구간, 타이틀·어트랙트",
       "evidence": "확정"
     },
     {
@@ -100,7 +100,7 @@
       "sampleRate": 48000,
       "lengthSamples": 166622,
       "lengthSec": 3.471,
-      "usage": "스테이지 클리어 징글. 보스 격파 → 암전 후 3.5초 한 번. → 스테이지 성공 종료",
+      "usage": "보스 격파 징글. 6개 보스 모두 격파 직후 3.5초 한 번. → 스테이지 성공 종료",
       "evidence": "확정"
     },
     {
@@ -152,8 +152,8 @@
       "sampleRate": 48000,
       "lengthSamples": 3396377,
       "lengthSec": 70.758,
-      "usage": "스토리 연출(오프닝·엔딩) 곡. 게임 코드에 직접 호출이 없고 연출 스크립트에서만 70.8초 한 번 재생. → 오프닝·엔딩 컷신",
-      "evidence": "추정"
+      "usage": "엔딩. 킹핀 격파 → 격파 징글 뒤 유령 독백·스태프 롤·THE END 동안 70.8초 한 번. → 엔딩 컷신",
+      "evidence": "확정"
     },
     {
       "dst": "BGM/bgm_12.wav",
@@ -167,7 +167,7 @@
       "sampleRate": 48000,
       "lengthSamples": 4028660,
       "lengthSec": 83.93,
-      "usage": "게임오버 후 이름 입력(랭킹) 화면. 컨티뉴 곡이 끝나면 재생. 루프곡. → 기록·랭킹 화면",
+      "usage": "이름 입력(랭킹) 화면. 게임오버 후와 엔딩 후 모두. 루프곡. → 기록·랭킹 화면",
       "evidence": "확정"
     },
     {
@@ -178,8 +178,8 @@
       "sampleRate": 48000,
       "lengthSamples": 4561,
       "lengthSec": 0.095,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 1(0.12초 짧은 음정음) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 1(0.12초 짧은 음정음) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_17.wav",
@@ -204,8 +204,8 @@
       "sampleRate": 48000,
       "lengthSamples": 829550,
       "lengthSec": 17.282,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 2를 약 5.1초 주기로 반복하는 루프음",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 2를 약 5.1초 주기로 반복하는 루프음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_19.wav",
@@ -215,7 +215,7 @@
       "sampleRate": 48000,
       "lengthSamples": 34535,
       "lengthSec": 0.719,
-      "usage": "공통 피격음. 캐릭터가 공격에 맞는 순간(근접·마법형 호스트의 적중음도 이것). 원본 OKI2 샘플 3. → 오토어택 타격",
+      "usage": "공통 피격음. 캐릭터가 공격에 맞는 순간. 근접·마법형 호스트(Amazon 2종·Guru·Ninja Shuriken·Magician 2종·SnowWoman·Vampire·Slugger)는 이것이 사실상 공격음. 원본 OKI2 샘플 3. → 오토어택 타격",
       "evidence": "확정"
     },
     {
@@ -230,7 +230,7 @@
       "sampleRate": 48000,
       "lengthSamples": 283656,
       "lengthSec": 5.91,
-      "usage": "대폭발. 보스 파츠 파괴·보스 격파 때 OKI2 샘플 4를 연쇄로 터뜨리는 루프음(약 5.3초 주기). 직전에 효과음 전체 정지. → 보스 격파",
+      "usage": "대폭발. 보스 파츠 파괴·6개 보스 격파 때 OKI2 샘플 4를 연쇄로 터뜨리는 루프음(약 5.3초 주기). 직전에 효과음 전체 정지. → 보스 격파",
       "evidence": "확정"
     },
     {
@@ -241,8 +241,8 @@
       "sampleRate": 48000,
       "lengthSamples": 31149,
       "lengthSec": 0.649,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 5(0.46초) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 5(0.46초) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_22.wav",
@@ -252,8 +252,8 @@
       "sampleRate": 48000,
       "lengthSamples": 9623,
       "lengthSec": 0.2,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 6(0.25초) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 6(0.25초) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_23.wav",
@@ -263,7 +263,7 @@
       "sampleRate": 48000,
       "lengthSamples": 46961,
       "lengthSec": 0.978,
-      "usage": "아이템 획득(하트·캡슐을 먹는 순간). 원본 OKI2 샘플 7. → 아이템·골드 코인 획득",
+      "usage": "아이템 획득. 유령 에너지 회복·열쇠·호스트 체력 회복 아이템을 먹는 순간. 원본 OKI2 샘플 7. → 아이템·골드 코인 획득",
       "evidence": "확정"
     },
     {
@@ -274,8 +274,8 @@
       "sampleRate": 48000,
       "lengthSamples": 42918,
       "lengthSec": 0.894,
-      "usage": "드래곤 3종(Green·Blue·Red)의 브레스 공격음. 화면이 번쩍이는 특수 아이템 획득에도 쓰임. 원본 OKI2 샘플 8. → 청룡·샐러맨더·드라군 공격",
-      "evidence": "드래곤 확정 · 아이템 추정"
+      "usage": "Dragon (Green·Blue) 화염 브레스 공격음. 화면의 적을 모두 쓰러뜨리는 폭탄 아이템 획득음으로도 쓰임. 원본 OKI2 샘플 8. → 샐러맨더·청룡(드라군 추정) 공격, 전체 공격 아이템",
+      "evidence": "확정"
     },
     {
       "dst": "SFX/sfx_25.wav",
@@ -285,8 +285,8 @@
       "sampleRate": 48000,
       "lengthSamples": 101360,
       "lengthSec": 2.112,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 9(2.64초) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 9(2.64초) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_26.wav",
@@ -296,8 +296,8 @@
       "sampleRate": 48000,
       "lengthSamples": 38119,
       "lengthSec": 0.794,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 10(0.99초) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 10(0.99초) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_27.wav",
@@ -307,8 +307,8 @@
       "sampleRate": 48000,
       "lengthSamples": 26814,
       "lengthSec": 0.559,
-      "usage": "근접 타격·탄 반사(슬러거 배트가 닿는 순간 등). 원본 OKI2 샘플 11. → 슬러거 반사",
-      "evidence": "추정"
+      "usage": "Slugger 배트로 탄을 받아쳐 되돌리는 반사음(플레이어·적 슬러거 모두). 원본 OKI2 샘플 11. → 슬러거 반사",
+      "evidence": "확정"
     },
     {
       "dst": "SFX/sfx_28.wav",
@@ -318,8 +318,8 @@
       "sampleRate": 48000,
       "lengthSamples": 47156,
       "lengthSec": 0.982,
-      "usage": "특수 대상 피격음. 맞은 객체 종류가 0x22일 때 19번 대신. 원본 OKI2 샘플 12",
-      "evidence": "확정 · 대상 미확인"
+      "usage": "특수 슬롯 객체(종류 0x22)가 적을 때릴 때 19번 대신 나는 피격음. 원본 OKI2 샘플 12",
+      "evidence": "발생 조건 확정 · 대상 캐릭터 확인 불가"
     },
     {
       "dst": "SFX/sfx_29.wav",
@@ -329,7 +329,7 @@
       "sampleRate": 48000,
       "lengthSamples": 40636,
       "lengthSec": 0.847,
-      "usage": "크러셔 쇠구슬이 바닥에 떨어지는 충격음. 원본 OKI2 샘플 13. → 크러셔 보스 패턴",
+      "usage": "Crusher 쇠구슬이 바닥에 떨어지는 충격음. 원본 OKI2 샘플 13. → 크러셔 보스 패턴",
       "evidence": "확정"
     },
     {
@@ -340,8 +340,8 @@
       "sampleRate": 48000,
       "lengthSamples": 51188,
       "lengthSec": 1.066,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 14(1.33초) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 14(1.33초) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_31.wav",
@@ -351,8 +351,8 @@
       "sampleRate": 48000,
       "lengthSamples": 46628,
       "lengthSec": 0.971,
-      "usage": "원작 게임에서 호출되지 않음. 내용은 OKI2 샘플 15(1.21초 저음) 한 번",
-      "evidence": "원작 미사용 추정"
+      "usage": "원작 프로그램이 한 번도 요청하지 않음(요청 경로 전수 조사). 내용은 OKI2 샘플 15(1.21초 저음) 한 번",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "SFX/sfx_32.wav",
@@ -362,8 +362,8 @@
       "sampleRate": 48000,
       "lengthSamples": 8922,
       "lengthSec": 0.186,
-      "usage": "미사일 발사(Commando Missiles Pack), 로봇 스네이크 레이저. 원본 OKI2 샘플 16. → 미사일 코만도 공격·로봇 스네이크",
-      "evidence": "미사일 확정 · 레이저 추정"
+      "usage": "Robot Snakes 보스 공격음. Commando (Missiles Pack) 미사일 발사음으로도 추정. 원본 OKI2 샘플 16. → 로봇 스네이크 보스, 미사일 코만도",
+      "evidence": "보스 확정 · 코만도 추정"
     },
     {
       "dst": "SFX/sfx_33.wav",
@@ -373,7 +373,7 @@
       "sampleRate": 48000,
       "lengthSamples": 12743,
       "lengthSec": 0.265,
-      "usage": "총격. Gangster 2종·Hopper 2종·Commando MG/Laser 계열이 쏠 때. 원본 OKI2 샘플 17. → 갱스터·폭력배·호퍼·코만도(기관총·레이저) 공격",
+      "usage": "총격. Gangster 2종·Hopper 2종·Commando (Machine Gun)이 쏠 때. 원본 OKI2 샘플 17. → 갱스터·폭력배·호퍼 2종·코만도(기관총) 공격",
       "evidence": "확정"
     },
     {
@@ -384,7 +384,7 @@
       "sampleRate": 48000,
       "lengthSamples": 14597,
       "lengthSec": 0.304,
-      "usage": "여성 호스트 피격 비명. 빙의 중 에너지가 깎이는 순간(Amazon·Amazon Elite·SnowWoman·Magician 2종). 원본 OKI2 샘플 18. → 여성 호스트 피격·사망",
+      "usage": "여성 호스트 피격 비명. 빙의 중 에너지가 깎이는 순간(원작 호스트 번호 1·2·23–26). 원본 OKI2 샘플 18. → 여성 호스트 피격·사망",
       "evidence": "확정"
     },
     {
@@ -406,8 +406,8 @@
       "sampleRate": 48000,
       "lengthSamples": 15409,
       "lengthSec": 0.321,
-      "usage": "보스 등장·솟구침(파이썬 머리가 솟을 때, 슬러지가 수면에서 튀어나올 때). 원본 OKI2 샘플 20. → 파이썬·슬러지 보스 연출",
-      "evidence": "추정"
+      "usage": "Python·Sludge 보스가 솟구치며 공격할 때. 원본 OKI2 샘플 20. → 파이썬·슬러지 보스 패턴",
+      "evidence": "확정"
     },
     {
       "dst": "SFX/sfx_37.wav",
@@ -417,8 +417,8 @@
       "sampleRate": 48000,
       "lengthSamples": 21087,
       "lengthSec": 0.439,
-      "usage": "Vampire 박쥐탄 공격음. 원본 OKI2 샘플 21. → 흡혈귀 공격",
-      "evidence": "소리 확정 · 캐릭터 추정"
+      "usage": "Ninja (Chain) 사슬 공격음. 원본 OKI2 샘플 21. → 닌자(사슬) 공격",
+      "evidence": "확정"
     },
     {
       "dst": "SFX/sfx_38.wav",
@@ -428,7 +428,7 @@
       "sampleRate": 48000,
       "lengthSamples": 24328,
       "lengthSec": 0.507,
-      "usage": "수류탄·로켓 폭발(Commando Grenade·Robot 공격). 원본 OKI2 샘플 22. → 수류탄 코만도·로봇 공격",
+      "usage": "폭발형 공격음. Commando (Grenade) 수류탄·Robot 로켓·Kingpin 비행 기계 공격. 원본 OKI2 샘플 22. → 수류탄 코만도·로봇 공격, 킹핀 보스",
       "evidence": "확정"
     },
     {
@@ -440,8 +440,8 @@
       "sampleRate": 24242,
       "lengthSamples": 7936,
       "lengthSec": 0.327,
-      "usage": "BGM 드럼 1채널 기본 박자. BGM 1–10·12 거의 전곡에서 가장 많이 울림. 짧고 음정 성분이 강함 → 킥(베이스) 드럼 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 드럼 1채널 기본 박자. BGM 1–10·12 거의 전곡에서 가장 많이 울림. 짧고 음정 성분이 강함 → 킥(베이스) 드럼으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_002.wav",
@@ -452,8 +452,8 @@
       "sampleRate": 24242,
       "lengthSamples": 12960,
       "lengthSec": 0.535,
-      "usage": "BGM 드럼 2·3채널. BGM 1·2·3·5·6·7·8·9·10. 0.53초 잡음형 → 스네어 드럼 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 드럼 2·3채널. BGM 1·2·3·5·6·7·8·9·10. 0.53초 잡음형 → 스네어 드럼으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_003.wav",
@@ -464,8 +464,8 @@
       "sampleRate": 24242,
       "lengthSamples": 15808,
       "lengthSec": 0.652,
-      "usage": "BGM 1·2·3·8 필인에서 004·005와 함께 짧게 사용. 음정 있는 0.65초 → 탐(높은 음) 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 1·2·3·8 필인에서 004·005와 함께 짧게 사용. 음정 있는 0.65초 → 탐(높은 음)으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_004.wav",
@@ -476,8 +476,8 @@
       "sampleRate": 24242,
       "lengthSamples": 16064,
       "lengthSec": 0.663,
-      "usage": "BGM 1·2·3·8 필인. 003보다 낮은 음정 → 탐(중간 음) 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 1·2·3·8 필인. 003보다 낮은 음정 → 탐(중간 음)으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_005.wav",
@@ -488,8 +488,8 @@
       "sampleRate": 24242,
       "lengthSamples": 14784,
       "lengthSec": 0.61,
-      "usage": "BGM 1·2·3·8 필인. 가장 낮은 음정 → 탐(낮은 음) 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 1·2·3·8 필인. 가장 낮은 음정 → 탐(낮은 음)으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_006.wav",
@@ -501,7 +501,7 @@
       "lengthSamples": 10208,
       "lengthSec": 0.421,
       "usage": "어떤 BGM·SFX에서도 재생되지 않음. 0.42초 고음 잡음형",
-      "evidence": "원작 미사용"
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki1_007.wav",
@@ -512,8 +512,8 @@
       "sampleRate": 24242,
       "lengthSamples": 11136,
       "lengthSec": 0.459,
-      "usage": "BGM 8(250회)의 주력 타악, BGM 6·1에도 사용. 0.46초 중간 잡음형 → 클랩·림샷 계열 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 8(250회)의 주력 타악, BGM 6·1에도 사용. 0.46초 중간 잡음형 → 클랩·림샷 계열로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_008.wav",
@@ -524,8 +524,8 @@
       "sampleRate": 24242,
       "lengthSamples": 11712,
       "lengthSec": 0.483,
-      "usage": "BGM 드럼 3채널 잘게 쪼개는 박자. BGM 1·2·4·5·7·9·10·12. 0.48초 고음 잡음 → 닫힌 하이햇 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 드럼 3채널 잘게 쪼개는 박자. BGM 1·2·4·5·7·9·10·12. 0.48초 고음 잡음 → 닫힌 하이햇으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_009.wav",
@@ -536,8 +536,8 @@
       "sampleRate": 24242,
       "lengthSamples": 26976,
       "lengthSec": 1.113,
-      "usage": "BGM 1·5·6·7·9·10·12 강조 박. 1.11초 고음 잡음 → 오픈 하이햇·심벌 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 1·5·6·7·9·10·12 강조 박. 1.11초 고음 잡음 → 오픈 하이햇·심벌로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_010.wav",
@@ -548,8 +548,8 @@
       "sampleRate": 24242,
       "lengthSamples": 31424,
       "lengthSec": 1.296,
-      "usage": "BGM 3·6 강조 박. 1.30초 여운 있는 잡음 → 크래시 심벌 계열 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 3·6 강조 박. 1.30초 여운 있는 잡음 → 크래시 심벌 계열로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_011.wav",
@@ -560,8 +560,8 @@
       "sampleRate": 24242,
       "lengthSamples": 10304,
       "lengthSec": 0.425,
-      "usage": "BGM 6(364회) 주력, BGM 4·12·3에도 사용. 0.43초 짧은 고음 → 쉐이커·탬버린 계열 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 6(364회) 주력, BGM 4·12·3에도 사용. 0.43초 짧은 고음 → 쉐이커·탬버린 계열로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_012.wav",
@@ -572,8 +572,8 @@
       "sampleRate": 24242,
       "lengthSamples": 50144,
       "lengthSec": 2.068,
-      "usage": "BGM 3 강조(16회), BGM 10에서 한 번. 2.07초 긴 여운 잡음 → 긴 심벌 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 3 강조(16회), BGM 10에서 한 번. 2.07초 긴 여운 잡음 → 긴 심벌로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_013.wav",
@@ -584,8 +584,8 @@
       "sampleRate": 24242,
       "lengthSamples": 9792,
       "lengthSec": 0.404,
-      "usage": "BGM 4(하수도) 전용. 음정이 뚜렷한 0.40초 → 카우벨·우드블록 계열 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 4(하수도) 전용. 음정이 뚜렷한 0.40초 → 카우벨·우드블록 계열로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_014.wav",
@@ -596,8 +596,8 @@
       "sampleRate": 24242,
       "lengthSamples": 7488,
       "lengthSec": 0.309,
-      "usage": "BGM 5(스테이지 6) 전용 주력 타악(147회). 0.31초 저역 잡음 → 스네어·클랩 변형 추정",
-      "evidence": "사용처 확정 · 악기 추정"
+      "usage": "BGM 5(스테이지 6) 전용 주력 타악(147회). 0.31초 저역 잡음 → 스네어·클랩 변형으로 보임",
+      "evidence": "사용처 확정 · 악기 이름은 청취 확인 필요"
     },
     {
       "dst": "Samples/oki1_015.wav",
@@ -620,8 +620,8 @@
       "sampleRate": 24242,
       "lengthSamples": 2880,
       "lengthSec": 0.119,
-      "usage": "SFX 16의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 16의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_002.wav",
@@ -632,8 +632,8 @@
       "sampleRate": 24242,
       "lengthSamples": 29184,
       "lengthSec": 1.204,
-      "usage": "SFX 18의 원본(SFX 18이 이 샘플을 반복). 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 18의 원본(SFX 18이 이 샘플을 반복). 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_003.wav",
@@ -668,8 +668,8 @@
       "sampleRate": 24242,
       "lengthSamples": 11072,
       "lengthSec": 0.457,
-      "usage": "SFX 21의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 21의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_006.wav",
@@ -680,8 +680,8 @@
       "sampleRate": 24242,
       "lengthSamples": 6080,
       "lengthSec": 0.251,
-      "usage": "SFX 22의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 22의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_007.wav",
@@ -704,8 +704,8 @@
       "sampleRate": 24242,
       "lengthSamples": 27104,
       "lengthSec": 1.118,
-      "usage": "SFX 24 드래곤 브레스·특수 아이템의 원본",
-      "evidence": "드래곤 확정"
+      "usage": "SFX 24 드래곤 브레스·전체 공격 아이템의 원본",
+      "evidence": "확정"
     },
     {
       "dst": "Samples/oki2_009.wav",
@@ -716,8 +716,8 @@
       "sampleRate": 24242,
       "lengthSamples": 64000,
       "lengthSec": 2.64,
-      "usage": "SFX 25의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 25의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_010.wav",
@@ -728,8 +728,8 @@
       "sampleRate": 24242,
       "lengthSamples": 24064,
       "lengthSec": 0.993,
-      "usage": "SFX 26의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 26의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_011.wav",
@@ -740,8 +740,8 @@
       "sampleRate": 24242,
       "lengthSamples": 16928,
       "lengthSec": 0.698,
-      "usage": "SFX 27 근접 타격·탄 반사의 원본",
-      "evidence": "추정"
+      "usage": "SFX 27 슬러거 탄 반사음의 원본",
+      "evidence": "확정"
     },
     {
       "dst": "Samples/oki2_012.wav",
@@ -752,8 +752,8 @@
       "sampleRate": 24242,
       "lengthSamples": 29792,
       "lengthSec": 1.229,
-      "usage": "SFX 28 특수 대상 피격음의 원본",
-      "evidence": "확정 · 대상 미확인"
+      "usage": "SFX 28 특수 객체 피격음의 원본",
+      "evidence": "발생 조건 확정 · 대상 캐릭터 확인 불가"
     },
     {
       "dst": "Samples/oki2_013.wav",
@@ -776,8 +776,8 @@
       "sampleRate": 24242,
       "lengthSamples": 32320,
       "lengthSec": 1.333,
-      "usage": "SFX 30의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 30의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_015.wav",
@@ -788,8 +788,8 @@
       "sampleRate": 24242,
       "lengthSamples": 29440,
       "lengthSec": 1.214,
-      "usage": "SFX 31의 원본. 원작 게임에서 호출되지 않음",
-      "evidence": "원작 미사용 추정"
+      "usage": "SFX 31의 원본. 원작 게임에서 요청되지 않음",
+      "evidence": "원작 미사용 확정"
     },
     {
       "dst": "Samples/oki2_016.wav",
@@ -800,8 +800,8 @@
       "sampleRate": 24242,
       "lengthSamples": 5632,
       "lengthSec": 0.232,
-      "usage": "SFX 32 미사일·레이저 발사음의 원본",
-      "evidence": "미사일 확정"
+      "usage": "SFX 32 로봇 스네이크 공격음의 원본",
+      "evidence": "확정"
     },
     {
       "dst": "Samples/oki2_017.wav",
@@ -848,8 +848,8 @@
       "sampleRate": 24242,
       "lengthSamples": 9728,
       "lengthSec": 0.401,
-      "usage": "SFX 36 보스 등장·솟구침의 원본",
-      "evidence": "추정"
+      "usage": "SFX 36 파이썬·슬러지 공격음의 원본",
+      "evidence": "확정"
     },
     {
       "dst": "Samples/oki2_021.wav",
@@ -860,8 +860,8 @@
       "sampleRate": 24242,
       "lengthSamples": 13312,
       "lengthSec": 0.549,
-      "usage": "SFX 37 Vampire 박쥐탄의 원본",
-      "evidence": "소리 확정 · 캐릭터 추정"
+      "usage": "SFX 37 닌자(사슬) 공격음의 원본",
+      "evidence": "확정"
     },
     {
       "dst": "Samples/oki2_022.wav",
@@ -872,7 +872,7 @@
       "sampleRate": 24242,
       "lengthSamples": 15360,
       "lengthSec": 0.634,
-      "usage": "SFX 38 수류탄·로켓 폭발의 원본",
+      "usage": "SFX 38 수류탄·로켓·킹핀 공격음의 원본",
       "evidence": "확정"
     }
   ]
