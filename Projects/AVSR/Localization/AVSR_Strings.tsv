@@ -1,443 +1,443 @@
 key	ko	ja	en
-host.gangster.name	갱스터		
-host.thug.name	폭력배		
-host.amazon.name	아마존		
-host.amazon_elite.name	아마존 정예		
-host.hopper.name	호퍼		
-host.hopper_smg.name	호퍼(기관단총)		
-host.commando_mg.name	코만도(기관총)		
-host.commando_laser.name	코만도(레이저)		
-host.commando_grenade.name	코만도(수류탄)		
-host.salamander.name	샐러맨더		
-host.dragoon.name	드라군		
-host.dragon_blue.name	청룡		
-host.guru.name	구루		
-host.white_wizard.name	화이트 위저드		
-host.medium.name	영매		
-host.ninja.name	닌자		
-host.ninja_chain.name	닌자(사슬)		
-host.robot.name	로봇		
-host.baseball.name	슬러거		
-host.snowwoman.name	설녀		
-host.vampire.name	흡혈귀		
-host.commando_missile.name	코만도(미사일)		
-host.death.name	사신		
-askill.psg_h01.name	도약 강타		
-askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.		
-askill.psg_h02.name	(미정)		
-askill.psg_h02.desc	스킬 보류 — 정해지면 채운다.		
-askill.psg_h03.name	융단 폭격		
-askill.psg_h03.desc	수류탄 5발을 부채꼴로 동시에 던진다.		
-askill.psg_h04.name	연쇄 방전		
-askill.psg_h04.desc	3초간 주변 적에게 전기가 계속 튄다.		
-askill.psg_h05.name	방벽 전개		
-askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.		
-askill.psg_h06.name	다중 유도		
-askill.psg_h06.desc	반원으로 퍼진 8발이 한 대상으로 모여 든다.		
-askill.psg_h07.name	뇌전 폭주		
-askill.psg_h07.desc	2초간 번개 튕김이 반드시 터진다.		
-askill.psg_h08.name	독 뿜기		
-askill.psg_h08.desc	둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.		
-askill.psg_h09.name	화염 지대		
-askill.psg_h09.desc	가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.		
-askill.psg_h10.name	일제 표식		
-askill.psg_h10.desc	방 안 모든 적에게 3초간 표식을 새긴다.		
-askill.psg_h11.name	난사		
-askill.psg_h11.desc	1초간 3방향으로 쏟아붓는다.		
-askill.psg_h12.name	수호 결계		
-askill.psg_h12.desc	3초간 받는 피해 −50% · 쉴드 획득 2배.		
-askill.psg_h13.name	정조준		
-askill.psg_h13.desc	5초간 치명타 확률이 90% 로 고정된다.		
-askill.psg_h14.name	도약 강습		
-askill.psg_h14.desc	가장 먼 적에게 뛰어들고 2초간 무적.		
-askill.psg_h15.name	골렘 소환		
-askill.psg_h15.desc	골렘을 세운다. 해골보다 크고 오래 싸운다.		
-askill.psg_h16.name	광휘 확산		
-askill.psg_h16.desc	부채꼴 8방향으로 광탄을 쏜다.		
-askill.psg_h17.name	사슬 결박		
-askill.psg_h17.desc	방 안 모든 적을 5초간 묶는다. 묶인 적은 더 아프게 맞는다.		
-askill.psg_h18.name	그림자 분신		
-askill.psg_h18.desc	방 한가운데 분신을 세운다. 5초간 적이 전부 분신을 노린다.		
-askill.psg_h19.name	포탑 전개		
-askill.psg_h19.desc	10초간 자동으로 쏘는 포탑을 세운다.		
-askill.psg_h20.name	전탄 반사		
-askill.psg_h20.desc	4초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.		
-askill.psg_h21.name	얼음 감옥		
-askill.psg_h21.desc	2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.		
-askill.psg_h22.name	혈연		
-askill.psg_h22.desc	둘레 5 m 의 적 머릿수만큼 최대 체력의 2% 씩 회복한다.		
-askill.psg_h23.name	사신의 시간		
-askill.psg_h23.desc	3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.		
-pskill.psv_amazon.name	쉴드 질주		
-pskill.psv_amazon.desc	쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.		
-pskill.psv_counter.name	역전의 자세		
-pskill.psv_counter.desc	쉴드가 남아 있는 동안 공격력이 오른다.		
-pskill.psv_slugger.name	장외 타구		
-pskill.psv_slugger.desc	막타에 20% 로 주변 적을 날려 버린다.		
-pskill.psv_death.name	망자 소집		
-pskill.psv_death.desc	적을 잡을 때마다 그 자리에서 해골이 일어선다.		
-pskill.psv_guru.name	무형보		
-pskill.psv_guru.desc	걸어 다닐 때 지형지물을 통과한다.		
-pskill.psv_ninja_chain.name	흘리기		
-pskill.psv_ninja_chain.desc	10% 로 피해를 통째로 흘린다.		
-pskill.psv_dragoon.name	불씨		
-pskill.psv_dragoon.desc	명중한 적에게 10% 로 화상. 겹치지 않는다.		
-pskill.psv_salamander.name	독니		
-pskill.psv_salamander.desc	명중한 적에게 10% 로 독. 겹치지 않는다.		
-pskill.psv_dragon_blue.name	낙뢰		
-pskill.psv_dragon_blue.desc	10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.		
-pskill.psv_commando_grenade.name	파편탄		
-pskill.psv_commando_grenade.desc	상대 방어력을 50% 무시한다.		
-pskill.psv_snowwoman.name	서릿발		
-pskill.psv_snowwoman.desc	30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.		
-pskill.psv_hopper_smg.name	충격 반동		
-pskill.psv_hopper_smg.desc	10% 로 맞은 적을 밀어낸다.		
-pskill.psv_commando_mg.name	중장갑		
-pskill.psv_commando_mg.desc	방어력 20% 증가.		
-pskill.psv_thug.name	삥		
-pskill.psv_thug.desc	주운 골드가 10% 더 들어온다.		
-pskill.psv_ninja.name	질주		
-pskill.psv_ninja.desc	적을 잡으면 1.5초간 이동속도 +30%.		
-pskill.psv_leech.name	흡혈		
-pskill.psv_leech.desc	8% 로 공격력의 5% 만큼 회복한다.		
-pskill.psv_gangster.name	처형 계약		
-pskill.psv_gangster.desc	표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.		
-pskill.psv_momentum.name	급소		
-pskill.psv_momentum.desc	치명타 피해 +30%.		
-pskill.psv_commando_missile.name	고폭탄		
-pskill.psv_commando_missile.desc	투사체가 지형지물을 무시한다.		
-pskill.psv_medium.name	강령		
-pskill.psv_medium.desc	적을 잡으면 30% 로 해골이 일어선다.		
-pskill.psv_white_wizard.name	관통 광선		
-pskill.psv_white_wizard.desc	투사체가 지형지물을 무시하고 적을 관통한다.		
-pskill.psv_commando_laser.name	집속 광선		
-pskill.psv_commando_laser.desc	투사체가 지형지물을 무시하고 적을 관통한다.		
-pskill.psv_spare_circuit.name	예비 회로		
-pskill.psv_spare_circuit.desc	평타가 2% 로 액티브 쿨을 1초 당긴다.		
-card.c001.name	감전		
-card.c001.desc	명중하면 전기가 옆 적에게 튄다.		
-card.c002.name	성장 가속		
-card.c002.desc	얻는 경험치가 늘어난다.		
-card.c003.name	수호 방패		
-card.c003.desc	방패가 내 주위를 돌며 막는다.		
-card.c004.name	처형		
-card.c004.desc	빈사인 적을 확률로 즉사시킨다.		
-card.c005.name	번개 사슬		
-card.c005.desc	전기가 더 여러 번 튄다.		
-card.c006.name	흡혼		
-card.c006.desc	적을 잡으면 체력을 돌려받는다.		
-card.c007.name	찰나의 불사		
-card.c007.desc	맞는 순간 2초 무적이 된다.		
-card.c008.name	추가 발사		
-card.c008.desc	쏠 때마다 탄이 더 나간다.		
-card.c009.name	화염 각인		
-card.c009.desc	공격에 화상을 붙인다.		
-card.c010.name	궁지		
-card.c010.desc	체력이 절반 아래면 세진다.		
-boss.robot_snakes.name	로봇 스네이크		
-bossmove.BurrowStrike.name	솟아오름		
-bossmove.RailLaser.name	레이저		
-bossmove.DebrisFall.name	천장 파편		
-bossmove.HeadBite.name	머리 물기		
-boss.crusher.name	크러셔		
-bossmove.Missile.name	미사일		
-bossmove.WreckingBall.name	쇠사슬 파괴구		
-bossmove.FanShot.name	부채꼴 사격		
-bossmove.RamCharge.name	돌진		
-boss.python.name	파이썬		
-bossmove.HeadLunge.name	머리 뻗기		
-bossmove.VenomSpit.name	독 뱉기		
-bossmove.BrickFall.name	벽돌 낙하		
-bossmove.BodyShove.name	몸통 밀기		
-boss.sludge.name	슬러지		
-bossmove.Emerge.name	솟아오름		
-bossmove.Spit.name	뱉기		
-bossmove.CeilingCling.name	천장 붙기		
-bossmove.CeilingSpread.name	천장 확산		
-boss.guardian.name	가디언		
-bossmove.SegmentThrust.name	마디 돌진		
-bossmove.SegmentLaunch.name	마디 사출		
-bossmove.CoilWall.name	똬리		
-boss.kingpin.name	킹핀		
-bossmove.MissileSalvo.name	미사일 일제		
-bossmove.ExecutionLock.name	처형 조준		
-bossmove.StrafingRun.name	저공 활강		
-bossmove.BoosterDrop.name	부스터 강하		
-event.EV_CH1_01.title	영혼의 사당		
-event.EV_CH1_01.body	부서진 방파제 끝에 낡은 사당이 서 있다.\n동전을 놓는 자리가 손때에 파여 있다.		
-event.EV_CH1_01.accept	동전을 놓는다		
-event.EV_CH1_01.decline	지나간다		
-event.EV_CH1_02.title	버려진 보급품		
-event.EV_CH1_02.body	뒤집힌 상자 하나. 안에 든 것을 다 가져갈 수는 없다.\n장비를 챙기든지, 팔아 넘기든지.		
-event.EV_CH1_02.accept	장비를 챙긴다		
-event.EV_CH1_02.decline	팔아 넘긴다  (골드 25)		
-event.EV_CH1_03.title	잠긴 금고		
-event.EV_CH1_03.body	다이얼이 세 칸 남았다. 억지로 열면 안의 것이 상할지도 모른다.		
-event.EV_CH1_03.accept	억지로 연다		
-event.EV_CH1_03.decline	지나간다		
-event.EV_CH1_04.title	길 잃은 영혼		
-event.EV_CH1_04.body	저도 몸을 찾다 지친 것이 하나 떠 있다.\n제 몫을 조금 떼어 주면 몸으로 가는 길을 넓혀 주겠다고 한다.		
-event.EV_CH1_04.accept	영혼을 나눠 준다		
-event.EV_CH1_04.decline	지나간다		
-event.EV_CH1_05.title	야전 의무병		
-event.EV_CH1_05.body	부두 창고에 아직 숨이 붙은 의무병이 있다.\n말은 안 통하지만 손짓은 통한다.		
-event.EV_CH1_05.accept	값을 치른다		
-event.EV_CH1_05.decline	내버려 둔다		
-event.EV_CH1_06.title	좁은 길목		
-event.EV_CH1_06.body	짐짝 사이로 길이 하나뿐이다.\n반대편에서 기척이 난다. 돌아갈 수도 있다.		
-event.EV_CH1_06.accept	밀고 들어간다		
-event.EV_CH1_06.decline	돌아간다		
-event.EV_CH2_01.title	저주받은 은닉처		
-event.EV_CH2_01.body	네온이 닿지 않는 구석. 손을 넣으면 살이 타는 냄새가 난다.\n안쪽에서 무언가가 빛난다.		
-event.EV_CH2_01.accept	손을 넣는다		
-event.EV_CH2_01.decline	물러선다		
-event.EV_CH2_02.title	이름난 몸		
-event.EV_CH2_02.body	골목 끝에 하나가 서 있다. 이 구역에서 제일 좋은 몸이다.\n비켜 줄 생각은 없어 보인다.		
-event.EV_CH2_02.accept	덤빈다		
-event.EV_CH2_02.decline	돌아간다		
-event.EV_CH2_03.title	봉인된 궤짝		
-event.EV_CH2_03.body	값은 비싸지만 안에 든 것은 확실하다.\n이런 물건은 두 번 나오지 않는다.		
-event.EV_CH2_03.accept	값을 치른다		
-event.EV_CH2_03.decline	지나간다		
-event.EV_CH2_04.title	교차사격		
-event.EV_CH2_04.body	양쪽 옥상에 총구가 걸려 있다. 영혼을 조금 태워 몸을 낮추면\n첫 사격은 넘길 수 있다.		
-event.EV_CH2_04.accept	영혼을 태워 뚫는다		
-event.EV_CH2_04.decline	돌아간다		
-event.EV_CH2_05.title	암시장 연줄		
-event.EV_CH2_05.body	네온 아래에서 누가 손짓한다. 몸을 좀 내주면\n이 구역 상인들에게 말을 넣어 주겠다고 한다.		
-event.EV_CH2_05.accept	살을 떼어 준다		
-event.EV_CH2_05.decline	물러선다		
-event.EV_CH2_06.title	부서진 제단		
-event.EV_CH2_06.body	금 간 제단이 아직 숨을 쉰다.\n새 것을 주지는 못하지만, 지닌 것 하나는 벼려 준다고 한다.		
-event.EV_CH2_06.accept	제단에 올린다		
-event.EV_CH2_06.decline	지나간다		
-event.EV_CH3_01.title	영혼을 건 내기		
-event.EV_CH3_01.body	배관 사이에 자기와 똑같이 생긴 것이 앉아 있다.\n제 몫을 떼어 주면 길을 보여 주겠다고 한다.		
-event.EV_CH3_01.accept	영혼을 떼어 준다		
-event.EV_CH3_01.decline	지나간다		
-event.EV_CH3_02.title	치명적인 도전		
-event.EV_CH3_02.body	요새의 문지기 둘이 길을 막고 서 있다.\n이겨서 얻을 것이 크고, 져서 잃을 것도 크다.		
-event.EV_CH3_02.accept	받아들인다		
-event.EV_CH3_02.decline	돌아간다		
-event.EV_CH3_03.title	보스 대비		
-event.EV_CH3_03.body	무기고에 파쇄탄이 하나 남아 있다.\n값은 비싸지만, 그 방어막을 한 번은 확실히 벗긴다.		
-event.EV_CH3_03.accept	값을 치른다		
-event.EV_CH3_03.decline	지나간다		
-event.EV_CH3_04.title	타락한 호스트		
-event.EV_CH3_04.body	배관 안쪽에서 낫 끄는 소리가 난다.\n살을 조금 내주면 이쪽으로 나온다. 나오면, 빼앗을 수 있다.		
-event.EV_CH3_04.accept	살을 내준다		
-event.EV_CH3_04.decline	지나간다		
-event.EV_CH3_05.title	심연의 거래		
-event.EV_CH3_05.body	바닥이 보이지 않는 통로. 아래에서 목소리가 올라온다.\n값은 영혼으로 받는다고 한다.		
-event.EV_CH3_05.accept	영혼을 내준다		
-event.EV_CH3_05.decline	대신 쉬어 간다  (고스트 30% 회복)		
-event.EV_CH3_06.title	마지막 보급 투하		
-event.EV_CH3_06.body	요새 위로 낙하산 하나가 내려온다.\n먼저 집는 쪽이 임자지만, 안에 무엇이 들었는지는 모른다.		
-event.EV_CH3_06.accept	전부 털어 넣는다		
-event.EV_CH3_06.decline	지나간다		
-event.EV_DEAL_01.title	피의 계약		
-event.EV_DEAL_01.body	제단이 손목을 잡는다.\n네 그릇을 영영 줄이는 대신, 이 판에서 가장 큰 것을 준다.		
-event.EV_DEAL_01.accept	피를 내준다		
-event.EV_DEAL_01.decline	등을 돌린다		
-event.EV_DEAL_02.title	광란		
-event.EV_DEAL_02.body	속삭임이 귀를 채운다.\n몸이 작아지는 만큼 손이 빨라진다고 한다.		
-event.EV_DEAL_02.accept	귀를 연다		
-event.EV_DEAL_02.decline	등을 돌린다		
-event.EV_DEAL_04.title	영혼 저당		
-event.EV_DEAL_04.body	유령의 몫을 담보로 잡는다.\n영혼이 얇아지지만 손에는 둘이 남는다.		
-event.EV_DEAL_04.accept	영혼을 맡긴다		
-event.EV_DEAL_04.decline	등을 돌린다		
-event.EV_DEAL_06.title	굶주림		
-event.EV_DEAL_06.body	굶주린 것이 제 이빨을 내민다.\n그릇을 조금 내주면 남의 피로 채우는 법을 알려 준다.		
-event.EV_DEAL_06.accept	이빨을 받는다		
-event.EV_DEAL_06.decline	등을 돌린다		
-stage.1.1.name	쓰레기 집적장		
-stage.2.1.name	미사일 저장기지		
-stage.3.1.name	밤의 도시 거리		
-stage.4.1.name	밤의 공중기지 옥상		
-stage.5.1.name	유령 연구소		
-stage.6.1.name	야간 정유소		
-host.ghost.name	유령		
-tip.loading.0	고스트는 떠 있는 동안 체력이 깎인다. 몸은 빨리 고를수록 좋다.		
-tip.loading.1	멈춰야 쏜다. 움직이는 동안에는 자동 공격이 멈춘다.		
-tip.loading.2	몸을 스스로 놓아주면 그 몸은 이 방에서 다시 탈 수 없다.		
-tip.loading.3	보스는 빼앗을 수 없다. 보스방은 타고 들어간 몸으로 끝내야 한다.		
-tip.loading.4	조준 링이 회색 자물쇠면 아직 조건이 안 찼다. 더 두들기면 열린다.		
-tip.loading.5	몸을 잃으면 Ghost HP 20%가 날아간다. 놓아주는 편이 싸다.		
-tip.loading.6	회복 방에서는 Ghost HP 가 돌아온다. 다음 방을 보고 들어가라.		
-tip.loading.7	몸이 바뀌어도 버프는 남는다. 스탯이 아니라 나에게 붙기 때문이다.		
-tip.loading.8	머리 위 금색 조준 링이 지금 빙의 버튼이 노리는 몸이다.		
-tip.loading.9	빙의 표식은 가까운 순으로 다섯까지만 뜬다. 나머지는 사거리 밖이다.		
-tip.loading.10	붉은 X 가 붙은 몸은 내가 버린 몸이다. 이 방에서는 다시 못 탄다.		
-tip.loading.11	액티브 스킬은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 액티브 스킬를 쓰는지다.		
-tip.loading.12	주위에 뺏을 몸이 하나도 없으면 잠시 뒤 몸 하나가 던져진다. 대신 값이 비싸다.		
-tip.loading.13	화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.		
-opening.line.0	어느 날, 여자친구와 함께 걷고 있었다.		
-opening.line.1	그런데 갑자기, 습격당했다!		
-opening.line.2	으아아아아아악……		
-opening.line.6	탕!		
-opening.line.9	그리고, 나는 죽었다.		
-opening.line.10	내가 자네를 불렀네.		
-opening.line.11	그자들은 악의 비밀결사였어.		
-opening.line.12	내 유령 에너지 연구를 캐내려고\n딸을 납치해 몸값을 요구했다네.		
-opening.line.13	자네의 에너지는 한정돼 있네.		
-opening.line.14	자네의 에너지는 한정돼 있네.		
-opening.line.15	부탁하네. 내 딸을 구해 주게!		
-ui.shop.host.name	몸 — {0}		
-ui.shop.host.desc	그 자리에서 이 몸을 빼앗는다		
-ui.shop.heal.name	치료		
-ui.shop.heal.desc	호스트 {0}% · 고스트 {1}% 회복		
-ui.shop.limit	남은 구매 {0}회 · 카드 {1}장		
-ui.shop.result.host	{0} 빙의		
-ui.shop.result.consumable	{0} 구입 — 다음 방에서 열린다		
-ui.shop.result.card	{0} 구입		
-ui.battle.barrier	방벽 {0}		
-ui.rarity.legendary	전설		
-ui.rarity.epic	영웅		
-ui.rarity.rare	희귀		
-ui.rarity.common	일반		
-ui.event.reward.card_grant	{0} 카드 {1}장		
-ui.event.reward.card_offer	{0} 카드 3택 1		
-ui.event.reward.upgrade	가진 카드 한 장 레벨 +1		
-ui.event.reward.host_heal	호스트 체력 {0}% 회복		
-ui.event.reward.ghost_heal	고스트 체력 {0}% 회복		
-ui.event.gold	골드 {0}		
-ui.event.reward.reach	빙의 사거리 +{0}% (판 끝까지)		
-ui.event.reward.discount	상점 값 -{0}% (판 끝까지)		
-ui.event.reward.shield_break	다음 보스 방어막 한 번 무효		
-ui.event.reward.spawn_host	빼앗을 몸 하나가 나타난다		
-ui.event.cost.ghost_hp	고스트 체력 {0}%		
-ui.event.cost.host_hp	호스트 체력 {0}%		
-ui.event.cost.max_hp	최대 체력 -{0}% (영구)		
-ui.event.blocked.no_body	몸이 없다		
-ui.event.blocked.cant_pay	치를 수 없다		
-ui.event.result.passed	지나쳤다.		
-ui.event.result.elite	정예가 앞을 막는다.		
-ui.event.result.ambush	매복이다.		
-ui.event.result.missed	빗나갔다.		
-ui.event.result.gold	골드 +{0}		
-ui.event.result.no_body	몸이 없어 받을 수 없었다.		
-ui.event.result.nothing_left	가져갈 것이 남아 있지 않았다.		
-ui.event.result.cards	카드 {0}장 획득		
-ui.event.result.got	{0} 획득		
-ui.event.result.pick_card	카드를 고른다		
-ui.event.result.nothing_to_pick	고를 것이 남아 있지 않았다.		
-ui.event.result.nothing_to_upgrade	벼릴 것이 없었다.		
-ui.event.result.reach	빙의 사거리 +{0}%		
-ui.event.result.discount	상점 카드 값 {0}% 할인		
-ui.event.result.shield_break	다음 보스의 방어막을 한 번 깬다		
-ui.event.result.nobody	아무도 오지 않았다.		
-ui.event.result.appeared	{0} 이(가) 나타났다		
-ui.hostselect.title.pick	HOST 를 선택하세요!		
-ui.hostselect.title.codex	HOST 도감		
-ui.hostselect.header_desc	사망 시 유령으로 돌아가, 다른 HOST에 빙의할 수 있습니다.		
-ui.hostselect.possess_start	빙의 시작		
-ui.hostselect.back	돌아가기		
-ui.hostselect.stats	능력치		
-ui.hostselect.upgrade.title	HOST 강화		
-ui.hostselect.upgrade.sub	액티브 · 패시브 스킬 강화		
-ui.hostselect.mastery.maxed	{0} 은(는) 이미 숙련도 최대다.		
-ui.common.ok	확인		
-ui.hostselect.mastery.short	파편이 모자란다.\n{0} — {1} / {2}  ({3}개 더)		
-ui.hostselect.mastery.unseal	봉인 해제		
-ui.hostselect.mastery.step	숙련도 Lv {0} → {1}		
-ui.hostselect.mastery.confirm	{0}  {1}\n파편 {2}개를 쓴다.		
-ui.hostselect.mastery	숙련도		
-ui.hostselect.shard	영혼 파편		
-ui.hostselect.start_ghost	유령으로 시작		
-ui.hostselect.ghost.badge	유령		
-ui.hostselect.ghost.trait	몸이 없다		
-ui.hostselect.ghost.rule	몸이 없으면 HP가 계속 줄어든다\n몸 없이 주는 피해는 60%		
-ui.hostselect.ghost.skill	몸 빼앗기		
-ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적을 빼앗아 그 몸으로 싸운다		
-ui.hostselect.ghost.skill_desc_near	가까운 적을 빼앗아 그 몸으로 싸운다		
-ui.hostselect.ghost.level	고스트 레벨		
-ui.hostselect.ghost.level_by_gold	골드로 올린다		
-ui.job.melee	근거리		
-ui.job.mid	중거리		
-ui.job.ranged	원거리		
-ui.job.melee.trait	치고 버틴다		
-ui.job.mid.trait	붙어서 쏟는다		
-ui.job.ranged.trait	거리를 두고 쏜다		
-ui.job.melee.rule	때릴 때마다 쉴드 (HP 3% · 최대 30%)\n타격 시 12% 확률로 0.8초 스턴		
-ui.job.mid.rule	직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다		
-ui.job.ranged.rule	직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다		
-ui.hostselect.tip	HOST마다 이동속도, 공격 방식, 스킬이 다릅니다.\n다양한 HOST를 경험해 보세요!		
-ui.hostselect.owned	보유 HOST  {0}/{1}		
-ui.hostselect.gold_short	골드가 모자란다.\n{0}({1}급) — {2:N0} / {3:N0}\n\n유령으로 시작하면 골드가 들지 않는다.		
-ui.attack.melee_drain	근접 · 흡혈		
-ui.attack.melee	근접		
-ui.attack.single_slow	단발 · 둔화		
-ui.attack.single	단발		
-ui.attack.rapid	연사		
-ui.attack.spread	확산 {0}발		
-ui.attack.pierce	관통		
-ui.attack.snipe	저격		
-ui.attack.pulse	주위 광역		
-ui.unlock.stage	CH{0} · {1}스테이지		
-ui.unlock.boss	CH{0} 보스 격파		
-ui.shrine.full_heal.title	몸을 아문다		
-ui.shrine.full_heal.desc	호스트 체력을 가득 채운다		
-ui.shrine.full_heal.result	호스트 체력을 가득 채웠다		
-ui.shrine.soul_heal.title	영혼을 채운다		
-ui.shrine.soul_heal.desc	고스트 체력을 가득 채운다		
-ui.shrine.soul_heal.result	고스트 체력을 가득 채웠다		
-ui.shrine.max_hp.title	그릇을 넓힌다		
-ui.shrine.max_hp.desc	뺏는 몸이 더 튼튼해진다		
-ui.shrine.max_hp.result	뺏는 몸이 더 튼튼해졌다		
-ui.shrine.atk.title	힘을 받는다		
-ui.shrine.atk.desc	공격력이 오른다		
-ui.shrine.atk.result	공격력이 올랐다		
-ui.shrine.speed.title	손이 빨라진다		
-ui.shrine.speed.desc	공격이 빨라진다		
-ui.shrine.speed.result	공격이 빨라졌다		
-ui.shrine.range.title	멀리 닿는다		
-ui.shrine.range.desc	사거리가 늘어난다		
-ui.shrine.range.result	사거리가 늘어났다		
-ui.opening.skip	건너뛰기		
-ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력		
-ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}		
-ui.ingame.exit_opened	출구가 열렸다 — 통과해서 다음 스테이지로		
-ui.ingame.event.reward	보상 · {0}		
-ui.ingame.event.decline	지나간다		
-ui.shrine.title	회복의 제단		
-ui.shrine.hint	하나만 가져갈 수 있다		
-ui.shop.gold	보유 골드 {0:N0}		
-ui.buff.sub	카드를 선택하세요		
-ui.ingame.result.clear	스테이지 클리어!\n골드 +{0}   고스트 EXP +{1}		
-ui.ingame.result.dead	유령이 소멸했습니다.\n로비로 돌아갑니다.		
-ui.ingame.result.to_lobby	로비로		
-ui.ingame.pause.message	스테이지를 포기하고 로비로 돌아갈까요?		
-ui.ingame.pause.give_up	포기		
-ui.ingame.pause.continue	계속		
-ui.dodge.back	뒤로		
-ui.dodge.side	옆으로		
-ui.dodge.gap	틈으로		
-ui.dodge.perp	직각으로		
-ui.dodge.zone	안전지대로		
-ui.dodge.close	붙어라		
-ui.dodge.swap	몸을 갈아타라		
-ui.dodge.hold	쏘지 마라		
-ui.battle.head_exposed	머리 노출		
-ui.consumable.bomb.name	폭탄		
-ui.consumable.bomb.desc	다음 방이 열리면 광역 한 방		
-ui.consumable.ally.name	동료		
-ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다		
-ui.consumable.freeze.name	정지		
-ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다		
-ui.lobby.mode.survival.name	서바이벌 모드		
-ui.lobby.mode.survival.desc	끝까지 살아남아라		
-ui.lobby.mode.scenario.name	시나리오 모드		
-ui.lobby.mode.scenario.desc	영혼이 깃든 새로운 이야기		
-ui.lobby.mode.defense.name	디펜스 모드		
-ui.lobby.mode.defense.desc	몰려오는 적을 막아라		
-ui.lobby.game_mode	게임 모드		
-ui.lobby.continue	이어서 하기		
-ui.lobby.play	플레이하기		
-ui.common.quit.message	게임을 종료하시겠습니까?		
-ui.common.quit	종료		
-ui.common.cancel	취소		
-ui.shop.leave	나간다		
-ui.shop.title	상점		
-ui.lobby.host_button.sub	육성 · 액티브 스킬 · 도감		
-ui.lobby.shop_button.sub	상점 · 패키지 · 재화		
+host.gangster.name	갱스터	ギャングスター	
+host.thug.name	폭력배	チンピラ	
+host.amazon.name	아마존	アマゾネス	
+host.amazon_elite.name	아마존 정예	アマゾネス・エリート	
+host.hopper.name	호퍼	ホッパー	
+host.hopper_smg.name	호퍼(기관단총)	ホッパー（SMG）	
+host.commando_mg.name	코만도(기관총)	コマンドー（マシンガン）	
+host.commando_laser.name	코만도(레이저)	コマンドー（レーザー）	
+host.commando_grenade.name	코만도(수류탄)	コマンドー（グレネード）	
+host.salamander.name	샐러맨더	サラマンダー	
+host.dragoon.name	드라군	ドラグーン	
+host.dragon_blue.name	청룡	青龍	
+host.guru.name	구루	グル	
+host.white_wizard.name	화이트 위저드	ホワイトウィザード	
+host.medium.name	영매	霊媒師	
+host.ninja.name	닌자	忍者	
+host.ninja_chain.name	닌자(사슬)	忍者（鎖）	
+host.robot.name	로봇	ロボット	
+host.baseball.name	슬러거	スラッガー	
+host.snowwoman.name	설녀	雪女	
+host.vampire.name	흡혈귀	ヴァンパイア	
+host.commando_missile.name	코만도(미사일)	コマンドー（ミサイル）	
+host.death.name	사신	死神	
+askill.psg_h01.name	도약 강타	跳躍強打	
+askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.	最も近い敵に飛び込み、周囲に300%のダメージを与える。	
+askill.psg_h02.name	(미정)	（未定）	
+askill.psg_h02.desc	스킬 보류 — 정해지면 채운다.	スキル保留 — 決まり次第追加する。	
+askill.psg_h03.name	융단 폭격	絨毯爆撃	
+askill.psg_h03.desc	수류탄 5발을 부채꼴로 동시에 던진다.	グレネード5発を扇状に同時に投げる。	
+askill.psg_h04.name	연쇄 방전	連鎖放電	
+askill.psg_h04.desc	3초간 주변 적에게 전기가 계속 튄다.	3秒間、周囲の敵に電撃が走り続ける。	
+askill.psg_h05.name	방벽 전개	防壁展開	
+askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.	5秒間、最大体力分のシールドをまとう。削られると消える。	
+askill.psg_h06.name	다중 유도	多重誘導	
+askill.psg_h06.desc	반원으로 퍼진 8발이 한 대상으로 모여 든다.	半円状に放った8発が1体の敵に収束する。	
+askill.psg_h07.name	뇌전 폭주	雷電暴走	
+askill.psg_h07.desc	2초간 번개 튕김이 반드시 터진다.	2秒間、連鎖雷が必ず発生する。	
+askill.psg_h08.name	독 뿜기	毒霧噴射	
+askill.psg_h08.desc	둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.	周囲5mの敵をすべて毒状態にする。毒はダメージを与え、動きを鈍らせる。	
+askill.psg_h09.name	화염 지대	火炎地帯	
+askill.psg_h09.desc	가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.	最も近い敵の足元に火の海を広げる。上に立つ敵は燃え続ける。	
+askill.psg_h10.name	일제 표식	一斉マーキング	
+askill.psg_h10.desc	방 안 모든 적에게 3초간 표식을 새긴다.	部屋にいるすべての敵に3秒間マーキングを刻む。	
+askill.psg_h11.name	난사	乱射	
+askill.psg_h11.desc	1초간 3방향으로 쏟아붓는다.	1秒間、3方向に撃ちまくる。	
+askill.psg_h12.name	수호 결계	守護結界	
+askill.psg_h12.desc	3초간 받는 피해 −50% · 쉴드 획득 2배.	3秒間、被ダメージ−50%・シールド獲得量2倍。	
+askill.psg_h13.name	정조준	精密照準	
+askill.psg_h13.desc	5초간 치명타 확률이 90% 로 고정된다.	5秒間、クリティカル率が90%に固定される。	
+askill.psg_h14.name	도약 강습	跳躍強襲	
+askill.psg_h14.desc	가장 먼 적에게 뛰어들고 2초간 무적.	最も遠い敵に飛び込み、2秒間無敵になる。	
+askill.psg_h15.name	골렘 소환	ゴーレム召喚	
+askill.psg_h15.desc	골렘을 세운다. 해골보다 크고 오래 싸운다.	ゴーレムを呼び出す。スケルトンより大きく、長く戦う。	
+askill.psg_h16.name	광휘 확산	光輝拡散	
+askill.psg_h16.desc	부채꼴 8방향으로 광탄을 쏜다.	扇状8方向に光弾を放つ。	
+askill.psg_h17.name	사슬 결박	鎖の束縛	
+askill.psg_h17.desc	방 안 모든 적을 5초간 묶는다. 묶인 적은 더 아프게 맞는다.	部屋のすべての敵を5秒間拘束する。拘束された敵は受けるダメージが増える。	
+askill.psg_h18.name	그림자 분신	影分身	
+askill.psg_h18.desc	방 한가운데 분신을 세운다. 5초간 적이 전부 분신을 노린다.	部屋の中央に分身を置く。5秒間、敵はすべて分身を狙う。	
+askill.psg_h19.name	포탑 전개	砲台展開	
+askill.psg_h19.desc	10초간 자동으로 쏘는 포탑을 세운다.	10秒間、自動で撃つ砲台を設置する。	
+askill.psg_h20.name	전탄 반사	全弾反射	
+askill.psg_h20.desc	4초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.	4秒間、飛んでくる弾を跳ね返す。反射弾は威力が高い。	
+askill.psg_h21.name	얼음 감옥	氷の牢獄	
+askill.psg_h21.desc	2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.	2秒間、氷に閉じこもる。攻撃を受けず与えず、体力を30%回復する。	
+askill.psg_h22.name	혈연	血宴	
+askill.psg_h22.desc	둘레 5 m 의 적 머릿수만큼 최대 체력의 2% 씩 회복한다.	周囲5mの敵の数だけ、最大体力の2%ずつ回復する。	
+askill.psg_h23.name	사신의 시간	死神の刻	
+askill.psg_h23.desc	3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.	3秒間、攻撃した敵を即死させる。中ボスは半分、ボスは10分の1。	
+pskill.psv_amazon.name	쉴드 질주	シールド疾走	
+pskill.psv_amazon.desc	쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.	シールドが溜まるほど速くなる。最大時は移動速度+40%。	
+pskill.psv_counter.name	역전의 자세	逆転の構え	
+pskill.psv_counter.desc	쉴드가 남아 있는 동안 공격력이 오른다.	シールドが残っている間、攻撃力が上がる。	
+pskill.psv_slugger.name	장외 타구	場外弾	
+pskill.psv_slugger.desc	막타에 20% 로 주변 적을 날려 버린다.	とどめの一撃で20%の確率で周囲の敵を吹き飛ばす。	
+pskill.psv_death.name	망자 소집	亡者召集	
+pskill.psv_death.desc	적을 잡을 때마다 그 자리에서 해골이 일어선다.	敵を倒すたび、その場にスケルトンが起き上がる。	
+pskill.psv_guru.name	무형보	無形歩	
+pskill.psv_guru.desc	걸어 다닐 때 지형지물을 통과한다.	歩いている間、障害物をすり抜ける。	
+pskill.psv_ninja_chain.name	흘리기	受け流し	
+pskill.psv_ninja_chain.desc	10% 로 피해를 통째로 흘린다.	10%の確率でダメージを丸ごと受け流す。	
+pskill.psv_dragoon.name	불씨	火種	
+pskill.psv_dragoon.desc	명중한 적에게 10% 로 화상. 겹치지 않는다.	命中した敵に10%の確率で燃焼。重複しない。	
+pskill.psv_salamander.name	독니	毒牙	
+pskill.psv_salamander.desc	명중한 적에게 10% 로 독. 겹치지 않는다.	命中した敵に10%の確率で毒。重複しない。	
+pskill.psv_dragon_blue.name	낙뢰	落雷	
+pskill.psv_dragon_blue.desc	10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.	10%の確率で隣の敵に雷が跳ぶ。跳ぶ先がいなければ発動しない。	
+pskill.psv_commando_grenade.name	파편탄	破片弾	
+pskill.psv_commando_grenade.desc	상대 방어력을 50% 무시한다.	相手の防御力を50%無視する。	
+pskill.psv_snowwoman.name	서릿발	霜柱	
+pskill.psv_snowwoman.desc	30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.	30%の確率で敵を凍結させる。凍った敵にはダメージが増える。ボスには効かない。	
+pskill.psv_hopper_smg.name	충격 반동	衝撃反動	
+pskill.psv_hopper_smg.desc	10% 로 맞은 적을 밀어낸다.	10%の確率で当たった敵を押し返す。	
+pskill.psv_commando_mg.name	중장갑	重装甲	
+pskill.psv_commando_mg.desc	방어력 20% 증가.	防御力20%上昇。	
+pskill.psv_thug.name	삥	カツアゲ	
+pskill.psv_thug.desc	주운 골드가 10% 더 들어온다.	拾ったゴールドが10%増える。	
+pskill.psv_ninja.name	질주	疾走	
+pskill.psv_ninja.desc	적을 잡으면 1.5초간 이동속도 +30%.	敵を倒すと1.5秒間、移動速度+30%。	
+pskill.psv_leech.name	흡혈	吸血	
+pskill.psv_leech.desc	8% 로 공격력의 5% 만큼 회복한다.	8%の確率で攻撃力の5%分を回復する。	
+pskill.psv_gangster.name	처형 계약	処刑契約	
+pskill.psv_gangster.desc	표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.	マーキングされた敵を20%の確率で即死させる。エリートは最大体力の50%、ボスは30%。	
+pskill.psv_momentum.name	급소	急所	
+pskill.psv_momentum.desc	치명타 피해 +30%.	クリティカルダメージ+30%。	
+pskill.psv_commando_missile.name	고폭탄	高爆弾	
+pskill.psv_commando_missile.desc	투사체가 지형지물을 무시한다.	弾が障害物を無視する。	
+pskill.psv_medium.name	강령	降霊	
+pskill.psv_medium.desc	적을 잡으면 30% 로 해골이 일어선다.	敵を倒すと30%の確率でスケルトンが起き上がる。	
+pskill.psv_white_wizard.name	관통 광선	貫通光線	
+pskill.psv_white_wizard.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	
+pskill.psv_commando_laser.name	집속 광선	集束光線	
+pskill.psv_commando_laser.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	
+pskill.psv_spare_circuit.name	예비 회로	予備回路	
+pskill.psv_spare_circuit.desc	평타가 2% 로 액티브 쿨을 1초 당긴다.	通常攻撃が2%の確率でアクティブのクールタイムを1秒短縮する。	
+card.c001.name	감전	感電	
+card.c001.desc	명중하면 전기가 옆 적에게 튄다.	命中すると隣の敵に電撃が跳ぶ。	
+card.c002.name	성장 가속	成長加速	
+card.c002.desc	얻는 경험치가 늘어난다.	獲得経験値が増える。	
+card.c003.name	수호 방패	守護の盾	
+card.c003.desc	방패가 내 주위를 돌며 막는다.	盾が周囲を回って攻撃を防ぐ。	
+card.c004.name	처형	処刑	
+card.c004.desc	빈사인 적을 확률로 즉사시킨다.	瀕死の敵を確率で即死させる。	
+card.c005.name	번개 사슬	雷鎖	
+card.c005.desc	전기가 더 여러 번 튄다.	電撃がより多く跳ぶ。	
+card.c006.name	흡혼	吸魂	
+card.c006.desc	적을 잡으면 체력을 돌려받는다.	敵を倒すと体力が回復する。	
+card.c007.name	찰나의 불사	刹那の不死	
+card.c007.desc	맞는 순간 2초 무적이 된다.	被弾した瞬間、2秒間無敵になる。	
+card.c008.name	추가 발사	追加発射	
+card.c008.desc	쏠 때마다 탄이 더 나간다.	撃つたびに弾が増える。	
+card.c009.name	화염 각인	火炎の刻印	
+card.c009.desc	공격에 화상을 붙인다.	攻撃に燃焼を付与する。	
+card.c010.name	궁지	窮地	
+card.c010.desc	체력이 절반 아래면 세진다.	体力が半分以下になると強くなる。	
+boss.robot_snakes.name	로봇 스네이크	ロボットスネーク	
+bossmove.BurrowStrike.name	솟아오름	突き上げ	
+bossmove.RailLaser.name	레이저	レーザー	
+bossmove.DebrisFall.name	천장 파편	天井崩落	
+bossmove.HeadBite.name	머리 물기	噛みつき	
+boss.crusher.name	크러셔	クラッシャー	
+bossmove.Missile.name	미사일	ミサイル	
+bossmove.WreckingBall.name	쇠사슬 파괴구	鉄球	
+bossmove.FanShot.name	부채꼴 사격	扇状射撃	
+bossmove.RamCharge.name	돌진	突進	
+boss.python.name	파이썬	パイソン	
+bossmove.HeadLunge.name	머리 뻗기	首伸ばし	
+bossmove.VenomSpit.name	독 뱉기	毒吐き	
+bossmove.BrickFall.name	벽돌 낙하	レンガ落下	
+bossmove.BodyShove.name	몸통 밀기	体当たり	
+boss.sludge.name	슬러지	スラッジ	
+bossmove.Emerge.name	솟아오름	出現	
+bossmove.Spit.name	뱉기	吐き出し	
+bossmove.CeilingCling.name	천장 붙기	天井張り付き	
+bossmove.CeilingSpread.name	천장 확산	天井拡散	
+boss.guardian.name	가디언	ガーディアン	
+bossmove.SegmentThrust.name	마디 돌진	節突進	
+bossmove.SegmentLaunch.name	마디 사출	節射出	
+bossmove.CoilWall.name	똬리	とぐろ	
+boss.kingpin.name	킹핀	キングピン	
+bossmove.MissileSalvo.name	미사일 일제	ミサイル一斉射	
+bossmove.ExecutionLock.name	처형 조준	処刑照準	
+bossmove.StrafingRun.name	저공 활강	低空滑空	
+bossmove.BoosterDrop.name	부스터 강하	ブースター降下	
+event.EV_CH1_01.title	영혼의 사당	魂の祠	
+event.EV_CH1_01.body	부서진 방파제 끝에 낡은 사당이 서 있다.\n동전을 놓는 자리가 손때에 파여 있다.	崩れた防波堤の先に、古びた祠が建っている。\n硬貨を置く窪みが、人の手ですり減っている。	
+event.EV_CH1_01.accept	동전을 놓는다	硬貨を置く	
+event.EV_CH1_01.decline	지나간다	立ち去る	
+event.EV_CH1_02.title	버려진 보급품	捨てられた補給品	
+event.EV_CH1_02.body	뒤집힌 상자 하나. 안에 든 것을 다 가져갈 수는 없다.\n장비를 챙기든지, 팔아 넘기든지.	横倒しの箱がひとつ。中身をすべて持っていくことはできない。\n装備を持っていくか、売り払うか。	
+event.EV_CH1_02.accept	장비를 챙긴다	装備を持っていく	
+event.EV_CH1_02.decline	팔아 넘긴다  (골드 25)	売り払う  （ゴールド25）	
+event.EV_CH1_03.title	잠긴 금고	鍵のかかった金庫	
+event.EV_CH1_03.body	다이얼이 세 칸 남았다. 억지로 열면 안의 것이 상할지도 모른다.	ダイヤルはあと3つ。無理に開ければ、中身が傷むかもしれない。	
+event.EV_CH1_03.accept	억지로 연다	無理やり開ける	
+event.EV_CH1_03.decline	지나간다	立ち去る	
+event.EV_CH1_04.title	길 잃은 영혼	迷える魂	
+event.EV_CH1_04.body	저도 몸을 찾다 지친 것이 하나 떠 있다.\n제 몫을 조금 떼어 주면 몸으로 가는 길을 넓혀 주겠다고 한다.	体を探し疲れた者がひとつ、漂っている。\n分け前を少し渡せば、体への道を広げてやると言う。	
+event.EV_CH1_04.accept	영혼을 나눠 준다	魂を分け与える	
+event.EV_CH1_04.decline	지나간다	立ち去る	
+event.EV_CH1_05.title	야전 의무병	野戦衛生兵	
+event.EV_CH1_05.body	부두 창고에 아직 숨이 붙은 의무병이 있다.\n말은 안 통하지만 손짓은 통한다.	埠頭の倉庫に、まだ息のある衛生兵がいる。\n言葉は通じないが、身振りは通じる。	
+event.EV_CH1_05.accept	값을 치른다	代価を払う	
+event.EV_CH1_05.decline	내버려 둔다	放っておく	
+event.EV_CH1_06.title	좁은 길목	狭い通り道	
+event.EV_CH1_06.body	짐짝 사이로 길이 하나뿐이다.\n반대편에서 기척이 난다. 돌아갈 수도 있다.	荷物の間に道はひとつだけ。\n向こう側で気配がする。引き返すこともできる。	
+event.EV_CH1_06.accept	밀고 들어간다	押し入る	
+event.EV_CH1_06.decline	돌아간다	引き返す	
+event.EV_CH2_01.title	저주받은 은닉처	呪われた隠し場所	
+event.EV_CH2_01.body	네온이 닿지 않는 구석. 손을 넣으면 살이 타는 냄새가 난다.\n안쪽에서 무언가가 빛난다.	ネオンの届かない片隅。手を入れると、肉の焼ける匂いがする。\n奥で何かが光っている。	
+event.EV_CH2_01.accept	손을 넣는다	手を入れる	
+event.EV_CH2_01.decline	물러선다	身を引く	
+event.EV_CH2_02.title	이름난 몸	名の知れた体	
+event.EV_CH2_02.body	골목 끝에 하나가 서 있다. 이 구역에서 제일 좋은 몸이다.\n비켜 줄 생각은 없어 보인다.	路地の奥にひとり立っている。この区域でいちばん良い体だ。\n道を譲る気はなさそうだ。	
+event.EV_CH2_02.accept	덤빈다	挑む	
+event.EV_CH2_02.decline	돌아간다	引き返す	
+event.EV_CH2_03.title	봉인된 궤짝	封印された木箱	
+event.EV_CH2_03.body	값은 비싸지만 안에 든 것은 확실하다.\n이런 물건은 두 번 나오지 않는다.	値は張るが、中身は確かだ。\nこういう品は二度と出ない。	
+event.EV_CH2_03.accept	값을 치른다	代価を払う	
+event.EV_CH2_03.decline	지나간다	立ち去る	
+event.EV_CH2_04.title	교차사격	十字砲火	
+event.EV_CH2_04.body	양쪽 옥상에 총구가 걸려 있다. 영혼을 조금 태워 몸을 낮추면\n첫 사격은 넘길 수 있다.	両側の屋上に銃口が並んでいる。魂を少し燃やして身を低くすれば、\n最初の射撃はやり過ごせる。	
+event.EV_CH2_04.accept	영혼을 태워 뚫는다	魂を燃やして突破する	
+event.EV_CH2_04.decline	돌아간다	引き返す	
+event.EV_CH2_05.title	암시장 연줄	闇市のツテ	
+event.EV_CH2_05.body	네온 아래에서 누가 손짓한다. 몸을 좀 내주면\n이 구역 상인들에게 말을 넣어 주겠다고 한다.	ネオンの下で誰かが手招きしている。体を少し差し出せば、\nこの区域の商人に口を利いてやると言う。	
+event.EV_CH2_05.accept	살을 떼어 준다	肉を差し出す	
+event.EV_CH2_05.decline	물러선다	身を引く	
+event.EV_CH2_06.title	부서진 제단	壊れた祭壇	
+event.EV_CH2_06.body	금 간 제단이 아직 숨을 쉰다.\n새 것을 주지는 못하지만, 지닌 것 하나는 벼려 준다고 한다.	ひび割れた祭壇が、まだ息づいている。\n新しいものは与えられないが、持っているものをひとつ鍛えてやると言う。	
+event.EV_CH2_06.accept	제단에 올린다	祭壇に捧げる	
+event.EV_CH2_06.decline	지나간다	立ち去る	
+event.EV_CH3_01.title	영혼을 건 내기	魂を賭けた勝負	
+event.EV_CH3_01.body	배관 사이에 자기와 똑같이 생긴 것이 앉아 있다.\n제 몫을 떼어 주면 길을 보여 주겠다고 한다.	配管の間に、自分とそっくりな者が座っている。\n分け前を渡せば、道を示してやると言う。	
+event.EV_CH3_01.accept	영혼을 떼어 준다	魂を分け与える	
+event.EV_CH3_01.decline	지나간다	立ち去る	
+event.EV_CH3_02.title	치명적인 도전	命懸けの挑戦	
+event.EV_CH3_02.body	요새의 문지기 둘이 길을 막고 서 있다.\n이겨서 얻을 것이 크고, 져서 잃을 것도 크다.	要塞の門番がふたり、道を塞いでいる。\n勝てば得るものは大きく、負ければ失うものも大きい。	
+event.EV_CH3_02.accept	받아들인다	受けて立つ	
+event.EV_CH3_02.decline	돌아간다	引き返す	
+event.EV_CH3_03.title	보스 대비	ボス対策	
+event.EV_CH3_03.body	무기고에 파쇄탄이 하나 남아 있다.\n값은 비싸지만, 그 방어막을 한 번은 확실히 벗긴다.	武器庫に破砕弾がひとつ残っている。\n値は張るが、あのバリアを一度は確実に剥がせる。	
+event.EV_CH3_03.accept	값을 치른다	代価を払う	
+event.EV_CH3_03.decline	지나간다	立ち去る	
+event.EV_CH3_04.title	타락한 호스트	堕ちたホスト	
+event.EV_CH3_04.body	배관 안쪽에서 낫 끄는 소리가 난다.\n살을 조금 내주면 이쪽으로 나온다. 나오면, 빼앗을 수 있다.	配管の奥から、鎌を引きずる音がする。\n肉を少し差し出せば、こちらへ出てくる。出てくれば、奪える。	
+event.EV_CH3_04.accept	살을 내준다	肉を差し出す	
+event.EV_CH3_04.decline	지나간다	立ち去る	
+event.EV_CH3_05.title	심연의 거래	深淵の取引	
+event.EV_CH3_05.body	바닥이 보이지 않는 통로. 아래에서 목소리가 올라온다.\n값은 영혼으로 받는다고 한다.	底の見えない通路。下から声が昇ってくる。\n代価は魂で受け取ると言う。	
+event.EV_CH3_05.accept	영혼을 내준다	魂を差し出す	
+event.EV_CH3_05.decline	대신 쉬어 간다  (고스트 30% 회복)	代わりに休んでいく  （ゴースト30%回復）	
+event.EV_CH3_06.title	마지막 보급 투하	最後の補給投下	
+event.EV_CH3_06.body	요새 위로 낙하산 하나가 내려온다.\n먼저 집는 쪽이 임자지만, 안에 무엇이 들었는지는 모른다.	要塞の上に、パラシュートがひとつ降りてくる。\n先に掴んだ者のものだが、中身は分からない。	
+event.EV_CH3_06.accept	전부 털어 넣는다	全部つぎ込む	
+event.EV_CH3_06.decline	지나간다	立ち去る	
+event.EV_DEAL_01.title	피의 계약	血の契約	
+event.EV_DEAL_01.body	제단이 손목을 잡는다.\n네 그릇을 영영 줄이는 대신, 이 판에서 가장 큰 것을 준다.	祭壇が手首を掴む。\nお前の器を永遠に削る代わりに、この旅でいちばん大きなものを与えよう。	
+event.EV_DEAL_01.accept	피를 내준다	血を差し出す	
+event.EV_DEAL_01.decline	등을 돌린다	背を向ける	
+event.EV_DEAL_02.title	광란	狂乱	
+event.EV_DEAL_02.body	속삭임이 귀를 채운다.\n몸이 작아지는 만큼 손이 빨라진다고 한다.	囁きが耳を満たす。\n体が小さくなる分、手が速くなると言う。	
+event.EV_DEAL_02.accept	귀를 연다	耳を傾ける	
+event.EV_DEAL_02.decline	등을 돌린다	背を向ける	
+event.EV_DEAL_04.title	영혼 저당	魂の抵当	
+event.EV_DEAL_04.body	유령의 몫을 담보로 잡는다.\n영혼이 얇아지지만 손에는 둘이 남는다.	幽霊の取り分を担保に取る。\n魂は薄くなるが、手元にはふたつ残る。	
+event.EV_DEAL_04.accept	영혼을 맡긴다	魂を預ける	
+event.EV_DEAL_04.decline	등을 돌린다	背を向ける	
+event.EV_DEAL_06.title	굶주림	飢え	
+event.EV_DEAL_06.body	굶주린 것이 제 이빨을 내민다.\n그릇을 조금 내주면 남의 피로 채우는 법을 알려 준다.	飢えたものが自らの牙を差し出す。\n器を少し渡せば、他者の血で満たす術を教えてやると言う。	
+event.EV_DEAL_06.accept	이빨을 받는다	牙を受け取る	
+event.EV_DEAL_06.decline	등을 돌린다	背を向ける	
+stage.1.1.name	쓰레기 집적장	ゴミ集積場	
+stage.2.1.name	미사일 저장기지	ミサイル貯蔵基地	
+stage.3.1.name	밤의 도시 거리	夜の街	
+stage.4.1.name	밤의 공중기지 옥상	夜の空中基地 屋上	
+stage.5.1.name	유령 연구소	幽霊研究所	
+stage.6.1.name	야간 정유소	夜の製油所	
+host.ghost.name	유령	ゴースト	
+tip.loading.0	고스트는 떠 있는 동안 체력이 깎인다. 몸은 빨리 고를수록 좋다.	ゴーストは漂っている間、体力が減り続けます。体は早く選ぶほど有利です。	
+tip.loading.1	멈춰야 쏜다. 움직이는 동안에는 자동 공격이 멈춘다.	止まっているときだけ撃ちます。移動中は自動攻撃が止まります。	
+tip.loading.2	몸을 스스로 놓아주면 그 몸은 이 방에서 다시 탈 수 없다.	自分から手放した体には、その部屋で再び憑依できません。	
+tip.loading.3	보스는 빼앗을 수 없다. 보스방은 타고 들어간 몸으로 끝내야 한다.	ボスには憑依できません。ボス部屋は乗り込んだ体で戦い抜きましょう。	
+tip.loading.4	조준 링이 회색 자물쇠면 아직 조건이 안 찼다. 더 두들기면 열린다.	照準リングが灰色の鍵なら、まだ条件を満たしていません。さらに攻撃すると解放されます。	
+tip.loading.5	몸을 잃으면 Ghost HP 20%가 날아간다. 놓아주는 편이 싸다.	体を失うとGhost HPが20%減ります。自分から手放すほうが安く済みます。	
+tip.loading.6	회복 방에서는 Ghost HP 가 돌아온다. 다음 방을 보고 들어가라.	回復部屋ではGhost HPが戻ります。次の部屋を見てから進みましょう。	
+tip.loading.7	몸이 바뀌어도 버프는 남는다. 스탯이 아니라 나에게 붙기 때문이다.	体が変わってもバフは残ります。ステータスではなく、あなた自身に付くからです。	
+tip.loading.8	머리 위 금색 조준 링이 지금 빙의 버튼이 노리는 몸이다.	頭上の金色の照準リングが、いま憑依ボタンで狙っている体です。	
+tip.loading.9	빙의 표식은 가까운 순으로 다섯까지만 뜬다. 나머지는 사거리 밖이다.	憑依マーカーは近い順に5つまで表示されます。それ以外は射程外です。	
+tip.loading.10	붉은 X 가 붙은 몸은 내가 버린 몸이다. 이 방에서는 다시 못 탄다.	赤い×が付いた体は、あなたが捨てた体です。この部屋では再び憑依できません。	
+tip.loading.11	액티브 스킬은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 액티브 스킬를 쓰는지다.	アクティブスキルは体ごとに異なります。どの体に憑依したかで、使えるアクティブスキルが決まります。	
+tip.loading.12	주위에 뺏을 몸이 하나도 없으면 잠시 뒤 몸 하나가 던져진다. 대신 값이 비싸다.	周囲に奪える体がひとつもないと、しばらくして体がひとつ投げ込まれます。ただしコストは高めです。	
+tip.loading.13	화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.	画面端の矢印は、画面外に奪える体があることを示しています。	
+opening.line.0	어느 날, 여자친구와 함께 걷고 있었다.	ある日、恋人と一緒に歩いていた。	
+opening.line.1	그런데 갑자기, 습격당했다!	すると突然、襲われた！	
+opening.line.2	으아아아아아악……	うわあああああっ……	
+opening.line.6	탕!	バンッ！	
+opening.line.9	그리고, 나는 죽었다.	そして、俺は死んだ。	
+opening.line.10	내가 자네를 불렀네.	わしが君を呼んだのじゃ。	
+opening.line.11	그자들은 악의 비밀결사였어.	奴らは悪の秘密結社じゃった。	
+opening.line.12	내 유령 에너지 연구를 캐내려고\n딸을 납치해 몸값을 요구했다네.	わしの幽霊エネルギー研究を奪おうと\n娘をさらい、身代金を要求してきたのじゃ。	
+opening.line.13	자네의 에너지는 한정돼 있네.	君のエネルギーには限りがある。	
+opening.line.14	자네의 에너지는 한정돼 있네.	君のエネルギーには限りがある。	
+opening.line.15	부탁하네. 내 딸을 구해 주게!	頼む。わしの娘を救ってくれ！	
+ui.shop.host.name	몸 — {0}	体 — {0}	
+ui.shop.host.desc	그 자리에서 이 몸을 빼앗는다	その場でこの体を奪う	
+ui.shop.heal.name	치료	治療	
+ui.shop.heal.desc	호스트 {0}% · 고스트 {1}% 회복	ホスト{0}%・ゴースト{1}%回復	
+ui.shop.limit	남은 구매 {0}회 · 카드 {1}장	残り購入{0}回・カード{1}枚	
+ui.shop.result.host	{0} 빙의	{0}に憑依	
+ui.shop.result.consumable	{0} 구입 — 다음 방에서 열린다	{0}を購入 — 次の部屋で発動	
+ui.shop.result.card	{0} 구입	{0}を購入	
+ui.battle.barrier	방벽 {0}	防壁 {0}	
+ui.rarity.legendary	전설	レジェンド	
+ui.rarity.epic	영웅	エピック	
+ui.rarity.rare	희귀	レア	
+ui.rarity.common	일반	コモン	
+ui.event.reward.card_grant	{0} 카드 {1}장	{0}カード{1}枚	
+ui.event.reward.card_offer	{0} 카드 3택 1	{0}カード 3枚から1枚選択	
+ui.event.reward.upgrade	가진 카드 한 장 레벨 +1	所持カード1枚のレベル+1	
+ui.event.reward.host_heal	호스트 체력 {0}% 회복	ホスト体力{0}%回復	
+ui.event.reward.ghost_heal	고스트 체력 {0}% 회복	ゴースト体力{0}%回復	
+ui.event.gold	골드 {0}	ゴールド{0}	
+ui.event.reward.reach	빙의 사거리 +{0}% (판 끝까지)	憑依射程+{0}%（ラン終了まで）	
+ui.event.reward.discount	상점 값 -{0}% (판 끝까지)	ショップ価格-{0}%（ラン終了まで）	
+ui.event.reward.shield_break	다음 보스 방어막 한 번 무효	次のボスのバリアを1回無効	
+ui.event.reward.spawn_host	빼앗을 몸 하나가 나타난다	奪える体がひとつ現れる	
+ui.event.cost.ghost_hp	고스트 체력 {0}%	ゴースト体力{0}%	
+ui.event.cost.host_hp	호스트 체력 {0}%	ホスト体力{0}%	
+ui.event.cost.max_hp	최대 체력 -{0}% (영구)	最大体力-{0}%（永続）	
+ui.event.blocked.no_body	몸이 없다	体がない	
+ui.event.blocked.cant_pay	치를 수 없다	払えない	
+ui.event.result.passed	지나쳤다.	立ち去った。	
+ui.event.result.elite	정예가 앞을 막는다.	エリートが立ちはだかる。	
+ui.event.result.ambush	매복이다.	待ち伏せだ。	
+ui.event.result.missed	빗나갔다.	外れた。	
+ui.event.result.gold	골드 +{0}	ゴールド+{0}	
+ui.event.result.no_body	몸이 없어 받을 수 없었다.	体がなく、受け取れなかった。	
+ui.event.result.nothing_left	가져갈 것이 남아 있지 않았다.	持っていけるものは残っていなかった。	
+ui.event.result.cards	카드 {0}장 획득	カード{0}枚獲得	
+ui.event.result.got	{0} 획득	{0}を獲得	
+ui.event.result.pick_card	카드를 고른다	カードを選ぶ	
+ui.event.result.nothing_to_pick	고를 것이 남아 있지 않았다.	選べるものが残っていなかった。	
+ui.event.result.nothing_to_upgrade	벼릴 것이 없었다.	鍛えるものがなかった。	
+ui.event.result.reach	빙의 사거리 +{0}%	憑依射程+{0}%	
+ui.event.result.discount	상점 카드 값 {0}% 할인	ショップのカード価格{0}%割引	
+ui.event.result.shield_break	다음 보스의 방어막을 한 번 깬다	次のボスのバリアを一度破る	
+ui.event.result.nobody	아무도 오지 않았다.	誰も来なかった。	
+ui.event.result.appeared	{0} 이(가) 나타났다	{0}が現れた	
+ui.hostselect.title.pick	HOST 를 선택하세요!	HOSTを選択してください！	
+ui.hostselect.title.codex	HOST 도감	HOST図鑑	
+ui.hostselect.header_desc	사망 시 유령으로 돌아가, 다른 HOST에 빙의할 수 있습니다.	死亡するとゴーストに戻り、別のHOSTに憑依できます。	
+ui.hostselect.possess_start	빙의 시작	憑依開始	
+ui.hostselect.back	돌아가기	戻る	
+ui.hostselect.stats	능력치	ステータス	
+ui.hostselect.upgrade.title	HOST 강화	HOST強化	
+ui.hostselect.upgrade.sub	액티브 · 패시브 스킬 강화	アクティブ・パッシブスキル強化	
+ui.hostselect.mastery.maxed	{0} 은(는) 이미 숙련도 최대다.	{0}の熟練度はすでに最大です。	
+ui.common.ok	확인	OK	
+ui.hostselect.mastery.short	파편이 모자란다.\n{0} — {1} / {2}  ({3}개 더)	欠片が足りません。\n{0} — {1} / {2}（あと{3}個）	
+ui.hostselect.mastery.unseal	봉인 해제	封印解除	
+ui.hostselect.mastery.step	숙련도 Lv {0} → {1}	熟練度 Lv {0} → {1}	
+ui.hostselect.mastery.confirm	{0}  {1}\n파편 {2}개를 쓴다.	{0}  {1}\n欠片を{2}個使用します。	
+ui.hostselect.mastery	숙련도	熟練度	
+ui.hostselect.shard	영혼 파편	魂の欠片	
+ui.hostselect.start_ghost	유령으로 시작	ゴーストで開始	
+ui.hostselect.ghost.badge	유령	ゴースト	
+ui.hostselect.ghost.trait	몸이 없다	体がない	
+ui.hostselect.ghost.rule	몸이 없으면 HP가 계속 줄어든다\n몸 없이 주는 피해는 60%	体がないとHPが減り続ける\n体なしで与えるダメージは60%	
+ui.hostselect.ghost.skill	몸 빼앗기	体を奪う	
+ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적을 빼앗아 그 몸으로 싸운다	{0:0.#}マス以内の敵を奪い、その体で戦う	
+ui.hostselect.ghost.skill_desc_near	가까운 적을 빼앗아 그 몸으로 싸운다	近くの敵を奪い、その体で戦う	
+ui.hostselect.ghost.level	고스트 레벨	ゴーストレベル	
+ui.hostselect.ghost.level_by_gold	골드로 올린다	ゴールドで上げる	
+ui.job.melee	근거리	近距離	
+ui.job.mid	중거리	中距離	
+ui.job.ranged	원거리	遠距離	
+ui.job.melee.trait	치고 버틴다	殴って耐える	
+ui.job.mid.trait	붙어서 쏟는다	張り付いて撃ち込む	
+ui.job.ranged.trait	거리를 두고 쏜다	距離を取って撃つ	
+ui.job.melee.rule	때릴 때마다 쉴드 (HP 3% · 최대 30%)\n타격 시 12% 확률로 0.8초 스턴	攻撃するたびにシールド（HP3%・最大30%）\n命中時12%の確率で0.8秒スタン	
+ui.job.mid.rule	직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다	職業ルールなし — 速い連射と短い射程がそのまま特性	
+ui.job.ranged.rule	직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다	職業ルールなし — 差はそれぞれのアクティブ・パッシブが担う	
+ui.hostselect.tip	HOST마다 이동속도, 공격 방식, 스킬이 다릅니다.\n다양한 HOST를 경험해 보세요!	HOSTごとに移動速度、攻撃方法、スキルが異なります。\nいろいろなHOSTを試してみましょう！	
+ui.hostselect.owned	보유 HOST  {0}/{1}	所持HOST  {0}/{1}	
+ui.hostselect.gold_short	골드가 모자란다.\n{0}({1}급) — {2:N0} / {3:N0}\n\n유령으로 시작하면 골드가 들지 않는다.	ゴールドが足りません。\n{0}（{1}ランク） — {2:N0} / {3:N0}\n\nゴーストで開始すればゴールドはかかりません。	
+ui.attack.melee_drain	근접 · 흡혈	近接・吸血	
+ui.attack.melee	근접	近接	
+ui.attack.single_slow	단발 · 둔화	単発・鈍足	
+ui.attack.single	단발	単発	
+ui.attack.rapid	연사	連射	
+ui.attack.spread	확산 {0}발	拡散{0}発	
+ui.attack.pierce	관통	貫通	
+ui.attack.snipe	저격	狙撃	
+ui.attack.pulse	주위 광역	周囲範囲	
+ui.unlock.stage	CH{0} · {1}스테이지	CH{0}・ステージ{1}	
+ui.unlock.boss	CH{0} 보스 격파	CH{0} ボス撃破	
+ui.shrine.full_heal.title	몸을 아문다	体を癒す	
+ui.shrine.full_heal.desc	호스트 체력을 가득 채운다	ホストの体力を全回復する	
+ui.shrine.full_heal.result	호스트 체력을 가득 채웠다	ホストの体力を全回復した	
+ui.shrine.soul_heal.title	영혼을 채운다	魂を満たす	
+ui.shrine.soul_heal.desc	고스트 체력을 가득 채운다	ゴーストの体力を全回復する	
+ui.shrine.soul_heal.result	고스트 체력을 가득 채웠다	ゴーストの体力を全回復した	
+ui.shrine.max_hp.title	그릇을 넓힌다	器を広げる	
+ui.shrine.max_hp.desc	뺏는 몸이 더 튼튼해진다	奪う体がより頑丈になる	
+ui.shrine.max_hp.result	뺏는 몸이 더 튼튼해졌다	奪う体がより頑丈になった	
+ui.shrine.atk.title	힘을 받는다	力を授かる	
+ui.shrine.atk.desc	공격력이 오른다	攻撃力が上がる	
+ui.shrine.atk.result	공격력이 올랐다	攻撃力が上がった	
+ui.shrine.speed.title	손이 빨라진다	手が速くなる	
+ui.shrine.speed.desc	공격이 빨라진다	攻撃が速くなる	
+ui.shrine.speed.result	공격이 빨라졌다	攻撃が速くなった	
+ui.shrine.range.title	멀리 닿는다	遠くまで届く	
+ui.shrine.range.desc	사거리가 늘어난다	射程が伸びる	
+ui.shrine.range.result	사거리가 늘어났다	射程が伸びた	
+ui.opening.skip	건너뛰기	スキップ	
+ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력	肉体とは別に保たれる魂の体力	
+ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}	緊急憑依 — GHOST -{0}	
+ui.ingame.exit_opened	출구가 열렸다 — 통과해서 다음 스테이지로	出口が開いた — 通り抜けて次のステージへ	
+ui.ingame.event.reward	보상 · {0}	報酬・{0}	
+ui.ingame.event.decline	지나간다	立ち去る	
+ui.shrine.title	회복의 제단	回復の祭壇	
+ui.shrine.hint	하나만 가져갈 수 있다	ひとつだけ持っていける	
+ui.shop.gold	보유 골드 {0:N0}	所持ゴールド {0:N0}	
+ui.buff.sub	카드를 선택하세요	カードを選択してください	
+ui.ingame.result.clear	스테이지 클리어!\n골드 +{0}   고스트 EXP +{1}	ステージクリア！\nゴールド+{0}   ゴーストEXP+{1}	
+ui.ingame.result.dead	유령이 소멸했습니다.\n로비로 돌아갑니다.	ゴーストが消滅しました。\nロビーに戻ります。	
+ui.ingame.result.to_lobby	로비로	ロビーへ	
+ui.ingame.pause.message	스테이지를 포기하고 로비로 돌아갈까요?	ステージを諦めてロビーに戻りますか？	
+ui.ingame.pause.give_up	포기	諦める	
+ui.ingame.pause.continue	계속	続ける	
+ui.dodge.back	뒤로	後ろへ	
+ui.dodge.side	옆으로	横へ	
+ui.dodge.gap	틈으로	隙間へ	
+ui.dodge.perp	직각으로	直角へ	
+ui.dodge.zone	안전지대로	安全地帯へ	
+ui.dodge.close	붙어라	張り付け	
+ui.dodge.swap	몸을 갈아타라	体を乗り換えろ	
+ui.dodge.hold	쏘지 마라	撃つな	
+ui.battle.head_exposed	머리 노출	頭部露出	
+ui.consumable.bomb.name	폭탄	爆弾	
+ui.consumable.bomb.desc	다음 방이 열리면 광역 한 방	次の部屋が開いたら範囲攻撃を一発	
+ui.consumable.ally.name	동료	仲間	
+ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	次の部屋で体がひとつ一緒に戦う	
+ui.consumable.freeze.name	정지	停止	
+ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部屋で敵が{0:0}秒止まる	
+ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	
+ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	
+ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	
+ui.lobby.mode.scenario.desc	영혼이 깃든 새로운 이야기	魂が宿る新たな物語	
+ui.lobby.mode.defense.name	디펜스 모드	ディフェンスモード	
+ui.lobby.mode.defense.desc	몰려오는 적을 막아라	押し寄せる敵を食い止めろ	
+ui.lobby.game_mode	게임 모드	ゲームモード	
+ui.lobby.continue	이어서 하기	続きから	
+ui.lobby.play	플레이하기	プレイ	
+ui.common.quit.message	게임을 종료하시겠습니까?	ゲームを終了しますか？	
+ui.common.quit	종료	終了	
+ui.common.cancel	취소	キャンセル	
+ui.shop.leave	나간다	店を出る	
+ui.shop.title	상점	ショップ	
+ui.lobby.host_button.sub	육성 · 액티브 스킬 · 도감	育成・アクティブスキル・図鑑	
+ui.lobby.shop_button.sub	상점 · 패키지 · 재화	ショップ・パック・通貨	
