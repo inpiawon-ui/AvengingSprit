@@ -16,6 +16,13 @@ namespace Game.Module.InGame
     {
         private const float LifeSeconds = 0.55f;
         private const float RiseDistance = 34f;   // 총 상승 거리
+        /// <summary>
+        /// 맞은 자리보다 이만큼 **위에서** 뜬다. 맞은 자리에서 뜨면 타격 이펙트(불꽃·섬광)에
+        /// 숫자가 가려져 안 읽혔다(기획 2026-09-15).
+        /// </summary>
+        private const float StartLift = 20f;
+        /// <summary>기본 피해 숫자 크기. 26 에서 2 올렸다(기획 2026-09-15).</summary>
+        private const float NormalFontSize = 28f;
         private const float FadeFrom = 0.55f;     // 수명의 이 지점부터 흐려진다
         private const float PopScale = 1.35f;     // 뜨는 순간 살짝 커졌다 제자리로
 
@@ -23,7 +30,7 @@ namespace Game.Module.InGame
         //
         // 확률로 터지는 것은 **터진 게 보여야 한다.** 숫자만 커지면 그냥
         // 센 적을 만난 것처럼 읽힌다 — 색·크기·팝 셋을 함께 키운다.
-        private const float CritFontSize = 38f;
+        private const float CritFontSize = 40f;
         private const float CritPopScale = 1.9f;
 
         // ── 곁다리 수치 ─────────────────────────────────────────
@@ -31,7 +38,7 @@ namespace Game.Module.InGame
         // 피흡 같은 **덤 정보**는 작게 뜬다. 피해 숫자와 같은 26pt 로 띄웠더니
         // 「물어뜯기」(쿨 2초)가 나올 때마다 `+825` 가 내가 맞은 `9` 를 통째로
         // 덮었다 — 내가 몇 대 맞았는지가 화면에서 사라졌다(기획 2026-09-07).
-        private const float MinorFontSize = 16f;
+        private const float MinorFontSize = 18f;
         private const float MinorPopScale = 1.1f;
 
         private bool _crit;
@@ -95,7 +102,7 @@ namespace Game.Module.InGame
             tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.raycastTarget = false;
             tmp.fontStyle = FontStyles.Bold;
-            tmp.fontSize = 26f;
+            tmp.fontSize = NormalFontSize;
             return tmp;
         }
 
@@ -127,7 +134,7 @@ namespace Game.Module.InGame
         {
             _crit = crit;
             _minor = false;
-            _tmp.fontSize = crit ? CritFontSize : 26f;
+            _tmp.fontSize = crit ? CritFontSize : NormalFontSize;
             if (_shadow != null) _shadow.fontSize = _tmp.fontSize;
             _origin = at;
             _drift = Random.Range(-10f, 10f);
@@ -162,7 +169,7 @@ namespace Game.Module.InGame
 
             // 픽셀아트라 소수 좌표로 두면 글자가 흐릿하게 떨린다. 정수로 스냅한다.
             _rect.anchoredPosition = new Vector2(
-                Mathf.Round(_origin.x + _drift), Mathf.Round(_origin.y + rise));
+                Mathf.Round(_origin.x + _drift), Mathf.Round(_origin.y + StartLift + rise));
 
             float peak = _crit ? CritPopScale : _minor ? MinorPopScale : PopScale;
             float pop = t < 0.2f ? Mathf.Lerp(peak, 1f, t / 0.2f) : 1f;
