@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Module.Common;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -146,6 +147,12 @@ namespace Game.Module.InGame
         public int CostValue => _costValue;
         public string AcceptKr => _acceptKr;
         public string DeclineKr => _declineKr;
+
+        // 화면에 보이는 문구 — 지금 언어로. 번역이 없으면 위의 원문(*Kr)이다.
+        public string DisplayTitle   => Localize.FromTable($"event.{_eventId}.title", _titleKr);
+        public string DisplayBody    => Localize.FromTable($"event.{_eventId}.body", _bodyKr);
+        public string DisplayAccept  => Localize.FromTable($"event.{_eventId}.accept", _acceptKr);
+        public string DisplayDecline => Localize.FromTable($"event.{_eventId}.decline", _declineKr);
         public EventReward RewardType => _rewardType;
         public int RewardValue => _rewardValue;
         public Game.Character.CardRarity RewardRarity => _rewardRarity;

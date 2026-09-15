@@ -76,7 +76,7 @@ namespace Game.Module.Lobby
                 _portrait.material = grayMaterial;   // 해금이면 null — 기본 UI 머티리얼
             }
             if (_nameText != null)
-                _nameText.text = unlocked ? entry.NameKr : "???";
+                _nameText.text = unlocked ? entry.DisplayName : "???";
 
             if (_lockIcon != null) _lockIcon.gameObject.SetActive(!unlocked);
             if (_selectMarker != null) _selectMarker.gameObject.SetActive(false);

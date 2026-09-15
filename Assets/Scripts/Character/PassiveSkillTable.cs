@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Module.Common;
 using UnityEngine;
 
 namespace Game.Character
@@ -56,6 +57,11 @@ namespace Game.Character
         public string NameEn      => _nameEn;
         public string NameKr      => _nameKr;
         public string Description => _description;
+
+        /// <summary>화면에 보이는 이름. 지금 언어로 — 번역이 없으면 원문(<see cref="NameKr"/>).</summary>
+        public string DisplayName => Localize.FromTable($"pskill.{_passiveSkillKey}.name", _nameKr);
+        /// <summary>화면에 보이는 설명. 지금 언어로 — 번역이 없으면 원문(<see cref="Description"/>).</summary>
+        public string DisplayDescription => Localize.FromTable($"pskill.{_passiveSkillKey}.desc", _description);
         public PassiveKind Kind   => _kind;
 
         /// <summary>확률형만 0 보다 크다. 카드의 `PassiveSkillChanceText` 가 이 값을 그린다.</summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Module.Common;
 using UnityEngine;
 
 namespace Game.Character
@@ -268,6 +269,9 @@ namespace Game.Character
         public bool HasTelegraph => _telegraphSeconds > 0f;
 
         public string NameKr => _nameKr;
+
+        /// <summary>화면에 보이는 이름. 지금 언어로 — 번역이 없으면 원문(<see cref="NameKr"/>).</summary>
+        public string DisplayName => Localize.FromTable($"bossmove.{LabelKey}.name", _nameKr);
         public string NameEn => _nameEn;
 
         public BossShape Shape => _shape;
@@ -341,6 +345,9 @@ namespace Game.Character
         public int RoomNo => _roomNo;
         public string NameEn => _nameEn;
         public string NameKr => _nameKr;
+
+        /// <summary>화면에 보이는 이름. 지금 언어로 — 번역이 없으면 원문(<see cref="NameKr"/>).</summary>
+        public string DisplayName => Localize.FromTable($"boss.{_bossKey}.name", _nameKr);
         public string SpriteName => string.IsNullOrEmpty(_spriteName) ? "unit_boss" : _spriteName;
         public float HpMul => _hpMul <= 0f ? 1f : _hpMul;
         public float AtkMul => _atkMul <= 0f ? 1f : _atkMul;

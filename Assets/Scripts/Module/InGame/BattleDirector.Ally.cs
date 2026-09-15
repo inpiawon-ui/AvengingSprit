@@ -70,7 +70,7 @@ namespace Game.Module.InGame
 
             var u = NewUnit($"Ally_{pick.HostKey}");
             int hp = Mathf.Max(1, (_host != null ? _host.HpMax : 100) * AllyHpPercent / 100);
-            u.Setup(UnitSide.Player, pick.HostKey, pick.NameKr, TrashSprite(pick),
+            u.Setup(UnitSide.Player, pick.HostKey, pick.DisplayName, TrashSprite(pick),
                     hp, Mathf.Max(1, Mathf.RoundToInt(EnemyAtkOf(pick) * AllyAtkMul)),
                     EnemySpeedOf(pick), HostRangeOf(pick), EnemyIntervalOf(pick),
                     UnitBox(84f, 78f), isBoss: false, profile: pick);

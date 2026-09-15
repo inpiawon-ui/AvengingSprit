@@ -79,7 +79,7 @@ namespace Game.Module.InGame
             }
 
             var u = NewUnit($"MidBoss_{leader.HostKey}");
-            u.Setup(UnitSide.Enemy, leader.HostKey, leader.NameKr, TrashSprite(leader),
+            u.Setup(UnitSide.Enemy, leader.HostKey, leader.DisplayName, TrashSprite(leader),
                     Mathf.RoundToInt(EnemyHpOf(leader) * MidBossHpMul),
                     Mathf.RoundToInt(EnemyAtkOf(leader) * MidBossAtkMul),
                     EnemySpeedOf(leader),

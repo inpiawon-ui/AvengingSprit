@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Module.Common;
+using UnityEngine;
 
 namespace Game.Character
 {
@@ -602,7 +603,7 @@ namespace Game.Character
             {
                 var e = _stageNames[i];
                 if (e.Chapter != chapter || room < e.FromRoom) continue;
-                found = e.NameKr;   // 조건을 만족하는 **마지막** 것이 지금 구간이다
+                found = Localize.FromTable($"stage.{e.Chapter}.{e.FromRoom}.name", e.NameKr);   // 조건을 만족하는 **마지막** 것이 지금 구간이다
             }
             return found;
         }

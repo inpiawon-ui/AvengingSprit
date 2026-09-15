@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Module.Common;
 using UnityEngine;
 
 namespace Game.Character
@@ -233,6 +234,11 @@ namespace Game.Character
         public string BuffKey => _buffKey;
         public string NameKr => _nameKr;
         public string Description => _description;
+
+        /// <summary>화면에 보이는 이름. 지금 언어로 — 번역이 없으면 원문(<see cref="NameKr"/>).</summary>
+        public string DisplayName => Localize.FromTable($"card.{_buffKey}.name", _nameKr);
+        /// <summary>화면에 보이는 설명. 지금 언어로 — 번역이 없으면 원문(<see cref="Description"/>).</summary>
+        public string DisplayDescription => Localize.FromTable($"card.{_buffKey}.desc", _description);
         public BuffKind Kind => _kind;
         public int Value => _value;
         public bool Stackable => _stackable;
