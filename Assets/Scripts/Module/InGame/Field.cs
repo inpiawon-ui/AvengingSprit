@@ -34,8 +34,12 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed class Field : MonoBehaviour
     {
-        /// <summary>효과가 떨어지는 간격. 매 프레임 주면 초당 60번이 된다.</summary>
-        private const float TickInterval = 0.5f;
+        /// <summary>
+        /// 효과가 떨어지는 간격. 매 프레임 주면 초당 60번이 된다.
+        /// 0.5초는 숫자가 너무 틱틱 떴다(기획 2026-09-15) — **간격 3배 · 한 번 피해 3배**로 바꿨다. 초당 피해는 같다.
+        /// </summary>
+        private const float TickInterval = 1.5f;
+        private const int DamageTickMul = 3;
         private const float FadeSeconds = 0.4f;   // 사라지기 전 마지막 구간
 
         private RectTransform _rect;
@@ -103,7 +107,7 @@ namespace Game.Module.InGame
             Center = at;
             Radius = radius;
             Effect = effect;
-            DamagePerTick = damagePerTick;
+            DamagePerTick = damagePerTick * DamageTickMul;
             FromPlayer = fromPlayer;
             _life = _lifeMax = seconds;
             _tickTimer = 0f;                 // 깔리는 순간 한 번 터진다

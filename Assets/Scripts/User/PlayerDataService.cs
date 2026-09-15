@@ -58,8 +58,30 @@ namespace Game.User
         public int ReachedStage   => _data?.reachedStage   ?? 1;
         public int ClearedChapter => _data?.clearedChapter ?? 0;
 
+        /// <summary>
+        /// 전투가 세우는 몸 전부. ⚠ **숨긴 몸(`IsHiddenHost`)은 뺀다** — 목록에도 적으로도 안 나온다.
+        /// </summary>
         public IReadOnlyList<HostEntry> AllHosts
-            => _hosts != null ? _hosts.Entries : System.Array.Empty<HostEntry>();
+        {
+            get
+            {
+                if (_hosts == null) return System.Array.Empty<HostEntry>();
+                if (_visible != null) return _visible;
+                var all = _hosts.Entries;
+                _visible = new List<HostEntry>(all.Count);
+                for (int i = 0; i < all.Count; i++)
+                    if (!IsHiddenHost(all[i].HostKey)) _visible.Add(all[i]);
+                return _visible;
+            }
+        }
+
+        private List<HostEntry> _visible;
+
+        /// <summary>
+        /// 당분간 게임에서 빼 둔 몸(기획 2026-09-15 — 아마존 정예, 나중에 다시 넣는다).
+        /// 표는 그대로 두고 여기서만 거른다 — 임포터가 표를 다시 써도 빠진 채로 남는다.
+        /// </summary>
+        public static bool IsHiddenHost(string hostKey) => hostKey == "amazon_elite";
 
         /// <summary>
         /// 호스트 선택 화면에 내보낼 몸. 방패병·센서드론·엘리트처럼 정본이 배우로만 쓰는 행은 뺀다.
@@ -78,7 +100,7 @@ namespace Game.User
                 // 고르는 자리가 같아야 한다 — 버튼을 따로 두면 규칙이 둘이 된다.
                 _playable.Add(HostEntry.CreateGhost());
                 for (int i = 0; i < all.Count; i++)
-                    if (!all[i].ActorOnly) _playable.Add(all[i]);
+                    if (!all[i].ActorOnly && !IsHiddenHost(all[i].HostKey)) _playable.Add(all[i]);
                 return _playable;
             }
         }

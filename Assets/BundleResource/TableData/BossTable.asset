@@ -113,7 +113,7 @@ MonoBehaviour:
       _draw: 9
       _dodge: 1
       _degrees: 120
-      _radiusMeters: 2
+      _radiusMeters: 3
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 1
-      _rangeMeters: 3
+      _rangeMeters: 4.5
       _group: 0
   - _bossKey: crusher
     _chapter: 2

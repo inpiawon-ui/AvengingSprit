@@ -162,6 +162,21 @@ namespace Game.Module.InGame
                     view.gameObject.SetActive(false);
                     break;
                 }
+                if (_shieldDownLeft[i] > 0f) continue;
+
+                // 적 탄에 닿아도 **탄을 지우고 방패도 깨진다**(기획 2026-09-15) — 몬스터에 부딪힐 때와 같은 규칙.
+                for (int k = 0; k < _shots.Count; k++)
+                {
+                    var s = _shots[k];
+                    if (s == null || !s.IsActive || s.FromPlayer) continue;
+                    if (Vector2.Distance(s.Position, at) > ShieldHitRadius) continue;
+
+                    s.Despawn();
+                    SpawnImpact(at, "pulse");
+                    _shieldDownLeft[i] = 1f;
+                    view.gameObject.SetActive(false);
+                    break;
+                }
             }
 
             // 다 깨졌으면 그때부터 함께 돌아올 시계를 켠다.

@@ -1,4 +1,5 @@
 using System;
+using GameFramework.Core.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,6 +38,7 @@ namespace Game.Module.Common.UI
             if (cancelText == "취소") cancelText = Localize.Get("ui.common.cancel");
 
             if (s_instance == null) s_instance = Build();
+            s_instance.ApplyFont(FindFont());   // 언어가 바뀌었거나 폰트가 내려갔을 수 있다 — 띄울 때마다 다시 건다
             s_instance._onConfirm = onConfirm;
             s_instance._message.text = message;
             s_instance._confirmLabel.text = confirmText;
@@ -121,12 +123,30 @@ namespace Game.Module.Common.UI
             return popup;
         }
 
-        /// <summary>씬에 이미 쓰이는 한글 폰트를 재사용한다(전용 에셋 참조를 만들지 않기 위함).</summary>
+        /// <summary>
+        /// 본문 폰트. **문자열 표가 들고 있는 지금 언어의 폰트**를 쓴다 — 판 내내 살아 있다.
+        ///
+        /// ⚠ 예전에는 씬에 떠 있는 아무 글자의 폰트를 빌렸다. 빌드에서는 그 폰트가 **씬 번들과 함께 내려가**
+        ///   (로비를 떠나면 ui 번들이 풀린다) 인게임 퍼즈 창의 글자가 하나도 안 보였다(기획 2026-09-15).
+        ///   에디터에서는 폰트가 하나뿐이고 안 내려가서 멀쩡해 보였다.
+        /// </summary>
         private static TMP_FontAsset FindFont()
         {
-            var any = UnityEngine.Object.FindAnyObjectByType<TextMeshProUGUI>(FindObjectsInactive.Include);
-            if (any != null && any.font != null) return any.font;
+            if (CoreModule.TryGet<ILanguageService>(out var lang) && lang.GothicFont != null) return lang.GothicFont;
             return TMP_Settings.defaultFontAsset;
+        }
+
+        private void ApplyFont(TMP_FontAsset font)
+        {
+            if (font == null) return;
+            SetFont(_message);
+            SetFont(_confirmLabel);
+            SetFont(_cancelLabel);
+
+            void SetFont(TextMeshProUGUI t)
+            {
+                if (t != null && t.font != font) t.font = font;
+            }
         }
 
         private static Image NewImage(string name, Transform parent, Color color)

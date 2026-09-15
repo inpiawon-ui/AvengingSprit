@@ -58,7 +58,7 @@ namespace Game.Module.InGame
 
         // ── 수치 ─────────────────────────────────────────────
         private const float AmazonStrikeRadiusMeters = 2.5f;
-        private const float AmazonStrikeMul = 3.0f;            // 명세 「300% 정도」
+        private const float AmazonStrikeMul = 6.0f;            // 명세 「300% 정도」 → 기획 2026-09-15 피해 2배
         private const float ReaperWindowSeconds = 3f;          // 명세 「3초간 유지」
         private const int ReaperBossPercent = 10;
         private const int ReaperMidBossPercent = 50;
@@ -138,7 +138,7 @@ namespace Game.Module.InGame
             }
 
             float r = Meters(AmazonStrikeRadiusMeters) * _buffs.AoeMul;
-            int dmg = SkillDamage(me, AmazonStrikeMul * BaseAxis(1f));   // Lv1 ×3.0 → Lv4 ×4.5
+            int dmg = SkillDamage(me, AmazonStrikeMul * BaseAxis(1f));   // 6.0 × 표 성장축(Lv1 1.5 → Lv4 2.2)
             var list = EnemiesInRange(me.Position, r);
             for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
             PlayFx("slam", me.Position, r * 2f, loop: false);

@@ -24,14 +24,17 @@ namespace Game.Module.InGame
         private const int SummonMaxCount = 6;
 
         // ── 해골 — 사신 · 영매가 처치할 때 ──────────────────────
-        private const float SkullLifeSeconds = 12f;
+        // 기획 2026-09-15 — 3초 뒤 사라진다. 남은 시간이 **체력바가 줄어드는 것**으로 보인다.
+        private const float SkullLifeSeconds = 3f;
         private const float SkullHpPercent = 0.25f;
         private const float SkullAtkPercent = 0.40f;
+        /// <summary>해골 평타 간격. 잡몹 해골(1.4초)을 그대로 쓰면 너무 느렸다 — 3초 사는 동안 두 번뿐이었다.</summary>
+        private const float SkullAttackInterval = 0.6f;
 
         // ── 골렘 — 영매 액티브 ─────────────────────────────────
         /// <summary>골렘 그림 아틀라스 키(`atlas/unit_golem`). 잡몹 표에는 없는 몸이다.</summary>
         private const string GolemKey = "golem";
-        private const float GolemLifeSeconds = 15f;
+        // 골렘은 수명이 없다 — **죽을 때까지** 남고 다음 방에도 따라온다(기획 2026-09-15).
 
         /// <summary>
         /// 골렘의 몸값. **근접으로 때리는 몸**이다 — 주먹이 무기라 탄이 없다.
@@ -60,6 +63,8 @@ namespace Game.Module.InGame
         {
             public Unit U;
             public float Life;
+            public float LifeMax;
+            public bool Drains;    // 남은 수명만큼 체력바를 줄인다(해골)
             public bool Attacks;
             public bool Mobile;
             public bool Taunt;
@@ -87,7 +92,7 @@ namespace Game.Module.InGame
         private void SummonSkull(Vector2 at)
             => SpawnSummon(TrashSkeletonKey, "해골", SkullHpPercent, SkullAtkPercent,
                            SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
-                           profile: Skeleton);
+                           profile: Skeleton, intervalOverride: SkullAttackInterval, drains: true);
 
         /// <summary>
         /// 영매 액티브 — 골렘. 해골보다 크고 오래 간다.
@@ -99,7 +104,7 @@ namespace Game.Module.InGame
         /// </summary>
         private void SummonGolem(Vector2 at)
             => SpawnSummon(GolemKey, "골렘", GolemHpPercent, GolemAtkPercent,
-                           GolemLifeSeconds, attacks: true, mobile: true, taunt: true, at: at,
+                           float.PositiveInfinity, attacks: true, mobile: true, taunt: true, at: at,
                            profile: GolemProfile);
 
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
@@ -134,7 +139,8 @@ namespace Game.Module.InGame
         /// </param>
         private void SpawnSummon(string key, string name, float hpPercent, float atkPercent,
                                  float life, bool attacks, bool mobile, bool taunt,
-                                 Vector2 at, float scale = 1f, HostEntry profile = null)
+                                 Vector2 at, float scale = 1f, HostEntry profile = null,
+                                 float intervalOverride = 0f, bool drains = false)
         {
             if (_host == null) return;
 
@@ -147,7 +153,8 @@ namespace Game.Module.InGame
             int hp = Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * hpPercent));
             int atk = Mathf.Max(0, Mathf.RoundToInt(_host.Atk * atkPercent));
             float range = profile != null ? profile.CanonRange * _pxPerMeter : _host.AttackRange;
-            float interval = profile != null ? profile.CanonInterval : _host.AttackInterval;
+            float interval = intervalOverride > 0f ? intervalOverride
+                           : profile != null ? profile.CanonInterval : _host.AttackInterval;
             u.Setup(UnitSide.Player, key, name, art, hp, atk,
                     _host.MoveSpeed * 0.9f, range, interval,
                     UnitBox(96f * scale, 92f * scale), isBoss: false, profile: profile);
@@ -156,7 +163,8 @@ namespace Game.Module.InGame
             u.ResetPattern();
             ApplyFacingSprites(u, key);
 
-            _summons.Add(new Summon { U = u, Life = life, Attacks = attacks, Mobile = mobile, Taunt = taunt });
+            _summons.Add(new Summon { U = u, Life = life, LifeMax = life, Drains = drains,
+                                      Attacks = attacks, Mobile = mobile, Taunt = taunt });
             PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
         }
 
@@ -171,6 +179,8 @@ namespace Game.Module.InGame
 
                 s.Life -= dt;
                 if (s.Life <= 0f) { PlayFx("smoke", s.U.Position, 96f, loop: false); RemoveSummon(i); continue; }
+                if (s.Drains && s.LifeMax > 0f)
+                    s.U.DrainHpTo(Mathf.CeilToInt(s.U.HpMax * s.Life / s.LifeMax));
 
                 s.U.TickFlash(dt);
                 s.U.TickAnim(dt);
@@ -219,10 +229,27 @@ namespace Game.Module.InGame
             _summons.RemoveAt(index);
         }
 
-        /// <summary>방이 바뀌면 다 거둔다 — 산 방에서만 같이 싸운다.</summary>
-        private void ClearSummons()
+        /// <summary>방이 바뀌면 다 거둔다 — 산 방에서만 같이 싸운다. 골렘은 남길 수 있다.</summary>
+        private void ClearSummons(bool keepGolem = false)
         {
-            for (int i = _summons.Count - 1; i >= 0; i--) RemoveSummon(i);
+            for (int i = _summons.Count - 1; i >= 0; i--)
+            {
+                var s = _summons[i];
+                if (keepGolem && s.U != null && s.U.IsAlive && s.U.Key == GolemKey) continue;
+                RemoveSummon(i);
+            }
+        }
+
+        /// <summary>남겨 둔 소환물(골렘)을 새 방의 내 곁으로 옮긴다.</summary>
+        private void RegroupSummons(Vector2 around)
+        {
+            for (int i = 0; i < _summons.Count; i++)
+            {
+                var u = _summons[i].U;
+                if (u == null || !u.IsAlive) continue;
+                u.Position = ClampedInField(u, around + new Vector2(Meters(1.2f) * (i % 2 == 0 ? 1f : -1f), 0f));
+                u.SetMoving(false);
+            }
         }
 
         /// <summary>

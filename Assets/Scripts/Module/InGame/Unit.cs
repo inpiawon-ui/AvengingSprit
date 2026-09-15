@@ -322,6 +322,18 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
+        /// 시간이 다해 가는 소환물의 체력을 **내리기만** 한다. 맞아서 이미 더 낮으면 그대로 둔다.
+        /// 0 으로는 안 내린다 — 사라지는 것은 수명이 정한다.
+        /// </summary>
+        public void DrainHpTo(int hp)
+        {
+            int next = Mathf.Clamp(hp, 1, HpMax);
+            if (next >= Hp) return;
+            Hp = next;
+            RefreshHpBar();
+        }
+
+        /// <summary>
         /// 최대 체력을 그 자리에서 줄인다 (악마 계약).
         ///
         /// 지금 체력이 새 상한을 넘으면 함께 내린다 — 안 그러면 막대가 가득 찬 채로
@@ -1101,6 +1113,17 @@ namespace Game.Module.InGame
         /// </summary>
         public void RetryAttackSoon(float seconds) => _attackTimer = seconds;
 
+        /// <summary>
+        /// 쏘지 않는 동안에도 다음 차례까지의 시간을 흘린다. **0 에서 멈춘다** — 모아 두었다가 몰아 쏘지 못한다.
+        ///
+        /// 걷거나 사거리 밖에 있는 동안 시계가 멈춰 있어서, 멈춰 서면 남은 간격을 통째로
+        /// 다시 기다렸다 — 「멈춰서 때릴 때 선딜이 있다」가 그것이다(기획 2026-09-15).
+        /// </summary>
+        public void CoolAttack(float dt)
+        {
+            if (_attackTimer > 0f) _attackTimer = Mathf.Max(0f, _attackTimer - dt);
+        }
+
         // ⚠ 전투 전체의 손 속도. 내 몸 · 잡몹 · 보스 · 불러낸 몸이 **모두 여기를 지난다** —
         //   평타 간격을 다시 채우는 자리가 여기 하나뿐이라 전체를 한 번에 늦추려면 여기여야 한다.
         //   캐릭터 사이의 빠르고 느린 차이는 비율이라 그대로 남는다.
@@ -1534,6 +1557,12 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
+        /// 도트 피해 한 번에 떨어뜨리는 양. 1 씩 흘리면 숫자가 너무 틱틱 뜬다(기획 2026-09-15) —
+        /// 3 씩 모아 떨어뜨린다. 초당 피해는 그대로이고 **간격이 3배 · 한 번이 3배**가 된다.
+        /// </summary>
+        private const int DotChunkDamage = 3;
+
+        /// <summary>
         /// 상태이상 시간을 흘린다. 이번 프레임에 줘야 할 화상 피해를 돌려준다(없으면 0).
         /// 소수 피해가 사라지지 않도록 누적해 두었다가 1 이상이 될 때만 떨어뜨린다 —
         /// 매 프레임 1씩 주면 화상이 초당 60 이 된다.
@@ -1564,11 +1593,10 @@ namespace Game.Module.InGame
                 else
                 {
                     _poisonAccum += PoisonDamagePerSecond * dt;
-                    if (_poisonAccum >= 1f)
+                    if (_poisonAccum >= DotChunkDamage)
                     {
-                        int p = Mathf.FloorToInt(_poisonAccum);
-                        _poisonAccum -= p;
-                        total += p;
+                        _poisonAccum -= DotChunkDamage;
+                        total += DotChunkDamage;
                     }
                 }
             }
@@ -1578,10 +1606,9 @@ namespace Game.Module.InGame
             if (_burnTimer <= 0f) { _burnStack = 0; _burnAccum = 0f; return total; }
 
             _burnAccum += BurnDamagePerStackPerSecond * _burnStack * dt;
-            if (_burnAccum < 1f) return total;
-            int give = Mathf.FloorToInt(_burnAccum);
-            _burnAccum -= give;
-            return total + give;
+            if (_burnAccum < DotChunkDamage) return total;
+            _burnAccum -= DotChunkDamage;
+            return total + DotChunkDamage;
         }
 
         public void ClearStatus()

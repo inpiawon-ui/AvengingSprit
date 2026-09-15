@@ -122,7 +122,7 @@ namespace Game.Module.InGame
         /// 초가 아니라 **비율**로 채운다 — 쿨 긴 몸이 20대보다 더 맞아야 하면
         /// 「이 몸은 스킬을 못 쓴다」가 되어 버린다.
         /// </summary>
-        private const int SkillHitsToFull = 20;
+        private const int SkillHitsToFull = 30;   // 기획 2026-09-15 — 20대 → 1.5배 더 때려야 찬다
 
         private void ChargeSkillOnHit()
         {
@@ -474,8 +474,28 @@ namespace Game.Module.InGame
             await UniTask.NextFrame(this.GetCancellationTokenOnDestroy());
             await UniTask.NextFrame(this.GetCancellationTokenOnDestroy());
 
-            if (_loading != null) await _loading.HideAsync();
-            _running = true;
+            if (_loading != null)
+            {
+                await _loading.HideAsync();
+                // ⚠ `HideAsync` 는 **곧바로 돌아올 수 있다.** 프레임워크가 씬이 올라온 순간 이미 걷기 시작해서,
+                //   두 번째 호출은 「이미 걷는 중」이라 기다리지 않는다 — 로딩창이 떠 있는데 판이 돌았다
+                //   (기획 2026-09-15). 실제로 사라질 때까지 기다린다.
+                await UniTask.WaitUntil(() => !_loading.IsVisible,
+                                        cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
+            _bootDone = true;
+        }
+
+        private bool _bootDone;
+
+        /// <summary>
+        /// 판을 연다. **화면의 덮개까지 다 걷힌 뒤에** `InGameMainUI` 가 부른다.
+        /// 여기서 여는 이유: 전투 준비 뒤에도 카드 · 화면 아틀라스를 읽느라 검은 덮개가 더 떠 있는데,
+        /// 그동안 판이 돌면 적이 덮개 뒤에서 달려들고 Ghost HP 가 깎인다.
+        /// </summary>
+        public void BeginBattle()
+        {
+            if (_bootDone) _running = true;
         }
 
         // ─────────────────────────────────────────────────────────
@@ -591,13 +611,16 @@ namespace Game.Module.InGame
         ///   25종을 돌리려고 004 를 이벤트 방으로 만든 뜻이 흐려진다.
         ///   대가형(악마 계약)은 별도 방이 아니라 **이벤트 풀 안**에 들어간다.
         /// </summary>
-        private const float RestHpRatio = 0.40f;
+        private const float RestHpRatio = 0.30f;
 
         /// <summary>
-        /// 004 방이 무엇으로 열리는가.
+        /// 004 방이 무엇으로 열리는가 (기획 2026-09-15).
         ///
-        ///   고스트 HP ≤ 40%  →  회복 제단 (`RoomKind.Rest`)
-        ///   그 외             →  이벤트   (`RoomKind.Event`)
+        ///   호스트 체력 ≤ 30%  →  천사의 제단 (`RoomKind.Rest`)
+        ///   그 외               →  천사 · 악마 **반반**
+        ///
+        /// ⚠ 예전에는 **고스트 HP** 만 봤다. 몸에 타 있는 동안 고스트 HP 는 거의 가득이라
+        ///   천사의 제단이 사실상 안 나왔다. 이제 몸의 체력을 본다 — 몸이 없으면 고스트 HP 로 잰다.
         /// </summary>
         private RoomKind KindOfCanon(RoomEntry room)
         {
@@ -611,8 +634,12 @@ namespace Game.Module.InGame
                 "REST" => RoomKind.Rest,
                 _       => RoomKind.Normal,
             };
-            if (kind == RoomKind.Event && _ghostHp <= GhostHpMax * RestHpRatio)
-                return RoomKind.Rest;
+            if (kind == RoomKind.Event)
+            {
+                float ratio = _host != null && _host.HpMax > 0 ? (float)_host.Hp / _host.HpMax
+                            : GhostHpMax > 0 ? (float)_ghostHp / GhostHpMax : 1f;
+                if (ratio <= RestHpRatio || UnityEngine.Random.value < 0.5f) return RoomKind.Rest;
+            }
             return kind;
         }
 
@@ -640,6 +667,15 @@ namespace Game.Module.InGame
             if (TrashByKey(actorId, 1) != null || TrashByKey(actorId, 2) != null
                 || TrashByKey(actorId, 3) != null)
                 return hosts.Count > 0 ? hosts[0] : null;
+
+            // 숨긴 몸(아마존 정예 — 기획 2026-09-15)은 목록에서 빠져 있다.
+            // 방 데이터가 그 자리를 찍었으면 아마존으로 세운다 — 비워 두면 방 구성이 달라진다.
+            if (PlayerDataService.IsHiddenHost(actorId))
+            {
+                for (int i = 0; i < hosts.Count; i++)
+                    if (hosts[i].HostKey == "amazon") return hosts[i];
+                return hosts.Count > 0 ? hosts[0] : null;
+            }
 
             if (_missingActors.Add(actorId))
                 Debug.LogWarning($"[Battle] {actorId} 의 그림이 아직 없다 — 대역으로 세운다");
@@ -741,11 +777,13 @@ namespace Game.Module.InGame
                 u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),
                         // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
                         // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
-                        Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)),
-                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)),
+                        Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)
+                                         * SpawnHpMul(elite)),
+                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)
+                                         * SpawnAtkMul(elite)),
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
-                        EnemyIntervalOf(e, elite),
+                        EnemyIntervalOf(e, elite) / EnemyHandSpeedMul,
                         // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
                         // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
                         // 엘리트뿐 아니라 **집행자**도 128 캔버스다.
@@ -2571,6 +2609,12 @@ namespace Game.Module.InGame
             return RoomKind.Normal;
         }
 
+        /// <summary>
+        /// 보스 공격력 배수. 1챕터 보스(로봇 스네이크)만 2배(기획 2026-09-15) — 너무 약했다.
+        /// 모든 보스 피해가 `boss.Atk` 를 읽으므로 여기 한 곳에서 곱한다.
+        /// </summary>
+        private static float BossAtkMulOf(string bossKey) => bossKey == "robot_snakes" ? 2f : 1f;
+
         private void EnterRoom(int index)
         {
             _roomIndex = index;
@@ -2583,7 +2627,8 @@ namespace Game.Module.InGame
             _bloodDebtUsed = 0;   // 피의 부채는 방마다 다시 센다
             ClearDeployables();   // 포탑도 방을 따라오지 않는다
             ClearAlly();          // 동료도 마찬가지 — 산 방에서만 같이 싸운다
-            ClearSummons();       // 불러낸 것들도 방을 넘어가지 않는다
+            // 불러낸 것들도 방을 넘어가지 않는다 — **골렘만 예외**다. 죽을 때까지 따라온다(기획 2026-09-15).
+            ClearSummons(keepGolem: true);
             ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
             ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
@@ -2705,9 +2750,10 @@ namespace Game.Module.InGame
                                canon ? _canonRoom.BossHp
                                  : def != null && def.HasCanonStats ? def.CanonHp
                                  : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)))),
-                           canon ? _canonRoom.BossAtk
+                           Mathf.RoundToInt(BossAtkMulOf(bossKey) * (
+                               canon ? _canonRoom.BossAtk
                                  : def != null && def.HasCanonStats ? def.CanonAtk
-                                 : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)),
+                                 : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)))),
                            canon ? _canonRoom.BossMoveSpeed * _pxPerMeter
                                  : _config.BossMoveSpeed * (def?.MoveSpeedMul ?? 1f),
                            _config.BossAttackRange, _config.BossAttackInterval,
@@ -2820,6 +2866,8 @@ namespace Game.Module.InGame
                 avatar.Position = ToPixels(_canonRoom.PlayerSpawn);
                 ClearOfCover(avatar);   // 입구 자리도 엄폐물과 겹칠 수 있다
             }
+            // 따라온 골렘을 내 곁으로 옮긴다. 안 옮기면 지난 방 좌표에 선다.
+            if (avatar != null) RegroupSummons(avatar.Position);
             // ⚠ **방에 들어선 직후 잠깐은 안 맞는다** (2026-09-10).
             //   입구에서 적을 4.5 m 밀어냈지만, 원거리 적은 그보다 멀리서도 쏜다.
             //   화면이 새 방으로 바뀌는 순간에 이미 날아오던 탄이 닿으면
@@ -2858,11 +2906,11 @@ namespace Game.Module.InGame
                 // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
                 NoteMetHost(e);
                 u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
-                        Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
-                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
+                        Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f) * SpawnHpMul(elite)),
+                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f) * SpawnAtkMul(elite)),
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
-                        EnemyIntervalOf(e, elite),
+                        EnemyIntervalOf(e, elite) / EnemyHandSpeedMul,
                         UnitBox(84f, 78f), isBoss: false, profile: e);
                 u.Position = SpawnSlot(i, count);
                 ClearOfCover(u);
@@ -3508,6 +3556,7 @@ namespace Game.Module.InGame
                 {
                     _stopTimer = 0f;
                     IsFiring = false;
+                    if (_host != null) _host.CoolAttack(dt);   // 걷는 동안에도 다음 차례까지 시간은 흐른다
                     return;
                 }
             }
@@ -3516,7 +3565,7 @@ namespace Game.Module.InGame
             // 멈춤의 대가가 사라진다.
             _stopTimer += dt;
             if (_stopTimer < Mathf.Max(0.02f, _config.AttackResumeSeconds - _buffs.StopDelayCut))
-            { IsFiring = false; return; }
+            { IsFiring = false; if (_host != null) _host.CoolAttack(dt); return; }
 
             // 고스트는 공격하지 않는다 — 빙의해야 싸울 수 있다(핵심 동사)
             if (_host == null) { IsFiring = false; return; }
@@ -3545,7 +3594,7 @@ namespace Game.Module.InGame
                            EdgeDistance(_host, target)
                                <= EffectiveRange(_host) * _buffs.RangeMul;
             IsFiring = inRange;
-            if (!inRange) return;
+            if (!inRange) { _host.CoolAttack(dt); return; }
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
             if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
@@ -3921,6 +3970,21 @@ namespace Game.Module.InGame
         /// </summary>
         private const float EliteIntervalMul = 0.5f;
 
+        // ── 몬스터 조정 (기획 2026-09-15) ────────────────────────
+        //
+        // 방에 **서는 자리**(방 · 무작위 방 · 보스 부하)에서만 곱한다.
+        // `EnemyAtkOf` · `EnemyIntervalOf` 에 넣으면 상점 동료 · 중간 보스까지 같이 세진다.
+        /// <summary>일반 몬스터 피해 2배. 엘리트 · 보스에는 안 붙는다.</summary>
+        private const float NormalEnemyAtkMul = 2f;
+        /// <summary>1챕터 엘리트 체력 · 공격력 2배 — 너무 약했다.</summary>
+        private const float Ch1EliteStatMul = 2f;
+        /// <summary>일반 몬스터 · 엘리트 공격 속도 1.5배(간격 ÷ 1.5).</summary>
+        private const float EnemyHandSpeedMul = 1.5f;
+
+        private float SpawnHpMul(bool elite) => elite && _runChapter == 1 ? Ch1EliteStatMul : 1f;
+        private float SpawnAtkMul(bool elite)
+            => elite ? (_runChapter == 1 ? Ch1EliteStatMul : 1f) : NormalEnemyAtkMul;
+
         /// <summary>
         /// 적이 얼마나 자주 때리는가. 배율은 `GameConfig` 에 있다 —
         /// 두 번 다시 조정하게 되어 인스펙터에서 돌릴 수 있게 뺐다.
@@ -4057,7 +4121,17 @@ namespace Game.Module.InGame
         //   상쇄하지 않으면 로비가 2.8 회라고 적고 판은 1.96 회를 때린다 — 실측으로 확인했다.
         private float HostIntervalOf(HostEntry e)
             => e == null ? _config.HostAttackInterval
-             : _config.IntervalOfGrade(e.RateGrade) * _config.AttackSpeedMul;
+             : _config.IntervalOfGrade(e.RateGrade) * _config.AttackSpeedMul / HostHandSpeedOf(e);
+
+        // 기획 2026-09-15 — 아마존 공격 속도 2배, 근접 몸 1.5배. **아마존은 2배만** — 둘을 겹치지 않는다.
+        // ⚠ 로비에 적힌 초당 횟수는 등급으로만 계산하므로 이 배율이 안 보인다.
+        private const float AmazonHandSpeedMul = 2f;
+        private const float MeleeHandSpeedMul = 1.5f;
+
+        private static float HostHandSpeedOf(HostEntry e)
+            => e.HostKey == "amazon" ? AmazonHandSpeedMul
+             : e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse ? MeleeHandSpeedMul
+             : 1f;
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —
@@ -4546,10 +4620,10 @@ namespace Game.Module.InGame
                 NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
                 u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
                         Mathf.Max(1, Mathf.RoundToInt(EnemyHpOf(e) * 0.6f)),
-                        EnemyAtkOf(e),
+                        Mathf.RoundToInt(EnemyAtkOf(e) * NormalEnemyAtkMul),
                         EnemySpeedOf(e),
                         EnemyRangeOf(e),
-                        EnemyIntervalOf(e),
+                        EnemyIntervalOf(e) / EnemyHandSpeedMul,
                         UnitBox(78f, 72f), isBoss: false, profile: e);
 
                 // 보스(160px)와 겹치지 않게 바깥에 원형으로 흩는다
@@ -4597,8 +4671,15 @@ namespace Game.Module.InGame
             {
                 case AttackKind.Melee:
                 case AttackKind.Pulse:
-                    MeleeStrike(attacker, target, fromPlayer, hitAll: kind == AttackKind.Pulse);
+                {
+                    // 구루는 주변을 한꺼번에 치지 않고 **하나만** 친다(기획 2026-09-15).
+                    // 추가 발사 카드가 붙으면 탄 수 대신 **맞는 적 수**가 늘어난다.
+                    bool single = attacker.Key == "guru";
+                    int maxHits = single && fromPlayer ? 1 + _buffs.ExtraShots + SprayExtraShots : 1;
+                    MeleeStrike(attacker, target, fromPlayer,
+                                hitAll: kind == AttackKind.Pulse && !single, maxHits: maxHits);
                     break;
+                }
 
                 default:
                 {
@@ -4689,7 +4770,7 @@ namespace Game.Module.InGame
              ? float.MaxValue
              : Vector2.Distance(from.Position, to.Position) - BodyExcess(to);
 
-        private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll)
+        private void MeleeStrike(Unit attacker, Unit target, bool fromPlayer, bool hitAll, int maxHits = 1)
         {
             var p = attacker.Profile;
             float reach = attacker.AttackRange * (fromPlayer ? _buffs.RangeMul : 1f);
@@ -4714,21 +4795,29 @@ namespace Game.Module.InGame
 
             if (fromPlayer)
             {
-                for (int i = _enemies.Count - 1; i >= 0; i--)
+                // 겨눈 적을 **먼저** 친다(첫 바퀴는 겨눈 적만, 둘째 바퀴는 나머지).
+                // 목록 순서대로만 치면 한 명만 치는 몸이 옆의 엉뚱한 적을 때린다.
+                int hits = 0;
+                for (int pass = 0; pass < 2; pass++)
                 {
-                    var e = _enemies[i];
-                    if (e == null || !e.IsAlive) continue;
-                    // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
-                    if (EdgeDistance(attacker, e) > reach) continue;
-                    Burst(e.Position, true);
-                    GameSound.Cue("hit.enemy");
-                    bool wasAlive = e.IsAlive;
-                    HitEnemyWith(e,
-                        Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)), p);
-                    // 정본 S04 흡혈 마무리 — 근접으로 끝냈을 때만 회복이 터진다.
-                    // 흡혈을 쌓는 몸과 터뜨리는 몸이 달라 **갈아타야만** 성립한다.
-                    if (wasAlive && !e.IsAlive) OnMeleeFinish(attacker);
-                    if (!hitAll) break;
+                    for (int i = _enemies.Count - 1; i >= 0; i--)
+                    {
+                        if (i >= _enemies.Count) continue;   // 앞에서 죽어 목록이 줄었다
+                        var e = _enemies[i];
+                        if (e == null || !e.IsAlive) continue;
+                        if ((pass == 0) != (e == target)) continue;
+                        // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
+                        if (EdgeDistance(attacker, e) > reach) continue;
+                        Burst(e.Position, true);
+                        GameSound.Cue("hit.enemy");
+                        bool wasAlive = e.IsAlive;
+                        HitEnemyWith(e,
+                            Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)), p);
+                        // 정본 S04 흡혈 마무리 — 근접으로 끝냈을 때만 회복이 터진다.
+                        // 흡혈을 쌓는 몸과 터뜨리는 몸이 달라 **갈아타야만** 성립한다.
+                        if (wasAlive && !e.IsAlive) OnMeleeFinish(attacker);
+                        if (!hitAll && ++hits >= maxHits) return;
+                    }
                 }
                 return;
             }
@@ -5291,8 +5380,10 @@ namespace Game.Module.InGame
         {
             switch (f.Effect)
             {
+                // ⚠ 걸어 두는 시간은 장판 한 박자(1.5초 — `Field.TickInterval`)보다 길어야 한다.
+                //   짧으면 박자 사이에 풀렸다 걸렸다 깜빡인다(기획 2026-09-15 박자를 0.5 → 1.5초로 늘리며 같이 늘렸다).
                 case FieldEffect.Slow:
-                    u.ApplySlow(FieldSlowPercent, 0.8f);
+                    u.ApplySlow(FieldSlowPercent, 1.8f);
                     // 정본 BUF_T03 — 둔화 장판 가장자리가 피해를 준다.
                     // 가장자리로 한정하는 이유는 "안에 있으면 아프다" 가 아니라
                     // "들어오고 나갈 때 아프다" 라야 자리를 잡을 이유가 생기기 때문이다.
@@ -5303,16 +5394,16 @@ namespace Game.Module.InGame
                     }
                     break;
                 case FieldEffect.Burn:
-                    u.ApplyBurn(1.2f);
-                    if (toEnemy) ChainStatus(u, StatusKind.Burn, 1.2f);
+                    u.ApplyBurn(1.8f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Burn, 1.8f);
                     break;
                 case FieldEffect.Freeze:
-                    u.ApplyFreeze(1.2f);
-                    if (toEnemy) ChainStatus(u, StatusKind.Freeze, 1.2f);
+                    u.ApplyFreeze(1.8f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Freeze, 1.8f);
                     break;
                 case FieldEffect.Curse:
-                    u.ApplyCurse(1.2f);
-                    if (toEnemy) ChainStatus(u, StatusKind.Curse, 1.2f);
+                    u.ApplyCurse(1.8f);
+                    if (toEnemy) ChainStatus(u, StatusKind.Curse, 1.8f);
                     break;
             }
             if (f.DamagePerTick > 0) HurtByField(u, f.DamagePerTick, toEnemy);
@@ -6062,7 +6153,7 @@ namespace Game.Module.InGame
         private static Color ShotTint(bool fromPlayer, string kind)
         {
             if (!fromPlayer) return ShotEnemyColor;
-            return kind == "venom" || kind == "thunder" || kind == "beam"
+            return kind == "venom" || kind == "thunder" || kind == "beam" || kind == "lightorb"
                  ? Color.white : ShotPlayerColor;
         }
         private static readonly Color ShotEnemyColor = new(0.55f, 0.78f, 1f, 1f);
@@ -6240,7 +6331,8 @@ namespace Game.Module.InGame
             { "salamander", "venom" }, { "dragoon", "dragoon" },      // 독불(2026-09-14 기획) / 불덩이
             { "dragon_blue", "thunder" }, { "snowwoman", "frost" },   // 청룡은 번개(2026-09-14) · 설녀만 냉기
             { "ninja", "shuriken" }, { "ninja_chain", "chain" },      // 수리검 / 사슬낫
-            { "white_wizard", "beam" }, { "medium", "medium" },       // 일자 광탄(2026-09-14) / 도깨비불
+            // 라이트 매지션은 원작 「Magic Beam」 빛 구슬(2026-09-15 — 주황 막대가 원작과 달랐다) / 다크는 아직 도깨비불
+            { "white_wizard", "lightorb" }, { "medium", "medium" },
             { "guru", "pulse" }, { "robot", "pulse" },                // 둥근 파동 / 로봇은 미사일(`shot_pulse` 가 미사일 그림 — 2026-09-15 되돌림)
             // 정본에서 원거리로 바뀐 둘. 전용 그림이 없으면 흰 점으로 나간다.
             { "vampire", "drain" },     // 원작 시트의 박쥐 2장 (날개 편 것 / 접은 것)
@@ -6271,7 +6363,8 @@ namespace Game.Module.InGame
         /// 미사일 4장도 반복이다 — 몸통은 네 장 모두 같고 **꼬리불만 뛴다.**
         /// 한 번만 넘기면 꼬리가 가장 긴 4번에서 굳은 채로 날아간다.
         private static bool LoopsFrames(string kind)
-            => kind == "drain" || kind == "shuriken" || kind == "grenade" || kind == "missile";
+            => kind == "drain" || kind == "shuriken" || kind == "grenade" || kind == "missile"
+               || kind == "lightorb";   // 빛 구슬 4장 — 테가 일렁이며 날아간다
 
         /// <summary>
         /// 맞은 자리에서 터뜨린다. 그림이 없으면 아무것도 하지 않는다 —

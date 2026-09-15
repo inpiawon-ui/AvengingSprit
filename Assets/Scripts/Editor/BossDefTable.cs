@@ -104,13 +104,14 @@ namespace Game.EditorTools
                         // 기획 2026-09-07 — 「일제 출현」을 버리고 **기본 평타**를 넣었다.
                         //   솟아오른 뱀이 내 곁에 있는데 2초에 한 번도 물지 않으면
                         //   붙어 있는 것이 안 무섭다. P1 부터 나온다.
+                        // 기획 2026-09-15 — 범위 1.5배(반경 2 → 3) · 들어오는 거리 3 → 4.5 m
                         new() { Phase = 1, NameKr = "물어뜯기", NameEn = "HeadBite",
                                 Cooldown = 2f, Telegraph = 0.45f, DamageMul = 0.5f,
                                 Shape = "Arc", Draw = "HeadBite", Dodge = "SIDE",
-                                Degrees = 120f, Radius = 2f, Width = 0f, Length = 0f,
+                                Degrees = 120f, Radius = 3f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 3f, Group = 0 },
+                                Range = "NEAR", RangeMeters = 4.5f, Group = 0 },
                     } },
 
             // ── 슬러지 · 정유소 — 위에서 떨어진다 ────────────────────────────

@@ -291,6 +291,8 @@ namespace Game.Module.InGame
 
             RefreshCurrency();
             await RemoveCoverAsync();   // 여기까지 와야 방에 그림이 다 올라와 있다
+            // 덮개가 **다 걷힌 뒤에** 판을 연다 — 보이지도 않는데 적이 먼저 움직이지 않게(기획 2026-09-15).
+            _battle.BeginBattle();
         }
 
         private void Update()

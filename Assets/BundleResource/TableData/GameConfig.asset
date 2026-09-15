@@ -28,7 +28,7 @@ MonoBehaviour:
   _cameraZoomPhone: 1
   _cameraZoomTablet: 1
   _possessInvulnSeconds: 1.25
-  _attackResumeSeconds: 0.06
+  _attackResumeSeconds: 0.03
   _hostStartHpPercent: 70
   _emergencyDelaySeconds: 1
   _emergencyHostHpPercent: 30
