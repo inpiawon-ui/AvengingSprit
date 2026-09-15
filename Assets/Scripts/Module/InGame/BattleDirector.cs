@@ -2632,6 +2632,7 @@ namespace Game.Module.InGame
             ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
             ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
+            _rangedKnockAt.Clear();   // 지난 방 몹의 밀림 시각을 들고 가지 않는다
             _barrier = 0;
             _barrierUsedThisRoom = false;   // 위기 방벽은 방마다 한 번 (C018)
             _fightReward = null;            // 지난 방 매복 삯을 들고 넘어가지 않는다
@@ -6896,6 +6897,8 @@ namespace Game.Module.InGame
                 if (crit) HitStop(HitStopOnCrit);
             }
             bool dead = victim.TakeDamage(dmg);
+            // 원거리 몸이 근접 몹을 맞히면 뒤로 민다(기획 2026-09-16). 적 탄이 나를 맞힐 때는 이 길을 안 지난다.
+            if (!dead && shot.FromPlayer) RangedKnockback(victim);
             if (shot.SlowPercent > 0 && Roll(SlowChance))
                 ApplySlowProc(victim);
             if (shot.LifestealPercent > 0 && _host != null && Roll(LeechChance))

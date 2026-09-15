@@ -238,6 +238,42 @@ namespace Game.Module.InGame
             victim.Position = ClampedInField(victim, victim.Position + away.normalized * Meters(meters));
         }
 
+        // ── 원거리 몸이 근접 몹을 맞히면 밀어낸다 (기획 2026-09-16) ────────
+        //
+        // 멈춰야만 쏘는 규칙이라 근접 몹을 잡으려면 **제자리에서 맞으면서** 쏘는 수밖에 없었다.
+        // 맞힐 때마다 뒤로 밀어내 붙기 전에 한 대 더 칠 틈을 준다.
+        //
+        // ⚠ **거꾸로는 안 민다** — 몬스터가 나를 때릴 때는 아무 일도 없다.
+        // ⚠ 보스 · 원거리 몹은 안 민다. 근거리 몸이 때릴 때도 안 민다(그건 따로 정한다).
+        // ⚠ 연사 몸(초당 수십 발)이 맞힐 때마다 밀면 근접 몹이 영영 못 온다 — **적마다 0.2초에 한 번**.
+        private const float RangedKnockMeters = 1f;
+        private const float RangedKnockCooldown = 0.2f;
+        private readonly System.Collections.Generic.Dictionary<Unit, float> _rangedKnockAt = new();
+
+        private void RangedKnockback(Unit victim)
+        {
+            var host = _host;
+            if (host == null || host.Profile == null || victim == null || !victim.IsAlive || victim.IsBoss) return;
+            if (IsMeleeKind(host.Profile.Kind)) return;              // 근거리 몸이 쏜 것은 안 민다
+            if (victim.Profile == null || !IsMeleeKind(victim.Profile.Kind)) return;   // 근접 몹만
+
+            float now = Time.time;
+            if (_rangedKnockAt.TryGetValue(victim, out float last) && now - last < RangedKnockCooldown) return;
+            _rangedKnockAt[victim] = now;
+
+            var away = victim.Position - host.Position;
+            if (away.sqrMagnitude < 0.01f) return;
+            // 엄폐물을 뚫고 박히지 않게 미끄러지며 밀린다.
+            // ⚠ `SlideMove` 의 셋째 인자는 **옮길 양**이다(도착 자리가 아니다). 자리를 넘겼더니
+            //   자리 좌표가 통째로 더해져 한 번에 방 끝(4.8 m)까지 날아갔다(실측 2026-09-16).
+            var push = away.normalized * Meters(RangedKnockMeters);
+            victim.Position = ClampedInField(victim, SlideMove(victim, victim.Position, push));
+            victim.CancelWindup();   // 휘두르던 자세는 풀린다 — 다시 붙어서 자세를 잡아야 한다
+        }
+
+        private static bool IsMeleeKind(Game.Character.AttackKind kind)
+            => kind == Game.Character.AttackKind.Melee || kind == Game.Character.AttackKind.Pulse;
+
         /// <summary>로봇 — 스킬 게이지를 이만큼 더 채운다(쿨이 그만큼 줄어든 것과 같다).</summary>
         private void GainSkillCharge(float seconds)
         {
