@@ -133,7 +133,7 @@ description: 이 게임의 모듈 구현 명세 — 새 모듈 추가 시 코드
   - `PlayMusic(cue)` — 같은 곡이면 **다시 틀지 않는다**, 다르면 0.4초 페이드아웃 뒤 바꾼다
   - `StopMusic()` · `PlayCue(cue)` · `PlayHostAttack(hostKey)` · `PlayHostHurt(hostKey)` · `PlaySkill(hostKey)` · `StopAllEffects()`
   - 정적 창구 `GameSound.Music/Cue/HostAttack/HostHurt/Skill/StopEffects` — `CoreModule.TryGet` 을 매번 안 쓰게
-- 큐 이름: `screen.{title|opening|lobby}` · `stage.{clear|fail}` · `chapter.{n}.{normal|boss}` · `ui.play` · `run.{gold|card|shop}` · `hit.enemy` · `hit.reflect` · `boss.down` · `boss.{BossDraw}` · `host.{hostKey}.{attack|hurt}` · `skill.{hostKey}`
+- 큐 이름: `screen.{title|opening|lobby}` · `stage.{clear|fail}` · `chapter.{n}.{normal|boss}` · `ui.play` · `run.{gold|card|shop}` · `hit.enemy` · `hit.reflect` · `boss.down` · `boss.{BossDraw}` · `host.{hostKey}.{attack|hurt}` · `skill.{hostKey}` · `event.{possess|exit|bossphase|levelup|offer|emergency}`
   - 챕터 「중간 구역」 곡은 `SoundTable._chapterMid` (챕터 · 방 범위 · 음원)
 - 에디터 도구 `Tools/Game/사운드/사운드 표 만들기` — `sounds` 그룹 · 주소 35개 · 임포트 설정 · 매니페스트(`Projects/AVSR/_sound_extract/sound_manifest.json`) 루프 지점 · 적용표를 한 번에 만든다
   - 임포트: BGM `Compressed In Memory` · Vorbis 0.7 / SFX `Decompress On Load` · ADPCM
@@ -141,6 +141,8 @@ description: 이 게임의 모듈 구현 명세 — 새 모듈 추가 시 코드
   - 프레임워크 `SoundModule` 은 **등록하지 않는다.** `PlayBGM` 은 파일 전체만 되풀이해 인트로가 매 바퀴 다시 나오고, `Play` 는 부를 때마다 주소로 로드(참조 수만 늘고 해제가 없다)라 연사에서 늦고 풀이 바닥난다
   - 루프는 AudioSource 두 개를 `PlayScheduled`(dspTime)로 번갈아 예약한다. 이음매 1초 전에 다음 바퀴를 건다. 예약을 놓치면(에디터 일시정지 등) 지금부터 루프 시작점으로 다시 잇는다
   - 같은 효과음은 0.06초 안에 다시 나지 않고 동시에 3개까지다. 목소리 16개가 다 차면 버린다
+  - 드문 소리(`skill.*` · `boss.*` · `ui.*` · `event.*`)는 위 제한을 안 받는다 — 제한은 음원 기준이라 같은 음원을 쓰는 평타에 먹힌다
+  - 원작에 소리가 없던 자리도 채운다(기획 2026-09-15 「없는 것보다 있는 게 낫다」). 원작이 한 번도 안 부른 음원(`sfx_16·21·22·25·26·28·30·31`)을 파형으로 골라 넣었다 — 귀로 확인 전이다
   - 곡·효과음 번호를 코드에 적지 않는다 — 큐 → 음원 대응은 표에 있다
   - 효과음 호출은 교전 중 매 발 불린다 — 문자열을 조립하지 않는다(호스트 키로 미리 만든 사전을 찾는다)
   - `Samples/` 37개는 등록하지 않는다 (원작 사운드 CPU 가 조합하는 원재료)

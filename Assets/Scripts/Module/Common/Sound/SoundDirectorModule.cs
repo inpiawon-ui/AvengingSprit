@@ -42,6 +42,15 @@ namespace Game.Module.Common
             _tokens.Add(bus.Subscribe<BuffChosenEvent>(_director.OnBuffChosen));
             _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_director.OnShopPurchased));
             _tokens.Add(bus.Subscribe<HostLostEvent>(_director.OnHostLost));
+            // 원작에 소리가 없던 순간도 채운다(기획 2026-09-15). 전투 코드를 안 건드리고 이벤트로 받는다.
+            _tokens.Add(bus.Subscribe<PossessedEvent>(_ => _director.PlayCue("event.possess")));
+            _tokens.Add(bus.Subscribe<ExitOpenedEvent>(_ => _director.PlayCue("event.exit")));
+            _tokens.Add(bus.Subscribe<BossPhaseEvent>(_ => _director.PlayCue("event.bossphase")));
+            _tokens.Add(bus.Subscribe<BuffOfferEvent>(_ => _director.PlayCue("event.levelup")));
+            _tokens.Add(bus.Subscribe<EventOfferEvent>(_ => _director.PlayCue("event.offer")));
+            _tokens.Add(bus.Subscribe<ShrineOpenedEvent>(_ => _director.PlayCue("event.offer")));
+            _tokens.Add(bus.Subscribe<EmergencyHostEvent>(_ => _director.PlayCue("event.emergency")));
+            // 상점 열림은 안 받는다 — 살 때마다 진열대를 다시 띄우면 구입음과 겹친다
             _director.LoadAsync().Forget();   // fire-and-forget: 표가 오기 전 곡 요청은 모아 뒀다가 튼다
         }
 
@@ -206,7 +215,8 @@ namespace Game.Module.Common
                 //   방금 난 평타에 먹혀 스킬 소리가 안 났다(실측 2026-09-15). 드문 소리는 줄을 서지 않는다.
                 bool important = cue.Cue.StartsWith("skill.", StringComparison.Ordinal)
                               || cue.Cue.StartsWith("boss.", StringComparison.Ordinal)
-                              || cue.Cue.StartsWith("ui.", StringComparison.Ordinal);
+                              || cue.Cue.StartsWith("ui.", StringComparison.Ordinal)
+                              || cue.Cue.StartsWith("event.", StringComparison.Ordinal);
                 var fx = new EffectRef(clip, entry.Volume, cue.Cue, important);
                 _effectCue[cue.Cue] = fx;
 

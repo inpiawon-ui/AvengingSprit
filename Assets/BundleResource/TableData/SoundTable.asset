@@ -368,6 +368,24 @@ MonoBehaviour:
   - _cue: boss.down
     _clipKey: sfx_20
     _thenClipKey: 
+  - _cue: event.possess
+    _clipKey: sfx_30
+    _thenClipKey: 
+  - _cue: event.exit
+    _clipKey: sfx_26
+    _thenClipKey: 
+  - _cue: event.bossphase
+    _clipKey: sfx_25
+    _thenClipKey: 
+  - _cue: event.levelup
+    _clipKey: sfx_28
+    _thenClipKey: 
+  - _cue: event.offer
+    _clipKey: sfx_16
+    _thenClipKey: 
+  - _cue: event.emergency
+    _clipKey: sfx_21
+    _thenClipKey: 
   - _cue: boss.RailLaser
     _clipKey: sfx_32
     _thenClipKey: 
@@ -391,6 +409,54 @@ MonoBehaviour:
     _thenClipKey: 
   - _cue: boss.BoosterDrop
     _clipKey: sfx_38
+    _thenClipKey: 
+  - _cue: boss.Crush
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: boss.Conveyor
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: boss.ShieldUp
+    _clipKey: sfx_21
+    _thenClipKey: 
+  - _cue: boss.RamCharge
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: boss.SegmentThrust
+    _clipKey: sfx_22
+    _thenClipKey: 
+  - _cue: boss.SegmentLaunch
+    _clipKey: sfx_32
+    _thenClipKey: 
+  - _cue: boss.CoilWall
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: boss.HeadBite
+    _clipKey: sfx_21
+    _thenClipKey: 
+  - _cue: boss.VenomCloud
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: boss.BrickFall
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: boss.BodyShove
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: boss.ExecutionLock
+    _clipKey: sfx_16
+    _thenClipKey: 
+  - _cue: boss.DebrisFall
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: boss.Spit
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: boss.CeilingCling
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: boss.CeilingSpread
+    _clipKey: sfx_36
     _thenClipKey: 
   - _cue: host.gangster.attack
     _clipKey: sfx_33
@@ -470,34 +536,64 @@ MonoBehaviour:
   - _cue: host.ninja_chain.hurt
     _clipKey: sfx_35
     _thenClipKey: 
+  - _cue: host.amazon.attack
+    _clipKey: sfx_22
+    _thenClipKey: 
   - _cue: host.amazon.hurt
     _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.amazon_elite.attack
+    _clipKey: sfx_22
     _thenClipKey: 
   - _cue: host.amazon_elite.hurt
     _clipKey: sfx_34
     _thenClipKey: 
+  - _cue: host.white_wizard.attack
+    _clipKey: sfx_26
+    _thenClipKey: 
   - _cue: host.white_wizard.hurt
     _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.medium.attack
+    _clipKey: sfx_26
     _thenClipKey: 
   - _cue: host.medium.hurt
     _clipKey: sfx_34
     _thenClipKey: 
+  - _cue: host.snowwoman.attack
+    _clipKey: sfx_30
+    _thenClipKey: 
   - _cue: host.snowwoman.hurt
     _clipKey: sfx_34
+    _thenClipKey: 
+  - _cue: host.ninja.attack
+    _clipKey: sfx_22
     _thenClipKey: 
   - _cue: host.ninja.hurt
     _clipKey: sfx_35
     _thenClipKey: 
-  - _cue: host.guru.hurt
-    _clipKey: sfx_35
+  - _cue: host.baseball.attack
+    _clipKey: sfx_22
     _thenClipKey: 
   - _cue: host.baseball.hurt
     _clipKey: sfx_35
     _thenClipKey: 
-  - _cue: host.vampire.hurt
-    _clipKey: sfx_35
+  - _cue: host.death.attack
+    _clipKey: sfx_22
     _thenClipKey: 
   - _cue: host.death.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.guru.attack
+    _clipKey: sfx_21
+    _thenClipKey: 
+  - _cue: host.guru.hurt
+    _clipKey: sfx_35
+    _thenClipKey: 
+  - _cue: host.vampire.attack
+    _clipKey: sfx_16
+    _thenClipKey: 
+  - _cue: host.vampire.hurt
     _clipKey: sfx_35
     _thenClipKey: 
   - _cue: skill.commando_grenade
@@ -517,6 +613,54 @@ MonoBehaviour:
     _thenClipKey: 
   - _cue: skill.ninja_chain
     _clipKey: sfx_37
+    _thenClipKey: 
+  - _cue: skill.amazon
+    _clipKey: sfx_29
+    _thenClipKey: 
+  - _cue: skill.death
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: skill.guru
+    _clipKey: sfx_30
+    _thenClipKey: 
+  - _cue: skill.thug
+    _clipKey: sfx_33
+    _thenClipKey: 
+  - _cue: skill.hopper_smg
+    _clipKey: sfx_22
+    _thenClipKey: 
+  - _cue: skill.commando_mg
+    _clipKey: sfx_21
+    _thenClipKey: 
+  - _cue: skill.dragoon
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: skill.salamander
+    _clipKey: sfx_24
+    _thenClipKey: 
+  - _cue: skill.snowwoman
+    _clipKey: sfx_26
+    _thenClipKey: 
+  - _cue: skill.ninja
+    _clipKey: sfx_21
+    _thenClipKey: 
+  - _cue: skill.vampire
+    _clipKey: sfx_25
+    _thenClipKey: 
+  - _cue: skill.gangster
+    _clipKey: sfx_16
+    _thenClipKey: 
+  - _cue: skill.hopper
+    _clipKey: sfx_28
+    _thenClipKey: 
+  - _cue: skill.medium
+    _clipKey: sfx_31
+    _thenClipKey: 
+  - _cue: skill.white_wizard
+    _clipKey: sfx_26
+    _thenClipKey: 
+  - _cue: skill.robot
+    _clipKey: sfx_29
     _thenClipKey: 
   _chapterMid:
   - _chapter: 2

@@ -205,6 +205,15 @@ namespace Game.Editor
                 new("hit.reflect", "sfx_27"),
                 new("boss.down", "sfx_20"),
 
+                // ── 원작에 소리가 없던 순간 — 「없는 것보다 있는 게 낫다」(기획 2026-09-15) ──
+                //   원작이 한 번도 안 부른 음원을 파형(길이 · 밝기 · 모양)으로 골랐다. 귀로 확인 전이다.
+                new("event.possess", "sfx_30"),              // 밝게 끄는 1.1초
+                new("event.exit", "sfx_26"),                 // 아주 밝게 끄는 0.8초
+                new("event.bossphase", "sfx_25"),            // 길게 끄는 2.1초
+                new("event.levelup", "sfx_28"),              // 밝은 0.98초
+                new("event.offer", "sfx_16"),                // 0.1초 짧은 음정음
+                new("event.emergency", "sfx_21"),            // 치고 줄어드는 0.65초
+
                 // 4.5 보스 패턴 — 사용처 문서 MAME 실측 확정본(7d261296) 기준
                 new("boss.RailLaser", "sfx_32"),             // 로봇 스네이크 공격
                 new("boss.BurrowStrike", "sfx_32"),          // 로봇 스네이크 공격
@@ -214,7 +223,24 @@ namespace Game.Editor
                 new("boss.MissileSalvo", "sfx_38"),          // 킹핀 비행 기계 공격
                 new("boss.StrafingRun", "sfx_38"),
                 new("boss.BoosterDrop", "sfx_38"),
-                // 가디언은 전용 공격음이 없다(확정) — 격파 폭발만
+
+                // ── 원작에 소리가 없던 패턴 채움 (가디언은 원작 무음 확정이지만 기획이 채우기로) ──
+                new("boss.Crush", "sfx_29"),                 // 크러셔 압착 — 충격
+                new("boss.Conveyor", "sfx_31"),              // 컨베이어 — 저음
+                new("boss.ShieldUp", "sfx_21"),              // 방패 전개
+                new("boss.RamCharge", "sfx_29"),             // 돌진 — 충격
+                new("boss.SegmentThrust", "sfx_22"),         // 가디언 마디 돌진 — 짧은 파열
+                new("boss.SegmentLaunch", "sfx_32"),         // 마디 사출
+                new("boss.CoilWall", "sfx_31"),              // 똬리 — 저음
+                new("boss.HeadBite", "sfx_21"),              // 머리 물기
+                new("boss.VenomCloud", "sfx_24"),            // 파이썬 독 뱉기 — 브레스
+                new("boss.BrickFall", "sfx_29"),             // 벽돌 낙하 — 충격
+                new("boss.BodyShove", "sfx_31"),             // 몸통 밀기 — 저음
+                new("boss.ExecutionLock", "sfx_16"),         // 킹핀 처형 조준 — 짧은 음정음
+                new("boss.DebrisFall", "sfx_29"),            // 로봇 스네이크 천장 파편 — 충격
+                new("boss.Spit", "sfx_24"),                  // 슬러지 뱉기 — 브레스
+                new("boss.CeilingCling", "sfx_31"),          // 천장 붙기 — 저음
+                new("boss.CeilingSpread", "sfx_36"),         // 천장 확산 — 솟구침과 같은 계열
             };
 
             // 4.4 호스트 — 공격음 · 피격음
@@ -225,9 +251,14 @@ namespace Game.Editor
             // ⚠ sfx_37 은 박쥐탄이 아니라 **닌자(사슬) 사슬 공격음**이다(MAME 실측 확정 7d261296).
             //   흡혈귀는 20분 빙의 동안 박쥐탄이 무음이었다.
             Hosts(list, "sfx_37", "sfx_35", "ninja_chain");
-            // 전용 공격음이 없는 몸 — 적중 때 `hit.enemy` 가 난다
-            Hosts(list, null, "sfx_34", "amazon", "amazon_elite", "white_wizard", "medium", "snowwoman");
-            Hosts(list, null, "sfx_35", "ninja", "guru", "baseball", "vampire", "death");   // death 는 D5
+            // ── 원작에 전용 공격음이 없는 몸 — 「없는 것보다 있는 게 낫다」(기획 2026-09-15) ──
+            //   원작이 한 번도 안 부른 음원을 파형으로 골라 채웠다. 적중 때 `hit.enemy` 도 그대로 난다.
+            Hosts(list, "sfx_22", "sfx_34", "amazon", "amazon_elite");     // 0.2초 짧은 파열 — 휘두름
+            Hosts(list, "sfx_26", "sfx_34", "white_wizard", "medium");      // 아주 밝게 끄는 0.8초 — 마법
+            Hosts(list, "sfx_30", "sfx_34", "snowwoman");                    // 밝게 끄는 1.1초 — 얼음
+            Hosts(list, "sfx_22", "sfx_35", "ninja", "baseball", "death");   // death 피격은 D5
+            Hosts(list, "sfx_21", "sfx_35", "guru");                         // 치고 줄어드는 0.65초 — 파동
+            Hosts(list, "sfx_16", "sfx_35", "vampire");                      // 0.1초 짧은 음정음 — 박쥐
 
             // 4.6 액티브 스킬 — 계열이 같은 원작음을 빌린다(D6). 나머지는 무음
             list.Add(new SoundCueEntry("skill.commando_grenade", "sfx_38"));
@@ -236,6 +267,24 @@ namespace Game.Editor
             list.Add(new SoundCueEntry("skill.commando_laser", "sfx_32"));
             list.Add(new SoundCueEntry("skill.baseball", "sfx_27"));
             list.Add(new SoundCueEntry("skill.ninja_chain", "sfx_37"));   // 사슬 묶기 — 사슬 공격음
+
+            // 원작 무음 스킬 채움 (기획 2026-09-15). 아마존 정예는 스킬이 보류라 아무 일도 없으므로 무음 그대로.
+            list.Add(new SoundCueEntry("skill.amazon", "sfx_29"));        // 도약 내려찍기 — 충격
+            list.Add(new SoundCueEntry("skill.death", "sfx_31"));         // 사신 — 저음
+            list.Add(new SoundCueEntry("skill.guru", "sfx_30"));          // 수호 결계 — 밝게 끄는 소리
+            list.Add(new SoundCueEntry("skill.thug", "sfx_33"));          // 난사 — 총격
+            list.Add(new SoundCueEntry("skill.hopper_smg", "sfx_22"));    // 멀리 뛰기 — 짧은 파열
+            list.Add(new SoundCueEntry("skill.commando_mg", "sfx_21"));   // 방벽
+            list.Add(new SoundCueEntry("skill.dragoon", "sfx_24"));       // 불바다 — 브레스
+            list.Add(new SoundCueEntry("skill.salamander", "sfx_24"));    // 독 뱉기 — 브레스
+            list.Add(new SoundCueEntry("skill.snowwoman", "sfx_26"));     // 얼음 껍질 — 아주 밝은 소리
+            list.Add(new SoundCueEntry("skill.ninja", "sfx_21"));         // 분신
+            list.Add(new SoundCueEntry("skill.vampire", "sfx_25"));       // 박쥐 떼 — 길게 끄는 소리
+            list.Add(new SoundCueEntry("skill.gangster", "sfx_16"));      // 전원 표식 — 짧은 음정음
+            list.Add(new SoundCueEntry("skill.hopper", "sfx_28"));        // 치명 고조 — 밝은 소리
+            list.Add(new SoundCueEntry("skill.medium", "sfx_31"));        // 골렘 소환 — 저음
+            list.Add(new SoundCueEntry("skill.white_wizard", "sfx_26"));  // 마법 부채꼴
+            list.Add(new SoundCueEntry("skill.robot", "sfx_29"));         // 포탑 설치 — 충격
 
             return list.ToArray();
         }
