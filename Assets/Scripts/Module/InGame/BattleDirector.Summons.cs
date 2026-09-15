@@ -106,6 +106,20 @@ namespace Game.Module.InGame
             string key = _host != null ? _host.Key : TrashSkeletonKey;
             SpawnSummon(key, "분신", CloneHpPercent, 0f, CloneLifeSeconds,
                         attacks: false, mobile: false, taunt: true, at: at);
+
+            // ⚠ 분신은 **닌자와 같은 그림**이다. 그냥 두면 화면에 닌자가 둘이라
+            //   어느 쪽이 나인지 모른다(기획 2026-09-15). 색으로 가른다 —
+            //   푸르게 식히고 반쯤 비쳐서 "저건 내가 아니다" 가 한눈에 읽히게.
+            if (_summons.Count > 0)
+            {
+                var u = _summons[_summons.Count - 1].U;
+                if (u != null)
+                {
+                    u.MarkPhantom();
+                    // 나타나는 순간에도 표가 나야 한다 — 연기 위에 한 번 더 터뜨린다.
+                    PlayFx("burst", u.Position, 120f, loop: false);
+                }
+            }
         }
 
         /// <param name="profile">

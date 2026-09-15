@@ -306,7 +306,7 @@ MonoBehaviour:
     _primaryStatA: 3
     _primaryStatB: 5
     _attackKind: 2
-    _shotCount: 2
+    _shotCount: 1
     _spreadDegrees: 8
     _rangeMul: 0.9
     _intervalMul: 0.4
@@ -329,7 +329,7 @@ MonoBehaviour:
     _canonRange: 6.8
     _canonInterval: 0.82692313
     _canonShotSpeed: 5.8960004
-    _canonShotCount: 2
+    _canonShotCount: 1
     _canonTelegraph: 0.43
     _canonMaxConcurrent: 2
     _canonHoming: 0
@@ -362,7 +362,7 @@ MonoBehaviour:
     _primaryStatA: 3
     _primaryStatB: 1
     _attackKind: 2
-    _shotCount: 2
+    _shotCount: 1
     _spreadDegrees: 8
     _rangeMul: 1
     _intervalMul: 0.4
@@ -385,7 +385,7 @@ MonoBehaviour:
     _canonRange: 7.2
     _canonInterval: 0.92
     _canonShotSpeed: 6.298
-    _canonShotCount: 2
+    _canonShotCount: 1
     _canonTelegraph: 0.46
     _canonMaxConcurrent: 2
     _canonHoming: 0

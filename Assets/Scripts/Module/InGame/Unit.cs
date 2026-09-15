@@ -339,6 +339,9 @@ namespace Game.Module.InGame
                           Game.Character.HostEntry profile = null)
         {
             Profile = profile;
+            // ⚠ 풀에서 돌려 쓰는 몸이다. 안 끄면 분신이 쓰던 몸을 물려받은
+            //   잡몹이 계속 유령빛으로 서 있는다.
+            IsPhantom = false;
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -1228,13 +1231,38 @@ namespace Game.Module.InGame
             {
                 // 예고 중에는 예고색이 이긴다. 그 다음이 상태이상, 없으면 흰색.
                 if (_telegraph) return;
-                _body.color = TryStatusTint(out var tint) ? tint : Color.white;
+                _body.color = TryStatusTint(out var tint) ? tint : RestColor;
                 return;
             }
             _flashTimer -= dt;
             if (_flashTimer > 0f) { _body.color = new Color(1f, 0.45f, 0.45f, 1f); return; }
-            _body.color = TryStatusTint(out var back) ? back : Color.white;
+            _body.color = TryStatusTint(out var back) ? back : RestColor;
         }
+
+        // ── 분신 ────────────────────────────────────────────────
+        //
+        // 닌자 분신은 **닌자와 같은 그림**을 쓴다. 그대로 두면 화면에 닌자가 둘이라
+        // 어느 쪽이 나인지 모른다 — 조작이 안 먹는 쪽이 나인 줄 알게 된다.
+        // 그림을 새로 받지 않고 **색으로** 가른다: 푸르게 식히고 반쯤 비친다.
+        // 무적 점멸이 투명도를 쓰는 것과 같은 방식이다.
+
+        // ⚠ 0.62 알파 · 옅은 파랑으로는 **약했다.** 닌자가 원래 파란 몸이라
+        //   실제 화면에서 둘이 거의 같아 보였다(실측 2026-09-15).
+        //   더 비치게(0.42) 하고 청록 쪽으로 더 밀어 확실히 가른다.
+        private static readonly Color PhantomColor = new(0.42f, 0.86f, 1f, 0.42f);
+
+        /// <summary>이 몸이 분신인가. 평상시 색이 흰색 대신 유령빛이 된다.</summary>
+        public bool IsPhantom { get; private set; }
+
+        /// <summary>분신으로 세운다. 불러낸 직후 한 번만 부른다.</summary>
+        public void MarkPhantom()
+        {
+            IsPhantom = true;
+            if (_body != null) _body.color = PhantomColor;
+        }
+
+        /// <summary>아무 일도 없을 때의 색. 분신만 흰색이 아니다.</summary>
+        private Color RestColor => IsPhantom ? PhantomColor : Color.white;
 
         /// <summary>
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.
