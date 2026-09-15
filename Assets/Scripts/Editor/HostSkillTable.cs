@@ -66,8 +66,9 @@ namespace Game.EditorTools
             new() { HostKey = "commando_grenade", NameKr = "코만도(수류탄)", SkillNameKr = "융단 폭격",
                      Cooldown = 20f, Base = 1.2f, BaseMax = 1.8f, Spec = 5f, SpecMax = 8f,
                      Confirmed = false },
+            // 얼음 감옥 지속 — 2.5~3.8초가 길었다, **반으로**(기획 2026-09-15)
             new() { HostKey = "snowwoman", NameKr = "설녀", SkillNameKr = "빙결 파쇄",
-                     Cooldown = 14f, Base = 2.5f, BaseMax = 3.8f, Spec = 1f, SpecMax = 3f,
+                     Cooldown = 14f, Base = 1.25f, BaseMax = 1.9f, Spec = 1f, SpecMax = 3f,
                      Confirmed = false },
             new() { HostKey = "thug", NameKr = "폭력배", SkillNameKr = "난사",
                      Cooldown = 8f, Base = 3f, BaseMax = 4.5f, Spec = 3f, SpecMax = 7f,

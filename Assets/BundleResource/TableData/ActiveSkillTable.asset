@@ -214,17 +214,17 @@ MonoBehaviour:
   - _activeSkillKey: psg_h21
     _nameEn: Whiteout
     _nameKr: "\uC5BC\uC74C \uAC10\uC625"
-    _description: "2\uCD08\uAC04 \uC5BC\uC74C\uC5D0 \uB4E4\uC5B4\uAC04\uB2E4. \uB9DE\uC9C0\uB3C4
+    _description: "1\uCD08\uAC04 \uC5BC\uC74C\uC5D0 \uB4E4\uC5B4\uAC04\uB2E4. \uB9DE\uC9C0\uB3C4
       \uB54C\uB9AC\uC9C0\uB3C4 \uC54A\uACE0 \uCCB4\uB825 30% \uB97C \uCC44\uC6B4\uB2E4."
     _scaling:
-      _baseValue: 2.5
-      _baseValueMax: 3.8
+      _baseValue: 1.25
+      _baseValueMax: 1.9
       _specValue: 1
       _specValueMax: 3
   - _activeSkillKey: psg_h22
     _nameEn: Crimson Night
     _nameKr: "\uD608\uC5F0"
-    _description: "\uB458\uB808 5 m \uC758 \uC801 \uBA38\uB9BF\uC218\uB9CC\uD07C
+    _description: "\uD654\uBA74\uC5D0 \uBCF4\uC774\uB294 \uC801 \uBA38\uB9BF\uC218\uB9CC\uD07C
       \uCD5C\uB300 \uCCB4\uB825\uC758 2% \uC529 \uD68C\uBCF5\uD55C\uB2E4."
     _scaling:
       _baseValue: 2
