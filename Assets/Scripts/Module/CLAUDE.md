@@ -120,6 +120,33 @@ description: 이 게임의 모듈 구현 명세 — 새 모듈 추가 시 코드
 
 ---
 
+## 5. SoundDirectorModule (사운드)
+
+**파일**: `Assets/Scripts/Module/Common/Sound/` — `SoundDirectorModule.cs` · `ISoundDirector.cs` · `SoundTable.cs` · `GameSound.cs`
+
+- 역할: 곡(인트로 + 루프)과 효과음을 튼다. 화면·방·판 끝 이벤트를 받아 곡을 고르고, 전투 코드의 한 줄 호출로 효과음을 낸다. 계획서 `Projects/AVSR/AVSR_SoundPlan.md`
+- 의존: `IEventBus`, `IResourceManager` (둘 다 `Initialize` 에서만 쓴다)
+- 등록 방식: `[Module(Layer = ModuleLayer.Game)]` 자동 등록 · `ISoundDirector` 제공 · `ITickable` (이음매 예약 · 페이드)
+- 데이터: `Assets/BundleResource/TableData/SoundTable.asset` · 주소 `TableData/SoundTable` · 라벨 `label_tabledata`
+  - 음원 주소 `Sounds/bgm_01` … `Sounds/sfx_38` · 그룹 `sounds` · 라벨 `label_sound`
+- 핵심 멤버:
+  - `PlayMusic(cue)` — 같은 곡이면 **다시 틀지 않는다**, 다르면 0.4초 페이드아웃 뒤 바꾼다
+  - `StopMusic()` · `PlayCue(cue)` · `PlayHostAttack(hostKey)` · `PlayHostHurt(hostKey)` · `PlaySkill(hostKey)` · `StopAllEffects()`
+  - 정적 창구 `GameSound.Music/Cue/HostAttack/HostHurt/Skill/StopEffects` — `CoreModule.TryGet` 을 매번 안 쓰게
+- 큐 이름: `screen.{title|opening|lobby}` · `stage.{clear|fail}` · `chapter.{n}.{normal|boss}` · `ui.play` · `run.{gold|card|shop}` · `hit.enemy` · `hit.reflect` · `boss.down` · `boss.{BossDraw}` · `host.{hostKey}.{attack|hurt}` · `skill.{hostKey}`
+  - 챕터 「중간 구역」 곡은 `SoundTable._chapterMid` (챕터 · 방 범위 · 음원)
+- 에디터 도구 `Tools/Game/사운드/사운드 표 만들기` — `sounds` 그룹 · 주소 35개 · 임포트 설정 · 매니페스트(`Projects/AVSR/_sound_extract/sound_manifest.json`) 루프 지점 · 적용표를 한 번에 만든다
+  - 임포트: BGM `Compressed In Memory` · Vorbis 0.7 / SFX `Decompress On Load` · ADPCM
+- 주의사항:
+  - 프레임워크 `SoundModule` 은 **등록하지 않는다.** `PlayBGM` 은 파일 전체만 되풀이해 인트로가 매 바퀴 다시 나오고, `Play` 는 부를 때마다 주소로 로드(참조 수만 늘고 해제가 없다)라 연사에서 늦고 풀이 바닥난다
+  - 루프는 AudioSource 두 개를 `PlayScheduled`(dspTime)로 번갈아 예약한다. 이음매 1초 전에 다음 바퀴를 건다. 예약을 놓치면(에디터 일시정지 등) 지금부터 루프 시작점으로 다시 잇는다
+  - 같은 효과음은 0.06초 안에 다시 나지 않고 동시에 3개까지다. 목소리 16개가 다 차면 버린다
+  - 곡·효과음 번호를 코드에 적지 않는다 — 큐 → 음원 대응은 표에 있다
+  - 효과음 호출은 교전 중 매 발 불린다 — 문자열을 조립하지 않는다(호스트 키로 미리 만든 사전을 찾는다)
+  - `Samples/` 37개는 등록하지 않는다 (원작 사운드 CPU 가 조합하는 원재료)
+
+---
+
 ## API DTO 작성 규칙
 
 **위치**: `Assets/Scripts/Module/Common/Dto/`  
