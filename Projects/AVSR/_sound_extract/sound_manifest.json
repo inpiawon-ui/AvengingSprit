@@ -1,0 +1,735 @@
+{
+  "source": "Avenging Spirit (Jaleco, 1991) arcade ROM set avspirit, MAME 0.289",
+  "notes": "bgm/sfx: MAME wavwrite 48kHz mono(원본 L==R). oki_sample: spirit14(oki1)/spirit13(oki2) ADPCM 직접 디코딩 24242Hz.",
+  "items": [
+    {
+      "dst": "BGM/bgm_01.wav",
+      "soundCode": 1,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 867120,
+        "loopSamples": 9317745
+      },
+      "seamNcc": 0.9997,
+      "sampleRate": 48000,
+      "lengthSamples": 10184865,
+      "lengthSec": 212.185
+    },
+    {
+      "dst": "BGM/bgm_02.wav",
+      "soundCode": 2,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 799968,
+        "loopSamples": 9312900
+      },
+      "seamNcc": 0.9997,
+      "sampleRate": 48000,
+      "lengthSamples": 10112868,
+      "lengthSec": 210.685
+    },
+    {
+      "dst": "BGM/bgm_03.wav",
+      "soundCode": 3,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 597840,
+        "loopSamples": 6145123
+      },
+      "seamNcc": 1.0,
+      "sampleRate": 48000,
+      "lengthSamples": 6742963,
+      "lengthSec": 140.478
+    },
+    {
+      "dst": "BGM/bgm_04.wav",
+      "soundCode": 4,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 148080,
+        "loopSamples": 11022758
+      },
+      "seamNcc": 1.0,
+      "sampleRate": 48000,
+      "lengthSamples": 11170838,
+      "lengthSec": 232.726
+    },
+    {
+      "dst": "BGM/bgm_05.wav",
+      "soundCode": 5,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 1058688,
+        "loopSamples": 3204150
+      },
+      "seamNcc": 0.9999,
+      "sampleRate": 48000,
+      "lengthSamples": 4262838,
+      "lengthSec": 88.809
+    },
+    {
+      "dst": "BGM/bgm_06.wav",
+      "soundCode": 6,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 1015536,
+        "loopSamples": 5533532
+      },
+      "seamNcc": 0.9997,
+      "sampleRate": 48000,
+      "lengthSamples": 6549068,
+      "lengthSec": 136.439
+    },
+    {
+      "dst": "BGM/bgm_07.wav",
+      "soundCode": 7,
+      "kind": "bgm",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 166622,
+      "lengthSec": 3.471
+    },
+    {
+      "dst": "BGM/bgm_08.wav",
+      "soundCode": 8,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 1148640,
+        "loopSamples": 2297083
+      },
+      "seamNcc": 0.9994,
+      "sampleRate": 48000,
+      "lengthSamples": 3445723,
+      "lengthSec": 71.786
+    },
+    {
+      "dst": "BGM/bgm_09.wav",
+      "soundCode": 9,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 398256,
+        "loopSamples": 3452787
+      },
+      "seamNcc": 0.9999,
+      "sampleRate": 48000,
+      "lengthSamples": 3851043,
+      "lengthSec": 80.23
+    },
+    {
+      "dst": "BGM/bgm_10.wav",
+      "soundCode": 10,
+      "kind": "bgm",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 816594,
+      "lengthSec": 17.012
+    },
+    {
+      "dst": "BGM/bgm_11.wav",
+      "soundCode": 11,
+      "kind": "bgm",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 3396377,
+      "lengthSec": 70.758
+    },
+    {
+      "dst": "BGM/bgm_12.wav",
+      "soundCode": 12,
+      "kind": "bgm",
+      "loop": {
+        "startSamples": 377088,
+        "loopSamples": 3651572
+      },
+      "seamNcc": 1.0,
+      "sampleRate": 48000,
+      "lengthSamples": 4028660,
+      "lengthSec": 83.93
+    },
+    {
+      "dst": "SFX/sfx_16.wav",
+      "soundCode": 16,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 4561,
+      "lengthSec": 0.095
+    },
+    {
+      "dst": "SFX/sfx_17.wav",
+      "soundCode": 17,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 80290,
+      "lengthSec": 1.673
+    },
+    {
+      "dst": "SFX/sfx_18.wav",
+      "soundCode": 18,
+      "kind": "sfx",
+      "loop": {
+        "startSamples": 582384,
+        "loopSamples": 247166
+      },
+      "seamNcc": 1.0,
+      "sampleRate": 48000,
+      "lengthSamples": 829550,
+      "lengthSec": 17.282
+    },
+    {
+      "dst": "SFX/sfx_19.wav",
+      "soundCode": 19,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 34535,
+      "lengthSec": 0.719
+    },
+    {
+      "dst": "SFX/sfx_20.wav",
+      "soundCode": 20,
+      "kind": "sfx",
+      "loop": {
+        "startSamples": 27504,
+        "loopSamples": 256152
+      },
+      "seamNcc": 1.0,
+      "sampleRate": 48000,
+      "lengthSamples": 283656,
+      "lengthSec": 5.91
+    },
+    {
+      "dst": "SFX/sfx_21.wav",
+      "soundCode": 21,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 31149,
+      "lengthSec": 0.649
+    },
+    {
+      "dst": "SFX/sfx_22.wav",
+      "soundCode": 22,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 9623,
+      "lengthSec": 0.2
+    },
+    {
+      "dst": "SFX/sfx_23.wav",
+      "soundCode": 23,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 46961,
+      "lengthSec": 0.978
+    },
+    {
+      "dst": "SFX/sfx_24.wav",
+      "soundCode": 24,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 42918,
+      "lengthSec": 0.894
+    },
+    {
+      "dst": "SFX/sfx_25.wav",
+      "soundCode": 25,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 101360,
+      "lengthSec": 2.112
+    },
+    {
+      "dst": "SFX/sfx_26.wav",
+      "soundCode": 26,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 38119,
+      "lengthSec": 0.794
+    },
+    {
+      "dst": "SFX/sfx_27.wav",
+      "soundCode": 27,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 26814,
+      "lengthSec": 0.559
+    },
+    {
+      "dst": "SFX/sfx_28.wav",
+      "soundCode": 28,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 47156,
+      "lengthSec": 0.982
+    },
+    {
+      "dst": "SFX/sfx_29.wav",
+      "soundCode": 29,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 40636,
+      "lengthSec": 0.847
+    },
+    {
+      "dst": "SFX/sfx_30.wav",
+      "soundCode": 30,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 51188,
+      "lengthSec": 1.066
+    },
+    {
+      "dst": "SFX/sfx_31.wav",
+      "soundCode": 31,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 46628,
+      "lengthSec": 0.971
+    },
+    {
+      "dst": "SFX/sfx_32.wav",
+      "soundCode": 32,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 8922,
+      "lengthSec": 0.186
+    },
+    {
+      "dst": "SFX/sfx_33.wav",
+      "soundCode": 33,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 12743,
+      "lengthSec": 0.265
+    },
+    {
+      "dst": "SFX/sfx_34.wav",
+      "soundCode": 34,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 14597,
+      "lengthSec": 0.304
+    },
+    {
+      "dst": "SFX/sfx_35.wav",
+      "soundCode": 35,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 16216,
+      "lengthSec": 0.338
+    },
+    {
+      "dst": "SFX/sfx_36.wav",
+      "soundCode": 36,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 15409,
+      "lengthSec": 0.321
+    },
+    {
+      "dst": "SFX/sfx_37.wav",
+      "soundCode": 37,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 21087,
+      "lengthSec": 0.439
+    },
+    {
+      "dst": "SFX/sfx_38.wav",
+      "soundCode": 38,
+      "kind": "sfx",
+      "loop": null,
+      "sampleRate": 48000,
+      "lengthSamples": 24328,
+      "lengthSec": 0.507
+    },
+    {
+      "dst": "Samples/oki1_001.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 1,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 7936,
+      "lengthSec": 0.327
+    },
+    {
+      "dst": "Samples/oki1_002.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 2,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 12960,
+      "lengthSec": 0.535
+    },
+    {
+      "dst": "Samples/oki1_003.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 3,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 15808,
+      "lengthSec": 0.652
+    },
+    {
+      "dst": "Samples/oki1_004.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 4,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 16064,
+      "lengthSec": 0.663
+    },
+    {
+      "dst": "Samples/oki1_005.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 5,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 14784,
+      "lengthSec": 0.61
+    },
+    {
+      "dst": "Samples/oki1_006.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 6,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 10208,
+      "lengthSec": 0.421
+    },
+    {
+      "dst": "Samples/oki1_007.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 7,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 11136,
+      "lengthSec": 0.459
+    },
+    {
+      "dst": "Samples/oki1_008.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 8,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 11712,
+      "lengthSec": 0.483
+    },
+    {
+      "dst": "Samples/oki1_009.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 9,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 26976,
+      "lengthSec": 1.113
+    },
+    {
+      "dst": "Samples/oki1_010.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 10,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 31424,
+      "lengthSec": 1.296
+    },
+    {
+      "dst": "Samples/oki1_011.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 11,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 10304,
+      "lengthSec": 0.425
+    },
+    {
+      "dst": "Samples/oki1_012.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 12,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 50144,
+      "lengthSec": 2.068
+    },
+    {
+      "dst": "Samples/oki1_013.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 13,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 9792,
+      "lengthSec": 0.404
+    },
+    {
+      "dst": "Samples/oki1_014.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 14,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 7488,
+      "lengthSec": 0.309
+    },
+    {
+      "dst": "Samples/oki1_015.wav",
+      "kind": "oki_sample",
+      "chip": "oki1",
+      "sampleIndex": 15,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 50688,
+      "lengthSec": 2.091
+    },
+    {
+      "dst": "Samples/oki2_001.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 1,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 2880,
+      "lengthSec": 0.119
+    },
+    {
+      "dst": "Samples/oki2_002.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 2,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 29184,
+      "lengthSec": 1.204
+    },
+    {
+      "dst": "Samples/oki2_003.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 3,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 21824,
+      "lengthSec": 0.9
+    },
+    {
+      "dst": "Samples/oki2_004.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 4,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 65536,
+      "lengthSec": 2.703
+    },
+    {
+      "dst": "Samples/oki2_005.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 5,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 11072,
+      "lengthSec": 0.457
+    },
+    {
+      "dst": "Samples/oki2_006.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 6,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 6080,
+      "lengthSec": 0.251
+    },
+    {
+      "dst": "Samples/oki2_007.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 7,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 29664,
+      "lengthSec": 1.224
+    },
+    {
+      "dst": "Samples/oki2_008.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 8,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 27104,
+      "lengthSec": 1.118
+    },
+    {
+      "dst": "Samples/oki2_009.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 9,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 64000,
+      "lengthSec": 2.64
+    },
+    {
+      "dst": "Samples/oki2_010.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 10,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 24064,
+      "lengthSec": 0.993
+    },
+    {
+      "dst": "Samples/oki2_011.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 11,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 16928,
+      "lengthSec": 0.698
+    },
+    {
+      "dst": "Samples/oki2_012.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 12,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 29792,
+      "lengthSec": 1.229
+    },
+    {
+      "dst": "Samples/oki2_013.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 13,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 25664,
+      "lengthSec": 1.059
+    },
+    {
+      "dst": "Samples/oki2_014.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 14,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 32320,
+      "lengthSec": 1.333
+    },
+    {
+      "dst": "Samples/oki2_015.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 15,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 29440,
+      "lengthSec": 1.214
+    },
+    {
+      "dst": "Samples/oki2_016.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 16,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 5632,
+      "lengthSec": 0.232
+    },
+    {
+      "dst": "Samples/oki2_017.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 17,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 8192,
+      "lengthSec": 0.338
+    },
+    {
+      "dst": "Samples/oki2_018.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 18,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 9216,
+      "lengthSec": 0.38
+    },
+    {
+      "dst": "Samples/oki2_019.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 19,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 10240,
+      "lengthSec": 0.422
+    },
+    {
+      "dst": "Samples/oki2_020.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 20,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 9728,
+      "lengthSec": 0.401
+    },
+    {
+      "dst": "Samples/oki2_021.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 21,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 13312,
+      "lengthSec": 0.549
+    },
+    {
+      "dst": "Samples/oki2_022.wav",
+      "kind": "oki_sample",
+      "chip": "oki2",
+      "sampleIndex": 22,
+      "loop": null,
+      "sampleRate": 24242,
+      "lengthSamples": 15360,
+      "lengthSec": 0.634
+    }
+  ]
+}
