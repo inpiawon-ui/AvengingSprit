@@ -204,10 +204,22 @@ namespace Game.Module.Common
             if (!IsGothic(text.font)) return;   // 픽셀 폰트 칸은 건드리지 않는다
 
             // 재질 프리셋 이름 꼬리를 먼저 읽는다 — 폰트를 바꾸면 재질이 기본으로 돌아간다.
-            string suffix = PresetSuffix(text.fontSharedMaterial);
+            var before = text.fontSharedMaterial;
+            string suffix = PresetSuffix(before);
             text.font = target.Gothic;
             var preset = FindPreset(target, suffix);
-            if (preset != null) text.fontSharedMaterial = preset;
+            if (preset != null) { text.fontSharedMaterial = preset; return; }
+
+            // ⚠ 프리셋이 아닌 **제 재질**(피해 숫자처럼 외곽선을 따로 올린 인스턴스)은 폰트만 바뀌고
+            //   재질이 옛 폰트의 아틀라스를 그대로 물고 있었다 — 새 글자 좌표로 옛 아틀라스를 읽어
+            //   숫자 뒤에 **검은 네모**가 떴다(2026-09-15). 설정은 살리고 아틀라스만 갈아 끼운다.
+            var now = text.fontSharedMaterial;
+            if (now != null && now.mainTexture != target.Gothic.atlasTexture)
+            {
+                var copy = new Material(now) { name = now.name };
+                copy.SetTexture(ShaderUtilities.ID_MainTex, target.Gothic.atlasTexture);
+                text.fontSharedMaterial = copy;
+            }
         }
 
         private bool IsGothic(TMP_FontAsset font)
