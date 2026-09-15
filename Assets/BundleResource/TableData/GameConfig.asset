@@ -39,6 +39,7 @@ MonoBehaviour:
   _expPerBoss: 60
   _expToLevelBase: 40
   _expGrowthPercent: 45
+  _sandboxNoExecute: 0
   _sandboxMode: 1
   _attackSpeedMul: 0.7
   _enemyIntervalMul: 0.85

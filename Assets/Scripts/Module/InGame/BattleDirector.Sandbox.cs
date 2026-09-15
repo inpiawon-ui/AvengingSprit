@@ -46,7 +46,11 @@ namespace Game.Module.InGame
         ///   사신의 시간 · 암살 카드는 그냥 죽인다 — 그래서 적이 계속 사라졌다
         ///   (기획 2026-09-15). 테스트 판에서는 세 곳 모두 막는다.
         /// </summary>
-        private bool SandboxBlocksExecute => Sandbox;
+        /// <summary>
+        /// ⚠ **즉사를 보려면 `GameConfig._sandboxNoExecute` 를 꺼라.**
+        ///   기본은 막혀 있다 — 안 막으면 표식 처형만으로 방이 쓸려서 연출을 못 본다.
+        /// </summary>
+        private bool SandboxBlocksExecute => Sandbox && _config.SandboxNoExecute;
 
         /// <summary>
         /// 유령 시계를 멈출 차례인가.

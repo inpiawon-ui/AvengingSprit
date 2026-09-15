@@ -161,6 +161,12 @@ namespace Game.Character
         [Tooltip("켜면 방마다 적 5마리 · 체력 200배 · 스킬 게이지가 안 깎인다")]
         [SerializeField] private bool _sandboxMode;
 
+        // ⚠ 즉사는 **체력을 안 본다.** 200배로 불려도 갱스터 표식 처형 · 사신의 시간 ·
+        //   암살 카드는 그냥 죽인다. 그래서 기본은 막아 두는데,
+        //   **즉사 자체를 보고 싶을 때는 이 칸을 꺼야 한다.**
+        [Tooltip("테스트 판에서 즉사(갱스터 처형·사신·암살)를 막는다. 기본은 꺼짐 — 즉사가 그대로 터진다")]
+        [SerializeField] private bool _sandboxNoExecute;
+
         [Header("전투 전체 손 속도")]
         [Tooltip("평타 속도 배수. 1 = 지금 속도, 0.7 = 0.7배로 느리게. 내 몸·잡몹·보스·불러낸 몸에 모두 걸린다")]
         [SerializeField] private float _attackSpeedMul = 0.7f;
@@ -375,6 +381,9 @@ namespace Game.Character
 
         /// <summary>연출 확인용 테스트 판. 켜면 적이 안 죽고 스킬이 계속 나간다.</summary>
         public bool SandboxMode => _sandboxMode;
+
+        /// <summary>테스트 판에서 즉사를 막는가. 끄면 즉사가 그대로 터진다.</summary>
+        public bool SandboxNoExecute => _sandboxNoExecute;
 
         /// <summary>
         /// 전투 전체의 평타 속도 배수 (2026-09-15). 1 이 지금까지의 속도다.
