@@ -249,9 +249,9 @@ namespace Game.Module.InGame
         private const float RangedKnockMeters = 1f;
         /// <summary>
         /// 밀린 뒤 맞은 자세로 서 있는 시간. 바로 걸어오면 순간이동처럼 보였다(기획 2026-09-16).
-        /// 0.1초 → 1초로 늘려 시험 중(기획 2026-09-16 · 사용자가 직접 테스트).
+        /// 0.1초 → 1초 → 0.5초로 시험 중(기획 2026-09-16 · 사용자가 직접 테스트).
         /// </summary>
-        private const float RangedKnockHoldSeconds = 1f;
+        private const float RangedKnockHoldSeconds = 0.5f;
         private const float RangedKnockCooldown = 0.2f;
         private readonly System.Collections.Generic.Dictionary<Unit, float> _rangedKnockAt = new();
 
