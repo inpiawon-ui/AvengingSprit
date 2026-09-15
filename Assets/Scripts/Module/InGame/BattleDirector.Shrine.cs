@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Module.Events;
 using UnityEngine;
+using Localize = Game.Module.Common.Localize;
 
 namespace Game.Module.InGame
 {
@@ -54,12 +55,12 @@ namespace Game.Module.InGame
 
         private static string ShrineTitleOf(ShrineGift g) => g switch
         {
-            ShrineGift.FullHeal => "몸을 아문다",
-            ShrineGift.SoulHeal => "영혼을 채운다",
-            ShrineGift.MaxHpUp  => "그릇을 넓힌다",
-            ShrineGift.AtkUp    => "힘을 받는다",
-            ShrineGift.SpeedUp  => "손이 빨라진다",
-            _                   => "멀리 닿는다",
+            ShrineGift.FullHeal => Localize.Get("ui.shrine.full_heal.title"),
+            ShrineGift.SoulHeal => Localize.Get("ui.shrine.soul_heal.title"),
+            ShrineGift.MaxHpUp  => Localize.Get("ui.shrine.max_hp.title"),
+            ShrineGift.AtkUp    => Localize.Get("ui.shrine.atk.title"),
+            ShrineGift.SpeedUp  => Localize.Get("ui.shrine.speed.title"),
+            _                   => Localize.Get("ui.shrine.range.title"),
         };
 
         /// <summary>
@@ -70,12 +71,12 @@ namespace Game.Module.InGame
         /// </summary>
         private static string ShrineDescOf(ShrineGift g) => g switch
         {
-            ShrineGift.FullHeal => "호스트 체력을 가득 채운다",
-            ShrineGift.SoulHeal => "고스트 체력을 가득 채운다",
-            ShrineGift.MaxHpUp  => "뺏는 몸이 더 튼튼해진다",
-            ShrineGift.AtkUp    => "공격력이 오른다",
-            ShrineGift.SpeedUp  => "공격이 빨라진다",
-            _                   => "사거리가 늘어난다",
+            ShrineGift.FullHeal => Localize.Get("ui.shrine.full_heal.desc"),
+            ShrineGift.SoulHeal => Localize.Get("ui.shrine.soul_heal.desc"),
+            ShrineGift.MaxHpUp  => Localize.Get("ui.shrine.max_hp.desc"),
+            ShrineGift.AtkUp    => Localize.Get("ui.shrine.atk.desc"),
+            ShrineGift.SpeedUp  => Localize.Get("ui.shrine.speed.desc"),
+            _                   => Localize.Get("ui.shrine.range.desc"),
         };
 
         /// <summary>제단 선물의 아이콘. 뜻이 가장 가까운 카드 그림을 빌려 쓴다.</summary>
@@ -148,11 +149,11 @@ namespace Game.Module.InGame
             switch (g)
             {
                 case ShrineGift.FullHeal:
-                    if (_host == null) return "몸이 없어 받을 수 없었다.";
+                    if (_host == null) return Localize.Get("ui.event.result.no_body");
                     _host.Heal(_host.HpMax);
                     PublishHp();
                     ShowHeal(_host.Position, _host.HpMax);
-                    return "호스트 체력을 가득 채웠다";
+                    return Localize.Get("ui.shrine.full_heal.result");
 
                 case ShrineGift.SoulHeal:
                 {
@@ -162,7 +163,7 @@ namespace Game.Module.InGame
                     var at = Avatar != null ? Avatar.Position : Vector2.zero;
                     PlayFx("heal_plus", at, 128f, loop: false);
                     ShowHeal(at, Mathf.Max(1, _ghostHp - before));
-                    return "고스트 체력을 가득 채웠다";
+                    return Localize.Get("ui.shrine.soul_heal.result");
                 }
 
                 // ⚠ 아래 셋은 **카드 통로를 그대로 탄다.** 제단 전용 배율을 따로 두면
@@ -174,19 +175,19 @@ namespace Game.Module.InGame
                         _host.SetHpMax(Mathf.RoundToInt(_host.HpMax * (1f + ShrineMaxHpUpPercent / 100f)));
                         PublishHp();
                     }
-                    return "뺏는 몸이 더 튼튼해졌다";
+                    return Localize.Get("ui.shrine.max_hp.result");
 
                 case ShrineGift.AtkUp:
                     _buffs.AddShrineAtkPercent(ShrineAtkUpPercent);
-                    return "공격력이 올랐다";
+                    return Localize.Get("ui.shrine.atk.result");
 
                 case ShrineGift.SpeedUp:
                     _buffs.AddShrineAttackSpeedPercent(ShrineSpeedUpPercent);
-                    return "공격이 빨라졌다";
+                    return Localize.Get("ui.shrine.speed.result");
 
                 default:
                     _buffs.AddShrineRangePercent(ShrineRangeUpPercent);
-                    return "사거리가 늘어났다";
+                    return Localize.Get("ui.shrine.range.result");
             }
         }
     }

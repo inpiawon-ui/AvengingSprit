@@ -109,6 +109,9 @@ namespace Game.Module.Common.UI
             "화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.",
         };
 
+        /// <summary>한국어 원문은 위 배열이 쥐고, 번역은 문자열 표 `tip.loading.{번호}` 에 있다.</summary>
+        private static string TipOf(int index) => Localize.FromTable($"tip.loading.{index}", Tips[index]);
+
         private CanvasGroup _group;
         private Image _backdrop;
         private Image _band;
@@ -191,7 +194,7 @@ namespace Game.Module.Common.UI
             // 팁은 시작 지점만 무작위다. 이후로는 순서대로 돌아 한 바퀴 안에 겹치지 않는다.
             _tipIndex = Random.Range(0, Tips.Length);
             _tipTimer = TipSeconds;
-            if (_tip != null) _tip.text = Tips[_tipIndex];
+            if (_tip != null) _tip.text = TipOf(_tipIndex);
 
             // 그림은 한 번만 받아 둔다. 아직 안 왔으면 이번 전환에는 없는 대로 뜬다 —
             // 가림막이 즉시 뜨는 것 자체가 목적이라 그림을 기다리지 않는다.
@@ -298,7 +301,7 @@ namespace Game.Module.Common.UI
                     _tipTimer += TipSeconds;
                     // 한 바퀴 돌 때까지 같은 팁이 다시 나오지 않는다
                     _tipIndex = (_tipIndex + 1) % Tips.Length;
-                    _tip.text = Tips[_tipIndex];
+                    _tip.text = TipOf(_tipIndex);
                 }
             }
 

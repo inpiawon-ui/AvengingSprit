@@ -8768,6 +8768,7 @@ GameObject:
   - component: {fileID: 343904002753462649}
   - component: {fileID: 435453149025383966}
   - component: {fileID: 6755963514844200077}
+  - component: {fileID: 3176690197513743602}
   m_Layer: 0
   m_Name: ShopLeaveText
   m_TagString: Untagged
@@ -8894,6 +8895,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3176690197513743602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4444332218599087526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.shop.leave
 --- !u!1 &4553788404363406495
 GameObject:
   m_ObjectHideFlags: 0
@@ -16538,6 +16552,7 @@ GameObject:
   - component: {fileID: 8568508726344559567}
   - component: {fileID: 5283198073335806778}
   - component: {fileID: 5389431789380339053}
+  - component: {fileID: 8306262742553322018}
   m_Layer: 0
   m_Name: ShopTitleText
   m_TagString: Untagged
@@ -16664,6 +16679,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8306262742553322018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595916037895712831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.shop.title
 --- !u!1 &8606373797240614748
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,7 +32,8 @@ namespace Game.Module.Common.UI
             if (SystemPopup.IsShowing) { SystemPopup.Close(); return; }
             if (_target != null && _target.OnBackPressed()) return;
 
-            SystemPopup.Show("게임을 종료하시겠습니까?", Application.Quit, "종료", "취소");
+            SystemPopup.Show(Localize.Get("ui.common.quit.message"), Application.Quit,
+                             Localize.Get("ui.common.quit"), Localize.Get("ui.common.cancel"));
         }
 
         /// <summary>

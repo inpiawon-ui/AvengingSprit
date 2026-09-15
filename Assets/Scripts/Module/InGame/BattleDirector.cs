@@ -12,6 +12,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
+using Localize = Game.Module.Common.Localize;
 
 namespace Game.Module.InGame
 {
@@ -512,7 +513,7 @@ namespace Game.Module.InGame
                                  + $"유저데이터 준비={_player != null && _player.IsReady}");
                 return;
             }
-            EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position, 100);
+            EnterHost(entry, entry.HostKey, entry.DisplayName, _ghost.Position, 100);
         }
 
         // ── 정본 방 ───────────────────────────────────────────────
@@ -736,7 +737,7 @@ namespace Game.Module.InGame
                 var u = NewUnit(isHost ? $"Enemy_{s.ActorId}_{s.SpawnId}"
                                        : $"Trash_{e.HostKey}_{s.SpawnId}");
                 NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, TrashSprite(e),
+                u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),
                         // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
                         // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
                         Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)),
@@ -2697,7 +2698,7 @@ namespace Game.Module.InGame
                 var boss = NewUnit("Boss");
                 boss.Setup(UnitSide.Enemy,
                            bossKey,
-                           canon ? _canonRoom.BossName : def?.NameKr ?? "BOSS",
+                           canon ? _canonRoom.BossName : def?.DisplayName ?? "BOSS",
                            bossArt,
                            Mathf.RoundToInt(BossHpMul * (
                                canon ? _canonRoom.BossHp
@@ -2855,7 +2856,7 @@ namespace Game.Module.InGame
                 // 적도 호스트다 — 같은 공격 방식을 쓴다. 방마다 교전 양상이 달라진다.
                 // 정예는 수가 적은 대신 하나하나가 세다 — 빙의 대상이 귀해진다.
                 NoteMetHost(e);
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
                         Mathf.RoundToInt(EnemyHpOf(e) * (elite ? _config.EliteHpMul : 1f)),
                         Mathf.RoundToInt(EnemyAtkOf(e) * (elite ? _config.EliteAtkMul : 1f)),
                         EnemySpeedOf(e),
@@ -3294,7 +3295,7 @@ namespace Game.Module.InGame
             var e = EnemyAt(hosts, _roomIndex, _enemies.Count);
             var u = NewUnit($"RescueHost_{e.HostKey}");
             NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
-            u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+            u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
                     Mathf.RoundToInt(EnemyHpOf(e)), Mathf.RoundToInt(EnemyAtkOf(e)),
                     EnemySpeedOf(e), EnemyRangeOf(e), EnemyIntervalOf(e),
                     UnitBox(84f, 78f), isBoss: false, profile: e);
@@ -3358,7 +3359,7 @@ namespace Game.Module.InGame
 
             _ghostHp = Mathf.Max(1, _ghostHp - _config.EmergencyGhostCost);
 
-            EnterHost(entry, entry.HostKey, entry.NameKr, _ghost.Position,
+            EnterHost(entry, entry.HostKey, entry.DisplayName, _ghost.Position,
                       _config.EmergencyHostHpPercent);
             _bus.Publish(new EmergencyHostEvent
             {
@@ -4535,7 +4536,7 @@ namespace Game.Module.InGame
                 var e = hosts[(_enemies.Count * 3 + i * 7) % hosts.Count];
                 var u = NewUnit($"Minion_{e.HostKey}_{_enemies.Count}");
                 NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
-                u.Setup(UnitSide.Enemy, e.HostKey, e.NameKr, UnitGet(e.SpriteKey),
+                u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
                         Mathf.Max(1, Mathf.RoundToInt(EnemyHpOf(e) * 0.6f)),
                         EnemyAtkOf(e),
                         EnemySpeedOf(e),
@@ -5611,9 +5612,9 @@ namespace Game.Module.InGame
                 var card = _buffTable.Get(o.BuffKey);
                 int lv = _buffs.LevelOf(o.BuffKey);
                 names[i] = card != null
-                    ? (lv > 0 ? $"{card.NameKr}  Lv.{lv}→{Mathf.Min(lv + 1, card.MaxLevel)}" : card.NameKr)
+                    ? (lv > 0 ? $"{card.DisplayName}  Lv.{lv}→{Mathf.Min(lv + 1, card.MaxLevel)}" : card.DisplayName)
                     : o.CardId;
-                descs[i] = card != null ? card.Description : string.Empty;
+                descs[i] = card != null ? card.DisplayDescription : string.Empty;
                 prices[i] = PriceOf(o);
                 can[i] = CanBuyCard(o);
                 icons[i] = BuffIconOf(card);
@@ -5624,8 +5625,8 @@ namespace Game.Module.InGame
             {
                 var he = _hostOffers[0];
                 int price = HostPriceOf();
-                names[hostAt] = $"몸 — {he.NameKr}";
-                descs[hostAt] = "그 자리에서 이 몸을 빼앗는다";
+                names[hostAt] = Localize.Format("ui.shop.host.name", he.DisplayName);
+                descs[hostAt] = Localize.Get("ui.shop.host.desc");
                 prices[hostAt] = price;
                 can[hostAt] = _shopBought < _shopRules.TotalPurchaseLimit && _runGold >= price;
                 // ⚠ UI 아틀라스에는 몸의 초상이 없다(`hostportraitimage_*` 는 로비 쪽 그림이다).
@@ -5648,8 +5649,8 @@ namespace Game.Module.InGame
             }
 
             int heal = ShopHealIndex;
-            names[heal] = "치료";
-            descs[heal] = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
+            names[heal] = Localize.Get("ui.shop.heal.name");
+            descs[heal] = Localize.Format("ui.shop.heal.desc", _shopRules.HostHealPct, _shopRules.GhostHealPct);
             prices[heal] = _shopRules.HealPrice;
             // ⚠ 치료는 **한 번만** 판다. 카드·몸은 산 뒤 진열대에서 빠지고
             //   소모품은 하나만 들 수 있는데, 치료만 한도가 남으면 두 번 살 수 있었다.
@@ -5662,8 +5663,8 @@ namespace Game.Module.InGame
             {
                 Names = names, Descs = descs, Prices = prices, CanBuy = can, Icons = icons,
                 Gold = _runGold,
-                LimitLine = $"남은 구매 {_shopRules.TotalPurchaseLimit - _shopBought}회"
-                          + $" · 카드 {_shopRules.CardPurchaseLimit - _shopCardsBought}장",
+                LimitLine = Localize.Format("ui.shop.limit", _shopRules.TotalPurchaseLimit - _shopBought,
+                                          _shopRules.CardPurchaseLimit - _shopCardsBought),
             });
         }
 
@@ -5697,8 +5698,8 @@ namespace Game.Module.InGame
                 // 「뺏을 몸을 세워 두고 빙의」가 아니라 바로 입는다.
                 var at = Avatar != null ? Avatar.Position : Vector2.zero;
                 if (_host != null) LeaveHost();
-                EnterHost(he, he.HostKey, he.NameKr, at, 100);
-                line = $"{he.NameKr} 빙의";
+                EnterHost(he, he.HostKey, he.DisplayName, at, 100);
+                line = Localize.Format("ui.shop.result.host", he.DisplayName);
             }
             else if (index == ShopConsumableIndex)
             {
@@ -5709,7 +5710,7 @@ namespace Game.Module.InGame
                 AddRunGold(-price);
                 _shopBought++;
                 _pendingConsumable = _shopConsumable;
-                line = $"{ConsumableNameOf(_shopConsumable)} 구입 — 다음 방에서 열린다";
+                line = Localize.Format("ui.shop.result.consumable", ConsumableNameOf(_shopConsumable));
             }
             else if (index == ShopHealIndex)
             {
@@ -5723,7 +5724,7 @@ namespace Game.Module.InGame
                 _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * _shopRules.GhostHealPct / 100);
                 if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * _shopRules.HostHealPct / 100));
                 PublishHp();
-                line = $"호스트 {_shopRules.HostHealPct}% · 고스트 {_shopRules.GhostHealPct}% 회복";
+                line = Localize.Format("ui.shop.heal.desc", _shopRules.HostHealPct, _shopRules.GhostHealPct);
             }
             else
             {
@@ -5741,7 +5742,7 @@ namespace Game.Module.InGame
                 // 산 물건은 진열대에서 뺀다. 남겨 두면 다 산 뒤에도 값이 붙어 있어
                 // 아직 살 수 있는 것처럼 보인다.
                 _shopOffers.RemoveAt(index);
-                line = $"{card.NameKr} 구입";
+                line = Localize.Format("ui.shop.result.card", card.DisplayName);
             }
 
             // ⚠ **하나 사면 창이 닫힌다** (2026-09-09).
@@ -5887,7 +5888,7 @@ namespace Game.Module.InGame
             // 방벽이 섰다는 것이 화면에 남아야 한다. 체력바만 보고 있으면
             // 다음 한 방을 왜 안 맞았는지 알 수 없다.
             var t = RentDamageText();
-            if (t != null && Avatar != null) t.Show(Avatar.Position, $"방벽 {_barrier}", HealColor);
+            if (t != null && Avatar != null) t.Show(Avatar.Position, Localize.Format("ui.battle.barrier", _barrier), HealColor);
         }
 
         /// <summary>방벽이 먼저 받아 낸다. 남은 피해만 돌려준다.</summary>
@@ -8016,7 +8017,7 @@ namespace Game.Module.InGame
             _ghost.gameObject.SetActive(false);
 
             _host = NewUnit($"Host_{key}");
-            _host.Setup(UnitSide.Player, key, entry != null ? entry.NameKr : fallbackName,
+            _host.Setup(UnitSide.Player, key, entry != null ? entry.DisplayName : fallbackName,
                         UnitGet(key),
                         // 고스트가 들고 온 Lv 로 이 몸의 능력치를 정한다.
                         // 악마 계약을 샀으면 여기서 깎인다 - 몸이 아니라 판에 붙은 빚이다.
@@ -8056,7 +8057,7 @@ namespace Game.Module.InGame
             {
                 PossessedHostKey = key,
                 DisplayNameEn = entry != null ? ShortNameEn(entry.NameEn) : fallbackName,
-                DisplayNameKr = entry != null ? entry.NameKr : string.Empty,
+                DisplayNameKr = entry != null ? entry.DisplayName : string.Empty,
                 Mastery = _player != null && key != null ? _player.GetMastery(key) : 0,
                 HostHpMax = _host.HpMax,
             });
@@ -8421,10 +8422,10 @@ namespace Game.Module.InGame
             _bus.Publish(new EventOfferEvent
             {
                 EventId = _event.EventId,
-                Title = _event.TitleKr,
-                Body = _event.BodyKr,
-                AcceptLabel = _event.AcceptKr,
-                DeclineLabel = _event.DeclineKr,
+                Title = _event.DisplayTitle,
+                Body = _event.DisplayBody,
+                AcceptLabel = _event.DisplayAccept,
+                DeclineLabel = _event.DisplayDecline,
                 CostLabel = CostLabelOf(_event),
                 RewardLabel = RewardLabelOf(_event),
                 CanAfford = CanAfford(_event) && CanReceive(_event),
@@ -8453,36 +8454,36 @@ namespace Game.Module.InGame
         /// </summary>
         private string RewardLabelOf(EventEntry e)
         {
-            string many = e.RewardValue > 1 ? $" {e.RewardValue}장" : " 1장";
+            int many = Mathf.Max(1, e.RewardValue);
             string grade = e.RewardRarity switch
             {
-                CardRarity.Legendary => "전설",
-                CardRarity.Epic => "영웅",
-                CardRarity.Rare => "희귀",
-                _ => "일반",
+                CardRarity.Legendary => Localize.Get("ui.rarity.legendary"),
+                CardRarity.Epic => Localize.Get("ui.rarity.epic"),
+                CardRarity.Rare => Localize.Get("ui.rarity.rare"),
+                _ => Localize.Get("ui.rarity.common"),
             };
             return e.RewardType switch
             {
-                EventReward.CardGrant => $"{grade} 카드{many}",
-                EventReward.CardOffer => $"{grade} 카드 3택 1",
-                EventReward.UpgradeCard => "가진 카드 한 장 레벨 +1",
-                EventReward.HostHeal => $"호스트 체력 {e.RewardValue}% 회복",
-                EventReward.GhostHeal => $"고스트 체력 {e.RewardValue}% 회복",
-                EventReward.Gold => $"골드 {EventGold(e.RewardValue)}",
-                EventReward.PossessReach => $"빙의 사거리 +{e.RewardValue}% (판 끝까지)",
-                EventReward.ShopDiscount => $"상점 값 -{e.RewardValue}% (판 끝까지)",
-                EventReward.BossShieldBreak => "다음 보스 방어막 한 번 무효",
-                EventReward.SpawnHost => "빼앗을 몸 하나가 나타난다",
+                EventReward.CardGrant => Localize.Format("ui.event.reward.card_grant", grade, many),
+                EventReward.CardOffer => Localize.Format("ui.event.reward.card_offer", grade),
+                EventReward.UpgradeCard => Localize.Get("ui.event.reward.upgrade"),
+                EventReward.HostHeal => Localize.Format("ui.event.reward.host_heal", e.RewardValue),
+                EventReward.GhostHeal => Localize.Format("ui.event.reward.ghost_heal", e.RewardValue),
+                EventReward.Gold => Localize.Format("ui.event.gold", EventGold(e.RewardValue)),
+                EventReward.PossessReach => Localize.Format("ui.event.reward.reach", e.RewardValue),
+                EventReward.ShopDiscount => Localize.Format("ui.event.reward.discount", e.RewardValue),
+                EventReward.BossShieldBreak => Localize.Get("ui.event.reward.shield_break"),
+                EventReward.SpawnHost => Localize.Get("ui.event.reward.spawn_host"),
                 _ => string.Empty,
             };
         }
 
         private string CostLabelOf(EventEntry e) => e.CostType switch
         {
-            EventCost.Gold => $"골드 {EventGold(e.CostValue)}",
-            EventCost.GhostHp => $"고스트 체력 {e.CostValue}%",
-            EventCost.HostHp => $"호스트 체력 {e.CostValue}%",
-            EventCost.MaxHp => $"최대 체력 -{e.CostValue}% (영구)",
+            EventCost.Gold => Localize.Format("ui.event.gold", EventGold(e.CostValue)),
+            EventCost.GhostHp => Localize.Format("ui.event.cost.ghost_hp", e.CostValue),
+            EventCost.HostHp => Localize.Format("ui.event.cost.host_hp", e.CostValue),
+            EventCost.MaxHp => Localize.Format("ui.event.cost.max_hp", e.CostValue),
             _ => string.Empty,
         };
 
@@ -8518,8 +8519,8 @@ namespace Game.Module.InGame
         /// 길게 적으면 명판 밖으로 두 줄이 되어 버튼 위로 흘러내린다.
         /// </summary>
         private string BlockedReasonOf(EventEntry e)
-            => !CanReceive(e) ? "몸이 없다"
-             : !CanAfford(e) ? "치를 수 없다"
+            => !CanReceive(e) ? Localize.Get("ui.event.blocked.no_body")
+             : !CanAfford(e) ? Localize.Get("ui.event.blocked.cant_pay")
              : string.Empty;
 
         /// <summary>이벤트를 받아들이거나 지나친다. UI 가 호출한다.</summary>
@@ -8535,7 +8536,7 @@ namespace Game.Module.InGame
                 // 등을 돌려도 받는 것이 있는 이벤트가 있다 (정본의 `..._OR_...`)
                 line = e.HasDeclineReward
                     ? GiveReward(e.DeclineReward, e.DeclineValue, e.RewardRarity, e.RewardKey)
-                    : "지나쳤다.";
+                    : Localize.Get("ui.event.result.passed");
             }
             else if (e.FightFirst)
             {
@@ -8544,7 +8545,7 @@ namespace Game.Module.InGame
                 PayCost(e);
                 _fightReward = e;
                 SpawnProcedural(e.FightCount, e.FightElite, _roomIndex * 7 + 3);
-                line = e.FightElite ? "정예가 앞을 막는다." : "매복이다.";
+                line = e.FightElite ? Localize.Get("ui.event.result.elite") : Localize.Get("ui.event.result.ambush");
             }
             else
             {
@@ -8555,9 +8556,9 @@ namespace Game.Module.InGame
                 line = hit
                     ? GiveReward(e.RewardType, e.RewardValue, e.RewardRarity, e.RewardKey)
                     : e.HasDeclineReward
-                        ? "빗나갔다. " + GiveReward(e.DeclineReward, e.DeclineValue, e.RewardRarity, e.RewardKey)
-                        : "빗나갔다.";
-                if (hit && e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += $" · 골드 +{e.ExtraGold}"; }
+                        ? Localize.Get("ui.event.result.missed") + " " + GiveReward(e.DeclineReward, e.DeclineValue, e.RewardRarity, e.RewardKey)
+                        : Localize.Get("ui.event.result.missed");
+                if (hit && e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += " · " + Localize.Format("ui.event.result.gold", e.ExtraGold); }
             }
 
             _bus.Publish(new EventResolvedEvent { EventId = e.EventId, Accepted = accept, ResultLine = line });
@@ -8579,7 +8580,7 @@ namespace Game.Module.InGame
             _fightReward = null;
 
             string line = GiveReward(e.RewardType, e.RewardValue, e.RewardRarity, e.RewardKey);
-            if (e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += $" · 골드 +{e.ExtraGold}"; }
+            if (e.ExtraGold > 0) { AddRunGoldAtPlayer(e.ExtraGold); line += " · " + Localize.Format("ui.event.result.gold", e.ExtraGold); }
             _bus.Publish(new EventResolvedEvent { EventId = e.EventId, Accepted = true, ResultLine = line });
         }
 
@@ -8614,22 +8615,22 @@ namespace Game.Module.InGame
             switch (kind)
             {
                 case EventReward.HostHeal:
-                    if (_host == null) return "몸이 없어 받을 수 없었다.";
+                    if (_host == null) return Localize.Get("ui.event.result.no_body");
                     _host.Heal(Mathf.Max(1, _host.HpMax * value / 100));
                     PublishHp();
-                    return $"호스트 체력 {value}% 회복";
+                    return Localize.Format("ui.event.reward.host_heal", value);
 
                 case EventReward.GhostHeal:
                     _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * value / 100);
                     PublishHp();
-                    return $"고스트 체력 {value}% 회복";
+                    return Localize.Format("ui.event.reward.ghost_heal", value);
 
                 case EventReward.Gold:
                 {
                     // 대가와 같은 배율을 탄다. 한쪽만 곱하면 뒤 챕터의 거래가 한없이 남는다.
                     int gold = EventGold(value);
                     AddRunGoldAtPlayer(gold);
-                    return $"골드 +{gold}";
+                    return Localize.Format("ui.event.result.gold", gold);
                 }
 
                 case EventReward.CardGrant:
@@ -8649,37 +8650,37 @@ namespace Game.Module.InGame
                         if (card == null) break;
                         _buffs.Apply(card);
                         _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
-                        last = card.NameKr;
+                        last = card.DisplayName;
                     }
-                    if (last == null) return "가져갈 것이 남아 있지 않았다.";
-                    return count > 1 ? $"카드 {count}장 획득" : $"{last} 획득";
+                    if (last == null) return Localize.Get("ui.event.result.nothing_left");
+                    return count > 1 ? Localize.Format("ui.event.result.cards", count) : Localize.Format("ui.event.result.got", last);
                 }
 
                 case EventReward.CardOffer:
                     OfferBuff();
-                    return _awaitingBuff ? "카드를 고른다" : "고를 것이 남아 있지 않았다.";
+                    return _awaitingBuff ? Localize.Get("ui.event.result.pick_card") : Localize.Get("ui.event.result.nothing_to_pick");
 
                 case EventReward.UpgradeCard:
                 {
                     var up = PickUpgradable();
-                    if (up == null) return "벼릴 것이 없었다.";
+                    if (up == null) return Localize.Get("ui.event.result.nothing_to_upgrade");
                     int lv = _buffs.LevelOf(up.BuffKey);
                     _buffs.Apply(up);
                     _bus.Publish(new BuffChosenEvent { ChosenKey = up.BuffKey, TotalBuffCount = _buffs.Count });
-                    return $"{up.NameKr} Lv.{lv} → Lv.{_buffs.LevelOf(up.BuffKey)}";
+                    return $"{up.DisplayName} Lv.{lv} → Lv.{_buffs.LevelOf(up.BuffKey)}";
                 }
 
                 case EventReward.PossessReach:
                     _possessReachMul += value / 100f;
-                    return $"빙의 사거리 +{value}%";
+                    return Localize.Format("ui.event.result.reach", value);
 
                 case EventReward.ShopDiscount:
                     _shopDiscount = Mathf.Clamp(_shopDiscount + value, 0, 80);
-                    return $"상점 카드 값 {_shopDiscount}% 할인";
+                    return Localize.Format("ui.event.result.discount", _shopDiscount);
 
                 case EventReward.BossShieldBreak:
                     _bossShieldBreak = true;
-                    return "다음 보스의 방어막을 한 번 깬다";
+                    return Localize.Get("ui.event.result.shield_break");
 
                 case EventReward.SpawnHost:
                     return SpawnPossessableHost(key);
@@ -8730,15 +8731,15 @@ namespace Game.Module.InGame
         private string SpawnPossessableHost(string hostKey)
         {
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
-            if (hosts == null || string.IsNullOrEmpty(hostKey)) return "아무도 오지 않았다.";
+            if (hosts == null || string.IsNullOrEmpty(hostKey)) return Localize.Get("ui.event.result.nobody");
 
             HostEntry def = null;
             for (int i = 0; i < hosts.Count; i++)
                 if (hosts[i].HostKey == hostKey) { def = hosts[i]; break; }
-            if (def == null) return "아무도 오지 않았다.";
+            if (def == null) return Localize.Get("ui.event.result.nobody");
 
             var u = NewUnit($"Event_{hostKey}");
-            u.Setup(UnitSide.Enemy, def.HostKey, def.NameKr, UnitGet(def.SpriteKey),
+            u.Setup(UnitSide.Enemy, def.HostKey, def.DisplayName, UnitGet(def.SpriteKey),
                     EnemyHpOf(def), EnemyAtkOf(def), EnemySpeedOf(def),
                     EnemyRangeOf(def), EnemyIntervalOf(def),
                     UnitBox(84f, 78f), isBoss: false, profile: def);
@@ -8751,7 +8752,7 @@ namespace Game.Module.InGame
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, def.SpriteKey);
             _enemies.Add(u);
-            return $"{def.NameKr} 이(가) 나타났다";
+            return Localize.Format("ui.event.result.appeared", def.DisplayName);
         }
 
         /// <summary>

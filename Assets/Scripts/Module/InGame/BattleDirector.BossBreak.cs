@@ -1,5 +1,6 @@
 using Game.Character;
 using UnityEngine;
+using Localize = Game.Module.Common.Localize;
 
 namespace Game.Module.InGame
 {
@@ -194,7 +195,7 @@ namespace Game.Module.InGame
                 // 눈에 보이는 순간이어야 한다. 숫자만 바뀌면 무슨 일이 났는지 모른다.
                 PlayFx("burst", victim.Position, 216f, loop: false);
                 var t = RentDamageText();
-                if (t != null) t.Show(victim.Position, "머리 노출", HealColor);
+                if (t != null) t.Show(victim.Position, Localize.Get("ui.battle.head_exposed"), HealColor);
                 Debug.Log($"[보스] 가디언 머리 무적 해제 — 마디 {_segmentsLeft} 남음 "
                           + $"· 이제부터 피해 {BreakDamageMul:0.#}배");
             }

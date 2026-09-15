@@ -116,6 +116,8 @@ namespace Game.Module.InGame
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
+            Localize.ApplyFonts(transform);
             MakeCover();
             CoreModule.TryGet(out _player);
             gameObject.AddComponent<BackButtonRouter>();
@@ -772,7 +774,7 @@ namespace Game.Module.InGame
         {
             _ui.SetText("PlayerSoulLabel", "PLAYER SOUL");
             _ui.SetText("GhostNameText", "GHOST");
-            _ui.SetText("GhostSubText", "육체와 별개로 유지되는 영혼 체력");
+            _ui.SetText("GhostSubText", Localize.Get("ui.ingame.ghost_sub"));
             _ui.SetText("HpLabelGhost", "HP");
             _ui.SetText("RunResourceLabel", "RUN RESOURCES");
             _ui.SetText("FreeMoveLabel", "FREE MOVE AREA");
@@ -900,14 +902,14 @@ namespace Game.Module.InGame
         }
 
         private void OnEmergencyHost(EmergencyHostEvent e)
-            => _ui.SetText("StageText", $"긴급 빙의 — GHOST -{e.GhostCost}");
+            => _ui.SetText("StageText", Localize.Format("ui.ingame.emergency_host", e.GhostCost));
 
         /// <summary>
         /// 증원 예고. 방을 다 비웠다고 생각한 순간 여섯 기가 소리 없이 나타나면
         /// 기획이 아니라 버그로 읽힌다 — 나오기 전에 한 줄이라도 알린다.
         /// </summary>
         private void OnExitOpened(ExitOpenedEvent e)
-            => _ui.SetText("StageText", "출구가 열렸다 — 통과해서 다음 스테이지로");
+            => _ui.SetText("StageText", Localize.Get("ui.ingame.exit_opened"));
 
         /// <summary>
         /// 레벨 표기만 남긴다.
@@ -1014,7 +1016,7 @@ namespace Game.Module.InGame
             // 받는 것을 금색 한 줄로 아래에 덧붙인다.
             _ui.SetText("EventBodyText", string.IsNullOrEmpty(e.RewardLabel)
                 ? e.Body
-                : $"{e.Body}\n<color=#F5C044>보상 · {e.RewardLabel}</color>");
+                : $"{e.Body}\n<color=#F5C044>{Localize.Format("ui.ingame.event.reward", e.RewardLabel)}</color>");
             // 못 고르는 이유를 **누르기 전에** 적는다. 값이 모자란 것과
             // 몸이 없어 못 받는 것은 다른 이유라 문구도 달라야 한다.
             // ⚠ 줄표(`— ... —`)를 붙이지 않는다. 명판 그림(`eventcostpill`)이
@@ -1030,7 +1032,7 @@ namespace Game.Module.InGame
 
             _ui.SetText("EventAcceptText", e.AcceptLabel);
             _ui.SetText("EventDeclineText",
-                string.IsNullOrEmpty(e.DeclineLabel) ? "지나간다" : e.DeclineLabel);
+                string.IsNullOrEmpty(e.DeclineLabel) ? Localize.Get("ui.ingame.event.decline") : e.DeclineLabel);
             _ui.SetText("EventResultText", string.Empty);
 
             _ui.SetActive("EventResultText", false);
@@ -1076,8 +1078,8 @@ namespace Game.Module.InGame
 
         private void OnShrineOpened(ShrineOpenedEvent e)
         {
-            _ui.SetText("ShrineTitleText", "회복의 제단");
-            _ui.SetText("ShrineHintText", "하나만 가져갈 수 있다");
+            _ui.SetText("ShrineTitleText", Localize.Get("ui.shrine.title"));
+            _ui.SetText("ShrineHintText", Localize.Get("ui.shrine.hint"));
             _ui.SetActive("ShrineHintPill", true);
             _ui.SetText("ShrineResultText", string.Empty);
             _ui.SetActive("ShrineResultText", false);
@@ -1166,7 +1168,7 @@ namespace Game.Module.InGame
 
         private void OnShopOpened(ShopOpenedEvent e)
         {
-            _ui.SetText("ShopGoldText", $"보유 골드 {e.Gold:N0}");
+            _ui.SetText("ShopGoldText", Localize.Format("ui.shop.gold", e.Gold));
             _ui.SetText("ShopLimitText", e.LimitLine);
 
             for (int i = 0; i < ShopSlots; i++)
@@ -1255,7 +1257,7 @@ namespace Game.Module.InGame
                 titleArt.color = Color.white;
             }
             _ui.SetText("BuffTitleText", titleSprite != null ? string.Empty : "LEVEL UP!");
-            _ui.SetText("BuffSubText", "카드를 선택하세요");
+            _ui.SetText("BuffSubText", Localize.Get("ui.buff.sub"));
 
             for (int i = 0; i < BuffCardCount; i++)
             {
@@ -1275,8 +1277,8 @@ namespace Game.Module.InGame
                     lv > 0 ? $"Lv.{lv} → Lv.{Mathf.Min(lv + 1, entry.MaxLevel)}"
                            : entry.Rarity.ToString().ToUpperInvariant());
 
-                _ui.SetText($"BuffCard{i}Name", entry.NameKr);
-                _ui.SetText($"BuffCard{i}Desc", entry.Description);
+                _ui.SetText($"BuffCard{i}Name", entry.DisplayName);
+                _ui.SetText($"BuffCard{i}Desc", entry.DisplayDescription);
 
                 SetCardArt(i, entry, lv > 0);
 
@@ -1445,18 +1447,18 @@ namespace Game.Module.InGame
             _finished = true;
             SystemPopup.Show(
                 e.IsCleared
-                    ? $"스테이지 클리어!\n골드 +{e.RewardGold}   고스트 EXP +{e.RewardGhostExp}"
-                    : "유령이 소멸했습니다.\n로비로 돌아갑니다.",
+                    ? Localize.Format("ui.ingame.result.clear", e.RewardGold, e.RewardGhostExp)
+                    : Localize.Get("ui.ingame.result.dead"),
                 onConfirm: () => GoLobbyAsync(e).Forget(),   // fire-and-forget: 씬 전환 대기 불필요
-                confirmText: "로비로",
+                confirmText: Localize.Get("ui.ingame.result.to_lobby"),
                 cancelText: null);
         }
 
         private void OnPause()
         {
-            SystemPopup.Show("스테이지를 포기하고 로비로 돌아갈까요?",
+            SystemPopup.Show(Localize.Get("ui.ingame.pause.message"),
                 onConfirm: () => GoLobbyAsync(default).Forget(),  // fire-and-forget: 씬 전환 대기 불필요
-                confirmText: "포기", cancelText: "계속");
+                confirmText: Localize.Get("ui.ingame.pause.give_up"), cancelText: Localize.Get("ui.ingame.pause.continue"));
         }
 
         private async UniTaskVoid GoLobbyAsync(StageFinishedEvent e)

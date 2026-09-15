@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Module.Common;
 using UnityEngine;
 
 namespace Game.Character
@@ -374,6 +375,9 @@ namespace Game.Character
         public string HostKey => _hostKey;
         public string NameEn  => _nameEn;
         public string NameKr  => _nameKr;
+
+        /// <summary>화면에 보이는 이름. 지금 언어로 — 번역이 없으면 원문(<see cref="NameKr"/>).</summary>
+        public string DisplayName => Localize.FromTable($"host.{_hostKey}.name", _nameKr);
         public int Hp   => _hp;
         public int Atk  => _atk;
         public int Spd  => _spd;
@@ -405,13 +409,13 @@ namespace Game.Character
         /// <summary>호스트 선택·인게임 HUD 에 쓰는 짧은 교전 스타일 문구.</summary>
         public string AttackText => _attackKind switch
         {
-            AttackKind.Melee  => _lifestealPercent > 0 ? "근접 · 흡혈" : "근접",
-            AttackKind.Single => _slowPercent > 0 ? "단발 · 둔화" : "단발",
-            AttackKind.Rapid  => "연사",
-            AttackKind.Spread => $"확산 {ShotCount}발",
-            AttackKind.Pierce => "관통",
-            AttackKind.Snipe  => "저격",
-            AttackKind.Pulse  => "주위 광역",
+            AttackKind.Melee  => Localize.Get(_lifestealPercent > 0 ? "ui.attack.melee_drain" : "ui.attack.melee"),
+            AttackKind.Single => Localize.Get(_slowPercent > 0 ? "ui.attack.single_slow" : "ui.attack.single"),
+            AttackKind.Rapid  => Localize.Get("ui.attack.rapid"),
+            AttackKind.Spread => Localize.Format("ui.attack.spread", ShotCount),
+            AttackKind.Pierce => Localize.Get("ui.attack.pierce"),
+            AttackKind.Snipe  => Localize.Get("ui.attack.snipe"),
+            AttackKind.Pulse  => Localize.Get("ui.attack.pulse"),
             _ => string.Empty,
         };
 
@@ -538,8 +542,8 @@ namespace Game.Character
         public string UnlockText => _unlockType switch
         {
             HostUnlockType.Owned            => string.Empty,
-            HostUnlockType.StageReach       => $"CH{_unlockChapter} · {_unlockStage}스테이지",
-            HostUnlockType.ChapterBossClear => $"CH{_unlockChapter} 보스 격파",
+            HostUnlockType.StageReach       => Localize.Format("ui.unlock.stage", _unlockChapter, _unlockStage),
+            HostUnlockType.ChapterBossClear => Localize.Format("ui.unlock.boss", _unlockChapter),
             _ => string.Empty,
         };
 

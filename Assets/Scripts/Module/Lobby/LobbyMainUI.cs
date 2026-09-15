@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Game.Module.Common;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
@@ -46,17 +47,19 @@ namespace Game.Module.Lobby
         // 나머지 둘은 자물쇠가 붙고 플레이 버튼이 사라진다.
         private readonly struct GameMode
         {
-            public readonly string Name, Desc;
+            private readonly string _key;
             public readonly bool Unlocked;
-            public GameMode(string name, string desc, bool unlocked)
-            { Name = name; Desc = desc; Unlocked = unlocked; }
+            public GameMode(string key, bool unlocked) { _key = key; Unlocked = unlocked; }
+            // 글자는 들고 있지 않는다 — 언어를 바꾸면 다음에 칸을 칠할 때 바로 따라온다
+            public string Name => Localize.Get($"ui.lobby.mode.{_key}.name");
+            public string Desc => Localize.Get($"ui.lobby.mode.{_key}.desc");
         }
 
         private static readonly GameMode[] Modes =
         {
-            new("서바이벌 모드", "끝까지 살아남아라", false),
-            new("시나리오 모드", "영혼이 깃든 새로운 이야기", true),
-            new("디펜스 모드",   "몰려오는 적을 막아라", false),
+            new("survival", false),
+            new("scenario", true),
+            new("defense", false),
         };
 
         private const int ScenarioIndex = 1;
@@ -88,6 +91,8 @@ namespace Game.Module.Lobby
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
+            Localize.ApplyFonts(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
 
             gameObject.AddComponent<BackButtonRouter>();
@@ -108,7 +113,7 @@ namespace Game.Module.Lobby
 
             // 하단 바 문구는 목업대로 — 가운데는 CHAPTER 가 아니라 PLAY 다
             _ui.SetText("ChapterButtonTitleText", "PLAY");
-            _ui.SetText("ChapterButtonSubText", "게임 모드");
+            _ui.SetText("ChapterButtonSubText", Localize.Get("ui.lobby.game_mode"));
 
             ApplyModes();
             ApplyTabs();
@@ -293,7 +298,7 @@ namespace Game.Module.Lobby
             // 신규 유저에게 '이어서 하기'는 성립하지 않는다 — 상태별 라벨 전환
             bool started = _player.ReachedStage > 1 || _player.ClearedChapter > 0;
             _ui.SetText("ContinueButtonText", started ? "CONTINUE" : "START");
-            _ui.SetText("ModePlayButtonText", (started ? "이어서 하기" : "플레이하기") + "  ▶");
+            _ui.SetText("ModePlayButtonText", (started ? Localize.Get("ui.lobby.continue") : Localize.Get("ui.lobby.play")) + "  ▶");
             ApplyModes();   // 가운데 칸이 진행도를 적는다
         }
 

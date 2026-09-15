@@ -1228,6 +1228,7 @@ GameObject:
   - component: {fileID: 8005694424107919218}
   - component: {fileID: 4685897436440916649}
   - component: {fileID: 1748893810297510250}
+  - component: {fileID: 6974741756498937688}
   m_Layer: 0
   m_Name: HostButtonSubText
   m_TagString: Untagged
@@ -1354,6 +1355,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6974741756498937688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705988180844669750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.lobby.host_button.sub
 --- !u!1 &830463580723254644
 GameObject:
   m_ObjectHideFlags: 0
@@ -11377,6 +11391,7 @@ GameObject:
   - component: {fileID: 7000283701470095272}
   - component: {fileID: 6059433734296865575}
   - component: {fileID: 6429103598810908289}
+  - component: {fileID: 3601075619895134354}
   m_Layer: 0
   m_Name: GameModeLabel
   m_TagString: Untagged
@@ -11503,6 +11518,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3601075619895134354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7811538437309379641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.lobby.game_mode
 --- !u!1 &7860459680570464156
 GameObject:
   m_ObjectHideFlags: 0
@@ -12396,6 +12424,7 @@ GameObject:
   - component: {fileID: 4511800011284641638}
   - component: {fileID: 50545680477297302}
   - component: {fileID: 440400691236658170}
+  - component: {fileID: 8727468445108370143}
   m_Layer: 0
   m_Name: ShopButtonSubText
   m_TagString: Untagged
@@ -12522,6 +12551,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8727468445108370143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497141823343715387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5b366a1eaaa8144bec2a9662fedafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
+  _key: ui.lobby.shop_button.sub
 --- !u!1 &8739353948648754529
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,6 +32,10 @@ namespace Game.Module.Common.UI
         public static void Show(string message, Action onConfirm,
                                 string confirmText = "확인", string cancelText = "취소")
         {
+            // 매개변수 기본값은 상수여야 해서 번역을 못 싣는다 — 기본 글자면 여기서 갈아 끼운다
+            if (confirmText == "확인") confirmText = Localize.Get("ui.common.ok");
+            if (cancelText == "취소") cancelText = Localize.Get("ui.common.cancel");
+
             if (s_instance == null) s_instance = Build();
             s_instance._onConfirm = onConfirm;
             s_instance._message.text = message;

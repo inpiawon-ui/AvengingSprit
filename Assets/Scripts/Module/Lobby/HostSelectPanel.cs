@@ -69,6 +69,8 @@ namespace Game.Module.Lobby
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
+            Localize.ApplyFonts(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
 
             _ui.OnClick("PossessStartButton", OnPossessStart);
@@ -151,14 +153,14 @@ namespace Game.Module.Lobby
             RefreshDetail(_selectedKey);
             RefreshFooter();
 
-            _ui.SetText("HeaderTitleText", _isChapterStart ? "HOST 를 선택하세요!" : "HOST 도감");
-            _ui.SetText("HeaderDescText", "사망 시 유령으로 돌아가, 다른 HOST에 빙의할 수 있습니다.");
+            _ui.SetText("HeaderTitleText", _isChapterStart ? Localize.Get("ui.hostselect.title.pick") : Localize.Get("ui.hostselect.title.codex"));
+            _ui.SetText("HeaderDescText", Localize.Get("ui.hostselect.header_desc"));
             _ui.SetActive("PossessStartButton", true);
-            _ui.SetText("PossessTitleText", _isChapterStart ? "빙의 시작" : "돌아가기");
+            _ui.SetText("PossessTitleText", _isChapterStart ? Localize.Get("ui.hostselect.possess_start") : Localize.Get("ui.hostselect.back"));
             _ui.SetText("PossessSubText", _isChapterStart ? "(POSSESS)" : "(BACK)");
-            _ui.SetText("StatGroupLabel", "능력치");
-            _ui.SetText("HostUpgradeTitleText", "HOST 강화");
-            _ui.SetText("HostUpgradeSubText", "액티브 · 패시브 스킬 강화");
+            _ui.SetText("StatGroupLabel", Localize.Get("ui.hostselect.stats"));
+            _ui.SetText("HostUpgradeTitleText", Localize.Get("ui.hostselect.upgrade.title"));
+            _ui.SetText("HostUpgradeSubText", Localize.Get("ui.hostselect.upgrade.sub"));
         }
 
         /// <summary>설계서의 `HostSlot` 1칸을 호스트 수만큼 복제해 그리드를 만든다.</summary>
@@ -368,7 +370,7 @@ namespace Game.Module.Lobby
                     : GetSprite($"icon_grade_{e.Grade.ToString().ToLowerInvariant()}");
                 grade.enabled = grade.sprite != null;
             }
-            _ui.SetText("HostNameKrText", e.NameKr);
+            _ui.SetText("HostNameKrText", e.DisplayName);
 
             var portrait = _ui.Get<Image>("HostPortraitImage");
             if (portrait != null)
@@ -435,8 +437,8 @@ namespace Game.Module.Lobby
             _ui.SetText("ActiveSkillLabel", "ACTIVE SKILL");
             // 한글 이름을 쓴다 — 영문은 카드 맨 위 호스트 이름이 이미 맡고 있다.
             _ui.SetText("ActiveSkillNameText",
-                skill != null ? (string.IsNullOrEmpty(skill.NameKr) ? skill.NameEn : skill.NameKr) : "—");
-            _ui.SetText("ActiveSkillDescText", skill?.Description ?? string.Empty);
+                skill != null ? (string.IsNullOrEmpty(skill.DisplayName) ? skill.NameEn : skill.DisplayName) : "—");
+            _ui.SetText("ActiveSkillDescText", skill?.DisplayDescription ?? string.Empty);
             // ⚠ 전용 자물쇠 그림이 아직 없다. 초상용(`hostdetaillockicon`, 80×96)을
             //   42px 칸에 눌러 넣으면 뭉개진 덩어리로 보인다 — 그림이 올 때까지 끈다.
             //   봉인은 아이콘 흐림으로 이미 읽힌다.
@@ -491,7 +493,7 @@ namespace Game.Module.Lobby
             int lv = _player.GetMastery(e.HostKey);
             if (lv >= _player.MasteryMax)
             {
-                SystemPopup.Show($"{e.NameKr} 은(는) 이미 숙련도 최대다.", null, "확인", null);
+                SystemPopup.Show(Localize.Format("ui.hostselect.mastery.maxed", e.DisplayName), null, Localize.Get("ui.common.ok"), null);
                 return;
             }
 
@@ -505,14 +507,14 @@ namespace Game.Module.Lobby
                 // 얼마나 모자란지를 숫자로 말해 준다. "부족합니다" 만으로는
                 // 몇 판을 더 돌아야 하는지 알 수 없다.
                 SystemPopup.Show(
-                    $"파편이 모자란다.\n{e.NameKr} — {have} / {need}  ({need - have}개 더)",
-                    null, "확인", null);
+                    Localize.Format("ui.hostselect.mastery.short", e.DisplayName, have, need, need - have),
+                    null, Localize.Get("ui.common.ok"), null);
                 return;
             }
 
-            string title = lv < 1 ? "봉인 해제" : $"숙련도 Lv {lv} → {lv + 1}";
+            string title = lv < 1 ? Localize.Get("ui.hostselect.mastery.unseal") : Localize.Format("ui.hostselect.mastery.step", lv, lv + 1);
             SystemPopup.Show(
-                $"{e.NameKr}  {title}\n파편 {need}개를 쓴다.",
+                Localize.Format("ui.hostselect.mastery.confirm", e.DisplayName, title, need),
                 () => DoUpgrade(e.HostKey, need));
         }
 
@@ -567,8 +569,8 @@ namespace Game.Module.Lobby
             // 확률형만 숫자를 띄운다. 상시형에 "100%" 를 적으면 확률처럼 읽힌다.
             _ui.SetText("PassiveSkillChanceText",
                 p.ChancePercent > 0 ? $"{p.ChancePercent}%" : string.Empty);
-            _ui.SetText("PassiveSkillNameText", p.NameKr);
-            _ui.SetText("PassiveSkillDescText", p.Description);
+            _ui.SetText("PassiveSkillNameText", p.DisplayName);
+            _ui.SetText("PassiveSkillDescText", p.DisplayDescription);
 
             // ⚠ 패시브 아이콘은 뺐다. 좁은 칸에서 글자와 겹쳐 문장을 가렸다 —
             //   무엇인지는 이름과 설명이 이미 말한다.
@@ -609,7 +611,7 @@ namespace Game.Module.Lobby
         /// </summary>
         private void SetMastery(HostEntry e, bool unlocked)
         {
-            _ui.SetText("MasteryLabel", "숙련도");
+            _ui.SetText("MasteryLabel", Localize.Get("ui.hostselect.mastery"));
 
             int lv = _player.GetMastery(e.HostKey);
             int have = _player.GetShards(e.HostKey);
@@ -618,9 +620,9 @@ namespace Game.Module.Lobby
             int need = _player.MasteryCost(e.HostKey);
 
             // 숙련도는 **몇 단계 중 몇인지**가 먼저다. 파편은 그 아래 진행이다.
-            _ui.SetText("MasteryLabel", "숙련도");
+            _ui.SetText("MasteryLabel", Localize.Get("ui.hostselect.mastery"));
             _ui.SetText("MasteryValueText", $"Lv {lv} / {_player.MasteryMax}");
-            _ui.SetText("ShardText", "영혼 파편");
+            _ui.SetText("ShardText", Localize.Get("ui.hostselect.shard"));
             _ui.SetText("ShardCountText", need <= 0 ? "MAX" : $"{have} / {need}");
 
             // 빈 슬롯 처리로 죽어 있던 색을 되돌린다
@@ -649,7 +651,7 @@ namespace Game.Module.Lobby
         /// </summary>
         private void SetStartCost(HostEntry e, bool unlocked)
         {
-            _ui.SetText("PossessTitleText", e.IsGhost ? "유령으로 시작" : "빙의 시작");
+            _ui.SetText("PossessTitleText", e.IsGhost ? Localize.Get("ui.hostselect.start_ghost") : Localize.Get("ui.hostselect.possess_start"));
             // ⚠ 버튼 밑줄은 껐다. 보라 바탕 위 보라 글자라 읽히지 않았다.
             //   여기 있던 입장 골드 표기(`B급 -300 G`)는 **아직 갈 곳이 없다** —
             //   어디에 둘지 정해지면 그때 다시 붙인다.
@@ -681,23 +683,23 @@ namespace Game.Module.Lobby
             var gb = _ui.Get<Image>("GradeBadge");
             if (gb != null) gb.enabled = false;   // 유령은 등급이 없다
 
-            _ui.SetText("JobBadgeText", "유령");
+            _ui.SetText("JobBadgeText", Localize.Get("ui.hostselect.ghost.badge"));
             var badge = _ui.Get<Image>("JobBadge");
             if (badge != null) badge.enabled = false;   // 유령은 직업 배지 그림이 없다
 
             _ui.SetText("JobSkillLabel", "JOB TRAIT");
-            _ui.SetText("JobTraitNameText", "몸이 없다");
+            _ui.SetText("JobTraitNameText", Localize.Get("ui.hostselect.ghost.trait"));
             // ⚠ 초·퍼센트를 늘어놓지 않는다. 0.7초·1.25초는 **플레이하면 몸으로 아는 값**이다.
             //   화면에는 "무엇을 조심해야 하는가" 한 줄만 남긴다.
             _ui.SetText("JobRuleText",
-                "몸이 없으면 HP가 계속 줄어든다\n몸 없이 주는 피해는 60%");
+                Localize.Get("ui.hostselect.ghost.rule"));
 
             _ui.SetText("ActiveSkillLabel", "ACTIVE SKILL");
-            _ui.SetText("ActiveSkillNameText", "몸 빼앗기");
+            _ui.SetText("ActiveSkillNameText", Localize.Get("ui.hostselect.ghost.skill"));
             _ui.SetText("ActiveSkillDescText",
                 _config != null
-                    ? $"{_config.PossessRange / 72f:0.#}칸 안의 적을 빼앗아 그 몸으로 싸운다"
-                    : "가까운 적을 빼앗아 그 몸으로 싸운다");
+                    ? Localize.Format("ui.hostselect.ghost.skill_desc", _config.PossessRange / 72f)
+                    : Localize.Get("ui.hostselect.ghost.skill_desc_near"));
 
             // 유령은 패시브가 없다 — 빈 슬롯으로 둔다.
             MarkPassiveEmpty();
@@ -719,9 +721,9 @@ namespace Game.Module.Lobby
         private void MarkMasteryEmpty()
         {
             // 유령은 파편으로 크지 않는다 — 이 칸은 **고스트 Lv** 을 보여주는 자리다.
-            _ui.SetText("MasteryLabel", "고스트 레벨");
+            _ui.SetText("MasteryLabel", Localize.Get("ui.hostselect.ghost.level"));
             _ui.SetText("MasteryValueText", $"Lv {_player.GhostLevel} / {_player.GhostLevelMax}");
-            _ui.SetText("ShardText", "골드로 올린다");
+            _ui.SetText("ShardText", Localize.Get("ui.hostselect.ghost.level_by_gold"));
             _ui.SetText("ShardCountText", $"{_player.GhostLevelCost(_player.GhostLevel + 1):N0} G");
             var fill = _ui.Find("ShardBarFill") as RectTransform;
             if (fill != null)
@@ -764,9 +766,9 @@ namespace Game.Module.Lobby
 
         private static string JobNameOf(HostJob j) => j switch
         {
-            HostJob.Melee => "근거리",
-            HostJob.Mid   => "중거리",
-            _             => "원거리",
+            HostJob.Melee => Localize.Get("ui.job.melee"),
+            HostJob.Mid   => Localize.Get("ui.job.mid"),
+            _             => Localize.Get("ui.job.ranged"),
         };
 
         private static string JobSpriteOf(HostJob j) => j switch
@@ -783,9 +785,9 @@ namespace Game.Module.Lobby
         /// </summary>
         private static string JobTraitNameOf(HostJob j) => j switch
         {
-            HostJob.Melee => "치고 버틴다",
-            HostJob.Mid   => "붙어서 쏟는다",
-            _             => "거리를 두고 쏜다",
+            HostJob.Melee => Localize.Get("ui.job.melee.trait"),
+            HostJob.Mid   => Localize.Get("ui.job.mid.trait"),
+            _             => Localize.Get("ui.job.ranged.trait"),
         };
 
         /// <summary>
@@ -798,10 +800,9 @@ namespace Game.Module.Lobby
         /// </summary>
         private static string JobRuleOf(HostJob j) => j switch
         {
-            HostJob.Melee => "때릴 때마다 쉴드 (HP 3% · 최대 30%)\n"
-                           + "타격 시 12% 확률로 0.8초 스턴",
-            HostJob.Mid   => "직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다",
-            _             => "직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다",
+            HostJob.Melee => Localize.Get("ui.job.melee.rule"),
+            HostJob.Mid   => Localize.Get("ui.job.mid.rule"),
+            _             => Localize.Get("ui.job.ranged.rule"),
         };
 
         /// <summary>숫자가 아닌 것을 능력치 칸에 적는다 (유령의 `—` 등).</summary>
@@ -852,8 +853,8 @@ namespace Game.Module.Lobby
         private void RefreshFooter()
         {
             _ui.SetText("TipText",
-                "HOST마다 이동속도, 대시(회피) 속도, 공격 방식이 다릅니다.\n다양한 HOST를 경험해 보세요!");
-            _ui.SetText("OwnedHostCountText", $"보유 HOST  {_player.OwnedHostCount}/{_player.PlayableHosts.Count}");
+                Localize.Get("ui.hostselect.tip"));
+            _ui.SetText("OwnedHostCountText", Localize.Format("ui.hostselect.owned", _player.OwnedHostCount, _player.PlayableHosts.Count));
             _ui.SetText("HostListTitleText", "HOST LIST");
         }
 
@@ -878,9 +879,8 @@ namespace Game.Module.Lobby
             if (!_player.PayHostEntry(e))
             {
                 SystemPopup.Show(
-                    $"골드가 모자란다.\n{e.NameKr}({e.Grade}급) — {_player.Gold:N0} / {cost:N0}\n\n"
-                    + "유령으로 시작하면 골드가 들지 않는다.",
-                    null, "확인", null);
+                    Localize.Format("ui.hostselect.gold_short", e.DisplayName, e.Grade, _player.Gold, cost),
+                    null, Localize.Get("ui.common.ok"), null);
                 return;
             }
 

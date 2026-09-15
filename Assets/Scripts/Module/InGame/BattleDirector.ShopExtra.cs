@@ -2,6 +2,7 @@
 using Game.Character;
 using Game.Module.Events;
 using UnityEngine;
+using Localize = Game.Module.Common.Localize;
 
 namespace Game.Module.InGame
 {
@@ -82,17 +83,17 @@ namespace Game.Module.InGame
 
         private static string ConsumableNameOf(Consumable c) => c switch
         {
-            Consumable.Bomb   => "폭탄",
-            Consumable.Freeze => "정지",
-            Consumable.Ally   => "동료",
+            Consumable.Bomb   => Localize.Get("ui.consumable.bomb.name"),
+            Consumable.Freeze => Localize.Get("ui.consumable.freeze.name"),
+            Consumable.Ally   => Localize.Get("ui.consumable.ally.name"),
             _                 => string.Empty,
         };
 
         private static string ConsumableDescOf(Consumable c) => c switch
         {
-            Consumable.Bomb   => "다음 방이 열리면 광역 한 방",
-            Consumable.Freeze => $"다음 방에서 적이 {ConsumableFreezeSeconds:0}초 멈춘다",
-            Consumable.Ally   => "다음 방에서 몸 하나가 같이 싸운다",
+            Consumable.Bomb   => Localize.Get("ui.consumable.bomb.desc"),
+            Consumable.Freeze => Localize.Format("ui.consumable.freeze.desc", ConsumableFreezeSeconds),
+            Consumable.Ally   => Localize.Get("ui.consumable.ally.desc"),
             _                 => string.Empty,
         };
 

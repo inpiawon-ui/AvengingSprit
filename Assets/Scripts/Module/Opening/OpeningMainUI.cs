@@ -75,6 +75,8 @@ namespace Game.Module.Opening
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
+            Localize.ApplyFonts(transform);
 
             var cutT = _ui.Find("CutImage");
             if (cutT != null)
@@ -91,7 +93,7 @@ namespace Game.Module.Opening
             if (_box != null)
                 _boxGroup = _box.GetComponent<CanvasGroup>() ?? _box.gameObject.AddComponent<CanvasGroup>();
 
-            _ui.SetText("SkipText", "건너뛰기");
+            _ui.SetText("SkipText", Localize.Get("ui.opening.skip"));
             _ui.OnClick("SkipButton", Skip);
             _ui.OnClick("TouchArea", OnTapped);
             gameObject.AddComponent<BackButtonRouter>();
@@ -209,7 +211,8 @@ namespace Game.Module.Opening
 
             // 글상자 — 대사가 없는 컷은 아예 숨긴다. 빈 상자가 떠 있으면 화면을 먹는다.
             if (_box != null) _box.gameObject.SetActive(cut.HasLine);
-            if (cut.HasLine) _ui.SetText("LineText", cut.Line);
+            // 대사 원문은 컷 표가 쥔다. 키는 전체 순번이다 — 같은 그림을 두 번 쓰는 컷이 있어 그림 키로는 못 가른다
+            if (cut.HasLine) _ui.SetText("LineText", Localize.FromTable($"opening.line.{_index}", cut.Line));
 
             ShowArtAsync(cut).Forget();     // fire-and-forget: 그림이 한 프레임 늦어도 된다
             ApplyGhostAsync(cut).Forget();  // fire-and-forget: 유령도 마찬가지다

@@ -3,6 +3,7 @@ using Game.Character;
 using Game.Module.Events;
 using UnityEngine;
 using UnityEngine.UI;
+using Localize = Game.Module.Common.Localize;
 
 namespace Game.Module.InGame
 {
@@ -607,14 +608,14 @@ namespace Game.Module.InGame
         /// <summary>정본이 못박은 회피 8종. 화살표가 못 그리는 둘도 말로는 뜬다.</summary>
         private static string DodgeWord(DodgeHint d) => d switch
         {
-            DodgeHint.Back  => "뒤로",
-            DodgeHint.Side  => "옆으로",
-            DodgeHint.Gap   => "틈으로",
-            DodgeHint.Perp  => "직각으로",
-            DodgeHint.Zone  => "안전지대로",
-            DodgeHint.Close => "붙어라",
-            DodgeHint.Swap  => "몸을 갈아타라",
-            DodgeHint.Hold  => "쏘지 마라",
+            DodgeHint.Back  => Localize.Get("ui.dodge.back"),
+            DodgeHint.Side  => Localize.Get("ui.dodge.side"),
+            DodgeHint.Gap   => Localize.Get("ui.dodge.gap"),
+            DodgeHint.Perp  => Localize.Get("ui.dodge.perp"),
+            DodgeHint.Zone  => Localize.Get("ui.dodge.zone"),
+            DodgeHint.Close => Localize.Get("ui.dodge.close"),
+            DodgeHint.Swap  => Localize.Get("ui.dodge.swap"),
+            DodgeHint.Hold  => Localize.Get("ui.dodge.hold"),
             _               => string.Empty,
         };
 
@@ -626,7 +627,7 @@ namespace Game.Module.InGame
             var dir = SafeDirection(m, boss, me);
 
             // 이름은 처음 볼 때만. 회피 한마디는 매번 — 이건 외우는 것이 아니라 읽는 것이다.
-            string title = FirstSighting($"{boss?.Key}/{m.LabelKey}") ? m.NameKr : null;
+            string title = FirstSighting($"{boss?.Key}/{m.LabelKey}") ? m.DisplayName : null;
 
             // 보스 머리 위. 256 짜리 몸의 절반보다 조금 더 올린다.
             var labelAt = (boss != null ? boss.Position : me.Position) + new Vector2(0f, 150f);
