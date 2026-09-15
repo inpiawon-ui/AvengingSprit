@@ -1,0 +1,1927 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d5f1907a4e9b04489afb72659d4809c, type: 3}
+  m_Name: StringTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.StringTable
+  _defaultLanguage: 1
+  _followSystemLanguage: 0
+  _fonts:
+  - _language: 0
+    _gothic: {fileID: 11400000, guid: a11cb69ee9108e245a192bc9cfa5c1e5, type: 2}
+    _presets:
+    - {fileID: 2100000, guid: ec66cf25d5ffcfb4481c740fec7bf3cd, type: 2}
+    - {fileID: 2100000, guid: 1048c74e2e95d1040880a470ca21133e, type: 2}
+    - {fileID: 2100000, guid: ad93704e84acf644b954857ac315bfc9, type: 2}
+    - {fileID: 2100000, guid: e70d8f5890d4fcc46a55872addf6c2cc, type: 2}
+    - {fileID: 2100000, guid: 1a3ea73f4b7d08342b03ccfd68f25912, type: 2}
+    - {fileID: 2100000, guid: be7a5ab276ca5114185ad001d91a3afe, type: 2}
+    - {fileID: 2100000, guid: 06e795c38d56b7246be80f839d7e74e8, type: 2}
+    - {fileID: 2100000, guid: 29a277b3c45e05249912b8e69901f190, type: 2}
+  - _language: 1
+    _gothic: {fileID: 11400000, guid: f2f78df69396f8f4780949e0771a4eaf, type: 2}
+    _presets:
+    - {fileID: 2100000, guid: 12c4b11e1485d2b4dac8e93803ab1d52, type: 2}
+    - {fileID: 2100000, guid: 447fccd2a65548347a0edd2fe2f84738, type: 2}
+    - {fileID: 2100000, guid: 5f28e38de106c0640b5799da0b8c3ae6, type: 2}
+    - {fileID: 2100000, guid: 7ade10da1384f86408bb6154734cb90c, type: 2}
+    - {fileID: 2100000, guid: aba74ca57d9bddc47ab8c56336029c9f, type: 2}
+    - {fileID: 2100000, guid: d52bf1c2b0918e14c96356dc9abe8a25, type: 2}
+    - {fileID: 2100000, guid: 35eeb99ec6752564189bc18e0f4fe15b, type: 2}
+    - {fileID: 2100000, guid: c0a44819a7d6cdc40be6cc313464b1f0, type: 2}
+  - _language: 2
+    _gothic: {fileID: 11400000, guid: a11cb69ee9108e245a192bc9cfa5c1e5, type: 2}
+    _presets:
+    - {fileID: 2100000, guid: ec66cf25d5ffcfb4481c740fec7bf3cd, type: 2}
+    - {fileID: 2100000, guid: 1048c74e2e95d1040880a470ca21133e, type: 2}
+    - {fileID: 2100000, guid: ad93704e84acf644b954857ac315bfc9, type: 2}
+    - {fileID: 2100000, guid: e70d8f5890d4fcc46a55872addf6c2cc, type: 2}
+    - {fileID: 2100000, guid: 1a3ea73f4b7d08342b03ccfd68f25912, type: 2}
+    - {fileID: 2100000, guid: be7a5ab276ca5114185ad001d91a3afe, type: 2}
+    - {fileID: 2100000, guid: 06e795c38d56b7246be80f839d7e74e8, type: 2}
+    - {fileID: 2100000, guid: 29a277b3c45e05249912b8e69901f190, type: 2}
+  _entries:
+  - _key: host.gangster.name
+    _ko: "\uAC31\uC2A4\uD130"
+    _ja: 
+    _en: 
+  - _key: host.thug.name
+    _ko: "\uD3ED\uB825\uBC30"
+    _ja: 
+    _en: 
+  - _key: host.amazon.name
+    _ko: "\uC544\uB9C8\uC874"
+    _ja: 
+    _en: 
+  - _key: host.amazon_elite.name
+    _ko: "\uC544\uB9C8\uC874 \uC815\uC608"
+    _ja: 
+    _en: 
+  - _key: host.hopper.name
+    _ko: "\uD638\uD37C"
+    _ja: 
+    _en: 
+  - _key: host.hopper_smg.name
+    _ko: "\uD638\uD37C(\uAE30\uAD00\uB2E8\uCD1D)"
+    _ja: 
+    _en: 
+  - _key: host.commando_mg.name
+    _ko: "\uCF54\uB9CC\uB3C4(\uAE30\uAD00\uCD1D)"
+    _ja: 
+    _en: 
+  - _key: host.commando_laser.name
+    _ko: "\uCF54\uB9CC\uB3C4(\uB808\uC774\uC800)"
+    _ja: 
+    _en: 
+  - _key: host.commando_grenade.name
+    _ko: "\uCF54\uB9CC\uB3C4(\uC218\uB958\uD0C4)"
+    _ja: 
+    _en: 
+  - _key: host.salamander.name
+    _ko: "\uC0D0\uB7EC\uB9E8\uB354"
+    _ja: 
+    _en: 
+  - _key: host.dragoon.name
+    _ko: "\uB4DC\uB77C\uAD70"
+    _ja: 
+    _en: 
+  - _key: host.dragon_blue.name
+    _ko: "\uCCAD\uB8E1"
+    _ja: 
+    _en: 
+  - _key: host.guru.name
+    _ko: "\uAD6C\uB8E8"
+    _ja: 
+    _en: 
+  - _key: host.white_wizard.name
+    _ko: "\uD654\uC774\uD2B8 \uC704\uC800\uB4DC"
+    _ja: 
+    _en: 
+  - _key: host.medium.name
+    _ko: "\uC601\uB9E4"
+    _ja: 
+    _en: 
+  - _key: host.ninja.name
+    _ko: "\uB2CC\uC790"
+    _ja: 
+    _en: 
+  - _key: host.ninja_chain.name
+    _ko: "\uB2CC\uC790(\uC0AC\uC2AC)"
+    _ja: 
+    _en: 
+  - _key: host.robot.name
+    _ko: "\uB85C\uBD07"
+    _ja: 
+    _en: 
+  - _key: host.baseball.name
+    _ko: "\uC2AC\uB7EC\uAC70"
+    _ja: 
+    _en: 
+  - _key: host.snowwoman.name
+    _ko: "\uC124\uB140"
+    _ja: 
+    _en: 
+  - _key: host.vampire.name
+    _ko: "\uD761\uD608\uADC0"
+    _ja: 
+    _en: 
+  - _key: host.commando_missile.name
+    _ko: "\uCF54\uB9CC\uB3C4(\uBBF8\uC0AC\uC77C)"
+    _ja: 
+    _en: 
+  - _key: host.death.name
+    _ko: "\uC0AC\uC2E0"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h01.name
+    _ko: "\uB3C4\uC57D \uAC15\uD0C0"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h01.desc
+    _ko: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uC5B4
+      \uB458\uB808\uB97C 300% \uD53C\uD574\uB85C \uCE5C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h02.name
+    _ko: "(\uBBF8\uC815)"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h02.desc
+    _ko: "\uC2A4\uD0AC \uBCF4\uB958 \u2014 \uC815\uD574\uC9C0\uBA74 \uCC44\uC6B4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h03.name
+    _ko: "\uC735\uB2E8 \uD3ED\uACA9"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h03.desc
+    _ko: "\uC218\uB958\uD0C4 5\uBC1C\uC744 \uBD80\uCC44\uAF34\uB85C \uB3D9\uC2DC\uC5D0
+      \uB358\uC9C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h04.name
+    _ko: "\uC5F0\uC1C4 \uBC29\uC804"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h04.desc
+    _ko: "3\uCD08\uAC04 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uC804\uAE30\uAC00 \uACC4\uC18D
+      \uD284\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h05.name
+    _ko: "\uBC29\uBCBD \uC804\uAC1C"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h05.desc
+    _ko: "5\uCD08\uAC04 \uCD5C\uB300 \uCCB4\uB825\uB9CC\uD07C \uC274\uB4DC\uB97C
+      \uB450\uB978\uB2E4. \uAE4E\uC774\uBA74 \uB05D\uB09C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h06.name
+    _ko: "\uB2E4\uC911 \uC720\uB3C4"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h06.desc
+    _ko: "\uBC18\uC6D0\uC73C\uB85C \uD37C\uC9C4 8\uBC1C\uC774 \uD55C \uB300\uC0C1\uC73C\uB85C
+      \uBAA8\uC5EC \uB4E0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h07.name
+    _ko: "\uB1CC\uC804 \uD3ED\uC8FC"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h07.desc
+    _ko: "2\uCD08\uAC04 \uBC88\uAC1C \uD295\uAE40\uC774 \uBC18\uB4DC\uC2DC \uD130\uC9C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h08.name
+    _ko: "\uB3C5 \uBFDC\uAE30"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h08.desc
+    _ko: "\uB458\uB808 5 m \uC758 \uC801\uC744 \uBAA8\uB450 \uC911\uB3C5\uC2DC\uD0A8\uB2E4.
+      \uB3C5\uC740 \uC544\uD504\uACE0 \uB290\uB824\uC9C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h09.name
+    _ko: "\uD654\uC5FC \uC9C0\uB300"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h09.desc
+    _ko: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801 \uBC1C\uBC11\uC5D0 \uBD88\uBC14\uB2E4\uB97C
+      \uD3B8\uB2E4. \uBC1F\uACE0 \uC120 \uC801\uC774 \uACC4\uC18D \uD0C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h10.name
+    _ko: "\uC77C\uC81C \uD45C\uC2DD"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h10.desc
+    _ko: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C 3\uCD08\uAC04 \uD45C\uC2DD\uC744
+      \uC0C8\uAE34\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h11.name
+    _ko: "\uB09C\uC0AC"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h11.desc
+    _ko: "1\uCD08\uAC04 3\uBC29\uD5A5\uC73C\uB85C \uC3DF\uC544\uBD93\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h12.name
+    _ko: "\uC218\uD638 \uACB0\uACC4"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h12.desc
+    _ko: "3\uCD08\uAC04 \uBC1B\uB294 \uD53C\uD574 \u221250% \xB7 \uC274\uB4DC \uD68D\uB4DD
+      2\uBC30."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h13.name
+    _ko: "\uC815\uC870\uC900"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h13.desc
+    _ko: "5\uCD08\uAC04 \uCE58\uBA85\uD0C0 \uD655\uB960\uC774 90% \uB85C \uACE0\uC815\uB41C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h14.name
+    _ko: "\uB3C4\uC57D \uAC15\uC2B5"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h14.desc
+    _ko: "\uAC00\uC7A5 \uBA3C \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uACE0 2\uCD08\uAC04
+      \uBB34\uC801."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h15.name
+    _ko: "\uACE8\uB818 \uC18C\uD658"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h15.desc
+    _ko: "\uACE8\uB818\uC744 \uC138\uC6B4\uB2E4. \uD574\uACE8\uBCF4\uB2E4 \uD06C\uACE0
+      \uC624\uB798 \uC2F8\uC6B4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h16.name
+    _ko: "\uAD11\uD718 \uD655\uC0B0"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h16.desc
+    _ko: "\uBD80\uCC44\uAF34 8\uBC29\uD5A5\uC73C\uB85C \uAD11\uD0C4\uC744 \uC3DC\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h17.name
+    _ko: "\uC0AC\uC2AC \uACB0\uBC15"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h17.desc
+    _ko: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801\uC744 5\uCD08\uAC04 \uBB36\uB294\uB2E4.
+      \uBB36\uC778 \uC801\uC740 \uB354 \uC544\uD504\uAC8C \uB9DE\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h18.name
+    _ko: "\uADF8\uB9BC\uC790 \uBD84\uC2E0"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h18.desc
+    _ko: "\uBC29 \uD55C\uAC00\uC6B4\uB370 \uBD84\uC2E0\uC744 \uC138\uC6B4\uB2E4.
+      5\uCD08\uAC04 \uC801\uC774 \uC804\uBD80 \uBD84\uC2E0\uC744 \uB178\uB9B0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h19.name
+    _ko: "\uD3EC\uD0D1 \uC804\uAC1C"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h19.desc
+    _ko: "10\uCD08\uAC04 \uC790\uB3D9\uC73C\uB85C \uC3D8\uB294 \uD3EC\uD0D1\uC744
+      \uC138\uC6B4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h20.name
+    _ko: "\uC804\uD0C4 \uBC18\uC0AC"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h20.desc
+    _ko: "4\uCD08\uAC04 \uB0A0\uC544\uC624\uB294 \uD0C4\uC744 \uB418\uBC1B\uC544\uCE5C\uB2E4.
+      \uBC18\uC0AC\uD0C4\uC740 \uB354 \uC544\uD504\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h21.name
+    _ko: "\uC5BC\uC74C \uAC10\uC625"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h21.desc
+    _ko: "2\uCD08\uAC04 \uC5BC\uC74C\uC5D0 \uB4E4\uC5B4\uAC04\uB2E4. \uB9DE\uC9C0\uB3C4
+      \uB54C\uB9AC\uC9C0\uB3C4 \uC54A\uACE0 \uCCB4\uB825 30% \uB97C \uCC44\uC6B4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h22.name
+    _ko: "\uD608\uC5F0"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h22.desc
+    _ko: "\uB458\uB808 5 m \uC758 \uC801 \uBA38\uB9BF\uC218\uB9CC\uD07C \uCD5C\uB300
+      \uCCB4\uB825\uC758 2% \uC529 \uD68C\uBCF5\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: askill.psg_h23.name
+    _ko: "\uC0AC\uC2E0\uC758 \uC2DC\uAC04"
+    _ja: 
+    _en: 
+  - _key: askill.psg_h23.desc
+    _ko: "3\uCD08\uAC04 \uB54C\uB9AC\uB294 \uC801\uC774 \uC8FD\uB294\uB2E4. \uC911\uAC04
+      \uBCF4\uC2A4\uB294 \uC808\uBC18, \uBCF4\uC2A4\uB294 \uC5F4\uC5D0 \uD558\uB098."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_amazon.name
+    _ko: "\uC274\uB4DC \uC9C8\uC8FC"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_amazon.desc
+    _ko: "\uC274\uB4DC\uAC00 \uCC30\uC218\uB85D \uBE68\uB77C\uC9C4\uB2E4. \uAC00\uB4DD\uC774\uBA74
+      \uC774\uB3D9\uC18D\uB3C4 +40%."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_counter.name
+    _ko: "\uC5ED\uC804\uC758 \uC790\uC138"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_counter.desc
+    _ko: "\uC274\uB4DC\uAC00 \uB0A8\uC544 \uC788\uB294 \uB3D9\uC548 \uACF5\uACA9\uB825\uC774
+      \uC624\uB978\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_slugger.name
+    _ko: "\uC7A5\uC678 \uD0C0\uAD6C"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_slugger.desc
+    _ko: "\uB9C9\uD0C0\uC5D0 20% \uB85C \uC8FC\uBCC0 \uC801\uC744 \uB0A0\uB824 \uBC84\uB9B0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_death.name
+    _ko: "\uB9DD\uC790 \uC18C\uC9D1"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_death.desc
+    _ko: "\uC801\uC744 \uC7A1\uC744 \uB54C\uB9C8\uB2E4 \uADF8 \uC790\uB9AC\uC5D0\uC11C
+      \uD574\uACE8\uC774 \uC77C\uC5B4\uC120\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_guru.name
+    _ko: "\uBB34\uD615\uBCF4"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_guru.desc
+    _ko: "\uAC78\uC5B4 \uB2E4\uB2D0 \uB54C \uC9C0\uD615\uC9C0\uBB3C\uC744 \uD1B5\uACFC\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_ninja_chain.name
+    _ko: "\uD758\uB9AC\uAE30"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_ninja_chain.desc
+    _ko: "10% \uB85C \uD53C\uD574\uB97C \uD1B5\uC9F8\uB85C \uD758\uB9B0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_dragoon.name
+    _ko: "\uBD88\uC528"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_dragoon.desc
+    _ko: "\uBA85\uC911\uD55C \uC801\uC5D0\uAC8C 10% \uB85C \uD654\uC0C1. \uACB9\uCE58\uC9C0
+      \uC54A\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_salamander.name
+    _ko: "\uB3C5\uB2C8"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_salamander.desc
+    _ko: "\uBA85\uC911\uD55C \uC801\uC5D0\uAC8C 10% \uB85C \uB3C5. \uACB9\uCE58\uC9C0
+      \uC54A\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_dragon_blue.name
+    _ko: "\uB099\uB8B0"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_dragon_blue.desc
+    _ko: "10% \uB85C \uC606 \uC801\uC5D0\uAC8C \uBC88\uAC1C\uAC00 \uD284\uB2E4. \uD288
+      \uC801\uC774 \uC5C6\uC73C\uBA74 \uD130\uC9C0\uC9C0 \uC54A\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_grenade.name
+    _ko: "\uD30C\uD3B8\uD0C4"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_grenade.desc
+    _ko: "\uC0C1\uB300 \uBC29\uC5B4\uB825\uC744 50% \uBB34\uC2DC\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_snowwoman.name
+    _ko: "\uC11C\uB9BF\uBC1C"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_snowwoman.desc
+    _ko: "30% \uB85C \uC801\uC744 \uC5BC\uB9B0\uB2E4. \uC5BC\uC5B4 \uC788\uB294 \uC801\uC5D0\uAC8C\uB294
+      \uB354 \uC544\uD504\uB2E4. \uBCF4\uC2A4\uB294 \uC548 \uAC78\uB9B0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_hopper_smg.name
+    _ko: "\uCDA9\uACA9 \uBC18\uB3D9"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_hopper_smg.desc
+    _ko: "10% \uB85C \uB9DE\uC740 \uC801\uC744 \uBC00\uC5B4\uB0B8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_mg.name
+    _ko: "\uC911\uC7A5\uAC11"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_mg.desc
+    _ko: "\uBC29\uC5B4\uB825 20% \uC99D\uAC00."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_thug.name
+    _ko: "\uC0A5"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_thug.desc
+    _ko: "\uC8FC\uC6B4 \uACE8\uB4DC\uAC00 10% \uB354 \uB4E4\uC5B4\uC628\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_ninja.name
+    _ko: "\uC9C8\uC8FC"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_ninja.desc
+    _ko: "\uC801\uC744 \uC7A1\uC73C\uBA74 1.5\uCD08\uAC04 \uC774\uB3D9\uC18D\uB3C4
+      +30%."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_leech.name
+    _ko: "\uD761\uD608"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_leech.desc
+    _ko: "8% \uB85C \uACF5\uACA9\uB825\uC758 5% \uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_gangster.name
+    _ko: "\uCC98\uD615 \uACC4\uC57D"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_gangster.desc
+    _ko: "\uD45C\uC2DD\uC774 \uBD99\uC740 \uC801\uC744 20% \uB85C \uC989\uC0AC. \uC5D8\uB9AC\uD2B8\uB294
+      \uCD5C\uB300 \uCCB4\uB825 50%, \uBCF4\uC2A4\uB294 30%."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_momentum.name
+    _ko: "\uAE09\uC18C"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_momentum.desc
+    _ko: "\uCE58\uBA85\uD0C0 \uD53C\uD574 +30%."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_missile.name
+    _ko: "\uACE0\uD3ED\uD0C4"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_missile.desc
+    _ko: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C\uC744 \uBB34\uC2DC\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_medium.name
+    _ko: "\uAC15\uB839"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_medium.desc
+    _ko: "\uC801\uC744 \uC7A1\uC73C\uBA74 30% \uB85C \uD574\uACE8\uC774 \uC77C\uC5B4\uC120\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_white_wizard.name
+    _ko: "\uAD00\uD1B5 \uAD11\uC120"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_white_wizard.desc
+    _ko: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C\uC744 \uBB34\uC2DC\uD558\uACE0
+      \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_laser.name
+    _ko: "\uC9D1\uC18D \uAD11\uC120"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_commando_laser.desc
+    _ko: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C\uC744 \uBB34\uC2DC\uD558\uACE0
+      \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: pskill.psv_spare_circuit.name
+    _ko: "\uC608\uBE44 \uD68C\uB85C"
+    _ja: 
+    _en: 
+  - _key: pskill.psv_spare_circuit.desc
+    _ko: "\uD3C9\uD0C0\uAC00 2% \uB85C \uC561\uD2F0\uBE0C \uCFE8\uC744 1\uCD08 \uB2F9\uAE34\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c001.name
+    _ko: "\uAC10\uC804"
+    _ja: 
+    _en: 
+  - _key: card.c001.desc
+    _ko: "\uBA85\uC911\uD558\uBA74 \uC804\uAE30\uAC00 \uC606 \uC801\uC5D0\uAC8C \uD284\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c002.name
+    _ko: "\uC131\uC7A5 \uAC00\uC18D"
+    _ja: 
+    _en: 
+  - _key: card.c002.desc
+    _ko: "\uC5BB\uB294 \uACBD\uD5D8\uCE58\uAC00 \uB298\uC5B4\uB09C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c003.name
+    _ko: "\uC218\uD638 \uBC29\uD328"
+    _ja: 
+    _en: 
+  - _key: card.c003.desc
+    _ko: "\uBC29\uD328\uAC00 \uB0B4 \uC8FC\uC704\uB97C \uB3CC\uBA70 \uB9C9\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c004.name
+    _ko: "\uCC98\uD615"
+    _ja: 
+    _en: 
+  - _key: card.c004.desc
+    _ko: "\uBE48\uC0AC\uC778 \uC801\uC744 \uD655\uB960\uB85C \uC989\uC0AC\uC2DC\uD0A8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c005.name
+    _ko: "\uBC88\uAC1C \uC0AC\uC2AC"
+    _ja: 
+    _en: 
+  - _key: card.c005.desc
+    _ko: "\uC804\uAE30\uAC00 \uB354 \uC5EC\uB7EC \uBC88 \uD284\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c006.name
+    _ko: "\uD761\uD63C"
+    _ja: 
+    _en: 
+  - _key: card.c006.desc
+    _ko: "\uC801\uC744 \uC7A1\uC73C\uBA74 \uCCB4\uB825\uC744 \uB3CC\uB824\uBC1B\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c007.name
+    _ko: "\uCC30\uB098\uC758 \uBD88\uC0AC"
+    _ja: 
+    _en: 
+  - _key: card.c007.desc
+    _ko: "\uB9DE\uB294 \uC21C\uAC04 2\uCD08 \uBB34\uC801\uC774 \uB41C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c008.name
+    _ko: "\uCD94\uAC00 \uBC1C\uC0AC"
+    _ja: 
+    _en: 
+  - _key: card.c008.desc
+    _ko: "\uC3E0 \uB54C\uB9C8\uB2E4 \uD0C4\uC774 \uB354 \uB098\uAC04\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c009.name
+    _ko: "\uD654\uC5FC \uAC01\uC778"
+    _ja: 
+    _en: 
+  - _key: card.c009.desc
+    _ko: "\uACF5\uACA9\uC5D0 \uD654\uC0C1\uC744 \uBD99\uC778\uB2E4."
+    _ja: 
+    _en: 
+  - _key: card.c010.name
+    _ko: "\uAD81\uC9C0"
+    _ja: 
+    _en: 
+  - _key: card.c010.desc
+    _ko: "\uCCB4\uB825\uC774 \uC808\uBC18 \uC544\uB798\uBA74 \uC138\uC9C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: boss.robot_snakes.name
+    _ko: "\uB85C\uBD07 \uC2A4\uB124\uC774\uD06C"
+    _ja: 
+    _en: 
+  - _key: bossmove.BurrowStrike.name
+    _ko: "\uC19F\uC544\uC624\uB984"
+    _ja: 
+    _en: 
+  - _key: bossmove.RailLaser.name
+    _ko: "\uB808\uC774\uC800"
+    _ja: 
+    _en: 
+  - _key: bossmove.DebrisFall.name
+    _ko: "\uCC9C\uC7A5 \uD30C\uD3B8"
+    _ja: 
+    _en: 
+  - _key: bossmove.HeadBite.name
+    _ko: "\uBA38\uB9AC \uBB3C\uAE30"
+    _ja: 
+    _en: 
+  - _key: boss.crusher.name
+    _ko: "\uD06C\uB7EC\uC154"
+    _ja: 
+    _en: 
+  - _key: bossmove.Missile.name
+    _ko: "\uBBF8\uC0AC\uC77C"
+    _ja: 
+    _en: 
+  - _key: bossmove.WreckingBall.name
+    _ko: "\uC1E0\uC0AC\uC2AC \uD30C\uAD34\uAD6C"
+    _ja: 
+    _en: 
+  - _key: bossmove.FanShot.name
+    _ko: "\uBD80\uCC44\uAF34 \uC0AC\uACA9"
+    _ja: 
+    _en: 
+  - _key: bossmove.RamCharge.name
+    _ko: "\uB3CC\uC9C4"
+    _ja: 
+    _en: 
+  - _key: boss.python.name
+    _ko: "\uD30C\uC774\uC36C"
+    _ja: 
+    _en: 
+  - _key: bossmove.HeadLunge.name
+    _ko: "\uBA38\uB9AC \uBED7\uAE30"
+    _ja: 
+    _en: 
+  - _key: bossmove.VenomSpit.name
+    _ko: "\uB3C5 \uBC49\uAE30"
+    _ja: 
+    _en: 
+  - _key: bossmove.BrickFall.name
+    _ko: "\uBCBD\uB3CC \uB099\uD558"
+    _ja: 
+    _en: 
+  - _key: bossmove.BodyShove.name
+    _ko: "\uBAB8\uD1B5 \uBC00\uAE30"
+    _ja: 
+    _en: 
+  - _key: boss.sludge.name
+    _ko: "\uC2AC\uB7EC\uC9C0"
+    _ja: 
+    _en: 
+  - _key: bossmove.Emerge.name
+    _ko: "\uC19F\uC544\uC624\uB984"
+    _ja: 
+    _en: 
+  - _key: bossmove.Spit.name
+    _ko: "\uBC49\uAE30"
+    _ja: 
+    _en: 
+  - _key: bossmove.CeilingCling.name
+    _ko: "\uCC9C\uC7A5 \uBD99\uAE30"
+    _ja: 
+    _en: 
+  - _key: bossmove.CeilingSpread.name
+    _ko: "\uCC9C\uC7A5 \uD655\uC0B0"
+    _ja: 
+    _en: 
+  - _key: boss.guardian.name
+    _ko: "\uAC00\uB514\uC5B8"
+    _ja: 
+    _en: 
+  - _key: bossmove.SegmentThrust.name
+    _ko: "\uB9C8\uB514 \uB3CC\uC9C4"
+    _ja: 
+    _en: 
+  - _key: bossmove.SegmentLaunch.name
+    _ko: "\uB9C8\uB514 \uC0AC\uCD9C"
+    _ja: 
+    _en: 
+  - _key: bossmove.CoilWall.name
+    _ko: "\uB62C\uB9AC"
+    _ja: 
+    _en: 
+  - _key: boss.kingpin.name
+    _ko: "\uD0B9\uD540"
+    _ja: 
+    _en: 
+  - _key: bossmove.MissileSalvo.name
+    _ko: "\uBBF8\uC0AC\uC77C \uC77C\uC81C"
+    _ja: 
+    _en: 
+  - _key: bossmove.ExecutionLock.name
+    _ko: "\uCC98\uD615 \uC870\uC900"
+    _ja: 
+    _en: 
+  - _key: bossmove.StrafingRun.name
+    _ko: "\uC800\uACF5 \uD65C\uAC15"
+    _ja: 
+    _en: 
+  - _key: bossmove.BoosterDrop.name
+    _ko: "\uBD80\uC2A4\uD130 \uAC15\uD558"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_01.title
+    _ko: "\uC601\uD63C\uC758 \uC0AC\uB2F9"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_01.body
+    _ko: "\uBD80\uC11C\uC9C4 \uBC29\uD30C\uC81C \uB05D\uC5D0 \uB0A1\uC740 \uC0AC\uB2F9\uC774
+      \uC11C \uC788\uB2E4.\n\uB3D9\uC804\uC744 \uB193\uB294 \uC790\uB9AC\uAC00 \uC190\uB54C\uC5D0
+      \uD30C\uC5EC \uC788\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_01.accept
+    _ko: "\uB3D9\uC804\uC744 \uB193\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_01.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_02.title
+    _ko: "\uBC84\uB824\uC9C4 \uBCF4\uAE09\uD488"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_02.body
+    _ko: "\uB4A4\uC9D1\uD78C \uC0C1\uC790 \uD558\uB098. \uC548\uC5D0 \uB4E0 \uAC83\uC744
+      \uB2E4 \uAC00\uC838\uAC08 \uC218\uB294 \uC5C6\uB2E4.\n\uC7A5\uBE44\uB97C \uCC59\uAE30\uB4E0\uC9C0,
+      \uD314\uC544 \uB118\uAE30\uB4E0\uC9C0."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_02.accept
+    _ko: "\uC7A5\uBE44\uB97C \uCC59\uAE34\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_02.decline
+    _ko: "\uD314\uC544 \uB118\uAE34\uB2E4  (\uACE8\uB4DC 25)"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_03.title
+    _ko: "\uC7A0\uAE34 \uAE08\uACE0"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_03.body
+    _ko: "\uB2E4\uC774\uC5BC\uC774 \uC138 \uCE78 \uB0A8\uC558\uB2E4. \uC5B5\uC9C0\uB85C
+      \uC5F4\uBA74 \uC548\uC758 \uAC83\uC774 \uC0C1\uD560\uC9C0\uB3C4 \uBAA8\uB978\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_03.accept
+    _ko: "\uC5B5\uC9C0\uB85C \uC5F0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_03.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_04.title
+    _ko: "\uAE38 \uC783\uC740 \uC601\uD63C"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_04.body
+    _ko: "\uC800\uB3C4 \uBAB8\uC744 \uCC3E\uB2E4 \uC9C0\uCE5C \uAC83\uC774 \uD558\uB098
+      \uB5A0 \uC788\uB2E4.\n\uC81C \uBAAB\uC744 \uC870\uAE08 \uB5BC\uC5B4 \uC8FC\uBA74
+      \uBAB8\uC73C\uB85C \uAC00\uB294 \uAE38\uC744 \uB113\uD600 \uC8FC\uACA0\uB2E4\uACE0
+      \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_04.accept
+    _ko: "\uC601\uD63C\uC744 \uB098\uB220 \uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_04.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_05.title
+    _ko: "\uC57C\uC804 \uC758\uBB34\uBCD1"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_05.body
+    _ko: "\uBD80\uB450 \uCC3D\uACE0\uC5D0 \uC544\uC9C1 \uC228\uC774 \uBD99\uC740
+      \uC758\uBB34\uBCD1\uC774 \uC788\uB2E4.\n\uB9D0\uC740 \uC548 \uD1B5\uD558\uC9C0\uB9CC
+      \uC190\uC9D3\uC740 \uD1B5\uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_05.accept
+    _ko: "\uAC12\uC744 \uCE58\uB978\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_05.decline
+    _ko: "\uB0B4\uBC84\uB824 \uB454\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_06.title
+    _ko: "\uC881\uC740 \uAE38\uBAA9"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_06.body
+    _ko: "\uC9D0\uC9DD \uC0AC\uC774\uB85C \uAE38\uC774 \uD558\uB098\uBFD0\uC774\uB2E4.\n\uBC18\uB300\uD3B8\uC5D0\uC11C
+      \uAE30\uCC99\uC774 \uB09C\uB2E4. \uB3CC\uC544\uAC08 \uC218\uB3C4 \uC788\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_06.accept
+    _ko: "\uBC00\uACE0 \uB4E4\uC5B4\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH1_06.decline
+    _ko: "\uB3CC\uC544\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_01.title
+    _ko: "\uC800\uC8FC\uBC1B\uC740 \uC740\uB2C9\uCC98"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_01.body
+    _ko: "\uB124\uC628\uC774 \uB2FF\uC9C0 \uC54A\uB294 \uAD6C\uC11D. \uC190\uC744
+      \uB123\uC73C\uBA74 \uC0B4\uC774 \uD0C0\uB294 \uB0C4\uC0C8\uAC00 \uB09C\uB2E4.\n\uC548\uCABD\uC5D0\uC11C
+      \uBB34\uC5B8\uAC00\uAC00 \uBE5B\uB09C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_01.accept
+    _ko: "\uC190\uC744 \uB123\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_01.decline
+    _ko: "\uBB3C\uB7EC\uC120\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_02.title
+    _ko: "\uC774\uB984\uB09C \uBAB8"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_02.body
+    _ko: "\uACE8\uBAA9 \uB05D\uC5D0 \uD558\uB098\uAC00 \uC11C \uC788\uB2E4. \uC774
+      \uAD6C\uC5ED\uC5D0\uC11C \uC81C\uC77C \uC88B\uC740 \uBAB8\uC774\uB2E4.\n\uBE44\uCF1C
+      \uC904 \uC0DD\uAC01\uC740 \uC5C6\uC5B4 \uBCF4\uC778\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_02.accept
+    _ko: "\uB364\uBE48\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_02.decline
+    _ko: "\uB3CC\uC544\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_03.title
+    _ko: "\uBD09\uC778\uB41C \uADA4\uC9DD"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_03.body
+    _ko: "\uAC12\uC740 \uBE44\uC2F8\uC9C0\uB9CC \uC548\uC5D0 \uB4E0 \uAC83\uC740
+      \uD655\uC2E4\uD558\uB2E4.\n\uC774\uB7F0 \uBB3C\uAC74\uC740 \uB450 \uBC88 \uB098\uC624\uC9C0
+      \uC54A\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_03.accept
+    _ko: "\uAC12\uC744 \uCE58\uB978\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_03.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_04.title
+    _ko: "\uAD50\uCC28\uC0AC\uACA9"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_04.body
+    _ko: "\uC591\uCABD \uC625\uC0C1\uC5D0 \uCD1D\uAD6C\uAC00 \uAC78\uB824 \uC788\uB2E4.
+      \uC601\uD63C\uC744 \uC870\uAE08 \uD0DC\uC6CC \uBAB8\uC744 \uB0AE\uCD94\uBA74\n\uCCAB
+      \uC0AC\uACA9\uC740 \uB118\uAE38 \uC218 \uC788\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_04.accept
+    _ko: "\uC601\uD63C\uC744 \uD0DC\uC6CC \uB6AB\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_04.decline
+    _ko: "\uB3CC\uC544\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_05.title
+    _ko: "\uC554\uC2DC\uC7A5 \uC5F0\uC904"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_05.body
+    _ko: "\uB124\uC628 \uC544\uB798\uC5D0\uC11C \uB204\uAC00 \uC190\uC9D3\uD55C\uB2E4.
+      \uBAB8\uC744 \uC880 \uB0B4\uC8FC\uBA74\n\uC774 \uAD6C\uC5ED \uC0C1\uC778\uB4E4\uC5D0\uAC8C
+      \uB9D0\uC744 \uB123\uC5B4 \uC8FC\uACA0\uB2E4\uACE0 \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_05.accept
+    _ko: "\uC0B4\uC744 \uB5BC\uC5B4 \uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_05.decline
+    _ko: "\uBB3C\uB7EC\uC120\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_06.title
+    _ko: "\uBD80\uC11C\uC9C4 \uC81C\uB2E8"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_06.body
+    _ko: "\uAE08 \uAC04 \uC81C\uB2E8\uC774 \uC544\uC9C1 \uC228\uC744 \uC270\uB2E4.\n\uC0C8
+      \uAC83\uC744 \uC8FC\uC9C0\uB294 \uBABB\uD558\uC9C0\uB9CC, \uC9C0\uB2CC \uAC83
+      \uD558\uB098\uB294 \uBCBC\uB824 \uC900\uB2E4\uACE0 \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_06.accept
+    _ko: "\uC81C\uB2E8\uC5D0 \uC62C\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH2_06.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_01.title
+    _ko: "\uC601\uD63C\uC744 \uAC74 \uB0B4\uAE30"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_01.body
+    _ko: "\uBC30\uAD00 \uC0AC\uC774\uC5D0 \uC790\uAE30\uC640 \uB611\uAC19\uC774 \uC0DD\uAE34
+      \uAC83\uC774 \uC549\uC544 \uC788\uB2E4.\n\uC81C \uBAAB\uC744 \uB5BC\uC5B4 \uC8FC\uBA74
+      \uAE38\uC744 \uBCF4\uC5EC \uC8FC\uACA0\uB2E4\uACE0 \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_01.accept
+    _ko: "\uC601\uD63C\uC744 \uB5BC\uC5B4 \uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_01.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_02.title
+    _ko: "\uCE58\uBA85\uC801\uC778 \uB3C4\uC804"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_02.body
+    _ko: "\uC694\uC0C8\uC758 \uBB38\uC9C0\uAE30 \uB458\uC774 \uAE38\uC744 \uB9C9\uACE0
+      \uC11C \uC788\uB2E4.\n\uC774\uACA8\uC11C \uC5BB\uC744 \uAC83\uC774 \uD06C\uACE0,
+      \uC838\uC11C \uC783\uC744 \uAC83\uB3C4 \uD06C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_02.accept
+    _ko: "\uBC1B\uC544\uB4E4\uC778\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_02.decline
+    _ko: "\uB3CC\uC544\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_03.title
+    _ko: "\uBCF4\uC2A4 \uB300\uBE44"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_03.body
+    _ko: "\uBB34\uAE30\uACE0\uC5D0 \uD30C\uC1C4\uD0C4\uC774 \uD558\uB098 \uB0A8\uC544
+      \uC788\uB2E4.\n\uAC12\uC740 \uBE44\uC2F8\uC9C0\uB9CC, \uADF8 \uBC29\uC5B4\uB9C9\uC744
+      \uD55C \uBC88\uC740 \uD655\uC2E4\uD788 \uBC97\uAE34\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_03.accept
+    _ko: "\uAC12\uC744 \uCE58\uB978\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_03.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_04.title
+    _ko: "\uD0C0\uB77D\uD55C \uD638\uC2A4\uD2B8"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_04.body
+    _ko: "\uBC30\uAD00 \uC548\uCABD\uC5D0\uC11C \uB0AB \uB044\uB294 \uC18C\uB9AC\uAC00
+      \uB09C\uB2E4.\n\uC0B4\uC744 \uC870\uAE08 \uB0B4\uC8FC\uBA74 \uC774\uCABD\uC73C\uB85C
+      \uB098\uC628\uB2E4. \uB098\uC624\uBA74, \uBE7C\uC557\uC744 \uC218 \uC788\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_04.accept
+    _ko: "\uC0B4\uC744 \uB0B4\uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_04.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_05.title
+    _ko: "\uC2EC\uC5F0\uC758 \uAC70\uB798"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_05.body
+    _ko: "\uBC14\uB2E5\uC774 \uBCF4\uC774\uC9C0 \uC54A\uB294 \uD1B5\uB85C. \uC544\uB798\uC5D0\uC11C
+      \uBAA9\uC18C\uB9AC\uAC00 \uC62C\uB77C\uC628\uB2E4.\n\uAC12\uC740 \uC601\uD63C\uC73C\uB85C
+      \uBC1B\uB294\uB2E4\uACE0 \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_05.accept
+    _ko: "\uC601\uD63C\uC744 \uB0B4\uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_05.decline
+    _ko: "\uB300\uC2E0 \uC26C\uC5B4 \uAC04\uB2E4  (\uACE0\uC2A4\uD2B8 30% \uD68C\uBCF5)"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_06.title
+    _ko: "\uB9C8\uC9C0\uB9C9 \uBCF4\uAE09 \uD22C\uD558"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_06.body
+    _ko: "\uC694\uC0C8 \uC704\uB85C \uB099\uD558\uC0B0 \uD558\uB098\uAC00 \uB0B4\uB824\uC628\uB2E4.\n\uBA3C\uC800
+      \uC9D1\uB294 \uCABD\uC774 \uC784\uC790\uC9C0\uB9CC, \uC548\uC5D0 \uBB34\uC5C7\uC774
+      \uB4E4\uC5C8\uB294\uC9C0\uB294 \uBAA8\uB978\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_06.accept
+    _ko: "\uC804\uBD80 \uD138\uC5B4 \uB123\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_CH3_06.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_01.title
+    _ko: "\uD53C\uC758 \uACC4\uC57D"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_01.body
+    _ko: "\uC81C\uB2E8\uC774 \uC190\uBAA9\uC744 \uC7A1\uB294\uB2E4.\n\uB124 \uADF8\uB987\uC744
+      \uC601\uC601 \uC904\uC774\uB294 \uB300\uC2E0, \uC774 \uD310\uC5D0\uC11C \uAC00\uC7A5
+      \uD070 \uAC83\uC744 \uC900\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_01.accept
+    _ko: "\uD53C\uB97C \uB0B4\uC900\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_01.decline
+    _ko: "\uB4F1\uC744 \uB3CC\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_02.title
+    _ko: "\uAD11\uB780"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_02.body
+    _ko: "\uC18D\uC0AD\uC784\uC774 \uADC0\uB97C \uCC44\uC6B4\uB2E4.\n\uBAB8\uC774
+      \uC791\uC544\uC9C0\uB294 \uB9CC\uD07C \uC190\uC774 \uBE68\uB77C\uC9C4\uB2E4\uACE0
+      \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_02.accept
+    _ko: "\uADC0\uB97C \uC5F0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_02.decline
+    _ko: "\uB4F1\uC744 \uB3CC\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_04.title
+    _ko: "\uC601\uD63C \uC800\uB2F9"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_04.body
+    _ko: "\uC720\uB839\uC758 \uBAAB\uC744 \uB2F4\uBCF4\uB85C \uC7A1\uB294\uB2E4.\n\uC601\uD63C\uC774
+      \uC587\uC544\uC9C0\uC9C0\uB9CC \uC190\uC5D0\uB294 \uB458\uC774 \uB0A8\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_04.accept
+    _ko: "\uC601\uD63C\uC744 \uB9E1\uAE34\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_04.decline
+    _ko: "\uB4F1\uC744 \uB3CC\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_06.title
+    _ko: "\uAD76\uC8FC\uB9BC"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_06.body
+    _ko: "\uAD76\uC8FC\uB9B0 \uAC83\uC774 \uC81C \uC774\uBE68\uC744 \uB0B4\uBBFC\uB2E4.\n\uADF8\uB987\uC744
+      \uC870\uAE08 \uB0B4\uC8FC\uBA74 \uB0A8\uC758 \uD53C\uB85C \uCC44\uC6B0\uB294
+      \uBC95\uC744 \uC54C\uB824 \uC900\uB2E4."
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_06.accept
+    _ko: "\uC774\uBE68\uC744 \uBC1B\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: event.EV_DEAL_06.decline
+    _ko: "\uB4F1\uC744 \uB3CC\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: stage.1.1.name
+    _ko: "\uC4F0\uB808\uAE30 \uC9D1\uC801\uC7A5"
+    _ja: 
+    _en: 
+  - _key: stage.2.1.name
+    _ko: "\uBBF8\uC0AC\uC77C \uC800\uC7A5\uAE30\uC9C0"
+    _ja: 
+    _en: 
+  - _key: stage.3.1.name
+    _ko: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
+    _ja: 
+    _en: 
+  - _key: stage.4.1.name
+    _ko: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
+    _ja: 
+    _en: 
+  - _key: stage.5.1.name
+    _ko: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
+    _ja: 
+    _en: 
+  - _key: stage.6.1.name
+    _ko: "\uC57C\uAC04 \uC815\uC720\uC18C"
+    _ja: 
+    _en: 
+  - _key: host.ghost.name
+    _ko: "\uC720\uB839"
+    _ja: 
+    _en: 
+  - _key: tip.loading.0
+    _ko: "\uACE0\uC2A4\uD2B8\uB294 \uB5A0 \uC788\uB294 \uB3D9\uC548 \uCCB4\uB825\uC774
+      \uAE4E\uC778\uB2E4. \uBAB8\uC740 \uBE68\uB9AC \uACE0\uB97C\uC218\uB85D \uC88B\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.1
+    _ko: "\uBA48\uCDB0\uC57C \uC3DC\uB2E4. \uC6C0\uC9C1\uC774\uB294 \uB3D9\uC548\uC5D0\uB294
+      \uC790\uB3D9 \uACF5\uACA9\uC774 \uBA48\uCD98\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.2
+    _ko: "\uBAB8\uC744 \uC2A4\uC2A4\uB85C \uB193\uC544\uC8FC\uBA74 \uADF8 \uBAB8\uC740
+      \uC774 \uBC29\uC5D0\uC11C \uB2E4\uC2DC \uD0C8 \uC218 \uC5C6\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.3
+    _ko: "\uBCF4\uC2A4\uB294 \uBE7C\uC557\uC744 \uC218 \uC5C6\uB2E4. \uBCF4\uC2A4\uBC29\uC740
+      \uD0C0\uACE0 \uB4E4\uC5B4\uAC04 \uBAB8\uC73C\uB85C \uB05D\uB0B4\uC57C \uD55C\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.4
+    _ko: "\uC870\uC900 \uB9C1\uC774 \uD68C\uC0C9 \uC790\uBB3C\uC1E0\uBA74 \uC544\uC9C1
+      \uC870\uAC74\uC774 \uC548 \uCC3C\uB2E4. \uB354 \uB450\uB4E4\uAE30\uBA74 \uC5F4\uB9B0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.5
+    _ko: "\uBAB8\uC744 \uC783\uC73C\uBA74 Ghost HP 20%\uAC00 \uB0A0\uC544\uAC04\uB2E4.
+      \uB193\uC544\uC8FC\uB294 \uD3B8\uC774 \uC2F8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.6
+    _ko: "\uD68C\uBCF5 \uBC29\uC5D0\uC11C\uB294 Ghost HP \uAC00 \uB3CC\uC544\uC628\uB2E4.
+      \uB2E4\uC74C \uBC29\uC744 \uBCF4\uACE0 \uB4E4\uC5B4\uAC00\uB77C."
+    _ja: 
+    _en: 
+  - _key: tip.loading.7
+    _ko: "\uBAB8\uC774 \uBC14\uB00C\uC5B4\uB3C4 \uBC84\uD504\uB294 \uB0A8\uB294\uB2E4.
+      \uC2A4\uD0EF\uC774 \uC544\uB2C8\uB77C \uB098\uC5D0\uAC8C \uBD99\uAE30 \uB54C\uBB38\uC774\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.8
+    _ko: "\uBA38\uB9AC \uC704 \uAE08\uC0C9 \uC870\uC900 \uB9C1\uC774 \uC9C0\uAE08
+      \uBE59\uC758 \uBC84\uD2BC\uC774 \uB178\uB9AC\uB294 \uBAB8\uC774\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.9
+    _ko: "\uBE59\uC758 \uD45C\uC2DD\uC740 \uAC00\uAE4C\uC6B4 \uC21C\uC73C\uB85C \uB2E4\uC12F\uAE4C\uC9C0\uB9CC
+      \uB72C\uB2E4. \uB098\uBA38\uC9C0\uB294 \uC0AC\uAC70\uB9AC \uBC16\uC774\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.10
+    _ko: "\uBD89\uC740 X \uAC00 \uBD99\uC740 \uBAB8\uC740 \uB0B4\uAC00 \uBC84\uB9B0
+      \uBAB8\uC774\uB2E4. \uC774 \uBC29\uC5D0\uC11C\uB294 \uB2E4\uC2DC \uBABB \uD0C4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.11
+    _ko: "\uC561\uD2F0\uBE0C \uC2A4\uD0AC\uC740 \uBAB8\uB9C8\uB2E4 \uB2E4\uB974\uB2E4.
+      \uC5B4\uB5A4 \uBAB8\uC744 \uD0D4\uB294\uC9C0\uAC00 \uACE7 \uC5B4\uB5A4 \uC561\uD2F0\uBE0C
+      \uC2A4\uD0AC\uB97C \uC4F0\uB294\uC9C0\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.12
+    _ko: "\uC8FC\uC704\uC5D0 \uBE8F\uC744 \uBAB8\uC774 \uD558\uB098\uB3C4 \uC5C6\uC73C\uBA74
+      \uC7A0\uC2DC \uB4A4 \uBAB8 \uD558\uB098\uAC00 \uB358\uC838\uC9C4\uB2E4. \uB300\uC2E0
+      \uAC12\uC774 \uBE44\uC2F8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: tip.loading.13
+    _ko: "\uD654\uBA74 \uAC00\uC7A5\uC790\uB9AC \uD654\uC0B4\uD45C\uB294 \uCC3D \uBC16\uC5D0
+      \uBE8F\uC744 \uBAB8\uC774 \uC788\uB2E4\uB294 \uB73B\uC774\uB2E4."
+    _ja: 
+    _en: 
+  - _key: opening.line.0
+    _ko: "\uC5B4\uB290 \uB0A0, \uC5EC\uC790\uCE5C\uAD6C\uC640 \uD568\uAED8 \uAC77\uACE0
+      \uC788\uC5C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: opening.line.1
+    _ko: "\uADF8\uB7F0\uB370 \uAC11\uC790\uAE30, \uC2B5\uACA9\uB2F9\uD588\uB2E4!"
+    _ja: 
+    _en: 
+  - _key: opening.line.2
+    _ko: "\uC73C\uC544\uC544\uC544\uC544\uC544\uC545\u2026\u2026"
+    _ja: 
+    _en: 
+  - _key: opening.line.6
+    _ko: "\uD0D5!"
+    _ja: 
+    _en: 
+  - _key: opening.line.9
+    _ko: "\uADF8\uB9AC\uACE0, \uB098\uB294 \uC8FD\uC5C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: opening.line.10
+    _ko: "\uB0B4\uAC00 \uC790\uB124\uB97C \uBD88\uB800\uB124."
+    _ja: 
+    _en: 
+  - _key: opening.line.11
+    _ko: "\uADF8\uC790\uB4E4\uC740 \uC545\uC758 \uBE44\uBC00\uACB0\uC0AC\uC600\uC5B4."
+    _ja: 
+    _en: 
+  - _key: opening.line.12
+    _ko: "\uB0B4 \uC720\uB839 \uC5D0\uB108\uC9C0 \uC5F0\uAD6C\uB97C \uCE90\uB0B4\uB824\uACE0\n\uB538\uC744
+      \uB0A9\uCE58\uD574 \uBAB8\uAC12\uC744 \uC694\uAD6C\uD588\uB2E4\uB124."
+    _ja: 
+    _en: 
+  - _key: opening.line.13
+    _ko: "\uC790\uB124\uC758 \uC5D0\uB108\uC9C0\uB294 \uD55C\uC815\uB3FC \uC788\uB124."
+    _ja: 
+    _en: 
+  - _key: opening.line.14
+    _ko: "\uC790\uB124\uC758 \uC5D0\uB108\uC9C0\uB294 \uD55C\uC815\uB3FC \uC788\uB124."
+    _ja: 
+    _en: 
+  - _key: opening.line.15
+    _ko: "\uBD80\uD0C1\uD558\uB124. \uB0B4 \uB538\uC744 \uAD6C\uD574 \uC8FC\uAC8C!"
+    _ja: 
+    _en: 
+  - _key: ui.shop.host.name
+    _ko: "\uBAB8 \u2014 {0}"
+    _ja: 
+    _en: 
+  - _key: ui.shop.host.desc
+    _ko: "\uADF8 \uC790\uB9AC\uC5D0\uC11C \uC774 \uBAB8\uC744 \uBE7C\uC557\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shop.heal.name
+    _ko: "\uCE58\uB8CC"
+    _ja: 
+    _en: 
+  - _key: ui.shop.heal.desc
+    _ko: "\uD638\uC2A4\uD2B8 {0}% \xB7 \uACE0\uC2A4\uD2B8 {1}% \uD68C\uBCF5"
+    _ja: 
+    _en: 
+  - _key: ui.shop.limit
+    _ko: "\uB0A8\uC740 \uAD6C\uB9E4 {0}\uD68C \xB7 \uCE74\uB4DC {1}\uC7A5"
+    _ja: 
+    _en: 
+  - _key: ui.shop.result.host
+    _ko: "{0} \uBE59\uC758"
+    _ja: 
+    _en: 
+  - _key: ui.shop.result.consumable
+    _ko: "{0} \uAD6C\uC785 \u2014 \uB2E4\uC74C \uBC29\uC5D0\uC11C \uC5F4\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shop.result.card
+    _ko: "{0} \uAD6C\uC785"
+    _ja: 
+    _en: 
+  - _key: ui.battle.barrier
+    _ko: "\uBC29\uBCBD {0}"
+    _ja: 
+    _en: 
+  - _key: ui.rarity.legendary
+    _ko: "\uC804\uC124"
+    _ja: 
+    _en: 
+  - _key: ui.rarity.epic
+    _ko: "\uC601\uC6C5"
+    _ja: 
+    _en: 
+  - _key: ui.rarity.rare
+    _ko: "\uD76C\uADC0"
+    _ja: 
+    _en: 
+  - _key: ui.rarity.common
+    _ko: "\uC77C\uBC18"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.card_grant
+    _ko: "{0} \uCE74\uB4DC {1}\uC7A5"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.card_offer
+    _ko: "{0} \uCE74\uB4DC 3\uD0DD 1"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.upgrade
+    _ko: "\uAC00\uC9C4 \uCE74\uB4DC \uD55C \uC7A5 \uB808\uBCA8 +1"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.host_heal
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 {0}% \uD68C\uBCF5"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.ghost_heal
+    _ko: "\uACE0\uC2A4\uD2B8 \uCCB4\uB825 {0}% \uD68C\uBCF5"
+    _ja: 
+    _en: 
+  - _key: ui.event.gold
+    _ko: "\uACE8\uB4DC {0}"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.reach
+    _ko: "\uBE59\uC758 \uC0AC\uAC70\uB9AC +{0}% (\uD310 \uB05D\uAE4C\uC9C0)"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.discount
+    _ko: "\uC0C1\uC810 \uAC12 -{0}% (\uD310 \uB05D\uAE4C\uC9C0)"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.shield_break
+    _ko: "\uB2E4\uC74C \uBCF4\uC2A4 \uBC29\uC5B4\uB9C9 \uD55C \uBC88 \uBB34\uD6A8"
+    _ja: 
+    _en: 
+  - _key: ui.event.reward.spawn_host
+    _ko: "\uBE7C\uC557\uC744 \uBAB8 \uD558\uB098\uAC00 \uB098\uD0C0\uB09C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.event.cost.ghost_hp
+    _ko: "\uACE0\uC2A4\uD2B8 \uCCB4\uB825 {0}%"
+    _ja: 
+    _en: 
+  - _key: ui.event.cost.host_hp
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 {0}%"
+    _ja: 
+    _en: 
+  - _key: ui.event.cost.max_hp
+    _ko: "\uCD5C\uB300 \uCCB4\uB825 -{0}% (\uC601\uAD6C)"
+    _ja: 
+    _en: 
+  - _key: ui.event.blocked.no_body
+    _ko: "\uBAB8\uC774 \uC5C6\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.event.blocked.cant_pay
+    _ko: "\uCE58\uB97C \uC218 \uC5C6\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.passed
+    _ko: "\uC9C0\uB098\uCCE4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.elite
+    _ko: "\uC815\uC608\uAC00 \uC55E\uC744 \uB9C9\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.ambush
+    _ko: "\uB9E4\uBCF5\uC774\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.missed
+    _ko: "\uBE57\uB098\uAC14\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.gold
+    _ko: "\uACE8\uB4DC +{0}"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.no_body
+    _ko: "\uBAB8\uC774 \uC5C6\uC5B4 \uBC1B\uC744 \uC218 \uC5C6\uC5C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.nothing_left
+    _ko: "\uAC00\uC838\uAC08 \uAC83\uC774 \uB0A8\uC544 \uC788\uC9C0 \uC54A\uC558\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.cards
+    _ko: "\uCE74\uB4DC {0}\uC7A5 \uD68D\uB4DD"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.got
+    _ko: "{0} \uD68D\uB4DD"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.pick_card
+    _ko: "\uCE74\uB4DC\uB97C \uACE0\uB978\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.nothing_to_pick
+    _ko: "\uACE0\uB97C \uAC83\uC774 \uB0A8\uC544 \uC788\uC9C0 \uC54A\uC558\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.nothing_to_upgrade
+    _ko: "\uBCBC\uB9B4 \uAC83\uC774 \uC5C6\uC5C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.reach
+    _ko: "\uBE59\uC758 \uC0AC\uAC70\uB9AC +{0}%"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.discount
+    _ko: "\uC0C1\uC810 \uCE74\uB4DC \uAC12 {0}% \uD560\uC778"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.shield_break
+    _ko: "\uB2E4\uC74C \uBCF4\uC2A4\uC758 \uBC29\uC5B4\uB9C9\uC744 \uD55C \uBC88
+      \uAE6C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.event.result.nobody
+    _ko: "\uC544\uBB34\uB3C4 \uC624\uC9C0 \uC54A\uC558\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.event.result.appeared
+    _ko: "{0} \uC774(\uAC00) \uB098\uD0C0\uB0AC\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.title.pick
+    _ko: "HOST \uB97C \uC120\uD0DD\uD558\uC138\uC694!"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.title.codex
+    _ko: "HOST \uB3C4\uAC10"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.header_desc
+    _ko: "\uC0AC\uB9DD \uC2DC \uC720\uB839\uC73C\uB85C \uB3CC\uC544\uAC00, \uB2E4\uB978
+      HOST\uC5D0 \uBE59\uC758\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.possess_start
+    _ko: "\uBE59\uC758 \uC2DC\uC791"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.back
+    _ko: "\uB3CC\uC544\uAC00\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.stats
+    _ko: "\uB2A5\uB825\uCE58"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.upgrade.title
+    _ko: "HOST \uAC15\uD654"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.upgrade.sub
+    _ko: "\uC561\uD2F0\uBE0C \xB7 \uD328\uC2DC\uBE0C \uC2A4\uD0AC \uAC15\uD654"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery.maxed
+    _ko: "{0} \uC740(\uB294) \uC774\uBBF8 \uC219\uB828\uB3C4 \uCD5C\uB300\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.common.ok
+    _ko: "\uD655\uC778"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery.short
+    _ko: "\uD30C\uD3B8\uC774 \uBAA8\uC790\uB780\uB2E4.\n{0} \u2014 {1} / {2}  ({3}\uAC1C
+      \uB354)"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery.unseal
+    _ko: "\uBD09\uC778 \uD574\uC81C"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery.step
+    _ko: "\uC219\uB828\uB3C4 Lv {0} \u2192 {1}"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery.confirm
+    _ko: "{0}  {1}\n\uD30C\uD3B8 {2}\uAC1C\uB97C \uC4F4\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.mastery
+    _ko: "\uC219\uB828\uB3C4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.shard
+    _ko: "\uC601\uD63C \uD30C\uD3B8"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.start_ghost
+    _ko: "\uC720\uB839\uC73C\uB85C \uC2DC\uC791"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.badge
+    _ko: "\uC720\uB839"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.trait
+    _ko: "\uBAB8\uC774 \uC5C6\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.rule
+    _ko: "\uBAB8\uC774 \uC5C6\uC73C\uBA74 HP\uAC00 \uACC4\uC18D \uC904\uC5B4\uB4E0\uB2E4\n\uBAB8
+      \uC5C6\uC774 \uC8FC\uB294 \uD53C\uD574\uB294 60%"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.skill
+    _ko: "\uBAB8 \uBE7C\uC557\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.skill_desc
+    _ko: "{0:0.#}\uCE78 \uC548\uC758 \uC801\uC744 \uBE7C\uC557\uC544 \uADF8 \uBAB8\uC73C\uB85C
+      \uC2F8\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.skill_desc_near
+    _ko: "\uAC00\uAE4C\uC6B4 \uC801\uC744 \uBE7C\uC557\uC544 \uADF8 \uBAB8\uC73C\uB85C
+      \uC2F8\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.level
+    _ko: "\uACE0\uC2A4\uD2B8 \uB808\uBCA8"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.ghost.level_by_gold
+    _ko: "\uACE8\uB4DC\uB85C \uC62C\uB9B0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.job.melee
+    _ko: "\uADFC\uAC70\uB9AC"
+    _ja: 
+    _en: 
+  - _key: ui.job.mid
+    _ko: "\uC911\uAC70\uB9AC"
+    _ja: 
+    _en: 
+  - _key: ui.job.ranged
+    _ko: "\uC6D0\uAC70\uB9AC"
+    _ja: 
+    _en: 
+  - _key: ui.job.melee.trait
+    _ko: "\uCE58\uACE0 \uBC84\uD2F4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.job.mid.trait
+    _ko: "\uBD99\uC5B4\uC11C \uC3DF\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.job.ranged.trait
+    _ko: "\uAC70\uB9AC\uB97C \uB450\uACE0 \uC3DC\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.job.melee.rule
+    _ko: "\uB54C\uB9B4 \uB54C\uB9C8\uB2E4 \uC274\uB4DC (HP 3% \xB7 \uCD5C\uB300 30%)\n\uD0C0\uACA9
+      \uC2DC 12% \uD655\uB960\uB85C 0.8\uCD08 \uC2A4\uD134"
+    _ja: 
+    _en: 
+  - _key: ui.job.mid.rule
+    _ko: "\uC9C1\uC5C5 \uADDC\uCE59 \uC5C6\uC74C \u2014 \uBE60\uB978 \uC5F0\uC0AC\uC640
+      \uC9E7\uC740 \uC0AC\uAC70\uB9AC\uAC00 \uACE7 \uD2B9\uC131\uC774\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.job.ranged.rule
+    _ko: "\uC9C1\uC5C5 \uADDC\uCE59 \uC5C6\uC74C \u2014 \uCC28\uBCC4\uD654\uB294
+      \uAC01\uC790\uC758 \uC561\uD2F0\uBE0C\xB7\uD328\uC2DC\uBE0C\uAC00 \uB9E1\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.tip
+    _ko: "HOST\uB9C8\uB2E4 \uC774\uB3D9\uC18D\uB3C4, \uACF5\uACA9 \uBC29\uC2DD, \uC2A4\uD0AC\uC774
+      \uB2E4\uB985\uB2C8\uB2E4.\n\uB2E4\uC591\uD55C HOST\uB97C \uACBD\uD5D8\uD574
+      \uBCF4\uC138\uC694!"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.owned
+    _ko: "\uBCF4\uC720 HOST  {0}/{1}"
+    _ja: 
+    _en: 
+  - _key: ui.hostselect.gold_short
+    _ko: "\uACE8\uB4DC\uAC00 \uBAA8\uC790\uB780\uB2E4.\n{0}({1}\uAE09) \u2014 {2:N0}
+      / {3:N0}\n\n\uC720\uB839\uC73C\uB85C \uC2DC\uC791\uD558\uBA74 \uACE8\uB4DC\uAC00
+      \uB4E4\uC9C0 \uC54A\uB294\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.attack.melee_drain
+    _ko: "\uADFC\uC811 \xB7 \uD761\uD608"
+    _ja: 
+    _en: 
+  - _key: ui.attack.melee
+    _ko: "\uADFC\uC811"
+    _ja: 
+    _en: 
+  - _key: ui.attack.single_slow
+    _ko: "\uB2E8\uBC1C \xB7 \uB454\uD654"
+    _ja: 
+    _en: 
+  - _key: ui.attack.single
+    _ko: "\uB2E8\uBC1C"
+    _ja: 
+    _en: 
+  - _key: ui.attack.rapid
+    _ko: "\uC5F0\uC0AC"
+    _ja: 
+    _en: 
+  - _key: ui.attack.spread
+    _ko: "\uD655\uC0B0 {0}\uBC1C"
+    _ja: 
+    _en: 
+  - _key: ui.attack.pierce
+    _ko: "\uAD00\uD1B5"
+    _ja: 
+    _en: 
+  - _key: ui.attack.snipe
+    _ko: "\uC800\uACA9"
+    _ja: 
+    _en: 
+  - _key: ui.attack.pulse
+    _ko: "\uC8FC\uC704 \uAD11\uC5ED"
+    _ja: 
+    _en: 
+  - _key: ui.unlock.stage
+    _ko: "CH{0} \xB7 {1}\uC2A4\uD14C\uC774\uC9C0"
+    _ja: 
+    _en: 
+  - _key: ui.unlock.boss
+    _ko: "CH{0} \uBCF4\uC2A4 \uACA9\uD30C"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.full_heal.title
+    _ko: "\uBAB8\uC744 \uC544\uBB38\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.full_heal.desc
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825\uC744 \uAC00\uB4DD \uCC44\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.full_heal.result
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825\uC744 \uAC00\uB4DD \uCC44\uC6E0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.soul_heal.title
+    _ko: "\uC601\uD63C\uC744 \uCC44\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.soul_heal.desc
+    _ko: "\uACE0\uC2A4\uD2B8 \uCCB4\uB825\uC744 \uAC00\uB4DD \uCC44\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.soul_heal.result
+    _ko: "\uACE0\uC2A4\uD2B8 \uCCB4\uB825\uC744 \uAC00\uB4DD \uCC44\uC6E0\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.max_hp.title
+    _ko: "\uADF8\uB987\uC744 \uB113\uD78C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.max_hp.desc
+    _ko: "\uBE8F\uB294 \uBAB8\uC774 \uB354 \uD2BC\uD2BC\uD574\uC9C4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.max_hp.result
+    _ko: "\uBE8F\uB294 \uBAB8\uC774 \uB354 \uD2BC\uD2BC\uD574\uC84C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.atk.title
+    _ko: "\uD798\uC744 \uBC1B\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.atk.desc
+    _ko: "\uACF5\uACA9\uB825\uC774 \uC624\uB978\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.atk.result
+    _ko: "\uACF5\uACA9\uB825\uC774 \uC62C\uB790\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.speed.title
+    _ko: "\uC190\uC774 \uBE68\uB77C\uC9C4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.speed.desc
+    _ko: "\uACF5\uACA9\uC774 \uBE68\uB77C\uC9C4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.speed.result
+    _ko: "\uACF5\uACA9\uC774 \uBE68\uB77C\uC84C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.range.title
+    _ko: "\uBA40\uB9AC \uB2FF\uB294\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.range.desc
+    _ko: "\uC0AC\uAC70\uB9AC\uAC00 \uB298\uC5B4\uB09C\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.range.result
+    _ko: "\uC0AC\uAC70\uB9AC\uAC00 \uB298\uC5B4\uB0AC\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.opening.skip
+    _ko: "\uAC74\uB108\uB6F0\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.ghost_sub
+    _ko: "\uC721\uCCB4\uC640 \uBCC4\uAC1C\uB85C \uC720\uC9C0\uB418\uB294 \uC601\uD63C
+      \uCCB4\uB825"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.emergency_host
+    _ko: "\uAE34\uAE09 \uBE59\uC758 \u2014 GHOST -{0}"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.exit_opened
+    _ko: "\uCD9C\uAD6C\uAC00 \uC5F4\uB838\uB2E4 \u2014 \uD1B5\uACFC\uD574\uC11C \uB2E4\uC74C
+      \uC2A4\uD14C\uC774\uC9C0\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.event.reward
+    _ko: "\uBCF4\uC0C1 \xB7 {0}"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.event.decline
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.title
+    _ko: "\uD68C\uBCF5\uC758 \uC81C\uB2E8"
+    _ja: 
+    _en: 
+  - _key: ui.shrine.hint
+    _ko: "\uD558\uB098\uB9CC \uAC00\uC838\uAC08 \uC218 \uC788\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shop.gold
+    _ko: "\uBCF4\uC720 \uACE8\uB4DC {0:N0}"
+    _ja: 
+    _en: 
+  - _key: ui.buff.sub
+    _ko: "\uCE74\uB4DC\uB97C \uC120\uD0DD\uD558\uC138\uC694"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.result.clear
+    _ko: "\uC2A4\uD14C\uC774\uC9C0 \uD074\uB9AC\uC5B4!\n\uACE8\uB4DC +{0}   \uACE0\uC2A4\uD2B8
+      EXP +{1}"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.result.dead
+    _ko: "\uC720\uB839\uC774 \uC18C\uBA78\uD588\uC2B5\uB2C8\uB2E4.\n\uB85C\uBE44\uB85C
+      \uB3CC\uC544\uAC11\uB2C8\uB2E4."
+    _ja: 
+    _en: 
+  - _key: ui.ingame.result.to_lobby
+    _ko: "\uB85C\uBE44\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.pause.message
+    _ko: "\uC2A4\uD14C\uC774\uC9C0\uB97C \uD3EC\uAE30\uD558\uACE0 \uB85C\uBE44\uB85C
+      \uB3CC\uC544\uAC08\uAE4C\uC694?"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.pause.give_up
+    _ko: "\uD3EC\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.ingame.pause.continue
+    _ko: "\uACC4\uC18D"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.back
+    _ko: "\uB4A4\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.side
+    _ko: "\uC606\uC73C\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.gap
+    _ko: "\uD2C8\uC73C\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.perp
+    _ko: "\uC9C1\uAC01\uC73C\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.zone
+    _ko: "\uC548\uC804\uC9C0\uB300\uB85C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.close
+    _ko: "\uBD99\uC5B4\uB77C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.swap
+    _ko: "\uBAB8\uC744 \uAC08\uC544\uD0C0\uB77C"
+    _ja: 
+    _en: 
+  - _key: ui.dodge.hold
+    _ko: "\uC3D8\uC9C0 \uB9C8\uB77C"
+    _ja: 
+    _en: 
+  - _key: ui.battle.head_exposed
+    _ko: "\uBA38\uB9AC \uB178\uCD9C"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.bomb.name
+    _ko: "\uD3ED\uD0C4"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.bomb.desc
+    _ko: "\uB2E4\uC74C \uBC29\uC774 \uC5F4\uB9AC\uBA74 \uAD11\uC5ED \uD55C \uBC29"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.ally.name
+    _ko: "\uB3D9\uB8CC"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.ally.desc
+    _ko: "\uB2E4\uC74C \uBC29\uC5D0\uC11C \uBAB8 \uD558\uB098\uAC00 \uAC19\uC774
+      \uC2F8\uC6B4\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.freeze.name
+    _ko: "\uC815\uC9C0"
+    _ja: 
+    _en: 
+  - _key: ui.consumable.freeze.desc
+    _ko: "\uB2E4\uC74C \uBC29\uC5D0\uC11C \uC801\uC774 {0:0}\uCD08 \uBA48\uCD98\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.survival.name
+    _ko: "\uC11C\uBC14\uC774\uBC8C \uBAA8\uB4DC"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.survival.desc
+    _ko: "\uB05D\uAE4C\uC9C0 \uC0B4\uC544\uB0A8\uC544\uB77C"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.scenario.name
+    _ko: "\uC2DC\uB098\uB9AC\uC624 \uBAA8\uB4DC"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.scenario.desc
+    _ko: "\uC601\uD63C\uC774 \uAE43\uB4E0 \uC0C8\uB85C\uC6B4 \uC774\uC57C\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.defense.name
+    _ko: "\uB514\uD39C\uC2A4 \uBAA8\uB4DC"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.mode.defense.desc
+    _ko: "\uBAB0\uB824\uC624\uB294 \uC801\uC744 \uB9C9\uC544\uB77C"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.game_mode
+    _ko: "\uAC8C\uC784 \uBAA8\uB4DC"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.continue
+    _ko: "\uC774\uC5B4\uC11C \uD558\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.play
+    _ko: "\uD50C\uB808\uC774\uD558\uAE30"
+    _ja: 
+    _en: 
+  - _key: ui.common.quit.message
+    _ko: "\uAC8C\uC784\uC744 \uC885\uB8CC\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+    _ja: 
+    _en: 
+  - _key: ui.common.quit
+    _ko: "\uC885\uB8CC"
+    _ja: 
+    _en: 
+  - _key: ui.common.cancel
+    _ko: "\uCDE8\uC18C"
+    _ja: 
+    _en: 
+  - _key: ui.shop.leave
+    _ko: "\uB098\uAC04\uB2E4"
+    _ja: 
+    _en: 
+  - _key: ui.shop.title
+    _ko: "\uC0C1\uC810"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.host_button.sub
+    _ko: "\uC721\uC131 \xB7 \uC561\uD2F0\uBE0C \uC2A4\uD0AC \xB7 \uB3C4\uAC10"
+    _ja: 
+    _en: 
+  - _key: ui.lobby.shop_button.sub
+    _ko: "\uC0C1\uC810 \xB7 \uD328\uD0A4\uC9C0 \xB7 \uC7AC\uD654"
+    _ja: 
+    _en: 
