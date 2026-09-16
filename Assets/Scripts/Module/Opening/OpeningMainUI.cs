@@ -53,6 +53,15 @@ namespace Game.Module.Opening
         /// </summary>
         private const float FadeSeconds = 0.18f;
 
+        /// <summary>
+        /// 첫 컷이 화면에 얹힐 때까지 로딩 가림막을 그대로 둔다.
+        ///
+        /// 씬이 올라온 것과 **볼 것이 생긴 것**은 다르다. 컷 그림은 씬이 뜬 뒤에
+        /// 비동기로 오므로, 씬만 보고 걷으면 빈 화면이 한 박자 보인다
+        /// (인게임이 캐릭터 아틀라스를 기다리는 것과 같은 이유다).
+        /// </summary>
+        private bool _veilLifted;
+
         private UIBinder _ui;
         private Image _cut;          // 앞 겹 — 지금 컷
         private Image _cutBack;      // 뒷 겹 — 지나가는 컷을 받쳐 준다
@@ -84,9 +93,12 @@ namespace Game.Module.Opening
             {
                 _cut = cutT.GetComponent<Image>();
                 _cutGroup = cutT.GetComponent<CanvasGroup>() ?? cutT.gameObject.AddComponent<CanvasGroup>();
+                // ⚠ **그림 없는 `Image` 는 흰 사각형이다.** 첫 컷이 오기 전까지 켜 두면
+                //   화면 가운데가 하얗게 뜬다(2026-09-16). 그림이 온 뒤에만 켠다.
+                _cut.enabled = false;
             }
             var backT = _ui.Find("CutImageBack");
-            if (backT != null) _cutBack = backT.GetComponent<Image>();
+            if (backT != null) { _cutBack = backT.GetComponent<Image>(); _cutBack.enabled = false; }
             var ghostT = _ui.Find("GhostImage");
             if (ghostT != null) _ghost = ghostT.GetComponent<Image>();
 
@@ -242,7 +254,7 @@ namespace Game.Module.Opening
         /// </summary>
         private async UniTaskVoid ShowArtAsync(OpeningCut cut)
         {
-            if (_cut == null) return;
+            if (_cut == null) { LiftVeil(); return; }
 
             if (!cut.HasArt)
             {
@@ -253,10 +265,11 @@ namespace Game.Module.Opening
                 _fadeLeft = 0f;
                 if (_boxGroup != null) _boxGroup.alpha = 1f;
                 Release();
+                LiftVeil();
                 return;
             }
 
-            if (!CoreModule.TryGet<IResourceManager>(out var res)) return;
+            if (!CoreModule.TryGet<IResourceManager>(out var res)) { LiftVeil(); return; }
 
             string address = AddressPrefix + cut.Key;
             Sprite sprite = null;
@@ -267,10 +280,11 @@ namespace Game.Module.Opening
             if (this == null || _index < 0 || _index >= _cuts.Length
                 || _cuts[_index].Key != cut.Key) { res.Release(address); return; }
 
+
             string previous = _heldAddress;
             _heldAddress = address;
 
-            if (sprite == null) { _cut.enabled = false; return; }
+            if (sprite == null) { _cut.enabled = false; LiftVeil(); return; }
 
             // 회상 컷은 색을 뺀다. 그림은 프롤로그 것 그대로다 — 원작도 그렇게 다시 쓴다.
             if (cut.Sepia) sprite = SepiaOf(sprite, cut.Key);
@@ -302,6 +316,16 @@ namespace Game.Module.Opening
             }
 
             if (!string.IsNullOrEmpty(previous) && previous != address) res.Release(previous);
+            LiftVeil();   // 볼 것이 생겼다
+        }
+
+        /// <summary>로딩 가림막을 내린다. 여러 번 불러도 한 번만 먹는다.</summary>
+        private void LiftVeil()
+        {
+            if (_veilLifted) return;
+            _veilLifted = true;
+            if (CoreModule.TryGet<GameFramework.Core.Module.Loading.ILoadingManager>(out var loading))
+                loading.HideAsync().Forget();   // fire-and-forget: 걷는 연출은 가림막이 알아서 한다
         }
 
         private void Release()

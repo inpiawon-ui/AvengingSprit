@@ -36,6 +36,9 @@ namespace Game.Module.Common
         /// </summary>
         private const float BattleReadyTimeout = 25f;
 
+        /// <summary>오프닝은 컷 한 장이라 훨씬 빨리 온다. 그만큼 안전장치도 짧다.</summary>
+        private const float OpeningReadyTimeout = 8f;
+
         private IDisposable _unloading, _progress, _loaded;
         private CancellationTokenSource _guard;
 
@@ -83,11 +86,15 @@ namespace Game.Module.Common
         {
             if (!TryLoading(out var loading)) return;
 
-            // 인게임은 씬이 올라온 뒤가 진짜 로딩이다 — 캐릭터 아틀라스를 그때 올린다.
-            if (e.NextScene == SceneNames.InGame)
+            // 씬이 올라온 것과 **볼 것이 생긴 것**은 다르다. 이 둘은 씬이 뜬 뒤가
+            // 진짜 로딩이라, 화면 쪽이 준비 완료를 알릴 때까지 가림막을 둔다.
+            //   인게임  캐릭터 아틀라스 스무 장
+            //   오프닝  첫 컷 그림 — 없는 채로 걷으면 **하얀 네모**가 한 박자 보였다(2026-09-16)
+            if (e.NextScene == SceneNames.InGame || e.NextScene == SceneNames.Opening)
             {
                 loading.SetProgress(SceneLoadShare);
-                StartGuard(loading);
+                StartGuard(loading, e.NextScene == SceneNames.InGame
+                                       ? BattleReadyTimeout : OpeningReadyTimeout);
                 return;
             }
 
@@ -95,22 +102,23 @@ namespace Game.Module.Common
             loading.HideAsync().Forget();   // fire-and-forget: 전환이 끝났다
         }
 
-        /// <summary>인게임이 끝내 준비 완료를 안 알리면 시간이 지나 걷는다.</summary>
-        private void StartGuard(ILoadingManager loading)
+        /// <summary>화면이 끝내 준비 완료를 안 알리면 시간이 지나 걷는다.</summary>
+        private void StartGuard(ILoadingManager loading, float timeout)
         {
             _guard = new CancellationTokenSource();
-            GuardAsync(loading, _guard.Token).Forget();   // fire-and-forget: 안전장치
+            GuardAsync(loading, timeout, _guard.Token).Forget();   // fire-and-forget: 안전장치
         }
 
-        private static async UniTaskVoid GuardAsync(ILoadingManager loading, CancellationToken token)
+        private static async UniTaskVoid GuardAsync(ILoadingManager loading, float timeout,
+                                                    CancellationToken token)
         {
             bool cancelled = await UniTask
-                .Delay(TimeSpan.FromSeconds(BattleReadyTimeout), DelayType.UnscaledDeltaTime,
+                .Delay(TimeSpan.FromSeconds(timeout), DelayType.UnscaledDeltaTime,
                        cancellationToken: token)
                 .SuppressCancellationThrow();
             if (cancelled || !loading.IsVisible) return;
 
-            Debug.LogWarning("[Loading] 인게임 준비 신호가 없어 가림막을 강제로 걷는다.");
+            Debug.LogWarning("[Loading] 준비 신호가 없어 가림막을 강제로 걷는다.");
             await loading.HideAsync();
         }
 
