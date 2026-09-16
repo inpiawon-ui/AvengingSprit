@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Module.Common;
+using Game.Module.Common.Chest;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
@@ -20,24 +21,27 @@ namespace Game.Module.Lobby
     /// </summary>
     public sealed class LobbyMainUI : MonoBehaviour, IBackTarget
     {
-        private const float ExpBarWidth = 84f;   // 목업 실측 — GhostExpBarBg 폭
-
-        // TBD-CH — 챕터 미기획. 목업이 노출한 CH3 값만 실제 문구다.
-        private static readonly string[] ChapterNames = { "FACTORY", "HARBOR", "TOWER" };
-        private static readonly string[] BossNames = { "MAD DOCTOR", "IRON CLAW", "OVERLORD" };
-
         [SerializeField] private HostSelectPanel _hostSelectPanel;
+
+        /// <summary>
+        /// 모드 칸 그림. <see cref="Modes"/> 와 **같은 순서**다 (서바이벌 · 시나리오 · 디펜스).
+        /// 회전 목마라 어느 칸에 무엇이 오는지가 바뀌므로 코드가 갈아 끼운다.
+        /// </summary>
+        [SerializeField] private Sprite[] _modeArts = new Sprite[3];
 
         private UIBinder _ui;
         private IPlayerDataService _player;
+        private IChestService _chests;
         private readonly List<IDisposable> _tokens = new();
 
         // 1차 범위 밖 — 버튼은 두되 누르면 준비중 안내만 띄운다.
-        // ⚠ 시즌패스 · 이벤트 · 일일로그인 · 기능탭은 로비에서 **걷어냈다**(2026-09-15 목업).
-        //   꺼진 오브젝트에 리스너를 걸면 "왜 안 눌리지" 를 다시 찾게 되므로 목록에서도 뺀다.
+        // ⚠ 시즌패스 · 이벤트 · 일일로그인 · 기능탭 · 챕터 카드 · 고스트 위젯은 로비에서
+        //   **걷어냈다**(2026-09-15 · 2026-09-16 목업). 프리팹에서도 지웠으므로 목록에도 없다.
         private static readonly (string element, string label)[] NotReady =
         {
             ("MailButton", "우편"), ("SettingsButton", "설정"),
+            // 유령 수색(방치)은 화면만 세워 뒀다 — 기능은 나중(기획 2026-09-16)
+            ("GhostSearchHelpButton", "유령 수색"), ("GhostSearchClaimButton", "유령 수색"),
         };
 
         // ── 게임 모드 ────────────────────────────────────────────
@@ -94,6 +98,7 @@ namespace Game.Module.Lobby
             // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
             Localize.ApplyFonts(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
+            CoreModule.TryGet<IChestService>(out _chests);
 
             gameObject.AddComponent<BackButtonRouter>();
             global::Game.Module.Common.GameSound.Music("screen.lobby");
@@ -116,14 +121,119 @@ namespace Game.Module.Lobby
             _ui.SetText("ChapterButtonTitleText", "PLAY");
             _ui.SetText("ChapterButtonSubText", Localize.Get("ui.lobby.game_mode"));
 
+            // 상자 세 칸 — 누르면 시간이 남았으면 젬으로 열고, 다 됐으면 보상을 받는다
+            for (int i = 0; i < ChestSlots; i++)
+            {
+                int slot = i;   // 클로저가 루프 변수를 잡지 않게 복사한다
+                var root = _ui.Find($"ChestSlot{i + 1}");
+                if (root == null) continue;
+                var button = _ui.Find(root, "ChestActionButton")?.GetComponent<UnityEngine.UI.Button>();
+                if (button != null) button.onClick.AddListener(() => OnChestAction(slot));
+            }
+
+            _ui.SetText("GhostSearchTitleText", "유령 수색");
             ApplyModes();
             ApplyTabs();
+            ApplyChests();
 
             foreach (var (element, label) in NotReady)
             {
                 var captured = label;
                 _ui.OnClick(element, () => NotifyNotReady(captured));
             }
+        }
+
+        // ── 보물상자 ─────────────────────────────────────────────
+        //
+        // 칸마다 세 가지 모습이 있다. 어느 것이 켜지는지가 곧 상태다 —
+        //   빈 칸      「빈 칸」 글자만
+        //   세는 중    상자 그림 · 남은 시간 · 「젬 n · 즉시 열기」
+        //   다 됨      상자 그림 · 「완료!」 띠 · 「보상 획득하기」
+        //
+        // ⚠ 매 프레임 다시 그리지 않는다. 1초에 한 번 `ChestChangedEvent` 가 오고,
+        //   세는 동안의 「남은 시간」 글자만 따로 1초마다 고친다.
+
+        private const int ChestSlots = 3;
+        private const float ChestTickSeconds = 1f;
+        private float _chestTick;
+
+        private void Update()
+        {
+            if (_chests == null) return;
+            _chestTick += Time.unscaledDeltaTime;
+            if (_chestTick < ChestTickSeconds) return;
+            _chestTick = 0f;
+            ApplyChests();
+        }
+
+        private void ApplyChests()
+        {
+            if (_chests == null && !CoreModule.TryGet<IChestService>(out _chests)) return;
+
+            for (int i = 0; i < ChestSlots; i++)
+            {
+                var root = _ui.Find($"ChestSlot{i + 1}");
+                if (root == null) continue;
+
+                var s = _chests.Get(i);
+                bool has = !s.IsEmpty;
+                bool ready = s.IsReady;
+
+                SetIn(root, "ChestEmptyText", !has);
+                SetIn(root, "ChestArt", has);
+                SetIn(root, "ChestReadyBanner", ready);
+                SetIn(root, "ChestReadyText", ready);
+                SetIn(root, "ChestTimeIcon", has && !ready);
+                SetIn(root, "ChestTimeText", has && !ready);
+                SetIn(root, "ChestActionButton", has);
+                SetIn(root, "ChestActionGemIcon", has && !ready);
+                SetIn(root, "ChestActionCostText", has && !ready);
+                SetIn(root, "ChestActionLabelText", has);
+
+                if (!has) continue;
+                TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
+                TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));
+                TextIn(root, "ChestActionLabelText", ready ? "보상 획득하기" : "즉시 열기");
+            }
+        }
+
+        /// <summary>남은 시간 — 목업대로 「3시간 12분」 꼴. 1분 미만은 초로 적는다.</summary>
+        private static string Remain(int seconds)
+        {
+            if (seconds <= 0) return "0초";
+            int h = seconds / 3600, m = seconds % 3600 / 60;
+            if (h > 0) return $"{h}시간 {m}분";
+            if (m > 0) return $"{m}분";
+            return $"{seconds}초";
+        }
+
+        private void SetIn(Transform root, string name, bool on)
+        {
+            var t = _ui.Find(root, name);
+            if (t != null && t.gameObject.activeSelf != on) t.gameObject.SetActive(on);
+        }
+
+        private void TextIn(Transform root, string name, string value)
+        {
+            var t = _ui.Find(root, name)?.GetComponent<TMPro.TextMeshProUGUI>();
+            if (t != null) t.text = value;
+        }
+
+        private void OnChestAction(int slot)
+        {
+            if (_chests == null) return;
+            var s = _chests.Get(slot);
+            if (s.IsEmpty) return;
+
+            if (s.IsReady)
+            {
+                if (_chests.TryClaim(slot, out _)) global::Game.Module.Common.GameSound.Cue("run.gold");
+                return;
+            }
+
+            // 젬이 모자라면 아무 일도 안 일어난 듯 보인다 — 왜 안 열렸는지 알려 준다
+            if (!_chests.TryOpenNow(slot)) NotifyNotReady($"젬 {s.GemCost:N0} 개가 필요합니다");
+            else global::Game.Module.Common.GameSound.Cue("run.shop");
         }
 
         // ── 게임 모드 ────────────────────────────────────────────
@@ -148,10 +258,11 @@ namespace Game.Module.Lobby
             int left = (_modeIndex + Modes.Length - 1) % Modes.Length;
             int right = (_modeIndex + 1) % Modes.Length;
 
-            SetSideCard("ModeCardLeft", Modes[left]);
-            SetSideCard("ModeCardRight", Modes[right]);
+            SetSideCard("ModeCardLeft", left);
+            SetSideCard("ModeCardRight", right);
 
             var mid = Modes[_modeIndex];
+            SetArt(_ui.Find("ModeCenterArt"), _modeIndex);
             _ui.SetText("ModeCenterTitleText", mid.Name);
             _ui.SetText("ModeCenterSubText", CenterDescOf(mid));
             _ui.SetActive("ModeCenterArt", mid.Unlocked);
@@ -173,16 +284,29 @@ namespace Game.Module.Lobby
             return $"CH {_player.CurrentChapter:00}   ·   {_player.ReachedStage} / 30";
         }
 
-        private void SetSideCard(string card, GameMode mode)
+        private void SetSideCard(string card, int modeIndex)
         {
             var root = _ui.Find(card);
             if (root == null) return;
+            var mode = Modes[modeIndex];
             var title = _ui.Find(root, "ModeTitleText")?.GetComponent<TMPro.TextMeshProUGUI>();
             if (title != null) title.text = mode.Name;
             var sub = _ui.Find(root, "ModeSubText")?.GetComponent<TMPro.TextMeshProUGUI>();
             if (sub != null) sub.text = mode.Desc;
             var lockIcon = _ui.Find(root, "ModeLockIcon");
             if (lockIcon != null) lockIcon.gameObject.SetActive(!mode.Unlocked);
+            SetArt(_ui.Find(root, "ModeCardArt"), modeIndex);
+        }
+
+        /// <summary>그 칸에 그 모드의 그림을 끼운다. 그림이 없으면 칸을 비워 둔다.</summary>
+        private void SetArt(Transform target, int modeIndex)
+        {
+            var img = target != null ? target.GetComponent<UnityEngine.UI.Image>() : null;
+            if (img == null) return;
+            var sprite = _modeArts != null && modeIndex >= 0 && modeIndex < _modeArts.Length
+                ? _modeArts[modeIndex] : null;
+            img.sprite = sprite;
+            img.color = sprite != null ? Color.white : new Color(0.16f, 0.22f, 0.36f, 1f);
         }
 
         // ── 하단 바 ──────────────────────────────────────────────
@@ -247,8 +371,8 @@ namespace Game.Module.Lobby
             var bus = CoreModule.Get<IEventBus>();
             _tokens.Add(bus.Subscribe<UserDataReadyEvent>(_ => Refresh()));
             _tokens.Add(bus.Subscribe<CurrencyChangedEvent>(_ => RefreshCurrency()));
-            _tokens.Add(bus.Subscribe<GhostProgressChangedEvent>(_ => RefreshGhost()));
             _tokens.Add(bus.Subscribe<ProgressChangedEvent>(_ => RefreshChapter()));
+            _tokens.Add(bus.Subscribe<ChestChangedEvent>(_ => ApplyChests()));
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
             Refresh();
         }
@@ -264,43 +388,25 @@ namespace Game.Module.Lobby
             if (_player == null) CoreModule.TryGet<IPlayerDataService>(out _player);
             if (_player == null || !_player.IsReady) return;
             RefreshCurrency();
-            RefreshGhost();
             RefreshChapter();
+            ApplyChests();
         }
 
         private void RefreshCurrency()
         {
             if (_player == null || !_player.IsReady) return;
-            _ui.SetText("StaminaText", $"{_player.Stamina}/{_player.StaminaMax}");
+            // 스태미나·고스트 Lv 위젯은 2026-09-16 목업에서 걷어냈다 — 칠할 칸이 없다
             _ui.SetText("GoldText", _player.Gold.ToString("N0"));
             _ui.SetText("GemText", _player.Gem.ToString("N0"));
-        }
-
-        private void RefreshGhost()
-        {
-            if (_player == null || !_player.IsReady) return;
-            _ui.SetText("GhostLabelText", "GHOST");
-            _ui.SetText("GhostLevelText", $"Lv.{_player.GhostLevel}");
-            _ui.SetText("GhostExpText", $"{_player.GhostExp} / {_player.GhostExpMax}");
-            float r = _player.GhostExpMax > 0 ? (float)_player.GhostExp / _player.GhostExpMax : 0f;
-            _ui.SetFill("GhostExpBarFill", r, ExpBarWidth);
         }
 
         private void RefreshChapter()
         {
             if (_player == null || !_player.IsReady) return;
-            _ui.SetText("ChapterNumberText", $"CHAPTER {_player.CurrentChapter:00}");
-            _ui.SetText("ProgressText", $"{_player.ReachedStage} / 30");
-
-            // 챕터 콘텐츠 미기획 — 목업(CH3)의 문구를 임시로 쓴다.
-            // ChapterTable 이 생기면 이 배열을 걷어내고 데이터에서 읽는다. (TBD-CH)
-            int idx = Mathf.Clamp(_player.CurrentChapter - 1, 0, ChapterNames.Length - 1);
-            _ui.SetText("ChapterNameText", ChapterNames[idx]);
-            _ui.SetText("BossNameText", BossNames[idx]);
             // 신규 유저에게 '이어서 하기'는 성립하지 않는다 — 상태별 라벨 전환
             bool started = _player.ReachedStage > 1 || _player.ClearedChapter > 0;
-            _ui.SetText("ContinueButtonText", started ? "CONTINUE" : "START");
-            _ui.SetText("ModePlayButtonText", (started ? Localize.Get("ui.lobby.continue") : Localize.Get("ui.lobby.play")) + "  ▶");
+            _ui.SetText("ModePlayButtonText",
+                        (started ? Localize.Get("ui.lobby.continue") : Localize.Get("ui.lobby.play")) + "  ▶");
             ApplyModes();   // 가운데 칸이 진행도를 적는다
         }
 

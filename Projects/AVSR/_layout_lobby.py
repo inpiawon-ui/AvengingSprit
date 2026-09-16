@@ -1,41 +1,45 @@
 """로비 목업 실측 레이아웃 → Unity 적용용 JSON.
 
-좌표 출처: Reference/Mockups/lobby_hub.jpeg (683x1024) 에 20px 격자를 씌워 실측.
+좌표 출처: Reference/Mockups/lobby_hub_v2.png (941x1672) 실측 — 2026-09-16 개편 목업.
 이 파일이 로비 레이아웃의 **단일 출처**다. 프리팹을 직접 손보지 말고 여기를 고친다.
 
-좌표계 변환 — 목업 683x1024(2:3) → 캔버스 720x1280(9:16)
-  S = 720/683
-  x' = x * S                                (가로는 균일 스케일)
-  y' : 밴드별
-    hud     y' = y * S                      상단 고정
-    content y' = 1280 - (1024 - y) * S      하단 고정
-  세로로 남는 200px 은 HUD 와 콘텐츠 사이 배경 영역이 전부 흡수한다.
-  (목업의 하늘/유령 영역이 넓어질 뿐 요소 간 간격비는 보존된다)
+── 좌표계 ───────────────────────────────────────────────────────────
+목업이 941x1672 = **정확히 9:16** 이라 캔버스 720x1280 과 비율이 같다.
+  S = 720/941 = 0.7651        가로·세로 같은 배율, 밴드 나누기가 필요 없다
 
-폰트 크기 — 목업에서 잰 대문자 높이(cap) 로부터
+⚠ 예전 목업(683x1024, 2:3)은 비율이 달라 「상단 고정 / 하단 고정」 두 밴드로 나눠
+  남는 200px 을 배경이 흡수하게 했다. 새 목업은 그럴 일이 없다 —
+  **밴드 개념을 되살리지 마라.** 한 배율로 곱하면 목업 그대로 나온다.
+
+── 2026-09-16 개편에서 걷어낸 것 ────────────────────────────────────
+  로고(LogoLockup) · 시즌패스 · 이벤트 · 일일로그인 · 기능탭 ·
+  고스트 위젯(Lv/EXP) · 스태미나 · 챕터 카드 · 가운데 큰 유령/포탈링
+프리팹에서 **지운다**(숨기지 않는다). 남겨 두면 다음 사람이 왜 안 보이는지 찾는다.
+
+── 새로 들어온 것 ───────────────────────────────────────────────────
+  유령 수색(방치) 패널 — 지금은 껍데기. 기능은 나중(기획 2026-09-16)
+  보물상자 3칸 — 실동작. 규칙은 Assets/Scripts/Module/CLAUDE.md 6절
+
+글자 크기 — 목업에서 잰 대문자 높이(cap) 로부터
   fontSize = cap / 0.70 * S                 (Noto Sans KR cap ratio 0.70)
 """
 import json, os
 
 import _fit_boxes
 
-S = 720.0 / 683.0
+MOCK_W, MOCK_H = 941.0, 1672.0
+S = 720.0 / MOCK_W
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', 'Assets', 'Scripts', 'Editor', 'UISpec', '_layout_Lobby.json')
 
 # 팔레트 (목업 스포이드)
 WHITE = '#F2F4F8'
-GOLD = '#F0B428'
-BLUE = '#4AA8E8'
-RED = '#E8404A'
-DIM = '#6E90B8'
-DARK = '#241A08'          # 골드 버튼 위 어두운 글자
-LAV = '#C9A0F0'           # HOST 라벨
-LAV_D = '#9B7ACC'
-SHOP = '#6EC0F0'
-SHOP_D = '#5A96C0'
-GOLD_D = '#C89830'
-GREEN = '#8CD048'
+GOLD = '#F5C542'
+CYAN = '#4DD8FF'
+BLUE = '#6EC8F0'
+DIM = '#8FA8C8'
+DARK = '#2A1B05'          # 금색 버튼 위 어두운 글자
+LAV = '#C9A0F0'
 GREY = '#4A5468'
 
 
@@ -44,139 +48,177 @@ def cap(c):
     return round(c / 0.70 * S, 1)
 
 
-# (이름, 밴드, 목업 rect, 옵션)
-#   옵션 키: text / size / align(L|C|R) / color / wrap / clone / dx / parent
 L = []
 
 
-def add(name, band, rect, **o):
-    L.append(dict(name=name, band=band, rect=list(rect), **o))
+def add(name, rect, **o):
+    L.append(dict(name=name, rect=list(rect), **o))
 
+
+# ── 배경 ────────────────────────────────────────────────────────────
+add('LobbyStageArea', (0, 0, MOCK_W, MOCK_H))
+add('LobbyBackground', (0, 0, MOCK_W, MOCK_H), parent='LobbyStageArea')
 
 # ── 상단 HUD ────────────────────────────────────────────────────────
-add('TopHudGroup', 'hud', (0, 0, 683, 100))
-add('TopHudBackground', 'hud', (0, 0, 683, 100))
-add('GhostWidget', 'hud', (9, 10, 161, 77))
-add('GhostPortraitIcon', 'hud', (12, 13, 58, 58))
-add('GhostLabelText', 'hud', (78, 16, 82, 16), text='GHOST', size=cap(9), align='L', color=WHITE)
-add('GhostLevelText', 'hud', (78, 33, 82, 21), size=cap(12), align='L', color=GOLD)
-add('GhostExpBarBg', 'hud', (78, 55, 80, 11))
-add('GhostExpBarFill', 'hud', (78, 55, 80, 11))
-add('GhostExpText', 'hud', (96, 66, 62, 15), size=cap(9), align='R', color=WHITE)
+#
+# 목업에는 골드·젬·우편뿐이다. 설정은 남기기로 했으므로(기획 2026-09-16)
+# **로고가 있던 왼쪽 빈자리**에 둔다 — 오른쪽 끝은 목업 그대로 지킨다.
+add('TopHudGroup', (27, 10, 886, 80))
+add('SettingsButton', (38, 18, 64, 64), parent='TopHudGroup')
 
-add('StaminaCounter', 'hud', (179, 21, 106, 34))
-add('StaminaIcon', 'hud', (186, 27, 16, 21))
-add('StaminaText', 'hud', (206, 28, 52, 19), size=cap(13), align='C', color=WHITE)
-add('StaminaCounter/PlusButton', 'hud', (261, 30, 16, 16))
+add('GoldCounter', (279, 18, 306, 64), parent='TopHudGroup')
+add('GoldIcon', (288, 27, 46, 46), parent='GoldCounter')
+add('GoldText', (345, 28, 190, 44), size=cap(40), align='C', color=WHITE, parent='GoldCounter')
+add('GoldCounter/PlusButton', (539, 27, 46, 46), parent='GoldCounter')
 
-add('GoldCounter', 'hud', (292, 21, 108, 34))
-add('GoldIcon', 'hud', (299, 27, 21, 21))
-add('GoldText', 'hud', (324, 28, 56, 19), size=cap(13), align='C', color=WHITE)
-add('GoldCounter/PlusButton', 'hud', (381, 30, 16, 16))
+add('GemCounter', (607, 18, 223, 64), parent='TopHudGroup')
+add('GemIcon', (616, 27, 46, 46), parent='GemCounter')
+add('GemText', (668, 28, 116, 44), size=cap(40), align='C', color=WHITE, parent='GemCounter')
+add('GemCounter/PlusButton', (784, 27, 46, 46), parent='GemCounter')
 
-add('GemCounter', 'hud', (409, 21, 110, 34))
-add('GemIcon', 'hud', (415, 27, 21, 21))
-add('GemText', 'hud', (440, 28, 56, 19), size=cap(13), align='C', color=WHITE)
-add('GemCounter/PlusButton', 'hud', (498, 30, 16, 16))
+add('MailButton', (846, 18, 76, 64), parent='TopHudGroup')
+add('MailButton/NotifyBadge', (900, 8, 34, 34), parent='MailButton')
 
-add('MailButton', 'hud', (567, 26, 35, 26))
-add('MailButton/NotifyBadge', 'hud', (593, 19, 19, 19))
-add('SettingsButton', 'hud', (631, 25, 27, 27))
+# ── 유령 수색 (방치) ────────────────────────────────────────────────
+#
+# 기능은 아직 없다. 목업의 글자·그림·계층만 그대로 세워 둔다 —
+# 나중에 기능을 붙일 때 화면을 다시 안 짜도 되게.
+add('GhostSearchPanel', (27, 231, 886, 376), create='IMG', parent='LobbyMainUI')
+add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
+add('GhostSearchIcon', (58, 250, 124, 94), create='IMG', parent='GhostSearchPanel')
+add('GhostSearchTitleText', (206, 256, 200, 48), text='유령 수색',
+    size=cap(38), align='L', color=WHITE, create='TMP', parent='GhostSearchPanel')
+add('GhostSearchHelpButton', (432, 262, 52, 44), create='BTN', parent='GhostSearchPanel')
+add('GhostSearchTimerText', (206, 302, 290, 54), text='04:32:18',
+    size=cap(44), align='L', color=CYAN, create='TMP', parent='GhostSearchPanel')
+add('GhostSearchGoldIcon', (58, 354, 76, 76), create='IMG', parent='GhostSearchPanel')
+add('GhostSearchGoldText', (150, 360, 320, 58), text='+ 12,640 G',
+    size=cap(40), align='L', color=GOLD, create='TMP', parent='GhostSearchPanel')
+add('GhostSearchDescText', (58, 436, 436, 90), text='유령이 도시 곳곳을 떠돌며 골드를 찾아옵니다.',
+    size=cap(28), align='L', color=WHITE, wrap=True, create='TMP', parent='GhostSearchPanel')
+add('GhostSearchClaimButton', (644, 508, 272, 80), create='BTN', parent='GhostSearchPanel')
+add('GhostSearchClaimIcon', (668, 520, 58, 58), create='IMG', parent='GhostSearchClaimButton')
+add('GhostSearchClaimText', (734, 522, 170, 54), text='보상 받기',
+    size=cap(34), align='C', color=DARK, create='TMP', parent='GhostSearchClaimButton')
+add('GhostSearchClaimButton/NotifyBadge', (886, 490, 46, 46),
+    create='IMG', parent='GhostSearchClaimButton')
 
-# ── 배경 연출 ───────────────────────────────────────────────────────
-add('GhostAvatar', 'content', (256, 294, 176, 220))
-add('PortalRing', 'content', (256, 598, 176, 54))
+# ── 보물상자 3칸 ────────────────────────────────────────────────────
+#
+# 목업 실측은 칸마다 폭이 288/275/283 으로 조금씩 다르다(AI 목업의 흔들림).
+# 같은 폭으로 고른다 — 27..913 안에서 282 세 칸 + 20 간격.
+CHEST_X0, CHEST_Y0, CHEST_W, CHEST_H = 27, 621, 282, 275
+CHEST_STEP = 302
 
-# ── 챕터 카드 ───────────────────────────────────────────────────────
-add('ChapterCard', 'content', (14, 288, 198, 290))
-add('ChapterNumberText', 'content', (22, 298, 130, 21), size=cap(14), align='L', color=BLUE)
-add('ChapterNameText', 'content', (20, 320, 160, 30), size=cap(24), align='L', color=WHITE)
-add('BossLabel', 'content', (20, 353, 60, 19), text='BOSS', size=cap(13), align='L', color=RED)
-add('BossNameText', 'content', (20, 377, 78, 21), size=cap(13), align='L', color=WHITE)
-add('BossPortrait', 'content', (100, 352, 72, 80))
-add('ProgressLabel', 'content', (20, 448, 80, 19), text='PROGRESS', size=cap(13), align='L', color=DIM)
-add('ProgressBarBg', 'content', (20, 470, 122, 9))
-add('ProgressBarFill', 'content', (20, 470, 122, 9))
-add('ProgressText', 'content', (20, 463, 80, 21), size=cap(14), align='L', color=WHITE)
-add('ProgressRewardChest', 'content', (148, 450, 34, 33))
-add('ContinueButton', 'content', (30, 502, 175, 62))
-add('ContinueButtonText', 'content', (30, 510, 175, 26), size=cap(18), align='C', color=DARK)
-# 번개 글리프는 폰트에 없어 두부(□)가 된다 — 스태미나 아이콘 스프라이트로 대체
-add('ContinueButton/StaminaIcon', 'content', (95, 537, 18, 21), create='IMG', parent='ContinueButton')
-add('ContinueCostText', 'content', (116, 538, 44, 19), text='x5', size=cap(13), align='L', color=DARK)
+add('ChestBand', (CHEST_X0, CHEST_Y0, 886, CHEST_H), create='IMG', parent='LobbyMainUI')
 
-# ── 우측 프로모 (1차 범위 밖 — 정적 표기만) ─────────────────────────
-add('SidePromoGroup', 'content', (458, 288, 209, 300))
-add('BattlePassCard', 'content', (458, 288, 209, 95))
-add('BattlePassTitleText', 'content', (466, 297, 130, 21), text='BATTLE PASS',
-    size=cap(15), align='L', color=GOLD, create='TMP', parent='BattlePassCard')
-add('BattlePassSeasonText', 'content', (468, 321, 130, 20), text='SEASON 1',
-    size=cap(14), align='L', color=WHITE, create='TMP', parent='BattlePassCard')
-add('BattlePassBadge', 'content', (466, 346, 34, 34))
-add('BattlePassBarBg', 'content', (505, 351, 78, 10))
-add('BattlePassBarFill', 'content', (505, 351, 78, 10))
-add('BattlePassExpText', 'content', (503, 361, 82, 19), text='45 / 100',
-    size=cap(13), align='C', color=WHITE, create='TMP', parent='BattlePassCard')
-add('BattlePassArt', 'content', (585, 290, 78, 92))
+for i in range(3):
+    slot = f'ChestSlot{i + 1}'
+    x = CHEST_X0 + CHEST_STEP * i
 
-add('EventCard', 'content', (458, 390, 209, 97))
-add('EventTitleText', 'content', (466, 398, 130, 26), text='EVENT',
-    size=cap(20), align='L', color=BLUE, create='TMP', parent='EventCard')
-add('EventTimerText', 'content', (466, 450, 130, 21), text='6D 18H',
-    size=cap(14), align='L', color=BLUE, create='TMP', parent='EventCard')
-add('EventArt', 'content', (570, 404, 76, 78))
-add('EventCard/NotifyBadge', 'content', (638, 392, 22, 22))
+    def c(lx, ly, w, h):
+        """칸 안에서의 자리 → 캔버스 절대 좌표"""
+        return (x + lx, CHEST_Y0 + ly, w, h)
 
-add('DailyLoginCard', 'content', (458, 492, 209, 96))
-add('DailyLoginTitleText', 'content', (466, 498, 150, 24), text='DAILY LOGIN',
-    size=cap(18), align='L', color=GREEN, create='TMP', parent='DailyLoginCard')
-add('DailyLoginArt', 'content', (572, 512, 52, 46))
-add('DailyLoginCheck', 'content', (462, 555, 16, 16), clone=4, dx=17)
-add('DailyLoginDayText', 'content', (612, 559, 50, 18), text='DAY 5',
-    size=cap(11), align='R', color=WHITE, create='TMP', parent='DailyLoginCard')
-add('DailyLoginCard/NotifyBadge', 'content', (638, 494, 22, 22))
+    add(slot, (x, CHEST_Y0, CHEST_W, CHEST_H), create='GROUP', parent='ChestBand')
+    add(f'{slot}/ChestSlotFrame', c(0, 0, CHEST_W, CHEST_H), create='IMG', parent=slot)
+    add(f'{slot}/ChestArt', c(54, 14, 174, 132), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyBanner', c(34, 5, 214, 52), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyText', c(34, 9, 214, 44), text='완료!',
+        size=cap(34), align='C', color=GOLD, create='TMP', parent=slot)
+    add(f'{slot}/ChestEmptyText', c(20, 100, 242, 48), text='빈 칸',
+        size=cap(28), align='C', color=DIM, create='TMP', parent=slot)
+    add(f'{slot}/ChestTimeIcon', c(44, 142, 36, 36), create='IMG', parent=slot)
+    add(f'{slot}/ChestTimeText', c(88, 140, 150, 42), text='3시간 12분',
+        size=cap(30), align='L', color=WHITE, create='TMP', parent=slot)
+    # ⚠ 버튼 글자·아이콘을 **버튼의 자식으로 두지 않는다.** 적용기의 `parent` 는 경로가
+    #   아니라 단일 이름만 찾는데, 세 칸의 버튼 이름이 같아 전부 첫 칸으로 붙는다.
+    #   칸 직속으로 두고 버튼 위에 그린다 — 글자는 raycast 대상이 아니라 눌림은 버튼이 받는다.
+    add(f'{slot}/ChestActionButton', c(26, 185, 230, 70), create='BTN', parent=slot)
+    add(f'{slot}/ChestActionGemIcon', c(60, 192, 40, 40), create='IMG', parent=slot)
+    add(f'{slot}/ChestActionCostText', c(108, 190, 110, 44), text='1,000',
+        size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
+    add(f'{slot}/ChestActionLabelText', c(26, 228, 230, 34), text='즉시 열기',
+        size=cap(26), align='C', color=WHITE, create='TMP', parent=slot)
 
-# ── 기능 탭 바 (1차 범위 밖) ────────────────────────────────────────
-TAB_C = [111, 222, 333, 444, 555]
-TABS = ['Mission', 'Achievement', 'Ranking', 'Inventory', 'Friends']
-add('FeatureTabBar', 'content', (20, 618, 640, 76))
-add('FeatureTabBarBackground', 'content', (20, 618, 640, 76))
-for c, t in zip(TAB_C, TABS):
-    add(f'{t}Tab', 'content', (c - 50, 620, 100, 72))
-    add(f'{t}TabIcon', 'content', (c - 20, 624, 40, 40))
-    add(f'{t}TabLabel', 'content', (c - 50, 674, 100, 17),
-        text=t.upper(), size=cap(9), align='C', color=WHITE)
-add('MissionTab/NotifyBadge', 'content', (141, 619, 18, 18))
-add('FriendsTabLock', 'content', (549, 641, 21, 21))
+# ── 게임 모드 ───────────────────────────────────────────────────────
+#
+# ⚠ 이 판은 **늘리면 안 된다.** 720 폭 안의 한 덩어리 캐러셀이라 4:3 에서 늘리면
+#   가운데 카드가 중앙을 벗어난다. `ScreenFitInstaller.CenterLocks` 가 잠근다.
+add('GameModeGroup', (0, 905, MOCK_W, 492))
+add('GameModeLabelAccent', (27, 912, 14, 54), parent='GameModeGroup')
+add('GameModeLabel', (52, 906, 300, 60), size=cap(44), align='L', color=WHITE,
+    parent='GameModeGroup')
+
+add('ModeArrowLeft', (6, 1138, 44, 84), parent='GameModeGroup')
+add('ModeArrowLeftText', (6, 1146, 44, 68), text='◀', size=cap(40), align='C', color=WHITE,
+    parent='ModeArrowLeft')
+
+add('ModeCardLeft', (45, 975, 215, 400), parent='GameModeGroup')
+add('ModeCardLeft/ModeCardArt', (58, 988, 190, 236), create='IMG', parent='ModeCardLeft')
+add('ModeCardLeft/ModeLockIcon', (126, 1116, 68, 80), parent='ModeCardLeft')
+add('ModeCardLeft/ModeTitleText', (45, 1228, 215, 52), size=cap(34), align='C', color=WHITE,
+    parent='ModeCardLeft')
+add('ModeCardLeft/ModeSubText', (45, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
+    parent='ModeCardLeft')
+
+add('ModeCardRight', (686, 975, 215, 400), parent='GameModeGroup')
+add('ModeCardRight/ModeCardArt', (699, 988, 190, 236), create='IMG', parent='ModeCardRight')
+add('ModeCardRight/ModeLockIcon', (767, 1116, 68, 80), parent='ModeCardRight')
+add('ModeCardRight/ModeTitleText', (686, 1228, 215, 52), size=cap(34), align='C', color=WHITE,
+    parent='ModeCardRight')
+add('ModeCardRight/ModeSubText', (686, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
+    parent='ModeCardRight')
+
+add('ModeArrowRight', (891, 1138, 44, 84), parent='GameModeGroup')
+add('ModeArrowRightText', (891, 1146, 44, 68), text='▶', size=cap(40), align='C', color=WHITE,
+    parent='ModeArrowRight')
+
+# 가운데 칸은 **맨 나중에** — 양옆 칸 위로 올라와야 한다(표 순서 = 그리는 순서)
+add('ModeCardCenter', (280, 960, 378, 428), parent='GameModeGroup')
+add('ModeCenterArt', (288, 968, 362, 236), parent='ModeCardCenter')
+add('ModeMainBadge', (288, 964, 116, 50), parent='ModeCardCenter')
+add('ModeMainBadgeText', (288, 970, 116, 40), text='MAIN', size=cap(26), align='C', color=DARK,
+    parent='ModeMainBadge')
+add('ModeCenterLockIcon', (434, 1058, 70, 82), parent='ModeCardCenter')
+add('ModeCenterIcon', (314, 1210, 82, 68), create='IMG', parent='ModeCardCenter')
+add('ModeCenterTitleText', (406, 1204, 234, 60), size=cap(46), align='L', color=WHITE,
+    parent='ModeCardCenter')
+add('ModeCenterSubText', (406, 1266, 234, 40), size=cap(26), align='L', color=BLUE,
+    parent='ModeCardCenter')
+add('ModePlayButton', (303, 1292, 338, 74), parent='ModeCardCenter')
+add('ModePlayButtonText', (303, 1300, 338, 58), size=cap(44), align='C', color=DARK,
+    parent='ModePlayButton')
 
 # ── 하단 3버튼 ──────────────────────────────────────────────────────
-add('MainActionBar', 'content', (12, 706, 645, 196))
-add('HostButton', 'content', (12, 712, 200, 188))
-add('HostButtonArt', 'content', (20, 718, 184, 116))
-add('HostButtonTitleText', 'content', (12, 836, 200, 34), text='HOST', size=cap(28), align='C', color=LAV)
-add('HostButtonSubText', 'content', (12, 869, 200, 20),
-    text='육성 · ULTIMATE · 도감', size=cap(12), align='C', color=LAV_D)
-add('HostButton/NotifyBadge', 'content', (194, 715, 20, 20))
+#
+# 가운데(PLAY)만 크고 금색이다 — 지금 서 있는 곳이 로비라서다.
+add('MainActionBar', (27, 1466, 886, 190))
 
-add('ChapterButton', 'content', (228, 708, 215, 194))
-add('ChapterButtonArt', 'content', (235, 714, 201, 122))
-add('ChapterButtonTitleText', 'content', (228, 838, 215, 34), text='CHAPTER', size=cap(32), align='C', color=GOLD)
-add('ChapterButtonSubText', 'content', (228, 869, 215, 20),
-    text='게임 시작', size=cap(12), align='C', color=GOLD_D)
+add('HostButton', (36, 1487, 267, 128), parent='MainActionBar')
+add('HostButtonArt', (50, 1492, 118, 118), parent='HostButton')
+add('HostButtonTitleText', (176, 1510, 124, 52), text='HOST',
+    size=cap(40), align='L', color=WHITE, parent='HostButton')
+add('HostButtonSubText', (176, 1562, 124, 40), text='호스트 육성',
+    size=cap(28), align='L', color=BLUE, parent='HostButton')
+add('HostButton/NotifyBadge', (270, 1488, 34, 34), parent='HostButton')
 
-add('ShopButton', 'content', (452, 712, 203, 188))
-add('ShopButtonArt', 'content', (458, 718, 191, 116))
-add('ShopButtonTitleText', 'content', (452, 836, 203, 34), text='SHOP', size=cap(28), align='C', color=SHOP)
-add('ShopButtonSubText', 'content', (452, 869, 203, 20),
-    text='상점 · 패키지 · 재화', size=cap(12), align='C', color=SHOP_D)
-add('ShopButton/NotifyBadge', 'content', (637, 715, 20, 20))
+add('ChapterButton', (320, 1481, 302, 140), parent='MainActionBar')
+add('ChapterButtonArt', (346, 1496, 112, 112), parent='ChapterButton')
+add('ChapterButtonTitleText', (468, 1506, 140, 54), size=cap(40), align='L', color=DARK,
+    parent='ChapterButton')
+add('ChapterButtonSubText', (468, 1560, 140, 42), size=cap(28), align='L', color=DARK,
+    parent='ChapterButton')
 
-add('LogoLockup', 'content', (250, 908, 160, 108))
-add('VersionText', 'content', (14, 992, 70, 15), size=cap(10), align='L', color=GREY)
+add('ShopButton', (641, 1487, 264, 128), parent='MainActionBar')
+add('ShopButtonArt', (656, 1492, 118, 118), parent='ShopButton')
+add('ShopButtonTitleText', (782, 1510, 124, 52), text='SHOP',
+    size=cap(40), align='L', color=WHITE, parent='ShopButton')
+add('ShopButtonSubText', (782, 1562, 124, 40), text='상점',
+    size=cap(28), align='L', color=LAV, parent='ShopButton')
+add('ShopButton/NotifyBadge', (872, 1488, 34, 34), parent='ShopButton')
 
-
-def y_of(band, y):
-    return y * S if band == 'hud' else 1280.0 - (1024.0 - y) * S
+add('VersionText', (30, 1636, 100, 22), size=cap(14), align='L', color=GREY)
 
 
 def main():
@@ -185,7 +227,7 @@ def main():
         x, y, w, h = e['rect']
         r = {
             'name': e['name'],
-            'x': round(x * S, 1), 'y': round(y_of(e['band'], y), 1),
+            'x': round(x * S, 1), 'y': round(y * S, 1),
             'w': round(w * S, 1), 'h': round(h * S, 1),
         }
         for k in ('text', 'size', 'align', 'color', 'wrap', 'clone', 'dx', 'create', 'parent'):
@@ -196,7 +238,6 @@ def main():
         rows.append(r)
 
     # 목업 실측 박스와 실제 에셋 비율이 어긋나면 여기서 맞춘다
-
     _fit_boxes.report(_fit_boxes.fit(rows, 'LobbyMainUI'), 'Lobby')
 
     out = os.path.abspath(OUT)
