@@ -24,10 +24,10 @@ namespace Game.Editor
         /// <summary>납품 폴더에서 끌어올 그림과 9-slice 보더 (Vector4 = 왼·아래·오른·위).</summary>
         private static readonly (string file, Vector4 border)[] Incoming =
         {
-            ("panelframe", new Vector4(48, 48, 48, 48)),
-            ("chestslotframe", new Vector4(36, 36, 36, 36)),
-            ("buttonblue", new Vector4(32, 28, 32, 28)),
-            ("buttongold", new Vector4(32, 28, 32, 28)),
+            ("panelframe", new Vector4(64, 64, 64, 64)),
+            ("chestslotframe", new Vector4(64, 64, 64, 64)),
+            ("buttonblue", new Vector4(64, 28, 64, 28)),
+            ("buttongold", new Vector4(64, 26, 64, 26)),
             ("chestreadybanner", Vector4.zero),
             ("chest_wood", Vector4.zero),
             ("chest_silver", Vector4.zero),
@@ -42,26 +42,19 @@ namespace Game.Editor
             ("ghostsearchart", Vector4.zero),
             ("lobbybackground", Vector4.zero),
             // 겹쳐 얹는 테두리 — 속이 비어 있다
-            ("hudpill", new Vector4(40, 20, 40, 20)),
-            ("actionframe_blue", new Vector4(24, 20, 24, 20)),
-            ("actionframe_gold", new Vector4(24, 20, 24, 20)),
-            ("modecardframe_center", new Vector4(40, 40, 40, 40)),
+            ("hudpill", new Vector4(72, 26, 72, 26)),
+            ("actionframe_blue", new Vector4(72, 48, 72, 48)),
+            ("actionframe_gold", new Vector4(72, 48, 72, 48)),
+            ("modecardframe_center", new Vector4(72, 72, 72, 72)),
             ("modecardframe_side", Vector4.zero),
-            ("modecardframe_side_l", Vector4.zero),
             ("goldicon", Vector4.zero),
             ("gemicon", Vector4.zero),
             ("plusbutton", Vector4.zero),
             ("mailbutton", Vector4.zero),
             ("settingsbutton", Vector4.zero),
             ("notifybadge", Vector4.zero),
-            // 납품본에서 **만들어 쓰는** 판본 — 납품 폴더엔 없고 임포트 설정만 맞춘다.
-            //   `_edge`  속을 비워 그림 위에 얹는 테두리
-            //   `_solid` 속을 채워 배경으로 쓰는 칸
-            ("panelframe_edge", new Vector4(48, 48, 48, 48)),
-            ("chestslotframe_edge", new Vector4(36, 36, 36, 36)),
-            ("hudpill_solid", new Vector4(40, 20, 40, 20)),
-            ("actionframe_blue_solid", new Vector4(24, 20, 24, 20)),
-            ("actionframe_gold_solid", new Vector4(24, 20, 24, 20)),
+            // 좌우 모드 칸은 기운 방향이 반대다 — 납품본을 뒤집어 만들어 쓴다
+            ("modecardframe_side_l", Vector4.zero),
         };
 
         /// <summary>「노드 이름 : 그림 파일」. 칸 안쪽 노드는 `칸/노드` 로 적는다.</summary>
@@ -71,31 +64,30 @@ namespace Game.Editor
 
             // 상단 HUD — 재화 칸은 테두리만 얹고 속은 배경이 비친다
             ("SettingsButton", "settingsbutton"),
-            ("GoldCounter", "hudpill_solid"),
+            ("GoldCounter", "hudpill"),
             ("GoldIcon", "goldicon"),
-            ("GemCounter", "hudpill_solid"),
+            ("GemCounter", "hudpill"),
             ("GemIcon", "gemicon"),
             ("MailButton", "mailbutton"),
 
             // 유령 수색 — 그림 위에 **속 빈** 테두리를 얹는다
             ("GhostSearchArt", "ghostsearchart"),
-            ("GhostSearchFrame", "panelframe_edge"),
+            ("GhostSearchFrame", "panelframe"),
             ("GhostSearchIcon", "ghostsearchicon"),
             ("GhostSearchGoldIcon", "goldicon"),
             ("GhostSearchClaimIcon", "chapterbuttonart"),
             ("GhostSearchClaimButton", "buttongold"),
             ("GhostSearchHelpButton", "buttonblue"),
 
-            ("ChestBand", "panelframe"),
             ("ModeCenterIcon", "modecentericon"),
             ("ModeCardCenterFrame", "modecardframe_center"),
 
             // 하단 바 — 칸 테두리는 속을 비우고 그림·글자가 그 안에 보인다
-            ("HostButton", "actionframe_blue_solid"),
+            ("HostButton", "actionframe_blue"),
             ("HostButtonArt", "hostbuttonart"),
-            ("ChapterButton", "actionframe_gold_solid"),
+            ("ChapterButton", "actionframe_gold"),
             ("ChapterButtonArt", "chapterbuttonart"),
-            ("ShopButton", "actionframe_blue_solid"),
+            ("ShopButton", "actionframe_blue"),
             ("ShopButtonArt", "shopbuttonart"),
         };
 

@@ -82,6 +82,14 @@ namespace Game.Editor
                 return;
             }
 
+            // ⚠ 「칸이 떴다」로는 부족하다. 언어팩 표와 유저 데이터가 오기 전에 찍으면
+            //   글자가 **키 그대로**(`ui.lobby.chest.empty`) 나오고 상자가 전부 빈 칸으로
+            //   보인다(2026-09-16 실제로 그랬다). 둘 다 온 뒤에 찍는다.
+            if (Game.Module.Common.Localize.Get("ui.lobby.game_mode") == "ui.lobby.game_mode")
+            { _wait = 30; return; }
+            if (!CoreModule.TryGet<IPlayerDataService>(out var ready) || !ready.IsReady)
+            { _wait = 30; return; }
+
             if (!SessionState.GetBool(Settled, false))
             {
                 SessionState.SetBool(Settled, true);
