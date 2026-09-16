@@ -29,6 +29,25 @@ namespace Game.Module.Lobby
         /// </summary>
         [SerializeField] private Sprite[] _modeArts = new Sprite[3];
 
+        /// <summary>상자 칸 버튼 — 세는 중엔 파랑, 다 되면 금색이다.</summary>
+        [SerializeField] private Sprite _chestButtonBlue;
+        [SerializeField] private Sprite _chestButtonGold;
+
+        /// <summary>
+        /// 상자 등급별 그림. 어느 칸에 무슨 등급이 오는지가 매번 달라 코드가 갈아 끼운다.
+        ///
+        /// ⚠ 표(`ChestTable`)가 등급을 정하고 여기는 그림만 갖는다 — 등급이 늘면
+        ///   표에 줄을 더하고 여기에 짝을 더한다.
+        /// </summary>
+        [System.Serializable]
+        private struct ChestArt
+        {
+            public string Key;
+            public Sprite Sprite;
+        }
+
+        [SerializeField] private ChestArt[] _chestArts = System.Array.Empty<ChestArt>();
+
         private UIBinder _ui;
         private IPlayerDataService _player;
         private IChestService _chests;
@@ -131,7 +150,7 @@ namespace Game.Module.Lobby
                 if (button != null) button.onClick.AddListener(() => OnChestAction(slot));
             }
 
-            _ui.SetText("GhostSearchTitleText", "유령 수색");
+            // 유령 수색 · 상자 「빈 칸」 글자는 프리팹에 고정이다 — `LocalizedText` 가 칠한다
             ApplyModes();
             ApplyTabs();
             ApplyChests();
@@ -191,20 +210,55 @@ namespace Game.Module.Lobby
                 SetIn(root, "ChestActionLabelText", has);
 
                 if (!has) continue;
+
+                var art = _ui.Find(root, "ChestArt")?.GetComponent<UnityEngine.UI.Image>();
+                if (art != null)
+                {
+                    var sprite = ChestSpriteOf(s.ChestKey);
+                    if (sprite != null && art.sprite != sprite) art.sprite = sprite;
+                    // 그림이 없으면 흰 네모가 뜬다 — 차라리 안 보이는 편이 낫다
+                    art.enabled = sprite != null;
+                }
+
+                // 다 된 칸은 금색 버튼으로 바뀐다 — 어느 칸을 눌러야 하는지가 색으로 보인다
+                var button = _ui.Find(root, "ChestActionButton")?.GetComponent<UnityEngine.UI.Image>();
+                if (button != null)
+                {
+                    var want = ready ? _chestButtonGold : _chestButtonBlue;
+                    if (want != null && button.sprite != want) button.sprite = want;
+                }
+                // 금색 버튼 위에 흰 글자는 안 읽힌다
+                var label = _ui.Find(root, "ChestActionLabelText")?.GetComponent<TMPro.TextMeshProUGUI>();
+                if (label != null) label.color = ready ? new Color(0.16f, 0.11f, 0.02f) : Color.white;
+
                 TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
                 TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));
-                TextIn(root, "ChestActionLabelText", ready ? "보상 획득하기" : "즉시 열기");
+                TextIn(root, "ChestActionLabelText",
+                       Localize.Get(ready ? "ui.lobby.chest.claim" : "ui.lobby.chest.open_now"));
             }
         }
 
-        /// <summary>남은 시간 — 목업대로 「3시간 12분」 꼴. 1분 미만은 초로 적는다.</summary>
+        /// <summary>
+        /// 남은 시간 — 목업대로 「3시간 12분」 꼴. 1분 미만은 초로 적는다.
+        ///
+        /// ⚠ 단위 자리가 언어마다 달라(「3h 12m」) 꼴을 통째로 표에서 읽는다.
+        ///   숫자만 갈아 끼우면 일본어·영어에서 말이 안 된다.
+        /// </summary>
         private static string Remain(int seconds)
         {
-            if (seconds <= 0) return "0초";
+            if (seconds <= 0) return Localize.Format("ui.lobby.chest.time_s", 0);
             int h = seconds / 3600, m = seconds % 3600 / 60;
-            if (h > 0) return $"{h}시간 {m}분";
-            if (m > 0) return $"{m}분";
-            return $"{seconds}초";
+            if (h > 0) return Localize.Format("ui.lobby.chest.time_h", h, m);
+            if (m > 0) return Localize.Format("ui.lobby.chest.time_m", m);
+            return Localize.Format("ui.lobby.chest.time_s", seconds);
+        }
+
+        private Sprite ChestSpriteOf(string chestKey)
+        {
+            if (_chestArts == null || string.IsNullOrEmpty(chestKey)) return null;
+            for (int i = 0; i < _chestArts.Length; i++)
+                if (_chestArts[i].Key == chestKey) return _chestArts[i].Sprite;
+            return null;
         }
 
         private void SetIn(Transform root, string name, bool on)
@@ -232,7 +286,8 @@ namespace Game.Module.Lobby
             }
 
             // 젬이 모자라면 아무 일도 안 일어난 듯 보인다 — 왜 안 열렸는지 알려 준다
-            if (!_chests.TryOpenNow(slot)) NotifyNotReady($"젬 {s.GemCost:N0} 개가 필요합니다");
+            if (!_chests.TryOpenNow(slot))
+                NotifyNotReady(Localize.Format("ui.lobby.chest.need_gem", s.GemCost.ToString("N0")));
             else global::Game.Module.Common.GameSound.Cue("run.shop");
         }
 

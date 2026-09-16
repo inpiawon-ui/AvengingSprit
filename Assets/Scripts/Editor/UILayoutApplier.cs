@@ -69,6 +69,15 @@ namespace Game.Editor
             /// <summary>루트 자신의 배치 [x, y, w, h]. 스트레치 앵커는 유지한다.</summary>
             public float[] rootRect;
             public Item[] items;
+
+            /// <summary>
+            /// 다 적용한 뒤 **맨 뒤(= 맨 위)로** 보낼 노드. 표에 없는 창이 여기에 온다.
+            ///
+            /// ⚠ 표에 적힌 것은 전부 `SetAsLastSibling` 을 받으므로, 표에 없는 노드는
+            ///   저절로 맨 앞(= 맨 아래)으로 밀린다. 로비의 `HostSelectPanel` 이 그래서
+            ///   로비 화면 **뒤에** 깔려 열어도 안 보였다.
+            /// </summary>
+            public string[] last;
         }
 
         [MenuItem("Tools/Game/Apply Mockup Layout")]
@@ -143,6 +152,14 @@ namespace Game.Editor
                         applied++;
                     }
                 }
+
+                if (spec.last != null)
+                    foreach (var n in spec.last)
+                    {
+                        var t = FindByName(root.transform, n);
+                        if (t != null) t.SetAsLastSibling();
+                        else Debug.LogWarning($"[UILayout] {screen}: 맨 위로 보낼 '{n}' 없음");
+                    }
 
                 PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
                 if (created) UnityEngine.Object.DestroyImmediate(root);

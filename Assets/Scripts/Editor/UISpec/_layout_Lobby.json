@@ -257,6 +257,15 @@
    "parent": "GhostSearchClaimButton"
   },
   {
+   "name": "GhostSearchFrame",
+   "x": 20.7,
+   "y": 176.7,
+   "w": 677.9,
+   "h": 287.7,
+   "create": "IMG",
+   "parent": "GhostSearchPanel"
+  },
+  {
    "name": "ChestBand",
    "x": 20.7,
    "y": 475.2,
@@ -743,6 +752,15 @@
    "parent": "ModeCardLeft"
   },
   {
+   "name": "ModeCardLeft/ModeCardFrame",
+   "x": 34.4,
+   "y": 746.0,
+   "w": 164.5,
+   "h": 306.1,
+   "create": "IMG",
+   "parent": "ModeCardLeft"
+  },
+  {
    "name": "ModeCardRight",
    "x": 524.9,
    "y": 746.0,
@@ -787,6 +805,15 @@
    "size": 28.4,
    "align": "C",
    "color": "#6EC8F0",
+   "parent": "ModeCardRight"
+  },
+  {
+   "name": "ModeCardRight/ModeCardFrame",
+   "x": 524.9,
+   "y": 746.0,
+   "w": 164.5,
+   "h": 306.1,
+   "create": "IMG",
    "parent": "ModeCardRight"
   },
   {
@@ -875,12 +902,12 @@
   },
   {
    "name": "ModeCenterSubText",
-   "x": 310.6,
+   "x": 223.4,
    "y": 968.7,
-   "w": 179.0,
+   "w": 270.9,
    "h": 30.6,
    "size": 28.4,
-   "align": "L",
+   "align": "C",
    "color": "#6EC8F0",
    "parent": "ModeCardCenter"
   },
@@ -904,6 +931,15 @@
    "parent": "ModePlayButton"
   },
   {
+   "name": "ModeCardCenterFrame",
+   "x": 214.2,
+   "y": 734.5,
+   "w": 289.2,
+   "h": 327.5,
+   "create": "IMG",
+   "parent": "ModeCardCenter"
+  },
+  {
    "name": "MainActionBar",
    "x": 20.7,
    "y": 1121.7,
@@ -921,9 +957,9 @@
   {
    "name": "HostButtonArt",
    "x": 38.3,
-   "y": 1158.3,
+   "y": 1141.6,
    "w": 90.3,
-   "h": 56.8,
+   "h": 90.3,
    "parent": "HostButton"
   },
   {
@@ -969,9 +1005,9 @@
   {
    "name": "ChapterButtonArt",
    "x": 264.7,
-   "y": 1161.5,
+   "y": 1144.7,
    "w": 85.7,
-   "h": 52.1,
+   "h": 85.7,
    "parent": "ChapterButton"
   },
   {
@@ -1007,9 +1043,9 @@
   {
    "name": "ShopButtonArt",
    "x": 501.9,
-   "y": 1159.3,
+   "y": 1141.6,
    "w": 90.3,
-   "h": 54.8,
+   "h": 90.3,
    "parent": "ShopButton"
   },
   {
@@ -1054,5 +1090,8 @@
    "align": "L",
    "color": "#4A5468"
   }
+ ],
+ "last": [
+  "HostSelectPanel"
  ]
 }

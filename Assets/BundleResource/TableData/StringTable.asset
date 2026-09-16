@@ -1928,3 +1928,68 @@ MonoBehaviour:
     _ko: "\uC0C1\uC810 \xB7 \uD328\uD0A4\uC9C0 \xB7 \uC7AC\uD654"
     _ja: "\u30B7\u30E7\u30C3\u30D7\u30FB\u30D1\u30C3\u30AF\u30FB\u901A\u8CA8"
     _en: 
+  - _key: ui.lobby.search.title
+    _ko: "\uC720\uB839 \uC218\uC0C9"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u635C\u7D22"
+    _en: Ghost Search
+  - _key: ui.lobby.search.desc
+    _ko: "\uC720\uB839\uC774 \uB3C4\uC2DC \uACF3\uACF3\uC744 \uB5A0\uB3CC\uBA70 \uACE8\uB4DC\uB97C
+      \uCC3E\uC544\uC635\uB2C8\uB2E4."
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u304C\u8857\u3092\u5DE1\u3063\u3066\u30B4\u30FC\u30EB\u30C9\u3092\u96C6\u3081\u3066\u304D\u307E\u3059\u3002"
+    _en: Your ghost roams the city and brings back gold.
+  - _key: ui.lobby.search.claim
+    _ko: "\uBCF4\uC0C1 \uBC1B\uAE30"
+    _ja: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308B"
+    _en: Claim
+  - _key: ui.lobby.chest.empty
+    _ko: "\uBE48 \uCE78"
+    _ja: "\u7A7A\u304D\u30B9\u30ED\u30C3\u30C8"
+    _en: Empty
+  - _key: ui.lobby.chest.ready
+    _ko: "\uC644\uB8CC!"
+    _ja: "\u5B8C\u4E86!"
+    _en: Ready!
+  - _key: ui.lobby.chest.open_now
+    _ko: "\uC989\uC2DC \uC5F4\uAE30"
+    _ja: "\u4ECA\u3059\u3050\u958B\u3051\u308B"
+    _en: Open Now
+  - _key: ui.lobby.chest.claim
+    _ko: "\uBCF4\uC0C1 \uD68D\uB4DD\uD558\uAE30"
+    _ja: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308B"
+    _en: Claim Reward
+  - _key: ui.lobby.chest.need_gem
+    _ko: "\uC82C {0}\uAC1C\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4"
+    _ja: "\u30B8\u30A7\u30E0\u304C{0}\u500B\u5FC5\u8981\u3067\u3059"
+    _en: Needs {0} gems
+  - _key: ui.lobby.chest.full
+    _ko: "\uC0C1\uC790 \uCE78\uC774 \uAC00\uB4DD \uCC3C\uC2B5\uB2C8\uB2E4"
+    _ja: "\u5B9D\u7BB1\u30B9\u30ED\u30C3\u30C8\u304C\u3044\u3063\u3071\u3044\u3067\u3059"
+    _en: Chest slots are full
+  - _key: ui.lobby.chest.time_h
+    _ko: "{0}\uC2DC\uAC04 {1}\uBD84"
+    _ja: "{0}\u6642\u9593{1}\u5206"
+    _en: '{0}h {1}m'
+  - _key: ui.lobby.chest.time_m
+    _ko: "{0}\uBD84"
+    _ja: "{0}\u5206"
+    _en: '{0}m'
+  - _key: ui.lobby.chest.time_s
+    _ko: "{0}\uCD08"
+    _ja: "{0}\u79D2"
+    _en: '{0}s'
+  - _key: chest.wood.name
+    _ko: "\uB098\uBB34 \uC0C1\uC790"
+    _ja: "\u6728\u306E\u5B9D\u7BB1"
+    _en: Wooden Chest
+  - _key: chest.silver.name
+    _ko: "\uC740 \uC0C1\uC790"
+    _ja: "\u9280\u306E\u5B9D\u7BB1"
+    _en: Silver Chest
+  - _key: chest.gold.name
+    _ko: "\uAE08 \uC0C1\uC790"
+    _ja: "\u91D1\u306E\u5B9D\u7BB1"
+    _en: Golden Chest
+  - _key: chest.magic.name
+    _ko: "\uB9C8\uBC95 \uC0C1\uC790"
+    _ja: "\u9B54\u6CD5\u306E\u5B9D\u7BB1"
+    _en: Magic Chest

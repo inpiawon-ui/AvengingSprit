@@ -102,6 +102,9 @@ add('GhostSearchClaimText', (734, 522, 170, 54), text='보상 받기',
     size=cap(34), align='C', color=DARK, create='TMP', parent='GhostSearchClaimButton')
 add('GhostSearchClaimButton/NotifyBadge', (886, 490, 46, 46),
     create='IMG', parent='GhostSearchClaimButton')
+# ⚠ 테두리는 **맨 나중에** 그린다. 판 자신에 테두리를 칠하면 그 위에 얹히는
+#   그림이 통째로 덮어 버려 테두리가 안 보인다(2026-09-16 실제로 그랬다).
+add('GhostSearchFrame', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
 
 # ── 보물상자 3칸 ────────────────────────────────────────────────────
 #
@@ -161,6 +164,7 @@ add('ModeCardLeft/ModeTitleText', (45, 1228, 215, 52), size=cap(34), align='C', 
     parent='ModeCardLeft')
 add('ModeCardLeft/ModeSubText', (45, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
     parent='ModeCardLeft')
+add('ModeCardLeft/ModeCardFrame', (45, 975, 215, 400), create='IMG', parent='ModeCardLeft')
 
 add('ModeCardRight', (686, 975, 215, 400), parent='GameModeGroup')
 add('ModeCardRight/ModeCardArt', (699, 988, 190, 236), create='IMG', parent='ModeCardRight')
@@ -169,6 +173,7 @@ add('ModeCardRight/ModeTitleText', (686, 1228, 215, 52), size=cap(34), align='C'
     parent='ModeCardRight')
 add('ModeCardRight/ModeSubText', (686, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
     parent='ModeCardRight')
+add('ModeCardRight/ModeCardFrame', (686, 975, 215, 400), create='IMG', parent='ModeCardRight')
 
 add('ModeArrowRight', (891, 1138, 44, 84), parent='GameModeGroup')
 add('ModeArrowRightText', (891, 1146, 44, 68), text='▶', size=cap(40), align='C', color=WHITE,
@@ -184,11 +189,15 @@ add('ModeCenterLockIcon', (434, 1058, 70, 82), parent='ModeCardCenter')
 add('ModeCenterIcon', (314, 1210, 82, 68), create='IMG', parent='ModeCardCenter')
 add('ModeCenterTitleText', (406, 1204, 234, 60), size=cap(46), align='L', color=WHITE,
     parent='ModeCardCenter')
-add('ModeCenterSubText', (406, 1266, 234, 40), size=cap(26), align='L', color=BLUE,
+# ⚠ 부제는 카드 안에 가둔다. 목업 자리(406~640)에 두면 진행도 「CH 03 · 26 / 30」 이
+#   카드 밖으로 흘러 옆 칸을 덮는다 — 카드 폭(288~650) 전체를 쓰고 가운데 정렬한다.
+add('ModeCenterSubText', (292, 1266, 354, 40), size=cap(26), align='C', color=BLUE,
     parent='ModeCardCenter')
 add('ModePlayButton', (303, 1292, 338, 74), parent='ModeCardCenter')
 add('ModePlayButtonText', (303, 1300, 338, 58), size=cap(44), align='C', color=DARK,
     parent='ModePlayButton')
+# 금테는 **맨 나중에** — 카드 안의 그림·글자 위로 둘러싸야 한다
+add('ModeCardCenterFrame', (280, 960, 378, 428), create='IMG', parent='ModeCardCenter')
 
 # ── 하단 3버튼 ──────────────────────────────────────────────────────
 #
@@ -243,7 +252,9 @@ def main():
     out = os.path.abspath(OUT)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, 'w', encoding='utf-8') as f:
-        json.dump({'screen': 'Lobby', 'root': 'LobbyMainUI', 'items': rows}, f,
+        # 호스트 선택 판은 표에 없다 — 로비 **위에** 떠야 하므로 맨 뒤로 보낸다
+        json.dump({'screen': 'Lobby', 'root': 'LobbyMainUI', 'items': rows,
+                   'last': ['HostSelectPanel']}, f,
                   ensure_ascii=False, indent=1)
     print(f'{len(rows)}개 → {out}')
 
