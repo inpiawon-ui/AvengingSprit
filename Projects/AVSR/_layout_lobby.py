@@ -223,28 +223,30 @@ add('ModePlayButtonText', (303, 1300, 338, 58), size=cap(44), align='C', color=D
 add('MainActionBar', (0, 1466, MOCK_W, 190))
 
 add('HostButton', (36, 1487, 267, 128), parent='MainActionBar')
-add('HostButtonArt', (50, 1492, 118, 118), parent='HostButton')
-add('HostButtonTitleText', (170, 1510, 112, 48), text='HOST',
-    size=cap(31), align='C', color=WHITE, parent='HostButton')
-# ⚠ 일본어 부제(「育成・アクティブスキル・図鑑」)가 한국어보다 훨씬 길다 — 작게 잡는다
-add('HostButtonSubText', (162, 1556, 128, 38), text='호스트 육성',
-    size=cap(21), align='C', color=BLUE, parent='HostButton')
-add('HostButton/NotifyBadge', (286, 1478, 34, 34), parent='HostButton')
+# 목업 실측(2026-09-16): 군인 50~145 / 1510~1605 · HOST 162~245 / 1525~1555
+#                  부제 172~275 / 1565~1587 · 배지 268~298 / 1500~1530
+# ⚠ 아이콘을 목업보다 크게 잡았더니 글자와의 간격이 벌어져 보였다
+add('HostButtonArt', (48, 1508, 100, 100), parent='HostButton')
+add('HostButtonTitleText', (156, 1518, 96, 42), text='HOST',
+    size=cap(30), align='C', color=WHITE, parent='HostButton')
+add('HostButtonSubText', (156, 1560, 122, 32), text='호스트 육성',
+    size=cap(20), align='C', color=BLUE, parent='HostButton')
+add('HostButton/NotifyBadge', (266, 1498, 34, 34), parent='HostButton')
 
 add('ChapterButton', (320, 1481, 302, 140), parent='MainActionBar')
-add('ChapterButtonArt', (346, 1496, 112, 112), parent='ChapterButton')
-add('ChapterButtonTitleText', (464, 1506, 148, 50), size=cap(34), align='C', color=DARK,
+add('ChapterButtonArt', (348, 1498, 118, 106), parent='ChapterButton')
+add('ChapterButtonTitleText', (470, 1518, 98, 42), size=cap(30), align='C', color=DARK,
     parent='ChapterButton')
-add('ChapterButtonSubText', (462, 1556, 152, 38), size=cap(22), align='C', color=DARK,
+add('ChapterButtonSubText', (466, 1560, 106, 32), size=cap(20), align='C', color=DARK,
     parent='ChapterButton')
 
 add('ShopButton', (641, 1487, 264, 128), parent='MainActionBar')
-add('ShopButtonArt', (656, 1492, 118, 118), parent='ShopButton')
-add('ShopButtonTitleText', (774, 1510, 112, 48), text='SHOP',
-    size=cap(31), align='C', color=WHITE, parent='ShopButton')
-add('ShopButtonSubText', (766, 1556, 128, 38), text='상점',
-    size=cap(21), align='C', color=LAV, parent='ShopButton')
-add('ShopButton/NotifyBadge', (888, 1478, 34, 34), parent='ShopButton')
+add('ShopButtonArt', (655, 1504, 102, 100), parent='ShopButton')
+add('ShopButtonTitleText', (768, 1518, 100, 42), text='SHOP',
+    size=cap(30), align='C', color=WHITE, parent='ShopButton')
+add('ShopButtonSubText', (768, 1560, 100, 32), text='상점',
+    size=cap(20), align='C', color=LAV, parent='ShopButton')
+add('ShopButton/NotifyBadge', (872, 1498, 34, 34), parent='ShopButton')
 
 add('VersionText', (30, 1636, 100, 22), size=cap(14), align='L', color=GREY)
 
