@@ -9488,6 +9488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3522670204669084082}
+  - component: {fileID: 3127585561541439929}
   m_Layer: 0
   m_Name: GameModeGroup
   m_TagString: Untagged
@@ -9516,11 +9517,23 @@ RectTransform:
   - {fileID: 8566682401341974420}
   m_Father: {fileID: 2605939298851886734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -360, y: -548}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -134}
   m_SizeDelta: {x: 720, y: 452}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3127585561541439929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296925395981385368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bf9addcc15af9141bfc5a4cf476a9a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitLock
 --- !u!1 &6316042334735717143
 GameObject:
   m_ObjectHideFlags: 0
