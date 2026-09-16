@@ -4162,6 +4162,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6047017800114358100}
+  - component: {fileID: 5064180779377205795}
   m_Layer: 0
   m_Name: TopHudGroup
   m_TagString: Untagged
@@ -4192,6 +4193,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -7.7}
   m_SizeDelta: {x: 720, y: 61.2}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &5064180779377205795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3255522947116252115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
 --- !u!1 &3472112865936879437
 GameObject:
   m_ObjectHideFlags: 0
@@ -4440,6 +4453,7 @@ GameObject:
   - component: {fileID: 7934354149104273016}
   - component: {fileID: 6479278840133022480}
   - component: {fileID: 5705104428748715995}
+  - component: {fileID: 8829499562027650520}
   m_Layer: 0
   m_Name: GhostSearchPanel
   m_TagString: Untagged
@@ -4516,6 +4530,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8829499562027650520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3669602112148619315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
 --- !u!1 &3684154481602925224
 GameObject:
   m_ObjectHideFlags: 0
@@ -8448,6 +8474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3522670204669084082}
+  - component: {fileID: 153276525809307489}
   m_Layer: 0
   m_Name: GameModeGroup
   m_TagString: Untagged
@@ -8481,6 +8508,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -692.5}
   m_SizeDelta: {x: 720, y: 376.5}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &153276525809307489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296925395981385368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
 --- !u!1 &6321892094105693500
 GameObject:
   m_ObjectHideFlags: 0
@@ -9056,6 +9095,7 @@ GameObject:
   - component: {fileID: 8992038744224924773}
   - component: {fileID: 5701833546180606628}
   - component: {fileID: 4466196231265420985}
+  - component: {fileID: 5886703956715848864}
   m_Layer: 0
   m_Name: ChestBand
   m_TagString: Untagged
@@ -9123,6 +9163,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.1406845
+--- !u!114 &5886703956715848864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827638475022614417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
 --- !u!1 &6978061144312772282
 GameObject:
   m_ObjectHideFlags: 0
@@ -10157,6 +10209,7 @@ GameObject:
   - component: {fileID: 6857233165891695785}
   - component: {fileID: 7507232542359653596}
   - component: {fileID: 6372128829907642879}
+  - component: {fileID: 8510455263094285791}
   m_Layer: 0
   m_Name: MainActionBar
   m_TagString: Untagged
@@ -10224,6 +10277,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.3069445
+--- !u!114 &8510455263094285791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7644506038603744261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
 --- !u!1 &7716333746240444662
 GameObject:
   m_ObjectHideFlags: 0

@@ -94,6 +94,22 @@ namespace Game.Editor
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButtonSubText"),
         };
 
+        /// <summary>
+        /// 남는 **세로**를 나눠 벌릴 줄. 「프리팹 : 노드 이름」 — 그린 순서 무관.
+        ///
+        /// 20:9 폰은 기준(1280)보다 320 px 이 남는데, 그 몫이 통째로 상단 HUD 아래
+        /// 한 곳에 고여 거기만 텅 비어 보였다(2026-09-16 지적). 여기 적은 줄들이
+        /// 남는 만큼을 칸 사이에 고르게 나눠 갖는다.
+        /// </summary>
+        private static readonly (string prefab, string node)[] Spreads =
+        {
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "TopHudGroup"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchPanel"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestBand"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GameModeGroup"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "MainActionBar"),
+        };
+
         /// <summary>폭을 늘리면 안 되는 판. 「프리팹 : 노드 이름」.</summary>
         private static readonly (string prefab, string node)[] Locks =
         {
@@ -124,7 +140,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/ScreenFit 달기")]
         public static void Run()
         {
-            int added = 0, locked = 0, shared = 0, centered = 0;
+            int added = 0, locked = 0, shared = 0, centered = 0, spread = 0;
 
             foreach (var path in Roots)
             {
@@ -179,6 +195,26 @@ namespace Game.Editor
                     }
                 }
 
+                // 남는 세로를 나눠 벌릴 줄
+                var spreadNodes = new System.Collections.Generic.List<Transform>();
+                foreach (var (p, node) in Spreads)
+                {
+                    if (p != path) continue;
+                    var t = FindByName(root.transform, node);
+                    if (t == null) { Debug.LogWarning($"[ScreenFit] 벌릴 줄 없음: {node}"); continue; }
+                    spreadNodes.Add(t);
+                }
+                foreach (var t in spreadNodes)
+                    if (t.GetComponent<ScreenFitSpread>() == null)
+                    {
+                        t.gameObject.AddComponent<ScreenFitSpread>();
+                        spread++;
+                    }
+                // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다
+                foreach (var c in root.GetComponentsInChildren<ScreenFitSpread>(true))
+                    if (!spreadNodes.Contains(c.transform))
+                        UnityEngine.Object.DestroyImmediate(c, true);
+
                 // 가운데에 둘 칸 — 이름이 같은 것이 여럿이므로 전부 찾는다
                 var centerNodes = new System.Collections.Generic.List<Transform>();
                 foreach (var (p, node) in Centers)
@@ -219,7 +255,7 @@ namespace Game.Editor
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로, {centered}개를 가운데로 했다");
+            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로, {centered}개를 가운데로, {spread}개를 세로로 벌리기로 했다");
         }
 
         /// <summary>

@@ -402,6 +402,78 @@ namespace Game.Module.Common.UI
             //   로비 게임모드 칸이 태블릿에서 안 넓어지고 왼쪽에 몰렸다(2026-09-16).
             Canvas.ForceUpdateCanvases();
             ApplyShares();
+            ApplySpreadY();
+        }
+
+        // ── 남는 세로를 형제끼리 나눈다 ──────────────────────────
+        //
+        // 20:9 처럼 길쭉한 폰은 기준(1280)보다 세로가 320 px 남는다. 그 몫이 지금은
+        // 통째로 한 곳(상단 HUD 아래)에 고여 거기만 텅 비어 보였다(2026-09-16 지적).
+        // `ScreenFitSpread` 가 붙은 형제들은 **크기를 그대로 두고** 남는 세로를
+        // 칸 사이에 고르게 나눠 벌린다 — 첫째는 제자리, 막내는 화면 끝에 닿는다.
+        //
+        // ⚠ 그린 간격을 고르게 **맞추지** 않는다. 남는 것만 고르게 **더한다** —
+        //   9:16 에서는 더할 것이 0 이라 목업 그대로다.
+
+        private readonly List<int> _spreadBuf = new();
+
+        private void ApplySpreadY()
+        {
+            for (int i = 0; i < _entries.Count; i++)
+            {
+                var head = _entries[i];
+                if (head.Rect == null || head.Rect.GetComponent<ScreenFitSpread>() == null) continue;
+
+                var parent = head.Rect.parent as RectTransform;
+                if (parent == null) continue;
+
+                // 앞에서 이미 처리한 무리는 건너뛴다
+                bool first = true;
+                for (int k = 0; k < i; k++)
+                    if (_entries[k].Rect != null && _entries[k].Rect.parent == parent
+                        && _entries[k].Rect.GetComponent<ScreenFitSpread>() != null)
+                    { first = false; break; }
+                if (!first) continue;
+
+                _spreadBuf.Clear();
+                for (int k = i; k < _entries.Count; k++)
+                {
+                    var e = _entries[k];
+                    if (e.Rect == null || e.Rect.parent != parent) continue;
+                    if (e.Rect.GetComponent<ScreenFitSpread>() == null) continue;
+                    _spreadBuf.Add(k);
+                }
+                if (_spreadBuf.Count < 2) continue;
+
+                float extra = parent.rect.height - head.Y.ParentBase;
+                if (extra <= 0.5f) continue;   // 9:16 — 더할 것이 없다
+
+                // 그린 **위쪽 변** 순서로 늘어놓는다. Box 의 Min 은 아래에서 잰 값이라
+                // 위쪽 변은 `ParentBase - (Min + Size)` 다.
+                _spreadBuf.Sort((a, b) => TopOf(_entries[a].Y).CompareTo(TopOf(_entries[b].Y)));
+
+                float step = extra / (_spreadBuf.Count - 1);
+                for (int n = 0; n < _spreadBuf.Count; n++)
+                {
+                    var e = _entries[_spreadBuf[n]];
+                    if (e.Rect == null) continue;
+                    SetTop(e.Rect, TopOf(e.Y) + step * n, e.Y.Size);
+                }
+            }
+        }
+
+        private static float TopOf(Box y) => y.ParentBase - (y.Min + y.Size);
+
+        /// <summary>위쪽 변 기준으로 세로 자리를 다시 적는다. 가로는 건드리지 않는다.</summary>
+        private static void SetTop(RectTransform rt, float top, float height)
+        {
+            var aMin = rt.anchorMin; var aMax = rt.anchorMax;
+            var pivot = rt.pivot; var size = rt.sizeDelta; var pos = rt.anchoredPosition;
+            aMin.y = 1f; aMax.y = 1f; pivot.y = 1f;
+            rt.anchorMin = aMin; rt.anchorMax = aMax; rt.pivot = pivot;
+            // ⚠ 앵커를 바꾸면 유니티가 크기를 다시 계산한다 — 크기를 다시 넣어 준다.
+            size.y = height; rt.sizeDelta = size;
+            pos.y = -top; rt.anchoredPosition = pos;
         }
 
         // ── 남는 폭을 형제끼리 나눈다 ────────────────────────────

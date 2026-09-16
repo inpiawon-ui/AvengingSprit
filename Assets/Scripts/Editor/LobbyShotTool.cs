@@ -57,7 +57,7 @@ namespace Game.Editor
             PlayerPrefs.SetInt("game.language", (int)Game.Module.Common.Language.Japanese);
             PlayerPrefs.Save();
             SetSize(Shots[0].w, Shots[0].h);
-            if (!EditorApplication.isPlaying) EditorApplication.EnterPlaymode();
+            if (!EditorApplication.isPlaying) { OpenBootScene(); EditorApplication.EnterPlaymode(); }
         }
 
         [MenuItem("Tools/Game/로비 해상도 스샷 멈춤")]
@@ -152,6 +152,23 @@ namespace Game.Editor
             p.SetChestSlot(2, "gold", now - 1000L, 2 * 3600);             // 완료
             if (CoreModule.TryGet<IEventBus>(out var bus))
                 bus.Publish(new Game.Module.Events.ChestChangedEvent());
+        }
+
+
+        /// <summary>
+        /// 플레이 전에 **부트 씬을 연다.**
+        ///
+        /// 에디터에 로비 씬이 열린 채로 플레이하면 `GameLauncher` 가 없어 모듈이 하나도
+        /// 등록되지 않는다 — 언어팩·유저 데이터가 영영 안 와서 도구가 멈춘 채 기다린다
+        /// (2026-09-16). 열린 씬이 무엇이든 여기서 맞춘다.
+        /// </summary>
+        private static void OpenBootScene()
+        {
+            const string boot = "Assets/Scenes/BootScene.unity";
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path == boot) return;
+            if (!UnityEditor.SceneManagement.EditorSceneManager
+                    .SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene(boot);
         }
 
         private static bool Click(string name)
