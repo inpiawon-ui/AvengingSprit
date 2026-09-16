@@ -47,6 +47,7 @@ namespace Game.Editor
             ("actionframe_gold", new Vector4(24, 20, 24, 20)),
             ("modecardframe_center", new Vector4(40, 40, 40, 40)),
             ("modecardframe_side", Vector4.zero),
+            ("modecardframe_side_l", Vector4.zero),
             ("goldicon", Vector4.zero),
             ("gemicon", Vector4.zero),
             ("plusbutton", Vector4.zero),
@@ -98,12 +99,6 @@ namespace Game.Editor
             ("ShopButtonArt", "shopbuttonart"),
         };
 
-        /// <summary>좌우 모드 칸은 이름이 같다 — 칸을 훑으며 같은 것을 꽂는다.</summary>
-        private static readonly (string node, string file)[] ModeCardBind =
-        {
-            ("ModeCardFrame", "modecardframe_side"),
-        };
-
         /// <summary>같은 이름이 여러 곳에 있는 것 — 전부에 꽂는다.</summary>
         private static readonly (string node, string file)[] BindAll =
         {
@@ -143,16 +138,19 @@ namespace Game.Editor
                     if (Put(slot, node, file)) bound++; else missing++;
             }
 
-            foreach (var card in new[] { "ModeCardLeft", "ModeCardRight" })
+            // 두 칸 모두 **가운데를 향해** 기운다. 납품본은 왼쪽 변이 긴 모양이라
+            // 그대로가 오른쪽 칸이고, 왼쪽 칸은 좌우를 뒤집은 그림을 쓴다.
+            //
+            // ⚠ `localScale.x = -1` 로 뒤집지 마라. 적용기가 노드를 **왼쪽 위 pivot** 으로
+            //   정규화하므로, 뒤집으면 칸 왼쪽 바깥으로 통째로 밀려난다(2026-09-16 실제로 그랬다).
+            foreach (var (card, file) in new[]
+                     { ("ModeCardLeft", "modecardframe_side_l"), ("ModeCardRight", "modecardframe_side") })
             {
                 var t = Find(root.transform, card);
                 if (t == null) { missing++; continue; }
-                foreach (var (node, file) in ModeCardBind)
-                    if (Put(t, node, file)) bound++; else missing++;
-                // 오른쪽 칸은 같은 그림을 좌우로 뒤집어 쓴다 — 기운 방향이 반대다
+                if (Put(t, "ModeCardFrame", file)) bound++; else missing++;
                 var frame = Find(t, "ModeCardFrame");
-                if (frame != null)
-                    frame.localScale = new Vector3(card == "ModeCardRight" ? -1f : 1f, 1f, 1f);
+                if (frame != null) frame.localScale = Vector3.one;
             }
 
             foreach (var (node, file) in BindAll)
@@ -188,6 +186,8 @@ namespace Game.Editor
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
 
+            int fonts = ApplyGothic(root.transform);
+
             // 호스트 선택 판은 로비 **위에** 떠야 한다
             var hsp = root.transform.Find("HostSelectPanel");
             if (hsp != null) hsp.SetAsLastSibling();
@@ -196,8 +196,54 @@ namespace Game.Editor
             PrefabUtility.UnloadPrefabContents(root);
             AssetDatabase.SaveAssets();
 
-            Debug.Log($"[로비] 납품 반영 {pulled}장 · 그림 꽂기 {bound}개"
+            Debug.Log($"[로비] 납품 반영 {pulled}장 · 그림 꽂기 {bound}개 · 폰트 {fonts}칸"
                       + (missing > 0 ? $" · 못 찾은 것 {missing}개" : ""));
+        }
+
+        // ── 폰트 ─────────────────────────────────────────────────
+
+        private const string GothicFont = "Assets/BaseResource/Fonts/NotoSansKR SDF.asset";
+
+        /// <summary>
+        /// 로비 글자를 **굵은 고딕**으로 맞춘다 (기획 2026-09-16 「목업처럼」).
+        ///
+        /// ⚠ TMP 는 폰트를 안 지정하면 `TMP_Settings.defaultFontAsset` 인 **픽셀 폰트**를 쓴다.
+        ///   한글·일본어는 대체 폰트로 넘어가 고딕으로 나오지만 **라틴·숫자는 픽셀로 남아**
+        ///   「4,288」 「HOST」 만 결이 달랐다. 여기서 한 번 고딕으로 못 박는다.
+        ///
+        /// 언어를 바꾸면 `LanguageModule.SwapFont` 가 한국어↔일본어 폰트를 갈아 끼운다 —
+        /// 그 대상이 되려면 표에 있는 고딕이어야 해서 픽셀 폰트로 두면 안 된다.
+        ///
+        /// 굵기는 **가짜 굵게**(`FontStyles.Bold`)다. SDF 라 번지지 않고, 진짜 Bold 자형을
+        /// 쓰려면 아틀라스를 새로 구워야 한다 — 지금 결로 충분하다.
+        /// </summary>
+        private static int ApplyGothic(Transform root)
+        {
+            var font = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(GothicFont);
+            if (font == null) { Debug.LogWarning($"[로비] 고딕 폰트 없음: {GothicFont}"); return 0; }
+
+            int n = 0;
+            foreach (var t in root.GetComponentsInChildren<TMPro.TMP_Text>(true))
+            {
+                // 호스트 선택 판은 제 화면이다 — 로비가 손대지 않는다
+                if (IsUnder(t.transform, "HostSelectPanel")) continue;
+                if (t.font != font) { t.font = font; t.fontSharedMaterial = font.material; }
+                if ((t.fontStyle & TMPro.FontStyles.Bold) == 0) t.fontStyle |= TMPro.FontStyles.Bold;
+                n++;
+            }
+            return n;
+        }
+
+        // ⚠ 자동 축소는 **여기서 건드리지 마라.** `UILayoutApplier.ApplyText` 가 표의
+        //   `size` 를 기준으로 이미 잡아 준다. 여기서 `t.fontSize` 를 다시 읽어 기준으로 삼으면
+        //   **이미 줄어든 값**을 새 최대치로 삼아, 도구를 돌릴 때마다 글자가 작아지다
+        //   사라진다(2026-09-16 실제로 재화 숫자가 통째로 없어졌다).
+
+        private static bool IsUnder(Transform t, string ancestor)
+        {
+            for (var p = t; p != null; p = p.parent)
+                if (p.name == ancestor) return true;
+            return false;
         }
 
         // ── 납품 끌어오기 ────────────────────────────────────────

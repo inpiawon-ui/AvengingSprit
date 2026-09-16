@@ -356,7 +356,9 @@ namespace Game.Editor
                 // 같은 대문자 높이를 쓰면 가로가 넘치므로 축소 여지를 넉넉히 준다.
                 tmp.enableAutoSizing = true;
                 tmp.fontSizeMax = it.size;
-                tmp.fontSizeMin = Mathf.Max(8f, it.size * 0.45f);
+                // ⚠ 바닥을 넉넉히 낮춘다. 여기가 높으면 **줄여도 안 들어가** 칸 밖으로 흘러나간다
+                //   (2026-09-16 로비 카드 제목이 그랬다 — 45 % 에서 멈춰 넘쳤다).
+                tmp.fontSizeMin = Mathf.Max(8f, it.size * 0.35f);
             }
             tmp.alignment = it.align switch
             {
@@ -365,7 +367,11 @@ namespace Game.Editor
                 "TL" => TextAlignmentOptions.TopLeft,
                 _ => TextAlignmentOptions.Left,
             };
-            SetWrap(tmp, it.wrap);
+            // ⚠ **한 줄짜리 칸은 줄바꿈을 끈다.** 켜 두면 자동 축소가 「작게 줄여 한 줄」 대신
+            //   「크게 두 줄」을 고른다 — 목업은 한 줄인데 제목이 접혀 나왔다(2026-09-16).
+            //   칸 높이가 글자 두 줄을 담을 만큼 높을 때만 접는다.
+            bool tall = it.size > 0f && it.h > it.size * 1.9f;
+            SetWrap(tmp, it.wrap || tall);
             tmp.overflowMode = TextOverflowModes.Overflow;
             tmp.margin = Vector4.zero;
 

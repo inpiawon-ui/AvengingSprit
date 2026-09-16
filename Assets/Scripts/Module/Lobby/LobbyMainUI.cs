@@ -346,7 +346,9 @@ namespace Game.Module.Lobby
             SetArt(_ui.Find("ModeCenterArt"), _modeIndex);
             _ui.SetText("ModeCenterTitleText", mid.Name);
             _ui.SetText("ModeCenterSubText", CenterDescOf(mid));
-            _ui.SetActive("ModeCenterArt", mid.Unlocked);
+            // ⚠ 잠겼다고 그림을 끄지 마라. 가운데 칸이 통째로 시커먼 판이 되어 고장 난 것처럼
+            //   보였다(2026-09-16). 목업도 잠긴 칸에 그림을 두고 자물쇠만 얹는다.
+            _ui.SetActive("ModeCenterArt", true);
             _ui.SetActive("ModeCenterLockIcon", !mid.Unlocked);
             _ui.SetActive("ModePlayButton", mid.Unlocked);
             // MAIN 딱지는 **주 콘텐츠에만** 붙는다. 아무 칸에나 붙으면 표시가 아니라 장식이 된다.

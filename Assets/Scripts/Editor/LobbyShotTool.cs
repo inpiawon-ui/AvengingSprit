@@ -25,11 +25,19 @@ namespace Game.Editor
         private const string Key = "avsr.lobbyshot";
         private const string Settled = Key + ".settled";
 
-        private static readonly (int w, int h, string name)[] Shots =
+        /// <summary>
+        /// 무엇을 찍나. `turn` 은 찍기 **전에** 게임 모드 칸을 오른쪽으로 넘길 횟수다.
+        ///
+        /// ⚠ 회전은 반드시 찍어 본다. 목업은 한 장뿐이라 「가운데가 시나리오일 때」만
+        ///   맞춰 놓고 끝내기 쉬운데, 넘기면 칸마다 그림·자물쇠·MAIN 딱지가 갈아 끼워진다.
+        /// </summary>
+        private static readonly (int w, int h, int turn, string name)[] Shots =
         {
-            (768, 1024, "lobby_4x3"),
-            (720, 1280, "lobby_16x9"),
-            (1080, 2400, "lobby_20x9"),
+            (768, 1024, 0, "lobby_4x3"),
+            (720, 1280, 0, "lobby_16x9"),
+            (1080, 2400, 0, "lobby_20x9"),
+            (720, 1280, 1, "lobby_mode_turn1"),
+            (720, 1280, 1, "lobby_mode_turn2"),
         };
 
         private static int _wait;
@@ -41,6 +49,7 @@ namespace Game.Editor
         {
             SessionState.SetInt(Key, 1);
             SessionState.SetBool(Settled, false);
+            SessionState.SetInt(Key + ".turned", -1);
             SetSize(Shots[0].w, Shots[0].h);
             if (!EditorApplication.isPlaying) EditorApplication.EnterPlaymode();
         }
@@ -95,6 +104,14 @@ namespace Game.Editor
             {
                 SetSize(s.w, s.h);
                 _wait = 180;   // 캔버스가 제 크기를 찾고 ScreenFit 이 다시 맞출 때까지
+                return;
+            }
+
+            if (s.turn > 0 && SessionState.GetInt(Key + ".turned", 0) < shot)
+            {
+                SessionState.SetInt(Key + ".turned", shot);
+                for (int i = 0; i < s.turn; i++) Click("ModeArrowRight");
+                _wait = 60;
                 return;
             }
 
