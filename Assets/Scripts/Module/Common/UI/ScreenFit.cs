@@ -388,7 +388,17 @@ namespace Game.Module.Common.UI
             {
                 var e = _entries[i];
                 if (e.Rect == null) continue;
-                if (e.Share) continue;   // 나눠 갖는 판은 아래에서 따로 잡는다
+                if (e.Share)
+                {
+                    // 가로는 아래에서 따로 나눈다. 다만 **세로로 부모를 꽉 채우는 놈은
+                    // 여기서 늘려 둔다** — 안 그러면 부모가 세로로 커져도 저 혼자 그린
+                    // 키로 남는다. 20:9 에서 상자 띠는 325.9 로 커졌는데 상자 칸 셋이
+                    // 210.4 인 채 위에 붙어, 칸 아래가 통째로 비고 상자가 위로 쏠렸다
+                    // (2026-09-16 지적).
+                    if (e.Y.Full && !e.LayoutOwned && e.Rect.parent == e.Parent)
+                        ApplyAxis(e.Rect, e.Y, horizontal: false);
+                    continue;
+                }
 
                 // ⚠ **부모가 바뀐 놈은 놓아준다.** `InGameMainUI` 가 D패드를 `ControlGroup`
                 //   밖 루트로 꺼내는데, 그 뒤에 화면이 바뀌어 다시 적용하면 **새 부모(화면 전체)**
