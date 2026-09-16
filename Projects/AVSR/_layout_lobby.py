@@ -97,8 +97,10 @@ add('MailButton/NotifyBadge', (900, 8, 34, 34), parent='MailButton')
 #
 # 기능은 아직 없다. 목업의 글자·그림·계층만 그대로 세워 둔다 —
 # 나중에 기능을 붙일 때 화면을 다시 안 짜도 되게.
-add('GhostSearchPanel', (0, 231, MOCK_W, 376), create='IMG', parent='LobbyMainUI')
-add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
+# ⚠ 목업은 이 자리를 **로고**로 채운다. 로고를 걷어냈으므로(2026-09-16) 그만큼
+#   판을 위로 올려 먹게 한다 — 안 그러면 상단이 통째로 비어 보인다.
+add('GhostSearchPanel', (0, 120, MOCK_W, 487), create='IMG', parent='LobbyMainUI')
+add('GhostSearchArt', (27, 120, 886, 487), create='IMG', parent='GhostSearchPanel')
 # 글자 뒤 어두운 판 — 골목 그림 위에서 글자가 읽히게 한다(목업 실측 27~471 / 236~510).
 # ⚠ 그림 **다음**, 글자 **앞**에 적는다. 표 순서가 곧 그리는 순서다.
 # ⚠ 납품 그림 444x274 안에서 판은 **324x260 만** 차지한다(오른쪽·아래가 투명).
@@ -106,8 +108,10 @@ add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPane
 #   판이 27~471 / 236~510 에 떨어지게 칸을 키운다 — 444*444/324, 274*274/260.
 add('GhostSearchScrim', (27, 236, 608, 289), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchIcon', (58, 250, 124, 94), create='IMG', parent='GhostSearchPanel')
-# 목업 가운데에서 보물상자 위를 나는 큰 유령 — 빠져 있었다(2026-09-16)
-add('GhostSearchBigGhost', (372, 276, 220, 170), create='IMG', parent='GhostSearchPanel')
+# 목업 가운데에서 보물상자 위를 나는 큰 유령.
+# ⚠ 판을 위로 올린 뒤(로고 자리) 유령이 제목 줄에 바싹 붙어 글자를 가렸다 —
+#   글자판 오른쪽(471) 밖으로 비켜 세운다(2026-09-16 지적).
+add('GhostSearchBigGhost', (446, 318, 220, 170), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchTitleText', (206, 256, 200, 48), text='유령 수색',
     size=cap(38), align='L', color=WHITE, create='TMP', parent='GhostSearchPanel')
 add('GhostSearchHelpButton', (428, 262, 48, 44), create='BTN', parent='GhostSearchPanel')
@@ -128,7 +132,7 @@ add('GhostSearchClaimButton/NotifyBadge', (872, 488, 46, 46),
     create='IMG', parent='GhostSearchClaimButton')
 # ⚠ 테두리는 **맨 나중에** 그린다. 판 자신에 테두리를 칠하면 그 위에 얹히는
 #   그림이 통째로 덮어 버려 테두리가 안 보인다(2026-09-16 실제로 그랬다).
-add('GhostSearchFrame', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
+add('GhostSearchFrame', (27, 120, 886, 487), create='IMG', parent='GhostSearchPanel')
 
 # ── 보물상자 3칸 ────────────────────────────────────────────────────
 #

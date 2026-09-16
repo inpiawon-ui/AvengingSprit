@@ -17,7 +17,12 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 BASE = os.path.join(ROOT, 'Assets', 'BaseResource')
 IMPORT = os.path.join(ROOT, 'Assets', 'Scripts', 'Editor', 'UISpec', '_import.json')
 
-ALWAYS_STRETCH = ('background', 'floor', 'fill', 'cooldown')
+ALWAYS_STRETCH = ('background', 'floor', 'fill', 'cooldown', 'scrim')
+
+# 이름으로는 못 가르는데 **늘어나야 하는** 칸.
+#   GhostSearchArt  판을 키우면 골목 그림도 같이 커져야 한다 — 비율을 지키면
+#                   판만 커지고 그림은 그대로라 위쪽이 통째로 빈다(2026-09-16)
+STRETCH_NODES = {'GhostSearchArt'}
 # 비율이 크게 어긋날 때만 손댄다. 미세한 차이까지 맞추면 목업 실측이 흔들린다.
 SKEW_LIMIT = 1.06
 
@@ -41,6 +46,8 @@ def fit(items, folder):
     for it in items:
         name = it['name'].split('/')[-1]
         low = name.lower()
+        if name in STRETCH_NODES:
+            continue
         if low + '.png' in protected or any(k in low for k in ALWAYS_STRETCH):
             continue
 

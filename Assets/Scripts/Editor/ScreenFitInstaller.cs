@@ -101,6 +101,15 @@ namespace Game.Editor
         /// 한 곳에 고여 거기만 텅 비어 보였다(2026-09-16 지적). 여기 적은 줄들이
         /// 남는 만큼을 칸 사이에 고르게 나눠 갖는다.
         /// </summary>
+        /// <summary>
+        /// 남는 세로를 **간격이 아니라 제 키로** 먹는 줄. `Spreads` 의 부분집합이다.
+        ///
+        /// 비워 두면 남는 만큼을 칸 사이 간격으로 고르게 나눈다.
+        /// </summary>
+        private static readonly (string prefab, string node)[] Grows =
+        {
+        };
+
         private static readonly (string prefab, string node)[] Spreads =
         {
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "TopHudGroup"),
@@ -205,11 +214,14 @@ namespace Game.Editor
                     spreadNodes.Add(t);
                 }
                 foreach (var t in spreadNodes)
-                    if (t.GetComponent<ScreenFitSpread>() == null)
-                    {
-                        t.gameObject.AddComponent<ScreenFitSpread>();
-                        spread++;
-                    }
+                {
+                    var mark = t.GetComponent<ScreenFitSpread>();
+                    if (mark == null) { mark = t.gameObject.AddComponent<ScreenFitSpread>(); spread++; }
+                    bool grow = false;
+                    foreach (var (gp, gn) in Grows)
+                        if (gp == path && gn == t.name) { grow = true; break; }
+                    mark.SetGrow(grow);
+                }
                 // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다
                 foreach (var c in root.GetComponentsInChildren<ScreenFitSpread>(true))
                     if (!spreadNodes.Contains(c.transform))

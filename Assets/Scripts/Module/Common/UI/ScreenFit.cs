@@ -452,6 +452,38 @@ namespace Game.Module.Common.UI
                 // 위쪽 변은 `ParentBase - (Min + Size)` 다.
                 _spreadBuf.Sort((a, b) => TopOf(_entries[a].Y).CompareTo(TopOf(_entries[b].Y)));
 
+                // 「키운다」로 표시한 줄이 있으면 **간격이 아니라 그 줄들의 키**로 먹는다.
+                float growSum = 0f;
+                for (int n = 0; n < _spreadBuf.Count; n++)
+                {
+                    var r = _entries[_spreadBuf[n]].Rect;
+                    if (r != null && (r.GetComponent<ScreenFitSpread>()?.Grow ?? false))
+                        growSum += _entries[_spreadBuf[n]].Y.Size;
+                }
+
+                if (growSum > 0.5f)
+                {
+                    // 그린 간격은 그대로 두고, 표시한 줄만 제 키 비율대로 불린다.
+                    float cursor = TopOf(_entries[_spreadBuf[0]].Y);
+                    float prevBottom = cursor;
+                    for (int n = 0; n < _spreadBuf.Count; n++)
+                    {
+                        var e = _entries[_spreadBuf[n]];
+                        if (e.Rect == null) continue;
+                        float drawnTop = TopOf(e.Y);
+                        if (n > 0) cursor += drawnTop - prevBottom;   // 그린 간격을 그대로
+                        prevBottom = drawnTop + e.Y.Size;
+
+                        var mark = e.Rect.GetComponent<ScreenFitSpread>();
+                        float height = e.Y.Size;
+                        if (mark != null && mark.Grow) height += extra * (e.Y.Size / growSum);
+
+                        SetTop(e.Rect, cursor, height);
+                        cursor += height;
+                    }
+                    continue;
+                }
+
                 float step = extra / (_spreadBuf.Count - 1);
                 for (int n = 0; n < _spreadBuf.Count; n++)
                 {

@@ -20,5 +20,16 @@ namespace Game.Module.Common.UI
     [RequireComponent(typeof(RectTransform))]
     public sealed class ScreenFitSpread : MonoBehaviour
     {
+        [SerializeField] private bool _grow;
+
+        /// <summary>
+        /// 남는 세로를 **간격이 아니라 제 키로** 먹는가.
+        ///
+        /// 판 그림이 9-slice 이거나 화면을 꽉 채우는 장면 그림이면 켜도 된다 —
+        /// 늘어나도 티가 안 난다. 기운 낱장 카드처럼 늘리면 뭉개지는 것은 끄고 둔다.
+        /// </summary>
+        public bool Grow => _grow;
+
+        public void SetGrow(bool grow) => _grow = grow;
     }
 }
