@@ -97,7 +97,9 @@ namespace Game.Module.Lobby
         private const float TabOnScale = 1.04f;
         private const float TabOffScale = 0.94f;
         private const float TabLift = 10f;     // 켜진 칸만 살짝 올라온다
-        private const float TabDim = 0.45f;    // 꺼진 칸 밝기 배수
+        // ⚠ 0.45 는 너무 어둡다 — 목업은 세 칸이 다 또렷하고 고른 칸만 금색이다.
+        //   어둡게 죽이면 테두리·글자가 안 보여 「프레임이 없다」로 읽힌다(2026-09-16).
+        private const float TabDim = 0.82f;    // 꺼진 칸 밝기 배수
 
         /// <summary>칸 하나 — 제자리·제 색을 기억해 둔다. 꺼질 때 곱하고 켜질 때 되돌린다.</summary>
         private sealed class TabView

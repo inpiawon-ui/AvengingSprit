@@ -359,6 +359,10 @@ namespace Game.Editor
                 // ⚠ 바닥을 넉넉히 낮춘다. 여기가 높으면 **줄여도 안 들어가** 칸 밖으로 흘러나간다
                 //   (2026-09-16 로비 카드 제목이 그랬다 — 45 % 에서 멈춰 넘쳤다).
                 tmp.fontSizeMin = Mathf.Max(8f, it.size * 0.35f);
+                // ⚠⚠ **이 줄이 핵심이다.** 기본값 `Overflow` 면 자동 축소가 **가로를 안 본다** —
+                //   줄바꿈을 꺼 두면 글자가 칸 밖으로 그대로 흘러나간다. 로비에서 제목·부제가
+                //   카드 밖으로 나가던 것이 전부 이것 때문이었다(2026-09-16).
+                tmp.overflowMode = TextOverflowModes.Truncate;
             }
             tmp.alignment = it.align switch
             {

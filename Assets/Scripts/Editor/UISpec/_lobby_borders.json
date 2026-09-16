@@ -1,0 +1,50 @@
+{
+ "hudpill": [
+  69,
+  7,
+  69,
+  12
+ ],
+ "buttonblue": [
+  60,
+  20,
+  60,
+  24
+ ],
+ "buttongold": [
+  59,
+  15,
+  59,
+  17
+ ],
+ "actionframe_blue": [
+  67,
+  38,
+  67,
+  37
+ ],
+ "actionframe_gold": [
+  65,
+  31,
+  65,
+  32
+ ],
+ "chestslotframe": [
+  61,
+  60,
+  61,
+  60
+ ],
+ "panelframe": [
+  61,
+  60,
+  61,
+  61
+ ],
+ "modecardframe_center": [
+  70,
+  70,
+  70,
+  70
+ ]
+}

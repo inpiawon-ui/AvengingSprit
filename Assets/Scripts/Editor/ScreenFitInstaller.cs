@@ -32,6 +32,18 @@ namespace Game.Editor
             ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "RunResourcePanel"),
             ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "CurrentHostPanel"),
             ("Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab", "ChapterGroup"),
+
+            // 로비 — 태블릿 4:3 에서 판이 화면 끝까지 늘어나고, **그 안의 칸들이 남는 폭을
+            // 나눠 갖는다.** 가운데로 모으면 좌우 120 px 씩이 그냥 빈다(2026-09-16 지적).
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestSlot1"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestSlot2"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestSlot3"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "HostButton"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChapterButton"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButton"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardLeft"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardCenter"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
         };
 
         /// <summary>폭을 늘리면 안 되는 판. 「프리팹 : 노드 이름」.</summary>
@@ -52,14 +64,9 @@ namespace Game.Editor
         /// </summary>
         private static readonly (string prefab, string node)[] CenterLocks =
         {
-            // 로비 게임모드 줄. 720 폭 안에 「◀ 카드 카드 카드 ▶」가 가운데 정렬로 그려져 있다.
-            //
-            // ⚠ 태블릿 4:3(캔버스 960)에서 이 판이 통째로 늘어나면서 **카드가 갈라졌다.**
-            //   판 안의 것들이 양끝(2 px · 718 px)에 닿아 있어 `ScreenFit` 이 「가로지르는 줄」로
-            //   보고 가장 넓은 틈에서 좌·우로 갈라 붙이는데, 그러면 **가운데 카드가 오른쪽 무리에
-            //   끼어** 중앙을 벗어난다(2026-09-16 사용자 지적 「해상도 대응이 안 된다」).
-            //   이 줄은 상단 재화 줄과 달리 갈라지면 안 되는 **한 덩어리 캐러셀**이다.
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GameModeGroup"),
+            // ⚠ 로비 게임모드 줄을 여기에 넣지 마라. 잠그면 720 폭에 갇혀 태블릿에서
+            //   좌우 120 px 씩이 빈다 — 그건 4:3 문제를 **덮은 것**이지 푼 것이 아니다.
+            //   대신 세 카드에 `ScreenFitShare` 를 붙여 남는 폭을 나눠 갖게 했다(위 `Shares`).
         };
 
         /// <summary>화면을 그린 기준 크기. <see cref="ScreenFit"/> 와 같은 9:16 이다.</summary>

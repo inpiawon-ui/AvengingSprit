@@ -3,6 +3,16 @@
 좌표 출처: Reference/Mockups/lobby_hub_v2.png (941x1672) 실측 — 2026-09-16 개편 목업.
 이 파일이 로비 레이아웃의 **단일 출처**다. 프리팹을 직접 손보지 말고 여기를 고친다.
 
+── 해상도 대응 ──────────────────────────────────────────────────────
+⚠ **가운데로 모으지 마라.** 태블릿 4:3 은 보이는 캔버스가 960 폭이라, 720 에 가둬
+  가운데 두면 좌우 120 px 씩이 그냥 빈다. 그건 대응이 아니다(2026-09-16 지적).
+
+  판(상단 HUD · 유령수색 · 상자 밴드 · 하단 바)은 **그린 폭을 기준 폭과 같게** 두어
+  `ScreenFit` 이 화면 끝까지 늘리게 한다. 판 안의 칸(상자 3칸 · 하단 3버튼 ·
+  모드 3카드)은 `ScreenFitShare` 로 남는 폭을 그린 비율대로 나눠 갖는다 —
+  칸 사이 간격은 그린 값을 지키므로 줄 모양 그대로 폭만 커진다.
+  붙이는 곳: `ScreenFitInstaller.Shares`
+
 ── 좌표계 ───────────────────────────────────────────────────────────
 목업이 941x1672 = **정확히 9:16** 이라 캔버스 720x1280 과 비율이 같다.
   S = 720/941 = 0.7651        가로·세로 같은 배율, 밴드 나누기가 필요 없다
@@ -67,7 +77,7 @@ add('LobbyBackground', (0, 0, MOCK_W, MOCK_H), parent='LobbyStageArea')
 #
 # 목업에는 골드·젬·우편뿐이다. 설정은 남기기로 했으므로(기획 2026-09-16)
 # **로고가 있던 왼쪽 빈자리**에 둔다 — 오른쪽 끝은 목업 그대로 지킨다.
-add('TopHudGroup', (27, 10, 886, 80))
+add('TopHudGroup', (0, 10, MOCK_W, 80))
 add('SettingsButton', (38, 18, 64, 64), parent='TopHudGroup')
 
 add('GoldCounter', (279, 18, 306, 64), parent='TopHudGroup')
@@ -87,9 +97,11 @@ add('MailButton/NotifyBadge', (900, 8, 34, 34), parent='MailButton')
 #
 # 기능은 아직 없다. 목업의 글자·그림·계층만 그대로 세워 둔다 —
 # 나중에 기능을 붙일 때 화면을 다시 안 짜도 되게.
-add('GhostSearchPanel', (27, 231, 886, 376), create='IMG', parent='LobbyMainUI')
+add('GhostSearchPanel', (0, 231, MOCK_W, 376), create='IMG', parent='LobbyMainUI')
 add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchIcon', (58, 250, 124, 94), create='IMG', parent='GhostSearchPanel')
+# 목업 가운데에서 보물상자 위를 나는 큰 유령 — 빠져 있었다(2026-09-16)
+add('GhostSearchBigGhost', (372, 276, 220, 170), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchTitleText', (206, 256, 200, 48), text='유령 수색',
     size=cap(38), align='L', color=WHITE, create='TMP', parent='GhostSearchPanel')
 add('GhostSearchHelpButton', (428, 262, 48, 44), create='BTN', parent='GhostSearchPanel')
@@ -119,7 +131,7 @@ add('GhostSearchFrame', (27, 231, 886, 376), create='IMG', parent='GhostSearchPa
 CHEST_X0, CHEST_Y0, CHEST_W, CHEST_H = 27, 621, 282, 275
 CHEST_STEP = 302
 
-add('ChestBand', (CHEST_X0, CHEST_Y0, 886, CHEST_H), create='IMG', parent='LobbyMainUI')
+add('ChestBand', (0, CHEST_Y0, MOCK_W, CHEST_H), create='IMG', parent='LobbyMainUI')
 
 for i in range(3):
     slot = f'ChestSlot{i + 1}'
@@ -131,9 +143,9 @@ for i in range(3):
 
     add(slot, (x, CHEST_Y0, CHEST_W, CHEST_H), create='GROUP', parent='ChestBand')
     add(f'{slot}/ChestSlotFrame', c(0, 0, CHEST_W, CHEST_H), create='IMG', parent=slot)
-    add(f'{slot}/ChestArt', c(54, 14, 174, 132), create='IMG', parent=slot)
-    add(f'{slot}/ChestReadyBanner', c(34, 5, 214, 52), create='IMG', parent=slot)
-    add(f'{slot}/ChestReadyText', c(34, 9, 214, 44), text='완료!',
+    add(f'{slot}/ChestArt', c(38, 12, 206, 142), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyBanner', c(30, 2, 222, 58), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyText', c(30, 8, 222, 46), text='완료!',
         size=cap(34), align='C', color=GOLD, create='TMP', parent=slot)
     add(f'{slot}/ChestEmptyText', c(20, 100, 242, 48), text='빈 칸',
         size=cap(28), align='C', color=DIM, create='TMP', parent=slot)
@@ -143,7 +155,7 @@ for i in range(3):
     # ⚠ 버튼 글자·아이콘을 **버튼의 자식으로 두지 않는다.** 적용기의 `parent` 는 경로가
     #   아니라 단일 이름만 찾는데, 세 칸의 버튼 이름이 같아 전부 첫 칸으로 붙는다.
     #   칸 직속으로 두고 버튼 위에 그린다 — 글자는 raycast 대상이 아니라 눌림은 버튼이 받는다.
-    add(f'{slot}/ChestActionButton', c(26, 185, 230, 70), create='BTN', parent=slot)
+    add(f'{slot}/ChestActionButton', c(18, 185, 246, 70), create='BTN', parent=slot)
     add(f'{slot}/ChestActionGemIcon', c(60, 192, 40, 40), create='IMG', parent=slot)
     add(f'{slot}/ChestActionCostText', c(108, 190, 110, 44), text='1,000',
         size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
@@ -169,8 +181,6 @@ add('ModeArrowLeftText', (6, 1146, 44, 68), text='◀', size=cap(40), align='C',
 add('ModeCardLeft', (45, 975, 215, 400), parent='GameModeGroup')
 add('ModeCardLeft/ModeCardArt', (58, 988, 190, 236), create='IMG', parent='ModeCardLeft')
 add('ModeCardLeft/ModeLockIcon', (126, 1116, 68, 80), parent='ModeCardLeft')
-# ⚠ 테두리는 그림 위·**글자 아래**다. 맨 나중에 두면 기운 테가 글자를 잘라 먹는다.
-add('ModeCardLeft/ModeCardFrame', (45, 975, 215, 400), create='IMG', parent='ModeCardLeft')
 # 기운 테 안쪽에 들어와야 한다 — 칸 폭(215)을 다 쓰면 양끝이 테에 물린다
 add('ModeCardLeft/ModeTitleText', (68, 1230, 170, 48), size=cap(30), align='C', color=WHITE,
     parent='ModeCardLeft')
@@ -180,7 +190,6 @@ add('ModeCardLeft/ModeSubText', (72, 1284, 162, 36), size=cap(24), align='C', co
 add('ModeCardRight', (686, 975, 215, 400), parent='GameModeGroup')
 add('ModeCardRight/ModeCardArt', (699, 988, 190, 236), create='IMG', parent='ModeCardRight')
 add('ModeCardRight/ModeLockIcon', (767, 1116, 68, 80), parent='ModeCardRight')
-add('ModeCardRight/ModeCardFrame', (686, 975, 215, 400), create='IMG', parent='ModeCardRight')
 add('ModeCardRight/ModeTitleText', (709, 1230, 170, 48), size=cap(30), align='C', color=WHITE,
     parent='ModeCardRight')
 add('ModeCardRight/ModeSubText', (713, 1284, 162, 36), size=cap(24), align='C', color=BLUE,
@@ -207,13 +216,11 @@ add('ModeCenterSubText', (302, 1266, 334, 40), size=cap(26), align='C', color=BL
 add('ModePlayButton', (303, 1292, 338, 74), parent='ModeCardCenter')
 add('ModePlayButtonText', (303, 1300, 338, 58), size=cap(44), align='C', color=DARK,
     parent='ModePlayButton')
-# 금테는 **맨 나중에** — 카드 안의 그림·글자 위로 둘러싸야 한다
-add('ModeCardCenterFrame', (280, 960, 378, 428), create='IMG', parent='ModeCardCenter')
 
 # ── 하단 3버튼 ──────────────────────────────────────────────────────
 #
 # 가운데(PLAY)만 크고 금색이다 — 지금 서 있는 곳이 로비라서다.
-add('MainActionBar', (27, 1466, 886, 190))
+add('MainActionBar', (0, 1466, MOCK_W, 190))
 
 add('HostButton', (36, 1487, 267, 128), parent='MainActionBar')
 add('HostButtonArt', (50, 1492, 118, 118), parent='HostButton')

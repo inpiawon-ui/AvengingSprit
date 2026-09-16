@@ -47,6 +47,11 @@ namespace Game.Editor
             ("actionframe_gold", new Vector4(72, 48, 72, 48)),
             ("modecardframe_center", new Vector4(72, 72, 72, 72)),
             ("modecardframe_side", Vector4.zero),
+            // 속이 찬 모드 카드 판 — 테두리·속·글자판이 한 장에 다 있다
+            ("modecard_side", Vector4.zero),
+            ("modecard_side_l", Vector4.zero),
+            ("modecard_center", Vector4.zero),
+            ("ghostsearchbig", Vector4.zero),
             ("goldicon", Vector4.zero),
             ("gemicon", Vector4.zero),
             ("plusbutton", Vector4.zero),
@@ -80,7 +85,8 @@ namespace Game.Editor
             ("GhostSearchHelpButton", "buttonblue"),
 
             ("ModeCenterIcon", "modecentericon"),
-            ("ModeCardCenterFrame", "modecardframe_center"),
+            ("ModeCardCenter", "modecard_center"),
+            ("GhostSearchBigGhost", "ghostsearchbig"),
 
             // 하단 바 — 칸 테두리는 속을 비우고 그림·글자가 그 안에 보인다
             ("HostButton", "actionframe_blue"),
@@ -136,14 +142,8 @@ namespace Game.Editor
             // ⚠ `localScale.x = -1` 로 뒤집지 마라. 적용기가 노드를 **왼쪽 위 pivot** 으로
             //   정규화하므로, 뒤집으면 칸 왼쪽 바깥으로 통째로 밀려난다(2026-09-16 실제로 그랬다).
             foreach (var (card, file) in new[]
-                     { ("ModeCardLeft", "modecardframe_side_l"), ("ModeCardRight", "modecardframe_side") })
-            {
-                var t = Find(root.transform, card);
-                if (t == null) { missing++; continue; }
-                if (Put(t, "ModeCardFrame", file)) bound++; else missing++;
-                var frame = Find(t, "ModeCardFrame");
-                if (frame != null) frame.localScale = Vector3.one;
-            }
+                     { ("ModeCardLeft", "modecard_side_l"), ("ModeCardRight", "modecard_side") })
+                if (Put(root.transform, card, file)) bound++; else missing++;
 
             foreach (var (node, file) in BindAll)
             {
@@ -240,6 +240,35 @@ namespace Game.Editor
 
         // ── 납품 끌어오기 ────────────────────────────────────────
 
+        /// <summary>
+        /// 여백을 잘라 낸 뒤의 9-slice 보더. `Projects/AVSR` 의 잘라내기 도구가 적어 둔다.
+        ///
+        /// ⚠ 납품 그림에 투명 여백이 남으면 박스를 목업대로 잡아도 **그만큼 작게** 그려진다.
+        ///   여백을 잘라 「박스 = 그림」으로 만들고, 잘라 낸 만큼 보더도 줄인 값이 여기다.
+        /// </summary>
+        private const string BorderTable = "Assets/Scripts/Editor/UISpec/_lobby_borders.json";
+
+        private static System.Collections.Generic.Dictionary<string, Vector4> LoadBorders()
+        {
+            var map = new System.Collections.Generic.Dictionary<string, Vector4>();
+            if (!File.Exists(BorderTable)) return map;
+            // 작은 표라 간단히 읽는다 — `"name": [l, b, r, t]`
+            foreach (var line in File.ReadAllLines(BorderTable))
+            {
+                int q1 = line.IndexOf('"');
+                int q2 = q1 < 0 ? -1 : line.IndexOf('"', q1 + 1);
+                int lb = line.IndexOf('[');
+                int rb = line.IndexOf(']');
+                if (q1 < 0 || q2 < 0 || lb < 0 || rb < 0) continue;
+                var nums = line.Substring(lb + 1, rb - lb - 1).Split(',');
+                if (nums.Length != 4) continue;
+                map[line.Substring(q1 + 1, q2 - q1 - 1)] = new Vector4(
+                    float.Parse(nums[0]), float.Parse(nums[1]),
+                    float.Parse(nums[2]), float.Parse(nums[3]));
+            }
+            return map;
+        }
+
         private static int ImportIncoming()
         {
             int n = 0;
@@ -252,8 +281,10 @@ namespace Game.Editor
             }
             if (n > 0) AssetDatabase.Refresh();
 
-            foreach (var (file, border) in Incoming)
+            var trimmed = LoadBorders();
+            foreach (var (file, rawBorder) in Incoming)
             {
+                var border = trimmed.TryGetValue(file, out var b) ? b : rawBorder;
                 var dst = $"{Res}/{file}.png";
                 if (AssetImporter.GetAtPath(dst) is not TextureImporter ti) continue;
                 ti.textureType = TextureImporterType.Sprite;
@@ -299,14 +330,19 @@ namespace Game.Editor
         /// `pixelsPerUnitMultiplier` 를 올리면 테두리가 그만큼 작게 그려진다.
         /// 칸의 40 % 안에 들어오게 맞춘다 — 가운데가 충분히 남아야 늘어난 티가 안 난다.
         /// </summary>
+        /// <summary>테두리가 칸에서 차지해도 되는 최대 비율. 목업 테두리는 이보다 훨씬 얇다.</summary>
+        private const float BorderShare = 0.22f;
+
         private static void FitBorder(Image img, Sprite sprite)
         {
             var rect = ((RectTransform)img.transform).rect;
             float need = 1f;
             float h = sprite.border.y + sprite.border.w;   // 아래 + 위
             float w = sprite.border.x + sprite.border.z;   // 왼 + 오른
-            if (rect.height > 1f && h > rect.height * 0.4f) need = Mathf.Max(need, h / (rect.height * 0.4f));
-            if (rect.width > 1f && w > rect.width * 0.4f) need = Mathf.Max(need, w / (rect.width * 0.4f));
+            if (rect.height > 1f && h > rect.height * BorderShare)
+                need = Mathf.Max(need, h / (rect.height * BorderShare));
+            if (rect.width > 1f && w > rect.width * BorderShare)
+                need = Mathf.Max(need, w / (rect.width * BorderShare));
             img.pixelsPerUnitMultiplier = need;
         }
 
