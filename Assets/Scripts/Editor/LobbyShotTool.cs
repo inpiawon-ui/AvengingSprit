@@ -138,9 +138,11 @@ namespace Game.Editor
         {
             if (!CoreModule.TryGet<IPlayerDataService>(out var p) || !p.IsReady) return;
             long now = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            p.SetChestSlot(0, "gold", now + 1000L * 11520, 4 * 3600);     // 3시간 12분
+            // 목업과 같은 색으로 심는다 — 파랑(은) · 보라(마법) · 금(완료).
+            // 색이 다르면 목업과 나란히 놓고 비교할 때 무엇이 어긋났는지 안 보인다.
+            p.SetChestSlot(0, "silver", now + 1000L * 11520, 4 * 3600);   // 3시간 12분
             p.SetChestSlot(1, "magic", now + 1000L * 6480, 8 * 3600);     // 1시간 48분
-            p.SetChestSlot(2, "silver", now - 1000L, 2 * 3600);           // 완료
+            p.SetChestSlot(2, "gold", now - 1000L, 2 * 3600);             // 완료
             if (CoreModule.TryGet<IEventBus>(out var bus))
                 bus.Publish(new Game.Module.Events.ChestChangedEvent());
         }
