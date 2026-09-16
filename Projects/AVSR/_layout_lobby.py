@@ -68,13 +68,13 @@ add('SettingsButton', (38, 18, 64, 64), parent='TopHudGroup')
 
 add('GoldCounter', (279, 18, 306, 64), parent='TopHudGroup')
 add('GoldIcon', (288, 27, 46, 46), parent='GoldCounter')
-add('GoldText', (345, 28, 190, 44), size=cap(40), align='C', color=WHITE, parent='GoldCounter')
-add('GoldCounter/PlusButton', (539, 27, 46, 46), parent='GoldCounter')
+add('GoldText', (340, 28, 176, 44), size=cap(36), align='C', color=WHITE, parent='GoldCounter')
+add('GoldCounter/PlusButton', (525, 27, 46, 46), parent='GoldCounter')
 
 add('GemCounter', (607, 18, 223, 64), parent='TopHudGroup')
 add('GemIcon', (616, 27, 46, 46), parent='GemCounter')
-add('GemText', (668, 28, 116, 44), size=cap(40), align='C', color=WHITE, parent='GemCounter')
-add('GemCounter/PlusButton', (784, 27, 46, 46), parent='GemCounter')
+add('GemText', (666, 28, 104, 44), size=cap(36), align='C', color=WHITE, parent='GemCounter')
+add('GemCounter/PlusButton', (772, 27, 46, 46), parent='GemCounter')
 
 add('MailButton', (846, 18, 76, 64), parent='TopHudGroup')
 add('MailButton/NotifyBadge', (900, 8, 34, 34), parent='MailButton')
@@ -88,7 +88,9 @@ add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPane
 add('GhostSearchIcon', (58, 250, 124, 94), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchTitleText', (206, 256, 200, 48), text='유령 수색',
     size=cap(38), align='L', color=WHITE, create='TMP', parent='GhostSearchPanel')
-add('GhostSearchHelpButton', (432, 262, 52, 44), create='BTN', parent='GhostSearchPanel')
+add('GhostSearchHelpButton', (428, 262, 48, 44), create='BTN', parent='GhostSearchPanel')
+add('GhostSearchHelpText', (428, 266, 48, 38), text='?',
+    size=cap(26), align='C', color=WHITE, create='TMP', parent='GhostSearchHelpButton')
 add('GhostSearchTimerText', (206, 302, 290, 54), text='04:32:18',
     size=cap(44), align='L', color=CYAN, create='TMP', parent='GhostSearchPanel')
 add('GhostSearchGoldIcon', (58, 354, 76, 76), create='IMG', parent='GhostSearchPanel')
@@ -98,8 +100,8 @@ add('GhostSearchDescText', (58, 436, 436, 90), text='유령이 도시 곳곳을 
     size=cap(28), align='L', color=WHITE, wrap=True, create='TMP', parent='GhostSearchPanel')
 add('GhostSearchClaimButton', (644, 508, 272, 80), create='BTN', parent='GhostSearchPanel')
 add('GhostSearchClaimIcon', (668, 520, 58, 58), create='IMG', parent='GhostSearchClaimButton')
-add('GhostSearchClaimText', (734, 522, 170, 54), text='보상 받기',
-    size=cap(34), align='C', color=DARK, create='TMP', parent='GhostSearchClaimButton')
+add('GhostSearchClaimText', (726, 526, 182, 48), text='보상 받기',
+    size=cap(23), align='C', color=DARK, create='TMP', parent='GhostSearchClaimButton')
 add('GhostSearchClaimButton/NotifyBadge', (886, 490, 46, 46),
     create='IMG', parent='GhostSearchClaimButton')
 # ⚠ 테두리는 **맨 나중에** 그린다. 판 자신에 테두리를 칠하면 그 위에 얹히는
@@ -141,16 +143,19 @@ for i in range(3):
     add(f'{slot}/ChestActionGemIcon', c(60, 192, 40, 40), create='IMG', parent=slot)
     add(f'{slot}/ChestActionCostText', c(108, 190, 110, 44), text='1,000',
         size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
-    add(f'{slot}/ChestActionLabelText', c(26, 228, 230, 34), text='즉시 열기',
-        size=cap(26), align='C', color=WHITE, create='TMP', parent=slot)
+    # ⚠ 「보상 획득하기」가 들어갈 칸이다 — 목업의 「즉시 열기」보다 길어 작게 잡는다
+    # 목업 실측: 버튼 806~876 · 젬값 줄 810~854 · 라벨 850~874.
+    # 라벨을 위로 올리면 젬값과 겹친다 — 겹치지 않는 자리가 여기뿐이다.
+    add(f'{slot}/ChestActionLabelText', c(18, 228, 246, 28), text='즉시 열기',
+        size=cap(19), align='C', color=WHITE, create='TMP', parent=slot)
 
 # ── 게임 모드 ───────────────────────────────────────────────────────
 #
 # ⚠ 이 판은 **늘리면 안 된다.** 720 폭 안의 한 덩어리 캐러셀이라 4:3 에서 늘리면
 #   가운데 카드가 중앙을 벗어난다. `ScreenFitInstaller.CenterLocks` 가 잠근다.
 add('GameModeGroup', (0, 905, MOCK_W, 492))
-add('GameModeLabelAccent', (27, 912, 14, 54), parent='GameModeGroup')
-add('GameModeLabel', (52, 906, 300, 60), size=cap(44), align='L', color=WHITE,
+add('GameModeLabelAccent', (27, 918, 14, 50), parent='GameModeGroup')
+add('GameModeLabel', (52, 914, 300, 58), size=cap(38), align='L', color=WHITE,
     parent='GameModeGroup')
 
 add('ModeArrowLeft', (6, 1138, 44, 84), parent='GameModeGroup')
@@ -160,20 +165,22 @@ add('ModeArrowLeftText', (6, 1146, 44, 68), text='◀', size=cap(40), align='C',
 add('ModeCardLeft', (45, 975, 215, 400), parent='GameModeGroup')
 add('ModeCardLeft/ModeCardArt', (58, 988, 190, 236), create='IMG', parent='ModeCardLeft')
 add('ModeCardLeft/ModeLockIcon', (126, 1116, 68, 80), parent='ModeCardLeft')
-add('ModeCardLeft/ModeTitleText', (45, 1228, 215, 52), size=cap(34), align='C', color=WHITE,
-    parent='ModeCardLeft')
-add('ModeCardLeft/ModeSubText', (45, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
-    parent='ModeCardLeft')
+# ⚠ 테두리는 그림 위·**글자 아래**다. 맨 나중에 두면 기운 테가 글자를 잘라 먹는다.
 add('ModeCardLeft/ModeCardFrame', (45, 975, 215, 400), create='IMG', parent='ModeCardLeft')
+# 기운 테 안쪽에 들어와야 한다 — 칸 폭(215)을 다 쓰면 양끝이 테에 물린다
+add('ModeCardLeft/ModeTitleText', (64, 1230, 178, 48), size=cap(25), align='C', color=WHITE,
+    parent='ModeCardLeft')
+add('ModeCardLeft/ModeSubText', (68, 1284, 170, 36), size=cap(17), align='C', color=BLUE,
+    parent='ModeCardLeft')
 
 add('ModeCardRight', (686, 975, 215, 400), parent='GameModeGroup')
 add('ModeCardRight/ModeCardArt', (699, 988, 190, 236), create='IMG', parent='ModeCardRight')
 add('ModeCardRight/ModeLockIcon', (767, 1116, 68, 80), parent='ModeCardRight')
-add('ModeCardRight/ModeTitleText', (686, 1228, 215, 52), size=cap(34), align='C', color=WHITE,
-    parent='ModeCardRight')
-add('ModeCardRight/ModeSubText', (686, 1282, 215, 40), size=cap(26), align='C', color=BLUE,
-    parent='ModeCardRight')
 add('ModeCardRight/ModeCardFrame', (686, 975, 215, 400), create='IMG', parent='ModeCardRight')
+add('ModeCardRight/ModeTitleText', (705, 1230, 178, 48), size=cap(25), align='C', color=WHITE,
+    parent='ModeCardRight')
+add('ModeCardRight/ModeSubText', (709, 1284, 170, 36), size=cap(17), align='C', color=BLUE,
+    parent='ModeCardRight')
 
 add('ModeArrowRight', (891, 1138, 44, 84), parent='GameModeGroup')
 add('ModeArrowRightText', (891, 1146, 44, 68), text='▶', size=cap(40), align='C', color=WHITE,
@@ -206,26 +213,27 @@ add('MainActionBar', (27, 1466, 886, 190))
 
 add('HostButton', (36, 1487, 267, 128), parent='MainActionBar')
 add('HostButtonArt', (50, 1492, 118, 118), parent='HostButton')
-add('HostButtonTitleText', (176, 1510, 124, 52), text='HOST',
-    size=cap(40), align='L', color=WHITE, parent='HostButton')
-add('HostButtonSubText', (176, 1562, 124, 40), text='호스트 육성',
-    size=cap(28), align='L', color=BLUE, parent='HostButton')
-add('HostButton/NotifyBadge', (270, 1488, 34, 34), parent='HostButton')
+add('HostButtonTitleText', (168, 1508, 116, 52), text='HOST',
+    size=cap(32), align='C', color=WHITE, parent='HostButton')
+# ⚠ 일본어 부제(「育成・アクティブスキル・図鑑」)가 한국어보다 훨씬 길다 — 작게 잡는다
+add('HostButtonSubText', (162, 1558, 128, 40), text='호스트 육성',
+    size=cap(24), align='C', color=BLUE, parent='HostButton')
+add('HostButton/NotifyBadge', (286, 1478, 34, 34), parent='HostButton')
 
 add('ChapterButton', (320, 1481, 302, 140), parent='MainActionBar')
 add('ChapterButtonArt', (346, 1496, 112, 112), parent='ChapterButton')
-add('ChapterButtonTitleText', (468, 1506, 140, 54), size=cap(40), align='L', color=DARK,
+add('ChapterButtonTitleText', (462, 1504, 152, 54), size=cap(36), align='C', color=DARK,
     parent='ChapterButton')
-add('ChapterButtonSubText', (468, 1560, 140, 42), size=cap(28), align='L', color=DARK,
+add('ChapterButtonSubText', (462, 1558, 152, 40), size=cap(24), align='C', color=DARK,
     parent='ChapterButton')
 
 add('ShopButton', (641, 1487, 264, 128), parent='MainActionBar')
 add('ShopButtonArt', (656, 1492, 118, 118), parent='ShopButton')
-add('ShopButtonTitleText', (782, 1510, 124, 52), text='SHOP',
-    size=cap(40), align='L', color=WHITE, parent='ShopButton')
-add('ShopButtonSubText', (782, 1562, 124, 40), text='상점',
-    size=cap(28), align='L', color=LAV, parent='ShopButton')
-add('ShopButton/NotifyBadge', (872, 1488, 34, 34), parent='ShopButton')
+add('ShopButtonTitleText', (772, 1508, 116, 52), text='SHOP',
+    size=cap(32), align='C', color=WHITE, parent='ShopButton')
+add('ShopButtonSubText', (766, 1558, 128, 40), text='상점',
+    size=cap(24), align='C', color=LAV, parent='ShopButton')
+add('ShopButton/NotifyBadge', (888, 1478, 34, 34), parent='ShopButton')
 
 add('VersionText', (30, 1636, 100, 22), size=cap(14), align='L', color=GREY)
 

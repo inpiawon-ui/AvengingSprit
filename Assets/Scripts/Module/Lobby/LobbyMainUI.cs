@@ -176,6 +176,18 @@ namespace Game.Module.Lobby
         private const float ChestTickSeconds = 1f;
         private float _chestTick;
 
+        /// <summary>
+        /// 다 된 칸에서 버튼 글자를 올리는 양. 젬값 줄이 사라진 만큼이다.
+        ///
+        /// 세는 중엔 「젬값 / 즉시 열기」 두 줄이라 글자가 버튼 아래쪽에 앉는다.
+        /// 다 되면 한 줄뿐이라 그대로 두면 버튼 바닥에 붙어 잘려 보인다.
+        /// </summary>
+        private const float ChestLabelReadyLift = 22f;
+
+        /// <summary>표가 적어 둔 버튼 글자의 제자리. 올렸다 내렸다 하려면 기준이 있어야 한다.</summary>
+        private float _chestLabelY;
+        private bool _chestLabelYRead;
+
         private void Update()
         {
             if (_chests == null) return;
@@ -193,6 +205,12 @@ namespace Game.Module.Lobby
             {
                 var root = _ui.Find($"ChestSlot{i + 1}");
                 if (root == null) continue;
+
+                if (!_chestLabelYRead)
+                {
+                    var first = _ui.Find(root, "ChestActionLabelText") as RectTransform;
+                    if (first != null) { _chestLabelY = first.anchoredPosition.y; _chestLabelYRead = true; }
+                }
 
                 var s = _chests.Get(i);
                 bool has = !s.IsEmpty;
@@ -229,7 +247,15 @@ namespace Game.Module.Lobby
                 }
                 // 금색 버튼 위에 흰 글자는 안 읽힌다
                 var label = _ui.Find(root, "ChestActionLabelText")?.GetComponent<TMPro.TextMeshProUGUI>();
-                if (label != null) label.color = ready ? new Color(0.16f, 0.11f, 0.02f) : Color.white;
+                if (label != null)
+                {
+                    label.color = ready ? new Color(0.16f, 0.11f, 0.02f) : Color.white;
+                    // 다 된 칸은 젬값 줄이 사라진다 — 글자를 버튼 한가운데로 올린다
+                    var lr = (RectTransform)label.transform;
+                    var p = lr.anchoredPosition;
+                    p.y = _chestLabelY + (ready ? ChestLabelReadyLift : 0f);
+                    lr.anchoredPosition = p;
+                }
 
                 TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
                 TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));

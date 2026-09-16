@@ -439,8 +439,8 @@ ui.common.quit	종료	終了
 ui.common.cancel	취소	キャンセル	
 ui.shop.leave	나간다	店を出る	
 ui.shop.title	상점	ショップ	
-ui.lobby.host_button.sub	육성 · 액티브 스킬 · 도감	育成・アクティブスキル・図鑑	
-ui.lobby.shop_button.sub	상점 · 패키지 · 재화	ショップ・パック・通貨	
+ui.lobby.host_button.sub	호스트 육성	ホスト育成	Train Hosts
+ui.lobby.shop_button.sub	상점	ショップ	Shop
 ui.lobby.search.title	유령 수색	ゴースト捜索	Ghost Search
 ui.lobby.search.desc	유령이 도시 곳곳을 떠돌며 골드를 찾아옵니다.	ゴーストが街を巡ってゴールドを集めてきます。	Your ghost roams the city and brings back gold.
 ui.lobby.search.claim	보상 받기	報酬を受け取る	Claim
