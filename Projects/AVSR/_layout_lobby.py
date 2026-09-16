@@ -179,7 +179,7 @@ add('ModeArrowLeftText', (6, 1146, 44, 68), text='◀', size=cap(40), align='C',
     parent='ModeArrowLeft')
 
 add('ModeCardLeft', (45, 975, 215, 400), parent='GameModeGroup')
-add('ModeCardLeft/ModeCardArt', (58, 988, 190, 236), create='IMG', parent='ModeCardLeft')
+add('ModeCardLeft/ModeCardArt', (64, 994, 178, 222), create='IMG', parent='ModeCardLeft')
 add('ModeCardLeft/ModeLockIcon', (126, 1116, 68, 80), parent='ModeCardLeft')
 # 기운 테 안쪽에 들어와야 한다 — 칸 폭(215)을 다 쓰면 양끝이 테에 물린다
 add('ModeCardLeft/ModeTitleText', (72, 1232, 162, 44), size=cap(26), align='C', color=WHITE,
@@ -188,7 +188,7 @@ add('ModeCardLeft/ModeSubText', (76, 1282, 154, 34), size=cap(19), align='C', co
     parent='ModeCardLeft')
 
 add('ModeCardRight', (686, 975, 215, 400), parent='GameModeGroup')
-add('ModeCardRight/ModeCardArt', (699, 988, 190, 236), create='IMG', parent='ModeCardRight')
+add('ModeCardRight/ModeCardArt', (705, 994, 178, 222), create='IMG', parent='ModeCardRight')
 add('ModeCardRight/ModeLockIcon', (767, 1116, 68, 80), parent='ModeCardRight')
 add('ModeCardRight/ModeTitleText', (713, 1232, 162, 44), size=cap(26), align='C', color=WHITE,
     parent='ModeCardRight')
@@ -201,7 +201,7 @@ add('ModeArrowRightText', (891, 1146, 44, 68), text='▶', size=cap(40), align='
 
 # 가운데 칸은 **맨 나중에** — 양옆 칸 위로 올라와야 한다(표 순서 = 그리는 순서)
 add('ModeCardCenter', (280, 960, 378, 428), parent='GameModeGroup')
-add('ModeCenterArt', (288, 968, 362, 236), parent='ModeCardCenter')
+add('ModeCenterArt', (298, 978, 342, 222), parent='ModeCardCenter')
 add('ModeMainBadge', (288, 964, 116, 50), parent='ModeCardCenter')
 add('ModeMainBadgeText', (288, 970, 116, 40), text='MAIN', size=cap(26), align='C', color=DARK,
     parent='ModeMainBadge')

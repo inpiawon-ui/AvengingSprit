@@ -376,7 +376,10 @@ namespace Game.Editor
             //   칸 높이가 글자 두 줄을 담을 만큼 높을 때만 접는다.
             bool tall = it.size > 0f && it.h > it.size * 1.9f;
             SetWrap(tmp, it.wrap || tall);
-            tmp.overflowMode = TextOverflowModes.Overflow;
+            // ⚠ 여기서 `Overflow` 로 되돌리지 마라. 위에서 `Truncate` 로 맞춘 것을 덮어
+            //   자동 축소가 **가로를 안 보게** 된다 — 2026-09-16 에 실제로 이 한 줄 때문에
+            //   로비 글자가 전부 칸 밖으로 흘렀고, 위만 고쳤다가 고쳐지지 않아 한참 헤맸다.
+            if (it.size <= 0f) tmp.overflowMode = TextOverflowModes.Overflow;
             tmp.margin = Vector4.zero;
 
             if (!string.IsNullOrEmpty(it.color) &&

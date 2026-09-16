@@ -235,8 +235,12 @@ namespace Game.Module.Lobby
                 if (art != null)
                 {
                     var sprite = ChestSpriteOf(s.ChestKey);
-                    if (sprite != null && art.sprite != sprite) art.sprite = sprite;
-                    // 그림이 없으면 흰 네모가 뜬다 — 차라리 안 보이는 편이 낫다
+                    if (sprite != null && art.sprite != sprite)
+                    {
+                        art.sprite = sprite;
+                        art.color = Color.white;   // 자리표시 색이 남아 있으면 그림이 물든다
+                    }
+                    // 그림이 없으면 네모가 뜬다 — 차라리 안 보이는 편이 낫다
                     art.enabled = sprite != null;
                 }
 
@@ -391,7 +395,9 @@ namespace Game.Module.Lobby
             var sprite = _modeArts != null && modeIndex >= 0 && modeIndex < _modeArts.Length
                 ? _modeArts[modeIndex] : null;
             img.sprite = sprite;
-            img.color = sprite != null ? Color.white : new Color(0.16f, 0.22f, 0.36f, 1f);
+            img.color = Color.white;
+            // 그림이 없으면 색 네모가 남는다 — 안 그리는 편이 낫다
+            img.enabled = sprite != null;
         }
 
         // ── 하단 바 ──────────────────────────────────────────────

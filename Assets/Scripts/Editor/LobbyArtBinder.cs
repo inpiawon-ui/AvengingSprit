@@ -145,6 +145,19 @@ namespace Game.Editor
                      { ("ModeCardLeft", "modecard_side_l"), ("ModeCardRight", "modecard_side") })
                 if (Put(root.transform, card, file)) bound++; else missing++;
 
+            // ⚠ 코드가 나중에 채우는 칸은 **비워 둔다.** 그림 없이 색만 남으면
+            //   시커먼 네모가 그려져 「상자가 안 보인다」로 읽힌다(2026-09-16).
+            foreach (var node in new[] { "ChestArt", "ModeCardArt" })
+            {
+                var hits = new System.Collections.Generic.List<Transform>();
+                Collect(root.transform, node, hits);
+                foreach (var t in hits)
+                {
+                    var img = t.GetComponent<Image>();
+                    if (img != null && img.sprite == null) img.enabled = false;
+                }
+            }
+
             foreach (var (node, file) in BindAll)
             {
                 var hits = new System.Collections.Generic.List<Transform>();

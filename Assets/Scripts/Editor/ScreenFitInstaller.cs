@@ -46,6 +46,19 @@ namespace Game.Editor
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
         };
 
+        /// <summary>
+        /// 나눠 갖되 **폭은 그대로 두고 간격만** 벌리는 판.
+        ///
+        /// 모드 카드는 기운 사다리꼴 낱장이라 9-슬라이스가 안 된다 — 폭을 늘리면
+        /// 테가 뭉개지고 안쪽 그림이 카드 밖으로 나간다(2026-09-16).
+        /// </summary>
+        private static readonly (string prefab, string node)[] SpaceOnly =
+        {
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardLeft"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardCenter"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
+        };
+
         /// <summary>폭을 늘리면 안 되는 판. 「프리팹 : 노드 이름」.</summary>
         private static readonly (string prefab, string node)[] Locks =
         {
@@ -114,16 +127,38 @@ namespace Game.Editor
                     }
                 }
 
+                // ⚠ 목록에서 뺀 것은 **컴포넌트도 떼어 낸다.** 한 번 붙은 잠금은 저절로
+                //   사라지지 않는다 — 로비 게임모드 판이 그래서 계속 720 에 갇혀 있었고,
+                //   잠긴 판은 `ScreenFit` 이 통째로 건너뛰어 안쪽 나눠갖기도 안 돌았다(2026-09-16).
+                foreach (var lockComp in root.GetComponentsInChildren<ScreenFitLock>(true))
+                {
+                    bool wanted = false;
+                    foreach (var (p, node) in Locks)
+                        if (p == path && node == lockComp.name) { wanted = true; break; }
+                    foreach (var (p, node) in CenterLocks)
+                        if (p == path && node == lockComp.name) { wanted = true; break; }
+                    if (!wanted)
+                    {
+                        Debug.Log($"[ScreenFit] 잠금 뗌: {lockComp.name}");
+                        UnityEngine.Object.DestroyImmediate(lockComp, true);
+                    }
+                }
+
                 foreach (var (p, node) in Shares)
                 {
                     if (p != path) continue;
                     var t = FindByName(root.transform, node);
                     if (t == null) { Debug.LogWarning($"[ScreenFit] 나눌 노드 없음: {node}"); continue; }
-                    if (t.GetComponent<ScreenFitShare>() == null)
+                    var share = t.GetComponent<ScreenFitShare>();
+                    if (share == null)
                     {
-                        t.gameObject.AddComponent<ScreenFitShare>();
+                        share = t.gameObject.AddComponent<ScreenFitShare>();
                         shared++;
                     }
+                    bool spaceOnly = false;
+                    foreach (var (sp, sn) in SpaceOnly)
+                        if (sp == path && sn == node) { spaceOnly = true; break; }
+                    share.SetSpaceOnly(spaceOnly);
                 }
 
                 PrefabUtility.SaveAsPrefabAsset(root, path);

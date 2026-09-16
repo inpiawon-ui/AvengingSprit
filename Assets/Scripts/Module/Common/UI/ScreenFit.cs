@@ -386,6 +386,11 @@ namespace Game.Module.Common.UI
 
             // ⚠ **늘린 뒤에** 나눈다. 먼저 나누면 부모가 아직 그린 폭이라 남는 몫이 0 으로
             //   잡히고, 판이 하나도 안 넓어진다.
+            //
+            // ⚠⚠ 앵커를 고쳐 놓아도 `rect` 는 **레이아웃을 다시 돌려야** 새 폭이 된다.
+            //   그냥 이어서 읽으면 늘리기 전 값이라 남는 몫이 0 으로 잡힌다 —
+            //   로비 게임모드 칸이 태블릿에서 안 넓어지고 왼쪽에 몰렸다(2026-09-16).
+            Canvas.ForceUpdateCanvases();
             ApplyShares();
         }
 
@@ -398,6 +403,20 @@ namespace Game.Module.Common.UI
         //   크기를 바꿔 주면 그룹이 알아서 벌려 놓는다.
 
         private readonly List<int> _shareBuf = new();
+
+        /// <summary>
+        /// 그 판이 **실제로 얼마나 넓어졌는지**. `rect.width` 를 쓰면 안 된다 —
+        /// 앵커를 막 고쳐 놓은 참이라 레이아웃이 아직 안 돌아 **늘리기 전 값**이 나온다.
+        /// 태블릿에서 게임모드 칸이 안 넓어지고 왼쪽에 몰린 원인이었다(2026-09-16).
+        ///
+        /// 스트레치면 부모를 타고 올라가 계산하고, 고정 폭이면 적어 둔 값을 그대로 쓴다.
+        /// </summary>
+        private static float EffectiveWidth(RectTransform rt)
+        {
+            if (rt.anchorMin.x > 0.01f || rt.anchorMax.x < 0.99f) return rt.sizeDelta.x;
+            float parentWidth = rt.parent is RectTransform p ? EffectiveWidth(p) : rt.rect.width;
+            return parentWidth - rt.offsetMin.x + rt.offsetMax.x;   // offsetMax.x 는 음수다
+        }
 
         private void ApplyShares()
         {
@@ -426,11 +445,17 @@ namespace Game.Module.Common.UI
                 if (_shareBuf.Count == 0 || sum <= 0f) continue;
 
                 if (parent is not RectTransform prt) continue;
-                float extra = prt.rect.width - _entries[_shareBuf[0]].X.ParentBase;
+                float extra = EffectiveWidth(prt) - _entries[_shareBuf[0]].X.ParentBase;
                 if (extra < 0f) extra = 0f;
 
                 // 그린 왼쪽 변 순서로 늘어놓는다
                 _shareBuf.Sort((a, b) => _entries[a].X.Min.CompareTo(_entries[b].X.Min));
+
+                // 늘리면 안 되는 그림(기운 낱장 등)은 **폭을 지키고 간격만** 벌린다.
+                bool spaceOnly = _entries[_shareBuf[0]].Rect
+                    .GetComponent<ScreenFitShare>()?.SpaceOnly ?? false;
+                float spread = spaceOnly && _shareBuf.Count > 1
+                    ? extra / (_shareBuf.Count - 1) : 0f;
 
                 float cursor = _entries[_shareBuf[0]].X.Min;
                 float prevAuthoredRight = cursor;
@@ -438,8 +463,9 @@ namespace Game.Module.Common.UI
                 {
                     var e = _entries[_shareBuf[n]];
                     float gap = e.X.Min - prevAuthoredRight;     // 그린 간격은 그대로
+                    if (n > 0) gap += spread;
                     cursor += gap;
-                    float w = e.X.Size + extra * (e.X.Size / sum);
+                    float w = spaceOnly ? e.X.Size : e.X.Size + extra * (e.X.Size / sum);
 
                     e.Rect.sizeDelta = new Vector2(w, e.Rect.sizeDelta.y);
                     if (!e.LayoutOwned)

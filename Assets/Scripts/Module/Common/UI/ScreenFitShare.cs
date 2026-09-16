@@ -19,5 +19,18 @@ namespace Game.Module.Common.UI
     [RequireComponent(typeof(RectTransform))]
     public sealed class ScreenFitShare : MonoBehaviour
     {
+        [SerializeField] private bool _spaceOnly;
+
+        /// <summary>
+        /// 켜면 **폭은 그린 값 그대로 두고 사이 간격만** 벌린다.
+        ///
+        /// ⚠ 늘리면 안 되는 그림이 있다. 로비 모드 카드는 기운 사다리꼴 낱장이라
+        ///   9-슬라이스가 안 되고, 폭을 늘리면 테가 뭉개진다(2026-09-16).
+        ///   그런 줄은 카드를 그대로 두고 **벌어지게** 하는 것이 맞다.
+        /// </summary>
+        public bool SpaceOnly => _spaceOnly;
+
+        /// <summary>에디터 도구가 켠다.</summary>
+        public void SetSpaceOnly(bool on) => _spaceOnly = on;
     }
 }
