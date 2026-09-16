@@ -23,6 +23,8 @@ namespace Game.Editor
             "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
         };
 
+        private const string Lobby = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
+
         /// <summary>부모의 남는 폭을 형제와 나눠 갖는 판. 「프리팹 : 노드 이름」.</summary>
         private static readonly (string prefab, string node)[] Shares =
         {
@@ -41,9 +43,8 @@ namespace Game.Editor
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "HostButton"),
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChapterButton"),
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButton"),
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardLeft"),
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardCenter"),
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
+            // ⚠ 모드 카드 세 장은 여기 없다. 간격만 벌렸더니 4:3 에서 카드 사이에
+            //   110 px 짜리 구멍 두 개가 생겼다 — 지금은 `Zooms` 가 통째로 키운다.
         };
 
         /// <summary>
@@ -54,9 +55,25 @@ namespace Game.Editor
         /// </summary>
         private static readonly (string prefab, string node)[] SpaceOnly =
         {
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardLeft"),
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardCenter"),
-            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
+            // (현재 없음 — 모드 카드는 `Zooms` 로 옮겼다)
+        };
+
+        /// <summary>
+        /// 남는 폭을 **배율**로 먹는 무리. 「프리팹 : 노드 이름」 — 같은 부모끼리 한 무리다.
+        ///
+        /// 폭을 늘릴 수 없는 기운 낱장(모드 카드)이라 통째로 키운다. 배율은
+        /// 부모 폭과 **부모 높이**가 정하므로, 부모 박스가 곧 세로 예산이다.
+        /// 자세한 것은 <see cref="ScreenFitZoom"/>.
+        /// </summary>
+        private static readonly (string prefab, string node)[] Zooms =
+        {
+            (Lobby, "ModeCardLeft"),
+            (Lobby, "ModeCardCenter"),
+            (Lobby, "ModeCardRight"),
+            // 화살표도 같이 커져야 카드 옆에 붙어 있다 — 빼 두면 4:3 에서
+            // 가운데로 흘러 카드 위에 올라탄다(2026-09-16).
+            (Lobby, "ModeArrowLeft"),
+            (Lobby, "ModeArrowRight"),
         };
 
         /// <summary>
@@ -171,7 +188,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/ScreenFit 달기")]
         public static void Run()
         {
-            int added = 0, locked = 0, shared = 0, centered = 0, spread = 0, topped = 0;
+            int added = 0, locked = 0, shared = 0, centered = 0, spread = 0, topped = 0, zoomed = 0;
 
             foreach (var path in Roots)
             {
@@ -285,6 +302,27 @@ namespace Game.Editor
                     if (!centerNodes.Contains(c.transform))
                         UnityEngine.Object.DestroyImmediate(c, true);
 
+                // 남는 폭을 배율로 먹을 무리
+                var zoomNodes = new System.Collections.Generic.List<Transform>();
+                foreach (var (p, node) in Zooms)
+                {
+                    if (p != path) continue;
+                    var t = FindByName(root.transform, node);
+                    if (t == null) { Debug.LogWarning($"[ScreenFit] 키울 노드 없음: {node}"); continue; }
+                    zoomNodes.Add(t);
+                }
+                foreach (var t in zoomNodes)
+                    if (t.GetComponent<ScreenFitZoom>() == null)
+                    {
+                        t.gameObject.AddComponent<ScreenFitZoom>();
+                        zoomed++;
+                    }
+                // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다
+                foreach (var c in root.GetComponentsInChildren<ScreenFitZoom>(true))
+                    if (!zoomNodes.Contains(c.transform))
+                        UnityEngine.Object.DestroyImmediate(c, true);
+
+                var shareNodes = new System.Collections.Generic.List<Transform>();
                 foreach (var (p, node) in Shares)
                 {
                     if (p != path) continue;
@@ -300,14 +338,20 @@ namespace Game.Editor
                     foreach (var (sp, sn) in SpaceOnly)
                         if (sp == path && sn == node) { spaceOnly = true; break; }
                     share.SetSpaceOnly(spaceOnly);
+                    shareNodes.Add(t);
                 }
+                // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다.
+                //   모드 카드를 `Zooms` 로 옮겼는데 나눠갖기가 남아 있으면 둘이 싸운다.
+                foreach (var c in root.GetComponentsInChildren<ScreenFitShare>(true))
+                    if (!shareNodes.Contains(c.transform))
+                        UnityEngine.Object.DestroyImmediate(c, true);
 
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 PrefabUtility.UnloadPrefabContents(root);
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"[ScreenFit] 루트 {added}개 · 잠금 {locked} · 나눠갖기 {shared} · 가운데 {centered} · 세로 벌리기 {spread} · 위쪽 붙이기 {topped}");
+            Debug.Log($"[ScreenFit] 루트 {added}개 · 잠금 {locked} · 나눠갖기 {shared} · 가운데 {centered} · 세로 벌리기 {spread} · 위쪽 붙이기 {topped} · 배율 {zoomed}");
         }
 
         /// <summary>

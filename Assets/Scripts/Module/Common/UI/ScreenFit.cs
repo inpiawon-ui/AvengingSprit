@@ -257,6 +257,13 @@ namespace Game.Module.Common.UI
                     SetSide(i, horizontal, Side.Center);
                     continue;
                 }
+                // 배율로 먹는 칸은 가운데 기준이어야 한다 — `ApplyZoom` 이 「가운데에서의
+                // 어긋남」에 배율을 곱해 자리를 벌린다.
+                if (_entries[i].Rect.GetComponent<ScreenFitZoom>() != null)
+                {
+                    SetSide(i, horizontal, Side.Center);
+                    continue;
+                }
                 // 세로만 위쪽 변에 못 박는다 — 판이 커질 때 글 덩어리가 찢어지지 않게.
                 if (!horizontal && _entries[i].Rect.GetComponent<ScreenFitTop>() != null)
                 {
@@ -419,6 +426,65 @@ namespace Game.Module.Common.UI
             Canvas.ForceUpdateCanvases();
             ApplyShares();
             ApplySpreadY();
+            ApplyZoom();
+        }
+
+        // ── 남는 폭을 배율로 먹는다 ──────────────────────────────
+        //
+        // 기운 낱장이라 폭을 못 늘리는 판(게임모드 카드)을 위한 길이다. 폭 대신
+        // **통째로 키운다** — 카드도 커지고 카드 사이 간격도 그린 비율대로 벌어진다.
+        // 자세한 이유는 `ScreenFitZoom`.
+
+        private readonly List<int> _zoomBuf = new();
+
+        private void ApplyZoom()
+        {
+            for (int i = 0; i < _entries.Count; i++)
+            {
+                if (_entries[i].Rect == null) continue;
+                if (_entries[i].Rect.GetComponent<ScreenFitZoom>() == null) continue;
+                var parent = _entries[i].Rect.parent;
+                if (parent is not RectTransform prt) continue;
+
+                // 같은 부모의 형제를 모은다 (앞에서 이미 처리한 무리는 건너뛴다)
+                bool first = true;
+                for (int k = 0; k < i; k++)
+                    if (_entries[k].Rect != null && _entries[k].Rect.parent == parent
+                        && _entries[k].Rect.GetComponent<ScreenFitZoom>() != null)
+                    { first = false; break; }
+                if (!first) continue;
+
+                _zoomBuf.Clear();
+                float tallest = 0f;
+                for (int k = i; k < _entries.Count; k++)
+                {
+                    var e = _entries[k];
+                    if (e.Rect == null || e.Rect.parent != parent) continue;
+                    if (e.Rect.GetComponent<ScreenFitZoom>() == null) continue;
+                    _zoomBuf.Add(k);
+                    if (e.Y.Size > tallest) tallest = e.Y.Size;
+                }
+                if (_zoomBuf.Count == 0 || tallest <= 0f) continue;
+
+                float baseW = _entries[_zoomBuf[0]].X.ParentBase;
+                if (baseW <= 0f) continue;
+
+                // 넘치면 안 되니 **둘 중 작은 쪽**이다
+                float byWidth = EffectiveWidth(prt) / baseW;
+                float byHeight = prt.rect.height / tallest;
+                float k2 = Mathf.Min(byWidth, byHeight);
+                if (k2 <= 1.0001f) continue;   // 9:16 · 20:9 — 키울 것이 없다
+
+                for (int n = 0; n < _zoomBuf.Count; n++)
+                {
+                    var e = _entries[_zoomBuf[n]];
+                    if (e.Rect.parent != e.Parent) continue;
+                    e.Rect.localScale = new Vector3(k2, k2, 1f);
+                    // 가운데 앵커라 `anchoredPosition` 이 곧 「가운데에서의 어긋남」이다.
+                    // 배율을 곱하면 자리도 같은 비율로 벌어진다.
+                    e.Rect.anchoredPosition *= k2;
+                }
+            }
         }
 
         // ── 남는 세로를 형제끼리 나눈다 ──────────────────────────

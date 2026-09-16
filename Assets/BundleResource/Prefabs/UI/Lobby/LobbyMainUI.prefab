@@ -312,6 +312,7 @@ GameObject:
   - component: {fileID: 6121280231826665952}
   - component: {fileID: 8065805997474190440}
   - component: {fileID: 4011405903012003406}
+  - component: {fileID: 7109740416455086193}
   m_Layer: 0
   m_Name: ModeArrowLeft
   m_TagString: Untagged
@@ -336,7 +337,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -156.79999}
+  m_AnchoredPosition: {x: 0, y: -163.70001}
   m_SizeDelta: {x: 39.8, y: 73.5}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6121280231826665952
@@ -421,6 +422,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7109740416455086193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481824028006496719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e02bcb1f61a5d04b87954d4f5d75097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitZoom
 --- !u!1 &495502019372503219
 GameObject:
   m_ObjectHideFlags: 0
@@ -3932,6 +3945,7 @@ GameObject:
   - component: {fileID: 5186868331926553038}
   - component: {fileID: 2663133545325093460}
   - component: {fileID: 7118618251882508019}
+  - component: {fileID: 1325583839926774239}
   m_Layer: 0
   m_Name: ModeArrowRight
   m_TagString: Untagged
@@ -3956,7 +3970,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 680.2, y: -156.79999}
+  m_AnchoredPosition: {x: 680.2, y: -163.70001}
   m_SizeDelta: {x: 39.8, y: 73.5}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5186868331926553038
@@ -4041,6 +4055,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1325583839926774239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3144337365192081876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e02bcb1f61a5d04b87954d4f5d75097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitZoom
 --- !u!1 &3182525897533810593
 GameObject:
   m_ObjectHideFlags: 0
@@ -5747,7 +5773,7 @@ GameObject:
   - component: {fileID: 7182929952460817169}
   - component: {fileID: 7502009718287351910}
   - component: {fileID: 8940844687332015623}
-  - component: {fileID: 8600362535816325014}
+  - component: {fileID: 4604171262486122121}
   m_Layer: 0
   m_Name: ModeCardCenter
   m_TagString: Untagged
@@ -5778,7 +5804,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 192.8, y: -13.700012}
+  m_AnchoredPosition: {x: 192.8, y: -20.600037}
   m_SizeDelta: {x: 329, y: 367.3}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7182929952460817169
@@ -5863,7 +5889,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8600362535816325014
+--- !u!114 &4604171262486122121
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5872,10 +5898,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4341186199392116856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e02bcb1f61a5d04b87954d4f5d75097, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
-  _spaceOnly: 1
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitZoom
 --- !u!1 &4420568104796096921
 GameObject:
   m_ObjectHideFlags: 0
@@ -8611,8 +8636,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -692.5}
-  m_SizeDelta: {x: 720, y: 376.5}
+  m_AnchoredPosition: {x: 0, y: -685.6}
+  m_SizeDelta: {x: 720, y: 420.1}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &153276525809307489
 MonoBehaviour:
@@ -9791,7 +9816,7 @@ GameObject:
   - component: {fileID: 7363974045515597243}
   - component: {fileID: 5878183614423464727}
   - component: {fileID: 19399402597280905}
-  - component: {fileID: 1187433196003752599}
+  - component: {fileID: 5760313696699370380}
   m_Layer: 0
   m_Name: ModeCardLeft
   m_TagString: Untagged
@@ -9819,7 +9844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20.7, y: -48.200012}
+  m_AnchoredPosition: {x: 20.7, y: -55.100037}
   m_SizeDelta: {x: 182.1, y: 309.9}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7363974045515597243
@@ -9904,7 +9929,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1187433196003752599
+--- !u!114 &5760313696699370380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9913,10 +9938,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7439864718794327022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e02bcb1f61a5d04b87954d4f5d75097, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
-  _spaceOnly: 1
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitZoom
 --- !u!1 &7512084333887055738
 GameObject:
   m_ObjectHideFlags: 0
@@ -9951,7 +9975,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 18.4, y: -5.299988}
+  m_AnchoredPosition: {x: 18.4, y: -12.200012}
   m_SizeDelta: {x: 8.4, y: 30.6}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &3228122340745612414
@@ -10783,7 +10807,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 44.4, y: -2.2999878}
+  m_AnchoredPosition: {x: 44.4, y: -9.200012}
   m_SizeDelta: {x: 229.5, y: 38.3}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6059433734296865575
@@ -13025,7 +13049,7 @@ GameObject:
   - component: {fileID: 7460737219397430917}
   - component: {fileID: 8374999105656616689}
   - component: {fileID: 8621877369101536190}
-  - component: {fileID: 5364095074005494127}
+  - component: {fileID: 3082692296790121392}
   m_Layer: 0
   m_Name: ModeCardRight
   m_TagString: Untagged
@@ -13053,7 +13077,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 518, y: -48.200012}
+  m_AnchoredPosition: {x: 518, y: -55.100037}
   m_SizeDelta: {x: 182.1, y: 309.9}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7460737219397430917
@@ -13138,7 +13162,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5364095074005494127
+--- !u!114 &3082692296790121392
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13147,10 +13171,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9144463941720343752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22e3077eb33f8694ba7b5e6c651361b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e02bcb1f61a5d04b87954d4f5d75097, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitShare
-  _spaceOnly: 1
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitZoom
 --- !u!1 &9153537826565886090
 GameObject:
   m_ObjectHideFlags: 0
