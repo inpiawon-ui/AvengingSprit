@@ -3948,17 +3948,9 @@ namespace Game.Module.InGame
         }
 
         private int EnemyHpOf(HostEntry e)
-            => e.HostKey == TrashSkeletonKey ? TestSkeletonHp   // ⚠ 시험 — 해골 체력 고정
-             : SandboxHp(Mathf.Max(1, Mathf.RoundToInt(
+            => SandboxHp(Mathf.Max(1, Mathf.RoundToInt(
                    (e.HasCanon ? e.CanonHp : _config.EnemyHp(e.Hp))
                    * EnemyHpGrowth() * _config.EnemyHpMul)));
-
-        /// <summary>
-        /// ⚠ **시험용.** 넉백 · 경직을 눈으로 보려고 해골 체력을 고정한다(기획 2026-09-16).
-        /// 한두 대에 죽어 밀리는 것을 볼 틈이 없었다. 시험이 끝나면 이 상수와 위 한 줄을 지운다.
-        /// 보스 부하로 서는 해골은 0.6 배(600)다.
-        /// </summary>
-        private const int TestSkeletonHp = 1000;
 
         private int EnemyAtkOf(HostEntry e)
             => Mathf.Max(1, Mathf.RoundToInt(
