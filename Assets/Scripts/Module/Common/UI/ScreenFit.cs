@@ -257,6 +257,12 @@ namespace Game.Module.Common.UI
                     SetSide(i, horizontal, Side.Center);
                     continue;
                 }
+                // 세로만 위쪽 변에 못 박는다 — 판이 커질 때 글 덩어리가 찢어지지 않게.
+                if (!horizontal && _entries[i].Rect.GetComponent<ScreenFitTop>() != null)
+                {
+                    SetSide(i, horizontal, Side.Max);   // 세로에서 Max 가 위쪽이다
+                    continue;
+                }
                 items.Add(i);
             }
             if (items.Count == 0) return;

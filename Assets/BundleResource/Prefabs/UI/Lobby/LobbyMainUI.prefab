@@ -1995,6 +1995,7 @@ GameObject:
   - component: {fileID: 458383322116049592}
   - component: {fileID: 779440795872456716}
   - component: {fileID: 2902677131729707405}
+  - component: {fileID: 538371059342713494}
   m_Layer: 0
   m_Name: GhostSearchDescText
   m_TagString: Untagged
@@ -2135,6 +2136,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
   _key: ui.lobby.search.desc
+--- !u!114 &538371059342713494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306478069416406028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &1415694354258483302
 GameObject:
   m_ObjectHideFlags: 0
@@ -2494,6 +2507,7 @@ GameObject:
   - component: {fileID: 7537204437807112198}
   - component: {fileID: 3535689496046834652}
   - component: {fileID: 4283682068857673949}
+  - component: {fileID: 3847597906709379284}
   m_Layer: 0
   m_Name: GhostSearchHelpText
   m_TagString: Untagged
@@ -2620,6 +2634,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3847597906709379284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744703103226450736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &1824942660226426985
 GameObject:
   m_ObjectHideFlags: 0
@@ -2870,6 +2896,7 @@ GameObject:
   - component: {fileID: 7794536707647670640}
   - component: {fileID: 6280905874582209890}
   - component: {fileID: 3509502032889417838}
+  - component: {fileID: 210131571781619223}
   m_Layer: 0
   m_Name: GhostSearchHelpButton
   m_TagString: Untagged
@@ -2979,6 +3006,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &210131571781619223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076280482815707012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &2109756957741644294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4014,6 +4053,7 @@ GameObject:
   - component: {fileID: 3949594545779177671}
   - component: {fileID: 7724605103980533395}
   - component: {fileID: 5140304502890597914}
+  - component: {fileID: 4319589420625903127}
   m_Layer: 0
   m_Name: GhostSearchTitleText
   m_TagString: Untagged
@@ -4153,6 +4193,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.LocalizedText
   _key: ui.lobby.search.title
+--- !u!114 &4319589420625903127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182525897533810593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &3255522947116252115
 GameObject:
   m_ObjectHideFlags: 0
@@ -4543,7 +4595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
-  _grow: 0
+  _grow: 1
 --- !u!1 &3684154481602925224
 GameObject:
   m_ObjectHideFlags: 0
@@ -5835,6 +5887,7 @@ GameObject:
   - component: {fileID: 3882662154832997274}
   - component: {fileID: 7825585726097083146}
   - component: {fileID: 3016533733727973224}
+  - component: {fileID: 8431507913403994247}
   m_Layer: 0
   m_Name: GhostSearchTimerText
   m_TagString: Untagged
@@ -5961,6 +6014,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8431507913403994247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4420568104796096921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &4671858592756567742
 GameObject:
   m_ObjectHideFlags: 0
@@ -6825,6 +6890,7 @@ GameObject:
   - component: {fileID: 6052102519419405258}
   - component: {fileID: 5107456214270067978}
   - component: {fileID: 8480616202852425006}
+  - component: {fileID: 4806494893712842389}
   m_Layer: 0
   m_Name: GhostSearchScrim
   m_TagString: Untagged
@@ -6889,6 +6955,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4806494893712842389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368381545305548421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &5460745962404692590
 GameObject:
   m_ObjectHideFlags: 0
@@ -7471,6 +7549,7 @@ GameObject:
   - component: {fileID: 4727382261030216580}
   - component: {fileID: 2494834523646618139}
   - component: {fileID: 7682119066140617730}
+  - component: {fileID: 4170113854908908768}
   m_Layer: 0
   m_Name: GhostSearchGoldText
   m_TagString: Untagged
@@ -7597,6 +7676,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4170113854908908768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5898078010813755399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &5924837884272648852
 GameObject:
   m_ObjectHideFlags: 0
@@ -7784,6 +7875,7 @@ GameObject:
   - component: {fileID: 4954846748417588894}
   - component: {fileID: 3845440595123007338}
   - component: {fileID: 4036431279868172364}
+  - component: {fileID: 8708275193846134149}
   m_Layer: 0
   m_Name: GhostSearchIcon
   m_TagString: Untagged
@@ -7848,6 +7940,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8708275193846134149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5996740578113361918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &6026168641918372201
 GameObject:
   m_ObjectHideFlags: 0
@@ -9178,7 +9282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0380e865881e2f7469b43890a10e1092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitSpread
-  _grow: 0
+  _grow: 1
 --- !u!1 &6978061144312772282
 GameObject:
   m_ObjectHideFlags: 0
@@ -11121,6 +11225,7 @@ GameObject:
   - component: {fileID: 2329529714233798755}
   - component: {fileID: 2071085811781821324}
   - component: {fileID: 2303949545548554771}
+  - component: {fileID: 7918195820005123093}
   m_Layer: 0
   m_Name: GhostSearchGoldIcon
   m_TagString: Untagged
@@ -11185,6 +11290,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7918195820005123093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8067831269767875876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &8163345920699963145
 GameObject:
   m_ObjectHideFlags: 0
@@ -11966,6 +12083,7 @@ GameObject:
   - component: {fileID: 6032061395357505969}
   - component: {fileID: 5108216066980248472}
   - component: {fileID: 3343655366427309243}
+  - component: {fileID: 2094176947349334231}
   m_Layer: 0
   m_Name: GhostSearchBigGhost
   m_TagString: Untagged
@@ -12030,6 +12148,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2094176947349334231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8791070247547688672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d64886aa748934e8d77e3d5fa7d1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.ScreenFitTop
 --- !u!1 &8849618930934173281
 GameObject:
   m_ObjectHideFlags: 0

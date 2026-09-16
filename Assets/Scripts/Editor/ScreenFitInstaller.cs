@@ -106,8 +106,30 @@ namespace Game.Editor
         ///
         /// 비워 두면 남는 만큼을 칸 사이 간격으로 고르게 나눈다.
         /// </summary>
+        /// <summary>
+        /// 판이 세로로 커져도 **위쪽 변에 붙어 있을** 칸. 「프리팹 : 노드 이름」.
+        ///
+        /// 안 붙이면 위쪽 글자는 위에, 아래쪽 글자는 아래에 붙어 한 덩어리였던 글이
+        /// 위아래로 찢어진다 — 유령 수색 판에서 설명글만 금화 더미까지 내려갔다(2026-09-16).
+        /// </summary>
+        private static readonly (string prefab, string node)[] Tops =
+        {
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchScrim"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchIcon"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchTitleText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchHelpButton"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchHelpText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchTimerText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchGoldIcon"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchGoldText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchDescText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchBigGhost"),
+        };
+
         private static readonly (string prefab, string node)[] Grows =
         {
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "GhostSearchPanel"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestBand"),
         };
 
         private static readonly (string prefab, string node)[] Spreads =
@@ -149,7 +171,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/ScreenFit 달기")]
         public static void Run()
         {
-            int added = 0, locked = 0, shared = 0, centered = 0, spread = 0;
+            int added = 0, locked = 0, shared = 0, centered = 0, spread = 0, topped = 0;
 
             foreach (var path in Roots)
             {
@@ -203,6 +225,24 @@ namespace Game.Editor
                         UnityEngine.Object.DestroyImmediate(lockComp, true);
                     }
                 }
+
+                // 판이 커져도 위쪽에 붙어 있을 칸
+                var topNodes = new System.Collections.Generic.List<Transform>();
+                foreach (var (p, node) in Tops)
+                {
+                    if (p != path) continue;
+                    CollectByName(root.transform, node, topNodes);
+                }
+                foreach (var t in topNodes)
+                    if (t.GetComponent<ScreenFitTop>() == null)
+                    {
+                        t.gameObject.AddComponent<ScreenFitTop>();
+                        topped++;
+                    }
+                // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다
+                foreach (var c in root.GetComponentsInChildren<ScreenFitTop>(true))
+                    if (!topNodes.Contains(c.transform))
+                        UnityEngine.Object.DestroyImmediate(c, true);
 
                 // 남는 세로를 나눠 벌릴 줄
                 var spreadNodes = new System.Collections.Generic.List<Transform>();
@@ -267,7 +307,7 @@ namespace Game.Editor
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로, {centered}개를 가운데로, {spread}개를 세로로 벌리기로 했다");
+            Debug.Log($"[ScreenFit] 루트 {added}개 · 잠금 {locked} · 나눠갖기 {shared} · 가운데 {centered} · 세로 벌리기 {spread} · 위쪽 붙이기 {topped}");
         }
 
         /// <summary>
