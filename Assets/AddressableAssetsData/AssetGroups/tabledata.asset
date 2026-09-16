@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ccd5484d9f3d38449c5fd6e516d34b7
+    m_Address: TableData/ChestTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 70ef5c5b22f3cb74dad27c93348f3fc1
     m_Address: TableData/EventTable
     m_ReadOnly: 0

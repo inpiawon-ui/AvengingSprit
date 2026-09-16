@@ -9247,6 +9247,31 @@ namespace Game.Module.InGame
                 RewardHostMemory = memory,
                 RewardGem = gem,
             });
+
+            GrantChest(cleared, stages);
+        }
+
+        /// <summary>
+        /// 판이 끝나면 상자가 나온다 (기획 2026-09-16). 무엇을 이겼는지가 등급을 정한다 —
+        /// 챕터를 끝냈으면 금, 정예를 깼으면 은, 방이라도 지나왔으면 나무.
+        ///
+        /// ⚠ 한 방도 못 지나온 판은 **안 준다.** 시작하자마자 죽어도 상자가 나오면
+        ///   죽는 것이 상자 농사가 된다.
+        /// </summary>
+        private void GrantChest(bool cleared, int stages)
+        {
+            if (stages <= 0) return;
+            if (!CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests)) return;
+
+            string key = cleared ? "gold" : _eliteRoomsCleared > 0 ? "silver" : "wood";
+            bool accepted = chests.TryGrant(key, out int slot);
+            // 칸이 다 차서 못 받았으면 **조용히 버리지 않는다.** 왜 안 들어왔는지 알 길이 없어진다.
+            _bus.Publish(new ChestGrantedEvent
+            {
+                GrantedChestKey = key,
+                Slot = slot,
+                Accepted = accepted,
+            });
         }
 
         private void PublishHp()

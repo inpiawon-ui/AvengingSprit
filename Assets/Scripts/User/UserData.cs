@@ -17,7 +17,9 @@ namespace Game.User
     {
         // v2 — 호스트 숙련도·파편 추가. 기존 저장(v1)은 두 배열이 비어 있으므로
         //      전원 봉인(숙련도 0)으로 읽힌다. 잃는 값이 없어 마이그레이션 코드가 필요 없다.
-        public const int CurrentSaveVersion = 2;
+        // v3 — 보물상자 3칸 추가. 기존 저장은 세 배열이 비어 있어 **빈 칸 셋**으로 읽힌다.
+        //      길이는 읽을 때 맞추므로(`NormalizeChests`) 마이그레이션 코드가 필요 없다.
+        public const int CurrentSaveVersion = 3;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -68,8 +70,39 @@ namespace Game.User
         public int[] hostMastery = Array.Empty<int>();
         public int[] hostShards = Array.Empty<int>();
 
+        // ── 보물상자 ─────────────────────────────────────────
+        //
+        // 세 칸이 **동시에** 시간을 센다. 저장하는 것은 «완료 시각»(Unix ms, UTC)이라
+        // 앱을 꺼도 흐른다.
+        //
+        // ⚠ 총 소요 초를 같이 저장한다. 기기 시각을 **뒤로** 돌리면 완료 시각까지의
+        //   거리가 통째로 늘어나는데, 총 소요로 잘라야 남은 시간이 부풀지 않는다.
+        //   (앞으로 돌리는 치팅은 서버가 붙기 전까지 못 막는다 — TBD-SRV)
+        [Header("보물상자")]
+        public string[] chestKeys = Array.Empty<string>();
+        public long[] chestUnlockAt = Array.Empty<long>();
+        public int[] chestSeconds = Array.Empty<int>();
+
         [Header("선택")]
         public string selectedHostId = string.Empty;
+
+        /// <summary>
+        /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —
+        /// 옛 저장(v2)은 배열이 비어 있고, 칸 수가 바뀌면 길이가 어긋난다.
+        /// </summary>
+        public void NormalizeChests(int slotCount)
+        {
+            chestKeys = Resize(chestKeys, slotCount, string.Empty);
+            chestUnlockAt = Resize(chestUnlockAt, slotCount, 0L);
+            chestSeconds = Resize(chestSeconds, slotCount, 0);
+        }
+
+        private static T[] Resize<T>(T[] src, int n, T fill)
+        {
+            var dst = new T[n];
+            for (int i = 0; i < n; i++) dst[i] = src != null && i < src.Length ? src[i] : fill;
+            return dst;
+        }
 
         public static UserData CreateNew() => new UserData();
     }

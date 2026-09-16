@@ -110,7 +110,25 @@ namespace Game.User
         bool TrySpendStamina(int amount);
 
         void AddCurrency(int gold, int gem);
+
+        /// <summary>영구 재화 네 가지를 한 번에 더한다. 상자를 열 때 쓴다.</summary>
+        void AddGrowthCurrency(int gold, int gem, int spiritCore, int hostMemory);
+
         void SetProgress(int chapter, int stage);
+
+        // ── 보물상자 칸 ──────────────────────────────────────
+        //
+        // 저장 필드를 직접 건드리지 않게 여기를 거친다(constants.md 6절 제약 4).
+        // `ChestModule` 전용이다 — 다른 곳에서 부르지 않는다.
+
+        int ChestSlotCount { get; }
+        /// <summary>그 칸의 상자 키. 빈 칸이면 빈 문자열.</summary>
+        string GetChestKey(int slot);
+        /// <summary>해제 완료 시각 (Unix ms, UTC).</summary>
+        long GetChestUnlockAt(int slot);
+        /// <summary>총 소요 초. 남은 시간을 자를 때 쓴다.</summary>
+        int GetChestSeconds(int slot);
+        void SetChestSlot(int slot, string chestKey, long unlockAt, int seconds);
 
         /// <summary>
         /// 스테이지 종료 보상. 골드·고스트 EXP 지급 후 저장까지 한 번에 처리한다.

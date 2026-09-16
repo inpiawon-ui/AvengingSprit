@@ -151,6 +151,52 @@ description: 이 게임의 모듈 구현 명세 — 새 모듈 추가 시 코드
 
 ---
 
+## 6. ChestModule (보물상자)
+
+**파일**: `Assets/Scripts/Module/Common/Chest/` — `ChestModule.cs` · `IChestService.cs` · `ChestTable.cs` · `ChestSlotState.cs` / 이벤트는 `Assets/Scripts/Module/Events/ChestEvents.cs`
+
+- 역할: 인게임을 끝내고 받은 상자를 로비 **3칸**에 담아 두고, 실시간으로 해제 시간을 세고, 젬으로 즉시 열고, 보상을 지급한다. 크래시 로얄 방식(기획 2026-09-16).
+- 의존: `IEventBus`, `IResourceManager`, `IPlayerDataService`
+- 등록 방식: `[Module(Layer = ModuleLayer.Game)]` 자동 등록 · `IChestService` 제공 · `ITickable`(1초마다 완료 검사)
+- 데이터: `Assets/BundleResource/TableData/ChestTable.asset` · 주소 `TableData/ChestTable` · 라벨 `label_tabledata`
+- 저장: `UserData` v3 — `chestKeys[3]` · `chestUnlockAt[3]` · `chestSeconds[3]`
+
+### 핵심 멤버
+
+| 멤버 | 하는 일 |
+|---|---|
+| `SlotCount` | 3 (칸 수는 표가 아니라 코드 상수 — 화면이 3칸으로 그려져 있다) |
+| `Get(slot)` | `ChestSlotState` — 비었는지 · 무슨 상자인지 · 남은 초 · 즉시 열기 젬값 |
+| `TryGrant(chestKey)` | 빈 칸에 담고 그 순간부터 시간을 센다. 칸이 다 차면 `false` |
+| `GemCostOf(slot)` | 남은 시간 × 등급별 분당 젬값 (올림, 최소 1) |
+| `TryOpenNow(slot)` | 젬을 치르고 즉시 완료 상태로 |
+| `TryClaim(slot)` | 완료된 칸을 열어 보상 지급 후 칸을 비운다 |
+| `RewardOf(chestKey)` | 굴린 보상(골드·스피릿코어·호스트기억·젬·파편) |
+
+이벤트: `ChestChangedEvent`(칸 상태가 바뀜) · `ChestGrantedEvent{ChestKey, Slot}` · `ChestOpenedEvent{ChestKey, 보상}`
+
+### 규칙과 그 이유
+
+- **세 칸이 동시에 센다.** 크래시 로얄은 한 번에 하나만 여는데, 목업이 두 칸을 동시에 세고 있다(3시간 12분 · 1시간 48분). 목업이 정본이다.
+- **시계는 기기 UTC.** 저장하는 것은 «완료 시각»(Unix ms)이라 앱을 꺼도 흐른다.
+  - ⚠ 기기 시각을 **뒤로** 돌리면 남은 시간이 통째로 늘어난다. 그래서 상자마다 총 소요 초(`chestSeconds`)를 같이 저장하고 **남은 시간을 [0, 총 소요] 로 자른다.**
+  - 앞으로 돌리는 치팅은 막지 못한다. 서버가 붙기 전까지 감수한다(TBD-SRV).
+- **칸이 다 차면 상자를 안 준다.** 클리어 때 빈 칸이 없으면 `TryGrant` 가 `false` 를 돌려주고, 인게임 결과 화면이 「칸이 없어 상자를 못 받았다」를 알린다. 조용히 버리면 왜 안 들어왔는지 알 길이 없다.
+- **보상은 열 때 굴린다.** 받을 때 굴려 저장하면 저장 파일을 들여다보고 마음에 안 들면 다시 받는 식이 가능해진다.
+- **등급은 무엇을 이겼는지로 정한다** — 일반 스테이지 = 나무, 엘리트 = 은, 보스 = 금. 표의 `chestKey` 로 적는다.
+- 젬값·해제 시간·보상 범위는 전부 표에 있다. **코드에 숫자를 적지 않는다.** (밸런스 TBD-BAL)
+
+### 화면 노드 이름 (프리팹 = 바인딩 키)
+
+`ChestBand` > `ChestSlot1`·`ChestSlot2`·`ChestSlot3`, 각 칸 안에
+`ChestSlotFrame` · `ChestArt` · `ChestEmptyText` · `ChestTimeIcon` · `ChestTimeText` ·
+`ChestReadyBanner` · `ChestReadyText` · `ChestActionButton` > (`ChestActionGemIcon` · `ChestActionCostText` · `ChestActionLabelText`)
+
+세 칸의 자식 이름은 **같다.** `UIBinder.Find(slotRoot, name)` 으로 칸 안에서 찾는다 —
+게임 모드 좌우 칸(`ModeTitleText` 등)과 같은 방식이다.
+
+---
+
 ## API DTO 작성 규칙
 
 **위치**: `Assets/Scripts/Module/Common/Dto/`  

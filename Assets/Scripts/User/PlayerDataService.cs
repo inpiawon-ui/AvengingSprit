@@ -128,6 +128,7 @@ namespace Game.User
         public async UniTask LoadAsync()
         {
             _data = await _repo.LoadAsync();
+            _data.NormalizeChests(ChestSlotCount);   // 옛 저장(v2)은 상자 배열이 비어 있다
             UnsealUnlocked();
             _bus?.Publish(new UserDataReadyEvent { LoadedGhostLevel = _data.ghostLevel });
             PublishCurrency();
@@ -476,6 +477,43 @@ namespace Game.User
             _data.gold = Mathf.Max(0, _data.gold + gold);
             _data.gem  = Mathf.Max(0, _data.gem + gem);
             PublishCurrency();
+        }
+
+        public void AddGrowthCurrency(int gold, int gem, int spiritCore, int hostMemory)
+        {
+            if (_data == null) return;
+            _data.gold       = Mathf.Max(0, _data.gold + gold);
+            _data.gem        = Mathf.Max(0, _data.gem + gem);
+            _data.spiritCore = Mathf.Max(0, _data.spiritCore + spiritCore);
+            _data.hostMemory = Mathf.Max(0, _data.hostMemory + hostMemory);
+            PublishCurrency();
+        }
+
+        // ── 보물상자 칸 ──────────────────────────────────────
+
+        public int ChestSlotCount => 3;
+
+        private bool ChestSlotOk(int slot)
+            => _data != null && _data.chestKeys != null
+               && slot >= 0 && slot < _data.chestKeys.Length;
+
+        public string GetChestKey(int slot)
+            => ChestSlotOk(slot) ? _data.chestKeys[slot] ?? string.Empty : string.Empty;
+
+        public long GetChestUnlockAt(int slot)
+            => ChestSlotOk(slot) ? _data.chestUnlockAt[slot] : 0L;
+
+        public int GetChestSeconds(int slot)
+            => ChestSlotOk(slot) ? _data.chestSeconds[slot] : 0;
+
+        public void SetChestSlot(int slot, string chestKey, long unlockAt, int seconds)
+        {
+            if (_data == null) return;
+            _data.NormalizeChests(ChestSlotCount);
+            if (slot < 0 || slot >= ChestSlotCount) return;
+            _data.chestKeys[slot] = chestKey ?? string.Empty;
+            _data.chestUnlockAt[slot] = unlockAt;
+            _data.chestSeconds[slot] = seconds;
         }
 
         public void SetProgress(int chapter, int stage)
