@@ -71,12 +71,13 @@ namespace Game.Editor
             ("mailbutton", Vector4.zero),
             ("settingsbutton", Vector4.zero),
             ("notifybadge", Vector4.zero),
-            ("seasonpassicon", Vector4.zero),
-            ("eventicon", Vector4.zero),
             // ⚠ 세로 테두리를 0 으로 두지 마라. 위·아래 줄 높이가 0 이 되어 늘릴 때
             //   아틀라스의 **옆 스프라이트를 긁어 온다**(2026-09-16 보라 상자 유령).
             ("actionbarbackground", new Vector4(120, 24, 120, 24)),
             ("modelockicon", Vector4.zero),
+            // 모드 카드 그림 — 자물쇠·테두리는 그림에 넣지 않는다(게임이 따로 얹는다)
+            ("modeart_survival", Vector4.zero),
+            ("modeart_defense", Vector4.zero),
             ("modearrow_left", Vector4.zero),
             ("modearrow_right", Vector4.zero),
             ("chesttimeplate", new Vector4(40, 0, 40, 0)),
@@ -96,12 +97,6 @@ namespace Game.Editor
             ("GemCounter", "hudpill"),
             ("GemIcon", "gemicon"),
             ("MailButton", "mailbutton"),
-
-            // 시즌 패스 / 이벤트 — 재화 칸과 같은 모서리 깎인 테두리를 쓴다
-            ("SeasonPassButton", "hudpill"),
-            ("SeasonPassArt", "seasonpassicon"),
-            ("EventButton", "hudpill"),
-            ("EventArt", "eventicon"),
 
             // 유령 수색 — 그림 위에 **속 빈** 테두리를 얹는다
             ("GhostSearchArt", "ghostsearchart"),
@@ -255,10 +250,6 @@ namespace Game.Editor
         /// </summary>
         private static readonly (string node, string key)[] LocKeys =
         {
-            ("SeasonPassTitleText", "ui.lobby.season_pass"),
-            ("SeasonPassStateText", "ui.lobby.season_pass.state"),
-            ("EventTitleText", "ui.lobby.event"),
-            ("EventStateText", "ui.lobby.event.state"),
             ("GhostSearchTitleText", "ui.lobby.search.title"),
             ("GhostSearchDescText", "ui.lobby.search.desc"),
             ("GhostSearchClaimText", "ui.lobby.search.claim"),

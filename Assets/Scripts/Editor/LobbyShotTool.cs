@@ -50,9 +50,11 @@ namespace Game.Editor
             SessionState.SetInt(Key, 1);
             SessionState.SetBool(Settled, false);
             SessionState.SetInt(Key + ".turned", -1);
-            // ⚠ 목업은 한국어다. 저장된 언어가 일본어로 남아 있으면 글자 길이가 달라
-            //   「목업과 같나」를 잴 수가 없다(2026-09-16 실제로 일본어로 찍혔다).
-            PlayerPrefs.SetInt("game.language", (int)Game.Module.Common.Language.Korean);
+            // 출시 언어(일본어)로 고정해 찍는다. 저장된 언어가 무엇이든 같은 조건에서
+            // 찍혀야 어제 것과 오늘 것을 견줄 수 있다.
+            // ⚠ 목업은 한국어라 글자 길이가 다르다 — 자리 대조는 목업 좌표로 하고,
+            //   **글자가 칸을 넘치는지**는 이 일본어 스샷으로 본다(가장 긴 언어).
+            PlayerPrefs.SetInt("game.language", (int)Game.Module.Common.Language.Japanese);
             PlayerPrefs.Save();
             SetSize(Shots[0].w, Shots[0].h);
             if (!EditorApplication.isPlaying) EditorApplication.EnterPlaymode();

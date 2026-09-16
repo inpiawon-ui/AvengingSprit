@@ -248,7 +248,17 @@ namespace Game.Module.Common.UI
         {
             var items = new List<int>();
             for (int i = from; i < to; i++)
-                if (!Axis(_entries[i], horizontal).Full) items.Add(i);
+            {
+                if (Axis(_entries[i], horizontal).Full) continue;
+                // 「가운데에 둬라」 표시가 붙은 칸은 여기서 바로 가른다 — 좌·우로 찢으면
+                //   작은 칸(상자 칸)의 한 줄이 두 동강 난다(2026-09-16).
+                if (_entries[i].Rect.GetComponent<ScreenFitCenter>() != null)
+                {
+                    SetSide(i, horizontal, Side.Center);
+                    continue;
+                }
+                items.Add(i);
+            }
             if (items.Count == 0) return;
 
             // 판 안쪽은 낱개로, **좌·우 둘로만** 가린다.

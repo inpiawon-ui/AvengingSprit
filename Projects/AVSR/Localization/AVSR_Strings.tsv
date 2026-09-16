@@ -425,10 +425,6 @@ ui.consumable.ally.name	동료	仲間
 ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	次の部屋で体がひとつ一緒に戦う	
 ui.consumable.freeze.name	정지	停止	
 ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部屋で敵が{0:0}秒止まる	
-ui.lobby.season_pass	시즌 패스	シーズンパス	Season Pass
-ui.lobby.season_pass.state	12일 남음	残り12日	12 days left
-ui.lobby.event	이벤트	イベント	Event
-ui.lobby.event.state	진행 중	開催中	Ongoing
 ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	
 ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	
 ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	

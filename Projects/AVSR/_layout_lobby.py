@@ -22,7 +22,7 @@
   **밴드 개념을 되살리지 마라.** 한 배율로 곱하면 목업 그대로 나온다.
 
 ── 2026-09-16 개편에서 걷어낸 것 ────────────────────────────────────
-  로고(LogoLockup) · 일일로그인 · 기능탭 ·
+  로고(LogoLockup) · 시즌패스 · 이벤트 · 일일로그인 · 기능탭 ·
   고스트 위젯(Lv/EXP) · 스태미나 · 챕터 카드 · 가운데 큰 유령/포탈링
 프리팹에서 **지운다**(숨기지 않는다). 남겨 두면 다음 사람이 왜 안 보이는지 찾는다.
 
@@ -55,8 +55,6 @@ DIM = '#8FA8C8'
 DARK = '#2A1B05'          # 금색 버튼 위 어두운 글자
 LAV = '#C9A0F0'
 GREY = '#4A5468'
-YELLOW = '#FFF34D'        # 시즌 패스 남은 날
-PINK = '#FF6DE9'          # 이벤트 진행 중
 
 
 def cap(c):
@@ -94,26 +92,6 @@ add('GemCounter/PlusButton', (772, 27, 46, 46), parent='GemCounter')
 
 add('MailButton', (846, 18, 76, 64), parent='TopHudGroup')
 add('MailButton/NotifyBadge', (900, 8, 34, 34), parent='MailButton')
-
-# ── 시즌 패스 / 이벤트 (목업 실측) ──────────────────────────────────
-#
-# 기능은 아직 없다. 유령 수색과 같은 취급 — 글자·그림·계층만 세워 둔다.
-# 목업 실측(2026-09-16): 판 502~700 / 721~915, 세로 112~192
-add('SeasonPassButton', (502, 112, 198, 80), create='BTN', parent='LobbyMainUI')
-add('SeasonPassArt', (520, 124, 56, 62), create='IMG', parent='SeasonPassButton')
-add('SeasonPassTitleText', (589, 121, 92, 34), text='시즌 패스',
-    size=cap(26), align='L', color=WHITE, create='TMP', parent='SeasonPassButton')
-add('SeasonPassStateText', (589, 155, 92, 34), text='12일 남음',
-    size=cap(26), align='L', color=YELLOW, create='TMP', parent='SeasonPassButton')
-add('SeasonPassButton/NotifyBadge', (673, 103, 34, 34), create='IMG', parent='SeasonPassButton')
-
-add('EventButton', (721, 112, 194, 80), create='BTN', parent='LobbyMainUI')
-add('EventArt', (726, 128, 90, 52), create='IMG', parent='EventButton')
-add('EventTitleText', (818, 121, 92, 34), text='이벤트',
-    size=cap(26), align='L', color=WHITE, create='TMP', parent='EventButton')
-add('EventStateText', (818, 155, 92, 34), text='진행 중',
-    size=cap(26), align='L', color=PINK, create='TMP', parent='EventButton')
-add('EventButton/NotifyBadge', (891, 103, 34, 34), create='IMG', parent='EventButton')
 
 # ── 유령 수색 (방치) ────────────────────────────────────────────────
 #

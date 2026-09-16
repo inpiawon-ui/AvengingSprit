@@ -59,6 +59,41 @@ namespace Game.Editor
             ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ModeCardRight"),
         };
 
+        /// <summary>
+        /// 부모 가운데에 두는 칸. 「프리팹 : 노드 이름」 — 이름이 같은 것은 **전부**.
+        ///
+        /// 나눠 갖는 판 안쪽은 기본이 좌·우 둘로만 가르는 것인데, 상자 칸·하단 바 칸처럼
+        /// **작고 가운데로 모인 칸**에서는 그러면 한 줄이 두 동강 난다 — 태블릿에서
+        /// 시계는 왼쪽 끝, 남은 시간 글자는 오른쪽 끝에 붙었다(2026-09-16).
+        /// </summary>
+        private static readonly (string prefab, string node)[] Centers =
+        {
+            // 상자 칸 속 — 그림·시간 줄·버튼 속 글자
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestArt"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestEmptyText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestTimePlate"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestTimeIcon"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestTimeText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestReadyBanner"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestReadyText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestActionButton"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestActionGemIcon"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestActionCostText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestActionLabelText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChestReadyLabelText"),
+
+            // 하단 바 칸 속 — 아이콘과 두 줄 글자
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "HostButtonArt"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "HostButtonTitleText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "HostButtonSubText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChapterButtonArt"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChapterButtonTitleText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ChapterButtonSubText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButtonArt"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButtonTitleText"),
+            ("Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab", "ShopButtonSubText"),
+        };
+
         /// <summary>폭을 늘리면 안 되는 판. 「프리팹 : 노드 이름」.</summary>
         private static readonly (string prefab, string node)[] Locks =
         {
@@ -89,7 +124,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/ScreenFit 달기")]
         public static void Run()
         {
-            int added = 0, locked = 0, shared = 0;
+            int added = 0, locked = 0, shared = 0, centered = 0;
 
             foreach (var path in Roots)
             {
@@ -144,6 +179,24 @@ namespace Game.Editor
                     }
                 }
 
+                // 가운데에 둘 칸 — 이름이 같은 것이 여럿이므로 전부 찾는다
+                var centerNodes = new System.Collections.Generic.List<Transform>();
+                foreach (var (p, node) in Centers)
+                {
+                    if (p != path) continue;
+                    CollectByName(root.transform, node, centerNodes);
+                }
+                foreach (var t in centerNodes)
+                    if (t.GetComponent<ScreenFitCenter>() == null)
+                    {
+                        t.gameObject.AddComponent<ScreenFitCenter>();
+                        centered++;
+                    }
+                // ⚠ 목록에서 뺀 것은 컴포넌트도 뗀다 — 잠금과 같은 이유다
+                foreach (var c in root.GetComponentsInChildren<ScreenFitCenter>(true))
+                    if (!centerNodes.Contains(c.transform))
+                        UnityEngine.Object.DestroyImmediate(c, true);
+
                 foreach (var (p, node) in Shares)
                 {
                     if (p != path) continue;
@@ -166,7 +219,7 @@ namespace Game.Editor
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로 했다");
+            Debug.Log($"[ScreenFit] 루트 {added}개에 달았고 {locked}개를 잠갔고 {shared}개를 나눠갖기로, {centered}개를 가운데로 했다");
         }
 
         /// <summary>
@@ -175,6 +228,13 @@ namespace Game.Editor
         ///
         /// 여러 번 돌려도 같은 값이 나온다 — 되돌리는 계산이 가운데 앵커에도 그대로 들어맞는다.
         /// </summary>
+        private static void CollectByName(Transform root, string name,
+                                         System.Collections.Generic.List<Transform> into)
+        {
+            if (root.name == name && !into.Contains(root)) into.Add(root);
+            for (int i = 0; i < root.childCount; i++) CollectByName(root.GetChild(i), name, into);
+        }
+
         private static void CenterAnchor(RectTransform rt)
         {
             float w = rt.sizeDelta.x, h = rt.sizeDelta.y;
