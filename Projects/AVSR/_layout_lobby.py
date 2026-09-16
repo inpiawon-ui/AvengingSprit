@@ -121,6 +121,12 @@ add('EventButton/NotifyBadge', (891, 103, 34, 34), create='IMG', parent='EventBu
 # 나중에 기능을 붙일 때 화면을 다시 안 짜도 되게.
 add('GhostSearchPanel', (0, 231, MOCK_W, 376), create='IMG', parent='LobbyMainUI')
 add('GhostSearchArt', (27, 231, 886, 376), create='IMG', parent='GhostSearchPanel')
+# 글자 뒤 어두운 판 — 골목 그림 위에서 글자가 읽히게 한다(목업 실측 27~471 / 236~510).
+# ⚠ 그림 **다음**, 글자 **앞**에 적는다. 표 순서가 곧 그리는 순서다.
+# ⚠ 납품 그림 444x274 안에서 판은 **324x260 만** 차지한다(오른쪽·아래가 투명).
+#   칸을 그림 크기대로 두면 판이 73 % 폭으로 그려져 글자가 판 밖으로 나간다.
+#   판이 27~471 / 236~510 에 떨어지게 칸을 키운다 — 444*444/324, 274*274/260.
+add('GhostSearchScrim', (27, 236, 608, 289), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchIcon', (58, 250, 124, 94), create='IMG', parent='GhostSearchPanel')
 # 목업 가운데에서 보물상자 위를 나는 큰 유령 — 빠져 있었다(2026-09-16)
 add('GhostSearchBigGhost', (372, 276, 220, 170), create='IMG', parent='GhostSearchPanel')
@@ -134,8 +140,8 @@ add('GhostSearchTimerText', (206, 302, 290, 54), text='04:32:18',
 add('GhostSearchGoldIcon', (58, 354, 76, 76), create='IMG', parent='GhostSearchPanel')
 add('GhostSearchGoldText', (150, 360, 320, 58), text='+ 12,640 G',
     size=cap(40), align='L', color=GOLD, create='TMP', parent='GhostSearchPanel')
-add('GhostSearchDescText', (48, 432, 478, 96), text='유령이 도시 곳곳을 떠돌며 골드를 찾아옵니다.',
-    size=cap(26), align='L', color=WHITE, wrap=True, create='TMP', parent='GhostSearchPanel')
+add('GhostSearchDescText', (48, 426, 440, 86), text='유령이 도시 곳곳을 떠돌며 골드를 찾아옵니다.',
+    size=cap(24), align='L', color=WHITE, wrap=True, create='TMP', parent='GhostSearchPanel')
 add('GhostSearchClaimButton', (628, 506, 272, 82), create='BTN', parent='GhostSearchPanel')
 add('GhostSearchClaimIcon', (650, 518, 58, 58), create='IMG', parent='GhostSearchClaimButton')
 add('GhostSearchClaimText', (712, 524, 178, 46), text='보상 받기',
@@ -171,24 +177,26 @@ for i in range(3):
         size=cap(30), align='C', color=GOLD, create='TMP', parent=slot)
     add(f'{slot}/ChestEmptyText', c(20, 100, 242, 48), text='빈 칸',
         size=cap(28), align='C', color=DIM, create='TMP', parent=slot)
-    add(f'{slot}/ChestTimeIcon', c(44, 142, 36, 36), create='IMG', parent=slot)
-    add(f'{slot}/ChestTimeText', c(88, 140, 150, 42), text='3시간 12분',
-        size=cap(30), align='L', color=WHITE, create='TMP', parent=slot)
+    # 목업은 시계·남은 시간 줄 뒤에 어두운 판이 깔려 있다 — 글자가 그냥 떠 있으면 안 읽힌다
+    add(f'{slot}/ChestTimePlate', c(19, 125, 246, 48), create='IMG', parent=slot)
+    add(f'{slot}/ChestTimeIcon', c(73, 137, 40, 38), create='IMG', parent=slot)
+    add(f'{slot}/ChestTimeText', c(121, 134, 152, 40), text='3시간 12분',
+        size=cap(31), align='L', color=WHITE, create='TMP', parent=slot)
     # ⚠ 버튼 글자·아이콘을 **버튼의 자식으로 두지 않는다.** 적용기의 `parent` 는 경로가
     #   아니라 단일 이름만 찾는데, 세 칸의 버튼 이름이 같아 전부 첫 칸으로 붙는다.
     #   칸 직속으로 두고 버튼 위에 그린다 — 글자는 raycast 대상이 아니라 눌림은 버튼이 받는다.
-    add(f'{slot}/ChestActionButton', c(18, 185, 246, 70), create='BTN', parent=slot)
-    add(f'{slot}/ChestActionGemIcon', c(60, 192, 40, 40), create='IMG', parent=slot)
-    add(f'{slot}/ChestActionCostText', c(108, 190, 110, 44), text='1,000',
+    add(f'{slot}/ChestActionButton', c(19, 181, 250, 70), create='BTN', parent=slot)
+    add(f'{slot}/ChestActionGemIcon', c(101, 189, 47, 38), create='IMG', parent=slot)
+    add(f'{slot}/ChestActionCostText', c(158, 187, 120, 42), text='1,000',
         size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
     # 「즉시 열기」는 젬값 줄 **아래** 한 줄이다 — 위로 올리면 젬값과 겹친다.
     # 목업 실측: 버튼 806~876 · 젬값 줄 810~854 · 라벨 850~874.
-    add(f'{slot}/ChestActionLabelText', c(18, 228, 246, 28), text='즉시 열기',
-        size=cap(26), align='C', color=WHITE, create='TMP', parent=slot)
+    add(f'{slot}/ChestActionLabelText', c(19, 226, 250, 32), text='즉시 열기',
+        size=cap(28), align='C', color=WHITE, create='TMP', parent=slot)
     # ⚠ 완료 칸의 「보상 획득하기」는 **칸을 따로 둔다.** 예전에는 같은 칸을 22px 올려
     #   돌려 썼는데, 젬값 줄이 없어 글자가 커져야 하는데도 상자 높이가 그대로라
     #   목업의 절반 크기로 찍혔다(2026-09-16). 두 상태는 글자 크기가 다르다.
-    add(f'{slot}/ChestReadyLabelText', c(18, 200, 246, 46), text='보상 획득하기',
+    add(f'{slot}/ChestReadyLabelText', c(19, 190, 250, 50), text='보상 획득하기',
         size=cap(34), align='C', color=DARK, create='TMP', parent=slot)
 
 # ── 게임 모드 ───────────────────────────────────────────────────────
@@ -217,32 +225,34 @@ def side(tag, x):
 
 side('ModeCardLeft', 27)
 
-add('ModeArrowLeft', (0, 1116, 40, 80), parent='GameModeGroup')
-add('ModeArrowLeftText', (0, 1124, 40, 64), text='◀', size=cap(30), align='C', color=WHITE,
-    parent='ModeArrowLeft')
+# ⚠ 화살표를 글꼴 글자(`◀`)로 찍지 마라. 목업은 속이 빈 **두꺼운 꺾쇠**인데
+#   글자는 속이 꽉 찬 삼각형이라 결이 다르다(2026-09-16).
+add('ModeArrowLeft', (0, 1110, 52, 96), create='BTN', parent='GameModeGroup')
+add('ModeArrowLeftArt', (0, 1110, 52, 96), create='IMG', parent='ModeArrowLeft')
 
 side('ModeCardRight', 677)
 
-add('ModeArrowRight', (901, 1116, 40, 80), parent='GameModeGroup')
-add('ModeArrowRightText', (901, 1124, 40, 64), text='▶', size=cap(30), align='C', color=WHITE,
-    parent='ModeArrowRight')
+add('ModeArrowRight', (889, 1110, 52, 96), create='BTN', parent='GameModeGroup')
+add('ModeArrowRightArt', (889, 1110, 52, 96), create='IMG', parent='ModeArrowRight')
 
 # 가운데 칸은 **맨 나중에** — 양옆 칸 위로 올라와야 한다(표 순서 = 그리는 순서)
-add('ModeCardCenter', (282, 948, 370, 430), parent='GameModeGroup')
-add('ModeCenterArt', (292, 995, 353, 200), parent='ModeCardCenter')
-add('ModeMainBadge', (288, 948, 88, 44), parent='ModeCardCenter')
-add('ModeMainBadgeText', (288, 953, 88, 36), text='MAIN', size=cap(24), align='C', color=DARK,
+# ⚠ 칸이 곧 카드가 아니다. 판 그림은 430x480 이고 금테가 (30,25)~(399,454) 라,
+#   칸을 그만큼 바깥으로 물려야 금테가 목업의 카드 자리에 떨어진다.
+add('ModeCardCenter', (252, 923, 430, 480), parent='GameModeGroup')
+add('ModeCenterArt', (292, 968, 353, 240), parent='ModeCardCenter')
+add('ModeMainBadge', (292, 958, 88, 44), parent='ModeCardCenter')
+add('ModeMainBadgeText', (292, 963, 88, 36), text='MAIN', size=cap(24), align='C', color=DARK,
     parent='ModeMainBadge')
 add('ModeCenterLockIcon', (437, 1059, 60, 72), parent='ModeCardCenter')
-add('ModeCenterIcon', (292, 1205, 70, 58), create='IMG', parent='ModeCardCenter')
-add('ModeCenterTitleText', (372, 1202, 240, 54), size=cap(38), align='L', color=WHITE,
+add('ModeCenterIcon', (292, 1220, 70, 58), create='IMG', parent='ModeCardCenter')
+add('ModeCenterTitleText', (372, 1218, 240, 54), size=cap(36), align='L', color=WHITE,
     parent='ModeCardCenter')
 # ⚠ 부제는 카드 안에 가둔다. 목업 자리(342~600)에 두면 진행도 「CH 03 · 26 / 30」 이
 #   카드 밖으로 흘러 옆 칸을 덮는다 — 카드 폭 전체를 쓰고 가운데 정렬한다.
-add('ModeCenterSubText', (296, 1250, 342, 36), size=cap(21), align='C', color=BLUE,
+add('ModeCenterSubText', (296, 1266, 342, 34), size=cap(21), align='C', color=BLUE,
     parent='ModeCardCenter')
-add('ModePlayButton', (290, 1298, 355, 64), parent='ModeCardCenter')
-add('ModePlayButtonText', (290, 1304, 355, 52), size=cap(34), align='C', color=DARK,
+add('ModePlayButton', (290, 1300, 355, 70), parent='ModeCardCenter')
+add('ModePlayButtonText', (290, 1308, 355, 54), size=cap(28), align='C', color=DARK,
     parent='ModePlayButton')
 
 # ── 하단 3버튼 ──────────────────────────────────────────────────────

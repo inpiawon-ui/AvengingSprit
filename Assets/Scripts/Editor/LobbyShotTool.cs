@@ -163,30 +163,74 @@ namespace Game.Editor
         }
 
         /// <summary>
-        /// 화면 맨 아래 60 px 에 걸치는 **켜져 있는** 그림·글자를 전부 적는다.
+        /// 로비에 **다른 화면의 조각이 켜져 있는지** 적는다.
         ///
-        /// 다른 화면의 조각이 로비 아래로 삐져나오는 일이 있었다 — 프리팹만 봐서는
-        /// 안 보이고(그 판은 `Awake` 에서 스스로 꺼진다) 스샷에만 나온다(2026-09-16).
+        /// 호스트 선택 판은 제 `Awake` 에서 꺼지므로 프리팹만 봐서는 안 보이는데,
+        /// 켜지는 도중의 끄기가 안 먹어 조각이 로비 위로 삐져나온 적이 있다(2026-09-16).
+        /// 스샷에만 나오는 종류의 사고라 찍는 김에 같이 적는다.
         /// </summary>
         private static void LogBottomStrip()
         {
-            var sb = new System.Text.StringBuilder("[LobbyShot] 화면 맨 아래에 걸친 것:");
+            var sb = new System.Text.StringBuilder();
             foreach (var g in Object.FindObjectsByType<UnityEngine.UI.Graphic>(
                          FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
                 if (!g.isActiveAndEnabled) continue;
+
+                string path = g.name;
+                bool foreign = false;
+                for (var p = g.transform.parent; p != null; p = p.parent)
+                {
+                    path = p.name + "/" + path;
+                    if (p.name == "HostSelectPanel") foreign = true;
+                }
+                // 게임 모드 줄과 하단 바 **사이**(화면 아래 150~280 px)에는 아무것도 없어야 한다.
+                // 다른 화면 조각이 여기로 흘러나온 적이 있다(2026-09-16).
+                var box = new Vector3[4];
+                g.rectTransform.GetWorldCorners(box);
+                var c0 = g.canvas != null ? g.canvas.worldCamera : null;
+                float b0 = RectTransformUtility.WorldToScreenPoint(c0, box[0]).y;
+                float t0 = RectTransformUtility.WorldToScreenPoint(c0, box[2]).y;
+                // 게임 모드 카드 아래 ~ 하단 바 위의 **빈 띠**. 여기엔 아무것도 없어야 한다.
+                float lo = Screen.height * 0.06f, hi = Screen.height * 0.25f;
+                bool inGap = b0 > lo && t0 < hi && g.name != "LobbyBackground"
+                             && !g.name.EndsWith("Text") && g.name != "NotifyBadge";
+                var im0 = g as UnityEngine.UI.Image;
+                if (im0 != null && im0.sprite != null && im0.sprite.name.StartsWith("chest_"))
+                    inGap = true;   // 상자 그림이 어디에 떠 있는지 전부 적는다
+                if (!foreign && !inGap) continue;
+
                 var corners = new Vector3[4];
                 g.rectTransform.GetWorldCorners(corners);
                 var cam = g.canvas != null ? g.canvas.worldCamera : null;
-                float bottom = RectTransformUtility.WorldToScreenPoint(cam, corners[0]).y;
-                float top = RectTransformUtility.WorldToScreenPoint(cam, corners[2]).y;
-                if (bottom >= 60f || top <= 0f) continue;
-
-                string path = g.name;
-                for (var p = g.transform.parent; p != null; p = p.parent) path = p.name + "/" + path;
-                sb.Append($"\n  {path}  y {bottom:0}~{top:0}");
+                // ⚠ 줄바꿈으로 나누지 마라 — 콘솔은 첫 줄만 보여 준다(2026-09-16).
+                sb.Append($"  |  {path}  y {RectTransformUtility.WorldToScreenPoint(cam, corners[0]).y:0}"
+                          + $"~{RectTransformUtility.WorldToScreenPoint(cam, corners[2]).y:0}");
             }
-            Debug.Log(sb.ToString());
+            Debug.Log(sb.Length == 0
+                ? "[LobbyShot] 남의 화면 조각 없음"
+                : "[LobbyShot] ⚠ 로비 위에 켜져 있는 남의 화면 조각:" + sb);
+
+            // 화면에 실제로 그려지는 것 **전부**를 파일로 남긴다. 콘솔 한 줄로는
+            // 어디서 온 그림인지 못 찾는 일이 있었다(2026-09-16).
+            var all = new System.Text.StringBuilder();
+            foreach (var g in Object.FindObjectsByType<UnityEngine.UI.Graphic>(
+                         FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (!g.isActiveAndEnabled) continue;
+                string q = g.name;
+                for (var pp = g.transform.parent; pp != null; pp = pp.parent) q = pp.name + "/" + q;
+                var cc = new Vector3[4];
+                g.rectTransform.GetWorldCorners(cc);
+                var cam2 = g.canvas != null ? g.canvas.worldCamera : null;
+                var lo2 = RectTransformUtility.WorldToScreenPoint(cam2, cc[0]);
+                var hi2 = RectTransformUtility.WorldToScreenPoint(cam2, cc[2]);
+                var im2 = g as UnityEngine.UI.Image;
+                all.AppendLine($"{q}\tx {lo2.x:0}~{hi2.x:0}\ty {lo2.y:0}~{hi2.y:0}\t"
+                               + (im2 != null ? (im2.sprite != null ? im2.sprite.name : "-") : g.GetType().Name));
+            }
+            var dump = Path.Combine(Path.GetTempPath(), "claude", "lobby_graphics.txt");
+            File.WriteAllText(dump, all.ToString());
         }
 
         /// <summary>게임 뷰를 고정 해상도로 맞춘다 (에디터 내부 타입이라 리플렉션).</summary>

@@ -98,6 +98,7 @@ namespace Game.Editor
         {
             "ChestArt",            // 등급이 정해질 때 `LobbyMainUI` 가 끼운다
             "ModeCardArt",         // 회전할 때마다 갈아 끼운다
+            "ModeCenterArt",       // 〃 (가운데 칸)
             "GameModeLabelAccent", // 노란 막대 하나 — 그림이 필요 없다
         };
 

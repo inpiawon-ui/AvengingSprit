@@ -194,6 +194,7 @@ namespace Game.Module.Lobby
                 SetIn(root, "ChestArt", has);
                 SetIn(root, "ChestReadyBanner", ready);
                 SetIn(root, "ChestReadyText", ready);
+                SetIn(root, "ChestTimePlate", has && !ready);
                 SetIn(root, "ChestTimeIcon", has && !ready);
                 SetIn(root, "ChestTimeText", has && !ready);
                 SetIn(root, "ChestActionButton", has);

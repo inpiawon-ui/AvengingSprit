@@ -20,6 +20,17 @@ namespace Game.Editor
     {
         private const string Prefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string Res = "Assets/BaseResource/LobbyMainUI";
+
+        /// <summary>
+        /// 아틀라스 **밖**에 두는 그림과 그 자리. 전체 화면 배경은 묶어도 드로우콜이
+        /// 줄지 않는데, 941x1672 한 장이 아틀라스를 2048x4096 으로 불려 다른 스프라이트가
+        /// 배경 위로 비쳐 나왔다(2026-09-16 하단 바 옆 보라 상자).
+        /// </summary>
+        private const string BackdropDir = "Assets/BaseResource/LobbyBackdrop";
+        private static readonly string[] Backdrops = { "lobbybackground", "actionbarbackground" };
+
+        private static string FolderOf(string file)
+            => System.Array.IndexOf(Backdrops, file) >= 0 ? BackdropDir : Res;
         private const string InDir = "Projects/AVSR/_exchange/in";
 
         /// <summary>납품 폴더에서 끌어올 그림과 9-slice 보더 (Vector4 = 왼·아래·오른·위).</summary>
@@ -41,6 +52,7 @@ namespace Game.Editor
             ("chesttimeicon", Vector4.zero),
             ("modecentericon", Vector4.zero),
             ("ghostsearchart", Vector4.zero),
+            ("ghostsearchscrim", Vector4.zero),
             ("lobbybackground", Vector4.zero),
             // 겹쳐 얹는 테두리 — 속이 비어 있다
             ("hudpill", new Vector4(72, 26, 72, 26)),
@@ -61,8 +73,13 @@ namespace Game.Editor
             ("notifybadge", Vector4.zero),
             ("seasonpassicon", Vector4.zero),
             ("eventicon", Vector4.zero),
-            ("actionbarbackground", new Vector4(120, 0, 120, 0)),
+            // ⚠ 세로 테두리를 0 으로 두지 마라. 위·아래 줄 높이가 0 이 되어 늘릴 때
+            //   아틀라스의 **옆 스프라이트를 긁어 온다**(2026-09-16 보라 상자 유령).
+            ("actionbarbackground", new Vector4(120, 24, 120, 24)),
             ("modelockicon", Vector4.zero),
+            ("modearrow_left", Vector4.zero),
+            ("modearrow_right", Vector4.zero),
+            ("chesttimeplate", new Vector4(40, 0, 40, 0)),
             // 좌우 모드 칸은 기운 방향이 반대다 — 납품본을 뒤집어 만들어 쓴다
             ("modecardframe_side_l", Vector4.zero),
         };
@@ -88,6 +105,7 @@ namespace Game.Editor
 
             // 유령 수색 — 그림 위에 **속 빈** 테두리를 얹는다
             ("GhostSearchArt", "ghostsearchart"),
+            ("GhostSearchScrim", "ghostsearchscrim"),
             ("GhostSearchFrame", "panelframe"),
             ("GhostSearchIcon", "ghostsearchicon"),
             ("GhostSearchGoldIcon", "goldicon"),
@@ -96,7 +114,10 @@ namespace Game.Editor
             ("GhostSearchHelpButton", "buttonblue"),
 
             ("ModeCenterIcon", "modecentericon"),
+            ("ModeMainBadge", "continuebutton"),   // 목업의 MAIN 딱지와 같은 금색 판
             ("ModeCenterLockIcon", "modelockicon"),
+            ("ModeArrowLeftArt", "modearrow_left"),
+            ("ModeArrowRightArt", "modearrow_right"),
             ("ModeCardCenter", "modecard_center"),
             ("GhostSearchBigGhost", "ghostsearchbig"),
 
@@ -126,6 +147,7 @@ namespace Game.Editor
             ("ChestActionButton", "buttonblue"),
             ("ChestActionGemIcon", "gemicon"),
             ("ChestTimeIcon", "chesttimeicon"),
+            ("ChestTimePlate", "chesttimeplate"),
         };
 
         private static readonly string[] ChestKeys = { "wood", "silver", "gold", "magic" };
@@ -161,14 +183,16 @@ namespace Game.Editor
 
             // ⚠ 코드가 나중에 채우는 칸은 **비워 둔다.** 그림 없이 색만 남으면
             //   시커먼 네모가 그려져 「상자가 안 보인다」로 읽힌다(2026-09-16).
-            foreach (var node in new[] { "ChestArt", "ModeCardArt" })
+            foreach (var node in new[] { "ChestArt", "ModeCardArt", "ModeCenterArt" })
             {
                 var hits = new System.Collections.Generic.List<Transform>();
                 Collect(root.transform, node, hits);
                 foreach (var t in hits)
                 {
                     var img = t.GetComponent<Image>();
-                    if (img != null && img.sprite == null) img.enabled = false;
+                    if (img == null) continue;
+                    img.sprite = null;     // 예전에 잘못 박힌 그림이 남아 있을 수 있다
+                    img.enabled = false;
                 }
             }
 
@@ -263,6 +287,7 @@ namespace Game.Editor
 
         private const string GothicFont = "Assets/BaseResource/Fonts/NotoSansKR SDF.asset";
 
+
         /// <summary>
         /// 로비 글자를 **굵은 고딕**으로 맞춘다 (기획 2026-09-16 「목업처럼」).
         ///
@@ -286,6 +311,9 @@ namespace Game.Editor
             {
                 // 호스트 선택 판은 제 화면이다 — 로비가 손대지 않는다
                 if (IsUnder(t.transform, "HostSelectPanel")) continue;
+                // ⚠ 윤곽 재질(` - Outline`, 굵기 0.18)을 씌우지 마라. 이 크기에서는 윤곽이
+                //   글자 속살을 먹어 오히려 흐려진다(2026-09-16 실제로 그랬다).
+                //   목업의 또렷함은 윤곽이 아니라 **글자 뒤의 어두운 판**에서 온다.
                 if (t.font != font) { t.font = font; t.fontSharedMaterial = font.material; }
                 if ((t.fontStyle & TMPro.FontStyles.Bold) == 0) t.fontStyle |= TMPro.FontStyles.Bold;
                 n++;
@@ -343,7 +371,7 @@ namespace Game.Editor
             {
                 var src = $"{InDir}/{file}.png";
                 if (!File.Exists(src)) continue;
-                File.Copy(src, $"{Res}/{file}.png", true);
+                File.Copy(src, $"{FolderOf(file)}/{file}.png", true);
                 n++;
             }
             if (n > 0) AssetDatabase.Refresh();
@@ -352,7 +380,7 @@ namespace Game.Editor
             foreach (var (file, rawBorder) in Incoming)
             {
                 var border = trimmed.TryGetValue(file, out var b) ? b : rawBorder;
-                var dst = $"{Res}/{file}.png";
+                var dst = $"{FolderOf(file)}/{file}.png";
                 if (AssetImporter.GetAtPath(dst) is not TextureImporter ti) continue;
                 ti.textureType = TextureImporterType.Sprite;
                 ti.spriteImportMode = SpriteImportMode.Single;
@@ -430,7 +458,7 @@ namespace Game.Editor
         }
 
         private static Sprite Sprite(string file)
-            => AssetDatabase.LoadAssetAtPath<Sprite>($"{Res}/{file}.png");
+            => AssetDatabase.LoadAssetAtPath<Sprite>($"{FolderOf(file)}/{file}.png");
 
         private static void Collect(Transform root, string name, System.Collections.Generic.List<Transform> into)
         {
