@@ -75,8 +75,10 @@ namespace Game.Module.Lobby
 
             _ui.OnClick("PossessStartButton", OnPossessStart);
             _ui.OnClick("HostUpgradeButton", OnUpgrade);
-
-            gameObject.SetActive(false);
+            // ⚠ 여기서 `SetActive(false)` 를 하지 마라. 켜지는 도중의 끄기는 그 프레임에
+            //   안 먹어 판 조각이 로비 아래로 삐져나오고, 부모가 먼저 꺼 두면 이 `Awake`
+            //   자체가 `Open()` 때 돌면서 다시 꺼 버려 판이 영영 안 열린다(2026-09-16).
+            //   처음 닫아 두는 것은 주인인 `LobbyMainUI` 가 한다.
         }
 
         private void OnEnable()

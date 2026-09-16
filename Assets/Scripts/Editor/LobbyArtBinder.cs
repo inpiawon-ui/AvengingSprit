@@ -1,4 +1,5 @@
 using System.IO;
+using Game.Module.Common;
 using Game.Module.Common.UI;
 using UnityEditor;
 using UnityEngine;
@@ -58,6 +59,10 @@ namespace Game.Editor
             ("mailbutton", Vector4.zero),
             ("settingsbutton", Vector4.zero),
             ("notifybadge", Vector4.zero),
+            ("seasonpassicon", Vector4.zero),
+            ("eventicon", Vector4.zero),
+            ("actionbarbackground", new Vector4(120, 0, 120, 0)),
+            ("modelockicon", Vector4.zero),
             // 좌우 모드 칸은 기운 방향이 반대다 — 납품본을 뒤집어 만들어 쓴다
             ("modecardframe_side_l", Vector4.zero),
         };
@@ -75,6 +80,12 @@ namespace Game.Editor
             ("GemIcon", "gemicon"),
             ("MailButton", "mailbutton"),
 
+            // 시즌 패스 / 이벤트 — 재화 칸과 같은 모서리 깎인 테두리를 쓴다
+            ("SeasonPassButton", "hudpill"),
+            ("SeasonPassArt", "seasonpassicon"),
+            ("EventButton", "hudpill"),
+            ("EventArt", "eventicon"),
+
             // 유령 수색 — 그림 위에 **속 빈** 테두리를 얹는다
             ("GhostSearchArt", "ghostsearchart"),
             ("GhostSearchFrame", "panelframe"),
@@ -85,10 +96,12 @@ namespace Game.Editor
             ("GhostSearchHelpButton", "buttonblue"),
 
             ("ModeCenterIcon", "modecentericon"),
+            ("ModeCenterLockIcon", "modelockicon"),
             ("ModeCardCenter", "modecard_center"),
             ("GhostSearchBigGhost", "ghostsearchbig"),
 
-            // 하단 바 — 칸 테두리는 속을 비우고 그림·글자가 그 안에 보인다
+            // 하단 바 — 어두운 금속 판 위에 칸 세 개가 얹힌다
+            ("MainActionBar", "actionbarbackground"),
             ("HostButton", "actionframe_blue"),
             ("HostButtonArt", "hostbuttonart"),
             ("ChapterButton", "actionframe_gold"),
@@ -102,6 +115,7 @@ namespace Game.Editor
         {
             ("NotifyBadge", "notifybadge"),
             ("PlusButton", "plusbutton"),
+            ("ModeLockIcon", "modelockicon"),
         };
 
         /// <summary>상자 세 칸 안쪽은 이름이 같다 — 칸을 훑으며 같은 것을 꽂는다.</summary>
@@ -192,6 +206,7 @@ namespace Game.Editor
             }
 
             int fonts = ApplyGothic(root.transform);
+            int keys = ApplyLocalizationKeys(root.transform);
 
             // 호스트 선택 판은 로비 **위에** 떠야 한다
             var hsp = root.transform.Find("HostSelectPanel");
@@ -201,8 +216,47 @@ namespace Game.Editor
             PrefabUtility.UnloadPrefabContents(root);
             AssetDatabase.SaveAssets();
 
-            Debug.Log($"[로비] 납품 반영 {pulled}장 · 그림 꽂기 {bound}개 · 폰트 {fonts}칸"
+            Debug.Log($"[로비] 납품 반영 {pulled}장 · 그림 꽂기 {bound}개 · 폰트 {fonts}칸 · 언어키 {keys}칸"
                       + (missing > 0 ? $" · 못 찾은 것 {missing}개" : ""));
+        }
+
+        // ── 언어 키 ──────────────────────────────────────────────
+
+        /// <summary>
+        /// 「프리팹에 고정으로 박힌 글자 : 언어팩 키」 단일 출처.
+        ///
+        /// ⚠ 예전에는 이 짝을 손으로 프리팹에 심어 놨었다 — 어느 칸이 어느 키인지
+        ///   코드 어디에도 없어서, 칸을 새로 만들면 번역이 조용히 빠졌다(2026-09-16).
+        ///   코드가 `SetText` 로 채우는 칸(재화·남은 시간·모드 이름)은 여기 넣지 마라.
+        /// </summary>
+        private static readonly (string node, string key)[] LocKeys =
+        {
+            ("SeasonPassTitleText", "ui.lobby.season_pass"),
+            ("SeasonPassStateText", "ui.lobby.season_pass.state"),
+            ("EventTitleText", "ui.lobby.event"),
+            ("EventStateText", "ui.lobby.event.state"),
+            ("GhostSearchTitleText", "ui.lobby.search.title"),
+            ("GhostSearchDescText", "ui.lobby.search.desc"),
+            ("GhostSearchClaimText", "ui.lobby.search.claim"),
+            ("GameModeLabel", "ui.lobby.game_mode"),
+            ("HostButtonSubText", "ui.lobby.host_button.sub"),
+            ("ShopButtonSubText", "ui.lobby.shop_button.sub"),
+        };
+
+        private static int ApplyLocalizationKeys(Transform root)
+        {
+            int n = 0;
+            foreach (var (node, key) in LocKeys)
+            {
+                var t = Find(root, node);
+                if (t == null) { Debug.LogWarning($"[로비] 언어 키 붙일 칸 없음: {node}"); continue; }
+                if (t.GetComponent<TMPro.TMP_Text>() == null) continue;
+
+                var lt = t.GetComponent<LocalizedText>() ?? t.gameObject.AddComponent<LocalizedText>();
+                lt.SetKey(key);
+                n++;
+            }
+            return n;
         }
 
         // ── 폰트 ─────────────────────────────────────────────────
@@ -343,19 +397,29 @@ namespace Game.Editor
         /// `pixelsPerUnitMultiplier` 를 올리면 테두리가 그만큼 작게 그려진다.
         /// 칸의 40 % 안에 들어오게 맞춘다 — 가운데가 충분히 남아야 늘어난 티가 안 난다.
         /// </summary>
-        /// <summary>테두리가 칸에서 차지해도 되는 최대 비율. 목업 테두리는 이보다 훨씬 얇다.</summary>
-        private const float BorderShare = 0.22f;
+        /// <summary>가운데(늘어나는 부분)가 칸에서 최소 이만큼은 남아야 한다.</summary>
+        private const float MiddleShare = 0.25f;
 
         private static void FitBorder(Image img, Sprite sprite)
         {
             var rect = ((RectTransform)img.transform).rect;
+
+            // ① 칸이 그림보다 작으면 **테두리도 같은 비율로** 작게 그려야 그림 그대로 보인다.
+            //    ⚠ 예전에는 「테두리는 칸의 22 % 안」이라는 고정 비율만 썼다. 목업 실측
+            //    칸(204x98)에 267x128 액자를 넣으면 배율이 4.5 까지 튀어 **테가 2 px 로
+            //    사라졌다** — 하단 바 칸에 테두리가 아예 없어 보인 이유다(2026-09-16).
             float need = 1f;
+            if (rect.width > 1f) need = Mathf.Max(need, sprite.rect.width / rect.width);
+            if (rect.height > 1f) need = Mathf.Max(need, sprite.rect.height / rect.height);
+
+            // ② 그래도 테두리가 칸을 다 먹으면 가운데가 사라져 한 줄로 뭉갠다 — 더 줄인다.
             float h = sprite.border.y + sprite.border.w;   // 아래 + 위
             float w = sprite.border.x + sprite.border.z;   // 왼 + 오른
-            if (rect.height > 1f && h > rect.height * BorderShare)
-                need = Mathf.Max(need, h / (rect.height * BorderShare));
-            if (rect.width > 1f && w > rect.width * BorderShare)
-                need = Mathf.Max(need, w / (rect.width * BorderShare));
+            if (rect.height > 1f && h > 0f)
+                need = Mathf.Max(need, h / (rect.height * (1f - MiddleShare)));
+            if (rect.width > 1f && w > 0f)
+                need = Mathf.Max(need, w / (rect.width * (1f - MiddleShare)));
+
             img.pixelsPerUnitMultiplier = need;
         }
 

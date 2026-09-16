@@ -50,6 +50,10 @@ namespace Game.Editor
             SessionState.SetInt(Key, 1);
             SessionState.SetBool(Settled, false);
             SessionState.SetInt(Key + ".turned", -1);
+            // ⚠ 목업은 한국어다. 저장된 언어가 일본어로 남아 있으면 글자 길이가 달라
+            //   「목업과 같나」를 잴 수가 없다(2026-09-16 실제로 일본어로 찍혔다).
+            PlayerPrefs.SetInt("game.language", (int)Game.Module.Common.Language.Korean);
+            PlayerPrefs.Save();
             SetSize(Shots[0].w, Shots[0].h);
             if (!EditorApplication.isPlaying) EditorApplication.EnterPlaymode();
         }
@@ -127,6 +131,7 @@ namespace Game.Editor
             Directory.CreateDirectory(dir);
             ScreenCapture.CaptureScreenshot(Path.Combine(dir, s.name + ".png"));
             Debug.Log($"[LobbyShot] {s.name} {Screen.width}x{Screen.height}");
+            if (shot == 1) LogBottomStrip();
             // ⚠ 다음 해상도로 **여기서 바꾸지 마라.** `CaptureScreenshot` 은 다음 프레임 끝에
             //   찍히므로 먼저 바꾸면 이번 장이 다음 해상도로 찍힌다.
             SessionState.SetInt(Key, step + 1);
@@ -155,6 +160,33 @@ namespace Game.Editor
             if (b == null || !b.isActiveAndEnabled) return false;
             b.onClick.Invoke();
             return true;
+        }
+
+        /// <summary>
+        /// 화면 맨 아래 60 px 에 걸치는 **켜져 있는** 그림·글자를 전부 적는다.
+        ///
+        /// 다른 화면의 조각이 로비 아래로 삐져나오는 일이 있었다 — 프리팹만 봐서는
+        /// 안 보이고(그 판은 `Awake` 에서 스스로 꺼진다) 스샷에만 나온다(2026-09-16).
+        /// </summary>
+        private static void LogBottomStrip()
+        {
+            var sb = new System.Text.StringBuilder("[LobbyShot] 화면 맨 아래에 걸친 것:");
+            foreach (var g in Object.FindObjectsByType<UnityEngine.UI.Graphic>(
+                         FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (!g.isActiveAndEnabled) continue;
+                var corners = new Vector3[4];
+                g.rectTransform.GetWorldCorners(corners);
+                var cam = g.canvas != null ? g.canvas.worldCamera : null;
+                float bottom = RectTransformUtility.WorldToScreenPoint(cam, corners[0]).y;
+                float top = RectTransformUtility.WorldToScreenPoint(cam, corners[2]).y;
+                if (bottom >= 60f || top <= 0f) continue;
+
+                string path = g.name;
+                for (var p = g.transform.parent; p != null; p = p.parent) path = p.name + "/" + path;
+                sb.Append($"\n  {path}  y {bottom:0}~{top:0}");
+            }
+            Debug.Log(sb.ToString());
         }
 
         /// <summary>게임 뷰를 고정 해상도로 맞춘다 (에디터 내부 타입이라 리플렉션).</summary>

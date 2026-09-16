@@ -90,28 +90,10 @@ namespace Game.Module.Lobby
 
         // ── 하단 바 ──────────────────────────────────────────────
         //
-        // HOST · PLAY · SHOP 은 **다른 페이지로 가는 문**이다. 아직 그 페이지가
-        // 없으므로, 누른 것이 눌린 채로 보이게만 한다 — 어디에 서 있는지가 보여야
-        // "안 눌렸나" 를 다시 누르지 않는다.
-        private static readonly string[] Tabs = { "HostButton", "ChapterButton", "ShopButton" };
-        private const float TabOnScale = 1.04f;
-        private const float TabOffScale = 0.94f;
-        private const float TabLift = 10f;     // 켜진 칸만 살짝 올라온다
-        // ⚠ 0.45 는 너무 어둡다 — 목업은 세 칸이 다 또렷하고 고른 칸만 금색이다.
-        //   어둡게 죽이면 테두리·글자가 안 보여 「프레임이 없다」로 읽힌다(2026-09-16).
-        private const float TabDim = 0.82f;    // 꺼진 칸 밝기 배수
-
-        /// <summary>칸 하나 — 제자리·제 색을 기억해 둔다. 꺼질 때 곱하고 켜질 때 되돌린다.</summary>
-        private sealed class TabView
-        {
-            public RectTransform Rect;
-            public float BaseY;
-            public UnityEngine.UI.Graphic[] Graphics;
-            public Color[] BaseColors;
-        }
-
-        private readonly List<TabView> _tabViews = new();
-        private string _activeTab = "ChapterButton";   // 지금 서 있는 곳이 로비(PLAY)다
+        // ⚠ 「눌린 칸」 연출(밝기 곱하기·크기 줄이기)을 다시 넣지 마라. 목업은 세 칸이
+        //   같은 크기·같은 밝기이고, 지금 있는 곳은 PLAY 칸의 **금색 액자**로만 드러난다.
+        //   흐리게 죽이면 글자·테두리가 안 보여 「프레임이 없다」로 읽힌다(2026-09-16).
+        //   금색 액자는 `LobbyArtBinder` 가 고정으로 박는다.
 
         private void Awake()
         {
@@ -124,6 +106,11 @@ namespace Game.Module.Lobby
             gameObject.AddComponent<BackButtonRouter>();
             global::Game.Module.Common.GameSound.Music("screen.lobby");
             _ui.SetText("VersionText", $"v{Application.version}");
+
+            // 호스트 선택 판은 **로비가** 닫아 둔다. 판이 제 `Awake` 에서 스스로 끄면
+            // 켜지는 도중이라 그 프레임에 안 먹어, 판 아래 팁 띠가 로비 바닥으로
+            // 삐져나왔다(2026-09-16).
+            if (_hostSelectPanel != null) _hostSelectPanel.Close();
 
             // 하단 바 — 누르면 그 칸이 켜진 채로 남는다
             _ui.OnClick("HostButton",    () => SelectTab("HostButton"));
@@ -154,7 +141,6 @@ namespace Game.Module.Lobby
 
             // 유령 수색 · 상자 「빈 칸」 글자는 프리팹에 고정이다 — `LocalizedText` 가 칠한다
             ApplyModes();
-            ApplyTabs();
             ApplyChests();
 
             foreach (var (element, label) in NotReady)
@@ -178,18 +164,10 @@ namespace Game.Module.Lobby
         private const float ChestTickSeconds = 1f;
         private float _chestTick;
 
-        /// <summary>
-        /// 다 된 칸에서 버튼 글자를 올리는 양. 젬값 줄이 사라진 만큼이다.
-        ///
-        /// 세는 중엔 「젬값 / 즉시 열기」 두 줄이라 글자가 버튼 아래쪽에 앉는다.
-        /// 다 되면 한 줄뿐이라 그대로 두면 버튼 바닥에 붙어 잘려 보인다.
-        /// </summary>
-        private const float ChestLabelReadyLift = 22f;
-
-        /// <summary>표가 적어 둔 버튼 글자의 제자리. 올렸다 내렸다 하려면 기준이 있어야 한다.</summary>
-        private float _chestLabelY;
-        private bool _chestLabelYRead;
-
+        // 상자 버튼 글자는 상태마다 **칸이 다르다.**
+        // 세는 중엔 「젬값 / 즉시 열기」 두 줄, 다 되면 「보상 획득하기」 한 줄이다.
+        // ⚠ 한 칸을 위아래로 옮겨 돌려 쓰지 마라 — 한 줄일 때도 두 줄짜리 높이에 갇혀
+        //   목업 절반 크기로 찍힌다(2026-09-16). 크기는 레이아웃 표가 정한다.
         private void Update()
         {
             if (_chests == null) return;
@@ -208,12 +186,6 @@ namespace Game.Module.Lobby
                 var root = _ui.Find($"ChestSlot{i + 1}");
                 if (root == null) continue;
 
-                if (!_chestLabelYRead)
-                {
-                    var first = _ui.Find(root, "ChestActionLabelText") as RectTransform;
-                    if (first != null) { _chestLabelY = first.anchoredPosition.y; _chestLabelYRead = true; }
-                }
-
                 var s = _chests.Get(i);
                 bool has = !s.IsEmpty;
                 bool ready = s.IsReady;
@@ -227,7 +199,8 @@ namespace Game.Module.Lobby
                 SetIn(root, "ChestActionButton", has);
                 SetIn(root, "ChestActionGemIcon", has && !ready);
                 SetIn(root, "ChestActionCostText", has && !ready);
-                SetIn(root, "ChestActionLabelText", has);
+                SetIn(root, "ChestActionLabelText", has && !ready);
+                SetIn(root, "ChestReadyLabelText", ready);
 
                 if (!has) continue;
 
@@ -251,22 +224,10 @@ namespace Game.Module.Lobby
                     var want = ready ? _chestButtonGold : _chestButtonBlue;
                     if (want != null && button.sprite != want) button.sprite = want;
                 }
-                // 금색 버튼 위에 흰 글자는 안 읽힌다
-                var label = _ui.Find(root, "ChestActionLabelText")?.GetComponent<TMPro.TextMeshProUGUI>();
-                if (label != null)
-                {
-                    label.color = ready ? new Color(0.16f, 0.11f, 0.02f) : Color.white;
-                    // 다 된 칸은 젬값 줄이 사라진다 — 글자를 버튼 한가운데로 올린다
-                    var lr = (RectTransform)label.transform;
-                    var p = lr.anchoredPosition;
-                    p.y = _chestLabelY + (ready ? ChestLabelReadyLift : 0f);
-                    lr.anchoredPosition = p;
-                }
-
                 TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
                 TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));
-                TextIn(root, "ChestActionLabelText",
-                       Localize.Get(ready ? "ui.lobby.chest.claim" : "ui.lobby.chest.open_now"));
+                TextIn(root, "ChestActionLabelText", Localize.Get("ui.lobby.chest.open_now"));
+                TextIn(root, "ChestReadyLabelText", Localize.Get("ui.lobby.chest.claim"));
             }
         }
 
@@ -404,57 +365,9 @@ namespace Game.Module.Lobby
 
         private void SelectTab(string tab)
         {
-            _activeTab = tab;
-            ApplyTabs();
-
-            // 갈 곳이 있는 것만 실제로 간다. 나머지는 눌린 티만 남기고 안내한다.
+            // 갈 곳이 있는 것만 실제로 간다. 나머지는 아직 없다고 알린다.
             if (tab == "HostButton") OpenHostSelect(false);
             else if (tab == "ShopButton") NotifyNotReady("상점");
-        }
-
-        /// <summary>프리팹이 칠해 둔 색이 원본이다. 한 번만 담아 두고 그 뒤로는 곱하기만 한다.</summary>
-        private void CacheTabs()
-        {
-            _tabViews.Clear();
-            for (int i = 0; i < Tabs.Length; i++)
-            {
-                if (_ui.Find(Tabs[i]) is not RectTransform rt) continue;
-                var graphics = rt.GetComponentsInChildren<UnityEngine.UI.Graphic>(true);
-                var colors = new Color[graphics.Length];
-                for (int g = 0; g < graphics.Length; g++) colors[g] = graphics[g].color;
-                _tabViews.Add(new TabView
-                {
-                    Rect = rt,
-                    BaseY = rt.anchoredPosition.y,
-                    Graphics = graphics,
-                    BaseColors = colors,
-                });
-            }
-        }
-
-        private void ApplyTabs()
-        {
-            if (_tabViews.Count != Tabs.Length) CacheTabs();
-
-            for (int i = 0; i < _tabViews.Count; i++)
-            {
-                var view = _tabViews[i];
-                if (view.Rect == null) continue;
-                bool on = view.Rect.name == _activeTab;
-
-                view.Rect.localScale = Vector3.one * (on ? TabOnScale : TabOffScale);
-                var pos = view.Rect.anchoredPosition;
-                pos.y = view.BaseY + (on ? TabLift : 0f);
-                view.Rect.anchoredPosition = pos;
-
-                // 액자만 어둡게 하면 그림이 그대로라 티가 안 난다 — 칸 전체를 함께 낮춘다.
-                for (int g = 0; g < view.Graphics.Length; g++)
-                {
-                    var target = view.BaseColors[g];
-                    if (!on) target = new Color(target.r * TabDim, target.g * TabDim, target.b * TabDim, target.a);
-                    view.Graphics[g].color = target;
-                }
-            }
         }
 
         private void OnEnable()

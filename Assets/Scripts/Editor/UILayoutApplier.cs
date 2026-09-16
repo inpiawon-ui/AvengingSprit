@@ -231,6 +231,7 @@ namespace Game.Editor
                 }
                 found = go.transform;
             }
+            else EnsureParts(found.gameObject, it.create);
 
             result.Add(found);
 
@@ -260,6 +261,31 @@ namespace Game.Editor
             if (root.name == name) into.Add(root);
             for (int i = 0; i < root.childCount; i++)
                 CollectByName(root.GetChild(i), name, into);
+        }
+
+        /// <summary>
+        /// 이미 있는 노드에 `create` 가 시키는 부품을 채운다.
+        ///
+        /// ⚠ 만들 때만 붙이면, 나중에 표에서 `create` 를 바꿔도 **기존 노드는 그대로**라
+        ///   「표는 고쳤는데 화면은 그대로」가 된다(2026-09-16 하단 바 판).
+        /// </summary>
+        private static void EnsureParts(GameObject go, string create)
+        {
+            switch (create)
+            {
+                case "TMP":
+                    if (go.GetComponent<TMP_Text>() == null)
+                        go.AddComponent<TextMeshProUGUI>().raycastTarget = false;
+                    break;
+                case "IMG":
+                    if (go.GetComponent<Image>() == null)
+                        go.AddComponent<Image>().raycastTarget = false;
+                    break;
+                case "BTN":
+                    if (go.GetComponent<Image>() == null) go.AddComponent<Image>();
+                    if (go.GetComponent<Button>() == null) go.AddComponent<Button>();
+                    break;
+            }
         }
 
         private static Transform FindByName(Transform root, string name)
