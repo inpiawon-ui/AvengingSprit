@@ -32,6 +32,9 @@ namespace Game.Module.InGame
         private const float CutInAngle = 2.5f;
         private const float CutInY = 170f;                 // 화면 가운데에서 위로
         private const float ReadyFrameSeconds = 0.12f;
+        private const float CastEdgeOverscanX = 70f;   // 화면 밖으로 내보내는 폭(캔버스 px)
+        private const float CastEdgeOverscanY = 110f;
+        private const float CastEdgeAlpha = 0.5f;      // 가장 밝을 때도 반만
         private const float ButtonPunchSeconds = 0.24f;
 
         private RectTransform _castLayer;
@@ -96,7 +99,15 @@ namespace Game.Module.InGame
             var dim = _uiAtlas.GetSprite("skillcast_dim");
             if (dim != null) _castDim = MakeStretch("SkillCastDim", dim);
             var edge = _uiAtlas.GetSprite("skillcast_edge_glow");
-            if (edge != null) _castEdge = MakeStretch("SkillCastEdge", edge);
+            if (edge != null)
+            {
+                _castEdge = MakeStretch("SkillCastEdge", edge);
+                // 화면에 딱 맞추면 테두리가 두껍고 과했다(기획 2026-09-17 「은은하고 얇게」).
+                // 그림을 화면보다 크게 깔아 바깥쪽 절반은 화면 밖으로 내보낸다 — 안쪽으로 뻗는 두께가 준다.
+                var rt = _castEdge.rectTransform;
+                rt.offsetMin = new Vector2(-CastEdgeOverscanX, -CastEdgeOverscanY);
+                rt.offsetMax = new Vector2(CastEdgeOverscanX, CastEdgeOverscanY);
+            }
 
             var band = _uiAtlas.GetSprite("skillcastband");
             if (band != null)
@@ -289,7 +300,7 @@ namespace Game.Module.InGame
                     {
                         // 가장자리는 들어올 때 가장 세게 번쩍이고 가라앉는다
                         float flare = Mathf.Lerp(1f, 0.6f, Mathf.Clamp01((t - CutInSlideSeconds) / CutInHoldSeconds));
-                        _castEdge.color = new Color(color.r, color.g, color.b, shown * flare);
+                        _castEdge.color = new Color(color.r, color.g, color.b, shown * flare * CastEdgeAlpha);
                     }
                     if (_cutIn != null)
                     {
