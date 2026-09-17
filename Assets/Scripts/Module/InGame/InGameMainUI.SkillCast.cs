@@ -28,11 +28,12 @@ namespace Game.Module.InGame
         private const float CutInSlideSeconds = 0.09f;
         // 0.34 는 「딱 생기고 바로 없어진다」 — 0.5초 더 세워 둔다(기획 2026-09-17)
         // ⚠ 들어오는 시간 + 이 값 = `BattleDirector.CastFreezeSeconds`. 띠가 빠지는 순간 스킬이 나간다.
-        private const float CutInHoldSeconds = 0.84f;
+        private const float CutInHoldSeconds = 0.54f;   // 0.84 에서 0.2초 → 0.1초 더 뺐다(기획 2026-09-17)
         private const float CutInOutSeconds = 0.13f;
         private const float CutInAngle = 2.5f;
         private const float CutInY = 170f;                 // 화면 가운데에서 위로
         private const float ReadyFrameSeconds = 0.12f;
+        private const bool CastEdgeEnabled = false;
         private const float CastEdgeOverscanX = 70f;   // 화면 밖으로 내보내는 폭(캔버스 px)
         private const float CastEdgeOverscanY = 110f;
         private const float CastEdgeAlpha = 0.5f;      // 가장 밝을 때도 반만
@@ -100,7 +101,8 @@ namespace Game.Module.InGame
             var dim = _uiAtlas.GetSprite("skillcast_dim");
             if (dim != null) _castDim = MakeStretch("SkillCastDim", dim);
             var edge = _uiAtlas.GetSprite("skillcast_edge_glow");
-            if (edge != null)
+            // 가장자리 빛은 **일단 끈다**(기획 2026-09-17 「일단 안 뜨게 해 보고」). 다시 켜려면 true.
+            if (edge != null && CastEdgeEnabled)
             {
                 _castEdge = MakeStretch("SkillCastEdge", edge);
                 // 화면에 딱 맞추면 테두리가 두껍고 과했다(기획 2026-09-17 「은은하고 얇게」).

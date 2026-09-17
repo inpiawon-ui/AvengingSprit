@@ -32,7 +32,7 @@ namespace Game.Module.InGame
         /// 컷인 동안 전투를 세워 두는 시간(실제 시간). 화면 쪽 컷인이 들어와 서 있는 시간
         /// (`InGameMainUI.CutInSlideSeconds + CutInHoldSeconds`)과 같아야 띠가 빠지는 순간 터진다.
         /// </summary>
-        private const float CastFreezeSeconds = 0.93f;
+        private const float CastFreezeSeconds = 0.63f;
 
         private const float CastLinesSize = 170f;
         private const float CastRingInner = 150f;
