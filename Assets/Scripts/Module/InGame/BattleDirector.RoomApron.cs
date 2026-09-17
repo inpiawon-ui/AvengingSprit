@@ -44,16 +44,18 @@ namespace Game.Module.InGame
         private string _apronHeld;
 
         /// <summary>무대 이름으로 방 아래 바닥을 건다. 좌우 벽과 같은 자리(`ApplyRoomFloor`)에서 부른다.</summary>
-        private void ApplyRoomApron(string env, int chapter)
+        /// <param name="preferKey">먼저 찾아볼 이름(보스방 `boss_crusher`). 없으면 무대 것으로 떨어진다.</param>
+        private void ApplyRoomApron(string env, int chapter, string preferKey = null)
         {
             if (string.IsNullOrEmpty(env)) env = EnvOfChapter(chapter);
 
             EnsureRoomApron();
             if (_apron == null) return;
 
-            if (env == _apronEnv) return;
-            _apronEnv = env;
-            LoadRoomApronAsync(env).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
+            string key = string.IsNullOrEmpty(preferKey) ? env : preferKey;
+            if (key == _apronEnv) return;
+            _apronEnv = key;
+            LoadRoomApronAsync(key, env).Forget();   // fire-and-forget: 바닥은 한 프레임 늦어도 된다
         }
 
         private void EnsureRoomApron()
@@ -80,11 +82,16 @@ namespace Game.Module.InGame
             ApplyScroll();
         }
 
-        private async UniTaskVoid LoadRoomApronAsync(string env)
+        private async UniTaskVoid LoadRoomApronAsync(string key, string env)
         {
-            // 무대 전용이 먼저, 없으면 공용.
-            var address = RoomApronPrefix + env;
-            var art = await LoadOptionalAsync<Sprite>(address);   // 전용이 없는 무대다
+            // 보스 전용 → 무대 전용 → 공용 순.
+            var address = RoomApronPrefix + key;
+            var art = await LoadOptionalAsync<Sprite>(address);   // 전용이 없는 방이다
+            if (art == null && key != env)
+            {
+                address = RoomApronPrefix + env;
+                art = await LoadOptionalAsync<Sprite>(address);
+            }
             if (art == null)
             {
                 address = RoomApronCommon;
@@ -92,7 +99,7 @@ namespace Game.Module.InGame
             }
 
             // 기다리는 사이에 방이 또 바뀌었으면 이 결과는 버린다.
-            if (_apronEnv != env || _apronImage == null)
+            if (_apronEnv != key || _apronImage == null)
             {
                 if (art != null && address != _apronHeld)
                     CoreModule.Get<IResourceManager>().Release(address);

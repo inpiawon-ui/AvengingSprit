@@ -4972,7 +4972,10 @@ namespace Game.Module.InGame
 
             // 방 아래 남는 자리(조작 버튼이 떠 있는 곳)를 같은 무대의 「방 밖 바닥」으로 채운다
             // (`BattleDirector.RoomApron.cs`). 방이 창보다 길면 남는 자리가 없어 저절로 꺼진다.
-            ApplyRoomApron(_floorEnv, chapter);
+            // 보스방은 방과 아래 영역을 **한 장으로** 받았다(2026-09-17) — 아래 영역도 그 보스 것을 쓴다.
+            string bossSlug = forcedBossRoom ? _roomBoss.BossKey
+                            : _canonRoom != null && _canonRoom.IsBoss ? BossSlug(_canonRoom.BossId) : null;
+            ApplyRoomApron(_floorEnv, chapter, string.IsNullOrEmpty(bossSlug) ? null : "boss_" + bossSlug);
 
             // 방 위 바깥(카메라가 문 앞까지 따라 올라가면 드러난다)은 구름으로 가린다
             // (`BattleDirector.RoomCloud.cs`). 구름은 무대 공용 한 장.

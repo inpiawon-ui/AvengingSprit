@@ -110,6 +110,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58b7c932aecd63543aefdc0f7b1cd9ca
+    m_Address: roomfloor/roomapron_boss_sludge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 64e7749c93808294cab00f2f5387950d
     m_Address: roomfloor/roomfloor_ch3_lane_wide
     m_ReadOnly: 0
@@ -129,6 +135,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6e8363f2014b5144784f3bbd189808a1
     m_Address: roomfloor/roomfloor_env_lab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ec3992c40cf82f43b9ff36613634d9f
+    m_Address: roomfloor/roomapron_boss_crusher
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -218,6 +230,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c1eeea4ace3fa6e4dbd1d928f59beed9
+    m_Address: roomfloor/roomapron_boss_kingpin
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2f653a29ef1bb740a844831a9a16b47
     m_Address: roomfloor/roomfloor_kingpin
     m_ReadOnly: 0
@@ -238,6 +256,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d195de5e70443a34b9718e156e26f0c6
     m_Address: roomfloor/roomfloor_crusher
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1a05c00de6ff934abd3409aab302708
+    m_Address: roomfloor/roomapron_boss_python
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
@@ -291,6 +315,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e95c2ba2d9ced794290e02a8b57e0f5c
     m_Address: roomfloor/roomapron_missile
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ecbea6df309b8d14986e7d38866ec75b
+    m_Address: roomfloor/roomapron_boss_robot_snakes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f74a4a3190c589c48bdc4b6a8032a079
+    m_Address: roomfloor/roomapron_boss_guardian
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
