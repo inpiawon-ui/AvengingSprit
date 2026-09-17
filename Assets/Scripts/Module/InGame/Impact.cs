@@ -118,6 +118,7 @@ namespace Game.Module.InGame
             _spin = 0f;
             _life = 0f;
             _rect.localEulerAngles = Vector3.zero;
+            _rect.localScale = Vector3.one;
             _loop = loop;
             _step = 0f;
             _hold = false;
@@ -193,6 +194,12 @@ namespace Game.Module.InGame
             _step = Mathf.Max(0.02f, seconds);
             _timer = _step;
         }
+
+        /// <summary>
+        /// 세로로 눌러 **바닥에 누운 타원**으로 만든다. 발밑 링은 위에서 비스듬히 본 바닥이라
+        /// 정원이면 몸 뒤에 세운 판처럼 보인다.
+        /// </summary>
+        public void SetSquash(float yScale) => _rect.localScale = new Vector3(1f, Mathf.Max(0.05f, yScale), 1f);
 
         /// <summary>그림을 초당 <paramref name="degreesPerSecond"/> 만큼 돌린다.</summary>
         public void SetSpin(float degreesPerSecond) => _spin = degreesPerSecond;

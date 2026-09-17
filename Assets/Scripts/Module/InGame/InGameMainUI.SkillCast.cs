@@ -27,6 +27,7 @@ namespace Game.Module.InGame
     {
         private const float CutInSlideSeconds = 0.09f;
         // 0.34 는 「딱 생기고 바로 없어진다」 — 0.5초 더 세워 둔다(기획 2026-09-17)
+        // ⚠ 들어오는 시간 + 이 값 = `BattleDirector.CastFreezeSeconds`. 띠가 빠지는 순간 스킬이 나간다.
         private const float CutInHoldSeconds = 0.84f;
         private const float CutInOutSeconds = 0.13f;
         private const float CutInAngle = 2.5f;

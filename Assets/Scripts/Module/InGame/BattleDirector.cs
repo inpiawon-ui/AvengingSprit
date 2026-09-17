@@ -3080,6 +3080,8 @@ namespace Game.Module.InGame
 
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
+            // 스킬 컷인 중 — 전투를 세우고 연출만 돌린다. 컷인이 끝나면 스킬이 나간다.
+            if (IsCastFrozen) { TickCastFreeze(); return; }
 
             // ⚠ 임시 — WASD 이동 (`BattleDirector.Keyboard.cs`). 지울 때 이 줄도 함께.
             TickKeyboardMove();
@@ -8075,7 +8077,7 @@ namespace Game.Module.InGame
 
         public void TryPossess()
         {
-            if (!_running || _awaitingBuff || IsChanneling) return;
+            if (!_running || _awaitingBuff || IsChanneling || IsCastFrozen) return;
 
             // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다.
             // 몸이 있을 때 이 버튼은 **탈출**이다.
@@ -8239,7 +8241,7 @@ namespace Game.Module.InGame
 
         public void TryActiveSkill()
         {
-            if (!_running || _skillCooldown < SkillCooldownOf(_host?.Profile)) return;
+            if (!_running || IsCastFrozen || _skillCooldown < SkillCooldownOf(_host?.Profile)) return;
             // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 액티브 스킬은 뚫려 있어서,
             // 몸이 없는 상태로 화면 전체를 쓸어버릴 수 있었다.
             // 게이지는 그대로 둔다 — 몸을 얻으면 그때 쓴다.
@@ -8249,7 +8251,8 @@ namespace Game.Module.InGame
             if (IsSkillSealed(me.Key)) return;
 
             if (!SandboxKeepsGauge) _skillCooldown = 0f;
-            CastHostSkill(me);
+            // 스킬은 컷인이 끝난 뒤에 나간다(`BattleDirector.SkillCast`) — 그동안 전투는 멈춘다
+            BeginCast(me);
         }
 
         // ── 돌풍 돌진 (아마존) ───────────────────────────────────

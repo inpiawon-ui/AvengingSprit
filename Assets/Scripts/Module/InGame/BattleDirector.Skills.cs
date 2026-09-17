@@ -404,7 +404,6 @@ namespace Game.Module.InGame
         {
             if (me == null) return;
             global::Game.Module.Common.GameSound.Skill(me.Key);
-            PlayCastPresentation(me);   // 보이는 것만 얹는다 — 아래 스킬 효과와는 따로다
             switch (me.Key)
             {
                 // ── 근거리 6 ──
