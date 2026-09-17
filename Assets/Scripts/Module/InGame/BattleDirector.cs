@@ -1281,11 +1281,7 @@ namespace Game.Module.InGame
 
                 case "ROTATING_BLADE":
                 {
-                    ob.Frames = new[]
-                    {
-                        GetSprite($"{art}_1"), GetSprite($"{art}_2"),
-                        GetSprite($"{art}_3"), GetSprite($"{art}_4"),
-                    };
+                    ob.Frames = EnvFrames(art, 4);
                     ob.IsHazard = true;
                     if (ob.Damage <= 0) ob.Damage = 10;
                     if (ob.Tick <= 0f) ob.Tick = 0.5f;
@@ -1304,8 +1300,26 @@ namespace Game.Module.InGame
             }
         }
 
-        private Sprite[] Frames3(string prefix)
-            => new[] { GetSprite($"{prefix}_1"), GetSprite($"{prefix}_2"), GetSprite($"{prefix}_3") };
+        private Sprite[] Frames3(string prefix) => EnvFrames(prefix, 3);
+
+        /// <summary>
+        /// 움직이는 장애물의 프레임. 첫 장이 놓인 그림(EnvSprite)과 **같은 세트**여야 한다 —
+        /// 기본형으로 받으면 새 무대 그림이 한 프레임 뒤 옛 그림으로 바뀐다.
+        /// 무대 세트에 없는 장(상자 금 간 그림 · 톱날 회전 그림)은 무대 첫 장을 그대로 쓴다.
+        /// </summary>
+        private Sprite[] EnvFrames(string prefix, int count)
+        {
+            string tail = prefix.Substring(4);
+            var envFirst = string.IsNullOrEmpty(_floorEnv) ? null : GetSprite($"obj_{_floorEnv}_{tail}_1");
+            var frames = new Sprite[count];
+            for (int i = 0; i < count; i++)
+            {
+                frames[i] = envFirst != null
+                    ? GetSprite($"obj_{_floorEnv}_{tail}_{i + 1}") ?? envFirst
+                    : GetSprite($"{prefix}_{i + 1}");
+            }
+            return frames;
+        }
 
         /// <summary>축·사슬처럼 본체를 따라다니는 보조 그림 한 장.</summary>
         private RectTransform MakeExtra(string name, string sprite, Vector2 at, float size)
@@ -1606,6 +1620,9 @@ namespace Game.Module.InGame
                         var c = o.Home.center + new Vector2(Mathf.Cos(ang), Mathf.Sin(ang)) * rad;
                         MoveObstacle(o, rt, c);
                         SetFrame(o, Mathf.FloorToInt(Mathf.Repeat(t * 16f, 4f)));
+                        // 무대 톱날은 한 장뿐이라 프레임이 안 바뀐다 — 그림 자체를 돌린다
+                        if (o.Frames != null && o.Frames.Length > 1 && o.Frames[0] == o.Frames[1])
+                            rt.localRotation = Quaternion.Euler(0f, 0f, -t * 360f * 4f);
                         break;
                     }
 
