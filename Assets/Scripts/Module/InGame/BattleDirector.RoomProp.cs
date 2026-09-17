@@ -64,8 +64,12 @@ namespace Game.Module.InGame
             _roomPropUsed = false;
         }
 
+        /// <summary>
+        /// 물건 자리. 보스를 잡은 방의 악마의 제단은 **방 한가운데**에 선다(기획 2026-09-17) —
+        /// 보스가 사라진 아레나 복판이 곧 보상 자리다.
+        /// </summary>
         private Vector2 RoomPropAt()
-            => new(_roomSize.x * 0.5f, -_roomSize.y * RoomPropYRatio);
+            => new(_roomSize.x * 0.5f, -_roomSize.y * (_roomKind == RoomKind.Boss ? 0.5f : RoomPropYRatio));
 
         private void ClearRoomProp()
         {
@@ -91,7 +95,8 @@ namespace Game.Module.InGame
             _roomPropUsed = true;
             if (_roomKind == RoomKind.Rest) OpenShrine();
             else if (_roomKind == RoomKind.Shop) OpenShop();
-            else if (_roomKind == RoomKind.Event) OfferEvent();
+            // 악마의 제단 — 보스를 잡은 방에 선다(예전 004 이벤트 방 규칙도 남겨 둔다)
+            else if (_roomKind == RoomKind.Event || _roomKind == RoomKind.Boss) OfferEvent();
 
             // 다 쓴 물건은 흐릿하게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
             if (_roomPropImg != null) _roomPropImg.color = new Color(1f, 1f, 1f, 0.45f);

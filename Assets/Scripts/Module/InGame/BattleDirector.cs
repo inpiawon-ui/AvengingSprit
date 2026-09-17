@@ -600,27 +600,14 @@ namespace Game.Module.InGame
         /// 그 자리를 빌린다 — 그래야 지나갈 수 있다. 화면이 생기면 갈라낸다.
         /// </summary>
         /// <summary>
-        /// 004 가 회복 제단으로 갈리는 체력 문턱. 고스트 최대 체력의 몫이다.
+        /// 방이 무엇으로 열리는가.
         ///
-        /// ⚠ 004 **바로 다음이 중간 보스**이고 그 대장은 빙의가 안 된다.
-        ///   체력이 바닥인 채로 대가형 이벤트만 뜨면 그 판은 거기서 끝난다 —
-        ///   고를 것이 남아 있어야 선택이지, 죽는 길 하나뿐이면 그건 벽이다.
+        ///   004 (EVENT)  →  언제나 천사의 제단 (`RoomKind.Rest`)   — 기획 2026-09-17
+        ///   악마의 제단  →  보스를 잡은 방에 선다 (`OnRoomCleared`)
         ///
-        /// ⚠ 한때 「그 위는 회복/이벤트 반반 무작위」로 뒀다가 되돌렸다(2026-09-08 확정).
-        ///   무작위로 두면 **회복이 두 번 연달아 나오는 판**이 생기고, 그러면 이벤트
-        ///   25종을 돌리려고 004 를 이벤트 방으로 만든 뜻이 흐려진다.
-        ///   대가형(악마 계약)은 별도 방이 아니라 **이벤트 풀 안**에 들어간다.
-        /// </summary>
-        private const float RestHpRatio = 0.30f;
-
-        /// <summary>
-        /// 004 방이 무엇으로 열리는가 (기획 2026-09-15).
-        ///
-        ///   호스트 체력 ≤ 30%  →  천사의 제단 (`RoomKind.Rest`)
-        ///   그 외               →  천사 · 악마 **반반**
-        ///
-        /// ⚠ 예전에는 **고스트 HP** 만 봤다. 몸에 타 있는 동안 고스트 HP 는 거의 가득이라
-        ///   천사의 제단이 사실상 안 나왔다. 이제 몸의 체력을 본다 — 몸이 없으면 고스트 HP 로 잰다.
+        /// ⚠ 예전(2026-09-15)에는 004 가 「몸 체력 30% 이하면 천사, 아니면 천사·악마 반반」이었다.
+        ///   004 바로 다음이 중간 보스라 거기서 늘 회복을 받게 하고, 대가를 치르는 거래는
+        ///   보스를 넘긴 보상 자리로 옮겼다.
         /// </summary>
         private RoomKind KindOfCanon(RoomEntry room)
         {
@@ -634,12 +621,7 @@ namespace Game.Module.InGame
                 "REST" => RoomKind.Rest,
                 _       => RoomKind.Normal,
             };
-            if (kind == RoomKind.Event)
-            {
-                float ratio = _host != null && _host.HpMax > 0 ? (float)_host.Hp / _host.HpMax
-                            : GhostHpMax > 0 ? (float)_ghostHp / GhostHpMax : 1f;
-                if (ratio <= RestHpRatio || UnityEngine.Random.value < 0.5f) return RoomKind.Rest;
-            }
+            if (kind == RoomKind.Event) return RoomKind.Rest;
             return kind;
         }
 
@@ -8470,6 +8452,12 @@ namespace Game.Module.InGame
             bool isLast = IsLastRoom;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
+
+            // 보스를 잡은 자리에 **악마의 제단**이 선다(기획 2026-09-17). 다가서면 계약을 묻는다.
+            // 출구는 같이 열린다 — 쓸지 말지는 고르는 것이다.
+            // ⚠ 계약으로 매복이 붙으면 그 싸움을 비운 뒤 여기로 다시 온다. 제단을 또 세우면
+            //   다 쓴 제단이 새것으로 되살아나므로, 이미 서 있으면 세우지 않는다.
+            if (_roomKind == RoomKind.Boss && _roomProp == null) SpawnDevilAltar();
 
             // 버프는 이제 **레벨업**에서 나온다(기획서 A 5-2). 방을 비운 것만으로는
             // 주지 않는다 — 잡는 만큼 성장하는 쪽이 교전을 피하지 않게 만든다.
