@@ -85,13 +85,16 @@ namespace Game.Module.InGame
             Shake(CastShake);
 
             var skill = SkillEntryOf(me.Key);
+            // 영어 화면은 큰 글씨가 곧 영문 이름이다. 번역 표에 영어 칸이 비어 있어
+            // `DisplayName` 이 한국어로 떨어졌다 — 표의 영문 이름을 쓰고 아래 줄은 비운다.
+            bool english = global::Game.Module.Common.Localize.Current == global::Game.Module.Common.Language.English;
+            string bigName = skill == null ? string.Empty
+                : english || string.IsNullOrEmpty(skill.DisplayName) ? skill.NameEn : skill.DisplayName;
             _bus.Publish(new SkillCastEvent
             {
                 CastHostKey = me.Key,
-                SkillName = skill != null
-                    ? (string.IsNullOrEmpty(skill.DisplayName) ? skill.NameEn : skill.DisplayName)
-                    : string.Empty,
-                SkillNameEn = skill?.NameEn ?? string.Empty,
+                SkillName = bigName,
+                SkillNameEn = english ? string.Empty : skill?.NameEn ?? string.Empty,
                 CastColor = color,
             });
         }

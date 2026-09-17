@@ -33,7 +33,9 @@ namespace Game.EditorTools
             new[]{ "ninja_chain",      "사슬 결박",     "방 안 모든 적을 5초간 묶는다. 묶인 적은 더 아프게 맞는다." },
             new[]{ "dragoon",          "화염 지대",     "가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다." },
             new[]{ "salamander",       "독 뿜기",       "둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다." },
-            new[]{ "dragon_blue",      "뇌전 폭주",     "2초간 번개 튕김이 반드시 터진다." },
+            // 영문 이름(넷째 칸)은 바뀐 것만 적는다 — 나머지는 정본 임포터 값 그대로다.
+            // 청룡은 냉기 → 번개로 바뀌었는데 영문이 `Glacial Breath` 로 남아 컷인에 떴다(기획 2026-09-17).
+            new[]{ "dragon_blue",      "뇌전 폭주",     "2초간 번개 튕김이 반드시 터진다.", "Thunder Rampage" },
             new[]{ "commando_grenade", "융단 폭격",     "수류탄 5발을 부채꼴로 동시에 던진다." },
             new[]{ "snowwoman",        "얼음 감옥",     "2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다." },
             new[]{ "thug",             "난사",          "1초간 3방향으로 쏟아붓는다." },
@@ -118,6 +120,7 @@ namespace Game.EditorTools
                     if (e.FindPropertyRelative("_activeSkillKey").stringValue != key) continue;
                     e.FindPropertyRelative("_nameKr").stringValue = row[1];
                     e.FindPropertyRelative("_description").stringValue = row[2];
+                    if (row.Length > 3) e.FindPropertyRelative("_nameEn").stringValue = row[3];
                     actDone++;
                     break;
                 }

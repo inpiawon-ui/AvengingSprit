@@ -45,6 +45,7 @@ namespace Game.Module.InGame
         private TMP_Text _cutInNameEn;
 
         private Image _readyGlow;
+        private Image _readyGlowOuter;
         private Image _readySpark;
         private Sprite[] _readyFrames;
         private float _readyTimer;
@@ -65,6 +66,11 @@ namespace Game.Module.InGame
             {
                 _readyFrames = new[] { f1, _uiAtlas.GetSprite("skillcastready_2") ?? f1,
                                        _uiAtlas.GetSprite("skillcastready_3") ?? f1 };
+                // 바깥 겹 — 같은 그림을 크게 한 장 더 깔아 빛이 멀리 번지게 한다.
+                // ⚠ 한 겹이면 밝은 바닥(CH5 민트)에서 빛이 바닥에 묻혔다(기획 2026-09-17).
+                _readyGlowOuter = MakeImage("SkillReadyGlowOuter", button, f1, new Vector2(171f, 171f) * 1.18f,
+                                            Vector2.zero);
+                _readyGlowOuter.transform.SetAsLastSibling();
                 // 그림 가운데 구멍(100×112)이 버튼 크기와 같게 잘라 두었다 — 원본 크기 그대로 쓴다
                 _readyGlow = MakeImage("SkillReadyGlow", button, f1, new Vector2(171f, 171f), Vector2.zero);
                 _readyGlow.transform.SetAsLastSibling();
@@ -174,6 +180,7 @@ namespace Game.Module.InGame
             if (_readyGlow.gameObject.activeSelf != ready)
             {
                 _readyGlow.gameObject.SetActive(ready);
+                if (_readyGlowOuter != null) _readyGlowOuter.gameObject.SetActive(ready);
                 if (_readySpark != null) _readySpark.gameObject.SetActive(ready);
             }
             if (!ready) return;
@@ -184,10 +191,19 @@ namespace Game.Module.InGame
                 _readyTimer += ReadyFrameSeconds;
                 _readyIndex = (_readyIndex + 1) % _readyFrames.Length;
                 _readyGlow.sprite = _readyFrames[_readyIndex];
+                if (_readyGlowOuter != null) _readyGlowOuter.sprite = _readyFrames[(_readyIndex + 1) % _readyFrames.Length];
             }
-            // 숨 쉬듯 — 완전히 꺼지면 「준비됐다가 풀렸다」로 읽힌다. 0.55 아래로 안 내린다
-            float k = 0.55f + 0.45f * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f * 1.1f));
-            _readyGlow.color = new Color(_castColor.r, _castColor.g, _castColor.b, k);
+            // 숨 쉬듯 — 완전히 꺼지면 「준비됐다가 풀렸다」로 읽힌다. 0.8 아래로 안 내린다
+            float wave = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f * 1.1f);
+            // 안쪽 겹은 흰빛을 섞어 **밝게**, 바깥 겹은 몸 색 그대로 **넓게** — 어느 바닥에서든 한쪽은 튄다
+            var inner = Color.Lerp(_castColor, Color.white, 0.45f);
+            _readyGlow.color = new Color(inner.r, inner.g, inner.b, 0.8f + 0.2f * wave);
+            _readyGlow.rectTransform.localScale = Vector3.one * (1f + 0.05f * wave);
+            if (_readyGlowOuter != null)
+            {
+                _readyGlowOuter.color = new Color(_castColor.r, _castColor.g, _castColor.b, 0.45f + 0.45f * wave);
+                _readyGlowOuter.rectTransform.localScale = Vector3.one * (0.96f + 0.1f * wave);
+            }
 
             if (_readySpark != null)
             {
@@ -230,6 +246,16 @@ namespace Game.Module.InGame
 
             if (_cutIn != null)
             {
+                // ⚠ 폰트는 **시전 때마다** HUD 글자에서 다시 받는다. 이 노드는 화면이 뜬 뒤에
+                //   코드로 만들어서, 언어를 바꿔도 폰트 교체 대상에 안 들어간다 —
+                //   일본어 폰트로 한글을 그리면 네모가 뜬다.
+                var fontSource = _ui.Get<TMP_Text>("HostNameKrText");
+                if (fontSource != null)
+                    foreach (var t in new[] { _cutInTag, _cutInName, _cutInNameEn })
+                    {
+                        t.font = fontSource.font;
+                        t.fontSharedMaterial = fontSource.fontSharedMaterial;
+                    }
                 _cutInPortrait.sprite = _battle != null ? _battle.UnitSprite(e.CastHostKey) : null;
                 _cutInPortrait.enabled = _cutInPortrait.sprite != null;
                 // 띠 그림은 푸른 빛이 들어 있다 — 몸 색을 반만 섞어 빛이 죽지 않게
