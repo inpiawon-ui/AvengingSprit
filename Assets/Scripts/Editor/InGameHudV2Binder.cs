@@ -13,7 +13,7 @@ namespace Game.Editor
     ///   위 HUD 전체     → `hudbackdrop_v2`   (판 0~243 을 제 크기로)
     ///   방향 패드 받침  → `hud_dpad_base_v2`
     ///   ACTION 액자     → `hud_action_frame_v2` (버튼 두 칸이 그려져 있다)
-    ///   보스 명판       → `hud_boss_plate_v2`   (보스방에서만 켜지는 `BossGroup` 뒤에 깐다)
+    ///   보스 명판       → `hud_boss_plate_v3`   (재발주 — 보스방에서만 켜지는 `BossGroup` 뒤에 깐다)
     ///
     /// 칸 테두리가 판에 이미 그려져 있으므로 **칸마다 붙이던 테두리 그림은 끈다.**
     /// 시안의 칸은 예전 칸보다 조금씩 크고 자리도 몇 픽셀씩 달라서,
@@ -103,7 +103,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/인게임 HUD 퀄업 2차 판 꽂기")]
         public static void Run()
         {
-            foreach (var f in new[] { "hudbackdrop_v2", "hud_dpad_base_v2", "hud_action_frame_v2", "hud_boss_plate_v2" })
+            foreach (var f in new[] { "hudbackdrop_v2", "hud_dpad_base_v2", "hud_action_frame_v2", "hud_boss_plate_v3" })
                 EnsureSprite($"{Res}/{f}.png");
 
             var root = PrefabUtility.LoadPrefabContents(Prefab);
@@ -187,7 +187,7 @@ namespace Game.Editor
 
         /// <summary>
         /// 보스 명판. `BossGroup` 은 가로로 늘어나는 줄이라 **가운데 기준**으로 놓는다.
-        /// 명판 689×105 안의 바 홈은 (44,39) 부터 600×28, 이름 칸은 위 6~31, 체력 칸은 아래 71~101.
+        /// 명판 720×110 (v3 재발주 — v2 는 이름 · 숫자 칸에 테두리가 없어 검은 네모로 튀어나왔다).
         /// </summary>
         private const float BossPlateDrop = 14f;   // BossGroup 윗변 236 → 명판 윗변 250
 
@@ -195,7 +195,7 @@ namespace Game.Editor
         {
             var group = Find(root.transform, "BossGroup") as RectTransform;
             if (group == null) return;
-            group.sizeDelta = new Vector2(group.sizeDelta.x, 105f);
+            group.sizeDelta = new Vector2(group.sizeDelta.x, BossPlateDrop + 110f);
 
             var plateT = group.Find("BossPlate");
             if (plateT == null)
@@ -210,28 +210,28 @@ namespace Game.Editor
             plate.pivot = new Vector2(0.5f, 1f);
             // HUD 받침이 243 으로 길어졌다 — 명판을 그 아래로 내린다(보스방 시안의 명판 위치)
             plate.anchoredPosition = new Vector2(0f, -BossPlateDrop);
-            plate.sizeDelta = new Vector2(689f, 105f);
+            plate.sizeDelta = new Vector2(720f, 110f);
             var pimg = plateT.GetComponent<Image>();
-            pimg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Res}/hud_boss_plate_v2.png");
+            pimg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Res}/hud_boss_plate_v3.png");
             pimg.raycastTarget = false;
 
             if (group.Find("BossHpBarBg") is RectTransform bar)
             {
                 bar.anchorMin = bar.anchorMax = new Vector2(0.5f, 1f);
                 bar.pivot = new Vector2(0.5f, 1f);
-                bar.anchoredPosition = new Vector2(0f, -39f - BossPlateDrop);
-                bar.sizeDelta = new Vector2(600f, 28f);
-                if (bar.Find("BossHpBarFill") is RectTransform fill) fill.sizeDelta = new Vector2(600f, 28f);
+                bar.anchoredPosition = new Vector2(-1f, -44f - BossPlateDrop);
+                bar.sizeDelta = new Vector2(594f, 24f);
+                if (bar.Find("BossHpBarFill") is RectTransform fill) fill.sizeDelta = new Vector2(594f, 24f);
             }
             if (group.Find("BossLabel") is RectTransform label)
             {
                 label.anchoredPosition = new Vector2(0f, -6f - BossPlateDrop);
-                label.sizeDelta = new Vector2(label.sizeDelta.x, 25f);
+                label.sizeDelta = new Vector2(label.sizeDelta.x, 24f);
             }
             if (group.Find("BossHpText") is RectTransform hp)
             {
-                hp.anchoredPosition = new Vector2(0f, -73f - BossPlateDrop);
-                hp.sizeDelta = new Vector2(hp.sizeDelta.x, 26f);
+                hp.anchoredPosition = new Vector2(0f, -80f - BossPlateDrop);
+                hp.sizeDelta = new Vector2(hp.sizeDelta.x, 24f);
             }
         }
 

@@ -31,7 +31,7 @@ namespace Game.Module.InGame
         // ⚠ HUD 퀄업 2차(2026-09-17, `InGameHudV2Binder`)에서 판의 바 홈에 맞춰 폭이 바뀌었다
         private const float GhostBarWidth = 155f;   // 프리팹 GhostHpBarBg 폭
         private const float HostBarWidth = 129f;    // 프리팹 HostHpBarBg 폭
-        private const float BossBarWidth = 600f;    // 프리팹 BossHpBarBg 폭
+        private const float BossBarWidth = 594f;    // 프리팹 BossHpBarBg 폭
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
