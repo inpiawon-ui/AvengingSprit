@@ -26,7 +26,8 @@ namespace Game.Module.InGame
     public sealed partial class InGameMainUI
     {
         private const float CutInSlideSeconds = 0.09f;
-        private const float CutInHoldSeconds = 0.34f;
+        // 0.34 는 「딱 생기고 바로 없어진다」 — 0.5초 더 세워 둔다(기획 2026-09-17)
+        private const float CutInHoldSeconds = 0.84f;
         private const float CutInOutSeconds = 0.13f;
         private const float CutInAngle = 2.5f;
         private const float CutInY = 170f;                 // 화면 가운데에서 위로

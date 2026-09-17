@@ -50,6 +50,8 @@ namespace Game.Module.InGame
             var body = me.Position;
             var feet = body - Vector2.up * CastFootDrop;
 
+            me.BeginCastWhite();   // 몸 모양 그대로 하얗게 — 시안 「몸이 하얗게 번쩍」
+
             // 몸의 빛은 **흰빛이 먼저** 보여야 번쩍으로 읽힌다 — 색은 옅게만 섞는다
             var flash = PlayFx("castflash", body, CastFlashSize, loop: false);
             if (flash != null)

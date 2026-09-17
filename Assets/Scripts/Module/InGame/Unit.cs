@@ -1236,6 +1236,8 @@ namespace Game.Module.InGame
             // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
             if (_body == null || _dying) return;
 
+            TickCastWhite(dt);
+
             // 윤곽은 무적과 **따로** 켠다(기획 2026-09-15) — 스킬이 준 무적에만 그린다.
             // 방 입장·빙의 직후·공중에 뜬 잡몹처럼 규칙상 무적인 것까지 그리면
             // 화면 여기저기서 허연 테두리가 수시로 튀어 지저분했다.
@@ -1341,6 +1343,57 @@ namespace Game.Module.InGame
             bool lit = (int)(_invulnPhase / InvulnAuraBlinkSeconds) % 2 == 0;
             _invulnAura.color = new Color(0.75f, 0.95f, 1f, lit ? 0.95f : 0f);
             if (!_invulnAura.gameObject.activeSelf) _invulnAura.gameObject.SetActive(true);
+        }
+
+        // ── 스킬 시전 — 몸이 하얗게 번쩍 ─────────────────────────
+        //
+        // 시안 2번째 컷 「몸이 하얗게 번쩍」(2026-09-17). 빛 그림(`fx_castflash`)만 얹었더니
+        // 몸이 그대로 보여서 「캐릭터가 하얗게 되는 게 없다」는 지적을 받았다.
+        // 무적 윤곽과 같은 실루엣 재질로 **몸 모양 그대로 흰 판**을 몸 **앞에** 덮고 빠르게 걷는다.
+        // 새 그림이 아니라 몸 그림의 알파만 쓴다.
+
+        private const float CastWhiteSeconds = 0.34f;
+        private const float CastWhiteHoldSeconds = 0.08f;   // 이만큼은 완전히 하얗다
+
+        private Image _castWhite;
+        private float _castWhiteTimer;
+
+        /// <summary>스킬을 썼다. 몸을 잠깐 하얗게 덮는다.</summary>
+        public void BeginCastWhite() => _castWhiteTimer = CastWhiteSeconds;
+
+        private void TickCastWhite(float dt)
+        {
+            if (_castWhiteTimer <= 0f)
+            {
+                if (_castWhite != null && _castWhite.gameObject.activeSelf) _castWhite.gameObject.SetActive(false);
+                return;
+            }
+            _castWhiteTimer = Mathf.Max(0f, _castWhiteTimer - dt);
+
+            if (_castWhite == null)
+            {
+                _castWhite = GetOrCreate("CastWhite", _body.rectTransform.sizeDelta, Vector2.zero);
+                _castWhite.preserveAspect = _body.preserveAspect;
+                _castWhite.material = SilhouetteMaterial();
+            }
+            // 몸 **바로 앞**. 체력바 · 표시보다는 뒤라 그것들을 가리지 않는다.
+            _castWhite.transform.SetSiblingIndex(_body.transform.GetSiblingIndex() + 1);
+
+            var src = _body.rectTransform;
+            var rt = _castWhite.rectTransform;
+            rt.anchorMin = src.anchorMin;
+            rt.anchorMax = src.anchorMax;
+            rt.pivot = src.pivot;
+            rt.sizeDelta = src.sizeDelta;
+            rt.anchoredPosition = src.anchoredPosition;
+            rt.localScale = src.localScale;
+            _castWhite.sprite = _body.sprite;
+            _castWhite.enabled = _castWhite.sprite != null;
+
+            float fade = CastWhiteSeconds - CastWhiteHoldSeconds;
+            float a = _castWhiteTimer >= fade ? 1f : _castWhiteTimer / fade;
+            _castWhite.color = new Color(1f, 1f, 1f, a);
+            if (!_castWhite.gameObject.activeSelf) _castWhite.gameObject.SetActive(true);
         }
 
         // ── 분신 ────────────────────────────────────────────────
