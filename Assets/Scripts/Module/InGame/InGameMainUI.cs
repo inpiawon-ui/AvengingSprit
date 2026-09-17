@@ -28,9 +28,10 @@ namespace Game.Module.InGame
         // 게이지 채우기 폭. 레이아웃 JSON 의 `*HpBarBg` 가로와 같아야 한다 —
         // 어긋나면 HP 가 가득 차도 바가 덜 차거나 넘친다.
         // (_layout_ingame.py 의 목업 좌표 × 1.25)
-        private const float GhostBarWidth = 148f;   // 프리팹 GhostHpBarBg 폭
-        private const float HostBarWidth = 118f;    // 프리팹 HostHpBarBg 폭
-        private const float BossBarWidth = 640f;    // 프리팹 BossHpBarBg 폭
+        // ⚠ HUD 퀄업 2차(2026-09-17, `InGameHudV2Binder`)에서 판의 바 홈에 맞춰 폭이 바뀌었다
+        private const float GhostBarWidth = 155f;   // 프리팹 GhostHpBarBg 폭
+        private const float HostBarWidth = 129f;    // 프리팹 HostHpBarBg 폭
+        private const float BossBarWidth = 600f;    // 프리팹 BossHpBarBg 폭
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
@@ -806,7 +807,10 @@ namespace Game.Module.InGame
         private void ShowNoHost()
         {
             _hasRealHost = false;
-            _ui.SetActive("CurrentHostPanel", false);
+            // ⚠ 칸을 끄지 않는다(HUD 퀄업 2차, 2026-09-17). 칸 테두리가 받침 판에 그려져 있어서,
+            //   끄면 CHAPTER 칸 글자만 가운데로 미끄러지고 테두리는 제자리에 남아 어긋난다.
+            //   안의 글자 · 배지 · 바 · 초상만 비워 빈 칸으로 둔다.
+            _ui.SetActive("CurrentHostPanel", true);
             _ui.SetText("HostLabel", string.Empty);
             _ui.SetText("HostNameEnText", string.Empty);
             _ui.SetText("HostNameKrText", string.Empty);
@@ -876,7 +880,7 @@ namespace Game.Module.InGame
         }
 
         /// <summary>방 진행 바 폭. 프리팹 `RoomProgressBg` 와 같아야 한다.</summary>
-        private const float RoomProgressWidth = 302f;
+        private const float RoomProgressWidth = 219f;
 
         private void OnRoomEntered(RoomEnteredEvent e)
         {
