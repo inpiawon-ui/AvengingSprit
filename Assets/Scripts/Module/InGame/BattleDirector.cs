@@ -6136,6 +6136,7 @@ namespace Game.Module.InGame
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * BreakMul(victim)));
             // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
             NoteBossDamage(victim, damage);
+            damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
             ShowDamage(victim.Position, damage, toEnemy: true);
             SpawnFx("hit", victim.Position, HitFxSize);
             Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
@@ -6906,6 +6907,7 @@ namespace Game.Module.InGame
             bool crit = shot.FromPlayer && RollCrit();
             // 호퍼 패시브는 치명타 **피해**를 키운다. 확률은 스탯이 따로 갖는다.
             if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * (CritMultiplier + CritDamageBonus)));
+            if (shot.FromPlayer) dmg = SandboxDamage(dmg);   // Sandbox — 테스트 피해 고정
 
             ShowDamage(victim.Position, dmg, toEnemy: true, crit);
             if (shot.FromPlayer)

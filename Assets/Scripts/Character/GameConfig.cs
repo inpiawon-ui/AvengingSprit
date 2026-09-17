@@ -168,6 +168,11 @@ namespace Game.Character
         [Tooltip("테스트 판에서 즉사(갱스터 처형·사신·암살)를 막는다. 기본은 꺼짐 — 즉사가 그대로 터진다")]
         [SerializeField] private bool _sandboxNoExecute;
 
+        // 스테이지를 빨리 넘기며 배경 · 장애물 · 보스 · 연출을 한 바퀴 둘러보기 위한 칸(기획 2026-09-17).
+        // 테스트 판(`_sandboxMode`)과 따로 둔다 — 저것은 적이 **안 죽는** 판이고 이것은 **바로 죽는** 판이다.
+        [Tooltip("0 보다 크면 내 공격 한 방의 피해가 이 값으로 고정된다. 0 = 꺼짐. 빌드 전에 0")]
+        [SerializeField] private int _testPlayerDamage;
+
         [Header("전투 전체 손 속도")]
         [Tooltip("평타 속도 배수. 1 = 지금 속도, 0.7 = 0.7배로 느리게. 내 몸·잡몹·보스·불러낸 몸에 모두 걸린다")]
         [SerializeField] private float _attackSpeedMul = 0.7f;
@@ -385,6 +390,9 @@ namespace Game.Character
 
         /// <summary>테스트 판에서 즉사를 막는가. 끄면 즉사가 그대로 터진다.</summary>
         public bool SandboxNoExecute => _sandboxNoExecute;
+
+        /// <summary>내 공격 한 방 피해 고정값(테스트). 0 이면 꺼짐.</summary>
+        public int TestPlayerDamage => Mathf.Max(0, _testPlayerDamage);
 
         /// <summary>
         /// 전투 전체의 평타 속도 배수 (2026-09-15). 1 이 지금까지의 속도다.

@@ -61,6 +61,15 @@ namespace Game.Module.InGame
         private bool SandboxKeepsGhost => Sandbox;
 
         /// <summary>
+        /// 내 공격 피해를 테스트 값으로 바꾼다(`GameConfig._testPlayerDamage`). 꺼져 있으면 받은 값 그대로.
+        /// 스테이지를 한 방씩 넘기며 전체를 둘러보는 용도다.
+        /// </summary>
+        private int SandboxDamage(int normal)
+            => _config != null && _config.TestPlayerDamage > 0 ? _config.TestPlayerDamage : normal;
+
+        private bool TestDamageOn => _config != null && _config.TestPlayerDamage > 0;
+
+        /// <summary>
         /// 적 수를 다섯으로 **채운다.** 정본 방은 스폰 목록이 정해져 있어
         /// `SandboxCount` 가 안 닿는다 — 모자란 만큼 뒤에 더 세운다.
         /// 적을 **세운 뒤에** 부른다.
@@ -84,7 +93,7 @@ namespace Game.Module.InGame
 
         private void EnsureSandboxTag()
         {
-            if (!Sandbox)
+            if (!Sandbox && !TestDamageOn)
             {
                 if (_sandboxTag != null) _sandboxTag.gameObject.SetActive(false);
                 return;
@@ -100,11 +109,11 @@ namespace Game.Module.InGame
                 // ⚠ HUD 위에 올리면 「PLAYER SOUL」 글자와 겹쳐 둘 다 안 읽힌다(실측).
                 //   HUD 아래(280px)로 내려 방 왼쪽 위 구석에 붙인다.
                 _sandboxTag.anchoredPosition = new Vector2(12f, -292f);
-                _sandboxTag.sizeDelta = new Vector2(200f, 34f);
+                _sandboxTag.sizeDelta = new Vector2(280f, 34f);   // 「● 데미지 9999」가 200 에서 두 줄로 꺾였다
 
                 var tmp = go.AddComponent<TMPro.TextMeshProUGUI>();
                 // ⚠ 길게 적었더니 줄바꿈되어 방을 가렸다(실측). 한 줄로 줄인다.
-                tmp.text = "● 테스트 판";
+                tmp.text = Sandbox ? "● 테스트 판" : $"● 데미지 {_config.TestPlayerDamage}";
                 tmp.fontSize = 24f;
                 tmp.color = new Color(1f, 0.32f, 0.32f, 1f);
                 tmp.raycastTarget = false;
