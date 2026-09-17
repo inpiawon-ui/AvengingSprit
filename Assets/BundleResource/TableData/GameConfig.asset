@@ -53,7 +53,7 @@ MonoBehaviour:
   _critPerGrade: 3
   _sandboxMode: 0
   _sandboxNoExecute: 0
-  _testPlayerDamage: 9999
+  _testPlayerDamage: 0
   _attackSpeedMul: 0.7
   _enemyIntervalMul: 0.85
   _enemyWindupMul: 0.7
