@@ -161,6 +161,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ef29d5c7eba1154a9f07296361c892a
+    m_Address: roomfloor/roomapron_street
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7fd66156edb7bc547be6238fe36dda7a
     m_Address: roomfloor/roomside_missile
     m_ReadOnly: 0
@@ -176,6 +182,12 @@ MonoBehaviour:
     m_Address: roomfloor/roomside_rooftop
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91ea08131b230284da82c9bf449b83ec
+    m_Address: roomfloor/roomapron_rooftop
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9f5f68c190a78e340a6bd6e3273f6879
     m_Address: roomfloor/roomfloor_env_missile
@@ -236,10 +248,29 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ddb9ffa6aecd27f48ba90c7e79ff626e
+    m_Address: roomfloor/roomapron_refinery
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ddce0aa592b88374b8947749ce8db603
+    m_Address: roomfloor/roomapron_lab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ddce603542a27664cbbe37dd225478bc
+    m_Address: roomfloor/roomapron_holding
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: df7471e5598609d41a6e251d65a2eae9
     m_Address: roomfloor/roomapron_junkyard
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - label_roomfloor
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e34bc5fd8633ef34da62b061816a9e01
     m_Address: roomfloor/roomfloor_sludge
@@ -254,6 +285,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e80cdd5f75abe37499b8f5d57ab136a1
     m_Address: roomfloor/roomfloor_ch3_ring
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_roomfloor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e95c2ba2d9ced794290e02a8b57e0f5c
+    m_Address: roomfloor/roomapron_missile
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_roomfloor
