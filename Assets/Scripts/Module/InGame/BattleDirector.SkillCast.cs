@@ -34,7 +34,7 @@ namespace Game.Module.InGame
         /// </summary>
         private const float CastFreezeSeconds = 0.63f;
 
-        private const float CastLinesSize = 170f;
+        private const float CastLinesSize = 220f;   // 그림 가운데 지름 200/512 가 비어 있다 — 몸(약 90×130)이 들어가는 크기
         private const float CastRingInner = 150f;
         private const float CastRingOuter = 240f;
         private const float CastReleaseRingSize = 230f;
@@ -75,8 +75,10 @@ namespace Game.Module.InGame
             me.BeginCastWhite();   // 몸 모양 그대로 하얗게 — 시안 「몸이 하얗게 번쩍」
 
             // 몸 둘레로 뻗는 흰 빛줄기 — 시안 1컷
-            var lines = PlayFx("castburst", body, CastLinesSize, loop: false);
-            if (lines != null) lines.SetFrameSeconds(0.06f);
+            // 전용 가는 빛줄기(`fx_castlines`)가 먼저, 없으면 폭발 그림으로 버틴다
+            var lines = PlayFx("castlines", body, CastLinesSize, loop: false)
+                        ?? PlayFx("castburst", body, CastLinesSize, loop: false);
+            if (lines != null) lines.SetFrameSeconds(0.07f);
 
             // 발밑에서 퍼지는 흰 타원
             var pop = PlayFloorFx("castring", feet, CastReleaseRingSize, loop: false);

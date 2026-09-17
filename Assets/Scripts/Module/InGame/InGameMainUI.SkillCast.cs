@@ -34,6 +34,7 @@ namespace Game.Module.InGame
         private const float CutInY = 170f;                 // 화면 가운데에서 위로
         private const float ReadyFrameSeconds = 0.12f;
         private const bool CastEdgeEnabled = false;
+        private static readonly bool ReadyGlowOuterEnabled = false;
         private const float CastEdgeOverscanX = 70f;   // 화면 밖으로 내보내는 폭(캔버스 px)
         private const float CastEdgeOverscanY = 110f;
         private const float CastEdgeAlpha = 0.5f;      // 가장 밝을 때도 반만
@@ -74,9 +75,13 @@ namespace Game.Module.InGame
                                        _uiAtlas.GetSprite("skillcastready_3") ?? f1 };
                 // 바깥 겹 — 같은 그림을 크게 한 장 더 깔아 빛이 멀리 번지게 한다.
                 // ⚠ 한 겹이면 밝은 바닥(CH5 민트)에서 빛이 바닥에 묻혔다(기획 2026-09-17).
-                _readyGlowOuter = MakeImage("SkillReadyGlowOuter", button, f1, new Vector2(171f, 171f) * 1.18f,
-                                            Vector2.zero);
-                _readyGlowOuter.transform.SetAsLastSibling();
+                // ⚠ 두꺼운 준비 빛(바깥 그림자 포함)을 받은 뒤로는 한 겹이면 된다 — 두 겹이면 과하다.
+                if (ReadyGlowOuterEnabled)
+                {
+                    _readyGlowOuter = MakeImage("SkillReadyGlowOuter", button, f1, new Vector2(171f, 171f) * 1.18f,
+                                                Vector2.zero);
+                    _readyGlowOuter.transform.SetAsLastSibling();
+                }
                 // 그림 가운데 구멍(100×112)이 버튼 크기와 같게 잘라 두었다 — 원본 크기 그대로 쓴다
                 _readyGlow = MakeImage("SkillReadyGlow", button, f1, new Vector2(171f, 171f), Vector2.zero);
                 _readyGlow.transform.SetAsLastSibling();
