@@ -2647,6 +2647,7 @@ namespace Game.Module.InGame
             // 불러낸 것들도 방을 넘어가지 않는다 — **골렘만 예외**다. 죽을 때까지 따라온다(기획 2026-09-15).
             ClearSummons(keepGolem: true);
             ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
+            ClearCastPresentation();
             ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
             _rangedKnockAt.Clear();   // 지난 방 몹의 밀림 시각을 들고 가지 않는다
@@ -3137,6 +3138,7 @@ namespace Game.Module.InGame
             TickDamageTexts(dt);
             TickGoldPiles(dt);
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
+            TickCastPresentation(dt);
             TickStatusFx(dt);
             TickHostPassives(dt);
             TickNewSkills(dt);

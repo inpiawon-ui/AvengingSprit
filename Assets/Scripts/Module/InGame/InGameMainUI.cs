@@ -246,6 +246,7 @@ namespace Game.Module.InGame
             // 하나 사면 **연출 없이 바로** 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
             _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => HidePanelNow("ShopPanel")));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
+            _tokens.Add(bus.Subscribe<SkillCastEvent>(OnSkillCast));
         }
 
         private void OnDisable()
@@ -285,6 +286,8 @@ namespace Game.Module.InGame
             // 아틀라스가 온 **뒤에** 껍데기를 입힌다. 먼저 부르면 그림이 아직 없어
             // 단색으로 남는다 — 화면이 한 번 초라했다가 안 바뀐다.
             SkinPopups();
+            SkinSkillCast();
+            SetSkillReadyHost(_readyHostKey);   // 아틀라스보다 몸이 먼저 정해졌을 수 있다
 
             try { _buffTable = await CoreModule.Get<IResourceManager>().LoadAsync<BuffTable>("TableData/BuffTable"); }
             catch (Exception e) { Debug.LogError($"[InGame] BuffTable 로드 실패 — {e.Message}"); }
@@ -300,6 +303,7 @@ namespace Game.Module.InGame
             if (_skillCooldownFill != null && _battle != null)
                 _skillCooldownFill.fillAmount = 1f - _battle.SkillCooldownRatio;
 
+            TickSkillReady(Time.unscaledDeltaTime);
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();
         }
@@ -852,6 +856,7 @@ namespace Game.Module.InGame
         private void SetSkillButton(string hostKey)
         {
             bool hasHost = !string.IsNullOrEmpty(hostKey);
+            SetSkillReadyHost(hostKey);
             _ui.SetActive("SkillButton", hasHost);
             if (!hasHost) return;
 

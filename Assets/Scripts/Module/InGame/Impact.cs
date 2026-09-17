@@ -114,6 +114,10 @@ namespace Game.Module.InGame
             _index = 0;
             _image.sprite = frames[0];
             _image.color = Color.white;
+            _tint = Color.white;
+            _spin = 0f;
+            _life = 0f;
+            _rect.localEulerAngles = Vector3.zero;
             _loop = loop;
             _step = 0f;
             _hold = false;
@@ -164,6 +168,46 @@ namespace Game.Module.InGame
         /// <summary>줄기였던 자리를 되돌린다. 풀에서 돌려 쓰므로 반드시 필요하다.</summary>
         private bool _isBeam;
 
+        // ── 스킬 시전 연출용 ───────────────────────────────────
+        //
+        // 시전 그림은 흰색으로 받아 **몸마다 색을 입힌다.** 마법진은 한 장이라
+        // 가만히 두면 붙여 놓은 스티커다 — 천천히 돌리고, 정해진 시간 뒤 흐려지며 꺼진다.
+        // 모두 `Play` 가 되돌린다(풀에서 돌려 쓰는 자리).
+
+        private Color _tint = Color.white;
+        private float _spin;        // 초당 도는 각도
+        private float _life;        // 0 이면 수명 없음
+        private float _fade;
+        private float _age;
+
+        /// <summary>그림에 색을 입힌다. <see cref="Play"/> 뒤에 부른다.</summary>
+        public void SetTint(Color color)
+        {
+            _tint = color;
+            if (_image != null) _image.color = color;
+        }
+
+        /// <summary>한 장의 시간을 정한다. <see cref="Play"/> 뒤에 부른다.</summary>
+        public void SetFrameSeconds(float seconds)
+        {
+            _step = Mathf.Max(0.02f, seconds);
+            _timer = _step;
+        }
+
+        /// <summary>그림을 초당 <paramref name="degreesPerSecond"/> 만큼 돌린다.</summary>
+        public void SetSpin(float degreesPerSecond) => _spin = degreesPerSecond;
+
+        /// <summary>
+        /// <paramref name="seconds"/> 뒤에 꺼진다. 마지막 <paramref name="fadeSeconds"/> 동안 흐려진다.
+        /// 한 장짜리를 loop 로 틀어 두고 이걸로 거둔다.
+        /// </summary>
+        public void SetLife(float seconds, float fadeSeconds)
+        {
+            _life = Mathf.Max(0.01f, seconds);
+            _fade = Mathf.Clamp(fadeSeconds, 0.01f, _life);
+            _age = 0f;
+        }
+
         /// <summary>돌고 있는 표시를 몸을 따라 옮긴다.</summary>
         public void MoveTo(Vector2 at)
         {
@@ -181,6 +225,17 @@ namespace Game.Module.InGame
         public void Tick(float dt)
         {
             if (!IsActive) return;
+
+            if (_spin != 0f && !_isBeam)
+                _rect.localEulerAngles = new Vector3(0f, 0f, _rect.localEulerAngles.z + _spin * dt);
+
+            if (_life > 0f)
+            {
+                _age += dt;
+                if (_age >= _life) { Stop(); return; }
+                float k = Mathf.Clamp01((_life - _age) / _fade);
+                _image.color = new Color(_tint.r, _tint.g, _tint.b, _tint.a * k);
+            }
 
             if (_pulseSeconds > 0f && !_isBeam)
             {

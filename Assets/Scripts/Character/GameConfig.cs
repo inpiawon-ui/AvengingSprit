@@ -608,6 +608,57 @@ namespace Game.Character
             return found;
         }
 
+        // ── 스킬 시전 색 ─────────────────────────────────────────
+        //
+        // 스킬 연출 그림(빛·링·폭발·컷인 테두리)은 **흰색·회색으로만** 받았다.
+        // 몸마다 색을 여기서 입힌다 — 23명이 같은 흰 빛이면 누가 쓴 스킬인지 안 읽힌다.
+        // ⚠ 액티브 스킬 표에 두지 않는다. 표 임포터가 그 표를 통째로 다시 만든다.
+
+        [System.Serializable]
+        public struct CastColor
+        {
+            public string HostKey;
+            public Color Color;
+        }
+
+        [Header("스킬 시전 색 — 호스트별")]
+        [SerializeField] private Color _castColorDefault = new(0.45f, 0.85f, 1f, 1f);
+        [SerializeField] private CastColor[] _castColors =
+        {
+            new CastColor { HostKey = "death",            Color = new Color(1.00f, 0.22f, 0.30f) },
+            new CastColor { HostKey = "amazon",           Color = new Color(1.00f, 0.55f, 0.20f) },
+            new CastColor { HostKey = "amazon_elite",     Color = new Color(1.00f, 0.70f, 0.25f) },
+            new CastColor { HostKey = "baseball",         Color = new Color(0.75f, 0.90f, 1.00f) },
+            new CastColor { HostKey = "guru",             Color = new Color(1.00f, 0.85f, 0.35f) },
+            new CastColor { HostKey = "ninja_chain",      Color = new Color(0.70f, 0.55f, 1.00f) },
+            new CastColor { HostKey = "thug",             Color = new Color(1.00f, 0.75f, 0.25f) },
+            new CastColor { HostKey = "hopper_smg",       Color = new Color(0.60f, 1.00f, 0.35f) },
+            new CastColor { HostKey = "commando_mg",      Color = new Color(1.00f, 0.65f, 0.20f) },
+            new CastColor { HostKey = "commando_laser",   Color = new Color(1.00f, 0.30f, 0.35f) },
+            new CastColor { HostKey = "commando_grenade", Color = new Color(1.00f, 0.50f, 0.15f) },
+            new CastColor { HostKey = "commando_missile", Color = new Color(1.00f, 0.40f, 0.20f) },
+            new CastColor { HostKey = "dragoon",          Color = new Color(1.00f, 0.45f, 0.10f) },
+            new CastColor { HostKey = "salamander",       Color = new Color(0.55f, 1.00f, 0.30f) },
+            new CastColor { HostKey = "dragon_blue",      Color = new Color(0.35f, 0.70f, 1.00f) },
+            new CastColor { HostKey = "snowwoman",        Color = new Color(0.55f, 0.95f, 1.00f) },
+            new CastColor { HostKey = "ninja",            Color = new Color(0.60f, 0.45f, 1.00f) },
+            new CastColor { HostKey = "vampire",          Color = new Color(0.90f, 0.15f, 0.45f) },
+            new CastColor { HostKey = "gangster",         Color = new Color(1.00f, 0.80f, 0.30f) },
+            new CastColor { HostKey = "hopper",           Color = new Color(0.80f, 1.00f, 0.30f) },
+            new CastColor { HostKey = "white_wizard",     Color = new Color(1.00f, 0.95f, 0.65f) },
+            new CastColor { HostKey = "medium",           Color = new Color(0.75f, 0.35f, 1.00f) },
+            new CastColor { HostKey = "robot",            Color = new Color(0.35f, 1.00f, 0.90f) },
+        };
+
+        /// <summary>이 몸이 스킬을 쓸 때 입히는 색. 표에 없으면 기본색.</summary>
+        public Color CastColorOf(string hostKey)
+        {
+            if (_castColors != null && !string.IsNullOrEmpty(hostKey))
+                for (int i = 0; i < _castColors.Length; i++)
+                    if (_castColors[i].HostKey == hostKey) return _castColors[i].Color;
+            return _castColorDefault;
+        }
+
         public float RangeGrowthMax(int jobIndex)
             => _rangeGrowthMax == null || _rangeGrowthMax.Length == 0
                 ? 99f

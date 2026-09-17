@@ -145,6 +145,20 @@ namespace Game.Module.Events
         public int HostHpMax;
     }
 
+    /// <summary>
+    /// 액티브 스킬이 나갔다. **연출 전용** — 버튼 눌림 · 컷인 띠가 이걸 듣는다.
+    /// 스킬 효과는 이 이벤트와 상관없이 이미 나간 뒤다.
+    /// </summary>
+    public struct SkillCastEvent : IEvent
+    {
+        public string CastHostKey;
+        /// <summary>컷인 큰 글씨 — 지금 언어의 스킬 이름.</summary>
+        public string SkillName;
+        /// <summary>컷인 작은 글씨 — 영문 스킬 이름.</summary>
+        public string SkillNameEn;
+        public UnityEngine.Color CastColor;
+    }
+
     /// <summary>호스트가 파괴되어 고스트로 돌아왔다.</summary>
     public struct HostLostEvent : IEvent
     {
