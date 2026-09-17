@@ -80,11 +80,25 @@ namespace Game.Editor
             public string[] last;
         }
 
-        [MenuItem("Tools/Game/Apply Mockup Layout")]
-        public static void Run()
+        // ⚠ **화면마다 따로 돌린다.** 예전에는 메뉴 하나가 세 화면을 한꺼번에 적용했다.
+        //   로비만 고치려고 돌릴 때마다 인게임 · 호스트 선택에도 표가 다시 들어갔는데,
+        //   그 두 표는 **프리팹을 손으로 다듬은 뒤로 낡아 있었다.** 옛 HUD 노드가 되살아나고
+        //   HUD 배경판이 맨 위로 올라가 챕터 판을 통째로 덮었다(2026-09-17 지적).
+        //   고칠 화면의 메뉴만 누른다.
+        [MenuItem("Tools/Game/Apply Mockup Layout/Lobby")]
+        public static void RunLobby() => Run("Lobby");
+
+        [MenuItem("Tools/Game/Apply Mockup Layout/HostSelect (표가 낡았다 — 프리팹을 덮어쓴다)")]
+        public static void RunHostSelect() => Run("HostSelect");
+
+        [MenuItem("Tools/Game/Apply Mockup Layout/InGame (표가 낡았다 — 프리팹을 덮어쓴다)")]
+        public static void RunInGame() => Run("InGame");
+
+        private static void Run(string only)
         {
             foreach (var (screen, prefabPath) in Targets)
             {
+                if (screen != only) continue;
                 var specPath = $"{SpecDir}/_layout_{screen}.json";
                 if (!File.Exists(specPath))
                 {
