@@ -37,7 +37,8 @@ namespace Game.Module.InGame
         private int SandboxHp(int normal) => Sandbox ? normal * SandboxHpMul : normal;
 
         /// <summary>게이지를 깎을 차례인가. 테스트 판에서는 안 깎는다 — 계속 쓸 수 있어야 한다.</summary>
-        private bool SandboxKeepsGauge => Sandbox;
+        /// 데미지 테스트 모드에서도 안 깎는다 — 스킬 컷인 · 연출을 연달아 보기 위해서다(기획 2026-09-17).
+        private bool SandboxKeepsGauge => Sandbox || TestDamageOn;
 
         /// <summary>
         /// 즉사를 막을 차례인가.
@@ -109,12 +110,13 @@ namespace Game.Module.InGame
                 // ⚠ HUD 위에 올리면 「PLAYER SOUL」 글자와 겹쳐 둘 다 안 읽힌다(실측).
                 //   HUD 아래(280px)로 내려 방 왼쪽 위 구석에 붙인다.
                 _sandboxTag.anchoredPosition = new Vector2(12f, -292f);
-                _sandboxTag.sizeDelta = new Vector2(280f, 34f);   // 「● 데미지 9999」가 200 에서 두 줄로 꺾였다
+                _sandboxTag.sizeDelta = new Vector2(360f, 34f);   // 「● 데미지 9999 · 스킬 무한」이 200 에서 두 줄로 꺾였다
 
                 var tmp = go.AddComponent<TMPro.TextMeshProUGUI>();
                 // ⚠ 길게 적었더니 줄바꿈되어 방을 가렸다(실측). 한 줄로 줄인다.
-                tmp.text = Sandbox ? "● 테스트 판" : $"● 데미지 {_config.TestPlayerDamage}";
+                tmp.text = Sandbox ? "● 테스트 판" : $"● 데미지 {_config.TestPlayerDamage} · 스킬 무한";
                 tmp.fontSize = 24f;
+                tmp.textWrappingMode = TMPro.TextWrappingModes.NoWrap;   // 폭이 모자라면 두 줄로 꺾여 방을 가렸다
                 tmp.color = new Color(1f, 0.32f, 0.32f, 1f);
                 tmp.raycastTarget = false;
             }
