@@ -71,7 +71,10 @@ namespace Game.Module.InGame
             _apron.sizeDelta = RoomApronSize;
 
             _apronImage = go.GetComponent<Image>();
-            _apronImage.color = RoomSideTint;    // 좌우 벽과 같은 톤 — 방 밖이다
+            // ⚠ 색을 곱하지 않는다 (2026-09-17). 새 무대 배경은 방 바닥과 아래 영역을
+            //   **한 장으로 이어 그려** 잘라 쓴다. 예전처럼 좌우 벽 톤(`RoomSideTint`)을 곱하면
+            //   경계에서 아래 영역만 한 톤 어두워져 한 장면이 두 장으로 갈라져 보인다.
+            _apronImage.color = Color.white;
             _apronImage.raycastTarget = false;   // 조작을 가로채면 안 된다
             _apronImage.enabled = false;         // 그림이 올 때까지 비워 둔다
             ApplyScroll();
