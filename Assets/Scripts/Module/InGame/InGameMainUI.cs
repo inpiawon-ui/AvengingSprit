@@ -196,11 +196,13 @@ namespace Game.Module.InGame
             //   글자가 바탕에 묻혔다. 청록 위에 청록을 얹고 있었다.
             var shrineHint = _ui.Get<TMPro.TMP_Text>("ShrineHintText");
             if (shrineHint != null) shrineHint.color = new Color(0.90f, 0.96f, 0.98f);
-            // 선택 칸은 반대로 **흰 대리석**(밝기 236)이다 — 짙은 글자라야 읽힌다.
+            // 선택 칸은 **어두운 남색 판**이다(2026-09-17 UI 퀄업, 시안 `ui_mockup_angel`).
+            // ⚠ 예전 칸은 흰 대리석(밝기 236)이라 짙은 글자를 썼는데, 새 칸에 그대로 두니
+            //   글자가 바탕에 묻혀 거의 안 읽혔다. 시안대로 밝은 글자로 바꾼다.
             for (int i = 0; i < ShrineChoiceCount; i++)
             {
                 var ct = _ui.Get<TMPro.TMP_Text>($"ShrineChoice{i}Text");
-                if (ct != null) ct.color = new Color(0.07f, 0.16f, 0.21f);
+                if (ct != null) ct.color = new Color(0.95f, 0.97f, 0.99f);
             }
             _ui.SetActive("ShrinePanel", false);
 
@@ -1120,7 +1122,7 @@ namespace Game.Module.InGame
                 //   만들려니 둘 다 안 읽혔다.
                 _ui.SetText($"ShrineChoice{i}Text",
                             e.Titles[i] + System.Environment.NewLine
-                            + $"<size=85%><color=#2E5666>{e.Descs[i]}</color></size>");
+                            + $"<size=85%><color=#8FD3E8>{e.Descs[i]}</color></size>");
                 var btn = _ui.Get<Button>($"ShrineChoice{i}");
                 if (btn == null) continue;
                 int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다
