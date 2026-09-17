@@ -137,48 +137,25 @@ namespace Game.Module.InGame
             SetPanel(panelName, false);
         }
 
-        // ── 산 물건이 진열대에서 빠져나간다 ─────────────────────
+        // ── 연출 없이 바로 지운다 ────────────────────────────────
         //
-        // 사는 순간 창이 그냥 닫혀서, **무엇을 샀는지가 화면에 안 남았다.**
-        // 골드가 줄어든 것만 보이니 잘못 눌렀는지도 알 수 없다.
-        // 산 칸만 떠오르며 옅어진 뒤에 창을 닫는다 — 「저것이 빠져나갔다」가 남는다.
+        // 상점에서 사면 **누르는 순간 창이 사라진다** (2026-09-17 기획).
+        // 예전에는 산 칸이 떠오르며 옅어진 뒤(0.22초) 창이 줄어들며 닫혀(0.11초)
+        // 연출 두 개가 이어 붙었는데, 「선택하고 이펙트가 이상하다」는 지적을 받았다.
         //
-        // ⚠ 칸은 다음 손님에게 **다시 쓰인다.** 끝나고 자리·크기·투명도를
-        //   원래대로 돌려놓지 않으면 다음 상점에서 빈 칸이 떠 있는 채로 열린다.
+        // ⚠ 여는 연출이 아직 돌고 있을 수 있다. 크기 · 투명도를 원래대로 돌려놓고
+        //   바쁜 표시도 지운다 — 안 그러면 다음 상점이 작게 · 투명한 채로 열리거나
+        //   `SetPanel` 이 「연출 중」으로 알고 열기를 무시한다.
 
-        private const float SoldSeconds = 0.22f;
-        private const float SoldLift = 34f;      // 떠오르는 높이(px)
-
-        /// <summary>산 칸을 띄워 보내고 나서 창을 닫는다.</summary>
-        private void SellOffThenClose(int index, string panelName)
+        private void HidePanelNow(string panelName)
         {
-            var slot = _ui.Find($"ShopItem{index}") as RectTransform;
-            if (slot == null) { SetPanel(panelName, false); return; }
-            SellOffAsync(slot, panelName).Forget();   // fire-and-forget: 연출은 기다릴 것이 없다
-        }
-
-        private async UniTaskVoid SellOffAsync(RectTransform slot, string panelName)
-        {
-            var group = EnsureGroup(slot);
-            var home = slot.anchoredPosition;
-            float t = 0f;
-            while (t < SoldSeconds)
-            {
-                t += Time.unscaledDeltaTime;
-                float k = Mathf.Clamp01(t / SoldSeconds);
-                if (slot == null) break;
-                slot.anchoredPosition = home + new Vector2(0f, SoldLift * k);
-                slot.localScale = Vector3.one * Mathf.Lerp(1f, 1.08f, k);
-                if (group != null) group.alpha = 1f - k;
-                await UniTask.Yield();
-            }
-            if (slot != null)
-            {
-                slot.anchoredPosition = home;      // ⚠ 다음 상점을 위해 되돌린다
-                slot.localScale = Vector3.one;
-                if (group != null) group.alpha = 1f;
-            }
-            SetPanel(panelName, false);
+            var tr = _ui.Find(panelName);
+            if (tr == null) { _ui.SetActive(panelName, false); return; }
+            tr.gameObject.SetActive(false);
+            tr.localScale = Vector3.one;
+            var group = tr.GetComponent<CanvasGroup>();
+            if (group != null) group.alpha = 1f;
+            _popupBusy.Remove(panelName);
         }
 
         /// <summary>

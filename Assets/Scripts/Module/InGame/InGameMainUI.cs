@@ -243,10 +243,8 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
-            // 하나 사면 바로 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
-            // 닫기 전에 **산 칸이 떠오르며 사라진다** — 어느 줄을 샀는지가 눈에 남게.
-            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(
-                e => SellOffThenClose(e.Index, "ShopPanel")));
+            // 하나 사면 **연출 없이 바로** 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
+            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => HidePanelNow("ShopPanel")));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
         }
 
