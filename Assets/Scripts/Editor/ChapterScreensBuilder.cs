@@ -218,11 +218,16 @@ namespace Game.Editor
                 Center(card, i % 2 == 0 ? -112 : 112, -60 - (i / 2) * 217, 190, 190);
                 var icon = Img(Node(card, "RewardCardIcon"), i == 0 ? P("reward_goldpile") : null);
                 icon.preserveAspect = true;
-                Center(icon.rectTransform, 0, 8, 160, 150);
+                // 납품 카드(190) 실측 — 그림 창 y 30~144 · 개수 띠 y 147~178 (위에서).
+                // 그림은 창 안에만, 글자는 띠 안에만 둔다. 띠가 31 px 로 낮아 글자를 키우면 밖으로 샌다.
+                Center(icon.rectTransform, 0, 8, 150, 108);
                 Center(Img(Node(card, "RewardCardFrame"), i == 0 ? P("rewardcard_gold") : P("rewardcard_b"))
                            .rectTransform, 0, 0, 190, 190);
-                Center(Txt(Node(card, "RewardCardCountText"), "×0", 40, TextAlignmentOptions.Center).rectTransform,
-                       0, -70, 170, 44);
+                var count = Txt(Node(card, "RewardCardCountText"), "×0", 28, TextAlignmentOptions.Center);
+                Center(count.rectTransform, 0, -67, 150, 30);
+                count.enableAutoSizing = true;
+                count.fontSizeMin = 16;
+                count.fontSizeMax = 28;
             }
 
             var ok = Img(Node(box, "RewardOkButton"), P("button_yellow_wide")).rectTransform;
