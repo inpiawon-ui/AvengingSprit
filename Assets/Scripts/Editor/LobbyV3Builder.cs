@@ -38,7 +38,7 @@ namespace Game.Editor
 
         [Serializable] private class TextSpec { public string name; public int[] box; public string color; public string align; public int[] area; public int size; }
         [Serializable] private class BoxSpec { public string name; public int[] box; }
-        [Serializable] private class Spec { public int mockupW, mockupH, splitY; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
+        [Serializable] private class Spec { public int mockupW, mockupH, splitY, extendH, extendOverlap; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
         [Serializable] private class CalibItem { public string name; public float dx, dy, scale = 1f, dilate, aspect = 1f; }
         [Serializable] private class Calib { public CalibItem[] items; }
 
@@ -131,12 +131,14 @@ namespace Game.Editor
                 if (version != null) version.gameObject.SetActive(false);   // 시안에 없다
 
                 int split = s_spec.splitY;
-                // 긴 화면에서 두 판 사이에 뜨는 틈 — 아래판 윗부분 그림을 늘려 메운다(9:16 에서는 안 보인다)
+                // 긴 화면에서 두 판 사이에 뜨는 틈 — 위판 바로 아래에 골목 바닥 연장 그림을 붙인다.
+                // 아래판이 그 위를 덮으므로 9:16 에서는 안 보이고, 화면이 길어질수록 더 드러난다.
                 var gap = Node(root.transform, "LobbyV3Gap");
-                Stretch(gap);
+                gap.anchorMin = gap.anchorMax = gap.pivot = new Vector2(0.5f, 1f);
+                gap.anchoredPosition = new Vector2(0f, -(split - s_spec.extendOverlap) * S);   // 위판과 몇 줄 겹쳐 알파로 녹인다
+                gap.sizeDelta = new Vector2(s_spec.mockupW * S, Mathf.Max(1, s_spec.extendH) * S);
                 gap.gameObject.AddComponent<ScreenFitLock>();
-                Img(gap, Spr("base_top")).color = Color.white;
-                gap.GetComponent<Image>().type = Image.Type.Simple;
+                Img(gap, Spr("base_extend")).enabled = s_spec.extendH > 0;
 
                 var top = Band(root.transform, "LobbyV3Top", Spr("base_top"), s_spec.mockupW, split, true);
                 var bottom = Band(root.transform, "LobbyV3Bottom", Spr("base_bottom"), s_spec.mockupW,
@@ -178,7 +180,7 @@ namespace Game.Editor
                 BindLobby(root);
 
                 // 판이 늦게 만들어져 맨 뒤로 가면 창(호스트 선택 등)을 덮는다 — 맨 앞으로 보낸다
-                gap.SetSiblingIndex(0); top.SetSiblingIndex(1); bottom.SetSiblingIndex(2);
+                top.SetSiblingIndex(0); gap.SetSiblingIndex(1); bottom.SetSiblingIndex(2);
                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -410,6 +412,11 @@ namespace Game.Editor
                 e.FindPropertyRelative("Key").stringValue = map[i].key;
                 e.FindPropertyRelative("Sprite").objectReferenceValue = map[i].s;
             }
+            // 금 상자는 세는 중에 빛살 없는 그림을 쓴다(있을 때만)
+            var calm = Spr("chest_black_calm");
+            for (int i = 0; i < map.Length; i++)
+                arts.GetArrayElementAtIndex(i).FindPropertyRelative("Counting").objectReferenceValue =
+                    map[i].key == "gold" ? calm : null;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -498,6 +505,9 @@ namespace Game.Editor
         }
     }
 }
+
+
+
 
 
 

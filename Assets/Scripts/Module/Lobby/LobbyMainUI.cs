@@ -50,6 +50,8 @@ namespace Game.Module.Lobby
         {
             public string Key;
             public Sprite Sprite;
+            /// <summary>세는 중일 때 그림. 비면 <see cref="Sprite"/>. 완료 빛살이 박힌 그림(금 상자)은 세는 중에도 «다 됐다» 로 보인다.</summary>
+            public Sprite Counting;
         }
 
         [SerializeField] private ChestArt[] _chestArts = System.Array.Empty<ChestArt>();
@@ -136,7 +138,7 @@ namespace Game.Module.Lobby
 
             // 하단 바 문구는 목업대로 — 가운데는 CHAPTER 가 아니라 PLAY 다
             _ui.SetText("ChapterButtonTitleText", "PLAY");
-            _ui.SetText("ChapterButtonSubText", Localize.Get("ui.lobby.game_mode"));
+            // 아래 「게임 모드」 는 프리팹의 LocalizedText 가 칠한다(언어가 바뀌면 따라온다)
 
             // 상자 세 칸 — 누르면 시간이 남았으면 젬으로 열고, 다 됐으면 보상을 받는다
             for (int i = 0; i < ChestSlots; i++)
@@ -217,7 +219,7 @@ namespace Game.Module.Lobby
                 var art = _ui.Find(root, "ChestArt")?.GetComponent<UnityEngine.UI.Image>();
                 if (art != null)
                 {
-                    var sprite = ChestSpriteOf(s.ChestKey);
+                    var sprite = ChestSpriteOf(s.ChestKey, ready);
                     if (sprite != null && art.sprite != sprite)
                     {
                         art.sprite = sprite;
@@ -369,11 +371,15 @@ namespace Game.Module.Lobby
             textRect.localPosition = tp;
         }
 
-        private Sprite ChestSpriteOf(string chestKey)
+        private Sprite ChestSpriteOf(string chestKey, bool ready)
         {
             if (_chestArts == null || string.IsNullOrEmpty(chestKey)) return null;
             for (int i = 0; i < _chestArts.Length; i++)
-                if (_chestArts[i].Key == chestKey) return _chestArts[i].Sprite;
+            {
+                if (_chestArts[i].Key != chestKey) continue;
+                var a = _chestArts[i];
+                return !ready && a.Counting != null ? a.Counting : a.Sprite;
+            }
             return null;
         }
 
@@ -530,8 +536,29 @@ namespace Game.Module.Lobby
                 if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
             }));
             Refresh();
+            UpdateGapFill();
         }
 
+        // 긴 화면에서 위판 · 아래판 사이에 뜨는 틈은 골목 바닥 연장 그림이 메운다.
+        // 연장 그림은 위판과 몇 줄 겹쳐 알파로 녹인다 — 그런데 틈이 거의 없는 9:16 에서 겹치면
+        // 시안 위판 끝줄이 바뀐다. 틈이 작으면 겹치지 않는 자리(위판 바로 아래)로 내린다.
+        // ⚠ 끄면 안 된다: 시안(941×1672)은 정확히 9:16 이 아니라 9:16 에서도 0.7 px 가 비어 뒤가 비친다.
+        private float _gapOverlapY = float.NaN;
+
+        private void OnRectTransformDimensionsChange() => UpdateGapFill();
+
+        private void UpdateGapFill()
+        {
+            var gap = transform.Find("LobbyV3Gap") as RectTransform;
+            var top = transform.Find("LobbyV3Top") as RectTransform;
+            var bottom = transform.Find("LobbyV3Bottom") as RectTransform;
+            if (gap == null || top == null || bottom == null) return;
+            if (float.IsNaN(_gapOverlapY)) _gapOverlapY = gap.anchoredPosition.y;   // 빌더가 둔 겹친 자리
+            float free = ((RectTransform)transform).rect.height - top.rect.height - bottom.rect.height;
+            var p = gap.anchoredPosition;
+            p.y = free > 2f ? _gapOverlapY : -top.rect.height;
+            gap.anchoredPosition = p;
+        }
         private void OnDisable()
         {
             for (int i = 0; i < _tokens.Count; i++) _tokens[i]?.Dispose();
@@ -607,6 +634,11 @@ namespace Game.Module.Lobby
         }
     }
 }
+
+
+
+
+
 
 
 

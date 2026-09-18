@@ -1,7 +1,9 @@
 {
  "mockupW": 941,
  "mockupH": 1672,
- "splitY": 620,
+ "splitY": 598,
+ "extendH": 575,
+ "extendOverlap": 12,
  "texts": [
   {
    "name": "GoldText",

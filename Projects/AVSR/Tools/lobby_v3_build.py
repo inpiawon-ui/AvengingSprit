@@ -19,7 +19,7 @@ ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
 REF = os.path.join(HERE, '..', '_exchange', 'ref', 'lobby_v3')
 OUT = os.path.join(ROOT, 'Assets', 'BaseResource', 'LobbyV3')
 W, H = 941, 1672
-SPLIT_Y = 620          # 위판 / 아래판 경계 — 긴 화면에서 위판은 위에, 아래판은 아래에 붙는다
+SPLIT_Y = 598          # 위판 / 아래판 경계 — 상자 판 윗선(603) 바로 위. 긴 화면에서 위판은 위에, 아래판은 아래에 붙는다
 
 # ── 지울 글자 칸 (시안 좌표, 넉넉하게) ──────────────────────────────
 # (이름 = 게임 노드 이름, 칸, 정렬)
@@ -318,16 +318,69 @@ def main():
         Image.fromarray(np.dstack([srcimg[y0:y1, x0:x1], a])).save(os.path.join(OUT, f'{name}.png'))
         spec['parts'][name] = [x0, y0, x1, y1]
 
+    # 금 상자 「세는 중」 그림 — 시안엔 완료(빛살) 모습뿐이라 코덱스가 빛살만 지운 것(out_chest_black_calm.png)에서 뗀다.
+    # 자리는 chest_black 과 같은 상자(650,684,890,807)로 맞춘다 — 같은 칸 배치를 쓴다.
+    calm_path = os.path.join(REF, 'out_chest_black_calm_raw.png')
+    if os.path.exists(calm_path):
+        cx0, cy0 = 640, 660                      # 코덱스에 준 잘라 낸 자리(260×155)
+        bx0, by0, bx1, by1 = 650, 684, 890, 807
+        full = np.asarray(Image.open(calm_path).convert('RGB').resize((260, 155), Image.LANCZOS)).astype(np.float32)
+        # 코덱스 그림이 조금 밀려 있을 수 있다 — 시안 상자와 위상 상관으로 맞춘다
+        src = M[cy0:cy0 + 155, cx0:cx0 + 260].astype(np.float32)
+        (sx_, sy_), _ = cv2.phaseCorrelate(src.mean(axis=2), full.mean(axis=2))
+        full = cv2.warpAffine(full, np.float32([[1, 0, -sx_], [0, 1, -sy_]]), (260, 155), borderMode=cv2.BORDER_REPLICATE)
+        print('calm: 어긋남', round(sx_, 2), round(sy_, 2))
+        calm = full[by0 - cy0:by1 - cy0, bx0 - cx0:bx1 - cx0].astype(np.int16)
+        edge = np.concatenate([calm[0], calm[-1], calm[:, 0], calm[:, -1]])
+        bgc = np.median(edge, axis=0)
+        d = np.abs(calm - bgc).sum(axis=2)
+        a = np.clip((d - 24) * 6, 0, 255).astype(np.uint8)
+        body = cv2.morphologyEx((a > 100).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+        flood = np.pad(body, 1)
+        ff = np.zeros((flood.shape[0] + 2, flood.shape[1] + 2), np.uint8)
+        cv2.floodFill(flood, ff, (0, 0), 2)
+        inside = (flood[1:-1, 1:-1] != 2)
+        a = np.where(inside, 255, a).astype(np.uint8)
+        a = cv2.GaussianBlur(a, (3, 3), 0)
+        Image.fromarray(np.dstack([calm.astype(np.uint8), a])).save(os.path.join(OUT, 'chest_black_calm.png'))
+
     for i, (x0, y0, x1, y1) in enumerate(SLOTS):
         base[y0 + INSET:y1 - INSET, x0 + INSET:x1 - INSET] = empties[i]
 
     Image.fromarray(base[:SPLIT_Y]).save(os.path.join(OUT, 'base_top.png'))
+    # 긴 화면(20:9 등)에서 두 판 사이 틈을 메우는 골목 바닥 연장 — 코덱스가 시안 아래로 이어 그린 것.
+    # 코덱스 결과는 크기 · 위쪽이 시안과 조금 다르다 → 폭을 941 로 맞추고, 위쪽(시안이 있는 곳)으로 세로 어긋남을 재서 맞춘다.
+    # 위판과 OVERLAP 줄 겹쳐 알파로 녹인다(틈이 없는 9:16 에서는 LobbyMainUI 가 이 판을 끈다).
+    ext_path = os.path.join(REF, 'out_extend_raw.png')
+    if os.path.exists(ext_path):
+        OVERLAP = 12
+        raw = Image.open(ext_path).convert('RGB')
+        raw = raw.resize((W, round(raw.height * W / raw.width)), Image.LANCZOS)
+        R = np.asarray(raw).astype(np.float32)
+        ref = M[300:SPLIT_Y].astype(np.float32).mean(axis=2)
+        best, off = 1e9, 0
+        for dy in range(-40, 41):
+            y0 = 300 + dy
+            if y0 < 0 or y0 + ref.shape[0] > R.shape[0]:
+                continue
+            e = np.abs(R[y0:y0 + ref.shape[0]].mean(axis=2) - ref).mean()
+            if e < best:
+                best, off = e, dy
+        start = SPLIT_Y - OVERLAP + off
+        ext = R[start:].copy()
+        a = np.ones(ext.shape[0], np.float32)
+        a[:OVERLAP] = np.linspace(0, 1, OVERLAP + 1)[1:]
+        rgba = np.dstack([np.clip(ext, 0, 255).astype(np.uint8), (a[:, None] * 255).repeat(W, 1).astype(np.uint8)])
+        Image.fromarray(rgba).save(os.path.join(OUT, 'base_extend.png'))
+        spec['extendH'] = int(ext.shape[0])
+        spec['extendOverlap'] = OVERLAP
+        print('extend: 세로 어긋남', off, '평균 차', round(float(best), 1), '높이', ext.shape[0])
     Image.fromarray(base[SPLIT_Y:]).save(os.path.join(OUT, 'base_bottom.png'))
     Image.fromarray(clean).save(os.path.join(REF, 'debug_clean.png'))
     Image.fromarray(base).save(os.path.join(REF, 'debug_base.png'))
     # 유니티 JsonUtility 가 읽게 목록으로 편다
     flat = {
-        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y,
+        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y, 'extendH': spec.get('extendH', 0), 'extendOverlap': spec.get('extendOverlap', 0),
         'texts': [dict(name=k, **v) for k, v in spec['texts'].items()],
         'parts': [dict(name=k, box=v) for k, v in spec['parts'].items()],
         'icons': [dict(name=k, box=v) for k, v in spec['icons'].items()],
@@ -339,6 +392,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
 
 
 
