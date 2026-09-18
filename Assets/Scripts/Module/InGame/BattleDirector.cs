@@ -444,7 +444,9 @@ namespace Game.Module.InGame
             //   호스트 해금은 그것을 먼저 보므로 깨서 얻은 몸은 잠기지 않는다.
             //   챕터를 쓰는 자리가 열다섯 곳인데(적 성장·보스 선택·아틀라스 …)
             //   전부 이 값을 보므로, 여기 하나만 맞춰 두면 나머지가 따라온다.
-            _runChapter = 1;
+            //   (2026-09-18) 이제 한 판 = **고른 챕터 하나**다. 챕터 선택 화면이 고른 값을
+            //   받아 그 챕터 001 에서 시작하고, 그 챕터 보스(015)를 잡으면 끝난다.
+            _runChapter = StartChapter;
             _runStage = 1;
             _maxHpDebt = 0;   // 계약은 판 한정이다
             ClearCardRuntime();
@@ -559,7 +561,25 @@ namespace Game.Module.InGame
         /// 그 뒤로 앞 챕터를 다시는 못 본다. 시작은 고정하고, 챕터는 방을
         /// 밟아 나가며 오른다(`EnterRoom`).
         /// </summary>
-        private string FirstCanonRoom => "ROOM_CH1_001";
+        private string FirstCanonRoom => _rooms?.FirstOf(StartChapter)?.RoomId ?? $"ROOM_CH{StartChapter}_001";
+
+        /// <summary>로비의 챕터 선택. 데이터가 없으면(에디터에서 씬을 바로 켰을 때) 1챕터.</summary>
+        private int StartChapter =>
+            _player != null && _player.IsReady ? Mathf.Clamp(_player.SelectedChapter, 1, ChapterCount) : 1;
+
+        /// <summary>
+        /// 이 방에서 판이 끝나는가 — 출구가 없거나 **출구가 다른 챕터로 이어진다.**
+        ///
+        /// 방 표는 챕터 015 를 다음 챕터 001 로 잇는다(60방 이어 가기 시절 기획).
+        /// 표는 그대로 두고 여기서 챕터 경계를 끝으로 본다 — 한 판 = 한 챕터(기획 2026-09-18).
+        /// </summary>
+        private bool EndsRun(RoomEntry room)
+        {
+            if (room == null) return false;
+            if (room.IsChapterEnd) return true;
+            var next = _rooms?.Get(room.Exits[0].NextRoomId);
+            return next != null && next.Chapter != room.Chapter;
+        }
 
         /// <summary>
         /// 이 판이 지금 몇 챕터를 걷고 있는가. **저장에 안 쓴다.**
@@ -2456,7 +2476,7 @@ namespace Game.Module.InGame
                         var e = ActorProfile(room.Spawns[i].ActorId, hosts);
                         if (e != null && !keys.Contains(e.SpriteKey)) keys.Add(e.SpriteKey);
                     }
-                    id = room.Exits.Count > 0 ? room.Exits[0].NextRoomId : null;
+                    id = EndsRun(room) ? null : room.Exits[0].NextRoomId;
                 }
                 return keys;
             }
@@ -2585,7 +2605,7 @@ namespace Game.Module.InGame
                     var r = _rooms.Get(id);
                     if (r == null) break;
                     ahead++;
-                    id = r.Exits.Count > 0 ? r.Exits[0].NextRoomId : null;
+                    id = EndsRun(r) ? null : r.Exits[0].NextRoomId;
                 }
                 int n = passed + ahead;
                 return n > 0 ? n : _config.StagesPerChapter;
@@ -2594,7 +2614,7 @@ namespace Game.Module.InGame
 
         /// <summary>정본 경로의 끝(보스를 잡은 방)인가.</summary>
         private bool IsLastRoom =>
-            _canonRoom != null ? _canonRoom.IsChapterEnd
+            _canonRoom != null ? EndsRun(_canonRoom)
                                : _roomIndex >= _config.StagesPerChapter - 1;
 
         private RoomKind KindOf(int index)
@@ -9231,64 +9251,51 @@ namespace Game.Module.InGame
             //   여기서 옮겨 줘야 걸어온 만큼이 기록된다.
             if (_player != null && _player.IsReady)
                 _player.SetProgress(_runChapter, _runStage);
-            // 보상은 **통과한 스테이지 수** 기준. 챕터를 끝냈으면 전부 통과한 것이다.
-            int stages = cleared ? RoomTotal : Mathf.Max(0, _roomIndex);
 
-            // 정본 REWARD_DB — 방마다 골드가 조금씩 붙고, 정예방은 스피릿 코어와
-            // 호스트 메모리를 준다. 챕터를 끝내면 큰 몫이 따로 온다.
-            //   R_STD  방당 Gold 10
-            //   R_ELITE 정예방 Gold 25 · Core 2 · Memory 1
-            //   R_CH1  챕터 클리어 Gold 120 · Core 4 · EXP 5
-            // 판에서 모은 골드가 정산의 축이다. 방마다 붙는 정본 값이라
-            // 통과한 방 수에 비례한다 — 여기에 정예·챕터 클리어 몫이 얹힌다.
-            int gold = _runGold + _eliteRoomsCleared * 15;
-            int core = _eliteRoomsCleared * 2;
-            int memory = _eliteRoomsCleared;
-            int gem = 0;
-            if (cleared)
+            // ⚠ **죽으면 보상이 없다**(기획 2026-09-18). 골드도 상자도 없다 —
+            //   결과 화면은 클리어했을 때만 나온다. 죽으면 알림창 하나 뒤 로비로.
+            if (!cleared)
             {
-                int ch = Mathf.Clamp(_runChapter, 1, 3);
-                gold += ch == 1 ? 120 : ch == 2 ? 180 : 260;
-                core += ch == 1 ? 4 : ch == 2 ? 6 : 9;
-                memory += ch == 1 ? 0 : ch == 2 ? 2 : 4;
-                gem += ch == 3 ? 20 : 0;
+                _bus.Publish(new StageFinishedEvent { IsCleared = false, FinishedChapter = _runChapter });
+                return;
             }
+
+            // 클리어 — 챕터가 높을수록 골드가 많고 상자 등급이 높다.
+            // 이미 깬 챕터를 다시 깨도 준다(기획). 골드는 **지금** 넣는다 —
+            // 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
+            int ch = Mathf.Clamp(_runChapter, 1, ChapterCount);
+            int gold = ChapterClearGold[ch - 1];
+            string chestKey = ChapterChestKey[ch - 1];
+
+            bool accepted = false;
+            if (CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests))
+            {
+                accepted = chests.TryGrant(chestKey, out int slot);
+                // 칸이 다 차서 못 받았으면 **조용히 버리지 않는다.** 결과 창이 알린다.
+                _bus.Publish(new ChestGrantedEvent { GrantedChestKey = chestKey, Slot = slot, Accepted = accepted });
+            }
+            if (_player != null && _player.IsReady)
+                _player.GrantChapterClearAsync(ch, gold).Forget();   // fire-and-forget: 저장 완료를 기다릴 화면이 없다
 
             _bus.Publish(new StageFinishedEvent
             {
-                IsCleared = cleared,
+                IsCleared = true,
                 RewardGold = gold,
-                RewardGhostExp = _config.RewardGhostExp(stages),
-                RewardSpiritCore = core,
-                RewardHostMemory = memory,
-                RewardGem = gem,
+                FinishedChapter = ch,
+                RewardChestKey = chestKey,
+                ChestAccepted = accepted,
             });
-
-            GrantChest(cleared, stages);
         }
 
         /// <summary>
-        /// 판이 끝나면 상자가 나온다 (기획 2026-09-16). 무엇을 이겼는지가 등급을 정한다 —
-        /// 챕터를 끝냈으면 금, 정예를 깼으면 은, 방이라도 지나왔으면 나무.
-        ///
-        /// ⚠ 한 방도 못 지나온 판은 **안 준다.** 시작하자마자 죽어도 상자가 나오면
-        ///   죽는 것이 상자 농사가 된다.
+        /// 챕터 클리어 골드 (챕터 1 ~ 6). ⚠ 밸런스 미확정(TBD-BAL) — 자리표시 값이다.
+        /// 낮은 챕터일수록 적다: 쉬운 챕터를 되풀이해 버는 것보다 앞으로 가는 편이 낫게.
         /// </summary>
-        private void GrantChest(bool cleared, int stages)
-        {
-            if (stages <= 0) return;
-            if (!CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests)) return;
+        private static readonly int[] ChapterClearGold = { 150, 200, 300, 400, 550, 700 };
 
-            string key = cleared ? "gold" : _eliteRoomsCleared > 0 ? "silver" : "wood";
-            bool accepted = chests.TryGrant(key, out int slot);
-            // 칸이 다 차서 못 받았으면 **조용히 버리지 않는다.** 왜 안 들어왔는지 알 길이 없어진다.
-            _bus.Publish(new ChestGrantedEvent
-            {
-                GrantedChestKey = key,
-                Slot = slot,
-                Accepted = accepted,
-            });
-        }
+        /// <summary>챕터 클리어 상자 — 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18). 키는 `ChestTable`.</summary>
+        private static readonly string[] ChapterChestKey =
+            { "silver", "silver", "gold", "gold", "platinum", "platinum" };
 
         private void PublishHp()
         {

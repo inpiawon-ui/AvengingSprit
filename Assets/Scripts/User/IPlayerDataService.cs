@@ -31,6 +31,15 @@ namespace Game.User
         int ReachedStage { get; }
         int ClearedChapter { get; }
 
+        /// <summary>도전할 수 있는 가장 높은 챕터 — 깬 챕터 + 1 (1 ~ 6).</summary>
+        int UnlockedChapter { get; }
+
+        /// <summary>
+        /// 이번 판에 들어갈 챕터. 챕터 선택 화면이 정하고 전투가 읽는다.
+        /// 판 한정 — 저장하지 않는다. 안 골랐으면 열린 챕터 중 가장 높은 것.
+        /// </summary>
+        int SelectedChapter { get; set; }
+
         /// <summary>현재 선택된 호스트 키. 없으면 시작 보유 호스트로 대체된다.</summary>
         string SelectedHostId { get; }
 
@@ -135,6 +144,12 @@ namespace Game.User
         /// `cleared` 일 때만 스테이지를 전진시킨다 — 실패는 진행도를 건드리지 않는다.
         /// </summary>
         UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared);
+
+        /// <summary>
+        /// 챕터 클리어 보상 — 골드를 주고 격파 기록을 올려 다음 챕터를 연다. 저장까지 한다.
+        /// 이미 깬 챕터를 다시 깨도 골드는 준다(기획 2026-09-18).
+        /// </summary>
+        UniTask GrantChapterClearAsync(int chapter, int gold);
 
         /// <summary>정본 REWARD_DB 를 반영하는 확장형. 영구 재화는 실패해도 남는다.</summary>
         UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared,

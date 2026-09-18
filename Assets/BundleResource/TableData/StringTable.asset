@@ -2009,3 +2009,56 @@ MonoBehaviour:
     _ko: "\uC9C4\uD589 \uC911"
     _ja: "\u958B\u50AC\u4E2D"
     _en: Ongoing
+  - _key: chest.platinum.name
+    _ko: "\uBC31\uAE08 \uC0C1\uC790"
+    _ja: "\u30D7\u30E9\u30C1\u30CA\u306E\u5B9D\u7BB1"
+    _en: Platinum Chest
+  - _key: ui.chest.reward.title
+    _ko: "{0} \uC5F4\uAE30!"
+    _ja: "{0}\u3092\u958B\u3051\u305F\uFF01"
+    _en: '{0} Opened!'
+  - _key: ui.chest.reward.gold
+    _ko: "\uACE8\uB4DC  +{0}"
+    _ja: "\u30B4\u30FC\u30EB\u30C9  +{0}"
+    _en: Gold  +{0}
+  - _key: ui.chest.reward.shard
+    _ko: "{0} ({1}\uAE09) \uC870\uAC01  \xD7{2}"
+    _ja: "{0}\uFF08{1}\u7D1A\uFF09\u306E\u304B\u3051\u3089  \xD7{2}"
+    _en: "{0} ({1}) Shards  \xD7{2}"
+  - _key: ui.result.clear
+    _ko: "\uCC55\uD130 {0} \uD074\uB9AC\uC5B4!"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC{0} \u30AF\u30EA\u30A2\uFF01"
+    _en: Chapter {0} Clear!
+  - _key: ui.result.gold
+    _ko: "\uACE8\uB4DC \uD68D\uB4DD  +{0}"
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u7372\u5F97  +{0}"
+    _en: Gold  +{0}
+  - _key: ui.result.chest
+    _ko: "\uC0C1\uC790 \uD68D\uB4DD  {0}"
+    _ja: "\u5B9D\u7BB1\u7372\u5F97  {0}"
+    _en: Chest  {0}
+  - _key: ui.result.chest_full
+    _ko: "\uC0C1\uC790 \uCE78\uC774 \uAC00\uB4DD \uCC28 \uC0C1\uC790\uB97C \uBC1B\uC9C0
+      \uBABB\uD588\uC2B5\uB2C8\uB2E4\n(\uACE8\uB4DC\uB294 \uC9C0\uAE09\uB418\uC5C8\uC2B5\uB2C8\uB2E4)"
+    _ja: "\u5B9D\u7BB1\u30B9\u30ED\u30C3\u30C8\u304C\u3044\u3063\u3071\u3044\u306E\u305F\u3081\u5B9D\u7BB1\u3092\u53D7\u3051\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F\n\uFF08\u30B4\u30FC\u30EB\u30C9\u306F\u53D7\u3051\u53D6\u308A\u307E\u3057\u305F\uFF09"
+    _en: "Chest slots are full \u2014 the chest was lost\n(Gold was still granted)"
+  - _key: ui.chapter.title
+    _ko: "\uCC55\uD130 \uC120\uD0DD"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC\u9078\u629E"
+    _en: Select Chapter
+  - _key: ui.chapter.locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF\u4E2D"
+    _en: Locked
+  - _key: ui.chapter.cleared
+    _ko: "\uD074\uB9AC\uC5B4"
+    _ja: "\u30AF\u30EA\u30A2\u6E08\u307F"
+    _en: Cleared
+  - _key: ui.chapter.new
+    _ko: "\uB3C4\uC804 \uAC00\uB2A5"
+    _ja: "\u6311\u6226\u53EF\u80FD"
+    _en: Available
+  - _key: ui.chapter.locked_hint
+    _ko: "\uCC55\uD130 {0}\uC744(\uB97C) \uD074\uB9AC\uC5B4\uD558\uBA74 \uC5F4\uB9BD\uB2C8\uB2E4"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC{0}\u3092\u30AF\u30EA\u30A2\u3059\u308B\u3068\u89E3\u653E\u3055\u308C\u307E\u3059"
+    _en: Clear Chapter {0} to unlock

@@ -1456,29 +1456,34 @@ namespace Game.Module.InGame
         {
             if (_finished) return;
             _finished = true;
+            // ⚠ 임시 결과 창이다 — 결과 화면 시안(ui_new_chapter_result_v1)이 통과하면 갈아 끼운다.
+            //   보상은 전투가 이미 넣었다. 여기는 보여 주고 로비로 보낼 뿐이다.
             SystemPopup.Show(
-                e.IsCleared
-                    ? Localize.Format("ui.ingame.result.clear", e.RewardGold, e.RewardGhostExp)
-                    : Localize.Get("ui.ingame.result.dead"),
-                onConfirm: () => GoLobbyAsync(e).Forget(),   // fire-and-forget: 씬 전환 대기 불필요
-                confirmText: Localize.Get("ui.ingame.result.to_lobby"),
+                e.IsCleared ? ClearMessage(e) : Localize.Get("ui.ingame.result.dead"),
+                onConfirm: () => GoLobbyAsync().Forget(),   // fire-and-forget: 씬 전환 대기 불필요
+                confirmText: Localize.Get("ui.common.ok"),
                 cancelText: null);
+        }
+
+        private static string ClearMessage(StageFinishedEvent e)
+        {
+            string chest = e.ChestAccepted
+                ? Localize.Format("ui.result.chest", Localize.Get($"chest.{e.RewardChestKey}.name"))
+                : Localize.Get("ui.result.chest_full");
+            return Localize.Format("ui.result.clear", e.FinishedChapter) + "\n\n"
+                 + Localize.Format("ui.result.gold", e.RewardGold.ToString("N0")) + "\n"
+                 + chest;
         }
 
         private void OnPause()
         {
             SystemPopup.Show(Localize.Get("ui.ingame.pause.message"),
-                onConfirm: () => GoLobbyAsync(default).Forget(),  // fire-and-forget: 씬 전환 대기 불필요
+                onConfirm: () => GoLobbyAsync().Forget(),  // fire-and-forget: 씬 전환 대기 불필요
                 confirmText: Localize.Get("ui.ingame.pause.give_up"), cancelText: Localize.Get("ui.ingame.pause.continue"));
         }
 
-        private async UniTaskVoid GoLobbyAsync(StageFinishedEvent e)
+        private async UniTaskVoid GoLobbyAsync()
         {
-            if (_player != null && _player.IsReady && e.RewardGold > 0)
-                await _player.GrantStageRewardAsync(e.RewardGold, e.RewardGhostExp, e.IsCleared,
-                                                    e.RewardSpiritCore, e.RewardHostMemory,
-                                                    e.RewardGem);
-
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
                 SceneName = SceneNames.Lobby,

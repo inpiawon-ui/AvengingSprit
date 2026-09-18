@@ -264,5 +264,12 @@ namespace Game.Module.Events
         public int RewardSpiritCore;
         public int RewardHostMemory;
         public int RewardGem;
+
+        /// <summary>이번 판의 챕터 (1 ~ 6). 한 판 = 한 챕터다.</summary>
+        public int FinishedChapter;
+        /// <summary>클리어로 받은 상자 등급. 죽었으면 비어 있다.</summary>
+        public string RewardChestKey;
+        /// <summary>상자 칸에 들어갔는가. 칸이 다 차 못 받았으면 false — 골드는 그래도 준다.</summary>
+        public bool ChestAccepted;
     }
 }

@@ -23,6 +23,9 @@ namespace Game.Module.Lobby
     {
         [SerializeField] private HostSelectPanel _hostSelectPanel;
 
+        /// <summary>PLAY → 챕터 선택 → 호스트 선택 (기획 2026-09-18).</summary>
+        [SerializeField] private ChapterSelectPanel _chapterSelectPanel;
+
         /// <summary>
         /// 모드 칸 그림. <see cref="Modes"/> 와 **같은 순서**다 (서바이벌 · 시나리오 · 디펜스).
         /// 회전 목마라 어느 칸에 무엇이 오는지가 바뀌므로 코드가 갈아 끼운다.
@@ -111,6 +114,7 @@ namespace Game.Module.Lobby
             // 켜지는 도중이라 그 프레임에 안 먹어, 판 아래 팁 띠가 로비 바닥으로
             // 삐져나왔다(2026-09-16).
             if (_hostSelectPanel != null) _hostSelectPanel.Close();
+            if (_chapterSelectPanel != null) _chapterSelectPanel.Close();
 
             // 하단 바 — 누르면 그 칸이 켜진 채로 남는다
             _ui.OnClick("HostButton",    () => SelectTab("HostButton"));
@@ -275,7 +279,11 @@ namespace Game.Module.Lobby
 
             if (s.IsReady)
             {
-                if (_chests.TryClaim(slot, out _)) global::Game.Module.Common.GameSound.Cue("run.gold");
+                if (_chests.TryClaim(slot, out var reward))
+                {
+                    global::Game.Module.Common.GameSound.Cue("run.gold");
+                    ShowChestReward(reward);
+                }
                 return;
             }
 
@@ -283,6 +291,27 @@ namespace Game.Module.Lobby
             if (!_chests.TryOpenNow(slot))
                 NotifyNotReady(Localize.Format("ui.lobby.chest.need_gem", s.GemCost.ToString("N0")));
             else global::Game.Module.Common.GameSound.Cue("run.shop");
+        }
+
+        /// <summary>
+        /// 연 상자의 보상 목록. 보상은 이미 들어갔다 — 확인을 누르면 창만 닫힌다.
+        ///
+        /// ⚠ 임시 창이다 — 보상 화면 시안(ui_new_chest_reward_v1, 클래시로얄식 카드 목록)이
+        ///   통과하면 갈아 끼운다.
+        /// </summary>
+        private void ShowChestReward(ChestReward reward)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append(Localize.Format("ui.chest.reward.title", Localize.Get($"chest.{reward.ChestKey}.name")));
+            sb.Append("\n\n").Append(Localize.Format("ui.chest.reward.gold", reward.Gold.ToString("N0")));
+            for (int i = 0; i < reward.ShardHostKeys.Length; i++)
+            {
+                var host = _player?.GetHost(reward.ShardHostKeys[i]);
+                string name = host != null ? host.DisplayName : reward.ShardHostKeys[i];
+                string grade = host != null ? host.Grade.ToString() : "?";
+                sb.Append('\n').Append(Localize.Format("ui.chest.reward.shard", name, grade, reward.ShardCounts[i]));
+            }
+            SystemPopup.Show(sb.ToString(), null, Localize.Get("ui.common.ok"), null);
         }
 
         // ── 게임 모드 ────────────────────────────────────────────
@@ -298,7 +327,9 @@ namespace Game.Module.Lobby
             var mode = Modes[_modeIndex];
             if (!mode.Unlocked) { NotifyNotReady(mode.Name); return; }
             global::Game.Module.Common.GameSound.Cue("ui.play");   // 원작 코인 투입음
-            OpenHostSelect(true);
+            // 챕터를 먼저 고른다. 판이 없으면(프리팹 미반영) 예전처럼 바로 호스트 선택으로.
+            if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
+            else OpenHostSelect(true);
         }
 
         /// <summary>세 칸에 모드를 다시 꽂는다. 가운데가 고른 것이다.</summary>
@@ -332,7 +363,8 @@ namespace Game.Module.Lobby
             // ⚠ 카드 폭(248)을 넘기면 옆칸 위로 글자가 올라탄다. 챕터 이름까지 넣었더니
             //   실제로 그랬다 — 번호와 진행도만 적는다. 이름은 들어가서 볼 자리가 따로 있다.
             if (!mode.Unlocked || _player == null || !_player.IsReady) return mode.Desc;
-            return $"CH {_player.CurrentChapter:00}   ·   {_player.ReachedStage} / 30";
+            // 한 판 = 한 챕터(2026-09-18) — 열린 챕터와 깬 챕터 수를 적는다
+            return $"CH {_player.UnlockedChapter:00}   ·   {_player.ClearedChapter} / {PlayerDataService.ChapterCount}";
         }
 
         private void SetSideCard(string card, int modeIndex)
@@ -437,6 +469,11 @@ namespace Game.Module.Lobby
             if (_hostSelectPanel != null && _hostSelectPanel.IsOpen)
             {
                 _hostSelectPanel.Close();
+                return true;
+            }
+            if (_chapterSelectPanel != null && _chapterSelectPanel.IsOpen)
+            {
+                _chapterSelectPanel.Close();
                 return true;
             }
             return false;

@@ -58,6 +58,20 @@ namespace Game.User
         public int ReachedStage   => _data?.reachedStage   ?? 1;
         public int ClearedChapter => _data?.clearedChapter ?? 0;
 
+        /// <summary>챕터 수. 방 표(90방 = 6 × 15)와 같다.</summary>
+        public const int ChapterCount = 6;
+
+        public int UnlockedChapter => Mathf.Clamp(ClearedChapter + 1, 1, ChapterCount);
+
+        // 0 = 아직 안 골랐다 → 열린 챕터 중 가장 높은 것
+        private int _selectedChapter;
+
+        public int SelectedChapter
+        {
+            get => _selectedChapter <= 0 ? UnlockedChapter : Mathf.Clamp(_selectedChapter, 1, UnlockedChapter);
+            set => _selectedChapter = value;
+        }
+
         /// <summary>
         /// 전투가 세우는 몸 전부. ⚠ **숨긴 몸(`IsHiddenHost`)은 뺀다** — 목록에도 적으로도 안 나온다.
         /// </summary>
@@ -572,6 +586,18 @@ namespace Game.User
                 SetProgress(_data.currentChapter, _data.reachedStage + 1);
             }
 
+            await SaveAsync();
+        }
+
+        public async UniTask GrantChapterClearAsync(int chapter, int gold)
+        {
+            if (_data == null) return;
+            _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
+            PublishCurrency();
+
+            // 격파 기록은 **올라가기만** 한다 — 1챕터를 다시 깨도 3챕터 기록이 안 내려간다.
+            _data.clearedChapter = Mathf.Clamp(Mathf.Max(_data.clearedChapter, chapter), 0, ChapterCount);
+            SetProgress(chapter, _data.reachedStage);   // 해금 재평가 + ProgressChangedEvent
             await SaveAsync();
         }
 
