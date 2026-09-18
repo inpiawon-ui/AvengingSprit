@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Module.Common;
@@ -60,11 +60,12 @@ namespace Game.Module.Lobby
         private readonly List<IDisposable> _tokens = new();
 
         // 1차 범위 밖 — 버튼은 두되 누르면 준비중 안내만 띄운다.
-        // ⚠ 시즌패스 · 이벤트 · 일일로그인 · 기능탭 · 챕터 카드 · 고스트 위젯은 로비에서
-        //   **걷어냈다**(2026-09-15 · 2026-09-16 목업). 프리팹에서도 지웠으므로 목록에도 없다.
+        // 시즌 패스 · 이벤트는 시안(lobby_hub_v2)에 있어 로비 v3 에서 다시 세웠다(2026-09-18) — 기능은 나중.
+        // 설정 버튼은 시안에 없어 로비에서 빠졌다.
         private static readonly (string element, string label)[] NotReady =
         {
             ("MailButton", "우편"), ("SettingsButton", "설정"),
+            ("SeasonPassButton", "시즌 패스"), ("EventButton", "이벤트"),
             // 유령 수색(방치)은 화면만 세워 뒀다 — 기능은 나중(기획 2026-09-16)
             ("GhostSearchHelpButton", "유령 수색"), ("GhostSearchClaimButton", "유령 수색"),
         };
@@ -233,9 +234,17 @@ namespace Game.Module.Lobby
                     var want = ready ? _chestButtonGold : _chestButtonBlue;
                     if (want != null && button.sprite != want) button.sprite = want;
                 }
+                // 상태마다 상자 · 버튼 자리가 다르다(로비 v3) — 상자는 그림 제 크기로
+                var layout = root.GetComponent<ChestSlotLayout>();
+                if (layout != null)
+                {
+                    var artRt = art != null ? art.rectTransform : null;
+                    layout.Apply(artRt, button != null ? button.rectTransform : null, ready);
+                }
                 TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
                 if (!ready) CenterTimeRow(root);
                 TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));
+                if (!ready) KeepClearOfIcon(root, "ChestActionGemIcon", "ChestActionCostText", GemClearGap);
                 TextIn(root, "ChestActionLabelText", Localize.Get("ui.lobby.chest.open_now"));
                 TextIn(root, "ChestReadyLabelText", Localize.Get("ui.lobby.chest.claim"));
             }
@@ -257,7 +266,17 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>시계와 남은 시간 사이 간격(캔버스 px).</summary>
-        private const float TimeRowGap = 6f;
+        private const float TimeRowGap = 9.95f;   // 시안: 시계 그림 끝 126 → 글자 139 (시안 px) × 720/941
+        /// <summary>
+        /// 젬 값이 젬을 덮는지 볼 때의 간격. 시안 「1,000」 은 젬에 거의 붙어 있어(간격 6.89) 그 값으로 재면
+        /// 글자 칸의 좌우 여백(bearing) 때문에 시안 그대로의 자리도 «덮는다» 로 잡혀 밀렸다 — 여유를 둔다.
+        /// </summary>
+        private const float GemClearGap = 3.5f;
+        /// <summary>「플레이하기 ▶」 — 글자 끝 → ▶ 간격, 덩어리 가운데(버튼 왼쪽 기준). 시안: 글자 390~535 · ▶ 554~575, 버튼 305~.</summary>
+        private const float PlayArrowGap = 12.7f;   // 그림 여백(알파 번짐) 만큼 실측으로 줄였다
+        private const float PlayGroupCenter = 135.8f;
+        /// <summary>시계 + 시간 덩어리는 시안에서 판 가운데보다 2px(시안) 왼쪽에 있다.</summary>
+        private const float TimeRowShift = -1.53f;
 
         /// <summary>
         /// 시계 + 남은 시간을 **한 덩어리로** 시간 판 가운데에 둔다(2026-09-18 지적).
@@ -266,28 +285,87 @@ namespace Game.Module.Lobby
         /// 짧을 때 덩어리가 왼쪽으로 쏠린다. 글자 폭을 재서 매번 맞춘다.
         /// </summary>
         private void CenterTimeRow(Transform slot)
+            => CenterRow(slot, "ChestTimePlate", "ChestTimeIcon", "ChestTimeText", TimeRowGap, TimeRowShift);
+
+        /// <summary>
+        /// 글자 + 아이콘(글자 뒤) 한 덩어리를 부모 안 정해진 가운데에 둔다.
+        /// ▶ 는 시안 글꼴의 좁은 삼각형이라 그림으로 붙인다 — 언어마다 글자 길이가 달라도 글자 끝을 따라간다.
+        /// </summary>
+        private void PlaceTextThenIcon(string parentName, string textName, string iconName, float gap, float centerX)
         {
-            var plate = _ui.Find(slot, "ChestTimePlate") as RectTransform;
-            var icon = _ui.Find(slot, "ChestTimeIcon") as RectTransform;
-            var text = _ui.Find(slot, "ChestTimeText")?.GetComponent<TMPro.TextMeshProUGUI>();
+            var parent = _ui.Find(parentName);
+            if (parent == null) return;
+            var text = _ui.Find(parent, textName)?.GetComponent<TMPro.TextMeshProUGUI>();
+            var icon = _ui.Find(parent, iconName) as RectTransform;
+            if (text == null || icon == null) return;
+
+            var rt = text.rectTransform;
+            text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Left;
+            text.ForceMeshUpdate();
+            float sx = rt.localScale.x;
+            float textW = text.textBounds.size.x * sx;
+            float left = centerX - (textW + gap + icon.rect.width) * 0.5f;
+            // 버튼 안 자식은 왼쪽 위 기준(anchor·pivot 0,1)이라 anchoredPosition 이 곧 부모 왼쪽에서의 거리다
+            var p = rt.anchoredPosition;
+            p.x = left - text.textBounds.min.x * sx;
+            rt.anchoredPosition = p;
+            var ip = icon.anchoredPosition;
+            ip.x = left + textW + gap;
+            icon.anchoredPosition = ip;
+        }
+
+        /// <summary>
+        /// 젬 값 — 시안은 **젬은 제자리, 숫자만 제 칸 가운데**다(「1,000」 · 「800」 가운데가 같다).
+        /// 칸은 빌더가 잡아 두고, 숫자가 길어 젬을 덮을 때만 오른쪽으로 민다.
+        /// </summary>
+        private void KeepClearOfIcon(Transform slot, string iconName, string textName, float gap)
+        {
+            var icon = _ui.Find(slot, iconName) as RectTransform;
+            var text = _ui.Find(slot, textName)?.GetComponent<TMPro.TextMeshProUGUI>();
+            if (icon == null || text == null) return;
+
+            text.margin = Vector4.zero;
+            text.ForceMeshUpdate();
+            var rt = text.rectTransform;
+            float sx = rt.localScale.x;
+            float inkLeft = rt.localPosition.x + text.textBounds.min.x * sx;
+            float iconRight = icon.localPosition.x + (1f - icon.pivot.x) * icon.rect.width;
+            float need = iconRight + gap - inkLeft;
+            // 가운데 정렬 글자는 왼쪽 여백의 절반만큼 움직인다
+            if (need > 0f) text.margin = new Vector4(2f * need / sx, 0f, 0f, 0f);
+        }
+
+        /// <summary>
+        /// 아이콘 + 글자 한 줄을 판 가운데에 둔다. 시안 간격: 시계 → 시간 9.95 (캔버스).
+        /// ⚠ 가로 정렬만 바꾼다 — 세로는 글자 모양 기준(Geometry)이어야 시안 줄에 앉는다.
+        /// </summary>
+        private void CenterRow(Transform slot, string plateName, string iconName, string textName, float gap, float shift = 0f)
+        {
+            var plate = _ui.Find(slot, plateName) as RectTransform;
+            var icon = _ui.Find(slot, iconName) as RectTransform;
+            var text = _ui.Find(slot, textName)?.GetComponent<TMPro.TextMeshProUGUI>();
             if (plate == null || icon == null || text == null) return;
 
             var textRect = text.rectTransform;
-            float textW = Mathf.Min(text.GetPreferredValues(text.text).x, textRect.rect.width);
+            text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Left;
+            text.ForceMeshUpdate();
+            // 글자 칸은 가로로 눌려 있을 수 있다(시안 글꼴 폭 맞춤) — 보이는 폭은 × localScale.x
+            float sx = textRect.localScale.x;
+            float textW = Mathf.Min(text.textBounds.size.x, textRect.rect.width) * sx;
             float iconW = icon.rect.width;
-            float group = iconW + TimeRowGap + textW;
+            float group = iconW + gap + textW;
 
             // 셋 다 같은 부모 안이라 localPosition 으로 맞춘다 — 앵커가 달라도 같은 자로 잰다
             float center = plate.localPosition.x + (0.5f - plate.pivot.x) * plate.rect.width;
-            float left = center - group * 0.5f;
+            float left = center + shift - group * 0.5f;
 
             var ip = icon.localPosition;
             ip.x = left + icon.pivot.x * iconW;
             icon.localPosition = ip;
 
-            text.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+            // 글자 잉크의 왼쪽 끝을 맞춘다 — textBounds 는 글자 칸 기준점(pivot) 기준이다
             var tp = textRect.localPosition;
-            tp.x = left + iconW + TimeRowGap + textRect.pivot.x * textRect.rect.width;
+            tp.x = left + iconW + gap - text.textBounds.min.x * sx;
             textRect.localPosition = tp;
         }
 
@@ -356,10 +434,14 @@ namespace Game.Module.Lobby
 
         // ── 게임 모드 ────────────────────────────────────────────
 
+        /// <summary>
+        /// 옆 카드 · 화살표 — 로비 v3 는 카드가 시안 자리에 **고정**이다(카드 그림이 바탕에 있다).
+        /// 옆 모드는 잠겨 있으므로 돌리지 않고 「준비 중」을 알린다.
+        /// </summary>
         private void RotateMode(int step)
         {
-            _modeIndex = (_modeIndex + step + Modes.Length) % Modes.Length;
-            ApplyModes();
+            var side = Modes[(ScenarioIndex + step + Modes.Length) % Modes.Length];
+            NotifyNotReady(side.Name);
         }
 
         private void PlaySelectedMode()
@@ -384,7 +466,10 @@ namespace Game.Module.Lobby
             var mid = Modes[_modeIndex];
             SetArt(_ui.Find("ModeCenterArt"), _modeIndex);
             _ui.SetText("ModeCenterTitleText", mid.Name);
-            _ui.SetText("ModeCenterSubText", CenterDescOf(mid));
+            // 시안대로 모드 소개 글 — 진행도는 챕터 선택 화면이 보여 준다
+            _ui.SetText("ModeCenterSubText", mid.Desc);
+            _ui.SetText("ModePlayButtonText", Localize.Get("ui.lobby.play"));
+            PlaceTextThenIcon("ModePlayButton", "ModePlayButtonText", "ModePlayButtonArrow", PlayArrowGap, PlayGroupCenter);
             // ⚠ 잠겼다고 그림을 끄지 마라. 가운데 칸이 통째로 시커먼 판이 되어 고장 난 것처럼
             //   보였다(2026-09-16). 목업도 잠긴 칸에 그림을 두고 자물쇠만 얹는다.
             _ui.SetActive("ModeCenterArt", true);
@@ -392,19 +477,6 @@ namespace Game.Module.Lobby
             _ui.SetActive("ModePlayButton", mid.Unlocked);
             // MAIN 딱지는 **주 콘텐츠에만** 붙는다. 아무 칸에나 붙으면 표시가 아니라 장식이 된다.
             _ui.SetActive("ModeMainBadge", _modeIndex == ScenarioIndex);
-        }
-
-        /// <summary>
-        /// 가운데 칸 설명. 시나리오는 지금 어디까지 왔는지가 설명보다 쓸모 있다 —
-        /// 챕터 카드를 걷어냈으므로 그 정보가 갈 곳이 여기뿐이다.
-        /// </summary>
-        private string CenterDescOf(GameMode mode)
-        {
-            // ⚠ 카드 폭(248)을 넘기면 옆칸 위로 글자가 올라탄다. 챕터 이름까지 넣었더니
-            //   실제로 그랬다 — 번호와 진행도만 적는다. 이름은 들어가서 볼 자리가 따로 있다.
-            if (!mode.Unlocked || _player == null || !_player.IsReady) return mode.Desc;
-            // 한 판 = 한 챕터(2026-09-18) — 열린 챕터와 깬 챕터 수를 적는다
-            return $"CH {_player.UnlockedChapter:00}   ·   {_player.ClearedChapter} / {PlayerDataService.ChapterCount}";
         }
 
         private void SetSideCard(string card, int modeIndex)
@@ -450,6 +522,8 @@ namespace Game.Module.Lobby
             _tokens.Add(bus.Subscribe<CurrencyChangedEvent>(_ => RefreshCurrency()));
             _tokens.Add(bus.Subscribe<ProgressChangedEvent>(_ => RefreshChapter()));
             _tokens.Add(bus.Subscribe<ChestChangedEvent>(_ => ApplyChests()));
+            // 코드가 채우는 글자(모드 이름 · 플레이 · 상자 문구)는 LocalizedText 가 없다 — 언어가 바뀌면 다시 채운다
+            _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => { Refresh(); ApplyChests(); }));
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
             _tokens.Add(bus.Subscribe<ChapterSelectRequestedEvent>(_ =>
             {
@@ -484,11 +558,8 @@ namespace Game.Module.Lobby
         private void RefreshChapter()
         {
             if (_player == null || !_player.IsReady) return;
-            // 신규 유저에게 '이어서 하기'는 성립하지 않는다 — 상태별 라벨 전환
-            bool started = _player.ReachedStage > 1 || _player.ClearedChapter > 0;
-            _ui.SetText("ModePlayButtonText",
-                        (started ? Localize.Get("ui.lobby.continue") : Localize.Get("ui.lobby.play")) + "  ▶");
-            ApplyModes();   // 가운데 칸이 진행도를 적는다
+            // 버튼 글자는 시안대로 늘 「플레이하기 ▶」다 — 이어 할 챕터는 챕터 선택이 고른다(로비 v3)
+            ApplyModes();
         }
 
         private void OpenHostSelect(bool isChapterStart)
@@ -536,3 +607,10 @@ namespace Game.Module.Lobby
         }
     }
 }
+
+
+
+
+
+
+

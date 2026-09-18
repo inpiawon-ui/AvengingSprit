@@ -69,8 +69,16 @@ namespace Game.Module.Common
         [SerializeField] private TMP_FontAsset _gothic;
         [SerializeField] private Material[] _presets = Array.Empty<Material>();
 
+        /// <summary>
+        /// 굵은 본문 폰트(제목 · 버튼 · 숫자). 로비 시안 글자가 굵은 고딕이다(2026-09-18).
+        /// 비어 있으면 본문 폰트(<see cref="Gothic"/>)로 떨어진다.
+        /// </summary>
+        [SerializeField] private TMP_FontAsset _heavy;
+
         public Language Language => _language;
         public TMP_FontAsset Gothic => _gothic;
+        public TMP_FontAsset Heavy => _heavy != null ? _heavy : _gothic;
+        public bool HasHeavy => _heavy != null;
         public IReadOnlyList<Material> Presets => _presets;
     }
 

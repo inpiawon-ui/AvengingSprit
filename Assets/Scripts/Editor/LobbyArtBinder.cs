@@ -152,8 +152,14 @@ namespace Game.Editor
             ("silver", "chest_silver"), ("gold", "chest_gold"), ("platinum", "chest_magic"),
         };
 
-        [MenuItem("Tools/Game/로비 그림 꽂기")]
+        // ⚠ 로비는 2026-09-18 부터 로비 v3 빌더가 시안 픽셀로 세운다. 예전 노드에 그림을 꽂는 이 도구는 막는다.
+        [MenuItem("Tools/Game/로비 그림 꽂기 (막힘 — 로비 v3 빌더를 쓴다)")]
         public static void Run()
+        {
+            Debug.LogWarning("[로비] 로비 그림은 로비 v3 빌더가 꽂는다 — Tools/Game/로비 v3");
+        }
+
+        private static void RunOld()
         {
             int pulled = ImportIncoming();
 

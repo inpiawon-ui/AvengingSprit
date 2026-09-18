@@ -425,15 +425,15 @@ ui.consumable.ally.name	동료	仲間
 ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	次の部屋で体がひとつ一緒に戦う	
 ui.consumable.freeze.name	정지	停止	
 ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部屋で敵が{0:0}秒止まる	
-ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	
-ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	
-ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	
-ui.lobby.mode.scenario.desc	영혼이 깃든 새로운 이야기	魂が宿る新たな物語	
-ui.lobby.mode.defense.name	디펜스 모드	ディフェンスモード	
-ui.lobby.mode.defense.desc	몰려오는 적을 막아라	押し寄せる敵を食い止めろ	
-ui.lobby.game_mode	게임 모드	ゲームモード	
+ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	Survival Mode
+ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	Survive to the end
+ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	Scenario Mode
+ui.lobby.mode.scenario.desc	영혼이 깃든 새로운 이야기	魂が宿る新たな物語	A new tale with a soul
+ui.lobby.mode.defense.name	디펜스 모드	ディフェンスモード	Defense Mode
+ui.lobby.mode.defense.desc	몰려오는 적을 막아라	押し寄せる敵を食い止めろ	Hold back the horde
+ui.lobby.game_mode	게임 모드	ゲームモード	Game Mode
 ui.lobby.continue	이어서 하기	続きから	
-ui.lobby.play	플레이하기	プレイ	
+ui.lobby.play	플레이하기	プレイ	Play
 ui.common.quit.message	게임을 종료하시겠습니까?	ゲームを終了しますか？	
 ui.common.quit	종료	終了	
 ui.common.cancel	취소	キャンセル	
@@ -442,8 +442,12 @@ ui.shop.title	상점	ショップ
 ui.lobby.host_button.sub	호스트 육성	ホスト育成	Train Hosts
 ui.lobby.shop_button.sub	상점	ショップ	Shop
 ui.lobby.search.title	유령 수색	ゴースト捜索	Ghost Search
-ui.lobby.search.desc	유령이 도시 곳곳을 떠돌며 골드를 찾아옵니다.	ゴーストが街を巡ってゴールドを集めてきます。	Your ghost roams the city and brings back gold.
-ui.lobby.search.claim	보상 받기	報酬を受け取る	Claim
+ui.lobby.search.desc	유령이 도시 곳곳을 떠돌며\n골드를 찾아옵니다.	ゴーストが街を巡って\nゴールドを集めてきます。	Your ghost roams the city\nand brings back gold.
+ui.lobby.season.title	시즌 패스	シーズンパス	Season Pass
+ui.lobby.season.sub	12일 남음	残り12日	12 days left
+ui.lobby.event.title	이벤트	イベント	Event
+ui.lobby.event.sub	진행 중	開催中	Live
+ui.lobby.search.claim보상 받기	報酬を受け取る	Claim
 ui.lobby.chest.empty	빈 칸	空きスロット	Empty
 ui.lobby.chest.ready	완료!	完了!	Ready!
 ui.lobby.chest.open_now	즉시 열기	今すぐ開ける	Open Now

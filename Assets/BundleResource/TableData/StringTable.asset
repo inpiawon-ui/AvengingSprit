@@ -26,6 +26,7 @@ MonoBehaviour:
     - {fileID: 2100000, guid: be7a5ab276ca5114185ad001d91a3afe, type: 2}
     - {fileID: 2100000, guid: 06e795c38d56b7246be80f839d7e74e8, type: 2}
     - {fileID: 2100000, guid: 29a277b3c45e05249912b8e69901f190, type: 2}
+    _heavy: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
   - _language: 1
     _gothic: {fileID: 11400000, guid: f2f78df69396f8f4780949e0771a4eaf, type: 2}
     _presets:
@@ -37,6 +38,7 @@ MonoBehaviour:
     - {fileID: 2100000, guid: d52bf1c2b0918e14c96356dc9abe8a25, type: 2}
     - {fileID: 2100000, guid: 35eeb99ec6752564189bc18e0f4fe15b, type: 2}
     - {fileID: 2100000, guid: c0a44819a7d6cdc40be6cc313464b1f0, type: 2}
+    _heavy: {fileID: 0}
   - _language: 2
     _gothic: {fileID: 11400000, guid: a11cb69ee9108e245a192bc9cfa5c1e5, type: 2}
     _presets:
@@ -48,6 +50,7 @@ MonoBehaviour:
     - {fileID: 2100000, guid: be7a5ab276ca5114185ad001d91a3afe, type: 2}
     - {fileID: 2100000, guid: 06e795c38d56b7246be80f839d7e74e8, type: 2}
     - {fileID: 2100000, guid: 29a277b3c45e05249912b8e69901f190, type: 2}
+    _heavy: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
   _entries:
   - _key: host.gangster.name
     _ko: "\uAC31\uC2A4\uD130"
@@ -1867,31 +1870,31 @@ MonoBehaviour:
   - _key: ui.lobby.mode.survival.name
     _ko: "\uC11C\uBC14\uC774\uBC8C \uBAA8\uB4DC"
     _ja: "\u30B5\u30D0\u30A4\u30D0\u30EB\u30E2\u30FC\u30C9"
-    _en: 
+    _en: Survival Mode
   - _key: ui.lobby.mode.survival.desc
     _ko: "\uB05D\uAE4C\uC9C0 \uC0B4\uC544\uB0A8\uC544\uB77C"
     _ja: "\u6700\u5F8C\u307E\u3067\u751F\u304D\u6B8B\u308C"
-    _en: 
+    _en: Survive to the end
   - _key: ui.lobby.mode.scenario.name
     _ko: "\uC2DC\uB098\uB9AC\uC624 \uBAA8\uB4DC"
     _ja: "\u30B7\u30CA\u30EA\u30AA\u30E2\u30FC\u30C9"
-    _en: 
+    _en: Scenario Mode
   - _key: ui.lobby.mode.scenario.desc
     _ko: "\uC601\uD63C\uC774 \uAE43\uB4E0 \uC0C8\uB85C\uC6B4 \uC774\uC57C\uAE30"
     _ja: "\u9B42\u304C\u5BBF\u308B\u65B0\u305F\u306A\u7269\u8A9E"
-    _en: 
+    _en: A new tale with a soul
   - _key: ui.lobby.mode.defense.name
     _ko: "\uB514\uD39C\uC2A4 \uBAA8\uB4DC"
     _ja: "\u30C7\u30A3\u30D5\u30A7\u30F3\u30B9\u30E2\u30FC\u30C9"
-    _en: 
+    _en: Defense Mode
   - _key: ui.lobby.mode.defense.desc
     _ko: "\uBAB0\uB824\uC624\uB294 \uC801\uC744 \uB9C9\uC544\uB77C"
     _ja: "\u62BC\u3057\u5BC4\u305B\u308B\u6575\u3092\u98DF\u3044\u6B62\u3081\u308D"
-    _en: 
+    _en: Hold back the horde
   - _key: ui.lobby.game_mode
     _ko: "\uAC8C\uC784 \uBAA8\uB4DC"
     _ja: "\u30B2\u30FC\u30E0\u30E2\u30FC\u30C9"
-    _en: 
+    _en: Game Mode
   - _key: ui.lobby.continue
     _ko: "\uC774\uC5B4\uC11C \uD558\uAE30"
     _ja: "\u7D9A\u304D\u304B\u3089"
@@ -1899,7 +1902,7 @@ MonoBehaviour:
   - _key: ui.lobby.play
     _ko: "\uD50C\uB808\uC774\uD558\uAE30"
     _ja: "\u30D7\u30EC\u30A4"
-    _en: 
+    _en: Play
   - _key: ui.common.quit.message
     _ko: "\uAC8C\uC784\uC744 \uC885\uB8CC\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
     _ja: "\u30B2\u30FC\u30E0\u3092\u7D42\u4E86\u3057\u307E\u3059\u304B\uFF1F"
@@ -1933,10 +1936,12 @@ MonoBehaviour:
     _ja: "\u30B4\u30FC\u30B9\u30C8\u635C\u7D22"
     _en: Ghost Search
   - _key: ui.lobby.search.desc
-    _ko: "\uC720\uB839\uC774 \uB3C4\uC2DC \uACF3\uACF3\uC744 \uB5A0\uB3CC\uBA70 \uACE8\uB4DC\uB97C
+    _ko: "\uC720\uB839\uC774 \uB3C4\uC2DC \uACF3\uACF3\uC744 \uB5A0\uB3CC\uBA70\n\uACE8\uB4DC\uB97C
       \uCC3E\uC544\uC635\uB2C8\uB2E4."
-    _ja: "\u30B4\u30FC\u30B9\u30C8\u304C\u8857\u3092\u5DE1\u3063\u3066\u30B4\u30FC\u30EB\u30C9\u3092\u96C6\u3081\u3066\u304D\u307E\u3059\u3002"
-    _en: Your ghost roams the city and brings back gold.
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u304C\u8857\u3092\u5DE1\u3063\u3066\n\u30B4\u30FC\u30EB\u30C9\u3092\u96C6\u3081\u3066\u304D\u307E\u3059\u3002"
+    _en: 'Your ghost roams the city
+
+      and brings back gold.'
   - _key: ui.lobby.search.claim
     _ko: "\uBCF4\uC0C1 \uBC1B\uAE30"
     _ja: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308B"
@@ -2073,4 +2078,24 @@ MonoBehaviour:
   - _key: "ui.result.clear\uCC55\uD130 {0} \uD074\uB9AC\uC5B4!"
     _ko: "\u30C1\u30E3\u30D7\u30BF\u30FC{0} \u30AF\u30EA\u30A2\uFF01"
     _ja: Chapter {0} Clear!
+    _en: 
+  - _key: ui.lobby.season.title
+    _ko: "\uC2DC\uC98C \uD328\uC2A4"
+    _ja: "\u30B7\u30FC\u30BA\u30F3\u30D1\u30B9"
+    _en: Season Pass
+  - _key: ui.lobby.season.sub
+    _ko: "12\uC77C \uB0A8\uC74C"
+    _ja: "\u6B8B\u308A12\u65E5"
+    _en: 12 days left
+  - _key: ui.lobby.event.title
+    _ko: "\uC774\uBCA4\uD2B8"
+    _ja: "\u30A4\u30D9\u30F3\u30C8"
+    _en: Event
+  - _key: ui.lobby.event.sub
+    _ko: "\uC9C4\uD589 \uC911"
+    _ja: "\u958B\u50AC\u4E2D"
+    _en: Live
+  - _key: "ui.lobby.search.claim\uBCF4\uC0C1 \uBC1B\uAE30"
+    _ko: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308B"
+    _ja: Claim
     _en: 

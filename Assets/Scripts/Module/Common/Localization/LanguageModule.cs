@@ -63,6 +63,9 @@ namespace Game.Module.Common
         private TMP_FontAsset _pixel;
         private List<TMP_FontAsset> _pixelOriginal;
 
+        // 획 두께 보정 재질 — (폰트, 두께)마다 하나를 여러 글자 칸이 같이 쓴다
+        private readonly Dictionary<(int font, int dilate), Material> _weights = new();
+
         public Language Current => _current;
         public bool IsReady => _table != null;
         public TMP_FontAsset GothicFont => _table?.FontFor(_current)?.Gothic;
@@ -132,6 +135,9 @@ namespace Game.Module.Common
 
         public void RestoreFallbacks()
         {
+            foreach (var m in _weights.Values)
+                if (m != null) UnityEngine.Object.Destroy(m);
+            _weights.Clear();
             if (_pixel == null || _pixelOriginal == null) return;
             _pixel.fallbackFontAssetTable = _pixelOriginal;
             _pixel = null;
@@ -200,7 +206,23 @@ namespace Game.Module.Common
 
         private void SwapFont(TMP_Text text, LanguageFont target)
         {
-            if (text == null || text.font == null || text.font == target.Gothic) return;
+            if (text == null || text.font == null) return;
+
+            // 굵은 폰트 칸은 굵은 폰트끼리 바꾼다. 그 언어에 굵은 폰트가 없으면
+            // 본문 폰트에 굵게 모양을 얹어 대신한다(일본어 굵은 폰트가 아직 없다).
+            // ⚠ 표시는 글자 칸 위의 `HeavyText` 가 쥔다 — 폰트로만 알아보면, 굵은 폰트가 없는
+            //   언어에서 본문 폰트로 바뀐 순간 다음 언어로 갈 때 굵은 칸이었는지를 잃는다.
+            var heavy = text.GetComponent<HeavyText>();
+            if (heavy != null || IsHeavy(text.font))
+            {
+                if (text.font != target.Heavy) text.font = target.Heavy;
+                if (target.HasHeavy) text.fontStyle &= ~FontStyles.Bold;
+                else text.fontStyle |= FontStyles.Bold;
+                if (heavy != null) ApplyWeight(text, heavy.Dilate);
+                return;
+            }
+
+            if (text.font == target.Gothic) return;
             if (!IsGothic(text.font)) return;   // 픽셀 폰트 칸은 건드리지 않는다
 
             // 재질 프리셋 이름 꼬리를 먼저 읽는다 — 폰트를 바꾸면 재질이 기본으로 돌아간다.
@@ -220,6 +242,38 @@ namespace Game.Module.Common
                 copy.SetTexture(ShaderUtilities.ID_MainTex, target.Gothic.atlasTexture);
                 text.fontSharedMaterial = copy;
             }
+        }
+
+        /// <summary>
+        /// 획 두께 보정. 0 이면 폰트 기본 재질. 폰트를 바꾸면 재질이 기본으로 돌아가므로 바꿀 때마다 다시 입힌다.
+        /// </summary>
+        private void ApplyWeight(TMP_Text text, float dilate)
+        {
+            int step = Mathf.RoundToInt(dilate * 100f);
+            if (step == 0)
+            {
+                if (text.fontSharedMaterial != text.font.material) text.fontSharedMaterial = text.font.material;
+                return;
+            }
+            var key = (text.font.GetInstanceID(), step);
+            if (!_weights.TryGetValue(key, out var m) || m == null)
+            {
+                m = new Material(text.font.material) { name = $"{text.font.name} W{step}" };
+                m.SetFloat(ShaderUtilities.ID_FaceDilate, step / 100f);
+                _weights[key] = m;
+            }
+            text.fontSharedMaterial = m;
+        }
+
+        /// <summary>어느 언어든 굵은 폰트로 등록된 것인가. 본문 폰트와 같은 칸은 빼고 본다.</summary>
+        private bool IsHeavy(TMP_FontAsset font)
+        {
+            for (int i = 0; i < _table.Fonts.Count; i++)
+            {
+                var f = _table.Fonts[i];
+                if (f != null && f.HasHeavy && f.Heavy == font) return true;
+            }
+            return false;
         }
 
         private bool IsGothic(TMP_FontAsset font)

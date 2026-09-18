@@ -1,0 +1,724 @@
+{
+ "mockupW": 941,
+ "mockupH": 1672,
+ "splitY": 620,
+ "texts": [
+  {
+   "name": "GoldText",
+   "box": [
+    379,
+    39,
+    503,
+    70
+   ],
+   "color": "#FFF88A",
+   "align": "C",
+   "area": [
+    368,
+    28,
+    512,
+    72
+   ],
+   "size": 31
+  },
+  {
+   "name": "GemText",
+   "box": [
+    684,
+    40,
+    756,
+    68
+   ],
+   "color": "#69CFFC",
+   "align": "C",
+   "area": [
+    672,
+    28,
+    768,
+    72
+   ],
+   "size": 27
+  },
+  {
+   "name": "SeasonPassTitleText",
+   "box": [
+    592,
+    135,
+    679,
+    157
+   ],
+   "color": "#FFFFFF",
+   "align": "C",
+   "area": [
+    585,
+    126,
+    690,
+    160
+   ],
+   "size": 23
+  },
+  {
+   "name": "SeasonPassSubText",
+   "box": [
+    594,
+    168,
+    677,
+    187
+   ],
+   "color": "#FDF458",
+   "align": "C",
+   "area": [
+    585,
+    160,
+    690,
+    195
+   ],
+   "size": 20
+  },
+  {
+   "name": "EventTitleText",
+   "box": [
+    823,
+    135,
+    883,
+    157
+   ],
+   "color": "#FFFFFF",
+   "align": "C",
+   "area": [
+    812,
+    126,
+    895,
+    160
+   ],
+   "size": 23
+  },
+  {
+   "name": "EventSubText",
+   "box": [
+    824,
+    168,
+    884,
+    187
+   ],
+   "color": "#F670E1",
+   "align": "C",
+   "area": [
+    812,
+    160,
+    895,
+    195
+   ],
+   "size": 20
+  },
+  {
+   "name": "GhostSearchTitleText",
+   "box": [
+    134,
+    259,
+    250,
+    290
+   ],
+   "color": "#D5E8FF",
+   "align": "L",
+   "area": [
+    130,
+    250,
+    260,
+    294
+   ],
+   "size": 30
+  },
+  {
+   "name": "GhostSearchTimerText",
+   "box": [
+    139,
+    303,
+    294,
+    333
+   ],
+   "color": "#02F0FF",
+   "align": "L",
+   "area": [
+    128,
+    296,
+    302,
+    340
+   ],
+   "size": 38
+  },
+  {
+   "name": "GhostSearchGoldText",
+   "box": [
+    116,
+    365,
+    277,
+    396
+   ],
+   "color": "#FEF58B",
+   "align": "L",
+   "area": [
+    106,
+    356,
+    288,
+    402
+   ],
+   "size": 31
+  },
+  {
+   "name": "GhostSearchDescText",
+   "box": [
+    48,
+    429,
+    301,
+    483
+   ],
+   "color": "#E2EFFC",
+   "align": "L",
+   "area": [
+    40,
+    420,
+    312,
+    488
+   ],
+   "size": 23
+  },
+  {
+   "name": "GhostSearchClaimText",
+   "box": [
+    753,
+    537,
+    878,
+    568
+   ],
+   "color": "#000000",
+   "align": "C",
+   "area": [
+    740,
+    526,
+    892,
+    576
+   ],
+   "size": 33
+  },
+  {
+   "name": "GameModeLabel",
+   "box": [
+    58,
+    920,
+    201,
+    957
+   ],
+   "color": "#E4F3FF",
+   "align": "L",
+   "area": [
+    50,
+    912,
+    208,
+    958
+   ],
+   "size": 38
+  },
+  {
+   "name": "ModeSideLeftTitleText",
+   "box": [
+    69,
+    1268,
+    222,
+    1296
+   ],
+   "color": "#9CA7C0",
+   "align": "C",
+   "area": [
+    58,
+    1262,
+    232,
+    1300
+   ],
+   "size": 27
+  },
+  {
+   "name": "ModeSideLeftSubText",
+   "box": [
+    74,
+    1310,
+    216,
+    1330
+   ],
+   "color": "#4F9FD2",
+   "align": "C",
+   "area": [
+    58,
+    1302,
+    232,
+    1336
+   ],
+   "size": 19
+  },
+  {
+   "name": "ModeCenterTitleText",
+   "box": [
+    408,
+    1215,
+    616,
+    1250
+   ],
+   "color": "#FFFFFF",
+   "align": "L",
+   "area": [
+    400,
+    1204,
+    622,
+    1254
+   ],
+   "size": 37
+  },
+  {
+   "name": "ModeCenterSubText",
+   "box": [
+    413,
+    1263,
+    614,
+    1282
+   ],
+   "color": "#8FD2F9",
+   "align": "C",
+   "area": [
+    402,
+    1258,
+    622,
+    1292
+   ],
+   "size": 19
+  },
+  {
+   "name": "ModePlayButtonText",
+   "box": [
+    390,
+    1318,
+    535,
+    1350
+   ],
+   "color": "#000000",
+   "align": "C",
+   "area": [
+    378,
+    1308,
+    545,
+    1356
+   ],
+   "size": 33
+  },
+  {
+   "name": "ModeSideRightTitleText",
+   "box": [
+    735,
+    1269,
+    863,
+    1298
+   ],
+   "color": "#9DA7C1",
+   "align": "C",
+   "area": [
+    706,
+    1262,
+    880,
+    1300
+   ],
+   "size": 27
+  },
+  {
+   "name": "ModeSideRightSubText",
+   "box": [
+    720,
+    1308,
+    875,
+    1330
+   ],
+   "color": "#4EA1D5",
+   "align": "C",
+   "area": [
+    706,
+    1302,
+    880,
+    1336
+   ],
+   "size": 18
+  },
+  {
+   "name": "HostButtonTitleText",
+   "box": [
+    164,
+    1528,
+    246,
+    1555
+   ],
+   "color": "#FFFFFF",
+   "align": "L",
+   "area": [
+    156,
+    1518,
+    252,
+    1560
+   ],
+   "size": 30
+  },
+  {
+   "name": "HostButtonSubText",
+   "box": [
+    163,
+    1569,
+    269,
+    1590
+   ],
+   "color": "#76D0FE",
+   "align": "L",
+   "area": [
+    156,
+    1562,
+    278,
+    1596
+   ],
+   "size": 22
+  },
+  {
+   "name": "ChapterButtonTitleText",
+   "box": [
+    473,
+    1526,
+    564,
+    1556
+   ],
+   "color": "#010100",
+   "align": "L",
+   "area": [
+    464,
+    1515,
+    570,
+    1560
+   ],
+   "size": 38
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "box": [
+    473,
+    1569,
+    562,
+    1591
+   ],
+   "color": "#000000",
+   "align": "L",
+   "area": [
+    464,
+    1562,
+    568,
+    1596
+   ],
+   "size": 23
+  },
+  {
+   "name": "ShopButtonTitleText",
+   "box": [
+    780,
+    1528,
+    864,
+    1556
+   ],
+   "color": "#FFFFFF",
+   "align": "L",
+   "area": [
+    772,
+    1518,
+    872,
+    1560
+   ],
+   "size": 31
+  },
+  {
+   "name": "ShopButtonSubText",
+   "box": [
+    783,
+    1569,
+    821,
+    1591
+   ],
+   "color": "#78D7FF",
+   "align": "L",
+   "area": [
+    776,
+    1562,
+    830,
+    1596
+   ],
+   "size": 22
+  },
+  {
+   "name": "_time1",
+   "box": [
+    139,
+    769,
+    256,
+    793
+   ],
+   "color": "#D2E6FE",
+   "align": "L",
+   "area": [
+    130,
+    758,
+    266,
+    798
+   ],
+   "size": 25
+  },
+  {
+   "name": "_time2",
+   "box": [
+    439,
+    770,
+    554,
+    793
+   ],
+   "color": "#D9E9FE",
+   "align": "L",
+   "area": [
+    430,
+    758,
+    566,
+    798
+   ],
+   "size": 0
+  },
+  {
+   "name": "_cost1",
+   "box": [
+    165,
+    820,
+    231,
+    844
+   ],
+   "color": "#FEFEFE",
+   "align": "C",
+   "area": [
+    158,
+    810,
+    240,
+    846
+   ],
+   "size": 25
+  },
+  {
+   "name": "_cost2",
+   "box": [
+    481,
+    821,
+    525,
+    841
+   ],
+   "color": "#FEFEFF",
+   "align": "C",
+   "area": [
+    456,
+    810,
+    530,
+    846
+   ],
+   "size": 0
+  },
+  {
+   "name": "_label1",
+   "box": [
+    138,
+    852,
+    220,
+    872
+   ],
+   "color": "#FDFDFF",
+   "align": "C",
+   "area": [
+    128,
+    844,
+    228,
+    874
+   ],
+   "size": 21
+  },
+  {
+   "name": "_label2",
+   "box": [
+    435,
+    852,
+    516,
+    872
+   ],
+   "color": "#FBFCFF",
+   "align": "C",
+   "area": [
+    428,
+    844,
+    526,
+    874
+   ],
+   "size": 0
+  },
+  {
+   "name": "_ready",
+   "box": [
+    743,
+    642,
+    798,
+    668
+   ],
+   "color": "#FDFAA0",
+   "align": "C",
+   "area": [
+    718,
+    634,
+    808,
+    670
+   ],
+   "size": 26
+  },
+  {
+   "name": "_claim",
+   "box": [
+    690,
+    833,
+    850,
+    861
+   ],
+   "color": "#000000",
+   "align": "C",
+   "area": [
+    680,
+    824,
+    860,
+    868
+   ],
+   "size": 28
+  }
+ ],
+ "parts": [
+  {
+   "name": "chest_blue",
+   "box": [
+    40,
+    626,
+    305,
+    760
+   ]
+  },
+  {
+   "name": "chest_purple",
+   "box": [
+    346,
+    626,
+    600,
+    760
+   ]
+  },
+  {
+   "name": "chest_black",
+   "box": [
+    650,
+    684,
+    890,
+    807
+   ]
+  },
+  {
+   "name": "timeplate",
+   "box": [
+    48,
+    753,
+    302,
+    804
+   ]
+  },
+  {
+   "name": "gembutton",
+   "box": [
+    46,
+    802,
+    304,
+    884
+   ]
+  },
+  {
+   "name": "goldbutton",
+   "box": [
+    642,
+    806,
+    894,
+    884
+   ]
+  },
+  {
+   "name": "readybanner",
+   "box": [
+    660,
+    622,
+    880,
+    684
+   ]
+  }
+ ],
+ "icons": [
+  {
+   "name": "clock",
+   "box": [
+    92,
+    762,
+    126,
+    796
+   ]
+  },
+  {
+   "name": "gem",
+   "box": [
+    115,
+    815,
+    156,
+    846
+   ]
+  },
+  {
+   "name": "playarrow",
+   "box": [
+    554,
+    1319,
+    575,
+    1348
+   ]
+  }
+ ],
+ "slots": [
+  {
+   "name": "ChestSlot1",
+   "box": [
+    27,
+    622,
+    318,
+    897
+   ]
+  },
+  {
+   "name": "ChestSlot2",
+   "box": [
+    333,
+    622,
+    613,
+    897
+   ]
+  },
+  {
+   "name": "ChestSlot3",
+   "box": [
+    627,
+    622,
+    913,
+    897
+   ]
+  }
+ ]
+}

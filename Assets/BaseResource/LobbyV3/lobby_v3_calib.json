@@ -1,0 +1,246 @@
+{
+ "items": [
+  {
+   "name": "GoldText",
+   "dx": -7.47,
+   "dy": -0.68,
+   "scale": 0.979,
+   "dilate": 0.096,
+   "aspect": 1.0801,
+   "lock": true
+  },
+  {
+   "name": "GemText",
+   "dx": 0.35,
+   "dy": -0.75,
+   "scale": 1.0312,
+   "dilate": 0.105,
+   "aspect": 0.9783
+  },
+  {
+   "name": "SeasonPassTitleText",
+   "dx": -1.27,
+   "dy": -0.68,
+   "scale": 1.0321,
+   "dilate": -0.126,
+   "aspect": 0.9635
+  },
+  {
+   "name": "SeasonPassSubText",
+   "dx": -3.75,
+   "dy": -1.02,
+   "scale": 1.0122,
+   "dilate": -0.154,
+   "aspect": 1.0196
+  },
+  {
+   "name": "EventTitleText",
+   "dx": -0.26,
+   "dy": -1.02,
+   "scale": 1.0126,
+   "dilate": -0.093,
+   "aspect": 0.9635
+  },
+  {
+   "name": "EventSubText",
+   "dx": 2.3,
+   "dy": -0.89,
+   "scale": 1.1231,
+   "dilate": -0.231,
+   "aspect": 0.9339
+  },
+  {
+   "name": "GhostSearchTitleText",
+   "dx": -0.41,
+   "dy": -0.83,
+   "scale": 1.1084,
+   "dilate": 0.01,
+   "aspect": 0.9045
+  },
+  {
+   "name": "GhostSearchTimerText",
+   "dx": -2.2,
+   "dy": -0.78,
+   "scale": 0.9904,
+   "dilate": 0.013,
+   "aspect": 0.9949
+  },
+  {
+   "name": "GhostSearchGoldText",
+   "dx": -1.37,
+   "dy": -0.36,
+   "scale": 1.0038,
+   "dilate": 0.065,
+   "aspect": 1.0413
+  },
+  {
+   "name": "GhostSearchDescText",
+   "dx": -1.13,
+   "dy": -0.86,
+   "scale": 1.1105,
+   "dilate": -0.202,
+   "aspect": 0.9293
+  },
+  {
+   "name": "GhostSearchClaimText",
+   "dx": -3.75,
+   "dy": -0.72,
+   "scale": 0.9557,
+   "dilate": 0.273,
+   "aspect": 1.0391
+  },
+  {
+   "name": "GameModeLabel",
+   "dx": -2.31,
+   "dy": -0.91,
+   "scale": 1.026,
+   "dilate": 0.064,
+   "aspect": 0.9458,
+   "lock": true
+  },
+  {
+   "name": "ModeSideLeftTitleText",
+   "dx": 3.53,
+   "dy": -0.8,
+   "scale": 1.0355,
+   "dilate": 0.048,
+   "aspect": 0.9647
+  },
+  {
+   "name": "ModeSideLeftSubText",
+   "dx": 10.29,
+   "dy": -1.31,
+   "scale": 1.1368,
+   "dilate": -0.21,
+   "aspect": 0.8747
+  },
+  {
+   "name": "ModeCenterTitleText",
+   "dx": -1.33,
+   "dy": -0.93,
+   "scale": 0.9618,
+   "dilate": 0.107,
+   "aspect": 1.0231
+  },
+  {
+   "name": "ModeCenterSubText",
+   "dx": 7.61,
+   "dy": -0.99,
+   "scale": 1.0676,
+   "dilate": -0.156,
+   "aspect": 0.928
+  },
+  {
+   "name": "ModeSideRightTitleText",
+   "dx": 14.7,
+   "dy": -1.53,
+   "scale": 1.1293,
+   "dilate": -0.002,
+   "aspect": 0.8874
+  },
+  {
+   "name": "ModeSideRightSubText",
+   "dx": 24.94,
+   "dy": -0.81,
+   "scale": 1.3363,
+   "dilate": -0.227,
+   "aspect": 0.7432
+  },
+  {
+   "name": "HostButtonTitleText",
+   "dx": -3.78,
+   "dy": -1.08,
+   "scale": 1.1077,
+   "dilate": 0.056,
+   "aspect": 0.9249
+  },
+  {
+   "name": "HostButtonSubText",
+   "dx": -2.35,
+   "dy": -0.64,
+   "scale": 1.1133,
+   "dilate": -0.179,
+   "aspect": 0.9283
+  },
+  {
+   "name": "ChapterButtonTitleText",
+   "dx": -4.15,
+   "dy": -1.36,
+   "scale": 1.0299,
+   "dilate": 0.154,
+   "aspect": 0.9827
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "dx": -2.87,
+   "dy": -0.65,
+   "scale": 0.9884,
+   "dilate": 0.091,
+   "aspect": 1.0437
+  },
+  {
+   "name": "ShopButtonTitleText",
+   "dx": -1.6,
+   "dy": -1.42,
+   "scale": 1.1309,
+   "dilate": 0.046,
+   "aspect": 0.875
+  },
+  {
+   "name": "ShopButtonSubText",
+   "dx": -2.07,
+   "dy": -0.98,
+   "scale": 1.0751,
+   "dilate": -0.15,
+   "aspect": 0.9421
+  },
+  {
+   "name": "_time1",
+   "dx": -2.75,
+   "dy": -1.14,
+   "scale": 0.9977,
+   "dilate": -0.128,
+   "aspect": 0.9997
+  },
+  {
+   "name": "_ready",
+   "dx": 10.09,
+   "dy": -1.85,
+   "scale": 1.0854,
+   "dilate": 0.075,
+   "aspect": 0.9155
+  },
+  {
+   "name": "_claim",
+   "dx": 0.83,
+   "dy": -1.08,
+   "scale": 1.0249,
+   "dilate": 0.225,
+   "aspect": 0.9901
+  },
+  {
+   "name": "_cost1",
+   "dx": -5.51,
+   "dy": -0.81,
+   "scale": 0.9706,
+   "dilate": -0.006,
+   "aspect": 1.0433
+  },
+  {
+   "name": "_label1",
+   "dx": -1.82,
+   "dy": -1.55,
+   "scale": 1.004,
+   "dilate": -0.177,
+   "aspect": 1.0362
+  },
+  {
+   "name": "ModePlayButtonText",
+   "dx": -0.6,
+   "dy": -1.35,
+   "scale": 1.0008,
+   "dilate": 0.187,
+   "aspect": 0.9883
+  }
+ ]
+}

@@ -85,8 +85,10 @@ namespace Game.Editor
         //   그 두 표는 **프리팹을 손으로 다듬은 뒤로 낡아 있었다.** 옛 HUD 노드가 되살아나고
         //   HUD 배경판이 맨 위로 올라가 챕터 판을 통째로 덮었다(2026-09-17 지적).
         //   고칠 화면의 메뉴만 누른다.
-        [MenuItem("Tools/Game/Apply Mockup Layout/Lobby")]
-        public static void RunLobby() => Run("Lobby");
+        // ⚠ 로비는 2026-09-18 부터 「로비 v3 — 시안 그대로 세우기」(LobbyV3Builder)가 세운다.
+        //   이 메뉴를 돌리면 예전 노드가 되살아나 v3 위에 겹친다 — 막아 둔다.
+        [MenuItem("Tools/Game/Apply Mockup Layout/Lobby (막힘 — 로비 v3 빌더를 쓴다)")]
+        public static void RunLobby() => Debug.LogWarning("[UILayout] 로비는 로비 v3 빌더로 세운다 — Tools/Game/로비 v3");
 
         [MenuItem("Tools/Game/Apply Mockup Layout/HostSelect (표가 낡았다 — 프리팹을 덮어쓴다)")]
         public static void RunHostSelect() => Run("HostSelect");
