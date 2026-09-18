@@ -14,16 +14,23 @@ RAW = os.path.join(HERE, 'raw')
 OUT = os.path.join(HERE, 'AVSR_promo_40s.mp4')
 
 # (파일, 시작 초, 끝 초, 설명)
+# take4 — 자동 조종(PromoPilot)으로 타이틀부터 1챕터 끝까지 한 번에 찍은 판 (장면 기록 promo_take4_marks.txt)
+# take5 — 보스전만 다시 찍은 판 (보통 데미지 · 상자 칸 비움 → 결과창에 「상자 획득」)
 SEGMENTS = [
-    ('promo_take1.mp4', 1.0, 4.0, '타이틀'),
-    ('promo_take1.mp4', 46.0, 50.0, '로비 → PLAY → 챕터 선택'),
-    ('promo_take1.mp4', 56.5, 59.5, 'START → 호스트 선택'),
-    ('promo_take1.mp4', 66.0, 68.2, '호스트 선택 → 빙의 시작'),
-    ('promo_take1.mp4', 70.5, 72.0, '유령 등장'),
-    ('promo_take1.mp4', 97.8, 101.0, '적에게 빙의'),
-    ('promo_take2.mp4', 0.3, 15.5, '보스 등장 · 공격 · 스킬 컷인'),
-    ('promo_take2.mp4', 36.3, 40.0, '마지막 스킬 → 보스 격파'),
-    ('promo_take2.mp4', 57.3, 61.5, 'CHAPTER 1 CLEAR'),   # 멈춘 화면이라 길게 두지 않는다
+    ('promo_take4.mp4', 1.0, 3.0, '타이틀'),
+    ('promo_take4.mp4', 31.0, 33.0, '로비 → PLAY'),
+    ('promo_take4.mp4', 50.3, 52.3, '챕터 선택 → START'),
+    ('promo_take4.mp4', 59.1, 60.4, '호스트 선택 → 빙의 시작'),
+    ('promo_take4.mp4', 70.4, 74.1, '유령 → 적에게 빙의'),
+    ('promo_take4.mp4', 83.5, 85.5, '전투'),
+    ('promo_take4.mp4', 87.8, 89.8, '레벨업 카드'),
+    ('promo_take4.mp4', 105.3, 108.3, '4번 방 천사 (회복의 제단)'),
+    ('promo_take4.mp4', 163.0, 165.5, '8번 방 중간보스'),
+    ('promo_take4.mp4', 177.8, 180.3, '악마의 제단 (목숨 건 도전)'),
+    ('promo_take4.mp4', 282.2, 285.2, '12번 방 상점'),
+    ('promo_take5_boss.mp4', 23.5, 31.0, '보스 — 예고 지대 · 레이저 피하기'),
+    ('promo_take5_boss.mp4', 40.5, 44.0, '스킬 컷인 → 보스 격파'),
+    ('promo_take5_boss.mp4', 46.5, 49.5, 'CHAPTER 1 CLEAR · 상자 획득'),
 ]
 
 FADE = 0.4   # 처음 · 끝 페이드

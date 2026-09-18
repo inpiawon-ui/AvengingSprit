@@ -987,8 +987,17 @@ namespace Game.Module.InGame
             SetGoldShown(_goldTarget);
 
             if (_player == null || !_player.IsReady) return;
-            _ui.SetText("GemText", _player.Gem.ToString("N0"));
+            _ui.SetText("GemText", Compact(_player.Gem));
         }
+
+        /// <summary>
+        /// 칸이 좁은 인게임 재화 숫자 — 10만부터 K · M 으로 줄인다.
+        /// ⚠ 젬 1,000,000 이 칸을 넘쳐 옆 골드 칸 위로 겹쳐 찍혔다(2026-09-18).
+        /// </summary>
+        private static string Compact(int v)
+            => v >= 1_000_000 ? $"{v / 1_000_000f:0.#}M"
+             : v >= 100_000 ? $"{v / 1000}K"
+             : v.ToString("N0");
 
         private static float Ratio(int v, int max) => max > 0 ? Mathf.Clamp01((float)v / max) : 0f;
 
