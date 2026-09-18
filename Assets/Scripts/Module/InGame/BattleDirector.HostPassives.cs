@@ -260,7 +260,7 @@ namespace Game.Module.InGame
         /// false 로 되돌리면 예전 넉백(1 m 밀고 0.3초)이 그대로 돈다 — 넉백 코드는 지우지 않았다.
         /// </summary>
         private static readonly bool RangedHitStaggerInsteadOfKnockback = true;   // const 면 아래 넉백 줄이 «닿지 않는 코드» 경고가 된다
-        private const float RangedStaggerSeconds = 0.5f;   // 1초 → 0.5초(기획 2026-09-18 · 사용자 테스트)
+        private const float RangedStaggerSeconds = 0.3f;   // 1초 → 0.5초 → 0.3초(기획 2026-09-18 · 사용자 테스트)
         private readonly System.Collections.Generic.Dictionary<Unit, float> _rangedKnockAt = new();
 
         private void RangedKnockback(Unit victim)
@@ -376,5 +376,6 @@ namespace Game.Module.InGame
         }
     }
 }
+
 
 
