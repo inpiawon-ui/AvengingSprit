@@ -75,6 +75,8 @@ namespace Game.Module.Lobby
 
             _ui.OnClick("PossessStartButton", OnPossessStart);
             _ui.OnClick("HostUpgradeButton", OnUpgrade);
+            _ui.OnClick("HostSelectBackButton", Back);
+            // 창 뒤 어둡게 막을 누르면 아무 일도 없다 — 로비가 눌리지 않게 막기만 한다
             // ⚠ 여기서 `SetActive(false)` 를 하지 마라. 켜지는 도중의 끄기는 그 프레임에
             //   안 먹어 판 조각이 로비 아래로 삐져나오고, 부모가 먼저 꺼 두면 이 `Awake`
             //   자체가 `Open()` 때 돌면서 다시 꺼 버려 판이 영영 안 열린다(2026-09-16).
@@ -111,6 +113,17 @@ namespace Game.Module.Lobby
         }
 
         public void Close() => gameObject.SetActive(false);
+
+        /// <summary>
+        /// 뒤로 — 창을 닫고, 판을 시작하러 들어온 길이면 **챕터 선택으로 돌아간다**.
+        /// 뒤로가기 버튼과 기기 뒤로 키가 같은 길을 쓴다.
+        /// </summary>
+        public void Back()
+        {
+            bool fromChapter = _isChapterStart;
+            Close();
+            if (fromChapter) CoreModule.Get<IEventBus>().Publish(new ChapterSelectRequestedEvent());
+        }
 
         private async UniTaskVoid BuildAsync()
         {

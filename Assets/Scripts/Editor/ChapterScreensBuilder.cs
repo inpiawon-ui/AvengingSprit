@@ -25,6 +25,7 @@ namespace Game.Editor
     {
         private const string LobbyPrefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string InGamePrefab = "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab";
+        private const string HostPrefab = "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab";
         private const string Incoming = "Projects/AVSR/_exchange/in";
         private const string PartsDir = "Assets/BaseResource/ChapterScreens";
         private const string Lobby = "Assets/BaseResource/LobbyMainUI/";
@@ -102,6 +103,14 @@ namespace Game.Editor
             }
             finally { PrefabUtility.UnloadPrefabContents(ingame); }
 
+            var host = PrefabUtility.LoadPrefabContents(HostPrefab);
+            try
+            {
+                BuildHostSelectExtras(host.transform);
+                PrefabUtility.SaveAsPrefabAsset(host, HostPrefab);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(host); }
+
             int have = 0;
             foreach (var (part, _) in Parts) if (File.Exists($"{PartsDir}/{part}.png")) have++;
             Debug.Log($"[챕터 화면] 세움 — 부품 {have}/{Parts.Length} (이번에 가져온 것 {pulled})");
@@ -118,19 +127,32 @@ namespace Game.Editor
             Full(Img(Node(panel, "ChapterSelectBg"), P("chapterselect_bg")).rectTransform);
             var box = Content(panel, "ChapterSelectContent");
 
-            Top(Img(Node(box, "ChapterSelectBackButton"), P("button_back")).rectTransform, -298, -52, 84, 60);
-            Btn(box.Find("ChapterSelectBackButton"));
+            // ⚠ 윗줄(뒤로가기 · 골드 · 젬)은 가운데 판이 아니라 **화면 맨 위**에 붙인다(2026-09-18 지적).
+            //   판 안에 두면 긴 폰에서 화면 위가 비고 윗줄이 가운데로 내려온다.
+            //   뒤로가기는 화면 왼쪽 위 모서리, 재화는 화면 위 가운데 — 태블릿에서도 제자리다.
+            var back = Img(Node(panel, "ChapterSelectBackButton"), P("button_back")).rectTransform;
+            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
+            back.anchoredPosition = new Vector2(20, -22);
+            back.sizeDelta = new Vector2(84, 60);
+            back.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            Btn(back);
 
-            var gold = Img(Node(box, "ChapterGoldPill"), L("hudpill")).rectTransform;
+            var bar = Node(panel, "ChapterTopBar");
+            bar.anchorMin = bar.anchorMax = bar.pivot = new Vector2(0.5f, 1f);
+            bar.anchoredPosition = Vector2.zero;
+            bar.sizeDelta = new Vector2(720, 80);
+            bar.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+
+            var gold = Img(Node(bar, "ChapterGoldPill"), L("hudpill")).rectTransform;
             Top(gold, -30, -38, 230, 46);
             Center(Img(Node(gold, "ChapterGoldIcon"), L("goldicon")).rectTransform, -88, 0, 42, 42);
             Center(Txt(Node(gold, "ChapterGoldText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
                    20, 0, 150, 40);
-            var gem = Img(Node(box, "ChapterGemPill"), L("hudpill")).rectTransform;
-            Top(gem, 190, -38, 170, 46);
-            Center(Img(Node(gem, "ChapterGemIcon"), L("gemicon")).rectTransform, -58, 0, 40, 36);
+            var gem = Img(Node(bar, "ChapterGemPill"), L("hudpill")).rectTransform;
+            Top(gem, 205, -38, 200, 46);   // 젬 1,000,000 도 들어가게
+            Center(Img(Node(gem, "ChapterGemIcon"), L("gemicon")).rectTransform, -72, 0, 40, 36);
             Center(Txt(Node(gem, "ChapterGemText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
-                   20, 0, 100, 40);
+                   20, 0, 140, 40);
 
             var title = Img(Node(box, "ChapterSelectTitle"), P("chapterselect_title"));
             Top(title.rectTransform, 0, -148, 600, 110);
@@ -203,9 +225,14 @@ namespace Game.Editor
             var chest = Img(Node(box, "RewardChestArt"), P("chestreward_open_gold"));
             chest.preserveAspect = true;
             Center(chest.rectTransform, 0, 340, 420, 340);
-            var header = Txt(Node(box, "RewardHeaderText"), "獲得:", 42, TextAlignmentOptions.Center);
+            // 납품 액자(640×880) 실측 — 제목 판 x 190~455 · y 195~262, 안쪽 판 x 118~522 · y 268~735.
+            // 액자 위 = 가운데 +305 이므로 제목 판 가운데 = +77. 시안 자리(+100)에 두면 글자가 판 위로 샜다.
+            var header = Txt(Node(box, "RewardHeaderText"), "獲得:", 36, TextAlignmentOptions.Center);
             header.color = new Color(1f, 0.85f, 0.35f);
-            Center(header.rectTransform, 0, 100, 300, 56);
+            Center(header.rectTransform, 0, 77, 240, 52);
+            header.enableAutoSizing = true;
+            header.fontSizeMin = 22;
+            header.fontSizeMax = 36;
 
             // 카드 칸 — 자리는 코드가 장 수에 맞춰 다시 잡는다(`ChestRewardPopup.Fill`)
             var grid = Node(box, "RewardGrid");
@@ -346,6 +373,41 @@ namespace Game.Editor
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             popup.gameObject.SetActive(false);
+        }
+
+        // ── 호스트 선택 — 뒤 어둡게 · 뒤로가기 ───────────────────
+        //
+        // 호스트 선택은 화면 위 105 아래부터 1175 높이인 판이라, 긴 폰에서는 위아래로
+        // 로비가 그대로 보였고 뒤로 갈 버튼도 없었다(2026-09-18 지적).
+
+        private static void BuildHostSelectExtras(Transform root)
+        {
+            // 판 뒤를 화면 끝까지 덮는 어둡게 막. 판보다 넓게 뻗어야 하므로 여백을 크게 준다.
+            // `ScreenFitLock` — `ScreenFit` 이 「판을 꽉 채운다」로 보고 판 크기로 되돌리지 않게.
+            var old = root.Find("HostSelectDim");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var dim = Img(Node(root, "HostSelectDim"), null);
+            dim.color = new Color(0f, 0f, 0f, 0.85f);
+            dim.raycastTarget = true;   // 뒤의 로비가 눌리지 않게
+            var drt = dim.rectTransform;
+            drt.anchorMin = Vector2.zero;
+            drt.anchorMax = Vector2.one;
+            drt.offsetMin = new Vector2(-800f, -1600f);
+            drt.offsetMax = new Vector2(800f, 600f);
+            dim.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            drt.SetAsFirstSibling();
+
+            // 뒤로가기 — 챕터 선택과 같은 그림 · 같은 자리(화면 왼쪽 위).
+            // 판 위가 화면 위에서 105 아래라, 판 위 기준 +83 이 화면 위 22 다.
+            old = root.Find("HostSelectBackButton");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var back = Img(Node(root, "HostSelectBackButton"), P("button_back")).rectTransform;
+            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
+            back.anchoredPosition = new Vector2(20f, 83f);
+            back.sizeDelta = new Vector2(84f, 60f);
+            back.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            Btn(back);
+            back.SetAsLastSibling();
         }
 
         // ── 부품 가져오기 ────────────────────────────────────────

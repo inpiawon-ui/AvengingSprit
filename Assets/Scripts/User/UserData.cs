@@ -37,7 +37,9 @@ namespace Game.User
         public int stamina = 30;
         public int staminaMax = 30;
         public int gold;
-        public int gem;
+        // ⚠ 임시 (2026-09-18) — 테스트용으로 처음 설치하면 젬 100만. 상자 즉시 열기를
+        //   마음껏 눌러 보게. 출시 전 0 으로 되돌린다.
+        public int gem = 1_000_000;
 
         // 정본 성장 재화 (Growth Runtime — Gold / Spirit Core / Host Memory / Gem).
         // 런이 끝나면 빌드·호스트·아이템·시너지는 사라지고 이 둘은 남는다.

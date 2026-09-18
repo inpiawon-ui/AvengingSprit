@@ -451,6 +451,10 @@ namespace Game.Module.Lobby
             _tokens.Add(bus.Subscribe<ProgressChangedEvent>(_ => RefreshChapter()));
             _tokens.Add(bus.Subscribe<ChestChangedEvent>(_ => ApplyChests()));
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
+            _tokens.Add(bus.Subscribe<ChapterSelectRequestedEvent>(_ =>
+            {
+                if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
+            }));
             Refresh();
         }
 
@@ -513,7 +517,7 @@ namespace Game.Module.Lobby
             }
             if (_hostSelectPanel != null && _hostSelectPanel.IsOpen)
             {
-                _hostSelectPanel.Close();
+                _hostSelectPanel.Back();   // 판 시작 길이면 챕터 선택으로 돌아간다
                 return true;
             }
             if (_chapterSelectPanel != null && _chapterSelectPanel.IsOpen)

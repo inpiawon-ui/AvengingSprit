@@ -41,14 +41,16 @@ namespace Game.Module.Lobby
         private const int CardSlots = 6;
 
         /// <summary>네 장까지는 2열(시안), 다섯 장부터는 3열로 줄여 액자 안에 담는다.</summary>
-        private const float CardStep2 = 224f, CardStep3 = 170f, CardScale3 = 0.8f;
-        private const float RowStep2 = 217f, RowStep3 = 175f;
+        // ⚠ 액자 안쪽 판이 **폭 404** 뿐이다(납품 실측). 카드(190)를 원래 크기로 두 장 놓으면
+        //   벌써 판을 넘는다 — 두 줄은 0.9 배, 세 줄은 0.66 배로 줄여 판 안에 담는다(2026-09-18 지적).
+        private const float CardScale2 = 0.9f, CardStep2 = 196f, RowStep2 = 190f;
+        private const float CardScale3 = 0.66f, CardStep3 = 132f, RowStep3 = 142f;
 
         /// <summary>
-        /// 카드 줄들의 가운데 — 「획득:」 판 아래 ~ OK 위 사이의 한가운데(액자 기준).
+        /// 카드 줄들의 가운데 — 액자 안쪽 판(y 268~735)의 한가운데.
         /// 줄 수와 상관없이 여기를 가운데로 모은다 — 위에 붙이면 두 장일 때 아래가 텅 빈다.
         /// </summary>
-        private const float RowsCenter = -185f;
+        private const float RowsCenter = -196f;
 
         private const string AtlasAddress = "atlas/hostselectpanel";
 
@@ -120,7 +122,7 @@ namespace Game.Module.Lobby
                 int inRow = Mathf.Min(cols, count - row * cols);
                 float x = (col - (inRow - 1) * 0.5f) * step;
                 card.anchoredPosition = new Vector2(x, rowTop - row * rowStep);
-                card.localScale = Vector3.one * (wide ? CardScale3 : 1f);
+                card.localScale = Vector3.one * (wide ? CardScale3 : CardScale2);
 
                 if (i == 0) BindCard(card, _cardGold, _goldPile, $"+{_shown.Gold:N0}");
                 else

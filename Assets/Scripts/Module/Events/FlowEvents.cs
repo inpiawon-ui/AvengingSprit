@@ -14,6 +14,14 @@ namespace Game.Module.Events
         public bool IsChapterStart;
     }
 
+    /// <summary>
+    /// 챕터 선택을 다시 열어달라. 호스트 선택에서 뒤로 가면 챕터 선택으로 돌아간다
+    /// (PLAY → 챕터 선택 → 호스트 선택 순서라 한 칸 앞이 챕터 선택이다).
+    /// </summary>
+    public struct ChapterSelectRequestedEvent : IEvent
+    {
+    }
+
     /// <summary>빙의 시작. 선택 호스트로 인게임에 진입한다.</summary>
     public struct PossessStartRequestedEvent : IEvent
     {
