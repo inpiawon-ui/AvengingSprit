@@ -13,63 +13,45 @@ MonoBehaviour:
   m_Name: ChestTable
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.Chest.ChestTable
   _entries:
-  - _key: wood
-    _nameKey: chest.wood.name
-    _sprite: chest_wood
-    _unlockSeconds: 1800
-    _gemPerMinute: 2
-    _goldMin: 400
-    _goldMax: 900
-    _coreMin: 0
-    _coreMax: 1
-    _memoryMin: 2
-    _memoryMax: 5
-    _gemMin: 0
-    _gemMax: 0
-    _shardMin: 1
-    _shardMax: 3
   - _key: silver
     _nameKey: chest.silver.name
     _sprite: chest_silver
-    _unlockSeconds: 7200
+    _unlockSeconds: 60
     _gemPerMinute: 3
-    _goldMin: 1200
-    _goldMax: 2400
-    _coreMin: 1
-    _coreMax: 3
-    _memoryMin: 6
-    _memoryMax: 12
-    _gemMin: 0
-    _gemMax: 5
-    _shardMin: 3
-    _shardMax: 8
+    _goldMin: 100
+    _goldMax: 200
+    _shardMin: 6
+    _shardMax: 10
+    _hostKindsMin: 1
+    _hostKindsMax: 2
+    _weightB: 85
+    _weightA: 15
+    _weightS: 0
   - _key: gold
     _nameKey: chest.gold.name
     _sprite: chest_gold
-    _unlockSeconds: 14400
+    _unlockSeconds: 120
     _gemPerMinute: 4
-    _goldMin: 3000
-    _goldMax: 6000
-    _coreMin: 3
-    _coreMax: 8
-    _memoryMin: 15
-    _memoryMax: 30
-    _gemMin: 10
-    _gemMax: 25
-    _shardMin: 8
-    _shardMax: 18
-  - _key: magic
-    _nameKey: chest.magic.name
+    _goldMin: 300
+    _goldMax: 500
+    _shardMin: 14
+    _shardMax: 22
+    _hostKindsMin: 2
+    _hostKindsMax: 3
+    _weightB: 55
+    _weightA: 38
+    _weightS: 7
+  - _key: platinum
+    _nameKey: chest.platinum.name
     _sprite: chest_magic
-    _unlockSeconds: 28800
+    _unlockSeconds: 180
     _gemPerMinute: 5
-    _goldMin: 7000
-    _goldMax: 13000
-    _coreMin: 8
-    _coreMax: 16
-    _memoryMin: 35
-    _memoryMax: 60
-    _gemMin: 30
-    _gemMax: 60
-    _shardMin: 18
-    _shardMax: 35
+    _goldMin: 700
+    _goldMax: 1000
+    _shardMin: 28
+    _shardMax: 40
+    _hostKindsMin: 3
+    _hostKindsMax: 4
+    _weightB: 30
+    _weightA: 45
+    _weightS: 25

@@ -145,7 +145,12 @@ namespace Game.Editor
             ("ChestTimePlate", "chesttimeplate"),
         };
 
-        private static readonly string[] ChestKeys = { "wood", "silver", "gold", "magic" };
+        // 상자 등급 → 그림 (기획 2026-09-18 — 은 · 금 · 백금).
+        // ⚠ 백금 그림은 아직 없다 — 발주본이 오기 전까지 chest_magic 을 쓴다.
+        private static readonly (string key, string file)[] ChestKeys =
+        {
+            ("silver", "chest_silver"), ("gold", "chest_gold"), ("platinum", "chest_magic"),
+        };
 
         [MenuItem("Tools/Game/로비 그림 꽂기")]
         public static void Run()
@@ -211,8 +216,8 @@ namespace Game.Editor
                 for (int i = 0; i < ChestKeys.Length; i++)
                 {
                     var e = arts.GetArrayElementAtIndex(i);
-                    e.FindPropertyRelative("Key").stringValue = ChestKeys[i];
-                    e.FindPropertyRelative("Sprite").objectReferenceValue = Sprite($"chest_{ChestKeys[i]}");
+                    e.FindPropertyRelative("Key").stringValue = ChestKeys[i].key;
+                    e.FindPropertyRelative("Sprite").objectReferenceValue = Sprite(ChestKeys[i].file);
                 }
 
                 var modes = so.FindProperty("_modeArts");

@@ -181,9 +181,9 @@ namespace Game.Module.Common.Chest
             // ⚠ 보상은 **열 때** 굴린다. 받을 때 굴려 저장하면 저장 파일을 보고
             //   마음에 안 들 때 다시 받는 식이 가능해진다.
             reward = Roll(e, p);
-            p.AddGrowthCurrency(reward.Gold, reward.Gem, reward.SpiritCore, reward.HostMemory);
-            if (reward.Shards > 0 && !string.IsNullOrEmpty(reward.ShardHostKey))
-                p.AddShards(reward.ShardHostKey, reward.Shards);
+            p.AddGrowthCurrency(reward.Gold, 0, 0, 0);
+            for (int i = 0; i < reward.ShardHostKeys.Length; i++)
+                p.AddShards(reward.ShardHostKeys[i], reward.ShardCounts[i]);
 
             p.SetChestSlot(slot, string.Empty, 0, 0);
             Save();
@@ -192,35 +192,71 @@ namespace Game.Module.Common.Chest
             {
                 OpenedChestKey = e.Key,
                 RewardGold = reward.Gold,
-                RewardSpiritCore = reward.SpiritCore,
-                RewardHostMemory = reward.HostMemory,
-                RewardGem = reward.Gem,
-                RewardShards = reward.Shards,
-                RewardShardHostKey = reward.ShardHostKey,
+                RewardShardHostKeys = reward.ShardHostKeys,
+                RewardShardCounts = reward.ShardCounts,
             });
             _bus?.Publish(new ChestChangedEvent());
             return true;
         }
 
+        /// <summary>
+        /// 골드 + 호스트 조각을 굴린다(기획 2026-09-18).
+        ///
+        /// 조각은 **호스트 여러 명에게 나눠** 준다 — 상자 등급이 높을수록 여러 명 · 많이 ·
+        /// 높은 등급(S·A)이 잘 나온다(표의 등급 무게). **해금 안 된 호스트도 준다** —
+        /// 조각을 모아 두면 풀었을 때 바로 키울 수 있다(기획).
+        /// </summary>
         private static ChestReward Roll(ChestEntry e, IPlayerDataService p)
         {
             int gold = UnityEngine.Random.Range(e.GoldMin, e.GoldMax + 1);
-            int core = UnityEngine.Random.Range(e.CoreMin, e.CoreMax + 1);
-            int memory = UnityEngine.Random.Range(e.MemoryMin, e.MemoryMax + 1);
-            int gem = UnityEngine.Random.Range(e.GemMin, e.GemMax + 1);
             int shards = UnityEngine.Random.Range(e.ShardMin, e.ShardMax + 1);
 
-            // 파편은 **고를 수 있는 몸 중에서** 하나를 뽑아 준다. 전투 전용 배우에게 주면
-            // 로비에서 쓸 곳이 없어 받은 티가 안 난다.
-            string host = string.Empty;
+            // 후보 — 고를 수 있는 몸 전부(유령 제외). 전투 전용 배우는 로비에서 쓸 곳이 없다.
+            var pool = new System.Collections.Generic.List<global::Game.Character.HostEntry>();
             var list = p.PlayableHosts;
-            if (shards > 0 && list != null && list.Count > 0)
+            if (list != null)
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] != null && !list[i].IsGhost) pool.Add(list[i]);
+
+            int kinds = Mathf.Clamp(UnityEngine.Random.Range(e.HostKindsMin, e.HostKindsMax + 1), 0,
+                                    Mathf.Min(pool.Count, Mathf.Max(0, shards)));
+            if (kinds <= 0) return new ChestReward(e.Key, gold, null, null);
+
+            var keys = new string[kinds];
+            var counts = new int[kinds];
+            for (int k = 0; k < kinds; k++)
             {
-                var pick = list[UnityEngine.Random.Range(0, list.Count)];
-                host = pick != null ? pick.HostKey : string.Empty;
+                var pick = PickByGrade(pool, e);
+                keys[k] = pick.HostKey;
+                pool.Remove(pick);   // 같은 호스트가 두 줄로 나오지 않게
             }
-            if (string.IsNullOrEmpty(host)) shards = 0;
-            return new ChestReward(gold, core, memory, gem, shards, host);
+
+            // 총 개수를 나눈다 — 모두 1개씩은 받고, 나머지는 무작위로 얹는다.
+            // 첫 칸이 가장 많도록 정렬해 보여 준다(클래시로얄처럼 큰 것부터).
+            for (int k = 0; k < kinds; k++) counts[k] = 1;
+            for (int left = shards - kinds; left > 0; left--) counts[UnityEngine.Random.Range(0, kinds)]++;
+            System.Array.Sort(counts, keys);
+            System.Array.Reverse(counts);
+            System.Array.Reverse(keys);
+            return new ChestReward(e.Key, gold, keys, counts);
+        }
+
+        /// <summary>등급 무게로 등급을 먼저 뽑고, 그 등급 안에서 호스트를 고른다. 그 등급이 비면 아무나.</summary>
+        private static global::Game.Character.HostEntry PickByGrade(
+            System.Collections.Generic.List<global::Game.Character.HostEntry> pool, ChestEntry e)
+        {
+            int total = Mathf.Max(0, e.WeightB) + Mathf.Max(0, e.WeightA) + Mathf.Max(0, e.WeightS);
+            var grade = global::Game.Character.HostGrade.B;
+            if (total > 0)
+            {
+                int r = UnityEngine.Random.Range(0, total);
+                grade = r < e.WeightB ? global::Game.Character.HostGrade.B
+                      : r < e.WeightB + e.WeightA ? global::Game.Character.HostGrade.A
+                      : global::Game.Character.HostGrade.S;
+            }
+            var same = pool.FindAll(h => h.Grade == grade);
+            var from = same.Count > 0 ? same : pool;
+            return from[UnityEngine.Random.Range(0, from.Count)];
         }
 
         private void Save()

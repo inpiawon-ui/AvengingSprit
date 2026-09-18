@@ -15,15 +15,13 @@ namespace Game.Module.Events
         public bool Accepted;
     }
 
-    /// <summary>상자를 열었다.</summary>
+    /// <summary>상자를 열었다. 보상 목록 창이 이것을 받아 카드로 늘어놓는다.</summary>
     public struct ChestOpenedEvent : IEvent
     {
         public string OpenedChestKey;
         public int RewardGold;
-        public int RewardSpiritCore;
-        public int RewardHostMemory;
-        public int RewardGem;
-        public int RewardShards;
-        public string RewardShardHostKey;
+        /// <summary>조각을 받은 호스트들. <see cref="RewardShardCounts"/> 와 짝이다.</summary>
+        public string[] RewardShardHostKeys;
+        public int[] RewardShardCounts;
     }
 }

@@ -23,20 +23,23 @@ namespace Game.Module.Common.Chest
         }
     }
 
-    /// <summary>열어서 받은 것. 화면에 뭘 받았는지 보여 주려고 그대로 돌려준다.</summary>
+    /// <summary>
+    /// 열어서 받은 것. 화면(보상 카드 목록)에 그대로 늘어놓는다.
+    /// 조각은 호스트마다 한 줄 — <see cref="ShardHostKeys"/> 와 <see cref="ShardCounts"/> 가 짝이다.
+    /// </summary>
     public readonly struct ChestReward
     {
-        public readonly int Gold, SpiritCore, HostMemory, Gem, Shards;
-        public readonly string ShardHostKey;
+        public readonly string ChestKey;
+        public readonly int Gold;
+        public readonly string[] ShardHostKeys;
+        public readonly int[] ShardCounts;
 
-        public ChestReward(int gold, int core, int memory, int gem, int shards, string shardHostKey)
+        public ChestReward(string chestKey, int gold, string[] shardHostKeys, int[] shardCounts)
         {
+            ChestKey = chestKey;
             Gold = gold;
-            SpiritCore = core;
-            HostMemory = memory;
-            Gem = gem;
-            Shards = shards;
-            ShardHostKey = shardHostKey;
+            ShardHostKeys = shardHostKeys ?? System.Array.Empty<string>();
+            ShardCounts = shardCounts ?? System.Array.Empty<int>();
         }
     }
 
