@@ -461,7 +461,9 @@ chest.platinum.name	백금 상자	プラチナの宝箱	Platinum Chest
 ui.chest.reward.title	{0} 열기!	{0}を開けた！	{0} Opened!
 ui.chest.reward.gold	골드  +{0}	ゴールド  +{0}	Gold  +{0}
 ui.chest.reward.shard	{0} ({1}급) 조각  ×{2}	{0}（{1}級）のかけら  ×{2}	{0} ({1}) Shards  ×{2}
-ui.result.clear	챕터 {0} 클리어!	チャプター{0} クリア！	Chapter {0} Clear!
+ui.result.gold_label	골드 획득	ゴールド獲得	Gold Earned
+ui.chest.reward.header	획득:	獲得:	Rewards:
+ui.result.clear챕터 {0} 클리어!	チャプター{0} クリア！	Chapter {0} Clear!
 ui.result.gold	골드 획득  +{0}	ゴールド獲得  +{0}	Gold  +{0}
 ui.result.chest	상자 획득  {0}	宝箱獲得  {0}	Chest  {0}
 ui.result.chest_full	상자 칸이 가득 차 상자를 받지 못했습니다\n(골드는 지급되었습니다)	宝箱スロットがいっぱいのため宝箱を受け取れませんでした\n（ゴールドは受け取りました）	Chest slots are full — the chest was lost\n(Gold was still granted)

@@ -1456,8 +1456,10 @@ namespace Game.Module.InGame
         {
             if (_finished) return;
             _finished = true;
-            // ⚠ 임시 결과 창이다 — 결과 화면 시안(ui_new_chapter_result_v1)이 통과하면 갈아 끼운다.
-            //   보상은 전투가 이미 넣었다. 여기는 보여 주고 로비로 보낼 뿐이다.
+            // 보상은 전투가 이미 넣었다. 여기는 보여 주고 로비로 보낼 뿐이다.
+            // 클리어는 결과창(시안), 죽음은 알림창 하나 — 죽으면 보여 줄 보상이 없다.
+            var result = e.IsCleared ? GetComponentInChildren<ChapterResultPopup>(true) : null;
+            if (result != null) { result.Show(e); return; }
             SystemPopup.Show(
                 e.IsCleared ? ClearMessage(e) : Localize.Get("ui.ingame.result.dead"),
                 onConfirm: () => GoLobbyAsync().Forget(),   // fire-and-forget: 씬 전환 대기 불필요

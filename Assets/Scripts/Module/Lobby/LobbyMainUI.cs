@@ -26,6 +26,9 @@ namespace Game.Module.Lobby
         /// <summary>PLAY → 챕터 선택 → 호스트 선택 (기획 2026-09-18).</summary>
         [SerializeField] private ChapterSelectPanel _chapterSelectPanel;
 
+        /// <summary>상자를 연 뒤 받은 것을 카드로 늘어놓는 창.</summary>
+        [SerializeField] private ChestRewardPopup _chestRewardPopup;
+
         /// <summary>
         /// 모드 칸 그림. <see cref="Modes"/> 와 **같은 순서**다 (서바이벌 · 시나리오 · 디펜스).
         /// 회전 목마라 어느 칸에 무엇이 오는지가 바뀌므로 코드가 갈아 끼운다.
@@ -115,6 +118,7 @@ namespace Game.Module.Lobby
             // 삐져나왔다(2026-09-16).
             if (_hostSelectPanel != null) _hostSelectPanel.Close();
             if (_chapterSelectPanel != null) _chapterSelectPanel.Close();
+            if (_chestRewardPopup != null) _chestRewardPopup.Close();
 
             // 하단 바 — 누르면 그 칸이 켜진 채로 남는다
             _ui.OnClick("HostButton",    () => SelectTab("HostButton"));
@@ -295,12 +299,12 @@ namespace Game.Module.Lobby
 
         /// <summary>
         /// 연 상자의 보상 목록. 보상은 이미 들어갔다 — 확인을 누르면 창만 닫힌다.
-        ///
-        /// ⚠ 임시 창이다 — 보상 화면 시안(ui_new_chest_reward_v1, 클래시로얄식 카드 목록)이
-        ///   통과하면 갈아 끼운다.
+        /// 보상 창이 프리팹에 없으면(빌더 미실행) 알림창으로 대신한다.
         /// </summary>
         private void ShowChestReward(ChestReward reward)
         {
+            if (_chestRewardPopup != null) { _chestRewardPopup.Show(reward); return; }
+
             var sb = new System.Text.StringBuilder();
             sb.Append(Localize.Format("ui.chest.reward.title", Localize.Get($"chest.{reward.ChestKey}.name")));
             sb.Append("\n\n").Append(Localize.Format("ui.chest.reward.gold", reward.Gold.ToString("N0")));
@@ -466,6 +470,11 @@ namespace Game.Module.Lobby
         /// <summary>로비에서 열리는 것은 호스트 선택 패널뿐이다. 열려 있으면 그것부터 닫는다.</summary>
         public bool OnBackPressed()
         {
+            if (_chestRewardPopup != null && _chestRewardPopup.IsOpen)
+            {
+                _chestRewardPopup.Close();
+                return true;
+            }
             if (_hostSelectPanel != null && _hostSelectPanel.IsOpen)
             {
                 _hostSelectPanel.Close();
