@@ -157,31 +157,37 @@ for i in range(3):
     add(slot, (x, CHEST_Y0, CHEST_W, CHEST_H), create='GROUP', parent='ChestBand')
     add(f'{slot}/ChestSlotFrame', c(0, 0, CHEST_W, CHEST_H), create='IMG', parent=slot)
     add(f'{slot}/ChestArt', c(38, 12, 206, 142), create='IMG', parent=slot)
-    add(f'{slot}/ChestReadyBanner', c(23, 8, 224, 49), create='IMG', parent=slot)
-    add(f'{slot}/ChestReadyText', c(52, 13, 166, 38), text='완료!',
+    # 「완료!」 띠는 칸 윗변에 걸쳐 올린다 — 상자 위에 얹으면 뚜껑을 가렸다(2026-09-18 지적).
+    add(f'{slot}/ChestReadyBanner', c(33, -14, 204, 45), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyText', c(52, -10, 166, 37), text='완료!',
         size=cap(30), align='C', color=GOLD, create='TMP', parent=slot)
     add(f'{slot}/ChestEmptyText', c(20, 100, 242, 48), text='빈 칸',
         size=cap(28), align='C', color=DIM, create='TMP', parent=slot)
     # 목업은 시계·남은 시간 줄 뒤에 어두운 판이 깔려 있다 — 글자가 그냥 떠 있으면 안 읽힌다
-    add(f'{slot}/ChestTimePlate', c(19, 125, 246, 48), create='IMG', parent=slot)
-    add(f'{slot}/ChestTimeIcon', c(73, 137, 40, 38), create='IMG', parent=slot)
-    add(f'{slot}/ChestTimeText', c(121, 134, 152, 40), text='3시간 12분',
+    # ⚠ 시간 판 · 버튼은 상자 그림(12~154) **아래**에서 시작한다. 예전 값(판 125)은
+    #   상자 아랫부분을 덮었다(2026-09-18 지적). 시계 + 글자 한 덩어리를 판 가운데에
+    #   두는 것은 `LobbyMainUI.CenterTimeRow` 가 글자 길이를 재서 맞춘다.
+    add(f'{slot}/ChestTimePlate', c(19, 150, 246, 44), create='IMG', parent=slot)
+    add(f'{slot}/ChestTimeIcon', c(73, 154, 36, 34), create='IMG', parent=slot)
+    add(f'{slot}/ChestTimeText', c(117, 152, 152, 40), text='3시간 12분',
         size=cap(31), align='L', color=WHITE, create='TMP', parent=slot)
     # ⚠ 버튼 글자·아이콘을 **버튼의 자식으로 두지 않는다.** 적용기의 `parent` 는 경로가
     #   아니라 단일 이름만 찾는데, 세 칸의 버튼 이름이 같아 전부 첫 칸으로 붙는다.
     #   칸 직속으로 두고 버튼 위에 그린다 — 글자는 raycast 대상이 아니라 눌림은 버튼이 받는다.
-    add(f'{slot}/ChestActionButton', c(19, 181, 250, 70), create='BTN', parent=slot)
-    add(f'{slot}/ChestActionGemIcon', c(101, 189, 47, 38), create='IMG', parent=slot)
-    add(f'{slot}/ChestActionCostText', c(158, 187, 120, 42), text='1,000',
+    # 버튼은 젬값 줄 + 「즉시 열기」 두 줄이 **다 들어가게** 키웠다 — 예전 70 은
+    #   아래 줄이 버튼 밖으로 나갔다(2026-09-18 지적).
+    add(f'{slot}/ChestActionButton', c(12, 196, 258, 72), create='BTN', parent=slot)
+    add(f'{slot}/ChestActionGemIcon', c(101, 201, 44, 36), create='IMG', parent=slot)
+    add(f'{slot}/ChestActionCostText', c(154, 199, 120, 40), text='1,000',
         size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
     # 「즉시 열기」는 젬값 줄 **아래** 한 줄이다 — 위로 올리면 젬값과 겹친다.
     # 목업 실측: 버튼 806~876 · 젬값 줄 810~854 · 라벨 850~874.
-    add(f'{slot}/ChestActionLabelText', c(19, 226, 250, 32), text='즉시 열기',
+    add(f'{slot}/ChestActionLabelText', c(12, 235, 258, 30), text='즉시 열기',
         size=cap(28), align='C', color=WHITE, create='TMP', parent=slot)
     # ⚠ 완료 칸의 「보상 획득하기」는 **칸을 따로 둔다.** 예전에는 같은 칸을 22px 올려
     #   돌려 썼는데, 젬값 줄이 없어 글자가 커져야 하는데도 상자 높이가 그대로라
     #   목업의 절반 크기로 찍혔다(2026-09-16). 두 상태는 글자 크기가 다르다.
-    add(f'{slot}/ChestReadyLabelText', c(19, 190, 250, 50), text='보상 획득하기',
+    add(f'{slot}/ChestReadyLabelText', c(24, 203, 234, 58), text='보상 획득하기',
         size=cap(34), align='C', color=DARK, create='TMP', parent=slot)
 
 # ── 게임 모드 ───────────────────────────────────────────────────────

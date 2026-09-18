@@ -234,6 +234,7 @@ namespace Game.Module.Lobby
                     if (want != null && button.sprite != want) button.sprite = want;
                 }
                 TextIn(root, "ChestTimeText", Remain(s.RemainSeconds));
+                if (!ready) CenterTimeRow(root);
                 TextIn(root, "ChestActionCostText", s.GemCost.ToString("N0"));
                 TextIn(root, "ChestActionLabelText", Localize.Get("ui.lobby.chest.open_now"));
                 TextIn(root, "ChestReadyLabelText", Localize.Get("ui.lobby.chest.claim"));
@@ -253,6 +254,41 @@ namespace Game.Module.Lobby
             if (h > 0) return Localize.Format("ui.lobby.chest.time_h", h, m);
             if (m > 0) return Localize.Format("ui.lobby.chest.time_m", m);
             return Localize.Format("ui.lobby.chest.time_s", seconds);
+        }
+
+        /// <summary>시계와 남은 시간 사이 간격(캔버스 px).</summary>
+        private const float TimeRowGap = 6f;
+
+        /// <summary>
+        /// 시계 + 남은 시간을 **한 덩어리로** 시간 판 가운데에 둔다(2026-09-18 지적).
+        ///
+        /// 글자 길이가 「1分」 부터 「3時間12分」 까지 달라서 자리를 고정하면
+        /// 짧을 때 덩어리가 왼쪽으로 쏠린다. 글자 폭을 재서 매번 맞춘다.
+        /// </summary>
+        private void CenterTimeRow(Transform slot)
+        {
+            var plate = _ui.Find(slot, "ChestTimePlate") as RectTransform;
+            var icon = _ui.Find(slot, "ChestTimeIcon") as RectTransform;
+            var text = _ui.Find(slot, "ChestTimeText")?.GetComponent<TMPro.TextMeshProUGUI>();
+            if (plate == null || icon == null || text == null) return;
+
+            var textRect = text.rectTransform;
+            float textW = Mathf.Min(text.GetPreferredValues(text.text).x, textRect.rect.width);
+            float iconW = icon.rect.width;
+            float group = iconW + TimeRowGap + textW;
+
+            // 셋 다 같은 부모 안이라 localPosition 으로 맞춘다 — 앵커가 달라도 같은 자로 잰다
+            float center = plate.localPosition.x + (0.5f - plate.pivot.x) * plate.rect.width;
+            float left = center - group * 0.5f;
+
+            var ip = icon.localPosition;
+            ip.x = left + icon.pivot.x * iconW;
+            icon.localPosition = ip;
+
+            text.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+            var tp = textRect.localPosition;
+            tp.x = left + iconW + TimeRowGap + textRect.pivot.x * textRect.rect.width;
+            textRect.localPosition = tp;
         }
 
         private Sprite ChestSpriteOf(string chestKey)
