@@ -17,6 +17,25 @@ OUT = os.path.join(HERE, 'AVSR_promo_40s.mp4')
 # take4 — 자동 조종(PromoPilot)으로 타이틀부터 1챕터 끝까지 한 번에 찍은 판 (장면 기록 promo_take4_marks.txt)
 # take5 — 보스전만 다시 찍은 판 (보통 데미지 · 상자 칸 비움 → 결과창에 「상자 획득」)
 SEGMENTS = [
+    # take7 — 청룡(뇌전 폭주)으로 자동 조종, 처음부터 끝까지 한 판 (장면 기록 promo_take7_marks.txt)
+    ('promo_take7.mp4', 0.8, 2.6, '타이틀'),
+    ('promo_take7.mp4', 5.0, 6.5, '로비 → PLAY'),
+    ('promo_take7.mp4', 7.3, 9.3, '챕터 선택 → START'),
+    ('promo_take7.mp4', 10.2, 11.4, '호스트 선택 — 청룡'),
+    ('promo_take7.mp4', 14.1, 15.8, '1번 방 입장'),
+    ('promo_take7.mp4', 30.8, 34.0, '스킬 컷인 → 번개 연쇄'),
+    ('promo_take7.mp4', 44.3, 46.1, '레벨업 카드'),
+    ('promo_take7.mp4', 49.7, 52.2, '4번 방 천사'),
+    ('promo_take7.mp4', 113.4, 115.9, '8번 방 악마의 제단'),
+    ('promo_take7.mp4', 119.2, 122.7, '중간보스 방 — 번개 연쇄'),
+    ('promo_take7.mp4', 166.4, 168.9, '12번 방 상점'),
+    ('promo_take7.mp4', 201.3, 208.7, '보스 등장(이름판) → 스킬'),
+    ('promo_take7.mp4', 216.8, 219.8, '보스 레이저 피하기'),
+    ('promo_take7.mp4', 235.5, 238.4, '마지막 스킬 → 보스 격파'),
+    ('promo_take7.mp4', 239.5, 242.0, 'CHAPTER 1 CLEAR'),
+]
+
+SEGMENTS_OLD_TAKE4 = [
     ('promo_take4.mp4', 1.0, 3.0, '타이틀'),
     ('promo_take4.mp4', 31.0, 33.0, '로비 → PLAY'),
     ('promo_take4.mp4', 50.3, 52.3, '챕터 선택 → START'),

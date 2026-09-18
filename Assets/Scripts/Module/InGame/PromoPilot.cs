@@ -26,6 +26,11 @@ namespace Game.Module.InGame
         /// <summary>이보다 멀면 다가간다(픽셀). 몸마다 사거리가 달라 넉넉히 잡는다.</summary>
         private const float ChaseRange = 330f;
 
+        /// <summary>스킬 간격(초). 스킬 연출이 끝까지 보이도록 너무 잦지 않게.</summary>
+        public static float SkillEveryMin = 7f, SkillEveryMax = 10f;
+
+        private FieldInfo _fSkillGauge;
+
         private BattleDirector _bd;
         private FieldInfo _fEnemies, _fShots, _fFields, _fHost, _fGhost, _fRoomSize, _fExits, _fExitOpen,
                           _fDanger, _fRoomProp, _fRoomPropUsed, _fPossessTarget, _fInvuln, _fGhostHp,
@@ -95,6 +100,7 @@ namespace Game.Module.InGame
             _pAvatar = t.GetProperty("Avatar", F);
             _fRoomIndex = t.GetField("_roomIndex", F);
             _fRoomKind = t.GetField("_roomKind", F);
+            _fSkillGauge = t.GetField("_skillCooldown", F);
         }
 
         private void Update()
@@ -254,8 +260,11 @@ namespace Game.Module.InGame
             if (_skillIn <= 0f && _fHost.GetValue(_bd) != null
                 && (alive >= 3 || _fBoss.GetValue(_bd) != null))
             {
+                // 녹화용 — 게이지를 채워 두고 쓴다(게이지는 0 에서 차오른다). 영상에 스킬이 꼭 나오게.
+                _fSkillGauge.SetValue(_bd, 999f);
                 _bd.TryActiveSkill();
-                _skillIn = Random.Range(5.5f, 8f);
+                Mark("skill");
+                _skillIn = Random.Range(SkillEveryMin, SkillEveryMax);
             }
 
             _bd.MoveInput = Vector2.zero;   // 멈춰서 쏜다
