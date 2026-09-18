@@ -318,6 +318,31 @@ def main():
         Image.fromarray(np.dstack([srcimg[y0:y1, x0:x1], a])).save(os.path.join(OUT, f'{name}.png'))
         spec['parts'][name] = [x0, y0, x1, y1]
 
+    # 태블릿(3:4 등) 양옆 — 코덱스가 시안 좌우로 골목 풍경을 이어 그린 것(out_sides_raw.png, 입력은 좌우 SIDE px 씩 넓힌 판).
+    # 위판 · 아래판에 따로 붙으므로 598 줄에서 위 · 아래로 나눈다.
+    sides_path = os.path.join(REF, 'out_sides_raw.png')
+    if os.path.exists(sides_path):
+        SIDE = 170
+        raw = Image.open(sides_path).convert('RGB').resize((W + 2 * SIDE, H), Image.LANCZOS)
+        R = np.asarray(raw).astype(np.float32)
+        # 코덱스 그림이 가로로 조금 밀려 있을 수 있다 — 가운데(시안) 가장자리 띠로 어긋남을 잰다
+        best, off = 1e9, 0
+        for dx in range(-30, 31):
+            a0 = SIDE + dx
+            if a0 < 0 or a0 + W > R.shape[1]:
+                continue
+            e = np.abs(R[:, a0:a0 + 40] - M[:, :40]).mean() + np.abs(R[:, a0 + W - 40:a0 + W] - M[:, W - 40:]).mean()
+            if e < best:
+                best, off = e, dx
+        left = R[:, SIDE + off - SIDE:SIDE + off]
+        right = R[:, SIDE + off + W:SIDE + off + W + SIDE]
+        for nm, strip in (('side_left', left), ('side_right', right)):
+            s8 = np.clip(strip, 0, 255).astype(np.uint8)
+            Image.fromarray(s8[:SPLIT_Y]).save(os.path.join(OUT, f'{nm}_top.png'))
+            Image.fromarray(s8[SPLIT_Y:]).save(os.path.join(OUT, f'{nm}_bottom.png'))
+        spec['sideW'] = SIDE
+        print('sides: 가로 어긋남', off, '평균 차', round(float(best) / 2, 1))
+
     # 금 상자 「세는 중」 그림 — 시안엔 완료(빛살) 모습뿐이라 코덱스가 빛살만 지운 것(out_chest_black_calm.png)에서 뗀다.
     # 자리는 chest_black 과 같은 상자(650,684,890,807)로 맞춘다 — 같은 칸 배치를 쓴다.
     calm_path = os.path.join(REF, 'out_chest_black_calm_raw.png')
@@ -380,7 +405,7 @@ def main():
     Image.fromarray(base).save(os.path.join(REF, 'debug_base.png'))
     # 유니티 JsonUtility 가 읽게 목록으로 편다
     flat = {
-        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y, 'extendH': spec.get('extendH', 0), 'extendOverlap': spec.get('extendOverlap', 0),
+        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y, 'extendH': spec.get('extendH', 0), 'extendOverlap': spec.get('extendOverlap', 0), 'sideW': spec.get('sideW', 0),
         'texts': [dict(name=k, **v) for k, v in spec['texts'].items()],
         'parts': [dict(name=k, box=v) for k, v in spec['parts'].items()],
         'icons': [dict(name=k, box=v) for k, v in spec['icons'].items()],
@@ -392,6 +417,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

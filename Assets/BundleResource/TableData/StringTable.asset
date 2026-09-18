@@ -38,7 +38,7 @@ MonoBehaviour:
     - {fileID: 2100000, guid: d52bf1c2b0918e14c96356dc9abe8a25, type: 2}
     - {fileID: 2100000, guid: 35eeb99ec6752564189bc18e0f4fe15b, type: 2}
     - {fileID: 2100000, guid: c0a44819a7d6cdc40be6cc313464b1f0, type: 2}
-    _heavy: {fileID: 0}
+    _heavy: {fileID: 11400000, guid: c7b97620a8536a34a94a5d91f53d4800, type: 2}
   - _language: 2
     _gothic: {fileID: 11400000, guid: a11cb69ee9108e245a192bc9cfa5c1e5, type: 2}
     _presets:

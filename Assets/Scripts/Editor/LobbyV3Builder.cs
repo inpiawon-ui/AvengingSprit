@@ -38,7 +38,7 @@ namespace Game.Editor
 
         [Serializable] private class TextSpec { public string name; public int[] box; public string color; public string align; public int[] area; public int size; }
         [Serializable] private class BoxSpec { public string name; public int[] box; }
-        [Serializable] private class Spec { public int mockupW, mockupH, splitY, extendH, extendOverlap; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
+        [Serializable] private class Spec { public int mockupW, mockupH, splitY, extendH, extendOverlap, sideW; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
         [Serializable] private class CalibItem { public string name; public float dx, dy, scale = 1f, dilate, aspect = 1f; }
         [Serializable] private class Calib { public CalibItem[] items; }
 
@@ -143,6 +143,16 @@ namespace Game.Editor
                 var top = Band(root.transform, "LobbyV3Top", Spr("base_top"), s_spec.mockupW, split, true);
                 var bottom = Band(root.transform, "LobbyV3Bottom", Spr("base_bottom"), s_spec.mockupW,
                                   s_spec.mockupH - split, false);
+
+                // 태블릿 양옆 — 판 바깥에 붙는 골목 풍경(폰에서는 화면 밖이라 안 보인다)
+                if (s_spec.sideW > 0)
+                {
+                    int sw = s_spec.sideW;
+                    Side(top, "SideLeft", "side_left_top", -sw, split);
+                    Side(top, "SideRight", "side_right_top", s_spec.mockupW, split);
+                    Side(bottom, "SideLeft", "side_left_bottom", -sw, s_spec.mockupH - split);
+                    Side(bottom, "SideRight", "side_right_bottom", s_spec.mockupW, s_spec.mockupH - split);
+                }
 
                 // 눌리는 자리
                 foreach (var (node, x0, y0, x1, y1) in Buttons)
@@ -420,6 +430,13 @@ namespace Game.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        private static void Side(RectTransform band, string name, string sprite, int x0, int h)
+        {
+            var rt = Place(band, name, x0, 0, x0 + s_spec.sideW, h);
+            Img(rt, Spr(sprite));
+            rt.SetAsFirstSibling();
+        }
+
         // ── 판 · 노드 ───────────────────────────────────────────
 
         private static RectTransform Band(Transform root, string name, Sprite sprite, int w, int h, bool top)
@@ -505,6 +522,7 @@ namespace Game.Editor
         }
     }
 }
+
 
 
 

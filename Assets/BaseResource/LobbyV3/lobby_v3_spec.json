@@ -4,6 +4,7 @@
  "splitY": 598,
  "extendH": 575,
  "extendOverlap": 12,
+ "sideW": 170,
  "texts": [
   {
    "name": "GoldText",
