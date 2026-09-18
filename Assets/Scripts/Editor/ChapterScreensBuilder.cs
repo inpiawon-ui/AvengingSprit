@@ -38,8 +38,6 @@ namespace Game.Editor
             ("result_rowpanel", Lobby + "chestslotframe.png"),
             ("result_warnbar", Lobby + "hudpill.png"),
             ("reward_goldpile", Lobby + "goldicon.png"),
-            ("result_title_ch1", null), ("result_title_ch2", null), ("result_title_ch3", null),
-            ("result_title_ch4", null), ("result_title_ch5", null), ("result_title_ch6", null),
             ("button_yellow_wide", Lobby + "buttongold.png"),
 
             ("chapterselect_bg", HostSel + "hostselectbackground.png"),
@@ -277,11 +275,19 @@ namespace Game.Editor
             //   테두리와 겹쳐 선이 두 겹으로 보였다(2026-09-18). 액자 안 좌표(위에서 잰 값):
             //     제목 판 118~178 · 이름 판 195~255 · 안쪽 판 280~660 · OK 자리 670~760
             //   액자는 가운데 +20 에 놓이므로 액자 위 = 가운데 +420. 가운데 기준 = 420 − 액자 안 y.
-            var title = Img(Node(box, "ResultTitleImage"), P("result_title_ch1"));
-            Center(title.rectTransform, 0, 272, 680, 121);   // 납품 제목은 글자 둘레가 비어 있어 키워 판을 채운다
-            var titleText = Txt(Node(box, "ResultTitleText"), "CHAPTER 1 CLEAR", 44, TextAlignmentOptions.Center);
-            titleText.color = new Color(1f, 0.82f, 0.25f);
-            Center(titleText.rectTransform, 0, 272, 480, 60);
+            // 제목은 **글자**다 — 챕터가 늘어도 그림을 새로 받지 않게(2026-09-18 지시).
+            // 시안의 금빛 글자를 위 밝은 금 → 아래 주황 금 세로 그라데이션으로 낸다.
+            var titleText = Txt(Node(box, "ResultTitleText"), "CHAPTER 1 CLEAR", 50, TextAlignmentOptions.Center);
+            titleText.color = Color.white;   // 그라데이션이 곱해지는 바탕
+            titleText.enableVertexGradient = true;
+            titleText.colorGradient = new VertexGradient(
+                new Color(1f, 0.96f, 0.62f), new Color(1f, 0.96f, 0.62f),
+                new Color(1f, 0.66f, 0.12f), new Color(1f, 0.66f, 0.12f));
+            titleText.characterSpacing = 2f;
+            titleText.enableAutoSizing = true;
+            titleText.fontSizeMin = 32;
+            titleText.fontSizeMax = 50;
+            Center(titleText.rectTransform, 0, 272, 460, 58);
 
             // 이름 판은 액자에 그려져 있다 — 글자만 얹는다(따로 발주한 판은 겹치므로 안 쓴다)
             Center(Txt(Node(box, "ResultSubText"), "", 30, TextAlignmentOptions.Center).rectTransform,
@@ -326,9 +332,6 @@ namespace Game.Editor
 
             var comp = popup.gameObject.AddComponent<ChapterResultPopup>();
             var so = new SerializedObject(comp);
-            var titles = so.FindProperty("_titles");
-            titles.arraySize = 6;
-            for (int i = 0; i < 6; i++) titles.GetArrayElementAtIndex(i).objectReferenceValue = P($"result_title_ch{i + 1}");
             var arts = so.FindProperty("_chestArts");
             (string key, Sprite sprite)[] chests =
             {

@@ -28,8 +28,6 @@ namespace Game.Module.InGame
             public Sprite Sprite;
         }
 
-        /// <summary>제목 그림 「CHAPTER n CLEAR」 — 챕터 1 ~ 6. 없으면 글자로 대신 적는다.</summary>
-        [SerializeField] private Sprite[] _titles = new Sprite[6];
         [SerializeField] private ChestArt[] _chestArts = Array.Empty<ChestArt>();
 
         /// <summary>못 받은 상자는 흐리게 — 「이걸 받을 뻔했다」가 보이되 받은 것처럼 보이면 안 된다.</summary>
@@ -50,15 +48,9 @@ namespace Game.Module.InGame
             gameObject.SetActive(true);
             transform.SetAsLastSibling();   // 06_ui 규약 — 활성화 시 최상단으로
 
-            int ch = Mathf.Clamp(e.FinishedChapter, 1, 6);
-            var titleSprite = _titles != null && ch - 1 < _titles.Length ? _titles[ch - 1] : null;
-            var title = _ui.Get<Image>("ResultTitleImage");
-            if (title != null)
-            {
-                title.sprite = titleSprite;
-                title.enabled = titleSprite != null;
-            }
-            _ui.SetActive("ResultTitleText", titleSprite == null);
+            // ⚠ 제목은 **글자**다. 챕터마다 그림으로 받으면 챕터가 늘 때마다 발주가 붙는다
+            //   (2026-09-18 지적 「100챕터 나오면 일일이 리소스로 만들 거냐」). 숫자만 바뀐다.
+            int ch = Mathf.Max(1, e.FinishedChapter);
             _ui.SetText("ResultTitleText", $"CHAPTER {ch} CLEAR");
 
             _ui.SetText("ResultSubText", Localize.Get($"stage.{ch}.1.name"));
