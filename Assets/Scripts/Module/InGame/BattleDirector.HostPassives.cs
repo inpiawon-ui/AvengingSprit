@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Module.InGame
 {
@@ -253,6 +253,14 @@ namespace Game.Module.InGame
         /// </summary>
         private const float RangedKnockHoldSeconds = 0.3f;
         private const float RangedKnockCooldown = 0.2f;
+
+        /// <summary>
+        /// 넉백 대신 **제자리 경직**으로 시험 중(기획 2026-09-18 · 사용자가 직접 테스트).
+        /// true 면 밀지 않고 맞은 자리에서 <see cref="RangedStaggerSeconds"/> 동안 선다.
+        /// false 로 되돌리면 예전 넉백(1 m 밀고 0.3초)이 그대로 돈다 — 넉백 코드는 지우지 않았다.
+        /// </summary>
+        private static readonly bool RangedHitStaggerInsteadOfKnockback = true;   // const 면 아래 넉백 줄이 «닿지 않는 코드» 경고가 된다
+        private const float RangedStaggerSeconds = 1f;
         private readonly System.Collections.Generic.Dictionary<Unit, float> _rangedKnockAt = new();
 
         private void RangedKnockback(Unit victim)
@@ -265,6 +273,13 @@ namespace Game.Module.InGame
             float now = Time.time;
             if (_rangedKnockAt.TryGetValue(victim, out float last) && now - last < RangedKnockCooldown) return;
             _rangedKnockAt[victim] = now;
+
+            if (RangedHitStaggerInsteadOfKnockback)
+            {
+                victim.CancelWindup();                  // 휘두르던 자세는 풀린다
+                victim.HoldHit(RangedStaggerSeconds);   // 밀지 않고 맞은 자리에서 선다
+                return;
+            }
 
             var away = victim.Position - host.Position;
             if (away.sqrMagnitude < 0.01f) return;
@@ -361,3 +376,4 @@ namespace Game.Module.InGame
         }
     }
 }
+
