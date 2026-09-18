@@ -12,7 +12,10 @@ namespace Game.User
     /// </summary>
     public sealed class LocalUserDataRepository : IUserDataRepository
     {
-        private const string SaveKey = "avsr_userdata";
+        // ⚠ 0.1.15 에서 이름을 바꿨다 — 덮어 설치해도 **처음 상태로 시작**하게(2026-09-18 지시:
+        //   젬 100만 · 상자 없음 · 챕터 1만). 예전 저장(`avsr_userdata`)은 읽지 않는다.
+        //   다음에 또 전원 초기화가 필요하면 뒤 번호만 올린다.
+        private const string SaveKey = "avsr_userdata_0115";
 
         private readonly IDataManager _data;
 
