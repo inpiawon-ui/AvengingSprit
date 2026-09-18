@@ -694,14 +694,14 @@ MonoBehaviour:
     _cutSeconds: 0
   _chapterMid:
   - _chapter: 2
+    _fromRoom: 8
+    _toRoom: 14
+    _clipKey: bgm_08
+  - _chapter: 6
     _fromRoom: 5
     _toRoom: 9
     _clipKey: bgm_08
   - _chapter: 6
-    _fromRoom: 4
-    _toRoom: 6
-    _clipKey: bgm_08
-  - _chapter: 6
-    _fromRoom: 7
-    _toRoom: 9
+    _fromRoom: 10
+    _toRoom: 14
     _clipKey: bgm_09

@@ -8448,16 +8448,17 @@ namespace Game.Module.InGame
             if (_canonRoom != null && _canonRoom.HealPct > 0) HealOnClear(_canonRoom.HealPct);
 
             // 마지막 스테이지 = 보스방. 보스를 잡으면 **챕터 클리어**로 끝난다.
-            if (_roomKind == RoomKind.Elite) _eliteRoomsCleared++;
+            // 엘리트 방은 중간보스 방으로 합쳤다(기획 2026-09-18) — 정산 · 은상자는 중간보스를 센다
+            if (_roomKind == RoomKind.Elite || (_canonRoom != null && _canonRoom.IsMidBoss)) _eliteRoomsCleared++;
             bool isLast = IsLastRoom;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
             if (isLast) { Finish(true); return; }
 
-            // 보스를 잡은 자리에 **악마의 제단**이 선다(기획 2026-09-17). 다가서면 계약을 묻는다.
-            // 출구는 같이 열린다 — 쓸지 말지는 고르는 것이다.
+            // **중간보스(8번 방)** 를 잡은 자리에 악마의 제단이 선다(기획 2026-09-18 —
+            // 전에는 챕터 보스를 잡은 자리였다). 다가서면 계약을 묻는다. 출구는 같이 열린다.
             // ⚠ 계약으로 매복이 붙으면 그 싸움을 비운 뒤 여기로 다시 온다. 제단을 또 세우면
             //   다 쓴 제단이 새것으로 되살아나므로, 이미 서 있으면 세우지 않는다.
-            if (_roomKind == RoomKind.Boss && _roomProp == null) SpawnDevilAltar();
+            if (_canonRoom != null && _canonRoom.IsMidBoss && _roomProp == null) SpawnDevilAltarCenter();
 
             // 버프는 이제 **레벨업**에서 나온다(기획서 A 5-2). 방을 비운 것만으로는
             // 주지 않는다 — 잡는 만큼 성장하는 쪽이 교전을 피하지 않게 만든다.

@@ -303,9 +303,10 @@ namespace Game.Editor
         /// <summary>D3 — 원작 가운데 구역을 방 번호로.</summary>
         private static ChapterMidMusicEntry[] ChapterMid() => new[]
         {
-            new ChapterMidMusicEntry(2, 5, 9, "bgm_08"),
-            new ChapterMidMusicEntry(6, 4, 6, "bgm_08"),
-            new ChapterMidMusicEntry(6, 7, 9, "bgm_09"),
+            // 챕터 15방(2026-09-18) — 예전 10방의 구간을 같은 비율로 옮겼다
+            new ChapterMidMusicEntry(2, 8, 14, "bgm_08"),
+            new ChapterMidMusicEntry(6, 5, 9, "bgm_08"),
+            new ChapterMidMusicEntry(6, 10, 14, "bgm_09"),
         };
     }
 }

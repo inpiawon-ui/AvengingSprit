@@ -39,6 +39,20 @@ namespace Game.Module.InGame
         /// </summary>
         private void SpawnDevilAltar() => SpawnRoomProp("obj_devil_altar", 192f, 192f);
 
+        /// <summary>
+        /// 중간보스를 잡은 방의 악마의 제단 — **방 한가운데**에 선다(기획 2026-09-18).
+        /// 이 방은 전투방이라 방 종류로는 제단인 줄 모른다 — 따로 표시해 둔다.
+        /// </summary>
+        private void SpawnDevilAltarCenter()
+        {
+            SpawnDevilAltar();
+            _devilAltarHere = _roomProp != null;
+            if (_roomProp != null) _roomProp.anchoredPosition = RoomPropAt();
+        }
+
+        /// <summary>이 방의 물건이 전투 뒤에 선 악마의 제단인가.</summary>
+        private bool _devilAltarHere;
+
         private void SpawnRoomProp(string artKey, float w, float h)
         {
             ClearRoomProp();
@@ -69,7 +83,7 @@ namespace Game.Module.InGame
         /// 보스가 사라진 아레나 복판이 곧 보상 자리다.
         /// </summary>
         private Vector2 RoomPropAt()
-            => new(_roomSize.x * 0.5f, -_roomSize.y * (_roomKind == RoomKind.Boss ? 0.5f : RoomPropYRatio));
+            => new(_roomSize.x * 0.5f, -_roomSize.y * (_devilAltarHere ? 0.5f : RoomPropYRatio));
 
         private void ClearRoomProp()
         {
@@ -77,6 +91,7 @@ namespace Game.Module.InGame
             _roomProp = null;
             _roomPropImg = null;
             _roomPropUsed = false;
+            _devilAltarHere = false;
         }
 
         /// <summary>
@@ -95,8 +110,8 @@ namespace Game.Module.InGame
             _roomPropUsed = true;
             if (_roomKind == RoomKind.Rest) OpenShrine();
             else if (_roomKind == RoomKind.Shop) OpenShop();
-            // 악마의 제단 — 보스를 잡은 방에 선다(예전 004 이벤트 방 규칙도 남겨 둔다)
-            else if (_roomKind == RoomKind.Event || _roomKind == RoomKind.Boss) OfferEvent();
+            // 악마의 제단 — 중간보스를 잡은 방에 선다(예전 004 이벤트 방 규칙도 남겨 둔다)
+            else if (_roomKind == RoomKind.Event || _devilAltarHere) OfferEvent();
 
             // 다 쓴 물건은 흐릿하게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
             if (_roomPropImg != null) _roomPropImg.color = new Color(1f, 1f, 1f, 0.45f);

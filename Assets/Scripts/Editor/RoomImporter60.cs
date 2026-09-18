@@ -42,23 +42,85 @@ namespace Game.EditorTools
         /// <summary>위쪽 문이 서는 구역(m). `RoomImporterV33.GateBandMeters` 와 같은 값.</summary>
         private const float GateBandMeters = 2.5f;
 
-        private const int RoomsPerChapter = 10;
+        private const int SourceRoomsPerChapter = 10;
+        private const int RoomsPerChapter = 15;
 
-        [MenuItem("Tools/Game/60방 임포트 (6챕터 × 10방)")]
+        // ── 챕터당 15방 (기획 2026-09-18) ────────────────────────────
+        //
+        //   1  2  3  4    5  6  7  8      9 10 11 12   13 14 15
+        //   전 전 전 천사 전 전 전 중간보스 전 전 전 상점 전 전 보스
+        //
+        // 배정표(`RoomDef60`)는 챕터당 10방이다. 새 배정표를 짓지 않고 **있는 방을 다시 앉힌다** —
+        // 전투방 여섯(001·002·003·006·008·009)으로 전투 자리 열하나를 채운다.
+        // 같은 적 배치가 두 번 나오는 방은 방 이름이 달라 좌우 뒤집기 · 물건 밀기가 달라지고,
+        // 지형 글자도 다른 것을 받는다(`LayoutOf`).
+        //
+        // ⚠ 엘리트 방(009)은 이제 따로 없다 — 8 번 중간보스가 그 자리다(「중간보스(엘리트)」).
+        //   009 의 적 배치는 일반 전투로 쓴다.
+
+        /// <summary>새 방 번호(1~15) → 배정표의 원래 방 번호.</summary>
+        private static readonly string[] SourceOf =
+        {
+            null,                                   // 0 은 안 쓴다
+            "001", "002", "003", "004",             // 1~4   (4 = 천사 — 원래 이벤트 방)
+            "006", "008", "009", "005",             // 5~8   (8 = 중간보스)
+            "002", "006", "008", "007",             // 9~12  (12 = 상점)
+            "003", "009", "010",                    // 13~15 (15 = 보스)
+        };
+
+        /// <summary>배정표 60방을 90방(6챕터 × 15방)으로 다시 앉힌다.</summary>
+        private static RoomDef60.Room[] Build90(RoomDef60.Room[] src)
+        {
+            var list = new List<RoomDef60.Room>(90);
+            for (int ch = 1; ch <= 6; ch++)
+            {
+                for (int no = 1; no <= RoomsPerChapter; no++)
+                {
+                    RoomDef60.Room s = null;
+                    foreach (var r in src)
+                        if (r.Ch == ch && r.No == SourceOf[no]) { s = r; break; }
+                    if (s == null) { Debug.LogError($"[90방] 원본 없음 CH{ch} {SourceOf[no]}"); return null; }
+
+                    list.Add(new RoomDef60.Room
+                    {
+                        Ch = s.Ch,
+                        No = no.ToString("000"),
+                        // 엘리트 방은 없앴다 — 그 배치는 일반 전투로
+                        Kind = s.Kind == "엘리트" ? "전투" : s.Kind,
+                        Floor = s.Floor,
+                        Layout = s.Layout,
+                        LayoutKo = s.LayoutKo,
+                        Comp = s.Comp,
+                        Pool = s.Pool,
+                        Boss = s.Boss,
+                        Captain = s.Captain,
+                        Minions = s.Minions,
+                        MinionFrom = s.MinionFrom,
+                        Elite = false,
+                        Spawns = s.Spawns,
+                    });
+                }
+            }
+            return list.ToArray();
+        }
+
+        [MenuItem("Tools/Game/90방 임포트 (6챕터 × 15방)")]
         public static void Import()
         {
             var table = AssetDatabase.LoadAssetAtPath<RoomTable>(TablePath);
             if (table == null) { Debug.LogError("[60방] RoomTable 없음: " + TablePath); return; }
 
-            var defs = RoomDef60.All;
-            if (defs == null || defs.Length != 60)
+            var src = RoomDef60.All;
+            if (src == null || src.Length != 6 * SourceRoomsPerChapter)
             {
-                Debug.LogError($"[60방] 배정표가 60방이 아니다: {defs?.Length ?? 0}");
+                Debug.LogError($"[60방] 배정표가 60방이 아니다: {src?.Length ?? 0}");
                 return;
             }
+            var defs = Build90(src);
+            if (defs == null) return;
 
             var so = new SerializedObject(table);
-            so.FindProperty("_contractVersion").stringValue = "rooms60-1.0";
+            so.FindProperty("_contractVersion").stringValue = "rooms90-1.0";
             var rooms = so.FindProperty("_rooms");
             rooms.ClearArray();
 
@@ -398,32 +460,36 @@ namespace Game.EditorTools
         /// ⚠ 005 는 여섯 챕터 모두 중간보스 방이라 늘 F(정적)다.
         ///   보스급이 주인공인 자리에서 바닥까지 시끄러우면 패턴이 안 읽힌다.
         /// </summary>
+        /// <summary>챕터마다 전투방 여섯이 받던 지형 글자 — 원래 001 · 002 · 003 · 006 · 008 · 009 순.</summary>
+        private static readonly string[][] ChapterLetters =
+        {
+            new[] { "A", "B", "E", "J", "D", "G" },
+            new[] { "B", "E", "J", "D", "C", "K" },
+            new[] { "E", "J", "D", "C", "K", "M" },
+            new[] { "J", "D", "C", "K", "N", "H" },
+            new[] { "D", "C", "K", "O", "Q", "L" },
+            new[] { "C", "K", "P", "I", "R", "Q" },
+        };
+
+        private static int SourceIndex(string oldNo) => oldNo switch
+        {
+            "001" => 0, "002" => 1, "003" => 2, "006" => 3, "008" => 4, "009" => 5, _ => -1,
+        };
+
         private static string LayoutOf(RoomDef60.Room d)
         {
             if (!string.IsNullOrEmpty(d.Boss)) return string.Empty;   // 보스는 전용 아레나
+            if (!string.IsNullOrEmpty(d.Captain)) return "F";          // 중간보스는 늘 정적인 F
             int ch = Mathf.Clamp(d.Ch, 1, 6);
-            return (ch, d.No) switch
-            {
-                (1, "001") => "A", (1, "002") => "B", (1, "003") => "E",
-                (1, "005") => "F", (1, "006") => "J", (1, "008") => "D", (1, "009") => "G",
+            int no = int.TryParse(d.No, out var n) ? n : 0;
+            string oldNo = no >= 1 && no < SourceOf.Length ? SourceOf[no] : null;
+            int idx = SourceIndex(oldNo);
+            if (idx < 0) return d.Layout;   // 천사(4) · 상점(12) 은 원본대로 — 비어 있다
 
-                (2, "001") => "B", (2, "002") => "E", (2, "003") => "J",
-                (2, "005") => "F", (2, "006") => "D", (2, "008") => "C", (2, "009") => "K",
-
-                (3, "001") => "E", (3, "002") => "J", (3, "003") => "D",
-                (3, "005") => "F", (3, "006") => "C", (3, "008") => "K", (3, "009") => "M",
-
-                (4, "001") => "J", (4, "002") => "D", (4, "003") => "C",
-                (4, "005") => "F", (4, "006") => "K", (4, "008") => "N", (4, "009") => "H",
-
-                (5, "001") => "D", (5, "002") => "C", (5, "003") => "K",
-                (5, "005") => "F", (5, "006") => "O", (5, "008") => "Q", (5, "009") => "L",
-
-                (6, "001") => "C", (6, "002") => "K", (6, "003") => "P",
-                (6, "005") => "F", (6, "006") => "I", (6, "008") => "R", (6, "009") => "Q",
-
-                _ => d.Layout,   // 회복(004)·상점(007) 은 원본대로 — 비어 있다
-            };
+            var letters = ChapterLetters[ch - 1];
+            // 앞쪽(1~7)은 원래 짝 그대로. 뒤쪽(9~14)은 같은 적 배치를 한 번 더 쓰므로
+            // **다른 지형**을 준다 — 같은 챕터 글자 안에서 세 칸 밀어 고른다(위험물 단계는 챕터를 지킨다).
+            return no <= 7 ? letters[idx] : letters[(idx + 3) % letters.Length];
         }
 
         /// <summary>

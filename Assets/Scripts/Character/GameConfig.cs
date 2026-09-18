@@ -485,7 +485,8 @@ namespace Game.Character
 
         /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 001 은 1.00, 009 는 1.20.</summary>
         public float EnemyRoomMul(int roomNo)
-            => 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, 9) - 1) / 8f);
+            // 보스 직전 방(14)에서 최대 — 챕터가 15방이 됐다(2026-09-18, 예전 10방은 9 에서 최대)
+            => 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, 14) - 1) / 13f);
 
         /// <summary>방 배율의 폭. 챕터 배율(최대 4.18배)에 비하면 양념이다.</summary>
         private const float EnemyRoomMulSpan = 0.20f;
