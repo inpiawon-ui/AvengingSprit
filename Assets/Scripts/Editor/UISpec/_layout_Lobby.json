@@ -335,7 +335,7 @@
   {
    "name": "ChestSlot1/ChestReadyBanner",
    "x": 45.9,
-   "y": 464.4,
+   "y": 444.4,
    "w": 156.1,
    "h": 34.4,
    "create": "IMG",
@@ -344,7 +344,7 @@
   {
    "name": "ChestSlot1/ChestReadyText",
    "x": 60.4,
-   "y": 467.5,
+   "y": 447.5,
    "w": 127.0,
    "h": 28.3,
    "text": "완료!",
@@ -401,7 +401,7 @@
   {
    "name": "ChestSlot1/ChestActionButton",
    "x": 29.8,
-   "y": 625.1,
+   "y": 645.1,
    "w": 197.4,
    "h": 55.1,
    "create": "BTN",
@@ -410,7 +410,7 @@
   {
    "name": "ChestSlot1/ChestActionGemIcon",
    "x": 97.9,
-   "y": 628.9,
+   "y": 648.9,
    "w": 33.7,
    "h": 27.5,
    "create": "IMG",
@@ -419,7 +419,7 @@
   {
    "name": "ChestSlot1/ChestActionCostText",
    "x": 138.5,
-   "y": 627.4,
+   "y": 647.4,
    "w": 91.8,
    "h": 30.6,
    "text": "1,000",
@@ -432,7 +432,7 @@
   {
    "name": "ChestSlot1/ChestActionLabelText",
    "x": 29.8,
-   "y": 655.0,
+   "y": 675.0,
    "w": 197.4,
    "h": 23.0,
    "text": "즉시 열기",
@@ -445,7 +445,7 @@
   {
    "name": "ChestSlot1/ChestReadyLabelText",
    "x": 39.0,
-   "y": 630.5,
+   "y": 650.5,
    "w": 179.0,
    "h": 44.4,
    "text": "보상 획득하기",
@@ -485,7 +485,7 @@
   {
    "name": "ChestSlot2/ChestReadyBanner",
    "x": 277.0,
-   "y": 464.4,
+   "y": 444.4,
    "w": 156.1,
    "h": 34.4,
    "create": "IMG",
@@ -494,7 +494,7 @@
   {
    "name": "ChestSlot2/ChestReadyText",
    "x": 291.5,
-   "y": 467.5,
+   "y": 447.5,
    "w": 127.0,
    "h": 28.3,
    "text": "완료!",
@@ -551,7 +551,7 @@
   {
    "name": "ChestSlot2/ChestActionButton",
    "x": 260.9,
-   "y": 625.1,
+   "y": 645.1,
    "w": 197.4,
    "h": 55.1,
    "create": "BTN",
@@ -560,7 +560,7 @@
   {
    "name": "ChestSlot2/ChestActionGemIcon",
    "x": 329.0,
-   "y": 628.9,
+   "y": 648.9,
    "w": 33.7,
    "h": 27.5,
    "create": "IMG",
@@ -569,7 +569,7 @@
   {
    "name": "ChestSlot2/ChestActionCostText",
    "x": 369.6,
-   "y": 627.4,
+   "y": 647.4,
    "w": 91.8,
    "h": 30.6,
    "text": "1,000",
@@ -582,7 +582,7 @@
   {
    "name": "ChestSlot2/ChestActionLabelText",
    "x": 260.9,
-   "y": 655.0,
+   "y": 675.0,
    "w": 197.4,
    "h": 23.0,
    "text": "즉시 열기",
@@ -595,7 +595,7 @@
   {
    "name": "ChestSlot2/ChestReadyLabelText",
    "x": 270.1,
-   "y": 630.5,
+   "y": 650.5,
    "w": 179.0,
    "h": 44.4,
    "text": "보상 획득하기",
@@ -635,7 +635,7 @@
   {
    "name": "ChestSlot3/ChestReadyBanner",
    "x": 508.1,
-   "y": 464.4,
+   "y": 444.4,
    "w": 156.1,
    "h": 34.4,
    "create": "IMG",
@@ -644,7 +644,7 @@
   {
    "name": "ChestSlot3/ChestReadyText",
    "x": 522.6,
-   "y": 467.5,
+   "y": 447.5,
    "w": 127.0,
    "h": 28.3,
    "text": "완료!",
@@ -701,7 +701,7 @@
   {
    "name": "ChestSlot3/ChestActionButton",
    "x": 492.0,
-   "y": 625.1,
+   "y": 645.1,
    "w": 197.4,
    "h": 55.1,
    "create": "BTN",
@@ -710,7 +710,7 @@
   {
    "name": "ChestSlot3/ChestActionGemIcon",
    "x": 560.1,
-   "y": 628.9,
+   "y": 648.9,
    "w": 33.7,
    "h": 27.5,
    "create": "IMG",
@@ -719,7 +719,7 @@
   {
    "name": "ChestSlot3/ChestActionCostText",
    "x": 600.6,
-   "y": 627.4,
+   "y": 647.4,
    "w": 91.8,
    "h": 30.6,
    "text": "1,000",
@@ -732,7 +732,7 @@
   {
    "name": "ChestSlot3/ChestActionLabelText",
    "x": 492.0,
-   "y": 655.0,
+   "y": 675.0,
    "w": 197.4,
    "h": 23.0,
    "text": "즉시 열기",
@@ -745,7 +745,7 @@
   {
    "name": "ChestSlot3/ChestReadyLabelText",
    "x": 501.2,
-   "y": 630.5,
+   "y": 650.5,
    "w": 179.0,
    "h": 44.4,
    "text": "보상 획득하기",

@@ -143,6 +143,8 @@ add('GhostSearchFrame', (27, 120, 886, 487), create='IMG', parent='GhostSearchPa
 # 같은 폭으로 고른다 — 27..913 안에서 282 세 칸 + 20 간격.
 CHEST_X0, CHEST_Y0, CHEST_W, CHEST_H = 27, 621, 282, 275
 CHEST_STEP = 302
+# 버튼 줄은 캔버스 20 px 아래로, 「완료!」 띠는 20 px 위로(2026-09-18 지시). 목업 px 로 환산.
+DOWN = 20 / S
 
 add('ChestBand', (0, CHEST_Y0, MOCK_W, CHEST_H), create='IMG', parent='LobbyMainUI')
 
@@ -158,8 +160,8 @@ for i in range(3):
     add(f'{slot}/ChestSlotFrame', c(0, 0, CHEST_W, CHEST_H), create='IMG', parent=slot)
     add(f'{slot}/ChestArt', c(38, 12, 206, 142), create='IMG', parent=slot)
     # 「완료!」 띠는 칸 윗변에 걸쳐 올린다 — 상자 위에 얹으면 뚜껑을 가렸다(2026-09-18 지적).
-    add(f'{slot}/ChestReadyBanner', c(33, -14, 204, 45), create='IMG', parent=slot)
-    add(f'{slot}/ChestReadyText', c(52, -10, 166, 37), text='완료!',
+    add(f'{slot}/ChestReadyBanner', c(33, -14 - DOWN, 204, 45), create='IMG', parent=slot)
+    add(f'{slot}/ChestReadyText', c(52, -10 - DOWN, 166, 37), text='완료!',
         size=cap(30), align='C', color=GOLD, create='TMP', parent=slot)
     add(f'{slot}/ChestEmptyText', c(20, 100, 242, 48), text='빈 칸',
         size=cap(28), align='C', color=DIM, create='TMP', parent=slot)
@@ -176,18 +178,18 @@ for i in range(3):
     #   칸 직속으로 두고 버튼 위에 그린다 — 글자는 raycast 대상이 아니라 눌림은 버튼이 받는다.
     # 버튼은 젬값 줄 + 「즉시 열기」 두 줄이 **다 들어가게** 키웠다 — 예전 70 은
     #   아래 줄이 버튼 밖으로 나갔다(2026-09-18 지적).
-    add(f'{slot}/ChestActionButton', c(12, 196, 258, 72), create='BTN', parent=slot)
-    add(f'{slot}/ChestActionGemIcon', c(101, 201, 44, 36), create='IMG', parent=slot)
-    add(f'{slot}/ChestActionCostText', c(154, 199, 120, 40), text='1,000',
+    add(f'{slot}/ChestActionButton', c(12, 196 + DOWN, 258, 72), create='BTN', parent=slot)
+    add(f'{slot}/ChestActionGemIcon', c(101, 201 + DOWN, 44, 36), create='IMG', parent=slot)
+    add(f'{slot}/ChestActionCostText', c(154, 199 + DOWN, 120, 40), text='1,000',
         size=cap(34), align='L', color=WHITE, create='TMP', parent=slot)
     # 「즉시 열기」는 젬값 줄 **아래** 한 줄이다 — 위로 올리면 젬값과 겹친다.
     # 목업 실측: 버튼 806~876 · 젬값 줄 810~854 · 라벨 850~874.
-    add(f'{slot}/ChestActionLabelText', c(12, 235, 258, 30), text='즉시 열기',
+    add(f'{slot}/ChestActionLabelText', c(12, 235 + DOWN, 258, 30), text='즉시 열기',
         size=cap(28), align='C', color=WHITE, create='TMP', parent=slot)
     # ⚠ 완료 칸의 「보상 획득하기」는 **칸을 따로 둔다.** 예전에는 같은 칸을 22px 올려
     #   돌려 썼는데, 젬값 줄이 없어 글자가 커져야 하는데도 상자 높이가 그대로라
     #   목업의 절반 크기로 찍혔다(2026-09-16). 두 상태는 글자 크기가 다르다.
-    add(f'{slot}/ChestReadyLabelText', c(24, 203, 234, 58), text='보상 획득하기',
+    add(f'{slot}/ChestReadyLabelText', c(24, 203 + DOWN, 234, 58), text='보상 획득하기',
         size=cap(34), align='C', color=DARK, create='TMP', parent=slot)
 
 # ── 게임 모드 ───────────────────────────────────────────────────────

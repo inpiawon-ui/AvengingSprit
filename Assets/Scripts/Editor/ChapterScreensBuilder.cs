@@ -14,9 +14,9 @@ namespace Game.Editor
     /// 시안: `Projects/AVSR/_exchange/in/ui_new_chapter_result_v1.png` · `ui_new_chapter_select_v1.png` ·
     /// `ui_new_chest_reward_v1.png` (720×1280). 아래 자리표는 시안에서 잰 값이다.
     ///
-    /// 부품(글자 없는 그림 35장)은 발주 중이다. 도착하면 `_exchange/in/` 에서 가져와
-    /// `Assets/BaseResource/ChapterScreens/` 에 두고 그것을 꽂는다. **아직 없는 부품은
-    /// 게임에 있던 비슷한 그림을 자리표시로 쓴다** — 부품이 오면 이 메뉴를 다시 돌리면 끝이다.
+    /// 부품(글자 없는 그림 34장, 2026-09-18 납품)은 `_exchange/in/` 에서 가져와
+    /// `Assets/BaseResource/ChapterScreens/` 에 두고 그것을 꽂는다. 없는 부품은 게임에 있던
+    /// 비슷한 그림을 자리표시로 쓴다 — 부품을 다시 받으면 이 메뉴를 다시 돌리면 끝이다.
     ///
     /// 노드 이름 = 바인딩 키다. 코드(`ChapterSelectPanel` · `ChestRewardPopup` · `ChapterResultPopup`)는
     /// 이름으로만 찾으므로 여기서 이름을 바꾸면 거기도 바꾼다.
@@ -111,44 +111,42 @@ namespace Game.Editor
 
         // ── 챕터 선택 (시안 ui_new_chapter_select_v1) ─────────────
         //
-        // 위쪽(재화 · 제목 · 카드)은 화면 위에, START 는 화면 아래에 붙인다.
-        // 시안은 1280 높이라 더 긴 폰(1600)에서는 카드와 START 사이가 벌어진다.
+        // 배경만 화면을 채우고, 나머지는 시안 한 장 판(`Content`) 안에 시안 좌표 그대로 담는다.
+        // 판이 화면 가운데에 뜨므로 긴 폰에서는 위아래로, 태블릿에서는 좌우로 배경이 더 보인다.
 
         private static ChapterSelectPanel BuildChapterSelect(Transform root)
         {
             var panel = Fresh(root, "ChapterSelectPanel");
             Full(Img(Node(panel, "ChapterSelectBg"), P("chapterselect_bg")).rectTransform);
+            var box = Content(panel, "ChapterSelectContent");
 
-            Top(Img(Node(panel, "ChapterSelectBackButton"), P("button_back")).rectTransform, -298, -52, 84, 60);
-            Btn(panel.Find("ChapterSelectBackButton"));
+            Top(Img(Node(box, "ChapterSelectBackButton"), P("button_back")).rectTransform, -298, -52, 84, 60);
+            Btn(box.Find("ChapterSelectBackButton"));
 
-            var gold = Img(Node(panel, "ChapterGoldPill"), L("hudpill")).rectTransform;
+            var gold = Img(Node(box, "ChapterGoldPill"), L("hudpill")).rectTransform;
             Top(gold, -30, -38, 230, 46);
             Center(Img(Node(gold, "ChapterGoldIcon"), L("goldicon")).rectTransform, -88, 0, 42, 42);
             Center(Txt(Node(gold, "ChapterGoldText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
                    20, 0, 150, 40);
-            var gem = Img(Node(panel, "ChapterGemPill"), L("hudpill")).rectTransform;
+            var gem = Img(Node(box, "ChapterGemPill"), L("hudpill")).rectTransform;
             Top(gem, 190, -38, 170, 46);
             Center(Img(Node(gem, "ChapterGemIcon"), L("gemicon")).rectTransform, -58, 0, 40, 36);
             Center(Txt(Node(gem, "ChapterGemText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
                    20, 0, 100, 40);
 
-            var title = Img(Node(panel, "ChapterSelectTitle"), P("chapterselect_title"));
+            var title = Img(Node(box, "ChapterSelectTitle"), P("chapterselect_title"));
             Top(title.rectTransform, 0, -148, 600, 110);
             title.enabled = title.sprite != null;
-            var titleText = Txt(Node(panel, "ChapterSelectTitleText"), "CHAPTER SELECT", 50, TextAlignmentOptions.Center);
+            var titleText = Txt(Node(box, "ChapterSelectTitleText"), "CHAPTER SELECT", 50, TextAlignmentOptions.Center);
             Top(titleText.rectTransform, 0, -148, 600, 110);
 
             // 카드 여섯 장 — 2열 × 3행. 시안 중심 (185, 337) (533, 337) … 행 간격 283
-            // ⚠ 카드는 **화면 가운데**에 붙인다. 위에 붙이면 긴 폰(1600)에서 카드 아래가
-            //   320 이나 텅 빈다. 제목 아래 ~ START 위 사이의 한가운데가 시안에서도 폰에서도
-            //   같은 자리(가운데 +3)라, 가운데 기준 좌표가 두 화면 모두에 맞는다.
             for (int i = 0; i < 6; i++)
             {
                 int chapter = i + 1;
                 float x = i % 2 == 0 ? -175f : 173f;
                 float y = 303f - (i / 2) * 283f;
-                var card = Node(panel, $"ChapterCard{chapter}");
+                var card = Node(box, $"ChapterCard{chapter}");
                 Center(card, x, y, 330, 270);
                 Btn(card);
 
@@ -167,15 +165,15 @@ namespace Game.Editor
                 foreach (var g in card.GetComponentsInChildren<Graphic>()) g.raycastTarget = g.transform == card;
             }
 
-            var start = Img(Node(panel, "ChapterStartButton"), P("chapterselect_startbutton")).rectTransform;
+            var start = Img(Node(box, "ChapterStartButton"), P("chapterselect_startbutton")).rectTransform;
             start.anchorMin = start.anchorMax = new Vector2(0.5f, 0f);
             start.pivot = new Vector2(0.5f, 0.5f);
             start.anchoredPosition = new Vector2(0, 110);
             start.sizeDelta = new Vector2(380, 100);
             Btn(start);
-            var startText = Txt(Node(start, "ChapterStartText"), "START", 46, TextAlignmentOptions.Center, plain: true);
+            var startText = Txt(Node(start, "ChapterStartText"), "START", 42, TextAlignmentOptions.Center, plain: true);
             startText.color = new Color(0.12f, 0.1f, 0.05f);
-            Center(startText.rectTransform, 10, 0, 220, 70);
+            Center(startText.rectTransform, 20, 0, 170, 70);
 
             var comp = panel.gameObject.AddComponent<ChapterSelectPanel>();
             var so = new SerializedObject(comp);
@@ -199,19 +197,20 @@ namespace Game.Editor
         {
             var popup = Fresh(root, "ChestRewardPopup");
             var dim = Img(Node(popup, "RewardDim"), null);
-            dim.color = new Color(0f, 0f, 0f, 0.8f);
+            dim.color = new Color(0f, 0f, 0f, 0.95f);
             Full(dim.rectTransform);
+            var box = Content(popup, "RewardContent");
 
-            Center(Img(Node(popup, "RewardFrame"), P("chestreward_frame")).rectTransform, 0, -135, 640, 880);
-            var chest = Img(Node(popup, "RewardChestArt"), P("chestreward_open_gold"));
+            Center(Img(Node(box, "RewardFrame"), P("chestreward_frame")).rectTransform, 0, -135, 640, 880);
+            var chest = Img(Node(box, "RewardChestArt"), P("chestreward_open_gold"));
             chest.preserveAspect = true;
             Center(chest.rectTransform, 0, 340, 420, 340);
-            var header = Txt(Node(popup, "RewardHeaderText"), "獲得:", 36, TextAlignmentOptions.Center);
+            var header = Txt(Node(box, "RewardHeaderText"), "獲得:", 42, TextAlignmentOptions.Center);
             header.color = new Color(1f, 0.85f, 0.35f);
             Center(header.rectTransform, 0, 100, 300, 56);
 
             // 카드 칸 — 자리는 코드가 장 수에 맞춰 다시 잡는다(`ChestRewardPopup.Fill`)
-            var grid = Node(popup, "RewardGrid");
+            var grid = Node(box, "RewardGrid");
             Center(grid, 0, 0, 10, 10);
             for (int i = 0; i < 6; i++)
             {
@@ -222,11 +221,11 @@ namespace Game.Editor
                 Center(icon.rectTransform, 0, 8, 160, 150);
                 Center(Img(Node(card, "RewardCardFrame"), i == 0 ? P("rewardcard_gold") : P("rewardcard_b"))
                            .rectTransform, 0, 0, 190, 190);
-                Center(Txt(Node(card, "RewardCardCountText"), "×0", 34, TextAlignmentOptions.Center).rectTransform,
+                Center(Txt(Node(card, "RewardCardCountText"), "×0", 40, TextAlignmentOptions.Center).rectTransform,
                        0, -70, 170, 44);
             }
 
-            var ok = Img(Node(popup, "RewardOkButton"), P("button_yellow_wide")).rectTransform;
+            var ok = Img(Node(box, "RewardOkButton"), P("button_yellow_wide")).rectTransform;
             Center(ok, 0, -478, 290, 80);
             Btn(ok);
             var okText = Txt(Node(ok, "RewardOkText"), "OK", 40, TextAlignmentOptions.Center, plain: true);
@@ -262,49 +261,59 @@ namespace Game.Editor
             PickFont(root.gameObject);
             var popup = Fresh(root, "ChapterResultPopup");
             var dim = Img(Node(popup, "ResultDim"), null);
-            dim.color = new Color(0f, 0f, 0f, 0.78f);
+            dim.color = new Color(0f, 0f, 0f, 0.88f);
             Full(dim.rectTransform);
+            var box = Content(popup, "ResultContent");
 
-            Center(Img(Node(popup, "ResultFrame"), P("result_frame")).rectTransform, 0, 20, 660, 800);
+            Center(Img(Node(box, "ResultFrame"), P("result_frame")).rectTransform, 0, 20, 660, 800);
 
-            var title = Img(Node(popup, "ResultTitleImage"), P("result_title_ch1"));
-            Center(title.rectTransform, 0, 285, 560, 100);
-            var titleText = Txt(Node(popup, "ResultTitleText"), "CHAPTER 1 CLEAR", 54, TextAlignmentOptions.Center);
+            // ⚠ 납품 액자(660×800)에는 **제목 판 · 챕터 이름 판 · 큰 안쪽 판 · OK 자리가 그려져 있다.**
+            //   시안 자리가 아니라 **액자 그림 속 칸**에 맞춘다 — 시안대로 두면 줄 판이 안쪽 판
+            //   테두리와 겹쳐 선이 두 겹으로 보였다(2026-09-18). 액자 안 좌표(위에서 잰 값):
+            //     제목 판 118~178 · 이름 판 195~255 · 안쪽 판 280~660 · OK 자리 670~760
+            //   액자는 가운데 +20 에 놓이므로 액자 위 = 가운데 +420. 가운데 기준 = 420 − 액자 안 y.
+            var title = Img(Node(box, "ResultTitleImage"), P("result_title_ch1"));
+            Center(title.rectTransform, 0, 272, 680, 121);   // 납품 제목은 글자 둘레가 비어 있어 키워 판을 채운다
+            var titleText = Txt(Node(box, "ResultTitleText"), "CHAPTER 1 CLEAR", 44, TextAlignmentOptions.Center);
             titleText.color = new Color(1f, 0.82f, 0.25f);
-            Center(titleText.rectTransform, 0, 285, 600, 100);
+            Center(titleText.rectTransform, 0, 272, 480, 60);
 
-            var sub = Img(Node(popup, "ResultSubPlate"), P("result_subplate")).rectTransform;
-            Center(sub, 0, 210, 380, 60);
-            Full(Txt(Node(sub, "ResultSubText"), "", 30, TextAlignmentOptions.Center).rectTransform);
+            // 이름 판은 액자에 그려져 있다 — 글자만 얹는다(따로 발주한 판은 겹치므로 안 쓴다)
+            Center(Txt(Node(box, "ResultSubText"), "", 30, TextAlignmentOptions.Center).rectTransform,
+                   0, 195, 360, 56);
 
-            var goldRow = Img(Node(popup, "ResultGoldRow"), P("result_rowpanel")).rectTransform;
-            Center(goldRow, 0, 70, 500, 150);
+            var goldRow = Img(Node(box, "ResultGoldRow"), P("result_rowpanel")).rectTransform;
+            Center(goldRow, 0, 62, 460, 140);
             var pile = Img(Node(goldRow, "ResultGoldIcon"), P("reward_goldpile"));
             pile.preserveAspect = true;
-            Center(pile.rectTransform, -125, -5, 200, 140);
+            Center(pile.rectTransform, -115, -3, 185, 130);
             Left(Txt(Node(goldRow, "ResultGoldLabelText"), "", 30, TextAlignmentOptions.MidlineLeft).rectTransform,
-                 -5, 30, 240, 44);
+                 -10, 28, 230, 44);
             var value = Txt(Node(goldRow, "ResultGoldValueText"), "+0", 52, TextAlignmentOptions.MidlineLeft);
             value.color = new Color(1f, 0.85f, 0.3f);
-            Left(value.rectTransform, -5, -20, 240, 64);
+            Left(value.rectTransform, -10, -20, 230, 64);
 
-            var chestRow = Img(Node(popup, "ResultChestRow"), P("result_rowpanel")).rectTransform;
-            Center(chestRow, 0, -112, 500, 150);
+            var chestRow = Img(Node(box, "ResultChestRow"), P("result_rowpanel")).rectTransform;
+            Center(chestRow, 0, -86, 460, 140);
             var chest = Img(Node(chestRow, "ResultChestArt"), L("chest_silver"));
             chest.preserveAspect = true;
-            Center(chest.rectTransform, -115, 0, 180, 124);
+            Center(chest.rectTransform, -105, 0, 170, 117);
             Left(Txt(Node(chestRow, "ResultChestNameText"), "", 32, TextAlignmentOptions.MidlineLeft).rectTransform,
-                 15, 0, 220, 50);
+                 10, 0, 210, 50);
 
-            var warn = Img(Node(popup, "ResultWarnBar"), P("result_warnbar"));
+            var warn = Img(Node(box, "ResultWarnBar"), P("result_warnbar"));
             if (!File.Exists($"{PartsDir}/result_warnbar.png")) warn.color = new Color(0.8f, 0.15f, 0.15f, 0.85f);
-            Center(warn.rectTransform, 0, -234, 480, 50);
-            var warnText = Txt(Node(warn.transform, "ResultWarnText"), "", 22, TextAlignmentOptions.Center);
+            Center(warn.rectTransform, 0, -192, 440, 46);
+            // 띠 왼쪽 끝에 경고 삼각형이 그려져 있다 — 글자는 그 오른쪽 칸에만 쓴다
+            var warnText = Txt(Node(warn.transform, "ResultWarnText"), "", 20, TextAlignmentOptions.Center);
             warnText.color = new Color(1f, 0.45f, 0.4f);
-            Center(warnText.rectTransform, 20, 0, 400, 40);
+            Center(warnText.rectTransform, 30, 0, 340, 40);
+            warnText.enableAutoSizing = true;
+            warnText.fontSizeMin = 14;
+            warnText.fontSizeMax = 20;
 
-            var ok = Img(Node(popup, "ResultOkButton"), P("button_yellow_wide")).rectTransform;
-            Center(ok, 0, -318, 290, 80);
+            var ok = Img(Node(box, "ResultOkButton"), P("button_yellow_wide")).rectTransform;
+            Center(ok, 0, -295, 272, 76);
             Btn(ok);
             var okText = Txt(Node(ok, "ResultOkText"), "OK", 40, TextAlignmentOptions.Center, plain: true);
             okText.color = new Color(0.12f, 0.1f, 0.05f);
@@ -401,6 +410,21 @@ namespace Game.Editor
             return node;
         }
 
+        /// <summary>
+        /// 시안 한 장(720×1280) 크기의 판을 **화면 가운데**에 둔다 — 배경 · 어둡게 막 말고는 전부 이 안에 담는다.
+        ///
+        /// 폰(720×1600) · 태블릿(960×1280) 어디서든 시안 그대로 가운데에 뜬다(2026-09-18 지시
+        /// 「모든 UI 는 가운데」). `ScreenFitLock` 을 붙여 `ScreenFit` 이 이 판과 그 안을 가장자리로
+        /// 끌어 붙이지 않게 한다 — 안 붙이면 카드는 위로, START 는 아래로 갈라졌다.
+        /// </summary>
+        private static RectTransform Content(Transform parent, string name)
+        {
+            var box = Node(parent, name);
+            Center(box, 0, 0, 720, 1280);
+            box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            return box;
+        }
+
         private static RectTransform Node(Transform parent, string name)
         {
             var go = new GameObject(name, typeof(RectTransform)) { layer = 5 };
@@ -428,6 +452,7 @@ namespace Game.Editor
             t.alignment = align;
             t.color = Color.white;
             t.raycastTarget = false;
+            t.fontStyle = FontStyles.Bold;   // 시안 글자는 전부 굵다
             t.textWrappingMode = TextWrappingModes.NoWrap;
             t.overflowMode = TextOverflowModes.Overflow;
             return t;

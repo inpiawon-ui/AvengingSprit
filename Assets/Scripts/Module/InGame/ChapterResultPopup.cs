@@ -75,8 +75,25 @@ namespace Game.Module.InGame
             _ui.SetText("ResultChestNameText", Localize.Get($"chest.{e.RewardChestKey}.name"));
 
             _ui.SetActive("ResultWarnBar", !e.ChestAccepted);
+            // 경고 띠가 없으면 안쪽 판 아래가 빈다 — 두 줄을 띠 몫의 절반만큼 내려 위아래를 고른다
+            float drop = e.ChestAccepted ? RowDropWithoutWarn : 0f;
+            ShiftRow("ResultGoldRow", ref _goldRowY, drop);
+            ShiftRow("ResultChestRow", ref _chestRowY, drop);
             _ui.SetText("ResultWarnText", Localize.Get("ui.lobby.chest.full"));
             _ui.SetText("ResultOkText", "OK");
+        }
+
+        /// <summary>경고 띠(46) + 간격이 빠질 때 두 줄을 내리는 거리 — 그 절반.</summary>
+        private const float RowDropWithoutWarn = 28f;
+
+        // 빌더가 세운 자리. 처음 한 번 기억해 두고 거기서부터 옮긴다 — 창을 다시 띄워도 안 밀리게.
+        private float? _goldRowY, _chestRowY;
+
+        private void ShiftRow(string node, ref float? baseY, float drop)
+        {
+            if (_ui.Find(node) is not RectTransform row) return;
+            baseY ??= row.anchoredPosition.y;
+            row.anchoredPosition = new Vector2(row.anchoredPosition.x, baseY.Value - drop);
         }
 
         private Sprite ChestArtOf(string key)
