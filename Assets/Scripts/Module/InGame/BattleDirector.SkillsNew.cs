@@ -443,11 +443,6 @@ namespace Game.Module.InGame
         /// <summary>표적 하나가 찍히는 간격(초).</summary>
         private const float MarkStagger = 0.07f;
 
-        /// <summary>표적 고리가 도는 속도(초당 도). 느리게 — 빠르면 «돌아가는 장식»이 된다.</summary>
-        private const float MarkSpin = 42f;
-
-        private static readonly Color MarkColor = new(1f, 0.35f, 0.3f);
-
         private readonly List<(Unit Target, float Delay, float Seconds, int Percent)> _markQueue = new();
 
         /// <summary>갱스터 — 방 전체에 표식. 패시브(20% 즉사)와 한 쌍이다.</summary>
@@ -490,20 +485,8 @@ namespace Game.Module.InGame
                 e.ApplyAmp(q.Percent, q.Seconds);
                 e.SetMark(q.Seconds);
                 // ⚠ 표적은 **표식이 걸려 있는 내내 붙어 돈다.** 한 번 깜빡이고 사라지면
-                //   누가 찍혔는지 알 수 없다(기획 2026-09-15). 크기도 천천히 오르내린다.
-                // 덩치를 감싸야 «찍혔다»로 읽힌다 — 큰 몸에 작은 고리를 얹으면 배지처럼 보인다
-                float ring = Mathf.Clamp(e.BodyRadius * 2.6f, MarkFxSize, MarkFxSize * 2.4f);
-                var im = TakeLoopFx("mark", e.Position, ring);
-                if (im != null)
-                {
-                    im.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-                    im.SetSpin(MarkSpin);        // 천천히 돈다 — 멈춰 있으면 도장 찍힌 그림이다
-                    im.SetTint(MarkColor);
-                    _markFx.Add((e, im, q.Seconds));
-                }
-                // 찍히는 순간 — 조이는 고리와 반짝임. 어디가 찍혔는지 눈이 따라간다.
-                _pfx?.Ring(e.Position, MarkColor, ring * 1.5f);
-                _pfx?.Sparkle(e.Position, MarkColor, 0.7f);
+                //   누가 찍혔는지 알 수 없다(기획 2026-09-15).
+                ShowReticleOn(e, ReticleKind.Mark, q.Seconds);
             }
         }
 

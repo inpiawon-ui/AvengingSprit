@@ -208,8 +208,12 @@ namespace Game.Module.InGame
 
                 // 겨눈 자리에 표식을 찍어 둔다. 예고 내내 떠 있어야
                 // "저기가 찍혔다 — 몸을 갈아타라" 가 읽힌다.
+                // ⚠ 같은 그림을 **색도 없이** 띄우고 있었다 — 내가 찍은 표식과 보스가
+                //   나를 겨눈 것이 구별되지 않았다. 지금은 주황이 «보스가 노린다»는 뜻이다.
                 case BossDraw.ExecutionLock:
-                    _lockMark = PlayFx("mark", _danger.Origin, Mathf.Max(96f, _danger.Radius), loop: true);
+                    _lockMark = ShowReticle(_danger.Origin,
+                                            Mathf.Max(ReticleMinSize, _danger.Radius),
+                                            ReticleKind.BossLock);
                     break;
             }
         }

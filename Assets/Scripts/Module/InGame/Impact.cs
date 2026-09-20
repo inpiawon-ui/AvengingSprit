@@ -75,7 +75,23 @@ namespace Game.Module.InGame
             _pulseTime = 0f;
         }
 
-        private void ClearPulse() => _pulseSeconds = 0f;
+        private void ClearPulse() { _pulseSeconds = 0f; _snapLeft = 0f; }
+
+        // ── 조여드는 잠금(snap) ─────────────────────────────────
+        //
+        // 표적이 **제 크기 그대로 툭 나타나면** 「붙었다」가 아니라 「그려졌다」로 읽힌다.
+        // 크게 벌어진 채 나타나 제 크기로 조여들어야 조준이 걸린 것으로 보인다.
+        // 맥박(SetPulse)보다 **먼저** 끝나고, 끝나면 맥박에 자리를 넘긴다.
+
+        private float _snapFrom, _snapSpan, _snapLeft;
+
+        /// <summary><paramref name="from"/> 배에서 1배로 <paramref name="seconds"/> 동안 조여든다.</summary>
+        public void SetSnap(float from, float seconds)
+        {
+            _snapFrom = Mathf.Max(1f, from);
+            _snapSpan = Mathf.Max(0.02f, seconds);
+            _snapLeft = _snapSpan;
+        }
 
         public void Cache(RectTransform parent, float size)
         {
@@ -244,7 +260,15 @@ namespace Game.Module.InGame
                 _image.color = new Color(_tint.r, _tint.g, _tint.b, _tint.a * k);
             }
 
-            if (_pulseSeconds > 0f && !_isBeam)
+            if (_snapLeft > 0f && !_isBeam)
+            {
+                _snapLeft -= dt;
+                // 끝으로 갈수록 느려진다(제곱) — 등속으로 조이면 기계가 닫히는 것처럼 뻣뻣하다
+                float t = Mathf.Clamp01(_snapLeft / _snapSpan);
+                float k = 1f + (_snapFrom - 1f) * t * t;
+                _rect.sizeDelta = new Vector2(_baseSize * k, _baseSize * k);
+            }
+            else if (_pulseSeconds > 0f && !_isBeam)
             {
                 _pulseTime += dt;
                 // 0 → 1 → 0 을 왕복. 사인이 아니라 삼각파라 등속으로 오간다 —

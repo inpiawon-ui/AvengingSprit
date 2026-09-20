@@ -832,7 +832,9 @@ namespace Game.Module.InGame
             _markTransfersLeft--;
             next.ApplyAmp(_markPercent, left);
             next.SetMark(left);
-            PlayFx("mark", next.Position, 48f, loop: false);
+            // ⚠ 예전에는 48px 짜리가 **한 번 깜빡이고 끝**이었다 — 옮겨 붙은 것은 봤는데
+            //   누구에게 붙었는지는 다음 순간 알 수 없었다. 스킬 표식과 같은 표적을 붙인다.
+            ShowReticleOn(next, ReticleKind.Mark, left);
         }
 
         // ── 호퍼 · 도약 강타 ─────────────────────────────────────
@@ -930,6 +932,9 @@ namespace Game.Module.InGame
                 if (list[i] == null || !list[i].IsAlive) continue;
                 list[i].ApplyAmp(_cursePercent, left);
                 list[i].SetMark(left);
+                // ⚠ 여기는 **아무것도 안 그리고 있었다.** 저주가 옆으로 번졌는데 화면에는
+                //   표시가 없어, 왜 저 적이 더 아프게 맞는지 알 길이 없었다.
+                ShowReticleOn(list[i], ReticleKind.Curse, left);
             }
             // Lv5 미만이면 한 번 번지고 끝이다. 연쇄가 아니면 여기서 꺼 둔다.
             if (!_curseSpreadChains) _curseSpreadMeters = 0f;
