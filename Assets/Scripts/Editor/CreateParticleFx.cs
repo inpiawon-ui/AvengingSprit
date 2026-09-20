@@ -32,8 +32,11 @@ namespace Game.EditorTools
         private const string Group = "particlefx";
         private const string Label = "label_particlefx";
 
-        /// <summary>더하기로 섞을 그림 — 빛나는 것. 나머지는 보통 알파 합성이다.</summary>
-        private static readonly string[] Additive = { "spark", "glow" };
+        /// <summary>
+        /// 더하기로 섞을 그림 — **빛나는 것**. 겹칠수록 밝아져야 번쩍임이 된다.
+        /// 덩어리(연기·파편)는 빛이 아니라 물체라 보통 알파 합성이다 — 겹쳐도 밝아지면 안 된다.
+        /// </summary>
+        private static readonly string[] Additive = { "spark", "glow", "ember", "streak", "ring", "star4" };
 
         [MenuItem("Tools/Game/파티클/파티클 재질 만들기")]
         public static void Build()

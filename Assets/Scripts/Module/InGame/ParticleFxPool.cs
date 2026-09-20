@@ -14,6 +14,14 @@ namespace Game.Module.InGame
         Glow,
         /// <summary>파편 — 돌며 튄다.</summary>
         Shard,
+        /// <summary>잔불 — 작은 불씨가 떠오르다 꺼진다.</summary>
+        Ember,
+        /// <summary>속도선 — 날아가는 방향으로 길게 늘어난다.</summary>
+        Streak,
+        /// <summary>충격파 고리 — 한 장이 퍼지며 커진다.</summary>
+        Ring,
+        /// <summary>반짝이 — 치명타·획득 같은 «좋은 일»에 튄다.</summary>
+        Star4,
     }
 
     /// <summary>
@@ -104,6 +112,25 @@ namespace Game.Module.InGame
                      count: Mathf.RoundToInt(7 * power), speed: 300f * power,
                      size: 13f, life: 0.5f, spin: 520f);
 
+        /// <summary>퍼지는 고리 — 한 장이 커지며 사라진다. 폭발의 «밀려 나감»을 맡는다.</summary>
+        public void Ring(Vector2 at, Color color, float size)
+            => Burst(ParticleFxKind.Ring, at, color,
+                     count: 1, speed: 0f, size: size, life: 0.3f, spin: 0f);
+
+        /// <summary>떠오르는 잔불 — 불타는 자리에 몇 알씩 계속 뿌린다.</summary>
+        public void Embers(Vector2 at, Color color, int count, float spread)
+        {
+            for (int i = 0; i < count; i++)
+                Burst(ParticleFxKind.Ember, at + Random.insideUnitCircle * spread, color,
+                      count: 1, speed: 40f, size: 14f, life: 0.8f, spin: 0f);
+        }
+
+        /// <summary>반짝이 — 치명타·획득처럼 «좋은 일»에.</summary>
+        public void Sparkle(Vector2 at, Color color, float power = 1f)
+            => Burst(ParticleFxKind.Star4, at, color,
+                     count: Mathf.RoundToInt(5 * power), speed: 150f * power,
+                     size: 22f, life: 0.45f, spin: 0f);
+
         // ── 알맹이 ──────────────────────────────────────────────
 
         /// <summary>
@@ -146,7 +173,22 @@ namespace Game.Module.InGame
             ParticleFxKind.Spark => 320f,
             ParticleFxKind.Shard => 620f,
             ParticleFxKind.Smoke => -40f,    // 연기는 떠오른다
+            ParticleFxKind.Ember => -90f,    // 불씨도 떠오른다 — 연기보다 가볍다
             _ => 0f,
+        };
+
+        /// <summary>
+        /// 종류마다 «살아 있는 동안 크기가 어떻게 변하나».
+        ///
+        /// 고리는 **커지며** 사라져야 밀려 나가는 것으로 읽히고,
+        /// 빛은 **줄며** 사라져야 번쩍임이 된다. 나머지는 그대로다.
+        /// </summary>
+        private static AnimationCurve SizeCurveOf(ParticleFxKind kind) => kind switch
+        {
+            ParticleFxKind.Ring => AnimationCurve.EaseInOut(0f, 0.25f, 1f, 1f),
+            ParticleFxKind.Glow => AnimationCurve.EaseInOut(0f, 1f, 1f, 0.35f),
+            ParticleFxKind.Smoke => AnimationCurve.EaseInOut(0f, 0.7f, 1f, 1.15f),
+            _ => null,
         };
 
         private ParticleSystem SystemOf(ParticleFxKind kind)
@@ -188,6 +230,14 @@ namespace Game.Module.InGame
             force.enabled = true;
             force.space = ParticleSystemSimulationSpace.Local;
             force.y = new ParticleSystem.MinMaxCurve(-GravityOf(kind));
+
+            var curve = SizeCurveOf(kind);
+            if (curve != null)
+            {
+                var size = ps.sizeOverLifetime;
+                size.enabled = true;
+                size.size = new ParticleSystem.MinMaxCurve(1f, curve);
+            }
 
             var renderer = go.GetComponent<ParticleSystemRenderer>();
             renderer.renderMode = ParticleSystemRenderMode.Billboard;

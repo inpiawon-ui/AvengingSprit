@@ -5392,6 +5392,7 @@ namespace Game.Module.InGame
 
         private void TickFields(float dt)
         {
+            TickFieldParticles(dt);
             for (int i = 0; i < _fields.Count; i++)
             {
                 var f = _fields[i];
@@ -6445,6 +6446,10 @@ namespace Game.Module.InGame
         /// </summary>
         private Impact PlayFx(string name, Vector2 at, float size, bool loop, float over = 0f)
         {
+            // 한 번 터지는 표시에만 알갱이를 얹는다 — 돌아가는 상태 표시(쉴드·스턴)에
+            // 얹으면 알갱이가 끊임없이 흩날려 «상태»가 아니라 «사건»으로 읽힌다.
+            if (!loop) EmitFxParticles(name, at, size);
+
             var frames = FxFrames(name);
             if (frames == null) return null;
 

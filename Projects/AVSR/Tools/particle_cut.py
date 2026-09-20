@@ -6,10 +6,14 @@
   지우므로, 그림 안쪽의 같은 색은 그대로 남는다.
 
 쓰는 법:
-  python particle_cut.py <납품 판> <가로칸> <세로칸> <결과 한 변> <이름1> <이름2> ... [--apply]
+  python particle_cut.py <납품 판> <가로칸> <세로칸> <결과 한 변> <이름1> <이름2> ... [--soft] [--apply]
 
   예) python particle_cut.py out_particles_raw.png 2 2 64 spark smoke glow shard --apply
   --apply 를 주면 Assets/BaseResource/ParticleFx/ 에 넣는다.
+
+⚠ `--soft` — **검은 배경에 매끈하게 그려 온 판**은 이쪽을 쓴다.
+  밝기를 그대로 알파로 삼아 가장자리가 부드럽게 사라진다(도려내지 않는다).
+  각진 픽셀 그림에는 쓰지 마라 — 밝기가 낮은 부분까지 반투명해진다.
 
 ⚠ 결과는 **정사각 캔버스에 가운데 정렬**이다. 파티클 판은 정사각이라 그림이 가로로 길면
   늘어나 버린다 — 여백째로 넣어야 비율이 산다.
@@ -58,10 +62,26 @@ def background_mask(rgb):
     return out
 
 
-def cut_cell(cell, size):
+def cut_cell(cell, size, soft=False, gain=1.0, floor=0.0):
     rgb = np.asarray(cell.convert("RGB"))
-    alpha = np.where(background_mask(rgb), 0, 255).astype(np.uint8)
-    px = np.dstack([rgb, alpha])
+    if soft:
+        # 밝기가 곧 알파다 — 빛은 어두운 데서 서서히 사라진다.
+        lum = rgb.max(axis=2).astype(np.float32)
+        # ⚠ 납품 판에 옅은 얼룩(생성기가 남긴 후광)이 딸려 오는 일이 있다.
+        #   `--floor` 아래 밝기는 통째로 버린다 — 안 버리면 조각 둘레에 때가 낀다.
+        if floor > 0:
+            lum = np.clip((lum - floor) * (235.0 / max(1.0, 235.0 - floor)), 0, 255)
+        alpha = np.clip(lum * gain * 255.0 / 235.0, 0, 255).astype(np.uint8)
+        if gain > 1.5:
+            # 덩어리(연기·파편)는 **명암을 색에 남긴다.** 알파만 키워 속을 꽉 채운다.
+            px = np.dstack([rgb, alpha])
+        else:
+            # 빛나는 것은 색을 흰쪽으로 끌어올린다 — 어두움은 색이 아니라 «옅음»이다.
+            norm = np.where(lum[..., None] > 1, rgb * (255.0 / np.maximum(lum[..., None], 1)), 255)
+            px = np.dstack([np.clip(norm, 0, 255).astype(np.uint8), alpha])
+    else:
+        alpha = np.where(background_mask(rgb), 0, 255).astype(np.uint8)
+        px = np.dstack([rgb, alpha])
 
     ys, xs = np.nonzero(alpha > 0)
     if len(xs) == 0:
@@ -78,8 +98,10 @@ def cut_cell(cell, size):
                        .resize((max(1, round(w * scale)), max(1, round(h * scale))), Image.BOX)).astype(np.float32)
     a = small[..., 3:4]
     col = np.where(a > 0, small[..., :3] * 255.0 / np.maximum(a, 1e-3), 0)
-    hard = (a[..., 0] >= HARD) * 255
-    img = Image.fromarray(np.dstack([np.clip(col, 0, 255).astype(np.uint8), hard.astype(np.uint8)]), "RGBA")
+    # 각진 그림은 알파를 굳히고(반투명 테두리가 없다), 매끈한 그림은 그대로 둔다
+    out_a = a[..., 0] if soft else (a[..., 0] >= HARD) * 255
+    img = Image.fromarray(np.dstack([np.clip(col, 0, 255).astype(np.uint8),
+                                     np.clip(out_a, 0, 255).astype(np.uint8)]), "RGBA")
 
     out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     out.paste(img, ((size - img.width) // 2, (size - img.height) // 2))
@@ -91,6 +113,14 @@ def main():
     cols, rows, size = int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
     names = [a for a in sys.argv[5:] if not a.startswith("--")]
     apply = "--apply" in sys.argv
+    soft = "--soft" in sys.argv
+    gain = 1.0
+    floor = 0.0
+    for a in sys.argv:
+        if a.startswith("--gain="):
+            gain = float(a.split("=", 1)[1])
+        if a.startswith("--floor="):
+            floor = float(a.split("=", 1)[1])
 
     im = Image.open(sheet).convert("RGB")
     cw, ch = im.width // cols, im.height // rows
@@ -101,7 +131,7 @@ def main():
         if name == "-":
             continue
         r, c = divmod(i, cols)
-        out, w, h = cut_cell(im.crop((c * cw, r * ch, (c + 1) * cw, (r + 1) * ch)), size)
+        out, w, h = cut_cell(im.crop((c * cw, r * ch, (c + 1) * cw, (r + 1) * ch)), size, soft, gain, floor)
         out.save(OUT / f"{name}.png")
         made.append(name)
         print(f"{name:8s} {size}x{size} 캔버스 · 잉크 {w}x{h}")
