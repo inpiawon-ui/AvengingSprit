@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -433,22 +434,76 @@ namespace Game.Module.InGame
 
         private float _barrierSeconds;
 
+        // ── 갱스터 · 일제 마킹 ──────────────────────────────────
+        //
+        // 「일제」라고 해서 **한 프레임에 전부 찍으면 아무 일도 안 일어난 것처럼 보인다** —
+        // 눈이 한 군데씩 따라갈 시간이 없어서 그냥 «화면이 바뀌었다»로 읽힌다.
+        // 가까운 적부터 0.07초 간격으로 훑어 찍는다. 다 찍히는 데 0.3초면 충분하다.
+
+        /// <summary>표적 하나가 찍히는 간격(초).</summary>
+        private const float MarkStagger = 0.07f;
+
+        /// <summary>표적 고리가 도는 속도(초당 도). 느리게 — 빠르면 «돌아가는 장식»이 된다.</summary>
+        private const float MarkSpin = 42f;
+
+        private static readonly Color MarkColor = new(1f, 0.35f, 0.3f);
+
+        private readonly List<(Unit Target, float Delay, float Seconds, int Percent)> _markQueue = new();
+
         /// <summary>갱스터 — 방 전체에 표식. 패시브(20% 즉사)와 한 쌍이다.</summary>
         private void GangsterMarkAll(Unit me)
         {
             float seconds = BaseAxis(GangsterMarkSeconds);   // Lv1 3 → Lv4 5초
             int percent = _markPercent;
+
+            // 가까운 적부터 — 훑는 방향이 있어야 «시선이 지나갔다»로 읽힌다
+            _markQueue.Clear();
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || e.IsDying) continue;
-                e.ApplyAmp(percent, seconds);
-                e.SetMark(seconds);
+                _markQueue.Add((e, 0f, seconds, percent));
+            }
+            var from = me.Position;
+            _markQueue.Sort((a, b) => (a.Target.Position - from).sqrMagnitude
+                                      .CompareTo((b.Target.Position - from).sqrMagnitude));
+            for (int i = 0; i < _markQueue.Count; i++)
+            {
+                var q = _markQueue[i];
+                _markQueue[i] = (q.Target, i * MarkStagger, q.Seconds, q.Percent);
+            }
+        }
+
+        /// <summary>차례가 된 표적을 하나씩 찍는다.</summary>
+        private void TickMarkQueue(float dt)
+        {
+            for (int i = _markQueue.Count - 1; i >= 0; i--)
+            {
+                var q = _markQueue[i];
+                float left = q.Delay - dt;
+                if (left > 0f) { _markQueue[i] = (q.Target, left, q.Seconds, q.Percent); continue; }
+
+                _markQueue.RemoveAt(i);
+                var e = q.Target;
+                if (e == null || !e.IsAlive || e.IsDying) continue;
+
+                e.ApplyAmp(q.Percent, q.Seconds);
+                e.SetMark(q.Seconds);
                 // ⚠ 표적은 **표식이 걸려 있는 내내 붙어 돈다.** 한 번 깜빡이고 사라지면
                 //   누가 찍혔는지 알 수 없다(기획 2026-09-15). 크기도 천천히 오르내린다.
-                var im = TakeLoopFx("mark", e.Position, MarkFxSize);
-                im?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-                if (im != null) _markFx.Add((e, im, seconds));
+                // 덩치를 감싸야 «찍혔다»로 읽힌다 — 큰 몸에 작은 고리를 얹으면 배지처럼 보인다
+                float ring = Mathf.Clamp(e.BodyRadius * 2.6f, MarkFxSize, MarkFxSize * 2.4f);
+                var im = TakeLoopFx("mark", e.Position, ring);
+                if (im != null)
+                {
+                    im.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+                    im.SetSpin(MarkSpin);        // 천천히 돈다 — 멈춰 있으면 도장 찍힌 그림이다
+                    im.SetTint(MarkColor);
+                    _markFx.Add((e, im, q.Seconds));
+                }
+                // 찍히는 순간 — 조이는 고리와 반짝임. 어디가 찍혔는지 눈이 따라간다.
+                _pfx?.Ring(e.Position, MarkColor, ring * 1.5f);
+                _pfx?.Sparkle(e.Position, MarkColor, 0.7f);
             }
         }
 
@@ -571,6 +626,7 @@ namespace Game.Module.InGame
                 _spits[i] = (fx, target, from, t);
             }
             TickChain(dt);
+            TickMarkQueue(dt);
             TickSkillAura(ref _reflectAuraFx, IsReflectingAll);
             TickSkillAura(ref _critAuraFx, _critLockSeconds > 0f);
             for (int i = _markFx.Count - 1; i >= 0; i--)
