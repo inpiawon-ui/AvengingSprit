@@ -50,8 +50,11 @@ namespace Game.Module.InGame
         private const float CastFlashSeconds = 0.26f;
         private const float CastFlashPeak = 0.5f;
 
-        /// <summary>시전 알갱이 세기. 평타 타격(1)보다 훨씬 커야 «스킬»로 읽힌다.</summary>
-        private const float CastParticlePower = 2.6f;
+        /// <summary>시전 불티 세기. 평타 타격(1)보다 훨씬 커야 «스킬»로 읽힌다.</summary>
+        private const float CastParticlePower = 2.2f;
+
+        /// <summary>시전 연기 세기. **불티보다 훨씬 작게** — 연기는 뒤에 나올 연출을 가린다.</summary>
+        private const float CastSmokePower = 0.9f;
 
         /// <summary>
         /// 발밑에 깔리는 그림(링) 전용 자리. 탄 레이어는 몸보다 **위**라
@@ -167,8 +170,11 @@ namespace Game.Module.InGame
             HitStop(CastHitStop);
             Shake(CastReleaseShake);
             // 알갱이 — 스킬 색으로 크게 한 번. 발밑에서 연기가 같이 밀려 나간다.
+            // ⚠ 연기를 시전 세기(2.6)로 띄웠더니 **방 한가운데가 통째로 가려졌다.**
+            //   그 뒤에 나가는 스킬 연출(표적이 찍히는 것 등)이 연기에 묻힌다.
+            //   불티는 세게, 연기는 발밑에 얕게.
             _pfx?.Hit(me.Position, ParticleElement.Fire, CastParticlePower);
-            _pfx?.Puff(feet, ParticleElement.Dust, CastParticlePower);
+            _pfx?.Puff(feet, ParticleElement.Dust, CastSmokePower);
             CastHostSkill(me);
         }
 

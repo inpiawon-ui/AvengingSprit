@@ -93,7 +93,11 @@ namespace Game.Module.InGame
             int key = KeyOf(kind, element);
             _materials[key] = material;
             if (_systems.TryGetValue(key, out var ps))
-                ps.GetComponent<ParticleSystemRenderer>().sharedMaterial = material;
+            {
+                var r = ps.GetComponent<ParticleSystemRenderer>();
+                r.sharedMaterial = material;
+                r.enabled = true;   // 재질이 없어 꺼 두었던 것이 늦게 오면 다시 켠다
+            }
         }
 
         public void SetSortingOrder(int order)
@@ -146,6 +150,40 @@ namespace Game.Module.InGame
             for (int i = 0; i < count; i++)
                 Burst(ParticleFxKind.Ember, element, at + Random.insideUnitCircle * spread,
                       count: 1, speed: 40f, size: 16f, life: 0.8f, spin: 0f);
+        }
+
+        /// <summary>
+        /// 한 점에서 다른 점으로 **쏜다.** 알갱이가 날아가는 것이 보여야
+        /// 「저기로 갔다」가 읽힌다 — 결과만 나타나면 눈이 못 따라간다.
+        ///
+        /// <paramref name="seconds"/> 안에 닿도록 속도를 맞춘다.
+        /// </summary>
+        public void Dart(Vector2 from, Vector2 to, ParticleElement element, float seconds, int count = 3)
+        {
+            var d = to - from;
+            float dist = d.magnitude;
+            if (dist < 1f || seconds <= 0f) return;
+            var dir = d / dist;
+            float speed = dist / seconds;
+
+            var ps = SystemOf(ParticleFxKind.Streak, element);
+            var p = new ParticleSystem.EmitParams
+            {
+                applyShapeToPosition = false,
+                startColor = Color.white,
+                startLifetime = seconds,
+            };
+            for (int i = 0; i < count; i++)
+            {
+                // 앞뒤로 살짝 흩어 놓아 **한 줄기**가 아니라 «쏟아져 간다»로 보이게
+                float lead = i / (float)Mathf.Max(1, count) * 0.22f;
+                p.position = from + dir * (dist * lead * 0.25f);
+                p.velocity = dir * speed * Random.Range(0.94f, 1.06f);
+                p.startSize = 40f * Random.Range(0.8f, 1.15f);
+                p.startLifetime = seconds * (1f - lead * 0.3f);
+                p.rotation = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                ps.Emit(p, 1);
+            }
         }
 
         /// <summary>반짝이 — 치명타·획득처럼 «좋은 일»에.</summary>
@@ -271,7 +309,17 @@ namespace Game.Module.InGame
             renderer.sortingOrder = _sortingOrder;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
-            if (_materials.TryGetValue(key, out var mat)) renderer.sharedMaterial = mat;
+            // ⚠ 재질을 못 찾으면 유니티 **기본 파티클 재질**로 떨어지는데, 그것이 화면에
+            //   **반투명 네모**로 그려진다. 표가 한 칸 비었을 뿐인데 사각형이 뜬다 —
+            //   같은 모양의 불(Fire) 것으로 대신하고, 그것마저 없으면 아예 그리지 않는다.
+            if (!_materials.TryGetValue(key, out var mat))
+                _materials.TryGetValue(KeyOf(kind, ParticleElement.Fire), out mat);
+            if (mat != null) renderer.sharedMaterial = mat;
+            else
+            {
+                renderer.enabled = false;
+                Debug.LogWarning($"[파티클] 재질 없음 — {kind}/{element}. 그리지 않는다.");
+            }
 
             ps.Play();          // 알갱이를 직접 밀어 넣으려면 시스템이 돌고 있어야 한다
             _systems[key] = ps;

@@ -436,14 +436,37 @@ namespace Game.Module.InGame
 
         // ── 갱스터 · 일제 마킹 ──────────────────────────────────
         //
-        // 「일제」라고 해서 **한 프레임에 전부 찍으면 아무 일도 안 일어난 것처럼 보인다** —
-        // 눈이 한 군데씩 따라갈 시간이 없어서 그냥 «화면이 바뀌었다»로 읽힌다.
-        // 가까운 적부터 0.07초 간격으로 훑어 찍는다. 다 찍히는 데 0.3초면 충분하다.
+        // ⚠ **유저가 «찍히는 것»을 봐야 한다.** 고친 내력이 둘이다.
+        //
+        //   ① 「일제」라고 한 프레임에 전부 찍었더니 아무 일도 안 일어난 것처럼 보였다 —
+        //      눈이 한 군데씩 따라갈 시간이 없어 그냥 «화면이 바뀌었다»로 읽힌다.
+        //   ② 하나씩 찍게 했더니 이번엔 **터지는 섬광에 묻혔다.** 시전 섬광이 방을 덮는
+        //      0.26초 사이에 조용히 생겨 있어서, 유저는 한참 뒤에야 «저게 뭐지?» 했다.
+        //
+        // 그래서 지금은 이렇게 한다.
+        //   섬광이 빠지기를 기다린다 → 시전자에서 적으로 **조준선이 날아간다** →
+        //   닿는 순간 표적이 조여들며 박힌다 → 다음 적으로. 마지막 한 발에 화면이 한 번 멈칫한다.
+        //
+        // 시선이 «총구 → 날아가는 선 → 꽂히는 표적» 으로 끌려간다. 그게 전부다.
 
-        /// <summary>표적 하나가 찍히는 간격(초).</summary>
-        private const float MarkStagger = 0.07f;
+        /// <summary>섬광이 빠질 때까지 기다리는 시간. 이 사이에 찍으면 하얗게 묻힌다.</summary>
+        private const float MarkLeadSeconds = 0.16f;
 
-        private readonly List<(Unit Target, float Delay, float Seconds, int Percent)> _markQueue = new();
+        /// <summary>표적 하나가 찍히는 간격(초). 너무 빠르면 다시 «한꺼번에»가 된다.</summary>
+        private const float MarkStagger = 0.11f;
+
+        /// <summary>조준선이 적에게 닿는 데 걸리는 시간. 짧아야 «쏜 것»이지 «떠다니는 것»이 아니다.</summary>
+        private const float MarkTravelSeconds = 0.13f;
+
+        /// <summary>마지막 한 발에 화면을 멈칫하게 하는 시간 — 「다 찍었다」를 맺는다.</summary>
+        private const float MarkFinishHitStop = 0.06f;
+
+        /// <summary>
+        /// 찍을 차례를 기다리는 적들.
+        /// <c>DartLeft</c> 는 조준선을 쏠 때까지, <c>MarkLeft</c> 는 표적이 박힐 때까지.
+        /// 이미 쏜 것은 <c>DartLeft</c> 를 음수로 두어 두 번 쏘지 않는다.
+        /// </summary>
+        private readonly List<(Unit Target, float DartLeft, float MarkLeft, float Seconds, int Percent)> _markQueue = new();
 
         /// <summary>갱스터 — 방 전체에 표식. 패시브(20% 즉사)와 한 쌍이다.</summary>
         private void GangsterMarkAll(Unit me)
@@ -451,42 +474,58 @@ namespace Game.Module.InGame
             float seconds = BaseAxis(GangsterMarkSeconds);   // Lv1 3 → Lv4 5초
             int percent = _markPercent;
 
-            // 가까운 적부터 — 훑는 방향이 있어야 «시선이 지나갔다»로 읽힌다
             _markQueue.Clear();
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || e.IsDying) continue;
-                _markQueue.Add((e, 0f, seconds, percent));
+                _markQueue.Add((e, 0f, 0f, seconds, percent));
             }
+            // 가까운 적부터 — 훑는 방향이 있어야 «시선이 지나갔다»로 읽힌다
             var from = me.Position;
             _markQueue.Sort((a, b) => (a.Target.Position - from).sqrMagnitude
                                       .CompareTo((b.Target.Position - from).sqrMagnitude));
             for (int i = 0; i < _markQueue.Count; i++)
             {
                 var q = _markQueue[i];
-                _markQueue[i] = (q.Target, i * MarkStagger, q.Seconds, q.Percent);
+                float dart = MarkLeadSeconds + i * MarkStagger;
+                _markQueue[i] = (q.Target, dart, dart + MarkTravelSeconds, q.Seconds, q.Percent);
             }
         }
 
-        /// <summary>차례가 된 표적을 하나씩 찍는다.</summary>
+        /// <summary>차례가 된 적에게 조준선을 쏘고, 닿으면 표적을 박는다.</summary>
         private void TickMarkQueue(float dt)
         {
             for (int i = _markQueue.Count - 1; i >= 0; i--)
             {
                 var q = _markQueue[i];
-                float left = q.Delay - dt;
-                if (left > 0f) { _markQueue[i] = (q.Target, left, q.Seconds, q.Percent); continue; }
-
-                _markQueue.RemoveAt(i);
+                float dart = q.DartLeft - dt;
+                float mark = q.MarkLeft - dt;
                 var e = q.Target;
-                if (e == null || !e.IsAlive || e.IsDying) continue;
 
+                // 적이 먼저 죽었으면 조용히 뺀다 — 시체에 조준선을 쏘지 않는다
+                if (e == null || !e.IsAlive || e.IsDying) { _markQueue.RemoveAt(i); continue; }
+
+                // ① 조준선이 나간다
+                if (q.DartLeft > 0f && dart <= 0f && _host != null)
+                {
+                    _pfx?.Dart(_host.MuzzlePosition, e.Position, ParticleElement.Fire, MarkTravelSeconds);
+                    global::Game.Module.Common.GameSound.HostAttack(_host.Key);   // 표에 있는 소리만 쓴다
+                }
+
+                if (mark > 0f) { _markQueue[i] = (e, dart, mark, q.Seconds, q.Percent); continue; }
+
+                // ② 닿았다 — 표적이 박힌다
+                _markQueue.RemoveAt(i);
                 e.ApplyAmp(q.Percent, q.Seconds);
                 e.SetMark(q.Seconds);
                 // ⚠ 표적은 **표식이 걸려 있는 내내 붙어 돈다.** 한 번 깜빡이고 사라지면
                 //   누가 찍혔는지 알 수 없다(기획 2026-09-15).
                 ShowReticleOn(e, ReticleKind.Mark, q.Seconds);
+                Shake(2.5f);
+
+                // 마지막 한 발 — 화면이 한 번 멈칫하며 「다 찍었다」를 맺는다
+                if (_markQueue.Count == 0) HitStop(MarkFinishHitStop);
             }
         }
 
