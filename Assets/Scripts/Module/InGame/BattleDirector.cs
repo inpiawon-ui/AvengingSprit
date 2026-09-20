@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -1860,7 +1860,9 @@ namespace Game.Module.InGame
             var p = f + _zoom * (at - f);
             // 정수로 맞춰 놓지 않으면 픽셀 그림이 매 프레임 미세하게 흔들린다.
             layer.anchoredPosition = new Vector2(Mathf.Round(p.x), Mathf.Round(p.y));
-            layer.localScale = new Vector3(_zoom, _zoom, 1f);
+            // 줌 펀치는 **보이는 것만** 흔든다 — 판정은 `RoomToView` 가 쓰는 `_zoom` 그대로다
+            float z = _zoom * (1f + _zoomPunch);
+            layer.localScale = new Vector3(z, z, 1f);
         }
 
         /// <summary>
@@ -3100,6 +3102,8 @@ namespace Game.Module.InGame
 
             TickShake(dt);
             TickHitStop();
+            TickScreenFlash();
+            TickZoomPunch();
 
             TickPlayer(dt);
             TickAlly(dt);          // 상점에서 산 동료
@@ -9313,3 +9317,4 @@ namespace Game.Module.InGame
         }
     }
 }
+

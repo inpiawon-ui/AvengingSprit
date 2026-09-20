@@ -146,5 +146,53 @@ MonoBehaviour:
   - Chapter: 6
     FromRoom: 1
     NameKr: "\uC57C\uAC04 \uC815\uC720\uC18C"
+  _castColorDefault: {r: 0.45, g: 0.85, b: 1, a: 1}
+  _castColors:
+  - HostKey: death
+    Color: {r: 1, g: 0.22, b: 0.3, a: 1}
+  - HostKey: amazon
+    Color: {r: 1, g: 0.55, b: 0.2, a: 1}
+  - HostKey: amazon_elite
+    Color: {r: 1, g: 0.7, b: 0.25, a: 1}
+  - HostKey: baseball
+    Color: {r: 0.75, g: 0.9, b: 1, a: 1}
+  - HostKey: guru
+    Color: {r: 1, g: 0.85, b: 0.35, a: 1}
+  - HostKey: ninja_chain
+    Color: {r: 0.7, g: 0.55, b: 1, a: 1}
+  - HostKey: thug
+    Color: {r: 1, g: 0.75, b: 0.25, a: 1}
+  - HostKey: hopper_smg
+    Color: {r: 0.6, g: 1, b: 0.35, a: 1}
+  - HostKey: commando_mg
+    Color: {r: 1, g: 0.65, b: 0.2, a: 1}
+  - HostKey: commando_laser
+    Color: {r: 1, g: 0.3, b: 0.35, a: 1}
+  - HostKey: commando_grenade
+    Color: {r: 1, g: 0.5, b: 0.15, a: 1}
+  - HostKey: commando_missile
+    Color: {r: 1, g: 0.4, b: 0.2, a: 1}
+  - HostKey: dragoon
+    Color: {r: 1, g: 0.45, b: 0.1, a: 1}
+  - HostKey: salamander
+    Color: {r: 0.55, g: 1, b: 0.3, a: 1}
+  - HostKey: dragon_blue
+    Color: {r: 0.35, g: 0.7, b: 1, a: 1}
+  - HostKey: snowwoman
+    Color: {r: 0.55, g: 0.95, b: 1, a: 1}
+  - HostKey: ninja
+    Color: {r: 0.6, g: 0.45, b: 1, a: 1}
+  - HostKey: vampire
+    Color: {r: 0.9, g: 0.15, b: 0.45, a: 1}
+  - HostKey: gangster
+    Color: {r: 1, g: 0.8, b: 0.3, a: 1}
+  - HostKey: hopper
+    Color: {r: 0.8, g: 1, b: 0.3, a: 1}
+  - HostKey: white_wizard
+    Color: {r: 1, g: 0.95, b: 0.65, a: 1}
+  - HostKey: medium
+    Color: {r: 0.75, g: 0.35, b: 1, a: 1}
+  - HostKey: robot
+    Color: {r: 0.35, g: 1, b: 0.9, a: 1}
   _ghostLevelCostBase: 200
   _ghostLevelCostStep: 60

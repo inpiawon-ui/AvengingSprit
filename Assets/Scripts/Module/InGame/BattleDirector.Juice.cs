@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Module.InGame
 {
@@ -83,6 +83,7 @@ namespace Game.Module.InGame
             _shake = 0f;
             _shakeOffset = Vector2.zero;
             if (_hitStopLeft > 0f) { _hitStopLeft = 0f; Time.timeScale = 1f; }
+            ClearBigJuice();
         }
 
         // ── 어느 타격이 얼마나 흔드는가 ──────────────────────────
@@ -115,3 +116,4 @@ namespace Game.Module.InGame
         }
     }
 }
+

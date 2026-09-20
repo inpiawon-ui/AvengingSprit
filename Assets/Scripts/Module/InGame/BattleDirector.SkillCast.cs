@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Module.Events;
 using UnityEngine;
 
@@ -41,6 +41,14 @@ namespace Game.Module.InGame
         private const float CastFootDrop = 34f;      // 몸 중심 → 발밑
         private const float CastRingSquash = 0.42f;  // 바닥에 누운 타원
         private const float CastShake = 3f;
+
+        // 스킬이 터지는 순간의 연출 세기(2026-09-20). 시전 흔들림(3)보다 확실히 세야
+        // 「준비」와 「터짐」이 구분된다.
+        private const float CastReleaseShake = 6f;
+        private const float CastZoomPunch = 0.06f;
+        private const float CastHitStop = 0.09f;
+        private const float CastFlashSeconds = 0.26f;
+        private const float CastFlashPeak = 0.5f;
 
         /// <summary>
         /// 발밑에 깔리는 그림(링) 전용 자리. 탄 레이어는 몸보다 **위**라
@@ -146,7 +154,15 @@ namespace Game.Module.InGame
             var fade = PlayFloorStill(feet, CastRingInner, 0.9f);
             fade?.SetLife(0.45f, 0.45f);
 
-            Shake(CastShake);
+            // ── 터지는 순간 (2026-09-20) ───────────────────────────
+            // 흔들림만으로는 «큰 일이 났다» 가 안 된다. 세 가지를 한 프레임에 겹친다.
+            //   섬광 — 그 스킬의 색으로 방을 덮었다 뺀다(무엇이 터졌는지 색으로 읽힌다)
+            //   줌 펀치 — 화면을 확 당겼다 놓는다
+            //   히트스톱 — 아주 잠깐 시간을 늦춰 «한 방» 을 만든다
+            ScreenFlash(_castColor, CastFlashSeconds, CastFlashPeak);
+            ZoomPunch(CastZoomPunch);
+            HitStop(CastHitStop);
+            Shake(CastReleaseShake);
             CastHostSkill(me);
         }
 
@@ -215,3 +231,4 @@ namespace Game.Module.InGame
         }
     }
 }
+
