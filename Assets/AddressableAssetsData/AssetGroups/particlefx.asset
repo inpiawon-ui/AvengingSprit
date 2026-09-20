@@ -15,6 +15,48 @@ MonoBehaviour:
   m_GroupName: particlefx
   m_GUID: f692c7723e5087941852f030315c7125
   m_SerializeEntries:
+  - m_GUID: 04f216accc5994842b3540b6a2d833bb
+    m_Address: ParticleFx/glow_venom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bd9b9624b944f640b85df6c7139d047
+    m_Address: ParticleFx/ember
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e87a947e2d10814db019a61f814248c
+    m_Address: ParticleFx/ring_venom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31d98809d8a7e63458cb82f68cf741c3
+    m_Address: ParticleFx/spark_curse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35cb48b4612886843ace798f6ad1fb00
+    m_Address: ParticleFx/star4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4109b9bd4a90c79448622ee427a8e508
+    m_Address: ParticleFx/shard_dust
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4665c54aa4821734f96746394b67132d
+    m_Address: ParticleFx/ring_ice
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4cc05e75c1f64ad4cb4f28fa9a812848
     m_Address: ParticleFx/shard
     m_ReadOnly: 0
@@ -27,14 +69,62 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 675540e07709ab94bbfcac17e035f6ee
+    m_Address: ParticleFx/ring
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ea2dbdc0674e9d4fa97010eed0781e0
     m_Address: ParticleFx/smoke
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 977d99f6515a700458f25f363d7d31b0
+    m_Address: ParticleFx/ring_curse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a86c500675167d4dbd555a13b21d1c6
+    m_Address: ParticleFx/spark_ice
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a1c9dba57e669cf46ab73155e4d324fb
+    m_Address: ParticleFx/spark_venom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b62f0bbc7a035a64ab5fa126d536b1f1
+    m_Address: ParticleFx/glow_curse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfd34032a0253954f9307a7dc24a946b
     m_Address: ParticleFx/spark
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c37cb75a3742deb4997a99302a029af1
+    m_Address: ParticleFx/smoke_dust
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d9697b8ab127c6246aae7896e9e47a64
+    m_Address: ParticleFx/streak
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f48ab3245e7037e469e8b594460b1ca1
+    m_Address: ParticleFx/glow_ice
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_particlefx

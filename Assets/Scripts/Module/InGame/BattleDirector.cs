@@ -6625,7 +6625,7 @@ namespace Game.Module.InGame
         {
             // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
             // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
-            _pfx?.Hit(at, Color.white);
+            _pfx?.Hit(at, ParticleElement.Fire, 0.8f);
 
             var frames = ImpactFrames(kind);
             if (frames == null) return;
@@ -7185,8 +7185,8 @@ namespace Game.Module.InGame
         {
             u.SetState(EnemyState.Dead);
             // 쓰러지는 그림만으로는 «해치웠다»가 약하다. 부서진 조각과 흙먼지를 같이 뿌린다.
-            _pfx?.Shards(u.Position, Color.white, u.IsBoss ? 3f : 1f);
-            _pfx?.Puff(u.Position, new Color(0.85f, 0.82f, 0.75f), u.IsBoss ? 3f : 1f);
+            _pfx?.Shards(u.Position, ParticleElement.Dust, u.IsBoss ? 3f : 1f);
+            _pfx?.Puff(u.Position, ParticleElement.Dust, u.IsBoss ? 3f : 1f);
             // ⚠ **목록에서 빼기 전에** 옮긴다. 뺀 뒤에 부르면 옆 사람을 찾는
             //   `EnemiesInRange` 가 이미 죽은 자리를 기준으로 도는 것은 같지만,
             //   전이 대상 후보에서 자기 자신을 빼려고 목록 조작에 기대게 된다.

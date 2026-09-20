@@ -36,7 +36,15 @@ namespace Game.EditorTools
         /// 더하기로 섞을 그림 — **빛나는 것**. 겹칠수록 밝아져야 번쩍임이 된다.
         /// 덩어리(연기·파편)는 빛이 아니라 물체라 보통 알파 합성이다 — 겹쳐도 밝아지면 안 된다.
         /// </summary>
+        /// <summary>⚠ 색조만 돌린 변형(`spark_ice` 등)도 같은 합성을 써야 한다 — 이름 앞머리로 가린다.</summary>
         private static readonly string[] Additive = { "spark", "glow", "ember", "streak", "ring", "star4" };
+
+        private static bool IsAdditive(string key)
+        {
+            foreach (var a in Additive)
+                if (key == a || key.StartsWith(a + "_")) return true;
+            return false;
+        }
 
         [MenuItem("Tools/Game/파티클/파티클 재질 만들기")]
         public static void Build()
@@ -68,7 +76,7 @@ namespace Game.EditorTools
                 var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
                 if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, matPath); }
                 mat.shader = shader;
-                SetupBlend(mat, Additive.Contains(key));
+                SetupBlend(mat, IsAdditive(key));
                 mat.SetTexture("_BaseMap", tex);
                 mat.SetColor("_BaseColor", Color.white);
                 EditorUtility.SetDirty(mat);

@@ -27,17 +27,45 @@ namespace Game.Module.InGame
         /// </summary>
         private RectTransform _pfxLayer;
 
-        /// <summary>종류 ↔ 주소. `CreateParticleFx` 에디터 툴이 같은 이름으로 만든다.</summary>
-        private static readonly (ParticleFxKind Kind, string Address)[] ParticleArt =
+        /// <summary>
+        /// 모양 · 속성 ↔ 주소. `CreateParticleFx` 에디터 툴이 같은 이름으로 재질을 만든다.
+        ///
+        /// ⚠ 속성 변형은 **색조만 돌려 구운 그림**이다(`Tools/particle_hue.py`).
+        ///   런타임 곱셈 색 입히기는 칠해진 그림의 결을 죽인다 —
+        ///   주황 불티에 파랑을 곱하면 밝은 데는 회색, 어두운 데는 검정이 되어 «도형»으로 돌아간다.
+        ///
+        /// 전용 그림이 없는 칸은 가장 가까운 것을 돌려 쓴다(얼음 연기 → 흙먼지 연기).
+        /// </summary>
+        private static readonly (ParticleFxKind Kind, ParticleElement Element, string Address)[] ParticleArt =
         {
-            (ParticleFxKind.Spark,  "ParticleFx/spark"),
-            (ParticleFxKind.Smoke,  "ParticleFx/smoke"),
-            (ParticleFxKind.Glow,   "ParticleFx/glow"),
-            (ParticleFxKind.Shard,  "ParticleFx/shard"),
-            (ParticleFxKind.Ember,  "ParticleFx/ember"),
-            (ParticleFxKind.Streak, "ParticleFx/streak"),
-            (ParticleFxKind.Ring,   "ParticleFx/ring"),
-            (ParticleFxKind.Star4,  "ParticleFx/star4"),
+            (ParticleFxKind.Spark,  ParticleElement.Fire,  "ParticleFx/spark"),
+            (ParticleFxKind.Spark,  ParticleElement.Ice,   "ParticleFx/spark_ice"),
+            (ParticleFxKind.Spark,  ParticleElement.Venom, "ParticleFx/spark_venom"),
+            (ParticleFxKind.Spark,  ParticleElement.Curse, "ParticleFx/spark_curse"),
+            (ParticleFxKind.Spark,  ParticleElement.Dust,  "ParticleFx/spark"),
+            (ParticleFxKind.Glow,   ParticleElement.Fire,  "ParticleFx/glow"),
+            (ParticleFxKind.Glow,   ParticleElement.Ice,   "ParticleFx/glow_ice"),
+            (ParticleFxKind.Glow,   ParticleElement.Venom, "ParticleFx/glow_venom"),
+            (ParticleFxKind.Glow,   ParticleElement.Curse, "ParticleFx/glow_curse"),
+            (ParticleFxKind.Glow,   ParticleElement.Dust,  "ParticleFx/glow"),
+            (ParticleFxKind.Smoke,  ParticleElement.Fire,  "ParticleFx/smoke"),
+            (ParticleFxKind.Smoke,  ParticleElement.Dust,  "ParticleFx/smoke_dust"),
+            (ParticleFxKind.Smoke,  ParticleElement.Ice,   "ParticleFx/smoke_dust"),
+            (ParticleFxKind.Smoke,  ParticleElement.Venom, "ParticleFx/smoke_dust"),
+            (ParticleFxKind.Smoke,  ParticleElement.Curse, "ParticleFx/smoke_dust"),
+            (ParticleFxKind.Shard,  ParticleElement.Ice,   "ParticleFx/shard"),
+            (ParticleFxKind.Shard,  ParticleElement.Dust,  "ParticleFx/shard_dust"),
+            (ParticleFxKind.Shard,  ParticleElement.Fire,  "ParticleFx/shard_dust"),
+            (ParticleFxKind.Shard,  ParticleElement.Venom, "ParticleFx/shard_dust"),
+            (ParticleFxKind.Shard,  ParticleElement.Curse, "ParticleFx/shard_dust"),
+            (ParticleFxKind.Ember,  ParticleElement.Fire,  "ParticleFx/ember"),
+            (ParticleFxKind.Ring,   ParticleElement.Fire,  "ParticleFx/ring"),
+            (ParticleFxKind.Ring,   ParticleElement.Ice,   "ParticleFx/ring_ice"),
+            (ParticleFxKind.Ring,   ParticleElement.Venom, "ParticleFx/ring_venom"),
+            (ParticleFxKind.Ring,   ParticleElement.Curse, "ParticleFx/ring_curse"),
+            (ParticleFxKind.Ring,   ParticleElement.Dust,  "ParticleFx/ring"),
+            (ParticleFxKind.Star4,  ParticleElement.Fire,  "ParticleFx/star4"),
+            (ParticleFxKind.Streak, ParticleElement.Fire,  "ParticleFx/streak"),
         };
 
         private void MakeParticleLayer()
@@ -88,39 +116,39 @@ namespace Game.Module.InGame
             float power = Mathf.Clamp(size / 96f, 0.6f, 3f);
             switch (name)
             {
-                case "burst":          Boom(at, FireColor, power); break;
-                case "grenade_burst":  Boom(at, FireColor, power * 1.3f); break;
+                case "burst":          Boom(at, ParticleElement.Fire, power); break;
+                case "grenade_burst":  Boom(at, ParticleElement.Fire, power * 1.3f); break;
                 case "slam":
-                    _pfx.Shards(at, DustColor, power);
-                    _pfx.Puff(at, DustColor, power);
-                    _pfx.Ring(at, DustColor, size * 1.1f);
+                    _pfx.Shards(at, ParticleElement.Dust, power);
+                    _pfx.Puff(at, ParticleElement.Dust, power);
+                    _pfx.Ring(at, ParticleElement.Dust, size * 1.1f);
                     break;
                 case "shatter":
-                    _pfx.Shards(at, IceColor, power);
-                    _pfx.Sparkle(at, IceColor, power * 0.6f);
+                    _pfx.Shards(at, ParticleElement.Ice, power);
+                    _pfx.Sparkle(at, ParticleElement.Fire, power * 0.6f);
                     break;
                 case "freeze":
-                case "iceblock":       _pfx.Shards(at, IceColor, power * 0.7f); break;
-                case "burn":           _pfx.Embers(at, FireColor, 3, size * 0.25f); break;
-                case "venom":          _pfx.Embers(at, VenomColor, 3, size * 0.25f); break;
+                case "iceblock":       _pfx.Shards(at, ParticleElement.Ice, power * 0.7f); break;
+                case "burn":           _pfx.Embers(at, ParticleElement.Fire, 3, size * 0.25f); break;
+                case "venom":          _pfx.Hit(at, ParticleElement.Venom, power * 0.7f); break;
                 case "goo_burst":
-                    _pfx.Hit(at, VenomColor, power);
-                    _pfx.Puff(at, VenomColor, power);
+                    _pfx.Hit(at, ParticleElement.Venom, power);
+                    _pfx.Puff(at, ParticleElement.Venom, power);
                     break;
-                case "sludge_drop":    _pfx.Puff(at, VenomColor, power * 0.8f); break;
-                case "dash":           _pfx.Puff(at, DustColor, power * 0.6f); break;
-                case "crit":           _pfx.Sparkle(at, GoldColor, power); break;
-                case "reflect":        _pfx.Sparkle(at, IceColor, power * 0.8f); break;
-                case "bolt":           _pfx.Hit(at, PfxBoltColor, power * 0.8f); break;
-                case "scythe":         _pfx.Hit(at, CurseColor, power); break;
-                case "leech":          _pfx.Embers(at, BloodColor, 3, size * 0.2f); break;
-                case "heal_plus":      _pfx.Sparkle(at, PfxHealColor, power * 0.8f); break;
+                case "sludge_drop":    _pfx.Puff(at, ParticleElement.Venom, power * 0.8f); break;
+                case "dash":           _pfx.Puff(at, ParticleElement.Dust, power * 0.6f); break;
+                case "crit":           _pfx.Sparkle(at, ParticleElement.Fire, power); break;
+                case "reflect":        _pfx.Sparkle(at, ParticleElement.Fire, power * 0.8f); break;
+                case "bolt":           _pfx.Hit(at, ParticleElement.Ice, power * 0.8f); break;
+                case "scythe":         _pfx.Hit(at, ParticleElement.Curse, power); break;
+                case "leech":          _pfx.Embers(at, ParticleElement.Fire, 3, size * 0.2f); break;
+                case "heal_plus":      _pfx.Sparkle(at, ParticleElement.Fire, power * 0.8f); break;
                 case "burrow":
                 case "bulge":
-                    _pfx.Shards(at, DustColor, power * 0.8f);
-                    _pfx.Puff(at, DustColor, power);
+                    _pfx.Shards(at, ParticleElement.Dust, power * 0.8f);
+                    _pfx.Puff(at, ParticleElement.Dust, power);
                     break;
-                case "turret":         _pfx.Puff(at, DustColor, power * 0.8f); break;
+                case "turret":         _pfx.Puff(at, ParticleElement.Dust, power * 0.8f); break;
             }
         }
 
@@ -151,28 +179,27 @@ namespace Game.Module.InGame
                 switch (f.Effect)
                 {
                     case FieldEffect.Burn:
-                    case FieldEffect.Damage: _pfx.Embers(f.Center, FireColor, count, f.Radius * 0.8f); break;
-                    case FieldEffect.Freeze: _pfx.Sparkle(f.Center + Random.insideUnitCircle * f.Radius * 0.8f, IceColor, 0.35f); break;
-                    case FieldEffect.Curse:  _pfx.Embers(f.Center, CurseColor, count, f.Radius * 0.8f); break;
+                    case FieldEffect.Damage: _pfx.Embers(f.Center, ParticleElement.Fire, count, f.Radius * 0.8f); break;
+                    case FieldEffect.Freeze: _pfx.Sparkle(f.Center + Random.insideUnitCircle * f.Radius * 0.8f, ParticleElement.Ice, 0.35f); break;
+                    case FieldEffect.Curse:  _pfx.Embers(f.Center, ParticleElement.Curse, count, f.Radius * 0.8f); break;
                 }
             }
         }
 
-        /// <summary>폭발 한 벌 — 불티·연기·밀려 나가는 고리·파편을 한 프레임에 겹친다.</summary>
-        private void Boom(Vector2 at, Color color, float power)
+        /// <summary>폭발 한 벌 — 섬광·불티·연기·밀려 나가는 고리를 한 프레임에 겹친다.</summary>
+        private void Boom(Vector2 at, ParticleElement element, float power)
         {
-            _pfx.Hit(at, color, power);
-            _pfx.Puff(at, DustColor, power);
-            _pfx.Ring(at, color, 120f * power);
-            _pfx.Shards(at, color, power * 0.7f);
+            _pfx.Hit(at, element, power);
+            _pfx.Puff(at, element, power);
+            _pfx.Ring(at, element, 120f * power);
         }
 
         private async UniTask LoadParticleArtAsync(IResourceManager res)
         {
             if (_pfx == null) return;
-            foreach (var (kind, address) in ParticleArt)
+            foreach (var (kind, element, address) in ParticleArt)
             {
-                try { _pfx.SetMaterial(kind, await res.LoadAsync<Material>(address)); }
+                try { _pfx.SetMaterial(kind, element, await res.LoadAsync<Material>(address)); }
                 catch (Exception e)
                 {
                     Debug.LogWarning($"[Battle] 파티클 재질 없음({address}) — 기본 재질로 나온다. {e.Message}");

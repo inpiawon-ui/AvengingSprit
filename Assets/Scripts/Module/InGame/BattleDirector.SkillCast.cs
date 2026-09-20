@@ -167,8 +167,8 @@ namespace Game.Module.InGame
             HitStop(CastHitStop);
             Shake(CastReleaseShake);
             // 알갱이 — 스킬 색으로 크게 한 번. 발밑에서 연기가 같이 밀려 나간다.
-            _pfx?.Hit(me.Position, _castColor, CastParticlePower);
-            _pfx?.Puff(feet, _castColor, CastParticlePower);
+            _pfx?.Hit(me.Position, ParticleElement.Fire, CastParticlePower);
+            _pfx?.Puff(feet, ParticleElement.Dust, CastParticlePower);
             CastHostSkill(me);
         }
 

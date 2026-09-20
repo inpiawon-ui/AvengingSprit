@@ -25,6 +25,24 @@ namespace Game.Module.InGame
     }
 
     /// <summary>
+    /// 알갱이의 **속성(색)**. 모양은 같고 색만 다른 그림을 고른다.
+    ///
+    /// ⚠ 런타임 곱셈 색 입히기를 쓰지 않는 이유 —
+    ///   칠해진 그림(주황 불티)에 파랑을 곱하면 밝은 데는 회색, 어두운 데는 검정이 되어
+    ///   **결이 죽고 다시 «도형»이 된다.** 색조만 돌려 구운 그림을 골라 쓴다.
+    /// </summary>
+    public enum ParticleElement
+    {
+        /// <summary>불 — 기본. 주황·노랑.</summary>
+        Fire,
+        Ice,
+        Venom,
+        Curse,
+        /// <summary>흙먼지 — 채도를 뺀 것. 내려찍기·무너짐에 쓴다.</summary>
+        Dust,
+    }
+
+    /// <summary>
     /// 파티클 뿌리개 (2026-09-20).
     ///
     /// ── 왜 만들었나 ──────────────────────────────────────────
@@ -59,17 +77,22 @@ namespace Game.Module.InGame
         /// </summary>
         private const ParticleSystemScalingMode Scaling = ParticleSystemScalingMode.Hierarchy;
 
-        private readonly Dictionary<ParticleFxKind, ParticleSystem> _systems = new();
-        private readonly Dictionary<ParticleFxKind, Material> _materials = new();
+        private readonly Dictionary<int, ParticleSystem> _systems = new();
+        private readonly Dictionary<int, Material> _materials = new();
 
         private int _sortingOrder = InGameMainUI.ParticleOrder;
 
-        /// <summary>종류별 그림. 방이 만들어질 때 한 번 꽂아 준다. 없으면 기본 재질로 나온다.</summary>
-        public void SetMaterial(ParticleFxKind kind, Material material)
+        /// <summary>모양 + 속성 한 쌍을 사전 열쇠 하나로. 종류가 몇 개 안 되어 곱셈이면 충분하다.</summary>
+        private static int KeyOf(ParticleFxKind kind, ParticleElement element)
+            => (int)kind * 8 + (int)element;
+
+        /// <summary>그림 한 장을 꽂는다. 방이 만들어질 때 한 번. 없으면 기본 재질로 나온다.</summary>
+        public void SetMaterial(ParticleFxKind kind, ParticleElement element, Material material)
         {
             if (material == null) return;
-            _materials[kind] = material;
-            if (_systems.TryGetValue(kind, out var ps))
+            int key = KeyOf(kind, element);
+            _materials[key] = material;
+            if (_systems.TryGetValue(key, out var ps))
                 ps.GetComponent<ParticleSystemRenderer>().sharedMaterial = material;
         }
 
@@ -89,62 +112,63 @@ namespace Game.Module.InGame
         // ── 미리 잡아 둔 연출 ────────────────────────────────────
 
         /// <summary>때린 자리 — 불티가 사방으로 튄다.</summary>
-        public void Hit(Vector2 at, Color color, float power = 1f)
+        public void Hit(Vector2 at, ParticleElement element, float power = 1f)
         {
-            Burst(ParticleFxKind.Spark, at, color,
+            Burst(ParticleFxKind.Spark, element, at,
                   count: Mathf.RoundToInt(10 * power), speed: 260f * power,
-                  size: 10f, life: 0.32f, spin: 0f);
+                  size: 26f, life: 0.32f, spin: 0f);
             // ⚠ 빛 알갱이는 **작아야 한다.** 크게 키우면 더하기 합성이라 바닥이 뿌옇게
             //   들뜬 원판으로 보인다 — 번쩍임이 아니라 «접시가 놓였다»가 된다(2026-09-20).
-            Burst(ParticleFxKind.Glow, at, color,
-                  count: 1, speed: 0f, size: 26f * power, life: 0.14f, spin: 0f);
+            Burst(ParticleFxKind.Glow, element, at,
+                  count: 1, speed: 0f, size: 46f * power, life: 0.16f, spin: 0f);
         }
 
         /// <summary>터진 자리 — 연기가 부풀어 오른다.</summary>
-        public void Puff(Vector2 at, Color color, float power = 1f)
-            => Burst(ParticleFxKind.Smoke, at, color,
-                     count: Mathf.RoundToInt(5 * power), speed: 90f * power,
-                     size: 30f * power, life: 0.7f, spin: 40f);
+        public void Puff(Vector2 at, ParticleElement element, float power = 1f)
+            => Burst(ParticleFxKind.Smoke, element, at,
+                     count: Mathf.RoundToInt(3 * power), speed: 70f * power,
+                     size: 64f * power, life: 0.75f, spin: 25f);
 
         /// <summary>부서진 자리 — 파편이 돌며 튄다.</summary>
-        public void Shards(Vector2 at, Color color, float power = 1f)
-            => Burst(ParticleFxKind.Shard, at, color,
+        public void Shards(Vector2 at, ParticleElement element, float power = 1f)
+            => Burst(ParticleFxKind.Shard, element, at,
                      count: Mathf.RoundToInt(7 * power), speed: 300f * power,
-                     size: 13f, life: 0.5f, spin: 520f);
+                     size: 26f, life: 0.5f, spin: 420f);
 
         /// <summary>퍼지는 고리 — 한 장이 커지며 사라진다. 폭발의 «밀려 나감»을 맡는다.</summary>
-        public void Ring(Vector2 at, Color color, float size)
-            => Burst(ParticleFxKind.Ring, at, color,
+        public void Ring(Vector2 at, ParticleElement element, float size)
+            => Burst(ParticleFxKind.Ring, element, at,
                      count: 1, speed: 0f, size: size, life: 0.3f, spin: 0f);
 
         /// <summary>떠오르는 잔불 — 불타는 자리에 몇 알씩 계속 뿌린다.</summary>
-        public void Embers(Vector2 at, Color color, int count, float spread)
+        public void Embers(Vector2 at, ParticleElement element, int count, float spread)
         {
             for (int i = 0; i < count; i++)
-                Burst(ParticleFxKind.Ember, at + Random.insideUnitCircle * spread, color,
-                      count: 1, speed: 40f, size: 14f, life: 0.8f, spin: 0f);
+                Burst(ParticleFxKind.Ember, element, at + Random.insideUnitCircle * spread,
+                      count: 1, speed: 40f, size: 16f, life: 0.8f, spin: 0f);
         }
 
         /// <summary>반짝이 — 치명타·획득처럼 «좋은 일»에.</summary>
-        public void Sparkle(Vector2 at, Color color, float power = 1f)
-            => Burst(ParticleFxKind.Star4, at, color,
+        public void Sparkle(Vector2 at, ParticleElement element, float power = 1f)
+            => Burst(ParticleFxKind.Star4, element, at,
                      count: Mathf.RoundToInt(5 * power), speed: 150f * power,
-                     size: 22f, life: 0.45f, spin: 0f);
+                     size: 26f, life: 0.45f, spin: 0f);
 
         // ── 알맹이 ──────────────────────────────────────────────
 
         /// <summary>
         /// 한 자리에서 알갱이를 터뜨린다. 좌표·속도·중력은 **방 좌표(픽셀)** 단위다.
         /// </summary>
-        public void Burst(ParticleFxKind kind, Vector2 at, Color color,
+        public void Burst(ParticleFxKind kind, ParticleElement element, Vector2 at,
                           int count, float speed, float size, float life, float spin)
         {
             if (count <= 0) return;
-            var ps = SystemOf(kind);
+            var ps = SystemOf(kind, element);
             var p = new ParticleSystem.EmitParams
             {
                 applyShapeToPosition = false,
-                startColor = color,
+                // ⚠ 그림이 이미 칠해져 있다 — **흰색으로 둔다.** 색을 곱하면 결이 죽는다.
+                startColor = Color.white,
                 startLifetime = life,
             };
             for (int i = 0; i < count; i++)
@@ -191,11 +215,12 @@ namespace Game.Module.InGame
             _ => null,
         };
 
-        private ParticleSystem SystemOf(ParticleFxKind kind)
+        private ParticleSystem SystemOf(ParticleFxKind kind, ParticleElement element)
         {
-            if (_systems.TryGetValue(kind, out var found)) return found;
+            int key = KeyOf(kind, element);
+            if (_systems.TryGetValue(key, out var found)) return found;
 
-            var go = new GameObject("ParticleFx_" + kind, typeof(RectTransform));
+            var go = new GameObject("ParticleFx_" + kind + "_" + element, typeof(RectTransform));
             var rt = (RectTransform)go.transform;
             rt.SetParent(transform, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);   // 방 좌표계와 같은 기준점
@@ -246,10 +271,10 @@ namespace Game.Module.InGame
             renderer.sortingOrder = _sortingOrder;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
-            if (_materials.TryGetValue(kind, out var mat)) renderer.sharedMaterial = mat;
+            if (_materials.TryGetValue(key, out var mat)) renderer.sharedMaterial = mat;
 
             ps.Play();          // 알갱이를 직접 밀어 넣으려면 시스템이 돌고 있어야 한다
-            _systems[kind] = ps;
+            _systems[key] = ps;
             return ps;
         }
 

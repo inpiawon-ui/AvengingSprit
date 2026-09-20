@@ -43,11 +43,17 @@ namespace Game.Module.InGame
         private const float ReticleSnapFrom = 2.3f;
         private const float ReticleSnapSeconds = 0.18f;
 
+        /// <summary>
+        /// ⚠ 지금 표적 그림은 **이미 붉게 칠해져 있다.** 그래서 표식은 색을 입히지 않는다
+        ///   (붉은 그림에 붉은 색을 곱하면 검붉게 죽는다). 저주·보스는 뜻을 갈라야 하므로
+        ///   색을 입히되 밝게 잡아 원본이 살아 있게 둔다.
+        ///   그림이 흰색 원판으로 바뀌면 세 값 모두 제 색으로 바꾼다.
+        /// </summary>
         private static Color ColorOf(ReticleKind kind) => kind switch
         {
-            ReticleKind.Curse    => new Color(0.78f, 0.45f, 1f),
-            ReticleKind.BossLock => new Color(1f, 0.66f, 0.2f),
-            _                    => new Color(1f, 0.35f, 0.3f),
+            ReticleKind.Curse    => new Color(0.85f, 0.6f, 1f),
+            ReticleKind.BossLock => new Color(1f, 0.85f, 0.55f),
+            _                    => Color.white,
         };
 
         /// <summary>덩치에 맞춘 표적 지름.</summary>
@@ -72,8 +78,8 @@ namespace Game.Module.InGame
             if (ping)
             {
                 // 조이는 고리와 반짝임 — 어디가 찍혔는지 눈이 따라간다
-                _pfx?.Ring(at, color, size * 1.5f);
-                _pfx?.Sparkle(at, color, 0.7f);
+                _pfx?.Ring(at, ParticleElement.Fire, size * 1.5f);
+                _pfx?.Sparkle(at, ParticleElement.Fire, 0.7f);
             }
             return im;
         }
