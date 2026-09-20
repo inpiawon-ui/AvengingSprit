@@ -21,8 +21,8 @@ namespace Game.Module.InGame
     /// 갱스터 스킬만 조준환을 붙여 돌렸고, **저주 전이는 아무것도 안 그렸으며**,
     /// 보스 조준은 같은 그림을 색도 없이 띄웠다. 플레이어가 배워야 할 규칙이 셋이 된다.
     ///
-    /// 이제 하나다 — **조준환이 조여들며 붙고, 천천히 돌고, 색이 뜻을 말한다.**
-    ///   붉은색 = 내가 찍었다(표식) · 보라 = 저주 · 주황 = 보스가 노린다
+    /// 이제 하나다 — **타오르는 낙인이 조여들며 붙고, 천천히 돌고, 색이 뜻을 말한다.**
+    ///   불길(붉은색) = 내가 찍었다(표식) · 보라 = 저주 · 청록 = 보스가 노린다
     ///
     /// ⚠ 크기는 **덩치에 맞춘다.** 큰 몸에 작은 고리를 얹으면 가슴에 단 배지처럼 보인다.
     /// </summary>
@@ -44,16 +44,25 @@ namespace Game.Module.InGame
         private const float ReticleSnapSeconds = 0.18f;
 
         /// <summary>
-        /// ⚠ 지금 표적 그림은 **이미 붉게 칠해져 있다.** 그래서 표식은 색을 입히지 않는다
-        ///   (붉은 그림에 붉은 색을 곱하면 검붉게 죽는다). 저주·보스는 뜻을 갈라야 하므로
-        ///   색을 입히되 밝게 잡아 원본이 살아 있게 둔다.
-        ///   그림이 흰색 원판으로 바뀌면 세 값 모두 제 색으로 바꾼다.
+        /// 갈래마다 **제 그림**을 쓴다.
+        ///
+        /// ⚠ 색을 곱해 가르지 않는다. 표적은 불길로 칠해져 있어서, 거기에 보라를 곱하면
+        ///   밝은 데는 회색이 되고 어두운 데는 검게 죽어 **타오르는 느낌이 사라진다.**
+        ///   `Tools/mark_hue.py` 로 색조만 돌려 구운 한 벌을 쓴다(붉은 불 · 보라 · 청록).
         /// </summary>
-        private static Color ColorOf(ReticleKind kind) => kind switch
+        private static string FxNameOf(ReticleKind kind) => kind switch
         {
-            ReticleKind.Curse    => new Color(0.85f, 0.6f, 1f),
-            ReticleKind.BossLock => new Color(1f, 0.85f, 0.55f),
-            _                    => Color.white,
+            ReticleKind.Curse    => "markcurse",
+            ReticleKind.BossLock => "markboss",
+            _                    => "mark",
+        };
+
+        /// <summary>찍히는 순간 튀는 알갱이의 색. 그림과 같은 계열로 맞춘다.</summary>
+        private static ParticleElement ElementOf(ReticleKind kind) => kind switch
+        {
+            ReticleKind.Curse    => ParticleElement.Curse,
+            ReticleKind.BossLock => ParticleElement.Ice,
+            _                    => ParticleElement.Fire,
         };
 
         /// <summary>덩치에 맞춘 표적 지름.</summary>
@@ -66,11 +75,11 @@ namespace Game.Module.InGame
         /// </summary>
         private Impact ShowReticle(Vector2 at, float size, ReticleKind kind, bool ping = true)
         {
-            var color = ColorOf(kind);
-            var im = TakeLoopFx("mark", at, size);
+            var element = ElementOf(kind);
+            // 전용 그림이 아직 없으면 붉은 본판으로 떨어진다 — 표시가 사라지는 것보다 낫다
+            var im = TakeLoopFx(FxNameOf(kind), at, size) ?? TakeLoopFx("mark", at, size);
             if (im != null)
             {
-                im.SetTint(color);
                 im.SetSpin(ReticleSpin);
                 im.SetSnap(ReticleSnapFrom, ReticleSnapSeconds);   // 조여들며 붙는다
                 im.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
@@ -78,8 +87,8 @@ namespace Game.Module.InGame
             if (ping)
             {
                 // 조이는 고리와 반짝임 — 어디가 찍혔는지 눈이 따라간다
-                _pfx?.Ring(at, ParticleElement.Fire, size * 1.5f);
-                _pfx?.Sparkle(at, ParticleElement.Fire, 0.7f);
+                _pfx?.Ring(at, element, size * 1.5f);
+                _pfx?.Sparkle(at, element, 0.7f);
             }
             return im;
         }

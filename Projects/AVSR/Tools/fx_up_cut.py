@@ -25,11 +25,15 @@ GAME = ROOT / "Assets/BaseResource/InGameMainUI"
 OUT = ROOT / "Projects/AVSR/_exchange/ref/fx_up/cut"
 
 
-def key_out_black(im):
-    """검은 배경을 뚫는다. 밝기가 곧 알파다 — 빛은 어두운 데서 서서히 사라지기 때문."""
+def key_out_black(im, floor=12.0):
+    """검은 배경을 뚫는다. 밝기가 곧 알파다 — 빛은 어두운 데서 서서히 사라지기 때문.
+
+    ⚠ <floor> 아래 밝기는 통째로 버린다. 칠해서 받은 판은 배경이 **완전한 검정이 아니라**
+      옅은 후광이 깔려 있어, 기본값으로 뚫으면 알파가 5~8% 남아 화면에 **네모난 헤일로**로 뜬다.
+    """
     a = np.asarray(im.convert("RGB")).astype(np.float32)
     lum = a.max(axis=2)
-    alpha = np.clip((lum - 12) * 255.0 / 120.0, 0, 255).astype(np.uint8)
+    alpha = np.clip((lum - floor) * 255.0 / 120.0, 0, 255).astype(np.uint8)
     return Image.fromarray(np.dstack([a.astype(np.uint8), alpha]))
 
 
@@ -38,8 +42,12 @@ def main():
     cols, rows = int(sys.argv[3]), int(sys.argv[4])
     out_w, out_h = int(sys.argv[5]), int(sys.argv[6])
     apply = "--apply" in sys.argv
+    floor = 12.0
+    for a in sys.argv:
+        if a.startswith("--floor="):
+            floor = float(a.split("=", 1)[1])
 
-    im = key_out_black(Image.open(sheet))
+    im = key_out_black(Image.open(sheet), floor)
     cw, ch = im.width // cols, im.height // rows
     OUT.mkdir(parents=True, exist_ok=True)
 
