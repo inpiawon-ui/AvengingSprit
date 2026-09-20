@@ -104,6 +104,7 @@ namespace Game.Module.InGame
         /// <summary>방을 나가거나 판이 끝날 때 — 섬광과 줌을 원래대로.</summary>
         private void ClearBigJuice()
         {
+            _pfx?.ClearAll();   // 남은 알갱이가 다음 방에 떠 있으면 안 된다
             _flashLeft = 0f;
             if (_screenFlash != null) _screenFlash.enabled = false;
             if (_zoomPunch != 0f) { _zoomPunch = 0f; ApplyScroll(); }

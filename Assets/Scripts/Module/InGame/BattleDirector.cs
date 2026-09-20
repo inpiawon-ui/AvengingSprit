@@ -420,6 +420,10 @@ namespace Game.Module.InGame
             _shotLayer.anchoredPosition = _unitLayer.anchoredPosition;
             _shotLayer.sizeDelta = _unitLayer.sizeDelta;
 
+            // 알갱이(파티클)는 캔버스가 아니라 sortingOrder 로 겹침을 다툰다 —
+            // 형제 순서는 상관없고, 방 안에 있기만 하면 된다(BattleDirector.Particles 참조).
+            MakeParticleLayer();
+
             // 피해 수치는 탄보다 위에 그린다 — 탄에 가리면 읽을 수 없다.
             var textGo = new GameObject("DamageTextLayer", typeof(RectTransform));
             textGo.transform.SetParent(_unitLayer.parent, false);
@@ -429,6 +433,8 @@ namespace Game.Module.InGame
             _textLayer.pivot = _unitLayer.pivot;
             _textLayer.anchoredPosition = _unitLayer.anchoredPosition;
             _textLayer.sizeDelta = _unitLayer.sizeDelta;
+
+            await LoadParticleArtAsync(res);   // 층은 위에서 만들었다 — 여기서 재질을 꽂는다
 
             SpawnGhost();
             EnterStartHost();
@@ -1838,6 +1844,7 @@ namespace Game.Module.InGame
             // 여기 한 곳만 더하면 바닥·유닛·탄·글자가 통째로 같이 흔들린다.
             var at = _scroll + _shakeOffset;
             Place(_unitLayer, at);
+            Place(_pfxLayer, at);
             Place(_shotLayer, at);
             Place(_textLayer, at);
             Place(_fieldLayer, at);
@@ -6611,6 +6618,10 @@ namespace Game.Module.InGame
 
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
+            // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
+            // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
+            _pfx?.Hit(at, Color.white);
+
             var frames = ImpactFrames(kind);
             if (frames == null) return;
             // 터짐 그림은 48 캔버스라 탄(24)보다 여백이 크다. 상자를 탄과 같은 값으로
@@ -7168,6 +7179,9 @@ namespace Game.Module.InGame
         private void KillEnemy(Unit u)
         {
             u.SetState(EnemyState.Dead);
+            // 쓰러지는 그림만으로는 «해치웠다»가 약하다. 부서진 조각과 흙먼지를 같이 뿌린다.
+            _pfx?.Shards(u.Position, Color.white, u.IsBoss ? 3f : 1f);
+            _pfx?.Puff(u.Position, new Color(0.85f, 0.82f, 0.75f), u.IsBoss ? 3f : 1f);
             // ⚠ **목록에서 빼기 전에** 옮긴다. 뺀 뒤에 부르면 옆 사람을 찾는
             //   `EnemiesInRange` 가 이미 죽은 자리를 기준으로 도는 것은 같지만,
             //   전이 대상 후보에서 자기 자신을 빼려고 목록 조작에 기대게 된다.

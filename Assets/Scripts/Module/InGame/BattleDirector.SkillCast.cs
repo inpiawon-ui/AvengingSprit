@@ -50,6 +50,9 @@ namespace Game.Module.InGame
         private const float CastFlashSeconds = 0.26f;
         private const float CastFlashPeak = 0.5f;
 
+        /// <summary>시전 알갱이 세기. 평타 타격(1)보다 훨씬 커야 «스킬»로 읽힌다.</summary>
+        private const float CastParticlePower = 2.6f;
+
         /// <summary>
         /// 발밑에 깔리는 그림(링) 전용 자리. 탄 레이어는 몸보다 **위**라
         /// 발밑 링이 몸을 덮어 버린다 — 장판 레이어(몸 아래)에 따로 둔다.
@@ -163,6 +166,9 @@ namespace Game.Module.InGame
             ZoomPunch(CastZoomPunch);
             HitStop(CastHitStop);
             Shake(CastReleaseShake);
+            // 알갱이 — 스킬 색으로 크게 한 번. 발밑에서 연기가 같이 밀려 나간다.
+            _pfx?.Hit(me.Position, _castColor, CastParticlePower);
+            _pfx?.Puff(feet, _castColor, CastParticlePower);
             CastHostSkill(me);
         }
 

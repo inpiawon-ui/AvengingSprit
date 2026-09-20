@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: particlefx
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: particlefx
+  m_GUID: f692c7723e5087941852f030315c7125
+  m_SerializeEntries:
+  - m_GUID: 4cc05e75c1f64ad4cb4f28fa9a812848
+    m_Address: ParticleFx/shard
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52d2e7349f221fa499ba0c1c671027c5
+    m_Address: ParticleFx/glow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ea2dbdc0674e9d4fa97010eed0781e0
+    m_Address: ParticleFx/smoke
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfd34032a0253954f9307a7dc24a946b
+    m_Address: ParticleFx/spark
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1a09de5a2fc8d1c4cb65bf8bc8486456, type: 2}
+    - {fileID: 11400000, guid: 9ce00b0716da6a1438300807a30eca75, type: 2}

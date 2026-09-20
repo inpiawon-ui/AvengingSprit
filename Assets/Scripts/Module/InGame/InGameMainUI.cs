@@ -93,6 +93,9 @@ namespace Game.Module.InGame
             rt.anchorMax = Vector2.one;
             rt.offsetMin = rt.offsetMax = Vector2.zero;
             rt.SetAsLastSibling();          // 무엇보다 위에 덮는다
+            // ⚠ 형제 순서만으로는 모자란다. HUD 는 제 캔버스(밴드 20)를 쓰므로
+            //   덮개도 밴드에 올려야 그 위를 덮는다 — InGameMainUI.SortingBands 참조.
+            LiftToBand(rt, CoverBandOrder);
 
             _cover = go.AddComponent<Image>();
             _cover.color = new Color(0.02f, 0.03f, 0.06f, 1f);
@@ -119,6 +122,7 @@ namespace Game.Module.InGame
             _ui = new UIBinder(transform);
             // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
             Localize.ApplyFonts(transform);
+            SetupSortingBands();   // 덮개보다 먼저 — 덮개가 밴드 위에 올라타야 한다
             MakeCover();
             CoreModule.TryGet(out _player);
             gameObject.AddComponent<BackButtonRouter>();
