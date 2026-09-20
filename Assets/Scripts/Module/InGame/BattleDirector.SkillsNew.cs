@@ -316,6 +316,9 @@ namespace Game.Module.InGame
             if (next == null) { _chainHopsLeft = 0; return; }
 
             PlayBolt(_chainFrom, next.Position);
+            // 줄기가 닿은 자리도 **번개 색**이어야 한다. 기본 타격 불꽃은 노란색이라
+            // 파란 줄기와 따로 놀았다 — 줄기 끝에서 노란 별이 터졌다(2026-09-20).
+            SpawnImpact(next.Position, "thunder", ChainImpactSize);
             HitEnemyWith(next, _chainDamage, _chainProfile);
             _chainFrom = next.Position;
             _chainLast = next;
@@ -652,6 +655,9 @@ namespace Game.Module.InGame
 
         /// <summary>줄기 굵기(px). 그림이 192×64 라 세로 64 를 그대로 쓴다.</summary>
         private const float BoltBeamThickness = 64f;
+
+        /// <summary>줄기가 닿은 자리의 번개 터짐 크기. 줄기 굵기보다 커야 「꽂혔다」로 읽힌다.</summary>
+        private const float ChainImpactSize = 96f;
 
         /// <summary>지속 표시를 몸 위에 띄운다. 이미 떠 있으면 새로 건다.</summary>
         private void StartSkillAura(ref Impact slot, string fx)
