@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -383,6 +383,7 @@ namespace Game.Module.InGame
             _body.sprite = sprite;
             _baseSprite = sprite;
             ApplyFloatShadow(size);
+            ApplyGroundShadow(size);
             for (int i = 0; i < _frames.Length; i++) _frames[i] = null;
             _facingIndex = -1;
             _facingFlip = false;
@@ -847,12 +848,14 @@ namespace Game.Module.InGame
                 Apply();
             }
 
-            // die2 로 넘어간 뒤부터 서서히 사라진다.
+            // die2 로 넘어간 뒤부터 서서히 사라진다. 발밑 그림자도 같이 옅어진다.
             if (_body != null && _deathTimer > Die1Seconds)
             {
                 float t = Mathf.Clamp01((_deathTimer - Die1Seconds) / DeathFadeSeconds);
                 var c = _body.color;
                 _body.color = new Color(c.r, c.g, c.b, 1f - t);
+                if (_groundShadow != null && _groundShadow.enabled)
+                    _groundShadow.color = new Color(0f, 0f, 0f, GroundShadowAlpha * (1f - t));
             }
             return _deathTimer >= Die1Seconds + DeathFadeSeconds;
         }
@@ -1923,6 +1926,8 @@ namespace Game.Module.InGame
         {
             IsHidden = hidden;
             if (_body != null) _body.enabled = !hidden;
+            // 발밑 그림자는 몸을 따라간다 — 몸이 사라졌는데 그림자만 남으면 자리를 잘못 알린다
+            if (_groundShadow != null) _groundShadow.enabled = !hidden && _groundShadowOn;
 
             if (!hidden || !showShadow)
             {
@@ -2025,6 +2030,46 @@ namespace Game.Module.InGame
             _floatShadow.color = new Color(0f, 0f, 0f, 0.38f);
             _floatShadow.transform.SetAsFirstSibling();   // 몸보다 뒤에 그린다
             _floatShadow.enabled = true;
+        }
+
+        // ── 바닥에 붙은 몸의 그림자 ──────────────────────────────
+        //
+        // 탑다운인데 발밑이 비어 있으면 몸이 바닥에서 떠 보인다 — 방바닥 그림은 촘촘한데
+        // 캐릭터만 납작해 보이는 것도 여기서 온다(기획 2026-09-20).
+        //
+        // 떠 있는 몸(`_floatShadow`)과 **필드를 나눈다.** 그쪽은 「발이 안 닿는다」를 말하려고
+        // 더 작고 멀리 떨어뜨린 그림자라, 한 필드로 합치면 둘 중 하나가 서로를 끈다.
+        // 유령은 그림자가 없다 — 소울이다.
+
+        private Image _groundShadow;
+        /// <summary>이 몸이 발밑 그림자를 쓰는가. 풀에서 돌려 쓰므로 «그림자 칸이 있다» 와 다르다.</summary>
+        private bool _groundShadowOn;
+        /// <summary>발밑 그림자 진하기. 0.32 는 밝은 방바닥에서 안 보였다(실측 2026-09-20).</summary>
+        private const float GroundShadowAlpha = 0.45f;
+
+        /// <summary>발밑 그림자. 몸을 세울 때마다 부른다(풀에서 돌려 쓰므로 매번 다시 정한다).</summary>
+        private void ApplyGroundShadow(Vector2 size)
+        {
+            _groundShadowOn = Key != "ghost" && !IsFloatingKey(Key);
+            if (!_groundShadowOn)
+            {
+                if (_groundShadow != null) _groundShadow.enabled = false;
+                return;
+            }
+
+            // 그림은 `preserveAspect` 로 **짧은 변에 맞춰 정사각**으로 들어간다.
+            // 발밑은 그 정사각의 아래에서 8/96 지점이다(캐릭터 그림 규약).
+            float draw = Mathf.Min(size.x, size.y);
+            float feetY = -size.y * 0.5f + draw * (8f / 96f);
+
+            // 빛이 왼쪽 위에서 오니 그림자는 오른쪽 아래로 조금 치우친다
+            _groundShadow = GetOrCreate("GroundShadow",
+                                        new Vector2(draw * 0.50f, draw * 0.145f),
+                                        new Vector2(draw * 0.02f, feetY + draw * 0.01f));
+            _groundShadow.sprite = RoundSprite();
+            _groundShadow.color = new Color(0f, 0f, 0f, GroundShadowAlpha);
+            _groundShadow.transform.SetAsFirstSibling();   // 몸보다 뒤에 그린다
+            _groundShadow.enabled = true;
         }
 
         // ── 행동 패턴의 제 상태 ──────────────────────────────────
@@ -2195,3 +2240,6 @@ namespace Game.Module.InGame
         public void MoveToward(Vector2 target, float dt) => Position += StepToward(target, dt);
     }
 }
+
+
+
