@@ -6640,6 +6640,16 @@ namespace Game.Module.InGame
                 if (s == null) break;
                 list.Add(s);
             }
+            // 전용 그림이 없는 탄은 **성질이 가장 가까운 터짐**을 빌려 쓴다.
+            // 예전에는 여기서 `impact_1`(없는 파일)로 떨어져 **맞아도 아무것도 안 보였다** —
+            // 기관총·기관단총·야구공·창·사슬낫이 전부 소리 없이 사라졌다(2026-09-20).
+            if (list.Count == 0 && kind != null && ImpactArt.TryGetValue(kind, out var borrowed))
+                for (int i = 1; i <= 8; i++)
+                {
+                    var s = GetSprite($"impact_{borrowed}_{i}");
+                    if (s == null) break;
+                    list.Add(s);
+                }
             if (list.Count == 0)
             {
                 var fallback = GetSprite("impact_1");
@@ -6649,6 +6659,23 @@ namespace Game.Module.InGame
             if (kind != null) _impactSprite[kind] = frames;
             return frames;
         }
+
+        /// <summary>
+        /// 전용 터짐 그림이 없는 탄 → 빌려 쓸 터짐 이름.
+        ///
+        /// 탄 종류는 21가지인데 터짐 그림은 그만큼 없다. 전부 그려 받는 대신
+        /// **성질이 같은 것끼리 묶어** 빌려 쓴다 — 쇠붙이는 노란 불꽃, 불은 화염,
+        /// 구슬은 마법 반짝임. 화면에서 구별이 필요한 것(번개·독)만 전용으로 그린다.
+        /// </summary>
+        private static readonly Dictionary<string, string> ImpactArt = new()
+        {
+            { "mg", "bullet" }, { "smg", "bullet" }, { "thug", "bullet" },
+            { "ball", "bullet" }, { "spear", "bullet" },   // 물리 타격 — 원작의 노란 별 불꽃
+            { "chain", "scrapgunner" },                    // 사슬낫 — 쇠끼리 부딪히는 불똥
+            { "dragoon", "flame" },                        // 불덩이
+            { "lightorb", "magic" }, { "darkorb", "magic" }, { "medium", "magic" },
+            { "beam", "laser" }, { "spiral", "pulse" }, { "robot", "pulse" },
+        };
 
         private readonly Dictionary<string, Sprite[]> _impactSprite = new();
 
