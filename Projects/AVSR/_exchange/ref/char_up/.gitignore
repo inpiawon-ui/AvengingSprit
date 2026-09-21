@@ -1,0 +1,8 @@
+# 중간 산출물 — 되돌릴 수 있는 것은 담지 않는다.
+# 자른 낱장은 언제든 out_*_raw.png 에서 다시 만들 수 있고(unit_up_cut.py),
+# old/ 의 «퀄업 전» 그림은 이미 git 역사에 들어 있다.
+cut/
+cut_*/
+pick/
+takes/
+old/
