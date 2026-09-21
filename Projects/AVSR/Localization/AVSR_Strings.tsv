@@ -428,9 +428,9 @@ ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部�
 ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	Survival Mode
 ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	Survive to the end
 ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	Scenario Mode
-ui.lobby.mode.scenario.desc	영혼이 깃든 새로운 이야기	魂が宿る新たな物語	A new tale with a soul
+ui.lobby.mode.scenario.desc	되살아난 영혼의 새 이야기	魂が蘇る新たな物語	A soul reborn
 ui.lobby.mode.defense.name	디펜스 모드	ディフェンスモード	Defense Mode
-ui.lobby.mode.defense.desc	몰려오는 적을 막아라	押し寄せる敵を食い止めろ	Hold back the horde
+ui.lobby.mode.defense.desc	몰려오는 적을 격퇴하라	押し寄せる敵を撃退せよ	Repel the incoming horde
 ui.lobby.game_mode	게임 모드	ゲームモード	Game Mode
 ui.lobby.continue	이어서 하기	続きから	
 ui.lobby.play	플레이하기	プレイ	Play
@@ -441,7 +441,7 @@ ui.shop.leave	나간다	店を出る
 ui.shop.title	상점	ショップ	
 ui.lobby.host_button.sub	호스트 육성	ホスト育成	Train Hosts
 ui.lobby.shop_button.sub	상점	ショップ	Shop
-ui.lobby.search.title	유령 수색	ゴースト捜索	Ghost Search
+ui.lobby.search.title	유령 관찰	ゴースト観察	Ghost Watch
 ui.lobby.search.desc	유령이 도시 곳곳을 떠돌며\n골드를 찾아옵니다.	ゴーストが街を巡って\nゴールドを集めてきます。	Your ghost roams the city\nand brings back gold.
 ui.lobby.season.title	시즌 패스	シーズンパス	Season Pass
 ui.lobby.season.sub	12일 남음	残り12日	12 days left
@@ -454,14 +454,15 @@ ui.lobby.chest.open_now	즉시 열기	今すぐ開ける	Open Now
 ui.lobby.chest.claim	보상 획득하기	報酬を受け取る	Claim Reward
 ui.lobby.chest.need_gem	젬 {0}개가 필요합니다	ジェムが{0}個必要です	Needs {0} gems
 ui.lobby.chest.full	상자 칸이 가득 찼습니다	宝箱スロットがいっぱいです	Chest slots are full
-ui.lobby.chest.time_h	{0}시간 {1}분	{0}時間{1}分	{0}h {1}m
+ui.lobby.chest.time_h	{0}시간 {1}분	{0}時間 {1}分	{0}h {1}m
 ui.lobby.chest.time_m	{0}분	{0}分	{0}m
 ui.lobby.chest.time_s	{0}초	{0}秒	{0}s
+ui.lobby.chest.open_confirm	젬 {0}개로 지금 열까요?	ジェム{0}個で今すぐ開けますか?	Open now for {0} gems?
 chest.wood.name	나무 상자	木の宝箱	Wooden Chest
-chest.silver.name	은 상자	銀の宝箱	Silver Chest
-chest.gold.name	금 상자	金の宝箱	Golden Chest
+chest.silver.name	은 상자	シルバーチェスト	Silver Chest
+chest.gold.name	금 상자	ゴールドチェスト	Golden Chest
 chest.magic.name	마법 상자	魔法の宝箱	Magic Chest
-chest.platinum.name	백금 상자	プラチナの宝箱	Platinum Chest
+chest.platinum.name	백금 상자	プラチナチェスト	Platinum Chest
 ui.chest.reward.title	{0} 열기!	{0}を開けた！	{0} Opened!
 ui.chest.reward.gold	골드  +{0}	ゴールド  +{0}	Gold  +{0}
 ui.chest.reward.shard	{0} ({1}급) 조각  ×{2}	{0}（{1}級）のかけら  ×{2}	{0} ({1}) Shards  ×{2}

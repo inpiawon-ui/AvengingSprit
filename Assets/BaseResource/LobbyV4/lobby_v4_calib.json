@@ -1,0 +1,220 @@
+{
+ "items": [
+  {
+   "name": "GoldText",
+   "dx": -2.63,
+   "dy": -0.7,
+   "scale": 1.0599,
+   "dilate": -0.069,
+   "aspect": 0.9759
+  },
+  {
+   "name": "GemText",
+   "dx": 0.4,
+   "dy": -1.1,
+   "scale": 1.0855,
+   "dilate": -0.089,
+   "aspect": 0.8881
+  },
+  {
+   "name": "SeasonPassTitleText",
+   "dx": -0.52,
+   "dy": -0.75,
+   "scale": 1.223,
+   "dilate": -0.114,
+   "aspect": 0.8363
+  },
+  {
+   "name": "SeasonPassSubText",
+   "dx": -1.82,
+   "dy": -0.89,
+   "scale": 1.0362,
+   "dilate": -0.089,
+   "aspect": 0.9654
+  },
+  {
+   "name": "EventTitleText",
+   "dx": 0.46,
+   "dy": -1.42,
+   "scale": 1.1305,
+   "dilate": -0.125,
+   "aspect": 0.8935
+  },
+  {
+   "name": "EventSubText",
+   "dx": 1.46,
+   "dy": -1.29,
+   "scale": 1.003,
+   "dilate": -0.088,
+   "aspect": 0.997
+  },
+  {
+   "name": "GhostSearchTitleText",
+   "dx": -2.69,
+   "dy": -1.41,
+   "scale": 1.2154,
+   "dilate": -0.143,
+   "aspect": 0.8494
+  },
+  {
+   "name": "GhostSearchTimerText",
+   "dx": -1.74,
+   "dy": -0.53,
+   "scale": 1.0303,
+   "dilate": 0.014,
+   "aspect": 0.976
+  },
+  {
+   "name": "GhostSearchGoldText",
+   "dx": -1.09,
+   "dy": -0.48,
+   "scale": 1.0012,
+   "dilate": 0.039,
+   "aspect": 0.9615
+  },
+  {
+   "name": "GhostSearchDescText",
+   "dx": -3.51,
+   "dy": -1.18,
+   "scale": 0.9891,
+   "dilate": -0.157,
+   "aspect": 0.9671
+  },
+  {
+   "name": "HostButtonSubText",
+   "dx": 0.23,
+   "dy": -1.39,
+   "scale": 1.0361,
+   "dilate": -0.063,
+   "aspect": 0.9654
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "dx": 0.62,
+   "dy": -1.0,
+   "scale": 1.0,
+   "dilate": -0.004,
+   "aspect": 1.0
+  },
+  {
+   "name": "ShopButtonSubText",
+   "dx": -0.13,
+   "dy": -0.57,
+   "scale": 1.0346,
+   "dilate": -0.032,
+   "aspect": 0.9753
+  },
+  {
+   "name": "GameModeLabel",
+   "dx": -2.33,
+   "dy": -1.32,
+   "scale": 1.0728,
+   "dilate": 0.125,
+   "aspect": 0.936
+  },
+  {
+   "name": "ModeScenarioTitleText",
+   "dx": -2.64,
+   "dy": 3.31,
+   "scale": 1.498,
+   "dilate": 0.335,
+   "aspect": 0.6688
+  },
+  {
+   "name": "ModeScenarioSubText",
+   "dx": -2.0,
+   "dy": -2.0,
+   "scale": 1.4128,
+   "dilate": 0.003,
+   "aspect": 0.6769
+  },
+  {
+   "name": "ModePlayButtonText",
+   "dx": 0.0,
+   "dy": -1.14,
+   "scale": 1.0552,
+   "dilate": 0.326,
+   "aspect": 0.9626
+  },
+  {
+   "name": "_time1",
+   "dx": 0.0,
+   "dy": -1.58,
+   "scale": 1.0346,
+   "dilate": 0.165,
+   "aspect": 0.9469
+  },
+  {
+   "name": "_time2",
+   "dx": 0.0,
+   "dy": -1.54,
+   "scale": 1.0346,
+   "dilate": 0.187,
+   "aspect": 0.9338
+  },
+  {
+   "name": "_time3",
+   "dx": 0.0,
+   "dy": -1.48,
+   "scale": 1.0346,
+   "dilate": 0.182,
+   "aspect": 0.9598
+  },
+  {
+   "name": "ModeSurvivalTitleText",
+   "dx": 1.0,
+   "dy": 0.0,
+   "scale": 1.2557,
+   "dilate": 0.157,
+   "aspect": 0.7871
+  },
+  {
+   "name": "ModeSurvivalSubText",
+   "dx": 0.5,
+   "dy": -1.5,
+   "scale": 1.3369,
+   "dilate": 0.046,
+   "aspect": 0.7444
+  },
+  {
+   "name": "ModeDefenseTitleText",
+   "dx": 0.44,
+   "dy": 0.38,
+   "scale": 1.4761,
+   "dilate": 0.125,
+   "aspect": 0.7034
+  },
+  {
+   "name": "ModeDefenseSubText",
+   "dx": 7.5,
+   "dy": -2.0,
+   "scale": 1.5741,
+   "dilate": 0.064,
+   "aspect": 0.602
+  },
+  {
+   "name": "_title1",
+   "dx": 2.92,
+   "dy": -1.55,
+   "scale": 1.2055,
+   "dilate": 0.213,
+   "aspect": 0.8334
+  },
+  {
+   "name": "_title2",
+   "dx": 3.0,
+   "dy": -1.96,
+   "scale": 1.1969,
+   "dilate": 0.205,
+   "aspect": 0.8394
+  },
+  {
+   "name": "_title3",
+   "dx": 6.75,
+   "dy": -1.35,
+   "scale": 1.1954,
+   "dilate": 0.209,
+   "aspect": 0.86
+  }
+ ]
+}

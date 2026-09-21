@@ -1,12 +1,12 @@
 ﻿# -*- coding: utf-8 -*-
-"""로비 v3 글자 보정 — 시안 글자와 게임 글자의 잉크를 재서 자리 · 크기 · 굵기를 고친다.
+"""로비 v4 글자 보정 — 시안 글자와 게임 글자의 잉크를 재서 자리 · 크기 · 굵기를 고친다.
 
 쓰는 법:
   python lobby_calib.py <글자 있는 스샷> <글자 뺀 스샷> [--apply]
 
   시안 잉크  = |시안 - 글자 지운 시안(debug_clean.png)|
   게임 잉크  = |글자 있는 스샷 - 글자 뺀 스샷|
-두 잉크의 테두리 상자 · 잉크 양을 비교해 `lobby_v3_calib.json` 의 dx · dy · scale · dilate 를 누적한다.
+두 잉크의 테두리 상자 · 잉크 양을 비교해 `lobby_v4_calib.json` 의 dx · dy · scale · dilate 를 누적한다.
 --apply 가 없으면 재기만 한다.
 """
 import json
@@ -17,16 +17,18 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[3]
-REF = ROOT / "Projects/AVSR/_exchange/ref/lobby_v3"
-SPEC = ROOT / "Assets/BaseResource/LobbyV3/lobby_v3_spec.json"
-CALIB = ROOT / "Assets/BaseResource/LobbyV3/lobby_v3_calib.json"
+REF = ROOT / "Projects/AVSR/_exchange/ref/lobby_v4"
+SPEC = ROOT / "Assets/BaseResource/LobbyV4/lobby_v4_spec.json"
+CALIB = ROOT / "Assets/BaseResource/LobbyV4/lobby_v4_calib.json"
 THRESH = 60
 SUBPIXEL = "--subpixel" in sys.argv
 
 # 내용이 시안과 다른 칸(데이터로 채움) — 높이 · 세로 자리만 맞춘다
 HEIGHT_ONLY = set()
 # 시안 전용 이름 → 게임에서 같은 자리에 뜨는 칸이 없는 것
-SKIP = {"_time2", "_label2", "_cost2"}
+SKIP = set()
+# 가로 자리를 코드가 정하는 칸(글자 폭을 재서 아이콘과 한 덩어리로 가운데 맞춤) — 가로 보정은 먹지 않으니 쌓지 않는다
+NO_DX = {"ModePlayButtonText", "_time1", "_time2", "_time3"}
 
 
 def load(p, size):
@@ -73,18 +75,7 @@ def main():
     size = mock_img.size
     mock = np.asarray(mock_img).astype(np.int16)
     clean = load(REF / "debug_clean.png", size)
-    # 상자 칸 속 글자는 부품(글자 지운 판) + 아이콘을 시안 위에 얹은 것을 기준으로 — 지운 그림 전체는 아이콘 · 띠까지 지워 잉크가 섞인다
-    chest_ref = mock_img.copy()
-    lv3 = ROOT / "Assets/BaseResource/LobbyV3"
-    for p in spec["parts"] + spec["icons"]:
-        if p["name"].startswith("chest_"):
-            continue
-        im = Image.open(lv3 / (p["name"] + ".png")).convert("RGBA")
-        x0, y0, x1, y1 = p["box"]
-        if im.size != (x1 - x0, y1 - y0):
-            im = im.resize((x1 - x0, y1 - y0), Image.LANCZOS)
-        chest_ref.alpha_composite(im, (x0, y0)) if chest_ref.mode == "RGBA" else chest_ref.paste(im, (x0, y0), im)
-    chest_ref = np.asarray(chest_ref.convert("RGB")).astype(np.int16)
+    # 카드 속 글자(_title · _time)도 debug_clean 에서 글자만 지워 두었다(lobby_v4_build.py) — 한 판으로 잰다
     a = load(shot, size)
     b = load(bare, size)
 
@@ -107,7 +98,7 @@ def main():
             reg = (bx0 - 2, by0 - 3, max(ax1, bx1) + 4, by1 + 3)
         others = [u["box"] for u in spec["texts"] if u["name"] != name and u["name"] not in SKIP
                   and not (u["box"][2] <= reg[0] or u["box"][0] >= reg[2] or u["box"][3] <= reg[1] or u["box"][1] >= reg[3])]
-        m = ink(mock, chest_ref if name.startswith("_") else clean, reg, others)
+        m = ink(mock, clean, reg, others)
         o = ink(a, b, reg, others)
         if m is None or o is None:
             rows.append(f"{name:24s} 잉크 없음 m={m is not None} o={o is not None}")
@@ -157,7 +148,7 @@ def main():
             # 높이로 글자 크기, 폭/높이로 가로 비율 — 시안 글꼴이 조금 좁아 한 폰트로는 둘 다 못 맞춘다. 1px 흔들림을 줄이려 0.8 만 간다
             c["scale"] = round(c["scale"] * sh ** 0.8, 4)
             c["aspect"] = round(c["aspect"] * (sw / sh) ** 0.8, 4)
-            c["dx"] = round(c["dx"] + dx, 2)
+            c["dx"] = 0.0 if name in NO_DX else round(c["dx"] + dx, 2)
             c["dy"] = round(c["dy"] + dy, 2)
             if name not in HEIGHT_ONLY:
                 c["dilate"] = round(float(np.clip(c["dilate"] + 0.35 * (r - 1), -0.5, 0.5)), 3)

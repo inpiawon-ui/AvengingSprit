@@ -1,4 +1,4 @@
-"""로비 시안 대조 검수 — 게임 스샷을 시안(lobby_hub_v2.png)과 칸마다 비교한다.
+"""로비 시안 대조 검수 — 게임 스샷을 시안(lobby_hub_v3_jp.png)과 칸마다 비교한다.
 
 사용: python lobby_match.py <게임 스샷.png> [출력 폴더]
   - 스샷은 9:16 화면에서 찍는다(시안이 941×1672 = 9:16).
@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-MOCK = os.path.join(HERE, '..', 'Reference', 'Mockups', 'lobby_hub_v2.png')
+MOCK = os.path.join(HERE, '..', 'Reference', 'Mockups', 'lobby_hub_v3_jp.png')   # 로비 v4 (2026-09-21)
 W, H = 941, 1672
 
 PASS_MAD = 14.0
@@ -18,26 +18,25 @@ PASS_SSIM = 0.80
 
 # 칸 — 시안 좌표(941×1672)
 REGIONS = {
-    'logo': (15, 18, 248, 152),
-    'gold_pill': (278, 16, 588, 85),
-    'gem_pill': (605, 16, 833, 85),
-    'mail': (845, 10, 932, 90),
-    'season_pass': (500, 108, 705, 202),
-    'event': (718, 108, 922, 202),
-    'ghost_box': (26, 230, 340, 505),
-    'ghost_scene': (340, 230, 941, 600),
-    'reward_btn': (640, 495, 915, 592),
-    'chest1': (27, 620, 318, 897),
-    'chest2': (332, 620, 614, 897),
-    'chest3': (626, 620, 914, 897),
-    'mode_label': (20, 910, 215, 965),
-    'card_left': (35, 965, 268, 1385),
-    'card_center': (278, 945, 662, 1390),
-    'card_right': (675, 965, 905, 1385),
-    'arrows': (0, 1120, 941, 1200),
-    'bottom_host': (30, 1485, 310, 1620),
-    'bottom_play': (310, 1480, 632, 1622),
-    'bottom_shop': (635, 1485, 912, 1620),
+    'logo': (20, 15, 295, 165),
+    'gold_pill': (305, 18, 548, 80),
+    'gem_pill': (560, 18, 772, 80),
+    'mail_settings': (785, 5, 935, 85),
+    'season_pass': (488, 100, 700, 198),
+    'event': (713, 100, 918, 198),
+    'ghost_box': (33, 248, 333, 510),
+    'ghost_scene': (340, 210, 941, 630),
+    'chest1': (37, 652, 320, 902),
+    'chest2': (332, 652, 610, 902),
+    'chest3': (622, 652, 905, 902),
+    'mode_label': (28, 918, 280, 970),
+    'scenario': (28, 968, 912, 1208),
+    'survival': (32, 1212, 465, 1410),
+    'defense': (474, 1212, 910, 1410),
+    'dots': (400, 1412, 540, 1442),
+    'bottom_host': (5, 1474, 301, 1668),
+    'bottom_play': (305, 1471, 636, 1670),
+    'bottom_shop': (640, 1474, 938, 1668),
 }
 
 

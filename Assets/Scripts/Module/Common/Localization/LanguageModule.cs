@@ -64,7 +64,7 @@ namespace Game.Module.Common
         private List<TMP_FontAsset> _pixelOriginal;
 
         // 획 두께 보정 재질 — (폰트, 두께)마다 하나를 여러 글자 칸이 같이 쓴다
-        private readonly Dictionary<(int font, int dilate), Material> _weights = new();
+        private readonly Dictionary<(int font, int dilate, int outline, uint color), Material> _weights = new();
 
         public Language Current => _current;
         public bool IsReady => _table != null;
@@ -218,7 +218,7 @@ namespace Game.Module.Common
                 if (text.font != target.Heavy) text.font = target.Heavy;
                 if (target.HasHeavy) text.fontStyle &= ~FontStyles.Bold;
                 else text.fontStyle |= FontStyles.Bold;
-                if (heavy != null) ApplyWeight(text, heavy.Dilate);
+                if (heavy != null) ApplyWeight(text, heavy);
                 return;
             }
 
@@ -245,21 +245,30 @@ namespace Game.Module.Common
         }
 
         /// <summary>
-        /// 획 두께 보정. 0 이면 폰트 기본 재질. 폰트를 바꾸면 재질이 기본으로 돌아가므로 바꿀 때마다 다시 입힌다.
+        /// 획 두께 보정 · 외곽선. 둘 다 0 이면 폰트 기본 재질. 폰트를 바꾸면 재질이 기본으로 돌아가므로 바꿀 때마다 다시 입힌다.
         /// </summary>
-        private void ApplyWeight(TMP_Text text, float dilate)
+        private void ApplyWeight(TMP_Text text, HeavyText heavy)
         {
-            int step = Mathf.RoundToInt(dilate * 100f);
-            if (step == 0)
+            int step = Mathf.RoundToInt(heavy.Dilate * 100f);
+            int outline = Mathf.RoundToInt(heavy.OutlineWidth * 100f);
+            if (step == 0 && outline == 0)
             {
                 if (text.fontSharedMaterial != text.font.material) text.fontSharedMaterial = text.font.material;
                 return;
             }
-            var key = (text.font.GetInstanceID(), step);
+            var c = heavy.OutlineColor;
+            uint color = outline == 0 ? 0u : (uint)(c.r << 24 | c.g << 16 | c.b << 8 | c.a);
+            var key = (text.font.GetInstanceID(), step, outline, color);
             if (!_weights.TryGetValue(key, out var m) || m == null)
             {
-                m = new Material(text.font.material) { name = $"{text.font.name} W{step}" };
+                m = new Material(text.font.material) { name = $"{text.font.name} W{step} O{outline}" };
                 m.SetFloat(ShaderUtilities.ID_FaceDilate, step / 100f);
+                if (outline > 0)
+                {
+                    m.SetFloat(ShaderUtilities.ID_OutlineWidth, outline / 100f);
+                    m.SetColor(ShaderUtilities.ID_OutlineColor, c);
+                    m.EnableKeyword(ShaderUtilities.Keyword_Outline);   // 모바일 셰이더는 이 키워드가 없으면 외곽선을 안 그린다
+                }
                 _weights[key] = m;
             }
             text.fontSharedMaterial = m;

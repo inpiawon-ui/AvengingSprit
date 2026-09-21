@@ -3,39 +3,41 @@ using UnityEngine;
 namespace Game.Module.Lobby
 {
     /// <summary>
-    /// 상자 칸 속 배치 — 상태마다 자리가 다르다 (로비 v3, 시안 lobby_hub_v2 그대로).
+    /// 상자 카드 속 상자 그림의 자리 — 등급마다 다르다 (로비 v4, 시안 lobby_hub_v3_jp 그대로).
     ///
-    /// 시안에서 「세는 중」 칸은 상자가 위에 있고 아래에 시간 판 · 젬 버튼이,
-    /// 「완료」 칸은 위에 월계관 띠 · 가운데 상자 · 아래 금색 버튼이 온다. 상자와 버튼의
-    /// 자리 · 크기가 두 상태에서 다르므로 칸마다 두 벌을 들고, `LobbyMainUI` 가 상태에 맞춰 옮긴다.
+    /// 시안의 세 카드는 은 · 금 · 백금 상자를 한 장씩 담고 있고, 상자마다 크기 · 자리가 조금씩 다르다.
+    /// 어느 칸에 어느 등급이 올지는 매번 달라서, 칸마다 세 등급의 자리를 다 들고 `LobbyMainUI` 가 골라 옮긴다.
     ///
     /// 좌표는 칸 기준(왼쪽 위 원점, 아래로 음수) anchoredPosition · sizeDelta 다. 빌더가 채운다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class ChestSlotLayout : MonoBehaviour
     {
-        [SerializeField] private Rect _chestCounting;
-        [SerializeField] private Rect _chestReady;
-        [SerializeField] private Rect _buttonCounting;
-        [SerializeField] private Rect _buttonReady;
-
-        public void Set(Rect chestCounting, Rect chestReady, Rect buttonCounting, Rect buttonReady)
+        [System.Serializable]
+        private struct GradeRect
         {
-            _chestCounting = chestCounting; _chestReady = chestReady;
-            _buttonCounting = buttonCounting; _buttonReady = buttonReady;
+            public string Key;
+            public Rect Rect;
         }
 
-        public void Apply(RectTransform chest, RectTransform button, bool ready)
+        [SerializeField] private GradeRect[] _chests = System.Array.Empty<GradeRect>();
+
+        public void Set(string[] keys, Rect[] rects)
         {
-            Place(chest, ready ? _chestReady : _chestCounting);
-            Place(button, ready ? _buttonReady : _buttonCounting);
+            _chests = new GradeRect[keys.Length];
+            for (int i = 0; i < keys.Length; i++) _chests[i] = new GradeRect { Key = keys[i], Rect = rects[i] };
         }
 
-        private static void Place(RectTransform rt, Rect r)
+        public void Apply(RectTransform chest, string chestKey)
         {
-            if (rt == null || r.size == Vector2.zero) return;
-            rt.anchoredPosition = r.position;
-            rt.sizeDelta = r.size;
+            if (chest == null) return;
+            for (int i = 0; i < _chests.Length; i++)
+            {
+                if (_chests[i].Key != chestKey) continue;
+                chest.anchoredPosition = _chests[i].Rect.position;
+                chest.sizeDelta = _chests[i].Rect.size;
+                return;
+            }
         }
     }
 }

@@ -1,0 +1,587 @@
+{
+ "mockupW": 941,
+ "mockupH": 1672,
+ "splitY": 632,
+ "extendH": 539,
+ "extendOverlap": 12,
+ "sideW": 170,
+ "texts": [
+  {
+   "name": "GoldText",
+   "box": [
+    406,
+    38,
+    478,
+    66
+   ],
+   "color": "#FFED65",
+   "align": "C",
+   "area": [
+    392,
+    28,
+    494,
+    72
+   ],
+   "size": 27
+  },
+  {
+   "name": "GemText",
+   "box": [
+    626,
+    43,
+    712,
+    63
+   ],
+   "color": "#9AFEFF",
+   "align": "C",
+   "area": [
+    616,
+    28,
+    718,
+    72
+   ],
+   "size": 19
+  },
+  {
+   "name": "SeasonPassTitleText",
+   "box": [
+    575,
+    129,
+    682,
+    150
+   ],
+   "color": "#FFFFFF",
+   "align": "C",
+   "area": [
+    566,
+    122,
+    692,
+    156
+   ],
+   "size": 18
+  },
+  {
+   "name": "SeasonPassSubText",
+   "box": [
+    582,
+    161,
+    671,
+    183
+   ],
+   "color": "#FFF769",
+   "align": "C",
+   "area": [
+    566,
+    154,
+    692,
+    190
+   ],
+   "size": 22
+  },
+  {
+   "name": "EventTitleText",
+   "box": [
+    811,
+    130,
+    892,
+    151
+   ],
+   "color": "#FFFFFF",
+   "align": "C",
+   "area": [
+    800,
+    122,
+    902,
+    156
+   ],
+   "size": 21
+  },
+  {
+   "name": "EventSubText",
+   "box": [
+    820,
+    161,
+    886,
+    184
+   ],
+   "color": "#FEAFF6",
+   "align": "C",
+   "area": [
+    800,
+    154,
+    902,
+    190
+   ],
+   "size": 23
+  },
+  {
+   "name": "GhostSearchTitleText",
+   "box": [
+    142,
+    280,
+    262,
+    303
+   ],
+   "color": "#FFFFFF",
+   "align": "L",
+   "area": [
+    132,
+    272,
+    268,
+    306
+   ],
+   "size": 20
+  },
+  {
+   "name": "GhostSearchTimerText",
+   "box": [
+    143,
+    318,
+    293,
+    348
+   ],
+   "color": "#02FDFF",
+   "align": "L",
+   "area": [
+    136,
+    308,
+    302,
+    352
+   ],
+   "size": 36
+  },
+  {
+   "name": "GhostSearchGoldText",
+   "box": [
+    125,
+    372,
+    290,
+    408
+   ],
+   "color": "#FEF06E",
+   "align": "L",
+   "area": [
+    116,
+    360,
+    302,
+    408
+   ],
+   "size": 36
+  },
+  {
+   "name": "GhostSearchDescText",
+   "box": [
+    61,
+    434,
+    306,
+    489
+   ],
+   "color": "#FFFFFF",
+   "align": "L",
+   "area": [
+    50,
+    426,
+    314,
+    498
+   ],
+   "size": 23
+  },
+  {
+   "name": "HostButtonSubText",
+   "box": [
+    100,
+    1623,
+    216,
+    1647
+   ],
+   "color": "#00FAFF",
+   "align": "C",
+   "area": [
+    86,
+    1614,
+    226,
+    1652
+   ],
+   "size": 24
+  },
+  {
+   "name": "ChapterButtonSubText",
+   "box": [
+    403,
+    1623,
+    538,
+    1646
+   ],
+   "color": "#FFFEFF",
+   "align": "C",
+   "area": [
+    390,
+    1619,
+    548,
+    1652
+   ],
+   "size": 23
+  },
+  {
+   "name": "ShopButtonSubText",
+   "box": [
+    744,
+    1623,
+    836,
+    1646
+   ],
+   "color": "#00FAFF",
+   "align": "C",
+   "area": [
+    728,
+    1614,
+    848,
+    1652
+   ],
+   "size": 23
+  },
+  {
+   "name": "GameModeLabel",
+   "box": [
+    61,
+    928,
+    262,
+    963
+   ],
+   "color": "#F8F8F9",
+   "align": "L",
+   "area": [
+    56,
+    920,
+    274,
+    968
+   ],
+   "size": 34
+  },
+  {
+   "name": "ModeScenarioTitleText",
+   "box": [
+    163,
+    1019,
+    404,
+    1066
+   ],
+   "color": "#F5F8FA",
+   "align": "L",
+   "area": [
+    154,
+    1016,
+    412,
+    1070
+   ],
+   "size": 35
+  },
+  {
+   "name": "ModeScenarioSubText",
+   "box": [
+    167,
+    1070,
+    373,
+    1100
+   ],
+   "color": "#00C7DE",
+   "align": "L",
+   "area": [
+    158,
+    1070,
+    382,
+    1106
+   ],
+   "size": 23
+  },
+  {
+   "name": "ModePlayButtonText",
+   "box": [
+    705,
+    1133,
+    803,
+    1167
+   ],
+   "color": "#080702",
+   "align": "C",
+   "area": [
+    690,
+    1122,
+    812,
+    1174
+   ],
+   "size": 34
+  },
+  {
+   "name": "ModeSurvivalTitleText",
+   "box": [
+    152,
+    1335,
+    352,
+    1366
+   ],
+   "color": "#F5F5F6",
+   "align": "C",
+   "area": [
+    136,
+    1328,
+    364,
+    1366
+   ],
+   "size": 26
+  },
+  {
+   "name": "ModeSurvivalSubText",
+   "box": [
+    169,
+    1366,
+    334,
+    1396
+   ],
+   "color": "#60BBD5",
+   "align": "C",
+   "area": [
+    150,
+    1366,
+    350,
+    1400
+   ],
+   "size": 21
+  },
+  {
+   "name": "ModeDefenseTitleText",
+   "box": [
+    584,
+    1331,
+    797,
+    1363
+   ],
+   "color": "#F4F3F6",
+   "align": "C",
+   "area": [
+    576,
+    1328,
+    806,
+    1366
+   ],
+   "size": 24
+  },
+  {
+   "name": "ModeDefenseSubText",
+   "box": [
+    591,
+    1366,
+    796,
+    1393
+   ],
+   "color": "#64C5DD",
+   "align": "C",
+   "area": [
+    576,
+    1366,
+    806,
+    1400
+   ],
+   "size": 19
+  },
+  {
+   "name": "_title1",
+   "box": [
+    96,
+    672,
+    268,
+    696
+   ],
+   "color": "#010139",
+   "align": "C",
+   "area": [
+    46,
+    662,
+    311,
+    706
+   ],
+   "size": 22
+  },
+  {
+   "name": "_title2",
+   "box": [
+    389,
+    671,
+    561,
+    696
+   ],
+   "color": "#010138",
+   "align": "C",
+   "area": [
+    341,
+    662,
+    601,
+    706
+   ],
+   "size": 22
+  },
+  {
+   "name": "_title3",
+   "box": [
+    682,
+    672,
+    857,
+    695
+   ],
+   "color": "#01013C",
+   "align": "C",
+   "area": [
+    631,
+    662,
+    896,
+    706
+   ],
+   "size": 22
+  },
+  {
+   "name": "_time1",
+   "box": [
+    151,
+    851,
+    267,
+    875
+   ],
+   "color": "#00002C",
+   "align": "L",
+   "area": [
+    134,
+    842,
+    295,
+    886
+   ],
+   "size": 24
+  },
+  {
+   "name": "_time2",
+   "box": [
+    445,
+    851,
+    561,
+    875
+   ],
+   "color": "#00002E",
+   "align": "L",
+   "area": [
+    429,
+    842,
+    585,
+    886
+   ],
+   "size": 24
+  },
+  {
+   "name": "_time3",
+   "box": [
+    740,
+    851,
+    856,
+    875
+   ],
+   "color": "#000030",
+   "align": "L",
+   "area": [
+    719,
+    842,
+    880,
+    886
+   ],
+   "size": 24
+  }
+ ],
+ "parts": [
+  {
+   "name": "chest_silver",
+   "box": [
+    99,
+    704,
+    263,
+    831
+   ],
+   "card": 0
+  },
+  {
+   "name": "chest_gold",
+   "box": [
+    388,
+    702,
+    556,
+    831
+   ],
+   "card": 1
+  },
+  {
+   "name": "chest_platinum",
+   "box": [
+    680,
+    701,
+    850,
+    831
+   ],
+   "card": 2
+  },
+  {
+   "name": "timeplate",
+   "box": [
+    49,
+    832,
+    308,
+    892
+   ],
+   "card": 0
+  }
+ ],
+ "icons": [
+  {
+   "name": "playarrow",
+   "box": [
+    816,
+    1136,
+    838,
+    1168
+   ]
+  },
+  {
+   "name": "clock",
+   "box": [
+    87,
+    842,
+    127,
+    881
+   ]
+  }
+ ],
+ "slots": [
+  {
+   "name": "ChestSlot1",
+   "box": [
+    37,
+    652,
+    320,
+    902
+   ]
+  },
+  {
+   "name": "ChestSlot2",
+   "box": [
+    332,
+    652,
+    610,
+    902
+   ]
+  },
+  {
+   "name": "ChestSlot3",
+   "box": [
+    622,
+    652,
+    905,
+    902
+   ]
+  }
+ ]
+}

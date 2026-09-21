@@ -1880,17 +1880,17 @@ MonoBehaviour:
     _ja: "\u30B7\u30CA\u30EA\u30AA\u30E2\u30FC\u30C9"
     _en: Scenario Mode
   - _key: ui.lobby.mode.scenario.desc
-    _ko: "\uC601\uD63C\uC774 \uAE43\uB4E0 \uC0C8\uB85C\uC6B4 \uC774\uC57C\uAE30"
-    _ja: "\u9B42\u304C\u5BBF\u308B\u65B0\u305F\u306A\u7269\u8A9E"
-    _en: A new tale with a soul
+    _ko: "\uB418\uC0B4\uC544\uB09C \uC601\uD63C\uC758 \uC0C8 \uC774\uC57C\uAE30"
+    _ja: "\u9B42\u304C\u8607\u308B\u65B0\u305F\u306A\u7269\u8A9E"
+    _en: A soul reborn
   - _key: ui.lobby.mode.defense.name
     _ko: "\uB514\uD39C\uC2A4 \uBAA8\uB4DC"
     _ja: "\u30C7\u30A3\u30D5\u30A7\u30F3\u30B9\u30E2\u30FC\u30C9"
     _en: Defense Mode
   - _key: ui.lobby.mode.defense.desc
-    _ko: "\uBAB0\uB824\uC624\uB294 \uC801\uC744 \uB9C9\uC544\uB77C"
-    _ja: "\u62BC\u3057\u5BC4\u305B\u308B\u6575\u3092\u98DF\u3044\u6B62\u3081\u308D"
-    _en: Hold back the horde
+    _ko: "\uBAB0\uB824\uC624\uB294 \uC801\uC744 \uACA9\uD1F4\uD558\uB77C"
+    _ja: "\u62BC\u3057\u5BC4\u305B\u308B\u6575\u3092\u6483\u9000\u305B\u3088"
+    _en: Repel the incoming horde
   - _key: ui.lobby.game_mode
     _ko: "\uAC8C\uC784 \uBAA8\uB4DC"
     _ja: "\u30B2\u30FC\u30E0\u30E2\u30FC\u30C9"
@@ -1932,9 +1932,9 @@ MonoBehaviour:
     _ja: "\u30B7\u30E7\u30C3\u30D7"
     _en: Shop
   - _key: ui.lobby.search.title
-    _ko: "\uC720\uB839 \uC218\uC0C9"
-    _ja: "\u30B4\u30FC\u30B9\u30C8\u635C\u7D22"
-    _en: Ghost Search
+    _ko: "\uC720\uB839 \uAD00\uCC30"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u89B3\u5BDF"
+    _en: Ghost Watch
   - _key: ui.lobby.search.desc
     _ko: "\uC720\uB839\uC774 \uB3C4\uC2DC \uACF3\uACF3\uC744 \uB5A0\uB3CC\uBA70\n\uACE8\uB4DC\uB97C
       \uCC3E\uC544\uC635\uB2C8\uB2E4."
@@ -1972,7 +1972,7 @@ MonoBehaviour:
     _en: Chest slots are full
   - _key: ui.lobby.chest.time_h
     _ko: "{0}\uC2DC\uAC04 {1}\uBD84"
-    _ja: "{0}\u6642\u9593{1}\u5206"
+    _ja: "{0}\u6642\u9593 {1}\u5206"
     _en: '{0}h {1}m'
   - _key: ui.lobby.chest.time_m
     _ko: "{0}\uBD84"
@@ -1988,11 +1988,11 @@ MonoBehaviour:
     _en: Wooden Chest
   - _key: chest.silver.name
     _ko: "\uC740 \uC0C1\uC790"
-    _ja: "\u9280\u306E\u5B9D\u7BB1"
+    _ja: "\u30B7\u30EB\u30D0\u30FC\u30C1\u30A7\u30B9\u30C8"
     _en: Silver Chest
   - _key: chest.gold.name
     _ko: "\uAE08 \uC0C1\uC790"
-    _ja: "\u91D1\u306E\u5B9D\u7BB1"
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u30C1\u30A7\u30B9\u30C8"
     _en: Golden Chest
   - _key: chest.magic.name
     _ko: "\uB9C8\uBC95 \uC0C1\uC790"
@@ -2016,7 +2016,7 @@ MonoBehaviour:
     _en: Ongoing
   - _key: chest.platinum.name
     _ko: "\uBC31\uAE08 \uC0C1\uC790"
-    _ja: "\u30D7\u30E9\u30C1\u30CA\u306E\u5B9D\u7BB1"
+    _ja: "\u30D7\u30E9\u30C1\u30CA\u30C1\u30A7\u30B9\u30C8"
     _en: Platinum Chest
   - _key: ui.chest.reward.title
     _ko: "{0} \uC5F4\uAE30!"
@@ -2099,3 +2099,7 @@ MonoBehaviour:
     _ko: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308B"
     _ja: Claim
     _en: 
+  - _key: ui.lobby.chest.open_confirm
+    _ko: "\uC82C {0}\uAC1C\uB85C \uC9C0\uAE08 \uC5F4\uAE4C\uC694?"
+    _ja: "\u30B8\u30A7\u30E0{0}\u500B\u3067\u4ECA\u3059\u3050\u958B\u3051\u307E\u3059\u304B?"
+    _en: Open now for {0} gems?

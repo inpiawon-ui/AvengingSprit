@@ -8,12 +8,19 @@ namespace Game.Module.Common
     ///
     /// <see cref="Dilate"/> 는 획 두께 보정이다. 시안 글자마다 굵기가 조금씩 달라(보통 · 중간 · 굵게)
     /// 폰트를 여러 벌 두는 대신 한 폰트의 획을 깎거나 불린다. 언어가 바뀌어도 같은 값을 다시 입힌다.
+    ///
+    /// <see cref="OutlineWidth"/> 도 같은 이유로 여기서 쥔다 — 언어가 바뀌면 재질이 통째로 바뀌어
+    /// 글자 칸에 따로 올린 외곽선은 사라진다(로비 v4 그림 위 글자, 2026-09-21).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HeavyText : MonoBehaviour
     {
         [SerializeField, Range(-0.5f, 0.5f)] private float _dilate;
+        [SerializeField, Range(0f, 0.5f)] private float _outlineWidth;
+        [SerializeField] private Color32 _outlineColor = new Color32(0, 0, 0, 255);
 
         public float Dilate => _dilate;
+        public float OutlineWidth => _outlineWidth;
+        public Color32 OutlineColor => _outlineColor;
     }
 }

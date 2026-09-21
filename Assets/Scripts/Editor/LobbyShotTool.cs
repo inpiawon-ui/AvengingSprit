@@ -1,4 +1,5 @@
 using System.IO;
+using Game.Module.Common;
 using Game.Module.Common.Chest;
 using Game.User;
 using GameFramework.Core.Base;
@@ -10,8 +11,11 @@ using UnityEngine.UI;
 namespace Game.Editor
 {
     /// <summary>
-    /// 로비를 해상도별로 찍어 둔다. 상자 세 칸에 「세는 중 · 세는 중 · 완료」를 심어
-    /// 세 가지 모습이 한 장에 다 나오게 한다.
+    /// 로비를 해상도 · 상태 · 언어별로 찍어 둔다 (로비 v4 검수용).
+    ///   - 시안 상태: 상자 세 칸에 은 · 금 · 백금 「3時間 12分」, 골드 1,357 · 젬 1,000,000 — 시안과 픽셀 대조한다
+    ///   - 글자 뺀 판: 같은 상태에서 글자만 끈 것 — `lobby_calib.py` 가 게임 글자 잉크를 잰다
+    ///   - 상태: 빈 칸 · 완료 · 세는 중(짧은 시간)
+    ///   - 한국어 · 영어, 4:3 · 20:9
     ///
     /// ⚠ **`EditorApplication.update` 안에서는 절대 예외를 흘리지 마라.**
     ///   2026-09-16 에 `CoreModule.Get` 이 매 프레임 던지는 바람에 로그가 720 MB 로
@@ -25,19 +29,18 @@ namespace Game.Editor
         private const string Key = "avsr.lobbyshot";
         private const string Settled = Key + ".settled";
 
-        /// <summary>
-        /// 무엇을 찍나. `turn` 은 찍기 **전에** 게임 모드 칸을 오른쪽으로 넘길 횟수다.
-        ///
-        /// ⚠ 회전은 반드시 찍어 본다. 목업은 한 장뿐이라 「가운데가 시나리오일 때」만
-        ///   맞춰 놓고 끝내기 쉬운데, 넘기면 칸마다 그림·자물쇠·MAIN 딱지가 갈아 끼워진다.
-        /// </summary>
-        private static readonly (int w, int h, int turn, string name)[] Shots =
+        private enum Seeds { Mockup, States }
+
+        /// <summary>무엇을 찍나. `bare` 는 로비 글자를 전부 끄고 찍는다(글자 보정용).</summary>
+        private static readonly (int w, int h, Seeds seed, Language lang, bool bare, string name)[] Shots =
         {
-            (768, 1024, 0, "lobby_4x3"),
-            (720, 1280, 0, "lobby_16x9"),
-            (1080, 2400, 0, "lobby_20x9"),
-            (720, 1280, 1, "lobby_mode_turn1"),
-            (720, 1280, 1, "lobby_mode_turn2"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, false, "lobby_16x9"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, true, "lobby_16x9_bare"),
+            (720, 1280, Seeds.States, Language.Japanese, false, "lobby_states"),
+            (720, 1280, Seeds.Mockup, Language.Korean, false, "lobby_ko"),
+            (720, 1280, Seeds.Mockup, Language.English, false, "lobby_en"),
+            (768, 1024, Seeds.Mockup, Language.Japanese, false, "lobby_4x3"),
+            (1080, 2400, Seeds.Mockup, Language.Japanese, false, "lobby_20x9"),
         };
 
         private static int _wait;
@@ -49,7 +52,7 @@ namespace Game.Editor
         {
             SessionState.SetInt(Key, 1);
             SessionState.SetBool(Settled, false);
-            SessionState.SetInt(Key + ".turned", -1);
+            SessionState.SetInt(Key + ".prepared", -1);
             // 출시 언어(일본어)로 고정해 찍는다. 저장된 언어가 무엇이든 같은 조건에서
             // 찍혀야 어제 것과 오늘 것을 견줄 수 있다.
             // ⚠ 목업은 한국어라 글자 길이가 다르다 — 자리 대조는 목업 좌표로 하고,
@@ -80,7 +83,7 @@ namespace Game.Editor
 
         private static void Step(int step)
         {
-            var card = GameObject.Find("ModeCardCenter");
+            var card = GameObject.Find("ModeScenarioCard");
             bool loading = GameObject.Find("[LoadingView]") != null;
             if (card == null || !card.activeInHierarchy || loading)
             {
@@ -99,8 +102,7 @@ namespace Game.Editor
             if (!SessionState.GetBool(Settled, false))
             {
                 SessionState.SetBool(Settled, true);
-                Seed();
-                _wait = 180;
+                _wait = 120;
                 return;
             }
 
@@ -108,6 +110,7 @@ namespace Game.Editor
             if (shot >= Shots.Length)
             {
                 SessionState.SetInt(Key, 0);
+                SetBare(false);
                 Debug.Log("[LobbyShot] 끝");
                 EditorApplication.ExitPlaymode();
                 return;
@@ -121,11 +124,14 @@ namespace Game.Editor
                 return;
             }
 
-            if (s.turn > 0 && SessionState.GetInt(Key + ".turned", 0) < shot)
+            // 찍기 직전에 상태 · 언어를 심는다 — 상자 시간은 흐르므로 매 장 다시 심어야 「3時間 12分」 이 선다
+            if (SessionState.GetInt(Key + ".prepared", -1) < shot)
             {
-                SessionState.SetInt(Key + ".turned", shot);
-                for (int i = 0; i < s.turn; i++) Click("ModeArrowRight");
-                _wait = 60;
+                SessionState.SetInt(Key + ".prepared", shot);
+                if (CoreModule.TryGet<Game.Module.Common.ILanguageService>(out var lang)) lang.SetLanguage(s.lang);
+                Seed(s.seed);
+                SetBare(s.bare);
+                _wait = 90;
                 return;
             }
 
@@ -133,25 +139,57 @@ namespace Game.Editor
             Directory.CreateDirectory(dir);
             ScreenCapture.CaptureScreenshot(Path.Combine(dir, s.name + ".png"));
             Debug.Log($"[LobbyShot] {s.name} {Screen.width}x{Screen.height}");
-            if (shot == 1) LogBottomStrip();
+            if (shot == 0) LogBottomStrip();
             // ⚠ 다음 해상도로 **여기서 바꾸지 마라.** `CaptureScreenshot` 은 다음 프레임 끝에
             //   찍히므로 먼저 바꾸면 이번 장이 다음 해상도로 찍힌다.
             SessionState.SetInt(Key, step + 1);
             _wait = 60;
         }
 
-        /// <summary>세 칸에 「세는 중 · 세는 중 · 완료」를 심는다. 시안용 더미다.</summary>
-        private static void Seed()
+        /// <summary>
+        /// 상자 세 칸을 심는다. 시안용 더미다(저장하지 않는다 — 다음 저장 때까지만 남는다).
+        ///   Mockup  은 · 금 · 백금 「3時間 12分」 — 시안 그대로. 골드 · 젬 글자도 시안 숫자로 덮는다
+        ///   States  빈 칸 · 완료(금) · 세는 중(백금 5분)
+        /// </summary>
+        private static void Seed(Seeds seed)
         {
             if (!CoreModule.TryGet<IPlayerDataService>(out var p) || !p.IsReady) return;
             long now = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            // 목업과 같은 색으로 심는다 — 파랑(은) · 보라(마법) · 금(완료).
-            // 색이 다르면 목업과 나란히 놓고 비교할 때 무엇이 어긋났는지 안 보인다.
-            p.SetChestSlot(0, "silver", now + 1000L * 11520, 4 * 3600);   // 3시간 12분
-            p.SetChestSlot(1, "magic", now + 1000L * 6480, 8 * 3600);     // 1시간 48분
-            p.SetChestSlot(2, "gold", now - 1000L, 2 * 3600);             // 완료
+            if (seed == Seeds.Mockup)
+            {
+                // 3시간 12분 + 40초 — 찍는 사이 1분 단위가 넘어가지 않게
+                for (int i = 0; i < 3; i++)
+                    p.SetChestSlot(i, new[] { "silver", "gold", "platinum" }[i], now + 1000L * (11520 + 40), 4 * 3600);
+            }
+            else
+            {
+                p.SetChestSlot(0, null, 0, 0);
+                p.SetChestSlot(1, "gold", now - 1000L, 2 * 3600);
+                p.SetChestSlot(2, "platinum", now + 1000L * 330, 3600);
+            }
             if (CoreModule.TryGet<IEventBus>(out var bus))
                 bus.Publish(new Game.Module.Events.ChestChangedEvent());
+            // 재화 글자는 화면에서만 시안 숫자로 — 세이브는 건드리지 않는다
+            SetText("GoldText", "1,357");
+            SetText("GemText", "1,000,000");
+        }
+
+        private static void SetText(string name, string value)
+        {
+            var go = GameObject.Find(name);
+            var t = go != null ? go.GetComponent<TMPro.TextMeshProUGUI>() : null;
+            if (t != null) t.text = value;
+        }
+
+        /// <summary>로비 글자를 전부 끄거나 켠다 — 글자 뺀 판을 찍어 게임 글자 잉크만 뽑는다.</summary>
+        private static void SetBare(bool bare)
+        {
+            var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.LobbyMainUI>();
+            if (lobby == null) return;
+            foreach (var t in lobby.GetComponentsInChildren<TMPro.TextMeshProUGUI>(true))
+                t.enabled = !bare;
+            foreach (var img in lobby.GetComponentsInChildren<Image>(true))
+                if (img.name == "ModePlayButtonArrow") img.enabled = !bare;
         }
 
 
