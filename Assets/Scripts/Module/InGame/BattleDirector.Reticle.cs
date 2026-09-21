@@ -21,23 +21,32 @@ namespace Game.Module.InGame
     /// 갱스터 스킬만 조준환을 붙여 돌렸고, **저주 전이는 아무것도 안 그렸으며**,
     /// 보스 조준은 같은 그림을 색도 없이 띄웠다. 플레이어가 배워야 할 규칙이 셋이 된다.
     ///
-    /// 이제 하나다 — **타오르는 낙인이 조여들며 붙고, 천천히 돌고, 색이 뜻을 말한다.**
-    ///   불길(붉은색) = 내가 찍었다(표식) · 보라 = 저주 · 청록 = 보스가 노린다
+    /// 이제 하나다 — **조준 표적이 조여들며 붙고, 숨 쉬듯 커졌다 작아지고, 색이 뜻을 말한다.**
+    ///   붉은색 = 내가 찍었다(표식) · 보라 = 저주 · 청록 = 보스가 노린다
     ///
     /// ⚠ 크기는 **덩치에 맞춘다.** 큰 몸에 작은 고리를 얹으면 가슴에 단 배지처럼 보인다.
     /// </summary>
     public sealed partial class BattleDirector
     {
         /// <summary>표적 기본 지름. 덩치가 작아도 이보다 작아지지 않는다.</summary>
-        private const float ReticleMinSize = 96f;
+        private const float ReticleMinSize = 64f;
 
-        private const float ReticleMaxSize = 230f;
+        private const float ReticleMaxSize = 220f;
 
-        /// <summary>몸 반지름 대비 표적 지름.</summary>
-        private const float ReticleBodyRatio = 2.6f;
+        /// <summary>
+        /// 몸 반지름 대비 표적 지름. `BodyRadius` 는 몸 폭의 0.42 배이므로
+        /// **2.0 이면 몸 폭의 84%** — 캐릭터보다 살짝 작게 얹힌다(기획 2026-09-21).
+        /// 크게 두면 표적이 캐릭터를 잡아먹어 누가 찍혔는지가 오히려 흐려진다.
+        /// </summary>
+        private const float ReticleBodyRatio = 2.0f;
 
-        /// <summary>도는 속도(초당 도). 느리게 — 빠르면 «돌아가는 장식»이 된다.</summary>
-        private const float ReticleSpin = 42f;
+        // ⚠ **돌리지 않는다**(기획 2026-09-21). 조준 기호는 각이 서 있어야 조준으로 읽히는데,
+        //   돌리면 그 각이 계속 어긋나 «돌아가는 장식»이 된다. 살아 있다는 느낌은 맥박이 낸다.
+
+        /// <summary>숨 쉬듯 커졌다 작아진다. 한 바퀴에 걸리는 시간과 폭.</summary>
+        private const float ReticlePulseMin = 0.82f;
+        private const float ReticlePulseMax = 1.08f;
+        private const float ReticlePulseSeconds = 0.75f;
 
         /// <summary>조여들기 시작하는 배율과 걸리는 시간.</summary>
         private const float ReticleSnapFrom = 2.3f;
@@ -80,9 +89,8 @@ namespace Game.Module.InGame
             var im = TakeLoopFx(FxNameOf(kind), at, size) ?? TakeLoopFx("mark", at, size);
             if (im != null)
             {
-                im.SetSpin(ReticleSpin);
                 im.SetSnap(ReticleSnapFrom, ReticleSnapSeconds);   // 조여들며 붙는다
-                im.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+                im.SetPulse(ReticlePulseMin, ReticlePulseMax, ReticlePulseSeconds);
             }
             if (ping)
             {
