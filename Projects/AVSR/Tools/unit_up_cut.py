@@ -117,17 +117,18 @@ def main():
             bad.append(label)
         print(f"검수 {label}: 퀄업 {mine}px / 지금 {theirs}px{mark}")
 
-    # 쓰러짐은 «뼈만 남는» 연출이라 흰 뼈가 있어야 한다 — 초록 양복만 남으면 사람이 넘어진 그림이다
+    # 쓰러짐은 «뼈만 남는» 연출이다.
+    #
+    # ⚠ 색으로 «뼈»를 재는 판정은 **버렸다**(2026-09-21). 두 방향으로 다 틀렸다 —
+    #   아마존은 금발·살색이 뼈로 잡혀 «쓰러진 몸»이 17%로 통과했고,
+    #   박쥐는 제대로 그린 «날개 달린 해골»이 10%로 빠꾸당했다.
+    #   숫자로 가를 수 없는 것을 숫자로 가르면 틀린 쪽을 고친다. 죽음만은 눈으로 본다.
     die2 = OUT / f"unit_{key}_{facing}_die2.png"
     if die2.exists():
         px = np.asarray(Image.open(die2).convert("RGBA"))
         ink = px[..., 3] > 8
         bone = ink & (px[..., 0] > 170) & (px[..., 1] > 150) & (px[..., 2] > 120)
-        ratio = bone.sum() / max(1, ink.sum())
-        ok = ratio > 0.12
-        print(f"검수 쓰러짐2 뼈 비율 {ratio * 100:.0f}%{'' if ok else '  ← 뼈가 없다(빠꾸)'}")
-        if not ok:
-            bad.append("쓰러짐2")
+        print(f"검수 쓰러짐2 밝은 뼈 비율 {bone.sum() / max(1, ink.sum()) * 100:.0f}% (참고용 — 눈으로 확인)")
 
     print("저장:", OUT)
     if bad:

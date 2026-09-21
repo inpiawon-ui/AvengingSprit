@@ -45,6 +45,12 @@ CENTER_TOL = 6       # 발 중심이 이만큼 넘게 흔들리면 좌우로 미
 HEIGHT_TOL = 8       # 키가 이만큼 넘게 들쭉날쭉하면 커졌다 작아졌다 한다
 
 
+# 떠 있는 몸 — 발이 바닥에 닿지 않는다. 게임 쪽 `Unit.FloatingKeys` 와 같은 목록에
+# 날개로 실루엣이 오르내리는 것들을 더했다. 이쪽은 **발줄·키 검사를 하지 않는다** —
+# 떠 있는 몸에 「발이 흔들린다」고 적으면 발주서가 거짓말을 한다.
+FLOATING = {"guru", "snowwoman", "vampire", "death", "ghost", "bat", "sludge"}
+
+
 def ink(path):
     a = np.asarray(Image.open(path).convert("RGBA"))[..., 3]
     return a > 8
@@ -105,12 +111,15 @@ def check(key, facing):
         stats["발줄흔들림"] = max(feet) - min(feet)
         stats["발중심흔들림"] = round(max(centers) - min(centers), 1)
         stats["키차이"] = max(heights) - min(heights)
-        if stats["발줄흔들림"] > FOOT_TOL:
-            bad.append(f"발줄 {stats['발줄흔들림']}px 흔들림")
-        if stats["발중심흔들림"] > CENTER_TOL:
-            bad.append(f"좌우 {stats['발중심흔들림']}px 미끄러짐")
-        if stats["키차이"] > HEIGHT_TOL:
-            bad.append(f"키 {stats['키차이']}px 들쭉날쭉")
+        # 떠 있는 몸은 발이 바닥에 닿지 않는다 — 발줄·발중심·키를 재는 것이 뜻이 없다
+        floating = key in FLOATING
+        if not floating:
+            if stats["발줄흔들림"] > FOOT_TOL:
+                bad.append(f"발줄 {stats['발줄흔들림']}px 흔들림")
+            if stats["발중심흔들림"] > CENTER_TOL:
+                bad.append(f"좌우 {stats['발중심흔들림']}px 미끄러짐")
+            if stats["키차이"] > HEIGHT_TOL:
+                bad.append(f"키 {stats['키차이']}px 들쭉날쭉")
 
     # ── 동작
     stats["걷기"] = int((masks["_walk1"] ^ masks["_walk2"]).sum())
@@ -124,8 +133,9 @@ def check(key, facing):
         bad.append(f"피격 {stats['피격']}")
     if stats["공격"] < ATK_MIN:
         bad.append(f"공격 {stats['공격']}")
-    if stats["뼈"] < BONE_MIN:
-        bad.append(f"뼈 {stats['뼈']} (뼈가 안 남는다)")
+    # ⚠ 뼈는 **숫자로 가르지 않는다**(2026-09-21). 두 방향으로 다 틀렸다 —
+    #   금발·살색이 뼈로 잡혀 «쓰러진 몸»이 통과하고, 제대로 그린 «날개 달린 해골»이 빠꾸당했다.
+    #   값은 남겨 두되(참고용) 문제로 세지 않는다. 죽음만은 눈으로 본다.
     return bad, stats
 
 
