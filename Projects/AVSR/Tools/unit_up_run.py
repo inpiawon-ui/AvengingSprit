@@ -92,13 +92,26 @@ def main():
         if key in SKIP:
             print(f"[{key}] 건너뜀(프레임 구성이 다르다)", flush=True)
             continue
+        if batch.LIMIT_HIT.is_set():
+            print(f"\n‼ 코덱스 사용량 한도 — {key} 부터 멈춘다. 한도가 풀리면 이어서 돌린다.", flush=True)
+            stuck.append((key, ["한도로 못 함"]))
+            continue
         print(f"\n===== {key} =====", flush=True)
         order_and_deliver(key, qa.FACINGS)
+        if batch.LIMIT_HIT.is_set():
+            # 이번 판에서 한도에 걸렸다 — 받은 것만 검수하고, 없는 방향은 «빠꾸»로 세지 않는다
+            print("  ‼ 이 유닛 도중에 한도에 걸렸다 — 반영하지 않는다(방향마다 그림이 섞인다)", flush=True)
+            stuck.append((key, ["한도로 못 함"]))
+            continue
         passed, failed = check(key, qa.FACINGS)
         print(f"  1차 통과 {len(passed)} / 빠꾸 {failed}", flush=True)
 
         if failed:
             order_and_deliver(key, failed)
+            if batch.LIMIT_HIT.is_set():
+                print("  ‼ 재발주 도중 한도 — 반영하지 않는다(방향마다 그림이 섞인다)", flush=True)
+                stuck.append((key, ["한도로 못 함"]))
+                continue
             passed2, failed2 = check(key, failed)
             passed += passed2
             failed = failed2

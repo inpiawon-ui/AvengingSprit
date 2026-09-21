@@ -30,8 +30,23 @@ OUT = os.path.join(ROOT, "Projects", "AVSR", "_exchange", "ref", "char_up")
 CODEX = r"C:\won\tools\node-v24.18.0-win-x64\codex.ps1"
 
 
+class UsageLimit(Exception):
+    """코덱스 사용량 한도. 이 뒤로는 몇 번을 보내도 빈손이다 — 즉시 멈춘다."""
+
+
+# 한도에 한 번 걸리면 같은 판의 나머지 스레드도 보내지 않는다
+LIMIT_HIT = threading.Event()
+
+
 def run_codex(order_path):
-    """발주서 하나를 코덱스에 보낸다. 표준입력으로 밀어 넣는다."""
+    """발주서 하나를 코덱스에 보낸다. 표준입력으로 밀어 넣는다.
+
+    ⚠ 사용량 한도에 걸리면 **빈손으로 정상 종료**한다(납품 파일만 안 생긴다).
+      그걸 모르고 돌리면 «빠꾸 → 재발주 → 빠꾸»를 끝없이 돈다(2026-09-21 세 명을 통째로 날렸다).
+      출력에서 한도 문구를 찾아 `LIMIT_HIT` 을 세운다.
+    """
+    if LIMIT_HIT.is_set():
+        return -1
     env = dict(os.environ)
     env.pop("OPENAI_API_KEY", None)   # ⚠ 로그인으로만 쓴다
     with open(order_path, "r", encoding="utf-8") as f:
@@ -40,6 +55,13 @@ def run_codex(order_path):
            f"& '{CODEX}' exec --sandbox workspace-write --skip-git-repo-check -"]
     p = subprocess.run(cmd, input=text.encode("utf-8"), env=env,
                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=1800)
+    out = p.stdout.decode("utf-8", "replace")
+    if "usage limit" in out:
+        LIMIT_HIT.set()
+        for line in out.splitlines():
+            if "usage limit" in line:
+                print("  ‼ 코덱스 사용량 한도:", line.strip()[:160], flush=True)
+                break
     return p.returncode
 
 
