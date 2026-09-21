@@ -19,7 +19,9 @@ namespace Game.User
         //      전원 봉인(숙련도 0)으로 읽힌다. 잃는 값이 없어 마이그레이션 코드가 필요 없다.
         // v3 — 보물상자 3칸 추가. 기존 저장은 세 배열이 비어 있어 **빈 칸 셋**으로 읽힌다.
         //      길이는 읽을 때 맞추므로(`NormalizeChests`) 마이그레이션 코드가 필요 없다.
-        public const int CurrentSaveVersion = 3;
+        // v4 — 능력치 골드 강화(유령 공통 · 호스트별) · 성장 경로 보상 추가(2026-09-21).
+        //      옛 저장은 배열이 비어 있어 **전부 Lv0 · 보상 안 받음**으로 읽힌다. 길이는 읽을 때 맞춘다.
+        public const int CurrentSaveVersion = 4;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -85,6 +87,17 @@ namespace Game.User
         public long[] chestUnlockAt = Array.Empty<long>();
         public int[] chestSeconds = Array.Empty<int>();
 
+        // ── 능력치 강화(골드) · 성장 경로 ─────────────────────
+        //
+        // 첨자는 `HostStat` 순서(Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed).
+        //   ghostStatLevels  유령 탭에서 올린 값 — **모든 몸**에 붙는다
+        //   hostStatLevels   호스트별 — `hostKeys[i]` 의 값이 [i × 6 + 능력치] 에 들어간다
+        // 성장 경로 보상은 받은 칸을 비트로 적는다(칸 i → 1 << i).
+        [Header("능력치 강화 · 성장 경로")]
+        public int[] ghostStatLevels = Array.Empty<int>();
+        public int[] hostStatLevels = Array.Empty<int>();
+        public int ghostPathClaimed;
+
         [Header("선택")]
         public string selectedHostId = string.Empty;
 
@@ -97,6 +110,13 @@ namespace Game.User
             chestKeys = Resize(chestKeys, slotCount, string.Empty);
             chestUnlockAt = Resize(chestUnlockAt, slotCount, 0L);
             chestSeconds = Resize(chestSeconds, slotCount, 0);
+        }
+
+        /// <summary>능력치 강화 배열 길이를 맞춘다 — 옛 저장(v3)은 비어 있고, 호스트가 늘면 짧다.</summary>
+        public void NormalizeStats(int statCount)
+        {
+            ghostStatLevels = Resize(ghostStatLevels, statCount, 0);
+            hostStatLevels = Resize(hostStatLevels, (hostKeys?.Length ?? 0) * statCount, 0);
         }
 
         private static T[] Resize<T>(T[] src, int n, T fill)

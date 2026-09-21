@@ -1,0 +1,196 @@
+{
+ "items": [
+  {
+   "name": "GoldText",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "TabOnText",
+   "dx": 3.2,
+   "dy": -1.6,
+   "scale": 0.9489,
+   "dilate": 0.186,
+   "aspect": 1.0336
+  },
+  {
+   "name": "CardNameEn",
+   "dx": -0.8,
+   "dy": 0.0,
+   "scale": 1.0608,
+   "dilate": 0.167,
+   "aspect": 0.9225
+  },
+  {
+   "name": "CardName",
+   "dx": -0.8,
+   "dy": 0.8,
+   "scale": 1.0792,
+   "dilate": -0.063,
+   "aspect": 0.9675
+  },
+  {
+   "name": "CardLvLabel",
+   "dx": -2.4,
+   "dy": 0.0,
+   "scale": 1.2473,
+   "dilate": -0.101,
+   "aspect": 0.8879
+  },
+  {
+   "name": "ExpLabel",
+   "dx": -1.6,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": -0.113,
+   "aspect": 1.0
+  },
+  {
+   "name": "StatHeader",
+   "dx": -1.6,
+   "dy": -0.8,
+   "scale": 1.0,
+   "dilate": 0.039,
+   "aspect": 0.9689
+  },
+  {
+   "name": "StatTabOn",
+   "dx": 16.8,
+   "dy": 0.4,
+   "scale": 1.1127,
+   "dilate": 0.224,
+   "aspect": 0.9347
+  },
+  {
+   "name": "RowName",
+   "dx": -0.8,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": -0.215,
+   "aspect": 0.9679
+  },
+  {
+   "name": "RowPct",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.1127,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "ListHeader",
+   "dx": -0.8,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.027,
+   "aspect": 0.9871
+  },
+  {
+   "name": "SortText",
+   "dx": -0.8,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": -0.116,
+   "aspect": 1.0354
+  },
+  {
+   "name": "PathTitle",
+   "dx": -1.6,
+   "dy": 0.0,
+   "scale": 1.0769,
+   "dilate": -0.031,
+   "aspect": 0.9199
+  },
+  {
+   "name": "PathLabelLock",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "BoxLvLabel",
+   "dx": -1.6,
+   "dy": 0.0,
+   "scale": 1.2227,
+   "dilate": -0.169,
+   "aspect": 0.9297
+  },
+  {
+   "name": "ExpValue",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "Nav_host_off",
+   "dx": -9.6,
+   "dy": -2.8,
+   "scale": 0.6888,
+   "dilate": -0.305,
+   "aspect": 1.1563
+  },
+  {
+   "name": "Nav_play_off",
+   "dx": -5.6,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": -0.268,
+   "aspect": 1.0002
+  },
+  {
+   "name": "Nav_shop_off",
+   "dx": -4.8,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": -0.197,
+   "aspect": 1.0285
+  },
+  {
+   "name": "PathLabelDone",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "PathLabelNext",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "PathLabelNow",
+   "dx": 0.0,
+   "dy": 0.0,
+   "scale": 1.0,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "CardDesc",
+   "dx": -4.8,
+   "dy": 0.0,
+   "scale": 1.0869,
+   "dilate": 0.0,
+   "aspect": 1.0
+  },
+  {
+   "name": "RowLvLabel",
+   "dx": -1.6,
+   "dy": 0.0,
+   "scale": 1.1213,
+   "dilate": -0.093,
+   "aspect": 0.999
+  }
+ ]
+}

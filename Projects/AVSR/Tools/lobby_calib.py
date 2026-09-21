@@ -26,9 +26,25 @@ SUBPIXEL = "--subpixel" in sys.argv
 # 내용이 시안과 다른 칸(데이터로 채움) — 높이 · 세로 자리만 맞춘다
 HEIGHT_ONLY = set()
 # 시안 전용 이름 → 게임에서 같은 자리에 뜨는 칸이 없는 것
-SKIP = set()
+# 하단 바 부제는 로비 · 육성 공통 하단 바로 옮겼다(2026-09-21) — 로비 시안 자리가 아니다
+SKIP = {"HostButtonSubText", "ChapterButtonSubText", "ShopButtonSubText"}
 # 가로 자리를 코드가 정하는 칸(글자 폭을 재서 아이콘과 한 덩어리로 가운데 맞춤) — 가로 보정은 먹지 않으니 쌓지 않는다
 NO_DX = {"ModePlayButtonText", "_time1", "_time2", "_time3"}
+# 그림 위 외곽선 글자 — 양쪽 다 **글자 본색**으로 잰다. 차이로 재면 시안 쪽은 코덱스 판의 그림 차이까지,
+# 게임 쪽은 외곽선까지 잡혀 서로 다른 것을 견준다(제목 · 설명이 겹친 원인, 2026-09-21)
+COLOR_TEXTS = {"ModeScenarioTitleText", "ModeScenarioSubText", "ModeSurvivalTitleText", "ModeSurvivalSubText",
+               "ModeDefenseTitleText", "ModeDefenseSubText"}
+
+
+def color_ink(a, box, hex_color, tol=70):
+    x0, y0, x1, y1 = box
+    col = np.array([int(hex_color[i:i + 2], 16) for i in (1, 3, 5)])
+    m = np.abs(a[y0:y1, x0:x1] - col).sum(axis=2) < tol
+    ys, xs = np.nonzero(m)
+    if len(xs) < 20:
+        return None
+    return dict(x0=x0 + xs.min(), x1=x0 + xs.max() + 1, y0=y0 + ys.min(), y1=y0 + ys.max() + 1,
+                count=int(m.sum()), weight=float(m.sum()), img=m.astype(np.float32))
 
 
 def load(p, size):
@@ -98,8 +114,12 @@ def main():
             reg = (bx0 - 2, by0 - 3, max(ax1, bx1) + 4, by1 + 3)
         others = [u["box"] for u in spec["texts"] if u["name"] != name and u["name"] not in SKIP
                   and not (u["box"][2] <= reg[0] or u["box"][0] >= reg[2] or u["box"][3] <= reg[1] or u["box"][1] >= reg[3])]
-        m = ink(mock, clean, reg, others)
-        o = ink(a, b, reg, others)
+        if name in COLOR_TEXTS:
+            m = color_ink(mock, reg, t["color"])
+            o = color_ink(a, reg, t["color"])
+        else:
+            m = ink(mock, clean, reg, others)
+            o = ink(a, b, reg, others)
         if m is None or o is None:
             rows.append(f"{name:24s} 잉크 없음 m={m is not None} o={o is not None}")
             continue

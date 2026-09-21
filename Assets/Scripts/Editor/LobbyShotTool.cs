@@ -31,16 +31,29 @@ namespace Game.Editor
 
         private enum Seeds { Mockup, States }
 
-        /// <summary>무엇을 찍나. `bare` 는 로비 글자를 전부 끄고 찍는다(글자 보정용).</summary>
-        private static readonly (int w, int h, Seeds seed, Language lang, bool bare, string name)[] Shots =
+        /// <summary>어느 화면 — 로비(PLAY 칸) · 육성 유령 탭 · 육성 호스트 능력치 · 육성 호스트 스킬.</summary>
+        private enum Screen2 { Lobby, Ghost, HostStats, HostSkill }
+
+        /// <summary>무엇을 찍나. `bare` 는 글자를 전부 끄고 찍는다(글자 보정용).</summary>
+        private static readonly (int w, int h, Seeds seed, Language lang, bool bare, Screen2 screen, string name)[] Shots =
         {
-            (720, 1280, Seeds.Mockup, Language.Japanese, false, "lobby_16x9"),
-            (720, 1280, Seeds.Mockup, Language.Japanese, true, "lobby_16x9_bare"),
-            (720, 1280, Seeds.States, Language.Japanese, false, "lobby_states"),
-            (720, 1280, Seeds.Mockup, Language.Korean, false, "lobby_ko"),
-            (720, 1280, Seeds.Mockup, Language.English, false, "lobby_en"),
-            (768, 1024, Seeds.Mockup, Language.Japanese, false, "lobby_4x3"),
-            (1080, 2400, Seeds.Mockup, Language.Japanese, false, "lobby_20x9"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, false, Screen2.Lobby, "lobby_16x9"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, true, Screen2.Lobby, "lobby_16x9_bare"),
+            (720, 1280, Seeds.States, Language.Japanese, false, Screen2.Lobby, "lobby_states"),
+            (720, 1280, Seeds.Mockup, Language.Korean, false, Screen2.Lobby, "lobby_ko"),
+            (720, 1280, Seeds.Mockup, Language.English, false, Screen2.Lobby, "lobby_en"),
+            (768, 1024, Seeds.Mockup, Language.Japanese, false, Screen2.Lobby, "lobby_4x3"),
+            (1080, 2400, Seeds.Mockup, Language.Japanese, false, Screen2.Lobby, "lobby_20x9"),
+            (720, 1280, Seeds.Mockup, Language.Korean, false, Screen2.Ghost, "growth_ghost_ko"),
+            (720, 1280, Seeds.Mockup, Language.Korean, false, Screen2.HostStats, "growth_host_ko"),
+            (720, 1280, Seeds.Mockup, Language.Korean, false, Screen2.HostSkill, "growth_skill_ko"),
+            (720, 1280, Seeds.Mockup, Language.Korean, true, Screen2.Ghost, "growth_ghost_bare"),
+            (720, 1280, Seeds.Mockup, Language.Korean, true, Screen2.HostStats, "growth_host_bare"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, false, Screen2.Ghost, "growth_ghost_ja"),
+            (720, 1280, Seeds.Mockup, Language.Japanese, false, Screen2.HostStats, "growth_host_ja"),
+            (720, 1280, Seeds.Mockup, Language.English, false, Screen2.HostSkill, "growth_skill_en"),
+            (1080, 2400, Seeds.Mockup, Language.Japanese, false, Screen2.HostStats, "growth_host_20x9"),
+            (768, 1024, Seeds.Mockup, Language.Japanese, false, Screen2.Ghost, "growth_ghost_4x3"),
         };
 
         private static int _wait;
@@ -83,7 +96,7 @@ namespace Game.Editor
 
         private static void Step(int step)
         {
-            var card = GameObject.Find("ModeScenarioCard");
+            var card = GameObject.Find("BottomNav");
             bool loading = GameObject.Find("[LoadingView]") != null;
             if (card == null || !card.activeInHierarchy || loading)
             {
@@ -130,6 +143,7 @@ namespace Game.Editor
                 SessionState.SetInt(Key + ".prepared", shot);
                 if (CoreModule.TryGet<Game.Module.Common.ILanguageService>(out var lang)) lang.SetLanguage(s.lang);
                 Seed(s.seed);
+                Show(s.screen);
                 SetBare(s.bare);
                 _wait = 90;
                 return;
@@ -179,6 +193,20 @@ namespace Game.Editor
             var go = GameObject.Find(name);
             var t = go != null ? go.GetComponent<TMPro.TextMeshProUGUI>() : null;
             if (t != null) t.text = value;
+        }
+
+        /// <summary>하단 바 · 탭을 눌러 그 화면으로 간다.</summary>
+        private static void Show(Screen2 screen)
+        {
+            if (screen == Screen2.Lobby) { Click("ChapterButton"); return; }
+            Click("HostButton");
+            if (screen == Screen2.Ghost) Click("TabGhostButton");
+            else
+            {
+                Click("TabHostButton");
+                Click(screen == Screen2.HostSkill ? "SkillTabButton" : "StatTabButton");
+            }
+            SetText("GrowthGoldText", "125,680");   // 시안 숫자 — 화면에서만
         }
 
         /// <summary>로비 글자를 전부 끄거나 켠다 — 글자 뺀 판을 찍어 게임 글자 잉크만 뽑는다.</summary>

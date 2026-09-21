@@ -673,14 +673,61 @@ namespace Game.Character
                 ? 99f
                 : _rangeGrowthMax[Mathf.Clamp(jobIndex, 0, _rangeGrowthMax.Length - 1)];
 
-        [Tooltip("고스트 레벨업 골드 = 기본 + 증가폭 × (레벨 - 1).")]
-        [SerializeField] private int _ghostLevelCostBase = 200;
-        [SerializeField] private int _ghostLevelCostStep = 60;
-
         public int GhostLevelMax => Mathf.Max(1, _ghostLevelMax);
 
-        public int GhostLevelCost(int level)
-            => _ghostLevelCostBase + _ghostLevelCostStep * Mathf.Max(0, level - 1);
+        // ── 성장 — 능력치 골드 강화 · 유저(유령) 레벨 · 성장 경로 (2026-09-21) ──
+        //
+        // ⚠ 전부 **임시값**이다. 시안(growth_ui_v4) 숫자에서 역산했다 —
+        //   Lv15 +30% 2,800G · Lv12 +24% 2,400G → 레벨당 +2%, 한 단계 ≈ 200G × 다음 레벨.
+        //   배열 첨자는 `HostStat` 순서(Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed).
+
+        [Header("성장 — 능력치 골드 강화")]
+        [Tooltip("유령 탭 강화 상한 — 모든 몸에 붙는다.")]
+        [SerializeField] private int _ghostStatMax = 50;
+        [Tooltip("호스트별 강화 상한.")]
+        [SerializeField] private int _hostStatMax = 20;
+        [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다).")]
+        [SerializeField] private float[] _statPercentPerLevel = { 2f, 2f, 2f, 1f, 1f, 1f };
+        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령 · 호스트.")]
+        [SerializeField] private int _ghostStatCostStep = 200;
+        [SerializeField] private int _hostStatCostStep = 200;
+
+        [Header("성장 — 유저(유령) 레벨")]
+        [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1).")]
+        [SerializeField] private int _userExpBase = 100;
+        [SerializeField] private int _userExpStep = 60;
+        [Tooltip("챕터를 깼을 때 받는 경험치(챕터 1~). 죽으면 없다. 표가 짧으면 마지막 칸.")]
+        [SerializeField] private int[] _chapterClearExp = { 300, 500, 800, 1200, 1700, 2300 };
+
+        [Header("성장 — 유령 성장 경로 보상")]
+        [SerializeField] private int[] _pathLevels = { 10, 20, 30, 40, 50 };
+        [SerializeField] private int[] _pathGold = { 5000, 10000, 20000, 30000, 50000 };
+        [SerializeField] private int[] _pathGem = { 50, 100, 200, 300, 500 };
+        [SerializeField] private int[] _pathSpiritCore = { 5, 10, 20, 30, 50 };
+
+        public int GhostStatMax => Mathf.Max(1, _ghostStatMax);
+        public int HostStatMax => Mathf.Max(1, _hostStatMax);
+
+        public float StatPercentPerLevel(HostStat stat)
+            => _statPercentPerLevel == null || _statPercentPerLevel.Length == 0 ? 0f
+             : _statPercentPerLevel[Mathf.Clamp((int)stat, 0, _statPercentPerLevel.Length - 1)];
+
+        /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
+        public int StatCost(bool ghost, int level) => (ghost ? _ghostStatCostStep : _hostStatCostStep) * (level + 1);
+
+        public int UserExpToNext(int level) => _userExpBase + _userExpStep * Mathf.Max(0, level - 1);
+
+        public int ChapterClearExp(int chapter)
+            => _chapterClearExp == null || _chapterClearExp.Length == 0 ? 0
+             : _chapterClearExp[Mathf.Clamp(chapter - 1, 0, _chapterClearExp.Length - 1)];
+
+        public int PathCount => _pathLevels?.Length ?? 0;
+        public int PathLevel(int i) => At(_pathLevels, i);
+        public int PathGold(int i) => At(_pathGold, i);
+        public int PathGem(int i) => At(_pathGem, i);
+        public int PathSpiritCore(int i) => At(_pathSpiritCore, i);
+
+        private static int At(int[] a, int i) => a == null || i < 0 || i >= a.Length ? 0 : a[i];
 
         /// <summary>숙련도 <paramref name="level"/> → 다음 단계 비용 (등급 배수 전).</summary>
         public int ShardCurveAt(int level)

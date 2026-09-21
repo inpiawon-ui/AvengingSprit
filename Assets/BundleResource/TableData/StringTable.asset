@@ -2103,3 +2103,272 @@ MonoBehaviour:
     _ko: "\uC82C {0}\uAC1C\uB85C \uC9C0\uAE08 \uC5F4\uAE4C\uC694?"
     _ja: "\u30B8\u30A7\u30E0{0}\u500B\u3067\u4ECA\u3059\u3050\u958B\u3051\u307E\u3059\u304B?"
     _en: Open now for {0} gems?
+  - _key: ui.growth.tab.ghost
+    _ko: "\uC720\uB839 \uC721\uC131"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u80B2\u6210"
+    _en: Ghost
+  - _key: ui.growth.tab.host
+    _ko: "\uD638\uC2A4\uD2B8 \uC721\uC131"
+    _ja: "\u30DB\u30B9\u30C8\u80B2\u6210"
+    _en: Hosts
+  - _key: ui.growth.tab.stats
+    _ko: "\uB2A5\uB825\uCE58"
+    _ja: "\u80FD\u529B\u5024"
+    _en: Stats
+  - _key: ui.growth.tab.skills
+    _ko: "\uC2A4\uD0AC"
+    _ja: "\u30B9\u30AD\u30EB"
+    _en: Skills
+  - _key: ui.growth.stat_header
+    _ko: "\uB2A5\uB825\uCE58 \uAC15\uD654"
+    _ja: "\u80FD\u529B\u5024\u5F37\u5316"
+    _en: Stat Upgrades
+  - _key: ui.growth.path_header
+    _ko: "\uC720\uB839 \uC131\uC7A5 \uACBD\uB85C"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u6210\u9577\u30EB\u30FC\u30C8"
+    _en: Ghost Growth Path
+  - _key: ui.growth.host_list
+    _ko: "\uD638\uC2A4\uD2B8 \uBAA9\uB85D"
+    _ja: "\u30DB\u30B9\u30C8\u4E00\u89A7"
+    _en: Host List
+  - _key: ui.growth.sort.default
+    _ko: "\uAE30\uBCF8\uC21C"
+    _ja: "\u6A19\u6E96\u9806"
+    _en: Default
+  - _key: ui.growth.max
+    _ko: MAX
+    _ja: MAX
+    _en: MAX
+  - _key: ui.growth.gold_short
+    _ko: "\uACE8\uB4DC\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4"
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u304C\u8DB3\u308A\u307E\u305B\u3093"
+    _en: Not enough gold
+  - _key: ui.growth.path_claim
+    _ko: "\uBC1B\uAE30"
+    _ja: "\u53D7\u53D6"
+    _en: Claim
+  - _key: ui.growth.path_claimed
+    _ko: "Lv {0} \uBCF4\uC0C1\uC744 \uBC1B\uC558\uC2B5\uB2C8\uB2E4"
+    _ja: "Lv {0} \u306E\u5831\u916C\u3092\u53D7\u3051\u53D6\u308A\u307E\u3057\u305F"
+    _en: Lv {0} reward claimed
+  - _key: ui.growth.path_locked
+    _ko: "Lv {0} \uC5D0 \uBC1B\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4"
+    _ja: "Lv {0} \u3067\u53D7\u3051\u53D6\u308C\u307E\u3059"
+    _en: Unlocks at Lv {0}
+  - _key: ui.growth.help.stats
+    _ko: "\uACE8\uB4DC\uB85C \uB2A5\uB825\uCE58\uB97C \uC601\uAD6C\uD788 \uC62C\uB9BD\uB2C8\uB2E4.\n\uC720\uB839
+      \uC721\uC131\uC740 \uBAA8\uB4E0 \uD638\uC2A4\uD2B8\uC5D0, \uD638\uC2A4\uD2B8
+      \uC721\uC131\uC740 \uADF8 \uD638\uC2A4\uD2B8\uC5D0\uB9CC \uBD99\uC2B5\uB2C8\uB2E4."
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u3067\u80FD\u529B\u5024\u3092\u6C38\u4E45\u306B\u5F37\u5316\u3057\u307E\u3059\u3002\n\u30B4\u30FC\u30B9\u30C8\u80B2\u6210\u306F\u5168\u30DB\u30B9\u30C8\u306B\u3001\u30DB\u30B9\u30C8\u80B2\u6210\u306F\u305D\u306E\u30DB\u30B9\u30C8\u3060\u3051\u306B\u9069\u7528\u3055\u308C\u307E\u3059\u3002"
+    _en: 'Spend gold to permanently raise stats.
+
+      Ghost upgrades apply to every
+      host; host upgrades apply to that host only.'
+  - _key: ui.growth.help.path
+    _ko: "\uCC55\uD130\uB97C \uD074\uB9AC\uC5B4\uD558\uBA74 \uC720\uB839 \uACBD\uD5D8\uCE58\uB97C
+      \uC5BB\uC2B5\uB2C8\uB2E4.\n\uC815\uD574\uC9C4 \uB808\uBCA8\uC5D0 \uB2FF\uC73C\uBA74
+      \uBCF4\uC0C1\uC744 \uBC1B\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC\u3092\u30AF\u30EA\u30A2\u3059\u308B\u3068\u30B4\u30FC\u30B9\u30C8\u7D4C\u9A13\u5024\u3092\u7372\u5F97\u3057\u307E\u3059\u3002\n\u6C7A\u307E\u3063\u305F\u30EC\u30D9\u30EB\u306B\u9054\u3059\u308B\u3068\u5831\u916C\u3092\u53D7\u3051\u53D6\u308C\u307E\u3059\u3002"
+    _en: 'Clear chapters to earn ghost EXP.
+
+      Reach milestone levels to claim
+      rewards.'
+  - _key: ui.growth.ghost.name
+    _ko: "\uC720\uB839"
+    _ja: "\u30B4\u30FC\u30B9\u30C8"
+    _en: Ghost
+  - _key: ui.growth.ghost.desc
+    _ko: "\uC138\uC0C1\uC744 \uB5A0\uB3C4\uB294 \uC815\uC758\uB85C\uC6B4 \uC601\uD63C.\n\uC544\uC9C1
+      \uB05D\uB098\uC9C0 \uC54A\uC740 \uC774\uC57C\uAE30\uB97C \uC704\uD574\n\uC624\uB298\uB3C4
+      \uD568\uAED8\uD569\uB2C8\uB2E4."
+    _ja: "\u4E16\u3092\u3055\u307E\u3088\u3046\u6B63\u7FA9\u306E\u9B42\u3002\n\u307E\u3060\u7D42\u308F\u3089\u306A\u3044\u7269\u8A9E\u306E\u305F\u3081\u306B\n\u4ECA\u65E5\u3082\u5171\u306B\u6226\u3044\u307E\u3059\u3002"
+    _en: 'A righteous soul adrift in the world,
+
+      fighting on for a story
+
+      that
+      isn''t over yet.'
+  - _key: ui.stat.hp
+    _ko: "\uCD5C\uB300 HP"
+    _ja: "\u6700\u5927HP"
+    _en: Max HP
+  - _key: ui.stat.atk
+    _ko: "\uACF5\uACA9\uB825"
+    _ja: "\u653B\u6483\u529B"
+    _en: Attack
+  - _key: ui.stat.crit
+    _ko: "\uD06C\uB9AC\uD2F0\uCEEC \uD655\uB960"
+    _ja: "\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u7387"
+    _en: Crit Chance
+  - _key: ui.stat.atkspeed
+    _ko: "\uACF5\uACA9 \uC18D\uB3C4"
+    _ja: "\u653B\u6483\u901F\u5EA6"
+    _en: Attack Speed
+  - _key: ui.stat.range
+    _ko: "\uC0AC\uAC70\uB9AC"
+    _ja: "\u5C04\u7A0B"
+    _en: Range
+  - _key: ui.stat.movespeed
+    _ko: "\uC774\uB3D9 \uC18D\uB3C4"
+    _ja: "\u79FB\u52D5\u901F\u5EA6"
+    _en: Move Speed
+  - _key: host.gangster.desc
+    _ko: "\uB4B7\uACE8\uBAA9\uC744 \uC8FC\uB984\uC7A1\uB358 \uB450\uBAA9.\n\uAD8C\uCD1D
+      \uD55C \uC790\uB8E8\uB85C \uAE38\uC744 \uC5F0\uB2E4."
+    _ja: "\u88CF\u8DEF\u5730\u3092\u4ED5\u5207\u3063\u3066\u3044\u305F\u30DC\u30B9\u3002\n\u62F3\u9283\u4E00\u4E01\u3067\u9053\u3092\u5207\u308A\u958B\u304F\u3002"
+    _en: 'A back-alley boss who clears
+
+      the way with a single pistol.'
+  - _key: host.thug.desc
+    _ko: "\uAC70\uB9AC\uC758 \uC2F8\uC6C0\uAFBC.\n\uC8FC\uBA39\uC774 \uBA3C\uC800
+      \uB098\uAC04\uB2E4."
+    _ja: "\u8857\u306E\u30B1\u30F3\u30AB\u5C4B\u3002\n\u62F3\u304C\u5148\u306B\u51FA\u308B\u3002"
+    _en: 'A street brawler whose
+
+      fists always go first.'
+  - _key: host.amazon.desc
+    _ko: "\uC815\uAE00\uC758 \uC804\uC0AC.\n\uB0A0\uB79C \uBAB8\uB180\uB9BC\uC73C\uB85C
+      \uC801\uC744 \uBCA4\uB2E4."
+    _ja: "\u30B8\u30E3\u30F3\u30B0\u30EB\u306E\u6226\u58EB\u3002\n\u7D20\u65E9\u3044\u8EAB\u306E\u3053\u306A\u3057\u3067\u6575\u3092\u65AC\u308B\u3002"
+    _en: 'A jungle warrior who cuts foes
+
+      down with nimble moves.'
+  - _key: host.amazon_elite.desc
+    _ko: "\uC544\uB9C8\uC874 \uC804\uC0AC\uB2E8\uC758 \uC815\uC608.\n\uBC18\uACA9\uC73C\uB85C
+      \uD750\uB984\uC744 \uB4A4\uC9D1\uB294\uB2E4."
+    _ja: "\u30A2\u30DE\u30BE\u30CD\u30B9\u6226\u58EB\u56E3\u306E\u7CBE\u92ED\u3002\n\u53CD\u6483\u3067\u6D41\u308C\u3092\u3072\u3063\u304F\u308A\u8FD4\u3059\u3002"
+    _en: 'Elite of the Amazon warband who
+
+      turns the tide with counters.'
+  - _key: host.hopper.desc
+    _ko: "\uB6F0\uC5B4\uC624\uB974\uBA70 \uC2F8\uC6B0\uB294 \uBB34\uBC95\uC790.\n\uBA48\uCD94\uC9C0
+      \uC54A\uB294 \uAE30\uC138\uAC00 \uBB34\uAE30\uB2E4."
+    _ja: "\u8DF3\u306D\u56DE\u3063\u3066\u6226\u3046\u7121\u6CD5\u8005\u3002\n\u6B62\u307E\u3089\u306A\u3044\u52E2\u3044\u304C\u6B66\u5668\u3060\u3002"
+    _en: 'An outlaw who fights on the hop.
+
+      Momentum is the weapon.'
+  - _key: host.hopper_smg.desc
+    _ko: "\uAE30\uAD00\uB2E8\uCD1D\uC744 \uB4E0 \uD638\uD37C.\n\uC274 \uC0C8 \uC5C6\uC774
+      \uD0C4\uC744 \uD37C\uBD93\uB294\uB2E4."
+    _ja: "\u30B5\u30D6\u30DE\u30B7\u30F3\u30AC\u30F3\u3092\u6301\u3064\u30DB\u30C3\u30D1\u30FC\u3002\n\u7D76\u3048\u9593\u306A\u304F\u5F3E\u3092\u6D74\u3073\u305B\u308B\u3002"
+    _en: 'A hopper with an SMG who never
+
+      stops pouring out bullets.'
+  - _key: host.commando_mg.desc
+    _ko: "\uC5B4\uB5A4 \uC804\uC7A5\uC5D0\uC11C\uB3C4 \uC784\uBB34\uB97C \uC644\uC218\uD558\uB294\n\uD2B9\uC218\uBD80\uB300\uC6D0\uC785\uB2C8\uB2E4."
+    _ja: "\u3069\u3093\u306A\u6226\u5834\u3067\u3082\u4EFB\u52D9\u3092\u5B8C\u9042\u3059\u308B\n\u7279\u6B8A\u90E8\u968A\u54E1\u3067\u3059\u3002"
+    _en: 'A special forces soldier who completes
+
+      the mission on any battlefield.'
+  - _key: host.commando_laser.desc
+    _ko: "\uB808\uC774\uC800 \uC18C\uCD1D\uC744 \uC4F0\uB294 \uCF54\uB9CC\uB3C4.\n\uBA40\uB9AC\uC11C
+      \uD55C \uC904\uB85C \uAFF0\uB6AB\uB294\uB2E4."
+    _ja: "\u30EC\u30FC\u30B6\u30FC\u30E9\u30A4\u30D5\u30EB\u306E\u30B3\u30DE\u30F3\u30C9\u30FC\u3002\n\u9060\u304F\u304B\u3089\u4E00\u76F4\u7DDA\u306B\u8CAB\u304F\u3002"
+    _en: 'A commando with a laser rifle who
+
+      pierces enemies from afar.'
+  - _key: host.commando_grenade.desc
+    _ko: "\uC218\uB958\uD0C4\uC744 \uB2E4\uB8E8\uB294 \uCF54\uB9CC\uB3C4.\n\uBB49\uCE5C
+      \uC801\uC744 \uD55C\uAEBC\uBC88\uC5D0 \uB0A0\uB9B0\uB2E4."
+    _ja: "\u624B\u69B4\u5F3E\u3092\u6271\u3046\u30B3\u30DE\u30F3\u30C9\u30FC\u3002\n\u56FA\u307E\u3063\u305F\u6575\u3092\u307E\u3068\u3081\u3066\u5439\u304D\u98DB\u3070\u3059\u3002"
+    _en: 'A grenadier commando who blasts
+
+      clustered enemies at once.'
+  - _key: host.salamander.desc
+    _ko: "\uBD88\uC744 \uBFDC\uB294 \uB3C4\uB9C8\uBC40 \uC778\uAC04.\n\uAC00\uAE4C\uC774
+      \uC624\uB294 \uC801\uC744 \uD0DC\uC6B4\uB2E4."
+    _ja: "\u706B\u3092\u5410\u304F\u30C8\u30AB\u30B2\u4EBA\u9593\u3002\n\u8FD1\u3065\u304F\u6575\u3092\u713C\u304D\u5C3D\u304F\u3059\u3002"
+    _en: 'A fire-breathing lizardman who
+
+      burns anyone who comes close.'
+  - _key: host.dragoon.desc
+    _ko: "\uCC3D\uC744 \uB4E0 \uC6A9\uAE30\uBCD1.\n\uBB35\uC9C1\uD55C \uD55C \uBC29\uC73C\uB85C
+      \uB6AB\uACE0 \uB098\uAC04\uB2E4."
+    _ja: "\u69CD\u3092\u69CB\u3048\u305F\u7ADC\u9A0E\u5175\u3002\n\u91CD\u3044\u4E00\u6483\u3067\u7A81\u304D\u9032\u3080\u3002"
+    _en: 'A lance-wielding dragoon who
+
+      breaks through with heavy blows.'
+  - _key: host.dragon_blue.desc
+    _ko: "\uD478\uB978 \uBE44\uB298\uC758 \uC6A9.\n\uBE60\uB978 \uC228\uACB0\uB85C
+      \uC801\uC744 \uBAB0\uC544\uCE5C\uB2E4."
+    _ja: "\u9752\u3044\u9C57\u306E\u30C9\u30E9\u30B4\u30F3\u3002\n\u7D20\u65E9\u3044\u30D6\u30EC\u30B9\u3067\u6575\u3092\u8FFD\u3044\u7ACB\u3066\u308B\u3002"
+    _en: 'A blue-scaled dragon that drives
+
+      foes back with swift breath.'
+  - _key: host.guru.desc
+    _ko: "\uD5C8\uACF5\uC5D0 \uB5A0 \uC788\uB294 \uC218\uD589\uC790.\n\uBC84\uD2F0\uACE0
+      \uB610 \uBC84\uD2F4\uB2E4."
+    _ja: "\u5B99\u306B\u6D6E\u304B\u3076\u4FEE\u884C\u8005\u3002\n\u8010\u3048\u3066\u3001\u307E\u305F\u8010\u3048\u308B\u3002"
+    _en: 'A levitating ascetic who endures
+
+      and endures again.'
+  - _key: host.white_wizard.desc
+    _ko: "\uD770 \uC637\uC758 \uB9C8\uBC95\uC0AC.\n\uBA40\uB9AC\uC11C \uB9C8\uB825\uC744
+      \uC3D8\uC544 \uBCF4\uB0B8\uB2E4."
+    _ja: "\u767D\u8863\u306E\u9B54\u6CD5\u4F7F\u3044\u3002\n\u9060\u304F\u304B\u3089\u9B54\u529B\u3092\u6483\u3061\u51FA\u3059\u3002"
+    _en: 'A wizard in white who hurls
+
+      magic from a distance.'
+  - _key: host.medium.desc
+    _ko: "\uC601\uD63C\uC744 \uBD80\uB974\uB294 \uBB34\uB140.\n\uBCF4\uC774\uC9C0
+      \uC54A\uB294 \uD798\uC73C\uB85C \uC2F8\uC6B4\uB2E4."
+    _ja: "\u970A\u3092\u547C\u3076\u5DEB\u5973\u3002\n\u898B\u3048\u306A\u3044\u529B\u3067\u6226\u3046\u3002"
+    _en: 'A medium who calls on spirits
+
+      and fights with unseen power.'
+  - _key: host.ninja.desc
+    _ko: "\uADF8\uB9BC\uC790 \uC18D\uC758 \uB2CC\uC790.\n\uBE60\uB978 \uC190\uC73C\uB85C
+      \uAE09\uC18C\uB97C \uB178\uB9B0\uB2E4."
+    _ja: "\u5F71\u306B\u3072\u305D\u3080\u5FCD\u8005\u3002\n\u7D20\u65E9\u3044\u624B\u3067\u6025\u6240\u3092\u72D9\u3046\u3002"
+    _en: 'A ninja in the shadows who strikes
+
+      vital points with quick hands.'
+  - _key: host.ninja_chain.desc
+    _ko: "\uC0AC\uC2AC\uB0AB\uC744 \uC4F0\uB294 \uB2CC\uC790.\n\uBA3C \uAC70\uB9AC\uC5D0\uC11C
+      \uC801\uC744 \uB09A\uC544\uCC48\uB2E4."
+    _ja: "\u9396\u938C\u3092\u4F7F\u3046\u5FCD\u8005\u3002\n\u96E2\u308C\u305F\u6575\u3092\u7D61\u3081\u53D6\u308B\u3002"
+    _en: 'A chain-sickle ninja who snares
+
+      enemies from far away.'
+  - _key: host.robot.desc
+    _ko: "\uACE0\uCCA0\uB85C \uB9CC\uB4E0 \uC804\uD22C \uB85C\uBD07.\n\uC608\uBE44
+      \uD68C\uB85C\uB85C \uBA87 \uBC88\uC774\uACE0 \uC77C\uC5B4\uB09C\uB2E4."
+    _ja: "\u9244\u304F\u305A\u3067\u4F5C\u3089\u308C\u305F\u6226\u95D8\u30ED\u30DC\u30C3\u30C8\u3002\n\u4E88\u5099\u56DE\u8DEF\u3067\u4F55\u5EA6\u3067\u3082\u7ACB\u3061\u4E0A\u304C\u308B\u3002"
+    _en: 'A scrap-built battle robot that gets
+
+      back up on spare circuits.'
+  - _key: host.baseball.desc
+    _ko: "\uBC29\uB9DD\uC774\uB97C \uB4E0 \uAC15\uD0C0\uC790.\n\uD55C \uBC88 \uD718\uB450\uB974\uBA74
+      \uB2F4\uC7A5\uC744 \uB118\uAE34\uB2E4."
+    _ja: "\u30D0\u30C3\u30C8\u3092\u63E1\u308B\u5F37\u6253\u8005\u3002\n\u3072\u3068\u632F\u308A\u3067\u30D5\u30A7\u30F3\u30B9\u3092\u8D8A\u3048\u308B\u3002"
+    _en: 'A power hitter whose single swing
+
+      sends foes over the fence.'
+  - _key: host.snowwoman.desc
+    _ko: "\uB208\uC744 \uBD80\uB974\uB294 \uC124\uB140.\n\uCC28\uAC00\uC6B4 \uC190\uAE38\uB85C
+      \uC801\uC744 \uC5BC\uB9B0\uB2E4."
+    _ja: "\u96EA\u3092\u547C\u3076\u96EA\u5973\u3002\n\u51B7\u305F\u3044\u624B\u3067\u6575\u3092\u51CD\u3089\u305B\u308B\u3002"
+    _en: 'A snow woman whose icy touch
+
+      freezes her foes.'
+  - _key: host.vampire.desc
+    _ko: "\uBC24\uC758 \uADC0\uC871 \uD761\uD608\uADC0.\n\uC801\uC758 \uD53C\uB85C
+      \uC0C1\uCC98\uB97C \uBA54\uC6B4\uB2E4."
+    _ja: "\u591C\u306E\u8CB4\u65CF\u3001\u5438\u8840\u9B3C\u3002\n\u6575\u306E\u8840\u3067\u50B7\u3092\u3075\u3055\u3050\u3002"
+    _en: 'A vampire noble of the night who
+
+      heals on the blood of foes.'
+  - _key: host.commando_missile.desc
+    _ko: "\uBBF8\uC0AC\uC77C\uC744 \uC3D8\uB294 \uCF54\uB9CC\uB3C4.\n\uBA40\uB9AC
+      \uC788\uB294 \uC801\uAE4C\uC9C0 \uD3ED\uACA9\uD55C\uB2E4."
+    _ja: "\u30DF\u30B5\u30A4\u30EB\u3092\u6483\u3064\u30B3\u30DE\u30F3\u30C9\u30FC\u3002\n\u9060\u304F\u306E\u6575\u307E\u3067\u7206\u6483\u3059\u308B\u3002"
+    _en: 'A missile commando who bombards
+
+      even distant enemies.'
+  - _key: host.death.desc
+    _ko: "\uB0AB\uC744 \uB4E0 \uC8FD\uC74C \uADF8 \uC790\uCCB4.\n\uB2FF\uB294 \uBAA8\uB4E0
+      \uAC83\uC744 \uAC70\uB454\uB2E4."
+    _ja: "\u938C\u3092\u6301\u3064\u6B7B\u305D\u306E\u3082\u306E\u3002\n\u89E6\u308C\u308B\u3082\u306E\u3059\u3079\u3066\u3092\u5208\u308A\u53D6\u308B\u3002"
+    _en: 'Death itself, scythe in hand,
+
+      reaping all it touches.'

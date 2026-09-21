@@ -7594,7 +7594,15 @@ namespace Game.Module.InGame
         /// <summary>지금 몸의 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercent =>
             HostStats.CritPercent(_config, _host?.Profile, GhostLevel,
-                                  _player != null ? _player.GhostLevelMax : 50);
+                                  _player != null ? _player.GhostLevelMax : 50)
+            * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit);
+
+        /// <summary>
+        /// 로비 능력치 골드 강화 배율 — 유령 탭(모든 몸) + 이 몸의 호스트 탭. 저장이 없으면 1.
+        /// 치명타는 확률에 곱한다(%p 가 아니다).
+        /// </summary>
+        private float UpgradeMul(string hostKey, HostStat stat)
+            => _player != null ? _player.StatBonusMul(hostKey, stat) : 1f;
 
         private float CritMultiplier => _config != null ? _config.CritMultiplier : 2f;
 
@@ -8235,11 +8243,12 @@ namespace Game.Module.InGame
                         UnitGet(key),
                         // 고스트가 들고 온 Lv 로 이 몸의 능력치를 정한다.
                         // 악마 계약을 샀으면 여기서 깎인다 - 몸이 아니라 판에 붙은 빚이다.
-                        WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul)),
-                        LeveledAtk(entry),
-                        HostSpeedOf(entry),
-                        HostRangeOf(entry),
-                        HostIntervalOf(entry),
+                        // 로비 능력치 강화(유령 공통 + 이 몸)가 여기서 곱해진다(2026-09-21)
+                        WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul * UpgradeMul(key, HostStat.Hp))),
+                        Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk))),
+                        HostSpeedOf(entry) * UpgradeMul(key, HostStat.MoveSpeed),
+                        HostRangeOf(entry) * UpgradeMul(key, HostStat.Range),
+                        HostIntervalOf(entry) / UpgradeMul(key, HostStat.AtkSpeed),
                         UnitBox(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;
             ApplyFacingSprites(_host, key);

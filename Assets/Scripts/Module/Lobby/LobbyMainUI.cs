@@ -28,6 +28,9 @@ namespace Game.Module.Lobby
         /// <summary>상자를 연 뒤 받은 것을 카드로 늘어놓는 창.</summary>
         [SerializeField] private ChestRewardPopup _chestRewardPopup;
 
+        /// <summary>육성 화면 — 하단 바 HOST 칸(기획 2026-09-21).</summary>
+        [SerializeField] private GrowthPanel _growthPanel;
+
         /// <summary>
         /// 상자 등급별 그림. 어느 칸에 무슨 등급이 오는지가 매번 달라 코드가 갈아 끼운다.
         ///
@@ -83,10 +86,13 @@ namespace Game.Module.Lobby
             if (_chapterSelectPanel != null) _chapterSelectPanel.Close();
             if (_chestRewardPopup != null) _chestRewardPopup.Close();
 
-            // 하단 바 — PLAY 칸은 늘 켜진 모습(시안)이고, 누르면 시나리오로 간다
-            _ui.OnClick("HostButton", () => OpenHostSelect(false));
-            _ui.OnClick("ChapterButton", PlayScenario);
+            // 하단 바 — 로비 · 육성이 **같이 쓴다**. 누른 칸이 선택 모습이 되고 위 화면만 바뀐다(기획 2026-09-21)
+            //   HOST → 육성 화면 · PLAY → 로비 · SHOP → 준비 중(선택은 그대로)
+            if (_growthPanel != null) _growthPanel.Close();
+            _ui.OnClick("HostButton", () => SelectTab(Tab.Host));
+            _ui.OnClick("ChapterButton", () => SelectTab(Tab.Play));
             _ui.OnClick("ShopButton", () => NotifyNotReady("상점"));
+            SelectTab(Tab.Play);
 
             // 게임 모드 — 열린 것은 시나리오뿐이다. 잠긴 두 칸은 이름을 알려 준다
             _ui.OnClick("ModeScenarioCard", PlayScenario);
@@ -354,6 +360,35 @@ namespace Game.Module.Lobby
             SystemPopup.Show(sb.ToString(), null, Localize.Get("ui.common.ok"), null);
         }
 
+        // ── 하단 바 ──────────────────────────────────────────────
+
+        private enum Tab { Play, Host }
+
+        private static readonly string[] LobbyPageNodes = { "LobbyV4Gap", "LobbyV4Top", "LobbyV4Mid" };
+
+        private void SelectTab(Tab tab)
+        {
+            bool host = tab == Tab.Host;
+            SetNav("HostButton", host);
+            SetNav("ChapterButton", !host);
+            SetNav("ShopButton", false);
+            // 위 화면만 바꾼다 — 육성 화면이 켜지면 로비 판은 끈다(가려져 안 보이는데 그리기만 한다)
+            for (int i = 0; i < LobbyPageNodes.Length; i++)
+            {
+                var t = transform.Find(LobbyPageNodes[i]);
+                if (t != null) t.gameObject.SetActive(!host);
+            }
+            if (_growthPanel == null) return;
+            if (host) _growthPanel.Open();
+            else _growthPanel.Close();
+        }
+
+        private void SetNav(string node, bool selected)
+        {
+            var view = _ui.Find(node)?.GetComponent<NavTabView>();
+            if (view != null) view.SetSelected(selected);
+        }
+
         // ── 게임 모드 ────────────────────────────────────────────
 
         private void PlayScenario()
@@ -384,7 +419,9 @@ namespace Game.Module.Lobby
         // 판 셋 — 위판은 화면 위, 하단 바 판은 바닥에 붙고, 가운데판(상자 · 게임 모드)은 남는 공간의
         // **한가운데**에 선다. 전에는 가운데판이 하단 바에 붙어 있어 20:9 에서 UI 가 아래로 몰리고
         // 가운데에 빈 바닥만 크게 남았다(2026-09-21 지적). 두 틈은 판 뒤에 깐 이어 그린 그림이 메운다.
-        private const string TopNode = "LobbyV4Top", MidNode = "LobbyV4Mid", NavNode = "LobbyV4Nav";
+        private const string TopNode = "LobbyV4Top", MidNode = "LobbyV4Mid", NavNode = "BottomNav";
+        /// <summary>기준 해상도 세로(constants.md 3절) — 9:16 캔버스 높이.</summary>
+        private const float ReferenceHeight = 1280f;
 
         private void OnRectTransformDimensionsChange() => LayoutBands();
 
@@ -395,8 +432,11 @@ namespace Game.Module.Lobby
             var nav = transform.Find(NavNode) as RectTransform;
             if (top == null || mid == null || nav == null) return;
             float free = ((RectTransform)transform).rect.height - top.rect.height - mid.rect.height - nav.rect.height;
+            // 하단 바가 시안보다 작아(2026-09-21) 9:16 에서도 가운데판 아래에 틈이 남는다. 그 몫(slack)은
+            // 가운데판 아래(도시)에 두어 9:16 에서 가운데판이 시안 자리에 있게 하고, 그보다 더 남는 것만 위아래로 나눈다.
+            float slack = ReferenceHeight - top.rect.height - mid.rect.height - nav.rect.height;
             var p = mid.anchoredPosition;
-            p.y = -(top.rect.height + Mathf.Max(0f, free) * 0.5f);
+            p.y = -(top.rect.height + Mathf.Max(0f, free - Mathf.Max(0f, slack)) * 0.5f);
             mid.anchoredPosition = p;
         }
 
@@ -440,6 +480,11 @@ namespace Game.Module.Lobby
         /// <summary>로비에서 열리는 창을 위에서부터 닫는다.</summary>
         public bool OnBackPressed()
         {
+            if (_growthPanel != null && _growthPanel.IsOpen)
+            {
+                SelectTab(Tab.Play);   // 육성 화면에서 뒤로 = 로비(PLAY 칸)
+                return true;
+            }
             if (_chestRewardPopup != null && _chestRewardPopup.IsOpen)
             {
                 _chestRewardPopup.Close();

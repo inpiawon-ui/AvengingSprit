@@ -262,10 +262,10 @@
   {
    "name": "ModeScenarioTitleText",
    "box": [
-    163,
-    1019,
-    404,
-    1066
+    164,
+    1028,
+    401,
+    1064
    ],
    "color": "#F5F8FA",
    "align": "L",
@@ -280,10 +280,10 @@
   {
    "name": "ModeScenarioSubText",
    "box": [
-    167,
-    1070,
-    373,
-    1100
+    166,
+    1076,
+    371,
+    1098
    ],
    "color": "#00C7DE",
    "align": "L",
@@ -293,15 +293,15 @@
     382,
     1106
    ],
-   "size": 23
+   "size": 21
   },
   {
    "name": "ModePlayButtonText",
    "box": [
     705,
     1133,
-    803,
-    1167
+    801,
+    1165
    ],
    "color": "#080702",
    "align": "C",
@@ -311,15 +311,15 @@
     812,
     1174
    ],
-   "size": 34
+   "size": 33
   },
   {
    "name": "ModeSurvivalTitleText",
    "box": [
-    152,
-    1335,
-    352,
-    1366
+    151,
+    1336,
+    351,
+    1361
    ],
    "color": "#F5F5F6",
    "align": "C",
@@ -334,10 +334,10 @@
   {
    "name": "ModeSurvivalSubText",
    "box": [
-    169,
-    1366,
-    334,
-    1396
+    168,
+    1372,
+    333,
+    1392
    ],
    "color": "#60BBD5",
    "align": "C",
@@ -347,15 +347,15 @@
     350,
     1400
    ],
-   "size": 21
+   "size": 19
   },
   {
    "name": "ModeDefenseTitleText",
    "box": [
-    584,
-    1331,
-    797,
-    1363
+    589,
+    1336,
+    795,
+    1361
    ],
    "color": "#F4F3F6",
    "align": "C",
@@ -365,15 +365,15 @@
     806,
     1366
    ],
-   "size": 24
+   "size": 23
   },
   {
    "name": "ModeDefenseSubText",
    "box": [
-    591,
-    1366,
-    796,
-    1393
+    590,
+    1372,
+    794,
+    1391
    ],
    "color": "#64C5DD",
    "align": "C",
@@ -383,7 +383,7 @@
     806,
     1400
    ],
-   "size": 19
+   "size": 18
   },
   {
    "name": "_title1",

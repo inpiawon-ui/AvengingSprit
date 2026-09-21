@@ -143,6 +143,8 @@ namespace Game.User
         {
             _data = await _repo.LoadAsync();
             _data.NormalizeChests(ChestSlotCount);   // 옛 저장(v2)은 상자 배열이 비어 있다
+            _data.NormalizeStats(StatCount);         // 옛 저장(v3)은 능력치 강화 배열이 비어 있다
+            _data.ghostExpMax = ExpToNext(_data.ghostLevel);   // 곡선이 바뀌면 막대 끝도 따라온다
             UnsealUnlocked();
             _bus?.Publish(new UserDataReadyEvent { LoadedGhostLevel = _data.ghostLevel });
             PublishCurrency();
@@ -150,17 +152,6 @@ namespace Game.User
 
         public UniTask SaveAsync()
             => _data == null ? UniTask.CompletedTask : _repo.SaveAsync(_data).AsUniTask();
-
-        /// <summary>
-        /// 해금 조건을 무시하고 전부 열어 둔다 — **테스트용**이다.
-        /// 21종을 다 만져 봐야 밸런스를 판단할 수 있는데, 정상 진행으로는
-        /// 챕터를 깨야 열려서 확인에 며칠이 걸린다.
-        ///
-        /// ⚠ 출시 전에 반드시 false 로 되돌린다. 켜 두면 해금이라는 성장 축이 통째로 사라진다.
-        /// </summary>
-        // `const` 로 두면 컴파일러가 아래 분기를 통째로 죽은 코드로 판정해
-        // CS0162 경고가 뜬다. 끄고 켜는 시험용 스위치이므로 static readonly 로 둔다.
-        public static readonly bool UnlockAllForTest = true;   // ⚠ 임시 (2026-09-09) — 출시 전 false
 
         /// <summary>
         /// 이 몸을 **쓸 수 있는가.** 진행도로 평가하며 저장하지 않는다.
@@ -173,18 +164,9 @@ namespace Game.User
         public bool IsHostUnlocked(HostEntry host)
         {
             if (host == null) return false;
-            if (host.IsGhost) return true;   // 유령은 언제나 고를 수 있다
-            if (UnlockAllForTest) return true;
-            return host.UnlockType switch
-            {
-                HostUnlockType.Owned => true,
-                HostUnlockType.StageReach =>
-                    ClearedChapter >= host.UnlockChapter ||
-                    (CurrentChapter == host.UnlockChapter && ReachedStage >= host.UnlockStage) ||
-                    CurrentChapter > host.UnlockChapter,
-                HostUnlockType.ChapterBossClear => ClearedChapter >= host.UnlockChapter,
-                _ => false,
-            };
+            // 모든 몸은 **처음부터 열려 있다**(기획 2026-09-21). 해금 대신 조각으로 별을 올리는 것이 성장 축이다.
+            // 표의 해금 조건(`UnlockType` 등)은 남겨 둔다 — 도감 순서 · 등장 시점 표시에 다시 쓸 수 있다.
+            return true;
         }
 
         /// <summary>
@@ -271,6 +253,7 @@ namespace Game.User
             _data.hostKeys[n] = hostKey;
             _data.hostMastery[n] = 0;
             _data.hostShards[n] = 0;
+            _data.NormalizeStats(StatCount);   // 능력치 강화 배열도 한 칸(6값) 늘린다 — 뒤에 붙으므로 기존 첨자는 그대로
             return n;
         }
 
@@ -354,7 +337,7 @@ namespace Game.User
         //   벌을 받아 진입 장벽만 높아진다. **등급 셋으로만 가른다.**
         /// <summary>
         /// ⚠ **임시로 전부 0 골드다** (2026-09-09). 21종을 다 만져 보려면 값이 걸림돌이라
-        ///   `UnlockAllForTest` 와 짝으로 열어 두었다. 출시 전 아래 원래 표로 되돌린다.
+        ///   열어 두었다. 출시 전 아래 원래 표로 되돌린다.
         ///
         ///   원래 값 — S 1000 · A 600 · 그 외 300
         /// </summary>
@@ -394,40 +377,128 @@ namespace Game.User
             return true;
         }
 
-        // ── 고스트 Lv — 골드로 산다 ─────────────────────────────
+        // ── 고스트 Lv = 유저 레벨 ─────────────────────────────
         //
-        // 경험치로 저절로 오르지 않는다. 로비에서 눌러 산다.
-        // 골드는 앞으로 아웃게임 상점·인게임 강화 상점에서도 쓰이므로,
-        // "레벨을 살까 다른 걸 살까" 가 매번 선택이 된다.
+        // 챕터를 깨서 받는 경험치로만 오른다(기획 2026-09-21). 예전엔 골드로 샀는데,
+        // 골드는 이제 능력치 강화에 쓴다 — 두 곳이 같은 골드를 두고 다투면 레벨 쪽만 산다.
 
         public int GhostLevelMax => _config != null ? _config.GhostLevelMax : 50;
 
-        /// <summary>
-        /// Lv <paramref name="level"/> → 다음 레벨 비용(골드).
-        /// 곡선은 `GameConfig` 가 갖는다 — 여기에는 상한 판정만 있다.
-        /// </summary>
-        public int GhostLevelCost(int level)
-            => _config == null || level < 1 || level >= GhostLevelMax
-                ? 0 : _config.GhostLevelCost(level);
+        private int ExpToNext(int level) => _config != null ? Mathf.Max(1, _config.UserExpToNext(level)) : 100;
 
-        /// <summary>지금 골드로 다음 레벨을 살 수 있는가.</summary>
-        public bool CanBuyGhostLevel
-            => _data != null && GhostLevel < GhostLevelMax
-               && _data.gold >= GhostLevelCost(GhostLevel);
-
-        /// <summary>다음 레벨을 산다. 골드가 모자라거나 상한이면 아무 일도 없다.</summary>
-        public bool BuyGhostLevel()
+        /// <summary>경험치를 더하고 넘친 만큼 레벨을 올린다. 상한이면 막대를 가득 채운 채 멈춘다.</summary>
+        private void AddUserExp(int amount)
         {
-            if (!CanBuyGhostLevel) return false;
-            _data.gold -= GhostLevelCost(_data.ghostLevel);
-            _data.ghostLevel++;
-            PublishCurrency();
-            _bus?.Publish(new GhostProgressChangedEvent
+            if (_data == null || amount <= 0) return;
+            _data.ghostExp += amount;
+            while (_data.ghostLevel < GhostLevelMax && _data.ghostExp >= ExpToNext(_data.ghostLevel))
+            {
+                _data.ghostExp -= ExpToNext(_data.ghostLevel);
+                _data.ghostLevel++;
+            }
+            _data.ghostExpMax = ExpToNext(_data.ghostLevel);
+            if (_data.ghostLevel >= GhostLevelMax) _data.ghostExp = Mathf.Min(_data.ghostExp, _data.ghostExpMax);
+            PublishGhostProgress();
+        }
+
+        private void PublishGhostProgress()
+            => _bus?.Publish(new GhostProgressChangedEvent
             {
                 NewLevel = _data.ghostLevel,
                 NewExp = _data.ghostExp,
                 NewExpMax = _data.ghostExpMax,
             });
+
+        /// <summary>별 — 숙련도 2단계마다 하나(기획 2026-09-21).</summary>
+        public int StarsOf(string hostKey) => Mathf.Clamp(GetMastery(hostKey) / 2, 0, 5);
+
+        // ── 능력치 골드 강화 ─────────────────────────────────
+        //
+        // 수치는 전부 `GameConfig`(임시값). 여기엔 규칙만 둔다.
+
+        private static readonly int StatCount = Enum.GetValues(typeof(HostStat)).Length;
+
+        public int GhostStatMax => _config != null ? _config.GhostStatMax : 50;
+        public int HostStatMax => _config != null ? _config.HostStatMax : 20;
+
+        public int GhostStatLevel(HostStat stat)
+        {
+            if (_data == null) return 0;
+            _data.NormalizeStats(StatCount);
+            return _data.ghostStatLevels[(int)stat];
+        }
+
+        public int HostStatLevel(string hostKey, HostStat stat)
+        {
+            int i = IndexOfHost(hostKey);
+            if (i < 0) return 0;
+            _data.NormalizeStats(StatCount);
+            return _data.hostStatLevels[i * StatCount + (int)stat];
+        }
+
+        public int GhostStatCost(HostStat stat)
+        {
+            int lv = GhostStatLevel(stat);
+            return _config == null || lv >= GhostStatMax ? 0 : _config.StatCost(true, lv);
+        }
+
+        public int HostStatCost(string hostKey, HostStat stat)
+        {
+            int lv = HostStatLevel(hostKey, stat);
+            return _config == null || lv >= HostStatMax ? 0 : _config.StatCost(false, lv);
+        }
+
+        public float StatPercent(HostStat stat, int level)
+            => _config != null ? _config.StatPercentPerLevel(stat) * level : 0f;
+
+        public bool BuyGhostStat(HostStat stat)
+        {
+            int cost = GhostStatCost(stat);
+            if (cost <= 0 || _data.gold < cost) return false;
+            _data.gold -= cost;
+            _data.ghostStatLevels[(int)stat]++;
+            PublishCurrency();
+            return true;
+        }
+
+        public bool BuyHostStat(string hostKey, HostStat stat)
+        {
+            int cost = HostStatCost(hostKey, stat);
+            if (cost <= 0 || _data.gold < cost) return false;
+            int i = EnsureHost(hostKey);
+            if (i < 0) return false;
+            _data.gold -= cost;
+            _data.hostStatLevels[i * StatCount + (int)stat]++;
+            PublishCurrency();
+            return true;
+        }
+
+        public float StatBonusMul(string hostKey, HostStat stat)
+        {
+            float pct = StatPercent(stat, GhostStatLevel(stat))
+                      + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat)));
+            return 1f + pct / 100f;
+        }
+
+        // ── 유령 성장 경로 ──────────────────────────────────
+
+        public int PathCount => _config != null ? _config.PathCount : 0;
+        public int PathLevel(int index) => _config != null ? _config.PathLevel(index) : 0;
+        public bool IsPathClaimed(int index) => _data != null && (_data.ghostPathClaimed & (1 << index)) != 0;
+
+        public void GetPathReward(int index, out int gold, out int gem, out int spiritCore)
+        {
+            gold = _config != null ? _config.PathGold(index) : 0;
+            gem = _config != null ? _config.PathGem(index) : 0;
+            spiritCore = _config != null ? _config.PathSpiritCore(index) : 0;
+        }
+
+        public bool ClaimPath(int index)
+        {
+            if (_data == null || index < 0 || index >= PathCount || IsPathClaimed(index)) return false;
+            if (GhostLevel < PathLevel(index)) return false;
+            _data.ghostPathClaimed |= 1 << index;
+            AddGrowthCurrency(_config.PathGold(index), _config.PathGem(index), _config.PathSpiritCore(index), 0);
             return true;
         }
 
@@ -564,16 +635,9 @@ namespace Game.User
             _data.hostMemory = Mathf.Max(0, _data.hostMemory + Mathf.Max(0, hostMemory));
             PublishCurrency();
 
-            // ⚠ 경험치로 자동 레벨업하지 않는다. 고스트 Lv 은 **로비에서 골드로 산다**
-            //   (`BuyGhostLevel`). 판이 끝났다고 저절로 오르면 "무엇을 살까" 라는
-            //   판단이 사라져 골드가 갈 곳을 잃는다.
-            //   `ghostExp` 는 화면 진행바 표시용으로만 남는다.
-            _bus?.Publish(new GhostProgressChangedEvent
-            {
-                NewLevel = _data.ghostLevel,
-                NewExp = _data.ghostExp,
-                NewExpMax = _data.ghostExpMax,
-            });
+            // ⚠ 방마다 경험치를 주지 않는다. 유저(유령) 경험치는 **챕터를 깼을 때만**
+            //   `GrantChapterClearAsync` 가 준다(기획 2026-09-21). `ghostExp` 인자는 쓰지 않는다.
+            PublishGhostProgress();
 
             // 클리어했을 때만 스테이지를 전진시킨다. 실패는 진행도를 건드리지 않는다.
             if (cleared)
@@ -594,6 +658,8 @@ namespace Game.User
             if (_data == null) return;
             _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
             PublishCurrency();
+            // 유저(유령) 경험치는 **챕터를 깼을 때만** 준다(기획 2026-09-21) — 죽으면 없다
+            if (_config != null) AddUserExp(_config.ChapterClearExp(chapter));
 
             // 격파 기록은 **올라가기만** 한다 — 1챕터를 다시 깨도 3챕터 기록이 안 내려간다.
             _data.clearedChapter = Mathf.Clamp(Mathf.Max(_data.clearedChapter, chapter), 0, ChapterCount);

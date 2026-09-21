@@ -156,7 +156,8 @@ namespace Game.Editor
                 var top = Band(root.transform, "LobbyV4Top", Spr("base_top"), w, split, 1f);
                 var mid = Band(root.transform, "LobbyV4Mid", Spr("base_mid"), w, navY - split, 1f);
                 mid.anchoredPosition = new Vector2(0f, -split * S);
-                var nav = Band(root.transform, "LobbyV4Nav", Spr("base_nav"), w, s_spec.mockupH - navY, 0f);
+                // 하단 바는 로비 · 육성 **공통**이라 `GrowthBuilder` 가 세운다(2026-09-21). 여기선 세우지 않는다.
+                RectTransform nav = null;
 
                 // 아래 틈 그림은 가운데판을 따라다닌다 — 가운데판 바로 아래에 붙인다
                 var city = Place(mid, "LobbyV4City", 0, navY - split, w, navY - split + Mathf.Max(1, s_spec.cityH));
@@ -171,13 +172,16 @@ namespace Game.Editor
                     Side(top, "SideRight", "side_right_top", w, split);
                     Side(mid, "SideLeft", "side_left_mid", -sw, navY - split);
                     Side(mid, "SideRight", "side_right_mid", w, navY - split);
-                    Side(nav, "SideLeft", "side_left_nav", -sw, s_spec.mockupH - navY);
-                    Side(nav, "SideRight", "side_right_nav", w, s_spec.mockupH - navY);
+                    // 가운데판 아래 도시 틈의 양옆 — 하단 바가 작아져(2026-09-21) 태블릿에서 드러난다
+                    int ch = Mathf.Max(1, s_spec.cityH);
+                    Img(Place(city, "CitySideL", -sw, 0, 0, ch), Spr("city_side_l"));
+                    Img(Place(city, "CitySideR", w, 0, w + sw, ch), Spr("city_side_r"));
                 }
 
-                // 눌리는 자리
+                // 눌리는 자리 — 하단 바 칸은 공통 하단 바가 갖는다
                 foreach (var (node, x0, y0, x1, y1) in Buttons)
                 {
+                    if (y0 >= navY) continue;
                     var (band, off) = BandOf(y0, y1, top, mid, nav);
                     var b = Place(band, node, x0, y0 - off, x1, y1 - off);
                     var img = b.gameObject.AddComponent<Image>();
@@ -191,7 +195,7 @@ namespace Game.Editor
                 // 글자
                 foreach (var t in s_spec.texts)
                 {
-                    if (t.name.StartsWith("_")) continue;
+                    if (t.name.StartsWith("_") || t.box[1] >= navY) continue;   // 하단 바 글자는 공통 하단 바가 찍는다
                     var (band, off) = BandOf(t.box[1], t.box[3], top, mid, nav);
                     Text(band, t, off);
                 }
@@ -210,7 +214,7 @@ namespace Game.Editor
 
                 // 판이 늦게 만들어져 맨 뒤로 가면 창(호스트 선택 등)을 덮는다 — 맨 앞으로 보낸다
                 // 틈 그림이 판보다 먼저(뒤에) 그려져야 판 끝이 이음 줄을 덮는다
-                gap.SetSiblingIndex(0); top.SetSiblingIndex(1); mid.SetSiblingIndex(2); nav.SetSiblingIndex(3);
+                gap.SetSiblingIndex(0); top.SetSiblingIndex(1); mid.SetSiblingIndex(2);
                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -422,7 +426,8 @@ namespace Game.Editor
             // 「プレイ ▶」 — 글자 끝 → ▶ 간격, 덩어리 가운데(버튼 왼쪽 기준)
             var play = Array.Find(s_spec.texts, x => x.name == "ModePlayButtonText").box;
             var arrow = Icon("playarrow");
-            so.FindProperty("_playArrowGap").floatValue = (arrow[0] - play[2]) * S;
+            // −5: TMP 글자 칸 끝이 잉크 끝보다 넓다 — 시안 ▶ 817 · 게임 822 로 실측해 뺐다(2026-09-21)
+            so.FindProperty("_playArrowGap").floatValue = (arrow[0] - play[2] - 5) * S;
             so.FindProperty("_playGroupCenter").floatValue = ((play[0] + arrow[2]) * 0.5f - playButtonX0) * S;
             so.ApplyModifiedPropertiesWithoutUndo();
         }

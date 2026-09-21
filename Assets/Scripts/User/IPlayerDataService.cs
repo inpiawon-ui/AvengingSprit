@@ -69,12 +69,6 @@ namespace Game.User
         /// <summary>몸값을 치른다. 판을 시작하는 순간 한 번만 부른다.</summary>
         bool PayHostEntry(HostEntry host);
 
-        /// <summary>다음 고스트 레벨을 살 골드가 있는가.</summary>
-        bool CanBuyGhostLevel { get; }
-
-        /// <summary>골드로 다음 고스트 레벨을 산다.</summary>
-        bool BuyGhostLevel();
-
         /// <summary>그 몸의 파편 수.</summary>
         int GetShards(string hostKey);
 
@@ -87,11 +81,41 @@ namespace Game.User
         /// <summary>이 몸의 다음 단계에 드는 파편 (등급 배수 포함). 0 이면 만렙.</summary>
         int MasteryCost(string hostKey);
 
-        /// <summary>고스트 레벨 상한.</summary>
+        /// <summary>고스트(유저) 레벨 상한. 레벨은 챕터를 깨서 받는 경험치로만 오른다.</summary>
         int GhostLevelMax { get; }
 
-        /// <summary>Lv → 다음 레벨 골드. 0 이면 상한.</summary>
-        int GhostLevelCost(int level);
+        /// <summary>별 — 숙련도 2단계마다 하나(0~5). 조각을 모아 올린다.</summary>
+        int StarsOf(string hostKey);
+
+        // ── 능력치 골드 강화 ─────────────────────────────────
+        //
+        // 유령 탭에서 올린 값은 **모든 몸**에, 호스트 탭에서 올린 값은 그 몸에만 붙는다.
+        // 판에서는 두 값을 더한 % 가 빙의한 몸의 능력치에 곱해진다.
+
+        int GhostStatMax { get; }
+        int HostStatMax { get; }
+        int GhostStatLevel(HostStat stat);
+        int HostStatLevel(string hostKey, HostStat stat);
+        /// <summary>다음 단계 골드. 0 이면 상한.</summary>
+        int GhostStatCost(HostStat stat);
+        int HostStatCost(string hostKey, HostStat stat);
+        /// <summary>그 레벨까지 오른 % (예: Lv15 → 30).</summary>
+        float StatPercent(HostStat stat, int level);
+        /// <summary>골드를 쓰고 한 단계 올린다. 모자라거나 상한이면 false. 저장은 부르는 쪽이.</summary>
+        bool BuyGhostStat(HostStat stat);
+        bool BuyHostStat(string hostKey, HostStat stat);
+        /// <summary>그 몸이 판에서 받는 배율 = 1 + (유령 % + 호스트 %) / 100.</summary>
+        float StatBonusMul(string hostKey, HostStat stat);
+
+        // ── 유령 성장 경로 ──────────────────────────────────
+
+        int PathCount { get; }
+        int PathLevel(int index);
+        bool IsPathClaimed(int index);
+        /// <summary>그 칸의 보상(골드 · 젬 · 영혼 핵).</summary>
+        void GetPathReward(int index, out int gold, out int gem, out int spiritCore);
+        /// <summary>레벨이 닿았고 아직 안 받았으면 보상(골드 · 젬 · 영혼 핵)을 준다. 저장은 부르는 쪽이.</summary>
+        bool ClaimPath(int index);
 
         /// <summary>파편을 준다.</summary>
         void AddShards(string hostKey, int amount);
@@ -146,8 +170,8 @@ namespace Game.User
         UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared);
 
         /// <summary>
-        /// 챕터 클리어 보상 — 골드를 주고 격파 기록을 올려 다음 챕터를 연다. 저장까지 한다.
-        /// 이미 깬 챕터를 다시 깨도 골드는 준다(기획 2026-09-18).
+        /// 챕터 클리어 보상 — 골드 · 유저 경험치를 주고 격파 기록을 올려 다음 챕터를 연다. 저장까지 한다.
+        /// 이미 깬 챕터를 다시 깨도 골드 · 경험치는 준다(기획 2026-09-18 · 09-21).
         /// </summary>
         UniTask GrantChapterClearAsync(int chapter, int gold);
 

@@ -177,6 +177,23 @@ def text_spec(img, m, box, align, jp, bg, lines=1):
             'size': fit_size(jp, tb[2] - tb[0], line_h)}
 
 
+# 색으로 재지 않는 그림 위 글자 — 「ゲームモード」 는 칸 아래 흰 무늬까지 같은 색이라 차이로 잰 값이 맞다
+COLOR_BOX_SKIP = {'GameModeLabel'}
+
+
+def color_box(img, box, hex_color, tol=70, pad=6):
+    """칸 안에서 글자 본색에 가까운 픽셀의 테두리 상자(외곽선 제외)."""
+    x0, y0, x1, y1 = box
+    ya, yb = max(0, y0 - pad), min(img.shape[0], y1 + pad)
+    roi = img[ya:yb, x0:x1].astype(np.int16)
+    col = np.array([int(hex_color[i:i + 2], 16) for i in (1, 3, 5)])
+    m = np.abs(roi - col).sum(axis=2) < tol
+    ys, xs = np.nonzero(m)
+    if len(xs) < 20:
+        return None
+    return [x0 + int(xs.min()), ya + int(ys.min()), x0 + int(xs.max()) + 1, ya + int(ys.max()) + 1]
+
+
 def feather_paste(dst, src, mask, grow=4, soft=5):
     """src 를 mask(글자 잉크) 둘레만큼 dst 에 붙인다. 가장자리는 녹인다."""
     m = cv2.dilate(mask.astype(np.uint8), np.ones((2 * grow + 1, 2 * grow + 1), np.uint8)).astype(np.float32)
@@ -252,6 +269,12 @@ def main():
     for name, box, al, jp in ART_TEXTS:
         m, d = diff_mask(M, C, box)
         texts[name] = text_spec(M, m, box, al, jp, None)
+        # ⚠ 잉크 칸은 **글자 색**으로 다시 잰다. 코덱스 판과의 차이로 재면 코덱스가 글자 밑 그림까지
+        #   조금 바꿔 그린 탓에 칸이 부풀어, 제목 · 설명이 맞붙은 칸으로 잡혀 게임에서 겹쳤다(2026-09-21).
+        cb = color_box(M, box, texts[name]['color'])
+        if cb is not None and name not in COLOR_BOX_SKIP:
+            texts[name]['box'] = cb
+            texts[name]['size'] = fit_size(jp, cb[2] - cb[0], cb[3] - cb[1])
         bx0, by0, bx1, by1 = box
         region = np.zeros((H, W), np.uint8)
         region[by0:by1, bx0:bx1] = m
@@ -374,6 +397,9 @@ def main():
     if os.path.exists(city_path):
         city = continuation(city_path, M[1100:NAV_Y], 0, NAV_Y - 1100)
         Image.fromarray(city).save(os.path.join(OUT, 'base_city.png'))
+        # 태블릿 양옆 — 도시 가장자리 줄을 늘여 쓴다(예전엔 하단 바 판이 이 높이까지 덮었다)
+        Image.fromarray(city[:, :6]).save(os.path.join(OUT, 'city_side_l.png'))
+        Image.fromarray(city[:, -6:]).save(os.path.join(OUT, 'city_side_r.png'))
         spec_extra['cityH'] = int(city.shape[0])
 
     # 6) 태블릿 양옆
@@ -396,13 +422,12 @@ def main():
             s8 = np.clip(strip, 0, 255).astype(np.uint8)
             Image.fromarray(s8[:SPLIT_Y]).save(os.path.join(OUT, f'{nm}_top.png'))
             Image.fromarray(s8[SPLIT_Y:NAV_Y]).save(os.path.join(OUT, f'{nm}_mid.png'))
-            Image.fromarray(s8[NAV_Y:]).save(os.path.join(OUT, f'{nm}_nav.png'))
+            # 하단 바는 로비 · 육성 공통이라 growth_build.py 가 만든다(2026-09-21)
         spec_extra['sideW'] = SIDE
         print('sides: 가로 어긋남', off, '평균 차', round(float(best) / 2, 1))
 
     Image.fromarray(base[:SPLIT_Y]).save(os.path.join(OUT, 'base_top.png'))
     Image.fromarray(base[SPLIT_Y:NAV_Y]).save(os.path.join(OUT, 'base_mid.png'))
-    Image.fromarray(base[NAV_Y:]).save(os.path.join(OUT, 'base_nav.png'))
     Image.fromarray(clean).save(os.path.join(REF, 'debug_clean.png'))
     Image.fromarray(base).save(os.path.join(REF, 'debug_base.png'))
 

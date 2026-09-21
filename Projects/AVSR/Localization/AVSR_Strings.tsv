@@ -477,3 +477,49 @@ ui.chapter.locked	잠김	ロック中	Locked
 ui.chapter.cleared	클리어	クリア済み	Cleared
 ui.chapter.new	도전 가능	挑戦可能	Available
 ui.chapter.locked_hint	챕터 {0}을(를) 클리어하면 열립니다	チャプター{0}をクリアすると解放されます	Clear Chapter {0} to unlock
+ui.growth.tab.ghost	유령 육성	ゴースト育成	Ghost
+ui.growth.tab.host	호스트 육성	ホスト育成	Hosts
+ui.growth.tab.stats	능력치	能力値	Stats
+ui.growth.tab.skills	스킬	スキル	Skills
+ui.growth.stat_header	능력치 강화	能力値強化	Stat Upgrades
+ui.growth.path_header	유령 성장 경로	ゴースト成長ルート	Ghost Growth Path
+ui.growth.host_list	호스트 목록	ホスト一覧	Host List
+ui.growth.sort.default	기본순	標準順	Default
+ui.growth.max	MAX	MAX	MAX
+ui.growth.gold_short	골드가 부족합니다	ゴールドが足りません	Not enough gold
+ui.growth.path_claim	받기	受取	Claim
+ui.growth.path_claimed	Lv {0} 보상을 받았습니다	Lv {0} の報酬を受け取りました	Lv {0} reward claimed
+ui.growth.path_locked	Lv {0} 에 받을 수 있습니다	Lv {0} で受け取れます	Unlocks at Lv {0}
+ui.growth.help.stats	골드로 능력치를 영구히 올립니다.\n유령 육성은 모든 호스트에, 호스트 육성은 그 호스트에만 붙습니다.	ゴールドで能力値を永久に強化します。\nゴースト育成は全ホストに、ホスト育成はそのホストだけに適用されます。	Spend gold to permanently raise stats.\nGhost upgrades apply to every host; host upgrades apply to that host only.
+ui.growth.help.path	챕터를 클리어하면 유령 경험치를 얻습니다.\n정해진 레벨에 닿으면 보상을 받을 수 있습니다.	チャプターをクリアするとゴースト経験値を獲得します。\n決まったレベルに達すると報酬を受け取れます。	Clear chapters to earn ghost EXP.\nReach milestone levels to claim rewards.
+ui.growth.ghost.name	유령	ゴースト	Ghost
+ui.growth.ghost.desc	세상을 떠도는 정의로운 영혼.\n아직 끝나지 않은 이야기를 위해\n오늘도 함께합니다.	世をさまよう正義の魂。\nまだ終わらない物語のために\n今日も共に戦います。	A righteous soul adrift in the world,\nfighting on for a story\nthat isn't over yet.
+ui.stat.hp	최대 HP	最大HP	Max HP
+ui.stat.atk	공격력	攻撃力	Attack
+ui.stat.crit	크리티컬 확률	クリティカル率	Crit Chance
+ui.stat.atkspeed	공격 속도	攻撃速度	Attack Speed
+ui.stat.range	사거리	射程	Range
+ui.stat.movespeed	이동 속도	移動速度	Move Speed
+host.gangster.desc	뒷골목을 주름잡던 두목.\n권총 한 자루로 길을 연다.	裏路地を仕切っていたボス。\n拳銃一丁で道を切り開く。	A back-alley boss who clears\nthe way with a single pistol.
+host.thug.desc	거리의 싸움꾼.\n주먹이 먼저 나간다.	街のケンカ屋。\n拳が先に出る。	A street brawler whose\nfists always go first.
+host.amazon.desc	정글의 전사.\n날랜 몸놀림으로 적을 벤다.	ジャングルの戦士。\n素早い身のこなしで敵を斬る。	A jungle warrior who cuts foes\ndown with nimble moves.
+host.amazon_elite.desc	아마존 전사단의 정예.\n반격으로 흐름을 뒤집는다.	アマゾネス戦士団の精鋭。\n反撃で流れをひっくり返す。	Elite of the Amazon warband who\nturns the tide with counters.
+host.hopper.desc	뛰어오르며 싸우는 무법자.\n멈추지 않는 기세가 무기다.	跳ね回って戦う無法者。\n止まらない勢いが武器だ。	An outlaw who fights on the hop.\nMomentum is the weapon.
+host.hopper_smg.desc	기관단총을 든 호퍼.\n쉴 새 없이 탄을 퍼붓는다.	サブマシンガンを持つホッパー。\n絶え間なく弾を浴びせる。	A hopper with an SMG who never\nstops pouring out bullets.
+host.commando_mg.desc	어떤 전장에서도 임무를 완수하는\n특수부대원입니다.	どんな戦場でも任務を完遂する\n特殊部隊員です。	A special forces soldier who completes\nthe mission on any battlefield.
+host.commando_laser.desc	레이저 소총을 쓰는 코만도.\n멀리서 한 줄로 꿰뚫는다.	レーザーライフルのコマンドー。\n遠くから一直線に貫く。	A commando with a laser rifle who\npierces enemies from afar.
+host.commando_grenade.desc	수류탄을 다루는 코만도.\n뭉친 적을 한꺼번에 날린다.	手榴弾を扱うコマンドー。\n固まった敵をまとめて吹き飛ばす。	A grenadier commando who blasts\nclustered enemies at once.
+host.salamander.desc	불을 뿜는 도마뱀 인간.\n가까이 오는 적을 태운다.	火を吐くトカゲ人間。\n近づく敵を焼き尽くす。	A fire-breathing lizardman who\nburns anyone who comes close.
+host.dragoon.desc	창을 든 용기병.\n묵직한 한 방으로 뚫고 나간다.	槍を構えた竜騎兵。\n重い一撃で突き進む。	A lance-wielding dragoon who\nbreaks through with heavy blows.
+host.dragon_blue.desc	푸른 비늘의 용.\n빠른 숨결로 적을 몰아친다.	青い鱗のドラゴン。\n素早いブレスで敵を追い立てる。	A blue-scaled dragon that drives\nfoes back with swift breath.
+host.guru.desc	허공에 떠 있는 수행자.\n버티고 또 버틴다.	宙に浮かぶ修行者。\n耐えて、また耐える。	A levitating ascetic who endures\nand endures again.
+host.white_wizard.desc	흰 옷의 마법사.\n멀리서 마력을 쏘아 보낸다.	白衣の魔法使い。\n遠くから魔力を撃ち出す。	A wizard in white who hurls\nmagic from a distance.
+host.medium.desc	영혼을 부르는 무녀.\n보이지 않는 힘으로 싸운다.	霊を呼ぶ巫女。\n見えない力で戦う。	A medium who calls on spirits\nand fights with unseen power.
+host.ninja.desc	그림자 속의 닌자.\n빠른 손으로 급소를 노린다.	影にひそむ忍者。\n素早い手で急所を狙う。	A ninja in the shadows who strikes\nvital points with quick hands.
+host.ninja_chain.desc	사슬낫을 쓰는 닌자.\n먼 거리에서 적을 낚아챈다.	鎖鎌を使う忍者。\n離れた敵を絡め取る。	A chain-sickle ninja who snares\nenemies from far away.
+host.robot.desc	고철로 만든 전투 로봇.\n예비 회로로 몇 번이고 일어난다.	鉄くずで作られた戦闘ロボット。\n予備回路で何度でも立ち上がる。	A scrap-built battle robot that gets\nback up on spare circuits.
+host.baseball.desc	방망이를 든 강타자.\n한 번 휘두르면 담장을 넘긴다.	バットを握る強打者。\nひと振りでフェンスを越える。	A power hitter whose single swing\nsends foes over the fence.
+host.snowwoman.desc	눈을 부르는 설녀.\n차가운 손길로 적을 얼린다.	雪を呼ぶ雪女。\n冷たい手で敵を凍らせる。	A snow woman whose icy touch\nfreezes her foes.
+host.vampire.desc	밤의 귀족 흡혈귀.\n적의 피로 상처를 메운다.	夜の貴族、吸血鬼。\n敵の血で傷をふさぐ。	A vampire noble of the night who\nheals on the blood of foes.
+host.commando_missile.desc	미사일을 쏘는 코만도.\n멀리 있는 적까지 폭격한다.	ミサイルを撃つコマンドー。\n遠くの敵まで爆撃する。	A missile commando who bombards\neven distant enemies.
+host.death.desc	낫을 든 죽음 그 자체.\n닿는 모든 것을 거둔다.	鎌を持つ死そのもの。\n触れるものすべてを刈り取る。	Death itself, scythe in hand,\nreaping all it touches.

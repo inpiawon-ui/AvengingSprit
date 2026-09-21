@@ -738,12 +738,13 @@ namespace Game.Module.Lobby
             // 유령은 파편으로 크지 않는다 — 이 칸은 **고스트 Lv** 을 보여주는 자리다.
             _ui.SetText("MasteryLabel", Localize.Get("ui.hostselect.ghost.level"));
             _ui.SetText("MasteryValueText", $"Lv {_player.GhostLevel} / {_player.GhostLevelMax}");
-            _ui.SetText("ShardText", Localize.Get("ui.hostselect.ghost.level_by_gold"));
-            _ui.SetText("ShardCountText", $"{_player.GhostLevelCost(_player.GhostLevel + 1):N0} G");
+            // 유저 레벨은 챕터 클리어 경험치로 오른다(2026-09-21) — 막대는 경험치다
+            _ui.SetText("ShardText", "EXP");
+            _ui.SetText("ShardCountText", $"{_player.GhostExp:N0} / {_player.GhostExpMax:N0}");
             var fill = _ui.Find("ShardBarFill") as RectTransform;
             if (fill != null)
                 fill.sizeDelta = new Vector2(
-                    ShardBarWidth * Mathf.Clamp01((float)_player.GhostLevel / _player.GhostLevelMax),
+                    ShardBarWidth * Mathf.Clamp01((float)_player.GhostExp / Mathf.Max(1, _player.GhostExpMax)),
                     fill.sizeDelta.y);
         }
 
