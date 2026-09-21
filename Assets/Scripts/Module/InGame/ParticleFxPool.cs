@@ -267,6 +267,11 @@ namespace Game.Module.InGame
             rt.sizeDelta = Vector2.zero;
 
             var ps = go.AddComponent<ParticleSystem>();
+            // ⚠ 컴포넌트를 붙이는 순간 **이미 돌고 있다**(기본값 playOnAwake). 도는 중에는
+            //   `duration` 을 못 바꾼다 — 유니티가 경고를 뱉고 값이 안 먹는다.
+            //   설정하기 전에 완전히 세운다. 아래에서 다시 `Play()` 한다.
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
             var main = ps.main;
             main.playOnAwake = false;
             // ⚠ **계속 돌려 둔다.** 한 번 돌고 멈추는(loop = false) 시스템은 멈춘 뒤에
