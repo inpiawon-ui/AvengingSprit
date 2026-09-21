@@ -1,0 +1,141 @@
+﻿처리할 유닛: vampire snowwoman roadwarden ninja medium ghost dragoon white_wizard commando_missile coilwalker scrapgunner commando_laser skeleton golem dragon_blue death thug robot hopper commando_grenade amazon_elite ninja_chain hopper_smg guru baseball amazon actor_enforcer
+
+===== vampire =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== snowwoman =====
+  1차 통과 4 / 빠꾸 ['ne']
+  2차 통과 0 / 남은 빠꾸 ['ne']
+  반영 4방향
+
+===== roadwarden =====
+  1차 통과 4 / 빠꾸 ['n']
+  2차 통과 0 / 남은 빠꾸 ['n']
+  반영 4방향
+
+===== ninja =====
+  1차 통과 2 / 빠꾸 ['s', 'se', 'ne']
+  2차 통과 1 / 남은 빠꾸 ['s', 'se']
+  반영 3방향
+
+===== medium =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== ghost =====
+  1차 통과 4 / 빠꾸 ['e']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== dragoon =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== white_wizard =====
+  1차 통과 3 / 빠꾸 ['se', 'ne']
+  2차 통과 0 / 남은 빠꾸 ['se', 'ne']
+  반영 3방향
+
+===== commando_missile =====
+  1차 통과 3 / 빠꾸 ['s', 'ne']
+  2차 통과 1 / 남은 빠꾸 ['s']
+  반영 4방향
+
+===== coilwalker =====
+  1차 통과 3 / 빠꾸 ['ne', 'n']
+  2차 통과 1 / 남은 빠꾸 ['n']
+  반영 4방향
+
+===== scrapgunner =====
+  1차 통과 3 / 빠꾸 ['se', 'e']
+  2차 통과 1 / 남은 빠꾸 ['e']
+  반영 4방향
+
+===== commando_laser =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== skeleton =====
+  1차 통과 4 / 빠꾸 ['ne']
+  2차 통과 0 / 남은 빠꾸 ['ne']
+  반영 4방향
+
+===== golem =====
+  1차 통과 3 / 빠꾸 ['s', 'n']
+  2차 통과 1 / 남은 빠꾸 ['s']
+  반영 4방향
+
+===== dragon_blue =====
+  1차 통과 4 / 빠꾸 ['n']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== death =====
+  1차 통과 4 / 빠꾸 ['e']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== thug =====
+  1차 통과 3 / 빠꾸 ['s', 'e']
+  2차 통과 1 / 남은 빠꾸 ['e']
+  반영 4방향
+
+===== robot =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== hopper =====
+  1차 통과 4 / 빠꾸 ['ne']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== commando_grenade =====
+  1차 통과 4 / 빠꾸 ['e']
+  2차 통과 0 / 남은 빠꾸 ['e']
+  반영 4방향
+
+===== amazon_elite =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== ninja_chain =====
+  1차 통과 4 / 빠꾸 ['s']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== hopper_smg =====
+  1차 통과 4 / 빠꾸 ['s']
+  2차 통과 1 / 남은 빠꾸 []
+  반영 5방향
+
+===== guru =====
+  1차 통과 4 / 빠꾸 ['s']
+  2차 통과 0 / 남은 빠꾸 ['s']
+  반영 4방향
+
+===== baseball =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== amazon =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== actor_enforcer =====
+  1차 통과 5 / 빠꾸 []
+  반영 5방향
+
+===== 끝 =====
+  snowwoman: ne — 사람이 볼 것
+  roadwarden: n — 사람이 볼 것
+  ninja: s se — 사람이 볼 것
+  white_wizard: se ne — 사람이 볼 것
+  commando_missile: s — 사람이 볼 것
+  coilwalker: n — 사람이 볼 것
+  scrapgunner: e — 사람이 볼 것
+  skeleton: ne — 사람이 볼 것
+  golem: s — 사람이 볼 것
+  thug: e — 사람이 볼 것
+  commando_grenade: e — 사람이 볼 것
+  guru: s — 사람이 볼 것

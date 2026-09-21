@@ -34,8 +34,11 @@ OUT = batch.OUT
 #   boss      그림 한 장뿐
 # 여덟 칸만 올리면 **나머지 동작만 옛 그림으로 남아 따로 논다.** 따로 발주한다.
 #
-# ⚠ 크러셔 · 로봇스네이크 · 슬러지는 여덟 칸이 같다(`s_tell` 한 장만 덤) — 이 판으로 돈다.
-SKIP = {"boss", "guardian", "python", "kingpin"}
+#
+# ⚠ 크러셔 · 로봇스네이크 · 슬러지는 여덟 칸은 같지만 **한 칸이 256px** 이다(보스급).
+#   자르기 툴은 96px 규격이라 넣으면 몸이 1/3 로 줄어든다. 비교 기준(지금 그림)도 커서
+#   전 방향이 빠꾸 난다(2026-09-21 로봇스네이크). 256 판으로 따로 발주한다.
+SKIP = {"boss", "guardian", "python", "kingpin", "crusher", "robot_snakes", "sludge"}
 
 
 def order_and_deliver(key, facings):

@@ -46,8 +46,20 @@ def key_out(im):
     return Image.fromarray(np.dstack([rgb.astype(np.uint8), alpha]))
 
 
-def fit_cell(cell, lying):
-    """잉크를 규격 크기로 줄이고 발 기준으로 칸에 앉힌다."""
+# 서 있는 키보다 **낮은 자세**가 나오는 동작 — 웅크린 공격 · 피격 · 무너지는 쓰러짐1.
+# 이들까지 키 76 으로 늘리면 몸이 통째로 커진다(해골 쓰러짐1 머리가 칸만 해졌다, 2026-09-21).
+# 대기 칸과 **같은 배율**로 줄인다 — 한 판 안의 그림은 같은 크기로 그려져 있다.
+LOW_POSE = {"_atk1", "_atk2", "_hit", "_die1"}
+
+
+def ink_height(cell):
+    a = np.asarray(cell)[..., 3]
+    ys = np.nonzero((a > 8).any(axis=1))[0]
+    return 0 if len(ys) == 0 else int(ys.max() - ys.min() + 1)
+
+
+def fit_cell(cell, lying, ref_scale=None):
+    """잉크를 규격 크기로 줄이고 발 기준으로 칸에 앉힌다. ref_scale 이 있으면 그 배율을 넘지 않는다."""
     a = np.asarray(cell)[..., 3]
     ys, xs = np.nonzero(a > 8)
     if len(xs) == 0:
@@ -57,8 +69,12 @@ def fit_cell(cell, lying):
         w = min(84, ink.width)
         h = max(1, round(ink.height * w / ink.width))
     else:
-        h = INK_H
-        w = max(1, round(ink.width * h / ink.height))
+        s = INK_H / ink.height
+        if ref_scale is not None:
+            s = min(s, ref_scale)
+        s = min(s, 92 / ink.width)   # 옆으로 긴 자세가 칸을 넘지 않게
+        h = max(1, round(ink.height * s))
+        w = max(1, round(ink.width * s))
     small = ink.resize((w, h), Image.LANCZOS)
     # 반투명 가장자리는 도트답게 자른다(원본도 알파가 0 아니면 255 다)
     q = np.asarray(small).astype(np.uint8).copy()
@@ -83,10 +99,15 @@ def main():
     saved = {}
     side = im.width // 3
     OUT.mkdir(parents=True, exist_ok=True)
+    cells = []
     for i, act in enumerate(ACTS):
         r, c = divmod(i, 3)
-        cell = im.crop((c * side, r * side, (c + 1) * side, (r + 1) * side)).resize((CELL, CELL), Image.LANCZOS)
-        fitted = fit_cell(cell, act in LYING)
+        cells.append(im.crop((c * side, r * side, (c + 1) * side, (r + 1) * side)).resize((CELL, CELL), Image.LANCZOS))
+    idle_h = ink_height(cells[0])
+    ref_scale = INK_H / idle_h if idle_h else None
+    for i, act in enumerate(ACTS):
+        cell = cells[i]
+        fitted = fit_cell(cell, act in LYING, ref_scale if act in LOW_POSE else None)
         if fitted is None:
             print(f"{i + 1}칸 비었다 — {act or 'idle'}")
             continue
