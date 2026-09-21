@@ -27,8 +27,15 @@ import unit_up_batch as batch
 ROOT = qa.ROOT
 OUT = batch.OUT
 
-# 이 판으로 다룰 수 없는 것 — 프레임 구성이 다르다(보스 연출·단발 그림)
-SKIP = {"boss", "guardian", "python", "kingpin", "crusher", "robot_snakes", "sludge"}
+# 이 판으로 다룰 수 없는 것 — **동작이 더 있어** 여덟 칸으로 안 끝난다.
+#   kingpin   glide · lock · rise · salvo
+#   guardian  bite · launch · thrust · coil1~4
+#   python    in1~4 · out1~4 · die1~4 (아예 다른 구성)
+#   boss      그림 한 장뿐
+# 여덟 칸만 올리면 **나머지 동작만 옛 그림으로 남아 따로 논다.** 따로 발주한다.
+#
+# ⚠ 크러셔 · 로봇스네이크 · 슬러지는 여덟 칸이 같다(`s_tell` 한 장만 덤) — 이 판으로 돈다.
+SKIP = {"boss", "guardian", "python", "kingpin"}
 
 
 def order_and_deliver(key, facings):
