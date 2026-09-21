@@ -41,7 +41,7 @@ namespace Game.Editor
 
         [Serializable] private class TextSpec { public string name; public int[] box; public string color; public string align; public int[] area; public int size; }
         [Serializable] private class BoxSpec { public string name; public int[] box; public int card; }
-        [Serializable] private class Spec { public int mockupW, mockupH, splitY, extendH, extendOverlap, sideW; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
+        [Serializable] private class Spec { public int mockupW, mockupH, splitY, navY, extendH, cityH, sideW; public TextSpec[] texts; public BoxSpec[] parts, icons, slots; }
         [Serializable] private class CalibItem { public string name; public float dx, dy, scale = 1f, dilate, aspect = 1f; }
         [Serializable] private class Calib { public CalibItem[] items; }
 
@@ -50,7 +50,7 @@ namespace Game.Editor
         {
             "LobbyStageArea", "TopHudGroup", "GhostSearchPanel", "ChestBand", "GameModeGroup", "MainActionBar",
             "LobbyV3Backdrop", "LobbyV3Gap", "LobbyV3Top", "LobbyV3Bottom",
-            "LobbyV4Gap", "LobbyV4Top", "LobbyV4Bottom",
+            "LobbyV4Gap", "LobbyV4Top", "LobbyV4Bottom", "LobbyV4Mid", "LobbyV4Nav",
         };
 
         /// <summary>고정 글자 → 언어 표 키. 숫자 · 시간 · 상자 칸은 코드가 채운다.</summary>
@@ -140,49 +140,60 @@ namespace Game.Editor
                 var version = root.transform.Find("VersionText");
                 if (version != null) version.gameObject.SetActive(false);   // 시안에 없다
 
-                int split = s_spec.splitY;
-                // 긴 화면에서 두 판 사이에 뜨는 틈 — 위판 바로 아래에 바닥 연장 그림을 붙인다.
-                // 아래판이 그 위를 덮으므로 9:16 에서는 안 보이고, 화면이 길어질수록 더 드러난다.
+                int split = s_spec.splitY, navY = s_spec.navY, w = s_spec.mockupW;
+                // 판 셋 — 위판은 화면 위, 하단 바 판은 화면 바닥, 가운데판은 남는 공간의 한가운데
+                // (자리는 LobbyMainUI 가 화면 크기에 맞춰 옮긴다). 9:16 에서는 셋이 맞닿아 시안 그대로다.
+                // 긴 화면에서 뜨는 두 틈은 판 **뒤**에 깐 이어 그린 그림이 메운다 —
+                //   위 틈: 위판 바로 아래에서 시작하는 광장 바닥(가운데판 상자 띠 윗선이 끝을 덮는다)
+                //   아래 틈: 가운데판 바로 아래에서 시작하는 밤 도시(하단 바 판 땅 선이 끝을 덮는다)
                 var gap = Node(root.transform, "LobbyV4Gap");
                 gap.anchorMin = gap.anchorMax = gap.pivot = new Vector2(0.5f, 1f);
-                gap.anchoredPosition = new Vector2(0f, -(split - s_spec.extendOverlap) * S);   // 위판과 몇 줄 겹쳐 알파로 녹인다
-                gap.sizeDelta = new Vector2(s_spec.mockupW * S, Mathf.Max(1, s_spec.extendH) * S);
+                gap.anchoredPosition = new Vector2(0f, -split * S);
+                gap.sizeDelta = new Vector2(w * S, Mathf.Max(1, s_spec.extendH) * S);
                 gap.gameObject.AddComponent<ScreenFitLock>();
                 Img(gap, Spr("base_extend")).enabled = s_spec.extendH > 0;
 
-                var top = Band(root.transform, "LobbyV4Top", Spr("base_top"), s_spec.mockupW, split, true);
-                var bottom = Band(root.transform, "LobbyV4Bottom", Spr("base_bottom"), s_spec.mockupW,
-                                  s_spec.mockupH - split, false);
+                var top = Band(root.transform, "LobbyV4Top", Spr("base_top"), w, split, 1f);
+                var mid = Band(root.transform, "LobbyV4Mid", Spr("base_mid"), w, navY - split, 1f);
+                mid.anchoredPosition = new Vector2(0f, -split * S);
+                var nav = Band(root.transform, "LobbyV4Nav", Spr("base_nav"), w, s_spec.mockupH - navY, 0f);
+
+                // 아래 틈 그림은 가운데판을 따라다닌다 — 가운데판 바로 아래에 붙인다
+                var city = Place(mid, "LobbyV4City", 0, navY - split, w, navY - split + Mathf.Max(1, s_spec.cityH));
+                Img(city, Spr("base_city")).enabled = s_spec.cityH > 0;
+                city.SetAsFirstSibling();
 
                 // 태블릿 양옆 — 판 바깥에 붙는 풍경(폰에서는 화면 밖이라 안 보인다)
                 if (s_spec.sideW > 0)
                 {
                     int sw = s_spec.sideW;
                     Side(top, "SideLeft", "side_left_top", -sw, split);
-                    Side(top, "SideRight", "side_right_top", s_spec.mockupW, split);
-                    Side(bottom, "SideLeft", "side_left_bottom", -sw, s_spec.mockupH - split);
-                    Side(bottom, "SideRight", "side_right_bottom", s_spec.mockupW, s_spec.mockupH - split);
+                    Side(top, "SideRight", "side_right_top", w, split);
+                    Side(mid, "SideLeft", "side_left_mid", -sw, navY - split);
+                    Side(mid, "SideRight", "side_right_mid", w, navY - split);
+                    Side(nav, "SideLeft", "side_left_nav", -sw, s_spec.mockupH - navY);
+                    Side(nav, "SideRight", "side_right_nav", w, s_spec.mockupH - navY);
                 }
 
                 // 눌리는 자리
                 foreach (var (node, x0, y0, x1, y1) in Buttons)
                 {
-                    bool isTop = y1 <= split;
-                    var b = Place(isTop ? top : bottom, node, x0, y0 - (isTop ? 0 : split), x1, y1 - (isTop ? 0 : split));
+                    var (band, off) = BandOf(y0, y1, top, mid, nav);
+                    var b = Place(band, node, x0, y0 - off, x1, y1 - off);
                     var img = b.gameObject.AddComponent<Image>();
                     img.color = new Color(1f, 1f, 1f, 0f);
                     b.gameObject.AddComponent<Button>().targetGraphic = img;
                 }
 
                 // 상자 카드 — 글자보다 먼저(카드 버튼이 글자를 덮지 않게 글자가 뒤에 온다)
-                BuildChests(bottom, split);
+                BuildChests(mid, split);
 
                 // 글자
                 foreach (var t in s_spec.texts)
                 {
                     if (t.name.StartsWith("_")) continue;
-                    bool isTop = t.box[3] <= split;
-                    Text(isTop ? top : bottom, t, isTop ? 0 : split);
+                    var (band, off) = BandOf(t.box[1], t.box[3], top, mid, nav);
+                    Text(band, t, off);
                 }
 
                 // 「プレイ ▶」 — 글자와 ▶ 를 버튼 밑으로. 자리는 LobbyMainUI 가 글자 끝에 맞춰 옮긴다
@@ -198,7 +209,8 @@ namespace Game.Editor
                 BindLobby(root, pb.x0);
 
                 // 판이 늦게 만들어져 맨 뒤로 가면 창(호스트 선택 등)을 덮는다 — 맨 앞으로 보낸다
-                top.SetSiblingIndex(0); gap.SetSiblingIndex(1); bottom.SetSiblingIndex(2);
+                // 틈 그림이 판보다 먼저(뒤에) 그려져야 판 끝이 이음 줄을 덮는다
+                gap.SetSiblingIndex(0); top.SetSiblingIndex(1); mid.SetSiblingIndex(2); nav.SetSiblingIndex(3);
                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -207,9 +219,9 @@ namespace Game.Editor
 
         // ── 상자 카드 세 칸 ─────────────────────────────────────
 
-        private static void BuildChests(RectTransform bottom, int split)
+        private static void BuildChests(RectTransform mid, int split)
         {
-            var band = Node(bottom, "ChestBand");
+            var band = Node(mid, "ChestBand");
             Stretch(band);
             for (int i = 0; i < 3; i++)
             {
@@ -424,10 +436,19 @@ namespace Game.Editor
 
         // ── 판 · 노드 ───────────────────────────────────────────
 
-        private static RectTransform Band(Transform root, string name, Sprite sprite, int w, int h, bool top)
+        /// <summary>시안 세로 범위가 어느 판에 드는가 — 그 판과 판 윗변의 시안 y.</summary>
+        private static (RectTransform band, int off) BandOf(int y0, int y1, RectTransform top, RectTransform mid, RectTransform nav)
+        {
+            if (y1 <= s_spec.splitY) return (top, 0);
+            if (y0 >= s_spec.navY) return (nav, s_spec.navY);
+            return (mid, s_spec.splitY);
+        }
+
+        /// <summary>판 — <paramref name="anchorY"/> 1 은 화면 위, 0 은 화면 바닥에 붙는다.</summary>
+        private static RectTransform Band(Transform root, string name, Sprite sprite, int w, int h, float anchorY)
         {
             var rt = Node(root, name);
-            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, top ? 1f : 0f);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, anchorY);
             rt.anchoredPosition = Vector2.zero;
             rt.sizeDelta = new Vector2(w * S, h * S);
             rt.gameObject.AddComponent<ScreenFitLock>();

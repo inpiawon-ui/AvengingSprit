@@ -23,7 +23,11 @@ REF = os.path.join(HERE, '..', '_exchange', 'ref', 'lobby_v4')
 OUT = os.path.join(ROOT, 'Assets', 'BaseResource', 'LobbyV4')
 FONT = os.path.join(ROOT, 'Assets', 'BaseResource', 'Fonts', 'NotoSansJP-Bold.ttf')
 W, H = 941, 1672
-SPLIT_Y = 632          # 위판 / 아래판 경계 — 파란 상자 띠 윗선(636) 바로 위
+SPLIT_Y = 632          # 위판 / 가운데판 경계 — 파란 상자 띠 윗선(636) 바로 위
+NAV_Y = 1455           # 가운데판 / 하단 바 판 경계 — 하단 바 위 가로 땅 선(1456) 바로 위
+# 긴 화면(20:9 등)에서 남는 세로 공간은 위판 아래 · 하단 바 위로 반씩 나눈다(2026-09-21 지적: 「아래로 치우친다」).
+# 가운데판은 그 사이 한가운데에 선다. 두 틈은 코덱스가 이어 그린 바닥 · 도시가 메운다 —
+# 틈 끝은 상자 띠 윗선 · 하단 바 땅 선에 닿으므로 이음매가 UI 선 뒤로 숨는다.
 
 # ── 판 위 글자 — 줄 잇기로 지운다 (이름 = 게임 노드 이름, 넉넉한 칸, 정렬, 시안 글자) ──
 FLAT_TEXTS = [
@@ -336,31 +340,41 @@ def main():
     save_rgba(plate_src[by0:by1, bx0:bx1][ty0:ty1, tx0:tx1], a[ty0:ty1, tx0:tx1], 'timeplate')
     parts['timeplate'] = [bx0 + tx0, by0 + ty0, bx0 + tx1, by0 + ty1, 0]
 
-    # 5) 긴 화면 틈 — 코덱스가 위판 아래로 이어 그린 것
+    # 5) 긴 화면 틈 — 코덱스가 이어 그린 것. 틈은 판 **뒤**에 깐다(앞 판이 불투명이라 이음 줄을 덮는다)
     spec_extra = {}
-    ext_path = os.path.join(REF, 'out_extend_raw.png')
-    if os.path.exists(ext_path):
-        OVERLAP = 12
-        raw = Image.open(ext_path).convert('RGB')
+
+    def continuation(path, ref_rows, ref_y0, start_y):
+        """코덱스 그림에서 시안 줄(ref_rows)과 가장 잘 맞는 세로 자리를 찾아, start_y 부터 아래를 떼어 온다."""
+        raw = Image.open(path).convert('RGB')
         raw = raw.resize((W, round(raw.height * W / raw.width)), Image.LANCZOS)
         R = np.asarray(raw).astype(np.float32)
-        ref = M[300:SPLIT_Y].astype(np.float32).mean(axis=2)
+        ref = ref_rows.astype(np.float32).mean(axis=2)
         best, off = 1e9, 0
         for dy in range(-60, 61):
-            yy = 300 + dy
+            yy = ref_y0 + dy
             if yy < 0 or yy + ref.shape[0] > R.shape[0]:
                 continue
             e = np.abs(R[yy:yy + ref.shape[0]].mean(axis=2) - ref).mean()
             if e < best:
                 best, off = e, dy
-        start = SPLIT_Y - OVERLAP + off
-        ext = R[start:].copy()
-        al = np.ones(ext.shape[0], np.float32)
-        al[:OVERLAP] = np.linspace(0, 1, OVERLAP + 1)[1:]
-        rgba = np.dstack([np.clip(ext, 0, 255).astype(np.uint8), (al[:, None] * 255).repeat(W, 1).astype(np.uint8)])
-        Image.fromarray(rgba).save(os.path.join(OUT, 'base_extend.png'))
-        spec_extra['extendH'] = int(ext.shape[0]); spec_extra['extendOverlap'] = OVERLAP
-        print('extend: 세로 어긋남', off, '평균 차', round(float(best), 1), '높이', ext.shape[0])
+        print('  ', os.path.basename(path), '세로 어긋남', off, '평균 차', round(float(best), 1))
+        return np.clip(R[start_y + off:], 0, 255).astype(np.uint8)
+
+    # 위 틈 — 유령 장면 아래 광장(다시 발주한 것이 있으면 그것)
+    ext_path = os.path.join(REF, 'out_extend2_raw.png')
+    if not os.path.exists(ext_path):
+        ext_path = os.path.join(REF, 'out_extend_raw.png')
+    if os.path.exists(ext_path):
+        ext = continuation(ext_path, M[300:SPLIT_Y], 300, SPLIT_Y)
+        Image.fromarray(ext).save(os.path.join(OUT, 'base_extend.png'))
+        spec_extra['extendH'] = int(ext.shape[0])
+
+    # 아래 틈 — 게임 모드 아래 밤 도시. 입력은 시안 1100~1454 줄 + 빈 곳
+    city_path = os.path.join(REF, 'out_city_raw.png')
+    if os.path.exists(city_path):
+        city = continuation(city_path, M[1100:NAV_Y], 0, NAV_Y - 1100)
+        Image.fromarray(city).save(os.path.join(OUT, 'base_city.png'))
+        spec_extra['cityH'] = int(city.shape[0])
 
     # 6) 태블릿 양옆
     sides_path = os.path.join(REF, 'out_sides_raw.png')
@@ -381,18 +395,20 @@ def main():
         for nm, strip in (('side_left', left), ('side_right', right)):
             s8 = np.clip(strip, 0, 255).astype(np.uint8)
             Image.fromarray(s8[:SPLIT_Y]).save(os.path.join(OUT, f'{nm}_top.png'))
-            Image.fromarray(s8[SPLIT_Y:]).save(os.path.join(OUT, f'{nm}_bottom.png'))
+            Image.fromarray(s8[SPLIT_Y:NAV_Y]).save(os.path.join(OUT, f'{nm}_mid.png'))
+            Image.fromarray(s8[NAV_Y:]).save(os.path.join(OUT, f'{nm}_nav.png'))
         spec_extra['sideW'] = SIDE
         print('sides: 가로 어긋남', off, '평균 차', round(float(best) / 2, 1))
 
     Image.fromarray(base[:SPLIT_Y]).save(os.path.join(OUT, 'base_top.png'))
-    Image.fromarray(base[SPLIT_Y:]).save(os.path.join(OUT, 'base_bottom.png'))
+    Image.fromarray(base[SPLIT_Y:NAV_Y]).save(os.path.join(OUT, 'base_mid.png'))
+    Image.fromarray(base[NAV_Y:]).save(os.path.join(OUT, 'base_nav.png'))
     Image.fromarray(clean).save(os.path.join(REF, 'debug_clean.png'))
     Image.fromarray(base).save(os.path.join(REF, 'debug_base.png'))
 
     flat = {
-        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y,
-        'extendH': spec_extra.get('extendH', 0), 'extendOverlap': spec_extra.get('extendOverlap', 0),
+        'mockupW': W, 'mockupH': H, 'splitY': SPLIT_Y, 'navY': NAV_Y,
+        'extendH': spec_extra.get('extendH', 0), 'cityH': spec_extra.get('cityH', 0),
         'sideW': spec_extra.get('sideW', 0),
         'texts': [dict(name=k, **v) for k, v in texts.items()],
         'parts': [dict(name=k, box=v[:4], card=v[4]) for k, v in parts.items()],

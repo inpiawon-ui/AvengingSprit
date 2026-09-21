@@ -378,29 +378,26 @@ namespace Game.Module.Lobby
                 if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
             }));
             Refresh();
-            UpdateGapFill();
+            LayoutBands();
         }
 
-        // 긴 화면에서 위판 · 아래판 사이에 뜨는 틈은 바닥 연장 그림이 메운다.
-        // 연장 그림은 위판과 몇 줄 겹쳐 알파로 녹인다 — 그런데 틈이 거의 없는 9:16 에서 겹치면
-        // 시안 위판 끝줄이 바뀐다. 틈이 작으면 겹치지 않는 자리(위판 바로 아래)로 내린다.
-        // ⚠ 끄면 안 된다: 시안(941×1672)은 정확히 9:16 이 아니라 9:16 에서도 0.7 px 가 비어 뒤가 비친다.
-        private const string GapNode = "LobbyV4Gap", TopNode = "LobbyV4Top", BottomNode = "LobbyV4Bottom";
-        private float _gapOverlapY = float.NaN;
+        // 판 셋 — 위판은 화면 위, 하단 바 판은 바닥에 붙고, 가운데판(상자 · 게임 모드)은 남는 공간의
+        // **한가운데**에 선다. 전에는 가운데판이 하단 바에 붙어 있어 20:9 에서 UI 가 아래로 몰리고
+        // 가운데에 빈 바닥만 크게 남았다(2026-09-21 지적). 두 틈은 판 뒤에 깐 이어 그린 그림이 메운다.
+        private const string TopNode = "LobbyV4Top", MidNode = "LobbyV4Mid", NavNode = "LobbyV4Nav";
 
-        private void OnRectTransformDimensionsChange() => UpdateGapFill();
+        private void OnRectTransformDimensionsChange() => LayoutBands();
 
-        private void UpdateGapFill()
+        private void LayoutBands()
         {
-            var gap = transform.Find(GapNode) as RectTransform;
             var top = transform.Find(TopNode) as RectTransform;
-            var bottom = transform.Find(BottomNode) as RectTransform;
-            if (gap == null || top == null || bottom == null) return;
-            if (float.IsNaN(_gapOverlapY)) _gapOverlapY = gap.anchoredPosition.y;   // 빌더가 둔 겹친 자리
-            float free = ((RectTransform)transform).rect.height - top.rect.height - bottom.rect.height;
-            var p = gap.anchoredPosition;
-            p.y = free > 2f ? _gapOverlapY : -top.rect.height;
-            gap.anchoredPosition = p;
+            var mid = transform.Find(MidNode) as RectTransform;
+            var nav = transform.Find(NavNode) as RectTransform;
+            if (top == null || mid == null || nav == null) return;
+            float free = ((RectTransform)transform).rect.height - top.rect.height - mid.rect.height - nav.rect.height;
+            var p = mid.anchoredPosition;
+            p.y = -(top.rect.height + Mathf.Max(0f, free) * 0.5f);
+            mid.anchoredPosition = p;
         }
 
         private void OnDisable()

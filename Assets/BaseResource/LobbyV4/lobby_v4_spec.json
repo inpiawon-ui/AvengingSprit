@@ -2,8 +2,9 @@
  "mockupW": 941,
  "mockupH": 1672,
  "splitY": 632,
- "extendH": 539,
- "extendOverlap": 12,
+ "navY": 1455,
+ "extendH": 528,
+ "cityH": 320,
  "sideW": 170,
  "texts": [
   {
