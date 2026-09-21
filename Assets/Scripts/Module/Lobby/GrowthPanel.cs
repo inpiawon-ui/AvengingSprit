@@ -29,10 +29,17 @@ namespace Game.Module.Lobby
         private struct HostArt
         {
             public string Key;
-            public Sprite Portrait;   // 카드 큰 그림(동쪽 · 대기)
-            public Sprite Thumb;      // 목록 칸(남동 · 대기)
+            public Sprite Portrait;   // 카드 큰 그림 — 초상(발주본)이 있으면 그것, 없으면 유닛 그림(동쪽 · 대기)
+            public Sprite Thumb;      // 목록 칸 — 초상이 있으면 같은 그림, 없으면 유닛 그림(남동 · 대기)
             public Sprite Skill;      // 액티브 스킬 아이콘
+            public bool IsPortrait;   // 초상인가 — 유닛 그림은 투명 여백이 있어 칸을 키워 쓴다
         }
+
+        /// <summary>
+        /// 그림 칸 — 초상 · 유닛 그림 두 벌. 초상은 잉크에 딱 맞게 잘려 있어 시안 칸 그대로,
+        /// 유닛 그림(96px)은 위 · 옆 투명 여백만큼 칸을 키운다. (x, y, w, h) — 부모 왼쪽 위 기준, 아래로 +.
+        /// </summary>
+        [SerializeField] private Rect _portraitRect, _portraitRectUnit, _thumbRect, _thumbRectUnit;
 
         [SerializeField] private HostArt[] _hostArts = Array.Empty<HostArt>();
         /// <summary>`HostStat` 순서의 아이콘.</summary>
@@ -295,9 +302,11 @@ namespace Game.Module.Lobby
             var portrait = _ui.Get<Image>("HostPortrait");
             if (portrait != null)
             {
-                portrait.sprite = ArtOf(_hostKey).Portrait;
+                var art = ArtOf(_hostKey);
+                portrait.sprite = art.Portrait;
                 portrait.enabled = portrait.sprite != null;
                 portrait.preserveAspect = true;
+                PlaceArt(portrait.rectTransform, art.IsPortrait ? _portraitRect : _portraitRectUnit);
             }
             int shards = _player.GetShards(_hostKey);
             int cost = _player.MasteryCost(_hostKey);
@@ -362,9 +371,11 @@ namespace Game.Module.Lobby
                 var thumb = _ui.Find(card, "CardThumb")?.GetComponent<Image>();
                 if (thumb != null)
                 {
-                    thumb.sprite = ArtOf(key).Thumb;
+                    var art = ArtOf(key);
+                    thumb.sprite = art.Thumb;
                     thumb.enabled = thumb.sprite != null;
                     thumb.preserveAspect = true;
+                    PlaceArt(thumb.rectTransform, art.IsPortrait ? _thumbRect : _thumbRectUnit);
                 }
                 // 영문 몸 이름은 겹친다(코만도 넷 · 갱스터 둘) — 목록은 현지 이름으로 가른다
                 TextIn(card, "CardName", e != null ? e.DisplayName : key);
@@ -550,6 +561,13 @@ namespace Game.Module.Lobby
             int cut = n.IndexOf(" — ", StringComparison.Ordinal);
             if (cut < 0) cut = n.IndexOf(" - ", StringComparison.Ordinal);
             return (cut > 0 ? n.Substring(0, cut) : n).Trim();
+        }
+
+        private static void PlaceArt(RectTransform rt, Rect r)
+        {
+            if (r.size == Vector2.zero) return;
+            rt.anchoredPosition = new Vector2(r.x, -r.y);
+            rt.sizeDelta = r.size;
         }
 
         private HostArt ArtOf(string key)

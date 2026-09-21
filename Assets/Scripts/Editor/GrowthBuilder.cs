@@ -386,14 +386,17 @@ namespace Game.Editor
             foreach (var d in keys)
             {
                 string key = Path.GetFileName(d);
-                var portrait = AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_e.png");
-                var thumb = AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_se.png");
+                // 초상(발주본)이 있으면 그것을 카드 · 목록 둘 다에 쓴다. 없으면 유닛 그림
+                var drawn = AssetDatabase.LoadAssetAtPath<Sprite>($"{Dir}/Portraits/portrait_{key}.png");
+                var portrait = drawn != null ? drawn : AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_e.png");
+                var thumb = drawn != null ? drawn : AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_se.png");
                 if (portrait == null && thumb == null) continue;
                 int i = arts.arraySize++;
                 var e = arts.GetArrayElementAtIndex(i);
                 e.FindPropertyRelative("Key").stringValue = key;
                 e.FindPropertyRelative("Portrait").objectReferenceValue = portrait;
                 e.FindPropertyRelative("Thumb").objectReferenceValue = thumb;
+                e.FindPropertyRelative("IsPortrait").boolValue = drawn != null;
                 e.FindPropertyRelative("Skill").objectReferenceValue =
                     AssetDatabase.LoadAssetAtPath<Sprite>($"{SkillIconDir}/ultimateicon_{key}.png");
             }
@@ -414,6 +417,14 @@ namespace Game.Editor
             so.FindProperty("_labelNext").colorValue = Col(T("PathLabelNext").color);
             so.FindProperty("_labelLock").colorValue = Col(T("PathLabelLock").color);
             so.FindProperty("_skillListDrop").floatValue = s_spec.skillListDy;
+            // 그림 칸 — 초상은 시안 코만도 자리(카드 왼쪽 · 발은 판 바닥 위), 유닛 그림은 투명 여백만큼 크게
+            var pa = R("@HOST_PORTRAIT_AREA");
+            so.FindProperty("_portraitRect").rectValue = new Rect(pa[0] + 8, pa[1] + 10, pa[2] - pa[0] - 12, pa[3] - pa[1] - 16);
+            so.FindProperty("_portraitRectUnit").rectValue = new Rect(pa[0], pa[3] - 262, pa[2] - pa[0], 262);
+            var c0 = R("@CARD0");
+            float cw = c0[2] - c0[0];
+            so.FindProperty("_thumbRect").rectValue = new Rect(18, 8, cw - 36, 100);
+            so.FindProperty("_thumbRectUnit").rectValue = new Rect(20, -20, cw - 40, 132);
             so.FindProperty("_ghostStatLift").floatValue = 50f;
             so.FindProperty("_rowPitch").floatValue = 50.6f;
             so.FindProperty("_cardPitch").vector2Value = new Vector2(174.3f, 162f);
@@ -650,6 +661,7 @@ namespace Game.Editor
 
         private static void ImportSprites()
         {
+            // 하위 폴더(Portraits)까지 — FindAssets 는 폴더 아래를 다 뒤진다
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Dir }))
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
