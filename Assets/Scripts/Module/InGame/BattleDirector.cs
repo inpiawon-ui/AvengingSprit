@@ -900,6 +900,7 @@ namespace Game.Module.InGame
             public GameObject Shadow;    // 발밑 그림자 — 바위처럼 움직이거나 통처럼 사라질 때 같이
             public Color BaseColor = Color.white;   // 예고 색을 되돌릴 원래 색
             public Image Img2;           // 불바닥 위 불꽃처럼 본체 위에 얹어 돌리는 두 번째 그림
+            public Image[] Puffs;        // 화염 분사구의 불기둥 덩이들 (BattleDirector.Hazards)
         }
 
         private readonly List<Obstacle> _obstacles = new();
@@ -942,6 +943,12 @@ namespace Game.Module.InGame
             { "WALL_TURRET_E",    60f },
             { "WALL_TURRET_W",    60f },
             { "PUSH_ROCK",        40f },   // 바위 — 발자국 1×1 · 그림 72×112
+            { "SWING_HAMMER_H",   54f },   // 가로 해머 — 세로 해머와 같은 그림
+            { "FLAME_JET_S",      40f },   // 분사구 — 발자국 1×1 · 그림 72×112
+            { "FLAME_JET_E",      40f },
+            { "FLAME_JET_W",      40f },
+            { "PROP_TALL",        94f },   // 무대 간판 소품(키 큰 것) — 기둥과 같은 규격 72×166
+            { "PROP_WIDE",        60f },   // 무대 간판 소품(넓은 것) — 상자와 같은 규격 144×132
         };
 
         /// <summary>
@@ -1008,6 +1015,12 @@ namespace Game.Module.InGame
             { "WALL_TURRET_E",  new Color(0.35f, 0.60f, 0.70f, 1f) },
             { "WALL_TURRET_W",  new Color(0.35f, 0.60f, 0.70f, 1f) },
             { "PUSH_ROCK",      new Color(0.50f, 0.47f, 0.44f, 1f) },
+            { "FLAME_JET_S",    new Color(0.62f, 0.28f, 0.20f, 1f) },
+            { "FLAME_JET_E",    new Color(0.62f, 0.28f, 0.20f, 1f) },
+            { "FLAME_JET_W",    new Color(0.62f, 0.28f, 0.20f, 1f) },
+            { "MINE",           new Color(0.80f, 0.20f, 0.20f, 0.9f) },
+            { "PROP_TALL",      new Color(0.42f, 0.44f, 0.52f, 1f) },
+            { "PROP_WIDE",      new Color(0.46f, 0.42f, 0.36f, 1f) },
         };
 
 #if UNITY_EDITOR
@@ -1093,7 +1106,11 @@ namespace Game.Module.InGame
         private void ClearObstacles()
         {
             for (int i = 0; i < _obstacles.Count; i++)
+            {
                 if (_obstacles[i].View != null) Destroy(_obstacles[i].View);
+                // 본체 밖에 따로 세운 것(톱니 축 · 분사구 불기둥)도 같이 치운다 — 안 치우면 다음 방에 남는다
+                if (_obstacles[i].View2 != null) Destroy(_obstacles[i].View2.gameObject);
+            }
             _obstacles.Clear();
 
             for (int i = 0; i < _obstacleShadows.Count; i++)
@@ -1289,6 +1306,15 @@ namespace Game.Module.InGame
             "WALL_TURRET_E"  => "obj_wallturret_e",
             "WALL_TURRET_W"  => "obj_wallturret_w",
             "PUSH_ROCK"      => "obj_rock",
+            // 피해야 하는 장애물(BattleDirector.Hazards). 레이저·톱날·해머·웅덩이는 있는 그림을 쓴다.
+            "LASER_H" or "LASER_V" => "obj_laser_beam",
+            "SLIDE_BLADE_H" or "SLIDE_BLADE_V" => "obj_blade",
+            "SWING_HAMMER_H" => "obj_hammer",
+            "FLAME_JET_S"    => "obj_flamejet_s",
+            "FLAME_JET_E"    => "obj_flamejet_e",
+            "FLAME_JET_W"    => "obj_flamejet_w",
+            "SLOW_POOL"      => "fx_goo_splat",
+            "MINE"           => "obj_mine",
             // 도랑은 가로·세로 두 장뿐이다. 접두사를 하나로 두면 바로 아래
             // 크기 판정이 `_h`·`_v` 를 알아서 골라 준다 — 종류를 둘로 나눈 이유다.
             "CHANNEL_H" or "CHANNEL_V" => "obj_channel",
@@ -1372,6 +1398,11 @@ namespace Game.Module.InGame
                         ob.Img2.color = new Color(1f, 1f, 1f, 0.85f);
                         ob.View2 = frt;
                     }
+                    break;
+
+                // 피해야 하는 장애물 7종 — 레이저 문 · 레일 톱날 · 가로 해머 · 분사구 · 낙하물 · 웅덩이 · 지뢰
+                default:
+                    SetupHazard(ob);
                     break;
             }
         }
@@ -1728,6 +1759,10 @@ namespace Game.Module.InGame
                             var fs = o.Frames[Mathf.FloorToInt(Mathf.Repeat(Time.time * 6f + o.Phase * 4f, 4f))];
                             if (fs != null && o.Img2.sprite != fs) o.Img2.sprite = fs;
                         }
+                        break;
+
+                    default:
+                        TickHazardMotion(o, rt);   // 레이저 문 · 레일 톱날 · 가로 해머 · 웅덩이
                         break;
                 }
             }
@@ -3656,7 +3691,7 @@ namespace Game.Module.InGame
                 // 막힌 것을 타고 미끄러진다. 밀어 넣고 빼내면 벽에서 캐릭터가 떨린다.
                 var before = me.Position;
                 var p = SlideMove(me, me.Position,
-                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul) * dt);
+                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul * PoolMoveMul) * dt);
                 // 테두리·문 한계는 `ClampedInField` 한 곳이 갖는다.
                 p = ClampedInField(me, p);
                 me.Position = p;
@@ -3857,6 +3892,13 @@ namespace Game.Module.InGame
 
                 if (pattern == EnemyPattern.Cross)
                 { TickCross(e, dt); Separate(e, i, dt); continue; }
+
+                if (pattern == EnemyPattern.Stream)
+                { TickCrossStream(e, dt); Separate(e, i, dt); continue; }
+
+                // 급강하 — `false` 면 아직 멀거나 쉬는 중이라 아래 평소 흐름(추격)으로 내려간다
+                if (pattern == EnemyPattern.Dive && TickDive(e, me, d, dt))
+                { Separate(e, i, dt); continue; }
 
                 if (pattern == EnemyPattern.Vault)
                 { TickVault(e, me, dt); Separate(e, i, dt); continue; }
@@ -6933,6 +6975,14 @@ namespace Game.Module.InGame
                     continue;
                 }
 
+                // 갈라지는 탄 — 때가 되면 제자리에서 여럿으로 흩어진다(코일 보행기 CH6)
+                if (p.TickSplit(dt))
+                {
+                    SplitShot(p);
+                    p.Despawn();
+                    continue;
+                }
+
                 // 던진 탄은 공중에 있다 — 벽도 기둥도 사람도 스쳐 지나간다.
                 // 떨어진 그 순간에만 일이 벌어진다.
                 if (p.IsLob)
@@ -7334,13 +7384,21 @@ namespace Game.Module.InGame
         {
             u.SetState(EnemyState.Dead);
             // 쓰러지는 그림만으로는 «해치웠다»가 약하다. 부서진 조각과 흙먼지를 같이 뿌린다.
-            _pfx?.Shards(u.Position, ParticleElement.Dust, u.IsBoss ? 3f : 1f);
-            _pfx?.Puff(u.Position, ParticleElement.Dust, u.IsBoss ? 3f : 1f);
+            // 잡몹·호스트는 작고 짧게(`Death`), 보스만 크게 — 방마다 여러 번 나는 일이라
+            // 예전 크기로는 화면이 먼지로 덮였다(기획 2026-09-28).
+            if (u.IsBoss)
+            {
+                _pfx?.Shards(u.Position, ParticleElement.Dust, 3f);
+                _pfx?.Puff(u.Position, ParticleElement.Dust, 3f);
+            }
+            else _pfx?.Death(u.Position, ParticleElement.Dust);
             // ⚠ **목록에서 빼기 전에** 옮긴다. 뺀 뒤에 부르면 옆 사람을 찾는
             //   `EnemiesInRange` 가 이미 죽은 자리를 기준으로 도는 것은 같지만,
             //   전이 대상 후보에서 자기 자신을 빼려고 목록 조작에 기대게 된다.
             TransferMark(u);
             SpreadCurse(u);
+            // 죽을 때 하는 짓 — 해골의 죽음 탄 · 집행자의 갈라짐(`Patterns2`). 목록에서 빼기 전에 부른다.
+            OnTrashDeath(u);
             // C017 생명 회수 — 잡을 때마다 최대 체력의 몇 %를 돌려받는다
             if (_buffs.RegenPercentPerKill > 0 && _host != null)
                 Leech(Mathf.Max(1, _host.HpMax * _buffs.RegenPercentPerKill / 100));

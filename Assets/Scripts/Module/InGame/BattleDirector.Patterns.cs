@@ -54,6 +54,12 @@ namespace Game.Module.InGame
             Ambush,
             /// <summary>느린 회오리 한 발이 따라온다 — 순찰기(CH6)</summary>
             Spiral,
+
+            // ── 2차 (2026-09-28 · `BattleDirector.Patterns2`) ──
+            /// <summary>멈춰서 겨누고 한 줄로 꽂힌다 — 박쥐(CH2+). CH4 부터는 지그재그로 다가온다</summary>
+            Dive,
+            /// <summary>한 발씩 돌며 한 바퀴를 쏜다 — 십자 포탑(CH6)</summary>
+            Stream,
         }
 
         /// <summary>
@@ -80,12 +86,15 @@ namespace Game.Module.InGame
         private EnemyPattern PatternOf(Unit e)
         {
             if (e == null) return EnemyPattern.Chase;
-            int ch = _runChapter;
+            int ch = PatternChapter;
             switch (e.Key)
             {
                 case TrashEnforcerKey: return EnemyPattern.Hop;
                 case TrashCoilKey:     return EnemyPattern.Vault;
-                case TrashCrossKey:    return EnemyPattern.Cross;
+                case TrashCrossKey:
+                    return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;
+                case TrashBatKey:
+                    return ch >= DiveFromChapter ? EnemyPattern.Dive : EnemyPattern.Chase;
                 case TrashWardenKey:
                     return ch >= SpiralFromChapter ? EnemyPattern.Spiral
                          : ch >= BurstFromChapter  ? EnemyPattern.Burst
@@ -166,9 +175,11 @@ namespace Game.Module.InGame
             float life = reach / Mathf.Max(1f, speed) + 0.25f;
             int dmg = Mathf.Max(1, e.Atk);
 
-            for (int i = 0; i < CrossDirs; i++)
+            // CH5 부터는 4방향과 8방향을 번갈아 쏜다(`CrossDirsNow`)
+            int dirs = CrossDirsNow(e);
+            for (int i = 0; i < dirs; i++)
             {
-                float deg = e.PatternAngle + 360f / CrossDirs * i;
+                float deg = e.PatternAngle + 360f / dirs * i;
                 var dir = Rotate(Vector2.right, deg);
                 var shot = RentShot();
                 if (shot == null) return;
@@ -256,6 +267,7 @@ namespace Game.Module.InGame
                     }
                     e.PatternPhase = 0;
                     e.PatternTimer = HopIdleSeconds;
+                    OnHopLanded(e);   // CH4 부터 착지에 충격파가 난다
                     return true;
             }
         }
@@ -324,8 +336,8 @@ namespace Game.Module.InGame
                         e.PatternTimer = VaultFallSeconds;
                         // 내려오면서 쏜다. 착지할 때가 아니라 **낙하 시작**에 쏘아야
                         // 탄과 몸이 같이 내려오는 그림이 된다.
-                        FireFan(e, me.Position, VaultShots, VaultSpreadDeg,
-                                Mathf.Max(1, e.Atk / VaultShots));
+                        // 챕터에 따라 탄이 달라진다 — 부채꼴 · 튕기는 탄 · 갈라지는 탄
+                        FireVaultVolley(e, me);
                     }
                     return true;
                 }

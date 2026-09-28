@@ -213,7 +213,8 @@ namespace Game.Module.InGame
             RemoveObstacle(o);
             SpawnImpact(at, "grenade", r * 2f);
 
-            for (int i = 0; i < _enemies.Count; i++)
+            // ⚠ 뒤에서부터 돈다 — `KillEnemy` 가 목록에서 빼므로 앞에서부터 돌면 다음 놈을 건너뛴다
+            for (int i = _enemies.Count - 1; i >= 0; i--)
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || e.IsDying || e.IsBoss) continue;
@@ -376,12 +377,16 @@ namespace Game.Module.InGame
         {
             TickFuses(dt);
             TickWallTurrets(dt);
+            TickHazards2(dt);   // 분사구 · 낙하물 · 웅덩이 · 지뢰 (BattleDirector.Hazards)
+            TickWarns(dt);      // 바닥 예고 (BattleDirector.Warn)
         }
 
         private void ClearGimmicks()
         {
             _fused.Clear();
             _fuse.Clear();
+            ClearWarns();
+            _inSlowPool = false;
         }
     }
 }

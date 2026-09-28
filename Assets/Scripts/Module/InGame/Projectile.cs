@@ -252,6 +252,8 @@ namespace Game.Module.InGame
             BouncesLeft = bounces;
             HasBounced = false;
             _ricochets = 0;        // 풀에서 돌려 쓰므로 지난 발의 튕김 횟수를 지운다
+            SplitCount = 0;        // 갈라짐도 마찬가지다 — 쏠 때마다 다시 정한다
+            _splitTimer = 0f;
             SlowPercent = slowPercent;
             LifestealPercent = lifestealPercent;
             _alreadyHit.Clear();
@@ -358,6 +360,31 @@ namespace Game.Module.InGame
         private const int RicochetMax = 3;
         private const float RicochetPushPixels = 10f;
         private int _ricochets;
+
+        // ── 갈라지는 탄 ─────────────────────────────────────────
+        //
+        // 날아가다 때가 되면 여럿으로 흩어진다. 흩는 일은 탄이 스스로 못 한다 —
+        // 새 탄을 풀에서 꺼내야 하므로 `BattleDirector.SplitShot` 이 한다. 여기는 시계만 든다.
+
+        private float _splitTimer;
+
+        /// <summary>갈라질 때 몇 조각이 되는가. 0 이면 안 갈라지는 탄이다.</summary>
+        public int SplitCount { get; private set; }
+
+        /// <summary>이만큼 날아간 뒤 <paramref name="count"/> 조각으로 갈라지게 한다. `Fire` 다음에 부른다.</summary>
+        public void SetSplit(float seconds, int count)
+        {
+            _splitTimer = Mathf.Max(0.05f, seconds);
+            SplitCount = Mathf.Max(0, count);
+        }
+
+        /// <summary>갈라질 때가 됐으면 true. 안 갈라지는 탄은 늘 false 다.</summary>
+        public bool TickSplit(float dt)
+        {
+            if (SplitCount <= 0) return false;
+            _splitTimer -= dt;
+            return _splitTimer <= 0f;
+        }
 
         public bool Bounce(Vector2 normal)
         {

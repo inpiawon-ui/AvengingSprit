@@ -139,6 +139,22 @@ namespace Game.Module.InGame
                      count: Mathf.RoundToInt(7 * power), speed: 300f * power,
                      size: 26f, life: 0.5f, spin: 420f);
 
+        /// <summary>
+        /// 잡몹·호스트가 쓰러진 자리 — **작고 짧게.**
+        ///
+        /// 예전에는 `Shards` + `Puff` 를 그대로 불렀다(연기 3덩이 64 px · 0.75초, 파편 7개 · 초속 300).
+        /// 구름이 몸집(100 px)만 해서 한 방에 예닐곱이 죽으면 화면이 먼지로 덮였다
+        /// (기획 2026-09-28 「먼지 이펙트가 너무 과해」). 죽음은 방마다 여러 번 나는 일이라
+        /// 하나하나는 가벼워야 한다 — 크게 터지는 것은 보스 몫이다.
+        /// </summary>
+        public void Death(Vector2 at, ParticleElement element)
+        {
+            Burst(ParticleFxKind.Smoke, element, at,
+                  count: 2, speed: 35f, size: 34f, life: 0.4f, spin: 25f);
+            Burst(ParticleFxKind.Shard, element, at,
+                  count: 4, speed: 150f, size: 18f, life: 0.35f, spin: 420f);
+        }
+
         /// <summary>퍼지는 고리 — 한 장이 커지며 사라진다. 폭발의 «밀려 나감»을 맡는다.</summary>
         public void Ring(Vector2 at, ParticleElement element, float size)
             => Burst(ParticleFxKind.Ring, element, at,
