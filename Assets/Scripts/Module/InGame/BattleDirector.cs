@@ -893,6 +893,12 @@ namespace Game.Module.InGame
             public int Damage;
             public float Tick;
             public GameObject View;
+
+            // ── 기믹 (BattleDirector.Gimmicks) ────────────────────
+            public float Timer;          // 벽 포탑 — 다음 발까지
+            public bool Telegraph;       // 벽 포탑 — 포신이 달아 있는가
+            public GameObject Shadow;    // 발밑 그림자 — 바위처럼 움직이거나 통처럼 사라질 때 같이
+            public Color BaseColor = Color.white;   // 예고 색을 되돌릴 원래 색
         }
 
         private readonly List<Obstacle> _obstacles = new();
@@ -929,6 +935,12 @@ namespace Game.Module.InGame
             { "TIMED_SPIKE",     0f },   // 바닥 배수구 — 그림 144×144 · 바닥에 눕는다
             { "ROTATING_BLADE",  0f },   // 바닥을 스치듯 돈다
             { "SWING_HAMMER",   54f },
+            // 2026-09-28 배치 개편 — 그림은 발주 중(`order_room_gimmicks.md`). 값은 발주 규격이다.
+            { "EXPLOSIVE_BARREL", 40f },   // 통 — 발자국 1×1 · 그림 72×112
+            { "WALL_TURRET_S",    60f },   // 벽 포탑 — 발자국 1×1 · 그림 72×132
+            { "WALL_TURRET_E",    60f },
+            { "WALL_TURRET_W",    60f },
+            { "PUSH_ROCK",        40f },   // 바위 — 발자국 1×1 · 그림 72×112
         };
 
         /// <summary>
@@ -990,6 +1002,11 @@ namespace Game.Module.InGame
             { "TIMED_SPIKE",    new Color(0.72f, 0.66f, 0.30f, 0.75f) },
             { "ROTATING_BLADE", new Color(0.78f, 0.78f, 0.84f, 0.95f) },
             { "SWING_HAMMER",   new Color(0.62f, 0.60f, 0.66f, 0.95f) },
+            { "EXPLOSIVE_BARREL", new Color(0.85f, 0.45f, 0.15f, 1f) },
+            { "WALL_TURRET_S",  new Color(0.35f, 0.60f, 0.70f, 1f) },
+            { "WALL_TURRET_E",  new Color(0.35f, 0.60f, 0.70f, 1f) },
+            { "WALL_TURRET_W",  new Color(0.35f, 0.60f, 0.70f, 1f) },
+            { "PUSH_ROCK",      new Color(0.50f, 0.47f, 0.44f, 1f) },
         };
 
 #if UNITY_EDITOR
@@ -1082,6 +1099,7 @@ namespace Game.Module.InGame
                 if (_obstacleShadows[i] != null) Destroy(_obstacleShadows[i]);
             _obstacleShadows.Clear();
             _hazardTimer.Clear();
+            ClearGimmicks();   // 불붙은 통을 다음 방으로 들고 가지 않는다
         }
 
         /// <summary>
@@ -1112,7 +1130,7 @@ namespace Game.Module.InGame
         ///   그림자는 거기 넣지 않고 만들 때 맨 뒤로 보낸다. 매 프레임 다시 정렬되지 않아
         ///   깜빡이지도 않는다.
         /// </summary>
-        private void SpawnObstacleShadow(string kind, Vector2 center, Vector2 size)
+        private GameObject SpawnObstacleShadow(string kind, Vector2 center, Vector2 size)
         {
             var go = new GameObject($"Shadow_{kind}", typeof(RectTransform), typeof(Image));
             go.transform.SetParent(_unitLayer, false);
@@ -1131,6 +1149,7 @@ namespace Game.Module.InGame
             img.color = ObstacleShadowColor;
             go.transform.SetAsFirstSibling();   // 바닥 바로 위, 모든 것보다 뒤
             _obstacleShadows.Add(go);
+            return go;
         }
 
         private void SpawnObstacles(RoomEntry room)
@@ -1177,7 +1196,7 @@ namespace Game.Module.InGame
                 //   숨으려다 맞고, 진짜 엄폐물은 못 알아봤다.
                 //   그림자는 「이건 바닥에서 솟아 있다」를 한눈에 말해 준다.
                 //   눕는 것(도랑·가시판)에는 안 붙인다 — 솟은 것이 아니다.
-                if (rise > 0f) SpawnObstacleShadow(o.Kind, center, size);
+                var shadow = rise > 0f ? SpawnObstacleShadow(o.Kind, center, size) : null;
 
                 var go = new GameObject($"Obj_{o.Kind}_{o.ObjectId}",
                                         typeof(RectTransform), typeof(Image));
@@ -1224,6 +1243,7 @@ namespace Game.Module.InGame
                     BlocksEnemyShot = o.BlocksEnemyShot,
                     IsHazard = o.IsHazard, Damage = o.HazardDamage, Tick = o.HazardTick,
                     View = go, Kind = o.Kind, Img = img, Home = rect,
+                    Shadow = shadow, BaseColor = img.color,
                     // 같은 방의 같은 종류가 한 박자로 움직이면 기계처럼 보인다.
                     // 자리로 위상을 어긋내면 방 전체가 살아 있는 것처럼 읽힌다.
                     Phase = Mathf.Repeat((center.x * 0.013f + center.y * 0.021f), 1f),
@@ -1262,6 +1282,12 @@ namespace Game.Module.InGame
         {
             "ROTATING_BLADE" => "obj_blade",
             "SWING_HAMMER"   => "obj_hammer",
+            // 2026-09-28 배치 개편에서 생긴 셋. 그림이 오기 전에는 색 상자로 선다(`ObstacleColor`).
+            "EXPLOSIVE_BARREL" => "obj_barrel",
+            "WALL_TURRET_S"  => "obj_wallturret_s",
+            "WALL_TURRET_E"  => "obj_wallturret_e",
+            "WALL_TURRET_W"  => "obj_wallturret_w",
+            "PUSH_ROCK"      => "obj_rock",
             // 도랑은 가로·세로 두 장뿐이다. 접두사를 하나로 두면 바로 아래
             // 크기 판정이 `_h`·`_v` 를 알아서 골라 준다 — 종류를 둘로 나눈 이유다.
             "CHANNEL_H" or "CHANNEL_V" => "obj_channel",
@@ -1304,6 +1330,37 @@ namespace Game.Module.InGame
                     ob.IsHazard = true;
                     if (ob.Damage <= 0) ob.Damage = 12;
                     if (ob.Tick <= 0f) ob.Tick = 0.7f;
+                    break;
+
+                // ── 2026-09-28 배치 개편 (BattleDirector.Gimmicks) ──
+                case "EXPLOSIVE_BARREL":
+                    ob.Hp = 1;   // 한 발이면 터진다
+                    break;
+
+                case "WALL_TURRET_S":
+                case "WALL_TURRET_E":
+                case "WALL_TURRET_W":
+                    // 포탑마다 박자를 어긋낸다 — 셋이 한 박자로 쏘면 사선이 한꺼번에 열리고 닫힌다
+                    ob.Timer = WallTurretInterval * (0.5f + ob.Phase * 0.5f);
+                    break;
+
+                case "HAZARD":
+                    // 불바닥은 늘 켜져 있다. 그림은 장판 불(`fx_firefield`)을 돌려 쓴다 —
+                    // 한 장이면 불이 아니라 불 그림을 붙여 놓은 것으로 보인다(장판에서 겪었다).
+                    ob.IsHazard = true;
+                    if (ob.Damage <= 0) ob.Damage = 6;
+                    if (ob.Tick <= 0f) ob.Tick = 0.8f;
+                    if (GetSprite("fx_firefield_1") != null)
+                    {
+                        ob.Frames = new[]
+                        {
+                            GetSprite("fx_firefield_1"), GetSprite("fx_firefield_2"),
+                            GetSprite("fx_firefield_3"), GetSprite("fx_firefield_4"),
+                        };
+                        ob.Img.sprite = ob.Frames[0];
+                        ob.Img.color = Color.white;
+                        ob.BaseColor = Color.white;
+                    }
                     break;
             }
         }
@@ -1470,6 +1527,8 @@ namespace Game.Module.InGame
 
             var p = from + delta;
             if (!BlockedAt(p, half, drop)) return p;
+            // 막은 것이 바위면 밀어 본다 — 플레이어만. 밀렸으면 그 자리로 그대로 들어간다.
+            if (u == Avatar && TryPushRock(u, from, delta, half, drop) && !BlockedAt(p, half, drop)) return p;
 
             var px = new Vector2(from.x + delta.x, from.y);
             if (!BlockedAt(px, half, drop)) return px;
@@ -1649,6 +1708,12 @@ namespace Game.Module.InGame
                     case "CRATE":
                         // 남은 체력에 따라 금이 간다. 부서지는 것은 맞을 때 처리한다.
                         SetFrame(o, o.Hp > CrateHp / 2 ? 0 : 1);
+                        break;
+
+                    case "HAZARD":
+                        // 불바닥 — 넉 장을 돌린다. 물건마다 위상이 달라 방 전체가 한 박자로 안 깜빡인다.
+                        if (o.Frames != null)
+                            SetFrame(o, Mathf.FloorToInt(Mathf.Repeat(Time.time * 6f + o.Phase * 4f, 4f)));
                         break;
                 }
             }
@@ -2996,13 +3061,24 @@ namespace Game.Module.InGame
         /// </summary>
         private bool BlockedByCover(Vector2 at, bool fromPlayer)
         {
-            // 적 탄은 **지형을 통과한다.**
+            // 적 탄은 **키 큰 것**(기둥·덩어리·난간·되튕기는 벽·포탑·바위)에만 막힌다.
             //
-            // 지형이 촘촘해질수록 엄폐 뒤에 붙어 서서 아무것도 안 하는 것이 최적이 된다 —
-            // 적이 못 쏘고 나는 나가서 쏘면 되니까. 그러면 지형이 전술이 아니라 은신처가 된다.
-            // 막히는 쪽은 **내 탄만**이다. 그래야 지형이 "어디에 숨을까"가 아니라
-            // "어디서 쏠 수 있을까"를 묻는 물건이 된다.
-            if (!fromPlayer) return false;
+            // ⚠ 2026-09-28 배치 개편 전에는 적 탄이 모든 지형을 통과했다 — 「엄폐 뒤에 붙어
+            //   서는 것이 정답이 되면 지형이 은신처가 된다」는 이유였다. 그 걱정은
+            //   **낮은 것**(상자·낮은 벽·바리케이드)이 맡는다: 저것은 지금도 적 탄이 넘어온다.
+            //   키 큰 것까지 통과하면 「기둥 뒤로 돌아 들어가 각을 잡는」 놀이가 아예 없다 —
+            //   궁수의 전설이 재미있는 자리가 정확히 거기다. 적도 같은 규칙으로 각을 잡는다
+            //   (`BattleDirector.Gimmicks` — 사선이 막히면 옆으로 나와 쏘고 다시 숨는다).
+            if (!fromPlayer)
+            {
+                for (int i = 0; i < _obstacles.Count; i++)
+                {
+                    var o = _obstacles[i];
+                    if (!o.BlocksEnemyShot || !o.BlocksShot) continue;
+                    if (o.ShotBounds.Contains(at)) return true;
+                }
+                return false;
+            }
             // 패시브로 엄폐물을 통과하는 몸이 있다(명세 2026-09-14).
             if (ShotIgnoresObstacles) return false;
 
@@ -3148,6 +3224,7 @@ namespace Game.Module.InGame
             TickDying(dt);
             for (int i = 0; i < _enemies.Count; i++) _enemies[i]?.TickMark(dt);
             TickMovingObstacles(dt);
+            TickGimmicks(dt);     // 통 심지 · 벽 포탑
             TickHazards(dt);
             SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
             TickDamageTexts(dt);
@@ -3789,7 +3866,8 @@ namespace Game.Module.InGame
                 //          계속 쫓아오면 붙어 버려 사거리의 의미가 없다
                 float reach = EffectiveRange(e);
 
-                if (d > reach)
+                // 걸려서 도는 중이면 사거리 밖이어도 끝까지 돈다 — 아래 `IsRepositioning` 가지가 옮긴다
+                if (d > reach && !(e.IsRepositioning && e.IsDetouring))
                 {
                     e.CancelWindup();   // 사거리 밖으로 밀려났으면 자세를 푼다
 
@@ -3803,8 +3881,12 @@ namespace Game.Module.InGame
                     e.EndReposition();
 
                     e.SetState(EnemyState.Approach);
+                    var before = e.Position;
                     e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
                     e.SetMoving(true);
+                    // 오목한 지형에 걸려 제자리걸음이면 옆으로 돌아 나간다 —
+                    // 벽에 붙어 떠는 적은 과녁이지 적이 아니다(2026-09-28 배치 개편)
+                    if (NoteStuck(e, before, dt)) e.BeginDetour(PickDetourSpot(e, me));
                 }
                 // 자세를 잡는 중 — 아직 안 때린다. 이 틈이 피하거나 파고들 시간이다
                 else if (e.IsWindingUp)
@@ -3823,9 +3905,29 @@ namespace Game.Module.InGame
                 {
                     // 자리를 옮기는 중 — 쏘지 않는다. 이 틈이 곧 반격할 틈이다
                     e.SetState(EnemyState.Cooldown);
+                    var before = e.Position;
                     e.Position = SlideMove(e, e.Position, e.StepToward(e.RepositionTarget, dt));
                     e.SetMoving(true);
-                    if (Vector2.Distance(e.Position, e.RepositionTarget) < 24f) e.EndReposition();
+                    // 닿았거나 가다 걸렸으면 끝낸다. 걸린 채 두면 영영 그 자리에서 떤다.
+                    if (Vector2.Distance(e.Position, e.RepositionTarget) < 24f || NoteStuck(e, before, dt))
+                    {
+                        e.EndReposition();
+                        // 키 큰 것 뒤에 닿았다 — 한 박자 숨었다가 내다본다
+                        if (!IsMelee(e) && HiddenFrom(e.Position, me.Position)) e.CoverWait = CoverPeekSeconds;
+                    }
+                }
+                // 엄폐 뒤에서 숨을 고른다
+                else if (e.CoverWait > 0f)
+                {
+                    e.CoverWait -= dt;
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Cooldown);
+                }
+                // 사선이 키 큰 것에 막혔다 — 옆으로 한 걸음 나와 각을 잡는다 (2026-09-28)
+                else if (!IsMelee(e) && !EnemyLineClear(e.Position, me.Position))
+                {
+                    e.CancelWindup();
+                    e.BeginReposition(PickLineOfSightSpot(e, me));
                 }
                 else if (e.TickAttack(dt))
                 {
@@ -4176,14 +4278,28 @@ namespace Game.Module.InGame
         private Vector2 PickRepositionSpot(Unit e, Unit me)
         {
             var toMe = me.Position - e.Position;
-            var side = new Vector2(-toMe.y, toMe.x).normalized;
+            var dir = toMe.sqrMagnitude < 0.0001f ? e.Facing : toMe.normalized;
             // 개체마다 좌우를 갈라 놓기만 하면 된다. EntityId 를 int 로 캐스팅하는 것은
             // 이미 폐기 예정이라 해시로 받는다 — 값의 의미는 안 쓰고 홀짝만 본다.
-            if (((e.GetEntityId().GetHashCode() + _roomIndex) & 1) == 0) side = -side;
+            var side = new Vector2(-dir.y, dir.x) * SideSignOf(e);
+            var back = -dir;
 
             // 옮겨 갈 자리도 같은 한계를 지킨다. 여기만 방 전체로 두면
             // 적이 테두리 위로 걸어 올라가 벽에 붙어 선다.
-            return ClampedInField(e, e.Position + side * RepositionDistance);
+            var fallback = ClampedInField(e, e.Position + side * RepositionDistance);
+
+            // 2026-09-28 배치 개편 — **쏘고 나면 숨는다.** 옆·반대 옆·옆뒤 대각 중에
+            // 플레이어 사선에서 키 큰 것에 가려지는 자리가 있으면 그리로 간다.
+            // 닿으면 한 박자 숨었다가(`CoverWait`) 사선이 막혀 있으니 옆으로 내다보고 쏜다 —
+            // 궁수의 전설의 「빼꼼」이 여기서 난다. 가려지는 자리가 없으면 예전대로 옆걸음이다.
+            Vector2[] cands = { side, -side, (side + back).normalized, (-side + back).normalized };
+            for (int i = 0; i < cands.Length; i++)
+            {
+                var spot = ClampedInField(e, e.Position + cands[i] * RepositionDistance);
+                if (!Walkable(e, spot)) continue;
+                if (HiddenFrom(spot, me.Position)) return spot;
+            }
+            return fallback;
         }
 
         /// <summary>
@@ -6817,10 +6933,23 @@ namespace Game.Module.InGame
                 // 벽에서 없애 버리면 화면 끝에서 탄이 뚝 끊겨 어색하다.
                 if (p.BouncesLeft > 0 && !BounceOffWalls(p)) { }
 
+                // 되튕기는 벽 — 내 탄은 되돌아온다(도탄 버프와 무관). 적 탄은 아래에서 막힌다.
+                if (p.FromPlayer && RicochetWallAt(p.Position, out var wall))
+                {
+                    if (!p.Ricochet(CoverNormal(wall, p.Position))) { p.Despawn(); continue; }
+                    PlayFx("reflect", p.Position, 40f, loop: false);
+                    continue;
+                }
+
                 // 엄폐물에 막힌다. 이게 없으면 기둥이 그림일 뿐이라
                 // 뒤에 숨는 것이 아무 의미가 없다.
                 // 부술 수 있는 것이 먼저다. 막히기 전에 때려야 뚫린다.
                 if (p.FromPlayer && p.Damage > 0 && DamageCrate(p.Position, p.Damage))
+                {
+                    if (!p.Pierce) { p.Despawn(); continue; }
+                }
+                // 폭발 통 — 내 탄 한 발이면 터진다. 관통탄은 지나가며 터뜨린다.
+                if (p.FromPlayer && p.Damage > 0 && DamageBarrel(p.Position))
                 {
                     if (!p.Pierce) { p.Despawn(); continue; }
                 }
@@ -6829,7 +6958,13 @@ namespace Game.Module.InGame
                 {
                     // 도탄이 남아 있으면 기둥에서도 튕긴다. 정본 "도탄 벽" 지형지물이
                     // 이 경로를 쓴다 — 기둥이 막기만 하는 것이 아니라 되돌려 준다.
-                    if (!p.Bounce(BounceNormalFromCover(p.Position))) { p.Despawn(); continue; }
+                    if (!p.Bounce(BounceNormalFromCover(p.Position)))
+                    {
+                        // 적 탄이 기둥에 박힌다 — 소리 없이 사라지면 「왜 안 맞았지」가 된다
+                        if (!p.FromPlayer) SpawnImpact(p.Position, p.Kind);
+                        p.Despawn();
+                        continue;
+                    }
                 }
 
                 if (p.Damage <= 0) continue;   // 근접 타격 섬광 — 수명만 흘려보낸다

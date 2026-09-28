@@ -1713,7 +1713,36 @@ namespace Game.Module.InGame
             RepositionTarget = target;
         }
 
-        public void EndReposition() => IsRepositioning = false;
+        public void EndReposition()
+        {
+            IsRepositioning = false;
+            IsDetouring = false;
+        }
+
+        // ── 지형을 보는 눈 (2026-09-28 배치 개편) ─────────────────
+        //
+        // 원거리는 쏘고 나서 키 큰 것 뒤로 숨었다가 한 박자 뒤에 내다보고,
+        // 근접은 오목한 지형에 걸리면 옆으로 돌아 나간다. 그 상태를 여기 든다 —
+        // `BattleDirector` 가 매 프레임 사전을 뒤지지 않게.
+
+        /// <summary>엄폐 뒤에 닿은 뒤 내다보기까지 남은 시간(초). 0 이면 평소대로.</summary>
+        public float CoverWait { get; set; }
+
+        /// <summary>제자리걸음이 이어진 시간(초). 오목한 지형에 걸렸는지 본다.</summary>
+        public float StuckTimer { get; set; }
+
+        /// <summary>
+        /// 지금 옮겨 가는 것이 **걸려서 도는 우회**인가.
+        /// 우회는 사거리 밖에서도 끝까지 간다 — 평소 재배치는 사거리 밖이면 접는다.
+        /// </summary>
+        public bool IsDetouring { get; private set; }
+
+        public void BeginDetour(Vector2 target)
+        {
+            BeginReposition(target);
+            IsDetouring = true;
+            StuckTimer = 0f;
+        }
 
         // ── 쉴드 ─────────────────────────────────────────────
         //

@@ -251,6 +251,7 @@ namespace Game.Module.InGame
             Pierce = pierce;
             BouncesLeft = bounces;
             HasBounced = false;
+            _ricochets = 0;        // 풀에서 돌려 쓰므로 지난 발의 튕김 횟수를 지운다
             SlowPercent = slowPercent;
             LifestealPercent = lifestealPercent;
             _alreadyHit.Clear();
@@ -335,6 +336,29 @@ namespace Game.Module.InGame
         /// 튕긴 뒤 **맞은 목록을 비운다.** 안 그러면 되돌아온 탄이 방금 지나친 적을
         /// 그냥 통과한다 — 도탄의 재미는 왔던 길을 다시 훑는 데 있다.
         /// </summary>
+        /// <summary>
+        /// 되튕기는 벽(RICOCHET_WALL)에 맞았다. 도탄 버프와 **무관하게** 튕긴다 —
+        /// 이 벽의 값어치는 「각을 만들어 뒤를 친다」라 버프가 있어야 통하면 지형이 아니다.
+        /// 다만 벽과 벽 사이에서 영영 오가면 안 되므로 한 발에 세 번까지다.
+        /// 튕긴 뒤 벽 밖으로 한 뼘 내보낸다 — 같은 프레임에 같은 벽에 또 걸리지 않게.
+        /// </summary>
+        public bool Ricochet(Vector2 normal)
+        {
+            if (_ricochets >= RicochetMax) return false;
+            _ricochets++;
+            HasBounced = true;
+            _dir = Vector2.Reflect(_dir, normal).normalized;
+            _rect.localEulerAngles =
+                new Vector3(0f, 0f, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg);
+            _rect.anchoredPosition += normal * RicochetPushPixels;
+            _alreadyHit.Clear();
+            return true;
+        }
+
+        private const int RicochetMax = 3;
+        private const float RicochetPushPixels = 10f;
+        private int _ricochets;
+
         public bool Bounce(Vector2 normal)
         {
             if (BouncesLeft <= 0) return false;
