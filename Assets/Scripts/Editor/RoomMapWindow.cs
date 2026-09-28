@@ -509,7 +509,12 @@ namespace Game.EditorTools
         }
 
         private static readonly string[] Kinds =
-            { "PILLAR", "BARRICADE", "LOW_COVER", "DIVIDER", "HAZARD" };
+        {
+            "PILLAR", "BARRICADE", "LOW_COVER", "DIVIDER", "HAZARD",
+            "CRATE", "BULK", "RAIL", "TIMED_SPIKE", "ROTATING_BLADE", "SWING_HAMMER",
+            "CHANNEL_H", "CHANNEL_V", "RICOCHET_WALL",
+            "EXPLOSIVE_BARREL", "WALL_TURRET_S", "WALL_TURRET_E", "WALL_TURRET_W", "PUSH_ROCK",
+        };
 
         private void DrawButtons(RoomEntry r)
         {
