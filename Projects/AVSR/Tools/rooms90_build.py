@@ -1,0 +1,472 @@
+# -*- coding: utf-8 -*-
+"""손으로 그린 90방(rooms90.txt)을 검사하고 게임이 읽는 표(rooms90.tsv)와 배치도 한 장으로 굽는다.
+
+쓰는 법:  python rooms90_build.py            # 검사 + tsv + 배치도
+          python rooms90_build.py --strict   # 경고도 실패로 (커밋 전)
+
+입력  Projects/AVSR/Rooms/rooms90.txt   ← 사람이 고치는 유일한 자리
+출력  Projects/AVSR/Rooms/rooms90.tsv   ← `Tools > Game > 90방 임포트` 가 읽는다
+      Projects/AVSR/Rooms/rooms90_sheet.png
+
+── 방 한 칸 = 1 m. 방은 10 × 16 m. 글자 한 줄이 가로 10 m, 줄 16개가 세로 16 m다. ──
+   맨 윗줄이 y 15~16(문 구역), 맨 아랫줄이 y 0~1(입구 쪽).
+
+물건(대문자·기호)은 **발자국 크기만큼 같은 글자로 채운다.** 한 칸만 찍으면 오류다 —
+그래야 그림을 보고 어디까지 막히는지 바로 읽힌다.
+
+  P 기둥 1×1        C 상자 2×1(가로)    B 덩어리 2×2      L 낮은 벽 3×1(가로)
+  R 바리케이드 3×1  I 난간 1×2(세로)    S 주기 가시 2×2   O 회전 톱니 2×2(반경 2.2 m 돈다)
+  H 왕복 해머 2×2(위아래로 ±1.7 m 오간다)      = 도랑 가로 2×1    # 도랑 세로 1×2
+  W 되튕기는 벽 3×1(가로)   V 되튕기는 벽 1×3(세로)   F 불바닥 2×2
+  X 폭발 통 1×1    T 벽 포탑 1×1(아래로 쏜다)   < > 벽 포탑(왼쪽/오른쪽으로 쏜다)   K 미는 바위 1×1
+
+적(소문자)은 한 글자가 한 기다. 방마다 legend 로 글자→몸을 정하고, 빼앗을 수 있는 몸은 `*` 를 붙인다.
+"""
+import os
+import sys
+import re
+
+from PIL import Image, ImageDraw, ImageFont
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
+SRC_DIR = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms')   # rooms90_ch1.txt … rooms90_ch6.txt
+TSV = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms', 'rooms90.tsv')
+SHEET = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms', 'rooms90_sheet.png')
+
+W, H = 10, 16
+GATE_TOP = 13.5          # 이 위로는 물건이 못 올라간다(문 구역 2.5 m)
+ENTRANCE = (5.0, 1.7)    # 플레이어가 서는 자리
+ENTRANCE_CLEAR = 4.5     # 적은 입구에서 이만큼 떨어진다
+
+# 글자 → (종류, 폭, 높이)
+GLYPH = {
+    'P': ('PILLAR', 1, 1),
+    'C': ('CRATE', 2, 1),
+    'B': ('BULK', 2, 2),
+    'L': ('LOW_COVER', 3, 1),
+    'R': ('BARRICADE', 3, 1),
+    'I': ('RAIL', 1, 2),
+    'S': ('TIMED_SPIKE', 2, 2),
+    'O': ('ROTATING_BLADE', 2, 2),
+    'H': ('SWING_HAMMER', 2, 2),
+    '=': ('CHANNEL_H', 2, 1),
+    '#': ('CHANNEL_V', 1, 2),
+    'W': ('RICOCHET_WALL', 3, 1),
+    'V': ('RICOCHET_WALL', 1, 3),
+    'F': ('HAZARD', 2, 2),
+    'X': ('EXPLOSIVE_BARREL', 1, 1),
+    'T': ('WALL_TURRET_S', 1, 1),
+    '<': ('WALL_TURRET_W', 1, 1),
+    '>': ('WALL_TURRET_E', 1, 1),
+    'K': ('PUSH_ROCK', 1, 1),
+}
+
+# 키 큰 것 — 적 탄도 막는다. 낮은 것(상자·낮은 벽·바리케이드)은 적 탄이 넘어온다.
+TALL = {'PILLAR', 'BULK', 'RAIL', 'RICOCHET_WALL', 'WALL_TURRET_S', 'WALL_TURRET_W', 'WALL_TURRET_E',
+        'PUSH_ROCK'}
+# 몸을 막는 것
+SOLID = TALL | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER'}
+# 몸은 못 건너지만 탄은 지나가는 것
+CHANNEL = {'CHANNEL_H', 'CHANNEL_V'}
+# 밟으면 아픈 것 (피해, 간격)
+HAZARD = {'TIMED_SPIKE': ('SPIKE', 6, 0.8), 'HAZARD': ('FIRE', 6, 0.8),
+          'ROTATING_BLADE': ('BLADE', 10, 0.5), 'SWING_HAMMER': ('HAMMER', 12, 0.7)}
+
+BLADE_RADIUS = 2.2
+HAMMER_HALF_TRAVEL = 1.7
+
+# 잡몹 — 챕터마다 나오는 것이 정해져 있다(`BattleDirector.TrashKeysFor` 와 같아야 한다)
+TRASH = {
+    1: {'skeleton', 'bat', 'scrapgunner'},
+    2: {'bat', 'actor_enforcer', 'roadwarden'},
+    3: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross'},
+    4: {'bat', 'actor_enforcer', 'coilwalker', 'roadwarden'},
+    5: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross'},
+    6: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross', 'roadwarden'},
+}
+RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross'}
+STATIC_TRASH = {'turret_cross'}   # 안 움직인다 — 자리가 곧 전부다
+
+# 호스트 데뷔 챕터 — 지금 배정표(RoomDef60)에서 처음 나오는 챕터 그대로
+DEBUT = {
+    'gangster': 1, 'amazon': 1, 'commando_grenade': 1, 'salamander': 1, 'hopper': 1,
+    'hopper_smg': 2, 'thug': 2, 'commando_mg': 2, 'robot': 2, 'guru': 2, 'white_wizard': 2,
+    'snowwoman': 3, 'ninja': 3, 'vampire': 3,
+    'baseball': 4, 'medium': 4, 'dragon_blue': 4, 'commando_laser': 4, 'ninja_chain': 4,
+    'amazon_elite': 5, 'commando_missile': 5,
+    'death': 6, 'dragoon': 6,
+}
+# 붙어서 싸우는 몸 — HostTable 의 AttackKind 가 Melee(0)·Pulse(6) 인 것. 나머지는 쏜다.
+MELEE_HOST = {'amazon', 'amazon_elite', 'death', 'guru', 'baseball', 'ninja_chain'}
+MAX_HOSTS = 2
+
+# 방마다 적 수 — 챕터 안에서도 뒤로 갈수록 는다
+COUNT = {
+    1: (3, 5), 2: (4, 6), 3: (5, 7), 4: (6, 8), 5: (7, 9), 6: (8, 10),
+}
+COMBAT_NO = ['001', '002', '003', '005', '006', '007', '009', '010', '011', '013', '014']
+
+
+class Room:
+    def __init__(self, cid):
+        self.id = cid            # ROOM_CH1_001
+        self.name = ''
+        self.note = ''
+        self.legend = {}
+        self.rows = []
+        self.objects = []        # (kind, cx, cy, w, h)
+        self.spawns = []         # (actor, cx, cy, host)
+        self.chapter = int(cid[7])
+        self.no = cid[-3:]
+        self.line = 0
+
+
+def parse(path):
+    rooms, cur, in_map = [], None, False
+    with open(path, encoding='utf-8') as f:
+        for ln, raw in enumerate(f, 1):
+            line = raw.rstrip('\n')
+            if in_map:
+                if line.strip() == '' or line.startswith('['):
+                    in_map = False
+                else:
+                    cur.rows.append(line.rstrip())
+                    continue
+            s = line.strip()
+            if not s or s.startswith('//'):
+                continue
+            m = re.match(r'\[(CH\d_\d{3})\]\s*(.*)', s)
+            if m:
+                cur = Room('ROOM_' + m.group(1))
+                cur.line = ln
+                rest = m.group(2)
+                if '|' in rest:
+                    cur.name, cur.note = [t.strip() for t in rest.split('|', 1)]
+                else:
+                    cur.name = rest.strip()
+                rooms.append(cur)
+                continue
+            if s.startswith('legend:'):
+                for tok in s[7:].split():
+                    g, unit = tok.split('=')
+                    cur.legend[g] = (unit.rstrip('*'), unit.endswith('*'))
+                continue
+            if s.startswith('map:'):
+                in_map = True
+                continue
+            raise SystemExit(f'{path}:{ln}: 모르는 줄 — {s}')
+    return rooms
+
+
+def build(room, errors, warns):
+    rows = room.rows
+    tag = f'{room.id}({room.name})'
+    if len(rows) != H:
+        errors.append(f'{tag}: 줄이 {len(rows)}개 — 16개여야 한다')
+        return
+    for r, row in enumerate(rows):
+        if len(row) != W:
+            errors.append(f'{tag}: {r + 1}째 줄 폭 {len(row)} — 10이어야 한다: "{row}"')
+            return
+    grid = [list(r) for r in rows]
+    used = [[False] * W for _ in range(H)]
+
+    # ── 물건: 발자국을 통째로 같은 글자로 채웠는지 본다 ──
+    for r in range(H):
+        for c in range(W):
+            g = grid[r][c]
+            if used[r][c] or g not in GLYPH:
+                continue
+            kind, w, h = GLYPH[g]
+            ok = r + h <= H and c + w <= W
+            if ok:
+                for dr in range(h):
+                    for dc in range(w):
+                        if grid[r + dr][c + dc] != g or used[r + dr][c + dc]:
+                            ok = False
+            if not ok:
+                errors.append(f'{tag}: {r + 1}줄 {c + 1}칸 "{g}" — {kind} 는 {w}×{h} 칸을 같은 글자로 채워야 한다')
+                used[r][c] = True
+                continue
+            for dr in range(h):
+                for dc in range(w):
+                    used[r + dr][c + dc] = True
+            cx = c + w / 2.0
+            cy = (H - r) - h / 2.0
+            room.objects.append((kind, cx, cy, float(w), float(h)))
+
+    # ── 적 ──
+    for r in range(H):
+        for c in range(W):
+            g = grid[r][c]
+            if g == '.' or g in GLYPH:
+                continue
+            if g not in room.legend:
+                errors.append(f'{tag}: {r + 1}줄 {c + 1}칸 "{g}" — legend 에 없다')
+                continue
+            unit, host = room.legend[g]
+            room.spawns.append((unit, c + 0.5, (H - r) - 0.5, host))
+
+    check(room, errors, warns)
+
+
+def rect(o):
+    kind, cx, cy, w, h = o
+    return cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2
+
+
+def sweep_rect(o):
+    """움직이는 것이 실제로 훑는 자리. 톱니는 축 반경, 해머는 위아래 왕복."""
+    kind, cx, cy, w, h = o
+    if kind == 'ROTATING_BLADE':
+        r = BLADE_RADIUS + 1.0
+        return cx - r, cy - r, cx + r, cy + r
+    if kind == 'SWING_HAMMER':
+        return cx - w / 2, cy - h / 2 - HAMMER_HALF_TRAVEL, cx + w / 2, cy + h / 2 + HAMMER_HALF_TRAVEL
+    return rect(o)
+
+
+def inside(x, y, r, margin=0.0):
+    return r[0] - margin < x < r[2] + margin and r[1] - margin < y < r[3] + margin
+
+
+def reachable(room):
+    """입구에서 문 아래(y 13)까지 걸어갈 수 있나. `RoomMapWindow.Reachable` 과 같은 자로 잰다."""
+    step = 0.25
+    us = 1.2                                       # GameConfig.UnitScale
+    bw, bh = 96 * us, 92 * us
+    hx = max(bw * 0.25, 21) / 72
+    hy = max(bh * 0.16, 14) / 72
+    drop = (bh * 0.5) / 72 - hy
+    half_x, half_y = bw * 0.5 / 72, bh * 0.5 / 72
+    scale = 0.7                                     # ObstacleViewScale
+    boxes = []
+    for o in room.objects:
+        kind, cx, cy, w, h = o
+        if kind not in SOLID and kind not in CHANNEL:
+            continue
+        if kind == 'SWING_HAMMER':                  # 오가는 길 전체를 막힌 것으로 본다
+            boxes.append((cx, cy, w * scale / 2, h * scale / 2 + HAMMER_HALF_TRAVEL))
+        else:
+            boxes.append((cx, cy, w * scale / 2, h * scale / 2))
+    gw, gh = int(W / step), int(H / step)
+
+    def free(gx, gy):
+        px, py = gx * step, gy * step
+        if px < half_x or px > W - half_x or py < half_y or py > H - half_y:
+            return False
+        fy = py - drop
+        for bx, by, bz, bwd in boxes:
+            if abs(px - bx) < bz + hx and abs(fy - by) < bwd + hy:
+                return False
+        return True
+
+    sx, sy = round(ENTRANCE[0] / step), round(ENTRANCE[1] / step)
+    while sy <= gh and not free(sx, sy):
+        sy += 1
+    if sy > gh:
+        return False, 0
+    seen = {(sx, sy)}
+    q = [(sx, sy)]
+    top = 0
+    while q:
+        x, y = q.pop()
+        top = max(top, y * step)
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx <= gw and 0 <= ny <= gh and (nx, ny) not in seen and free(nx, ny):
+                seen.add((nx, ny))
+                q.append((nx, ny))
+    return top >= H - 3.0, len(seen)
+
+
+def check(room, errors, warns):
+    tag = f'{room.id}({room.name})'
+    ch = room.chapter
+    # 물건 자리
+    for o in room.objects:
+        kind, cx, cy, w, h = o
+        if cy + h / 2 > GATE_TOP + 0.001:
+            errors.append(f'{tag}: {kind}({cx},{cy}) 가 문 구역(y>{GATE_TOP})을 침범')
+        if kind in SOLID and abs(cx - ENTRANCE[0]) < 1.5 + w / 2 and cy - h / 2 < 3.0:
+            errors.append(f'{tag}: {kind}({cx},{cy}) 가 입구 코앞을 막는다')
+    # 움직이는 것끼리·움직이는 것과 벽
+    for o in room.objects:
+        kind = o[0]
+        if kind not in ('ROTATING_BLADE', 'SWING_HAMMER'):
+            continue
+        sw = sweep_rect(o)
+        if kind == 'SWING_HAMMER' and (sw[1] < 0.3 or sw[3] > GATE_TOP):
+            errors.append(f'{tag}: 해머({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
+        if kind == 'ROTATING_BLADE' and (o[1] - BLADE_RADIUS < 0 or o[1] + BLADE_RADIUS > W):
+            warns.append(f'{tag}: 톱니({o[1]},{o[2]}) 날이 벽 그림에 반쯤 들어간다')
+        for p in room.objects:
+            if p is o or p[0] in HAZARD or p[0] in CHANNEL:
+                continue
+            pr = rect(p)
+            if kind == 'ROTATING_BLADE':
+                # 날 끝이 닿는 거리(축 반경 + 날 반폭)보다 가까운 모서리가 있으면 날이 물건을 긁는다
+                nx = min(max(o[1], pr[0]), pr[2])
+                ny = min(max(o[2], pr[1]), pr[3])
+                hit = ((nx - o[1]) ** 2 + (ny - o[2]) ** 2) ** 0.5 < BLADE_RADIUS + 1.0
+            else:
+                hit = pr[0] < sw[2] and pr[2] > sw[0] and pr[1] < sw[3] and pr[3] > sw[1]
+            if hit:
+                warns.append(f'{tag}: {kind}({o[1]},{o[2]}) 가 훑는 자리에 {p[0]}({p[1]},{p[2]}) 가 있다')
+    # 적
+    n = len(room.spawns)
+    lo, hi = COUNT[ch]
+    if room.no in COMBAT_NO and not (lo <= n <= hi):
+        warns.append(f'{tag}: 적 {n}기 — CH{ch} 은 {lo}~{hi}')
+    hosts = [s for s in room.spawns if s[3]]
+    if room.no in COMBAT_NO and not hosts:
+        errors.append(f'{tag}: 빼앗을 몸이 없다')
+    if len(hosts) > MAX_HOSTS:
+        errors.append(f'{tag}: 빼앗을 몸 {len(hosts)} — 최대 {MAX_HOSTS} (넘치면 잡몹으로 강등된다)')
+    seen_host = set()
+    has_melee = has_ranged = False
+    for actor, x, y, host in room.spawns:
+        if host:
+            if actor not in DEBUT:
+                errors.append(f'{tag}: 모르는 호스트 {actor}')
+            elif DEBUT[actor] > ch:
+                errors.append(f'{tag}: {actor} 는 CH{DEBUT[actor]} 데뷔 — CH{ch} 에 못 나온다')
+            if actor in seen_host:
+                errors.append(f'{tag}: 같은 몸 {actor} 이 둘')
+            seen_host.add(actor)
+            if actor in MELEE_HOST: has_melee = True
+            else: has_ranged = True
+        else:
+            if actor not in TRASH[ch]:
+                errors.append(f'{tag}: 잡몹 {actor} 는 CH{ch} 목록에 없다 (그림이 안 올라간다)')
+            if actor in RANGED_TRASH: has_ranged = True
+            else: has_melee = True
+        d = ((x - ENTRANCE[0]) ** 2 + (y - ENTRANCE[1]) ** 2) ** 0.5
+        if d < ENTRANCE_CLEAR:
+            errors.append(f'{tag}: {actor}({x},{y}) 가 입구에서 {d:.1f} m — {ENTRANCE_CLEAR} m 이상')
+        for o in room.objects:
+            kind = o[0]
+            if kind in HAZARD and kind not in ('SWING_HAMMER',):
+                if inside(x, y, rect(o)):
+                    warns.append(f'{tag}: {actor}({x},{y}) 가 {kind} 위에 선다')
+                continue
+            if inside(x, y, sweep_rect(o) if kind == 'SWING_HAMMER' else rect(o), 0.3):
+                errors.append(f'{tag}: {actor}({x},{y}) 가 {kind}({o[1]},{o[2]}) 속에 선다')
+        # 원거리는 엄폐 뒤에 세운다 — 키 큰 것이 1.6 m 안에
+        ranged = (actor in RANGED_TRASH) if not host else (actor not in MELEE_HOST)
+        if ranged and actor not in STATIC_TRASH:
+            near = any(o[0] in TALL and abs(o[1] - x) < o[3] / 2 + 1.6 and abs(o[2] - y) < o[4] / 2 + 1.6
+                       for o in room.objects)
+            if not near:
+                warns.append(f'{tag}: 원거리 {actor}({x},{y}) 근처에 키 큰 엄폐가 없다')
+    if room.no in COMBAT_NO and not (has_melee and has_ranged):
+        warns.append(f'{tag}: 근접·원거리가 다 있어야 한다 (근접 {has_melee} · 원거리 {has_ranged})')
+    ok, cells = reachable(room)
+    if not ok:
+        errors.append(f'{tag}: 입구에서 문까지 못 간다')
+
+
+def write_tsv(rooms):
+    with open(TSV, 'w', encoding='utf-8', newline='\n') as f:
+        f.write('# rooms90-hand-1.0 — rooms90_build.py 가 굽는다. 손으로 고치지 않는다.\n')
+        for r in rooms:
+            f.write(f'ROOM\t{r.id}\t{r.name}\t{r.note}\n')
+            for kind, cx, cy, w, h in r.objects:
+                hz = HAZARD.get(kind, ('NONE', 0, 0))
+                move = 1 if (kind in SOLID or kind in CHANNEL) else 0
+                shot = 1 if kind in SOLID else 0
+                eshot = 1 if kind in TALL else 0
+                f.write(f'OBJ\t{kind}\t{cx:g}\t{cy:g}\t{w:g}\t{h:g}\t{move}\t{shot}\t{eshot}\t{hz[0]}\t{hz[1]}\t{hz[2]:g}\n')
+            for actor, x, y, host in r.spawns:
+                f.write(f'SPAWN\t{actor}\t{x:g}\t{y:g}\t{1 if host else 0}\n')
+
+
+COL = {'PILLAR': (205, 190, 120), 'CRATE': (170, 120, 70), 'BULK': (150, 140, 120), 'RAIL': (120, 130, 160),
+       'LOW_COVER': (100, 140, 170), 'BARRICADE': (140, 110, 90), 'TIMED_SPIKE': (220, 200, 60),
+       'ROTATING_BLADE': (240, 240, 250), 'CHANNEL_H': (60, 90, 160), 'CHANNEL_V': (60, 90, 160),
+       'SWING_HAMMER': (200, 200, 230), 'RICOCHET_WALL': (170, 170, 220), 'HAZARD': (235, 100, 40),
+       'EXPLOSIVE_BARREL': (250, 140, 30), 'WALL_TURRET_S': (90, 200, 220), 'WALL_TURRET_W': (90, 200, 220),
+       'WALL_TURRET_E': (90, 200, 220), 'PUSH_ROCK': (130, 120, 110)}
+
+
+def sheet(rooms, out=SHEET):
+    S = 15
+    pw, ph = W * S + 10, H * S + 30
+    cols = 15
+    img = Image.new('RGB', (cols * pw + 10, 6 * ph + 10), (26, 28, 34))
+    dr = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype('C:/Windows/Fonts/malgun.ttf', 11)
+        small = ImageFont.truetype('C:/Windows/Fonts/malgun.ttf', 9)
+    except Exception:
+        font = small = ImageFont.load_default()
+    for i, r in enumerate(rooms):
+        col = (int(r.no) - 1) % 15
+        cx0 = col * pw + 6
+        cy0 = (r.chapter - 1) * ph + 6
+        dr.text((cx0, cy0), f'{r.id[5:]} {r.name}', fill=(235, 235, 235), font=font)
+        top = cy0 + 16
+        dr.rectangle([cx0, top, cx0 + W * S, top + H * S], fill=(50, 54, 64), outline=(95, 100, 115))
+        dr.rectangle([cx0, top, cx0 + W * S, top + 2.5 * S], fill=(42, 46, 56))
+        for k in range(1, W):
+            dr.line([cx0 + k * S, top, cx0 + k * S, top + H * S], fill=(58, 62, 72))
+        for k in range(1, H):
+            dr.line([cx0, top + k * S, cx0 + W * S, top + k * S], fill=(58, 62, 72))
+
+        def px(x, y):
+            return cx0 + x * S, top + (H - y) * S
+
+        for kind, x, y, w, h in r.objects:
+            if kind in ('ROTATING_BLADE',):
+                X, Y = px(x, y)
+                rr = BLADE_RADIUS * S
+                dr.ellipse([X - rr, Y - rr, X + rr, Y + rr], outline=(200, 200, 230))
+            if kind == 'SWING_HAMMER':
+                x0, y0 = px(x - w / 2, y + h / 2 + HAMMER_HALF_TRAVEL)
+                x1, y1 = px(x + w / 2, y - h / 2 - HAMMER_HALF_TRAVEL)
+                dr.rectangle([x0, y0, x1, y1], outline=(200, 200, 230))
+            x0, y0 = px(x - w / 2, y + h / 2)
+            x1, y1 = px(x + w / 2, y - h / 2)
+            dr.rectangle([x0 + 1, y0 + 1, x1 - 1, y1 - 1], fill=COL.get(kind, (200, 60, 200)), outline=(15, 15, 15))
+            g = [k for k, v in GLYPH.items() if v[0] == kind and v[1] == w and v[2] == h]
+            dr.text((x0 + 3, y0 + 1), g[0] if g else '?', fill=(20, 20, 20), font=small)
+        for actor, x, y, host in r.spawns:
+            X, Y = px(x, y)
+            rad = 6
+            colr = (90, 220, 120) if host else ((255, 150, 60) if actor in RANGED_TRASH else (230, 70, 70))
+            dr.ellipse([X - rad, Y - rad, X + rad, Y + rad], fill=colr, outline=(0, 0, 0))
+            dr.text((X - 3, Y - 6), actor[0], fill=(0, 0, 0), font=small)
+        X, Y = px(*ENTRANCE)
+        dr.rectangle([X - 5, Y - 5, X + 5, Y + 5], fill=(80, 160, 255))
+    img.save(out)
+    return out
+
+
+def main():
+    strict = '--strict' in sys.argv
+    rooms = []
+    for name in sorted(os.listdir(SRC_DIR)):
+        if re.match(r'rooms90_ch\d\.txt$', name):
+            rooms += parse(os.path.join(SRC_DIR, name))
+    errors, warns = [], []
+    ids = set()
+    for r in rooms:
+        if r.id in ids:
+            errors.append(f'{r.id} 가 두 번 있다')
+        ids.add(r.id)
+        build(r, errors, warns)
+    for w in warns:
+        print('경고', w)
+    for e in errors:
+        print('오류', e)
+    print(f'방 {len(rooms)} · 물건 {sum(len(r.objects) for r in rooms)} · 적 {sum(len(r.spawns) for r in rooms)}'
+          f' · 경고 {len(warns)} · 오류 {len(errors)}')
+    if errors or (strict and warns):
+        sys.exit(1)
+    write_tsv(rooms)
+    print('저장:', TSV)
+    print('배치도:', sheet(rooms))
+
+
+if __name__ == '__main__':
+    main()

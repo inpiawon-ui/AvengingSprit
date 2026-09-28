@@ -566,9 +566,10 @@ namespace Game.EditorTools
             bool channel = IsChannel(kind);
             o.FindPropertyRelative("_blocksMove").boolValue = solid || channel;
             o.FindPropertyRelative("_blocksShot").boolValue = solid;   // 도랑 위로는 탄이 지나간다
-            // 적 탄은 지형을 통과한다 — 엄폐 뒤에 붙어 서는 것이 정답이 되면
-            // 지형이 전술이 아니라 은신처가 된다. 막히는 것은 내 탄뿐이다.
-            o.FindPropertyRelative("_blocksEnemyShot").boolValue = false;
+            // 적 탄은 **키 큰 것**에만 막힌다 (2026-09-28 배치 개편 — 궁수의 전설 규칙).
+            // 낮은 것(상자·낮은 벽·바리케이드)은 넘어온다 — 숨는 곳이 아니라 쏠 자리다.
+            // 기둥·덩어리·난간은 양쪽 다 막아 「뒤로 돌아 들어가 각을 잡는」 놀이를 만든다.
+            o.FindPropertyRelative("_blocksEnemyShot").boolValue = IsTall(kind);
 
             // ⚠ 앞 원소 복사에 딸려 온 해저드 값이 남으면 안 된다.
             //   가시는 밟으면 아픈 물건이라 여기서 늘 지우면 장식이 된다.
@@ -822,6 +823,11 @@ namespace Game.EditorTools
 
         private static bool PropSolid(string kind)
             => kind != "TIMED_SPIKE" && kind != "ROTATING_BLADE" && !IsChannel(kind);
+
+        /// <summary>키 큰 것 — 적 탄도 막는다. `rooms90_build.py` 의 TALL 과 같아야 한다.</summary>
+        private static bool IsTall(string kind)
+            => kind == "PILLAR" || kind == "BULK" || kind == "RAIL" || kind == "DIVIDER"
+            || kind == "RICOCHET_WALL";
 
         /// <summary>
         /// 바닥에 파인 도랑인가.

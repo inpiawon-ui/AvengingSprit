@@ -125,6 +125,9 @@ namespace Game.EditorTools
             rooms.ClearArray();
 
             int spawns = 0, bossRooms = 0, midBossRooms = 0, eliteRooms = 0, eventRooms = 0;
+            // 손으로 그린 전투방(2026-09-28 배치 개편). 있으면 배치 틀 대신 그것을 그대로 옮긴다.
+            var hand = Rooms90Hand.Load();
+            int handRooms = 0;
 
             for (int i = 0; i < defs.Length; i++)
             {
@@ -177,9 +180,23 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("_eventPool").stringValue = d.Pool ?? string.Empty;
                 if (!string.IsNullOrEmpty(d.Pool)) eventRooms++;
 
-                spawns += WriteSpawns(e, d, roomId, ref eliteRooms);
-                WriteObjects(e, d);
+                if (d.Kind == "전투" && hand.TryGetValue(roomId, out var h))
+                {
+                    // 손으로 그린 방 — 표를 **그대로** 옮긴다. 뒤집기·밀기·펼치기는 없다.
+                    // 그것들은 틀 18종을 90방이 돌려쓰던 시절 「같은 방으로 안 보이게」 하던 장치다.
+                    e.FindPropertyRelative("_intent").stringValue = h.Name;
+                    e.FindPropertyRelative("_template").stringValue = "HAND";
+                    spawns += WriteSpawnsHand(e, h, roomId);
+                    WriteObjectsHand(e, h);
+                    handRooms++;
+                }
+                else
+                {
+                    spawns += WriteSpawns(e, d, roomId, ref eliteRooms);
+                    WriteObjects(e, d);
+                }
             }
+            if (handRooms > 0) Debug.Log($"[90방] 손으로 그린 전투방 {handRooms}개를 그대로 옮겼다");
 
             so.ApplyModifiedPropertiesWithoutUndo();
             int unblocked = UnblockRooms(table, so, rooms);
@@ -406,6 +423,55 @@ namespace Game.EditorTools
                 p.FindPropertyRelative("_elite").boolValue = elite && s.IsHost;
             }
             return list.Length;
+        }
+
+        // ── 손으로 그린 방 (Rooms90Hand) ─────────────────────────
+
+        private static int WriteSpawnsHand(SerializedProperty e, Rooms90Hand.Room h, string roomId)
+        {
+            var arr = e.FindPropertyRelative("_spawns");
+            arr.ClearArray();
+            for (int i = 0; i < h.Spawns.Count; i++)
+            {
+                var s = h.Spawns[i];
+                arr.InsertArrayElementAtIndex(i);
+                var p = arr.GetArrayElementAtIndex(i);
+                p.FindPropertyRelative("_spawnId").stringValue = $"{roomId}_S{i + 1:00}";
+                p.FindPropertyRelative("_actorId").stringValue = s.Actor;
+                p.FindPropertyRelative("_at").vector2Value = new Vector2(s.X, s.Y);
+                p.FindPropertyRelative("_facing").stringValue = "S";
+                p.FindPropertyRelative("_delaySeconds").floatValue = 0f;
+                p.FindPropertyRelative("_trigger").stringValue = s.Host ? "POSSESSION_TARGET" : "ROOM_ENTER";
+                p.FindPropertyRelative("_telegraph").stringValue = string.Empty;
+                p.FindPropertyRelative("_elite").boolValue = false;
+            }
+            return h.Spawns.Count;
+        }
+
+        private static void WriteObjectsHand(SerializedProperty e, Rooms90Hand.Room h)
+        {
+            var objs = e.FindPropertyRelative("_objects");
+            objs.ClearArray();
+            for (int i = 0; i < h.Objects.Count; i++)
+            {
+                var src = h.Objects[i];
+                objs.InsertArrayElementAtIndex(i);
+                var o = objs.GetArrayElementAtIndex(i);
+                o.FindPropertyRelative("_objectId").stringValue = $"{src.Kind}_{i + 1}";
+                o.FindPropertyRelative("_kind").stringValue = src.Kind;
+                o.FindPropertyRelative("_at").vector2Value = new Vector2(src.X, src.Y);
+                o.FindPropertyRelative("_size").vector2Value = new Vector2(src.W, src.H);
+                o.FindPropertyRelative("_blocksMove").boolValue = src.BlocksMove;
+                o.FindPropertyRelative("_blocksShot").boolValue = src.BlocksShot;
+                o.FindPropertyRelative("_blocksEnemyShot").boolValue = src.BlocksEnemyShot;
+                o.FindPropertyRelative("_blocksSight").boolValue = src.BlocksEnemyShot;
+                o.FindPropertyRelative("_destructible").boolValue =
+                    src.Kind == "CRATE" || src.Kind == "EXPLOSIVE_BARREL";
+                o.FindPropertyRelative("_hazardKind").stringValue = src.Hazard;
+                o.FindPropertyRelative("_hazardDamage").intValue = src.HazardDamage;
+                o.FindPropertyRelative("_hazardTick").floatValue = src.HazardTick;
+                o.FindPropertyRelative("_unnamed").floatValue = 0f;
+            }
         }
 
         /// <summary>
