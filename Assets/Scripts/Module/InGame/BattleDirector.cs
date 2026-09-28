@@ -899,6 +899,7 @@ namespace Game.Module.InGame
             public bool Telegraph;       // 벽 포탑 — 포신이 달아 있는가
             public GameObject Shadow;    // 발밑 그림자 — 바위처럼 움직이거나 통처럼 사라질 때 같이
             public Color BaseColor = Color.white;   // 예고 색을 되돌릴 원래 색
+            public Image Img2;           // 불바닥 위 불꽃처럼 본체 위에 얹어 돌리는 두 번째 그림
         }
 
         private readonly List<Obstacle> _obstacles = new();
@@ -1345,21 +1346,31 @@ namespace Game.Module.InGame
                     break;
 
                 case "HAZARD":
-                    // 불바닥은 늘 켜져 있다. 그림은 장판 불(`fx_firefield`)을 돌려 쓴다 —
+                    // 불바닥은 늘 켜져 있다. 바닥 그림(`obj_hazard` — 달아오른 격자)은 그대로 두고
+                    // **그 위에 자식으로** 장판 불(`fx_firefield`)을 얹어 돌린다 —
                     // 한 장이면 불이 아니라 불 그림을 붙여 놓은 것으로 보인다(장판에서 겪었다).
+                    // ⚠ 바닥 그림 자리에 불꽃을 덮어쓰면 안 된다 — 처음에 그랬더니 새로 받은 격자가 안 보였다.
                     ob.IsHazard = true;
                     if (ob.Damage <= 0) ob.Damage = 6;
                     if (ob.Tick <= 0f) ob.Tick = 0.8f;
-                    if (GetSprite("fx_firefield_1") != null)
+                    if (GetSprite("fx_firefield_1") != null && ob.View != null)
                     {
                         ob.Frames = new[]
                         {
                             GetSprite("fx_firefield_1"), GetSprite("fx_firefield_2"),
                             GetSprite("fx_firefield_3"), GetSprite("fx_firefield_4"),
                         };
-                        ob.Img.sprite = ob.Frames[0];
-                        ob.Img.color = Color.white;
-                        ob.BaseColor = Color.white;
+                        var fire = new GameObject("Fire", typeof(RectTransform), typeof(Image));
+                        fire.transform.SetParent(ob.View.transform, false);   // 자식 — 부모와 함께 줄 서고 움직인다
+                        var frt = (RectTransform)fire.transform;
+                        frt.anchorMin = Vector2.zero;
+                        frt.anchorMax = Vector2.one;
+                        frt.offsetMin = frt.offsetMax = Vector2.zero;
+                        ob.Img2 = fire.GetComponent<Image>();
+                        ob.Img2.sprite = ob.Frames[0];
+                        ob.Img2.raycastTarget = false;
+                        ob.Img2.color = new Color(1f, 1f, 1f, 0.85f);
+                        ob.View2 = frt;
                     }
                     break;
             }
@@ -1711,9 +1722,12 @@ namespace Game.Module.InGame
                         break;
 
                     case "HAZARD":
-                        // 불바닥 — 넉 장을 돌린다. 물건마다 위상이 달라 방 전체가 한 박자로 안 깜빡인다.
-                        if (o.Frames != null)
-                            SetFrame(o, Mathf.FloorToInt(Mathf.Repeat(Time.time * 6f + o.Phase * 4f, 4f)));
+                        // 불바닥 — 위에 얹은 불꽃 넉 장을 돌린다. 물건마다 위상이 달라 방 전체가 한 박자로 안 깜빡인다.
+                        if (o.Frames != null && o.Img2 != null)
+                        {
+                            var fs = o.Frames[Mathf.FloorToInt(Mathf.Repeat(Time.time * 6f + o.Phase * 4f, 4f))];
+                            if (fs != null && o.Img2.sprite != fs) o.Img2.sprite = fs;
+                        }
                         break;
                 }
             }

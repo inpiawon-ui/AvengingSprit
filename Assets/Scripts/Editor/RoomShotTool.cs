@@ -105,7 +105,11 @@ namespace Game.EditorTools
 
             int room = SessionState.GetInt("RoomShot.room", 0);
             int shot = SessionState.GetInt("RoomShot.shot", 0);
-            if (room >= Rooms.Length)
+            // 목록을 바꿔 찍고 싶으면 `RoomShot.rooms` 에 쉼표로 적는다 — 정적 배열은 플레이 진입의
+            // 도메인 리로드에서 기본값으로 돌아가므로 SessionState 가 유일하게 살아남는 자리다.
+            string custom = SessionState.GetString("RoomShot.rooms", string.Empty);
+            var rooms = string.IsNullOrEmpty(custom) ? Rooms : custom.Split(',');
+            if (room >= rooms.Length)
             {
                 SessionState.SetInt(Key, 0);
                 // 플레이는 켜 둔다 — 찍은 뒤 같은 판에서 기믹 동작을 코드로 찔러 본다.
@@ -113,7 +117,7 @@ namespace Game.EditorTools
                 return;
             }
 
-            string id = Rooms[room];
+            string id = rooms[room];
             if (shot == 0)
             {
                 // 방을 연다. 맞아 죽으면 검수가 끊기므로 판 동안 무적으로 둔다.
