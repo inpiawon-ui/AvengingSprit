@@ -22,11 +22,17 @@ IN = os.path.join(ROOT, 'Projects', 'AVSR', '_exchange', 'in')
 RAW = os.path.join(IN, '_raw')
 
 SIZE = {'barrel': (72, 112), 'wallturret_s': (72, 132), 'wallturret_e': (72, 132), 'rock': (72, 112),
-        'ricochet_wall_h': (216, 162), 'ricochet_wall_v': (72, 306), 'hazard': (144, 144)}
-FLAT = {'hazard'}          # 바닥에 눕는다 — 가운데에 둔다
+        'ricochet_wall_h': (216, 162), 'ricochet_wall_v': (72, 306), 'hazard': (144, 144),
+        # 3차 (2026-09-28) — 화염 분사구 · 지뢰 · 무대 간판 소품
+        'flamejet_s': (72, 112), 'flamejet_e': (72, 112), 'mine': (72, 72),
+        'prop_tall': (72, 166), 'prop_wide': (144, 132)}
+FLAT = {'hazard', 'mine'}  # 바닥에 눕는다 — 가운데에 둔다
+NO_GROW = {'mine'}         # 일부러 칸보다 작게 그린 것 — 키우지 않는다
 MIN_FILL_W = 0.8           # 잉크 폭이 칸의 이만큼에 못 미치면 키운다
+FLIP = {'wallturret_e': 'wallturret_w', 'flamejet_e': 'flamejet_w'}   # 오른쪽 것을 뒤집어 왼쪽 것을 만든다
 PAT = re.compile(r'^obj_(?:(street|rooftop|lab|refinery|junkyard|missile|holding)_)?'
-                 r'(barrel|wallturret_s|wallturret_e|rock|ricochet_wall_h|ricochet_wall_v|hazard)\.png$')
+                 r'(barrel|wallturret_s|wallturret_e|rock|ricochet_wall_h|ricochet_wall_v|hazard'
+                 r'|flamejet_s|flamejet_e|mine|prop_tall|prop_wide)\.png$')
 
 
 def fit(im, kind):
@@ -39,7 +45,7 @@ def fit(im, kind):
         return im, '빈 그림'
     ink = im.crop((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
     note = []
-    if ink.width < w * MIN_FILL_W:
+    if ink.width < w * MIN_FILL_W and kind not in NO_GROW:
         s = min(w / ink.width, h / ink.height)
         ink = ink.resize((max(1, round(ink.width * s)), max(1, round(ink.height * s))), Image.LANCZOS)
         q = np.asarray(ink).copy()
@@ -70,8 +76,8 @@ def main():
         ys, xs = np.nonzero(a)
         w, h = out.size
         print(f'{name}: {note} · 여백 좌{xs.min()} 우{w - 1 - xs.max()} 아래{h - 1 - ys.max()} 위{ys.min()}')
-        if kind == 'wallturret_e':
-            west = name.replace('wallturret_e', 'wallturret_w')
+        if kind in FLIP:
+            west = name.replace(kind, FLIP[kind])
             out.transpose(Image.FLIP_LEFT_RIGHT).save(os.path.join(IN, west))
             print(f'{west}: 반전')
 
