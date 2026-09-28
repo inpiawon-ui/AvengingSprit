@@ -60,21 +60,43 @@ GLYPH = {
     '<': ('WALL_TURRET_W', 1, 1),
     '>': ('WALL_TURRET_E', 1, 1),
     'K': ('PUSH_ROCK', 1, 1),
+    # ── 2차 (2026-09-28) — 피해야 하는 것 7종 + 물건 다양화 ──
+    '-': ('LASER_H', 4, 1),          # 레이저 문(가로) — 꺼짐 → 깜빡 → 켜짐
+    '!': ('LASER_V', 1, 4),          # 레이저 문(세로)
+    'A': ('SLIDE_BLADE_H', 2, 2),    # 레일 톱날 — 좌우로 ±2 m 오간다
+    'U': ('SLIDE_BLADE_V', 2, 2),    # 레일 톱날 — 위아래로 ±2 m 오간다
+    'Z': ('SWING_HAMMER_H', 2, 2),   # 가로 해머 — 좌우로 ±1.7 m 오간다
+    'J': ('FLAME_JET_S', 1, 1),      # 화염 분사구(아래로 3 m)
+    '}': ('FLAME_JET_E', 1, 1),      # 화염 분사구(오른쪽으로)
+    '{': ('FLAME_JET_W', 1, 1),      # 화염 분사구(왼쪽으로)
+    'D': ('DROP_ZONE', 2, 2),        # 낙하물 — 예고 원이 뜨고 떨어진다(바닥에 그림 없음)
+    'G': ('SLOW_POOL', 2, 2),        # 끈끈이 웅덩이 — 밟으면 느려진다
+    'M': ('MINE', 1, 1),             # 근접 지뢰
+    'N': ('BLOCK', 1, 1),            # 낮은 돌 블록 — 모아서 담을 쌓는다
+    'Q': ('PROP_TALL', 1, 1),        # 무대 간판 소품(키 큰 것 — 가로등·안테나·배양관 …)
+    'E': ('PROP_WIDE', 2, 1),        # 무대 간판 소품(넓은 것 — 폐차·실외기·제어반 …)
 }
 
 # 키 큰 것 — 적 탄도 막는다. 낮은 것(상자·낮은 벽·바리케이드)은 적 탄이 넘어온다.
 TALL = {'PILLAR', 'BULK', 'RAIL', 'RICOCHET_WALL', 'WALL_TURRET_S', 'WALL_TURRET_W', 'WALL_TURRET_E',
-        'PUSH_ROCK'}
+        'PUSH_ROCK', 'PROP_TALL'}
 # 몸을 막는 것
-SOLID = TALL | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER'}
+SOLID = TALL | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER', 'SWING_HAMMER_H',
+                'BLOCK', 'PROP_WIDE', 'FLAME_JET_S', 'FLAME_JET_E', 'FLAME_JET_W'}
 # 몸은 못 건너지만 탄은 지나가는 것
 CHANNEL = {'CHANNEL_H', 'CHANNEL_V'}
 # 밟으면 아픈 것 (피해, 간격)
 HAZARD = {'TIMED_SPIKE': ('SPIKE', 6, 0.8), 'HAZARD': ('FIRE', 6, 0.8),
-          'ROTATING_BLADE': ('BLADE', 10, 0.5), 'SWING_HAMMER': ('HAMMER', 12, 0.7)}
+          'ROTATING_BLADE': ('BLADE', 10, 0.5), 'SWING_HAMMER': ('HAMMER', 12, 0.7),
+          'SWING_HAMMER_H': ('HAMMER', 12, 0.7),
+          'SLIDE_BLADE_H': ('BLADE', 10, 0.5), 'SLIDE_BLADE_V': ('BLADE', 10, 0.5),
+          'LASER_H': ('LASER', 12, 0.6), 'LASER_V': ('LASER', 12, 0.6)}
+# 바닥에 있고 몸도 탄도 안 막는 것 — 적이 그 위에 서도 된다(경고만)
+FLOOR = {'DROP_ZONE', 'SLOW_POOL', 'MINE'}
 
 BLADE_RADIUS = 2.2
 HAMMER_HALF_TRAVEL = 1.7
+SLIDE_HALF_TRAVEL = 2.0
 
 # 잡몹 — 챕터마다 나오는 것이 정해져 있다(`BattleDirector.TrashKeysFor` 와 같아야 한다)
 TRASH = {
@@ -224,7 +246,16 @@ def sweep_rect(o):
         return cx - r, cy - r, cx + r, cy + r
     if kind == 'SWING_HAMMER':
         return cx - w / 2, cy - h / 2 - HAMMER_HALF_TRAVEL, cx + w / 2, cy + h / 2 + HAMMER_HALF_TRAVEL
+    if kind == 'SWING_HAMMER_H':
+        return cx - w / 2 - HAMMER_HALF_TRAVEL, cy - h / 2, cx + w / 2 + HAMMER_HALF_TRAVEL, cy + h / 2
+    if kind == 'SLIDE_BLADE_H':
+        return cx - w / 2 - SLIDE_HALF_TRAVEL, cy - h / 2, cx + w / 2 + SLIDE_HALF_TRAVEL, cy + h / 2
+    if kind == 'SLIDE_BLADE_V':
+        return cx - w / 2, cy - h / 2 - SLIDE_HALF_TRAVEL, cx + w / 2, cy + h / 2 + SLIDE_HALF_TRAVEL
     return rect(o)
+
+
+MOVERS = ('ROTATING_BLADE', 'SWING_HAMMER', 'SWING_HAMMER_H', 'SLIDE_BLADE_H', 'SLIDE_BLADE_V')
 
 
 def inside(x, y, r, margin=0.0):
@@ -248,6 +279,8 @@ def reachable(room):
             continue
         if kind == 'SWING_HAMMER':                  # 오가는 길 전체를 막힌 것으로 본다
             boxes.append((cx, cy, w * scale / 2, h * scale / 2 + HAMMER_HALF_TRAVEL))
+        elif kind == 'SWING_HAMMER_H':
+            boxes.append((cx, cy, w * scale / 2 + HAMMER_HALF_TRAVEL, h * scale / 2))
         else:
             boxes.append((cx, cy, w * scale / 2, h * scale / 2))
     gw, gh = int(W / step), int(H / step)
@@ -293,15 +326,17 @@ def check(room, errors, warns):
     # 움직이는 것끼리·움직이는 것과 벽
     for o in room.objects:
         kind = o[0]
-        if kind not in ('ROTATING_BLADE', 'SWING_HAMMER'):
+        if kind not in MOVERS:
             continue
         sw = sweep_rect(o)
-        if kind == 'SWING_HAMMER' and (sw[1] < 0.3 or sw[3] > GATE_TOP):
-            errors.append(f'{tag}: 해머({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
+        if kind in ('SWING_HAMMER', 'SLIDE_BLADE_V') and (sw[1] < 0.3 or sw[3] > GATE_TOP):
+            errors.append(f'{tag}: {kind}({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
+        if kind in ('SWING_HAMMER_H', 'SLIDE_BLADE_H') and (sw[0] < 0 or sw[2] > W):
+            errors.append(f'{tag}: {kind}({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
         if kind == 'ROTATING_BLADE' and (o[1] - BLADE_RADIUS < 0 or o[1] + BLADE_RADIUS > W):
             warns.append(f'{tag}: 톱니({o[1]},{o[2]}) 날이 벽 그림에 반쯤 들어간다')
         for p in room.objects:
-            if p is o or p[0] in HAZARD or p[0] in CHANNEL:
+            if p is o or p[0] in HAZARD or p[0] in CHANNEL or p[0] in FLOOR:
                 continue
             pr = rect(p)
             if kind == 'ROTATING_BLADE':
@@ -346,11 +381,17 @@ def check(room, errors, warns):
             errors.append(f'{tag}: {actor}({x},{y}) 가 입구에서 {d:.1f} m — {ENTRANCE_CLEAR} m 이상')
         for o in room.objects:
             kind = o[0]
-            if kind in HAZARD and kind not in ('SWING_HAMMER',):
+            if kind in FLOOR:
+                continue                                  # 바닥 것 위에는 서도 된다
+            if kind in MOVERS and kind != 'ROTATING_BLADE':
+                if inside(x, y, sweep_rect(o), 0.3):      # 오가는 길 위에 서면 첫 박자에 치인다
+                    errors.append(f'{tag}: {actor}({x},{y}) 가 {kind}({o[1]},{o[2]}) 가 오가는 길에 선다')
+                continue
+            if kind in HAZARD:
                 if inside(x, y, rect(o)):
                     warns.append(f'{tag}: {actor}({x},{y}) 가 {kind} 위에 선다')
                 continue
-            if inside(x, y, sweep_rect(o) if kind == 'SWING_HAMMER' else rect(o), 0.3):
+            if inside(x, y, rect(o), 0.3):
                 errors.append(f'{tag}: {actor}({x},{y}) 가 {kind}({o[1]},{o[2]}) 속에 선다')
         # 원거리는 엄폐 뒤에 세운다 — 키 큰 것이 1.6 m 안에
         ranged = (actor in RANGED_TRASH) if not host else (actor not in MELEE_HOST)
@@ -386,7 +427,12 @@ COL = {'PILLAR': (205, 190, 120), 'CRATE': (170, 120, 70), 'BULK': (150, 140, 12
        'ROTATING_BLADE': (240, 240, 250), 'CHANNEL_H': (60, 90, 160), 'CHANNEL_V': (60, 90, 160),
        'SWING_HAMMER': (200, 200, 230), 'RICOCHET_WALL': (170, 170, 220), 'HAZARD': (235, 100, 40),
        'EXPLOSIVE_BARREL': (250, 140, 30), 'WALL_TURRET_S': (90, 200, 220), 'WALL_TURRET_W': (90, 200, 220),
-       'WALL_TURRET_E': (90, 200, 220), 'PUSH_ROCK': (130, 120, 110)}
+       'WALL_TURRET_E': (90, 200, 220), 'PUSH_ROCK': (130, 120, 110),
+       'LASER_H': (255, 80, 120), 'LASER_V': (255, 80, 120), 'SLIDE_BLADE_H': (240, 240, 250),
+       'SLIDE_BLADE_V': (240, 240, 250), 'SWING_HAMMER_H': (200, 200, 230),
+       'FLAME_JET_S': (200, 80, 50), 'FLAME_JET_E': (200, 80, 50), 'FLAME_JET_W': (200, 80, 50),
+       'DROP_ZONE': (120, 70, 70), 'SLOW_POOL': (110, 170, 90), 'MINE': (230, 50, 50),
+       'BLOCK': (190, 200, 205), 'PROP_TALL': (150, 160, 200), 'PROP_WIDE': (170, 150, 120)}
 
 
 def sheet(rooms, out=SHEET):
@@ -421,10 +467,18 @@ def sheet(rooms, out=SHEET):
                 X, Y = px(x, y)
                 rr = BLADE_RADIUS * S
                 dr.ellipse([X - rr, Y - rr, X + rr, Y + rr], outline=(200, 200, 230))
-            if kind == 'SWING_HAMMER':
-                x0, y0 = px(x - w / 2, y + h / 2 + HAMMER_HALF_TRAVEL)
-                x1, y1 = px(x + w / 2, y - h / 2 - HAMMER_HALF_TRAVEL)
+            if kind in MOVERS and kind != 'ROTATING_BLADE':
+                sw = sweep_rect((kind, x, y, w, h))
+                x0, y0 = px(sw[0], sw[3])
+                x1, y1 = px(sw[2], sw[1])
                 dr.rectangle([x0, y0, x1, y1], outline=(200, 200, 230))
+            if kind.startswith('FLAME_JET'):
+                dx, dy = (-1, 0) if kind.endswith('_W') else (1, 0) if kind.endswith('_E') else (0, -1)
+                fx, fy = x + dx * 2.0, y + dy * 2.0
+                hw, hh = (1.5, 0.55) if dx else (0.55, 1.5)
+                x0, y0 = px(fx - hw, fy + hh)
+                x1, y1 = px(fx + hw, fy - hh)
+                dr.rectangle([x0, y0, x1, y1], outline=(255, 140, 60))
             x0, y0 = px(x - w / 2, y + h / 2)
             x1, y1 = px(x + w / 2, y - h / 2)
             dr.rectangle([x0 + 1, y0 + 1, x1 - 1, y1 - 1], fill=COL.get(kind, (200, 60, 200)), outline=(15, 15, 15))
