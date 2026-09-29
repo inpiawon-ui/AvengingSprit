@@ -316,8 +316,8 @@ namespace Game.Module.Lobby
         private void RefreshChapter()
         {
             int i = _chapter - 1;
-            // 시안은 번호가 「CHAPTER」보다 크고 밝다 — 한 줄 안에서 번호만 키운다
-            _ui.SetText("CHChapterNoText", $"CHAPTER <size=125%><color=#5BC8FF>{_chapter:00}</color></size>");
+            // 「CHAPTER」 글자는 화면 그림에 이미 있다 — 번호만 쓴다
+            _ui.SetText("CHChapterNoText", $"{_chapter:00}");
             _ui.SetText("CHChapterNameText", Localize.Get($"stage.{_chapter}.1.name"));
             _ui.SetText("CHChapterDescText",
                         Localize.FromTable($"chapter.{_chapter}.desc",
@@ -336,8 +336,8 @@ namespace Game.Module.Lobby
             SetArrow("CHPrevButton", _chapter > 1);
             SetArrow("CHNextButton", _chapter < ChapterCount);
 
+            // 「BOSS」·「클리어 보상」 같은 고정 글자는 화면 그림에 있다 — 값만 쓴다
             var ca = _chapterArts != null && i < _chapterArts.Length ? _chapterArts[i] : default;
-            _ui.SetText("CHBossLabel", Localize.FromTable("ui.chapterhost.boss", "BOSS"));
             _ui.SetText("CHBossNameText", ca.BossName ?? string.Empty);
             var boss = _ui.Get<Image>("CHBossPortrait");
             if (boss != null)
@@ -347,7 +347,6 @@ namespace Game.Module.Lobby
                 boss.preserveAspect = true;
             }
 
-            _ui.SetText("CHRewardLabel", Localize.FromTable("ui.chapterhost.reward", "클리어 보상"));
             var (min, max) = i < ClearGold.Length ? ClearGold[i] : (0, 0);
             _ui.SetText("CHRewardGoldText", $"{min:N0} ~ {max:N0}");
             var chest = _ui.Get<Image>("CHRewardChestIcon");
@@ -360,20 +359,19 @@ namespace Game.Module.Lobby
             _ui.SetText("CHRewardChestText", ca.ChestLabel ?? string.Empty);
         }
 
+        /// <summary>
+        /// 화살표는 **화면 그림에 이미 그려져 있다.** 여기 있는 것은 누를 자리(투명)뿐이라
+        /// 색을 건드리면 흰 네모가 나타난다(2026-09-29). 눌리는지만 바꾼다.
+        /// </summary>
         private void SetArrow(string name, bool on)
         {
-            var img = _ui.Get<Image>(name);
-            if (img != null) img.color = on ? Color.white : new Color(1f, 1f, 1f, 0.25f);
             var btn = _ui.Get<Button>(name);
             if (btn != null) btn.interactable = on;
         }
 
         private void RefreshHosts()
         {
-            _ui.SetText("CHHostTitle", Localize.FromTable("ui.chapterhost.pick", "호스트 선택"));
-            _ui.SetText("CHHostHintText",
-                        Localize.FromTable("ui.chapterhost.owned_only", "보유한 호스트만 선택 가능합니다."));
-
+            // 「호스트 선택」·안내 문구는 화면 그림에 있다
             for (int i = 0; i < _cards.Count; i++)
             {
                 var card = _cards[i];
@@ -381,9 +379,9 @@ namespace Game.Module.Lobby
                 var e = _player.GetHost(key);
                 bool sel = !_pickedRandom && key == _pickedHost;
 
-                var frame = _ui.Find(card, "CardFrame")?.GetComponent<Image>();
-                if (frame != null && _cardFrame != null && _cardFrameSelected != null)
-                    frame.sprite = sel ? _cardFrameSelected : _cardFrame;
+                // 빈 칸은 화면 그림에 있다 — 고른 칸에만 금색 액자를 덮는다
+                var sel2 = _ui.Find(card, "CardFrameSel");
+                if (sel2 != null) sel2.gameObject.SetActive(sel);
                 var check = _ui.Find(card, "CardCheck");
                 if (check != null) check.gameObject.SetActive(sel);
 
@@ -404,9 +402,9 @@ namespace Game.Module.Lobby
                     var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
                     if (img == null) continue;
                     img.gameObject.SetActive(!ghost);
+                    // 켜진 별·빈 별 둘 다 시안에서 떼어 온 그림이라 색을 건드리지 않는다
                     img.sprite = s < stars ? _starOn : _starOff;
-                    // 빈 별은 그냥 두면 어두운 판에 묻혀 안 보인다 — 조금 들어 올린다
-                    img.color = s < stars ? Color.white : new Color(0.62f, 0.68f, 0.78f);
+                    img.color = Color.white;
                 }
 
                 // 유령은 몸이 아니다 — 전투력 자리에 무엇인지를 적는다
@@ -422,15 +420,8 @@ namespace Game.Module.Lobby
                 if (powerIcon != null) powerIcon.gameObject.SetActive(!ghost);
             }
 
-            // 넓은 칸이라 액자 그림을 바꾸지 않는다 — 고른 표시는 체크와 색으로 한다
-            var rf = _ui.Get<Image>("RandomFrame");
-            if (rf != null) rf.color = _pickedRandom ? new Color(1f, 0.96f, 0.84f) : Color.white;
+            // 랜덤 칸의 글자와 그림도 화면 그림에 있다 — 고른 표시만 낸다
             _ui.SetActive("RandomCheck", _pickedRandom);
-            _ui.SetText("RandomTitle", Localize.FromTable("ui.chapterhost.random", "랜덤 선택"));
-            _ui.SetText("RandomDesc1",
-                        Localize.FromTable("ui.chapterhost.random_desc1", "모든 호스트 중 하나가 랜덤으로 선택됩니다."));
-            _ui.SetText("RandomDesc2",
-                        Localize.FromTable("ui.chapterhost.random_desc2", "낮은 확률로 전설 호스트 등장!"));
         }
 
         private void RefreshStart()
@@ -439,13 +430,10 @@ namespace Game.Module.Lobby
             _ui.SetText("CHStartCostText", cost.ToString("N0"));
             _ui.SetActive("CHStartCostIcon", cost > 0);
             _ui.SetActive("CHStartCostText", cost > 0);
-            _ui.SetActive("CHStartDivider", cost > 0);
-            _ui.SetText("CHStartText", Localize.FromTable("ui.chapterhost.start", "도전하기 ▶"));
+            // 「도전하기 ▶」는 화면 그림에 있다
 
             var btn = _ui.Get<Button>("CHStartButton");
             if (btn != null) btn.interactable = ChapterOpen && (_pickedRandom || !string.IsNullOrEmpty(_pickedHost));
-            var img = _ui.Get<Image>("CHStartButton");
-            if (img != null) img.color = ChapterOpen ? Color.white : new Color(0.55f, 0.55f, 0.6f);
         }
 
         /// <summary>
