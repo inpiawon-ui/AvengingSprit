@@ -52,6 +52,18 @@ namespace Game.User
         /// </summary>
         bool IsHostUnlocked(HostEntry host);
 
+        /// <summary>
+        /// 그 몸을 **가지고 있는가** — 고르는 목록에 내보낼지. 유령은 언제나 true.
+        /// 해금(<see cref="IsHostUnlocked"/>)과 다르다 — 그쪽은 지금 전부 열려 있다.
+        /// </summary>
+        bool IsHostOwned(HostEntry host);
+
+        /// <summary>그 몸의 전투력. ⚠ 지금은 등급 기준 임시값이다(2026-09-29).</summary>
+        int PowerOf(string hostKey);
+
+        /// <summary>골드를 낸다. 모자라면 아무 일도 없다. 몸값이 아닌 지불(랜덤 선택 등)에 쓴다.</summary>
+        bool TrySpendGold(int amount);
+
         /// <summary>그 몸의 숙련도 Lv (0 = 봉인). 스킬은 이 값만 본다.</summary>
         int GetMastery(string hostKey);
 

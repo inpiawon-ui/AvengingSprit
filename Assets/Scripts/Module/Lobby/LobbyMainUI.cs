@@ -22,8 +22,14 @@ namespace Game.Module.Lobby
     {
         [SerializeField] private HostSelectPanel _hostSelectPanel;
 
-        /// <summary>PLAY → 챕터 선택 → 호스트 선택 (기획 2026-09-18).</summary>
+        /// <summary>PLAY → 챕터 선택 → 호스트 선택 (기획 2026-09-18). ⚠ 아래 통합 창으로 대체됐다.</summary>
         [SerializeField] private ChapterSelectPanel _chapterSelectPanel;
+
+        /// <summary>
+        /// 챕터와 호스트를 **한 창에서** 고른다 (기획 2026-09-29).
+        /// 이 판이 있으면 PLAY 는 여기로 간다 — 위 두 판(챕터 선택 · 호스트 선택)을 대신한다.
+        /// </summary>
+        [SerializeField] private ChapterHostPanel _chapterHostPanel;
 
         /// <summary>상자를 연 뒤 받은 것을 카드로 늘어놓는 창.</summary>
         [SerializeField] private ChestRewardPopup _chestRewardPopup;
@@ -84,6 +90,7 @@ namespace Game.Module.Lobby
             // 삐져나왔다(2026-09-16).
             if (_hostSelectPanel != null) _hostSelectPanel.Close();
             if (_chapterSelectPanel != null) _chapterSelectPanel.Close();
+            if (_chapterHostPanel != null) _chapterHostPanel.Close();
             if (_chestRewardPopup != null) _chestRewardPopup.Close();
 
             // 하단 바 — 로비 · 육성이 **같이 쓴다**. 누른 칸이 선택 모습이 되고 위 화면만 바뀐다(기획 2026-09-21)
@@ -394,8 +401,10 @@ namespace Game.Module.Lobby
         private void PlayScenario()
         {
             global::Game.Module.Common.GameSound.Cue("ui.play");   // 원작 코인 투입음
-            // 챕터를 먼저 고른다. 판이 없으면(프리팹 미반영) 예전처럼 바로 호스트 선택으로.
-            if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
+            // 챕터와 몸을 한 창에서 고른다(기획 2026-09-29).
+            // 판이 아직 프리팹에 없으면 예전 길로 떨어진다 — 창이 안 뜨는 것보다 낫다.
+            if (_chapterHostPanel != null) _chapterHostPanel.Open();
+            else if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
             else OpenHostSelect(true);
         }
 
@@ -498,6 +507,11 @@ namespace Game.Module.Lobby
             if (_chapterSelectPanel != null && _chapterSelectPanel.IsOpen)
             {
                 _chapterSelectPanel.Close();
+                return true;
+            }
+            if (_chapterHostPanel != null && _chapterHostPanel.IsOpen)
+            {
+                _chapterHostPanel.Close();
                 return true;
             }
             return false;

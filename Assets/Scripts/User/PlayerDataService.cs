@@ -342,15 +342,21 @@ namespace Game.User
         ///   원래 값 — S 1000 · A 600 · 그 외 300
         /// </summary>
         public static int HostEntryCost(HostGrade grade)
-        {
-            if (FreeHostsForTest) return 0;
-            return grade switch
+            => FreeHostsForTest ? 0 : BaseHostEntryCost(grade);
+
+        /// <summary>
+        /// 등급표의 **진짜 값.** 테스트용 무료 플래그를 안 본다.
+        ///
+        /// 화면에 적는 값은 이쪽이다 — 무료로 풀어 둔 동안에도 「이 몸은 얼마짜리인가」가
+        /// 보여야 한다. 실제로 치를 때만 <see cref="HostEntryCost"/> 가 0 을 돌려준다.
+        /// </summary>
+        public static int BaseHostEntryCost(HostGrade grade)
+            => grade switch
             {
                 HostGrade.S => 1000,
                 HostGrade.A => 600,
                 _           => 300,
             };
-        }
 
         /// <summary>⚠ 임시 (2026-09-09) — 몸 값을 0 으로. 출시 전 false 로 되돌린다.</summary>
         public static readonly bool FreeHostsForTest = true;
@@ -373,6 +379,23 @@ namespace Game.User
             int cost = EntryCostOf(host);
             if (cost <= 0) return true;      // 유령 — 낼 것이 없다
             _data.gold -= cost;
+            PublishCurrency();
+            return true;
+        }
+
+        /// <summary>
+        /// 골드를 그냥 낸다. 모자라면 아무 일도 없다.
+        ///
+        /// 몸값(<see cref="PayHostEntry"/>)은 등급에서 값이 나오는데, 랜덤 선택처럼
+        /// **고른 몸과 값이 따로 노는** 지불이 있어 따로 둔다.
+        /// ⚠ 테스트용 무료 플래그(<see cref="FreeHostsForTest"/>)는 여기에 안 걸린다 —
+        ///   몸값이 아니다.
+        /// </summary>
+        public bool TrySpendGold(int amount)
+        {
+            if (_data == null || amount < 0 || _data.gold < amount) return false;
+            if (amount == 0) return true;
+            _data.gold -= amount;
             PublishCurrency();
             return true;
         }
@@ -411,6 +434,40 @@ namespace Game.User
 
         /// <summary>별 — 숙련도 2단계마다 하나(기획 2026-09-21).</summary>
         public int StarsOf(string hostKey) => Mathf.Clamp(GetMastery(hostKey) / 2, 0, 5);
+
+        // ── 전투력 ───────────────────────────────────────────
+        //
+        // ⚠ **임시다 (2026-09-29 지시).** 등급만 본다 — 스탯 9종을 수치로 환산하는 일은
+        //   따로 하기로 했다. 지금은 고르는 화면에 「세다/약하다」가 보이기만 하면 된다.
+        //   숙련도를 조금 얹는 것은 **별을 올린 몸이 목록에서 앞서 보이게** 하기 위함이다.
+
+        private const int PowerB = 8000, PowerA = 11000, PowerS = 14000;
+        private const int PowerPerMastery = 300;
+
+        /// <summary>이 몸의 전투력. 유령은 몸이 아니라 0 이다.</summary>
+        public static int HostPowerOf(HostEntry host, int mastery)
+        {
+            if (host == null || host.IsGhost) return 0;
+            int by = host.Grade switch
+            {
+                HostGrade.S => PowerS,
+                HostGrade.A => PowerA,
+                _           => PowerB,
+            };
+            return by + Mathf.Max(0, mastery) * PowerPerMastery;
+        }
+
+        public int PowerOf(string hostKey) => HostPowerOf(GetHost(hostKey), GetMastery(hostKey));
+
+        /// <summary>
+        /// 이 몸을 **가지고 있는가.** 고르는 목록에 내보낼지를 정한다.
+        ///
+        /// ⚠ <see cref="IsHostUnlocked"/> 와 다르다. 그쪽은 지금 전부 `true` 다
+        ///   (기획 2026-09-21 — 해금 대신 조각으로 별을 올린다). 보유는 **저장에 그 몸이
+        ///   있고 봉인이 풀렸는가**로 본다. 유령은 몸이 아니므로 언제나 가지고 있다.
+        /// </summary>
+        public bool IsHostOwned(HostEntry host)
+            => host != null && (host.IsGhost || GetMastery(host.HostKey) >= 1);
 
         // ── 능력치 골드 강화 ─────────────────────────────────
         //
