@@ -92,14 +92,25 @@ namespace Game.Editor
             Hit(box, "CHMailButton", 805, 52, 78, 72);
             Hit(box, "CHSettingsButton", 945, 54, 86, 78);
 
-            // 골드 값 — 시안의 동전 그림은 그대로 두고 숫자만 우리가 쓴다
-            var gold = Txt(Node(box, "CHGoldText"), "0", F(44), TextAlignmentOptions.Left);
-            TL2(gold.rectTransform, 330, 54, 200, 54);
+            // 골드 — 칸과 금화는 시안 것이다(칸 x 371~711 · 금화 가운데 407). 숫자만 우리가 쓴다
+            var gold = Txt(Node(box, "CHGoldText"), "0", F(40), TextAlignmentOptions.Left);
+            TL2(gold.rectTransform, 442, 54, 258, 56);
+            gold.enableAutoSizing = true;
+            gold.fontSizeMin = F(26);
+            gold.fontSizeMax = F(40);
 
-            // 젬은 시안에 없다(2026-09-29 지시) — 같은 칸 오른쪽 빈자리에 넣는다
-            T(Img(Node(box, "CHGemIcon"), L("gemicon")).rectTransform, 546, 54, 40, 36);
-            var gem = Txt(Node(box, "CHGemText"), "0", F(38), TextAlignmentOptions.Left);
-            TL2(gem.rectTransform, 576, 54, 150, 50);
+            // 다이아 — 시안에는 칸이 하나뿐이라 **같은 칸을 하나 더 떠서** 왼쪽에 놓는다.
+            // 9-슬라이스라 좁혀도 양 끝 장식이 안 뭉개진다.
+            var gemPill = Img(Node(box, "CHGemPill"), P("ch_pill"));
+            gemPill.type = Image.Type.Sliced;
+            T(gemPill.rectTransform, 242, 54, 252, 80);
+            TR(Img(Node(gemPill.transform, "CHGemIcon"), L("gemicon")).rectTransform,
+               242, 54, 150, 54, 42, 38);
+            var gem = Txt(Node(gemPill.transform, "CHGemText"), "0", F(34), TextAlignmentOptions.Left);
+            TLR(gem.rectTransform, 242, 54, 180, 54, 172, 50);
+            gem.enableAutoSizing = true;
+            gem.fontSizeMin = F(22);
+            gem.fontSizeMax = F(34);
         }
 
         // ── 챕터 칸 ────────────────────────────────────────
