@@ -34,6 +34,7 @@ namespace Game.EditorTools
         private const string DefaultRes = "Assets/BaseResource/InGameMainUI";
         private const string HostSelectRes = "Assets/BaseResource/HostSelectPanel";
         private const string CardRes = "Assets/BaseResource/Card";
+        private const string PortraitRes = "Assets/BaseResource/Growth/Portraits";
         private const string AtlasDir = "Assets/BundleResource/Atlas";
 
         [MenuItem("Tools/Game/납품 반영 (_exchange/in)")]
@@ -261,6 +262,11 @@ namespace Game.EditorTools
             //   다만 이것은 **갈 자리가 분명한** 그림이라 여기서 먼저 잡아 준다 —
             //   방마다 한 장씩 불러오고 넘어가면 놓아 주는, 방 바닥과 같은 규칙이다.
             if (name.StartsWith("obj_python_wall")) return new[] { $"{RoomFloorRes}/{name}" };
+
+            // 호스트 카드 일러스트(`portrait_*`) — 육성·호스트 선택 카드에서 쓴다.
+            // 통과본 `portrait_gangster` 만 `existing` 이 잡아 주고 나머지 22장은
+            // 처음 오는 이름이라 기본값(인게임)으로 흐른다.
+            if (name.StartsWith("portrait_")) return new[] { $"{PortraitRes}/{name}" };
 
             // 인게임 HUD 부품·이펙트 — 새 이름은 `existing` 이 못 잡아 기본값으로 흐른다.
             if (name.StartsWith("hud_") || name.StartsWith("fx_"))
