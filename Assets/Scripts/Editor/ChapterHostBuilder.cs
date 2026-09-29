@@ -34,7 +34,23 @@ namespace Game.Editor
 
         /// <summary>시안(1024 폭) → 게임 판(720 폭) 배율.</summary>
         private const float S = 720f / 1024f;
-        private const float DesignW = 1024f, DesignH = 1536f;
+        private const float DesignW = 1024f;
+
+        // ── 화면 비율 맞추기 ────────────────────────────────
+        // 시안 1024x1536(2:3)을 720 폭에 맞추면 세로가 1080 이라 **위아래 100 씩 검게 빈다.**
+        // 배경 굽는 쪽(`makescreenbg.py`)에서 **그림 안쪽 빈 벽 띠 두 곳**을 142 씩 늘려
+        // 1024x1820 으로 만든다 — 그래야 상단 바와 「도전하기」가 화면 끝에 붙는다.
+        // 여기서는 그 늘어난 만큼 **시안 y 좌표를 밀어 준다.** 코드에는 계속 시안 픽셀을 적는다.
+        private const float GrowTop = 200f, GrowBottom = 84f;
+        private const float SeamTop = 115f;      // 상단 바 아래 벽 띠 (시안 100~131)
+        private const float SeamBottom = 1241f;  // 호스트 판 아래 벽 띠 (시안 1234~1249)
+        private const float DesignH = 1536f + GrowTop + GrowBottom;
+        private const float PadX = 176f;         // 배경을 좌우로 이어 그린 폭 (태블릿용)
+
+        /// <summary>시안 y → 늘린 판의 y. 띠 안에는 노드가 없으므로 경계는 띠 한가운데로 잡는다.</summary>
+        private static float Y(float ty) => ty < SeamTop ? ty
+                                          : ty < SeamBottom ? ty + GrowTop
+                                          : ty + GrowTop + GrowBottom;
 
         private static TMP_FontAsset s_font;
 
@@ -72,9 +88,10 @@ namespace Game.Editor
 
             var box = Content(panel, "CHContent");
 
-            // 화면 = 시안 그림 한 장. 720 폭에 맞추면 세로 1080 이 되어 위아래가 100 씩 남는다.
+            // 화면 = 시안 그림 한 장. 벽 띠를 늘려 화면(9:16)을 꽉 채운 판이다.
+            // ⚠ 이 한 장만은 **밀지 않는다** — 늘린 판 자체라 이미 제자리다.
             var screen = Img(Node(box, "CHScreen"), P("ch_screen"));
-            T(screen.rectTransform, DesignW / 2f, DesignH / 2f, DesignW, DesignH);
+            Center(screen.rectTransform, 0f, 0f, (DesignW + 2f * PadX) * S, DesignH * S);
 
             TopBar(box);
             ChapterBox(box);
@@ -92,25 +109,39 @@ namespace Game.Editor
             Hit(box, "CHMailButton", 805, 52, 78, 72);
             Hit(box, "CHSettingsButton", 945, 54, 86, 78);
 
-            // 골드 — 칸과 금화는 시안 것이다(칸 x 371~711 · 금화 가운데 407). 숫자만 우리가 쓴다
-            var gold = Txt(Node(box, "CHGoldText"), "0", F(40), TextAlignmentOptions.Left);
-            TL2(gold.rectTransform, 442, 54, 258, 56);
-            gold.enableAutoSizing = true;
-            gold.fontSizeMin = F(26);
-            gold.fontSizeMax = F(40);
+            // 재화 칸 둘 — 시안 칸(ch_pill)을 두 개 그린다. 9-슬라이스라 폭을 바꿔도 끝 장식이 산다.
+            // ⚠ **빼곡하지 않게.** 칸 사이 24, 아이콘과 글자 사이 20, 글자 뒤 여백 28 을 둔다
+            //   (2026-09-30 지시 — 붙어 있어 답답하다).
+            Pill(box, "CHGemPill", "CHGemIcon", "CHGemText", L("gemicon"), 130, 402, 44, 40);
+            Pill(box, "CHGoldPill", "CHGoldIcon", "CHGoldText", L("goldicon"), 426, 722, 46, 46);
+        }
 
-            // 다이아 — 시안에는 칸이 하나뿐이라 **같은 칸을 하나 더 떠서** 왼쪽에 놓는다.
-            // 9-슬라이스라 좁혀도 양 끝 장식이 안 뭉개진다.
-            var gemPill = Img(Node(box, "CHGemPill"), P("ch_pill"));
-            gemPill.type = Image.Type.Sliced;
-            T(gemPill.rectTransform, 242, 54, 252, 80);
-            TR(Img(Node(gemPill.transform, "CHGemIcon"), L("gemicon")).rectTransform,
-               242, 54, 150, 54, 42, 38);
-            var gem = Txt(Node(gemPill.transform, "CHGemText"), "0", F(34), TextAlignmentOptions.Left);
-            TLR(gem.rectTransform, 242, 54, 180, 54, 172, 50);
-            gem.enableAutoSizing = true;
-            gem.fontSizeMin = F(22);
-            gem.fontSizeMax = F(34);
+        /// <summary>
+        /// 재화 칸 한 개. 시안에서 뜬 빈 칸(ch_pill)을 9-슬라이스로 늘려 쓴다.
+        /// 좌우 끝(x0·x1)을 시안 픽셀로 받아 **안쪽 여백을 넉넉히** 잡는다 —
+        /// 아이콘 왼쪽 30 · 아이콘과 숫자 사이 20 · 숫자 뒤 28.
+        /// </summary>
+        private static void Pill(Transform box, string pillName, string iconName, string textName,
+                                 Sprite icon, float x0, float x1, float iconW, float iconH)
+        {
+            const float PillY = 54f, PillH = 84f;
+            const float PadLeft = 30f, Gap = 20f, PadRight = 28f;
+
+            float cx = (x0 + x1) / 2f;
+            var pill = Img(Node(box, pillName), P("ch_pill"));
+            pill.type = Image.Type.Sliced;
+            T(pill.rectTransform, cx, PillY, x1 - x0, PillH);
+
+            float iconCx = x0 + PadLeft + iconW / 2f;
+            TR(Img(Node(pill.transform, iconName), icon).rectTransform,
+               cx, PillY, iconCx, PillY, iconW, iconH);
+
+            float textX = iconCx + iconW / 2f + Gap;
+            var t = Txt(Node(pill.transform, textName), "0", F(36), TextAlignmentOptions.Left);
+            TLR(t.rectTransform, cx, PillY, textX, PillY, x1 - PadRight - textX, 52);
+            t.enableAutoSizing = true;
+            t.fontSizeMin = F(20);
+            t.fontSizeMax = F(36);
         }
 
         // ── 챕터 칸 ────────────────────────────────────────
@@ -308,14 +339,32 @@ namespace Game.Editor
                 var e = chapterArts.GetArrayElementAtIndex(ch - 1);
                 var (key, nameEn) = BossOfChapter(bossSo, ch);
                 e.FindPropertyRelative("BossName").stringValue = nameEn;
-                e.FindPropertyRelative("BossPortrait").objectReferenceValue =
-                    Spr($"{UnitDir}/{key}/unit_{key}_e.png");
+                e.FindPropertyRelative("BossPortrait").objectReferenceValue = BossFace(key);
                 e.FindPropertyRelative("Chest").objectReferenceValue = ChestOfChapter(ch);
                 e.FindPropertyRelative("ChestLabel").stringValue = ChestLabelOfChapter(ch);
                 chapterArt.GetArrayElementAtIndex(ch - 1).objectReferenceValue =
                     Spr($"{PartsDir}/ch_art_{ch}.png");
             }
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// 보스 얼굴. 동쪽(`_e`) 그림이 없는 보스도 있다 — 파이썬은 남쪽(`_s`)뿐이다.
+        /// 없으면 남쪽 · 그것도 없으면 그 보스 폴더의 아무 그림이나 쓴다(빈 칸보다 낫다).
+        /// </summary>
+        private static Sprite BossFace(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            var dir = $"{UnitDir}/{key}";
+            var face = Spr($"{dir}/unit_{key}_e.png") ?? Spr($"{dir}/unit_{key}_s.png");
+            if (face != null || !Directory.Exists(dir)) return face;
+
+            foreach (var f in Directory.GetFiles(dir, "*.png"))
+            {
+                var s = Spr(f.Replace(Path.DirectorySeparatorChar, '/'));
+                if (s != null) return s;
+            }
+            return null;
         }
 
         private static (string key, string nameEn) BossOfChapter(SerializedObject bossSo, int chapter)
@@ -347,26 +396,26 @@ namespace Game.Editor
 
         private static RectTransform T(RectTransform r, float tx, float ty, float tw, float th)
         {
-            Center(r, (tx - DesignW / 2f) * S, (DesignH / 2f - ty) * S, tw * S, th * S);
+            Center(r, (tx - DesignW / 2f) * S, (DesignH / 2f - Y(ty)) * S, tw * S, th * S);
             return r;
         }
 
         /// <summary>화면 기준, 왼쪽 끝을 맞춘다(왼쪽 정렬 글자).</summary>
         private static RectTransform TL2(RectTransform r, float tx, float ty, float tw, float th)
         {
-            Left(r, (tx - DesignW / 2f) * S, (DesignH / 2f - ty) * S, tw * S, th * S);
+            Left(r, (tx - DesignW / 2f) * S, (DesignH / 2f - Y(ty)) * S, tw * S, th * S);
             return r;
         }
 
         private static RectTransform TR(RectTransform r, float px, float py, float tx, float ty, float tw, float th)
         {
-            Center(r, (tx - px) * S, (py - ty) * S, tw * S, th * S);
+            Center(r, (tx - px) * S, (Y(py) - Y(ty)) * S, tw * S, th * S);
             return r;
         }
 
         private static RectTransform TLR(RectTransform r, float px, float py, float tx, float ty, float tw, float th)
         {
-            Left(r, (tx - px) * S, (py - ty) * S, tw * S, th * S);
+            Left(r, (tx - px) * S, (Y(py) - Y(ty)) * S, tw * S, th * S);
             return r;
         }
 
