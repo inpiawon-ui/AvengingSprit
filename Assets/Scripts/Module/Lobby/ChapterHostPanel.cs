@@ -296,8 +296,33 @@ namespace Game.Module.Lobby
 
         // ── 그리기 ───────────────────────────────────────────
 
+        /// <summary>
+        /// 배경에서 빼낸 **붙박이 글자**를 지금 언어로 채운다.
+        ///
+        /// 예전에는 이 글자들이 화면 그림에 박혀 있었다 — 일본 납품이라 번역이 안 됐다(2026-10-01).
+        /// 번역이 없으면 `FromTable` 이 여기 적은 한국어 원문을 그대로 돌려준다.
+        /// </summary>
+        private void RefreshLabels()
+        {
+            _ui.SetText("CHChapterLabel", Localize.FromTable("ui.chapterhost.chapter", "CHAPTER"));
+            _ui.SetText("CHBossLabel", Localize.FromTable("ui.chapterhost.boss", "BOSS"));
+            _ui.SetText("CHRewardLabel", Localize.FromTable("ui.chapterhost.reward", "클리어 보상"));
+            _ui.SetText("CHHostTitle", Localize.FromTable("ui.chapterhost.hosttitle", "호스트 선택"));
+            _ui.SetText("CHHostNote",
+                        Localize.FromTable("ui.chapterhost.ownedonly", "보유한 호스트만 선택 가능합니다."));
+            _ui.SetText("CHRandomTitle", Localize.FromTable("ui.chapterhost.random", "랜덤 선택"));
+            _ui.SetText("CHRandomDesc1",
+                        Localize.FromTable("ui.chapterhost.randomdesc1",
+                                           "모든 호스트 중 하나가 랜덤으로 선택됩니다."));
+            _ui.SetText("CHRandomDesc2",
+                        Localize.FromTable("ui.chapterhost.randomdesc2",
+                                           "낮은 확률로 전설 호스트 등장!"));
+            _ui.SetText("CHStartLabel", Localize.FromTable("ui.chapterhost.start", "도전하기") + " \u25B6");
+        }
+
         private void RefreshAll()
         {
+            RefreshLabels();
             RefreshCurrency();
             RefreshChapter();
             RefreshHosts();
@@ -329,6 +354,7 @@ namespace Game.Module.Lobby
                 if (_chapterArt != null && i < _chapterArt.Length && _chapterArt[i] != null)
                     art.sprite = _chapterArt[i];
                 art.color = ChapterOpen ? Color.white : new Color(0.45f, 0.45f, 0.5f);
+                FillBox(art);
             }
             _ui.SetActive("CHLockIcon", !ChapterOpen);
 
@@ -357,6 +383,31 @@ namespace Game.Module.Lobby
                 chest.preserveAspect = true;
             }
             _ui.SetText("CHRewardChestText", ca.ChestLabel ?? string.Empty);
+        }
+
+        /// <summary>
+        /// 그림을 **액자에 꽉 채운다**(cover). 넘치는 쪽은 `RectMask2D` 가 자른다.
+        ///
+        /// `preserveAspect` 는 반대로 **안에 맞춰 넣어서**(contain) 위아래나 좌우에
+        /// 빈 띠가 생긴다 — 시안은 그림이 액자 끝까지 차 있는데 게임에서는 그림만
+        /// 동동 떠 보였다(2026-10-01 지적).
+        /// </summary>
+        private static void FillBox(Image img)
+        {
+            var sprite = img.sprite;
+            var box = img.rectTransform.parent as RectTransform;
+            if (sprite == null || box == null) return;
+
+            img.preserveAspect = false;
+            float bw = box.rect.width, bh = box.rect.height;
+            if (bw <= 1f || bh <= 1f) return;
+
+            var s = sprite.rect;
+            float scale = Mathf.Max(bw / s.width, bh / s.height);   // 둘 중 **큰 쪽** = 꽉 채우기
+            img.rectTransform.anchorMin = img.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            img.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            img.rectTransform.anchoredPosition = Vector2.zero;
+            img.rectTransform.sizeDelta = new Vector2(s.width * scale, s.height * scale);
         }
 
         /// <summary>

@@ -116,6 +116,37 @@ namespace Game.Editor
         }
 
         /// <summary>재화 숫자 한 칸. 칸·아이콘은 시안 것이고 숫자만 왼쪽 정렬로 얹는다.</summary>
+        /// <summary>
+        /// 배경에서 빼낸 **붙박이 글자** 한 칸. 값이 아니라 화면 문구다.
+        ///
+        /// 일본 납품이라 그림에 박힌 글자는 번역할 수 없다 — 전부 여기로 뺀다(2026-10-01).
+        /// 실제 문구는 `ChapterHostPanel` 이 `Localize.FromTable` 로 채운다.
+        /// </summary>
+        private static TextMeshProUGUI Label(Transform box, string name, string sample,
+                                             float x, float y, float w, float h, float size,
+                                             TextAlignmentOptions align = TextAlignmentOptions.Left)
+        {
+            var t = Txt(Node(box, name), sample, F(size), align);
+            if (align == TextAlignmentOptions.Right)
+                Right(t.rectTransform, (x - DesignW / 2f) * S, (DesignH / 2f - y) * S, w * S, h * S);
+            else
+                TL2(t.rectTransform, x, y, w, h);
+            t.enableAutoSizing = true;
+            t.fontSizeMin = F(size * 0.55f);
+            t.fontSizeMax = F(size);
+            t.richText = true;
+            return t;
+        }
+
+        /// <summary>오른쪽 끝을 맞춘다(오른쪽 정렬 글자).</summary>
+        private static void Right(RectTransform r, float x, float y, float w, float h)
+        {
+            r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
+            r.pivot = new Vector2(1f, 0.5f);
+            r.anchoredPosition = new Vector2(x, y);
+            r.sizeDelta = new Vector2(w, h);
+        }
+
         private static void Num(Transform box, string name, float x, float y, float w)
         {
             var t = Txt(Node(box, name), "0", F(34), TextAlignmentOptions.Left);
@@ -133,9 +164,13 @@ namespace Game.Editor
             Hit(box, "CHPrevButton", 109, 279, 68, 68);
             Hit(box, "CHNextButton", 455, 279, 68, 68);
 
-            // 「CHAPTER」 글자는 시안에 있다(x 148~330). 번호만 쓴다(x 333~403 · y 239~286)
+            // 「CHAPTER」 도 번역해야 하므로 코드 글자다 (시안 x 153~335 · y 246~284)
+            Label(box, "CHChapterLabel", "CHAPTER", 152, 263, 166, 54, 42)
+                .color = new Color(0.78f, 0.86f, 0.96f);
+
+            // 번호 (x 333~403 · y 239~286)
             var no = Txt(Node(box, "CHChapterNoText"), "01", F(54), TextAlignmentOptions.Left);
-            TL2(no.rectTransform, 331, 272, 120, 68);
+            TL2(no.rectTransform, 331, 263, 92, 58);
             no.color = new Color(0.36f, 0.78f, 1f);
 
             // 챕터 이름 — 실측 y 325~410
@@ -164,7 +199,11 @@ namespace Game.Editor
             var portrait = Img(Node(box, "CHBossPortrait"), null);
             portrait.preserveAspect = true;
             T(portrait.rectTransform, 167, 727, 158, 158);
-            // 「BOSS」 는 시안 글자(y 672~705). 보스 이름만 그 아래(y 740~775)에 쓴다
+            // 「BOSS」·「클리어 보상」 도 코드 글자다. 해골 아이콘(x 277~310)만 시안 것을 쓴다
+            Label(box, "CHBossLabel", "BOSS", 324, 683, 92, 50, 38);
+            Label(box, "CHRewardLabel", "클리어 보상", 485, 675, 170, 54, 36);
+
+            // 보스 이름 (y 735~757)
             var bossName = Txt(Node(box, "CHBossNameText"), "", F(34), TextAlignmentOptions.Left);
             TL2(bossName.rectTransform, 278, 756, 180, 48);
             bossName.enableAutoSizing = true;
@@ -194,6 +233,11 @@ namespace Game.Editor
         private static void HostBox(Transform box)
         {
             // 실측 — 첫 칸 x 85 · 폭 144 · 사이 10 · 여섯 장 914 · 카드 가운데 y 1099
+            // 머리말도 코드 글자다 — 노란 막대(x 68~80)와 청록 점(x 835~855)만 시안 것
+            Label(box, "CHHostTitle", "호스트 선택", 110, 922, 330, 54, 38);
+            Label(box, "CHHostNote", "보유한 호스트만 선택 가능합니다.", 1004, 922, 252, 44, 24,
+                  TextAlignmentOptions.Right).color = new Color(0.78f, 0.86f, 0.96f);
+
             // 실측(v6) — 첫 칸 x 82 · 폭 142 · 사이 12 · 카드 가운데 y 1145
             var view = T(Node(box, "CHHostViewport"), 540, 1145, 914, 360);
             view.gameObject.AddComponent<RectMask2D>();
@@ -273,6 +317,11 @@ namespace Game.Editor
             // 실측(v6) — 랜덤 판 y 1347~1608 / 버튼 노란판 x 272~800 · y 1730~1855
             var random = T(Node(box, "CHRandomCard"), 540, 1478, 960, 252);
             Btn(random);
+            // 랜덤 칸 문구 셋도 코드 글자다 (시안 x 238~ · y 1415 / 1475 / 1521)
+            Label(box, "CHRandomTitle", "랜덤 선택", 341, 1425, 300, 50, 38);
+            Label(box, "CHRandomDesc1", "모든 호스트 중 하나가 랜덤으로 선택됩니다.", 341, 1482, 590, 44, 32);
+            Label(box, "CHRandomDesc2", "낮은 확률로 전설 호스트 등장!", 341, 1528, 590, 44, 32);
+
             var check = Img(Node(random, "RandomCheck"), P("ch_check"));
             check.preserveAspect = true;
             TR(check.rectTransform, 540, 1478, 975, 1382, 48, 48);
@@ -281,6 +330,10 @@ namespace Game.Editor
             Btn(start);
             // 실측 — 동전 x 305~365(가운데 335) · 값 글자 x 378~481 · 구분선 506
             TR(Img(Node(start, "CHStartCostIcon"), L("goldicon")).rectTransform, 536, 1792, 335, 1792, 62, 62);
+            // 「도전하기 ▶」 도 코드 글자다 (시안 x 534~760 · y 1765~1825)
+            Label(box, "CHStartLabel", "도전하기 ▶", 530, 1792, 272, 60, 46)
+                .color = new Color(0.20f, 0.13f, 0.03f);
+
             var cost = Txt(Node(start, "CHStartCostText"), "0", F(48), TextAlignmentOptions.Left);
             TLR(cost.rectTransform, 536, 1792, 376, 1792, 122, 58);
             cost.color = new Color(0.20f, 0.13f, 0.03f);

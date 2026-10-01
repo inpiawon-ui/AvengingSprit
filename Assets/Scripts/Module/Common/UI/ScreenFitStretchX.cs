@@ -36,6 +36,14 @@ namespace Game.Module.Common.UI
 
         private void OnEnable() => Apply();
 
+        /// <summary>
+        /// ⚠ `OnRectTransformDimensionsChange` 는 **내 칸 크기가 바뀔 때만** 온다.
+        ///   이 상자는 기준 폭으로 고정돼 있어(`ScreenFitLock`) 화면 비율이 바뀌어도
+        ///   내 칸은 그대로다 — 그래서 알림이 오지 않는다(2026-10-01 : 4:3 으로 바꿔도 배율이 1 이었다).
+        ///   부모 폭을 매 프레임 본다. 바뀐 것이 없으면 아무것도 하지 않으니 부담이 없다.
+        /// </summary>
+        private void Update() => Apply();
+
         private void OnRectTransformDimensionsChange() => Apply();
 
         private void Apply()
