@@ -6329,11 +6329,11 @@ namespace Game.Module.InGame
             // 취약 창 보너스. 보스에게만 붙는다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * BreakMul(victim)));
             // 상성 — 약점을 찌르면 크게 들어간다. 탄 경로(`ApplyShotHit`)와 같은 자다.
-            damage = WithAffinity(victim, damage, out bool weak);
+            damage = WithAffinity(victim, damage, out bool weak, out bool dull);
             // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
             NoteBossDamage(victim, damage);
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
-            ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak);
+            ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak, dull);
             SpawnFx("hit", victim.Position, HitFxSize);
             Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
@@ -7145,8 +7145,8 @@ namespace Game.Module.InGame
             if (victim.IsBoss && !_bossExposed) return;   // 숨어 있으면 안 맞는다
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * BreakMul(victim)));
             // 상성 — 내 탄만. 적 탄이 나를 맞히는 길은 여기를 안 지난다.
-            bool weak = false;
-            if (shot.FromPlayer) dmg = WithAffinity(victim, dmg, out weak);
+            bool weak = false, dull = false;
+            if (shot.FromPlayer) dmg = WithAffinity(victim, dmg, out weak, out dull);
             NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
             // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
@@ -7170,7 +7170,7 @@ namespace Game.Module.InGame
             if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * (CritMultiplier + CritDamageBonus)));
             if (shot.FromPlayer) dmg = SandboxDamage(dmg);   // Sandbox — 테스트 피해 고정
 
-            ShowDamage(victim.Position, dmg, toEnemy: true, crit, weak);
+            ShowDamage(victim.Position, dmg, toEnemy: true, crit, weak, dull);
             if (shot.FromPlayer)
             {
                 GameSound.Cue("hit.enemy");
@@ -7794,11 +7794,13 @@ namespace Game.Module.InGame
             => ShowDamage(at, damage, toEnemy, crit, false);
 
         /// <param name="weak">약점을 찔렀다 — 치명타처럼 크게, 초록으로 뜬다.</param>
-        private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak)
+        /// <param name="dull">안 맞는 몸으로 때렸다 — 작고 흐리게 뜬다(치명타면 치명타가 이긴다).</param>
+        private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak, bool dull = false)
         {
             if (damage <= 0) return;
             var t = RentDamageText();
             if (t == null) return;
+            if (dull && !crit) { t.ShowMinor(at, damage.ToString(), DullDamageColor); return; }
             var color = weak ? WeakDamageColor
                       : crit ? CritDamageColor
                       : toEnemy ? DamageToEnemy : DamageToPlayer;

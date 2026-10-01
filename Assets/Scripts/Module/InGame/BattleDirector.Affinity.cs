@@ -58,6 +58,16 @@ namespace Game.Module.InGame
         public const float WeakDamageMul = 2.0f;
 
         /// <summary>
+        /// 약점이 맞을 때 / 안 맞을 때의 피해 배율 (기획 2026-10-01 「맞으면 100%, 아니면 70%」).
+        ///
+        /// 2배로 «더 주는» 대신 **안 맞으면 덜 들어가게** 한다 — 맞는 몸이 기준이고
+        /// 안 맞는 몸은 답답해야 「여기는 이 몸이 아니구나」가 손에 온다.
+        /// 위 `WeakDamageMul` 은 이 규칙으로 바뀌면서 쓰지 않는다(견주려고 남겨 둔다).
+        /// </summary>
+        public const float MatchDamageMul = 1.0f;
+        public const float OffDamageMul = 0.7f;
+
+        /// <summary>
         /// 스스로 나온 뒤 다시 들어갈 수 있을 때까지(초). 예전 규칙(1.2초)은 «탈출이 순간이동이
         /// 되지 않게» 였는데, 갈아타는 것이 권장 행동인 지금은 그 시간이 그대로 손해다.
         /// </summary>
@@ -192,14 +202,28 @@ namespace Game.Module.InGame
         /// 약점 보정. 플레이어 공격의 두 길(탄 · 근접/스킬)이 **같은 자**로 잰다.
         /// 터졌으면 이펙트와 소리도 여기서 낸다 — 숫자만 커지면 왜 커졌는지 모른다.
         /// </summary>
-        private int WithAffinity(Unit victim, int damage, out bool weak)
+        /// <param name="weak">약점을 찔렀다 — 제값이 들어간다.</param>
+        /// <param name="dull">약점이 있는 적인데 내 몸이 그 계열이 아니다 — 덜 들어간다.</param>
+        private int WithAffinity(Unit victim, int damage, out bool weak, out bool dull)
         {
-            weak = HitsWeakness(victim);
-            if (!weak) return damage;
-            SpawnFx("weakhit", victim.Position, WeakFxSize);
-            GameSound.Cue("hit.weak");
-            return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.WeakDamageMul));
+            weak = dull = false;
+            if (!AffinityRule.Enabled || _host == null) return damage;
+            var need = WeaknessOf(victim);
+            if (need == Affinity.None) return damage;   // 약점이 없는 적(빼앗을 수 있는 몸)은 그대로
+
+            if (need == MyFamily)
+            {
+                weak = true;
+                SpawnFx("weakhit", victim.Position, WeakFxSize);
+                GameSound.Cue("hit.weak");
+                return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.MatchDamageMul));
+            }
+            dull = true;
+            return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.OffDamageMul));
         }
+
+        /// <summary>안 맞는 몸으로 때린 숫자 — 작고 흐리게. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
+        private static readonly Color DullDamageColor = new(0.62f, 0.66f, 0.72f, 0.9f);
 
         private const float WeakFxSize = 150f;
 
