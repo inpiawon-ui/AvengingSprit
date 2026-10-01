@@ -216,10 +216,63 @@ namespace Game.Module.InGame
                 weak = true;
                 SpawnFx("weakhit", victim.Position, WeakFxSize);
                 GameSound.Cue("hit.weak");
+                StrongHitReaction(victim);
                 return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.MatchDamageMul));
             }
             dull = true;
             return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.OffDamageMul));
+        }
+
+        // ── 타격 반응 (2026-10-01) ──────────────────────────────
+        //
+        // 「세게 들어간다 / 덜 들어간다」는 숫자가 아니라 **맞은 쪽의 반응**에서 온다.
+        // 아이콘·방패·말풍선은 캐릭터마다 따로 맞춰야 하지만, 반응은 어떤 적에게도 똑같이 먹힌다.
+        //
+        //   맞는 몸   — 뒤로 밀리고, 하던 공격이 끊기고, 잠깐 굳는다. 화면이 멈칫하고 흔들린다.
+        //   안 맞는 몸 — 맞아도 꿈쩍 않고 그대로 걸어온다. 불똥만 작게 튀고 「팅」 소리가 난다.
+
+        /// <summary>안 맞는 몸으로 때리는 중인가. 맞기 **전에** 묻는다 — 움찔할지 말지가 여기서 갈린다.</summary>
+        private bool IsDullAgainst(Unit victim)
+        {
+            if (!AffinityRule.Enabled || _host == null) return false;
+            var need = WeaknessOf(victim);
+            return need != Affinity.None && need != MyFamily;
+        }
+
+        private const float DullFxScale = 0.5f;
+        private const float StrongPushMeters = 0.6f;
+        private const float StrongHoldSeconds = 0.28f;
+        private const float StrongHitStop = 0.045f;
+        private const float StrongShake = 4f;
+        /// <summary>연사 몸이 맞힐 때마다 밀면 적이 영영 못 온다 — 적마다 이 간격에 한 번만.</summary>
+        private const float StrongReactCooldown = 0.25f;
+
+        private readonly System.Collections.Generic.Dictionary<Unit, float> _strongReactAt = new();
+        private float _strongStopAt;
+
+        private void StrongHitReaction(Unit victim)
+        {
+            Shake(StrongShake);
+            float now = Time.time;
+            // 멈칫은 화면 전체다 — 여러 마리를 한꺼번에 때려도 한 번만.
+            if (now - _strongStopAt >= StrongReactCooldown) { _strongStopAt = now; HitStop(StrongHitStop); }
+
+            if (victim == null || !victim.IsAlive || victim.IsBoss) return;
+            if (_strongReactAt.TryGetValue(victim, out float last) && now - last < StrongReactCooldown) return;
+            _strongReactAt[victim] = now;
+
+            var me = Avatar;
+            if (me != null)
+            {
+                var away = victim.Position - me.Position;
+                if (away.sqrMagnitude > 0.01f)
+                {
+                    var push = away.normalized * Meters(StrongPushMeters);
+                    victim.Position = ClampedInField(victim, SlideMove(victim, victim.Position, push));
+                }
+            }
+            victim.CancelWindup();
+            victim.HoldHit(StrongHoldSeconds);
         }
 
         /// <summary>안 맞는 몸으로 때린 숫자 — 작고 흐리게. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>

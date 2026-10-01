@@ -6297,7 +6297,8 @@ namespace Game.Module.InGame
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
             victim.IsAggro = true;
-            victim.SetState(EnemyState.Hit);
+            // 상성 — 안 맞는 몸으로 때리면 **움찔하지 않는다.** 맞아도 꿈쩍 않는 것이 「덜 들어간다」다.
+            if (!IsDullAgainst(victim)) victim.SetState(EnemyState.Hit);
             // 저주는 받는 피해를 늘린다. 표시되는 숫자도 늘어난 값이어야 —
             // 저주를 걸어 놓고 숫자가 그대로면 걸린 줄 모른다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.CurseDamageMul));
@@ -6334,8 +6335,9 @@ namespace Game.Module.InGame
             NoteBossDamage(victim, damage);
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
             ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak, dull);
-            SpawnFx("hit", victim.Position, HitFxSize);
-            Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
+            // 안 맞는 몸 — 불똥만 작게 튀고 화면은 안 흔들린다.
+            SpawnFx("hit", victim.Position, dull ? HitFxSize * DullFxScale : HitFxSize);
+            if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
             // 터졌는지 아닌지가 읽혀야지, 25% 냐 45% 냐는 화면에서 구별되지 않는다.
@@ -7123,7 +7125,8 @@ namespace Game.Module.InGame
             // 맞았으면 무조건 반응한다. 사거리가 탐지 거리보다 긴 호스트(히트맨 357)로
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
-            victim.SetState(EnemyState.Hit);
+            // 상성 — 안 맞는 몸으로 때리면 **움찔하지 않는다.** 맞아도 꿈쩍 않는 것이 「덜 들어간다」다.
+            if (!IsDullAgainst(victim)) victim.SetState(EnemyState.Hit);
             int dmg = BouncedDamage(shot, shot.Damage);
             if (dmg <= 0) return;   // 버프 없이 튕긴 탄은 스쳐 지나간다
 
@@ -7173,15 +7176,17 @@ namespace Game.Module.InGame
             ShowDamage(victim.Position, dmg, toEnemy: true, crit, weak, dull);
             if (shot.FromPlayer)
             {
-                GameSound.Cue("hit.enemy");
+                // 안 맞는 몸 — 「팅」 하고 튕기는 소리, 작은 불똥, 흔들림 없음.
+                GameSound.Cue(dull ? "hit.reflect" : "hit.enemy");
                 SpawnFx(crit ? "crit" : "hit", victim.Position,
-                        crit ? CritFxSize : HitFxSize);
-                Shake(crit ? ShakeOnCrit : victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
+                        crit ? CritFxSize : dull ? HitFxSize * DullFxScale : HitFxSize);
+                if (!dull) Shake(crit ? ShakeOnCrit : victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);
             }
             bool dead = victim.TakeDamage(dmg);
             // 원거리 몸이 근접 몹을 맞히면 뒤로 민다(기획 2026-09-16). 적 탄이 나를 맞힐 때는 이 길을 안 지난다.
-            if (!dead && shot.FromPlayer) RangedKnockback(victim);
+            // 상성이 안 맞으면 이 경직도 없다 — 맞으면서 그대로 걸어온다.
+            if (!dead && shot.FromPlayer && !dull) RangedKnockback(victim);
             if (shot.SlowPercent > 0 && Roll(SlowChance))
                 ApplySlowProc(victim);
             if (shot.LifestealPercent > 0 && _host != null && Roll(LeechChance))

@@ -117,6 +117,21 @@ namespace Game.EditorTools
                 // 끄면 진짜로 맞고 죽는다 — 유령 에너지가 얼마나 버티는지 볼 때 쓴다.
                 pilot.KeepAlive = SessionState.GetBool("AffinityDemo.keepAlive", true);
                 PromoPilot.Log.Clear();
+
+                // 타격 반응을 견줄 때 — 1챕터 잡몹은 두세 방에 죽어 반응을 볼 틈이 없다.
+                // 첫 방 잡몹의 체력만 곱해 오래 맞게 한다(빼앗을 수 있는 몸은 그대로).
+                float hpMul = SessionState.GetFloat("AffinityDemo.hpMul", 1f);
+                if (hpMul > 1f && bt.GetField("_enemies", F).GetValue(director) is System.Collections.IList list)
+                {
+                    var hp = typeof(Unit).GetProperty("Hp");
+                    foreach (var o in list)
+                        if (o is Unit u && u != null && u.IsAlive && !u.IsHostBody)
+                        {
+                            int v = Mathf.RoundToInt(u.HpMax * hpMul);
+                            u.SetHpMax(v);
+                            hp.SetValue(u, v);
+                        }
+                }
                 SessionState.SetInt(Key, 3);
                 SessionState.SetInt("AffinityDemo.startFrame", Time.frameCount);
                 _wait = 10;
