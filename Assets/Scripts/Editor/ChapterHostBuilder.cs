@@ -160,16 +160,32 @@ namespace Game.Editor
 
         private static void ChapterBox(Transform box)
         {
-            // 실측(v6) — 챕터 판 y 190~580 · 보스/보상 판 y 617~835
-            Hit(box, "CHPrevButton", 109, 279, 68, 68);
-            Hit(box, "CHNextButton", 455, 279, 68, 68);
+            // ── 챕터 칸 — 시안은 **한 덩어리**다 ────────────────
+            // 스테이지 그림이 칸 전체(x 55~1026 · y 193~578)에 깔리고,
+            // 그 위에 왼쪽 딤이 덮이고, 그 위에 화살표와 글자가 올라간다.
+            // 예전에는 그림을 오른쪽 네모에만 넣고 그 자리를 한 색으로 메웠는데,
+            // 둥근 테두리까지 지워져 스테이지·보스·보상이 따로 노는 것처럼 보였다(2026-10-01).
+            var artBox = T(Node(box, "CHChapterArtBox"), 540.5f, 385.5f, 966, 380);
+            artBox.gameObject.AddComponent<RectMask2D>();
+            var art = Img(Node(artBox, "CHChapterArt"), null);
+            Center(art.rectTransform, 0, 0, 966 * S, 380 * S);
 
-            // 「CHAPTER」 도 번역해야 하므로 코드 글자다 (시안 x 153~335 · y 246~284)
+            // 왼쪽 딤 — 글자가 읽히게. 둥근 모서리도 이 그림이 가린다
+            var dim = Img(Node(artBox, "CHChapterDim"), P("ch_dim"));
+            Center(dim.rectTransform, 0, 0, 966 * S, 380 * S);
+
+            // 화살표는 그림 위에 다시 올린다 (실측 ◀ 가운데 97,266 · ▶ 453,266)
+            Img(Node(box, "CHPrevArrow"), P("ch_arrow_left")).preserveAspect = true;
+            T((RectTransform)box.Find("CHPrevArrow"), 97, 266, 36, 60);
+            Img(Node(box, "CHNextArrow"), P("ch_arrow_right")).preserveAspect = true;
+            T((RectTransform)box.Find("CHNextArrow"), 453, 266, 36, 60);
+            Hit(box, "CHPrevButton", 97, 266, 72, 72);
+            Hit(box, "CHNextButton", 453, 266, 72, 72);
+
+            // 「CHAPTER」·번호 (실측 글자 x 153~313 · 번호 x 333~404 · y 240~286)
             Label(box, "CHChapterLabel", "CHAPTER", 152, 263, 166, 54, 42)
                 .color = new Color(0.78f, 0.86f, 0.96f);
-
-            // 번호 (x 333~403 · y 239~286)
-            var no = Txt(Node(box, "CHChapterNoText"), "01", F(54), TextAlignmentOptions.Left);
+            var no = Txt(Node(box, "CHChapterNoText"), "01", F(50), TextAlignmentOptions.Left);
             TL2(no.rectTransform, 331, 263, 92, 58);
             no.color = new Color(0.36f, 0.78f, 1f);
 
@@ -187,30 +203,24 @@ namespace Game.Editor
             desc.lineSpacing = 12f;
             desc.color = new Color(0.86f, 0.90f, 0.96f);
 
-            // 챕터 그림 — 실측 x 473~1020 · y 192~578
-            var artBox = T(Node(box, "CHChapterArtBox"), 747, 385, 548, 388);
-            artBox.gameObject.AddComponent<RectMask2D>();
-            var art = Img(Node(artBox, "CHChapterArt"), null);
-            art.preserveAspect = true;
-            Center(art.rectTransform, 0, 0, 548 * S, 388 * S);
             T(Img(Node(box, "CHLockIcon"), L("modelockicon")).rectTransform, 747, 385, 150, 180);
 
-            // 보스 얼굴 — 시안의 빈 틀(x 85~250 · y 645~810) 안
+            // ── 보스 칸 · 클리어 보상 칸 (같은 큰 액자 안의 작은 네모 둘) ──
+            // 보스 얼굴은 둥근 틀(x 80~257 · y 654~805) **안쪽**에만 들어간다
             var portrait = Img(Node(box, "CHBossPortrait"), null);
             portrait.preserveAspect = true;
-            T(portrait.rectTransform, 167, 727, 158, 158);
-            // 「BOSS」·「클리어 보상」 도 코드 글자다. 해골 아이콘(x 277~310)만 시안 것을 쓴다
+            T(portrait.rectTransform, 169, 730, 158, 132);
             Label(box, "CHBossLabel", "BOSS", 324, 683, 92, 50, 38);
             Label(box, "CHRewardLabel", "클리어 보상", 485, 675, 170, 54, 36);
 
-            // 보스 이름 (y 735~757)
+            // 보스 이름 (y 740~775)
             var bossName = Txt(Node(box, "CHBossNameText"), "", F(34), TextAlignmentOptions.Left);
             TL2(bossName.rectTransform, 278, 756, 180, 48);
             bossName.enableAutoSizing = true;
             bossName.fontSizeMin = F(18);
             bossName.fontSizeMax = F(34);
 
-            // 클리어 보상 — 「클리어 보상」 글자와 동전(가운데 508,752)은 시안 것
+            // 동전(가운데 508,752)은 시안 것. 값·상자·상자 이름만 낸다
             var gold = Txt(Node(box, "CHRewardGoldText"), "", F(38), TextAlignmentOptions.Left);
             TL2(gold.rectTransform, 552, 757, 228, 52);
             gold.color = new Color(1f, 0.85f, 0.32f);
@@ -220,7 +230,7 @@ namespace Game.Editor
 
             var chest = Img(Node(box, "CHRewardChestIcon"), L("chest_gold"));
             chest.preserveAspect = true;
-            T(chest.rectTransform, 862, 770, 146, 136);
+            T(chest.rectTransform, 864, 763, 146, 132);
             var chestText = Txt(Node(box, "CHRewardChestText"), "", F(30), TextAlignmentOptions.Left);
             TL2(chestText.rectTransform, 938, 760, 92, 44);
             chestText.enableAutoSizing = true;
