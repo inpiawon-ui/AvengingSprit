@@ -58,7 +58,11 @@ namespace Game.Module.InGame
         private bool _loggedBossDown;
         private FieldInfo _fRoomIndex, _fRoomKind;
 
-        private void Mark(string what) => Log.Append(what).Append(':').Append(Time.frameCount).Append(';');
+        /// <summary>「이름:프레임@초;」 — 초는 게임 시간이라 방을 깨는 데 걸린 시간을 견줄 수 있다.</summary>
+        private void Mark(string what) => Log.Append(what).Append(':').Append(Time.frameCount)
+            .Append('@').Append(Time.time.ToString("0.0")).Append(';');
+
+        private bool _loggedClear;
 
         private void LogScene()
         {
@@ -67,6 +71,7 @@ namespace Game.Module.InGame
             {
                 _loggedRoom = room;
                 _loggedBossDown = false;
+                _loggedClear = false;
                 Mark($"room{room + 1}_{_fRoomKind.GetValue(_bd)}");
             }
             string popup = Active("BuffChoicePanel") ? "levelup" : Active("ShrinePanel") ? "angel"
@@ -126,6 +131,11 @@ namespace Game.Module.InGame
             if (enemies != null) for (int i = 0; i < enemies.Count; i++)
                 if (enemies[i] is Unit u && u != null && u.IsAlive) alive++;
 
+            if (alive == 0 && !_loggedClear) { _loggedClear = true; Mark("clear"); }
+
+            // 상성 시험판 — 유리한 몸이 방에 있으면 그리로 갈아탄다(영상에 그 장면이 나오게).
+            if (alive > 0 && SeekAdvantage(me, enemies, dt)) { Unstick(me, dt); return; }
+
             // 유령이면 몸부터 — 빙의가 이 게임의 핵심이다
             if (_fHost.GetValue(_bd) == null && _fPossessTarget.GetValue(_bd) != null)
             {
@@ -137,6 +147,71 @@ namespace Game.Module.InGame
             else Explore(me);
 
             Unstick(me, dt);
+        }
+
+        // ── 상성 — 유리한 몸으로 갈아타기 ────────────────────────
+        //
+        // 방에서 가장 많은 약점을 찌르는 몸이 서 있고 내 몸이 그 계열이 아니면,
+        // 잠깐 지켜본 뒤 나와서 그 몸으로 간다. 사람이 「아, 저게 유리하구나」 하고
+        // 갈아타는 순서를 그대로 흉내 낸다.
+
+        /// <summary>끄면 갈아타지 않는다 — 「안 갈아탔을 때」와 견주려고 둔다.</summary>
+        public bool SeekAdvantageOn = true;
+
+        private readonly int[] _weak = new int[6];
+        private float _seekWait;
+        private Unit _seekBody;
+
+        private bool SeekAdvantage(Unit me, IList enemies, float dt)
+        {
+            if (!SeekAdvantageOn || !AffinityRule.Enabled) return false;
+
+            for (int i = 0; i < _weak.Length; i++) _weak[i] = 0;
+            for (int i = 0; i < enemies.Count; i++)
+                if (enemies[i] is Unit u && u != null && u.IsAlive && !u.IsHostBody)
+                    _weak[(int)AffinityRule.WeaknessOf(u.Key)] += u.IsBoss ? 100 : 1;
+            int best = 0;
+            for (int i = 1; i < _weak.Length; i++) if (_weak[i] > best) best = _weak[i];
+            if (best == 0) { _seekBody = null; return false; }
+
+            var host = _fHost.GetValue(_bd) as Unit;
+            if (host != null)
+            {
+                var mine = AffinityRule.FamilyOf(host.Key);
+                if (mine != Affinity.None && _weak[(int)mine] == best) { _seekBody = null; return false; }
+            }
+
+            Unit want = null; float wd = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+                if (enemies[i] is Unit u && u != null && u.IsAlive && u.IsHostBody && !u.RepossessBanned)
+                {
+                    var f = AffinityRule.FamilyOf(u.Key);
+                    if (f == Affinity.None || _weak[(int)f] != best) continue;
+                    float d = (u.Position - me.Position).sqrMagnitude;
+                    if (d < wd) { wd = d; want = u; }
+                }
+            if (want == null) { _seekBody = null; return false; }
+
+            if (want != _seekBody) { _seekBody = want; _seekWait = 0.9f; }   // 표시를 읽는 시간
+            if (_seekWait > 0f) { _seekWait -= dt; return false; }
+
+            if (host != null)
+            {
+                // 몸을 버린다 — 빙의 버튼이 몸이 있을 때는 「나오기」다
+                _bd.TryPossess();
+                Mark("eject");
+                _possessIn = 0.55f;   // 다시 들어갈 수 있게 되는 시간(0.5초)만 기다린다
+                return true;
+            }
+
+            if (ReferenceEquals(_fPossessTarget.GetValue(_bd), want))
+            {
+                _bd.MoveInput = Vector2.zero;
+                _possessIn -= dt;
+                if (_possessIn <= 0f) { _bd.TryPossess(); Mark("possess_adv"); _possessIn = 1.2f; }
+            }
+            else _bd.MoveInput = Toward(me.Position, want.Position);
+            return true;
         }
 
         // ── 막힘 풀기 ──────────────────────────────────────────

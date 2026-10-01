@@ -388,6 +388,10 @@ MonoBehaviour:
     _clipKey: sfx_27
     _thenClipKey: 
     _cutSeconds: 0
+  - _cue: hit.weak
+    _clipKey: sfx_27
+    _thenClipKey: 
+    _cutSeconds: 0
   - _cue: boss.down
     _clipKey: sfx_20
     _thenClipKey: 

@@ -761,6 +761,13 @@ namespace Game.Module.InGame
                 portrait.preserveAspect = true;
                 portrait.gameObject.SetActive(portrait.sprite != null);
             }
+            // 상성 시험판 — 지금 몸의 계열. 모드가 꺼져 있으면 그림이 null 이라 칸이 꺼진다.
+            var affinity = _ui.Get<Image>("HostAffinityIcon");
+            if (affinity != null)
+            {
+                affinity.sprite = _battle != null ? _battle.AffinityIconOf(e.PossessedHostKey) : null;
+                affinity.gameObject.SetActive(affinity.sprite != null);
+            }
             // 액티브 스킬 버튼도 그 몸의 것으로 바꾼다. 23종이 같은 그림이면
             // 무엇을 들고 있는지가 화면에 안 보인다.
             SetSkillButton(e.PossessedHostKey);
@@ -825,6 +832,7 @@ namespace Game.Module.InGame
             _ui.SetText("HostHpText", string.Empty);
             _ui.SetActive("HostPortraitFrame", false);
             _ui.SetActive("HostPortraitImage", false);
+            _ui.SetActive("HostAffinityIcon", false);
             SetSkillButton(null);
         }
 

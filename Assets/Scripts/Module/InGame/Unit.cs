@@ -355,6 +355,10 @@ namespace Game.Module.InGame
             //   잡몹이 계속 유령빛으로 서 있는다.
             IsPhantom = false;
             if (_invulnAura != null) _invulnAura.gameObject.SetActive(false);
+            // 상성 표시도 앞서 쓰던 몸의 것이 남는다 — 해골이 쓰던 약점을 호스트가 물려받으면 안 된다.
+            if (_weakIcon != null) _weakIcon.gameObject.SetActive(false);
+            if (_advMark != null) _advMark.gameObject.SetActive(false);
+            if (_advRing != null) _advRing.gameObject.SetActive(false);
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -581,6 +585,86 @@ namespace Game.Module.InGame
             PossessMark.Locked => new Color(0.55f, 0.58f, 0.66f, 0.75f),
             _ => new Color(0.37f, 0.78f, 1f, 0.95f),
         };
+
+        // ── 상성 표시 (시험판 2026-10-01) ─────────────────────────
+        //
+        // 약점은 **보여야** 쓴다. 적 머리 위에는 «무엇에 약한가», 빼앗을 수 있는 몸에는
+        // «이 몸이 지금 유리하다»를 띄운다. 그림은 `BattleDirector.Affinity` 가 넘긴다.
+
+        private Image _weakIcon, _advMark, _advRing;
+
+        /// <summary>약점 아이콘 크기. 원본 64 를 줄여 쓴다 — 체력 바 위에 얹히는 크기.</summary>
+        private const float WeakIconSize = 34f;
+        /// <summary>납품 그림(48)은 화살이 캔버스의 절반만 찬다 — 조준 링과 같은 눈높이가 되게 키운다.</summary>
+        private const float AdvMarkSize = 56f;
+
+        /// <param name="lit">지금 내 몸이 이 약점을 찌르는가. 찌르면 커지고 뛴다.</param>
+        public void SetWeakIcon(Sprite icon, bool lit, bool show)
+        {
+            bool on = show && icon != null;
+            if (_weakIcon == null)
+            {
+                if (!on) return;
+                _weakIcon = GetOrCreate("WeakIcon", new Vector2(WeakIconSize, WeakIconSize), Vector2.zero);
+                _weakIcon.preserveAspect = true;
+            }
+            if (_weakIcon.gameObject.activeSelf != on) _weakIcon.gameObject.SetActive(on);
+            if (!on) return;
+
+            // 풀에서 돌려 쓰는 몸이라 크기가 바뀐다 — 자리는 매번 다시 잡는다.
+            var size = _rect.sizeDelta;
+            ((RectTransform)_weakIcon.transform).anchoredPosition =
+                new Vector2(0f, size.y * 0.5f + 8f + WeakIconSize * 0.6f);
+            _weakIcon.sprite = icon;
+            _weakIcon.color = lit ? Color.white : new Color(1f, 1f, 1f, 0.82f);
+            float s = lit ? 1.3f + 0.12f * Mathf.Sin(Time.unscaledTime * 9f) : 1f;
+            _weakIcon.transform.localScale = Vector3.one * s;
+        }
+
+        /// <summary>«이 몸이 지금 유리하다». 둘 다 null 이면 끈다.</summary>
+        public void SetAdvantage(Sprite mark, Sprite ring)
+        {
+            bool markOn = mark != null, ringOn = ring != null;
+            if (_advMark != null && _advMark.gameObject.activeSelf != markOn)
+                _advMark.gameObject.SetActive(markOn);
+            if (_advRing != null && _advRing.gameObject.activeSelf != ringOn)
+                _advRing.gameObject.SetActive(ringOn);
+            if (!markOn && !ringOn) return;
+
+            var size = _rect.sizeDelta;
+            float wave = Mathf.Sin(Time.unscaledTime * 5f);
+
+            if (ringOn)
+            {
+                if (_advRing == null)
+                {
+                    _advRing = GetOrCreate("AdvRing", Vector2.one, Vector2.zero);
+                    _advRing.preserveAspect = true;
+                    // 몸 뒤, 그림자 앞 — 발밑에 깔린다.
+                    if (_body != null)
+                        _advRing.transform.SetSiblingIndex(_body.transform.GetSiblingIndex());
+                }
+                var rt = (RectTransform)_advRing.transform;
+                rt.sizeDelta = new Vector2(size.x * 1.5f, size.x * 0.75f);
+                rt.anchoredPosition = new Vector2(0f, -size.y * 0.40f);
+                _advRing.sprite = ring;
+                _advRing.color = new Color(1f, 1f, 1f, 0.8f + 0.2f * wave);
+                _advRing.transform.localScale = Vector3.one * (1f + 0.05f * wave);
+            }
+
+            if (markOn)
+            {
+                if (_advMark == null)
+                {
+                    _advMark = GetOrCreate("AdvMark", new Vector2(AdvMarkSize, AdvMarkSize), Vector2.zero);
+                    _advMark.preserveAspect = true;
+                }
+                // 빙의 조준 링 위에 얹는다. 위아래로 뛰어야 눈에 들어온다.
+                ((RectTransform)_advMark.transform).anchoredPosition =
+                    new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f + AdvMarkSize * 0.9f + 4f * wave);
+                _advMark.sprite = mark;
+            }
+        }
 
         public void SetSprite(Sprite s)
         {

@@ -22,6 +22,23 @@ namespace Game.EditorTools
         private const string BossHpMenu   = "Tools/Game/테스트 — 보스 체력 10배";
         private const string IdleMenu     = "Tools/Game/테스트 — 보스 가만히 (버튼으로만)";
 
+        // ── 상성 모드 (시험판 2026-10-01) ──────────────────────
+        //
+        // 적마다 약점을 두고, 약점에 맞는 몸으로 갈아타면 유리해지는 규칙.
+        // 끄면 예전 규칙 그대로다 — 두 방식을 바꿔 가며 해 보려고 스위치로 둔다.
+        private const string AffinityMenu = "Tools/Game/시험판 — 상성 모드";
+
+        [MenuItem(AffinityMenu)]
+        private static void ToggleAffinity()
+            => AffinityRule.Enabled = !AffinityRule.Enabled;
+
+        [MenuItem(AffinityMenu, true)]
+        private static bool ToggleAffinityValidate()
+        {
+            Menu.SetChecked(AffinityMenu, AffinityRule.Enabled);
+            return true;
+        }
+
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
             => BattleDirector.OneEnemyPerRoom = !BattleDirector.OneEnemyPerRoom;

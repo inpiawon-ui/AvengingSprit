@@ -203,6 +203,7 @@ namespace Game.Editor
                 new("run.shop", "sfx_24"),                   // D4
                 new("hit.enemy", "sfx_19"),
                 new("hit.reflect", "sfx_27"),
+                new("hit.weak", "sfx_27"),                   // 상성 시험판 — 약점 적중. 전용음이 오기 전까지 반사음을 빌린다
                 new("boss.down", "sfx_20", null, 1.5f),      // 원작 대폭발 6초가 이상하게 오래 간다 → 1.5초에서 줄여 끔(기획 2026-09-15)
 
                 // ── 원작에 소리가 없던 순간 — 「없는 것보다 있는 게 낫다」(기획 2026-09-15) ──

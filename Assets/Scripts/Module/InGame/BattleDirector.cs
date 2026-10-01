@@ -774,8 +774,10 @@ namespace Game.Module.InGame
                 int chapterNo = _runChapter;
                 // 방 데이터가 이 자리의 잡몹을 지정했으면 그대로 세운다(손으로 짠 레이아웃).
                 // 안 지정했으면 예전대로 목록을 돌려 쓴다 — 절차 생성 방이 그렇다.
-                var e = isHost ? ActorProfile(s.ActorId, hosts)
-                               : (TrashForSlot(s.ActorId, chapterNo, trashSeq++)
+                // 상성 시험판 — 가르치는 방은 자리는 그대로 두고 누가 서는지만 바꾼다.
+                string actorId = AffinityRule.ActorOverride(room.RoomId, isHost, s.ActorId);
+                var e = isHost ? ActorProfile(actorId, hosts)
+                               : (TrashForSlot(actorId, chapterNo, trashSeq++)
                                   ?? TrashAt(trashSeq++, chapterNo));
                 if (e == null) continue;
 
@@ -2084,6 +2086,7 @@ namespace Game.Module.InGame
             _markArrow = GetSprite("possessmark_arrow");
             _markNextBody1 = GetSprite("possessmark_nextbody_1");
             _markNextBody2 = GetSprite("possessmark_nextbody_2");
+            CacheAffinitySprites();   // 상성 시험판 — 계열 아이콘 · 유리 표시
 
             // 문 4장도 여기서 한 번만 받는다. 여는 연출이 매 프레임 그림을 바꾸므로
             // 그때마다 GetSprite 를 부르면 0.5 초 동안 새 Sprite 가 30개 쌓인다.
@@ -6325,10 +6328,12 @@ namespace Game.Module.InGame
 
             // 취약 창 보너스. 보스에게만 붙는다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * BreakMul(victim)));
+            // 상성 — 약점을 찌르면 크게 들어간다. 탄 경로(`ApplyShotHit`)와 같은 자다.
+            damage = WithAffinity(victim, damage, out bool weak);
             // 가디언 마디 · 「나와 있을 때 때렸는가」를 여기서 센다.
             NoteBossDamage(victim, damage);
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
-            ShowDamage(victim.Position, damage, toEnemy: true);
+            ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak);
             SpawnFx("hit", victim.Position, HitFxSize);
             Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
@@ -7139,6 +7144,9 @@ namespace Game.Module.InGame
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * ScorchMul(victim)));
             if (victim.IsBoss && !_bossExposed) return;   // 숨어 있으면 안 맞는다
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * BreakMul(victim)));
+            // 상성 — 내 탄만. 적 탄이 나를 맞히는 길은 여기를 안 지난다.
+            bool weak = false;
+            if (shot.FromPlayer) dmg = WithAffinity(victim, dmg, out weak);
             NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
             // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
@@ -7162,7 +7170,7 @@ namespace Game.Module.InGame
             if (crit) dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * (CritMultiplier + CritDamageBonus)));
             if (shot.FromPlayer) dmg = SandboxDamage(dmg);   // Sandbox — 테스트 피해 고정
 
-            ShowDamage(victim.Position, dmg, toEnemy: true, crit);
+            ShowDamage(victim.Position, dmg, toEnemy: true, crit, weak);
             if (shot.FromPlayer)
             {
                 GameSound.Cue("hit.enemy");
@@ -7783,11 +7791,18 @@ namespace Game.Module.InGame
             => ShowDamage(at, damage, toEnemy, false);
 
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit)
+            => ShowDamage(at, damage, toEnemy, crit, false);
+
+        /// <param name="weak">약점을 찔렀다 — 치명타처럼 크게, 초록으로 뜬다.</param>
+        private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak)
         {
             if (damage <= 0) return;
             var t = RentDamageText();
             if (t == null) return;
-            t.Show(at, damage, crit ? CritDamageColor : toEnemy ? DamageToEnemy : DamageToPlayer, crit);
+            var color = weak ? WeakDamageColor
+                      : crit ? CritDamageColor
+                      : toEnemy ? DamageToEnemy : DamageToPlayer;
+            t.Show(at, damage, color, crit || weak);
         }
 
         /// <summary>치명타 숫자 색. 평타(흰색)와 한눈에 갈려야 한다.</summary>
@@ -7908,11 +7923,12 @@ namespace Game.Module.InGame
                 }
             }
             RefreshPossessMarks(from);
+            RefreshAffinityMarks();   // 상성 시험판 — 약점 아이콘 · 유리한 몸
 
             // 몸이 있으면 버튼은 언제나 누를 수 있는 **탈출**이다. 값(-15%)을 함께 적는다.
             bool has = _host != null || _possessTarget != null;
             int cost = _host != null
-                ? Mathf.Max(1, GhostHpMax * _config.GhostLeaveCostPercent / 100) : 0;
+                ? Mathf.Max(1, GhostHpMax * LeaveCostPercent / 100) : 0;
             // 놓아준 직후의 짧은 잠금 동안에는 대상이 있어도 못 누른다.
             bool blocked = _host == null && _repossessLock > 0f;
             if (has == _hadPossessTarget && cost == _hadPossessCost
@@ -8287,7 +8303,7 @@ namespace Game.Module.InGame
             _channelBody = null;
 
             EnterHost(_channelEntry, _channelKey, _channelName, _channelTo,
-                      _config.HostStartHpPercent);
+                      PossessStartHpPercent);
             _channelEntry = null;
         }
 
@@ -8301,6 +8317,9 @@ namespace Game.Module.InGame
         /// </summary>
         private void LeaveHost()
         {
+            // 상성 시험판 — 버린 몸은 적으로 돌아가지 않고 그 자리에서 쓰러진다.
+            if (AffinityRule.Enabled) { LeaveHostCollapse(); return; }
+
             var body = _host;
             if (body == null) return;
 
