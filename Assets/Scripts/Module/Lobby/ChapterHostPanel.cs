@@ -304,7 +304,6 @@ namespace Game.Module.Lobby
         /// </summary>
         private void RefreshLabels()
         {
-            _ui.SetText("CHChapterLabel", Localize.FromTable("ui.chapterhost.chapter", "CHAPTER"));
             _ui.SetText("CHBossLabel", Localize.FromTable("ui.chapterhost.boss", "BOSS"));
             _ui.SetText("CHRewardLabel", Localize.FromTable("ui.chapterhost.reward", "클리어 보상"));
             _ui.SetText("CHHostTitle", Localize.FromTable("ui.chapterhost.hosttitle", "호스트 선택"));
@@ -341,8 +340,12 @@ namespace Game.Module.Lobby
         private void RefreshChapter()
         {
             int i = _chapter - 1;
-            // 「CHAPTER」 글자는 화면 그림에 이미 있다 — 번호만 쓴다
-            _ui.SetText("CHChapterNoText", $"{_chapter:00}");
+            // 「CHAPTER」와 번호는 **한 글자칸**이다. 따로 두면 가로로 늘어나는 화면(4:3)에서
+            // 글자는 제 폭을 지키고 자리만 벌어져 둘 사이가 뜬다(2026-10-01).
+            _ui.SetText("CHChapterLabel",
+                        $"{Localize.FromTable("ui.chapterhost.chapter", "CHAPTER")} "
+                        + $"<size=122%><color=#5CC7FF>{_chapter:00}</color></size>");
+            _ui.SetText("CHChapterNoText", string.Empty);
             _ui.SetText("CHChapterNameText", Localize.Get($"stage.{_chapter}.1.name"));
             _ui.SetText("CHChapterDescText",
                         Localize.FromTable($"chapter.{_chapter}.desc",

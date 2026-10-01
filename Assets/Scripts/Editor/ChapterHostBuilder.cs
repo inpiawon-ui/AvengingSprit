@@ -52,6 +52,13 @@ namespace Game.Editor
         /// </summary>
         private const float PadX = 0f, PadY = 240f;
 
+        private static readonly string[] KeepAspectNames =
+        {
+            "CardThumb", "CardStar", "CardPowerIcon", "CardCheck", "RandomCheck",
+            "CHBossPortrait", "CHRewardChestIcon", "CHStartCostIcon",
+            "CHPrevArrow", "CHNextArrow", "CHLockIcon",
+        };
+
         private static TMP_FontAsset s_font;
 
         [MenuItem("Tools/Game/챕터·호스트 선택 창 세우기")]
@@ -96,6 +103,15 @@ namespace Game.Editor
             ChapterBox(box);
             HostBox(box);
             BottomRow(box);
+
+            // 4:3 에서 가로로 늘릴 때 **캐릭터 그림·아이콘은 찌그러뜨리지 않는다**(글자는 자동)
+            foreach (var img in panel.GetComponentsInChildren<Image>(true))
+                foreach (var prefix in KeepAspectNames)
+                    if (img.name.StartsWith(prefix))
+                    {
+                        img.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitKeepAspect>();
+                        break;
+                    }
 
             return panel.gameObject.AddComponent<ChapterHostPanel>();
         }
@@ -189,7 +205,7 @@ namespace Game.Editor
             Hit(box, "CHNextButton", 453, 266, 72, 72);
 
             // 「CHAPTER」·번호 (실측 글자 x 153~313 · 번호 x 333~404 · y 240~286)
-            Label(box, "CHChapterLabel", "CHAPTER", 152, 263, 166, 54, 42)
+            Label(box, "CHChapterLabel", "CHAPTER", 152, 263, 280, 62, 42)
                 .color = new Color(0.78f, 0.86f, 0.96f);
             var no = Txt(Node(box, "CHChapterNoText"), "01", F(50), TextAlignmentOptions.Left);
             TL2(no.rectTransform, 331, 263, 92, 58);
@@ -236,9 +252,9 @@ namespace Game.Editor
 
             var chest = Img(Node(box, "CHRewardChestIcon"), L("chest_gold"));
             chest.preserveAspect = true;
-            T(chest.rectTransform, 864, 763, 146, 132);
+            T(chest.rectTransform, 846, 763, 128, 122);
             var chestText = Txt(Node(box, "CHRewardChestText"), "", F(30), TextAlignmentOptions.Left);
-            TL2(chestText.rectTransform, 938, 760, 92, 44);
+            TL2(chestText.rectTransform, 914, 760, 100, 44);
             chestText.enableAutoSizing = true;
             chestText.fontSizeMin = F(12);
             chestText.fontSizeMax = F(30);

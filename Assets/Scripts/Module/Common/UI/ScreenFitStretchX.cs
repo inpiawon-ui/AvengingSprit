@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Module.Common.UI
@@ -26,6 +28,8 @@ namespace Game.Module.Common.UI
         private RectTransform _self;
         private RectTransform _parent;
         private float _applied = -1f;
+        private readonly List<TMP_Text> _texts = new();
+        private readonly List<ScreenFitKeepAspect> _keeps = new();
 
         private void Awake()
         {
@@ -72,6 +76,22 @@ namespace Game.Module.Common.UI
 
             _applied = scale;
             _self.localScale = new Vector3(scale, 1f, 1f);
+            KeepAspect(1f / scale);
+        }
+
+        /// <summary>
+        /// 글자와 「찌그러뜨리지 마라」 표시가 붙은 그림은 **거꾸로 줄여** 제 비율을 지킨다.
+        /// 자리는 판과 같이 벌어지고, 모양만 그대로다. 배율이 바뀔 때만 돈다.
+        /// </summary>
+        private void KeepAspect(float inverse)
+        {
+            var keep = new Vector3(inverse, 1f, 1f);
+            GetComponentsInChildren(true, _texts);
+            for (int i = 0; i < _texts.Count; i++) _texts[i].rectTransform.localScale = keep;
+            GetComponentsInChildren(true, _keeps);
+            for (int i = 0; i < _keeps.Count; i++) _keeps[i].transform.localScale = keep;
+            _texts.Clear();
+            _keeps.Clear();
         }
     }
 }
