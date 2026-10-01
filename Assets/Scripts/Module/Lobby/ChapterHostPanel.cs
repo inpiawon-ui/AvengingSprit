@@ -559,14 +559,14 @@ namespace Game.Module.Lobby
     {
         // ⚠ 시안이 **9:16(1080x1920)** 으로 다시 그려졌다(2026-10-01).
         //   2:3 시안을 늘려 쓰던 때와 달리 늘림이 없다 — 배율은 빌더와 **같은 720/1080** 이다.
-        //   실측 : 카드 가로 144 · 세로 265 · 사이 10 · 보이는 폭 914 (여섯 장).
+        //   실측(v6) : 카드 가로 142 · 세로 360 · 사이 12 · 보이는 폭 914 (여섯 장).
         private const float S = 720f / 1080f;
 
-        public const float CardWidth = 144f * S;
-        public const float CardHeight = 266f * S;
-        public const float CardGap = 9.6f * S;
-        public const float ViewWidth = 912f * S;
-        public const float ViewHeight = 266f * S;
+        public const float CardWidth = 142f * S;
+        public const float CardHeight = 360f * S;
+        public const float CardGap = 12f * S;
+        public const float ViewWidth = 914f * S;
+        public const float ViewHeight = 360f * S;
         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
     }
 }

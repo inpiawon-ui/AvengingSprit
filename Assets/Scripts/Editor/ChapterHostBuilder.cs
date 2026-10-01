@@ -42,12 +42,15 @@ namespace Game.Editor
         private const float DesignW = 1080f, DesignH = 1920f;
 
         /// <summary>
-        /// 배경 그림의 바깥 여백 — 좌우 180 · 위아래 240 (시안 픽셀).
-        /// 기기 비율이 달라 더 넓거나 더 긴 화면에서만 드러나는 자리다.
-        /// **가장자리를 늘려 때우지 않고 새로 그려 받았다**(v5) — 늘린 것은 뿌옇게 번진다.
-        ///   16:9 1080x1920 · 4:3 1440x1920 · 20:9 1080x2400 을 모두 덮는다.
+        /// 배경 그림의 바깥 여백 (시안 픽셀). **그림의 실제 크기와 반드시 같아야 한다** —
+        /// 다르면 그림이 늘어나 화면이 통째로 확대돼 보인다
+        /// (2026-10-01 : 1080x1920 그림을 1440x2400 자리에 그려 1.33 배로 커졌다).
+        ///
+        /// 가로 여백은 **필요 없다** — `ScreenFitStretchX` 가 가로를 늘려 채운다.
+        /// 세로 여백만 둔다(20:9 처럼 더 긴 화면용). 그 여백은 가장자리를 늘린 것이 아니라
+        /// **새로 그려 받은 그림**이다 — 늘린 것은 뿌옇게 번진다.
         /// </summary>
-        private const float PadX = 180f, PadY = 240f;
+        private const float PadX = 0f, PadY = 240f;
 
         private static TMP_FontAsset s_font;
 
@@ -101,14 +104,15 @@ namespace Game.Editor
 
         private static void TopBar(Transform box)
         {
-            // 실측(v4) — 칸 y 62~140 (가운데 101) · 다이아 칸 x 172~460 · 금화 칸 x 470~762
-            Hit(box, "CHBackButton", 108, 101, 96, 82);
-            Hit(box, "CHMailButton", 821, 101, 100, 82);
-            Hit(box, "CHSettingsButton", 966, 101, 96, 82);
+            // 실측(v6) — 칸 y 60~144 (가운데 101)
+            //   뒤로가기 x 61~144 · 다이아 칸 234~488 · 금화 칸 505~800 · 메일 827~937 · 설정 937~1020
+            Hit(box, "CHBackButton", 103, 101, 88, 82);
+            Hit(box, "CHMailButton", 882, 101, 112, 82);
+            Hit(box, "CHSettingsButton", 978, 101, 86, 82);
 
-            // 칸과 아이콘은 **시안에 이미 그려져 있다**(다이아 칸도 포함). 숫자만 얹는다.
-            Num(box, "CHGemText", 262, 101, 190);
-            Num(box, "CHGoldText", 570, 101, 200);
+            // 칸과 아이콘은 **시안에 이미 그려져 있다**. 숫자만 얹는다.
+            Num(box, "CHGemText", 318, 101, 164);
+            Num(box, "CHGoldText", 606, 101, 186);
         }
 
         /// <summary>재화 숫자 한 칸. 칸·아이콘은 시안 것이고 숫자만 왼쪽 정렬로 얹는다.</summary>
@@ -125,64 +129,64 @@ namespace Game.Editor
 
         private static void ChapterBox(Transform box)
         {
-            // 실측(v4) — 판 y 334~652 · 바깥 x 57~1022
-            Hit(box, "CHPrevButton", 110, 383, 64, 64);
-            Hit(box, "CHNextButton", 462, 383, 64, 64);
+            // 실측(v6) — 챕터 판 y 190~580 · 보스/보상 판 y 617~835
+            Hit(box, "CHPrevButton", 109, 279, 68, 68);
+            Hit(box, "CHNextButton", 455, 279, 68, 68);
 
-            // 「CHAPTER」 글자는 시안에 있다(x 148~330). 번호만 쓴다(x 343~420 · y 362~402)
-            var no = Txt(Node(box, "CHChapterNoText"), "01", F(50), TextAlignmentOptions.Left);
-            TL2(no.rectTransform, 341, 382, 118, 62);
+            // 「CHAPTER」 글자는 시안에 있다(x 148~330). 번호만 쓴다(x 333~403 · y 239~286)
+            var no = Txt(Node(box, "CHChapterNoText"), "01", F(54), TextAlignmentOptions.Left);
+            TL2(no.rectTransform, 331, 272, 120, 68);
             no.color = new Color(0.36f, 0.78f, 1f);
 
-            // 챕터 이름 — 실측 y 418~500
-            var name = Txt(Node(box, "CHChapterNameText"), "", F(74), TextAlignmentOptions.Left);
-            TL2(name.rectTransform, 85, 459, 380, 96);
+            // 챕터 이름 — 실측 y 325~410
+            var name = Txt(Node(box, "CHChapterNameText"), "", F(80), TextAlignmentOptions.Left);
+            TL2(name.rectTransform, 85, 368, 350, 100);
             name.enableAutoSizing = true;
-            name.fontSizeMin = F(42);
-            name.fontSizeMax = F(74);
+            name.fontSizeMin = F(44);
+            name.fontSizeMax = F(80);
 
-            // 설명 — TopLeft 는 칸 위쪽부터 그려진다. 글자 위가 518 이 되게 칸 가운데를 556 에 둔다
-            var desc = Txt(Node(box, "CHChapterDescText"), "", F(25), TextAlignmentOptions.TopLeft);
-            TL2(desc.rectTransform, 85, 556, 390, 76);
+            // 설명 — TopLeft 는 칸 위쪽부터 그려진다. 글자 위가 458 이 되게 칸 가운데를 506 에 둔다
+            var desc = Txt(Node(box, "CHChapterDescText"), "", F(27), TextAlignmentOptions.TopLeft);
+            TL2(desc.rectTransform, 85, 506, 440, 96);
             desc.textWrappingMode = TextWrappingModes.Normal;
             desc.lineSpacing = 12f;
             desc.color = new Color(0.86f, 0.90f, 0.96f);
 
-            // 챕터 그림 — 실측 x 473~1024 · y 334~652
-            var artBox = T(Node(box, "CHChapterArtBox"), 748, 493, 550, 316);
+            // 챕터 그림 — 실측 x 473~1020 · y 192~578
+            var artBox = T(Node(box, "CHChapterArtBox"), 747, 385, 548, 388);
             artBox.gameObject.AddComponent<RectMask2D>();
             var art = Img(Node(artBox, "CHChapterArt"), null);
             art.preserveAspect = true;
-            Center(art.rectTransform, 0, 0, 550 * S, 316 * S);
-            T(Img(Node(box, "CHLockIcon"), L("modelockicon")).rectTransform, 748, 493, 120, 150);
+            Center(art.rectTransform, 0, 0, 548 * S, 388 * S);
+            T(Img(Node(box, "CHLockIcon"), L("modelockicon")).rectTransform, 747, 385, 150, 180);
 
-            // 보스 얼굴 — 시안의 빈 틀(x 84~226 · y 654~788) 안
+            // 보스 얼굴 — 시안의 빈 틀(x 85~250 · y 645~810) 안
             var portrait = Img(Node(box, "CHBossPortrait"), null);
             portrait.preserveAspect = true;
-            T(portrait.rectTransform, 154, 721, 132, 124);
-            // 「BOSS」 는 시안 글자(y 681~714). 보스 이름만 그 아래(y 735~757)에 쓴다
-            var bossName = Txt(Node(box, "CHBossNameText"), "", F(32), TextAlignmentOptions.Left);
-            TL2(bossName.rectTransform, 282, 746, 180, 44);
+            T(portrait.rectTransform, 167, 727, 158, 158);
+            // 「BOSS」 는 시안 글자(y 672~705). 보스 이름만 그 아래(y 740~775)에 쓴다
+            var bossName = Txt(Node(box, "CHBossNameText"), "", F(34), TextAlignmentOptions.Left);
+            TL2(bossName.rectTransform, 278, 756, 180, 48);
             bossName.enableAutoSizing = true;
             bossName.fontSizeMin = F(18);
-            bossName.fontSizeMax = F(32);
+            bossName.fontSizeMax = F(34);
 
-            // 클리어 보상 — 「클리어 보상」 글자와 동전(x 484~534)은 시안 것
-            var gold = Txt(Node(box, "CHRewardGoldText"), "", F(36), TextAlignmentOptions.Left);
-            TL2(gold.rectTransform, 552, 736, 196, 48);
+            // 클리어 보상 — 「클리어 보상」 글자와 동전(가운데 508,752)은 시안 것
+            var gold = Txt(Node(box, "CHRewardGoldText"), "", F(38), TextAlignmentOptions.Left);
+            TL2(gold.rectTransform, 552, 757, 228, 52);
             gold.color = new Color(1f, 0.85f, 0.32f);
             gold.enableAutoSizing = true;
             gold.fontSizeMin = F(22);
-            gold.fontSizeMax = F(36);
+            gold.fontSizeMax = F(38);
 
             var chest = Img(Node(box, "CHRewardChestIcon"), L("chest_gold"));
             chest.preserveAspect = true;
-            T(chest.rectTransform, 819, 727, 118, 128);
-            var chestText = Txt(Node(box, "CHRewardChestText"), "", F(28), TextAlignmentOptions.Left);
-            TL2(chestText.rectTransform, 862, 746, 160, 44);
+            T(chest.rectTransform, 862, 770, 146, 136);
+            var chestText = Txt(Node(box, "CHRewardChestText"), "", F(30), TextAlignmentOptions.Left);
+            TL2(chestText.rectTransform, 938, 760, 92, 44);
             chestText.enableAutoSizing = true;
-            chestText.fontSizeMin = F(18);
-            chestText.fontSizeMax = F(28);
+            chestText.fontSizeMin = F(12);
+            chestText.fontSizeMax = F(30);
         }
 
         // ── 호스트 줄 ──────────────────────────────────────
@@ -190,7 +194,8 @@ namespace Game.Editor
         private static void HostBox(Transform box)
         {
             // 실측 — 첫 칸 x 85 · 폭 144 · 사이 10 · 여섯 장 914 · 카드 가운데 y 1099
-            var view = T(Node(box, "CHHostViewport"), 542, 1063, 912, 266);
+            // 실측(v6) — 첫 칸 x 82 · 폭 142 · 사이 12 · 카드 가운데 y 1145
+            var view = T(Node(box, "CHHostViewport"), 540, 1145, 914, 360);
             view.gameObject.AddComponent<RectMask2D>();
 
             var content = Node(view, "CHHostContent");
@@ -208,8 +213,8 @@ namespace Game.Editor
 
             for (int i = 0; i < ChapterHostLayout.CardSlots; i++) Card(content, i);
 
-            Hit(box, "CHHostPrev", 66, 1063, 58, 110);
-            Hit(box, "CHHostNext", 1016, 1063, 58, 110);
+            Hit(box, "CHHostPrev", 65, 1145, 58, 120);
+            Hit(box, "CHHostNext", 1015, 1145, 58, 120);
         }
 
         /// <summary>
@@ -230,54 +235,54 @@ namespace Game.Editor
 
             var thumb = Img(Node(card, "CardThumb"), null);
             thumb.preserveAspect = true;
-            Center(thumb.rectTransform, 0, 51 * S, 134 * S, 160 * S);
+            Center(thumb.rectTransform, 0, 53 * S, 138 * S, 182 * S);
 
-            // 실측(카드 가운데 1063 기준) — 이름 +48 · 별 +77 · 전투력 +109
-            var name = Txt(Node(card, "CardName"), "", F(26), TextAlignmentOptions.Center);
-            Center(name.rectTransform, 0, -48 * S, 138 * S, 34 * S);
+            // 실측(카드 가운데 1145 기준) — 이름 +61 · 별 +99 · 전투력 +132
+            var name = Txt(Node(card, "CardName"), "", F(30), TextAlignmentOptions.Center);
+            Center(name.rectTransform, 0, -61 * S, 140 * S, 38 * S);
             name.enableAutoSizing = true;
-            name.fontSizeMin = F(12);
-            name.fontSizeMax = F(26);
+            name.fontSizeMin = F(13);
+            name.fontSizeMax = F(30);
 
             for (int s = 0; s < 5; s++)
             {
-                // 실측 — 별 다섯이 카드 가운데 기준 -50 에서 24.6 간격, 한 개 22
+                // 실측 — 별 다섯이 카드 가운데 기준 -50 에서 25 간격, 한 개 22
                 var star = Img(Node(card, $"CardStar{s}"), P("ch_star_off"));
                 star.preserveAspect = true;
-                Center(star.rectTransform, (-50f + s * 24.6f) * S, -77 * S, 24 * S, 24 * S);
+                Center(star.rectTransform, (-50f + s * 25f) * S, -101 * S, 24 * S, 24 * S);
             }
 
             var powerIcon = Img(Node(card, "CardPowerIcon"), P("ch_power_icon"));
             powerIcon.preserveAspect = true;
-            Center(powerIcon.rectTransform, -50 * S, -109 * S, 26 * S, 26 * S);
-            var power = Txt(Node(card, "CardPowerText"), "", F(28), TextAlignmentOptions.Left);
-            Left(power.rectTransform, -20 * S, -109 * S, 112 * S, 38 * S);
+            Center(powerIcon.rectTransform, -53 * S, -132 * S, 30 * S, 30 * S);
+            var power = Txt(Node(card, "CardPowerText"), "", F(32), TextAlignmentOptions.Left);
+            Left(power.rectTransform, -27 * S, -132 * S, 116 * S, 42 * S);
 
             // 고른 표시 — 금색 액자와 체크. 둘 다 시안에서 잘라 온 것이다
             var sel = Img(Node(card, "CardFrameSel"), P("ch_card_frame_sel"));
-            Center(sel.rectTransform, 0, 0, ChapterHostLayout.CardWidth + 8f, ChapterHostLayout.CardHeight + 8f);
+            Center(sel.rectTransform, 0, 0, ChapterHostLayout.CardWidth + 10f, ChapterHostLayout.CardHeight + 10f);
             var check = Img(Node(card, "CardCheck"), P("ch_check"));
             check.preserveAspect = true;
-            Center(check.rectTransform, 47 * S, 112 * S, 46 * S, 42 * S);
+            Center(check.rectTransform, 41 * S, 155 * S, 44 * S, 44 * S);
         }
 
         // ── 아래 — 랜덤 칸과 도전 버튼 ──────────────────────
 
         private static void BottomRow(Transform box)
         {
-            // 실측(v4) — 랜덤 판 y 1217~1461 / 버튼 노란판 x 270~806 · y 1729~1855
-            var random = T(Node(box, "CHRandomCard"), 540, 1339, 960, 240);
+            // 실측(v6) — 랜덤 판 y 1347~1608 / 버튼 노란판 x 272~800 · y 1730~1855
+            var random = T(Node(box, "CHRandomCard"), 540, 1478, 960, 252);
             Btn(random);
             var check = Img(Node(random, "RandomCheck"), P("ch_check"));
             check.preserveAspect = true;
-            TR(check.rectTransform, 540, 1339, 975, 1252, 48, 44);
+            TR(check.rectTransform, 540, 1478, 975, 1382, 48, 48);
 
-            var start = T(Node(box, "CHStartButton"), 538, 1792, 536, 126);
+            var start = T(Node(box, "CHStartButton"), 536, 1792, 528, 126);
             Btn(start);
-            // 실측 — 동전 x 300~360 · 값 글자 x 378~508 · 구분선 520
-            TR(Img(Node(start, "CHStartCostIcon"), L("goldicon")).rectTransform, 538, 1792, 330, 1792, 60, 60);
-            var cost = Txt(Node(start, "CHStartCostText"), "0", F(46), TextAlignmentOptions.Left);
-            TLR(cost.rectTransform, 538, 1792, 374, 1792, 140, 56);
+            // 실측 — 동전 x 305~365(가운데 335) · 값 글자 x 378~481 · 구분선 506
+            TR(Img(Node(start, "CHStartCostIcon"), L("goldicon")).rectTransform, 536, 1792, 335, 1792, 62, 62);
+            var cost = Txt(Node(start, "CHStartCostText"), "0", F(48), TextAlignmentOptions.Left);
+            TLR(cost.rectTransform, 536, 1792, 376, 1792, 122, 58);
             cost.color = new Color(0.20f, 0.13f, 0.03f);
         }
 
@@ -434,6 +439,10 @@ namespace Game.Editor
         {
             var box = Node(parent, name);
             Center(box, 0, 0, 720, 1280);
+            // ⚠ `ScreenFit` 은 부모를 꽉 채우는 상자를 **가로 스트레치로 바꿔 버린다**.
+            //   그러면 상자만 960 이 되고 안의 판·글자는 절대 좌표라 가운데 720 에 그대로 몰린다.
+            //   게다가 아래 배율까지 겹쳐 두 번 늘어난다(2026-10-01). 그래서 먼저 막는다.
+            box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
             // 4:3 에서는 보이는 폭이 960 이라 그대로 두면 판이 가운데 720 에만 모인다.
             // **가로만** 배율로 늘려 채운다 — 세로는 배경 그림의 위아래 여백이 메운다.
             box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitStretchX>();

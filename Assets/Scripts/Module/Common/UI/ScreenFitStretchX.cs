@@ -44,6 +44,17 @@ namespace Game.Module.Common.UI
             if (_parent == null) _parent = transform.parent as RectTransform;
             if (_parent == null || _baseWidth <= 0f) return;
 
+            // ⚠ 내 상자는 **기준 폭(720)으로 고정**되어 있어야 한다. `ScreenFit` 이 스트레치로
+            //   바꿔 놓으면 상자가 이미 960 인데 배율까지 겹쳐 두 번 늘어난다(2026-10-01).
+            //   `ScreenFitLock` 으로 막아 두지만, 혹시 몰라 여기서도 되돌린다.
+            if (_self.anchorMin != new Vector2(0.5f, 0.5f) || _self.anchorMax != new Vector2(0.5f, 0.5f))
+            {
+                var size = _self.rect.size;
+                _self.anchorMin = _self.anchorMax = _self.pivot = new Vector2(0.5f, 0.5f);
+                _self.sizeDelta = new Vector2(_baseWidth, size.y);
+                _self.anchoredPosition = Vector2.zero;
+            }
+
             float width = _parent.rect.width;
             if (width <= 1f) return;
 
