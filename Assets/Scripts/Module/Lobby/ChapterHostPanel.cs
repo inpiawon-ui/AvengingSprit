@@ -563,10 +563,10 @@ namespace Game.Module.Lobby
         private const float S = 720f / 1080f;
 
         public const float CardWidth = 144f * S;
-        public const float CardHeight = 265f * S;
-        public const float CardGap = 10f * S;
-        public const float ViewWidth = 914f * S;
-        public const float ViewHeight = 265f * S;
+        public const float CardHeight = 266f * S;
+        public const float CardGap = 9.6f * S;
+        public const float ViewWidth = 912f * S;
+        public const float ViewHeight = 266f * S;
         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
     }
 }
