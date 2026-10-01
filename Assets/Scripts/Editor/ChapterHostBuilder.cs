@@ -160,19 +160,25 @@ namespace Game.Editor
 
         private static void ChapterBox(Transform box)
         {
-            // ── 챕터 칸 — 시안은 **한 덩어리**다 ────────────────
-            // 스테이지 그림이 칸 전체(x 55~1026 · y 193~578)에 깔리고,
-            // 그 위에 왼쪽 딤이 덮이고, 그 위에 화살표와 글자가 올라간다.
-            // 예전에는 그림을 오른쪽 네모에만 넣고 그 자리를 한 색으로 메웠는데,
-            // 둥근 테두리까지 지워져 스테이지·보스·보상이 따로 노는 것처럼 보였다(2026-10-01).
-            var artBox = T(Node(box, "CHChapterArtBox"), 540.5f, 385.5f, 966, 380);
+            // ── 챕터 큰 판 — 시안의 **스테이지에는 따로 박스가 없다** ──
+            // 스테이지 그림이 큰 판 전체(x 36~1044 · y 172~856 의 테두리 안쪽)에 깔리고,
+            // 그 위에 딤(왼쪽 + 아래)이 덮이고, 아래에 보스 칸 · 보상 칸 두 네모만 얹힌다.
+            // ⚠ 두 번 틀렸다(2026-10-01) — 처음엔 그림을 오른쪽 네모에만 넣었고,
+            //   다음엔 챕터에 안쪽 박스를 남긴 채 그 안에만 깔았다. 박스는 보스·보상 둘뿐이다.
+            var artBox = T(Node(box, "CHChapterArtBox"), 540, 514, 1000, 676);
             artBox.gameObject.AddComponent<RectMask2D>();
             var art = Img(Node(artBox, "CHChapterArt"), null);
-            Center(art.rectTransform, 0, 0, 966 * S, 380 * S);
+            Center(art.rectTransform, 0, 0, 1000 * S, 676 * S);
 
-            // 왼쪽 딤 — 글자가 읽히게. 둥근 모서리도 이 그림이 가린다
-            var dim = Img(Node(artBox, "CHChapterDim"), P("ch_dim"));
-            Center(dim.rectTransform, 0, 0, 966 * S, 380 * S);
+            // 딤 — 왼쪽(글자 자리)과 아래(두 네모 자리)를 어둡게. 깎인 모서리도 이 그림이 가린다
+            var dim = Img(Node(artBox, "CHChapterDim"), P("ch_dim2"));
+            Center(dim.rectTransform, 0, 0, 1000 * S, 676 * S);
+
+            // 보스 칸 · 보상 칸 — 배경에서 떼어 낸 빈 칸을 그림 위에 다시 올린다
+            // (실측 보스 x 52~442 · 보상 x 459~1026 · y 617~833, 잘라낸 판은 둘레 4 씩 더 크다)
+            T(Img(Node(box, "CHBossBox"), P("ch_bossbox")).rectTransform, 247, 725.5f, 398, 225);
+            T(Img(Node(box, "CHRewardBox"), P("ch_rewardbox")).rectTransform, 742.5f, 725.5f, 575, 225);
+            // 보상 동전은 칸 그림에 들어 있다(가운데 508,752)
 
             // 화살표는 그림 위에 다시 올린다 (실측 ◀ 가운데 97,266 · ▶ 453,266)
             Img(Node(box, "CHPrevArrow"), P("ch_arrow_left")).preserveAspect = true;
