@@ -557,15 +557,16 @@ namespace Game.Module.Lobby
     /// <summary>카드 자리값 — 판과 빌더가 **같은 숫자**를 봐야 목록이 어긋나지 않는다.</summary>
     public static class ChapterHostLayout
     {
-        // ⚠ 시안(1024 폭) 값을 그대로 줄인 것이다. 배율은 빌더와 **같은 0.703125** 다.
-        //   시안 카드 = 가로 142.67 · 세로 245 · 사이 8 · 보이는 폭 896 (여섯 장).
-        private const float S = 720f / 1024f;
+        // ⚠ 시안이 **9:16(1080x1920)** 으로 다시 그려졌다(2026-10-01).
+        //   2:3 시안을 늘려 쓰던 때와 달리 늘림이 없다 — 배율은 빌더와 **같은 720/1080** 이다.
+        //   실측 : 카드 가로 144 · 세로 265 · 사이 10 · 보이는 폭 914 (여섯 장).
+        private const float S = 720f / 1080f;
 
-        public const float CardWidth = 140f * S;
-        public const float CardHeight = 258f * S;
-        public const float CardGap = 12.4f * S;
-        public const float ViewWidth = 901f * S;
-        public const float ViewHeight = 258f * S;
+        public const float CardWidth = 144f * S;
+        public const float CardHeight = 265f * S;
+        public const float CardGap = 10f * S;
+        public const float ViewWidth = 914f * S;
+        public const float ViewHeight = 265f * S;
         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
     }
 }
