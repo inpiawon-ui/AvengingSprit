@@ -41,8 +41,13 @@ namespace Game.Editor
         private const float S = 720f / 1080f;
         private const float DesignW = 1080f, DesignH = 1920f;
 
-        /// <summary>배경을 좌우로 이어 그린 폭 — 태블릿(4:3)에서만 보인다. 세로는 딱 맞아 덧댈 것이 없다.</summary>
-        private const float PadX = 180f;
+        /// <summary>
+        /// 배경 그림의 바깥 여백 — 좌우 180 · 위아래 240 (시안 픽셀).
+        /// 기기 비율이 달라 더 넓거나 더 긴 화면에서만 드러나는 자리다.
+        /// **가장자리를 늘려 때우지 않고 새로 그려 받았다**(v5) — 늘린 것은 뿌옇게 번진다.
+        ///   16:9 1080x1920 · 4:3 1440x1920 · 20:9 1080x2400 을 모두 덮는다.
+        /// </summary>
+        private const float PadX = 180f, PadY = 240f;
 
         private static TMP_FontAsset s_font;
 
@@ -82,7 +87,7 @@ namespace Game.Editor
 
             // 화면 = 시안 그림 한 장. 9:16 으로 그려져 있어 그대로 깔면 꽉 찬다.
             var screen = Img(Node(box, "CHScreen"), P("ch_screen"));
-            Center(screen.rectTransform, 0f, 0f, (DesignW + 2f * PadX) * S, DesignH * S);
+            Center(screen.rectTransform, 0f, 0f, (DesignW + 2f * PadX) * S, (DesignH + 2f * PadY) * S);
 
             TopBar(box);
             ChapterBox(box);
