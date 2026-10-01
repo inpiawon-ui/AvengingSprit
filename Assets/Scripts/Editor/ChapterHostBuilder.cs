@@ -434,7 +434,9 @@ namespace Game.Editor
         {
             var box = Node(parent, name);
             Center(box, 0, 0, 720, 1280);
-            box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            // 4:3 에서는 보이는 폭이 960 이라 그대로 두면 판이 가운데 720 에만 모인다.
+            // **가로만** 배율로 늘려 채운다 — 세로는 배경 그림의 위아래 여백이 메운다.
+            box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitStretchX>();
             return box;
         }
 
