@@ -51,3 +51,9 @@ if __name__ == '__main__':
     cut('_fx_weakhit_sheet.png', [f'fx_weakhit_{i}' for i in range(1, 5)], (128, 128))
     check('affinity_adv_mark.png')
     check('affinity_adv_ring.png')
+
+    # ── 가위바위보(날 · 힘 · 술) 부품 (2026-10-02) ──
+    cut('_rps_gems_sheet.png', ['rps_gem_blade', 'rps_gem_force', 'rps_gem_magic'], (64, 64))
+    cut('_rps_arrows_sheet.png', ['rps_up', 'rps_down'], (64, 64))
+    cut('_rps_triangle_sheet.png', ['rps_tri_blade', 'rps_tri_force', 'rps_tri_magic'], (240, 220))
+    check('rps_ring.png')
