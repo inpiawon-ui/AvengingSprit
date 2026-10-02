@@ -984,6 +984,9 @@ namespace Game.Module.InGame
 
             // 몸을 놓아줄 때만 값이 붙는다. 유령 상태의 빙의는 공짜다.
             _ui.SetText("PossessCostText", hasTarget && cost > 0 ? $"-{cost}" : string.Empty);
+
+            // 값이 0 = 유령이 탈 몸을 잡았다. 그때만 버튼이 빛난다.
+            SetPossessGlow(usable && cost == 0);
         }
 
         private void SetPossessReady(bool ready) => SetPossessState(ready, 0, false);

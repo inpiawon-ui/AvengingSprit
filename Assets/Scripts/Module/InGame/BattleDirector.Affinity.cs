@@ -349,6 +349,7 @@ namespace Game.Module.InGame
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
             PublishHp();
+            BeginSoulOut(body, pos);
         }
 
         // ── 표시 ────────────────────────────────────────────────

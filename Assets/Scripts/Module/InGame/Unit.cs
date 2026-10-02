@@ -921,6 +921,17 @@ namespace Game.Module.InGame
             return true;
         }
 
+        /// <summary>혼이 빠진 몸의 색. 원작 쓰러짐 그림을 그대로 두고 색만 뺀다.</summary>
+        private static readonly Color CorpseTint = new(0.62f, 0.66f, 0.76f, 1f);
+
+        private bool _corpseHold;
+
+        /// <summary>
+        /// 쓰러진 몸을 **사라지지 않게 붙든다.** 유령이 돌아와 되살릴 자리라서
+        /// 바닥에 남아 있어야 한다. 풀면 그때부터 평소처럼 옅어지며 사라진다.
+        /// </summary>
+        public void SetCorpseHold(bool on) => _corpseHold = on;
+
         /// <summary>사망 연출을 진행시킨다. 다 끝났으면 true — 그때 없앤다.</summary>
         public bool TickDeath(float dt)
         {
@@ -931,6 +942,14 @@ namespace Game.Module.InGame
             {
                 _frame = FrameDie2;
                 Apply();
+            }
+
+            // 붙들린 몸은 쓰러진 채로 남는다 — 사라지는 시계를 세워 둔다.
+            if (_corpseHold && _deathTimer >= Die1Seconds)
+            {
+                _deathTimer = Die1Seconds;
+                if (_body != null) _body.color = CorpseTint;
+                return false;
             }
 
             // die2 로 넘어간 뒤부터 서서히 사라진다. 발밑 그림자도 같이 옅어진다.

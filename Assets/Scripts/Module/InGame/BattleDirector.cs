@@ -2777,6 +2777,7 @@ namespace Game.Module.InGame
             ClearJuice();         // ⚠ 늦춘 시간을 되돌린다. 안 하면 느려진 채로 굳는다
             ClearCastPresentation();
             ClearExitArrows();    // 안내 화살표도 방을 따라오지 않는다
+            ClearSoulFx();        // 쓰러진 몸 자리 · 혼불 · 빛줄기도
             _echoBlasts.Clear();  // 방을 넘긴 뒤 지난 방 좌표에서 터지면 안 된다
             _rangedKnockAt.Clear();   // 지난 방 몹의 밀림 시각을 들고 가지 않는다
             _barrier = 0;
@@ -3294,6 +3295,7 @@ namespace Game.Module.InGame
             TickRescue(dt);
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
+            TickSoulFx(dt);        // 혼줄 · 돌아갈 곳 · 탈 몸 비추기
             TickExitOpen(dt);
             TickExit();
 
@@ -3534,7 +3536,7 @@ namespace Game.Module.InGame
         /// </summary>
         private void TickEmergency(float dt)
         {
-            if (_host != null || _awaitingBuff) { _emergencyWait = 0f; return; }
+            if (_host != null || _awaitingBuff || IsChanneling) { _emergencyWait = 0f; return; }
             if (_possessTarget != null || HasFutureHost()) { _emergencyWait = 0f; return; }
 
             // ⚠ 적이 없는 방에서는 이 구제책이 **사형선고**가 된다.
@@ -3573,12 +3575,8 @@ namespace Game.Module.InGame
 
             _ghostHp = Mathf.Max(1, _ghostHp - _config.EmergencyGhostCost);
 
-            EnterHost(entry, entry.HostKey, entry.DisplayName, _ghost.Position,
-                      _config.EmergencyHostHpPercent);
-            _bus.Publish(new EmergencyHostEvent
-            {
-                HostKey = entry.HostKey, GhostCost = _config.EmergencyGhostCost,
-            });
+            // 그 자리에 툭 생기지 않는다 — 쓰러진 내 몸 자리로 돌아가 되살린다(`BattleDirector.SoulFx`).
+            BeginRevive(entry);
         }
 
         /// <summary>
@@ -7297,6 +7295,7 @@ namespace Game.Module.InGame
         {
             var pos = _host.Position;
             var key = _host.Key;
+            var body = _host;
             Retire(_host);       // 몸은 쓰러진다 — 유령이 그 자리에서 빠져나온다
             _host = null;
 
@@ -7325,6 +7324,7 @@ namespace Game.Module.InGame
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
             PublishHp();
+            BeginSoulOut(body, pos);
         }
 
         /// <summary>
@@ -8310,8 +8310,10 @@ namespace Game.Module.InGame
             if (_channelBody != null) Destroy(_channelBody.gameObject);
             _channelBody = null;
 
+            bool revive = _reviveHpPercent > 0;
             EnterHost(_channelEntry, _channelKey, _channelName, _channelTo,
-                      PossessStartHpPercent);
+                      revive ? _reviveHpPercent : PossessStartHpPercent);
+            if (revive) FinishRevive(_channelKey);
             _channelEntry = null;
         }
 
@@ -8367,6 +8369,7 @@ namespace Game.Module.InGame
 
             _bus.Publish(new HostLostEvent { LostHostKey = key });
             PublishHp();
+            BeginSoulOut(null, pos);   // 놓아준 몸은 적으로 돌아간다 — 쓰러진 몸은 없다
         }
 
         public void TryPossess()
@@ -8469,6 +8472,7 @@ namespace Game.Module.InGame
                                Vector2 pos, int startHpPercent)
         {
             if (entry != null) _lastHostEntry = entry;
+            SoulFxOnEnterHost();
             _dashTime = 0f;   // 몸이 바뀌면 돌진도 끊는다
             _ghost.gameObject.SetActive(false);
 
