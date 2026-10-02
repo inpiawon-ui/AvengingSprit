@@ -23,6 +23,14 @@ namespace Game.EditorTools
     ///   AffinityDemo.seek    유리한 몸으로 갈아탈 것인가(끄면 처음 몸으로 끝까지 — 견주기용)
     ///   AffinityDemo.record  영상 파일 경로(확장자 없이). 비우면 안 찍는다
     ///   AffinityDemo.rooms   이 방까지 깨면 멈춘다(영상 길이). 0 이면 계속
+    ///
+    /// ── 밸런스 검증 (2026-10-02) ─────────────────────────────────
+    ///   AffinityDemo.chapter   들어갈 챕터(기본 1)
+    ///   AffinityDemo.profile   그 판의 플레이어 힘 — 「유령Lv;유령 체,공,속;몸 체,공,속」(강화 단계)
+    ///   AffinityDemo.queue     여러 판을 줄 세운다 — 「챕터|몸|힘」을 줄바꿈으로. 한 판이 끝나면 다음 판을 연다
+    ///   결과는 `Library/BalanceRuns.tsv` 에 한 줄씩 쌓인다(챕터 · 도달 방 · 깼는가 · 걸린 초 · 판 골드)
+    ///
+    /// ⚠ 힘을 넣으면 **저장이 바뀐다.** 돌리기 전에 저장 파일을 따로 떠 두고 끝나면 되돌린다.
     /// </summary>
     [InitializeOnLoad]
     public static class AffinityDemoTool
@@ -40,6 +48,7 @@ namespace Game.EditorTools
         {
             SessionState.SetInt(Key, 1);
             SessionState.SetBool("AffinityDemo.ran", false);
+            SessionState.SetInt("AffinityDemo.watchRoom", -1);
             _wait = 0;
             if (!EditorApplication.isPlaying) { OpenBootScene(); EditorApplication.EnterPlaymode(); }
         }
@@ -52,9 +61,56 @@ namespace Game.EditorTools
             if (EditorApplication.isPlaying) EditorApplication.ExitPlaymode();
         }
 
+        public const string ResultPath = "Library/BalanceRuns.tsv";
+        private const float StuckSeconds = 240f;
+
+        /// <summary>줄 선 판이 있으면 하나 꺼내 연다. 플레이가 완전히 꺼진 뒤에만.</summary>
+        private static void NextInQueue()
+        {
+            string queue = SessionState.GetString("AffinityDemo.queue", string.Empty);
+            if (string.IsNullOrEmpty(queue)) return;
+            int nl = queue.IndexOf('\n');
+            string head = nl < 0 ? queue : queue.Substring(0, nl);
+            SessionState.SetString("AffinityDemo.queue", nl < 0 ? string.Empty : queue.Substring(nl + 1));
+            var t = head.Split('|');
+            if (t.Length < 3) return;
+            SessionState.SetInt("AffinityDemo.chapter", int.Parse(t[0]));
+            SessionState.SetString("AffinityDemo.host", t[1]);
+            SessionState.SetString("AffinityDemo.profile", t[2]);
+            Start();
+        }
+
+        /// <summary>그 판의 플레이어 힘을 저장(메모리)에 넣는다 — 모델이 말한 「이 챕터를 깨는 판의 힘」.</summary>
+        private static void ApplyProfile(Game.User.IPlayerDataService player, string hostKey, int chapter)
+        {
+            var dataField = player.GetType().GetField("_data", F);
+            if (!(dataField?.GetValue(player) is Game.User.UserData data)) return;
+            data.clearedChapter = Mathf.Max(data.clearedChapter, chapter - 1);
+
+            string profile = SessionState.GetString("AffinityDemo.profile", string.Empty);
+            if (string.IsNullOrEmpty(profile)) return;
+            var parts = profile.Split(';');
+            int count = System.Enum.GetValues(typeof(Game.Character.HostStat)).Length;
+            data.NormalizeStats(count);
+            int[] at = { (int)Game.Character.HostStat.Hp, (int)Game.Character.HostStat.Atk,
+                         (int)Game.Character.HostStat.AtkSpeed };
+
+            data.ghostLevel = int.Parse(parts[0]);
+            for (int i = 0; i < data.ghostStatLevels.Length; i++) data.ghostStatLevels[i] = 0;
+            var g = parts[1].Split(',');
+            for (int i = 0; i < at.Length; i++) data.ghostStatLevels[at[i]] = int.Parse(g[i]);
+
+            int hostAt = (int)player.GetType().GetMethod("IndexOfHost", F).Invoke(player, new object[] { hostKey });
+            for (int i = 0; i < data.hostStatLevels.Length; i++) data.hostStatLevels[i] = 0;
+            if (hostAt < 0) return;
+            var h = parts[2].Split(',');
+            for (int i = 0; i < at.Length; i++) data.hostStatLevels[hostAt * count + at[i]] = int.Parse(h[i]);
+        }
+
         private static void Tick()
         {
             int step = SessionState.GetInt(Key, 0);
+            if (step <= 0 && !EditorApplication.isPlayingOrWillChangePlaymode) { NextInQueue(); return; }
             if (step <= 0 || !EditorApplication.isPlaying) return;
             if (_wait > 0) { _wait--; return; }
             try { Step(step); }
@@ -114,8 +170,10 @@ namespace Game.EditorTools
                         // 시작 직전에 녹화를 건다 — 고르는 장면부터 담긴다.
                         StartRecording();
                         string host = SessionState.GetString("AffinityDemo.host", string.Empty);
+                        int chapter = SessionState.GetInt("AffinityDemo.chapter", 1);
+                        ApplyProfile(p, host, chapter);
                         var t = panel.GetType();
-                        t.GetField("_chapter", F).SetValue(panel, 1);
+                        t.GetField("_chapter", F).SetValue(panel, chapter);
                         t.GetField("_pickedRandom", F).SetValue(panel, false);
                         t.GetField("_pickedHost", F).SetValue(panel,
                             string.IsNullOrEmpty(host) ? Game.Character.HostEntry.GhostKey : host);
@@ -170,12 +228,37 @@ namespace Game.EditorTools
             bool running = (bool)bt.GetField("_running", F).GetValue(director);
             if (running) SessionState.SetBool("AffinityDemo.ran", true);
             bool over = !running && SessionState.GetBool("AffinityDemo.ran", false);
-            if (over || (until > 0 && room >= until))
+            // 한 방에서 너무 오래 있으면 막힌 것이다 — 「막힘」으로 적고 판을 끝낸다(다음 판이 기다린다).
+            // 보스방은 길어도 정상이라 넉넉히 준다.
+            if (room != SessionState.GetInt("AffinityDemo.watchRoom", -1))
+            {
+                SessionState.SetInt("AffinityDemo.watchRoom", room);
+                SessionState.SetFloat("AffinityDemo.watchSince", Time.time);
+            }
+            bool stuck = running && Time.time - SessionState.GetFloat("AffinityDemo.watchSince", Time.time) > StuckSeconds;
+            if (stuck) Debug.LogWarning($"[AffinityDemo] 방 {room + 1} 에서 {StuckSeconds}초 넘게 못 나갔다 — 막힘으로 적는다");
+
+            if (over || stuck || (until > 0 && room >= until))
             {
                 SessionState.SetString("AffinityDemo.marks", PromoPilot.Log.ToString());
                 SessionState.SetInt(Key, 0);
                 StopRecording();
                 Debug.Log($"[AffinityDemo] 끝 — 방 {room + 1} · 장면 기록 {PromoPilot.Log}");
+
+                // 결과 한 줄 — 유령 에너지가 남아 있으면 깬 것이다(죽음은 0 에서만 난다).
+                int ghostHp = (int)bt.GetField("_ghostHp", F).GetValue(director);
+                int frames = Time.frameCount - SessionState.GetInt("AffinityDemo.startFrame", Time.frameCount);
+                File.AppendAllText(ResultPath, string.Join("\t",
+                    SessionState.GetInt("AffinityDemo.chapter", 1),
+                    SessionState.GetString("AffinityDemo.host", string.Empty),
+                    SessionState.GetString("AffinityDemo.profile", string.Empty),
+                    room + 1, stuck ? "stuck" : over && ghostHp > 0 ? "clear" : "dead",
+                    Time.timeSinceLevelLoad.ToString("0"), director.RunGold, frames,
+                    PromoPilot.Log.ToString()) + "\n");
+
+                // 줄 선 판이 남았으면 플레이를 끄고 다음 판으로 넘어간다
+                if (!string.IsNullOrEmpty(SessionState.GetString("AffinityDemo.queue", string.Empty)))
+                    EditorApplication.ExitPlaymode();
                 return;
             }
             _wait = 15;

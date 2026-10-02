@@ -106,7 +106,157 @@ namespace Game.Module.InGame
             _fRoomIndex = t.GetField("_roomIndex", F);
             _fRoomKind = t.GetField("_roomKind", F);
             _fSkillGauge = t.GetField("_skillCooldown", F);
+            _mBlockedAt = t.GetMethod("BlockedAt", F);
+            _mRange = t.GetMethod("EffectiveRange", F);
+            _mCover = t.GetMethod("BlockedByCover", F);
+            _mFootHalf = t.GetMethod("FootHalf", BindingFlags.NonPublic | BindingFlags.Static);
+            _mFootDrop = t.GetMethod("FootDrop", BindingFlags.NonPublic | BindingFlags.Static);
         }
+
+        // ── 길찾기 ──────────────────────────────────────────────
+        //
+        // 예전에는 목표로 **곧장** 걷고, 막히면 옆으로 비켜 보는 것이 전부였다(`Unstick`).
+        // 해자 · 담 · 기둥 숲처럼 돌아가야 하는 방에서는 틈 앞에서 제자리를 맴돌았다
+        // (2026-10-02 자동 검증 — 6챕터 「증류탑」에서 방을 비우고도 문으로 못 갔다).
+        // 방을 격자로 나눠 너비 우선으로 길을 찾고, 그 길의 두세 칸 앞을 보고 걷는다.
+        // 막힘 판정은 전투와 **같은 자**(`BattleDirector.BlockedAt`)다 — 자가 둘이면 한쪽이 낡는다.
+
+        private const float PathCell = 24f;
+        /// <summary>발자국을 이만큼 부풀려 잰다(px) — 모서리를 스치는 길을 고르지 않게.</summary>
+        private const float PathPad = 6f;
+        private const float PathEvery = 0.25f;
+
+        private MethodInfo _mBlockedAt, _mFootHalf, _mFootDrop, _mRange;
+
+        /// <summary>
+        /// 피한 뒤 이만큼은 서 있는다(초). 이 게임은 **멈춰야 쏜다** — 십자 포탑처럼 쉬지 않고 쏘는 적 앞에서
+        /// 탄이 올 때마다 피하면 한 발도 못 쏘고 방을 못 끝낸다(2026-10-02 검증에서 세 판이 그렇게 멈췄다).
+        /// </summary>
+        private const float DodgeRestSeconds = 1.1f;
+        private float _dodgeRest;
+
+        private MethodInfo _mCover;
+        private readonly object[] _coverArgs = new object[2];
+
+        /// <summary>
+        /// 여기서 저 적까지 **내 탄이 닿는가.** 키 큰 것 뒤에 선 적을 향해 제자리에서 쏘기만 하면
+        /// 한 발도 안 들어가고 방이 안 끝난다(2026-10-02 검증 — 6챕터 「파이프 골목」에서 난간 뒤 포탑을 못 잡았다).
+        /// 전투와 같은 자(`BattleDirector.BlockedByCover`)로 사선을 따라 찍어 본다.
+        /// </summary>
+        private bool HasLine(Vector2 from, Vector2 to)
+        {
+            if (_mCover == null) return true;
+            var d = to - from;
+            int n = Mathf.Max(1, Mathf.CeilToInt(d.magnitude / 20f));
+            _coverArgs[1] = true;
+            for (int i = 1; i < n; i++)
+            {
+                _coverArgs[0] = from + d * (i / (float)n);
+                if ((bool)_mCover.Invoke(_bd, _coverArgs)) return false;
+            }
+            return true;
+        }
+
+        /// <summary>지금 몸이 때릴 수 있는 거리(px). 못 읽으면 넉넉한 기본값.</summary>
+        private float ReachOf(Unit me)
+        {
+            if (_mRange == null) return ChaseRange;
+            _footArgs[0] = me;
+            float r = (float)_mRange.Invoke(_bd, _footArgs);
+            return r > 1f ? Mathf.Min(r, ChaseRange) : ChaseRange;
+        }
+        private bool[] _pathFree;
+        private int[] _pathFrom;
+        private readonly System.Collections.Generic.Queue<int> _pathQueue = new();
+        private readonly object[] _blockedArgs = new object[3];
+        private readonly object[] _footArgs = new object[1];
+        private int _pathW, _pathH;
+        private float _pathAge;
+        private Vector2 _pathGoal, _pathStep;
+        private bool _pathHas;
+
+        /// <summary>목표로 가는 방향. 길이 있으면 길을 따라, 못 찾으면 곧장.</summary>
+        private Vector2 PathToward(Unit me, Vector2 to)
+        {
+            var pos = me.Position;
+            if ((to - pos).sqrMagnitude < 16f) return Vector2.zero;
+
+            _pathAge -= Time.deltaTime;
+            if (!_pathHas || _pathAge <= 0f || (to - _pathGoal).sqrMagnitude > 40f * 40f)
+            {
+                _pathAge = PathEvery;
+                _pathGoal = to;
+                _pathHas = FindStep(me, pos, to, out _pathStep);
+            }
+            if (!_pathHas) return Toward(pos, to);
+            var d = _pathStep - pos;
+            return d.sqrMagnitude < 9f ? Toward(pos, to) : d.normalized;
+        }
+
+        private bool FindStep(Unit me, Vector2 pos, Vector2 to, out Vector2 step)
+        {
+            step = to;
+            var room = (Vector2)_fRoomSize.GetValue(_bd);
+            int w = Mathf.Max(1, Mathf.CeilToInt(room.x / PathCell));
+            int h = Mathf.Max(1, Mathf.CeilToInt(room.y / PathCell));
+            if (_pathFree == null || _pathW != w || _pathH != h)
+            {
+                _pathW = w; _pathH = h;
+                _pathFree = new bool[w * h];
+                _pathFrom = new int[w * h];
+            }
+
+            _footArgs[0] = me;
+            var half = (Vector2)_mFootHalf.Invoke(null, _footArgs) + new Vector2(PathPad, PathPad);
+            float drop = (float)_mFootDrop.Invoke(null, _footArgs);
+            _blockedArgs[1] = half;
+            _blockedArgs[2] = drop;
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                {
+                    _blockedArgs[0] = CellCenter(x, y);
+                    _pathFree[y * w + x] = !(bool)_mBlockedAt.Invoke(_bd, _blockedArgs);
+                    _pathFrom[y * w + x] = -1;
+                }
+
+            int start = CellOf(pos), goal = CellOf(to);
+            _pathFree[start] = true;   // 서 있는 자리는 부풀린 자로 재면 막힌 것으로 나올 수 있다
+            _pathQueue.Clear();
+            _pathQueue.Enqueue(start);
+            _pathFrom[start] = start;
+            int best = start;
+            float bestD = (CellCenter(start % w, start / w) - to).sqrMagnitude;
+            while (_pathQueue.Count > 0)
+            {
+                int c = _pathQueue.Dequeue();
+                if (c == goal) { best = c; break; }
+                int cx = c % w, cy = c / w;
+                float dd = (CellCenter(cx, cy) - to).sqrMagnitude;
+                if (dd < bestD) { bestD = dd; best = c; }
+                for (int k = 0; k < 4; k++)
+                {
+                    int nx = cx + (k == 0 ? 1 : k == 1 ? -1 : 0), ny = cy + (k == 2 ? 1 : k == 3 ? -1 : 0);
+                    if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                    int n = ny * w + nx;
+                    if (_pathFrom[n] >= 0 || !_pathFree[n]) continue;
+                    _pathFrom[n] = c;
+                    _pathQueue.Enqueue(n);
+                }
+            }
+            if (best == start) return false;
+
+            // 목표에서 거슬러 올라와 **출발 다음 세 번째 칸**을 본다 — 한 칸 앞만 보면 지그재그로 떤다.
+            int a = best, b = best, c3 = best;
+            for (int at = best; at != start; at = _pathFrom[at]) { c3 = b; b = a; a = at; }
+            step = CellCenter(c3 % w, c3 / w);
+            return true;
+        }
+
+        private Vector2 CellCenter(int x, int y) => new((x + 0.5f) * PathCell, -(y + 0.5f) * PathCell);
+
+        private int CellOf(Vector2 p)
+            => Mathf.Clamp(Mathf.FloorToInt(-p.y / PathCell), 0, _pathH - 1) * _pathW
+             + Mathf.Clamp(Mathf.FloorToInt(p.x / PathCell), 0, _pathW - 1);
 
         private void Update()
         {
@@ -207,7 +357,7 @@ namespace Game.Module.InGame
                 _possessIn -= dt;
                 if (_possessIn <= 0f) { _bd.TryPossess(); Mark("possess_adv"); _possessIn = 1.2f; }
             }
-            else _bd.MoveInput = Toward(me.Position, want.Position);
+            else _bd.MoveInput = PathToward(me, want.Position);
             return true;
         }
 
@@ -274,6 +424,7 @@ namespace Game.Module.InGame
                 _bd.MoveInput = KeepInside(pos, _dodgeDir, room);
                 return;
             }
+            if (_dodgeRest > 0f) _dodgeRest -= dt;
 
             // 3) 위협 — 장판 · 가까운 적탄 · 공격 준비 중인 가까운 적
             Vector2 threat = Vector2.zero; bool hit = false;
@@ -291,8 +442,9 @@ namespace Game.Module.InGame
                     if (enemies[i] is Unit u && u != null && u.IsAlive && u.IsWindingUp
                         && (u.Position - pos).sqrMagnitude < (u.IsBoss ? 420f * 420f : 200f * 200f))
                     { threat = u.Position; hit = true; break; }
-            if (hit && Random.value < 0.85f)   // 가끔은 버틴다 — 너무 완벽하면 봇 같다
+            if (hit && _dodgeRest <= 0f && Random.value < 0.85f)   // 가끔은 버틴다 — 너무 완벽하면 봇 같다
             {
+                _dodgeRest = DodgeRestSeconds;
                 var away = pos - threat;
                 if (away.sqrMagnitude < 1f) away = Random.insideUnitCircle;
                 var side = new Vector2(-away.y, away.x) * (Random.value < 0.5f ? 1f : -1f);
@@ -304,9 +456,11 @@ namespace Game.Module.InGame
 
             // 4) 적이 멀리 서 있으면 다가간다 — 안 오는 적(원거리 · 제자리형) 앞에서 멈춰 버리지 않게
             var far = Nearest(enemies, pos);
-            if (far != null && (far.Position - pos).sqrMagnitude > ChaseRange * ChaseRange)
+            float reach = ReachOf(me) * 0.85f;
+            if (far != null && ((far.Position - pos).sqrMagnitude > reach * reach || !HasLine(pos, far.Position)))
             {
-                _dodgeDir = (far.Position - pos).normalized;
+                _dodgeDir = PathToward(me, far.Position);
+                if (_dodgeDir.sqrMagnitude < 0.01f) _dodgeDir = (far.Position - pos).normalized;
                 _dodgeLeft = Random.Range(0.4f, 0.7f);
                 _bd.MoveInput = KeepInside(pos, _dodgeDir, room);
                 return;
@@ -351,14 +505,14 @@ namespace Game.Module.InGame
             if (_fRoomProp.GetValue(_bd) is RectTransform prop && prop != null
                 && !(bool)_fRoomPropUsed.GetValue(_bd))
             {
-                _bd.MoveInput = Toward(pos, prop.anchoredPosition);
+                _bd.MoveInput = PathToward(me, prop.anchoredPosition);
                 return;
             }
             if ((bool)_fExitOpen.GetValue(_bd) && _fExits.GetValue(_bd) is IList exits && exits.Count > 0)
             {
                 var gate = exits[0];
                 var view = gate.GetType().GetField("View").GetValue(gate) as RectTransform;
-                if (view != null) { _bd.MoveInput = Toward(pos, view.anchoredPosition); return; }
+                if (view != null) { _bd.MoveInput = PathToward(me, view.anchoredPosition); return; }
             }
             _bd.MoveInput = Vector2.zero;
         }
