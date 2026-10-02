@@ -92,35 +92,48 @@ def cord():
         save(f'fx_soulcord_{i + 1}', im)
 
 
+def cut8(sheet, stem, align):
+    """8장짜리(4열 x 2행, 384x512 칸) -> 192x256 여덟 장.
+
+    생성 그림은 윗줄과 아랫줄의 기준점이 몇십 px 씩 어긋나 온다 — 넘기면 위아래로 튄다.
+    그림을 고치지 않고 **칸 안에서 옮겨** 맞춘다.
+      align='bottom' : 가장 아래 픽셀을 칸 아래에서 20 px 위에, 그 밑동의 가로 중심을 칸 가운데에
+      align='center' : 그림 덩어리의 한가운데를 칸 한가운데에
+    """
+    for i, c in enumerate(cells(sheet, 4, 2)):
+        im = glow_alpha(c)
+        solid = im.getchannel('A').point(lambda v: 255 if v > 60 else 0)
+        box = solid.getbbox()
+        if box:
+            if align == 'bottom':
+                band = solid.crop((0, max(box[1], box[3] - 40), im.width, box[3])).getbbox()
+                cx = (band[0] + band[2]) / 2 if band else (box[0] + box[2]) / 2
+                dx, dy = round(im.width / 2 - cx), (im.height - 20) - box[3]
+            else:
+                dx = round(im.width / 2 - (box[0] + box[2]) / 2)
+                dy = round(im.height / 2 - (box[1] + box[3]) / 2)
+            moved = Image.new('RGBA', im.size)
+            moved.paste(im, (dx, dy))
+            im = moved
+        save(f'{stem}_{i + 1}', shrink(im, (192, 256)))
+
+
 def spot():
     src = os.path.join(IN, '_soul2_beam.png')
     if not os.path.exists(src):
         print('없음 _soul2_beam.png'); return
-    beam = shrink(glow_alpha(Image.open(src)), (256, 384))
-    save('fx_spotbeam', beam)
+    save('fx_spotbeam', shrink(glow_alpha(Image.open(src)), (256, 384)))
 
-    # 어둠 — 빛줄기가 덮는 자리만 뚫는다. 줄마다 빛의 왼끝~오른끝 사이가 «안»이다.
-    w, h = beam.size
-    ap = beam.getchannel('A').load()
-    mask = Image.new('L', (w, h), 0)
-    mp = mask.load()
-    for y in range(h):
-        xs = [x for x in range(w) if ap[x, y] > 28]
-        if len(xs) < 2:
-            continue
-        for x in range(xs[0], xs[-1] + 1):
-            mp[x, y] = 255
-    mask = mask.filter(ImageFilter.GaussianBlur(6))
-    dark = Image.new('RGBA', (w, h), (255, 255, 255, 255))
-    dark.putalpha(mask.point(lambda v: 255 - v))
-    # 가장자리는 반드시 꽉 찬 어둠 — 둘레를 메우는 판과 이어져야 한다.
-    dp = dark.load()
-    for x in range(w):
-        dp[x, 0] = dp[x, h - 1] = (255, 255, 255, 255)
-    for y in range(h):
-        dp[0, y] = dp[w - 1, y] = (255, 255, 255, 255)
-    save('fx_spotdark', dark)
 
+def icons():
+    """버튼 아이콘 — 투명 바탕으로 받는다. 크기만 확인한다."""
+    for n in ('possessicon_enter', 'possessicon_leave'):
+        src = os.path.join(IN, n + '.png')
+        if not os.path.exists(src):
+            print('없음', n); continue
+        im = Image.open(src).convert('RGBA')
+        assert im.size == (96, 108), f'{n} 크기 {im.size}'
+        save(n, im)
 
 def glow():
     src = os.path.join(IN, 'possessbutton_glow.png')
@@ -130,11 +143,13 @@ def glow():
 
 
 if __name__ == '__main__':
-    cut('_soul2_wisp_sheet.png', 'fx_soulwisp', 4, 1, (192, 512))
-    cut('_soul2_ripple_sheet.png', 'fx_soulripple', 2, 2, (384, 256))
+    # 3차(2026-10-02) — 4장짜리는 넘길 때 뚝뚝 끊겨 8장짜리로 다시 받았다. 혼줄 · 빛줄기는 2차 그대로.
+    cut8('_soul3_wisp_sheet.png', 'fx_soulwisp', 'bottom')
+    cut8('_soul3_ripple_sheet.png', 'fx_soulripple', 'center')
+    cut8('_soul3_pillar_sheet.png', 'fx_soulpillar', 'bottom')
+    cut8('_soul3_flame_sheet.png', 'fx_soulflame', 'bottom')
+    cut8('_soul3_aura_sheet.png', 'fx_soulaura', 'bottom')
     cord()
-    cut('_soul2_pillar_sheet.png', 'fx_soulpillar', 4, 1, (192, 512))
-    cut('_soul2_flame_sheet.png', 'fx_soulflame', 4, 1, (192, 512))
-    cut('_soul2_aura_sheet.png', 'fx_soulaura', 2, 2, (384, 256))
     spot()
     glow()
+    icons()
