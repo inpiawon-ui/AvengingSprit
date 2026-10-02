@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
-SRC_DIR = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms')   # rooms90_ch1.txt … rooms90_ch6.txt
+SRC_DIR = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms')   # rooms90_ch1.txt … rooms90_chN.txt
 TSV = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms', 'rooms90.tsv')
 SHEET = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms', 'rooms90_sheet.png')
 
@@ -98,15 +98,48 @@ BLADE_RADIUS = 2.2
 HAMMER_HALF_TRAVEL = 1.7
 SLIDE_HALF_TRAVEL = 2.0
 
-# 잡몹 — 챕터마다 나오는 것이 정해져 있다(`BattleDirector.TrashKeysFor` 와 같아야 한다)
-TRASH = {
-    1: {'skeleton', 'bat', 'scrapgunner'},
-    2: {'bat', 'actor_enforcer', 'roadwarden'},
-    3: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross'},
-    4: {'bat', 'actor_enforcer', 'coilwalker', 'roadwarden'},
-    5: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross'},
-    6: {'skeleton', 'actor_enforcer', 'coilwalker', 'turret_cross', 'roadwarden'},
+# ── 챕터 정의 — chapters.tsv 가 단일 출처다(유니티 임포터도 같은 표를 읽는다) ──
+# 챕터 수 · 잡몹 목록 · 적 수 범위를 여기 코드에 적지 않는다. 새 챕터는 그 표에 한 줄을 더한다.
+CHAPTERS_TSV = os.path.join(ROOT, 'Projects', 'AVSR', 'Rooms', 'chapters.tsv')
+
+
+def load_chapters():
+    rows, head = {}, None
+    with open(CHAPTERS_TSV, encoding='utf-8') as f:
+        for raw in f:
+            line = raw.rstrip('\n')
+            if not line.strip() or line.startswith('#'):
+                continue
+            cells = line.split('\t')
+            if head is None:
+                head = cells
+                continue
+            d = dict(zip(head, cells))
+            lo, hi = d['count'].split('-')
+            rows[int(d['ch'])] = {
+                'stage': d['stage'], 'boss': d['boss'], 'leader': d['leader'],
+                'trash': set(d['trash'].split(',')), 'lean': d['lean'],
+                'count': (int(lo), int(hi)), 'name': d['name'],
+            }
+    return rows
+
+
+CHAPTERS = load_chapters()
+TRASH = {ch: c['trash'] for ch, c in CHAPTERS.items()}
+
+# 상성(가위바위보) — `AffinityRule.KindOf` 와 같아야 한다. 힘 → 날 → 술 → 힘.
+KIND = {
+    'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade',
+    'actor_enforcer': 'force', 'turret_cross': 'force',
+    'skeleton': 'magic', 'coilwalker': 'magic',
+    'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
+    'ninja': 'blade', 'amazon': 'blade', 'amazon_elite': 'blade',
+    'baseball': 'force', 'guru': 'force', 'ninja_chain': 'force', 'commando_grenade': 'force',
+    'commando_missile': 'force', 'commando_laser': 'force', 'robot': 'force',
+    'dragoon': 'magic', 'snowwoman': 'magic', 'dragon_blue': 'magic', 'salamander': 'magic',
+    'vampire': 'magic', 'white_wizard': 'magic', 'medium': 'magic', 'death': 'magic',
 }
+BEATS = {'force': 'blade', 'blade': 'magic', 'magic': 'force'}
 RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross'}
 STATIC_TRASH = {'turret_cross'}   # 안 움직인다 — 자리가 곧 전부다
 
@@ -124,9 +157,7 @@ MELEE_HOST = {'amazon', 'amazon_elite', 'death', 'guru', 'baseball', 'ninja_chai
 MAX_HOSTS = 2
 
 # 방마다 적 수 — 챕터 안에서도 뒤로 갈수록 는다
-COUNT = {
-    1: (3, 5), 2: (4, 6), 3: (5, 7), 4: (6, 8), 5: (7, 9), 6: (8, 10),
-}
+COUNT = {ch: c['count'] for ch, c in CHAPTERS.items()}
 COMBAT_NO = ['001', '002', '003', '005', '006', '007', '009', '010', '011', '013', '014']
 
 
@@ -139,7 +170,7 @@ class Room:
         self.rows = []
         self.objects = []        # (kind, cx, cy, w, h)
         self.spawns = []         # (actor, cx, cy, host)
-        self.chapter = int(cid[7])
+        self.chapter = int(re.match(r'ROOM_CH(\d+)_', cid).group(1))
         self.no = cid[-3:]
         self.line = 0
 
@@ -158,7 +189,7 @@ def parse(path):
             s = line.strip()
             if not s or s.startswith('//'):
                 continue
-            m = re.match(r'\[(CH\d_\d{3})\]\s*(.*)', s)
+            m = re.match(r'\[(CH\d+_\d{3})\]\s*(.*)', s)
             if m:
                 cur = Room('ROOM_' + m.group(1))
                 cur.line = ln
@@ -262,13 +293,22 @@ def inside(x, y, r, margin=0.0):
     return r[0] - margin < x < r[2] + margin and r[1] - margin < y < r[3] + margin
 
 
-def reachable(room):
-    """입구에서 문 아래(y 13)까지 걸어갈 수 있나. `RoomMapWindow.Reachable` 과 같은 자로 잰다."""
+# 넉넉한 길 — 발자국을 이만큼(m) 부풀려도 문까지 가야 한다.
+# 물건은 그림이 70% 라 한 칸 띄운 틈이 1.3 m, 발 폭이 0.8 m 다 — 지나가기는 하지만 모서리에 걸려
+# 비비적거린다(2026-10-02 자동 검증에서 CH6_003 기둥 틈에 끼어 맴돌았다). 0.3 이면 두 칸 틈부터 통과다.
+WIDE_PAD = 0.3
+
+
+def reachable(room, pad=0.0):
+    """입구에서 문 아래(y 13)까지 걸어갈 수 있나. `RoomMapWindow.Reachable` 과 같은 자로 잰다.
+
+    pad 를 주면 발자국을 그만큼 부풀려 잰다 — 「좁은 틈을 비집지 않고도 가는 길」이 있는가.
+    """
     step = 0.25
     us = 1.2                                       # GameConfig.UnitScale
     bw, bh = 96 * us, 92 * us
-    hx = max(bw * 0.25, 21) / 72
-    hy = max(bh * 0.16, 14) / 72
+    hx = max(bw * 0.25, 21) / 72 + pad
+    hy = max(bh * 0.16, 14) / 72 + pad
     drop = (bh * 0.5) / 72 - hy
     half_x, half_y = bw * 0.5 / 72, bh * 0.5 / 72
     scale = 0.7                                     # ObstacleViewScale
@@ -289,7 +329,7 @@ def reachable(room):
         px, py = gx * step, gy * step
         if px < half_x or px > W - half_x or py < half_y or py > H - half_y:
             return False
-        fy = py - drop
+        fy = py - drop + pad
         for bx, by, bz, bwd in boxes:
             if abs(px - bx) < bz + hx and abs(fy - by) < bwd + hy:
                 return False
@@ -405,6 +445,8 @@ def check(room, errors, warns):
     ok, cells = reachable(room)
     if not ok:
         errors.append(f'{tag}: 입구에서 문까지 못 간다')
+    elif not reachable(room, WIDE_PAD)[0]:
+        warns.append(f'{tag}: 문까지 가는 길이 전부 한 칸 틈을 지난다 — 두 칸 폭 길이 하나는 있어야 한다')
 
 
 def write_tsv(rooms):
@@ -439,7 +481,7 @@ def sheet(rooms, out=SHEET):
     S = 15
     pw, ph = W * S + 10, H * S + 30
     cols = 15
-    img = Image.new('RGB', (cols * pw + 10, 6 * ph + 10), (26, 28, 34))
+    img = Image.new('RGB', (cols * pw + 10, max(r.chapter for r in rooms) * ph + 10), (26, 28, 34))
     dr = ImageDraw.Draw(img)
     try:
         font = ImageFont.truetype('C:/Windows/Fonts/malgun.ttf', 11)
@@ -450,7 +492,7 @@ def sheet(rooms, out=SHEET):
         col = (int(r.no) - 1) % 15
         cx0 = col * pw + 6
         cy0 = (r.chapter - 1) * ph + 6
-        dr.text((cx0, cy0), f'{r.id[5:]} {r.name}', fill=(235, 235, 235), font=font)
+        dr.text((cx0, cy0), f'{r.id[5:]} {r.name}'[:22], fill=(235, 235, 235), font=font)
         top = cy0 + 16
         dr.rectangle([cx0, top, cx0 + W * S, top + H * S], fill=(50, 54, 64), outline=(95, 100, 115))
         dr.rectangle([cx0, top, cx0 + W * S, top + 2.5 * S], fill=(42, 46, 56))
@@ -496,12 +538,46 @@ def sheet(rooms, out=SHEET):
     return out
 
 
+def mix_report(rooms):
+    """챕터마다 잡몹의 날 · 힘 · 술 수와, 그 방에 많은 쪽을 이기는 몸(답이 되는 몸)이 선 방 수."""
+    by = {}
+    for r in rooms:
+        d = by.setdefault(r.chapter, {'blade': 0, 'force': 0, 'magic': 0, 'answer': 0, 'rooms': 0, 'hosts': set()})
+        d['rooms'] += 1
+        cnt = {'blade': 0, 'force': 0, 'magic': 0}
+        for actor, x, y, host in r.spawns:
+            if host:
+                d['hosts'].add(actor)
+            else:
+                k = KIND.get(actor)
+                if k:
+                    cnt[k] += 1
+                    d[k] += 1
+        major = max(cnt, key=cnt.get)
+        if any(host and BEATS.get(KIND.get(actor)) == major for actor, x, y, host in r.spawns):
+            d['answer'] += 1
+    for ch in sorted(by):
+        d = by[ch]
+        lean = CHAPTERS[ch]['lean'] if ch in CHAPTERS else '?'
+        print(f"구성 CH{ch}: 날 {d['blade']} · 힘 {d['force']} · 술 {d['magic']} (목표 {lean})"
+              f" · 답이 되는 몸이 선 방 {d['answer']}/{d['rooms']} · 몸 {len(d['hosts'])}종")
+
+
 def main():
     strict = '--strict' in sys.argv
+    only = None                        # --only 7  → 그 챕터 파일만 검사한다(tsv 는 안 쓴다)
+    if '--only' in sys.argv:
+        only = int(sys.argv[sys.argv.index('--only') + 1])
     rooms = []
-    for name in sorted(os.listdir(SRC_DIR)):
-        if re.match(r'rooms90_ch\d\.txt$', name):
-            rooms += parse(os.path.join(SRC_DIR, name))
+    names = [n for n in os.listdir(SRC_DIR) if re.match(r'rooms90_ch\d+\.txt$', n)]
+    names.sort(key=lambda n: int(re.search(r'ch(\d+)', n).group(1)))
+    for name in names:
+        ch = int(re.search(r'ch(\d+)', name).group(1))
+        if only is not None and ch != only:
+            continue
+        if ch not in CHAPTERS:
+            raise SystemExit(f'{name}: chapters.tsv 에 CH{ch} 줄이 없다')
+        rooms += parse(os.path.join(SRC_DIR, name))
     errors, warns = [], []
     ids = set()
     for r in rooms:
@@ -515,8 +591,19 @@ def main():
         print('오류', e)
     print(f'방 {len(rooms)} · 물건 {sum(len(r.objects) for r in rooms)} · 적 {sum(len(r.spawns) for r in rooms)}'
           f' · 경고 {len(warns)} · 오류 {len(errors)}')
+    mix_report(rooms)
     if errors or (strict and warns):
         sys.exit(1)
+    if only is not None:
+        out = os.path.join(SRC_DIR, f'rooms90_sheet_ch{only}.png')
+        print('배치도(이 챕터만):', sheet(rooms, out))
+        return
+    # 챕터마다 전투방 11칸이 다 있어야 한다
+    for ch in CHAPTERS:
+        have = {r.no for r in rooms if r.chapter == ch}
+        miss = [n for n in COMBAT_NO if n not in have]
+        if miss:
+            raise SystemExit(f'CH{ch}: 방이 빠졌다 — {miss}')
     write_tsv(rooms)
     print('저장:', TSV)
     print('배치도:', sheet(rooms))
