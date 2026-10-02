@@ -49,12 +49,36 @@ SHEET = {
     "snowwoman": "Enemies - SnowWoman.png",
     "vampire": "Enemies - Vampire.png",
     "ghost": "Playable Characters - Ghost.png",
+    "death": "Miscellaneous - Death.png",
     "crusher": "Bosses - Crusher.png",
     "guardian": "Bosses - Guardian.png",
     "kingpin": "Bosses - Kingpin.png",
     "python": "Bosses - Python.png",
     "robot_snakes": "Bosses - Robot Snakes.png",
     "sludge": "Bosses - Sludge.png",
+}
+
+# 지금 게임 그림의 **복장이 원작과 다른 몸** (2026-10-02 지적 — IP 작품이라 원작과 같아야 한다).
+# 여기 적힌 몸은 «지금 그림의 복장을 지켜라» 대신 «원작 복장으로 그려라» 로 발주한다.
+# 자세는 여전히 지금 게임 그림을 따른다 — 동작 타이밍 · 총구 자리를 다시 안 맞추려고.
+ORIGINAL_OUTFIT = {
+    "amazon": (
+        "- 머리 : 주황색 긴 머리 · 눈 : 파란 눈\n"
+        "- 상의 : 어깨끈 없는 **분홍 튜브톱** (지금 그림의 파란 탱크톱은 틀렸다)\n"
+        "- 하의 : **파란 짧은 치마** — 한 장의 천이 두 다리 사이를 끊김 없이 덮는다 (검은 반바지는 틀렸다)\n"
+        "- 부츠 : **분홍 부츠** · 손목 : 밝은 회색 손목 보호대"),
+    "amazon_elite": (
+        "- 머리 : **선명한 청보라색** 긴 머리 · 눈 : 붉은 눈\n"
+        "- 상의 : 어깨끈 없는 **초록 튜브톱** (지금 그림의 검붉은 톱은 틀렸다)\n"
+        "- 하의 : **분홍 짧은 치마** — 한 장의 천이 두 다리 사이를 끊김 없이 덮는다 (반바지는 틀렸다)\n"
+        "- 부츠 : **초록 부츠**(분홍 줄) · 손목 : 밝은 회색 손목 보호대"),
+    "ninja_chain": (
+        "- 닌자복 전체(두건 · 복면 · 상의 · 하의) : **밝고 선명한 분홍** (지금 그림의 검붉은색은 틀렸다)\n"
+        "- 사슬 : 은회색 · 신발과 손 보호대 : 회색"),
+    "death": (
+        "- 도포 : **선명한 분홍** · 허리띠 : **파랑** · 도포 끝단 : 노란 테 (지금 그림의 탁한 색은 틀렸다)\n"
+        "- 얼굴 : 은회색 해골, 눈구멍 안에 붉은 눈\n"
+        "- **큰 낫**(은빛 날 · 파란 자루)을 **여덟 칸 모두** 들고 있다 — 지금 그림에 낫이 없는 칸도 그 자세에 맞게 쥐여 준다"),
 }
 
 VIEW = {
@@ -144,7 +168,7 @@ API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성·편집 �
 ⚠⚠ 가장 중요 — **여덟 칸 모두 같은 시점이다: {view_name}.**
    다른 방향으로 그리면 그 납품은 통째로 버린다.
    여덟 칸의 인물은 **같은 사람**이어야 한다 — 복장 · 색 · 체형 · 머리 모양이 칸마다 달라지면 안 된다.
-   입력 1번(지금 게임 그림)의 **복장과 색을 그대로 지켜라.** 바꾸는 것은 밀도와 입체감뿐이다.
+{outfit_rule}
 
 ■ 기본 원칙 — **지금 그림의 «자세»를 그대로 따라 그린다**
    칸마다 입력 1번의 같은 칸을 옆에 두고, **같은 자세 · 같은 실루엣 · 같은 손발 위치**로 그려라.
@@ -152,7 +176,7 @@ API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성·편집 �
    ⚠ 지금 그림이 크게 움직이는 칸(예: 두 주먹으로 바닥을 내려찍는 공격)을 **얌전한 자세로
      바꿔 오면 그 납품은 못 쓴다.** 연출이 통째로 죽는다.
 
-할 일: 같은 인물 · 같은 복장 · 같은 색으로 두고 **밀도와 입체감만** 올린다.
+{todo_line}
 - 명암 4~5단계. 빛은 왼쪽 위, 그늘은 오른쪽 아래, 밝은 쪽에 얇은 테두리 빛.
 - 외곽선은 검정 하나로만 두르지 말고 빛 쪽 · 그늘 쪽 색을 나눈다.
 - 얼굴과 무기는 또렷하게. 잔무늬로 지저분하게 만들지 마라.
@@ -199,6 +223,23 @@ def write_order(key, facing):
                       f"1991년 아케이드 원작 시트(느낌의 기준 — 자세는 따라 하지 말고 "
                       f"도트 굵기 · 색 · 외곽선 처리만 참고).\n")
 
+    outfit = ORIGINAL_OUTFIT.get(key)
+    if outfit:
+        portrait = f"Assets/BaseResource/Growth/Portraits/portrait_{key}.png"
+        if os.path.exists(os.path.join(ROOT, portrait)):
+            sheet_line += (f"5. {portrait}  원작 복장을 키워 그린 **통과본**(같은 인물). "
+                           f"옷 모양과 색은 이 그림과 4번 원작 시트가 정답이다.\n")
+        outfit_rule = (
+            "   ⚠ 입력 1번(지금 게임 그림)은 **복장과 색이 원작과 다르다 — 따라 그리지 마라.**\n"
+            "   자세만 1번에서 가져오고, 복장과 색은 **원작**(4번 시트 · 5번 통과본)대로 그린다 :\n"
+            + "\n".join("   " + ln for ln in outfit.split("\n")))
+        todo_line = ("할 일: 자세는 지금 그림 그대로, **복장과 색은 원작으로** 바꾸고, "
+                     "밀도와 입체감은 퀄업 기준(3번)에 맞춘다.")
+    else:
+        outfit_rule = ("   입력 1번(지금 게임 그림)의 **복장과 색을 그대로 지켜라.** "
+                       "바꾸는 것은 밀도와 입체감뿐이다.")
+        todo_line = "할 일: 같은 인물 · 같은 복장 · 같은 색으로 두고 **밀도와 입체감만** 올린다."
+
     dst = f"Projects/AVSR/_exchange/ref/char_up/out_{key}_{facing}_raw.png"
     text = TEMPLATE.format(
         key=key,
@@ -207,6 +248,8 @@ def write_order(key, facing):
         src_x3=os.path.relpath(src_x3, ROOT).replace("\\", "/"),
         anchor="Projects/AVSR/_exchange/ref/char_up/up_front_idle.png",
         sheet_line=sheet_line,
+        outfit_rule=outfit_rule,
+        todo_line=todo_line,
         problems="\n".join(problem_lines(key, facing)),
         dst=dst,
     )

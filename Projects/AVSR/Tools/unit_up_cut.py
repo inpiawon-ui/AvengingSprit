@@ -33,14 +33,32 @@ LYING = {"_die2"}
 
 
 def key_out(im):
-    """마젠타 배경을 뚫고, 가장자리에 번진 분홍 기운을 뺀다."""
+    """마젠타 배경을 뚫고, 가장자리에 번진 분홍 기운을 뺀다.
+
+    ⚠ 색만 보고 뚫지 않는다 — **판 가장자리에서 이어진** 마젠타만 배경이다.
+      분홍 옷을 입은 몸(아마존 · 사슬 닌자 · 데스)은 옷 색이 배경과 가까워서,
+      색만 보면 옷이 통째로 뚫려 검게 나왔다(2026-10-02). 몸은 어두운 외곽선에 싸여 있어
+      배경과 이어지지 않는다.
+    """
+    from scipy import ndimage
     a = np.asarray(im.convert("RGB")).astype(np.int16)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     dist = np.abs(a - np.array([255, 0, 255])).sum(axis=2)
     pink = (r > 120) & (b > 120) & (r - g > 45) & (b - g > 45)
-    alpha = np.where((dist < 150) | pink, 0, 255).astype(np.uint8)
+    like_bg = (dist < 150) | pink
+
+    # 가장자리에 닿은 덩어리만 배경
+    labels, _ = ndimage.label(like_bg)
+    edge = np.unique(np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]]))
+    bg = np.isin(labels, edge[edge > 0])
+    # 팔 · 다리 사이처럼 몸에 갇힌 틈은 **순수 마젠타**일 때만 뚫는다(옷의 분홍은 훨씬 탁하다)
+    bg |= dist < 60
+
+    alpha = np.where(bg, 0, 255).astype(np.uint8)
     rgb = a.copy()
-    spill = (alpha > 0) & (r - g > 20) & (b - g > 20)
+    # 번짐 제거는 배경과 **맞닿은 테두리**에만 — 옷 안쪽의 분홍은 건드리지 않는다
+    rim = ndimage.binary_dilation(bg, iterations=2) & ~bg
+    spill = rim & (r - g > 20) & (b - g > 20) & like_bg
     rgb[spill, 0] = np.minimum(rgb[spill, 0], g[spill] + 20)
     rgb[spill, 2] = np.minimum(rgb[spill, 2], g[spill] + 20)
     return Image.fromarray(np.dstack([rgb.astype(np.uint8), alpha]))
