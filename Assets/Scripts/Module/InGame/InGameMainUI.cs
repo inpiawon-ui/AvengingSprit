@@ -278,6 +278,11 @@ namespace Game.Module.InGame
             SetStaticLabels();
             // 판은 유령으로 시작한다 — HOST 칸과 스킬 버튼을 먼저 비워 둔다.
             ShowNoHost();
+            // 「CURRENT HOST」 칸의 얼굴 — 원작처럼 얼굴만 크게 보여 준다. 없으면 몸 그림으로 버틴다.
+            // 판이 서자마자 첫 빙의 알림이 오므로 **판보다 먼저** 받아 둔다.
+            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+            catch (Exception e) { Debug.LogWarning($"[InGameUI] 얼굴 아틀라스 로드 실패 — {e.Message}"); }
+
             await _battle.BootAsync(field, layer);
 
             // 카드 문구는 테이블에서 읽는다 — 버프 정의를 UI 에 복제하지 않기 위함
@@ -757,7 +762,8 @@ namespace Game.Module.InGame
             var portrait = _ui.Get<Image>("HostPortraitImage");
             if (portrait != null && _battle != null)
             {
-                portrait.sprite = _battle.UnitSprite(e.PossessedHostKey);
+                var face = _faceAtlas != null ? _faceAtlas.GetSprite($"face_{e.PossessedHostKey}") : null;
+                portrait.sprite = face != null ? face : _battle.UnitSprite(e.PossessedHostKey);
                 portrait.preserveAspect = true;
                 portrait.gameObject.SetActive(portrait.sprite != null);
             }
@@ -1398,6 +1404,7 @@ namespace Game.Module.InGame
         // 전부 표가 만든 자리를 그대로 쓴다.
         private SpriteAtlas _cardAtlas;
         private SpriteAtlas _uiAtlas;
+        private SpriteAtlas _faceAtlas;
 
         /// <summary>
         /// 화면 아틀라스에서 한 장. 없으면 null — 부르는 쪽이 단색으로 버틴다.

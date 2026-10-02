@@ -195,6 +195,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a33d6e972459bf34ea83c76e19807d3b
+    m_Address: atlas/hostface
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c05cc5a4b46fead4088deae4e7cf571a
     m_Address: atlas/unit_commando_grenade
     m_ReadOnly: 0

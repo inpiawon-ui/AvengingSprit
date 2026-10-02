@@ -57,6 +57,7 @@ namespace Game.Module.Lobby
         private UIBinder _ui;
         private IPlayerDataService _player;
         private SpriteAtlas _hostAtlas;
+        private SpriteAtlas _faceAtlas;
         private ChestReward _shown;
 
         public bool IsOpen => gameObject.activeSelf;
@@ -84,6 +85,9 @@ namespace Game.Module.Lobby
         {
             try { _hostAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>(AtlasAddress); }
             catch (Exception e) { Debug.LogWarning($"[ChestReward] 호스트 아틀라스 로드 실패 — {e.Message}"); }
+            // 조각 칸의 얼굴 — 원작 얼굴 아이콘을 먼저 쓴다. 없는 몸만 예전 초상으로 버틴다.
+            try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
+            catch (Exception e) { Debug.LogWarning($"[ChestReward] 얼굴 아틀라스 로드 실패 — {e.Message}"); }
             if (this != null && gameObject.activeSelf) Fill();
         }
 
@@ -130,7 +134,8 @@ namespace Game.Module.Lobby
                     string key = _shown.ShardHostKeys[i - 1];
                     var host = _player?.GetHost(key);
                     var grade = host != null ? host.Grade : HostGrade.B;
-                    var face = _hostAtlas != null ? _hostAtlas.GetSprite($"hostslotportrait_{key}") : null;
+                    var face = _faceAtlas != null ? _faceAtlas.GetSprite($"face_{key}") : null;
+                    if (face == null && _hostAtlas != null) face = _hostAtlas.GetSprite($"hostslotportrait_{key}");
                     BindCard(card, FrameOf(grade), face, $"×{_shown.ShardCounts[i - 1]}");
                 }
             }
