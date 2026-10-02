@@ -296,8 +296,8 @@ MonoBehaviour:
   - _hostKey: hopper_smg
     _nameEn: "HOOPER \u2014 SUBMACHINE GUN"
     _nameKr: "\uD638\uD37C(\uAE30\uAD00\uB2E8\uCD1D)"
-    _hp: 63
-    _atk: 68
+    _hp: 72
+    _atk: 88
     _spd: 92
     _atkSpeed: 99
     _defenseGrade: 3
@@ -408,7 +408,7 @@ MonoBehaviour:
   - _hostKey: commando_laser
     _nameEn: "COMMANDO \u2014 LASER"
     _nameKr: "\uCF54\uB9CC\uB3C4(\uB808\uC774\uC800)"
-    _hp: 68
+    _hp: 78
     _atk: 84
     _spd: 72
     _atkSpeed: 56
@@ -800,8 +800,8 @@ MonoBehaviour:
   - _hostKey: medium
     _nameEn: "MAGICIAN \u2014 DARK"
     _nameKr: "\uC601\uB9E4"
-    _hp: 65
-    _atk: 82
+    _hp: 72
+    _atk: 90
     _spd: 69
     _atkSpeed: 55
     _defenseGrade: 2
@@ -856,8 +856,8 @@ MonoBehaviour:
   - _hostKey: ninja
     _nameEn: "NINJA \u2014 SHURIKEN"
     _nameKr: "\uB2CC\uC790"
-    _hp: 62
-    _atk: 72
+    _hp: 70
+    _atk: 88
     _spd: 91
     _atkSpeed: 94
     _defenseGrade: 2
@@ -912,8 +912,8 @@ MonoBehaviour:
   - _hostKey: ninja_chain
     _nameEn: "NINJA \u2014 CHAIN"
     _nameKr: "\uB2CC\uC790(\uC0AC\uC2AC)"
-    _hp: 72
-    _atk: 78
+    _hp: 80
+    _atk: 82
     _spd: 84
     _atkSpeed: 71
     _defenseGrade: 4
@@ -1136,8 +1136,8 @@ MonoBehaviour:
   - _hostKey: vampire
     _nameEn: VAMPIRE
     _nameKr: "\uD761\uD608\uADC0"
-    _hp: 76
-    _atk: 72
+    _hp: 80
+    _atk: 80
     _spd: 75
     _atkSpeed: 69
     _defenseGrade: 5
