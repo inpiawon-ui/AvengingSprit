@@ -922,7 +922,7 @@ namespace Game.Module.InGame
         }
 
         /// <summary>혼이 빠진 몸의 색. 원작 쓰러짐 그림을 그대로 두고 색만 뺀다.</summary>
-        private static readonly Color CorpseTint = new(0.62f, 0.66f, 0.76f, 1f);
+        private static readonly Color CorpseTint = new(0.78f, 0.82f, 0.95f, 1f);
 
         private bool _corpseHold;
 
@@ -930,7 +930,28 @@ namespace Game.Module.InGame
         /// 쓰러진 몸을 **사라지지 않게 붙든다.** 유령이 돌아와 되살릴 자리라서
         /// 바닥에 남아 있어야 한다. 풀면 그때부터 평소처럼 옅어지며 사라진다.
         /// </summary>
-        public void SetCorpseHold(bool on) => _corpseHold = on;
+        public void SetCorpseHold(bool on)
+        {
+            _corpseHold = on;
+            // 혼이 빠진 몸은 잿빛이다. 색을 곱해서는 잿빛이 안 된다(어두워질 뿐) — 재질로 뺀다.
+            // 풀 때 되돌리지 않는다. 풀린 몸은 그 색 그대로 옅어지며 사라진다.
+            if (on && _body != null)
+            {
+                var gray = GrayMaterial();
+                if (gray != null) _body.material = gray;
+            }
+        }
+
+        private static Material s_gray;
+
+        private static Material GrayMaterial()
+        {
+            if (s_gray != null) return s_gray;
+            var sh = Shader.Find("UI/Gray");
+            // 셰이더가 없으면 기본 재질로 떨어진다 — 잿빛이 안 될 뿐 터지지는 않는다.
+            if (sh != null) s_gray = new Material(sh) { hideFlags = HideFlags.HideAndDontSave };
+            return s_gray;
+        }
 
         /// <summary>사망 연출을 진행시킨다. 다 끝났으면 true — 그때 없앤다.</summary>
         public bool TickDeath(float dt)
@@ -1526,7 +1547,17 @@ namespace Game.Module.InGame
         }
 
         /// <summary>아무 일도 없을 때의 색. 분신만 흰색이 아니다.</summary>
-        private Color RestColor => IsPhantom ? PhantomColor : Color.white;
+        private Color RestColor => IsPhantom ? PhantomColor
+            : _dim < 0.999f ? new Color(_dim, _dim, Mathf.Min(1f, _dim * 1.18f), 1f) : Color.white;
+
+        private float _dim = 1f;
+
+        /// <summary>
+        /// 몸을 어둡게 가라앉힌다(1 = 제 색). 유령이 탈 몸을 고를 때 **못 타는 것들**을 물린다 —
+        /// 방을 통째로 덮어 어둡게 하면 탈 수 있는 몸까지 같이 어두워진다.
+        /// 상태이상 색 · 피격 점멸은 이 위에 그대로 이긴다.
+        /// </summary>
+        public void SetDim(float k) => _dim = Mathf.Clamp01(k);
 
         /// <summary>
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.

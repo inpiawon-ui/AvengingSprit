@@ -135,6 +135,7 @@ namespace Game.Module.InGame
         private Unit _possessTarget;
         private bool _hadPossessTarget;
         private bool _hadPossessBlocked;
+        private bool _hadPossessLeave, _hadPossessDenied;
         private int _hadPossessCost = -1;
 
         // ── 유지 훅 ───────────────────────────────────────────────
@@ -7939,15 +7940,21 @@ namespace Game.Module.InGame
                 ? Mathf.Max(1, GhostHpMax * LeaveCostPercent / 100) : 0;
             // 놓아준 직후의 짧은 잠금 동안에는 대상이 있어도 못 누른다.
             bool blocked = _host == null && _repossessLock > 0f;
+            bool leave = _host != null;
+            bool denied = leave && !CanLeaveHost();
             if (has == _hadPossessTarget && cost == _hadPossessCost
-                && blocked == _hadPossessBlocked) return;
+                && blocked == _hadPossessBlocked
+                && leave == _hadPossessLeave && denied == _hadPossessDenied) return;
 
             _hadPossessTarget = has;
             _hadPossessCost = cost;
             _hadPossessBlocked = blocked;
+            _hadPossessLeave = leave;
+            _hadPossessDenied = denied;
             _bus.Publish(new PossessTargetChangedEvent
             {
                 HasTarget = has, GhostCost = cost, Blocked = blocked,
+                IsLeave = leave, LeaveDenied = denied,
             });
         }
 
@@ -8276,7 +8283,10 @@ namespace Game.Module.InGame
                 // 몸에는 **일찍** 닿는다(85%). 나머지 15% 는 제자리에서 쏙 빨려 들어가는 시간이다 —
                 // 도착과 사라짐이 같은 순간이면 "들어갔다"가 아니라 "없어졌다"로 보인다.
                 float travel = Mathf.Clamp01(t / SuckStart);
-                _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, travel * travel);
+                // 평소 빙의는 빨려 들듯 가속한다. 되살리기는 혼줄을 따라 내려와 **몸 앞에서 감속**한다 —
+                // 가속한 채 꽂히면 줄을 타는 게 아니라 건너뛰는 것으로 보인다(검수).
+                float eased = _channelGhostSpan < 1f ? Mathf.SmoothStep(0f, 1f, travel) : travel * travel;
+                _ghost.Position = Vector2.Lerp(_channelFrom, _channelTo, eased);
 
                 // 축소 그림(3장)이 크기를 담고 있으므로 스케일은 건드리지 않는다.
                 // 그림이 아직 없을 때만 스케일로 줄인다 — 픽셀이 뭉개지지만 없는 것보다 낫다.
@@ -8380,7 +8390,17 @@ namespace Game.Module.InGame
 
             // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다.
             // 몸이 있을 때 이 버튼은 **탈출**이다.
-            if (_host != null) { LeaveHost(); return; }
+            if (_host != null)
+            {
+                // 옮겨 탈 몸이 없으면 못 나간다 — 이유를 화면에 알린다(기획 2026-10-02).
+                if (!CanLeaveHost())
+                {
+                    _bus.Publish(new PossessDeniedEvent { NoHostToPossess = true });
+                    return;
+                }
+                LeaveHost();
+                return;
+            }
 
             if (_possessTarget == null || _repossessLock > 0f) return;
 

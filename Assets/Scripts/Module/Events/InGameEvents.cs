@@ -194,6 +194,16 @@ namespace Game.Module.Events
         public int GhostCost;
         /// <summary>대상은 있는데 지금은 못 누른다 — 쿨다운 또는 Ghost HP 부족.</summary>
         public bool Blocked;
+        /// <summary>지금 이 버튼은 「나가기」다(몸을 입고 있다). false 면 「빙의」.</summary>
+        public bool IsLeave;
+        /// <summary>나가기인데 옮겨 탈 몸이 방에 없다 — 눌러도 안 나간다.</summary>
+        public bool LeaveDenied;
+    }
+
+    /// <summary>나가기를 눌렀는데 옮겨 탈 몸이 없어 거절됐다. 화면이 이유를 한 줄 알린다.</summary>
+    public struct PossessDeniedEvent : IEvent
+    {
+        public bool NoHostToPossess;
     }
 
 

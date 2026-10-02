@@ -40,6 +40,9 @@ namespace Game.Module.InGame
             public Sprite[] Frames;
             public float Delay, Age, Life, FrameSeconds, FadeIn, FadeOut, ScaleFrom, ScaleTo, Alpha;
             public bool Loop;
+            /// <summary>따라다닐 몸. 몸에 붙은 기운은 몸이 걸어가면 같이 간다 — 제자리에 남으면 빈 바닥이 탄다.</summary>
+            public Unit Follow;
+            public Vector2 FollowOffset;
             public bool IsPlaying => Life > 0f;
 
             public void Stop()
@@ -68,6 +71,7 @@ namespace Game.Module.InGame
                 }
                 Age += dt;
                 if (Age >= Life) { Stop(); return; }
+                if (Follow != null) Rect.anchoredPosition = Follow.Position + FollowOffset;
 
                 int n = Frames.Length;
                 int i = Mathf.FloorToInt(Age / FrameSeconds);
@@ -135,6 +139,7 @@ namespace Game.Module.InGame
             fx.Rect.localScale = new Vector3(scaleFrom, scaleFrom, 1f);
             fx.Image.sprite = fx.Frames[0];
             fx.Image.color = new Color(1f, 1f, 1f, fadeIn > 0f ? 0f : alpha);
+            fx.Follow = null;
             fx.Delay = delay;
             fx.Age = 0f;
             fx.Life = Mathf.Max(0.02f, life);
@@ -150,57 +155,94 @@ namespace Game.Module.InGame
         }
 
         // 그림 안의 기준점(아래에서, 0~1) — 발주서의 「기준점」 과 같은 값이다.
-        private static readonly Vector2 PivotBottom = new(0.5f, 0.02f);
         private static readonly Vector2 PivotCenter = new(0.5f, 0.5f);
-        private static readonly Vector2 PivotPillar = new(0.5f, 96f / 1024f);
-        private static readonly Vector2 PivotFlame = new(0.5f, 64f / 1024f);
-        private static readonly Vector2 PivotAura = new(0.5f, 96f / 512f);
+        // 자르는 쪽(`soulfx_fit.py`)이 밑동을 칸 아래 20 px 에 맞춰 놓는다. 거기에 바닥 고리의 반 높이를 더한다.
+        private static readonly Vector2 PivotWisp = new(0.5f, 20f / 512f);
+        private static readonly Vector2 PivotPillar = new(0.5f, 34f / 512f);
+        private static readonly Vector2 PivotFlame = new(0.5f, 28f / 512f);
+        private static readonly Vector2 PivotAura = new(0.5f, 26f / 512f);
 
-        private static readonly Vector2 RippleSize = new(250f, 167f);
-        private static readonly Vector2 WispSize = new(120f, 320f);
-        private static readonly Vector2 PillarSize = new(156f, 416f);
-        private static readonly Vector2 FlameSize = new(104f, 277f);
-        private static readonly Vector2 AuraSize = new(250f, 167f);
+        // ⚠ **절제한다.** 캐릭터 키가 90 px 남짓이다. 처음에는 기둥을 416 px 로 세웠다가
+        //   「크다고 다 멋있는 게 아니다」로 반려됐다(2026-10-02). 캐릭터 곁에 딱 맞게 붙인다.
+        //   칸 그림은 192 × 256 (전부 같다) — 여기 값은 그 칸을 화면에 그리는 크기다.
+        //
+        //   아래 값은 코덱스 디자인 검수(`_exchange/review_soulfx.md`)를 거쳐 한 번 더 줄인 것이다 —
+        //   물결 0.8배 · 기둥은 캐릭터 키의 1.5배 · 몸 둘레 기운은 키의 0.9배.
+        private static readonly Vector2 RippleSize = new(132f, 176f);    // 물결 지름 ≈ 112
+        private static readonly Vector2 WispSize = new(117f, 156f);      // 가닥 높이 ≈ 100
+        private static readonly Vector2 PillarSize = new(101f, 135f);    // 기둥 높이 ≈ 135
+        private static readonly Vector2 FlameSize = new(105f, 140f);
+        private static readonly Vector2 AuraSize = new(100f, 98f);       // 키의 0.9배
+
+        /// <summary>빛기둥 · 기운의 짙기. 흰 심이 꽉 차면 그 앞에 선 몸까지 하얗게 날린다.</summary>
+        private const float PillarAlpha = 0.68f;
+        private const float AuraAlpha = 0.7f;
 
         /// <summary>유닛 자리(몸 가운데)에서 발밑까지.</summary>
         private const float SoulFootDrop = 34f;
         /// <summary>유닛 자리에서 가슴께까지.</summary>
         private const float SoulChestLift = 14f;
 
+        private const float SoulFrameSeconds = 0.075f;   // 8 장 = 0.6초
+
         /// <summary>발밑에 퍼지는 물결. 캐릭터 뒤(바닥)에 깐다.</summary>
         private void PlaySoulRipple(Vector2 unitPos, float delay = 0f)
             => PlaySoulFx("soulripple", behind: true, unitPos + Vector2.down * SoulFootDrop, RippleSize, PivotCenter,
-                          life: 0.68f, frameSeconds: 0.17f, delay: delay, fadeOut: 0.2f,
-                          scaleFrom: 0.75f, scaleTo: 1.1f);
+                          life: SoulFrameSeconds * 8f, frameSeconds: SoulFrameSeconds, delay: delay, fadeOut: 0.12f);
 
-        /// <summary>몸 둘레에 피어오르는 기운. 가운데가 비어 있어 캐릭터 앞에 그려도 안 가린다.</summary>
-        private void PlaySoulAura(Vector2 unitPos, float delay = 0f)
-            => PlaySoulFx("soulaura", behind: false, unitPos + Vector2.down * SoulFootDrop, AuraSize, PivotAura,
-                          life: 0.72f, frameSeconds: 0.18f, delay: delay, fadeOut: 0.22f);
+        /// <summary>
+        /// 몸 둘레에 피어오르는 기운. **몸 뒤에 깐다** — 가운데가 빈 그림이라 앞에 그려도 될 줄 알았는데,
+        /// 캐릭터 크기에 맞게 줄이면 그 빈자리가 몸보다 좁아져 몸통을 덮었다(검수 반려).
+        /// </summary>
+        private void PlaySoulAura(Unit unit)
+        {
+            if (unit == null) return;
+            var fx = PlaySoulFx("soulaura", behind: true, unit.Position + Vector2.down * SoulFootDrop,
+                                AuraSize, PivotAura, life: SoulFrameSeconds * 8f,
+                                frameSeconds: SoulFrameSeconds, fadeOut: 0.12f, alpha: AuraAlpha);
+            if (fx == null) return;
+            fx.Follow = unit;
+            fx.FollowOffset = Vector2.down * SoulFootDrop;
+        }
 
         // ── 빠져나오기 ──────────────────────────────────────────
 
-        private const float SoulRiseSeconds = 0.55f;
-        private const float SoulRiseHeight = 58f;
+        private const float SoulRiseSeconds = 0.6f;
+        /// <summary>유령이 몸 위로 떠오르는 높이. 혼줄이 길게 늘어져 보이려면 이만큼은 떠야 한다.</summary>
+        private const float SoulRiseHeight = 96f;
         /// <summary>혼줄은 유령이 다 솟은 뒤에도 잠깐 팽팽하게 남았다가 끊긴다.</summary>
-        private const float SoulCordSeconds = 0.85f;
-        private const float SoulSnapSeconds = 0.26f;
-        private const float SoulCordThickness = 60f;
-        private const float SoulCordFrameSeconds = 0.09f;
-        private const float SoulTrailInterval = 0.09f;
+        private const float SoulCordSeconds = 1.0f;
+        private const float SoulSnapSeconds = 0.3f;
+        private const float SoulCordThickness = 18f;
+        /// <summary>줄이 일렁이는 빠르기. 빠르면 굽이가 장마다 튀어 줄이 아니라 깜빡이로 보인다.</summary>
+        private const float SoulCordFrameSeconds = 0.18f;
+        private const float SoulTrailInterval = 0.1f;
 
         private float _soulRise;
         private float _soulCordLeft;      // 팽팽한 시간 + 끊기는 시간
         private float _soulTrail;
-        private Vector2 _soulFrom;
+        private Vector2 _soulFrom;        // 혼줄이 걸린 가슴
+        private Vector2 _soulRiseFrom, _soulRiseTo;
         private bool _soulSnapped;
         private RectTransform _soulCordRect;
         private Image _soulCordImage;
+
+        /// <summary>
+        /// **매여 있다** — 옮겨 탈 몸이 없어 곧 이 몸으로 되돌아간다.
+        /// 줄이 끊기지 않고, 유령은 몸 바로 위에 떠서 기다린다. 다른 데로 갔다가 돌아오면
+        /// 「어디 갔다 오는 거냐」가 된다(반려 2026-10-02) — 나온 자리에서 그대로 다시 들어간다.
+        /// </summary>
+        private bool _soulTether;
 
         /// <summary>쓰러진 내 몸. 유령이 다른 몸에 들거나 되살릴 때까지 바닥에 남는다.</summary>
         private Unit _corpse;
         private Vector2 _fallPos;
         private bool _hasFall;
+
+        /// <summary>지금 몸을 잃으면 되살리기(긴급 호스트)로 이어지는가.</summary>
+        private bool WillReviveHere()
+            => _enemies.Count > 0 && !HasFutureHost()
+               && _ghostHp > _config.EmergencyGhostCost && PickPlayerHost() != null;
 
         /// <summary>
         /// 몸에서 유령이 나온다. <paramref name="body"/> 는 방금 쓰러뜨린 몸(없어도 된다).
@@ -216,13 +258,17 @@ namespace Game.Module.InGame
                 body.SetCorpseHold(true);
                 _corpse = body;
             }
+            _soulTether = _corpse != null && WillReviveHere();
 
             PlaySoulRipple(pos);
             // 혼불은 몸 **뒤**에서 머리 위로 솟는다 — 쓰러지는 동작을 가리지 않는다.
-            PlaySoulFx("soulwisp", behind: true, pos + Vector2.down * 6f, WispSize, PivotBottom,
-                       life: 0.8f, frameSeconds: 0.2f, fadeOut: 0.2f);
+            PlaySoulFx("soulwisp", behind: true, pos + Vector2.up * 4f, WispSize, PivotWisp,
+                       life: SoulFrameSeconds * 8f, frameSeconds: SoulFrameSeconds, fadeOut: 0.12f);
 
             _soulFrom = pos + Vector2.up * SoulChestLift;
+            _soulRiseFrom = pos;
+            _soulRiseTo = pos + Vector2.up * SoulRiseHeight;
+            _soulRiseTo.y = Mathf.Min(_soulRiseTo.y, -30f);     // 방 윗변을 넘지 않는다
             _soulRise = SoulRiseSeconds;
             _soulCordLeft = SoulCordSeconds + SoulSnapSeconds;
             _soulTrail = 0f;
@@ -230,29 +276,30 @@ namespace Game.Module.InGame
             if (_ghost != null) _ghost.transform.localScale = Vector3.one * 0.35f;
         }
 
+        private static float SoulEase(float k) => 1f - (1f - k) * (1f - k);
+
         private void TickSoulOut(float dt)
         {
-            if (_soulCordLeft <= 0f) return;
-            _soulCordLeft -= dt;
+            if (_soulCordLeft <= 0f && !_soulTether) return;
+            if (!_soulTether) _soulCordLeft -= dt;
 
-            // 몸에 들어갔거나 들어가는 중이면 줄을 거둔다 — 끈이 새 몸에 걸려 있으면 안 된다.
-            if (_host != null || IsChanneling || _ghost == null || _soulCordLeft <= 0f)
-            {
-                EndSoulOut();
-                return;
-            }
+            // 다른 몸에 들어갔으면 줄을 거둔다 — 끈이 새 몸에 걸려 있으면 안 된다.
+            // 매여 있을 때는 되돌아가는 길(채널)에도 줄이 남는다.
+            bool done = _host != null || _ghost == null
+                        || (!_soulTether && (IsChanneling || _soulCordLeft <= 0f));
+            if (done) { EndSoulOut(); return; }
 
             if (_soulRise > 0f)
             {
-                float before = 1f - Mathf.Clamp01(_soulRise / SoulRiseSeconds);
+                float before = SoulEase(1f - Mathf.Clamp01(_soulRise / SoulRiseSeconds));
                 _soulRise -= dt;
-                float t = 1f - Mathf.Clamp01(_soulRise / SoulRiseSeconds);
-                // 쑥 뽑혀 나온다 — 처음에 빠르고 끝에서 멎는다. 이동분만 더해 조작과 겹치게 한다.
-                float eased(float k) => 1f - (1f - k) * (1f - k);
-                var p = _ghost.Position + Vector2.up * (SoulRiseHeight * (eased(t) - eased(before)));
-                p.y = Mathf.Min(p.y, -24f);
-                _ghost.Position = p;
-                _ghost.transform.localScale = Vector3.one * Mathf.Lerp(0.35f, 1f, eased(t));
+                float now = SoulEase(1f - Mathf.Clamp01(_soulRise / SoulRiseSeconds));
+                // 쑥 뽑혀 나온다 — 처음에 빠르고 끝에서 멎는다.
+                // 매여 있으면 제자리로 못 박고, 아니면 이동분만 더해 조작과 겹치게 한다.
+                _ghost.Position = _soulTether
+                    ? Vector2.Lerp(_soulRiseFrom, _soulRiseTo, now)
+                    : _ghost.Position + (_soulRiseTo - _soulRiseFrom) * (now - before);
+                _ghost.transform.localScale = Vector3.one * Mathf.Lerp(0.35f, 1f, now);
 
                 // 솟는 길에 잔상을 남긴다(원작 대시 잔상과 같은 것).
                 _soulTrail -= dt;
@@ -263,9 +310,16 @@ namespace Game.Module.InGame
                     var sprite = _ghost.BodySprite;
                     if (img != null && sprite != null)
                         img.Play(sprite, _ghost.Position, _ghost.GetComponent<RectTransform>().sizeDelta
-                                 * _ghost.transform.localScale.x, _ghost.BodyFlipX, 0.35f, 0.22f);
+                                 * _ghost.transform.localScale.x, _ghost.BodyFlipX, 0.35f, 0.24f);
                 }
                 if (_soulRise <= 0f) _ghost.transform.localScale = Vector3.one;
+            }
+            else if (_soulTether && !IsChanneling)
+            {
+                // 매여 있는 동안은 몸 위에 떠 있는다 — 살짝 까딱이며.
+                _ghost.Position = _soulRiseTo + Vector2.up * (Mathf.Sin(Time.time * 5f) * 2.5f);
+                // 되살릴 조건이 깨졌으면(잡몹이 다 죽었다 등) 줄을 놓는다.
+                if (!WillReviveHere()) { _soulTether = false; _soulCordLeft = SoulSnapSeconds; }
             }
 
             DrawSoulCord();
@@ -288,18 +342,18 @@ namespace Game.Module.InGame
             }
 
             var from = _soulFrom;
-            var to = _ghost.Position + Vector2.down * 14f;   // 유령의 꼬리
+            var to = _ghost.Position + Vector2.down * 12f * _ghost.transform.localScale.x;   // 유령의 꼬리
             var d = to - from;
             float len = d.magnitude;
-            bool show = len > 8f;
+            bool show = len > 10f;
             if (_soulCordRect.gameObject.activeSelf != show) _soulCordRect.gameObject.SetActive(show);
             if (!show) return;
 
-            bool snap = _soulCordLeft <= SoulSnapSeconds;
+            bool snap = !_soulTether && _soulCordLeft <= SoulSnapSeconds;
             if (snap && !_soulSnapped)
             {
                 _soulSnapped = true;
-                if (_pfx != null) _pfx.Sparkle((from + to) * 0.5f, ParticleElement.Ice, 1.1f);
+                if (_pfx != null) _pfx.Sparkle((from + to) * 0.5f, ParticleElement.Ice, 0.8f);
             }
 
             // 그림은 가로다(왼쪽 = 몸, 오른쪽 = 유령). 길이만큼 늘이고 각도만큼 돌린다.
@@ -317,6 +371,7 @@ namespace Game.Module.InGame
         {
             _soulRise = 0f;
             _soulCordLeft = 0f;
+            _soulTether = false;
             if (_soulCordRect != null) _soulCordRect.gameObject.SetActive(false);
             if (_ghost != null && _host == null && !IsChanneling)
                 _ghost.transform.localScale = Vector3.one;
@@ -332,17 +387,19 @@ namespace Game.Module.InGame
         // ── 되살리기 ────────────────────────────────────────────
         //
         // 순서가 연출이다. 한꺼번에 터뜨리면 무슨 일인지 안 읽힌다.
-        //   0.00  유령이 원작 그림대로 줄어들며 쓰러진 몸으로 날아간다 (0.55초)
-        //   0.55  몸에 닿았다 — 발밑에 물결, 몸 **뒤**로 빛기둥이 솟는다
-        //   1.05  몸이 일어선다(여기서 실제로 몸을 입는다). 몸 둘레에 기운
-        //   1.60  빛기둥이 실 몇 가닥으로 풀려 올라간다
+        //   (기다리는 동안 — 유령은 혼줄에 매여 쓰러진 몸 바로 위에 떠 있다)
+        //   0.00  유령이 원작 그림대로 줄어들며 **줄을 따라** 몸으로 내려간다 (0.5초)
+        //   0.50  몸에 닿았다 — 발밑에 물결, 몸 **뒤**로 빛기둥이 솟는다
+        //   1.00  몸이 일어선다(여기서 실제로 몸을 입는다). 몸 둘레에 기운
+        //   1.55  빛기둥이 실 몇 가닥으로 풀려 올라간다
 
         /// <summary>유령이 몸에 닿기까지. 채널 전체 가운데 이만큼만 유령이 움직인다.</summary>
-        private const float ReviveFlySeconds = 0.55f;
+        private const float ReviveFlySeconds = 0.5f;
         /// <summary>닿은 뒤 빛기둥이 솟는 동안. 이게 끝나면 몸이 선다.</summary>
         private const float ReviveBuildSeconds = 0.5f;
-        private const float RevivePillarBurnSeconds = 1.05f;
-        private const float RevivePillarFadeSeconds = 0.45f;
+        private const float PillarFrameSeconds = 0.09f;
+        /// <summary>기둥이 가장 밝게 서 있는 시간. 길면 내려온 유령 · 솟는 기둥 · 일어서는 몸이 한 덩어리가 된다.</summary>
+        private const float PillarBurnSeconds = 0.2f;
 
         private SoulFx _homeFlame;
         /// <summary>되살리는 중이면 그 몸의 시작 체력(%). 0 이면 평소 빙의다.</summary>
@@ -366,7 +423,11 @@ namespace Game.Module.InGame
             var from = _ghost.Position;
             var to = ReviveSpot;
 
-            EndSoulOut();
+            // 매여 있지 않았으면(떠돌다 돌아오는 길) 줄은 이미 끊겼다 — 거둔다.
+            if (!_soulTether) EndSoulOut();
+            _soulRise = 0f;
+            _ghost.transform.localScale = Vector3.one;
+
             _reviveHpPercent = _config.EmergencyHostHpPercent;
             _channelBody = null;
             _channelFrom = from;
@@ -383,19 +444,20 @@ namespace Game.Module.InGame
             _homeFlame = null;
 
             var feet = to + Vector2.down * SoulFootDrop;
-            PlaySoulRipple(to, delay: ReviveFlySeconds);
-            // 빛기둥 — 솟고(1장) · 타오르고(2 · 3장 번갈아) · 풀린다(4장). 전부 몸 뒤다.
+            float t0 = ReviveFlySeconds;
+            PlaySoulRipple(to, delay: t0);
+            // 빛기둥 — 솟고(1~3장) · 타오르고(4~6장 되풀이) · 풀린다(7 · 8장). 전부 몸 뒤다.
             PlaySoulFx("soulpillar", behind: true, feet, PillarSize, PivotPillar,
-                       life: 0.2f, frameSeconds: 0.2f, delay: ReviveFlySeconds,
-                       fadeIn: 0.08f, fadeOut: 0f, firstFrame: 1, frameCount: 1);
+                       life: PillarFrameSeconds * 3f, frameSeconds: PillarFrameSeconds, delay: t0,
+                       fadeIn: 0.05f, fadeOut: 0f, alpha: PillarAlpha, firstFrame: 1, frameCount: 3);
             PlaySoulFx("soulpillar", behind: true, feet, PillarSize, PivotPillar,
-                       life: RevivePillarBurnSeconds, frameSeconds: 0.1f, loop: true,
-                       delay: ReviveFlySeconds + 0.2f, fadeOut: 0f, firstFrame: 2, frameCount: 2);
+                       life: PillarBurnSeconds, frameSeconds: PillarBurnSeconds / 3f, loop: true,
+                       delay: t0 + PillarFrameSeconds * 3f, fadeOut: 0f, alpha: PillarAlpha,
+                       firstFrame: 4, frameCount: 3);
             PlaySoulFx("soulpillar", behind: true, feet, PillarSize, PivotPillar,
-                       life: RevivePillarFadeSeconds, frameSeconds: RevivePillarFadeSeconds,
-                       delay: ReviveFlySeconds + 0.2f + RevivePillarBurnSeconds,
-                       fadeOut: RevivePillarFadeSeconds, scaleFrom: 1f, scaleTo: 1.08f,
-                       firstFrame: 4, frameCount: 1);
+                       life: PillarFrameSeconds * 4f, frameSeconds: PillarFrameSeconds * 2f,
+                       delay: t0 + PillarFrameSeconds * 3f + PillarBurnSeconds,
+                       fadeOut: PillarFrameSeconds * 2f, alpha: PillarAlpha, firstFrame: 7, frameCount: 2);
         }
 
         /// <summary>몸이 선 직후. 몸 둘레에 기운을 올리고 알린다.</summary>
@@ -403,11 +465,7 @@ namespace Game.Module.InGame
         {
             _reviveHpPercent = 0;
             _channelGhostSpan = 1f;
-            if (_host != null)
-            {
-                PlaySoulAura(_host.Position);
-                if (_pfx != null) _pfx.Embers(_host.Position, ParticleElement.Ice, 8, 60f);
-            }
+            PlaySoulAura(_host);
             _bus.Publish(new EmergencyHostEvent
             {
                 HostKey = hostKey, GhostCost = _config.EmergencyGhostCost,
@@ -434,7 +492,7 @@ namespace Game.Module.InGame
                 if (_running)
                 {
                     PlaySoulRipple(pos);
-                    PlaySoulAura(pos);
+                    _soulAuraPending = true;   // 몸은 아직 안 섰다 — 선 뒤에 그 몸에 붙인다
                 }
             }
 
@@ -446,7 +504,8 @@ namespace Game.Module.InGame
         private void TickHomeFlame()
         {
             // 긴급 호스트를 기다리는 동안만 — 「여기로 돌아간다」.
-            bool waiting = _emergencyWait > 0f && _host == null && !IsChanneling
+            // 매여 있을 때는 혼줄이 이미 그 말을 하고 있다. 떠돌다 돌아올 때만 띄운다.
+            bool waiting = _emergencyWait > 0f && _host == null && !IsChanneling && !_soulTether
                            && _ghost != null && _ghostHp > _config.EmergencyGhostCost;
             if (!waiting)
             {
@@ -457,7 +516,7 @@ namespace Game.Module.InGame
             var at = ReviveSpot + Vector2.down * (SoulFootDrop - 14f);
             if (_homeFlame == null || !_homeFlame.IsPlaying)
                 _homeFlame = PlaySoulFx("soulflame", behind: false, at, FlameSize, PivotFlame,
-                                        life: 60f, frameSeconds: 0.13f, loop: true, fadeIn: 0.25f);
+                                        life: 60f, frameSeconds: 0.1f, loop: true, fadeIn: 0.25f);
             else _homeFlame.Rect.anchoredPosition = at;
         }
 
@@ -469,140 +528,149 @@ namespace Game.Module.InGame
 
         // ── 비추기 ──────────────────────────────────────────────
         //
-        // 빛줄기는 캐릭터 **뒤**에 깐다 — 앞에 덮으면 그 몸의 빙의 동작이 뿌옇게 가린다.
-        // 어둠은 **구멍 뚫린 한 장**(fx_spotdark)과 그 둘레를 메우는 네 장으로 앞에 덮는다.
-        // 유닛 층 위에 통째로 덮으면 비출 몸도 같이 어두워진다 — 구멍으로 그 몸만 남긴다.
+        // 유령일 때 **탈 수 있는 몸 전부**에 빛줄기를 내린다. 그 가운데 지금 버튼을 누르면
+        // 들어갈 몸(가장 가깝거나 우선순위가 높은 것)만 크고 밝다 — 다가가면 그리로 옮겨 간다.
+        //
+        // 어둠은 **바닥에만** 깐다(유닛 뒤). 못 타는 적은 몸 색을 가라앉힌다(`Unit.SetDim`).
+        // ⚠ 처음에는 유닛 위에 구멍 뚫린 어둠을 덮었다. 구멍이 하나뿐이라 탈 몸이 둘이면
+        //   한쪽이 같이 어두워졌고, 머리 위 표식 · 체력바까지 어둠에 묻혔다.
+        // 빛줄기도 캐릭터 **뒤**다 — 앞에 덮으면 그 몸의 빙의 동작이 뿌옇게 가린다.
 
-        private const float SpotWidth = 230f;
-        private const float SpotHeight = 345f;
+        private static readonly Vector2 SpotSize = new(96f, 144f);     // 바닥 타원 ≈ 캐릭터 폭의 1.35배
+        /// <summary>고르지 않은 몸의 빛줄기는 작고 옅고 색이 빠져 있다 — 고른 몸과 한눈에 갈려야 한다.</summary>
+        private const float SpotOtherScale = 0.65f;
+        private const float SpotOtherAlpha = 0.45f;
+        private static readonly Color SpotOtherTint = new(0.72f, 0.78f, 0.88f);
         /// <summary>그림에서 바닥 타원의 중심 높이(아래에서, 0~1).</summary>
         private const float SpotPivotY = 170f / 1536f;
-        private const float SpotFill = 3000f;
+        private const int MaxSpots = 5;
 
         /// <summary>처음에는 진하게 어두워졌다가(「저기다」) 곧 옅어진다 — 싸움을 가리면 안 된다.</summary>
         // ⚠ 0.58 / 0.26 으로는 **안 보였다** — 바닥이 원래 어두운 남색이라 그 정도는 묻힌다.
-        private const float SpotDarkPeak = 0.82f;
+        private const float SpotDarkPeak = 0.8f;
         private const float SpotDarkRest = 0.5f;
         private const float SpotDarkPeakSeconds = 0.9f;
         private const float SpotFadeSpeed = 4f;
         // 꽉 찬 빛은 파란 판자처럼 보였다 — 뒤 바닥이 비쳐야 빛줄기다.
-        private const float SpotBeamAlpha = 0.6f;
+        private const float SpotBeamAlpha = 0.62f;
+        /// <summary>못 타는 적의 몸 밝기(가장 어두울 때).</summary>
+        private const float SpotUnitDim = 0.38f;
 
         private static readonly Color SpotDarkColor = new(0.02f, 0.03f, 0.09f, 1f);
 
-        private RectTransform _spotRoot;
-        private RectTransform _spotBeamRect;
-        private Image _spotBeam, _spotHole;
-        private readonly Image[] _spotFill = new Image[4];
+        private Image _spotDark;
+        private readonly Image[] _spotBeams = new Image[MaxSpots];
+        private readonly Unit[] _spotUnits = new Unit[MaxSpots];
         private float _spotShown;      // 0~1
         private float _spotAge;
-        private Unit _spotUnit;
+        private bool _spotWasOn;
 
         private void TickSpotlight(float dt)
         {
-            var target = _host == null && !IsChanneling && !_awaitingBuff && _repossessLock <= 0f
-                ? _possessTarget : null;
+            bool ghost = _host == null && !IsChanneling && !_awaitingBuff && _running;
 
-            if (target != null)
+            // 탈 수 있는 몸을 모은다. 고른 몸(_possessTarget)이 맨 앞.
+            int n = 0;
+            if (ghost)
             {
-                if (_spotRoot == null && !MakeSpotlight()) return;
-                // 다른 몸으로 옮겨 가면 다시 한 번 어두워진다 — 「이번엔 저기」.
-                if (target != _spotUnit) { _spotUnit = target; _spotAge = 0f; }
-                _spotAge += dt;
-                var feet = target.Position + Vector2.down * SoulFootDrop;
-                _spotRoot.anchoredPosition = feet;
-                _spotBeamRect.anchoredPosition = feet;
-                _spotShown = Mathf.MoveTowards(_spotShown, 1f, SpotFadeSpeed * dt);
+                if (_possessTarget != null) _spotUnits[n++] = _possessTarget;
+                for (int i = 0; i < _enemies.Count && n < MaxSpots; i++)
+                {
+                    var e = _enemies[i];
+                    if (e == null || e == _possessTarget || !e.IsPossessable) continue;
+                    _spotUnits[n++] = e;
+                }
             }
-            else
-            {
-                if (_spotRoot == null) return;
-                _spotUnit = null;
-                // 빙의가 시작되면 **바로** 걷는다 — 들어가는 동작 위에 빛이 남아 있으면 안 된다.
-                _spotShown = IsChanneling ? 0f : Mathf.MoveTowards(_spotShown, 0f, SpotFadeSpeed * dt);
-            }
+            for (int i = n; i < MaxSpots; i++) _spotUnits[i] = null;
 
-            bool on = _spotShown > 0.001f;
-            if (_spotRoot.gameObject.activeSelf != on) _spotRoot.gameObject.SetActive(on);
-            if (_spotBeamRect.gameObject.activeSelf != on) _spotBeamRect.gameObject.SetActive(on);
-            if (!on) return;
+            bool on = n > 0;
+            if (on && _spotDark == null && !MakeSpotlight()) return;
+            if (_spotDark == null) return;
+
+            if (on && !_spotWasOn) _spotAge = 0f;    // 유령이 될 때마다 다시 한 번 진하게
+            _spotWasOn = on;
+            if (on) _spotAge += dt;
+            // 빙의가 시작되면 **바로** 걷는다 — 들어가는 동작 뒤에 빛이 남아 있으면 안 된다.
+            _spotShown = on ? Mathf.MoveTowards(_spotShown, 1f, SpotFadeSpeed * dt)
+                : IsChanneling ? 0f : Mathf.MoveTowards(_spotShown, 0f, SpotFadeSpeed * dt);
+
+            bool visible = _spotShown > 0.001f;
+            if (_spotDark.gameObject.activeSelf != visible) _spotDark.gameObject.SetActive(visible);
 
             float settle = Mathf.Clamp01((_spotAge - SpotDarkPeakSeconds) / 0.6f);
             float dark = Mathf.Lerp(SpotDarkPeak, SpotDarkRest, settle) * _spotShown;
-            var dc = new Color(SpotDarkColor.r, SpotDarkColor.g, SpotDarkColor.b, dark);
-            _spotHole.color = dc;
-            for (int i = 0; i < _spotFill.Length; i++) _spotFill[i].color = dc;
+            if (visible)
+                _spotDark.color = new Color(SpotDarkColor.r, SpotDarkColor.g, SpotDarkColor.b, dark);
+
+            // 못 타는 적은 가라앉힌다. 꺼질 때는 제 색(1)으로 돌아간다.
+            float dim = Mathf.Lerp(1f, SpotUnitDim, dark / SpotDarkPeak);
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e != null) e.SetDim(visible && !e.IsPossessable ? dim : 1f);
+            }
 
             // 빛줄기는 숨쉬듯 — 가만히 있으면 붙여 놓은 그림이다.
             float breathe = 0.86f + 0.14f * Mathf.Sin(Time.time * 3.2f);
-            _spotBeam.color = new Color(1f, 1f, 1f, SpotBeamAlpha * breathe * _spotShown);
+            for (int i = 0; i < MaxSpots; i++)
+            {
+                var img = _spotBeams[i];
+                var u = visible ? _spotUnits[i] : null;
+                if (img.gameObject.activeSelf != (u != null)) img.gameObject.SetActive(u != null);
+                if (u == null) continue;
+
+                bool picked = u == _possessTarget;
+                var rt = img.rectTransform;
+                rt.anchoredPosition = u.Position + Vector2.down * SoulFootDrop;
+                rt.sizeDelta = picked ? SpotSize : SpotSize * SpotOtherScale;
+                var tint = picked ? Color.white : SpotOtherTint;
+                img.color = new Color(tint.r, tint.g, tint.b,
+                    SpotBeamAlpha * _spotShown * (picked ? breathe : SpotOtherAlpha));
+            }
         }
 
         private bool MakeSpotlight()
         {
             var beam = GetSprite("fx_spotbeam");
-            var hole = GetSprite("fx_spotdark");
-            if (beam == null || hole == null || _shotLayer == null || _fieldLayer == null) return false;
+            if (beam == null || _fieldLayer == null) return false;
 
-            // 빛줄기 — 캐릭터 뒤
-            var beamGo = new GameObject("SoulSpotBeam", typeof(RectTransform), typeof(Image));
-            _spotBeamRect = (RectTransform)beamGo.transform;
-            _spotBeamRect.SetParent(_fieldLayer, false);
-            _spotBeamRect.anchorMin = _spotBeamRect.anchorMax = new Vector2(0f, 1f);
-            _spotBeamRect.pivot = new Vector2(0.5f, SpotPivotY);
-            _spotBeamRect.sizeDelta = new Vector2(SpotWidth, SpotHeight);
-            _spotBeam = beamGo.GetComponent<Image>();
-            _spotBeam.sprite = beam;
-            _spotBeam.raycastTarget = false;
-            beamGo.SetActive(false);
-
-            // 어둠 — 캐릭터 앞
-            var go = new GameObject("SoulSpotDark", typeof(RectTransform));
-            _spotRoot = (RectTransform)go.transform;
-            _spotRoot.SetParent(_shotLayer, false);
-            _spotRoot.anchorMin = _spotRoot.anchorMax = new Vector2(0f, 1f);
-            _spotRoot.pivot = new Vector2(0.5f, 0.5f);
-            _spotRoot.sizeDelta = Vector2.zero;
-            _spotRoot.SetAsFirstSibling();   // 탄 · 터짐 그림은 어둠 위에 그대로 보인다
-
-            float below = SpotHeight * SpotPivotY;
-            float above = SpotHeight - below;
-            float half = SpotWidth * 0.5f;
-
-            _spotHole = SpotImage("Dark", hole, new Vector2(0.5f, SpotPivotY),
-                                  Vector2.zero, new Vector2(SpotWidth, SpotHeight));
-            // 구멍 둘레 — 왼 · 오른 · 위 · 아래
-            _spotFill[0] = SpotImage("DarkL", null, new Vector2(1f, SpotPivotY),
-                                     new Vector2(-half, 0f), new Vector2(SpotFill, SpotHeight));
-            _spotFill[1] = SpotImage("DarkR", null, new Vector2(0f, SpotPivotY),
-                                     new Vector2(half, 0f), new Vector2(SpotFill, SpotHeight));
-            _spotFill[2] = SpotImage("DarkT", null, new Vector2(0.5f, 0f),
-                                     new Vector2(0f, above), new Vector2(SpotFill * 2f + SpotWidth, SpotFill));
-            _spotFill[3] = SpotImage("DarkB", null, new Vector2(0.5f, 1f),
-                                     new Vector2(0f, -below), new Vector2(SpotFill * 2f + SpotWidth, SpotFill));
-            go.SetActive(false);
-            return true;
-        }
-
-        private Image SpotImage(string name, Sprite sprite, Vector2 pivot, Vector2 at, Vector2 size)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
+            var go = new GameObject("SoulSpotDark", typeof(RectTransform), typeof(Image));
             var rt = (RectTransform)go.transform;
-            rt.SetParent(_spotRoot, false);
+            rt.SetParent(_fieldLayer, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = pivot;
-            rt.anchoredPosition = at;
-            rt.sizeDelta = size;
-            var img = go.AddComponent<Image>();
-            img.sprite = sprite;
-            img.raycastTarget = false;
-            return img;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(6000f, 6000f);      // 방 밖(벽 · 바닥 아래)까지 덮는다
+            rt.SetAsFirstSibling();                        // 장판 · 물결 · 빛줄기는 어둠 위에
+            _spotDark = go.GetComponent<Image>();
+            _spotDark.raycastTarget = false;
+            go.SetActive(false);
+
+            for (int i = 0; i < MaxSpots; i++)
+            {
+                var b = new GameObject("SoulSpotBeam", typeof(RectTransform), typeof(Image));
+                var br = (RectTransform)b.transform;
+                br.SetParent(_fieldLayer, false);
+                br.anchorMin = br.anchorMax = new Vector2(0f, 1f);
+                br.pivot = new Vector2(0.5f, SpotPivotY);
+                _spotBeams[i] = b.GetComponent<Image>();
+                _spotBeams[i].sprite = beam;
+                _spotBeams[i].raycastTarget = false;
+                b.SetActive(false);
+            }
+            return true;
         }
 
         // ── 공통 ────────────────────────────────────────────────
 
+        private bool _soulAuraPending;
+
         private void TickSoulFx(float dt)
         {
+            if (_soulAuraPending)
+            {
+                _soulAuraPending = false;
+                PlaySoulAura(_host);
+            }
             TickSoulOut(dt);
             TickHomeFlame();
             TickSpotlight(dt);
@@ -619,10 +687,32 @@ namespace Game.Module.InGame
             EndSoulOut();
             _homeFlame = null;
             for (int i = 0; i < _soulFx.Count; i++) _soulFx[i].Stop();
-            _spotUnit = null;
             _spotShown = 0f;
-            if (_spotRoot != null) _spotRoot.gameObject.SetActive(false);
-            if (_spotBeamRect != null) _spotBeamRect.gameObject.SetActive(false);
+            _spotWasOn = false;
+            if (_spotDark != null)
+            {
+                _spotDark.gameObject.SetActive(false);
+                for (int i = 0; i < MaxSpots; i++) _spotBeams[i].gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>화면(HUD)이 인게임 아틀라스의 그림을 빌려 쓸 때.</summary>
+        public Sprite UiSprite(string name) => GetSprite(name);
+
+        // ── 나가기 ──────────────────────────────────────────────
+
+        /// <summary>
+        /// 몸을 버리고 나갈 수 있는가 — **옮겨 탈 몸이 방에 있을 때만.**
+        /// 탈 몸이 없는데 나가면 유령으로 떠서 시계만 돈다. 그건 선택지가 아니라 함정이다.
+        /// </summary>
+        private bool CanLeaveHost()
+        {
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e != null && e.HasPossessCondition) return true;
+            }
+            return false;
         }
     }
 }

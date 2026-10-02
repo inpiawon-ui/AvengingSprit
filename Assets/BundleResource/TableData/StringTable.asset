@@ -2372,3 +2372,7 @@ MonoBehaviour:
     _en: 'Death itself, scythe in hand,
 
       reaping all it touches.'
+  - _key: ui.ingame.no_host_to_possess
+    _ko: "\uBE59\uC758\uD560 \uD638\uC2A4\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4"
+    _ja: "\u6191\u4F9D\u3067\u304D\u308B\u30DB\u30B9\u30C8\u304C\u3044\u307E\u305B\u3093"
+    _en: No host to possess

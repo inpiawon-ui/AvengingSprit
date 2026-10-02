@@ -398,6 +398,7 @@ ui.opening.skip	건너뛰기	スキップ
 ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력	肉体とは別に保たれる魂の体力	
 ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}	緊急憑依 — GHOST -{0}	
 ui.ingame.exit_opened	출구가 열렸다 — 통과해서 다음 스테이지로	出口が開いた — 通り抜けて次のステージへ	
+ui.ingame.no_host_to_possess	빙의할 호스트가 없습니다	憑依できるホストがいません	No host to possess
 ui.ingame.event.reward	보상 · {0}	報酬・{0}	
 ui.ingame.event.decline	지나간다	立ち去る	
 ui.shrine.title	회복의 제단	回復の祭壇	

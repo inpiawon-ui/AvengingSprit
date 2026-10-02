@@ -239,7 +239,8 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<RunExpChangedEvent>(OnExpChanged));
             _tokens.Add(bus.Subscribe<EmergencyHostEvent>(OnEmergencyHost));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(
-                e => SetPossessState(e.HasTarget, e.GhostCost, e.Blocked)));
+                e => SetPossessState(e.HasTarget, e.GhostCost, e.Blocked, e.IsLeave, e.LeaveDenied)));
+            _tokens.Add(bus.Subscribe<PossessDeniedEvent>(OnPossessDenied));
             _tokens.Add(bus.Subscribe<RepossessLockEvent>(OnRepossessLock));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
@@ -969,21 +970,28 @@ namespace Game.Module.InGame
         ///   대상은 있는데 못 누름 — 켜지되 눌리지 않고, 이유(쿨다운·HP)를 보여준다
         /// 마지막을 그냥 회색으로 두면 "왜 안 되지"만 남는다.
         /// </summary>
-        private void SetPossessState(bool hasTarget, int cost, bool blocked)
+        private void SetPossessState(bool hasTarget, int cost, bool blocked,
+                                     bool isLeave = false, bool leaveDenied = false)
         {
             _possessCost = cost;
-            bool usable = hasTarget && !blocked;
+            bool usable = hasTarget && !blocked && !leaveDenied;
+
+            // 빙의 / 나가기 — 같은 버튼이지만 얼굴이 다르다(`InGameMainUI.SoulFx`).
+            SetPossessFace(isLeave, !usable);
 
             var btn = _ui.Get<Button>("PossessButton");
-            if (btn != null) btn.interactable = usable;
+            // ⚠ 옮겨 탈 몸이 없는 「나가기」 는 회색이지만 **눌리기는 한다** — 눌러야 이유를 듣는다.
+            if (btn != null) btn.interactable = usable || leaveDenied;
             if (_possessButtonImage != null)
                 _possessButtonImage.color =
                     usable ? Color.white
+                    : leaveDenied ? new Color(0.45f, 0.45f, 0.5f, 1f)
                     : hasTarget ? new Color(0.85f, 0.55f, 0.55f, 1f)   // 대상은 있는데 값이 모자라다
                     : new Color(0.45f, 0.45f, 0.5f, 1f);
 
             // 몸을 놓아줄 때만 값이 붙는다. 유령 상태의 빙의는 공짜다.
-            _ui.SetText("PossessCostText", hasTarget && cost > 0 ? $"-{cost}" : string.Empty);
+            _ui.SetText("PossessCostText",
+                        hasTarget && cost > 0 && !leaveDenied ? $"-{cost}" : string.Empty);
 
             // 값이 0 = 유령이 탈 몸을 잡았다. 그때만 버튼이 빛난다.
             SetPossessGlow(usable && cost == 0);
