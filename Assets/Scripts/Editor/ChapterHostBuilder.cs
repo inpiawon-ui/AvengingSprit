@@ -56,7 +56,7 @@ namespace Game.Editor
         {
             "CardThumb", "CardStar", "CardPowerIcon", "CardCheck", "RandomCheck",
             "CHBossPortrait", "CHRewardChestIcon", "CHStartCostIcon",
-            "CHPrevArrow", "CHNextArrow", "CHLockIcon",
+            "CHPrevArrow", "CHNextArrow", "CHLockIcon", "CHIcon",
         };
 
         private static TMP_FontAsset s_font;
@@ -122,6 +122,11 @@ namespace Game.Editor
         {
             // 실측(v6) — 칸 y 60~144 (가운데 101)
             //   뒤로가기 x 61~144 · 다이아 칸 234~488 · 금화 칸 505~800 · 메일 827~937 · 설정 937~1020
+            Icon(box, "CHIconBack", "ch_icon_back", 103, 102, 66, 60);
+            Icon(box, "CHIconGem", "ch_icon_gem", 272, 102, 68, 68);
+            Icon(box, "CHIconGold", "ch_icon_gold", 552, 102, 76, 68);
+            Icon(box, "CHIconMail", "ch_icon_mail", 868, 103, 64, 50);
+            Icon(box, "CHIconGear", "ch_icon_gear", 979, 102, 66, 60);
             Hit(box, "CHBackButton", 103, 101, 88, 82);
             Hit(box, "CHMailButton", 882, 101, 112, 82);
             Hit(box, "CHSettingsButton", 978, 101, 86, 82);
@@ -163,6 +168,13 @@ namespace Game.Editor
             r.sizeDelta = new Vector2(w, h);
         }
 
+        /// <summary>
+        /// 배경에서 떼어 낸 아이콘 한 개. 배경에 그려진 채로는 4:3 에서 판과 함께 가로로 늘어난다 —
+        /// 따로 올리면 자리는 벌어지되 모양은 그대로다(`ScreenFitKeepAspect`, 2026-10-02).
+        /// </summary>
+        private static void Icon(Transform box, string name, string part, float x, float y, float w, float h)
+            => T(Img(Node(box, name), P(part)).rectTransform, x, y, w, h);
+
         private static void Num(Transform box, string name, float x, float y, float w)
         {
             var t = Txt(Node(box, name), "0", F(34), TextAlignmentOptions.Left);
@@ -194,7 +206,8 @@ namespace Game.Editor
             // (실측 보스 x 52~442 · 보상 x 459~1026 · y 617~833, 잘라낸 판은 둘레 4 씩 더 크다)
             T(Img(Node(box, "CHBossBox"), P("ch_bossbox")).rectTransform, 247, 725.5f, 398, 225);
             T(Img(Node(box, "CHRewardBox"), P("ch_rewardbox")).rectTransform, 742.5f, 725.5f, 575, 225);
-            // 보상 동전은 칸 그림에 들어 있다(가운데 508,752)
+            Icon(box, "CHIconSkull", "ch_icon_skull", 293, 686, 38, 52);
+            Icon(box, "CHIconCoin", "ch_icon_coin", 509, 753, 70, 70);
 
             // 화살표는 그림 위에 다시 올린다 (실측 ◀ 가운데 97,266 · ▶ 453,266)
             Img(Node(box, "CHPrevArrow"), P("ch_arrow_left")).preserveAspect = true;
@@ -266,6 +279,7 @@ namespace Game.Editor
         {
             // 실측 — 첫 칸 x 85 · 폭 144 · 사이 10 · 여섯 장 914 · 카드 가운데 y 1099
             // 머리말도 코드 글자다 — 노란 막대(x 68~80)와 청록 점(x 835~855)만 시안 것
+            Icon(box, "CHIconDot", "ch_icon_dot", 727, 919, 30, 30);
             Label(box, "CHHostTitle", "호스트 선택", 110, 922, 330, 54, 38);
             Label(box, "CHHostNote", "보유한 호스트만 선택 가능합니다.", 1004, 922, 252, 44, 24,
                   TextAlignmentOptions.Right).color = new Color(0.78f, 0.86f, 0.96f);
@@ -350,6 +364,7 @@ namespace Game.Editor
             var random = T(Node(box, "CHRandomCard"), 540, 1478, 960, 252);
             Btn(random);
             // 랜덤 칸 문구 셋도 코드 글자다 (시안 x 238~ · y 1415 / 1475 / 1521)
+            Icon(box, "CHIconDice", "ch_icon_dice", 176, 1478, 212, 252);
             Label(box, "CHRandomTitle", "랜덤 선택", 341, 1425, 300, 50, 38);
             Label(box, "CHRandomDesc1", "모든 호스트 중 하나가 랜덤으로 선택됩니다.", 341, 1482, 590, 44, 32);
             Label(box, "CHRandomDesc2", "낮은 확률로 전설 호스트 등장!", 341, 1528, 590, 44, 32);
