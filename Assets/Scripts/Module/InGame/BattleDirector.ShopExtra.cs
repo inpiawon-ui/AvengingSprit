@@ -54,14 +54,14 @@ namespace Game.Module.InGame
             int top = 0;
             if (_shopTable != null)
             {
-                int ch = Mathf.Clamp(_runChapter, 1, 3);
+                int ch = ShopChapter;
                 var all = _shopTable.Offers;
                 for (int i = 0; i < all.Count; i++)
                     if (all[i].Chapter == ch && all[i].Price > top) top = all[i].Price;
             }
             // 표를 못 읽었을 때를 위한 대비값 — 회복값의 1.5배쯤이 그 줄이다.
             if (top <= 0) top = Mathf.Max(40, Mathf.RoundToInt(_shopRules.HealPrice * 1.5f));
-            return top;
+            return ShopPrice(top);
         }
 
         // ── 소모품 ───────────────────────────────────────────────
@@ -108,7 +108,7 @@ namespace Game.Module.InGame
         private int ConsumablePrice()
         {
             int sum = 0;
-            for (int i = 0; i < _shopOffers.Count; i++) sum += _shopOffers[i].Price;
+            for (int i = 0; i < _shopOffers.Count; i++) sum += ShopPrice(_shopOffers[i].Price);
             int avg = _shopOffers.Count > 0 ? sum / _shopOffers.Count : 42;
             return Mathf.Max(10, avg / 3);
         }

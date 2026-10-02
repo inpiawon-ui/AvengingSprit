@@ -367,7 +367,7 @@ namespace Game.Module.InGame
             try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress); }
             catch (Exception e) { Debug.LogError($"[Battle] 아틀라스 로드 실패 — {e.Message}"); }
             CachePossessMarkSprites();
-            try { _config = await res.LoadAsync<GameConfig>("TableData/GameConfig"); }
+            try { _config = await res.LoadAsync<GameConfig>("TableData/GameConfig"); AffinityRule.Bind(_config); }
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
 
@@ -604,9 +604,6 @@ namespace Game.Module.InGame
         /// <summary>이 판에서 밟은 방 수. <see cref="_runChapter"/> 와 같이 저장에 안 쓴다.</summary>
         private int _runStage = 1;
 
-        /// <summary>챕터 수. 정본 6챕터.</summary>
-        private const int ChapterCount = 6;
-
         private RoomTable _rooms;
         private EventTable _eventTable;
         private ShopTable _shopTable;
@@ -673,8 +670,7 @@ namespace Game.Module.InGame
             //   예전에는 그냥 경고를 뱉어서 "해골·박쥐·폐품사수의 그림이 아직 없다" 는
             //   줄이 매 판 찍혔고, 실제로는 셋 다 그림이 멀쩡히 붙어 있는데도
             //   그 로그만 보고 리소스를 다시 발주할 뻔했다.
-            if (TrashByKey(actorId, 1) != null || TrashByKey(actorId, 2) != null
-                || TrashByKey(actorId, 3) != null)
+            if (TrashEntryOf(TrashKeyAlias(actorId)) != null)
                 return hosts.Count > 0 ? hosts[0] : null;
 
             // 숨긴 몸(아마존 정예 — 기획 2026-09-15)은 목록에서 빠져 있다.
@@ -775,8 +771,7 @@ namespace Game.Module.InGame
                 int chapterNo = _runChapter;
                 // 방 데이터가 이 자리의 잡몹을 지정했으면 그대로 세운다(손으로 짠 레이아웃).
                 // 안 지정했으면 예전대로 목록을 돌려 쓴다 — 절차 생성 방이 그렇다.
-                // 상성 시험판 — 가르치는 방은 자리는 그대로 두고 누가 서는지만 바꾼다.
-                string actorId = AffinityRule.ActorOverride(room.RoomId, isHost, s.ActorId);
+                string actorId = s.ActorId;
                 var e = isHost ? ActorProfile(actorId, hosts)
                                : (TrashForSlot(actorId, chapterNo, trashSeq++)
                                   ?? TrashAt(trashSeq++, chapterNo));
@@ -2749,7 +2744,9 @@ namespace Game.Module.InGame
         /// 보스 공격력 배수. 1챕터 보스(로봇 스네이크)만 2배(기획 2026-09-15) — 너무 약했다.
         /// 모든 보스 피해가 `boss.Atk` 를 읽으므로 여기 한 곳에서 곱한다.
         /// </summary>
-        private static float BossAtkMulOf(string bossKey) => bossKey == "robot_snakes" ? 2f : 1f;
+        /// ⚠ 챕터 표가 있으면 **곱하지 않는다** — 표의 `bossAtk` 가 이미 그 값을 담고 있다(1챕터 36).
+        private float BossAtkMulOf(string bossKey)
+            => HasChapterTable ? 1f : bossKey == "robot_snakes" ? 2f : 1f;
 
         private void EnterRoom(int index)
         {
@@ -3021,6 +3018,7 @@ namespace Game.Module.InGame
             {
                 RoomIndex = index, RoomTotal = RoomTotal,
                 Chapter = ch,
+                MusicChapter = ChapterRow(ch).Music,
                 StageInChapter = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : index + 1,
                 ChapterTotal = ChapterRoomCount(ch),
                 IsBossRoom = isBoss, Kind = _roomKind,
@@ -5189,7 +5187,14 @@ namespace Game.Module.InGame
         ///   짝은 주장이 아니라 방 표에서 뽑았다 — 챕터별 일반 방 8개의 `_floor` 집계:
         ///     CH1 junkyard · CH2 missile · CH3 street · CH4 rooftop · CH5 lab · CH6 refinery
         /// </summary>
-        private static string ChapterFloorKey(int chapter, RoomEntry room) => chapter switch
+        private string ChapterFloorKey(int chapter, RoomEntry room)
+        {
+            // 챕터 표의 무대가 이긴다 — 7챕터부터는 앞 챕터의 무대를 빌려 쓴다.
+            string stage = ChapterRow(chapter).Stage;
+            return !string.IsNullOrEmpty(stage) ? "roomfloor_env_" + stage : LegacyChapterFloorKey(chapter);
+        }
+
+        private static string LegacyChapterFloorKey(int chapter) => chapter switch
         {
             // ⚠ 예전에는 CH1 만 배치 글자별로 여섯 장(`roomfloor_ch1_*`)을 따로 깔았다.
             //   그 여섯 장은 720×936 이라 16 m 방에서 세로로 늘어난다(2026-09-14) — 무대 한 장으로 통일한다.
@@ -5838,7 +5843,7 @@ namespace Game.Module.InGame
             _shopOffers.Clear();
             if (_shopTable == null || _buffTable == null) { SpawnExit(); return; }
 
-            int ch = Mathf.Clamp(_runChapter, 1, 3);
+            int ch = ShopChapter;
             _shopRules = _shopTable.ForChapter(ch);
             if (_shopRules == null) { SpawnExit(); return; }
 
@@ -5963,12 +5968,12 @@ namespace Game.Module.InGame
             int heal = ShopHealIndex;
             names[heal] = Localize.Get("ui.shop.heal.name");
             descs[heal] = Localize.Format("ui.shop.heal.desc", _shopRules.HostHealPct, _shopRules.GhostHealPct);
-            prices[heal] = _shopRules.HealPrice;
+            prices[heal] = ShopHealPrice;
             // ⚠ 치료는 **한 번만** 판다. 카드·몸은 산 뒤 진열대에서 빠지고
             //   소모품은 하나만 들 수 있는데, 치료만 한도가 남으면 두 번 살 수 있었다.
             can[heal] = !_shopHealBought
                      && _shopBought < _shopRules.TotalPurchaseLimit
-                     && _runGold >= _shopRules.HealPrice;
+                     && _runGold >= ShopHealPrice;
             icons[heal] = "buffcard_heal";   // 회복은 카드가 아니라 상점 고유 칸이다
 
             _bus.Publish(new ShopOpenedEvent
@@ -5982,8 +5987,8 @@ namespace Game.Module.InGame
 
         /// <summary>암시장 연줄(EV_CH2_05)이 붙어 있으면 그만큼 싸다. 최소 1 골드는 받는다.</summary>
         private int PriceOf(ShopOffer o)
-            => _shopDiscount <= 0 ? o.Price
-             : Mathf.Max(1, Mathf.RoundToInt(o.Price * (100 - _shopDiscount) / 100f));
+            => _shopDiscount <= 0 ? ShopPrice(o.Price)
+             : Mathf.Max(1, Mathf.RoundToInt(ShopPrice(o.Price) * (100 - _shopDiscount) / 100f));
 
         private bool CanBuyCard(ShopOffer o)
             => _shopBought < _shopRules.TotalPurchaseLimit
@@ -6028,8 +6033,8 @@ namespace Game.Module.InGame
             {
                 if (_shopHealBought) return;
                 if (_shopBought >= _shopRules.TotalPurchaseLimit) return;
-                if (_runGold < _shopRules.HealPrice) return;
-                AddRunGold(-_shopRules.HealPrice);
+                if (_runGold < ShopHealPrice) return;
+                AddRunGold(-ShopHealPrice);
                 _shopBought++;
                 _shopHealBought = true;
 
@@ -8820,8 +8825,11 @@ namespace Game.Module.InGame
         /// </summary>
         private static readonly float[] EventGoldMuls = { 1.0f, 1.4f, 1.9f, 2.5f, 3.2f, 4.0f };
 
+        /// ⚠ 챕터 표가 있으면 표의 `priceMul` 을 쓴다 — 위 배열은 표가 없을 때의 대비책이다.
         private int EventGold(int baseValue)
-            => Mathf.RoundToInt(baseValue * EventGoldMuls[Mathf.Clamp(_runChapter, 1, 6) - 1]);
+            => Mathf.RoundToInt(baseValue * (HasChapterTable
+                   ? RunPriceMul
+                   : EventGoldMuls[Mathf.Clamp(_runChapter, 1, EventGoldMuls.Length) - 1]));
 
         /// <summary>
         /// 무엇을 받는가. 「악마의 계약이 무슨 버프인지 하나도 모르겠다」는 보고를 받고
@@ -9444,6 +9452,19 @@ namespace Game.Module.InGame
 
         private int GhostHpMax => _config.GhostHpMax + _buffs.GhostHpBonus;
 
+        /// <summary>
+        /// 포기하고 나간다 — 판에서 주운 골드만 챙긴다(죽었을 때와 같은 대우, 기획 2026-10-01).
+        /// 결과 알림은 띄우지 않는다. 포기 확인 창이 이미 그 자리다.
+        /// </summary>
+        public void GiveUp()
+        {
+            if (!_running) return;
+            _running = false;
+            int carried = Mathf.Max(0, _runGold);
+            if (carried > 0 && _player != null && _player.IsReady)
+                _player.GrantRunGoldAsync(carried).Forget();   // fire-and-forget: 씬을 떠나는 중이다
+        }
+
         private void Finish(bool cleared)
         {
             if (!_running) return;
@@ -9457,11 +9478,20 @@ namespace Game.Module.InGame
             if (_player != null && _player.IsReady)
                 _player.SetProgress(_runChapter, _runStage);
 
-            // ⚠ **죽으면 보상이 없다**(기획 2026-09-18). 골드도 상자도 없다 —
-            //   결과 화면은 클리어했을 때만 나온다. 죽으면 알림창 하나 뒤 로비로.
+            // 판에서 주운 골드 — 상점에서 쓰고 남은 만큼이다.
+            int carried = Mathf.Max(0, _runGold);
+
+            // ⚠ **죽으면 판에서 번 골드만 준다**(기획 2026-10-01). 상자도 클리어 골드도 없다.
+            //   예전에는(2026-09-18) 아무것도 안 줬다 — 못 깨는 챕터에 막히면 강해질 길이 없어
+            //   같은 판을 맨손으로 되풀이해야 했다. 진 판도 다음 판의 밑천이 된다.
             if (!cleared)
             {
-                _bus.Publish(new StageFinishedEvent { IsCleared = false, FinishedChapter = _runChapter });
+                if (carried > 0 && _player != null && _player.IsReady)
+                    _player.GrantRunGoldAsync(carried).Forget();   // fire-and-forget: 저장 완료를 기다릴 화면이 없다
+                _bus.Publish(new StageFinishedEvent
+                {
+                    IsCleared = false, FinishedChapter = _runChapter, RewardGold = carried,
+                });
                 return;
             }
 
@@ -9469,8 +9499,10 @@ namespace Game.Module.InGame
             // 이미 깬 챕터를 다시 깨도 준다(기획). 골드는 **지금** 넣는다 —
             // 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
             int ch = Mathf.Clamp(_runChapter, 1, ChapterCount);
-            int gold = ChapterClearGold[ch - 1];
-            string chestKey = ChapterChestKey[ch - 1];
+            var row = ChapterRow(ch);
+            int legacy = Mathf.Clamp(ch, 1, ChapterClearGold.Length) - 1;
+            int gold = (row.ClearGold > 0 ? row.ClearGold : ChapterClearGold[legacy]) + carried;
+            string chestKey = !string.IsNullOrEmpty(row.Chest) ? row.Chest : ChapterChestKey[legacy];
 
             bool accepted = false;
             if (CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests))
@@ -9493,8 +9525,7 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 챕터 클리어 골드 (챕터 1 ~ 6). ⚠ 밸런스 미확정(TBD-BAL) — 자리표시 값이다.
-        /// 낮은 챕터일수록 적다: 쉬운 챕터를 되풀이해 버는 것보다 앞으로 가는 편이 낫게.
+        /// 챕터 클리어 골드 — ⚠ **챕터 표가 없을 때의 대비책이다.** 정본은 `chapters.tsv` 의 `clearGold`.
         /// </summary>
         private static readonly int[] ChapterClearGold = { 150, 200, 300, 400, 550, 700 };
 

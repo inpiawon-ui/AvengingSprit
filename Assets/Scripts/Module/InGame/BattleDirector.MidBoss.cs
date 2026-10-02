@@ -35,8 +35,10 @@ namespace Game.Module.InGame
         ///   3배 × 2배 = 6배가 되어 「중간 보스 피가 너무 많다」가 됐다.
         ///   여기서 절반으로 내려 예전 체감(3배)으로 돌린다.
         /// </summary>
-        private const float MidBossHpMul = 1.5f;
-        private const float MidBossAtkMul = 1.4f;
+        /// ⚠ 2026-10-02 에 1.5 → 2.6 · 1.4 → 1.8. 챕터 체력 곡선을 완만하게 눕히면서(1챕터 0.5 · 6챕터 1.16)
+        ///   대장이 잡몹 한 기 반짜리가 됐다 — 8번 방이 그냥 지나가는 방이었다. 판 한가운데의 고비여야 한다.
+        private const float MidBossHpMul = 2.6f;
+        private const float MidBossAtkMul = 1.8f;
 
         /// <summary>부하를 다 잡았을 때 대장이 굳는 시간. 정본 3초.</summary>
         private const float MidBossStunSeconds = 3f;

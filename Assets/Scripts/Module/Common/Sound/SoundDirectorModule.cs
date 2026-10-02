@@ -552,14 +552,16 @@ namespace Game.Module.Common
         internal void OnRoomEntered(RoomEnteredEvent e)
         {
             if (!IsReady) return;
-            if (e.IsBossRoom) { PlayMusic($"chapter.{e.Chapter}.boss"); return; }
+            // 곡이 아직 없는 챕터는 앞 챕터 곡을 빌린다(챕터 표의 `music`) — 새 곡이 오면 표만 고친다.
+            int ch = e.MusicChapter > 0 ? e.MusicChapter : e.Chapter;
+            if (e.IsBossRoom) { PlayMusic($"chapter.{ch}.boss"); return; }
 
             // 원작 스테이지 가운데 구역 — 방 번호 범위로 정했다(계획서 D3)
-            var mid = _table.MidClipKey(e.Chapter, e.StageInChapter);
+            var mid = _table.MidClipKey(ch, e.StageInChapter);
             if (mid != null) { RequestMusic(mid, null, "chapter.mid"); return; }
 
             // 상점·제단·이벤트 방도 챕터 곡을 그대로 이어 간다 — 방마다 곡이 끊기면 산만하다
-            PlayMusic($"chapter.{e.Chapter}.normal");
+            PlayMusic($"chapter.{ch}.normal");
         }
 
         internal void OnStageFinished(StageFinishedEvent e) =>

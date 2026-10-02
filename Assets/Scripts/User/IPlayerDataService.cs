@@ -106,6 +106,14 @@ namespace Game.User
 
         int GhostStatMax { get; }
         int HostStatMax { get; }
+        /// <summary>이 몸의 강화 상한 — 성급이 연다(1성 10 · 2성 20 …).</summary>
+        int HostStatCap(string hostKey);
+        /// <summary>챕터 수(챕터 표의 줄 수).</summary>
+        int ChapterCount { get; }
+        /// <summary>그 챕터의 줄(이름 · 보상 · 빌려 쓰는 그림 칸 …). 표가 없으면 기본값.</summary>
+        Game.Character.GameConfig.ChapterDef ChapterInfo(int chapter);
+        /// <summary>게임 설정. 부트 초기에는 null 일 수 있다.</summary>
+        Game.Character.GameConfig Config { get; }
         int GhostStatLevel(HostStat stat);
         int HostStatLevel(string hostKey, HostStat stat);
         /// <summary>다음 단계 골드. 0 이면 상한.</summary>
@@ -186,6 +194,12 @@ namespace Game.User
         /// 이미 깬 챕터를 다시 깨도 골드 · 경험치는 준다(기획 2026-09-18 · 09-21).
         /// </summary>
         UniTask GrantChapterClearAsync(int chapter, int gold);
+
+        /// <summary>
+        /// 판이 클리어 없이 끝났을 때(사망 · 포기) — 판에서 주운 골드만 계정에 넣고 저장한다.
+        /// 「죽으면 판에서 번 골드만 준다」(기획 2026-10-01). 상자 · 경험치 · 격파 기록은 없다.
+        /// </summary>
+        UniTask GrantRunGoldAsync(int gold);
 
         /// <summary>정본 REWARD_DB 를 반영하는 확장형. 영구 재화는 실패해도 남는다.</summary>
         UniTask GrantStageRewardAsync(int gold, int ghostExp, bool cleared,

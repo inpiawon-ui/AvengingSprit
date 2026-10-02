@@ -524,3 +524,18 @@ host.snowwoman.desc	눈을 부르는 설녀.\n차가운 손길로 적을 얼린�
 host.vampire.desc	밤의 귀족 흡혈귀.\n적의 피로 상처를 메운다.	夜の貴族、吸血鬼。\n敵の血で傷をふさぐ。	A vampire noble of the night who\nheals on the blood of foes.
 host.commando_missile.desc	미사일을 쏘는 코만도.\n멀리 있는 적까지 폭격한다.	ミサイルを撃つコマンドー。\n遠くの敵まで爆撃する。	A missile commando who bombards\neven distant enemies.
 host.death.desc	낫을 든 죽음 그 자체.\n닿는 모든 것을 거둔다.	鎌を持つ死そのもの。\n触れるものすべてを刈り取る。	Death itself, scythe in hand,\nreaping all it touches.
+stage.7.1.name	불타는 집적장	燃える集積場	Burning Junkyard
+stage.8.1.name	봉쇄된 저장기지	封鎖された貯蔵基地	Sealed Depot
+stage.9.1.name	망령의 거리	亡霊の街	Street of Wraiths
+stage.10.1.name	최후의 옥상	最後の屋上	The Last Rooftop
+chapter.1.desc	도시가 버린 것들이 쌓이는 곳\n무언가가 그 아래에서 깨어났다.	街が捨てたものが積もる場所\nその下で何かが目を覚ました。	
+chapter.2.desc	도시 외곽에 위치한 수수께끼의 군사 시설\n더 깊은 곳에서 누군가가 움직이고 있다.	街外れにある謎の軍事施設\nさらに奥で誰かが動いている。	
+chapter.3.desc	네온이 꺼지지 않는 밤의 거리\n골목마다 다른 얼굴이 기다린다.	ネオンが消えない夜の街\n路地ごとに違う顔が待っている。	
+chapter.4.desc	빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.	雨水が溜まった空中基地の屋上\n足元が崩れる音がする。	
+chapter.5.desc	잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.	鍵のかかっていない研究所の扉\n失敗作がまだ息をしている。	
+chapter.6.desc	불길이 멈추지 않는 정유소\n모든 것의 주인이 여기 있다.	炎が止まらない製油所\nすべての主がここにいる。	
+chapter.7.desc	꺼지지 않는 불이 고철을 녹인다\n길은 터뜨려서 여는 수밖에 없다.	消えない炎が鉄くずを溶かす\n道は爆破して開くしかない。	
+chapter.8.desc	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽어야 지나간다.	すべての扉が閉ざされた基地の奥\n射線とリズムを読まなければ通れない。	
+chapter.9.desc	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.	灯りの消えた街を亡者が歩く\nもはや床さえも敵だ。	
+chapter.10.desc	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 한다.	すべてが始まった屋上\n学んだことをすべて出し切れ。	
+ui.ingame.result.dead_gold	유령이 소멸했습니다.\n주운 골드 +{0} 을 챙겨 로비로 돌아갑니다.	ゴーストが消滅しました。\n拾ったゴールド +{0} を持ってロビーに戻ります。	The ghost has vanished.\nYou keep +{0} gold.

@@ -1508,7 +1508,9 @@ namespace Game.Module.InGame
             var result = e.IsCleared ? GetComponentInChildren<ChapterResultPopup>(true) : null;
             if (result != null) { result.Show(e); return; }
             SystemPopup.Show(
-                e.IsCleared ? ClearMessage(e) : Localize.Get("ui.ingame.result.dead"),
+                e.IsCleared ? ClearMessage(e)
+                : e.RewardGold > 0 ? Localize.Format("ui.ingame.result.dead_gold", e.RewardGold.ToString("N0"))
+                : Localize.Get("ui.ingame.result.dead"),
                 onConfirm: () => GoLobbyAsync().Forget(),   // fire-and-forget: 씬 전환 대기 불필요
                 confirmText: Localize.Get("ui.common.ok"),
                 cancelText: null);
@@ -1527,7 +1529,11 @@ namespace Game.Module.InGame
         private void OnPause()
         {
             SystemPopup.Show(Localize.Get("ui.ingame.pause.message"),
-                onConfirm: () => GoLobbyAsync().Forget(),  // fire-and-forget: 씬 전환 대기 불필요
+                onConfirm: () =>
+                {
+                    if (_battle != null) _battle.GiveUp();   // 주운 골드는 챙겨서 나간다
+                    GoLobbyAsync().Forget();                 // fire-and-forget: 씬 전환 대기 불필요
+                },
                 confirmText: Localize.Get("ui.ingame.pause.give_up"), cancelText: Localize.Get("ui.ingame.pause.continue"));
         }
 

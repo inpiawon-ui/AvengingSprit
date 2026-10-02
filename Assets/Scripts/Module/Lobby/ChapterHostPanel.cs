@@ -61,25 +61,12 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
         [SerializeField] private Sprite _matchUp, _matchDown;
 
-        /// <summary>
-        /// 클리어 보상 골드 — ⚠ **임시표다 (2026-09-29).** 경제 밸런스가 정해지면 표로 옮긴다.
-        /// 스샷의 CH2 값(3,000~5,000)에 맞추고 앞뒤를 이어 붙였다.
-        /// </summary>
-        private static readonly (int min, int max)[] ClearGold =
-        {
-            (1000, 1800), (3000, 5000), (5000, 8000), (8000, 12000), (12000, 18000), (18000, 26000),
-        };
+        // ⚠ 클리어 보상 · 챕터 설명 · 그림 칸은 **챕터 표**(`GameConfig.ChapterOf`)에서 온다.
+        //   예전에는 여기 6칸 배열로 적혀 있었고, 보상 골드는 실제 지급액의 4~14배였다(임시표).
+        //   화면에 적힌 값과 받는 값이 달라서는 안 된다 — 같은 표를 읽는다.
 
-        /// <summary>챕터 설명 두 줄 — 번역표에 없으면 이 한국어가 나온다.</summary>
-        private static readonly string[] ChapterDesc =
-        {
-            "도시가 버린 것들이 쌓이는 곳\n무언가가 그 아래에서 깨어났다.",
-            "도시 외곽에 위치한 수수께끼의 군사 시설\n더 깊은 곳에서 누군가가 움직이고 있다.",
-            "네온이 꺼지지 않는 밤의 거리\n골목마다 다른 얼굴이 기다린다.",
-            "빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.",
-            "잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.",
-            "불길이 멈추지 않는 정유소\n모든 것의 주인이 여기 있다.",
-        };
+        /// <summary>판에서 주운 골드 중 평균적으로 남겨 나오는 몫(상점에서 쓰고 남은 것). 표시 범위의 아래쪽.</summary>
+        private const float RunGoldKeepRatio = 0.6f;
 
         /// <summary>랜덤 선택의 값. 제일 싸다 — 고를 이유를 값으로 만든다(기획 2026-09-29).</summary>
         public const int RandomCost = 300;
@@ -87,7 +74,7 @@ namespace Game.Module.Lobby
         /// <summary>랜덤이 **안 가진 몸**을 빌려줄 확률(%). 그 판에만 쓴다.</summary>
         private const int LegendChancePercent = 5;
 
-        private const int ChapterCount = PlayerDataService.ChapterCount;
+        private int ChapterCount => _player != null && _player.IsReady ? _player.ChapterCount : 1;
 
         private static readonly Color GoldText = new(1f, 0.85f, 0.32f);
         private static readonly Color DimText = new(0.66f, 0.71f, 0.8f);
@@ -143,6 +130,7 @@ namespace Game.Module.Lobby
             if (_player == null) CoreModule.TryGet<IPlayerDataService>(out _player);
             if (_player == null || !_player.IsReady) return;
 
+            Game.Module.InGame.AffinityRule.Bind(_player.Config);
             _chapter = Mathf.Clamp(_player.SelectedChapter, 1, ChapterCount);
             BuildCards();
             _pickedRandom = false;
@@ -408,17 +396,21 @@ namespace Game.Module.Lobby
 
         private void RefreshChapter()
         {
-            int i = _chapter - 1;
+            var row = _player != null ? _player.ChapterInfo(_chapter) : default;
+            // 그림은 빌려 쓰는 칸에서 — 7챕터부터는 앞 챕터의 그림을 쓴다(새 그림이 오면 표만 고친다)
+            int i = (row.Art > 0 ? row.Art : _chapter) - 1;
+            int bossAt = (row.BossArt > 0 ? row.BossArt : _chapter) - 1;
+            int chestAt = (row.ChestArt > 0 ? row.ChestArt : _chapter) - 1;
             // 「CHAPTER」와 번호는 **한 글자칸**이다. 따로 두면 가로로 늘어나는 화면(4:3)에서
             // 글자는 제 폭을 지키고 자리만 벌어져 둘 사이가 뜬다(2026-10-01).
             _ui.SetText("CHChapterLabel",
                         $"{Localize.FromTable("ui.chapterhost.chapter", "CHAPTER")} "
                         + $"<size=122%><color=#5CC7FF>{_chapter:00}</color></size>");
             _ui.SetText("CHChapterNoText", string.Empty);
-            _ui.SetText("CHChapterNameText", Localize.Get($"stage.{_chapter}.1.name"));
+            _ui.SetText("CHChapterNameText",
+                        Localize.FromTable($"stage.{_chapter}.1.name", row.Name ?? string.Empty));
             _ui.SetText("CHChapterDescText",
-                        Localize.FromTable($"chapter.{_chapter}.desc",
-                                           i < ChapterDesc.Length ? ChapterDesc[i] : string.Empty));
+                        Localize.FromTable($"chapter.{_chapter}.desc", row.Desc ?? string.Empty));
 
             var art = _ui.Get<Image>("CHChapterArt");
             if (art != null)
@@ -435,7 +427,10 @@ namespace Game.Module.Lobby
             SetArrow("CHNextButton", _chapter < ChapterCount);
 
             // 「BOSS」·「클리어 보상」 같은 고정 글자는 화면 그림에 있다 — 값만 쓴다
-            var ca = _chapterArts != null && i < _chapterArts.Length ? _chapterArts[i] : default;
+            var ca = _chapterArts != null && bossAt >= 0 && bossAt < _chapterArts.Length
+                ? _chapterArts[bossAt] : default;
+            var chestArt = _chapterArts != null && chestAt >= 0 && chestAt < _chapterArts.Length
+                ? _chapterArts[chestAt] : default;
             _ui.SetText("CHBossNameText", ca.BossName ?? string.Empty);
             var boss = _ui.Get<Image>("CHBossPortrait");
             if (boss != null)
@@ -445,16 +440,18 @@ namespace Game.Module.Lobby
                 boss.preserveAspect = true;
             }
 
-            var (min, max) = i < ClearGold.Length ? ClearGold[i] : (0, 0);
+            // 받는 골드 = 클리어 골드 + 판에서 주워 남긴 골드. 상점에서 얼마나 쓰느냐로 범위가 생긴다.
+            int min = row.ClearGold + Mathf.RoundToInt(row.RunGold * RunGoldKeepRatio);
+            int max = row.ClearGold + row.RunGold;
             _ui.SetText("CHRewardGoldText", $"{min:N0} ~ {max:N0}");
             var chest = _ui.Get<Image>("CHRewardChestIcon");
             if (chest != null)
             {
-                chest.sprite = ca.Chest;
+                chest.sprite = chestArt.Chest;
                 chest.enabled = chest.sprite != null;
                 chest.preserveAspect = true;
             }
-            _ui.SetText("CHRewardChestText", ca.ChestLabel ?? string.Empty);
+            _ui.SetText("CHRewardChestText", chestArt.ChestLabel ?? string.Empty);
 
             RefreshChapterAffinity();
         }

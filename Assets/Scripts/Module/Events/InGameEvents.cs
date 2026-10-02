@@ -97,7 +97,9 @@ namespace Game.Module.Events
         public int RoomTotal;      // 런 전체 방 수
         // 화면에는 **챕터와 그 안의 순번**을 보여 준다.
         // 런 통짜 번호(45 중 13)만 보이면 챕터가 어디서 갈리는지 알 수가 없다.
-        public int Chapter;        // 1~3
+        public int Chapter;        // 1~
+        /// <summary>곡을 빌려 쓰는 챕터(챕터 표의 `music`). 0 이면 `Chapter` 그대로.</summary>
+        public int MusicChapter;
         public int StageInChapter; // 챕터 안에서 몇 번째 방인가 (1-based)
         public int ChapterTotal;   // 이 챕터의 방 수
         public bool IsBossRoom;

@@ -40,16 +40,26 @@ namespace Game.Module.InGame
         /// 상성 모드. 에디터 메뉴 `Tools/Game/시험판 — 상성 모드` 로 켜고 끈다.
         /// 끄면 예전 규칙 그대로다 — 두 방식을 바꿔 가며 해 볼 수 있어야 한다.
         /// </summary>
+        /// ⚠ **2026-10-02 정식이 됐다** — 기본이 켜짐이고 빌드에서는 늘 켜져 있다.
+        ///   에디터 스위치는 「상성 없이 해 보기」 용으로만 남긴다.
         public static bool Enabled
         {
 #if UNITY_EDITOR
-            get => UnityEditor.EditorPrefs.GetBool("AVSR.AffinityMode", false);
+            get => UnityEditor.EditorPrefs.GetBool("AVSR.AffinityMode", true);
             set => UnityEditor.EditorPrefs.SetBool("AVSR.AffinityMode", value);
 #else
-            get => false;
+            get => true;
             set { }
 #endif
         }
+
+        /// <summary>
+        /// 챕터 표. 로비와 전투가 「이 챕터엔 어느 쪽이 많은가 · 보스는 어느 쪽인가」를 물을 때 본다.
+        /// `PlayerDataService` 가 설정을 읽은 뒤 한 번 건다.
+        /// </summary>
+        private static Game.Character.GameConfig s_config;
+
+        public static void Bind(Game.Character.GameConfig config) => s_config = config;
 
         /// <summary>유리 · 보통 · 불리의 피해 배율. (제안값 — 유리 130 / 보통 100 / 불리 70)</summary>
         public const float WinDamageMul = 1.3f;
@@ -73,18 +83,19 @@ namespace Game.Module.InGame
             // ── 날: 총 · 칼 · 창을 든 것 ──
             "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
                 or "amazon" or "amazon_elite"
-                or "bat" or "python" or "kingpin"
+                or "bat" or "roadwarden" or "scrapgunner"
+                or "python" or "kingpin"
                 => Affinity.Blade,
             // ── 힘: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
             "baseball" or "guru" or "ninja_chain" or "commando_grenade" or "commando_missile"
                 or "commando_laser" or "robot"
-                or "scrapgunner" or "actor_enforcer" or "roadwarden" or "coilwalker" or "obj_turret"
+                or "actor_enforcer" or "obj_turret" or "turret_cross"
                 or "robot_snakes" or "crusher" or "guardian"
                 => Affinity.Force,
             // ── 술: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
             "dragoon" or "snowwoman" or "dragon_blue" or "salamander" or "vampire"
                 or "white_wizard" or "medium" or "death"
-                or "skeleton" or "sludge"
+                or "skeleton" or "coilwalker" or "sludge"
                 => Affinity.Magic,
             _ => Affinity.None,
         };
@@ -111,16 +122,12 @@ namespace Game.Module.InGame
         ///   손으로 적은 숫자는 방을 고치는 순간 낡는다.
         /// ⚠ 지금 잡몹 7종은 기계가 많아 **「힘」 쪽으로 크게 쏠려 있다.** 새 잡몹을 넣을 때 날 · 술 쪽을 채워야 한다.
         /// </summary>
-        public static (int blade, int force, int magic) ChapterMix(int chapter) => chapter switch
+        public static (int blade, int force, int magic) ChapterMix(int chapter)
         {
-            1 => (10, 12, 10),   // 박쥐 / 폐품 사수 / 해골
-            2 => (11, 29, 0),    // 박쥐 / 순찰기 · 집행자
-            3 => (0, 36, 16),    // 코일 · 집행자 · 십자 포탑 / 해골
-            4 => (13, 46, 0),    // 박쥐 / 집행자 · 순찰기 · 코일
-            5 => (0, 52, 18),    // 집행자 · 코일 · 십자 포탑 / 해골
-            6 => (0, 61, 18),    // 집행자 · 순찰기 · 코일 · 십자 포탑 / 해골
-            _ => (0, 0, 0),
-        };
+            if (s_config == null || !s_config.HasChapterTable) return (0, 0, 0);
+            var row = s_config.ChapterOf(chapter);
+            return (row.MixBlade, row.MixForce, row.MixMagic);
+        }
 
         /// <summary>그 챕터에 가장 많은 쪽.</summary>
         public static Affinity MajorOf(int chapter)
@@ -132,16 +139,9 @@ namespace Game.Module.InGame
         }
 
         /// <summary>그 챕터 보스의 쪽.</summary>
-        public static Affinity BossKindOf(int chapter) => chapter switch
-        {
-            1 => KindOf("robot_snakes"),
-            2 => KindOf("crusher"),
-            3 => KindOf("python"),
-            4 => KindOf("sludge"),
-            5 => KindOf("guardian"),
-            6 => KindOf("kingpin"),
-            _ => Affinity.None,
-        };
+        public static Affinity BossKindOf(int chapter)
+            => s_config != null && s_config.HasChapterTable
+                ? KindOf(s_config.ChapterOf(chapter).Boss) : Affinity.None;
 
         public static string GemName(Affinity a) => a switch
         {
@@ -158,26 +158,6 @@ namespace Game.Module.InGame
             Affinity.Magic => "rps_tri_magic",
             _ => null,
         };
-
-        /// <summary>
-        /// 가르치는 방 — 1챕터 앞의 세 방은 **한 쪽의 적만** 세우고 열쇠가 되는 몸을 같이 둔다.
-        /// 날(권총) 몸으로 들어갔을 때 유리 → 보통 → 불리 순으로 겪게 짰다.
-        /// 방 데이터(`RoomTable`)는 건드리지 않는다. 자리는 그대로 쓰고 누가 서는지만 바꾼다.
-        /// </summary>
-        public static string ActorOverride(string roomId, bool isHostSlot, string actorId)
-        {
-            if (!Enabled) return actorId;
-            return roomId switch
-            {
-                // 해골(술) — 날이 유리하다. 총칼 든 몸이면 시원하게 잡힌다.
-                "ROOM_CH1_001" => isHostSlot ? "amazon" : "skeleton",
-                // 박쥐(날) — 날끼리는 보통. 힘(수류탄)이 유리하다.
-                "ROOM_CH1_002" => isHostSlot ? "commando_grenade" : "bat",
-                // 폐품 사수(힘) — 날은 튕긴다. 술(샐러맨더)로 갈아타야 한다.
-                "ROOM_CH1_003" => isHostSlot ? "salamander" : "scrapgunner",
-                _ => actorId,
-            };
-        }
     }
 
     public sealed partial class BattleDirector

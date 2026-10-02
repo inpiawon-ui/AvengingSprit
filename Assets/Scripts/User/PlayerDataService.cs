@@ -58,8 +58,13 @@ namespace Game.User
         public int ReachedStage   => _data?.reachedStage   ?? 1;
         public int ClearedChapter => _data?.clearedChapter ?? 0;
 
-        /// <summary>챕터 수. 방 표(90방 = 6 × 15)와 같다.</summary>
-        public const int ChapterCount = 6;
+        /// <summary>챕터 수. 챕터 표(`GameConfig.ChapterOf`)의 줄 수다 — 코드에 적지 않는다.</summary>
+        public int ChapterCount => _config != null ? _config.ChapterCount : 6;
+
+        public GameConfig.ChapterDef ChapterInfo(int chapter)
+            => _config != null ? _config.ChapterOf(chapter) : default;
+
+        public GameConfig Config => _config;
 
         public int UnlockedChapter => Mathf.Clamp(ClearedChapter + 1, 1, ChapterCount);
 
@@ -432,8 +437,13 @@ namespace Game.User
                 NewExpMax = _data.ghostExpMax,
             });
 
-        /// <summary>별 — 숙련도 2단계마다 하나(기획 2026-09-21).</summary>
-        public int StarsOf(string hostKey) => Mathf.Clamp(GetMastery(hostKey) / 2, 0, 5);
+        /// <summary>
+        /// 별(성급) — 숙련도 두 단계마다 하나. 숙련도 1·2 → 1성, 3·4 → 2성 … 9·10 → 5성.
+        ///
+        /// ⚠ 예전에는 `숙련도 ÷ 2` 라 처음 가진 몸(숙련도 1)이 0성이었다. 성급이 강화 상한을
+        ///   정하게 되면서(기획 2026-10-02) 0성이면 강화를 하나도 못 한다 — 가진 몸은 1성부터다.
+        /// </summary>
+        public int StarsOf(string hostKey) => Mathf.Clamp((GetMastery(hostKey) + 1) / 2, 0, 5);
 
         // ── 전투력 ───────────────────────────────────────────
         //
@@ -476,7 +486,11 @@ namespace Game.User
         private static readonly int StatCount = Enum.GetValues(typeof(HostStat)).Length;
 
         public int GhostStatMax => _config != null ? _config.GhostStatMax : 50;
-        public int HostStatMax => _config != null ? _config.HostStatMax : 20;
+        public int HostStatMax => _config != null ? _config.HostStatMax : 50;
+
+        /// <summary>이 몸의 강화 상한 — 성급이 연다(1성 10 · 2성 20 …).</summary>
+        public int HostStatCap(string hostKey)
+            => _config != null ? _config.HostStatCap(StarsOf(hostKey)) : 10;
 
         public int GhostStatLevel(HostStat stat)
         {
@@ -502,7 +516,7 @@ namespace Game.User
         public int HostStatCost(string hostKey, HostStat stat)
         {
             int lv = HostStatLevel(hostKey, stat);
-            return _config == null || lv >= HostStatMax ? 0 : _config.StatCost(false, lv);
+            return _config == null || lv >= HostStatCap(hostKey) ? 0 : _config.StatCost(false, lv);
         }
 
         public float StatPercent(HostStat stat, int level)
@@ -707,6 +721,14 @@ namespace Game.User
                 SetProgress(_data.currentChapter, _data.reachedStage + 1);
             }
 
+            await SaveAsync();
+        }
+
+        public async UniTask GrantRunGoldAsync(int gold)
+        {
+            if (_data == null) return;
+            _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
+            PublishCurrency();
             await SaveAsync();
         }
 

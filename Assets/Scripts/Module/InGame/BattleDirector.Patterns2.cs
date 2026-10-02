@@ -30,7 +30,9 @@ namespace Game.Module.InGame
         ///   올라가기만 하므로, 뒤 챕터에서 시작한 판이 앞 챕터 방에 서면 1챕터 박쥐가
         ///   급강하를 한다(2026-09-28 검수 스샷에서 실제로 그랬다). 방이 제 챕터를 안다.
         /// </summary>
-        private int PatternChapter => _canonRoom != null ? _canonRoom.Chapter : _runChapter;
+        /// ⚠ 챕터 번호가 아니라 **패턴 단계**다(챕터 표의 `pattern`). 아래 `…FromChapter` 문턱은
+        ///   1~6 챕터에서 배우는 순서이고, 7챕터부터는 전부 6단계로 싸운다.
+        private int PatternChapter => PatternStageOf(_canonRoom != null ? _canonRoom.Chapter : _runChapter);
 
         // 같은 몸이 달라지는 챕터. 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다(`TrashKeysFor`).
         private const int DiveFromChapter       = 2;   // 박쥐 → 급강하 (CH2·CH4)

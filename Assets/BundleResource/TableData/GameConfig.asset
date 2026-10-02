@@ -97,6 +97,306 @@ MonoBehaviour:
   _activeSkillDamage: 140
   _rewardGoldPerRoom: 120
   _rewardGhostExpPerRoom: 8
+  _chapters:
+  - Chapter: 1
+    Name: "\uC4F0\uB808\uAE30 \uC9D1\uC801\uC7A5"
+    Desc: "\uB3C4\uC2DC\uAC00 \uBC84\uB9B0 \uAC83\uB4E4\uC774 \uC313\uC774\uB294
+      \uACF3\n\uBB34\uC5B8\uAC00\uAC00 \uADF8 \uC544\uB798\uC5D0\uC11C \uAE68\uC5B4\uB0AC\uB2E4."
+    Stage: junkyard
+    Boss: robot_snakes
+    Leader: salamander
+    Trash:
+    - skeleton
+    - bat
+    - scrapgunner
+    - actor_enforcer
+    Pattern: 1
+    EnemyHpMul: 0.5
+    EnemyAtkMul: 1
+    BossHp: 1650
+    BossAtk: 36
+    ClearGold: 200
+    Chest: silver
+    ClearExp: 300
+    PriceMul: 1
+    RunGold: 464
+    Music: 1
+    Art: 1
+    BossArt: 1
+    ChestArt: 1
+    MixBlade: 11
+    MixForce: 9
+    MixMagic: 10
+  - Chapter: 2
+    Name: "\uBBF8\uC0AC\uC77C \uC800\uC7A5\uAE30\uC9C0"
+    Desc: "\uB3C4\uC2DC \uC678\uACFD\uC5D0 \uC704\uCE58\uD55C \uC218\uC218\uAED8\uB07C\uC758
+      \uAD70\uC0AC \uC2DC\uC124\n\uB354 \uAE4A\uC740 \uACF3\uC5D0\uC11C \uB204\uAD70\uAC00\uAC00
+      \uC6C0\uC9C1\uC774\uACE0 \uC788\uB2E4."
+    Stage: missile
+    Boss: crusher
+    Leader: robot
+    Trash:
+    - bat
+    - roadwarden
+    - scrapgunner
+    - actor_enforcer
+    Pattern: 2
+    EnemyHpMul: 0.57
+    EnemyAtkMul: 0.89
+    BossHp: 2000
+    BossAtk: 38
+    ClearGold: 300
+    Chest: silver
+    ClearExp: 500
+    PriceMul: 1.3
+    RunGold: 601
+    Music: 2
+    Art: 2
+    BossArt: 2
+    ChestArt: 1
+    MixBlade: 25
+    MixForce: 13
+    MixMagic: 0
+  - Chapter: 3
+    Name: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
+    Desc: "\uB124\uC628\uC774 \uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBC24\uC758 \uAC70\uB9AC\n\uACE8\uBAA9\uB9C8\uB2E4
+      \uB2E4\uB978 \uC5BC\uAD74\uC774 \uAE30\uB2E4\uB9B0\uB2E4."
+    Stage: street
+    Boss: python
+    Leader: vampire
+    Trash:
+    - skeleton
+    - coilwalker
+    - actor_enforcer
+    - turret_cross
+    Pattern: 3
+    EnemyHpMul: 0.69
+    EnemyAtkMul: 0.82
+    BossHp: 2530
+    BossAtk: 42
+    ClearGold: 450
+    Chest: silver
+    ClearExp: 800
+    PriceMul: 1.7
+    RunGold: 791
+    Music: 3
+    Art: 3
+    BossArt: 3
+    ChestArt: 1
+    MixBlade: 0
+    MixForce: 17
+    MixMagic: 32
+  - Chapter: 4
+    Name: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
+    Desc: "\uBE57\uBB3C\uC774 \uACE0\uC778 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1\n\uBC1C\uBC11\uC774
+      \uBB34\uB108\uC9C0\uB294 \uC18C\uB9AC\uAC00 \uB09C\uB2E4."
+    Stage: rooftop
+    Boss: sludge
+    Leader: dragon_blue
+    Trash:
+    - actor_enforcer
+    - turret_cross
+    - bat
+    - coilwalker
+    Pattern: 4
+    EnemyHpMul: 0.79
+    EnemyAtkMul: 0.78
+    BossHp: 3020
+    BossAtk: 46
+    ClearGold: 650
+    Chest: gold
+    ClearExp: 1200
+    PriceMul: 2.2
+    RunGold: 1023
+    Music: 4
+    Art: 4
+    BossArt: 4
+    ChestArt: 3
+    MixBlade: 16
+    MixForce: 28
+    MixMagic: 15
+  - Chapter: 5
+    Name: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
+    Desc: "\uC7A0\uAE30\uC9C0 \uC54A\uC740 \uC5F0\uAD6C\uC18C\uC758 \uBB38\n\uC2E4\uD328\uD55C
+      \uAC83\uB4E4\uC774 \uC544\uC9C1 \uC228\uC744 \uC270\uB2E4."
+    Stage: lab
+    Boss: guardian
+    Leader: ninja_chain
+    Trash:
+    - roadwarden
+    - scrapgunner
+    - bat
+    - skeleton
+    - actor_enforcer
+    Pattern: 5
+    EnemyHpMul: 0.93
+    EnemyAtkMul: 0.76
+    BossHp: 3680
+    BossAtk: 51
+    ClearGold: 900
+    Chest: gold
+    ClearExp: 1700
+    PriceMul: 2.8
+    RunGold: 1297
+    Music: 5
+    Art: 5
+    BossArt: 5
+    ChestArt: 3
+    MixBlade: 36
+    MixForce: 18
+    MixMagic: 17
+  - Chapter: 6
+    Name: "\uC57C\uAC04 \uC815\uC720\uC18C"
+    Desc: "\uBD88\uAE38\uC774 \uBA48\uCD94\uC9C0 \uC54A\uB294 \uC815\uC720\uC18C\n\uBAA8\uB4E0
+      \uAC83\uC758 \uC8FC\uC778\uC774 \uC5EC\uAE30 \uC788\uB2E4."
+    Stage: refinery
+    Boss: kingpin
+    Leader: medium
+    Trash:
+    - skeleton
+    - coilwalker
+    - roadwarden
+    - actor_enforcer
+    - turret_cross
+    Pattern: 6
+    EnemyHpMul: 1.16
+    EnemyAtkMul: 0.8
+    BossHp: 4720
+    BossAtk: 59
+    ClearGold: 1200
+    Chest: gold
+    ClearExp: 2300
+    PriceMul: 3.5
+    RunGold: 1624
+    Music: 6
+    Art: 6
+    BossArt: 6
+    ChestArt: 3
+    MixBlade: 21
+    MixForce: 21
+    MixMagic: 39
+  - Chapter: 7
+    Name: "\uBD88\uD0C0\uB294 \uC9D1\uC801\uC7A5"
+    Desc: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBD88\uC774 \uACE0\uCCA0\uC744 \uB179\uC778\uB2E4\n\uAE38\uC740
+      \uD130\uB728\uB824\uC11C \uC5EC\uB294 \uC218\uBC16\uC5D0 \uC5C6\uB2E4."
+    Stage: junkyard
+    Boss: python
+    Leader: baseball
+    Trash:
+    - actor_enforcer
+    - turret_cross
+    - scrapgunner
+    - skeleton
+    - coilwalker
+    Pattern: 6
+    EnemyHpMul: 1.38
+    EnemyAtkMul: 0.88
+    BossHp: 5740
+    BossAtk: 65
+    ClearGold: 1550
+    Chest: platinum
+    ClearExp: 3000
+    PriceMul: 4.3
+    RunGold: 1993
+    Music: 1
+    Art: 1
+    BossArt: 3
+    ChestArt: 5
+    MixBlade: 21
+    MixForce: 41
+    MixMagic: 19
+  - Chapter: 8
+    Name: "\uBD09\uC1C4\uB41C \uC800\uC7A5\uAE30\uC9C0"
+    Desc: "\uBB38\uC774 \uC804\uBD80 \uC7A0\uAE34 \uAE30\uC9C0 \uAE4A\uC740 \uACF3\n\uC0AC\uC120\uACFC
+      \uBC15\uC790\uB97C \uC77D\uC5B4\uC57C \uC9C0\uB098\uAC04\uB2E4."
+    Stage: missile
+    Boss: sludge
+    Leader: commando_missile
+    Trash:
+    - bat
+    - roadwarden
+    - scrapgunner
+    - coilwalker
+    - turret_cross
+    Pattern: 6
+    EnemyHpMul: 1.63
+    EnemyAtkMul: 0.89
+    BossHp: 6970
+    BossAtk: 72
+    ClearGold: 1950
+    Chest: platinum
+    ClearExp: 3800
+    PriceMul: 5.2
+    RunGold: 2415
+    Music: 2
+    Art: 2
+    BossArt: 4
+    ChestArt: 5
+    MixBlade: 45
+    MixForce: 23
+    MixMagic: 24
+  - Chapter: 9
+    Name: "\uB9DD\uB839\uC758 \uAC70\uB9AC"
+    Desc: "\uBD88\uC774 \uAEBC\uC9C4 \uAC70\uB9AC\uC5D0 \uB9DD\uC790\uAC00 \uAC77\uB294\uB2E4\n\uC774\uC81C\uB294
+      \uBC14\uB2E5\uB9C8\uC800 \uC801\uC774\uB2E4."
+    Stage: street
+    Boss: guardian
+    Leader: dragoon
+    Trash:
+    - skeleton
+    - coilwalker
+    - bat
+    - actor_enforcer
+    - roadwarden
+    Pattern: 6
+    EnemyHpMul: 2.1
+    EnemyAtkMul: 1.08
+    BossHp: 9180
+    BossAtk: 85
+    ClearGold: 2400
+    Chest: platinum
+    ClearExp: 4700
+    PriceMul: 6.2
+    RunGold: 2879
+    Music: 3
+    Art: 3
+    BossArt: 5
+    ChestArt: 5
+    MixBlade: 24
+    MixForce: 24
+    MixMagic: 44
+  - Chapter: 10
+    Name: "\uCD5C\uD6C4\uC758 \uC625\uC0C1"
+    Desc: "\uBAA8\uB4E0 \uAC83\uC774 \uC2DC\uC791\uB41C \uC625\uC0C1\n\uBC30\uC6B4
+      \uAC83\uC744 \uC804\uBD80 \uAEBC\uB0B4\uC57C \uD55C\uB2E4."
+    Stage: rooftop
+    Boss: kingpin
+    Leader: death
+    Trash:
+    - skeleton
+    - bat
+    - scrapgunner
+    - actor_enforcer
+    - roadwarden
+    - coilwalker
+    - turret_cross
+    Pattern: 6
+    EnemyHpMul: 2.48
+    EnemyAtkMul: 1.08
+    BossHp: 11060
+    BossAtk: 93
+    ClearGold: 3000
+    Chest: platinum
+    ClearExp: 5700
+    PriceMul: 7.3
+    RunGold: 3385
+    Music: 4
+    Art: 4
+    BossArt: 6
+    ChestArt: 5
+    MixBlade: 35
+    MixForce: 33
+    MixMagic: 35
   _shardCurve: 080000000c000000100000001400000023000000280000002e000000340000003a0000005a000000
   _gradeMultiplier:
   - 0.8
@@ -194,5 +494,22 @@ MonoBehaviour:
     Color: {r: 0.75, g: 0.35, b: 1, a: 1}
   - HostKey: robot
     Color: {r: 0.35, g: 1, b: 0.9, a: 1}
-  _ghostLevelCostBase: 200
-  _ghostLevelCostStep: 60
+  _ghostStatMax: 50
+  _hostStatMax: 50
+  _hostStatPerStar: 10
+  _statPercentPerLevel:
+  - 2
+  - 2
+  - 2
+  - 1
+  - 1
+  - 1
+  _ghostStatCostStep: 100
+  _hostStatCostStep: 60
+  _userExpBase: 100
+  _userExpStep: 60
+  _chapterClearExp: 2c010000f401000020030000b0040000a4060000fc080000
+  _pathLevels: 0a000000140000001e0000002800000032000000
+  _pathGold: 8813000010270000204e00003075000050c30000
+  _pathGem: 3200000064000000c80000002c010000f4010000
+  _pathSpiritCore: 050000000a000000140000001e00000032000000

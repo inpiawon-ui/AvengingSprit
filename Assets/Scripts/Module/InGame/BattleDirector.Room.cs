@@ -77,14 +77,8 @@ namespace Game.Module.InGame
         ///
         /// CH2·CH3 원거리는 아직 그림이 없다(43차 발주 진행 중).
         /// 오면 그 챕터 목록에 한 자리 넣으면 그만이다.
-        private static HostEntry[] TrashPool(int chapter) => chapter switch
-        {
-            1 => new[] { Skeleton, Bat, Scrapgunner },
-            2 => new[] { Enforcer, Bat, Roadwarden },
-            _ => new[] { Enforcer, Skeleton, Coilwalker, Cross },
-        };
-
-        private static HostEntry TrashAt(int i, int chapter)
+        /// ⚠ 통은 이제 챕터 표에서 만든다(`BattleDirector.Chapter.cs` 의 `TrashPool`).
+        private HostEntry TrashAt(int i, int chapter)
         {
             var pool = TrashPool(chapter);
             return pool[i % pool.Length];
@@ -112,23 +106,13 @@ namespace Game.Module.InGame
         private static string TrashKeyAlias(string key)
             => key == "turret_cross" ? TrashCrossKey : key;
 
-        private static HostEntry TrashByKey(string key, int chapter)
+        private HostEntry TrashByKey(string key, int chapter)
         {
             if (string.IsNullOrEmpty(key)) return null;
             key = TrashKeyAlias(key);
             var allow = TrashKeysFor(chapter);
             for (int i = 0; i < allow.Length; i++)
-            {
-                if (allow[i] != key) continue;
-                return key == TrashSkeletonKey ? Skeleton
-                     : key == TrashBatKey      ? Bat
-                     : key == TrashGunnerKey   ? Scrapgunner
-                     : key == TrashEnforcerKey ? Enforcer
-                     : key == TrashWardenKey   ? Roadwarden
-                     : key == TrashCoilKey     ? Coilwalker
-                     : key == TrashCrossKey    ? Cross
-                     : null;
-            }
+                if (allow[i] == key) return TrashEntryOf(key);
             return null;
         }
 
@@ -149,7 +133,7 @@ namespace Game.Module.InGame
         ///     FRONT · FLANK (근접 키) → 그 챕터 근접
         ///     RANGED · BACK (원거리 키) → 그 챕터 원거리
         /// </summary>
-        private static HostEntry TrashForSlot(string key, int chapter, int seq)
+        private HostEntry TrashForSlot(string key, int chapter, int seq)
         {
             var exact = TrashByKey(key, chapter);
             if (exact != null) return exact;
@@ -200,7 +184,9 @@ namespace Game.Module.InGame
         ///     CH5 매복(해골)
         ///     CH6 회오리 유도탄(순찰기)
         /// </summary>
-        private static string[] TrashKeysFor(int chapter) => chapter switch
+        /// ⚠ **챕터 표가 없을 때의 대비책이다.** 정본은 `chapters.tsv` 의 `trash` 칸
+        ///   (`BattleDirector.Chapter.cs` 의 `TrashKeysFor`).
+        private static string[] LegacyTrashKeysFor(int chapter) => chapter switch
         {
             1 => new[] { TrashSkeletonKey, TrashBatKey, TrashGunnerKey },
             2 => new[] { TrashBatKey, TrashEnforcerKey, TrashWardenKey },
@@ -301,7 +287,7 @@ namespace Game.Module.InGame
         ///
         /// 지형 차이는 배경이 아니라 그 위에 얹히는 장애물 배치가 만든다.
         /// </summary>
-        private static string FloorKeyOf(RoomEntry room, int fallbackChapter)
+        private string FloorKeyOf(RoomEntry room, int fallbackChapter)
         {
             if (room == null) return InterimRoomFloor;
 

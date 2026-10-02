@@ -262,7 +262,8 @@ namespace Game.Module.Lobby
                 var row = _rows[i];
                 var stat = StatOrder[i];
                 int lv = ghost ? _player.GhostStatLevel(stat) : _player.HostStatLevel(_hostKey, stat);
-                int max = ghost ? _player.GhostStatMax : _player.HostStatMax;
+                // 호스트는 성급이 상한을 연다 — 「/ 10」 이 「/ 20」 으로 바뀌는 것이 성급의 보상이다
+                int max = ghost ? _player.GhostStatMax : _player.HostStatCap(_hostKey);
                 int cost = ghost ? _player.GhostStatCost(stat) : _player.HostStatCost(_hostKey, stat);
                 TextIn(row, "RowNameText", Localize.Get($"ui.stat.{StatKeys[(int)stat]}"));
                 TextIn(row, "RowLvLabel", "Lv.");

@@ -474,14 +474,88 @@ namespace Game.Character
         private static readonly float[] EnemyChapterHpTrims =
             { 0.50f, 1.00f, 1.00f, 1.00f, 1.00f, 1.00f };
 
-        /// <summary>공격력에 쓰는 챕터 배율.</summary>
+        /// <summary>공격력에 쓰는 챕터 배율. 챕터 표가 있으면 그것이 이긴다.</summary>
         public float EnemyChapterMul(int chapter)
-            => EnemyChapterMuls[Mathf.Clamp(chapter, 1, EnemyChapterMuls.Length) - 1];
+            => HasChapters ? ChapterOf(chapter).EnemyAtkMul
+             : EnemyChapterMuls[Mathf.Clamp(chapter, 1, EnemyChapterMuls.Length) - 1];
 
-        /// <summary>체력에 쓰는 챕터 배율. 위 배율에 챕터별 체력 손질을 곱한다.</summary>
+        /// <summary>체력에 쓰는 챕터 배율. 챕터 표의 값은 체력 손질까지 이미 들어 있다.</summary>
         public float EnemyChapterHpMul(int chapter)
-            => EnemyChapterMul(chapter)
+            => HasChapters ? ChapterOf(chapter).EnemyHpMul
+             : EnemyChapterMuls[Mathf.Clamp(chapter, 1, EnemyChapterMuls.Length) - 1]
              * EnemyChapterHpTrims[Mathf.Clamp(chapter, 1, EnemyChapterHpTrims.Length) - 1];
+
+        // ── 챕터 표 ──────────────────────────────────────────────
+        //
+        // **챕터에 관한 모든 값이 여기 한 줄씩 들어 있다.** 원본은 `Projects/AVSR/Rooms/chapters.tsv`,
+        // `Tools/Game/챕터 표 임포트` 가 이 배열로 굽는다.
+        //
+        // ⚠ 예전에는 챕터 수 6 이 스무 군데에 박혀 있었다 — 상수 둘(`ChapterCount`), 6칸 배열 일곱,
+        //   `Clamp(…, 1, 6)` · `Clamp(…, 1, 3)` 여럿. 챕터를 하나 늘리려면 그걸 다 찾아야 했고,
+        //   하나라도 빠지면 조용히 6챕터 값으로 떨어졌다. 목표는 100챕터다(기획 2026-10-01).
+        //   **코드에 챕터 번호를 적지 않는다.** 새 챕터 = 표에 한 줄.
+
+        /// <summary>챕터 한 줄.</summary>
+        [System.Serializable]
+        public struct ChapterDef
+        {
+            public int Chapter;
+            [Tooltip("화면에 뜨는 이름(한국어 원문). 번역은 문자열 표 `stage.{n}.1.name`.")]
+            public string Name;
+            [Tooltip("챕터 선택 화면의 한 줄 설명(한국어 원문). 번역은 `chapter.{n}.desc`.")]
+            public string Desc;
+            [Tooltip("무대 — 방 바닥 · 옆벽 · 소품을 고른다(roomfloor_env_{stage}).")]
+            public string Stage;
+            [Tooltip("15번 방 보스 키.")]
+            public string Boss;
+            [Tooltip("8번 방 중간보스 대장(호스트 키).")]
+            public string Leader;
+            [Tooltip("이 챕터에 서는 잡몹 키.")]
+            public string[] Trash;
+            [Tooltip("잡몹 패턴 단계(1~6). 같은 잡몹도 단계가 오르면 다르게 싸운다.")]
+            public int Pattern;
+            [Tooltip("잡몹 · 적 몸의 체력 배율.")]
+            public float EnemyHpMul;
+            [Tooltip("잡몹 · 적 몸의 공격력 배율.")]
+            public float EnemyAtkMul;
+            public int BossHp;
+            public int BossAtk;
+            [Tooltip("깼을 때 계정에 들어오는 골드(판에서 주운 골드는 따로 얹힌다).")]
+            public int ClearGold;
+            [Tooltip("깼을 때 받는 상자 키(ChestTable).")]
+            public string Chest;
+            [Tooltip("깼을 때 받는 유저 경험치.")]
+            public int ClearExp;
+            [Tooltip("판 안 값(방 골드 · 상점 값 · 이벤트 골드)의 배율. 1챕터가 1.")]
+            public float PriceMul;
+            [Tooltip("판에서 주울 수 있는 골드 총액(15방). 표시용 — 실제 값은 방 표에 구워져 있다.")]
+            public int RunGold;
+            [Tooltip("음악을 빌려 쓰는 챕터(SoundTable 의 `chapter.{n}.*` 큐).")]
+            public int Music;
+            [Tooltip("로비 그림을 빌려 쓰는 칸(1부터) — 챕터 그림 · 보스 얼굴과 이름 · 상자.")]
+            public int Art;
+            public int BossArt;
+            public int ChestArt;
+            [Tooltip("잡몹의 날 · 힘 · 술 수(전투방 11칸 합계). 방 배치에서 센 값이다.")]
+            public int MixBlade, MixForce, MixMagic;
+        }
+
+        [Header("챕터 표 — chapters.tsv 에서 굽는다")]
+        [SerializeField] private ChapterDef[] _chapters = new ChapterDef[0];
+
+        private bool HasChapters => _chapters != null && _chapters.Length > 0;
+
+        /// <summary>챕터 표가 구워져 있는가. 없으면 호출하는 쪽이 예전 값으로 떨어진다.</summary>
+        public bool HasChapterTable => HasChapters;
+
+        /// <summary>챕터 수. 표가 비어 있으면(임포트 전) 예전 값 6.</summary>
+        public int ChapterCount => HasChapters ? _chapters.Length : 6;
+
+        /// <summary>
+        /// 그 챕터의 줄. 범위를 벗어나면 가장 가까운 줄 — 표가 비어 있으면 기본값(전부 0)이다.
+        /// </summary>
+        public ChapterDef ChapterOf(int chapter)
+            => HasChapters ? _chapters[Mathf.Clamp(chapter, 1, _chapters.Length) - 1] : default;
 
         /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 001 은 1.00, 009 는 1.20.</summary>
         public float EnemyRoomMul(int roomNo)
@@ -606,6 +680,10 @@ namespace Game.Character
         /// <summary>이 챕터·방 번호의 무대 이름. 못 찾으면 빈 문자열.</summary>
         public string StageNameOf(int chapter, int room)
         {
+            // 챕터 표가 있으면 그 이름이 이긴다(방 구간은 없다 — 챕터 하나에 이름 하나).
+            if (HasChapters)
+                return Localize.FromTable($"stage.{Mathf.Clamp(chapter, 1, ChapterCount)}.1.name",
+                                          ChapterOf(chapter).Name);
             if (_stageNames == null) return string.Empty;
             string found = string.Empty;
             for (int i = 0; i < _stageNames.Length; i++)
@@ -684,13 +762,18 @@ namespace Game.Character
         [Header("성장 — 능력치 골드 강화")]
         [Tooltip("유령 탭 강화 상한 — 모든 몸에 붙는다.")]
         [SerializeField] private int _ghostStatMax = 50;
-        [Tooltip("호스트별 강화 상한.")]
-        [SerializeField] private int _hostStatMax = 20;
+        [Tooltip("호스트별 강화 상한(5성일 때). 성급마다 `_hostStatPerStar` 씩 열린다.")]
+        [SerializeField] private int _hostStatMax = 50;
+        [Tooltip("성급 하나가 여는 강화 레벨. 1성 10 · 2성 20 … (기획 2026-10-02)")]
+        [SerializeField] private int _hostStatPerStar = 10;
         [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다).")]
         [SerializeField] private float[] _statPercentPerLevel = { 2f, 2f, 2f, 1f, 1f, 1f };
-        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령 · 호스트.")]
-        [SerializeField] private int _ghostStatCostStep = 200;
-        [SerializeField] private int _hostStatCostStep = 200;
+        // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다 — 10챕터를 67판쯤에 깨는
+        // 수입(누적 약 7만 9천 골드)으로 유령 15 · 주력 몸 25 레벨쯤 사게 맞춘 값이다.
+        // 예전 200 은 한 판 수입(300~1,550)에 비해 14배쯤 비쌌다.
+        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령(모든 몸에 붙는다)이 비싸고 호스트(그 몸만)가 싸다.")]
+        [SerializeField] private int _ghostStatCostStep = 100;
+        [SerializeField] private int _hostStatCostStep = 60;
 
         [Header("성장 — 유저(유령) 레벨")]
         [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1).")]
@@ -708,6 +791,13 @@ namespace Game.Character
         public int GhostStatMax => Mathf.Max(1, _ghostStatMax);
         public int HostStatMax => Mathf.Max(1, _hostStatMax);
 
+        /// <summary>
+        /// 성급이 여는 호스트 강화 상한. 1성 10 · 2성 20 … 5성 50.
+        /// 조각 → 성급 → 강화 상한 → 골드 강화 순서로 육성이 묶인다(기획 2026-10-02).
+        /// </summary>
+        public int HostStatCap(int stars)
+            => Mathf.Clamp(Mathf.Max(1, stars) * Mathf.Max(1, _hostStatPerStar), 1, HostStatMax);
+
         public float StatPercentPerLevel(HostStat stat)
             => _statPercentPerLevel == null || _statPercentPerLevel.Length == 0 ? 0f
              : _statPercentPerLevel[Mathf.Clamp((int)stat, 0, _statPercentPerLevel.Length - 1)];
@@ -718,7 +808,8 @@ namespace Game.Character
         public int UserExpToNext(int level) => _userExpBase + _userExpStep * Mathf.Max(0, level - 1);
 
         public int ChapterClearExp(int chapter)
-            => _chapterClearExp == null || _chapterClearExp.Length == 0 ? 0
+            => HasChapters ? ChapterOf(chapter).ClearExp
+             : _chapterClearExp == null || _chapterClearExp.Length == 0 ? 0
              : _chapterClearExp[Mathf.Clamp(chapter - 1, 0, _chapterClearExp.Length - 1)];
 
         public int PathCount => _pathLevels?.Length ?? 0;

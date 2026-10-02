@@ -68,32 +68,65 @@ namespace Game.EditorTools
             "003", "009", "010",                    // 13~15 (15 = 보스)
         };
 
-        /// <summary>배정표 60방을 90방(6챕터 × 15방)으로 다시 앉힌다.</summary>
-        private static RoomDef60.Room[] Build90(RoomDef60.Room[] src)
+        /// <summary>
+        /// 무대 → 배정표(`RoomDef60`)에서 그 무대를 쓰는 챕터. 천사 · 중간보스 · 상점 · 보스 방의
+        /// 틀(바닥 · 이벤트 통 · 부하 후보)을 여기서 빌린다. 전투방은 손배치 표가 덮는다.
+        ///
+        /// 새 무대 그림이 오면 여기에 한 줄을 더하는 것이 아니라 **배정표에 그 무대의 방 넷을 더한다.**
+        /// </summary>
+        private static int SourceChapterOf(string stage) => stage switch
         {
-            var list = new List<RoomDef60.Room>(90);
-            for (int ch = 1; ch <= 6; ch++)
+            "junkyard" => 1,
+            "missile" => 2,
+            "street" => 3,
+            "rooftop" => 4,
+            "lab" => 5,
+            "refinery" => 6,
+            _ => 1,
+        };
+
+        /// <summary>지금 굽는 챕터 표. `Import` 가 채운다 — 굽는 동안 여러 곳이 본다.</summary>
+        private static List<ChapterTsv.Row> s_chapters = new();
+
+        private static ChapterTsv.Row RowOf(int chapter) => ChapterTsv.Of(s_chapters, chapter);
+
+        /// <summary>
+        /// 배정표 60방을 **챕터 표의 챕터 수 × 15방**으로 다시 앉힌다.
+        ///
+        /// 7챕터부터는 그림이 아직 없어 1~6챕터 무대를 빌린다(기획 2026-10-02). 틀은 같은 무대의
+        /// 원본 챕터에서 가져오되 **보스 · 대장은 챕터 표가 정한다** — 같은 무대에서 다른 보스를 만난다.
+        /// </summary>
+        private static RoomDef60.Room[] BuildAll(RoomDef60.Room[] src)
+        {
+            var list = new List<RoomDef60.Room>(s_chapters.Count * RoomsPerChapter);
+            foreach (var row in s_chapters)
             {
+                int ch = row.Ch;
+                int from = SourceChapterOf(row.Stage);
                 for (int no = 1; no <= RoomsPerChapter; no++)
                 {
                     RoomDef60.Room s = null;
                     foreach (var r in src)
-                        if (r.Ch == ch && r.No == SourceOf[no]) { s = r; break; }
-                    if (s == null) { Debug.LogError($"[90방] 원본 없음 CH{ch} {SourceOf[no]}"); return null; }
+                        if (r.Ch == from && r.No == SourceOf[no]) { s = r; break; }
+                    if (s == null) { Debug.LogError($"[방 임포트] 원본 없음 CH{from} {SourceOf[no]}"); return null; }
 
+                    bool isBoss = !string.IsNullOrEmpty(s.Boss);
+                    bool isMid = !string.IsNullOrEmpty(s.Captain);
                     list.Add(new RoomDef60.Room
                     {
-                        Ch = s.Ch,
+                        Ch = ch,
                         No = no.ToString("000"),
                         // 엘리트 방은 없앴다 — 그 배치는 일반 전투로
                         Kind = s.Kind == "엘리트" ? "전투" : s.Kind,
-                        Floor = s.Floor,
+                        // 보스방 바닥은 **보스의 것**이다(`roomfloor_{보스}`) — 빌려 온 무대의 원래 보스 바닥을 쓰면
+                        // 파이썬이 로봇 스네이크의 아레나에 선다.
+                        Floor = isBoss && !string.IsNullOrEmpty(row.Boss) ? "roomfloor_" + row.Boss : s.Floor,
                         Layout = s.Layout,
                         LayoutKo = s.LayoutKo,
                         Comp = s.Comp,
                         Pool = s.Pool,
-                        Boss = s.Boss,
-                        Captain = s.Captain,
+                        Boss = isBoss && !string.IsNullOrEmpty(row.Boss) ? row.Boss : s.Boss,
+                        Captain = isMid && !string.IsNullOrEmpty(row.Leader) ? row.Leader : s.Captain,
                         Minions = s.Minions,
                         MinionFrom = s.MinionFrom,
                         Elite = false,
@@ -104,7 +137,7 @@ namespace Game.EditorTools
             return list.ToArray();
         }
 
-        [MenuItem("Tools/Game/90방 임포트 (6챕터 × 15방)")]
+        [MenuItem("Tools/Game/90방 임포트 (챕터 표 × 15방)")]
         public static void Import()
         {
             var table = AssetDatabase.LoadAssetAtPath<RoomTable>(TablePath);
@@ -116,7 +149,9 @@ namespace Game.EditorTools
                 Debug.LogError($"[60방] 배정표가 60방이 아니다: {src?.Length ?? 0}");
                 return;
             }
-            var defs = Build90(src);
+            s_chapters = ChapterTsv.Load();
+            if (s_chapters.Count == 0) return;
+            var defs = BuildAll(src);
             if (defs == null) return;
 
             var so = new SerializedObject(table);
@@ -164,7 +199,7 @@ namespace Game.EditorTools
                 if (!string.IsNullOrEmpty(d.Boss))
                 {
                     bossProp.stringValue = BossIdOf(d.Boss);
-                    WriteBoss(e, d.Boss);
+                    WriteBoss(e, d.Boss, RowOf(d.Ch));
                     bossRooms++;
                 }
                 else bossProp.stringValue = string.Empty;
@@ -179,6 +214,9 @@ namespace Game.EditorTools
 
                 e.FindPropertyRelative("_eventPool").stringValue = d.Pool ?? string.Empty;
                 if (!string.IsNullOrEmpty(d.Pool)) eventRooms++;
+
+                if (d.Kind == "전투" && !hand.ContainsKey(roomId))
+                    Debug.LogWarning($"[방 임포트] {roomId} 손배치가 없다 — 빌려 온 원본 배치로 굽는다");
 
                 if (d.Kind == "전투" && hand.TryGetValue(roomId, out var h))
                 {
@@ -204,7 +242,7 @@ namespace Game.EditorTools
             AssetDatabase.SaveAssets();
             if (unblocked > 0) Debug.Log($"[60방] 막힌 방을 풀려고 물건 {unblocked}개를 뺐다");
 
-            Debug.Log($"[60방] 방 {defs.Length} · 스폰 {spawns} — "
+            Debug.Log($"[방 임포트] {s_chapters.Count}챕터 · 방 {defs.Length} · 스폰 {spawns} — "
                       + $"보스 {bossRooms} · 중간보스 {midBossRooms} · 엘리트 {eliteRooms} · 이벤트 {eventRooms}");
         }
 
@@ -266,7 +304,7 @@ namespace Game.EditorTools
         /// ⚠ 여기서 숫자를 짓지 않는다. 그 표가 정본 도면과 대조를 마친 유일한 자리이고,
         ///   두 곳에 적으면 한쪽이 반드시 낡는다.
         /// </summary>
-        private static void WriteBoss(SerializedProperty e, string slug)
+        private static void WriteBoss(SerializedProperty e, string slug, ChapterTsv.Row row)
         {
             BossDefTable.Boss def = null;
             foreach (var b in BossDefTable.All)
@@ -274,8 +312,11 @@ namespace Game.EditorTools
             if (def == null) { Debug.LogWarning($"[60방] BossDefTable 에 없는 보스: {slug}"); return; }
 
             e.FindPropertyRelative("_bossName").stringValue = def.NameEn;
-            e.FindPropertyRelative("_bossHp").intValue = def.Hp;
-            e.FindPropertyRelative("_bossAtk").intValue = def.Atk;
+            // ⚠ 체력 · 공격력은 **챕터 표가 이긴다.** 보스는 「어떤 놈인가」(패턴 · 그림)이고
+            //   얼마나 센가는 「몇 챕터에서 만나는가」다 — 같은 보스가 7챕터에 다시 서면 더 세야 한다.
+            //   `BossDefTable` 값은 표에 숫자가 없을 때의 대비책이다.
+            e.FindPropertyRelative("_bossHp").intValue = row != null && row.BossHp > 0 ? row.BossHp : def.Hp;
+            e.FindPropertyRelative("_bossAtk").intValue = row != null && row.BossAtk > 0 ? row.BossAtk : def.Atk;
             e.FindPropertyRelative("_bossMoveSpeed").floatValue = 2.2f;
             // 방 가운데 위쪽. 플레이어는 아래에서 들어온다.
             e.FindPropertyRelative("_bossAt").vector2Value = new Vector2(RoomWidth * 0.5f, RoomHeight * 0.72f);
@@ -336,6 +377,20 @@ namespace Game.EditorTools
             };
             float chapterMul = 1f + (d.Ch - 1) * 0.35f;
 
+            // 골드는 챕터 표가 정한다(전투방 · 중간보스 · 보스). 표에 없으면 예전 규칙.
+            var row = RowOf(d.Ch);
+            if (row != null && row.RoomGold > 0)
+            {
+                int g = d.Kind switch
+                {
+                    "보스" => row.BossGold,
+                    "중간보스" => row.MidGold,
+                    "이벤트" or "회복" or "상점" => 0,
+                    _ => row.RoomGold,
+                };
+                e.FindPropertyRelative("_gold").intValue = g;
+            }
+            else
             e.FindPropertyRelative("_gold").intValue = Mathf.RoundToInt(gold * chapterMul);
             e.FindPropertyRelative("_exp").intValue = Mathf.RoundToInt(exp * chapterMul);
             // ⚠ 회복은 **어느 방에도 얹지 않는다.**
@@ -546,7 +601,9 @@ namespace Game.EditorTools
         {
             if (!string.IsNullOrEmpty(d.Boss)) return string.Empty;   // 보스는 전용 아레나
             if (!string.IsNullOrEmpty(d.Captain)) return "F";          // 중간보스는 늘 정적인 F
-            int ch = Mathf.Clamp(d.Ch, 1, 6);
+            // 지형 글자는 빌려 온 무대의 원본 챕터 것을 쓴다(손배치가 없는 방의 대비책일 뿐이다)
+            var layoutRow = RowOf(d.Ch);
+            int ch = Mathf.Clamp(layoutRow != null ? SourceChapterOf(layoutRow.Stage) : d.Ch, 1, 6);
             int no = int.TryParse(d.No, out var n) ? n : 0;
             string oldNo = no >= 1 && no < SourceOf.Length ? SourceOf[no] : null;
             int idx = SourceIndex(oldNo);

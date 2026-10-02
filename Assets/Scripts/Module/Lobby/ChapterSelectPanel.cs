@@ -28,7 +28,7 @@ namespace Game.Module.Lobby
         /// <summary>카드 오른쪽 아래 상자 — 그 챕터를 깨면 받는 등급.</summary>
         [SerializeField] private Sprite[] _chapterChest = new Sprite[SlotCount];
 
-        private const int SlotCount = PlayerDataService.ChapterCount;
+        private const int SlotCount = 6;   // 옛 창 — 카드 여섯 장이 프리팹에 박혀 있다(지금은 ChapterHostPanel 이 대신한다)
 
         /// <summary>잠긴 카드 그림의 밝기. 목록이 한눈에 「어디까지 왔나」로 읽히게.</summary>
         private static readonly Color LockedArt = new(0.45f, 0.45f, 0.5f, 1f);
