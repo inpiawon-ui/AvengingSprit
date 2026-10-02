@@ -8268,6 +8268,8 @@ namespace Game.Module.InGame
 
             _channel -= dt;
             float t = _channelTotal <= 0f ? 1f : 1f - Mathf.Clamp01(_channel / _channelTotal);
+            // 되살리기는 채널 앞쪽에서만 유령이 움직인다 — 남은 시간은 몸 안에서 빛기둥이 솟는다.
+            if (_channelGhostSpan < 1f) t = Mathf.Clamp01(t / _channelGhostSpan);
 
             if (_ghost != null)
             {
@@ -8472,7 +8474,7 @@ namespace Game.Module.InGame
                                Vector2 pos, int startHpPercent)
         {
             if (entry != null) _lastHostEntry = entry;
-            SoulFxOnEnterHost();
+            SoulFxOnEnterHost(pos);
             _dashTime = 0f;   // 몸이 바뀌면 돌진도 끊는다
             _ghost.gameObject.SetActive(false);
 
