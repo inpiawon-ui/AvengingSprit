@@ -1547,17 +1547,7 @@ namespace Game.Module.InGame
         }
 
         /// <summary>아무 일도 없을 때의 색. 분신만 흰색이 아니다.</summary>
-        private Color RestColor => IsPhantom ? PhantomColor
-            : _dim < 0.999f ? new Color(_dim, _dim, Mathf.Min(1f, _dim * 1.18f), 1f) : Color.white;
-
-        private float _dim = 1f;
-
-        /// <summary>
-        /// 몸을 어둡게 가라앉힌다(1 = 제 색). 유령이 탈 몸을 고를 때 **못 타는 것들**을 물린다 —
-        /// 방을 통째로 덮어 어둡게 하면 탈 수 있는 몸까지 같이 어두워진다.
-        /// 상태이상 색 · 피격 점멸은 이 위에 그대로 이긴다.
-        /// </summary>
-        public void SetDim(float k) => _dim = Mathf.Clamp01(k);
+        private Color RestColor => IsPhantom ? PhantomColor : Color.white;
 
         /// <summary>
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.
