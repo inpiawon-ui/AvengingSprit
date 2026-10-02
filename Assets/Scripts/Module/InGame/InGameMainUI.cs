@@ -768,6 +768,9 @@ namespace Game.Module.InGame
                 affinity.sprite = _battle != null ? _battle.AffinityIconOf(e.PossessedHostKey) : null;
                 affinity.gameObject.SetActive(affinity.sprite != null);
             }
+            // 몸이 바뀌면 유리 · 불리가 통째로 바뀐다 — 삼각판을 다시 크게 보여 준다.
+            _affinityHostKey = e.PossessedHostKey;
+            ShowAffinityTriangle();
             // 액티브 스킬 버튼도 그 몸의 것으로 바꾼다. 23종이 같은 그림이면
             // 무엇을 들고 있는지가 화면에 안 보인다.
             SetSkillButton(e.PossessedHostKey);
@@ -833,6 +836,7 @@ namespace Game.Module.InGame
             _ui.SetActive("HostPortraitFrame", false);
             _ui.SetActive("HostPortraitImage", false);
             _ui.SetActive("HostAffinityIcon", false);
+            ShowAffinityTriangle();   // 몸이 없으면 삼각판도 내린다
             SetSkillButton(null);
         }
 
@@ -922,6 +926,9 @@ namespace Game.Module.InGame
 
             // 방의 성격은 알림 줄에 잠깐 띄운다 — 정예방에 들어선 걸 모르면 대비할 수 없다.
             _ui.SetText("StageText", kind != null && e.Kind != RoomKind.Boss ? $"{kind} ROOM" : string.Empty);
+
+            // 상성 시험판 — 새 방의 적을 보기 전에 「나는 지금 이 쪽」을 한 번 크게.
+            ShowAffinityTriangle();
         }
 
         private void OnEmergencyHost(EmergencyHostEvent e)

@@ -158,7 +158,7 @@ namespace Game.Module.InGame
         /// <summary>끄면 갈아타지 않는다 — 「안 갈아탔을 때」와 견주려고 둔다.</summary>
         public bool SeekAdvantageOn = true;
 
-        private readonly int[] _weak = new int[6];
+        private readonly int[] _kinds = new int[4];
         private float _seekWait;
         private Unit _seekBody;
 
@@ -166,27 +166,24 @@ namespace Game.Module.InGame
         {
             if (!SeekAdvantageOn || !AffinityRule.Enabled) return false;
 
-            for (int i = 0; i < _weak.Length; i++) _weak[i] = 0;
+            // 이 방에 가장 많은 쪽 — 그 쪽을 이기는 몸이 「타야 할 몸」이다.
+            for (int i = 0; i < _kinds.Length; i++) _kinds[i] = 0;
             for (int i = 0; i < enemies.Count; i++)
                 if (enemies[i] is Unit u && u != null && u.IsAlive && !u.IsHostBody)
-                    _weak[(int)AffinityRule.WeaknessOf(u.Key)] += u.IsBoss ? 100 : 1;
-            int best = 0;
-            for (int i = 1; i < _weak.Length; i++) if (_weak[i] > best) best = _weak[i];
-            if (best == 0) { _seekBody = null; return false; }
+                    _kinds[(int)AffinityRule.KindOf(u.Key)] += u.IsBoss ? 100 : 1;
+            int best = 0; var major = Affinity.None;
+            for (int i = 1; i < _kinds.Length; i++) if (_kinds[i] > best) { best = _kinds[i]; major = (Affinity)i; }
+            if (major == Affinity.None) { _seekBody = null; return false; }
 
             var host = _fHost.GetValue(_bd) as Unit;
-            if (host != null)
-            {
-                var mine = AffinityRule.FamilyOf(host.Key);
-                if (mine != Affinity.None && _weak[(int)mine] == best) { _seekBody = null; return false; }
-            }
+            if (host != null && AffinityRule.Beats(AffinityRule.KindOf(host.Key), major))
+            { _seekBody = null; return false; }
 
             Unit want = null; float wd = float.MaxValue;
             for (int i = 0; i < enemies.Count; i++)
                 if (enemies[i] is Unit u && u != null && u.IsAlive && u.IsHostBody && !u.RepossessBanned)
                 {
-                    var f = AffinityRule.FamilyOf(u.Key);
-                    if (f == Affinity.None || _weak[(int)f] != best) continue;
+                    if (!AffinityRule.Beats(AffinityRule.KindOf(u.Key), major)) continue;
                     float d = (u.Position - me.Position).sqrMagnitude;
                     if (d < wd) { wd = d; want = u; }
                 }

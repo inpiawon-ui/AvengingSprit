@@ -356,9 +356,9 @@ namespace Game.Module.InGame
             IsPhantom = false;
             if (_invulnAura != null) _invulnAura.gameObject.SetActive(false);
             // 상성 표시도 앞서 쓰던 몸의 것이 남는다 — 해골이 쓰던 약점을 호스트가 물려받으면 안 된다.
-            if (_weakIcon != null) _weakIcon.gameObject.SetActive(false);
-            if (_advMark != null) _advMark.gameObject.SetActive(false);
-            if (_advRing != null) _advRing.gameObject.SetActive(false);
+            if (_kindGem != null) _kindGem.gameObject.SetActive(false);
+            if (_matchArrow != null) _matchArrow.gameObject.SetActive(false);
+            if (_kindRing != null) _kindRing.gameObject.SetActive(false);
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -586,84 +586,85 @@ namespace Game.Module.InGame
             _ => new Color(0.37f, 0.78f, 1f, 0.95f),
         };
 
-        // ── 상성 표시 (시험판 2026-10-01) ─────────────────────────
+        // ── 상성 표시 (시험판 2026-10-02 · 가위바위보) ─────────────
         //
-        // 약점은 **보여야** 쓴다. 적 머리 위에는 «무엇에 약한가», 빼앗을 수 있는 몸에는
-        // «이 몸이 지금 유리하다»를 띄운다. 그림은 `BattleDirector.Affinity` 가 넘긴다.
+        // 모든 몸과 적이 날 · 힘 · 술 가운데 하나다. 보여 주는 것은 셋뿐이다:
+        //   보석   — 그 대상이 어느 쪽인가 (체력 바 왼쪽 끝, 작게)
+        //   화살표 — 지금 내 몸으로 때리면 유리(▲)한가 불리(▼)한가 (머리 위)
+        //   고리   — 빼앗을 수 있는 몸의 발밑. 그 몸의 쪽 색으로 가늘게 깔린다
+        // ⚠ 몸 둘레 윤곽선은 쓰지 않는다 — 시안에서 「통짜로 진해서 예쁘지 않다」로 반려됐다(2026-10-02).
+        //   그림은 `BattleDirector.Affinity` 가 넘긴다. 여기는 자리와 움직임만 맡는다.
 
-        private Image _weakIcon, _advMark, _advRing;
+        private Image _kindGem, _matchArrow, _kindRing;
 
-        /// <summary>약점 아이콘 크기. 원본 64 를 줄여 쓴다 — 체력 바 위에 얹히는 크기.</summary>
-        private const float WeakIconSize = 34f;
-        /// <summary>납품 그림(48)은 화살이 캔버스의 절반만 찬다 — 조준 링과 같은 눈높이가 되게 키운다.</summary>
-        private const float AdvMarkSize = 56f;
+        // 18 · 26 으로 시작했다가 실제 화면에서 너무 작아 키웠다(2026-10-02 녹화 확인).
+        private const float KindGemSize = 24f;
+        private const float MatchArrowSize = 32f;
 
-        /// <param name="lit">지금 내 몸이 이 약점을 찌르는가. 찌르면 커지고 뛴다.</param>
-        public void SetWeakIcon(Sprite icon, bool lit, bool show)
+        /// <summary>어느 쪽인가. null 이면 끈다.</summary>
+        public void SetKindGem(Sprite gem)
         {
-            bool on = show && icon != null;
-            if (_weakIcon == null)
+            bool on = gem != null;
+            if (_kindGem == null)
             {
                 if (!on) return;
-                _weakIcon = GetOrCreate("WeakIcon", new Vector2(WeakIconSize, WeakIconSize), Vector2.zero);
-                _weakIcon.preserveAspect = true;
+                _kindGem = GetOrCreate("KindGem", new Vector2(KindGemSize, KindGemSize), Vector2.zero);
+                _kindGem.preserveAspect = true;
             }
-            if (_weakIcon.gameObject.activeSelf != on) _weakIcon.gameObject.SetActive(on);
+            if (_kindGem.gameObject.activeSelf != on) _kindGem.gameObject.SetActive(on);
             if (!on) return;
 
-            // 풀에서 돌려 쓰는 몸이라 크기가 바뀐다 — 자리는 매번 다시 잡는다.
+            // 풀에서 돌려 쓰는 몸이라 크기가 바뀐다 — 자리는 매번 다시 잡는다. 체력 바(폭 70%) 왼쪽 끝에 붙인다.
             var size = _rect.sizeDelta;
-            ((RectTransform)_weakIcon.transform).anchoredPosition =
-                new Vector2(0f, size.y * 0.5f + 8f + WeakIconSize * 0.6f);
-            _weakIcon.sprite = icon;
-            _weakIcon.color = lit ? Color.white : new Color(1f, 1f, 1f, 0.82f);
-            float s = lit ? 1.3f + 0.12f * Mathf.Sin(Time.unscaledTime * 9f) : 1f;
-            _weakIcon.transform.localScale = Vector3.one * s;
+            ((RectTransform)_kindGem.transform).anchoredPosition =
+                new Vector2(-size.x * 0.35f - KindGemSize * 0.55f, size.y * 0.5f + 6f);
+            _kindGem.sprite = gem;
         }
 
-        /// <summary>«이 몸이 지금 유리하다». 둘 다 null 이면 끈다.</summary>
-        public void SetAdvantage(Sprite mark, Sprite ring)
+        /// <summary>지금 내 몸으로 때리면 유리한가(▲) 불리한가(▼). null 이면 끈다(보통).</summary>
+        public void SetMatchArrow(Sprite arrow)
         {
-            bool markOn = mark != null, ringOn = ring != null;
-            if (_advMark != null && _advMark.gameObject.activeSelf != markOn)
-                _advMark.gameObject.SetActive(markOn);
-            if (_advRing != null && _advRing.gameObject.activeSelf != ringOn)
-                _advRing.gameObject.SetActive(ringOn);
-            if (!markOn && !ringOn) return;
+            bool on = arrow != null;
+            if (_matchArrow == null)
+            {
+                if (!on) return;
+                _matchArrow = GetOrCreate("MatchArrow", new Vector2(MatchArrowSize, MatchArrowSize), Vector2.zero);
+                _matchArrow.preserveAspect = true;
+            }
+            if (_matchArrow.gameObject.activeSelf != on) _matchArrow.gameObject.SetActive(on);
+            if (!on) return;
 
             var size = _rect.sizeDelta;
+            float bob = 2.5f * Mathf.Sin(Time.unscaledTime * 5f);
+            ((RectTransform)_matchArrow.transform).anchoredPosition =
+                new Vector2(0f, size.y * 0.5f + 12f + MatchArrowSize * 0.6f + bob);
+            _matchArrow.sprite = arrow;
+        }
+
+        /// <param name="calling">「이 몸을 타라」 — 고리가 밝게 뛴다. 아니면 가늘고 은은하게 깔려만 있다.</param>
+        public void SetKindRing(Sprite ring, Color tint, bool calling)
+        {
+            bool on = ring != null;
+            if (_kindRing == null)
+            {
+                if (!on) return;
+                _kindRing = GetOrCreate("KindRing", Vector2.one, Vector2.zero);
+                _kindRing.preserveAspect = true;
+                // 몸 뒤, 그림자 앞 — 발밑에 깔린다.
+                if (_body != null) _kindRing.transform.SetSiblingIndex(_body.transform.GetSiblingIndex());
+            }
+            if (_kindRing.gameObject.activeSelf != on) _kindRing.gameObject.SetActive(on);
+            if (!on) return;
+
+            var size = _rect.sizeDelta;
+            var rt = (RectTransform)_kindRing.transform;
+            rt.sizeDelta = new Vector2(size.x * 1.25f, size.x * 0.625f);
+            rt.anchoredPosition = new Vector2(0f, -size.y * 0.40f);
+            _kindRing.sprite = ring;
             float wave = Mathf.Sin(Time.unscaledTime * 5f);
-
-            if (ringOn)
-            {
-                if (_advRing == null)
-                {
-                    _advRing = GetOrCreate("AdvRing", Vector2.one, Vector2.zero);
-                    _advRing.preserveAspect = true;
-                    // 몸 뒤, 그림자 앞 — 발밑에 깔린다.
-                    if (_body != null)
-                        _advRing.transform.SetSiblingIndex(_body.transform.GetSiblingIndex());
-                }
-                var rt = (RectTransform)_advRing.transform;
-                rt.sizeDelta = new Vector2(size.x * 1.5f, size.x * 0.75f);
-                rt.anchoredPosition = new Vector2(0f, -size.y * 0.40f);
-                _advRing.sprite = ring;
-                _advRing.color = new Color(1f, 1f, 1f, 0.8f + 0.2f * wave);
-                _advRing.transform.localScale = Vector3.one * (1f + 0.05f * wave);
-            }
-
-            if (markOn)
-            {
-                if (_advMark == null)
-                {
-                    _advMark = GetOrCreate("AdvMark", new Vector2(AdvMarkSize, AdvMarkSize), Vector2.zero);
-                    _advMark.preserveAspect = true;
-                }
-                // 빙의 조준 링 위에 얹는다. 위아래로 뛰어야 눈에 들어온다.
-                ((RectTransform)_advMark.transform).anchoredPosition =
-                    new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f + AdvMarkSize * 0.9f + 4f * wave);
-                _advMark.sprite = mark;
-            }
+            tint.a = calling ? 0.85f + 0.15f * wave : 0.55f;
+            _kindRing.color = tint;
+            _kindRing.transform.localScale = Vector3.one * (calling ? 1.12f + 0.08f * wave : 1f);
         }
 
         public void SetSprite(Sprite s)

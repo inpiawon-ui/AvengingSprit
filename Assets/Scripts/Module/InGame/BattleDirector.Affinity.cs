@@ -4,32 +4,35 @@ using GameSound = Game.Module.Common.GameSound;
 
 namespace Game.Module.InGame
 {
-    /// <summary>상성 계열. 몸은 계열 하나를 갖고, 적은 약점 하나를 갖는다.</summary>
+    /// <summary>
+    /// 상성의 세 쪽. **모든 몸과 모든 적이 셋 중 하나다** (가위바위보).
+    ///
+    ///   힘 → 날 → 술 → 힘   (화살표는 「이긴다」)
+    ///   단단한 힘 앞에 총칼은 튕기고 / 총칼은 술사를 베고 / 주술은 갑옷을 뚫는다.
+    /// </summary>
     public enum Affinity
     {
         None,
-        /// <summary>타격 — 근접으로 때리는 몸</summary>
-        Strike,
-        /// <summary>연사 — 총을 빠르게 쏘는 몸</summary>
-        Rapid,
-        /// <summary>관통 — 뚫고 지나가는 광선을 쏘는 몸</summary>
-        Pierce,
-        /// <summary>폭발 — 터지는 것을 던지는 몸</summary>
-        Blast,
-        /// <summary>속성 — 얼리고 태우고 중독시키는 몸</summary>
-        Element,
+        /// <summary>날 — 총 · 칼 · 창. 노랑.</summary>
+        Blade,
+        /// <summary>힘 — 단단한 것, 둔기 · 폭발 · 기계. 주황빨강.</summary>
+        Force,
+        /// <summary>술 — 불 · 얼음 · 주술, 망자와 괴이. 보라.</summary>
+        Magic,
     }
 
     /// <summary>
-    /// 상성 시험판의 규칙표 (2026-10-01).
+    /// 상성 시험판의 규칙표 (2026-10-01 시작 · 2026-10-02 가위바위보로 다시 씀).
     ///
-    /// **왜 만드나.** 지금은 처음 들고 간 몸으로 끝까지 가는 것이 정답이라
-    /// 빙의가 «몸이 죽었을 때 쓰는 여분 목숨»으로만 남는다. 적마다 약점을 두고
-    /// 그 약점에 맞는 몸을 방에 같이 세워, **갈아타는 것이 이득**인 순간을 만든다.
-    /// 잘 키운 몸은 능력치 차이가 상성 이득보다 커서 그냥 밀고 갈 수 있다.
+    /// **왜 만드나.** 처음 들고 간 몸으로 끝까지 가는 것이 정답이라 빙의가 «몸이 죽었을 때
+    /// 쓰는 여분 목숨»으로만 남았다. 적마다 쪽을 두고, 그 쪽을 이기는 몸을 방에 같이 세워
+    /// **갈아타는 것이 이득**인 순간을 만든다. 잘 키운 몸은 능력치 차이가 상성보다 커서 그냥 밀고 간다.
     ///
-    /// ⚠ 시험판이다 — 숫자와 표가 코드에 있다. 방향이 정해지면 표(`HostTable` 의 계열 칸,
-    ///   적 표의 약점 칸)로 옮긴다.
+    /// **왜 이 셋인가.** 처음에는 공격 방식 다섯(타격 · 연사 · 관통 · 폭발 · 속성)으로 나눴는데
+    /// 「뭐가 뭐에 강한지 느낌이 안 온다」로 반려됐고, 불 · 물 같은 속성은 「호스트에 억지」로 반려됐다.
+    /// 날 · 힘 · 술은 호스트가 **지금 들고 있는 무기 그대로**이고, 돌고 도는 이유가 상식이다.
+    ///
+    /// ⚠ 시험판이다 — 숫자와 표가 코드에 있다. 확정되면 표(`HostTable` 의 쪽 칸, 적 표)로 옮긴다.
     /// </summary>
     public static class AffinityRule
     {
@@ -48,30 +51,9 @@ namespace Game.Module.InGame
 #endif
         }
 
-        /// <summary>
-        /// 약점을 맞혔을 때 피해 배율.
-        ///
-        /// ⚠ 1.5 로 시작했다가 2.0 으로 올렸다(2026-10-01 실측). 1챕터 잡몹은 원래 두세 방에
-        ///   죽어서, 1.5 배로는 «한 방 덜 맞고 죽는다» 정도라 갈아타는 2~3초를 못 갚았다
-        ///   (갱스터로 끝까지 6.1초 · 아마존으로 갈아타고 8.4초). 갈아탄 보람이 눈에 보여야 한다.
-        /// </summary>
-        public const float WeakDamageMul = 2.0f;
-
-        /// <summary>
-        /// 약점이 맞을 때 / 안 맞을 때의 피해 배율 (기획 2026-10-01 「맞으면 100%, 아니면 70%」).
-        ///
-        /// 2배로 «더 주는» 대신 **안 맞으면 덜 들어가게** 한다 — 맞는 몸이 기준이고
-        /// 안 맞는 몸은 답답해야 「여기는 이 몸이 아니구나」가 손에 온다.
-        /// 위 `WeakDamageMul` 은 이 규칙으로 바뀌면서 쓰지 않는다(견주려고 남겨 둔다).
-        /// </summary>
-        public const float MatchDamageMul = 1.0f;
-        public const float OffDamageMul = 0.7f;
-
-        /// <summary>
-        /// 스스로 나온 뒤 다시 들어갈 수 있을 때까지(초). 예전 규칙(1.2초)은 «탈출이 순간이동이
-        /// 되지 않게» 였는데, 갈아타는 것이 권장 행동인 지금은 그 시간이 그대로 손해다.
-        /// </summary>
-        public const float LeaveLockSeconds = 0.5f;
+        /// <summary>유리 · 보통 · 불리의 피해 배율. (제안값 — 유리 130 / 보통 100 / 불리 70)</summary>
+        public const float WinDamageMul = 1.3f;
+        public const float LoseDamageMul = 0.7f;
 
         /// <summary>
         /// 스스로 나올 때 내는 유령 에너지(%). 죽어서 나올 때(20%)보다 싸야
@@ -79,75 +61,90 @@ namespace Game.Module.InGame
         /// </summary>
         public const int LeaveCostPercent = 8;
 
-        /// <summary>이 몸의 계열. 호스트가 아니면(잡몹·보스) None.</summary>
-        public static Affinity FamilyOf(string hostKey) => hostKey switch
-        {
-            "amazon" or "amazon_elite" or "guru" or "ninja_chain" or "baseball" or "death"
-                => Affinity.Strike,
-            "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
-                => Affinity.Rapid,
-            "commando_laser" or "white_wizard" or "medium" or "robot"
-                => Affinity.Pierce,
-            "commando_grenade" or "commando_missile" or "dragoon"
-                => Affinity.Blast,
-            "dragon_blue" or "snowwoman" or "salamander" or "vampire"
-                => Affinity.Element,
-            _ => Affinity.None,
-        };
-
         /// <summary>
-        /// 이 적의 약점. 빼앗을 수 있는 몸(호스트)에는 약점이 없다 — 표에 없으면 None.
-        ///
-        /// 약점은 그 적의 생김새에서 읽히게 골랐다: 뼈는 부수고(타격), 작고 빠른 것은
-        /// 쏟아부어 맞히고(연사), 엄폐 뒤 사수는 터뜨린다(폭발).
+        /// 스스로 나온 뒤 다시 들어갈 수 있을 때까지(초). 예전 규칙(1.2초)은 «탈출이 순간이동이
+        /// 되지 않게» 였는데, 갈아타는 것이 권장 행동인 지금은 그 시간이 그대로 손해다.
         /// </summary>
-        public static Affinity WeaknessOf(string enemyKey) => enemyKey switch
+        public const float LeaveLockSeconds = 0.5f;
+
+        /// <summary>이 몸(또는 적)이 어느 쪽인가. 표에 없으면 None — 상성을 안 탄다.</summary>
+        public static Affinity KindOf(string key) => key switch
         {
-            // 잡몹
-            "skeleton" => Affinity.Strike,
-            "bat" => Affinity.Rapid,
-            "scrapgunner" => Affinity.Blast,
-            "actor_enforcer" => Affinity.Pierce,
-            "roadwarden" => Affinity.Element,
-            "coilwalker" => Affinity.Rapid,
-            "obj_turret" => Affinity.Blast,
-            // 보스 — 직전 방(014)에 유리한 몸이 서 있어야 한다
-            "robot_snakes" => Affinity.Strike,
-            "crusher" => Affinity.Blast,
-            "python" => Affinity.Strike,
-            "sludge" => Affinity.Element,
-            "guardian" => Affinity.Pierce,
-            "kingpin" => Affinity.Rapid,
+            // ── 날: 총 · 칼 · 창을 든 것 ──
+            "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
+                or "amazon" or "amazon_elite"
+                or "bat" or "python" or "kingpin"
+                => Affinity.Blade,
+            // ── 힘: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
+            "baseball" or "guru" or "ninja_chain" or "commando_grenade" or "commando_missile"
+                or "commando_laser" or "robot"
+                or "scrapgunner" or "actor_enforcer" or "roadwarden" or "coilwalker" or "obj_turret"
+                or "robot_snakes" or "crusher" or "guardian"
+                => Affinity.Force,
+            // ── 술: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
+            "dragoon" or "snowwoman" or "dragon_blue" or "salamander" or "vampire"
+                or "white_wizard" or "medium" or "death"
+                or "skeleton" or "sludge"
+                => Affinity.Magic,
             _ => Affinity.None,
         };
 
-        /// <summary>계열 아이콘의 스프라이트 이름(아틀라스 `ingamemainui`).</summary>
-        public static string IconName(Affinity a) => a switch
+        /// <summary>a 가 b 를 이기는가. 힘 → 날 → 술 → 힘.</summary>
+        public static bool Beats(Affinity a, Affinity b)
+            => (a == Affinity.Force && b == Affinity.Blade)
+            || (a == Affinity.Blade && b == Affinity.Magic)
+            || (a == Affinity.Magic && b == Affinity.Force);
+
+        /// <summary>때리는 쪽 기준의 결과. +1 유리 · 0 보통 · −1 불리.</summary>
+        public static int Outcome(Affinity attacker, Affinity victim)
         {
-            Affinity.Strike => "affinity_strike",
-            Affinity.Rapid => "affinity_rapid",
-            Affinity.Pierce => "affinity_pierce",
-            Affinity.Blast => "affinity_blast",
-            Affinity.Element => "affinity_element",
+            if (attacker == Affinity.None || victim == Affinity.None) return 0;
+            if (Beats(attacker, victim)) return 1;
+            if (Beats(victim, attacker)) return -1;
+            return 0;
+        }
+
+        /// <summary>쪽의 색 — 발밑 고리를 물들인다. 보석 그림과 같은 계통.</summary>
+        public static Color ColorOf(Affinity a) => a switch
+        {
+            Affinity.Blade => new Color(0.98f, 0.80f, 0.22f),
+            Affinity.Force => new Color(0.96f, 0.38f, 0.20f),
+            Affinity.Magic => new Color(0.68f, 0.40f, 0.95f),
+            _ => Color.white,
+        };
+
+        public static string GemName(Affinity a) => a switch
+        {
+            Affinity.Blade => "rps_gem_blade",
+            Affinity.Force => "rps_gem_force",
+            Affinity.Magic => "rps_gem_magic",
+            _ => null,
+        };
+
+        public static string TriangleName(Affinity a) => a switch
+        {
+            Affinity.Blade => "rps_tri_blade",
+            Affinity.Force => "rps_tri_force",
+            Affinity.Magic => "rps_tri_magic",
             _ => null,
         };
 
         /// <summary>
-        /// 가르치는 방 — 1챕터 앞의 세 방은 **약점 한 종류만** 세우고 열쇠가 되는 몸을 같이 둔다.
-        /// 방 데이터(`RoomTable`)는 건드리지 않는다. 자리는 그대로 쓰고 누가 서는지만 바꾼다 —
-        /// 모드를 끄면 원래 방으로 돌아간다.
+        /// 가르치는 방 — 1챕터 앞의 세 방은 **한 쪽의 적만** 세우고 열쇠가 되는 몸을 같이 둔다.
+        /// 날(권총) 몸으로 들어갔을 때 유리 → 보통 → 불리 순으로 겪게 짰다.
+        /// 방 데이터(`RoomTable`)는 건드리지 않는다. 자리는 그대로 쓰고 누가 서는지만 바꾼다.
         /// </summary>
         public static string ActorOverride(string roomId, bool isHostSlot, string actorId)
         {
             if (!Enabled) return actorId;
             return roomId switch
             {
-                // 해골만 — 타격에 약하다. 열쇠는 아마존.
+                // 해골(술) — 날이 유리하다. 총칼 든 몸이면 시원하게 잡힌다.
                 "ROOM_CH1_001" => isHostSlot ? "amazon" : "skeleton",
-                // 박쥐만 — 연사에 약하다. 열쇠는 갱스터.
-                "ROOM_CH1_002" => isHostSlot ? "gangster" : "bat",
-                // 폐품 사수만 — 폭발에 약하다. 열쇠는 코만도(수류탄).
-                "ROOM_CH1_003" => isHostSlot ? "commando_grenade" : "scrapgunner",
+                // 박쥐(날) — 날끼리는 보통. 힘(수류탄)이 유리하다.
+                "ROOM_CH1_002" => isHostSlot ? "commando_grenade" : "bat",
+                // 폐품 사수(힘) — 날은 튕긴다. 술(샐러맨더)로 갈아타야 한다.
+                "ROOM_CH1_003" => isHostSlot ? "salamander" : "scrapgunner",
                 _ => actorId,
             };
         }
@@ -159,105 +156,95 @@ namespace Game.Module.InGame
         //
         // `SpriteAtlas.GetSprite` 는 부를 때마다 새 Sprite 를 만든다 — 한 번만 받아 둔다.
 
-        private readonly Sprite[] _affIcons = new Sprite[6];
-        private Sprite _affAdvMark, _affAdvRing;
+        private readonly Sprite[] _affGems = new Sprite[4];
+        private readonly Sprite[] _affTriangles = new Sprite[4];
+        private Sprite _affUp, _affDown, _affRing;
 
         private void CacheAffinitySprites()
         {
-            for (int i = 1; i < _affIcons.Length; i++)
-                _affIcons[i] = GetSprite(AffinityRule.IconName((Affinity)i));
-            _affAdvMark = GetSprite("affinity_adv_mark");
-            _affAdvRing = GetSprite("affinity_adv_ring");
+            for (int i = 1; i < _affGems.Length; i++)
+            {
+                _affGems[i] = GetSprite(AffinityRule.GemName((Affinity)i));
+                _affTriangles[i] = GetSprite(AffinityRule.TriangleName((Affinity)i));
+            }
+            _affUp = GetSprite("rps_up");
+            _affDown = GetSprite("rps_down");
+            _affRing = GetSprite("rps_ring");
         }
 
-        /// <summary>계열 아이콘. HUD 가 지금 몸의 계열을 그릴 때 쓴다. 모드가 꺼져 있으면 null.</summary>
+        /// <summary>그 몸의 보석. HUD 가 지금 몸의 쪽을 그릴 때 쓴다. 모드가 꺼져 있으면 null.</summary>
         public Sprite AffinityIconOf(string hostKey)
-        {
-            if (!AffinityRule.Enabled) return null;
-            return _affIcons[(int)AffinityRule.FamilyOf(hostKey)];
-        }
+            => AffinityRule.Enabled ? _affGems[(int)AffinityRule.KindOf(hostKey)] : null;
+
+        /// <summary>그 몸의 꼭짓점이 빛나는 삼각 상성판. 방에 들어설 때 HUD 가 크게 띄운다.</summary>
+        public Sprite AffinityTriangleOf(string hostKey)
+            => AffinityRule.Enabled ? _affTriangles[(int)AffinityRule.KindOf(hostKey)] : null;
 
         // ── 판정 ────────────────────────────────────────────────
 
-        /// <summary>지금 내 몸의 계열. 유령이면 None.</summary>
-        private Affinity MyFamily
-            => _host != null ? AffinityRule.FamilyOf(_host.Key) : Affinity.None;
+        /// <summary>지금 내 몸의 쪽. 유령이면 None.</summary>
+        private Affinity MyKind
+            => _host != null ? AffinityRule.KindOf(_host.Key) : Affinity.None;
 
-        /// <summary>이 적의 약점. 빼앗을 수 있는 몸과 중간 보스 대장은 약점이 없다.</summary>
-        private static Affinity WeaknessOf(Unit u)
+        /// <summary>내 지금 몸으로 이 적을 때릴 때의 결과. +1 유리 · 0 보통 · −1 불리.</summary>
+        private int OutcomeAgainst(Unit victim)
         {
-            if (u == null || u.IsHostBody) return Affinity.None;
-            return AffinityRule.WeaknessOf(u.Key);
-        }
-
-        /// <summary>내 지금 몸이 이 적의 약점을 찌르는가.</summary>
-        private bool HitsWeakness(Unit victim)
-        {
-            if (!AffinityRule.Enabled) return false;
-            var mine = MyFamily;
-            return mine != Affinity.None && WeaknessOf(victim) == mine;
+            if (!AffinityRule.Enabled || _host == null || victim == null) return 0;
+            return AffinityRule.Outcome(MyKind, AffinityRule.KindOf(victim.Key));
         }
 
         /// <summary>
-        /// 약점 보정. 플레이어 공격의 두 길(탄 · 근접/스킬)이 **같은 자**로 잰다.
+        /// 상성 보정. 플레이어 공격의 두 길(탄 · 근접/스킬)이 **같은 자**로 잰다.
         /// 터졌으면 이펙트와 소리도 여기서 낸다 — 숫자만 커지면 왜 커졌는지 모른다.
         /// </summary>
-        /// <param name="weak">약점을 찔렀다 — 제값이 들어간다.</param>
-        /// <param name="dull">약점이 있는 적인데 내 몸이 그 계열이 아니다 — 덜 들어간다.</param>
+        /// <param name="weak">유리 — 이기는 쪽을 때렸다.</param>
+        /// <param name="dull">불리 — 지는 쪽을 때렸다.</param>
         private int WithAffinity(Unit victim, int damage, out bool weak, out bool dull)
         {
-            weak = dull = false;
-            if (!AffinityRule.Enabled || _host == null) return damage;
-            var need = WeaknessOf(victim);
-            if (need == Affinity.None) return damage;   // 약점이 없는 적(빼앗을 수 있는 몸)은 그대로
-
-            if (need == MyFamily)
+            int outcome = OutcomeAgainst(victim);
+            weak = outcome > 0;
+            dull = outcome < 0;
+            if (weak)
             {
-                weak = true;
                 SpawnFx("weakhit", victim.Position, WeakFxSize);
                 GameSound.Cue("hit.weak");
                 StrongHitReaction(victim);
-                return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.MatchDamageMul));
+                return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.WinDamageMul));
             }
-            dull = true;
-            return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.OffDamageMul));
+            if (dull) return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.LoseDamageMul));
+            return damage;
         }
+
+        private const float WeakFxSize = 150f;
 
         // ── 타격 반응 (2026-10-01) ──────────────────────────────
         //
         // 「세게 들어간다 / 덜 들어간다」는 숫자가 아니라 **맞은 쪽의 반응**에서 온다.
-        // 아이콘·방패·말풍선은 캐릭터마다 따로 맞춰야 하지만, 반응은 어떤 적에게도 똑같이 먹힌다.
         //
-        //   맞는 몸   — 뒤로 밀리고, 하던 공격이 끊기고, 잠깐 굳는다. 화면이 멈칫하고 흔들린다.
-        //   안 맞는 몸 — 맞아도 꿈쩍 않고 그대로 걸어온다. 불똥만 작게 튀고 「팅」 소리가 난다.
+        //   유리 — 뒤로 밀리고, 하던 공격이 끊기고, 잠깐 굳는다. 화면이 흔들린다.
+        //   불리 — 맞아도 꿈쩍 않고 그대로 걸어온다. 불똥만 작게 튀고 「팅」 소리가 난다.
+        //
+        // ⚠ 치명타와 겹치지 않게 역할을 나눈다: 치명타는 **숫자가 커지고 화면이 멈칫**하고,
+        //   상성은 **적이 반응**한다. 그래서 유리 타격에는 화면 멈칫(HitStop)을 넣지 않는다.
 
-        /// <summary>안 맞는 몸으로 때리는 중인가. 맞기 **전에** 묻는다 — 움찔할지 말지가 여기서 갈린다.</summary>
-        private bool IsDullAgainst(Unit victim)
-        {
-            if (!AffinityRule.Enabled || _host == null) return false;
-            var need = WeaknessOf(victim);
-            return need != Affinity.None && need != MyFamily;
-        }
+        /// <summary>불리한 쪽을 때리는 중인가. 맞기 **전에** 묻는다 — 움찔할지 말지가 여기서 갈린다.</summary>
+        private bool IsDullAgainst(Unit victim) => OutcomeAgainst(victim) < 0;
 
         private const float DullFxScale = 0.5f;
         private const float StrongPushMeters = 0.6f;
         private const float StrongHoldSeconds = 0.28f;
-        private const float StrongHitStop = 0.045f;
-        private const float StrongShake = 4f;
+        private const float StrongShake = 3f;
         /// <summary>연사 몸이 맞힐 때마다 밀면 적이 영영 못 온다 — 적마다 이 간격에 한 번만.</summary>
         private const float StrongReactCooldown = 0.25f;
 
         private readonly System.Collections.Generic.Dictionary<Unit, float> _strongReactAt = new();
-        private float _strongStopAt;
 
         private void StrongHitReaction(Unit victim)
         {
             Shake(StrongShake);
-            float now = Time.time;
-            // 멈칫은 화면 전체다 — 여러 마리를 한꺼번에 때려도 한 번만.
-            if (now - _strongStopAt >= StrongReactCooldown) { _strongStopAt = now; HitStop(StrongHitStop); }
-
             if (victim == null || !victim.IsAlive || victim.IsBoss) return;
+
+            float now = Time.time;
             if (_strongReactAt.TryGetValue(victim, out float last) && now - last < StrongReactCooldown) return;
             _strongReactAt[victim] = now;
 
@@ -275,13 +262,11 @@ namespace Game.Module.InGame
             victim.HoldHit(StrongHoldSeconds);
         }
 
-        /// <summary>안 맞는 몸으로 때린 숫자 — 작고 흐리게. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
-        private static readonly Color DullDamageColor = new(0.62f, 0.66f, 0.72f, 0.9f);
-
-        private const float WeakFxSize = 150f;
-
-        /// <summary>약점 숫자 색. 유리 표시(초록)와 같은 계통 — 초록은 «상성 이득»이다.</summary>
+        /// <summary>유리 숫자 색 — ▲ 와 같은 초록. 치명타(금색)와 갈린다.</summary>
         private static readonly Color WeakDamageColor = new(0.55f, 1f, 0.35f, 1f);
+
+        /// <summary>불리 숫자 — 작고 흐리게. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
+        private static readonly Color DullDamageColor = new(0.62f, 0.66f, 0.72f, 0.9f);
 
         // ── 갈아타기 규칙 ───────────────────────────────────────
 
@@ -338,55 +323,68 @@ namespace Game.Module.InGame
 
         // ── 표시 ────────────────────────────────────────────────
 
-        /// <summary>계열별 살아 있는 적 수. 매 프레임 다시 센다 — 할당 없이.</summary>
-        private readonly int[] _weakCount = new int[6];
+        /// <summary>쪽별 살아 있는 잡몹 수. 매 프레임 다시 센다 — 할당 없이.</summary>
+        private readonly int[] _kindCount = new int[4];
 
         /// <summary>
-        /// 적 머리 위 약점 아이콘과, 유리한 몸의 표시를 갱신한다.
+        /// 적 머리 위 보석과 화살표, 빼앗을 수 있는 몸의 발밑 고리를 갱신한다.
         ///
-        /// «유리한 몸» = 이 방에 **가장 많은 약점**을 찌르는 계열의 몸.
-        /// 섞인 방에서 모든 몸이 빛나면 아무것도 안 빛나는 것과 같다 — 가장 많은 쪽만 본다.
+        /// 「이 몸을 타라」 = 이 방에 **가장 많은 쪽을 이기는** 몸. 지금 내 몸이 이미 그 쪽을
+        /// 이기고 있으면 부르지 않는다 — 갈아탈 이유가 없는데 고리가 뛰면 거짓말이다.
         /// </summary>
         private void RefreshAffinityMarks()
         {
             bool on = AffinityRule.Enabled;
 
-            for (int i = 0; i < _weakCount.Length; i++) _weakCount[i] = 0;
-            int best = 0;
+            for (int i = 0; i < _kindCount.Length; i++) _kindCount[i] = 0;
+            var major = Affinity.None;
             if (on)
             {
                 for (int i = 0; i < _enemies.Count; i++)
                 {
                     var e = _enemies[i];
-                    if (e == null || !e.IsAlive) continue;
-                    var w = WeaknessOf(e);
+                    if (e == null || !e.IsAlive || e.IsHostBody) continue;
                     // 보스는 혼자서 방 전체다 — 잡몹 몇 마리에 밀리면 안 된다.
-                    if (w != Affinity.None) _weakCount[(int)w] += e.IsBoss ? 100 : 1;
+                    _kindCount[(int)AffinityRule.KindOf(e.Key)] += e.IsBoss ? 100 : 1;
                 }
-                for (int i = 1; i < _weakCount.Length; i++)
-                    if (_weakCount[i] > best) best = _weakCount[i];
+                int best = 0;
+                for (int i = 1; i < _kindCount.Length; i++)
+                    if (_kindCount[i] > best) { best = _kindCount[i]; major = (Affinity)i; }
             }
 
-            var mine = MyFamily;
+            var mine = MyKind;
+            bool alreadyWinning = on && AffinityRule.Beats(mine, major);
+
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
                 if (e == null) continue;
-                if (!on || !e.IsAlive) { e.SetWeakIcon(null, false, false); e.SetAdvantage(null, null); continue; }
-
-                var w = WeaknessOf(e);
-                e.SetWeakIcon(_affIcons[(int)w], w != Affinity.None && w == mine, w != Affinity.None);
-
-                bool adv = false;
-                // ⚠ `IsPossessable` 을 보지 않는다 — 그건 «지금 이 순간» 이라 몸을 입고 있으면 false 다.
-                //   유리 표시는 몸을 입고 있을 때 가장 필요하다(나와서 저리로 가라는 뜻이니까).
-                if (e.IsHostBody && !e.RepossessBanned && !e.IsBoss && best > 0)
+                if (!on || !e.IsAlive)
                 {
-                    var f = AffinityRule.FamilyOf(e.Key);
-                    adv = f != Affinity.None && _weakCount[(int)f] == best;
+                    e.SetKindGem(null); e.SetMatchArrow(null); e.SetKindRing(null, Color.white, false);
+                    continue;
                 }
-                if (adv) e.SetAdvantage(_affAdvMark, _affAdvRing);
-                else e.SetAdvantage(null, null);
+
+                var kind = AffinityRule.KindOf(e.Key);
+                e.SetKindGem(_affGems[(int)kind]);
+
+                int outcome = AffinityRule.Outcome(mine, kind);
+                e.SetMatchArrow(outcome > 0 ? _affUp : outcome < 0 ? _affDown : null);
+
+                // 고리는 빼앗을 수 있는 몸에만. 그 몸의 쪽 색으로 가늘게 깔린다.
+                if (e.IsHostBody && !e.RepossessBanned && !e.IsBoss && kind != Affinity.None)
+                {
+                    bool calling = !alreadyWinning && AffinityRule.Beats(kind, major);
+                    e.SetKindRing(_affRing, AffinityRule.ColorOf(kind), calling);
+                }
+                else e.SetKindRing(null, Color.white, false);
+            }
+
+            // 내 몸 발밑에도 같은 고리를 은은하게 — 「나는 지금 이 쪽」.
+            if (_host != null)
+            {
+                if (on && mine != Affinity.None) _host.SetKindRing(_affRing, AffinityRule.ColorOf(mine), false);
+                else _host.SetKindRing(null, Color.white, false);
             }
         }
     }
