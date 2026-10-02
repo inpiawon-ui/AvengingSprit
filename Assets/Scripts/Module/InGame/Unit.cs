@@ -358,7 +358,7 @@ namespace Game.Module.InGame
             // 상성 표시도 앞서 쓰던 몸의 것이 남는다 — 해골이 쓰던 약점을 호스트가 물려받으면 안 된다.
             if (_kindGem != null) _kindGem.gameObject.SetActive(false);
             if (_matchArrow != null) _matchArrow.gameObject.SetActive(false);
-            if (_kindRing != null) _kindRing.gameObject.SetActive(false);
+            if (_takeMark != null) _takeMark.gameObject.SetActive(false);
             _rect = (RectTransform)transform;
             Side = side;
             Key = key;
@@ -591,15 +591,16 @@ namespace Game.Module.InGame
         // 모든 몸과 적이 날 · 힘 · 술 가운데 하나다. 보여 주는 것은 셋뿐이다:
         //   보석   — 그 대상이 어느 쪽인가 (체력 바 왼쪽 끝, 작게)
         //   화살표 — 지금 내 몸으로 때리면 유리(▲)한가 불리(▼)한가 (머리 위)
-        //   고리   — 빼앗을 수 있는 몸의 발밑. 그 몸의 쪽 색으로 가늘게 깔린다
+        //   타라   — 지금 갈아타면 유리한 몸의 머리 위 (유령이 내려앉는 표시)
         // ⚠ 몸 둘레 윤곽선은 쓰지 않는다 — 시안에서 「통짜로 진해서 예쁘지 않다」로 반려됐다(2026-10-02).
         //   그림은 `BattleDirector.Affinity` 가 넘긴다. 여기는 자리와 움직임만 맡는다.
 
-        private Image _kindGem, _matchArrow, _kindRing;
+        private Image _kindGem, _matchArrow, _takeMark;
 
         // 18 · 26 으로 시작했다가 실제 화면에서 너무 작아 키웠다(2026-10-02 녹화 확인).
         private const float KindGemSize = 24f;
         private const float MatchArrowSize = 32f;
+        private const float TakeMarkSize = 38f;
 
         /// <summary>어느 쪽인가. null 이면 끈다.</summary>
         public void SetKindGem(Sprite gem)
@@ -641,30 +642,29 @@ namespace Game.Module.InGame
             _matchArrow.sprite = arrow;
         }
 
-        /// <param name="calling">「이 몸을 타라」 — 고리가 밝게 뛴다. 아니면 가늘고 은은하게 깔려만 있다.</param>
-        public void SetKindRing(Sprite ring, Color tint, bool calling)
+        /// <summary>
+        /// 「이 몸을 타라」 — 지금 이 방에서 이 몸으로 갈아타면 유리하다. null 이면 끈다.
+        ///
+        /// 발밑 고리로 알렸다가 「타야 할 몸을 알리기에는 어색하다」로 반려됐다(2026-10-02).
+        /// 머리 위, 빙의 조준 링보다 한 칸 위에 뜬다 — 유령이 내려앉는 그림이라 뜻이 겹치지 않는다.
+        /// </summary>
+        public void SetTakeMark(Sprite mark)
         {
-            bool on = ring != null;
-            if (_kindRing == null)
+            bool on = mark != null;
+            if (_takeMark == null)
             {
                 if (!on) return;
-                _kindRing = GetOrCreate("KindRing", Vector2.one, Vector2.zero);
-                _kindRing.preserveAspect = true;
-                // 몸 뒤, 그림자 앞 — 발밑에 깔린다.
-                if (_body != null) _kindRing.transform.SetSiblingIndex(_body.transform.GetSiblingIndex());
+                _takeMark = GetOrCreate("TakeMark", new Vector2(TakeMarkSize, TakeMarkSize), Vector2.zero);
+                _takeMark.preserveAspect = true;
             }
-            if (_kindRing.gameObject.activeSelf != on) _kindRing.gameObject.SetActive(on);
+            if (_takeMark.gameObject.activeSelf != on) _takeMark.gameObject.SetActive(on);
             if (!on) return;
 
             var size = _rect.sizeDelta;
-            var rt = (RectTransform)_kindRing.transform;
-            rt.sizeDelta = new Vector2(size.x * 1.25f, size.x * 0.625f);
-            rt.anchoredPosition = new Vector2(0f, -size.y * 0.40f);
-            _kindRing.sprite = ring;
-            float wave = Mathf.Sin(Time.unscaledTime * 5f);
-            tint.a = calling ? 0.85f + 0.15f * wave : 0.55f;
-            _kindRing.color = tint;
-            _kindRing.transform.localScale = Vector3.one * (calling ? 1.12f + 0.08f * wave : 1f);
+            float bob = 4f * Mathf.Sin(Time.unscaledTime * 6f);
+            ((RectTransform)_takeMark.transform).anchoredPosition =
+                new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f + TakeMarkSize * 0.95f + bob);
+            _takeMark.sprite = mark;
         }
 
         public void SetSprite(Sprite s)

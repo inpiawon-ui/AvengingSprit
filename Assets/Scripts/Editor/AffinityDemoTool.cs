@@ -86,6 +86,31 @@ namespace Game.EditorTools
                     var panel = Object.FindAnyObjectByType<Game.Module.Lobby.ChapterHostPanel>();
                     if (panel != null && panel.gameObject.activeInHierarchy)
                     {
+                        // 로비 화면도 찍는다 — 판에 들어가기 전에 상성이 어떻게 보이는지.
+                        // `AffinityDemo.lobbyShots` 에 「챕터:경로」 를 `|` 로 이어 적으면 하나씩 찍고 넘어간다.
+                        string shots = SessionState.GetString("AffinityDemo.lobbyShots", string.Empty);
+                        if (!string.IsNullOrEmpty(shots))
+                        {
+                            int bar = shots.IndexOf('|');
+                            string head = bar < 0 ? shots : shots.Substring(0, bar);
+                            SessionState.SetString("AffinityDemo.lobbyShots", bar < 0 ? string.Empty : shots.Substring(bar + 1));
+                            if (SessionState.GetBool("AffinityDemo.lobbyArmed", false))
+                            {
+                                // 앞 차례에 챕터를 바꿔 놨다 — 이제 찍는다.
+                                ScreenCapture.CaptureScreenshot(head.Substring(head.IndexOf(':') + 1));
+                                SessionState.SetBool("AffinityDemo.lobbyArmed", false);
+                                _wait = 20;
+                                return;
+                            }
+                            var pt = panel.GetType();
+                            pt.GetField("_chapter", F).SetValue(panel, int.Parse(head.Substring(0, head.IndexOf(':'))));
+                            pt.GetMethod("RefreshAll", F).Invoke(panel, null);
+                            SessionState.SetString("AffinityDemo.lobbyShots", shots);   // 같은 항목을 다음 차례에 찍는다
+                            SessionState.SetBool("AffinityDemo.lobbyArmed", true);
+                            _wait = 20;
+                            return;
+                        }
+
                         // 시작 직전에 녹화를 건다 — 고르는 장면부터 담긴다.
                         StartRecording();
                         string host = SessionState.GetString("AffinityDemo.host", string.Empty);

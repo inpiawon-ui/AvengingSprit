@@ -896,7 +896,8 @@ namespace Game.Module.InGame
         }
 
         /// <summary>방 진행 바 폭. 프리팹 `RoomProgressBg` 와 같아야 한다.</summary>
-        private const float RoomProgressWidth = 219f;
+        // 219 → 200: 칸 왼쪽에 삼각 상성판이 들어오면서 글자와 막대가 오른쪽으로 밀렸다(2026-10-02).
+        private const float RoomProgressWidth = 200f;
 
         private void OnRoomEntered(RoomEnteredEvent e)
         {

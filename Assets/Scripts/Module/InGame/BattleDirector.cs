@@ -7809,7 +7809,8 @@ namespace Game.Module.InGame
             var color = weak ? WeakDamageColor
                       : crit ? CritDamageColor
                       : toEnemy ? DamageToEnemy : DamageToPlayer;
-            t.Show(at, damage, color, crit || weak);
+            // 큰 글씨는 치명타만 쓴다 — 상성까지 크게 뜨면 둘이 구별되지 않는다(2026-10-02).
+            t.Show(at, damage, color, crit);
         }
 
         /// <summary>치명타 숫자 색. 평타(흰색)와 한눈에 갈려야 한다.</summary>

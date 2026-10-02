@@ -57,6 +57,10 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _cardFrame, _cardFrameSelected;
         [SerializeField] private Sprite _starOn, _starOff;
 
+        // 상성 시험판(2026-10-02) — 날 · 힘 · 술 보석(이 순서), 유리 ▲ · 불리 ▼
+        [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
+        [SerializeField] private Sprite _matchUp, _matchDown;
+
         /// <summary>
         /// 클리어 보상 골드 — ⚠ **임시표다 (2026-09-29).** 경제 밸런스가 정해지면 표로 옮긴다.
         /// 스샷의 CH2 값(3,000~5,000)에 맞추고 앞뒤를 이어 붙였다.
@@ -291,7 +295,72 @@ namespace Game.Module.Lobby
             _chapter = next;
             GameSound.Cue("ui.tap");
             RefreshChapter();
+            RefreshHosts();   // 상성 — 챕터가 바뀌면 어느 몸이 유리한지도 바뀐다
             RefreshStart();
+        }
+
+        // ── 상성 (시험판 2026-10-02) ─────────────────────────
+        //
+        // 판에 들어가기 **전에** 보여야 한다 — 「이 챕터엔 이쪽 적이 많다 → 이 몸이 유리하다」.
+        // 전투 화면과 같은 보석 · 같은 화살표를 쓴다.
+
+        private Sprite GemOf(Game.Module.InGame.Affinity kind)
+        {
+            int i = (int)kind - 1;
+            return i >= 0 && i < _kindGems.Length ? _kindGems[i] : null;
+        }
+
+        /// <summary>챕터 칸 — 적 구성(날 · 힘 · 술 몇 마리씩)과 보스의 쪽.</summary>
+        private void RefreshChapterAffinity()
+        {
+            bool on = Game.Module.InGame.AffinityRule.Enabled;
+            var (blade, force, magic) = Game.Module.InGame.AffinityRule.ChapterMix(_chapter);
+            SetKindCount(0, Game.Module.InGame.Affinity.Blade, blade, on);
+            SetKindCount(1, Game.Module.InGame.Affinity.Force, force, on);
+            SetKindCount(2, Game.Module.InGame.Affinity.Magic, magic, on);
+
+            var bossGem = _ui.Get<Image>("CHBossKindGem");
+            if (bossGem != null)
+            {
+                bossGem.sprite = on ? GemOf(Game.Module.InGame.AffinityRule.BossKindOf(_chapter)) : null;
+                bossGem.gameObject.SetActive(bossGem.sprite != null);
+            }
+        }
+
+        private void SetKindCount(int slot, Game.Module.InGame.Affinity kind, int count, bool on)
+        {
+            var gem = _ui.Get<Image>($"CHKindGem{slot}");
+            if (gem != null)
+            {
+                gem.sprite = on ? GemOf(kind) : null;
+                gem.gameObject.SetActive(gem.sprite != null);
+                // 한 마리도 안 나오는 쪽은 흐리게 — 자리는 지킨다(없애면 줄이 흔들린다).
+                gem.color = count > 0 ? Color.white : new Color(1f, 1f, 1f, 0.3f);
+            }
+            _ui.SetText($"CHKindCount{slot}", on ? count.ToString() : string.Empty);
+        }
+
+        /// <summary>호스트 카드 — 그 몸의 보석과, 이 챕터에 가장 많은 적에게 유리한가 불리한가.</summary>
+        private void RefreshCardAffinity(Transform card, string hostKey)
+        {
+            bool on = Game.Module.InGame.AffinityRule.Enabled;
+            var kind = Game.Module.InGame.AffinityRule.KindOf(hostKey);
+
+            var gem = _ui.Find(card, "CardKindGem")?.GetComponent<Image>();
+            if (gem != null)
+            {
+                gem.sprite = on ? GemOf(kind) : null;
+                gem.gameObject.SetActive(gem.sprite != null);
+            }
+
+            var arrow = _ui.Find(card, "CardMatchArrow")?.GetComponent<Image>();
+            if (arrow != null)
+            {
+                int outcome = on ? Game.Module.InGame.AffinityRule.Outcome(
+                    kind, Game.Module.InGame.AffinityRule.MajorOf(_chapter)) : 0;
+                arrow.sprite = outcome > 0 ? _matchUp : outcome < 0 ? _matchDown : null;
+                arrow.gameObject.SetActive(arrow.sprite != null);
+            }
         }
 
         // ── 그리기 ───────────────────────────────────────────
@@ -386,6 +455,8 @@ namespace Game.Module.Lobby
                 chest.preserveAspect = true;
             }
             _ui.SetText("CHRewardChestText", ca.ChestLabel ?? string.Empty);
+
+            RefreshChapterAffinity();
         }
 
         /// <summary>
@@ -472,6 +543,8 @@ namespace Game.Module.Lobby
                 }
                 var powerIcon = _ui.Find(card, "CardPowerIcon");
                 if (powerIcon != null) powerIcon.gameObject.SetActive(!ghost);
+
+                RefreshCardAffinity(card, key);
             }
 
             // 랜덤 칸의 글자와 그림도 화면 그림에 있다 — 고른 표시만 낸다

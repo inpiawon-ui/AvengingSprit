@@ -104,13 +104,43 @@ namespace Game.Module.InGame
             return 0;
         }
 
-        /// <summary>쪽의 색 — 발밑 고리를 물들인다. 보석 그림과 같은 계통.</summary>
-        public static Color ColorOf(Affinity a) => a switch
+        /// <summary>
+        /// 챕터의 적 구성 (날, 힘, 술 — 방 표에 선 잡몹 수). 로비가 「이 챕터엔 어느 쪽이 많은가」를 보여 줄 때 쓴다.
+        ///
+        /// ⚠ `RoomTable` 실측(2026-09-28)을 옮겨 적은 것이다. 확정되면 방 표에서 직접 센다 —
+        ///   손으로 적은 숫자는 방을 고치는 순간 낡는다.
+        /// ⚠ 지금 잡몹 7종은 기계가 많아 **「힘」 쪽으로 크게 쏠려 있다.** 새 잡몹을 넣을 때 날 · 술 쪽을 채워야 한다.
+        /// </summary>
+        public static (int blade, int force, int magic) ChapterMix(int chapter) => chapter switch
         {
-            Affinity.Blade => new Color(0.98f, 0.80f, 0.22f),
-            Affinity.Force => new Color(0.96f, 0.38f, 0.20f),
-            Affinity.Magic => new Color(0.68f, 0.40f, 0.95f),
-            _ => Color.white,
+            1 => (10, 12, 10),   // 박쥐 / 폐품 사수 / 해골
+            2 => (11, 29, 0),    // 박쥐 / 순찰기 · 집행자
+            3 => (0, 36, 16),    // 코일 · 집행자 · 십자 포탑 / 해골
+            4 => (13, 46, 0),    // 박쥐 / 집행자 · 순찰기 · 코일
+            5 => (0, 52, 18),    // 집행자 · 코일 · 십자 포탑 / 해골
+            6 => (0, 61, 18),    // 집행자 · 순찰기 · 코일 · 십자 포탑 / 해골
+            _ => (0, 0, 0),
+        };
+
+        /// <summary>그 챕터에 가장 많은 쪽.</summary>
+        public static Affinity MajorOf(int chapter)
+        {
+            var (blade, force, magic) = ChapterMix(chapter);
+            if (blade == 0 && force == 0 && magic == 0) return Affinity.None;
+            if (force >= blade && force >= magic) return Affinity.Force;
+            return blade >= magic ? Affinity.Blade : Affinity.Magic;
+        }
+
+        /// <summary>그 챕터 보스의 쪽.</summary>
+        public static Affinity BossKindOf(int chapter) => chapter switch
+        {
+            1 => KindOf("robot_snakes"),
+            2 => KindOf("crusher"),
+            3 => KindOf("python"),
+            4 => KindOf("sludge"),
+            5 => KindOf("guardian"),
+            6 => KindOf("kingpin"),
+            _ => Affinity.None,
         };
 
         public static string GemName(Affinity a) => a switch
@@ -158,7 +188,7 @@ namespace Game.Module.InGame
 
         private readonly Sprite[] _affGems = new Sprite[4];
         private readonly Sprite[] _affTriangles = new Sprite[4];
-        private Sprite _affUp, _affDown, _affRing;
+        private Sprite _affUp, _affDown, _affTake;
 
         private void CacheAffinitySprites()
         {
@@ -169,7 +199,7 @@ namespace Game.Module.InGame
             }
             _affUp = GetSprite("rps_up");
             _affDown = GetSprite("rps_down");
-            _affRing = GetSprite("rps_ring");
+            _affTake = GetSprite("rps_take");
         }
 
         /// <summary>그 몸의 보석. HUD 가 지금 몸의 쪽을 그릴 때 쓴다. 모드가 꺼져 있으면 null.</summary>
@@ -327,7 +357,7 @@ namespace Game.Module.InGame
         private readonly int[] _kindCount = new int[4];
 
         /// <summary>
-        /// 적 머리 위 보석과 화살표, 빼앗을 수 있는 몸의 발밑 고리를 갱신한다.
+        /// 적 머리 위 보석과 화살표, 「이 몸을 타라」 표시를 갱신한다.
         ///
         /// 「이 몸을 타라」 = 이 방에 **가장 많은 쪽을 이기는** 몸. 지금 내 몸이 이미 그 쪽을
         /// 이기고 있으면 부르지 않는다 — 갈아탈 이유가 없는데 고리가 뛰면 거짓말이다.
@@ -361,7 +391,7 @@ namespace Game.Module.InGame
                 if (e == null) continue;
                 if (!on || !e.IsAlive)
                 {
-                    e.SetKindGem(null); e.SetMatchArrow(null); e.SetKindRing(null, Color.white, false);
+                    e.SetKindGem(null); e.SetMatchArrow(null); e.SetTakeMark(null);
                     continue;
                 }
 
@@ -371,20 +401,10 @@ namespace Game.Module.InGame
                 int outcome = AffinityRule.Outcome(mine, kind);
                 e.SetMatchArrow(outcome > 0 ? _affUp : outcome < 0 ? _affDown : null);
 
-                // 고리는 빼앗을 수 있는 몸에만. 그 몸의 쪽 색으로 가늘게 깔린다.
-                if (e.IsHostBody && !e.RepossessBanned && !e.IsBoss && kind != Affinity.None)
-                {
-                    bool calling = !alreadyWinning && AffinityRule.Beats(kind, major);
-                    e.SetKindRing(_affRing, AffinityRule.ColorOf(kind), calling);
-                }
-                else e.SetKindRing(null, Color.white, false);
-            }
-
-            // 내 몸 발밑에도 같은 고리를 은은하게 — 「나는 지금 이 쪽」.
-            if (_host != null)
-            {
-                if (on && mine != Affinity.None) _host.SetKindRing(_affRing, AffinityRule.ColorOf(mine), false);
-                else _host.SetKindRing(null, Color.white, false);
+                // 「타라」 는 빼앗을 수 있는 몸에만, 그 몸이 이 방에 가장 많은 쪽을 이길 때만.
+                bool take = e.IsHostBody && !e.RepossessBanned && !e.IsBoss
+                            && !alreadyWinning && AffinityRule.Beats(kind, major);
+                e.SetTakeMark(take ? _affTake : null);
             }
         }
     }

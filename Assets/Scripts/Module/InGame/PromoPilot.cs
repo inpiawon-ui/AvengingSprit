@@ -189,7 +189,7 @@ namespace Game.Module.InGame
                 }
             if (want == null) { _seekBody = null; return false; }
 
-            if (want != _seekBody) { _seekBody = want; _seekWait = 0.9f; }   // 표시를 읽는 시간
+            if (want != _seekBody) { _seekBody = want; _seekWait = 2.8f; }   // 안 맞는 몸으로 때리는 모습이 보일 만큼 지켜본다
             if (_seekWait > 0f) { _seekWait -= dt; return false; }
 
             if (host != null)
