@@ -134,6 +134,11 @@ namespace Game.Module.InGame
                 await UniTask.Yield();
             }
             if (slot != null) slot.localScale = start;
+
+            // ⚠ 레벨업이 연달아 두 번 오면 튕기는 사이에 **다음 3택1 이 이미 떠 있다**(전투는 0.1초 뒤에 연다).
+            //   그걸 여기서 닫으면 전투는 고르기를 기다리는데 창이 없어 판이 영영 멈춘다
+            //   (2026-10-02 자동 검증 6챕터 2번 방에서 실제로 멈췄다). 새 제안이 떠 있으면 닫지 않는다.
+            if (panelName == "BuffChoicePanel" && _battle != null && _battle.IsAwaitingBuff) return;
             SetPanel(panelName, false);
         }
 
