@@ -188,7 +188,7 @@ namespace Game.Module.InGame
 
         private readonly Sprite[] _affGems = new Sprite[4];
         private readonly Sprite[] _affTriangles = new Sprite[4];
-        private Sprite _affUp, _affDown, _affTake;
+        private Sprite _affUp, _affDown;
 
         private void CacheAffinitySprites()
         {
@@ -199,7 +199,6 @@ namespace Game.Module.InGame
             }
             _affUp = GetSprite("rps_up");
             _affDown = GetSprite("rps_down");
-            _affTake = GetSprite("rps_take");
         }
 
         /// <summary>그 몸의 보석. HUD 가 지금 몸의 쪽을 그릴 때 쓴다. 모드가 꺼져 있으면 null.</summary>
@@ -354,37 +353,18 @@ namespace Game.Module.InGame
 
         // ── 표시 ────────────────────────────────────────────────
 
-        /// <summary>쪽별 살아 있는 잡몹 수. 매 프레임 다시 센다 — 할당 없이.</summary>
-        private readonly int[] _kindCount = new int[4];
-
         /// <summary>
-        /// 적 머리 위 보석과 화살표, 「이 몸을 타라」 표시를 갱신한다.
+        /// 적 머리 위 보석과 유리 · 불리 화살표를 갱신한다.
         ///
-        /// 「이 몸을 타라」 = 이 방에 **가장 많은 쪽을 이기는** 몸. 지금 내 몸이 이미 그 쪽을
-        /// 이기고 있으면 부르지 않는다 — 갈아탈 이유가 없는데 고리가 뛰면 거짓말이다.
+        /// 머리 위 유령 아이콘은 여기서 다루지 않는다 — 「타면 유리하다」 가 아니라
+        /// 「탈 수 있다」 로 뜻이 바뀌어 `BattleDirector.SoulFx` 가 맡는다(기획 2026-10-02).
+        /// 유리한 몸은 보석과 화살표로 읽는다.
         /// </summary>
         private void RefreshAffinityMarks()
         {
             bool on = AffinityRule.Enabled;
 
-            for (int i = 0; i < _kindCount.Length; i++) _kindCount[i] = 0;
-            var major = Affinity.None;
-            if (on)
-            {
-                for (int i = 0; i < _enemies.Count; i++)
-                {
-                    var e = _enemies[i];
-                    if (e == null || !e.IsAlive || e.IsHostBody) continue;
-                    // 보스는 혼자서 방 전체다 — 잡몹 몇 마리에 밀리면 안 된다.
-                    _kindCount[(int)AffinityRule.KindOf(e.Key)] += e.IsBoss ? 100 : 1;
-                }
-                int best = 0;
-                for (int i = 1; i < _kindCount.Length; i++)
-                    if (_kindCount[i] > best) { best = _kindCount[i]; major = (Affinity)i; }
-            }
-
             var mine = MyKind;
-            bool alreadyWinning = on && AffinityRule.Beats(mine, major);
 
             for (int i = 0; i < _enemies.Count; i++)
             {
@@ -392,7 +372,7 @@ namespace Game.Module.InGame
                 if (e == null) continue;
                 if (!on || !e.IsAlive)
                 {
-                    e.SetKindGem(null); e.SetMatchArrow(null); e.SetTakeMark(null);
+                    e.SetKindGem(null); e.SetMatchArrow(null);
                     continue;
                 }
 
@@ -401,11 +381,6 @@ namespace Game.Module.InGame
 
                 int outcome = AffinityRule.Outcome(mine, kind);
                 e.SetMatchArrow(outcome > 0 ? _affUp : outcome < 0 ? _affDown : null);
-
-                // 「타라」 는 빼앗을 수 있는 몸에만, 그 몸이 이 방에 가장 많은 쪽을 이길 때만.
-                bool take = e.IsHostBody && !e.RepossessBanned && !e.IsBoss
-                            && !alreadyWinning && AffinityRule.Beats(kind, major);
-                e.SetTakeMark(take ? _affTake : null);
             }
         }
     }

@@ -308,9 +308,13 @@ namespace Game.Module.InGame
                 float now = SoulEase(1f - Mathf.Clamp01(_soulRise / SoulRiseSeconds));
                 // 쑥 뽑혀 나온다 — 처음에 빠르고 끝에서 멎는다.
                 // 매여 있으면 제자리로 못 박고, 아니면 이동분만 더해 조작과 겹치게 한다.
+                //
+                // ⚠ 그냥 자리를 더해 올리면 **기둥 속으로 밀려 들어가 갇힌다**(실제로 기둥 두 개
+                //   사이에 끼어 못 나왔다). 걸어서 가는 것과 같은 길 — 막힌 것은 타고 미끄러진다.
                 _ghost.Position = _soulTether
                     ? Vector2.Lerp(_soulRiseFrom, _soulRiseTo, now)
-                    : _ghost.Position + (_soulRiseTo - _soulRiseFrom) * (now - before);
+                    : ClampedInField(_ghost, SlideMove(_ghost, _ghost.Position,
+                                                       (_soulRiseTo - _soulRiseFrom) * (now - before)));
                 _ghost.transform.localScale = Vector3.one * Mathf.Lerp(0.35f, 1f, now);
 
                 // 솟는 길에 잔상을 남긴다(원작 대시 잔상과 같은 것).
@@ -568,6 +572,7 @@ namespace Game.Module.InGame
             var target = _host == null && !IsChanneling && !_awaitingBuff && _running
                 ? _possessTarget : null;
 
+            RefreshTakeMarks(target);
             if (target != null && _spotBeam == null && !MakeSpotlight()) return;
             if (_spotBeam == null) return;
 
@@ -586,6 +591,24 @@ namespace Game.Module.InGame
             // 숨쉬듯 — 가만히 있으면 붙여 놓은 그림이다.
             float breathe = 0.86f + 0.14f * Mathf.Sin(Time.time * 3.2f);
             _spotBeam.color = new Color(1f, 1f, 1f, SpotBeamAlpha * breathe * _spotShown);
+        }
+
+        private Sprite _takeSprite;
+
+        /// <summary>
+        /// 유령일 때 **탈 수 있는 몸** 머리 위에 유령 아이콘을 띄운다. 지금 들어갈 몸(빛줄기)은 뺀다.
+        /// 예전의 과녁 표식(파랑 · 금색 · 자물쇠 · 금지)을 이 한 장이 대신한다.
+        /// </summary>
+        private void RefreshTakeMarks(Unit picked)
+        {
+            if (_takeSprite == null) _takeSprite = GetSprite("rps_take");
+            bool ghost = _host == null && !IsChanneling && !_awaitingBuff && _running;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null) continue;
+                e.SetTakeMark(ghost && e != picked && e.IsPossessable ? _takeSprite : null);
+            }
         }
 
         private bool MakeSpotlight()

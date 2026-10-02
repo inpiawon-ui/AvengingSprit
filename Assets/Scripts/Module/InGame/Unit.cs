@@ -643,10 +643,11 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 「이 몸을 타라」 — 지금 이 방에서 이 몸으로 갈아타면 유리하다. null 이면 끈다.
+        /// 「이 몸은 탈 수 있다」 — 유령일 때 탈 수 있는 몸의 머리 위에 뜬다. null 이면 끈다.
         ///
-        /// 발밑 고리로 알렸다가 「타야 할 몸을 알리기에는 어색하다」로 반려됐다(2026-10-02).
-        /// 머리 위, 빙의 조준 링보다 한 칸 위에 뜬다 — 유령이 내려앉는 그림이라 뜻이 겹치지 않는다.
+        /// 처음에는 「타면 유리하다」 는 뜻이었고 과녁 표식 위 칸에 떴다. 과녁을 걷으면서
+        /// (기획 2026-10-02) 이 한 장이 「탈 수 있다」 를 맡고, 자리도 체력바 바로 위로 내려왔다.
+        /// 유령일 때만 뜨므로 같은 자리의 유리 · 불리 화살표(몸을 입었을 때만 뜬다)와 안 겹친다.
         /// </summary>
         public void SetTakeMark(Sprite mark)
         {
@@ -663,7 +664,7 @@ namespace Game.Module.InGame
             var size = _rect.sizeDelta;
             float bob = 4f * Mathf.Sin(Time.unscaledTime * 6f);
             ((RectTransform)_takeMark.transform).anchoredPosition =
-                new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f + TakeMarkSize * 0.95f + bob);
+                new Vector2(0f, size.y * 0.5f + 12f + TakeMarkSize * 0.6f + bob);
             _takeMark.sprite = mark;
         }
 

@@ -2068,25 +2068,15 @@ namespace Game.Module.InGame
 
         private Sprite GetSprite(string n) => _atlas != null ? _atlas.GetSprite(n) : null;
 
-        // 빙의 표식 그림 4종 (기획서 1-5 A). `SpriteAtlas.GetSprite` 는 부를 때마다
+        // 화면 밖 후보 화살표 그림. `SpriteAtlas.GetSprite` 는 부를 때마다
         // 새 Sprite 를 만들어 준다 — 매 프레임 부르면 그대로 쌓인다. 한 번만 받아 둔다.
-        private Sprite _markReady, _markTarget, _markBanned, _markLocked, _markArrow;
-        private Sprite _markNextBody1, _markNextBody2;
-
-        /// <summary>다음 몸 표식은 두 장을 번갈아 보여 준다. 가만히 있으면 눈에 안 들어온다.</summary>
-        private const float NextBodyBlink = 0.4f;
+        private Sprite _markArrow;
 
         private void CachePossessMarkSprites()
         {
             Unit.SetShieldFillSprite(GetSprite("hostshieldfill"));
 
-            _markReady = GetSprite("possessmark_ready");
-            _markTarget = GetSprite("possessmark_target");
-            _markBanned = GetSprite("possessmark_banned");
-            _markLocked = GetSprite("possessmark_locked");
             _markArrow = GetSprite("possessmark_arrow");
-            _markNextBody1 = GetSprite("possessmark_nextbody_1");
-            _markNextBody2 = GetSprite("possessmark_nextbody_2");
             CacheAffinitySprites();   // 상성 시험판 — 계열 아이콘 · 유리 표시
 
             // 문 4장도 여기서 한 번만 받는다. 여는 연출이 매 프레임 그림을 바꾸므로
@@ -7199,13 +7189,6 @@ namespace Game.Module.InGame
                 _bus.Publish(new BossHpChangedEvent { BossHp = victim.Hp, BossHpMax = victim.HpMax });
         }
 
-        /// <summary>
-        /// 몸을 입고 있을 때 **조건부 적의 잠금 표식**을 그려 줄 거리.
-        /// 빙의 사거리가 아니다 — 갈아탈 수 없으므로 뺏는 데는 안 쓰인다.
-        /// 호스트는 265 밖에서 쏘고 있어 유령 사거리(110)로는 표식이 영영 안 뜬다.
-        /// </summary>
-        private const float MarkShowRange = 460f;
-
         // ── 무적이 보이게 ────────────────────────────────────────
         //
         // ⚠ 예전에는 무적이면 `return` 하고 끝이라 **화면에 아무 일도 안 일어났다.**
@@ -7958,111 +7941,14 @@ namespace Game.Module.InGame
             });
         }
 
-        // ── 빙의 표식 (기획서 1-5) ────────────────────────────────
+        // ── 빙의 표식 ────────────────────────────────────────────
         //
-        // 표식은 **사거리 안 후보에게만**, 가까운 순으로 최대 5개까지 뜬다.
-        // 방 하나에 열 마리가 서 있는데 전부 조준 링을 달면 표식이 적을 덮어
-        // "누구를 뺏을까"가 아니라 "누가 누구지"가 된다.
+        // **과녁(조준 링) 표식은 걷었다**(기획 2026-10-02). 파란 과녁 · 금색 과녁 · 자물쇠 · 금지 ·
+        // 「다음 몸」 을 머리 위에 띄웠는데, 지금 들어갈 몸은 빛줄기가, 그 밖의 탈 수 있는 몸은
+        // 유령 아이콘이 이미 말하고 있다(`BattleDirector.SoulFx`). 같은 말을 두 번 하는 표식이
+        // 머리 위를 덮기만 했다. 남은 것은 화면 밖 후보를 가리키는 화살표뿐이다.
 
-        /// <summary>한 번에 띄우는 표식 수 (기획서 1-5 B).</summary>
-        private const int MaxPossessMarks = 5;
-
-        /// <summary>고스트일 때 표식 배율 (기획서 1-5 B · 120%).</summary>
-        private const float GhostMarkScale = 1.2f;
-
-        private readonly Unit[] _markSlot = new Unit[MaxPossessMarks];
-        private readonly float[] _markDist = new float[MaxPossessMarks];
-        private int _markCount;
-
-        private void RefreshPossessMarks(Unit from)
-        {
-            _markCount = 0;
-            if (from != null && !_awaitingBuff) CollectMarks(from);
-            RefreshPossessArrows(from);
-
-            // 고스트일 때 크게. 몸이 없을 때가 "어디로 들어갈까"를 고르는 시간이다.
-            float scale = _host == null ? GhostMarkScale : 1f;
-
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null) continue;
-
-                if (!IsMarked(e)) { e.SetPossessMark(Unit.PossessMark.None); continue; }
-
-                if (e == _possessTarget)
-                    e.SetPossessMark(Unit.PossessMark.Target, _markTarget, 1f, scale);
-                // 정본이 "네 다음 몸" 으로 찍어 둔 적(`POSSESSION_TARGET`). 아직 못 타더라도
-                // **죽이지 말고 남겨 두라**는 뜻이라, 잠금 표식과 다른 것을 달아야 한다.
-                else if (e.IsNextBody && !e.RepossessBanned && _markNextBody1 != null)
-                    e.SetPossessMark(Unit.PossessMark.Locked,
-                        Mathf.Repeat(Time.time, NextBodyBlink * 2f) < NextBodyBlink
-                            ? _markNextBody1 : _markNextBody2,
-                        e.IsPossessable ? 1f : e.PossessProgress, scale);
-                else if (e.RepossessBanned)
-                    e.SetPossessMark(Unit.PossessMark.Banned, _markBanned, 1f, scale);
-                else if (!e.IsPossessable)
-                    e.SetPossessMark(Unit.PossessMark.Locked, _markLocked, e.PossessProgress, scale);
-                else
-                    e.SetPossessMark(Unit.PossessMark.Ready, _markReady, 1f, scale);
-            }
-        }
-
-        private void CollectMarks(Unit from)
-        {
-            // 조준 중인 몸은 거리와 무관하게 자리를 차지한다 — 우선순위 규칙(A 4-3)으로
-            // 뽑힌 대상이 여섯 번째로 가까웠다는 이유로 금색 링이 사라지면 거짓말이 된다.
-            if (_possessTarget != null) InsertMark(_possessTarget, -1f);
-
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || e == _possessTarget) continue;
-                if (!e.IsAlive || e.IsDying || e.IsBoss) continue;
-
-                // 뺏을 수 있거나, 뺏었다가 버렸거나, 조건이 안 찼거나 — 셋 다 알려줄 값이 있다.
-                // 그 밖(보스·빙의 불가 종류)은 표식을 달아 봐야 화면만 시끄럽다.
-                if (!e.IsPossessable && !e.RepossessBanned && !e.HasPossessCondition) continue;
-
-                // 몸을 입고 있는 동안에는 다른 몸을 노리지 않는다(1-7). 그래도 조건부 적의
-                // 잠금 표식은 남긴다 — 지금 두들기는 놈이 언제 열리는지가 다음 수다.
-                if (_host != null && !e.HasPossessCondition && !e.IsNextBody) continue;
-
-                // 몸을 입은 동안에는 **잠금 표식만** 그린다 — 갈아탈 수는 없다.
-                // 이때는 교전 거리에서 보여야 "저놈이 언제 열리는지" 가 다음 수가 된다.
-                float range = (_host != null ? MarkShowRange
-                            : e.PossessRange > 0f ? e.PossessRange
-                            : _config.PossessRange) * PossessReachMul;
-                float d = Vector2.Distance(from.Position, e.Position);
-                if (d > range) continue;          // 사거리를 벗어나면 아이콘이 사라진다
-
-                InsertMark(e, d);
-            }
-        }
-
-        /// <summary>가까운 순으로 끼워 넣는다. 뒤로 밀려 5개를 넘으면 버린다.</summary>
-        private void InsertMark(Unit e, float d)
-        {
-            int at = _markCount;
-            while (at > 0 && _markDist[at - 1] > d) at--;
-            if (at >= MaxPossessMarks) return;
-
-            for (int i = Mathf.Min(_markCount, MaxPossessMarks - 1); i > at; i--)
-            {
-                _markSlot[i] = _markSlot[i - 1];
-                _markDist[i] = _markDist[i - 1];
-            }
-            _markSlot[at] = e;
-            _markDist[at] = d;
-            if (_markCount < MaxPossessMarks) _markCount++;
-        }
-
-        private bool IsMarked(Unit e)
-        {
-            for (int i = 0; i < _markCount; i++)
-                if (_markSlot[i] == e) return true;
-            return false;
-        }
+        private void RefreshPossessMarks(Unit from) => RefreshPossessArrows(from);
 
         // ── 화면 밖 후보 화살표 (기획서 1-5 B) ────────────────────
         //
