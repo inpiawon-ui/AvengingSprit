@@ -16,8 +16,8 @@ MonoBehaviour:
   - _key: silver
     _nameKey: chest.silver.name
     _sprite: chest_silver
-    _unlockSeconds: 60
-    _gemPerMinute: 3
+    _unlockSeconds: 10800
+    _gemPerMinute: 0.1
     _goldMin: 100
     _goldMax: 200
     _shardMin: 6
@@ -30,8 +30,8 @@ MonoBehaviour:
   - _key: gold
     _nameKey: chest.gold.name
     _sprite: chest_gold
-    _unlockSeconds: 120
-    _gemPerMinute: 4
+    _unlockSeconds: 28800
+    _gemPerMinute: 0.12
     _goldMin: 300
     _goldMax: 500
     _shardMin: 14
@@ -44,8 +44,8 @@ MonoBehaviour:
   - _key: platinum
     _nameKey: chest.platinum.name
     _sprite: chest_magic
-    _unlockSeconds: 180
-    _gemPerMinute: 5
+    _unlockSeconds: 43200
+    _gemPerMinute: 0.15
     _goldMin: 700
     _goldMax: 1000
     _shardMin: 28

@@ -78,6 +78,15 @@ namespace Game.User
         /// <summary>이 몸을 데려갈 골드가 있는가.</summary>
         bool CanAffordHost(HostEntry host);
 
+        /// <summary>지금 고른 챕터에 이 몸을 데려가며 실제로 내는 값(유령 0 · 테스트 모드 0).</summary>
+        int EntryCostOf(HostEntry host);
+
+        /// <summary>그 챕터에 이 몸을 데려가는 진짜 값 — 화면에 적는 값(테스트 모드를 안 본다).</summary>
+        int EntryPriceOf(HostEntry host, int chapter);
+
+        /// <summary>그 챕터의 랜덤 선택 값.</summary>
+        int RandomEntryPrice(int chapter);
+
         /// <summary>몸값을 치른다. 판을 시작하는 순간 한 번만 부른다.</summary>
         bool PayHostEntry(HostEntry host);
 
@@ -110,6 +119,8 @@ namespace Game.User
         int HostStatCap(string hostKey);
         /// <summary>챕터 수(챕터 표의 줄 수).</summary>
         int ChapterCount { get; }
+        /// <summary>테스트 모드 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 빨리. 라이브는 false.</summary>
+        bool TestMode { get; }
         /// <summary>그 챕터의 줄(이름 · 보상 · 빌려 쓰는 그림 칸 …). 표가 없으면 기본값.</summary>
         Game.Character.GameConfig.ChapterDef ChapterInfo(int chapter);
         /// <summary>게임 설정. 부트 초기에는 null 일 수 있다.</summary>

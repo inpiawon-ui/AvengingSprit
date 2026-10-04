@@ -21,7 +21,8 @@ namespace Game.User
         //      길이는 읽을 때 맞추므로(`NormalizeChests`) 마이그레이션 코드가 필요 없다.
         // v4 — 능력치 골드 강화(유령 공통 · 호스트별) · 성장 경로 보상 추가(2026-09-21).
         //      옛 저장은 배열이 비어 있어 **전부 Lv0 · 보상 안 받음**으로 읽힌다. 길이는 읽을 때 맞춘다.
-        public const int CurrentSaveVersion = 4;
+        // v5 — 라이브 기준(2026-10-04). 시작 몸 지급 표시(`starterGranted`). 시작 젬 0.
+        public const int CurrentSaveVersion = 5;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -39,9 +40,9 @@ namespace Game.User
         public int stamina = 30;
         public int staminaMax = 30;
         public int gold;
-        // ⚠ 임시 (2026-09-18) — 테스트용으로 처음 설치하면 젬 100만. 상자 즉시 열기를
-        //   마음껏 눌러 보게. 출시 전 0 으로 되돌린다.
-        public int gem = 1_000_000;
+        // 라이브 기준 0 (2026-10-04). 테스트 모드를 켜면 불러올 때 100만으로 채운다
+        // (`PlayerDataService.LoadAsync`) — 저장 기본값에 테스트 값을 두지 않는다.
+        public int gem;
 
         // 정본 성장 재화 (Growth Runtime — Gold / Spirit Core / Host Memory / Gem).
         // 런이 끝나면 빌드·호스트·아이템·시너지는 사라지고 이 둘은 남는다.
@@ -100,6 +101,9 @@ namespace Game.User
 
         [Header("선택")]
         public string selectedHostId = string.Empty;
+
+        /// <summary>시작 몸을 줬는가. 한 번만 준다 — 몸을 지워도 다시 생기지 않는다.</summary>
+        public bool starterGranted;
 
         /// <summary>
         /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —

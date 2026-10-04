@@ -16,6 +16,38 @@ namespace Game.EditorTools
     public static class TestSwitches
     {
         private const string OneEnemyMenu = "Tools/Game/테스트 — 방당 몹 1기";
+
+        // ── 테스트 모드 (2026-10-04) ──────────────────────────────
+        //
+        // **기본은 라이브다.** 켜면 전부 해금 · 무료 입장 · 젬 100만 · 상자 시간 1/60.
+        // ⚠ EditorPrefs 가 아니라 `GameConfig.asset` 에 적는다 — 기기 빌드에도 따라가야 하기 때문이다.
+        //   그래서 **켜 둔 채 출시 빌드를 굽지 않는다.** 빌드 전에 이 메뉴의 체크를 본다.
+        private const string TestModeMenu = "Tools/Game/테스트 모드 (전부 열기 · 무료 · 젬 · 상자 빨리)";
+        private const string ConfigPath = "Assets/BundleResource/TableData/GameConfig.asset";
+
+        [MenuItem(TestModeMenu)]
+        private static void ToggleTestMode()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<Game.Character.GameConfig>(ConfigPath);
+            if (config == null) { Debug.LogError("[테스트 모드] GameConfig 없음: " + ConfigPath); return; }
+            var so = new SerializedObject(config);
+            var p = so.FindProperty("_testMode");
+            p.boolValue = !p.boolValue;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+            Debug.Log(p.boolValue
+                ? "[테스트 모드] 켬 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 1/60. 다음 실행부터 적용된다"
+                : "[테스트 모드] 끔 — 라이브 기준으로 돌아간다");
+        }
+
+        [MenuItem(TestModeMenu, true)]
+        private static bool ToggleTestModeValidate()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<Game.Character.GameConfig>(ConfigPath);
+            Menu.SetChecked(TestModeMenu, config != null && config.TestMode);
+            return true;
+        }
         private const string ThemeMenu    = "Tools/Game/테스트 — 1챕터에서 테마 6종 다 보기";
         private const string BossMenu     = "Tools/Game/테스트 — 방 1~6 에 보스 하나씩";
         private const string OpeningMenu  = "Tools/Game/테스트 — 오프닝 다시 보기";

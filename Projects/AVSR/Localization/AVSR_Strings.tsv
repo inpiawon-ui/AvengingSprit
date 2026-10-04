@@ -539,3 +539,5 @@ chapter.8.desc	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽�
 chapter.9.desc	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.	灯りの消えた街を亡者が歩く\nもはや床さえも敵だ。	
 chapter.10.desc	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 한다.	すべてが始まった屋上\n学んだことをすべて出し切れ。	
 ui.ingame.result.dead_gold	유령이 소멸했습니다.\n주운 골드 +{0} 을 챙겨 로비로 돌아갑니다.	ゴーストが消滅しました。\n拾ったゴールド +{0} を持ってロビーに戻ります。	The ghost has vanished.\nYou keep +{0} gold.
+ui.growth.locked	해금 필요	解放が必要	Locked
+ui.growth.unlock	해금	解放	Unlock

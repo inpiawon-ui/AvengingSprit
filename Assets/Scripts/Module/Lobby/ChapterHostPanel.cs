@@ -68,9 +68,6 @@ namespace Game.Module.Lobby
         /// <summary>판에서 주운 골드 중 평균적으로 남겨 나오는 몫(상점에서 쓰고 남은 것). 표시 범위의 아래쪽.</summary>
         private const float RunGoldKeepRatio = 0.6f;
 
-        /// <summary>랜덤 선택의 값. 제일 싸다 — 고를 이유를 값으로 만든다(기획 2026-09-29).</summary>
-        public const int RandomCost = 300;
-
         /// <summary>랜덤이 **안 가진 몸**을 빌려줄 확률(%). 그 판에만 쓴다.</summary>
         private const int LegendChancePercent = 5;
 
@@ -571,9 +568,8 @@ namespace Game.Module.Lobby
         {
             get
             {
-                if (_pickedRandom) return RandomCost;
-                var e = _player.GetHost(_pickedHost);
-                return e == null || e.IsGhost ? 0 : PlayerDataService.BaseHostEntryCost(e.Grade);
+                if (_pickedRandom) return _player.RandomEntryPrice(_chapter);
+                return _player.EntryPriceOf(_player.GetHost(_pickedHost), _chapter);
             }
         }
 
@@ -635,7 +631,7 @@ namespace Game.Module.Lobby
             EnterGameAsync().Forget();   // fire-and-forget: 씬 전환 완료를 기다릴 필요가 없다
         }
 
-        /// <summary>랜덤은 제 값(<see cref="RandomCost"/>)으로 낸다 — 뽑힌 몸의 등급값이 아니다.</summary>
+        /// <summary>랜덤은 제 값(`RandomEntryPrice`)으로 낸다 — 뽑힌 몸의 등급값이 아니다.</summary>
         private bool PayEntry(HostEntry e, int cost)
         {
             if (!_pickedRandom) return _player.PayHostEntry(e);

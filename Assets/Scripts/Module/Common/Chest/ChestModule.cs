@@ -145,8 +145,9 @@ namespace Game.Module.Common.Chest
             }
             if (slot < 0) return false;   // 칸이 다 찼다 — 조용히 버리지 않고 알린다
 
-            p.SetChestSlot(slot, chestKey,
-                           NowMs() + (long)entry.UnlockSeconds * 1000L, entry.UnlockSeconds);
+            // 테스트 모드면 1/60 — 3시간 상자가 3분에 열린다(라이브 값은 표에 그대로 있다)
+            int seconds = p.TestMode ? Mathf.Max(5, entry.UnlockSeconds / 60) : entry.UnlockSeconds;
+            p.SetChestSlot(slot, chestKey, NowMs() + (long)seconds * 1000L, seconds);
             Save();
             _bus?.Publish(new ChestChangedEvent());
             return true;

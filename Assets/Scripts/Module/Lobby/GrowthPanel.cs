@@ -270,7 +270,9 @@ namespace Game.Module.Lobby
                 TextIn(row, "RowLvNum", lv.ToString());
                 TextIn(row, "RowLvMax", $"/ {max}");
                 TextIn(row, "RowPctText", $"+{_player.StatPercent(stat, lv):0.0}%");
-                TextIn(row, "RowCostText", cost > 0 ? cost.ToString("N0") : Localize.Get("ui.growth.max"));
+                bool locked = !ghost && _player.GetMastery(_hostKey) < 1;
+                TextIn(row, "RowCostText", locked ? Localize.Get("ui.growth.locked")
+                                         : cost > 0 ? cost.ToString("N0") : Localize.Get("ui.growth.max"));
                 var coin = _ui.Find(row, "RowCoin");
                 if (coin != null) coin.gameObject.SetActive(cost > 0);
                 row.GetComponentInChildren<InkRun>(true)?.Apply();
@@ -313,6 +315,8 @@ namespace Game.Module.Lobby
             int cost = _player.MasteryCost(_hostKey);
             SetBar("ShardBarFill", cost > 0 ? shards : 1, cost > 0 ? cost : 1);
             _ui.SetText("ShardValueText", cost > 0 ? $"{shards} / {cost}" : Localize.Get("ui.growth.max"));
+            // 안 가진 몸 — 초상을 어둡게. 조각이 차면 막대를 눌러 해금한다(숙련도 0 → 1)
+            if (portrait != null) portrait.color = mastery >= 1 ? Color.white : LockedTint;
         }
 
         private void SetLevel(int lv, int max)
@@ -377,6 +381,7 @@ namespace Game.Module.Lobby
                     thumb.enabled = thumb.sprite != null;
                     thumb.preserveAspect = true;
                     PlaceArt(thumb.rectTransform, art.IsPortrait ? _thumbRect : _thumbRectUnit);
+                    thumb.color = _player.GetMastery(key) >= 1 ? Color.white : LockedTint;
                 }
                 // 영문 몸 이름은 겹친다(코만도 넷 · 갱스터 둘) — 목록은 현지 이름으로 가른다
                 TextIn(card, "CardName", e != null ? e.DisplayName : key);
@@ -507,6 +512,9 @@ namespace Game.Module.Lobby
             RefreshGoldAndRows();
         }
 
+        /// <summary>안 가진 몸의 그림 색 — 잠겨 있다는 것이 한눈에 읽혀야 한다.</summary>
+        private static readonly Color LockedTint = new(0.32f, 0.34f, 0.4f, 1f);
+
         private void UpgradeMastery()
         {
             int cost = _player.MasteryCost(_hostKey);
@@ -520,7 +528,8 @@ namespace Game.Module.Lobby
                 return;
             }
             int lv = _player.GetMastery(_hostKey);
-            SystemPopup.Show(Localize.Format("ui.hostselect.mastery.confirm", name, $"Lv {lv} → {lv + 1}", cost), () =>
+            string step = lv < 1 ? Localize.Get("ui.growth.unlock") : $"Lv {lv} → {lv + 1}";
+            SystemPopup.Show(Localize.Format("ui.hostselect.mastery.confirm", name, step, cost), () =>
             {
                 if (!_player.SpendShards(_hostKey, cost)) return;
                 GameSound.Cue("run.card");

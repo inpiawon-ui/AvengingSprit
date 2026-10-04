@@ -39,7 +39,16 @@ namespace Game.User
             _activeSkills = activeSkills;
             _passiveSkills = passiveSkills;
             _config = config;
+            s_testMode = config != null && config.TestMode;
         }
+
+        /// <summary>테스트 모드 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 빨리(`GameConfig.TestMode`).</summary>
+        private static bool s_testMode;
+
+        public bool TestMode => s_testMode;
+
+        /// <summary>테스트 모드에서 불러올 때 채워 주는 젬.</summary>
+        private const int TestGem = 1_000_000;
 
         public bool IsReady => _data != null;
 
@@ -150,7 +159,8 @@ namespace Game.User
             _data.NormalizeChests(ChestSlotCount);   // 옛 저장(v2)은 상자 배열이 비어 있다
             _data.NormalizeStats(StatCount);         // 옛 저장(v3)은 능력치 강화 배열이 비어 있다
             _data.ghostExpMax = ExpToNext(_data.ghostLevel);   // 곡선이 바뀌면 막대 끝도 따라온다
-            UnsealUnlocked();
+            GrantStarter();
+            if (s_testMode && _data.gem < TestGem) _data.gem = TestGem;
             _bus?.Publish(new UserDataReadyEvent { LoadedGhostLevel = _data.ghostLevel });
             PublishCurrency();
         }
@@ -169,9 +179,12 @@ namespace Game.User
         public bool IsHostUnlocked(HostEntry host)
         {
             if (host == null) return false;
-            // 모든 몸은 **처음부터 열려 있다**(기획 2026-09-21). 해금 대신 조각으로 별을 올리는 것이 성장 축이다.
-            // 표의 해금 조건(`UnlockType` 등)은 남겨 둔다 — 도감 순서 · 등장 시점 표시에 다시 쓸 수 있다.
-            return true;
+            if (host.IsGhost) return true;
+            // **라이브 기준(2026-10-04) — 조각을 모아 해금한다.** 숙련도 ≥ 1 이 곧 「가졌다」다.
+            // 예전(2026-09-21)에는 모든 몸이 처음부터 열려 있었다 — 그건 테스트용이었다(기획 2026-10-01 8번).
+            // ⚠ 판 안에서 빼앗는 것은 막지 않는다. 안 가진 몸도 빙의는 되고 **스킬만 봉인**된다(`IsSkillSealed`).
+            //   이 판정은 로비(시작 몸 고르기)에서만 쓴다.
+            return GetMastery(host.HostKey) >= 1;
         }
 
         /// <summary>
@@ -184,6 +197,25 @@ namespace Game.User
         public bool IsSkillSealed(string hostKey) => GetMastery(hostKey) < 1;
 
         /// <summary>
+        /// 새 계정에 시작 몸 하나를 준다(숙련도 1). **한 번만** — 저장에 표시가 남는다.
+        ///
+        /// 유령만으로 시작하면 첫 판에 「몸을 골라 들어간다」를 못 해 보고, 몸의 스킬이 무엇인지도 모른다.
+        /// 몸 하나는 쥐고 시작하고, 나머지는 판에서 만나 써 보고 조각을 모아 연다.
+        /// </summary>
+        private void GrantStarter()
+        {
+            if (_data == null || _data.starterGranted) return;
+            string key = _config != null ? _config.StarterHost : "gangster";
+            int at = EnsureHost(key);
+            if (at >= 0 && _data.hostMastery[at] < 1) _data.hostMastery[at] = 1;
+            _data.starterGranted = true;
+            if (string.IsNullOrEmpty(_data.selectedHostId)) _data.selectedHostId = key;
+        }
+
+        /// <summary>
+        /// ⚠ **더 이상 부르지 않는다**(2026-10-04 라이브 기준) — 모든 몸이 열려 있던 시절의 것이다.
+        ///   지금은 시작 몸 하나만 주고(`GrantStarter`) 나머지는 조각으로 연다.
+        ///
         /// **해금된 몸의 봉인을 푼다** (숙련도 0 → 1).
         ///
         /// 해금과 봉인은 원래 다른 축이었다 — 몸을 얻은 뒤 파편으로 스킬을 따로 열게.
@@ -265,7 +297,10 @@ namespace Game.User
         public int GetMastery(string hostKey)
         {
             int i = IndexOfHost(hostKey);
-            return i < 0 ? 0 : _data.hostMastery[i];
+            int m = i < 0 ? 0 : _data.hostMastery[i];
+            // 테스트 모드 — 안 가진 몸도 1 로 읽는다(저장은 그대로라 끄면 원래대로 돌아온다).
+            if (s_testMode && m < 1 && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return 1;
+            return m;
         }
 
         public int GetShards(string hostKey)
@@ -341,34 +376,48 @@ namespace Game.User
         // ⚠ 숙련도에 비례시키지 않는다. 키운 몸일수록 비싸지면 공들인 쪽이
         //   벌을 받아 진입 장벽만 높아진다. **등급 셋으로만 가른다.**
         /// <summary>
-        /// ⚠ **임시로 전부 0 골드다** (2026-09-09). 21종을 다 만져 보려면 값이 걸림돌이라
-        ///   열어 두었다. 출시 전 아래 원래 표로 되돌린다.
+        /// 1챕터 기준 데려가는 값 — S 200 · A 120 · 그 외 60. 챕터 값 배율(`chapters.tsv` 의 priceMul)이 곱해진다.
         ///
-        ///   원래 값 — S 1000 · A 600 · 그 외 300
-        /// </summary>
-        public static int HostEntryCost(HostGrade grade)
-            => FreeHostsForTest ? 0 : BaseHostEntryCost(grade);
-
-        /// <summary>
-        /// 등급표의 **진짜 값.** 테스트용 무료 플래그를 안 본다.
-        ///
-        /// 화면에 적는 값은 이쪽이다 — 무료로 풀어 둔 동안에도 「이 몸은 얼마짜리인가」가
-        /// 보여야 한다. 실제로 치를 때만 <see cref="HostEntryCost"/> 가 0 을 돌려준다.
+        /// ⚠ 2026-10-04 에 S 1000 · A 600 · B 300 고정에서 바꿨다. 그 값은 무료(테스트)로 풀려 있어
+        ///   아무도 낸 적이 없었는데, 라이브로 켜 보니 **1챕터를 깨고 받는 돈(478~664)의 절반이 입장료**였다.
+        ///   수입의 10% 안팎이 되게 챕터에 묶는다 — 10챕터 B 438.
         /// </summary>
         public static int BaseHostEntryCost(HostGrade grade)
             => grade switch
             {
-                HostGrade.S => 1000,
-                HostGrade.A => 600,
-                _           => 300,
+                HostGrade.S => 200,
+                HostGrade.A => 120,
+                _           => 60,
             };
 
-        /// <summary>⚠ 임시 (2026-09-09) — 몸 값을 0 으로. 출시 전 false 로 되돌린다.</summary>
-        public static readonly bool FreeHostsForTest = true;
+        /// <summary>랜덤 선택은 B 값의 80% — 제일 싸다(고를 이유를 값으로 만든다, 기획 2026-09-29).</summary>
+        private const float RandomEntryRatio = 0.8f;
 
-        /// <summary>이 칸을 데려가는 값. **유령은 공짜다** — 몸이 아니다.</summary>
-        public static int EntryCostOf(HostEntry host)
-            => host == null || host.IsGhost ? 0 : HostEntryCost(host.Grade);
+        private float EntryMul(int chapter)
+        {
+            float m = _config != null ? _config.ChapterOf(chapter).PriceMul : 0f;
+            return m > 0f ? m : 1f;
+        }
+
+        /// <summary>
+        /// 그 챕터에 이 몸을 데려가는 **진짜 값**(테스트 모드를 안 본다). 화면에 적는 값이 이쪽이다.
+        /// </summary>
+        public int EntryPriceOf(HostEntry host, int chapter)
+            => host == null || host.IsGhost ? 0
+             : Mathf.RoundToInt(BaseHostEntryCost(host.Grade) * EntryMul(chapter));
+
+        /// <summary>그 챕터의 랜덤 선택 값.</summary>
+        public int RandomEntryPrice(int chapter)
+            => Mathf.RoundToInt(BaseHostEntryCost(HostGrade.B) * RandomEntryRatio * EntryMul(chapter));
+
+        /// <summary>테스트 모드면 몸값이 0 이다(`GameConfig.TestMode`). 라이브는 늘 false.</summary>
+        public static bool FreeHostsForTest => s_testMode;
+
+        /// <summary>
+        /// 지금 고른 챕터에 이 칸을 데려가며 **실제로 내는 값.** 유령은 공짜, 테스트 모드면 0.
+        /// </summary>
+        public int EntryCostOf(HostEntry host)
+            => FreeHostsForTest ? 0 : EntryPriceOf(host, SelectedChapter);
 
         /// <summary>이 몸을 데려갈 골드가 있는가. 유령은 언제나 true.</summary>
         public bool CanAffordHost(HostEntry host)
@@ -490,7 +539,8 @@ namespace Game.User
 
         /// <summary>이 몸의 강화 상한 — 성급이 연다(1성 10 · 2성 20 …).</summary>
         public int HostStatCap(string hostKey)
-            => _config != null ? _config.HostStatCap(StarsOf(hostKey)) : 10;
+            // 안 가진 몸(숙련도 0)은 강화할 수 없다 — 해금이 먼저다
+            => GetMastery(hostKey) < 1 ? 0 : _config != null ? _config.HostStatCap(StarsOf(hostKey)) : 10;
 
         public int GhostStatLevel(HostStat stat)
         {

@@ -891,7 +891,7 @@ namespace Game.Module.Lobby
 
             // 몸값을 낸다. 모자라면 들어가지 않고 얼마가 모자란지 알린다 —
             // 조용히 유령으로 바꿔 넣으면 "왜 내 캐릭터가 아니지" 가 된다.
-            int cost = PlayerDataService.EntryCostOf(e);
+            int cost = _player.EntryCostOf(e);
             if (!_player.PayHostEntry(e))
             {
                 SystemPopup.Show(

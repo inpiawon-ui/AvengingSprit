@@ -2451,3 +2451,11 @@ MonoBehaviour:
     _en: 'The ghost has vanished.
 
       You keep +{0} gold.'
+  - _key: ui.growth.locked
+    _ko: "\uD574\uAE08 \uD544\uC694"
+    _ja: "\u89E3\u653E\u304C\u5FC5\u8981"
+    _en: Locked
+  - _key: ui.growth.unlock
+    _ko: "\uD574\uAE08"
+    _ja: "\u89E3\u653E"
+    _en: Unlock

@@ -15,7 +15,9 @@ namespace Game.User
         // ⚠ 0.1.15 에서 이름을 바꿨다 — 덮어 설치해도 **처음 상태로 시작**하게(2026-09-18 지시:
         //   젬 100만 · 상자 없음 · 챕터 1만). 예전 저장(`avsr_userdata`)은 읽지 않는다.
         //   다음에 또 전원 초기화가 필요하면 뒤 번호만 올린다.
-        private const string SaveKey = "avsr_userdata_0115";
+        // ⚠ 0.1.16(2026-10-04) — 라이브 기준으로 바꾸며 다시 처음 상태로 시작한다
+        //   (테스트 저장은 몸 전부 해금 · 젬 100만이 박혀 있다). 테스트는 테스트 모드 스위치로 한다.
+        private const string SaveKey = "avsr_userdata_0116";
 
         private readonly IDataManager _data;
 

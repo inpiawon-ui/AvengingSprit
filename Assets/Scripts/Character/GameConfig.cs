@@ -153,6 +153,25 @@ namespace Game.Character
         [Tooltip("1등급 치명타율")] [SerializeField] private float _critAtGrade1 = 5f;
         [Tooltip("한 등급당 증가")]  [SerializeField] private float _critPerGrade = 3f;
 
+        // ── 라이브 / 테스트 모드 (2026-10-04) ──────────────────────
+        //
+        // **기본은 라이브다.** 몸은 조각으로 해금하고, 입장료를 내고, 상자는 몇 시간을 기다린다.
+        // 테스트 모드를 켜면 그 넷을 한꺼번에 푼다 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 시간 1/60.
+        // 메뉴 `Tools/Game/테스트 모드 (전부 열기 · 무료 · 젬 · 상자 빨리)` 로 켜고 끈다.
+        //
+        // ⚠ 예전에는 이 넷이 코드 곳곳에 「출시 전 되돌린다」 주석과 함께 박혀 있었다
+        //   (`FreeHostsForTest = true` · 젬 1,000,000 · 상자 1~3분 · 전원 해금).
+        //   하나라도 빠뜨리면 출시판에 테스트 값이 남는다. 이제 스위치 하나다.
+        [Header("라이브 / 테스트 모드")]
+        [Tooltip("켜면 전부 해금 · 무료 입장 · 젬 100만 · 상자 시간 1/60. 출시 빌드에서는 끈다.")]
+        [SerializeField] private bool _testMode;
+
+        [Tooltip("새 계정이 처음부터 가진 몸. 나머지는 조각을 모아 해금한다.")]
+        [SerializeField] private string _starterHost = "gangster";
+
+        public bool TestMode => _testMode;
+        public string StarterHost => string.IsNullOrEmpty(_starterHost) ? "gangster" : _starterHost;
+
         // ── 테스트 판 (2026-09-15) ────────────────────────────
         //
         // ⚠ **켜면 게임이 아니다.** 적이 안 죽고 스킬이 계속 나간다 —

@@ -25,19 +25,22 @@ namespace Game.Editor
         private const string Address = "TableData/ChestTable";
 
         private const int Minute = 60;
+        private const int Hour = 60 * Minute;
 
         [MenuItem("Tools/Game/상자/상자 표 만들기")]
         public static void Run()
         {
-            // 등급 3종 — 챕터 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18).
-            // 해제 시간은 **테스트용** 1·2·3분이다(기획). 출시 전 다시 정한다.
+            // 등급 3종 — 어느 챕터가 어느 상자를 주는지는 챕터 표(`chapters.tsv` 의 chest)가 정한다.
+            // 해제 시간은 **라이브 값**이다(2026-10-04) — 은 3시간 · 금 8시간 · 백금 12시간(크래시 로얄과 같은 결).
+            // 테스트 모드에서는 상자 모듈이 1/60 로 줄인다(3분 · 8분 · 12분).
+            // 젬값은 분당 — 은 18 · 금 58 · 백금 108 젬으로 즉시 연다.
             // ⚠ 백금 상자 그림은 아직 없다 — 발주본이 오기 전까지 chest_magic 을 쓴다.
             var entries = new[]
             {
                 //             키            스프라이트        해제         분당젬  골드          조각 총수   호스트 수  등급 무게 B·A·S
-                new ChestEntry("silver",   "chest_silver",  1 * Minute, 3f, (100, 200),  (6, 10),  (1, 2), (85, 15, 0)),
-                new ChestEntry("gold",     "chest_gold",    2 * Minute, 4f, (300, 500),  (14, 22), (2, 3), (55, 38, 7)),
-                new ChestEntry("platinum", "chest_magic",   3 * Minute, 5f, (700, 1000), (28, 40), (3, 4), (30, 45, 25)),
+                new ChestEntry("silver",   "chest_silver",  3 * Hour,  0.10f, (100, 200),  (6, 10),  (1, 2), (85, 15, 0)),
+                new ChestEntry("gold",     "chest_gold",    8 * Hour,  0.12f, (300, 500),  (14, 22), (2, 3), (55, 38, 7)),
+                new ChestEntry("platinum", "chest_magic",   12 * Hour, 0.15f, (700, 1000), (28, 40), (3, 4), (30, 45, 25)),
             };
 
             var table = AssetDatabase.LoadAssetAtPath<ChestTable>(TablePath);
