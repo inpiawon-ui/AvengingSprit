@@ -72,6 +72,8 @@ namespace Game.Module.InGame
             ShiftRow("ResultGoldRow", ref _goldRowY, drop);
             ShiftRow("ResultChestRow", ref _chestRowY, drop);
             _ui.SetText("ResultWarnText", Localize.Get("ui.lobby.chest.full"));
+            // 모은 조각 — 노드(`ResultShardText`)는 결과 창을 다시 짤 때 들어온다. 없으면 조용히 넘어간다
+            _ui.SetText("ResultShardText", InGameMainUI.ShardLine(e).TrimStart('\n'));
             _ui.SetText("ResultOkText", "OK");
         }
 

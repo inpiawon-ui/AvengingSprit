@@ -541,3 +541,18 @@ chapter.10.desc	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 �
 ui.ingame.result.dead_gold	유령이 소멸했습니다.\n주운 골드 +{0} 을 챙겨 로비로 돌아갑니다.	ゴーストが消滅しました。\n拾ったゴールド +{0} を持ってロビーに戻ります。	The ghost has vanished.\nYou keep +{0} gold.
 ui.growth.locked	해금 필요	解放が必要	Locked
 ui.growth.unlock	해금	解放	Unlock
+ui.result.shards	조각  {0}	欠片  {0}	Shards  {0}
+ui.currency.essence	영혼 정수	魂のエッセンス	Soul Essence
+ui.shop.daily.title	오늘의 상점	本日のショップ	Daily Shop
+ui.shop.daily.reset	{0} 후 새 상품	{0}後に新商品	New items in {0}
+ui.shop.daily.free	무료	無料	FREE
+ui.shop.daily.bought	구매 완료	購入済み	SOLD
+ui.shop.daily.refresh	새로고침	更新	Refresh
+ui.shop.daily.fail.bought	오늘은 이미 샀습니다.	本日は購入済みです。	Already bought today.
+ui.shop.daily.fail.gold	골드가 부족합니다.	ゴールドが足りません。	Not enough gold.
+ui.shop.daily.fail.gem	젬이 부족합니다.	ジェムが足りません。	Not enough gems.
+ui.shop.daily.fail.chest_full	상자 칸이 가득 찼습니다.	宝箱の枠がいっぱいです。	Chest slots are full.
+ui.shop.daily.fail.refresh_limit	오늘은 더 새로고침할 수 없습니다.	本日はこれ以上更新できません。	No more refreshes today.
+ui.shop.daily.fail.unknown	지금은 살 수 없습니다.	今は購入できません。	Cannot buy right now.
+ui.growth.essence.exchange	정수 {0}개로 조각 1개	エッセンス{0}個で欠片1個	{0} essence → 1 shard
+ui.growth.essence.short	정수가 부족합니다 ({0}/{1})	エッセンスが足りません ({0}/{1})	Not enough essence ({0}/{1})

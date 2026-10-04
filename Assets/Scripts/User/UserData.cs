@@ -22,7 +22,8 @@ namespace Game.User
         // v4 — 능력치 골드 강화(유령 공통 · 호스트별) · 성장 경로 보상 추가(2026-09-21).
         //      옛 저장은 배열이 비어 있어 **전부 Lv0 · 보상 안 받음**으로 읽힌다. 길이는 읽을 때 맞춘다.
         // v5 — 라이브 기준(2026-10-04). 시작 몸 지급 표시(`starterGranted`). 시작 젬 0.
-        public const int CurrentSaveVersion = 5;
+        // v6 — 정수 · 일일 상점(2026-10-04). 옛 저장은 정수 0 · 상점 빈 칸으로 읽혀 그날 다시 짠다.
+        public const int CurrentSaveVersion = 6;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -105,6 +106,13 @@ namespace Game.User
         /// <summary>시작 몸을 줬는가. 한 번만 준다 — 몸을 지워도 다시 생기지 않는다.</summary>
         public bool starterGranted;
 
+        // ── 정수 · 일일 상점 ─────────────────────────────────
+        [Header("정수 · 일일 상점")]
+        /// <summary>다 키운 몸에게 온 조각이 바뀐 것. 원하는 몸의 조각으로 바꾼다.</summary>
+        public int essence;
+
+        public DailyShopData dailyShop = new DailyShopData();
+
         /// <summary>
         /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —
         /// 옛 저장(v2)은 배열이 비어 있고, 칸 수가 바뀌면 길이가 어긋난다.
@@ -131,5 +139,24 @@ namespace Game.User
         }
 
         public static UserData CreateNew() => new UserData();
+    }
+
+    /// <summary>
+    /// 그날의 일일 상점. **짠 진열을 그대로 저장한다** — 날짜로 다시 계산하면 조각을 사서 몸이
+    /// 다 자란 순간 진열이 바뀐다(후보가 「덜 자란 몸」이기 때문이다).
+    /// </summary>
+    [Serializable]
+    public sealed class DailyShopData
+    {
+        /// <summary>진열을 짠 날(현지 날짜 yyyyMMdd). 날이 바뀌면 다시 짠다.</summary>
+        public int day;
+        /// <summary>그날 젬으로 새로고침한 횟수.</summary>
+        public int refreshes;
+        /// <summary>산 칸(칸 i → 1 &lt;&lt; i).</summary>
+        public int bought;
+        public int[] kinds = Array.Empty<int>();
+        public string[] keys = Array.Empty<string>();
+        public int[] counts = Array.Empty<int>();
+        public int[] prices = Array.Empty<int>();
     }
 }

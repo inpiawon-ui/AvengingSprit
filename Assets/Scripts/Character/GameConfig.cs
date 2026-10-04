@@ -172,6 +172,46 @@ namespace Game.Character
         public bool TestMode => _testMode;
         public string StarterHost => string.IsNullOrEmpty(_starterHost) ? "gangster" : _starterHost;
 
+        // ── 상점 · 정수 (2026-10-04) ───────────────────────────────
+        //
+        // 재화 흐름: **판(골드 · 조각) + 상자(골드 · 조각) → 부족한 것은 상점에서 산다.**
+        // 기획서 `Projects/AVSR/AVSR_Content_Economy.md`. 배열 첨자는 등급 순서 B · A · S 다.
+        //
+        // 정수 — 숙련도를 다 올린 몸(Lv10)에게 온 조각은 정수로 바뀐다. 정수로 **원하는 몸의 조각**을 산다.
+        //   상자가 조각을 무작위로 주므로, 정수가 없으면 다 키운 몸의 조각은 버리는 보상이 된다.
+        [Header("상점 · 정수 — 첨자는 등급 B · A · S")]
+        [Tooltip("조각 하나를 정수로 살 때의 값.")]
+        [SerializeField] private int[] _essencePerShard = { 2, 3, 5 };
+
+        [Tooltip("일일 상점 조각 칸 하나에 담기는 조각 수.")]
+        [SerializeField] private int[] _shopShardCount = { 6, 4, 2 };
+
+        [Tooltip("일일 상점 조각 하나의 골드 값(1챕터 기준 — 열린 챕터의 값 배율이 곱해진다).")]
+        [SerializeField] private int[] _shopShardGold = { 40, 80, 200 };
+
+        [Tooltip("일일 상점 무료 선물 골드(1챕터 기준).")]
+        [SerializeField] private int _shopFreeGold = 100;
+
+        [Tooltip("일일 상점 상자 칸 — 상자 키와 젬 값.")]
+        [SerializeField] private string _shopChestKey = "silver";
+        [SerializeField] private int _shopChestGems = 40;
+
+        [Tooltip("일일 상점 새로고침 젬 값 — 하루에 이 배열 길이만큼 할 수 있다.")]
+        [SerializeField] private int[] _shopRefreshGems = { 10, 20, 40 };
+
+        private static int ByGrade(int[] a, HostGrade g, int fallback)
+            => a != null && (int)g < a.Length ? a[(int)g] : fallback;
+
+        public int EssencePerShard(HostGrade g) => Mathf.Max(1, ByGrade(_essencePerShard, g, 3));
+        public int ShopShardCount(HostGrade g) => Mathf.Max(1, ByGrade(_shopShardCount, g, 3));
+        public int ShopShardGold(HostGrade g) => Mathf.Max(1, ByGrade(_shopShardGold, g, 80));
+        public int ShopFreeGold => Mathf.Max(0, _shopFreeGold);
+        public string ShopChestKey => string.IsNullOrEmpty(_shopChestKey) ? "silver" : _shopChestKey;
+        public int ShopChestGems => Mathf.Max(1, _shopChestGems);
+        public int ShopRefreshCount => _shopRefreshGems?.Length ?? 0;
+        public int ShopRefreshGems(int used)
+            => _shopRefreshGems != null && used >= 0 && used < _shopRefreshGems.Length ? _shopRefreshGems[used] : 0;
+
         // ── 테스트 판 (2026-09-15) ────────────────────────────
         //
         // ⚠ **켜면 게임이 아니다.** 적이 안 죽고 스킬이 계속 나간다 —

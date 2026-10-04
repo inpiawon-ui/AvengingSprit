@@ -1508,12 +1508,32 @@ namespace Game.Module.InGame
             var result = e.IsCleared ? GetComponentInChildren<ChapterResultPopup>(true) : null;
             if (result != null) { result.Show(e); return; }
             SystemPopup.Show(
-                e.IsCleared ? ClearMessage(e)
+                (e.IsCleared ? ClearMessage(e)
                 : e.RewardGold > 0 ? Localize.Format("ui.ingame.result.dead_gold", e.RewardGold.ToString("N0"))
-                : Localize.Get("ui.ingame.result.dead"),
+                : Localize.Get("ui.ingame.result.dead")) + ShardLine(e),
                 onConfirm: () => GoLobbyAsync().Forget(),   // fire-and-forget: 씬 전환 대기 불필요
                 confirmText: Localize.Get("ui.common.ok"),
                 cancelText: null);
+        }
+
+        /// <summary>
+        /// 이번 판에 모은 조각 한 줄 — 「갱스터 ×3 · 아마존 ×1」. 없으면 빈 값.
+        /// 결과 창(`ChapterResultPopup`)도 같은 줄을 쓴다.
+        /// </summary>
+        public static string ShardLine(StageFinishedEvent e)
+        {
+            if (e.ShardHostKeys == null || e.ShardHostKeys.Length == 0) return string.Empty;
+            CoreModule.TryGet<Game.User.IPlayerDataService>(out var player);
+            var sb = new System.Text.StringBuilder();
+            int shown = Mathf.Min(e.ShardHostKeys.Length, 4);
+            for (int i = 0; i < shown; i++)
+            {
+                var host = player?.GetHost(e.ShardHostKeys[i]);
+                if (i > 0) sb.Append(" · ");
+                sb.Append(host != null ? host.DisplayName : e.ShardHostKeys[i]).Append(" ×").Append(e.ShardCounts[i]);
+            }
+            if (e.ShardHostKeys.Length > shown) sb.Append(" …");
+            return "\n" + Localize.Format("ui.result.shards", sb.ToString());
         }
 
         private static string ClearMessage(StageFinishedEvent e)

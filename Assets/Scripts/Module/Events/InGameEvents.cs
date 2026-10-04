@@ -283,5 +283,12 @@ namespace Game.Module.Events
         public string RewardChestKey;
         /// <summary>상자 칸에 들어갔는가. 칸이 다 차 못 받았으면 false — 골드는 그래도 준다.</summary>
         public bool ChestAccepted;
+
+        /// <summary>
+        /// 이번 판에 모은 조각(잡거나 쓰다 잃은 몸) — 많은 것부터. 클리어 · 사망 공통이다.
+        /// 「써 본 몸이 모인다」가 결과에서 보여야 빙의가 수집으로 이어진다(기획 2026-10-04).
+        /// </summary>
+        public string[] ShardHostKeys;
+        public int[] ShardCounts;
     }
 }

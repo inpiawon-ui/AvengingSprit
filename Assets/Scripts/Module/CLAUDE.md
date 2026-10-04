@@ -201,6 +201,24 @@ description: 이 게임의 모듈 구현 명세 — 새 모듈 추가 시 코드
 
 ---
 
+## 7. DailyShopModule (오늘의 상점)
+
+**파일**: `Assets/Scripts/Module/Common/Shop/DailyShopModule.cs` (`IDailyShopService` · `DailyShopSlot` · `DailyShopKind` 같은 파일) / 이벤트 `DailyShopChangedEvent`(`UserDataEvents.cs`)
+
+- 역할: 하루에 한 번(기기 자정) 진열 여섯 칸을 짜고, 사고, 젬으로 새로고침한다. 기획서 `Projects/AVSR/AVSR_Content_Economy.md` 3절
+- 의존: `IEventBus`, `IPlayerDataService`(상태 · 재화 · 조각), `IChestService`(상자 칸)
+- 등록: `[Module(Layer = ModuleLayer.Game)]` 자동 등록
+- 저장: `UserData.dailyShop`(v6) — **짠 진열을 그대로 저장한다.** 날짜로 다시 계산하면 사는 순간 진열이 바뀐다
+- 핵심 멤버: `Get(i)` · `TryBuy(i, out failKey)` · `TryRefresh(out failKey)` · `RefreshGemCost` · `UntilReset`
+- 주의사항:
+  - 수치는 전부 `GameConfig` 「상점 · 정수」 칸. 골드 값은 열린 가장 높은 챕터의 값 배율(`chapters.tsv` priceMul)을 곱한다
+  - 상자 칸은 **값을 받기 전에** 빈 상자 칸을 확인한다
+  - 실패 이유는 문자열 키(`ui.shop.daily.fail.*`)로 돌려준다 — 화면이 그대로 토스트로 띄운다
+
+영혼 정수는 모듈이 아니라 `PlayerDataService` 에 있다 — 다 키운 몸(숙련도 상한)에게 온 조각이 `AddShards` 에서 정수로 바뀐다. `ExchangeEssence(hostKey, n)` 로 원하는 몸의 조각을 산다(B 2 · A 3 · S 5).
+
+---
+
 ## API DTO 작성 규칙
 
 **위치**: `Assets/Scripts/Module/Common/Dto/`  

@@ -2459,3 +2459,63 @@ MonoBehaviour:
     _ko: "\uD574\uAE08"
     _ja: "\u89E3\u653E"
     _en: Unlock
+  - _key: ui.result.shards
+    _ko: "\uC870\uAC01  {0}"
+    _ja: "\u6B20\u7247  {0}"
+    _en: Shards  {0}
+  - _key: ui.currency.essence
+    _ko: "\uC601\uD63C \uC815\uC218"
+    _ja: "\u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9"
+    _en: Soul Essence
+  - _key: ui.shop.daily.title
+    _ko: "\uC624\uB298\uC758 \uC0C1\uC810"
+    _ja: "\u672C\u65E5\u306E\u30B7\u30E7\u30C3\u30D7"
+    _en: Daily Shop
+  - _key: ui.shop.daily.reset
+    _ko: "{0} \uD6C4 \uC0C8 \uC0C1\uD488"
+    _ja: "{0}\u5F8C\u306B\u65B0\u5546\u54C1"
+    _en: New items in {0}
+  - _key: ui.shop.daily.free
+    _ko: "\uBB34\uB8CC"
+    _ja: "\u7121\u6599"
+    _en: FREE
+  - _key: ui.shop.daily.bought
+    _ko: "\uAD6C\uB9E4 \uC644\uB8CC"
+    _ja: "\u8CFC\u5165\u6E08\u307F"
+    _en: SOLD
+  - _key: ui.shop.daily.refresh
+    _ko: "\uC0C8\uB85C\uACE0\uCE68"
+    _ja: "\u66F4\u65B0"
+    _en: Refresh
+  - _key: ui.shop.daily.fail.bought
+    _ko: "\uC624\uB298\uC740 \uC774\uBBF8 \uC0C0\uC2B5\uB2C8\uB2E4."
+    _ja: "\u672C\u65E5\u306F\u8CFC\u5165\u6E08\u307F\u3067\u3059\u3002"
+    _en: Already bought today.
+  - _key: ui.shop.daily.fail.gold
+    _ko: "\uACE8\uB4DC\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4."
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u304C\u8DB3\u308A\u307E\u305B\u3093\u3002"
+    _en: Not enough gold.
+  - _key: ui.shop.daily.fail.gem
+    _ko: "\uC82C\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4."
+    _ja: "\u30B8\u30A7\u30E0\u304C\u8DB3\u308A\u307E\u305B\u3093\u3002"
+    _en: Not enough gems.
+  - _key: ui.shop.daily.fail.chest_full
+    _ko: "\uC0C1\uC790 \uCE78\uC774 \uAC00\uB4DD \uCC3C\uC2B5\uB2C8\uB2E4."
+    _ja: "\u5B9D\u7BB1\u306E\u67A0\u304C\u3044\u3063\u3071\u3044\u3067\u3059\u3002"
+    _en: Chest slots are full.
+  - _key: ui.shop.daily.fail.refresh_limit
+    _ko: "\uC624\uB298\uC740 \uB354 \uC0C8\uB85C\uACE0\uCE68\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    _ja: "\u672C\u65E5\u306F\u3053\u308C\u4EE5\u4E0A\u66F4\u65B0\u3067\u304D\u307E\u305B\u3093\u3002"
+    _en: No more refreshes today.
+  - _key: ui.shop.daily.fail.unknown
+    _ko: "\uC9C0\uAE08\uC740 \uC0B4 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    _ja: "\u4ECA\u306F\u8CFC\u5165\u3067\u304D\u307E\u305B\u3093\u3002"
+    _en: Cannot buy right now.
+  - _key: ui.growth.essence.exchange
+    _ko: "\uC815\uC218 {0}\uAC1C\uB85C \uC870\uAC01 1\uAC1C"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9{0}\u500B\u3067\u6B20\u72471\u500B"
+    _en: "{0} essence \u2192 1 shard"
+  - _key: ui.growth.essence.short
+    _ko: "\uC815\uC218\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4 ({0}/{1})"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9\u304C\u8DB3\u308A\u307E\u305B\u3093 ({0}/{1})"
+    _en: Not enough essence ({0}/{1})

@@ -148,8 +148,23 @@ namespace Game.User
         /// <summary>레벨이 닿았고 아직 안 받았으면 보상(골드 · 젬 · 영혼 핵)을 준다. 저장은 부르는 쪽이.</summary>
         bool ClaimPath(int index);
 
-        /// <summary>파편을 준다.</summary>
+        /// <summary>파편을 준다. 숙련도를 다 올린 몸이면 정수로 바뀐다.</summary>
         void AddShards(string hostKey, int amount);
+
+        /// <summary>정수 — 다 키운 몸에게 온 조각이 바뀐 것.</summary>
+        int Essence { get; }
+
+        /// <summary>그 몸의 조각 하나를 정수로 살 때의 값(등급별).</summary>
+        int EssencePriceOf(string hostKey);
+
+        /// <summary>정수로 그 몸의 조각을 산다. 모자라거나 다 키운 몸이면 false.</summary>
+        bool ExchangeEssence(string hostKey, int shards);
+
+        /// <summary>일일 상점 상태(저장에 들어 있다). 진열을 짜고 사는 것은 `IDailyShopService` 가 한다.</summary>
+        DailyShopData DailyShop { get; }
+
+        /// <summary>젬을 낸다. 모자라면 아무 일도 없다.</summary>
+        bool TrySpendGem(int amount);
 
         /// <summary>파편을 쓰고 숙련도를 한 단계 올린다. 봉인 해제도 같은 동작이다.</summary>
         bool SpendShards(string hostKey, int cost);

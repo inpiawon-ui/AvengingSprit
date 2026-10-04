@@ -18,6 +18,14 @@ namespace Game.Module.Events
         public int NewStamina;
         public int NewGold;
         public int NewGem;
+        public int NewEssence;
+    }
+
+    /// <summary>일일 상점 진열이나 산 칸이 바뀌었다(날이 바뀜 · 새로고침 · 구매).</summary>
+    public struct DailyShopChangedEvent : IEvent
+    {
+        /// <summary>방금 산 칸(-1 = 구매가 아니다).</summary>
+        public int BoughtSlot;
     }
 
     /// <summary>고스트 레벨·EXP 가 변했다.</summary>

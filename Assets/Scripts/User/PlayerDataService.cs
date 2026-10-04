@@ -336,6 +336,14 @@ namespace Game.User
             if (amount <= 0) return;
             int i = EnsureHost(hostKey);
             if (i < 0) return;
+            // 다 키운 몸(숙련도 상한)에게 온 조각은 **정수로 바꾼다** — 버리는 보상이 없게(기획 2026-10-04).
+            // 바뀌는 값은 조각 하나에 1. 정수로 조각을 살 때는 등급값(B 2 · A 3 · S 5)을 낸다.
+            if (_data.hostMastery[i] >= MasteryMax)
+            {
+                _data.essence += amount;
+                PublishCurrency();
+                return;
+            }
             _data.hostShards[i] += amount;
         }
 
@@ -677,6 +685,47 @@ namespace Game.User
             return true;
         }
 
+        // ── 정수 · 일일 상점 ─────────────────────────────────
+
+        public int Essence => _data?.essence ?? 0;
+
+        public int EssencePriceOf(string hostKey)
+        {
+            var e = GetHost(hostKey);
+            return e == null || e.IsGhost || _config == null ? 0 : _config.EssencePerShard(e.Grade);
+        }
+
+        public bool ExchangeEssence(string hostKey, int shards)
+        {
+            int price = EssencePriceOf(hostKey) * Mathf.Max(0, shards);
+            if (_data == null || price <= 0 || _data.essence < price) return false;
+            if (GetMastery(hostKey) >= MasteryMax) return false;   // 다 키운 몸의 조각은 다시 정수가 될 뿐이다
+            _data.essence -= price;
+            int i = EnsureHost(hostKey);
+            _data.hostShards[i] += shards;
+            PublishCurrency();
+            return true;
+        }
+
+        public DailyShopData DailyShop
+        {
+            get
+            {
+                if (_data == null) return null;
+                _data.dailyShop ??= new DailyShopData();
+                return _data.dailyShop;
+            }
+        }
+
+        public bool TrySpendGem(int amount)
+        {
+            if (_data == null || amount < 0 || _data.gem < amount) return false;
+            if (amount == 0) return true;
+            _data.gem -= amount;
+            PublishCurrency();
+            return true;
+        }
+
         public void AddCurrency(int gold, int gem)
         {
             if (_data == null) return;
@@ -777,6 +826,7 @@ namespace Game.User
         public async UniTask GrantRunGoldAsync(int gold)
         {
             if (_data == null) return;
+            // 0 이어도 저장한다 — 판 안에서 모은 조각(`AddShards`)이 같이 남는다
             _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
             PublishCurrency();
             await SaveAsync();
@@ -804,6 +854,7 @@ namespace Game.User
                 NewStamina = _data.stamina,
                 NewGold    = _data.gold,
                 NewGem     = _data.gem,
+                NewEssence = _data.essence,
             });
         }
     }

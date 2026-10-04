@@ -395,6 +395,8 @@ namespace Game.Module.InGame
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
             _eventsUsed.Clear();
             _runGold = 0;     // 판 골드도 런 한정이다
+            _runShardKeys.Clear();
+            _runShardCounts.Clear();
             _possessReachMul = 0f;
             _shopDiscount = 0;
             _bossShieldBreak = false;
@@ -7379,7 +7381,25 @@ namespace Game.Module.InGame
             if (_player == null || string.IsNullOrEmpty(hostKey)) return;
             // 호스트 표에 없는 키(해골·박쥐 같은 잡몹)는 거른다.
             if (_player.GetHost(hostKey) == null) return;
-            _player.AddShards(hostKey, _player.ShardDropFor(hostKey, lost));
+            int n = _player.ShardDropFor(hostKey, lost);
+            _player.AddShards(hostKey, n);
+            int at = _runShardKeys.IndexOf(hostKey);
+            if (at < 0) { _runShardKeys.Add(hostKey); _runShardCounts.Add(n); }
+            else _runShardCounts[at] += n;
+        }
+
+        // 이번 판에 모은 조각 — 결과 화면이 보여 준다
+        private readonly List<string> _runShardKeys = new();
+        private readonly List<int> _runShardCounts = new();
+
+        /// <summary>모은 조각을 많은 것부터 배열로. 판이 끝날 때 한 번 부른다.</summary>
+        private void RunShardsSorted(out string[] keys, out int[] counts)
+        {
+            keys = _runShardKeys.ToArray();
+            counts = _runShardCounts.ToArray();
+            System.Array.Sort(counts, keys);
+            System.Array.Reverse(counts);
+            System.Array.Reverse(keys);
         }
 
         private void KillEnemy(Unit u)
@@ -9461,7 +9481,8 @@ namespace Game.Module.InGame
             if (!_running) return;
             _running = false;
             int carried = Mathf.Max(0, _runGold);
-            if (carried > 0 && _player != null && _player.IsReady)
+            // 골드가 0 이어도 저장한다 — 판 안에서 모은 조각이 남아야 한다
+            if (_player != null && _player.IsReady)
                 _player.GrantRunGoldAsync(carried).Forget();   // fire-and-forget: 씬을 떠나는 중이다
         }
 
@@ -9484,13 +9505,16 @@ namespace Game.Module.InGame
             // ⚠ **죽으면 판에서 번 골드만 준다**(기획 2026-10-01). 상자도 클리어 골드도 없다.
             //   예전에는(2026-09-18) 아무것도 안 줬다 — 못 깨는 챕터에 막히면 강해질 길이 없어
             //   같은 판을 맨손으로 되풀이해야 했다. 진 판도 다음 판의 밑천이 된다.
+            RunShardsSorted(out var shardKeys, out var shardCounts);
             if (!cleared)
             {
-                if (carried > 0 && _player != null && _player.IsReady)
+                // 골드가 0 이어도 저장한다 — 판 안에서 모은 조각이 남아야 한다
+                if (_player != null && _player.IsReady)
                     _player.GrantRunGoldAsync(carried).Forget();   // fire-and-forget: 저장 완료를 기다릴 화면이 없다
                 _bus.Publish(new StageFinishedEvent
                 {
                     IsCleared = false, FinishedChapter = _runChapter, RewardGold = carried,
+                    ShardHostKeys = shardKeys, ShardCounts = shardCounts,
                 });
                 return;
             }
@@ -9521,6 +9545,8 @@ namespace Game.Module.InGame
                 FinishedChapter = ch,
                 RewardChestKey = chestKey,
                 ChestAccepted = accepted,
+                ShardHostKeys = shardKeys,
+                ShardCounts = shardCounts,
             });
         }
 
