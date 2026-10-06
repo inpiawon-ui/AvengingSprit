@@ -1,0 +1,12 @@
+AVENGING SPIRIT: RE:BORN — 1챕터 배경 밝게 바꾼 «게임 적용본» 검수 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+PD 시안 : Projects/AVSR/_exchange/ref/ch1_bright/pd_ch1_bright_mockup.png
+PD 말 : 「이런 느낌으로 1챕터를 바꿔 달라. 시안에서 조금만 — 캐릭터 밑에 깔리는 배경 느낌으로.」
+게임 적용본 : Projects/AVSR/_exchange/ref/ch1_bright/game_ch1_bright_pair.png (왼쪽 유령 상태 · 오른쪽 갱스터 빙의, 실제 게임 720x1280)
+  ※ 위쪽 HUD 는 따로 확정된 디자인이라 보지 마라. 바닥 · 방 아래(분쇄기) 영역만 본다.
+볼 것 : 1) 시안의 밝은 낮 느낌이 나는가  2) 시안보다 한 단계 차분해 캐릭터 · 유령이 바닥 위에서 또렷한가
+        3) 바닥 · 방 아래 · 벽이 한 벌로 이어지는가  4) 장애물(검푸른 탑 · 부서진 차)이 새 바닥과 어울리는가
+쓸 것 : Projects/AVSR/_exchange/review_ch1_bright.md (한국어, 10줄 이내) — 항목별 ○△× 와 이유, 마지막 줄 「PD 보고 가능」 또는 「한 번 더 고칠 것」.
+끝나면 파일 경로만 알려라.

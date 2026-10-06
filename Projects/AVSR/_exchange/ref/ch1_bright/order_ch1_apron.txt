@@ -1,0 +1,18 @@
+AVENGING SPIRIT: RE:BORN — 1챕터 방 아래 영역(분쇄기 · 고철 더미) 를 새 바닥과 같은 톤으로
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+1챕터(쓰레기 집적장) 방 바닥을 PD 시안대로 밝은 낮 느낌으로 바꿨다(통과).
+같은 톤으로 방 아래 영역(분쇄기 · 고철 더미) 도 바꾼다. 반드시 열어 봐라 :
+  Projects/AVSR/_exchange/ref/ch1_bright/ok_roomfloor_env_junkyard.png     통과한 새 방 바닥(720 x 1152) — **톤 · 밝기 · 채도는 이것과 한 벌로**
+  Projects/AVSR/_exchange/ref/ch1_bright/pd_ch1_bright_mockup.png          PD 시안 전체
+  Projects/AVSR/_exchange/ref/ch1_bright/pd_apron_crop.png               PD 시안의 방 아래 부분(분쇄기)
+  Projects/AVSR/_exchange/ref/ch1_bright/now_roomapron_junkyard.png   **지금 게임의 그림(바꿀 대상, 720 x 540)**
+
+■ 지킬 것 : 캔버스 720 x 540 그대로. 분쇄기 · 철판 · 고철 더미 · 사슬 · 크레인 집게의 자리와 모양은 지금 그림 그대로. 맨 위 가장자리는 방 바닥 아래 끝과 이어지는 자리라 그대로. 바꾸는 것은 색 · 밝기 · 질감뿐 — 다시 그리지 마라.
+■ 바꿀 것 : 지금의 어둡고 푸른 밤빛 → 새 바닥과 같은 **낮빛**(녹슨 갈색 철판 · 바랜 고철 · 따뜻한 회색).
+  새 바닥보다 **조금 더 어둡게**(방 밖이라 한 걸음 물러나 보이게). 평균 밝기 목표 85 안팎.
+  밤안개 · 푸른 연기는 빼거나 아주 옅게. 캐릭터가 없는 자리지만 조작 버튼이 위에 뜨므로 너무 밝거나 어지러우면 안 된다.
+
+■ 만들 것 : Projects/AVSR/_exchange/in/roomapron_junkyard.png  (720 x 540, PNG)
+끝나면 경로만 알려라.
