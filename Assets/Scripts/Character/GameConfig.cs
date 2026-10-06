@@ -684,6 +684,18 @@ namespace Game.Character
         [Tooltip("성장한 사거리의 직업별 상한(m). 이걸 넘으면 직업 판정이 흔들린다.")]
         [SerializeField] private float[] _rangeGrowthMax = { 2.8f, 5.9f, 9.5f, 9.2f };
 
+        // 사거리 강화는 **직업마다 다르게 붙는다**(기획 2026-10-06). 한 % 로 곱하면 원거리가
+        // 다 올렸을 때 7.5 → 15 m 가 되어 입구에서 방 전체를 쏘고, 중거리는 상한(5.9)을 넘어 원거리가 된다.
+        //   근거리 +1%/Lv(1.4 → 2.8 m) · 중거리 +0.5%/Lv(→ 5.9 m 에서 멈춤) · 원거리 +0.3%/Lv(→ 9.5 m 에서 멈춤)
+        // 상한은 위 `_rangeGrowthMax` 다 — 전투도 이 상한을 쓴다(예전에는 로비 표시만 썼다).
+        [Tooltip("사거리 강화 레벨당 % — 직업 순서: 근거리 · 중거리 · 원거리")]
+        [SerializeField] private float[] _rangePercentPerLevelByJob = { 1f, 0.5f, 0.3f };
+
+        /// <summary>그 직업의 사거리 강화 레벨당 %(직업 0 근거리 · 1 중거리 · 2 원거리).</summary>
+        public float RangePercentPerLevel(int jobIndex)
+            => _rangePercentPerLevelByJob == null || _rangePercentPerLevelByJob.Length == 0 ? 0f
+             : _rangePercentPerLevelByJob[Mathf.Clamp(jobIndex, 0, _rangePercentPerLevelByJob.Length - 1)];
+
         public float CritMultiplier => _critMultiplier;
 
         /// <summary>

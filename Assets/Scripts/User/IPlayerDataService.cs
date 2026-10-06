@@ -143,6 +143,9 @@ namespace Game.User
         /// </summary>
         float StatBonusFlat(string hostKey, HostStat stat);
 
+        /// <summary>그 능력치의 강화 레벨 합 — 유령 탭 + 이 몸의 호스트 탭.</summary>
+        int StatLevelTotal(string hostKey, HostStat stat);
+
         // ── 유령 성장 경로 ──────────────────────────────────
 
         int PathCount { get; }

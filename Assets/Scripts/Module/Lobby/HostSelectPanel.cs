@@ -757,8 +757,6 @@ namespace Game.Module.Lobby
         //   그 몸이 든 무기의 성질(`AttackKind.Pierce`)이다.
         private enum HostJob { Melee, Mid, Ranged }
 
-        private const float MidRangeMeters = 6.0f;
-
         /// <summary>
         /// `GANGSTER — GUN` → `GANGSTER`. 표의 영문명에는 무기 구분이 붙어 있는데
         /// 이름줄에 그대로 넣으면 두 줄로 접히거나 잘린다.
@@ -772,13 +770,8 @@ namespace Game.Module.Lobby
             return (cut > 0 ? nameEn.Substring(0, cut) : nameEn).Trim();
         }
 
-        private static HostJob JobOf(HostEntry e)
-        {
-            if (e == null) return HostJob.Ranged;
-            if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return HostJob.Melee;
-            return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters
-                 ? HostJob.Mid : HostJob.Ranged;
-        }
+        // 규칙은 `HostStats.JobIndex` 한 곳에 있다(2026-10-06) — 여기는 이름만 붙인다
+        private static HostJob JobOf(HostEntry e) => (HostJob)HostStats.JobIndex(e);
 
         private static string JobNameOf(HostJob j) => j switch
         {

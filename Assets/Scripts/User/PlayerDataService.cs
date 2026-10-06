@@ -602,6 +602,9 @@ namespace Game.User
             return true;
         }
 
+        public int StatLevelTotal(string hostKey, HostStat stat)
+            => GhostStatLevel(stat) + (string.IsNullOrEmpty(hostKey) ? 0 : HostStatLevel(hostKey, stat));
+
         public float StatBonusFlat(string hostKey, HostStat stat)
             => StatPercent(stat, GhostStatLevel(stat))
              + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat)));

@@ -249,6 +249,20 @@ namespace Game.Module.Lobby
             else { RefreshHostCard(); RefreshSkills(); RefreshCards(); }
         }
 
+        /// <summary>
+        /// 능력치 줄의 「+x%」. 사거리만 직업마다 다르다(근거리 +1% · 중거리 +0.5% · 원거리 +0.3% / Lv) —
+        /// 몸 탭은 그 몸의 직업 값, 유령 탭(모든 몸)은 「+가장 작은~가장 큰%」로 적는다.
+        /// </summary>
+        private string PctText(HostStat stat, int lv, bool ghost)
+        {
+            var c = _player.Config;
+            if (stat != HostStat.Range || c == null) return $"+{_player.StatPercent(stat, lv):0.0}%";
+            if (!ghost) return $"+{c.RangePercentPerLevel(HostStats.JobIndex(_player.GetHost(_hostKey))) * lv:0.0}%";
+            float lo = c.RangePercentPerLevel(HostStats.JobRanged) * lv;
+            float hi = c.RangePercentPerLevel(HostStats.JobMelee) * lv;
+            return $"+{lo:0.#}~{hi:0.#}%";
+        }
+
         private void SetTabText(string node, bool on)
         {
             var t = _ui.Find(node)?.GetComponent<TabTextColors>();
@@ -272,7 +286,7 @@ namespace Game.Module.Lobby
                 TextIn(row, "RowLvLabel", "Lv.");
                 TextIn(row, "RowLvNum", lv.ToString());
                 TextIn(row, "RowLvMax", $"/ {max}");
-                TextIn(row, "RowPctText", $"+{_player.StatPercent(stat, lv):0.0}%");
+                TextIn(row, "RowPctText", PctText(stat, lv, ghost));
                 bool locked = !ghost && _player.GetMastery(_hostKey) < 1;
                 TextIn(row, "RowCostText", locked ? Localize.Get("ui.growth.locked")
                                          : cost > 0 ? cost.ToString("N0") : Localize.Get("ui.growth.max"));

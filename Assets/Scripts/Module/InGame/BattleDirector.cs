@@ -3341,16 +3341,8 @@ namespace Game.Module.InGame
         //   로비(`HostSelectPanel.JobOf`)와 **같은 규칙**이다 — 바뀌면 두 곳을 함께 고친다.
         private enum HostJob { Melee, Mid, Ranged }
 
-        /// <summary>중거리와 원거리를 가르는 선. 근거리 최대 2.2m 와는 두 칸 넘게 벌어져 있다.</summary>
-        private const float MidRangeMeters = 6.0f;
-
-        private static HostJob JobOf(HostEntry e)
-        {
-            if (e == null) return HostJob.Ranged;
-            if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return HostJob.Melee;
-            return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters
-                 ? HostJob.Mid : HostJob.Ranged;
-        }
+        // 규칙은 `HostStats.JobIndex` 한 곳에 있다(2026-10-06) — 여기는 이름만 붙인다
+        private static HostJob JobOf(HostEntry e) => (HostJob)HostStats.JobIndex(e);
 
         /// <summary>
         /// 격투 직업의 상시 규칙 — 때릴 때마다 쉴드, 그리고 확률 스턴.
@@ -8418,7 +8410,9 @@ namespace Game.Module.InGame
                         WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul * UpgradeMul(key, HostStat.Hp))),
                         Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk))),
                         HostSpeedOf(entry) * UpgradeMul(key, HostStat.MoveSpeed),
-                        HostRangeOf(entry) * UpgradeMul(key, HostStat.Range),
+                        // 사거리 강화는 직업마다 다르게 붙고 직업 상한에서 멈춘다(2026-10-06)
+                        HostStats.UpgradedRange(_config, entry, HostRangeOf(entry),
+                            _player != null ? _player.StatLevelTotal(key, HostStat.Range) : 0, _pxPerMeter),
                         HostIntervalOf(entry) / UpgradeMul(key, HostStat.AtkSpeed),
                         UnitBox(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;

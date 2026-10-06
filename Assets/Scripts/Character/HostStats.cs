@@ -16,6 +16,41 @@ namespace Game.Character
     /// </summary>
     public static class HostStats
     {
+        // ── 직업 ──────────────────────────────────────────────
+        //
+        // **직업을 가르는 자는 여기 하나다.** 전투(`BattleDirector.JobOf`)와 로비(`HostSelectPanel.JobOf`)가
+        // 규칙을 따로 들고 있었는데, 사거리 강화가 직업을 보게 되면서(2026-10-06) 셋째 자리가 생겼다 —
+        // 세 곳이 어긋나기 전에 한 곳으로 모은다.
+        //   0 근거리  근접 · 광역        1 중거리  사거리 6 m 이하       2 원거리  나머지
+
+        public const int JobMelee = 0, JobMid = 1, JobRanged = 2;
+
+        /// <summary>중거리와 원거리를 가르는 선(m).</summary>
+        public const float MidRangeMeters = 6.0f;
+
+        public static int JobIndex(HostEntry e)
+        {
+            if (e == null) return JobRanged;
+            if (e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse) return JobMelee;
+            return e.CanonHostRange > 0f && e.CanonHostRange <= MidRangeMeters ? JobMid : JobRanged;
+        }
+
+        /// <summary>
+        /// 사거리 강화를 얹은 사거리 — 직업마다 레벨당 % 가 다르고 직업 상한에서 멈춘다.
+        /// 기본 사거리가 이미 상한보다 길면 줄이지 않는다.
+        /// </summary>
+        /// <param name="baseRange">강화 전 사거리(단위는 부르는 쪽 그대로 — px 이든 m 이든)</param>
+        /// <param name="unitsPerMeter">상한(m)을 baseRange 단위로 바꾸는 값</param>
+        public static float UpgradedRange(GameConfig config, HostEntry host, float baseRange,
+                                          int upgradeLevels, float unitsPerMeter)
+        {
+            if (config == null || host == null) return baseRange;
+            int job = JobIndex(host);
+            float grown = baseRange * (1f + config.RangePercentPerLevel(job) * Mathf.Max(0, upgradeLevels) / 100f);
+            float cap = config.RangeGrowthMax(job) * unitsPerMeter;
+            return Mathf.Min(grown, Mathf.Max(baseRange, cap));
+        }
+
         /// <summary>
         /// Lv1 → 만렙 사이의 성장 배율.
         ///
