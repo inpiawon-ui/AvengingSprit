@@ -53,12 +53,23 @@ namespace Game.Editor
             "LobbyV4Gap", "LobbyV4Top", "LobbyV4Bottom", "LobbyV4Mid", "LobbyV4Nav",
         };
 
+        /// <summary>
+        /// 걷어낸 임시 기능 — 유령 관찰 · 시즌 패스 · 이벤트(PD 2026-10-06 「임시로 있던 것, 다 정리하자」).
+        /// 시안 명세(`lobby_v4_spec.json`)에는 아직 글자 칸이 남아 있어서, 이 이름으로 시작하는 것은 만들지 않는다.
+        /// 판 그림도 배경(`base_top`)에서 지웠다. 기능을 붙일 때 시안부터 다시 받는다.
+        /// </summary>
+        private static readonly string[] RetiredPrefixes = { "SeasonPass", "Event", "GhostSearch" };
+
+        private static bool Retired(string node)
+        {
+            foreach (var p in RetiredPrefixes)
+                if (node.StartsWith(p)) return true;
+            return false;
+        }
+
         /// <summary>고정 글자 → 언어 표 키. 숫자 · 시간 · 상자 칸은 코드가 채운다.</summary>
         private static readonly (string node, string key)[] Keys =
         {
-            ("SeasonPassTitleText", "ui.lobby.season.title"), ("SeasonPassSubText", "ui.lobby.season.sub"),
-            ("EventTitleText", "ui.lobby.event.title"), ("EventSubText", "ui.lobby.event.sub"),
-            ("GhostSearchTitleText", "ui.lobby.search.title"), ("GhostSearchDescText", "ui.lobby.search.desc"),
             ("GameModeLabel", "ui.lobby.game_mode"),
             ("ModeScenarioTitleText", "ui.lobby.mode.scenario.name"), ("ModeScenarioSubText", "ui.lobby.mode.scenario.desc"),
             ("ModePlayButtonText", "ui.lobby.play"),
@@ -72,7 +83,6 @@ namespace Game.Editor
         private static readonly (string node, string text)[] Fixed =
         {
             ("GoldText", "1,357"), ("GemText", "1,000,000"),
-            ("GhostSearchTimerText", "04:32:18"), ("GhostSearchGoldText", "+12,640 G"),
         };
 
         /// <summary>
@@ -94,8 +104,6 @@ namespace Game.Editor
         {
             ("GoldPlusButton", 494, 26, 540, 76), ("GemPlusButton", 719, 26, 765, 76),
             ("MailButton", 786, 16, 854, 82), ("SettingsButton", 864, 18, 930, 82),
-            ("SeasonPassButton", 490, 107, 698, 196), ("EventButton", 715, 107, 913, 196),
-            ("GhostSearchHelpButton", 274, 272, 316, 308),
             ("ModeScenarioCard", 30, 970, 910, 1205),
             ("ModePlayButton", 645, 1114, 887, 1188),
             ("ModeSurvivalCard", 34, 1214, 463, 1409), ("ModeDefenseCard", 476, 1214, 908, 1409),
@@ -109,8 +117,6 @@ namespace Game.Editor
             ("GameModeLabel", 420f),
             // 시나리오 글자 오른쪽엔 병사가 있다(x 400~) — 넘으면 줄인다
             ("ModeScenarioTitleText", 410f), ("ModeScenarioSubText", 400f),
-            ("GhostSearchTitleText", 268f), ("GhostSearchTimerText", 318f), ("GhostSearchGoldText", 318f),
-            ("GhostSearchDescText", 322f),
         };
 
         private static Spec s_spec;
@@ -196,6 +202,7 @@ namespace Game.Editor
                 foreach (var t in s_spec.texts)
                 {
                     if (t.name.StartsWith("_") || t.box[1] >= navY) continue;   // 하단 바 글자는 공통 하단 바가 찍는다
+                    if (Retired(t.name)) continue;
                     var (band, off) = BandOf(t.box[1], t.box[3], top, mid, nav);
                     Text(band, t, off);
                 }
@@ -312,7 +319,6 @@ namespace Game.Editor
                 SetKey(rt.gameObject, key);
                 tmp.text = Localize(key);
             }
-            if (t.name == "GhostSearchDescText") tmp.lineSpacing = -2f;
             var outline = Array.Find(Outlines, o => o.node == t.name);
             if (outline.node != null)
             {

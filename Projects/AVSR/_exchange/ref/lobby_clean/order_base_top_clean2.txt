@@ -1,0 +1,15 @@
+AVENGING SPIRIT: RE:BORN — 로비 위쪽 배경, 지운 자리에 남은 테두리 자국 마저 지우기
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+지난 납품 Projects/AVSR/_exchange/ref/lobby_clean/try1_base_top_clean.png 은 거의 됐다. 판 안의 그림은 잘 지워졌다.
+그런데 **판 테두리의 일부가 가는 선으로 남았다.** 밝게 확대한 그림을 봐라 :
+  Projects/AVSR/_exchange/ref/lobby_clean/try1_leftovers_zoom.png  (왼쪽 : 오른쪽 위 두 판 자리 · 오른쪽 : 왼쪽 큰 판 자리)
+  · 오른쪽 위 두 판 자리 : 왼쪽 세로 테두리 선 · 아래 가로 테두리 선, 그리고 오른쪽 위 모서리의 **빨간 「!」 반원 조각**이 남았다.
+    (대략 x 488~700 · y 105~197 과 x 713~916 · y 105~197)
+  · 왼쪽 큰 판 자리 : 위 · 왼쪽 · 오른쪽 · 아래의 가는 테두리 선이 남았다. (대략 x 33~335 · y 247~507)
+
+■ 할 일 : try1_base_top_clean.png 를 바탕으로, 위 선 · 조각만 흔적 없이 지우고 둘레의 하늘 · 구름 · 건물을 이어 그린다.
+  그 밖은 **1픽셀도 바꾸지 마라**(try1 그대로).
+■ 만들 것 : Projects/AVSR/_exchange/ref/lobby_clean/base_top_clean.png  (덮어써라, 941 x 632)
+끝나면 경로만 알려라.

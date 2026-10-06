@@ -65,12 +65,10 @@ namespace Game.Module.Lobby
         private readonly List<IDisposable> _tokens = new();
 
         // 1차 범위 밖 — 버튼은 두되 누르면 준비중 안내만 띄운다.
-        // 유령 관찰(방치)은 화면만 세워 뒀다 — 기능은 나중(기획 2026-09-16)
+        // ⚠ 유령 관찰 · 시즌 패스 · 이벤트는 임시 화면이라 로비에서 걷어냈다(PD 2026-10-06). 판 그림도 배경에서 지웠다.
         private static readonly (string element, string label)[] NotReady =
         {
             ("MailButton", "우편"), ("SettingsButton", "설정"),
-            ("SeasonPassButton", "시즌 패스"), ("EventButton", "이벤트"),
-            ("GhostSearchHelpButton", "유령 관찰"),
             ("GoldPlusButton", "상점"), ("GemPlusButton", "상점"),
         };
 
