@@ -51,6 +51,15 @@ MonoBehaviour:
   _movePerGrade: 0.22
   _critAtGrade1: 5
   _critPerGrade: 3
+  _testMode: 0
+  _starterHost: gangster
+  _essencePerShard: 020000000300000005000000
+  _shopShardCount: 060000000400000002000000
+  _shopShardGold: 2800000050000000c8000000
+  _shopFreeGold: 100
+  _shopChestKey: silver
+  _shopChestGems: 40
+  _shopRefreshGems: 0a0000001400000028000000
   _sandboxMode: 0
   _sandboxNoExecute: 0
   _testPlayerDamage: 0
@@ -303,8 +312,8 @@ MonoBehaviour:
     BossArt: 3
     ChestArt: 5
     MixBlade: 21
-    MixForce: 41
-    MixMagic: 19
+    MixForce: 40
+    MixMagic: 20
   - Chapter: 8
     Name: "\uBD09\uC1C4\uB41C \uC800\uC7A5\uAE30\uC9C0"
     Desc: "\uBB38\uC774 \uC804\uBD80 \uC7A0\uAE34 \uAE30\uC9C0 \uAE4A\uC740 \uACF3\n\uC0AC\uC120\uACFC
@@ -427,6 +436,10 @@ MonoBehaviour:
   - 5.9
   - 9.5
   - 9.2
+  _rangePercentPerLevelByJob:
+  - 1
+  - 0.5
+  - 0.3
   _stageNames:
   - Chapter: 1
     FromRoom: 1
@@ -504,6 +517,8 @@ MonoBehaviour:
   - 1
   - 1
   - 1
+  _critDamagePerLevel: 1
+  _defensePerLevel: 0.2
   _ghostStatCostStep: 100
   _hostStatCostStep: 60
   _userExpBase: 100
