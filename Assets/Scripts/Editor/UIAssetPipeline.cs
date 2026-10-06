@@ -295,7 +295,7 @@ namespace Game.Editor
             var borders = new System.Collections.Generic.Dictionary<string, Vector4>
             {
                 { "popup_frame", new Vector4(84, 84, 84, 84) },
-                { "popup_tray", new Vector4(64, 0, 64, 0) },
+                { "popup_groove", new Vector4(24, 20, 24, 20) },   // 버튼 하나짜리 알림의 얇은 홈
             };
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Res }))
             {

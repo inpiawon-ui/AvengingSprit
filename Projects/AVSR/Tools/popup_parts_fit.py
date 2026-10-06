@@ -5,12 +5,12 @@
 그림을 고치지 않는다 — 바탕 빼기 · 자르기 · 줄이기만 한다.
 
   in/popup_frame.png          → Assets/BaseResource/SystemPopup/popup_frame.png        (폭 600, 9-slice)
-  in/popup_tray.png           → Assets/BaseResource/SystemPopup/popup_tray.png         (폭 500, 가로 9-slice)
+  in/popup_groove.png         → Assets/BaseResource/SystemPopup/popup_groove.png       (폭 600, 9-slice — 버튼 하나짜리 알림의 얇은 홈)
   in/popup_button_cancel.png  → Assets/BaseResource/SystemPopup/popup_button_cancel.png (290 x 80 — 노란 버튼과 같은 크기)
   in/popup_button_confirm.png → Assets/BaseResource/SystemPopup/popup_button_confirm.png (290 x 80 — 취소와 짝)
   in/stat_icons_critdmg_def.png → Assets/BaseResource/Growth/icon_critdmg.png · icon_def.png (50 x 43 — 기존 능력치 아이콘 칸)
 
-쓰는 법: python Projects/AVSR/Tools/popup_parts_fit.py [frame|tray|cancel|confirm|icons ...]  (없으면 전부)
+쓰는 법: python Projects/AVSR/Tools/popup_parts_fit.py [frame|groove|cancel|confirm|icons ...]  (없으면 전부)
 """
 import os, sys
 from PIL import Image
@@ -68,9 +68,10 @@ def frame():
          os.path.join(OUT, 'popup_frame.png'))
 
 
-def tray():
-    save(fit_width(trim(key_out(Image.open(os.path.join(IN, 'popup_tray.png')))), 500),
-         os.path.join(OUT, 'popup_tray.png'))
+def groove():
+    """볼트 달린 받침(popup_tray)은 시안과 달라 뺐다(2026-10-06) — 시안의 버튼 하나짜리 알림은 얇은 홈이다."""
+    save(fit_width(trim(key_out(Image.open(os.path.join(IN, 'popup_groove.png')))), 600),
+         os.path.join(OUT, 'popup_groove.png'))
 
 
 def cancel():
@@ -97,6 +98,6 @@ def icons():
         save(canvas, os.path.join(GROWTH, name + '.png'))
 
 
-JOBS = {'frame': frame, 'tray': tray, 'cancel': cancel, 'confirm': confirm, 'icons': icons}
+JOBS = {'frame': frame, 'groove': groove, 'cancel': cancel, 'confirm': confirm, 'icons': icons}
 for job in (sys.argv[1:] or list(JOBS)):
     JOBS[job]()

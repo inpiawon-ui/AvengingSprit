@@ -33,15 +33,17 @@ namespace Game.Module.Common.UI
         private const string AtlasAddress = "atlas/systempopup";
 
         // ── 자리(기준 해상도 720 x 1280) ──
-        private const float PanelWidth = 640f;          // 시안(popup_mock_v2)의 폭 — 화면 폭의 약 89%
-        private const float PanelMinHeight = 290f;
-        /// <summary>틀 안쪽 여백 — 글이 금속 테두리에 닿지 않게.</summary>
-        private const float PadTop = 56f, PadSide = 48f, PadBottom = 34f;
-        private const float TextGap = 22f;          // 본문과 버튼 받침 사이
-        private const float TrayHeight = 82f;         // 받침 그림의 높이(500 x 81) — 세로로는 늘리지 않는다
-        private const float TrayInset = 30f;        // 받침 좌우가 틀 안쪽에서 들어간 만큼
-        private const float ButtonWidth = 256f, ButtonHeight = 71f;   // 290 x 80 버튼의 비율
-        private const float ButtonGap = 18f;
+        // 값은 시안(popup_mock_v2)을 720 폭에서 잰 것이다(2026-10-06).
+        private const float PanelWidth = 655f;
+        private const float PanelMinHeight = 310f;
+        /// <summary>틀 안쪽 여백 — 틀 윗변 금속 띠가 두꺼워 위는 넉넉히.</summary>
+        private const float PadTop = 90f, PadSide = 48f;
+        private const float TextGap = 30f;          // 본문과 버튼(또는 홈) 사이
+        private const float ButtonCenterY = 77f;    // 틀 아랫변에서 버튼 가운데까지
+        /// <summary>버튼 둘은 판 위에 바로, 하나는 얇은 홈 안에 조금 크게 — 시안 그대로.</summary>
+        private const float PairWidth = 266f, PairHeight = 74f, PairGap = 22f;
+        private const float SingleWidth = 300f, SingleHeight = 78f;
+        private const float GrooveHeight = 96f, GrooveInset = 42f;
         /// <summary>짧은 한 줄은 시안처럼 크게, 여러 줄 · 긴 글은 한 단계 작게(시안의 3줄 알림).</summary>
         private const float BodyFontSize = 36f, LongFontSize = 26f;
         /// <summary>뒤 화면 어둡게 — 코덱스 검수 「50~55%」. 어디서 불렸는지 알아볼 만큼만.</summary>
@@ -130,7 +132,8 @@ namespace Game.Module.Common.UI
         {
             if (_artApplied || s_atlas == null) return;
             var frame = s_atlas.GetSprite("popup_frame");
-            var tray = s_atlas.GetSprite("popup_tray");
+            // 버튼 하나일 때의 얇은 홈. 없으면 홈 없이 뜬다(볼트 달린 옛 받침은 시안과 달라 뺐다)
+            var tray = s_atlas.GetSprite("popup_groove");
             var ok = s_atlas.GetSprite("popup_button_confirm");
             var cancel = s_atlas.GetSprite("popup_button_cancel");
             if (frame == null || ok == null || cancel == null) return;   // 하나라도 빠지면 색 상자 그대로
@@ -138,7 +141,7 @@ namespace Game.Module.Common.UI
             // 틀 한 장이 테두리와 판을 다 들고 있다 — 색 상자 둘(테두리색 바깥 + 판색 안쪽)은 걷는다
             Sliced(_panelImage, frame);
             _panelFill.enabled = false;
-            if (tray != null) { Sliced(_tray, tray); _tray.enabled = true; }
+            if (tray != null) Sliced(_tray, tray);
             Simple(_confirmImage, ok);
             Simple(_cancelImage, cancel);
             _confirmLabel.color = new Color(0.16f, 0.10f, 0.02f, 1f);
@@ -177,38 +180,47 @@ namespace Game.Module.Common.UI
             if (isLong) _message.fontSize = LongFontSize;
             var pref = _message.GetPreferredValues(_message.text, textWidth, 0f);
             float textHeight = Mathf.Max(_message.fontSize * 1.4f, pref.y);
-            float height = Mathf.Max(PanelMinHeight, PadTop + textHeight + TextGap + TrayHeight + PadBottom);
+
+            bool two = _cancel.gameObject.activeSelf;
+            // 본문 아래 끝 = 버튼(하나일 때는 홈) 위 끝
+            float bottomZone = ButtonCenterY + (two ? PairHeight : GrooveHeight) * 0.5f;
+            float height = Mathf.Max(PanelMinHeight, PadTop + textHeight + TextGap + bottomZone);
             _panel.sizeDelta = new Vector2(PanelWidth, height);
 
             var mrt = _message.rectTransform;
             mrt.anchorMin = new Vector2(0f, 1f);
             mrt.anchorMax = new Vector2(1f, 1f);
             mrt.pivot = new Vector2(0.5f, 1f);
-            // 본문 칸은 틀 위쪽 여백에서 받침 위까지 — 그 안에서 가운데로 앉는다
-            float bodyHeight = height - PadTop - TextGap - TrayHeight - PadBottom;
+            // 본문 칸은 틀 위쪽 여백에서 버튼 위까지 — 그 안에서 가운데로 앉는다
+            float bodyHeight = height - PadTop - TextGap - bottomZone;
             mrt.anchoredPosition = new Vector2(0f, -PadTop);
             mrt.sizeDelta = new Vector2(-PadSide * 2f, bodyHeight);
 
+            // 홈은 버튼 하나일 때만 — 시안의 버튼 둘은 판 위에 바로 앉는다
+            _tray.enabled = !two && _tray.sprite != null;
             var trt = _tray.rectTransform;
             trt.anchorMin = new Vector2(0f, 0f);
             trt.anchorMax = new Vector2(1f, 0f);
-            trt.pivot = new Vector2(0.5f, 0f);
-            trt.anchoredPosition = new Vector2(0f, PadBottom);
-            trt.sizeDelta = new Vector2(-TrayInset * 2f, TrayHeight);
+            trt.pivot = new Vector2(0.5f, 0.5f);
+            trt.anchoredPosition = new Vector2(0f, ButtonCenterY);
+            trt.sizeDelta = new Vector2(-GrooveInset * 2f, GrooveHeight);
 
-            bool two = _cancel.gameObject.activeSelf;
-            float y = PadBottom + TrayHeight * 0.5f;
-            float half = (ButtonWidth + ButtonGap) * 0.5f;
-            PlaceButton(_confirm.GetComponent<RectTransform>(), two ? half : 0f, y);
-            PlaceButton(_cancel.GetComponent<RectTransform>(), -half, y);
+            var confirm = _confirm.GetComponent<RectTransform>();
+            if (two)
+            {
+                float half = (PairWidth + PairGap) * 0.5f;
+                PlaceButton(confirm, half, PairWidth, PairHeight);
+                PlaceButton(_cancel.GetComponent<RectTransform>(), -half, PairWidth, PairHeight);
+            }
+            else PlaceButton(confirm, 0f, SingleWidth, SingleHeight);
         }
 
-        private static void PlaceButton(RectTransform rt, float x, float y)
+        private static void PlaceButton(RectTransform rt, float x, float w, float h)
         {
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = new Vector2(x, y);
-            rt.sizeDelta = new Vector2(ButtonWidth, ButtonHeight);
+            rt.anchoredPosition = new Vector2(x, ButtonCenterY);
+            rt.sizeDelta = new Vector2(w, h);
         }
 
         // ─────────────────────────────────────────────────────────
