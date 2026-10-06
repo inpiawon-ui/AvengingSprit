@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -15,6 +16,7 @@ namespace Game.Module.InGame
     ///   · `BattleDirector.Cards.cs`        — 암살 차단
     ///   · `BattleDirector.HostPassives.cs` — 표식 처형 차단
     ///   · `BattleDirector.SkillsNew.cs`    — 사신 즉사 차단
+    ///   그리고 이 판을 쓰는 에디터 도구 `Assets/Scripts/Editor/SkillFxRecorder.cs`(스킬 연출 영상)도 함께 지운다.
     ///
     /// ⚠ 스위치는 `GameConfig` 에 있다(`_sandboxMode`). **기본은 꺼짐**이고,
     ///   켜져 있으면 인게임 좌상단에 빨간 글씨로 알린다 — 켠 채로 빌드하는 사고를 막는다.
@@ -69,6 +71,65 @@ namespace Game.Module.InGame
             => _config != null && _config.TestPlayerDamage > 0 ? _config.TestPlayerDamage : normal;
 
         private bool TestDamageOn => _config != null && _config.TestPlayerDamage > 0;
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// 스킬 연출 영상(`SkillFxRecorder`)용 — 지금 몸을 치우고 그 자리에 다른 몸을 세운다(2026-10-06).
+        /// 테스트 판에서만 된다. 빙의 연출 · 탈출 비용 없이 바로 바꾼다 — 23종을 한 판에서 연달아 찍으려고.
+        /// 영상 도중 맞아 죽지 않게 무적을 길게 건다.
+        /// </summary>
+        public bool SandboxSwapHost(string key)
+        {
+            if (!Sandbox || !_running || _player == null) return false;
+            var entry = _player.GetHost(key);
+            if (entry == null) return false;
+            Vector2 pos = _host != null ? _host.Position : _ghost.Position;
+            if (_host != null)
+            {
+                Destroy(_host.gameObject);
+                _host = null;
+            }
+            EnterHost(entry, key, entry.DisplayName, pos, 100);
+            _invuln = 999f;
+            // 앞 스킬이 방을 비웠을 수 있다 — 적이 없으면 스킬이 허공에 나가거나 안 나간다
+            SandboxTopUp(++_sandboxSwaps);
+            return true;
+        }
+
+        private int _sandboxSwaps;
+
+        /// <summary>테스트 판이 돌고 있는가 — 영상 도구가 시작해도 되는지 본다.</summary>
+        public bool SandboxRunning => Sandbox && _running;
+
+        /// <summary>
+        /// 그 몸의 그림을 올린다. 판은 시작 몸 · 길에 나올 적의 그림만 미리 올려서,
+        /// 그 밖의 몸으로 바로 바꾸면 **흰 네모**로 섰다(영상 2026-10-06). 실제 게임은 방 안의 적에게서만 몸을 얻어 문제없다.
+        /// </summary>
+        public void SandboxPreload(string hostKey)
+        {
+            var res = GameFramework.Core.Base.CoreModule.Get<GameFramework.Core.Module.Resource.IResourceManager>();
+            foreach (var key in SandboxAtlasKeys(hostKey))
+                if (!_unitAtlas.ContainsKey(key))
+                    LoadOneUnitAtlasAsync(res, key).Forget();   // fire-and-forget: 다 올라왔는지는 SandboxUnitReady 로 본다
+        }
+
+        public bool SandboxUnitReady(string hostKey)
+        {
+            foreach (var key in SandboxAtlasKeys(hostKey))
+                if (!_unitAtlas.ContainsKey(key)) return false;
+            return true;
+        }
+
+        /// <summary>몸 키와 그림 키 — 둘이 다른 몸이 있어 둘 다 올린다.</summary>
+        private System.Collections.Generic.IEnumerable<string> SandboxAtlasKeys(string hostKey)
+        {
+            if (string.IsNullOrEmpty(hostKey)) yield break;
+            yield return hostKey;
+            var entry = _player != null ? _player.GetHost(hostKey) : null;
+            if (entry != null && !string.IsNullOrEmpty(entry.SpriteKey) && entry.SpriteKey != hostKey)
+                yield return entry.SpriteKey;
+        }
+#endif
 
         /// <summary>
         /// 적 수를 다섯으로 **채운다.** 정본 방은 스폰 목록이 정해져 있어

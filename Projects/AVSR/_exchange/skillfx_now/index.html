@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스킬 연출 점검</title>
+<style>
+  :root { --bg:#10141f; --card:#1a2132; --line:#2c3650; --text:#e9eef8; --dim:#9aa6bf; --acc:#ffd23f; --ok:#5cff7a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:"Noto Sans KR","Malgun Gothic",sans-serif; }
+  header { position:sticky; top:0; z-index:5; background:#0b0f18ee; border-bottom:1px solid var(--line); padding:12px 16px;
+           display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  header h1 { font-size:18px; margin:0 12px 0 0; }
+  header p { margin:0; color:var(--dim); font-size:13px; flex:1 1 300px; }
+  button { background:var(--acc); color:#1b1500; border:0; border-radius:6px; padding:8px 14px; font-weight:700; cursor:pointer; }
+  button.ghost { background:transparent; color:var(--text); border:1px solid var(--line); }
+  main { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; padding:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+  video { width:100%; aspect-ratio:9/16; background:#000; display:block; }
+  .body { padding:10px 12px 12px; display:flex; flex-direction:column; gap:6px; }
+  .name { font-weight:700; font-size:16px; }
+  .name small { color:var(--dim); font-weight:400; margin-left:6px; }
+  .desc { font-size:13px; color:var(--dim); }
+  .lv5 { font-size:13px; }
+  .lv5 b { color:var(--acc); }
+  .tag { display:inline-block; font-size:11px; padding:1px 6px; border-radius:4px; margin-right:4px; }
+  .tag.done { background:#173d24; color:var(--ok); }
+  .tag.new { background:#3d3417; color:var(--acc); }
+  textarea { width:100%; min-height:64px; resize:vertical; background:#0d1220; color:var(--text); border:1px solid var(--line);
+             border-radius:6px; padding:8px; font-family:inherit; font-size:13px; }
+  #toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#000c; padding:10px 16px; border-radius:8px;
+           display:none; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>스킬 연출 점검 (22종)</h1>
+  <p>영상을 보고 아래 칸에 고칠 점을 적으세요. 적은 내용은 이 브라우저에 남습니다. 다 적으면 「메모 모아 복사」를 눌러 채팅에 붙여 넣으면 됩니다.</p>
+  <button id="copy">메모 모아 복사</button>
+  <button id="loop" class="ghost">전부 반복 재생 켜기</button>
+</header>
+<main id="list"></main>
+<div id="toast"></div>
+<script>
+const SKILLS = [
+  ["01_gangster","갱스터","일제 표식","방 안 모든 적에게 3초간 표식","new","표식 적이 죽으면 표식이 옮겨 붙음 · 표식 피해 +30→60%"],
+  ["02_thug","폭력배","난사","1초간 3방향 난사","done","탄 관통 · 방향 3→7갈래"],
+  ["03_amazon","아마존","도약 강타","가장 가까운 적에게 뛰어들어 둘레 타격","new","착지 충격파 기절 1→2초"],
+  ["04_hopper","호퍼","정조준","5초간 치명타 확률 90% 고정","new","치명타가 작은 폭발 · 폭발 40→100%"],
+  ["05_hopper_smg","호퍼(기관단총)","도약 강습","가장 먼 적에게 뛰어들고 2초 무적","new","무적 동안 공속 +30→60%"],
+  ["06_commando_mg","코만도(기관총)","방벽 전개","5초간 최대 체력만큼 쉴드","new","방벽이 끝날 때 남은 쉴드만큼 폭발 50→150%"],
+  ["07_commando_laser","코만도(레이저)","연쇄 방전","3초간 주변 적에게 전기","new","감전 적 경직 확률 20→50%"],
+  ["08_commando_grenade","코만도(수류탄)","융단 폭격","수류탄 5발 부채꼴","done","착탄 화상 장판 · 5→8발"],
+  ["09_salamander","샐러맨더","독 뿜기","둘레 5 m 적 모두 중독","new","중독 적이 죽으면 독 웅덩이 3→6초"],
+  ["10_dragoon","드라군","화염 지대","가장 가까운 적 발밑 불바다","new","불바다 위 적 방어 −30→−45%"],
+  ["11_dragon_blue","청룡","뇌전 폭주","2초간 번개 튕김이 반드시 터짐","new","번개가 두 갈래로 · 갈래 피해 50→100%"],
+  ["12_guru","구루","수호 결계","3초간 받는 피해 −50%","done","결계 안 적 둔화 · 결계 5→8초"],
+  ["13_white_wizard","화이트 위저드","광휘 확산","부채꼴 8방향 광탄","new","광탄이 벽에 튕김 1→3회 (+ Lv1~4 성장 없음)"],
+  ["14_medium","영매","골렘 소환","해골보다 크고 오래 싸우는 골렘","new","골렘이 쓰러질 때 바위 폭발 (+ Lv1~4 성장 없음)"],
+  ["15_ninja","닌자","그림자 분신","분신이 5초간 적의 관심을 끎","new","분신이 표창을 던짐 (+ Lv1~4 성장 없음)"],
+  ["16_ninja_chain","닌자(사슬)","사슬 결박","방 안 모든 적을 5초간 묶음","new","풀릴 때 적을 끌어당김 · 추가 피해 +30→60%"],
+  ["17_robot","로봇","포탑 전개","10초 자동 포탑","done","반대편에 포탑 한 대 더 · 10→14초"],
+  ["18_baseball","슬러거","전탄 반사","5초간 탄 되받아치기","done","반사탄 관통 · 반사 피해 ×2→×4"],
+  ["19_snowwoman","설녀","얼음 감옥","잠깐 얼음 속 무적 · 체력 30% 회복","new","깨질 때 둘레 적 빙결 1→3초"],
+  ["20_vampire","흡혈귀","혈연","보이는 적마다 최대 체력 2% 회복","new","넘친 회복은 쉴드로 50→100%"],
+  ["21_commando_missile","코만도(미사일)","다중 유도","반원 8발이 한 대상으로","new","대상이 죽으면 남은 미사일 재유도 · 8→12발"],
+  ["22_death","사신","사신의 시간","3초간 때리는 적 즉사","new","즉사한 적의 영혼이 체력 회복 (+ Lv1~4 성장 없음)"],
+];
+const KEY = "skillfx_notes_v1";
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { notes = {}; }
+const list = document.getElementById("list");
+for (const [file, host, skill, desc, kind, lv5] of SKILLS) {
+  const card = document.createElement("article");
+  card.className = "card";
+  card.innerHTML = `
+    <video src="${file}.mp4" controls preload="metadata" playsinline></video>
+    <div class="body">
+      <div class="name">${host}<small>${skill}</small></div>
+      <div class="desc">지금: ${desc}</div>
+      <div class="lv5"><span class="tag ${kind}">${kind === "done" ? "Lv5 있음" : "Lv5 제안"}</span><b>Lv5</b> ${lv5}</div>
+      <textarea placeholder="고칠 점 (예: 표식이 작아서 안 보임, 사격이 더 묵직했으면)"></textarea>
+    </div>`;
+  const ta = card.querySelector("textarea");
+  ta.value = notes[file] || "";
+  ta.addEventListener("input", () => {
+    notes[file] = ta.value;
+    try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch (e) {}
+  });
+  list.appendChild(card);
+}
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 1800);
+}
+document.getElementById("copy").onclick = async () => {
+  const lines = SKILLS.filter(s => (notes[s[0]] || "").trim())
+                      .map(s => `- ${s[1]} 「${s[2]}」: ${notes[s[0]].trim()}`);
+  const text = lines.length ? "스킬 연출 메모\n" + lines.join("\n") : "";
+  if (!text) { toast("적은 메모가 없습니다"); return; }
+  try { await navigator.clipboard.writeText(text); toast(`메모 ${lines.length}개를 복사했습니다`); }
+  catch (e) { prompt("아래 글을 복사하세요", text); }
+};
+let looping = false;
+document.getElementById("loop").onclick = (ev) => {
+  looping = !looping;
+  for (const v of document.querySelectorAll("video")) { v.loop = looping; v.muted = looping; if (looping) v.play(); else v.pause(); }
+  ev.target.textContent = looping ? "전부 반복 재생 끄기" : "전부 반복 재생 켜기";
+};
+</script>
+</body>
+</html>
