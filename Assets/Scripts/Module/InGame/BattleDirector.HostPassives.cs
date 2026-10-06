@@ -89,7 +89,9 @@ namespace Game.Module.InGame
             if (entry == null) return 0;
             float percent = entry.DefensePercent;
             if (key == "commando_mg") percent *= 1f + CommandoMgDefenseBonus;
-            return Mathf.RoundToInt(percent);
+            // 로비 방어력 강화(%p)를 더한다 — 유령 탭(모든 몸) + 이 몸의 호스트 탭(2026-10-06)
+            if (_player != null) percent += _player.StatBonusFlat(key, Game.Character.HostStat.Defense);
+            return Mathf.Min(Mathf.RoundToInt(percent), Game.Character.GameConfig.DefenseCapPercent);
         }
 
         /// <summary>코만도(수류탄) — 상대 방어력을 이만큼 무시한다.</summary>
@@ -100,9 +102,12 @@ namespace Game.Module.InGame
         private float GoldGainMul
             => PassiveHostKey == "thug" ? 1f + ThugGoldBonus : 1f;
 
-        /// <summary>호퍼 — 치명타가 더 아프다. 치명타 배율에 **더한다**.</summary>
+        /// <summary>
+        /// 치명타 배율에 **더하는** 몫 — 호퍼 패시브 + 로비 치명타 피해 강화(%p → 배율, 2026-10-06).
+        /// </summary>
         private float CritDamageBonus
-            => PassiveHostKey == "hopper" ? HopperCritDamageBonus : 0f;
+            => (PassiveHostKey == "hopper" ? HopperCritDamageBonus : 0f)
+             + (_player != null ? _player.StatBonusFlat(PassiveHostKey, Game.Character.HostStat.CritDamage) / 100f : 0f);
 
         /// <summary>구루 — 걸어 다닐 때 장애물을 통과한다.</summary>
         private bool HostIgnoresObstacles => PassiveHostKey == "guru";

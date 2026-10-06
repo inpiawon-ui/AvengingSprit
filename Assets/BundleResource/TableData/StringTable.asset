@@ -2519,3 +2519,15 @@ MonoBehaviour:
     _ko: "\uC815\uC218\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4 ({0}/{1})"
     _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9\u304C\u8DB3\u308A\u307E\u305B\u3093 ({0}/{1})"
     _en: Not enough essence ({0}/{1})
+  - _key: ui.ingame.nohost_hint
+    _ko: "\uBE59\uC758\uD560 \uBAB8\uC744 \uCC3E\uC73C\uC138\uC694"
+    _ja: "\u6191\u4F9D\u3059\u308B\u4F53\u3092\u63A2\u305D\u3046"
+    _en: Find a body to possess
+  - _key: ui.stat.critdmg
+    _ko: "\uD06C\uB9AC\uD2F0\uCEEC \uD53C\uD574"
+    _ja: "\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u30C0\u30E1\u30FC\u30B8"
+    _en: Crit Damage
+  - _key: ui.stat.def
+    _ko: "\uBC29\uC5B4\uB825"
+    _ja: "\u9632\u5FA1\u529B"
+    _en: Defense

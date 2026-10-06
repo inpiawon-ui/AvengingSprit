@@ -138,6 +138,11 @@ namespace Game.User
         /// <summary>그 몸이 판에서 받는 배율 = 1 + (유령 % + 호스트 %) / 100.</summary>
         float StatBonusMul(string hostKey, HostStat stat);
 
+        /// <summary>
+        /// 더하는 능력치(치명타 피해 · 방어력)의 강화 합(%p) — 유령 탭 + 이 몸의 호스트 탭.
+        /// </summary>
+        float StatBonusFlat(string hostKey, HostStat stat);
+
         // ── 유령 성장 경로 ──────────────────────────────────
 
         int PathCount { get; }

@@ -556,3 +556,6 @@ ui.shop.daily.fail.refresh_limit	오늘은 더 새로고침할 수 없습니다.
 ui.shop.daily.fail.unknown	지금은 살 수 없습니다.	今は購入できません。	Cannot buy right now.
 ui.growth.essence.exchange	정수 {0}개로 조각 1개	エッセンス{0}個で欠片1個	{0} essence → 1 shard
 ui.growth.essence.short	정수가 부족합니다 ({0}/{1})	エッセンスが足りません ({0}/{1})	Not enough essence ({0}/{1})
+ui.ingame.nohost_hint	빙의할 몸을 찾으세요	憑依する体を探そう	Find a body to possess
+ui.stat.critdmg	크리티컬 피해	クリティカルダメージ	Crit Damage
+ui.stat.def	방어력	防御力	Defense

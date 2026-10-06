@@ -18,7 +18,9 @@ namespace Game.Character
     ///   "이 몸의 능력" 인데 그것만 "뺏을 때의 조건" 이라 층이 다르다.
     ///   뺏으면 HP 바에 바로 보이므로 미리 알려 줄 이유도 없다.
     /// </summary>
-    public enum HostStat { Hp, Atk, Crit, AtkSpeed, Range, MoveSpeed }
+    /// ⚠ **뒤에만 더한다.** 저장(`hostStatLevels`)이 [몸 × 능력치 수 + 능력치] 로 이 순서를 쓴다.
+    ///   치명타 피해 · 방어력은 2026-10-06 에 더했다 — 옛 저장은 `UserData.NormalizeStats` 가 옮긴다.
+    public enum HostStat { Hp, Atk, Crit, AtkSpeed, Range, MoveSpeed, CritDamage, Defense }
 
     /// <summary>
     /// 레벨 한 칸의 능력치. `HostEntry._levelStats` 의 원소다.

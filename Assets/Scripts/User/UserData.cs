@@ -124,11 +124,29 @@ namespace Game.User
             chestSeconds = Resize(chestSeconds, slotCount, 0);
         }
 
-        /// <summary>능력치 강화 배열 길이를 맞춘다 — 옛 저장(v3)은 비어 있고, 호스트가 늘면 짧다.</summary>
+        /// <summary>
+        /// 능력치 강화 배열 길이를 맞춘다 — 옛 저장(v3)은 비어 있고, 호스트가 늘면 짧다.
+        ///
+        /// ⚠ 능력치 수가 늘면(6 → 8, 2026-10-06) 몸마다 칸 수가 바뀐다. 길이만 늘리면
+        ///   [몸 × 6 + 능력치] 로 적힌 값이 [몸 × 8 + 능력치] 로 읽혀 **다른 몸의 강화가 섞인다.**
+        ///   옛 칸 수를 길이에서 알아내 몸별로 옮긴다.
+        /// </summary>
         public void NormalizeStats(int statCount)
         {
             ghostStatLevels = Resize(ghostStatLevels, statCount, 0);
-            hostStatLevels = Resize(hostStatLevels, (hostKeys?.Length ?? 0) * statCount, 0);
+            int hosts = hostKeys?.Length ?? 0;
+            int len = hostStatLevels?.Length ?? 0;
+            if (hosts > 0 && len > 0 && len % hosts == 0 && len / hosts != statCount && len / hosts < statCount)
+            {
+                int old = len / hosts;
+                var moved = new int[hosts * statCount];
+                for (int h = 0; h < hosts; h++)
+                    for (int s = 0; s < old; s++)
+                        moved[h * statCount + s] = hostStatLevels[h * old + s];
+                hostStatLevels = moved;
+                return;
+            }
+            hostStatLevels = Resize(hostStatLevels, hosts * statCount, 0);
         }
 
         private static T[] Resize<T>(T[] src, int n, T fill)

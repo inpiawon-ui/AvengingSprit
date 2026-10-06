@@ -59,8 +59,11 @@ namespace Game.Module.Lobby
 
         // 목록 순서 — 시안 첫 줄이 공격력이다
         private static readonly HostStat[] StatOrder =
-            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.AtkSpeed, HostStat.Range, HostStat.MoveSpeed };
-        private static readonly string[] StatKeys = { "hp", "atk", "crit", "atkspeed", "range", "movespeed" };
+            { HostStat.Atk, HostStat.Hp, HostStat.Crit, HostStat.CritDamage, HostStat.Defense,
+              HostStat.AtkSpeed, HostStat.Range, HostStat.MoveSpeed };
+        // 첨자는 `HostStat` 순서다 — 화면 순서(`StatOrder`)가 아니다
+        private static readonly string[] StatKeys =
+            { "hp", "atk", "crit", "atkspeed", "range", "movespeed", "critdmg", "def" };
 
         private enum Page { Ghost, Host }
 

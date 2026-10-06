@@ -825,8 +825,18 @@ namespace Game.Character
         [SerializeField] private int _hostStatMax = 50;
         [Tooltip("성급 하나가 여는 강화 레벨. 1성 10 · 2성 20 … (기획 2026-10-02)")]
         [SerializeField] private int _hostStatPerStar = 10;
-        [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다).")]
+        [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다). 순서 Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed")]
         [SerializeField] private float[] _statPercentPerLevel = { 2f, 2f, 2f, 1f, 1f, 1f };
+
+        // 치명타 피해 · 방어력(2026-10-06)은 **더하는 값(%p)** 이다 — 배율로 곱하면 타고난 값이 낮은 몸
+        // (방어 3% · 치명타 피해는 모두 200%)에게 강화가 거의 안 먹는다.
+        [Tooltip("치명타 피해 — 레벨당 더하는 %p. 기본 200% 에 더한다(유령 50 + 몸 50 = +100%p → 300%).")]
+        [SerializeField] private float _critDamagePerLevel = 1f;
+        [Tooltip("방어력 — 레벨당 더하는 %p. 몸의 타고난 방어(등급 × 3%)에 더한다(유령 50 + 몸 50 = +20%p).")]
+        [SerializeField] private float _defensePerLevel = 0.2f;
+
+        /// <summary>방어력 상한(%). 강화를 다 해도 이 위로는 안 오른다 — 맞아도 안 아프면 피할 이유가 없다.</summary>
+        public const int DefenseCapPercent = 60;
         // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다 — 10챕터를 67판쯤에 깨는
         // 수입(누적 약 7만 9천 골드)으로 유령 15 · 주력 몸 25 레벨쯤 사게 맞춘 값이다.
         // 예전 200 은 한 판 수입(300~1,550)에 비해 14배쯤 비쌌다.
@@ -857,9 +867,17 @@ namespace Game.Character
         public int HostStatCap(int stars)
             => Mathf.Clamp(Mathf.Max(1, stars) * Mathf.Max(1, _hostStatPerStar), 1, HostStatMax);
 
+        /// <summary>
+        /// 레벨당 오르는 값. 치명타 피해 · 방어력은 %p(더하는 값), 나머지는 %(곱하는 배율).
+        /// </summary>
         public float StatPercentPerLevel(HostStat stat)
-            => _statPercentPerLevel == null || _statPercentPerLevel.Length == 0 ? 0f
-             : _statPercentPerLevel[Mathf.Clamp((int)stat, 0, _statPercentPerLevel.Length - 1)];
+            => stat == HostStat.CritDamage ? _critDamagePerLevel
+             : stat == HostStat.Defense ? _defensePerLevel
+             : _statPercentPerLevel == null || (int)stat >= _statPercentPerLevel.Length ? 0f
+             : _statPercentPerLevel[(int)stat];
+
+        /// <summary>더하는 능력치인가(치명타 피해 · 방어력). 곱하는 것과 화면 표시 · 계산이 다르다.</summary>
+        public static bool IsFlatStat(HostStat stat) => stat == HostStat.CritDamage || stat == HostStat.Defense;
 
         /// <summary>Lv <paramref name="level"/> → 다음 단계 골드.</summary>
         public int StatCost(bool ghost, int level) => (ghost ? _ghostStatCostStep : _hostStatCostStep) * (level + 1);
