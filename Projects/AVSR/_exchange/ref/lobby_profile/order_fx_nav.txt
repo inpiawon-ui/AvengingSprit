@@ -1,0 +1,16 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 늘리거나 흐려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 하단 바 칸 여섯 장(켜짐 · 꺼짐)을 «같은 틀»로
+
+지금 하단 바(HOST · PLAY · SHOP)는 칸을 누를 때마다 커졌다 작아졌다 한다 — 켜짐 · 꺼짐 그림의 **틀 크기 · 자리 · 아이콘 크기가 서로 다르다.**
+  지금 그림 : C:/won/UnityProject/AvengingSprit/Assets/BaseResource/Growth/nav_host_on.png · nav_host_off.png · nav_play_on.png · nav_play_off.png · nav_shop_on.png · nav_shop_off.png (238 x 108 · 236 x 108)
+  확정 시안의 하단 바 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/ref_bottom_nav.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fx_nav_sheet.png  — 가로 1080 x 세로 324, 배경 마젠타 #FF00FF 단색
+  · 360 x 162 칸 여섯 개 — 윗줄(켜짐) 왼쪽부터 HOST · PLAY · SHOP, 아랫줄(꺼짐) 같은 순서.
+  · **여섯 칸의 틀(팔각 테두리)은 크기 · 자리 · 두께가 픽셀 단위로 같다.** 칸 가장자리에서 6px 안쪽에 틀을 둔다.
+  · 같은 칸의 켜짐 · 꺼짐은 **아이콘(갱스터 · 유령 · 보물상자)과 글자(HOST · PLAY · SHOP)의 크기 · 자리가 같다.**
+  · 다른 것은 색뿐 : 켜짐 = 금색 테두리 · 금빛 번짐 · 노란 글자 / 꺼짐 = 하늘색 테두리 · 흰 글자. 판 안쪽은 둘 다 짙은 남색.
+  · 아래 줄의 작은 부제(호스트 육성 · 게임 모드 · 상점)는 그리지 마라 — 게임이 글자로 얹는다(그 자리는 비워 둔다: 큰 글자 아래).
+  · 유령은 C:/won/UnityProject/AvengingSprit/Projects/AVSR/Reference/Hosts/idle/ghost_anchor_user_x8.png 와 같은 생김새.
+끝나면 경로만 알려라.

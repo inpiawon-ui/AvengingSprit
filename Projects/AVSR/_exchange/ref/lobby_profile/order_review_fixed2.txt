@@ -1,0 +1,18 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 파일을 고치지 마라 — 읽고 검토만 한다.
+
+AVENGING SPIRIT: RE:BORN — 로비 · 육성 · 챕터 선택 「위 · 아래 고정」 적용 검토
+
+PD 지시 : 확정 시안(C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fixed_lobby.png · fixed_growth.png · fixed_chapter.png)과 «완전 똑같이». 아래 바 버튼을 누르면 그 칸의 점(쪽 표시 점 셋)에 불이 들어와야 한다.
+
+볼 것
+ 1. 코드 : C:/won/UnityProject/AvengingSprit/Assets/Scripts/Editor/FixedBarsBinder.cs (새 에디터 도구 — 프리팹을 고친다)
+          변경분 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/review_fixed2_diff.txt (LobbyMainUI · ChapterHostPanel · FontPolicy)
+ 2. 게임 스샷 대 시안(왼쪽 게임 · 오른쪽 시안, 9:16) : review2_lobby.png · review2_growth.png · review2_chapter.png (같은 폴더)
+    태블릿 4:3 · 긴 폰 20:9 (로비 · 육성 · 챕터 순) : review2_4x3.png · review2_20x9.png
+    ※ 데이터(레벨 · 골드 · 챕터 상자 개수)가 시안과 다른 것은 정상이다. 자리 · 크기 · 모양 · 글꼴만 본다.
+
+답할 것(한국어, 짧게, 번호 목록)
+ A. 시안과 다른 점 — 자리 · 크기 · 글꼴 · 빠진 것. 심한 순.
+ B. 코드 버그 · 위험 — 특히 (1) 아래 바를 눌렀을 때 챕터 창 닫힘 · 점 켜짐 흐름, (2) 챕터 창이 열릴 때 형제 순서(위 막대 · 아래 바가 창 위에 남아야 한다), (3) 도구를 두 번 돌렸을 때 망가지는 것.
+ C. 4:3 · 20:9 에서 어색한 것.
+결과를 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/review_fixed2.md 에 써라. 끝나면 경로만 알려라.

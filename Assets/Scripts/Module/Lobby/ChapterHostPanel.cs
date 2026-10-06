@@ -123,7 +123,11 @@ namespace Game.Module.Lobby
         public void Open()
         {
             gameObject.SetActive(true);
-            transform.SetAsLastSibling();   // 06_ui 규약 — 활성화 시 최상단으로
+            // 06_ui 규약은 최상단이지만, 위 막대 · 아래 바는 이 창 위에 남는다(PD 2026-10-06 — 위 · 아래 고정).
+            //   그래서 아래 바 바로 밑까지만 올린다.
+            var nav = transform.parent != null ? transform.parent.Find("BottomNav") : null;
+            if (nav == null) transform.SetAsLastSibling();
+            else if (transform.GetSiblingIndex() > nav.GetSiblingIndex()) transform.SetSiblingIndex(nav.GetSiblingIndex());
             if (_player == null) CoreModule.TryGet<IPlayerDataService>(out _player);
             if (_player == null || !_player.IsReady) return;
 
@@ -402,7 +406,7 @@ namespace Game.Module.Lobby
             // 글자는 제 폭을 지키고 자리만 벌어져 둘 사이가 뜬다(2026-10-01).
             _ui.SetText("CHChapterLabel",
                         $"{Localize.FromTable("ui.chapterhost.chapter", "CHAPTER")} "
-                        + $"<size=122%><color=#5CC7FF>{_chapter:00}</color></size>");
+                        + $"<size=128%><color=#5CC7FF>{_chapter:00}</color></size>");
             _ui.SetText("CHChapterNoText", string.Empty);
             _ui.SetText("CHChapterNameText",
                         Localize.FromTable($"stage.{_chapter}.1.name", row.Name ?? string.Empty));
@@ -534,6 +538,11 @@ namespace Game.Module.Lobby
                         ? Localize.FromTable("ui.chapterhost.ghost_power", "몸 없음")
                         : _player.PowerOf(key).ToString("N0");
                     power.color = ghost ? DimText : GoldText;
+                    // 유령은 별 · 칼이 없다 — 시안대로 그 두 줄 사이 가운데에 쓴다(2026-10-06 실측)
+                    var r = power.rectTransform;
+                    r.pivot = new Vector2(ghost ? 0.5f : 0f, 0.5f);
+                    r.anchoredPosition = ghost ? ChapterHostLayout.GhostNote : ChapterHostLayout.PowerText;
+                    power.alignment = ghost ? TextAlignmentOptions.Center : TextAlignmentOptions.Left;
                 }
                 var powerIcon = _ui.Find(card, "CardPowerIcon");
                 if (powerIcon != null) powerIcon.gameObject.SetActive(!ghost);
@@ -677,16 +686,16 @@ namespace Game.Module.Lobby
     /// <summary>카드 자리값 — 판과 빌더가 **같은 숫자**를 봐야 목록이 어긋나지 않는다.</summary>
     public static class ChapterHostLayout
     {
-        // ⚠ 시안이 **9:16(1080x1920)** 으로 다시 그려졌다(2026-10-01).
-        //   2:3 시안을 늘려 쓰던 때와 달리 늘림이 없다 — 배율은 빌더와 **같은 720/1080** 이다.
-        //   실측(v6) : 카드 가로 142 · 세로 360 · 사이 12 · 보이는 폭 914 (여섯 장).
-        private const float S = 720f / 1080f;
-
-        public const float CardWidth = 142f * S;
-        public const float CardHeight = 360f * S;
-        public const float CardGap = 12f * S;
-        public const float ViewWidth = 914f * S;
-        public const float ViewHeight = 360f * S;
+        // ⚠ 위 · 아래 고정 시안(2026-10-06, `_exchange/ref/lobby_profile/fixed_chapter.png`)에서 다시 쟀다 — 화면 px.
+        //   카드 113 x 225 · 사이 13 · 보이는 폭 630 (다섯 장). 칸 배치는 `FixedBarsBinder` 가 같은 값으로 옮긴다.
+        //   ⚠ `ChapterHostBuilder` 는 다시 돌리지 않는다 — 빌더에 없는 상성 노드가 사라진다.
+        public const float CardWidth = 113f;
+        public const float CardHeight = 225f;
+        public const float CardGap = 13f;
+        public const float ViewWidth = 630f;
+        public const float ViewHeight = 225f;
+        /// <summary>카드 가운데 기준 — 전투력 글자(왼쪽 끝) · 유령의 「몸 없음」(가운데).</summary>
+        public static readonly Vector2 PowerText = new(-20f, -92f), GhostNote = new(0f, -80.5f);
         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
     }
 }

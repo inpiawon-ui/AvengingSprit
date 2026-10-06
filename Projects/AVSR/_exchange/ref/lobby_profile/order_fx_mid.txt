@@ -1,0 +1,9 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 늘리거나 흐려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 로비 가운데 배경에서 쪽 표시 점 세 개 지우기
+
+  바탕 : C:/won/UnityProject/AvengingSprit/Assets/BaseResource/LobbyV4/base_mid.png
+  게임 모드 칸들 아래 가운데에 작은 점 세 개(노랑 하나 · 파랑 둘)가 그려져 있다. 이 점들을 게임이 따로 얹어 켜고 끄게 바꾼다.
+■ 지울 것 : 그 점 세 개만 흔적 없이 — 둘레 배경으로 잇는다.  ■ 그 밖은 바탕 그대로.
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fx_base_mid.png (바탕과 같은 크기)
+끝나면 경로만 알려라.

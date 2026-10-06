@@ -1,0 +1,12 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 늘리거나 흐려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 왼쪽 위 유령 프로필 판 «빈 판»
+
+PD 가 확정한 시안 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fixed_lobby.png
+판만 자른 참조 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/ref_profile_plate.png (250 x 120)
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fx_profile_plate.png — 가로 375 x 세로 180 (참조의 정확히 1.5배), 배경 마젠타 #FF00FF 단색
+  · 참조의 프로필 판과 **같은 모양 · 같은 자리 · 같은 색**(1.5배): 하늘색 네온 테두리의 둥근 판, 왼쪽 얼굴 원, 오른쪽 위 LV 배지(짙은 남색 속 · 하늘색 테두리), 그 아래 경험치 막대 홈.
+  · 지울 것 : 얼굴 원 안의 유령(원 안은 짙은 남색으로 비운다), 배지 안의 「LV. 12」 글자, 막대 안의 하늘색 채움(홈은 비운다), 막대 아래 「1,240 / 2,000」 글자.
+  · 판 바깥(위 막대의 어두운 띠 · 금화 칸)은 그리지 말고 마젠타로 둔다. 판 테두리의 빛 번짐은 남긴다.
+끝나면 경로만 알려라.

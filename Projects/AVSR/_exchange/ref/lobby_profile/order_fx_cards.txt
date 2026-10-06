@@ -1,0 +1,13 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+AVENGING SPIRIT: RE:BORN — 확정 챕터 선택 화면의 «빈 카드 틀» 두 장 · 체크 표 · 주사위 판
+
+  시안 : Projects/AVSR/_exchange/ref/lobby_profile/fixed_chapter.png · 카드 부분 확대 Projects/AVSR/_exchange/ref/lobby_profile/ref_cards.png · 주사위 부분 Projects/AVSR/_exchange/ref/lobby_profile/ref_dice.png
+  게임은 카드 안의 얼굴 · 이름 · 별 · 전투력 · 속성 아이콘을 실시간으로 얹는다. 그래서 **안이 빈 틀**이 필요하다.
+
+■ 만들 것 : Projects/AVSR/_exchange/ref/lobby_profile/fx_card_parts.png — 가로 1200 x 세로 400, 배경 마젠타 #FF00FF 단색. 왼쪽부터 칸 넷(칸끼리 닿지 않게) :
+  ① 보통 카드 틀(시안의 「갱스터」 카드 틀 — 하늘색 팔각 테두리 · 짙은 남색 안쪽) — **안을 비운다**. 시안 카드와 같은 비율(가로 113 : 세로 225), 크기 226 x 450 으로.
+  ② 고른 카드 틀(시안의 「유령」 카드 틀 — 금색 테두리 · 금빛 번짐) — 안을 비운다. ①과 **같은 크기 · 같은 자리의 테두리**(번짐만 바깥으로).
+  ③ 오른쪽 위 노란 체크 표(시안 유령 카드 오른쪽 위의 노란 네모 + 검은 ✓) — 70 x 56 안팎.
+  ④ 주사위 판(시안 랜덤 선택 왼쪽의 파란 빛 네모 판 + 하얀 주사위 + 노란 ?) — 정사각 244 x 244.
+끝나면 경로만 알려라.

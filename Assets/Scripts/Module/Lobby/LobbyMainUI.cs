@@ -58,6 +58,8 @@ namespace Game.Module.Lobby
         /// <summary>「プレイ ▶」 — 글자 끝 → ▶ 간격, 덩어리 가운데(버튼 왼쪽 기준). 빌더가 시안에서 잰 값으로 덮는다.</summary>
         [SerializeField] private float _playArrowGap = 9f;
         [SerializeField] private float _playGroupCenter = 92f;
+        /// <summary>아래 바 위 쪽 표시 점 — 고른 칸(HOST · PLAY · SHOP)의 점에 불이 들어온다(PD 2026-10-06).</summary>
+        [SerializeField] private Sprite _navDotOn, _navDotOff;
 
         private UIBinder _ui;
         private IPlayerDataService _player;
@@ -380,6 +382,9 @@ namespace Game.Module.Lobby
             SetNav("HostButton", host);
             SetNav("ChapterButton", !host);
             SetNav("ShopButton", false);
+            SetDots(host ? 0 : 1);
+            // 아래 바는 챕터 창 위에 있어 창이 열린 채로 눌린다 — HOST 든 PLAY 든 누르면 창을 닫고 그 화면으로
+            if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
             // 위 화면만 바꾼다 — 육성 화면이 켜지면 로비 판은 끈다(가려져 안 보이는데 그리기만 한다)
             for (int i = 0; i < LobbyPageNodes.Length; i++)
             {
@@ -389,6 +394,15 @@ namespace Game.Module.Lobby
             if (_growthPanel == null) return;
             if (host) _growthPanel.Open();
             else _growthPanel.Close();
+        }
+
+        private void SetDots(int lit)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var dot = _ui.Find("NavDot" + i)?.GetComponent<UnityEngine.UI.Image>();
+                if (dot != null) dot.sprite = i == lit ? _navDotOn : _navDotOff;
+            }
         }
 
         private void SetNav(string node, bool selected)
@@ -446,10 +460,18 @@ namespace Game.Module.Lobby
             // 하단 바가 시안보다 작아(2026-09-21) 9:16 에서도 가운데판 아래에 틈이 남는다. 그 몫(slack)은
             // 가운데판 아래(도시)에 두어 9:16 에서 가운데판이 시안 자리에 있게 하고, 그보다 더 남는 것만 위아래로 나눈다.
             float slack = ReferenceHeight - top.rect.height - mid.rect.height - nav.rect.height;
+            // 위 · 아래 고정 시안(2026-10-06)은 위 막대 밑으로 판을 내렸다 — 위판 +44, 가운데판 +46 · 세로 0.9637(실측).
+            top.anchoredPosition = new Vector2(top.anchoredPosition.x, -FixedTopShift);
+            mid.localScale = new Vector3(1f, FixedMidScaleY, 1f);
+            if (transform.Find(GapNode) is RectTransform gap)
+                gap.anchoredPosition = new Vector2(gap.anchoredPosition.x, -(top.rect.height + FixedTopShift));
             var p = mid.anchoredPosition;
-            p.y = -(top.rect.height + Mathf.Max(0f, free - Mathf.Max(0f, slack)) * 0.5f);
+            p.y = -(top.rect.height + FixedMidShift + Mathf.Max(0f, free - Mathf.Max(0f, slack)) * 0.5f);
             mid.anchoredPosition = p;
         }
+
+        private const string GapNode = "LobbyV4Gap";
+        private const float FixedTopShift = 44f, FixedMidShift = 46f, FixedMidScaleY = 0.9637f;
 
         private void OnDisable()
         {
@@ -466,8 +488,8 @@ namespace Game.Module.Lobby
             ApplyChests();
         }
 
-        /// <summary>경험치 채움의 가득 찬 폭 — `LobbyProfileBinder.FillWidth` 와 같아야 한다.</summary>
-        private const float ProfileFillWidth = 116f * 226f / 250f;
+        /// <summary>경험치 채움의 가득 찬 폭 — `FixedBarsBinder.ProfileFillWidth` 와 같아야 한다.</summary>
+        private const float ProfileFillWidth = 117f;
 
         /// <summary>
         /// 왼쪽 위 유령 프로필(A안, PD 확정 2026-10-06) — 유령 레벨 · 경험치.

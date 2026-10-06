@@ -1,0 +1,11 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 늘리거나 흐려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 육성 화면 배경(bg_skill)에서 로고 · 재화 칸 지우기
+
+  바탕 : C:/won/UnityProject/AvengingSprit/Assets/BaseResource/Growth/bg_skill.png (720 x 1170)
+  위 막대를 화면 공통 막대로 바꿔서, 배경 맨 위에 그려진 것들이 필요 없어졌다.
+■ 지울 것 : 왼쪽 위 「AVENGING SPIRIT RE:BORN」 로고, 오른쪽 위 금화 칸 · 우편 단추(빨간 「!」) · 톱니바퀴 — 흔적 없이.
+  그 자리는 **둘레와 이어지는 밤 도시 풍경**(하늘 · 달 · 건물 실루엣 · 창불빛)으로 그린다.
+■ 그 밖은 바탕 그대로(위치 같게 — 나는 위쪽 띠만 오려 쓴다).
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/fx_bg_skill.png (720 x 1170)
+끝나면 경로만 알려라.

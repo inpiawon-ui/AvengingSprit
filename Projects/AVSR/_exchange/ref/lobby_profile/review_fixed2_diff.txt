@@ -1,0 +1,151 @@
+diff --git a/Assets/Scripts/Module/Common/UI/FontPolicy.cs b/Assets/Scripts/Module/Common/UI/FontPolicy.cs
+index af7205ee..81c4d61d 100644
+--- a/Assets/Scripts/Module/Common/UI/FontPolicy.cs
++++ b/Assets/Scripts/Module/Common/UI/FontPolicy.cs
+@@ -43,8 +43,8 @@ namespace Game.Module.Common.UI
+             "StaminaText", "GoldText", "GemText", "GhostExpText", "GhostLevelText",
+             "ProgressText", "StatValueText", "ContinueCostText", "OwnedHostCountText",
+             "BattlePassExpText", "DailyLoginDayText", "EventTimerText",
+-            // 로비 유령 프로필(A안) — LV · 경험치 수치
+-            "ProfileLevelText", "ProfileExpText",
++            // ⚠ 로비 유령 프로필(ProfileLevelText · ProfileExpText)은 픽셀이 아니다 — 위 · 아래 고정 시안(2026-10-06)은
++            //   금화 수치와 같은 굵은 고딕이다
+             // 인게임 HUD 3차(D안) — 영문 · 숫자는 전부 원작 픽셀 글꼴(시안 확정 2026-10-06)
+             "PlayerSoulLabel", "GhostNameText", "LevelText", "HpLabelGhost", "GhostHpText",
+             "HostLabel", "HostLevelText", "HpLabelHost", "HostHpText",
+diff --git a/Assets/Scripts/Module/Lobby/ChapterHostPanel.cs b/Assets/Scripts/Module/Lobby/ChapterHostPanel.cs
+index fc85257e..c1eef397 100644
+--- a/Assets/Scripts/Module/Lobby/ChapterHostPanel.cs
++++ b/Assets/Scripts/Module/Lobby/ChapterHostPanel.cs
+@@ -123,7 +123,11 @@ namespace Game.Module.Lobby
+         public void Open()
+         {
+             gameObject.SetActive(true);
+-            transform.SetAsLastSibling();   // 06_ui 규약 — 활성화 시 최상단으로
++            // 06_ui 규약은 최상단이지만, 위 막대 · 아래 바는 이 창 위에 남는다(PD 2026-10-06 — 위 · 아래 고정).
++            //   그래서 아래 바 바로 밑까지만 올린다.
++            var nav = transform.parent != null ? transform.parent.Find("BottomNav") : null;
++            if (nav == null) transform.SetAsLastSibling();
++            else if (transform.GetSiblingIndex() > nav.GetSiblingIndex()) transform.SetSiblingIndex(nav.GetSiblingIndex());
+             if (_player == null) CoreModule.TryGet<IPlayerDataService>(out _player);
+             if (_player == null || !_player.IsReady) return;
+ 
+@@ -402,7 +406,7 @@ namespace Game.Module.Lobby
+             // 글자는 제 폭을 지키고 자리만 벌어져 둘 사이가 뜬다(2026-10-01).
+             _ui.SetText("CHChapterLabel",
+                         $"{Localize.FromTable("ui.chapterhost.chapter", "CHAPTER")} "
+-                        + $"<size=122%><color=#5CC7FF>{_chapter:00}</color></size>");
++                        + $"<size=128%><color=#5CC7FF>{_chapter:00}</color></size>");
+             _ui.SetText("CHChapterNoText", string.Empty);
+             _ui.SetText("CHChapterNameText",
+                         Localize.FromTable($"stage.{_chapter}.1.name", row.Name ?? string.Empty));
+@@ -534,6 +538,11 @@ namespace Game.Module.Lobby
+                         ? Localize.FromTable("ui.chapterhost.ghost_power", "몸 없음")
+                         : _player.PowerOf(key).ToString("N0");
+                     power.color = ghost ? DimText : GoldText;
++                    // 유령은 별 · 칼이 없다 — 시안대로 그 두 줄 사이 가운데에 쓴다(2026-10-06 실측)
++                    var r = power.rectTransform;
++                    r.pivot = new Vector2(ghost ? 0.5f : 0f, 0.5f);
++                    r.anchoredPosition = ghost ? ChapterHostLayout.GhostNote : ChapterHostLayout.PowerText;
++                    power.alignment = ghost ? TextAlignmentOptions.Center : TextAlignmentOptions.Left;
+                 }
+                 var powerIcon = _ui.Find(card, "CardPowerIcon");
+                 if (powerIcon != null) powerIcon.gameObject.SetActive(!ghost);
+@@ -677,16 +686,16 @@ namespace Game.Module.Lobby
+     /// <summary>카드 자리값 — 판과 빌더가 **같은 숫자**를 봐야 목록이 어긋나지 않는다.</summary>
+     public static class ChapterHostLayout
+     {
+-        // ⚠ 시안이 **9:16(1080x1920)** 으로 다시 그려졌다(2026-10-01).
+-        //   2:3 시안을 늘려 쓰던 때와 달리 늘림이 없다 — 배율은 빌더와 **같은 720/1080** 이다.
+-        //   실측(v6) : 카드 가로 142 · 세로 360 · 사이 12 · 보이는 폭 914 (여섯 장).
+-        private const float S = 720f / 1080f;
+-
+-        public const float CardWidth = 142f * S;
+-        public const float CardHeight = 360f * S;
+-        public const float CardGap = 12f * S;
+-        public const float ViewWidth = 914f * S;
+-        public const float ViewHeight = 360f * S;
++        // ⚠ 위 · 아래 고정 시안(2026-10-06, `_exchange/ref/lobby_profile/fixed_chapter.png`)에서 다시 쟀다 — 화면 px.
++        //   카드 113 x 225 · 사이 13 · 보이는 폭 630 (다섯 장). 칸 배치는 `FixedBarsBinder` 가 같은 값으로 옮긴다.
++        //   ⚠ `ChapterHostBuilder` 는 다시 돌리지 않는다 — 빌더에 없는 상성 노드가 사라진다.
++        public const float CardWidth = 113f;
++        public const float CardHeight = 225f;
++        public const float CardGap = 13f;
++        public const float ViewWidth = 630f;
++        public const float ViewHeight = 225f;
++        /// <summary>카드 가운데 기준 — 전투력 글자(왼쪽 끝) · 유령의 「몸 없음」(가운데).</summary>
++        public static readonly Vector2 PowerText = new(-20f, -92f), GhostNote = new(0f, -80.5f);
+         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
+     }
+ }
+diff --git a/Assets/Scripts/Module/Lobby/LobbyMainUI.cs b/Assets/Scripts/Module/Lobby/LobbyMainUI.cs
+index 4c435512..46aa0fc5 100644
+--- a/Assets/Scripts/Module/Lobby/LobbyMainUI.cs
++++ b/Assets/Scripts/Module/Lobby/LobbyMainUI.cs
+@@ -58,6 +58,8 @@ namespace Game.Module.Lobby
+         /// <summary>「プレイ ▶」 — 글자 끝 → ▶ 간격, 덩어리 가운데(버튼 왼쪽 기준). 빌더가 시안에서 잰 값으로 덮는다.</summary>
+         [SerializeField] private float _playArrowGap = 9f;
+         [SerializeField] private float _playGroupCenter = 92f;
++        /// <summary>아래 바 위 쪽 표시 점 — 고른 칸(HOST · PLAY · SHOP)의 점에 불이 들어온다(PD 2026-10-06).</summary>
++        [SerializeField] private Sprite _navDotOn, _navDotOff;
+ 
+         private UIBinder _ui;
+         private IPlayerDataService _player;
+@@ -380,6 +382,9 @@ namespace Game.Module.Lobby
+             SetNav("HostButton", host);
+             SetNav("ChapterButton", !host);
+             SetNav("ShopButton", false);
++            SetDots(host ? 0 : 1);
++            // 아래 바는 챕터 창 위에 있어 창이 열린 채로 눌린다 — HOST 든 PLAY 든 누르면 창을 닫고 그 화면으로
++            if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
+             // 위 화면만 바꾼다 — 육성 화면이 켜지면 로비 판은 끈다(가려져 안 보이는데 그리기만 한다)
+             for (int i = 0; i < LobbyPageNodes.Length; i++)
+             {
+@@ -391,6 +396,15 @@ namespace Game.Module.Lobby
+             else _growthPanel.Close();
+         }
+ 
++        private void SetDots(int lit)
++        {
++            for (int i = 0; i < 3; i++)
++            {
++                var dot = _ui.Find("NavDot" + i)?.GetComponent<UnityEngine.UI.Image>();
++                if (dot != null) dot.sprite = i == lit ? _navDotOn : _navDotOff;
++            }
++        }
++
+         private void SetNav(string node, bool selected)
+         {
+             var view = _ui.Find(node)?.GetComponent<NavTabView>();
+@@ -446,11 +460,19 @@ namespace Game.Module.Lobby
+             // 하단 바가 시안보다 작아(2026-09-21) 9:16 에서도 가운데판 아래에 틈이 남는다. 그 몫(slack)은
+             // 가운데판 아래(도시)에 두어 9:16 에서 가운데판이 시안 자리에 있게 하고, 그보다 더 남는 것만 위아래로 나눈다.
+             float slack = ReferenceHeight - top.rect.height - mid.rect.height - nav.rect.height;
++            // 위 · 아래 고정 시안(2026-10-06)은 위 막대 밑으로 판을 내렸다 — 위판 +44, 가운데판 +46 · 세로 0.9637(실측).
++            top.anchoredPosition = new Vector2(top.anchoredPosition.x, -FixedTopShift);
++            mid.localScale = new Vector3(1f, FixedMidScaleY, 1f);
++            if (transform.Find(GapNode) is RectTransform gap)
++                gap.anchoredPosition = new Vector2(gap.anchoredPosition.x, -(top.rect.height + FixedTopShift));
+             var p = mid.anchoredPosition;
+-            p.y = -(top.rect.height + Mathf.Max(0f, free - Mathf.Max(0f, slack)) * 0.5f);
++            p.y = -(top.rect.height + FixedMidShift + Mathf.Max(0f, free - Mathf.Max(0f, slack)) * 0.5f);
+             mid.anchoredPosition = p;
+         }
+ 
++        private const string GapNode = "LobbyV4Gap";
++        private const float FixedTopShift = 44f, FixedMidShift = 46f, FixedMidScaleY = 0.9637f;
++
+         private void OnDisable()
+         {
+             for (int i = 0; i < _tokens.Count; i++) _tokens[i]?.Dispose();
+@@ -466,8 +488,8 @@ namespace Game.Module.Lobby
+             ApplyChests();
+         }
+ 
+-        /// <summary>경험치 채움의 가득 찬 폭 — `LobbyProfileBinder.FillWidth` 와 같아야 한다.</summary>
+-        private const float ProfileFillWidth = 116f * 226f / 250f;
++        /// <summary>경험치 채움의 가득 찬 폭 — `FixedBarsBinder.ProfileFillWidth` 와 같아야 한다.</summary>
++        private const float ProfileFillWidth = 117f;
+ 
+         /// <summary>
+         /// 왼쪽 위 유령 프로필(A안, PD 확정 2026-10-06) — 유령 레벨 · 경험치.

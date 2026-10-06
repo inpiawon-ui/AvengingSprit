@@ -1,0 +1,11 @@
+AVENGING SPIRIT: RE:BORN — «위 막대 · 아래 바 고정» 시안 세 장 검수 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+PD 요청 : 「호스트 육성과 게임 모드 선택을 할 때 탑뷰는 그대로 유지되면 좋겠어. 탑이랑 바텀은 고정인 느낌으로.」
+  Projects/AVSR/_exchange/ref/lobby_profile/fixed_lobby.png · fixed_growth.png · fixed_chapter.png (각 720x1280)
+  지금 화면 : now_growth_host.png · now_chapter_select.png · game_lobby_profile.png (같은 폴더)
+볼 것 : 1) 세 장의 위 막대 · 아래 바가 같은가  2) 육성 · 챕터 선택 내용이 줄어든 자리에서 잘리거나 겹치거나 너무 작아진 것이 있는가
+        3) 챕터 선택에서 뒤로 단추가 없어져도 흐름이 자연스러운가  4) 고칠 점
+쓸 것 : Projects/AVSR/_exchange/ref/lobby_profile/review_fixed.md (한국어, 10줄 이내), 마지막 줄 「PD 보고 가능」 또는 「한 번 더 고칠 것」.
+끝나면 파일 경로만 알려라.

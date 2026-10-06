@@ -1,0 +1,8 @@
+AVENGING SPIRIT: RE:BORN — «위 · 아래 고정» 챕터 선택 시안 고치기
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+Projects/AVSR/_exchange/ref/lobby_profile/fixed_chapter_v1.png 를 바탕으로 한 가지만 고친다 :
+  · 「CHAPTER 01」 양옆의 **챕터 좌우 전환 화살표(◀ ▶)** 가 빠졌다. 지금 게임(now_chapter_select.png)처럼 「CHAPTER 01」 양옆에 되살려라.
+  위 막대 · 아래 바 · 나머지 내용은 v1 그대로(픽셀 단위로 같게).
+만들 것 : Projects/AVSR/_exchange/ref/lobby_profile/fixed_chapter.png (덮어써라, 720 x 1280). 끝나면 경로만 알려라.
