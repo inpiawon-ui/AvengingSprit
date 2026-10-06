@@ -118,12 +118,36 @@ def growth_strip():
         im.save(os.path.join(IN, name))
 
 
+def growth_full(key):
+    """fx_growth_full_{key}.png (960 x 1447) → Growth/bg_ghost_full.png · v5/bg_host_v5_full.png
+
+    태블릿 좌우 120 · 키 큰 폰 아래 340 을 이어 그린 배경. 위로는 늘리지 않는다 —
+    맨 위 밤 도시 띠는 장면 한가운데를 자른 그림이라 위로 이으면 달 · 간판에서 경계가 생겼다(2026-10-06).
+    (120, 0) 부터 지금 배경의 보이던 줄(y 63 ~ 1170)을 그대로 덮는다 — 칸 · 테두리는 원본 그대로. 이음매만 4px 섞는다.
+    """
+    src = {'ghost': os.path.join(GROWTH, 'bg_ghost.png'), 'host_v5': os.path.join(GROWTH, 'v5', 'bg_host_v5.png')}[key]
+    dst = {'ghost': os.path.join(GROWTH, 'bg_ghost_full.png'),
+           'host_v5': os.path.join(GROWTH, 'v5', 'bg_host_v5_full.png')}[key]
+    out = Image.open(os.path.join(SRC, 'fx_growth_full_%s.png' % key)).convert('RGBA')
+    if out.size != (960, 1447):
+        out = out.resize((960, 1447), Image.LANCZOS)
+    core = Image.open(src).convert('RGBA').crop((0, 63, 720, 1170))
+    mask = Image.new('L', core.size, 0)
+    mask.paste(255, (4, 0, 716, core.size[1] - 4))   # 위 변은 화면 위 막대 밑이라 섞지 않는다
+    out.paste(core, (120, 0), mask.filter(ImageFilter.GaussianBlur(2)))
+    out.convert('RGB').save(dst)
+    print(os.path.basename(dst), out.size)
+
+
 if __name__ == '__main__':
     # ⚠ 그냥 돌리면 점을 base_mid 에서 다시 자른다 — base_mid 는 이미 점을 지운 판이라 빈 점이 된다.
-    #   판 하나만 다시 자를 때는 이름을 준다 : python fixed_bars_cut.py profile | strip
+    #   판 하나만 다시 자를 때는 이름을 준다 : python fixed_bars_cut.py profile | strip | full ghost host_v5
     if sys.argv[1:] == ['profile']:
         profile_plate()
     elif sys.argv[1:] == ['strip']:
         growth_strip()
+    elif sys.argv[1:2] == ['full']:
+        for k in sys.argv[2:]:
+            growth_full(k)
     else:
         main()

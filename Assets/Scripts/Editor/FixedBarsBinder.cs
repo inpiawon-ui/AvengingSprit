@@ -33,7 +33,8 @@ namespace Game.Editor
             foreach (var p in new[] { $"{Lobby}/fixed_top_band.png", $"{Lobby}/profile_plate_fx.png", $"{Lobby}/band_edge_l.png", $"{Lobby}/band_edge_r.png",
                                       $"{Lobby}/nav_dot_on.png", $"{Lobby}/nav_dot_off.png",
                                       $"{Ch}/ch_screen_fixed.png", $"{Ch}/ch_card_frame_fx.png", $"{Ch}/ch_card_frame_sel_fx.png",
-                                      $"{Ch}/ch_check_fx.png", $"{Ch}/ch_icon_dice_fx.png" })
+                                      $"{Ch}/ch_check_fx.png", $"{Ch}/ch_icon_dice_fx.png", $"{Ch}/ch_screen_wide.png",
+                                      $"{Growth_}/bg_ghost_full.png", $"{Growth_}/v5/bg_host_v5_full.png" })
                 EnsureSprite(p);
             Border($"{Ch}/ch_card_frame_fx.png", 28);
             Border($"{Ch}/ch_card_frame_sel_fx.png", 36);
@@ -235,12 +236,24 @@ namespace Game.Editor
         public const float GrowthShift = 58f;
         public const float GrowthScaleY = 0.9745f;
 
+        /// <summary>
+        /// 태블릿 · 키 큰 폰용으로 이어 그린 배경(960 x 1447). 화면에 보이던 줄(배경 y 63 ~ 1170)이
+        /// 새 그림의 (120, 0) 부터 놓인다 — 좌우 120 은 태블릿 몫, 아래 340 줄은 키 큰 폰 몫.
+        /// 판은 키 큰 폰에서도 위 막대 밑에 붙어 있다 — 맨 위 밤 도시 띠가 시안 그대로 막대 밑에 보여야 한다.
+        /// (위로 이어 그리면 띠가 장면 한가운데를 자른 그림이라 달 · 간판에서 경계가 생겼다 — 2026-10-06)
+        /// </summary>
+        private const float GrowthFullLeft = 120f, GrowthFullTop = 63f;
+
         private static void Growth(Transform root)
         {
             var page = root.Find("GrowthPanel/Page") as RectTransform;
             if (page == null) return;
             page.anchoredPosition = new Vector2(page.anchoredPosition.x, -GrowthShift);
             page.localScale = new Vector3(1f, GrowthScaleY, 1f);
+            if (page.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null)
+                page.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            FullBg(page, "BgGhost", $"{Growth_}/bg_ghost_full.png");
+            FullBg(page, "HostPage/H5Bg", $"{Growth_}/v5/bg_host_v5_full.png");
             // 육성 판의 위 띠(로고 · 금화 · 우편 · 설정)는 공통 위 막대가 맡는다
             foreach (var n in new[] { "GrowthGoldPlusButton", "GrowthMailButton", "GrowthSettingsButton", "GrowthGoldText" })
                 if (Find(page, n) is Transform t) t.gameObject.SetActive(false);
@@ -253,6 +266,18 @@ namespace Game.Editor
                 tmp.fontSizeMin = Mathf.Min(tmp.fontSizeMax, 9f);
                 tmp.textWrappingMode = TextWrappingModes.NoWrap;
             }
+        }
+
+        private const string Growth_ = "Assets/BaseResource/Growth";
+
+        private static void FullBg(Transform page, string node, string sprite)
+        {
+            var s = Spr(sprite);
+            if (s == null || page.Find(node) is not RectTransform r) return;   // 그림이 아직 없으면 지금 그대로
+            r.GetComponent<Image>().sprite = s;
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 1f);
+            r.anchoredPosition = new Vector2(-GrowthFullLeft, -GrowthFullTop);
+            r.sizeDelta = new Vector2(s.rect.width, s.rect.height);   // 배경 그림은 화면 해상도(720 폭) 그대로다
         }
 
         // ── 챕터 선택 ─────────────────────────────────────────────
@@ -275,9 +300,20 @@ namespace Game.Editor
             // 판 — 위 막대 · 아래 바 사이(시안 y 120 ~ 1170)를 그린 것. 키 큰 폰용으로 위아래가 늘어난 판이면 그만큼 크다.
             if (box.Find("CHScreen") is not Transform screenNode) { Debug.LogWarning("[FixedBars] 노드 없음: CHScreen"); return; }
             var screen = screenNode.GetComponent<Image>();
-            screen.sprite = Spr($"{Ch}/ch_screen_fixed.png");
-            float aspect = screen.sprite != null ? screen.sprite.rect.height / screen.sprite.rect.width : 1050f / 720f;
-            C(box, "CHScreen", 360, 645, 720, 720f * aspect);
+            // 태블릿 · 키 큰 폰용으로 사방을 이어 그린 판(1255 x 1790)이 있으면 그것 — 가운데 941 폭이 시안 720 이다
+            var wide = Spr($"{Ch}/ch_screen_wide.png");
+            screen.sprite = wide != null ? wide : Spr($"{Ch}/ch_screen_fixed.png");
+            float k = 720f / 941f;
+            C(box, "CHScreen", 360, 645, screen.sprite.rect.width * k, screen.sprite.rect.height * k);
+            // ⚠ 화면 맞춤(ScreenFit)이 이 칸을 만지면 태블릿에서 판을 가로로 늘리고 글자를 양옆으로 흩는다.
+            //   칸 전체를 720 그대로 가운데에 두고, 남는 좌우는 이어 그린 판이 메운다
+            if (box.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null)
+                box.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+            // 가로 늘리기(ScreenFitStretchX)는 좌우가 빈 띠로 남던 때(2026-10-01) 넣은 것 — 판째 1.33배로 늘려
+            //   테두리 모서리가 찌그러졌다. 이제 좌우는 이어 그린 판이 메운다. 로비 · 육성과 같은 방식
+            if (box.TryGetComponent<Game.Module.Common.UI.ScreenFitStretchX>(out var stretch))
+                Object.DestroyImmediate(stretch);
+            box.localScale = Vector3.one;
 
             // 챕터 큰 판 — 그림은 판 안쪽(x 28~692 · y 136~409)
             C(box, "CHChapterArtBox", 360, 272.5f, 664, 273);

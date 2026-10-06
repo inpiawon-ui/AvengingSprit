@@ -54,5 +54,24 @@ def main():
         print(name, xs.stop - xs.start, ys.stop - ys.start)
 
 
+def wide():
+    """fx_chapter_wide.png (1255 x 1790, 태블릿용 좌우 157 연장) → ChapterHost/ch_screen_wide.png
+
+    가운데 941 폭은 지금 판(ch_screen_fixed.png — 구분선까지 붙인 것)을 그대로 덮는다.
+    납품이 가운데를 조금이라도 바꿨어도 칸 · 테두리는 원본 그대로 남는다. 이음매만 3px 섞는다.
+    """
+    out = Image.open(os.path.join(SRC, 'fx_chapter_wide.png')).convert('RGBA')
+    core = Image.open(os.path.join(CH, 'ch_screen_fixed.png')).convert('RGBA')
+    x0 = (out.size[0] - core.size[0]) // 2
+    mask = Image.new('L', core.size, 0)
+    mask.paste(255, (4, 0, core.size[0] - 4, core.size[1]))
+    out.paste(core, (x0, 0), mask.filter(ImageFilter.GaussianBlur(2)))
+    out.convert('RGB').save(os.path.join(CH, 'ch_screen_wide.png'))
+    print('ch_screen_wide', out.size)
+
+
 if __name__ == '__main__':
-    main()
+    if sys.argv[1:] == ['wide']:
+        wide()
+    else:
+        main()
