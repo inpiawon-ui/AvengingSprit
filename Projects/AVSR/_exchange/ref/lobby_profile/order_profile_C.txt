@@ -1,0 +1,24 @@
+AVENGING SPIRIT: RE:BORN — 로비 왼쪽 위에 «유령 레벨 · 경험치» 넣는 시안 · C안 — 네가 가장 좋다고 보는 답
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+PD 질문 : 「로비 왼쪽 위 'AVENGING SPIRIT' 로고 자리에 유령 레벨이랑 경험치 등을 어울리게 넣으면 좋을 만한 게 있을까?」
+이 게임에서 **유령 = 플레이어 자신(유저 레벨)** 이다. 경험치는 챕터를 깨면 오른다. 레벨은 1 ~ 최대 레벨까지.
+너는 이 게임 UI 의 아트 디렉터다. 색 · 디자인은 네게 맡긴다.
+
+■ 열어 볼 것
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/now_lobby.png              지금 로비(720 x 1280) — 바꿀 자리는 왼쪽 위 로고 칸(대략 x 0~230, y 0~130)
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D2.png               확정된 인게임 HUD — 유령 알약(얼굴 원 · LV 배지 · 막대)의 생김새 참고
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/ingame_ui/font_specimen.png              우리 글꼴(영문 · 숫자 원작 픽셀, 한글 굵은 고딕)
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/Reference/Hosts/idle/ghost_anchor_user_x8.png   유령 기준 생김새
+
+■ 들어가야 하는 정보
+  · 유령 얼굴 · 「LV. 12」 같은 레벨 · 경험치 막대와 「1,240 / 2,000」 같은 수치
+  · 맨 위 재화 칸(금화 · 다이아) · 우편 · 설정 단추는 지금 자리 그대로. 가운데 큰 유령 · 보물상자 장면을 가리지 마라.
+■ 이 안 : 네 판단. A(로고 대신 프로필 판) · B(작은 로고 + 아래 프로필)와 **다른 답**을 내라.
+  예 : 유령 얼굴 둘레를 감싸는 둥근 경험치 고리 + 가운데 레벨 숫자, 혹은 재화 줄과 한 줄로 합치는 식. 의견서에 왜 이것이 가장 좋은지 적어라.
+
+■ 만들 것
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/profile_C.png   완성된 로비 화면 한 장(720 x 1280, 지금 로비와 같은 크기 — 왼쪽 위만 바뀐 모습)
+  C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/lobby_profile/profile_C.md    이 안의 의도 5줄 안팎(한국어)
+끝나면 두 파일의 경로만 알려라.

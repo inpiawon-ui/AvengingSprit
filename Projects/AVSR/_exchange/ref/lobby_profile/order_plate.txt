@@ -1,0 +1,16 @@
+AVENGING SPIRIT: RE:BORN — 로비 유령 프로필 판(A안 확정) «빈 판» 과 채움 막대
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+PD 가 A안을 확정했다. 게임이 유령 얼굴 · 레벨 글자 · 경험치 채움 · 수치를 실시간으로 얹으므로, 그것들을 뺀 판이 필요하다.
+  Projects/AVSR/_exchange/ref/lobby_profile/pd_profile_A_crop.png   확정 판(250 x 115 화면 크기 그대로 잘라 둔 것)
+  Projects/AVSR/_exchange/ref/lobby_profile/profile_A.png           확정 시안 전체
+
+■ 만들 것 1 : Projects/AVSR/_exchange/ref/lobby_profile/plate_empty.png   (750 x 345 — 확정 판의 정확히 3배)
+  · 확정 판과 **같은 모양 · 같은 비율 · 같은 자리**(3배로 키운 것). 바깥은 마젠타 #FF00FF 단색.
+  · 지울 것 : 유령 그림(얼굴 원 안은 비운다 — 둥근 테두리는 남긴다) · 「LV. 12」 글자(노란 배지 **틀은 남기고** 안만 비운다) ·
+    경험치 막대의 하늘색 **채움**(빈 홈만 남긴다) · 「1,240 / 2,000」 글자.
+  · 확정본에서 판이 조금 크고 빛이 강하다는 검수 의견이 있었다 — 테두리 빛 번짐만 살짝 줄여라(모양 · 크기는 그대로).
+■ 만들 것 2 : Projects/AVSR/_exchange/ref/lobby_profile/plate_fill.png   (가로 400 x 세로 60, 마젠타 바탕)
+  · 경험치 막대 채움(확정본의 밝은 하늘색) 한 줄, 가로 360 · 세로 36 안팎, 끝은 각지게(게임이 길이를 잘라 쓴다).
+끝나면 두 파일의 경로만 알려라.

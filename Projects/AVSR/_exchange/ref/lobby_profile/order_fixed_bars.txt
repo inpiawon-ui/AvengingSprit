@@ -1,0 +1,26 @@
+AVENGING SPIRIT: RE:BORN — 로비 · 육성 · 게임 모드 선택에서 «위 막대 · 아래 바 고정» 시안 세 장
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+PD 요청 : 「호스트 육성과 게임 모드 선택을 할 때 탑뷰는 그대로 유지되면 좋겠어. 탑이랑 바텀은 고정인 느낌으로.」
+지금은 화면마다 위쪽이 다르다 :
+  Projects/AVSR/_exchange/ref/lobby_profile/profile_A.png          로비 — 확정된 A안(왼쪽 위 유령 프로필 판 · 금화 · 다이아 · 우편 · 설정)
+  Projects/AVSR/_exchange/ref/lobby_profile/now_growth_host.png    육성 화면 — 위에 로고 · 금화 · 우편 · 설정 띠가 따로 있다(다이아 없음)
+  Projects/AVSR/_exchange/ref/lobby_profile/now_chapter_select.png 게임 모드 → 챕터 · 호스트 선택 — 뒤로 · 다이아 · 금화 · 우편 · 설정 막대가 따로 있고, 아래 바(HOST · PLAY · SHOP)가 없다
+
+■ 만들 것 — 세 장, 모두 720 x 1280 완성 화면
+  Projects/AVSR/_exchange/ref/lobby_profile/fixed_lobby.png
+  Projects/AVSR/_exchange/ref/lobby_profile/fixed_growth.png
+  Projects/AVSR/_exchange/ref/lobby_profile/fixed_chapter.png
+  · **위 막대는 세 장이 픽셀 단위로 같다** : 로비 A안의 왼쪽 위 유령 프로필 판 + 금화 칸 + 다이아 칸 + 우편 + 설정. 자리 · 크기 그대로.
+    뒤에 깔린 배경도 세 장이 같게 — 위 막대만 따로 떼어 쓸 수 있도록, 막대 뒤에 얇은 어두운 띠를 깔아라(로비 장면이 그 아래에서 시작).
+  · **아래 바는 세 장이 픽셀 단위로 같다** : 지금 로비의 HOST · PLAY · SHOP 바. 로비 · 챕터 선택은 PLAY 가, 육성은 HOST 가 선택(금색 테두리).
+  · 가운데만 바뀐다 :
+      로비 — 지금 로비 장면 그대로(위 막대 밑으로 장면 · 상자 칸 · 게임 모드).
+      육성 — 지금 육성 화면의 내용(유령/호스트 육성 탭 · 몸 카드 · 능력치 강화 · 스킬 · 호스트 목록)을 위 막대와 아래 바 사이에 맞춰 넣는다. 육성 화면 자체의 로고 · 금화 · 우편 · 설정 띠는 없앤다.
+      챕터 선택 — 지금 챕터 · 호스트 선택의 내용(챕터 칸 · 보스 · 클리어 보상 · 호스트 선택 · 랜덤 선택 · 도전하기 버튼)을 위 막대와 아래 바 사이에 맞춰 넣는다.
+        자기 막대(뒤로 · 다이아 · 금화 · 우편 · 설정)는 없앤다. 「도전하기」는 아래 바 **바로 위**에. 뒤로 가기는 아래 바의 PLAY 를 다시 누르는 것 · 기기 뒤로 단추로 한다.
+  · 내용이 위아래로 줄어드니 칸 사이 여백을 줄이고 필요하면 글자 · 칸을 조금 줄여라. 잘리거나 겹치면 안 된다.
+  · 글꼴은 Projects/AVSR/_exchange/ref/ingame_ui/font_specimen.png 대로(영문 · 숫자 원작 픽셀, 한글 굵은 고딕).
+■ 그리고 의견서 : Projects/AVSR/_exchange/ref/lobby_profile/fixed_bars.md (한국어 8줄 안팎) — 위 막대 높이 · 무엇을 줄였는지.
+끝나면 네 파일의 경로만 알려라.

@@ -1,0 +1,11 @@
+AVENGING SPIRIT: RE:BORN — 로비 프로필 세 안 검수 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+PD 질문 : 「로비 왼쪽 위 로고 자리에 유령 레벨 · 경험치 등을 어울리게 넣으면 좋을 만한 게 있을까?」
+  Projects/AVSR/_exchange/ref/lobby_profile/profile_compare.png       지금 · A · B · C (로비 위쪽 절반)
+  Projects/AVSR/_exchange/ref/lobby_profile/profile_compare_zoom.png  A · B · C 왼쪽 위 확대
+  낱장 : profile_A.png · profile_B.png · profile_C.png, 의견서 profile_*.md (같은 폴더)
+볼 것 : 로비와 어울림 · 레벨과 경험치가 한눈에 읽히는가 · 재화 줄과의 정렬 · 휴대폰 실제 크기(720 폭)에서 글자 크기 · 브랜드(로고) 유무의 득실 · 구현하기 쉬운가
+쓸 것 : Projects/AVSR/_exchange/ref/lobby_profile/review.md (한국어, 12줄 이내) — 안마다 장점 하나 · 문제 하나, **추천 안 하나**와 이유, 추천 안을 다듬을 점 셋.
+끝나면 파일 경로만 알려라.

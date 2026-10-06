@@ -1,0 +1,10 @@
+AVENGING SPIRIT: RE:BORN — 로비 위쪽 배경에서 로고 지우기
+
+**스크립트로 픽셀을 복사 · 늘리기 · 흐리기로 때우지 마라. 내장 이미지 생성(편집) 기능으로 그려라.** API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+■ 바탕 : Projects/AVSR/_exchange/ref/lobby_profile/now_base_top.png  (941 x 632)
+■ 지울 것 : 왼쪽 위 「AVENGING SPIRIT RE:BORN」 로고(대략 x 25~295 · y 10~165) — 글자 · 빨간 획 · 그림자까지 흔적 없이.
+  그 자리는 **둘레와 이어지는 밤하늘 · 구름 · 건물 실루엣**으로 그린다(그 자리에는 나중에 프로필 판이 올라간다).
+■ 나머지는 바탕 그대로(나는 그 자리만 오려서 쓴다 — 위치는 같게).
+■ 만들 것 : Projects/AVSR/_exchange/ref/lobby_profile/base_top_nologo.png  (941 x 632)
+끝나면 경로만 알려라.

@@ -96,6 +96,8 @@ namespace Game.Module.Lobby
             //   HOST → 육성 화면 · PLAY → 로비 · SHOP → 준비 중(선택은 그대로)
             if (_growthPanel != null) _growthPanel.Close();
             _ui.OnClick("HostButton", () => SelectTab(Tab.Host));
+            // 왼쪽 위 유령 프로필 — 누르면 육성의 유령 탭으로(유령 = 플레이어 자신)
+            _ui.OnClick("LobbyProfile", OpenGhostGrowth);
             _ui.OnClick("ChapterButton", () => SelectTab(Tab.Play));
             _ui.OnClick("ShopButton", () => NotifyNotReady("상점"));
             SelectTab(Tab.Play);
@@ -412,6 +414,7 @@ namespace Game.Module.Lobby
             var bus = CoreModule.Get<IEventBus>();
             _tokens.Add(bus.Subscribe<UserDataReadyEvent>(_ => Refresh()));
             _tokens.Add(bus.Subscribe<CurrencyChangedEvent>(_ => RefreshCurrency()));
+            _tokens.Add(bus.Subscribe<GhostProgressChangedEvent>(_ => RefreshProfile()));
             _tokens.Add(bus.Subscribe<ChestChangedEvent>(_ => ApplyChests()));
             // 코드가 채우는 글자(상자 문구 · 플레이 자리)는 LocalizedText 가 없다 — 언어가 바뀌면 다시 채운다
             _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => { _playLabelDirty = true; ApplyChests(); }));
@@ -459,7 +462,33 @@ namespace Game.Module.Lobby
             if (_player == null) CoreModule.TryGet<IPlayerDataService>(out _player);
             if (_player == null || !_player.IsReady) return;
             RefreshCurrency();
+            RefreshProfile();
             ApplyChests();
+        }
+
+        /// <summary>경험치 채움의 가득 찬 폭 — `LobbyProfileBinder.FillWidth` 와 같아야 한다.</summary>
+        private const float ProfileFillWidth = 116f * 226f / 250f;
+
+        /// <summary>
+        /// 왼쪽 위 유령 프로필(A안, PD 확정 2026-10-06) — 유령 레벨 · 경험치.
+        /// 유령은 유저 레벨이다. 경험치는 챕터를 깨면 오른다. 최대 레벨이면 「MAX」.
+        /// </summary>
+        private void RefreshProfile()
+        {
+            if (_player == null || !_player.IsReady) return;
+            int lv = _player.GhostLevel;
+            bool max = lv >= _player.GhostLevelMax;
+            // 픽셀 글꼴의 띄어쓰기는 한 글자만큼 넓어 「LV.   1」 로 벌어졌다 — 좁은 칸을 준다
+            _ui.SetText("ProfileLevelText", $"LV.<space=0.25em>{lv}");
+            _ui.SetText("ProfileExpText", max ? "MAX" : $"{_player.GhostExp:N0} / {_player.GhostExpMax:N0}");
+            float ratio = max ? 1f : _player.GhostExpMax > 0 ? (float)_player.GhostExp / _player.GhostExpMax : 0f;
+            _ui.SetFill("ProfileExpFill", ratio, ProfileFillWidth);
+        }
+
+        private void OpenGhostGrowth()
+        {
+            SelectTab(Tab.Host);
+            if (_growthPanel != null) _growthPanel.ShowGhost();
         }
 
         private void RefreshCurrency()

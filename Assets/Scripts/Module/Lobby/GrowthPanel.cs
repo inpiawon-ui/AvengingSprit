@@ -122,6 +122,13 @@ namespace Game.Module.Lobby
 
         public void Close() => gameObject.SetActive(false);
 
+        /// <summary>유령 탭을 연다 — 로비 왼쪽 위 유령 프로필을 눌렀을 때.</summary>
+        public void ShowGhost()
+        {
+            if (!gameObject.activeSelf) Open();
+            if (_player != null && _player.IsReady) ShowPage(Page.Ghost);
+        }
+
         // ── 세우기 — 줄 · 칸을 표만큼 복제 ───────────────────────
 
         private void BuildOnce()

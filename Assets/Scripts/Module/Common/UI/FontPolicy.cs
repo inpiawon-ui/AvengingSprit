@@ -43,6 +43,8 @@ namespace Game.Module.Common.UI
             "StaminaText", "GoldText", "GemText", "GhostExpText", "GhostLevelText",
             "ProgressText", "StatValueText", "ContinueCostText", "OwnedHostCountText",
             "BattlePassExpText", "DailyLoginDayText", "EventTimerText",
+            // 로비 유령 프로필(A안) — LV · 경험치 수치
+            "ProfileLevelText", "ProfileExpText",
             // 인게임 HUD 3차(D안) — 영문 · 숫자는 전부 원작 픽셀 글꼴(시안 확정 2026-10-06)
             "PlayerSoulLabel", "GhostNameText", "LevelText", "HpLabelGhost", "GhostHpText",
             "HostLabel", "HostLevelText", "HpLabelHost", "HostHpText",

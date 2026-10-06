@@ -222,6 +222,8 @@ namespace Game.Editor
                 // 판이 늦게 만들어져 맨 뒤로 가면 창(호스트 선택 등)을 덮는다 — 맨 앞으로 보낸다
                 // 틈 그림이 판보다 먼저(뒤에) 그려져야 판 끝이 이음 줄을 덮는다
                 gap.SetSiblingIndex(0); top.SetSiblingIndex(1); mid.SetSiblingIndex(2);
+                // 왼쪽 위 유령 프로필 — LobbyV4Top 을 다시 만들었으니 다시 꽂는다
+                LobbyProfileBinder.Bind(root);
                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
