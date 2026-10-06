@@ -38,6 +38,8 @@ W, H = 10, 16
 GATE_TOP = 13.5          # 이 위로는 물건이 못 올라간다(문 구역 2.5 m)
 ENTRANCE = (5.0, 1.7)    # 플레이어가 서는 자리
 ENTRANCE_CLEAR = 4.5     # 적은 입구에서 이만큼 떨어진다
+FIRST_ROOM_POSSESS_M = 5.5   # 첫 방의 몸 — 입구에서 이 안(빙의 사거리 429 px = 6 m 에서 여유를 뺐다)
+FIRST_ROOM_ENEMY_GAP = 3.0   # 첫 방의 적 — 몸보다 이만큼 뒤(위)
 
 # 글자 → (종류, 폭, 높이)
 GLYPH = {
@@ -442,6 +444,20 @@ def check(room, errors, warns):
                 warns.append(f'{tag}: 원거리 {actor}({x},{y}) 근처에 키 큰 엄폐가 없다')
     if room.no in COMBAT_NO and not (has_melee and has_ranged):
         warns.append(f'{tag}: 근접·원거리가 다 있어야 한다 (근접 {has_melee} · 원거리 {has_ranged})')
+    # 챕터 첫 방 — 들어서자마자 빙의하고 시작한다(기획 2026-10-06).
+    # 유령은 몸이 없으면 에너지가 닳으므로, 첫 방에서 적을 지나 몸을 찾으러 가게 하면
+    # 빙의를 배우기도 전에 죽는다. 몸은 입구에서 빙의 사거리 안, 적은 그 몸보다 3 m 이상 뒤.
+    if room.no == '001':
+        hosts = [(x, y) for actor, x, y, host in room.spawns if host]
+        if hosts:
+            hx, hy = min(hosts, key=lambda h: (h[0] - ENTRANCE[0]) ** 2 + (h[1] - ENTRANCE[1]) ** 2)
+            d = ((hx - ENTRANCE[0]) ** 2 + (hy - ENTRANCE[1]) ** 2) ** 0.5
+            if d > FIRST_ROOM_POSSESS_M:
+                errors.append(f'{tag}: 첫 방의 몸이 입구에서 {d:.1f} m — 빙의 사거리 {FIRST_ROOM_POSSESS_M} m 안에 둔다')
+            for actor, x, y, host in room.spawns:
+                if not host and y < hy + FIRST_ROOM_ENEMY_GAP:
+                    errors.append(f'{tag}: 첫 방의 {actor}({x},{y}) 가 몸({hx},{hy})보다 '
+                                  f'{FIRST_ROOM_ENEMY_GAP} m 이상 뒤에 있어야 한다')
     ok, cells = reachable(room)
     if not ok:
         errors.append(f'{tag}: 입구에서 문까지 못 간다')

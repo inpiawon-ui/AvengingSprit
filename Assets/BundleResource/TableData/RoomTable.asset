@@ -55,27 +55,27 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH1_001_S01
-      _actorId: gangster
-      _at: {x: 4.5, y: 12.5}
+      _actorId: skeleton
+      _at: {x: 4.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH1_001_S02
       _actorId: skeleton
-      _at: {x: 4.5, y: 8.5}
+      _at: {x: 5.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH1_001_S03
-      _actorId: skeleton
-      _at: {x: 5.5, y: 7.5}
+      _actorId: gangster
+      _at: {x: 4.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
@@ -2248,7 +2248,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_001_S02
       _actorId: bat
-      _at: {x: 4.5, y: 9.5}
+      _at: {x: 6.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2256,7 +2256,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_001_S03
       _actorId: bat
-      _at: {x: 5.5, y: 7.5}
+      _at: {x: 4.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2264,7 +2264,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_001_S04
       _actorId: robot
-      _at: {x: 7.5, y: 5.5}
+      _at: {x: 5.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
@@ -4823,16 +4823,16 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH3_001_S02
-      _actorId: hopper_smg
-      _at: {x: 3.5, y: 9.5}
+      _actorId: skeleton
+      _at: {x: 2.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH3_001_S03
       _actorId: skeleton
-      _at: {x: 2.5, y: 7.5}
+      _at: {x: 7.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -4840,18 +4840,18 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH3_001_S04
       _actorId: skeleton
-      _at: {x: 7.5, y: 7.5}
+      _at: {x: 4.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH3_001_S05
-      _actorId: skeleton
-      _at: {x: 4.5, y: 6.5}
+      _actorId: hopper_smg
+      _at: {x: 5.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: WALL_TURRET_S_1
@@ -4919,7 +4919,20 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_6
+    - _objectId: PROP_TALL_6
+      _kind: PROP_TALL
+      _at: {x: 4.5, y: 5.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PILLAR_7
       _kind: PILLAR
       _at: {x: 8.5, y: 5.5}
       _size: {x: 1, y: 1}
@@ -4932,7 +4945,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_7
+    - _objectId: CRATE_8
       _kind: CRATE
       _at: {x: 3, y: 3.5}
       _size: {x: 2, y: 1}
@@ -4945,7 +4958,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_WIDE_8
+    - _objectId: PROP_WIDE_9
       _kind: PROP_WIDE
       _at: {x: 7, y: 3.5}
       _size: {x: 2, y: 1}
@@ -7739,6 +7752,14 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH4_001_S01
+      _actorId: bat
+      _at: {x: 2.5, y: 11.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH4_001_S02
       _actorId: actor_enforcer
       _at: {x: 3.5, y: 11.5}
       _facing: S
@@ -7746,7 +7767,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH4_001_S02
+      _spawnId: ROOM_CH4_001_S03
       _actorId: coilwalker
       _at: {x: 6.5, y: 11.5}
       _facing: S
@@ -7754,7 +7775,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH4_001_S03
+      _spawnId: ROOM_CH4_001_S04
       _actorId: actor_enforcer
       _at: {x: 2.5, y: 10.5}
       _facing: S
@@ -7762,7 +7783,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH4_001_S04
+      _spawnId: ROOM_CH4_001_S05
       _actorId: actor_enforcer
       _at: {x: 7.5, y: 10.5}
       _facing: S
@@ -7770,20 +7791,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH4_001_S05
+      _spawnId: ROOM_CH4_001_S06
       _actorId: medium
       _at: {x: 2.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH4_001_S06
-      _actorId: bat
-      _at: {x: 7.5, y: 6.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
@@ -10317,24 +10330,24 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S02
-      _actorId: commando_grenade
-      _at: {x: 7.5, y: 11.5}
+      _actorId: skeleton
+      _at: {x: 2.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S03
       _actorId: bat
-      _at: {x: 3.5, y: 9.5}
+      _at: {x: 5.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S04
-      _actorId: bat
-      _at: {x: 6.5, y: 9.5}
+      _actorId: actor_enforcer
+      _at: {x: 7.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -10342,26 +10355,26 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH5_001_S05
       _actorId: bat
-      _at: {x: 5.5, y: 7.5}
+      _at: {x: 3.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S06
-      _actorId: skeleton
-      _at: {x: 1.5, y: 6.5}
+      _actorId: bat
+      _at: {x: 6.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_001_S07
-      _actorId: actor_enforcer
-      _at: {x: 8.5, y: 6.5}
+      _actorId: commando_grenade
+      _at: {x: 2.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PROP_TALL_1
@@ -13472,6 +13485,22 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_001_S04
+      _actorId: actor_enforcer
+      _at: {x: 4.5, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH6_001_S05
+      _actorId: skeleton
+      _at: {x: 8.5, y: 9.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH6_001_S06
       _actorId: skeleton
       _at: {x: 0.5, y: 8.5}
       _facing: S
@@ -13479,7 +13508,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH6_001_S05
+      _spawnId: ROOM_CH6_001_S07
       _actorId: coilwalker
       _at: {x: 9.5, y: 8.5}
       _facing: S
@@ -13487,28 +13516,12 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH6_001_S06
-      _actorId: actor_enforcer
-      _at: {x: 2.5, y: 6.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_001_S07
+      _spawnId: ROOM_CH6_001_S08
       _actorId: ninja
       _at: {x: 2.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_001_S08
-      _actorId: skeleton
-      _at: {x: 9.5, y: 5.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
     - _objectId: PROP_TALL_1
@@ -16652,24 +16665,24 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_001_S03
-      _actorId: dragon_blue
-      _at: {x: 4.5, y: 10.5}
+      _actorId: actor_enforcer
+      _at: {x: 1.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_001_S04
-      _actorId: turret_cross
-      _at: {x: 5.5, y: 9.5}
+      _actorId: actor_enforcer
+      _at: {x: 3.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_001_S05
-      _actorId: actor_enforcer
-      _at: {x: 1.5, y: 7.5}
+      _actorId: skeleton
+      _at: {x: 7.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -16677,26 +16690,26 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH7_001_S06
       _actorId: skeleton
-      _at: {x: 8.5, y: 7.5}
+      _at: {x: 1.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_001_S07
-      _actorId: actor_enforcer
-      _at: {x: 4.5, y: 6.5}
+      _actorId: turret_cross
+      _at: {x: 7.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_001_S08
-      _actorId: actor_enforcer
-      _at: {x: 0.5, y: 5.5}
+      _actorId: dragon_blue
+      _at: {x: 4.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PROP_TALL_1
@@ -20032,6 +20045,22 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH8_001_S01
+      _actorId: scrapgunner
+      _at: {x: 1.5, y: 12.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH8_001_S02
+      _actorId: coilwalker
+      _at: {x: 8.5, y: 12.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH8_001_S03
       _actorId: roadwarden
       _at: {x: 1.5, y: 11.5}
       _facing: S
@@ -20039,15 +20068,15 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH8_001_S02
-      _actorId: commando_grenade
+      _spawnId: ROOM_CH8_001_S04
+      _actorId: turret_cross
       _at: {x: 4.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH8_001_S03
+      _spawnId: ROOM_CH8_001_S05
       _actorId: roadwarden
       _at: {x: 8.5, y: 11.5}
       _facing: S
@@ -20055,7 +20084,15 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH8_001_S04
+      _spawnId: ROOM_CH8_001_S06
+      _actorId: bat
+      _at: {x: 3.5, y: 9.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH8_001_S07
       _actorId: turret_cross
       _at: {x: 4.5, y: 9.5}
       _facing: S
@@ -20063,44 +20100,20 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH8_001_S05
-      _actorId: scrapgunner
-      _at: {x: 1.5, y: 7.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH8_001_S06
-      _actorId: coilwalker
-      _at: {x: 8.5, y: 7.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH8_001_S07
-      _actorId: bat
-      _at: {x: 3.5, y: 6.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
       _spawnId: ROOM_CH8_001_S08
-      _actorId: turret_cross
-      _at: {x: 5.5, y: 6.5}
+      _actorId: bat
+      _at: {x: 6.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH8_001_S09
-      _actorId: bat
-      _at: {x: 7.5, y: 6.5}
+      _actorId: commando_grenade
+      _at: {x: 4.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
@@ -23259,24 +23272,24 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_001_S03
-      _actorId: hopper_smg
-      _at: {x: 3.5, y: 10.5}
+      _actorId: skeleton
+      _at: {x: 1.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_001_S04
-      _actorId: skeleton
-      _at: {x: 5.5, y: 9.5}
+      _actorId: actor_enforcer
+      _at: {x: 4.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_001_S05
-      _actorId: skeleton
-      _at: {x: 4.5, y: 7.5}
+      _actorId: bat
+      _at: {x: 7.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -23284,7 +23297,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH9_001_S06
       _actorId: skeleton
-      _at: {x: 0.5, y: 6.5}
+      _at: {x: 2.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -23292,26 +23305,26 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH9_001_S07
       _actorId: skeleton
-      _at: {x: 9.5, y: 6.5}
+      _at: {x: 5.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_001_S08
-      _actorId: actor_enforcer
-      _at: {x: 1.5, y: 5.5}
+      _actorId: skeleton
+      _at: {x: 7.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_001_S09
-      _actorId: bat
-      _at: {x: 8.5, y: 5.5}
+      _actorId: hopper_smg
+      _at: {x: 4.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PROP_TALL_1
@@ -23420,7 +23433,7 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: PROP_TALL_9
       _kind: PROP_TALL
-      _at: {x: 1.5, y: 4.5}
+      _at: {x: 3.5, y: 5.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -23432,6 +23445,19 @@ MonoBehaviour:
       _hazardTick: 0
       _unnamed: 0
     - _objectId: PROP_TALL_10
+      _kind: PROP_TALL
+      _at: {x: 1.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PROP_TALL_11
       _kind: PROP_TALL
       _at: {x: 8.5, y: 4.5}
       _size: {x: 1, y: 1}
@@ -26366,11 +26392,11 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S03
-      _actorId: commando_mg
-      _at: {x: 4.5, y: 10.5}
+      _actorId: skeleton
+      _at: {x: 2.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: POSSESSION_TARGET
+      _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S04
@@ -26382,51 +26408,51 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S05
-      _actorId: skeleton
-      _at: {x: 3.5, y: 8.5}
+      _actorId: bat
+      _at: {x: 7.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S06
-      _actorId: skeleton
-      _at: {x: 6.5, y: 8.5}
+      _actorId: coilwalker
+      _at: {x: 1.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S07
-      _actorId: coilwalker
-      _at: {x: 2.5, y: 7.5}
+      _actorId: skeleton
+      _at: {x: 3.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S08
-      _actorId: actor_enforcer
-      _at: {x: 7.5, y: 7.5}
+      _actorId: skeleton
+      _at: {x: 6.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S09
-      _actorId: skeleton
-      _at: {x: 1.5, y: 5.5}
+      _actorId: actor_enforcer
+      _at: {x: 8.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_001_S10
-      _actorId: bat
-      _at: {x: 8.5, y: 5.5}
+      _actorId: commando_mg
+      _at: {x: 4.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
-      _trigger: ROOM_ENTER
+      _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
     - _objectId: PILLAR_1
@@ -26533,40 +26559,14 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SWING_HAMMER_9
-      _kind: SWING_HAMMER
-      _at: {x: 5, y: 7}
-      _size: {x: 2, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: HAMMER
-      _hazardDamage: 12
-      _hazardTick: 0.7
-      _unnamed: 0
-    - _objectId: FLAME_JET_E_10
-      _kind: FLAME_JET_E
-      _at: {x: 0.5, y: 6.5}
+    - _objectId: PROP_TALL_9
+      _kind: PROP_TALL
+      _at: {x: 3.5, y: 5.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: FLAME_JET_W_11
-      _kind: FLAME_JET_W
-      _at: {x: 9.5, y: 6.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
+      _blocksEnemyShot: 1
+      _blocksSight: 1
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0

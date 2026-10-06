@@ -1,5 +1,5 @@
 # rooms90-hand-1.0 — rooms90_build.py 가 굽는다. 손으로 고치지 않는다.
-ROOM	ROOM_CH1_001	첫 골목	해골(술) 둘이 가운데 골로 내려온다 — 기둥 곁의 갱스터(날)를 빼앗아 긴 사선으로 하나씩 딴다
+ROOM	ROOM_CH1_001	첫 골목	입구 앞 갱스터(날)부터 빼앗고 시작한다 — 해골(술) 둘이 가운데 골로 내려오면 긴 사선으로 하나씩 딴다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	6.5	11.5	1	1	1	1	1	NONE	0	0
@@ -10,9 +10,9 @@ OBJ	PILLAR	6.5	6.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	6.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_WIDE	2	3.5	2	1	1	1	0	NONE	0	0
 OBJ	PROP_WIDE	8	3.5	2	1	1	1	0	NONE	0	0
-SPAWN	gangster	4.5	12.5	1
-SPAWN	skeleton	4.5	8.5	0
-SPAWN	skeleton	5.5	7.5	0
+SPAWN	skeleton	4.5	10.5	0
+SPAWN	skeleton	5.5	9.5	0
+SPAWN	gangster	4.5	6.5	1
 ROOM	ROOM_CH1_002	상자 창고	박쥐와 폐품 사수(날)뿐이다 — 수류탄 코만도(힘)가 상자 줄 너머로 던져 터뜨린다
 OBJ	PROP_TALL	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	7.5	11.5	1	1	1	1	1	NONE	0	0
@@ -142,7 +142,7 @@ SPAWN	scrapgunner	5.5	10.5	0
 SPAWN	actor_enforcer	2.5	9.5	0
 SPAWN	actor_enforcer	7.5	9.5	0
 SPAWN	salamander	7.5	7.5	1
-ROOM	ROOM_CH2_001	격납고 복도	박쥐(날)가 덩어리 사이 좁은 복도로 한 줄로 온다 — 복도 끝의 로봇(힘)이 관통으로 꿴다
+ROOM	ROOM_CH2_001	격납고 복도	입구 앞 로봇(힘)부터 빼앗고 시작한다 — 박쥐(날)가 덩어리 사이 복도로 한 줄로 오면 관통으로 꿴다
 OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	BULK	3	10	2	2	1	1	1	NONE	0	0
 OBJ	BULK	7	10	2	2	1	1	1	NONE	0	0
@@ -150,9 +150,9 @@ OBJ	BULK	3	7	2	2	1	1	1	NONE	0	0
 OBJ	BULK	7	7	2	2	1	1	1	NONE	0	0
 OBJ	CRATE	2	3.5	2	1	1	1	0	NONE	0	0
 SPAWN	roadwarden	4.5	11.5	0
+SPAWN	bat	6.5	11.5	0
 SPAWN	bat	4.5	9.5	0
-SPAWN	bat	5.5	7.5	0
-SPAWN	robot	7.5	5.5	1
+SPAWN	robot	5.5	6.5	1
 ROOM	ROOM_CH2_002	첫 가시	집행자(힘)가 가시판 위아래로 한 줄 — 백마법사(술)의 관통이 가시 너머로 둘을 꿴다. 가시는 주기로 솟는다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
@@ -295,20 +295,21 @@ SPAWN	actor_enforcer	1.5	10.5	0
 SPAWN	actor_enforcer	8.5	10.5	0
 SPAWN	salamander	2.5	5.5	1
 SPAWN	actor_enforcer	7.5	5.5	0
-ROOM	ROOM_CH3_001	밤거리 초입	해골 셋이 트인 광장을 가로질러 몰려온다 — 연사하는 몸이 다가오는 떼를 긁는다. 벽 포탑 아래 줄은 피한다
+ROOM	ROOM_CH3_001	밤거리 초입	입구 앞 연사 몸부터 빼앗고 시작한다 — 해골 셋이 광장을 가로질러 몰려오면 다가오는 떼를 긁는다. 벽 포탑 아래 줄은 피한다
 OBJ	WALL_TURRET_S	2.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	7.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	1.5	10.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	10.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	1.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	PROP_TALL	4.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	8.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	3	3.5	2	1	1	1	0	NONE	0	0
 OBJ	PROP_WIDE	7	3.5	2	1	1	1	0	NONE	0	0
 SPAWN	coilwalker	4.5	11.5	0
-SPAWN	hopper_smg	3.5	9.5	1
-SPAWN	skeleton	2.5	7.5	0
-SPAWN	skeleton	7.5	7.5	0
-SPAWN	skeleton	4.5	6.5	0
+SPAWN	skeleton	2.5	10.5	0
+SPAWN	skeleton	7.5	10.5	0
+SPAWN	skeleton	4.5	9.5	0
+SPAWN	hopper_smg	5.5	6.5	1
 ROOM	ROOM_CH3_002	배수로	코일 보행기가 도랑 건너 기둥 뒤에서 쏜다 — 탄은 도랑을 건넌다, 단발 몸이 건너편을 하나씩 딴다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	8.5	11.5	1	1	1	1	1	NONE	0	0
@@ -479,7 +480,7 @@ SPAWN	skeleton	4.5	8.5	0
 SPAWN	turret_cross	4.5	7.5	0
 SPAWN	skeleton	5.5	6.5	0
 SPAWN	hopper_smg	8.5	5.5	1
-ROOM	ROOM_CH4_001	옥상 진입	집행자 셋이 실외기 깔때기를 지나 해머 옆 좁은 틈으로 한 줄로 내려온다 — 꿰뚫는 영매가 틈을 겨눈다
+ROOM	ROOM_CH4_001	옥상 진입	입구 앞 영매부터 빼앗고 시작한다 — 집행자 셋이 해머 옆 좁은 틈으로 한 줄로 내려오면 꿰뚫어 겨눈다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	1	9.5	2	1	1	1	0	NONE	0	0
@@ -488,12 +489,12 @@ OBJ	CRATE	9	9.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	2	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	8	8.5	2	1	1	1	0	NONE	0	0
 OBJ	PROP_TALL	1.5	6.5	1	1	1	1	1	NONE	0	0
+SPAWN	bat	2.5	11.5	0
 SPAWN	actor_enforcer	3.5	11.5	0
 SPAWN	coilwalker	6.5	11.5	0
 SPAWN	actor_enforcer	2.5	10.5	0
 SPAWN	actor_enforcer	7.5	10.5	0
 SPAWN	medium	2.5	6.5	1
-SPAWN	bat	7.5	6.5	0
 ROOM	ROOM_CH4_002	되튕기는 벽	박쥐 셋이 벽에 둘러싸인 안뜰로 몰려든다 — 레이저 몸이 꿰뚫고, 빗나간 빛은 벽에 튕겨 돌아온다
 OBJ	RICOCHET_WALL	2.5	11.5	3	1	1	1	1	NONE	0	0
 OBJ	RICOCHET_WALL	7.5	11.5	3	1	1	1	1	NONE	0	0
@@ -640,7 +641,7 @@ SPAWN	turret_cross	4.5	8.5	0
 SPAWN	medium	3.5	7.5	1
 SPAWN	actor_enforcer	5.5	7.5	0
 SPAWN	bat	6.5	7.5	0
-ROOM	ROOM_CH5_001	실험실 입구	박쥐 셋이 트인 광장 한가운데 통 옆으로 뭉친다 — 수류탄 몸이 뭉친 떼를 한꺼번에 터뜨린다. 통을 쏘면 같이 터진다
+ROOM	ROOM_CH5_001	실험실 입구	입구 앞 수류탄 몸부터 빼앗고 시작한다 — 박쥐 셋이 광장 한가운데 통 옆으로 뭉치면 한꺼번에 터뜨린다. 통을 쏘면 같이 터진다
 OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	EXPLOSIVE_BARREL	4.5	8.5	1	1	1	1	0	NONE	0	0
@@ -652,12 +653,12 @@ OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	3	3.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	7	3.5	2	1	1	1	0	NONE	0	0
 SPAWN	scrapgunner	2.5	11.5	0
-SPAWN	commando_grenade	7.5	11.5	1
+SPAWN	skeleton	2.5	10.5	0
+SPAWN	bat	5.5	10.5	0
+SPAWN	actor_enforcer	7.5	10.5	0
 SPAWN	bat	3.5	9.5	0
 SPAWN	bat	6.5	9.5	0
-SPAWN	bat	5.5	7.5	0
-SPAWN	skeleton	1.5	6.5	0
-SPAWN	actor_enforcer	8.5	6.5	0
+SPAWN	commando_grenade	2.5	6.5	1
 ROOM	ROOM_CH5_002	유리 복도	순찰기와 사수가 난간 사이 가운데 골에 한 줄로 선다 — 꿰뚫는 레이저 몸이 골 어귀에서 줄을 꿴다. 양옆은 불바닥
 OBJ	RAIL	3.5	11	1	2	1	1	1	NONE	0	0
 OBJ	RAIL	6.5	11	1	2	1	1	1	NONE	0	0
@@ -849,7 +850,7 @@ SPAWN	skeleton	9.5	9.5	0
 SPAWN	guru	5.5	8.5	1
 SPAWN	bat	4.5	7.5	0
 SPAWN	actor_enforcer	9.5	5.5	0
-ROOM	ROOM_CH6_001	정유소 입구	해골과 코일이 톱니 도는 광장 둘레에 흩어져 선다 — 톱니 때문에 못 붙는다, 닌자의 단발이 광장 너머에서 하나씩 딴다. 입구 앞은 끈끈하다
+ROOM	ROOM_CH6_001	정유소 입구	입구 앞 닌자부터 빼앗고 시작한다 — 해골과 코일이 톱니 도는 광장 둘레에 선다, 톱니 너머로 단발로 하나씩 딴다. 입구 앞은 끈끈하다
 OBJ	PROP_TALL	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	1.5	10.5	1	1	1	1	1	NONE	0	0
@@ -861,11 +862,11 @@ OBJ	SLOW_POOL	5	3	2	2	0	0	0	NONE	0	0
 SPAWN	coilwalker	3.5	11.5	0
 SPAWN	turret_cross	5.5	11.5	0
 SPAWN	roadwarden	7.5	11.5	0
+SPAWN	actor_enforcer	4.5	10.5	0
+SPAWN	skeleton	8.5	9.5	0
 SPAWN	skeleton	0.5	8.5	0
 SPAWN	coilwalker	9.5	8.5	0
-SPAWN	actor_enforcer	2.5	6.5	0
 SPAWN	ninja	2.5	5.5	1
-SPAWN	skeleton	9.5	5.5	0
 ROOM	ROOM_CH6_002	파이프 골목	십자 포탑 둘과 집행자 둘이 난간 사이 골목에 한 줄로 선다 — 꿰뚫는 영매가 골목 어귀에서 줄을 꿴다. 양옆 돌아가는 길은 해머가 오간다
 OBJ	RAIL	3.5	11	1	2	1	1	1	NONE	0	0
 OBJ	RAIL	6.5	11	1	2	1	1	1	NONE	0	0
@@ -1066,7 +1067,7 @@ SPAWN	actor_enforcer	8.5	7.5	0
 SPAWN	roadwarden	2.5	6.5	0
 SPAWN	skeleton	5.5	6.5	0
 SPAWN	thug	7.5	6.5	1
-ROOM	ROOM_CH7_001	폐차 기둥숲	집행자 셋이 기둥 사이로 온다 — 푸른 용이 긴 사선으로 늦추고, 통 옆에 선 놈부터 터뜨린다
+ROOM	ROOM_CH7_001	폐차 기둥숲	입구 앞 푸른 용부터 빼앗고 시작한다 — 집행자가 기둥 사이로 오면 긴 사선으로 늦추고, 통 옆에 선 놈부터 터뜨린다
 OBJ	PROP_TALL	3.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	6.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	1.5	10.5	1	1	1	1	1	NONE	0	0
@@ -1081,12 +1082,12 @@ OBJ	PILLAR	3.5	4.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	6.5	4.5	1	1	1	1	1	NONE	0	0
 SPAWN	scrapgunner	1.5	12.5	0
 SPAWN	scrapgunner	8.5	12.5	0
-SPAWN	dragon_blue	4.5	10.5	1
-SPAWN	turret_cross	5.5	9.5	0
-SPAWN	actor_enforcer	1.5	7.5	0
-SPAWN	skeleton	8.5	7.5	0
-SPAWN	actor_enforcer	4.5	6.5	0
-SPAWN	actor_enforcer	0.5	5.5	0
+SPAWN	actor_enforcer	1.5	11.5	0
+SPAWN	actor_enforcer	3.5	10.5	0
+SPAWN	skeleton	7.5	10.5	0
+SPAWN	skeleton	1.5	9.5	0
+SPAWN	turret_cross	7.5	9.5	0
+SPAWN	dragon_blue	4.5	6.5	1
 ROOM	ROOM_CH7_002	엇갈린 담	집행자가 담 틈으로 한 줄로 나온다 — 흰 마법사가 틈을 꿰뚫는다. 오른쪽 틈은 통이 막고 있다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
@@ -1299,7 +1300,7 @@ SPAWN	actor_enforcer	0.5	6.5	0
 SPAWN	commando_missile	3.5	6.5	1
 SPAWN	turret_cross	6.5	6.5	0
 SPAWN	actor_enforcer	9.5	6.5	0
-ROOM	ROOM_CH8_001	봉쇄 회랑	순찰기와 사수가 기둥 열 뒤에서 쏘고 벽 포탑이 가로로 긋는다 — 유탄 특공대가 기둥 뒤로 던져 넣는다
+ROOM	ROOM_CH8_001	봉쇄 회랑	입구 앞 유탄 특공대부터 빼앗고 시작한다 — 순찰기와 사수가 기둥 열 뒤에서 쏘고 벽 포탑이 가로로 긋는다, 기둥 뒤로 던져 넣는다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_E	0.5	10.5	1	1	1	1	1	NONE	0	0
@@ -1310,15 +1311,15 @@ OBJ	PILLAR	2.5	7.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	7.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	2.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	scrapgunner	1.5	12.5	0
+SPAWN	coilwalker	8.5	12.5	0
 SPAWN	roadwarden	1.5	11.5	0
-SPAWN	commando_grenade	4.5	11.5	1
+SPAWN	turret_cross	4.5	11.5	0
 SPAWN	roadwarden	8.5	11.5	0
+SPAWN	bat	3.5	9.5	0
 SPAWN	turret_cross	4.5	9.5	0
-SPAWN	scrapgunner	1.5	7.5	0
-SPAWN	coilwalker	8.5	7.5	0
-SPAWN	bat	3.5	6.5	0
-SPAWN	turret_cross	5.5	6.5	0
-SPAWN	bat	7.5	6.5	0
+SPAWN	bat	6.5	9.5	0
+SPAWN	commando_grenade	4.5	6.5	1
 ROOM	ROOM_CH8_002	차단선	레이저 문 둘이 엇갈려 길을 꺾는다 — 박쥐와 사수가 틈으로 한 줄이 된다. 로봇이 틈을 꿰뚫는다
 OBJ	PROP_TALL	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	7.5	11.5	1	1	1	1	1	NONE	0	0
@@ -1522,7 +1523,7 @@ SPAWN	turret_cross	5.5	6.5	0
 SPAWN	death	7.5	6.5	1
 SPAWN	bat	0.5	5.5	0
 SPAWN	bat	9.5	5.5	0
-ROOM	ROOM_CH9_001	가로등 대로	해골 떼가 끈끈이 깔린 대로를 건너온다 — 연사하는 몸이 멀리서 긁는다
+ROOM	ROOM_CH9_001	가로등 대로	입구 앞 연사 몸부터 빼앗고 시작한다 — 해골 떼가 끈끈이 깔린 대로를 건너오면 멀리서 긁는다
 OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	1.5	9.5	1	1	1	1	1	NONE	0	0
@@ -1531,17 +1532,18 @@ OBJ	PROP_TALL	1.5	7.5	1	1	1	1	1	NONE	0	0
 OBJ	SLOW_POOL	3	7	2	2	0	0	0	NONE	0	0
 OBJ	SLOW_POOL	7	7	2	2	0	0	0	NONE	0	0
 OBJ	PROP_TALL	8.5	7.5	1	1	1	1	1	NONE	0	0
+OBJ	PROP_TALL	3.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	1.5	4.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	4.5	1	1	1	1	1	NONE	0	0
 SPAWN	coilwalker	2.5	11.5	0
 SPAWN	coilwalker	7.5	11.5	0
-SPAWN	hopper_smg	3.5	10.5	1
+SPAWN	skeleton	1.5	10.5	0
+SPAWN	actor_enforcer	4.5	10.5	0
+SPAWN	bat	7.5	10.5	0
+SPAWN	skeleton	2.5	9.5	0
 SPAWN	skeleton	5.5	9.5	0
-SPAWN	skeleton	4.5	7.5	0
-SPAWN	skeleton	0.5	6.5	0
-SPAWN	skeleton	9.5	6.5	0
-SPAWN	actor_enforcer	1.5	5.5	0
-SPAWN	bat	8.5	5.5	0
+SPAWN	skeleton	7.5	9.5	0
+SPAWN	hopper_smg	4.5	6.5	1
 ROOM	ROOM_CH9_002	불타는 차도	폐차가 계단처럼 엇갈리고 사이가 불탄다 — 술이 많다. 단발로 멀리 선 코일부터 딴다
 OBJ	PROP_TALL	0.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	9.5	12.5	1	1	1	1	1	NONE	0	0
@@ -1737,7 +1739,7 @@ SPAWN	skeleton	0.5	5.5	0
 SPAWN	skeleton	9.5	5.5	0
 SPAWN	actor_enforcer	0.5	4.5	0
 SPAWN	actor_enforcer	9.5	4.5	0
-ROOM	ROOM_CH10_001	옥상 진입로	깔때기 담 안으로 해골이 쏟아진다 — 술이 많다. 연사하는 몸이 목에서 긁는다. 가운데로 해머가 오간다
+ROOM	ROOM_CH10_001	옥상 진입로	입구 앞 기관총 특공대부터 빼앗고 시작한다 — 깔때기 담 너머로 해골이 쏟아진다, 술이 많다. 연사로 긁는다
 OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	6.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	BLOCK	3.5	10.5	1	1	1	1	0	NONE	0	0
@@ -1746,19 +1748,17 @@ OBJ	BLOCK	0.5	9.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	9.5	9.5	1	1	1	1	0	NONE	0	0
 OBJ	PILLAR	0.5	8.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	9.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	SWING_HAMMER	5	7	2	2	1	1	0	HAMMER	12	0.7
-OBJ	FLAME_JET_E	0.5	6.5	1	1	1	1	0	NONE	0	0
-OBJ	FLAME_JET_W	9.5	6.5	1	1	1	1	0	NONE	0	0
+OBJ	PROP_TALL	3.5	5.5	1	1	1	1	1	NONE	0	0
 SPAWN	coilwalker	1.5	11.5	0
 SPAWN	scrapgunner	8.5	11.5	0
-SPAWN	commando_mg	4.5	10.5	1
+SPAWN	skeleton	2.5	10.5	0
 SPAWN	turret_cross	5.5	10.5	0
-SPAWN	skeleton	3.5	8.5	0
-SPAWN	skeleton	6.5	8.5	0
-SPAWN	coilwalker	2.5	7.5	0
-SPAWN	actor_enforcer	7.5	7.5	0
-SPAWN	skeleton	1.5	5.5	0
-SPAWN	bat	8.5	5.5	0
+SPAWN	bat	7.5	10.5	0
+SPAWN	coilwalker	1.5	9.5	0
+SPAWN	skeleton	3.5	9.5	0
+SPAWN	skeleton	6.5	9.5	0
+SPAWN	actor_enforcer	8.5	9.5	0
+SPAWN	commando_mg	4.5	6.5	1
 ROOM	ROOM_CH10_002	레이저 활주로	레이저가 골 셋을 가른다 — 날 쪽이 골마다 한 줄로 선다. 관통하는 힘 쪽 몸이 꿰뚫는다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	6.5	11.5	1	1	1	1	1	NONE	0	0
