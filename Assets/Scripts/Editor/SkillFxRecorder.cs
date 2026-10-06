@@ -36,6 +36,7 @@ namespace Game.Editor
         private const float LoadSettleSeconds = 1.5f;   // 전투가 선 뒤 방 입장 연출이 끝날 때까지
 
         private static readonly List<string> s_keys = new();
+        private static readonly List<int> s_numbers = new();   // 파일 순번(전체 목록 기준)
         private static int s_index;
         private static Step s_step;
         private static double s_at;
@@ -44,7 +45,10 @@ namespace Game.Editor
         private static int s_width, s_height;
 
         [MenuItem("Tools/Game/스킬 연출 영상 찍기 (테스트 판 · 인게임에서)")]
-        public static void Run()
+        public static void RunAll() => Run();
+
+        /// <summary>몇 종만 다시 찍는다(몸 키). 비우면 전부. 파일 번호는 전체 목록의 순번을 그대로 쓴다.</summary>
+        public static void Run(params string[] only)
         {
             if (!Application.isPlaying) { Debug.LogError("[스킬 영상] 플레이 중 인게임에서 누른다"); return; }
             s_battle = Object.FindAnyObjectByType<BattleDirector>();
@@ -56,8 +60,16 @@ namespace Game.Editor
             if (!CoreModule.TryGet<IPlayerDataService>(out var player)) return;
 
             s_keys.Clear();
+            s_numbers.Clear();
+            int n = 0;
             foreach (var e in player.PlayableHosts)
-                if (e != null && !e.IsGhost) s_keys.Add(e.HostKey);
+            {
+                if (e == null || e.IsGhost) continue;
+                n++;
+                if (only != null && only.Length > 0 && System.Array.IndexOf(only, e.HostKey) < 0) continue;
+                s_keys.Add(e.HostKey);
+                s_numbers.Add(n);
+            }
             Directory.CreateDirectory(OutDir);
             // 크기는 **처음 한 번만** 정한다 — 녹화기가 게임 화면을 녹화 크기로 바꿔 놓아서, 찍을 때마다
             // 「지금 화면의 반」을 다시 재면 1080 → 540 → 270 … 으로 줄어들었다(2026-10-06)
@@ -65,6 +77,7 @@ namespace Game.Editor
             s_height = Mathf.Max(2, Screen.height / 2 * 2);
             s_index = 0;
             s_step = Step.Load;
+            BattleDirector.SandboxSkipTopUp = true;
             EditorApplication.update -= Tick;
             EditorApplication.update += Tick;
             Debug.Log($"[스킬 영상] 시작 — {s_keys.Count}종");
@@ -112,7 +125,7 @@ namespace Game.Editor
                     break;
                 case Step.Settle:
                     if (now < s_at) return;
-                    StartRecording($"{OutDir}/{s_index + 1:00}_{s_keys[s_index]}");
+                    StartRecording($"{OutDir}/{s_numbers[s_index]:00}_{s_keys[s_index]}");
                     s_at = now + LeadSeconds;
                     s_step = Step.Cast;
                     break;
@@ -157,6 +170,7 @@ namespace Game.Editor
         private static void Stop(string why)
         {
             EditorApplication.update -= Tick;
+            BattleDirector.SandboxSkipTopUp = false;
             if (s_rec != null && s_rec.IsRecording()) s_rec.StopRecording();
             s_rec = null;
             Debug.Log(why == null ? $"[스킬 영상] 끝 — {OutDir}" : $"[스킬 영상] 멈춤 — {why}");

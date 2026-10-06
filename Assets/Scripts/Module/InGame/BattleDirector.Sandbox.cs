@@ -91,12 +91,13 @@ namespace Game.Module.InGame
             }
             EnterHost(entry, key, entry.DisplayName, pos, 100);
             _invuln = 999f;
-            // 앞 스킬이 방을 비웠을 수 있다 — 적이 없으면 스킬이 허공에 나가거나 안 나간다
-            SandboxTopUp(++_sandboxSwaps);
+            // ⚠ 적을 채우지 않는다 — 영상 도구가 몸마다 판을 새로 연다. 채우면 그림이 안 올라온 종류의 적이
+            //   흰 네모로 섰다(2026-10-06).
             return true;
         }
 
-        private int _sandboxSwaps;
+        /// <summary>영상 도구가 켠다 — 방 입장 때 적 다섯 채우기를 건너뛴다.</summary>
+        public static bool SandboxSkipTopUp;
 
         /// <summary>테스트 판이 돌고 있는가 — 영상 도구가 시작해도 되는지 본다.</summary>
         public bool SandboxRunning => Sandbox && _running;
@@ -139,6 +140,10 @@ namespace Game.Module.InGame
         private void SandboxTopUp(int index)
         {
             if (!Sandbox) return;
+#if UNITY_EDITOR
+            // 스킬 영상을 찍는 동안은 채우지 않는다 — 채우는 적은 아무 몸이나 골라 그림이 안 올라온 종류가 흰 네모로 섰다
+            if (SandboxSkipTopUp) return;
+#endif
             int have = 0;
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null && _enemies[i].IsAlive) have++;

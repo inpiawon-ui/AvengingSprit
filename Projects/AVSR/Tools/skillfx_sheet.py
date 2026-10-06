@@ -4,13 +4,18 @@ Projects/AVSR/_exchange/skillfx_now/*.mp4 에서 영상마다 장면 8컷(0.75�
 영상이 제대로 찍혔는지(적 · 스킬 · 이펙트가 보이는지) 빠르게 훑어보는 용도다.
 출력: Projects/AVSR/_exchange/skillfx_now/sheet_1.png · sheet_2.png (11줄씩)
 """
-import os, glob, subprocess, tempfile
+import os, sys, glob, subprocess, tempfile
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
 DIR = os.path.join(ROOT, 'Projects', 'AVSR', '_exchange', 'skillfx_now')
 FONT = os.path.join(ROOT, 'Assets', 'BaseResource', 'Fonts', 'NotoSansKR-Bold.ttf')
 CUTS, STEP, W = 8, 0.75, 135          # 컷 수 · 간격(초) · 컷 폭(px)
+START = 0.3                            # 첫 컷(초)
+NAME = 'sheet'
+# 스킬이 나갔는지 볼 때: python skillfx_sheet.py cast — 스킬 직후 2초를 0.25초 간격으로(컷인 · 첫 이펙트)
+if len(sys.argv) > 1 and sys.argv[1] == 'cast':
+    START, STEP, NAME = 0.35, 0.25, 'cast'
 H = W * 1280 // 720
 LABEL = 150
 
@@ -20,7 +25,7 @@ def frames(path):
     with tempfile.TemporaryDirectory() as tmp:
         for i in range(CUTS):
             png = os.path.join(tmp, f'{i}.png')
-            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{0.3 + STEP * i:.2f}', '-i', path,
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{START + STEP * i:.2f}', '-i', path,
                             '-frames:v', '1', '-vf', f'scale={W}:{H}', png], check=False)
             out.append(Image.open(png).convert('RGB') if os.path.exists(png) else Image.new('RGB', (W, H)))
     return out
@@ -37,7 +42,7 @@ def main():
             d.text((8, r * H + 8), os.path.basename(v)[:-4].replace('_', '\n', 1), fill=(255, 255, 255), font=font)
             for c, im in enumerate(frames(v)):
                 sheet.paste(im, (LABEL + c * W, r * H))
-        out = os.path.join(DIR, f'sheet_{part // 11 + 1}.png')
+        out = os.path.join(DIR, f'{NAME}_{part // 11 + 1}.png')
         sheet.save(out)
         print(out, sheet.size)
 
