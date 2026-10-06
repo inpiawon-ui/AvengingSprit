@@ -1,0 +1,11 @@
+AVENGING SPIRIT: RE:BORN — 인게임 UI D안 최종본 재확인 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+Projects/AVSR/_exchange/review_hud2.md 의 「D안 최종본 수정 지시」 다섯 가지가
+Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D2.png 에 반영됐는지, 고치기 전 hud_draft_D.png 와 비교해 확인해라.
+PD 요청 넷(상성 독립 박스 · 금화만 · 딱딱한 틀 줄이기 · 우리 글꼴)도 다시 ○△× 로.
+새로 생긴 흠(뭉개진 글자 · 겹침 · 잘림)이 있으면 적어라. 빙의 버튼의 「-8」 은 맞는 표기다.
+
+쓸 것 : Projects/AVSR/_exchange/review_hud2_D2.md (한국어, 15줄 이내) — 마지막 줄에 「PD 보고 가능」 또는 「한 번 더 고칠 것」과 이유.
+끝나면 파일 경로만 알려라.

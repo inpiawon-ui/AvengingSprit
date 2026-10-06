@@ -43,6 +43,11 @@ namespace Game.Module.Common.UI
             "StaminaText", "GoldText", "GemText", "GhostExpText", "GhostLevelText",
             "ProgressText", "StatValueText", "ContinueCostText", "OwnedHostCountText",
             "BattlePassExpText", "DailyLoginDayText", "EventTimerText",
+            // 인게임 HUD 3차(D안) — 영문 · 숫자는 전부 원작 픽셀 글꼴(시안 확정 2026-10-06)
+            "PlayerSoulLabel", "GhostNameText", "LevelText", "HpLabelGhost", "GhostHpText",
+            "HostLabel", "HostLevelText", "HpLabelHost", "HostHpText",
+            "ChapterLabel", "RoomLabel", "RoomNumberText", "RoomTotalText",
+            "SkillButtonLabel", "PossessButtonLabel", "PossessCostText",
             // 영문 라벨
             "GhostLabelText", "ChapterNumberText",
             "BossLabel", "ProgressLabel", "StatLabelText",

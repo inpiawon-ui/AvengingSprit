@@ -1,0 +1,28 @@
+AVENGING SPIRIT: RE:BORN — 인게임 UI 2차 시안 세 장 검수 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+너는 이 게임 UI 의 아트 디렉터 겸 검수자다. PD 에게 보이기 전에 세 안을 냉정하게 검수해라.
+
+■ 열어 볼 것
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_B.png   PD 가 고른 1차 방향
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_C.png   2차 C안 — 틀을 거의 없앤 배치
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D.png   2차 D안 — 양쪽 구석 알약
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_E.png   2차 E안 — 맨 위 리본 + 긴 상태 띠
+  Projects/AVSR/_exchange/ref/ingame_ui/style_lobby.png   로비(화풍 기준)
+  Projects/AVSR/_exchange/ref/ingame_ui/font_specimen.png 우리 글꼴 견본
+
+■ PD 요청 넷 — 안마다 지켰는지 ○ △ × 로
+  1) 상성 삼각을 **따로 박스**에 두어 스테이지 정보와 별개로 보이게
+  2) 런 재화는 **금화만**(다이아 없음, 큰 재화 칸 없음)
+  3) 여러 네모 틀에 갇혀 **딱딱한 느낌**을 없앨 것
+  4) 글자는 **우리 글꼴**(영문·숫자 원작 픽셀, 한글 굵은 고딕)
+■ 그 밖에 볼 것
+  · 전투 중 한눈에 읽히는가(HP 두 개 · 몸 이름 · 방 진행) · 전투 판을 얼마나 가리는가
+  · 로비와 한 벌로 보이는가 · 낱장으로 잘라 구현하기 쉬운가 · 그림에 흠(뭉개진 글자, 겹침, 잘림)이 있는가
+
+■ 쓸 것 : Projects/AVSR/_exchange/review_hud2.md (한국어)
+  · 세 안 각각 : 위 넷의 ○△× 와 한 줄 이유, 장점 둘 · 문제 둘
+  · **추천 안 하나**와 이유
+  · 추천 안을 최종본으로 만들 때 고칠 점(구체적으로, 다섯 개 이내)
+끝나면 파일 경로만 알려라.

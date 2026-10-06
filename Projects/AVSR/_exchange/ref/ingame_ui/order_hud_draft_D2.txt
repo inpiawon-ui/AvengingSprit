@@ -1,0 +1,29 @@
+AVENGING SPIRIT: RE:BORN — 인게임 UI 시안 D안 최종본
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+네가 그린 2차 D안(양쪽 구석 알약)이 검수에서 추천안으로 뽑혔다. 아래 다섯 가지만 고쳐 최종본을 그려라.
+화풍 · 색 · 글꼴 · 배치의 큰 틀은 D안 그대로다.
+
+■ 열어 볼 것
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D.png     고칠 대상
+  Projects/AVSR/_exchange/review_hud2.md                    검수서(왜 고치는지)
+  Projects/AVSR/_exchange/ref/ingame_ui/font_specimen.png   우리 글꼴 — 영문·숫자 원작 픽셀, 한글 굵은 고딕
+  Projects/AVSR/_exchange/ref/ingame_ui/now_ingame.png      가운데 전투 판은 이것 그대로
+
+■ 고칠 것
+  1) 좌우 상태 알약의 세로 높이와 안쪽 여백을 10~15% 줄이고 화면 위쪽에 더 붙여, 전투 판이 더 보이게.
+  2) 가운데 스테이지 묶음 폭을 조금 넓혀 「밤의 도시 거리」 띄어쓰기를 살리고,
+     「CHAPTER 3」 · 「밤의 도시 거리」 · 「ROOM 01 / 15」 의 왼쪽 기준선을 맞춘다.
+  3) 좌우 HP 막대의 길이와 수치 자리를 같은 규칙으로 — 둘 다 막대 바로 아래 오른쪽 끝에 수치.
+  4) 상성 원형 배지는 독립 박스로 그대로 두되, 조금 안쪽 · 위쪽으로 옮기고 지름을 약간 줄인다.
+  5) 네온 외곽선 두께를 모든 부품에서 같은 굵기로 맞춘다. 초상 원 · 알약 몸체 · HP 막대 · 레벨 배지 · 상성 원이
+     서로 겹쳐 붙지 않고 따로 잘라 쓸 수 있게 경계를 깔끔하게.
+  ※ 빙의 버튼의 「-8」 은 맞는 표기다(빙의할 때 유령 HP 를 8 쓴다). 그대로 둔다.
+  ※ 런 재화는 금화 하나뿐. 다이아는 넣지 마라.
+
+■ 만들 것
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D2.png   완성된 전투 화면 한 장(세로 9:16, 1080 x 1920 권장)
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D2.md    무엇을 어떻게 고쳤는지 5줄 안팎(한국어)
+
+끝나면 두 파일의 경로만 알려라.

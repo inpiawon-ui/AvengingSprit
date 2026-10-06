@@ -1,0 +1,12 @@
+AVENGING SPIRIT: RE:BORN — 조이스틱 받침(손잡이 없음) · 손잡이 두 장
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+Projects/AVSR/_exchange/ref/ingame_ui/hud3_clean_host.png 왼쪽 아래의 조이스틱(둥근 받침 + 가운데 빨간 공 손잡이)을 게임에 넣는다.
+게임에서는 손잡이가 엄지를 따라 움직이므로 **받침과 손잡이를 따로** 받아야 한다.
+
+만들 것 (둘 다 마젠타 #FF00FF 바탕, 그림은 판의 조이스틱과 같은 화풍 · 같은 크기)
+  1) Projects/AVSR/_exchange/ref/ingame_ui/hud3_pad_base.png   — 받침만. 가운데 빨간 공이 있던 자리는 **받침 안쪽 바탕(어두운 남색 원판)**으로 이어 그린다.
+     네 방향 화살표 · 테두리 · 빛은 판과 똑같이. 크기 : 판의 받침과 같은 지름(약 260px), 캔버스 300 x 300 가운데.
+  2) Projects/AVSR/_exchange/ref/ingame_ui/hud3_pad_knob.png   — 빨간 공 손잡이만. 판과 같은 지름(약 96px), 캔버스 120 x 120 가운데.
+끝나면 두 파일의 경로만 알려라.

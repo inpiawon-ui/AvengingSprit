@@ -1,0 +1,18 @@
+AVENGING SPIRIT: RE:BORN — 인게임 HUD 뒤에 까는 위쪽 배경 띠
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라.
+
+확정된 인게임 HUD(D안)를 게임에 넣었더니, 전투 판은 HUD 아래(화면 위에서 345px, 1080 폭 기준)부터 시작해서
+**HUD 뒤가 빈 검은 띠**로 보인다. 시안에서는 그 뒤로 배경이 보였다. 그 자리에 깔 배경 띠가 필요하다.
+
+■ 열어 볼 것
+  Projects/AVSR/_exchange/ref/ingame_ui/hud_draft_D2.png       확정 시안(HUD 의 생김새와 색)
+  Projects/AVSR/_exchange/ref/ingame_ui/style_lobby.png        로비 — 밤의 도시 하늘 · 달 · 건물 실루엣의 화풍
+  C:/Users/inpia/AppData/Local/Temp/claude/C--won-UnityProject-AvengingSprit/af8a272a-b3e6-436c-8fa4-112c804b5f2a/scratchpad/shots/hud3_game_ghost.png   지금 게임 화면(검은 띠가 보인다)
+
+■ 만들 것 : Projects/AVSR/_exchange/ref/ingame_ui/hud3_top_band.png   (가로 1080 x 세로 345, 불투명)
+  · 로비 화풍의 **아주 어두운** 밤하늘 띠 — 짙은 남색 바탕에 멀리 흐린 건물 실루엣 · 드문 창불빛 정도.
+    HUD 글자와 네온 테두리가 또렷하게 읽혀야 하므로 **밝은 것 · 큰 무늬 · 캐릭터 · 달 · 글자를 넣지 마라.**
+  · 맨 아래 가장자리 : 전투 판과 닿는 선. 얇은 하늘색 네온 선 한 줄 + 그 위로 살짝 빛 번짐.
+  · 좌우 끝까지 이어지게(4:3 화면에서는 가로로 늘려 쓴다 — 가운데 크게 튀는 것이 없게).
+끝나면 경로만 알려라.

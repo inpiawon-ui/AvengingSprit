@@ -28,9 +28,10 @@ namespace Game.Module.InGame
         // 게이지 채우기 폭. 레이아웃 JSON 의 `*HpBarBg` 가로와 같아야 한다 —
         // 어긋나면 HP 가 가득 차도 바가 덜 차거나 넘친다.
         // (_layout_ingame.py 의 목업 좌표 × 1.25)
-        // ⚠ HUD 퀄업 2차(2026-09-17, `InGameHudV2Binder`)에서 판의 바 홈에 맞춰 폭이 바뀌었다
-        private const float GhostBarWidth = 155f;   // 프리팹 GhostHpBarBg 폭
-        private const float HostBarWidth = 129f;    // 프리팹 HostHpBarBg 폭
+        // ⚠ HUD 3차(2026-10-06, `InGameHudV3Binder` — D안)에서 새 판의 바 홈에 맞춰 폭이 바뀌었다.
+        //   값은 시안(1080 폭) 홈 폭 × 720/1080. 빌더의 표와 같아야 한다.
+        private const float GhostBarWidth = 140f;   // 프리팹 GhostHpBarBg 폭 (시안 210)
+        private const float HostBarWidth = 140f;    // 프리팹 HostHpBarBg 폭 (시안 210)
         private const float BossBarWidth = 594f;    // 프리팹 BossHpBarBg 폭
         private const int BuffCardCount = 3;
 
@@ -46,6 +47,11 @@ namespace Game.Module.InGame
         private BattleDirector _battle;
         private IPlayerDataService _player;
         private readonly List<IDisposable> _tokens = new();
+
+        // 스킬 버튼 틀 두 장 — 몸이 있을 때 / 없을 때. 빌더(`InGameHudV3Binder`)가 꽂는다.
+        // ⚠ 몸이 없을 때는 «잠김»이 아니라 «비움»이다(PD 2026-10-04). 자물쇠는 숙련도 0 봉인에만 쓴다.
+        [SerializeField] private Sprite _skillFrame;
+        [SerializeField] private Sprite _skillFrameEmpty;
 
         private RectTransform _dpad;
         private RectTransform _knob;
@@ -711,8 +717,9 @@ namespace Game.Module.InGame
             //   다시 켜져서 `ShowNoHost` 로 끈 것이 도로 살아난다.
             _hostBarShown = e.HasHost && _hasRealHost;
             _ui.SetActive("HostHpBarBg", _hostBarShown);
-            _ui.SetActive("HostHpText", e.HasHost);
-            if (!e.HasHost) return;
+            // 숫자도 같은 규칙 — 유령일 때 몸 칸에 유령 HP 가 「105/105」 로 찍혔다(HUD 3차 실측 2026-10-06).
+            _ui.SetActive("HostHpText", _hostBarShown);
+            if (!_hostBarShown) return;
             _ui.SetText("HostHpText", $"{e.HostHp}/{e.HostHpMax}");
             _hostHpRatio = Ratio(e.HostHp, e.HostHpMax);
             _ui.SetFill("HostHpBarFill", _hostHpRatio, HostBarWidth);
@@ -749,6 +756,8 @@ namespace Game.Module.InGame
             if (e.PossessedHostKey == Game.Character.HostEntry.GhostKey) { ShowNoHost(); return; }
             _hasRealHost = true;
             _ui.SetActive("CurrentHostPanel", true);
+            _ui.SetActive("Hud3HostEmptyFace", false);
+            _ui.SetActive("Hud3HostEmptyBar", false);
 
             _ui.SetText("HostLabel", "CURRENT HOST");
             _ui.SetActive("HostPortraitFrame", true);
@@ -768,13 +777,8 @@ namespace Game.Module.InGame
                 portrait.preserveAspect = true;
                 portrait.gameObject.SetActive(portrait.sprite != null);
             }
-            // 상성 시험판 — 지금 몸의 계열. 모드가 꺼져 있으면 그림이 null 이라 칸이 꺼진다.
-            var affinity = _ui.Get<Image>("HostAffinityIcon");
-            if (affinity != null)
-            {
-                affinity.sprite = _battle != null ? _battle.AffinityIconOf(e.PossessedHostKey) : null;
-                affinity.gameObject.SetActive(affinity.sprite != null);
-            }
+            // 몸 칸의 계열 보석은 HUD 3차(D안)에서 뺐다 — 계열은 오른쪽 상성 배지가 보여 준다(몸 기준으로 빛난다).
+            // 켜 두면 옛 자리(몸 칸 가운데)에 보석 하나가 떠 있었다(2026-10-06 실측).
             // 몸이 바뀌면 유리 · 불리가 통째로 바뀐다 — 삼각판을 다시 크게 보여 준다.
             _affinityHostKey = e.PossessedHostKey;
             ShowAffinityTriangle();
@@ -832,10 +836,14 @@ namespace Game.Module.InGame
             //   끄면 CHAPTER 칸 글자만 가운데로 미끄러지고 테두리는 제자리에 남아 어긋난다.
             //   안의 글자 · 배지 · 바 · 초상만 비워 빈 칸으로 둔다.
             _ui.SetActive("CurrentHostPanel", true);
-            _ui.SetText("HostLabel", string.Empty);
-            _ui.SetText("HostNameEnText", string.Empty);
-            _ui.SetText("HostNameKrText", string.Empty);
-            _ui.SetText("HostLevelText", string.Empty);
+            // HUD 3차 — 몸 칸은 사라지지 않고 「몸 없음」 상태로 채워진다(PD 2026-10-04 :
+            // 「호스트가 없을 때도 뭔가 있어야 한다」). 빈 얼굴 · 빈 막대는 시안의 덧판이다.
+            _ui.SetActive("Hud3HostEmptyFace", true);
+            _ui.SetActive("Hud3HostEmptyBar", true);
+            _ui.SetText("HostLabel", "CURRENT HOST");
+            _ui.SetText("HostNameEnText", "NO HOST");
+            _ui.SetText("HostNameKrText", Localize.FromTable("ui.ingame.nohost_hint", "빙의할 몸을 찾으세요"));
+            _ui.SetText("HostLevelText", "—");
             _ui.SetText("HpLabelHost", string.Empty);
             _ui.SetActive("HostLevelBadge", false);
             _ui.SetActive("HostHpBarBg", false);
@@ -868,6 +876,9 @@ namespace Game.Module.InGame
         //   겹쳐 있는데도 코드가 한쪽만 옮겨 절반씩 포개져 있었다.
         //   지금은 켜고 끄기만 하면 된다.
 
+        /// <summary>빈 스킬 칸의 이름표 색 — 쓸 것이 없음을 흐린 글자로.</summary>
+        private static readonly Color EmptySkillLabelTint = new(0.55f, 0.62f, 0.72f, 1f);
+
         /// <summary>봉인된 스킬 아이콘 색. 끄지 않고 눌러서 "있는데 잠겼다" 로 읽힌다.</summary>
         private static readonly Color SealedSkillTint = new(0.38f, 0.40f, 0.48f, 1f);
 
@@ -884,8 +895,22 @@ namespace Game.Module.InGame
         {
             bool hasHost = !string.IsNullOrEmpty(hostKey);
             SetSkillReadyHost(hostKey);
-            _ui.SetActive("SkillButton", hasHost);
-            if (!hasHost) return;
+            // HUD 3차 — 몸이 없으면 버튼을 **감추지 않고 비운다**. 칸이 사라지면 화면 한쪽이 뜯겨 보인다.
+            _ui.SetActive("SkillButton", true);
+            var frame = _ui.Get<Image>("SkillButton");
+            if (frame != null && _skillFrame != null)
+                frame.sprite = hasHost || _skillFrameEmpty == null ? _skillFrame : _skillFrameEmpty;
+            var label = _ui.Get<TMPro.TextMeshProUGUI>("SkillButtonLabel");
+            if (label != null) label.color = hasHost ? Color.white : EmptySkillLabelTint;
+            if (!hasHost)
+            {
+                var emptyIcon = _ui.Get<Image>("SkillIcon");
+                if (emptyIcon != null) emptyIcon.enabled = false;
+                _ui.SetActive("SkillSealIcon", false);
+                var emptyBtn = _ui.Get<Button>("SkillButton");
+                if (emptyBtn != null) emptyBtn.interactable = false;
+                return;
+            }
 
             bool sealedSkill = _battle != null && _battle.IsSkillSealed(hostKey);
 
@@ -904,7 +929,8 @@ namespace Game.Module.InGame
 
         /// <summary>방 진행 바 폭. 프리팹 `RoomProgressBg` 와 같아야 한다.</summary>
         // 219 → 200: 칸 왼쪽에 삼각 상성판이 들어오면서 글자와 막대가 오른쪽으로 밀렸다(2026-10-02).
-        private const float RoomProgressWidth = 200f;
+        // 200 → 100: HUD 3차(D안) — 스테이지 정보가 두 알약 사이 가운데로 옮겨 홈이 짧아졌다(시안 150).
+        private const float RoomProgressWidth = 100f;
 
         private void OnRoomEntered(RoomEnteredEvent e)
         {

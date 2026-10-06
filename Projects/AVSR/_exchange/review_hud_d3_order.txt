@@ -1,0 +1,12 @@
+AVENGING SPIRIT: RE:BORN — 인게임 UI D안 수정 확인 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+Projects/AVSR/_exchange/ref/ingame_ui/hud_D2_pair.png 를 열어라 (왼쪽 몸 있을 때 · 오른쪽 유령 상태).
+PD 지적 둘이 반영됐는지 확인해라.
+  1) 상성은 지금 몸 기준 — 왼쪽 배지에서 몸(아마존, 노랑 보석)의 보석만 빛나고, 노랑→보라 초록 · 빨강→노랑 빨강 · 나머지 회색인가.
+     (규칙 참조 : Projects/AVSR/_exchange/ref/ingame_ui/affinity_now.png 첫 번째 그림)
+  2) 유령 상태에서 스킬 · 상성 칸은 «잠김»(자물쇠)이 아니라 «비움»으로 보이는가. 빈 칸이 고장처럼 보이지 않는가.
+  3) 두 상태의 위쪽 · 아래쪽 부품 자리와 크기가 같은가. 새로 생긴 흠이 있는가.
+쓸 것 : Projects/AVSR/_exchange/review_hud_d3.md (한국어, 10줄 이내) — 항목별 ○△× 와 이유, 마지막 줄 「PD 보고 가능」 또는 「한 번 더 고칠 것」.
+끝나면 파일 경로만 알려라.
