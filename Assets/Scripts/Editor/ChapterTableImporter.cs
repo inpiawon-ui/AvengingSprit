@@ -82,9 +82,9 @@ namespace Game.EditorTools
         /// <summary>잡몹의 쪽 — `AffinityRule.KindOf` · `rooms90_build.py` 의 KIND 와 같아야 한다.</summary>
         private static int KindIndex(string actor) => actor switch
         {
-            "bat" or "roadwarden" or "scrapgunner" => 0,          // 날
-            "actor_enforcer" or "turret_cross" => 1,              // 힘
-            "skeleton" or "coilwalker" => 2,                      // 술
+            "bat" or "roadwarden" or "scrapgunner" => 0,          // 무기
+            "actor_enforcer" or "turret_cross" => 1,              // 파워
+            "skeleton" or "coilwalker" => 2,                      // 마법
             _ => -1,
         };
 
@@ -104,7 +104,7 @@ namespace Game.EditorTools
                     return;
                 }
 
-            // 잡몹의 날 · 힘 · 술 수는 손으로 적지 않는다 — 구운 방 표에서 센다.
+            // 잡몹의 무기 · 파워 · 마법 수는 손으로 적지 않는다 — 구운 방 표에서 센다.
             var mix = new Dictionary<int, int[]>();
             foreach (var kv in Rooms90Hand.Load())
             {

@@ -8,7 +8,7 @@ namespace Game.Module.InGame
     /// 상성 표시 (시험판 2026-10-02).
     ///
     /// 화면에 들어가는 것은 둘이다.
-    ///   · `HostAffinityIcon` — CURRENT HOST 칸의 보석. 지금 몸이 날 · 힘 · 술 가운데 어느 쪽인가.
+    ///   · `HostAffinityIcon` — CURRENT HOST 칸의 보석. 지금 몸이 파워 · 무기 · 마법 가운데 어느 쪽인가.
     ///   · `AffinityTriangle` — 삼각 상성판. **CHAPTER 칸 왼쪽에 늘 떠 있다.** 내 쪽 꼭짓점이 빛나고,
     ///     내가 이기는 쪽으로 가는 화살표는 초록, 나를 이기는 쪽에서 오는 화살표는 붉다.
     ///

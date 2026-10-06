@@ -57,7 +57,7 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _cardFrame, _cardFrameSelected;
         [SerializeField] private Sprite _starOn, _starOff;
 
-        // 상성 시험판(2026-10-02) — 날 · 힘 · 술 보석(이 순서), 유리 ▲ · 불리 ▼
+        // 상성 시험판(2026-10-02) — 무기 · 파워 · 마법 아이콘(이 순서), 유리 ▲ · 불리 ▼
         [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
         [SerializeField] private Sprite _matchUp, _matchDown;
 
@@ -295,7 +295,7 @@ namespace Game.Module.Lobby
             return i >= 0 && i < _kindGems.Length ? _kindGems[i] : null;
         }
 
-        /// <summary>챕터 칸 — 적 구성(날 · 힘 · 술 몇 마리씩)과 보스의 쪽.</summary>
+        /// <summary>챕터 칸 — 적 구성(무기 · 파워 · 마법 몇 마리씩)과 보스의 쪽.</summary>
         private void RefreshChapterAffinity()
         {
             bool on = Game.Module.InGame.AffinityRule.Enabled;

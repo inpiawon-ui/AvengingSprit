@@ -595,7 +595,7 @@ namespace Game.Character
             public int Art;
             public int BossArt;
             public int ChestArt;
-            [Tooltip("잡몹의 날 · 힘 · 술 수(전투방 11칸 합계). 방 배치에서 센 값이다.")]
+            [Tooltip("잡몹의 무기 · 파워 · 마법 수(전투방 11칸 합계). 방 배치에서 센 값이다.")]
             public int MixBlade, MixForce, MixMagic;
         }
 

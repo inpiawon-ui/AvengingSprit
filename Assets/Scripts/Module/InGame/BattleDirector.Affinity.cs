@@ -7,17 +7,20 @@ namespace Game.Module.InGame
     /// <summary>
     /// 상성의 세 쪽. **모든 몸과 모든 적이 셋 중 하나다** (가위바위보).
     ///
-    ///   힘 → 날 → 술 → 힘   (화살표는 「이긴다」)
-    ///   단단한 힘 앞에 총칼은 튕기고 / 총칼은 술사를 베고 / 주술은 갑옷을 뚫는다.
+    ///   파워 → 무기 → 마법 → 파워   (화살표는 「이긴다」)
+    ///   단단한 파워 앞에 총칼은 튕기고 / 총칼은 마법사를 베고 / 마법은 갑옷을 뚫는다.
+    ///
+    /// 이름은 PD 시안(2026-10-06, `_exchange/ref/affinity3/pd_affinity3_mockup.png`)으로 「날 · 힘 · 술」에서 바꿨다.
+    /// 규칙(이기는 방향 · ±30%)과 몸의 배정은 그대로다. 코드 이름(Blade · Force · Magic)과 그림 파일 이름도 그대로 둔다.
     /// </summary>
     public enum Affinity
     {
         None,
-        /// <summary>날 — 총 · 칼 · 창. 노랑.</summary>
+        /// <summary>무기(옛 「날」) — 총 · 칼 · 창. 금색, 칼과 권총 아이콘.</summary>
         Blade,
-        /// <summary>힘 — 단단한 것, 둔기 · 폭발 · 기계. 주황빨강.</summary>
+        /// <summary>파워(옛 「힘」) — 단단한 것, 둔기 · 폭발 · 기계. 빨강, 주먹 아이콘.</summary>
         Force,
-        /// <summary>술 — 불 · 얼음 · 주술, 망자와 괴이. 보라.</summary>
+        /// <summary>마법(옛 「술」) — 불 · 얼음 · 주술, 망자와 괴이. 파랑, 별빛 구슬 아이콘.</summary>
         Magic,
     }
 
@@ -30,7 +33,7 @@ namespace Game.Module.InGame
     ///
     /// **왜 이 셋인가.** 처음에는 공격 방식 다섯(타격 · 연사 · 관통 · 폭발 · 속성)으로 나눴는데
     /// 「뭐가 뭐에 강한지 느낌이 안 온다」로 반려됐고, 불 · 물 같은 속성은 「호스트에 억지」로 반려됐다.
-    /// 날 · 힘 · 술은 호스트가 **지금 들고 있는 무기 그대로**이고, 돌고 도는 이유가 상식이다.
+    /// 파워 · 무기 · 마법은 호스트가 **지금 들고 있는 무기 그대로**이고, 돌고 도는 이유가 상식이다.
     ///
     /// ⚠ 시험판이다 — 숫자와 표가 코드에 있다. 확정되면 표(`HostTable` 의 쪽 칸, 적 표)로 옮긴다.
     /// </summary>
@@ -80,19 +83,19 @@ namespace Game.Module.InGame
         /// <summary>이 몸(또는 적)이 어느 쪽인가. 표에 없으면 None — 상성을 안 탄다.</summary>
         public static Affinity KindOf(string key) => key switch
         {
-            // ── 날: 총 · 칼 · 창을 든 것 ──
+            // ── 무기: 총 · 칼 · 창을 든 것 ──
             "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
                 or "amazon" or "amazon_elite"
                 or "bat" or "roadwarden" or "scrapgunner"
                 or "python" or "kingpin"
                 => Affinity.Blade,
-            // ── 힘: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
+            // ── 파워: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
             "baseball" or "guru" or "ninja_chain" or "commando_grenade" or "commando_missile"
                 or "commando_laser" or "robot"
                 or "actor_enforcer" or "obj_turret" or "turret_cross"
                 or "robot_snakes" or "crusher" or "guardian"
                 => Affinity.Force,
-            // ── 술: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
+            // ── 마법: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
             "dragoon" or "snowwoman" or "dragon_blue" or "salamander" or "vampire"
                 or "white_wizard" or "medium" or "death"
                 or "skeleton" or "coilwalker" or "sludge"
@@ -100,7 +103,7 @@ namespace Game.Module.InGame
             _ => Affinity.None,
         };
 
-        /// <summary>a 가 b 를 이기는가. 힘 → 날 → 술 → 힘.</summary>
+        /// <summary>a 가 b 를 이기는가. 파워 → 무기 → 마법 → 파워.</summary>
         public static bool Beats(Affinity a, Affinity b)
             => (a == Affinity.Force && b == Affinity.Blade)
             || (a == Affinity.Blade && b == Affinity.Magic)
@@ -116,11 +119,11 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 챕터의 적 구성 (날, 힘, 술 — 방 표에 선 잡몹 수). 로비가 「이 챕터엔 어느 쪽이 많은가」를 보여 줄 때 쓴다.
+        /// 챕터의 적 구성 (무기, 파워, 마법 — 방 표에 선 잡몹 수). 로비가 「이 챕터엔 어느 쪽이 많은가」를 보여 줄 때 쓴다.
         ///
         /// ⚠ `RoomTable` 실측(2026-09-28)을 옮겨 적은 것이다. 확정되면 방 표에서 직접 센다 —
         ///   손으로 적은 숫자는 방을 고치는 순간 낡는다.
-        /// ⚠ 지금 잡몹 7종은 기계가 많아 **「힘」 쪽으로 크게 쏠려 있다.** 새 잡몹을 넣을 때 날 · 술 쪽을 채워야 한다.
+        /// ⚠ 지금 잡몹 7종은 기계가 많아 **「파워」 쪽으로 크게 쏠려 있다.** 새 잡몹을 넣을 때 무기 · 마법 쪽을 채워야 한다.
         /// </summary>
         public static (int blade, int force, int magic) ChapterMix(int chapter)
         {
@@ -143,6 +146,7 @@ namespace Game.Module.InGame
             => s_config != null && s_config.HasChapterTable
                 ? KindOf(s_config.ChapterOf(chapter).Boss) : Affinity.None;
 
+        /// <summary>속성 아이콘(주먹 · 칼과 권총 · 별빛 구슬). 파일 이름의 «gem» 은 예전 보석 그림 자리라서다.</summary>
         public static string GemName(Affinity a) => a switch
         {
             Affinity.Blade => "rps_gem_blade",
