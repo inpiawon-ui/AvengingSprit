@@ -286,7 +286,9 @@ namespace Game.Module.InGame
             _chainFrom = me.Position;
             _chainLast = null;
             _chainStruck.Clear();
-            _chainDamage = SkillDamage(me, ChainHopDamageMul * BaseAxis(1f));
+            // 성장 축은 **초**다(2 → 3) — 피해는 그 오른 비율(×1 → ×1.5)만 따른다.
+            // 축 값을 피해에 그대로 곱하면 폭주 시간을 초로 고친 순간 피해가 두 배가 된다(2026-10-06)
+            _chainDamage = SkillDamage(me, ChainHopDamageMul * _boltSurgeSeconds / BoltSurgeSeconds);
             _chainProfile = me.Profile;
             if (NearestEnemy(me.Position, Meters(ChainHopRangeMeters)) == null)
             { _chainHopsLeft = 0; PlayFx("crit", me.Position, 96f, loop: false); }

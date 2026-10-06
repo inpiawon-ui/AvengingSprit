@@ -54,8 +54,8 @@ MonoBehaviour:
     _description: "3\uCD08\uAC04 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uC804\uAE30\uAC00
       \uACC4\uC18D \uD284\uB2E4."
     _scaling:
-      _baseValue: 4
-      _baseValueMax: 6
+      _baseValue: 3
+      _baseValueMax: 4.5
       _specValue: 3
       _specValueMax: 5
     _growthUnit: 1
@@ -66,8 +66,8 @@ MonoBehaviour:
     _description: "5\uCD08\uAC04 \uCD5C\uB300 \uCCB4\uB825\uB9CC\uD07C \uC274\uB4DC\uB97C
       \uB450\uB978\uB2E4. \uAE4E\uC774\uBA74 \uB05D\uB09C\uB2E4."
     _scaling:
-      _baseValue: 0.5
-      _baseValueMax: 0.65
+      _baseValue: 1
+      _baseValueMax: 1.5
       _specValue: 5
       _specValueMax: 8
     _growthUnit: 3
@@ -90,8 +90,8 @@ MonoBehaviour:
     _description: "2\uCD08\uAC04 \uBC88\uAC1C \uD295\uAE40\uC774 \uBC18\uB4DC\uC2DC
       \uD130\uC9C4\uB2E4."
     _scaling:
-      _baseValue: 1
-      _baseValueMax: 1.6
+      _baseValue: 2
+      _baseValueMax: 3
       _specValue: 3
       _specValueMax: 6
     _growthUnit: 1
@@ -126,8 +126,8 @@ MonoBehaviour:
     _description: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C 3\uCD08\uAC04 \uD45C\uC2DD\uC744
       \uC0C8\uAE34\uB2E4."
     _scaling:
-      _baseValue: 6
-      _baseValueMax: 10
+      _baseValue: 3
+      _baseValueMax: 5
       _specValue: 0.3
       _specValueMax: 0.6
     _growthUnit: 1
@@ -137,8 +137,8 @@ MonoBehaviour:
     _nameKr: "\uB09C\uC0AC"
     _description: "1\uCD08\uAC04 3\uBC29\uD5A5\uC73C\uB85C \uC3DF\uC544\uBD93\uB294\uB2E4."
     _scaling:
-      _baseValue: 3
-      _baseValueMax: 4.5
+      _baseValue: 1
+      _baseValueMax: 1.5
       _specValue: 3
       _specValueMax: 7
     _growthUnit: 1
@@ -161,8 +161,8 @@ MonoBehaviour:
     _description: "5\uCD08\uAC04 \uCE58\uBA85\uD0C0 \uD655\uB960\uC774 90% \uB85C
       \uACE0\uC815\uB41C\uB2E4."
     _scaling:
-      _baseValue: 3
-      _baseValueMax: 4.5
+      _baseValue: 5
+      _baseValueMax: 7.5
       _specValue: 0.4
       _specValueMax: 1
     _growthUnit: 1
@@ -173,8 +173,8 @@ MonoBehaviour:
     _description: "\uAC00\uC7A5 \uBA3C \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uACE0
       2\uCD08\uAC04 \uBB34\uC801."
     _scaling:
-      _baseValue: 2.5
-      _baseValueMax: 4
+      _baseValue: 2
+      _baseValueMax: 3
       _specValue: 3
       _specValueMax: 5
     _growthUnit: 1
@@ -235,7 +235,7 @@ MonoBehaviour:
     _scaling:
       _baseValue: 0.6
       _baseValueMax: 1
-      _specValue: 8
+      _specValue: 10
       _specValueMax: 14
     _growthUnit: 2
     _growthMul: 1
@@ -269,8 +269,8 @@ MonoBehaviour:
     _description: "\uD654\uBA74\uC5D0 \uBCF4\uC774\uB294 \uC801 \uBA38\uB9BF\uC218\uB9CC\uD07C
       \uCD5C\uB300 \uCCB4\uB825\uC758 2% \uC529 \uD68C\uBCF5\uD55C\uB2E4."
     _scaling:
-      _baseValue: 2
-      _baseValueMax: 3
+      _baseValue: 1
+      _baseValueMax: 1.5
       _specValue: 5
       _specValueMax: 8
     _growthUnit: 3

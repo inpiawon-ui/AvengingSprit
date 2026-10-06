@@ -9,6 +9,9 @@ namespace Game.EditorTools
     /// 옮겨 적은 것이다. 기획이 바뀌면 .js 를 받아 다시 옮긴다 —
     /// ⚠ **이 파일을 손으로 고치지 않는다.**
     ///
+    /// ⚠ 예외(2026-10-06): .js 는 v1.0(2026-08-31) 옛 스킬 세트다. 스킬이 명세 2026-09-14 로 바뀌었는데
+    ///   성장 값은 옛 스킬 것이 남아 설명과 어긋났다. 아홉 줄은 **새 명세(전투 코드 주석)** 로 손으로 맞췄다(줄 끝 주석).
+    ///
     /// 23명이 **전부 같은 모양**이다. 그래서 강화 화면이 호스트마다 다른 글을 쓸 필요가 없다.
     ///   base → baseMax   Lv1 → 4 에 자라는 축
     ///   Lv5              해제 하나. 값이 없는 불리언이다
@@ -61,7 +64,7 @@ namespace Game.EditorTools
                      Cooldown = 14f, Base = 0.5f, BaseMax = 0.9f, Spec = 6f, SpecMax = 10f,
                      Confirmed = false },
             new() { HostKey = "dragon_blue", NameKr = "청룡", SkillNameKr = "냉기 브레스",
-                     Cooldown = 14f, Base = 1f, BaseMax = 1.6f, Spec = 3f, SpecMax = 6f,
+                     Cooldown = 14f, Base = 2f, BaseMax = 3f, Spec = 3f, SpecMax = 6f,   // 뇌전 폭주 2→3초 — 옛 값 1→1.6
                      Confirmed = false },
             new() { HostKey = "commando_grenade", NameKr = "코만도(수류탄)", SkillNameKr = "융단 폭격",
                      Cooldown = 20f, Base = 1.2f, BaseMax = 1.8f, Spec = 5f, SpecMax = 8f,
@@ -71,25 +74,27 @@ namespace Game.EditorTools
                      Cooldown = 14f, Base = 1.25f, BaseMax = 1.9f, Spec = 1f, SpecMax = 3f,
                      Confirmed = false },
             new() { HostKey = "thug", NameKr = "폭력배", SkillNameKr = "난사",
-                     Cooldown = 8f, Base = 3f, BaseMax = 4.5f, Spec = 3f, SpecMax = 7f,
+                     Cooldown = 8f, Base = 1f, BaseMax = 1.5f, Spec = 3f, SpecMax = 7f,   // 난사 1→1.5초 — 옛 값 3→4.5
                      Confirmed = false },
             new() { HostKey = "hopper_smg", NameKr = "호퍼(기관단총)", SkillNameKr = "도약 연사",
-                     Cooldown = 14f, Base = 2.5f, BaseMax = 4f, Spec = 3f, SpecMax = 5f,
+                     Cooldown = 14f, Base = 2f, BaseMax = 3f, Spec = 3f, SpecMax = 5f,   // 도약 강습 무적 2→3초 — 옛 값 2.5→4
                      Confirmed = false },
             new() { HostKey = "ninja", NameKr = "닌자(표창)", SkillNameKr = "그림자 분신",
                      Cooldown = 20f, Base = 0.5f, BaseMax = 0.8f, Spec = 4f, SpecMax = 8f,
                      Confirmed = false },
             new() { HostKey = "vampire", NameKr = "흡혈귀", SkillNameKr = "혈갈",
-                     Cooldown = 20f, Base = 2f, BaseMax = 3f, Spec = 5f, SpecMax = 8f,
+                     // 혈연 2→3%(0.02 × 값) — 옛 값 2→3 은 4→6%
+                     Cooldown = 20f, Base = 1f, BaseMax = 1.5f, Spec = 5f, SpecMax = 8f,
                      Confirmed = false },
             new() { HostKey = "commando_mg", NameKr = "코만도(기관총)", SkillNameKr = "오버히트",
-                     Cooldown = 14f, Base = 0.5f, BaseMax = 0.65f, Spec = 5f, SpecMax = 8f,
+                     // 방벽 최대 체력 100→150% — 옛 값 0.5→0.65
+                     Cooldown = 14f, Base = 1f, BaseMax = 1.5f, Spec = 5f, SpecMax = 8f,
                      Confirmed = false },
             new() { HostKey = "gangster", NameKr = "갱스터", SkillNameKr = "표식 사격",
-                     Cooldown = 14f, Base = 6f, BaseMax = 10f, Spec = 0.3f, SpecMax = 0.6f,
+                     Cooldown = 14f, Base = 3f, BaseMax = 5f, Spec = 0.3f, SpecMax = 0.6f,   // 일제 표식 3→5초 — 옛 값 6→10
                      Confirmed = false },
             new() { HostKey = "hopper", NameKr = "호퍼", SkillNameKr = "도약 강타",
-                     Cooldown = 14f, Base = 3f, BaseMax = 4.5f, Spec = 0.4f, SpecMax = 1f,
+                     Cooldown = 14f, Base = 5f, BaseMax = 7.5f, Spec = 0.4f, SpecMax = 1f,   // 정조준 5→7.5초 — 옛 값 3→4.5
                      Confirmed = false },
             new() { HostKey = "commando_missile", NameKr = "코만도(미사일)", SkillNameKr = "다중 유도",
                      Cooldown = 20f, Base = 1f, BaseMax = 1.5f, Spec = 5f, SpecMax = 8f,
@@ -101,10 +106,12 @@ namespace Game.EditorTools
                      Cooldown = 20f, Base = 2.5f, BaseMax = 3.8f, Spec = 0f, SpecMax = 0.8f,
                      Confirmed = false },
             new() { HostKey = "commando_laser", NameKr = "코만도(레이저)", SkillNameKr = "광폭 레이저",
-                     Cooldown = 20f, Base = 4f, BaseMax = 6f, Spec = 3f, SpecMax = 5f,
+                     // 연쇄 방전 3초(명세 2026-09-14) — 옛 값 4→6
+                     Cooldown = 20f, Base = 3f, BaseMax = 4.5f, Spec = 3f, SpecMax = 5f,
                      Confirmed = false },
             new() { HostKey = "robot", NameKr = "로봇", SkillNameKr = "포탑 전개",
-                     Cooldown = 20f, Base = 0.6f, BaseMax = 1f, Spec = 8f, SpecMax = 14f,
+                     // Lv5 포탑 10초부터 — 8 이면 Lv4(10초)보다 짧아졌다
+                     Cooldown = 20f, Base = 0.6f, BaseMax = 1f, Spec = 10f, SpecMax = 14f,
                      Confirmed = false },
         };
 
