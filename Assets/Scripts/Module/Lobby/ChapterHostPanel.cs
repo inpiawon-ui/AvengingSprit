@@ -560,10 +560,48 @@ namespace Game.Module.Lobby
             _ui.SetText("CHStartCostText", cost.ToString("N0"));
             _ui.SetActive("CHStartCostIcon", cost > 0);
             _ui.SetActive("CHStartCostText", cost > 0);
-            // 「도전하기 ▶」는 화면 그림에 있다
+            LayoutStart(cost > 0);
 
             var btn = _ui.Get<Button>("CHStartButton");
             if (btn != null) btn.interactable = ChapterOpen && (_pickedRandom || !string.IsNullOrEmpty(_pickedHost));
+        }
+
+        /// <summary>
+        /// 「(동전) 60 도전하기 ▶」 를 한 덩어리로 재서 가운데에 세운다(PD 2026-10-07).
+        ///
+        /// 글자 자리를 고정해 두면 값이 붙을 때 덩어리가 왼쪽으로 27 쏠렸다 — 값은 글자 **앞에** 붙기 때문이다.
+        /// 값 자릿수 · 언어마다 폭이 다르니 그때그때 잰다.
+        /// </summary>
+        private void LayoutStart(bool hasCost)
+        {
+            if (_ui.Find("CHStartButton") is not RectTransform button) return;
+            var label = _ui.Get<TextMeshProUGUI>("CHStartLabel");
+            if (label == null) return;
+            var icon = _ui.Find("CHStartCostIcon") as RectTransform;
+            var costText = _ui.Get<TextMeshProUGUI>("CHStartCostText");
+
+            float labelWidth = label.GetPreferredValues(label.text).x;
+            float costWidth = hasCost && costText != null ? costText.GetPreferredValues(costText.text).x : 0f;
+            float iconWidth = hasCost && icon != null ? icon.rect.width : 0f;
+            float lead = hasCost
+                ? iconWidth + ChapterHostLayout.StartIconGap + costWidth + ChapterHostLayout.StartCostGap
+                : 0f;
+            float left = ChapterHostLayout.StartGroupCenter - (lead + labelWidth) * 0.5f;   // 덩어리 왼쪽 끝(판 좌표)
+
+            // 글자는 판(CHContent) 안 · 왼쪽 끝 기준, 동전 · 값은 버튼 안 · 가운데 기준이다
+            var lp = label.rectTransform.anchoredPosition;
+            label.rectTransform.anchoredPosition = new Vector2(left + lead, lp.y);
+            if (!hasCost) return;
+            float buttonCenter = button.anchoredPosition.x + (0.5f - button.pivot.x) * button.rect.width;
+            if (icon != null)
+                icon.anchoredPosition = new Vector2(left + iconWidth * 0.5f - buttonCenter, icon.anchoredPosition.y);
+            if (costText != null)
+            {
+                var r = costText.rectTransform;
+                r.sizeDelta = new Vector2(Mathf.Max(r.sizeDelta.x, costWidth + 2f), r.sizeDelta.y);
+                float x = left + iconWidth + ChapterHostLayout.StartIconGap - buttonCenter;   // 값의 왼쪽 끝(버튼 좌표)
+                r.anchoredPosition = new Vector2(x + r.pivot.x * r.sizeDelta.x, r.anchoredPosition.y);
+            }
         }
 
         /// <summary>
@@ -696,6 +734,13 @@ namespace Game.Module.Lobby
         public const float ViewHeight = 225f;
         /// <summary>카드 가운데 기준 — 전투력 글자(왼쪽 끝) · 유령의 「몸 없음」(가운데).</summary>
         public static readonly Vector2 PowerText = new(-20f, -92f), GhostNote = new(0f, -80.5f);
+        /// <summary>
+        /// 「도전하기」 덩어리의 가운데(판 좌표 — 판 가운데가 0). 시안의 「도전하기 ▶」 잉크 가운데 x 370.5 − 360.
+        /// 버튼 가운데(359)보다 11 오른쪽이다 — ▶ 가 가벼워 보여 시안이 그렇게 놓았다. 값이 붙어도 같은 가운데를 쓴다.
+        /// </summary>
+        public const float StartGroupCenter = 10.5f;
+        /// <summary>동전 → 값 · 값 → 「도전하기」 사이(화면 px).</summary>
+        public const float StartIconGap = 4f, StartCostGap = 10f;
         public const int CardSlots = 26;   // 유령 + 호스트 23 + 여유
     }
 }
