@@ -23,7 +23,7 @@ namespace Game.Module.Lobby
     ///
     /// 화면은 시안 픽셀 그대로다 — `GrowthBuilder` 가 세운다. 노드 이름 = 여기서 찾는 이름.
     /// </summary>
-    public sealed class GrowthPanel : MonoBehaviour
+    public sealed partial class GrowthPanel : MonoBehaviour
     {
         [Serializable]
         private struct HostArt
@@ -32,29 +32,19 @@ namespace Game.Module.Lobby
             public Sprite Portrait;   // 카드 큰 그림 — 초상(발주본)이 있으면 그것, 없으면 유닛 그림(동쪽 · 대기)
             public Sprite Thumb;      // 목록 칸 — 초상이 있으면 같은 그림, 없으면 유닛 그림(남동 · 대기)
             public Sprite Skill;      // 액티브 스킬 아이콘
+            public Sprite Passive;    // 패시브 스킬 아이콘(호스트 선택 화면과 같은 그림)
             public bool IsPortrait;   // 초상인가 — 유닛 그림은 투명 여백이 있어 칸을 키워 쓴다
         }
-
-        /// <summary>
-        /// 그림 칸 — 초상 · 유닛 그림 두 벌. 초상은 잉크에 딱 맞게 잘려 있어 시안 칸 그대로,
-        /// 유닛 그림(96px)은 위 · 옆 투명 여백만큼 칸을 키운다. (x, y, w, h) — 부모 왼쪽 위 기준, 아래로 +.
-        /// </summary>
-        [SerializeField] private Rect _portraitRect, _portraitRectUnit, _thumbRect, _thumbRectUnit;
 
         [SerializeField] private HostArt[] _hostArts = Array.Empty<HostArt>();
         /// <summary>`HostStat` 순서의 아이콘.</summary>
         [SerializeField] private Sprite[] _statIcons = Array.Empty<Sprite>();
-        [SerializeField] private Sprite _starBigOn, _starBigOff, _starSmallOn, _starSmallOff;
+        [SerializeField] private Sprite _starBigOn, _starBigOff;
         [SerializeField] private Sprite _nodeDone, _nodeNext, _nodeLock;
         [SerializeField] private Color _labelDone = Color.cyan, _labelNow = Color.white,
                                        _labelNext = Color.yellow, _labelLock = Color.white;
         /// <summary>유령 탭은 「능력치 · 스킬」 탭 줄이 없어 능력치 판이 이만큼 위로 늘었다(px).</summary>
         [SerializeField] private float _ghostStatLift = 50f;
-        /// <summary>스킬 탭에서는 호스트 목록이 이만큼 아래에 있다(시안 px).</summary>
-        [SerializeField] private float _skillListDrop = 48f;
-        /// <summary>목록 칸 간격(가로 · 세로)과 한 줄 칸 수.</summary>
-        [SerializeField] private Vector2 _cardPitch = new(174.3f, 162f);
-        [SerializeField] private int _cardColumns = 4;
         [SerializeField] private float _rowPitch = 50.6f;
 
         // 목록 순서 — 시안 첫 줄이 공격력이다
@@ -71,14 +61,10 @@ namespace Game.Module.Lobby
         private IPlayerDataService _player;
         private readonly List<IDisposable> _tokens = new();
         private readonly List<Transform> _rows = new();
-        private readonly List<Transform> _cards = new();
-        private readonly List<string> _cardKeys = new();
         private Page _page = Page.Ghost;
-        private bool _skillTab;
         private string _hostKey;
         private bool _built;
         private Vector2 _statSectionPos, _statViewportSize;
-        private Vector2 _hostListPos;
 
         public bool IsOpen => gameObject.activeSelf;
 
@@ -90,13 +76,10 @@ namespace Game.Module.Lobby
 
             _ui.OnClick("TabGhostButton", () => ShowPage(Page.Ghost));
             _ui.OnClick("TabHostButton", () => ShowPage(Page.Host));
-            _ui.OnClick("StatTabButton", () => { _skillTab = false; RefreshAll(); });
-            _ui.OnClick("SkillTabButton", () => { _skillTab = true; RefreshAll(); });
             _ui.OnClick("StatHelpButton", () => Toast(Localize.Get("ui.growth.help.stats")));
             _ui.OnClick("PathHelpButton", () => Toast(Localize.Get("ui.growth.help.path")));
             _ui.OnClick("PathBoxButton", () => ClaimNext());
             for (int i = 0; i < 5; i++) _ui.OnClick($"PathNode{i}", () => ClaimNext());
-            _ui.OnClick("ShardBarButton", UpgradeMastery);
             foreach (var (node, label) in new[] { ("GrowthGoldPlusButton", "상점"), ("GrowthMailButton", "우편"),
                                                   ("GrowthSettingsButton", "설정"), ("SortButton", "정렬") })
             {
@@ -108,8 +91,7 @@ namespace Game.Module.Lobby
             if (section != null) _statSectionPos = section.anchoredPosition;
             var viewport = _ui.Find("StatViewport") as RectTransform;
             if (viewport != null) _statViewportSize = viewport.sizeDelta;
-            var list = _ui.Find("HostList") as RectTransform;
-            if (list != null) _hostListPos = list.anchoredPosition;
+            AwakeHostPage();
         }
 
         private void OnEnable()
@@ -172,34 +154,7 @@ namespace Game.Module.Lobby
                     content.sizeDelta = new Vector2(content.sizeDelta.x, _rowPitch * StatOrder.Length + 4f);
             }
 
-            var cardTemplate = _ui.Find("HostCard");
-            if (cardTemplate != null && _player != null)
-            {
-                var content = cardTemplate.parent as RectTransform;
-                var hosts = _player.PlayableHosts;
-                int n = 0;
-                for (int i = 0; i < hosts.Count; i++)
-                {
-                    var e = hosts[i];
-                    if (e == null || e.IsGhost) continue;
-                    var card = n == 0 ? cardTemplate : Instantiate(cardTemplate.gameObject, content).transform;
-                    card.name = $"HostCard_{e.HostKey}";
-                    var rt = (RectTransform)card;
-                    rt.anchoredPosition = ((RectTransform)cardTemplate).anchoredPosition +
-                                          new Vector2(_cardPitch.x * (n % _cardColumns), -_cardPitch.y * (n / _cardColumns));
-                    string key = e.HostKey;
-                    card.GetComponent<Button>()?.onClick.AddListener(() => SelectHost(key));
-                    _cards.Add(card);
-                    _cardKeys.Add(key);
-                    n++;
-                }
-                if (content != null)
-                {
-                    int rows = (n + _cardColumns - 1) / _cardColumns;
-                    content.sizeDelta = new Vector2(content.sizeDelta.x, _cardPitch.y * rows + 8f);
-                }
-                if (string.IsNullOrEmpty(_hostKey) && _cardKeys.Count > 0) _hostKey = _cardKeys[0];
-            }
+            BuildHostPageOnce();
         }
 
         // ── 칠하기 ──────────────────────────────────────────────
@@ -215,25 +170,25 @@ namespace Game.Module.Lobby
             if (_player == null || !_player.IsReady || !_built) return;
             bool ghost = _page == Page.Ghost;
 
+            // 호스트 탭은 v5 한 화면(`HostPage`, 2026-10-06) — 옛 호스트 판 · 하위 탭 · 목록은 끈다.
+            // 유령 탭은 예전 그대로다.
+            SetActive("HostPage", !ghost);
             SetActive("BgGhost", ghost);
-            SetActive("BgHost", !ghost && !_skillTab);
-            SetActive("BgSkill", !ghost && _skillTab);
+            SetActive("BgHost", false);
+            SetActive("BgSkill", false);
             SetActive("TabGhostOn", ghost); SetActive("TabGhostOff", !ghost);
             SetActive("TabHostOn", !ghost); SetActive("TabHostOff", ghost);
             SetTabText("TabGhostText", ghost);
             SetTabText("TabHostText", !ghost);
 
-            SetActive("HostPortrait", !ghost);
-            SetActive("ShardGroup", !ghost);
+            for (int i = 0; i < GhostCardNodes.Length; i++) SetActive(GhostCardNodes[i], ghost);
+            SetActive("HostPortrait", false);
+            SetActive("ShardGroup", false);
             SetActive("ExpGroup", ghost);
-            SetActive("HostTabs", !ghost);
-            SetActive("StatTabOn", !_skillTab); SetActive("StatTabOff", _skillTab);
-            SetActive("SkillTabOn", _skillTab); SetActive("SkillTabOff", !_skillTab);
-            SetTabText("StatTabText", !_skillTab);
-            SetTabText("SkillTabText", _skillTab);
-            SetActive("StatSection", ghost || !_skillTab);
-            SetActive("SkillSection", !ghost && _skillTab);
-            SetActive("HostList", !ghost);
+            SetActive("HostTabs", false);
+            SetActive("StatSection", ghost);
+            SetActive("SkillSection", false);
+            SetActive("HostList", false);
             SetActive("GhostPath", ghost);
 
             // 유령 탭은 탭 줄이 없어 능력치 판이 위로 늘었다 — 판 · 창을 올리고 늘린다
@@ -241,13 +196,18 @@ namespace Game.Module.Lobby
             if (section != null) section.anchoredPosition = _statSectionPos + new Vector2(0f, ghost ? _ghostStatLift : 0f);
             var viewport = _ui.Find("StatViewport") as RectTransform;
             if (viewport != null) viewport.sizeDelta = _statViewportSize + new Vector2(0f, ghost ? _ghostStatLift : 0f);
-            var list = _ui.Find("HostList") as RectTransform;
-            if (list != null) list.anchoredPosition = _hostListPos + new Vector2(0f, _skillTab ? -_skillListDrop : 0f);
 
             RefreshGoldAndRows();
             if (ghost) { RefreshGhostCard(); RefreshPath(); }
-            else { RefreshHostCard(); RefreshSkills(); RefreshCards(); }
+            else RefreshHostPage();
         }
+
+        /// <summary>몸 정보 카드의 유령 탭 글자 · 별 — 호스트 탭에서는 v5 판이 제 것을 쓴다.</summary>
+        private static readonly string[] GhostCardNodes =
+        {
+            "CardNameEnText", "CardNameText", "CardDescText", "CardLvLabel", "CardLvNum", "CardLvMax",
+            "CardStar0", "CardStar1", "CardStar2", "CardStar3", "CardStar4",
+        };
 
         /// <summary>
         /// 능력치 줄의 「+x%」. 사거리만 직업마다 다르다(근거리 +1% · 중거리 +0.5% · 원거리 +0.3% / Lv) —
@@ -273,7 +233,8 @@ namespace Game.Module.Lobby
         {
             if (_player == null || !_player.IsReady) return;
             _ui.SetText("GrowthGoldText", _player.Gold.ToString("N0"));
-            bool ghost = _page == Page.Ghost;
+            if (_page == Page.Host) { RefreshHostRows(); RefreshStarUpBox(); return; }
+            bool ghost = true;
             for (int i = 0; i < _rows.Count; i++)
             {
                 var row = _rows[i];
@@ -309,33 +270,6 @@ namespace Game.Module.Lobby
             _ui.SetText("ExpValueText", $"{_player.GhostExp:N0} / {_player.GhostExpMax:N0}");
         }
 
-        private void RefreshHostCard()
-        {
-            var e = _player.GetHost(_hostKey);
-            if (e == null) return;
-            _ui.SetText("CardNameEnText", ShortName(e).ToUpperInvariant());
-            _ui.SetText("CardNameText", e.DisplayName);
-            _ui.SetText("CardDescText", Localize.Get($"host.{e.HostKey}.desc"));
-            int mastery = _player.GetMastery(_hostKey);
-            SetLevel(mastery, _player.MasteryMax);
-            SetStars("CardStar", _player.StarsOf(_hostKey), _starBigOn, _starBigOff);
-            var portrait = _ui.Get<Image>("HostPortrait");
-            if (portrait != null)
-            {
-                var art = ArtOf(_hostKey);
-                portrait.sprite = art.Portrait;
-                portrait.enabled = portrait.sprite != null;
-                portrait.preserveAspect = true;
-                PlaceArt(portrait.rectTransform, art.IsPortrait ? _portraitRect : _portraitRectUnit);
-            }
-            int shards = _player.GetShards(_hostKey);
-            int cost = _player.MasteryCost(_hostKey);
-            SetBar("ShardBarFill", cost > 0 ? shards : 1, cost > 0 ? cost : 1);
-            _ui.SetText("ShardValueText", cost > 0 ? $"{shards} / {cost}" : Localize.Get("ui.growth.max"));
-            // 안 가진 몸 — 초상을 어둡게. 조각이 차면 막대를 눌러 해금한다(숙련도 0 → 1)
-            if (portrait != null) portrait.color = mastery >= 1 ? Color.white : LockedTint;
-        }
-
         private void SetLevel(int lv, int max)
         {
             _ui.SetText("CardLvLabel", "Lv.");
@@ -357,58 +291,6 @@ namespace Game.Module.Lobby
         {
             var fill = _ui.Get<Image>(fillName);
             if (fill != null) fill.fillAmount = Mathf.Clamp01(max > 0 ? (float)value / max : 0f);
-        }
-
-        private void RefreshSkills()
-        {
-            var e = _player.GetHost(_hostKey);
-            if (e == null) return;
-            var active = _player.GetActiveSkill(e.ActiveSkillKey);
-            _ui.SetText("SkillActiveName", active != null
-                ? (string.IsNullOrEmpty(active.DisplayName) ? active.NameEn : active.DisplayName) : "—");
-            _ui.SetText("SkillActiveDesc", active?.DisplayDescription ?? string.Empty);
-            var icon = _ui.Get<Image>("SkillActiveIcon");
-            if (icon != null)
-            {
-                icon.sprite = ArtOf(_hostKey).Skill;
-                icon.enabled = icon.sprite != null;
-            }
-            var passive = _player.GetPassiveSkill(e.PassiveSkillKey);
-            _ui.SetText("SkillPassiveName", passive != null ? passive.DisplayName : "—");
-            _ui.SetText("SkillPassiveDesc", passive != null ? passive.DisplayDescription : string.Empty);
-        }
-
-        private void RefreshCards()
-        {
-            for (int i = 0; i < _cards.Count; i++)
-            {
-                var card = _cards[i];
-                string key = _cardKeys[i];
-                var e = _player.GetHost(key);
-                bool sel = key == _hostKey;
-                var frameOn = _ui.Find(card, "CardFrameSel");
-                if (frameOn != null) frameOn.gameObject.SetActive(sel);
-                var frameOff = _ui.Find(card, "CardFrame");
-                if (frameOff != null) frameOff.gameObject.SetActive(!sel);
-                var thumb = _ui.Find(card, "CardThumb")?.GetComponent<Image>();
-                if (thumb != null)
-                {
-                    var art = ArtOf(key);
-                    thumb.sprite = art.Thumb;
-                    thumb.enabled = thumb.sprite != null;
-                    thumb.preserveAspect = true;
-                    PlaceArt(thumb.rectTransform, art.IsPortrait ? _thumbRect : _thumbRectUnit);
-                    thumb.color = _player.GetMastery(key) >= 1 ? Color.white : LockedTint;
-                }
-                // 영문 몸 이름은 겹친다(코만도 넷 · 갱스터 둘) — 목록은 현지 이름으로 가른다
-                TextIn(card, "CardName", e != null ? e.DisplayName : key);
-                int stars = _player.StarsOf(key);
-                for (int s = 0; s < 5; s++)
-                {
-                    var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
-                    if (img != null) img.sprite = s < stars ? _starSmallOn : _starSmallOff;
-                }
-            }
         }
 
         private void RefreshPath()
@@ -529,32 +411,6 @@ namespace Game.Module.Lobby
             RefreshGoldAndRows();
         }
 
-        /// <summary>안 가진 몸의 그림 색 — 잠겨 있다는 것이 한눈에 읽혀야 한다.</summary>
-        private static readonly Color LockedTint = new(0.32f, 0.34f, 0.4f, 1f);
-
-        private void UpgradeMastery()
-        {
-            int cost = _player.MasteryCost(_hostKey);
-            if (cost <= 0) return;
-            var e = _player.GetHost(_hostKey);
-            string name = e != null ? e.DisplayName : _hostKey;
-            int have = _player.GetShards(_hostKey);
-            if (have < cost)
-            {
-                Toast(Localize.Format("ui.hostselect.mastery.short", name, have, cost, cost - have));
-                return;
-            }
-            int lv = _player.GetMastery(_hostKey);
-            string step = lv < 1 ? Localize.Get("ui.growth.unlock") : $"Lv {lv} → {lv + 1}";
-            SystemPopup.Show(Localize.Format("ui.hostselect.mastery.confirm", name, step, cost), () =>
-            {
-                if (!_player.SpendShards(_hostKey, cost)) return;
-                GameSound.Cue("run.card");
-                _player.SaveAsync().Forget();   // fire-and-forget: 숙련도를 올리자마자 남긴다
-                RefreshAll();
-            });
-        }
-
         private void ClaimNext()
         {
             for (int i = 0; i < _player.PathCount; i++)
@@ -588,13 +444,6 @@ namespace Game.Module.Lobby
             int cut = n.IndexOf(" — ", StringComparison.Ordinal);
             if (cut < 0) cut = n.IndexOf(" - ", StringComparison.Ordinal);
             return (cut > 0 ? n.Substring(0, cut) : n).Trim();
-        }
-
-        private static void PlaceArt(RectTransform rt, Rect r)
-        {
-            if (r.size == Vector2.zero) return;
-            rt.anchoredPosition = new Vector2(r.x, -r.y);
-            rt.sizeDelta = r.size;
         }
 
         private HostArt ArtOf(string key)

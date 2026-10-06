@@ -559,3 +559,57 @@ ui.growth.essence.short	정수가 부족합니다 ({0}/{1})	エッセンスが�
 ui.ingame.nohost_hint	빙의할 몸을 찾으세요	憑依する体を探そう	Find a body to possess
 ui.stat.critdmg	크리티컬 피해	クリティカルダメージ	Crit Damage
 ui.stat.def	방어력	防御力	Defense
+ui.starup.title	성급 올리기	星級アップ	Star Up
+ui.starup.button	성급 UP	星級UP	STAR UP
+ui.starup.label	성급	星級	Stars
+ui.starup.value	★ {0} / 5	★ {0} / 5	★ {0} / 5
+ui.starup.rises	함께 오르는 것	一緒に上がるもの	Also improves
+ui.starup.skill_lv	스킬 Lv	スキル Lv	Skill Lv
+ui.starup.stat_cap	능력치 강화 상한	能力値強化の上限	Stat upgrade cap
+ui.starup.cap_short	강화 상한 Lv {0}	強化上限 Lv {0}	Upgrade cap Lv {0}
+ui.starup.spec_lock	Lv.{0} 특수 효과	Lv.{0} 特殊効果	Lv.{0} special
+ui.starup.maxed	최대 성급입니다.	最大星級です。	Max stars reached.
+ui.starup.shard_short	조각이 모자랍니다.\n{0} / {1}  ({2}개 더)	欠片が足りません。\n{0} / {1}（あと{2}個）	Not enough shards.\n{0} / {1} ({2} more)
+ui.starup.gold_short	골드가 모자랍니다.\n{0} / {1}  ({2} 더)	ゴールドが足りません。\n{0} / {1}（あと{2}）	Not enough gold.\n{0} / {1} ({2} more)
+ui.starup.confirm	{0}  {1}\n파편 {2}개 · 골드 {3}을 씁니다.	{0}  {1}\n欠片{2}個・ゴールド{3}を使用します。	{0}  {1}\nUses {2} shards and {3} gold.
+ui.starup.done	성급이 올랐습니다!	星級が上がりました！	Stars up!
+ui.growth.skill.active	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL
+ui.growth.skill.passive	PASSIVE	PASSIVE	PASSIVE
+ui.growth.skill.header	스킬	スキル	Skills
+pskill.psv_amazon.growth	이동속도	移動速度	Move speed
+pskill.psv_counter.growth	공격력	攻撃力	Attack
+pskill.psv_slugger.growth	날려 보낼 확률	吹き飛ばし確率	Fling chance
+pskill.psv_ninja_chain.growth	회피	回避	Dodge
+pskill.psv_dragoon.growth	화상 확률	火傷確率	Burn chance
+pskill.psv_salamander.growth	중독 확률	毒確率	Poison chance
+pskill.psv_dragon_blue.growth	번개 확률	落雷確率	Lightning chance
+pskill.psv_commando_grenade.growth	방어 무시	防御無視	Armor pierce
+pskill.psv_snowwoman.growth	빙결 확률	凍結確率	Freeze chance
+pskill.psv_hopper_smg.growth	밀쳐내기 확률	ノックバック確率	Knockback chance
+pskill.psv_commando_mg.growth	방어력 증가	防御力上昇	Defense up
+pskill.psv_thug.growth	골드 증가	ゴールド増加	Gold up
+pskill.psv_ninja.growth	이동속도	移動速度	Move speed
+pskill.psv_leech.growth	발동 확률	発動確率	Proc chance
+pskill.psv_gangster.growth	즉사 확률	即死確率	Execute chance
+pskill.psv_momentum.growth	치명타 피해	クリティカルダメージ	Crit damage
+pskill.psv_medium.growth	해골 확률	骸骨確率	Skull chance
+pskill.psv_spare_circuit.growth	발동 확률	発動確率	Proc chance
+askill.psg_h01.growth	피해	ダメージ	Damage
+askill.psg_h03.growth	수류탄 피해	手榴弾ダメージ	Grenade damage
+askill.psg_h04.growth	지속 시간	持続時間	Duration
+askill.psg_h05.growth	쉴드량	シールド量	Shield
+askill.psg_h06.growth	미사일 피해	ミサイルダメージ	Missile damage
+askill.psg_h07.growth	폭주 시간	暴走時間	Surge time
+askill.psg_h08.growth	독 피해	毒ダメージ	Poison damage
+askill.psg_h09.growth	초당 피해	毎秒ダメージ	Damage / sec
+askill.psg_h10.growth	표식 시간	マーク時間	Mark time
+askill.psg_h11.growth	난사 시간	乱射時間	Barrage time
+askill.psg_h12.growth	피해 감소	被ダメージ減少	Damage taken down
+askill.psg_h13.growth	정조준 시간	狙撃時間	Aim time
+askill.psg_h14.growth	무적 시간	無敵時間	Invincible time
+askill.psg_h17.growth	결박 시간	拘束時間	Bind time
+askill.psg_h19.growth	포탑 피해	砲台ダメージ	Turret damage
+askill.psg_h20.growth	반사 시간	反射時間	Reflect time
+askill.psg_h21.growth	얼음 시간	氷結時間	Ice time
+askill.psg_h22.growth	적 하나당 회복	敵1体ごとの回復	Heal per enemy
+ui.unit.seconds	{0:0.0}초	{0:0.0}秒	{0:0.0}s

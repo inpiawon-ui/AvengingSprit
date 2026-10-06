@@ -20,7 +20,7 @@ namespace Game.Editor
     /// ⚠ **로비 v4 빌더 다음에** 돌린다. 로비 빌더는 옛 하단 바를 지우고 이 빌더가 공통 하단 바를 세운다.
     /// 시안 = 캔버스(720×1280)라 배율이 없다. 좌표는 전부 「왼쪽 위 원점, 아래로 +」 시안 px 다.
     /// </summary>
-    public static class GrowthBuilder
+    public static partial class GrowthBuilder
     {
         private const string Prefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string Dir = "Assets/BaseResource/Growth";
@@ -121,7 +121,11 @@ namespace Game.Editor
             BuildSkills(page);
             BuildHostList(page);
             BuildPath(page);
+            // 호스트 탭은 v5 한 화면(2026-10-06) — 바탕들 바로 뒤에 둬서 머리(골드 · 탭)가 그 위에 그려지게 한다
+            var hostPage = BuildHostPage(page);
+            hostPage.SetSiblingIndex(Find(page, "BgSkill").GetSiblingIndex() + 1);
             BindGrowth(gp);
+            BindHostPage(gp);
             return panel;
         }
 
@@ -402,6 +406,9 @@ namespace Game.Editor
                 e.FindPropertyRelative("IsPortrait").boolValue = drawn != null;
                 e.FindPropertyRelative("Skill").objectReferenceValue =
                     AssetDatabase.LoadAssetAtPath<Sprite>($"{SkillIconDir}/ultimateicon_{key}.png");
+                // 패시브 아이콘은 10명만 따로 있다 — 나머지는 육성 화면의 공용 패시브 아이콘
+                var passiveIcon = AssetDatabase.LoadAssetAtPath<Sprite>($"{SkillIconDir}/passiveicon_{key}.png");
+                e.FindPropertyRelative("Passive").objectReferenceValue = passiveIcon != null ? passiveIcon : Spr("passive_icon");
             }
             // HostStat 순서 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed · CritDamage · Defense
             var icons = so.FindProperty("_statIcons");
@@ -411,8 +418,6 @@ namespace Game.Editor
             for (int i = 0; i < iconFiles.Length; i++) icons.GetArrayElementAtIndex(i).objectReferenceValue = Spr(iconFiles[i]);
             so.FindProperty("_starBigOn").objectReferenceValue = Spr("star_big_on");
             so.FindProperty("_starBigOff").objectReferenceValue = Spr("star_big_off");
-            so.FindProperty("_starSmallOn").objectReferenceValue = Spr("slot_star_on");
-            so.FindProperty("_starSmallOff").objectReferenceValue = Spr("slot_star_off");
             so.FindProperty("_nodeDone").objectReferenceValue = Spr("node_done");
             so.FindProperty("_nodeNext").objectReferenceValue = Spr("node_next");
             so.FindProperty("_nodeLock").objectReferenceValue = Spr("node_lock");
@@ -420,18 +425,8 @@ namespace Game.Editor
             so.FindProperty("_labelNow").colorValue = Col(T("PathLabelNow").color);
             so.FindProperty("_labelNext").colorValue = Col(T("PathLabelNext").color);
             so.FindProperty("_labelLock").colorValue = Col(T("PathLabelLock").color);
-            so.FindProperty("_skillListDrop").floatValue = s_spec.skillListDy;
-            // 그림 칸 — 초상은 시안 코만도 자리(카드 왼쪽 · 발은 판 바닥 위), 유닛 그림은 투명 여백만큼 크게
-            var pa = R("@HOST_PORTRAIT_AREA");
-            so.FindProperty("_portraitRect").rectValue = new Rect(pa[0] + 8, pa[1] + 10, pa[2] - pa[0] - 12, pa[3] - pa[1] - 16);
-            so.FindProperty("_portraitRectUnit").rectValue = new Rect(pa[0], pa[3] - 262, pa[2] - pa[0], 262);
-            var c0 = R("@CARD0");
-            float cw = c0[2] - c0[0];
-            so.FindProperty("_thumbRect").rectValue = new Rect(18, 8, cw - 36, 100);
-            so.FindProperty("_thumbRectUnit").rectValue = new Rect(20, -20, cw - 40, 132);
             so.FindProperty("_ghostStatLift").floatValue = 50f;
             so.FindProperty("_rowPitch").floatValue = 50.6f;
-            so.FindProperty("_cardPitch").vector2Value = new Vector2(174.3f, 162f);
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
