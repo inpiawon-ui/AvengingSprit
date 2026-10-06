@@ -1,0 +1,12 @@
+AVENGING SPIRIT: RE:BORN — 인게임 HUD 글자 맞춤 검수 (그림은 만들지 마라 — 읽고 평가만)
+
+API 키를 쓰는 CLI 폴백은 쓰지 마라.
+
+PD 지적 : 「폰트들이 UI 를 삐져나간 게 너무 많다. UI 에 맞춰 적용해 달라.」 고친 뒤 실제 게임을 찍었다.
+  Projects/AVSR/_exchange/ref/ingame_ui/game_hud3_text_tops.png    위쪽 HUD 2배 확대 — 위 : 유령 상태 · 가운데 : 해골에 빙의 · 아래 : 가장 긴 글자 시험
+     (긴 글자 시험 = 몸 이름 COMMANDO MISSILE · 일본어 이름 · HP 1999/1999 · 금화 99,999 · 일본어 무대 이름)
+  Projects/AVSR/_exchange/ref/ingame_ui/game_hud3_text_bottom.png  아래 버튼 — 왼쪽 유령 상태 · 오른쪽 몸 있을 때
+  ※ 해골은 숙련도 0 이라 스킬이 봉인돼 자물쇠가 뜨는 것이 맞다. 몸 있을 때 금화 숫자가 커진 것은 금화를 얻는 순간의 튀는 연출이다.
+볼 것 : 글자가 판 · 칸 · 홈 · 테두리 밖으로 나가거나 덮는 곳이 남았는가 · 막대 채움이 홈 안에 들어갔는가 · 읽기 어려울 만큼 작은 글자가 있는가.
+쓸 것 : Projects/AVSR/_exchange/review_hud3_text.md (한국어, 10줄 이내) — 남은 문제를 자리와 함께, 마지막 줄 「PD 보고 가능」 또는 「한 번 더 고칠 것」.
+끝나면 파일 경로만 알려라.

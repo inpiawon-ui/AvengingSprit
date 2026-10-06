@@ -30,8 +30,8 @@ namespace Game.Module.InGame
         // (_layout_ingame.py 의 목업 좌표 × 1.25)
         // ⚠ HUD 3차(2026-10-06, `InGameHudV3Binder` — D안)에서 새 판의 바 홈에 맞춰 폭이 바뀌었다.
         //   값은 시안(1080 폭) 홈 폭 × 720/1080. 빌더의 표와 같아야 한다.
-        private const float GhostBarWidth = 140f;   // 프리팹 GhostHpBarBg 폭 (시안 210)
-        private const float HostBarWidth = 140f;    // 프리팹 HostHpBarBg 폭 (시안 210)
+        private const float GhostBarWidth = 139f;   // 프리팹 GhostHpBarBg 폭 (시안 209 — 판의 홈 안쪽)
+        private const float HostBarWidth = 139f;    // 프리팹 HostHpBarBg 폭 (시안 208 — 판의 홈 안쪽)
         private const float BossBarWidth = 594f;    // 프리팹 BossHpBarBg 폭
         private const int BuffCardCount = 3;
 
@@ -843,7 +843,7 @@ namespace Game.Module.InGame
             _ui.SetText("HostLabel", "CURRENT HOST");
             _ui.SetText("HostNameEnText", "NO HOST");
             _ui.SetText("HostNameKrText", Localize.FromTable("ui.ingame.nohost_hint", "빙의할 몸을 찾으세요"));
-            _ui.SetText("HostLevelText", "—");
+            _ui.SetText("HostLevelText", "-");   // 픽셀 글꼴에는 「—」 가 없어 대체 글꼴로 떨어져 배지 위로 튀었다
             _ui.SetText("HpLabelHost", string.Empty);
             _ui.SetActive("HostLevelBadge", false);
             _ui.SetActive("HostHpBarBg", false);
@@ -930,7 +930,7 @@ namespace Game.Module.InGame
         /// <summary>방 진행 바 폭. 프리팹 `RoomProgressBg` 와 같아야 한다.</summary>
         // 219 → 200: 칸 왼쪽에 삼각 상성판이 들어오면서 글자와 막대가 오른쪽으로 밀렸다(2026-10-02).
         // 200 → 100: HUD 3차(D안) — 스테이지 정보가 두 알약 사이 가운데로 옮겨 홈이 짧아졌다(시안 150).
-        private const float RoomProgressWidth = 100f;
+        private const float RoomProgressWidth = 97f;   // 시안 146 — 판의 홈 안쪽
 
         private void OnRoomEntered(RoomEnteredEvent e)
         {

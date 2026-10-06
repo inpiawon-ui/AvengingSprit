@@ -57,36 +57,39 @@ namespace Game.Editor
         //   「PLAYER SOUL」이 6px 로 줄어 안 읽혔다(2026-10-06 실측). 글자 칸은 옆의 빈자리(배지 · 얼굴 테두리 앞)까지 넓혔다.
         private static readonly (string node, float x, float y, float w, float h)[] Rects =
         {
+            // ⚠ 막대 · HP 숫자는 **판의 홈을 픽셀로 잰 값**이다(hud3_clean_host.png : 유령 · 몸 홈 테두리 y 142 · 161,
+            //   방 진행 홈 y 160 · 181). 채움은 홈 안쪽, 숫자는 홈 아래 — 시안 눈대중으로 놓았더니 채움이 홈 위로 뜨고
+            //   숫자가 홈 테두리를 덮었다(2026-10-06).
             // 유령 알약
             ("GhostHudIcon", 40, 70, 92, 90),
-            ("PlayerSoulLabel", 157, 52, 173, 28),
-            ("GhostNameText", 160, 80, 160, 42),
-            ("LevelText", 334, 75, 86, 34),
-            ("HpLabelGhost", 155, 128, 44, 28),
-            ("GhostHpBarBg", 205, 132, 210, 18),
-            ("GhostHpBarFill", 205, 132, 210, 18),
-            ("GhostHpText", 290, 152, 125, 22),
+            ("PlayerSoulLabel", 158, 52, 160, 28),
+            ("GhostNameText", 158, 82, 160, 38),
+            ("LevelText", 343, 80, 69, 25),
+            ("HpLabelGhost", 164, 143, 36, 18),
+            ("GhostHpBarBg", 202, 145, 209, 14),
+            ("GhostHpBarFill", 202, 145, 209, 14),
+            ("GhostHpText", 300, 163, 110, 20),
             // 몸 알약
             ("HostPortraitImage", 942, 64, 102, 104),
-            ("HostLabel", 752, 52, 180, 28),
-            ("HostNameEnText", 752, 80, 180, 42),
-            ("HostNameKrText", 752, 112, 180, 30),
-            ("HostLevelText", 661, 77, 82, 32),
-            ("HpLabelHost", 658, 140, 46, 28),
-            ("HostHpBarBg", 708, 147, 210, 14),
-            ("HostHpBarFill", 708, 147, 210, 14),
-            ("HostHpText", 800, 163, 120, 20),
+            ("HostLabel", 760, 52, 158, 28),
+            ("HostNameEnText", 760, 82, 158, 32),
+            ("HostNameKrText", 760, 114, 158, 26),
+            ("HostLevelText", 668, 81, 69, 25),
+            ("HpLabelHost", 668, 143, 36, 18),
+            ("HostHpBarBg", 708, 145, 208, 14),
+            ("HostHpBarFill", 708, 145, 208, 14),
+            ("HostHpText", 800, 163, 112, 20),
             // 가운데 스테이지
-            ("ChapterLabel", 458, 55, 170, 24),
-            ("ChapterNameText", 459, 86, 160, 32),
-            ("RoomLabel", 459, 126, 60, 22),
-            ("RoomNumberText", 527, 117, 40, 34),
-            ("RoomTotalText", 572, 126, 56, 24),
-            ("RoomProgressBg", 466, 160, 150, 21),
-            ("RoomProgressFill", 466, 160, 150, 21),
+            ("ChapterLabel", 464, 52, 150, 26),
+            ("ChapterNameText", 464, 86, 150, 30),
+            ("RoomLabel", 464, 124, 58, 24),
+            ("RoomNumberText", 524, 118, 44, 32),
+            ("RoomTotalText", 569, 124, 45, 24),
+            ("RoomProgressBg", 467, 163, 146, 16),
+            ("RoomProgressFill", 467, 163, 146, 16),
             // 금화 · 일시정지 · 상성
             ("GoldIcon", 55, 228, 50, 50),
-            ("GoldText", 115, 230, 95, 46),
+            ("GoldText", 112, 226, 93, 52),
             ("PauseButton", 234, 204, 97, 98),
             ("AffinityTriangle", 922, 230, 114, 110),
             // 아래 조작 — 묶음(ButtonRow) 기준이 아니라 화면 기준으로 적는다(부모 원점을 빼서 넣는다)
@@ -96,13 +99,13 @@ namespace Game.Editor
             ("SkillIcon", 712, 1660, 134, 134),
             ("SkillCooldown", 705, 1655, 148, 146),
             ("SkillSealIcon", 747, 1695, 64, 64),
-            ("SkillButtonLabel", 700, 1810, 162, 52),
+            ("SkillButtonLabel", 714, 1817, 134, 40),
             ("PossessButton", 877, 1630, 190, 235),
             ("PossessGhostIcon", 920, 1672, 104, 100),
             ("PossessCooldown", 900, 1655, 145, 146),
             ("PossessCooldownText", 877, 1690, 190, 70),
-            ("PossessCostText", 877, 1762, 190, 40),
-            ("PossessButtonLabel", 888, 1810, 168, 52),
+            ("PossessCostText", 900, 1762, 145, 40),
+            ("PossessButtonLabel", 902, 1817, 140, 40),
             ("PossessButtonGlow", 857, 1610, 230, 275),
         };
 
@@ -277,7 +280,7 @@ namespace Game.Editor
                     // 픽셀 글꼴은 고정폭이라 시안 고딕보다 넓다 — 칸 폭에 맞춰 줄어들게 한다(최대는 시안 크기)
                     tmp.enableAutoSizing = true;
                     tmp.fontSizeMax = size;
-                    tmp.fontSizeMin = Mathf.Max(7f, size * 0.45f);   // 7 아래는 실기에서 안 읽힌다
+                    tmp.fontSizeMin = 7f;   // 7 아래는 실기에서 안 읽힌다 — 그 위로는 칸에 맞춰 얼마든지 줄어든다
                     tmp.fontSize = size;
                     tmp.alignment = align switch
                     {
@@ -287,7 +290,12 @@ namespace Game.Editor
                     };
                     tmp.color = color;
                     tmp.textWrappingMode = TextWrappingModes.NoWrap;
-                    tmp.overflowMode = TextOverflowModes.Overflow;
+                    // 가장 작게 줄여도 넘치면 칸 밖으로 삐져나가지 말고 말줄임(…)으로 자른다(PD 2026-10-06 :
+                    // 「폰트들이 UI 를 삐져나간 게 너무 많다」). 긴 이름(일본어 몸 이름 등)도 칸 안에서 끝난다.
+                    // ⚠ 말줄임(Ellipsis)은 쓰지 않는다 — 픽셀 글꼴에 「…」 가 없어서, 넘치는 순간 글자가 **통째로 사라졌다**
+                    //   (금화 「99,999」 실측). 칸 끝에서 자른다.
+                    tmp.overflowMode = TextOverflowModes.Truncate;
+                    tmp.margin = Vector4.zero;
                 }
 
                 foreach (var n in new[] { "GhostHudIcon", "HostPortraitImage", "PossessGhostIcon", "AffinityTriangle",
