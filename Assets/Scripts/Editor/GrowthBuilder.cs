@@ -403,9 +403,10 @@ namespace Game.Editor
                 e.FindPropertyRelative("Skill").objectReferenceValue =
                     AssetDatabase.LoadAssetAtPath<Sprite>($"{SkillIconDir}/ultimateicon_{key}.png");
             }
-            // HostStat 순서 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed
+            // HostStat 순서 — Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed · CritDamage · Defense
             var icons = so.FindProperty("_statIcons");
-            string[] iconFiles = { "icon_hp", "icon_atk", "icon_crit", "icon_atkspeed", "icon_range", "icon_movespeed" };
+            string[] iconFiles = { "icon_hp", "icon_atk", "icon_crit", "icon_atkspeed", "icon_range", "icon_movespeed",
+                                   "icon_critdmg", "icon_def" };
             icons.arraySize = iconFiles.Length;
             for (int i = 0; i < iconFiles.Length; i++) icons.GetArrayElementAtIndex(i).objectReferenceValue = Spr(iconFiles[i]);
             so.FindProperty("_starBigOn").objectReferenceValue = Spr("star_big_on");

@@ -51970,6 +51970,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 77ff840377a7760458858bcc123afca9, type: 3}
   - {fileID: 21300000, guid: 01414a457ff0fbf408f75aa4460aa583, type: 3}
   - {fileID: 21300000, guid: 17bb98c2493dc3f46b62aa4f5195f1d5, type: 3}
+  - {fileID: 21300000, guid: 6d7c7a20364e6344c98d0074099a3c2c, type: 3}
+  - {fileID: 21300000, guid: 215c2666b724c52428ca074f757fc613, type: 3}
   _starBigOn: {fileID: 21300000, guid: eeb1f2652fc27e148bcd440c34320103, type: 3}
   _starBigOff: {fileID: 21300000, guid: b73c28cd3be51a649ac655928162f846, type: 3}
   _starSmallOn: {fileID: 21300000, guid: bbb9f8bb3f9ef6f4db6863a851f3eed0, type: 3}
