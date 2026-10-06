@@ -389,7 +389,10 @@ namespace Game.Editor
                 // 초상(발주본)이 있으면 그것을 카드 · 목록 둘 다에 쓴다. 없으면 유닛 그림
                 var drawn = AssetDatabase.LoadAssetAtPath<Sprite>($"{Dir}/Portraits/portrait_{key}.png");
                 var portrait = drawn != null ? drawn : AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_e.png");
-                var thumb = drawn != null ? drawn : AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_se.png");
+                // 목록 칸은 **얼굴 아이콘**(인게임 HUD 와 같은 그림)이 먼저다 — 전신은 작은 칸에서 누군지 안 보인다(2026-10-06)
+                var face = AssetDatabase.LoadAssetAtPath<Sprite>($"{Dir}/Faces/face_{key}.png");
+                var thumb = face != null ? face
+                          : drawn != null ? drawn : AssetDatabase.LoadAssetAtPath<Sprite>($"{UnitDir}/{key}/unit_{key}_se.png");
                 if (portrait == null && thumb == null) continue;
                 int i = arts.arraySize++;
                 var e = arts.GetArrayElementAtIndex(i);

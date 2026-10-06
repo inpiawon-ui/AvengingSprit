@@ -44503,13 +44503,13 @@ MonoBehaviour:
     Thumb: {fileID: 21300000, guid: d1b74ecb9deeb2946a7681bbbb058f8c, type: 3}
     IsPortrait: 0
   - Key: amazon
-    Thumb: {fileID: 21300000, guid: 03b843a564063c74da640223bb438b40, type: 3}
+    Thumb: {fileID: 21300000, guid: 01734e41ed4df694fbb7ee3c3a063f88, type: 3}
     IsPortrait: 1
   - Key: amazon_elite
-    Thumb: {fileID: 21300000, guid: fc04c88bc8325994da37a52af9897bca, type: 3}
+    Thumb: {fileID: 21300000, guid: 84e40c3e3f777dd45baad2d8d90456dc, type: 3}
     IsPortrait: 1
   - Key: baseball
-    Thumb: {fileID: 21300000, guid: 98c0f4b62b1aa1c48b9fe556cf3e76fd, type: 3}
+    Thumb: {fileID: 21300000, guid: ef0c3cecacd33d746bb66211bdeb7ac3, type: 3}
     IsPortrait: 1
   - Key: bat
     Thumb: {fileID: 21300000, guid: aeb292597439f514e95ec0aa377e9741, type: 3}
@@ -44518,31 +44518,31 @@ MonoBehaviour:
     Thumb: {fileID: 21300000, guid: 71d66d7376c946341acf39e5ad36f2a2, type: 3}
     IsPortrait: 0
   - Key: commando_grenade
-    Thumb: {fileID: 21300000, guid: 835c8c15558fcad429d053a7405318f5, type: 3}
+    Thumb: {fileID: 21300000, guid: 085cebf5701cf5a40a6457f9bf1f4c09, type: 3}
     IsPortrait: 1
   - Key: commando_laser
-    Thumb: {fileID: 21300000, guid: f6090358017472d47a473bcb3cc31cec, type: 3}
+    Thumb: {fileID: 21300000, guid: bac33a6f055507c42888402587fa3a82, type: 3}
     IsPortrait: 1
   - Key: commando_mg
-    Thumb: {fileID: 21300000, guid: 646c7c57d62205a40b8ad4c5e8abf9ed, type: 3}
+    Thumb: {fileID: 21300000, guid: 0a55619967896a141b5d90735ed9fbfd, type: 3}
     IsPortrait: 1
   - Key: commando_missile
-    Thumb: {fileID: 21300000, guid: 1d53bde46d2504c4bafaaa17f944067c, type: 3}
+    Thumb: {fileID: 21300000, guid: d6f00c557305b5c4e9e83d519e9e66b2, type: 3}
     IsPortrait: 1
   - Key: crusher
     Thumb: {fileID: 21300000, guid: ad0bca41e10c2b5469cfebc42f23c5ed, type: 3}
     IsPortrait: 0
   - Key: death
-    Thumb: {fileID: 21300000, guid: 5557b93c61a65b744bee452014c7264c, type: 3}
+    Thumb: {fileID: 21300000, guid: 015bbd4936d24594aa71feb4850bd578, type: 3}
     IsPortrait: 1
   - Key: dragon_blue
-    Thumb: {fileID: 21300000, guid: bb7107df5ea77ae4eb467bf533bbd3dd, type: 3}
+    Thumb: {fileID: 21300000, guid: 02a1de30f02392141a9329fc6779c03d, type: 3}
     IsPortrait: 1
   - Key: dragoon
-    Thumb: {fileID: 21300000, guid: b52c1cb4a7210bf4c9fc4567693fccd1, type: 3}
+    Thumb: {fileID: 21300000, guid: 7596347f56408ca419dc95a2e394aa2c, type: 3}
     IsPortrait: 1
   - Key: gangster
-    Thumb: {fileID: 21300000, guid: d512d63a6ab32184abfdf0dd66f916b0, type: 3}
+    Thumb: {fileID: 21300000, guid: b8a9468070ddcfc4780bcf8ee1d81419, type: 3}
     IsPortrait: 1
   - Key: ghost
     Thumb: {fileID: 21300000, guid: ace8886d22b68da408af7133dfa34ee5, type: 3}
@@ -44554,37 +44554,37 @@ MonoBehaviour:
     Thumb: {fileID: 21300000, guid: dc23ed7563f86be4aa4ee15dc0a34e53, type: 3}
     IsPortrait: 0
   - Key: guru
-    Thumb: {fileID: 21300000, guid: 0e6c02a6ec5bce74b89c4f74a5fef700, type: 3}
+    Thumb: {fileID: 21300000, guid: 550aca447df36d74badbdda1c3405845, type: 3}
     IsPortrait: 1
   - Key: hopper
-    Thumb: {fileID: 21300000, guid: e82ba55359be6284e96a0fae0b294ecc, type: 3}
+    Thumb: {fileID: 21300000, guid: 24214275ae7a7a048ac811ce01a26a19, type: 3}
     IsPortrait: 1
   - Key: hopper_smg
-    Thumb: {fileID: 21300000, guid: 72e40612b94488941baa5dc159c291c7, type: 3}
+    Thumb: {fileID: 21300000, guid: 79edbe279ddad274c85ad898f11ac3c2, type: 3}
     IsPortrait: 1
   - Key: kingpin
     Thumb: {fileID: 21300000, guid: ea45246504808904585780c8156c6215, type: 3}
     IsPortrait: 0
   - Key: medium
-    Thumb: {fileID: 21300000, guid: 600e60ef93aa5a04aad2a2a3c7575772, type: 3}
+    Thumb: {fileID: 21300000, guid: f43560055ca41c04ebea7bca88afcdf8, type: 3}
     IsPortrait: 1
   - Key: ninja
-    Thumb: {fileID: 21300000, guid: 912f0a5d8e848884a847cde538135037, type: 3}
+    Thumb: {fileID: 21300000, guid: eaec1b161c8fdea4fa90dab3e72d02c7, type: 3}
     IsPortrait: 1
   - Key: ninja_chain
-    Thumb: {fileID: 21300000, guid: 509a86e119fdaa54694fc57bcb187444, type: 3}
+    Thumb: {fileID: 21300000, guid: f05a83845f0b9ba45be845fc1ea351a9, type: 3}
     IsPortrait: 1
   - Key: roadwarden
     Thumb: {fileID: 21300000, guid: 8c0168b4b01e1184baff25b625a378b0, type: 3}
     IsPortrait: 0
   - Key: robot
-    Thumb: {fileID: 21300000, guid: 9831ac11c7130344282a41743415639c, type: 3}
+    Thumb: {fileID: 21300000, guid: 942a2d4e89e5da44dbcaab61fae010b9, type: 3}
     IsPortrait: 1
   - Key: robot_snakes
     Thumb: {fileID: 21300000, guid: fea02944235bdb644b0a26c15ecc9c15, type: 3}
     IsPortrait: 0
   - Key: salamander
-    Thumb: {fileID: 21300000, guid: c7f8fc73640e1f847b1d7f4561fea807, type: 3}
+    Thumb: {fileID: 21300000, guid: 8737f33091a45c644882fad18eb82952, type: 3}
     IsPortrait: 1
   - Key: scrapgunner
     Thumb: {fileID: 21300000, guid: 5a488e76e9a9655488129afae5a6c909, type: 3}
@@ -44596,16 +44596,16 @@ MonoBehaviour:
     Thumb: {fileID: 21300000, guid: 0f6ba0c97879b0748ba847d7ade71acf, type: 3}
     IsPortrait: 0
   - Key: snowwoman
-    Thumb: {fileID: 21300000, guid: 81de826a361f02e4b9d26e6932ced123, type: 3}
+    Thumb: {fileID: 21300000, guid: 3681c19679806ed49a62a586bb68f271, type: 3}
     IsPortrait: 1
   - Key: thug
-    Thumb: {fileID: 21300000, guid: c96ff0c1661bfca4b82d732289194679, type: 3}
+    Thumb: {fileID: 21300000, guid: c24497d9fc560224e9b0f159820c253c, type: 3}
     IsPortrait: 1
   - Key: vampire
-    Thumb: {fileID: 21300000, guid: ffed1b53fb4012641ae453de25193f3c, type: 3}
+    Thumb: {fileID: 21300000, guid: fde0af60b66abd843bfe19d689deec68, type: 3}
     IsPortrait: 1
   - Key: white_wizard
-    Thumb: {fileID: 21300000, guid: 64778ad585b92e940bd5af4ee2048639, type: 3}
+    Thumb: {fileID: 21300000, guid: f96410cbc99af884cac0aab0283e303a, type: 3}
     IsPortrait: 1
   - Key: ghost
     Thumb: {fileID: 21300000, guid: 25303dda85fa7a24eadc87ce5ce3058d, type: 3}
@@ -51790,17 +51790,17 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: amazon
     Portrait: {fileID: 21300000, guid: 03b843a564063c74da640223bb438b40, type: 3}
-    Thumb: {fileID: 21300000, guid: 03b843a564063c74da640223bb438b40, type: 3}
+    Thumb: {fileID: 21300000, guid: 01734e41ed4df694fbb7ee3c3a063f88, type: 3}
     Skill: {fileID: 21300000, guid: 2825eb2e637ea104f9a08d0d3f56917c, type: 3}
     IsPortrait: 1
   - Key: amazon_elite
     Portrait: {fileID: 21300000, guid: fc04c88bc8325994da37a52af9897bca, type: 3}
-    Thumb: {fileID: 21300000, guid: fc04c88bc8325994da37a52af9897bca, type: 3}
+    Thumb: {fileID: 21300000, guid: 84e40c3e3f777dd45baad2d8d90456dc, type: 3}
     Skill: {fileID: 21300000, guid: 27b12dd4d42e4a2468172b6b44786f27, type: 3}
     IsPortrait: 1
   - Key: baseball
     Portrait: {fileID: 21300000, guid: 98c0f4b62b1aa1c48b9fe556cf3e76fd, type: 3}
-    Thumb: {fileID: 21300000, guid: 98c0f4b62b1aa1c48b9fe556cf3e76fd, type: 3}
+    Thumb: {fileID: 21300000, guid: ef0c3cecacd33d746bb66211bdeb7ac3, type: 3}
     Skill: {fileID: 21300000, guid: c1ac4c74629b0514f9357f814c0afa4a, type: 3}
     IsPortrait: 1
   - Key: bat
@@ -51815,22 +51815,22 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: commando_grenade
     Portrait: {fileID: 21300000, guid: 835c8c15558fcad429d053a7405318f5, type: 3}
-    Thumb: {fileID: 21300000, guid: 835c8c15558fcad429d053a7405318f5, type: 3}
+    Thumb: {fileID: 21300000, guid: 085cebf5701cf5a40a6457f9bf1f4c09, type: 3}
     Skill: {fileID: 21300000, guid: ee87a6fc35b90004b87fb7100bc24c34, type: 3}
     IsPortrait: 1
   - Key: commando_laser
     Portrait: {fileID: 21300000, guid: f6090358017472d47a473bcb3cc31cec, type: 3}
-    Thumb: {fileID: 21300000, guid: f6090358017472d47a473bcb3cc31cec, type: 3}
+    Thumb: {fileID: 21300000, guid: bac33a6f055507c42888402587fa3a82, type: 3}
     Skill: {fileID: 21300000, guid: b3dc0ab332dcd0443a334920fb8ad732, type: 3}
     IsPortrait: 1
   - Key: commando_mg
     Portrait: {fileID: 21300000, guid: 646c7c57d62205a40b8ad4c5e8abf9ed, type: 3}
-    Thumb: {fileID: 21300000, guid: 646c7c57d62205a40b8ad4c5e8abf9ed, type: 3}
+    Thumb: {fileID: 21300000, guid: 0a55619967896a141b5d90735ed9fbfd, type: 3}
     Skill: {fileID: 21300000, guid: 101ea6b81ca19d242b2a770c89774959, type: 3}
     IsPortrait: 1
   - Key: commando_missile
     Portrait: {fileID: 21300000, guid: 1d53bde46d2504c4bafaaa17f944067c, type: 3}
-    Thumb: {fileID: 21300000, guid: 1d53bde46d2504c4bafaaa17f944067c, type: 3}
+    Thumb: {fileID: 21300000, guid: d6f00c557305b5c4e9e83d519e9e66b2, type: 3}
     Skill: {fileID: 21300000, guid: ecdbde97752b95843a729fea173b1542, type: 3}
     IsPortrait: 1
   - Key: crusher
@@ -51840,22 +51840,22 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: death
     Portrait: {fileID: 21300000, guid: 5557b93c61a65b744bee452014c7264c, type: 3}
-    Thumb: {fileID: 21300000, guid: 5557b93c61a65b744bee452014c7264c, type: 3}
+    Thumb: {fileID: 21300000, guid: 015bbd4936d24594aa71feb4850bd578, type: 3}
     Skill: {fileID: 21300000, guid: 04b01ee3a4ed40546ad072dd0a28f9c1, type: 3}
     IsPortrait: 1
   - Key: dragon_blue
     Portrait: {fileID: 21300000, guid: bb7107df5ea77ae4eb467bf533bbd3dd, type: 3}
-    Thumb: {fileID: 21300000, guid: bb7107df5ea77ae4eb467bf533bbd3dd, type: 3}
+    Thumb: {fileID: 21300000, guid: 02a1de30f02392141a9329fc6779c03d, type: 3}
     Skill: {fileID: 21300000, guid: d5ccba1906468da42ae0f3c4ee49d0dd, type: 3}
     IsPortrait: 1
   - Key: dragoon
     Portrait: {fileID: 21300000, guid: b52c1cb4a7210bf4c9fc4567693fccd1, type: 3}
-    Thumb: {fileID: 21300000, guid: b52c1cb4a7210bf4c9fc4567693fccd1, type: 3}
+    Thumb: {fileID: 21300000, guid: 7596347f56408ca419dc95a2e394aa2c, type: 3}
     Skill: {fileID: 21300000, guid: 820782f155b0f4d4eadc4aae450bd7d4, type: 3}
     IsPortrait: 1
   - Key: gangster
     Portrait: {fileID: 21300000, guid: d512d63a6ab32184abfdf0dd66f916b0, type: 3}
-    Thumb: {fileID: 21300000, guid: d512d63a6ab32184abfdf0dd66f916b0, type: 3}
+    Thumb: {fileID: 21300000, guid: b8a9468070ddcfc4780bcf8ee1d81419, type: 3}
     Skill: {fileID: 21300000, guid: de4bcdc2ef4de5644bb601e7dee57166, type: 3}
     IsPortrait: 1
   - Key: ghost
@@ -51875,17 +51875,17 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: guru
     Portrait: {fileID: 21300000, guid: 0e6c02a6ec5bce74b89c4f74a5fef700, type: 3}
-    Thumb: {fileID: 21300000, guid: 0e6c02a6ec5bce74b89c4f74a5fef700, type: 3}
+    Thumb: {fileID: 21300000, guid: 550aca447df36d74badbdda1c3405845, type: 3}
     Skill: {fileID: 21300000, guid: b79c400f2b48b7442b61d5008ed7c4a0, type: 3}
     IsPortrait: 1
   - Key: hopper
     Portrait: {fileID: 21300000, guid: e82ba55359be6284e96a0fae0b294ecc, type: 3}
-    Thumb: {fileID: 21300000, guid: e82ba55359be6284e96a0fae0b294ecc, type: 3}
+    Thumb: {fileID: 21300000, guid: 24214275ae7a7a048ac811ce01a26a19, type: 3}
     Skill: {fileID: 21300000, guid: 35113f2daba2e4d488f93d9340d421c5, type: 3}
     IsPortrait: 1
   - Key: hopper_smg
     Portrait: {fileID: 21300000, guid: 72e40612b94488941baa5dc159c291c7, type: 3}
-    Thumb: {fileID: 21300000, guid: 72e40612b94488941baa5dc159c291c7, type: 3}
+    Thumb: {fileID: 21300000, guid: 79edbe279ddad274c85ad898f11ac3c2, type: 3}
     Skill: {fileID: 21300000, guid: 513e9cbecad39a742986cb9b3d2d840d, type: 3}
     IsPortrait: 1
   - Key: kingpin
@@ -51895,17 +51895,17 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: medium
     Portrait: {fileID: 21300000, guid: 600e60ef93aa5a04aad2a2a3c7575772, type: 3}
-    Thumb: {fileID: 21300000, guid: 600e60ef93aa5a04aad2a2a3c7575772, type: 3}
+    Thumb: {fileID: 21300000, guid: f43560055ca41c04ebea7bca88afcdf8, type: 3}
     Skill: {fileID: 21300000, guid: ac469b5a283509c4ebafd36297a7a8bd, type: 3}
     IsPortrait: 1
   - Key: ninja
     Portrait: {fileID: 21300000, guid: 912f0a5d8e848884a847cde538135037, type: 3}
-    Thumb: {fileID: 21300000, guid: 912f0a5d8e848884a847cde538135037, type: 3}
+    Thumb: {fileID: 21300000, guid: eaec1b161c8fdea4fa90dab3e72d02c7, type: 3}
     Skill: {fileID: 21300000, guid: 36be8d12195e3e24489a5c0d3f468016, type: 3}
     IsPortrait: 1
   - Key: ninja_chain
     Portrait: {fileID: 21300000, guid: 509a86e119fdaa54694fc57bcb187444, type: 3}
-    Thumb: {fileID: 21300000, guid: 509a86e119fdaa54694fc57bcb187444, type: 3}
+    Thumb: {fileID: 21300000, guid: f05a83845f0b9ba45be845fc1ea351a9, type: 3}
     Skill: {fileID: 21300000, guid: 931f4860ce0c19b428436c505a635a86, type: 3}
     IsPortrait: 1
   - Key: roadwarden
@@ -51915,7 +51915,7 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: robot
     Portrait: {fileID: 21300000, guid: 9831ac11c7130344282a41743415639c, type: 3}
-    Thumb: {fileID: 21300000, guid: 9831ac11c7130344282a41743415639c, type: 3}
+    Thumb: {fileID: 21300000, guid: 942a2d4e89e5da44dbcaab61fae010b9, type: 3}
     Skill: {fileID: 21300000, guid: b63866d3e81b9a040a81f590934be51d, type: 3}
     IsPortrait: 1
   - Key: robot_snakes
@@ -51925,7 +51925,7 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: salamander
     Portrait: {fileID: 21300000, guid: c7f8fc73640e1f847b1d7f4561fea807, type: 3}
-    Thumb: {fileID: 21300000, guid: c7f8fc73640e1f847b1d7f4561fea807, type: 3}
+    Thumb: {fileID: 21300000, guid: 8737f33091a45c644882fad18eb82952, type: 3}
     Skill: {fileID: 21300000, guid: dd6c1289f6853ad49ab90a38d0e4ca00, type: 3}
     IsPortrait: 1
   - Key: scrapgunner
@@ -51945,22 +51945,22 @@ MonoBehaviour:
     IsPortrait: 0
   - Key: snowwoman
     Portrait: {fileID: 21300000, guid: 81de826a361f02e4b9d26e6932ced123, type: 3}
-    Thumb: {fileID: 21300000, guid: 81de826a361f02e4b9d26e6932ced123, type: 3}
+    Thumb: {fileID: 21300000, guid: 3681c19679806ed49a62a586bb68f271, type: 3}
     Skill: {fileID: 21300000, guid: 3ddddce52128188438e6f70160a22953, type: 3}
     IsPortrait: 1
   - Key: thug
     Portrait: {fileID: 21300000, guid: c96ff0c1661bfca4b82d732289194679, type: 3}
-    Thumb: {fileID: 21300000, guid: c96ff0c1661bfca4b82d732289194679, type: 3}
+    Thumb: {fileID: 21300000, guid: c24497d9fc560224e9b0f159820c253c, type: 3}
     Skill: {fileID: 21300000, guid: 4ed48cdda61d25646ab9f48c50bec0a5, type: 3}
     IsPortrait: 1
   - Key: vampire
     Portrait: {fileID: 21300000, guid: ffed1b53fb4012641ae453de25193f3c, type: 3}
-    Thumb: {fileID: 21300000, guid: ffed1b53fb4012641ae453de25193f3c, type: 3}
+    Thumb: {fileID: 21300000, guid: fde0af60b66abd843bfe19d689deec68, type: 3}
     Skill: {fileID: 21300000, guid: f9e61353694a4bf43a72bf83e53c8ad2, type: 3}
     IsPortrait: 1
   - Key: white_wizard
     Portrait: {fileID: 21300000, guid: 64778ad585b92e940bd5af4ee2048639, type: 3}
-    Thumb: {fileID: 21300000, guid: 64778ad585b92e940bd5af4ee2048639, type: 3}
+    Thumb: {fileID: 21300000, guid: f96410cbc99af884cac0aab0283e303a, type: 3}
     Skill: {fileID: 21300000, guid: 7bf072b4ddd10384d8708d79a68cb623, type: 3}
     IsPortrait: 1
   _statIcons:

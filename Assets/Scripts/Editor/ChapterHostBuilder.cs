@@ -402,7 +402,10 @@ namespace Game.Editor
             foreach (var dir in Directory.GetDirectories(UnitDir))
             {
                 string key = Path.GetFileName(dir);
-                var drawn = Spr($"{Growth}Portraits/portrait_{key}.png");
+                // 목록 칸은 작다 — 전신이면 누군지 안 보인다. **얼굴 아이콘**(`Faces/face_*`, 인게임 HUD 와 같은 그림)이
+                // 먼저고, 없으면 초상 · 유닛 그림(2026-10-06 기획 「풀 이미지 말고 얼굴만」)
+                var face = Spr($"{Growth}Faces/face_{key}.png");
+                var drawn = face != null ? face : Spr($"{Growth}Portraits/portrait_{key}.png");
                 var thumb = drawn != null ? drawn : Spr($"{UnitDir}/{key}/unit_{key}_se.png");
                 if (thumb == null) thumb = Spr($"{UnitDir}/{key}/unit_{key}_e.png");
                 if (thumb == null) continue;
