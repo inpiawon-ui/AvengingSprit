@@ -23,6 +23,8 @@ MonoBehaviour:
       _baseValueMax: 2.2
       _specValue: 1
       _specValueMax: 2
+    _growthUnit: 2
+    _growthMul: 6
   - _activeSkillKey: psg_h02
     _nameEn: Amazon Sonic Break
     _nameKr: "(\uBBF8\uC815)"
@@ -32,6 +34,8 @@ MonoBehaviour:
       _baseValueMax: 4
       _specValue: 1
       _specValueMax: 2
+    _growthUnit: 0
+    _growthMul: 1
   - _activeSkillKey: psg_h03
     _nameEn: Carpet Bombing
     _nameKr: "\uC735\uB2E8 \uD3ED\uACA9"
@@ -42,6 +46,8 @@ MonoBehaviour:
       _baseValueMax: 1.8
       _specValue: 5
       _specValueMax: 8
+    _growthUnit: 2
+    _growthMul: 1
   - _activeSkillKey: psg_h04
     _nameEn: Chain Discharge
     _nameKr: "\uC5F0\uC1C4 \uBC29\uC804"
@@ -52,6 +58,8 @@ MonoBehaviour:
       _baseValueMax: 6
       _specValue: 3
       _specValueMax: 5
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h05
     _nameEn: Barrier Deploy
     _nameKr: "\uBC29\uBCBD \uC804\uAC1C"
@@ -62,6 +70,8 @@ MonoBehaviour:
       _baseValueMax: 0.65
       _specValue: 5
       _specValueMax: 8
+    _growthUnit: 3
+    _growthMul: 100
   - _activeSkillKey: psg_h06
     _nameEn: Multi Homing
     _nameKr: "\uB2E4\uC911 \uC720\uB3C4"
@@ -72,6 +82,8 @@ MonoBehaviour:
       _baseValueMax: 1.5
       _specValue: 5
       _specValueMax: 8
+    _growthUnit: 2
+    _growthMul: 1
   - _activeSkillKey: psg_h07
     _nameEn: Thunder Rampage
     _nameKr: "\uB1CC\uC804 \uD3ED\uC8FC"
@@ -82,6 +94,8 @@ MonoBehaviour:
       _baseValueMax: 1.6
       _specValue: 3
       _specValueMax: 6
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h08
     _nameEn: Venom Spray
     _nameKr: "\uB3C5 \uBFDC\uAE30"
@@ -92,6 +106,8 @@ MonoBehaviour:
       _baseValueMax: 0.9
       _specValue: 6
       _specValueMax: 10
+    _growthUnit: 2
+    _growthMul: 1
   - _activeSkillKey: psg_h09
     _nameEn: Inferno Field
     _nameKr: "\uD654\uC5FC \uC9C0\uB300"
@@ -102,6 +118,8 @@ MonoBehaviour:
       _baseValueMax: 5
       _specValue: 0.3
       _specValueMax: 0.45
+    _growthUnit: 2
+    _growthMul: 1
   - _activeSkillKey: psg_h10
     _nameEn: Mass Death Mark
     _nameKr: "\uC77C\uC81C \uD45C\uC2DD"
@@ -112,6 +130,8 @@ MonoBehaviour:
       _baseValueMax: 10
       _specValue: 0.3
       _specValueMax: 0.6
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h11
     _nameEn: Street Barrage
     _nameKr: "\uB09C\uC0AC"
@@ -121,6 +141,8 @@ MonoBehaviour:
       _baseValueMax: 4.5
       _specValue: 3
       _specValueMax: 7
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h12
     _nameEn: Guardian Ward
     _nameKr: "\uC218\uD638 \uACB0\uACC4"
@@ -131,6 +153,8 @@ MonoBehaviour:
       _baseValueMax: 0.7
       _specValue: 5
       _specValueMax: 8
+    _growthUnit: 3
+    _growthMul: 100
   - _activeSkillKey: psg_h13
     _nameEn: Dead Aim
     _nameKr: "\uC815\uC870\uC900"
@@ -141,6 +165,8 @@ MonoBehaviour:
       _baseValueMax: 4.5
       _specValue: 0.4
       _specValueMax: 1
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h14
     _nameEn: Phantom Leap
     _nameKr: "\uB3C4\uC57D \uAC15\uC2B5"
@@ -151,6 +177,8 @@ MonoBehaviour:
       _baseValueMax: 4
       _specValue: 3
       _specValueMax: 5
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h15
     _nameEn: Summon Golem
     _nameKr: "\uACE8\uB818 \uC18C\uD658"
@@ -161,6 +189,8 @@ MonoBehaviour:
       _baseValueMax: 0.35
       _specValue: 1
       _specValueMax: 2.5
+    _growthUnit: 0
+    _growthMul: 1
   - _activeSkillKey: psg_h16
     _nameEn: Radiant Burst
     _nameKr: "\uAD11\uD718 \uD655\uC0B0"
@@ -171,6 +201,8 @@ MonoBehaviour:
       _baseValueMax: 3.8
       _specValue: 0
       _specValueMax: 0.8
+    _growthUnit: 0
+    _growthMul: 1
   - _activeSkillKey: psg_h17
     _nameEn: Chain Bind
     _nameKr: "\uC0AC\uC2AC \uACB0\uBC15"
@@ -181,6 +213,8 @@ MonoBehaviour:
       _baseValueMax: 7
       _specValue: 0.5
       _specValueMax: 1.2
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h18
     _nameEn: Shadow Clone
     _nameKr: "\uADF8\uB9BC\uC790 \uBD84\uC2E0"
@@ -191,6 +225,8 @@ MonoBehaviour:
       _baseValueMax: 0.8
       _specValue: 4
       _specValueMax: 8
+    _growthUnit: 0
+    _growthMul: 1
   - _activeSkillKey: psg_h19
     _nameEn: Turret Deploy
     _nameKr: "\uD3EC\uD0D1 \uC804\uAC1C"
@@ -201,6 +237,8 @@ MonoBehaviour:
       _baseValueMax: 1
       _specValue: 8
       _specValueMax: 14
+    _growthUnit: 2
+    _growthMul: 1
   - _activeSkillKey: psg_h20
     _nameEn: Full Reflect
     _nameKr: "\uC804\uD0C4 \uBC18\uC0AC"
@@ -211,6 +249,8 @@ MonoBehaviour:
       _baseValueMax: 7
       _specValue: 2
       _specValueMax: 4
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h21
     _nameEn: Ice Prison
     _nameKr: "\uC5BC\uC74C \uAC10\uC625"
@@ -221,6 +261,8 @@ MonoBehaviour:
       _baseValueMax: 1.9
       _specValue: 1
       _specValueMax: 3
+    _growthUnit: 1
+    _growthMul: 1
   - _activeSkillKey: psg_h22
     _nameEn: Blood Feast
     _nameKr: "\uD608\uC5F0"
@@ -231,6 +273,8 @@ MonoBehaviour:
       _baseValueMax: 3
       _specValue: 5
       _specValueMax: 8
+    _growthUnit: 3
+    _growthMul: 2
   - _activeSkillKey: psg_h23
     _nameEn: Death Harvest
     _nameKr: "\uC0AC\uC2E0\uC758 \uC2DC\uAC04"
@@ -242,3 +286,5 @@ MonoBehaviour:
       _baseValueMax: 7.5
       _specValue: 0
       _specValueMax: 0.6
+    _growthUnit: 0
+    _growthMul: 1

@@ -330,7 +330,7 @@ namespace Game.Module.InGame
         /// </summary>
         private float ReversalMul
             => _host != null && _host.Key == "amazon_elite" && _host.Shield > 0
-             ? 1f + ReversalAtkBonus : 1f;
+             ? 1f + PassiveFrac(ReversalAtkBonus) : 1f;
 
         // ── 탄력 (호퍼) ──────────────────────────────────────────
         //

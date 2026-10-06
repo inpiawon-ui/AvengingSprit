@@ -67,13 +67,36 @@ namespace Game.Module.InGame
         /// <summary>지금 입고 있는 몸의 키. 몸이 없으면 null — 유령에는 패시브가 없다.</summary>
         private string PassiveHostKey => _host != null ? _host.Key : null;
 
+        // ── 성급과 함께 오르는 대표 수치 (기획 2026-10-06) ─────────────
+        //
+        // 패시브마다 **대표 수치 하나**가 성급(숙련도)을 따라 오른다. 값은 패시브 표(`_growthMin/Max`, % 단위)에 있고
+        // 몸을 입을 때 한 번 계산해 둔다 — 한 번에 입는 몸은 하나라 값도 하나다.
+        // 위 상수들은 **표가 비었을 때의 값**이다(표를 안 구운 빌드 · 오르지 않는 패시브).
+        private float _passiveGrowth = -1f;
+
+        /// <summary>대표 수치(%)를 정수 확률로. 표가 비었으면 상수.</summary>
+        private int PassivePct(int fallback) => _passiveGrowth >= 0f ? Mathf.RoundToInt(_passiveGrowth) : fallback;
+
+        /// <summary>대표 수치(%)를 배수 몫(0.2 = 20%)으로. 표가 비었으면 상수.</summary>
+        private float PassiveFrac(float fallback) => _passiveGrowth >= 0f ? _passiveGrowth / 100f : fallback;
+
+        private void CachePassiveGrowth(Game.Character.HostEntry entry)
+        {
+            _passiveGrowth = -1f;
+            if (entry == null || _player == null) return;
+            var passive = _player.GetPassiveSkill(entry.PassiveSkillKey);
+            if (passive == null || !passive.HasGrowth) return;
+            _passiveGrowth = passive.GrowthAt(_player.GetMastery(entry.HostKey), _player.MasteryMax);
+        }
+
         // ── 몸에 붙는 성질 ────────────────────────────────────
 
         /// <summary>몸을 입는 순간 그 몸의 성질을 넣는다(`EnterHost`).</summary>
         private void ApplyHostPassives(Unit body, string key, Game.Character.HostEntry entry)
         {
             if (body == null) return;
-            body.SetDodge(key == "ninja_chain" ? NinjaChainDodgePercent : 0);
+            CachePassiveGrowth(entry);
+            body.SetDodge(key == "ninja_chain" ? PassivePct(NinjaChainDodgePercent) : 0);
             body.SetDefense(HostDefensePercent(key, entry));
             body.SetSpeedMul(1f);
             _ninjaKillSpeedTimer = 0f;
@@ -88,7 +111,7 @@ namespace Game.Module.InGame
         {
             if (entry == null) return 0;
             float percent = entry.DefensePercent;
-            if (key == "commando_mg") percent *= 1f + CommandoMgDefenseBonus;
+            if (key == "commando_mg") percent *= 1f + PassiveFrac(CommandoMgDefenseBonus);
             // 로비 방어력 강화(%p)를 더한다 — 유령 탭(모든 몸) + 이 몸의 호스트 탭(2026-10-06)
             if (_player != null) percent += _player.StatBonusFlat(key, Game.Character.HostStat.Defense);
             return Mathf.Min(Mathf.RoundToInt(percent), Game.Character.GameConfig.DefenseCapPercent);
@@ -96,17 +119,17 @@ namespace Game.Module.InGame
 
         /// <summary>코만도(수류탄) — 상대 방어력을 이만큼 무시한다.</summary>
         private int ArmorIgnorePercent
-            => PassiveHostKey == "commando_grenade" ? GrenadeArmorIgnorePercent : 0;
+            => PassiveHostKey == "commando_grenade" ? PassivePct(GrenadeArmorIgnorePercent) : 0;
 
         /// <summary>폭력배 — 주운 골드가 더 들어온다.</summary>
         private float GoldGainMul
-            => PassiveHostKey == "thug" ? 1f + ThugGoldBonus : 1f;
+            => PassiveHostKey == "thug" ? 1f + PassiveFrac(ThugGoldBonus) : 1f;
 
         /// <summary>
         /// 치명타 배율에 **더하는** 몫 — 호퍼 패시브 + 로비 치명타 피해 강화(%p → 배율, 2026-10-06).
         /// </summary>
         private float CritDamageBonus
-            => (PassiveHostKey == "hopper" ? HopperCritDamageBonus : 0f)
+            => (PassiveHostKey == "hopper" ? PassiveFrac(HopperCritDamageBonus) : 0f)
              + (_player != null ? _player.StatBonusFlat(PassiveHostKey, Game.Character.HostStat.CritDamage) / 100f : 0f);
 
         /// <summary>구루 — 걸어 다닐 때 장애물을 통과한다.</summary>
@@ -143,7 +166,7 @@ namespace Game.Module.InGame
             {
                 // 드라군 — 불이 붙는다. 이미 타고 있으면 시간만 늘어난다(중복 없음).
                 case "dragoon":
-                    if (Roll(PassiveProcPercent))
+                    if (Roll(PassivePct(PassiveProcPercent)))
                     {
                         victim.ApplyBurn(PassiveAilmentSeconds);
                         PlayFx("burn", victim.Position, 64f, loop: false);
@@ -152,7 +175,7 @@ namespace Game.Module.InGame
 
                 // 샐러맨더 — 독. 겹치지 않는다(명세).
                 case "salamander":
-                    if (!victim.IsPoisoned && Roll(PassiveProcPercent))
+                    if (!victim.IsPoisoned && Roll(PassivePct(PassiveProcPercent)))
                     {
                         victim.ApplyPoison(PassiveAilmentSeconds);
                         PlayFx("venom", victim.Position, 64f, loop: false);
@@ -162,12 +185,12 @@ namespace Game.Module.InGame
                 // 청룡 — 옆 적에게 튄다. **튈 곳이 없으면 안 터진다**(명세).
                 case "dragon_blue":
                     // 액티브가 도는 2초 동안은 확률을 보지 않는다 — 무조건 튄다(명세).
-                    if (_boltSurgeSeconds > 0f || Roll(PassiveProcPercent)) ChainBolt(victim, damage);
+                    if (_boltSurgeSeconds > 0f || Roll(PassivePct(PassiveProcPercent))) ChainBolt(victim, damage);
                     break;
 
                 // 설녀 — 얼린다. 보스는 안 걸린다(명세).
                 case "snowwoman":
-                    if (!victim.IsBoss && Roll(SnowFreezeChancePercent))
+                    if (!victim.IsBoss && Roll(PassivePct(SnowFreezeChancePercent)))
                     {
                         victim.ApplyFreeze(PassiveAilmentSeconds);
                         PlayFx("freeze", victim.Position, 72f, loop: false);
@@ -176,23 +199,23 @@ namespace Game.Module.InGame
 
                 // 호퍼(기관단총) — 살짝 밀어낸다.
                 case "hopper_smg":
-                    if (Roll(PassiveProcPercent)) Knockback(victim, KnockbackMeters);
+                    if (Roll(PassivePct(PassiveProcPercent))) Knockback(victim, KnockbackMeters);
                     break;
 
                 // 흡혈귀 — 아주 조금 돌려받는다.
                 case "vampire":
-                    if (Roll(VampireProcPercent) && _host != null)
+                    if (Roll(PassivePct(VampireProcPercent)) && _host != null)
                         Leech(Mathf.Max(1, Mathf.RoundToInt(_host.Atk * VampireProcAtkPercent)));
                     break;
 
                 // 갱스터 — **표식이 붙은 적에게만**. 일반은 즉사, 엘리트·보스는 최대 체력을 깎는다.
                 case "gangster":
-                    if (victim.IsMarked && Roll(GangsterExecutePercent)) MarkExecute(victim);
+                    if (victim.IsMarked && Roll(PassivePct(GangsterExecutePercent))) MarkExecute(victim);
                     break;
 
                 // 로봇 — 평타가 스킬 쿨을 당긴다.
                 case "robot":
-                    if (Roll(RobotCoolProcPercent)) GainSkillCharge(RobotCoolGainSeconds);
+                    if (Roll(PassivePct(RobotCoolProcPercent))) GainSkillCharge(RobotCoolGainSeconds);
                     break;
             }
         }
@@ -320,13 +343,13 @@ namespace Game.Module.InGame
             {
                 // 슬러거 — 막타에 주변이 날아간다. 야구 방망이다.
                 case "baseball":
-                    if (Roll(SluggerFlingChancePercent)) FlingAround(victim.Position);
+                    if (Roll(PassivePct(SluggerFlingChancePercent))) FlingAround(victim.Position);
                     break;
 
                 // 닌자 — 잡으면 잠깐 빨라진다.
                 case "ninja":
                     _ninjaKillSpeedTimer = NinjaKillSpeedSeconds;
-                    _host.SetSpeedMul(1f + NinjaKillSpeedBonus);
+                    _host.SetSpeedMul(1f + PassiveFrac(NinjaKillSpeedBonus));
                     PlayFx("dash", _host.Position, 96f, loop: false);
                     break;
 
@@ -337,7 +360,7 @@ namespace Game.Module.InGame
 
                 // 영매 — 30% 로 해골.
                 case "medium":
-                    if (Roll(MediumSkullPercent)) SummonSkull(victim.Position);
+                    if (Roll(PassivePct(MediumSkullPercent))) SummonSkull(victim.Position);
                     break;
             }
         }
@@ -377,7 +400,7 @@ namespace Game.Module.InGame
             if (_host.Key != "amazon") return;
             int cap = Mathf.Max(1, _host.HpMax * (_config != null ? _config.ShieldCapPercent : 30) / 100);
             float ratio = Mathf.Clamp01(_host.Shield / (float)cap);
-            _host.SetSpeedMul(1f + AmazonShieldSpeedBonus * ratio);
+            _host.SetSpeedMul(1f + PassiveFrac(AmazonShieldSpeedBonus) * ratio);
         }
     }
 }

@@ -53,6 +53,31 @@ namespace Game.Character
 
         public SkillScaling Scaling => _scaling;
 
+        // 성급과 함께 오르는 **대표 수치 하나**(기획 2026-10-06 — 「패시브도 오른다」).
+        // 단위는 화면에 보이는 그대로(%). 코드가 쓰는 상수(0.2 · 20)는 전투 쪽이 바꿔 읽는다.
+        // 두 값이 다 0 이면 오르지 않는 패시브다(켜짐/꺼짐 — 무형보 · 고폭탄 등) — 성급 창에 줄이 안 생긴다.
+        [Tooltip("성급 Lv1 일 때의 대표 수치(%). 0 이면 오르지 않는 패시브.")]
+        [SerializeField] private float _growthMin;
+        [Tooltip("성급 만렙일 때의 대표 수치(%). Lv1 → 만렙 사이는 고르게 잇는다.")]
+        [SerializeField] private float _growthMax;
+
+        public bool HasGrowth => _growthMin > 0f || _growthMax > 0f;
+
+        /// <summary>성급 <paramref name="level"/> 일 때의 대표 수치(%). 오르지 않는 패시브면 0.</summary>
+        public float GrowthAt(int level, int masteryMax)
+        {
+            if (!HasGrowth) return 0f;
+            if (masteryMax <= 1) return _growthMax;
+            float t = Mathf.Clamp01((Mathf.Clamp(level, 1, masteryMax) - 1f) / (masteryMax - 1f));
+            return Mathf.Lerp(_growthMin, _growthMax, t);
+        }
+
+        /// <summary>대표 수치의 이름(「즉사 확률」 등). 언어팩 `pskill.{키}.growth`.</summary>
+        // FromTable 은 한국어면 표 원문 칸을 돌려준다 — 이 글자는 원문이 없어 언어팩에서 바로 꺼낸다
+        public string GrowthLabel => Localize.Get($"pskill.{_passiveSkillKey}.growth");
+
+        public void SetGrowth(float min, float max) { _growthMin = min; _growthMax = max; }
+
         public string PassiveSkillKey => _passiveSkillKey;
         public string NameEn      => _nameEn;
         public string NameKr      => _nameKr;
