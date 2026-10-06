@@ -365,6 +365,30 @@ namespace Game.User
             return true;
         }
 
+        /// <summary>이 몸의 다음 성급에 드는 골드(등급 배수 포함, 10 단위). 봉인 해제 · 만렙이면 0.</summary>
+        public int StarUpGoldCost(string hostKey)
+        {
+            int lv = GetMastery(hostKey);
+            if (_config == null || lv < 0 || lv >= MasteryMax) return 0;
+            var host = GetHost(hostKey);
+            float mul = host != null ? _config.GradeMultiplier(host.Grade) : 1f;
+            return Mathf.RoundToInt(_config.StarUpGoldAt(lv) * mul / 10f) * 10;
+        }
+
+        /// <summary>
+        /// 조각과 골드를 함께 내고 성급을 한 단계 올린다(기획 2026-10-06).
+        /// 둘 다 있는지 **먼저** 본다 — 조각만 빠지고 골드가 모자라 멈추는 반쪽 상태를 만들지 않는다.
+        /// </summary>
+        public bool TryStarUp(string hostKey)
+        {
+            int i = IndexOfHost(hostKey);
+            if (i < 0 || _data.hostMastery[i] >= MasteryMax) return false;
+            int shards = MasteryCost(hostKey), gold = StarUpGoldCost(hostKey);
+            if (shards <= 0 || _data.hostShards[i] < shards || _data.gold < gold) return false;
+            if (!TrySpendGold(gold)) return false;
+            return SpendShards(hostKey, shards);
+        }
+
         /// <summary>
         /// 이번 판을 **유령으로** 시작하는가.
         ///
@@ -545,10 +569,10 @@ namespace Game.User
         public int GhostStatMax => _config != null ? _config.GhostStatMax : 50;
         public int HostStatMax => _config != null ? _config.HostStatMax : 50;
 
-        /// <summary>이 몸의 강화 상한 — 성급이 연다(1성 10 · 2성 20 …).</summary>
+        /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
         public int HostStatCap(string hostKey)
             // 안 가진 몸(숙련도 0)은 강화할 수 없다 — 해금이 먼저다
-            => GetMastery(hostKey) < 1 ? 0 : _config != null ? _config.HostStatCap(StarsOf(hostKey)) : 10;
+            => GetMastery(hostKey) < 1 ? 0 : _config != null ? _config.HostStatCap(GetMastery(hostKey)) : 10;
 
         public int GhostStatLevel(HostStat stat)
         {

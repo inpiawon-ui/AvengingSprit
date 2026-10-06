@@ -655,6 +655,12 @@ namespace Game.Character
         [Tooltip("등급별 요구량 배수. 순서는 HostGrade — B / A / S. 드문 몸일수록 한 단계가 비싸다.")]
         [SerializeField] private float[] _gradeMultiplier = { 1.0f, 1.4f, 2.0f };
 
+        // 성급 올리기는 **조각 + 골드**다(기획 2026-10-06). 조각은 몸을 정하고, 골드는 판 수입과 다툰다 —
+        // 능력치 강화와 같은 골드를 쓰므로 둘 중 무엇을 먼저 올릴지가 선택이 된다.
+        [Tooltip("성급 한 단계(숙련도 Lv → Lv+1)의 골드(일반 등급 기준, 첨자 = 지금 Lv). 등급 배수가 곱해진다. " +
+                 "0 → 1(봉인 해제)은 조각만 — 몸을 처음 얻는 데는 골드를 받지 않는다. 임시값.")]
+        [SerializeField] private int[] _starUpGold = { 0, 400, 700, 1200, 1800, 2500, 3300, 4200, 5200, 8000 };
+
         [Tooltip("파편 드롭. x = 그냥 죽였을 때, y = 빙의해 쓰다가 잃었을 때. 잃었을 때가 반드시 더 커야 한다 — 반대면 파밍이 빙의를 벌줘서 플레이어가 핵심 재미를 스스로 피한다.")]
         [SerializeField] private Vector2Int[] _dropByFrequency =
             { new Vector2Int(1, 3), new Vector2Int(2, 6), new Vector2Int(10, 30) };
@@ -833,10 +839,12 @@ namespace Game.Character
         [Header("성장 — 능력치 골드 강화")]
         [Tooltip("유령 탭 강화 상한 — 모든 몸에 붙는다.")]
         [SerializeField] private int _ghostStatMax = 50;
-        [Tooltip("호스트별 강화 상한(5성일 때). 성급마다 `_hostStatPerStar` 씩 열린다.")]
+        [Tooltip("호스트별 강화 상한(5성일 때). 성급 한 단계마다 `_hostStatPerStep` 씩 열린다.")]
         [SerializeField] private int _hostStatMax = 50;
-        [Tooltip("성급 하나가 여는 강화 레벨. 1성 10 · 2성 20 … (기획 2026-10-02)")]
-        [SerializeField] private int _hostStatPerStar = 10;
+        // 예전에는 별 하나(두 단계)마다 10 이었다(기획 2026-10-02). 성급 창이 「함께 오르는 것」을 보여주게 되면서
+        // (2026-10-06) 단계마다 오르게 바꿨다 — 반 칸 올렸는데 상한이 그대로면 연결이 끊겨 보인다. 끝값(50)은 같다.
+        [Tooltip("성급 한 단계(별 반 칸)가 여는 강화 레벨. Lv1 5 · Lv2 10 … Lv10 50.")]
+        [SerializeField] private int _hostStatPerStep = 5;
         [Tooltip("레벨당 오르는 %. 치명타도 확률에 곱하는 배율이다(%p 가 아니다). 순서 Hp · Atk · Crit · AtkSpeed · Range · MoveSpeed")]
         [SerializeField] private float[] _statPercentPerLevel = { 2f, 2f, 2f, 1f, 1f, 1f };
 
@@ -873,11 +881,11 @@ namespace Game.Character
         public int HostStatMax => Mathf.Max(1, _hostStatMax);
 
         /// <summary>
-        /// 성급이 여는 호스트 강화 상한. 1성 10 · 2성 20 … 5성 50.
+        /// 성급(숙련도) 단계가 여는 호스트 강화 상한. Lv1 5 · Lv2 10 … Lv10 50.
         /// 조각 → 성급 → 강화 상한 → 골드 강화 순서로 육성이 묶인다(기획 2026-10-02).
         /// </summary>
-        public int HostStatCap(int stars)
-            => Mathf.Clamp(Mathf.Max(1, stars) * Mathf.Max(1, _hostStatPerStar), 1, HostStatMax);
+        public int HostStatCap(int mastery)
+            => Mathf.Clamp(Mathf.Max(1, mastery) * Mathf.Max(1, _hostStatPerStep), 1, HostStatMax);
 
         /// <summary>
         /// 레벨당 오르는 값. 치명타 피해 · 방어력은 %p(더하는 값), 나머지는 %(곱하는 배율).
@@ -914,6 +922,10 @@ namespace Game.Character
             => _shardCurve == null || level < 0 || level >= _shardCurve.Length ? 0 : _shardCurve[level];
 
         public int MasteryMax => _shardCurve?.Length ?? 0;
+
+        /// <summary>숙련도 <paramref name="level"/> → 다음 단계 골드 (등급 배수 전).</summary>
+        public int StarUpGoldAt(int level)
+            => _starUpGold == null || level < 0 || level >= _starUpGold.Length ? 0 : _starUpGold[level];
 
         /// <summary>등급별 요구량 배수. 표가 짧으면 마지막 칸을 쓴다.</summary>
         public float GradeMultiplier(HostGrade grade)

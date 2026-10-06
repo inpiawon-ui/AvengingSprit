@@ -411,6 +411,7 @@ MonoBehaviour:
   - 0.8
   - 1.2
   - 1.8
+  _starUpGold: 0000000090010000bc020000b004000008070000c4090000e40c00006810000050140000401f0000
   _dropByFrequency:
   - {x: 1, y: 3}
   - {x: 2, y: 6}
@@ -509,7 +510,7 @@ MonoBehaviour:
     Color: {r: 0.35, g: 1, b: 0.9, a: 1}
   _ghostStatMax: 50
   _hostStatMax: 50
-  _hostStatPerStar: 10
+  _hostStatPerStep: 5
   _statPercentPerLevel:
   - 2
   - 2

@@ -115,7 +115,7 @@ namespace Game.User
 
         int GhostStatMax { get; }
         int HostStatMax { get; }
-        /// <summary>이 몸의 강화 상한 — 성급이 연다(1성 10 · 2성 20 …).</summary>
+        /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
         int HostStatCap(string hostKey);
         /// <summary>챕터 수(챕터 표의 줄 수).</summary>
         int ChapterCount { get; }
@@ -176,6 +176,12 @@ namespace Game.User
 
         /// <summary>파편을 쓰고 숙련도를 한 단계 올린다. 봉인 해제도 같은 동작이다.</summary>
         bool SpendShards(string hostKey, int cost);
+
+        /// <summary>다음 성급에 드는 골드(등급 배수 포함). 봉인 해제 · 만렙이면 0.</summary>
+        int StarUpGoldCost(string hostKey);
+
+        /// <summary>조각 + 골드를 내고 성급(숙련도)을 한 단계 올린다. 하나라도 모자라면 아무것도 안 쓴다.</summary>
+        bool TryStarUp(string hostKey);
 
         IReadOnlyList<HostEntry> AllHosts { get; }
 

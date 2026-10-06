@@ -527,15 +527,24 @@ namespace Game.Module.Lobby
                 return;
             }
 
+            // 성급은 조각 + 골드다(기획 2026-10-06) — 골드도 모자란 만큼을 숫자로 말해 준다
+            int gold = _player.StarUpGoldCost(e.HostKey);
+            if (_player.Gold < gold)
+            {
+                SystemPopup.Show(Localize.Format("ui.starup.gold_short", _player.Gold, gold, gold - _player.Gold),
+                                 null, Localize.Get("ui.common.ok"), null);
+                return;
+            }
+
             string title = lv < 1 ? Localize.Get("ui.hostselect.mastery.unseal") : Localize.Format("ui.hostselect.mastery.step", lv, lv + 1);
             SystemPopup.Show(
-                Localize.Format("ui.hostselect.mastery.confirm", e.DisplayName, title, need),
-                () => DoUpgrade(e.HostKey, need));
+                Localize.Format("ui.starup.confirm", e.DisplayName, title, need, gold),
+                () => DoUpgrade(e.HostKey));
         }
 
-        private void DoUpgrade(string hostKey, int cost)
+        private void DoUpgrade(string hostKey)
         {
-            if (!_player.SpendShards(hostKey, cost)) return;
+            if (!_player.TryStarUp(hostKey)) return;
             _player.SaveAsync().Forget();   // fire-and-forget: 저장 실패해도 화면은 이미 갱신됐다
             RefreshDetail(hostKey);
             // 목록 칸도 잠금 표시가 바뀔 수 있다
