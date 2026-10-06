@@ -38,6 +38,7 @@ namespace Game.Module.Title
         private void Awake()
         {
             _ui = new UIBinder(transform);
+            Game.Module.Common.UI.SystemPopup.Preload();   // 공통 알림 그림을 미리 받는다 — 첫 알림이 색 상자로 뜨지 않게
             // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
             Localize.ApplyFonts(transform);
             _tapText = _ui.Find("TapToStartText");

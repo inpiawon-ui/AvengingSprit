@@ -22,5 +22,13 @@ namespace Game.Module.Common
         public float Dilate => _dilate;
         public float OutlineWidth => _outlineWidth;
         public Color32 OutlineColor => _outlineColor;
+
+        /// <summary>코드로 만드는 글자 칸(공통 팝업 등)에서 값을 넣는다. 프리팹 칸은 인스펙터 값을 쓴다.</summary>
+        public void Set(float dilate, float outlineWidth, Color32 outlineColor)
+        {
+            _dilate = dilate;
+            _outlineWidth = outlineWidth;
+            _outlineColor = outlineColor;
+        }
     }
 }

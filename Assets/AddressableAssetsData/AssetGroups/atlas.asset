@@ -261,6 +261,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ebecf549552c1fa448228d39e7995191
+    m_Address: atlas/systempopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ec31de62ef14a894d9348b916185d545
     m_Address: atlas/unit_hopper_smg
     m_ReadOnly: 0

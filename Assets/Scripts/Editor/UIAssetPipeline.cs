@@ -278,6 +278,54 @@ namespace Game.Editor
         /// 카드 아이콘 36장을 아틀라스 하나로 묶는다 (정본 v2.3 카드 32 + 등급 테두리 4).
         /// 캐릭터와 달리 한 장짜리 UI 그림이라 종별로 나눌 이유가 없다.
         /// </summary>
+        /// <summary>
+        /// 공통 알림 팝업(`SystemPopup`) 부품을 아틀라스 `atlas/systempopup` 로 묶는다 (2026-10-06).
+        /// 틀 · 버튼 받침은 9-slice 테두리를 여기서 건다 — 그림 원본은 `Projects/AVSR/Tools/popup_parts_fit.py` 가 앉힌다.
+        /// </summary>
+        [MenuItem("Tools/Game/공통 팝업 아틀라스 만들기")]
+        public static void BuildSystemPopupAtlas()
+        {
+            const string Res = "Assets/BaseResource/SystemPopup";
+            if (!AssetDatabase.IsValidFolder(Res))
+            {
+                Debug.LogError($"[UIAssetPipeline] 공통 팝업 폴더 없음: {Res}");
+                return;
+            }
+            // 9-slice 테두리(픽셀) — 장식은 모서리 안에만 있게 발주했다(L, B, R, T)
+            var borders = new System.Collections.Generic.Dictionary<string, Vector4>
+            {
+                { "popup_frame", new Vector4(84, 84, 84, 84) },
+                { "popup_tray", new Vector4(64, 0, 64, 0) },
+            };
+            foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Res }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!(AssetImporter.GetAtPath(path) is TextureImporter ti)) continue;
+                ti.textureType = TextureImporterType.Sprite;
+                ti.spriteImportMode = SpriteImportMode.Single;
+                ti.mipmapEnabled = false;
+                ti.alphaIsTransparency = true;
+                ti.textureCompression = TextureImporterCompression.Uncompressed;
+                string name = Path.GetFileNameWithoutExtension(path);
+                ti.spriteBorder = borders.TryGetValue(name, out var b) ? b : Vector4.zero;
+                ti.SaveAndReimport();
+            }
+
+            EnsureFolder(AtlasDir);
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings == null) { Debug.LogError("[UIAssetPipeline] Addressable 설정 없음"); return; }
+            var group = settings.FindGroup(AtlasGroup) ?? settings.CreateGroup(
+                AtlasGroup, false, false, true, null,
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema),
+                typeof(UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema));
+            if (!settings.GetLabels().Contains(AtlasLabel)) settings.AddLabel(AtlasLabel);
+
+            BuildOneAtlas("systempopup", Res, settings, group, 2048);
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[UIAssetPipeline] 공통 팝업 아틀라스 갱신");
+        }
+
         [MenuItem("Tools/Game/카드 아틀라스 만들기")]
         public static void BuildCardAtlas()
         {
