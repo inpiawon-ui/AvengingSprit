@@ -121,11 +121,8 @@ namespace Game.Module.InGame
                     break;
 
                 case "SLOW_POOL":
-                    ob.Frames = new[]
-                    {
-                        GetSprite("fx_goo_splat_1"), GetSprite("fx_goo_splat_2"),
-                        GetSprite("fx_goo_splat_3"), GetSprite("fx_goo_splat_4"),
-                    };
+                    // 바닥 웅덩이 한 장(obj_slow_pool) — 탄 효과 넉 장을 돌리던 것은 점처럼 보여 뺐다
+                    ob.Frames = null;
                     break;
             }
         }

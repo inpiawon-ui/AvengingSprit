@@ -1317,7 +1317,8 @@ namespace Game.Module.InGame
             "FLAME_JET_S"    => "obj_flamejet_s",
             "FLAME_JET_E"    => "obj_flamejet_e",
             "FLAME_JET_W"    => "obj_flamejet_w",
-            "SLOW_POOL"      => "fx_goo_splat",
+            // 끈끈이 — 예전엔 탄 맞는 효과(fx_goo_splat)를 빌려 바닥에 점처럼 보였다(PD 2026-10-07). 바닥 웅덩이 그림으로
+            "SLOW_POOL"      => "obj_slow_pool",
             "MINE"           => "obj_mine",
             // 도랑은 가로·세로 두 장뿐이다. 접두사를 하나로 두면 바로 아래
             // 크기 판정이 `_h`·`_v` 를 알아서 골라 준다 — 종류를 둘로 나눈 이유다.

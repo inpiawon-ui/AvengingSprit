@@ -1,0 +1,14 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 도형을 그려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 바닥 「끈끈이 웅덩이」 그림 (밟으면 느려지는 장판)
+
+지금 모습 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/ROOM_CH2_003.png · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/ROOM_CH2_005.png — 가운데 아래 작은 초록 점이 지금 끈끈이다.
+문제(PD 보고) : 탄이 맞을 때 튀는 작은 효과 그림을 빌려 써서, 2 x 2 칸(144 x 144 px) 바닥 장판인데 점처럼 보인다. 밟으면 느려지는 자리라는 게 안 읽힌다.
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/goo_pool_raw.png — 정사각(576 x 576 쯤), 배경 **마젠타 #FF00FF 단색**
+  · 위에서 비스듬히 내려다본 바닥의 **넓고 납작한 끈끈이 웅덩이 하나** — 칸을 거의 꽉 채우는 둥근 얼룩(가장자리는 불규칙한 물방울 모양)
+  · 색 : 짙은 독초록 ~ 형광 연두. 가운데에 거품 두세 개 · 끈적하게 늘어진 가장자리. 바닥 무늬가 살짝 비쳐 보이는 느낌은 그리지 말고 불투명하게.
+  · 그림체 : 지금 게임 바닥 · 물건과 같게(16비트 픽셀 · 1 px 짙은 외곽선 · 2~3단 끊기는 명암). 바닥 위에서 위로 솟는 것은 없다(높이 0).
+  · 한 장만 만든다(움직임은 게임에서 넣는다).
+  · 글자 · 번호를 그리지 마라.
+끝나면 경로만 알려라.
