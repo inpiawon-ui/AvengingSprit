@@ -95,6 +95,7 @@ namespace Game.Module.InGame
                 ResolveWarn(w);
             }
             TickRushFx(dt);   // 돌진 예고 위 흐르는 꺾쇠 · 흙먼지 (BattleDirector.Rush)
+            TickMoleMounds(); // 두더지 흙더미 거두기 (BattleDirector.Mole)
         }
 
         /// <summary>예고가 찼다 — 그 도형 안을 친다. 그린 도형과 **같은** `Contains` 로 잰다.</summary>
@@ -151,6 +152,7 @@ namespace Game.Module.InGame
                 if (_warns[i].View != null) _warns[i].View.Hide();
             }
             ClearRushFx();
+            ClearMoleMounds();
         }
     }
 }

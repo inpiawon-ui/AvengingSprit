@@ -107,12 +107,13 @@ namespace Game.Module.InGame
                         e.SetFacing(dir);
                         e.PatternFrom = e.Position;
                         e.PatternTo = ClampedInField(e, e.Position + dir * Meters(spec.Meters));
+                        if (e.Key == TrashBoarKey) e.PatternTo = ClampToView(e.PatternTo, BoarViewMarginPx);   // 화면 밖으로 달려 나가지 않는다
                         e.PatternPhase = 1;
                         e.PatternTimer = spec.TellSeconds;
                         e.SetTelegraph(true);
                         StartWarn(BandShape(e.Position, dir, Meters(spec.WidthMeters),
                                             Vector2.Distance(e.PatternFrom, e.PatternTo)),
-                                  spec.TellSeconds, Mathf.Max(1, e.Atk), owner: e);
+                                  spec.TellSeconds, ChargeContact(e) ? 0 : Mathf.Max(1, e.Atk), owner: e);   // 멧돼지는 띠가 안 친다 — 닿아야 친다
                         StartRushFx(e, e.PatternFrom, e.PatternTo, Meters(spec.WidthMeters), spec.TellSeconds, dust: true);
                         return true;
                     }
@@ -140,6 +141,7 @@ namespace Game.Module.InGame
                     e.PlayAttack();
                     e.PatternPhase = 2;
                     e.PatternTimer = DiveSpecOf(e).DashSeconds;
+                    if (ChargeContact(e)) e.PatternAngle = 0f;   // 이번 돌진은 아직 안 쳤다
                     return true;
 
                 case 2:
@@ -151,6 +153,7 @@ namespace Game.Module.InGame
                     float k = 1f - Mathf.Clamp01(e.PatternTimer / spec.DashSeconds);
                     var want = Vector2.Lerp(e.PatternFrom, e.PatternTo, k);
                     e.Position = SlideMove(e, e.Position, want - e.Position);   // 지형에는 막힌다
+                    if (ChargeContact(e)) TickChargeContact(e, me, spec);       // 달리는 몸에 닿아야 아프다
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 3;
                     // 끝까지 못 갔다 = 벽 · 물건에 박았다 → 휘청(더 긴 빈틈). 멧돼지에게만 차이가 난다

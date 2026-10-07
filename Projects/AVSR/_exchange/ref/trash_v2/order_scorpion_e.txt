@@ -1,0 +1,17 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 그리거나 늘리거나 뒤집어서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 잡몹 「고철 전갈」 게임 그림 샘플 (동쪽 · 8동작) — 폐품 사수 자리를 바꾼다
+
+생김새 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_scorpion_concept.png (PD 통과 후보 A — C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mock_gunner_v1.png 왼쪽) — 꼬리 끝이 고철 포신인 녹슨 고철 전갈.
+  ⚠ 시안은 녹 질감이 다른 잡몹보다 많다 → **라인업 그림체로 단순하게** : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mock_lineup_v2_labeled.png · 먼저 통과한 멧돼지 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/boar_e_raw.png
+  녹은 큰 얼룩 두세 군데만, 판금 이음새는 굵게 몇 줄. 몸 색 3~4덩어리(녹슨 주황 · 쇠 회색 · 어두운 갈색) + 붉은 눈.
+하는 일 : **원거리 단발** — 엄폐 곁에 서서 꼬리 포신으로 한 발씩 쏘고 옆걸음친다. 쓰레기장 · 미사일 기지의 첫 원거리 잡몹.
+칸 · 동작 형식은 멧돼지 · 돌 고릴라와 같게 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/boar_e_raw.png · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/gorilla_e_raw.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/scorpion_e_raw.png — 정사각(864 x 864 쯤, 96 x 96 칸 3 x 3 을 3배), 배경 **마젠타 #FF00FF 단색**
+  · 칸 차례 : 1 대기(꼬리를 머리 위로 말아 든다) · 2 걷기1 · 3 걷기2 / 4 공격1(꼬리 포신을 앞으로 겨눔) · 5 공격2(꼬리 포신 발사 — 포구 불꽃) · 6 피격(움찔)
+            / 7 쓰러짐1 · 8 쓰러짐2(뒤집혀 다리를 오그림) · 9 빈 칸
+  · 모두 오른쪽(동쪽)을 본다. 여덟 칸 같은 몸 · 같은 크기 · 같은 색.
+  · 크기 : 96 칸에서 바닥부터 치켜든 꼬리 끝까지 54~60 px, 몸 길이는 칸 폭의 3/4 쯤(멧돼지와 비슷한 덩치).
+  · 1 px 짙은 외곽선 · 12~16색 · 2~3단 끊기는 명암. 질감 노이즈 금지.
+끝나면 경로만 알려라.

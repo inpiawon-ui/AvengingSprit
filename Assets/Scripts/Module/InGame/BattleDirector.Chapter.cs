@@ -38,6 +38,7 @@ namespace Game.Module.InGame
              : key == TrashCoilKey     ? Coilwalker
              : key == TrashCrossKey    ? Cross
              : key == TrashBoarKey     ? Boar
+             : key == TrashMoleKey     ? Mole
              : null;
 
         /// <summary>

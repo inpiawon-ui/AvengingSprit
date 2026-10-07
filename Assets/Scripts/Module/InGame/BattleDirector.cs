@@ -6527,7 +6527,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive) continue;
+                if (e == null || !e.IsAlive || e.IsHidden) continue;   // 땅속은 폭발도 안 닿는다
                 if (Vector2.Distance(at, e.Position) > r) continue;
                 ApplyShotHit(e, shot);
             }
@@ -7124,7 +7124,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive) continue;
+                if (e == null || !e.IsAlive || e.IsHidden) continue;   // 땅속(두더지 · 매복 해골)은 탄이 지나간다
                 if (shot.Pierce && shot.HasHit(e)) continue;
                 // 몸통 반경 + 탄 반경. 중심끼리의 고정 거리로 재면 몸이 커진 만큼
                 // 어깨를 지나는 탄이 통과한다 — 관통탄이 앞사람만 맞히던 원인이다.

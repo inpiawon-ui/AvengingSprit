@@ -1,0 +1,15 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 그리거나 늘리거나 뒤집어서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 새 잡몹 「드릴 두더지」 게임 그림 샘플 (동쪽 · 9칸)
+
+생김새 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_mole_concept.png (PD 통과 라인업 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mock_lineup_v2_labeled.png 의 4번) — 코 끝 드릴 · 등에 미사일 셋 · 주황 이음새 기계 두더지.
+하는 일 : **땅속에 숨어 다니다** 1~2초 뒤 솟아올라 등 미사일을 쏘고 다시 숨는다(평타 없음). 숨은 동안은 흙더미만 보인다.
+칸 · 동작 형식 · 그림체는 먼저 통과한 멧돼지 · 돌 고릴라와 같게 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/boar_e_raw.png · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/gorilla_e_raw.png · 게임 그림체 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_game_sprites_x4.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mole_e_raw.png — 정사각(864 x 864 쯤, 96 x 96 칸 3 x 3 을 3배), 배경 **마젠타 #FF00FF 단색**
+  · 칸 차례 : 1 대기(땅 위) · 2 걷기1 · 3 걷기2 / 4 공격1(땅에서 솟아오르며 등 미사일 셋을 앞으로 겨눔) · 5 공격2(미사일 발사 — 발사구 불꽃) · 6 피격
+            / 7 쓰러짐1 · 8 쓰러짐2(옆으로 누운 고철) · **9 땅속(몸은 안 보이고 흙더미 위로 드릴 끝만 살짝 — 바닥 높이)**
+  · 1~8 은 오른쪽(동쪽)을 본다. 아홉 칸 같은 색 · 같은 크기.
+  · 크기 : 96 칸에서 발부터 미사일 끝까지 56~62 px(멧돼지와 비슷한 덩치). 9 의 흙더미는 폭 50 px 쯤 · 높이 20 px 이하.
+  · 1 px 짙은 외곽선 · 12~16색 · 2~3단 끊기는 명암. 잔털 · 질감 노이즈 금지.
+끝나면 경로만 알려라.

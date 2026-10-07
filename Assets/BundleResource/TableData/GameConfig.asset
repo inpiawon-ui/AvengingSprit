@@ -180,6 +180,7 @@ MonoBehaviour:
     - coilwalker
     - actor_enforcer
     - turret_cross
+    - mole
     Pattern: 3
     EnemyHpMul: 0.69
     EnemyAtkMul: 0.82
@@ -194,9 +195,9 @@ MonoBehaviour:
     Art: 3
     BossArt: 3
     ChestArt: 1
-    MixBlade: 0
+    MixBlade: 5
     MixForce: 17
-    MixMagic: 32
+    MixMagic: 31
   - Chapter: 4
     Name: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
     Desc: "\uBE57\uBB3C\uC774 \uACE0\uC778 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1\n\uBC1C\uBC11\uC774
@@ -224,7 +225,7 @@ MonoBehaviour:
     BossArt: 4
     ChestArt: 3
     MixBlade: 16
-    MixForce: 28
+    MixForce: 27
     MixMagic: 15
   - Chapter: 5
     Name: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
@@ -253,9 +254,9 @@ MonoBehaviour:
     Art: 5
     BossArt: 5
     ChestArt: 3
-    MixBlade: 36
-    MixForce: 18
-    MixMagic: 17
+    MixBlade: 35
+    MixForce: 17
+    MixMagic: 18
   - Chapter: 6
     Name: "\uC57C\uAC04 \uC815\uC720\uC18C"
     Desc: "\uBD88\uAE38\uC774 \uBA48\uCD94\uC9C0 \uC54A\uB294 \uC815\uC720\uC18C\n\uBAA8\uB4E0

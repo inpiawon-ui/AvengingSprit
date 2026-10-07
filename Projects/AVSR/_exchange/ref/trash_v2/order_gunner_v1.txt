@@ -1,0 +1,19 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 그리거나 늘리거나 뒤집어서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 「폐품 사수」를 대신할 잡몹 후보 3종 시안 (사람이 아닌 것)
+
+문제(PD) : 잡몹은 **사람이 아닌 것**이어야 한다 — 빙의하는 몸(호스트)은 전부 사람이라, 사람처럼 생긴 잡몹은 빼앗을 몸으로 읽힌다.
+  지금 1 · 2챕터 원거리 잡몹 「폐품 사수」는 총 든 사람이다 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_trash_now.png · 게임 화면 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/ROOM_CH1_007.png
+하는 일(그대로 둔다) : **원거리 단발** — 엄폐물 곁에 서서 한 발씩 쏘고 옆걸음친다. 쓰레기장 · 미사일 기지에 선다. 첫 원거리 잡몹이라 위협적이되 단순해야 한다.
+먼저 통과한 새 잡몹 라인업(같은 그림체 · 같은 크기감) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mock_lineup_v2_labeled.png — 돌 고릴라 · 멧돼지 · 아르마딜로 · 두더지 · 사마귀 · 버섯 · 미라 · 거미.
+  이들과 겹치지 않는 생물로.
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mock_gunner_v1.png — 가로형(1672 x 941 쯤), 배경은 어두운 회청 단색
+  · 후보 셋을 한 줄로, 모두 오른쪽(동쪽)을 보는 옆모습 · 쏘는 자세(총구 · 발사 부위가 보이게) :
+     A **고철 전갈** — 꼬리 끝이 고철 포신, 꼬리로 한 발씩 쏜다
+     B **깡통 게** — 등딱지가 녹슨 깡통 · 한쪽 집게가 총구
+     C **포탑 거북이** — 작은 거북 등에 고철 포탑 하나
+  · 줄 끝에 크기 비교용으로 게임의 **박쥐 · 갱스터를 같은 배율로** 세워라(라인업 2차와 같은 방식).
+  · 1991 아케이드 16비트 픽셀 · 96 x 96 칸에 그린 크기를 4배로(가장 가까운 이웃). 1 px 짙은 외곽선 · 12~16색 · 2~3단 끊기는 명암.
+  · 글자 · 번호를 그리지 마라.
+끝나면 경로만 알려라.

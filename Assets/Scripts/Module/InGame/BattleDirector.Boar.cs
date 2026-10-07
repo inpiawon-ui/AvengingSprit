@@ -16,6 +16,13 @@ namespace Game.Module.InGame
     ///   **돌진 → 돌진 → 돌진**(PD 2026-10-07 「한 번 돌진해서 갔으면 또 다른 곳으로 돌진해야 한다 — 붙어서 때리고만 있으면 의미가 없다」).
     ///   돌진 사이에 서 있거나 물지 않는다. 너무 가까우면 내 둘레를 비스듬히 돌아 거리를 벌리고(달릴 길을 만든다),
     ///   알맞은 거리면 옆걸음으로 각을 바꾸다가, 숨이 돌아오는 대로 **다른 방향에서** 다시 겨눈다.
+    ///
+    ///   **달릴 때 부딪혀야만 아프다**(PD 「가만히 있을 때는 안 아파야 근접 캐릭이 때릴 수 있다」).
+    ///   띠는 보여 주기만 하고, 피해는 돌진 중 몸이 내게 닿는 순간 한 번 들어간다(띠가 끝날 때 한꺼번에 치지 않는다).
+    ///   근접 몫 : 돌진 뒤 0.5초 그 자리에 선다(박으면 1.3초) · 돌아 나가는 걸음은 몸보다 느리다 — 쫓아가 칠 수 있다.
+    ///   (PD 「패턴 딜레이가 너무 길다 — 0.5초쯤 줄여」 → 멈춤 1초 → 0.5초)
+    ///
+    ///   **화면 밖으로 나가지 않는다**(PD) — 돌진 끝점과 도는 걸음을 지금 보이는 화면 안으로 자른다.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -43,11 +50,28 @@ namespace Game.Module.InGame
         }
 
         // 멧돼지 — 2.6 ~ 6 m 에서 겨눠 7 m 를 0.36초에 달린다(박쥐 5 m / 0.22초보다 길고 굵다). 예고 0.75초.
-        //   멈춤 0.6초 · 다음 돌진까지 0.35초 — 쉬지 않고 다시 달린다. 2.6 m 보다 가까우면 먼저 거리를 벌린다
-        private static readonly DiveSpec BoarDive = new(6.0f, 2.6f, 0.75f, 0.36f, 7.0f, 1.1f, 0.6f, 1.6f, 0.35f);
-        private const float BoarRunMps = 3.4f;        // 거리를 벌리며 도는 빠르기
-        private const float BoarStrafeMps = 1.8f;     // 알맞은 거리에서 각을 바꾸는 옆걸음
+        //   멈춤 0.5초(근접이 치는 틈, 박으면 1.3초) · 다음 돌진까지 0.35초. 2.6 m 보다 가까우면 먼저 거리를 벌린다
+        private static readonly DiveSpec BoarDive = new(6.0f, 2.6f, 0.75f, 0.36f, 7.0f, 1.1f, 0.5f, 1.3f, 0.35f);
+        private const float BoarViewMarginPx = 48f;   // 화면 가장자리에서 이만큼 안쪽까지만 간다(몸 반쯤)
+        private const float BoarRunMps = 2.0f;        // 거리를 벌리며 도는 빠르기 — 몸보다 느려 쫓아가 칠 수 있다
+        private const float BoarStrafeMps = 1.4f;     // 알맞은 거리에서 각을 바꾸는 옆걸음
+        private const float BoarHitReachMeters = 0.45f;   // 띠 반폭에 더하는 몸 반경 — 이만큼 닿으면 부딪힌 것
         private const float BoarOrbitDegrees = 55f;   // 내게서 멀어지는 방향을 이만큼 옆으로 꺾어 돈다 — 다음 돌진은 다른 각에서
+
+        /// <summary>달리는 동안 부딪혀야 아픈가(띠가 끝날 때 한꺼번에 치지 않는다). 지금은 멧돼지만.</summary>
+        private static bool ChargeContact(Unit e) => e.Key == TrashBoarKey;
+
+        /// <summary>
+        /// 돌진 중(단계 2) 매 프레임 — 몸이 내게 닿으면 한 번 친다. 한 번 친 돌진은 다시 안 친다(`PatternAngle` 을 표시로 쓴다 —
+        /// 지그재그 흔들기 각도인데 멧돼지는 흔들지 않는다).
+        /// </summary>
+        private void TickChargeContact(Unit e, Unit me, in DiveSpec spec)
+        {
+            if (e.PatternAngle > 0.5f || _host == null || me == null) return;
+            if (Vector2.Distance(e.Position, me.Position) > Meters(spec.WidthMeters * 0.5f + BoarHitReachMeters)) return;
+            e.PatternAngle = 1f;
+            DamagePlayer(Mathf.Max(1, e.Atk));
+        }
 
         private DiveSpec DiveSpecOf(Unit e)
             => e.Key == TrashBoarKey
@@ -63,8 +87,12 @@ namespace Game.Module.InGame
         /// 진짜 기절(스킬)은 막지 않는다 — 그때는 `InterruptCharge` 가 돌진을 거둔다.
         /// 박쥐 급강하 · 고릴라 돌진도 같은 길을 탄다.
         /// </summary>
+        ///
+        /// **멧돼지는 피격 경직을 아예 안 받는다**(2026-10-07 시험 — 로봇 탄에 맞을 때마다 굳어 멈춤 1초가 2.8초, 다음 돌진까지 7초가 됐다.
+        /// 「계속 돌진」이 총 맞는 동안 사라졌다). 근접이 치는 틈은 정해진 멈춤(1초 · 박으면 1.8초)으로 준다.
         private bool ChargeArmored(Unit e)
-            => !e.IsStunned && (e.PatternPhase == 1 || e.PatternPhase == 2) && PatternOf(e) == EnemyPattern.Dive;
+            => !e.IsStunned && (e.Key == TrashBoarKey || e.Key == TrashMoleKey   // 두더지도 박자가 정해져 있다 — 맞는다고 오래 솟아 있지 않는다
+                                || ((e.PatternPhase == 1 || e.PatternPhase == 2) && PatternOf(e) == EnemyPattern.Dive));
 
         /// <summary>
         /// 겨누는 중에 기절하면 **돌진을 거둔다** — 띠도 같이 지운다. 풀리면 처음(다가오기)부터 다시 겨눈다.
@@ -114,9 +142,22 @@ namespace Game.Module.InGame
             }
             e.SetState(EnemyState.Approach);
             e.SetFacing(dir);
+            bool wasOnScreen = IsOnScreen(e);
             e.Position = SlideMove(e, e.Position, dir * (Meters(mps) * dt));
+            if (wasOnScreen) e.Position = ClampToView(e.Position, BoarViewMarginPx);   // 보이던 몸은 화면 밖으로 안 나간다
             e.SetMoving(true);
             return true;
+        }
+
+        /// <summary>방 좌표를 지금 보이는 화면 안으로 자른다(가장자리에서 <paramref name="marginPx"/> 안쪽).</summary>
+        private Vector2 ClampToView(Vector2 room, float marginPx)
+        {
+            if (_field == null || _zoom <= 0.0001f) return room;
+            var v = RoomToView(room);
+            float w = _field.rect.width, h = _field.rect.height;
+            var c = new Vector2(Mathf.Clamp(v.x, marginPx, w - marginPx), Mathf.Clamp(v.y, -h + marginPx, -marginPx));
+            if (c == v) return room;
+            return room + (c - v) / _zoom;   // RoomToView 는 배율 _zoom 의 닮은꼴이다
         }
 
     }

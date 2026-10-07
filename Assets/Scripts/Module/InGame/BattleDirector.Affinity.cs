@@ -86,7 +86,7 @@ namespace Game.Module.InGame
             // ── 무기: 총 · 칼 · 창을 든 것 ──
             "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
                 or "amazon" or "amazon_elite"
-                or "bat" or "roadwarden" or "scrapgunner"
+                or "bat" or "roadwarden" or "scrapgunner" or "mole"
                 or "python" or "kingpin"
                 => Affinity.Blade,
             // ── 파워: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──

@@ -144,7 +144,7 @@ TRASH = {ch: c['trash'] for ch, c in CHAPTERS.items()}
 
 # 상성(가위바위보) — `AffinityRule.KindOf` 와 같아야 한다. 힘 → 날 → 술 → 힘.
 KIND = {
-    'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade',
+    'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade', 'mole': 'blade',
     'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force',
     'skeleton': 'magic', 'coilwalker': 'magic',
     'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
@@ -155,8 +155,10 @@ KIND = {
     'vampire': 'magic', 'white_wizard': 'magic', 'medium': 'magic', 'death': 'magic',
 }
 BEATS = {'force': 'blade', 'blade': 'magic', 'magic': 'force'}
-RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross'}
+RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross', 'mole'}
 STATIC_TRASH = {'turret_cross'}   # 안 움직인다 — 자리가 곧 전부다
+# 엄폐가 필요 없는 원거리 — 포탑은 서 있는 자리가 전부고, 두더지는 땅속으로 다닌다
+NO_COVER_TRASH = STATIC_TRASH | {'mole'}
 
 # 호스트 데뷔 챕터 — 지금 배정표(RoomDef60)에서 처음 나오는 챕터 그대로
 DEBUT = {
@@ -454,7 +456,7 @@ def check(room, errors, warns):
                 errors.append(f'{tag}: {actor}({x},{y}) 가 {kind}({o[1]},{o[2]}) 속에 선다')
         # 원거리는 엄폐 뒤에 세운다 — 키 큰 것이 1.6 m 안에
         ranged = (actor in RANGED_TRASH) if not host else (actor not in MELEE_HOST)
-        if ranged and actor not in STATIC_TRASH:
+        if ranged and actor not in NO_COVER_TRASH:
             near = any(o[0] in COVER and abs(o[1] - x) < o[3] / 2 + 1.6 and abs(o[2] - y) < o[4] / 2 + 1.6
                        for o in room.objects)
             if not near:
