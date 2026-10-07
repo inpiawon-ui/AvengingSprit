@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Game.Module.InGame
 {
@@ -93,11 +93,13 @@ namespace Game.Module.InGame
         //
         // 예전 피격 그림이 전부 **노란 뾰족 별**(`fx_hit` · `fx_crit`)이라 표창처럼 보였고,
         // 상성 유리는 얼음 조각(`fx_weakhit`)이라 무엇으로 때리든 얼음이 나왔다(PD 반려).
-        // 새 그림 없이 있는 파티클(불티 · 섬광 · 불 고리 · 연기)로 바꾼다. 별 모양(`star4` 반짝이)은 쓰지 않는다.
+        // 새 그림 없이 있는 파티클(노란 섬광 · 불티)로 바꾼다. 별 모양(`star4` 반짝이)은 쓰지 않는다.
+        // ⚠ 불 고리 · 연기까지 얹었더니 「이펙트가 너무 크고 화염은 과하다 — 예전 노란색으로 터지던 느낌이면 된다」(PD 2026-10-07).
+        //   작은 노란 팝으로 줄였다. 「팍팍」은 크기가 아니라 반동 · 멈칫이 맡는다.
         //   보통 — 탄 고유 터짐 + 불티(`SpawnImpact` 가 이미 낸다)만. 근접 · 스킬은 불티를 여기서 낸다
-        //   치명 — 「팍팍 터지게 강하게」(PD): 불티 · 큰 섬광 · 불 고리 · 연기가 한 번에 + 반동 · 멈칫
-        //   유리 — ▲ 와 같은 주황: 불 고리 + 불티
-        //   불리 — 회색 먼지 한 줌 + 약한 불티(덜 들어갔다)
+        //   치명 — 노란 섬광 한 번 + 불티 + 반동 · 멈칫
+        //   유리 — 조금 더 많은 불티(색은 ▲ · 숫자가 말한다)
+        //   불리 — 회색 먼지 조금 + 약한 불티(덜 들어갔다)
         // 연사 몸은 치명타가 자주 터진다 — 간격을 둬, 사이 치명타는 숫자만 크게.
 
         private const float CritBurstGap = 0.12f;
@@ -109,12 +111,12 @@ namespace Game.Module.InGame
             float now = Time.unscaledTime;
             if (now - _lastCritBurstAt < CritBurstGap) return;
             _lastCritBurstAt = now;
-            _pfx.Hit(at, ParticleElement.Fire, 1.8f);      // 불티 18개 · 큰 섬광
-            _pfx.Ring(at, ParticleElement.Fire, 150f);      // 밀려 나가는 불 고리 — 190 은 몸을 통째로 덮었다
-            _pfx.Puff(at, ParticleElement.Fire, 0.6f);      // 터진 연기
+            // 노란 섬광(지름 64) 한 번 + 불티 8개 — 섬광은 짧게(0.13초) 번쩍이고 줄어든다
+            _pfx.Burst(ParticleFxKind.Glow, ParticleElement.Fire, at, count: 1, speed: 0f, size: 64f, life: 0.13f, spin: 0f);
+            _pfx.Burst(ParticleFxKind.Spark, ParticleElement.Fire, at, count: 8, speed: 230f, size: 22f, life: 0.22f, spin: 0f);
         }
 
-        // 기관총이 유리한 적을 쏘면 매 발 불 고리가 떠 화면이 고리로 덮였다(녹화 2026-10-07) — 적마다 간격을 둔다
+        // 기관총이 유리한 적을 쏘면 매 발 터져 화면이 덮였다(녹화 2026-10-07) — 적마다 간격을 둔다
         private const float WeakBurstGap = 0.25f;
         private readonly System.Collections.Generic.Dictionary<Unit, float> _weakBurstAt = new();
 
@@ -128,15 +130,14 @@ namespace Game.Module.InGame
                 return;
             }
             _weakBurstAt[victim] = now;
-            _pfx.Ring(victim.Position, ParticleElement.Fire, 100f);
-            _pfx.Hit(victim.Position, ParticleElement.Fire, 1.1f);
+            _pfx.Hit(victim.Position, ParticleElement.Fire, 1f);
         }
 
         private void DullPuff(Vector2 at)
         {
             if (_pfx == null) return;
-            _pfx.Puff(at, ParticleElement.Dust, 0.45f);
-            _pfx.Hit(at, ParticleElement.Dust, 0.5f);
+            _pfx.Puff(at, ParticleElement.Dust, 0.3f);
+            _pfx.Hit(at, ParticleElement.Dust, 0.4f);
         }
 
         /// <summary>근접 · 스킬 보통 타격 — 탄이 없어 `SpawnImpact` 불티가 안 나는 길.</summary>

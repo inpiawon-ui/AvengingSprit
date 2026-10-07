@@ -219,7 +219,7 @@ namespace Game.Module.InGame
             dull = outcome < 0;
             if (weak)
             {
-                // 얼음 조각(fx_weakhit)은 무엇으로 때리든 얼음이라 뺐다(PD) — ▲ 와 같은 주황 불 고리 + 불티
+                // 얼음 조각(fx_weakhit)은 무엇으로 때리든 얼음이라 뺐다(PD) — 불티를 조금 더(색은 ▲ · 숫자가 말한다)
                 if (!HxAffinityHit(victim)) WeakBurst(victim);
                 GameSound.Cue("hit.weak");
                 StrongHitReaction(victim);

@@ -6356,7 +6356,7 @@ namespace Game.Module.InGame
             if (!HxSkillHit(victim, weak, dull))
             {
                 if (dull) DullPuff(victim.Position);
-                else if (!weak) HitSparks(victim.Position);   // 유리는 WithAffinity 가 주황 불 고리를 냈다
+                else if (!weak) HitSparks(victim.Position);   // 유리는 WithAffinity 가 불티를 냈다
             }
             if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
@@ -7208,7 +7208,7 @@ namespace Game.Module.InGame
                 // 공통 피격(빛 셰이더, HitFx.cs)은 꺼 두었다(HxEnabled) — 꺼져 있으면 아래 파티클 길로 간다
                 // 별 그림(fx_hit · fx_crit)은 표창처럼 보여 뺐다(PD 2026-10-07) — 보통은 탄 고유 터짐 + 불티로 충분
                 if (!HxShotHit(victim, crit, weak, dull) && dull && !crit) DullPuff(victim.Position);
-                if (crit) CritBurst(victim.Position);   // 「팍팍」 — 불티 · 섬광 · 충격 고리(PD 2026-10-07)
+                if (crit) CritBurst(victim.Position);   // 「팍」 — 노란 섬광 + 불티, 반동 · 멈칫(PD 2026-10-07)
                 if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
                 else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);
