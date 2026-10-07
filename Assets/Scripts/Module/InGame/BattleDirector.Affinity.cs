@@ -92,7 +92,7 @@ namespace Game.Module.InGame
             // ── 파워: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
             "baseball" or "guru" or "ninja_chain" or "commando_grenade" or "commando_missile"
                 or "commando_laser" or "robot"
-                or "actor_enforcer" or "obj_turret" or "turret_cross"
+                or "actor_enforcer" or "boar" or "obj_turret" or "turret_cross"
                 or "robot_snakes" or "crusher" or "guardian"
                 => Affinity.Force,
             // ── 마법: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──

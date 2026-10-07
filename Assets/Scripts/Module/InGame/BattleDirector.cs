@@ -951,6 +951,14 @@ namespace Game.Module.InGame
             { "FLAME_JET_W",      40f },
             { "PROP_TALL",        94f },   // 무대 간판 소품(키 큰 것) — 기둥과 같은 규격 72×166
             { "PROP_WIDE",        60f },   // 무대 간판 소품(넓은 것) — 상자와 같은 규격 144×132
+            // 3차(2026-10-07) — 키 큰 것을 대신할 **낮은 엄폐**(PD 「2D 라 위로 긴 것은 애매하다」). 솟음이 낮아 그림 = 막힌 칸
+            { "SANDBAG",          30f },   // 모래주머니 담 — 2×1 · 그림 144×102
+            { "BARREL_PILE",      36f },   // 눕혀 쌓은 드럼통 — 2×1 · 그림 144×108
+            { "FALLEN_PILLAR",    30f },   // 누운 기둥 — 2×1 · 그림 144×102
+            { "JERSEY_ROW",       30f },   // 콘크리트 블록 셋 — 3×1 · 그림 216×102
+            { "SCRAP_PILE",       24f },   // 납작한 고철 더미 — 2×1 · 그림 144×96
+            { "WRECK_CAR",        30f },   // 납작한 폐차 — 2×1 · 그림 144×102
+            { "PIT",               0f },   // 바닥 구덩이 — 눕는다(도랑처럼 탄은 넘어간다)
         };
 
         /// <summary>
@@ -1271,7 +1279,7 @@ namespace Game.Module.InGame
                 };
                 // 도랑은 **바닥에 파인 것**이다. 다른 소품·캐릭터보다 아래로 내린다 —
                 // 위에 있으면 도랑이 사람을 덮어 어디 서 있는지 안 보인다.
-                if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V") go.transform.SetAsFirstSibling();
+                if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V" || o.Kind == "PIT") go.transform.SetAsFirstSibling();
                 ob.Phase = HazardPhase(ob, center);   // 파도 순서 · 교대 개폐 (BattleDirector.Motion)
                 SetupMoving(ob, kind);
                 _obstacles.Add(ob);
@@ -3833,9 +3841,10 @@ namespace Game.Module.InGame
                 // 굳어 있는 동안은 다가오지도 때리지도 않는다.
                 // 자세도 함께 푼다 — 안 그러면 풀리는 순간 예고 없이 맞는다.
                 // 넉백 뒤 피격 경직(0.1초)도 같다 — 이펙트만 안 뜬다.
-                if (e.IsStunned || e.IsHitHeld)
+                if ((e.IsStunned || e.IsHitHeld) && !ChargeArmored(e))   // 돌진은 피격 경직에 안 끊긴다 (BattleDirector.Boar)
                 {
                     e.CancelWindup();
+                    InterruptCharge(e);   // 기절하면 겨누던 돌진도 거둔다 — 띠 없는 돌진 방지
                     e.SetMoving(false);
                     Separate(e, i, dt);
                     continue;
