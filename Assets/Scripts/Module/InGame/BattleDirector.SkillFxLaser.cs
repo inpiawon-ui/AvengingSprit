@@ -52,6 +52,10 @@ namespace Game.Module.InGame
             "commando_laser",
             // 무기 7종 (`BattleDirector.SkillFxWeapon.cs`)
             "amazon", "thug", "hopper_smg", "commando_mg", "gangster", "hopper", "ninja",
+            // 파워 (`BattleDirector.SkillFxPower.cs` · `SkillFxQuality.cs`)
+            "commando_grenade", "commando_missile", "guru", "ninja_chain", "robot", "baseball",
+            // 마법 (`BattleDirector.SkillFxQuality.cs`)
+            "salamander", "dragoon", "dragon_blue", "white_wizard", "medium", "snowwoman", "vampire", "death",
         };
 
         private bool HasQualityFx(Unit me) => me != null && me.Key != null && QualityFxHosts.Contains(me.Key);

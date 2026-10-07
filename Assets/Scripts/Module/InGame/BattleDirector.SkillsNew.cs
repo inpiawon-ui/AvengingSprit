@@ -162,7 +162,8 @@ namespace Game.Module.InGame
         private void ReaperWindow(Unit me)
         {
             _reaperSeconds = ReaperWindowSeconds;
-            PlayFx("scythe", me.Position, Meters(3f), loop: false);
+            if (!QxReaperOpen(me, _reaperSeconds))   // 퀄업(2026-10-07) — 낫 한 번 + 발밑 보라 기운
+                PlayFx("scythe", me.Position, Meters(3f), loop: false);
         }
 
         /// <summary>때릴 때마다 굴린다. 죽였으면 true — 부르는 쪽은 더 할 일이 없다.</summary>
@@ -175,7 +176,7 @@ namespace Game.Module.InGame
                         : victim == _midBoss ? ReaperMidBossPercent : 100;
             if (!Roll(percent)) return false;
 
-            PlayFx("scythe", victim.Position, 96f, loop: false);
+            if (!QxReaperKill(victim)) PlayFx("scythe", victim.Position, 96f, loop: false);
             if (victim.IsBoss)
             {
                 // 보스는 즉사시키지 않는다 — 방을 통째로 건너뛰게 된다. 크게 깎는다.
@@ -201,7 +202,7 @@ namespace Game.Module.InGame
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || e.IsDying) continue;
                 e.ApplyRoot(seconds);
-                PlayFx("chain", e.Position, 64f, loop: false);
+                if (!QxChainCast(me, e)) PlayFx("chain", e.Position, 64f, loop: false);
             }
         }
 
@@ -227,8 +228,10 @@ namespace Game.Module.InGame
             // ⚠ 불바다는 **사는 내내 일렁인다.** 한 장짜리 `field_burn` 이 깔려 6초를 가만히 있었다
             //   (기획 2026-09-15). 컷 네 장(`fx_lava_1~4`)을 장판 그림으로 넘겨 돌린다 —
             //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
-            SpawnField(at, Meters(LavaRadiusMeters) * _buffs.AoeMul, 6f,
-                       FieldEffect.Burn, tick, fromPlayer: true, artKey: "firefield");
+            float fieldRadius = Meters(LavaRadiusMeters) * _buffs.AoeMul;
+            SpawnField(at, fieldRadius, 6f,
+                       FieldEffect.Burn, tick, fromPlayer: true, artKey: FireFieldArt);
+            QxFireBloom(at, fieldRadius);   // 퀄업(2026-10-07) — 불바다가 확 피어난다
             // ⚠ `fx_lava` 는 불 둘레의 검붉은 얼룩이 **피웅덩이**로 읽혀 반려됐다(기획 2026-09-15).
             //   영역 곳곳에서 불길이 솟고 바깥은 숯빛인 `fx_firefield_1~4` 로 바꾼다.
         }
@@ -247,6 +250,7 @@ namespace Game.Module.InGame
             _spitDamage = dmg;
             _spitPoisonSeconds = seconds;
             var from = me.MuzzlePosition;
+            QxVenomCast(me);   // 퀄업(2026-10-07) — 입 앞에 모이는 빛 · 둘레로 퍼지는 독 안개
             var frames = ShotFrames("venom");
             var list = EnemiesInRange(me.Position, r);
             for (int i = 0; i < list.Count; i++)
@@ -300,6 +304,7 @@ namespace Game.Module.InGame
             // 축 값을 피해에 그대로 곱하면 폭주 시간을 초로 고친 순간 피해가 두 배가 된다(2026-10-06)
             _chainDamage = SkillDamage(me, ChainHopDamageMul * _boltSurgeSeconds / BoltSurgeSeconds);
             _chainProfile = me.Profile;
+            QxSurgeOpen(me, _boltSurgeSeconds);   // 퀄업(2026-10-07) — 몸에 감기는 청백 전기
             if (NearestEnemy(me.Position, Meters(ChainHopRangeMeters)) == null)
             { _chainHopsLeft = 0; PlayFx("crit", me.Position, 96f, loop: false); }
         }
@@ -331,7 +336,7 @@ namespace Game.Module.InGame
             PlayBolt(_chainFrom, next.Position);
             // 줄기가 닿은 자리도 **번개 색**이어야 한다. 기본 타격 불꽃은 노란색이라
             // 파란 줄기와 따로 놀았다 — 줄기 끝에서 노란 별이 터졌다(2026-09-20).
-            SpawnImpact(next.Position, "thunder", ChainImpactSize);
+            if (!QxSurgeSpark(next.Position)) SpawnImpact(next.Position, "thunder", ChainImpactSize);
             HitEnemyWith(next, _chainDamage, _chainProfile);
             _chainFrom = next.Position;
             _chainLast = next;
@@ -356,8 +361,13 @@ namespace Game.Module.InGame
             // ⚠ 그림을 `iceblock`(바닥에서 솟는 결정)에서 `ward`(몸을 감싸는 결정 껍질)로
             //   바꾼다. 「갇혔다」가 읽히려면 몸을 **둘러싸야** 한다(기획 2026-09-15).
             //   구루가 쓰던 자리인데, 구루는 얼음이 아니어야 하므로 이쪽으로 넘긴다.
-            _iceFx = TakeLoopFx("ward", me.Position, IceShellFxSize);
-            _iceFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+            // 퀄업(2026-10-07) — 모이는 서리 → 얼음 결정 속(지속) → 끝나면 깨져 흩어짐
+            _iceFx = QxIceOpen(me);
+            if (_iceFx == null)
+            {
+                _iceFx = TakeLoopFx("ward", me.Position, IceShellFxSize);
+                _iceFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+            }
         }
 
         /// <summary>몸을 감싼 얼음. 스킬이 끝나면 거둔다.</summary>
@@ -459,11 +469,12 @@ namespace Game.Module.InGame
             _batHeal = heal;
             _batSeconds = BatFlySeconds;
             _batTargets.Clear();
+            QxFeastOpen(me, BatFlySeconds);   // 퀄업(2026-10-07) — 발밑 붉은 원, 박쥐 대신 피 구슬
             for (int i = 0; i < list.Count; i++)
             {
-                var im = FreeImpact(BatFxSize);
+                var im = FreeImpact(BatFxSizeQ);
                 if (im == null) break;
-                im.Play(me.Position, FxFrames("bat"), BatFxSize, loop: true);
+                im.Play(me.Position, BatFrames, BatFxSizeQ, loop: true);
                 _batTargets.Add((im, me.Position, list[i].Position));
             }
             if (_batTargets.Count == 0) { Leech(heal); _batSeconds = 0f; }
@@ -640,7 +651,11 @@ namespace Game.Module.InGame
 
         /// <summary>영매 — 골렘을 세운다. 해골(패시브)보다 크고 오래 간다.</summary>
         private void MediumGolem(Unit me)
-            => SummonGolem(ClampedInField(me, me.Position + me.Facing * Meters(1.5f)));
+        {
+            var at = ClampedInField(me, me.Position + me.Facing * Meters(1.5f));
+            QxGolemRune(at);   // 퀄업(2026-10-07) — 바닥에 그려지는 룬 원(솟는 파편은 SpawnSummon)
+            SummonGolem(at);
+        }
 
         /// <summary>화이트 위저드 — 부채꼴 8방향. 관통은 패시브가 준다.</summary>
         private void WizardFan(Unit me)
@@ -655,7 +670,7 @@ namespace Game.Module.InGame
                           + WizardFanSpreadDeg * i / (WizardFanShots - 1);
                 FireShot(me, target, fromPlayer: true, angleOffsetDeg: off);
             }
-            PlayFx("holy_beam", me.MuzzlePosition, 96f, loop: false);
+            if (!QxWizardGather(me)) PlayFx("holy_beam", me.MuzzlePosition, 96f, loop: false);
         }
 
         /// <summary>코만도(레이저) — 3초 동안 주변 적에게 계속 튄다.</summary>
@@ -680,6 +695,7 @@ namespace Game.Module.InGame
         {
             TickLz(dt);   // 연쇄 방전 — 조준이 걸린 적에게 낙뢰(퀄업 연출 2026-10-07)
             TickWp(dt);   // 무기 7종 퀄업 연출
+            TickQx();     // 파워 · 마법 퀄업 연출 — 몸을 따라다니는 부품
             for (int i = _spits.Count - 1; i >= 0; i--)
             {
                 var (fx, target, from, t) = _spits[i];
@@ -731,7 +747,7 @@ namespace Game.Module.InGame
                     for (int i = 0; i < _batTargets.Count; i++) _batTargets[i].Fx?.Stop();
                     _batTargets.Clear();
                     if (_batHeal > 0) { Leech(_batHeal); _batHeal = 0; }
-                    PlayFx("drain", home, 96f, loop: false);
+                    if (!QxFeastGlow(home)) PlayFx("drain", home, 96f, loop: false);
                 }
             }
             if (_reaperSeconds > 0f) _reaperSeconds -= dt;
@@ -743,7 +759,12 @@ namespace Game.Module.InGame
                 _iceShellSeconds -= dt;
                 // 얼음은 몸을 따라다닌다. 끝나면 거둔다 — 안 거두면 방이 바뀌어도 남는다.
                 if (_iceFx != null && _host != null) _iceFx.MoveTo(_host.Position);
-                if (_iceShellSeconds <= 0f) { _iceFx?.Stop(); _iceFx = null; }
+                if (_iceShellSeconds <= 0f)
+                {
+                    _iceFx?.Stop();
+                    _iceFx = null;
+                    if (_host != null) QxIceBreak(_host.Position);
+                }
             }
 
             // 쉴드는 시간이 지나면 걷힌다 — 안 걷으면 다음 방까지 들고 간다.
@@ -782,6 +803,7 @@ namespace Game.Module.InGame
         /// </summary>
         private void PlayBolt(Vector2 from, Vector2 to)
         {
+            if (QxSurgeBolt(from, to)) return;   // 청룡 퀄업 — 청백 지그재그 번개
             var frames = FxFrames("boltbeam");
             if (frames == null) { PlayFx("bolt", to, 64f, loop: false); return; }
             var im = FreeImpact(BoltBeamThickness);

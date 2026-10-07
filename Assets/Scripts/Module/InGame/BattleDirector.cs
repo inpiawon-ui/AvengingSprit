@@ -6521,7 +6521,8 @@ namespace Game.Module.InGame
             // 불덩이가 피해 반경과 같은 크기로 뜬다. 그림이 반경보다 작으면
             // "안 맞았는데 맞았다" 로 읽히고, 크면 그 반대가 된다.
             // 로봇 미사일(`pulse` 탄)은 원작처럼 **큰 폭발**로 터진다 — 이름대로 찾으면 작은 섬광 두 장이다.
-            SpawnImpact(at, shot.Kind == "pulse" ? "grenade" : shot.Kind, r * 2f);
+            if (!PwExplode(shot, at, r))   // 융단 폭격은 큰 도트 폭발(BattleDirector.SkillFxPower)
+                SpawnImpact(at, shot.Kind == "pulse" ? "grenade" : shot.Kind, r * 2f);
 
             if (!shot.FromPlayer)
             {
@@ -6771,7 +6772,7 @@ namespace Game.Module.InGame
             {
                 var u = kv.Key;
                 if (u == null || !u.IsAlive || !u.IsPoisoned) { kv.Value?.Stop(); _poisonFxDone.Add(u); continue; }
-                kv.Value?.MoveTo(u.Position);
+                kv.Value?.MoveTo(PoisonFxAt(u));
             }
             for (int i = 0; i < _poisonFxDone.Count; i++) _poisonFx.Remove(_poisonFxDone[i]);
 
@@ -6779,7 +6780,7 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || !e.IsPoisoned || _poisonFx.ContainsKey(e)) continue;
-                var fx = TakeLoopFx("venom", e.Position, PoisonFxSize);
+                var fx = TakeLoopFx(PoisonFxName, PoisonFxAt(e), PoisonFxSizeQ);   // 샐러맨더 퀄업 — 머리 위 독 방울
                 if (fx != null) _poisonFx[e] = fx;
             }
 
@@ -6792,7 +6793,7 @@ namespace Game.Module.InGame
             {
                 var u = kv.Key;
                 if (u == null || !u.IsAlive || !u.IsRooted) { kv.Value?.Stop(); _rootFxDone.Add(u); continue; }
-                kv.Value?.MoveTo(u.Position - Vector2.up * RootFxLift);
+                kv.Value?.MoveTo(u.Position - Vector2.up * RootFxLiftQ);
             }
             for (int i = 0; i < _rootFxDone.Count; i++) _rootFx.Remove(_rootFxDone[i]);
 
@@ -6800,7 +6801,7 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null || !e.IsAlive || !e.IsRooted || _rootFx.ContainsKey(e)) continue;
-                var fx = TakeLoopFx("chain", e.Position - Vector2.up * RootFxLift, RootFxSize);
+                var fx = TakeLoopFx(RootFxName, e.Position - Vector2.up * RootFxLiftQ, RootFxSizeQ);   // 사슬 결박 퀄업 — 몸에 감긴 고리
                 if (fx != null) _rootFx[e] = fx;
             }
 
@@ -7209,7 +7210,7 @@ namespace Game.Module.InGame
                 if (!HxShotHit(victim, crit, weak, dull))
                 {
                     if (crit) CritBurst(victim.Position);
-                    else HitPop(victim.Position, dull);
+                    else if (!QxOrbPop(shot.Kind, victim.Position)) HitPop(victim.Position, dull);   // 광탄은 빛 조각
                 }
                 if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
                 else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);

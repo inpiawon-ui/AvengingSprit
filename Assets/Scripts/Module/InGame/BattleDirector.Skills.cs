@@ -280,6 +280,8 @@ namespace Game.Module.InGame
             _chainHopsLeft = 0;
             ClearLz();
             ClearWp();
+            ClearPw();
+            ClearQx();
             ClearHx();
             for (int i = 0; i < _spits.Count; i++) _spits[i].Fx?.Stop();
             _spits.Clear();
@@ -471,9 +473,15 @@ namespace Game.Module.InGame
             _reflectSeconds = BaseAxis(5f);         // 표 성장 축 Lv1 5 → Lv4 7초 (기획 2026-09-15 +1초)
             _reflectMul = SpecOpen ? SpecAxis(2f) : 2f;   // Lv5 2배 → Lv10 4배
             _reflectPierce = SpecOpen;              // Lv5 부터 반사탄이 관통
-            PlayFx("reflect", me.Position, 64f, loop: false);
             // 반사 중인 것이 **보여야 한다**(기획 2026-09-15). 방벽 쉴드에 가려 반사 상태인지 몰랐다.
-            StartSkillAura(ref _reflectAuraFx, "reflectaura");
+            // 퀄업(2026-10-07) — 몸 둘레 하얀-적황 반사 원(BattleDirector.SkillFxQuality)
+            _reflectAuraFx?.Stop();
+            _reflectAuraFx = QxReflectAura(me);
+            if (_reflectAuraFx == null)
+            {
+                PlayFx("reflect", me.Position, 64f, loop: false);
+                StartSkillAura(ref _reflectAuraFx, "reflectaura");
+            }
         }
 
         /// <summary>날아온 적 탄을 되받아친다. 반사가 도는 동안 호출된다.</summary>
@@ -482,7 +490,7 @@ namespace Game.Module.InGame
             if (shot == null) return;
             shot.TurnFriendly(_reflectMul);
             if (_reflectPierce) shot.GrantPierce();
-            PlayFx("reflect", shot.Position, 64f, loop: false);
+            if (!QxReflectSwing(shot.Position)) PlayFx("reflect", shot.Position, 64f, loop: false);
         }
 
         // ── 사신 · 영혼 수확 ─────────────────────────────────────
@@ -514,8 +522,13 @@ namespace Game.Module.InGame
             //   얼음은 설녀의 것이라 둘이 구별되지 않았다(기획 2026-09-15).
             //   그리고 **버티는 내내 돈다.** 한 번 터지고 사라지면 결계가 있는지 알 수 없다.
             _wardFx?.Stop();
-            _wardFx = TakeLoopFx("guard", me.Position, WardFxSize);
-            _wardFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+            // 퀄업(2026-10-07) — 발밑 황금 원 → 결계 막 → 결계 동안 얇은 테두리(BattleDirector.SkillFxQuality)
+            _wardFx = QxGuardOpen(me);
+            if (_wardFx == null)
+            {
+                _wardFx = TakeLoopFx("guard", me.Position, WardFxSize);
+                _wardFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
+            }
         }
 
         /// <summary>버티는 내내 몸에 붙어 도는 방어막.</summary>
@@ -674,7 +687,8 @@ namespace Game.Module.InGame
                 }
                 if (near != null) at = near.Position;
 
-                ThrowSkillGrenade(me, at, dmg, Meters(1.8f));
+                // 퀄업(2026-10-07) — 줄의 한쪽 끝부터 차례로 떨어져 큰 도트 폭발로 터진다(BattleDirector.SkillFxPower)
+                PwCarpetThrown(ThrowSkillGrenade(me, at, dmg, Meters(1.8f)), i);
 
                 // Lv5 — 착탄마다 작은 화상 장판이 남는다
                 if (SpecOpen)
@@ -978,6 +992,7 @@ namespace Game.Module.InGame
             if (side.sqrMagnitude < 0.01f) side = Vector2.right;
             side = side.normalized * Meters(TurretSideMeters);
 
+            QxTurretDrop(ClampedInField(me, me.Position + side));   // 퀄업(2026-10-07) — 쿵 착지 흙먼지
             SpawnDeployable(ClampedInField(me, me.Position + side), ghostly: false, seconds: seconds,
                             range: Meters(RobotTurretRangeMeters), damage: dmg,
                             fireInterval: RobotTurretInterval);
@@ -1033,17 +1048,18 @@ namespace Game.Module.InGame
         /// 던지는 자리. 비우면 총구다. 미사일 반원처럼 **여러 발을 벌려 쏠 때**만 넣는다 —
         /// 한 점에서 같은 곳으로 던지면 전부 겹쳐 한 발로 보인다.
         /// </param>
-        private void ThrowSkillGrenade(Unit me, Vector2 at, int damage, float radius,
-                                       Vector2? from = null)
+        private Projectile ThrowSkillGrenade(Unit me, Vector2 at, int damage, float radius,
+                                             Vector2? from = null)
         {
             var shot = RentShot();
-            if (shot == null) return;
+            if (shot == null) return null;
             var origin = from ?? me.MuzzlePosition;
             shot.SetSprite(ShotSpriteOf(me), "grenade", LoopsFrames("grenade"));
             shot.Fire(origin, at, _config.ShotSpeedPlayer, damage,
                       true, null, _config.ShotSize, ShotPlayerColor, _config.ShotLifeSeconds);
             shot.SetBlastRadius(radius);
             ThrowAsGrenade(shot, origin, at, 0f, _config.ShotSpeedPlayer);
+            return shot;
         }
     }
 }

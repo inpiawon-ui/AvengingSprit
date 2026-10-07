@@ -161,6 +161,12 @@ namespace Game.Module.InGame
 
         public bool IsLob => _lobSeconds > 0f;
 
+        /// <summary>던진 탄을 그만큼 늦게 떨어지게 한다(같은 궤적을 더 천천히) — 여러 발이 차례로 터지게(융단 폭격).</summary>
+        public void DelayLanding(float seconds)
+        {
+            if (IsLob && seconds > 0f) _lobSeconds += seconds;
+        }
+
         /// <summary>땅에 닿았는가. 부르는 쪽이 이걸 보고 터뜨린다.</summary>
         public bool HasLanded { get; private set; }
 

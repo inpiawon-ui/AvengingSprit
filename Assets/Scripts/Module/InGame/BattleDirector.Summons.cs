@@ -166,7 +166,9 @@ namespace Game.Module.InGame
 
             _summons.Add(new Summon { U = u, Life = life, LifeMax = life, Drains = drains,
                                       Attacks = attacks, Mobile = mobile, Taunt = taunt });
-            if (!_wpQuietSummon) PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
+            // 골렘은 룬 원에서 솟는다(영매 퀄업 2026-10-07) — 돌 파편 · 보라 빛
+            if (!_wpQuietSummon && !(key == GolemKey && QxGolemRise(u.Position)))
+                PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
         }
 
         // ── 굴리기 ───────────────────────────────────────────
