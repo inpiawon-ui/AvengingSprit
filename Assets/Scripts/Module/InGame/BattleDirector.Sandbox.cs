@@ -96,6 +96,30 @@ namespace Game.Module.InGame
             return true;
         }
 
+        /// <summary>
+        /// 영상용 — 살아 있는 적을 내 앞쪽(위) 부채꼴에 모은다. 방에 따라 적이 화면 맨 위 · 사거리 밖에 있어
+        /// 스킬이 허공에 나가거나(연쇄 방전) HUD 에 가렸다(2026-10-07).
+        /// </summary>
+        public void SandboxGatherEnemies(float meters)
+        {
+            var me = Avatar;
+            if (!Sandbox || me == null) return;
+            int n = 0;
+            for (int i = 0; i < _enemies.Count; i++) if (_enemies[i] != null && _enemies[i].IsAlive) n++;
+            int k = 0;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive) continue;
+                // 위쪽 120° 부채꼴에 고르게 — 하나면 바로 위
+                float a = n <= 1 ? 90f : 30f + 120f * k / (n - 1);
+                float r = Meters(meters) * (k % 2 == 0 ? 1f : 0.8f);
+                var p = me.Position + new Vector2(Mathf.Cos(a * Mathf.Deg2Rad), Mathf.Sin(a * Mathf.Deg2Rad)) * r;
+                e.Position = ClampedInField(e, p);
+                k++;
+            }
+        }
+
         /// <summary>영상 도구가 켠다 — 방 입장 때 적 다섯 채우기를 건너뛴다.</summary>
         public static bool SandboxSkipTopUp;
 

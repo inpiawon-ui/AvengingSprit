@@ -614,6 +614,8 @@ namespace Game.Module.InGame
         {
             _bounceSeconds = BaseAxis(BounceSeconds);   // Lv1 3 → Lv4 4.5초
             _bounceTick = 0f;
+            // 퀄업 연출이 있으면 첫 튐(_bounceTick 0)이 곧바로 조준 · 낙뢰로 시작을 보여 준다
+            if (LzReady) { ResetLz(); return; }
             // 시전 순간 한 번은 나에게서 가장 가까운 적으로 뻗는다 — 시작이 보여야 한다.
             var first = NearestEnemy(me.Position);
             if (first != null) PlayBolt(me.Position, first.Position);
@@ -627,6 +629,7 @@ namespace Game.Module.InGame
         /// <summary>새 액티브의 지속 시간을 흘린다. `TickHostPassives` 옆에서 돈다.</summary>
         private void TickNewSkills(float dt)
         {
+            TickLz(dt);   // 연쇄 방전 — 조준이 걸린 적에게 낙뢰(퀄업 연출 2026-10-07)
             for (int i = _spits.Count - 1; i >= 0; i--)
             {
                 var (fx, target, from, t) = _spits[i];
@@ -708,6 +711,8 @@ namespace Game.Module.InGame
             _bounceTick = BounceInterval;
             var list = EnemiesInRange(_host.Position, Meters(BounceRangeMeters));
             int dmg = SkillDamage(_host, BounceDamageMul);
+            // 퀄업 연출(2026-10-07) — 조준 → 상공 낙뢰. 피해는 낙뢰가 떨어질 때(0.09초 뒤) 들어간다
+            if (LzChain(_host, list, Mathf.Min(3, list.Count), dmg)) return;
             // ⚠ **줄기를 이어 그린다.** 예전에는 맞는 적 자리에 번개 한 덩이만 띄웠다 —
             //   시전자 발밑의 레이저 기둥은 가만히 있는데 멀리 있는 적이 맞아서,
             //   무엇이 무엇을 때리는지 안 보였다(기획 2026-09-15).

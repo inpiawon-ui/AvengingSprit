@@ -165,7 +165,8 @@ namespace Game.Module.InGame
             //   섬광 — 그 스킬의 색으로 방을 덮었다 뺀다(무엇이 터졌는지 색으로 읽힌다)
             //   줌 펀치 — 화면을 확 당겼다 놓는다
             //   히트스톱 — 아주 잠깐 시간을 늦춰 «한 방» 을 만든다
-            ScreenFlash(_castColor, CastFlashSeconds, CastFlashPeak);
+            // 퀄업 연출이 들어간 스킬은 방 전체를 색으로 덮지 않는다 — 맞은 자리가 묻힌다(코덱스 진단 2026-10-07)
+            if (!HasQualityFx(me)) ScreenFlash(_castColor, CastFlashSeconds, CastFlashPeak);
             ZoomPunch(CastZoomPunch);
             HitStop(CastHitStop);
             Shake(CastReleaseShake);
@@ -173,7 +174,8 @@ namespace Game.Module.InGame
             // ⚠ 연기를 시전 세기(2.6)로 띄웠더니 **방 한가운데가 통째로 가려졌다.**
             //   그 뒤에 나가는 스킬 연출(표적이 찍히는 것 등)이 연기에 묻힌다.
             //   불티는 세게, 연기는 발밑에 얕게.
-            _pfx?.Hit(me.Position, ParticleElement.Fire, CastParticlePower);
+            // 퀄업 연출 스킬은 붉은 불티를 뺀다 — 전기 스킬에 불이 튀면 속성이 흐려진다(검수 2026-10-07)
+            if (!HasQualityFx(me)) _pfx?.Hit(me.Position, ParticleElement.Fire, CastParticlePower);
             _pfx?.Puff(feet, ParticleElement.Dust, CastSmokePower);
             CastHostSkill(me);
         }

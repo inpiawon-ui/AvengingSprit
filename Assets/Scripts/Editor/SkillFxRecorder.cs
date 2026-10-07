@@ -31,6 +31,7 @@ namespace Game.Editor
         private const float SettleSeconds = 1.2f;   // 몸을 바꾼 뒤 빙의 연출이 가라앉을 때까지
         private const float LeadSeconds = 0.4f;     // 스킬 전에 잠깐 — 시작 자세가 보이게
         private const float RecordSeconds = 6.5f;   // 컷인 + 스킬 + 여운
+        private const float GatherMeters = 3.5f;    // 녹화 직전 적을 모으는 거리 — 가장 짧은 스킬 사거리 안쪽
 
         private enum Step { Load, WaitBattle, WaitAtlas, Swap, Settle, Cast, Recording }
         private const float LoadSettleSeconds = 1.5f;   // 전투가 선 뒤 방 입장 연출이 끝날 때까지
@@ -125,6 +126,7 @@ namespace Game.Editor
                     break;
                 case Step.Settle:
                     if (now < s_at) return;
+                    s_battle.SandboxGatherEnemies(GatherMeters);   // 적을 내 앞 사거리 안에 — 스킬이 허공에 안 나가게
                     StartRecording($"{OutDir}/{s_numbers[s_index]:00}_{s_keys[s_index]}");
                     s_at = now + LeadSeconds;
                     s_step = Step.Cast;
