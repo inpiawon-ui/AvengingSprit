@@ -3233,6 +3233,7 @@ namespace Game.Module.InGame
             TickZoomPunch();
 
             TickPlayer(dt);
+            TickRangeRing();       // 내 공격 사거리 원 — 움직인 뒤 자리를 따라간다
             TickAlly(dt);          // 상점에서 산 동료
             TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);

@@ -93,6 +93,10 @@ namespace Game.Character
         [Range(10, 100)]
         [SerializeField] private int _hostStartHpPercent = 70;
 
+        [Tooltip("내 공격 사거리 원(발밑 흰 원)의 진하기. 보이되 싸움을 가리지 않을 만큼 옅게 — 0 이면 끈다(2026-10-07).")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _rangeRingAlpha = 0.18f;
+
         [Header("긴급 호스트 (기획서 A 8-3)")]
         [Tooltip("빙의할 대상이 하나도 없을 때, 이만큼 기다린 뒤 몸을 하나 만들어 준다.")]
         [SerializeField] private float _emergencyDelaySeconds = 1f;
@@ -354,6 +358,7 @@ namespace Game.Character
         public int StagesPerChapter => Mathf.Max(1, _stagesPerChapter);
         public float ExitTouchRadius => _exitTouchRadius;
         public int HostStartHpPercent => Mathf.Clamp(_hostStartHpPercent, 10, 100);
+        public float RangeRingAlpha => Mathf.Clamp01(_rangeRingAlpha);
         public float EmergencyDelaySeconds => _emergencyDelaySeconds;
         public int EmergencyHostHpPercent => Mathf.Clamp(_emergencyHostHpPercent, 5, 100);
         public int EmergencyGhostCost => Mathf.Max(0, _emergencyGhostCost);
