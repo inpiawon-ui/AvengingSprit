@@ -1258,14 +1258,14 @@ SPAWN	amazon	2.5	6.5	1
 SPAWN	skeleton	6.5	6.5	0
 SPAWN	boar	0.5	5.5	0
 SPAWN	skeleton	8.5	5.5	0
-ROOM	ROOM_CH7_011	바위 문	집행자 셋이 바위 문 뒤에 줄을 선다 — 바위를 밀거나 문 가운데 상자를 터뜨려 열고, 살라만더가 문턱에 불을 뿌린다
+ROOM	ROOM_CH7_011	바위 문	집행자 셋이 바위 문 뒤에 줄을 선다 — 양옆 틈은 피스톤이 박자로 막는다 — 바위를 밀거나 가운데 상자를 터뜨려 열고, 살라만더가 문턱에 불을 뿌린다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	BLOCK	0.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	PISTON_E	0.5	8.5	1	1	1	1	0	NONE	0	0
 OBJ	PUSH_ROCK	3.5	8.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	5	8.5	2	1	1	1	0	NONE	0	0
 OBJ	PUSH_ROCK	6.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	BLOCK	9.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	PISTON_W	9.5	8.5	1	1	1	1	0	NONE	0	0
 OBJ	EXPLOSIVE_BARREL	4.5	7.5	1	1	1	1	0	NONE	0	0
 OBJ	EXPLOSIVE_BARREL	5.5	7.5	1	1	1	1	0	NONE	0	0
 OBJ	PROP_TALL	1.5	6.5	1	1	1	1	1	NONE	0	0

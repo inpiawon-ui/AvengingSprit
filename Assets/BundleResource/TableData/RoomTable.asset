@@ -19438,8 +19438,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BLOCK_3
-      _kind: BLOCK
+    - _objectId: PISTON_E_3
+      _kind: PISTON_E
       _at: {x: 0.5, y: 8.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
@@ -19490,8 +19490,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BLOCK_7
-      _kind: BLOCK
+    - _objectId: PISTON_W_7
+      _kind: PISTON_W
       _at: {x: 9.5, y: 8.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1

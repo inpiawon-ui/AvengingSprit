@@ -114,6 +114,11 @@ namespace Game.Module.InGame
                     SetupFlame(ob);
                     break;
 
+                case "PISTON_E":
+                case "PISTON_W":
+                    SetupPiston(ob);   // BattleDirector.Piston
+                    break;
+
                 case "DROP_ZONE":
                     // 자리표시만 한다 — 바닥에 아무것도 안 그린다. 보이는 것은 예고 원과 떨어지는 파편뿐이다.
                     if (ob.Img != null) ob.Img.enabled = false;
@@ -242,6 +247,7 @@ namespace Game.Module.InGame
                 if (o.Kind == null) continue;
 
                 if (IsFlameJet(o)) { TickFlame(o, me, foot, dt); continue; }
+                if (IsPiston(o)) { TickPiston(o, me, foot, dt); continue; }
 
                 switch (o.Kind)
                 {

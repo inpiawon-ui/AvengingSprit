@@ -85,6 +85,8 @@ GLYPH = {
     '^': ('JERSEY_ROW', 3, 1),       # 낮은 콘크리트 블록 셋 한 줄
     '&': ('SCRAP_PILE', 2, 1),       # 납작한 고철 판 무더기
     '?': ('WRECK_CAR', 2, 1),        # 위에서 본 납작한 폐차
+    ']': ('PISTON_E', 1, 1),         # 피스톤 압착기 — 머리가 오른쪽으로 2 m 튀어나왔다 들어간다(7챕터)
+    '[': ('PISTON_W', 1, 1),         # 피스톤 압착기 — 왼쪽으로
     '@': ('PIT', 2, 2),              # 바닥 구덩이 — 몸은 못 건너고 탄은 넘어간다(도랑과 같다)
 }
 
@@ -97,7 +99,7 @@ LOW_SHIELD = {'SANDBAG', 'BARREL_PILE', 'FALLEN_PILLAR', 'JERSEY_ROW', 'SCRAP_PI
 COVER = TALL | LOW_SHIELD
 # 몸을 막는 것
 SOLID = TALL | LOW_SHIELD | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER', 'SWING_HAMMER_H',
-                'BLOCK', 'PROP_WIDE', 'FLAME_JET_S', 'FLAME_JET_E', 'FLAME_JET_W'}
+                'BLOCK', 'PROP_WIDE', 'FLAME_JET_S', 'FLAME_JET_E', 'FLAME_JET_W', 'PISTON_E', 'PISTON_W'}
 # 몸은 못 건너지만 탄은 지나가는 것
 CHANNEL = {'CHANNEL_H', 'CHANNEL_V', 'PIT'}
 # 밟으면 아픈 것 (피해, 간격)
@@ -112,6 +114,7 @@ FLOOR = {'DROP_ZONE', 'SLOW_POOL', 'MINE'}
 BLADE_RADIUS = 2.2
 HAMMER_HALF_TRAVEL = 1.7
 SLIDE_HALF_TRAVEL = 2.0
+PISTON_REACH = 2.0           # 피스톤 머리가 몸통 밖으로 나가는 거리(m) — BattleDirector.Piston 과 같다
 
 # ── 챕터 정의 — chapters.tsv 가 단일 출처다(유니티 임포터도 같은 표를 읽는다) ──
 # 챕터 수 · 잡몹 목록 · 적 수 범위를 여기 코드에 적지 않는다. 새 챕터는 그 표에 한 줄을 더한다.
@@ -302,10 +305,14 @@ def sweep_rect(o):
         return cx - w / 2 - SLIDE_HALF_TRAVEL, cy - h / 2, cx + w / 2 + SLIDE_HALF_TRAVEL, cy + h / 2
     if kind == 'SLIDE_BLADE_V':
         return cx - w / 2, cy - h / 2 - SLIDE_HALF_TRAVEL, cx + w / 2, cy + h / 2 + SLIDE_HALF_TRAVEL
+    if kind == 'PISTON_E':                         # 몸통 + 오른쪽으로 뻗는 2 m
+        return cx - w / 2, cy - h / 2, cx + w / 2 + PISTON_REACH, cy + h / 2
+    if kind == 'PISTON_W':
+        return cx - w / 2 - PISTON_REACH, cy - h / 2, cx + w / 2, cy + h / 2
     return rect(o)
 
 
-MOVERS = ('ROTATING_BLADE', 'SWING_HAMMER', 'SWING_HAMMER_H', 'SLIDE_BLADE_H', 'SLIDE_BLADE_V')
+MOVERS = ('ROTATING_BLADE', 'SWING_HAMMER', 'SWING_HAMMER_H', 'SLIDE_BLADE_H', 'SLIDE_BLADE_V', 'PISTON_E', 'PISTON_W')
 
 
 def inside(x, y, r, margin=0.0):
@@ -390,7 +397,7 @@ def check(room, errors, warns):
         sw = sweep_rect(o)
         if kind in ('SWING_HAMMER', 'SLIDE_BLADE_V') and (sw[1] < 0.3 or sw[3] > GATE_TOP):
             errors.append(f'{tag}: {kind}({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
-        if kind in ('SWING_HAMMER_H', 'SLIDE_BLADE_H') and (sw[0] < 0 or sw[2] > W):
+        if kind in ('SWING_HAMMER_H', 'SLIDE_BLADE_H', 'PISTON_E', 'PISTON_W') and (sw[0] < 0 or sw[2] > W):
             errors.append(f'{tag}: {kind}({o[1]},{o[2]}) 왕복 길이 방 밖으로 나간다')
         if kind == 'ROTATING_BLADE' and (o[1] - BLADE_RADIUS < 0 or o[1] + BLADE_RADIUS > W):
             warns.append(f'{tag}: 톱니({o[1]},{o[2]}) 날이 벽 그림에 반쯤 들어간다')
@@ -508,6 +515,7 @@ COL = {'PILLAR': (205, 190, 120), 'CRATE': (170, 120, 70), 'BULK': (150, 140, 12
        'LASER_H': (255, 80, 120), 'LASER_V': (255, 80, 120), 'SLIDE_BLADE_H': (240, 240, 250),
        'SLIDE_BLADE_V': (240, 240, 250), 'SWING_HAMMER_H': (200, 200, 230),
        'FLAME_JET_S': (200, 80, 50), 'FLAME_JET_E': (200, 80, 50), 'FLAME_JET_W': (200, 80, 50),
+       'PISTON_E': (240, 190, 40), 'PISTON_W': (240, 190, 40),
        'DROP_ZONE': (120, 70, 70), 'SLOW_POOL': (110, 170, 90), 'MINE': (230, 50, 50),
        'BLOCK': (190, 200, 205), 'PROP_TALL': (150, 160, 200), 'PROP_WIDE': (170, 150, 120),
        'SANDBAG': (190, 170, 120), 'BARREL_PILE': (90, 110, 150), 'FALLEN_PILLAR': (175, 175, 170),
