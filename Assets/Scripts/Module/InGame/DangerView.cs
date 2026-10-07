@@ -36,7 +36,11 @@ namespace Game.Module.InGame
         private const float FillPixels = 192f;
         /// <summary>테두리 띠 그림 한 장이 둘레를 따라 차지하는 길이(px)와 띠 두께(px).</summary>
         private const float EdgeTilePixels = 128f;
-        private const float EdgeWidth = 14f;
+        /// <summary>
+        /// 테두리 띠 두께(px). 2차 그림(PD 확정 2026-10-07 — 테두리 E · 안쪽 D)은 띠 안에 이중선 + 안쪽으로 번지는
+        /// 그라데이션이 다 들어 있다 — 그라데이션이 안쪽으로 넉넉히 퍼지게 두껍게 편다(선 자체는 3 px 안팎).
+        /// </summary>
+        private const float EdgeWidth = 34f;
 
         private const float AppearSeconds = 0.18f;
         private const float AppearFrom = 0.72f;
@@ -290,15 +294,16 @@ namespace Game.Module.InGame
             switch (_layer)
             {
                 case Layer.Fill:
-                    c.a = _safe ? (art ? 0.55f : SafeTint.a)
-                                : (art ? Mathf.Lerp(0.45f, 0.70f, breath) : Mathf.Lerp(0.35f, 0.75f, breath));
+                    // 2차 그림은 그라데이션이 테두리 띠에 있다 — 채움은 도형 전체를 아주 옅게 물들이기만 한다
+                    c.a = _safe ? (art ? 0.16f : SafeTint.a)
+                                : (art ? Mathf.Lerp(0.10f, 0.18f, breath) : Mathf.Lerp(0.35f, 0.75f, breath));
                     break;
                 case Layer.Core:
                     // 다 찰 무렵 가장 진하다. 안전지대는 차오르지 않는다(늘 서 있을 자리다)
-                    c.a = _safe ? 0f : Mathf.Lerp(0.35f, 0.85f, _progress);
+                    c.a = _safe ? 0f : Mathf.Lerp(0.06f, 0.30f, _progress);   // 차오름은 은은하게 — 진하면 테두리가 묻힌다
                     break;
                 default:
-                    c.a = Mathf.Lerp(0.70f, 1f, breath);
+                    c.a = Mathf.Lerp(0.88f, 1f, breath);
                     break;
             }
             if (flash > 0f) c.a = Mathf.Max(c.a, flash);   // 터지는 순간 한 번 진해진다
@@ -377,7 +382,7 @@ namespace Game.Module.InGame
                 }
 
             float breath = Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI));
-            float width = EdgeWidth * Mathf.Lerp(0.8f, 1.25f, breath) * (_flash > 0f ? 1.6f : 1f);
+            float width = EdgeWidth * Mathf.Lerp(0.92f, 1.08f, breath) * (_flash > 0f ? 1.3f : 1f);
             var c = color;
             bool art = Art != null;
             float flowU = art ? -_age * 0.8f : 0f;   // 빛이 둘레를 따라 흐른다
