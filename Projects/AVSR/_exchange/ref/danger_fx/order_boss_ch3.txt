@@ -1,0 +1,16 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 도형을 그려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 공격 예고 「보스마다 맞춘」 시안 — 파이썬(밤거리 · 보라 네온)
+
+PD 생각 : 예고를 범용 하나로 쓰거나, 아예 **보스마다 맞춰** 새로 구성하거나. 이 시안은 뒤쪽 — 보스마다 맞춘 것이다.
+지금 게임 화면(이 보스방) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/now_boss_ch3.png (720 x 1280)
+지난 시안 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/mock_styles_ABC.png — PD 는 A(경고 테이프) 방향이 좋지만 테두리는 **얇게**, 안쪽은 **사선 빗금 말고** 예쁘게.
+
+■ 구성 (보스가 바뀌어도 이 뼈대는 같다 — 위험이 한눈에 읽혀야 한다)
+  · 채움 : 반투명 빨강, 가장자리가 진하고 가운데로 갈수록 옅어지는 부드러운 그라데이션(빗금 · 격자 없음). 바닥이 비쳐 보인다.
+  · 테두리 : **얇은**(화면 3~4 px) 빨강 선 한 줄.
+  · 보스 무늬 : 테두리 위에만 짧은 마디로 얹는다 — **뱀 비늘** 마디 — 독 초록 비늘 무늬가 테두리를 따라 짧게 이어진다. 채움 안에는 넣지 않는다.
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/mock_boss_ch3.png — 720 x 1280 (또는 941 x 1672), 불투명
+  · 위 화면과 같은 화면 · 같은 구도에, 한 화면에 세 가지 : ① 보스 둘레 원, ② 보스에서 아래로 뻗는 직선 띠(폭 1.5 m 쯤), ③ 보스 앞 부채꼴(90도).
+  · 픽셀 아트 그림체. 글자 · 새 UI 를 더하지 마라.
+끝나면 경로만 알려라.
