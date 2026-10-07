@@ -42,17 +42,55 @@ namespace Game.Module.InGame
 
         private void TickShake(float dt)
         {
+            TickKick(dt);
             if (_shake <= 0f)
             {
-                if (_shakeOffset != Vector2.zero) { _shakeOffset = Vector2.zero; ApplyScroll(); }
+                if (_shakeOffset != _kick) { _shakeOffset = _kick; ApplyScroll(); }
                 return;
             }
 
             _shake = Mathf.Max(0f, _shake - ShakeDecayPerSecond * dt);
             // 매 프레임 방향을 새로 뽑는다. 한 축으로만 떨면 흔들림이 아니라 미끄러짐이다.
             float a = (float)_rng.NextDouble() * Mathf.PI * 2f;
-            _shakeOffset = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * _shake;
+            _shakeOffset = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * _shake + _kick;
             ApplyScroll();
+        }
+
+        // ── 반동(kick) — 한 방향으로 밀렸다 부드럽게 돌아온다 (2026-10-07) ──────
+        //
+        // 떨림(Shake)은 매 프레임 방향이 바뀌어 크면 어지럽다. 치명타 · 낙뢰 같은 「한 방」은
+        // **맞은 방향으로 한 번 밀렸다가 돌아오는** 반동이 자연스럽다(코덱스 진단 — 1~2 px, 3~5 프레임).
+        // 연사 몸은 치명타가 자주 터지므로 간격을 둔다 — 계속 밀리면 화면이 미끄러진다.
+
+        private const float KickReturnPerSecond = 18f;   // 클수록 빨리 돌아온다(지수 감쇠)
+        private const float CritKickPixels = 2.5f;
+        private const float CritKickGap = 0.35f;         // 치명타 반동 사이 최소 간격(실제 시간)
+
+        private Vector2 _kick;
+        private float _lastCritKickAt = -1f;
+
+        /// <summary><paramref name="dir"/> 방향으로 <paramref name="pixels"/> 만큼 밀었다 돌려놓는다.</summary>
+        private void Kick(Vector2 dir, float pixels)
+        {
+            if (dir.sqrMagnitude < 0.0001f) return;
+            var k = dir.normalized * Mathf.Min(ShakeMaxPixels, pixels);
+            if (k.sqrMagnitude > _kick.sqrMagnitude) _kick = k;   // 큰 쪽만 — 겹쳐 더하면 밀려 나간다
+        }
+
+        /// <summary>치명타 반동 — 간격 안이면 평타 떨림만. 연사 몸이 화면을 계속 밀지 않게.</summary>
+        private void CritKick(Vector2 dir)
+        {
+            float now = Time.unscaledTime;
+            if (now - _lastCritKickAt < CritKickGap) { Shake(ShakeOnHit); return; }
+            _lastCritKickAt = now;
+            Kick(dir, CritKickPixels);
+        }
+
+        private void TickKick(float dt)
+        {
+            if (_kick == Vector2.zero) return;
+            _kick *= Mathf.Exp(-KickReturnPerSecond * dt);
+            if (_kick.sqrMagnitude < 0.01f) _kick = Vector2.zero;
         }
 
         // ── 히트스톱 ─────────────────────────────────────────────
@@ -81,6 +119,7 @@ namespace Game.Module.InGame
         private void ClearJuice()
         {
             _shake = 0f;
+            _kick = Vector2.zero;
             _shakeOffset = Vector2.zero;
             if (_hitStopLeft > 0f) { _hitStopLeft = 0f; Time.timeScale = 1f; }
             ClearBigJuice();
@@ -92,7 +131,7 @@ namespace Game.Module.InGame
         // 후반 챕터에서 평타 하나가 화면을 뒤흔든다 — 수치는 계속 커지기 때문이다.
 
         private const float ShakeOnHit = 1.6f;      // 평타. 있는지 없는지 모를 정도
-        private const float ShakeOnCrit = 4.5f;     // 치명타
+        // 치명타는 떨림(4.5 px)에서 반동(`CritKick` 2.5 px, 0.35초 간격)으로 바꿨다 — 연사에서 어지러웠다(2026-10-07)
         private const float ShakeOnKill = 3.0f;     // 잡았을 때
         private const float ShakeOnBossHurt = 5.5f; // 보스를 때렸을 때
         private const float ShakeOnPlayerHurt = 4f; // 내가 맞았을 때
