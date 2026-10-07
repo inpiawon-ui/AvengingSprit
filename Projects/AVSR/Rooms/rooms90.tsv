@@ -266,87 +266,81 @@ SPAWN	actor_enforcer	6.5	12.5	0
 SPAWN	scrapgunner	2.5	11.5	0
 SPAWN	salamander	1.5	5.5	1
 SPAWN	hopper_smg	8.5	5.5	1
-ROOM	ROOM_CH3_001	밤거리 초입	입구 앞 연사 몸부터 빼앗고 시작한다 — 해골 셋이 광장을 가로질러 몰려오면 다가오는 떼를 긁는다. 벽 포탑 아래 줄은 피한다
+ROOM	ROOM_CH3_001	네온 광장	입구 위 연사 호퍼부터 빼앗는다 — 해골(술) 셋이 광장 양쪽에서 몰려오면 다가오는 떼를 긁는다. 벽 포탑이 쏘는 두 줄에는 서지 않는다
 OBJ	WALL_TURRET_S	2.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	7.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	1.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	8.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	1.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	4.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	3	3.5	2	1	1	1	0	NONE	0	0
-OBJ	PROP_WIDE	7	3.5	2	1	1	1	0	NONE	0	0
+OBJ	SANDBAG	5	10.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	7	6.5	2	1	1	1	1	NONE	0	0
+SPAWN	skeleton	1.5	11.5	0
 SPAWN	coilwalker	4.5	11.5	0
-SPAWN	skeleton	2.5	10.5	0
-SPAWN	skeleton	7.5	10.5	0
-SPAWN	skeleton	4.5	9.5	0
+SPAWN	skeleton	8.5	11.5	0
+SPAWN	skeleton	3.5	9.5	0
 SPAWN	hopper_smg	5.5	6.5	1
-ROOM	ROOM_CH3_002	배수로	코일 보행기가 도랑 건너 기둥 뒤에서 쏜다 — 탄은 도랑을 건넌다, 단발 몸이 건너편을 하나씩 딴다
-OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	CHANNEL_H	1	8.5	2	1	1	0	0	NONE	0	0
-OBJ	CHANNEL_H	3	8.5	2	1	1	0	0	NONE	0	0
-OBJ	CHANNEL_H	7	8.5	2	1	1	0	0	NONE	0	0
-OBJ	CHANNEL_H	9	8.5	2	1	1	0	0	NONE	0	0
-OBJ	PROP_TALL	1.5	6.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	3	3.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	7	3.5	2	1	1	1	0	NONE	0	0
+ROOM	ROOM_CH3_002	배수로	코일 보행기(술) 둘이 도랑 건너 기둥 곁에서 쏜다 — 탄은 도랑을 건넌다. 갱스터(날)의 단발이 건너편을 하나씩 딴다. 고릴라는 다리로만 건너온다
+OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	CHANNEL_H	1	9.5	2	1	1	0	0	NONE	0	0
+OBJ	CHANNEL_H	3	9.5	2	1	1	0	0	NONE	0	0
+OBJ	CHANNEL_H	7	9.5	2	1	1	0	0	NONE	0	0
+OBJ	CHANNEL_H	9	9.5	2	1	1	0	0	NONE	0	0
+OBJ	FALLEN_PILLAR	3	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	coilwalker	3.5	11.5	0
 SPAWN	coilwalker	6.5	11.5	0
-SPAWN	gangster	2.5	6.5	1
-SPAWN	actor_enforcer	6.5	6.5	0
-SPAWN	skeleton	7.5	5.5	0
-ROOM	ROOM_CH3_003	골목 십자포	십자 포탑이 사거리 한가운데서 네 길을 다 쏜다, 집행자가 길을 따라 온다 — 건물 모퉁이에서 흡혈 단발로 버틴다
-OBJ	BULK	2	11	2	2	1	1	1	NONE	0	0
-OBJ	BULK	8	11	2	2	1	1	1	NONE	0	0
-OBJ	BULK	2	6	2	2	1	1	1	NONE	0	0
-OBJ	BULK	8	6	2	2	1	1	1	NONE	0	0
+SPAWN	actor_enforcer	4.5	10.5	0
+SPAWN	skeleton	7.5	6.5	0
+SPAWN	gangster	1.5	5.5	1
+ROOM	ROOM_CH3_003	십자포 사거리	십자 포탑(힘)이 사거리 한가운데서 네 길을 쏘고 고릴라(힘) 둘이 길을 따라 온다 — 흡혈귀(술)가 폐차 모퉁이 뒤에서 단발로 버틴다
+OBJ	WRECK_CAR	2	10.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	8	10.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	2	5.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	8	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	skeleton	4.5	10.5	0
 SPAWN	actor_enforcer	1.5	8.5	0
 SPAWN	turret_cross	4.5	8.5	0
-SPAWN	vampire	7.5	8.5	1
-SPAWN	actor_enforcer	6.5	7.5	0
-ROOM	ROOM_CH3_005	이중 배수로	엇갈린 도랑 두 줄이 S자 길을 만든다, 술 쪽이 띠마다 선다 — 닌자가 도랑 너머로 먼저 쏘고 들어간다
-OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	9.5	11.5	1	1	1	1	1	NONE	0	0
+SPAWN	actor_enforcer	8.5	8.5	0
+SPAWN	vampire	6.5	6.5	1
+ROOM	ROOM_CH3_005	이중 배수로	엇갈린 도랑 두 줄이 S자 길을 만든다, 해골(술)이 띠마다 선다 — 닌자(날)가 도랑 너머로 먼저 쏘고 들어간다
+OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_H	5	9.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	7	9.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	9	9.5	2	1	1	0	0	NONE	0	0
-OBJ	PILLAR	3.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	RAIL	9.5	7	1	2	1	1	1	NONE	0	0
-OBJ	CHANNEL_H	1	5.5	2	1	1	0	0	NONE	0	0
-OBJ	CHANNEL_H	3	5.5	2	1	1	0	0	NONE	0	0
-OBJ	CHANNEL_H	5	5.5	2	1	1	0	0	NONE	0	0
-SPAWN	coilwalker	2.5	11.5	0
-SPAWN	ninja	7.5	11.5	1
-SPAWN	skeleton	5.5	7.5	0
-SPAWN	coilwalker	8.5	7.5	0
-SPAWN	white_wizard	2.5	6.5	1
-SPAWN	skeleton	0.5	4.5	0
-ROOM	ROOM_CH3_006	포탑 골목	집행자 둘과 십자 포탑이 난간 사이 골에 선다, 레이저 문 앞에서 뭉친다 — 불 뿌리는 몸이 뭉친 자리를 태운다
+OBJ	CHANNEL_H	1	6.5	2	1	1	0	0	NONE	0	0
+OBJ	CHANNEL_H	3	6.5	2	1	1	0	0	NONE	0	0
+OBJ	CHANNEL_H	5	6.5	2	1	1	0	0	NONE	0	0
+OBJ	FALLEN_PILLAR	3	5.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	9	5.5	2	1	1	1	1	NONE	0	0
+SPAWN	coilwalker	1.5	11.5	0
+SPAWN	coilwalker	8.5	11.5	0
+SPAWN	skeleton	1.5	7.5	0
+SPAWN	skeleton	7.5	7.5	0
+SPAWN	white_wizard	1.5	5.5	1
+SPAWN	ninja	7.5	5.5	1
+ROOM	ROOM_CH3_006	레이저 골	고릴라(힘) 둘이 도랑 사이 골을 따라 내려오고 십자 포탑이 골 위에서 쏜다 — 샐러맨더(술)가 골 입구 레이저 앞에 뭉친 자리를 태운다
 OBJ	WALL_TURRET_S	1.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	8.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	RAIL	2.5	10	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	7.5	10	1	2	1	1	1	NONE	0	0
-OBJ	WALL_TURRET_E	0.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	WALL_TURRET_W	9.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	RAIL	2.5	6	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	7.5	6	1	2	1	1	1	NONE	0	0
+OBJ	CHANNEL_V	3.5	10	1	2	1	0	0	NONE	0	0
+OBJ	CHANNEL_V	6.5	10	1	2	1	0	0	NONE	0	0
+OBJ	CHANNEL_V	3.5	8	1	2	1	0	0	NONE	0	0
+OBJ	CHANNEL_V	6.5	8	1	2	1	0	0	NONE	0	0
+OBJ	CHANNEL_V	3.5	6	1	2	1	0	0	NONE	0	0
+OBJ	CHANNEL_V	6.5	6	1	2	1	0	0	NONE	0	0
 OBJ	LASER_H	5	4.5	4	1	0	0	0	LASER	12	0.6
-SPAWN	turret_cross	5.5	10.5	0
-SPAWN	coilwalker	3.5	8.5	0
-SPAWN	salamander	6.5	7.5	1
-SPAWN	actor_enforcer	4.5	6.5	0
-SPAWN	skeleton	1.5	5.5	0
-SPAWN	actor_enforcer	8.5	5.5	0
-ROOM	ROOM_CH3_007	지하도 계단	해골과 코일이 계단 단마다 흩어져 내려온다 — 기관총 몸이 단을 오르며 긁는다. 계단참에 파편이 떨어진다
+OBJ	SANDBAG	8	4.5	2	1	1	1	1	NONE	0	0
+SPAWN	turret_cross	4.5	11.5	0
+SPAWN	coilwalker	7.5	11.5	0
+SPAWN	actor_enforcer	4.5	10.5	0
+SPAWN	actor_enforcer	5.5	8.5	0
+SPAWN	skeleton	4.5	6.5	0
+SPAWN	salamander	7.5	5.5	1
+ROOM	ROOM_CH3_007	지하도 계단	해골과 코일(술)이 계단 단마다 흩어져 내려온다 — 기관총 코만도(날)가 단을 오르며 긁는다. 계단참에 파편이 떨어진다
 OBJ	PROP_TALL	9.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	LOW_COVER	7.5	10.5	3	1	1	1	0	NONE	0	0
+OBJ	JERSEY_ROW	7.5	10.5	3	1	1	1	1	NONE	0	0
 OBJ	PILLAR	5.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	LOW_COVER	4.5	8.5	3	1	1	1	0	NONE	0	0
+OBJ	JERSEY_ROW	4.5	8.5	3	1	1	1	1	NONE	0	0
 OBJ	DROP_ZONE	2	7	2	2	0	0	0	NONE	0	0
 OBJ	PILLAR	9.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	LOW_COVER	1.5	5.5	3	1	1	1	0	NONE	0	0
+OBJ	JERSEY_ROW	1.5	5.5	3	1	1	1	1	NONE	0	0
 OBJ	DROP_ZONE	7	4	2	2	0	0	0	NONE	0	0
 SPAWN	coilwalker	7.5	11.5	0
 SPAWN	coilwalker	3.5	9.5	0
@@ -354,33 +348,25 @@ SPAWN	guru	4.5	7.5	1
 SPAWN	commando_mg	7.5	7.5	1
 SPAWN	skeleton	4.5	6.5	0
 SPAWN	skeleton	8.5	5.5	0
-ROOM	ROOM_CH3_009	네온 사거리	코일 보행기 셋이 가로등 숲에 숨어 쏜다 — 붙어 치는 아마존이 기둥을 돌아 들어간다. 가운데 줄은 벽 포탑 사선
+ROOM	ROOM_CH3_009	사선 네온	코일 보행기(술) 둘이 사선으로 늘어선 폐차 뒤에서 쏜다 — 아마존(날)이 폐차 그늘을 타고 비스듬히 올라가 벤다. 가운데 줄은 벽 포탑 사선
 OBJ	WALL_TURRET_S	5.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	4.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	1.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	1.5	3.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	8.5	3.5	1	1	1	1	1	NONE	0	0
-SPAWN	coilwalker	3.5	11.5	0
-SPAWN	coilwalker	6.5	11.5	0
-SPAWN	amazon	4.5	8.5	1
-SPAWN	coilwalker	4.5	7.5	0
-SPAWN	skeleton	3.5	6.5	0
-SPAWN	robot	7.5	6.5	1
-ROOM	ROOM_CH3_010	뒷골목	집행자가 상자 깔때기의 좁은 목으로 한 줄로 나온다 — 꿰뚫는 흰 마법사가 목을 겨눈다. 십자 포탑 둘이 깔때기 안을 쏜다
-OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	6.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	2	10.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	4	8.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	6	6.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	9	5.5	2	1	1	1	1	NONE	0	0
+SPAWN	coilwalker	1.5	11.5	0
+SPAWN	coilwalker	5.5	9.5	0
+SPAWN	skeleton	7.5	8.5	0
+SPAWN	skeleton	1.5	7.5	0
+SPAWN	amazon	1.5	5.5	1
+SPAWN	robot	7.5	5.5	1
+ROOM	ROOM_CH3_010	뒷골목 깔때기	고릴라(힘) 둘이 상자 깔때기의 좁은 목으로 한 줄로 나온다 — 백마법사(술)의 관통이 목을 꿴다. 십자 포탑 둘이 깔때기 안을 쏜다
+OBJ	BLOCK	3.5	11.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	6.5	11.5	1	1	1	1	0	NONE	0	0
 OBJ	CRATE	3	10.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	7	10.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	2	9.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	9.5	2	1	1	1	0	NONE	0	0
+OBJ	BARREL_PILE	8	9.5	2	1	1	1	1	NONE	0	0
 OBJ	CRATE	1	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	9	8.5	2	1	1	1	0	NONE	0	0
 OBJ	PROP_TALL	9.5	6.5	1	1	1	1	1	NONE	0	0
@@ -392,13 +378,13 @@ SPAWN	skeleton	4.5	8.5	0
 SPAWN	turret_cross	2.5	7.5	0
 SPAWN	turret_cross	7.5	7.5	0
 SPAWN	hopper	7.5	6.5	1
-ROOM	ROOM_CH3_011	사이렌 거리	세로 도랑이 거리를 둘로 가른다, 술 쪽이 양쪽에 나뉘어 선다 — 단발 몸이 도랑 너머 건너편까지 쏜다. 길마다 레이저 문
+ROOM	ROOM_CH3_011	사이렌 거리	세로 도랑이 거리를 둘로 가르고 코일(술)이 양쪽에 나뉘어 선다 — 서그(날)의 단발이 도랑 너머 건너편까지 쏜다. 길마다 레이저 문이 번갈아 켜진다
 OBJ	WALL_TURRET_S	1.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	8.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	3.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	3	10.5	2	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_V	4.5	10	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	5.5	10	1	2	1	0	0	NONE	0	0
-OBJ	PROP_TALL	6.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	7	10.5	2	1	1	1	1	NONE	0	0
 OBJ	LASER_H	8	9.5	4	1	0	0	0	LASER	12	0.6
 OBJ	CHANNEL_V	4.5	8	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	5.5	8	1	2	1	0	0	NONE	0	0
@@ -413,11 +399,12 @@ SPAWN	skeleton	7.5	7.5	0
 SPAWN	skeleton	1.5	6.5	0
 SPAWN	commando_grenade	1.5	5.5	1
 SPAWN	actor_enforcer	8.5	5.5	0
-ROOM	ROOM_CH3_013	십자포 둘	십자 포탑 둘의 축이 어긋나 그늘은 가운데 덩어리 뒤뿐이다, 집행자가 덩어리로 몰린다 — 눈 뿌리는 몸이 뭉친 곳을 얼린다
+ROOM	ROOM_CH3_013	십자포 둘	십자 포탑(힘) 둘의 축이 어긋나 그늘은 가운데 폐차 더미 뒤뿐이다 — 고릴라(힘)가 그 그늘로 몰린다. 설녀(술)가 뭉친 곳을 얼린다
 OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_W	9.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	BULK	5	9	2	2	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	5	9.5	2	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	5	8.5	2	1	1	1	1	NONE	0	0
 OBJ	DROP_ZONE	7	6	2	2	0	0	0	NONE	0	0
 OBJ	WALL_TURRET_E	0.5	5.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	3	4.5	2	1	1	1	0	NONE	0	0
@@ -429,15 +416,15 @@ SPAWN	turret_cross	7.5	8.5	0
 SPAWN	actor_enforcer	1.5	7.5	0
 SPAWN	actor_enforcer	8.5	7.5	0
 SPAWN	snowwoman	3.5	6.5	1
-ROOM	ROOM_CH3_014	밤거리 끝	총정리 — 해골이 도랑 고리 안에서 다리 하나로 줄지어 나온다, 연사하는 몸이 다리 목을 긁는다. 십자 포탑이 네 다리를 다 쏜다
+ROOM	ROOM_CH3_014	밤거리 끝	3챕터 총정리 — 해골(술)이 도랑 고리 안에서 다리 하나로 줄지어 나온다. 호퍼(날)의 연사가 다리 목을 긁는다. 십자 포탑이 네 다리를 다 쏜다
 OBJ	WALL_TURRET_S	2.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	7.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	LASER_H	5	11.5	4	1	0	0	0	LASER	12	0.6
 OBJ	CHANNEL_H	3	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	7	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	2.5	9	1	2	1	0	0	NONE	0	0
-OBJ	PILLAR	3.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	6.5	9.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	4	9.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	6	9.5	2	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_V	7.5	9	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	2.5	6	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	7.5	6	1	2	1	0	0	NONE	0	0

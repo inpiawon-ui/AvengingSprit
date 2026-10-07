@@ -94,6 +94,7 @@ namespace Game.Module.InGame
                 if (w.View != null) w.View.Hide();
                 ResolveWarn(w);
             }
+            TickRushFx(dt);   // 돌진 예고 위 흐르는 꺾쇠 · 흙먼지 (BattleDirector.Rush)
         }
 
         /// <summary>예고가 찼다 — 그 도형 안을 친다. 그린 도형과 **같은** `Contains` 로 잰다.</summary>
@@ -138,6 +139,7 @@ namespace Game.Module.InGame
                 w.Active = false;
                 if (w.View != null) w.View.Hide();
             }
+            StopRushFxOf(owner);
         }
 
         /// <summary>방을 나갈 때 — 남은 예고를 전부 거둔다.</summary>
@@ -148,6 +150,7 @@ namespace Game.Module.InGame
                 _warns[i].Active = false;
                 if (_warns[i].View != null) _warns[i].View.Hide();
             }
+            ClearRushFx();
         }
     }
 }

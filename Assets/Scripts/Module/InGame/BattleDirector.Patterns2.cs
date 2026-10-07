@@ -113,6 +113,7 @@ namespace Game.Module.InGame
                         StartWarn(BandShape(e.Position, dir, Meters(spec.WidthMeters),
                                             Vector2.Distance(e.PatternFrom, e.PatternTo)),
                                   spec.TellSeconds, Mathf.Max(1, e.Atk), owner: e);
+                        StartRushFx(e, e.PatternFrom, e.PatternTo, Meters(spec.WidthMeters), spec.TellSeconds, dust: true);
                         return true;
                     }
                     // 멧돼지는 물지 않는다 — 돌진 사이엔 다가오거나 숨을 고른다
@@ -165,7 +166,7 @@ namespace Game.Module.InGame
                     e.PatternTimer -= dt;
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 0;
-                    e.PatternTimer = DiveCooldown;
+                    e.PatternTimer = DiveSpecOf(e).CooldownSeconds;   // 멧돼지는 곧바로 다음 돌진을 노린다
                     if (e.Key == TrashEnforcerKey) ToggleGorillaMove(e);   // 다음은 도약
                     return true;
             }

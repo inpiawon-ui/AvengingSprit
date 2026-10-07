@@ -154,6 +154,10 @@ namespace Game.EditorTools
                 case 0:
                     // 방을 연다. 순번은 늘 1 — 순번이 쌓이면 방 배율(적 체력)이 오르고 보스 판정이 끼어든다
                     Time.timeScale = 1f;
+                    // 판의 챕터를 방의 챕터로 — 잡몹은 판 챕터 목록으로 갈아 끼워지므로(`TrashForSlot`),
+                    // 세이브가 1챕터면 3챕터 방에도 1챕터 잡몹이 섰다(2026-10-07)
+                    var m = System.Text.RegularExpressions.Regex.Match(id, @"_CH(\d+)_");
+                    if (m.Success) t.GetField("_runChapter", F).SetValue(director, int.Parse(m.Groups[1].Value));
                     t.GetField("_canonRoomId", F).SetValue(director, id);
                     t.GetMethod("EnterRoom", F).Invoke(director, new object[] { 1 });
                     SessionState.SetInt("RoomLayout.phase", 1);

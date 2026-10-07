@@ -68,6 +68,9 @@ namespace Game.Module.InGame
                         // 선이 곧 탄이다 — 조준선 안에 남아 있으면 맞는다
                         StartWarn(BandShape(e.Position, dir, Meters(SnipeWidthMeters), _roomSize.magnitude),
                                   SnipeTellSeconds, Mathf.Max(1, Mathf.RoundToInt(e.Atk * SnipeDamageMul)), owner: e);
+                        // 공용 꺾쇠 — 탄이 날아올 쪽 (BattleDirector.Rush)
+                        StartRushFx(e, e.Position, e.Position + dir * _roomSize.magnitude, Meters(SnipeWidthMeters),
+                                    SnipeTellSeconds, dust: false);
                         e.PatternPhase = 1;
                         e.PatternTimer = SnipeTellSeconds;
                     }

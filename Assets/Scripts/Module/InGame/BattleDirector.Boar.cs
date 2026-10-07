@@ -10,9 +10,12 @@ namespace Game.Module.InGame
     /// **평타가 없다.** 하는 일은 돌진 하나뿐이다 — 멈춰 겨누고(앞발 긁기) → 바닥에 띠 → 일직선으로 들이받으며 지나간다.
     /// 박쥐의 급강하(`TickDive`)와 같은 세 박자를 쓰되 더 멀리 · 더 굵게 · 더 길게 예고한다.
     ///
-    ///   예고 → 실행 → 빈틈 : 끝까지 달리면 0.9초 선다. **벽 · 물건에 박으면 1.6초 휘청인다** — 엄폐 앞에 서서
+    ///   예고 → 실행 → 빈틈 : 끝까지 달리면 0.6초 선다. **벽 · 물건에 박으면 1.6초 휘청인다** — 엄폐 앞에 서서
     ///   돌진을 끌어들이면 오래 때릴 수 있다(방의 물건이 「이용」 역할을 얻는다).
-    ///   돌진 사이에는 다가오기만 하고 물지 않는다 — 가까이 붙으면 그 자리에서 다시 겨눈다.
+    ///
+    ///   **돌진 → 돌진 → 돌진**(PD 2026-10-07 「한 번 돌진해서 갔으면 또 다른 곳으로 돌진해야 한다 — 붙어서 때리고만 있으면 의미가 없다」).
+    ///   돌진 사이에 서 있거나 물지 않는다. 너무 가까우면 내 둘레를 비스듬히 돌아 거리를 벌리고(달릴 길을 만든다),
+    ///   알맞은 거리면 옆걸음으로 각을 바꾸다가, 숨이 돌아오는 대로 **다른 방향에서** 다시 겨눈다.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -28,24 +31,29 @@ namespace Game.Module.InGame
         private readonly struct DiveSpec
         {
             public readonly float TriggerMeters, MinMeters, TellSeconds, DashSeconds, Meters, WidthMeters,
-                                  RecoverSeconds, WallStunSeconds;
+                                  RecoverSeconds, WallStunSeconds, CooldownSeconds;
 
             public DiveSpec(float trigger, float min, float tell, float dash, float meters, float width,
-                            float recover, float wallStun)
+                            float recover, float wallStun, float cooldown)
             {
                 TriggerMeters = trigger; MinMeters = min; TellSeconds = tell; DashSeconds = dash;
                 Meters = meters; WidthMeters = width; RecoverSeconds = recover; WallStunSeconds = wallStun;
+                CooldownSeconds = cooldown;
             }
         }
 
-        // 멧돼지 — 6 m 앞에서 겨눠 7 m 를 0.36초에 달린다(박쥐 5 m / 0.22초보다 길고 굵다). 예고 0.75초
-        private static readonly DiveSpec BoarDive = new(6.0f, 1.2f, 0.75f, 0.36f, 7.0f, 1.1f, 0.9f, 1.6f);
+        // 멧돼지 — 2.6 ~ 6 m 에서 겨눠 7 m 를 0.36초에 달린다(박쥐 5 m / 0.22초보다 길고 굵다). 예고 0.75초.
+        //   멈춤 0.6초 · 다음 돌진까지 0.35초 — 쉬지 않고 다시 달린다. 2.6 m 보다 가까우면 먼저 거리를 벌린다
+        private static readonly DiveSpec BoarDive = new(6.0f, 2.6f, 0.75f, 0.36f, 7.0f, 1.1f, 0.6f, 1.6f, 0.35f);
+        private const float BoarRunMps = 3.4f;        // 거리를 벌리며 도는 빠르기
+        private const float BoarStrafeMps = 1.8f;     // 알맞은 거리에서 각을 바꾸는 옆걸음
+        private const float BoarOrbitDegrees = 55f;   // 내게서 멀어지는 방향을 이만큼 옆으로 꺾어 돈다 — 다음 돌진은 다른 각에서
 
         private DiveSpec DiveSpecOf(Unit e)
             => e.Key == TrashBoarKey
                 ? BoarDive
                 : new DiveSpec(DiveTriggerMeters, DiveMinMeters, DiveTellSeconds, DiveDashSeconds,
-                               DiveMeters, DiveWidthMeters, DiveRecoverSeconds, DiveRecoverSeconds);
+                               DiveMeters, DiveWidthMeters, DiveRecoverSeconds, DiveRecoverSeconds, DiveCooldown);
 
         /// <summary>
         /// 겨누기 · 돌진 중에는 **피격 경직(0.1초)에 안 끊긴다** — 띠가 깔린 대로 정확히 달린다.
@@ -71,8 +79,12 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 돌진 사이 — 멧돼지는 물지 않는다. 겨눌 거리 밖이면 다가오고, 안이면 그 자리에서 숨을 고른다(앞발 긁기 전).
-        /// 처리했으면 true. 박쥐 · 고릴라는 false — 평소 흐름(쫓아와 문다)으로 내려간다.
+        /// 돌진 사이 — 멧돼지는 서 있지도 물지도 않는다. 처리했으면 true.
+        ///   멀다        → 다가온다
+        ///   너무 가깝다 → 내 둘레를 비스듬히 돌며 멀어진다(달릴 길을 만든다)
+        ///   알맞다      → 옆걸음으로 각을 바꾼다 — 숨이 돌아오면 `TickDive` 가 곧장 겨눈다
+        /// 도는 쪽은 몸마다 정해져 있다 — 둘이면 양쪽에서 갈라 들어온다.
+        /// 박쥐 · 고릴라는 false — 평소 흐름(쫓아와 문다)으로 내려간다.
         /// </summary>
         private bool HoldBetweenCharges(Unit e, Unit me, float distance, float dt)
         {
@@ -84,11 +96,28 @@ namespace Game.Module.InGame
                 e.SetMoving(true);
                 return true;
             }
-            var to = me.Position - e.Position;
-            if (to.sqrMagnitude > 0.0001f) e.SetFacing(to.normalized);
-            e.SetMoving(false);
-            e.SetState(EnemyState.Cooldown);
+
+            var away = e.Position - me.Position;
+            away = away.sqrMagnitude < 0.0001f ? -e.Facing : away.normalized;
+            float side = (e.GetInstanceID() & 1) == 0 ? 1f : -1f;
+            Vector2 dir;
+            float mps;
+            if (distance < Meters(BoarDive.MinMeters + 0.6f))
+            {
+                dir = Rotate(away, side * BoarOrbitDegrees);   // 멀어지며 옆으로 돈다
+                mps = BoarRunMps;
+            }
+            else
+            {
+                dir = new Vector2(-away.y, away.x) * side;    // 거리는 두고 옆으로만
+                mps = BoarStrafeMps;
+            }
+            e.SetState(EnemyState.Approach);
+            e.SetFacing(dir);
+            e.Position = SlideMove(e, e.Position, dir * (Meters(mps) * dt));
+            e.SetMoving(true);
             return true;
         }
+
     }
 }
