@@ -32,9 +32,9 @@ button:focus-visible { outline: 2px solid var(--ghost); outline-offset: 2px; }
 @media (max-width: 780px) { .main { grid-template-columns: minmax(0, 1fr); } }
 .stage { position: relative; width: 100%; max-width: 400px; aspect-ratio: 9 / 16; justify-self: center; touch-action: none; user-select: none; -webkit-user-select: none; }
 canvas { width: 100%; height: 100%; display: block; border-radius: 14px; background: #07060d; }
-.act { position: absolute; right: 4%; bottom: 3%; width: 22%; aspect-ratio: 1; border-radius: 50%; border: 0; font-family: var(--f-display); font-size: clamp(14px, 4.4vw, 19px); line-height: 1.1; cursor: pointer; background: var(--gold); color: #1a1400; box-shadow: 0 0 0 3px rgba(0,0,0,.35); }
-.act.throw { background: #ff7a59; color: #1a0800; }
-.act.off { background: #3a3358; color: #8d86b3; }
+.act { position: absolute; right: 2%; bottom: 1%; width: 25%; aspect-ratio: 190 / 235; border: 0; padding: 0 0 18% 0; font-family: var(--f-display); font-size: clamp(15px, 4.6vw, 20px); line-height: 1.1; cursor: pointer; color: #fff; background: center / contain no-repeat; text-shadow: 0 0 6px #000, 0 0 2px #000; }
+.act.throw { color: #ffb08a; }
+.act.off { opacity: .45; }
 .overlay { position: absolute; inset: 0; border-radius: 14px; background: rgba(9, 7, 18, .9); display: grid; place-content: center; gap: 12px; padding: 22px; text-align: center; overflow: auto; }
 .overlay h2 { font-family: var(--f-display); font-weight: 400; font-size: 27px; margin: 0; }
 .overlay .eyebrow { color: var(--muted); font-size: 12.5px; letter-spacing: .06em; }
@@ -103,7 +103,7 @@ const SPR = /*SPRITES*/{};
 const IMG = {};
 for (const k in SPR) { const i = new Image(); i.src = SPR[k]; IMG[k] = i; }
 
-const W = 360, H = 640, FT = 78, FB = 628, FL = 14, FR = 346;
+const W = 360, H = 640, FT = 118, FB = 636, FL = 10, FR = 350;
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 const DPR = Math.min(2, window.devicePixelRatio || 1);
 cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -160,13 +160,13 @@ const STAGES = [
   { type: 'back', title: '등 뒤가 약점',
     problem: '크러셔는 <b>나를 바라본다</b>. 방패는 앞쪽만 막는다 — 맞는 색으로, <b>등 뒤에서</b> 쳐야 깨진다',
     hint: '보스가 천천히 돈다. 빠른 근접 몸이면 등 뒤를 붙어 다니기 쉽고, 원거리 몸은 멀리서 돌아 들어가야 한다',
-    bosses: [{ key: 'crusher', x: 180, y: 300, shields: ['force', 'blade'] }],
+    bosses: [{ key: 'crusher', x: 180, y: 340, shields: ['force', 'blade'] }],
     minions: [['vampire', 'snowwoman', 'robot'], ['baseball', 'guru', 'amazon']],
     showKey: false, pattern: 2.6, parTime: 70, free: true },
   { type: 'twin', title: '쌍둥이',
     problem: '크러셔와 킹핀, 둘 다 쓰러뜨려야 체력이 깎인다. 한쪽 방패를 깨면 <b>6초 안에</b> 다른 쪽도 깨야 한다 — 늦으면 되살아난다',
     hint: '한쪽을 깨기 직전까지만 깎아 두고, 다른 쪽 열쇠로 갈아타라. 그다음 던지기 하나로 남은 쪽을 마저 깨면 6초 안에 둘 다 깨진다',
-    bosses: [{ key: 'crusher', x: 100, shields: ['force', 'magic'], scale: .8 }, { key: 'kingpin', x: 262, shields: ['blade', 'force'], scale: .8 }],
+    bosses: [{ key: 'crusher', x: 88, shields: ['force', 'magic'], scale: .78 }, { key: 'kingpin', x: 272, shields: ['blade', 'force'], scale: .78 }],
     minions: [['snowwoman', 'baseball', 'gangster', 'dragoon'], ['amazon', 'vampire', 'gangster', 'dragoon']],
     showKey: false, pattern: 3.2, parTime: 100, window: 6 },
 ];
@@ -227,11 +227,11 @@ function moveInput() {
 function startStage(i) {
   stageIdx = i;
   const S = STAGES[i];
-  G = { S, running: true, t: 0, energy: 100, body: null, gx: 180, gy: 580, channel: 0, chTarget: null, target: null,
+  G = { S, running: true, t: 0, energy: 100, body: null, gx: 180, gy: 600, channel: 0, chTarget: null, target: null,
         minions: [], shots: [], fx: [], texts: [], thrown: null, msg: null, msgT: 0,
         phase: 0, segs: S.bosses[0].shields.length, down: 0,
         possess: 0, throws: 0, deaths: 0, blocked: 0, keyLost: 0,
-        bosses: S.bosses.map(b => ({ key: b.key, x: b.x, home: b.x, y: b.y || 200, shields: b.shields, scale: b.scale || 1,
+        bosses: S.bosses.map(b => ({ key: b.key, x: b.x, home: b.x, y: b.y || 245, shields: b.shields, scale: b.scale || 1,
                                       shield: SHIELD_HP, broken: false, brokenT: 0, face: Math.PI / 2, pat: 1.6 + Math.random(), tele: null, flash: 0 })) };
   document.getElementById('log').innerHTML = '';
   hideOverlay();
@@ -242,10 +242,10 @@ const curOf = B => B.shields[G.phase];
 function beginPhase(n) {
   G.phase = n; G.down = 0;
   for (const B of G.bosses) { B.shield = SHIELD_HP; B.broken = false; B.brokenT = 0; B.tele = null; B.pat = 1.6; }
-  const list = G.S.minions[n], xs = list.length === 4 ? [50, 133, 227, 310] : [70, 180, 290];
+  const list = G.S.minions[n], xs = list.length === 4 ? [48, 132, 216, 298] : [70, 180, 290];
   G.minions = list.map((k, i) => {
     const key = G.bosses.some(B => beats(DEF[k].aff, curOf(B)));
-    const y = G.S.free ? 540 : 470 + (i % 2) * 40;
+    const y = G.S.free ? 560 : 468 + (i % 2) * 36;    // 오른쪽 아래는 빙의 버튼 자리 — 가리지 않게
     return minion(k, xs[i], y, key && G.S.keyHp ? G.S.keyHp : 1);
   });
   const desc = G.bosses.map(B => `${DEF[B.key].name} ${AFF_NAME[curOf(B)]} 방패(열쇠 ${AFF_NAME[KEY_OF[curOf(B)]]})`).join(' · ');
@@ -342,7 +342,7 @@ function killMinion(m, why) {
   G.keyLost++;
   const before = B.shield; B.shield = Math.min(SHIELD_HP, B.shield + SHIELD_HP * .4);
   const me = G.body || { x: G.gx, y: G.gy };
-  const spot = me.x < 180 ? { x: 320, y: G.S.free ? 120 : 600 } : { x: 40, y: G.S.free ? 120 : 600 };
+  const spot = me.x < 180 ? { x: 300, y: G.S.free ? 165 : 470 } : { x: 60, y: G.S.free ? 165 : 470 };
   const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === m.d.aff);
   const nk = pool[(Math.random() * pool.length) | 0];
   G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
@@ -372,7 +372,7 @@ function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
 // 갱신
 // ─────────────────────────────────────────────────────────
 function move(o, dx, dy) {
-  const minY = G.S.free ? FT + 20 : 236;
+  const minY = G.S.free ? FT + 20 : 280;
   o.x = clamp(o.x + dx, FL + 12, FR - 12); o.y = clamp(o.y + dy, minY, FB - 10);
   if (G.S.free) for (const B of G.bosses) {           // 보스 몸에 겹치지 않게 밀어낸다
     const ax = o.x - B.x, ay = o.y - (B.y - 10), l = Math.hypot(ax, ay);
@@ -418,7 +418,7 @@ function update(dt) {
     m.bob += dt * 6; if (m.flash > 0) m.flash -= dt;
     const b = G.body; if (!b) continue;
     const dx = b.x - m.x, dy = b.y - m.y, dist = Math.hypot(dx, dy) || 1;
-    if (dist > m.d.range * .85) { m.x += dx / dist * m.d.spd * .6 * dt; m.y = Math.max(G.S.free ? FT + 20 : 236, m.y + dy / dist * m.d.spd * .6 * dt); }
+    if (dist > m.d.range * .85) { m.x += dx / dist * m.d.spd * .6 * dt; m.y = Math.max(G.S.free ? FT + 20 : 280, m.y + dy / dist * m.d.spd * .6 * dt); }
     m.cd -= dt;
     if (dist <= m.d.range + 8 && m.cd <= 0) {
       m.cd = m.d.cd * 1.5;
@@ -439,7 +439,7 @@ function update(dt) {
     if (B.keyWait >= 1.5) {
       B.keyWait = 0;
       const me = G.body || { x: G.gx, y: G.gy };
-      const spot = me.x < 180 ? { x: 320, y: G.S.free ? 120 : 600 } : { x: 40, y: G.S.free ? 120 : 600 };
+      const spot = me.x < 180 ? { x: 300, y: G.S.free ? 165 : 470 } : { x: 60, y: G.S.free ? 165 : 470 };
       const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === ka);
       const nk = pool[(Math.random() * pool.length) | 0];
       G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
@@ -486,7 +486,7 @@ function bossAI(B, dt) {
   } else {
     B.x += clamp(tgt.x - B.x, -1, 1) * 26 * dt;
     // 쌍둥이는 제자리 근처만 — 둘이 가운데로 몰려 겹치면 어느 방패가 무엇인지 안 읽힌다
-    B.x = G.bosses.length > 1 ? clamp(B.x, B.home - 25, B.home + 25) : clamp(B.x, 80, 280);
+    B.x = G.bosses.length > 1 ? clamp(B.x, B.home - 12, B.home + 12) : clamp(B.x, 80, 280);
   }
   if (B.tele) {
     B.tele.t -= dt;
@@ -521,6 +521,8 @@ function drawSprite(key, x, y, scale = 1, alpha = 1) {
   ctx.globalAlpha = alpha; ctx.drawImage(img, Math.round(x - w / 2), Math.round(y - h), Math.round(w), Math.round(h)); ctx.globalAlpha = 1;
 }
 function gem(x, y, aff, r = 6) {
+  const im = IMG['gem_' + aff];
+  if (im && im.complete && im.width) { const s = r * 2.6; ctx.imageSmoothingEnabled = true; ctx.drawImage(im, x - s / 2, y - s / 2, s, s); ctx.imageSmoothingEnabled = false; return; }
   ctx.fillStyle = AFF_COL[aff]; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath(); ctx.fill();
   ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1; ctx.stroke();
 }
@@ -529,13 +531,12 @@ function text(t, x, y, font, col, align = 'center') { ctx.font = font; ctx.textA
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#1d1a2c'; ctx.fillRect(FL, FT, FR - FL, FB - FT);
-  ctx.strokeStyle = '#262238'; ctx.lineWidth = 1;
-  for (let x = FL; x <= FR; x += 30) { ctx.beginPath(); ctx.moveTo(x + .5, FT); ctx.lineTo(x + .5, FB); ctx.stroke(); }
-  for (let y = FT; y <= FB; y += 30) { ctx.beginPath(); ctx.moveTo(FL, y + .5); ctx.lineTo(FR, y + .5); ctx.stroke(); }
-  if (G && !G.S.free) { ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(FL, 236); ctx.lineTo(FR, 236); ctx.stroke(); ctx.setLineDash([]); }
-  ctx.strokeStyle = '#3b3460'; ctx.lineWidth = 3; ctx.strokeRect(FL, FT, FR - FL, FB - FT);
-  if (!G) return;
+  // 보스방 바닥 — 게임에 들어간 그림 그대로
+  const floor = IMG['floor_' + (G ? G.S.bosses[0].key : 'crusher')] || IMG.floor_crusher;
+  if (floor && floor.complete && floor.width) { ctx.imageSmoothingEnabled = true; ctx.drawImage(floor, 0, FT - 30, W, 576); ctx.imageSmoothingEnabled = false; }
+  else { ctx.fillStyle = '#2b2a2a'; ctx.fillRect(0, FT, W, H - FT); }
+  if (G && !G.S.free) { ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(FL, 280); ctx.lineTo(FR, 280); ctx.stroke(); ctx.setLineDash([]); }
+  if (!G) { drawHudFrame(); return; }
 
   for (const B of G.bosses) if (B.tele) {
     const k = 1 - B.tele.t / B.tele.max;
@@ -562,7 +563,7 @@ function draw() {
   }
   for (const t of G.texts) { ctx.globalAlpha = Math.min(1, t.life * 2); ctx.font = '700 14px "Noto Sans KR"'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.strokeText(t.txt, t.x, t.y); ctx.fillStyle = t.col; ctx.fillText(t.txt, t.x, t.y); }
   ctx.globalAlpha = 1;
-  drawHud(); drawHint();
+  drawPad(); drawHud();
   if (G.msgT > 0) {
     ctx.globalAlpha = Math.min(1, G.msgT * 2);
     ctx.fillStyle = 'rgba(10,8,22,.86)'; ctx.fillRect(20, 380, 320, 40);
@@ -592,7 +593,7 @@ function drawBoss(B) {
   } else { ctx.beginPath(); ctx.arc(B.x, cy, R, 0, 6.283); ctx.stroke(); }
   ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(B.x, cy, R + 9, -1.57, -1.57 + 6.283 * clamp(B.shield / SHIELD_HP, 0, 1)); ctx.stroke();
-  const key = KEY_OF[cur], ly = B.y + 30, w = G.bosses.length > 1 ? 132 : 148;   // 발밑 — 위쪽은 HUD에 가린다
+  const key = KEY_OF[cur], ly = B.y + 30, w = G.bosses.length > 1 ? 122 : 148;   // 발밑 — 위쪽은 HUD에 가린다
   ctx.fillStyle = 'rgba(10,8,22,.85)'; ctx.fillRect(B.x - w / 2, ly - 18, w, 26);
   gem(B.x - w / 2 + 12, ly - 5, cur);
   text(`${AFF_NAME[cur]} 방패`, B.x - w / 2 + 22, ly + 1, '14px "Do Hyeon"', AFF_COL[cur], 'left');
@@ -611,7 +612,10 @@ function drawMinion(m) {
   drawSprite(m.key, m.x, m.y + Math.sin(m.bob), 1, m.flash > 0 ? .55 : 1);
   bar(m.x, m.y - 68, 34, m.hp / m.hpMax, '#ff5a5a');
   gem(m.x + 24, m.y - 66, m.d.aff);
-  text(`${m.d.name}·${m.d.kind}`, m.x, m.y + 15, '700 10px "Noto Sans KR"', '#c9c3ff');
+  { const label = `${m.d.name}·${m.d.kind}`; ctx.font = '700 10px "Noto Sans KR"'; const w = ctx.measureText(label).width + 10;
+    ctx.fillStyle = 'rgba(8,8,20,.78)'; ctx.fillRect(m.x - w / 2, m.y + 5, w, 15);
+    ctx.fillStyle = AFF_COL[m.d.aff]; ctx.fillRect(m.x - w / 2, m.y + 5, 3, 15);
+    text(label, m.x + 1, m.y + 16, '700 10px "Noto Sans KR"', '#e8e4ff'); }
   if (isKey && G.S.showKey) text('▲ 열쇠', m.x, m.y - 76, '14px "Do Hyeon"', '#ffd055');
   if (G.target === m) { ctx.strokeStyle = '#8fd6ff'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.arc(m.x, m.y - 26, 32, 0, 6.283); ctx.stroke(); ctx.setLineDash([]); }
 }
@@ -622,29 +626,55 @@ function drawBody() {
   drawSprite(b.key, b.x, b.y, 1, b.flash > 0 ? .55 : 1);
   bar(b.x, b.y - 68, 38, b.hp / b.hpMax, '#6be3a4');
   gem(b.x + 26, b.y - 66, b.d.aff);
+  meMark(b.x, b.y - 80);
+}
+function meMark(x, y) {
+  const bob = Math.sin(G.t * 5) * 2;
+  ctx.fillStyle = '#46e3ff'; ctx.beginPath(); ctx.moveTo(x - 7, y - 10 + bob); ctx.lineTo(x + 7, y - 10 + bob); ctx.lineTo(x, y + bob); ctx.closePath(); ctx.fill();
+  ctx.font = '13px "Do Hyeon"'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.8)'; ctx.strokeText('나', x, y - 14 + bob); ctx.fillStyle = '#46e3ff'; ctx.fillText('나', x, y - 14 + bob);
 }
 function drawGhost() {
   drawSprite('ghost', G.gx, G.gy + Math.sin(G.t * 4) * 3, .8, G.channel > 0 ? .5 : .95);
+  meMark(G.gx, G.gy - 58);
   if (G.chTarget) { ctx.strokeStyle = '#8fd6ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(G.gx, G.gy - 20); ctx.lineTo(G.chTarget.x, G.chTarget.y - 26); ctx.stroke(); }
 }
+function img(k) { const i = IMG[k]; return i && i.complete && i.width ? i : null; }
+function drawImg(k, x, y, w, h) { const i = img(k); if (!i) return false; ctx.imageSmoothingEnabled = true; ctx.drawImage(i, x, y, w, h); ctx.imageSmoothingEnabled = false; return true; }
+function face(k, cx, cy, r) {
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.clip();
+  ctx.fillStyle = '#0b1230'; ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+  const i = img('face_' + k); if (i) ctx.drawImage(i, cx - r, cy - r, r * 2, r * 2); else drawImg('ui_face', cx - r, cy - r, r * 2, r * 2);
+  ctx.restore();
+}
+function drawHudFrame() {
+  if (!drawImg('ui_band', 0, 0, W, 115)) { ctx.fillStyle = '#0a0d26'; ctx.fillRect(0, 0, W, 115); }
+}
 function drawHud() {
-  ctx.fillStyle = '#100d1e'; ctx.fillRect(0, 0, W, FT - 6);
-  text('유령 에너지', 12, 18, '700 11px "Noto Sans KR"', '#a39cc9', 'left');
-  ctx.fillStyle = '#2a2448'; ctx.fillRect(12, 24, 110, 9);
-  ctx.fillStyle = G.energy < 30 ? '#ff6464' : '#8fd6ff'; ctx.fillRect(12, 24, 110 * G.energy / 100, 9);
-  text(String(Math.ceil(G.energy)), 126, 33, '700 11px "Noto Sans KR"', '#fff', 'left');
-  text('지금 몸', 12, 52, '700 11px "Noto Sans KR"', '#a39cc9', 'left');
-  if (G.body) {
-    text(`${G.body.d.name} · ${AFF_NAME[G.body.d.aff]}`, 56, 53, '15px "Do Hyeon"', AFF_COL[G.body.d.aff], 'left');
-    if (G.down <= 0) {
-      const can = G.bosses.filter(B => !B.broken && beats(G.body.d.aff, curOf(B)));
-      text(can.length ? `${can.map(B => DEF[B.key].name).join('·')} 깨기 가능` : '지금 방패엔 막힘', 56, 69, '12px "Do Hyeon"', can.length ? '#6be3a4' : '#ff8a8a', 'left');
-    }
-  } else text('없음 (유령)', 56, 53, '15px "Do Hyeon"', '#8fd6ff', 'left');
-  text(G.bosses.map(B => DEF[B.key].name).join(' · '), 348, 18, '700 11px "Noto Sans KR"', '#a39cc9', 'right');
-  const n = G.bosses[0].shields.length, w = 22;
-  for (let i = 0; i < n; i++) { ctx.fillStyle = i < G.segs ? '#ff5a5a' : '#3a3358'; ctx.fillRect(348 - (n - i) * (w + 4), 26, w, 10); }
-  text(`${Math.floor(G.t)}초 · 몸 잃음 ${G.deaths}`, 348, 56, '13px "Do Hyeon"', '#c9c3ff', 'right');
+  drawHudFrame();
+  // 왼쪽 알약 — 나(유령)
+  drawImg('ui_gpill', 4, 10, 146, 52);
+  face('ghost', 26, 36, 17);
+  text('유령 에너지', 52, 30, '700 10px "Noto Sans KR"', '#8fd6ff', 'left');
+  ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(52, 41, 86, 7);
+  ctx.fillStyle = G.energy < 30 ? '#ff5a5a' : '#46e3ff'; ctx.fillRect(52, 41, 86 * G.energy / 100, 7);
+  text(String(Math.ceil(G.energy)), 140, 31, '13px "Do Hyeon"', '#fff', 'right');
+  // 오른쪽 알약 — 지금 몸
+  drawImg('ui_hpill', 210, 10, 146, 52);
+  const b = G.body;
+  face(b ? b.key : '', 334, 36, 17);
+  if (b) {
+    gem(222, 24, b.d.aff, 5);
+    text(b.d.name, 232, 29, '14px "Do Hyeon"', '#fff', 'left');
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(218, 41, 92, 7);
+    ctx.fillStyle = '#ff5a5a'; ctx.fillRect(218, 41, 92 * clamp(b.hp / b.hpMax, 0, 1), 7);
+  } else text('몸 없음', 222, 29, '14px "Do Hyeon"', '#8d96c9', 'left');
+  // 가운데 — 보스 체력 칸
+  text('보스', 180, 24, '700 10px "Noto Sans KR"', '#a39cc9');
+  const n = G.bosses[0].shields.length;
+  for (let i = 0; i < n; i++) { const x = 180 - n * 7 + i * 14; ctx.fillStyle = i < G.segs ? '#ff4a4a' : '#2a2f55'; ctx.fillRect(x + 1, 30, 11, 12); }
+  text(`${Math.floor(G.t)}초`, 180, 58, '12px "Do Hyeon"', '#c9c3ff');
+  // 둘째 줄 — 지금 할 일
+  drawHintBar();
 }
 function hintText() {
   if (G.down > 0) return '보스가 쓰러졌다 — 곧 새 방패. 다음 열쇠가 설 자리로 움직여라';
@@ -667,22 +697,32 @@ function hintText() {
   const need = [...new Set(open.map(B => AFF_NAME[KEY_OF[curOf(B)]]))].join(' 또는 ');
   return `${need} 부하에게 다가가 빙의`;
 }
-function drawHint() {
+function drawHintBar() {
   if (!G.running) return;
   const h = hintText(); if (!h) return;
-  ctx.font = '14px "Do Hyeon"'; ctx.textAlign = 'left';
-  const maxW = 236, lines = []; let line = '';
+  ctx.font = '15px "Do Hyeon"'; ctx.textAlign = 'center';
+  const maxW = 330, lines = []; let line = '';
   for (const word of h.split(' ')) { const t2 = line ? line + ' ' + word : word; if (ctx.measureText(t2).width > maxW && line) { lines.push(line); line = word; } else line = t2; }
   if (line) lines.push(line);
-  const k = Math.min(2, lines.length), y0 = FB - 14 - k * 19;
-  ctx.fillStyle = 'rgba(10,8,22,.84)'; ctx.fillRect(FL + 4, y0 - 4, maxW + 16, k * 19 + 10);
-  ctx.fillStyle = '#ffd055'; for (let i = 0; i < k; i++) ctx.fillText(lines[i], FL + 12, y0 + 14 + i * 19);
+  const k = Math.min(2, lines.length);
+  ctx.fillStyle = 'rgba(5,8,28,.82)'; ctx.fillRect(6, 68, W - 12, 42);
+  ctx.strokeStyle = 'rgba(255,208,85,.6)'; ctx.lineWidth = 1; ctx.strokeRect(6.5, 68.5, W - 13, 41);
+  ctx.fillStyle = '#ffd055';
+  for (let i = 0; i < k; i++) ctx.fillText(lines[i], 180, (k === 1 ? 95 : 85) + i * 18);
+}
+function drawPad() {
+  // 조이스틱 — 끌고 있으면 손잡이가 따라 움직인다
+  ctx.globalAlpha = .55; drawImg('ui_pad', 6, 540, 96, 94); ctx.globalAlpha = 1;
+  let kx = 54, ky = 587;
+  if (joy && joy.id !== -1) { const dx = joy.x - joy.sx, dy = joy.y - joy.sy, l = Math.hypot(dx, dy) || 1, m = Math.min(l, 26); kx += dx / l * m; ky += dy / l * m; }
+  ctx.globalAlpha = .8; drawImg('ui_knob', kx - 18, ky - 18, 36, 36); ctx.globalAlpha = 1;
 }
 
 // ─────────────────────────────────────────────────────────
 // 버튼 · 오버레이 · 결과
 // ─────────────────────────────────────────────────────────
 const actBtn = document.getElementById('act');
+if (SPR.ui_possess) actBtn.style.backgroundImage = `url(${SPR.ui_possess})`; else actBtn.style.background = '#ffd055';
 function syncButton() {
   if (!G || !G.running) { actBtn.className = 'act off'; actBtn.textContent = '빙의'; return; }
   if (G.body) { actBtn.className = 'act throw'; actBtn.textContent = '던지기'; }
