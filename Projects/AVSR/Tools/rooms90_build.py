@@ -87,12 +87,22 @@ GLYPH = {
     '?': ('WRECK_CAR', 2, 1),        # 위에서 본 납작한 폐차
     ']': ('PISTON_E', 1, 1),         # 피스톤 압착기 — 머리가 오른쪽으로 2 m 튀어나왔다 들어간다(7챕터)
     '[': ('PISTON_W', 1, 1),         # 피스톤 압착기 — 왼쪽으로
-    '@': ('PIT', 2, 2),              # 바닥 구덩이 — 몸은 못 건너고 탄은 넘어간다(도랑과 같다)
+    '@': ('PIT', 2, 2),
+    # 7~10챕터 새 기믹(2026-10-07 묶음) — 숫자는 숫자판 화살표다(6 → · 4 ← · 8 ↑ · 2 ↓)
+    '6': ('CONVEYOR_E', 1, 1),       # 컨베이어 바닥 — 오른쪽으로 민다(7챕터)
+    '4': ('CONVEYOR_W', 1, 1),
+    '8': ('CONVEYOR_N', 1, 1),
+    '2': ('CONVEYOR_S', 1, 1),
+    '0': ('COLLAPSE_FLOOR', 1, 1),   # 무너지는 바닥 — 밟으면 1.5초 뒤 구덩이(8챕터)
+    '5': ('SWITCH_PAD', 1, 1),       # 스위치 발판 — 밟는 동안 방의 레이저 문이 꺼진다(8챕터)
+    '9': ('LASER_PILLAR', 1, 1),     # 회전 레이저 기둥 — 4 m 광선이 돈다(9챕터)
+    '7': ('SHIELD_GEN', 1, 1),       # 방패 발전기 — 2.5 m 안 적에 보호막, 쏴서 부순다(9챕터)
+    '3': ('ONEWAY_GATE', 3, 1),      # 일방 문 — 위로 지나가면 뒤에서 닫힌다(10챕터)              # 바닥 구덩이 — 몸은 못 건너고 탄은 넘어간다(도랑과 같다)
 }
 
 # 키 큰 것 — 적 탄도 막는다. 낮은 것(상자·낮은 벽·바리케이드)은 적 탄이 넘어온다.
 TALL = {'PILLAR', 'BULK', 'RAIL', 'RICOCHET_WALL', 'WALL_TURRET_S', 'WALL_TURRET_W', 'WALL_TURRET_E',
-        'PUSH_ROCK', 'PROP_TALL'}
+        'PUSH_ROCK', 'PROP_TALL', 'LASER_PILLAR', 'SHIELD_GEN'}
 # 낮은 엄폐(3차) — 솟음이 낮지만 탄을 막는다. 원거리 적의 엄폐로도 친다
 LOW_SHIELD = {'SANDBAG', 'BARREL_PILE', 'FALLEN_PILLAR', 'JERSEY_ROW', 'SCRAP_PILE', 'WRECK_CAR'}
 # 원거리 적이 숨을 수 있는 것 — 적 탄도 막는 것
@@ -109,7 +119,9 @@ HAZARD = {'TIMED_SPIKE': ('SPIKE', 6, 0.8), 'HAZARD': ('FIRE', 6, 0.8),
           'SLIDE_BLADE_H': ('BLADE', 10, 0.5), 'SLIDE_BLADE_V': ('BLADE', 10, 0.5),
           'LASER_H': ('LASER', 12, 0.6), 'LASER_V': ('LASER', 12, 0.6)}
 # 바닥에 있고 몸도 탄도 안 막는 것 — 적이 그 위에 서도 된다(경고만)
-FLOOR = {'DROP_ZONE', 'SLOW_POOL', 'MINE'}
+FLOOR = {'DROP_ZONE', 'SLOW_POOL', 'MINE', 'CONVEYOR_E', 'CONVEYOR_W', 'CONVEYOR_N', 'CONVEYOR_S',
+         'COLLAPSE_FLOOR', 'SWITCH_PAD', 'ONEWAY_GATE'}
+LASER_PILLAR_REACH = 4.0      # 회전 레이저 길이(m) — BattleDirector.Gimmicks2 와 같다
 
 BLADE_RADIUS = 2.2
 HAMMER_HALF_TRAVEL = 1.7
@@ -148,8 +160,8 @@ TRASH = {ch: c['trash'] for ch, c in CHAPTERS.items()}
 # 상성(가위바위보) — `AffinityRule.KindOf` 와 같아야 한다. 힘 → 날 → 술 → 힘.
 KIND = {
     'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade', 'mole': 'blade', 'mantis': 'blade',
-    'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force',
-    'skeleton': 'magic', 'coilwalker': 'magic',
+    'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force', 'armadillo': 'force',
+    'skeleton': 'magic', 'coilwalker': 'magic', 'mushroom': 'magic', 'mummy': 'magic', 'spider': 'magic',
     'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
     'ninja': 'blade', 'amazon': 'blade', 'amazon_elite': 'blade',
     'baseball': 'force', 'guru': 'force', 'ninja_chain': 'force', 'commando_grenade': 'force',
@@ -158,10 +170,10 @@ KIND = {
     'vampire': 'magic', 'white_wizard': 'magic', 'medium': 'magic', 'death': 'magic',
 }
 BEATS = {'force': 'blade', 'blade': 'magic', 'magic': 'force'}
-RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross', 'mole', 'mantis'}
+RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross', 'mole', 'mantis', 'mummy', 'spider'}
 STATIC_TRASH = {'turret_cross'}   # 안 움직인다 — 자리가 곧 전부다
 # 엄폐가 필요 없는 원거리 — 포탑은 서 있는 자리가 전부고, 두더지는 땅속으로 다닌다
-NO_COVER_TRASH = STATIC_TRASH | {'mole'}
+NO_COVER_TRASH = STATIC_TRASH | {'mole', 'spider'}   # 알 거미는 숨지 않고 거리를 벌린다
 
 # 호스트 데뷔 챕터 — 지금 배정표(RoomDef60)에서 처음 나오는 챕터 그대로
 DEBUT = {
@@ -516,6 +528,9 @@ COL = {'PILLAR': (205, 190, 120), 'CRATE': (170, 120, 70), 'BULK': (150, 140, 12
        'SLIDE_BLADE_V': (240, 240, 250), 'SWING_HAMMER_H': (200, 200, 230),
        'FLAME_JET_S': (200, 80, 50), 'FLAME_JET_E': (200, 80, 50), 'FLAME_JET_W': (200, 80, 50),
        'PISTON_E': (240, 190, 40), 'PISTON_W': (240, 190, 40),
+       'CONVEYOR_E': (90, 90, 60), 'CONVEYOR_W': (90, 90, 60), 'CONVEYOR_N': (90, 90, 60), 'CONVEYOR_S': (90, 90, 60),
+       'COLLAPSE_FLOOR': (150, 110, 60), 'SWITCH_PAD': (60, 200, 90), 'LASER_PILLAR': (255, 80, 120),
+       'SHIELD_GEN': (80, 160, 255), 'ONEWAY_GATE': (200, 200, 200),
        'DROP_ZONE': (120, 70, 70), 'SLOW_POOL': (110, 170, 90), 'MINE': (230, 50, 50),
        'BLOCK': (190, 200, 205), 'PROP_TALL': (150, 160, 200), 'PROP_WIDE': (170, 150, 120),
        'SANDBAG': (190, 170, 120), 'BARREL_PILE': (90, 110, 150), 'FALLEN_PILLAR': (175, 175, 170),

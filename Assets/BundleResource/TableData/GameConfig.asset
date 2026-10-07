@@ -210,6 +210,7 @@ MonoBehaviour:
     - turret_cross
     - bat
     - coilwalker
+    - armadillo
     Pattern: 4
     EnemyHpMul: 0.79
     EnemyAtkMul: 0.78
@@ -224,8 +225,8 @@ MonoBehaviour:
     Art: 4
     BossArt: 4
     ChestArt: 3
-    MixBlade: 16
-    MixForce: 27
+    MixBlade: 15
+    MixForce: 28
     MixMagic: 15
   - Chapter: 5
     Name: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
@@ -240,6 +241,7 @@ MonoBehaviour:
     - bat
     - skeleton
     - actor_enforcer
+    - mushroom
     Pattern: 5
     EnemyHpMul: 0.93
     EnemyAtkMul: 0.76
@@ -255,8 +257,8 @@ MonoBehaviour:
     BossArt: 5
     ChestArt: 3
     MixBlade: 35
-    MixForce: 17
-    MixMagic: 18
+    MixForce: 16
+    MixMagic: 19
   - Chapter: 6
     Name: "\uC57C\uAC04 \uC815\uC720\uC18C"
     Desc: "\uBD88\uAE38\uC774 \uBA48\uCD94\uC9C0 \uC54A\uB294 \uC815\uC720\uC18C\n\uBAA8\uB4E0
@@ -301,6 +303,7 @@ MonoBehaviour:
     - scrapgunner
     - skeleton
     - coilwalker
+    - boar
     Pattern: 7
     EnemyHpMul: 1.38
     EnemyAtkMul: 0.88
@@ -331,6 +334,7 @@ MonoBehaviour:
     - scrapgunner
     - coilwalker
     - turret_cross
+    - spider
     Pattern: 7
     EnemyHpMul: 1.63
     EnemyAtkMul: 0.89
@@ -345,9 +349,9 @@ MonoBehaviour:
     Art: 2
     BossArt: 4
     ChestArt: 5
-    MixBlade: 45
+    MixBlade: 43
     MixForce: 23
-    MixMagic: 24
+    MixMagic: 26
   - Chapter: 9
     Name: "\uB9DD\uB839\uC758 \uAC70\uB9AC"
     Desc: "\uBD88\uC774 \uAEBC\uC9C4 \uAC70\uB9AC\uC5D0 \uB9DD\uC790\uAC00 \uAC77\uB294\uB2E4\n\uC774\uC81C\uB294
@@ -361,6 +365,7 @@ MonoBehaviour:
     - bat
     - actor_enforcer
     - roadwarden
+    - mummy
     Pattern: 7
     EnemyHpMul: 2.1
     EnemyAtkMul: 1.08

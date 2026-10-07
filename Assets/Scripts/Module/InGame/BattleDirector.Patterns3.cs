@@ -42,6 +42,9 @@ namespace Game.Module.InGame
         private bool TickPatterns3(Unit e, Unit me, float distance, float dt)
         {
             int stage = PatternChapter;
+            if (e.Key == TrashMushroomKey) return TickMushroom(e, me, distance, dt);   // 폭탄 버섯 — 다가와 자폭 (BattleDirector.Trash4)
+            if (e.Key == TrashMummyKey) return TickMummy(e, me, distance, dt);         // 미라 — 빈틈 있는 고리
+            if (e.Key == TrashSpiderKey && !_spiderlings.Contains(e)) return TickSpider(e, me, distance, dt);   // 알 거미 — 새끼는 평소 흐름
             if (e.Key == TrashMoleKey) return TickMole(e, me, distance, dt);   // 드릴 두더지 — 숨었다 솟아 미사일 (BattleDirector.Mole)
             if (e.Key == TrashMantisKey) return TickMantis(e, me, distance, dt); // 외눈 사마귀 — 저격만 (BattleDirector.Mantis)
             if (e.Key == TrashGunnerKey && stage >= SnipeFromStage) return TickSnipe(e, me, distance, dt);

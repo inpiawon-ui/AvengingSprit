@@ -102,15 +102,16 @@ b..V..V...
 // 역할: 낙하물 넷 = 피하기 — 네 귀에 떨어진다. 가운데 길로 몰린다
 // 역할(+): 가운데 드럼통 더미 = 코일 · 순찰기의 엄폐(낮다 — 너머가 보인다, 위로 긴 덩어리 대신)
 // 모양: 섬 — 가운데 엄폐, 네 귀 위험
-legend: k=skeleton c=coilwalker e=actor_enforcer b=bat w=roadwarden g=gangster* u=guru*
+// 역할(+++): **방패 발전기**(새 기믹) — 둘레 적에 보호막. 쏴서 부숴야 둘레가 맞는다 · **미라**(새 잡몹)가 빈틈 있는 고리를 뿌린다
+legend: k=skeleton c=coilwalker e=actor_enforcer b=bat w=roadwarden g=gangster* u=guru* m=mummy
 map:
 ..........
 ..........
 ..........
 ..........
 .DD..g.DD.
-.DD.c..DD.
-..c.%%.w..
+.DD.m..DD.
+..c.7..w..
 ....%%....
 .k......u.
 .DD.e..DD.
@@ -171,7 +172,8 @@ b........e
 // 역할: 가운데 낙하물 = 피하기 + 이용 — 광장 한복판에 떨어진다. 몰린 집행자도 맞는다
 // 역할(+): 가장자리 난간 = 순찰기 · 코일의 엄폐
 // 모양: 광장 — 가운데 비우고 둘레만
-legend: k=skeleton c=coilwalker e=actor_enforcer b=bat w=roadwarden s=salamander* t=thug*
+// 역할(+++): **회전 레이저 기둥**(새 기믹) — 광장 한복판에서 4 m 광선이 돈다. 광선을 따라 돌며 싸운다 · **미라**(새 잡몹)
+legend: k=skeleton c=coilwalker e=actor_enforcer b=bat w=roadwarden s=salamander* t=thug* m=mummy
 map:
 ..........
 ..........
@@ -180,8 +182,8 @@ map:
 I.s....w.I
 I........I
 ....e.....
-.c..DD..t.
-..e.DD.e..
+.m..9...t.
+..e....e..
 I........I
 Ie......eI
 k........b

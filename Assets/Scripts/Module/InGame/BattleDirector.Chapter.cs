@@ -40,6 +40,10 @@ namespace Game.Module.InGame
              : key == TrashBoarKey     ? Boar
              : key == TrashMoleKey     ? Mole
              : key == TrashMantisKey   ? Mantis
+             : key == TrashArmadilloKey ? Armadillo
+             : key == TrashMushroomKey ? Mushroom
+             : key == TrashMummyKey    ? Mummy
+             : key == TrashSpiderKey   ? Spider
              : null;
 
         /// <summary>

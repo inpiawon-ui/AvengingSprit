@@ -154,7 +154,9 @@ namespace Game.Module.InGame
             ClearRushFx();
             ClearMoleMounds();
             ClearFlameFx();
-            _pistons.Clear();   // 피스톤 그림은 물건과 같이 지워진다 — 표만 비운다
+            _pistons.Clear();
+            ClearTrash4();
+            ClearGimmick2();   // 피스톤 그림은 물건과 같이 지워진다 — 표만 비운다
         }
     }
 }

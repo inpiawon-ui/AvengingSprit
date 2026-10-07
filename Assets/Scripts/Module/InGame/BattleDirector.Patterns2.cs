@@ -217,6 +217,8 @@ namespace Game.Module.InGame
         {
             if (u == null || u.IsBoss || u.IsHostBody) return;
             CancelWarnsOf(u);
+            OnMushroomDeath(u);       // 잡힌 폭탄 버섯은 0.5초 뒤 그 자리에서 터진다 (BattleDirector.Trash4)
+            _spiderlings.Remove(u);
 
             if (u.Key == TrashSkeletonKey && PatternChapter >= DeathBurstFromChapter)
             {

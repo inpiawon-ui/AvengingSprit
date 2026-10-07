@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: atlas
   m_GUID: c75b0115ab861994c9299430cfe51ad6
   m_SerializeEntries:
+  - m_GUID: 035095696c7b79e4e978396e124e9c47
+    m_Address: atlas/unit_spider
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0374fa318f54f4b43b5b053c36b4962e
     m_Address: atlas/unit_medium
     m_ReadOnly: 0
@@ -201,6 +207,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0b930d1f86341c4cad7186b8b829387
+    m_Address: atlas/unit_mummy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a234b16a37a6ec94587f0885d90f6ff9
     m_Address: atlas/unit_sludge
     m_ReadOnly: 0
@@ -209,6 +221,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a33d6e972459bf34ea83c76e19807d3b
     m_Address: atlas/hostface
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7e0e0b8d992cfc4980b4a7c1d91dd71
+    m_Address: atlas/unit_armadillo
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -317,6 +335,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f5b1669dd296c4d4789e5dd695a65396
     m_Address: atlas/unit_bat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ffa2e5ed0300adb47877c107bbfcce00
+    m_Address: atlas/unit_mushroom
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

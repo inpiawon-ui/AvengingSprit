@@ -14,10 +14,10 @@ ch	stage	boss	leader	trash	lean	count	pattern	hpMul	atkMul	bossHp	bossAtk	roomGo
 1	junkyard	robot_snakes	salamander	skeleton,bat,scrapgunner,actor_enforcer	even	3-5	1	0.50	1.00	1650	36	24	80	120	200	silver	300	1.0	1	1	1	1	쓰레기 집적장	도시가 버린 것들이 쌓이는 곳\n무언가가 그 아래에서 깨어났다.
 2	missile	crusher	robot	bat,roadwarden,scrapgunner,actor_enforcer,boar	blade	4-6	2	0.57	0.89	2000	38	31	104	156	300	silver	500	1.3	2	2	2	1	미사일 저장기지	도시 외곽에 위치한 수수께끼의 군사 시설\n더 깊은 곳에서 누군가가 움직이고 있다.
 3	street	python	vampire	skeleton,coilwalker,actor_enforcer,turret_cross,mole	magic	5-7	3	0.69	0.82	2530	42	41	136	204	450	silver	800	1.7	3	3	3	1	밤의 도시 거리	네온이 꺼지지 않는 밤의 거리\n골목마다 다른 얼굴이 기다린다.
-4	rooftop	sludge	dragon_blue	actor_enforcer,turret_cross,bat,coilwalker	force	6-8	4	0.79	0.78	3020	46	53	176	264	650	gold	1200	2.2	4	4	4	3	밤의 공중기지 옥상	빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.
-5	lab	guardian	ninja_chain	roadwarden,scrapgunner,bat,skeleton,actor_enforcer	blade	7-9	5	0.93	0.76	3680	51	67	224	336	900	gold	1700	2.8	5	5	5	3	유령 연구소	잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.
+4	rooftop	sludge	dragon_blue	actor_enforcer,turret_cross,bat,coilwalker,armadillo	force	6-8	4	0.79	0.78	3020	46	53	176	264	650	gold	1200	2.2	4	4	4	3	밤의 공중기지 옥상	빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.
+5	lab	guardian	ninja_chain	roadwarden,scrapgunner,bat,skeleton,actor_enforcer,mushroom	blade	7-9	5	0.93	0.76	3680	51	67	224	336	900	gold	1700	2.8	5	5	5	3	유령 연구소	잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.
 6	refinery	kingpin	medium	skeleton,coilwalker,roadwarden,actor_enforcer,turret_cross,mantis	magic	8-10	6	1.16	0.80	4720	59	84	280	420	1200	gold	2300	3.5	6	6	6	3	야간 정유소	불길이 멈추지 않는 정유소\n모든 것의 주인이 여기 있다.
 7	junkyard	python	baseball	actor_enforcer,turret_cross,scrapgunner,skeleton,coilwalker,boar	force	8-10	7	1.38	0.88	5740	65	103	344	516	1550	platinum	3000	4.3	1	1	3	5	불타는 집적장	꺼지지 않는 불이 고철을 녹인다\n길은 터뜨려서 여는 수밖에 없다.
-8	missile	sludge	commando_missile	bat,roadwarden,scrapgunner,coilwalker,turret_cross	blade	9-11	7	1.63	0.89	6970	72	125	416	624	1950	platinum	3800	5.2	2	2	4	5	봉쇄된 저장기지	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽어야 지나간다.
-9	street	guardian	dragoon	skeleton,coilwalker,bat,actor_enforcer,roadwarden	magic	9-11	7	2.10	1.08	9180	85	149	496	744	2400	platinum	4700	6.2	3	3	5	5	망령의 거리	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.
+8	missile	sludge	commando_missile	bat,roadwarden,scrapgunner,coilwalker,turret_cross,spider	blade	9-11	7	1.63	0.89	6970	72	125	416	624	1950	platinum	3800	5.2	2	2	4	5	봉쇄된 저장기지	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽어야 지나간다.
+9	street	guardian	dragoon	skeleton,coilwalker,bat,actor_enforcer,roadwarden,mummy	magic	9-11	7	2.10	1.08	9180	85	149	496	744	2400	platinum	4700	6.2	3	3	5	5	망령의 거리	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.
 10	rooftop	kingpin	death	skeleton,bat,scrapgunner,actor_enforcer,roadwarden,coilwalker,turret_cross	even	10-12	7	2.48	1.08	11060	93	175	584	876	3000	platinum	5700	7.3	4	4	6	5	최후의 옥상	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 한다.

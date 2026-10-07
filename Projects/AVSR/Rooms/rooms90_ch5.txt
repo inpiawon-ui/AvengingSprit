@@ -107,7 +107,8 @@ $$........
 // 역할(+): 미는 바위 넷 = 이용 — 밀어서 움직이는 방패. 사선 앞에 밀어 두고 그 뒤로 붙는다(5챕터의 첫 바위)
 // 역할(++): 지뢰 둘 = 위험(계단 사잇길)
 // 모양: 계단 — 블록 줄 셋이 오른쪽 위에서 왼쪽 아래로
-legend: n=ninja_chain* m=medium* w=roadwarden s=scrapgunner k=skeleton
+// 역할(+++): **폭탄 버섯**(새 잡몹) — 다가와 깜빡이다 터진다. 원 밖으로 — 멀리서 잡으면 곁의 적을 휩쓴다
+legend: n=ninja_chain* m=medium* w=roadwarden s=scrapgunner k=skeleton f=mushroom
 map:
 ..........
 ..........
@@ -119,7 +120,7 @@ map:
 ...^^^.M..
 .w....m...
 ^^^.....sK
-..n....k..
+..n....f..
 ..M.......
 .......K..
 ..........
@@ -177,7 +178,8 @@ k.K.FF.K.k
 // 역할: 낮은 벽 세 줄 = 길 · 엄폐 — 열린 쪽이 번갈아 바뀐다. 원거리가 담 끝 기둥 곁에 숨는다
 // 역할(+): 지뢰 셋 = 위험 — 담이 끝나는 모퉁이(돌아 나가는 자리)마다 하나
 // 모양: 지그재그(Z) — 열린 쪽이 엇갈린 낮은 벽 세 줄
-legend: y=baseball* o=snowwoman* w=roadwarden s=scrapgunner k=skeleton e=actor_enforcer
+// 역할(+++): **폭탄 버섯**(새 잡몹) 둘 — 담 사이로 몰려온다. 터지기 전에 원 밖으로
+legend: y=baseball* o=snowwoman* w=roadwarden s=scrapgunner k=skeleton e=actor_enforcer f=mushroom
 map:
 ..........
 ..........
@@ -185,9 +187,9 @@ map:
 ........Q.
 ..w..o.s..
 LLLP..M...
-.k.....w..
+.f.....w..
 ...M..PLLL
-..s..y..e.
+..s..y..f.
 LLLP..M...
 ........k.
 ..........

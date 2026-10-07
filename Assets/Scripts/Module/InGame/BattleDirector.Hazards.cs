@@ -76,6 +76,7 @@ namespace Game.Module.InGame
         /// <summary>새 장애물의 준비물. `SetupMoving` 이 종류를 보고 부른다.</summary>
         private void SetupHazard(Obstacle ob)
         {
+            if (SetupGimmick2(ob)) return;   // 컨베이어 · 무너지는 바닥 · 발판 · 회전 레이저 · 발전기 · 일방 문 (BattleDirector.Gimmicks2)
             var rt = ob.View != null ? (RectTransform)ob.View.transform : null;
             switch (ob.Kind)
             {
@@ -195,8 +196,9 @@ namespace Game.Module.InGame
                 case "LASER_V":
                 {
                     float t = Mathf.Repeat(Time.time / LaserCycle + o.Phase, 1f);
-                    bool on = t >= LaserWarnUntil;
-                    bool warn = !on && t >= LaserOffUntil;
+                    // 스위치 발판을 밟고 있으면 꺼진 채로 둔다 (BattleDirector.Gimmicks2)
+                    bool on = !_switchHeld && t >= LaserWarnUntil;
+                    bool warn = !_switchHeld && !on && t >= LaserOffUntil;
                     o.HazardOn = on;
                     if (o.Img == null) break;
                     float a = on ? 1f
@@ -238,6 +240,7 @@ namespace Game.Module.InGame
         private void TickHazards2(float dt)
         {
             _inSlowPool = false;
+            BeginGimmick2Frame();
             var me = Avatar;
             Vector2 foot = me != null ? new Vector2(me.Position.x, me.Position.y - FootDrop(me)) : default;
 
@@ -248,6 +251,7 @@ namespace Game.Module.InGame
 
                 if (IsFlameJet(o)) { TickFlame(o, me, foot, dt); continue; }
                 if (IsPiston(o)) { TickPiston(o, me, foot, dt); continue; }
+                if (TickGimmick2(o, me, foot, dt)) continue;
 
                 switch (o.Kind)
                 {
@@ -270,6 +274,8 @@ namespace Game.Module.InGame
                         break;
                 }
             }
+            EndGimmick2Frame();   // 보호막 그림
+            TickBlasts(dt);       // 잡혀서 미뤄 둔 폭탄 버섯 폭발 (BattleDirector.Trash4)
         }
 
         private void TickFlame(Obstacle o, Unit me, Vector2 foot, float dt)

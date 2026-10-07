@@ -7910,7 +7910,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_005_S03
-      _actorId: actor_enforcer
+      _actorId: armadillo
       _at: {x: 1.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
@@ -7918,7 +7918,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_005_S04
-      _actorId: actor_enforcer
+      _actorId: armadillo
       _at: {x: 8.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
@@ -8574,7 +8574,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH4_009_S03
-      _actorId: bat
+      _actorId: armadillo
       _at: {x: 1.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
@@ -11046,7 +11046,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_006_S07
-      _actorId: skeleton
+      _actorId: mushroom
       _at: {x: 7.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -11876,7 +11876,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_010_S04
-      _actorId: skeleton
+      _actorId: mushroom
       _at: {x: 1.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
@@ -11908,7 +11908,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH5_010_S08
-      _actorId: actor_enforcer
+      _actorId: mushroom
       _at: {x: 8.5, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -17874,7 +17874,111 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_10
+    - _objectId: CONVEYOR_W_10
+      _kind: CONVEYOR_W
+      _at: {x: 1.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_11
+      _kind: CONVEYOR_W
+      _at: {x: 2.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_12
+      _kind: CONVEYOR_W
+      _at: {x: 3.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_13
+      _kind: CONVEYOR_W
+      _at: {x: 4.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_14
+      _kind: CONVEYOR_W
+      _at: {x: 5.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_15
+      _kind: CONVEYOR_W
+      _at: {x: 6.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_16
+      _kind: CONVEYOR_W
+      _at: {x: 7.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_W_17
+      _kind: CONVEYOR_W
+      _at: {x: 8.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CRATE_18
       _kind: CRATE
       _at: {x: 3, y: 3.5}
       _size: {x: 2, y: 1}
@@ -17887,7 +17991,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_11
+    - _objectId: CRATE_19
       _kind: CRATE
       _at: {x: 7, y: 3.5}
       _size: {x: 2, y: 1}
@@ -18354,7 +18458,85 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: EXPLOSIVE_BARREL_4
+    - _objectId: CONVEYOR_E_4
+      _kind: CONVEYOR_E
+      _at: {x: 2.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_E_5
+      _kind: CONVEYOR_E
+      _at: {x: 3.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_E_6
+      _kind: CONVEYOR_E
+      _at: {x: 4.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_E_7
+      _kind: CONVEYOR_E
+      _at: {x: 5.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_E_8
+      _kind: CONVEYOR_E
+      _at: {x: 6.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CONVEYOR_E_9
+      _kind: CONVEYOR_E
+      _at: {x: 7.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: EXPLOSIVE_BARREL_10
       _kind: EXPLOSIVE_BARREL
       _at: {x: 4.5, y: 8.5}
       _size: {x: 1, y: 1}
@@ -18367,7 +18549,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: EXPLOSIVE_BARREL_5
+    - _objectId: EXPLOSIVE_BARREL_11
       _kind: EXPLOSIVE_BARREL
       _at: {x: 5.5, y: 8.5}
       _size: {x: 1, y: 1}
@@ -18380,7 +18562,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: FALLEN_PILLAR_6
+    - _objectId: FALLEN_PILLAR_12
       _kind: FALLEN_PILLAR
       _at: {x: 2, y: 6.5}
       _size: {x: 2, y: 1}
@@ -18393,7 +18575,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: FALLEN_PILLAR_7
+    - _objectId: FALLEN_PILLAR_13
       _kind: FALLEN_PILLAR
       _at: {x: 8, y: 6.5}
       _size: {x: 2, y: 1}
@@ -18406,7 +18588,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: WRECK_CAR_8
+    - _objectId: WRECK_CAR_14
       _kind: WRECK_CAR
       _at: {x: 2, y: 4.5}
       _size: {x: 2, y: 1}
@@ -18419,7 +18601,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: WRECK_CAR_9
+    - _objectId: WRECK_CAR_15
       _kind: WRECK_CAR
       _at: {x: 8, y: 4.5}
       _size: {x: 2, y: 1}
@@ -20605,7 +20787,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH8_002_S08
-      _actorId: bat
+      _actorId: spider
       _at: {x: 1.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
@@ -20719,6 +20901,19 @@ MonoBehaviour:
       _blocksShot: 1
       _blocksEnemyShot: 1
       _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SWITCH_PAD_9
+      _kind: SWITCH_PAD
+      _at: {x: 4.5, y: 5.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22041,7 +22236,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH8_009_S09
-      _actorId: bat
+      _actorId: spider
       _at: {x: 0.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -22142,6 +22337,19 @@ MonoBehaviour:
       _blocksShot: 1
       _blocksEnemyShot: 1
       _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SWITCH_PAD_8
+      _kind: SWITCH_PAD
+      _at: {x: 4.5, y: 4.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22607,7 +22815,33 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CHANNEL_H_6
+    - _objectId: COLLAPSE_FLOOR_6
+      _kind: COLLAPSE_FLOOR
+      _at: {x: 2.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: COLLAPSE_FLOOR_7
+      _kind: COLLAPSE_FLOOR
+      _at: {x: 3.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_8
       _kind: CHANNEL_H
       _at: {x: 5, y: 8.5}
       _size: {x: 2, y: 1}
@@ -22620,7 +22854,33 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CHANNEL_H_7
+    - _objectId: COLLAPSE_FLOOR_9
+      _kind: COLLAPSE_FLOOR
+      _at: {x: 6.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: COLLAPSE_FLOOR_10
+      _kind: COLLAPSE_FLOOR
+      _at: {x: 7.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_H_11
       _kind: CHANNEL_H
       _at: {x: 9, y: 8.5}
       _size: {x: 2, y: 1}
@@ -22633,7 +22893,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_8
+    - _objectId: PILLAR_12
       _kind: PILLAR
       _at: {x: 1.5, y: 7.5}
       _size: {x: 1, y: 1}
@@ -22646,7 +22906,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_9
+    - _objectId: PILLAR_13
       _kind: PILLAR
       _at: {x: 8.5, y: 7.5}
       _size: {x: 1, y: 1}
@@ -22659,7 +22919,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CHANNEL_V_10
+    - _objectId: CHANNEL_V_14
       _kind: CHANNEL_V
       _at: {x: 4.5, y: 6}
       _size: {x: 1, y: 2}
@@ -22672,7 +22932,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CHANNEL_V_11
+    - _objectId: CHANNEL_V_15
       _kind: CHANNEL_V
       _at: {x: 5.5, y: 6}
       _size: {x: 1, y: 2}
@@ -24482,7 +24742,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_006_S02
-      _actorId: coilwalker
+      _actorId: mummy
       _at: {x: 4.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
@@ -24579,10 +24839,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BARREL_PILE_3
-      _kind: BARREL_PILE
-      _at: {x: 5, y: 9.5}
-      _size: {x: 2, y: 1}
+    - _objectId: SHIELD_GEN_3
+      _kind: SHIELD_GEN
+      _at: {x: 4.5, y: 9.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -25330,7 +25590,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_010_S04
-      _actorId: coilwalker
+      _actorId: mummy
       _at: {x: 1.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
@@ -25419,14 +25679,14 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: DROP_ZONE_3
-      _kind: DROP_ZONE
-      _at: {x: 5, y: 8}
-      _size: {x: 2, y: 2}
-      _blocksMove: 0
-      _blocksShot: 0
-      _blocksEnemyShot: 0
-      _blocksSight: 0
+    - _objectId: LASER_PILLAR_3
+      _kind: LASER_PILLAR
+      _at: {x: 4.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29539,6 +29799,14 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_014_S05
+      _actorId: turret_cross
+      _at: {x: 4.5, y: 9.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH10_014_S06
       _actorId: bat
       _at: {x: 5.5, y: 9.5}
       _facing: S
@@ -29546,17 +29814,9 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH10_014_S06
+      _spawnId: ROOM_CH10_014_S07
       _actorId: roadwarden
       _at: {x: 7.5, y: 9.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH10_014_S07
-      _actorId: turret_cross
-      _at: {x: 4.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -29654,7 +29914,33 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_5
+    - _objectId: ONEWAY_GATE_5
+      _kind: ONEWAY_GATE
+      _at: {x: 4.5, y: 8.5}
+      _size: {x: 3, y: 1}
+      _blocksMove: 0
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: CHANNEL_V_6
+      _kind: CHANNEL_V
+      _at: {x: 6.5, y: 8}
+      _size: {x: 1, y: 2}
+      _blocksMove: 1
+      _blocksShot: 0
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: RICOCHET_WALL_7
       _kind: RICOCHET_WALL
       _at: {x: 8.5, y: 8.5}
       _size: {x: 3, y: 1}
@@ -29667,7 +29953,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SWING_HAMMER_H_6
+    - _objectId: SWING_HAMMER_H_8
       _kind: SWING_HAMMER_H
       _at: {x: 5, y: 6}
       _size: {x: 2, y: 2}
@@ -29680,7 +29966,7 @@ MonoBehaviour:
       _hazardDamage: 12
       _hazardTick: 0.7
       _unnamed: 0
-    - _objectId: HAZARD_7
+    - _objectId: HAZARD_9
       _kind: HAZARD
       _at: {x: 2, y: 4}
       _size: {x: 2, y: 2}
@@ -29693,7 +29979,7 @@ MonoBehaviour:
       _hazardDamage: 6
       _hazardTick: 0.8
       _unnamed: 0
-    - _objectId: HAZARD_8
+    - _objectId: HAZARD_10
       _kind: HAZARD
       _at: {x: 8, y: 4}
       _size: {x: 2, y: 2}

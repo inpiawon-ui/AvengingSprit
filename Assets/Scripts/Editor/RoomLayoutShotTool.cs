@@ -84,7 +84,18 @@ namespace Game.EditorTools
         private static void Tick()
         {
             int step = SessionState.GetInt(Key, 0);
-            if (step <= 0 || !EditorApplication.isPlaying) return;
+            // 다 찍은 뒤에도 판을 붙잡아 둔다(`RoomLayout.hold`) — 그 방에서 바로 기믹 · 패턴을 시험하려고.
+            //   안 붙잡으면 몇 초 안에 유령이 사라져 판이 끝나고, 그 뒤엔 빙의도 적의 움직임도 없다.
+            if (step <= 0)
+            {
+                if (EditorApplication.isPlaying && SessionState.GetBool("RoomLayout.hold", false))
+                {
+                    var held = Object.FindAnyObjectByType<BattleDirector>();
+                    if (held != null) KeepAlive(held);
+                }
+                return;
+            }
+            if (!EditorApplication.isPlaying) return;
             // ⚠ 매 프레임 붙잡는다 — 세운 시간 동안에도 유령이 사라지면 판이 끝나 로비로 간다
             var director = Object.FindAnyObjectByType<BattleDirector>();
             if (director != null) KeepAlive(director);

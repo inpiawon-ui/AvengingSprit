@@ -239,6 +239,7 @@ e..M..M..b
 // 역할: 톱니 = 타이밍 · 위험 — 문 앞을 지킨다 · 가로 해머 = 타이밍(담 아래) · 불바닥 넷 = 피하기(입구 양옆)
 // 역할(+): 되튕기는 담 = 길 + 이용 — 담 틈에 뭉친다(확산 몸의 답) · 벽 포탑 둘 = 위 사선
 // 모양: 문 — 가로 담 하나, 위아래 위험
+// 역할(+++): **일방 문**(새 기믹) — 담 가운데 문을 위로 지나면 뒤에서 닫힌다. 아래 적을 다 보고 들어간다(창살 사이로 쏠 수는 있다)
 legend: k=skeleton c=coilwalker g=scrapgunner w=roadwarden b=bat e=actor_enforcer x=turret_cross r=commando_grenade* d=vampire*
 map:
 ..........
@@ -247,9 +248,9 @@ map:
 T...OO...T
 .g..OO..w.
 ..........
-.rc..b.w..
-WWW.x..WWW
-....d.....
+.rc.xb.w..
+WWW333#WWW
+....d.#...
 e...ZZ...e
 b...ZZ...k
 .FF....FF.

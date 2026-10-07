@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -949,6 +949,8 @@ namespace Game.Module.InGame
             { "FLAME_JET_S",      40f },   // 분사구 — 발자국 1×1 · 그림 72×112
             { "FLAME_JET_E",      40f },
             { "FLAME_JET_W",      40f },
+            { "LASER_PILLAR",     14f },   // 회전 레이저 기둥 — 그림 72×86 (BattleDirector.Gimmicks2)
+            { "SHIELD_GEN",       24f },   // 방패 발전기 — 그림 72×96
             { "PROP_TALL",        94f },   // 무대 간판 소품(키 큰 것) — 기둥과 같은 규격 72×166
             { "PROP_WIDE",        60f },   // 무대 간판 소품(넓은 것) — 상자와 같은 규격 144×132
             // 3차(2026-10-07) — 키 큰 것을 대신할 **낮은 엄폐**(PD 「2D 라 위로 긴 것은 애매하다」). 솟음이 낮아 그림 = 막힌 칸
@@ -1812,6 +1814,7 @@ namespace Game.Module.InGame
         /// </summary>
         private bool DamageCrate(Vector2 at, int damage)
         {
+            if (DamageShieldGen(at, damage)) return true;   // 방패 발전기도 내 탄에 부서진다 (BattleDirector.Gimmicks2)
             for (int i = 0; i < _obstacles.Count; i++)
             {
                 var o = _obstacles[i];
@@ -6335,6 +6338,7 @@ namespace Game.Module.InGame
             // 설녀 — 얼려 놓은 적에게는 더 아프다. 닌자(사슬)는 묶어 놓은 적에게.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * FrozenBonusMul(victim)));
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * BindBonusMul(victim)));
+            damage = GuardedDamage(victim, damage);   // 아르마딜로 정면 · 방패 발전기 보호막 (BattleDirector.Trash4)
             // 처형 — 약해진 잡몹을 단칼에. 피해 계산을 다 마친 뒤에 본다.
             if (TryAssassinate(victim)) { KillEnemy(victim); return; }
             ApplyImprints(victim);
@@ -7180,6 +7184,7 @@ namespace Game.Module.InGame
             if (shot.FromPlayer) dmg = WithAffinity(victim, dmg, out weak, out dull);
             NoteBossDamage(victim, dmg);
             dmg = Mathf.Max(1, Mathf.RoundToInt(dmg * CardDamageMul(victim)));
+            if (shot.FromPlayer) dmg = GuardedDamage(victim, dmg);   // 아르마딜로 정면 · 방패 발전기 보호막 (BattleDirector.Trash4)
             // C004 갑옷 분쇄 — 이번 타격은 **이미 벗겨진 만큼** 더 아프다.
             // 겹은 때린 다음에 쌓는다. 먼저 쌓으면 첫 타부터 보너스가 붙어
             // "반복 공격이 약화시킨다" 가 아니라 그냥 공격력 증가가 된다.

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -119,7 +119,8 @@ namespace Game.Module.InGame
         /// <summary>쏘는 잡몹인가. 자리를 대체할 때 **역할**을 살리려고 본다.</summary>
         private static bool IsRangedTrashKey(string key)
             => key == TrashGunnerKey || key == TrashWardenKey
-            || key == TrashCoilKey || key == TrashCrossKey || key == TrashMoleKey || key == TrashMantisKey;
+            || key == TrashCoilKey || key == TrashCrossKey || key == TrashMoleKey || key == TrashMantisKey
+            || key == TrashMummyKey || key == TrashSpiderKey;
 
         /// <summary>
         /// 이 자리에 세울 잡몹. 방 데이터가 지정한 키를 **그 챕터 것으로 갈아 끼운다.**
