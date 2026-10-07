@@ -3278,6 +3278,7 @@ namespace Game.Module.InGame
             TickGimmicks(dt);     // 통 심지 · 벽 포탑
             TickHazards(dt);
             SortDepth();          // 이동이 끝난 뒤에 앞뒤를 다시 정한다
+            TickOcclusion(dt);    // 키 큰 물건 뒤에 선 몸이 보이게 (BattleDirector.Occlusion)
             TickDamageTexts(dt);
             TickGoldPiles(dt);
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);

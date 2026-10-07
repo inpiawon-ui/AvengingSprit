@@ -22,15 +22,16 @@ OBJ	BULK	9	9	2	2	1	1	1	NONE	0	0
 SPAWN	salamander	4.5	11.5	1
 SPAWN	actor_enforcer	3.5	8.5	0
 SPAWN	actor_enforcer	6.5	8.5	0
-ROOM	ROOM_CH1_005	기둥 숲	해골(술)이 많다 — 아마존(날)이 기둥을 끼고 붙어 벤다. 꼭대기 폐품 사수는 기둥을 돌아 들어가 친다
-OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	6.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	3.5	6.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	6.5	6.5	1	1	1	1	1	NONE	0	0
-SPAWN	scrapgunner	4.5	12.5	0
-SPAWN	amazon	4.5	9.5	1
-SPAWN	skeleton	1.5	7.5	0
-SPAWN	skeleton	8.5	7.5	0
+ROOM	ROOM_CH1_005	사선 담	해골(술)이 많다 — 아마존(날)이 사선 벽 그늘을 타고 붙어 벤다. 꼭대기 폐품 사수는 사선 끝 기둥 뒤에 있다
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	BLOCK	6.5	10.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	5.5	9.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	4.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	7.5	1	1	1	1	0	NONE	0	0
+SPAWN	scrapgunner	7.5	12.5	0
+SPAWN	skeleton	1.5	9.5	0
+SPAWN	skeleton	8.5	8.5	0
+SPAWN	amazon	4.5	6.5	1
 ROOM	ROOM_CH1_006	좁은 문	집행자(힘) 둘이 바리케이드 문 하나로 몰려 나온다 — 문 앞의 샐러맨더(술)가 뭉친 자리에 뿌린다
 OBJ	BARRICADE	1.5	9.5	3	1	1	1	0	NONE	0	0
 OBJ	PILLAR	3.5	9.5	1	1	1	1	1	NONE	0	0
@@ -40,12 +41,19 @@ SPAWN	actor_enforcer	3.5	11.5	0
 SPAWN	actor_enforcer	6.5	11.5	0
 SPAWN	scrapgunner	2.5	10.5	0
 SPAWN	salamander	7.5	7.5	1
-ROOM	ROOM_CH1_007	폐차 섬	박쥐(날)가 가운데 섬을 양쪽으로 돌아 몰려온다 — 수류탄 코만도(힘)가 섬 모퉁이에 뭉친 떼를 터뜨린다
-OBJ	BULK	5	9	2	2	1	1	1	NONE	0	0
-SPAWN	scrapgunner	4.5	10.5	0
-SPAWN	bat	1.5	8.5	0
-SPAWN	bat	8.5	8.5	0
-SPAWN	commando_grenade	2.5	6.5	1
+ROOM	ROOM_CH1_007	폐차 깔때기	박쥐(날)가 깔때기를 타고 가운데 출구로 몰려온다 — 수류탄 코만도(힘)가 출구에 뭉친 떼를 터뜨린다
+OBJ	PILLAR	5.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	CRATE	1	9.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	9	9.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	2	8.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	8	8.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	3	7.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	7	7.5	2	1	1	1	0	NONE	0	0
+OBJ	PILLAR	3.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	scrapgunner	4.5	11.5	0
+SPAWN	bat	1.5	10.5	0
+SPAWN	bat	8.5	10.5	0
+SPAWN	commando_grenade	2.5	5.5	1
 ROOM	ROOM_CH1_009	난간 골목	해골(술) 셋이 난간 사이 골로 줄지어 온다 — 골 끝의 호퍼(날)가 긴 사선으로 딴다. 수류탄 코만도(힘)는 불리하다
 OBJ	RAIL	3.5	11	1	2	1	1	1	NONE	0	0
 OBJ	RAIL	6.5	11	1	2	1	1	1	NONE	0	0
