@@ -22,6 +22,8 @@ namespace Game.Module.InGame
         Ring,
         /// <summary>반짝이 — 치명타·획득 같은 «좋은 일»에 튄다.</summary>
         Star4,
+        /// <summary>유령 빛 알갱이 — 흰 · 하늘색 십자별(승인 시안에서 잘라 낸 그림). 위에서 흘러내린다.</summary>
+        GhostMote,
     }
 
     /// <summary>
@@ -207,6 +209,28 @@ namespace Game.Module.InGame
             => Burst(ParticleFxKind.Star4, element, at,
                      count: Mathf.RoundToInt(5 * power), speed: 150f * power,
                      size: 26f, life: 0.45f, spin: 0f);
+
+        /// <summary>
+        /// 정해진 방향으로 **흘려 보낸다** — 유령 빛의 빛 알갱이처럼 위에서 아래로 떨어지는 것(2026-10-07).
+        /// <paramref name="spread"/> 안의 아무 자리에서 태어나 <paramref name="velocity"/> 로 흐르고, 수명 끝에 흐려진다.
+        /// </summary>
+        public void Drift(ParticleFxKind kind, ParticleElement element, Vector2 at, Vector2 spread,
+                          Vector2 velocity, float size, float life, int count = 1)
+        {
+            if (count <= 0) return;
+            var ps = SystemOf(kind, element);
+            var p = new ParticleSystem.EmitParams { applyShapeToPosition = false, startColor = Color.white };
+            for (int i = 0; i < count; i++)
+            {
+                p.position = at + new Vector2(Random.Range(-spread.x, spread.x), Random.Range(-spread.y, spread.y));
+                p.velocity = velocity * Random.Range(0.75f, 1.25f);
+                p.startSize = size * Random.Range(0.6f, 1.2f);
+                p.startLifetime = life * Random.Range(0.8f, 1.15f);
+                p.rotation = 0f;
+                p.angularVelocity = 0f;
+                ps.Emit(p, 1);
+            }
+        }
 
         // ── 알맹이 ──────────────────────────────────────────────
 

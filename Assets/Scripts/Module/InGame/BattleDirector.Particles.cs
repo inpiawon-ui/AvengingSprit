@@ -65,6 +65,7 @@ namespace Game.Module.InGame
             (ParticleFxKind.Ring,   ParticleElement.Curse, "ParticleFx/ring_curse"),
             (ParticleFxKind.Ring,   ParticleElement.Dust,  "ParticleFx/ring"),
             (ParticleFxKind.Star4,  ParticleElement.Fire,  "ParticleFx/star4"),
+            (ParticleFxKind.GhostMote, ParticleElement.Fire, "ParticleFx/ghostmote"),
             (ParticleFxKind.Streak, ParticleElement.Fire,  "ParticleFx/streak"),
         };
 
@@ -205,6 +206,9 @@ namespace Game.Module.InGame
                     Debug.LogWarning($"[Battle] 파티클 재질 없음({address}) — 기본 재질로 나온다. {e.Message}");
                 }
             }
+            // 유령 빛(알파 빛 셰이더) — 없으면 유령 빛이 예전 원뿔 한 장으로 돌아간다(`GlReady`)
+            try { _glMaterial = await res.LoadAsync<Material>("ParticleFx/glight"); }
+            catch (Exception e) { Debug.LogWarning($"[Battle] 유령 빛 재질 없음 — {e.Message}"); }
         }
     }
 }

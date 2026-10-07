@@ -148,6 +148,34 @@ namespace Game.Editor
             }
         }
 
+        // ── 지금 화면 그대로 몇 초 찍기 (2026-10-07) ─────────────
+        //
+        // 스킬이 아닌 연출(유령 빛 · 피격)을 찍을 때. 판 준비 · 몸 바꾸기 없이 지금 게임 화면을 찍는다.
+        // `Game.Editor.SkillFxRecorder.RecordClip("이름", 초)` → `{OutDir}/clip_{이름}.mp4`
+
+        private static double s_clipEnd;
+
+        public static void RecordClip(string name, float seconds)
+        {
+            if (!EditorApplication.isPlaying) { Debug.LogError("[스킬 영상] 플레이 중이 아니다"); return; }
+            if (s_rec != null) { Debug.LogError("[스킬 영상] 이미 찍는 중"); return; }
+            s_width = Mathf.Max(2, Screen.width / 2 * 2);    // 영상 크기는 짝수여야 한다
+            s_height = Mathf.Max(2, Screen.height / 2 * 2);
+            System.IO.Directory.CreateDirectory(OutDir);
+            StartRecording(System.IO.Path.Combine(OutDir, "clip_" + name));
+            s_clipEnd = EditorApplication.timeSinceStartup + seconds;
+            EditorApplication.update += TickClip;
+        }
+
+        private static void TickClip()
+        {
+            if (EditorApplication.timeSinceStartup < s_clipEnd && EditorApplication.isPlaying) return;
+            EditorApplication.update -= TickClip;
+            if (s_rec != null && s_rec.IsRecording()) s_rec.StopRecording();
+            s_rec = null;
+            Debug.Log("[스킬 영상] 클립 끝");
+        }
+
         private static void StartRecording(string pathNoExt)
         {
             var settings = ScriptableObject.CreateInstance<RecorderControllerSettings>();

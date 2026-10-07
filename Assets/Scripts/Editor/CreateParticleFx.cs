@@ -37,7 +37,14 @@ namespace Game.EditorTools
         /// 덩어리(연기·파편)는 빛이 아니라 물체라 보통 알파 합성이다 — 겹쳐도 밝아지면 안 된다.
         /// </summary>
         /// <summary>⚠ 색조만 돌린 변형(`spark_ice` 등)도 같은 합성을 써야 한다 — 이름 앞머리로 가린다.</summary>
-        private static readonly string[] Additive = { "spark", "glow", "ember", "streak", "ring", "star4" };
+        private static readonly string[] Additive = { "spark", "glow", "ember", "streak", "ring", "star4", "ghostmote" };
+
+        /// <summary>
+        /// 유령 빛 재질(2026-10-07) — 그림 없이 알파로 빛을 그리는 셰이더(`UI/AdditiveLight`).
+        /// `Image` 에 꽂아 쓰므로 파티클 재질과 따로 만들지만, 같은 그룹 · 같은 주소 규칙으로 번들에 싣는다
+        /// (`Shader.Find` 만으로는 빌드에 셰이더가 안 실린다 — 재질이 참조해야 실린다).
+        /// </summary>
+        private const string LightMaterialPath = MaterialDir + "/glight.mat";
 
         private static bool IsAdditive(string key)
         {
@@ -87,6 +94,20 @@ namespace Game.EditorTools
                 made++;
             }
 
+            var lightShader = Shader.Find("UI/AdditiveLight");
+            if (lightShader != null)
+            {
+                var light = AssetDatabase.LoadAssetAtPath<Material>(LightMaterialPath);
+                if (light == null) { light = new Material(lightShader); AssetDatabase.CreateAsset(light, LightMaterialPath); }
+                light.shader = lightShader;
+                EditorUtility.SetDirty(light);
+                var lightEntry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(LightMaterialPath), group);
+                lightEntry.address = "ParticleFx/glight";
+                lightEntry.SetLabel(Label, true);
+                made++;
+            }
+            else Debug.LogWarning("[ParticleFx] UI/AdditiveLight 셰이더를 못 찾았다 — 유령 빛 재질을 건너뛴다");
+
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -104,7 +125,9 @@ namespace Game.EditorTools
             if (ti.textureType != TextureImporterType.Default) { ti.textureType = TextureImporterType.Default; dirty = true; }
             if (!ti.alphaIsTransparency) { ti.alphaIsTransparency = true; dirty = true; }
             if (ti.mipmapEnabled) { ti.mipmapEnabled = false; dirty = true; }
-            if (ti.filterMode != FilterMode.Point) { ti.filterMode = FilterMode.Point; dirty = true; }
+            // 유령 빛 별은 시안에서 잘라 낸 부드러운 빛이라 Point 로 줄이면 계단이 생겨 깨져 보인다 — 부드럽게
+            var filter = Path.GetFileNameWithoutExtension(path) == "ghostmote" ? FilterMode.Bilinear : FilterMode.Point;
+            if (ti.filterMode != filter) { ti.filterMode = filter; dirty = true; }
             if (ti.wrapMode != TextureWrapMode.Clamp) { ti.wrapMode = TextureWrapMode.Clamp; dirty = true; }
             if (dirty) ti.SaveAndReimport();
         }

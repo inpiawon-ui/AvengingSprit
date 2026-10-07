@@ -1404,6 +1404,7 @@ namespace Game.Module.InGame
                 ShowInvulnAura(true);
             }
             else ShowInvulnAura(false);
+            ShowLightRim();
 
             if (_invulnerable)
             {
@@ -1439,6 +1440,44 @@ namespace Game.Module.InGame
 
         /// <summary>스킬 무적 윤곽을 켜고 끈다. 매 프레임 불러도 된다.</summary>
         public void SetInvulnAura(bool on) => _invulnAuraOn = on;
+
+        // ── 유령 빛 테두리 (2026-10-07) ────────────────────────────
+        //
+        // 빙의할 몸에 하늘에서 빛이 내려올 때 **몸 실루엣을 따라 파란 빛 테두리**가 돈다(승인 시안).
+        // 그림 한 장으로는 몸마다 모양이 달라 시안처럼 안 붙는다 — 무적 윤곽과 같은 실루엣 재질로
+        // 몸 그림 모양 그대로 뒤에 깐다. 깜빡이지 않고 진하기만 받는다.
+
+        /// <summary>유령 빛 테두리 진하기(0 이면 끈다). 매 프레임 불러도 된다.</summary>
+        public void SetLightRim(float alpha) => _lightRimAlpha = alpha;
+
+        private float _lightRimAlpha;
+        private Image _lightRim;
+        // 시안의 테두리는 밝은 하늘빛(약 3~5 px) — 1차 비교에서 희미한 흰색, 2차에서 진하고 납작한 파랑이라
+        // 그 사이로 맞췄다(2026-10-07 시안 대비 비교 3회)
+        private const float LightRimScale = 1.1f;   // 96 px 몸에서 한쪽 약 5 px — 1.14 는 스티커 외곽선, 1.08 은 안 보였다
+        private static readonly Color LightRimColor = new(0.35f, 0.7f, 1f, 1f);
+
+        private void ShowLightRim()
+        {
+            if (_lightRimAlpha <= 0.01f || _body == null || _body.sprite == null)
+            {
+                if (_lightRim != null && _lightRim.gameObject.activeSelf) _lightRim.gameObject.SetActive(false);
+                return;
+            }
+            if (_lightRim == null)
+            {
+                _lightRim = GetOrCreate("LightRim", _rect.sizeDelta * LightRimScale, Vector2.zero);
+                _lightRim.transform.SetAsFirstSibling();   // 몸 뒤 — 앞에 오면 몸을 덮는다
+                _lightRim.preserveAspect = true;
+                _lightRim.material = SilhouetteMaterial();
+            }
+            _lightRim.sprite = _body.sprite;
+            var rt = (RectTransform)_lightRim.transform;
+            rt.sizeDelta = _rect.sizeDelta * LightRimScale;
+            rt.localScale = new Vector3(Mathf.Sign(_body.transform.localScale.x), 1f, 1f);
+            _lightRim.color = new Color(LightRimColor.r, LightRimColor.g, LightRimColor.b, _lightRimAlpha);
+            if (!_lightRim.gameObject.activeSelf) _lightRim.gameObject.SetActive(true);
+        }
 
         private bool _invulnAuraOn;
 

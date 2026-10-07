@@ -573,6 +573,13 @@ namespace Game.Module.InGame
                 ? _possessTarget : null;
 
             RefreshTakeMarks(target);
+            // 새 유령 빛(다섯 겹 · 내려옴 → 머묾 → 거둠, 2026-10-07) — 그림이 다 있으면 원뿔 한 장 대신
+            if (GlReady)
+            {
+                if (_spotBeam != null && _spotBeam.gameObject.activeSelf) _spotBeam.gameObject.SetActive(false);
+                TickGhostLight(target, IsChanneling, dt);
+                return;
+            }
             if (target != null && _spotBeam == null && !MakeSpotlight()) return;
             if (_spotBeam == null) return;
 
@@ -658,6 +665,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _soulFx.Count; i++) _soulFx[i].Stop();
             _spotShown = 0f;
             if (_spotBeam != null) _spotBeam.gameObject.SetActive(false);
+            ClearGhostLight();
         }
 
         /// <summary>화면(HUD)이 인게임 아틀라스의 그림을 빌려 쓸 때.</summary>

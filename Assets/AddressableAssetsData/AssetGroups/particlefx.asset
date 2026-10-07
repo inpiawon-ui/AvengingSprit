@@ -105,6 +105,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 774efd4ed6718c64f80b500e5113a9d6
+    m_Address: ParticleFx/glight
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7f12279eaa3ecb241beecb80427437fe
     m_Address: Fx/safe_edge
     m_ReadOnly: 0
@@ -131,6 +137,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a1c9dba57e669cf46ab73155e4d324fb
     m_Address: ParticleFx/spark_venom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa35a12d577a959459b99025c719e4da
+    m_Address: ParticleFx/ghostmote
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_particlefx
