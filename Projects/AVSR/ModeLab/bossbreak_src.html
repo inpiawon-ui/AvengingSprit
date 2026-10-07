@@ -208,7 +208,9 @@ function toLocal(ev) { const r = cv.getBoundingClientRect(); return { x: (ev.cli
 cv.addEventListener('pointerdown', e => { const p = toLocal(e); joy = { id: e.pointerId, sx: p.x, sy: p.y, x: p.x, y: p.y }; cv.setPointerCapture(e.pointerId); });
 cv.addEventListener('pointermove', e => { if (joy && e.pointerId === joy.id) { const p = toLocal(e); joy.x = p.x; joy.y = p.y; } });
 const endJoy = e => { if (joy && e.pointerId === joy.id) joy = null; };
-cv.addEventListener('pointerup', endJoy); cv.addEventListener('pointercancel', endJoy);
+cv.addEventListener('pointerup', endJoy); cv.addEventListener('pointercancel', endJoy); cv.addEventListener('lostpointercapture', endJoy);
+addEventListener('blur', () => { joy = null; keys.clear(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { joy = null; keys.clear(); } });
 document.getElementById('act').addEventListener('click', pressAct);
 function moveInput() {
   let x = 0, y = 0;
@@ -332,6 +334,12 @@ function breakShield(B) {
   banner('방패를 깼다! 보스 체력 −1칸', 1.6);
   log(`방패를 깼다 — 보스 체력 한 칸, ${DOWN_SEC}초 쓰러짐. 일어나면 새 방패`);
 }
+// 새 열쇠가 설 자리 — 기준점에서 가장 먼 곳. 방금 죽은 자리 근처면 같은 공격에 또 맞는다
+function farSpot(x, y) {
+  const c = G.S.free ? [{ x: 60, y: 165 }, { x: 300, y: 165 }, { x: 60, y: 560 }, { x: 300, y: 560 }]
+                     : [{ x: 60, y: 470 }, { x: 300, y: 470 }, { x: 180, y: 520 }];
+  return c.reduce((a, b) => Math.hypot(b.x - x, b.y - y) > Math.hypot(a.x - x, a.y - y) ? b : a);
+}
 function bossOfKey(aff) { return G.bosses.find(B => !B.broken && beats(aff, curOf(B))); }
 function killMinion(m, why) {
   if (m.dead) return;
@@ -341,8 +349,7 @@ function killMinion(m, why) {
   // 열쇠를 잃었다 — 방패 회복, 열쇠는 먼 곳에 바로 다시
   G.keyLost++;
   const before = B.shield; B.shield = Math.min(SHIELD_HP, B.shield + SHIELD_HP * .4);
-  const me = G.body || { x: G.gx, y: G.gy };
-  const spot = me.x < 180 ? { x: 300, y: G.S.free ? 165 : 470 } : { x: 60, y: G.S.free ? 165 : 470 };
+  const spot = farSpot(m.x, m.y);
   const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === m.d.aff);
   const nk = pool[(Math.random() * pool.length) | 0];
   G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
@@ -439,7 +446,7 @@ function update(dt) {
     if (B.keyWait >= 1.5) {
       B.keyWait = 0;
       const me = G.body || { x: G.gx, y: G.gy };
-      const spot = me.x < 180 ? { x: 300, y: G.S.free ? 165 : 470 } : { x: 60, y: G.S.free ? 165 : 470 };
+      const spot = farSpot(me.x, me.y);
       const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === ka);
       const nk = pool[(Math.random() * pool.length) | 0];
       G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
@@ -494,7 +501,9 @@ function bossAI(B, dt) {
       const T = B.tele; B.tele = null;
       ring(T.x, T.y + 20, T.r, '#ff6464');
       if (G.body && Math.hypot(G.body.x - T.x, G.body.y - T.y) < T.r) hitPlayer(34, null);
-      if (T.minions) for (const m of G.minions) if (!m.dead && Math.hypot(m.x - T.x, m.y - T.y) < T.r) killMinion(m, '보스가 내리찍었다');
+      // ⚠ 맞은 부하를 먼저 골라 두고 처리한다. 돌면서 처리하면 새로 나온 열쇠가 같은 원 안에서 또 죽고
+      //   또 나오기를 끝없이 되풀이해 게임이 멈춘다(2026-10-07 「열쇠를 지켜라」에서 실제로 멈췄다)
+      if (T.minions) { const hit = G.minions.filter(m => !m.dead && Math.hypot(m.x - T.x, m.y - T.y) < T.r); for (const m of hit) killMinion(m, '보스가 내리찍었다'); }
     }
     return;
   }
@@ -784,11 +793,18 @@ const hs = parseInt(location.hash.slice(1), 10); if (hs >= 1 && hs <= STAGES.len
 stageIdx = first; renderTabs(); introStage(first);
 
 let last = performance.now();
+// 어디서 오류가 나도 루프는 계속 돈다 — 멈추지 않고, 화면 아래에 무엇이 틀렸는지 띄운다
+let lastErr = null;
 function frame(now) {
-  const dt = Math.min(.05, (now - last) / 1000); last = now;
-  if (G && G.running && !paused) update(dt);
-  draw(); syncButton();
   requestAnimationFrame(frame);
+  const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
+  try { if (G && G.running && !paused) update(dt); } catch (e) { reportErr(e); }
+  try { draw(); syncButton(); } catch (e) { reportErr(e); }
+  if (lastErr) { ctx.fillStyle = 'rgba(120,0,0,.85)'; ctx.fillRect(0, H - 40, W, 40); ctx.fillStyle = '#fff'; ctx.font = '11px monospace'; ctx.textAlign = 'left'; ctx.fillText(('오류: ' + lastErr).slice(0, 58), 6, H - 24); ctx.fillText('이 글자를 캡처해 보내 주세요', 6, H - 9); }
+}
+function reportErr(e) {
+  const msg = (e && e.message ? e.message : String(e)) + ' @' + ((e && e.stack || '').split(String.fromCharCode(10))[1] || '').trim().slice(0, 40);
+  if (msg !== lastErr) { lastErr = msg; try { log('오류 — ' + msg); console.error(e); } catch (x) {} }
 }
 requestAnimationFrame(frame);
 </script>
