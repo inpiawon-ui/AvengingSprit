@@ -115,10 +115,11 @@ namespace Game.Module.InGame
 
                 case "LASER_PILLAR":
                 {
-                    // 광선은 레이저 문 그림(세로로 긴 한 장)을 같이 쓴다 — 기둥 발자국 가운데에서 뻗는다
+                    // 광선은 빨간 레이저 그림(obj_laser_crack, 레이저 문과 같은 96×512)을 같이 쓴다 — 청록이면
+                    // 아군 효과처럼 보였다(코덱스 검수). 기둥 발자국 가운데에서 뻗는다
                     var view = (RectTransform)ob.View.transform;
                     var local = ob.ShotBounds.center - view.anchoredPosition;
-                    var beam = ChildImage(ob, "Beam", GetSprite("obj_laser_beam"),
+                    var beam = ChildImage(ob, "Beam", GetSprite("obj_laser_crack") ?? GetSprite("obj_laser_beam"),
                                           new Vector2(Meters(LaserPillarWidthMeters), Meters(LaserPillarMeters)),
                                           new Vector2(0.5f, 0f), local);
                     beam.color = new Color(1f, 1f, 1f, 0.95f);
@@ -141,7 +142,7 @@ namespace Game.Module.InGame
                                           new Vector2(0.5f, 0f), new Vector2(0f, -Meters(0.5f)));
                     bars.gameObject.SetActive(false);
                     _extraImg[ob] = bars;
-                    var arrow = ChildImage(ob, "Arrow", GetSprite("obj_oneway_arrow"), new Vector2(72f, 72f) * k,
+                    var arrow = ChildImage(ob, "Arrow", GetSprite("obj_oneway_arrow"), new Vector2(108f, 108f) * k,
                                            new Vector2(0.5f, 0.5f), Vector2.zero);
                     _extraImg2[ob] = arrow;
                     ob.Hp = 0;           // 0 열림 · 1 닫힘
@@ -167,6 +168,16 @@ namespace Game.Module.InGame
                     bool on = me != null && o.ShotBounds.Contains(foot);
                     if (on) _switchHeld = true;
                     if (o.Img != null && o.Frames != null && o.Frames[on ? 1 : 0] != null) o.Img.sprite = o.Frames[on ? 1 : 0];
+                    // 표시등이 작아 전투 중에 안 읽혔다(코덱스 검수) — 안 밟았을 때는 판 전체가 숨 쉬듯 깜빡이고,
+                    // 밟는 순간 먼지가 튄다
+                    if (o.Img != null)
+                    {
+                        float k = on ? 1f : 0.72f + 0.28f * (0.5f + 0.5f * Mathf.Sin(Time.time * 7f));
+                        var c = new Color(k, k, k, 1f);
+                        if (o.Img.color != c) o.Img.color = c;
+                    }
+                    if (on && !o.Telegraph) _pfx?.Puff(o.ShotBounds.center, ParticleElement.Dust, 0.35f);
+                    o.Telegraph = on;
                     return true;
                 }
                 case "LASER_PILLAR": TickLaserPillar(o, me, foot, dt); return true;
@@ -254,6 +265,7 @@ namespace Game.Module.InGame
             if (o.Timer < CollapseSeconds)
             {
                 SetFrame(o, frame);
+                if (o.Img != null) o.Img.color = frame == 2 ? new Color(0.72f, 0.66f, 0.6f, 1f) : new Color(0.88f, 0.84f, 0.8f, 1f);
                 // 금이 가는 동안 판이 떤다 — 작은 화면에서 금 그림만으로는 「곧 꺼진다」가 약했다(코덱스 검수)
                 if (o.View != null)
                 {
@@ -268,6 +280,7 @@ namespace Game.Module.InGame
             // 꺼진다 — 구덩이가 된다(몸은 못 건너고 탄은 넘는다)
             o.Hp = 2;
             SetFrame(o, 3);
+            if (o.Img != null) o.Img.color = Color.white;
             o.BlocksMove = true;
             _pfx?.Puff(o.ShotBounds.center, ParticleElement.Dust, 0.8f);
             if (me != null && _host != null && o.ShotBounds.Contains(foot)) DamagePlayer(CollapseDamage);

@@ -32,7 +32,7 @@ GAME_KEY = {'gorilla': 'actor_enforcer', 'scorpion': 'scrapgunner'}
 # 돌 고릴라 76 은 「너무 크다」(PD 2026-10-07) → 68. 크게 보인 진짜 이유는 옛 집행자의 128 상자에 그려진 것이었다
 #   (96 칸이 1.33 배로 커졌다) — 지금은 잡몹 상자(84)에 그린다. 사람보다 조금 낮고 폭이 넓다
 BODY_H = {'gorilla': 68, 'boar': 60, 'mole': 58, 'mantis': 64, 'scorpion': 74,
-          'armadillo': 52, 'mushroom': 56, 'mummy': 64, 'spider': 58}   # 2026-10-07 묶음 넷 — 아르마딜로 · 거미는 낮고 넓다   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
+          'armadillo': 52, 'mushroom': 56, 'mummy': 64, 'spider': 58, 'spiderling': 62}   # 2026-10-07 묶음 넷 — 아르마딜로 · 거미는 낮고 넓다   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
 
 
 def cells(path):

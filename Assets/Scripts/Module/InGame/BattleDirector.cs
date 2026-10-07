@@ -2565,6 +2565,8 @@ namespace Game.Module.InGame
             for (int c = 1; c <= ChapterCount; c++)
                 foreach (var k in TrashKeysFor(c))
                     if (k != TrashCrossKey && !keys.Contains(k)) keys.Add(k);
+            // 알 거미가 낳는 새끼는 방에 서 있지 않아 위 목록에 없다 — 안 올리면 흰 사각형으로 태어난다 (BattleDirector.Trash4)
+            if (keys.Contains(TrashSpiderKey) && !keys.Contains(TrashSpiderlingKey)) keys.Add(TrashSpiderlingKey);
             var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
             // 그림이 하나도 안 걸렸을 때를 위한 마지막 대비책

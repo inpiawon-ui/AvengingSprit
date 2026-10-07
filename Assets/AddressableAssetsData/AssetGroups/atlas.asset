@@ -339,6 +339,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc99eb58bd301674e887cdcad06391e9
+    m_Address: atlas/unit_spiderling
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ffa2e5ed0300adb47877c107bbfcce00
     m_Address: atlas/unit_mushroom
     m_ReadOnly: 0

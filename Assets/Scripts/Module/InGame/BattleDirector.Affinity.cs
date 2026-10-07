@@ -98,7 +98,7 @@ namespace Game.Module.InGame
             // ── 마법: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
             "dragoon" or "snowwoman" or "dragon_blue" or "salamander" or "vampire"
                 or "white_wizard" or "medium" or "death"
-                or "skeleton" or "coilwalker" or "mushroom" or "mummy" or "spider" or "sludge"
+                or "skeleton" or "coilwalker" or "mushroom" or "mummy" or "spider" or "spiderling" or "sludge"
                 => Affinity.Magic,
             _ => Affinity.None,
         };

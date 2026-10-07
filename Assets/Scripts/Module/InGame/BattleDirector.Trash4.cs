@@ -14,8 +14,8 @@ namespace Game.Module.InGame
     ///   미라(9챕터 · 마법)            링 방사 — 멈춰 0.7초 손에 보랏빛을 모았다가 16발 고리. 빈틈 두 칸은 **내 쪽이 아닌 곳**에 난다 — 움직여 빠져야 한다
     ///   알 거미(8챕터 · 마법)          소환사 — 4.5초마다 새끼 둘을 낳고(최대 넷) 본체는 거리를 벌린다. 먼저 잡는다
     ///
-    /// 새끼 거미는 알 거미와 **같은 그림**(키 `spider`)을 작게 세운다 — 그림을 따로 받지 않는다(공용 리소스).
-    /// 패턴은 키가 아니라 「새끼 목록」으로 가른다.
+    /// 새끼 거미(키 `spiderling`)는 등에 깨진 알껍질을 진 전용 그림을 절반 크기로 세운다 —
+    /// 어미 그림을 줄여 쓰니 「알에서 나온 새끼」로 안 읽혔다(코덱스 검수 2026-10-07).
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -23,6 +23,7 @@ namespace Game.Module.InGame
         private const string TrashMushroomKey = "mushroom";
         private const string TrashMummyKey = "mummy";
         private const string TrashSpiderKey = "spider";
+        private const string TrashSpiderlingKey = "spiderling";   // 새끼 — 등에 알껍질을 진 전용 그림(코덱스 검수)
 
         private static HostEntry s_armadillo, s_mushroom, s_mummy, s_spider, s_spiderling;
 
@@ -46,9 +47,9 @@ namespace Game.Module.InGame
             hp: 34, atk: 6, moveMps: 1.2f, engageMps: 1.6f,
             rangeMeters: 5f, interval: 4.5f, telegraph: 0.6f);
 
-        // 새끼 — 같은 키(같은 그림), 다른 몸값. 빠르고 약한 근접
+        // 새끼 — 등에 깨진 알껍질을 진 전용 그림. 빠르고 약한 근접
         private static HostEntry Spiderling => s_spiderling ??= HostEntry.CreateTrash(
-            TrashSpiderKey, "새끼 거미", AttackKind.Melee,
+            TrashSpiderlingKey, "새끼 거미", AttackKind.Melee,
             hp: 6, atk: 4, moveMps: 2.4f, engageMps: 3.0f,
             rangeMeters: 0.8f, interval: 1.0f, telegraph: 0.25f);
 
@@ -119,6 +120,27 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
+        //  걷기 — 걸리면 옆으로 돌아 나간다(평소 잡몹과 같은 우회)
+        // ═══════════════════════════════════════════════════════════
+
+        /// <summary>
+        /// `goal` 쪽으로 한 걸음. 담 · 엄폐에 걸려 제자리걸음이면 평소 잡몹처럼 옆 자리로 돌아 나간다 —
+        /// 곧장 다가가기만 하면 낮은 담 뒤에서 한 발도 못 나왔다(실측 2026-10-08, 5-10 폭탄 버섯).
+        /// </summary>
+        private void StepWithDetour(Unit e, Unit me, Vector2 step, float dt)
+        {
+            var before = e.Position;
+            if (e.IsRepositioning && e.IsDetouring)
+            {
+                e.Position = SlideMove(e, e.Position, e.StepToward(e.RepositionTarget, dt));
+                if (Vector2.Distance(e.Position, e.RepositionTarget) < 24f || NoteStuck(e, before, dt)) e.EndReposition();
+                return;
+            }
+            e.Position = SlideMove(e, e.Position, step);
+            if (NoteStuck(e, before, dt)) e.BeginDetour(PickDetourSpot(e, me));
+        }
+
+        // ═══════════════════════════════════════════════════════════
         //  폭탄 버섯
         // ═══════════════════════════════════════════════════════════
 
@@ -142,7 +164,7 @@ namespace Game.Module.InGame
             if (distance > Meters(MushroomFuseMeters))
             {
                 e.SetState(EnemyState.Approach);
-                e.Position = SlideMove(e, e.Position, e.StepToward(me.Position, dt));
+                StepWithDetour(e, me, e.StepToward(me.Position, dt), dt);
                 e.SetMoving(true);
                 return true;
             }
@@ -235,7 +257,7 @@ namespace Game.Module.InGame
             e.SetState(EnemyState.Approach);
             float want = distance - Meters(MummyKeepMeters);
             if (Mathf.Abs(want) < Meters(0.5f)) { e.SetMoving(false); return true; }
-            e.Position = SlideMove(e, e.Position, dir * (Mathf.Sign(want) * e.MoveSpeed * dt));
+            StepWithDetour(e, me, dir * (Mathf.Sign(want) * e.MoveSpeed * dt), dt);
             e.SetMoving(true);
             return true;
         }
@@ -294,7 +316,7 @@ namespace Game.Module.InGame
             e.SetState(EnemyState.Approach);
             if (distance < Meters(SpiderKeepMeters))
             {
-                e.Position = SlideMove(e, e.Position, away * (e.MoveSpeed * dt));
+                StepWithDetour(e, me, away * (e.MoveSpeed * dt), dt);
                 e.SetMoving(true);
             }
             else e.SetMoving(false);
