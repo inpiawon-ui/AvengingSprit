@@ -1,0 +1,36 @@
+너는 이 게임의 **아트 디렉터**다. 이번엔 그림을 그리지 않고, 현재 게임 화면을 검수해서 **무엇을 어떻게 고칠지 네가 정한다.**
+PD 지시: 아트 · 이펙트 · 연출은 네가 주(主)이고, 개발 담당(Claude)은 네 판단대로 넣고 네가 틀린 점만 잡는 보조다.
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 이미지 생성도 하지 마라. 파일은 아래 검수서 하나만 쓴다.
+
+게임: AVENGING SPIRIT: RE:BORN — 세로 화면(720×1280 기준) 모바일 빙의 로그라이크, 탑다운 3/4 시점.
+유령이 적의 몸에 빙의해 싸운다. 원작은 1991년 아케이드(Jaleco). 도트 감성을 현대 모바일 퀄리티로 올리는 것이 목표. 일본 출시.
+
+PD 의견: "왜 우리 게임은 퀄 자체가 이렇게 떨어질까. 전체적으로 알 수가 없네."
+"빙의 이펙트나 불꽃 이펙트 같은 것도" 퀄이 낮다고 본다.
+
+아래 파일을 직접 열어서 보고 판단해라 (전부 실제 게임 캡처):
+방 화면:
+- Projects/AVSR/_exchange/ref/quality_audit/ROOM_CH1_003.png
+- Projects/AVSR/_exchange/ref/quality_audit/ROOM_CH2_009.png
+- Projects/AVSR/_exchange/ref/quality_audit/ROOM_CH3_009.png
+- Projects/AVSR/_exchange/ref/quality_audit/ROOM_CH5_013.png
+- Projects/AVSR/_exchange/ref/quality_audit/ROOM_CH6_007.png
+- Projects/AVSR/_exchange/ref/quality_audit/boar_charge_ingame.png (멧돼지 돌진 예고 — 화살표 · 흙먼지)
+화염 분사구 불줄기 (게임 녹화에서 뽑은 연속 프레임, 순서대로 보면 움직임이다):
+- Projects/AVSR/_exchange/ref/quality_audit/flame_frames/flame_00.png ~ flame_08.png
+- 그 불줄기의 원본 시트: Projects/AVSR/_exchange/ref/flame_fx/flame_jet_v3.png
+
+검수 관점 (각각 구체적으로, 화면의 어느 물체인지 짚어서):
+1. 화면 전체를 "싸 보이게" 만드는 원인을 큰 것부터 5~8개.
+2. 화풍이 섞인 것 — 선 굵기, 도트 밀도(한 픽셀이 화면에서 몇 배로 보이는지), 음영 방식, 채도가 서로 다른 물체.
+3. 축척 — 캐릭터 대비 물건 · 벽 · 바닥 무늬가 어색하게 크거나 작은 것.
+4. 바닥 · 벽 — 반복 무늬, 경계, 깊이감(그림자 · 접지)이 없는 것.
+5. 캐릭터 · 적이 바닥에 붙어 보이는가(발밑 그림자), 배경에서 잘 떨어지는가.
+6. 이펙트 — 불줄기 · 돌진 예고가 게임 그림과 따로 노는지. 불줄기는 움직임(프레임 흐름)까지 평가.
+7. **결정**: 고치는 순서. 효과 큰 것부터. 각 항목마다
+   - 방식: 「그림을 새로 받는다(무엇을, 어떤 규격으로)」 / 「파티클 · 셰이더 · 합성으로 만든다(어떻게)」 / 「배치 · 크기 · 색 조정만으로 된다(얼마나)」
+   - 개발 담당이 바로 할 수 있게 숫자까지(배율 · 픽셀 크기 · 색값 · 투명도 등).
+8. 화면 전체에 적용할 **아트 규칙** 5줄 이내 (예: 도트 1px = 화면 몇 px, 외곽선 색 규칙, 그림자 규칙). 앞으로 모든 발주에 붙인다.
+
+출력: Projects/AVSR/_exchange/ref/quality_audit/codex_review_01.md 에 한국어로 쓴다.
+듣기 좋은 말은 빼고, 고쳐야 할 것만 솔직하게. 각 항목에 해당 캡처 파일명을 붙인다.
