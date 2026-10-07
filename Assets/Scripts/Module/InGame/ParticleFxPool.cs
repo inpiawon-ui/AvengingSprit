@@ -24,6 +24,18 @@ namespace Game.Module.InGame
         Star4,
         /// <summary>유령 빛 알갱이 — 흰 · 하늘색 십자별(승인 시안에서 잘라 낸 그림). 위에서 흘러내린다.</summary>
         GhostMote,
+        /// <summary>
+        /// 피격 빛 알갱이 — 그림이 아니라 빛 셰이더로 그린 흰 점(더하기). **색은 쏠 때 준다**(흰색이라 곱해도 결이 안 죽는다).
+        /// 가로세로를 따로 줘서 늘이면 빛꼬리가 된다(`Spray`).
+        /// </summary>
+        HxDot,
+        /// <summary>
+        /// 피격 색 낱알 — 색마다 재질이 따로다(가운데가 하얘지는 정도 · 섞기 방식이 다르다, 코덱스 조정 r4).
+        /// 재질은 피격이 꽂는다(`BattleDirector.HxBuild`).
+        /// </summary>
+        HxGrainGold,
+        HxGrainSilver,
+        HxGrainOrange,
     }
 
     /// <summary>
@@ -232,6 +244,39 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>
+        /// 한 방향 부채꼴로 **뿌린다** — 피격의 「꿰뚫음(등 뒤로)」 · 「튕겨냄(쏜 쪽으로)」(2026-10-07).
+        /// <paramref name="size"/> 의 x 는 날아가는 쪽 길이, y 는 폭 — 같으면 점, 길면 빛꼬리다.
+        /// 색은 <paramref name="color"/> 로 칠한다(흰 점 그림 `HxDot` 전용).
+        /// <paramref name="spread"/> 는 태어나는 자리 흩기(반경), <paramref name="stagger"/> 는 한 알씩 늦게 나오는 간격(초) —
+        /// 같은 자리 · 같은 순간에 겹치면 낱알이 아니라 한 덩어리 얼룩으로 보인다.
+        /// 늦게 나오는 것은 그 시간만큼 궤적 뒤쪽에서 태어나게 해 흉내 낸다(파티클은 늦춰 쏘기가 없다).
+        /// </summary>
+        public void Spray(ParticleFxKind kind, Vector2 at, Vector2 dir, float halfConeDeg, int count,
+                          float speedMin, float speedMax, Vector2 size, float life, Color color,
+                          float spread = 0f, float stagger = 0f)
+        {
+            if (count <= 0) return;
+            var ps = SystemOf(kind, ParticleElement.Fire);
+            float baseRad = Mathf.Atan2(dir.y, dir.x);
+            var p = new ParticleSystem.EmitParams { applyShapeToPosition = false, startColor = color };
+            for (int i = 0; i < count; i++)
+            {
+                // 부채를 잘라 나누고 그 안에서 흔든다 — 한쪽에 뭉치지 않게(Burst 와 같은 이유)
+                float k = count == 1 ? Random.value : (i + Random.value) / count;
+                float a = baseRad + Mathf.Lerp(-halfConeDeg, halfConeDeg, k) * Mathf.Deg2Rad;
+                float s = Random.Range(0.8f, 1.2f);
+                var v = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Random.Range(speedMin, speedMax);
+                p.position = at + Random.insideUnitCircle * spread - v * (stagger * i);
+                p.velocity = v;
+                p.startSize3D = new Vector3(size.x * s, size.y * s, 1f);
+                p.startLifetime = life * Random.Range(0.8f, 1.15f);
+                p.rotation = a * Mathf.Rad2Deg;
+                p.angularVelocity = 0f;
+                ps.Emit(p, 1);
+            }
+        }
+
         // ── 알맹이 ──────────────────────────────────────────────
 
         /// <summary>
@@ -338,6 +383,18 @@ namespace Game.Module.InGame
             force.enabled = true;
             force.space = ParticleSystemSimulationSpace.Local;
             force.y = new ParticleSystem.MinMaxCurve(-GravityOf(kind));
+
+            if (kind == ParticleFxKind.HxDot || kind == ParticleFxKind.HxGrainGold
+                || kind == ParticleFxKind.HxGrainSilver || kind == ParticleFxKind.HxGrainOrange)
+            {
+                // 가로세로를 따로 받는다(빛꼬리) · 쏜 직후가 가장 빠르고 금방 선다 — 「탁 튀었다」로 읽히게
+                main.startSize3D = true;
+                var limit = ps.limitVelocityOverLifetime;
+                limit.enabled = true;
+                limit.drag = 5f;
+                limit.multiplyDragByParticleSize = false;
+                limit.multiplyDragByParticleVelocity = false;
+            }
 
             var curve = SizeCurveOf(kind);
             if (curve != null)

@@ -37,6 +37,9 @@ Shader "UI/AdditiveLight"
         _RingRadius ("Ring radius (0-1)", Float) = 0.8
         _RingWidth ("Ring thickness", Float) = 0.06
         _RingGlow ("Ring glow width", Float) = 0.18
+        _CoreWhite ("Beam core turns white (0-1)", Float) = 0.8
+        _RingWhite ("Ring line turns white (0-1)", Float) = 0.7
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Dst blend (One = add)", Float) = 1
 
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
@@ -70,7 +73,9 @@ Shader "UI/AdditiveLight"
         Lighting Off
         ZWrite Off
         ZTest [unity_GUIZTestMode]
-        Blend SrcAlpha One          // 더하기 — 빛은 겹칠수록 밝아진다
+        // 더하기(One) — 빛은 겹칠수록 밝아진다. 밝은 바닥에서 색이 하얗게 날아가는 색 몸통(피격의 주황 · 은빛)은
+        // 재질에서 _DstBlend = OneMinusSrcAlpha(보통 섞기)로 바꿔 색을 그대로 보인다(2026-10-07)
+        Blend SrcAlpha [_DstBlend]
         ColorMask [_ColorMask]
 
         Pass
@@ -104,7 +109,7 @@ Shader "UI/AdditiveLight"
             float _Shape;
             float _BottomWidth, _TopWidth, _EdgeSoft, _Body, _CoreWidth, _CoreBoost, _FadeTop, _FadeBottom;
             float _Streak, _Scroll, _DashCount, _DashDuty, _EdgeLine;
-            float _RingRadius, _RingWidth, _RingGlow;
+            float _RingRadius, _RingWidth, _RingGlow, _CoreWhite, _RingWhite;
 
             v2f vert (appdata_t v)
             {
@@ -145,7 +150,7 @@ Shader "UI/AdditiveLight"
                 float rim = exp(-pow((x - halfW) / 0.025, 2.0)) * _EdgeLine;
                 float a = (edge * _Body * streak + core * _CoreBoost + rim) * vfade;
                 // 심은 하얗게 — 가운데로 갈수록 색이 흰빛으로
-                fixed3 rgb = lerp(col.rgb, fixed3(1, 1, 1), saturate(core * 0.8));
+                fixed3 rgb = lerp(col.rgb, fixed3(1, 1, 1), saturate(core * _CoreWhite));
                 return fixed4(rgb, a * col.a);
             }
 
@@ -155,7 +160,8 @@ Shader "UI/AdditiveLight"
                 float line_ = exp(-pow((d - _RingRadius) / max(_RingWidth, 1e-4), 2.0));
                 float glow = exp(-pow((d - _RingRadius) / max(_RingGlow, 1e-4), 2.0)) * 0.45;
                 float a = saturate(line_ + glow);
-                fixed3 rgb = lerp(col.rgb, fixed3(1, 1, 1), saturate(line_ * 0.7));
+                // 보통 섞기의 색 낱알은 하얗게 섞으면 파스텔(주황 → 분홍)로 바랜다 — 재질마다 정한다(피격 2026-10-07)
+                fixed3 rgb = lerp(col.rgb, fixed3(1, 1, 1), saturate(line_ * _RingWhite));
                 return fixed4(rgb, a * col.a);
             }
 

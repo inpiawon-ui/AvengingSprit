@@ -132,6 +132,7 @@ namespace Game.Module.InGame
         {
             float dt = Time.unscaledDeltaTime;
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
+            TickHx(dt);
             TickCastPresentation(dt);
             if (_castPending != null) _castPending.TickFlash(dt);
 

@@ -3295,6 +3295,7 @@ namespace Game.Module.InGame
             TickDamageTexts(dt);
             TickGoldPiles(dt);
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].Tick(dt);
+            TickHx(dt);           // 공통 피격 빛 조각
             TickCastPresentation(dt);
             TickStatusFx(dt);
             TickHostPassives(dt);
@@ -4084,10 +4085,8 @@ namespace Game.Module.InGame
         /// <summary>방에 들어선 직후 안 맞는 시간. 한 호흡만 준다.</summary>
         private const float RoomEntryInvulnSeconds = 1.0f;
 
-        /// <summary>타격·피격 표시 크기(px). 예전 표시가 작아 때린 줄도 몰랐다.</summary>
-        private const float HitFxSize = 96f;
+        /// <summary>피격 표시 크기(px). 예전 표시가 작아 맞은 줄도 몰랐다.</summary>
         private const float HurtFxSize = 112f;
-        private const float CritFxSize = 150f;
 
         /// <summary>몇 발 쏘고 자리를 옮기는가 (원거리).</summary>
         private const int ShotsBeforeMove = 2;
@@ -6354,7 +6353,11 @@ namespace Game.Module.InGame
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
             ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak, dull);
             // 안 맞는 몸 — 불똥만 작게 튀고 화면은 안 흔들린다.
-            if (!HxSkipCommonHit) SpawnFx("hit", victim.Position, dull ? HitFxSize * DullFxScale : HitFxSize);
+            if (!HxSkillHit(victim, weak, dull))
+            {
+                if (dull) DullPuff(victim.Position);
+                else if (!weak) HitSparks(victim.Position);   // 유리는 WithAffinity 가 주황 불 고리를 냈다
+            }
             if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
@@ -6824,7 +6827,6 @@ namespace Game.Module.InGame
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
             if (kind == WpTracerKind) { WpTracerHit(at); return; }   // 난사 예광탄 — 작은 코어만
-            if (HxImpact(at, kind, size)) return;   // 피격 두 겹 — 투사체 고유 터짐(불티는 폭발 갈래만)
             // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
             // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
             _pfx?.Hit(at, ParticleElement.Fire, 0.8f);
@@ -7070,7 +7072,9 @@ namespace Game.Module.InGame
                     // 터지는 탄은 **닿은 자리에서 터진다.** 반경 안이 다 맞는다.
                     if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
-                    SpawnImpact(ImpactPointOn(hit, p.Position), p.Kind);
+                    // 공통 피격(2026-10-07) — 자리 · 방향만 적어 두고 `ApplyShotHit` 이 치명 · 상성을 보고 그린다
+                    var hitAt = ImpactPointOn(hit, p.Position);
+                    if (!HxNoteShot(p, hitAt)) SpawnImpact(hitAt, p.Kind);
                     ApplyShotHit(hit, p);
                 }
                 else
@@ -7201,10 +7205,10 @@ namespace Game.Module.InGame
             {
                 // 안 맞는 몸 — 「팅」 하고 튕기는 소리, 작은 불똥, 흔들림 없음.
                 GameSound.Cue(dull ? "hit.reflect" : "hit.enemy");
-                // 피격 두 겹(2026-10-07) — 그림이 있으면 노란 별 대신 치명 겹만(고유 터짐은 이미 났다)
-                if (!HxShotHit(victim, crit))
-                    SpawnFx(crit ? "crit" : "hit", victim.Position,
-                            crit ? CritFxSize : dull ? HitFxSize * DullFxScale : HitFxSize);
+                // 공통 피격(빛 셰이더, HitFx.cs)은 꺼 두었다(HxEnabled) — 꺼져 있으면 아래 파티클 길로 간다
+                // 별 그림(fx_hit · fx_crit)은 표창처럼 보여 뺐다(PD 2026-10-07) — 보통은 탄 고유 터짐 + 불티로 충분
+                if (!HxShotHit(victim, crit, weak, dull) && dull && !crit) DullPuff(victim.Position);
+                if (crit) CritBurst(victim.Position);   // 「팍팍」 — 불티 · 섬광 · 충격 고리(PD 2026-10-07)
                 if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
                 else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);
@@ -7837,8 +7841,8 @@ namespace Game.Module.InGame
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit)
             => ShowDamage(at, damage, toEnemy, crit, false);
 
-        /// <param name="weak">약점을 찔렀다 — 빨강으로 뜬다(주식처럼 오름 = 빨강).</param>
-        /// <param name="dull">안 맞는 몸으로 때렸다 — 작고 흐리게 뜬다(치명타면 치명타가 이긴다).</param>
+        /// <param name="weak">약점을 찔렀다 — 주황으로 뜬다(▲ 와 같은 색).</param>
+        /// <param name="dull">안 맞는 몸으로 때렸다 — 작은 은빛 숫자로 뜬다(치명타면 치명타가 이긴다).</param>
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak, bool dull = false)
         {
             if (damage <= 0) return;

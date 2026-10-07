@@ -1404,6 +1404,7 @@ namespace Game.Module.InGame
                 ShowInvulnAura(true);
             }
             else ShowInvulnAura(false);
+            if (_rimFlashLeft > 0f) _rimFlashLeft -= dt;
             ShowLightRim();
 
             if (_invulnerable)
@@ -1450,6 +1451,18 @@ namespace Game.Module.InGame
         /// <summary>유령 빛 테두리 진하기(0 이면 끈다). 매 프레임 불러도 된다.</summary>
         public void SetLightRim(float alpha) => _lightRimAlpha = alpha;
 
+        /// <summary>
+        /// 피격 테두리 번쩍(2026-10-07) — 같은 실루엣을 잠깐 다른 색으로. 상성 유리는 주황, 불리는 은빛
+        /// (「쇠에 맞고 튕겼다」). 유령 빛 테두리보다 이긴다.
+        /// </summary>
+        public void FlashRim(Color color, float seconds)
+        {
+            _rimFlashColor = color;
+            _rimFlashSeconds = _rimFlashLeft = Mathf.Max(0.01f, seconds);
+        }
+
+        private Color _rimFlashColor;
+        private float _rimFlashLeft, _rimFlashSeconds;
         private float _lightRimAlpha;
         private Image _lightRim;
         // 시안의 테두리는 밝은 하늘빛(약 3~5 px) — 1차 비교에서 희미한 흰색, 2차에서 진하고 납작한 파랑이라
@@ -1459,7 +1472,8 @@ namespace Game.Module.InGame
 
         private void ShowLightRim()
         {
-            if (_lightRimAlpha <= 0.01f || _body == null || _body.sprite == null)
+            bool flash = _rimFlashLeft > 0f;
+            if ((_lightRimAlpha <= 0.01f && !flash) || _body == null || _body.sprite == null)
             {
                 if (_lightRim != null && _lightRim.gameObject.activeSelf) _lightRim.gameObject.SetActive(false);
                 return;
@@ -1475,7 +1489,9 @@ namespace Game.Module.InGame
             var rt = (RectTransform)_lightRim.transform;
             rt.sizeDelta = _rect.sizeDelta * LightRimScale;
             rt.localScale = new Vector3(Mathf.Sign(_body.transform.localScale.x), 1f, 1f);
-            _lightRim.color = new Color(LightRimColor.r, LightRimColor.g, LightRimColor.b, _lightRimAlpha);
+            _lightRim.color = flash
+                ? new Color(_rimFlashColor.r, _rimFlashColor.g, _rimFlashColor.b, _rimFlashColor.a * (_rimFlashLeft / _rimFlashSeconds))
+                : new Color(LightRimColor.r, LightRimColor.g, LightRimColor.b, _lightRimAlpha);
             if (!_lightRim.gameObject.activeSelf) _lightRim.gameObject.SetActive(true);
         }
 

@@ -219,8 +219,8 @@ namespace Game.Module.InGame
             dull = outcome < 0;
             if (weak)
             {
-                // 때린 몸의 속성 겹(파워 · 무기 · 마법) — 무엇으로 때리든 얼음이 나오던 것을 바꿨다(2026-10-07)
-                if (!HxAffinityHit(victim)) SpawnFx("weakhit", victim.Position, WeakFxSize);
+                // 얼음 조각(fx_weakhit)은 무엇으로 때리든 얼음이라 뺐다(PD) — ▲ 와 같은 주황 불 고리 + 불티
+                if (!HxAffinityHit(victim)) WeakBurst(victim);
                 GameSound.Cue("hit.weak");
                 StrongHitReaction(victim);
                 return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.WinDamageMul));
@@ -228,8 +228,6 @@ namespace Game.Module.InGame
             if (dull) return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.LoseDamageMul));
             return damage;
         }
-
-        private const float WeakFxSize = 150f;
 
         // ── 타격 반응 (2026-10-01) ──────────────────────────────
         //
@@ -244,7 +242,6 @@ namespace Game.Module.InGame
         /// <summary>불리한 쪽을 때리는 중인가. 맞기 **전에** 묻는다 — 움찔할지 말지가 여기서 갈린다.</summary>
         private bool IsDullAgainst(Unit victim) => OutcomeAgainst(victim) < 0;
 
-        private const float DullFxScale = 0.5f;
         private const float StrongHoldSeconds = 0.28f;
         private const float StrongShake = 3f;
         /// <summary>연사 몸이 맞힐 때마다 밀면 적이 영영 못 온다 — 적마다 이 간격에 한 번만.</summary>
@@ -269,13 +266,16 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 유리 숫자 색 — ▲ 와 같은 빨강. 주식처럼 오름 = 빨강 · 내림 = 파랑이다(기획 2026-10-07).
-        /// 치명타(금색)와 갈린다. 내가 맞는 숫자(연한 빨강 `DamageToPlayer`)보다 짙다.
+        /// 유리 숫자 색 — ▲ 와 같은 주황(기획 2026-10-07 「A 주황」). 빨강은 「위험 · 내가 맞음」, 초록은 회복이라 뺐다.
+        /// 치명타(금빛 노랑)와는 색 · 크기로 갈린다.
         /// </summary>
-        private static readonly Color WeakDamageColor = new(1f, 0.27f, 0.2f, 1f);
+        private static readonly Color WeakDamageColor = new(1f, 0.494f, 0.11f, 1f);
 
-        /// <summary>불리 숫자 — 작고 흐리게, ▼ 와 같은 파랑 기운. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
-        private static readonly Color DullDamageColor = new(0.5f, 0.68f, 1f, 0.9f);
+        /// <summary>
+        /// 불리 숫자 — 작게, ▼ 와 같은 은빛 강철. 「안 먹힘 · 튕겨냄」이지 위험이 아니다.
+        /// 밋밋한 회색은 「꺼진 버튼」 같아 은빛으로 바꿨다(PD 2026-10-07).
+        /// </summary>
+        private static readonly Color DullDamageColor = new(0.667f, 0.714f, 0.776f, 1f);
 
         // ── 갈아타기 규칙 ───────────────────────────────────────
 

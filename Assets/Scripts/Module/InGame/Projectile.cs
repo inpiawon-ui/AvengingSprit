@@ -33,6 +33,9 @@ namespace Game.Module.InGame
         public Unit Target => _target;
         public Vector2 Position => _rect.anchoredPosition;
 
+        /// <summary>날아가는 방향(단위). 피격 이펙트가 「어느 쪽에서 맞았나」를 읽는다.</summary>
+        public Vector2 Direction => _dir;
+
         public bool Pierce { get; private set; }
 
         /// <summary>

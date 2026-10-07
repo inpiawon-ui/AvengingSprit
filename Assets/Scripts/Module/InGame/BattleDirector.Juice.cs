@@ -63,7 +63,9 @@ namespace Game.Module.InGame
         // 연사 몸은 치명타가 자주 터지므로 간격을 둔다 — 계속 밀리면 화면이 미끄러진다.
 
         private const float KickReturnPerSecond = 18f;   // 클수록 빨리 돌아온다(지수 감쇠)
-        private const float CritKickPixels = 2.5f;
+        // 2.5 → 4 — 「치명타가 터지면 팍팍 강하게 들어가는 느낌」(PD 2026-10-07). 떨림도 짧게 얹는다(CritShake)
+        private const float CritKickPixels = 4f;
+        private const float CritShake = 3f;
         private const float CritKickGap = 0.35f;         // 치명타 반동 사이 최소 간격(실제 시간)
 
         private Vector2 _kick;
@@ -84,7 +86,61 @@ namespace Game.Module.InGame
             if (now - _lastCritKickAt < CritKickGap) { Shake(ShakeOnHit); return; }
             _lastCritKickAt = now;
             Kick(dir, CritKickPixels);
+            Shake(CritShake);
         }
+
+        // ── 맞는 표시 — 별 그림 대신 파티클 (2026-10-07) ─────────
+        //
+        // 예전 피격 그림이 전부 **노란 뾰족 별**(`fx_hit` · `fx_crit`)이라 표창처럼 보였고,
+        // 상성 유리는 얼음 조각(`fx_weakhit`)이라 무엇으로 때리든 얼음이 나왔다(PD 반려).
+        // 새 그림 없이 있는 파티클(불티 · 섬광 · 불 고리 · 연기)로 바꾼다. 별 모양(`star4` 반짝이)은 쓰지 않는다.
+        //   보통 — 탄 고유 터짐 + 불티(`SpawnImpact` 가 이미 낸다)만. 근접 · 스킬은 불티를 여기서 낸다
+        //   치명 — 「팍팍 터지게 강하게」(PD): 불티 · 큰 섬광 · 불 고리 · 연기가 한 번에 + 반동 · 멈칫
+        //   유리 — ▲ 와 같은 주황: 불 고리 + 불티
+        //   불리 — 회색 먼지 한 줌 + 약한 불티(덜 들어갔다)
+        // 연사 몸은 치명타가 자주 터진다 — 간격을 둬, 사이 치명타는 숫자만 크게.
+
+        private const float CritBurstGap = 0.12f;
+        private float _lastCritBurstAt = -1f;
+
+        private void CritBurst(Vector2 at)
+        {
+            if (_pfx == null) return;
+            float now = Time.unscaledTime;
+            if (now - _lastCritBurstAt < CritBurstGap) return;
+            _lastCritBurstAt = now;
+            _pfx.Hit(at, ParticleElement.Fire, 1.8f);      // 불티 18개 · 큰 섬광
+            _pfx.Ring(at, ParticleElement.Fire, 150f);      // 밀려 나가는 불 고리 — 190 은 몸을 통째로 덮었다
+            _pfx.Puff(at, ParticleElement.Fire, 0.6f);      // 터진 연기
+        }
+
+        // 기관총이 유리한 적을 쏘면 매 발 불 고리가 떠 화면이 고리로 덮였다(녹화 2026-10-07) — 적마다 간격을 둔다
+        private const float WeakBurstGap = 0.25f;
+        private readonly System.Collections.Generic.Dictionary<Unit, float> _weakBurstAt = new();
+
+        private void WeakBurst(Unit victim)
+        {
+            if (_pfx == null || victim == null) return;
+            float now = Time.time;
+            if (_weakBurstAt.TryGetValue(victim, out float last) && now - last < WeakBurstGap)
+            {
+                _pfx.Hit(victim.Position, ParticleElement.Fire, 0.6f);   // 사이 탄은 불티만
+                return;
+            }
+            _weakBurstAt[victim] = now;
+            _pfx.Ring(victim.Position, ParticleElement.Fire, 100f);
+            _pfx.Hit(victim.Position, ParticleElement.Fire, 1.1f);
+        }
+
+        private void DullPuff(Vector2 at)
+        {
+            if (_pfx == null) return;
+            _pfx.Puff(at, ParticleElement.Dust, 0.45f);
+            _pfx.Hit(at, ParticleElement.Dust, 0.5f);
+        }
+
+        /// <summary>근접 · 스킬 보통 타격 — 탄이 없어 `SpawnImpact` 불티가 안 나는 길.</summary>
+        private void HitSparks(Vector2 at) => _pfx?.Hit(at, ParticleElement.Fire, 0.9f);
 
         private void TickKick(float dt)
         {
@@ -122,6 +178,7 @@ namespace Game.Module.InGame
             _kick = Vector2.zero;
             _shakeOffset = Vector2.zero;
             if (_hitStopLeft > 0f) { _hitStopLeft = 0f; Time.timeScale = 1f; }
+            _weakBurstAt.Clear();   // 지난 방의 죽은 적이 쌓이지 않게
             ClearBigJuice();
         }
 
@@ -136,7 +193,7 @@ namespace Game.Module.InGame
         private const float ShakeOnBossHurt = 5.5f; // 보스를 때렸을 때
         private const float ShakeOnPlayerHurt = 4f; // 내가 맞았을 때
 
-        private const float HitStopOnCrit = 0.06f;
+        private const float HitStopOnCrit = 0.09f;   // 0.06 → 0.09 — 치명타 「팍」(PD 2026-10-07)
         private const float HitStopOnBossKill = 0.18f;
 
         // ── 업그레이드 번쩍임 ────────────────────────────────────
