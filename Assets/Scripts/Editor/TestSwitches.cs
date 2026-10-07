@@ -71,6 +71,23 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── 사신의 수확 (시험판 2026-10-07) ─────────────────────
+        //
+        // 추가 모드 1순위를 개발 전에 손으로 느껴 보는 판. 모든 적에 경직이 쌓이고,
+        // 차면 혼이 드러나며, 유령으로 닿으면 거둔다. 규칙은 `BattleDirector.Reap.cs`.
+        private const string ReapMenu = "Tools/Game/시험판 — 사신의 수확";
+
+        [MenuItem(ReapMenu)]
+        private static void ToggleReap()
+            => ReapRule.Enabled = !ReapRule.Enabled;
+
+        [MenuItem(ReapMenu, true)]
+        private static bool ToggleReapValidate()
+        {
+            Menu.SetChecked(ReapMenu, ReapRule.Enabled);
+            return true;
+        }
+
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
             => BattleDirector.OneEnemyPerRoom = !BattleDirector.OneEnemyPerRoom;

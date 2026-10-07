@@ -23,6 +23,7 @@ namespace Game.Module.InGame
 
         private void OnGUI()
         {
+            DrawReapHud();   // 시험판 — 사신의 수확 (BattleDirector.Reap.cs)
             var def = _brain != null ? _brain.Entry : null;
             if (_boss == null || !_boss.IsAlive || def == null || def.Moves.Count == 0) return;
 

@@ -3256,6 +3256,7 @@ namespace Game.Module.InGame
             TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);
             TickEnemies(dt);
+            TickReap(dt);          // 시험판 — 사신의 수확 (꺼져 있으면 바로 돌아간다)
             TickShots(dt);
             TickFields(dt);
             TickDeploy(dt);
@@ -5467,7 +5468,8 @@ namespace Game.Module.InGame
         ///   따로 두면 한 곳만 고쳐진다.
         /// </summary>
         private bool Targetable(Unit e)
-            => e != null && e.IsAlive && !e.IsDying && !e.IsHidden;
+            => e != null && e.IsAlive && !e.IsDying && !e.IsHidden
+               && !e.IsSoulExposed;   // 시험판 — 사신의 수확: 드러난 혼은 겨누지 않는다
 
         private Unit NearestEnemy(Vector2 from, float range)
         {
@@ -8630,7 +8632,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                if (e == null || !e.IsAlive) continue;
+                if (e == null || !e.IsAlive || e.IsSoulExposed) continue;
                 float d = Vector2.Distance(at, e.Position);
                 if (d >= bestD) continue;
                 bestD = d; best = e;

@@ -671,6 +671,7 @@ namespace Game.Module.InGame
         /// </summary>
         private bool CanLeaveHost()
         {
+            if (ReapAllowsLeave()) return true;   // 시험판 — 사신의 수확: 거둘 혼이 있으면 나갈 수 있다
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];

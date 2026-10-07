@@ -181,6 +181,14 @@ namespace Game.Module.InGame
         /// </summary>
         public void TickStagger(float dt)
         {
+            // 시험판 — 사신의 수확. 혼이 드러난 동안은 게이지 대신 이 시계가 돈다.
+            if (_soulExposed > 0f)
+            {
+                _soulExposed = Mathf.Max(0f, _soulExposed - dt);
+                if (_soulExposed == 0f) { _stagger = 0f; _staggerCool = StaggerCooldownSeconds; }
+                return;
+            }
+
             if (_staggerWindow > 0f)
             {
                 _staggerWindow -= dt;
@@ -203,7 +211,20 @@ namespace Game.Module.InGame
             _stagger = 0f;
             _staggerWindow = 0f;
             _staggerCool = 0f;
+            _soulExposed = 0f;
         }
+
+        // ── 시험판 — 사신의 수확 (BattleDirector.Reap.cs) ──────────────
+        //
+        // 경직이 차면 빙의 창 대신 **혼이 드러난다.** 그동안은 맞지 않고(자동 공격이
+        // 거둘 몸을 죽이지 않게) 움직이지도 않는다. 시계가 다 돌면 그 체력 그대로 일어난다.
+        private float _soulExposed;
+
+        /// <summary>혼이 드러나 있는가 — 유령이 닿으면 거둔다.</summary>
+        public bool IsSoulExposed => _soulExposed > 0f;
+
+        /// <summary>드러난 혼의 남은 시간 0~1.</summary>
+        public float SoulExposedRatio => Mathf.Clamp01(_soulExposed / ReapRule.ExposeSeconds);
 
         public void BanRepossess() => RepossessBanned = true;
 
@@ -1135,6 +1156,7 @@ namespace Game.Module.InGame
         public bool TakeDamage(int amount)
         {
             if (!IsAlive) return false;
+            if (IsSoulExposed) return false;    // 시험판 — 사신의 수확: 드러난 혼은 맞지 않는다
             int dealt = Mathf.Max(1, amount);
 
             // 쉴드가 먼저 깎인다. 다 막아 내면 체력은 건드리지 않는다 —
@@ -1159,10 +1181,16 @@ namespace Game.Module.InGame
             PlayHit();          // 틴트와 자세를 같은 자리에서 시작해야 따로 놀지 않는다
 
             // 숙주만 경직이 쌓인다. 잡몹은 아무리 때려도 빼앗을 몸이 되지 않는다.
-            if (IsHostBody && Hp > 0 && _staggerWindow <= 0f && _staggerCool <= 0f)
+            // 시험판 — 사신의 수확에서는 보스를 뺀 모든 적에 쌓이고, 차면 혼이 드러난다.
+            bool reap = ReapRule.Enabled && Side == UnitSide.Enemy && !IsBoss;
+            if ((IsHostBody || reap) && Hp > 0 && _staggerWindow <= 0f && _staggerCool <= 0f)
             {
                 _stagger += dealt;
-                if (_stagger >= HpMax * StaggerNeedRatio) _staggerWindow = StaggerWindowSeconds;
+                if (reap)
+                {
+                    if (_stagger >= HpMax * ReapRule.StaggerNeedRatio) _soulExposed = ReapRule.ExposeSeconds;
+                }
+                else if (_stagger >= HpMax * StaggerNeedRatio) _staggerWindow = StaggerWindowSeconds;
             }
             return Hp == 0;
         }
@@ -1806,6 +1834,8 @@ namespace Game.Module.InGame
         /// </summary>
         public bool TryStatusTint(out Color color)
         {
+            // 시험판 — 사신의 수확. 드러난 혼은 다른 상태 색보다 먼저 보여야 한다.
+            if (_soulExposed > 0f) { color = new Color(0.78f, 0.55f, 1f, 0.75f); return true; }
             if (_burnStack > 0) { color = new Color(1f, 0.55f, 0.25f, 1f); return true; }
             if (_poisonTimer > 0f) { color = new Color(0.45f, 1f, 0.55f, 1f); return true; }
             if (_freezeTimer > 0f) { color = new Color(0.55f, 0.85f, 1f, 1f); return true; }
