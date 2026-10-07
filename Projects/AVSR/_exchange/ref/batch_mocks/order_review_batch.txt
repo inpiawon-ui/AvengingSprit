@@ -1,0 +1,14 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 이미지 생성은 하지 마라. 파일은 아래 하나만 쓴다.
+
+네가 그린 묶음(새 잡몹 넷 · 새 기믹 여섯)을 게임에 넣었다. **짧게** 검수해라 — 그림이 시안과 어긋난 곳 · 게임 화면 크기에서 읽기 어려운 곳만. 방향은 개발 담당이 정한다.
+
+볼 것(실제 게임 캡처):
+- 방 12개 한 장: `Projects/AVSR/_exchange/ref/batch_mocks/batch_rooms_ingame.png`
+- 동작 장면(8장씩): `rec_mush2_frames.png`(폭탄 버섯) · `rec_spider2_frames.png`(알 거미 · 스위치 발판) · `rec_mummy_frames.png`(미라 · 방패 발전기) ·
+  `rec_laser_frames.png`(회전 레이저) · `rec_conveyor_frames.png` · `rec_collapse_frames.png` · `rec_gate_frames.png` · `rec_armadillo_frames.png` (모두 같은 폴더)
+- 시안: `mock_monsters4.png` · `mock_ch7_conveyor.png` · `mock_ch8_floor.png` · `mock_ch9_laser_shield.png` · `mock_ch10_oneway.png`
+
+참고: 미라 고리 탄은 노란 불덩이로 찍혔는데, 개발 담당이 이미 보라색 어둠 구슬로 바꿨다(다음 녹화에 반영). 이건 지적하지 않아도 된다.
+
+답할 것 → `Projects/AVSR/_exchange/ref/batch_mocks/review_batch.md` (항목마다 한 줄, 20줄 이내)
+- 열 가지 각각: 「통과」 또는 「고칠 것 — 무엇을 · 가장 싼 방법(값 조정 / 그림 다시)」.

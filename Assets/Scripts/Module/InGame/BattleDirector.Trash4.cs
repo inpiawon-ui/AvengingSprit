@@ -78,7 +78,7 @@ namespace Game.Module.InGame
         private const int MummyGapShots = 2;
         private const float MummyGapAwayDegrees = 70f;   // 빈틈은 내 쪽에서 이만큼 이상 비켜 난다
         private const float MummyShotSpeedMul = 0.6f;
-        private const string MummyShotKind = "darkorb";   // 보랏빛 저주탄 — 영매의 어둠 구슬을 같이 쓴다(시안: 보라 고리)
+        private const string MummyShotKind = "darkorb";   // 영매의 어둠 구슬을 같이 쓴다 — 화면에선 흰 · 청록빛이라 보라 바닥(9챕터)에서 오히려 잘 읽힌다
 
         // ── 알 거미 ──────────────────────────────────────────────
         private const float SpiderKeepMeters = 4.0f;

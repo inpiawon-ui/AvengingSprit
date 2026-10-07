@@ -251,7 +251,19 @@ namespace Game.Module.InGame
             }
             o.Timer += dt;
             int frame = o.Timer < CollapseSeconds * 0.5f ? 1 : 2;
-            if (o.Timer < CollapseSeconds) { SetFrame(o, frame); return; }
+            if (o.Timer < CollapseSeconds)
+            {
+                SetFrame(o, frame);
+                // 금이 가는 동안 판이 떤다 — 작은 화면에서 금 그림만으로는 「곧 꺼진다」가 약했다(코덱스 검수)
+                if (o.View != null)
+                {
+                    float px = frame == 2 ? 2f : 1f;
+                    ((RectTransform)o.View.transform).anchoredPosition = o.Home.center
+                        + new Vector2(Mathf.Repeat(Time.time, 0.08f) < 0.04f ? px : -px, 0f);
+                }
+                return;
+            }
+            if (o.View != null) ((RectTransform)o.View.transform).anchoredPosition = o.Home.center;
 
             // 꺼진다 — 구덩이가 된다(몸은 못 건너고 탄은 넘는다)
             o.Hp = 2;
