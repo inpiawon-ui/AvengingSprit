@@ -1,0 +1,21 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 그리거나 늘리거나 흐려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 보스 예고(바닥 위험 표시) 부품 그림 6장
+
+통과한 시안 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/mock_danger.png — 이 때깔 그대로 게임이 쓸 **부품**으로 쪼개 받는다.
+게임은 부품을 도형(원 · 띠 · 부채꼴 · 고리 등)에 **무늬로 타일링**해서 그린다. 그래서 부품은 모양이 아니라 **무늬**다.
+
+■ 만들 것 — 같은 폴더에, 전부 PNG
+  1. C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_danger_fill.png — 256 x 256, **사방으로 이어지는(seamless) 타일**. 시안 원 안의 육각 격자 · 결 무늬.
+     짙은 빨강~주황, 배경은 **투명이 아니라 그 색 자체**(게임이 반투명으로 얹는다). 밝기는 중간 — 너무 하얗지 않게.
+  2. C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_danger_core.png — 256 x 256, seamless. 차오르는 층 — 1번보다 **밝고 진한** 주황~노랑 에너지(같은 육각 결 + 빛).
+  3. C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_danger_edge.png — 가로 256 x 세로 64, **가로로만 이어지는** 띠. 아래 끝(세로 0~16)이 가장 밝은 **빛나는 테두리 선**,
+     위로 갈수록(16~64) 빛이 번져 투명해진다. 작은 불티 · 광점이 섞인다. **배경 투명(알파)**. 이것이 도형 둘레에 감긴다.
+  4~6. 같은 셋을 **초록(안전지대)** 으로 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_safe_fill.png · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_safe_core.png · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/danger_fx/fx_safe_edge.png
+     (초록~청록, 빛 느낌은 같게 · 불티 대신 작은 빛 알갱이)
+
+■ 지킬 것
+  · 1 · 2 · 4 · 5 는 **이음매가 보이면 안 된다** — 좌우 · 위아래 가장자리 픽셀이 맞물려야 한다.
+  · 3 · 6 은 좌우만 맞물리면 된다. 위아래는 맞물리지 않는다(아래가 테두리, 위가 사라지는 쪽).
+  · 픽셀 아트 게임이다 — 선명한 형태. 글자 · 화살표 · 기호를 넣지 마라.
+끝나면 경로만 알려라.

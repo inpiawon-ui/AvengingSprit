@@ -396,6 +396,46 @@ namespace Game.Module.InGame
             }
         }
 
+        /// <summary>
+        /// 이 도형을 **안쪽으로만** 줄인 복사본 — 예고가 나타날 때 커지는 연출 · 안에서부터 차오르는 연출이 쓴다.
+        ///
+        /// ⚠ 판정 도형보다 커지는 일이 없다(<paramref name="t"/> 는 0~1). 그래서 「그린 것과 맞는 것」 보장이
+        ///   깨지지 않는다 — 줄인 것은 판정에 쓰지 않고 그림에만 쓴다.
+        ///   원 · 부채꼴은 반경, 띠는 길이(시작점에서 뻗는다), 고리는 안쪽 테두리에서 바깥으로,
+        ///   섬 밖(Outside)은 바깥에서 섬 쪽으로 찬다. 줄 · 분면 · 내 곁 흩뿌림은 false(진하기로만 찬다).
+        /// </summary>
+        public bool TryGrown(float t, Vector2 roomSize, out DangerShape grown)
+        {
+            grown = this;
+            t = Mathf.Clamp01(t);
+            switch (Shape)
+            {
+                case Kind.Wedge:
+                    grown.Radius = Radius * t;
+                    return true;
+                case Kind.Disc:
+                    // ⚠ 내 곁에 흩뿌리는 원은 자리를 반경으로 방 안에 밀어 넣는다(`CenterOf`) —
+                    //   반경을 줄이면 자리까지 옮겨 판정 밖으로 나갈 수 있다. 진하기로만 찬다
+                    if (Layout == Spread.NearTarget) return false;
+                    grown.Radius = Radius * t;
+                    return true;
+                case Kind.Band:
+                    grown.Length = Length * t;
+                    return true;
+                case Kind.Ring:
+                    grown.Radius = Inner + (Radius - Inner) * t;
+                    return true;
+                case Kind.Outside:
+                {
+                    float outer = roomSize.magnitude;
+                    grown.Radius = Radius + (outer - Radius) * (1f - t);
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
         // ── 삼각형 쌓기 ──────────────────────────────────────────
 
         /// <summary>

@@ -298,7 +298,7 @@ MonoBehaviour:
     - scrapgunner
     - skeleton
     - coilwalker
-    Pattern: 6
+    Pattern: 7
     EnemyHpMul: 1.38
     EnemyAtkMul: 0.88
     BossHp: 5740
@@ -328,7 +328,7 @@ MonoBehaviour:
     - scrapgunner
     - coilwalker
     - turret_cross
-    Pattern: 6
+    Pattern: 7
     EnemyHpMul: 1.63
     EnemyAtkMul: 0.89
     BossHp: 6970
@@ -358,7 +358,7 @@ MonoBehaviour:
     - bat
     - actor_enforcer
     - roadwarden
-    Pattern: 6
+    Pattern: 7
     EnemyHpMul: 2.1
     EnemyAtkMul: 1.08
     BossHp: 9180
@@ -390,7 +390,7 @@ MonoBehaviour:
     - roadwarden
     - coilwalker
     - turret_cross
-    Pattern: 6
+    Pattern: 7
     EnemyHpMul: 2.48
     EnemyAtkMul: 1.08
     BossHp: 11060

@@ -80,7 +80,7 @@ namespace Game.Module.InGame
 
         /// <summary>
         /// 잡몹 패턴 단계. 같은 잡몹도 단계가 오르면 다르게 싸운다(`BattleDirector.Patterns2`).
-        /// 표의 `pattern` 칸 — 1~6 챕터는 제 번호, 7챕터부터는 전부 6(다 배운 뒤다).
+        /// 표의 `pattern` 칸 — 1~6 챕터는 제 번호, 7챕터부터는 7(집행자 돌진, 2026-10-07).
         /// </summary>
         private int PatternStageOf(int chapter)
         {

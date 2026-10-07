@@ -1112,6 +1112,7 @@ namespace Game.Module.InGame
                 if (_obstacles[i].View2 != null) Destroy(_obstacles[i].View2.gameObject);
             }
             _obstacles.Clear();
+            ClearBladeRigs();
 
             for (int i = 0; i < _obstacleShadows.Count; i++)
                 if (_obstacleShadows[i] != null) Destroy(_obstacleShadows[i]);
@@ -1349,6 +1350,7 @@ namespace Game.Module.InGame
                     // 축은 제자리에 박혀 있고 날만 돈다. 축이 없으면 무엇을 중심으로
                     // 도는지 안 보여서 날이 허공에 떠 있는 것처럼 읽힌다.
                     ob.View2 = MakeExtra("Axis", $"{art}_axis", ob.Home.center, 54f);
+                    SetupBladeRig(ob);   // 톱니마다 움직임이 다르다 — BattleDirector.Motion
                     break;
                 }
 
@@ -1722,6 +1724,7 @@ namespace Game.Module.InGame
 
                     case "ROTATING_BLADE":
                     {
+                        if (TickBladeRig(o, rt)) break;   // 팔 · 다중 팔 · 가감속 · 팔 길이 (BattleDirector.Motion)
                         // 축을 중심으로 돈다. 그림은 22.5도씩 네 장이라 90도가 한 바퀴다.
                         float t = Mathf.Repeat(Time.time / BladeTurn + o.Phase, 1f);
                         float ang = t * Mathf.PI * 2f;
@@ -1821,6 +1824,7 @@ namespace Game.Module.InGame
             {
                 var o = _obstacles[i];
                 if (!o.IsHazard || !o.HazardOn || o.Damage <= 0) continue;
+                if (o.Kind == "ROTATING_BLADE" && BurnBladeRig(o, Avatar, dt)) continue;   // 팔도 아프다
                 // ⚠ **적은 안 아프다.** 가시·톱니·용암은 플레이어에게만 판정한다(기획 2026-09-08).
                 //
                 //   적까지 아프면 방이 알아서 정리된다 — 가시밭에 몰아넣고 기다리는 것이

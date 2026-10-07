@@ -1,31 +1,65 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using GameFramework.Core.Base;
+using GameFramework.Core.Module.Resource;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// <see cref="DangerShape"/> 를 바닥에 그린다.
+    /// <see cref="DangerShape"/> 를 바닥에 그린다 — 세 겹이다(2026-10-07 「PPT 도형 같다」 지적으로 다시 짰다).
+    ///
+    ///   채움  도형 안을 에너지 무늬로 옅게 채운다. 무늬는 천천히 흐른다
+    ///   차오름 예고가 진행되는 만큼 **안에서부터** 진하게 차오른다 — 다 차면 맞는다
+    ///   테두리 도형 둘레를 빛나는 띠로 두른다. 끝이 가까울수록 빠르게 숨 쉰다
+    ///
+    /// 나타날 때는 0.18초 동안 작게 시작해 제 크기로 커지고, 터지는 순간 한 번 번쩍인다.
     ///
     /// ⚠ **도형을 여기서 만들지 않는다.** 넘겨받은 것을 그대로 그린다 —
     ///   판정과 같은 구조체를 같은 함수(`Outline`)로 그리므로, 그린 것과 맞는 것이
-    ///   어긋날 수가 없다. 여기서 "조금 크게 그리면 보기 좋겠다" 를 하는 순간
-    ///   그 보장이 깨진다.
+    ///   어긋날 수가 없다. 커지고 차오르는 연출은 전부 `DangerShape.Grown`(판정 도형 **안쪽**으로만
+    ///   줄인 복사본)으로 한다 — 판정보다 크게 그리는 일은 없다.
     ///
-    /// 채움은 빗금 타일(`fx_danger_hatch` · `fx_safe_hatch`)이다.
-    /// 없으면 단색으로 칠한다 — 그림이 늦어도 굴러가야 한다.
+    /// 그림 `Fx/danger_fill` · `Fx/danger_core` · `Fx/danger_edge`(초록 안전지대는 `Fx/safe_*`)은
+    /// 따로 떨어진 텍스처다 — 아틀라스에 묶으면 타일이 안 돈다(`CanTile` 주석).
+    /// 아직 안 왔으면 예전처럼 빗금 · 단색으로 그린다 — 그림이 늦어도 굴러가야 한다.
     /// </summary>
     [RequireComponent(typeof(CanvasRenderer))]
     public sealed class DangerView : MaskableGraphic
     {
+        private enum Layer { Fill, Core, Edge }
+
         /// <summary>빗금 한 칸이 화면에서 차지하는 크기(px). 타일이 64 라 그대로 쓴다.</summary>
         private const float HatchPixels = 64f;
+        /// <summary>에너지 무늬 한 장이 화면에서 차지하는 크기(px).</summary>
+        private const float FillPixels = 192f;
+        /// <summary>테두리 띠 그림 한 장이 둘레를 따라 차지하는 길이(px)와 띠 두께(px).</summary>
+        private const float EdgeTilePixels = 128f;
+        private const float EdgeWidth = 14f;
+
+        private const float AppearSeconds = 0.18f;
+        private const float AppearFrom = 0.72f;
+        private const float FlashSeconds = 0.16f;
 
         private static readonly Color DangerTint = new(1f, 0.30f, 0.28f, 0.55f);
         private static readonly Color SafeTint = new(0.35f, 1f, 0.45f, 0.42f);
 
+        // ── 그림 — 한 번 받아 모두가 같이 쓴다 ───────────────────────
+        private static readonly string[] ArtAddress =
+            { "Fx/danger_fill", "Fx/danger_core", "Fx/danger_edge", "Fx/safe_fill", "Fx/safe_core", "Fx/safe_edge" };
+        private static readonly Texture2D[] s_art = new Texture2D[6];
+        private static bool s_artRequested;
+
         private readonly List<Vector2> _verts = new(128);
         private readonly List<int> _tris = new(256);
+        private readonly List<Vector2> _edgeVerts = new(256);
+        private readonly Dictionary<long, int> _edgeCount = new(256);
+        private readonly Dictionary<long, int> _edgeOther = new(256);
+        private readonly Dictionary<int, int> _edgeVert = new(256);   // 자리 키 → 그 자리의 첫 꼭짓점 번호
+
+        private Layer _layer;
+        private DangerView _core, _edge;     // 바닥 겹(채움)만 둘을 거느린다
 
         private DangerShape _shape;
         private Vector2 _roomSize;
@@ -35,6 +69,10 @@ namespace Game.Module.InGame
         /// <summary>깜빡임 — 예고가 끝나갈수록 빨라진다. 시간이 얼마 안 남았다는 신호다.</summary>
         private float _pulse;
         private float _progress;
+        private float _age;
+        private float _flash;   // 터진 뒤 남은 번쩍임(초). 0 이면 꺼진다
+
+        private Texture2D Art => s_art[(_safe ? 3 : 0) + (int)_layer];
 
         /// <summary>
         /// 빗금을 **타일로 쓸 수 있는가**.
@@ -59,7 +97,15 @@ namespace Game.Module.InGame
             }
         }
 
-        public override Texture mainTexture => CanTile ? _hatch.texture : s_WhiteTexture;
+        public override Texture mainTexture
+        {
+            get
+            {
+                if (Art != null) return Art;
+                if (_layer == Layer.Fill && CanTile) return _hatch.texture;
+                return s_WhiteTexture;
+            }
+        }
 
         protected override void Awake()
         {
@@ -69,9 +115,23 @@ namespace Game.Module.InGame
 
         public static DangerView Create(Transform parent)
         {
-            var go = new GameObject("DangerView", typeof(RectTransform), typeof(CanvasRenderer));
+            RequestArt();
+            var v = Make(parent, "DangerView", Layer.Fill);
+            // 차오름 · 테두리는 채움 **위에** 그린다 — 자식이라 같이 켜지고 같이 꺼진다
+            v._core = Make(v.transform, "DangerCore", Layer.Core);
+            v._edge = Make(v.transform, "DangerEdge", Layer.Edge);
+            v._core.gameObject.SetActive(true);
+            v._edge.gameObject.SetActive(true);
+            v.gameObject.SetActive(false);
+            return v;
+        }
+
+        private static DangerView Make(Transform parent, string name, Layer layer)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer));
             go.transform.SetParent(parent, false);
             var v = go.AddComponent<DangerView>();
+            v._layer = layer;
             var rt = (RectTransform)go.transform;
             // 방 좌표계 그대로 쓴다 — 왼쪽 위가 (0,0), 아래로 갈수록 y 가 음수다.
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
@@ -83,6 +143,24 @@ namespace Game.Module.InGame
             return v;
         }
 
+        /// <summary>그림을 한 번만 부른다. 실패해도 예전 모양으로 그린다.</summary>
+        private static void RequestArt()
+        {
+            if (s_artRequested) return;
+            s_artRequested = true;
+            LoadArtAsync().Forget();   // fire-and-forget: 그림이 오기 전에도 단색으로 그린다
+        }
+
+        private static async UniTaskVoid LoadArtAsync()
+        {
+            if (!CoreModule.TryGet<IResourceManager>(out var res)) { s_artRequested = false; return; }
+            for (int i = 0; i < ArtAddress.Length; i++)
+            {
+                try { s_art[i] = await res.LoadAsync<Texture2D>(ArtAddress[i]); }
+                catch (System.Exception e) { Debug.LogWarning($"[Danger] 그림 없음 {ArtAddress[i]} — {e.Message}"); }
+            }
+        }
+
         /// <summary>그릴 것을 넘긴다. <paramref name="safe"/> 면 초록 안전지대로 그린다.</summary>
         public void Show(DangerShape shape, Vector2 roomSize, Sprite hatch, bool safe)
         {
@@ -92,6 +170,8 @@ namespace Game.Module.InGame
             _safe = safe;
             _progress = 0f;
             _pulse = 0f;
+            _age = 0f;
+            _flash = 0f;
 
             // ⚠⚠ **이 한 줄이 없으면 도형이 아예 안 그려진다.**
             //
@@ -112,10 +192,12 @@ namespace Game.Module.InGame
             var rt = rectTransform;
             if (rt.sizeDelta != roomSize) rt.sizeDelta = roomSize;
 
-            color = safe ? SafeTint : DangerTint;
+            color = TintNow();
             gameObject.SetActive(!shape.IsNone);
             SetVerticesDirty();
             SetMaterialDirty();
+            if (_core != null) _core.Show(shape, roomSize, hatch, safe);
+            if (_edge != null) _edge.Show(shape, roomSize, hatch, safe);
         }
 
         /// <summary>
@@ -130,29 +212,97 @@ namespace Game.Module.InGame
             if (!IsShowing) return;
             _shape = shape;
             SetVerticesDirty();
+            if (_core != null) _core.Reaim(shape);
+            if (_edge != null) _edge.Reaim(shape);
         }
 
+        /// <summary>
+        /// 거둔다. 예고가 **터져서** 거두는 것이면 한 번 번쩍이고 사라진다(0.16초).
+        /// 판정은 부르는 쪽이 이미 끝냈다 — 번쩍임은 그림일 뿐 아무것도 안 친다.
+        /// </summary>
         public void Hide()
         {
+            if (IsShowing && _progress >= 0.95f && _layer == Layer.Fill)
+            {
+                _flash = FlashSeconds;
+                if (_core != null) _core._flash = FlashSeconds;
+                if (_edge != null) _edge._flash = FlashSeconds;
+                return;   // 번쩍임이 끝나면 `Update` 가 끈다
+            }
+            HideNow();
+        }
+
+        private void HideNow()
+        {
             _shape = default;
+            _flash = 0f;
             gameObject.SetActive(false);
         }
 
-        public bool IsShowing => gameObject.activeSelf && !_shape.IsNone;
+        public bool IsShowing => gameObject.activeSelf && !_shape.IsNone && _flash <= 0f;
 
         /// <summary>
-        /// 예고가 얼마나 찼는지(0~1) 알려 준다. 끝이 가까울수록 빠르게 깜빡인다.
+        /// 예고가 얼마나 찼는지(0~1) 알려 준다. 끝이 가까울수록 빠르게 숨 쉰다.
         /// </summary>
         public void Tick(float dt, float progress01)
         {
             if (!IsShowing) return;
+            Advance(dt, progress01);
+            if (_core != null) _core.Advance(dt, progress01);
+            if (_edge != null) _edge.Advance(dt, progress01);
+        }
+
+        private void Advance(float dt, float progress01)
+        {
             _progress = Mathf.Clamp01(progress01);
-            // 0.15초 주기에서 0.05초까지 빨라진다
+            _age += dt;
+            // 0.30초 주기에서 0.10초까지 빨라진다
             _pulse += dt / Mathf.Lerp(0.30f, 0.10f, _progress);
-            float a = Mathf.Lerp(0.35f, 0.75f, Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI)));
-            var c = _safe ? SafeTint : DangerTint;
-            c.a = _safe ? SafeTint.a : a;
-            if (color != c) color = c;
+            color = TintNow();
+            SetVerticesDirty();   // 무늬가 흐르고 테두리가 숨 쉰다 — 매 프레임 새로 짠다(보스전 예고 몇 개뿐)
+        }
+
+        // 터진 뒤 번쩍임은 부르는 쪽이 더는 `Tick` 을 안 부르므로 스스로 돈다
+        private void Update()
+        {
+            if (_flash <= 0f || _layer != Layer.Fill) return;
+            float dt = Time.deltaTime;
+            Flash(dt);
+            if (_core != null) _core.Flash(dt);
+            if (_edge != null) _edge.Flash(dt);
+            if (_flash <= 0f) HideNow();
+        }
+
+        private void Flash(float dt)
+        {
+            _flash = Mathf.Max(0f, _flash - dt);
+            color = TintNow();
+            SetVerticesDirty();
+        }
+
+        /// <summary>겹마다 진하기. 그림이 있으면 그림 색을 그대로 쓰고 진하기만 바꾼다.</summary>
+        private Color TintNow()
+        {
+            bool art = Art != null;
+            var c = art ? Color.white : (_safe ? SafeTint : DangerTint);
+            float breath = Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI));
+            float flash = _flash > 0f ? _flash / FlashSeconds : 0f;
+            switch (_layer)
+            {
+                case Layer.Fill:
+                    c.a = _safe ? (art ? 0.55f : SafeTint.a)
+                                : (art ? Mathf.Lerp(0.45f, 0.70f, breath) : Mathf.Lerp(0.35f, 0.75f, breath));
+                    break;
+                case Layer.Core:
+                    // 다 찰 무렵 가장 진하다. 안전지대는 차오르지 않는다(늘 서 있을 자리다)
+                    c.a = _safe ? 0f : Mathf.Lerp(0.35f, 0.85f, _progress);
+                    break;
+                default:
+                    c.a = Mathf.Lerp(0.70f, 1f, breath);
+                    break;
+            }
+            if (flash > 0f) c.a = Mathf.Max(c.a, flash);   // 터지는 순간 한 번 진해진다
+            return c;
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -160,25 +310,107 @@ namespace Game.Module.InGame
             vh.Clear();
             if (_shape.IsNone) return;
 
+            // 나타날 때 작게 시작해 제 크기로 — 판정 도형 **안쪽**에서만 커진다
+            float appear = Mathf.Clamp01(_age / AppearSeconds);
+            appear = 1f - (1f - appear) * (1f - appear) * (1f - appear);
+            float scale = Mathf.Lerp(AppearFrom, 1f, appear);
+            var shape = _shape;
+            if (_layer == Layer.Core)
+            {
+                // 차오름 — 진행도만큼 안에서부터. 그럴 수 없는 도형(줄 · 분면)은 진하기로만 찬다
+                float p = _flash > 0f ? 1f : _progress;
+                if (!_shape.TryGrown(Mathf.Max(0.02f, p), _roomSize, out shape)) shape = _shape;
+            }
+            else if (scale < 0.999f && _shape.TryGrown(scale, _roomSize, out var grown))
+            {
+                shape = grown;
+            }
+
             _verts.Clear();
             _tris.Clear();
             // ⚠ 판정과 **같은 함수**다. 여기만 고치는 일이 없어야 한다.
-            _shape.Outline(_verts, _tris, _roomSize);
+            shape.Outline(_verts, _tris, _roomSize);
             if (_verts.Count == 0 || _tris.Count == 0) return;
 
+            if (_layer == Layer.Edge) { PopulateEdge(vh); return; }
+
             var c = color;
+            bool art = Art != null;
+            // 무늬는 **화면에 고정**된 격자 위에서 천천히 흐른다. 도형을 따라 늘어나면 늘어난 티가 난다.
+            var flow = art ? new Vector2(_age * 0.06f, _age * (_layer == Layer.Core ? -0.10f : 0.04f)) : Vector2.zero;
             for (int i = 0; i < _verts.Count; i++)
             {
                 var p = _verts[i];
-                // 빗금은 **화면에 고정**된 격자다. 도형을 따라 늘어나면 늘어난 티가 나고,
-                // 도형이 움직일 때 무늬가 같이 끌려가 어지럽다.
-                // 타일을 못 쓰면 UV 를 한 점에 고정한다 — 흰 텍스처를 단색으로 칠한다.
-                var uv = CanTile ? new Vector2(p.x / HatchPixels, p.y / HatchPixels)
-                                 : new Vector2(0.5f, 0.5f);
+                Vector2 uv;
+                if (art) uv = new Vector2(p.x / FillPixels, p.y / FillPixels) + flow;
+                else if (_layer == Layer.Fill && CanTile) uv = new Vector2(p.x / HatchPixels, p.y / HatchPixels);
+                else uv = new Vector2(0.5f, 0.5f);   // 흰 텍스처를 단색으로 칠한다
                 vh.AddVert(p, c, uv);
             }
             for (int i = 0; i + 2 < _tris.Count; i += 3)
                 vh.AddTriangle(_tris[i], _tris[i + 1], _tris[i + 2]);
+        }
+
+        /// <summary>
+        /// 둘레 띠. 삼각형 가운데 **한 번만 나오는 변**이 둘레다 — 도형 종류마다 따로 짜지 않는다.
+        /// 띠는 둘레에서 **안쪽으로만** 두른다(판정 밖으로 안 나간다). 그림의 아래 끝(v 0)이 둘레다.
+        /// </summary>
+        private void PopulateEdge(VertexHelper vh)
+        {
+            _edgeCount.Clear();
+            _edgeOther.Clear();
+            _edgeVert.Clear();
+            for (int t = 0; t + 2 < _tris.Count; t += 3)
+                for (int k = 0; k < 3; k++)
+                {
+                    int a = _tris[t + k], b = _tris[t + (k + 1) % 3], other = _tris[t + (k + 2) % 3];
+                    // ⚠ 꼭짓점 **번호가 아니라 자리로** 짝을 짓는다. 원은 한 바퀴 끝 꼭짓점이 처음 것과 같은 자리의
+                    //   다른 번호라, 번호로 보면 그 살(중심 → 끝)이 둘레로 읽혀 원 안에 줄이 하나 그어졌다
+                    int pa = PosKey(_verts[a]), pb = PosKey(_verts[b]);
+                    if (pa == pb) continue;
+                    long key = pa < pb ? ((long)pa << 32) | (uint)pb : ((long)pb << 32) | (uint)pa;
+                    if (!_edgeVert.ContainsKey(pa)) _edgeVert[pa] = a;
+                    if (!_edgeVert.ContainsKey(pb)) _edgeVert[pb] = b;
+                    _edgeCount.TryGetValue(key, out int n);
+                    _edgeCount[key] = n + 1;
+                    _edgeOther[key] = other;
+                }
+
+            float breath = Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI));
+            float width = EdgeWidth * Mathf.Lerp(0.8f, 1.25f, breath) * (_flash > 0f ? 1.6f : 1f);
+            var c = color;
+            bool art = Art != null;
+            float flowU = art ? -_age * 0.8f : 0f;   // 빛이 둘레를 따라 흐른다
+            foreach (var pair in _edgeCount)
+            {
+                if (pair.Value != 1) continue;
+                int a = _edgeVert[(int)(pair.Key >> 32)], b = _edgeVert[(int)(pair.Key & 0xFFFFFFFF)];
+                var pa = _verts[a];
+                var pb = _verts[b];
+                var along = pb - pa;
+                float len = along.magnitude;
+                if (len < 0.5f) continue;
+                var n = new Vector2(-along.y, along.x) / len;
+                // 안쪽 = 그 변을 가진 삼각형의 세 번째 꼭짓점 쪽
+                if (Vector2.Dot(_verts[_edgeOther[pair.Key]] - pa, n) < 0f) n = -n;
+                float w = Mathf.Min(width, len);   // 짧은 변(고리 끝 등)에서 띠가 도형 밖으로 넘치지 않게
+                int i = vh.currentVertCount;
+                float u0 = flowU + (pa.x + pa.y) / EdgeTilePixels;   // 이웃 변과 무늬가 대충 이어지게 자리로 시작한다
+                float u1 = u0 + len / EdgeTilePixels;
+                vh.AddVert(pa, c, art ? new Vector2(u0, 0f) : new Vector2(0.5f, 0.5f));
+                vh.AddVert(pb, c, art ? new Vector2(u1, 0f) : new Vector2(0.5f, 0.5f));
+                vh.AddVert(pb + n * w, c, art ? new Vector2(u1, 1f) : new Vector2(0.5f, 0.5f));
+                vh.AddVert(pa + n * w, c, art ? new Vector2(u0, 1f) : new Vector2(0.5f, 0.5f));
+                vh.AddTriangle(i, i + 1, i + 2);
+                vh.AddTriangle(i, i + 2, i + 3);
+            }
+        }
+
+        /// <summary>꼭짓점 자리를 0.5 px 격자로 묶은 키. 같은 자리에 겹친 꼭짓점이 같은 키가 된다.</summary>
+        private static int PosKey(Vector2 p)
+        {
+            int x = Mathf.RoundToInt(p.x * 2f), y = Mathf.RoundToInt(p.y * 2f);
+            unchecked { return (x * 73856093) ^ (y * 19349663); }
         }
     }
 }

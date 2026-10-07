@@ -89,7 +89,8 @@ namespace Game.Module.InGame
             int ch = PatternChapter;
             switch (e.Key)
             {
-                case TrashEnforcerKey: return EnemyPattern.Hop;
+                case TrashEnforcerKey:
+                    return ch >= ChargeFromChapter ? EnemyPattern.Dive : EnemyPattern.Hop;
                 case TrashCoilKey:     return EnemyPattern.Vault;
                 case TrashCrossKey:
                     return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;

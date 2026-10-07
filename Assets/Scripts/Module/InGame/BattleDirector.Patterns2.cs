@@ -35,7 +35,9 @@ namespace Game.Module.InGame
         private int PatternChapter => PatternStageOf(_canonRoom != null ? _canonRoom.Chapter : _runChapter);
 
         // 같은 몸이 달라지는 챕터. 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다(`TrashKeysFor`).
-        private const int DiveFromChapter       = 2;   // 박쥐 → 급강하 (CH2·CH4)
+        // 1 챕터부터 — 「띠를 보면 옆으로」를 처음 방에서 배운다(기획 2026-10-07 「근접은 그냥 가서 때리는 수준」)
+        private const int DiveFromChapter       = 1;   // 박쥐 → 급강하
+        private const int ChargeFromChapter     = 7;   // 집행자 → 돌진(평타 없이 돌진만) — 7 챕터의 새 패턴
         private const int WeaveFromChapter      = 4;   // 박쥐 → 지그재그 (CH4)
         private const int SlamFromChapter       = 4;   // 집행자 → 내려찍기
         private const int SplitFromChapter      = 6;   // 집행자 → 죽으면 갈라진다
@@ -62,6 +64,11 @@ namespace Game.Module.InGame
         private const float DiveMeters = 5.0f;
         private const float DiveWidthMeters = 0.9f;
         private const float DiveCooldown = 1.6f;
+        /// <summary>
+        /// 돌진이 끝나고 **멈춰 서는** 시간 — 피한 사람이 때릴 차례(예고 → 실행 → 빈틈).
+        /// 예전에는 끝나자마자 다시 쫓아와서 피해도 때릴 틈이 없었다.
+        /// </summary>
+        private const float DiveRecoverSeconds = 0.7f;
         private const float WeaveHz = 1.4f;
         private const float WeaveRatio = 0.9f;   // 옆으로 흔드는 세기 — 앞으로 가는 속도 대비
 
@@ -69,6 +76,7 @@ namespace Game.Module.InGame
         ///   0  다가온다 (CH4+ 는 지그재그로). 거리가 맞고 사선이 트이면 1 로
         ///   1  예고 0.55초 — 멈춰서 겨눈다. 바닥에 띠
         ///   2  돌진 0.22초 — 띠 위를 지나간다
+        ///   3  숨 고르기 0.7초 — 그 자리에 선다(빈틈)
         /// </summary>
         private bool TickDive(Unit e, Unit me, float distance, float dt)
         {
@@ -120,7 +128,7 @@ namespace Game.Module.InGame
                     e.PatternTimer = DiveDashSeconds;
                     return true;
 
-                default:
+                case 2:
                 {
                     e.SetMoving(true);
                     e.SetState(EnemyState.Approach);
@@ -129,10 +137,19 @@ namespace Game.Module.InGame
                     var want = Vector2.Lerp(e.PatternFrom, e.PatternTo, k);
                     e.Position = SlideMove(e, e.Position, want - e.Position);   // 지형에는 막힌다
                     if (e.PatternTimer > 0f) return true;
+                    e.PatternPhase = 3;
+                    e.PatternTimer = DiveRecoverSeconds;
+                    return true;
+                }
+
+                default:
+                    e.SetMoving(false);
+                    e.SetState(EnemyState.Cooldown);
+                    e.PatternTimer -= dt;
+                    if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 0;
                     e.PatternTimer = DiveCooldown;
                     return true;
-                }
             }
         }
 

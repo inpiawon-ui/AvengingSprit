@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 08497176b21c7814da3eb650df3a7277
+    m_Address: Fx/danger_fill
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0bd9b9624b944f640b85df6c7139d047
     m_Address: ParticleFx/ember
     m_ReadOnly: 0
@@ -45,6 +51,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bc9a7c1bd1c96d47984975201913894
+    m_Address: Fx/danger_edge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4109b9bd4a90c79448622ee427a8e508
     m_Address: ParticleFx/shard_dust
     m_ReadOnly: 0
@@ -63,6 +75,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 51dc6fea356040c468e7365ff7eb3e85
+    m_Address: Fx/danger_core
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 52d2e7349f221fa499ba0c1c671027c5
     m_Address: ParticleFx/glow
     m_ReadOnly: 0
@@ -77,6 +95,24 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ea2dbdc0674e9d4fa97010eed0781e0
     m_Address: ParticleFx/smoke
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71384d4539aab7a4da35ad53d19fe85b
+    m_Address: Fx/safe_fill
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f12279eaa3ecb241beecb80427437fe
+    m_Address: Fx/safe_edge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96ad4776a74b6f947b1cc6aa16606a05
+    m_Address: Fx/safe_core
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_particlefx
