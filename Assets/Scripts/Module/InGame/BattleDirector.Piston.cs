@@ -30,7 +30,8 @@ namespace Game.Module.InGame
         private const float PistonRamMeters = 0.8f;       // 머리 · 축이 막는 두께
         private const int PistonDamage = 14;
         private const float PistonEnemyHpRatio = 0.35f;   // 적은 체력 비율로 — 끌어들여 찍으면 잡몹 셋에 하나는 쓰러진다
-        private const float PistonShakePx = 2f;
+        private const float PistonShakePx = 3f;       // 2px 는 약해 안 읽혔다
+        private const float PistonBlinkSeconds = 0.08f;
 
         // 그림 원본 크기(방 좌표 1칸 = 72px 기준)
         private const float PistonShaftW = 144f, PistonShaftH = 28f;
@@ -135,7 +136,10 @@ namespace Game.Module.InGame
                         : 1f - Mathf.SmoothStep(0f, 1f, (t - backAt) / PistonBackSeconds);
 
             // 예고 — 상태등이 켜지고 몸통이 정수 픽셀로 떤다(흐려지지 않게)
-            var want = warn || (t >= slamAt && t < backAt) ? rig.Warn : rig.Off;
+            // 예고 동안은 등을 깜빡인다 — 켜진 채로만 두면 작은 등이 전투 중에 안 읽혔다(코덱스 검수 2026-10-07)
+            bool lampOn = warn ? Mathf.Repeat(t - warnAt, PistonBlinkSeconds * 2f) < PistonBlinkSeconds
+                               : t >= slamAt && t < backAt;
+            var want = lampOn ? rig.Warn : rig.Off;
             if (want != null && o.Img != null && o.Img.sprite != want) o.Img.sprite = want;
             float shake = warn ? (Mathf.Repeat(Time.time, 0.1f) < 0.05f ? PistonShakePx : -PistonShakePx) : 0f;
             rig.Body.anchoredPosition = rig.BodyPos + new Vector2(shake, 0f);
