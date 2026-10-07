@@ -83,7 +83,7 @@ namespace Game.EditorTools
         private static int KindIndex(string actor) => actor switch
         {
             "bat" or "roadwarden" or "scrapgunner" => 0,          // 무기
-            "actor_enforcer" or "turret_cross" => 1,              // 파워
+            "actor_enforcer" or "boar" or "turret_cross" => 1,   // 파워
             "skeleton" or "coilwalker" => 2,                      // 마법
             _ => -1,
         };

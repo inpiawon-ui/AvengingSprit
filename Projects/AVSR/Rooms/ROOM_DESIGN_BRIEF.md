@@ -29,7 +29,7 @@
 | 쪽 | 잡몹 | 몸(호스트) |
 |---|---|---|
 | 날 blade | bat · roadwarden · scrapgunner | gangster · thug · hopper · hopper_smg · commando_mg · ninja · amazon |
-| 힘 force | actor_enforcer · turret_cross | baseball · guru · ninja_chain · commando_grenade · commando_missile · commando_laser · robot |
+| 힘 force | actor_enforcer · boar · turret_cross | baseball · guru · ninja_chain · commando_grenade · commando_missile · commando_laser · robot |
 | 술 magic | skeleton · coilwalker | dragoon · snowwoman · dragon_blue · salamander · vampire · white_wizard · medium · death |
 
 - `amazon_elite` 는 쓰지 않는다(숨긴 몸이라 런타임에 아마존으로 바뀐다).
@@ -42,7 +42,8 @@
 | bat 박쥐 | 날 | 근접. 빠르게 달라붙는다(뒤 챕터에서는 급강하 · 지그재그) |
 | scrapgunner 폐품 사수 | 날 | 원거리 단발. 엄폐 뒤에 세운다 |
 | roadwarden 순찰기 | 날 | 원거리 부채꼴(뒤 챕터 3연발 · 유도탄). 엄폐 뒤에 세운다 |
-| actor_enforcer 집행자 | 힘 | 근접. 체력이 가장 많다. 도약해 내려찍는다 |
+| actor_enforcer 돌 고릴라 | 힘 | 근접. 체력이 가장 많다. 도약해 내려찍는다(5단계부터 돌진과 번갈아) |
+| boar 쇠뿔 멧돼지 | 힘 | **돌진만**(평타 없음, 2챕터~). 굵은 띠 0.75초 → 7 m 들이받기. 벽 · 물건에 박으면 1.6초 휘청 — 앞에 곧게 달릴 길을 두고, 끝에 박을 물건을 둔다 |
 | turret_cross 십자 포탑 | 힘 | **안 움직인다.** 십자로 쏜다 — 자리가 곧 전부다. 사선이 방을 가르게 놓는다 |
 | skeleton 해골 | 술 | 근접. 죽을 때 탄을 뿌린다 — 뭉쳐 두면 터질 때 위험하다 |
 | coilwalker 코일 보행기 | 술 | 원거리. 도약하며 쏜다. 엄폐 뒤에 세운다 |

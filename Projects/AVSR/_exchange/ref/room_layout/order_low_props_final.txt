@@ -1,0 +1,16 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 도형을 그려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 낮은 장애물 8종 본 그림 (잘라 쓸 판)
+
+PD 통과 시안 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/mock_low_props.png — 위 줄 8개 **그대로**(같은 생김새 · 같은 색 · 같은 그림체). 이번엔 바닥 없이 물건만.
+우리 게임 물건 그림체 참조 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/ROOM_CH1_003.png (기둥 · 덩어리) · C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/goo_pool_raw.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/room_layout/low_props_raw.png — 가로형 1728 x 864 쯤(4 x 2 칸, 칸마다 432 x 432), 배경 **마젠타 #FF00FF 단색**
+  · 칸 차례(시안 위 줄 왼쪽부터) :
+      1 모래주머니 낮은 담 · 2 눕혀 쌓은 드럼통 · 3 바닥 구덩이(깨진 아스팔트 테두리 + 검은 구멍) · 4 쓰러져 누운 콘크리트 기둥
+      5 납작한 고철 판 무더기 · 6 바닥 배수구 철망 · 7 낮은 콘크리트 블록 셋 한 줄 · 8 위에서 본 납작한 폐차
+  · 위에서 비스듬히 내려다본 모습. 물건마다 칸 가운데, **바닥 그림자 · 바닥 타일은 그리지 마라**(마젠타가 바로 닿게).
+  · 높이 : 모두 낮다 — 바닥에서 솟는 부분은 물건 폭의 1/4 이하. 3 · 6 은 바닥 높이(솟지 않는다).
+  · 칸 폭을 잘 채워라(물건 폭 = 칸 폭의 80~90%). 7 은 블록 셋이 가로로 이어진 한 덩어리.
+  · 1 px 짙은 외곽선 · 2~3단 끊기는 명암 · 16비트 픽셀. 글자 · 번호를 그리지 마라.
+끝나면 경로만 알려라.

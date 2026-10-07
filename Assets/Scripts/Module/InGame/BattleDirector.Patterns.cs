@@ -96,6 +96,7 @@ namespace Game.Module.InGame
                         return _gorillaCharge.Contains(e) != (ch >= ChargeFromChapter) ? EnemyPattern.Dive : EnemyPattern.Hop;
                     return EnemyPattern.Hop;
                 case TrashCoilKey:     return EnemyPattern.Vault;
+                case TrashBoarKey:     return EnemyPattern.Dive;   // 멧돼지 — 돌진만(평타 없음, BattleDirector.Boar)
                 case TrashCrossKey:
                     return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;
                 case TrashBatKey:

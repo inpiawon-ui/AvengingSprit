@@ -78,10 +78,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 5.5, y: 6.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_1
+      _kind: SANDBAG
+      _at: {x: 6, y: 6.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -155,10 +155,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 4.5, y: 10.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 5, y: 10.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -168,20 +168,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_2
-      _kind: PILLAR
-      _at: {x: 5.5, y: 10.5}
-      _size: {x: 1, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_3
+    - _objectId: CRATE_2
       _kind: CRATE
       _at: {x: 1, y: 8.5}
       _size: {x: 2, y: 1}
@@ -194,7 +181,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_4
+    - _objectId: CRATE_3
       _kind: CRATE
       _at: {x: 3, y: 8.5}
       _size: {x: 2, y: 1}
@@ -207,7 +194,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_5
+    - _objectId: CRATE_4
       _kind: CRATE
       _at: {x: 7, y: 8.5}
       _size: {x: 2, y: 1}
@@ -220,7 +207,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_6
+    - _objectId: CRATE_5
       _kind: CRATE
       _at: {x: 9, y: 8.5}
       _size: {x: 2, y: 1}
@@ -233,7 +220,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_7
+    - _objectId: PILLAR_6
       _kind: PILLAR
       _at: {x: 8.5, y: 5.5}
       _size: {x: 1, y: 1}
@@ -310,10 +297,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 5.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_1
+      _kind: SANDBAG
+      _at: {x: 6, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -323,10 +310,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 1, y: 9}
-      _size: {x: 2, y: 2}
+    - _objectId: WRECK_CAR_2
+      _kind: WRECK_CAR
+      _at: {x: 1, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -336,10 +323,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_3
-      _kind: BULK
-      _at: {x: 9, y: 9}
-      _size: {x: 2, y: 2}
+    - _objectId: WRECK_CAR_3
+      _kind: WRECK_CAR
+      _at: {x: 9, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -461,10 +448,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 7.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: FALLEN_PILLAR_1
+      _kind: FALLEN_PILLAR
+      _at: {x: 7, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -722,10 +709,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 5.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 6, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -813,10 +800,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_8
-      _kind: PILLAR
-      _at: {x: 3.5, y: 5.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_8
+      _kind: SANDBAG
+      _at: {x: 4, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1154,10 +1141,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: PILLAR_1
-      _kind: PILLAR
-      _at: {x: 7.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_1
+      _kind: SANDBAG
+      _at: {x: 8, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1629,10 +1616,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 2, y: 11}
-      _size: {x: 2, y: 2}
+    - _objectId: SCRAP_PILE_1
+      _kind: SCRAP_PILE
+      _at: {x: 2, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1642,10 +1629,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_2
-      _kind: BULK
-      _at: {x: 8, y: 11}
-      _size: {x: 2, y: 2}
+    - _objectId: SCRAP_PILE_2
+      _kind: SCRAP_PILE
+      _at: {x: 8, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1655,10 +1642,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_3
-      _kind: BULK
-      _at: {x: 5, y: 8}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_3
+      _kind: BARREL_PILE
+      _at: {x: 2, y: 10.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1668,10 +1655,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_4
-      _kind: BULK
-      _at: {x: 2, y: 5}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_4
+      _kind: BARREL_PILE
+      _at: {x: 8, y: 10.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1681,10 +1668,36 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_5
-      _kind: BULK
-      _at: {x: 8, y: 5}
-      _size: {x: 2, y: 2}
+    - _objectId: WRECK_CAR_5
+      _kind: WRECK_CAR
+      _at: {x: 5, y: 8.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SCRAP_PILE_6
+      _kind: SCRAP_PILE
+      _at: {x: 2, y: 5.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SCRAP_PILE_7
+      _kind: SCRAP_PILE
+      _at: {x: 8, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -1971,10 +1984,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_10
-      _kind: PILLAR
-      _at: {x: 6.5, y: 6.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_10
+      _kind: SANDBAG
+      _at: {x: 7, y: 6.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -2268,7 +2281,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_003_S05
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 7.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
@@ -2309,10 +2322,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_3
-      _kind: BULK
-      _at: {x: 5, y: 9}
-      _size: {x: 2, y: 2}
+    - _objectId: SCRAP_PILE_3
+      _kind: SCRAP_PILE
+      _at: {x: 5, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -2322,7 +2335,20 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SLOW_POOL_4
+    - _objectId: WRECK_CAR_4
+      _kind: WRECK_CAR
+      _at: {x: 5, y: 8.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SLOW_POOL_5
       _kind: SLOW_POOL
       _at: {x: 5, y: 7}
       _size: {x: 2, y: 2}
@@ -2472,8 +2498,8 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_005_S02
-      _actorId: bat
-      _at: {x: 5.5, y: 11.5}
+      _actorId: boar
+      _at: {x: 4.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2481,7 +2507,7 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_005_S03
       _actorId: bat
-      _at: {x: 7.5, y: 11.5}
+      _at: {x: 5.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -2489,13 +2515,21 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH2_005_S04
       _actorId: bat
-      _at: {x: 4.5, y: 10.5}
+      _at: {x: 7.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_005_S05
+      _actorId: bat
+      _at: {x: 4.5, y: 10.5}
+      _facing: S
+      _delaySeconds: 0
+      _trigger: ROOM_ENTER
+      _telegraph: 
+    - _elite: 0
+      _spawnId: ROOM_CH2_005_S06
       _actorId: commando_grenade
       _at: {x: 7.5, y: 6.5}
       _facing: S
@@ -2985,7 +3019,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_007_S05
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 6.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
@@ -3294,7 +3328,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_009_S04
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 5.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
@@ -4006,7 +4040,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH2_013_S04
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 5.5, y: 10.5}
       _facing: S
       _delaySeconds: 0

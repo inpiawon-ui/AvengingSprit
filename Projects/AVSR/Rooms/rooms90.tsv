@@ -1,12 +1,11 @@
 # rooms90-hand-1.0 — rooms90_build.py 가 굽는다. 손으로 고치지 않는다.
 ROOM	ROOM_CH1_001	첫 골목	입구 앞 갱스터(날)부터 빼앗고 시작한다 — 해골(술) 둘이 내려오면 긴 사선으로 하나씩 딴다
-OBJ	PILLAR	5.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	6	6.5	2	1	1	1	1	NONE	0	0
 SPAWN	skeleton	4.5	10.5	0
 SPAWN	skeleton	5.5	9.5	0
 SPAWN	gangster	4.5	6.5	1
-ROOM	ROOM_CH1_002	상자 창고	박쥐와 폐품 사수(날)뿐이다 — 수류탄 코만도(힘)가 기둥 뒤 사수에게 넘겨 던진다
-OBJ	PILLAR	4.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	10.5	1	1	1	1	1	NONE	0	0
+ROOM	ROOM_CH1_002	상자 창고	박쥐와 폐품 사수(날)뿐이다 — 수류탄 코만도(힘)가 드럼통 뒤 사수에게 넘겨 던진다
+OBJ	BARREL_PILE	5	10.5	2	1	1	1	1	NONE	0	0
 OBJ	CRATE	1	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	3	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	7	8.5	2	1	1	1	0	NONE	0	0
@@ -16,14 +15,14 @@ SPAWN	scrapgunner	4.5	11.5	0
 SPAWN	bat	2.5	6.5	0
 SPAWN	commando_grenade	7.5	5.5	1
 ROOM	ROOM_CH1_003	고철 광장	집행자(힘) 둘이 트인 광장으로 뛰어든다 — 샐러맨더(술)의 확산이 한가운데서 둘을 함께 태운다
-OBJ	PILLAR	5.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	BULK	1	9	2	2	1	1	1	NONE	0	0
-OBJ	BULK	9	9	2	2	1	1	1	NONE	0	0
+OBJ	SANDBAG	6	11.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	1	9.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	9	9.5	2	1	1	1	1	NONE	0	0
 SPAWN	salamander	4.5	11.5	1
 SPAWN	actor_enforcer	3.5	8.5	0
 SPAWN	actor_enforcer	6.5	8.5	0
-ROOM	ROOM_CH1_005	사선 담	해골(술)이 많다 — 아마존(날)이 사선 벽 그늘을 타고 붙어 벤다. 꼭대기 폐품 사수는 사선 끝 기둥 뒤에 있다
-OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+ROOM	ROOM_CH1_005	사선 담	해골(술)이 많다 — 아마존(날)이 사선 벽 그늘을 타고 붙어 벤다. 꼭대기 폐품 사수는 사선 끝 누운 기둥 뒤에 있다
+OBJ	FALLEN_PILLAR	7	11.5	2	1	1	1	1	NONE	0	0
 OBJ	BLOCK	6.5	10.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	5.5	9.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	4.5	8.5	1	1	1	1	0	NONE	0	0
@@ -42,14 +41,14 @@ SPAWN	actor_enforcer	6.5	11.5	0
 SPAWN	scrapgunner	2.5	10.5	0
 SPAWN	salamander	7.5	7.5	1
 ROOM	ROOM_CH1_007	폐차 깔때기	박쥐(날)가 깔때기를 타고 가운데 출구로 몰려온다 — 수류탄 코만도(힘)가 출구에 뭉친 떼를 터뜨린다
-OBJ	PILLAR	5.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	6	11.5	2	1	1	1	1	NONE	0	0
 OBJ	CRATE	1	9.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	9	9.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	2	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	8	8.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	3	7.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	7	7.5	2	1	1	1	0	NONE	0	0
-OBJ	PILLAR	3.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	4	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	scrapgunner	4.5	11.5	0
 SPAWN	bat	1.5	10.5	0
 SPAWN	bat	8.5	10.5	0
@@ -67,7 +66,7 @@ SPAWN	commando_grenade	8.5	9.5	1
 SPAWN	skeleton	4.5	8.5	0
 SPAWN	skeleton	5.5	6.5	0
 ROOM	ROOM_CH1_010	고철 계단	집행자(힘)가 상자 계단을 넘어 뛰어온다 — 계단 위의 샐러맨더(술)가 답. 아마존(날)은 힘에게 밀린다
-OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	8	11.5	2	1	1	1	1	NONE	0	0
 OBJ	CRATE	4	9.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	6	7.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	8	5.5	2	1	1	1	0	NONE	0	0
@@ -100,11 +99,13 @@ SPAWN	skeleton	3.5	9.5	0
 SPAWN	skeleton	6.5	9.5	0
 SPAWN	salamander	8.5	7.5	1
 ROOM	ROOM_CH1_014	고철 더미 다섯	1챕터 총정리 — 집행자(힘) 둘이 더미 사이를 누빈다. 가운데 더미 곁의 샐러맨더(술)가 답, 호퍼(날)는 폐품 사수만 노린다
-OBJ	BULK	2	11	2	2	1	1	1	NONE	0	0
-OBJ	BULK	8	11	2	2	1	1	1	NONE	0	0
-OBJ	BULK	5	8	2	2	1	1	1	NONE	0	0
-OBJ	BULK	2	5	2	2	1	1	1	NONE	0	0
-OBJ	BULK	8	5	2	2	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	2	11.5	2	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	8	11.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	2	10.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	8	10.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	5	8.5	2	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	2	5.5	2	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	8	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	hopper	4.5	11.5	1
 SPAWN	scrapgunner	5.5	10.5	0
 SPAWN	actor_enforcer	2.5	9.5	0
@@ -120,7 +121,7 @@ OBJ	BLOCK	3.5	9.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	6.5	9.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	3.5	8.5	1	1	1	1	0	NONE	0	0
 OBJ	BLOCK	6.5	8.5	1	1	1	1	0	NONE	0	0
-OBJ	PILLAR	6.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	7	6.5	2	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	1.5	11.5	0
 SPAWN	bat	5.5	11.5	0
 SPAWN	bat	5.5	9.5	0
@@ -140,13 +141,14 @@ SPAWN	white_wizard	7.5	5.5	1
 ROOM	ROOM_CH2_003	정비 섬	순찰기와 폐품 사수(날)가 섬 너머 기둥 뒤에서 쏜다 — 섬 바로 아래는 끈끈하다. 구루(힘)가 옆으로 돌아 붙는다
 OBJ	PILLAR	2.5	10.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	BULK	5	9	2	2	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	5	9.5	2	1	1	1	1	NONE	0	0
+OBJ	WRECK_CAR	5	8.5	2	1	1	1	1	NONE	0	0
 OBJ	SLOW_POOL	5	7	2	2	0	0	0	NONE	0	0
 SPAWN	roadwarden	2.5	11.5	0
 SPAWN	scrapgunner	7.5	11.5	0
 SPAWN	bat	2.5	8.5	0
 SPAWN	bat	7.5	8.5	0
-SPAWN	actor_enforcer	7.5	6.5	0
+SPAWN	boar	7.5	6.5	0
 SPAWN	guru	1.5	5.5	1
 ROOM	ROOM_CH2_005	깔때기	박쥐(날) 셋이 깔때기를 타고 좁은 입으로 몰린다 — 입 앞이 끈끈해 뭉친다. 수류탄 코만도(힘)가 그 자리에 던진다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
@@ -159,6 +161,7 @@ OBJ	CRATE	7	8.5	2	1	1	1	0	NONE	0	0
 OBJ	SLOW_POOL	5	7	2	2	0	0	0	NONE	0	0
 OBJ	PILLAR	8.5	6.5	1	1	1	1	1	NONE	0	0
 SPAWN	scrapgunner	2.5	11.5	0
+SPAWN	boar	4.5	11.5	0
 SPAWN	bat	5.5	11.5	0
 SPAWN	bat	7.5	11.5	0
 SPAWN	bat	4.5	10.5	0
@@ -194,7 +197,7 @@ SPAWN	scrapgunner	3.5	11.5	0
 SPAWN	roadwarden	8.5	11.5	0
 SPAWN	bat	7.5	9.5	0
 SPAWN	bat	2.5	8.5	0
-SPAWN	actor_enforcer	6.5	6.5	0
+SPAWN	boar	6.5	6.5	0
 SPAWN	guru	8.5	5.5	1
 ROOM	ROOM_CH2_009	사일로 지그재그	순찰기(날) 둘이 방 위 양 끝에서 쏜다 — 낮은 담 두 줄이 길을 갈지자로 꺾는다. 로봇(힘)의 관통이 가로 골을 통째로 훑는다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
@@ -208,7 +211,7 @@ OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	1.5	11.5	0
 SPAWN	roadwarden	8.5	11.5	0
 SPAWN	bat	2.5	9.5	0
-SPAWN	actor_enforcer	5.5	6.5	0
+SPAWN	boar	5.5	6.5	0
 SPAWN	hopper_smg	1.5	5.5	1
 SPAWN	robot	8.5	5.5	1
 ROOM	ROOM_CH2_010	관제 계단	돌 고릴라(힘) 셋이 계단을 따라 비스듬히 한 줄로 내려온다 — 계단 아래의 백마법사(술)가 그 줄을 관통으로 꿴다. 기관총 코만도(날)는 밀린다
@@ -249,7 +252,7 @@ OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	2.5	11.5	0
 SPAWN	roadwarden	7.5	11.5	0
 SPAWN	bat	4.5	10.5	0
-SPAWN	actor_enforcer	5.5	10.5	0
+SPAWN	boar	5.5	10.5	0
 SPAWN	guru	1.5	5.5	1
 SPAWN	salamander	8.5	5.5	1
 ROOM	ROOM_CH2_014	회전 관문	2챕터 총정리 — 돌 고릴라(힘) 셋이 위에서 내려온다. 가운데 축에서 사슬 팔이 돌고 끝의 톱니가 한 바퀴 돈다(팔도 아프다). 샐러맨더(술)가 팔이 지나간 뒤 모인 고릴라를 태운다

@@ -94,10 +94,11 @@ namespace Game.Module.InGame
             {
                 case 0:
                 {
+                    var spec = DiveSpecOf(e);   // 박쥐 · 고릴라 · 멧돼지가 같은 세 박자를 다른 크기로 (BattleDirector.Boar)
                     e.PatternTimer -= dt;
                     bool ready = e.PatternTimer <= 0f
-                              && distance <= Meters(DiveTriggerMeters)
-                              && distance >= Meters(DiveMinMeters)
+                              && distance <= Meters(spec.TriggerMeters)
+                              && distance >= Meters(spec.MinMeters)
                               && EnemyLineClear(e.Position, me.Position);
                     if (ready)
                     {
@@ -105,15 +106,17 @@ namespace Game.Module.InGame
                         dir = dir.sqrMagnitude < 0.0001f ? e.Facing : dir.normalized;
                         e.SetFacing(dir);
                         e.PatternFrom = e.Position;
-                        e.PatternTo = ClampedInField(e, e.Position + dir * Meters(DiveMeters));
+                        e.PatternTo = ClampedInField(e, e.Position + dir * Meters(spec.Meters));
                         e.PatternPhase = 1;
-                        e.PatternTimer = DiveTellSeconds;
+                        e.PatternTimer = spec.TellSeconds;
                         e.SetTelegraph(true);
-                        StartWarn(BandShape(e.Position, dir, Meters(DiveWidthMeters),
+                        StartWarn(BandShape(e.Position, dir, Meters(spec.WidthMeters),
                                             Vector2.Distance(e.PatternFrom, e.PatternTo)),
-                                  DiveTellSeconds, Mathf.Max(1, e.Atk), owner: e);
+                                  spec.TellSeconds, Mathf.Max(1, e.Atk), owner: e);
                         return true;
                     }
+                    // 멧돼지는 물지 않는다 — 돌진 사이엔 다가오거나 숨을 고른다
+                    if (HoldBetweenCharges(e, me, distance, dt)) return true;
                     // 아직 멀거나 쉬는 중 — 평소처럼 쫓는다. CH4 부터는 좌우로 흔들며 온다.
                     if (PatternChapter < WeaveFromChapter || distance <= EffectiveRange(e)) return false;
                     e.PatternAngle += dt * WeaveHz * Mathf.PI * 2f;
@@ -135,20 +138,24 @@ namespace Game.Module.InGame
                     e.SetTelegraph(false);
                     e.PlayAttack();
                     e.PatternPhase = 2;
-                    e.PatternTimer = DiveDashSeconds;
+                    e.PatternTimer = DiveSpecOf(e).DashSeconds;
                     return true;
 
                 case 2:
                 {
                     e.SetMoving(true);
                     e.SetState(EnemyState.Approach);
+                    var spec = DiveSpecOf(e);
                     e.PatternTimer -= dt;
-                    float k = 1f - Mathf.Clamp01(e.PatternTimer / DiveDashSeconds);
+                    float k = 1f - Mathf.Clamp01(e.PatternTimer / spec.DashSeconds);
                     var want = Vector2.Lerp(e.PatternFrom, e.PatternTo, k);
                     e.Position = SlideMove(e, e.Position, want - e.Position);   // 지형에는 막힌다
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 3;
-                    e.PatternTimer = DiveRecoverSeconds;
+                    // 끝까지 못 갔다 = 벽 · 물건에 박았다 → 휘청(더 긴 빈틈). 멧돼지에게만 차이가 난다
+                    bool crashed = Vector2.Distance(e.Position, e.PatternTo) > Meters(0.5f);
+                    e.PatternTimer = crashed ? spec.WallStunSeconds : spec.RecoverSeconds;
+                    if (crashed && e.Key == TrashBoarKey) e.PlayHit();
                     return true;
                 }
 

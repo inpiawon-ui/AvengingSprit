@@ -150,6 +150,7 @@ MonoBehaviour:
     - roadwarden
     - scrapgunner
     - actor_enforcer
+    - boar
     Pattern: 2
     EnemyHpMul: 0.57
     EnemyAtkMul: 0.89
@@ -165,7 +166,7 @@ MonoBehaviour:
     BossArt: 2
     ChestArt: 1
     MixBlade: 29
-    MixForce: 15
+    MixForce: 16
     MixMagic: 0
   - Chapter: 3
     Name: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"

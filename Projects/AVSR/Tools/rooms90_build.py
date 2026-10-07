@@ -77,16 +77,29 @@ GLYPH = {
     'N': ('BLOCK', 1, 1),            # 낮은 돌 블록 — 모아서 담을 쌓는다
     'Q': ('PROP_TALL', 1, 1),        # 무대 간판 소품(키 큰 것 — 가로등·안테나·배양관 …)
     'E': ('PROP_WIDE', 2, 1),        # 무대 간판 소품(넓은 것 — 폐차·실외기·제어반 …)
+    # ── 3차 (2026-10-07) — 키 큰 것을 대신할 **낮은 엄폐** (PD 「위로 긴 것들은 2D 라 애매하다 · 다른 오브젝트로」)
+    #    솟음이 낮아 그림 = 막힌 칸이다. 그래도 **적 탄도 막는다**(모래주머니 뒤에 숨는다) — 방 한가운데 엄폐는 이것으로.
+    '$': ('SANDBAG', 2, 1),          # 모래주머니 낮은 담
+    '%': ('BARREL_PILE', 2, 1),      # 눕혀 쌓은 드럼통
+    '~': ('FALLEN_PILLAR', 2, 1),    # 쓰러져 누운 콘크리트 기둥
+    '^': ('JERSEY_ROW', 3, 1),       # 낮은 콘크리트 블록 셋 한 줄
+    '&': ('SCRAP_PILE', 2, 1),       # 납작한 고철 판 무더기
+    '?': ('WRECK_CAR', 2, 1),        # 위에서 본 납작한 폐차
+    '@': ('PIT', 2, 2),              # 바닥 구덩이 — 몸은 못 건너고 탄은 넘어간다(도랑과 같다)
 }
 
 # 키 큰 것 — 적 탄도 막는다. 낮은 것(상자·낮은 벽·바리케이드)은 적 탄이 넘어온다.
 TALL = {'PILLAR', 'BULK', 'RAIL', 'RICOCHET_WALL', 'WALL_TURRET_S', 'WALL_TURRET_W', 'WALL_TURRET_E',
         'PUSH_ROCK', 'PROP_TALL'}
+# 낮은 엄폐(3차) — 솟음이 낮지만 탄을 막는다. 원거리 적의 엄폐로도 친다
+LOW_SHIELD = {'SANDBAG', 'BARREL_PILE', 'FALLEN_PILLAR', 'JERSEY_ROW', 'SCRAP_PILE', 'WRECK_CAR'}
+# 원거리 적이 숨을 수 있는 것 — 적 탄도 막는 것
+COVER = TALL | LOW_SHIELD
 # 몸을 막는 것
-SOLID = TALL | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER', 'SWING_HAMMER_H',
+SOLID = TALL | LOW_SHIELD | {'CRATE', 'LOW_COVER', 'BARRICADE', 'EXPLOSIVE_BARREL', 'SWING_HAMMER', 'SWING_HAMMER_H',
                 'BLOCK', 'PROP_WIDE', 'FLAME_JET_S', 'FLAME_JET_E', 'FLAME_JET_W'}
 # 몸은 못 건너지만 탄은 지나가는 것
-CHANNEL = {'CHANNEL_H', 'CHANNEL_V'}
+CHANNEL = {'CHANNEL_H', 'CHANNEL_V', 'PIT'}
 # 밟으면 아픈 것 (피해, 간격)
 HAZARD = {'TIMED_SPIKE': ('SPIKE', 6, 0.8), 'HAZARD': ('FIRE', 6, 0.8),
           'ROTATING_BLADE': ('BLADE', 10, 0.5), 'SWING_HAMMER': ('HAMMER', 12, 0.7),
@@ -132,7 +145,7 @@ TRASH = {ch: c['trash'] for ch, c in CHAPTERS.items()}
 # 상성(가위바위보) — `AffinityRule.KindOf` 와 같아야 한다. 힘 → 날 → 술 → 힘.
 KIND = {
     'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade',
-    'actor_enforcer': 'force', 'turret_cross': 'force',
+    'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force',
     'skeleton': 'magic', 'coilwalker': 'magic',
     'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
     'ninja': 'blade', 'amazon': 'blade', 'amazon_elite': 'blade',
@@ -442,7 +455,7 @@ def check(room, errors, warns):
         # 원거리는 엄폐 뒤에 세운다 — 키 큰 것이 1.6 m 안에
         ranged = (actor in RANGED_TRASH) if not host else (actor not in MELEE_HOST)
         if ranged and actor not in STATIC_TRASH:
-            near = any(o[0] in TALL and abs(o[1] - x) < o[3] / 2 + 1.6 and abs(o[2] - y) < o[4] / 2 + 1.6
+            near = any(o[0] in COVER and abs(o[1] - x) < o[3] / 2 + 1.6 and abs(o[2] - y) < o[4] / 2 + 1.6
                        for o in room.objects)
             if not near:
                 warns.append(f'{tag}: 원거리 {actor}({x},{y}) 근처에 키 큰 엄폐가 없다')
@@ -478,7 +491,7 @@ def write_tsv(rooms):
                 hz = HAZARD.get(kind, ('NONE', 0, 0))
                 move = 1 if (kind in SOLID or kind in CHANNEL) else 0
                 shot = 1 if kind in SOLID else 0
-                eshot = 1 if kind in TALL else 0
+                eshot = 1 if kind in COVER else 0
                 f.write(f'OBJ\t{kind}\t{cx:g}\t{cy:g}\t{w:g}\t{h:g}\t{move}\t{shot}\t{eshot}\t{hz[0]}\t{hz[1]}\t{hz[2]:g}\n')
             for actor, x, y, host in r.spawns:
                 f.write(f'SPAWN\t{actor}\t{x:g}\t{y:g}\t{1 if host else 0}\n')
@@ -494,7 +507,10 @@ COL = {'PILLAR': (205, 190, 120), 'CRATE': (170, 120, 70), 'BULK': (150, 140, 12
        'SLIDE_BLADE_V': (240, 240, 250), 'SWING_HAMMER_H': (200, 200, 230),
        'FLAME_JET_S': (200, 80, 50), 'FLAME_JET_E': (200, 80, 50), 'FLAME_JET_W': (200, 80, 50),
        'DROP_ZONE': (120, 70, 70), 'SLOW_POOL': (110, 170, 90), 'MINE': (230, 50, 50),
-       'BLOCK': (190, 200, 205), 'PROP_TALL': (150, 160, 200), 'PROP_WIDE': (170, 150, 120)}
+       'BLOCK': (190, 200, 205), 'PROP_TALL': (150, 160, 200), 'PROP_WIDE': (170, 150, 120),
+       'SANDBAG': (190, 170, 120), 'BARREL_PILE': (90, 110, 150), 'FALLEN_PILLAR': (175, 175, 170),
+       'JERSEY_ROW': (185, 190, 195), 'SCRAP_PILE': (110, 100, 95), 'WRECK_CAR': (95, 100, 120),
+       'PIT': (30, 30, 35)}
 
 
 def sheet(rooms, out=SHEET):
