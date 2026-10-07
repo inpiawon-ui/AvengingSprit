@@ -219,7 +219,8 @@ namespace Game.Module.InGame
             dull = outcome < 0;
             if (weak)
             {
-                SpawnFx("weakhit", victim.Position, WeakFxSize);
+                // 때린 몸의 속성 겹(파워 · 무기 · 마법) — 무엇으로 때리든 얼음이 나오던 것을 바꿨다(2026-10-07)
+                if (!HxAffinityHit(victim)) SpawnFx("weakhit", victim.Position, WeakFxSize);
                 GameSound.Cue("hit.weak");
                 StrongHitReaction(victim);
                 return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.WinDamageMul));

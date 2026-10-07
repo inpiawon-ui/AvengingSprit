@@ -5026,11 +5026,14 @@ namespace Game.Module.InGame
                         if ((pass == 0) != (e == target)) continue;
                         // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
                         if (EdgeDistance(attacker, e) > reach) continue;
-                        Burst(e.Position, true);
+                        // 근접 피격 겹(베기 · 타격 · 사슬) — 그림이 없으면 예전 주황 원
+                        if (!HxMeleeHit(attacker, e)) Burst(e.Position, true);
                         GameSound.Cue("hit.enemy");
                         bool wasAlive = e.IsAlive;
+                        _hxMeleeSwing = true;
                         HitEnemyWith(e,
                             Mathf.RoundToInt(attacker.Atk * _buffs.AttackMul * EchoMul * SwingMul(fromPlayer)), p);
+                        _hxMeleeSwing = false;
                         // 정본 S04 흡혈 마무리 — 근접으로 끝냈을 때만 회복이 터진다.
                         // 흡혈을 쌓는 몸과 터뜨리는 몸이 달라 **갈아타야만** 성립한다.
                         if (wasAlive && !e.IsAlive) OnMeleeFinish(attacker);
@@ -6351,7 +6354,7 @@ namespace Game.Module.InGame
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
             ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak, dull);
             // 안 맞는 몸 — 불똥만 작게 튀고 화면은 안 흔들린다.
-            SpawnFx("hit", victim.Position, dull ? HitFxSize * DullFxScale : HitFxSize);
+            if (!HxSkipCommonHit) SpawnFx("hit", victim.Position, dull ? HitFxSize * DullFxScale : HitFxSize);
             if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
@@ -6821,6 +6824,7 @@ namespace Game.Module.InGame
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
             if (kind == WpTracerKind) { WpTracerHit(at); return; }   // 난사 예광탄 — 작은 코어만
+            if (HxImpact(at, kind, size)) return;   // 피격 두 겹 — 투사체 고유 터짐(불티는 폭발 갈래만)
             // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
             // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
             _pfx?.Hit(at, ParticleElement.Fire, 0.8f);
@@ -7197,8 +7201,10 @@ namespace Game.Module.InGame
             {
                 // 안 맞는 몸 — 「팅」 하고 튕기는 소리, 작은 불똥, 흔들림 없음.
                 GameSound.Cue(dull ? "hit.reflect" : "hit.enemy");
-                SpawnFx(crit ? "crit" : "hit", victim.Position,
-                        crit ? CritFxSize : dull ? HitFxSize * DullFxScale : HitFxSize);
+                // 피격 두 겹(2026-10-07) — 그림이 있으면 노란 별 대신 치명 겹만(고유 터짐은 이미 났다)
+                if (!HxShotHit(victim, crit))
+                    SpawnFx(crit ? "crit" : "hit", victim.Position,
+                            crit ? CritFxSize : dull ? HitFxSize * DullFxScale : HitFxSize);
                 if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
                 else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);

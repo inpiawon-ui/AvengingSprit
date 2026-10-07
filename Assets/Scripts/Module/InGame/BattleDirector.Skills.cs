@@ -280,6 +280,7 @@ namespace Game.Module.InGame
             _chainHopsLeft = 0;
             ClearLz();
             ClearWp();
+            ClearHx();
             for (int i = 0; i < _spits.Count; i++) _spits[i].Fx?.Stop();
             _spits.Clear();
             _hasteMul = 1f;
