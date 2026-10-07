@@ -1,0 +1,28 @@
+=== order_mock_ch7_conveyor.txt rc=0
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$src='"'C:\\Users\\inpia\\.codex\\generated_images\\01a1168c-d835-7252-bd7f-e6d4297b6922\\exec-50b555f8-fc4a-4652-a42d-8ab418
+  ! + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
+  ! + FullyQualifiedErrorId : ArgumentNullException
+  ! + FullyQualifiedErrorId : PropertyNotFound
+  ! + FullyQualifiedErrorId : PropertyNotFound
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : FileNotFoundException
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+완료했습니다. 내장 `image_gen` 편집 모드를 사용했으며 API 키/CLI 폴백은 사용하지 않았습니다.
+
+- [방 화면 시안 PNG](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch7_conveyor.png) — 720×1280
+- [부품 명세 MD](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch7_conveyor.md) — 14줄
+
+최종 프롬프트는 원본 화면 보존, 63px 폭의 가로·세로 컨베이어, 오른쪽/위쪽 흐름, 반복 화살표·롤러·낮은 테두리, 기존 물체 아래 바닥 레이어, 무문자 조건을 중심으로 구성했습니다.
+
+=== order_mock_ch10_oneway.txt rc=0
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$src='"'C:\\Users\\inpia\\.codex\\generated_images\\01a1168e-cb29-73d0-ae18-fcdf01a2bac0\\exec-84b66fad-bd91-441c-b121-a5660d
+완료했습니다. 원본 화면은 유지하고, 하단 빈 공간에 열림/닫힘 상태를 나란히 배치했습니다.
+
+- [방 화면 시안 PNG](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch10_oneway.png)
+- [부품 제작 사양 MD](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch10_oneway.md)
+
+720×1280 PNG로 저장했으며, API 키나 CLI 폴백 없이 내장 이미지 편집을 사용했습니다. 최종 프롬프트에는 원본 보존, 3칸 폭, 좌측 열림·우측 잠김, 기존 도트 화풍과 위험 띠 재사용 조건을 포함했습니다.
+

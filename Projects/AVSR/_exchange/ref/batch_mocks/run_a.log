@@ -1,0 +1,21 @@
+=== order_mock_monsters4.txt rc=0
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Item 'Projects/AVSR/_exchange/ref/trash_v2/mock_lineup_v2_labeled.png','Projects/AVSR/_exchange/ref/room_layout/ROOM_CH4_
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-ChildItem 'C:\\Users\\inpia\\.codex\\generated_images' -Recurse -File -Filter *.png -ErrorAction SilentlyContinue | Sort-
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-ChildItem 'C:\\Users\\inpia\\.codex\\generated_images' -Recurse -File -Filter *.png -ErrorAction SilentlyContinue | Sort-
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
+  ! + FullyQualifiedErrorId : ArgumentNullException
+  ! + FullyQualifiedErrorId : PropertyNotFound
+  ! + FullyQualifiedErrorId : PropertyNotFound
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvokeMethodOnNull
+  ! + FullyQualifiedErrorId : InvalidOperation,Microsoft.PowerShell.Commands.MoveItemCommand
+완성했습니다. API 키 기반 CLI 폴백 없이 내장 이미지 편집을 사용했습니다.
+
+- [방 안 화면 시안 PNG](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/batch_mocks/mock_monsters4.png) — 720×1280
+- [부품 제작 명세](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/batch_mocks/mock_monsters4.md) — 13줄
+
+최종 프롬프트에는 원본 방 보존, 네 잡몹의 지정 외형·크기·패턴, 단일 세로 화면, 라벨 및 패널 금지를 명시했습니다.
+

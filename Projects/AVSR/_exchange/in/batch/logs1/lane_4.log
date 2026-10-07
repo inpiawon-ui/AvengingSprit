@@ -1,0 +1,59 @@
+=== order_gimmick9.txt rc=0
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! + FullyQualifiedErrorId : UnauthorizedAccess
+  ! + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup, and preview assembly.
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$lines = @('# Gimmick 9 asset check','','Generated with the built-in image generation tool; post-processing was limited to nearest-neighbor sizing, transparent-canvas placement, binary-alpha cleanup,
+완료했습니다. 내장 이미지 생성 기능만 사용했으며, 후처리는 크기 조정·배경 투명화·이진 알파 정리에 한정했습니다.
+
+저장 위치: [batch 폴더](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch/)
+
+- `obj_laser_pillar.png` — 72×86
+- `obj_shield_gen_1.png` — 72×96
+- `obj_shield_gen_2.png` — 72×96
+- `fx_shield_bubble.png` — 128×128
+- `preview_gimmick9.png` — 조립 확인 그림
+- [check_gimmick9.md](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch/check_gimmick9.md) — 크기 및 알파 실측 기록
+
+모든 개별 에셋의 알파 값은 `{0, 255}`로 확인했습니다. 임시 원본과 처리 스크립트도 정리했습니다.
+
+=== order_gate10.txt rc=0
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Command magick, ffmpeg, node -ErrorAction SilentlyContinue | Select-Object Name,Source' in C:\won\UnityProject\AvengingSp
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$files = Get-ChildItem '"'C:\\Users\\inpia\\.codex\\generated_images\\01a11699-89b2-7b13-bfe9-616110ae1ac9\\*.png'; foreach (
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$ErrorActionPreference = 'Stop'
+  ! + FullyQualifiedErrorId : UnauthorizedAccess
+  ! + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$ErrorActionPreference = 'Stop'
+  ! +$ErrorActionPreference = 'Stop'
+완료했습니다. 내장 이미지 생성 기능만 사용했으며, 모든 PNG는 투명 배경과 이진 알파(`0, 255`)입니다.
+
+저장 위치: [batch 폴더](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch)
+
+- `obj_oneway_frame.png` — 216×72
+- `obj_oneway_bars.png` — 216×108
+- `obj_oneway_lock.png` — 40×40
+- `obj_oneway_arrow.png` — 72×72
+- [preview_gate10.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch/preview_gate10.png) — 조립 확인본
+- [check_gate10.md](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch/check_gate10.md) — 크기·알파 실측 결과
+
+생성 후 최근접 크기 조정과 알파 이진화만 스크립트로 처리했습니다.
+

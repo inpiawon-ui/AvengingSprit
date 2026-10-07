@@ -1,0 +1,22 @@
+=== order_mock_ch8_floor.txt rc=0
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+완성했습니다. 내장 ImageGen 편집 모드를 사용했으며 API 키/CLI 폴백은 사용하지 않았습니다.
+
+- [방 안 화면 시안 PNG](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/batch_mocks/mock_ch8_floor.png) — 720×1280
+- [부품 제작 명세 MD](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/batch_mocks/mock_ch8_floor.md) — 13줄
+
+최종 프롬프트는 원본 방 구성 보존, 63px 크기의 무너지는 바닥 4상태, 발판 2상태, 레이저 문 ON/OFF, 기존 위험 띠·레이저 표현 재사용, 무라벨 픽셀 아트 조건으로 구성했습니다.
+
+=== order_mock_ch9_laser_shield.txt rc=0
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw 'C:\\Users\\inpia\\.codex\\skills\\.system\\imagegen\\SKILL.md'; Get-Item 'Projects/AVSR/_exchange/ref/room_
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$src='"'C:\\Users\\inpia\\.codex\\generated_images\\01a1168e-9f70-7252-9915-3cb5dfc3f68e\\exec-17d9c3ad-ae67-42f4-956a-a351fe
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command 'Get-Command ffmpeg -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source' in C:\won\UnityProject\AvengingSprit
+  ! "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$dst='"'C:\\won\\UnityProject\\AvengingSprit\\Projects\\AVSR\\_exchange\\ref\\batch_mocks'; New-Item -ItemType Directory -For
+완성했습니다. API 키 기반 CLI 폴백은 사용하지 않았습니다.
+
+- [방 안 화면 시안 PNG](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch9_laser_shield.png) — 720×1280
+- [제작 부품 명세 MD](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\ref\batch_mocks\mock_ch9_laser_shield.md) — 9줄
+
+내장 이미지 편집 도구로 제작했습니다.
+

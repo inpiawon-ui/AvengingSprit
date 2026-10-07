@@ -1,0 +1,13 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 그림은 이미지 생성으로 그리고, 크기 맞춤 · 배경 뚫기 · 알파 정리만 스크립트로 해도 된다.
+
+AVENGING SPIRIT: RE:BORN 기믹 부품. **정답 그림은 PD 통과 시안**이다 — 생김새 · 색 · 재질을 그대로 옮긴다. 새로 디자인하지 않는다.
+규칙: 크기는 방 좌표(1칸 = 72px) 그대로의 캔버스 · 투명 배경(알파 0/255 만, 반투명 가장자리 금지) · 마젠타 · 흰 · 검정 바탕 금지 ·
+좌상단 광원 · 1px 짙은 외곽선 · 시안의 도트 밀도. 다 그린 뒤 파일마다 크기 · 알파 값 종류를 실측해 `check_gimmick9.md` 에 적고,
+시안처럼 조립한 확인 그림 `preview_gimmick9.png` 를 만든다. 저장 폴더: C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/batch/
+
+시안: C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/batch_mocks/mock_ch9_laser_shield.png
+그릴 것:
+- obj_laser_pillar.png — 72×86, 회전 레이저 기둥(짙은 강철 원통 · 노랑 · 검정 띠 · 붉은 발사구). 광선은 그리지 않는다(게임에 있다).
+- obj_shield_gen_1.png — 72×96, 방패 발전기 켜짐(푸른 코어).
+- obj_shield_gen_2.png — 72×96, 방패 발전기 부서짐(갈라진 외장 · 꺼진 코어 · 연기는 그리지 않는다).
+- fx_shield_bubble.png — 128×128, 적 몸을 감싸는 푸른 보호막 구(가운데는 비어 몸이 보이게, 가장자리 띠와 반짝임만 — 반투명 대신 도트 점 무늬로 비침을 표현).

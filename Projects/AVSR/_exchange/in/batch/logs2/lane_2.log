@@ -1,0 +1,15 @@
+=== order_mushroom_s.txt rc=0
+  ! WARNING: failed to clean up stale arg0 temp dirs: 액세스가 거부되었습니다. (os error 5)
+C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mushroom_s_raw.png
+
+=== order_mushroom_se.txt rc=0
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mushroom_se_raw.png
+
+=== order_mushroom_ne.txt rc=0
+C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mushroom_ne_raw.png
+
+=== order_mushroom_n.txt rc=0
+  ! + FullyQualifiedErrorId : CommandNotFoundException
+C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mushroom_n_raw.png
+
