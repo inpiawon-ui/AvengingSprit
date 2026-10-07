@@ -110,159 +110,159 @@ SPAWN	scrapgunner	5.5	10.5	0
 SPAWN	actor_enforcer	2.5	9.5	0
 SPAWN	actor_enforcer	7.5	9.5	0
 SPAWN	salamander	7.5	7.5	1
-ROOM	ROOM_CH2_001	격납고 복도	입구 앞 로봇(힘)부터 빼앗고 시작한다 — 박쥐(날)가 덩어리 사이 복도로 한 줄로 오면 관통으로 꿴다
-OBJ	PILLAR	3.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	BULK	3	10	2	2	1	1	1	NONE	0	0
-OBJ	BULK	7	10	2	2	1	1	1	NONE	0	0
-OBJ	BULK	3	7	2	2	1	1	1	NONE	0	0
-OBJ	BULK	7	7	2	2	1	1	1	NONE	0	0
-OBJ	CRATE	2	3.5	2	1	1	1	0	NONE	0	0
-SPAWN	roadwarden	4.5	11.5	0
-SPAWN	bat	6.5	11.5	0
-SPAWN	bat	4.5	9.5	0
-SPAWN	robot	5.5	6.5	1
-ROOM	ROOM_CH2_002	첫 가시	집행자(힘)가 가시판 위아래로 한 줄 — 백마법사(술)의 관통이 가시 너머로 둘을 꿴다. 가시는 주기로 솟는다
+ROOM	ROOM_CH2_001	격납고 골	입구 위 로봇(힘)부터 빼앗는다 — 박쥐(날)가 돌 블록 두 줄 사이 골로 일직선으로 내려온다. 골 끝에서 관통으로 둘을 꿴다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	TIMED_SPIKE	5	9	2	2	0	0	0	SPIKE	6	0.8
-OBJ	CRATE	2	6.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	6.5	2	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	11.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	6.5	11.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	10.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	6.5	10.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	9.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	6.5	9.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	6.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	PILLAR	6.5	6.5	1	1	1	1	1	NONE	0	0
+SPAWN	roadwarden	1.5	11.5	0
+SPAWN	bat	5.5	11.5	0
+SPAWN	bat	5.5	9.5	0
+SPAWN	robot	5.5	6.5	1
+ROOM	ROOM_CH2_002	가시 문	돌 고릴라(힘) 둘이 하나뿐인 문으로 넘어온다 — 문 바닥은 주기 가시다. 백마법사(술)가 문을 지나는 둘을 관통으로 꿴다
+OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	LOW_COVER	1.5	8.5	3	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	TIMED_SPIKE	5	8	2	2	0	0	0	SPIKE	6	0.8
+OBJ	BLOCK	6.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	LOW_COVER	8.5	8.5	3	1	1	1	0	NONE	0	0
+OBJ	PILLAR	8.5	5.5	1	1	1	1	1	NONE	0	0
 SPAWN	scrapgunner	3.5	11.5	0
-SPAWN	white_wizard	6.5	11.5	1
 SPAWN	actor_enforcer	4.5	10.5	0
-SPAWN	actor_enforcer	5.5	7.5	0
-ROOM	ROOM_CH2_003	정비 구덩이	순찰기와 폐품 사수(날)가 기둥 뒤에서 쏜다 — 가운데는 끈끈하니 구루(힘)로 촘촘한 엄폐를 타고 붙는다
-OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	2	10.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	10.5	2	1	1	1	0	NONE	0	0
-OBJ	PILLAR	3.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	6.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	SLOW_POOL	5	8	2	2	0	0	0	NONE	0	0
-OBJ	BLOCK	1.5	7.5	1	1	1	1	0	NONE	0	0
-OBJ	BLOCK	8.5	7.5	1	1	1	1	0	NONE	0	0
-OBJ	BLOCK	1.5	6.5	1	1	1	1	0	NONE	0	0
-OBJ	BLOCK	8.5	6.5	1	1	1	1	0	NONE	0	0
-OBJ	CRATE	3	4.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	7	4.5	2	1	1	1	0	NONE	0	0
+SPAWN	actor_enforcer	5.5	9.5	0
+SPAWN	white_wizard	7.5	5.5	1
+ROOM	ROOM_CH2_003	정비 섬	순찰기와 폐품 사수(날)가 섬 너머 기둥 뒤에서 쏜다 — 섬 바로 아래는 끈끈하다. 구루(힘)가 옆으로 돌아 붙는다
+OBJ	PILLAR	2.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	7.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	BULK	5	9	2	2	1	1	1	NONE	0	0
+OBJ	SLOW_POOL	5	7	2	2	0	0	0	NONE	0	0
 SPAWN	roadwarden	2.5	11.5	0
 SPAWN	scrapgunner	7.5	11.5	0
-SPAWN	guru	3.5	6.5	1
-SPAWN	bat	6.5	6.5	0
-ROOM	ROOM_CH2_005	격벽	박쥐(날)가 격벽 문 하나로 쏟아진다 — 문턱이 끈끈해 뭉친다. 수류탄 코만도(힘)가 그 자리에 던진다
-OBJ	LOW_COVER	1.5	9.5	3	1	1	1	0	NONE	0	0
-OBJ	PILLAR	3.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	6.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	LOW_COVER	8.5	9.5	3	1	1	1	0	NONE	0	0
-OBJ	SLOW_POOL	5	8	2	2	0	0	0	NONE	0	0
-OBJ	PROP_TALL	1.5	6.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	8	4.5	2	1	1	1	0	NONE	0	0
-SPAWN	bat	4.5	11.5	0
+SPAWN	bat	2.5	8.5	0
+SPAWN	bat	7.5	8.5	0
+SPAWN	actor_enforcer	7.5	6.5	0
+SPAWN	guru	1.5	5.5	1
+ROOM	ROOM_CH2_005	깔때기	박쥐(날) 셋이 깔때기를 타고 좁은 입으로 몰린다 — 입 앞이 끈끈해 뭉친다. 수류탄 코만도(힘)가 그 자리에 던진다
+OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	CRATE	1	10.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	9	10.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	2	9.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	8	9.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	3	8.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	7	8.5	2	1	1	1	0	NONE	0	0
+OBJ	SLOW_POOL	5	7	2	2	0	0	0	NONE	0	0
+OBJ	PILLAR	8.5	6.5	1	1	1	1	1	NONE	0	0
+SPAWN	scrapgunner	2.5	11.5	0
 SPAWN	bat	5.5	11.5	0
-SPAWN	scrapgunner	2.5	10.5	0
-SPAWN	actor_enforcer	7.5	10.5	0
-SPAWN	commando_grenade	2.5	6.5	1
-ROOM	ROOM_CH2_006	가시 십자로	집행자(힘)가 가시 넉 장 사이 십자 길 한가운데 모인다 — 샐러맨더(술)의 확산이 답. 서그(날)는 힘에게 밀린다
+SPAWN	bat	7.5	11.5	0
+SPAWN	bat	4.5	10.5	0
+SPAWN	commando_grenade	7.5	6.5	1
+ROOM	ROOM_CH2_006	가시 사거리	돌 고릴라(힘) 셋이 사거리 한가운데 가시판 둘레로 모인다 — 샐러맨더(술)의 확산이 답. 서그(날)는 힘에게 밀린다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	TIMED_SPIKE	3	9	2	2	0	0	0	SPIKE	6	0.8
-OBJ	TIMED_SPIKE	7	9	2	2	0	0	0	SPIKE	6	0.8
-OBJ	TIMED_SPIKE	3	6	2	2	0	0	0	SPIKE	6	0.8
-OBJ	TIMED_SPIKE	7	6	2	2	0	0	0	SPIKE	6	0.8
-OBJ	CRATE	2	3.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	3.5	2	1	1	1	0	NONE	0	0
-SPAWN	salamander	2.5	11.5	1
-SPAWN	thug	7.5	11.5	1
-SPAWN	actor_enforcer	3.5	7.5	0
-SPAWN	bat	5.5	7.5	0
-SPAWN	actor_enforcer	6.5	7.5	0
-ROOM	ROOM_CH2_007	발사대	순찰기와 폐품 사수(날)가 발사대 뒤에 숨어 쏜다 — 가운데 길은 끈끈하다. 구루(힘)로 섬을 돌아 들어가 친다
-OBJ	BULK	5	10	2	2	1	1	1	NONE	0	0
-OBJ	PILLAR	1.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	SLOW_POOL	5	6	2	2	0	0	0	NONE	0	0
-OBJ	CRATE	2	3.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	3.5	2	1	1	1	0	NONE	0	0
-SPAWN	roadwarden	3.5	11.5	0
-SPAWN	scrapgunner	6.5	11.5	0
-SPAWN	guru	2.5	7.5	1
-SPAWN	bat	5.5	7.5	0
-SPAWN	commando_mg	7.5	7.5	1
-ROOM	ROOM_CH2_009	사일로 열	박쥐(날)가 난간 옆 좁은 골로 한 줄로 내려온다 — 가운데는 가시다. 로봇(힘)의 관통이 골을 통째로 훑는다
-OBJ	RAIL	2.5	10	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	7.5	10	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	2.5	8	1	2	1	1	1	NONE	0	0
-OBJ	TIMED_SPIKE	5	8	2	2	0	0	0	SPIKE	6	0.8
-OBJ	RAIL	7.5	8	1	2	1	1	1	NONE	0	0
-SPAWN	roadwarden	8.5	11.5	0
-SPAWN	bat	1.5	10.5	0
-SPAWN	bat	1.5	8.5	0
-SPAWN	robot	3.5	6.5	1
-SPAWN	hopper_smg	6.5	6.5	1
-ROOM	ROOM_CH2_010	관제 계단	집행자(힘) 셋이 계단을 따라 비스듬히 한 줄 — 꼭대기의 백마법사(술)가 관통으로 꿴다. 기관총 코만도(날)는 밀린다
-OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	2	10.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	4	8.5	2	1	1	1	0	NONE	0	0
-OBJ	PILLAR	9.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	TIMED_SPIKE	2	6	2	2	0	0	0	SPIKE	6	0.8
-OBJ	CRATE	6	6.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	4.5	2	1	1	1	0	NONE	0	0
-SPAWN	roadwarden	2.5	11.5	0
-SPAWN	white_wizard	5.5	11.5	1
-SPAWN	actor_enforcer	8.5	10.5	0
-SPAWN	actor_enforcer	7.5	9.5	0
-SPAWN	actor_enforcer	6.5	8.5	0
-SPAWN	commando_mg	8.5	7.5	1
-ROOM	ROOM_CH2_011	탄약고	박쥐(날)가 상자 미로의 목마다 뭉친다 — 수류탄 코만도(힘)가 상자 너머로 던진다. 서그(날)는 집행자에게 불리하다
-OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	2	10.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	5	10.5	2	1	1	1	0	NONE	0	0
 OBJ	CRATE	8	10.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	1	8.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	5	8.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	9	8.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	2	9.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	8	9.5	2	1	1	1	0	NONE	0	0
+OBJ	TIMED_SPIKE	5	8	2	2	0	0	0	SPIKE	6	0.8
 OBJ	CRATE	2	6.5	2	1	1	1	0	NONE	0	0
-OBJ	PROP_TALL	5.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	3.5	6.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	8	6.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	3	4.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	7	4.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	2	5.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	8	5.5	2	1	1	1	0	NONE	0	0
 SPAWN	scrapgunner	2.5	11.5	0
 SPAWN	thug	7.5	11.5	1
-SPAWN	bat	3.5	9.5	0
-SPAWN	actor_enforcer	2.5	7.5	0
-SPAWN	bat	7.5	7.5	0
-SPAWN	commando_grenade	4.5	6.5	1
-ROOM	ROOM_CH2_013	레일 격납고	박쥐(날)가 가시 사이 가운데 길로 내려온다 — 그 길을 레일 톱날이 가로지른다. 로봇(힘)이 톱날 아래에서 관통으로 꿴다
+SPAWN	actor_enforcer	4.5	9.5	0
+SPAWN	actor_enforcer	3.5	8.5	0
+SPAWN	actor_enforcer	6.5	8.5	0
+SPAWN	salamander	4.5	6.5	1
+ROOM	ROOM_CH2_007	사선 담	순찰기와 폐품 사수(날)가 사선 담 끝 기둥 뒤에서 쏜다 — 구루(힘)가 담 그늘을 타고 비스듬히 올라가 친다
+OBJ	PILLAR	4.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	BLOCK	6.5	10.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	5.5	9.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	4.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	3.5	7.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	2.5	6.5	1	1	1	1	0	NONE	0	0
+SPAWN	scrapgunner	3.5	11.5	0
+SPAWN	roadwarden	8.5	11.5	0
+SPAWN	bat	7.5	9.5	0
+SPAWN	bat	2.5	8.5	0
+SPAWN	actor_enforcer	6.5	6.5	0
+SPAWN	guru	8.5	5.5	1
+ROOM	ROOM_CH2_009	사일로 지그재그	순찰기(날) 둘이 방 위 양 끝에서 쏜다 — 낮은 담 두 줄이 길을 갈지자로 꺾는다. 로봇(힘)의 관통이 가로 골을 통째로 훑는다
+OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	LOW_COVER	5.5	10.5	3	1	1	1	0	NONE	0	0
+OBJ	LOW_COVER	8.5	10.5	3	1	1	1	0	NONE	0	0
+OBJ	LOW_COVER	1.5	7.5	3	1	1	1	0	NONE	0	0
+OBJ	LOW_COVER	4.5	7.5	3	1	1	1	0	NONE	0	0
+OBJ	PILLAR	0.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	roadwarden	1.5	11.5	0
+SPAWN	roadwarden	8.5	11.5	0
+SPAWN	bat	2.5	9.5	0
+SPAWN	actor_enforcer	5.5	6.5	0
+SPAWN	hopper_smg	1.5	5.5	1
+SPAWN	robot	8.5	5.5	1
+ROOM	ROOM_CH2_010	관제 계단	돌 고릴라(힘) 셋이 계단을 따라 비스듬히 한 줄로 내려온다 — 계단 아래의 백마법사(술)가 그 줄을 관통으로 꿴다. 기관총 코만도(날)는 밀린다
+OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	CRATE	5	10.5	2	1	1	1	0	NONE	0	0
+OBJ	CRATE	7	8.5	2	1	1	1	0	NONE	0	0
+OBJ	PILLAR	0.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	CRATE	9	6.5	2	1	1	1	0	NONE	0	0
+OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	actor_enforcer	2.5	11.5	0
+SPAWN	roadwarden	8.5	11.5	0
+SPAWN	actor_enforcer	4.5	9.5	0
+SPAWN	actor_enforcer	6.5	7.5	0
+SPAWN	commando_mg	1.5	6.5	1
+SPAWN	white_wizard	8.5	5.5	1
+ROOM	ROOM_CH2_011	탄약고 T	폐품 사수(날) 둘이 T자 담 위 양 끝 기둥 뒤에 있다 — 수류탄 코만도(힘)가 담 너머로 던진다. 박쥐는 T자 줄기 양쪽으로 갈라 온다
+OBJ	PILLAR	0.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	LOW_COVER	2.5	10.5	3	1	1	1	0	NONE	0	0
+OBJ	LOW_COVER	7.5	10.5	3	1	1	1	0	NONE	0	0
+OBJ	PILLAR	9.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	BLOCK	4.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	5.5	8.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	4.5	7.5	1	1	1	1	0	NONE	0	0
+OBJ	BLOCK	5.5	7.5	1	1	1	1	0	NONE	0	0
+OBJ	PILLAR	0.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	scrapgunner	1.5	11.5	0
+SPAWN	scrapgunner	8.5	11.5	0
+SPAWN	bat	2.5	8.5	0
+SPAWN	bat	7.5	8.5	0
+SPAWN	commando_grenade	1.5	6.5	1
+SPAWN	thug	8.5	5.5	1
+ROOM	ROOM_CH2_013	레일 격납고	순찰기(날) 둘이 위에서 쏜다 — 그 앞을 레일 톱날이 좌우로 가로지른다. 구루(힘)가 톱날이 지나간 뒤를 따라 건너 붙는다
 OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	8.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	TIMED_SPIKE	2	10	2	2	0	0	0	SPIKE	6	0.8
-OBJ	TIMED_SPIKE	8	10	2	2	0	0	0	SPIKE	6	0.8
 OBJ	SLIDE_BLADE_H	5	8	2	2	0	0	0	BLADE	10	0.5
-OBJ	PROP_TALL	1.5	6.5	1	1	1	1	1	NONE	0	0
-OBJ	CRATE	2	4.5	2	1	1	1	0	NONE	0	0
-OBJ	CRATE	8	4.5	2	1	1	1	0	NONE	0	0
+OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	2.5	11.5	0
-SPAWN	salamander	7.5	11.5	1
+SPAWN	roadwarden	7.5	11.5	0
 SPAWN	bat	4.5	10.5	0
-SPAWN	bat	5.5	9.5	0
-SPAWN	robot	2.5	6.5	1
-SPAWN	actor_enforcer	7.5	6.5	0
-ROOM	ROOM_CH2_014	회전 관문	2챕터 총정리 — 집행자(힘) 셋이 톱니를 돌아 모여든다. 샐러맨더(술)가 답. 바깥으로 크게 도는 길은 끈끈하다
-OBJ	PILLAR	2.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	12.5	1	1	1	1	1	NONE	0	0
+SPAWN	actor_enforcer	5.5	10.5	0
+SPAWN	guru	1.5	5.5	1
+SPAWN	salamander	8.5	5.5	1
+ROOM	ROOM_CH2_014	회전 관문	2챕터 총정리 — 돌 고릴라(힘) 셋이 위에서 내려온다. 가운데 축에서 사슬 팔이 돌고 끝의 톱니가 한 바퀴 돈다(팔도 아프다). 샐러맨더(술)가 팔이 지나간 뒤 모인 고릴라를 태운다
+OBJ	PILLAR	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	ROTATING_BLADE	5	8	2	2	0	0	0	BLADE	10	0.5
-OBJ	PILLAR	1.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	8.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	SLOW_POOL	2	3	2	2	0	0	0	NONE	0	0
-OBJ	SLOW_POOL	8	3	2	2	0	0	0	NONE	0	0
-SPAWN	scrapgunner	3.5	12.5	0
-SPAWN	hopper_smg	6.5	12.5	1
-SPAWN	actor_enforcer	1.5	10.5	0
-SPAWN	actor_enforcer	8.5	10.5	0
-SPAWN	salamander	2.5	5.5	1
-SPAWN	actor_enforcer	7.5	5.5	0
+OBJ	PILLAR	0.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	PILLAR	9.5	5.5	1	1	1	1	1	NONE	0	0
+SPAWN	actor_enforcer	4.5	12.5	0
+SPAWN	actor_enforcer	5.5	12.5	0
+SPAWN	actor_enforcer	6.5	12.5	0
+SPAWN	scrapgunner	2.5	11.5	0
+SPAWN	salamander	1.5	5.5	1
+SPAWN	hopper_smg	8.5	5.5	1
 ROOM	ROOM_CH3_001	밤거리 초입	입구 앞 연사 몸부터 빼앗고 시작한다 — 해골 셋이 광장을 가로질러 몰려오면 다가오는 떼를 긁는다. 벽 포탑 아래 줄은 피한다
 OBJ	WALL_TURRET_S	2.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	7.5	12.5	1	1	1	1	1	NONE	0	0
