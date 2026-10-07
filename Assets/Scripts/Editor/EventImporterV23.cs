@@ -166,9 +166,10 @@ namespace Game.EditorTools
                 EventReward.BossShieldBreak, 0),
             ["EV_CH3_04"] = new(
                 "타락한 호스트",
-                "배관 안쪽에서 낫 끄는 소리가 난다.\n살을 조금 내주면 이쪽으로 나온다. 나오면, 빼앗을 수 있다.",
+                "배관 안쪽에서 날개 접는 소리가 난다.\n살을 조금 내주면 이쪽으로 나온다. 나오면, 빼앗을 수 있다.",
                 "살을 내준다", "지나간다",
-                EventReward.SpawnHost, 0, key: "death"),
+                // 예전엔 사신이었다 — 사신은 히든 캐릭터라 이벤트로도 안 나온다(PD 2026-10-07)
+                EventReward.SpawnHost, 0, key: "vampire"),
 
             ["EV_CH3_05"] = new(
                 "심연의 거래",

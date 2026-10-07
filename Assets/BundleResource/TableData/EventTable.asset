@@ -375,7 +375,7 @@ MonoBehaviour:
   - _eventId: EV_CH3_04
     _chapter: 3
     _titleKr: "\uD0C0\uB77D\uD55C \uD638\uC2A4\uD2B8"
-    _bodyKr: "\uBC30\uAD00 \uC548\uCABD\uC5D0\uC11C \uB0AB \uB044\uB294 \uC18C\uB9AC\uAC00
+    _bodyKr: "\uBC30\uAD00 \uC548\uCABD\uC5D0\uC11C \uB0A0\uAC1C \uC811\uB294 \uC18C\uB9AC\uAC00
       \uB09C\uB2E4.\n\uC0B4\uC744 \uC870\uAE08 \uB0B4\uC8FC\uBA74 \uC774\uCABD\uC73C\uB85C
       \uB098\uC628\uB2E4. \uB098\uC624\uBA74, \uBE7C\uC557\uC744 \uC218 \uC788\uB2E4."
     _costType: 3
@@ -385,7 +385,7 @@ MonoBehaviour:
     _rewardType: 9
     _rewardValue: 0
     _rewardRarity: 0
-    _rewardKey: death
+    _rewardKey: vampire
     _chancePercent: 0
     _hasDeclineReward: 0
     _declineReward: 2

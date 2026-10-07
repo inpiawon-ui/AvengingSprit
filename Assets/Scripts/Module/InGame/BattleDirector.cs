@@ -795,8 +795,9 @@ namespace Game.Module.InGame
                         EnemyIntervalOf(e, elite) / EnemyHandSpeedMul,
                         // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
                         // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
-                        // 엘리트뿐 아니라 **집행자**도 128 캔버스다.
-                        elite || e.HostKey == TrashEnforcerKey
+                        // 집행자 자리의 돌 고릴라(2026-10-07)는 96 캔버스라 잡몹 상자에 넣는다 —
+                        // 128 상자에 넣었더니 1.33 배로 커져 「너무 크다」(PD).
+                        elite
                             ? UnitBox(128f, 128f) : UnitBox(84f, 78f),
                         isBoss: false, profile: e);
                 u.Position = ToPixels(s.At);

@@ -107,9 +107,11 @@ namespace Game.User
 
         /// <summary>
         /// 당분간 게임에서 빼 둔 몸(기획 2026-09-15 — 아마존 정예, 나중에 다시 넣는다).
+        /// 사신은 히든 캐릭터다(PD 2026-10-07) — 방 · 상자 조각 · 상점 · 랜덤 · 긴급 투입 · 육성 목록 어디에도 안 나온다.
+        /// 얻는 길을 정하면 그 길에서만 풀어 준다.
         /// 표는 그대로 두고 여기서만 거른다 — 임포터가 표를 다시 써도 빠진 채로 남는다.
         /// </summary>
-        public static bool IsHiddenHost(string hostKey) => hostKey == "amazon_elite";
+        public static bool IsHiddenHost(string hostKey) => hostKey == "amazon_elite" || hostKey == "death";
 
         /// <summary>
         /// 호스트 선택 화면에 내보낼 몸. 방패병·센서드론·엘리트처럼 정본이 배우로만 쓰는 행은 뺀다.
@@ -143,7 +145,7 @@ namespace Game.User
                 {
                     // 저장된 선택이 아직 잠겨 있으면 시작 보유 호스트로 되돌린다
                     var e = GetHost(_data.selectedHostId);
-                    if (e != null && IsHostUnlocked(e)) return _data.selectedHostId;
+                    if (e != null && IsHostUnlocked(e) && !IsHiddenHost(e.HostKey)) return _data.selectedHostId;
                 }
                 // ⚠ 되돌아갈 곳은 **유령**이다. 예전에는 표의 `Owned` 첫 칸으로 갔는데,
                 //   `Owned` 인 몸이 하나도 없어지자 그냥 표의 0번(갱스터)이 나왔다 —
