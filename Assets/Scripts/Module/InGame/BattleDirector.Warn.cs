@@ -153,6 +153,7 @@ namespace Game.Module.InGame
             }
             ClearRushFx();
             ClearMoleMounds();
+            ClearFlameFx();
         }
     }
 }

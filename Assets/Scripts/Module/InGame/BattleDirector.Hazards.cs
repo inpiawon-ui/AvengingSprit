@@ -309,6 +309,7 @@ namespace Game.Module.InGame
                     }
                 }
             }
+            TickFlameFx(o, on, dt);   // 뿜어 나가는 불꽃 줄기 · 일렁임 · 켜짐/꺼짐 (BattleDirector.FlameFx)
 
             if (!on) { o.Timer = 0f; return; }
             if (o.Img != null && o.Img.color != o.BaseColor) o.Img.color = o.BaseColor;
