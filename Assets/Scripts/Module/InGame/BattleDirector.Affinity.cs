@@ -234,7 +234,7 @@ namespace Game.Module.InGame
         //
         // 「세게 들어간다 / 덜 들어간다」는 숫자가 아니라 **맞은 쪽의 반응**에서 온다.
         //
-        //   유리 — 뒤로 밀리고, 하던 공격이 끊기고, 잠깐 굳는다. 화면이 흔들린다.
+        //   유리 — 하던 공격이 끊기고, 제자리에서 잠깐 굳는다(밀지 않는다 — 2026-10-07). 화면이 흔들린다.
         //   불리 — 맞아도 꿈쩍 않고 그대로 걸어온다. 불똥만 작게 튀고 「팅」 소리가 난다.
         //
         // ⚠ 치명타와 겹치지 않게 역할을 나눈다: 치명타는 **숫자가 커지고 화면이 멈칫**하고,
@@ -244,7 +244,6 @@ namespace Game.Module.InGame
         private bool IsDullAgainst(Unit victim) => OutcomeAgainst(victim) < 0;
 
         private const float DullFxScale = 0.5f;
-        private const float StrongPushMeters = 0.6f;
         private const float StrongHoldSeconds = 0.28f;
         private const float StrongShake = 3f;
         /// <summary>연사 몸이 맞힐 때마다 밀면 적이 영영 못 온다 — 적마다 이 간격에 한 번만.</summary>
@@ -261,16 +260,9 @@ namespace Game.Module.InGame
             if (_strongReactAt.TryGetValue(victim, out float last) && now - last < StrongReactCooldown) return;
             _strongReactAt[victim] = now;
 
-            var me = Avatar;
-            if (me != null)
-            {
-                var away = victim.Position - me.Position;
-                if (away.sqrMagnitude > 0.01f)
-                {
-                    var push = away.normalized * Meters(StrongPushMeters);
-                    victim.Position = ClampedInField(victim, SlideMove(victim, victim.Position, push));
-                }
-            }
+            // ⚠ **밀지 않는다** — 맞은 자리에서 굳는다(기획 2026-10-07). 예전에는 0.6 m 뒤로 밀었는데
+            //   원거리 몸이 근접 몹을 칠 때 「넉백으로 밀린다」로 읽혔다. 원거리 → 근접 반응(`RangedKnockback`)이
+            //   이미 제자리 경직으로 바뀐 것(2026-09-18)과 같은 규칙으로 맞춘다.
             victim.CancelWindup();
             victim.HoldHit(StrongHoldSeconds);
         }
