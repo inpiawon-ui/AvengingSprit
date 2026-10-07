@@ -991,7 +991,7 @@ SPAWN	skeleton	3.5	6.5	0
 SPAWN	skeleton	6.5	6.5	0
 SPAWN	robot	1.5	5.5	1
 SPAWN	vampire	8.5	5.5	1
-ROOM	ROOM_CH6_013	마지막 정비창	해골 셋과 코일 둘이 레일 톱날 두 줄 너머에서 밀려온다 — 연사하는 몸이 레일을 건너는 떼를 긁는다. 가운데 띠에 사신이 서 있다
+ROOM	ROOM_CH6_013	마지막 정비창	해골 셋과 코일 둘이 레일 톱날 두 줄 너머에서 밀려온다 — 연사하는 몸이 레일을 건너는 떼를 긁는다. 가운데 띠에 뱀파이어가 서 있다
 OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	SLIDE_BLADE_H	5	10	2	2	0	0	0	BLADE	10	0.5
@@ -1008,7 +1008,7 @@ SPAWN	coilwalker	2.5	11.5	0
 SPAWN	skeleton	5.5	11.5	0
 SPAWN	coilwalker	7.5	11.5	0
 SPAWN	roadwarden	1.5	8.5	0
-SPAWN	death	4.5	8.5	1
+SPAWN	vampire	4.5	8.5	1
 SPAWN	roadwarden	8.5	8.5	0
 SPAWN	skeleton	1.5	7.5	0
 SPAWN	actor_enforcer	4.5	7.5	0
@@ -1246,7 +1246,7 @@ SPAWN	turret_cross	2.5	6.5	0
 SPAWN	skeleton	7.5	6.5	0
 SPAWN	actor_enforcer	0.5	5.5	0
 SPAWN	actor_enforcer	9.5	5.5	0
-ROOM	ROOM_CH7_014	소각로 깔때기	7챕터 총정리 — 바위 깔때기 목에 집행자와 포탑이 몰린다. 사신이 목에서 한꺼번에 벤다
+ROOM	ROOM_CH7_014	소각로 깔때기	7챕터 총정리 — 바위 깔때기 목에 집행자와 포탑이 몰린다. 뱀파이어가 목에 몰린 떼를 하나씩 빨아 버틴다
 OBJ	PROP_TALL	1.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	8.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PUSH_ROCK	3.5	9.5	1	1	1	1	1	NONE	0	0
@@ -1263,7 +1263,7 @@ SPAWN	turret_cross	4.5	11.5	0
 SPAWN	scrapgunner	1.5	10.5	0
 SPAWN	scrapgunner	8.5	10.5	0
 SPAWN	actor_enforcer	5.5	9.5	0
-SPAWN	death	4.5	8.5	1
+SPAWN	vampire	4.5	8.5	1
 SPAWN	actor_enforcer	0.5	6.5	0
 SPAWN	commando_missile	3.5	6.5	1
 SPAWN	turret_cross	6.5	6.5	0
@@ -1465,7 +1465,7 @@ SPAWN	scrapgunner	8.5	11.5	0
 SPAWN	turret_cross	4.5	10.5	0
 SPAWN	coilwalker	8.5	10.5	0
 SPAWN	roadwarden	1.5	7.5	0
-SPAWN	death	3.5	7.5	1
+SPAWN	vampire	3.5	7.5	1
 SPAWN	turret_cross	5.5	7.5	0
 SPAWN	roadwarden	8.5	7.5	0
 SPAWN	bat	0.5	5.5	0
@@ -1488,7 +1488,7 @@ SPAWN	coilwalker	6.5	9.5	0
 SPAWN	scrapgunner	8.5	9.5	0
 SPAWN	ninja_chain	2.5	6.5	1
 SPAWN	turret_cross	5.5	6.5	0
-SPAWN	death	7.5	6.5	1
+SPAWN	vampire	7.5	6.5	1
 SPAWN	bat	0.5	5.5	0
 SPAWN	bat	9.5	5.5	0
 ROOM	ROOM_CH9_001	가로등 대로	입구 앞 연사 몸부터 빼앗고 시작한다 — 해골 떼가 끈끈이 깔린 대로를 건너오면 멀리서 긁는다
@@ -1686,7 +1686,7 @@ SPAWN	actor_enforcer	7.5	8.5	0
 SPAWN	coilwalker	8.5	6.5	0
 SPAWN	actor_enforcer	0.5	5.5	0
 SPAWN	bat	9.5	5.5	0
-ROOM	ROOM_CH9_014	망령의 문 앞	9챕터 총정리 — 코일이 막다른 골 둘에 숨고 해골이 끈끈이를 건너온다. 단발로 골 안을 딴다. 사신이 가운데 선다
+ROOM	ROOM_CH9_014	망령의 문 앞	9챕터 총정리 — 코일이 막다른 골 둘에 숨고 해골이 끈끈이를 건너온다. 단발로 골 안을 딴다. 뱀파이어가 가운데 선다
 OBJ	FLAME_JET_S	3.5	12.5	1	1	1	1	0	NONE	0	0
 OBJ	FLAME_JET_S	6.5	12.5	1	1	1	1	0	NONE	0	0
 OBJ	RICOCHET_WALL	2.5	9.5	1	3	1	1	1	NONE	0	0
@@ -1700,7 +1700,7 @@ SPAWN	coilwalker	1.5	11.5	0
 SPAWN	coilwalker	8.5	11.5	0
 SPAWN	bat	5.5	10.5	0
 SPAWN	coilwalker	0.5	9.5	0
-SPAWN	death	4.5	9.5	1
+SPAWN	vampire	4.5	9.5	1
 SPAWN	thug	9.5	9.5	1
 SPAWN	skeleton	5.5	8.5	0
 SPAWN	skeleton	0.5	5.5	0
@@ -1931,7 +1931,7 @@ SPAWN	coilwalker	2.5	9.5	0
 SPAWN	bat	5.5	9.5	0
 SPAWN	roadwarden	7.5	9.5	0
 SPAWN	turret_cross	4.5	8.5	0
-SPAWN	death	4.5	7.5	1
+SPAWN	vampire	4.5	7.5	1
 SPAWN	actor_enforcer	0.5	6.5	0
 SPAWN	actor_enforcer	9.5	6.5	0
 SPAWN	bat	0.5	5.5	0

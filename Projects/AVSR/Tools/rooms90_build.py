@@ -157,6 +157,8 @@ DEBUT = {
 # 붙어서 싸우는 몸 — HostTable 의 AttackKind 가 Melee(0)·Pulse(6) 인 것. 나머지는 쏜다.
 MELEE_HOST = {'amazon', 'amazon_elite', 'death', 'guru', 'baseball', 'ninja_chain'}
 MAX_HOSTS = 2
+# 히든 캐릭터 — 적으로도 몸으로도 방에 세우지 않는다(사신은 따로 얻는 몸이다, PD 2026-10-07)
+HIDDEN_HOST = {'death'}
 
 # 방마다 적 수 — 챕터 안에서도 뒤로 갈수록 는다
 COUNT = {ch: c['count'] for ch, c in CHAPTERS.items()}
@@ -406,6 +408,8 @@ def check(room, errors, warns):
         if host:
             if actor not in DEBUT:
                 errors.append(f'{tag}: 모르는 호스트 {actor}')
+            elif actor in HIDDEN_HOST:
+                errors.append(f'{tag}: {actor} 는 히든 캐릭터 — 방에 세우지 않는다(PD 2026-10-07)')
             elif DEBUT[actor] > ch:
                 errors.append(f'{tag}: {actor} 는 CH{DEBUT[actor]} 데뷔 — CH{ch} 에 못 나온다')
             if actor in seen_host:

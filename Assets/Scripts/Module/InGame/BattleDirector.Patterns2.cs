@@ -37,7 +37,17 @@ namespace Game.Module.InGame
         // 같은 몸이 달라지는 챕터. 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다(`TrashKeysFor`).
         // 1 챕터부터 — 「띠를 보면 옆으로」를 처음 방에서 배운다(기획 2026-10-07 「근접은 그냥 가서 때리는 수준」)
         private const int DiveFromChapter       = 1;   // 박쥐 → 급강하
-        private const int ChargeFromChapter     = 7;   // 집행자 → 돌진(평타 없이 돌진만) — 7 챕터의 새 패턴
+        private const int ChargeFromChapter     = 7;   // 돌 고릴라 → 돌진이 먼저(도약과 번갈아)
+        private const int GorillaMixFromStage   = 5;   // 돌 고릴라 → 도약 · 돌진을 번갈아
+
+        /// <summary>돌 고릴라가 지금 「둘째 수」를 할 차례인가. 한 수가 끝날 때마다 뒤집는다.</summary>
+        private readonly System.Collections.Generic.HashSet<Unit> _gorillaCharge = new();
+
+        private void ToggleGorillaMove(Unit e)
+        {
+            if (PatternChapter < GorillaMixFromStage) return;
+            if (!_gorillaCharge.Remove(e)) _gorillaCharge.Add(e);
+        }
         private const int WeaveFromChapter      = 4;   // 박쥐 → 지그재그 (CH4)
         private const int SlamFromChapter       = 4;   // 집행자 → 내려찍기
         private const int SplitFromChapter      = 6;   // 집행자 → 죽으면 갈라진다
@@ -149,6 +159,7 @@ namespace Game.Module.InGame
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 0;
                     e.PatternTimer = DiveCooldown;
+                    if (e.Key == TrashEnforcerKey) ToggleGorillaMove(e);   // 다음은 도약
                     return true;
             }
         }

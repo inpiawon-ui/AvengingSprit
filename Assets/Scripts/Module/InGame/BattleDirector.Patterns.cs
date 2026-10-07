@@ -90,7 +90,11 @@ namespace Game.Module.InGame
             switch (e.Key)
             {
                 case TrashEnforcerKey:
-                    return ch >= ChargeFromChapter ? EnemyPattern.Dive : EnemyPattern.Hop;
+                    // 돌 고릴라 — 5단계부터 도약(내려찍기)과 돌진을 **번갈아** 한다(PD 「다양한 공격 패턴」).
+                    //   한 놈이 두 수를 섞으니 다음이 뭔지 읽어야 한다. 7단계부터는 돌진이 먼저 나온다
+                    if (ch >= GorillaMixFromStage)
+                        return _gorillaCharge.Contains(e) != (ch >= ChargeFromChapter) ? EnemyPattern.Dive : EnemyPattern.Hop;
+                    return EnemyPattern.Hop;
                 case TrashCoilKey:     return EnemyPattern.Vault;
                 case TrashCrossKey:
                     return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;
@@ -269,6 +273,7 @@ namespace Game.Module.InGame
                     e.PatternPhase = 0;
                     e.PatternTimer = HopIdleSeconds;
                     OnHopLanded(e);   // CH4 부터 착지에 충격파가 난다
+                    ToggleGorillaMove(e);
                     return true;
             }
         }

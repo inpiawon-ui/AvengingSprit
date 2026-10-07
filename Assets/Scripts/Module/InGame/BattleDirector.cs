@@ -2237,14 +2237,15 @@ namespace Game.Module.InGame
         private static HostEntry s_enforcer;
 
         /// <summary>
-        /// 집행자 — 무겁다. 느리지만 한 대가 아프고 잘 안 죽는다.
+        /// 돌 고릴라(옛 집행자 — 2026-10-07 그림 교체, 키는 그대로) — 무겁다. 느리지만 한 대가 아프고 잘 안 죽는다.
+        /// 사람 모양 잡몹은 호스트로 읽혀서 사람이 아닌 몸으로 바꿨다(PD).
         ///
         /// 그림 40장이 **이미 프로젝트에 들어와 있었는데 아무 데서도 안 쓰고 있었다.**
         /// 캔버스가 128×128 로 해골·박쥐(96)보다 한 등급 크다 — 줄이지 않고 그대로 쓴다.
         /// 덩치가 곧 "저건 밀고 들어오는 놈" 이라는 신호가 된다.
         /// </summary>
         private static HostEntry Enforcer => s_enforcer ??= HostEntry.CreateTrash(
-            TrashEnforcerKey, "집행자", AttackKind.Melee,
+            TrashEnforcerKey, "돌 고릴라", AttackKind.Melee,
             hp: 52, atk: 9, moveMps: 1.0f, engageMps: 2.0f,
             rangeMeters: 1.6f, interval: 1.7f, telegraph: 0.6f);
 
@@ -2825,6 +2826,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
                 if (_enemies[i] != null) Destroy(_enemies[i].gameObject);
             _enemies.Clear();
+            _gorillaCharge.Clear();   // 지난 방 고릴라를 들고 있지 않게
 
             // 이전 방에서 쓰러지던 몸은 여기서 끊는다. 안 그러면 새 방 바닥에
             // 앞 방 시체가 남아 페이드된다.

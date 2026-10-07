@@ -33,7 +33,7 @@
 | 술 magic | skeleton · coilwalker | dragoon · snowwoman · dragon_blue · salamander · vampire · white_wizard · medium · death |
 
 - `amazon_elite` 는 쓰지 않는다(숨긴 몸이라 런타임에 아마존으로 바뀐다).
-- `death`(사신)는 S급이다 — 6챕터에 1번, 7~10챕터에 챕터당 2번까지만.
+- `death`(사신)는 **히든 캐릭터** — 방에 세우지 않는다(PD 2026-10-07). 검사가 오류로 막는다.
 
 ### 잡몹 성격
 

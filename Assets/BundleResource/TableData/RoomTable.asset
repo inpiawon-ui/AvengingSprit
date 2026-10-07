@@ -15627,7 +15627,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_013_S05
-      _actorId: death
+      _actorId: vampire
       _at: {x: 4.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
@@ -19318,7 +19318,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_014_S06
-      _actorId: death
+      _actorId: vampire
       _at: {x: 4.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
@@ -22273,7 +22273,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH8_013_S07
-      _actorId: death
+      _actorId: vampire
       _at: {x: 3.5, y: 7.5}
       _facing: S
       _delaySeconds: 0
@@ -22571,7 +22571,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH8_014_S09
-      _actorId: death
+      _actorId: vampire
       _at: {x: 7.5, y: 6.5}
       _facing: S
       _delaySeconds: 0
@@ -25659,7 +25659,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH9_014_S05
-      _actorId: death
+      _actorId: vampire
       _at: {x: 4.5, y: 9.5}
       _facing: S
       _delaySeconds: 0
@@ -28922,7 +28922,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH10_014_S08
-      _actorId: death
+      _actorId: vampire
       _at: {x: 4.5, y: 7.5}
       _facing: S
       _delaySeconds: 0

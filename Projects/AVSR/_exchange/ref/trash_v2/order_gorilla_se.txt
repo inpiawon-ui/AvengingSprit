@@ -1,0 +1,14 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 픽셀을 그리거나 늘리거나 뒤집어서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 잡몹 「돌 고릴라」 게임 그림 — se 방향 8동작
+
+PD 통과한 동쪽 판 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/gorilla_e_raw.png — **같은 몸 · 같은 색 · 같은 크기 · 같은 그림체**로 방향만 바꾼다.
+같은 방향의 칸 · 자세 참조(지금 집행자 se 방향, 3배) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_enforcer_grid_se_x3.png
+우리 게임 그림체 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/ref_game_sprites_x4.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/gorilla_se_raw.png — 정사각(864 x 864 쯤, 96 x 96 칸 3 x 3 을 3배), 배경 **마젠타 #FF00FF 단색**
+  · 방향 : 오른쪽 아래(남동)를 보는 **비스듬한 앞모습**(4분의 3). 아홉 칸 모두 같은 방향.
+  · 칸 차례(동쪽 판과 같다) : 1 대기 · 2 걷기1 · 3 걷기2 / 4 공격1(주먹을 치켜든 준비) · 5 공격2(내려찍기) · 6 피격 / 7 쓰러짐1 · 8 쓰러짐2(누운 돌 무더기) · 9 빈 칸
+  · 크기 : 동쪽 판과 같은 몸 크기(96 칸에서 발부터 머리까지 70~76 px). 공격1 은 팔을 들어도 **몸 크기는 다른 칸과 같게**.
+  · 걷기 두 칸은 발이 번갈아 나가게. 1 px 짙은 외곽선 · 12~16색 · 2~3단 끊기는 명암.
+끝나면 경로만 알려라.
