@@ -24,7 +24,7 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..'))
 IN = os.path.join(ROOT, 'Projects', 'AVSR', '_exchange', 'in')
 OUT = os.path.join(ROOT, 'Assets', 'BaseResource', 'InGameMainUI')
 CELL = 256
-SHEER = {'gddome', 'isprison'}   # 비치는 막
+SHEER = {'gddome', 'isprison', 'vncloud'}   # 비치는 막 · 안개
 
 
 def key_magenta(rgb):

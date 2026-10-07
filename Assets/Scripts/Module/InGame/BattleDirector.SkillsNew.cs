@@ -91,10 +91,11 @@ namespace Game.Module.InGame
         private const float CritLockPercent = 90f;             // 「90퍼 고정」
         private const int MissileFanShots = 8;
         /// <summary>발사 지점을 반원으로 벌리는 거리. 이만큼 떨어져 날아올라 한 점에서 모인다.</summary>
-        private const float MissileFanOutMeters = 0.6f;
+        private const float MissileFanOutMeters = 0.45f;
         /// <summary>미사일 한 발의 폭발 반경. 1.2 m 는 기본 폭발(130px)보다 작아 안 터진 것처럼 보였다.</summary>
         private const float MissileBlastMeters = 1.9f;
-        private const float MissileFanSpreadDeg = 180f;        // 반원
+        // 반원(180°)은 옆 · 아래로 가는 탄이 많아 시안의 전방 부채꼴(약 115°)과 달랐다(검수 2026-10-07)
+        private const float MissileFanSpreadDeg = 115f;
         private const int WizardFanShots = 8;
         // ── 스케일 연출 기본값 (기획 2026-09-15) ────────────────
         //

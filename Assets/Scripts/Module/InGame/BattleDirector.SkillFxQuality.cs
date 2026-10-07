@@ -123,17 +123,18 @@ namespace Game.Module.InGame
         private bool QxChainCast(Unit me, Unit e)
         {
             if (!Qx("cbchain") || !Qx("cbwrap")) return false;
-            var beam = FreeImpact(QxCell);
-            beam?.PlayBeam(me.Position, e.Position, FxFrames("cbchain"), QxCell);
+            // 결박이 시안(몸통 밀착 약 85 px)의 1.7 배라 머리 · 팔까지 덮었다 — 사슬 · 섬광 · 감기를 함께 줄인다(검수 2026-10-07)
+            var beam = FreeImpact(QxCell * 0.75f);
+            beam?.PlayBeam(me.Position, e.Position, FxFrames("cbchain"), QxCell * 0.75f);
             beam?.SetFrameSeconds(0.28f);
-            QxOnce("cbsnap", e.Position, 0.05f, 0.7f);
-            QxOnce("cbwrap", e.Position, 0.08f, 0.9f);
+            QxOnce("cbsnap", e.Position, 0.05f, 0.55f);
+            QxOnce("cbwrap", e.Position, 0.07f, 0.55f);
             return true;
         }
 
         /// <summary>묶인 적의 표시 — 사슬 고리(몸에) · 없으면 예전 발밑 사슬.</summary>
         private string RootFxName => Qx("cbhold") ? "cbhold" : "chain";
-        private float RootFxSizeQ => Qx("cbhold") ? QxCell * 0.8f : RootFxSize;
+        private float RootFxSizeQ => Qx("cbhold") ? QxCell * 0.6f : RootFxSize;
         private float RootFxLiftQ => Qx("cbhold") ? 0f : RootFxLift;
 
         // ── 독 표시 ─────────────────────────────────────────────
@@ -146,7 +147,9 @@ namespace Game.Module.InGame
         {
             if (!Qx("vncloud")) return;
             QxOnce("vngather", me.MuzzlePosition, 0.06f, 0.6f);
-            QxOnce("vncloud", QxFeet(me.Position), 0.1f, 1.4f);
+            // 몸 중심을 채우는 안개(v1 도넛은 발밑에 깔려 다리만 둘렀다 — 재발주 · 검수 2026-10-07)
+            // 납품 안개가 꽉 칠해져 있다 — 시안처럼 안의 샐러맨더가 비치게 옅게
+            QxOnce("vncloud", me.Position, 0.08f, 1.25f)?.SetTint(new Color(1f, 1f, 1f, 0.6f));
         }
 
         // ── 로봇 · 포탑 전개 ───────────────────────────────────
@@ -258,7 +261,8 @@ namespace Game.Module.InGame
         {
             if (!Qx("vmcircle")) return;
             _vmCircleFx?.Stop();
-            _vmCircleFx = QxLoop("vmcircle", QxFeet(me.Position), 0.1f, life: seconds + 0.2f);
+            // 시안(약 150 px)보다 15~20% 작아 발동이 약했다(검수 2026-10-07)
+            _vmCircleFx = QxLoop("vmcircle", QxFeet(me.Position), 0.1f, 1.15f, life: seconds + 0.2f);
         }
 
         private bool QxFeastGlow(Vector2 at)

@@ -23,6 +23,11 @@ namespace Game.Module.InGame
         /// 「이펙트가 너무 크다」(PD)를 따라 시안 크기 쪽으로 줄였다(녹화 비교 2026-10-07).
         /// </summary>
         private const float PwBlastBoxPerDiameter = 0.62f;
+        /// <summary>
+        /// 미사일 폭발 상자(포탑 탄은 통과라 수류탄 값 그대로). 피해 반경(1.9 m)은 그대로 두고 그림만 시안(약 130 px)으로 —
+        /// 수류탄 값(0.62)으로는 약 170 px 라 적과 피해 숫자를 덮었다(검수 2026-10-07).
+        /// </summary>
+        private const float PwMissileBoxPerDiameter = 0.48f;
         private const float PwBlastFrameSeconds = 0.05f;
         private const float PwBlastShake = 2.5f;
 
@@ -41,8 +46,10 @@ namespace Game.Module.InGame
         {
             // 미사일(다중 유도 · 미사일 몸) · 포탑 탄(pulse)도 내 것이면 같은 도트 폭발로 — 퀄업 13종(2026-10-07)
             bool mine = shot.FromPlayer && (shot.Kind == "missile" || shot.Kind == "pulse");
-            if (!(_pwCarpet.Remove(shot) || mine) || !DotHitReady) return false;
-            var im = PlayFx("dotcrit", at, radius * 2f * PwBlastBoxPerDiameter, loop: false);
+            bool carpet = _pwCarpet.Remove(shot);
+            if (!(carpet || mine) || !DotHitReady) return false;
+            float box = !carpet && shot.Kind == "missile" ? PwMissileBoxPerDiameter : PwBlastBoxPerDiameter;
+            var im = PlayFx("dotcrit", at, radius * 2f * box, loop: false);
             im?.SetFrameSeconds(PwBlastFrameSeconds);
             _pfx?.Puff(at, ParticleElement.Dust, 0.5f);
             Shake(PwBlastShake);
