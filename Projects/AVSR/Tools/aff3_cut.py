@@ -74,5 +74,33 @@ def main():
         print('rps_tri_%s.png' % key)
 
 
+def stock():
+    """주식식 색(2026-10-07 PD) — 유리 ▲ 빨강 · 불리 ▼ 파랑, 삼각판은 이김 빨강 · 짐 파랑 · 상관없음 회색.
+
+      _exchange/in/_rps_arrows_stock.png (512 x 256, 2칸) → rps_up · rps_down (64) + 로비 사본 ch_match_up · ch_match_down
+      _exchange/ref/affinity3/rps_tri_{...}_stock.png       → rps_tri_{...}.png (480 x 440)
+    """
+    arrows = clear_pockets(key_out(np.asarray(Image.open(os.path.join(
+        ROOT, 'Projects', 'AVSR', '_exchange', 'in', '_rps_arrows_stock.png')).convert('RGB'))))
+    half = arrows.shape[1] // 2
+    for i, (game, lobby) in enumerate([('rps_up', 'ch_match_up'), ('rps_down', 'ch_match_down')]):
+        icon = fit(np.ascontiguousarray(arrows[:, i * half:(i + 1) * half]), (64, 64))
+        icon.save(os.path.join(OUT, game + '.png'))
+        icon.save(os.path.join(LOBBY, lobby + '.png'))
+        print(game, lobby)
+    for key in ['force', 'blade', 'magic']:
+        src = os.path.join(SRC, 'rps_tri_%s_stock.png' % key)
+        if not os.path.exists(src):
+            print('없음', src)
+            continue
+        rgba = clear_pockets(key_out(np.asarray(Image.open(src).convert('RGB'))))
+        Image.fromarray(rgba).convert('RGBa').resize((480, 440), Image.LANCZOS).convert('RGBA').save(
+            os.path.join(OUT, 'rps_tri_%s.png' % key))
+        print('rps_tri_%s.png' % key)
+
+
 if __name__ == '__main__':
-    main()
+    if sys.argv[1:] == ['stock']:
+        stock()
+    else:
+        main()

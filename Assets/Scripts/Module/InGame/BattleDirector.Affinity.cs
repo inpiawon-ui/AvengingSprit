@@ -275,11 +275,14 @@ namespace Game.Module.InGame
             victim.HoldHit(StrongHoldSeconds);
         }
 
-        /// <summary>유리 숫자 색 — ▲ 와 같은 초록. 치명타(금색)와 갈린다.</summary>
-        private static readonly Color WeakDamageColor = new(0.55f, 1f, 0.35f, 1f);
+        /// <summary>
+        /// 유리 숫자 색 — ▲ 와 같은 빨강. 주식처럼 오름 = 빨강 · 내림 = 파랑이다(기획 2026-10-07).
+        /// 치명타(금색)와 갈린다. 내가 맞는 숫자(연한 빨강 `DamageToPlayer`)보다 짙다.
+        /// </summary>
+        private static readonly Color WeakDamageColor = new(1f, 0.27f, 0.2f, 1f);
 
-        /// <summary>불리 숫자 — 작고 흐리게. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
-        private static readonly Color DullDamageColor = new(0.62f, 0.66f, 0.72f, 0.9f);
+        /// <summary>불리 숫자 — 작고 흐리게, ▼ 와 같은 파랑 기운. 「덜 들어갔다」가 숫자에서 읽혀야 한다.</summary>
+        private static readonly Color DullDamageColor = new(0.5f, 0.68f, 1f, 0.9f);
 
         // ── 갈아타기 규칙 ───────────────────────────────────────
 
