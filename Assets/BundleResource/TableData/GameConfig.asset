@@ -30,7 +30,7 @@ MonoBehaviour:
   _possessInvulnSeconds: 1.25
   _attackResumeSeconds: 0.03
   _hostStartHpPercent: 70
-  _rangeRingAlpha: 0.18
+  _rangeRingAlpha: 0.08
   _emergencyDelaySeconds: 1
   _emergencyHostHpPercent: 30
   _emergencyGhostCost: 20

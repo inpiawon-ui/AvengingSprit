@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 내 공격 사거리 원 (2026-10-07) — 지금 조종하는 몸(유령 · 호스트)의 발밑에 옅은 흰 원을 깐다.
+    /// 내 공격 사거리 원 (2026-10-07) — **근접 몸**의 발밑에 옅은 흰 원을 깐다(원거리 · 유령은 안 그린다 — PD).
     /// 공격이 어디까지 닿는지 한눈에 읽히게(다른 게임들이 쓰는 방식). 몸을 바꾸면 그 몸의 사거리로 바뀐다.
     ///
     /// 그림은 발주본(`range_ring` — 정원 흰 선 한 줄)이고 여기서는 크기 · 자리 · 진하기만 맞춘다.
@@ -28,7 +28,9 @@ namespace Game.Module.InGame
             // ⚠ 공격 판정과 **같은 자**로 잰다(`TickPlayer` — EffectiveRange × 버프 배율). 유닛 값만 보면
             //   근접 몸의 최소 사거리 · 사거리 버프가 빠져 원과 실제로 닿는 거리가 어긋난다.
             float range = me != null ? EffectiveRange(me) * _buffs.RangeMul : 0f;
-            bool show = alpha > 0f && me != null && me.IsAlive && range > 0f && _fieldLayer != null;
+            // 근접 몸만 — 원거리 몸 · 유령까지 그리니 흰 원이 늘 떠 있어 과했다(PD 2026-10-07)
+            bool melee = me != null && me.Profile != null && IsMeleeKind(me.Profile.Kind);
+            bool show = alpha > 0f && melee && me.IsAlive && range > 0f && _fieldLayer != null;
             if (_rangeRing == null)
             {
                 if (!show) return;
