@@ -5026,7 +5026,8 @@ namespace Game.Module.InGame
                         // 몸 가장자리까지 잰다 — 보스처럼 큰 몸은 중심이 멀어도 몸은 코앞이다.
                         if (EdgeDistance(attacker, e) > reach) continue;
                         // 근접 피격 겹(베기 · 타격 · 사슬) — 그림이 없으면 예전 주황 원
-                        if (!HxMeleeHit(attacker, e)) Burst(e.Position, true);
+                        // 예전 주황 원 — 도트 폭발(HitEnemyWith 의 HitPop)이 있으면 겹치지 않게 뺀다
+                        if (!HxMeleeHit(attacker, e) && !DotHitReady) Burst(e.Position, true);
                         GameSound.Cue("hit.enemy");
                         bool wasAlive = e.IsAlive;
                         _hxMeleeSwing = true;
@@ -6355,8 +6356,7 @@ namespace Game.Module.InGame
             // 안 맞는 몸 — 불똥만 작게 튀고 화면은 안 흔들린다.
             if (!HxSkillHit(victim, weak, dull))
             {
-                if (dull) DullPuff(victim.Position);
-                else if (!weak) HitSparks(victim.Position);   // 유리는 WithAffinity 가 불티를 냈다
+                HitPop(victim.Position, dull);   // 도트 폭발(PD 2026-10-07 「C」)
             }
             if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
             bool dead = victim.TakeDamage(damage);
@@ -7074,7 +7074,7 @@ namespace Game.Module.InGame
                     if (p.Pierce) p.MarkHit(hit); else p.Despawn();
                     // 공통 피격(2026-10-07) — 자리 · 방향만 적어 두고 `ApplyShotHit` 이 치명 · 상성을 보고 그린다
                     var hitAt = ImpactPointOn(hit, p.Position);
-                    if (!HxNoteShot(p, hitAt)) SpawnImpact(hitAt, p.Kind);
+                    if (!HxNoteShot(p, hitAt) && !DotHitCovers(p.Kind)) SpawnImpact(hitAt, p.Kind);   // 도트 폭발이 대신(ApplyShotHit)
                     ApplyShotHit(hit, p);
                 }
                 else
@@ -7205,10 +7205,12 @@ namespace Game.Module.InGame
             {
                 // 안 맞는 몸 — 「팅」 하고 튕기는 소리, 작은 불똥, 흔들림 없음.
                 GameSound.Cue(dull ? "hit.reflect" : "hit.enemy");
-                // 공통 피격(빛 셰이더, HitFx.cs)은 꺼 두었다(HxEnabled) — 꺼져 있으면 아래 파티클 길로 간다
-                // 별 그림(fx_hit · fx_crit)은 표창처럼 보여 뺐다(PD 2026-10-07) — 보통은 탄 고유 터짐 + 불티로 충분
-                if (!HxShotHit(victim, crit, weak, dull) && dull && !crit) DullPuff(victim.Position);
-                if (crit) CritBurst(victim.Position);   // 「팍」 — 노란 섬광 + 불티, 반동 · 멈칫(PD 2026-10-07)
+                // 공통 피격(빛 셰이더, HitFx.cs)은 꺼 두었다(HxEnabled) — 꺼져 있으면 도트 폭발(PD 2026-10-07 「C」)
+                if (!HxShotHit(victim, crit, weak, dull))
+                {
+                    if (crit) CritBurst(victim.Position);
+                    else HitPop(victim.Position, dull);
+                }
                 if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
                 else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);

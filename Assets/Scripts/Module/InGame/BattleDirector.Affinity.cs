@@ -219,8 +219,8 @@ namespace Game.Module.InGame
             dull = outcome < 0;
             if (weak)
             {
-                // 얼음 조각(fx_weakhit)은 무엇으로 때리든 얼음이라 뺐다(PD) — 불티를 조금 더(색은 ▲ · 숫자가 말한다)
-                if (!HxAffinityHit(victim)) WeakBurst(victim);
+                // 얼음 조각(fx_weakhit)은 무엇으로 때리든 얼음이라 뺐다(PD) — 맞는 표시는 보통과 같은 도트 폭발(HitPop),
+                // 유리라는 것은 ▲ · 주황 숫자 · 경직이 말한다
                 GameSound.Cue("hit.weak");
                 StrongHitReaction(victim);
                 return Mathf.Max(1, Mathf.RoundToInt(damage * AffinityRule.WinDamageMul));

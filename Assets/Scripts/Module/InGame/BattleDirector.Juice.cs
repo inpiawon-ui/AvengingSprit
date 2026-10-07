@@ -89,59 +89,50 @@ namespace Game.Module.InGame
             Shake(CritShake);
         }
 
-        // ── 맞는 표시 — 별 그림 대신 파티클 (2026-10-07) ─────────
+        // ── 맞는 표시 — 도트 폭발 (2026-10-07) ─────────────────────
         //
-        // 예전 피격 그림이 전부 **노란 뾰족 별**(`fx_hit` · `fx_crit`)이라 표창처럼 보였고,
-        // 상성 유리는 얼음 조각(`fx_weakhit`)이라 무엇으로 때리든 얼음이 나왔다(PD 반려).
-        // 새 그림 없이 있는 파티클(노란 섬광 · 불티)로 바꾼다. 별 모양(`star4` 반짝이)은 쓰지 않는다.
-        // ⚠ 불 고리 · 연기까지 얹었더니 「이펙트가 너무 크고 화염은 과하다 — 예전 노란색으로 터지던 느낌이면 된다」(PD 2026-10-07).
-        //   작은 노란 팝으로 줄였다. 「팍팍」은 크기가 아니라 반동 · 멈칫이 맡는다.
-        //   보통 — 탄 고유 터짐 + 불티(`SpawnImpact` 가 이미 낸다)만. 근접 · 스킬은 불티를 여기서 낸다
-        //   치명 — 노란 섬광 한 번 + 불티 + 반동 · 멈칫
-        //   유리 — 조금 더 많은 불티(색은 ▲ · 숫자가 말한다)
-        //   불리 — 회색 먼지 조금 + 약한 불티(덜 들어갔다)
-        // 연사 몸은 치명타가 자주 터진다 — 간격을 둬, 사이 치명타는 숫자만 크게.
+        // PD 가 고른 시안 「C 도트 폭발」(`Projects/AVSR/_exchange/in/hit_options_v1.png` C줄) — 원작풍 작은 픽셀 폭발.
+        // 그림 `fx_dothit_1~5`(보통) · `fx_dotcrit_1~6`(치명), 코덱스 납품 `in/hit_dot_frames.png`.
+        // 반려 이력(같은 날): 노란 뾰족 별(fx_hit · fx_crit)은 표창 같았고, 얼음(fx_weakhit)은 무엇으로 때리든 얼음이었고,
+        //   불 고리 · 연기는 크고 과했고, 작은 노란 섬광은 「터지는 느낌이 아니다」.
+        //   보통 · 유리 — 작은 도트 폭발(탄 고유 터짐 대신). 유리는 ▲ · 주황 숫자가 말한다
+        //   치명 — 큰 도트 폭발 + 반동 · 멈칫
+        //   불리 — 작은 도트 폭발을 더 작게 + 회색 먼지 조금(덜 들어갔다)
+        // 그림이 없으면 예전 불티로 돌아간다.
 
+        private const float DotHitSize = 128f;            // 그림 칸 128 = 화면 128 — 보통 최대 지름 약 44
+        private const float DotCritSize = 128f;           // 치명 최대 약 120
+        private const float DotHitFrameSeconds = 0.035f;
+        private const float DotCritFrameSeconds = 0.045f;
+        private const float DotDullScale = 0.7f;
+        // 연사 몸은 치명타가 자주 터진다 — 간격 안의 치명은 작은 폭발만(숫자는 크게 뜬다)
         private const float CritBurstGap = 0.12f;
         private float _lastCritBurstAt = -1f;
 
+        private bool DotHitReady => FxFrames("dothit") != null && FxFrames("dotcrit") != null;
+
+        /// <summary>탄 고유 터짐(impact_*)을 도트 폭발이 대신하는가 — 폭발탄 · 난사 예광탄은 제 터짐을 쓴다.</summary>
+        private bool DotHitCovers(string kind)
+            => DotHitReady && kind != WpTracerKind && kind != "grenade" && kind != "missile";
+
+        /// <summary>보통 타격 한 번. <paramref name="dull"/> 이면 작게 + 회색 먼지.</summary>
+        private void HitPop(Vector2 at, bool dull = false)
+        {
+            if (dull) _pfx?.Puff(at, ParticleElement.Dust, 0.3f);
+            var im = DotHitReady ? PlayFx("dothit", at, dull ? DotHitSize * DotDullScale : DotHitSize, loop: false) : null;
+            if (im != null) im.SetFrameSeconds(DotHitFrameSeconds);
+            else _pfx?.Hit(at, dull ? ParticleElement.Dust : ParticleElement.Fire, dull ? 0.4f : 0.9f);
+        }
+
         private void CritBurst(Vector2 at)
         {
-            if (_pfx == null) return;
             float now = Time.unscaledTime;
-            if (now - _lastCritBurstAt < CritBurstGap) return;
+            if (now - _lastCritBurstAt < CritBurstGap) { HitPop(at); return; }
             _lastCritBurstAt = now;
-            // 노란 섬광(지름 64) 한 번 + 불티 8개 — 섬광은 짧게(0.13초) 번쩍이고 줄어든다
-            _pfx.Burst(ParticleFxKind.Glow, ParticleElement.Fire, at, count: 1, speed: 0f, size: 64f, life: 0.13f, spin: 0f);
-            _pfx.Burst(ParticleFxKind.Spark, ParticleElement.Fire, at, count: 8, speed: 230f, size: 22f, life: 0.22f, spin: 0f);
+            var im = DotHitReady ? PlayFx("dotcrit", at, DotCritSize, loop: false) : null;
+            if (im != null) im.SetFrameSeconds(DotCritFrameSeconds);
+            else _pfx?.Hit(at, ParticleElement.Fire, 1.4f);
         }
-
-        // 기관총이 유리한 적을 쏘면 매 발 터져 화면이 덮였다(녹화 2026-10-07) — 적마다 간격을 둔다
-        private const float WeakBurstGap = 0.25f;
-        private readonly System.Collections.Generic.Dictionary<Unit, float> _weakBurstAt = new();
-
-        private void WeakBurst(Unit victim)
-        {
-            if (_pfx == null || victim == null) return;
-            float now = Time.time;
-            if (_weakBurstAt.TryGetValue(victim, out float last) && now - last < WeakBurstGap)
-            {
-                _pfx.Hit(victim.Position, ParticleElement.Fire, 0.6f);   // 사이 탄은 불티만
-                return;
-            }
-            _weakBurstAt[victim] = now;
-            _pfx.Hit(victim.Position, ParticleElement.Fire, 1f);
-        }
-
-        private void DullPuff(Vector2 at)
-        {
-            if (_pfx == null) return;
-            _pfx.Puff(at, ParticleElement.Dust, 0.3f);
-            _pfx.Hit(at, ParticleElement.Dust, 0.4f);
-        }
-
-        /// <summary>근접 · 스킬 보통 타격 — 탄이 없어 `SpawnImpact` 불티가 안 나는 길.</summary>
-        private void HitSparks(Vector2 at) => _pfx?.Hit(at, ParticleElement.Fire, 0.9f);
 
         private void TickKick(float dt)
         {
@@ -179,7 +170,6 @@ namespace Game.Module.InGame
             _kick = Vector2.zero;
             _shakeOffset = Vector2.zero;
             if (_hitStopLeft > 0f) { _hitStopLeft = 0f; Time.timeScale = 1f; }
-            _weakBurstAt.Clear();   // 지난 방의 죽은 적이 쌓이지 않게
             ClearBigJuice();
         }
 

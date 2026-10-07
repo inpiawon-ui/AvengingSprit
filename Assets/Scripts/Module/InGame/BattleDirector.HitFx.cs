@@ -111,9 +111,6 @@ namespace Game.Module.InGame
             return true;
         }
 
-        /// <summary>상성 유리 — 그리는 일은 끝에서 한 번에 한다(치명과 겹칠 수 있다). 다룰 수 있으면 true.</summary>
-        private bool HxAffinityHit(Unit victim) => HxReady;
-
         /// <summary>근접 한 대 — 때린 몸 자리를 적어 둔다. 다뤘으면 true(주황 원을 띄우지 않는다).</summary>
         private bool HxMeleeHit(Unit attacker, Unit victim)
         {
