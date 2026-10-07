@@ -1321,17 +1321,17 @@ SPAWN	actor_enforcer	0.5	6.5	0
 SPAWN	commando_missile	3.5	6.5	1
 SPAWN	turret_cross	6.5	6.5	0
 SPAWN	actor_enforcer	9.5	6.5	0
-ROOM	ROOM_CH8_001	봉쇄 회랑	입구 앞 유탄 특공대부터 빼앗고 시작한다 — 순찰기와 사수가 기둥 열 뒤에서 쏘고 벽 포탑이 가로로 긋는다, 기둥 뒤로 던져 넣는다
+ROOM	ROOM_CH8_001	봉쇄 회랑	입구 앞 유탄 특공대부터 빼앗고 시작한다 — 순찰기와 전갈이 회랑 뒤에서 쏘고 벽 포탑이 가로로 긋는다, 모래주머니 뒤로 던져 넣는다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_E	0.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	9.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	2	9.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	8	9.5	2	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_W	9.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	2	7.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	8	7.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	2	5.5	2	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	8	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	scrapgunner	1.5	12.5	0
 SPAWN	coilwalker	8.5	12.5	0
 SPAWN	roadwarden	1.5	11.5	0
@@ -1341,7 +1341,7 @@ SPAWN	bat	3.5	9.5	0
 SPAWN	turret_cross	4.5	9.5	0
 SPAWN	bat	6.5	9.5	0
 SPAWN	commando_grenade	4.5	6.5	1
-ROOM	ROOM_CH8_002	차단선	레이저 문 둘이 엇갈려 길을 꺾는다 — 박쥐와 사수가 틈으로 한 줄이 된다. 로봇이 틈을 꿰뚫는다
+ROOM	ROOM_CH8_002	차단선	레이저 문 둘이 엇갈려 길을 꺾는다 — 박쥐와 전갈이 틈으로 한 줄이 된다. 로봇이 틈을 꿰뚫는다
 OBJ	PROP_TALL	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	0.5	9.5	1	1	1	1	1	NONE	0	0
@@ -1365,8 +1365,7 @@ OBJ	CHANNEL_H	3	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	5	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	7	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	2.5	9	1	2	1	0	0	NONE	0	0
-OBJ	PILLAR	4.5	9.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	9.5	1	1	1	1	1	NONE	0	0
+OBJ	SANDBAG	5	9.5	2	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_V	7.5	9	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	3	7.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	7	7.5	2	1	1	0	0	NONE	0	0
@@ -1379,7 +1378,7 @@ SPAWN	coilwalker	3.5	8.5	0
 SPAWN	coilwalker	6.5	8.5	0
 SPAWN	bat	2.5	6.5	0
 SPAWN	turret_cross	7.5	6.5	0
-ROOM	ROOM_CH8_005	운반 레일	톱날이 방 허리를 오간다 — 순찰기와 사수는 그 너머에 있다. 박자에 건너 구루가 붙어 친다
+ROOM	ROOM_CH8_005	운반 레일	톱날이 방 허리를 오간다 — 순찰기와 전갈은 그 너머에 있다. 박자에 건너 구루가 붙어 친다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	CRATE	2	9.5	2	1	1	1	0	NONE	0	0
@@ -1397,14 +1396,13 @@ SPAWN	guru	4.5	6.5	1
 SPAWN	turret_cross	6.5	6.5	0
 SPAWN	bat	0.5	5.5	0
 SPAWN	bat	9.5	5.5	0
-ROOM	ROOM_CH8_006	포탑 체스판	십자 포탑 넷이 기둥과 엇갈려 선다 — 사선이 안 닿는 칸은 기둥 그늘뿐. 푸른 용이 그늘에서 하나씩 얼린다
-OBJ	PILLAR	2.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	10.5	1	1	1	1	1	NONE	0	0
+ROOM	ROOM_CH8_006	포탑 체스판	십자 포탑 넷이 엄폐와 엇갈려 선다 — 사선이 안 닿는 칸은 엄폐 그늘뿐. 푸른 용이 그늘에서 하나씩 얼린다
+OBJ	BARREL_PILE	2	10.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	8	10.5	2	1	1	1	1	NONE	0	0
 OBJ	LASER_H	5	9.5	4	1	0	0	0	LASER	12	0.6
-OBJ	PILLAR	4.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	8.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	2.5	6.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	7.5	6.5	1	1	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	8.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	2	6.5	2	1	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	8	6.5	2	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	1.5	11.5	0
 SPAWN	dragon_blue	3.5	11.5	1
 SPAWN	coilwalker	8.5	11.5	0
@@ -1418,8 +1416,8 @@ SPAWN	bat	9.5	5.5	0
 ROOM	ROOM_CH8_007	배수 삼분로	세로 도랑 둘이 방을 세 골로 가른다 — 골마다 사선이 하나씩. 레이저 특공대가 골을 따라 꿰뚫는다
 OBJ	WALL_TURRET_S	1.5	12.5	1	1	1	1	1	NONE	0	0
 OBJ	WALL_TURRET_S	8.5	12.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	3.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PROP_TALL	6.5	11.5	1	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	3	11.5	2	1	1	1	1	NONE	0	0
+OBJ	SCRAP_PILE	7	11.5	2	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_V	3.5	10	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	6.5	10	1	2	1	0	0	NONE	0	0
 OBJ	CHANNEL_V	3.5	8	1	2	1	0	0	NONE	0	0
@@ -1438,11 +1436,11 @@ SPAWN	vampire	8.5	8.5	1
 SPAWN	turret_cross	4.5	6.5	0
 SPAWN	bat	0.5	5.5	0
 SPAWN	bat	9.5	5.5	0
-ROOM	ROOM_CH8_009	탄약 벙커	코일 보행기 넷이 난간 칸막이마다 숨어 쏜다 — 아마존이 칸막이를 돌아 벤다. 가운데 길은 레이저가 끊는다
+ROOM	ROOM_CH8_009	탄약 벙커	코일 보행기 넷이 칸막이마다 숨어 쏜다 — 아마존이 칸막이를 돌아 벤다. 가운데 길은 레이저가 끊는다
 OBJ	RAIL	2.5	11	1	2	1	1	1	NONE	0	0
 OBJ	RAIL	7.5	11	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	4.5	8	1	2	1	1	1	NONE	0	0
-OBJ	RAIL	5.5	8	1	2	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	8.5	2	1	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	7.5	2	1	1	1	1	NONE	0	0
 OBJ	LASER_H	5	6.5	4	1	0	0	0	LASER	12	0.6
 OBJ	RAIL	2.5	5	1	2	1	1	1	NONE	0	0
 OBJ	RAIL	7.5	5	1	2	1	1	1	NONE	0	0
@@ -1456,17 +1454,14 @@ SPAWN	amazon	1.5	7.5	1
 SPAWN	turret_cross	7.5	7.5	0
 SPAWN	bat	0.5	5.5	0
 SPAWN	roadwarden	8.5	5.5	0
-ROOM	ROOM_CH8_010	등뼈 통로	가운데 기둥 줄 양옆으로 톱날이 오르내린다 — 사수는 등뼈 뒤에 숨는다. 야구 선수가 등뼈 틈으로 넘어가 친다
+ROOM	ROOM_CH8_010	등뼈 통로	가운데 누운 기둥 줄 양옆으로 톱날이 오르내린다 — 전갈은 등뼈 뒤에 숨는다. 야구 선수가 등뼈 틈으로 넘어가 친다
 OBJ	PROP_TALL	2.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	PROP_TALL	7.5	11.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	4.5	10.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	10.5	1	1	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	10.5	2	1	1	1	1	NONE	0	0
 OBJ	SLIDE_BLADE_V	2	8	2	2	0	0	0	BLADE	10	0.5
 OBJ	SLIDE_BLADE_V	8	8	2	2	0	0	0	BLADE	10	0.5
-OBJ	PILLAR	4.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	7.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	4.5	5.5	1	1	1	1	1	NONE	0	0
-OBJ	PILLAR	5.5	5.5	1	1	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	7.5	2	1	1	1	1	NONE	0	0
+OBJ	FALLEN_PILLAR	5	5.5	2	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	1.5	11.5	0
 SPAWN	medium	4.5	11.5	1
 SPAWN	roadwarden	8.5	11.5	0
@@ -1531,8 +1526,9 @@ OBJ	PILLAR	7.5	11.5	1	1	1	1	1	NONE	0	0
 OBJ	CHANNEL_H	2	10.5	2	1	1	0	0	NONE	0	0
 OBJ	CHANNEL_H	8	10.5	2	1	1	0	0	NONE	0	0
 OBJ	LASER_H	2	8.5	4	1	0	0	0	LASER	12	0.6
-OBJ	BULK	5	8	2	2	1	1	1	NONE	0	0
+OBJ	BARREL_PILE	5	8.5	2	1	1	1	1	NONE	0	0
 OBJ	LASER_H	8	8.5	4	1	0	0	0	LASER	12	0.6
+OBJ	BARREL_PILE	5	7.5	2	1	1	1	1	NONE	0	0
 SPAWN	roadwarden	1.5	11.5	0
 SPAWN	roadwarden	8.5	11.5	0
 SPAWN	turret_cross	4.5	10.5	0
