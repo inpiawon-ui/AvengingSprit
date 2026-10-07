@@ -74,14 +74,17 @@ def main():
         print('rps_tri_%s.png' % key)
 
 
-def stock():
-    """주식식 색(2026-10-07 PD) — 유리 ▲ 빨강 · 불리 ▼ 파랑, 삼각판은 이김 빨강 · 짐 파랑 · 상관없음 회색.
+def stock(suffix='stock'):
+    """화살표 · 삼각판 색 바꾸기. suffix 로 납품 묶음을 고른다.
+      stock  — 주식식(2026-10-07, 반려) 유리 ▲ 빨강 · 불리 ▼ 파랑
+      orange — 확정(2026-10-07 PD 「A 주황」) 유리 ▲ 주황 · 불리 ▼ 회색, 삼각판은 이김 주황 · 짐 회색 · 상관없음 흐린 선
+      silver — 불리 ▼ 만 은빛 강철로(2026-10-07 PD 「회색은 꺼진 버튼 같다」), 삼각판은 orange 그대로
 
-      _exchange/in/_rps_arrows_stock.png (512 x 256, 2칸) → rps_up · rps_down (64) + 로비 사본 ch_match_up · ch_match_down
-      _exchange/ref/affinity3/rps_tri_{...}_stock.png       → rps_tri_{...}.png (480 x 440)
+      _exchange/in/_rps_arrows_{suffix}.png (512 x 256, 2칸) → rps_up · rps_down (64) + 로비 사본 ch_match_up · ch_match_down
+      _exchange/ref/affinity3/rps_tri_{...}_{suffix}.png    → rps_tri_{...}.png (480 x 440)
     """
     arrows = clear_pockets(key_out(np.asarray(Image.open(os.path.join(
-        ROOT, 'Projects', 'AVSR', '_exchange', 'in', '_rps_arrows_stock.png')).convert('RGB'))))
+        ROOT, 'Projects', 'AVSR', '_exchange', 'in', '_rps_arrows_%s.png' % suffix)).convert('RGB'))))
     half = arrows.shape[1] // 2
     for i, (game, lobby) in enumerate([('rps_up', 'ch_match_up'), ('rps_down', 'ch_match_down')]):
         icon = fit(np.ascontiguousarray(arrows[:, i * half:(i + 1) * half]), (64, 64))
@@ -89,7 +92,7 @@ def stock():
         icon.save(os.path.join(LOBBY, lobby + '.png'))
         print(game, lobby)
     for key in ['force', 'blade', 'magic']:
-        src = os.path.join(SRC, 'rps_tri_%s_stock.png' % key)
+        src = os.path.join(SRC, 'rps_tri_%s_%s.png' % (key, suffix))
         if not os.path.exists(src):
             print('없음', src)
             continue
@@ -100,7 +103,7 @@ def stock():
 
 
 if __name__ == '__main__':
-    if sys.argv[1:] == ['stock']:
-        stock()
+    if sys.argv[1:2] == ['stock']:
+        stock(*sys.argv[2:3])
     else:
         main()
