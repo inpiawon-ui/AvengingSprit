@@ -90,7 +90,8 @@ ul.rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 // ─────────────────────────────────────────────────────────
 // 그림 (게임 유닛 정면 한 장씩)
 // ─────────────────────────────────────────────────────────
-const SPR = /*SPRITES*/;
+// ⚠ 이 파일은 원본이다 — 그림은 build.py 가 아래 {} 자리에 넣는다. 해 볼 파일은 AVSR_ModeLab.html
+const SPR = /*SPRITES*/{};
 const IMG = {};
 for (const k in SPR) { const i = new Image(); i.src = SPR[k]; IMG[k] = i; }
 
