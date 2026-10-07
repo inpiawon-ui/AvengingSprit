@@ -202,6 +202,30 @@ namespace Game.Module.InGame
             return true;
         }
 
+        /// <summary>
+        /// 같은 방 같은 종류의 **박자 순서** — 예전에는 자리 해시로 흩어 놓아 제각각 깜빡였다.
+        ///
+        ///   파도 순서(5 챕터+)  가시 · 화염 분사구가 왼쪽에서 오른쪽으로 차례로 켜진다 — 파도 뒤를 따라 걷는다
+        ///   교대 개폐(3 챕터+)  레이저 문은 번갈아 켜진다(앞 것이 켜지면 다음 것은 꺼진다) — 꺼진 쪽으로 건너뛴다
+        /// 그 밖은 예전 그대로(자리 해시).
+        /// </summary>
+        private float HazardPhase(Obstacle ob, Vector2 center)
+        {
+            float hashed = Mathf.Repeat(center.x * 0.013f + center.y * 0.021f, 1f);
+            int ch = _canonRoom != null ? _canonRoom.Chapter : _runChapter;
+            string k = ob.Kind ?? string.Empty;
+            if (ch >= 5 && (k == "TIMED_SPIKE" || k.StartsWith("FLAME_JET")))
+                return Mathf.Repeat(-center.x / Mathf.Max(1f, _roomSize.x) * 0.55f, 1f);
+            if (ch >= 3 && (k == "LASER_H" || k == "LASER_V"))
+            {
+                int n = 0;
+                for (int i = 0; i < _obstacles.Count; i++)
+                    if (_obstacles[i].Kind == "LASER_H" || _obstacles[i].Kind == "LASER_V") n++;
+                return (n % 2) * 0.5f;
+            }
+            return hashed;
+        }
+
         private static int MotionHash(string s)
         {
             unchecked

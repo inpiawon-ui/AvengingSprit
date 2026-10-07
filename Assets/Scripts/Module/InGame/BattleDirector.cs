@@ -66,7 +66,8 @@ namespace Game.Module.InGame
         private RectTransform _textLayer;
 
         /// <summary>탄이 터지는 그림. 탄과 같은 풀 방식이다.</summary>
-        private const int MaxImpacts = 24;
+        // 24 → 48 (2026-10-07) — 연쇄 방전 퀄업은 한 번 튈 때 적 셋에 조준선 · 고리 · 낙뢰 · 코어 · 파편 · 전기가 겹친다
+        private const int MaxImpacts = 48;
         private readonly List<Impact> _impacts = new();
 
         private const int MaxShots = 64;
@@ -1270,6 +1271,7 @@ namespace Game.Module.InGame
                 // 도랑은 **바닥에 파인 것**이다. 다른 소품·캐릭터보다 아래로 내린다 —
                 // 위에 있으면 도랑이 사람을 덮어 어디 서 있는지 안 보인다.
                 if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V") go.transform.SetAsFirstSibling();
+                ob.Phase = HazardPhase(ob, center);   // 파도 순서 · 교대 개폐 (BattleDirector.Motion)
                 SetupMoving(ob, kind);
                 _obstacles.Add(ob);
             }
@@ -3878,6 +3880,9 @@ namespace Game.Module.InGame
 
                 // 적 호스트의 액티브 스킬이 패턴보다 먼저다. 시전 중에는 안 움직인다.
                 if (TickEnemySkill(e, me, dt)) { Separate(e, i, dt); continue; }
+
+                // 3차 패턴(저격 · 박격 · 링) — 그 몸의 원래 패턴보다 먼저 본다. `false` 면 원래대로 내려간다
+                if (TickPatterns3(e, me, d, dt)) { Separate(e, i, dt); continue; }
 
                 if (pattern == EnemyPattern.Cross)
                 { TickCross(e, dt); Separate(e, i, dt); continue; }
@@ -7173,7 +7178,8 @@ namespace Game.Module.InGame
                 GameSound.Cue(dull ? "hit.reflect" : "hit.enemy");
                 SpawnFx(crit ? "crit" : "hit", victim.Position,
                         crit ? CritFxSize : dull ? HitFxSize * DullFxScale : HitFxSize);
-                if (!dull) Shake(crit ? ShakeOnCrit : victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
+                if (!dull && crit) CritKick(victim.Position - (Avatar != null ? Avatar.Position : victim.Position));
+                else if (!dull) Shake(victim.IsBoss ? ShakeOnBossHurt : ShakeOnHit);
                 if (crit) HitStop(HitStopOnCrit);
             }
             bool dead = victim.TakeDamage(dmg);
