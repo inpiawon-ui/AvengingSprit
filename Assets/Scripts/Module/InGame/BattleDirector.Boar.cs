@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Character;
 using UnityEngine;
 
@@ -57,6 +58,34 @@ namespace Game.Module.InGame
         private const float BoarStrafeMps = 1.4f;     // 알맞은 거리에서 각을 바꾸는 옆걸음
         private const float BoarHitReachMeters = 0.45f;   // 띠 반폭에 더하는 몸 반경 — 이만큼 닿으면 부딪힌 것
         private const float BoarOrbitDegrees = 55f;   // 내게서 멀어지는 방향을 이만큼 옆으로 꺾어 돈다 — 다음 돌진은 다른 각에서
+
+        // ── 연속 돌진 (패턴 단계 7 부터 — 기획 6절 「7챕터 돌진형 연속 돌진」) ──
+        //   한 번 달린 뒤 쉬지 않고 짧은 예고로 **한 번 더** 들이받는다. 두 번째가 끝나면 평소처럼 쉰다.
+        //   벽 · 물건에 박으면 이어 달리지 않는다 — 박은 휘청이 근접 몸이 치는 틈이다(패턴은 근접 틈을 남긴다).
+        //   이어 달리기는 붙어 있어도 건다(최소 거리 1.2 m) — 돌진을 피한 자리로 곧장 꺾어 오는 게 이 패턴이다.
+        private const int BoarChainFromStage = 7;
+        private const float BoarChainRecoverSeconds = 0.2f;   // 첫 돌진 뒤 숨 고르기 — 0.5초 멈춤 대신
+        private const float BoarChainTellRatio = 0.65f;       // 두 번째 예고는 짧게(0.75 → 0.49초)
+        private const float BoarChainMinMeters = 1.2f;
+        private const float BoarChainWindowSeconds = 0.6f;    // 이만큼 안에 각이 안 나오면 이어 달리기를 버린다
+
+        /// <summary>두 번째 돌진을 앞둔 · 달리는 멧돼지. 방을 나갈 때 비운다(`ClearRushFx`).</summary>
+        private readonly HashSet<Unit> _boarChain = new();
+
+        private bool BoarChaining(Unit e) => e.Key == TrashBoarKey && _boarChain.Contains(e);
+
+        /// <summary>
+        /// 돌진 하나가 끝났다(`TickDive` 단계 2 끝). 이어 달릴지 정하고 멈춤 시간을 돌려준다.
+        /// </summary>
+        private float AfterBoarDash(Unit e, bool crashed, in DiveSpec spec)
+        {
+            if (e.Key != TrashBoarKey || PatternChapter < BoarChainFromStage)
+                return crashed ? spec.WallStunSeconds : spec.RecoverSeconds;
+            if (crashed || _boarChain.Remove(e))   // 박았거나 두 번째였다 → 평소처럼 쉰다
+                return crashed ? spec.WallStunSeconds : spec.RecoverSeconds;
+            _boarChain.Add(e);
+            return BoarChainRecoverSeconds;
+        }
 
         /// <summary>달리는 동안 부딪혀야 아픈가(띠가 끝날 때 한꺼번에 치지 않는다). 지금은 멧돼지만.</summary>
         private static bool ChargeContact(Unit e) => e.Key == TrashBoarKey;

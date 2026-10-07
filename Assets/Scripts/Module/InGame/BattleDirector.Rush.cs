@@ -198,6 +198,7 @@ namespace Game.Module.InGame
         private void ClearRushFx()
         {
             for (int i = 0; i < _rushFx.Count; i++) HideRush(_rushFx[i]);
+            _boarChain.Clear();   // 방을 나가면 이어 달리기도 끝난다 — 풀에서 돌려 쓰는 몸이 「두 번째」로 시작하지 않게
         }
     }
 }

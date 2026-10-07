@@ -18300,7 +18300,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_007_S08
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 0.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -19097,7 +19097,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_010_S09
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 0.5, y: 5.5}
       _facing: S
       _delaySeconds: 0
@@ -19980,7 +19980,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH7_014_S07
-      _actorId: actor_enforcer
+      _actorId: boar
       _at: {x: 0.5, y: 6.5}
       _facing: S
       _delaySeconds: 0

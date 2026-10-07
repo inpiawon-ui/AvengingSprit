@@ -1,6 +1,7 @@
 // 7챕터 불타는 집적장 — 쓰레기장 무대를 빌려 쓴다. 힘 쪽(집행자 · 십자 포탑)이 쏠린다 → 술 쪽 몸이 빛난다.
 // 기믹: 폭발 통(X) · 상자(C) · 미는 바위(K) · 지뢰(M) · 불바닥(F) · 주기 가시(S) — **터뜨려 길을 연다.**
 // 잡몹: 집행자(근접 · 내려찍기) · 십자 포탑(안 움직임 — 통로를 가르게 세운다) · 고철 전갈(엄폐 뒤 단발) · 해골(죽을 때 탄) · 코일 보행기(도약 사격)
+//       쇠뿔 멧돼지(**새 패턴 — 연속 돌진**: 한 번 달린 뒤 짧은 예고로 한 번 더. 벽 · 물건에 박으면 이어 달리지 않고 휘청인다)
 // 방마다 뼈대가 다르다: 기둥 숲 · 엇갈린 담 · 세 갈래 골 · 가운데 섬 · 계단 · 광장 · 십자로 · 바람개비 · 좁은 문 · 불 고리 · 깔때기
 // 낮은 엄폐 $ 모래주머니 · % 누운 드럼통 · ~ 누운 기둥 · ^ 콘크리트 블록 줄 · & 고철 더미 · ? 폐차 (적 탄도 막는다)
 //
@@ -128,7 +129,8 @@ k......KK.
 // 역할: 가운데 통 둘 = 이용 — 떼가 모이는 한복판. 옮겨붙어 한 번에 터진다
 // 역할(+): 누운 드럼통 = 전갈의 엄폐 · 누운 기둥 둘 = 광장 양옆 엄폐(낮다 — 너머가 보인다) · 아래 폐차 둘 = 내 엄폐
 // 모양: 광장 — 가운데 비우고 둘레만
-legend: e=actor_enforcer t=turret_cross g=scrapgunner c=coilwalker d=dragoon* h=hopper_smg*
+// 역할(++): 쇠뿔 멧돼지 = 연속 돌진 — 트인 광장을 두 번 이어 가로지른다. 둘레 엄폐에 박으면 휘청, 그때 붙어 친다
+legend: e=actor_enforcer t=turret_cross g=scrapgunner c=coilwalker d=dragoon* h=hopper_smg* o=boar
 map:
 ..........
 ..........
@@ -140,7 +142,7 @@ map:
 ..t.XX.t..
 ...e..e...
 .~~....~~.
-e.......h.
+o.......h.
 .??....??.
 ..........
 ..........
@@ -174,7 +176,8 @@ kNNN..NNN.
 // 역할: 낮은 담 날개 넷 = 길 — 바람개비처럼 엇갈려 해골이 날개 사이를 돈다(근접 몸의 답)
 // 역할(+): 지뢰 둘 = 위험(날개 끝 지름길) · 위 고철 더미 둘 = 전갈 · 코일의 엄폐 · 가장자리 간판 = 로봇 · 아마존 쪽 엄폐
 // 모양: 바람개비 — 가로 날개는 낮은 담, 세로 날개는 레일 대신 돌 블록
-legend: e=actor_enforcer t=turret_cross g=scrapgunner k=skeleton c=coilwalker a=amazon* r=robot*
+// 역할(++): 쇠뿔 멧돼지 = 연속 돌진 — 날개 사이 트인 칸을 꺾어 달린다. 낮은 담 날개에 박으면 휘청
+legend: e=actor_enforcer t=turret_cross g=scrapgunner k=skeleton c=coilwalker a=amazon* r=robot* o=boar
 map:
 ..........
 ..........
@@ -186,7 +189,7 @@ LLLM.t....
 ...k.e.rQ.
 .Q....MLLL
 ..a.N.k...
-e...N...k.
+o...N...k.
 ..........
 ..........
 ..........
@@ -243,7 +246,8 @@ e...SS...e
 // 역할: 바위 깔때기 = 길 + 엄폐 — 목으로 떼가 몰린다. 바위를 밀면 목이 넓어진다
 // 역할(+): 목 아래 통 둘 = 이용(몰린 떼를 친다) · 불바닥 = 피하기(입구 쪽 가운데) · 지뢰 둘 = 위험(양옆 지름길)
 // 모양: 깔때기(V)
-legend: e=actor_enforcer t=turret_cross g=scrapgunner c=coilwalker d=vampire* m=commando_missile*
+// 역할(++): 쇠뿔 멧돼지 = 연속 돌진 — 깔때기 입구에서 목 쪽으로 두 번 몰아친다. 바위에 박으면 휘청
+legend: e=actor_enforcer t=turret_cross g=scrapgunner c=coilwalker d=vampire* m=commando_missile* o=boar
 map:
 ..........
 ..........
@@ -254,7 +258,7 @@ map:
 ...K.eK...
 ..K.d..K..
 ....XX....
-e..m..t..e
+o..m..t..e
 .M..FF..M.
 ....FF....
 ..........

@@ -1201,7 +1201,7 @@ SPAWN	turret_cross	2.5	8.5	0
 SPAWN	turret_cross	7.5	8.5	0
 SPAWN	actor_enforcer	3.5	7.5	0
 SPAWN	actor_enforcer	6.5	7.5	0
-SPAWN	actor_enforcer	0.5	5.5	0
+SPAWN	boar	0.5	5.5	0
 SPAWN	hopper_smg	8.5	5.5	1
 ROOM	ROOM_CH7_009	선별장 십자로	십자 포탑 둘이 네거리를 지킨다 — 영매가 가로 길을 따라 꿰뚫는다. 모퉁이 통을 터뜨리면 상자가 부서져 길이 넓어진다
 OBJ	PILLAR	1.5	10.5	1	1	1	1	1	NONE	0	0
@@ -1256,7 +1256,7 @@ SPAWN	actor_enforcer	5.5	8.5	0
 SPAWN	robot	7.5	8.5	1
 SPAWN	amazon	2.5	6.5	1
 SPAWN	skeleton	6.5	6.5	0
-SPAWN	actor_enforcer	0.5	5.5	0
+SPAWN	boar	0.5	5.5	0
 SPAWN	skeleton	8.5	5.5	0
 ROOM	ROOM_CH7_011	바위 문	집행자 셋이 바위 문 뒤에 줄을 선다 — 바위를 밀거나 문 가운데 상자를 터뜨려 열고, 살라만더가 문턱에 불을 뿌린다
 OBJ	PILLAR	2.5	11.5	1	1	1	1	1	NONE	0	0
@@ -1317,7 +1317,7 @@ SPAWN	scrapgunner	1.5	10.5	0
 SPAWN	scrapgunner	8.5	10.5	0
 SPAWN	actor_enforcer	5.5	9.5	0
 SPAWN	vampire	4.5	8.5	1
-SPAWN	actor_enforcer	0.5	6.5	0
+SPAWN	boar	0.5	6.5	0
 SPAWN	commando_missile	3.5	6.5	1
 SPAWN	turret_cross	6.5	6.5	0
 SPAWN	actor_enforcer	9.5	6.5	0

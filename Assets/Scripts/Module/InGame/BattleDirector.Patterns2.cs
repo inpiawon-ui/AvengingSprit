@@ -96,9 +96,11 @@ namespace Game.Module.InGame
                 {
                     var spec = DiveSpecOf(e);   // 박쥐 · 고릴라 · 멧돼지가 같은 세 박자를 다른 크기로 (BattleDirector.Boar)
                     e.PatternTimer -= dt;
+                    bool chain = BoarChaining(e);   // 연속 돌진의 두 번째 — 붙어 있어도 건다 (BattleDirector.Boar)
+                    if (chain && e.PatternTimer < -BoarChainWindowSeconds) { _boarChain.Remove(e); chain = false; }
                     bool ready = e.PatternTimer <= 0f
                               && distance <= Meters(spec.TriggerMeters)
-                              && distance >= Meters(spec.MinMeters)
+                              && distance >= Meters(chain ? BoarChainMinMeters : spec.MinMeters)
                               && EnemyLineClear(e.Position, me.Position);
                     if (ready)
                     {
@@ -108,13 +110,14 @@ namespace Game.Module.InGame
                         e.PatternFrom = e.Position;
                         e.PatternTo = ClampedInField(e, e.Position + dir * Meters(spec.Meters));
                         if (e.Key == TrashBoarKey) e.PatternTo = ClampToView(e.PatternTo, BoarViewMarginPx);   // 화면 밖으로 달려 나가지 않는다
+                        float tell = chain ? spec.TellSeconds * BoarChainTellRatio : spec.TellSeconds;
                         e.PatternPhase = 1;
-                        e.PatternTimer = spec.TellSeconds;
+                        e.PatternTimer = tell;
                         e.SetTelegraph(true);
                         StartWarn(BandShape(e.Position, dir, Meters(spec.WidthMeters),
                                             Vector2.Distance(e.PatternFrom, e.PatternTo)),
-                                  spec.TellSeconds, ChargeContact(e) ? 0 : Mathf.Max(1, e.Atk), owner: e);   // 멧돼지는 띠가 안 친다 — 닿아야 친다
-                        StartRushFx(e, e.PatternFrom, e.PatternTo, Meters(spec.WidthMeters), spec.TellSeconds, dust: true);
+                                  tell, ChargeContact(e) ? 0 : Mathf.Max(1, e.Atk), owner: e);   // 멧돼지는 띠가 안 친다 — 닿아야 친다
+                        StartRushFx(e, e.PatternFrom, e.PatternTo, Meters(spec.WidthMeters), tell, dust: true);
                         return true;
                     }
                     // 멧돼지는 물지 않는다 — 돌진 사이엔 다가오거나 숨을 고른다
@@ -158,7 +161,7 @@ namespace Game.Module.InGame
                     e.PatternPhase = 3;
                     // 끝까지 못 갔다 = 벽 · 물건에 박았다 → 휘청(더 긴 빈틈). 멧돼지에게만 차이가 난다
                     bool crashed = Vector2.Distance(e.Position, e.PatternTo) > Meters(0.5f);
-                    e.PatternTimer = crashed ? spec.WallStunSeconds : spec.RecoverSeconds;
+                    e.PatternTimer = AfterBoarDash(e, crashed, spec);   // 7단계부터 멧돼지는 한 번 더 이어 달린다
                     if (crashed && e.Key == TrashBoarKey) e.PlayHit();
                     return true;
                 }
@@ -169,7 +172,8 @@ namespace Game.Module.InGame
                     e.PatternTimer -= dt;
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 0;
-                    e.PatternTimer = DiveSpecOf(e).CooldownSeconds;   // 멧돼지는 곧바로 다음 돌진을 노린다
+                    // 멧돼지는 곧바로 다음 돌진을 노린다 — 이어 달리기면 기다림 없이
+                    e.PatternTimer = BoarChaining(e) ? 0f : DiveSpecOf(e).CooldownSeconds;
                     if (e.Key == TrashEnforcerKey) ToggleGorillaMove(e);   // 다음은 도약
                     return true;
             }
