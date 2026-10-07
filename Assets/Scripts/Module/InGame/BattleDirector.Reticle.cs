@@ -105,6 +105,8 @@ namespace Game.Module.InGame
         private void ShowReticleOn(Unit target, ReticleKind kind, float seconds)
         {
             if (target == null || !target.IsAlive) return;
+            // 갱스터 표식은 퀄업 그림(괄호)으로 — `BattleDirector.SkillFxWeapon.cs`
+            if (kind == ReticleKind.Mark && ShowGaMark(target, seconds)) return;
 
             // ⚠ 이미 붙어 있으면 **시간만 늘린다.** 하나 더 띄우면 고리 두 개가 겹쳐 돌아
             //   두 번 찍힌 것처럼 보이고, 먼저 것을 거둘 길도 없어진다.

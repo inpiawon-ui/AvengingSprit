@@ -47,7 +47,12 @@ namespace Game.Module.InGame
         private const float LzFollowScale = 0.8f;
 
         /// <summary>퀄업 연출이 들어간 스킬 — 시전 때 화면 전체 섬광 · 불티를 끈다(국소 빛만 쓴다).</summary>
-        private static readonly HashSet<string> QualityFxHosts = new() { "commando_laser" };
+        private static readonly HashSet<string> QualityFxHosts = new()
+        {
+            "commando_laser",
+            // 무기 7종 (`BattleDirector.SkillFxWeapon.cs`)
+            "amazon", "thug", "hopper_smg", "commando_mg", "gangster", "hopper", "ninja",
+        };
 
         private bool HasQualityFx(Unit me) => me != null && me.Key != null && QualityFxHosts.Contains(me.Key);
 

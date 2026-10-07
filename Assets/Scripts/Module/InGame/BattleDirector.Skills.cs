@@ -279,6 +279,7 @@ namespace Game.Module.InGame
             _iceFx = null;
             _chainHopsLeft = 0;
             ClearLz();
+            ClearWp();
             for (int i = 0; i < _spits.Count; i++) _spits[i].Fx?.Stop();
             _spits.Clear();
             _hasteMul = 1f;
@@ -743,7 +744,8 @@ namespace Game.Module.InGame
             _sprayDegrees = SpecOpen ? Mathf.Lerp(20f, 40f, Mathf.InverseLerp(3f, 7f, total)) : 20f;
             if (SpecOpen) _pierceSeconds = _spraySeconds;   // Lv5 — 탄이 관통
             GrantHaste(SprayHastePercent, _spraySeconds);
-            PlayFx("muzzle", me.MuzzlePosition, 48f, loop: false);
+            // 퀄업 연출(2026-10-07) — 세 갈래 조준이 벌어지고 탄은 가는 예광탄으로 나간다
+            if (!WpSprayOpen(me, _sprayDegrees)) PlayFx("muzzle", me.MuzzlePosition, 48f, loop: false);
         }
 
         // ── 호퍼(기관단총) · 도약 연사 ───────────────────────────

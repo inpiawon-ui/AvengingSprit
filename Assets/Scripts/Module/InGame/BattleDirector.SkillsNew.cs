@@ -126,6 +126,14 @@ namespace Game.Module.InGame
         private void AmazonLeapStrike(Unit me)
         {
             var target = NearestEnemy(me.Position);
+            // 퀄업 연출(2026-10-07) — 조준이 걸리고 0.1초 뒤 같은 동작으로 뛰어든다
+            if (WpAmazonWindup(me, target)) return;
+            AmazonLeapLand(me, target);
+        }
+
+        private void AmazonLeapLand(Unit me, Unit target)
+        {
+            var from = me.Position;
             if (target != null)
             {
                 var dir = (target.Position - me.Position);
@@ -142,7 +150,9 @@ namespace Game.Module.InGame
             int dmg = SkillDamage(me, AmazonStrikeMul * BaseAxis(1f));   // 6.0 × 표 성장축(Lv1 1.5 → Lv4 2.2)
             var list = EnemiesInRange(me.Position, r);
             for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
-            PlayFx("slam", me.Position, r * 2f, loop: false);
+            // 큰 회색 폭발 구름은 캐릭터 · 적을 통째로 가렸다(코덱스 진단) — 퀄업 연출이 있으면 절삭 · 바닥 펄스로
+            if (WpReady) WpAmazonImpact(from, me.Position, r);
+            else PlayFx("slam", me.Position, r * 2f, loop: false);
         }
 
         /// <summary>
@@ -373,7 +383,13 @@ namespace Game.Module.InGame
                 float d = Vector2.Distance(e.Position, me.Position);
                 if (d > best) { best = d; far = e; }
             }
+            // 퀄업 연출(2026-10-07) — 가장 먼 적에게 조준이 걸리고 0.1초 뒤 뛰어든다
+            if (WpSmgWindup(me, far)) return;
+            LeapFarGo(me, far);
+        }
 
+        private void LeapFarGo(Unit me, Unit far)
+        {
             var to = far != null
                    ? far.Position - (far.Position - me.Position).normalized * Meters(1.2f)
                    : me.Position + me.Facing * Meters(4f);
@@ -386,14 +402,42 @@ namespace Game.Module.InGame
             _invuln = Mathf.Max(_invuln, invuln);
             // 스킬이 준 무적이다 — 이 동안만 몸 윤곽이 깜빡인다(기획 2026-09-15).
             _skillInvuln = Mathf.Max(_skillInvuln, invuln);
-            PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
+            if (WpReady) WpSmgLanded(me, _dashFrom, _dashTo);
+            else PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
         }
 
-        /// <summary>닌자 — 방 한가운데에 분신을 세운다. 서 있는 동안 적이 전부 그쪽을 본다.</summary>
+        /// <summary>닌자 — 화면 한가운데에 분신을 세운다(`CloneSpot`). 서 있는 동안 적이 전부 그쪽을 본다.</summary>
         private void NinjaCloneSkill(Unit me)
         {
-            var center = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.5f);
+            var center = CloneSpot();
+            // 퀄업 연출(2026-10-07) — 한가운데 조준 → 훑는 선 · 절삭 → 분신이 선다
+            if (WpCloneOpen(me, center)) return;
             SummonClone(center);
+        }
+
+        /// <summary>
+        /// 분신이 설 자리 — **방 한가운데**, 단 지금 화면에 보이는 칸 안으로 당긴다.
+        /// ⚠ 방(세로 1152)이 창(1050)보다 길어, 캐릭터가 아래쪽에 서 있으면 방 한가운데가
+        ///   화면 위 HUD 밑에 숨었다 — 분신이 서 있는지조차 안 보였다(검수 2026-10-07).
+        /// ⚠ 창 한가운데로 옮겼더니 이번엔 캐릭터가 서는 자리(`ViewFocus`)와 겹쳐 닌자가 둘로 포개졌다.
+        ///   방 한가운데에서 가장 가까운, 창 위아래 가장자리(HUD · 체력바 자리)를 비운 자리로 당긴다.
+        /// </summary>
+        private Vector2 CloneSpot()
+        {
+            var spot = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.5f);
+            if (_field == null) return spot;
+            const float TopMargin = 220f, BottomMargin = 160f;
+            float viewTop = ViewToRoom(new Vector2(0f, -TopMargin)).y;
+            float viewBottom = ViewToRoom(new Vector2(0f, -_field.rect.height + BottomMargin)).y;
+            if (viewTop > viewBottom) spot.y = Mathf.Clamp(spot.y, viewBottom, viewTop);
+            return spot;
+        }
+
+        /// <summary>창 좌표 → 방 좌표 (`RoomToView` 의 거꾸로).</summary>
+        private Vector2 ViewToRoom(Vector2 view)
+        {
+            var f = ViewFocus;
+            return f + (view - f) / Mathf.Max(_zoom, 0.01f) - _scroll;
         }
 
         /// <summary>흡혈귀 — 화면에 보이는 적 **머릿수만큼** 돌려받는다.</summary>
@@ -431,7 +475,8 @@ namespace Game.Module.InGame
             int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * BaseAxis(1f)));   // Lv1 100% → Lv4 150%
             me.AddShield(amount, me.HpMax * 2);
             _barrierSeconds = BarrierSeconds;
-            PlayFx("shield", me.Position, 128f, loop: false);
+            // 퀄업 연출(2026-10-07) — 둥근 비눗방울 대신 몸 앞을 비운 분절 방벽
+            if (!WpBarrierOpen(me)) PlayFx("shield", me.Position, 128f, loop: false);
         }
 
         private float _barrierSeconds;
@@ -477,6 +522,8 @@ namespace Game.Module.InGame
             int percent = _markPercent;
 
             _markQueue.Clear();
+            // 퀄업 연출(2026-10-07) — 빠르게 훑고 한 번에 박힌다(큰 불덩이 · 섬광 없이)
+            if (WpGangOpen(me, seconds, percent)) return;
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
@@ -536,6 +583,8 @@ namespace Game.Module.InGame
         {
             _critLockSeconds = BaseAxis(CritLockSeconds);   // Lv1 5 → Lv4 7.5초
             _critLockPercent = CritLockPercent;
+            // 퀄업 연출(2026-10-07) — 몸 바깥 괄호가 조립되고 지속 내내 붙는다(공격이 아니라 상태)
+            if (WpHopOpen(me)) { _critAuraFx?.Stop(); _critAuraFx = null; return; }
             PlayFx("crit", me.Position, 96f, loop: false);
             // 지속 내내 **몸에 붙어 도는 표시**(기획 2026-09-15) — 시작 별 한 번으로는 켜져 있는지 몰랐다.
             StartSkillAura(ref _critAuraFx, "critlock");
@@ -630,6 +679,7 @@ namespace Game.Module.InGame
         private void TickNewSkills(float dt)
         {
             TickLz(dt);   // 연쇄 방전 — 조준이 걸린 적에게 낙뢰(퀄업 연출 2026-10-07)
+            TickWp(dt);   // 무기 7종 퀄업 연출
             for (int i = _spits.Count - 1; i >= 0; i--)
             {
                 var (fx, target, from, t) = _spits[i];

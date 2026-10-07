@@ -3634,7 +3634,8 @@ namespace Game.Module.InGame
             me.SetInvulnerable(IsInvulnerable);
             // 윤곽은 **스킬이 준 무적**에만 켠다(기획 2026-09-15). 방 입장·빙의 직후·카드 무적까지
             // 켜니 캐릭터가 수시로 허옇게 번쩍여 지저분했다 — 무적이라고 다 그리는 게 아니다.
-            me.SetInvulnAura(_skillInvuln > 0f);
+            // 호퍼(기관단총) 도약 무적은 몸 바깥 윤곽(hsinv)이 대신 말한다 — 몸을 덮는 윤곽은 끈다
+            me.SetInvulnAura(_skillInvuln > 0f && _hsInvFx == null);
             // 몸을 갈아타면 아바타가 바뀐다. 물려받지 못한 쪽에 점멸이 남으면
             // 쓰지도 않는 몸이 계속 깜빡인다.
             if (_ghost != null && _ghost != me) { _ghost.SetInvulnerable(false); _ghost.SetInvulnAura(false); }
@@ -6398,6 +6399,8 @@ namespace Game.Module.InGame
             if (shot == null) return;
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
+            // 난사 중이면 굵은 탄 대신 가는 예광탄(퀄업 연출 2026-10-07)
+            kind = WpTracerShot(attacker, shot, fromPlayer, attacker.MuzzlePosition, kind);
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -6792,7 +6795,8 @@ namespace Game.Module.InGame
                 if (mine != null) _stunFx[me] = mine;
             }
 
-            bool wantShield = me != null && me.IsAlive && me.Shield > 0;
+            // 코만도(기관총) 방벽이 서 있으면 거품을 겹쳐 그리지 않는다
+            bool wantShield = me != null && me.IsAlive && me.Shield > 0 && !IsCmWallShowing;
             if (wantShield)
             {
                 if (_shieldFx == null || !_shieldFx.IsActive)
@@ -6804,6 +6808,7 @@ namespace Game.Module.InGame
 
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
+            if (kind == WpTracerKind) { WpTracerHit(at); return; }   // 난사 예광탄 — 작은 코어만
             // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
             // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
             _pfx?.Hit(at, ParticleElement.Fire, 0.8f);
@@ -7814,7 +7819,7 @@ namespace Game.Module.InGame
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit)
             => ShowDamage(at, damage, toEnemy, crit, false);
 
-        /// <param name="weak">약점을 찔렀다 — 치명타처럼 크게, 초록으로 뜬다.</param>
+        /// <param name="weak">약점을 찔렀다 — 빨강으로 뜬다(주식처럼 오름 = 빨강).</param>
         /// <param name="dull">안 맞는 몸으로 때렸다 — 작고 흐리게 뜬다(치명타면 치명타가 이긴다).</param>
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak, bool dull = false)
         {

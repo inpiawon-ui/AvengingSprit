@@ -245,7 +245,7 @@ namespace Game.Module.InGame
         {
             // 표적은 이미 몸에 붙어 돌고 있다 — 처형 순간에 하나 더 띄우면 겹친다.
             // 처형은 **터짐**으로 보여 준다.
-            PlayFx("shatter", victim.Position, 120f, loop: false);
+            if (!WpExecute(victim)) PlayFx("shatter", victim.Position, 120f, loop: false);
             // Sandbox — 테스트 판에서는 즉사가 안 터진다 (지울 때 이 줄도 함께)
             if (SandboxBlocksExecute) return;
             if (!victim.IsBoss && !victim.IsElite) { KillEnemy(victim); return; }

@@ -127,7 +127,8 @@ namespace Game.Module.InGame
                 {
                     u.MarkPhantom();
                     // 나타나는 순간에도 표가 나야 한다 — 연기 위에 한 번 더 터뜨린다.
-                    PlayFx("burst", u.Position, 120f, loop: false);
+                    // (퀄업 연출이 세울 때는 그쪽이 바닥 펄스 · 절삭으로 대신한다)
+                    if (!_wpQuietSummon) PlayFx("burst", u.Position, 120f, loop: false);
                 }
             }
         }
@@ -165,7 +166,7 @@ namespace Game.Module.InGame
 
             _summons.Add(new Summon { U = u, Life = life, LifeMax = life, Drains = drains,
                                       Attacks = attacks, Mobile = mobile, Taunt = taunt });
-            PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
+            if (!_wpQuietSummon) PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
         }
 
         // ── 굴리기 ───────────────────────────────────────────
