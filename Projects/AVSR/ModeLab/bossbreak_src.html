@@ -1,0 +1,754 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVSR 보스 빙의전</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;700&family=Silkscreen&display=swap">
+<style>
+/* 레이아웃: 왼쪽 세로 게임 화면(9:16) + 오른쪽 이번 문제 · 규칙 · 기록. 좁으면 위아래. 아케이드 밤 한 톤. */
+:root {
+  --bg: #0e0b19; --panel: #18142c; --panel2: #221c3d; --line: #332b58;
+  --fg: #eeeaff; --muted: #a39cc9; --gold: #ffd055; --ghost: #8fd6ff; --ok: #6be3a4;
+  --blade: #f2c94c; --force: #ff6b5a; --magic: #6fa8ff;
+  --f-display: "Do Hyeon", "Noto Sans KR", system-ui, sans-serif;
+  --f-body: "Noto Sans KR", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--f-body); font-size: 14px; line-height: 1.6; }
+[hidden] { display: none !important; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 40px; display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+h1 { font-family: var(--f-display); font-weight: 400; font-size: 28px; margin: 0; }
+.sub { color: var(--muted); font-size: 13px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { font-family: var(--f-display); font-size: 16px; background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--gold); color: #1a1400; border-color: var(--gold); }
+.tab .st { color: var(--gold); margin-left: 4px; font-size: 13px; }
+.tab[aria-selected="true"] .st { color: #6b4f00; }
+button:focus-visible { outline: 2px solid var(--ghost); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 780px) { .main { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; width: 100%; max-width: 400px; aspect-ratio: 9 / 16; justify-self: center; touch-action: none; user-select: none; -webkit-user-select: none; }
+canvas { width: 100%; height: 100%; display: block; border-radius: 14px; background: #07060d; }
+.act { position: absolute; right: 4%; bottom: 3%; width: 22%; aspect-ratio: 1; border-radius: 50%; border: 0; font-family: var(--f-display); font-size: clamp(14px, 4.4vw, 19px); line-height: 1.1; cursor: pointer; background: var(--gold); color: #1a1400; box-shadow: 0 0 0 3px rgba(0,0,0,.35); }
+.act.throw { background: #ff7a59; color: #1a0800; }
+.act.off { background: #3a3358; color: #8d86b3; }
+.overlay { position: absolute; inset: 0; border-radius: 14px; background: rgba(9, 7, 18, .9); display: grid; place-content: center; gap: 12px; padding: 22px; text-align: center; overflow: auto; }
+.overlay h2 { font-family: var(--f-display); font-weight: 400; font-size: 27px; margin: 0; }
+.overlay .eyebrow { color: var(--muted); font-size: 12.5px; letter-spacing: .06em; }
+.overlay p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.overlay .q { color: var(--fg); font-size: 15px; background: var(--panel2); border-radius: 10px; padding: 10px 12px; text-align: left; }
+.overlay .q b { color: var(--gold); }
+.overlay .hint { color: var(--ok); font-size: 13.5px; }
+.overlay .stars { font-size: 30px; letter-spacing: 4px; color: var(--gold); }
+.overlay .stars i { color: #3a3358; font-style: normal; }
+.overlay .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.overlay button { font-family: var(--f-display); font-size: 19px; padding: 8px 22px; border-radius: 10px; border: 0; background: var(--gold); color: #1a1400; cursor: pointer; }
+.overlay button.ghostbtn { background: transparent; color: var(--ok); border: 1px solid var(--ok); font-size: 15px; padding: 6px 14px; }
+.side { display: grid; gap: 12px; min-width: 0; }
+.card { background: var(--panel); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; min-width: 0; }
+.card h2 { font-family: var(--f-display); font-weight: 400; font-size: 22px; margin: 0; }
+.card h3 { font-family: var(--f-display); font-weight: 400; font-size: 17px; margin: 0; color: var(--muted); }
+ul.rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.cycle { display: flex; align-items: center; gap: 8px; font-family: var(--f-display); font-size: 18px; flex-wrap: wrap; }
+.cycle .force { color: var(--force); } .cycle .blade { color: var(--blade); } .cycle .magic { color: var(--magic); }
+.log { display: grid; gap: 4px; font-size: 13.5px; max-height: 200px; overflow: auto; }
+.log div { padding: 4px 8px; border-radius: 6px; background: var(--panel2); }
+.log div:first-child { outline: 1px solid var(--gold); }
+.keys { color: var(--muted); font-size: 12.5px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>보스 빙의전</h1>
+    <span class="sub">보스가 무기를 준다 — 방패 색을 이기는 부하를 빼앗아 깨라 · 시험판(HTML)</span>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <div class="main">
+    <div class="stage" id="stage">
+      <canvas id="cv" width="360" height="640" aria-label="게임 화면"></canvas>
+      <button class="act off" id="act" type="button">빙의</button>
+      <div class="overlay" id="ov"></div>
+    </div>
+    <div class="side">
+      <div class="card">
+        <h2>규칙은 하나</h2>
+        <div class="cycle"><span class="force">파워</span>→<span class="blade">무기</span>→<span class="magic">마법</span>→<span class="force">파워</span></div>
+        <ul class="rules">
+          <li>보스 방패는 <b>그 색을 이기는 색</b>으로만 깨진다. 마법 방패면 무기, 파워 방패면 마법, 무기 방패면 파워. 다른 색은 <b>0</b> — 「막힘」</li>
+          <li>열쇠는 보스가 불러낸 <b>부하</b>다. 맞는 색 부하를 빼앗아 그 몸으로 방패를 친다</li>
+          <li><b>방패를 깨면 보스 체력이 한 칸</b> 깎이고, 보스가 잠깐 쓰러진다. 일어나면 <b>새 색 방패</b> — 몸을 다시 골라야 한다</li>
+          <li><b>나가기 = 몸 던지기.</b> 지금 몸을 보스에게 던져 그 색으로 방패에 큰 피해를 준다. 체력이 많이 남은 몸일수록 세다</li>
+          <li>열쇠 부하가 죽으면 보스 방패가 회복되고, 열쇠는 먼 곳에 다시 나온다 — 열쇠를 함부로 죽이지 마라</li>
+          <li>유령은 맞지 않지만 에너지가 초당 3 줄어든다. 몸이 죽으면 −20. 0 이면 실패</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>지금 일어난 일</h3>
+        <div class="log" id="log"></div>
+      </div>
+      <div class="card">
+        <h3>조작</h3>
+        <div class="keys">이동: 화면을 끌거나 WASD·방향키 · 멈추면 자동 공격(보스가 닿으면 보스부터) · 노란 버튼(스페이스): 유령일 때 빙의, 몸일 때 던지기 · P 일시정지</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ⚠ 이 파일은 원본이다 — 그림은 build.py 가 아래 {} 자리에 넣는다. 해 볼 파일은 AVSR_BossBreak.html
+const SPR = /*SPRITES*/{};
+const IMG = {};
+for (const k in SPR) { const i = new Image(); i.src = SPR[k]; IMG[k] = i; }
+
+const W = 360, H = 640, FT = 78, FB = 628, FL = 14, FR = 346;
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+ctx.imageSmoothingEnabled = false;
+
+const AFF_NAME = { blade: '무기', force: '파워', magic: '마법' };
+const AFF_COL = { blade: '#f2c94c', force: '#ff6b5a', magic: '#6fa8ff' };
+// 파워 → 무기 → 마법 → 파워 (화살표는 「이긴다」)
+const BEATS = { force: 'blade', blade: 'magic', magic: 'force' };
+const KEY_OF = { blade: 'force', magic: 'blade', force: 'magic' };   // 이 방패를 깨는 색
+const beats = (a, b) => BEATS[a] === b;
+function affMul(a, b) { if (!a || !b || a === b) return 1; return beats(a, b) ? 1.3 : 0.7; }
+
+const DEF = {
+  gangster:  { name: '갱스터', aff: 'blade', hp: 80,  atk: 9,  range: 160, cd: .6,  spd: 55, kind: '원거리' },
+  ninja:     { name: '닌자', aff: 'blade', hp: 70,  atk: 14, range: 46,  cd: .45, spd: 95, kind: '근접' },
+  amazon:    { name: '아마존', aff: 'blade', hp: 90,  atk: 16, range: 48,  cd: .5,  spd: 80, kind: '근접' },
+  robot:     { name: '로봇', aff: 'force', hp: 130, atk: 12, range: 170, cd: .8,  spd: 40, kind: '원거리' },
+  baseball:  { name: '야구선수', aff: 'force', hp: 120, atk: 18, range: 50,  cd: .6,  spd: 70, kind: '근접' },
+  guru:      { name: '구루', aff: 'force', hp: 90,  atk: 11, range: 160, cd: .7,  spd: 50, kind: '원거리' },
+  snowwoman: { name: '설녀', aff: 'magic', hp: 75,  atk: 12, range: 180, cd: .7,  spd: 55, kind: '원거리' },
+  dragoon:   { name: '드라군', aff: 'magic', hp: 85,  atk: 13, range: 170, cd: .75, spd: 55, kind: '원거리' },
+  vampire:   { name: '흡혈귀', aff: 'magic', hp: 95,  atk: 15, range: 48,  cd: .5,  spd: 80, kind: '근접' },
+  crusher:   { name: '크러셔', boss: 1 },
+  kingpin:   { name: '킹핀', boss: 1 },
+  python:    { name: '파이썬', boss: 1 },
+};
+const isMelee = d => d.kind === '근접';
+
+// ─────────────────────────────────────────────────────────
+// 스테이지 — 문제가 다른 다섯 판
+//   shields[i] : i 번째 페이즈의 방패 색. 페이즈 하나 = 보스 체력 한 칸
+//   minions[i] : 그 페이즈에 서는 부하
+// ─────────────────────────────────────────────────────────
+const STAGES = [
+  { type: 'basic', title: '색을 맞춰라',
+    problem: '크러셔의 방패는 <b>파워</b>다. 셋 중 누구의 몸이어야 방패가 깨질까?',
+    hint: '파워를 이기는 색은 마법. 설녀를 빼앗아라. 방패가 얼마 안 남으면 던져서 마무리',
+    bosses: [{ key: 'crusher', x: 180, shields: ['force', 'force'] }],
+    minions: [['snowwoman', 'robot', 'ninja'], ['vampire', 'gangster', 'baseball']],
+    showKey: true, pattern: 2.6, parTime: 45 },
+  { type: 'basic', title: '바뀌는 방패',
+    problem: '킹핀은 쓰러졌다 일어날 때마다 <b>방패 색을 바꾼다</b>. 무기 → 마법 → 무기. 지금 몸이 언제 쓸모없어지는지 보고 갈아타라',
+    hint: '방패가 깨지기 직전에 던지면 그 몸을 끝까지 쓰고 버릴 수 있다. 쓰러진 3초 동안 다음 열쇠 앞으로',
+    bosses: [{ key: 'kingpin', x: 180, shields: ['blade', 'magic', 'blade'] }],
+    minions: [['baseball', 'gangster', 'dragoon'], ['amazon', 'guru', 'vampire'], ['robot', 'ninja', 'snowwoman']],
+    showKey: true, pattern: 2.2, parTime: 60 },
+  { type: 'guard', title: '열쇠를 지켜라',
+    problem: '파이썬은 <b>열쇠 부하를 노려 내리찍는다</b>. 열쇠가 죽으면 방패가 회복된다. 열쇠는 둘 — 근접 하나, 원거리 하나',
+    hint: '빨간 원이 열쇠 위에 뜨면 바로 그 몸을 빼앗아 원 밖으로 나와라. 남은 열쇠 하나는 보험이다',
+    bosses: [{ key: 'python', x: 180, shields: ['magic', 'force'] }],
+    minions: [['amazon', 'gangster', 'robot', 'snowwoman'], ['vampire', 'dragoon', 'baseball', 'ninja']],
+    keyHp: .45, showKey: false, pattern: 1.9, parTime: 60 },
+  { type: 'back', title: '등 뒤가 약점',
+    problem: '크러셔는 <b>나를 바라본다</b>. 방패는 앞쪽만 막는다 — 맞는 색으로, <b>등 뒤에서</b> 쳐야 깨진다',
+    hint: '보스가 천천히 돈다. 빠른 근접 몸이면 등 뒤를 붙어 다니기 쉽고, 원거리 몸은 멀리서 돌아 들어가야 한다',
+    bosses: [{ key: 'crusher', x: 180, y: 300, shields: ['force', 'blade'] }],
+    minions: [['vampire', 'snowwoman', 'robot'], ['baseball', 'guru', 'amazon']],
+    showKey: false, pattern: 2.6, parTime: 70, free: true },
+  { type: 'twin', title: '쌍둥이',
+    problem: '크러셔와 킹핀, 둘 다 쓰러뜨려야 체력이 깎인다. 한쪽 방패를 깨면 <b>6초 안에</b> 다른 쪽도 깨야 한다 — 늦으면 되살아난다',
+    hint: '한쪽을 깨기 직전까지만 깎아 두고, 다른 쪽 열쇠로 갈아타라. 그다음 던지기 하나로 남은 쪽을 마저 깨면 6초 안에 둘 다 깨진다',
+    bosses: [{ key: 'crusher', x: 100, shields: ['force', 'magic'], scale: .8 }, { key: 'kingpin', x: 262, shields: ['blade', 'force'], scale: .8 }],
+    minions: [['snowwoman', 'baseball', 'gangster', 'dragoon'], ['amazon', 'vampire', 'gangster', 'dragoon']],
+    showKey: false, pattern: 3.2, parTime: 100, window: 6 },
+];
+
+const SHIELD_HP = 180;
+const DOWN_SEC = 3;
+
+// ─────────────────────────────────────────────────────────
+// 상태
+// ─────────────────────────────────────────────────────────
+let G = null, stageIdx = 0, paused = false;
+const best = loadBest();
+function loadBest() { try { return JSON.parse(localStorage.getItem('avsr.bossbreak.best2') || '{}'); } catch (e) { return {}; } }
+function saveBest() { try { localStorage.setItem('avsr.bossbreak.best2', JSON.stringify(best)); } catch (e) {} }
+function log(msg) {
+  const el = document.getElementById('log');
+  const div = document.createElement('div'); div.textContent = msg; el.prepend(div);
+  while (el.children.length > 16) el.lastChild.remove();
+}
+function minion(key, x, y, hpMul = 1) {
+  const d = DEF[key], hp = Math.round(d.hp * hpMul);
+  return { key, d, x, y, hp, hpMax: hp, cd: .6 + Math.random() * .8, flash: 0, dead: false, bob: Math.random() * 6 };
+}
+function bodyFrom(u) { const d = u.d; return { key: u.key, d, x: u.x, y: u.y, hp: d.hp * 2, hpMax: d.hp * 2, atk: d.atk * 1.6, cd: 0, flash: 0 }; }
+
+// ─────────────────────────────────────────────────────────
+// 입력
+// ─────────────────────────────────────────────────────────
+const keys = new Set();
+addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  keys.add(e.key.toLowerCase());
+  if (e.key === ' ') pressAct();
+  if (e.key.toLowerCase() === 'p' && G && G.running) paused = !paused;
+});
+addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
+let joy = null;
+function toLocal(ev) { const r = cv.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * W, y: (ev.clientY - r.top) / r.height * H }; }
+cv.addEventListener('pointerdown', e => { const p = toLocal(e); joy = { id: e.pointerId, sx: p.x, sy: p.y, x: p.x, y: p.y }; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener('pointermove', e => { if (joy && e.pointerId === joy.id) { const p = toLocal(e); joy.x = p.x; joy.y = p.y; } });
+const endJoy = e => { if (joy && e.pointerId === joy.id) joy = null; };
+cv.addEventListener('pointerup', endJoy); cv.addEventListener('pointercancel', endJoy);
+document.getElementById('act').addEventListener('click', pressAct);
+function moveInput() {
+  let x = 0, y = 0;
+  if (keys.has('a') || keys.has('arrowleft')) x -= 1;
+  if (keys.has('d') || keys.has('arrowright')) x += 1;
+  if (keys.has('w') || keys.has('arrowup')) y -= 1;
+  if (keys.has('s') || keys.has('arrowdown')) y += 1;
+  if (joy) { const dx = joy.x - joy.sx, dy = joy.y - joy.sy, l = Math.hypot(dx, dy); if (l > 8) { x = dx / Math.max(l, 40); y = dy / Math.max(l, 40); } }
+  const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; }
+  return { x, y };
+}
+
+// ─────────────────────────────────────────────────────────
+// 판
+// ─────────────────────────────────────────────────────────
+function startStage(i) {
+  stageIdx = i;
+  const S = STAGES[i];
+  G = { S, running: true, t: 0, energy: 100, body: null, gx: 180, gy: 580, channel: 0, chTarget: null, target: null,
+        minions: [], shots: [], fx: [], texts: [], thrown: null, msg: null, msgT: 0,
+        phase: 0, segs: S.bosses[0].shields.length, down: 0,
+        possess: 0, throws: 0, deaths: 0, blocked: 0, keyLost: 0,
+        bosses: S.bosses.map(b => ({ key: b.key, x: b.x, home: b.x, y: b.y || 200, shields: b.shields, scale: b.scale || 1,
+                                      shield: SHIELD_HP, broken: false, brokenT: 0, face: Math.PI / 2, pat: 1.6 + Math.random(), tele: null, flash: 0 })) };
+  document.getElementById('log').innerHTML = '';
+  hideOverlay();
+  beginPhase(0);
+  log(`스테이지 ${i + 1} — ${S.title}. 유령으로 들어왔다`);
+}
+const curOf = B => B.shields[G.phase];
+function beginPhase(n) {
+  G.phase = n; G.down = 0;
+  for (const B of G.bosses) { B.shield = SHIELD_HP; B.broken = false; B.brokenT = 0; B.tele = null; B.pat = 1.6; }
+  const list = G.S.minions[n], xs = list.length === 4 ? [50, 133, 227, 310] : [70, 180, 290];
+  G.minions = list.map((k, i) => {
+    const key = G.bosses.some(B => beats(DEF[k].aff, curOf(B)));
+    const y = G.S.free ? 540 : 470 + (i % 2) * 40;
+    return minion(k, xs[i], y, key && G.S.keyHp ? G.S.keyHp : 1);
+  });
+  const desc = G.bosses.map(B => `${DEF[B.key].name} ${AFF_NAME[curOf(B)]} 방패(열쇠 ${AFF_NAME[KEY_OF[curOf(B)]]})`).join(' · ');
+  banner(G.bosses.length > 1 ? '방패 둘 — 6초 안에 둘 다' : `${AFF_NAME[curOf(G.bosses[0])]} 방패`, 1.6);
+  log(`방패를 세웠다 — ${desc}`);
+}
+function banner(text, sec) { G.msg = text; G.msgT = sec; }
+
+// ─────────────────────────────────────────────────────────
+// 빙의 · 던지기
+// ─────────────────────────────────────────────────────────
+function pressAct() {
+  if (!G || !G.running || paused || G.channel > 0 || G.thrown) return;
+  if (G.body) { throwBody(); return; }
+  if (G.target) { G.channel = .3; G.chTarget = G.target; }
+}
+function finishPossess() {
+  const u = G.chTarget; G.chTarget = null;
+  if (!u || u.dead) return;
+  G.minions.splice(G.minions.indexOf(u), 1);
+  G.body = bodyFrom(u); G.possess++;
+  ring(u.x, u.y, 60, '#8fd6ff');
+  const can = G.bosses.filter(B => beats(u.d.aff, curOf(B))).map(B => DEF[B.key].name);
+  log(`빙의 — ${u.d.name}(${AFF_NAME[u.d.aff]} · ${u.d.kind})${can.length ? ` · ${can.join(' · ')} 방패를 깰 수 있다` : ' · 지금 방패에는 막힌다'}`);
+}
+function nearestBoss(x, y, pred) {
+  let best = null, bd = 1e9;
+  for (const B of G.bosses) { if (pred && !pred(B)) continue; const d = Math.hypot(B.x - x, B.y - 40 - y); if (d < bd) { bd = d; best = B; } }
+  return best;
+}
+function throwBody() {
+  const b = G.body; G.body = null; G.gx = b.x; G.gy = b.y;
+  // 깰 수 있는 보스가 있으면 그쪽으로, 없으면 가까운 쪽
+  const tgt = nearestBoss(b.x, b.y, B => !B.broken && beats(b.d.aff, curOf(B))) || nearestBoss(b.x, b.y, B => !B.broken) || G.bosses[0];
+  G.thrown = { b, B: tgt, sx: b.x, sy: b.y, t: 0, dur: .32 };
+  G.throws++;
+}
+function landThrow() {
+  const T = G.thrown; G.thrown = null;
+  const dmg = Math.round(15 + T.b.hp * .2);   // 마무리 한 방 — 방패의 1/4 쯤. 이것만으로 깨지면 싸울 이유가 사라진다
+  puff(T.B.x, T.B.y - 40, AFF_COL[T.b.d.aff], 24);
+  log(`던지기 — ${T.b.d.name}(${AFF_NAME[T.b.d.aff]}) → ${DEF[T.B.key].name} · 위력 ${dmg} (남은 체력 ${Math.round(T.b.hp)} 비례)`);
+  hitBoss(T.B, dmg, T.b.d.aff, T.sx, T.sy, true);
+}
+function bodyDies() {
+  const b = G.body; G.body = null; G.gx = b.x; G.gy = b.y;
+  puff(b.x, b.y, '#ff8a7a', 16);
+  G.energy = Math.max(0, G.energy - 20); G.deaths++;
+  popText(G.gx, G.gy - 30, '-20', '#ff9a9a');
+  log(`${b.d.name} 몸이 죽었다 — 유령으로 돌아왔다 (−20)`);
+}
+
+// ─────────────────────────────────────────────────────────
+// 피해
+// ─────────────────────────────────────────────────────────
+function behind(B, fx, fy) {
+  const ax = fx - B.x, ay = fy - (B.y - 40), l = Math.hypot(ax, ay) || 1;
+  const dot = (ax / l) * Math.cos(B.face) + (ay / l) * Math.sin(B.face);
+  return dot < -0.34;      // 앞에서 110° 넘게 돌아가 있으면 등 뒤
+}
+function hitBoss(B, dmg, aff, fx, fy, isThrow) {
+  if (G.down > 0 || B.broken) { popText(B.x, B.y - 110, '쓰러짐', '#a39cc9'); return; }
+  const cur = curOf(B);
+  B.flash = .1;
+  if (!beats(aff, cur)) { G.blocked++; popText(B.x + (Math.random() * 40 - 20), B.y - 100, '막힘 0', '#8d86b3'); return; }
+  if (G.S.type === 'back' && !behind(B, fx, fy)) { G.blocked++; popText(B.x + (Math.random() * 40 - 20), B.y - 100, '정면 막힘', '#8d86b3'); return; }
+  B.shield -= dmg;
+  popText(B.x + (Math.random() * 40 - 20), B.y - 100, (isThrow ? '던짐 ' : '') + Math.round(dmg), AFF_COL[aff]);
+  if (B.shield <= 0) breakShield(B);
+}
+function breakShield(B) {
+  ring(B.x, B.y, 120, AFF_COL[curOf(B)]); puff(B.x, B.y - 40, AFF_COL[curOf(B)], 30);
+  B.shield = 0; B.broken = true; B.tele = null;
+  if (G.bosses.some(o => !o.broken)) {
+    B.brokenT = G.S.window || 6;
+    banner(`${DEF[B.key].name} 깨짐! ${B.brokenT}초 안에 다른 쪽도`, 1.6);
+    log(`${DEF[B.key].name} 방패를 깼다 — ${B.brokenT}초 안에 다른 쪽도 깨야 한다`);
+    return;
+  }
+  G.segs--;
+  G.shots = G.shots.filter(s => s.from === 'p');
+  if (G.segs <= 0) { winStage(); return; }
+  G.down = DOWN_SEC;
+  banner('방패를 깼다! 보스 체력 −1칸', 1.6);
+  log(`방패를 깼다 — 보스 체력 한 칸, ${DOWN_SEC}초 쓰러짐. 일어나면 새 방패`);
+}
+function bossOfKey(aff) { return G.bosses.find(B => !B.broken && beats(aff, curOf(B))); }
+function killMinion(m, why) {
+  if (m.dead) return;
+  m.dead = true; puff(m.x, m.y, '#b6aed6', 10);
+  const B = G.down > 0 ? null : bossOfKey(m.d.aff);
+  if (!B) { log(`${m.d.name}(${AFF_NAME[m.d.aff]}) 쓰러짐${why ? ' — ' + why : ''}`); return; }
+  // 열쇠를 잃었다 — 방패 회복, 열쇠는 먼 곳에 바로 다시
+  G.keyLost++;
+  const before = B.shield; B.shield = Math.min(SHIELD_HP, B.shield + SHIELD_HP * .4);
+  const me = G.body || { x: G.gx, y: G.gy };
+  const spot = me.x < 180 ? { x: 320, y: G.S.free ? 120 : 600 } : { x: 40, y: G.S.free ? 120 : 600 };
+  const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === m.d.aff);
+  const nk = pool[(Math.random() * pool.length) | 0];
+  G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
+  log(`열쇠 ${m.d.name}(${AFF_NAME[m.d.aff]})를 잃었다${why ? ' — ' + why : ''} → ${DEF[B.key].name} 방패 회복(${Math.round(before)}→${Math.round(B.shield)}), 새 열쇠 ${DEF[nk].name}는 먼 곳에`);
+  popText(B.x, B.y - 120, '방패 회복', '#ff8a8a');
+}
+function hitMinion(m, dmg, aff) {
+  if (m.dead) return;
+  const mul = affMul(aff, m.d.aff), d = Math.max(1, Math.round(dmg * mul));
+  m.hp -= d; m.flash = .12;
+  popText(m.x, m.y - 46, d, mul > 1 ? '#ff6464' : mul < 1 ? '#6fa8ff' : '#fff');
+  if (m.hp <= 0) killMinion(m, '내가 쓰러뜨렸다');
+}
+function hitPlayer(dmg, aff) {
+  const b = G.body; if (!b || G.channel > 0) return;
+  const d = Math.max(1, Math.round(dmg * affMul(aff, b.d.aff)));
+  b.hp -= d; b.flash = .12; popText(b.x, b.y - 46, d, '#ffb0b0');
+  if (b.hp <= 0) bodyDies();
+}
+function puff(x, y, col, n) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, s = 40 + Math.random() * 140; G.fx.push({ t: 'p', x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: .5, max: .5, col, r: 2 + Math.random() * 3 }); } }
+function ring(x, y, r, col) { G.fx.push({ t: 'r', x, y, r, life: .4, max: .4, col }); }
+function popText(x, y, txt, col) { G.texts.push({ x, y, txt: String(txt), col, life: .8 }); }
+function shoot(x, y, tx, ty, spd, from, dmg, aff) { const dx = tx - x, dy = ty - y, l = Math.hypot(dx, dy) || 1; G.shots.push({ x, y, vx: dx / l * spd, vy: dy / l * spd, from, dmg, aff, life: 3, ox: x, oy: y }); }
+function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+// ─────────────────────────────────────────────────────────
+// 갱신
+// ─────────────────────────────────────────────────────────
+function move(o, dx, dy) {
+  const minY = G.S.free ? FT + 20 : 236;
+  o.x = clamp(o.x + dx, FL + 12, FR - 12); o.y = clamp(o.y + dy, minY, FB - 10);
+  if (G.S.free) for (const B of G.bosses) {           // 보스 몸에 겹치지 않게 밀어낸다
+    const ax = o.x - B.x, ay = o.y - (B.y - 10), l = Math.hypot(ax, ay);
+    if (l < 58) { o.x = B.x + ax / (l || 1) * 58; o.y = B.y - 10 + ay / (l || 1) * 58; }
+  }
+}
+function update(dt) {
+  G.t += dt; if (G.msgT > 0) G.msgT -= dt;
+  const mv = moveInput(), moving = Math.hypot(mv.x, mv.y) > .1;
+  if (G.channel > 0) { G.channel -= dt; if (G.channel <= 0) finishPossess(); }
+  if (G.thrown) { G.thrown.t += dt; if (G.thrown.t >= G.thrown.dur) landThrow(); }
+  if (!G.running) return;
+
+  if (G.body) {
+    const b = G.body, spd = b.d.spd * 1.6;
+    if (G.channel <= 0) { const p = { x: b.x, y: b.y }; move(p, mv.x * spd * dt, mv.y * spd * dt); b.x = p.x; b.y = p.y; }
+    b.cd -= dt; if (b.flash > 0) b.flash -= dt;
+    if (!moving && b.cd <= 0) {
+      // 닿는 보스 중 깰 수 있는 쪽부터, 없으면 닿는 보스, 그것도 없으면 가까운 부하
+      const reach = B => Math.hypot(B.x - b.x, B.y - 40 - b.y) - 44 * B.scale <= b.d.range + 10;
+      let tgt = G.bosses.find(B => reach(B) && !B.broken && beats(b.d.aff, curOf(B))) || G.bosses.find(B => reach(B) && !B.broken);
+      if (!tgt) { let bd = b.d.range + 10; for (const m of G.minions) { if (m.dead) continue; const d = Math.hypot(m.x - b.x, m.y - b.y); if (d < bd) { bd = d; tgt = m; } } }
+      if (tgt) {
+        b.cd = b.d.cd;
+        const isB = !!tgt.shields, tx = tgt.x, ty = isB ? tgt.y - 40 : tgt.y - 24;
+        if (isMelee(b.d)) { if (isB) hitBoss(tgt, b.atk, b.d.aff, b.x, b.y); else hitMinion(tgt, b.atk, b.d.aff); G.fx.push({ t: 's', x: b.x, y: b.y - 20, a: Math.atan2(ty - b.y, tx - b.x), life: .15, max: .15 }); }
+        else shoot(b.x, b.y - 26, tx, ty, 420, 'p', b.atk, b.d.aff);
+      }
+    }
+  } else {
+    const p = { x: G.gx, y: G.gy }; move(p, mv.x * 170 * dt, mv.y * 170 * dt); G.gx = p.x; G.gy = p.y;
+    G.energy = Math.max(0, G.energy - 3 * dt);
+  }
+
+  G.target = null;
+  if (!G.body && G.channel <= 0 && !G.thrown) {
+    let bd = 115;
+    for (const m of G.minions) { if (m.dead) continue; const d = Math.hypot(m.x - G.gx, m.y - G.gy); if (d < bd) { bd = d; G.target = m; } }
+  }
+
+  for (const m of G.minions) {
+    if (m.dead) continue;
+    m.bob += dt * 6; if (m.flash > 0) m.flash -= dt;
+    const b = G.body; if (!b) continue;
+    const dx = b.x - m.x, dy = b.y - m.y, dist = Math.hypot(dx, dy) || 1;
+    if (dist > m.d.range * .85) { m.x += dx / dist * m.d.spd * .6 * dt; m.y = Math.max(G.S.free ? FT + 20 : 236, m.y + dy / dist * m.d.spd * .6 * dt); }
+    m.cd -= dt;
+    if (dist <= m.d.range + 8 && m.cd <= 0) {
+      m.cd = m.d.cd * 1.5;
+      if (isMelee(m.d)) hitPlayer(m.d.atk * .45, m.d.aff);
+      else shoot(m.x, m.y - 26, b.x, b.y - 26, 200, 'e', m.d.atk * .45, m.d.aff);
+    }
+  }
+  G.minions = G.minions.filter(m => !m.dead);
+
+  // 열쇠가 하나도 없으면(던졌거나 죽었거나) 1.5초 뒤 먼 곳에 새 열쇠 — 막혀서 못 깨는 판을 없앤다
+  if (G.down <= 0) for (const B of G.bosses) {
+    if (B.broken) continue;
+    const ka = KEY_OF[curOf(B)];
+    const have = G.minions.some(m => !m.dead && m.d.aff === ka) || (G.body && G.body.d.aff === ka)
+              || (G.chTarget && G.chTarget.d.aff === ka);
+    if (have) { B.keyWait = 0; continue; }
+    B.keyWait = (B.keyWait || 0) + dt;
+    if (B.keyWait >= 1.5) {
+      B.keyWait = 0;
+      const me = G.body || { x: G.gx, y: G.gy };
+      const spot = me.x < 180 ? { x: 320, y: G.S.free ? 120 : 600 } : { x: 40, y: G.S.free ? 120 : 600 };
+      const pool = Object.keys(DEF).filter(k => !DEF[k].boss && DEF[k].aff === ka);
+      const nk = pool[(Math.random() * pool.length) | 0];
+      G.minions.push(minion(nk, spot.x, spot.y, G.S.keyHp || 1));
+      log(`${DEF[B.key].name}의 열쇠가 없다 — 먼 곳에 ${DEF[nk].name}(${AFF_NAME[ka]})가 나타났다`);
+    }
+  }
+  // 쌍둥이 — 한쪽만 깨진 채 시간이 지나면 되살아난다
+  for (const B of G.bosses) {
+    if (B.flash > 0) B.flash -= dt;
+    if (B.broken && B.brokenT > 0 && G.down <= 0) {
+      B.brokenT -= dt;
+      if (B.brokenT <= 0) { B.broken = false; B.shield = SHIELD_HP; log(`늦었다 — ${DEF[B.key].name} 방패가 되살아났다`); banner(`${DEF[B.key].name} 방패 부활`, 1.4); }
+    }
+  }
+  if (G.down > 0) { G.down -= dt; if (G.down <= 0) beginPhase(G.phase + 1); }
+  else for (const B of G.bosses) if (!B.broken) bossAI(B, dt);
+
+  for (const s of G.shots) {
+    s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
+    if (s.x < FL || s.x > FR || s.y < FT || s.y > FB) s.life = 0;
+    if (s.life <= 0) continue;
+    if (s.from === 'p') {
+      let hit = false;
+      for (const B of G.bosses) if (Math.hypot(B.x - s.x, B.y - 40 - s.y) < 46 * B.scale) { hitBoss(B, s.dmg, s.aff, s.ox, s.oy); s.life = 0; hit = true; break; }
+      if (hit) continue;
+      for (const m of G.minions) { if (!m.dead && Math.hypot(m.x - s.x, m.y - 24 - s.y) < 18) { hitMinion(m, s.dmg, s.aff); s.life = 0; break; } }
+    } else if (G.body && Math.hypot(G.body.x - s.x, G.body.y - 26 - s.y) < 16) { hitPlayer(s.dmg, s.aff); s.life = 0; }
+  }
+  G.shots = G.shots.filter(s => s.life > 0);
+  for (const f of G.fx) { f.life -= dt; if (f.t === 'p') { f.x += f.vx * dt; f.y += f.vy * dt; f.vx *= .9; f.vy *= .9; } }
+  G.fx = G.fx.filter(f => f.life > 0);
+  for (const t of G.texts) { t.life -= dt; t.y -= 28 * dt; }
+  G.texts = G.texts.filter(t => t.life > 0);
+
+  if (G.energy <= 0 && G.running) loseStage('유령 에너지가 다했다');
+}
+function bossAI(B, dt) {
+  const tgt = G.body || { x: G.gx, y: G.gy };
+  if (G.S.type === 'back') {
+    // 나를 향해 천천히 돈다 — 등 뒤로 돌아갈 틈이 이 속도에서 나온다
+    const want = Math.atan2(tgt.y - (B.y - 40), tgt.x - B.x);
+    let d = want - B.face; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+    B.face += clamp(d, -.6 * dt, .6 * dt);    // 등 뒤에서 멈추면 2초쯤 칠 틈이 생기는 속도
+  } else {
+    B.x += clamp(tgt.x - B.x, -1, 1) * 26 * dt;
+    // 쌍둥이는 제자리 근처만 — 둘이 가운데로 몰려 겹치면 어느 방패가 무엇인지 안 읽힌다
+    B.x = G.bosses.length > 1 ? clamp(B.x, B.home - 25, B.home + 25) : clamp(B.x, 80, 280);
+  }
+  if (B.tele) {
+    B.tele.t -= dt;
+    if (B.tele.t <= 0) {
+      const T = B.tele; B.tele = null;
+      ring(T.x, T.y + 20, T.r, '#ff6464');
+      if (G.body && Math.hypot(G.body.x - T.x, G.body.y - T.y) < T.r) hitPlayer(34, null);
+      if (T.minions) for (const m of G.minions) if (!m.dead && Math.hypot(m.x - T.x, m.y - T.y) < T.r) killMinion(m, '보스가 내리찍었다');
+    }
+    return;
+  }
+  B.pat -= dt; if (B.pat > 0) return;
+  B.pat = G.S.pattern;
+  // 지키기 — 열쇠를 노린다
+  if (G.S.type === 'guard') {
+    const keysAlive = G.minions.filter(m => !m.dead && beats(m.d.aff, curOf(B)));
+    if (keysAlive.length && Math.random() < .65) { const k = keysAlive[(Math.random() * keysAlive.length) | 0]; B.tele = { x: k.x, y: k.y, r: 58, t: 1.3, max: 1.3, minions: true }; return; }
+  }
+  const r = Math.random();
+  const ox = B.x, oy = B.y - 40;
+  if (r < .45) B.tele = { x: tgt.x, y: tgt.y, r: 62, t: 1.0, max: 1.0, minions: G.S.type === 'guard' };
+  else if (r < .75) { for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283 + Math.random() * .3; G.shots.push({ x: ox, y: oy, vx: Math.cos(a) * 150, vy: Math.sin(a) * 150, from: 'e', dmg: 9, aff: null, life: 4 }); } }
+  else { const base = Math.atan2(tgt.y - oy, tgt.x - ox); for (let i = -2; i <= 2; i++) { const a = base + i * .2; G.shots.push({ x: ox, y: oy, vx: Math.cos(a) * 210, vy: Math.sin(a) * 210, from: 'e', dmg: 9, aff: null, life: 4 }); } }
+}
+
+// ─────────────────────────────────────────────────────────
+// 그리기
+// ─────────────────────────────────────────────────────────
+function drawSprite(key, x, y, scale = 1, alpha = 1) {
+  const img = IMG[key]; if (!img || !img.complete || !img.width) return;
+  const w = img.width * scale * .85, h = img.height * scale * .85;
+  ctx.globalAlpha = alpha; ctx.drawImage(img, Math.round(x - w / 2), Math.round(y - h), Math.round(w), Math.round(h)); ctx.globalAlpha = 1;
+}
+function gem(x, y, aff, r = 6) {
+  ctx.fillStyle = AFF_COL[aff]; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1; ctx.stroke();
+}
+function bar(x, y, w, v, col) { ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x - w / 2, y, w, 4); ctx.fillStyle = col; ctx.fillRect(x - w / 2, y, w * clamp(v, 0, 1), 4); }
+function text(t, x, y, font, col, align = 'center') { ctx.font = font; ctx.textAlign = align; ctx.fillStyle = col; ctx.fillText(t, x, y); }
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#1d1a2c'; ctx.fillRect(FL, FT, FR - FL, FB - FT);
+  ctx.strokeStyle = '#262238'; ctx.lineWidth = 1;
+  for (let x = FL; x <= FR; x += 30) { ctx.beginPath(); ctx.moveTo(x + .5, FT); ctx.lineTo(x + .5, FB); ctx.stroke(); }
+  for (let y = FT; y <= FB; y += 30) { ctx.beginPath(); ctx.moveTo(FL, y + .5); ctx.lineTo(FR, y + .5); ctx.stroke(); }
+  if (G && !G.S.free) { ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(FL, 236); ctx.lineTo(FR, 236); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.strokeStyle = '#3b3460'; ctx.lineWidth = 3; ctx.strokeRect(FL, FT, FR - FL, FB - FT);
+  if (!G) return;
+
+  for (const B of G.bosses) if (B.tele) {
+    const k = 1 - B.tele.t / B.tele.max;
+    ctx.fillStyle = 'rgba(255,80,80,.16)'; ctx.beginPath(); ctx.arc(B.tele.x, B.tele.y, B.tele.r, 0, 6.283); ctx.fill();
+    ctx.fillStyle = 'rgba(255,80,80,.34)'; ctx.beginPath(); ctx.arc(B.tele.x, B.tele.y, B.tele.r * k, 0, 6.283); ctx.fill();
+  }
+  const list = G.bosses.map(B => ({ y: B.y, f: () => drawBoss(B) }));
+  for (const m of G.minions) list.push({ y: m.y, f: () => drawMinion(m) });
+  if (G.body) list.push({ y: G.body.y, f: drawBody });
+  list.sort((a, b) => a.y - b.y).forEach(o => o.f());
+  if (G.thrown) {
+    const T = G.thrown, k = clamp(T.t / T.dur, 0, 1);
+    const x = T.sx + (T.B.x - T.sx) * k, y = T.sy + (T.B.y - 30 - T.sy) * k - Math.sin(k * 3.14) * 60;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(k * 9); drawSprite(T.b.key, 0, 30, 1, 1); ctx.restore();
+  }
+  if (!G.body) drawGhost();
+  for (const s of G.shots) { ctx.fillStyle = s.from === 'p' ? (AFF_COL[s.aff] || '#ffe28a') : '#ff6464'; ctx.beginPath(); ctx.arc(s.x, s.y, s.from === 'p' ? 3.5 : 4, 0, 6.283); ctx.fill(); }
+  for (const f of G.fx) {
+    const a = f.life / f.max; ctx.globalAlpha = a;
+    if (f.t === 'p') { ctx.fillStyle = f.col; ctx.fillRect(f.x - f.r / 2, f.y - f.r / 2, f.r, f.r); }
+    else if (f.t === 'r') { ctx.strokeStyle = f.col; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(f.x, f.y - 30, f.r * (1.3 - a * .5), 0, 6.283); ctx.stroke(); }
+    else if (f.t === 's') { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(f.x, f.y, 30, f.a - .8, f.a + .8); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  for (const t of G.texts) { ctx.globalAlpha = Math.min(1, t.life * 2); ctx.font = '700 14px "Noto Sans KR"'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.strokeText(t.txt, t.x, t.y); ctx.fillStyle = t.col; ctx.fillText(t.txt, t.x, t.y); }
+  ctx.globalAlpha = 1;
+  drawHud(); drawHint();
+  if (G.msgT > 0) {
+    ctx.globalAlpha = Math.min(1, G.msgT * 2);
+    ctx.fillStyle = 'rgba(10,8,22,.86)'; ctx.fillRect(20, 380, 320, 40);
+    text(G.msg, 180, 407, '21px "Do Hyeon"', '#ffd055');
+    ctx.globalAlpha = 1;
+  }
+  if (paused) { ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(0, 0, W, H); text('일시정지 (P)', 180, 320, '28px "Do Hyeon"', '#fff'); }
+}
+function drawBoss(B) {
+  const cur = curOf(B), cy = B.y - 46 * B.scale, R = 64 * B.scale;
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(B.x, B.y, 44 * B.scale, 11, 0, 0, 6.283); ctx.fill();
+  if (G.down > 0) { drawSprite(B.key, B.x, B.y + 8, .9 * B.scale, .55); text(`쓰러짐 ${G.down.toFixed(1)}`, B.x, B.y - 120 * B.scale, '15px "Do Hyeon"', '#a39cc9'); return; }
+  if (B.broken) {
+    drawSprite(B.key, B.x, B.y + 6, .9 * B.scale, .6);
+    text(`깨짐 · ${Math.max(0, B.brokenT).toFixed(1)}초`, B.x, B.y - 128 * B.scale, '17px "Do Hyeon"', B.brokenT < 2 ? '#ff6464' : '#ffd055');
+    return;
+  }
+  drawSprite(B.key, B.x, B.y, B.scale, B.flash > 0 ? .6 : 1);
+  ctx.strokeStyle = AFF_COL[cur]; ctx.lineWidth = 7;
+  if (G.S.type === 'back') {
+    // 앞쪽 220°만 막는다 — 뒤쪽 틈이 약점
+    ctx.beginPath(); ctx.arc(B.x, cy, R, B.face - 1.92, B.face + 1.92); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.arc(B.x, cy, R, B.face + 1.92, B.face + 4.36); ctx.stroke(); ctx.setLineDash([]);
+    const bx = B.x - Math.cos(B.face) * (R + 18), by = cy - Math.sin(B.face) * (R + 18);
+    text('약점', bx, by + 5, '14px "Do Hyeon"', '#fff');
+  } else { ctx.beginPath(); ctx.arc(B.x, cy, R, 0, 6.283); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(B.x, cy, R + 9, -1.57, -1.57 + 6.283 * clamp(B.shield / SHIELD_HP, 0, 1)); ctx.stroke();
+  const key = KEY_OF[cur], ly = B.y + 30, w = G.bosses.length > 1 ? 132 : 148;   // 발밑 — 위쪽은 HUD에 가린다
+  ctx.fillStyle = 'rgba(10,8,22,.85)'; ctx.fillRect(B.x - w / 2, ly - 18, w, 26);
+  gem(B.x - w / 2 + 12, ly - 5, cur);
+  text(`${AFF_NAME[cur]} 방패`, B.x - w / 2 + 22, ly + 1, '14px "Do Hyeon"', AFF_COL[cur], 'left');
+  text('←', B.x + w / 2 - 50, ly + 1, '14px "Do Hyeon"', '#a39cc9');
+  gem(B.x + w / 2 - 36, ly - 5, key);
+  text(AFF_NAME[key], B.x + w / 2 - 26, ly + 1, '14px "Do Hyeon"', AFF_COL[key], 'left');
+}
+function drawMinion(m) {
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(m.x, m.y, 15, 5, 0, 0, 6.283); ctx.fill();
+  const isKey = G.down <= 0 && !!bossOfKey(m.d.aff);
+  if (isKey && G.S.showKey) {
+    const g = ctx.createRadialGradient(m.x, m.y - 26, 4, m.x, m.y - 26, 40);
+    g.addColorStop(0, 'rgba(255,208,85,.45)'); g.addColorStop(1, 'rgba(255,208,85,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(m.x, m.y - 26, 40, 0, 6.283); ctx.fill();
+  }
+  drawSprite(m.key, m.x, m.y + Math.sin(m.bob), 1, m.flash > 0 ? .55 : 1);
+  bar(m.x, m.y - 68, 34, m.hp / m.hpMax, '#ff5a5a');
+  gem(m.x + 24, m.y - 66, m.d.aff);
+  text(`${m.d.name}·${m.d.kind}`, m.x, m.y + 15, '700 10px "Noto Sans KR"', '#c9c3ff');
+  if (isKey && G.S.showKey) text('▲ 열쇠', m.x, m.y - 76, '14px "Do Hyeon"', '#ffd055');
+  if (G.target === m) { ctx.strokeStyle = '#8fd6ff'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.arc(m.x, m.y - 26, 32, 0, 6.283); ctx.stroke(); ctx.setLineDash([]); }
+}
+function drawBody() {
+  const b = G.body;
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(b.x, b.y, 16, 5, 0, 0, 6.283); ctx.fill();
+  ctx.strokeStyle = 'rgba(143,214,255,.85)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(b.x, b.y, 21, 7, 0, 0, 6.283); ctx.stroke();
+  drawSprite(b.key, b.x, b.y, 1, b.flash > 0 ? .55 : 1);
+  bar(b.x, b.y - 68, 38, b.hp / b.hpMax, '#6be3a4');
+  gem(b.x + 26, b.y - 66, b.d.aff);
+}
+function drawGhost() {
+  drawSprite('ghost', G.gx, G.gy + Math.sin(G.t * 4) * 3, .8, G.channel > 0 ? .5 : .95);
+  if (G.chTarget) { ctx.strokeStyle = '#8fd6ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(G.gx, G.gy - 20); ctx.lineTo(G.chTarget.x, G.chTarget.y - 26); ctx.stroke(); }
+}
+function drawHud() {
+  ctx.fillStyle = '#100d1e'; ctx.fillRect(0, 0, W, FT - 6);
+  text('유령 에너지', 12, 18, '700 11px "Noto Sans KR"', '#a39cc9', 'left');
+  ctx.fillStyle = '#2a2448'; ctx.fillRect(12, 24, 110, 9);
+  ctx.fillStyle = G.energy < 30 ? '#ff6464' : '#8fd6ff'; ctx.fillRect(12, 24, 110 * G.energy / 100, 9);
+  text(String(Math.ceil(G.energy)), 126, 33, '700 11px "Noto Sans KR"', '#fff', 'left');
+  text('지금 몸', 12, 52, '700 11px "Noto Sans KR"', '#a39cc9', 'left');
+  if (G.body) {
+    text(`${G.body.d.name} · ${AFF_NAME[G.body.d.aff]}`, 56, 53, '15px "Do Hyeon"', AFF_COL[G.body.d.aff], 'left');
+    if (G.down <= 0) {
+      const can = G.bosses.filter(B => !B.broken && beats(G.body.d.aff, curOf(B)));
+      text(can.length ? `${can.map(B => DEF[B.key].name).join('·')} 깨기 가능` : '지금 방패엔 막힘', 56, 69, '12px "Do Hyeon"', can.length ? '#6be3a4' : '#ff8a8a', 'left');
+    }
+  } else text('없음 (유령)', 56, 53, '15px "Do Hyeon"', '#8fd6ff', 'left');
+  text(G.bosses.map(B => DEF[B.key].name).join(' · '), 348, 18, '700 11px "Noto Sans KR"', '#a39cc9', 'right');
+  const n = G.bosses[0].shields.length, w = 22;
+  for (let i = 0; i < n; i++) { ctx.fillStyle = i < G.segs ? '#ff5a5a' : '#3a3358'; ctx.fillRect(348 - (n - i) * (w + 4), 26, w, 10); }
+  text(`${Math.floor(G.t)}초 · 몸 잃음 ${G.deaths}`, 348, 56, '13px "Do Hyeon"', '#c9c3ff', 'right');
+}
+function hintText() {
+  if (G.down > 0) return '보스가 쓰러졌다 — 곧 새 방패. 다음 열쇠가 설 자리로 움직여라';
+  if (G.thrown) return '던졌다!';
+  const open = G.bosses.filter(B => !B.broken);
+  const broken = G.bosses.find(B => B.broken);
+  if (G.body) {
+    const can = open.filter(B => beats(G.body.d.aff, curOf(B)));
+    if (!can.length) {
+      const need = [...new Set(open.map(B => AFF_NAME[KEY_OF[curOf(B)]]))].join(' 또는 ');
+      return `이 몸은 막힌다 — 던지고 ${need} 부하로`;
+    }
+    const B = can[0];
+    if (broken) return `${DEF[broken.key].name}가 되살아나기 전에 ${DEF[B.key].name}도 깨라!`;
+    if (G.S.type === 'back') return behind(B, G.body.x, G.body.y) ? '등 뒤다 — 멈춰서 쳐라' : '정면은 막힌다 — 등 뒤로 돌아가라';
+    if (G.bosses.length > 1 && B.shield < SHIELD_HP * .3) return '이쪽은 거의 깨졌다 — 다른 쪽을 먼저 깎아 두고 던져서 동시에';
+    return B.shield < SHIELD_HP * .25 ? '방패가 얼마 안 남았다 — 던져서 마무리!' : '맞는 색! 멈춰서 방패를 쳐라';
+  }
+  if (G.target) return `빙의 — ${G.target.d.name}(${AFF_NAME[G.target.d.aff]}·${G.target.d.kind})${bossOfKey(G.target.d.aff) ? ' · 열쇠다' : ' · 열쇠가 아니다'}`;
+  const need = [...new Set(open.map(B => AFF_NAME[KEY_OF[curOf(B)]]))].join(' 또는 ');
+  return `${need} 부하에게 다가가 빙의`;
+}
+function drawHint() {
+  if (!G.running) return;
+  const h = hintText(); if (!h) return;
+  ctx.font = '14px "Do Hyeon"'; ctx.textAlign = 'left';
+  const maxW = 236, lines = []; let line = '';
+  for (const word of h.split(' ')) { const t2 = line ? line + ' ' + word : word; if (ctx.measureText(t2).width > maxW && line) { lines.push(line); line = word; } else line = t2; }
+  if (line) lines.push(line);
+  const k = Math.min(2, lines.length), y0 = FB - 14 - k * 19;
+  ctx.fillStyle = 'rgba(10,8,22,.84)'; ctx.fillRect(FL + 4, y0 - 4, maxW + 16, k * 19 + 10);
+  ctx.fillStyle = '#ffd055'; for (let i = 0; i < k; i++) ctx.fillText(lines[i], FL + 12, y0 + 14 + i * 19);
+}
+
+// ─────────────────────────────────────────────────────────
+// 버튼 · 오버레이 · 결과
+// ─────────────────────────────────────────────────────────
+const actBtn = document.getElementById('act');
+function syncButton() {
+  if (!G || !G.running) { actBtn.className = 'act off'; actBtn.textContent = '빙의'; return; }
+  if (G.body) { actBtn.className = 'act throw'; actBtn.textContent = '던지기'; }
+  else { actBtn.className = G.target ? 'act' : 'act off'; actBtn.textContent = G.channel > 0 ? '…' : '빙의'; }
+}
+const ov = document.getElementById('ov');
+function showOverlay(html) { ov.innerHTML = html; ov.hidden = false; }
+function hideOverlay() { ov.hidden = true; }
+function stars(n) { return '★'.repeat(n) + `<i>${'★'.repeat(3 - n)}</i>`; }
+function introStage(i) {
+  stageIdx = i; G = null; paused = false;
+  for (const b of tabs.children) b.setAttribute('aria-selected', b.dataset.i == i);
+  const S = STAGES[i];
+  showOverlay(`<div class="eyebrow">스테이지 ${i + 1} / ${STAGES.length} · ${S.bosses.map(b => DEF[b.key].name).join(' · ')}</div><h2>${S.title}</h2>
+    <div class="q">문제 — ${S.problem}</div>
+    <p>별: 깸 · 몸을 하나도 안 잃음 · ${S.parTime}초 이하</p>
+    <div class="hint" id="hintTxt" hidden>힌트 — ${S.hint}</div>
+    <div class="row"><button type="button" class="ghostbtn" id="hintBtn">힌트 보기</button><button type="button" id="goBtn">시작</button></div>`);
+  document.getElementById('hintBtn').onclick = () => { document.getElementById('hintTxt').hidden = false; document.getElementById('hintBtn').hidden = true; };
+  document.getElementById('goBtn').onclick = () => startStage(i);
+  document.getElementById('log').innerHTML = '<div>시작하면 여기에 무슨 일이 일어났는지 적힌다</div>';
+  try { localStorage.setItem('avsr.bossbreak.stage', String(i)); } catch (e) {}
+}
+function winStage() {
+  G.running = false;
+  const S = G.S;
+  const n = 1 + (G.deaths === 0 ? 1 : 0) + (G.t <= S.parTime ? 1 : 0);
+  if (!best[stageIdx] || best[stageIdx] < n) { best[stageIdx] = n; saveBest(); renderTabs(); }
+  log(`클리어 — ${Math.round(G.t)}초 · 빙의 ${G.possess} · 던지기 ${G.throws} · 몸 잃음 ${G.deaths} · 막힘 ${G.blocked} · 열쇠 잃음 ${G.keyLost}`);
+  const next = stageIdx + 1 < STAGES.length;
+  showOverlay(`<h2>클리어</h2><div class="stars">${stars(n)}</div>
+    <p>${Math.round(G.t)}초 (기준 ${S.parTime}) · 몸 잃음 ${G.deaths} · 빙의 ${G.possess} · 던지기 ${G.throws} · 막힘 ${G.blocked} · 열쇠 잃음 ${G.keyLost}</p>
+    <div class="row"><button type="button" class="ghostbtn" id="againBtn">다시</button>${next ? '<button type="button" id="nextBtn">다음 스테이지</button>' : ''}</div>`);
+  document.getElementById('againBtn').onclick = () => introStage(stageIdx);
+  if (next) document.getElementById('nextBtn').onclick = () => introStage(stageIdx + 1);
+}
+function loseStage(why) {
+  G.running = false;
+  log(`실패 — ${why}`);
+  showOverlay(`<h2>실패</h2><p>${why} · 막힘 ${G.blocked} · 몸 잃음 ${G.deaths} · 열쇠 잃음 ${G.keyLost}</p>
+    <div class="hint">힌트 — ${G.S.hint}</div><div class="row"><button type="button" id="againBtn">다시</button></div>`);
+  document.getElementById('againBtn').onclick = () => introStage(stageIdx);
+}
+const tabs = document.getElementById('tabs');
+function renderTabs() {
+  tabs.innerHTML = '';
+  STAGES.forEach((S, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.i = i;
+    b.innerHTML = `${i + 1} ${S.title}${best[i] ? `<span class="st">${'★'.repeat(best[i])}</span>` : ''}`;
+    b.setAttribute('aria-selected', i === stageIdx);
+    b.onclick = () => introStage(i);
+    tabs.appendChild(b);
+  });
+}
+let first = 0;
+try { const s = parseInt(localStorage.getItem('avsr.bossbreak.stage') || '0', 10); if (s >= 0 && s < STAGES.length) first = s; } catch (e) {}
+const hs = parseInt(location.hash.slice(1), 10); if (hs >= 1 && hs <= STAGES.length) first = hs - 1;
+stageIdx = first; renderTabs(); introStage(first);
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (G && G.running && !paused) update(dt);
+  draw(); syncButton();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
