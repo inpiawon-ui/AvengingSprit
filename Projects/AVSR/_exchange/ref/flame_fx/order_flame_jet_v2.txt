@@ -1,0 +1,19 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 도형을 그리거나 그림을 돌리고 늘려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 화염 분사구 불줄기 **2차** (게임 화면 시안 + 프레임 시트)
+
+1차 결과 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/flame_fx/mock_flame_jet.png · 게임에 얹어 본 것 C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/flame_fx/preview_v1.png (아래쪽 가는 불줄기)
+1차의 문제(이것을 고친다) :
+  ① **너무 가늘다** — 높이:길이가 1:7 이라 불이 아니라 레이저 · 깃털로 보인다. → 높이:길이 **1:2.5 쯤**, 입에서 끝으로 갈수록 크게 부푸는 원뿔
+  ② **결이 빗살무늬(생선 가시)** 로 규칙적이다 → 둥글게 **뭉게뭉게 부푸는 불덩이 · 불혀**가 겹겹이, 불규칙하게. 화염방사기 불처럼 끝에서 말려 오르고 갈라진다
+  ③ 연기는 회색 공 몇 개뿐이었다 → 끝자리 연기는 불에서 이어져 검붉게 식어 가는 덩어리로
+지금 게임 화면(불을 얹을 곳) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/flame_fx/now_flame_jet.png — 왼쪽 위 벽의 검은 분사구가 오른쪽으로 3 m(화면 약 190 px) 뿜는다. 폭은 화면 약 70 px.
+
+■ 만들 것 1 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/flame_fx/mock_flame_jet_v2_screen.png — 지금 게임 화면 그대로(720 x 1280, 같은 구도 · HUD · 캐릭터), 왼쪽 위 분사구에서 **뿜는 중인 불줄기 하나만** 그려 넣은 완성 화면 시안
+■ 만들 것 2 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/flame_fx/mock_flame_jet_v2.png — 같은 불줄기의 프레임 시트, 배경 **마젠타 #FF00FF 단색**
+  · 칸 크기 가로 384 x 세로 160(왼쪽 끝이 분사구 입), 칸 사이 16 px. 위에서 아래로 14칸 :
+      1~3 붙는다(불덩이가 튀어나와 길어진다) · 4~11 뿜는다(되풀이, 11 → 4 로 끊김 없이) · 12~14 꺼진다(입부터 끊기고 끝에 검붉은 연기가 흩어진다)
+  · 색 : 입 쪽 흰 · 연노랑 심 → 노랑 · 주황 → 바깥과 끝은 빨강 · 검붉은 불혀. 불티 몇 알.
+  · 16비트 아케이드 픽셀(굵은 도트, 가장 가까운 이웃) · 12~16색 · 명암은 뚝뚝 끊기게. 외곽선 없음. 사진 같은 불 · 부드러운 그라데이션 금지.
+  · 글자 · 번호를 그리지 마라.
+끝나면 두 경로만 알려라.

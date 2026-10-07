@@ -27,11 +27,11 @@ ACTS = ['', '_walk1', '_walk2', '_atk1', '_atk2', '_hit', '_die1', '_die2']
 NINTH = {'mole': '_under'}
 STANDING = [0, 1, 2, 5]
 # 새 그림 → 게임이 부르는 키. 돌 고릴라는 집행자 자리에 들어간다(키를 바꾸면 방 표 · 챕터 표를 다 고쳐야 한다)
-GAME_KEY = {'gorilla': 'actor_enforcer'}
+GAME_KEY = {'gorilla': 'actor_enforcer', 'scorpion': 'scrapgunner'}
 # 몸 키(잉크 높이). 사람(호스트)은 76 이다. 덩치 큰 짐승은 폭이 넓어 같은 키여도 훨씬 커 보인다 —
 # 돌 고릴라 76 은 「너무 크다」(PD 2026-10-07) → 68. 크게 보인 진짜 이유는 옛 집행자의 128 상자에 그려진 것이었다
 #   (96 칸이 1.33 배로 커졌다) — 지금은 잡몹 상자(84)에 그린다. 사람보다 조금 낮고 폭이 넓다
-BODY_H = {'gorilla': 68, 'boar': 60, 'mole': 58}   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
+BODY_H = {'gorilla': 68, 'boar': 60, 'mole': 58, 'mantis': 64, 'scorpion': 74}   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
 
 
 def cells(path):

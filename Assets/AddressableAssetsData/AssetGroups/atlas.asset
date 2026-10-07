@@ -93,6 +93,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4269d7d5e5bb7284689dfeb420b60c0b
+    m_Address: atlas/unit_mantis
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4865145c909e3544da6c952c5d2c48be
     m_Address: atlas/unit_robot_snakes
     m_ReadOnly: 0

@@ -13406,10 +13406,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: PROP_TALL_1
-      _kind: PROP_TALL
-      _at: {x: 2.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 2, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -13419,10 +13419,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_2
-      _kind: PROP_TALL
-      _at: {x: 8.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BARREL_PILE_2
+      _kind: BARREL_PILE
+      _at: {x: 9, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -13591,16 +13591,16 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_002_S03
-      _actorId: actor_enforcer
-      _at: {x: 5.5, y: 10.5}
+      _actorId: coilwalker
+      _at: {x: 7.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_002_S04
-      _actorId: coilwalker
-      _at: {x: 7.5, y: 10.5}
+      _actorId: actor_enforcer
+      _at: {x: 5.5, y: 10.5}
       _facing: S
       _delaySeconds: 0
       _trigger: ROOM_ENTER
@@ -13638,10 +13638,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: RAIL_1
-      _kind: RAIL
-      _at: {x: 3.5, y: 11}
-      _size: {x: 1, y: 2}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 1, y: 12.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -13651,10 +13651,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RAIL_2
-      _kind: RAIL
-      _at: {x: 6.5, y: 11}
-      _size: {x: 1, y: 2}
+    - _objectId: BARREL_PILE_2
+      _kind: BARREL_PILE
+      _at: {x: 8, y: 12.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -13664,7 +13664,59 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SWING_HAMMER_3
+    - _objectId: BLOCK_3
+      _kind: BLOCK
+      _at: {x: 3.5, y: 11.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_4
+      _kind: BLOCK
+      _at: {x: 6.5, y: 11.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_5
+      _kind: BLOCK
+      _at: {x: 3.5, y: 10.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_6
+      _kind: BLOCK
+      _at: {x: 6.5, y: 10.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SWING_HAMMER_7
       _kind: SWING_HAMMER
       _at: {x: 1, y: 9}
       _size: {x: 2, y: 2}
@@ -13677,33 +13729,33 @@ MonoBehaviour:
       _hazardDamage: 12
       _hazardTick: 0.7
       _unnamed: 0
-    - _objectId: RAIL_4
-      _kind: RAIL
-      _at: {x: 3.5, y: 9}
-      _size: {x: 1, y: 2}
+    - _objectId: BLOCK_8
+      _kind: BLOCK
+      _at: {x: 3.5, y: 9.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RAIL_5
-      _kind: RAIL
-      _at: {x: 6.5, y: 9}
-      _size: {x: 1, y: 2}
+    - _objectId: BLOCK_9
+      _kind: BLOCK
+      _at: {x: 6.5, y: 9.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SWING_HAMMER_6
+    - _objectId: SWING_HAMMER_10
       _kind: SWING_HAMMER
       _at: {x: 9, y: 9}
       _size: {x: 2, y: 2}
@@ -13716,10 +13768,88 @@ MonoBehaviour:
       _hazardDamage: 12
       _hazardTick: 0.7
       _unnamed: 0
-    - _objectId: RAIL_7
-      _kind: RAIL
-      _at: {x: 3.5, y: 7}
-      _size: {x: 1, y: 2}
+    - _objectId: BLOCK_11
+      _kind: BLOCK
+      _at: {x: 3.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_12
+      _kind: BLOCK
+      _at: {x: 6.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_13
+      _kind: BLOCK
+      _at: {x: 3.5, y: 7.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_14
+      _kind: BLOCK
+      _at: {x: 6.5, y: 7.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_15
+      _kind: BLOCK
+      _at: {x: 3.5, y: 6.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_16
+      _kind: BLOCK
+      _at: {x: 6.5, y: 6.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SANDBAG_17
+      _kind: SANDBAG
+      _at: {x: 9, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -13729,20 +13859,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RAIL_8
-      _kind: RAIL
-      _at: {x: 6.5, y: 7}
-      _size: {x: 1, y: 2}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
-      _destructible: 0
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_9
+    - _objectId: CRATE_18
       _kind: CRATE
       _at: {x: 3, y: 3.5}
       _size: {x: 2, y: 1}
@@ -13755,7 +13872,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_10
+    - _objectId: CRATE_19
       _kind: CRATE
       _at: {x: 7, y: 3.5}
       _size: {x: 2, y: 1}
@@ -13857,7 +13974,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_003_S04
-      _actorId: roadwarden
+      _actorId: mantis
       _at: {x: 0.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
@@ -13974,10 +14091,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_7
-      _kind: PROP_TALL
-      _at: {x: 3.5, y: 9.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_7
+      _kind: SANDBAG
+      _at: {x: 4, y: 9.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -14265,8 +14382,8 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: RICOCHET_WALL_1
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_1
+      _kind: JERSEY_ROW
       _at: {x: 1.5, y: 10.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14278,8 +14395,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_2
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_2
+      _kind: JERSEY_ROW
       _at: {x: 8.5, y: 10.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14291,8 +14408,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_3
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_3
+      _kind: JERSEY_ROW
       _at: {x: 3.5, y: 8.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14317,8 +14434,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_5
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_5
+      _kind: JERSEY_ROW
       _at: {x: 7.5, y: 8.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14330,8 +14447,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_6
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_6
+      _kind: JERSEY_ROW
       _at: {x: 1.5, y: 6.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14343,8 +14460,8 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: RICOCHET_WALL_7
-      _kind: RICOCHET_WALL
+    - _objectId: JERSEY_ROW_7
+      _kind: JERSEY_ROW
       _at: {x: 8.5, y: 6.5}
       _size: {x: 3, y: 1}
       _blocksMove: 1
@@ -14531,40 +14648,40 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_3
-      _kind: PILLAR
+    - _objectId: BLOCK_3
+      _kind: BLOCK
       _at: {x: 3.5, y: 9.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_4
-      _kind: PILLAR
+    - _objectId: BLOCK_4
+      _kind: BLOCK
       _at: {x: 6.5, y: 9.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_5
-      _kind: PILLAR
+    - _objectId: BLOCK_5
+      _kind: BLOCK
       _at: {x: 1.5, y: 7.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14583,12 +14700,25 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_7
-      _kind: PILLAR
+    - _objectId: BLOCK_7
+      _kind: BLOCK
       _at: {x: 8.5, y: 7.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SANDBAG_8
+      _kind: SANDBAG
+      _at: {x: 9, y: 6.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
       _blocksEnemyShot: 1
       _blocksSight: 1
       _destructible: 0
@@ -14596,27 +14726,27 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_8
-      _kind: PILLAR
+    - _objectId: BLOCK_9
+      _kind: BLOCK
       _at: {x: 3.5, y: 5.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PILLAR_9
-      _kind: PILLAR
+    - _objectId: BLOCK_10
+      _kind: BLOCK
       _at: {x: 6.5, y: 5.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14695,7 +14825,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_007_S02
-      _actorId: roadwarden
+      _actorId: mantis
       _at: {x: 6.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
@@ -14758,10 +14888,10 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     _objects:
-    - _objectId: BULK_1
-      _kind: BULK
-      _at: {x: 5, y: 11}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 5, y: 11.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -14771,7 +14901,20 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PUSH_ROCK_2
+    - _objectId: SCRAP_PILE_2
+      _kind: SCRAP_PILE
+      _at: {x: 5, y: 10.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PUSH_ROCK_3
       _kind: PUSH_ROCK
       _at: {x: 1.5, y: 9.5}
       _size: {x: 1, y: 1}
@@ -14784,7 +14927,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PUSH_ROCK_3
+    - _objectId: PUSH_ROCK_4
       _kind: PUSH_ROCK
       _at: {x: 8.5, y: 9.5}
       _size: {x: 1, y: 1}
@@ -14797,10 +14940,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_4
-      _kind: BULK
-      _at: {x: 2, y: 8}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_5
+      _kind: BARREL_PILE
+      _at: {x: 2, y: 8.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -14810,10 +14953,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_5
-      _kind: BULK
-      _at: {x: 8, y: 8}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_6
+      _kind: BARREL_PILE
+      _at: {x: 8, y: 8.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -14823,7 +14966,33 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: DROP_ZONE_6
+    - _objectId: SCRAP_PILE_7
+      _kind: SCRAP_PILE
+      _at: {x: 2, y: 7.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SCRAP_PILE_8
+      _kind: SCRAP_PILE
+      _at: {x: 8, y: 7.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: DROP_ZONE_9
       _kind: DROP_ZONE
       _at: {x: 2, y: 5}
       _size: {x: 2, y: 2}
@@ -14836,10 +15005,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BULK_7
-      _kind: BULK
-      _at: {x: 5, y: 5}
-      _size: {x: 2, y: 2}
+    - _objectId: BARREL_PILE_10
+      _kind: BARREL_PILE
+      _at: {x: 5, y: 5.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -14849,7 +15018,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: DROP_ZONE_8
+    - _objectId: DROP_ZONE_11
       _kind: DROP_ZONE
       _at: {x: 8, y: 5}
       _size: {x: 2, y: 2}
@@ -14857,6 +15026,19 @@ MonoBehaviour:
       _blocksShot: 0
       _blocksEnemyShot: 0
       _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: SCRAP_PILE_12
+      _kind: SCRAP_PILE
+      _at: {x: 5, y: 4.5}
+      _size: {x: 2, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 1
+      _blocksSight: 1
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15373,10 +15555,10 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     _objects:
-    - _objectId: PROP_TALL_1
-      _kind: PROP_TALL
-      _at: {x: 1.5, y: 11.5}
-      _size: {x: 1, y: 1}
+    - _objectId: BARREL_PILE_1
+      _kind: BARREL_PILE
+      _at: {x: 1, y: 12.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -15386,7 +15568,20 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_WIDE_2
+    - _objectId: BLOCK_2
+      _kind: BLOCK
+      _at: {x: 1.5, y: 11.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PROP_WIDE_3
       _kind: PROP_WIDE
       _at: {x: 3, y: 11.5}
       _size: {x: 2, y: 1}
@@ -15399,10 +15594,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_3
-      _kind: PROP_TALL
-      _at: {x: 3.5, y: 9.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_4
+      _kind: SANDBAG
+      _at: {x: 7, y: 10.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -15412,7 +15607,20 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_WIDE_4
+    - _objectId: BLOCK_5
+      _kind: BLOCK
+      _at: {x: 3.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: PROP_WIDE_6
       _kind: PROP_WIDE
       _at: {x: 5, y: 9.5}
       _size: {x: 2, y: 1}
@@ -15425,7 +15633,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: WALL_TURRET_W_5
+    - _objectId: WALL_TURRET_W_7
       _kind: WALL_TURRET_W
       _at: {x: 9.5, y: 8.5}
       _size: {x: 1, y: 1}
@@ -15438,10 +15646,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_6
-      _kind: PROP_TALL
-      _at: {x: 6.5, y: 7.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_8
+      _kind: SANDBAG
+      _at: {x: 6, y: 7.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -15451,7 +15659,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_WIDE_7
+    - _objectId: PROP_WIDE_9
       _kind: PROP_WIDE
       _at: {x: 8, y: 7.5}
       _size: {x: 2, y: 1}
@@ -15464,7 +15672,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: WALL_TURRET_E_8
+    - _objectId: WALL_TURRET_E_10
       _kind: WALL_TURRET_E
       _at: {x: 0.5, y: 6.5}
       _size: {x: 1, y: 1}
@@ -15542,7 +15750,7 @@ MonoBehaviour:
     _spawns:
     - _elite: 0
       _spawnId: ROOM_CH6_011_S01
-      _actorId: roadwarden
+      _actorId: mantis
       _at: {x: 1.5, y: 11.5}
       _facing: S
       _delaySeconds: 0
@@ -15926,21 +16134,13 @@ MonoBehaviour:
     - _elite: 0
       _spawnId: ROOM_CH6_013_S05
       _actorId: vampire
-      _at: {x: 4.5, y: 8.5}
+      _at: {x: 5.5, y: 8.5}
       _facing: S
       _delaySeconds: 0
       _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_013_S06
-      _actorId: roadwarden
-      _at: {x: 8.5, y: 8.5}
-      _facing: S
-      _delaySeconds: 0
-      _trigger: ROOM_ENTER
-      _telegraph: 
-    - _elite: 0
-      _spawnId: ROOM_CH6_013_S07
       _actorId: skeleton
       _at: {x: 1.5, y: 7.5}
       _facing: S
@@ -15948,7 +16148,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH6_013_S08
+      _spawnId: ROOM_CH6_013_S07
       _actorId: actor_enforcer
       _at: {x: 4.5, y: 7.5}
       _facing: S
@@ -15956,7 +16156,7 @@ MonoBehaviour:
       _trigger: ROOM_ENTER
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH6_013_S09
+      _spawnId: ROOM_CH6_013_S08
       _actorId: hopper_smg
       _at: {x: 6.5, y: 7.5}
       _facing: S
@@ -15964,7 +16164,7 @@ MonoBehaviour:
       _trigger: POSSESSION_TARGET
       _telegraph: 
     - _elite: 0
-      _spawnId: ROOM_CH6_013_S10
+      _spawnId: ROOM_CH6_013_S09
       _actorId: skeleton
       _at: {x: 8.5, y: 7.5}
       _facing: S
@@ -16024,10 +16224,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_5
-      _kind: PROP_TALL
-      _at: {x: 3.5, y: 8.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_5
+      _kind: SANDBAG
+      _at: {x: 4, y: 8.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -16037,10 +16237,10 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: PROP_TALL_6
-      _kind: PROP_TALL
-      _at: {x: 6.5, y: 8.5}
-      _size: {x: 1, y: 1}
+    - _objectId: SANDBAG_6
+      _kind: SANDBAG
+      _at: {x: 8, y: 8.5}
+      _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 1
@@ -16249,7 +16449,7 @@ MonoBehaviour:
       _telegraph: 
     - _elite: 0
       _spawnId: ROOM_CH6_014_S08
-      _actorId: roadwarden
+      _actorId: mantis
       _at: {x: 2.5, y: 6.5}
       _facing: S
       _delaySeconds: 0

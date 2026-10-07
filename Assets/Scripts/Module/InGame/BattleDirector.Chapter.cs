@@ -39,6 +39,7 @@ namespace Game.Module.InGame
              : key == TrashCrossKey    ? Cross
              : key == TrashBoarKey     ? Boar
              : key == TrashMoleKey     ? Mole
+             : key == TrashMantisKey   ? Mantis
              : null;
 
         /// <summary>

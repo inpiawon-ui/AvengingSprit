@@ -270,6 +270,7 @@ MonoBehaviour:
     - roadwarden
     - actor_enforcer
     - turret_cross
+    - mantis
     Pattern: 6
     EnemyHpMul: 1.16
     EnemyAtkMul: 0.8
@@ -284,7 +285,7 @@ MonoBehaviour:
     Art: 6
     BossArt: 6
     ChestArt: 3
-    MixBlade: 21
+    MixBlade: 20
     MixForce: 21
     MixMagic: 39
   - Chapter: 7

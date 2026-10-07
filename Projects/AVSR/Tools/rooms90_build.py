@@ -144,7 +144,7 @@ TRASH = {ch: c['trash'] for ch, c in CHAPTERS.items()}
 
 # 상성(가위바위보) — `AffinityRule.KindOf` 와 같아야 한다. 힘 → 날 → 술 → 힘.
 KIND = {
-    'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade', 'mole': 'blade',
+    'bat': 'blade', 'roadwarden': 'blade', 'scrapgunner': 'blade', 'mole': 'blade', 'mantis': 'blade',
     'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force',
     'skeleton': 'magic', 'coilwalker': 'magic',
     'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
@@ -155,7 +155,7 @@ KIND = {
     'vampire': 'magic', 'white_wizard': 'magic', 'medium': 'magic', 'death': 'magic',
 }
 BEATS = {'force': 'blade', 'blade': 'magic', 'magic': 'force'}
-RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross', 'mole'}
+RANGED_TRASH = {'scrapgunner', 'roadwarden', 'coilwalker', 'turret_cross', 'mole', 'mantis'}
 STATIC_TRASH = {'turret_cross'}   # 안 움직인다 — 자리가 곧 전부다
 # 엄폐가 필요 없는 원거리 — 포탑은 서 있는 자리가 전부고, 두더지는 땅속으로 다닌다
 NO_COVER_TRASH = STATIC_TRASH | {'mole'}

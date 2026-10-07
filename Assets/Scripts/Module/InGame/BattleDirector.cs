@@ -2273,7 +2273,7 @@ namespace Game.Module.InGame
         /// 쏘면 몸을 빼앗을 이유가 줄어든다. 예비동작 0.75초로 길게 잡아 피할 틈을 남긴다.
         /// </summary>
         private static HostEntry Scrapgunner => s_gunner ??= HostEntry.CreateTrash(
-            TrashGunnerKey, "폐품 사수", AttackKind.Single,
+            TrashGunnerKey, "고철 전갈", AttackKind.Single,   // 옛 폐품 사수 — 사람 모양이라 호스트로 읽혀 그림을 바꿨다(PD 2026-10-07), 키는 그대로
             hp: 24, atk: 7, moveMps: 1.4f, engageMps: 2.2f,
             rangeMeters: 5.2f, interval: 1.9f, telegraph: 0.75f);
 

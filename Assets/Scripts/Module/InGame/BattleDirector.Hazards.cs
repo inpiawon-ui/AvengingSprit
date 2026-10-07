@@ -277,17 +277,8 @@ namespace Game.Module.InGame
             {
                 o.Telegraph = true;
                 if (o.Img != null) o.Img.color = WallTurretHotColor;
-                if (IsOnScreenAt(o.ShotBounds.center))
-                {
-                    var dir = FlameDir(o);
-                    var from = o.ShotBounds.center + dir * (o.ShotBounds.width * 0.5f);
-                    // 피해는 불이 켜져 있는 동안 아래에서 준다 — 예고는 보여 주기만 한다
-                    StartWarn(BandShape(from, dir, Meters(FlameWidthMeters), Meters(FlameLengthMeters)),
-                              (FlameWarnUntil - FlameOffUntil) * FlameCycle, damage: 0);
-                    // 공용 꺾쇠 — 불이 뿜어 나갈 쪽 (BattleDirector.Rush)
-                    StartRushFx(null, from, from + dir * Meters(FlameLengthMeters), Meters(FlameWidthMeters),
-                                (FlameWarnUntil - FlameOffUntil) * FlameCycle, dust: false);
-                }
+                // 바닥 예고(띠 · 꺾쇠)는 깔지 않는다 — PD 2026-10-07 「불기둥은 굳이 노티가 필요 없다」.
+                //   분사구가 달아오르는 색(위 한 줄)만 남긴다. 불이 일정한 박자로 켜지니 박자를 보고 지난다
             }
             if (!warn && !on && o.Telegraph)
             {

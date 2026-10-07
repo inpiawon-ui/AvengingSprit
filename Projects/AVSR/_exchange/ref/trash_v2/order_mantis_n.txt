@@ -1,0 +1,14 @@
+API 키를 쓰는 CLI 폴백은 쓰지 마라. 내장 이미지 생성 기능만 써라. 스크립트로 도형을 그리거나 그림을 돌리고 늘려서 때우지 마라.
+
+AVENGING SPIRIT: RE:BORN — 잡몹 「외눈 사마귀」 게임 그림 — n 방향 8동작
+
+동쪽 판 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mantis_e_raw.png — **같은 몸 · 같은 색 · 같은 크기 · 같은 그림체**로 방향만 바꾼다.
+같은 방향 몸의 칸 · 자세 참조(먼저 통과한 멧돼지 n 방향) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/boar_n_raw.png
+
+■ 만들 것 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v2/mantis_n_raw.png — 정사각(864 x 864 쯤, 96 x 96 칸 3 x 3 을 3배), 배경 **마젠타 #FF00FF 단색**
+  · 방향 : 위(북쪽, 화면 안쪽)를 보는 **뒷모습**(낫 둘과 더듬이가 머리 위로 보인다). 여덟 칸 모두 같은 방향.
+  · 칸 차례(동쪽 판과 같다) : 1 대기 · 2 걷기1 · 3 걷기2 / 4 공격1(몸을 낮추고 외눈이 붉게 빛나며 조준) · 5 공격2(외눈에서 빛줄기 발사 — 눈 앞 섬광) · 6 피격
+            / 7 쓰러짐1 · 8 쓰러짐2(옆으로 쓰러져 다리를 오그림) · 9 빈 칸
+  · 크기 : 동쪽 판과 같은 몸 크기. 걷기 두 칸은 다리가 번갈아 나가게.
+  · 1 px 짙은 외곽선 · 12~16색 · 2~3단 끊기는 명암. 질감 노이즈 금지.
+끝나면 경로만 알려라.
