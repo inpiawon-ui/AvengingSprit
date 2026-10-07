@@ -239,8 +239,8 @@ namespace Game.Module.InGame
             if (!Qx("isprison")) return null;
             QxOnce("isgather", me.Position, 0.06f, 0.8f);
             var shell = QxLoop("isprison", me.Position, 0.22f);
-            // 납품 결정이 꽤 불투명하다 — 시안처럼 안의 설녀가 비치게 조금 옅게
-            shell?.SetTint(new Color(1f, 1f, 1f, 0.72f));
+            // 납품 결정이 꽤 불투명하다 — 안의 설녀가 비치게 옅게(0.72 도 「너무 가린다」 PD 2026-10-07 → 0.4)
+            shell?.SetTint(new Color(1f, 1f, 1f, 0.4f));
             return shell;
         }
 
