@@ -49,6 +49,8 @@ namespace Game.Module.InGame
             var tr = _ui.Find(name);
             if (tr == null) { _ui.SetActive(name, on); return; }
 
+            // 보상 연출 중에 열리려는 창(거래 보상으로 오는 카드 3택1 등)은 연출이 끝난 뒤에 연다
+            if (on && _presenting) { _panelsAfterPresent.Enqueue(name); return; }
             if (_popupBusy.Contains(name)) { _popupWant[name] = on; return; }
             _popupWant.Remove(name);
             if (tr.gameObject.activeSelf == on) return;
@@ -179,15 +181,6 @@ namespace Game.Module.InGame
             var spec = _ui.Find("EventPanel") is Transform tr ? tr.GetComponent<PopupFxSpec>() : null;
             return spec != null ? spec.Additive : null;
         }
-
-        /// <summary>카드 희귀도 → 카드 테두리 연출 색(코덱스 levelup2 · 시안 mock_fxstory_levelup: RARE 청 · COMMON 백).</summary>
-        private static Color RarityFxColor(Game.Character.CardRarity rarity) => rarity switch
-        {
-            Game.Character.CardRarity.Rare => new Color32(92, 190, 255, 255),
-            Game.Character.CardRarity.Epic => new Color32(190, 110, 255, 255),
-            Game.Character.CardRarity.Legendary => new Color32(255, 200, 61, 255),
-            _ => new Color32(232, 238, 230, 255),
-        };
 
         // ── 고른 칸을 짚어 준다 ──────────────────────────────────
         //

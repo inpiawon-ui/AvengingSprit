@@ -52,9 +52,7 @@ namespace Game.Module.InGame
 
             _ui.SetText("ResultSubText", Localize.Get($"stage.{ch}.1.name"));
             _ui.SetText("ResultGoldLabelText", Localize.Get("ui.result.gold_label"));
-            // 금화가 쏟아지는 동안 0 에서 올라간다(시안 2컷 「0 → +1,240」). 금화 연출 시각과 맞춘다
             _ui.SetText("ResultGoldValueText", "+0");
-            CountGoldAsync(e.RewardGold, ++_countId).Forget();   // fire-and-forget: 숫자 연출은 기다릴 것이 없다
 
             // 상자 — 칸이 가득 차 못 받았으면 상자 줄을 아예 빼고 그 자리에 「받지 못했다」 경고만 둔다.
             // 흐리게라도 상자를 보여 주면 받은 것처럼 읽혔다(PD 2026-10-08 「가득 차 있으면 상자를 주면 안 되는데」)
@@ -89,42 +87,110 @@ namespace Game.Module.InGame
             // 좌표는 가운데 720x1280 판(ResultContent) 기준이라 거기에 띄운다(태블릿에서도 틀과 같이 움직인다)
             var fx = GetComponentInParent<PopupFxPlayer>();
             if (fx != null) fx.Open((RectTransform)transform, _ui.Find("ResultContent") as RectTransform);
+            RevealAsync(e, fx, ++_countId).Forget();   // fire-and-forget: 등장 · 금화 · 상자 연출은 제 시간에 끝난다
         }
 
-        // ── 금액 올라가기 ───────────────────────────────────────
+        // ── 등장 · 금화 · 상자 (PD 2026-10-08 반려 뒤 다시 짬) ─────────────────
         //
-        // 연출 표(fx_story.py layers_clear)의 금화가 1.55초에 떨어지기 시작해 2.35초에 다 쌓인다.
-        // 숫자는 그 사이에 0 에서 올라가고, 다 쌓이면 금화 더미가 한 번 튄다(PD 「돈이 쌓이는 연출」 2026-10-08).
+        //   0.00 창이 OutBack 곡선으로 살짝 커졌다 제자리(0.86 → 1)
+        //   1.55 위에서 금화가 떨어지기 시작 — 금화 더미 그림 자체가 없다가 네 단계로 쌓인다(그림이 바뀔 때마다 톡 튐), 숫자 0 → 금액
+        //   2.55 상자가 위에서 떨어져 바닥에 통통 튀며 놓인다(OutBounce) — 착지 2.95 에 먼지 고리(연출 표 clear_chest_land)
+        //        상자 칸이 가득 찼으면 상자 대신 경고 띠가 그 자리에 나타난다
+        // 금화 · 먼지 시각은 연출 표(fx_story.py layers_clear)와 같다 — 한쪽을 바꾸면 같이 바꾼다.
 
-        private const float GoldCountStart = 1.55f;
-        private const float GoldCountEnd = 2.35f;
-        private const float GoldPopSeconds = 0.18f;
-        private const float GoldPopScale = 1.12f;
+        private const float EnterSeconds = 0.38f;
+        private const float GoldStart = 1.55f;
+        private const float GoldEnd = 2.35f;
+        private const float ChestDrop = 2.55f;
+        private const float ChestFall = 0.4f;
+        private const float ChestFallHeight = 90f;
         private int _countId;
+        private Vector2? _chestArtHome;
 
-        private async UniTaskVoid CountGoldAsync(int gold, int id)
+        private async UniTaskVoid RevealAsync(StageFinishedEvent e, PopupFxPlayer fx, int id)
         {
             var token = this.GetCancellationTokenOnDestroy();
+            var content = _ui.Find("ResultContent") as RectTransform;
+            var contentGroup = Group(content);
+            var goldIcon = _ui.Get<Image>("ResultGoldIcon");
+            var finalPile = goldIcon != null ? goldIcon.sprite : null;
+            var stages = fx != null ? fx.FramesOf("present_goldpile_stages") : null;
+            var chest = _ui.Find("ResultChestArt") as RectTransform;
+            var chestName = Group(_ui.Find("ResultChestNameText"));
+            var chestGroup = Group(chest);
+            var warnGroup = Group(_ui.Find("ResultWarnBar"));
+            if (chest != null) _chestArtHome ??= chest.anchoredPosition;
+
+            // 처음 모습 — 금화 더미 · 상자 · 경고는 아직 없다
+            if (goldIcon != null) goldIcon.color = new Color(1f, 1f, 1f, 0f);
+            if (chestGroup != null) chestGroup.alpha = 0f;
+            if (chestName != null) chestName.alpha = 0f;
+            if (warnGroup != null) warnGroup.alpha = 0f;
+
+            int shown = -1;
             float t = 0f;
-            while (t < GoldCountEnd)
+            while (t < ChestDrop + ChestFall + 0.4f)
             {
                 if (this == null || id != _countId) return;
-                float k = Mathf.Clamp01((t - GoldCountStart) / (GoldCountEnd - GoldCountStart));
-                _ui.SetText("ResultGoldValueText", $"+{Mathf.RoundToInt(gold * (1f - (1f - k) * (1f - k))):N0}");
-                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
                 t += Time.unscaledDeltaTime;
+
+                // 창 등장
+                float ek = Mathf.Clamp01(t / EnterSeconds);
+                if (content != null) content.localScale = Vector3.one * Mathf.LerpUnclamped(0.86f, 1f, Ease.OutBack(ek));
+                if (contentGroup != null) contentGroup.alpha = Ease.OutCubic(Mathf.Clamp01(t / (EnterSeconds * 0.6f)));
+
+                // 금화 — 숫자는 곡선으로 오르고, 더미 그림은 네 단계로 쌓인다
+                float gk = Mathf.Clamp01((t - GoldStart) / (GoldEnd - GoldStart));
+                _ui.SetText("ResultGoldValueText", $"+{Mathf.RoundToInt(e.RewardGold * Ease.OutQuad(gk)):N0}");
+                int stage = gk <= 0.1f ? -1 : gk < 0.4f ? 0 : gk < 0.7f ? 1 : gk < 1f ? 2 : 3;
+                if (stage != shown && goldIcon != null)
+                {
+                    shown = stage;
+                    if (stage >= 0)
+                    {
+                        goldIcon.sprite = stage == 3 || stages == null || stages.Length < 4 ? finalPile : stages[stage];
+                        goldIcon.color = Color.white;
+                        PunchAsync(goldIcon.transform, 1.14f, 0.2f, id).Forget();   // fire-and-forget: 짧은 튐
+                    }
+                }
+
+                // 상자(받았으면) — 위에서 떨어져 통통 튀며 놓인다 / 못 받았으면 경고 띠가 나타난다
+                float ck = Mathf.Clamp01((t - ChestDrop) / ChestFall);
+                if (e.ChestAccepted && chest != null && _chestArtHome.HasValue && t >= ChestDrop)
+                {
+                    chest.anchoredPosition = _chestArtHome.Value + new Vector2(0f, ChestFallHeight * (1f - Ease.OutBounce(ck)));
+                    if (chestGroup != null) chestGroup.alpha = Mathf.Clamp01(ck * 4f);
+                    if (chestName != null) chestName.alpha = Ease.OutCubic(Mathf.Clamp01((t - ChestDrop - ChestFall) / 0.25f));
+                }
+                if (!e.ChestAccepted && warnGroup != null) warnGroup.alpha = Ease.OutCubic(ck);
+
+                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
             }
             if (this == null || id != _countId) return;
-            _ui.SetText("ResultGoldValueText", $"+{gold:N0}");
+            if (content != null) content.localScale = Vector3.one;
+            if (contentGroup != null) contentGroup.alpha = 1f;
+            _ui.SetText("ResultGoldValueText", $"+{e.RewardGold:N0}");
+            if (goldIcon != null) { goldIcon.sprite = finalPile; goldIcon.color = Color.white; }
+            if (chest != null && _chestArtHome.HasValue) chest.anchoredPosition = _chestArtHome.Value;
+        }
 
-            if (_ui.Find("ResultGoldIcon") is not Transform icon) return;
-            for (float p = 0f; p < GoldPopSeconds; p += Time.unscaledDeltaTime)
+        private async UniTaskVoid PunchAsync(Transform t, float from, float seconds, int id)
+        {
+            var token = this.GetCancellationTokenOnDestroy();
+            for (float p = 0f; p < seconds; p += Time.unscaledDeltaTime)
             {
-                if (this == null || id != _countId || icon == null) return;
-                icon.localScale = Vector3.one * Mathf.Lerp(GoldPopScale, 1f, p / GoldPopSeconds);
+                if (this == null || t == null || id != _countId) return;
+                t.localScale = Vector3.one * Mathf.LerpUnclamped(from, 1f, Ease.OutBack(p / seconds));
                 if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
             }
-            if (icon != null) icon.localScale = Vector3.one;
+            if (t != null) t.localScale = Vector3.one;
+        }
+
+        private static CanvasGroup Group(Transform t)
+        {
+            if (t == null) return null;
+            var g = t.GetComponent<CanvasGroup>();
+            return g != null ? g : t.gameObject.AddComponent<CanvasGroup>();
         }
 
         /// <summary>경고 띠(46) + 간격이 빠질 때 두 줄을 내리는 거리 — 그 절반.</summary>

@@ -365,6 +365,12 @@ namespace Game.Module.InGame
             return null;
         }
 
+        /// <summary>대상 가운데를 패널 좌표(왼쪽 위 기준, 아래로 +)로 — 보상 연출(띠 · 날아가는 것)도 같은 자로 잰다.</summary>
+        public static Vector2 PanelPoint(RectTransform panel, Transform target) => ScreenOf(panel, target);
+
+        /// <summary>연출 아틀라스의 프레임(fx_{name}_1 …). 결과창 금화 더미 단계 · 날아가는 구슬처럼 코드가 직접 쓰는 그림.</summary>
+        public Sprite[] FramesOf(string name) => Frames(name);
+
         /// <summary>대상 가운데를 패널 좌표(왼쪽 위 기준, 아래로 +)로.</summary>
         private static Vector2 ScreenOf(RectTransform panel, Transform target)
         {

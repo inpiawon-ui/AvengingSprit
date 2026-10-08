@@ -137,7 +137,6 @@ namespace Game.Module.InGame
             if (!_shrineOpen || index < 0 || index >= _shrineOffer.Count) return;
             _shrineOpen = false;
             string line = ApplyShrine(_shrineOffer[index]);
-            PlayUpgradeFx();   // 제단도 능력이 오르는 자리다 (`BattleDirector.Juice.cs`)
             _shrineOffer.Clear();
             _bus.Publish(new ShrineResolvedEvent { ResultLine = line });
             SpawnExit();
@@ -161,7 +160,7 @@ namespace Game.Module.InGame
                     _ghostHp = GhostHpMax;
                     PublishHp();
                     var at = Avatar != null ? Avatar.Position : Vector2.zero;
-                    PlayFx("heal_plus", at, 128f, loop: false);
+                    // 회복 그림은 보상 연출(InGameMainUI.PickShrineAsync)이 띄운다 — 여기서 또 띄우면 주황 별이 겹쳐 맞은 것처럼 보인다
                     ShowHeal(at, Mathf.Max(1, _ghostHp - before));
                     return Localize.Get("ui.shrine.soul_heal.result");
                 }

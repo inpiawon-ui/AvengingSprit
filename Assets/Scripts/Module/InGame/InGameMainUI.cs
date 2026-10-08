@@ -259,7 +259,8 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
             // 하나 사면 닫는다. 산 칸에서 금화가 HUD 골드로 · 물건이 위로 가는 연출(PD 2026-10-08)을
             // 보이게 다른 창과 같이 잠깐 두고 닫는다 — 그동안 창은 누르기를 받지 않는다.
-            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => CloseAfter("ShopPanel", PickFxHoldSeconds)));
+            // 사면 BuyAsync 가 HUD 골드 → 산 칸 → 몸 순서로 보여 주고 창을 닫는다
+            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => { if (!_presenting) SetPanel("ShopPanel", false); }));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
             _tokens.Add(bus.Subscribe<SkillCastEvent>(OnSkillCast));
         }
@@ -715,7 +716,7 @@ namespace Game.Module.InGame
         {
             _ui.SetText("GhostHpText", $"{e.GhostHp}/{e.GhostHpMax}");
             _ghostHpRatio = Ratio(e.GhostHp, e.GhostHpMax);
-            _ui.SetFill("GhostHpBarFill", _ghostHpRatio, GhostBarWidth);
+            SetFillSmooth("GhostHpBarFill", _ghostHpRatio, GhostBarWidth);
 
             // ⚠ `e.HasHost` 만 보면 안 된다. 전투는 **유령도 몸으로 센다** —
             //   판이 유령으로 시작하면 이 값이 참으로 오고, HP 바가 매 프레임
@@ -727,7 +728,7 @@ namespace Game.Module.InGame
             if (!_hostBarShown) return;
             _ui.SetText("HostHpText", $"{e.HostHp}/{e.HostHpMax}");
             _hostHpRatio = Ratio(e.HostHp, e.HostHpMax);
-            _ui.SetFill("HostHpBarFill", _hostHpRatio, HostBarWidth);
+            SetFillSmooth("HostHpBarFill", _hostHpRatio, HostBarWidth);
         }
 
         private void OnBossHp(BossHpChangedEvent e)
@@ -1099,6 +1100,7 @@ namespace Game.Module.InGame
 
         private void OnEventOffer(EventOfferEvent e)
         {
+            _lastOffer = e;
             _ui.SetText("EventTitleText", e.Title);
             // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다 — 받는 것은 금빛 알약 판에 따로 올린다.
             // (C 원혼 회로 2026-10-08: 본문 끝에 덧붙이면 본문 칸이 넘쳐 글자가 같이 줄었다)
@@ -1191,6 +1193,9 @@ namespace Game.Module.InGame
 
         private void OnShrineOpened(ShrineOpenedEvent e)
         {
+            _shrineIcons = e.Icons;
+            ResetFocus(ShrineNodes);
+            BlockInput("ShrinePanel", false);
             _ui.SetText("ShrineTitleText", Localize.Get("ui.shrine.title"));
             _ui.SetText("ShrineHintText", Localize.Get("ui.shrine.hint"));
             _ui.SetActive("ShrineHintPill", true);
@@ -1246,12 +1251,8 @@ namespace Game.Module.InGame
             _ui.Find("ShrinePanel")?.SetAsLastSibling();
         }
 
-        private void ChooseShrine(int index)
-        {
-            if (_battle == null) return;
-            if (_fx != null) _fx.Fire(_ui.Find("ShrinePanel") as RectTransform, index.ToString());
-            _battle.ChooseShrine(index);
-        }
+        // 고른 칸 포커스 → 구슬이 몸으로 → 닿는 순간 적용 · 회복 연출(InGameMainUI.Rewards)
+        private void ChooseShrine(int index) => PickShrineAsync(index).Forget();   // fire-and-forget: 연출은 제 시간에 끝난다
 
         // ⚠ 고르는 즉시 닫는다 (2026-09-10). 예전에는 결과 한 줄을 띄우고 1.2초 뒤에
         //   닫았는데, 고른 뒤에 화면이 멈춰 있는 그 틈이 「끝난 건가?」로 읽혔다.
@@ -1259,14 +1260,14 @@ namespace Game.Module.InGame
         //
         // ⚠ 연출 시안(mock_fxstory_altar, PD 통과 2026-10-08)의 「고른 칸이 번쩍 → 빛이 HP 로」가 칸에서 출발해야 해서
         //   창은 그 0.35초 뒤에 닫는다. 그동안 입력은 막힌다(같은 칸을 두 번 못 누르게).
-        private void OnShrineResolved(ShrineResolvedEvent e)
-            => CloseAfter("ShrinePanel", PickFxHoldSeconds);
+        private void OnShrineResolved(ShrineResolvedEvent e) { }   // 창은 PickShrineAsync 가 닫는다
 
         private void Resolve(bool accept)
         {
             if (_battle == null) return;
-            if (accept && _fx != null) _fx.Fire(_ui.Find("EventPanel") as RectTransform);
-            _battle.ResolveEvent(accept);
+            // 수락 — 창을 닫고 캐릭터에 저주 연출 + 얻은 것 · 치른 것(InGameMainUI.Rewards AcceptDevilAsync)
+            if (accept) { AcceptDevilAsync().Forget(); return; }   // fire-and-forget: 연출은 제 시간에 끝난다
+            _battle.ResolveEvent(false);
         }
 
         // ⚠ 수락·거절 어느 쪽이든 **바로 닫는다** (2026-09-10).
@@ -1276,8 +1277,7 @@ namespace Game.Module.InGame
         // ⚠ 수락은 연출 시안(mock_fxstory_devil)의 「혼이 문장으로 → 보상 판이 터진다」가 창 위에서 보여야 해서 0.35초 뒤에 닫는다.
         private void OnEventResolved(EventResolvedEvent e)
         {
-            if (e.Accepted) CloseAfter("EventPanel", PickFxHoldSeconds);
-            else SetPanel("EventPanel", false);
+            if (!e.Accepted) SetPanel("EventPanel", false);   // 수락은 AcceptDevilAsync 가 닫는다
         }
 
         // ── 상점 ─────────────────────────────────────────────────
@@ -1298,6 +1298,8 @@ namespace Game.Module.InGame
             // 「남은 구매 2회 · 카드 1장」은 안 띄운다 — 상점은 하나 사면 바로 닫혀서(ShopPurchasedEvent) 남은 횟수가
             // 의미가 없고 틀린 말이 된다(PD 2026-10-08 「상점 한번 선택하면 끝인데 저거 지워」)
             _ui.SetActive("ShopLimitText", false);
+            _shopIcons = e.Icons;
+            BlockInput("ShopPanel", false);
 
             for (int i = 0; i < ShopSlots; i++)
             {
@@ -1341,13 +1343,8 @@ namespace Game.Module.InGame
                 btn.onClick.RemoveAllListeners();
                 btn.interactable = can;
                 int slot = i;
-                // 산 칸에서 금화가 튀고 물건 빛이 HUD 골드로 — 창은 바로 닫혀도 연출은 덮개에서 끝까지 돈다
-                if (can) btn.onClick.AddListener(() =>
-                {
-                    if (_battle == null) return;
-                    if (_fx != null) _fx.Fire(_ui.Find("ShopPanel") as RectTransform, slot.ToString());
-                    _battle.BuyShopItem(slot);
-                });
+                // HUD 골드에서 금화가 이 칸으로 → 칸이 튕김 → 물건이 몸으로(InGameMainUI.Rewards BuyAsync)
+                if (can) btn.onClick.AddListener(() => BuyAsync(slot).Forget());   // fire-and-forget: 연출은 제 시간에 끝난다
             }
 
             var leaveBtn = _ui.Get<Button>("ShopLeaveButton");
@@ -1380,6 +1377,9 @@ namespace Game.Module.InGame
         /// </summary>
         private void OnBuffOffer(BuffOfferEvent e)
         {
+            if (_presenting) { _pendingOffer = e; return; }
+            ResetFocus(CardNodes);
+            BlockInput("BuffChoicePanel", false);
             if (_buffTable == null || e.OfferedKeys == null) return;
 
             // 제목은 그림(`leveluptitle`)으로 간다. 게임 서체로는 시안의 두께와
@@ -1422,7 +1422,7 @@ namespace Game.Module.InGame
                 _ui.SetText($"BuffCard{i}Desc", entry.DisplayDescription);
 
                 SetCardArt(i, entry, lv > 0);
-                if (_fx != null) _fx.Tint(_ui.Find("BuffChoicePanel") as RectTransform, $"BuffCard{i}", RarityFxColor(entry.Rarity));
+                if (_fx != null) _fx.Tint(_ui.Find("BuffChoicePanel") as RectTransform, $"BuffCard{i}", RarityColor(entry.Rarity));
 
                 // 매번 다른 카드가 오므로 이전 리스너를 지우고 새로 건다
                 var btn = _ui.Get<Button>($"BuffCard{i}");
@@ -1467,18 +1467,15 @@ namespace Game.Module.InGame
             var chip = _ui.Get<Image>($"BuffCard{i}Chip");
             var chipArt = _cardAtlas != null
                 ? _cardAtlas.GetSprite(owned ? "cardchip_level" : "cardchip_rarity") : null;
-            if (chip != null)
-            {
-                chip.sprite = chipArt;
-                chip.enabled = chipArt != null;
-            }
+            // 칩 그림은 끈다 — 카드 그림에 이미 등급 명판이 있어 두 겹이 「등급 밑 빈 네모」로 보였다(PD 10-08)
+            if (chip != null) chip.enabled = false;
             var chipText = _ui.Get<TMPro.TMP_Text>($"BuffCard{i}ChipText");
             if (chipText != null)
                 // ⚠ 명판 그림은 **어두운 돌**이다(실측 밝기 25/255). 예전에는 그림이
                 //   있으면 글자를 거의 검정으로 칠했는데, 그 위에서는 아예 안 보였다.
                 //   이미 가진 카드(레벨 표시)는 금빛으로 갈라 한눈에 구분되게 한다.
-                chipText.color = owned ? new Color(0.94f, 0.71f, 0.16f)
-                                       : new Color(0.88f, 0.92f, 0.98f);
+                // 새 카드는 등급색(카드 테두리 빛과 같은 색), 가진 카드의 레벨 표시는 금빛
+                chipText.color = owned ? new Color(0.94f, 0.71f, 0.16f) : RarityColor(entry.Rarity);
 
             // ③ 아이콘 + 아이콘 테두리 (이미 있는 리소스)
             var icon = _ui.Get<Image>($"BuffCard{i}Icon");
@@ -1586,13 +1583,8 @@ namespace Game.Module.InGame
 
         private void OnBuffPicked(string buffKey)
         {
-            // 효과는 바로 넣고, 창은 고른 칸을 한 번 튕긴 뒤 닫는다 —
-            // 연출을 기다렸다 넣으면 그 사이에 두 번 누를 수 있다.
-            _battle?.ChooseBuff(buffKey);
-            // 고른 카드가 타오르고 혼이 위 문장으로 — 카드 번호만 넘긴다(BuffCard{slot})
-            var picked = _pickedSlot ?? "BuffCard0";
-            if (_fx != null) _fx.Fire(_ui.Find("BuffChoicePanel") as RectTransform, picked.Substring(picked.Length - 1));
-            PunchThenClose(picked, "BuffChoicePanel", PickFxHoldSeconds);
+            // 고른 카드 포커스 → 창 닫힘 → 몸에 카드 힘이 깃듦(InGameMainUI.Rewards PickCardAsync)
+            PickCardAsync(buffKey, _pickedSlot ?? "BuffCard0").Forget();   // fire-and-forget: 연출은 제 시간에 끝난다
             _pickedSlot = null;
         }
 

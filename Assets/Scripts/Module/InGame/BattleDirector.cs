@@ -3307,6 +3307,8 @@ namespace Game.Module.InGame
 
             if (!_running || _config == null) return;
             if (_awaitingBuff) return;   // 3택1 선택 대기 — 적이 없는 상태라 멈춰도 안전하다
+            if (!IsPresentationHeld && _shopHealPending) ApplyShopHeal();
+            if (IsPresentationHeld) return;   // 보상 연출 중 — 무엇을 얻었는지 보여 주는 동안 선다(BattleDirector.Present)
             // 스킬 컷인 중 — 전투를 세우고 연출만 돌린다. 컷인이 끝나면 스킬이 나간다.
             if (IsCastFrozen) { TickCastFreeze(); return; }
 
@@ -6140,9 +6142,9 @@ namespace Game.Module.InGame
                 _shopBought++;
                 _shopHealBought = true;
 
-                _ghostHp = Mathf.Min(GhostHpMax, _ghostHp + GhostHpMax * _shopRules.GhostHealPct / 100);
-                if (_host != null) _host.Heal(Mathf.Max(1, _host.HpMax * _shopRules.HostHealPct / 100));
-                PublishHp();
+                // 회복은 산 물건이 몸에 닿을 때 들어간다(InGameMainUI.BuyAsync → ApplyShopHeal) — PD 10-08
+                //   「돈 → 물건 → 캐릭터 → 효과」 순서. 화면이 부르지 못하면 연출이 끝난 뒤 Update 가 넣는다
+                _shopHealPending = true;
                 line = Localize.Format("ui.shop.heal.desc", _shopRules.HostHealPct, _shopRules.GhostHealPct);
             }
             else

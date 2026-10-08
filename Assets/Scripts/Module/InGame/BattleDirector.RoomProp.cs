@@ -250,9 +250,8 @@ namespace Game.Module.InGame
             // 창은 작동 연출을 잠깐 보여 준 뒤 연다(RoomPropUseHoldSeconds)
             _roomPropOpenTimer = RoomPropUseHoldSeconds;
 
-            // 다 쓴 물건은 어둡게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
-            // 투명하게 하면 바닥이 비쳐 「꺼짐」이 아니라 「사라짐」으로 읽힌다(코덱스 room_heal1 · 시안 「다 씀」)
-            if (_roomPropImg != null) _roomPropImg.color = new Color(0.45f, 0.45f, 0.5f, 1f);
+            // 다 쓴 물건은 그대로 둔다 — 검게 칠하지 않는다(PD 10-08 「도착했는데 오브젝트를 검게」).
+            // 다 썼다는 것은 머리 위 표식이 내려가고 은은한 빛이 꺼지는 것으로 읽힌다.
             if (_roomPropRingImg != null) _roomPropRingImg.color = new Color(1f, 1f, 1f, 0.3f);
             // 표식은 「아직 쓸 수 있다」는 뜻이라 다 쓰면 내린다
             if (_roomPropMark != null) _roomPropMark.gameObject.SetActive(false);

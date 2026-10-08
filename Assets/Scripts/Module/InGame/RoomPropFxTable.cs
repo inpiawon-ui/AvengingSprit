@@ -29,9 +29,6 @@ namespace Game.Module.InGame
             new() { Frames = "room_heal_pillar", Phase = "near", Back = false, X = 0f, Y = -158f, W = 124f, H = 300f, Step = 0.120f,
                     T0 = 0f, T1 = 0f, Loop = true, Additive = true, Tint = new Color(1f, 1f, 1f, 1f), Alpha = 0.700f,
                     Flip = false, Fade = 0.080f, FromAvatar = false },
-            new() { Frames = "room_heal_absorb", Phase = "accept", Back = false, X = 0f, Y = 112f, W = 118f, H = 250f, Step = 0.080f,
-                    T0 = 0f, T1 = 0.350f, Loop = false, Additive = true, Tint = new Color(1f, 1f, 1f, 1f), Alpha = 0.900f,
-                    Flip = false, Fade = 0.040f, FromAvatar = false },
         };
 
         private static readonly PopupFxLayer[] RoomDevil =
