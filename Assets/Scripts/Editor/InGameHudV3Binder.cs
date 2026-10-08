@@ -33,7 +33,9 @@ namespace Game.Editor
             ("Hud3HostPill", "hud3_host_pill", 630, 37, 435, 157),
             ("Hud3StageTrack", "hud3_stage_track", 458, 153, 166, 36),
             ("Hud3GoldChip", "hud3_gold_chip", 28, 211, 197, 85),
-            ("Hud3AffRing", "hud3_aff_ring", 907, 213, 144, 144),
+            // 상성 링 — 몸 알약 **안**, 얼굴 오른쪽 아래에 배지로(PD 2026-10-08 「UI 를 벗어나 오른쪽 밑에 있다, 작게 해서 안에」).
+            //   예전 자리(907, 213, 144)는 알약 밖 아래였다. 크기 144 → 84
+            ("Hud3AffRing", "hud3_aff_ring", 980, 114, 84, 84),
             // 유령 상태에서만 켠다(`InGameMainUI.ShowNoHost`) — 판의 얼굴 테두리 · 막대 홈 위를 덮는다
             ("Hud3HostEmptyFace", "hud3_host_empty_face", 937, 71, 103, 103),
             ("Hud3HostEmptyBar", "hud3_host_empty_bar", 663, 139, 264, 44),
@@ -91,7 +93,7 @@ namespace Game.Editor
             ("GoldIcon", 55, 228, 50, 50),
             ("GoldText", 112, 226, 93, 52),
             ("PauseButton", 234, 204, 97, 98),
-            ("AffinityTriangle", 922, 230, 114, 110),
+            ("AffinityTriangle", 989, 124, 66, 64),   // 링 안 — 링과 같은 비율로 줄였다
             // 아래 조작 — 묶음(ButtonRow) 기준이 아니라 화면 기준으로 적는다(부모 원점을 빼서 넣는다)
             ("DPadBase", 9, 1611, 260, 255),
             ("ButtonRow", 681, 1630, 386, 235),
@@ -208,29 +210,10 @@ namespace Game.Editor
                     img.color = Color.white;
                     PlaceAbs((RectTransform)t, x, y, w, h);
                 }
-                // HUD 뒤 배경 띠 — 전투 판은 HUD 아래에서 시작해서, 받침이 없으면 HUD 뒤가 빈 검은 띠로 보인다.
-                // 화면 폭 전체로 늘린다(4:3 에서도 끝까지). 화면 맨 뒤에 깐다.
-                if (sprites.TryGetValue("hud3_top_band", out var band) && band != null)
-                {
-                    var bt = root.transform.Find("Hud3TopBand");
-                    if (bt == null)
-                    {
-                        var go = new GameObject("Hud3TopBand", typeof(RectTransform), typeof(Image));
-                        go.transform.SetParent(root.transform, false);
-                        bt = go.transform;
-                    }
-                    bt.SetSiblingIndex(0);
-                    var brt = (RectTransform)bt;
-                    brt.anchorMin = new Vector2(0f, 1f);
-                    brt.anchorMax = new Vector2(1f, 1f);
-                    brt.pivot = new Vector2(0.5f, 1f);
-                    brt.anchoredPosition = Vector2.zero;
-                    brt.sizeDelta = new Vector2(0f, 345f * K);
-                    var bimg = bt.GetComponent<Image>();
-                    bimg.sprite = band;
-                    bimg.raycastTarget = false;
-                    bimg.preserveAspect = false;
-                }
+                // HUD 뒤 배경 띠(밤 도시 그림)는 쓰지 않는다 — 챕터와 상관없이 같은 그림이 HUD 뒤를 덮었다.
+                // HUD 뒤는 뚫려 인게임 배경이 보이고 그 위에 판이 얹힌 느낌이 기획이다(PD 2026-10-08).
+                // 예전에 깐 띠가 프리팹에 남아 있으면 지운다.
+                if (root.transform.Find("Hud3TopBand") is Transform oldBand) Object.DestroyImmediate(oldBand.gameObject);
                 // 덧판은 몸이 없을 때만 — 기본은 끈다. 판은 유령으로 시작하므로 코드가 바로 켠다.
                 top.Find("Hud3HostEmptyFace").gameObject.SetActive(false);
                 top.Find("Hud3HostEmptyBar").gameObject.SetActive(false);

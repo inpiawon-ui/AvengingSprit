@@ -33,6 +33,10 @@ namespace Game.Module.InGame
         {
             if (_fieldTopOffset >= 0f || _field == null) return;
             _fieldTopOffset = -_field.anchoredPosition.y;
+            // HUD 뒤는 뚫려 방이 비친다 — HUD 판은 그 위에 얹힌다(PD 2026-10-08). 필드 자리 · 크기는 그대로라
+            // 카메라 · 판정은 안 바뀌고, 자르는 선(마스크)만 HUD 몫만큼 위로 올린다.
+            if (_field.TryGetComponent<UnityEngine.UI.RectMask2D>(out var mask))
+                mask.padding = new Vector4(mask.padding.x, mask.padding.y, mask.padding.z, -_fieldTopOffset);
         }
 
         /// <summary>
