@@ -99,8 +99,10 @@ node(P, 'BuffSubText', *at(LV, 180, 241), 329, 38, role='hint')
 for i, fx in enumerate((52, 264, 477)):
     c = 'BuffCard%d' % i
     node(P, c, *at(LV, fx, 368), 162, 320, sliced=True)
-    node(P, c + 'Chip', 14, 6, 134, 26, parent=c)
-    node(P, c + 'ChipText', 0, 0, 134, 26, parent=c + 'Chip', role='chip', group='buff_chip')
+    # 등급 글자는 카드 그림에 이미 있는 명판(190x350 그림 중 x 25~165 · y 33~62 → 카드 162x320 에서 x 21~141 · y 28~54) 안에 —
+    # 따로 얹던 칩 그림은 명판과 겹쳐 「등급 밑 빈 네모」로 보였다(PD 10-08). 칩은 자리만 남기고 그림을 끈다(hide)
+    node(P, c + 'Chip', 21, 28, 120, 26, parent=c, hide=True)
+    node(P, c + 'ChipText', 0, 0, 120, 26, parent=c + 'Chip', role='chip', group='buff_chip')
     node(P, c + 'Icon', 21, 40, 120, 120, parent=c)
     node(P, c + 'Name', 2, 170, 158, 34, parent=c, role='name', group='buff_name')
     # 카드 그림 안쪽 테두리(좌우 약 12px)에 글자가 닿지 않게 — 일본어 두 줄이 테두리에 붙었다(게임 캡처 2026-10-08)

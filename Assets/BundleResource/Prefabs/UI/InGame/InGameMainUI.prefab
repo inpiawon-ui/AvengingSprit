@@ -2716,75 +2716,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.PopupFxSpec
   _layers:
-  - Frames: clear_title_burst
-    Phase: open
-    Back: 1
-    X: 360
-    Y: 560
-    W: 980
-    H: 980
-    Step: 0.18
-    T0: 0
-    T1: 0.72
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.88
-    Flip: 0
-    Fade: 0.1
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: clear_edge_bolt
-    Phase: open
-    Back: 0
-    X: 50
-    Y: 640
-    W: 64
-    H: 360
-    Step: 0.14
-    T0: 0.45
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.34
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: clear_edge_bolt
-    Phase: open
-    Back: 0
-    X: 670
-    Y: 640
-    W: 64
-    H: 360
-    Step: 0.14
-    T0: 0.52
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.34
-    Flip: 1
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   - Frames: clear_coin_rain
     Phase: open
     Back: 0
@@ -2815,15 +2746,15 @@ MonoBehaviour:
     Y: 31
     W: 430
     H: 120
-    Step: 0.18
-    T0: 1.65
-    T1: 2.4
+    Step: 0.12
+    T0: 2.95
+    T1: 3.6
     Loop: 0
     Additive: 1
     Tint: {r: 1, g: 1, b: 1, a: 1}
     Alpha: 0.72
     Flip: 0
-    Fade: 0.12
+    Fade: 0.08
     Beam: 0
     X2: 0
     Y2: 0
@@ -2831,52 +2762,6 @@ MonoBehaviour:
     AtNode: ResultChestArt
     UntilAccept: 0
     InNode: 1
-  - Frames: clear_soul_rise
-    Phase: open
-    Back: 1
-    X: 250
-    Y: 300
-    W: 52
-    H: 330
-    Step: 0.18
-    T0: 1.15
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.32
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: clear_soul_rise
-    Phase: open
-    Back: 1
-    X: 470
-    Y: 300
-    W: 52
-    H: 330
-    Step: 0.18
-    T0: 1.27
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.32
-    Flip: 1
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   - Frames: clear_ok_glow
     Phase: open
     Back: 0
@@ -4163,7 +4048,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 134, y: 26}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &640110987067756107
 CanvasRenderer:
@@ -7926,8 +7811,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 14, y: -6}
-  m_SizeDelta: {x: 134, y: 26}
+  m_AnchoredPosition: {x: 21, y: -28}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6669110655424670263
 CanvasRenderer:
@@ -7950,7 +7835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10543,7 +10428,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 134, y: 26}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &3049309777485568390
 CanvasRenderer:
@@ -12948,8 +12833,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 14, y: -6}
-  m_SizeDelta: {x: 134, y: 26}
+  m_AnchoredPosition: {x: 21, y: -28}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1321180823684751880
 CanvasRenderer:
@@ -12972,7 +12857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14094,190 +13979,6 @@ MonoBehaviour:
     X2: 0
     Y2: 0
     FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: devil_pill_sparks
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 588.2353
-    H: 102.22222
-    Step: 0.12
-    T0: 0.6
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.62
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: EventRewardPill
-    UntilAccept: 0
-    InNode: 1
-  - Frames: devil_pill_sparks
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 588.2353
-    H: 102.22222
-    Step: 0.12
-    T0: 0.65
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.3529412, b: 0.27450982, a: 1}
-    Alpha: 0.52
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: EventCostPill
-    UntilAccept: 0
-    InNode: 1
-  - Frames: devil_button_glow
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 522.7273
-    H: 140
-    Step: 0.2
-    T0: 0.6
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.4
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: EventAcceptButton
-    UntilAccept: 1
-    InNode: 1
-  - Frames: devil_soul_beam
-    Phase: accept
-    Back: 0
-    X: 112
-    Y: 292
-    W: 0
-    H: 62
-    Step: 0.06
-    T0: 0
-    T1: 0.62
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 1
-    Flip: 0
-    Fade: 0.15
-    Beam: 1
-    X2: 360
-    Y2: 424
-    FromAvatar: 1
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: devil_chain_pull
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 661
-    W: 0
-    H: 52
-    Step: 0.06
-    T0: 0
-    T1: 0.48
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 1
-    Flip: 0
-    Fade: 0.15
-    Beam: 1
-    X2: 116
-    Y2: 721
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: devil_chain_pull
-    Phase: accept
-    Back: 0
-    X: 720
-    Y: 661
-    W: 0
-    H: 52
-    Step: 0.06
-    T0: 0
-    T1: 0.48
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 1
-    Flip: 0
-    Fade: 0.15
-    Beam: 1
-    X2: 604
-    Y2: 721
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
-  - Frames: devil_reward_burst
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 560
-    H: 131.42857
-    Step: 0.08
-    T0: 0.25
-    T1: 1
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 1
-    Flip: 0
-    Fade: 0
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: EventRewardPill
-    UntilAccept: 0
-    InNode: 1
-  - Frames: ui_powerup
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -10
-    W: 180
-    H: 220
-    Step: 0.07
-    T0: 0.35
-    T1: 0.95
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.06
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 1
     AtNode: 
     UntilAccept: 0
     InNode: 0
@@ -15596,29 +15297,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.PopupFxSpec
   _layers:
-  - Frames: shop_lamp_glow
-    Phase: open
-    Back: 1
-    X: 360
-    Y: 390
-    W: 160
-    H: 160
-    Step: 0.1
-    T0: 0
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.72
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 1
-    InNode: 0
   - Frames: shop_tube_ghost
     Phase: open
     Back: 0
@@ -15711,374 +15389,6 @@ MonoBehaviour:
     AtNode: 
     UntilAccept: 0
     InNode: 0
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.38
-    T1: 0.62
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem0
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 0.72
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem0
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.44
-    T1: 0.68
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem1
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 0.79
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem1
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.5
-    T1: 0.74
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem2
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 0.86
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem2
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.56
-    T1: 0.8
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem3
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 0.93
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem3
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.62
-    T1: 0.86
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem4
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 1
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem4
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_sheen
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 270
-    H: 121
-    Step: 0.1
-    T0: 0.68
-    T1: 0.92
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem5
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_cell_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 293
-    H: 172
-    Step: 0.16
-    T0: 1.07
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 1, g: 0.74509805, b: 0.19607843, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.16
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem5
-    UntilAccept: 1
-    InNode: 1
-  - Frames: shop_coin_burst
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 130
-    H: 130
-    Step: 0.07
-    T0: 0
-    T1: 0.28
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.72
-    Flip: 0
-    Fade: 0.04
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem{slot}
-    UntilAccept: 0
-    InNode: 1
-  - Frames: shop_coin_to_gold
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 0
-    H: 18
-    Step: 0.05
-    T0: 0.02
-    T1: 0.32
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 0.78431374, b: 0.23921569, a: 1}
-    Alpha: 0.9
-    Flip: 0
-    Fade: 0.03
-    Beam: 1
-    X2: 75
-    Y2: 152
-    FromAvatar: 0
-    AtNode: ShopItem{slot}
-    UntilAccept: 0
-    InNode: 0
-  - Frames: shop_item_arc
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -175
-    W: 250
-    H: 390
-    Step: 0.06
-    T0: 0.03
-    T1: 0.34
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.92
-    Flip: 0
-    Fade: 0.03
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShopItem{slot}
-    UntilAccept: 0
-    InNode: 0
-  - Frames: ui_powerup
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -10
-    W: 180
-    H: 220
-    Step: 0.07
-    T0: 0.35
-    T1: 0.95
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 0.68235296, b: 0.1254902, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.06
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 1
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
 --- !u!1 &6660206877852392182
 GameObject:
@@ -16116,7 +15426,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 134, y: 26}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1305668091526485097
 CanvasRenderer:
@@ -16992,66 +16302,43 @@ MonoBehaviour:
     AtNode: 
     UntilAccept: 0
     InNode: 0
-  - Frames: levelup_card_rim
+  - Frames: present_card_rim_thin
     Phase: open
     Back: 0
     X: 0
     Y: 0
-    W: 220
-    H: 399
-    Step: 0.1
-    T0: 0.42
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 0.36078432, g: 0.74509805, b: 1, a: 1}
-    Alpha: 0.48
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: BuffCard0
-    UntilAccept: 1
-    InNode: 1
-  - Frames: levelup_card_rise
-    Phase: open
-    Back: 1
-    X: 0
-    Y: 190
-    W: 92
-    H: 210
-    Step: 0.1
-    T0: 0.48
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 0.36078432, g: 0.74509805, b: 1, a: 1}
-    Alpha: 0.46
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: BuffCard0
-    UntilAccept: 1
-    InNode: 0
-  - Frames: levelup_card_rim
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 220
-    H: 399
-    Step: 0.1
+    W: 176
+    H: 336
+    Step: 0.32
     T0: 0.5
     T1: 0
     Loop: 1
     Additive: 1
+    Tint: {r: 0.36078432, g: 0.74509805, b: 1, a: 1}
+    Alpha: 0.55
+    Flip: 0
+    Fade: 0.15
+    Beam: 0
+    X2: 0
+    Y2: 0
+    FromAvatar: 0
+    AtNode: BuffCard0
+    UntilAccept: 1
+    InNode: 1
+  - Frames: present_card_rim_thin
+    Phase: open
+    Back: 0
+    X: 0
+    Y: 0
+    W: 176
+    H: 336
+    Step: 0.32
+    T0: 0.6
+    T1: 0
+    Loop: 1
+    Additive: 1
     Tint: {r: 0.9098039, g: 0.93333334, b: 0.9019608, a: 1}
-    Alpha: 0.48
+    Alpha: 0.55
     Flip: 0
     Fade: 0.15
     Beam: 0
@@ -17061,43 +16348,20 @@ MonoBehaviour:
     AtNode: BuffCard1
     UntilAccept: 1
     InNode: 1
-  - Frames: levelup_card_rise
-    Phase: open
-    Back: 1
-    X: 0
-    Y: 190
-    W: 92
-    H: 210
-    Step: 0.1
-    T0: 0.56
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 0.9098039, g: 0.93333334, b: 0.9019608, a: 1}
-    Alpha: 0.46
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: BuffCard1
-    UntilAccept: 1
-    InNode: 0
-  - Frames: levelup_card_rim
+  - Frames: present_card_rim_thin
     Phase: open
     Back: 0
     X: 0
     Y: 0
-    W: 220
-    H: 399
-    Step: 0.1
-    T0: 0.58
+    W: 176
+    H: 336
+    Step: 0.32
+    T0: 0.7
     T1: 0
     Loop: 1
     Additive: 1
     Tint: {r: 0.36078432, g: 0.74509805, b: 1, a: 1}
-    Alpha: 0.48
+    Alpha: 0.55
     Flip: 0
     Fade: 0.15
     Beam: 0
@@ -17107,98 +16371,6 @@ MonoBehaviour:
     AtNode: BuffCard2
     UntilAccept: 1
     InNode: 1
-  - Frames: levelup_card_rise
-    Phase: open
-    Back: 1
-    X: 0
-    Y: 190
-    W: 92
-    H: 210
-    Step: 0.1
-    T0: 0.64
-    T1: 0
-    Loop: 1
-    Additive: 1
-    Tint: {r: 0.36078432, g: 0.74509805, b: 1, a: 1}
-    Alpha: 0.46
-    Flip: 0
-    Fade: 0.15
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: BuffCard2
-    UntilAccept: 1
-    InNode: 0
-  - Frames: levelup_pick_flare
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 194
-    H: 358
-    Step: 0.08
-    T0: 0
-    T1: 0.35
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 0.78431374, b: 0.23921569, a: 1}
-    Alpha: 0.88
-    Flip: 0
-    Fade: 0.04
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: BuffCard{slot}
-    UntilAccept: 0
-    InNode: 1
-  - Frames: levelup_pick_stream
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -120
-    W: 0
-    H: 120
-    Step: 0.06
-    T0: 0.02
-    T1: 0.35
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.85
-    Flip: 0
-    Fade: 0.04
-    Beam: 1
-    X2: 360
-    Y2: 301
-    FromAvatar: 0
-    AtNode: BuffCard{slot}
-    UntilAccept: 0
-    InNode: 0
-  - Frames: ui_powerup
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -10
-    W: 180
-    H: 220
-    Step: 0.07
-    T0: 0.35
-    T1: 0.95
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 0.78431374, b: 0.23921569, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.06
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 1
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
 --- !u!1 &6923981480847023374
 GameObject:
@@ -22478,29 +21650,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.InGame.PopupFxSpec
   _layers:
-  - Frames: altar_drop_ripple
-    Phase: open
-    Back: 0
-    X: 360
-    Y: 354
-    W: 200
-    H: 260
-    Step: 0.12
-    T0: 0
-    T1: 0.62
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.06
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   - Frames: altar_tube_fill
     Phase: open
     Back: 0
@@ -22593,29 +21742,6 @@ MonoBehaviour:
     AtNode: 
     UntilAccept: 0
     InNode: 0
-  - Frames: altar_sweep
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 385
-    H: 114
-    Step: 0.12
-    T0: 0.42
-    T1: 0.72
-    Loop: 0
-    Additive: 0
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShrineChoice0
-    UntilAccept: 0
-    InNode: 1
   - Frames: altar_gem_pulse
     Phase: open
     Back: 0
@@ -22623,15 +21749,15 @@ MonoBehaviour:
     Y: 0
     W: 52
     H: 52
-    Step: 0.22
+    Step: 0.28
     T0: 0.7
     T1: 0
     Loop: 1
     Additive: 1
     Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.55
+    Alpha: 0.45
     Flip: 0
-    Fade: 0.16
+    Fade: 0.3
     Beam: 0
     X2: 0
     Y2: 0
@@ -22639,29 +21765,6 @@ MonoBehaviour:
     AtNode: ShrineChoice0
     UntilAccept: 0
     InNode: 1
-  - Frames: altar_sweep
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 385
-    H: 114
-    Step: 0.12
-    T0: 0.54
-    T1: 0.84
-    Loop: 0
-    Additive: 0
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShrineChoice1
-    UntilAccept: 0
-    InNode: 1
   - Frames: altar_gem_pulse
     Phase: open
     Back: 0
@@ -22669,43 +21772,20 @@ MonoBehaviour:
     Y: 0
     W: 52
     H: 52
-    Step: 0.22
+    Step: 0.28
     T0: 0.92
     T1: 0
     Loop: 1
     Additive: 1
     Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.55
+    Alpha: 0.45
     Flip: 0
-    Fade: 0.16
+    Fade: 0.3
     Beam: 0
     X2: 0
     Y2: 0
     FromAvatar: 0
     AtNode: ShrineChoice1
-    UntilAccept: 0
-    InNode: 1
-  - Frames: altar_sweep
-    Phase: open
-    Back: 0
-    X: 0
-    Y: 0
-    W: 385
-    H: 114
-    Step: 0.12
-    T0: 0.66
-    T1: 0.96
-    Loop: 0
-    Additive: 0
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.22
-    Flip: 0
-    Fade: 0.08
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShrineChoice2
     UntilAccept: 0
     InNode: 1
   - Frames: altar_gem_pulse
@@ -22715,15 +21795,15 @@ MonoBehaviour:
     Y: 0
     W: 52
     H: 52
-    Step: 0.22
+    Step: 0.28
     T0: 1.14
     T1: 0
     Loop: 1
     Additive: 1
     Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.55
+    Alpha: 0.45
     Flip: 0
-    Fade: 0.16
+    Fade: 0.3
     Beam: 0
     X2: 0
     Y2: 0
@@ -22731,75 +21811,6 @@ MonoBehaviour:
     AtNode: ShrineChoice2
     UntilAccept: 0
     InNode: 1
-  - Frames: altar_pick_glow
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 423
-    H: 102
-    Step: 0.09
-    T0: 0
-    T1: 0.35
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.85
-    Flip: 0
-    Fade: 0.05
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 0
-    AtNode: ShrineChoice{slot}
-    UntilAccept: 0
-    InNode: 1
-  - Frames: altar_heal_stream
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: 0
-    W: 0
-    H: 44
-    Step: 0.08
-    T0: 0.06
-    T1: 0.48
-    Loop: 0
-    Additive: 1
-    Tint: {r: 1, g: 1, b: 1, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.05
-    Beam: 1
-    X2: 112
-    Y2: 92
-    FromAvatar: 0
-    AtNode: ShrineChoice{slot}
-    UntilAccept: 0
-    InNode: 0
-  - Frames: ui_powerup
-    Phase: accept
-    Back: 0
-    X: 0
-    Y: -10
-    W: 180
-    H: 220
-    Step: 0.07
-    T0: 0.35
-    T1: 0.95
-    Loop: 0
-    Additive: 1
-    Tint: {r: 0.25882354, g: 0.91764706, b: 0.9490196, a: 1}
-    Alpha: 0.95
-    Flip: 0
-    Fade: 0.06
-    Beam: 0
-    X2: 0
-    Y2: 0
-    FromAvatar: 1
-    AtNode: 
-    UntilAccept: 0
-    InNode: 0
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
 --- !u!1 &8788303551249922292
 GameObject:
@@ -23665,8 +22676,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 14, y: -6}
-  m_SizeDelta: {x: 134, y: 26}
+  m_AnchoredPosition: {x: 21, y: -28}
+  m_SizeDelta: {x: 120, y: 26}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1835470309191401999
 CanvasRenderer:
@@ -23689,7 +22700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

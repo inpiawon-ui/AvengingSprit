@@ -115,20 +115,8 @@ def layers_devil():
         L('devil_chain_glow', 52, 732, 132, 300, 0.12, 0.15, alpha=0.58, fade=0.12),
         L('devil_chain_glow', 668, 732, 132, 300, 0.12, 0.15, alpha=0.58, fade=0.12, flip=True),
         L('devil_flame', 360, 405, 38, 76, 0.10, 0.25, alpha=0.82, fade=0.12),
-        # 알약에 붙는다 — 대가가 없는 거래는 대가 알약이 숨고 보상 알약이 가운데로 간다(숨은 칸 장식은 안 켠다, 10-08 게임 확인)
-        L('devil_pill_sparks', 0, 0, rw[2] / 0.85, rw[3] / 0.45, 0.12, 0.6, alpha=0.62, atNode='EventRewardPill', inNode=True),
-        L('devil_pill_sparks', 0, 0, cs[2] / 0.85, cs[3] / 0.45, 0.12, 0.65, tint=(255, 90, 70), alpha=0.52,
-          atNode='EventCostPill', inNode=True),
-        # 고르면 거둔다(검수 3회차 — 수락 컷엔 버튼 재질의 붉은 테두리만)
-        L('devil_button_glow', 0, 0, acc[2] / 0.88, acc[3] / 0.70, 0.2, 0.6, alpha=0.40, untilAccept=True,
-          atNode='EventAcceptButton', inNode=True),
-        # 3 수락
-        L('devil_soul_beam', *PREVIEW_AVATAR, 0, 62, 0.06, 0.0, 0.62, phase='accept', beam=True, x2=360, y2=424, fromAvatar=True),
-        L('devil_chain_pull', 0, 616, 0, 52, 0.06, 0.0, 0.48, phase='accept', beam=True, x2=116, y2=676),
-        L('devil_chain_pull', 720, 616, 0, 52, 0.06, 0.0, 0.48, phase='accept', beam=True, x2=604, y2=676),
-        L('devil_reward_burst', 0, 0, 560, rw[3] / 0.35, 0.08, 0.25, 1.0, loop=False, fade=0, phase='accept',
-          atNode='EventRewardPill', inNode=True),
-        powerup('devil'),
+        # 알약 반짝이 · 수락 버튼 빛 · 수락 반응(혼 줄기 · 사슬 · 보상 판 터짐 · 몸 빛)은 뺐다 — PD 10-08 「싼마이틱하게 하지 마」.
+        # 수락하면 창을 닫고 캐릭터에 저주 연출(InGameMainUI.Rewards AcceptDevilAsync)
     ]}
 
 
@@ -147,21 +135,12 @@ def layers_levelup():
     ]
     # 카드 테두리 · 상승광은 카드 희귀도 색(시안: RARE 청 · COMMON 백) — 게임은 InGameMainUI 가 카드마다
     # PopupFxPlayer.Tint(패널, 'BuffCard{i}', 희귀도색) 로 다시 칠한다. 표의 색은 미리보기 카드(RARE · COMMON · RARE)용.
+    # 카드 테두리 — 아주 가는 빛 토막이 천천히 한 바퀴(PD 10-08 「은은하게 · 얇게 · 천천히」). 상승광 · 고른 순간 빛줄기 · 몸 빛은 뺐다 —
+    # 고르면 그 카드가 커지며 가운데로 오고(포커스) 창을 닫은 뒤 캐릭터에 카드 힘이 깃든다(InGameMainUI.Rewards PickCardAsync)
     for i, c in enumerate(cards):
         tint = RARITY_TINT['common' if i == 1 else 'rare']
-        # 선이 카드 가장자리에 오게 — 그림 속 선은 가장자리에서 25px 안쪽이라 카드(162x320)보다 크게 그린다(10-08 실측)
-        lay.append(L('levelup_card_rim', 0, 0, 220, 399, 0.10, 0.42 + 0.08 * i, alpha=0.48, tint=tint,
+        lay.append(L('present_card_rim_thin', 0, 0, 176, 336, 0.32, 0.5 + 0.1 * i, alpha=0.55, tint=tint,
                      atNode='BuffCard%d' % i, untilAccept=True, inNode=True))
-        lay.append(L('levelup_card_rise', 0, 944 - cen(c)[1], 92, 210, 0.10, 0.48 + 0.08 * i, alpha=0.46, back=True,
-                     tint=tint, atNode='BuffCard%d' % i, untilAccept=True))
-    lay += [
-        L('levelup_pick_flare', 0, 0, 194, 358, 0.08, 0.0, 0.35, loop=False, tint=(255, 200, 61), alpha=0.88, fade=0.04,
-          phase='accept', atNode='BuffCard{slot}', inNode=True),
-        # 카드 위쪽(가운데에서 120 위)에서 문장으로 — 제목 · 안내 글자 뒤로(back)
-        L('levelup_pick_stream', 0, -120, 0, 120, 0.06, 0.02, 0.35, loop=False, alpha=0.85, fade=0.04,
-          phase='accept', beam=True, x2=em[0], y2=em[1], atNode='BuffCard{slot}', back=False),   # 시안처럼 틀 위로 — 뒤로 두면 틀에 다 가려져 안 보였다(10-08 재렌더)
-    ]
-    lay.append(powerup('levelup'))
     return {'panel': 'BuffChoicePanel', 'layers': lay, 'preview_slot': '0'}
 
 
@@ -171,7 +150,7 @@ def layers_altar():
     sym = (fr[0] + 295, fr[1] + 38)
     slots = [P.rect('ShrineChoice%d' % i, True) for i in range(3)]
     lay = [
-        L('altar_drop_ripple', sym[0], sym[1] - 30, 200, 260, 0.12, 0.0, 0.62, loop=False, alpha=0.95, fade=0.06),
+        # 등장 때 가운데로 떨어지던 물방울(altar_drop_ripple) · 칸 훑기(altar_sweep)는 뺐다 — PD 10-08 「쌩뚱맞게 위치도 안 맞는다, 없애」
         L('altar_tube_fill', fr[0] + 43, fr[1] + 275, 38, 300, 0.12, 0.16, alpha=0.5),
         L('altar_tube_fill', fr[0] + 547, fr[1] + 275, 38, 300, 0.12, 0.22, alpha=0.5, flip=True),
         # 가운데 낙하 물줄기(altar_idle_fall)는 뺐다 — 세 칸의 이름 · 설명 위를 지나가 글자를 가렸다(PD 10-08 「게임 정보는 가리면 안 돼」)
@@ -179,18 +158,11 @@ def layers_altar():
         L('altar_idle_bubbles', fr[0] + 547, fr[1] + 290, 56, 300, 0.16, 0.78, alpha=0.7, flip=True),
     ]
     for i, s in enumerate(slots):
-        # 칸 안(칸 그림 위 · 글자 아래). 보석 = 칸 그림 440 폭 중 x 385 → 407 폭 칸 가운데에서 +152(10-08 실측)
-        lay.append(L('altar_sweep', 0, 0, 385, 114, 0.12, 0.42 + 0.12 * i, 0.72 + 0.12 * i, loop=False,
-                     fade=0.08, add=False, alpha=0.22, atNode='ShrineChoice%d' % i, inNode=True))
-        lay.append(L('altar_gem_pulse', 152, 0, 52, 52, 0.22, 0.7 + 0.22 * i,
-                     alpha=0.55, fade=0.16, atNode='ShrineChoice%d' % i, inNode=True))
-    lay += [
-        L('altar_pick_glow', 0, 0, 423, 102, 0.09, 0.0, 0.35, loop=False, alpha=0.85, fade=0.05,
-          phase='accept', atNode='ShrineChoice{slot}', inNode=True),
-        L('altar_heal_stream', 0, 0, 0, 44, 0.08, 0.06, 0.48, loop=False, alpha=0.95, fade=0.05,
-          phase='accept', beam=True, x2=112, y2=92, atNode='ShrineChoice{slot}'),
-        powerup('altar'),
-    ]
+        # 칸 오른쪽 보석만 은은히 숨쉰다(칸 안 · 글자 아래). 보석 = 칸 그림 440 폭 중 x 385 → 407 폭 칸 가운데에서 +152
+        lay.append(L('altar_gem_pulse', 152, 0, 52, 52, 0.28, 0.7 + 0.22 * i,
+                     alpha=0.45, fade=0.3, atNode='ShrineChoice%d' % i, inNode=True))
+    # 고른 순간 빛 · 치유 줄기 · 몸 빛은 뺐다 — 고른 칸에서 회복 구슬이 실제로 고스트 몸까지 날아가고(InGameMainUI.Rewards PickShrineAsync)
+    # 닿는 순간 HP 바가 차며 몸에 회복 연출이 뜬다
     return {'panel': 'ShrinePanel', 'layers': lay, 'preview_slot': '1'}
 
 
@@ -200,30 +172,14 @@ def layers_shop():
     sym = (fr[0] + 345, fr[1] + 40)
     cells = [P.rect('ShopItem%d' % i, True) for i in range(6)]
     lay = [
-        L('shop_lamp_glow', *sym, 160, 160, 0.10, 0.0, alpha=0.72, back=True, untilAccept=True),
+        # 열 때 번쩍이던 등불(shop_lamp_glow) · 칸마다 훑는 빛 · 모든 칸 금테는 뺐다 — PD 10-08 「다 빛나면 뭐가 좋은 건데」
         L('shop_tube_ghost', fr[0] + 31, fr[1] + 300, 44, 300, 0.14, 0.16, alpha=0.68, untilAccept=True),
         L('shop_tube_ghost', fr[0] + 659, fr[1] + 300, 44, 300, 0.14, 0.22, alpha=0.68, flip=True, untilAccept=True),
         L('shop_pipe_flow', fr[0] + 190, fr[1] + 68, 200, 36, 0.10, 0.22, 0.82, loop=False, alpha=0.5, back=True),
         L('shop_pipe_flow', fr[0] + 500, fr[1] + 68, 200, 36, 0.10, 0.28, 0.88, loop=False, alpha=0.5, back=True,
           flip=True),
     ]
-    for i, c in enumerate(cells):
-        # 칸 안(칸 그림 위 · 이름 · 가격 · 설명 아래). 늘린 칸 크기(121)를 따라간다
-        lay.append(L('shop_cell_sheen', 0, 0, 270, 121, 0.10, 0.38 + 0.06 * i, 0.62 + 0.06 * i, loop=False,
-                     fade=0.08, alpha=0.22, untilAccept=True, atNode='ShopItem%d' % i, inNode=True))
-        # 선이 칸 금테(가장자리 2.5px) 위에 오게 — 그림 속 선은 282x103 중 x 13~268 · y 15~85(10-08 실측), 호박색
-        lay.append(L('shop_cell_rim', 0, 0, 293, 172, 0.16, 0.72 + 0.07 * i, tint=(255, 190, 50), alpha=0.48, fade=0.16,
-                     untilAccept=True, atNode='ShopItem%d' % i, inNode=True))
-    lay += [
-        L('shop_coin_burst', 0, 0, 130, 130, 0.07, 0.0, 0.28, loop=False, alpha=0.72, fade=0.04, phase='accept',
-          atNode='ShopItem{slot}', inNode=True),
-        L('shop_coin_to_gold', 0, 0, 0, 18, 0.05, 0.02, 0.32, loop=False, tint=(255, 200, 61), alpha=0.9, fade=0.03,
-          phase='accept',
-          beam=True, x2=75, y2=152, atNode='ShopItem{slot}'),
-        L('shop_item_arc', 0, -175, 250, 390, 0.06, 0.03, 0.34, loop=False, alpha=0.92, fade=0.03, phase='accept',
-          atNode='ShopItem{slot}'),
-    ]
-    lay.append(powerup('shop'))
+    # 구매 반응(칸 금화 튐 · 금화 줄 · 원호 아이콘 · 몸 빛)은 뺐다 — HUD 골드 → 산 칸 → 몸 순서로 InGameMainUI.Rewards BuyAsync 가 보여 준다
     return {'panel': 'ShopPanel', 'layers': lay, 'preview_slot': '0'}
 
 
@@ -236,18 +192,16 @@ def layers_clear():
     # 코덱스 1회차(review_fx_story_clear1.md) 반영. 단 제목색은 글자 검수 3회차(흰색 유지)를 따르고,
     # 「능력치 적용」 빛은 능력치를 얻는 창(레벨업 · 제단 · 악마 · 상점)에만 — 클리어는 보상 창이라 넣지 않는다.
     return {'panel': 'ChapterResultPopup', 'layers': [
-        L('clear_title_burst', 360, 560, 980, 980, 0.18, 0.0, 0.72, loop=False, alpha=0.88, fade=0.1, back=True),
-        L('clear_edge_bolt', 50, 640, 64, 360, 0.14, 0.45, alpha=0.34),
-        L('clear_edge_bolt', 670, 640, 64, 360, 0.14, 0.52, alpha=0.34, flip=True),
+        # 창 뒤 금빛 폭발(clear_title_burst)은 뺐다 — PD 10-08 「과하다」. 등장은 창이 OutBack 곡선으로 커지는 것 하나로 충분
+        # 창 가장자리 전기 · 양옆 원혼 입자는 뺐다 — PD 10-08 「아웃라인에 이펙트를 과하게, 그냥 이미지 같다」
         # 금화는 금화 더미 칸에 붙는다(줄이 내려가도 따라감) — 위에서 쏟아져 더미 위에 쌓인다(PD 10-08 「따로 논다」).
         # 숫자 0 → 금액 · 더미 튐은 ChapterResultPopup.CountGoldAsync 가 같은 1.55 ~ 2.35 초에 맞춘다
         # 금화 더미 칸 안(같은 줄 「골드 획득」 · 금액 글자보다 아래 층). 폭은 더미 칸(150) 안으로
         L('clear_coin_rain', 0, -30, 160, 160, 0.2, 1.55, 2.4, loop=False, alpha=1.0, fade=0.1, add=False,
           atNode='ResultGoldIcon', inNode=True),
-        L('clear_chest_land', -8, 31, 430, 120, 0.18, 1.65, 2.40, loop=False, alpha=0.72, fade=0.12,
+        # 상자가 위에서 떨어져 바닥에 닿는 순간(ChapterResultPopup.ChestDropAsync 의 착지 2.95초)에 먼지 고리
+        L('clear_chest_land', -8, 31, 430, 120, 0.12, 2.95, 3.6, loop=False, alpha=0.72, fade=0.08,
           atNode='ResultChestArt', inNode=True),
-        L('clear_soul_rise', 250, 300, 52, 330, 0.18, 1.15, alpha=0.32, back=True),
-        L('clear_soul_rise', 470, 300, 52, 330, 0.18, 1.27, alpha=0.32, back=True, flip=True),
         # 시안 3컷 「끝」= 누르기를 기다리는 대기 — 테두리만 은은히, 누르면 짧게 한 번 더
         L('clear_ok_glow', 0, 0, 304, 96, 0.16, 2.4, alpha=0.22, fade=0.3, atNode='ResultOkButton', inNode=True),
         L('clear_ok_glow', 0, 0, 304, 96, 0.09, 0.0, 0.35, loop=False, alpha=0.32, fade=0.06, phase='accept',
@@ -264,8 +218,7 @@ def layers_room_heal():
         L('room_heal_capsule_glow', 0, -8, 138, 238, 0.16, 0.0, add=False, alpha=0.38, fade=0.18),
         L('room_heal_steam', -12, -174, 126, 150, 0.16, 0.2, add=False, alpha=0.42, fade=0.18),
         L('room_heal_pillar', 0, -158, 124, 300, 0.12, 0.0, alpha=0.70, fade=0.08, phase='near'),
-        # 제단 발밑에서 아래(플레이어 쪽)로 — 몸 위치에 붙이면 큰 고리로 읽혔다(코덱스 room_heal2)
-        L('room_heal_absorb', 0, 112, 118, 250, 0.08, 0.0, 0.35, loop=False, alpha=0.90, fade=0.04, phase='accept'),
+        # 닿았을 때 아래로 떨어지던 빛줄기(room_heal_absorb)는 뺐다 — PD 10-08 「생뚱맞게 밑에 한 줄기, 없애」. 닿으면 창이 열린다
     ]}
 
 
