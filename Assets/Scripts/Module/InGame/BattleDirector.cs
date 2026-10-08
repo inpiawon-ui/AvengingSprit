@@ -9285,7 +9285,21 @@ namespace Game.Module.InGame
             u.SetState(EnemyState.Idle);
             ApplyFacingSprites(u, def.SpriteKey);
             _enemies.Add(u);
+            // ⚠ 이 몸은 판 시작 때 미리 올린 목록(`RunUnitKeys`)에 없을 수 있다 — 그러면 그림 없이 **흰 네모**로 섰다
+            //   (2026-10-08 연출 세션 캡처 · PD 「하얀 화면이 가끔 나온다」). 그림이 없으면 그 자리에서 올리고, 올 때까지 숨긴다.
+            if (UnitGet(def.SpriteKey) == null) LoadEventHostAsync(u, def.SpriteKey).Forget();   // fire-and-forget: 그림이 오면 그때 보인다
             return Localize.Format("ui.event.result.appeared", def.DisplayName);
+        }
+
+        private async UniTaskVoid LoadEventHostAsync(Unit u, string key)
+        {
+            u.gameObject.SetActive(false);
+            if (CoreModule.TryGet<IResourceManager>(out var res)) await LoadOneUnitAtlasAsync(res, key);
+            if (u == null || this == null) return;
+            var s = UnitGet(key);
+            if (s != null) u.SetSprite(s);
+            ApplyFacingSprites(u, key);
+            u.gameObject.SetActive(true);
         }
 
         /// <summary>
