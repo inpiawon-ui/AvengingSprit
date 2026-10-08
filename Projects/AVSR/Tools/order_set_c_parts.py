@@ -55,13 +55,22 @@ PARTS = {
     'shopitemcell': ('shopitemcell', 'shop', (272, 97), '상품 칸 — 흑철 테 · 남흑색 판 · 왼쪽 아이콘 자리(빈 네모) · 오른쪽 위 가격 판(빈). 아이콘 · 글자는 **그리지 않는다**'),
     'shopitemcell_off': ('shopitemcell', 'shop', (272, 97), '상품 칸(못 사는 상태) — 같은 모양, 회색으로 죽은 빛 · 어둡게, 아이콘 · 글자 없이'),
     'shopleavebutton': ('shopleavebutton', 'shop', (276, 64), '나가기 버튼 — 호박 테 · 어두운 판, **글자 없이**'),
+    # ── 챕터 클리어 결과창 (연출 시안 mock_fxstory_clear_v2 컷3 — C 원혼 회로 틀, 2026-10-08) ─────
+    # 납품 이름 = Assets/BaseResource/ChapterScreens/ 의 기존 부품 이름(덮어쓰면 결과창이 그대로 새 그림을 쓴다)
+    'result_frame': ('clear_frame', 'clear', (660, 800),
+                     '챕터 클리어 결과창 틀 전체 — 흑철 기계 틀 · 금빛 관로 · 좌우 청백 유리관 · 맨 위 유령 문장(둥근 유리 안 흰 유령). '
+                     '제목 판(「CHAPTER 1 CLEAR」 자리, 위에서 약 118~178) · 이름 판(약 195~255) · 큰 안쪽 판(약 280~660) · OK 자리(약 670~760)는 **글자 없이 빈 판**. '
+                     '안쪽 판 안의 줄 판 · 상자 · 금화는 그리지 않는다'),
+    'result_rowpanel': ('clear_row', 'clear', (500, 150), '결과창 안 보상 줄 판 — 흑철 테 · 남흑색 판, 금화 · 상자 · 글자 없이 빈 판'),
+    'result_warnbar': ('clear_warn', 'clear', (480, 50), '경고 띠 — 진홍 테 · 검붉은 판, 왼쪽 끝 작은 경고 삼각형만(글자 없이)'),
+    'button_yellow_wide': ('clear_ok', 'clear', (290, 80), 'OK 버튼 — 노란 판 · 흑철 테, **글자 없이**'),
 }
 
 TEMPLATE = r'''$env:OPENAI_API_KEY = $null
 Set-Location "C:\won\UnityProject\AvengingSprit"
 $prompt = @'
 이미지 생성 도구로 직접 그린다. API 키를 쓰는 CLI 폴백은 쓰지 마라. 스크립트로 도형을 그려 때우지 마라. 한 장만 그린다.
-게임 「Avenging Spirit RE:BORN」 인게임 UI 부품 — PD 가 통과시킨 시안 C 「원혼 회로」 Projects/AVSR/_exchange/in/mock_set_C_{screen}.png 와 **똑같은 모양 · 색 · 도트 그림체**로.
+게임 「Avenging Spirit RE:BORN」 인게임 UI 부품 — PD 가 통과시킨 시안 Projects/AVSR/_exchange/in/{mockfile} 와 **똑같은 모양 · 색 · 도트 그림체**로.
 앵커(시안에서 이 부품만 잘라 둔 것): Projects/AVSR/_exchange/in/anchor_c/{anchor}.png — 이걸 그대로 따라 깨끗하게 다시 그린다.
 [부품] {name} — {desc}
 [크기] 게임에서 {w} x {h} px 로 쓴다. 그 비율 그대로 캔버스에 크게(가로세로 비율 유지, 캔버스의 90% 정도 차게) 한 장.
@@ -93,7 +102,8 @@ def main(only=None):
     for name, (anchor, screen, (w, h), desc) in PARTS.items():
         if only and name not in only:
             continue
-        body = TEMPLATE.format(screen=screen, anchor=anchor, name=name, desc=desc, w=w, h=h)
+        mockfile = 'mock_fxstory_clear_v2.png (컷3)' if screen == 'clear' else 'mock_set_C_%s.png' % screen
+        body = TEMPLATE.format(mockfile=mockfile, anchor=anchor, name=name, desc=desc, w=w, h=h)
         with open(os.path.join(EX, 'order_setc_%s.ps1' % name), 'w', encoding='utf-8-sig') as f:
             f.write(body)
         keys.append(name)
