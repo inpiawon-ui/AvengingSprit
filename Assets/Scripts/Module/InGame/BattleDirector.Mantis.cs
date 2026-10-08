@@ -28,6 +28,9 @@ namespace Game.Module.InGame
         private bool TickMantis(Unit e, Unit me, float distance, float dt)
         {
             if (TickSnipe(e, me, distance, dt)) return true;
+            // 사거리 안이면 평소처럼 쏜다 — 예전엔 평타가 없어 조준선만 긋고 쉬는 놈이었다(PD 2026-10-08 「일반적으로 쏘다가
+            // 특정 구간에 워닝 띄우고 쏘는 것처럼」). 모아 쏘기는 위 `TickSnipe` 가 몇 초마다 끼어든다
+            if (distance <= Meters(SnipeTriggerMeters * 0.9f)) return false;
 
             // 쏘지 않는 동안 — 멀면 다가오고, 사거리 안이면 옆걸음으로 사선을 바꾼다
             if (distance > Meters(SnipeTriggerMeters * 0.9f))

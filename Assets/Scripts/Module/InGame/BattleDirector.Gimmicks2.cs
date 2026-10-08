@@ -379,6 +379,7 @@ namespace Game.Module.InGame
         {
             _extraImg.Clear();
             _extraImg2.Clear();
+            ClearFixtures();
             _shielded.Clear();
             foreach (var kv in _bubbles)
                 if (kv.Value != null) kv.Value.gameObject.SetActive(false);

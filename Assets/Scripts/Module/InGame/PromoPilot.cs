@@ -592,7 +592,9 @@ namespace Game.Module.InGame
             if (_fRoomProp.GetValue(_bd) is RectTransform prop && prop != null
                 && !(bool)_fRoomPropUsed.GetValue(_bd))
             {
-                _bd.MoveInput = PathToward(me, prop.anchoredPosition);
+                // 그림 한가운데가 아니라 **발밑**(바닥 링)으로 — 다가섰다 판정이 발밑 기준이다(BattleDirector.RoomProp).
+                // 300 px 로 커진 제단 한가운데에 서면 발밑에서 150 px 떨어져 영영 안 닿았다(2026-10-08 녹화 2-8).
+                _bd.MoveInput = PathToward(me, prop.anchoredPosition + Vector2.down * (prop.sizeDelta.y * 0.5f - 24f));
                 return;
             }
             if ((bool)_fExitOpen.GetValue(_bd) && _fExits.GetValue(_bd) is IList exits && exits.Count > 0)

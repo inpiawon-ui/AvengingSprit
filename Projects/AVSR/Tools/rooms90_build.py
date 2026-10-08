@@ -65,8 +65,8 @@ GLYPH = {
     # ── 2차 (2026-09-28) — 피해야 하는 것 7종 + 물건 다양화 ──
     '-': ('LASER_H', 4, 1),          # 레이저 문(가로) — 꺼짐 → 깜빡 → 켜짐
     '!': ('LASER_V', 1, 4),          # 레이저 문(세로)
-    'A': ('SLIDE_BLADE_H', 2, 2),    # 레일 톱날 — 좌우로 ±2 m 오간다
-    'U': ('SLIDE_BLADE_V', 2, 2),    # 레일 톱날 — 위아래로 ±2 m 오간다
+    'A': ('SLIDE_BLADE_H', 2, 2),    # 레일 톱날 — 좌우로 ±3 m 오간다
+    'U': ('SLIDE_BLADE_V', 2, 2),    # 레일 톱날 — 위아래로 ±3 m 오간다
     'Z': ('SWING_HAMMER_H', 2, 2),   # 가로 해머 — 좌우로 ±1.7 m 오간다
     'J': ('FLAME_JET_S', 1, 1),      # 화염 분사구(아래로 3 m)
     '}': ('FLAME_JET_E', 1, 1),      # 화염 분사구(오른쪽으로)
@@ -125,7 +125,7 @@ LASER_PILLAR_REACH = 4.0      # 회전 레이저 길이(m) — BattleDirector.Gi
 
 BLADE_RADIUS = 2.2
 HAMMER_HALF_TRAVEL = 1.7
-SLIDE_HALF_TRAVEL = 2.0
+SLIDE_HALF_TRAVEL = 3.0
 PISTON_REACH = 2.0           # 피스톤 머리가 몸통 밖으로 나가는 거리(m) — BattleDirector.Piston 과 같다
 
 # ── 챕터 정의 — chapters.tsv 가 단일 출처다(유니티 임포터도 같은 표를 읽는다) ──

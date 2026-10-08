@@ -30,7 +30,7 @@ namespace Game.Module.InGame
 
         // ── 레일 톱날 · 가로 해머 ─────────────────────────────────
         private const float SlideCycle = 2.8f;
-        private const float SlideTravel = 4.0f;       // 오가는 폭(m) — 가운데에서 ±2 m
+        private const float SlideTravel = 6.0f;       // 오가는 폭(m) — 가운데에서 ±3 m (PD 2026-10-08 「범위가 좁아 지나가는 게 말이 안 된다」 ±2 → ±3)
 
         // ── 화염 분사구 ──────────────────────────────────────────
         private const float FlameCycle = 3.4f;
@@ -131,6 +131,7 @@ namespace Game.Module.InGame
                     ob.Frames = null;
                     break;
             }
+            SetupFixture(ob);   // 아크 발생기 · 레일 · 들보 · 흐르는 도랑 (BattleDirector.Fixtures)
         }
 
         /// <summary>
@@ -200,6 +201,7 @@ namespace Game.Module.InGame
                     bool on = !_switchHeld && t >= LaserWarnUntil;
                     bool warn = !_switchHeld && !on && t >= LaserOffUntil;
                     o.HazardOn = on;
+                    if (TickArcGate(o, on, warn)) break;   // 전기 아크 문 (BattleDirector.Fixtures)
                     if (o.Img == null) break;
                     float a = on ? 1f
                             : warn ? (Mathf.Repeat(Time.time, 0.16f) < 0.08f ? 0.65f : 0.25f)
@@ -226,8 +228,15 @@ namespace Game.Module.InGame
                     float e = Mathf.SmoothStep(0f, 1f, t < 0.5f ? t * 2f : (1f - t) * 2f);
                     float span = HammerTravel * _pxPerMeter;
                     MoveObstacle(o, rt, o.Home.center + new Vector2(-span * 0.5f + span * e, 0f));
+                    TickGantry(o, rt);   // 들보 · 트롤리 · 사슬 · 그림자 (BattleDirector.Fixtures)
                     break;
                 }
+
+                case "CHANNEL_H":
+                case "CHANNEL_V":
+                    if (o.Frames != null)   // 흐르는 냉각수 — 그 무대 그림이 있을 때만
+                        SetFrame(o, Mathf.FloorToInt(Mathf.Repeat(Time.time * 5f + o.Phase * 4f, 4f)));
+                    break;
 
                 case "SLOW_POOL":
                     if (o.Frames != null)
@@ -275,6 +284,7 @@ namespace Game.Module.InGame
                 }
             }
             EndGimmick2Frame();   // 보호막 그림
+            TickFalling(dt);      // 떨어지는 잔해 (BattleDirector.Fixtures)
             TickBlasts(dt);       // 잡혀서 미뤄 둔 폭탄 버섯 폭발 (BattleDirector.Trash4)
         }
 
@@ -331,8 +341,8 @@ namespace Game.Module.InGame
             o.Timer -= dt;
             if (o.Timer > 0f) return;
             o.Timer = DropCycle;
-            // 유령은 겨누지 않는다 · 화면 밖에서는 안 떨어진다
-            if (_host == null || me == null || !IsOnScreenAt(o.ShotBounds.center)) return;
+            // 유령은 겨누지 않는다 · 화면 밖에서는 안 떨어진다 · 방을 깨면 그친다(깬 뒤에도 떨어지던 것 — PD 2026-10-08 3-7)
+            if (_host == null || me == null || _exitOpen || !IsOnScreenAt(o.ShotBounds.center)) return;
 
             var center = o.ShotBounds.center;
             Vector2 at;
@@ -346,7 +356,10 @@ namespace Game.Module.InGame
             float r = Meters(DropRadiusMeters);
             at.x = Mathf.Clamp(at.x, r, _roomSize.x - r);
             at.y = Mathf.Clamp(at.y, -_roomSize.y + r, -r);
-            StartWarn(DiscShape(at, r), DropWarnSeconds, DropDamage, impactKind: "grenade", fxSize: r * 2f);
+            // 위에서 잔해가 떨어진다 — 원만 뜨고 바닥이 터지면 무엇 때문인지 안 읽혔다(PD 2026-10-08). 깨짐은 잔해 쪽이 낸다
+            bool art = GetSprite("obj_drop_debris") != null;
+            StartWarn(DiscShape(at, r), DropWarnSeconds, DropDamage, impactKind: art ? null : "grenade", fxSize: r * 2f);
+            if (art) SpawnFallingDebris(at, DropWarnSeconds);
         }
 
         private void TickMine(Obstacle o, Unit me, float dt)

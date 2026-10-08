@@ -325,6 +325,8 @@ namespace Game.Module.InGame
                     e.PatternPhase = 1;
                     e.PatternTimer = VaultRiseSeconds;
                     e.SetInvulnerable(true);
+                    // 박차고 오르는 흙먼지 — 없으면 「점프했다가 사라졌다」로 보였다(PD 2026-10-08 6챕터 「기계」)
+                    _pfx?.Puff(e.Position, ParticleElement.Dust, 0.55f);
                     return true;
 
                 case 1:
@@ -360,6 +362,8 @@ namespace Game.Module.InGame
                     e.SetSpriteLift(0f);
                     e.SetInvulnerable(false);
                     e.Position = e.PatternTo;
+                    _pfx?.Puff(e.Position, ParticleElement.Dust, 0.8f);   // 내려앉는 쿵 — 어디로 왔는지 보이게
+                    Shake(ShakeOnKill * 0.5f);
                     e.PatternPhase = 0;
                     e.PatternTimer = VaultCrouchSeconds
                                    + Mathf.Max(0f, (e.Profile?.CanonInterval ?? 2.4f)
@@ -414,8 +418,10 @@ namespace Game.Module.InGame
         /// </summary>
         private bool TickEnemySkill(Unit e, Unit me, float dt)
         {
-            // 잡몹은 스킬이 없다. 빼앗을 수 있는 몸만 쓴다.
-            if (e == null || !e.IsHostBody || e.Profile == null) return false;
+            // 잡몹은 스킬이 없다. 빼앗을 수 있는 몸 · 그리고 중간보스 대장만 쓴다.
+            // ⚠ 대장은 못 뺏는 몸이라 예전엔 여기서 걸러져 **스킬을 한 번도 안 썼다** —
+            //   「대장은 자기 액티브 스킬을 쓴다」가 거짓이었고, 평타만 치는 큰 잡몹이었다(PD 2026-10-08 「너무 약하다」).
+            if (e == null || (!e.IsHostBody && e != _midBoss) || e.Profile == null) return false;
 
             // 시전 중 — 예고를 흘린다.
             if (_enemyCasting == e)
@@ -427,19 +433,29 @@ namespace Game.Module.InGame
 
                 e.SetTelegraph(false);
                 _enemyCasting = null;
-                _enemySkillClock = 0f;
-                _enemySkillSeen = true;
+                if (e == _midBoss) { _midBossSkillClock = 0f; _midBossSkillSeen = true; }
+                else { _enemySkillClock = 0f; _enemySkillSeen = true; }
                 CastEnemySkill(e, me);
                 return true;
             }
 
             if (_enemyCasting != null) return false;   // 다른 몸이 쓰는 중이다
 
-            _enemySkillClock += dt;
-            if (_enemySkillClock < EnemySkillGate(e.Profile)) return false;
+            // 대장은 제 시계를 따로 쓴다 — 부하가 스킬을 쓸 때마다 대장 시계까지 0 으로 돌아가면 영영 안 나온다
+            if (e == _midBoss)
+            {
+                if (IsMidBossStunned) return false;
+                _midBossSkillClock += dt;
+                if (_midBossSkillClock < MidBossSkillGate()) return false;
+            }
+            else
+            {
+                _enemySkillClock += dt;
+                if (_enemySkillClock < EnemySkillGate(e.Profile)) return false;
+            }
 
             _enemyCasting = e;
-            e.PatternTimer = EnemySkillTelegraph;
+            e.PatternTimer = e == _midBoss ? MidBossSkillTelegraph : EnemySkillTelegraph;
             e.SetTelegraph(true);
             // 몸 위에 표식을 띄운다 — 평타 예고(0.45~0.75초)보다 길어야 구별된다.
             PlayFx("mark", e.Position + new Vector2(0f, 52f), 48f, loop: false);
@@ -462,6 +478,10 @@ namespace Game.Module.InGame
             var dir = me.Position - e.Position;
             dir = dir.sqrMagnitude < 0.0001f ? e.Facing : dir.normalized;
             int dmg = Mathf.Max(1, e.Atk);
+            // 대장은 「소개」가 아니라 관문이다 — 탄 수 · 피해 · 돌진 거리를 키운다 (BattleDirector.MidBoss)
+            bool boss = e == _midBoss;
+            int fan = boss ? MidBossSkillShotMul : 1;
+            if (boss) dmg = Mathf.RoundToInt(dmg * MidBossSkillDamageMul);
 
             switch (e.Key)
             {
@@ -470,7 +490,7 @@ namespace Game.Module.InGame
                 case "dragon_blue":
                 case "salamander":
                 case "commando_grenade":
-                    FireFan(e, e.Position + dir * 400f, 5, 50f, Mathf.Max(1, dmg / 2));
+                    FireFan(e, e.Position + dir * 400f, 5 * fan, boss ? 80f : 50f, Mathf.Max(1, dmg / 2));
                     PlayFx(e.Key == "dragon_blue" ? "breath_ice" : "breath_fire",
                            e.Position + dir * 160f, 200f, loop: false);
                     break;
@@ -480,7 +500,7 @@ namespace Game.Module.InGame
                 case "death":
                 case "snowwoman":
                 case "white_wizard":
-                    FireFan(e, e.Position + dir * 400f, 8, 360f, Mathf.Max(1, dmg / 3));
+                    FireFan(e, e.Position + dir * 400f, 8 * fan, 360f, Mathf.Max(1, dmg / 3));
                     PlayFx("burst", e.Position, 96f, loop: false);
                     break;
 
@@ -488,7 +508,7 @@ namespace Game.Module.InGame
                 case "medium":
                 case "commando_laser":
                 case "commando_missile":
-                    FireFan(e, e.Position + dir * 400f, 3, 8f, Mathf.Max(1, dmg / 2));
+                    FireFan(e, e.Position + dir * 400f, 3 * fan, boss ? 20f : 8f, Mathf.Max(1, dmg / 2));
                     PlayFx("muzzle", e.MuzzlePosition, 48f, loop: false);
                     break;
 
@@ -498,16 +518,16 @@ namespace Game.Module.InGame
                 case "hopper":
                 case "ninja":
                 {
-                    var to = ClampedInField(e, e.Position + dir * Meters(3f));
+                    var to = ClampedInField(e, e.Position + dir * Meters(boss ? 4.5f : 3f));
                     e.Position = to;
-                    PlayFx("dash", to, 48f, loop: false);
-                    if (Vector2.Distance(to, me.Position) <= Meters(2.5f)) DamagePlayer(dmg);
+                    PlayFx("dash", to, boss ? 72f : 48f, loop: false);
+                    if (Vector2.Distance(to, me.Position) <= Meters(boss ? 3.2f : 2.5f)) DamagePlayer(dmg);
                     break;
                 }
 
                 // 나머지는 연사로 낸다. 몸짓이 없어도 "무언가 크게 했다" 는 읽힌다.
                 default:
-                    FireFan(e, me.Position, 3, 24f, Mathf.Max(1, dmg / 2));
+                    FireFan(e, me.Position, 3 * fan, boss ? 48f : 24f, Mathf.Max(1, dmg / 2));
                     PlayFx("muzzle", e.MuzzlePosition, 48f, loop: false);
                     break;
             }
@@ -580,7 +600,7 @@ namespace Game.Module.InGame
 
         /// <summary>한 발을 겨눈 자리로 쏜다. 패턴들이 같은 자를 쓰게 여기 모아 둔다.</summary>
         private void FireAimed(Unit e, Vector2 at, float speedMul,
-                               string kindOverride = null, float homing = 0f)
+                               string kindOverride = null, float homing = 0f, int damage = 0, float sizeMul = 1f)
         {
             e.PlayAttack();
             var dir = at - e.Position;
@@ -596,8 +616,8 @@ namespace Game.Module.InGame
             string kind = kindOverride ?? ShotKindOf(e);
             shot.SetSprite(kindOverride != null ? ShotFrames(kindOverride) : ShotSpriteOf(e),
                            kind, LoopsFrames(kind));
-            shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
-                      false, null, _config.ShotSize, ShotEnemyColor, life);
+            shot.Fire(e.Position, e.Position + dir * reach, speed, damage > 0 ? damage : Mathf.Max(1, e.Atk),
+                      false, null, _config.ShotSize * sizeMul, ShotEnemyColor, life);
             if (homing > 0f) shot.SetHoming(homing);
         }
 

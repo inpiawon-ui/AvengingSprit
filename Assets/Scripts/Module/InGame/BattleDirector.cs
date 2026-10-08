@@ -1294,7 +1294,9 @@ namespace Game.Module.InGame
         // 이름만 저장하고 거동은 없었다. 배치가 전부 정적이면 한 번 파악한 방은
         // 두 번째부터 아무 판단도 필요 없어진다. 시간 축은 여기서 생긴다.
 
-        private const float SpikeCycle = 2.0f;     // 들어감 → 솟음 → 들어감 한 바퀴
+        private const float SpikeCycle = 2.4f;     // 들어감 → 솟음 → 들어감 한 바퀴
+        private const float SpikeUpFrom = 0.68f;   // 주기의 이 뒤가 솟은 시간(0.77초) — 그 앞은 바닥이 비어 있다
+        private const float SpikeTellFrac = 0.21f; // 솟기 직전 끝이 들썩이는 예고(0.5초 — 코덱스 검수 「0.36초는 멈춰 쏘는 게임에서 짧다」)
         private const float BladeTurn = 2.6f;      // 톱날 한 바퀴
         private const float BladeRadius = 2.2f;    // 축에서 날까지(미터)
         private const float HammerCycle = 3.0f;    // 추가 왕복 한 바퀴
@@ -1575,7 +1577,15 @@ namespace Game.Module.InGame
         /// 벽에 붙었을 때 캐릭터가 떨린다. 아예 **들어가지 않게** 하는 편이 낫다.
         /// 대각선이 막히면 x 만, 그것도 막히면 y 만 시도한다 — 벽을 따라 흐른다.
         /// </summary>
+        /// <summary>
+        /// 걸음 한 번 — 물건에 막히면 미끄러지고, 끝으로 **방 안에 붙잡는다.**
+        /// ⚠ 예전엔 물건만 보고 방 경계를 안 봐서 물러서는 적이 벽 밖으로 걸어 나갔다
+        ///   (2026-10-08 8-2 거미 x -208 — PD 「뭐든 화면 밖으로 나가면 안 된다」). 맨 위 출구 통로도 여기서 같이 막힌다.
+        /// </summary>
         private Vector2 SlideMove(Unit u, Vector2 from, Vector2 delta)
+            => ClampedInField(u, SlideMoveRaw(u, from, delta));
+
+        private Vector2 SlideMoveRaw(Unit u, Vector2 from, Vector2 delta)
         {
             if (_obstacles.Count == 0) return from + delta;
             // 구루 패시브 — 걸어서 지나간다. 탄은 그대로 막힌다(이동만이다).
@@ -1682,6 +1692,9 @@ namespace Game.Module.InGame
             AddDepth(_host);
             for (int i = 0; i < _enemies.Count; i++) AddDepth(_enemies[i]);
             for (int i = 0; i < _dying.Count; i++) AddDepth(_dying[i]);
+            // 소환물 · 동료도 줄에 세운다 — 아래 「맨 뒤 칸부터」로 바꾸면서 줄 밖은 바닥으로 깔리기 때문이다
+            for (int i = 0; i < _summons.Count; i++) if (_summons[i]?.U != null && _summons[i].U.transform.parent == _unitLayer) AddDepth(_summons[i].U);
+            if (_ally != null && _ally.transform.parent == _unitLayer) AddDepth(_ally);
             // 문은 정렬에서 빼면 순서가 매 프레임 밀려 깜빡인다. 늘 맨 뒤에 둔다 —
             // 방 위쪽 끝에 있어 무엇을 가릴 일이 없다.
             for (int i = 0; i < _exits.Count; i++)
@@ -1702,8 +1715,16 @@ namespace Game.Module.InGame
                 }
                 _depthT[j + 1] = t; _depthY[j + 1] = y;
             }
+            // ⚠ 줄 선 것을 **맨 뒤 칸부터** 채운다. 예전엔 0 번부터 채워서, 줄 밖에 「맨 뒤로」 깔아 둔 것
+            //   (톱니 축 · 해머 사슬 · 물건 그림자)이 거꾸로 맨 위로 밀려 톱니와 캐릭터를 덮었다
+            //   (PD 2026-10-08 「톱니바퀴 뎁스가 안 맞는다」). 줄 밖의 것은 이제 언제나 줄 선 것들 뒤(바닥)다.
+            int first = _unitLayer.childCount - _depthT.Count;
             for (int i = 0; i < _depthT.Count; i++)
-                if (_depthT[i].GetSiblingIndex() != i) _depthT[i].SetSiblingIndex(i);
+            {
+                if (_depthT[i].parent != _unitLayer) continue;
+                int want = first + i;
+                if (_depthT[i].GetSiblingIndex() != want) _depthT[i].SetSiblingIndex(want);
+            }
         }
 
         /// <summary>해저드 위에 서 있으면 주기적으로 깎인다.</summary>
@@ -1725,14 +1746,19 @@ namespace Game.Module.InGame
                 {
                     case "TIMED_SPIKE":
                     {
-                        // 0 → 1 → 0 을 오간다. 솟은 동안(0.55 이상)만 아프다.
+                        // 없다 → 끝이 들썩(예고) → **한 번에 팍** → 그대로 → 한 번에 쏙.
+                        // 예전엔 0 → 반쯤 → 다 솟음을 천천히 오가며 반쯤 솟은 그림에선 안 아파서
+                        // 언제 피해야 하는지 안 읽혔다(PD 2026-10-08 2 · 6 / 10챕터).
                         float t = Mathf.Repeat(Time.time / SpikeCycle + o.Phase, 1f);
-                        float up = t < 0.5f ? t * 2f : (1f - t) * 2f;
-                        SetFrame(o, up < 0.2f ? 0 : up < 0.75f ? 1 : 2);
+                        bool up = t >= SpikeUpFrom;
+                        bool tell = !up && t >= SpikeUpFrom - SpikeTellFrac;
+                        SetFrame(o, up ? 2 : tell ? 1 : 0);
+                        if (up && !o.Telegraph) _pfx?.Puff(o.ShotBounds.center, ParticleElement.Dust, 0.45f);   // 솟는 순간 흙이 튄다
+                        o.Telegraph = up;
                         // ⚠ `Damage` 를 끄고 켜면 안 된다. 내려간 동안 0 으로 덮어쓴 뒤
                         //   올라올 때 `Max(1, 0)` 이 되어 **한 번 내려갔다 오면 피해가 1 로 굳는다.**
                         //   원래 값은 그대로 두고 **켜짐 여부만** 따로 든다.
-                        o.HazardOn = up >= 0.55f;
+                        o.HazardOn = up;
                         break;
                     }
 
@@ -1788,6 +1814,9 @@ namespace Game.Module.InGame
         /// <summary>판정과 그림을 함께 옮긴다. 축·사슬 같은 보조 그림도 따라간다.</summary>
         private void MoveObstacle(Obstacle o, RectTransform rt, Vector2 center)
         {
+            // 그림자도 같이 옮긴다 — 안 옮기면 오가는 톱날 · 해머의 그림자가 처음 자리에 박혀 있었다(2026-10-08 녹화)
+            if (o.Shadow != null)
+                ((RectTransform)o.Shadow.transform).anchoredPosition += center - o.Bounds.center;
             o.Bounds = new Rect(center.x - o.Home.width * 0.5f,
                                 center.y - o.Home.height * 0.5f,
                                 o.Home.width, o.Home.height);
@@ -2597,6 +2626,18 @@ namespace Game.Module.InGame
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return keys;
 
+            // 중간보스 대장은 방 자리(Spawns)가 아니라 `MidBossKey` 로 선다 — 아래 경로 훑기에 안 걸린다.
+            // 안 올리면 대장이 그림 없는 단색 네모로 선다(2026-10-08 실측 9-8 용기병, PD 「하얀 화면」).
+            if (_rooms != null)
+                for (int i = 0; i < _rooms.Rooms.Count; i++)
+                {
+                    var r = _rooms.Rooms[i];
+                    if (r == null || !r.IsMidBoss || string.IsNullOrEmpty(r.MidBossKey)) continue;
+                    for (int h = 0; h < hosts.Count; h++)
+                        if (hosts[h] != null && hosts[h].HostKey == r.MidBossKey && !keys.Contains(hosts[h].SpriteKey))
+                            keys.Add(hosts[h].SpriteKey);
+                }
+
             // 정본 경로가 있으면 그 길에 실제로 나오는 배우만 미리 받는다.
             // 전부 받으면 쓰지도 않을 아틀라스가 딸려 온다.
             if (_rooms != null && _rooms.Get(FirstCanonRoom) != null)
@@ -3202,7 +3243,35 @@ namespace Game.Module.InGame
 
             p.x = Mathf.Clamp(p.x, edge + half.x, _roomSize.x - edge - half.x);
             p.y = Mathf.Clamp(p.y, -_roomSize.y + edge + half.y, TopLimitFor(half.y));
+
+            // 맨 위 벽 — 출구 문 **폭 안에서만** 벽 위로 올라간다(PD 2026-10-08 「출구로 갈 때 출구 쪽만 갈 수 있어야
+            // 하는데 그 왼쪽 · 오른쪽으로 올라가는 버그」). 문 옆에서 위로 밀면 벽에 멈추고,
+            // 이미 통로 안에 있으면 좌우만 통로 폭으로 막는다.
+            float wall = TopWallY();
+            if (p.y > wall)
+            {
+                float cx = _exits.Count > 0 && _exits[0]?.View != null ? _exits[0].View.anchoredPosition.x : _roomSize.x * 0.5f;
+                if (Mathf.Abs(p.x - cx) > DoorOpeningHalf)
+                {
+                    bool inside = u.Position.y > wall && Mathf.Abs(u.Position.x - cx) <= DoorOpeningHalf + 1f;
+                    if (inside) p.x = Mathf.Clamp(p.x, cx - DoorOpeningHalf, cx + DoorOpeningHalf);
+                    else p.y = wall;
+                }
+            }
             return p;
+        }
+
+        /// <summary>출구 문 안쪽 폭의 절반(px) — 문 그림 216 px 에서 양쪽 기둥을 뺀 통로.</summary>
+        private const float DoorOpeningHalf = 68f;
+        /// <summary>문이 아직 안 섰을 때 맨 위 벽 높이(m). 배경의 위쪽 벽 · 울타리가 이만큼 내려온다.</summary>
+        private const float TopWallMeters = 2.2f;
+
+        /// <summary>맨 위 벽선(방 좌표, 음수). 문이 서 있으면 문 그림 아래 끝, 없으면 위에서 2.2 m.</summary>
+        private float TopWallY()
+        {
+            if (_exits.Count > 0 && _exits[0]?.View != null)
+                return _exits[0].View.anchoredPosition.y - _exits[0].View.sizeDelta.y * 0.5f;
+            return -TopWallMeters * _pxPerMeter;
         }
 
         /// <summary>
@@ -7446,18 +7515,25 @@ namespace Game.Module.InGame
             System.Array.Reverse(keys);
         }
 
+        private const float BossDeathFxSize = 300f;
+        private const float SoulDeathFxSize = 120f;
+        private const float MachineDeathFxSize = 110f;
+
         private void KillEnemy(Unit u)
         {
             u.SetState(EnemyState.Dead);
             // 쓰러지는 그림만으로는 «해치웠다»가 약하다. 부서진 조각과 흙먼지를 같이 뿌린다.
             // 잡몹·호스트는 작고 짧게(`Death`), 보스만 크게 — 방마다 여러 번 나는 일이라
             // 예전 크기로는 화면이 먼지로 덮였다(기획 2026-09-28).
+            // ⚠ 흙먼지 · 돌 조각은 뺐다 — PD 2026-10-08 「보스 죽을 때 파편이 쓰레기가 터지는 느낌」.
+            //   코덱스와 정한 공용 죽음(시안 `_exchange/ref/batch_1008/mock_commonfx.png`): 혼이 빠져나가듯 빛 · 고리 · 혼 연기로 걷힌다.
+            //   흙먼지(Dust)는 무너짐 · 착지 같은 「땅」에만 남긴다.
             if (u.IsBoss)
-            {
-                _pfx?.Shards(u.Position, ParticleElement.Dust, 3f);
-                _pfx?.Puff(u.Position, ParticleElement.Dust, 3f);
-            }
-            else _pfx?.Death(u.Position, ParticleElement.Dust);
+                PlayFx("bossdeath", u.Position, BossDeathFxSize, loop: false);   // 막타 슬로우 동안 천천히 피어오른다
+            else if (IsMachine(u.Key))
+                PlayFx("burst", u.Position, MachineDeathFxSize, loop: false);   // 기계는 혼이 없다 — 작게 「펑」
+            else
+                PlayFx("souldeath", u.Position, SoulDeathFxSize, loop: false);
             // ⚠ **목록에서 빼기 전에** 옮긴다. 뺀 뒤에 부르면 옆 사람을 찾는
             //   `EnemiesInRange` 가 이미 죽은 자리를 기준으로 도는 것은 같지만,
             //   전이 대상 후보에서 자기 자신을 빼려고 목록 조작에 기대게 된다.
@@ -7482,9 +7558,10 @@ namespace Game.Module.InGame
 
             // 잡은 순간을 몸으로 알린다. 보스는 크게 — 한 판의 매듭이다.
             Shake(u.IsBoss ? ShakeMaxPixels : ShakeOnKill);
-            if (u.IsBoss) HitStop(HitStopOnBossKill);
+            if (u.IsBoss) NoteBossDown(u);   // 막타 슬로우 — 결과 창은 슬로우가 풀린 뒤 (BattleDirector.BossDown)
 
-            GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+            // 마지막 보스의 경험치는 안 준다 — 판이 끝나는데 레벨업 창이 먼저 떠 막타 슬로우 · 폭발을 가렸다(2026-10-08 녹화)
+            if (!(u.IsBoss && IsLastRoom)) GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
             // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다.
             if (!u.IsBoss) GrantShards(u.Key, lost: false);
 
@@ -8748,7 +8825,8 @@ namespace Game.Module.InGame
             if (_roomKind == RoomKind.Elite || (_canonRoom != null && _canonRoom.IsMidBoss)) _eliteRoomsCleared++;
             bool isLast = IsLastRoom;
             _bus.Publish(new RoomClearedEvent { ClearedRoomIndex = _roomIndex, IsLastRoom = isLast });
-            if (isLast) { Finish(true); return; }
+            // 최종 보스면 슬로우 → 폭발 → 결과 창 순서로 (BattleDirector.BossDown)
+            if (isLast) { FinishAfterBossDownAsync().Forget(); return; }   // fire-and-forget: 기다리는 동안 방은 그대로 흐른다
 
             // **중간보스(8번 방)** 를 잡은 자리에 악마의 제단이 선다(기획 2026-09-18 —
             // 전에는 챕터 보스를 잡은 자리였다). 다가서면 계약을 묻는다. 출구는 같이 열린다.

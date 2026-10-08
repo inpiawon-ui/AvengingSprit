@@ -40,6 +40,27 @@ namespace Game.Module.InGame
         private const float MidBossHpMul = 2.6f;
         private const float MidBossAtkMul = 1.8f;
 
+        // ── 대장의 세기 (PD 2026-10-08 「공격 패턴도 너무 느리고 스킬 쿨도 너무 길고 약하다」) ──
+        /// <summary>평타 간격 배율 — 호스트 평타 간격 그대로면 큰 몸이 느릿느릿 한 대씩 친다.</summary>
+        private const float MidBossIntervalMul = 0.6f;
+        private const float MidBossSpeedMul = 1.2f;
+        /// <summary>스킬 대기. 첫 발은 짧게, 그다음은 제 쿨 × 0.6 을 4~7초로 묶는다(부하 몸은 쿨 × 3 — 소개용).</summary>
+        private const float MidBossSkillFirstDelay = 2.5f;
+        private const float MidBossSkillCoolMul = 0.6f;
+        private const float MidBossSkillMinSeconds = 4f;
+        private const float MidBossSkillMaxSeconds = 7f;
+        private const float MidBossSkillTelegraph = 0.8f;
+        /// <summary>스킬 탄 수 · 피해 배율 — 부하 몸이 쓰는 「소개」판의 두 배.</summary>
+        private const int MidBossSkillShotMul = 2;
+        private const float MidBossSkillDamageMul = 2f;
+
+        private float _midBossSkillClock;
+        private bool _midBossSkillSeen;
+
+        private float MidBossSkillGate()
+            => !_midBossSkillSeen ? MidBossSkillFirstDelay
+             : Mathf.Clamp(SkillCooldownOf(_midBoss?.Profile) * MidBossSkillCoolMul, MidBossSkillMinSeconds, MidBossSkillMaxSeconds);
+
         /// <summary>부하를 다 잡았을 때 대장이 굳는 시간. 정본 3초.</summary>
         private const float MidBossStunSeconds = 3f;
 
@@ -58,6 +79,8 @@ namespace Game.Module.InGame
             _midBoss = null;
             _midBossStun = 0f;
             _midBossStunUsed = false;
+            _midBossSkillClock = 0f;
+            _midBossSkillSeen = false;
         }
 
         /// <summary>
@@ -84,9 +107,9 @@ namespace Game.Module.InGame
             u.Setup(UnitSide.Enemy, leader.HostKey, leader.DisplayName, TrashSprite(leader),
                     Mathf.RoundToInt(EnemyHpOf(leader) * MidBossHpMul),
                     Mathf.RoundToInt(EnemyAtkOf(leader) * MidBossAtkMul),
-                    EnemySpeedOf(leader),
+                    EnemySpeedOf(leader) * MidBossSpeedMul,
                     EnemyRangeOf(leader),
-                    EnemyIntervalOf(leader),
+                    EnemyIntervalOf(leader) * MidBossIntervalMul,
                     // 잡몹 상자(84×78)를 1.8배로 키운다. 캔버스가 아니라 **상자**를 키워야
                     // 그림이 같은 비율로 커진다 — 여백까지 함께 늘어난다.
                     UnitBox(84f * MidBossScale, 78f * MidBossScale),

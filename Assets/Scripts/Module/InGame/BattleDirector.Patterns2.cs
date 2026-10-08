@@ -195,8 +195,9 @@ namespace Game.Module.InGame
         {
             if (PatternChapter < SlamFromChapter) return;
             float r = Meters(HopSlamRadiusMeters);
+            // 맞을 때 터지는 듯한 `slam` 한 장 대신 골렘과 같은 충격파 — 고릴라가 「기술을 썼다」로 읽히게(PD 2026-10-08)
             StartWarn(DiscShape(e.Position, r), HopSlamTellSeconds, Mathf.Max(1, e.Atk), owner: e,
-                      fxName: "slam", fxSize: r * 2f);
+                      fxName: GetSprite("fx_golem_ring") != null ? "shockwave" : "slam", fxSize: r * 2f);
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -219,6 +220,7 @@ namespace Game.Module.InGame
             CancelWarnsOf(u);
             OnMushroomDeath(u);       // 잡힌 폭탄 버섯은 0.5초 뒤 그 자리에서 터진다 (BattleDirector.Trash4)
             _spiderlings.Remove(u);
+            if (u.Key == TrashSpiderKey) { u.SetSpriteOverride(null); _spiderSpit.Remove(u); }   // 뱉기 · 낳기 그림을 쥔 채 죽으면 쓰러지는 그림이 안 나온다
 
             if (u.Key == TrashSkeletonKey && PatternChapter >= DeathBurstFromChapter)
             {

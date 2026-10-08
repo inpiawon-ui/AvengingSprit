@@ -103,7 +103,8 @@ namespace Game.Module.InGame
         {
             var at = w.Shape.ImpactAt(_roomSize);
             if (!string.IsNullOrEmpty(w.ImpactKind)) SpawnImpact(at, w.ImpactKind, w.FxSize);
-            if (!string.IsNullOrEmpty(w.FxName)) PlayFx(w.FxName, at, w.FxSize, loop: false);
+            if (w.FxName == "shockwave") SpawnShockwave(at, w.FxSize);   // 공용 충격파 (BattleDirector.Fixtures)
+            else if (!string.IsNullOrEmpty(w.FxName)) PlayFx(w.FxName, at, w.FxSize, loop: false);
 
             var me = Avatar;
             if (w.Damage > 0 && _host != null && me != null)

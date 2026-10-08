@@ -88,6 +88,41 @@ namespace Game.Module.InGame
         private const int SpiderBroodMax = 4;
         private const float SpiderlingBox = 0.5f;        // 새끼는 어미 칸의 절반
         private readonly HashSet<Unit> _spiderlings = new();
+        // 기본 공격 — 느린 독 덩이(PD 2026-10-08 「소환 · 기본 공격 애니가 구분돼야 한다, 기본 공격으로 투사체를 천천히」)
+        private const float SpiderSpitSeconds = 2.2f;
+        private const float SpiderSpitSpeedMul = 0.5f;   // 큰 방울이 천천히 — 보고 비킬 수 있게
+        private const string SpiderSpitKind = "spider";  // 거미 전용 초록 독 방울(shot_spider_1) — 샐러맨더 독불을 빌렸더니 「용이 쏘는 걸 쏜다」(PD 2026-10-08)
+        private readonly Dictionary<Unit, float> _spiderSpit = new();
+        private const float SpiderSpitTell = 0.3f;     // 웅크림(뱉기 직전)
+        private const float SpiderSpitRecover = 0.3f;  // 뱉고 돌아오는 두 장
+        // 동작 그림 — 뱉기 3장 · 낳기 3장, 오른쪽(e) · 왼쪽(w). `GetSprite` 는 부를 때마다 새로 만드니 한 번만 받는다
+        private Sprite[] _spiderSpitE, _spiderSpitW, _spiderLayE, _spiderLayW;
+        private bool _spiderFramesTried;
+
+        private Sprite[] SpiderFrames(string act, bool west)
+        {
+            if (!_spiderFramesTried)
+            {
+                _spiderFramesTried = true;
+                _spiderSpitE = SpiderLoad("spit_e"); _spiderSpitW = SpiderLoad("spit_w");
+                _spiderLayE = SpiderLoad("lay_e"); _spiderLayW = SpiderLoad("lay_w");
+            }
+            return act == "spit" ? (west ? _spiderSpitW : _spiderSpitE) : (west ? _spiderLayW : _spiderLayE);
+        }
+
+        private Sprite[] SpiderLoad(string name)
+        {
+            var a = new Sprite[3];
+            for (int i = 0; i < 3; i++) a[i] = UnitGet(TrashSpiderKey, $"{name}_{i + 1}");
+            return a[0] != null && a[1] != null && a[2] != null ? a : null;
+        }
+
+        /// <summary>동작 그림을 건다 — 그림이 없으면 원래 그림 그대로 둔다.</summary>
+        private void SpiderPose(Unit e, string act, int frame)
+        {
+            var set = SpiderFrames(act, e.Facing.x < 0f);
+            e.SetSpriteOverride(set != null ? set[Mathf.Clamp(frame, 0, 2)] : null);
+        }
 
         // ═══════════════════════════════════════════════════════════
         //  막기 — 아르마딜로 정면 · 방패 발전기 보호막
@@ -127,16 +162,22 @@ namespace Game.Module.InGame
         /// `goal` 쪽으로 한 걸음. 담 · 엄폐에 걸려 제자리걸음이면 평소 잡몹처럼 옆 자리로 돌아 나간다 —
         /// 곧장 다가가기만 하면 낮은 담 뒤에서 한 발도 못 나왔다(실측 2026-10-08, 5-10 폭탄 버섯).
         /// </summary>
+        /// <summary>기계 몹 — 죽을 때 쓰러지지 않고 「펑」 터진다(KillEnemy). 순찰기 · 코일 보행기 · 십자 포탑 · 드릴 두더지.</summary>
+        private static bool IsMachine(string key)
+            => key == TrashWardenKey || key == TrashCoilKey || key == TrashCrossKey || key == TrashMoleKey;
+
         private void StepWithDetour(Unit e, Unit me, Vector2 step, float dt)
         {
             var before = e.Position;
             if (e.IsRepositioning && e.IsDetouring)
             {
                 e.Position = SlideMove(e, e.Position, e.StepToward(e.RepositionTarget, dt));
+                ClampToField(e);
                 if (Vector2.Distance(e.Position, e.RepositionTarget) < 24f || NoteStuck(e, before, dt)) e.EndReposition();
                 return;
             }
             e.Position = SlideMove(e, e.Position, step);
+            ClampToField(e);   // 물러서는 걸음이 벽 밖으로 나가 잡을 수 없게 됐다(2026-10-08 8-2 거미 x -208)
             if (NoteStuck(e, before, dt)) e.BeginDetour(PickDetourSpot(e, me));
         }
 
@@ -287,7 +328,10 @@ namespace Game.Module.InGame
                 e.SetMoving(false);
                 e.SetState(EnemyState.Attack);
                 e.PatternTimer -= dt;
+                // 낳기 — 배를 들고 · 알주머니가 부풀고 · 알이 떨어진다(예고 시간에 맞춰 세 장)
+                SpiderPose(e, "lay", Mathf.FloorToInt((1f - e.PatternTimer / SpiderTellSeconds) * 3f));
                 if (e.PatternTimer > 0f) return true;
+                e.SetSpriteOverride(null);
                 e.SetTelegraph(false);
                 for (int k = 0; k < 2 && CountBrood() < SpiderBroodMax; k++)
                 {
@@ -308,6 +352,21 @@ namespace Game.Module.InGame
                 e.PlayAttack();
                 return true;
             }
+
+            // 새끼를 낳지 않는 동안 — 독 덩이를 천천히 뱉는다. 낳기와 다른 박자 · 다른 몸짓
+            if (!_spiderSpit.TryGetValue(e, out float spit)) spit = SpiderSpitSeconds * 0.5f;
+            spit -= dt;
+            if (spit <= 0f && EnemyLineClear(e.Position, me.Position))
+            {
+                spit = SpiderSpitSeconds;
+                FireAimed(e, me.Position, SpiderSpitSpeedMul, SpiderSpitKind);
+            }
+            _spiderSpit[e] = spit;
+            // 뱉기 몸짓 — 직전에 웅크리고(1) · 뱉고(2) · 돌아온다(3)
+            if (spit <= SpiderSpitTell) SpiderPose(e, "spit", 0);
+            else if (spit > SpiderSpitSeconds - SpiderSpitRecover)
+                SpiderPose(e, "spit", spit > SpiderSpitSeconds - SpiderSpitRecover * 0.5f ? 1 : 2);
+            else e.SetSpriteOverride(null);
 
             // 본체는 거리를 벌린다 — 붙으면 달아나고, 멀면 슬금슬금
             var away = e.Position - me.Position;
@@ -359,6 +418,8 @@ namespace Game.Module.InGame
             _blasts.Clear();
             _mushroomBlown.Clear();
             _spiderlings.Clear();
+            _spiderSpit.Clear();
+            _spiderFramesTried = false;   // 아틀라스는 판마다 다시 올라온다
         }
     }
 }

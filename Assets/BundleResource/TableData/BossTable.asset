@@ -113,7 +113,7 @@ MonoBehaviour:
       _draw: 9
       _dodge: 1
       _degrees: 120
-      _radiusMeters: 3
+      _radiusMeters: 4
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 1
-      _rangeMeters: 4.5
+      _rangeMeters: 6
       _group: 0
   - _bossKey: crusher
     _chapter: 2
@@ -176,7 +176,7 @@ MonoBehaviour:
       _draw: 2
       _dodge: 5
       _degrees: 0
-      _radiusMeters: 3.5
+      _radiusMeters: 4
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 1.6
@@ -184,7 +184,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 1
-      _rangeMeters: 4
+      _rangeMeters: 6
       _group: 0
     - _pattern: 2
       _fromPhase: 1
@@ -263,15 +263,15 @@ MonoBehaviour:
       _draw: 10
       _dodge: 3
       _degrees: 0
-      _radiusMeters: 5
-      _widthMeters: 1.6
-      _lengthMeters: 5
+      _radiusMeters: 6
+      _widthMeters: 2.4
+      _lengthMeters: 6
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 3
-      _rangeMeters: 5
+      _rangeMeters: 6
       _group: 0
     - _pattern: 7
       _fromPhase: 1
@@ -332,15 +332,15 @@ MonoBehaviour:
       _draw: 13
       _dodge: 0
       _degrees: 0
-      _radiusMeters: 2
-      _widthMeters: 2
+      _radiusMeters: 3
+      _widthMeters: 3
       _lengthMeters: 0
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 3
-      _rangeMeters: 2
+      _rangeMeters: 3
       _group: 0
   - _bossKey: sludge
     _chapter: 4
@@ -373,7 +373,7 @@ MonoBehaviour:
       _draw: 22
       _dodge: 4
       _degrees: 0
-      _radiusMeters: 2
+      _radiusMeters: 3
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -381,7 +381,7 @@ MonoBehaviour:
       _lanes: 0
       _safeAtMeters: {x: 0, y: 0}
       _range: 1
-      _rangeMeters: 4
+      _rangeMeters: 6
       _group: 0
     - _pattern: 7
       _fromPhase: 1
@@ -529,7 +529,7 @@ MonoBehaviour:
       _draw: 8
       _dodge: 2
       _degrees: 0
-      _radiusMeters: 2.625
+      _radiusMeters: 3.94
       _widthMeters: 0
       _lengthMeters: 0
       _innerRadiusMeters: 0
@@ -552,9 +552,9 @@ MonoBehaviour:
       _draw: 9
       _dodge: 1
       _degrees: 120
-      _radiusMeters: 3.2
-      _widthMeters: 2.4
-      _lengthMeters: 4
+      _radiusMeters: 4
+      _widthMeters: 3.6
+      _lengthMeters: 6
       _innerRadiusMeters: 0
       _gapDegrees: 0
       _lanes: 0

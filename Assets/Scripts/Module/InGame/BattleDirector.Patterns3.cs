@@ -22,8 +22,14 @@ namespace Game.Module.InGame
         private const float SnipeTriggerMeters = 7.5f;
         private const float SnipeTellSeconds = 1.0f;
         private const float SnipeWidthMeters = 0.45f;
-        private const float SnipeReloadSeconds = 2.0f;
         private const float SnipeDamageMul = 1.6f;
+        private const float SnipeShotMps = 24f;   // 저격 탄 초속(m) — 보이면서도 저격답게 빠르게(코덱스 검수 2026-10-08)
+        // 평소엔 평범하게 쏘다가 몇 초마다 한 번 예고 → 모아 쏘기(PD 2026-10-08 「워닝을 띄웠으면 미사일 한 방 같은 게 아니라
+        // 기를 모아 쏘는 방식 — 일반적으로 쏘다가 특정 구간에 워닝 띄우고 쏘는 것처럼」)
+        private const float SnipeEverySeconds = 4.5f;     // 모아 쏘기 간격 — 그 사이는 평타
+        private const float SnipeRecoverSeconds = 0.5f;   // 쏜 뒤 숨 고르기(근접 틈)
+        private const string SnipeShotKind = "laser";     // 레이저 코만도의 광탄 — 굵은 빛줄기
+        private const float SnipeShotSizeMul = 2.2f;
 
         // ── 박격 ──────────────────────────────────────────────────
         private const float MortarRadiusMeters = 1.15f;
@@ -70,9 +76,12 @@ namespace Game.Module.InGame
                         var dir = (me.Position - e.Position).normalized;
                         e.SetFacing(dir);
                         e.SetTelegraph(true);
-                        // 선이 곧 탄이다 — 조준선 안에 남아 있으면 맞는다
+                        // 조준선은 예고만 한다 — 피해는 다 찬 뒤 **실제로 날아가는 탄**이 낸다.
+                        // 예전엔 선이 곧 탄이라(선 안에 남으면 그냥 깎였다) 화면에 아무것도 안 날아가
+                        // 「워닝만 뜨고 공격을 안 한다 · 무슨 공격인지 안 보인다」였다(PD 2026-10-08 사마귀 · 전갈).
                         StartWarn(BandShape(e.Position, dir, Meters(SnipeWidthMeters), _roomSize.magnitude),
-                                  SnipeTellSeconds, Mathf.Max(1, Mathf.RoundToInt(e.Atk * SnipeDamageMul)), owner: e);
+                                  SnipeTellSeconds, 0, owner: e);
+                        e.PatternTo = e.Position + dir * _roomSize.magnitude;   // 쏠 방향은 예고를 긋는 순간 굳는다
                         // 공용 꺾쇠 — 탄이 날아올 쪽 (BattleDirector.Rush)
                         StartRushFx(e, e.Position, e.Position + dir * _roomSize.magnitude, Meters(SnipeWidthMeters),
                                     SnipeTellSeconds, dust: false);
@@ -82,15 +91,28 @@ namespace Game.Module.InGame
                     return true;
 
                 case 1:
+                {
                     e.SetMoving(false);
                     e.SetState(EnemyState.Attack);
+                    float before = e.PatternTimer;
                     e.PatternTimer -= dt;
+                    // 기를 모은다 — 총구에 불티가 모여든다(예고 동안 세 번). 「특별한 한 방이 온다」가 몸에서도 보이게
+                    for (int k = 1; k <= 3; k++)
+                    {
+                        float at = SnipeTellSeconds * (1f - k * 0.25f);
+                        if (before > at && e.PatternTimer <= at) _pfx?.Sparkle(e.MuzzlePosition, ParticleElement.Fire, 0.5f + k * 0.3f);
+                    }
                     if (e.PatternTimer > 0f) return true;
                     e.SetTelegraph(false);
-                    e.PlayAttack();
+                    // 모은 한 방 — 평소 탄보다 굵고 빠르고 아프다(관통 광탄). 예고가 「평범한 한 발」로 끝나지 않게(PD 2026-10-08)
+                    FireAimed(e, e.PatternTo, Meters(SnipeShotMps) / Mathf.Max(1f, _config.ShotSpeedEnemy), SnipeShotKind,
+                              damage: Mathf.Max(1, Mathf.RoundToInt(e.Atk * SnipeDamageMul)), sizeMul: SnipeShotSizeMul);
+                    PlayFx("muzzle", e.MuzzlePosition, 88f, loop: false);
+                    Shake(ShakeOnKill * 0.6f);
                     e.PatternPhase = 2;
-                    e.PatternTimer = SnipeReloadSeconds;
+                    e.PatternTimer = SnipeRecoverSeconds;
                     return true;
+                }
 
                 default:
                     e.SetMoving(false);
@@ -98,7 +120,7 @@ namespace Game.Module.InGame
                     e.PatternTimer -= dt;
                     if (e.PatternTimer > 0f) return true;
                     e.PatternPhase = 0;
-                    e.PatternTimer = 0.5f;
+                    e.PatternTimer = SnipeEverySeconds;   // 다음 모아 쏘기까지 — 그 사이는 평소처럼 쏜다
                     return true;
             }
         }

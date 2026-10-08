@@ -28,7 +28,7 @@ namespace Game.Module.InGame
             public Image[] Chevrons;
             public Image Dust;
             public Sprite[] DustFrames;   // 시작할 때 한 번 찾는다 — 매 프레임 이름을 조립하지 않게
-            public float Length, Total, Left, Scroll, Spacing;
+            public float Length, Total, Left, Spacing;
             public bool Active;
             public bool HasOwner;   // 몸이 건 예고 — 그 몸이 죽으면 같이 거둔다(분사구는 몸이 없다)
         }
@@ -39,9 +39,6 @@ namespace Game.Module.InGame
         private const float RushChevronGapMeters = 0.95f;   // 꺾쇠 사이 — 시안 A 의 간격
         private const float RushChevronScale = 0.85f;       // 꺾쇠 크기 / 띠 폭
         private const float RushChevronMinMeters = 0.55f;   // 가는 띠(저격 조준선)에서도 보이는 최소 크기
-        private const float RushFlowMinMps = 2.2f;          // 처음 흐르는 빠르기(m/초)
-        private const float RushFlowMaxMps = 9.0f;          // 막 달려 나가기 직전
-        private const float RushFadeMeters = 0.6f;          // 띠 양 끝에서 나타나고 사라지는 거리
         private const float RushDustFps = 10f;
         private const float RushDustMeters = 1.3f;
         private static readonly string[] RushDustNames = { "fx_rush_dust_1", "fx_rush_dust_2", "fx_rush_dust_3", "fx_rush_dust_4" };
@@ -87,7 +84,6 @@ namespace Game.Module.InGame
             fx.Owner = owner;
             fx.HasOwner = owner != null;
             fx.Total = fx.Left = Mathf.Max(0.05f, seconds);
-            fx.Scroll = 0f;
             // 긴 띠(방을 가로지르는 조준선)에서도 꺾쇠가 끝까지 닿게 — 모자라면 간격을 벌린다
             fx.Spacing = Mathf.Max(Meters(RushChevronGapMeters), fx.Length / RushChevronMax);
             fx.Active = true;
@@ -155,21 +151,20 @@ namespace Game.Module.InGame
         private void TickOneRush(RushFx fx, float dt)
         {
             float p = 1f - Mathf.Clamp01(fx.Left / fx.Total);   // 0 → 1 예고가 찬 만큼
-            fx.Scroll += Meters(Mathf.Lerp(RushFlowMinMps, RushFlowMaxMps, p * p)) * dt;
-            float cycle = fx.Spacing * RushChevronMax;
-            float fade = Meters(RushFadeMeters);
-            float glow = Mathf.Lerp(0.55f, 1f, p);
+            // 꺾쇠는 흐르지 않는다 — 제자리에 서서 **출발점부터 차례로 켜진다.** 마지막 것이 켜지면 달린다.
+            // 예전엔 띠 위를 빨라지며 흘러 정신없었다(PD 2026-10-08 「진행 단계처럼 쭉 완성되면서 다 차면 액션」).
+            float filled = p * fx.Length;
             for (int k = 0; k < fx.Chevrons.Length; k++)
             {
                 var im = fx.Chevrons[k];
-                float x = Mathf.Repeat(k * fx.Spacing + fx.Scroll, cycle);
-                bool on = x <= fx.Length;
-                if (im.gameObject.activeSelf != on) im.gameObject.SetActive(on);
-                if (!on) continue;
+                float x = (k + 0.5f) * fx.Spacing;
+                bool inBand = x <= fx.Length;
+                if (im.gameObject.activeSelf != inBand) im.gameObject.SetActive(inBand);
+                if (!inBand) continue;
                 ((RectTransform)im.transform).anchoredPosition = new Vector2(x, 0f);
-                // 양 끝에서 스며 나오고 스며 든다 — 띠 밖으로 튀어나가 보이지 않게
-                float a = Mathf.Clamp01(x / fade) * Mathf.Clamp01((fx.Length - x) / fade);
-                im.color = new Color(glow, glow, glow, a);
+                bool lit = x <= filled;
+                // 켜진 꺾쇠도 60% — PD 2026-10-08 「노티가 너무 찐하다」. 안 찬 꺾쇠는 옅게 자리만
+                im.color = lit ? new Color(1f, 1f, 1f, 0.6f) : new Color(0.55f, 0.55f, 0.55f, 0.18f);
             }
 
             if (fx.Dust.gameObject.activeSelf)

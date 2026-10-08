@@ -48,6 +48,7 @@ namespace Game.Module.InGame
 
         private static readonly Color DangerTint = new(1f, 0.30f, 0.28f, 0.55f);
         private static readonly Color SafeTint = new(0.35f, 1f, 0.45f, 0.42f);
+        private static readonly Color CoreTint = new(1f, 0.36f, 0.32f, 1f);
 
         // ── 그림 — 한 번 받아 모두가 같이 쓴다 ───────────────────────
         private static readonly string[] ArtAddress =
@@ -70,8 +71,6 @@ namespace Game.Module.InGame
         private Sprite _hatch;
         private bool _safe;
 
-        /// <summary>깜빡임 — 예고가 끝나갈수록 빨라진다. 시간이 얼마 안 남았다는 신호다.</summary>
-        private float _pulse;
         private float _progress;
         private float _age;
         private float _flash;   // 터진 뒤 남은 번쩍임(초). 0 이면 꺼진다
@@ -173,7 +172,6 @@ namespace Game.Module.InGame
             _hatch = hatch;
             _safe = safe;
             _progress = 0f;
-            _pulse = 0f;
             _age = 0f;
             _flash = 0f;
 
@@ -260,8 +258,8 @@ namespace Game.Module.InGame
         {
             _progress = Mathf.Clamp01(progress01);
             _age += dt;
-            // 0.30초 주기에서 0.10초까지 빨라진다
-            _pulse += dt / Mathf.Lerp(0.30f, 0.10f, _progress);
+            // ⚠ 숨쉬기(맥박)는 멈췄다 — PD 2026-10-08 「노티가 애니로 들어가서 정신없다, 진행 단계처럼 차오르다 다 차면 액션」.
+            //   범위는 옅게 가만히 서 있고, 안에서부터 차오르는 겹(Core)만 움직인다.
             color = TintNow();
             SetVerticesDirty();   // 무늬가 흐르고 테두리가 숨 쉰다 — 매 프레임 새로 짠다(보스전 예고 몇 개뿐)
         }
@@ -289,24 +287,26 @@ namespace Game.Module.InGame
         {
             bool art = Art != null;
             var c = art ? Color.white : (_safe ? SafeTint : DangerTint);
-            float breath = Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI));
+            // 차오르는 겹의 그림은 흰빛이라 그대로 두면 다 찰 무렵 **하얀 띠 · 하얀 원**이 됐다(2026-10-08 녹화) — 위험 빨강으로 물들인다
+            if (art && !_safe && _layer == Layer.Core) c = CoreTint;
             float flash = _flash > 0f ? _flash / FlashSeconds : 0f;
             switch (_layer)
             {
                 case Layer.Fill:
                     // 2차 그림은 그라데이션이 테두리 띠에 있다 — 채움은 도형 전체를 아주 옅게 물들이기만 한다
                     c.a = _safe ? (art ? 0.16f : SafeTint.a)
-                                : (art ? Mathf.Lerp(0.10f, 0.18f, breath) : Mathf.Lerp(0.35f, 0.75f, breath));
+                                : (art ? 0.09f : 0.28f);   // 범위 전체는 옅게 · 가만히(아직 안 찬 곳도 위험이라는 것이 보이게)
                     break;
                 case Layer.Core:
                     // 다 찰 무렵 가장 진하다. 안전지대는 차오르지 않는다(늘 서 있을 자리다)
-                    c.a = _safe ? 0f : Mathf.Lerp(0.06f, 0.30f, _progress);   // 차오름은 은은하게 — 진하면 테두리가 묻힌다
+                    // 차오름이 곧 진행 바다 — 다 차면 친다. PD 2026-10-08 「너무 찐하다 — 티는 나되 방해 안 되게 50~70%」 → 약 0.6배
+                    c.a = _safe ? 0f : Mathf.Lerp(0.18f, 0.38f, _progress);
                     break;
                 default:
-                    c.a = Mathf.Lerp(0.88f, 1f, breath);
+                    c.a = 0.6f;
                     break;
             }
-            if (flash > 0f) c.a = Mathf.Max(c.a, flash);   // 터지는 순간 한 번 진해진다
+            if (flash > 0f) c.a = Mathf.Max(c.a, flash * 0.7f);   // 터지는 순간 한 번 진해진다(그래도 화면을 덮지 않게)
             return c;
         }
 
@@ -342,7 +342,7 @@ namespace Game.Module.InGame
             var c = color;
             bool art = Art != null;
             // 무늬는 **화면에 고정**된 격자 위에서 천천히 흐른다. 도형을 따라 늘어나면 늘어난 티가 난다.
-            var flow = art ? new Vector2(_age * 0.06f, _age * (_layer == Layer.Core ? -0.10f : 0.04f)) : Vector2.zero;
+            var flow = Vector2.zero;   // 무늬는 흐르지 않는다(정신없다 — PD 2026-10-08)
             for (int i = 0; i < _verts.Count; i++)
             {
                 var p = _verts[i];
@@ -381,11 +381,10 @@ namespace Game.Module.InGame
                     _edgeOther[key] = other;
                 }
 
-            float breath = Mathf.Abs(Mathf.Sin(_pulse * Mathf.PI));
-            float width = EdgeWidth * Mathf.Lerp(0.92f, 1.08f, breath) * (_flash > 0f ? 1.3f : 1f);
+            float width = EdgeWidth * (_flash > 0f ? 1.3f : 1f);
             var c = color;
             bool art = Art != null;
-            float flowU = art ? -_age * 0.8f : 0f;   // 빛이 둘레를 따라 흐른다
+            float flowU = 0f;   // 빛이 둘레를 따라 흐르지 않는다(PD 2026-10-08)
             foreach (var pair in _edgeCount)
             {
                 if (pair.Value != 1) continue;

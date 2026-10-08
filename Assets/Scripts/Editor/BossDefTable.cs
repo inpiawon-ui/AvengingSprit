@@ -28,6 +28,11 @@ namespace Game.EditorTools
     /// ── 수치의 출처 ─────────────────────────────────────────────
     /// .js 는 반경·각도를 `spec` 한국어 문장 안에 둔다. 아래 각 패턴의 `// 출처` 주석이
     /// 그 문장이다 — 값이 맞는지 따질 때 여기를 본다.
+    ///
+    /// ── 근거리 패턴 범위 ×1.5 (PD 2026-10-08 「보스들 근거리 스킬은 범위를 1.5배 — 사거리가 너무 짧다」) ──
+    /// 물어뜯기 · 파괴구 · 머리 뻗기 · 몸통 밀기 · 솟아오름(슬러지) · 똬리 · 머리 물기(가디언)의 반경 · 폭 · 길이 · 거리 조건을 1.5배.
+    /// 상한 — 반경 4 m · 길이와 거리 조건 6 m(코덱스 검수: 방 폭 10 m 에서 5 m 넘는 원은 피할 자리를 지운다).
+    /// 원거리 · 낙하 · 장판 패턴과 예고 시간은 그대로. .js 정본 문장은 아직 옛 수치다 — 다음에 .js 를 받아 뽑을 때 이 값을 넣는다.
     /// </summary>
     public static class BossDefTable
     {
@@ -108,10 +113,10 @@ namespace Game.EditorTools
                         new() { Phase = 1, NameKr = "물어뜯기", NameEn = "HeadBite",
                                 Cooldown = 2f, Telegraph = 0.45f, DamageMul = 0.5f,
                                 Shape = "Arc", Draw = "HeadBite", Dodge = "SIDE",
-                                Degrees = 120f, Radius = 3f, Width = 0f, Length = 0f,
+                                Degrees = 120f, Radius = 4f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 4.5f, Group = 0 },
+                                Range = "NEAR", RangeMeters = 6f, Group = 0 },
                     } },
 
             // ── 슬러지 · 정유소 — 위에서 떨어진다 ────────────────────────────
@@ -140,10 +145,10 @@ namespace Game.EditorTools
                         new() { Phase = 1, NameKr = "쇠사슬 파괴구", NameEn = "WreckingBall",
                                 Cooldown = 3f, Telegraph = 1.0f, DamageMul = 0.94f,
                                 Shape = "Zone", Draw = "WreckingBall", Dodge = "CLOSE",
-                                Degrees = 0f, Radius = 3.5f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 4f, Width = 0f, Length = 0f,
                                 InnerRadius = 1.6f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
+                                Range = "NEAR", RangeMeters = 6f, Group = 0 },
 
                         // 부채꼴로 탄을 쏜다. **부채꼴은 겨냥 표시일 뿐이고** 탄은
                         // 그 방향으로 방 끝까지 날아간다(기획 2026-09-02 5차).
@@ -181,10 +186,10 @@ namespace Game.EditorTools
                         new() { Phase = 1, NameKr = "머리 뻗기", NameEn = "HeadLunge",
                                 Cooldown = 3f, Telegraph = 0.7f, DamageMul = 0.83f,
                                 Shape = "Line", Draw = "HeadLunge", Dodge = "PERP",
-                                Degrees = 0f, Radius = 5f, Width = 1.6f, Length = 5f,
+                                Degrees = 0f, Radius = 6f, Width = 2.4f, Length = 6f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 5f, Group = 0 },
+                                Range = "INSHAPE", RangeMeters = 6f, Group = 0 },
                         // 독을 뱉는다 · 내 자리에 반경 2.5 m · 웅덩이가 3초 남는다
                         new() { Phase = 1, NameKr = "독 뱉기", NameEn = "VenomSpit",
                                 Cooldown = 4f, Telegraph = 0.9f, DamageMul = 0.59f,
@@ -207,10 +212,10 @@ namespace Game.EditorTools
                                 Cooldown = 5f, Telegraph = 1f, DamageMul = 0.93f,
                                 // 방 폭을 다 덮으므로 옆으로는 못 피한다. 벽에서 멀어지는 수밖에 없다
                                 Shape = "Line", Draw = "BodyShove", Dodge = "BACK",
-                                Degrees = 0f, Radius = 2f, Width = 2f, Length = 0f,
+                                Degrees = 0f, Radius = 3f, Width = 3f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "INSHAPE", RangeMeters = 2f, Group = 0 },
+                                Range = "INSHAPE", RangeMeters = 3f, Group = 0 },
                     } },
 
             // ── 킹핀 · 옥상 — 하늘에 떠 있다 ──────────────────────────────
@@ -223,10 +228,10 @@ namespace Game.EditorTools
                         new() { Phase = 1, NameKr = "솟아오름", NameEn = "Emerge",
                                 Cooldown = 10f, Telegraph = 1f, DamageMul = 0.78f,
                                 Shape = "Zone", Draw = "Emerge", Dodge = "ZONE",
-                                Degrees = 0f, Radius = 2f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 3f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
-                                Range = "NEAR", RangeMeters = 4f, Group = 0 },
+                                Range = "NEAR", RangeMeters = 6f, Group = 0 },
                         // 출처 — 끈적한 덩어리를 뱉는다 · 착탄 반경 1.5 m · 웅덩이 4초 · 밟으면 이동 속도 절반
                         new() { Phase = 1, NameKr = "뱉기", NameEn = "Spit",
                                 Cooldown = 8f, Telegraph = 1f, DamageMul = 0.68f,
@@ -326,7 +331,7 @@ namespace Game.EditorTools
                         new() { Phase = 1, NameKr = "똬리", NameEn = "CoilWall",
                                 Cooldown = 2f, Telegraph = 1f, DamageMul = 0.91f,
                                 Shape = "Zone", Draw = "CoilWall", Dodge = "GAP",
-                                Degrees = 0f, Radius = 2.625f, Width = 0f, Length = 0f,
+                                Degrees = 0f, Radius = 3.94f, Width = 0f, Length = 0f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "INSHAPE", RangeMeters = 0f, Group = 1 },
@@ -342,7 +347,7 @@ namespace Game.EditorTools
                                 // ⚠ 반경은 쫓아와 멈추는 거리(3 m)보다 커야 한다.
                                 //   2.5 m 로 뒀더니 제자리에서 무는데 나는 3 m 밖이라
                                 //   한 번도 안 닿았다 — 똬리와 똑같은 함정이다.
-                                Degrees = 120f, Radius = 3.2f, Width = 2.4f, Length = 4f,
+                                Degrees = 120f, Radius = 4f, Width = 3.6f, Length = 6f,
                                 InnerRadius = 0f, GapDegrees = 0f, Lanes = 0,
                                 SafeX = 0f, SafeY = 0f,
                                 Range = "INSHAPE", RangeMeters = 0f, Group = 1 },

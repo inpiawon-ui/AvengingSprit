@@ -205,6 +205,8 @@ namespace Game.Module.InGame
                 }
 
                 s.U.SetMoving(false);
+                // 골렘은 주먹이 아니라 충격파 — 모아서 둘레를 친다 (BattleDirector.Fixtures)
+                if (s.U.Key == GolemKey && GolemSlamReady() && TickGolemSlam(s.U, target, d, dt)) continue;
                 // ⚠ `fromPlayer: true` — 이래야 피해가 적에게 간다(동료와 같은 규칙).
                 if (s.Attacks && s.U.TickAttack(dt)) PerformAttack(s.U, target, true);
                 else s.U.SetState(EnemyState.Cooldown);
