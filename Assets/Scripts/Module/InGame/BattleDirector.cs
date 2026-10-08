@@ -6003,7 +6003,7 @@ namespace Game.Module.InGame
             can[heal] = !_shopHealBought
                      && _shopBought < _shopRules.TotalPurchaseLimit
                      && _runGold >= ShopHealPrice;
-            icons[heal] = "buffcard_heal";   // 회복은 카드가 아니라 상점 고유 칸이다
+            icons[heal] = "shop_heal";       // 회복은 카드가 아니라 상점 고유 칸이다
 
             _bus.Publish(new ShopOpenedEvent
             {

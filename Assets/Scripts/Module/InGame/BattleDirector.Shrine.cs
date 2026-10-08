@@ -79,15 +79,15 @@ namespace Game.Module.InGame
             _                   => Localize.Get("ui.shrine.range.desc"),
         };
 
-        /// <summary>제단 선물의 아이콘. 뜻이 가장 가까운 카드 그림을 빌려 쓴다.</summary>
+        /// <summary>제단 선물의 아이콘 — 제 그림(C 원혼 회로 2026-10-08). 예전에는 옛 카드 그림을 빌려 뜻이 안 맞았다.</summary>
         public static string ShrineIconOf(int index) => index switch
         {
-            0 => "buffcard_heal",     // 몸을 아문다
-            1 => "buffcard_c017",     // 영혼을 채운다 — 생명 회수
-            2 => "buffcard_c020",     // 그릇을 넓힌다 — 불굴(최대 체력)
-            3 => "buffcard_c001",     // 힘을 받는다 — 공격 증폭
-            4 => "buffcard_c006",     // 손이 빨라진다 — 가속
-            _ => "buffcard_c011",     // 멀리 닿는다 — 확장
+            0 => "shrine_full_heal",  // 몸을 아문다
+            1 => "shrine_soul_heal",  // 영혼을 채운다
+            2 => "shrine_max_hp",     // 그릇을 넓힌다
+            3 => "shrine_atk",        // 힘을 받는다
+            4 => "shrine_speed",      // 손이 빨라진다
+            _ => "shrine_range",      // 멀리 닿는다
         };
 
         /// <summary>

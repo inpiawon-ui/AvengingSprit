@@ -1096,11 +1096,13 @@ namespace Game.Module.InGame
         private void OnEventOffer(EventOfferEvent e)
         {
             _ui.SetText("EventTitleText", e.Title);
-            // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다.
-            // 받는 것을 금색 한 줄로 아래에 덧붙인다.
-            _ui.SetText("EventBodyText", string.IsNullOrEmpty(e.RewardLabel)
-                ? e.Body
-                : $"{e.Body}\n<color=#F5C044>{Localize.Format("ui.ingame.event.reward", e.RewardLabel)}</color>");
+            // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다 — 받는 것은 금빛 알약 판에 따로 올린다.
+            // (C 원혼 회로 2026-10-08: 본문 끝에 덧붙이면 본문 칸이 넘쳐 글자가 같이 줄었다)
+            bool hasReward = !string.IsNullOrEmpty(e.RewardLabel);
+            _ui.SetText("EventBodyText", e.Body);
+            _ui.SetText("EventRewardText", hasReward ? Localize.Format("ui.ingame.event.reward", e.RewardLabel) : string.Empty);
+            _ui.SetActive("EventRewardPill", hasReward);
+            _ui.SetActive("EventRewardText", hasReward);
             // 못 고르는 이유를 **누르기 전에** 적는다. 값이 모자란 것과
             // 몸이 없어 못 받는 것은 다른 이유라 문구도 달라야 한다.
             // ⚠ 줄표(`— ... —`)를 붙이지 않는다. 명판 그림(`eventcostpill`)이
@@ -1124,6 +1126,7 @@ namespace Game.Module.InGame
             _ui.SetActive("EventDeclineButton", true);
             _ui.SetActive("EventCostText", true);
             _ui.SetActive("EventCostPill", !string.IsNullOrEmpty(costLine));
+            CenterRewardWhenAlone(string.IsNullOrEmpty(costLine));
             _ui.SetActive("EventBodyText", true);
 
             // 값을 못 치르면 버튼을 잠근다. 눌러 놓고 아무 일도 안 일어나면
@@ -1152,6 +1155,27 @@ namespace Game.Module.InGame
 
             SetPanel("EventPanel", true);
             _ui.Find("EventPanel")?.SetAsLastSibling();
+        }
+
+        private float _rewardPillX = float.NaN;
+        private float _rewardTextX = float.NaN;
+
+        /// <summary>
+        /// 보상 · 대가 알약은 한 줄에 나란히 선다. 대가가 없는 거래면 보상 알약 혼자 왼쪽에 쏠려 보여 가운데로 옮긴다.
+        /// 원래 자리는 처음 한 번 적어 두었다가 대가가 있는 거래에서 되돌린다.
+        /// </summary>
+        private void CenterRewardWhenAlone(bool alone)
+        {
+            var pill = _ui.Find("EventRewardPill") as RectTransform;
+            var text = _ui.Find("EventRewardText") as RectTransform;
+            // 가운데는 창 틀(EventBox) 기준 — 패널 rect 로 쟀더니 화면 밖으로 밀렸다
+            var box = _ui.Find("EventBox") as RectTransform;
+            if (pill == null || text == null || box == null) return;
+            if (float.IsNaN(_rewardPillX)) { _rewardPillX = pill.anchoredPosition.x; _rewardTextX = text.anchoredPosition.x; }
+            float center = box.anchoredPosition.x + (box.sizeDelta.x - pill.sizeDelta.x) * 0.5f;
+            float shift = alone ? center - _rewardPillX : 0f;
+            pill.anchoredPosition = new Vector2(_rewardPillX + shift, pill.anchoredPosition.y);
+            text.anchoredPosition = new Vector2(_rewardTextX + shift, text.anchoredPosition.y);
         }
 
         /// <summary>
@@ -1185,8 +1209,9 @@ namespace Game.Module.InGame
                         var grt = (RectTransform)gi.transform;
                         grt.anchorMin = grt.anchorMax = new Vector2(0f, 1f);
                         grt.pivot = new Vector2(0f, 1f);
-                        grt.anchoredPosition = new Vector2(18f, -16f);
-                        grt.sizeDelta = new Vector2(64f, 64f);
+                        // C 원혼 회로 선택 칸(2026-10-08) — 칸 왼쪽 아이콘 자리에 맞춘다
+                        grt.anchoredPosition = new Vector2(12f, -11f);
+                        grt.sizeDelta = new Vector2(56f, 56f);
                         gi.sprite = sp2;
                         gi.enabled = sp2 != null;
                         gi.color = Color.white;
@@ -1194,15 +1219,12 @@ namespace Game.Module.InGame
                     }
                 }
 
-                // 이름 한 줄, 그 아래 무엇을 주는지.
+                // 이름 한 줄, 그 아래 무엇을 주는지 — **칸을 나눈다**(C 원혼 회로 2026-10-08).
                 //
-                // ⚠ 설명을 70% 로 줄였더니 **읽을 수가 없었다.** 칸 글꼴이 자동으로
-                //   줄어드는데(최소 12) 거기에 70% 가 다시 곱해져 8px 까지 내려간다.
-                //   85% 로 올리고, 색도 이름과 갈라 놓는다 — 크기만으로 위계를
-                //   만들려니 둘 다 안 읽혔다.
-                _ui.SetText($"ShrineChoice{i}Text",
-                            e.Titles[i] + System.Environment.NewLine
-                            + $"<size=85%><color=#8FD3E8>{e.Descs[i]}</color></size>");
+                // ⚠ 예전에는 한 칸에 이름 + <size=85%> 설명을 넣었는데, 칸 글꼴이 자동으로
+                //   줄어든 위에 85% 가 다시 곱해져 설명이 11px 까지 내려갔다. 칸이 나뉘면 각자 크기를 지킨다.
+                _ui.SetText($"ShrineChoice{i}Text", e.Titles[i]);
+                _ui.SetText($"ShrineChoice{i}Desc", e.Descs[i]);
                 var btn = _ui.Get<Button>($"ShrineChoice{i}");
                 if (btn == null) continue;
                 int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다
@@ -1332,8 +1354,12 @@ namespace Game.Module.InGame
             // 제목은 그림(`leveluptitle`)으로 간다. 게임 서체로는 시안의 두께와
             // 광택이 안 나온다. 그림이 아직 없으면 글자가 대신 선다 —
             // 둘을 같이 띄우면 겹쳐 보인다.
+            // C 원혼 회로(2026-10-08): 창 틀(`levelupframe`)에 빈 제목 판이 있어 글자가 그 위에 선다.
+            // 예전 제목 그림(`leveluptitle`)은 판 위에 겹치므로 틀이 있으면 끈다.
+            var frameArt = _ui.Get<Image>("BuffFrame");
+            bool hasFrame = frameArt != null && frameArt.sprite != null;
             var titleArt = _ui.Get<Image>("BuffTitleArt");
-            var titleSprite = _cardAtlas != null ? _cardAtlas.GetSprite("leveluptitle") : null;
+            var titleSprite = !hasFrame && _cardAtlas != null ? _cardAtlas.GetSprite("leveluptitle") : null;
             if (titleArt != null)
             {
                 titleArt.sprite = titleSprite;
@@ -1395,7 +1421,8 @@ namespace Game.Module.InGame
             if (panel != null)
             {
                 panel.sprite = panelArt;
-                panel.type = panelArt != null ? Image.Type.Sliced : Image.Type.Simple;
+                // C 원혼 회로 카드 틀은 테두리 장식이 늘어나면 깨진다 — 늘이지 않고 칸 크기에 맞춘다
+                panel.type = Image.Type.Simple;
                 // 판때기가 아직 없으면 글자가 읽히게 속만 깔아 둔다(테두리는 만들지 않는다)
                 panel.color = panelArt != null ? Color.white
                                                : new Color(0.078f, 0.102f, 0.157f, 0.98f);
@@ -1472,21 +1499,27 @@ namespace Game.Module.InGame
         {
             // 상점 「유령 노점」
             Skin("ShopBox", "shopframe");
+            Skin("ShopGoldPill", "shopgoldpill");
             Skin("ShopLeaveButton", "shopleavebutton");
             for (int i = 0; i < ShopSlots; i++) Skin($"ShopItem{i}", "shopitemslot");
 
-            // 악마 「봉인된 궤짝」
+            // 악마의 거래
             Skin("EventBox", "eventframe");
-            Skin("EventCostPill", "eventcostpill");
+            Skin("EventRewardPill", "eventrewardpill");
+            Skin("EventCostPill", "eventcostpill", sliced: true);
             Skin("EventAcceptButton", "eventacceptbutton");
             Skin("EventDeclineButton", "eventdeclinebutton");
 
-            // 천사 「회복의 제단」
+            // 회복의 제단
             Skin("ShrineBox", "shrineframe");
             Skin("ShrineHintPill", "shrinehintpill");
-            for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot");
+            for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot", sliced: true);
 
-            void Skin(string node, string art)
+            // 레벨업 창 틀(C 원혼 회로 2026-10-08)
+            Skin("BuffFrame", "levelupframe");
+
+            // 늘려 쓰는 판(선택 칸 · 대가 알약)은 테두리를 지키고 가운데만 늘린다 — 테두리는 InGamePopupCLayout 이 임포트에 건다
+            void Skin(string node, string art, bool sliced = false)
             {
                 var img = _ui.Get<Image>(node);
                 var sp = UiArt(art);
@@ -1495,7 +1528,7 @@ namespace Game.Module.InGame
                 if (img == null || sp == null) return;
                 img.sprite = sp;
                 img.color = Color.white;
-                img.type = Image.Type.Simple;
+                img.type = sliced && sp.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
                 img.enabled = true;
             }
         }

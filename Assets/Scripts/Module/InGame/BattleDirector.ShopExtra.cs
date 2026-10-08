@@ -99,9 +99,9 @@ namespace Game.Module.InGame
 
         private static string ConsumableIconOf(Consumable c) => c switch
         {
-            Consumable.Bomb   => "buffcard_c013",   // 폭발 메아리
-            Consumable.Freeze => "buffcard_c025",   // 냉기 각인
-            _                 => "buffcard_c030",   // 동료 — 유령 포대 그림을 빌린다
+            Consumable.Bomb   => "shop_bomb",      // C 원혼 회로 캡슐 그림(2026-10-08)
+            Consumable.Freeze => "shop_freeze",
+            _                 => "shop_ally",
         };
 
         /// <summary>공용 카드의 1/3. 최소 10 골드는 받는다.</summary>

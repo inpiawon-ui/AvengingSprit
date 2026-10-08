@@ -16,28 +16,49 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        /// <summary>물건에 이만큼 다가서면 작동한다(px). 발밑이 겹칠 필요는 없다.</summary>
-        private const float RoomPropTouchRadius = 96f;
+        /// <summary>물건 **발밑**에 이만큼 다가서면 작동한다(px). 발밑이 겹칠 필요는 없다.</summary>
+        private const float RoomPropTouchRadius = 110f;
+
+        // ── C 「원혼 회로」 물건(2026-10-08) ─────────────────────────
+        // PD 「맵에 하나만 서는데 너무 작아 티가 안 난다 · 디자인도 새로」 — 그림 칸 300x380(납품)을 이 크기로 세운다.
+        // 예전 192 px 는 유닛(144 px)과 덩치가 같아 방 장식으로 읽혔다. 셋 다 같은 크기 — 덩치가 아니라 그림으로 갈린다.
+        // ⚠ 330 px 로 세웠더니 다가설 때 카메라가 플레이어를 따라 내려가 머리 위 표식이 HUD 밑에 가렸다 — 300 px · 표식을 바짝.
+        private const float RoomPropWidth = 236f;
+        private const float RoomPropHeight = 300f;
+        /// <summary>그림 맨 아래(다리 끝)에서 바닥 링 가운데까지 올린 거리.</summary>
+        private const float RoomPropRingLift = 14f;
+        private const float RoomPropRingWidth = 230f;
+        private const float RoomPropRingHeight = 86f;
+        private const float RoomPropMarkSize = 52f;
+        /// <summary>머리 위 표식이 그림 꼭대기에서 떠 있는 높이와 오르내림 폭 · 주기.</summary>
+        private const float RoomPropMarkGap = 12f;
+        private const float RoomPropMarkBob = 6f;
+        private const float RoomPropMarkBobSeconds = 1.4f;
 
         /// <summary>물건이 서는 자리 — 방 가로 한가운데, 세로로는 조금 위.</summary>
         private const float RoomPropYRatio = 0.42f;
 
         private RectTransform _roomProp;
         private Image _roomPropImg;
+        private RectTransform _roomPropRing;
+        private RectTransform _roomPropMark;
+        private Image _roomPropRingImg;
+        private Image _roomPropMarkImg;
+        private float _roomPropBobTime;
         private bool _roomPropUsed;
 
         /// <summary>회복 제단을 세운다. 그림이 없으면 아무것도 안 세운다.</summary>
-        private void SpawnHealShrine() => SpawnRoomProp("obj_heal_shrine", 192f, 192f);
+        private void SpawnHealShrine() => SpawnRoomProp("obj_heal_shrine", "heal");
 
         /// <summary>상점 가판을 세운다.</summary>
-        private void SpawnShopStall() => SpawnRoomProp("obj_shop_stall", 224f, 192f);
+        private void SpawnShopStall() => SpawnRoomProp("obj_shop_stall", "shop");
 
         /// <summary>
         /// 악마의 제단을 세운다. 회복 제단(천사)과 **같은 크기**로 선다 —
         /// 004 는 둘 중 하나가 서는 자리라, 크기가 다르면 어느 쪽이 왔는지가
         /// 그림이 아니라 덩치로 먼저 읽힌다.
         /// </summary>
-        private void SpawnDevilAltar() => SpawnRoomProp("obj_devil_altar", 192f, 192f);
+        private void SpawnDevilAltar() => SpawnRoomProp("obj_devil_altar", "devil");
 
         /// <summary>
         /// 중간보스를 잡은 방의 악마의 제단 — **방 한가운데**에 선다(기획 2026-09-18).
@@ -47,13 +68,14 @@ namespace Game.Module.InGame
         {
             SpawnDevilAltar();
             _devilAltarHere = _roomProp != null;
-            if (_roomProp != null) _roomProp.anchoredPosition = RoomPropAt();
+            if (_roomProp != null) PlaceRoomProp();
         }
 
         /// <summary>이 방의 물건이 전투 뒤에 선 악마의 제단인가.</summary>
         private bool _devilAltarHere;
 
-        private void SpawnRoomProp(string artKey, float w, float h)
+        /// <param name="kind">heal · devil · shop — 바닥 링(`obj_ring_{kind}`) · 머리 위 표식(`obj_mark_{kind}`) 그림 이름.</param>
+        private void SpawnRoomProp(string artKey, string kind)
         {
             ClearRoomProp();
             if (_unitLayer == null) return;
@@ -63,20 +85,46 @@ namespace Game.Module.InGame
             //   플레이어가 그걸 물건으로 알고 다가온다 — 없는 편이 낫다.
             if (art == null) return;
 
-            var go = new GameObject($"RoomProp_{artKey}", typeof(RectTransform), typeof(Image));
-            go.transform.SetParent(_unitLayer, false);
-            _roomProp = (RectTransform)go.transform;
-            _roomProp.anchorMin = _roomProp.anchorMax = new Vector2(0f, 1f);
-            _roomProp.pivot = new Vector2(0.5f, 0.5f);
-            _roomProp.sizeDelta = new Vector2(w, h);
-            _roomProp.anchoredPosition = RoomPropAt();
-
-            _roomPropImg = go.GetComponent<Image>();
-            _roomPropImg.sprite = art;
-            _roomPropImg.raycastTarget = false;
-            _roomPropImg.preserveAspect = true;
+            // 바닥 링이 몸보다 **먼저**(뒤에) 깔려야 다리가 링 위에 선다
+            _roomPropRing = MakePropImage($"RoomPropRing_{kind}", GetSprite($"obj_ring_{kind}"),
+                                          RoomPropRingWidth, RoomPropRingHeight, out _roomPropRingImg);
+            _roomProp = MakePropImage($"RoomProp_{artKey}", art, RoomPropWidth, RoomPropHeight, out _roomPropImg);
+            _roomPropMark = MakePropImage($"RoomPropMark_{kind}", GetSprite($"obj_mark_{kind}"),
+                                          RoomPropMarkSize, RoomPropMarkSize, out _roomPropMarkImg);
+            _roomPropBobTime = 0f;
+            PlaceRoomProp();
             _roomPropUsed = false;
         }
+
+        private RectTransform MakePropImage(string name, Sprite sprite, float w, float h, out Image img)
+        {
+            img = null;
+            if (sprite == null) return null;
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(_unitLayer, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(w, h);
+            img = go.GetComponent<Image>();
+            img.sprite = sprite;
+            img.raycastTarget = false;
+            img.preserveAspect = true;
+            return rt;
+        }
+
+        /// <summary>몸 · 바닥 링 · 머리 위 표식을 물건 자리에 함께 놓는다.</summary>
+        private void PlaceRoomProp()
+        {
+            var at = RoomPropAt();
+            if (_roomProp != null) _roomProp.anchoredPosition = at;
+            if (_roomPropRing != null) _roomPropRing.anchoredPosition = RoomPropFeet() + Vector2.up * RoomPropRingLift;
+            if (_roomPropMark != null)
+                _roomPropMark.anchoredPosition = at + Vector2.up * (RoomPropHeight * 0.5f + RoomPropMarkGap);
+        }
+
+        /// <summary>물건 발밑 — 그림이 커서(300 px) 가운데로 재면 다가서도 닿지 않는다. 닿기 판정은 여기로 잰다.</summary>
+        private Vector2 RoomPropFeet() => RoomPropAt() + Vector2.down * (RoomPropHeight * 0.5f);
 
         /// <summary>
         /// 물건 자리. 보스를 잡은 방의 악마의 제단은 **방 한가운데**에 선다(기획 2026-09-17) —
@@ -88,8 +136,14 @@ namespace Game.Module.InGame
         private void ClearRoomProp()
         {
             if (_roomProp != null) Destroy(_roomProp.gameObject);
+            if (_roomPropRing != null) Destroy(_roomPropRing.gameObject);
+            if (_roomPropMark != null) Destroy(_roomPropMark.gameObject);
             _roomProp = null;
             _roomPropImg = null;
+            _roomPropRing = null;
+            _roomPropRingImg = null;
+            _roomPropMark = null;
+            _roomPropMarkImg = null;
             _roomPropUsed = false;
             _devilAltarHere = false;
         }
@@ -103,9 +157,17 @@ namespace Game.Module.InGame
         private void TickRoomProp()
         {
             if (_roomProp == null || _roomPropUsed) return;
+            if (_roomPropMark != null)
+            {
+                // 머리 위 표식이 천천히 오르내린다 — 멈춰 있으면 그림의 일부로 읽힌다
+                _roomPropBobTime += Time.deltaTime;
+                float bob = Mathf.Sin(_roomPropBobTime * (2f * Mathf.PI / RoomPropMarkBobSeconds)) * RoomPropMarkBob;
+                _roomPropMark.anchoredPosition = RoomPropAt()
+                    + Vector2.up * (RoomPropHeight * 0.5f + RoomPropMarkGap + bob);
+            }
             var me = Avatar;
             if (me == null) return;
-            if (Vector2.Distance(me.Position, RoomPropAt()) > RoomPropTouchRadius) return;
+            if (Vector2.Distance(me.Position, RoomPropFeet()) > RoomPropTouchRadius) return;
 
             _roomPropUsed = true;
             if (_roomKind == RoomKind.Rest) OpenShrine();
@@ -115,6 +177,9 @@ namespace Game.Module.InGame
 
             // 다 쓴 물건은 흐릿하게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
             if (_roomPropImg != null) _roomPropImg.color = new Color(1f, 1f, 1f, 0.45f);
+            if (_roomPropRingImg != null) _roomPropRingImg.color = new Color(1f, 1f, 1f, 0.3f);
+            // 표식은 「아직 쓸 수 있다」는 뜻이라 다 쓰면 내린다
+            if (_roomPropMark != null) _roomPropMark.gameObject.SetActive(false);
         }
 
         /// <summary>
