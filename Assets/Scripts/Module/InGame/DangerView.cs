@@ -76,6 +76,7 @@ namespace Game.Module.InGame
         private float _flash;   // 터진 뒤 남은 번쩍임(초). 0 이면 꺼진다
 
         private Texture2D Art => s_art[(_safe ? 3 : 0) + (int)_layer];
+        private Texture2D _drawnArt;
 
         /// <summary>
         /// 빗금을 **타일로 쓸 수 있는가**.
@@ -146,6 +147,16 @@ namespace Game.Module.InGame
             return v;
         }
 
+        /// <summary>판 시작 때 미리 부른다 — 다 받을 때까지 기다린다(이미 받았으면 바로 돌아온다).</summary>
+        public static async UniTask PreloadAsync()
+        {
+            RequestArt();
+            float until = Time.realtimeSinceStartup + 3f;   // 못 받아도 판은 시작한다
+            while (s_artRequested && !s_artDone && Time.realtimeSinceStartup < until) await UniTask.Yield();
+        }
+
+        private static bool s_artDone;
+
         /// <summary>그림을 한 번만 부른다. 실패해도 예전 모양으로 그린다.</summary>
         private static void RequestArt()
         {
@@ -162,6 +173,7 @@ namespace Game.Module.InGame
                 try { s_art[i] = await res.LoadAsync<Texture2D>(ArtAddress[i]); }
                 catch (System.Exception e) { Debug.LogWarning($"[Danger] 그림 없음 {ArtAddress[i]} — {e.Message}"); }
             }
+            s_artDone = true;
         }
 
         /// <summary>그릴 것을 넘긴다. <paramref name="safe"/> 면 초록 안전지대로 그린다.</summary>
@@ -258,6 +270,9 @@ namespace Game.Module.InGame
         {
             _progress = Mathf.Clamp01(progress01);
             _age += dt;
+            // 예고 도중에 그림이 도착하면 재료도 바꿔 끼운다 — 안 그러면 색만 그림 색(흰)으로 바뀌고
+            // 텍스처는 흰 바탕 그대로라 한순간 **하얗게** 그려졌다
+            if (_drawnArt != Art) { _drawnArt = Art; SetMaterialDirty(); }
             // ⚠ 숨쉬기(맥박)는 멈췄다 — PD 2026-10-08 「노티가 애니로 들어가서 정신없다, 진행 단계처럼 차오르다 다 차면 액션」.
             //   범위는 옅게 가만히 서 있고, 안에서부터 차오르는 겹(Core)만 움직인다.
             color = TintNow();

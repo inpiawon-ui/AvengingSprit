@@ -8731,7 +8731,7 @@ MonoBehaviour:
     _chapter: 4
     _type: COMBAT
     _route: MAIN
-    _intent: "\uD574\uBA38 \uACE8"
+    _intent: "\uD654\uC5FC \uACE8"
     _isChapterStart: 0
     _handEdited: 0
     _width: 10
@@ -8873,48 +8873,48 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_3
-      _kind: CRATE
-      _at: {x: 2, y: 9.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 1
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: SWING_HAMMER_4
-      _kind: SWING_HAMMER
-      _at: {x: 5, y: 9}
-      _size: {x: 2, y: 2}
+    - _objectId: BLOCK_3
+      _kind: BLOCK
+      _at: {x: 1.5, y: 9.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
       _blocksSight: 0
       _destructible: 0
-      _hazardKind: HAMMER
-      _hazardDamage: 12
-      _hazardTick: 0.7
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_5
-      _kind: CRATE
-      _at: {x: 8, y: 9.5}
-      _size: {x: 2, y: 1}
+    - _objectId: FLAME_JET_E_4
+      _kind: FLAME_JET_E
+      _at: {x: 2.5, y: 9.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
       _blocksSight: 0
-      _destructible: 1
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: FLAME_JET_W_5
+      _kind: FLAME_JET_W
+      _at: {x: 7.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
     - _objectId: BLOCK_6
       _kind: BLOCK
-      _at: {x: 9.5, y: 9.5}
+      _at: {x: 8.5, y: 9.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
@@ -8927,6 +8927,19 @@ MonoBehaviour:
       _unnamed: 0
     - _objectId: BLOCK_7
       _kind: BLOCK
+      _at: {x: 9.5, y: 9.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_8
+      _kind: BLOCK
       _at: {x: 0.5, y: 8.5}
       _size: {x: 1, y: 1}
       _blocksMove: 1
@@ -8938,33 +8951,59 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: CRATE_8
-      _kind: CRATE
-      _at: {x: 2, y: 8.5}
-      _size: {x: 2, y: 1}
+    - _objectId: BLOCK_9
+      _kind: BLOCK
+      _at: {x: 1.5, y: 8.5}
+      _size: {x: 1, y: 1}
       _blocksMove: 1
       _blocksShot: 1
       _blocksEnemyShot: 0
       _blocksSight: 0
-      _destructible: 1
-      _hazardKind: NONE
-      _hazardDamage: 0
-      _hazardTick: 0
-      _unnamed: 0
-    - _objectId: CRATE_9
-      _kind: CRATE
-      _at: {x: 8, y: 8.5}
-      _size: {x: 2, y: 1}
-      _blocksMove: 1
-      _blocksShot: 1
-      _blocksEnemyShot: 0
-      _blocksSight: 0
-      _destructible: 1
+      _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
     - _objectId: BLOCK_10
+      _kind: BLOCK
+      _at: {x: 2.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_11
+      _kind: BLOCK
+      _at: {x: 7.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_12
+      _kind: BLOCK
+      _at: {x: 8.5, y: 8.5}
+      _size: {x: 1, y: 1}
+      _blocksMove: 1
+      _blocksShot: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
+      _destructible: 0
+      _hazardKind: NONE
+      _hazardDamage: 0
+      _hazardTick: 0
+      _unnamed: 0
+    - _objectId: BLOCK_13
       _kind: BLOCK
       _at: {x: 9.5, y: 8.5}
       _size: {x: 1, y: 1}
@@ -8977,7 +9016,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: SANDBAG_11
+    - _objectId: SANDBAG_14
       _kind: SANDBAG
       _at: {x: 3, y: 5.5}
       _size: {x: 2, y: 1}
@@ -8990,7 +9029,7 @@ MonoBehaviour:
       _hazardDamage: 0
       _hazardTick: 0
       _unnamed: 0
-    - _objectId: BARREL_PILE_12
+    - _objectId: BARREL_PILE_15
       _kind: BARREL_PILE
       _at: {x: 9, y: 5.5}
       _size: {x: 2, y: 1}

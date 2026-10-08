@@ -120,7 +120,8 @@ namespace Game.Module.InGame
         /// **멧돼지는 피격 경직을 아예 안 받는다**(2026-10-07 시험 — 로봇 탄에 맞을 때마다 굳어 멈춤 1초가 2.8초, 다음 돌진까지 7초가 됐다.
         /// 「계속 돌진」이 총 맞는 동안 사라졌다). 근접이 치는 틈은 정해진 멈춤(1초 · 박으면 1.8초)으로 준다.
         private bool ChargeArmored(Unit e)
-            => !e.IsStunned && (e.Key == TrashBoarKey || e.Key == TrashMoleKey   // 두더지도 박자가 정해져 있다 — 맞는다고 오래 솟아 있지 않는다
+            => !e.IsStunned && (e == _midBoss   // 중간보스 대장 — 맞을 때마다 굳어 공격을 못 하던 것(PD 2026-10-08). 기절은 그대로 먹는다
+                                || e.Key == TrashBoarKey || e.Key == TrashMoleKey   // 두더지도 박자가 정해져 있다 — 맞는다고 오래 솟아 있지 않는다
                                 || ((e.PatternPhase == 1 || e.PatternPhase == 2) && PatternOf(e) == EnemyPattern.Dive));
 
         /// <summary>

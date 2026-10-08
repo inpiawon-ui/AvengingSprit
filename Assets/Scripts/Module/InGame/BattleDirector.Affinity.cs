@@ -252,7 +252,8 @@ namespace Game.Module.InGame
         private void StrongHitReaction(Unit victim)
         {
             Shake(StrongShake);
-            if (victim == null || !victim.IsAlive || victim.IsBoss) return;
+            // 중간보스 대장도 빠진다 — 움찔할 때마다 예고가 취소돼 평타 · 스킬을 거의 못 썼다(PD 2026-10-08 「공격 텀이 너무 길다」)
+            if (victim == null || !victim.IsAlive || victim.IsBoss || victim == _midBoss) return;
 
             float now = Time.time;
             if (_strongReactAt.TryGetValue(victim, out float last) && now - last < StrongReactCooldown) return;

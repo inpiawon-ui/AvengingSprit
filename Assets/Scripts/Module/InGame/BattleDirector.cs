@@ -393,6 +393,8 @@ namespace Game.Module.InGame
                     t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true));
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
+            // 위험 예고 그림도 미리 — 첫 예고가 뜰 때 받기 시작하면 그 예고만 끝이 하얗게 번쩍였다(PD 2026-10-08)
+            await DangerView.PreloadAsync();
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
             _eventsUsed.Clear();
             _runGold = 0;     // 판 골드도 런 한정이다
@@ -1176,7 +1178,9 @@ namespace Game.Module.InGame
 
             var img = go.GetComponent<Image>();
             img.raycastTarget = false;
-            img.sprite = GetSprite("fx_shadow") ?? GetSprite("obj_shadow");
+            // ⚠ `fx_shadow` · `obj_shadow` 는 한 번도 들어온 적이 없다 — 그림 없이 반투명 **네모**가 깔렸다
+            //   (PD 2026-10-08 「그림자를 저따구로 대충」). 낙하물 그림자(둥근 타원)를 같이 쓴다
+            img.sprite = GetSprite("fx_shadow") ?? GetSprite("obj_shadow") ?? GetSprite("obj_drop_shadow");
             img.color = ObstacleShadowColor;
             go.transform.SetAsFirstSibling();   // 바닥 바로 위, 모든 것보다 뒤
             _obstacleShadows.Add(go);
@@ -3325,7 +3329,7 @@ namespace Game.Module.InGame
             TickZoomPunch();
 
             TickPlayer(dt);
-            TickRangeRing();       // 내 공격 사거리 원 — 움직인 뒤 자리를 따라간다
+            TickRangeRing(dt);     // 내 공격 사거리 원 — 움직인 뒤 자리를 따라간다
             TickAlly(dt);          // 상점에서 산 동료
             TickSummons(dt);       // 내가 불러낸 것들 — 해골 · 골렘 · 분신
             TickAfterimages(dt);
@@ -3840,6 +3844,7 @@ namespace Game.Module.InGame
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
             if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
+            _rangeRingPulse = 1f;   // 사거리 원은 내가 칠 때만 잠깐 보인다(PD 2026-10-08)
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
         }
