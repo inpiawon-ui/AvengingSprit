@@ -8754,7 +8754,11 @@ namespace Game.Module.InGame
             // 전에는 챕터 보스를 잡은 자리였다). 다가서면 계약을 묻는다. 출구는 같이 열린다.
             // ⚠ 계약으로 매복이 붙으면 그 싸움을 비운 뒤 여기로 다시 온다. 제단을 또 세우면
             //   다 쓴 제단이 새것으로 되살아나므로, 이미 서 있으면 세우지 않는다.
-            if (_canonRoom != null && _canonRoom.IsMidBoss && _roomProp == null) SpawnDevilAltarCenter();
+            if (_canonRoom != null && _canonRoom.IsMidBoss && _roomProp == null)
+            {
+                ClearRoomForAltar();   // 물건을 걷고 제단만 남긴다 — 섞여 있으면 장식으로 읽혀 지나친다 (BattleDirector.AltarClear)
+                SpawnDevilAltarCenter();
+            }
 
             // 버프는 이제 **레벨업**에서 나온다(기획서 A 5-2). 방을 비운 것만으로는
             // 주지 않는다 — 잡는 만큼 성장하는 쪽이 교전을 피하지 않게 만든다.
