@@ -28,6 +28,11 @@ namespace Game.EditorTools
     ///   AffinityDemo.unlock  켜면 고른 몸을 숙련도 1 로 열어 둔다(안 가진 몸은 유령으로 돈다)
     ///   AffinityDemo.direct  켜면 자동 조종이 피하지 않고 곧장 가서 때린다(검수 영상을 짧게)
     ///   AffinityDemo.atkMul  내 몸 공격력 배수(1 = 그대로) — 전 챕터 훑어보기 영상에서 너무 오래 안 걸리게(2026-10-08)
+    ///   AffinityDemo.path    지나갈 방 ID 를 쉼표로(예 「ROOM_CH1_001,ROOM_CH1_002,ROOM_CH1_008,ROOM_CH1_015」).
+    ///                        방을 깨면 출구가 다음 칸으로 간다 — 줄인 판(호스트별 확인 영상, 2026-10-08)
+    ///   AffinityDemo.refill  켜면 무적 대신 몸 체력을 채워 살린다 — 맞을 때 붉은 점멸이 영상에 남는다
+    ///   AffinityDemo.bossCapSeconds  보스방이 이 초를 넘기면 내 공격력을 `bossCapAtkMul`(기본 3)배로 — 영상이 끝나게
+    ///   AffinityDemo.recordPerHost  켜면 영상 파일 이름에 `_{호스트}` 를 붙인다 — 줄 선 호스트마다 따로 남긴다
     ///
     /// ── 밸런스 검증 (2026-10-02) ─────────────────────────────────
     ///   AffinityDemo.chapter   들어갈 챕터(기본 1)
@@ -206,6 +211,9 @@ namespace Game.EditorTools
             var bt = typeof(BattleDirector);
             if (bt.GetField("_canonRoom", F).GetValue(director) == null) { _wait = 20; return; }
 
+            // 숨긴 몸(엘리트 아마존 · 사신)은 로비에서 못 고른다 — 판이 유령으로 선 뒤 그 몸을 직접 입힌다(호스트별 확인 영상)
+            if (step == 2 && !EquipHiddenHost(director, bt)) { _wait = 5; return; }
+
             if (step == 2)
             {
                 var pilot = director.gameObject.GetComponent<PromoPilot>();
@@ -214,6 +222,7 @@ namespace Game.EditorTools
                 // 끄면 진짜로 맞고 죽는다 — 유령 에너지가 얼마나 버티는지 볼 때 쓴다.
                 pilot.KeepAlive = SessionState.GetBool("AffinityDemo.keepAlive", true);
                 pilot.Direct = SessionState.GetBool("AffinityDemo.direct", false);   // 곧장 가서 때리기만(전 챕터 검수 영상)
+                pilot.RefillInsteadOfInvuln = SessionState.GetBool("AffinityDemo.refill", false);   // 무적 대신 체력 채우기 — 맞는 연출이 보이게
                 PromoPilot.Log.Clear();
 
                 // 타격 반응을 견줄 때 — 1챕터 잡몹은 두세 방에 죽어 반응을 볼 틈이 없다.
@@ -238,6 +247,7 @@ namespace Game.EditorTools
 
             // 내 몸 공격력 배수 — 몸이 바뀌거나 값이 되돌아가면 다시 건다
             BoostHostAtk(director, bt);
+            FollowPath(director, bt);
 
             // ── 3. 정한 방까지 깨면 멈춘다 ───────────────────────
             int until = SessionState.GetInt("AffinityDemo.rooms", 0);
@@ -282,20 +292,91 @@ namespace Game.EditorTools
             _wait = 15;
         }
 
+        private static bool _hiddenLoading;
+
+        /// <summary>
+        /// 숨긴 몸을 입힌다. 그림이 올라올 때까지 false(다시 부른다), 다 입었거나 할 일이 없으면 true.
+        /// 그림은 판 시작 목록에 없으므로 여기서 받는다 — 안 받고 입히면 흰 네모로 선다.
+        /// </summary>
+        private static bool EquipHiddenHost(BattleDirector director, System.Type bt)
+        {
+            string key = SessionState.GetString("AffinityDemo.host", string.Empty);
+            if (!Game.User.PlayerDataService.IsHiddenHost(key)) return true;
+            if (bt.GetField("_host", F).GetValue(director) is Unit body && body != null && body.Key == key)
+            { _hiddenLoading = false; return true; }
+            if (!CoreModule.TryGet<Game.User.IPlayerDataService>(out var player)) return false;
+            var table = player.GetType().GetField("_hosts", F)?.GetValue(player) as Game.Character.HostTable;
+            var entry = table != null ? table.Get(key) : null;
+            if (entry == null) { Debug.LogWarning("[AffinityDemo] 숨긴 몸을 표에서 못 찾음 " + key); return true; }
+
+            var unitGet = bt.GetMethod("UnitGet", F);
+            if (unitGet.Invoke(director, new object[] { entry.SpriteKey, null }) == null)
+            {
+                if (!_hiddenLoading && CoreModule.TryGet<GameFramework.Core.Module.Resource.IResourceManager>(out var res))
+                {
+                    _hiddenLoading = true;
+                    var task = (Cysharp.Threading.Tasks.UniTask)bt.GetMethod("LoadOneUnitAtlasAsync", F)
+                        .Invoke(director, new object[] { res, entry.SpriteKey });
+                    Cysharp.Threading.Tasks.UniTaskExtensions.Forget(task);   // fire-and-forget: 다 올라왔는지는 UnitGet 으로 다시 본다
+                }
+                return false;
+            }
+            var ghost = bt.GetField("_ghost", F).GetValue(director) as Unit;
+            bt.GetMethod("EnterHost", F).Invoke(director, new object[]
+                { entry, entry.HostKey, entry.DisplayName, ghost != null ? ghost.Position : Vector2.zero, 100 });
+            Debug.Log("[AffinityDemo] 숨긴 몸 입힘 " + key);
+            _hiddenLoading = false;
+            return true;
+        }
+
+        /// <summary>
+        /// 줄인 판 — 지금 방의 출구들이 `AffinityDemo.path` 의 다음 방으로 가게 바꾼다.
+        /// 출구는 들어설 때 그 문의 `NextRoomId` 를 읽는다(`BattleDirector` 출구 처리) — 문만 바꾸면 된다.
+        /// </summary>
+        private static void FollowPath(BattleDirector director, System.Type bt)
+        {
+            string path = SessionState.GetString("AffinityDemo.path", string.Empty);
+            if (string.IsNullOrEmpty(path)) return;
+            var room = bt.GetField("_canonRoom", F).GetValue(director);
+            if (room == null) return;
+            string id = (string)room.GetType().GetProperty("RoomId").GetValue(room);
+            var ids = path.Split(',');
+            int at = System.Array.IndexOf(ids, id);
+            if (at < 0 || at + 1 >= ids.Length) return;
+            if (!(bt.GetField("_exits", F).GetValue(director) is System.Collections.IList exits)) return;
+            foreach (var gate in exits)
+            {
+                var f = gate.GetType().GetField("NextRoomId");
+                if (f != null && (string)f.GetValue(gate) != ids[at + 1]) f.SetValue(gate, ids[at + 1]);
+            }
+        }
+
         // ── 녹화 ────────────────────────────────────────────────
 
         private static Unit _boostHost;
         private static int _boostTo;
+        private static int _boostBase;
+        private static float _boostMul;
 
         private static void BoostHostAtk(BattleDirector director, System.Type bt)
         {
             float mul = SessionState.GetFloat("AffinityDemo.atkMul", 1f);
+            // 보스방이 너무 길어지면 마무리한다 — 곧장 때리는 조종은 「머리 물기」를 안 피해서 보스가 물 때마다 5% 를 되찾고,
+            // 체력을 채워 주는 녹화에서는 그대로 끝없이 갔다(2026-10-08 엘리트 아마존 · 기관총 커맨도 4분+).
+            float cap = SessionState.GetFloat("AffinityDemo.bossCapSeconds", 0f);
+            if (cap > 0f && bt.GetField("_boss", F).GetValue(director) is Unit boss && boss != null && boss.IsAlive
+                && Time.time - SessionState.GetFloat("AffinityDemo.watchSince", Time.time) > cap)
+                mul = Mathf.Max(mul, SessionState.GetFloat("AffinityDemo.bossCapAtkMul", 3f));
             if (mul <= 1f) return;
             var host = bt.GetField("_host", F).GetValue(director) as Unit;
             if (host == null) return;
-            if (host == _boostHost && host.Atk == _boostTo) return;
+            if (host == _boostHost && host.Atk == _boostTo && Mathf.Approximately(_boostMul, mul)) return;
+            // 이미 곱한 몸에 다른 배수를 걸 때는 원래 값에서 다시 곱한다(두 번 곱하지 않게)
+            int baseAtk = host == _boostHost && host.Atk == _boostTo ? _boostBase : host.Atk;
             _boostHost = host;
-            _boostTo = Mathf.RoundToInt(host.Atk * mul);
+            _boostBase = baseAtk;
+            _boostMul = mul;
+            _boostTo = Mathf.RoundToInt(baseAtk * mul);
             typeof(Unit).GetProperty("Atk").SetValue(host, _boostTo);
         }
 
@@ -305,6 +386,8 @@ namespace Game.EditorTools
             if (string.IsNullOrEmpty(path) || _recorder != null) return;
             if (SessionState.GetBool("AffinityDemo.recordPerChapter", false))
                 path += "_ch" + SessionState.GetInt("AffinityDemo.chapter", 1).ToString("00");
+            if (SessionState.GetBool("AffinityDemo.recordPerHost", false))
+                path += "_" + SessionState.GetString("AffinityDemo.host", "ghost");
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             var settings = ScriptableObject.CreateInstance<RecorderControllerSettings>();

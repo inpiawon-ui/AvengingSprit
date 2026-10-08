@@ -43,9 +43,16 @@ namespace Game.Module.InGame
         private float _popupWait;
         private float _skillIn = 3f;
         private float _possessIn = 1.2f;
+        private static readonly PropertyInfo s_hp = typeof(Unit).GetProperty("Hp");
 
         /// <summary>죽지 않게 — 녹화가 도중에 끊기지 않게.</summary>
         public bool KeepAlive = true;
+
+        /// <summary>
+        /// 무적 대신 체력을 채워서 살린다 — 무적이면 몸이 맞아도 붉게 번쩍이지 않아 「맞는 느낌」이 영상에서 빠진다.
+        /// 호스트별 평타 · 스킬 확인 영상용(2026-10-08). `KeepAlive` 가 켜져 있을 때만 본다.
+        /// </summary>
+        public bool RefillInsteadOfInvuln;
 
         /// <summary>
         /// 곧장 가서 때리기만 한다 — 피하기 · 자리 옮기기 · 붙은 적에게서 물러서기를 끈다.
@@ -273,7 +280,12 @@ namespace Game.Module.InGame
 
             if (KeepAlive)
             {
-                _fInvuln.SetValue(_bd, 9999f);
+                if (RefillInsteadOfInvuln)
+                {
+                    if (_fHost.GetValue(_bd) is Unit body && body != null && body.IsAlive && body.Hp < body.HpMax)
+                        s_hp.SetValue(body, body.HpMax);
+                }
+                else _fInvuln.SetValue(_bd, 9999f);
                 _fGhostHp.SetValue(_bd, 100);
             }
             if (_fSandboxTag.GetValue(_bd) is RectTransform tag) tag.localScale = Vector3.zero;

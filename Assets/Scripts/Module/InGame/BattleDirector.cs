@@ -3712,6 +3712,9 @@ namespace Game.Module.InGame
             // 1번 방에서 직접 빼앗는다. 원작이 그랬다.
             if (_player.StartAsGhost) return null;
             var picked = _player.GetHost(_player.SelectedHostId);
+            // ⚠ 고른 몸이 잠겼거나 숨긴 몸이면 `SelectedHostId` 가 **유령**으로 돌아온다 — 그 유령 항목을
+            //   몸으로 입히면 유령이 호스트처럼 평타를 쳤다(PD 2026-10-08 「고스트가 왜 싸워」). 그때는 유령으로 시작한다
+            if (picked != null && picked.HostKey == HostEntry.GhostKey) return null;
             if (picked != null) return picked;
             var all = _player.AllHosts;
             return all != null && all.Count > 0 ? all[0] : null;
