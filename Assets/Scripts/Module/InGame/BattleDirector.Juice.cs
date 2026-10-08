@@ -190,15 +190,14 @@ namespace Game.Module.InGame
         // ── 업그레이드 번쩍임 ────────────────────────────────────
 
         /// <summary>
-        /// 능력이 오르는 순간(레벨업 카드·제단) 몸에서 빛이 퍼진다.
-        /// 무엇이 좋아졌는지는 창이 말해 주므로, 여기서는 **일어났다는 사실**만 알린다.
+        /// 능력이 오르는 순간(레벨업 카드·제단).
+        /// 몸에 깃드는 빛은 창 연출(<see cref="PopupFxPlayer"/> 의 「능력치 적용」 — 창이 닫힐 때 창 색으로)이 맡는다.
+        /// ⚠ 여기서 `burst` 를 터뜨리지 않는다 — 공용 `burst` 가 전투 폭발 그림이라(2026-10-08 교체)
+        ///   고르는 순간 창 위로 불꽃이 터졌다. 흔들림만 남긴다.
         /// </summary>
         private void PlayUpgradeFx()
         {
-            var me = Avatar;
-            if (me == null) return;
-            PlayFx("burst", me.Position, 190f, loop: false);
-            SpawnImpact(me.Position, "pulse");
+            if (Avatar == null) return;
             Shake(2.5f);
         }
     }

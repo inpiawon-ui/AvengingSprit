@@ -32,6 +32,13 @@ namespace Game.Module.InGame
         private readonly HashSet<string> _popupBusy = new();
 
         /// <summary>
+        /// 연출 중에 들어온 마지막 요청(켜기/끄기). 연출이 끝나면 이 상태로 맞춘다.
+        /// ⚠ 예전엔 연출 중 요청을 버렸다 — 고른 카드 창이 닫히는 사이(고른 뒤 0.35초 + 닫힘 0.11초)에 다음 레벨업 창이
+        ///   오면 그 창이 안 뜨고, 전투는 카드 선택을 기다리며 멈춘 채 남았다(2026-10-08 게임 검사에서 발견).
+        /// </summary>
+        private readonly Dictionary<string, bool> _popupWant = new();
+
+        /// <summary>
         /// 창을 연출과 함께 켠다/끈다.
         ///
         /// 이미 원하는 상태면 아무것도 안 한다 — 매 프레임 같은 값을 넣는 자리
@@ -42,9 +49,9 @@ namespace Game.Module.InGame
             var tr = _ui.Find(name);
             if (tr == null) { _ui.SetActive(name, on); return; }
 
-            bool now = tr.gameObject.activeSelf;
-            if (now == on && !_popupBusy.Contains(name)) return;
-            if (_popupBusy.Contains(name)) return;
+            if (_popupBusy.Contains(name)) { _popupWant[name] = on; return; }
+            _popupWant.Remove(name);
+            if (tr.gameObject.activeSelf == on) return;
 
             if (on) OpenPanelAsync(name, tr).Forget();   // fire-and-forget: 연출은 기다릴 것이 없다
             else ClosePanelAsync(name, tr).Forget();     // fire-and-forget: 위와 같다
@@ -56,6 +63,7 @@ namespace Game.Module.InGame
             var group = EnsureGroup(tr);
             tr.gameObject.SetActive(true);
             tr.SetAsLastSibling();
+            if (_fx != null) _fx.Open(tr as RectTransform);
 
             float t = 0f;
             while (t < PopupOpenSeconds)
@@ -75,6 +83,7 @@ namespace Game.Module.InGame
                 if (group != null) group.alpha = 1f;
             }
             _popupBusy.Remove(name);
+            ApplyWanted(name);
         }
 
         private async UniTaskVoid ClosePanelAsync(string name, Transform tr)
@@ -94,12 +103,91 @@ namespace Game.Module.InGame
             }
             if (tr != null)
             {
+                if (_fx != null) _fx.Stop(tr as RectTransform);
                 tr.gameObject.SetActive(false);
                 tr.localScale = Vector3.one;
                 if (group != null) group.alpha = 1f;   // 다음에 켤 때 투명한 채로 뜨지 않게
             }
             _popupBusy.Remove(name);
+            ApplyWanted(name);
         }
+
+        /// <summary>연출 중에 미뤄 둔 요청을 이제 적용한다.</summary>
+        private void ApplyWanted(string name)
+        {
+            if (this == null || !_popupWant.TryGetValue(name, out bool on)) return;
+            _popupWant.Remove(name);
+            SetPanel(name, on);
+        }
+
+        // ── 고른 순간 연출을 보여 주고 닫는다 ───────────────────
+        //
+        // 연출 시안(PD 통과 2026-10-08)의 3컷 — 고른 칸에서 빛이 출발해 문장 · HP 로 간다. 창이 바로 사라지면
+        // 빛이 빈 화면에서 나온다. 잠깐 두고 닫되, 그동안 창은 누르기를 받지 않는다.
+
+        private const float PickFxHoldSeconds = 0.35f;
+
+        private void CloseAfter(string panelName, float seconds) => CloseAfterAsync(panelName, seconds).Forget();   // fire-and-forget: 닫기 연출은 기다릴 것이 없다
+
+        private async UniTaskVoid CloseAfterAsync(string panelName, float seconds)
+        {
+            var tr = _ui.Find(panelName);
+            var group = tr != null ? EnsureGroup(tr) : null;
+            if (group != null) group.interactable = false;
+            await UniTask.Delay(System.TimeSpan.FromSeconds(seconds), ignoreTimeScale: true,
+                                cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
+            if (group != null) group.interactable = true;
+            if (this != null) SetPanel(panelName, false);
+        }
+
+        // ── 같은 묶음은 같은 글자 크기 ─────────────────────────
+        //
+        // 카드 3장 · 제단 3칸 · 상점 6칸 · 보상/대가 한 쌍은 글이 짧은 칸만 크게 나오면 따로 논다
+        // (PD 「글자들이 다 따로 이사 와서 새로 잡은 느낌」 2026-10-08). 가장 긴 글이 정한 크기를 다 같이 쓴다.
+
+        private readonly Dictionary<TMPro.TMP_Text, float> _textMax = new();
+
+        private void EqualizeText(params string[] names)
+        {
+            float min = float.MaxValue;
+            for (int i = 0; i < names.Length; i++)
+            {
+                var t = _ui.Get<TMPro.TMP_Text>(names[i]);
+                if (t == null || !t.gameObject.activeInHierarchy || string.IsNullOrEmpty(t.text)) continue;
+                if (!_textMax.TryGetValue(t, out var max)) _textMax[t] = max = t.fontSizeMax;
+                t.fontSizeMax = max;
+                t.enableAutoSizing = true;
+                t.ForceMeshUpdate();
+                min = Mathf.Min(min, t.fontSize);
+            }
+            if (min == float.MaxValue) return;
+            for (int i = 0; i < names.Length; i++)
+            {
+                var t = _ui.Get<TMPro.TMP_Text>(names[i]);
+                if (t == null) continue;
+                if (!_textMax.ContainsKey(t)) _textMax[t] = t.fontSizeMax;
+                t.fontSizeMax = Mathf.Max(t.fontSizeMin, min);
+                t.ForceMeshUpdate();
+            }
+        }
+
+        private PopupFxPlayer _fx;
+
+        /// <summary>더하기 섞기 재질 — 창에 구워 둔 것을 방 오브젝트 연출도 같이 쓴다.</summary>
+        private Material PopupAdditiveMaterial()
+        {
+            var spec = _ui.Find("EventPanel") is Transform tr ? tr.GetComponent<PopupFxSpec>() : null;
+            return spec != null ? spec.Additive : null;
+        }
+
+        /// <summary>카드 희귀도 → 카드 테두리 연출 색(코덱스 levelup2 · 시안 mock_fxstory_levelup: RARE 청 · COMMON 백).</summary>
+        private static Color RarityFxColor(Game.Character.CardRarity rarity) => rarity switch
+        {
+            Game.Character.CardRarity.Rare => new Color32(92, 190, 255, 255),
+            Game.Character.CardRarity.Epic => new Color32(190, 110, 255, 255),
+            Game.Character.CardRarity.Legendary => new Color32(255, 200, 61, 255),
+            _ => new Color32(232, 238, 230, 255),
+        };
 
         // ── 고른 칸을 짚어 준다 ──────────────────────────────────
         //
@@ -113,14 +201,14 @@ namespace Game.Module.InGame
         private const float PickPunchScale = 1.14f;
 
         /// <summary>고른 칸을 부풀렸다 되돌린다. 끝나면 <paramref name="after"/> 를 부른다.</summary>
-        private void PunchThenClose(string slotName, string panelName)
+        private void PunchThenClose(string slotName, string panelName, float holdSeconds = 0f)
         {
             var slot = _ui.Find(slotName);
             if (slot == null) { SetPanel(panelName, false); return; }
-            PunchAsync(slot, panelName).Forget();   // fire-and-forget: 연출은 기다릴 것이 없다
+            PunchAsync(slot, panelName, holdSeconds).Forget();   // fire-and-forget: 연출은 기다릴 것이 없다
         }
 
-        private async UniTaskVoid PunchAsync(Transform slot, string panelName)
+        private async UniTaskVoid PunchAsync(Transform slot, string panelName, float holdSeconds)
         {
             var start = slot.localScale;
             float t = 0f;
@@ -134,6 +222,10 @@ namespace Game.Module.InGame
                 await UniTask.Yield();
             }
             if (slot != null) slot.localScale = start;
+            // 고른 카드에서 혼이 문장으로 올라가는 동안 창을 둔다(연출 시안 mock_fxstory_levelup 3컷)
+            if (holdSeconds > 0f)
+                await UniTask.Delay(System.TimeSpan.FromSeconds(holdSeconds), ignoreTimeScale: true,
+                                    cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
 
             // ⚠ 레벨업이 연달아 두 번 오면 튕기는 사이에 **다음 3택1 이 이미 떠 있다**(전투는 0.1초 뒤에 연다).
             //   그걸 여기서 닫으면 전투는 고르기를 기다리는데 창이 없어 판이 영영 멈춘다
@@ -156,11 +248,13 @@ namespace Game.Module.InGame
         {
             var tr = _ui.Find(panelName);
             if (tr == null) { _ui.SetActive(panelName, false); return; }
+            if (_fx != null) _fx.Stop(tr as RectTransform);
             tr.gameObject.SetActive(false);
             tr.localScale = Vector3.one;
             var group = tr.GetComponent<CanvasGroup>();
             if (group != null) group.alpha = 1f;
             _popupBusy.Remove(panelName);
+            _popupWant.Remove(panelName);
         }
 
         /// <summary>

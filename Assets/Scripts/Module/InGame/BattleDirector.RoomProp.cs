@@ -45,6 +45,57 @@ namespace Game.Module.InGame
         private Image _roomPropRingImg;
         private Image _roomPropMarkImg;
         private float _roomPropBobTime;
+        private string _roomPropKind;
+        private bool _roomPropNear;
+        private PopupFxPlayer _propFx;
+        private Material _propFxMaterial;
+
+        /// <summary>플레이어가 이만큼 다가서면 「다가감」 연출(빛 기둥 · 눈 번쩍)을 켠다(px, 발밑 기준). 작동 판정 반경은 따로다.</summary>
+        private const float RoomPropNearRadius = 240f;
+
+        /// <summary>
+        /// 닿은 뒤 창을 여는 데까지 — 작동 연출(치유 흡수 · 사슬 해방 · 금화 고리)이 창에 가려지지 않게(코덱스 room_*1).
+        /// 팝업의 「고른 뒤 닫힘」과 같은 0.35초.
+        /// </summary>
+        private const float RoomPropUseHoldSeconds = 0.35f;
+        private float _roomPropOpenTimer;
+
+        /// <summary>창 연출 · 방 오브젝트 연출이 빔을 쏘는 출발점(플레이어 몸).</summary>
+        public Transform AvatarTransform => Avatar != null ? Avatar.transform : null;
+
+        /// <summary>더하기 섞기 재질 — UI 가 창에 구워 둔 것을 건네준다.</summary>
+        public void SetPropFxMaterial(Material additive) => _propFxMaterial = additive;
+
+        private PopupFxPlayer PropFx()
+        {
+            if (_propFx == null)
+            {
+                _propFx = gameObject.AddComponent<PopupFxPlayer>();
+                _propFx.Init(() => AvatarTransform);
+            }
+            return _propFx;
+        }
+
+        /// <summary>물건 가운데를 유닛 층 좌표(왼쪽 위 기준, 아래로 +)로 — 연출 표(RoomPropFxTable)의 기준점.</summary>
+        private Vector2 RoomPropFxOrigin()
+        {
+            var at = RoomPropAt();
+            return new Vector2(at.x, -at.y);
+        }
+
+        private void PlayRoomPropFx(string phase, string owner)
+        {
+            if (_roomPropKind == null || _unitLayer == null) return;
+            PropFx().Play(owner, _unitLayer, RoomPropFxTable.Get(_roomPropKind), phase, _propFxMaterial, RoomPropFxOrigin());
+        }
+
+        private void OpenRoomPropWindow()
+        {
+            if (_roomKind == RoomKind.Rest) OpenShrine();
+            else if (_roomKind == RoomKind.Shop) OpenShop();
+            // 악마의 제단 — 중간보스를 잡은 방에 선다(예전 004 이벤트 방 규칙도 남겨 둔다)
+            else if (_roomKind == RoomKind.Event || _devilAltarHere) OfferEvent();
+        }
         private bool _roomPropUsed;
 
         /// <summary>회복 제단을 세운다. 그림이 없으면 아무것도 안 세운다.</summary>
@@ -68,7 +119,13 @@ namespace Game.Module.InGame
         {
             SpawnDevilAltar();
             _devilAltarHere = _roomProp != null;
-            if (_roomProp != null) PlaceRoomProp();
+            if (_roomProp != null)
+            {
+                PlaceRoomProp();
+                // 자리가 바뀌었다 — 대기 장식도 새 자리에서 다시
+                if (_propFx != null) _propFx.Stop("roomprop");
+                PlayRoomPropFx("open", "roomprop");
+            }
         }
 
         /// <summary>이 방의 물건이 전투 뒤에 선 악마의 제단인가.</summary>
@@ -94,6 +151,10 @@ namespace Game.Module.InGame
             _roomPropBobTime = 0f;
             PlaceRoomProp();
             _roomPropUsed = false;
+            // 연출(시안 mock_fxstory_room_*, PD 통과 2026-10-08) — 대기 장식부터
+            _roomPropKind = kind;
+            _roomPropNear = false;
+            PlayRoomPropFx("open", "roomprop");
         }
 
         private RectTransform MakePropImage(string name, Sprite sprite, float w, float h, out Image img)
@@ -144,6 +205,10 @@ namespace Game.Module.InGame
             _roomPropRingImg = null;
             _roomPropMark = null;
             _roomPropMarkImg = null;
+            if (_propFx != null) { _propFx.Stop("roomprop"); _propFx.Stop("roomprop#use"); }
+            _roomPropKind = null;
+            _roomPropNear = false;
+            _roomPropOpenTimer = 0f;
             _roomPropUsed = false;
             _devilAltarHere = false;
         }
@@ -156,6 +221,12 @@ namespace Game.Module.InGame
         /// </summary>
         private void TickRoomProp()
         {
+            if (_roomPropOpenTimer > 0f)
+            {
+                _roomPropOpenTimer -= Time.deltaTime;
+                if (_roomPropOpenTimer <= 0f) OpenRoomPropWindow();
+                return;
+            }
             if (_roomProp == null || _roomPropUsed) return;
             if (_roomPropMark != null)
             {
@@ -167,19 +238,27 @@ namespace Game.Module.InGame
             }
             var me = Avatar;
             if (me == null) return;
-            if (Vector2.Distance(me.Position, RoomPropFeet()) > RoomPropTouchRadius) return;
+            float dist = Vector2.Distance(me.Position, RoomPropFeet());
+            if (!_roomPropNear && dist <= RoomPropNearRadius)
+            {
+                _roomPropNear = true;
+                PlayRoomPropFx("near", "roomprop");
+            }
+            if (dist > RoomPropTouchRadius) return;
 
             _roomPropUsed = true;
-            if (_roomKind == RoomKind.Rest) OpenShrine();
-            else if (_roomKind == RoomKind.Shop) OpenShop();
-            // 악마의 제단 — 중간보스를 잡은 방에 선다(예전 004 이벤트 방 규칙도 남겨 둔다)
-            else if (_roomKind == RoomKind.Event || _devilAltarHere) OfferEvent();
+            // 창은 작동 연출을 잠깐 보여 준 뒤 연다(RoomPropUseHoldSeconds)
+            _roomPropOpenTimer = RoomPropUseHoldSeconds;
 
-            // 다 쓴 물건은 흐릿하게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
-            if (_roomPropImg != null) _roomPropImg.color = new Color(1f, 1f, 1f, 0.45f);
+            // 다 쓴 물건은 어둡게 남긴다. 지우면 "내가 뭘 했더라" 가 된다.
+            // 투명하게 하면 바닥이 비쳐 「꺼짐」이 아니라 「사라짐」으로 읽힌다(코덱스 room_heal1 · 시안 「다 씀」)
+            if (_roomPropImg != null) _roomPropImg.color = new Color(0.45f, 0.45f, 0.5f, 1f);
             if (_roomPropRingImg != null) _roomPropRingImg.color = new Color(1f, 1f, 1f, 0.3f);
             // 표식은 「아직 쓸 수 있다」는 뜻이라 다 쓰면 내린다
             if (_roomPropMark != null) _roomPropMark.gameObject.SetActive(false);
+            // 대기 · 다가감 장식을 거두고 작동 연출(치유 흡수 · 연기 고리 · 금화 고리)
+            if (_propFx != null) _propFx.Stop("roomprop");
+            PlayRoomPropFx("accept", "roomprop#use");
         }
 
         /// <summary>

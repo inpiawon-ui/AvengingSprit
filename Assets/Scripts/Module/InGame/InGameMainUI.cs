@@ -133,6 +133,7 @@ namespace Game.Module.InGame
             MakeCover();
             CoreModule.TryGet(out _player);
             gameObject.AddComponent<BackButtonRouter>();
+            _fx = gameObject.AddComponent<PopupFxPlayer>();   // 창 연출(PD 통과 시안 mock_fxstory_*, 2026-10-08)
 
             _dpad = _ui.Find("DPadBase") as RectTransform;
             _knob = _ui.Find("DPadKnob") as RectTransform;
@@ -256,8 +257,9 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<ShrineResolvedEvent>(OnShrineResolved));
             _tokens.Add(bus.Subscribe<EventResolvedEvent>(OnEventResolved));
             _tokens.Add(bus.Subscribe<ShopOpenedEvent>(OnShopOpened));
-            // 하나 사면 **연출 없이 바로** 닫는다. 산 것은 HUD 골드와 카드 칩이 말해 준다.
-            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => HidePanelNow("ShopPanel")));
+            // 하나 사면 닫는다. 산 칸에서 금화가 HUD 골드로 · 물건이 위로 가는 연출(PD 2026-10-08)을
+            // 보이게 다른 창과 같이 잠깐 두고 닫는다 — 그동안 창은 누르기를 받지 않는다.
+            _tokens.Add(bus.Subscribe<ShopPurchasedEvent>(_ => CloseAfter("ShopPanel", PickFxHoldSeconds)));
             _tokens.Add(bus.Subscribe<RunGoldChangedEvent>(OnRunGoldChanged));
             _tokens.Add(bus.Subscribe<SkillCastEvent>(OnSkillCast));
         }
@@ -304,6 +306,8 @@ namespace Game.Module.InGame
             // 아틀라스가 온 **뒤에** 껍데기를 입힌다. 먼저 부르면 그림이 아직 없어
             // 단색으로 남는다 — 화면이 한 번 초라했다가 안 바뀐다.
             SkinPopups();
+            _fx.Init(() => _battle != null ? _battle.AvatarTransform : null);
+            if (_battle != null) _battle.SetPropFxMaterial(PopupAdditiveMaterial());
             SkinSkillCast();
             SetSkillReadyHost(_readyHostKey);   // 아틀라스보다 몸이 먼저 정해졌을 수 있다
 
@@ -1153,29 +1157,30 @@ namespace Game.Module.InGame
                 declineBtn.onClick.AddListener(() => Resolve(false));
             }
 
+            EqualizeText("EventRewardText", "EventCostText");
             SetPanel("EventPanel", true);
             _ui.Find("EventPanel")?.SetAsLastSibling();
         }
 
-        private float _rewardPillX = float.NaN;
-        private float _rewardTextX = float.NaN;
+        private float _rewardPillY = float.NaN;
+        private float _rewardTextY = float.NaN;
 
         /// <summary>
-        /// 보상 · 대가 알약은 한 줄에 나란히 선다. 대가가 없는 거래면 보상 알약 혼자 왼쪽에 쏠려 보여 가운데로 옮긴다.
+        /// 보상 · 대가 알약은 위아래로 쌓인 넓은 한 줄 알약이다(PD 2026-10-08 「악마의 계약은 텍스트 공간이 부족」).
+        /// 대가가 없는 거래면 보상 알약 혼자 위에 붙고 아래가 비어 — 두 알약 자리의 가운데로 내린다.
         /// 원래 자리는 처음 한 번 적어 두었다가 대가가 있는 거래에서 되돌린다.
         /// </summary>
         private void CenterRewardWhenAlone(bool alone)
         {
             var pill = _ui.Find("EventRewardPill") as RectTransform;
             var text = _ui.Find("EventRewardText") as RectTransform;
-            // 가운데는 창 틀(EventBox) 기준 — 패널 rect 로 쟀더니 화면 밖으로 밀렸다
-            var box = _ui.Find("EventBox") as RectTransform;
-            if (pill == null || text == null || box == null) return;
-            if (float.IsNaN(_rewardPillX)) { _rewardPillX = pill.anchoredPosition.x; _rewardTextX = text.anchoredPosition.x; }
-            float center = box.anchoredPosition.x + (box.sizeDelta.x - pill.sizeDelta.x) * 0.5f;
-            float shift = alone ? center - _rewardPillX : 0f;
-            pill.anchoredPosition = new Vector2(_rewardPillX + shift, pill.anchoredPosition.y);
-            text.anchoredPosition = new Vector2(_rewardTextX + shift, text.anchoredPosition.y);
+            var cost = _ui.Find("EventCostPill") as RectTransform;
+            if (pill == null || text == null || cost == null) return;
+            if (float.IsNaN(_rewardPillY)) { _rewardPillY = pill.anchoredPosition.y; _rewardTextY = text.anchoredPosition.y; }
+            // 두 알약 윗변 사이 거리의 절반만큼 아래로(앵커 · 기준점이 같은 형제라 y 차이가 곧 거리)
+            float drop = alone ? (_rewardPillY - cost.anchoredPosition.y) * 0.5f : 0f;
+            pill.anchoredPosition = new Vector2(pill.anchoredPosition.x, _rewardPillY - drop);
+            text.anchoredPosition = new Vector2(text.anchoredPosition.x, _rewardTextY - drop);
         }
 
         /// <summary>
@@ -1209,9 +1214,12 @@ namespace Game.Module.InGame
                         var grt = (RectTransform)gi.transform;
                         grt.anchorMin = grt.anchorMax = new Vector2(0f, 1f);
                         grt.pivot = new Vector2(0f, 1f);
-                        // C 원혼 회로 선택 칸(2026-10-08) — 칸 왼쪽 아이콘 자리에 맞춘다
-                        grt.anchoredPosition = new Vector2(12f, -11f);
-                        grt.sizeDelta = new Vector2(56f, 56f);
+                        // C 원혼 회로 선택 칸(2026-10-08) — 칸 왼쪽 아이콘 틀 가운데에 맞춘다.
+                        // 틀 = 칸 그림 440 폭 중 x 27~99 → 칸 폭 비율로 환산한 가운데(407 폭이면 58)
+                        float slotH = slot.rect.height;
+                        float iconMid = slot.rect.width * (63f / 440f);
+                        grt.anchoredPosition = new Vector2(iconMid - 30f, -(slotH - 60f) * 0.5f);
+                        grt.sizeDelta = new Vector2(60f, 60f);
                         gi.sprite = sp2;
                         gi.enabled = sp2 != null;
                         gi.color = Color.white;
@@ -1232,6 +1240,8 @@ namespace Game.Module.InGame
                 btn.interactable = true;
                 btn.onClick.AddListener(() => ChooseShrine(pick));
             }
+            EqualizeText("ShrineChoice0Text", "ShrineChoice1Text", "ShrineChoice2Text");
+            EqualizeText("ShrineChoice0Desc", "ShrineChoice1Desc", "ShrineChoice2Desc");
             SetPanel("ShrinePanel", true);
             _ui.Find("ShrinePanel")?.SetAsLastSibling();
         }
@@ -1239,26 +1249,36 @@ namespace Game.Module.InGame
         private void ChooseShrine(int index)
         {
             if (_battle == null) return;
+            if (_fx != null) _fx.Fire(_ui.Find("ShrinePanel") as RectTransform, index.ToString());
             _battle.ChooseShrine(index);
         }
 
         // ⚠ 고르는 즉시 닫는다 (2026-09-10). 예전에는 결과 한 줄을 띄우고 1.2초 뒤에
         //   닫았는데, 고른 뒤에 화면이 멈춰 있는 그 틈이 「끝난 건가?」로 읽혔다.
         //   무엇을 받았는지는 HUD 체력·골드가 이미 말해 준다.
+        //
+        // ⚠ 연출 시안(mock_fxstory_altar, PD 통과 2026-10-08)의 「고른 칸이 번쩍 → 빛이 HP 로」가 칸에서 출발해야 해서
+        //   창은 그 0.35초 뒤에 닫는다. 그동안 입력은 막힌다(같은 칸을 두 번 못 누르게).
         private void OnShrineResolved(ShrineResolvedEvent e)
-            => SetPanel("ShrinePanel", false);
+            => CloseAfter("ShrinePanel", PickFxHoldSeconds);
 
         private void Resolve(bool accept)
         {
             if (_battle == null) return;
+            if (accept && _fx != null) _fx.Fire(_ui.Find("EventPanel") as RectTransform);
             _battle.ResolveEvent(accept);
         }
 
         // ⚠ 수락·거절 어느 쪽이든 **바로 닫는다** (2026-09-10).
         //   예전에는 결과를 적고 버튼을 「계속」으로 바꿔 한 번 더 누르게 했다 —
         //   같은 자리에서 두 번 확인시키는 셈이었다.
+        //
+        // ⚠ 수락은 연출 시안(mock_fxstory_devil)의 「혼이 문장으로 → 보상 판이 터진다」가 창 위에서 보여야 해서 0.35초 뒤에 닫는다.
         private void OnEventResolved(EventResolvedEvent e)
-            => SetPanel("EventPanel", false);
+        {
+            if (e.Accepted) CloseAfter("EventPanel", PickFxHoldSeconds);
+            else SetPanel("EventPanel", false);
+        }
 
         // ── 상점 ─────────────────────────────────────────────────
         //
@@ -1275,7 +1295,9 @@ namespace Game.Module.InGame
         private void OnShopOpened(ShopOpenedEvent e)
         {
             _ui.SetText("ShopGoldText", Localize.Format("ui.shop.gold", e.Gold));
-            _ui.SetText("ShopLimitText", e.LimitLine);
+            // 「남은 구매 2회 · 카드 1장」은 안 띄운다 — 상점은 하나 사면 바로 닫혀서(ShopPurchasedEvent) 남은 횟수가
+            // 의미가 없고 틀린 말이 된다(PD 2026-10-08 「상점 한번 선택하면 끝인데 저거 지워」)
+            _ui.SetActive("ShopLimitText", false);
 
             for (int i = 0; i < ShopSlots; i++)
             {
@@ -1319,7 +1341,13 @@ namespace Game.Module.InGame
                 btn.onClick.RemoveAllListeners();
                 btn.interactable = can;
                 int slot = i;
-                if (can) btn.onClick.AddListener(() => { if (_battle != null) _battle.BuyShopItem(slot); });
+                // 산 칸에서 금화가 튀고 물건 빛이 HUD 골드로 — 창은 바로 닫혀도 연출은 덮개에서 끝까지 돈다
+                if (can) btn.onClick.AddListener(() =>
+                {
+                    if (_battle == null) return;
+                    if (_fx != null) _fx.Fire(_ui.Find("ShopPanel") as RectTransform, slot.ToString());
+                    _battle.BuyShopItem(slot);
+                });
             }
 
             var leaveBtn = _ui.Get<Button>("ShopLeaveButton");
@@ -1333,6 +1361,9 @@ namespace Game.Module.InGame
                 });
             }
 
+            EqualizeText("ShopItem0Name", "ShopItem1Name", "ShopItem2Name", "ShopItem3Name", "ShopItem4Name", "ShopItem5Name");
+            EqualizeText("ShopItem0Price", "ShopItem1Price", "ShopItem2Price", "ShopItem3Price", "ShopItem4Price", "ShopItem5Price");
+            EqualizeText("ShopItem0Desc", "ShopItem1Desc", "ShopItem2Desc", "ShopItem3Desc", "ShopItem4Desc", "ShopItem5Desc");
             SetPanel("ShopPanel", true);
             _ui.Find("ShopPanel")?.SetAsLastSibling();
         }
@@ -1391,6 +1422,7 @@ namespace Game.Module.InGame
                 _ui.SetText($"BuffCard{i}Desc", entry.DisplayDescription);
 
                 SetCardArt(i, entry, lv > 0);
+                if (_fx != null) _fx.Tint(_ui.Find("BuffChoicePanel") as RectTransform, $"BuffCard{i}", RarityFxColor(entry.Rarity));
 
                 // 매번 다른 카드가 오므로 이전 리스너를 지우고 새로 건다
                 var btn = _ui.Get<Button>($"BuffCard{i}");
@@ -1401,6 +1433,9 @@ namespace Game.Module.InGame
                 btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
             }
 
+            EqualizeText("BuffCard0Name", "BuffCard1Name", "BuffCard2Name");
+            EqualizeText("BuffCard0Desc", "BuffCard1Desc", "BuffCard2Desc");
+            EqualizeText("BuffCard0ChipText", "BuffCard1ChipText", "BuffCard2ChipText");
             SetPanel("BuffChoicePanel", true);
             _ui.Find("BuffChoicePanel")?.SetAsLastSibling();
         }
@@ -1513,7 +1548,7 @@ namespace Game.Module.InGame
             // 회복의 제단
             Skin("ShrineBox", "shrineframe");
             Skin("ShrineHintPill", "shrinehintpill");
-            for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot", sliced: true);
+            for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot");
 
             // 레벨업 창 틀(C 원혼 회로 2026-10-08)
             Skin("BuffFrame", "levelupframe");
@@ -1528,7 +1563,10 @@ namespace Game.Module.InGame
                 if (img == null || sp == null) return;
                 img.sprite = sp;
                 img.color = Color.white;
-                img.type = sliced && sp.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
+                // 그리기 방식은 배치 도구(InGamePopupCLayout)가 프리팹에 정해 둔 것을 따른다 — 여기서 Simple 로 되돌리면
+                // 9분할로 늘린 상점 칸 · 넓은 보상 알약이 통째로 늘어나 양끝 장식이 찌그러졌다(2026-10-08 게임 검사).
+                // 늘리라고 한 판(sliced)만 9분할로 바꾼다
+                if (sliced && sp.border != Vector4.zero) img.type = Image.Type.Sliced;
                 img.enabled = true;
             }
         }
@@ -1551,7 +1589,10 @@ namespace Game.Module.InGame
             // 효과는 바로 넣고, 창은 고른 칸을 한 번 튕긴 뒤 닫는다 —
             // 연출을 기다렸다 넣으면 그 사이에 두 번 누를 수 있다.
             _battle?.ChooseBuff(buffKey);
-            PunchThenClose(_pickedSlot ?? "BuffCard0", "BuffChoicePanel");
+            // 고른 카드가 타오르고 혼이 위 문장으로 — 카드 번호만 넘긴다(BuffCard{slot})
+            var picked = _pickedSlot ?? "BuffCard0";
+            if (_fx != null) _fx.Fire(_ui.Find("BuffChoicePanel") as RectTransform, picked.Substring(picked.Length - 1));
+            PunchThenClose(picked, "BuffChoicePanel", PickFxHoldSeconds);
             _pickedSlot = null;
         }
 
