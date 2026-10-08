@@ -67,6 +67,7 @@ Stage 4  클라이언트   프리팹 바인딩 + 기능 구현
 │       ├── 05_prefabs.md   | 프리팹 생성 규칙 |
 │       ├── 06_ui.md        | UI 타입, 레이어, 팝업 |
 │       ├── 07_framework_rules.md | GameFramework 사용 규칙 |
+│       ├── 08_fx.md        | 이펙트 방식(빛=파티클 · 형태=그림) · 그림에 빛 굽지 않기 · 연출 순서 |
 │       └── module/         | 게임 모듈 전용 규칙 |
 │           └── coding_rules.md | 스크립트 위치, 네임스페이스 |
 ├── hooks/                  | PreToolUse 훅 스크립트 |
@@ -123,6 +124,7 @@ Assets/Scripts/Module/CLAUDE.md          | 모듈별 구현 명세
 - `.claude/rules/project/05_prefabs.md` — 프리팹 생성 규칙
 - `.claude/rules/project/06_ui.md` — UI 타입, 레이어, 팝업
 - `.claude/rules/project/07_framework_rules.md` — GameFramework 사용 규칙
+- `.claude/rules/project/08_fx.md` — 이펙트 방식(빛·반짝임·아우라=파티클, 형태=프레임 그림) · 연출 순서
 - `.claude/rules/project/module/coding_rules.md` — 스크립트 위치, 네임스페이스
 
 ---
