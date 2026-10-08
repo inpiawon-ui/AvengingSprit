@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Game.Character;
 using Game.Module.Common.UI;
 using TMPro;
 using UnityEngine;
@@ -27,6 +28,7 @@ namespace Game.Module.InGame
         private const float PresentHeadGap = 150f;   // 몸 가운데에서 머리 위 띠까지(px)
 
         private RectTransform _presentLayer;
+        private LevelUpFx _levelUpFx;
         private bool _presenting;
         private readonly Queue<string> _panelsAfterPresent = new();
 
@@ -43,6 +45,7 @@ namespace Game.Module.InGame
             public Color Sub2Color;
             public GainKind Kind;
             public Color Tint;           // 카드 흡수 그림에 곱할 색(등급색)
+            public CardRarity Rarity;    // 카드 — 등급별 연출 단계(LevelUpFx)
         }
 
         private static string FxOf(GainKind k) => k switch
@@ -69,7 +72,10 @@ namespace Game.Module.InGame
             if (_battle != null) _battle.HoldForPresentation(total + 0.1f);
 
             // ① 몸에 이펙트 — 몸 자리에 붙는다(FromAvatar)
-            if (_fx != null)
+            // 카드는 LevelUpFx 가 맡는다 — 카드 문양이 몸 둘레를 돌고 광원 · 빛기둥 · 고리(시안 mock_lvgain_free_peak)
+            if (g.Kind == GainKind.Card && _levelUpFx != null)
+                _levelUpFx.Gain(layer, PopupFxPlayer.PanelPoint(layer, avatar), avatar, g.Icon, g.Rarity, g.Tint, total);
+            else if (_fx != null)
             {
                 var fx = new PopupFxLayer
                 {
@@ -273,7 +279,7 @@ namespace Game.Module.InGame
         // ── 고른 것에 포커스 ─────────────────────────────────────
 
         /// <summary>
-        /// 고른 칸은 커지며(OutBack) 창 가운데 쪽으로 오고, 나머지는 작아지며 흐려진다.
+        /// 고른 칸은 커지며(OutBack) <paramref name="toCenterX"/> 로 오고(제자리면 그대로), 나머지는 작아지며 흐려진다.
         /// 원래 자리 · 크기는 다음에 창을 열 때 <see cref="ResetFocus"/> 가 되돌린다.
         /// </summary>
         private async UniTask FocusAsync(string picked, string[] all, float toCenterX, float seconds,

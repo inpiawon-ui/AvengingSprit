@@ -12,7 +12,7 @@ namespace Game.Module.InGame
     /// <summary>
     /// 보상 창 네 개의 「고른 뒤」 흐름 (PD 2026-10-08 반려 뒤 다시 짬 — memory fx-needs-story-and-purpose).
     ///
-    ///   레벨업 카드 : 고른 카드가 커지며 가운데로 · 나머지 흐려짐 → 창 닫힘 → 몸에 카드 힘이 깃듦 + 머리 위 카드 이름
+    ///   레벨업 카드 : 고른 카드가 제자리에서 커짐 · 나머지 흐려짐 → 창 닫힘 → 몸에 카드 힘이 깃듦 + 머리 위 카드 이름
     ///   회복의 제단 : 고른 칸에 포커스 → 칸에서 구슬이 고스트 몸으로 날아감 → 닿는 순간 효과 적용(HP 바가 찬다) + 힐 이펙트
     ///   악마의 거래 : 수락 → 창 닫힘 → 몸에 저주 연출 + 얻은 것(금색) · 치른 것(붉은색)
     ///   상점       : HUD 골드에서 금화가 산 칸으로 → 칸이 튕김 → 물건이 몸으로 날아감 → 창 닫힘 → 몸에 효과 + 이름
@@ -71,16 +71,21 @@ namespace Game.Module.InGame
                 SubColor = entry != null ? RarityColor(entry.Rarity) : Color.white,
                 Kind = GainKind.Card,
                 Tint = entry != null ? RarityColor(entry.Rarity) : Color.white,
+                Rarity = entry != null ? entry.Rarity : CardRarity.Common,
             };
             // 효과는 바로 넣는다 — 연출 중에 두 번 누를 수 없게 입력은 막아 두었다
             if (_battle != null) _battle.ChooseBuff(buffKey);
 
-            // 가운데 = 가운데 카드(BuffCard1)의 원래 자리
-            float center = _focusHome.TryGetValue("BuffCard1", out var home) ? home.x : 0f;
-            // 카드 바탕은 창 그림에 박혀 있어 비치므로 나머지 둘은 완전히 뺀다(겹친 글자 방지)
-            await FocusAsync(slot, CardNodes, center, 0.34f, othersAlpha: 0f);
+            // 카드 둘레로 등급색 빛살이 터진다(LevelUpFx — 시안 mock_lvpopup_free_peak)
+            if (_levelUpFx != null) _levelUpFx.Pick(System.Array.IndexOf(CardNodes, slot));
+            // 고른 카드는 제자리에서 커지고 나머지는 흐려진다(PD 10-08 2차 「제자리에서 커지게」).
+            // 옮기지 않으니 겹칠 일이 없어 나머지도 완전히 빼지 않는다
+            float home = (_ui.Find(slot) as RectTransform).anchoredPosition.x;
+            await FocusAsync(slot, CardNodes, home, 0.34f, othersAlpha: 0.3f);
             await WaitAsync(0.3f, token);
+            await WaitAsync(0.25f, token);   // 빛살이 다 펼쳐진 것을 보여 주고 닫는다
             SetPanel("BuffChoicePanel", false);
+            if (_levelUpFx != null) _levelUpFx.HideCards();
             await WaitAsync(0.12f, token);
             await PresentGainAsync(show);
             OpenPendingOffer();
@@ -228,6 +233,23 @@ namespace Game.Module.InGame
             _battle.ApplyShopHeal();
             await PresentGainAsync(show);
             OpenPendingOffer();
+        }
+
+        /// <summary>카드 뒤 등급색 광원 · 알갱이(LevelUpFx) — 창이 열릴 때.</summary>
+        private void ShowCardFx(BuffOfferEvent e)
+        {
+            if (_levelUpFx == null || _buffTable == null || e.OfferedKeys == null) return;
+            var cards = new RectTransform[CardNodes.Length];
+            var rarities = new CardRarity[CardNodes.Length];
+            var colors = new Color[CardNodes.Length];
+            for (int i = 0; i < CardNodes.Length; i++)
+            {
+                cards[i] = _ui.Find(CardNodes[i]) as RectTransform;
+                var entry = i < e.OfferedKeys.Length ? _buffTable.Get(e.OfferedKeys[i]) : null;
+                rarities[i] = entry != null ? entry.Rarity : CardRarity.Common;
+                colors[i] = RarityColor(rarities[i]);
+            }
+            _levelUpFx.ShowCards(cards, rarities, colors);
         }
 
         private void OpenPendingOffer()

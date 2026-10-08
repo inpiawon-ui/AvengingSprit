@@ -51,6 +51,11 @@ ROLES = {
     # 좁은 칸 이름(상점) — 일본어 「体 — ギャングスター」가 18 로는 130 칸을 넘었다(169px)
     'name_s':    (True, 21, 12, 0.28, 0.12, '#07101AD9', '#F2F1E9', 0),
     'chip':      (True, 16, 14, 0.22, 0.10, '#07101AE6', '#DCE8F0', 0),
+    # 레벨업 카드 전용 — 긴 글자는 TMP 자동 크기로 충분히 줄어들게(최소를 낮게). 「LEGENDARY」 · 「Chain Lightning」 ·
+    # 일본어 세 줄 설명이 최소 14 · 18 에 막혀 판 밖으로 넘쳤다(PD 2026-10-09 「긴 건 폰트가 작아지게 해야지」)
+    'card_chip': (True, 16, 9, 0.22, 0.10, '#07101AE6', '#DCE8F0', 0),
+    'card_name': (True, 21, 10, 0.28, 0.12, '#07101AD9', '#F2F1E9', 0),
+    'card_desc': (False, 16, 10, 0.06, 0.08, '#07101ACC', '#C9D1D8', 2),
     'primary':   (True, 26, 22, 0.34, 0.14, '#07101AE6', '#FFF3D0', 0),
     'secondary': (True, 20, 17, 0.24, 0.12, '#07101AD9', '#D7DCE0', 2),
     # 결과창 전용 — 「CHAPTER n CLEAR」 큰 제목 · 핵심 결과 값(한 화면 한 군데) · 노란 버튼 위 짙은 글자
@@ -87,7 +92,7 @@ def node(panel, name, x, y, w, h, parent=None, sprite=None, sliced=False, create
     if role:
         heavy, fs, mn, dil, ol, olc, col, ls = ROLES[role]
         d.update(fs=fs, mn=mn, heavy=heavy, dilate=dil, outline=ol, outlineColor=olc or '', lineSpacing=ls,
-                 color=color or col, nowrap=nowrap if nowrap is not None else role not in ('desc', 'body', 'secondary', 'pill'))
+                 color=color or col, nowrap=nowrap if nowrap is not None else role not in ('desc', 'card_desc', 'body', 'secondary', 'pill'))
     NODES.append(d)
 
 
@@ -102,11 +107,17 @@ for i, fx in enumerate((52, 264, 477)):
     # 등급 글자는 카드 그림에 이미 있는 명판(190x350 그림 중 x 25~165 · y 33~62 → 카드 162x320 에서 x 21~141 · y 28~54) 안에 —
     # 따로 얹던 칩 그림은 명판과 겹쳐 「등급 밑 빈 네모」로 보였다(PD 10-08). 칩은 자리만 남기고 그림을 끈다(hide)
     node(P, c + 'Chip', 21, 28, 120, 26, parent=c, hide=True)
-    node(P, c + 'ChipText', 0, 0, 120, 26, parent=c + 'Chip', role='chip', group='buff_chip')
-    node(P, c + 'Icon', 21, 40, 120, 120, parent=c)
-    node(P, c + 'Name', 2, 170, 158, 34, parent=c, role='name', group='buff_name')
+    node(P, c + 'ChipText', 8, 0, 104, 26, parent=c + 'Chip', role='card_chip', group='buff_chip')   # 명판 양끝 나사 안쪽
+    # 아이콘은 명판(y 28~54) 아래부터 — y 40 이면 아이콘 위쪽이 RARE 글자를 14px 덮었다(PD 10-09).
+    # 내린 만큼 이름과 안 부딪치게 120 → 110 으로 줄이고 가운데(21 + 5)
+    node(P, c + 'Icon', 26, 58, 110, 110, parent=c)
+    # 이름 · 설명은 카드 안쪽 테두리(좌우 약 12px) 안에 — 영어 이름(Flame Brand)이 테두리에 닿고
+    # 일본어 설명 첫 줄이 안쪽 테두리 선에 붙었다(3언어 게임 캡처 2026-10-09)
+    # 이름은 더 줄어들 수 있게(name_s, 최소 12) — 영어 「Chain Lightning」이 최소 18 로도 163px 라 칸 138 을 넘었다
+    node(P, c + 'Name', 16, 172, 130, 34, parent=c, role='card_name', group='buff_name')   # 카드판 안쪽 테두리(좌우 16) 안
     # 카드 그림 안쪽 테두리(좌우 약 12px)에 글자가 닿지 않게 — 일본어 두 줄이 테두리에 붙었다(게임 캡처 2026-10-08)
-    node(P, c + 'Desc', 14, 206, 134, 92, parent=c, role='desc', align='center', group='buff_desc')
+    # EPIC · COMMON 카드 그림의 설명 상자(안쪽 테두리) 안 — 일본어 세 줄이 상자 선에 닿았다
+    node(P, c + 'Desc', 22, 210, 118, 90, parent=c, role='card_desc', align='center', group='buff_desc')
 
 # ── 회복의 제단 ───────────────────────────────────────────
 P = 'ShrinePanel'

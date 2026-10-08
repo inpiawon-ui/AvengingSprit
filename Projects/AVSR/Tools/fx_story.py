@@ -137,10 +137,8 @@ def layers_levelup():
     # PopupFxPlayer.Tint(패널, 'BuffCard{i}', 희귀도색) 로 다시 칠한다. 표의 색은 미리보기 카드(RARE · COMMON · RARE)용.
     # 카드 테두리 — 아주 가는 빛 토막이 천천히 한 바퀴(PD 10-08 「은은하게 · 얇게 · 천천히」). 상승광 · 고른 순간 빛줄기 · 몸 빛은 뺐다 —
     # 고르면 그 카드가 커지며 가운데로 오고(포커스) 창을 닫은 뒤 캐릭터에 카드 힘이 깃든다(InGameMainUI.Rewards PickCardAsync)
-    for i, c in enumerate(cards):
-        tint = RARITY_TINT['common' if i == 1 else 'rare']
-        lay.append(L('present_card_rim_thin', 0, 0, 176, 336, 0.32, 0.5 + 0.1 * i, alpha=0.55, tint=tint,
-                     atNode='BuffCard%d' % i, untilAccept=True, inNode=True))
+    # 카드 둘레를 도는 얇은 빛(present_card_rim_thin)도 뺐다 — PD 10-08 2차 「카드 주변에 도는 이펙트 걍 제거」.
+    # 고른 카드는 제자리에서 커지고 나머지가 흐려지는 것(InGameMainUI.Rewards PickCardAsync)으로 충분하다
     return {'panel': 'BuffChoicePanel', 'layers': lay, 'preview_slot': '0'}
 
 
@@ -188,25 +186,26 @@ CLEAR = dict(frame=(30, 220, 660, 800), title=(130, 339, 460, 58), gold=(130, 50
              chest=(130, 656, 460, 140), warn=(140, 809, 440, 46), ok=(224, 897, 272, 76), emblem=(360, 270))
 
 
+# 결과창 시각 — ChapterResultPopup.RevealAsync 의 상수와 같다(한쪽을 바꾸면 같이 바꾼다)
+CLEAR_GOLD_START, CLEAR_GOLD_END, CLEAR_CHEST_LAND = 0.50, 1.30, 2.05
+
+
 def layers_clear():
-    # 코덱스 1회차(review_fx_story_clear1.md) 반영. 단 제목색은 글자 검수 3회차(흰색 유지)를 따르고,
-    # 「능력치 적용」 빛은 능력치를 얻는 창(레벨업 · 제단 · 악마 · 상점)에만 — 클리어는 보상 창이라 넣지 않는다.
-    return {'panel': 'ChapterResultPopup', 'layers': [
-        # 창 뒤 금빛 폭발(clear_title_burst)은 뺐다 — PD 10-08 「과하다」. 등장은 창이 OutBack 곡선으로 커지는 것 하나로 충분
-        # 창 가장자리 전기 · 양옆 원혼 입자는 뺐다 — PD 10-08 「아웃라인에 이펙트를 과하게, 그냥 이미지 같다」
-        # 금화는 금화 더미 칸에 붙는다(줄이 내려가도 따라감) — 위에서 쏟아져 더미 위에 쌓인다(PD 10-08 「따로 논다」).
-        # 숫자 0 → 금액 · 더미 튐은 ChapterResultPopup.CountGoldAsync 가 같은 1.55 ~ 2.35 초에 맞춘다
-        # 금화 더미 칸 안(같은 줄 「골드 획득」 · 금액 글자보다 아래 층). 폭은 더미 칸(150) 안으로
-        L('clear_coin_rain', 0, -30, 160, 160, 0.2, 1.55, 2.4, loop=False, alpha=1.0, fade=0.1, add=False,
-          atNode='ResultGoldIcon', inNode=True),
-        # 상자가 위에서 떨어져 바닥에 닿는 순간(ChapterResultPopup.ChestDropAsync 의 착지 2.95초)에 먼지 고리
-        L('clear_chest_land', -8, 31, 430, 120, 0.12, 2.95, 3.6, loop=False, alpha=0.72, fade=0.08,
-          atNode='ResultChestArt', inNode=True),
+    # PD 10-08 2차: 금화 더미 · 상자에 그려져 있던 빛은 그림에서 떼고(빛 없는 그림으로 갈아 끼움) 여기서 연출로 낸다.
+    # 창 뒤 금빛 폭발 · 창 가장자리 전기 · 원혼 입자는 1차에서 뺐다(「과하다」).
+    # 떨어지는 금화 비(clear_coin_rain)는 뺐다 — PD 10-08 「골드 떨어지는데 먹는 느낌을 어설프게 넣지 말고」.
+    # 쌓임은 금화 더미 그림이 네 단계로 커지는 것(ChapterResultPopup)만으로 말한다
+    lay = []
+    # 금화 더미 반짝임 · 상자 아우라 · 착지 먼지는 그림 층이 아니라 파티클 + 빛 셰이더로 낸다(규칙 08_fx.md, PD 10-08 2차)
+    # — ChapterResultPopup 이 같은 시각(CLEAR_GOLD_END · CLEAR_CHEST_LAND)에 띄운다
+    lay += [
         # 시안 3컷 「끝」= 누르기를 기다리는 대기 — 테두리만 은은히, 누르면 짧게 한 번 더
-        L('clear_ok_glow', 0, 0, 304, 96, 0.16, 2.4, alpha=0.22, fade=0.3, atNode='ResultOkButton', inNode=True),
+        L('clear_ok_glow', 0, 0, 304, 96, 0.16, CLEAR_CHEST_LAND + 0.25, alpha=0.22, fade=0.3, atNode='ResultOkButton',
+          inNode=True),
         L('clear_ok_glow', 0, 0, 304, 96, 0.09, 0.0, 0.35, loop=False, alpha=0.32, fade=0.06, phase='accept',
           atNode='ResultOkButton', inNode=True),
-    ]}
+    ]
+    return {'panel': 'ChapterResultPopup', 'layers': lay}
 
 
 # ── 방 오브젝트 — 좌표는 물건 가운데 기준(아래로 +). 물건 상자 236x300(RoomProp.cs), 발밑 = +150 ──

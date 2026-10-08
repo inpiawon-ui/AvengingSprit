@@ -134,6 +134,7 @@ namespace Game.Module.InGame
             CoreModule.TryGet(out _player);
             gameObject.AddComponent<BackButtonRouter>();
             _fx = gameObject.AddComponent<PopupFxPlayer>();   // 창 연출(PD 통과 시안 mock_fxstory_*, 2026-10-08)
+            _levelUpFx = gameObject.AddComponent<LevelUpFx>();   // 레벨업 풀세트(PD 2026-10-09 시안)
 
             _dpad = _ui.Find("DPadBase") as RectTransform;
             _knob = _ui.Find("DPadKnob") as RectTransform;
@@ -308,6 +309,7 @@ namespace Game.Module.InGame
             // 단색으로 남는다 — 화면이 한 번 초라했다가 안 바뀐다.
             SkinPopups();
             _fx.Init(() => _battle != null ? _battle.AvatarTransform : null);
+            _levelUpFx.Init(_fx, PopupAdditiveMaterial());
             if (_battle != null) _battle.SetPropFxMaterial(PopupAdditiveMaterial());
             SkinSkillCast();
             SetSkillReadyHost(_readyHostKey);   // 아틀라스보다 몸이 먼저 정해졌을 수 있다
@@ -1433,6 +1435,7 @@ namespace Game.Module.InGame
                 btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
             }
 
+            ShowCardFx(e);
             EqualizeText("BuffCard0Name", "BuffCard1Name", "BuffCard2Name");
             EqualizeText("BuffCard0Desc", "BuffCard1Desc", "BuffCard2Desc");
             EqualizeText("BuffCard0ChipText", "BuffCard1ChipText", "BuffCard2ChipText");
