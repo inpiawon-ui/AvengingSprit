@@ -74,6 +74,7 @@ Stage 4  클라이언트   프리팹 바인딩 + 기능 구현
 │   └── protect_framework.ps1 | GameFramework 수정 차단 |
 ├── commands/               | 커스텀 슬래시 명령 (게임별 추가 가능) |
 ├── skills/                 | 재사용 가능한 작업 스킬 (게임별 추가 가능) |
+│   └── fx-art-pipeline/    | 이펙트 · 아트 제작 순서 — 코덱스 자유 시안 → PD 선택 → 부품 발주 → 반영 → 나란히 검수 |
 ├── agents/                 | 에이전트 팀 (2-계층 구조) |
 │   ├── management/         | PM, PD, 모든 팀장 (client-lead, art-lead, plan-lead, sound-lead, server-lead) |
 │   ├── client/             | 클라이언트 팀원 7명 (framework/game/ui/network/tools/qa/scribe) |
