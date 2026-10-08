@@ -170,10 +170,16 @@ namespace Game.Character
         [Tooltip("켜면 전부 해금 · 무료 입장 · 젬 100만 · 상자 시간 1/60. 출시 빌드에서는 끈다.")]
         [SerializeField] private bool _testMode;
 
+        // 모든 몸을 숙련도 최대로 연다(PD 2026-10-08 「잠그라고 하기 전까지 다 열어 둬 — 빌드 테스트에도 필요」).
+        // 테스트 모드와 따로 둔다 — 이것만 켜면 입장료 · 젬 · 상자는 라이브 그대로다. 저장은 안 건드린다(끄면 원래대로).
+        [Tooltip("켜면 모든 호스트를 숙련도 최대로 연다(스킬 · 패시브 전부). 저장은 안 바뀐다. 출시 빌드에서는 끈다.")]
+        [SerializeField] private bool _openAllHosts = true;
+
         [Tooltip("새 계정이 처음부터 가진 몸. 나머지는 조각을 모아 해금한다.")]
         [SerializeField] private string _starterHost = "gangster";
 
         public bool TestMode => _testMode;
+        public bool OpenAllHosts => _openAllHosts;
         public string StarterHost => string.IsNullOrEmpty(_starterHost) ? "gangster" : _starterHost;
 
         // ── 상점 · 정수 (2026-10-04) ───────────────────────────────

@@ -53,6 +53,7 @@ MonoBehaviour:
   _critAtGrade1: 5
   _critPerGrade: 3
   _testMode: 0
+  _openAllHosts: 1
   _starterHost: gangster
   _essencePerShard: 020000000300000005000000
   _shopShardCount: 060000000400000002000000

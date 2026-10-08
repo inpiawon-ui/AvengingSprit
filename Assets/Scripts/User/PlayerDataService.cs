@@ -40,7 +40,11 @@ namespace Game.User
             _passiveSkills = passiveSkills;
             _config = config;
             s_testMode = config != null && config.TestMode;
+            s_openAllHosts = config != null && config.OpenAllHosts;
         }
+
+        /// <summary>모든 몸을 숙련도 최대로 읽는다(`GameConfig.OpenAllHosts`). 저장은 그대로다.</summary>
+        private static bool s_openAllHosts;
 
         /// <summary>테스트 모드 — 전부 해금 · 무료 입장 · 젬 100만 · 상자 빨리(`GameConfig.TestMode`).</summary>
         private static bool s_testMode;
@@ -300,6 +304,7 @@ namespace Game.User
         {
             int i = IndexOfHost(hostKey);
             int m = i < 0 ? 0 : _data.hostMastery[i];
+            if (s_openAllHosts && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return Mathf.Max(m, MasteryMax);
             // 테스트 모드 — 안 가진 몸도 1 로 읽는다(저장은 그대로라 끄면 원래대로 돌아온다).
             if (s_testMode && m < 1 && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return 1;
             return m;

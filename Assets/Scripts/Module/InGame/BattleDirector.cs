@@ -3844,7 +3844,6 @@ namespace Game.Module.InGame
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
             if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
-            _rangeRingPulse = 1f;   // 사거리 원은 내가 칠 때만 잠깐 보인다(PD 2026-10-08)
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
         }

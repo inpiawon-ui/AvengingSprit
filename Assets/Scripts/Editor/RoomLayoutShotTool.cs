@@ -261,6 +261,8 @@ namespace Game.EditorTools
         private static void KeepAlive(BattleDirector director)
         {
             var t = typeof(BattleDirector);
+            // 판이 아직 설정을 못 받았으면(`_config` 없음) 건너뛴다 — `GhostHpMax` 가 매 프레임 NullReference 를 쌓았다(10-08)
+            if (t.GetField("_config", F)?.GetValue(director) == null) return;
             var hp = t.GetField("_ghostHp", F);
             var max = t.GetProperty("GhostHpMax", F);
             if (hp != null && max != null) hp.SetValue(director, System.Convert.ChangeType(max.GetValue(director), hp.FieldType));
