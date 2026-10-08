@@ -1,0 +1,553 @@
+종류	경로	크기	문제
+그림	Assets/BaseResource/AppIcon/app_icon.png	1024x1024	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.0MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/ChapterHost/ch_art_1.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_art_2.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_art_3.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_art_4.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_art_5.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_art_6.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_bg.png	720x1280	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.5MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/ChapterHost/ch_card_frame_fx.png	203x350	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterHost/ch_card_frame_sel_fx.png	220x367	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterHost/ch_panel.png	965x350	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.3MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterHost/ch_plate.png	558x140	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterHost/ch_screen.png	1080x2400	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 9.9MB, ASTC 6x6 이면 약 1.1MB
+그림	Assets/BaseResource/ChapterHost/ch_screen_fixed.png	941x1790	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 6.4MB, ASTC 6x6 이면 약 0.7MB
+그림	Assets/BaseResource/ChapterHost/ch_screen_wide.png	1255x1790	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 8.6MB, ASTC 6x6 이면 약 1.0MB
+그림	Assets/BaseResource/ChapterHost/ch_start_button.png	1040x224	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.9MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_1.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_2.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_3.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_4.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_5.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_art_6.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_frame.png	330x270	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chaptercard_frame_selected.png	330x270	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chapterselect_bg.png	720x1280	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.5MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/ChapterScreens/chapterselect_title.png	600x110	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/ChapterScreens/chest_gold_clean.png	206x142	Read/Write 켜짐(메모리 2배)
+그림	Assets/BaseResource/ChapterScreens/chest_silver_clean.png	206x142	Read/Write 켜짐(메모리 2배)
+그림	Assets/BaseResource/ChapterScreens/chestreward_frame.png	640x880	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.1MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BaseResource/ChapterScreens/chestreward_open_gold.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterScreens/chestreward_open_platinum.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterScreens/chestreward_open_silver.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/ChapterScreens/result_frame.png	660x800	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.0MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BaseResource/ChapterScreens/result_rowpanel.png	500x150	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_amazon.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_amazon_elite.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_baseball.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_commando_grenade.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_commando_laser.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_commando_mg.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_commando_missile.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_death.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_dragon_blue.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_dragoon.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_gangster.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_ghost.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_guru.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_hopper.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_hopper_smg.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_medium.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_ninja.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_ninja_chain.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_robot.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_salamander.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_snowwoman.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_thug.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_vampire.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/Portraits/portrait_white_wizard.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/Growth/bg_ghost.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/Growth/bg_ghost_full.png	960x1447	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 5.3MB, ASTC 6x6 이면 약 0.6MB
+그림	Assets/BaseResource/Growth/bg_host.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/Growth/bg_skill.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/Growth/nav_bg.png	720x110	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/Growth/path_box.png	664x102	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/Growth/v5/bg_host_v5.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
+그림	Assets/BaseResource/Growth/v5/bg_host_v5_full.png	960x1447	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 5.3MB, ASTC 6x6 이면 약 0.6MB
+그림	Assets/BaseResource/Growth/v5/h5_starup_window.png	623x809	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.9MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BaseResource/InGameMainUI/fx_amland_1.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_amland_2.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_amland_3.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_amland_4.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castburst_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castburst_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castburst_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castflash_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castflash_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castflash_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castflash_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castlines_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castlines_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castlines_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castring_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castring_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castring_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castring_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_castrune_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_5.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_6.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_7.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_cmwall_8.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gaexec_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gaexec_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gaexec_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_5.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_gamark_6.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_5.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_6.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_7.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hopaim_8.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_5.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hsinv_6.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxblunt_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcore_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcore_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcore_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcore_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxcrit_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxline_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxline_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxline_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxmagic_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxpow_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxpow_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxpow_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxpow_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxslash_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxslash_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxslash_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxslash_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxweap_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxweap_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxweap_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_hxweap_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzaim_1.png	512x32	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzarc_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzarc_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzarc_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzarc_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzbolt_1.png	512x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzbolt_2.png	512x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzbolt_3.png	512x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzbolt_4.png	512x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzdebris_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzdebris_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzdebris_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzdebris_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzhit_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzhit_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzhit_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzhit_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzmuzzle_1.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzmuzzle_2.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzmuzzle_3.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzmuzzle_4.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzring_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzring_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzring_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_lzring_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpbeam_1.png	1024x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpbeam_2.png	1024x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpbeam_3.png	1024x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpbeam_4.png	1024x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpcut_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpcut_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpcut_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpcut_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wppulse_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wppulse_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wppulse_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wppulse_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpstate_1.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpstate_2.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpstate_3.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wpstate_4.png	192x192	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/fx_wptracer_1.png	128x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_aff_ring.png	144x144	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_cyan.png	546x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_purple.png	545x18	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_fill_red.png	546x19	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_ghost_pill.png	434x155	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_gold_chip.png	197x85	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_host_empty_bar.png	264x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_host_empty_face.png	103x103	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_host_pill.png	435x157	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_pad_base.png	260x255	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_pad_knob.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_pause.png	97x98	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_possess_frame.png	190x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_skill_empty.png	196x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_skill_frame.png	196x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_stage_track.png	166x36	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud3/hud3_top_band.png	1080x345	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud_action_frame_v2.png	244x157	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud_boss_plate_v2.png	689x105	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud_boss_plate_v3.png	720x110	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hud_dpad_base_v2.png	152x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/hudbackdrop_v2.png	720x243	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/range_ring.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcast_dim.png	720x1080	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcast_edge_glow.png	720x1080	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcastband.png	760x191	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcastready_1.png	171x171	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcastready_2.png	171x171	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcastready_3.png	171x171	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/InGameMainUI/skillcastspark.png	64x64	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/LobbyBackdrop/actionbarbackground.png	941x206	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.7MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyBackdrop/lobbybackground.png	941x1672	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 6.0MB, ASTC 6x6 이면 약 0.7MB
+그림	Assets/BaseResource/LobbyV4/base_city.png	941x320	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyV4/base_extend.png	941x528	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.9MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BaseResource/LobbyV4/base_mid.png	941x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.0MB, ASTC 6x6 이면 약 0.3MB
+그림	Assets/BaseResource/LobbyV4/base_top.png	941x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.3MB, ASTC 6x6 이면 약 0.3MB
+그림	Assets/BaseResource/LobbyV4/fixed_top_band.png	1080x180	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.7MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyV4/profile_plate.png	750x345	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyV4/profile_plate_fx.png	375x180	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/LobbyV4/side_left_mid.png	170x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyV4/side_left_top.png	170x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.4MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/LobbyV4/side_right_mid.png	170x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
+그림	Assets/BaseResource/LobbyV4/side_right_top.png	170x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.4MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_1.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_2.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_3.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_4.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_idle_bubbles_1.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_idle_bubbles_2.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_idle_bubbles_3.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_idle_bubbles_4.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_tube_fill_1.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_tube_fill_2.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_tube_fill_3.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_altar_tube_fill_4.png	87x347	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_chest_land_1.png	366x137	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_chest_land_2.png	366x137	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_chest_land_3.png	366x137	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_chest_land_4.png	366x137	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_coin_rain_1.png	136x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_coin_rain_2.png	136x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_coin_rain_3.png	136x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_coin_rain_4.png	136x136	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_ok_glow_1.png	326x82	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_ok_glow_2.png	326x82	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_ok_glow_3.png	326x82	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_ok_glow_4.png	326x82	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_title_burst_1.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_title_burst_2.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_title_burst_3.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_clear_title_burst_4.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_chain_glow_1.png	166x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_chain_glow_2.png	166x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_chain_glow_3.png	166x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_chain_glow_4.png	166x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_flame_1.png	32x65	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_flame_2.png	32x65	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_flame_3.png	32x65	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_flame_4.png	32x65	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_heat_1.png	512x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_heat_2.png	512x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_heat_3.png	512x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_heat_4.png	512x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_smoke_1.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_smoke_2.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_smoke_3.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_devil_smoke_4.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_1.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_2.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_3.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_4.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_strike_1.png	94x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_strike_2.png	94x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_strike_3.png	94x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_strike_4.png	94x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_pipe_flow_1.png	231x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_pipe_flow_2.png	231x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_pipe_flow_3.png	231x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_pipe_flow_4.png	231x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_tube_glow_1.png	56x187	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_tube_glow_2.png	56x187	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_tube_glow_3.png	56x187	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_tube_glow_4.png	56x187	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_1.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_2.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_3.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_4.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_curse_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_goldpile_stages_1.png	200x140	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_goldpile_stages_2.png	200x140	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_goldpile_stages_3.png	200x140	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_goldpile_stages_4.png	200x140	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_burst_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_orb_1.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_orb_2.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_orb_3.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_heal_orb_4.png	96x96	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_power_up_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_speed_up_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_5.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_present_vital_up_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_1.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_2.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_3.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_4.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_5.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_6.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_7.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_burst_8.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_1.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_2.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_3.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_4.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_5.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_6.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_7.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_glow_8.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_1.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_2.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_3.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_4.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_5.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_6.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_7.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_8.png	220x150	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_1.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_2.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_3.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_4.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_5.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_6.png	348x174	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_core_glow_1.png	88x177	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_core_glow_2.png	88x177	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_core_glow_3.png	88x177	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_core_glow_4.png	88x177	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_eye_flash_1.png	46x46	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_eye_flash_2.png	46x46	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_eye_flash_3.png	46x46	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_eye_flash_4.png	46x46	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_fire_smoke_1.png	230x230	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_fire_smoke_2.png	230x230	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_fire_smoke_3.png	230x230	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_fire_smoke_4.png	230x230	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_horn_fire_1.png	29x58	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_horn_fire_2.png	29x58	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_horn_fire_3.png	29x58	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_horn_fire_4.png	29x58	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_smoke_ring_1.png	306x153	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_smoke_ring_2.png	306x153	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_smoke_ring_3.png	306x153	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_devil_smoke_ring_4.png	306x153	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_capsule_glow_1.png	117x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_capsule_glow_2.png	117x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_capsule_glow_3.png	117x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_capsule_glow_4.png	117x235	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_pillar_1.png	128x255	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_pillar_2.png	128x255	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_pillar_3.png	128x255	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_pillar_4.png	128x255	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_ring_ripple_1.png	212x106	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_ring_ripple_2.png	212x106	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_ring_ripple_3.png	212x106	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_ring_ripple_4.png	212x106	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_steam_1.png	107x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_steam_2.png	107x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_steam_3.png	107x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_heal_steam_4.png	107x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_float_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_float_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_float_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_float_4.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_ring_1.png	425x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_ring_2.png	425x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_ring_3.png	425x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_coin_ring_4.png	425x212	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_eye_glow_1.png	41x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_eye_glow_2.png	41x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_eye_glow_3.png	41x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_eye_glow_4.png	41x20	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_lantern_1.png	29x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_lantern_2.png	29x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_lantern_3.png	29x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_lantern_4.png	29x29	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_soul_flame_1.png	156x313	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_soul_flame_2.png	156x313	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_soul_flame_3.png	156x313	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_room_shop_soul_flame_4.png	156x313	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_pipe_flow_1.png	245x31	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_pipe_flow_2.png	245x31	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_pipe_flow_3.png	245x31	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_pipe_flow_4.png	245x31	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_1.png	83x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_2.png	83x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_3.png	83x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_4.png	83x332	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BundleResource/Cutscene/cut_prologue_1.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_3.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_6.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_7.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_8.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_prologue_9.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_1.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_10.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_11.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/Cutscene/cut_start_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/ParticleFx/Danger/fx_danger_core.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BundleResource/ParticleFx/Danger/fx_danger_fill.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BundleResource/ParticleFx/Danger/fx_safe_core.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BundleResource/ParticleFx/Danger/fx_safe_fill.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_crusher.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_guardian.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_kingpin.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_python.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_robot_snakes.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_boss_sludge.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_common.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_holding.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_junkyard.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_lab.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_missile.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_refinery.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_rooftop.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomapron_street.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomcloud.png	720x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.8MB, ASTC 6x6 이면 약 0.2MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_crusher_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_holding_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_junkyard_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_junkyard_full_v3.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_lab_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_missile_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_refinery_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_rooftop_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_env_street_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_guardian_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_kingpin_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_python_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_robot_snakes_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+그림	Assets/BundleResource/RoomFloor/roomfloor_sludge_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
+아틀라스	Assets/BundleResource/Atlas/card.spriteatlasv2	최대 2048 · 어림 5.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 5.3MB(ASTC 4x4 면 1.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/hostface.spriteatlasv2	최대 2048 · 어림 7.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 7.5MB(ASTC 4x4 면 1.9MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/hostselectpanel.spriteatlasv2	최대 4096 · 어림 8.2MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 8.2MB(ASTC 4x4 면 2.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/ingamemainui.spriteatlasv2	최대 4096 · 어림 189.7MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 189.7MB(ASTC 4x4 면 47.4MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/loading.spriteatlasv2	최대 2048 · 어림 13.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.9MB(ASTC 4x4 면 3.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/lobbymainui.spriteatlasv2	최대 4096 · 어림 12.1MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 12.1MB(ASTC 4x4 면 3.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 52.2MB	필터 Point 아님; 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/systempopup.spriteatlasv2	최대 2048 · 어림 1.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.3MB(ASTC 4x4 면 0.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/titlemainui.spriteatlasv2	최대 4096 · 어림 11.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 11.5MB(ASTC 4x4 면 2.9MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_actor_enforcer.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_amazon.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_amazon_elite.spriteatlasv2	최대 1024 · 어림 2.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.0MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_armadillo.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_assault_gangster.spriteatlasv2	최대 1024 · 어림 0.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.0MB(ASTC 4x4 면 0.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_baseball.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_bat.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_boar.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_boss.spriteatlasv2	최대 1024 · 어림 0.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.3MB(ASTC 4x4 면 0.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_coilwalker.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_commando_grenade.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_commando_laser.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_commando_mg.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_commando_missile.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_crusher.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_death.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_dragon_blue.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_dragoon.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_fighter.spriteatlasv2	최대 1024 · 어림 0.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.0MB(ASTC 4x4 면 0.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_gangster.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_ghost.spriteatlasv2	최대 1024 · 어림 2.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.0MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_golem.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_guardian.spriteatlasv2	최대 1024 · 어림 17.6MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 17.6MB(ASTC 4x4 면 4.4MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_guru.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_hopper.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_hopper_smg.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_kingpin.spriteatlasv2	최대 1024 · 어림 19.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 19.8MB(ASTC 4x4 면 5.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_mantis.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_medium.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_mole.spriteatlasv2	최대 1024 · 어림 2.1MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.1MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_mummy.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_mushroom.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_ninja.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_ninja_chain.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_python.spriteatlasv2	최대 1024 · 어림 4.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 4.5MB(ASTC 4x4 면 1.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_roadwarden.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_robot.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_robot_snakes.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_salamander.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_scrapgunner.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_skeleton.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_sludge.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_snowwoman.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_spider.spriteatlasv2	최대 1024 · 어림 2.4MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.4MB(ASTC 4x4 면 0.6MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_spiderling.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_thug.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_vampire.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/unit_white_wizard.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
