@@ -48,6 +48,13 @@ namespace Game.Module.InGame
         public bool KeepAlive = true;
 
         /// <summary>
+        /// 곧장 가서 때리기만 한다 — 피하기 · 자리 옮기기 · 붙은 적에게서 물러서기를 끈다.
+        /// 무적으로 전 챕터를 훑는 검수 영상용(2026-10-08). 사람처럼 보이려는 동작이 근접 몸에선
+        /// 붙었다 물러났다를 되풀이해 방마다 시간을 버렸다(PD 지적 「돌이돌이 하면서 시간을 보낸다」).
+        /// </summary>
+        public bool Direct;
+
+        /// <summary>
         /// 장면 기록 「이름:프레임;」 — 편집할 때 방 · 창 · 보스 격파 자리를 찾는다.
         /// 녹화기가 프레임을 30fps 로 고정하므로 (프레임 − 녹화 시작 프레임) / 30 이 영상 속 초다.
         /// </summary>
@@ -386,10 +393,13 @@ namespace Game.Module.InGame
             }
             if (want.sqrMagnitude < 0.01f) { _stuckFor = 0f; _lastPos = pos; return; }
 
+            // 0.3초 동안 **실제로 나아간 거리**로 잰다. 프레임마다 재면 기둥에 겹친 몸이 밀려났다 돌아오는
+            // 몇 픽셀 떨림을 「움직인다」로 읽어 영영 안 비킨다(2026-10-08 실측 7-05 · 8-07 — 기둥 옆에서 4분).
+            _stuckFor += dt;
+            if (_stuckFor < 0.3f) return;
             float moved = (pos - _lastPos).magnitude;
             _lastPos = pos;
-            if (moved < 40f * dt) _stuckFor += dt; else _stuckFor = 0f;
-            if (_stuckFor < 0.3f) return;
+            if (moved >= 40f * _stuckFor) { _stuckFor = 0f; return; }
 
             // 가려던 쪽에 수직으로, 조금 뒤로 물러서며 비켜 간다
             _stuckFor = 0f;
@@ -406,6 +416,8 @@ namespace Game.Module.InGame
         {
             var room = (Vector2)_fRoomSize.GetValue(_bd);
             var pos = me.Position;
+
+            if (Direct) { FightDirect(me, enemies, alive, room, dt); return; }
 
             // 1) 보스 예고 지대 안이면 가장 가까운 안전한 곳으로
             var danger = (DangerShape)_fDanger.GetValue(_bd);
@@ -494,6 +506,81 @@ namespace Game.Module.InGame
             }
 
             _bd.MoveInput = Vector2.zero;   // 멈춰서 쏜다
+        }
+
+        // 직진 모드 감시 — 붙어 있는데 적 체력이 안 줄면(기둥에 겹쳐 시야가 막혔다 · 엄폐 뒤에 끼었다) 비켜 선다.
+        // 2026-10-08 전 챕터 영상: 7-05 · 8-03 에서 기둥 옆에 붙은 채 계속 밀기만 해 한 대도 못 치고 4분을 버렸다.
+        private Unit _directTarget, _directSkip;
+        private int _directHp;
+        private float _directNoHit, _directSkipFor;
+        private int _directSide = 1;
+
+        private Unit NearestExcept(IList enemies, Vector2 pos, Unit skip)
+        {
+            Unit best = null; float bd = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+                if (enemies[i] is Unit u && u != null && u.IsAlive && u != skip)
+                {
+                    float d = (u.Position - pos).sqrMagnitude;
+                    if (d < bd) { bd = d; best = u; }
+                }
+            return best ?? Nearest(enemies, pos);
+        }
+
+        /// <summary>가장 가까운 적에게 닿을 때까지 걷고, 닿으면 멈춰서 친다. 스킬은 평소처럼 가끔.</summary>
+        private void FightDirect(Unit me, IList enemies, int alive, Vector2 room, float dt)
+        {
+            var pos = me.Position;
+            if (_dodgeLeft > 0f)
+            {
+                _dodgeLeft -= dt;
+                _bd.MoveInput = KeepInside(pos, _dodgeDir, room);
+                return;
+            }
+            if (_directSkipFor > 0f) _directSkipFor -= dt; else _directSkip = null;
+            var near = NearestExcept(enemies, pos, _directSkip);
+
+            if (near != _directTarget) { _directTarget = near; _directHp = near != null ? near.Hp : 0; _directNoHit = 0f; }
+            else if (near != null)
+            {
+                if (near.Hp < _directHp) { _directHp = near.Hp; _directNoHit = 0f; }
+                else _directNoHit += dt;
+                if (_directNoHit > 6f)
+                {
+                    // 오래 못 치면 다른 적부터 — 그 사이 자리가 바뀐다
+                    _directSkip = near; _directSkipFor = 4f; _directTarget = null;
+                }
+                else if (_directNoHit > 2f && ((int)(_directNoHit * 10f)) % 20 == 0)
+                {
+                    // 2초마다 한 번 — 적을 끼고 옆으로 돈다(번갈아 좌 · 우)
+                    var to = near.Position - pos;
+                    if (to.sqrMagnitude < 1f) to = Vector2.up;
+                    _directSide = -_directSide;
+                    _dodgeDir = (new Vector2(-to.y, to.x).normalized * _directSide + to.normalized * 0.3f).normalized;
+                    _dodgeLeft = 0.5f;
+                    _bd.MoveInput = KeepInside(pos, _dodgeDir, room);
+                    return;
+                }
+            }
+            float reach = ReachOf(me) * 0.85f;
+            if (near != null && ((near.Position - pos).sqrMagnitude > reach * reach || !HasLine(pos, near.Position)))
+            {
+                var dir = PathToward(me, near.Position);
+                if (dir.sqrMagnitude < 0.01f) dir = (near.Position - pos).normalized;
+                _bd.MoveInput = KeepInside(pos, dir, room);
+                return;
+            }
+
+            _skillIn -= dt;
+            if (_skillIn <= 0f && _fHost.GetValue(_bd) != null
+                && (alive >= 3 || _fBoss.GetValue(_bd) != null))
+            {
+                _fSkillGauge.SetValue(_bd, 999f);
+                _bd.TryActiveSkill();
+                Mark("skill");
+                _skillIn = Random.Range(SkillEveryMin, SkillEveryMax);
+            }
+            _bd.MoveInput = Vector2.zero;   // 멈춰서 친다
         }
 
         // ── 방을 깬 뒤 ──────────────────────────────────────────
