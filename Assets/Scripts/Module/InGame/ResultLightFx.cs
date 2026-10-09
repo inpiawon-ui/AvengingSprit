@@ -15,11 +15,9 @@ namespace Game.Module.InGame
     ///
     /// 금화(코덱스 자유 시안 `mock_result_codex_*` — PD 「골드는 광원이 괜찮다」, 그대로 둔다)
     ///   광원 = 빛 셰이더 번짐 · 빛살 = 도트 그림 터짐 8장 → 반복 8장 · 앞 = 반짝 별 그림 반복 + 유령 빛 알갱이 파티클
-    /// 상자(새 시안 `mock_chest2_free_*` — 예전 상자 부품은 「광원에 아웃라인이 들어가 부자연스럽다」로 새로 받았다)
-    ///   광원 = 빛 셰이더 번짐(등급색, 착지에 확 밝아졌다 숨쉬기)
-    ///   착지 = 바닥에서 솟는 도트 빛살 그림 2장(번갈아 깜빡) — 곡선으로 솟구쳤다 사라짐
-    ///   파티클 = 반짝 별 · 도트 알갱이 그림 2종 — 착지에 위로 튀고, 머묾에 알갱이가 천천히 떠오르고 별이 가끔 반짝
-    ///   흰 그림에 등급색을 곱한다(모양은 같고 색만 다르다)
+    /// 상자 — **반짝임만**(PD 2026-10-10 「상자별로 색 글로우 넣은 건 제거, 촌스럽게 뒤에 붙여 놨다, 반짝이들만」).
+    ///   상자 뒤 등급색 광원 · 후광 · 바닥 빛살은 뺐다. 반짝 별 · 도트 알갱이 파티클(그림 2종)만 —
+    ///   착지에 위로 튀고, 머묾에 알갱이가 천천히 떠오르고 별이 가끔 반짝. 등급색을 살짝 곱한다
     ///
     /// 깊이: 광원 · 빛살 = 물건 그림 바로 앞 형제(물건에 가려짐) · 앞 그림 = 물건 바로 뒤 형제 · 파티클 = 결과창 캔버스 + 2.
     /// 상자가 자르기 틀(RectMask2D) 안에 있으면 틀 바깥 형제로 둔다 — 빛까지 틀에 잘리지 않게.
@@ -35,11 +33,7 @@ namespace Game.Module.InGame
         // 그림 칸(2배 440x300 · 480x300)을 줄 칸(126 높이) 안에 들게 줄였다 — 반 크기(220x150 · 240x150)는 줄 밖으로 넘치고
         // 금화 쪽은 오른쪽 「+1,240」 글자에 반짝 별이 걸렸다(녹화 vE)
         private static readonly Vector2 GoldSize = new(184f, 125f);
-        // 2배 칸 480x300 을 0.62 배 — 시안처럼 빛살이 상자 위까지 솟아 보이게(반 크기는 상자에 거의 가려졌다, 녹화 vG). 바닥 줄은 아래에서 10%
-        private static readonly Vector2 RiseSize = new(298f, 186f);
-        private const float RiseFlickerStep = 0.06f;
         private static readonly Vector2 GoldGlowSize = new(210f, 140f);
-        private static readonly Vector2 ChestGlowSize = new(214f, 158f);   // 시안 머묾처럼 상자 둘레로 광원이 보이게 — 210x140 은 상자에 거의 가려졌다(녹화 vI)
         private static readonly Color GoldGlowColor = new Color32(0xFF, 0xA8, 0x30, 0xFF);
 
         /// <summary>
@@ -58,7 +52,7 @@ namespace Game.Module.InGame
 
         // 은 = 시안(mock_chest2_free_*) 수준이 기본 — 은을 시안보다 낮추지 않는다(PD 10-09 「은상자는 저 정도는 들어가야」).
         // 위 등급은 **크기가 아니라 파티클 수 · 이펙트 종류를 더한다**(PD 10-09 「힘을 더 준다는 건 크기를 키우라는 게 아니라
-        // 파티클 객체 수를 약간 더 늘리고 이펙트를 다양하게」). 후광 · 빛살 · 광원 크기는 세 등급이 같다.
+        // 파티클 객체 수를 약간 더 늘리고 이펙트를 다양하게」).
         private static readonly ChestTier[] Tiers =
         {
             new() { Burst = 12, BurstStars = 0, SecondBurst = false, MoteGap = 0.25f, StarGap = 1.2f, Rising = false },   // 은
@@ -68,10 +62,8 @@ namespace Game.Module.InGame
 
         private ChestTier _tier = Tiers[0];
 
-        private Image _goldGlow, _goldBack, _goldFront, _chestGlow, _chestRise, _chestHalo;
-        private Sprite[] _chestHaloFrames;
-        private static readonly Vector2 HaloSize = new(240f, 150f);   // 2배 칸 480x300 의 반 — 상자(140x96)가 가운데
-        private Sprite[] _goldBurst, _goldLoop, _goldSparkle, _chestRiseFrames, _moteSprites;
+        private Image _goldGlow, _goldBack, _goldFront;
+        private Sprite[] _goldBurst, _goldLoop, _goldSparkle, _moteSprites;
         private Color _grade = Color.white;
         private bool _hasChest;
         private float _goldAt, _landAt, _clock = -1f;
@@ -105,9 +97,6 @@ namespace Game.Module.InGame
 
             if (!_hasChest) return;
             float c = _clock - _landAt;
-            Glow(_chestGlow, _grade, c, 0.45f, 0.1f, 2.0f);   // 넓고 옅은 받침 — 상자 모양 빛은 후광 그림이 맡는다
-            Rise(c);
-            Halo(c);
             if (c < 0f) return;
             var light = Color.Lerp(_grade, Color.white, 0.45f);
             if (!_chestBurstDone && _chestMotes != null)
@@ -160,41 +149,6 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 머묾 후광 — 시안 머묾처럼 상자 모양을 따라 감싸는 부드러운 빛(그림 한 장, 윤곽선 없음).
-        /// 착지에 0.25초 동안 밝게 차오르고 이후 숨쉰다(2.0초). 등급 단계가 진하기 · 크기를 올린다.
-        /// </summary>
-        private void Halo(float since)
-        {
-            if (_chestHalo == null || _chestHaloFrames == null || _chestHaloFrames.Length == 0) return;
-            if (since < 0f) { _chestHalo.enabled = false; return; }
-            float inK = Ease.OutCubic(Mathf.Clamp01(since / 0.25f));
-            float breathe = 0.5f - 0.5f * Mathf.Cos(since * Mathf.PI * 2f / 2.0f);
-            float a = inK * Mathf.Lerp(0.8f, 1f, breathe);
-            _chestHalo.sprite = _chestHaloFrames[0];
-            _chestHalo.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.9f, 1f, inK) * Mathf.Lerp(1f, 1.04f, breathe);
-            _chestHalo.color = new Color(_grade.r, _grade.g, _grade.b, a);
-            _chestHalo.enabled = true;
-        }
-
-        /// <summary>착지(강): 바닥 빛살이 OutBack 으로 솟구쳤다(0.28초) 0.9초에 걸쳐 사라진다. 두 장을 번갈아 깜빡여 일렁이게.</summary>
-        private void Rise(float since)
-        {
-            if (_chestRise == null || _chestRiseFrames == null || _chestRiseFrames.Length == 0) return;
-            if (since < 0f || since > 0.95f)
-            {
-                _chestRise.enabled = false;
-                return;
-            }
-            float up = Ease.OutBack(Mathf.Clamp01(since / 0.28f));
-            float fade = 1f - Mathf.Clamp01((since - 0.35f) / 0.6f);
-            _chestRise.rectTransform.localScale = new Vector3(Mathf.Lerp(0.7f, 1f, up), Mathf.LerpUnclamped(0.15f, 1f, up), 1f);
-            _chestRise.sprite = _chestRiseFrames[(int)(since / RiseFlickerStep) % _chestRiseFrames.Length];
-            // 등급색 그대로 — 흰색을 섞으면 시안의 선명한 파란 빛살이 하얗게 뿌옇게 됐다(녹화 vH)
-            _chestRise.color = new Color(_grade.r, _grade.g, _grade.b, fade);
-            _chestRise.enabled = true;
-        }
-
-        /// <summary>
         /// 결과창이 뜰 때 한 번. 시각은 창이 뜬 때부터의 초(금화가 다 쌓인 때 · 상자가 닿는 때).
         /// <paramref name="tier"/> = 상자 등급 단계(0 은 · 1 금 · 2 백금).
         /// </summary>
@@ -206,8 +160,6 @@ namespace Game.Module.InGame
             _goldBurst = fx.FramesOf("result_gold_burst");
             _goldLoop = fx.FramesOf("result_gold_glow");
             _goldSparkle = fx.FramesOf("result_gold_sparkle");
-            _chestRiseFrames = fx.FramesOf("result_chest_rise");
-            _chestHaloFrames = fx.FramesOf("result_chest_halo");
             _moteSprites = fx.FramesOf("result_mote");
             _additive = additive;
             _grade = grade;
@@ -217,19 +169,7 @@ namespace Game.Module.InGame
             // Unity 객체라 ??= 를 쓰지 않는다(파괴된 객체를 null 로 못 본다 — coding_conventions 5절)
             if (_goldBack == null) _goldBack = Layer(pile, "ResultGoldBack", additive, GoldSize, behind: true);
             if (_goldFront == null) _goldFront = Layer(pile, "ResultGoldFront", additive, GoldSize, behind: false);
-            if (_chestRise == null)
-            {
-                _chestRise = Layer(chest, "ResultChestRise", additive, RiseSize, behind: true);
-                if (_chestRise != null)
-                {
-                    // 그림의 바닥 줄(아래에서 15/150)을 상자 밑변(가운데에서 48 아래)에 — 아래에서 위로 솟게 피벗을 바닥 줄에
-                    var rt = _chestRise.rectTransform;
-                    rt.pivot = new Vector2(0.5f, 0.1f);
-                    rt.anchoredPosition += new Vector2(0f, -48f);
-                }
-            }
-            if (_chestHalo == null) _chestHalo = Layer(chest, "ResultChestHalo", additive, HaloSize, behind: true);
-            Hide(_goldGlow); Hide(_goldBack); Hide(_goldFront); Hide(_chestGlow); Hide(_chestRise); Hide(_chestHalo);
+            Hide(_goldGlow); Hide(_goldBack); Hide(_goldFront);
             if (_motes != null) _motes.Clear();
             if (_chestMotes != null) _chestMotes.Clear();
             _chestBurstDone = false;
@@ -336,14 +276,12 @@ namespace Game.Module.InGame
         {
             if (_lightSource != null && _goldGlow == null && _goldBack != null)
                 _goldGlow = GlowUnder(_goldBack, "ResultGoldGlow", GoldGlowSize, Vector2.zero);
-            if (_lightSource != null && _chestGlow == null && _chestRise != null)
-                _chestGlow = GlowUnder(_chestRise, "ResultChestGlow", ChestGlowSize, new Vector2(0f, 48f), 0.42f, 0.5f);   // 시안 머묾처럼 상자 가장자리 바로 바깥이 가장 밝게 — 넓고 옅은 번짐은 안 보였다(녹화 vJ)   // 빛살 피벗(상자 밑변)에서 상자 가운데로
             if (_moteMaterial != null && _motes == null) _motes = NewMotes(BandOrder() + 2);
             if (_chestMotes == null && _additive != null && _moteSprites != null && _moteSprites.Length > 0)
                 _chestMotes = NewChestMotes(BandOrder() + 2);
         }
 
-        private Image GlowUnder(Image layer, string name, Vector2 size, Vector2 offset, float core = 0.10f, float soft = 0.42f)
+        private Image GlowUnder(Image layer, string name, Vector2 size, Vector2 offset)
         {
             var go = new GameObject(name, typeof(RectTransform));
             var rt = (RectTransform)go.transform;
@@ -358,8 +296,8 @@ namespace Game.Module.InGame
             m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
             m.SetFloat("_RingRadius", 0f);
             // 심 + 번짐이 상자(uv) 반지름 안에서 끝나야 둥글다 — 0.5 + 0.8 은 모서리까지 꽉 차 네모 판이 됐다(녹화 vC)
-            m.SetFloat("_RingWidth", core);
-            m.SetFloat("_RingGlow", soft);   // 0.55 는 착지 순간 1.45 배로 커질 때 네모 모서리가 드러났다(녹화 vE)
+            m.SetFloat("_RingWidth", 0.10f);
+            m.SetFloat("_RingGlow", 0.42f);   // 0.55 는 착지 순간 1.45 배로 커질 때 네모 모서리가 드러났다(녹화 vE)
             m.SetFloat("_RingWhite", 0.3f);
             var img = go.AddComponent<Image>();
             img.material = m;

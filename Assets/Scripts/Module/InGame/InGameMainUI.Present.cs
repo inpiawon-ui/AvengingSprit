@@ -72,9 +72,9 @@ namespace Game.Module.InGame
             if (_battle != null) _battle.HoldForPresentation(total + 0.1f);
 
             // ① 몸에 이펙트 — 몸 자리에 붙는다(FromAvatar)
-            // 카드는 LevelUpFx 가 맡는다 — 카드 문양이 몸 둘레를 돌고 광원 · 빛기둥 · 고리(시안 mock_lvgain_free_peak)
+            // 카드는 LevelUpFx 가 맡는다 — 광원 · 빛기둥 · 고리 · 솟는 알갱이(시안 mock_lvgain_free_peak)
             if (g.Kind == GainKind.Card && _levelUpFx != null)
-                _levelUpFx.Gain(layer, PopupFxPlayer.PanelPoint(layer, avatar), avatar, g.Icon, g.Rarity, g.Tint, total);
+                _levelUpFx.Gain(layer, PopupFxPlayer.PanelPoint(layer, avatar), avatar, g.Rarity, g.Tint, total);
             else if (_fx != null)
             {
                 var fx = new PopupFxLayer
