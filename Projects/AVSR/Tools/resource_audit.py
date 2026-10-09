@@ -189,7 +189,12 @@ for p in files:
     is_table = ext == '.asset' and '/TableData/' in p.replace(os.sep, '/')
     if ext in ('.json', '.txt', '.prefab', '.unity') or is_table:
         data.update(w.lower() for w in re.findall(r'[A-Za-z0-9_]{3,}', read(p)))
+# 연출 표 — 팝업 연출 프레임 이름(「altar_tube_fill」 → 그림 fx_altar_tube_fill_1~4)은 코드가 아니라 이 표 · 프리팹 PopupFxSpec 이 부른다
+for extra in ('Projects/AVSR/Tools/popup_fx.json',):
+    data.update(w.lower() for w in re.findall(r'[A-Za-z0-9_]{3,}', read(os.path.join(ROOT, extra))))
 words = set(data)
+# 표에 적힌 이름은 조각으로도 센다 — 이름 틀 「fx_{name}_{i}」 의 빈칸이 「altar_tube_fill」 처럼 밑줄을 품는다
+words.update(part for w in data for part in w.split('_') if part)
 for p in code_files:
     words.update(w.lower() for w in re.findall(r'[A-Za-z][A-Za-z0-9]*', read(p)))
 tokens = words

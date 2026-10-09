@@ -276,6 +276,7 @@
 그림	Assets/BaseResource/PopupFx/fx_devil_smoke_2.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_devil_smoke_3.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_devil_smoke_4.png	512x512	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
+그림	Assets/BaseResource/PopupFx/fx_levelup_card_rays_1.png	520x760	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_1.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_2.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_3.png	306x306	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -300,10 +301,6 @@
 그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_6.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_7.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_present_card_absorb_8.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_1.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_2.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_3.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/PopupFx/fx_present_card_rim_thin_4.png	155x286	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_present_curse_1.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_present_curse_2.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_present_curse_3.png	256x256	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -500,7 +497,7 @@
 아틀라스	Assets/BundleResource/Atlas/ingamemainui.spriteatlasv2	최대 4096 · 어림 189.7MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 189.7MB(ASTC 4x4 면 47.4MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
 아틀라스	Assets/BundleResource/Atlas/loading.spriteatlasv2	최대 2048 · 어림 13.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.9MB(ASTC 4x4 면 3.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
 아틀라스	Assets/BundleResource/Atlas/lobbymainui.spriteatlasv2	최대 4096 · 어림 12.1MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 12.1MB(ASTC 4x4 면 3.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 52.2MB	필터 Point 아님; 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 52.9MB	필터 Point 아님; 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
 아틀라스	Assets/BundleResource/Atlas/systempopup.spriteatlasv2	최대 2048 · 어림 1.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.3MB(ASTC 4x4 면 0.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
 아틀라스	Assets/BundleResource/Atlas/titlemainui.spriteatlasv2	최대 4096 · 어림 11.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 11.5MB(ASTC 4x4 면 2.9MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
 아틀라스	Assets/BundleResource/Atlas/unit_actor_enforcer.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
