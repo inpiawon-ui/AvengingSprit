@@ -34,7 +34,15 @@
 사용	Assets/BaseResource/ChapterHost/ch_kind_magic.png	19201	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_match_down.png	4109	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_match_up.png	3944	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_pill.png	6921	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_power_icon.png	1768	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_dice.png	72736	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_1.png	58089	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_2.png	59524	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_3.png	61343	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_4.png	60917	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_5.png	58599	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/ChapterHost/ch_random_flame_6.png	58412	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_rewardbox.png	71731	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_screen_wide.png	2897444	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_star_off.png	1858	GUID 참조(프리팹 · 표 · 재질)
@@ -77,8 +85,8 @@
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Shadow.mat	1916	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Soft.mat	1921	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Title.mat	1922	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	18828716	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	8491250	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	27385458	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	23434732	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP-Bold.ttf	5761728	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP-Regular.otf	4533028	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowBlue.mat	1933	GUID 참조(프리팹 · 표 · 재질)
@@ -89,8 +97,8 @@
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Shadow.mat	1916	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Soft.mat	1921	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Title.mat	1922	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	12597560	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	1883468	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	19033644	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	10456413	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/OriginalPixel SDF.asset	30843	GUID 참조(프리팹 · 표 · 재질)
@@ -595,7 +603,9 @@
 사용	Assets/BaseResource/Shaders/UIAdditiveSprite.shader	2055	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Shaders/UIGray.shader	3166	빌드 경로에서 도달
 사용	Assets/BaseResource/Shaders/UIGrayscale.shader	4029	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Shaders/UISilhouette.shader	3581	빌드 경로에서 도달
+사용	Assets/BaseResource/Shaders/UISilhouette.mat	1033	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Shaders/UISilhouette.shader	3581	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Shaders/UISoftGlow.mat	1449	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/SystemPopup/popup_button_cancel.png	49857	아틀라스 systempopup.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/SystemPopup/popup_button_confirm.png	47159	아틀라스 systempopup.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/SystemPopup/popup_frame.png	227422	아틀라스 systempopup.spriteatlasv2 · 이름 직접
@@ -733,7 +743,7 @@
 사용	Assets/BundleResource/ParticleFx/pfx_streak.mat	2651	주소 ParticleFx/streak
 사용	Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab	387668	주소 UI/Lobby/HostSelectPanel
 사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	687078	주소 UI/InGame/InGameMainUI
-사용	Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab	2754633	주소 UI/Lobby/LobbyMainUI
+사용	Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab	2889726	주소 UI/Lobby/LobbyMainUI
 사용	Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab	29359	주소 UI/Opening/OpeningMainUI
 사용	Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab	26598	주소 UI/Title/TitleMainUI
 사용	Assets/BundleResource/RoomFloor/obj_python_wall.png	158338	주소 roomfloor/obj_python_wall
@@ -828,16 +838,16 @@
 사용	Assets/BundleResource/Sounds/SFX/sfx_38.wav	48700	주소 Sounds/sfx_38
 사용	Assets/BundleResource/TableData/ActiveSkillTable.asset	9116	주소 TableData/ActiveSkillTable
 사용	Assets/BundleResource/TableData/BossTable.asset	15377	주소 TableData/BossTable
-사용	Assets/BundleResource/TableData/BuffTable.asset	5279	주소 TableData/BuffTable
+사용	Assets/BundleResource/TableData/BuffTable.asset	6198	주소 TableData/BuffTable
 사용	Assets/BundleResource/TableData/ChestTable.asset	1327	주소 TableData/ChestTable
 사용	Assets/BundleResource/TableData/EventTable.asset	17064	주소 TableData/EventTable
-사용	Assets/BundleResource/TableData/GameConfig.asset	12877	주소 TableData/GameConfig
+사용	Assets/BundleResource/TableData/GameConfig.asset	13190	주소 TableData/GameConfig
 사용	Assets/BundleResource/TableData/HostTable.asset	29884	주소 TableData/HostTable
 사용	Assets/BundleResource/TableData/PassiveSkillTable.asset	9341	주소 TableData/PassiveSkillTable
-사용	Assets/BundleResource/TableData/RoomTable.asset	709188	주소 TableData/RoomTable
+사용	Assets/BundleResource/TableData/RoomTable.asset	709154	주소 TableData/RoomTable
 사용	Assets/BundleResource/TableData/ShopTable.asset	5490	주소 TableData/ShopTable
 사용	Assets/BundleResource/TableData/SoundTable.asset	15232	주소 TableData/SoundTable
-사용	Assets/BundleResource/TableData/StringTable.asset	133080	주소 TableData/StringTable
+사용	Assets/BundleResource/TableData/StringTable.asset	134929	주소 TableData/StringTable
 사용(동적)	Assets/BaseResource/Card/card_c002.png	48911	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c003.png	44224	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c004.png	50088	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -847,8 +857,8 @@
 사용(동적)	Assets/BaseResource/Card/card_c008.png	32784	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c009.png	47530	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c010.png	49274	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/card_c011.png	4404	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/card_c012.png	3260	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/card_c011.png	42330	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/card_c012.png	9970	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c013.png	5033	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c014.png	3170	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_c015.png	4628	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -3900,7 +3910,6 @@
 안 씀	Assets/BaseResource/ChapterHost/ch_list_left.png	4265	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/ChapterHost/ch_list_right.png	4259	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/ChapterHost/ch_panel.png	476152	아무 데서도 참조 · 이름 사용이 없다
-안 씀	Assets/BaseResource/ChapterHost/ch_pill.png	6921	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/ChapterHost/ch_plate.png	86127	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/ChapterHost/ch_random_icon.png	38440	아무 데서도 참조 · 이름 사용이 없다
 안 씀	Assets/BaseResource/ChapterHost/ch_screen.png	2675664	아무 데서도 참조 · 이름 사용이 없다 (에디터 빌더에만 이름이 나온다)
