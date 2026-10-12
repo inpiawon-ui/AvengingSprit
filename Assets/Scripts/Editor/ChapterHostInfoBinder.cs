@@ -21,7 +21,10 @@ namespace Game.Editor
         private const string LobbyPrefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string Ch = "Assets/BaseResource/ChapterHost";
         private const string SkillIconDir = "Assets/BaseResource/HostSelectPanel";
-        private const string DeathPortrait = SkillIconDir + "/hostportraitimage_death.png";
+        private const string Portraits = "Assets/BaseResource/Growth/Portraits";
+        // 카드 · 육성 화면과 같은 흉상(원작 그림). 작은 아이콘(64px)은 키우면 뭉개져 실루엣이 안 읽혔다
+        private const string DeathPortrait = Portraits + "/portrait_death.png";
+        private const string AdditiveMat = "Assets/BaseResource/Shaders/UIAdditiveSprite.mat";
 
         [MenuItem("Tools/Game/챕터·호스트 — 「?」 카드 · 고른 카드 설명 칸 꽂기")]
         public static void Run()
@@ -35,18 +38,42 @@ namespace Game.Editor
                 if (box == null) { Debug.LogError("[챕터·호스트 설명] CHContent 없음"); return; }
                 var font = box.Find("CHRandomDesc1")?.GetComponent<TMP_Text>();
 
-                // ── 「?」 카드 — 카드 줄 0번 칸에 주사위 타일을 겹친다(사신 실루엣은 판 코드가 CardThumb 에 입힌다)
+                // ── 「?」 카드 — v6 시안 구성: 가린 사신(판 코드가 CardThumb 에 색을 입힌다)을 크게, 그 앞 아래에 주사위 + 「?」.
+                //   랜덤은 별 · 값이 없다 — 이름을 별 자리로 내리고 그 위를 그림이 채운다
                 var card0 = box.Find("CHHostViewport/CHHostContent")?.GetChild(0);
                 if (card0 != null)
                 {
-                    var dice = Img(card0, "RandomDice", Spr($"{Ch}/ch_random_icon.png"));
-                    Local(dice.rectTransform, 33, -12, 36, 48);
-                    dice.transform.SetSiblingIndex(card0.Find("CardThumb") is Transform th ? th.GetSiblingIndex() + 1 : dice.transform.GetSiblingIndex());
+                    if (card0.Find("CardThumb") is RectTransform th) Local(th, 0, 40, 108, 120);
+                    var dice = Img(card0, "RandomDice", Spr(RandomDice));
+                    dice.preserveAspect = true;
+                    Local(dice.rectTransform, 2, -14, 100, 75);
+                    dice.transform.SetSiblingIndex(card0.Find("CardThumb") is Transform th2 ? th2.GetSiblingIndex() + 1 : dice.transform.GetSiblingIndex());
+                    if (card0.Find("CardName") is RectTransform nm) Local(nm, 0, -72, 109, 26);
                 }
 
-                // ── 설명 칸 — 왼쪽 네모(초상 / 가린 사신 + 주사위)
-                C(Img(box, "CHInfoPortrait", null).rectTransform, 121, 965, 112, 112);
-                C(Img(box, "CHInfoRandomDice", Spr($"{Ch}/ch_random_icon.png")).rectTransform, 158, 1009, 44, 58);
+                // ── 설명 칸 — 왼쪽 네모(초상 / 가린 사신 + 주사위). 세로 구분선(배경)은 x 190 언저리
+                C(Img(box, "CHInfoPortrait", null).rectTransform, 110, 952, 128, 120);
+                var infoDice = Img(box, "CHInfoRandomDice", Spr(RandomDice));
+                infoDice.preserveAspect = true;
+                C(infoDice.rectTransform, 114, 1010, 104, 78);
+
+                // 랜덤 글자 — 제목 · 「랜덤」 배지 · 설명 2줄을 위로 모은다(아래에 실루엣 줄 자리)
+                Move(box, "CHRandomTitle", 227, 912, 340, 30);
+                // 「랜덤」 배지는 칸 오른쪽 끝 — 제목 뒤에 붙이면 일본어 · 영어 제목이 길어 가려졌다
+                var pill = Img(box, "CHRandomPill", Spr($"{Ch}/ch_pill.png"));
+                pill.type = Image.Type.Sliced;
+                C(pill.rectTransform, 622, 912, 116, 28);
+                var pillDice = Img(pill.transform, "CHRandomPillDice", Spr(RandomDice));
+                pillDice.preserveAspect = true;
+                Local(pillDice.rectTransform, -32, 0, 30, 22);
+                var pillText = Txt(pill.transform, "CHRandomPillText", font, 15f, Color.white, true);
+                LocalLeft(pillText.rectTransform, -12, 0, 62, 26);
+                Line(pillText, 10f);
+                Move(box, "CHRandomDesc1", 227, 943, 455, 26);
+                Move(box, "CHRandomDesc2", 227, 967, 455, 26);
+
+                // 실루엣 줄 — 주사위 + 카드와 같은 원작 흉상에 푸른 빛만 입힌 것 + 반짝 별(기존 입자 그림)
+                Strip(box, panel);
 
                 // 이름 · 상성 · 설명
                 // ⚠ 한 줄 글자 칸은 글꼴 한 줄 높이보다 넉넉히 — 모자라면 말줄임이 글자를 통째로 지운다(2026-10-12 이름이 안 보였다)
@@ -69,6 +96,94 @@ namespace Game.Editor
                 Debug.Log("[챕터·호스트 설명] 꽂음 — 「?」 카드 · 설명 칸");
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        private const string RandomDice = Ch + "/ch_random_dice.png";
+        private const string Fx = "Assets/BaseResource/ParticleFx";
+
+        /// <summary>실루엣 줄에 서는 몸 — 원작 초상 그대로(색만 입힌다). 순서는 시안(유령 · 갱스터 · …).</summary>
+        private static readonly string[] StripHosts = { "ghost", "gangster", "thug", "amazon", "hopper" };
+
+        private static void Strip(Transform box, Transform panel)
+        {
+            var strip = box.Find("CHRandomStrip") as RectTransform;
+            if (strip == null)
+            {
+                var go = new GameObject("CHRandomStrip", typeof(RectTransform));
+                go.layer = box.gameObject.layer;
+                strip = (RectTransform)go.transform;
+                strip.SetParent(box, false);
+            }
+            C(strip, 445, 1013, 480, 64);
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(AdditiveMat);
+
+            // 빛 · 반짝 별은 입자 텍스처(스프라이트가 아니다)를 가산으로 — Image 에 넣으면 빈 네모가 그려졌다(2026-10-12)
+            //   주사위 뒤 빛(glow.png)은 뺐다 — 터지는 모양이라 폭발처럼 보였다
+            if (strip.Find("StripDiceGlow") is Transform oldGlow) Object.DestroyImmediate(oldGlow.gameObject);
+            var dice = Img(strip, "StripDice", Spr(RandomDice));
+            dice.preserveAspect = true;
+            Local(dice.rectTransform, -200, 0, 78, 58);
+
+            var tint = new Color(0.55f, 0.78f, 1f, 0.95f);   // 푸른 빛 실루엣 — 원작 흉상에 색만 입힌다
+            for (int i = 0; i < StripHosts.Length; i++)
+            {
+                // 카드에 쓰는 흉상과 같은 그림(판의 _hostArts) — portrait_* 은 전신이라 작게 줄 서 보였다
+                var face = Img(strip, $"StripHost{i}", ThumbOf(panel, StripHosts[i]));
+                face.preserveAspect = true;
+                face.color = tint;
+                Local(face.rectTransform, -125 + i * 76, 0, 68, 64);
+            }
+            var stars = new (float x, float y, float s)[]
+            {
+                (-250, 22, 18), (-150, 26, 14), (-95, -22, 12), (-15, 28, 16), (60, -24, 12), (135, 26, 16), (205, -18, 14), (232, 24, 12),
+            };
+            for (int i = 0; i < stars.Length; i++)
+            {
+                var st = Raw(strip, $"StripStar{i}", Tex($"{Fx}/star4.png"), mat);
+                st.color = new Color(1f, 0.95f, 0.70f, 0.85f);
+                Local(st.rectTransform, stars[i].x, stars[i].y, stars[i].s, stars[i].s);
+            }
+        }
+
+        private static Sprite ThumbOf(Transform panel, string key)
+        {
+            var comp = panel.GetComponent<Game.Module.Lobby.ChapterHostPanel>();
+            if (comp == null) return null;
+            var arts = new SerializedObject(comp).FindProperty("_hostArts");
+            for (int i = 0; i < arts.arraySize; i++)
+            {
+                var a = arts.GetArrayElementAtIndex(i);
+                if (a.FindPropertyRelative("Key").stringValue == key)
+                    return a.FindPropertyRelative("Thumb").objectReferenceValue as Sprite;
+            }
+            return null;
+        }
+
+        private static RawImage Raw(Transform parent, string name, Texture tex, Material mat)
+        {
+            var t = parent.Find(name);
+            if (t == null)
+            {
+                var go = new GameObject(name, typeof(RectTransform));
+                go.layer = parent.gameObject.layer;
+                t = go.transform;
+                t.SetParent(parent, false);
+            }
+            if (t.GetComponent<Image>() is Image old) Object.DestroyImmediate(old);   // 예전에 Image 로 꽂은 것
+            var raw = t.GetComponent<RawImage>();
+            if (raw == null) raw = t.gameObject.AddComponent<RawImage>();
+            raw.texture = tex;
+            raw.material = mat;
+            raw.raycastTarget = false;
+            return raw;
+        }
+
+        private static Texture Tex(string path) => AssetDatabase.LoadAssetAtPath<Texture>(path);
+
+        /// <summary>있는 글자 칸을 옮긴다(왼쪽 끝 x · 가운데 y, 화면 px).</summary>
+        private static void Move(Transform box, string name, float x, float y, float w, float h)
+        {
+            if (box.Find(name) is RectTransform r && r.TryGetComponent<TMP_Text>(out var t)) L(t, x, y, w, h);
         }
 
         private static void Skill(Transform box, string name, float x, float y, TMP_Text font)

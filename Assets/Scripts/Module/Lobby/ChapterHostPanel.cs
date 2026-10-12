@@ -653,10 +653,13 @@ namespace Game.Module.Lobby
             }
             _ui.SetActive("CHInfoRandomDice", random);
 
-            // 랜덤 글자
+            // 랜덤 글자 · 「랜덤」 배지 · 실루엣 줄(v6 시안)
             _ui.SetActive("CHRandomTitle", random);
             _ui.SetActive("CHRandomDesc1", random);
             _ui.SetActive("CHRandomDesc2", random);
+            _ui.SetActive("CHRandomPill", random);
+            _ui.SetActive("CHRandomStrip", random);
+            if (random) _ui.SetText("CHRandomPillText", Localize.FromTable("ui.chapterhost.random_badge", "랜덤"));
 
             // 몸 글자
             _ui.SetActive("CHInfoName", !random);

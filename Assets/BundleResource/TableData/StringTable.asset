@@ -2869,3 +2869,24 @@ MonoBehaviour:
     _ko: "\uB9C8\uBC95"
     _ja: "\u9B54\u6CD5"
     _en: Magic
+  - _key: ui.chapterhost.random_badge
+    _ko: "\uB79C\uB364"
+    _ja: "\u30E9\u30F3\u30C0\u30E0"
+    _en: Random
+  - _key: ui.chapterhost.random
+    _ko: "\uB79C\uB364 \uC120\uD0DD"
+    _ja: "\u30E9\u30F3\u30C0\u30E0\u9078\u629E"
+    _en: Random Pick
+  - _key: ui.chapterhost.randomdesc1
+    _ko: "\uBAA8\uB4E0 \uD638\uC2A4\uD2B8 \uC911 \uD558\uB098\uAC00 \uB79C\uB364\uC73C\uB85C
+      \uC120\uD0DD\uB429\uB2C8\uB2E4."
+    _ja: "\u5168\u30DB\u30B9\u30C8\u306E\u4E2D\u304B\u30891\u4F53\u304C\u30E9\u30F3\u30C0\u30E0\u3067\u9078\u3070\u308C\u307E\u3059\u3002"
+    _en: One of all hosts is picked at random.
+  - _key: ui.chapterhost.randomdesc2
+    _ko: "\uB0AE\uC740 \uD655\uB960\uB85C \uC804\uC124 \uD638\uC2A4\uD2B8 \uB4F1\uC7A5!"
+    _ja: "\u4F4E\u78BA\u7387\u3067\u4F1D\u8AAC\u306E\u30DB\u30B9\u30C8\u304C\u767B\u5834\uFF01"
+    _en: Small chance of a legendary host!
+  - _key: ui.chapterhost.ghost_power
+    _ko: "\uBAB8 \uC5C6\uC74C"
+    _ja: "\u4F53\u306A\u3057"
+    _en: No body
