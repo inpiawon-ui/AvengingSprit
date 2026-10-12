@@ -123,7 +123,7 @@ MonoBehaviour:
     - actor_enforcer
     Pattern: 1
     Crowd: 0.25
-    Fire: 0.75
+    Fire: 0.9
     EnemyHpMul: 0.8
     EnemyAtkMul: 1
     BossHp: 1650
@@ -156,7 +156,7 @@ MonoBehaviour:
     - boar
     Pattern: 2
     Crowd: 0.8
-    Fire: 0.7
+    Fire: 0.85
     EnemyHpMul: 1.25
     EnemyAtkMul: 1
     BossHp: 2731
@@ -188,7 +188,7 @@ MonoBehaviour:
     - mole
     Pattern: 3
     Crowd: 0.75
-    Fire: 0.66
+    Fire: 0.82
     EnemyHpMul: 1.45
     EnemyAtkMul: 1
     BossHp: 3301
@@ -220,7 +220,7 @@ MonoBehaviour:
     - armadillo
     Pattern: 4
     Crowd: 0.7
-    Fire: 0.63
+    Fire: 0.8
     EnemyHpMul: 1.66
     EnemyAtkMul: 1.03
     BossHp: 3942
@@ -253,7 +253,7 @@ MonoBehaviour:
     - mushroom
     Pattern: 5
     Crowd: 0.6
-    Fire: 0.6
+    Fire: 0.78
     EnemyHpMul: 1.93
     EnemyAtkMul: 1.08
     BossHp: 4739
@@ -286,7 +286,7 @@ MonoBehaviour:
     - mantis
     Pattern: 6
     Crowd: 0.5
-    Fire: 0.58
+    Fire: 0.76
     EnemyHpMul: 2.42
     EnemyAtkMul: 1.2
     BossHp: 6141
@@ -319,7 +319,7 @@ MonoBehaviour:
     - boar
     Pattern: 7
     Crowd: 0.45
-    Fire: 0.56
+    Fire: 0.74
     EnemyHpMul: 2.77
     EnemyAtkMul: 1.33
     BossHp: 7217
@@ -352,7 +352,7 @@ MonoBehaviour:
     - spider
     Pattern: 7
     Crowd: 0.45
-    Fire: 0.56
+    Fire: 0.74
     EnemyHpMul: 3.22
     EnemyAtkMul: 1.41
     BossHp: 8599
@@ -385,7 +385,7 @@ MonoBehaviour:
     - mummy
     Pattern: 7
     Crowd: 0.45
-    Fire: 0.56
+    Fire: 0.74
     EnemyHpMul: 4.1
     EnemyAtkMul: 1.71
     BossHp: 11200
@@ -419,7 +419,7 @@ MonoBehaviour:
     - turret_cross
     Pattern: 7
     Crowd: 0.45
-    Fire: 0.56
+    Fire: 0.74
     EnemyHpMul: 4.72
     EnemyAtkMul: 1.8
     BossHp: 13152

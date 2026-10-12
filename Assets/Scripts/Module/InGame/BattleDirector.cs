@@ -822,7 +822,8 @@ namespace Game.Module.InGame
                     EnemySpeedOf(e),
                     EnemyRangeOf(e),
                     // 챕터 연사 배율 — 전역 손 속도 0.7 이 적만 느리게 해 「연사가 너무 느리다」(PD 2026-10-12)
-                    EnemyIntervalOf(e, elite) / EnemyHandSpeedMul * _config.ChapterFireMul(_runChapter),
+                    EnemyIntervalOf(e, elite) / EnemyHandSpeedMul * _config.ChapterFireMul(_runChapter)
+                        * EnemyCadenceMul(e, isHost, elite),
                     // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
                     // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
                     // 집행자 자리의 돌 고릴라(2026-10-07)는 96 캔버스라 잡몹 상자에 넣는다 —
@@ -844,6 +845,23 @@ namespace Game.Module.InGame
             ApplyFacingSprites(u, e.SpriteKey);
             _enemies.Add(u);
             return u;
+        }
+
+        /// <summary>
+        /// 방 적 공격 간격을 늘리는 몫(PD 2026-10-12 「공격 쿨이 너무 짧다」).
+        /// 원거리(잡몹 · 적 몸) ×1.6 — 사거리를 두 배로 늘려 화면 어디서나 쏘게 됐는데 간격은 근접과 같아
+        ///   순찰기가 부채꼴 3발을 0.7초마다, 기관총 특공대가 0.44초마다 쐈다. 「쏘고 · 쉬고」가 보이게 한다.
+        /// 근접 적 몸 ×1.3 — 폭력배가 0.45초마다 휘둘렀다. 근접 잡몹은 그대로(붙어야 때리니 피할 틈이 있다).
+        /// 엘리트는 관문이라 그대로 둔다.
+        /// </summary>
+        private const float RangedEnemyIntervalMul = 1.6f;
+        private const float MeleeBodyIntervalMul = 1.3f;
+
+        private static float EnemyCadenceMul(HostEntry e, bool isHost, bool elite)
+        {
+            if (elite) return 1f;
+            if (!IsMeleeKind(e.Kind)) return RangedEnemyIntervalMul;
+            return isHost ? MeleeBodyIntervalMul : 1f;
         }
 
         // ── 방 밀도 (PD 2026-10-12 「궁수의 전설 2 는 2챕터만 돼도 10마리 구간이 있다」) ──
@@ -876,9 +894,8 @@ namespace Game.Module.InGame
                 var e = TrashOfRole(wantRanged, _runChapter, _roomIndex + k);
                 if (e == null) { wantRanged = !wantRanged; e = TrashOfRole(wantRanged, _runChapter, _roomIndex + k); }
                 if (e == null) continue;
-                // 같은 역할의 잡몹 옆에 세운다(쏘는 놈은 뒤쪽 · 붙는 놈은 앞쪽에 모인다). 없으면 아무 자리 옆
                 var src = CrowdAnchor(seeds, wantRanged, k);
-                if (src == null || !TryCrowdSpot(src, out var at)) continue;
+                if (src == null || !TryCrowdSpot(seeds, src, out var at)) continue;
                 SpawnRoomUnit(e, false, false, at, $"Trash_{e.HostKey}_crowd{k}");
                 total++;
                 if (wantRanged) ranged++;
@@ -901,28 +918,47 @@ namespace Game.Module.InGame
             return null;
         }
 
-        /// <summary>원래 자리 둘레 1.2 m 의 여덟 방향 중 걸을 수 있고 다른 적과 겹치지 않는 곳.</summary>
-        private bool TryCrowdSpot(Unit src, out Vector2 at)
+        // 더 세우는 자리 — **흩어 세운다**(PD 2026-10-12 「몬스터를 왜 이렇게 뭉쳐 놨어 · 원거리가 너무 뭉쳐 있다」).
+        //   예전에는 같은 역할 잡몹 옆 1.2 m 에 붙여 원거리끼리 한 덩어리가 됐다.
+        //   이제 손으로 짠 잡몹 자리들 둘레(2.2 · 3.2 m, 여덟 방향)를 다 보고 **가장 가까운 적과 가장 먼 곳**을 고른다.
+        //   1.6 m 안에 다른 적이 있는 곳은 안 쓴다. 손 배치의 가장 아래 자리보다 플레이어 쪽으로는 내려오지 않는다.
+        private static readonly float[] CrowdRings = { 2.2f, 3.2f };
+        private const float CrowdMinGapMeters = 1.6f;
+
+        private bool TryCrowdSpot(List<Unit> seeds, Unit src, out Vector2 at)
         {
-            float r = Meters(1.2f);
-            int start = (src.GetEntityId().GetHashCode() & 7);
-            for (int i = 0; i < 8; i++)
-            {
-                float deg = ((start + i) % 8) * 45f;
-                var cand = ClampedInField(src, src.Position + new Vector2(Mathf.Cos(deg * Mathf.Deg2Rad), Mathf.Sin(deg * Mathf.Deg2Rad)) * r);
-                if (!Walkable(src, cand)) continue;
-                bool crowded = false;
-                for (int j = 0; j < _enemies.Count; j++)
-                {
-                    var o = _enemies[j];
-                    if (o != null && o.IsAlive && (o.Position - cand).sqrMagnitude < Meters(0.8f) * Meters(0.8f)) { crowded = true; break; }
-                }
-                if (crowded) continue;
-                at = cand;
-                return true;
-            }
+            float lowest = float.PositiveInfinity;
+            for (int i = 0; i < seeds.Count; i++)
+                if (seeds[i] != null) lowest = Mathf.Min(lowest, seeds[i].Position.y);
+
+            float best = Meters(CrowdMinGapMeters);
+            bool found = false;
             at = default;
-            return false;
+            for (int s = 0; s < seeds.Count; s++)
+            {
+                var anchor = seeds[s];
+                if (anchor == null) continue;
+                for (int r = 0; r < CrowdRings.Length; r++)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        float rad = (i * 45f + 22.5f * r) * Mathf.Deg2Rad;
+                        var cand = ClampedInField(src, anchor.Position + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * Meters(CrowdRings[r]));
+                        if (cand.y < lowest || !Walkable(src, cand)) continue;
+                        float gap = float.PositiveInfinity;
+                        for (int j = 0; j < _enemies.Count; j++)
+                        {
+                            var o = _enemies[j];
+                            if (o != null && o.IsAlive) gap = Mathf.Min(gap, (o.Position - cand).magnitude);
+                        }
+                        if (gap <= best) continue;
+                        best = gap;
+                        at = cand;
+                        found = true;
+                    }
+                }
+            }
+            return found;
         }
 
         /// <summary>

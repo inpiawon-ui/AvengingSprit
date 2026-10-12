@@ -550,10 +550,10 @@ namespace Game.Module.InGame
         //   유도탄이 되어 비키는 것이 답이 아니게 된다.
 
         // 쉬는 시간은 그 몸의 공격 간격에 비례한다 — 챕터 연사 배율(chapters.tsv fire)이 연발에도 먹게(2026-10-12).
-        //   사수 2챕터 간격 0.75 → 쉼 1.9초(예전 고정값과 같다), 뒤 챕터일수록 짧아진다.
+        //   사수 2챕터 간격 약 1.45(원거리 ×1.6 포함) → 쉼 약 2.3초, 뒤 챕터일수록 짧아진다.
         // 발 사이 0.22초 — 맞은 뒤 흘리는 0.4초(HurtGraceSeconds)보다 짧으면 둘째 발이 늘 흘려진다.
         //   0.22 면 세 발 중 첫 발 · 셋째 발이 들어온다(안 비키면 두 대).
-        private const float BurstIdlePerInterval = 2.5f;
+        private const float BurstIdlePerInterval = 1.6f;   // 2.5 → 1.6 — 원거리 간격 자체를 ×1.6 늘려서(2026-10-12)
         private const float BurstIdleMinSeconds  = 1.0f;
         private const float BurstTellSeconds = 0.45f;
         private const float BurstGapSeconds  = 0.22f;
