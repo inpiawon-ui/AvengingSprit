@@ -1465,6 +1465,7 @@ namespace Game.Module.InGame
                 panel.color = panelArt != null ? Color.white
                                                : new Color(0.078f, 0.102f, 0.157f, 0.98f);
             }
+            SetCardCrown(panel != null ? panel.rectTransform : null, entry.Rarity == CardRarity.Legendary);
 
             // ② 칩
             var chip = _ui.Get<Image>($"BuffCard{i}Chip");
@@ -1495,6 +1496,30 @@ namespace Game.Module.InGame
             //   `card_frame_*` 그림은 그대로 두었다. 되살리려면 이 블록만 풀면 된다.
             var frame = GetOrMakeCardImage((RectTransform)icon.transform.parent, "IconFrame");
             if (frame != null) frame.enabled = false;
+        }
+
+        // 전설 카드 왕관 — 통일 카드판(2026-10-12)은 네 등급이 같은 몸통이고, 전설만 위테두리에 왕관 장식이 앉는다.
+        // 왕관은 카드 위로 튀어나와 몸통 그림과 따로 뗐다(카드 크기를 네 장 같게). 자리 = Projects/AVSR/Tools/cut_cardpanels.py 출력
+        private static readonly Rect CrownRect = new(50f, -17f, 62f, 35f);   // 카드 왼쪽 위 기준(x, y 아래로 +, 폭, 높이)
+
+        private void SetCardCrown(RectTransform card, bool legendary)
+        {
+            if (card == null) return;
+            var crownArt = legendary && _cardAtlas != null ? _cardAtlas.GetSprite("cardcrown_legendary") : null;
+            var crown = card.Find("Crown") as RectTransform;
+            if (crownArt == null)
+            {
+                if (crown != null) crown.gameObject.SetActive(false);
+                return;
+            }
+            var img = GetOrMakeCardImage(card, "Crown");
+            var rt = img.rectTransform;
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);   // 배치 툴과 같은 왼쪽 위 기준
+            rt.anchoredPosition = new Vector2(CrownRect.x, -CrownRect.y);
+            rt.sizeDelta = CrownRect.size;
+            img.sprite = crownArt;
+            img.color = Color.white;
+            img.gameObject.SetActive(true);
         }
 
         // ── 카드 그림 ────────────────────────────────────────────

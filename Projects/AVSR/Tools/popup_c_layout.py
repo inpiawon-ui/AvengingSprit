@@ -104,20 +104,15 @@ node(P, 'BuffSubText', *at(LV, 180, 241), 329, 38, role='hint')
 for i, fx in enumerate((52, 264, 477)):
     c = 'BuffCard%d' % i
     node(P, c, *at(LV, fx, 368), 162, 320, sliced=True)
-    # 등급 글자는 카드 그림에 이미 있는 명판(190x350 그림 중 x 25~165 · y 33~62 → 카드 162x320 에서 x 21~141 · y 28~54) 안에 —
-    # 따로 얹던 칩 그림은 명판과 겹쳐 「등급 밑 빈 네모」로 보였다(PD 10-08). 칩은 자리만 남기고 그림을 끈다(hide)
-    node(P, c + 'Chip', 21, 28, 120, 26, parent=c, hide=True)
-    node(P, c + 'ChipText', 8, 0, 104, 26, parent=c + 'Chip', role='card_chip', group='buff_chip')   # 명판 양끝 나사 안쪽
-    # 아이콘은 명판(y 28~54) 아래부터 — y 40 이면 아이콘 위쪽이 RARE 글자를 14px 덮었다(PD 10-09).
-    # 내린 만큼 이름과 안 부딪치게 120 → 110 으로 줄이고 가운데(21 + 5)
-    node(P, c + 'Icon', 26, 58, 110, 110, parent=c)
-    # 이름 · 설명은 카드 안쪽 테두리(좌우 약 12px) 안에 — 영어 이름(Flame Brand)이 테두리에 닿고
-    # 일본어 설명 첫 줄이 안쪽 테두리 선에 붙었다(3언어 게임 캡처 2026-10-09)
-    # 이름은 더 줄어들 수 있게(name_s, 최소 12) — 영어 「Chain Lightning」이 최소 18 로도 163px 라 칸 138 을 넘었다
-    node(P, c + 'Name', 16, 172, 130, 34, parent=c, role='card_name', group='buff_name')   # 카드판 안쪽 테두리(좌우 16) 안
-    # 카드 그림 안쪽 테두리(좌우 약 12px)에 글자가 닿지 않게 — 일본어 두 줄이 테두리에 붙었다(게임 캡처 2026-10-08)
-    # EPIC · COMMON 카드 그림의 설명 상자(안쪽 테두리) 안 — 일본어 세 줄이 상자 선에 닿았다
-    node(P, c + 'Desc', 22, 210, 118, 90, parent=c, role='card_desc', align='center', group='buff_desc')
+    # 통일 카드판(2026-10-12, PD 「카드 프레임들이 다 다른데 통일하는 게 낫지 않아?」) — 네 등급이 같은 몸통이라 칸도 하나.
+    # 자리 = 카드판 그림(190x350)의 상자 안쪽을 재서 카드 칸(162x320, Simple 로 그대로 줄임)에 옮긴 값(Tools/cut_cardpanels.py):
+    #   명판 x 42~146 · y 31~48 / 아이콘 칸 x 33~156 · y 56~178 / 이름 띠 x 32~156 · y 181~212 / 설명 상자 y 216~293.
+    # ⚠ 예전엔 등급마다 그림 속 상자가 달라 한 칸을 쓰니 전설 설명이 아래 테두리에 잘렸다(PD 10-12 「텍스트는 삐져나가면 안 돼」)
+    node(P, c + 'Chip', 36, 28, 89, 16, parent=c, hide=True)   # 칩 그림은 끈다 — 명판이 카드 그림에 있다(PD 10-08)
+    node(P, c + 'ChipText', 0, 0, 89, 16, parent=c + 'Chip', role='card_chip', group='buff_chip')
+    node(P, c + 'Icon', 29, 54, 104, 104, parent=c)
+    node(P, c + 'Name', 30, 167, 102, 26, parent=c, role='card_name', group='buff_name')
+    node(P, c + 'Desc', 30, 200, 102, 66, parent=c, role='card_desc', align='center', group='buff_desc')
 
 # ── 회복의 제단 ───────────────────────────────────────────
 P = 'ShrinePanel'
