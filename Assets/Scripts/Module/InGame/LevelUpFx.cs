@@ -13,16 +13,17 @@ namespace Game.Module.InGame
     ///
     /// 정답 시안(`Projects/AVSR/_exchange/in/`) · 가이드 `guide_tiers_fx.md`:
     ///   (광택이 카드를 훑던 것은 뺐다 — PD 2026-10-12 「팝업 시작할 때 옆으로 지나가는 빗금 없애, 안 이뻐」)
-    ///   등장 · 머묾 = 등급 명판(카드 맨 위 「RARE · EPIC · LEGENDARY」) 둘레에 등급색 빛이 은은히 번진다 —
-    ///          COMMON 없음 / RARE 옅게 / EPIC 조금 더 / LEGENDARY 더 밝게 + 등장 반짝 별 · 머묾 반짝 별 가끔
-    ///          (카드 위로 내려오던 빛기둥은 뺐다 — PD 2026-10-12 「카드 등급 표기 겉에 은은하게 블러, 빛줄기는 이상해」)
+    ///   등장 · 머묾 = 카드 테두리 바깥으로 등급색 빛이 은은히 번진다(카드 바로 뒤 부드러운 사각 빛) —
+    ///          COMMON 없음 / RARE · EPIC · LEGENDARY 등급색, 알파 0.7 ~ 1 을 1초에 한 번 숨쉼 / LEGENDARY + 등장 · 머묾 반짝 별
+    ///          (PD 2026-10-12 「카드 등급 표기 겉에 은은하게 블러, 빛줄기는 이상해」 · 「알파 0.7~1, 1초」 ·
+    ///           「타이틀에만 강조하는 게 아니라」 · 「타이틀에 저렇게 하는 거 제거, 촌스러워」 — 위로 내려오던 빛기둥 · 명판 고리 빛은 뺐다)
     ///          + 창 둘레 금빛 알갱이(mock_lvpopup_free_idle, 등급 무관)
     ///   고름 = mock_lvpopup_free_peak — 고른 카드 둘레 등급색 빛살 + 알갱이(그대로)
     ///   깃듦 = mock_lvgain_free_peak 그대로(광원 · 빛기둥 · 바닥 고리 · 솟는 알갱이) — 새 시안의 가는 섬광으로 바꿨다가
     ///          PD 2026-10-12 「유령에 적용되는 이펙트는 전에께 더 이쁘고 좋았다, 굳이 퀄을 떨굴 필요 없다」로 되돌렸다
-    /// 명판 빛은 카드 안 · 명판 글자 **아래** 형제 — 카드 사이 틈으로 번지지 않는다
+    /// 테두리 빛은 카드 모양 그대로 카드보다 조금만 크다 — 카드 사이 틈을 메우지 않는다
     /// (PD 2026-10-10 「카드 뒤에 있는 이펙트들 지저분해 보인다」 = 카드 뒤로 크게 번지던 둥근 광원이었다).
-    /// 겹: 명판 빛 · 깃듦 광원 · 빛기둥 · 고리 = 빛 셰이더(`ParticleFx/glight`) · 빛살 = `fx_levelup_card_rays` ·
+    /// 겹: 테두리 빛 · 깃듦 광원 · 빛기둥 · 고리 = 빛 셰이더(`ParticleFx/glight`) · 빛살 = `fx_levelup_card_rays` ·
     ///     반짝 별 · 알갱이 = 파티클(`fx_result_mote_1/2`).
     /// 크기는 모든 등급이 같고, 위로 갈수록 이펙트 종류 · 파티클 수를 더한다. 값은 <see cref="Tiers"/> 표 하나에.
     /// 시간은 실제 시간 — 레벨업 창 · 보상 연출은 게임 시간이 서 있어도 돈다.
@@ -31,8 +32,8 @@ namespace Game.Module.InGame
     {
         private struct Tier
         {
-            public float Plate;         // 등장 · 머묾 — 등급 명판 둘레 빛 밝기(0 = 없음)
-            public int AppearStars;     // 등장 — 명판 빛이 차오를 때 터지는 반짝 별 수
+            public float Halo;          // 등장 · 머묾 — 카드 테두리 바깥 빛(0 = 없음, 그 외는 알파 0.7 ~ 1 숨쉬기)
+            public int AppearStars;     // 등장 — 테두리 빛이 차오를 때 터지는 반짝 별 수
             public float IdleStarGap;   // 머묾 — 카드 모서리 반짝 별 간격(초, 0 = 없음)
             public int PickBurst;       // 고름 — 튀는 알갱이 수
             public int PickStars;       // 고름 — 같이 터지는 반짝 별 수
@@ -45,20 +46,18 @@ namespace Game.Module.InGame
         // COMMON = 기본(테두리만), 위 등급은 이펙트 종류 · 파티클 수를 한 겹씩 — 크기는 같다(스킬 fx-art-pipeline 2-1)
         private static readonly Tier[] Tiers =
         {
-            new() { Plate = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
-            new() { Plate = 0.6f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
-            new() { Plate = 0.75f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
-            new() { Plate = 0.9f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
+            new() { Halo = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
+            new() { Halo = 1f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
+            new() { Halo = 1f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
+            new() { Halo = 1f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
         };
 
         private const int CardCount = 3;
         // 빛살 그림(520x760)의 안쪽 구멍 실측 176x421 을 카드 162x320 에 맞춘 크기(가로 0.88 · 세로 0.74)
         private static readonly Vector2 RaysSize = new(458f, 562f);
         private const float AppearAt = 0.22f;      // 명판 빛이 가장 밝아지는 때(등장, 강)
-        // 명판(카드 칸 162x320 기준 x 36~125 · y 28~44, 배치 표 BuffCard*Chip) 테두리 바로 바깥을 도는 고리 빛.
-        // 속까지 번지는 둥근 빛(150x46)은 명판 글자를 같은 색으로 덮어 「RARE」가 안 읽혔다 — 테두리 둘레만 은은하게(게임 시험 4안 중 고름)
-        private static readonly Vector2 PlateGlowSize = new(124f, 40f);
-        private static readonly Vector2 PlateCenter = new(80.5f, -36f);   // 카드 왼쪽 위 기준
+        private const float HaloAlphaMin = 0.7f, HaloPulseSeconds = 1f;   // 테두리 빛 숨쉬기 — 알파 0.7 ~ 1, 1초
+        private static readonly Vector2 HaloMargin = new(36f, 36f);   // 카드(162x320)보다 사방 18 크게 — 바깥으로 보이는 빛 폭
 
         private PopupFxPlayer _fx;
         private Material _light;   // 번들 ParticleFx/glight — 깃듦 광원 · 빛기둥 · 고리
@@ -71,8 +70,8 @@ namespace Game.Module.InGame
         private readonly Color[] _cardColor = new Color[CardCount];
         private readonly Tier[] _cardTier = new Tier[CardCount];
         private readonly float[] _nextIdleStar = new float[CardCount];
-        private readonly Image[] _plateGlow = new Image[CardCount];
-        private Material _plateMaterial;
+        private readonly Image[] _cardHalo = new Image[CardCount];
+        private Material _haloMaterial;
         private readonly bool[] _appearDone = new bool[CardCount];
         private Image _rays0, _rays1;   // 같은 빛살 두 장을 겹쳐 더한다 — 한 장으로는 시안보다 흐렸다(녹화 vP)
         private ParticleSystem _panelParticles;
@@ -131,7 +130,7 @@ namespace Game.Module.InGame
                 _cardColor[i] = colors[i];
                 _cardTier[i] = Tiers[Mathf.Clamp((int)rarities[i], 0, Tiers.Length - 1)];
                 _nextIdleStar[i] = AppearAt + Random.Range(0.4f, 0.9f);
-                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
+                if (_cardHalo[i] != null) _cardHalo[i].enabled = false;
             }
             if (_rays0 == null && Has(_rays) && _cards[0] != null)
                 _rays0 = Behind(_cards[0], "CardRays", _additive, RaysSize);
@@ -153,7 +152,7 @@ namespace Game.Module.InGame
             if (_rays1 != null) _rays1.enabled = false;
             for (int i = 0; i < CardCount; i++)
             {
-                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
+                if (_cardHalo[i] != null) _cardHalo[i].enabled = false;
             }
             if (_panelParticles != null) _panelParticles.Clear();
         }
@@ -166,13 +165,14 @@ namespace Game.Module.InGame
                 var card = _cards[i];
                 if (card == null || !card.gameObject.activeInHierarchy) continue;
                 var tier = _cardTier[i];
-                // 고르면 다른 카드의 명판 빛은 0.2초에 사그라든다 — 고른 카드는 빛살이 맡는다
-                float pickFade = _picked < 0 || _picked == i ? 1f : 1f - Mathf.Clamp01(_pickClock / 0.2f);
-                TickPlate(i, t, tier, pickFade);
+                // 고르는 순간 테두리 빛은 모두 끈다 — 고른 카드는 빛살이 맡고, 카드가 포커스로 반투명해지는 동안
+                // 뒤의 빛이 비쳐 카드가 통째로 등급색으로 물들었다(녹화 final_1012g)
+                float pickFade = _picked < 0 ? 1f : 0f;
+                TickHalo(i, t, tier, pickFade);
                 if (_picked >= 0) continue;
                 if (!_appearDone[i] && t >= AppearAt)
                 {
-                    // 등장(강) — 명판 빛이 차오르는 순간 카드 윗변에서 반짝 별이 튄다
+                    // 등장(강) — 테두리 빛이 차오르는 순간 카드 둘레에서 반짝 별이 튄다
                     _appearDone[i] = true;
                     if (tier.AppearStars > 0)
                         Burst(_panelParticles, card, tier.AppearStars / 2, tier.AppearStars, Color.Lerp(_cardColor[i], Color.white, 0.5f), 0.5f);
@@ -196,46 +196,55 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 명판 빛 — 등급 글자 판 테두리 둘레에 등급색이 부드럽게 번진다(속은 비운다). 등장 때 0 → 1 로 차올랐다(<see cref="AppearAt"/>, 강)
-        /// 표의 밝기로 내려앉아 천천히 숨쉰다(약). 카드 안 · 명판 바로 앞 형제라 명판 글자는 빛 위에 선다.
+        /// 테두리 빛 — 카드 바로 뒤에 카드보다 조금 큰 부드러운 사각 빛. 카드가 가운데를 덮어 테두리 바깥만 번져 보인다.
+        /// 등장 때 0 → 1 로 차오르고(<see cref="AppearAt"/>), 그 뒤로 알파가 1 ↔ 0.7 을 1초에 한 번 오간다.
+        /// 카드를 따라간다(고른 카드가 커지면 같이).
         /// </summary>
-        private void TickPlate(int i, float t, Tier tier, float pickFade)
+        private void TickHalo(int i, float t, Tier tier, float pickFade)
         {
-            if (tier.Plate <= 0f || pickFade <= 0f)
+            if (tier.Halo <= 0f || pickFade <= 0f)
             {
-                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
+                if (_cardHalo[i] != null) _cardHalo[i].enabled = false;
                 return;
             }
-            var glow = PlateGlow(i);
-            if (glow == null) return;
+            var halo = CardHalo(i);
+            if (halo == null) return;
+            var card = _cards[i];
             float up = Ease.OutCubic(Mathf.Clamp01(t / AppearAt));
-            float settle = Ease.OutCubic(Mathf.Clamp01((t - AppearAt) / 0.5f));
-            float level = t < AppearAt ? up : Mathf.Lerp(1f, tier.Plate, settle);
-            float breathe = t < AppearAt + 0.5f ? 0f : 0.1f * tier.Plate * Mathf.Sin((t - AppearAt) * Mathf.PI * 2f / 2.4f);
-            glow.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.85f, 1f, up);
-            glow.color = WithAlpha(Color.Lerp(_cardColor[i], Color.white, 0.15f), (level + breathe) * pickFade);
-            glow.enabled = true;
+            float pulse = t < AppearAt ? up
+                : Mathf.Lerp(HaloAlphaMin, 1f, 0.5f + 0.5f * Mathf.Cos((t - AppearAt) * Mathf.PI * 2f / HaloPulseSeconds));
+            var rt = halo.rectTransform;
+            Follow(rt, card);
+            rt.sizeDelta = card.rect.size + HaloMargin;
+            rt.localScale = card.localScale;
+            halo.color = WithAlpha(_cardColor[i], tier.Halo * pulse * pickFade);
+            halo.enabled = true;
         }
 
-        /// <summary>명판 빛 한 장 — 빛 셰이더 재질이 와야 만든다. 카드 안 명판(`BuffCard*Chip`) 바로 앞 형제.</summary>
-        private Image PlateGlow(int i)
+        /// <summary>테두리 빛 한 장 — 빛 셰이더 재질이 와야 만든다. 카드 바로 앞 형제(= 카드 뒤에 그려진다).</summary>
+        private Image CardHalo(int i)
         {
-            if (_plateGlow[i] != null) return _plateGlow[i];
+            if (_cardHalo[i] != null) return _cardHalo[i];
             if (_light == null || _cards[i] == null) return null;
-            if (_plateMaterial == null)
-            {
-                _plateMaterial = GlowMaterial(0.06f, 0.3f);
-                _plateMaterial.SetFloat("_RingRadius", 0.82f);   // 명판 가장자리에 고리 — 속은 비워 글자가 읽힌다
-            }
-            var card = _cards[i];
-            var img = NewImage("PlateGlow", card, _plateMaterial, PlateGlowSize, new Vector2(0.5f, 0.5f), PlateCenter);
-            var rt = img.rectTransform;
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-            rt.anchoredPosition = PlateCenter;
-            var chip = card.Find(card.name + "Chip");
-            if (chip != null) rt.SetSiblingIndex(chip.GetSiblingIndex());
-            _plateGlow[i] = img;
-            return img;
+            if (_haloMaterial == null) _haloMaterial = HaloMaterial();
+            _cardHalo[i] = Behind(_cards[i], "CardHalo", _haloMaterial, _cards[i].rect.size + HaloMargin);
+            return _cardHalo[i];
+        }
+
+        /// <summary>
+        /// 부드러운 사각 빛 — 빛 셰이더의 빛기둥 모양을 위아래 폭 같게, 결 · 심 없이 쓴다.
+        /// 가장자리 번짐(가로 0.2 · 세로 0.11)은 카드 밖 18px 안에서 사그라들게 맞춘 값.
+        /// </summary>
+        private Material HaloMaterial()
+        {
+            var m = new Material(_light) { hideFlags = HideFlags.DontSave };
+            m.SetFloat("_Shape", 0f);
+            m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            m.SetFloat("_BottomWidth", 1f); m.SetFloat("_TopWidth", 1f); m.SetFloat("_EdgeSoft", 0.2f);
+            m.SetFloat("_Body", 1f); m.SetFloat("_CoreWidth", 0f); m.SetFloat("_CoreBoost", 0f);
+            m.SetFloat("_FadeTop", 0.11f); m.SetFloat("_FadeBottom", 0.11f);
+            m.SetFloat("_EdgeLine", 0f); m.SetFloat("_Streak", 0f); m.SetFloat("_Scroll", 0f); m.SetFloat("_DashCount", 0f);
+            return m;
         }
 
         // ── 2. 고름 — 카드 둘레 빛살 터짐 ───────────────────────────
