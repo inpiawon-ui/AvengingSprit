@@ -62,6 +62,8 @@ namespace Game.Editor
                     Local(dice.rectTransform, 2, -14, 100, 75);
                     dice.transform.SetSiblingIndex(card0.Find("CardThumb") is Transform th2 ? th2.GetSiblingIndex() + 1 : dice.transform.GetSiblingIndex());
                     if (card0.Find("CardName") is RectTransform nm) Local(nm, 0, -72, 109, 26);
+                    // ③ 카드 뒷면 — 유령 불꽃 문장(PD 2026-10-12 시안 mock_random_cardback)
+                    FlameFx(card0, "RandomFx", 0, 22, 96, 120, 5);
                 }
 
                 // ── 설명 칸 — 왼쪽 네모(초상 / 가린 사신 + 주사위). 세로 구분선(배경)은 x 190 언저리
@@ -70,7 +72,10 @@ namespace Game.Editor
                 infoDice.preserveAspect = true;
                 C(infoDice.rectTransform, 114, 1010, 104, 78);
 
-                // 랜덤 글자 — 제목 · 「랜덤」 배지 · 설명 2줄을 위로 모은다(아래에 실루엣 줄 자리)
+                // ③ 카드 뒷면 — 설명 칸 왼쪽에도 같은 문장(크게)
+                if (FlameFx(box, "CHInfoRandomFx", 0, 0, 104, 130, 6) is RectTransform pf) C(pf, 112, 972, 150, 150);
+
+                // 랜덤 글자 — 제목 · 「랜덤」 배지 · 설명 2줄
                 Move(box, "CHRandomTitle", 227, 912, 340, 30);
                 // 「랜덤」 배지는 칸 오른쪽 끝 — 제목 뒤에 붙이면 일본어 · 영어 제목이 길어 가려졌다
                 var pill = Img(box, "CHRandomPill", Spr($"{Ch}/ch_pill.png"));
@@ -159,6 +164,104 @@ namespace Game.Editor
                 st.color = new Color(1f, 0.95f, 0.70f, 0.85f);
                 Local(st.rectTransform, stars[i].x, stars[i].y, stars[i].s, stars[i].s);
             }
+        }
+
+        /// <summary>유령 불꽃 문장 6장(납품 시트를 자른 것) — `ch_random_flame_1` ~ `_6`.</summary>
+        private static Sprite[] FlameFrames()
+        {
+            var list = new System.Collections.Generic.List<Sprite>();
+            for (int i = 1; i <= 6; i++)
+            {
+                var sp = Spr($"{Ch}/ch_random_flame_{i}.png");
+                if (sp != null) list.Add(sp);
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// 문장 연출 묶음 — 뒤에서 앞으로 번짐(가산) · 문장 · 섬광 겹(가산) · 반짝 별(가산). 움직임은 `RandomPickFx`.
+        /// <paramref name="x"/>,<paramref name="y"/> 는 부모 가운데 기준(위가 +), w · h 는 문장 크기.
+        /// </summary>
+        private static RectTransform FlameFx(Transform parent, string name, float x, float y, float w, float h, int stars)
+        {
+            var frames = FlameFrames();
+            if (frames.Length == 0) { Debug.LogWarning("[챕터·호스트 설명] 불꽃 문장 그림 없음 — ch_random_flame_1~6"); return null; }
+            var root = parent.Find(name) as RectTransform;
+            if (root == null)
+            {
+                var go = new GameObject(name, typeof(RectTransform));
+                go.layer = parent.gameObject.layer;
+                root = (RectTransform)go.transform;
+                root.SetParent(parent, false);
+            }
+            Local(root, x, y, w, h);
+            var add = AssetDatabase.LoadAssetAtPath<Material>(AdditiveMat);
+
+            // 번짐은 그림이 아니라 빛 셰이더(UI/AdditiveLight 고리, 반지름 0 = 둥근 번짐) — glow.png 는 터지는 가시 모양이라 폭발처럼 보였다
+            if (root.Find("FxGlow") is Transform og && og.GetComponent<RawImage>() is RawImage oldRaw) Object.DestroyImmediate(oldRaw);
+            var glow = Img(root, "FxGlow", null);
+            glow.material = SoftGlow();
+            Local(glow.rectTransform, 0, 0, w * 1.6f, w * 1.6f);
+            var emblem = Img(root, "FxEmblem", frames[0]);
+            emblem.preserveAspect = true;
+            Local(emblem.rectTransform, 0, 0, w, h);
+            var flash = Img(root, "FxEmblemFlash", frames[0]);
+            flash.preserveAspect = true;
+            flash.material = add;
+            flash.color = new Color(1f, 1f, 1f, 0f);
+            Local(flash.rectTransform, 0, 0, w, h);
+
+            var starImgs = new RawImage[stars];
+            var spots = new (float x, float y, float s)[]
+            {
+                (-0.55f, 0.38f, 14), (0.52f, 0.30f, 11), (-0.48f, -0.30f, 10), (0.56f, -0.22f, 13), (0.05f, 0.56f, 9), (-0.10f, -0.52f, 11),
+            };
+            for (int i = 0; i < stars; i++)
+            {
+                var sp = spots[i % spots.Length];
+                // 흰 · 푸른 반짝이(ghostmote) — star4 는 주황이라 푸른 색을 곱하면 어두워져 안 보였다
+                var st = Raw(root, $"FxStar{i}", Tex($"{Fx}/ghostmote.png"), add);
+                Local(st.rectTransform, sp.x * w, sp.y * h, sp.s * 1.8f, sp.s * 1.8f);
+                starImgs[i] = st;
+            }
+
+            var fx = root.GetComponent<Game.Module.Lobby.RandomPickFx>();
+            if (fx == null) fx = root.gameObject.AddComponent<Game.Module.Lobby.RandomPickFx>();
+            var so = new SerializedObject(fx);
+            var fr = so.FindProperty("_frames");
+            fr.arraySize = frames.Length;
+            for (int i = 0; i < frames.Length; i++) fr.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
+            so.FindProperty("_frameRate").floatValue = 0f;   // 불꽃은 고정 — 혼자 일렁이면 거슬렸다(PD 2026-10-12)
+            so.FindProperty("_emblem").objectReferenceValue = emblem;
+            so.FindProperty("_emblemFlash").objectReferenceValue = flash;
+            so.FindProperty("_glow").objectReferenceValue = glow;
+            var sa = so.FindProperty("_stars");
+            sa.arraySize = starImgs.Length;
+            for (int i = 0; i < starImgs.Length; i++) sa.GetArrayElementAtIndex(i).objectReferenceValue = starImgs[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return root;
+        }
+
+        private const string SoftGlowMat = "Assets/BaseResource/Shaders/UISoftGlow.mat";
+
+        /// <summary>둥근 부드러운 번짐 재질 — `UI/AdditiveLight` 고리 모양을 반지름 0 · 넓은 번짐으로. 없으면 만든다.</summary>
+        private static Material SoftGlow()
+        {
+            var m = AssetDatabase.LoadAssetAtPath<Material>(SoftGlowMat);
+            if (m == null)
+            {
+                var sh = Shader.Find("UI/AdditiveLight");
+                if (sh == null) { Debug.LogError("[챕터·호스트 설명] UI/AdditiveLight 셰이더 없음"); return null; }
+                m = new Material(sh) { name = "UISoftGlow" };
+                AssetDatabase.CreateAsset(m, SoftGlowMat);
+            }
+            m.SetFloat("_Shape", 1f);
+            m.SetFloat("_RingRadius", 0f);
+            m.SetFloat("_RingWidth", 0.001f);
+            m.SetFloat("_RingGlow", 0.5f);
+            m.SetFloat("_RingWhite", 0f);
+            EditorUtility.SetDirty(m);
+            return m;
         }
 
         private static Sprite ThumbOf(Transform panel, string key)

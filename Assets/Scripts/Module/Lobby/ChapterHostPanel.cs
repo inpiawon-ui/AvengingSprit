@@ -280,6 +280,14 @@ namespace Game.Module.Lobby
             RefreshHosts();
             RefreshStart();
             ShowPicked();
+            // 고르는 순간(강) — 카드 · 설명 칸 문장이 함께 번쩍인다
+            FlashFx(_randomCard != null ? _ui.Find(_randomCard, "RandomFx") : null);
+            FlashFx(_ui.Find("CHInfoRandomFx"));
+        }
+
+        private static void FlashFx(Transform node)
+        {
+            if (node != null && node.TryGetComponent<RandomPickFx>(out var fx)) fx.Flash();
         }
 
         /// <summary>
@@ -610,17 +618,21 @@ namespace Game.Module.Lobby
             var check = _ui.Find(card, "CardCheck");
             if (check != null) check.gameObject.SetActive(_pickedRandom);
 
+            // ③ 카드 뒷면(PD 2026-10-12) — 유령 불꽃 문장. 노드가 없는(꽂기 전) 프리팹이면 예전 실루엣 + 주사위
+            var fx = _ui.Find(card, "RandomFx");
+            bool hasFx = fx != null;
+            if (hasFx) fx.gameObject.SetActive(true);
             var thumb = _ui.Find(card, "CardThumb")?.GetComponent<Image>();
             if (thumb != null)
             {
-                thumb.sprite = _randomDeath;
+                thumb.sprite = hasFx ? null : _randomDeath;
                 thumb.color = SilhouetteTint;
                 thumb.material = _silhouette;
-                thumb.enabled = thumb.sprite != null;
+                thumb.enabled = !hasFx && thumb.sprite != null;
                 thumb.preserveAspect = true;
             }
             var cardDice = _ui.Find(card, "RandomDice");
-            if (cardDice != null) cardDice.gameObject.SetActive(true);
+            if (cardDice != null) cardDice.gameObject.SetActive(!hasFx);
             TextIn(card, "CardName", Localize.FromTable("ui.chapterhost.random", "랜덤 선택"));
             for (int s = 0; s < 5; s++)
             {
@@ -650,6 +662,7 @@ namespace Game.Module.Lobby
             // 왼쪽 네모 — 랜덤이면 가린 사신 + 주사위, 몸이면 초상.
             //   설명 칸 노드가 없는(꽂기 전) 프리팹이면 예전 주사위 그림을 그대로 둔다
             var portrait = _ui.Get<Image>("CHInfoPortrait");
+            bool infoFx = _ui.Find("CHInfoRandomFx") != null;   // ③ 카드 뒷면 문장 — 있으면 실루엣 · 주사위 대신
             _ui.SetActive("CHIconDice", portrait == null && random);
             if (portrait != null)
             {
@@ -659,14 +672,16 @@ namespace Game.Module.Lobby
                 portrait.enabled = portrait.sprite != null;
                 portrait.preserveAspect = true;
             }
-            _ui.SetActive("CHInfoRandomDice", random);
+            _ui.SetActive("CHInfoPortrait", !random || !infoFx);
+            _ui.SetActive("CHInfoRandomDice", random && !infoFx);
+            _ui.SetActive("CHInfoRandomFx", random && infoFx);
 
             // 랜덤 글자 · 「랜덤」 배지 · 실루엣 줄(v6 시안)
             _ui.SetActive("CHRandomTitle", random);
             _ui.SetActive("CHRandomDesc1", random);
             _ui.SetActive("CHRandomDesc2", random);
             _ui.SetActive("CHRandomPill", random);
-            _ui.SetActive("CHRandomStrip", random);
+            _ui.SetActive("CHRandomStrip", false);   // 캐릭터 줄은 뺐다(PD 2026-10-12 「캐릭터 리스트로 넣을 필요 없다」)
             if (random) _ui.SetText("CHRandomPillText", Localize.FromTable("ui.chapterhost.random_badge", "랜덤"));
 
             // 몸 글자

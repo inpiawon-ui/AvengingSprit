@@ -1,0 +1,517 @@
+Reading additional input from stdin...
+OpenAI Codex v0.153.4
+--------
+workdir: C:\won\UnityProject\AvengingSprit
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: low
+reasoning summaries: none
+session id: 01a12eed-39be-7a21-8c76-494900b6e780
+--------
+user
+이미지 생성 도구로 직접 그린다. API 키를 쓰는 CLI 폴백은 쓰지 마라. 스크립트로 도형을 그리거나 다른 그림을 잘라 붙여 때우지 마라 — 이미지 도구가 막히면 그리지 말고 「못 그렸다」고만 답하라. 한 장만 그린다.
+먼저 Projects/AVSR/_exchange/codex_brief_fx.md 와 Projects/AVSR/_exchange/guide_random_pick.md 를 읽는다.
+게임 「Avenging Spirit RE:BORN」(도트 픽셀 아트) 로비 — 「?(랜덤 선택)」 카드와 아래 랜덤 설명 칸 **시안**.
+[바탕] Projects/AVSR/_exchange/ref/hostinfo_mock/base_random_now.png — 지금 실제 게임 화면(720x1280). **「?」 카드(카드 줄 맨 왼쪽, 금색 테두리)와 바로 아래 「랜덤 선택」 칸 두 곳만** 다시 꾸민다. 나머지(다른 카드 · 챕터 칸 · 도전하기 버튼 · 아래 바)는 그대로.
+PD 말: 「너무 구린데, 다른 방식으로 좀 이쁘게 · 캐릭터 리스트로 넣을 필요 없고 · 다른 게임 표현을 참고」. 지금 칸의 사신 실루엣 · 아래 캐릭터 실루엣 줄은 **없앤다**.
+[방향] 네가 아트 디렉터라면 어떻게 꾸미겠나 — 아래 세 방식에 얽매이지 말고 가장 예쁜 안.
+- 설명 칸은 지금 크기 그대로(카드 줄 아래 ~ 도전하기 버튼 바로 위). 글: 「ランダム選択 / 全ホストの中から1体がランダムで選ばれます。/ 低確率で伝説のホストが登場！」 — 글자는 또렷하게, 가리지 않는다.
+- 원작 캐릭터를 새로 그리지 않는다.
+그릴 것: 화면 두 장 나란히 — 왼쪽 = 머무는 장면(골라진 상태), 오른쪽 = 고르는 순간(가장 밝게 빛나는 박자). 각각 720x1280. 그림 아래 여백에 한국어 메모 3줄 이내(무엇이 어떻게 움직이나).
+[저장] Projects/AVSR/_exchange/in/mock_random_free.png
+codex
+이미지 생성 스킬을 사용해, 먼저 지정된 브리프와 가이드를 끝까지 읽고 기준 이미지를 확인한 뒤 한 장짜리 비교 시안을 생성하겠습니다. 이미지 도구가 실패하면 대체 제작 없이 바로 “못 그렸다”고 답하겠습니다.
+exec
+"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw -LiteralPath 'C:\\Users\\inpia\\.codex\\skills\\.system\\imagegen\\SKILL.md'; Get-Content -Raw -LiteralPath 'Projects\\AVSR\\_exchange\\codex_brief_fx.md'; Get-Content -Raw -LiteralPath 'Projects\\AVSR\\_exchange\\guide_random_pick.md'" in C:\won\UnityProject\AvengingSprit
+ succeeded in 173ms:
+---
+name: "imagegen"
+description: "Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas."
+---
+
+# Image Generation Skill
+
+Generates or edits images for the current project (for example website assets, game assets, UI mockups, product mockups, wireframes, logo design, photorealistic images, or infographics).
+
+## Top-level modes and rules
+
+This skill has exactly two top-level modes:
+
+- **Default built-in tool mode (preferred):** built-in `image_gen` tool for image generation, editing, and transparent-image requests. Does not require `OPENAI_API_KEY`.
+- **Fallback CLI mode:** `scripts/image_gen.py` CLI. Use when the user explicitly asks for or confirms the CLI/API/model path. Requires `OPENAI_API_KEY`.
+
+Within CLI fallback, the CLI exposes three subcommands:
+
+- `generate`
+- `edit`
+- `generate-batch`
+
+Rules:
+- Use the built-in `image_gen` tool by default for normal image generation and editing requests.
+- Do not switch to CLI fallback for ordinary quality, size, or file-path control.
+- For transparent images, ask built-in `image_gen` for a transparent background and preserve the generated alpha.
+- Never silently switch from built-in `image_gen` or CLI `gpt-image-2` to CLI `gpt-image-1.5`; ask the user first unless they explicitly requested `gpt-image-1.5`.
+- The word `batch` by itself does not mean CLI fallback. If the user asks for many assets or says to batch-generate assets without explicitly asking for CLI/API/model controls, stay on the built-in path and issue one built-in call per requested asset or variant.
+- If the built-in tool fails or is unavailable, tell the user the CLI fallback exists and that it requires `OPENAI_API_KEY`. Proceed only if the user explicitly asks for that fallback.
+- If the user explicitly asks for CLI mode, use the bundled `scripts/image_gen.py` workflow. Do not create one-off SDK runners.
+- Never modify `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
+
+Built-in save-path policy:
+- In built-in tool mode, Codex saves generated images under `$CODEX_HOME/*` by default.
+- Do not describe or rely on OS temp as the default built-in destination.
+- Do not describe or rely on a destination-path argument (if any) on the built-in `image_gen` tool. If a specific location is needed, generate first and then move or copy the selected output from `$CODEX_HOME/generated_images/...`.
+- Save-path precedence in built-in mode:
+  1. If the user names a destination, move or copy the selected output there.
+  2. If the image is meant for the current project, move or copy the final selected image into the workspace before finishing.
+  3. If the image is only for preview or brainstorming, render it inline; the underlying file can remain at the default `$CODEX_HOME/*` path.
+- Never leave a project-referenced asset only at the default `$CODEX_HOME/*` path.
+- Do not overwrite an existing asset unless the user explicitly asked for replacement; otherwise create a sibling versioned filename such as `hero-v2.png` or `item-icon-edited.png`.
+
+Shared prompt guidance for both modes lives in `references/prompting.md` and `references/sample-prompts.md`.
+
+Fallback-only docs/resources for CLI mode:
+- `references/cli.md`
+- `references/image-api.md`
+- `references/codex-network.md`
+- `scripts/image_gen.py`
+
+## When to use
+- Generate a new image (concept art, product shot, cover, website hero)
+- Generate a new image using one or more reference images for style, composition, or mood
+- Edit an existing image (inpainting, lighting or weather transformations, background replacement, object removal, compositing, transparent background)
+- Produce many assets or variants for one task
+
+## When not to use
+- Extending or matching an existing SVG/vector icon set, logo system, or illustration library inside the repo
+- Creating simple shapes, diagrams, wireframes, or icons that are better produced directly in SVG, HTML/CSS, or canvas
+- Making a small project-local asset edit when the source file already exists in an editable native format
+- Any task where the user clearly wants deterministic code-native output instead of a generated bitmap
+
+## Decision tree
+
+Think about two separate questions:
+
+1. **Intent:** is this a new image or an edit of an existing image?
+2. **Execution strategy:** is this one asset or many assets/variants?
+
+Intent:
+- If the user wants to modify an existing image while preserving parts of it, treat the request as **edit**.
+- If the user provides images only as references for style, composition, mood, or subject guidance, treat the request as **generate**.
+- If the user provides no images, treat the request as **generate**.
+
+Built-in edit semantics:
+- Built-in edit mode is for images already visible in the conversation context, such as attached images or images generated earlier in the thread.
+- If the user wants to edit a local image file with the built-in tool, first load it with built-in `view_image` tool so the image is visible in the conversation context, then proceed with the built-in edit flow.
+- Do not promise arbitrary filesystem-path editing through the built-in tool.
+- If a local file still needs direct file-path control, masks, or other explicit CLI-only parameters, use the explicit CLI fallback only when the user asks for it.
+- For edits, preserve invariants aggressively and save non-destructively by default.
+
+Execution strategy:
+- In the built-in default path, produce many assets or variants by issuing one `image_gen` call per requested asset or variant.
+- In the CLI fallback path, use the CLI `generate-batch` subcommand only when the user explicitly chose CLI mode and needs many prompts/assets.
+- For many distinct assets, do not use `n` as a substitute for separate prompts. `n` is for variants of one prompt; distinct assets need distinct built-in calls or distinct CLI `generate-batch` jobs.
+
+Assume the user wants a new image unless they clearly ask to change an existing one.
+
+## Workflow
+1. Decide the top-level mode: built-in by default, including transparent-output requests; fallback CLI only if explicitly requested or confirmed.
+2. Decide the intent: `generate` or `edit`.
+3. Decide whether the output is preview-only or meant to be consumed by the current project.
+4. Decide the execution strategy: single asset vs repeated built-in calls vs CLI `generate-batch`.
+5. Collect inputs up front: prompt(s), exact text (verbatim), constraints/avoid list, and any input images.
+6. For every input image, label its role explicitly:
+   - reference image
+   - edit target
+   - supporting insert/style/compositing input
+7. If the edit target is only on the local filesystem and you are staying on the built-in path, inspect it with `view_image` first so the image is available in conversation context.
+8. If the user asked for a photo, illustration, sprite, product image, banner, or other explicitly raster-style asset, use `image_gen` rather than substituting SVG/HTML/CSS placeholders. If the request is for an icon, logo, or UI graphic that should match existing repo-native SVG/vector/code assets, prefer editing those directly instead.
+9. Augment the prompt based on specificity:
+   - If the user's prompt is already specific and detailed, normalize it into a clear spec without adding creative requirements.
+   - If the user's prompt is generic, add tasteful augmentation only when it materially improves output quality.
+10. Use the built-in `image_gen` tool by default.
+11. For transparent-output requests, ask built-in `image_gen` for a transparent background and preserve the generated alpha channel.
+12. Inspect outputs and validate: subject, style, composition, text accuracy, and invariants/avoid items.
+13. Iterate with a single targeted change, then re-check.
+14. For preview-only work, render the image inline; the underlying file may remain at the default `$CODEX_HOME/generated_images/...` path.
+15. For project-bound work, move or copy the selected artifact into the workspace and update any consuming code or references. Never leave a project-referenced asset only at the default `$CODEX_HOME/generated_images/...` path.
+16. For batches or multi-asset requests, persist every requested deliverable final in the workspace unless the user explicitly asked to keep outputs preview-only. Discarded variants do not need to be kept unless requested.
+17. If the user explicitly chooses or confirms the CLI fallback, then use the fallback-only docs for model, quality, size, `input_fidelity`, masks, output format, output paths, and network setup.
+18. Always report the final saved path(s) for any workspace-bound asset(s), plus the final prompt or prompt set and whether the built-in tool or fallback CLI mode was used.
+
+## Transparent image requests
+
+Ask built-in `image_gen` for a genuinely transparent background and preserve its alpha.
+
+## Prompt augmentation
+
+Reformat user prompts into a structured, production-oriented spec. Make the user's goal clearer and more actionable, but do not blindly add detail.
+
+Treat this as prompt-shaping guidance, not a closed schema. Use only the lines that help, and add a short extra labeled line when it materially improves clarity.
+
+### Specificity policy
+
+Use the user's prompt specificity to decide how much augmentation is appropriate:
+
+- If the prompt is already specific and detailed, preserve that specificity and only normalize/structure it.
+- If the prompt is generic, you may add tasteful augmentation when it will materially improve the result.
+
+Allowed augmentations:
+- composition or framing hints
+- polish level or intended-use hints
+- practical layout guidance
+- reasonable scene concreteness that supports the stated request
+
+Not allowed augmentations:
+- extra characters or objects that are not implied by the request
+- brand names, slogans, palettes, or narrative beats that are not implied
+- arbitrary side-specific placement unless the surrounding layout supports it
+
+## Use-case taxonomy (exact slugs)
+
+Classify each request into one of these buckets and keep the slug consistent across prompts and references.
+
+Generate:
+- photorealistic-natural ??candid/editorial lifestyle scenes with real texture and natural lighting.
+- product-mockup ??product/packaging shots, catalog imagery, merch concepts.
+- ui-mockup ??app/web interface mockups and wireframes; specify the desired fidelity.
+- infographic-diagram ??diagrams/infographics with structured layout and text.
+- scientific-educational ??classroom explainers, scientific diagrams, and learning visuals with required labels and accuracy constraints.
+- ads-marketing ??campaign concepts and ad creatives with audience, brand position, scene, and exact tagline/copy.
+- productivity-visual ??slide, chart, workflow, and data-heavy business visuals.
+- logo-brand ??logo/mark exploration, vector-friendly.
+- illustration-story ??comics, children?셲 book art, narrative scenes.
+- stylized-concept ??style-driven concept art, 3D/stylized renders.
+- historical-scene ??period-accurate/world-knowledge scenes.
+
+Edit:
+- text-localization ??translate/replace in-image text, preserve layout.
+- identity-preserve ??try-on, person-in-scene; lock face/body/pose.
+- precise-object-edit ??remove/replace a specific element (including interior swaps).
+- lighting-weather ??time-of-day/season/atmosphere changes only.
+- background-extraction ??transparent background / clean cutout. Ask built-in `image_gen` for actual transparency.
+- style-transfer ??apply reference style while changing subject/scene.
+- compositing ??multi-image insert/merge with matched lighting/perspective.
+- sketch-to-render ??drawing/line art to photoreal render.
+
+## Shared prompt schema
+
+Use the following labeled spec as shared prompt scaffolding for both top-level modes:
+
+```text
+Use case: <taxonomy slug>
+Asset type: <where the asset will be used>
+Primary request: <user's main prompt>
+Input images: <Image 1: role; Image 2: role> (optional)
+Scene/backdrop: <environment>
+Subject: <main subject>
+Style/medium: <photo/illustration/3D/etc>
+Composition/framing: <wide/close/top-down; placement>
+Lighting/mood: <lighting + mood>
+Color palette: <palette notes>
+Materials/textures: <surface details>
+Text (verbatim): "<exact text>"
+Constraints: <must keep/must avoid>
+Avoid: <negative constraints>
+```
+
+Notes:
+- `Asset type` and `Input images` are prompt scaffolding, not dedicated CLI flags.
+- `Scene/backdrop` refers to the visual setting. It is not the same as the fallback CLI `background` parameter, which controls output transparency behavior.
+- Fallback-only execution notes such as `Quality:`, `Input fidelity:`, masks, output format, and output paths belong in the CLI path only. Do not treat them as built-in `image_gen` tool arguments.
+
+Augmentation rules:
+- Keep it short.
+- Add only the details needed to improve the prompt materially.
+- For edits, explicitly list invariants (`change only X; keep Y unchanged`).
+- If any critical detail is missing and blocks success, ask a question; otherwise proceed.
+
+## Examples
+
+### Generation example (hero image)
+```text
+Use case: product-mockup
+Asset type: landing page hero
+Primary request: a minimal hero image of a ceramic coffee mug
+Style/medium: clean product photography
+Composition/framing: wide composition with usable negative space for page copy if needed
+Lighting/mood: soft studio lighting
+Constraints: no logos, no text, no watermark
+```
+
+### Edit example (invariants)
+```text
+Use case: precise-object-edit
+Asset type: product photo background replacement
+Primary request: replace only the background with a warm sunset gradient
+Constraints: change only the background; keep the product and its edges unchanged; no text; no watermark
+```
+
+## Prompting best practices
+- Structure prompt as scene/backdrop -> subject -> details -> constraints.
+- Include intended use (ad, UI mock, infographic) to set the mode and polish level.
+- Use camera/composition language for photorealism.
+- Only use SVG/vector stand-ins when the user explicitly asked for vector output or a non-image placeholder.
+- Quote exact text and specify typography + placement.
+- For tricky words, spell them letter-by-letter and require verbatim rendering.
+- For multi-image inputs, reference images by index and describe how they should be used.
+- For edits, repeat invariants every iteration to reduce drift.
+- Iterate with single-change follow-ups.
+- If the prompt is generic, add only the extra detail that will materially help.
+- If the prompt is already detailed, normalize it instead of expanding it.
+- For CLI fallback only, see `references/cli.md` and `references/image-api.md` for model, `quality`, `input_fidelity`, masks, output format, and output-path guidance.
+- For transparent images, ask built-in `image_gen` for actual transparency and preserve its alpha.
+
+More principles shared by both modes: `references/prompting.md`.
+Copy/paste specs shared by both modes: `references/sample-prompts.md`.
+
+## Guidance by asset type
+Asset-type templates (website assets, game assets, wireframes, logo) are consolidated in `references/sample-prompts.md`.
+
+## gpt-image-2 guidance for CLI fallback
+
+The fallback CLI defaults to `gpt-image-2`.
+
+- Use `gpt-image-2` for new CLI/API workflows unless the user confirms a different model.
+- CLI `gpt-image-2` does not support `background=transparent`; ask before using `gpt-image-1.5` unless the user explicitly requested that model.
+- `gpt-image-2` always uses high fidelity for image inputs; do not set `input_fidelity` with this model.
+- `gpt-image-2` supports `quality` values `low`, `medium`, `high`, and `auto`.
+- Use `quality low` for fast drafts, thumbnails, and quick iterations. Use `medium`, `high`, or `auto` for final assets, dense text, diagrams, identity-sensitive edits, or high-resolution outputs.
+- Square images are typically fastest to generate. Use `1024x1024` for fast square drafts.
+- If the user asks for 4K-style output, use `3840x2160` for landscape or `2160x3840` for portrait.
+- `gpt-image-2` size may be `auto` or `WIDTHxHEIGHT` if all constraints hold: max edge `<= 3840px`, both edges multiples of `16px`, long-to-short ratio `<= 3:1`, total pixels between `655,360` and `8,294,400`.
+
+Popular `gpt-image-2` sizes:
+- `1024x1024` square
+- `1536x1024` landscape
+- `1024x1536` portrait
+- `2048x2048` 2K square
+- `2048x1152` 2K landscape
+- `3840x2160` 4K landscape
+- `2160x3840` 4K portrait
+- `auto`
+
+## Fallback CLI mode only
+
+### Temp and output conventions
+These conventions apply only to the CLI fallback. They do not describe built-in `image_gen` output behavior.
+- Use `tmp/imagegen/` for intermediate files (for example JSONL batches); delete them when done.
+- Write final artifacts under `output/imagegen/`.
+- Use `--out` or `--out-dir` to control output paths; keep filenames stable and descriptive.
+
+### Dependencies
+Prefer `uv` for dependency management in this repo.
+
+Required Python package:
+```bash
+uv pip install openai
+```
+
+Optional for image inspection and downscaling:
+```bash
+uv pip install pillow
+```
+
+Portability note:
+- If you are using the installed skill outside this repo, install dependencies into that environment with its package manager.
+- In uv-managed environments, `uv pip install ...` remains the preferred path.
+
+### Environment
+- `OPENAI_API_KEY` must be set for live API calls.
+- Do not ask the user for `OPENAI_API_KEY` when using the built-in `image_gen` tool.
+- Never ask the user to paste the full key in chat. Ask them to set it locally and confirm when ready.
+
+If the key is missing, give the user these steps:
+1. Create an API key in the OpenAI platform UI: https://platform.openai.com/api-keys
+2. Set `OPENAI_API_KEY` as an environment variable in their system.
+3. Offer to guide them through setting the environment variable for their OS/shell if needed.
+
+If installation is not possible in this environment, tell the user which dependency is missing and how to install it into their active environment.
+
+### Script-mode notes
+- CLI commands + examples: `references/cli.md`
+- API parameter quick reference: `references/image-api.md`
+- Network approvals / sandbox settings for CLI mode: `references/codex-network.md`
+
+## Reference map
+- `references/prompting.md`: shared prompting principles for both modes.
+- `references/sample-prompts.md`: shared copy/paste prompt recipes for both modes.
+- `references/cli.md`: fallback-only CLI usage via `scripts/image_gen.py`.
+- `references/image-api.md`: fallback-only API/CLI parameter reference.
+- `references/codex-network.md`: fallback-only network/sandbox troubleshooting for CLI mode.
+- `scripts/image_gen.py`: fallback-only CLI implementation. Use only when the user explicitly chooses or confirms CLI mode.
+
+# 肄붾뜳??怨듭슜 釉뚮━?????똀venging Spirit RE:BORN???곗텧 쨌 ?댄럺??諛⑺뼢 (2026-10-09)
+
+> 肄붾뜳?ㅼ뿉寃??쒖븞 쨌 遺??쨌 ?곸쓽瑜??쒗궗 ??**??긽 ???뚯씪??癒쇱? ?쎄쾶 ?쒕떎.** PD ? Claude 媛 吏湲덇퉴吏 ?뺥븳 寃껋씠??
+> PD ?뚯퐫?깆뒪?쒗뀒 臾댁“嫄????먮굦?쇰줈留??쒖떆??嫄??꾨땲吏? ????앹쓽 愿묒썝???ы븿?댁빞 ?쒕떎怨??섍린媛 ??嫄곗빞? ??
+> 洹몃옒??泥섏쓬遺??吏?쇳떚??????앹쑝濡??앷컖??嫄곕땲源?쨌 ?곕━???섍린???ㅽ븳????二쇰뒗 寃?醫뗭쓣 寃?媛숈븘??
+
+## 1. ??寃뚯엫??鍮쏆? ?뚮룄??紐⑥뼇 + 愿묒썝?띿쓣 ?욌뒗??
+- **紐⑥뼇**(鍮쏆궡 쨌 諛섏쭩 蹂?쨌 遺덇퐙 쨌 臾몄뼇 쨌 ?뷀뭾)? **?꾪듃 ?쎌? ?꾪듃**.
+- **愿묒썝 ?먮굦**(鍮쏆씠 ?ㅼ젣濡??쇱???踰덉쭚 쨌 釉붾８ 쨌 鍮?諛쏅뒗 二쇰? 쨌 ?좎삤瑜대뒗 ?낆옄)? **鍮??곗씠??쨌 ?뚰떚??*泥섎읆 遺?쒕읇寃?
+- ??以??섎굹留??덉쑝硫??ㅽ뙣?????꾪듃 洹몃┝留??덉쑝硫??뚰댆 ?먮굦留??덇퀬 ?뚰떚??쨌 ?곗씠???먮굦???녿떎??PD 2026-10-09),
+  留ㅻ걟???곗씠??鍮쏅쭔 ?덉쑝硫??꾪듃 洹몃┝怨??곕줈 ?쇰떎.
+- ?쒖븞??洹몃┫ ?뚮룄 ????寃뱀씠 蹂댁씠寃?洹몃┛?? ?ㅼ뿉 遺?쒕읇寃??쇱???愿묒썝 + 洹????꾪듃 鍮쏆궡 쨌 諛섏쭩 蹂?+ ?욎뿉 ?좎삤瑜대뒗 ?묒? 鍮??뚭갚??
+
+## 2. 湲곗? ??PD 媛 ?듦낵?쒗궓 寃?
+- **?좊졊 鍮?*(PD ?뚭킐李?븘 蹂댁??ㅳ?: `Projects/AVSR/_exchange/ref/gl_compare_v7.png` ??諛섑닾紐?鍮?留?쨌 媛??鍮쏆떖(鍮??곗씠?? + ?묒? ??쨌 ?섎뒛 ??옄蹂??뚭갚???뚰떚?? + 紐??섎젅 鍮?
+- **寃곌낵李?肄붾뜳???먯쑀 ?쒖븞**(紐⑥뼇 쨌 ?뷀뭾 ?듦낵): `Projects/AVSR/_exchange/in/mock_result_codex_peak.png` 쨌 `mock_result_codex_idle.png`.
+- 寃곌낵李?寃뚯엫 ?뱁솕??鍮??곗씠??踰덉쭚(愿묒썝 ?먮굦 ?듦낵): `Projects/AVSR/_exchange/ref/fx_game/mock_compare/claude_mock_silver.gif`.
+
+## 3. ?곗텧 ?먯튃(PD ?먮Ц)
+- ?뚯뿰異쒖뿉???곌???쨌 湲곗듅?꾧껐 쨌 ??뱀꽦???덉뼱???쒕떎?????댁쑀 ?녿뒗 鍮?湲덉?. 臾댁뾿???살뿀?붿? 쨌 臾댁뾿???쇱뼱?щ뒗吏媛 ?쏀????쒕떎.
+- ?뚯빟?섍쾶 ???뚮뒗 ?쏀븯寃??섍퀬, ?섏쨪 ?뚮뒗 ?섏쓣 以섏빞吏?????꾩꽦 쨌 李⑹? 쨌 ?띾뱷 ?쒓컙? ?뺤떎???멸쾶(踰덉찉 쨌 ?쇱퀜吏?, 癒몃Т???숈븞? ???섍쾶(?⑥돩湲?쨌 ?쇰쟻??.
+- 諛⑺뼢???댁빞湲곕떎 ???곕떎 = ??HUD) ??臾쇨굔 ??罹먮┃?????④낵. 怨좊Ⅸ????怨좊Ⅸ 寃??ъ빱????李??ロ옒 ??罹먮┃?곗뿉 ?④낵.
+- ?뚭쾶???뺣낫(湲??쨌 ?レ옄 쨌 ?꾩씠肄???媛由ъ? 留덀?쨌 ?뚮릺???딅뒗 洹몃┝???ｌ? 留덀?臾쇨굔 諛??⑥깋 ??湲덉?).
+- ?뚯뼱?ㅽ뵂 ?④낵硫?蹂댁뿬 二쇱? 留먭퀬, 蹂댁뿬 二쇰젮硫??쒕?濡쒌?쨌 ?앹뾽 ?μ떇? ?????곸떆 猷⑦봽, ??????踰??뚰뙇??쨌 ?뚮몢由??꾨? 湲덈튆 湲덉?.
+- 臾쇨굔 洹몃┝??鍮쏆쓣 援쎌? ?딅뒗????鍮쏆? ?댄럺?몃줈 ?곕줈(???鍮쏆쓣 吏?곕뒗 寃??꾨땲????硫뗭?寃??대┛??.
+
+## 3-1. ?깃툒蹂??댄럺???덈꺼留?PD 2026-10-09)
+- ?뚭?????醫뗭? 寃껋씠 ?덈Т ?댄럺?멸? 醫뗭븘 踰꾨━硫?洹몃떎???깃툒?ㅼ? ???붾젮?댁빞 ?섍퀬, ?섏쨷?먮뒗 嫄룹옟?????녾쾶 ?쒕떎????**?깃툒留덈떎 ?댄럺?몃? 怨꾨떒?앹쑝濡??섎늿??**
+- 媛????? ?깃툒? **湲곕낯 = ?뱀씤???쒖븞 ?섏?**(?쒖븞蹂대떎 ??텛吏 ?딅뒗??, ?꾨줈 媛덉닔濡???寃뱀뵫 ?뷀븳??愿묒썝 ?ш린 쨌 諛앷린 ??鍮쏆궡 쨌 ?곗쭚 ??諛섏쭩????쨌 ?밸퀎???μ떇).
+- 理쒖긽?꾨? ?꾪빐 ?붾젮?⑥쓣 **?④꺼 ?붾떎** ????? ?깃툒?????곗? ?딅뒗??
+- ?뚰옒????以?ㅳ?= **?ш린瑜??ㅼ슦??寃??꾨땲??* ?뚰떚???섎? 議곌툑 ?섎━怨??댄럺??醫낅쪟瑜??ㅼ뼇?섍쾶 寃뱀튂??寃?PD 2026-10-09).
+- ?곸슜 ????? ?곸옄(? < 湲?< 諛깃툑), 移대뱶(COMMON < RARE < EPIC < LEGENDARY), ?몄뒪???깃툒, 蹂댁긽 ?ш???
+
+## 4. 遺?덉쓣 洹몃┫ ??
+- 寃뚯엫? 洹몃┝ 쨌 ?뚰떚??쨌 ?곗씠?붾? ?욌뒗????遺?쒕윭??愿묒썝? ?곗씠?? ?⑹뼱吏??諛섏쭩??쨌 ?뚭갚?대뒗 ?뚰떚?? ?꾪듃 紐⑥뼇? 洹몃┝.
+  洹몃┝? ?꾩슂??留뚰겮 洹몃┛?? ?ㅻ쭔 ?뚯쟾 쨌 ?ш린 쨌 ?뚰뙆 쨌 ??怨깊븯湲곕줈 ?섎뒗 諛섎났(媛숈? 紐⑥뼇 ?됰쭔 ?ㅻⅨ ?щ윭 踰???? 援녹씠 ?щ윭 ??洹몃━吏 ?딅뒗??
+  (PD 2026-10-09 ??0?μ? 理쒖쟻?붽? ???먮떎 쨌 洹몃젃?ㅺ퀬 ?덈??곸쑝濡?以꾩씠?쇰뒗 嫄??꾨땲?? ?꾩슂???곕씪?쒕뒗 ?⑤룄 ?쇈?.
+- 鍮?遺?덉? **寃? 諛뷀깢**(寃뚯엫?먯꽌 ?뷀븯湲곕줈 洹몃┛??. 鍮?媛?μ옄由щ뒗 寃?뺤쑝濡?諛붾줈 ?ш렇?쇰뱺????諛붽묑???대몢??????湲덉?.
+- ?뺥깭 ?덈뒗 遺?덉? 遺꾪솉 諛뷀깢(#FF00FF).
+- 愿묒썝 踰덉쭚??洹몃┝???ｌ뼱???쒕떎 ????遺?쒕윭??洹몃씪?곗씠?섏쑝濡??깅뵳??怨꾨떒 湲덉?). ?곗씠?붾줈 ?곕줈 寃뱀튌 怨녹? 諛쒖＜臾몄뿉 ?곷뒗??
+
+# 濡쒕퉬 ??(?쒕뜡 ?좏깮)??移대뱶 쨌 ?쒕뜡 ?ㅻ챸 移????곗텧 媛?대뱶 (2026-10-12)
+
+## 紐⑺몴 紐⑥뒿
+- ?몄뒪??移대뱶 以?留??쇱そ ????移대뱶?, 洹?移대뱶瑜?怨좊Ⅴ硫??꾨옒???섏삤???뚮옖???좏깮???ㅻ챸 移?
+- **?쒕늿???뚮Т?뉗씠 ?섏삱吏 紐⑤Ⅴ???밸퀎??移멥??쇰줈 ?쏀엳怨? ?뚮궙? ?뺣쪧濡??꾩꽕???섏삩?ㅳ???湲곕?媛 ?앷릿??**
+- 吏湲?寃뚯엫 ?붾㈃???ㅼ삩 ?뚮몢由?쨌 湲덉깋 踰꾪듉 ?뷀뭾 ?덉뿉??媛???덉뿉 ?꾨뒗 移??섎굹(?ㅻⅨ 移대뱶蹂대떎 ???④퀎 ?붾젮?섍쾶).
+
+## ?ㅻⅨ 寃뚯엫???곕뒗 諛⑹떇 (李멸퀬)
+| 諛⑹떇 | ??| ?곕━ 寃뚯엫????린硫?|
+|---|---|---|
+| 猷곕젢 | ?ㅻℓ?쒕툕?쇰뜑???뚮옖?ㅳ?移?쨌 留덈━?ㅼ뭅???꾩씠??諛뺤뒪 ??移??덉뿉???꾨낫媛 鍮좊Ⅴ寃??뚮떎 硫덉텣??| 移대뱶 ?덉뿉???먯옉 珥덉긽?ㅼ씠 ?숉쐷 諛붾뚮뒗 ?붿긽 + ????|
+| 移대뱶 ?룸㈃ | 媛李?寃뚯엫 移대뱶 ?룸㈃ ??臾몄옣 쨌 ?濡쒓렇??諛섏쭩?? ?깃툒 鍮?湲덈튆)?쇰줈 ?ш? ?붿떆 | ?좊졊 遺덇퐙 臾몄옣??洹몃젮吏?移대뱶 ?룸㈃ + 湲덈튆 媛?μ옄由?|
+| 誘몄뒪?곕━ 援ъ뒳 쨌 ?곸옄 | 鍮쏅굹???곸옄 쨌 ?섏젙援?+ ????쨌 諛섏쭩??| ?곹샎 ?덇컻媛 ?뚯슜?뚯씠移섎뒗 ?섏젙援???????|
+
+## 諛뺤옄??| ?쒓컖 | 諛뺤옄 | 媛뺤빟 | 蹂댁씠??寃?|
+|---|---|---|---|
+| 癒몃Ь(??怨⑤옄???? | ?⑥돩湲?2珥?| ??| ????媛 ???섍쾶 鍮쏅굹怨?鍮??뚭갚??紐?媛쒓? ?좎삤瑜몃떎 |
+| 怨좊Ⅴ???쒓컙 | 0.3珥?| 媛?| 移대뱶媛 ??諛앹븘吏怨?鍮쏆씠 ??踰??쇱쭊??猷곕젢?대㈃ ?꾨낫媛 鍮좊Ⅴ寃??덈떎) |
+| 怨⑤씪吏??숈븞 | 諛섎났 | 以?| 湲덉깋 ?뚮몢由?+ 媛??湲덈튆 諛섏쭩???꾩꽕 ?붿떆) 쨌 ?꾨옒 ?ㅻ챸 移몄? ???섍쾶 |
+
+## PD ?먮Ц
+- ?뚮꼫臾?援щ┛??. ?嫄?醫 ?댁걯寃??쒗쁽?????놁쓣源? ?ㅻⅨ 諛⑹떇?쇰줈 醫 ?댁걯寃??쒗쁽??以섅?- ?뚯??뉕쾶 罹먮┃??由ъ뒪?몃줈 ?ｌ쓣 ?꾩슂???녾퀬??- ?뚮떎瑜?寃뚯엫? ?대뼡 ?앹쑝濡??쒗쁽?덈뒗吏瑜?醫 李멸퀬?섎㈃ 醫뗭쓣 寃?媛숈븘??
+## 吏??寃?- ?먯옉 罹먮┃?곕? ?덈줈 洹몃━吏 ?딅뒗??IP ???ｋ뒗?ㅻ㈃ ?먯옉 洹몃┝ 洹몃?濡?. 罹먮┃??以꾩? ?ｌ? ?딅뒗??
+- ?ㅻ챸 移몄? 吏湲?移??ш린(667 x 155, ?꾩쟾?섍린 踰꾪듉 諛붾줈 ?? ?덉뿉?? 湲??쨌 ?レ옄瑜?媛由ъ? ?딅뒗??
+- 鍮쏆? ?꾪듃 紐⑥뼇 + ?곗씠??踰덉쭚 쨌 ?뚰떚?대줈(`codex_brief_fx.md`).
+
+
+codex
+문서가 현재 셸 기본 인코딩 때문에 깨져 보여 UTF-8로 다시 읽겠습니다. 그 다음 실제 화면을 원본 해상도로 확인해, 변경 금지 영역과 두 편집 영역을 정확히 고정하겠습니다.
+exec
+"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw -Encoding utf8 -LiteralPath 'Projects\\AVSR\\_exchange\\codex_brief_fx.md'; Get-Content -Raw -Encoding utf8 -LiteralPath 'Projects\\AVSR\\_exchange\\guide_random_pick.md'" in C:\won\UnityProject\AvengingSprit
+ succeeded in 160ms:
+# 코덱스 공용 브리프 — 「Avenging Spirit RE:BORN」 연출 · 이펙트 방향 (2026-10-09)
+
+> 코덱스에게 시안 · 부품 · 상의를 시킬 때 **항상 이 파일을 먼저 읽게 한다.** PD 와 Claude 가 지금까지 정한 것이다.
+> PD 「코덱스한테 무조건 툰 느낌으로만 제시한 건 아니지? 저런 식의 광원도 포함해야 된다고 얘기가 된 거야? …
+> 그래야 처음부터 지피티도 저런 식으로 생각할 거니까 · 우리의 얘기도 쟤한테 해 주는 게 좋을 것 같아」.
+
+## 1. 이 게임의 빛은 「도트 모양 + 광원」을 섞는다
+- **모양**(빛살 · 반짝 별 · 불꽃 · 문양 · 화풍)은 **도트 픽셀 아트**.
+- **광원 느낌**(빛이 실제로 퍼지는 번짐 · 블룸 · 빛 받는 주변 · 떠오르는 입자)은 **빛 셰이더 · 파티클**처럼 부드럽게.
+- 둘 중 하나만 있으면 실패다 — 도트 그림만 있으면 「툰 느낌만 있고 파티클 · 셰이더 느낌이 없다」(PD 2026-10-09),
+  매끈한 셰이더 빛만 있으면 도트 그림과 따로 논다.
+- 시안을 그릴 때도 이 두 겹이 보이게 그린다: 뒤에 부드럽게 퍼지는 광원 + 그 위 도트 빛살 · 반짝 별 + 앞에 떠오르는 작은 빛 알갱이.
+
+## 2. 기준 — PD 가 통과시킨 것
+- **유령 빛**(PD 「괜찮아 보였다」): `Projects/AVSR/_exchange/ref/gl_compare_v7.png` — 반투명 빛 막 · 가는 빛심(빛 셰이더) + 작은 흰 · 하늘 십자별 알갱이(파티클) + 몸 둘레 빛.
+- **결과창 코덱스 자유 시안**(모양 · 화풍 통과): `Projects/AVSR/_exchange/in/mock_result_codex_peak.png` · `mock_result_codex_idle.png`.
+- 결과창 게임 녹화의 빛 셰이더 번짐(광원 느낌 통과): `Projects/AVSR/_exchange/ref/fx_game/mock_compare/claude_mock_silver.gif`.
+
+## 3. 연출 원칙(PD 원문)
+- 「연출에는 연관성 · 기승전결 · 타당성이 있어야 한다」 — 이유 없는 빛 금지. 무엇을 얻었는지 · 무엇이 일어났는지가 읽혀야 한다.
+- 「약하게 할 때는 약하게 하고, 힘줄 때는 힘을 줘야지」 — 완성 · 착지 · 획득 순간은 확실히 세게(번쩍 · 펼쳐짐), 머무는 동안은 은은하게(숨쉬기 · 일렁임).
+- 방향이 이야기다 — 산다 = 돈(HUD) → 물건 → 캐릭터 → 효과. 고른다 → 고른 것 포커스 → 창 닫힘 → 캐릭터에 효과.
+- 「게임 정보(글자 · 숫자 · 아이콘)는 가리지 마」 · 「되도 않는 그림자 넣지 마」(물건 밑 단색 판 금지).
+- 「어설픈 효과면 보여 주지 말고, 보여 주려면 제대로」 · 팝업 장식은 은은한 상시 루프, 열 때 한 번 「팍」 · 테두리 전부 금빛 금지.
+- 물건 그림에 빛을 굽지 않는다 — 빛은 이펙트로 따로(대신 빛을 지우는 게 아니라 더 멋지게 살린다).
+
+## 3-1. 등급별 이펙트 레벨링(PD 2026-10-09)
+- 「가장 안 좋은 것이 너무 이펙트가 좋아 버리면 그다음 등급들은 더 화려해야 하고, 나중에는 걷잡을 수 없게 된다」 — **등급마다 이펙트를 계단식으로 나눈다.**
+- 가장 낮은 등급은 **기본 = 승인된 시안 수준**(시안보다 낮추지 않는다), 위로 갈수록 한 겹씩 더한다(광원 크기 · 밝기 → 빛살 · 터짐 → 반짝임 수 · 특별한 장식).
+- 최상위를 위해 화려함을 **남겨 둔다** — 낮은 등급에 다 쓰지 않는다.
+- 「힘을 더 준다」 = **크기를 키우는 게 아니라** 파티클 수를 조금 늘리고 이펙트 종류를 다양하게 겹치는 것(PD 2026-10-09).
+- 적용 대상 예: 상자(은 < 금 < 백금), 카드(COMMON < RARE < EPIC < LEGENDARY), 호스트 등급, 보상 희귀도.
+
+## 4. 부품을 그릴 때
+- 게임은 그림 · 파티클 · 셰이더를 섞는다 — 부드러운 광원은 셰이더, 흩어지는 반짝임 · 알갱이는 파티클, 도트 모양은 그림.
+  그림은 필요한 만큼 그린다. 다만 회전 · 크기 · 알파 · 색 곱하기로 되는 반복(같은 모양 색만 다른 여러 벌 등)은 굳이 여러 장 그리지 않는다
+  (PD 2026-10-09 「80장은 최적화가 안 됐다 · 그렇다고 절대적으로 줄이라는 건 아니다, 필요에 따라서는 써도 돼」).
+- 빛 부품은 **검은 바탕**(게임에서 더하기로 그린다). 빛 가장자리는 검정으로 바로 사그라든다 — 바깥에 어두운 색 판 금지.
+- 형태 있는 부품은 분홍 바탕(#FF00FF).
+- 광원 번짐을 그림에 넣어도 된다 — 단 부드러운 그라데이션으로(딱딱한 계단 금지). 셰이더로 따로 겹칠 곳은 발주문에 적는다.
+
+# 로비 「?(랜덤 선택)」 카드 · 랜덤 설명 칸 — 연출 가이드 (2026-10-12)
+
+## 목표 모습
+- 호스트 카드 줄 맨 왼쪽 「?」 카드와, 그 카드를 고르면 아래에 나오는 「랜덤 선택」 설명 칸.
+- **한눈에 「무엇이 나올지 모르는 특별한 칸」 으로 읽히고, 「낮은 확률로 전설이 나온다」 는 기대가 생긴다.**
+- 지금 게임 화면의 네온 테두리 · 금색 버튼 화풍 안에서 가장 눈에 띄는 칸 하나(다른 카드보다 한 단계 화려하게).
+
+## 다른 게임이 쓰는 방식 (참고)
+| 방식 | 예 | 우리 게임에 옮기면 |
+|---|---|---|
+| 룰렛 | 스매시브라더스 「랜덤」 칸 · 마리오카트 아이템 박스 — 칸 안에서 후보가 빠르게 돌다 멈춘다 | 카드 안에서 원작 초상들이 휙휙 바뀌는 잔상 + 「?」 |
+| 카드 뒷면 | 가차 게임 카드 뒷면 — 문장 · 홀로그램 반짝임, 등급 빛(금빛)으로 희귀 암시 | 유령 불꽃 문장이 그려진 카드 뒷면 + 금빛 가장자리 |
+| 미스터리 구슬 · 상자 | 빛나는 상자 · 수정구 + 「?」 · 반짝이 | 영혼 안개가 소용돌이치는 수정구 속 「?」 |
+
+## 박자표
+| 시각 | 박자 | 강약 | 보이는 것 |
+|---|---|---|---|
+| 머묾(안 골랐을 때) | 숨쉬기 2초 | 약 | 「?」 가 은은하게 빛나고 빛 알갱이 몇 개가 떠오른다 |
+| 고르는 순간 | 0.3초 | 강 | 카드가 확 밝아지고 빛이 한 번 퍼진다(룰렛이면 후보가 빠르게 돈다) |
+| 골라진 동안 | 반복 | 중 | 금색 테두리 + 가끔 금빛 반짝임(전설 암시) · 아래 설명 칸은 은은하게 |
+
+## PD 원문
+- 「너무 구린데.. 저걸 좀 이쁘게 표현할 수 없을까? 다른 방식으로 좀 이쁘게 표현해 줘」
+- 「저렇게 캐릭터 리스트로 넣을 필요도 없고」
+- 「다른 게임은 어떤 식으로 표현했는지를 좀 참고하면 좋을 것 같아」
+
+## 지킬 것
+- 원작 캐릭터를 새로 그리지 않는다(IP — 넣는다면 원작 그림 그대로). 캐릭터 줄은 넣지 않는다.
+- 설명 칸은 지금 칸 크기(667 x 155, 도전하기 버튼 바로 위) 안에서. 글자 · 숫자를 가리지 않는다.
+- 빛은 도트 모양 + 셰이더 번짐 · 파티클로(`codex_brief_fx.md`).
+
+
+codex
+콘셉트는 ‘캐릭터 후보를 보여주는 랜덤’ 대신 ‘봉인된 영혼 카드가 운명을 추첨하는 장치’로 잡겠습니다. 카드에는 큰 물음표·회전하는 픽셀 룬·얇은 금빛 확률 신호만 두고, 설명 칸은 동일 크기 안에서 청록 영혼 소용돌이가 문장을 피해 흐르도록 구성합니다. 왼쪽은 은은한 호흡, 오른쪽은 0.3초 최고광 박자입니다.
+codex
+이미지 도구가 시안을 생성했습니다. 두 상태, 일본어 본문, 한국어 3줄 메모, 실루엣 제거는 반영됐고, 이제 생성된 원본 파일을 요청 경로에 그대로 복사해 저장하겠습니다.
+exec
+"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command '$src = '"'C:\\Users\\inpia\\.codex\\generated_images\\01a12eed-39be-7a21-8c76-494900b6e780\\exec-e7f42520-b34f-44b5-a07d-6897e5988188.png'; "'$dst = '"'C:\\won\\UnityProject\\AvengingSprit\\Projects\\AVSR\\_exchange\\in\\mock_random_free.png'; Copy-Item -LiteralPath "'$src -Destination $dst -Force; Get-Item -LiteralPath $dst | Select-Object FullName,Length,LastWriteTime' in C:\won\UnityProject\AvengingSprit
+ succeeded in 280ms:
+
+FullName                                                                           Length LastWriteTime        
+--------                                                                           ------ -------------        
+C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\mock_random_free.png 2370241 2026-10-12 오후 4:07:17
+
+
+
+codex
+이미지 생성 도구로 한 장 제작해 저장했습니다.
+
+[mock_random_free.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\mock_random_free.png)
+
+CLI/API 키 폴백은 사용하지 않았습니다.
+tokens used
+23,912
+이미지 생성 도구로 한 장 제작해 저장했습니다.
+
+[mock_random_free.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\mock_random_free.png)
+
+CLI/API 키 폴백은 사용하지 않았습니다.
