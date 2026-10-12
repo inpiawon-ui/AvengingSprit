@@ -84,8 +84,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -161,8 +161,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -303,8 +303,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -316,8 +316,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -329,8 +329,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -454,8 +454,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -715,8 +715,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -806,8 +806,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1147,8 +1147,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1622,8 +1622,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1635,8 +1635,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1648,8 +1648,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1661,8 +1661,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1674,8 +1674,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1687,8 +1687,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1700,8 +1700,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -1990,8 +1990,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -2328,8 +2328,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -2341,8 +2341,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4298,8 +4298,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4311,8 +4311,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4382,7 +4382,7 @@ MonoBehaviour:
     _bossId: B01
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -4446,7 +4446,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -4557,8 +4557,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4570,8 +4570,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4602,7 +4602,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -4773,8 +4773,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4805,7 +4805,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -4890,8 +4890,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4903,8 +4903,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4916,8 +4916,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4929,8 +4929,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -4961,7 +4961,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5025,7 +5025,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5230,8 +5230,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5243,8 +5243,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5275,7 +5275,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5498,8 +5498,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5530,7 +5530,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5657,8 +5657,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5683,8 +5683,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5722,8 +5722,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5754,7 +5754,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5868,7 +5868,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -5982,8 +5982,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -5995,8 +5995,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6008,8 +6008,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6021,8 +6021,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6053,7 +6053,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -6232,8 +6232,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6303,7 +6303,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -6430,8 +6430,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6469,8 +6469,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6592,7 +6592,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -6656,7 +6656,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -6796,8 +6796,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6809,8 +6809,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6822,8 +6822,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6874,8 +6874,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -6945,7 +6945,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Crusher
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2000
+    _bossHp: 2702
     _bossAtk: 38
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -7137,8 +7137,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -7150,8 +7150,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -7260,7 +7260,7 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -7324,7 +7324,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -7482,8 +7482,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -7514,7 +7514,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -7704,7 +7704,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -7946,7 +7946,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -8010,7 +8010,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -8132,8 +8132,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8145,8 +8145,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8158,8 +8158,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8190,7 +8190,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -8291,8 +8291,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8317,8 +8317,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8369,8 +8369,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8395,8 +8395,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -8453,7 +8453,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -8638,7 +8638,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -8752,7 +8752,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9022,8 +9022,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9035,8 +9035,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9067,7 +9067,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9220,8 +9220,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9233,8 +9233,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9265,7 +9265,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9374,8 +9374,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9387,8 +9387,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9400,8 +9400,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9413,8 +9413,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9439,8 +9439,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9452,8 +9452,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9465,8 +9465,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9478,8 +9478,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9510,7 +9510,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9574,7 +9574,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9709,8 +9709,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9748,8 +9748,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9761,8 +9761,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9793,7 +9793,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 2530
+    _bossHp: 3416
     _bossAtk: 42
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -9907,8 +9907,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -9998,8 +9998,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10024,8 +10024,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10037,8 +10037,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10082,7 +10082,7 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10146,7 +10146,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10299,8 +10299,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10357,7 +10357,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10471,8 +10471,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10627,8 +10627,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10659,7 +10659,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -10760,8 +10760,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10773,8 +10773,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10942,8 +10942,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -10974,7 +10974,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11038,7 +11038,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11225,8 +11225,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11283,7 +11283,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11397,8 +11397,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11436,8 +11436,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11488,8 +11488,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11546,7 +11546,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11707,8 +11707,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11733,8 +11733,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11759,8 +11759,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -11791,7 +11791,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -11905,7 +11905,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12014,8 +12014,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12027,8 +12027,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12040,8 +12040,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12053,8 +12053,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12105,8 +12105,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12118,8 +12118,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12131,8 +12131,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12144,8 +12144,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12176,7 +12176,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12520,7 +12520,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12637,8 +12637,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12650,8 +12650,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12767,8 +12767,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12780,8 +12780,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -12838,7 +12838,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -12902,7 +12902,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13019,8 +13019,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13058,8 +13058,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13214,8 +13214,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13253,8 +13253,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13311,7 +13311,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3020
+    _bossHp: 4072
     _bossAtk: 46
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13428,8 +13428,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13467,8 +13467,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13655,7 +13655,7 @@ MonoBehaviour:
     _bossId: B02
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13719,7 +13719,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -13828,8 +13828,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -13841,8 +13841,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14029,7 +14029,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14138,8 +14138,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14151,8 +14151,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14359,8 +14359,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14417,7 +14417,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14604,8 +14604,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14714,7 +14714,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14778,7 +14778,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -14895,8 +14895,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14934,8 +14934,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14960,8 +14960,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -14999,8 +14999,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15025,8 +15025,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15077,8 +15077,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15109,7 +15109,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15278,8 +15278,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15356,8 +15356,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15369,8 +15369,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15427,7 +15427,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15544,8 +15544,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15557,8 +15557,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15596,8 +15596,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15609,8 +15609,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15622,8 +15622,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15635,8 +15635,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15661,8 +15661,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15687,8 +15687,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -15719,7 +15719,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -15833,7 +15833,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16086,7 +16086,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16211,8 +16211,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -16250,8 +16250,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -16302,8 +16302,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -16360,7 +16360,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16673,7 +16673,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16737,7 +16737,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -16906,8 +16906,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -16919,8 +16919,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17029,7 +17029,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 3680
+    _bossHp: 4961
     _bossAtk: 51
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -17303,7 +17303,7 @@ MonoBehaviour:
     _bossId: B03
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -17367,7 +17367,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -17476,8 +17476,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17489,8 +17489,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17606,8 +17606,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17619,8 +17619,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17651,7 +17651,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -17838,8 +17838,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -17922,7 +17922,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -18031,8 +18031,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18044,8 +18044,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18284,7 +18284,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -18348,7 +18348,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -18491,8 +18491,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18569,8 +18569,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18731,7 +18731,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -18874,8 +18874,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18952,8 +18952,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18965,8 +18965,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -18978,8 +18978,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19049,7 +19049,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -19166,8 +19166,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19309,8 +19309,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19322,8 +19322,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19335,8 +19335,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19348,8 +19348,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -19380,7 +19380,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -19494,7 +19494,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -19916,7 +19916,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -20041,8 +20041,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -20054,8 +20054,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -20216,7 +20216,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -20490,7 +20490,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -20554,7 +20554,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -20815,7 +20815,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 4720
+    _bossHp: 6371
     _bossAtk: 59
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -21219,7 +21219,7 @@ MonoBehaviour:
     _bossId: B04
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -21283,7 +21283,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -21439,8 +21439,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21452,8 +21452,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21478,8 +21478,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21491,8 +21491,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21504,8 +21504,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21517,8 +21517,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -21549,7 +21549,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -21802,7 +21802,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -21984,8 +21984,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22055,7 +22055,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -22119,7 +22119,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -22354,7 +22354,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -22479,8 +22479,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22492,8 +22492,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22518,8 +22518,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22531,8 +22531,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22544,8 +22544,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22576,7 +22576,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -22727,8 +22727,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22740,8 +22740,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -22876,7 +22876,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -22990,7 +22990,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -23141,8 +23141,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23154,8 +23154,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23167,8 +23167,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23193,8 +23193,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23264,7 +23264,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -23423,8 +23423,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23462,8 +23462,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23475,8 +23475,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -23507,7 +23507,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -23854,7 +23854,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -23918,7 +23918,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -24200,7 +24200,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Python
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 5740
+    _bossHp: 7751
     _bossAtk: 65
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -24424,8 +24424,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -24450,8 +24450,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -24482,7 +24482,7 @@ MonoBehaviour:
     _bossId: B06
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -24546,7 +24546,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -24767,8 +24767,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -24825,7 +24825,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -25078,7 +25078,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -25208,8 +25208,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -25305,7 +25305,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -25369,7 +25369,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -25604,7 +25604,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -25768,8 +25768,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -25826,7 +25826,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -26035,7 +26035,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -26149,7 +26149,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -26326,8 +26326,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -26339,8 +26339,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -26352,8 +26352,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -26365,8 +26365,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -26475,7 +26475,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -26692,7 +26692,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -26968,8 +26968,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -27078,7 +27078,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -27142,7 +27142,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -27437,7 +27437,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Sludge
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 6970
+    _bossHp: 9404
     _bossAtk: 72
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -27622,8 +27622,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -27674,8 +27674,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -27732,7 +27732,7 @@ MonoBehaviour:
     _bossId: B02
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -27796,7 +27796,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -27921,8 +27921,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -27934,8 +27934,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -28025,8 +28025,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -28057,7 +28057,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -28221,8 +28221,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -28273,8 +28273,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -28286,8 +28286,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -28318,7 +28318,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -28605,7 +28605,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -28669,7 +28669,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -29003,7 +29003,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -29149,8 +29149,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29246,7 +29246,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -29379,8 +29379,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29392,8 +29392,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29535,8 +29535,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29548,8 +29548,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29606,7 +29606,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -29720,7 +29720,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -29853,8 +29853,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29866,8 +29866,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29905,8 +29905,8 @@ MonoBehaviour:
       _size: {x: 3, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29957,8 +29957,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -29970,8 +29970,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -30002,7 +30002,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -30195,8 +30195,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -30221,8 +30221,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -30292,7 +30292,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -30446,8 +30446,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -30634,7 +30634,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -30698,7 +30698,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -30852,8 +30852,8 @@ MonoBehaviour:
       _size: {x: 2, y: 1}
       _blocksMove: 1
       _blocksShot: 1
-      _blocksEnemyShot: 1
-      _blocksSight: 1
+      _blocksEnemyShot: 0
+      _blocksSight: 0
       _destructible: 0
       _hazardKind: NONE
       _hazardDamage: 0
@@ -30988,7 +30988,7 @@ MonoBehaviour:
     _bossId: 
     _bossName: Guardian
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 9180
+    _bossHp: 12390
     _bossAtk: 85
     _bossMoveSpeed: 2.2
     _bossPhaseGates:
@@ -31270,7 +31270,7 @@ MonoBehaviour:
     _bossId: B03
     _bossName: Kingpin
     _bossAt: {x: 5, y: 11.52}
-    _bossHp: 11060
+    _bossHp: 14932
     _bossAtk: 93
     _bossMoveSpeed: 2.2
     _bossPhaseGates:

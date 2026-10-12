@@ -37,7 +37,9 @@ namespace Game.Module.InGame
         /// </summary>
         /// ⚠ 2026-10-02 에 1.5 → 2.6 · 1.4 → 1.8. 챕터 체력 곡선을 완만하게 눕히면서(1챕터 0.5 · 6챕터 1.16)
         ///   대장이 잡몹 한 기 반짜리가 됐다 — 8번 방이 그냥 지나가는 방이었다. 판 한가운데의 고비여야 한다.
-        private const float MidBossHpMul = 2.6f;
+        /// ⚠ 2026-10-12 2.6 → 2.2. 챕터 체력 배율을 올리면서(2챕터 0.57 → 1.24) 대장도 같이 두 배 넘게 됐다 —
+        ///   대장 체력 348 → 1248(3.6배)이라 격노 · 소환까지 붙으면 너무 길다. 잡몹보다 조금 덜 오르게 깎는다.
+        private const float MidBossHpMul = 2.2f;
         private const float MidBossAtkMul = 1.8f;
 
         // ── 대장의 세기 (PD 2026-10-08 「공격 패턴도 너무 느리고 스킬 쿨도 너무 길고 약하다」) ──
@@ -59,7 +61,25 @@ namespace Game.Module.InGame
 
         private float MidBossSkillGate()
             => !_midBossSkillSeen ? MidBossSkillFirstDelay
-             : Mathf.Clamp(SkillCooldownOf(_midBoss?.Profile) * MidBossSkillCoolMul, MidBossSkillMinSeconds, MidBossSkillMaxSeconds);
+             : Mathf.Clamp(SkillCooldownOf(_midBoss?.Profile) * MidBossSkillCoolMul, MidBossSkillMinSeconds, MidBossSkillMaxSeconds)
+               * (_midBossEnraged ? MidBossEnrageSkillMul : 1f);
+
+        // ── 격노 (PD 2026-10-12 「중간보스면 중간보스 느낌 나게」) ──
+        //
+        // 체력이 절반 아래로 내려가면 한 번 크게 울부짖고(화면 흔들림 · 붉은 테두리) 2단계로 넘어간다.
+        // 더 빨리 걷고 더 자주 치고, 스킬도 더 자주 쓴다. 그리고 **부하를 둘 더 부른다** —
+        // 궁수의 전설 2 의 2챕터 보스도 2단계에서 졸개를 부른다. 이 게임에선 부하가 곧 빼앗을 몸이라,
+        // 새로 온 부하를 빼앗아 다시 대장을 치는 고비가 한 번 더 생긴다.
+        // 그림은 새로 들지 않는다 — 이미 있는 몸과 잡몹을 쓴다.
+        private const float MidBossEnrageAt = 0.5f;
+        private const float MidBossEnrageIntervalMul = 0.7f;
+        private const float MidBossEnrageMoveMul = 1.2f;
+        private const float MidBossEnrageSkillMul = 0.7f;
+        private const int MidBossEnrageSummons = 2;
+        private static readonly Color MidBossEnrageRim = new(1f, 0.25f, 0.2f, 1f);
+        private bool _midBossEnraged;
+        private float _midBossRimClock;
+        private HostEntry _midBossMinion;   // 부하 몸 하나 — 격노 때 같은 몸을 한 기 더 부른다
 
         /// <summary>부하를 다 잡았을 때 대장이 굳는 시간. 정본 3초.</summary>
         private const float MidBossStunSeconds = 3f;
@@ -81,6 +101,8 @@ namespace Game.Module.InGame
             _midBossStunUsed = false;
             _midBossSkillClock = 0f;
             _midBossSkillSeen = false;
+            _midBossEnraged = false;
+            _midBossRimClock = 0f;
         }
 
         /// <summary>
@@ -129,10 +151,15 @@ namespace Game.Module.InGame
             ApplyFacingSprites(u, leader.SpriteKey);
             _enemies.Add(u);
             _midBoss = u;
+            _midBossMinion = null;
+            for (int i = 0; i < _enemies.Count; i++)
+                if (_enemies[i] != null && _enemies[i] != u && _enemies[i].IsHostBody) { _midBossMinion = _enemies[i].Profile; break; }
 
             // 대장도 체력 막대를 쓴다. 최종 보스와 같은 자리에 뜨는 것이 맞다 —
             // 플레이어에게는 "이 방의 관문" 이라는 점이 같다.
-            _bus.Publish(new BossHpChangedEvent { BossHp = u.Hp, BossHpMax = u.HpMax, Phase = 1 });
+            // 이름을 같이 띄운다 — 체력 막대만 뜨면 「이게 대장이다」가 읽히지 않았다(PD 2026-10-12)
+            _bus.Publish(new BossHpChangedEvent { BossHp = u.Hp, BossHpMax = u.HpMax, BossName = leader.DisplayName, Phase = 1 });
+            Shake(ShakeMaxPixels * 0.6f);   // 들어서는 순간 한 번 쿵 — 관문 방이라는 신호
             Debug.Log($"[중간보스] {leader.NameKr} HP {u.Hp} 공격 {u.Atk} — 부하를 다 잡으면 {MidBossStunSeconds}초 경직");
         }
 
@@ -145,6 +172,7 @@ namespace Game.Module.InGame
         private void TickMidBoss(float dt)
         {
             if (_midBossStun > 0f) _midBossStun -= dt;
+            TickMidBossEnrage(dt);
             if (!HasMidBoss || _midBossStunUsed) return;
 
             for (int i = 0; i < _enemies.Count; i++)
@@ -160,6 +188,44 @@ namespace Game.Module.InGame
             _midBoss.SetState(EnemyState.Idle);
             _midBoss.PlayHit();   // 굳는 순간이 보여야 "지금이다" 가 읽힌다
             Debug.Log($"[중간보스] 부하 전멸 — {MidBossStunSeconds}초 경직");
+        }
+
+        private void TickMidBossEnrage(float dt)
+        {
+            if (!HasMidBoss) return;
+            if (_midBossEnraged)
+            {
+                // 격노 중에는 붉은 테두리가 천천히 숨쉰다 — 2단계라는 것이 계속 보인다
+                _midBossRimClock -= dt;
+                if (_midBossRimClock <= 0f) { _midBossRimClock = 0.9f; _midBoss.FlashRim(MidBossEnrageRim, 0.6f); }
+                return;
+            }
+            if (_midBoss.Hp > _midBoss.HpMax * MidBossEnrageAt) return;
+
+            _midBossEnraged = true;
+            _midBoss.ScaleCombat(MidBossEnrageMoveMul, MidBossEnrageIntervalMul);
+            _midBoss.FlashRim(MidBossEnrageRim, 0.6f);
+            _midBossRimClock = 0.9f;
+            Shake(ShakeMaxPixels);
+            _bus.Publish(new BossHpChangedEvent { BossHp = _midBoss.Hp, BossHpMax = _midBoss.HpMax, Phase = 2 });
+
+            // 부하 둘 — 대장 양옆에 선다. 이번 챕터 잡몹 목록에서 고르고, 한 기는 빼앗을 수 있는 몸이 되게 한다
+            // (방의 몸이 다 죽은 뒤 유령으로 맞지 않게).
+            int made = 0;
+            for (int k = 0; k < MidBossEnrageSummons; k++)
+            {
+                // 첫 기는 부하 몸(빼앗을 수 있다), 둘째는 이번 챕터 잡몹
+                bool body = k == 0 && _midBossMinion != null;
+                var e = body ? _midBossMinion : TrashAt(_roomIndex + k, _runChapter);
+                if (e == null) continue;
+                float side = k == 0 ? -1f : 1f;
+                var at = ClampedInField(_midBoss, _midBoss.Position + new Vector2(side * Meters(1.8f), Meters(0.6f)));
+                if (!Walkable(_midBoss, at)) at = _midBoss.Position + new Vector2(side * Meters(1.0f), 0f);
+                SpawnRoomUnit(e, body, false, at, $"MidBossCall_{e.HostKey}_{k}");
+                SpawnFx("hurt", at, HurtFxSize);
+                made++;
+            }
+            Debug.Log($"[중간보스] 격노 — 공격 간격 ×{MidBossEnrageIntervalMul} · 걸음 ×{MidBossEnrageMoveMul} · 부하 {made} 소환");
         }
     }
 }

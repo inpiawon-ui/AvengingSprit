@@ -134,6 +134,10 @@ card.c009.name	화염 각인	火炎の刻印	Flame Brand
 card.c009.desc	공격에 화상을 붙인다.	攻撃に燃焼を付与する。	Attacks inflict Burn.
 card.c010.name	궁지	窮地	Last Stand
 card.c010.desc	체력이 절반 아래면 세진다.	体力が半分以下になると強くなる。	Stronger below half HP.
+card.c011.name	공격 강화	攻撃強化	Power Up
+card.c011.desc	공격 피해가 늘어난다.	攻撃ダメージが上がる。	More attack damage.
+card.c012.name	속사	速射	Rapid Fire
+card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.
 boss.robot_snakes.name	로봇 스네이크	ロボットスネーク	Robot Snakes
 bossmove.BurrowStrike.name	솟아오름	突き上げ	Burrow Strike
 bossmove.RailLaser.name	레이저	レーザー	Laser

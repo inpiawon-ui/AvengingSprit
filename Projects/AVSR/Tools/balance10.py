@@ -50,7 +50,9 @@ SKILL_HP = 0.06      # 챕터가 오를수록 카드 · 손이 느는 몫(적 �
 # 1.0 = 「적 수 × 공격력」이 내 체력에 비례한다(방 전체가 쏟아내는 피해가 내 체력을 따라간다).
 # ⚠ 처음에는 0.35 였다. 자동 검증(2026-10-02)에서 「깨는 판의 힘」으로 넣은 3 · 6 · 10챕터가
 #   전부 방 7~10 에서 죽었다 — 적 수가 4 → 11 로 느는 것을 너무 약하게 봤다.
-COUNT_SOFTEN = 1.0
+HP_ANCHOR = 0.8      # 1챕터 잡몹 체력 배율(예전 0.5)
+HP_WALL = 1.35       # 2챕터부터 체력에 얹는 벽
+COUNT_SOFTEN = 0.5   # 1.0 이면 적이 늘어난 만큼 한 마리 공격을 다 깎아 10챕터 한 대 ≈ 1챕터였다(PD 2026-10-12 「너무 쉽다」)
 
 
 def level_of(exp):
@@ -167,12 +169,14 @@ def main():
     for ch, tries, runs, gold, (hm, dm, lv, gh, ho, star) in rows:
         c = ch - 1
         skill = 1 + SKILL_HP * c
-        # 적 체력 ← 내 화력. 1챕터는 0.5(지금 값 그대로 — 1챕터만 절반으로 깎여 있다)
-        hp_mul = 0.5 * (dm / base_dps) * skill
+        # 적 체력 ← 내 화력. 1챕터 닻 0.5 → 0.8, 2챕터부터 「첫 벽」 ×1.35
+        # (PD 2026-10-12 「몬스터 HP 가 너무 낮다 · 레벨업 안 해도 클리어가 쉽다」, 아처2 「2챕터부터 장비 · 능력 없이는 못 깬다」)
+        wall = HP_WALL if c else 1.0
+        hp_mul = HP_ANCHOR * (dm / base_dps) * skill * wall
         # 적 공격력 ← 내 체력. 적이 많아진 만큼은 덜 올린다
         atk_mul = (hm / base_hp) * (COUNT[0] / COUNT[c]) ** COUNT_SOFTEN
         atk_mul = atk_mul if c else 1.0     # 1 아래로도 내려간다 — 한 기는 약해져도 수가 는다
-        boss_hp = 1650 * (dm / base_dps) * (1 + 0.12 * c)
+        boss_hp = 1650 * (dm / base_dps) * (1 + 0.12 * c) * wall
         boss_atk = 18 if c == 0 else 30 * (hm / base_hp) ** 0.9
         rg = run_gold(c)
         room = rg / 464 * 24

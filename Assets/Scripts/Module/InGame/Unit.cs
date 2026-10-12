@@ -1448,6 +1448,13 @@ namespace Game.Module.InGame
         // 그림 한 장으로는 몸마다 모양이 달라 시안처럼 안 붙는다 — 무적 윤곽과 같은 실루엣 재질로
         // 몸 그림 모양 그대로 뒤에 깐다. 깜빡이지 않고 진하기만 받는다.
 
+        /// <summary>걸음 · 공격 간격을 배율로 바꾼다(중간보스 격노 — 2026-10-12). 간격은 작을수록 자주 친다.</summary>
+        public void ScaleCombat(float moveMul, float intervalMul)
+        {
+            MoveSpeed *= Mathf.Max(0.1f, moveMul);
+            AttackInterval *= Mathf.Max(0.1f, intervalMul);
+        }
+
         /// <summary>유령 빛 테두리 진하기(0 이면 끈다). 매 프레임 불러도 된다.</summary>
         public void SetLightRim(float alpha) => _lightRimAlpha = alpha;
 

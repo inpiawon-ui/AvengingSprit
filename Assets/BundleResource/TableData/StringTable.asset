@@ -2890,3 +2890,19 @@ MonoBehaviour:
     _ko: "\uBAB8 \uC5C6\uC74C"
     _ja: "\u4F53\u306A\u3057"
     _en: No body
+  - _key: card.c011.name
+    _ko: "\uACF5\uACA9 \uAC15\uD654"
+    _ja: "\u653B\u6483\u5F37\u5316"
+    _en: Power Up
+  - _key: card.c011.desc
+    _ko: "\uACF5\uACA9 \uD53C\uD574\uAC00 \uB298\uC5B4\uB09C\uB2E4."
+    _ja: "\u653B\u6483\u30C0\u30E1\u30FC\u30B8\u304C\u4E0A\u304C\u308B\u3002"
+    _en: More attack damage.
+  - _key: card.c012.name
+    _ko: "\uC18D\uC0AC"
+    _ja: "\u901F\u5C04"
+    _en: Rapid Fire
+  - _key: card.c012.desc
+    _ko: "\uB354 \uBE60\uB974\uAC8C \uC3DC\uB2E4."
+    _ja: "\u653B\u6483\u304C\u3088\u308A\u901F\u304F\u306A\u308B\u3002"
+    _en: Attack faster.

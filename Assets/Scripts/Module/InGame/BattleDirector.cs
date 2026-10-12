@@ -782,40 +782,11 @@ namespace Game.Module.InGame
                                   ?? TrashAt(trashSeq++, chapterNo));
                 if (e == null) continue;
 
-                var u = NewUnit(isHost ? $"Enemy_{s.ActorId}_{s.SpawnId}"
-                                       : $"Trash_{e.HostKey}_{s.SpawnId}");
-                NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
-                u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),
-                        // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
-                        // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
-                        Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)
-                                         * SpawnHpMul(elite)),
-                        Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)
-                                         * SpawnAtkMul(elite)),
-                        EnemySpeedOf(e),
-                        EnemyRangeOf(e),
-                        EnemyIntervalOf(e, elite) / EnemyHandSpeedMul,
-                        // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
-                        // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
-                        // 집행자 자리의 돌 고릴라(2026-10-07)는 96 캔버스라 잡몹 상자에 넣는다 —
-                        // 128 상자에 넣었더니 1.33 배로 커져 「너무 크다」(PD).
-                        elite
-                            ? UnitBox(128f, 128f) : UnitBox(84f, 78f),
-                        isBoss: false, profile: e);
-                u.Position = ToPixels(s.At);
-                ClearOfCover(u);
-                // 정본이 `POSSESSION_TARGET` 으로 찍은 자리(와 승격한 한 자리)만
-                // 빼앗을 수 있는 몸이다. 나머지는 잡몹 — 두들겨도 경직이 쌓이지 않는다.
-                if (isHost && !elite) { u.MarkAsHostBody(); u.MarkAsNextBody(); }
-                if (elite) u.MarkAsElite();
-                u.PossessPriority = e.PossessPriority;
-                u.PossessRange = 0f;
-                u.SetState(EnemyState.Idle);
-                // 풀에서 돌려 쓰므로 앞 방의 도약 단계가 남아 있을 수 있다.
-                u.ResetPattern();
-                ApplyFacingSprites(u, e.SpriteKey);
-                _enemies.Add(u);
+                var u = SpawnRoomUnit(e, isHost, elite, ToPixels(s.At),
+                                      isHost ? $"Enemy_{s.ActorId}_{s.SpawnId}" : $"Trash_{e.HostKey}_{s.SpawnId}");
+                if (!isHost && !elite) _crowdSeeds.Add(u);
             }
+            SpawnCrowd(room);
             EnsureHostBodies();
             SpawnMidBoss(room, hosts);
 
@@ -831,6 +802,97 @@ namespace Game.Module.InGame
                 else nMelee++;
             }
             Debug.Log($"[방] {room.RoomId} — 숙주 {nHost} · 근접 {nMelee} · 원거리 {nRanged}");
+        }
+
+        /// <summary>
+        /// 방 적 한 기를 세운다(잡몹 · 적 몸 · 엘리트). 배치 자리에서도, 밀도로 더 세우는 자리에서도 같은 길을 쓴다.
+        /// 공격 간격에 챕터 연사 배율(`chapters.tsv` fire)을 곱한다 — 보스는 이 길을 안 지난다.
+        /// </summary>
+        private Unit SpawnRoomUnit(HostEntry e, bool isHost, bool elite, Vector2 pixelPos, string name)
+        {
+            var u = NewUnit(name);
+            NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
+            u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),
+                    // 정본 엘리트(EL##)는 자기 행에 이미 센 체력이 적혀 있다.
+                    // 거기에 배율까지 곱하면 두 번 세진다 — 정본이 있으면 배율은 안 쓴다.
+                    Mathf.RoundToInt(EnemyHpOf(e) * (elite && !e.HasCanon ? _config.EliteHpMul : 1f)
+                                     * SpawnHpMul(elite)),
+                    Mathf.RoundToInt(EnemyAtkOf(e) * (elite && !e.HasCanon ? _config.EliteAtkMul : 1f)
+                                     * SpawnAtkMul(elite)),
+                    EnemySpeedOf(e),
+                    EnemyRangeOf(e),
+                    // 챕터 연사 배율 — 전역 손 속도 0.7 이 적만 느리게 해 「연사가 너무 느리다」(PD 2026-10-12)
+                    EnemyIntervalOf(e, elite) / EnemyHandSpeedMul * _config.ChapterFireMul(_runChapter),
+                    // 캔버스가 한 등급 큰 것들(128×128)은 상자도 커야 한다.
+                    // 잡몹 상자(84)에 넣으면 캔버스 여백까지 줄어 오히려 작아 보인다.
+                    // 집행자 자리의 돌 고릴라(2026-10-07)는 96 캔버스라 잡몹 상자에 넣는다 —
+                    // 128 상자에 넣었더니 1.33 배로 커져 「너무 크다」(PD).
+                    elite
+                        ? UnitBox(128f, 128f) : UnitBox(84f, 78f),
+                    isBoss: false, profile: e);
+            u.Position = pixelPos;
+            ClearOfCover(u);
+            // 정본이 `POSSESSION_TARGET` 으로 찍은 자리(와 승격한 한 자리)만
+            // 빼앗을 수 있는 몸이다. 나머지는 잡몹 — 두들겨도 경직이 쌓이지 않는다.
+            if (isHost && !elite) { u.MarkAsHostBody(); u.MarkAsNextBody(); }
+            if (elite) u.MarkAsElite();
+            u.PossessPriority = e.PossessPriority;
+            u.PossessRange = 0f;
+            u.SetState(EnemyState.Idle);
+            // 풀에서 돌려 쓰므로 앞 방의 도약 단계가 남아 있을 수 있다.
+            u.ResetPattern();
+            ApplyFacingSprites(u, e.SpriteKey);
+            _enemies.Add(u);
+            return u;
+        }
+
+        // ── 방 밀도 (PD 2026-10-12 「궁수의 전설 2 는 2챕터만 돼도 10마리 구간이 있다」) ──
+        //
+        // ⚠ 웨이브(증원)는 쓰지 않는다 — 두 번 만들었다 두 번 지웠다(방을 비운 순간 허공에서 나오면
+        //   빙의할 몸이 이미 다 죽어 유령으로 맞게 된다). 그래서 **들어서는 순간 다 서 있는** 규칙은 지키고,
+        //   손으로 짠 잡몹 자리 옆에 같은 잡몹을 한 기씩 더 세워 머릿수를 올린다(챕터 표 crowd).
+        //   어느 자리에 더 세울지는 방마다 고정 순서 — 같은 방은 늘 같은 모양이다.
+        private readonly List<Unit> _crowdSeeds = new();
+
+        private void SpawnCrowd(RoomEntry room)
+        {
+            var seeds = _crowdSeeds;
+            float crowd = room != null && !room.IsMidBoss ? _config.ChapterCrowd(_runChapter) : 0f;
+            int extra = Mathf.RoundToInt(seeds.Count * crowd);
+            int cap = _config.RoomEnemyCap;
+            for (int k = 0; k < extra && seeds.Count > 0; k++)
+            {
+                if (AliveEnemyCount() >= cap) break;
+                var src = seeds[(k * 3 + _roomIndex) % seeds.Count];
+                if (src == null || src.Profile == null) continue;
+                if (!TryCrowdSpot(src, out var at)) continue;
+                SpawnRoomUnit(src.Profile, false, false, at, $"Trash_{src.Key}_crowd{k}");
+            }
+            seeds.Clear();
+        }
+
+        /// <summary>원래 자리 둘레 1.2 m 의 여덟 방향 중 걸을 수 있고 다른 적과 겹치지 않는 곳.</summary>
+        private bool TryCrowdSpot(Unit src, out Vector2 at)
+        {
+            float r = Meters(1.2f);
+            int start = (src.GetEntityId().GetHashCode() & 7);
+            for (int i = 0; i < 8; i++)
+            {
+                float deg = ((start + i) % 8) * 45f;
+                var cand = ClampedInField(src, src.Position + new Vector2(Mathf.Cos(deg * Mathf.Deg2Rad), Mathf.Sin(deg * Mathf.Deg2Rad)) * r);
+                if (!Walkable(src, cand)) continue;
+                bool crowded = false;
+                for (int j = 0; j < _enemies.Count; j++)
+                {
+                    var o = _enemies[j];
+                    if (o != null && o.IsAlive && (o.Position - cand).sqrMagnitude < Meters(0.8f) * Meters(0.8f)) { crowded = true; break; }
+                }
+                if (crowded) continue;
+                at = cand;
+                return true;
+            }
+            at = default;
+            return false;
         }
 
         /// <summary>
@@ -2305,13 +2367,14 @@ namespace Game.Module.InGame
         /// 언제나 "달려오는 것을 상대하는" 한 가지 문제만 나왔다. 쏘는 놈이 섞이면
         /// 붙는 것과 피하는 것을 동시에 해야 한다 — 엄폐물이 그제서야 값을 가진다.
         ///
-        /// 사거리 5.2 m 는 **숙주 원거리(7.0~8.5 m)보다 짧다.** 잡몹이 숙주보다 멀리
-        /// 쏘면 몸을 빼앗을 이유가 줄어든다. 예비동작 0.75초로 길게 잡아 피할 틈을 남긴다.
+        /// 사거리 5.2 → 6.8 m(PD 2026-10-12 「벽 뒤에서 공격도 못 한다, 사거리를 늘려서라도 멀리서」).
+        /// 숙주 원거리(7.0~8.5 m)보다는 아직 조금 짧다 — 잡몹이 숙주보다 멀리 쏘면 몸을 빼앗을 이유가 줄어든다.
+        /// 예비동작 0.75초로 길게 잡아 피할 틈을 남긴다.
         /// </summary>
         private static HostEntry Scrapgunner => s_gunner ??= HostEntry.CreateTrash(
             TrashGunnerKey, "고철 전갈", AttackKind.Single,   // 옛 폐품 사수 — 사람 모양이라 호스트로 읽혀 그림을 바꿨다(PD 2026-10-07), 키는 그대로
             hp: 24, atk: 7, moveMps: 1.4f, engageMps: 2.2f,
-            rangeMeters: 5.2f, interval: 1.9f, telegraph: 0.75f);
+            rangeMeters: 6.8f, interval: 1.9f, telegraph: 0.75f);
 
         private const string TrashWardenKey = "roadwarden";
         private const string TrashCoilKey = "coilwalker";
@@ -2327,7 +2390,7 @@ namespace Game.Module.InGame
         private static HostEntry Roadwarden => s_warden ??= HostEntry.CreateTrash(
             TrashWardenKey, "순찰기", AttackKind.Single,
             hp: 34, atk: 9, moveMps: 1.1f, engageMps: 1.9f,
-            rangeMeters: 5.6f, interval: 1.8f, telegraph: 0.75f,
+            rangeMeters: 7.0f, interval: 1.8f, telegraph: 0.75f,   // 5.6 → 7.0(2026-10-12)
             // 자리를 지키고 각도로 덮는다(FAN). 사거리 5.6 m 에 40° 면 부채꼴 끝 폭이
             // 약 3.8 m — 방 폭의 3분의 1이다. 정면이면 2발, 옆으로 비키면 1발.
             shotCount: 3, spreadDegrees: 40f);
@@ -2341,7 +2404,7 @@ namespace Game.Module.InGame
         private static HostEntry Coilwalker => s_coil ??= HostEntry.CreateTrash(
             TrashCoilKey, "코일 보행기", AttackKind.Single,
             hp: 26, atk: 10, moveMps: 1.6f, engageMps: 2.4f,
-            rangeMeters: 6.2f, interval: 2.4f, telegraph: 0.7f);
+            rangeMeters: 7.4f, interval: 2.4f, telegraph: 0.7f);   // 6.2 → 7.4(2026-10-12)
 
 
         /// <summary>
@@ -3508,6 +3571,7 @@ namespace Game.Module.InGame
         private void TickGhostState(float dt)
         {
             if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
+            if (_hurtGrace > 0f) _hurtGrace = Mathf.Max(0f, _hurtGrace - dt);
             if (_skillInvuln > 0f) _skillInvuln = Mathf.Max(0f, _skillInvuln - dt);
 
             // 전술 빙의 쿨다운은 몸 안에 있든 밖에 있든 흐른다.
@@ -7328,9 +7392,15 @@ namespace Game.Module.InGame
         //   숫자나 글자를 띄우지 않는다 — 대신 몸을 보면 알 수 있어야 한다.
         //   표현은 `Unit` 쪽이다: 몸이 비치고 **윤곽만 빛난다.**
 
+        // 맞은 뒤 0.7초는 다음 피해를 흘린다(판정만 — 무적 윤곽 연출은 스킬 무적에만, 메모리 invuln-look-only-for-skills).
+        // 적 연사 · 밀도를 올리면서(2026-10-12) 탄 여러 발이 한꺼번에 겹쳐 「한 번에 녹는」 억울함을 막는다(Terraria 0.67초 수준).
+        private const float HurtGraceSeconds = 0.7f;
+        private float _hurtGrace;
+
         private void DamagePlayer(int amount)
         {
             if (IsInvulnerable) return;
+            if (_hurtGrace > 0f) return;
 
             // ⚠ **유령은 적 공격을 받지 않는다.** 몸이 없는 동안 줄어드는 것은
             //   시계(자연 감소)와 몸을 잃고 놓아주는 값뿐이다.
@@ -7376,6 +7446,7 @@ namespace Game.Module.InGame
             var hurtAt = Avatar != null ? Avatar.Position : Vector2.zero;
             ShowDamage(hurtAt, amount, toEnemy: false);
             SpawnFx("hurt", hurtAt, HurtFxSize);
+            _hurtGrace = HurtGraceSeconds;
             GameSound.HostHurt(_host.Key);
             Shake(ShakeOnPlayerHurt);
             if (_host.TakeDamage(amount)) LoseHost();

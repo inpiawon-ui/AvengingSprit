@@ -103,7 +103,7 @@ GLYPH = {
 # 키 큰 것 — 적 탄도 막는다. 낮은 것(상자·낮은 벽·바리케이드)은 적 탄이 넘어온다.
 TALL = {'PILLAR', 'BULK', 'RAIL', 'RICOCHET_WALL', 'WALL_TURRET_S', 'WALL_TURRET_W', 'WALL_TURRET_E',
         'PUSH_ROCK', 'PROP_TALL', 'LASER_PILLAR', 'SHIELD_GEN'}
-# 낮은 엄폐(3차) — 솟음이 낮지만 탄을 막는다. 원거리 적의 엄폐로도 친다
+# 낮은 엄폐(3차) — 솟음이 낮지만 내 탄을 막는다. 적 탄은 넘어온다(2026-10-12)
 LOW_SHIELD = {'SANDBAG', 'BARREL_PILE', 'FALLEN_PILLAR', 'JERSEY_ROW', 'SCRAP_PILE', 'WRECK_CAR'}
 # 원거리 적이 숨을 수 있는 것 — 적 탄도 막는 것
 COVER = TALL | LOW_SHIELD
@@ -512,7 +512,9 @@ def write_tsv(rooms):
                 hz = HAZARD.get(kind, ('NONE', 0, 0))
                 move = 1 if (kind in SOLID or kind in CHANNEL) else 0
                 shot = 1 if kind in SOLID else 0
-                eshot = 1 if kind in COVER else 0
+                # 적 탄은 키 큰 것만 막는다 — 낮은 엄폐는 적 탄이 넘어오고 내 탄은 막힌다(궁수의 전설식 비대칭).
+                # 낮은 엄폐가 적 탄 · 사선까지 막자 사수가 그 뒤에 서서 한 발도 못 쐈다(PD 2026-10-12 「벽 뒤에 왜 있냐」)
+                eshot = 1 if kind in TALL else 0
                 f.write(f'OBJ\t{kind}\t{cx:g}\t{cy:g}\t{w:g}\t{h:g}\t{move}\t{shot}\t{eshot}\t{hz[0]}\t{hz[1]}\t{hz[2]:g}\n')
             for actor, x, y, host in r.spawns:
                 f.write(f'SPAWN\t{actor}\t{x:g}\t{y:g}\t{1 if host else 0}\n')

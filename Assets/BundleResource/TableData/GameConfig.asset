@@ -122,7 +122,9 @@ MonoBehaviour:
     - scrapgunner
     - actor_enforcer
     Pattern: 1
-    EnemyHpMul: 0.5
+    Crowd: 0
+    Fire: 0.75
+    EnemyHpMul: 0.8
     EnemyAtkMul: 1
     BossHp: 1650
     BossAtk: 36
@@ -153,9 +155,11 @@ MonoBehaviour:
     - actor_enforcer
     - boar
     Pattern: 2
-    EnemyHpMul: 0.57
-    EnemyAtkMul: 0.89
-    BossHp: 2000
+    Crowd: 0.6
+    Fire: 0.7
+    EnemyHpMul: 1.24
+    EnemyAtkMul: 1
+    BossHp: 2702
     BossAtk: 38
     ClearGold: 300
     Chest: silver
@@ -183,9 +187,11 @@ MonoBehaviour:
     - turret_cross
     - mole
     Pattern: 3
-    EnemyHpMul: 0.69
-    EnemyAtkMul: 0.82
-    BossHp: 2530
+    Crowd: 0.5
+    Fire: 0.66
+    EnemyHpMul: 1.5
+    EnemyAtkMul: 1
+    BossHp: 3416
     BossAtk: 42
     ClearGold: 450
     Chest: silver
@@ -213,9 +219,11 @@ MonoBehaviour:
     - coilwalker
     - armadillo
     Pattern: 4
-    EnemyHpMul: 0.79
-    EnemyAtkMul: 0.78
-    BossHp: 3020
+    Crowd: 0.4
+    Fire: 0.63
+    EnemyHpMul: 1.71
+    EnemyAtkMul: 1.03
+    BossHp: 4072
     BossAtk: 46
     ClearGold: 650
     Chest: gold
@@ -244,9 +252,11 @@ MonoBehaviour:
     - actor_enforcer
     - mushroom
     Pattern: 5
-    EnemyHpMul: 0.93
-    EnemyAtkMul: 0.76
-    BossHp: 3680
+    Crowd: 0.3
+    Fire: 0.6
+    EnemyHpMul: 2.02
+    EnemyAtkMul: 1.08
+    BossHp: 4961
     BossAtk: 51
     ClearGold: 900
     Chest: gold
@@ -275,9 +285,11 @@ MonoBehaviour:
     - turret_cross
     - mantis
     Pattern: 6
-    EnemyHpMul: 1.16
-    EnemyAtkMul: 0.8
-    BossHp: 4720
+    Crowd: 0.25
+    Fire: 0.58
+    EnemyHpMul: 2.51
+    EnemyAtkMul: 1.2
+    BossHp: 6371
     BossAtk: 59
     ClearGold: 1200
     Chest: gold
@@ -306,9 +318,11 @@ MonoBehaviour:
     - coilwalker
     - boar
     Pattern: 7
-    EnemyHpMul: 1.38
-    EnemyAtkMul: 0.88
-    BossHp: 5740
+    Crowd: 0.2
+    Fire: 0.56
+    EnemyHpMul: 2.97
+    EnemyAtkMul: 1.33
+    BossHp: 7751
     BossAtk: 65
     ClearGold: 1550
     Chest: platinum
@@ -337,9 +351,11 @@ MonoBehaviour:
     - turret_cross
     - spider
     Pattern: 7
-    EnemyHpMul: 1.63
-    EnemyAtkMul: 0.89
-    BossHp: 6970
+    Crowd: 0.2
+    Fire: 0.56
+    EnemyHpMul: 3.52
+    EnemyAtkMul: 1.41
+    BossHp: 9404
     BossAtk: 72
     ClearGold: 1950
     Chest: platinum
@@ -368,9 +384,11 @@ MonoBehaviour:
     - roadwarden
     - mummy
     Pattern: 7
-    EnemyHpMul: 2.1
-    EnemyAtkMul: 1.08
-    BossHp: 9180
+    Crowd: 0.2
+    Fire: 0.56
+    EnemyHpMul: 4.54
+    EnemyAtkMul: 1.71
+    BossHp: 12390
     BossAtk: 85
     ClearGold: 2400
     Chest: platinum
@@ -400,9 +418,11 @@ MonoBehaviour:
     - coilwalker
     - turret_cross
     Pattern: 7
-    EnemyHpMul: 2.48
-    EnemyAtkMul: 1.08
-    BossHp: 11060
+    Crowd: 0.2
+    Fire: 0.56
+    EnemyHpMul: 5.36
+    EnemyAtkMul: 1.8
+    BossHp: 14932
     BossAtk: 93
     ClearGold: 3000
     Chest: platinum
@@ -416,6 +436,7 @@ MonoBehaviour:
     MixBlade: 35
     MixForce: 33
     MixMagic: 35
+  _roomEnemyCap: 12
   _shardCurve: 080000000c000000100000001400000023000000280000002e000000340000003a0000005a000000
   _gradeMultiplier:
   - 0.8

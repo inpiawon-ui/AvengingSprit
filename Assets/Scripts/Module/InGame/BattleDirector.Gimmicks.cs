@@ -71,22 +71,31 @@ namespace Game.Module.InGame
         /// 가까운 옆자리부터 본다 — 멀리 나가면 엄폐를 버린 것이 된다.
         /// 옆으로는 안 트이면 한 걸음 다가선다. 그래도 안 되면 다음 프레임에 다시 잰다.
         /// </summary>
+        private static readonly float[] LosSideSteps = { 1.0f, 1.8f, 2.6f, 3.6f, 4.8f };
+
         private Vector2 PickLineOfSightSpot(Unit e, Unit me)
         {
             var toMe = me.Position - e.Position;
             var dir = toMe.sqrMagnitude < 0.0001f ? e.Facing : toMe.normalized;
             var side = new Vector2(-dir.y, dir.x) * SideSignOf(e);
-            float[] steps = { 1.0f, 1.8f, 2.6f };
-            for (int s = 0; s < steps.Length; s++)
+            // 옆으로 더 멀리까지(4.8 m) 본다 — 저지 블록 줄 · 레일처럼 긴 엄폐는 2.6 m 안에 트인 자리가 없어
+            // 「앞으로 1.5 m = 벽 쪽」을 골라 걸리고 숨기를 되풀이했다(PD 2026-10-12 「벽 뒤에 왜 있냐」)
+            for (int s = 0; s < LosSideSteps.Length; s++)
             {
                 for (int sign = 1; sign >= -1; sign -= 2)
                 {
-                    var cand = ClampedInField(e, e.Position + side * (sign * Meters(steps[s])));
+                    var cand = ClampedInField(e, e.Position + side * (sign * Meters(LosSideSteps[s])));
                     if (!Walkable(e, cand)) continue;
                     if (EnemyLineClear(cand, me.Position)) return cand;
                 }
             }
-            return ClampedInField(e, e.Position + dir * Meters(1.5f));
+            // 옆이 다 막혔으면 비스듬히 앞으로(엄폐 끝을 돌아 나간다). 곧장 앞은 그 엄폐라 고르지 않는다
+            for (int sign = 1; sign >= -1; sign -= 2)
+            {
+                var cand = ClampedInField(e, e.Position + (dir + side * sign).normalized * Meters(2.4f));
+                if (Walkable(e, cand)) return cand;
+            }
+            return ClampedInField(e, e.Position - dir * Meters(1.2f));   // 그래도 없으면 물러나 다시 잰다
         }
 
         /// <summary>

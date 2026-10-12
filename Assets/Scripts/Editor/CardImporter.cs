@@ -83,6 +83,16 @@ namespace Game.EditorTools
             new("c010", "궁지", BuffKind.LowHpPower, CardRarity.Rare,
                 "ATTACK", new[] { 15, 25, 35, 45, 55 },
                 "체력이 절반 아래면 세진다."),
+
+            // 2026-10-12 — 공격력 · 공격 속도를 바로 올리는 카드가 한 장도 없어 「레벨업 안 해도 깬다」(PD).
+            // 적 체력을 올리면서, 카드를 고르면 화력이 확실히 붙게 한 장에 약 +10~15% 로 맞췄다.
+            new("c011", "공격 강화", BuffKind.Attack, CardRarity.Common,
+                "ATTACK", new[] { 12, 18, 24, 30, 36 },
+                "공격 피해가 늘어난다."),
+
+            new("c012", "속사", BuffKind.AttackSpeed, CardRarity.Rare,
+                "PROJECTILE", new[] { 10, 15, 20, 25, 30 },
+                "더 빠르게 쏜다."),
         };
 
         private static readonly System.Collections.Generic.Dictionary<string, string> CategoryColor = new()

@@ -24,6 +24,7 @@ namespace Game.EditorTools
             public string Stage, Boss, Leader, Lean, Chest, Name, Desc;
             public string[] Trash;
             public int Pattern, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
+            public float Crowd, Fire;
             public int Music, Art, BossArt, ChestArt;
             public float HpMul, AtkMul, PriceMul;
         }
@@ -55,6 +56,7 @@ namespace Game.EditorTools
                 {
                     Ch = I("ch"), Stage = S("stage"), Boss = S("boss"), Leader = S("leader"),
                     Trash = S("trash").Split(','), Lean = S("lean"), Pattern = I("pattern"),
+                    Crowd = F("crowd"), Fire = F("fire"),
                     HpMul = F("hpMul"), AtkMul = F("atkMul"), BossHp = I("bossHp"), BossAtk = I("bossAtk"),
                     RoomGold = I("roomGold"), MidGold = I("midGold"), BossGold = I("bossGold"),
                     ClearGold = I("clearGold"), Chest = S("chest"), Exp = I("exp"), PriceMul = F("priceMul"),
@@ -141,6 +143,8 @@ namespace Game.EditorTools
                     trash.GetArrayElementAtIndex(k).stringValue = r.Trash[k].Trim();
                 }
                 e.FindPropertyRelative("Pattern").intValue = r.Pattern;
+                e.FindPropertyRelative("Crowd").floatValue = r.Crowd;
+                e.FindPropertyRelative("Fire").floatValue = r.Fire;
                 e.FindPropertyRelative("EnemyHpMul").floatValue = r.HpMul;
                 e.FindPropertyRelative("EnemyAtkMul").floatValue = r.AtkMul;
                 e.FindPropertyRelative("BossHp").intValue = r.BossHp;

@@ -214,3 +214,43 @@ MonoBehaviour:
     _category: ATTACK
     _levelValues: 0f00000019000000230000002d00000037000000
     _implemented: 1
+  - _buffKey: c011
+    _nameKr: "\uACF5\uACA9 \uAC15\uD654"
+    _description: "\uACF5\uACA9 \uD53C\uD574\uAC00 \uB298\uC5B4\uB09C\uB2E4."
+    _kind: 0
+    _value: 12
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C011
+    _rarity: 0
+    _category: ATTACK
+    _levelValues: 0c00000012000000180000001e00000024000000
+    _implemented: 1
+  - _buffKey: c012
+    _nameKr: "\uC18D\uC0AC"
+    _description: "\uB354 \uBE60\uB974\uAC8C \uC3DC\uB2E4."
+    _kind: 1
+    _value: 10
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: PROJECTILE
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C012
+    _rarity: 1
+    _category: PROJECTILE
+    _levelValues: 0a0000000f00000014000000190000001e000000
+    _implemented: 1

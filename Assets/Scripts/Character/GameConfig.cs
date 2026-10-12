@@ -584,6 +584,10 @@ namespace Game.Character
             public string[] Trash;
             [Tooltip("잡몹 패턴 단계(1~6). 같은 잡몹도 단계가 오르면 다르게 싸운다.")]
             public int Pattern;
+            [Tooltip("잡몹 자리마다 같은 잡몹을 한 기 더 세울 몫(0.6 = 잡몹 10자리에 6기 더). 방 상한은 RoomEnemyCap.")]
+            public float Crowd;
+            [Tooltip("방 적(잡몹 · 적 몸)의 공격 간격 배율. 작을수록 자주 쏜다. 0 이면 1.")]
+            public float Fire;
             [Tooltip("잡몹 · 적 몸의 체력 배율.")]
             public float EnemyHpMul;
             [Tooltip("잡몹 · 적 몸의 공격력 배율.")]
@@ -632,8 +636,25 @@ namespace Game.Character
             // 보스 직전 방(14)에서 최대 — 챕터가 15방이 됐다(2026-09-18, 예전 10방은 9 에서 최대)
             => 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, 14) - 1) / 13f);
 
-        /// <summary>방 배율의 폭. 챕터 배율(최대 4.18배)에 비하면 양념이다.</summary>
-        private const float EnemyRoomMulSpan = 0.20f;
+        /// <summary>
+        /// 방 배율의 폭 — 0.20 → 0.60(PD 2026-10-12 「너무 쉽다 · 레벨업 안 해도 깬다」).
+        /// 14번 방이 1번 방의 1.6배라, 카드를 안 고르면 뒤 방으로 갈수록 잡는 데 오래 걸린다.
+        /// </summary>
+        private const float EnemyRoomMulSpan = 0.60f;
+
+        /// <summary>챕터 밀도(잡몹 자리마다 더 세울 몫). 표가 없으면 0.</summary>
+        public float ChapterCrowd(int chapter) => HasChapters ? Mathf.Max(0f, ChapterOf(chapter).Crowd) : 0f;
+
+        /// <summary>챕터 연사 배율(방 적 공격 간격에 곱한다). 표가 없거나 0 이면 1.</summary>
+        public float ChapterFireMul(int chapter)
+        {
+            float f = HasChapters ? ChapterOf(chapter).Fire : 0f;
+            return f > 0f ? Mathf.Clamp(f, 0.3f, 2f) : 1f;
+        }
+
+        [Tooltip("방 하나에 동시에 서는 적의 상한(밀도로 더 세울 때 넘지 않는다). 궁수의 전설 3챕터 무리 겹침이 8~12.")]
+        [SerializeField] private int _roomEnemyCap = 12;
+        public int RoomEnemyCap => Mathf.Max(1, _roomEnemyCap);
 
         public int BossHp(int chapter) => _bossHpBase + Mathf.Max(0, chapter - 1) * 400;
         public int BossAtk => _bossAtk;
