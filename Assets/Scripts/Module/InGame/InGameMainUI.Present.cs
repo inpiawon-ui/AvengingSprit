@@ -22,9 +22,10 @@ namespace Game.Module.InGame
     public sealed partial class InGameMainUI
     {
         // ── 시간(초) — 곡선은 Ease 의 OutBack · OutCubic · InOutSine ──
-        private const float PresentIconIn = 0.32f;
-        private const float PresentHold = 1.05f;
-        private const float PresentOut = 0.28f;
+        // 전부 반으로 줄였다 (PD 2026-10-12 「연출 시간이 너무 길다, 카드 선택 · 캐릭터에 효과 부여 시간을 반으로」) — 예전 0.32 · 1.05 · 0.28
+        private const float PresentIconIn = 0.16f;
+        private const float PresentHold = 0.52f;
+        private const float PresentOut = 0.14f;
         private const float PresentHeadGap = 150f;   // 몸 가운데에서 머리 위 띠까지(px)
 
         private RectTransform _presentLayer;
@@ -79,7 +80,7 @@ namespace Game.Module.InGame
             {
                 var fx = new PopupFxLayer
                 {
-                    Frames = FxOf(g.Kind), Phase = "accept", W = 230f, H = 230f, Step = 0.11f, T0 = 0f, T1 = 0f,
+                    Frames = FxOf(g.Kind), Phase = "accept", W = 230f, H = 230f, Step = 0.055f, T0 = 0f, T1 = 0f,
                     Loop = false, Additive = g.Kind != GainKind.Curse, Tint = g.Kind == GainKind.Card ? g.Tint : Color.white,
                     Alpha = 1f, Fade = 0.08f, FromAvatar = true,
                 };
@@ -108,8 +109,8 @@ namespace Game.Module.InGame
                 banner.Root.anchoredPosition = new Vector2(x, -(y - 24f * (1f - Ease.OutCubic(inK)) - rise));
                 banner.Icon.localScale = Vector3.one * s;
                 // 글자는 아이콘이 반쯤 내려온 뒤에 들어온다
-                float textK = Mathf.Clamp01((t - PresentIconIn * 0.5f) / 0.22f);
-                banner.Group.alpha = Mathf.Min(Ease.OutCubic(Mathf.Clamp01(t / 0.12f)), 1f - outK);
+                float textK = Mathf.Clamp01((t - PresentIconIn * 0.5f) / 0.11f);
+                banner.Group.alpha = Mathf.Min(Ease.OutCubic(Mathf.Clamp01(t / 0.06f)), 1f - outK);
                 banner.Texts.alpha = Ease.OutCubic(textK);
                 if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
             }

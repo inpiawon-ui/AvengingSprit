@@ -273,8 +273,9 @@ namespace Game.Module.InGame
             if (_rays0 != null && Has(_rays) && card != null)
             {
                 // 고름(강) — 빛살이 OutBack 으로 확 펼쳐졌다(0.22초) 0.55초에 걸쳐 사라진다
-                float up = Ease.OutBack(Mathf.Clamp01(_pickClock / 0.22f));
-                float fade = 1f - Mathf.Clamp01((_pickClock - 0.3f) / 0.55f);
+                // 시간은 반으로 (PD 2026-10-12 「연출 시간이 너무 길다, 카드 선택 · 캐릭터에 효과 부여 시간을 반으로」) — 예전 0.22 · 0.3 + 0.55
+                float up = Ease.OutBack(Mathf.Clamp01(_pickClock / 0.11f));
+                float fade = 1f - Mathf.Clamp01((_pickClock - 0.15f) / 0.28f);
                 Follow(_rays0.rectTransform, card);
                 _rays0.sprite = _rays[0];
                 _rays0.rectTransform.localScale = card.localScale * Mathf.LerpUnclamped(0.7f, 1f, up);
@@ -290,7 +291,7 @@ namespace Game.Module.InGame
                     _rays1.enabled = fade > 0f;
                 }
             }
-            if (_cardTier[_picked].PickSecond && !_pickSecondDone && _pickClock >= 0.25f && card != null)
+            if (_cardTier[_picked].PickSecond && !_pickSecondDone && _pickClock >= 0.12f && card != null)
             {
                 _pickSecondDone = true;
                 Burst(_panelParticles, card, 8, 5, Color.Lerp(_cardColor[_picked], Color.white, 0.55f), 0.5f);
@@ -322,7 +323,7 @@ namespace Game.Module.InGame
             _gainClock = 0f;
             _gainBurstDone = false;
             _gainNextMote = 0f;
-            _gainNextStar = 0.2f;
+            _gainNextStar = 0.1f;
             _gainRoot.anchoredPosition = new Vector2(body.x, -body.y);
             ClearBackMotes();
         }
@@ -429,29 +430,30 @@ namespace Game.Module.InGame
                 ClearBackMotes();
                 return;
             }
-            float inK = Ease.OutCubic(Mathf.Clamp01(t / 0.3f));
-            float outK = Mathf.Clamp01((t - (_gainLength - 0.35f)) / 0.35f);
+            // 깃듦 박자도 반으로 (PD 2026-10-12 「연출 시간이 너무 길다, 카드 선택 · 캐릭터에 효과 부여 시간을 반으로」) — 예전 0.3 · 0.35 · 0.25 · 0.4 · 고리 0.6
+            float inK = Ease.OutCubic(Mathf.Clamp01(t / 0.15f));
+            float outK = Mathf.Clamp01((t - (_gainLength - 0.18f)) / 0.18f);
             float life = inK * (1f - outK);
             var c = _gainColor;
 
             // 광원 — 깃드는 순간(강) 확 밝아졌다 머묾
             if (_gainGlow != null)
             {
-                float flare = t < 0.25f ? Mathf.Lerp(0.6f, 1.35f, Ease.OutCubic(t / 0.25f)) : Mathf.Lerp(1.35f, 1f, Ease.OutCubic(Mathf.Clamp01((t - 0.25f) / 0.4f)));
+                float flare = t < 0.12f ? Mathf.Lerp(0.6f, 1.35f, Ease.OutCubic(t / 0.12f)) : Mathf.Lerp(1.35f, 1f, Ease.OutCubic(Mathf.Clamp01((t - 0.12f) / 0.2f)));
                 _gainGlow.rectTransform.localScale = Vector3.one * flare;
-                _gainGlow.color = WithAlpha(c, (t < 0.25f ? 1f : 0.9f) * life);
+                _gainGlow.color = WithAlpha(c, (t < 0.12f ? 1f : 0.9f) * life);
                 _gainGlow.enabled = true;
             }
             // 빛기둥 — 위에서 몸으로 내려와 선다
             if (_gainPillar != null)
             {
-                _gainPillar.rectTransform.localScale = new Vector3(1f, Mathf.Lerp(0.2f, 1f, Ease.OutCubic(Mathf.Clamp01(t / 0.25f))), 1f);
+                _gainPillar.rectTransform.localScale = new Vector3(1f, Mathf.Lerp(0.2f, 1f, Ease.OutCubic(Mathf.Clamp01(t / 0.12f))), 1f);
                 _gainPillar.color = WithAlpha(c, 0.75f * life);
                 _gainPillar.enabled = true;
             }
             // 바닥 고리 — 퍼지며 사라진다(위 등급은 한 번 더)
             Ring(_gainRing, t, c, life);
-            if (_gainTier.GainSecondRing) Ring(_gainRing2, t - 0.35f, c, life);
+            if (_gainTier.GainSecondRing) Ring(_gainRing2, t - 0.18f, c, life);
             else if (_gainRing2 != null) _gainRing2.enabled = false;
             // 파티클 — 깃드는 순간 터지고, 머무는 동안 위로 솟는다
             var light = Color.Lerp(c, Color.white, 0.4f);
@@ -468,15 +470,15 @@ namespace Game.Module.InGame
                              Random.Range(0.5f, 0.85f), light, star ? 0 : 1);
                 }
             }
-            if (t < _gainLength - 0.3f && t >= _gainNextMote)
+            if (t < _gainLength - 0.15f && t >= _gainNextMote)
             {
-                _gainNextMote = t + 1f / Mathf.Max(1, _gainTier.GainMotes);
+                _gainNextMote = t + 0.5f / Mathf.Max(1, _gainTier.GainMotes);   // 시간이 반이라 두 배로 쏴 알갱이 수는 그대로
                 EmitBack(new Vector2(Random.Range(-46f, 46f), Random.Range(-40f, 10f)),
                          new Vector2(Random.Range(-6f, 6f), Random.Range(50f, 90f)), Random.Range(8f, 12f), Random.Range(0.6f, 0.9f), light, 1);
             }
-            if (_gainTier.GainStars && t >= _gainNextStar && t < _gainLength - 0.3f)
+            if (_gainTier.GainStars && t >= _gainNextStar && t < _gainLength - 0.15f)
             {
-                _gainNextStar = t + Random.Range(0.18f, 0.3f);
+                _gainNextStar = t + Random.Range(0.09f, 0.15f);
                 EmitBack(new Vector2(Random.Range(-60f, 60f), Random.Range(-50f, 60f)), Vector2.zero,
                          Random.Range(14f, 20f), Random.Range(0.35f, 0.5f), Color.Lerp(light, Color.white, 0.4f), 0);
             }
@@ -487,7 +489,7 @@ namespace Game.Module.InGame
         {
             if (ring == null) return;
             if (t < 0f) { ring.enabled = false; return; }
-            float k = Mathf.Clamp01(t / 0.6f);
+            float k = Mathf.Clamp01(t / 0.3f);
             ring.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.4f, 1.3f, Ease.OutCubic(k));
             ring.color = WithAlpha(c, (1f - k) * life);
             ring.enabled = k < 1f;

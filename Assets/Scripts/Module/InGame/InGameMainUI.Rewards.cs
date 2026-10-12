@@ -81,12 +81,13 @@ namespace Game.Module.InGame
             // 고른 카드는 제자리에서 커지고 나머지는 흐려진다(PD 10-08 2차 「제자리에서 커지게」).
             // 옮기지 않으니 겹칠 일이 없어 나머지도 완전히 빼지 않는다
             float home = (_ui.Find(slot) as RectTransform).anchoredPosition.x;
-            await FocusAsync(slot, CardNodes, home, 0.34f, othersAlpha: 0.3f);
-            await WaitAsync(0.3f, token);
-            await WaitAsync(0.25f, token);   // 빛살이 다 펼쳐진 것을 보여 주고 닫는다
+            // 시간은 모두 반으로 (PD 2026-10-12 「연출 시간이 너무 길다, 카드 선택 · 캐릭터에 효과 부여 시간을 반으로」) — 예전 0.34 · 0.3 · 0.25 · 0.12
+            await FocusAsync(slot, CardNodes, home, 0.17f, othersAlpha: 0.3f);
+            await WaitAsync(0.15f, token);
+            await WaitAsync(0.12f, token);   // 빛살이 다 펼쳐진 것을 보여 주고 닫는다
             SetPanel("BuffChoicePanel", false);
             if (_levelUpFx != null) _levelUpFx.HideCards();
-            await WaitAsync(0.12f, token);
+            await WaitAsync(0.06f, token);
             await PresentGainAsync(show);
             OpenPendingOffer();
         }
