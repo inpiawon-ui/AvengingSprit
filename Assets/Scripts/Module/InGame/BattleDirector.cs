@@ -3070,7 +3070,11 @@ namespace Game.Module.InGame
                                : canon ? BossSlug(_canonRoom.BossId) : null;
                 var def = _roomBoss;
                 if (string.IsNullOrEmpty(bossKey)) bossKey = def?.BossKey ?? "boss";
-                string bossName = canon ? _canonRoom.BossName : def?.NameEn ?? "BOSS";
+                // 이름은 언어팩을 거친다(boss.{key}.name) — 방 표의 이름(영문)을 그대로 띄워
+                // 한국어 화면에 「Crusher」가 떴다(2026-10-12 보스 띠). 표에 없는 보스만 예전 이름
+                var named = _bossTable != null ? _bossTable.ByKey(bossKey) : null;
+                string bossName = named != null ? named.DisplayName
+                                : canon ? _canonRoom.BossName : def?.NameEn ?? "BOSS";
                 var bossArt = UnitGet(bossKey)
                            ?? UnitGet(BossStand(bossKey))
                            ?? UnitGet(UnitKeyOf(def?.SpriteName ?? "unit_boss"))
@@ -3162,7 +3166,9 @@ namespace Game.Module.InGame
                 SpawnRoom(_canonRoom);
                 // 상점에서 사 둔 것은 **적이 설 때까지 기다렸다가** 터진다
                 // (`TickConsumable` 주석 참조). 여기서 따로 켤 것이 없다.
-                _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
+                // ⚠ 중간보스 방이면 끄지 않는다 — `SpawnRoom` 안에서 중간보스가 이름 · 체력을 띄운 직후라,
+                //   여기서 0 을 보내면 띠가 바로 꺼져 첫 대미지 때 이름 없이 「BOSS」로 떴다(2026-10-12)
+                if (!HasMidBoss) _bus.Publish(new BossHpChangedEvent { BossHp = 0, BossHpMax = 0 });
             }
             else
             {

@@ -32,7 +32,7 @@ namespace Game.Module.InGame
         //   값은 시안(1080 폭) 홈 폭 × 720/1080. 빌더의 표와 같아야 한다.
         private const float GhostBarWidth = 139f;   // 프리팹 GhostHpBarBg 폭 (시안 209 — 판의 홈 안쪽)
         private const float HostBarWidth = 139f;    // 프리팹 HostHpBarBg 폭 (시안 208 — 판의 홈 안쪽)
-        private const float BossBarWidth = 594f;    // 프리팹 BossHpBarBg 폭
+        private const float BossBarWidth = 316f;    // 프리팹 BossHpBarFill 최대 폭(홈 330 − 테두리 7×2) — InGameHudBossBandBinder 와 같게
         private const int BuffCardCount = 3;
 
         /// <summary>노브가 패드 폭의 몇 배까지 움직이는가. 이 거리에서 최대 속도다.</summary>
@@ -77,7 +77,8 @@ namespace Game.Module.InGame
         private Image _possessCooldown;
         private int _possessCost;
         private BuffTable _buffTable;
-        private string _bossName = "BOSS";
+        private string _bossName;
+        private bool _bossShown;
         private int _bossPhase = 1;
         private bool _finished;
 
@@ -329,6 +330,7 @@ namespace Game.Module.InGame
                 _skillCooldownFill.fillAmount = 1f - _battle.SkillCooldownRatio;
 
             TickSkillReady(Time.unscaledDeltaTime);
+            TickBossTrail(Time.deltaTime);
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();
         }
@@ -735,26 +737,82 @@ namespace Game.Module.InGame
 
         private void OnBossHp(BossHpChangedEvent e)
         {
+            // ⚠ **챕터 칸은 끄지 않는다.** 보스 체력은 챕터 정보를 밀어내는 것이 아니다.
+            // 보스 체력은 HUD 바로 아래 **띠**다(PD 2026-10-12 시안 ② + ①의 주황 잔상 —
+            // 예전 큰 판이 싸움판 한가운데로 내려와 「너무 거슬린다」). 자리는 `InGameHudBossBandBinder` 가 꽂는다.
             bool show = e.BossHpMax > 0;
-            _ui.SetActive("BossGroup", show);
+            bool appeared = show && !_bossShown;
+            if (show != _bossShown)
+            {
+                _ui.SetActive("BossGroup", show);
+                ShiftUnderBossBand(show);
+                _bossShown = show;
+            }
+            if (!show)
+            {
+                // 다음 보스가 앞 보스(중간보스) 이름을 물려받지 않게 비운다
+                _bossName = null;
+                _bossPhase = 1;
+                return;
+            }
 
-            // ⚠ **챕터 칸은 끄지 않는다.** 상단 오른쪽은 챕터 정보 자리다.
-            //   한때 여기서 껐다가 "왜 보스 HP 로 바뀌었냐" 는 지적을 받았다 —
-            //   보스 체력은 챕터 정보를 밀어내는 것이 아니다.
-            //   겹치던 것은 코드가 아니라 **프리팹 자리**로 풀었다:
-            //   보스 체력은 상단 HUD 아래 제 줄(가로 696)로 내려갔다.
-
-            if (!show) return;
+            float ratio = Ratio(e.BossHp, e.BossHpMax);
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
-            _ui.SetFill("BossHpBarFill", Ratio(e.BossHp, e.BossHpMax), BossBarWidth);
+            _ui.SetFill("BossHpBarFill", ratio, BossBarWidth);
+            OnBossRatio(ratio, appeared);
 
-            // 이름·페이즈는 바뀔 때만 온다. 매 피격 갱신에 덮어쓰지 않는다.
-            if (!string.IsNullOrEmpty(e.BossName)) _bossName = e.BossName;
-            if (e.Phase > 0) _bossPhase = e.Phase;
-            if (!string.IsNullOrEmpty(e.BossName) || e.Phase > 0)
-                // 도트 폰트는 고정폭이라 기존 고딕보다 훨씬 넓다. `PHASE 2` 를 그대로 붙이면
-                // 이름과 합쳐 273px 칸을 넘어 화면 밖으로 잘린다. 페이즈는 `P2` 로 줄인다.
-                _ui.SetText("BossLabel", _bossPhase > 1 ? $"{_bossName} P{_bossPhase}" : _bossName);
+            // 이름·페이즈는 바뀔 때만 다시 쓴다. 매 피격 갱신에 문자열을 만들지 않는다.
+            string name = !string.IsNullOrEmpty(e.BossName) ? e.BossName : _bossName ?? "BOSS";
+            int phase = e.Phase > 0 ? e.Phase : _bossPhase;
+            if (appeared || name != _bossName || phase != _bossPhase)
+            {
+                _bossName = name;
+                _bossPhase = phase;
+                // 페이즈는 `P2` 로 줄인다 — 이름 칸 폭이 142 다(자동 크기로 3언어를 맞춘다).
+                _ui.SetText("BossLabel", phase > 1 ? $"{name} P{phase}" : name);
+            }
+        }
+
+        // ── 보스 띠 — 주황 잔상 ─────────────────────────────────
+        //
+        // 맞으면 빨강은 바로 줄고, 막 깎인 만큼이 주황으로 잠깐 남았다가 따라 줄어든다(시안 ①).
+        // 「방금 얼마나 깎았나」가 막대에서 읽힌다. 연타 중에는 잔상이 기다린다 — 멈추면 한 번에 따라온다.
+        private const float BossTrailHoldSeconds = 0.35f;
+        private const float BossTrailDropPerSecond = 0.6f;
+        private float _bossRatio = 1f;
+        private float _bossTrail = 1f;
+        private float _bossTrailHold;
+
+        private void OnBossRatio(float ratio, bool appeared)
+        {
+            if (appeared || ratio >= _bossTrail) _bossTrail = ratio;   // 처음 · 회복은 잔상 없이
+            else if (ratio < _bossRatio) _bossTrailHold = BossTrailHoldSeconds;
+            _bossRatio = ratio;
+            _ui.SetFill("BossHpBarTrail", _bossTrail, BossBarWidth);
+        }
+
+        private void TickBossTrail(float dt)
+        {
+            if (!_bossShown || _bossTrail <= _bossRatio) return;
+            if (_bossTrailHold > 0f) { _bossTrailHold -= dt; return; }
+            _bossTrail = Mathf.MoveTowards(_bossTrail, _bossRatio, BossTrailDropPerSecond * dt);
+            _ui.SetFill("BossHpBarTrail", _bossTrail, BossBarWidth);
+        }
+
+        // 띠가 들어오는 동안 골드 · 일시정지 줄을 띠 높이만큼 내린다(시안 ② 그대로). 보스가 가면 제자리로.
+        private const float BossBandShift = 44f;
+        private static readonly string[] UnderBossBand = { "Hud3GoldChip", "RunResourcePanel", "PauseButton" };
+        private readonly Dictionary<string, Vector2> _underBandHome = new();
+
+        private void ShiftUnderBossBand(bool down)
+        {
+            for (int i = 0; i < UnderBossBand.Length; i++)
+            {
+                if (_ui.Find(UnderBossBand[i]) is not RectTransform rt) continue;
+                if (!_underBandHome.TryGetValue(UnderBossBand[i], out var home))
+                    _underBandHome[UnderBossBand[i]] = home = rt.anchoredPosition;
+                rt.anchoredPosition = down ? home + new Vector2(0f, -BossBandShift) : home;
+            }
         }
 
         private void OnPossessed(PossessedEvent e)
