@@ -142,7 +142,12 @@ namespace Game.Module.InGame
 
             // 대체할 때도 **표 이름 그대로 보면 안 된다.** 십자 포탑 자리가
             // 원거리로 안 읽혀 근접이 들어서고 있었다.
-            bool wantRanged = IsRangedTrashKey(TrashKeyAlias(key));
+            return TrashOfRole(IsRangedTrashKey(TrashKeyAlias(key)), chapter, seq);
+        }
+
+        /// <summary>그 챕터 잡몹 가운데 같은 역할(쏘는 놈 / 붙는 놈)을 차례로 돌려 고른다. 없으면 null.</summary>
+        private HostEntry TrashOfRole(bool wantRanged, int chapter, int seq)
+        {
             var pool = TrashPool(chapter);
             // 같은 역할끼리만 돌려 쓴다. 여럿이면 등장 비율이 목록에 든 수만큼이다.
             int n = 0;

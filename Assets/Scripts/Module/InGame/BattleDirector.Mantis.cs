@@ -20,7 +20,7 @@ namespace Game.Module.InGame
         private static HostEntry Mantis => s_mantis ??= HostEntry.CreateTrash(
             TrashMantisKey, "외눈 사마귀", AttackKind.Single,
             hp: 26, atk: 9, moveMps: 1.4f, engageMps: 2.0f,
-            rangeMeters: 7.5f, interval: 2.4f, telegraph: 1.0f);
+            rangeMeters: 12f, interval: 2.4f, telegraph: 1.0f);   // 7.5 → 12(2026-10-12)
 
         private const float MantisStrafeMps = 1.2f;
 

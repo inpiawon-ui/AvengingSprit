@@ -40,12 +40,12 @@ namespace Game.Module.InGame
         private static HostEntry Mummy => s_mummy ??= HostEntry.CreateTrash(
             TrashMummyKey, "미라", AttackKind.Single,
             hp: 30, atk: 8, moveMps: 0.8f, engageMps: 1.0f,
-            rangeMeters: 6f, interval: 3.2f, telegraph: 0.7f);
+            rangeMeters: 11f, interval: 3.2f, telegraph: 0.7f);   // 6 → 11(원거리 2배 안팎, 2026-10-12)
 
         private static HostEntry Spider => s_spider ??= HostEntry.CreateTrash(
             TrashSpiderKey, "알 거미", AttackKind.Single,
             hp: 34, atk: 6, moveMps: 1.2f, engageMps: 1.6f,
-            rangeMeters: 5f, interval: 4.5f, telegraph: 0.6f);
+            rangeMeters: 10f, interval: 4.5f, telegraph: 0.6f);   // 5 → 10(2026-10-12)
 
         // 새끼 — 등에 깨진 알껍질을 진 전용 그림. 빠르고 약한 근접
         private static HostEntry Spiderling => s_spiderling ??= HostEntry.CreateTrash(

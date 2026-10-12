@@ -122,9 +122,9 @@ MonoBehaviour:
     - scrapgunner
     - actor_enforcer
     Pattern: 1
-    Crowd: 0
+    Crowd: 0.25
     Fire: 0.75
-    EnemyHpMul: 0.8
+    EnemyHpMul: 1
     EnemyAtkMul: 1
     BossHp: 1650
     BossAtk: 36
@@ -132,7 +132,7 @@ MonoBehaviour:
     Chest: silver
     ClearExp: 300
     PriceMul: 1
-    RunGold: 464
+    RunGold: 232
     Music: 1
     Art: 1
     BossArt: 1
@@ -155,17 +155,17 @@ MonoBehaviour:
     - actor_enforcer
     - boar
     Pattern: 2
-    Crowd: 0.6
+    Crowd: 0.8
     Fire: 0.7
-    EnemyHpMul: 1.24
+    EnemyHpMul: 1.74
     EnemyAtkMul: 1
-    BossHp: 2702
+    BossHp: 3035
     BossAtk: 38
     ClearGold: 300
     Chest: silver
     ClearExp: 500
     PriceMul: 1.3
-    RunGold: 601
+    RunGold: 306
     Music: 2
     Art: 2
     BossArt: 2
@@ -187,17 +187,17 @@ MonoBehaviour:
     - turret_cross
     - mole
     Pattern: 3
-    Crowd: 0.5
+    Crowd: 0.75
     Fire: 0.66
-    EnemyHpMul: 1.5
+    EnemyHpMul: 2.01
     EnemyAtkMul: 1
-    BossHp: 3416
+    BossHp: 3668
     BossAtk: 42
     ClearGold: 450
     Chest: silver
     ClearExp: 800
     PriceMul: 1.7
-    RunGold: 791
+    RunGold: 390
     Music: 3
     Art: 3
     BossArt: 3
@@ -219,17 +219,17 @@ MonoBehaviour:
     - coilwalker
     - armadillo
     Pattern: 4
-    Crowd: 0.4
+    Crowd: 0.7
     Fire: 0.63
-    EnemyHpMul: 1.71
+    EnemyHpMul: 2.3
     EnemyAtkMul: 1.03
-    BossHp: 4072
+    BossHp: 4380
     BossAtk: 46
     ClearGold: 650
     Chest: gold
     ClearExp: 1200
     PriceMul: 2.2
-    RunGold: 1023
+    RunGold: 506
     Music: 4
     Art: 4
     BossArt: 4
@@ -252,17 +252,17 @@ MonoBehaviour:
     - actor_enforcer
     - mushroom
     Pattern: 5
-    Crowd: 0.3
+    Crowd: 0.6
     Fire: 0.6
-    EnemyHpMul: 2.02
+    EnemyHpMul: 2.67
     EnemyAtkMul: 1.08
-    BossHp: 4961
+    BossHp: 5266
     BossAtk: 51
     ClearGold: 900
     Chest: gold
     ClearExp: 1700
     PriceMul: 2.8
-    RunGold: 1297
+    RunGold: 654
     Music: 5
     Art: 5
     BossArt: 5
@@ -285,17 +285,17 @@ MonoBehaviour:
     - turret_cross
     - mantis
     Pattern: 6
-    Crowd: 0.25
+    Crowd: 0.5
     Fire: 0.58
-    EnemyHpMul: 2.51
+    EnemyHpMul: 3.36
     EnemyAtkMul: 1.2
-    BossHp: 6371
+    BossHp: 6823
     BossAtk: 59
     ClearGold: 1200
     Chest: gold
     ClearExp: 2300
     PriceMul: 3.5
-    RunGold: 1624
+    RunGold: 812
     Music: 6
     Art: 6
     BossArt: 6
@@ -318,17 +318,17 @@ MonoBehaviour:
     - coilwalker
     - boar
     Pattern: 7
-    Crowd: 0.2
+    Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 2.97
+    EnemyHpMul: 3.84
     EnemyAtkMul: 1.33
-    BossHp: 7751
+    BossHp: 8019
     BossAtk: 65
     ClearGold: 1550
     Chest: platinum
     ClearExp: 3000
     PriceMul: 4.3
-    RunGold: 1993
+    RunGold: 1002
     Music: 1
     Art: 1
     BossArt: 3
@@ -351,17 +351,17 @@ MonoBehaviour:
     - turret_cross
     - spider
     Pattern: 7
-    Crowd: 0.2
+    Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 3.52
+    EnemyHpMul: 4.47
     EnemyAtkMul: 1.41
-    BossHp: 9404
+    BossHp: 9554
     BossAtk: 72
     ClearGold: 1950
     Chest: platinum
     ClearExp: 3800
     PriceMul: 5.2
-    RunGold: 2415
+    RunGold: 1202
     Music: 2
     Art: 2
     BossArt: 4
@@ -384,17 +384,17 @@ MonoBehaviour:
     - roadwarden
     - mummy
     Pattern: 7
-    Crowd: 0.2
+    Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 4.54
+    EnemyHpMul: 5.69
     EnemyAtkMul: 1.71
-    BossHp: 12390
+    BossHp: 12444
     BossAtk: 85
     ClearGold: 2400
     Chest: platinum
     ClearExp: 4700
     PriceMul: 6.2
-    RunGold: 2879
+    RunGold: 1434
     Music: 3
     Art: 3
     BossArt: 5
@@ -418,17 +418,17 @@ MonoBehaviour:
     - coilwalker
     - turret_cross
     Pattern: 7
-    Crowd: 0.2
+    Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 5.36
+    EnemyHpMul: 6.56
     EnemyAtkMul: 1.8
-    BossHp: 14932
+    BossHp: 14613
     BossAtk: 93
     ClearGold: 3000
     Chest: platinum
     ClearExp: 5700
     PriceMul: 7.3
-    RunGold: 3385
+    RunGold: 1698
     Music: 4
     Art: 4
     BossArt: 6

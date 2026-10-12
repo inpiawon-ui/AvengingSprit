@@ -6,7 +6,7 @@
 #   crowd   잡몹 자리마다 한 기를 더 세울 몫(0.6 = 잡몹 10자리에 6기 더) — 방 전체 상한은 GameConfig 「방 적 상한」
 #   fire    방 적(잡몹 · 적 몸)의 공격 간격 배율. 작을수록 자주 쏜다 — 보스는 안 받는다
 #           (2026-10-12 PD 「HP 너무 낮고 연사 너무 느리다 · 2챕터만 돼도 10마리」 — 검토 _exchange/balance_review_1012.md)
-#   hpMul atkMul      잡몹 · 적 몸의 체력 · 공격력 배율          ← Tools/balance10.py(1챕터 닻 0.8 · 2챕터부터 벽 ×1.35 · 공격력 적 수 깎기 완화)
+#   hpMul atkMul      잡몹 · 적 몸의 체력 · 공격력 배율          ← Tools/balance10.py(1챕터 닻 1.0 · 2챕터부터 벽 ×1.5 · 공격력 적 수 깎기 완화)
 #   bossHp bossAtk    15번 방 보스
 #   roomGold midGold bossGold   전투방 · 중간보스 · 보스가 떨구는 골드
 #   clearGold chest exp          깼을 때 계정에 들어오는 것
@@ -14,13 +14,13 @@
 #   music             음악을 빌려 쓰는 챕터(SoundTable 의 chapter.{n}.*) — 새 곡이 오면 제 번호로
 #   art bossArt chestArt   로비 그림을 빌려 쓰는 칸(1부터) — 챕터 그림 · 보스 얼굴 · 상자
 ch	stage	boss	leader	trash	lean	count	pattern	crowd	fire	hpMul	atkMul	bossHp	bossAtk	roomGold	midGold	bossGold	clearGold	chest	exp	priceMul	music	art	bossArt	chestArt	name	desc
-1	junkyard	robot_snakes	salamander	skeleton,bat,scrapgunner,actor_enforcer	even	3-5	1	0	0.75	0.80	1.00	1650	36	24	80	120	200	silver	300	1.0	1	1	1	1	쓰레기 집적장	도시가 버린 것들이 쌓이는 곳\n무언가가 그 아래에서 깨어났다.
-2	missile	crusher	robot	bat,roadwarden,scrapgunner,actor_enforcer,boar	blade	4-6	2	0.6	0.7	1.24	1.00	2702	38	31	104	156	300	silver	500	1.3	2	2	2	1	미사일 저장기지	도시 외곽에 위치한 수수께끼의 군사 시설\n더 깊은 곳에서 누군가가 움직이고 있다.
-3	street	python	vampire	skeleton,coilwalker,actor_enforcer,turret_cross,mole	magic	5-7	3	0.5	0.66	1.50	1.00	3416	42	41	136	204	450	silver	800	1.7	3	3	3	1	밤의 도시 거리	네온이 꺼지지 않는 밤의 거리\n골목마다 다른 얼굴이 기다린다.
-4	rooftop	sludge	dragon_blue	actor_enforcer,turret_cross,bat,coilwalker,armadillo	force	6-8	4	0.4	0.63	1.71	1.03	4072	46	53	176	264	650	gold	1200	2.2	4	4	4	3	밤의 공중기지 옥상	빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.
-5	lab	guardian	ninja_chain	roadwarden,scrapgunner,bat,skeleton,actor_enforcer,mushroom	blade	7-9	5	0.3	0.6	2.02	1.08	4961	51	67	224	336	900	gold	1700	2.8	5	5	5	3	유령 연구소	잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.
-6	refinery	kingpin	medium	skeleton,coilwalker,roadwarden,actor_enforcer,turret_cross,mantis	magic	8-10	6	0.25	0.58	2.51	1.20	6371	59	84	280	420	1200	gold	2300	3.5	6	6	6	3	야간 정유소	불길이 멈추지 않는 정유소\n모든 것의 주인이 여기 있다.
-7	junkyard	python	baseball	actor_enforcer,turret_cross,scrapgunner,skeleton,coilwalker,boar	force	8-10	7	0.2	0.56	2.97	1.33	7751	65	103	344	516	1550	platinum	3000	4.3	1	1	3	5	불타는 집적장	꺼지지 않는 불이 고철을 녹인다\n길은 터뜨려서 여는 수밖에 없다.
-8	missile	sludge	commando_missile	bat,roadwarden,scrapgunner,coilwalker,turret_cross,spider	blade	9-11	7	0.2	0.56	3.52	1.41	9404	72	125	416	624	1950	platinum	3800	5.2	2	2	4	5	봉쇄된 저장기지	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽어야 지나간다.
-9	street	guardian	dragoon	skeleton,coilwalker,bat,actor_enforcer,roadwarden,mummy	magic	9-11	7	0.2	0.56	4.54	1.71	12390	85	149	496	744	2400	platinum	4700	6.2	3	3	5	5	망령의 거리	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.
-10	rooftop	kingpin	death	skeleton,bat,scrapgunner,actor_enforcer,roadwarden,coilwalker,turret_cross	even	10-12	7	0.2	0.56	5.36	1.80	14932	93	175	584	876	3000	platinum	5700	7.3	4	4	6	5	최후의 옥상	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 한다.
+1	junkyard	robot_snakes	salamander	skeleton,bat,scrapgunner,actor_enforcer	even	3-5	1	0.25	0.75	1.00	1.00	1650	36	12	40	60	200	silver	300	1.0	1	1	1	1	쓰레기 집적장	도시가 버린 것들이 쌓이는 곳\n무언가가 그 아래에서 깨어났다.
+2	missile	crusher	robot	bat,roadwarden,scrapgunner,actor_enforcer,boar	blade	4-6	2	0.8	0.7	1.74	1.00	3035	38	16	52	78	300	silver	500	1.3	2	2	2	1	미사일 저장기지	도시 외곽에 위치한 수수께끼의 군사 시설\n더 깊은 곳에서 누군가가 움직이고 있다.
+3	street	python	vampire	skeleton,coilwalker,actor_enforcer,turret_cross,mole	magic	5-7	3	0.75	0.66	2.01	1.00	3668	42	20	68	102	450	silver	800	1.7	3	3	3	1	밤의 도시 거리	네온이 꺼지지 않는 밤의 거리\n골목마다 다른 얼굴이 기다린다.
+4	rooftop	sludge	dragon_blue	actor_enforcer,turret_cross,bat,coilwalker,armadillo	force	6-8	4	0.7	0.63	2.30	1.03	4380	46	26	88	132	650	gold	1200	2.2	4	4	4	3	밤의 공중기지 옥상	빗물이 고인 공중기지 옥상\n발밑이 무너지는 소리가 난다.
+5	lab	guardian	ninja_chain	roadwarden,scrapgunner,bat,skeleton,actor_enforcer,mushroom	blade	7-9	5	0.6	0.6	2.67	1.08	5266	51	34	112	168	900	gold	1700	2.8	5	5	5	3	유령 연구소	잠기지 않은 연구소의 문\n실패한 것들이 아직 숨을 쉰다.
+6	refinery	kingpin	medium	skeleton,coilwalker,roadwarden,actor_enforcer,turret_cross,mantis	magic	8-10	6	0.5	0.58	3.36	1.20	6823	59	42	140	210	1200	gold	2300	3.5	6	6	6	3	야간 정유소	불길이 멈추지 않는 정유소\n모든 것의 주인이 여기 있다.
+7	junkyard	python	baseball	actor_enforcer,turret_cross,scrapgunner,skeleton,coilwalker,boar	force	8-10	7	0.45	0.56	3.84	1.33	8019	65	52	172	258	1550	platinum	3000	4.3	1	1	3	5	불타는 집적장	꺼지지 않는 불이 고철을 녹인다\n길은 터뜨려서 여는 수밖에 없다.
+8	missile	sludge	commando_missile	bat,roadwarden,scrapgunner,coilwalker,turret_cross,spider	blade	9-11	7	0.45	0.56	4.47	1.41	9554	72	62	208	312	1950	platinum	3800	5.2	2	2	4	5	봉쇄된 저장기지	문이 전부 잠긴 기지 깊은 곳\n사선과 박자를 읽어야 지나간다.
+9	street	guardian	dragoon	skeleton,coilwalker,bat,actor_enforcer,roadwarden,mummy	magic	9-11	7	0.45	0.56	5.69	1.71	12444	85	74	248	372	2400	platinum	4700	6.2	3	3	5	5	망령의 거리	불이 꺼진 거리에 망자가 걷는다\n이제는 바닥마저 적이다.
+10	rooftop	kingpin	death	skeleton,bat,scrapgunner,actor_enforcer,roadwarden,coilwalker,turret_cross	even	10-12	7	0.45	0.56	6.56	1.80	14613	93	88	292	438	3000	platinum	5700	7.3	4	4	6	5	최후의 옥상	모든 것이 시작된 옥상\n배운 것을 전부 꺼내야 한다.

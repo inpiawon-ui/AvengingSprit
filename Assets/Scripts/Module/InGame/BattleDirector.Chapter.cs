@@ -97,13 +97,19 @@ namespace Game.Module.InGame
 
         // ── 값 ──────────────────────────────────────────────────
 
+        /// <summary>
+        /// 판 골드를 반으로 줄인 몫(PD 2026-10-12 「골드 획득을 왜 이렇게 많이 해 주냐」 — chapters.tsv 방 · 중간보스 · 보스 골드 ×0.5).
+        /// 상점 값 · 이벤트 골드도 같이 반으로 해야 판 안의 살림(상점에서 하나 살 수 있나)은 그대로고, 남겨 가져가는 골드만 준다.
+        /// </summary>
+        private const float RunGoldScale = 0.5f;
+
         /// <summary>판 안 값(상점 · 이벤트)의 배율. 방이 떨구는 골드가 오르는 만큼 값도 오른다.</summary>
         private float RunPriceMul
         {
             get
             {
                 float m = ChapterRow(_runChapter).PriceMul;
-                return m > 0f ? m : 1f;
+                return (m > 0f ? m : 1f) * RunGoldScale;
             }
         }
 

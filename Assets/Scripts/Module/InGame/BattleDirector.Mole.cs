@@ -26,7 +26,7 @@ namespace Game.Module.InGame
         private static HostEntry Mole => s_mole ??= HostEntry.CreateTrash(
             TrashMoleKey, "드릴 두더지", AttackKind.Single,
             hp: 28, atk: 8, moveMps: 1.6f, engageMps: 2.4f,
-            rangeMeters: 6.0f, interval: 2.2f, telegraph: 0.6f);
+            rangeMeters: 10f, interval: 2.2f, telegraph: 0.6f);   // 6 → 10(2026-10-12)
 
         private const float MoleDigMps = 3.2f;          // 땅속에서 다니는 빠르기
         private const float MoleDigMaxSeconds = 1.6f;   // 이만큼 파고들면 그 자리에서 솟는다

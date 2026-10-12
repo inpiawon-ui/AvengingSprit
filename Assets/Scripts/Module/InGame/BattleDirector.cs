@@ -850,9 +850,14 @@ namespace Game.Module.InGame
         //
         // ⚠ 웨이브(증원)는 쓰지 않는다 — 두 번 만들었다 두 번 지웠다(방을 비운 순간 허공에서 나오면
         //   빙의할 몸이 이미 다 죽어 유령으로 맞게 된다). 그래서 **들어서는 순간 다 서 있는** 규칙은 지키고,
-        //   손으로 짠 잡몹 자리 옆에 같은 잡몹을 한 기씩 더 세워 머릿수를 올린다(챕터 표 crowd).
+        //   손으로 짠 잡몹 자리 옆에 잡몹을 한 기씩 더 세워 머릿수를 올린다(챕터 표 crowd).
         //   어느 자리에 더 세울지는 방마다 고정 순서 — 같은 방은 늘 같은 모양이다.
+        //
+        //   ⚠ 예전에는 자리에 선 잡몹을 **그대로 복사**했다. 돌 고릴라 셋 · 사수 하나인 방(2챕터 6 · 10 · 14번)이
+        //     고릴라 다섯이 되고 사수가 먼저 죽으면 「원거리 자체가 없고 골렘만」(PD 2026-10-12) 남았다.
+        //     그래서 **쏘는 놈이 잡몹의 40% 아래면 쏘는 놈을**, 아니면 붙는 놈을 그 챕터 목록에서 돌려 고른다.
         private readonly List<Unit> _crowdSeeds = new();
+        private const float CrowdRangedShare = 0.4f;
 
         private void SpawnCrowd(RoomEntry room)
         {
@@ -860,15 +865,40 @@ namespace Game.Module.InGame
             float crowd = room != null && !room.IsMidBoss ? _config.ChapterCrowd(_runChapter) : 0f;
             int extra = Mathf.RoundToInt(seeds.Count * crowd);
             int cap = _config.RoomEnemyCap;
+            int ranged = 0;
+            for (int i = 0; i < seeds.Count; i++)
+                if (seeds[i] != null && IsRangedTrashKey(seeds[i].Key)) ranged++;
+            int total = seeds.Count;
             for (int k = 0; k < extra && seeds.Count > 0; k++)
             {
                 if (AliveEnemyCount() >= cap) break;
-                var src = seeds[(k * 3 + _roomIndex) % seeds.Count];
-                if (src == null || src.Profile == null) continue;
-                if (!TryCrowdSpot(src, out var at)) continue;
-                SpawnRoomUnit(src.Profile, false, false, at, $"Trash_{src.Key}_crowd{k}");
+                bool wantRanged = ranged < (total + 1) * CrowdRangedShare;
+                var e = TrashOfRole(wantRanged, _runChapter, _roomIndex + k);
+                if (e == null) { wantRanged = !wantRanged; e = TrashOfRole(wantRanged, _runChapter, _roomIndex + k); }
+                if (e == null) continue;
+                // 같은 역할의 잡몹 옆에 세운다(쏘는 놈은 뒤쪽 · 붙는 놈은 앞쪽에 모인다). 없으면 아무 자리 옆
+                var src = CrowdAnchor(seeds, wantRanged, k);
+                if (src == null || !TryCrowdSpot(src, out var at)) continue;
+                SpawnRoomUnit(e, false, false, at, $"Trash_{e.HostKey}_crowd{k}");
+                total++;
+                if (wantRanged) ranged++;
             }
             seeds.Clear();
+        }
+
+        private Unit CrowdAnchor(List<Unit> seeds, bool ranged, int k)
+        {
+            int n = 0;
+            for (int i = 0; i < seeds.Count; i++)
+                if (seeds[i] != null && IsRangedTrashKey(seeds[i].Key) == ranged) n++;
+            int pick = n > 0 ? (k * 3 + _roomIndex) % n : (k * 3 + _roomIndex) % seeds.Count;
+            for (int i = 0; i < seeds.Count; i++)
+            {
+                if (seeds[i] == null) continue;
+                if (n > 0 && IsRangedTrashKey(seeds[i].Key) != ranged) continue;
+                if (pick-- == 0) return seeds[i];
+            }
+            return null;
         }
 
         /// <summary>원래 자리 둘레 1.2 m 의 여덟 방향 중 걸을 수 있고 다른 적과 겹치지 않는 곳.</summary>
@@ -2367,14 +2397,14 @@ namespace Game.Module.InGame
         /// 언제나 "달려오는 것을 상대하는" 한 가지 문제만 나왔다. 쏘는 놈이 섞이면
         /// 붙는 것과 피하는 것을 동시에 해야 한다 — 엄폐물이 그제서야 값을 가진다.
         ///
-        /// 사거리 5.2 → 6.8 m(PD 2026-10-12 「벽 뒤에서 공격도 못 한다, 사거리를 늘려서라도 멀리서」).
-        /// 숙주 원거리(7.0~8.5 m)보다는 아직 조금 짧다 — 잡몹이 숙주보다 멀리 쏘면 몸을 빼앗을 이유가 줄어든다.
+        /// 사거리 5.2 → 6.8 → 10.4 m(처음 값의 2배). PD 2026-10-12 「벽 뒤에서 공격도 못 한다, 사거리를 늘려서라도 멀리서」,
+        /// 이어 「원거리 몬스터들 사거리 2배 정도로」. 숙주 원거리(7.0~8.5 m)보다 멀리 쏜다 — 쏘는 놈은 붙어서 끊어야 한다.
         /// 예비동작 0.75초로 길게 잡아 피할 틈을 남긴다.
         /// </summary>
         private static HostEntry Scrapgunner => s_gunner ??= HostEntry.CreateTrash(
             TrashGunnerKey, "고철 전갈", AttackKind.Single,   // 옛 폐품 사수 — 사람 모양이라 호스트로 읽혀 그림을 바꿨다(PD 2026-10-07), 키는 그대로
             hp: 24, atk: 7, moveMps: 1.4f, engageMps: 2.2f,
-            rangeMeters: 6.8f, interval: 1.9f, telegraph: 0.75f);
+            rangeMeters: 10.4f, interval: 1.9f, telegraph: 0.75f);
 
         private const string TrashWardenKey = "roadwarden";
         private const string TrashCoilKey = "coilwalker";
@@ -2390,8 +2420,8 @@ namespace Game.Module.InGame
         private static HostEntry Roadwarden => s_warden ??= HostEntry.CreateTrash(
             TrashWardenKey, "순찰기", AttackKind.Single,
             hp: 34, atk: 9, moveMps: 1.1f, engageMps: 1.9f,
-            rangeMeters: 7.0f, interval: 1.8f, telegraph: 0.75f,   // 5.6 → 7.0(2026-10-12)
-            // 자리를 지키고 각도로 덮는다(FAN). 사거리 5.6 m 에 40° 면 부채꼴 끝 폭이
+            rangeMeters: 11.2f, interval: 1.8f, telegraph: 0.75f,   // 5.6 → 11.2(처음 값 2배, 2026-10-12)
+            // 자리를 지키고 각도로 덮는다(FAN). 5.6 m 거리에서 40° 면 부채꼴 폭이
             // 약 3.8 m — 방 폭의 3분의 1이다. 정면이면 2발, 옆으로 비키면 1발.
             shotCount: 3, spreadDegrees: 40f);
 
@@ -2404,7 +2434,7 @@ namespace Game.Module.InGame
         private static HostEntry Coilwalker => s_coil ??= HostEntry.CreateTrash(
             TrashCoilKey, "코일 보행기", AttackKind.Single,
             hp: 26, atk: 10, moveMps: 1.6f, engageMps: 2.4f,
-            rangeMeters: 7.4f, interval: 2.4f, telegraph: 0.7f);   // 6.2 → 7.4(2026-10-12)
+            rangeMeters: 12.4f, interval: 2.4f, telegraph: 0.7f);   // 6.2 → 12.4(처음 값 2배, 2026-10-12)
 
 
         /// <summary>
@@ -4324,8 +4354,10 @@ namespace Game.Module.InGame
         //
         // 방에 **서는 자리**(방 · 무작위 방 · 보스 부하)에서만 곱한다.
         // `EnemyAtkOf` · `EnemyIntervalOf` 에 넣으면 상점 동료 · 중간 보스까지 같이 세진다.
-        /// <summary>일반 몬스터 피해 2배. 엘리트 · 보스에는 안 붙는다.</summary>
-        private const float NormalEnemyAtkMul = 2f;
+        /// <summary>
+        /// 일반 몬스터 피해 2 → 3.5배(PD 2026-10-12 「맞아도 안 아프다」). 엘리트 · 보스에는 안 붙는다.
+        /// </summary>
+        private const float NormalEnemyAtkMul = 3.5f;
         /// <summary>1챕터 엘리트 체력 · 공격력 2배 — 너무 약했다.</summary>
         private const float Ch1EliteStatMul = 2f;
         /// <summary>일반 몬스터 · 엘리트 공격 속도 1.5배(간격 ÷ 1.5).</summary>
@@ -7392,9 +7424,9 @@ namespace Game.Module.InGame
         //   숫자나 글자를 띄우지 않는다 — 대신 몸을 보면 알 수 있어야 한다.
         //   표현은 `Unit` 쪽이다: 몸이 비치고 **윤곽만 빛난다.**
 
-        // 맞은 뒤 0.7초는 다음 피해를 흘린다(판정만 — 무적 윤곽 연출은 스킬 무적에만, 메모리 invuln-look-only-for-skills).
+        // 맞은 뒤 0.4초는 다음 피해를 흘린다(0.7 → 0.4 — 「맞아도 안 아프다」 2026-10-12)(판정만 — 무적 윤곽 연출은 스킬 무적에만, 메모리 invuln-look-only-for-skills).
         // 적 연사 · 밀도를 올리면서(2026-10-12) 탄 여러 발이 한꺼번에 겹쳐 「한 번에 녹는」 억울함을 막는다(Terraria 0.67초 수준).
-        private const float HurtGraceSeconds = 0.7f;
+        private const float HurtGraceSeconds = 0.4f;
         private float _hurtGrace;
 
         private void DamagePlayer(int amount)
