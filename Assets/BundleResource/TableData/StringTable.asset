@@ -2857,3 +2857,15 @@ MonoBehaviour:
     _ko: "{0:0.0}\uCD08"
     _ja: "{0:0.0}\u79D2"
     _en: '{0:0.0}s'
+  - _key: ui.affinity.blade
+    _ko: "\uBB34\uAE30"
+    _ja: "\u6B66\u5668"
+    _en: Weapon
+  - _key: ui.affinity.force
+    _ko: "\uD30C\uC6CC"
+    _ja: "\u30D1\u30EF\u30FC"
+    _en: Power
+  - _key: ui.affinity.magic
+    _ko: "\uB9C8\uBC95"
+    _ja: "\u9B54\u6CD5"
+    _en: Magic

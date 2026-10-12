@@ -28,6 +28,10 @@ namespace Game.Module.Lobby
     ///   3. **랜덤 선택도 하나의 선택**이다 — 고르면 위에서 고른 몸이 풀린다. 반대도 같다.
     ///   4. 잠긴 챕터는 넘겨볼 수는 있어도 들어가지 못한다.
     ///
+    /// ⚠ 2026-10-12 PD — 랜덤은 카드 줄 **맨 왼쪽 「?」 카드**가 됐다(유령 · 호스트가 한 칸씩 밀린다).
+    ///   아래 칸은 **고른 카드의 설명**이다 — 「?」 면 랜덤 설명, 몸이면 초상 · 이름 · 상성 · 설명 · 액티브 · 패시브(스탯은 없다).
+    ///   새 팝업을 띄우지 않는다. 시안: `Projects/AVSR/_exchange/in/mock_hostinfo_v6.png`
+    ///
     /// 노드 이름 = 바인딩 키다. `ChapterHostBuilder` 가 세우며, 이름을 바꾸면 거기도 바꾼다.
     /// </summary>
     public sealed class ChapterHostPanel : MonoBehaviour
@@ -39,6 +43,8 @@ namespace Game.Module.Lobby
             public string Key;
             public Sprite Thumb;
             public bool IsPortrait;   // 유닛 그림은 투명 여백이 있어 칸을 키워 쓴다
+            public Sprite Skill;      // 설명 칸 — 액티브 · 패시브 아이콘(육성 화면과 같은 그림)
+            public Sprite Passive;
         }
 
         /// <summary>챕터마다 붙는 것 — 보스 이름·얼굴과 클리어 상자.</summary>
@@ -56,6 +62,15 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _chapterArt = Array.Empty<Sprite>();
         [SerializeField] private Sprite _cardFrame, _cardFrameSelected;
         [SerializeField] private Sprite _starOn, _starOff;
+        /// <summary>
+        /// 「?」 카드 · 랜덤 설명 칸의 **가린 사신** — 원작 사신 초상 그대로(`hostportraitimage_death`)에 색만 입힌다.
+        /// ⚠ 원작 IP 라 캐릭터 모양은 원작과 100% 같아야 한다(PD 2026-10-12) — 그림을 새로 받지 않는다.
+        ///   주사위 + 「?」 는 지금 게임의 랜덤 그림(`ch_random_icon`)을 작게 겹친다(`RandomDice` · `CHInfoRandomDice`).
+        /// </summary>
+        [SerializeField] private Sprite _randomDeath;
+
+        /// <summary>가린 사신 색 — 어두운 남보라. 모양만 읽히고 정체는 안 보인다(「낮은 확률로 전설 등장」 암시).</summary>
+        private static readonly Color SilhouetteTint = new(0.40f, 0.30f, 0.62f, 1f);
 
         // 상성 시험판(2026-10-02) — 무기 · 파워 · 마법 아이콘(이 순서), 유리 ▲ · 불리 ▼
         [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
@@ -81,6 +96,7 @@ namespace Game.Module.Lobby
         private readonly List<IDisposable> _tokens = new();
         private readonly List<string> _cardKeys = new();
         private readonly List<Transform> _cards = new();
+        private Transform _randomCard;   // 카드 줄 0번 칸 — 「?」
 
         private ScrollRect _hostScroll;
         private int _chapter = 1;
@@ -99,7 +115,7 @@ namespace Game.Module.Lobby
             _ui.OnClick("CHBackButton", Close);
             _ui.OnClick("CHPrevButton", () => Step(-1));
             _ui.OnClick("CHNextButton", () => Step(+1));
-            _ui.OnClick("CHRandomCard", PickRandom);
+            // 랜덤은 카드 줄 0번 「?」 카드가 맡는다 — 아래 칸은 설명일 뿐 누르는 곳이 아니다(PD 2026-10-12)
             _ui.OnClick("CHStartButton", OnStart);
             _ui.OnClick("CHHostPrev", () => ScrollCards(-1));
             _ui.OnClick("CHHostNext", () => ScrollCards(+1));
@@ -159,8 +175,21 @@ namespace Game.Module.Lobby
             _cards.Clear();
             _cardKeys.Clear();
 
+            // 0번 칸 = 「?」 랜덤 카드. 몸들은 1번부터 — 한 칸씩 밀린다
+            _randomCard = content.childCount > 0 ? content.GetChild(0) : null;
+            if (_randomCard != null)
+            {
+                _randomCard.gameObject.SetActive(true);
+                var rb = _randomCard.GetComponent<Button>();
+                if (rb != null)
+                {
+                    rb.onClick.RemoveAllListeners();
+                    rb.onClick.AddListener(PickRandom);
+                }
+            }
+
             var playable = _player.PlayableHosts;
-            int slot = 0;
+            int slot = _randomCard != null ? 1 : 0;
             for (int i = 0; i < playable.Count && slot < content.childCount; i++)
             {
                 var e = playable[i];
@@ -186,7 +215,7 @@ namespace Game.Module.Lobby
             int owned = 0;
             for (int i = 0; i < playable.Count; i++)
                 if (playable[i] != null && _player.IsHostOwned(playable[i])) owned++;
-            if (owned > content.childCount)
+            if (owned + 1 > content.childCount)
                 Debug.LogWarning($"[챕터·호스트] 카드 칸 {content.childCount} 개로 보유 {owned} 명을 다 못 그린다");
 
             LayoutCards();
@@ -206,16 +235,20 @@ namespace Game.Module.Lobby
             float step = ChapterHostLayout.CardWidth + ChapterHostLayout.CardGap;
             // ⚠ 첫 칸은 **여백 없이 0 에서** 시작한다. 앞에 여백을 주면 줄 전체가 밀려
             //   여섯째 칸이 오른쪽에서 잘린다(시안은 여섯 장이 꽉 찬다).
+            int lead = _randomCard != null ? 1 : 0;   // 「?」 카드가 맨 앞 한 칸
             float total = Mathf.Max(ChapterHostLayout.ViewWidth,
-                                    _cards.Count * step - ChapterHostLayout.CardGap);
+                                    (_cards.Count + lead) * step - ChapterHostLayout.CardGap);
             content.sizeDelta = new Vector2(total, content.sizeDelta.y);
+            if (_randomCard is RectTransform rr) PlaceCard(rr, 0, step);
             for (int i = 0; i < _cards.Count; i++)
-            {
-                if (_cards[i] is not RectTransform r) continue;
-                r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
-                r.pivot = new Vector2(0f, 0.5f);
-                r.anchoredPosition = new Vector2(i * step, 0f);
-            }
+                if (_cards[i] is RectTransform r) PlaceCard(r, i + lead, step);
+        }
+
+        private static void PlaceCard(RectTransform r, int index, float step)
+        {
+            r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
+            r.pivot = new Vector2(0f, 0.5f);
+            r.anchoredPosition = new Vector2(index * step, 0f);
         }
 
         // ── 고르기 ───────────────────────────────────────────
@@ -240,6 +273,7 @@ namespace Game.Module.Lobby
             GameSound.Cue("ui.select");
             RefreshHosts();
             RefreshStart();
+            ShowPicked();
         }
 
         /// <summary>
@@ -250,9 +284,11 @@ namespace Game.Module.Lobby
         /// </summary>
         private void ShowPicked()
         {
-            if (_hostScroll == null || _hostScroll.content == null || _pickedRandom) return;
-            int at = _cardKeys.IndexOf(_pickedHost);
+            if (_hostScroll == null || _hostScroll.content == null) return;
+            int lead = _randomCard != null ? 1 : 0;
+            int at = _pickedRandom ? 0 : _cardKeys.IndexOf(_pickedHost);
             if (at < 0) return;
+            if (!_pickedRandom) at += lead;
             float hidden = _hostScroll.content.rect.width - ChapterHostLayout.ViewWidth;
             if (hidden <= 1f) return;
             float step = ChapterHostLayout.CardWidth + ChapterHostLayout.CardGap;
@@ -550,8 +586,139 @@ namespace Game.Module.Lobby
                 RefreshCardAffinity(card, key);
             }
 
-            // 랜덤 칸의 글자와 그림도 화면 그림에 있다 — 고른 표시만 낸다
-            _ui.SetActive("RandomCheck", _pickedRandom);
+            RefreshRandomCard();
+            // 고른 표시는 카드가 낸다 — 아래 칸의 체크는 예전 「랜덤 칸 = 버튼」 시절 것이다
+            _ui.SetActive("RandomCheck", false);
+            RefreshInfo();
+        }
+
+        /// <summary>
+        /// 카드 줄 0번 — 「?」 랜덤 카드. 별 · 값 · 상성 자리는 비운다(랜덤은 아직 정해지지 않은 몸이다).
+        /// </summary>
+        private void RefreshRandomCard()
+        {
+            var card = _randomCard;
+            if (card == null) return;
+            var sel = _ui.Find(card, "CardFrameSel");
+            if (sel != null) sel.gameObject.SetActive(_pickedRandom);
+            var check = _ui.Find(card, "CardCheck");
+            if (check != null) check.gameObject.SetActive(_pickedRandom);
+
+            var thumb = _ui.Find(card, "CardThumb")?.GetComponent<Image>();
+            if (thumb != null)
+            {
+                thumb.sprite = _randomDeath;
+                thumb.color = SilhouetteTint;
+                thumb.enabled = thumb.sprite != null;
+                thumb.preserveAspect = true;
+            }
+            var cardDice = _ui.Find(card, "RandomDice");
+            if (cardDice != null) cardDice.gameObject.SetActive(true);
+            TextIn(card, "CardName", Localize.FromTable("ui.chapterhost.random", "랜덤 선택"));
+            for (int s = 0; s < 5; s++)
+            {
+                var star = _ui.Find(card, $"CardStar{s}");
+                if (star != null) star.gameObject.SetActive(false);
+            }
+            foreach (var n in RandomCardHidden)
+            {
+                var t = _ui.Find(card, n);
+                if (t != null) t.gameObject.SetActive(false);
+            }
+        }
+
+        private static readonly string[] RandomCardHidden = { "CardPowerText", "CardPowerIcon", "CardKindGem", "CardMatchArrow" };
+
+        // ── 아래 칸 — 고른 카드의 설명 ───────────────────────
+
+        /// <summary>
+        /// 「?」 를 골랐으면 랜덤 설명, 몸을 골랐으면 그 몸의 정보. 칸은 예전 랜덤 칸 그대로다(도전하기 자리를 지킨다).
+        /// 노드는 `ChapterHostInfoBinder` 가 꽂는다 — 없으면(꽂기 전 프리팹) 예전 랜덤 칸 그대로 보인다.
+        /// </summary>
+        private void RefreshInfo()
+        {
+            bool random = _pickedRandom || string.IsNullOrEmpty(_pickedHost);
+            var e = random ? null : _player.GetHost(_pickedHost);
+
+            // 왼쪽 네모 — 랜덤이면 가린 사신 + 주사위, 몸이면 초상.
+            //   설명 칸 노드가 없는(꽂기 전) 프리팹이면 예전 주사위 그림을 그대로 둔다
+            var portrait = _ui.Get<Image>("CHInfoPortrait");
+            _ui.SetActive("CHIconDice", portrait == null && random);
+            if (portrait != null)
+            {
+                portrait.sprite = random ? _randomDeath : ArtOf(_pickedHost).Thumb;
+                portrait.color = random ? SilhouetteTint : Color.white;
+                portrait.enabled = portrait.sprite != null;
+                portrait.preserveAspect = true;
+            }
+            _ui.SetActive("CHInfoRandomDice", random);
+
+            // 랜덤 글자
+            _ui.SetActive("CHRandomTitle", random);
+            _ui.SetActive("CHRandomDesc1", random);
+            _ui.SetActive("CHRandomDesc2", random);
+
+            // 몸 글자
+            _ui.SetActive("CHInfoName", !random);
+            _ui.SetActive("CHInfoDesc", !random);
+            if (random)
+            {
+                SetInfoKind(Game.Module.InGame.Affinity.None);
+                SetSkills(null);
+                return;
+            }
+
+            bool ghost = e != null && e.IsGhost;
+            _ui.SetText("CHInfoName", e != null ? e.DisplayName : _pickedHost);
+            // 유령은 몸이 아니다 — 설명 자리에 유령 규칙을 적는다(호스트 선택 화면에 쓰던 글)
+            _ui.SetText("CHInfoDesc", ghost ? Localize.Get("ui.hostselect.ghost.rule") : Localize.Get($"host.{_pickedHost}.desc"));
+            SetInfoKind(ghost ? Game.Module.InGame.Affinity.None : Game.Module.InGame.AffinityRule.KindOf(_pickedHost));
+            SetSkills(ghost ? null : e);
+        }
+
+        /// <summary>상성 배지 — 보석 + 「무기 · 파워 · 마법」. 유령 · 랜덤은 숨긴다.</summary>
+        private void SetInfoKind(Game.Module.InGame.Affinity kind)
+        {
+            bool on = kind != Game.Module.InGame.Affinity.None;
+            var gem = _ui.Get<Image>("CHInfoKindIcon");
+            if (gem != null)
+            {
+                gem.sprite = on ? GemOf(kind) : null;
+                on &= gem.sprite != null;
+            }
+            _ui.SetActive("CHInfoKindIcon", on);
+            _ui.SetActive("CHInfoKindText", on);
+            if (on) _ui.SetText("CHInfoKindText", Localize.Get($"ui.affinity.{kind.ToString().ToLowerInvariant()}"));
+        }
+
+        /// <summary>액티브 · 패시브 두 칸. 몸이 아니면(랜덤 · 유령) 숨긴다. 없는 패시브는 「—」.</summary>
+        private void SetSkills(HostEntry e)
+        {
+            bool on = e != null;
+            _ui.SetActive("CHInfoSkillA", on);
+            _ui.SetActive("CHInfoSkillP", on);
+            if (!on) return;
+
+            var art = ArtOf(e.HostKey);
+            var active = _player.GetActiveSkill(e.ActiveSkillKey);
+            _ui.SetText("CHInfoSkillAName", active != null
+                ? (string.IsNullOrEmpty(active.DisplayName) ? active.NameEn : active.DisplayName) : "—");
+            _ui.SetText("CHInfoSkillADesc", active?.DisplayDescription ?? string.Empty);
+            SetInfoIcon("CHInfoSkillAIcon", art.Skill);
+
+            var passive = _player.GetPassiveSkill(e.PassiveSkillKey);
+            _ui.SetText("CHInfoSkillPName", passive != null ? passive.DisplayName : "—");
+            _ui.SetText("CHInfoSkillPDesc", passive != null ? passive.DisplayDescription : string.Empty);
+            SetInfoIcon("CHInfoSkillPIcon", art.Passive);
+        }
+
+        private void SetInfoIcon(string name, Sprite sprite)
+        {
+            var img = _ui.Get<Image>(name);
+            if (img == null) return;
+            img.sprite = sprite;
+            img.enabled = sprite != null;
+            img.preserveAspect = true;
         }
 
         private void RefreshStart()

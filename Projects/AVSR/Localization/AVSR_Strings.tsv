@@ -613,3 +613,6 @@ askill.psg_h20.growth	반사 시간	反射時間	Reflect time
 askill.psg_h21.growth	얼음 시간	氷結時間	Ice time
 askill.psg_h22.growth	적 하나당 회복	敵1体ごとの回復	Heal per enemy
 ui.unit.seconds	{0:0.0}초	{0:0.0}秒	{0:0.0}s
+ui.affinity.blade	무기	武器	Weapon
+ui.affinity.force	파워	パワー	Power
+ui.affinity.magic	마법	魔法	Magic
