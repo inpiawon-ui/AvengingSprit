@@ -82,10 +82,10 @@ namespace Game.Module.InGame
         private bool _pickSecondDone;
 
         // ── 깃듦(몸) ──
-        private RectTransform _gainRoot;      // 앞 — 파티클(보상 연출 층)
-        private RectTransform _gainBackRoot;  // 뒤 — 광원 · 빛기둥 · 고리(유령과 같은 층, 유령 바로 뒤)
+        private RectTransform _gainRoot;      // 몸 자리 표시(보상 연출 층) — 그리는 것은 모두 뒤 층
+        private RectTransform _gainBackRoot;  // 뒤 — 광원 · 빛기둥 · 고리 · 알갱이(유령과 같은 층, 유령 바로 뒤)
+        private Transform _gainAvatar;
         private Image _gainGlow, _gainPillar, _gainRing, _gainRing2;
-        private ParticleSystem _gainParticles;
         private float _gainClock = -1f, _gainLength, _gainNextMote, _gainNextStar;
         private Color _gainColor;
         private Tier _gainTier;
@@ -301,7 +301,8 @@ namespace Game.Module.InGame
             if (_gainBackRoot != null && avatar != null && avatar.parent != null)
             {
                 if (_gainBackRoot.parent != avatar.parent) _gainBackRoot.SetParent(avatar.parent, false);
-                _gainBackRoot.SetSiblingIndex(avatar.GetSiblingIndex());
+                _gainAvatar = avatar;
+                KeepBehindAvatar();
                 _gainBackRoot.position = avatar is RectTransform art ? art.TransformPoint(art.rect.center) : avatar.position;
                 _gainBackRoot.localScale = Vector3.one * (layer.lossyScale.x / Mathf.Max(0.0001f, _gainBackRoot.parent.lossyScale.x));
             }
@@ -313,7 +314,68 @@ namespace Game.Module.InGame
             _gainNextMote = 0f;
             _gainNextStar = 0.2f;
             _gainRoot.anchoredPosition = new Vector2(body.x, -body.y);
-            if (_gainParticles != null) _gainParticles.Clear();
+            ClearBackMotes();
+        }
+
+        // ── 깃듦 알갱이 — 유령 뒤 층의 UI 그림(파티클은 캔버스 맨 위라 유령 앞에 그려진다) ──
+
+        private const int BackMoteCount = 72;
+        private struct BackMote
+        {
+            public Image Img;
+            public Vector2 Pos, Vel;
+            public float Age, Life, Size;
+            public Color Color;
+        }
+        private readonly BackMote[] _backMotes = new BackMote[BackMoteCount];
+
+        private void EmitBack(Vector2 offsetPx, Vector2 velocityPx, float sizePx, float life, Color color, int kind)
+        {
+            if (_gainBackRoot == null || !Has(_motes)) return;
+            for (int i = 0; i < _backMotes.Length; i++)
+            {
+                ref var m = ref _backMotes[i];
+                if (m.Img != null && m.Img.enabled) continue;
+                // 광원 · 빛기둥 · 고리보다 나중에 생겨 뒤 층 안에서는 그 위에 그려진다
+                if (m.Img == null) m.Img = NewImage("GainMote", _gainBackRoot, _additive, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero);
+                m.Img.sprite = _motes[Mathf.Min(kind, _motes.Length - 1)];
+                m.Pos = offsetPx;
+                m.Vel = velocityPx;
+                m.Age = 0f;
+                m.Life = life;
+                m.Size = sizePx;
+                m.Color = color;
+                m.Img.enabled = true;
+                return;
+            }
+        }
+
+        /// <summary>파티클과 같은 결 — 끌림 3 · 크기 0.3 → 1 → 0.2 · 알파 0 → 1(15%) → 0.</summary>
+        private void TickBackMotes(float dt)
+        {
+            float drag = Mathf.Exp(-3f * dt);
+            for (int i = 0; i < _backMotes.Length; i++)
+            {
+                ref var m = ref _backMotes[i];
+                if (m.Img == null || !m.Img.enabled) continue;
+                m.Age += dt;
+                float k = m.Age / m.Life;
+                if (k >= 1f) { m.Img.enabled = false; continue; }
+                m.Vel *= drag;
+                m.Pos += m.Vel * dt;
+                float size = k < 0.25f ? Mathf.Lerp(0.3f, 1f, k / 0.25f) : Mathf.Lerp(1f, 0.2f, (k - 0.25f) / 0.75f);
+                float alpha = k < 0.15f ? k / 0.15f : 1f - (k - 0.15f) / 0.85f;
+                var rt = m.Img.rectTransform;
+                rt.anchoredPosition = m.Pos;
+                rt.sizeDelta = Vector2.one * (m.Size * size);
+                m.Img.color = WithAlpha(m.Color, m.Color.a * alpha);
+            }
+        }
+
+        private void ClearBackMotes()
+        {
+            for (int i = 0; i < _backMotes.Length; i++)
+                if (_backMotes[i].Img != null) _backMotes[i].Img.enabled = false;
         }
 
         private void EnsureGain(RectTransform layer)
@@ -329,17 +391,32 @@ namespace Game.Module.InGame
                 _gainRing2 = NewImage("GainRing2", _gainBackRoot, RingMaterial(), new Vector2(190f, 56f), new Vector2(0.5f, 0.5f), new Vector2(0f, -40f));
                 _gainGlow = NewImage("GainGlow", _gainBackRoot, GlowMaterial(0.3f, 0.6f), new Vector2(240f, 240f), new Vector2(0.5f, 0.5f), Vector2.zero);
             }
-            if (_motes != null) _gainParticles = NewParticles(_gainRoot, 1);
+        }
+
+        /// <summary>
+        /// 깃듦 뒤 층을 유령 바로 앞 형제로(= 유령 뒤에 그려진다).
+        /// ⚠ 이미 같은 부모의 앞쪽에 있던 것을 유령 번호로 옮기면 유령이 한 칸 당겨져 연출이 유령 **앞**에 선다 —
+        ///   첫 카드만 뒤였고 두 번째부터 앞이었다(PD 2026-10-12 「epic 빼고는 다들 뎁스가 안 맞아」). 매 프레임 확인한다(유닛이 늘면 순서가 바뀐다).
+        /// </summary>
+        private void KeepBehindAvatar()
+        {
+            if (_gainBackRoot == null || _gainAvatar == null || _gainBackRoot.parent != _gainAvatar.parent) return;
+            int avatar = _gainAvatar.GetSiblingIndex();
+            int back = _gainBackRoot.GetSiblingIndex();
+            if (back == avatar - 1) return;
+            _gainBackRoot.SetSiblingIndex(back < avatar ? avatar - 1 : avatar);
         }
 
         private void TickGain()
         {
             if (_gainRoot == null) return;
+            KeepBehindAvatar();
             float t = _gainClock;
             if (t > _gainLength)
             {
                 _gainClock = -1f;
                 SetEnabled(false);
+                ClearBackMotes();
                 return;
             }
             float inK = Ease.OutCubic(Mathf.Clamp01(t / 0.3f));
@@ -368,23 +445,32 @@ namespace Game.Module.InGame
             else if (_gainRing2 != null) _gainRing2.enabled = false;
             // 파티클 — 깃드는 순간 터지고, 머무는 동안 위로 솟는다
             var light = Color.Lerp(c, Color.white, 0.4f);
-            if (!_gainBurstDone && _gainParticles != null)
+            if (!_gainBurstDone)
             {
                 _gainBurstDone = true;
-                Burst(_gainParticles, _gainRoot, _gainTier.GainMotes, _gainTier.GainStars ? 6 : 2, light, 0f);
+                int stars = _gainTier.GainStars ? 6 : 2;
+                for (int i = 0; i < _gainTier.GainMotes + stars; i++)
+                {
+                    bool star = i >= _gainTier.GainMotes;
+                    float deg = Random.Range(0f, 360f);
+                    var dir = new Vector2(Mathf.Cos(deg * Mathf.Deg2Rad), Mathf.Sin(deg * Mathf.Deg2Rad));
+                    EmitBack(Vector2.zero, dir * Random.Range(80f, 180f), star ? Random.Range(15f, 22f) : Random.Range(9f, 14f),
+                             Random.Range(0.5f, 0.85f), light, star ? 0 : 1);
+                }
             }
-            if (_gainParticles != null && t < _gainLength - 0.3f && t >= _gainNextMote)
+            if (t < _gainLength - 0.3f && t >= _gainNextMote)
             {
                 _gainNextMote = t + 1f / Mathf.Max(1, _gainTier.GainMotes);
-                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-46f, 46f), Random.Range(-40f, 10f)),
-                       new Vector2(Random.Range(-6f, 6f), Random.Range(50f, 90f)), Random.Range(8f, 12f), Random.Range(0.6f, 0.9f), light, 1);
+                EmitBack(new Vector2(Random.Range(-46f, 46f), Random.Range(-40f, 10f)),
+                         new Vector2(Random.Range(-6f, 6f), Random.Range(50f, 90f)), Random.Range(8f, 12f), Random.Range(0.6f, 0.9f), light, 1);
             }
-            if (_gainTier.GainStars && _gainParticles != null && t >= _gainNextStar && t < _gainLength - 0.3f)
+            if (_gainTier.GainStars && t >= _gainNextStar && t < _gainLength - 0.3f)
             {
                 _gainNextStar = t + Random.Range(0.18f, 0.3f);
-                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-60f, 60f), Random.Range(-50f, 60f)), Vector2.zero,
-                       Random.Range(14f, 20f), Random.Range(0.35f, 0.5f), Color.Lerp(light, Color.white, 0.4f), 0);
+                EmitBack(new Vector2(Random.Range(-60f, 60f), Random.Range(-50f, 60f)), Vector2.zero,
+                         Random.Range(14f, 20f), Random.Range(0.35f, 0.5f), Color.Lerp(light, Color.white, 0.4f), 0);
             }
+            TickBackMotes(Time.unscaledDeltaTime);
         }
 
         private static void Ring(Image ring, float t, Color c, float life)
