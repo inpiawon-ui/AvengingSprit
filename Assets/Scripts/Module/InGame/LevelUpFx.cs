@@ -1,5 +1,8 @@
+using Cysharp.Threading.Tasks;
 using Game.Character;
 using Game.Module.Common.UI;
+using GameFramework.Core.Base;
+using GameFramework.Core.Module.Resource;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,11 +17,13 @@ namespace Game.Module.InGame
     ///   머묾 = mock_tiers_lv_idle — COMMON · RARE 아무것도 없음 / EPIC 카드 뒤 곧은 기둥이 은은히 / LEGENDARY + 반짝 별 가끔
     ///          + 창 둘레 금빛 알갱이(mock_lvpopup_free_idle, 등급 무관)
     ///   고름 = mock_lvpopup_free_peak — 고른 카드 둘레 등급색 빛살 + 알갱이(그대로)
-    ///   깃듦 = mock_tiers_gain — 0.5초 안의 세로 섬광 + 도트 알갱이가 위로. 바닥 고리 · 둥근 광원은 뺐다
+    ///   깃듦 = mock_lvgain_free_peak 그대로(광원 · 빛기둥 · 바닥 고리 · 솟는 알갱이) — 새 시안의 가는 섬광으로 바꿨다가
+    ///          PD 2026-10-12 「유령에 적용되는 이펙트는 전에께 더 이쁘고 좋았다, 굳이 퀄을 떨굴 필요 없다」로 되돌렸다
     /// 레퍼런스(그림판 shots_C): 아처로 2 — 보통 카드는 테두리만, 에픽부터 등급색 기둥, 고른 뒤엔 몸에 빛을 오래 두르지 않는다.
     /// 기둥은 카드 **뒤** 형제라 카드 위로 나온 부분만 보인다 — 카드 사이 틈 · 글자를 덮지 않는다
     /// (PD 2026-10-10 「카드 뒤에 있는 이펙트들 지저분해 보인다」 = 번지는 둥근 광원이었다).
-    /// 겹: 기둥 · 광택 · 섬광 = 세로 빛기둥 그림(`fx_tier_beam`) · 빛살 = `fx_levelup_card_rays` · 반짝 별 · 알갱이 = 파티클(`fx_result_mote_1/2`).
+    /// 겹: 카드 기둥 · 광택 = 세로 빛기둥 그림(`fx_tier_beam`) · 빛살 = `fx_levelup_card_rays` · 반짝 별 · 알갱이 = 파티클(`fx_result_mote_1/2`)
+    ///     · 깃듦 광원 · 빛기둥 · 고리 = 빛 셰이더(`ParticleFx/glight`).
     /// 크기는 모든 등급이 같고, 위로 갈수록 이펙트 종류 · 파티클 수를 더한다. 값은 <see cref="Tiers"/> 표 하나에.
     /// 시간은 실제 시간 — 레벨업 창 · 보상 연출은 게임 시간이 서 있어도 돈다.
     /// </summary>
@@ -34,17 +39,17 @@ namespace Game.Module.InGame
             public int PickStars;       // 고름 — 같이 터지는 반짝 별 수
             public bool PickSecond;     // 고름 — 0.25초 뒤 반짝임 한 번 더
             public int GainMotes;       // 깃듦 — 솟는 알갱이 수(초당)
-            public bool GainWide;       // 깃듦 — 가는 섬광 뒤에 넓은 등급색 섬광 한 겹 더
+            public bool GainSecondRing; // 깃듦 — 바닥 고리 두 번째 파동
             public bool GainStars;      // 깃듦 — 몸 둘레 반짝 별
         }
 
         // COMMON = 기본(테두리만), 위 등급은 이펙트 종류 · 파티클 수를 한 겹씩 — 크기는 같다(스킬 fx-art-pipeline 2-1)
         private static readonly Tier[] Tiers =
         {
-            new() { Sheen = false, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainWide = false, GainStars = false },     // COMMON
-            new() { Sheen = true, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainWide = false, GainStars = true },       // RARE
-            new() { Sheen = true, Beam = 0.35f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainWide = true, GainStars = true },     // EPIC
-            new() { Sheen = true, Beam = 0.45f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainWide = true, GainStars = true }, // LEGENDARY
+            new() { Sheen = false, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
+            new() { Sheen = true, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
+            new() { Sheen = true, Beam = 0.35f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
+            new() { Sheen = true, Beam = 0.45f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
         };
 
         private const int CardCount = 3;
@@ -54,9 +59,11 @@ namespace Game.Module.InGame
         private const float BeamAbove = 250f;      // 카드 윗변 위로 보이는 기둥 길이
         private const float BeamDrop = 0.22f;      // 기둥이 위에서 내려와 꽂히는 시간
         private const float SheenAt = 0.12f, SheenSeconds = 0.45f;
-        private const float GainFlash = 0.5f;      // 깃듦 섬광 길이(시안 「0.5초 안」)
+        private const float SheenWidth = 26f, SheenInset = 22f;   // 카드 테두리 안쪽만 훑게
 
         private PopupFxPlayer _fx;
+        private Material _light;   // 번들 ParticleFx/glight — 깃듦 광원 · 빛기둥 · 고리
+        private bool _loading;
         private Material _additive;
         private Sprite[] _rays, _motes, _beam;
 
@@ -76,8 +83,8 @@ namespace Game.Module.InGame
 
         // ── 깃듦(몸) ──
         private RectTransform _gainRoot;      // 앞 — 파티클(보상 연출 층)
-        private RectTransform _gainBackRoot;  // 뒤 — 섬광(유령과 같은 층, 유령 바로 뒤 — 유령을 하얗게 덮지 않게, 녹화 vQ2)
-        private Image _gainCore, _gainWide;
+        private RectTransform _gainBackRoot;  // 뒤 — 광원 · 빛기둥 · 고리(유령과 같은 층, 유령 바로 뒤)
+        private Image _gainGlow, _gainPillar, _gainRing, _gainRing2;
         private ParticleSystem _gainParticles;
         private float _gainClock = -1f, _gainLength, _gainNextMote, _gainNextStar;
         private Color _gainColor;
@@ -98,6 +105,7 @@ namespace Game.Module.InGame
             _fx = fx;
             _additive = additive;
             RefreshFrames();
+            if (_light == null && !_loading) LoadAsync().Forget();   // fire-and-forget: 오기 전엔 깃듦 광원 없이 돈다
         }
 
         /// <summary>연출 아틀라스는 늦게 온다 — 아직 없으면 쓸 때마다 다시 찾는다.</summary>
@@ -218,15 +226,16 @@ namespace Game.Module.InGame
             beam.enabled = true;
         }
 
-        /// <summary>광택 — 비스듬한 빛 한 줄이 카드를 왼쪽에서 오른쪽으로 한 번 훑는다(카드 칸 안에서 잘린다).</summary>
+        /// <summary>광택 — 세로 빛 한 줄이 카드 안쪽을 왼쪽에서 오른쪽으로 한 번 훑는다.</summary>
         private void TickSheen(int i, float t, Tier tier)
         {
             var sheen = _cardSheen[i];
             if (sheen == null) return;
             float k = (t - SheenAt) / SheenSeconds;
             if (!tier.Sheen || k < 0f || k > 1f || _picked >= 0) { sheen.enabled = false; return; }
-            var box = (RectTransform)sheen.rectTransform.parent;
-            sheen.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(-0.75f, 0.75f, Ease.InOutSine(k)) * box.rect.width, 0f);
+            var card = _cards[i];
+            float half = card.rect.width * 0.5f - SheenInset;
+            sheen.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(-half, half, Ease.InOutSine(k)), 0f);
             sheen.color = WithAlpha(Color.Lerp(_cardColor[i], Color.white, 0.5f), 0.55f * Mathf.Sin(k * Mathf.PI));
             sheen.enabled = true;
         }
@@ -288,6 +297,7 @@ namespace Game.Module.InGame
             if (layer == null) return;
             RefreshFrames();
             EnsureGain(layer);
+            // 광원 · 빛기둥 · 고리는 유령 **뒤** — 보상 층(위)에 두면 유령을 덮어 하얗게 지웠다(녹화 vQ2)
             if (_gainBackRoot != null && avatar != null && avatar.parent != null)
             {
                 if (_gainBackRoot.parent != avatar.parent) _gainBackRoot.SetParent(avatar.parent, false);
@@ -301,28 +311,25 @@ namespace Game.Module.InGame
             _gainClock = 0f;
             _gainBurstDone = false;
             _gainNextMote = 0f;
-            _gainNextStar = 0.15f;
+            _gainNextStar = 0.2f;
             _gainRoot.anchoredPosition = new Vector2(body.x, -body.y);
             if (_gainParticles != null) _gainParticles.Clear();
         }
 
         private void EnsureGain(RectTransform layer)
         {
-            if (_gainRoot == null)
+            if (_gainRoot != null) return;
+            _gainRoot = NewRect("LevelUpGain", layer, Vector2.zero);
+            _gainRoot.anchorMin = _gainRoot.anchorMax = new Vector2(0f, 1f);
+            _gainBackRoot = NewRect("LevelUpGainBack", layer, Vector2.zero);
+            if (_light != null)
             {
-                _gainRoot = NewRect("LevelUpGain", layer, Vector2.zero);
-                _gainRoot.anchorMin = _gainRoot.anchorMax = new Vector2(0f, 1f);
-                _gainBackRoot = NewRect("LevelUpGainBack", layer, Vector2.zero);
+                _gainPillar = NewImage("GainPillar", _gainBackRoot, BeamMaterial(), new Vector2(130f, 340f), new Vector2(0.5f, 0f), new Vector2(0f, -40f));
+                _gainRing = NewImage("GainRing", _gainBackRoot, RingMaterial(), new Vector2(190f, 56f), new Vector2(0.5f, 0.5f), new Vector2(0f, -40f));
+                _gainRing2 = NewImage("GainRing2", _gainBackRoot, RingMaterial(), new Vector2(190f, 56f), new Vector2(0.5f, 0.5f), new Vector2(0f, -40f));
+                _gainGlow = NewImage("GainGlow", _gainBackRoot, GlowMaterial(0.3f, 0.6f), new Vector2(240f, 240f), new Vector2(0.5f, 0.5f), Vector2.zero);
             }
-            // 섬광 — 위에서 몸을 지나 발밑까지 내려 꽂힌다(위 끝 = 몸 위 260, 아래 끝 = 발밑 45)
-            if (_gainCore == null && Has(_beam))
-            {
-                _gainWide = NewImage("GainFlashWide", _gainBackRoot, _additive, new Vector2(46f, 305f), new Vector2(0.5f, 1f), new Vector2(0f, 260f));
-                _gainCore = NewImage("GainFlash", _gainBackRoot, _additive, new Vector2(18f, 305f), new Vector2(0.5f, 1f), new Vector2(0f, 260f));
-                _gainWide.sprite = _beam[0];
-                _gainCore.sprite = _beam[0];
-            }
-            if (_gainParticles == null && Has(_motes)) _gainParticles = NewParticles(_gainRoot, 1);
+            if (_motes != null) _gainParticles = NewParticles(_gainRoot, 1);
         }
 
         private void TickGain()
@@ -332,21 +339,35 @@ namespace Game.Module.InGame
             if (t > _gainLength)
             {
                 _gainClock = -1f;
-                if (_gainCore != null) _gainCore.enabled = false;
-                if (_gainWide != null) _gainWide.enabled = false;
+                SetEnabled(false);
                 return;
             }
+            float inK = Ease.OutCubic(Mathf.Clamp01(t / 0.3f));
+            float outK = Mathf.Clamp01((t - (_gainLength - 0.35f)) / 0.35f);
+            float life = inK * (1f - outK);
             var c = _gainColor;
+
+            // 광원 — 깃드는 순간(강) 확 밝아졌다 머묾
+            if (_gainGlow != null)
+            {
+                float flare = t < 0.25f ? Mathf.Lerp(0.6f, 1.35f, Ease.OutCubic(t / 0.25f)) : Mathf.Lerp(1.35f, 1f, Ease.OutCubic(Mathf.Clamp01((t - 0.25f) / 0.4f)));
+                _gainGlow.rectTransform.localScale = Vector3.one * flare;
+                _gainGlow.color = WithAlpha(c, (t < 0.25f ? 1f : 0.9f) * life);
+                _gainGlow.enabled = true;
+            }
+            // 빛기둥 — 위에서 몸으로 내려와 선다
+            if (_gainPillar != null)
+            {
+                _gainPillar.rectTransform.localScale = new Vector3(1f, Mathf.Lerp(0.2f, 1f, Ease.OutCubic(Mathf.Clamp01(t / 0.25f))), 1f);
+                _gainPillar.color = WithAlpha(c, 0.75f * life);
+                _gainPillar.enabled = true;
+            }
+            // 바닥 고리 — 퍼지며 사라진다(위 등급은 한 번 더)
+            Ring(_gainRing, t, c, life);
+            if (_gainTier.GainSecondRing) Ring(_gainRing2, t - 0.35f, c, life);
+            else if (_gainRing2 != null) _gainRing2.enabled = false;
+            // 파티클 — 깃드는 순간 터지고, 머무는 동안 위로 솟는다
             var light = Color.Lerp(c, Color.white, 0.4f);
-
-            // 섬광(강) — 0.12초에 위에서 내리꽂히고 0.5초 안에 사라진다. 위 등급은 넓은 등급색 한 겹을 더 깐다
-            float grow = Ease.OutCubic(Mathf.Clamp01(t / 0.12f));
-            float fade = 1f - Mathf.Clamp01((t - 0.15f) / (GainFlash - 0.15f));
-            Flash(_gainCore, grow, Color.Lerp(c, Color.white, 0.7f), fade);
-            if (_gainTier.GainWide) Flash(_gainWide, grow, c, fade * 0.8f);
-            else if (_gainWide != null) _gainWide.enabled = false;
-
-            // 파티클 — 꽂히는 순간 터지고, 머무는 동안 위로 솟는다
             if (!_gainBurstDone && _gainParticles != null)
             {
                 _gainBurstDone = true;
@@ -355,28 +376,84 @@ namespace Game.Module.InGame
             if (_gainParticles != null && t < _gainLength - 0.3f && t >= _gainNextMote)
             {
                 _gainNextMote = t + 1f / Mathf.Max(1, _gainTier.GainMotes);
-                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-30f, 30f), Random.Range(-40f, 10f)),
-                       new Vector2(Random.Range(-5f, 5f), Random.Range(50f, 90f)), Random.Range(8f, 12f), Random.Range(0.6f, 0.9f), light, 1);
+                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-46f, 46f), Random.Range(-40f, 10f)),
+                       new Vector2(Random.Range(-6f, 6f), Random.Range(50f, 90f)), Random.Range(8f, 12f), Random.Range(0.6f, 0.9f), light, 1);
             }
             if (_gainTier.GainStars && _gainParticles != null && t >= _gainNextStar && t < _gainLength - 0.3f)
             {
                 _gainNextStar = t + Random.Range(0.18f, 0.3f);
-                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-50f, 50f), Random.Range(-45f, 55f)), Vector2.zero,
+                EmitAt(_gainParticles, _gainRoot, new Vector2(Random.Range(-60f, 60f), Random.Range(-50f, 60f)), Vector2.zero,
                        Random.Range(14f, 20f), Random.Range(0.35f, 0.5f), Color.Lerp(light, Color.white, 0.4f), 0);
             }
         }
 
-        private static void Flash(Image img, float grow, Color c, float alpha)
+        private static void Ring(Image ring, float t, Color c, float life)
         {
-            if (img == null) return;
-            img.rectTransform.localScale = new Vector3(1f, grow, 1f);
-            img.color = WithAlpha(c, alpha);
-            img.enabled = alpha > 0f;
+            if (ring == null) return;
+            if (t < 0f) { ring.enabled = false; return; }
+            float k = Mathf.Clamp01(t / 0.6f);
+            ring.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.4f, 1.3f, Ease.OutCubic(k));
+            ring.color = WithAlpha(c, (1f - k) * life);
+            ring.enabled = k < 1f;
+        }
+
+        private void SetEnabled(bool on)
+        {
+            if (_gainGlow != null) _gainGlow.enabled = on;
+            if (_gainPillar != null) _gainPillar.enabled = on;
+            if (_gainRing != null) _gainRing.enabled = on;
+            if (_gainRing2 != null) _gainRing2.enabled = on;
         }
 
         // ── 만들기 ───────────────────────────────────────────────
 
         private static bool Has(Sprite[] frames) => frames != null && frames.Length > 0;
+
+        private async UniTaskVoid LoadAsync()
+        {
+            _loading = true;
+            try { _light = await CoreModule.Get<IResourceManager>().LoadAsync<Material>("ParticleFx/glight"); }
+            catch (System.Exception e) { Debug.LogWarning($"[레벨업] 빛 셰이더 재질 없음 — 광원 없이 돈다. {e.Message}"); }
+            _loading = false;
+        }
+
+        /// <summary>둥근 번짐 — 빛 셰이더 타원(반지름 0). core · soft 는 심 · 번짐 폭.</summary>
+        private Material GlowMaterial(float core, float soft)
+        {
+            var m = new Material(_light) { hideFlags = HideFlags.DontSave };
+            m.SetFloat("_Shape", 1f);
+            m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            m.SetFloat("_RingRadius", 0f);
+            m.SetFloat("_RingWidth", core);
+            m.SetFloat("_RingGlow", soft);
+            m.SetFloat("_RingWhite", 0.25f);
+            return m;
+        }
+
+        /// <summary>바닥 고리 — 유령 빛 고리와 같은 값.</summary>
+        private Material RingMaterial()
+        {
+            var m = new Material(_light) { hideFlags = HideFlags.DontSave };
+            m.SetFloat("_Shape", 1f);
+            m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            m.SetFloat("_RingRadius", 0.8f);
+            m.SetFloat("_RingWidth", 0.05f);
+            m.SetFloat("_RingGlow", 0.25f);
+            return m;
+        }
+
+        /// <summary>빛기둥 — 유령 빛 광막과 같은 결(위가 좁은 사다리꼴, 결이 흐른다).</summary>
+        private Material BeamMaterial()
+        {
+            var m = new Material(_light) { hideFlags = HideFlags.DontSave };
+            m.SetFloat("_Shape", 0f);
+            m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            m.SetFloat("_BottomWidth", 1f); m.SetFloat("_TopWidth", 0.45f); m.SetFloat("_EdgeSoft", 0.2f);
+            m.SetFloat("_Body", 0.4f); m.SetFloat("_CoreWidth", 0.07f); m.SetFloat("_CoreBoost", 1.1f);
+            m.SetFloat("_FadeTop", 0.55f); m.SetFloat("_FadeBottom", 0.08f);
+            m.SetFloat("_EdgeLine", 0.1f); m.SetFloat("_Streak", 0.2f); m.SetFloat("_Scroll", 0.6f); m.SetFloat("_DashCount", 0f);
+            return m;
+        }
 
         /// <summary>카드 바로 앞 형제로 한 장 — 카드에 가려지고 창 틀 위에 선다.</summary>
         private static Image Behind(RectTransform card, string name, Material material, Vector2 size)
@@ -387,17 +464,14 @@ namespace Game.Module.InGame
             return img;
         }
 
-        /// <summary>광택 — 카드 칸 안에서만 보이게(RectMask2D) 비스듬한 빛 한 줄. 카드의 마지막 자식.</summary>
+        /// <summary>
+        /// 광택 — 카드 안쪽 높이의 세로 빛 한 줄. 카드의 마지막 자식.
+        /// ⚠ 가산 재질은 RectMask2D 에 잘리지 않는다 — 비스듬히 길게 두면 카드 밖으로 삐져나와 창 전체를 가로질렀다(녹화 final_1012).
+        ///   그래서 기울이지 않고 카드 안쪽 크기로만 만든다.
+        /// </summary>
         private Image NewSheen(RectTransform card)
         {
-            var box = NewRect("CardSheenBox", card, Vector2.zero);
-            box.anchorMin = Vector2.zero;
-            box.anchorMax = Vector2.one;
-            box.offsetMin = box.offsetMax = Vector2.zero;
-            box.gameObject.AddComponent<RectMask2D>();
-            var img = NewImage("CardSheen", box, _additive, new Vector2(34f, card.rect.height * 1.6f), new Vector2(0.5f, 0.5f), Vector2.zero);
-            img.rectTransform.localEulerAngles = new Vector3(0f, 0f, -22f);
-            return img;
+            return NewImage("CardSheen", card, _additive, new Vector2(SheenWidth, card.rect.height * 0.86f), new Vector2(0.5f, 0.5f), Vector2.zero);
         }
 
         /// <summary>카드 가운데를 따라간다(포커스로 커지거나 흐려져도).</summary>

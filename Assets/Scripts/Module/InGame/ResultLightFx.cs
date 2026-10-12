@@ -61,7 +61,7 @@ namespace Game.Module.InGame
         // 파티클 객체 수를 약간 더 늘리고 이펙트를 다양하게」).
         private static readonly ChestTier[] Tiers =
         {
-            new() { Dust = 7, Burst = 4, BurstStars = 3, Rings = 0, Rays = false, SecondBurst = false, Stars = 1, StarGap = 1.3f, Rising = false },   // 은
+            new() { Dust = 9, Burst = 6, BurstStars = 5, Rings = 0, Rays = false, SecondBurst = false, Stars = 1, StarGap = 1.3f, Rising = false },   // 은
             new() { Dust = 7, Burst = 8, BurstStars = 5, Rings = 1, Rays = false, SecondBurst = false, Stars = 2, StarGap = 0.9f, Rising = false },   // 금
             new() { Dust = 7, Burst = 12, BurstStars = 7, Rings = 2, Rays = true, SecondBurst = true, Stars = 3, StarGap = 0.6f, Rising = true },     // 백금
         };
@@ -72,13 +72,14 @@ namespace Game.Module.InGame
         private Sprite[] _goldBurst, _goldLoop, _goldSparkle, _moteSprites;
         private Sprite[] _ringSprite, _beamSprite, _coinSprite, _tierStarSprite;
         private const int CoinCount = 4;
-        private const float CoinLife = 0.8f;
+        private const float CoinLife = 0.6f;
+        private const float CoinGravity = 700f;   // 꼭대기 약 15~17px — 더미 위로 톡 튀고 금화 칸 안에서 끝난다
         private const float CoinSize = 15f;
         private const float RingSeconds = 0.5f;
         private const float RingGap = 0.14f;   // 백금 두 번째 고리
         private const float RaySeconds = 0.55f;
         private const float StarPopGap = 0.09f;
-        private const float TierStarSize = 15f;
+        private const float TierStarSize = 22f;   // 15 는 그림 여백 때문에 시안 별의 반으로 보였다(final_1012b 비교 시트)
         private readonly Image[] _rings = new Image[2];
         private readonly Image[] _rays = new Image[2];
         private readonly Image[] _tierStars = new Image[3];
@@ -163,9 +164,17 @@ namespace Game.Module.InGame
                 float deg = Random.Range(-65f, 65f) + 90f;
                 var dir = new Vector2(Mathf.Cos(deg * Mathf.Deg2Rad), Mathf.Sin(deg * Mathf.Deg2Rad));
                 bool star = i >= motes;
-                ChestMote(new Vector2(Random.Range(-0.4f, 0.4f), star ? Random.Range(-0.3f, 0.2f) : -0.42f),
-                          dir * Random.Range(70f, 160f), star ? Random.Range(14f, 20f) : Random.Range(9f, 16f),
-                          Random.Range(0.55f, 0.85f), light, star ? 0 : 1);
+                if (star)
+                {
+                    // 상자 둘레(옆 · 위 모서리)에 크게 떠서 천천히 — 시안 착지 컷의 반짝 별 자리
+                    float side = i % 2 == 0 ? -1f : 1f;
+                    ChestMote(new Vector2(side * Random.Range(0.45f, 0.62f), Random.Range(-0.3f, 0.4f)),
+                              new Vector2(side * Random.Range(8f, 20f), Random.Range(10f, 30f)),
+                              Random.Range(22f, 30f), Random.Range(0.8f, 1.1f), Color.Lerp(light, Color.white, 0.3f), 0);
+                    continue;
+                }
+                ChestMote(new Vector2(Random.Range(-0.4f, 0.4f), -0.42f),
+                          dir * Random.Range(70f, 160f), Random.Range(9f, 16f), Random.Range(0.55f, 0.85f), light, 1);
             }
         }
 
@@ -276,7 +285,7 @@ namespace Game.Module.InGame
             if (since < 0f || since > RingSeconds) { ring.enabled = false; return; }
             float k = since / RingSeconds;
             ring.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.45f, 1.2f, Ease.OutCubic(k));
-            ring.color = new Color(color.r, color.g, color.b, 1f - k * k);
+            ring.color = new Color(color.r, color.g, color.b, 1f - Mathf.SmoothStep(0f, 1f, (k - 0.45f) / 0.55f));
             ring.enabled = true;
         }
 
@@ -305,13 +314,13 @@ namespace Game.Module.InGame
         /// <summary>착지 먼지 — 상자 밑에서 양옆으로 일었다 금방 꺼진다(회색 도트 알갱이).</summary>
         private void Dust(int count)
         {
-            var dust = new Color(0.78f, 0.8f, 0.86f, 0.75f);
+            var dust = new Color(0.82f, 0.84f, 0.9f, 0.9f);   // 0.75 · 10~16px 는 녹화에서 거의 안 보였다(final_1012)
             for (int i = 0; i < count; i++)
             {
                 float side = i % 2 == 0 ? -1f : 1f;
                 ChestMote(new Vector2(side * Random.Range(0.15f, 0.45f), -0.45f),
                           new Vector2(side * Random.Range(40f, 90f), Random.Range(8f, 30f)),
-                          Random.Range(10f, 16f), Random.Range(0.35f, 0.5f), dust, 1);
+                          Random.Range(14f, 20f), Random.Range(0.4f, 0.55f), dust, 1);
             }
         }
 
@@ -324,10 +333,13 @@ namespace Game.Module.InGame
                 if (coin == null) continue;
                 float t = since - i * 0.06f;
                 if (t < 0f || t > CoinLife) { coin.enabled = false; continue; }
-                if (!coin.enabled) _coinVelocity[i] = new Vector2(Random.Range(-60f, 60f), Random.Range(150f, 210f));
+                if (!coin.enabled) _coinVelocity[i] = new Vector2(Random.Range(-50f, 50f), Random.Range(170f, 220f));
                 var v = _coinVelocity[i];
-                coin.rectTransform.anchoredPosition = _coinHome + new Vector2(v.x * t, v.y * t - 420f * t * t);
-                coin.color = new Color(1f, 1f, 1f, 1f - Mathf.Clamp01((t - CoinLife * 0.6f) / (CoinLife * 0.4f)));
+                float rise = v.y * t - CoinGravity * t * t;
+                if (rise < 0f && t > 0.05f) { coin.enabled = false; continue; }
+                float apex = v.y / (2f * CoinGravity);
+                coin.rectTransform.anchoredPosition = _coinHome + new Vector2(v.x * t, rise);
+                coin.color = new Color(1f, 1f, 1f, 1f - Mathf.Clamp01((t - apex) / apex));
                 coin.enabled = true;
             }
         }
@@ -361,7 +373,8 @@ namespace Game.Module.InGame
                 _tierStarHome = _tierStars[0].rectTransform.anchoredPosition;
                 for (int i = 0; i < _tierStars.Length; i++) Place(_tierStars[i], Vector2.zero, _tierStarSprite[0]);
             }
-            // 별은 등급마다 개수가 달라 매번 가운데 정렬로 다시 놓는다 — 상자 윗변 바로 위
+            // 별은 등급마다 개수가 달라 매번 가운데 정렬로 다시 놓는다 — 상자 윗변에 반쯤 걸친다
+            // (윗변 위에 띄우면 상자가 칸을 거의 채워 별이 칸 윗테두리 밖으로 나갔다, 녹화 final_1012)
             if (chest != null && _tierStars[0] != null)
             {
                 var r = chest.rectTransform.rect;
@@ -369,7 +382,7 @@ namespace Game.Module.InGame
                 for (int i = 0; i < _tierStars.Length; i++)
                 {
                     float x = (i - (n - 1) * 0.5f) * (TierStarSize + 2f);
-                    _tierStars[i].rectTransform.anchoredPosition = _tierStarHome + new Vector2(x, r.height * 0.5f + TierStarSize * 0.5f + 1f);
+                    _tierStars[i].rectTransform.anchoredPosition = _tierStarHome + new Vector2(x, r.height * 0.5f - 5f);
                 }
             }
             if (pile != null && _coins[0] == null && Has(_coinSprite))
