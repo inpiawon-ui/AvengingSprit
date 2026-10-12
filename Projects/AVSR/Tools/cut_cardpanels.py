@@ -5,7 +5,8 @@ PD 「카드 프레임들이 다 다른데 통일하는 게 낫지 않아?」 �
 - 전설 왕관은 카드 위로 튀어나와 몸통과 따로 뗀다 — 카드 크기를 네 장 똑같이 두고, 게임이 왕관을 카드 위에 얹는다.
   왕관 그림에는 몸통 윗부분 몇 줄이 같이 들어 있다(같은 점이라 겹쳐도 이어진다).
 - 옛 카드판은 지우지 않고 Projects/AVSR/_archive/cardpanel_20261012/ 로 옮겨 둔다(처음 한 번).
-python cut_cardpanels.py → 몸통 상자 · 왕관 자리(카드 칸 162x320 기준)를 출력
+python cut_cardpanels.py [납품 그림] → 몸통 상자 · 왕관 자리(카드 칸 162x320 기준)를 출력
+  2026-10-12 등급 색 구분판(in/tiers_part_cardpanels_color.png, 시안 mock_cardrarity_color) — PD 「좋은 거 안 좋은 거 구분이 안 된다」
 """
 import os
 import shutil
@@ -31,8 +32,8 @@ def key_magenta(rgb):
     return Image.fromarray(out, 'RGBA')
 
 
-def main():
-    sheet = Image.open(SRC).convert('RGB')
+def main(src=SRC):
+    sheet = Image.open(src).convert('RGB')
     a = np.asarray(sheet).astype(int)
     solid = ~((a[..., 0] > 170) & (a[..., 2] > 170) & (a[..., 1] < 110))
     boxes = []
@@ -77,4 +78,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    main(sys.argv[1] if len(sys.argv) > 1 else SRC)

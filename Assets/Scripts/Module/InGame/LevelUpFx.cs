@@ -14,7 +14,7 @@ namespace Game.Module.InGame
     /// 정답 시안(`Projects/AVSR/_exchange/in/`) · 가이드 `guide_tiers_fx.md`:
     ///   (광택이 카드를 훑던 것은 뺐다 — PD 2026-10-12 「팝업 시작할 때 옆으로 지나가는 빗금 없애, 안 이뻐」)
     ///   등장 · 머묾 = 카드 테두리 바깥으로 등급색 빛이 은은히 번진다(카드 바로 뒤 부드러운 사각 빛) —
-    ///          COMMON 없음 / RARE · EPIC · LEGENDARY 등급색, 알파 0.7 ~ 1 을 1초에 한 번 숨쉼 / LEGENDARY + 등장 · 머묾 반짝 별
+    ///          COMMON 없음 / RARE 옅게 / EPIC 알파 0.7 ~ 1 / LEGENDARY 0.7 ~ 1 더 넓게 + 반짝 별 — 1초에 한 번 숨쉼
     ///          (PD 2026-10-12 「카드 등급 표기 겉에 은은하게 블러, 빛줄기는 이상해」 · 「알파 0.7~1, 1초」 ·
     ///           「타이틀에만 강조하는 게 아니라」 · 「타이틀에 저렇게 하는 거 제거, 촌스러워」 — 위로 내려오던 빛기둥 · 명판 고리 빛은 뺐다)
     ///          + 창 둘레 금빛 알갱이(mock_lvpopup_free_idle, 등급 무관)
@@ -32,7 +32,9 @@ namespace Game.Module.InGame
     {
         private struct Tier
         {
-            public float Halo;          // 등장 · 머묾 — 카드 테두리 바깥 빛(0 = 없음, 그 외는 알파 0.7 ~ 1 숨쉬기)
+            public float Halo;          // 등장 · 머묾 — 카드 테두리 바깥 빛 가장 밝을 때 알파(0 = 없음)
+            public float HaloLow;       // 숨쉬기 가장 어두울 때 알파
+            public float HaloWide;      // 카드 밖으로 번지는 폭(px, 한쪽)
             public int AppearStars;     // 등장 — 테두리 빛이 차오를 때 터지는 반짝 별 수
             public float IdleStarGap;   // 머묾 — 카드 모서리 반짝 별 간격(초, 0 = 없음)
             public int PickBurst;       // 고름 — 튀는 알갱이 수
@@ -44,20 +46,21 @@ namespace Game.Module.InGame
         }
 
         // COMMON = 기본(테두리만), 위 등급은 이펙트 종류 · 파티클 수를 한 겹씩 — 크기는 같다(스킬 fx-art-pipeline 2-1)
+        // 테두리 빛은 계단식 — 셋이 같은 세기(0.7 ~ 1)였더니 「딱 봤을 때 좋은 거 안 좋은 거 구분이 안 된다」(PD 2026-10-12).
+        // 레어 옅게(0.3 ~ 0.45) · 에픽 0.7 ~ 1 · 전설 0.7 ~ 1 에 더 넓게 + 반짝 별
         private static readonly Tier[] Tiers =
         {
-            new() { Halo = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
-            new() { Halo = 1f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
-            new() { Halo = 1f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
-            new() { Halo = 1f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
+            new() { Halo = 0f, HaloLow = 0f, HaloWide = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
+            new() { Halo = 0.45f, HaloLow = 0.3f, HaloWide = 14f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
+            new() { Halo = 1f, HaloLow = 0.7f, HaloWide = 18f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
+            new() { Halo = 1f, HaloLow = 0.7f, HaloWide = 26f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
         };
 
         private const int CardCount = 3;
         // 빛살 그림(520x760)의 안쪽 구멍 실측 176x421 을 카드 162x320 에 맞춘 크기(가로 0.88 · 세로 0.74)
         private static readonly Vector2 RaysSize = new(458f, 562f);
         private const float AppearAt = 0.22f;      // 명판 빛이 가장 밝아지는 때(등장, 강)
-        private const float HaloAlphaMin = 0.7f, HaloPulseSeconds = 1f;   // 테두리 빛 숨쉬기 — 알파 0.7 ~ 1, 1초
-        private static readonly Vector2 HaloMargin = new(36f, 36f);   // 카드(162x320)보다 사방 18 크게 — 바깥으로 보이는 빛 폭
+        private const float HaloPulseSeconds = 1f;   // 테두리 빛 숨쉬기 1초(PD 「알파 0.7~1, 1초 정도」 — 세기는 표)
 
         private PopupFxPlayer _fx;
         private Material _light;   // 번들 ParticleFx/glight — 깃듦 광원 · 빛기둥 · 고리
@@ -212,10 +215,10 @@ namespace Game.Module.InGame
             var card = _cards[i];
             float up = Ease.OutCubic(Mathf.Clamp01(t / AppearAt));
             float pulse = t < AppearAt ? up
-                : Mathf.Lerp(HaloAlphaMin, 1f, 0.5f + 0.5f * Mathf.Cos((t - AppearAt) * Mathf.PI * 2f / HaloPulseSeconds));
+                : Mathf.Lerp(tier.HaloLow / tier.Halo, 1f, 0.5f + 0.5f * Mathf.Cos((t - AppearAt) * Mathf.PI * 2f / HaloPulseSeconds));
             var rt = halo.rectTransform;
             Follow(rt, card);
-            rt.sizeDelta = card.rect.size + HaloMargin;
+            rt.sizeDelta = card.rect.size + Vector2.one * (tier.HaloWide * 2f);
             rt.localScale = card.localScale;
             halo.color = WithAlpha(_cardColor[i], tier.Halo * pulse * pickFade);
             halo.enabled = true;
@@ -227,7 +230,7 @@ namespace Game.Module.InGame
             if (_cardHalo[i] != null) return _cardHalo[i];
             if (_light == null || _cards[i] == null) return null;
             if (_haloMaterial == null) _haloMaterial = HaloMaterial();
-            _cardHalo[i] = Behind(_cards[i], "CardHalo", _haloMaterial, _cards[i].rect.size + HaloMargin);
+            _cardHalo[i] = Behind(_cards[i], "CardHalo", _haloMaterial, _cards[i].rect.size);
             return _cardHalo[i];
         }
 
