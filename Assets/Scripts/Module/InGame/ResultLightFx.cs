@@ -15,9 +15,12 @@ namespace Game.Module.InGame
     ///
     /// 금화(코덱스 자유 시안 `mock_result_codex_*` — PD 「골드는 광원이 괜찮다」, 그대로 둔다)
     ///   광원 = 빛 셰이더 번짐 · 빛살 = 도트 그림 터짐 8장 → 반복 8장 · 앞 = 반짝 별 그림 반복 + 유령 빛 알갱이 파티클
-    /// 상자 — **반짝임만**(PD 2026-10-10 「상자별로 색 글로우 넣은 건 제거, 촌스럽게 뒤에 붙여 놨다, 반짝이들만」).
-    ///   상자 뒤 등급색 광원 · 후광 · 바닥 빛살은 뺐다. 반짝 별 · 도트 알갱이 파티클(그림 2종)만 —
-    ///   착지에 위로 튀고, 머묾에 알갱이가 천천히 떠오르고 별이 가끔 반짝. 등급색을 살짝 곱한다
+    /// 상자 — 등급 사다리(시안 `mock_tiers_result_peak/idle`, 가이드 `guide_tiers_fx.md`, PD 2026-10-12 「적용해서 보여줘」).
+    ///   레퍼런스: 클래시 로얄 럭키 드롭 — 상자는 그대로, 착지 순간에만 겹을 더한다(고리 → 고리 두 겹 + 빛줄기).
+    ///   상자 뒤에 계속 붙는 광원은 쓰지 않는다(PD 2026-10-10 「촌스럽게 뒤에 붙여 놨다」) — 빛은 착지 순간 퍼지고 사라진다.
+    ///   착지 = 먼지 + 도트 반짝 별 (+ 금: 바닥 고리 / + 백금: 고리 두 겹 · 세로 빛줄기 · 불꽃 알갱이)
+    ///   머묾 = 상자 위 등급 별(은 1 · 금 2 · 백금 3) + 반짝 별 가끔 (+ 백금: 알갱이가 천천히 떠오름)
+    /// 금화 — 다 쌓이는 순간 도트 금화 몇 닢이 위로 튀어 오른다(시안 금화 비를 작게)
     ///
     /// 깊이: 광원 · 빛살 = 물건 그림 바로 앞 형제(물건에 가려짐) · 앞 그림 = 물건 바로 뒤 형제 · 파티클 = 결과창 캔버스 + 2.
     /// 상자가 자르기 틀(RectMask2D) 안에 있으면 틀 바깥 형제로 둔다 — 빛까지 틀에 잘리지 않게.
@@ -42,10 +45,13 @@ namespace Game.Module.InGame
         /// </summary>
         private struct ChestTier
         {
-            public int Burst;         // 착지 때 튀는 알갱이 수
+            public int Dust;          // 착지 먼지 알갱이 수
+            public int Burst;         // 착지 때 튀는 도트 알갱이 수
             public int BurstStars;    // 착지 때 같이 터지는 반짝 별 수
-            public bool SecondBurst;  // 0.5초 뒤 반짝임 한 번 더
-            public float MoteGap;     // 머묾 알갱이 간격(초)
+            public int Rings;         // 착지 바닥 고리 수(0 · 1 · 2)
+            public bool Rays;         // 착지 세로 빛줄기
+            public bool SecondBurst;  // 0.5초 뒤 불꽃 알갱이 한 번 더
+            public int Stars;         // 상자 위 등급 별 개수
             public float StarGap;     // 머묾 반짝 별 간격(초)
             public bool Rising;       // 머묾에 위로 흘러오르는 빛 알갱이
         }
@@ -55,19 +61,34 @@ namespace Game.Module.InGame
         // 파티클 객체 수를 약간 더 늘리고 이펙트를 다양하게」).
         private static readonly ChestTier[] Tiers =
         {
-            new() { Burst = 12, BurstStars = 0, SecondBurst = false, MoteGap = 0.25f, StarGap = 1.2f, Rising = false },   // 은
-            new() { Burst = 16, BurstStars = 5, SecondBurst = false, MoteGap = 0.19f, StarGap = 0.7f, Rising = false },   // 금
-            new() { Burst = 20, BurstStars = 8, SecondBurst = true, MoteGap = 0.15f, StarGap = 0.45f, Rising = true },    // 백금
+            new() { Dust = 7, Burst = 4, BurstStars = 3, Rings = 0, Rays = false, SecondBurst = false, Stars = 1, StarGap = 1.3f, Rising = false },   // 은
+            new() { Dust = 7, Burst = 8, BurstStars = 5, Rings = 1, Rays = false, SecondBurst = false, Stars = 2, StarGap = 0.9f, Rising = false },   // 금
+            new() { Dust = 7, Burst = 12, BurstStars = 7, Rings = 2, Rays = true, SecondBurst = true, Stars = 3, StarGap = 0.6f, Rising = true },     // 백금
         };
 
         private ChestTier _tier = Tiers[0];
 
         private Image _goldGlow, _goldBack, _goldFront;
         private Sprite[] _goldBurst, _goldLoop, _goldSparkle, _moteSprites;
+        private Sprite[] _ringSprite, _beamSprite, _coinSprite, _tierStarSprite;
+        private const int CoinCount = 4;
+        private const float CoinLife = 0.8f;
+        private const float CoinSize = 15f;
+        private const float RingSeconds = 0.5f;
+        private const float RingGap = 0.14f;   // 백금 두 번째 고리
+        private const float RaySeconds = 0.55f;
+        private const float StarPopGap = 0.09f;
+        private const float TierStarSize = 15f;
+        private readonly Image[] _rings = new Image[2];
+        private readonly Image[] _rays = new Image[2];
+        private readonly Image[] _tierStars = new Image[3];
+        private readonly Image[] _coins = new Image[CoinCount];
+        private readonly Vector2[] _coinVelocity = new Vector2[CoinCount];
+        private Vector2 _coinHome, _tierStarHome;
         private Color _grade = Color.white;
         private bool _hasChest;
         private float _goldAt, _landAt, _clock = -1f;
-        private float _nextGoldMote, _nextChestMote, _nextChestStar;
+        private float _nextGoldMote, _nextChestStar;
         private bool _chestBurstDone, _secondBurstDone;
         private float _nextRising;
 
@@ -87,6 +108,7 @@ namespace Game.Module.InGame
 
             float g = _clock - _goldAt;
             Glow(_goldGlow, GoldGlowColor, g, 0.42f, 0.12f, 2.2f);
+            TickCoins(g);
             Frames2(_goldBack, _goldFront, _goldBurst, _goldLoop, _goldSparkle, g, Color.white);
             if (g >= 0.3f && _clock >= _nextGoldMote)
             {
@@ -101,29 +123,28 @@ namespace Game.Module.InGame
             var light = Color.Lerp(_grade, Color.white, 0.45f);
             if (!_chestBurstDone && _chestMotes != null)
             {
-                // 착지(강) — 별 · 알갱이가 바닥에서 위로 확 튄다
+                // 착지(강) — 먼지가 옆으로 일고 별 · 알갱이가 바닥에서 위로 확 튄다
                 _chestBurstDone = true;
+                Dust(_tier.Dust);
                 Burst(_tier.Burst, _tier.BurstStars, light);
             }
             if (_tier.SecondBurst && !_secondBurstDone && c >= 0.5f)
             {
                 _secondBurstDone = true;
-                Burst(8, 4, Color.Lerp(light, Color.white, 0.3f));
+                Burst(10, 4, Color.Lerp(light, Color.white, 0.3f));
             }
+            for (int i = 0; i < _rings.Length; i++)
+                RingAt(_rings[i], i < _tier.Rings ? c - i * RingGap : -1f, Color.Lerp(_grade, Color.white, 0.3f));
+            for (int i = 0; i < _rays.Length; i++)
+                RayAt(_rays[i], _tier.Rays ? c - i * 0.05f : -1f, Color.Lerp(_grade, Color.white, 0.5f));
+            for (int i = 0; i < _tierStars.Length; i++)
+                StarAt(_tierStars[i], i < _tier.Stars ? c - 0.12f - i * StarPopGap : -1f);
             if (_tier.Rising && _clock >= _nextRising)
             {
                 // 백금 머묾 — 상자 둘레에서 빛 알갱이가 위로 흘러오른다(더 빠르고 길게)
                 _nextRising = _clock + Random.Range(0.2f, 0.35f);
                 ChestMote(new Vector2(Random.Range(-0.5f, 0.5f), -0.35f), new Vector2(0f, Random.Range(40f, 60f)),
                           Random.Range(8f, 11f), Random.Range(0.9f, 1.2f), Color.Lerp(light, Color.white, 0.3f), 1);
-            }
-            if (_clock >= _nextChestMote)
-            {
-                // 머묾(약) — 도트 알갱이가 상자 둘레에서 천천히 떠오른다
-                _nextChestMote = _clock + _tier.MoteGap * Random.Range(0.8f, 1.3f);
-                ChestMote(new Vector2(Random.Range(-0.55f, 0.55f), Random.Range(-0.45f, 0.3f)),
-                          new Vector2(Random.Range(-4f, 4f), Random.Range(14f, 26f)),
-                          Random.Range(13f, 19f), Random.Range(1.1f, 1.6f), Color.Lerp(_grade, Color.white, 0.2f), 1);
             }
             if (_clock >= _nextChestStar)
             {
@@ -161,6 +182,10 @@ namespace Game.Module.InGame
             _goldLoop = fx.FramesOf("result_gold_glow");
             _goldSparkle = fx.FramesOf("result_gold_sparkle");
             _moteSprites = fx.FramesOf("result_mote");
+            _ringSprite = fx.FramesOf("tier_ring");
+            _beamSprite = fx.FramesOf("tier_beam");
+            _coinSprite = fx.FramesOf("result_coin");
+            _tierStarSprite = fx.FramesOf("result_tierstar");
             _additive = additive;
             _grade = grade;
             _pile = pile;
@@ -169,7 +194,12 @@ namespace Game.Module.InGame
             // Unity 객체라 ??= 를 쓰지 않는다(파괴된 객체를 null 로 못 본다 — coding_conventions 5절)
             if (_goldBack == null) _goldBack = Layer(pile, "ResultGoldBack", additive, GoldSize, behind: true);
             if (_goldFront == null) _goldFront = Layer(pile, "ResultGoldFront", additive, GoldSize, behind: false);
+            EnsureTierLayers(pile, chest, additive);
             Hide(_goldGlow); Hide(_goldBack); Hide(_goldFront);
+            for (int i = 0; i < _rings.Length; i++) Hide(_rings[i]);
+            for (int i = 0; i < _rays.Length; i++) Hide(_rays[i]);
+            for (int i = 0; i < _tierStars.Length; i++) Hide(_tierStars[i]);
+            for (int i = 0; i < _coins.Length; i++) Hide(_coins[i]);
             if (_motes != null) _motes.Clear();
             if (_chestMotes != null) _chestMotes.Clear();
             _chestBurstDone = false;
@@ -180,7 +210,6 @@ namespace Game.Module.InGame
             _goldAt = goldAt;
             _landAt = landAt;
             _nextGoldMote = goldAt + 0.4f;
-            _nextChestMote = landAt + 0.5f;
             _nextChestStar = landAt + 0.7f;
             _clock = 0f;
             if (_lightSource == null && !_loading) LoadAsync().Forget();   // fire-and-forget: 오기 전엔 광원 · 알갱이 없이 돈다
@@ -237,6 +266,133 @@ namespace Game.Module.InGame
         {
             if (img != null) img.enabled = false;
         }
+
+        // ── 4. 등급 사다리 — 고리 · 빛줄기 · 등급 별 · 먼지 · 금화 ─────────────
+
+        /// <summary>바닥 고리 — 상자 밑에서 퍼지며 사라진다(OutCubic, <see cref="RingSeconds"/>).</summary>
+        private static void RingAt(Image ring, float since, Color color)
+        {
+            if (ring == null) return;
+            if (since < 0f || since > RingSeconds) { ring.enabled = false; return; }
+            float k = since / RingSeconds;
+            ring.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.45f, 1.2f, Ease.OutCubic(k));
+            ring.color = new Color(color.r, color.g, color.b, 1f - k * k);
+            ring.enabled = true;
+        }
+
+        /// <summary>세로 빛줄기 — 바닥에서 위로 확 그어졌다(0.12초) 사라진다.</summary>
+        private static void RayAt(Image ray, float since, Color color)
+        {
+            if (ray == null) return;
+            if (since < 0f || since > RaySeconds) { ray.enabled = false; return; }
+            float grow = Ease.OutCubic(Mathf.Clamp01(since / 0.12f));
+            float fade = 1f - Mathf.Clamp01((since - 0.15f) / (RaySeconds - 0.15f));
+            ray.rectTransform.localScale = new Vector3(1f, grow, 1f);
+            ray.color = new Color(color.r, color.g, color.b, fade);
+            ray.enabled = true;
+        }
+
+        /// <summary>등급 별 — 착지 뒤 하나씩 톡 생겨(OutBack) 머문다.</summary>
+        private static void StarAt(Image star, float since)
+        {
+            if (star == null) return;
+            if (since < 0f) { star.enabled = false; return; }
+            star.rectTransform.localScale = Vector3.one * Mathf.LerpUnclamped(0f, 1f, Ease.OutBack(Mathf.Clamp01(since / 0.22f)));
+            star.color = Color.white;
+            star.enabled = true;
+        }
+
+        /// <summary>착지 먼지 — 상자 밑에서 양옆으로 일었다 금방 꺼진다(회색 도트 알갱이).</summary>
+        private void Dust(int count)
+        {
+            var dust = new Color(0.78f, 0.8f, 0.86f, 0.75f);
+            for (int i = 0; i < count; i++)
+            {
+                float side = i % 2 == 0 ? -1f : 1f;
+                ChestMote(new Vector2(side * Random.Range(0.15f, 0.45f), -0.45f),
+                          new Vector2(side * Random.Range(40f, 90f), Random.Range(8f, 30f)),
+                          Random.Range(10f, 16f), Random.Range(0.35f, 0.5f), dust, 1);
+            }
+        }
+
+        /// <summary>금화 — 다 쌓이는 순간 몇 닢이 더미 위로 튀어 올랐다 떨어지며 사라진다.</summary>
+        private void TickCoins(float since)
+        {
+            for (int i = 0; i < _coins.Length; i++)
+            {
+                var coin = _coins[i];
+                if (coin == null) continue;
+                float t = since - i * 0.06f;
+                if (t < 0f || t > CoinLife) { coin.enabled = false; continue; }
+                if (!coin.enabled) _coinVelocity[i] = new Vector2(Random.Range(-60f, 60f), Random.Range(150f, 210f));
+                var v = _coinVelocity[i];
+                coin.rectTransform.anchoredPosition = _coinHome + new Vector2(v.x * t, v.y * t - 420f * t * t);
+                coin.color = new Color(1f, 1f, 1f, 1f - Mathf.Clamp01((t - CoinLife * 0.6f) / (CoinLife * 0.4f)));
+                coin.enabled = true;
+            }
+        }
+
+        /// <summary>등급 사다리 층을 한 번 만든다 — 고리 · 빛줄기는 상자 앞(가산), 별은 상자 위, 금화는 더미 앞.</summary>
+        private void EnsureTierLayers(Image pile, Image chest, Material additive)
+        {
+            if (chest != null && _rings[0] == null && Has(_ringSprite))
+            {
+                var r = chest.rectTransform.rect;
+                for (int i = 0; i < _rings.Length; i++)
+                {
+                    _rings[i] = Layer(chest, "ResultChestRing" + i, additive, new Vector2(r.width * 1.45f, r.width * 0.42f), behind: false);
+                    Place(_rings[i], new Vector2(0f, -r.height * 0.42f), _ringSprite[0]);
+                }
+            }
+            if (chest != null && _rays[0] == null && Has(_beamSprite))
+            {
+                var r = chest.rectTransform.rect;
+                for (int i = 0; i < _rays.Length; i++)
+                {
+                    _rays[i] = Layer(chest, "ResultChestRay" + i, additive, new Vector2(18f, r.height * 1.25f), behind: false);
+                    _rays[i].rectTransform.pivot = new Vector2(0.5f, 0f);   // 바닥 기준 — 바닥에서 위로 그어진다
+                    Place(_rays[i], new Vector2((i == 0 ? -1f : 1f) * r.width * 0.46f, -r.height * 0.45f), _beamSprite[0]);
+                }
+            }
+            if (chest != null && _tierStars[0] == null && Has(_tierStarSprite))
+            {
+                for (int i = 0; i < _tierStars.Length; i++)
+                    _tierStars[i] = Layer(chest, "ResultTierStar" + i, null, new Vector2(TierStarSize, TierStarSize), behind: false);
+                _tierStarHome = _tierStars[0].rectTransform.anchoredPosition;
+                for (int i = 0; i < _tierStars.Length; i++) Place(_tierStars[i], Vector2.zero, _tierStarSprite[0]);
+            }
+            // 별은 등급마다 개수가 달라 매번 가운데 정렬로 다시 놓는다 — 상자 윗변 바로 위
+            if (chest != null && _tierStars[0] != null)
+            {
+                var r = chest.rectTransform.rect;
+                int n = Mathf.Max(1, _tier.Stars);
+                for (int i = 0; i < _tierStars.Length; i++)
+                {
+                    float x = (i - (n - 1) * 0.5f) * (TierStarSize + 2f);
+                    _tierStars[i].rectTransform.anchoredPosition = _tierStarHome + new Vector2(x, r.height * 0.5f + TierStarSize * 0.5f + 1f);
+                }
+            }
+            if (pile != null && _coins[0] == null && Has(_coinSprite))
+            {
+                var r = pile.rectTransform.rect;
+                for (int i = 0; i < _coins.Length; i++)
+                {
+                    _coins[i] = Layer(pile, "ResultCoinPop" + i, null, new Vector2(CoinSize, CoinSize), behind: false);
+                    Place(_coins[i], new Vector2(0f, r.height * 0.15f), _coinSprite[0]);
+                }
+                _coinHome = _coins[0].rectTransform.anchoredPosition;
+            }
+        }
+
+        private static void Place(Image img, Vector2 offset, Sprite sprite)
+        {
+            if (img == null) return;
+            img.sprite = sprite;
+            img.preserveAspect = true;
+            img.rectTransform.anchoredPosition += offset;
+        }
+
+        private static bool Has(Sprite[] frames) => frames != null && frames.Length > 0;
 
         // ── 3. 파티클 빛 알갱이 ────────────────────────────────────
 
