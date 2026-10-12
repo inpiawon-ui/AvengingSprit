@@ -25,6 +25,19 @@ namespace Game.Editor
         // 카드 · 육성 화면과 같은 흉상(원작 그림). 작은 아이콘(64px)은 키우면 뭉개져 실루엣이 안 읽혔다
         private const string DeathPortrait = Portraits + "/portrait_death.png";
         private const string AdditiveMat = "Assets/BaseResource/Shaders/UIAdditiveSprite.mat";
+        private const string SilhouetteMat = "Assets/BaseResource/Shaders/UISilhouette.mat";
+
+        /// <summary>`UI/Silhouette` 재질 — 없으면 만든다. 그림의 모양만 쓰고 색은 Image.color 로 칠한다.</summary>
+        private static Material Silhouette()
+        {
+            var m = AssetDatabase.LoadAssetAtPath<Material>(SilhouetteMat);
+            if (m != null) return m;
+            var sh = Shader.Find("UI/Silhouette");
+            if (sh == null) { Debug.LogError("[챕터·호스트 설명] UI/Silhouette 셰이더 없음"); return null; }
+            m = new Material(sh) { name = "UISilhouette" };
+            AssetDatabase.CreateAsset(m, SilhouetteMat);
+            return m;
+        }
 
         [MenuItem("Tools/Game/챕터·호스트 — 「?」 카드 · 고른 카드 설명 칸 꽂기")]
         public static void Run()
@@ -124,13 +137,16 @@ namespace Game.Editor
             dice.preserveAspect = true;
             Local(dice.rectTransform, -200, 0, 78, 58);
 
-            var tint = new Color(0.55f, 0.78f, 1f, 0.95f);   // 푸른 빛 실루엣 — 원작 흉상에 색만 입힌다
+            // 푸른 단색 실루엣 — 원작 흉상의 모양만(음영 없이). 색만 곱하면 안쪽 그림이 그대로 남았다(PD 2026-10-12)
+            var tint = new Color(0.42f, 0.70f, 1f, 0.95f);
+            var sil = Silhouette();
             for (int i = 0; i < StripHosts.Length; i++)
             {
                 // 카드에 쓰는 흉상과 같은 그림(판의 _hostArts) — portrait_* 은 전신이라 작게 줄 서 보였다
                 var face = Img(strip, $"StripHost{i}", ThumbOf(panel, StripHosts[i]));
                 face.preserveAspect = true;
                 face.color = tint;
+                face.material = sil;
                 Local(face.rectTransform, -125 + i * 76, 0, 68, 64);
             }
             var stars = new (float x, float y, float s)[]
@@ -212,6 +228,7 @@ namespace Game.Editor
             if (comp == null) return;
             var so = new SerializedObject(comp);
             so.FindProperty("_randomDeath").objectReferenceValue = Spr(DeathPortrait);
+            so.FindProperty("_silhouette").objectReferenceValue = Silhouette();
             var arts = so.FindProperty("_hostArts");
             for (int i = 0; i < arts.arraySize; i++)
             {

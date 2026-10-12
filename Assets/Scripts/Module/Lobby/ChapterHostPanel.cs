@@ -69,8 +69,14 @@ namespace Game.Module.Lobby
         /// </summary>
         [SerializeField] private Sprite _randomDeath;
 
-        /// <summary>가린 사신 색 — 어두운 남보라. 모양만 읽히고 정체는 안 보인다(「낮은 확률로 전설 등장」 암시).</summary>
-        private static readonly Color SilhouetteTint = new(0.40f, 0.30f, 0.62f, 1f);
+        /// <summary>
+        /// 실루엣 재질(`UI/Silhouette` — 그림의 모양만 쓰고 색은 통째로 갈아끼운다).
+        /// ⚠ 색만 곱하면(`Image.color`) 안쪽 음영이 그대로 남는다 — PD 2026-10-12 「음영을 깔지 말고 실루엣으로」.
+        /// </summary>
+        [SerializeField] private Material _silhouette;
+
+        /// <summary>가린 사신 실루엣 색 — 보라. 모양만 읽히고 정체는 안 보인다(「낮은 확률로 전설 등장」 암시).</summary>
+        private static readonly Color SilhouetteTint = new(0.42f, 0.26f, 0.70f, 1f);
 
         // 상성 시험판(2026-10-02) — 무기 · 파워 · 마법 아이콘(이 순서), 유리 ▲ · 불리 ▼
         [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
@@ -609,6 +615,7 @@ namespace Game.Module.Lobby
             {
                 thumb.sprite = _randomDeath;
                 thumb.color = SilhouetteTint;
+                thumb.material = _silhouette;
                 thumb.enabled = thumb.sprite != null;
                 thumb.preserveAspect = true;
             }
@@ -648,6 +655,7 @@ namespace Game.Module.Lobby
             {
                 portrait.sprite = random ? _randomDeath : ArtOf(_pickedHost).Thumb;
                 portrait.color = random ? SilhouetteTint : Color.white;
+                portrait.material = random ? _silhouette : null;   // 몸을 고르면 원래 그림으로 돌아온다
                 portrait.enabled = portrait.sprite != null;
                 portrait.preserveAspect = true;
             }
