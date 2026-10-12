@@ -12,18 +12,18 @@ namespace Game.Module.InGame
     /// 레벨업 연출 — 카드 등장 · 머묾 · 고르는 순간 · 몸에 깃드는 순간 (등급 사다리, PD 2026-10-12 「적용해서 보여줘」).
     ///
     /// 정답 시안(`Projects/AVSR/_exchange/in/`) · 가이드 `guide_tiers_fx.md`:
-    ///   등장 = mock_tiers_lv_appear — COMMON 테두리만 / RARE + 광택이 한 번 훑음 / EPIC + 위에서 빛기둥이 내려와 꽂힘 /
-    ///          LEGENDARY + 기둥 + 도트 반짝 별 터짐
-    ///   머묾 = mock_tiers_lv_idle — COMMON · RARE 아무것도 없음 / EPIC 카드 뒤 곧은 기둥이 은은히 / LEGENDARY + 반짝 별 가끔
+    ///   (광택이 카드를 훑던 것은 뺐다 — PD 2026-10-12 「팝업 시작할 때 옆으로 지나가는 빗금 없애, 안 이뻐」)
+    ///   등장 · 머묾 = 등급 명판(카드 맨 위 「RARE · EPIC · LEGENDARY」) 둘레에 등급색 빛이 은은히 번진다 —
+    ///          COMMON 없음 / RARE 옅게 / EPIC 조금 더 / LEGENDARY 더 밝게 + 등장 반짝 별 · 머묾 반짝 별 가끔
+    ///          (카드 위로 내려오던 빛기둥은 뺐다 — PD 2026-10-12 「카드 등급 표기 겉에 은은하게 블러, 빛줄기는 이상해」)
     ///          + 창 둘레 금빛 알갱이(mock_lvpopup_free_idle, 등급 무관)
     ///   고름 = mock_lvpopup_free_peak — 고른 카드 둘레 등급색 빛살 + 알갱이(그대로)
     ///   깃듦 = mock_lvgain_free_peak 그대로(광원 · 빛기둥 · 바닥 고리 · 솟는 알갱이) — 새 시안의 가는 섬광으로 바꿨다가
     ///          PD 2026-10-12 「유령에 적용되는 이펙트는 전에께 더 이쁘고 좋았다, 굳이 퀄을 떨굴 필요 없다」로 되돌렸다
-    /// 레퍼런스(그림판 shots_C): 아처로 2 — 보통 카드는 테두리만, 에픽부터 등급색 기둥, 고른 뒤엔 몸에 빛을 오래 두르지 않는다.
-    /// 기둥은 카드 **뒤** 형제라 카드 위로 나온 부분만 보인다 — 카드 사이 틈 · 글자를 덮지 않는다
-    /// (PD 2026-10-10 「카드 뒤에 있는 이펙트들 지저분해 보인다」 = 번지는 둥근 광원이었다).
-    /// 겹: 카드 기둥 · 광택 = 세로 빛기둥 그림(`fx_tier_beam`) · 빛살 = `fx_levelup_card_rays` · 반짝 별 · 알갱이 = 파티클(`fx_result_mote_1/2`)
-    ///     · 깃듦 광원 · 빛기둥 · 고리 = 빛 셰이더(`ParticleFx/glight`).
+    /// 명판 빛은 카드 안 · 명판 글자 **아래** 형제 — 카드 사이 틈으로 번지지 않는다
+    /// (PD 2026-10-10 「카드 뒤에 있는 이펙트들 지저분해 보인다」 = 카드 뒤로 크게 번지던 둥근 광원이었다).
+    /// 겹: 명판 빛 · 깃듦 광원 · 빛기둥 · 고리 = 빛 셰이더(`ParticleFx/glight`) · 빛살 = `fx_levelup_card_rays` ·
+    ///     반짝 별 · 알갱이 = 파티클(`fx_result_mote_1/2`).
     /// 크기는 모든 등급이 같고, 위로 갈수록 이펙트 종류 · 파티클 수를 더한다. 값은 <see cref="Tiers"/> 표 하나에.
     /// 시간은 실제 시간 — 레벨업 창 · 보상 연출은 게임 시간이 서 있어도 돈다.
     /// </summary>
@@ -31,9 +31,8 @@ namespace Game.Module.InGame
     {
         private struct Tier
         {
-            public bool Sheen;          // 등장 — 광택이 카드를 한 번 훑는다
-            public float Beam;          // 등장 · 머묾 — 카드 위 빛기둥 머묾 밝기(0 = 없음)
-            public int AppearStars;     // 등장 — 기둥이 꽂힐 때 터지는 반짝 별 수
+            public float Plate;         // 등장 · 머묾 — 등급 명판 둘레 빛 밝기(0 = 없음)
+            public int AppearStars;     // 등장 — 명판 빛이 차오를 때 터지는 반짝 별 수
             public float IdleStarGap;   // 머묾 — 카드 모서리 반짝 별 간격(초, 0 = 없음)
             public int PickBurst;       // 고름 — 튀는 알갱이 수
             public int PickStars;       // 고름 — 같이 터지는 반짝 별 수
@@ -46,34 +45,34 @@ namespace Game.Module.InGame
         // COMMON = 기본(테두리만), 위 등급은 이펙트 종류 · 파티클 수를 한 겹씩 — 크기는 같다(스킬 fx-art-pipeline 2-1)
         private static readonly Tier[] Tiers =
         {
-            new() { Sheen = false, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
-            new() { Sheen = true, Beam = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
-            new() { Sheen = true, Beam = 0.35f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
-            new() { Sheen = true, Beam = 0.45f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
+            new() { Plate = 0f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 10, PickStars = 3, PickSecond = false, GainMotes = 10, GainSecondRing = false, GainStars = false },     // COMMON
+            new() { Plate = 0.6f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 14, PickStars = 5, PickSecond = false, GainMotes = 14, GainSecondRing = false, GainStars = true },       // RARE
+            new() { Plate = 0.75f, AppearStars = 0, IdleStarGap = 0f, PickBurst = 18, PickStars = 7, PickSecond = true, GainMotes = 18, GainSecondRing = true, GainStars = true },     // EPIC
+            new() { Plate = 0.9f, AppearStars = 8, IdleStarGap = 0.9f, PickBurst = 24, PickStars = 10, PickSecond = true, GainMotes = 24, GainSecondRing = true, GainStars = true }, // LEGENDARY
         };
 
         private const int CardCount = 3;
         // 빛살 그림(520x760)의 안쪽 구멍 실측 176x421 을 카드 162x320 에 맞춘 크기(가로 0.88 · 세로 0.74)
         private static readonly Vector2 RaysSize = new(458f, 562f);
-        private const float BeamWidth = 104f;      // 카드 폭(162)의 약 0.65 — 시안 기둥 폭
-        private const float BeamAbove = 250f;      // 카드 윗변 위로 보이는 기둥 길이
-        private const float BeamDrop = 0.22f;      // 기둥이 위에서 내려와 꽂히는 시간
-        private const float SheenAt = 0.12f, SheenSeconds = 0.45f;
-        private const float SheenWidth = 26f, SheenInset = 22f;   // 카드 테두리 안쪽만 훑게
+        private const float AppearAt = 0.22f;      // 명판 빛이 가장 밝아지는 때(등장, 강)
+        // 명판(카드 칸 162x320 기준 x 36~125 · y 28~44, 배치 표 BuffCard*Chip) 테두리 바로 바깥을 도는 고리 빛.
+        // 속까지 번지는 둥근 빛(150x46)은 명판 글자를 같은 색으로 덮어 「RARE」가 안 읽혔다 — 테두리 둘레만 은은하게(게임 시험 4안 중 고름)
+        private static readonly Vector2 PlateGlowSize = new(124f, 40f);
+        private static readonly Vector2 PlateCenter = new(80.5f, -36f);   // 카드 왼쪽 위 기준
 
         private PopupFxPlayer _fx;
         private Material _light;   // 번들 ParticleFx/glight — 깃듦 광원 · 빛기둥 · 고리
         private bool _loading;
         private Material _additive;
-        private Sprite[] _rays, _motes, _beam;
+        private Sprite[] _rays, _motes;
 
         // ── 카드(창) ──
         private readonly RectTransform[] _cards = new RectTransform[CardCount];
         private readonly Color[] _cardColor = new Color[CardCount];
         private readonly Tier[] _cardTier = new Tier[CardCount];
         private readonly float[] _nextIdleStar = new float[CardCount];
-        private readonly Image[] _cardBeam = new Image[CardCount];
-        private readonly Image[] _cardSheen = new Image[CardCount];
+        private readonly Image[] _plateGlow = new Image[CardCount];
+        private Material _plateMaterial;
         private readonly bool[] _appearDone = new bool[CardCount];
         private Image _rays0, _rays1;   // 같은 빛살 두 장을 겹쳐 더한다 — 한 장으로는 시안보다 흐렸다(녹화 vP)
         private ParticleSystem _panelParticles;
@@ -114,7 +113,6 @@ namespace Game.Module.InGame
             if (_fx == null) return;
             if (_rays == null) _rays = _fx.FramesOf("levelup_card_rays");
             if (_motes == null) _motes = _fx.FramesOf("result_mote");
-            if (_beam == null) _beam = _fx.FramesOf("tier_beam");
         }
 
         // ── 1. 등장 · 머묾 ─────────────────────────────────────
@@ -132,11 +130,8 @@ namespace Game.Module.InGame
                 if (_cards[i] == null) continue;
                 _cardColor[i] = colors[i];
                 _cardTier[i] = Tiers[Mathf.Clamp((int)rarities[i], 0, Tiers.Length - 1)];
-                _nextIdleStar[i] = BeamDrop + Random.Range(0.4f, 0.9f);
-                if (_cardBeam[i] == null && Has(_beam)) _cardBeam[i] = Behind(_cards[i], "CardBeam", _additive, new Vector2(BeamWidth, 1f));
-                if (_cardSheen[i] == null && Has(_beam)) _cardSheen[i] = NewSheen(_cards[i]);
-                if (_cardBeam[i] != null) { _cardBeam[i].sprite = _beam[0]; _cardBeam[i].enabled = false; }
-                if (_cardSheen[i] != null) { _cardSheen[i].sprite = _beam[0]; _cardSheen[i].enabled = false; }
+                _nextIdleStar[i] = AppearAt + Random.Range(0.4f, 0.9f);
+                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
             }
             if (_rays0 == null && Has(_rays) && _cards[0] != null)
                 _rays0 = Behind(_cards[0], "CardRays", _additive, RaysSize);
@@ -158,8 +153,7 @@ namespace Game.Module.InGame
             if (_rays1 != null) _rays1.enabled = false;
             for (int i = 0; i < CardCount; i++)
             {
-                if (_cardBeam[i] != null) _cardBeam[i].enabled = false;
-                if (_cardSheen[i] != null) _cardSheen[i].enabled = false;
+                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
             }
             if (_panelParticles != null) _panelParticles.Clear();
         }
@@ -172,14 +166,13 @@ namespace Game.Module.InGame
                 var card = _cards[i];
                 if (card == null || !card.gameObject.activeInHierarchy) continue;
                 var tier = _cardTier[i];
-                // 고르면 기둥은 0.2초에 사그라든다 — 고른 카드는 빛살이 맡고, 나머지 카드는 흐려진다
-                float pickFade = _picked < 0 ? 1f : 1f - Mathf.Clamp01(_pickClock / 0.2f);
-                TickBeam(i, t, tier, pickFade);
-                TickSheen(i, t, tier);
+                // 고르면 다른 카드의 명판 빛은 0.2초에 사그라든다 — 고른 카드는 빛살이 맡는다
+                float pickFade = _picked < 0 || _picked == i ? 1f : 1f - Mathf.Clamp01(_pickClock / 0.2f);
+                TickPlate(i, t, tier, pickFade);
                 if (_picked >= 0) continue;
-                if (!_appearDone[i] && t >= BeamDrop)
+                if (!_appearDone[i] && t >= AppearAt)
                 {
-                    // 등장(강) — 기둥이 꽂히는 순간 카드 윗변에서 반짝 별이 튄다
+                    // 등장(강) — 명판 빛이 차오르는 순간 카드 윗변에서 반짝 별이 튄다
                     _appearDone[i] = true;
                     if (tier.AppearStars > 0)
                         Burst(_panelParticles, card, tier.AppearStars / 2, tier.AppearStars, Color.Lerp(_cardColor[i], Color.white, 0.5f), 0.5f);
@@ -203,41 +196,46 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 기둥 — 위에서 내려와 카드에 꽂혔다(<see cref="BeamDrop"/>, 강) 은은하게 남아 숨쉰다(약).
-        /// 카드 뒤 형제라 카드 위로 나온 부분만 보인다.
+        /// 명판 빛 — 등급 글자 판 테두리 둘레에 등급색이 부드럽게 번진다(속은 비운다). 등장 때 0 → 1 로 차올랐다(<see cref="AppearAt"/>, 강)
+        /// 표의 밝기로 내려앉아 천천히 숨쉰다(약). 카드 안 · 명판 바로 앞 형제라 명판 글자는 빛 위에 선다.
         /// </summary>
-        private void TickBeam(int i, float t, Tier tier, float pickFade)
+        private void TickPlate(int i, float t, Tier tier, float pickFade)
         {
-            var beam = _cardBeam[i];
-            if (beam == null) return;
-            if (tier.Beam <= 0f || pickFade <= 0f) { beam.enabled = false; return; }
-            var card = _cards[i];
-            var rt = beam.rectTransform;
-            rt.pivot = new Vector2(0.5f, 1f);
-            float height = card.rect.height * 0.5f + BeamAbove;
-            rt.sizeDelta = new Vector2(BeamWidth, height);
-            Follow(rt, card);
-            rt.anchoredPosition += new Vector2(0f, BeamAbove + card.rect.height * 0.5f) * card.localScale.y;
-            float drop = Ease.OutCubic(Mathf.Clamp01(t / BeamDrop));
-            rt.localScale = new Vector3(card.localScale.x, drop * card.localScale.y, 1f);
-            float flash = t < BeamDrop ? 1f : Mathf.Lerp(1f, tier.Beam, Ease.OutCubic(Mathf.Clamp01((t - BeamDrop) / 0.5f)));
-            float breathe = t < BeamDrop + 0.5f ? 0f : 0.08f * Mathf.Sin((t - BeamDrop) * Mathf.PI * 2f / 2.2f);
-            beam.color = WithAlpha(Color.Lerp(_cardColor[i], Color.white, 0.25f), (flash + breathe) * pickFade);
-            beam.enabled = true;
+            if (tier.Plate <= 0f || pickFade <= 0f)
+            {
+                if (_plateGlow[i] != null) _plateGlow[i].enabled = false;
+                return;
+            }
+            var glow = PlateGlow(i);
+            if (glow == null) return;
+            float up = Ease.OutCubic(Mathf.Clamp01(t / AppearAt));
+            float settle = Ease.OutCubic(Mathf.Clamp01((t - AppearAt) / 0.5f));
+            float level = t < AppearAt ? up : Mathf.Lerp(1f, tier.Plate, settle);
+            float breathe = t < AppearAt + 0.5f ? 0f : 0.1f * tier.Plate * Mathf.Sin((t - AppearAt) * Mathf.PI * 2f / 2.4f);
+            glow.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.85f, 1f, up);
+            glow.color = WithAlpha(Color.Lerp(_cardColor[i], Color.white, 0.15f), (level + breathe) * pickFade);
+            glow.enabled = true;
         }
 
-        /// <summary>광택 — 세로 빛 한 줄이 카드 안쪽을 왼쪽에서 오른쪽으로 한 번 훑는다.</summary>
-        private void TickSheen(int i, float t, Tier tier)
+        /// <summary>명판 빛 한 장 — 빛 셰이더 재질이 와야 만든다. 카드 안 명판(`BuffCard*Chip`) 바로 앞 형제.</summary>
+        private Image PlateGlow(int i)
         {
-            var sheen = _cardSheen[i];
-            if (sheen == null) return;
-            float k = (t - SheenAt) / SheenSeconds;
-            if (!tier.Sheen || k < 0f || k > 1f || _picked >= 0) { sheen.enabled = false; return; }
+            if (_plateGlow[i] != null) return _plateGlow[i];
+            if (_light == null || _cards[i] == null) return null;
+            if (_plateMaterial == null)
+            {
+                _plateMaterial = GlowMaterial(0.06f, 0.3f);
+                _plateMaterial.SetFloat("_RingRadius", 0.82f);   // 명판 가장자리에 고리 — 속은 비워 글자가 읽힌다
+            }
             var card = _cards[i];
-            float half = card.rect.width * 0.5f - SheenInset;
-            sheen.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(-half, half, Ease.InOutSine(k)), 0f);
-            sheen.color = WithAlpha(Color.Lerp(_cardColor[i], Color.white, 0.5f), 0.55f * Mathf.Sin(k * Mathf.PI));
-            sheen.enabled = true;
+            var img = NewImage("PlateGlow", card, _plateMaterial, PlateGlowSize, new Vector2(0.5f, 0.5f), PlateCenter);
+            var rt = img.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.anchoredPosition = PlateCenter;
+            var chip = card.Find(card.name + "Chip");
+            if (chip != null) rt.SetSiblingIndex(chip.GetSiblingIndex());
+            _plateGlow[i] = img;
+            return img;
         }
 
         // ── 2. 고름 — 카드 둘레 빛살 터짐 ───────────────────────────
@@ -548,16 +546,6 @@ namespace Game.Module.InGame
             img.transform.SetSiblingIndex(card.GetSiblingIndex());
             img.enabled = false;
             return img;
-        }
-
-        /// <summary>
-        /// 광택 — 카드 안쪽 높이의 세로 빛 한 줄. 카드의 마지막 자식.
-        /// ⚠ 가산 재질은 RectMask2D 에 잘리지 않는다 — 비스듬히 길게 두면 카드 밖으로 삐져나와 창 전체를 가로질렀다(녹화 final_1012).
-        ///   그래서 기울이지 않고 카드 안쪽 크기로만 만든다.
-        /// </summary>
-        private Image NewSheen(RectTransform card)
-        {
-            return NewImage("CardSheen", card, _additive, new Vector2(SheenWidth, card.rect.height * 0.86f), new Vector2(0.5f, 0.5f), Vector2.zero);
         }
 
         /// <summary>카드 가운데를 따라간다(포커스로 커지거나 흐려져도).</summary>
