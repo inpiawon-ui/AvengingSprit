@@ -80,6 +80,10 @@ namespace Game.Module.InGame
         //   무색하게 **한 번도 안 나온다.** 순찰기는 CH2·CH4·CH6 에 있어서
         //   부채꼴 → 3연발 → 회오리로 세 번 달라진다 — 같은 그림, 다른 적.
         private const int BurstFromChapter  = 4;   // 순찰기 → 3연발
+        // 고철 전갈(사수)도 2단계부터 연발 — 한 발씩 띄엄띄엄 쏘니 쉽다(PD 2026-10-12 「궁수의 전설 2챕터는 3~4발 쏘고 텀을 두고 또 쏜다」).
+        // 1챕터는 한 발씩 그대로 둔다 — 탄을 보고 비키는 것을 처음 배우는 곳이다.
+        private const int GunnerBurstFromChapter = 2;
+        private const int BurstFourFromChapter   = 4;   // 이 단계부터 4연발
         private const int AmbushFromChapter = 5;   // 해골   → 매복
         private const int SpiralFromChapter = 6;   // 순찰기 → 회오리 유도탄
 
@@ -101,6 +105,8 @@ namespace Game.Module.InGame
                     return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;
                 case TrashBatKey:
                     return ch >= DiveFromChapter ? EnemyPattern.Dive : EnemyPattern.Chase;
+                case TrashGunnerKey:
+                    return ch >= GunnerBurstFromChapter ? EnemyPattern.Burst : EnemyPattern.Strafe;
                 case TrashWardenKey:
                     return ch >= SpiralFromChapter ? EnemyPattern.Spiral
                          : ch >= BurstFromChapter  ? EnemyPattern.Burst
@@ -534,7 +540,7 @@ namespace Game.Module.InGame
         }
 
         // ===========================================================
-        //  BURST - 겨눈 선으로 3연발 (순찰기 · CH4)
+        //  BURST - 겨눈 선으로 3~4연발 (고철 전갈 2단계~ · 순찰기 4단계)
         // ===========================================================
         //
         // 동시에 세 발 뿌리는 확산과 다르다. **같은 선으로 시간차**라
@@ -543,17 +549,24 @@ namespace Game.Module.InGame
         // 주의: 겨냥은 **첫 발을 쏘기 직전 한 번**만 한다. 매 발마다 다시 겨누면
         //   유도탄이 되어 비키는 것이 답이 아니게 된다.
 
-        private const float BurstIdleSeconds = 1.9f;
+        // 쉬는 시간은 그 몸의 공격 간격에 비례한다 — 챕터 연사 배율(chapters.tsv fire)이 연발에도 먹게(2026-10-12).
+        //   사수 2챕터 간격 0.75 → 쉼 1.9초(예전 고정값과 같다), 뒤 챕터일수록 짧아진다.
+        // 발 사이 0.22초 — 맞은 뒤 흘리는 0.4초(HurtGraceSeconds)보다 짧으면 둘째 발이 늘 흘려진다.
+        //   0.22 면 세 발 중 첫 발 · 셋째 발이 들어온다(안 비키면 두 대).
+        private const float BurstIdlePerInterval = 2.5f;
+        private const float BurstIdleMinSeconds  = 1.0f;
         private const float BurstTellSeconds = 0.45f;
-        private const float BurstGapSeconds  = 0.14f;
-        private const int   BurstShots       = 3;
+        private const float BurstGapSeconds  = 0.22f;
+
+        private float BurstIdleOf(Unit e) => Mathf.Max(BurstIdleMinSeconds, e.AttackInterval * BurstIdlePerInterval);
+        private int BurstShotsOf() => PatternChapter >= BurstFourFromChapter ? 4 : 3;
 
         private bool TickBurst(Unit e, Unit me, float distance, float dt)
         {
             // 사거리 밖이면 평소 흐름(접근)에 맡긴다.
             if (e.PatternPhase == 0 && distance > EffectiveRange(e))
             {
-                e.PatternTimer = BurstIdleSeconds;
+                e.PatternTimer = BurstIdleOf(e);
                 return false;
             }
 
@@ -587,10 +600,10 @@ namespace Game.Module.InGame
                     if (e.PatternTimer > 0f) return true;
                     FireAimed(e, e.PatternTo, 1f);
                     e.PatternAngle += 1f;
-                    if (e.PatternAngle >= BurstShots)
+                    if (e.PatternAngle >= BurstShotsOf())
                     {
                         e.PatternPhase = 0;
-                        e.PatternTimer = BurstIdleSeconds;
+                        e.PatternTimer = BurstIdleOf(e);
                         return true;
                     }
                     e.PatternTimer = BurstGapSeconds;
