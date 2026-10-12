@@ -124,7 +124,7 @@ MonoBehaviour:
     Pattern: 1
     Crowd: 0.25
     Fire: 0.75
-    EnemyHpMul: 1
+    EnemyHpMul: 0.8
     EnemyAtkMul: 1
     BossHp: 1650
     BossAtk: 36
@@ -157,9 +157,9 @@ MonoBehaviour:
     Pattern: 2
     Crowd: 0.8
     Fire: 0.7
-    EnemyHpMul: 1.74
+    EnemyHpMul: 1.25
     EnemyAtkMul: 1
-    BossHp: 3035
+    BossHp: 2731
     BossAtk: 38
     ClearGold: 300
     Chest: silver
@@ -189,9 +189,9 @@ MonoBehaviour:
     Pattern: 3
     Crowd: 0.75
     Fire: 0.66
-    EnemyHpMul: 2.01
+    EnemyHpMul: 1.45
     EnemyAtkMul: 1
-    BossHp: 3668
+    BossHp: 3301
     BossAtk: 42
     ClearGold: 450
     Chest: silver
@@ -221,9 +221,9 @@ MonoBehaviour:
     Pattern: 4
     Crowd: 0.7
     Fire: 0.63
-    EnemyHpMul: 2.3
+    EnemyHpMul: 1.66
     EnemyAtkMul: 1.03
-    BossHp: 4380
+    BossHp: 3942
     BossAtk: 46
     ClearGold: 650
     Chest: gold
@@ -254,9 +254,9 @@ MonoBehaviour:
     Pattern: 5
     Crowd: 0.6
     Fire: 0.6
-    EnemyHpMul: 2.67
+    EnemyHpMul: 1.93
     EnemyAtkMul: 1.08
-    BossHp: 5266
+    BossHp: 4739
     BossAtk: 51
     ClearGold: 900
     Chest: gold
@@ -287,9 +287,9 @@ MonoBehaviour:
     Pattern: 6
     Crowd: 0.5
     Fire: 0.58
-    EnemyHpMul: 3.36
+    EnemyHpMul: 2.42
     EnemyAtkMul: 1.2
-    BossHp: 6823
+    BossHp: 6141
     BossAtk: 59
     ClearGold: 1200
     Chest: gold
@@ -320,9 +320,9 @@ MonoBehaviour:
     Pattern: 7
     Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 3.84
+    EnemyHpMul: 2.77
     EnemyAtkMul: 1.33
-    BossHp: 8019
+    BossHp: 7217
     BossAtk: 65
     ClearGold: 1550
     Chest: platinum
@@ -353,9 +353,9 @@ MonoBehaviour:
     Pattern: 7
     Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 4.47
+    EnemyHpMul: 3.22
     EnemyAtkMul: 1.41
-    BossHp: 9554
+    BossHp: 8599
     BossAtk: 72
     ClearGold: 1950
     Chest: platinum
@@ -386,9 +386,9 @@ MonoBehaviour:
     Pattern: 7
     Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 5.69
+    EnemyHpMul: 4.1
     EnemyAtkMul: 1.71
-    BossHp: 12444
+    BossHp: 11200
     BossAtk: 85
     ClearGold: 2400
     Chest: platinum
@@ -420,9 +420,9 @@ MonoBehaviour:
     Pattern: 7
     Crowd: 0.45
     Fire: 0.56
-    EnemyHpMul: 6.56
+    EnemyHpMul: 4.72
     EnemyAtkMul: 1.8
-    BossHp: 14613
+    BossHp: 13152
     BossAtk: 93
     ClearGold: 3000
     Chest: platinum
