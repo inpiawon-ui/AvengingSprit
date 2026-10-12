@@ -5,6 +5,7 @@
 사용	Assets/BaseResource/Card/card_c001.png	39680	아틀라스 card.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/Card/cardchip_level.png	7472	아틀라스 card.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/Card/cardchip_rarity.png	8710	아틀라스 card.spriteatlasv2 · 이름 직접
+사용	Assets/BaseResource/Card/cardcrown_legendary.png	6482	아틀라스 card.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/Card/leveluptitle.png	71253	아틀라스 card.spriteatlasv2 · 이름 직접
 사용	Assets/BaseResource/ChapterHost/ch_arrow_left.png	3440	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/ChapterHost/ch_arrow_right.png	3703	GUID 참조(프리팹 · 표 · 재질)
@@ -76,8 +77,8 @@
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Shadow.mat	1916	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Soft.mat	1921	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP SDF - Title.mat	1922	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	29498024	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	17023748	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansJP SDF.asset	18828716	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansJP-Bold SDF.asset	8491250	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP-Bold.ttf	5761728	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansJP-Regular.otf	4533028	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - GlowBlue.mat	1933	GUID 참조(프리팹 · 표 · 재질)
@@ -88,8 +89,8 @@
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Shadow.mat	1916	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Soft.mat	1921	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR SDF - Title.mat	1922	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	23298152	GUID 참조(프리팹 · 표 · 재질)
-사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	10455509	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansKR SDF.asset	12597560	GUID 참조(프리팹 · 표 · 재질)
+사용	Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset	1883468	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR-Bold.ttf	6223212	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/NotoSansKR.ttf	10415532	GUID 참조(프리팹 · 표 · 재질)
 사용	Assets/BaseResource/Fonts/OriginalPixel SDF.asset	30843	GUID 참조(프리팹 · 표 · 재질)
@@ -731,7 +732,7 @@
 사용	Assets/BundleResource/ParticleFx/pfx_star4.mat	2651	주소 ParticleFx/star4
 사용	Assets/BundleResource/ParticleFx/pfx_streak.mat	2651	주소 ParticleFx/streak
 사용	Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab	387668	주소 UI/Lobby/HostSelectPanel
-사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	687084	주소 UI/InGame/InGameMainUI
+사용	Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab	687078	주소 UI/InGame/InGameMainUI
 사용	Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab	2754633	주소 UI/Lobby/LobbyMainUI
 사용	Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab	29359	주소 UI/Opening/OpeningMainUI
 사용	Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab	26598	주소 UI/Title/TitleMainUI
@@ -872,10 +873,10 @@
 사용(동적)	Assets/BaseResource/Card/card_frame_epic.png	3724	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_frame_legendary.png	3675	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/Card/card_frame_rare.png	3699	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/cardpanel_common.png	92456	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/cardpanel_epic.png	96931	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/cardpanel_legendary.png	103313	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
-사용(동적)	Assets/BaseResource/Card/cardpanel_rare.png	94951	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/cardpanel_common.png	107986	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/cardpanel_epic.png	120095	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/cardpanel_legendary.png	118894	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/Card/cardpanel_rare.png	119947	아틀라스 card.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/HostSelectPanel/hostportraitimage_amazon.png	1527	아틀라스 hostselectpanel.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/HostSelectPanel/hostportraitimage_amazon_elite.png	2808	아틀라스 hostselectpanel.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/HostSelectPanel/hostportraitimage_baseball.png	1503	아틀라스 hostselectpanel.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -1931,6 +1932,7 @@
 사용(동적)	Assets/BaseResource/PopupFx/fx_present_vital_up_6.png	54308	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_present_vital_up_7.png	29718	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_present_vital_up_8.png	14236	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/PopupFx/fx_result_coin_1.png	3994	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_gold_burst_1.png	4966	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_gold_burst_2.png	11843	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_gold_burst_3.png	21015	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -1957,6 +1959,7 @@
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_gold_sparkle_8.png	1340	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_mote_1.png	166	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_result_mote_2.png	353	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/PopupFx/fx_result_tierstar_1.png	2183	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_1.png	12152	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_2.png	21803	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_room_devil_chain_release_3.png	20789	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
@@ -2027,6 +2030,8 @@
 사용(동적)	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_2.png	26244	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_3.png	26676	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/PopupFx/fx_shop_tube_ghost_4.png	26645	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/PopupFx/fx_tier_beam_1.png	12533	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
+사용(동적)	Assets/BaseResource/PopupFx/fx_tier_ring_1.png	6983	아틀라스 popupfx.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/TitleMainUI/titlelogo_1.png	9892	아틀라스 titlemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/TitleMainUI/titlelogo_2.png	10027	아틀라스 titlemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)
 사용(동적)	Assets/BaseResource/TitleMainUI/titlelogo_3.png	10021	아틀라스 titlemainui.spriteatlasv2 · 코드가 이름을 조립해 꺼낸다(template)

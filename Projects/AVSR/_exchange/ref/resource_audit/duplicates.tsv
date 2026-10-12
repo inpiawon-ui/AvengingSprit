@@ -3,6 +3,7 @@ Assets/BaseResource/ChapterHost/ch_kind_force.png	Assets/BaseResource/InGameMain
 Assets/BaseResource/ChapterHost/ch_kind_magic.png	Assets/BaseResource/InGameMainUI/rps_gem_magic.png
 Assets/BaseResource/ChapterHost/ch_match_down.png	Assets/BaseResource/InGameMainUI/rps_down.png
 Assets/BaseResource/ChapterHost/ch_match_up.png	Assets/BaseResource/InGameMainUI/rps_up.png
+Assets/BaseResource/ChapterHost/ch_star_on.png	Assets/BaseResource/PopupFx/fx_result_tierstar_1.png
 Assets/BaseResource/HostSelectPanel/arrowicon.png	Assets/BaseResource/HostSelectPanel/ghostarrowchevron.png
 Assets/BaseResource/HostSelectPanel/headerportaldeco.png	Assets/BaseResource/InGameMainUI/exitportal.png
 Assets/BaseResource/HostSelectPanel/hostportraitimage_amazon.png	Assets/BaseResource/HostSelectPanel/hostslotportrait_amazon.png
@@ -40,7 +41,7 @@ Assets/BaseResource/InGameMainUI/fx_crit_2.png	Assets/BaseResource/InGameMainUI/
 Assets/BaseResource/InGameMainUI/fx_crit_3.png	Assets/BaseResource/InGameMainUI/fx_weakhit_3.png
 Assets/BaseResource/InGameMainUI/fx_crit_4.png	Assets/BaseResource/InGameMainUI/fx_crit_5.png	Assets/BaseResource/InGameMainUI/fx_weakhit_4.png
 Assets/BaseResource/InGameMainUI/gemicon.png	Assets/BaseResource/LobbyMainUI/gemicon.png
-Assets/BaseResource/InGameMainUI/goldicon.png	Assets/BaseResource/LobbyMainUI/goldicon.png
+Assets/BaseResource/InGameMainUI/goldicon.png	Assets/BaseResource/LobbyMainUI/goldicon.png	Assets/BaseResource/PopupFx/fx_result_coin_1.png
 Assets/BaseResource/InGameMainUI/impact_flame_1.png	Assets/BaseResource/InGameMainUI/impact_grenade_2.png
 Assets/BaseResource/InGameMainUI/obj_blade_1.new.png	Assets/BaseResource/InGameMainUI/obj_blade_1.png
 Assets/BaseResource/InGameMainUI/obj_missile_channel_h.png	Assets/BaseResource/InGameMainUI/obj_missile_channel_h_1.png

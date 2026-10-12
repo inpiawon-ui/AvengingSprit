@@ -1,71 +1,7 @@
 종류	경로	크기	문제
 그림	Assets/BaseResource/AppIcon/app_icon.png	1024x1024	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.0MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/ChapterHost/ch_art_1.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_art_2.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_art_3.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_art_4.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_art_5.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_art_6.png	640x448	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_bg.png	720x1280	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.5MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/ChapterHost/ch_card_frame_fx.png	203x350	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterHost/ch_card_frame_sel_fx.png	220x367	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterHost/ch_panel.png	965x350	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.3MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterHost/ch_plate.png	558x140	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterHost/ch_screen.png	1080x2400	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 9.9MB, ASTC 6x6 이면 약 1.1MB
-그림	Assets/BaseResource/ChapterHost/ch_screen_fixed.png	941x1790	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 6.4MB, ASTC 6x6 이면 약 0.7MB
-그림	Assets/BaseResource/ChapterHost/ch_screen_wide.png	1255x1790	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 8.6MB, ASTC 6x6 이면 약 1.0MB
-그림	Assets/BaseResource/ChapterHost/ch_start_button.png	1040x224	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.9MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_1.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_2.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_3.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_4.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_5.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_art_6.png	300x230	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_frame.png	330x270	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chaptercard_frame_selected.png	330x270	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/ChapterScreens/chapterselect_bg.png	720x1280	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.5MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/ChapterScreens/chapterselect_title.png	600x110	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
 그림	Assets/BaseResource/ChapterScreens/chest_gold_clean.png	206x142	Read/Write 켜짐(메모리 2배)
 그림	Assets/BaseResource/ChapterScreens/chest_silver_clean.png	206x142	Read/Write 켜짐(메모리 2배)
-그림	Assets/BaseResource/ChapterScreens/chestreward_frame.png	640x880	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.1MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BaseResource/ChapterScreens/chestreward_open_gold.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterScreens/chestreward_open_platinum.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterScreens/chestreward_open_silver.png	420x340	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/ChapterScreens/result_frame.png	660x800	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.0MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BaseResource/ChapterScreens/result_rowpanel.png	500x150	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_amazon.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_amazon_elite.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_baseball.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_commando_grenade.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_commando_laser.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_commando_mg.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_commando_missile.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_death.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_dragon_blue.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_dragoon.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_gangster.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_ghost.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_guru.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_hopper.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_hopper_smg.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_medium.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_ninja.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_ninja_chain.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_robot.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_salamander.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_snowwoman.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_thug.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_vampire.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/Portraits/portrait_white_wizard.png	512x512	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/Growth/bg_ghost.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/Growth/bg_ghost_full.png	960x1447	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 5.3MB, ASTC 6x6 이면 약 0.6MB
-그림	Assets/BaseResource/Growth/bg_host.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/Growth/bg_skill.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/Growth/nav_bg.png	720x110	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/Growth/path_box.png	664x102	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/Growth/v5/bg_host_v5.png	720x1170	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.2MB, ASTC 6x6 이면 약 0.4MB
-그림	Assets/BaseResource/Growth/v5/bg_host_v5_full.png	960x1447	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 5.3MB, ASTC 6x6 이면 약 0.6MB
-그림	Assets/BaseResource/Growth/v5/h5_starup_window.png	623x809	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.9MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BaseResource/InGameMainUI/fx_amland_1.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_amland_2.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/fx_amland_3.png	256x128	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -219,19 +155,6 @@
 그림	Assets/BaseResource/InGameMainUI/skillcastready_2.png	171x171	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/skillcastready_3.png	171x171	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/InGameMainUI/skillcastspark.png	64x64	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
-그림	Assets/BaseResource/LobbyBackdrop/actionbarbackground.png	941x206	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.7MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyBackdrop/lobbybackground.png	941x1672	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 6.0MB, ASTC 6x6 이면 약 0.7MB
-그림	Assets/BaseResource/LobbyV4/base_city.png	941x320	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.1MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyV4/base_extend.png	941x528	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.9MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BaseResource/LobbyV4/base_mid.png	941x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 3.0MB, ASTC 6x6 이면 약 0.3MB
-그림	Assets/BaseResource/LobbyV4/base_top.png	941x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 2.3MB, ASTC 6x6 이면 약 0.3MB
-그림	Assets/BaseResource/LobbyV4/fixed_top_band.png	1080x180	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.7MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyV4/profile_plate.png	750x345	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.0MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyV4/profile_plate_fx.png	375x180	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.3MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/LobbyV4/side_left_mid.png	170x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyV4/side_left_top.png	170x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.4MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BaseResource/LobbyV4/side_right_mid.png	170x823	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.5MB, ASTC 6x6 이면 약 0.1MB
-그림	Assets/BaseResource/LobbyV4/side_right_top.png	170x632	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.4MB, ASTC 6x6 이면 약 0.0MB
 그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_1.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_2.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
 그림	Assets/BaseResource/PopupFx/fx_altar_gem_pulse_3.png	44x44	도트 그림인데 필터가 Point 가 아니다(filterMode 1) — 확인 필요
@@ -458,93 +381,4 @@
 그림	Assets/BundleResource/Cutscene/cut_start_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/ParticleFx/Danger/fx_danger_core.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BundleResource/ParticleFx/Danger/fx_danger_fill.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BundleResource/ParticleFx/Danger/fx_safe_core.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BundleResource/ParticleFx/Danger/fx_safe_fill.png	256x256	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 0.2MB, ASTC 6x6 이면 약 0.0MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_crusher.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_guardian.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_kingpin.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_python.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_robot_snakes.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_boss_sludge.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_common.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_holding.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_junkyard.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_lab.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_missile.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_refinery.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_rooftop.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomapron_street.png	720x540	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.5MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomcloud.png	720x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.8MB, ASTC 6x6 이면 약 0.2MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_crusher_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_holding_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_junkyard_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_junkyard_full_v3.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_lab_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_missile_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_refinery_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_rooftop_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_env_street_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_guardian_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_kingpin_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_python_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_robot_snakes_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-그림	Assets/BundleResource/RoomFloor/roomfloor_sludge_full.png	720x1692	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 4.6MB, ASTC 6x6 이면 약 0.5MB
-아틀라스	Assets/BundleResource/Atlas/card.spriteatlasv2	최대 2048 · 어림 5.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 5.3MB(ASTC 4x4 면 1.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/hostface.spriteatlasv2	최대 2048 · 어림 7.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 7.5MB(ASTC 4x4 면 1.9MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/hostselectpanel.spriteatlasv2	최대 4096 · 어림 8.2MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 8.2MB(ASTC 4x4 면 2.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/ingamemainui.spriteatlasv2	최대 4096 · 어림 189.7MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 189.7MB(ASTC 4x4 면 47.4MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/loading.spriteatlasv2	최대 2048 · 어림 13.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.9MB(ASTC 4x4 면 3.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/lobbymainui.spriteatlasv2	최대 4096 · 어림 12.1MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 12.1MB(ASTC 4x4 면 3.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 52.9MB	필터 Point 아님; 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/systempopup.spriteatlasv2	최대 2048 · 어림 1.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.3MB(ASTC 4x4 면 0.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/titlemainui.spriteatlasv2	최대 4096 · 어림 11.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 11.5MB(ASTC 4x4 면 2.9MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_actor_enforcer.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_amazon.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_amazon_elite.spriteatlasv2	최대 1024 · 어림 2.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.0MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_armadillo.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_assault_gangster.spriteatlasv2	최대 1024 · 어림 0.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.0MB(ASTC 4x4 면 0.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_baseball.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_bat.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_boar.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_boss.spriteatlasv2	최대 1024 · 어림 0.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.3MB(ASTC 4x4 면 0.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_coilwalker.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_commando_grenade.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_commando_laser.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_commando_mg.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_commando_missile.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_crusher.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_death.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_dragon_blue.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_dragoon.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_fighter.spriteatlasv2	최대 1024 · 어림 0.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 0.0MB(ASTC 4x4 면 0.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_gangster.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_ghost.spriteatlasv2	최대 1024 · 어림 2.0MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.0MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_golem.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_guardian.spriteatlasv2	최대 1024 · 어림 17.6MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 17.6MB(ASTC 4x4 면 4.4MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_guru.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_hopper.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_hopper_smg.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_kingpin.spriteatlasv2	최대 1024 · 어림 19.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 19.8MB(ASTC 4x4 면 5.0MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_mantis.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_medium.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_mole.spriteatlasv2	최대 1024 · 어림 2.1MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.1MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_mummy.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_mushroom.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_ninja.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_ninja_chain.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_python.spriteatlasv2	최대 1024 · 어림 4.5MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 4.5MB(ASTC 4x4 면 1.1MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_roadwarden.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_robot.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_robot_snakes.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_salamander.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_scrapgunner.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_skeleton.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_sludge.spriteatlasv2	최대 1024 · 어림 13.3MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 13.3MB(ASTC 4x4 면 3.3MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_snowwoman.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_spider.spriteatlasv2	최대 1024 · 어림 2.4MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 2.4MB(ASTC 4x4 면 0.6MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_spiderling.spriteatlasv2	최대 1024 · 어림 1.8MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.8MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_thug.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_vampire.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
-아틀라스	Assets/BundleResource/Atlas/unit_white_wizard.spriteatlasv2	최대 1024 · 어림 1.9MB	압축 없음(RGBA32) · 그림 면적으로 어림 약 1.9MB(ASTC 4x4 면 0.5MB); 안드로이드 따로 세팅 없음(기본값을 그대로 쓴다)
+아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 53.1MB	필터 Point 아님

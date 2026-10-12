@@ -41,7 +41,8 @@ namespace Game.Module.Opening
         ///   본 기록을 지운다. 이 상수를 다시 켤 일은 없다.
         /// </summary>
         /// ⚠ 2026-09-15 에 다시 켰다 — 시연용이라 **켤 때마다** 오프닝이 나와야 한다. 건너뛰기 버튼은 그대로다.
-        public const bool AlwaysShow = true;
+        /// ⚠ 2026-10-12 다시 껐다 — PD 「인트로 화면은 한 번 보면 더 안 나오게」. 다시 보려면 메뉴 `Tools/Game/테스트 — 오프닝 다시 보기`.
+        public const bool AlwaysShow = false;
 
         private const string AddressPrefix = "cutscene/";
 

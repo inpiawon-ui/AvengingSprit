@@ -28,14 +28,15 @@ alwaysApply: true
 |---|---|---|
 | **도트 그림(아틀라스에 묶임)** | `BaseResource/Unit · InGameMainUI · PopupFx · Card` 등 | Sprite · **Point** · 밉맵 끔 · Read/Write 끔. 압축은 원본이 아니라 **아틀라스**에서 정한다 |
 | **일러스트 그림(아틀라스에 묶임)** | 로비 · 타이틀 · 로딩 · 육성 | Sprite · Bilinear · 밉맵 끔 · Read/Write 끔 |
-| **아틀라스** | `BundleResource/Atlas/*.spriteatlasv2` | **안드로이드 따로 세팅(Override)** · 도트 = **ASTC 4x4** · 일러스트 = **ASTC 6x6** · 최대 2048(넘치면 4096) · 밉맵 끔 · Read/Write 끔 · 도트는 Point · 여백 4 |
-| **아틀라스 밖 큰 그림** | 방 바닥 · 배경 · 컷신 · 화면 한 장 그림 | 안드로이드 **ASTC 6x6**(바닥 · 배경) / 4x4(글자 · 선이 가는 것) · 최대 크기 ≥ 원본 긴 변 · 밉맵 끔 · Read/Write 끔 |
-| 예외 — 읽어야 하는 그림 | 컷신(색 빼기 `GetPixels32`) | Read/Write **켬** — 끄면 색 빼기가 안 된다 |
+| **아틀라스** | `BundleResource/Atlas/*.spriteatlasv2` | **안드로이드 따로 세팅(Override)** · **ASTC 4x4**(도트 · 일러스트 모두) · 최대 2048 · 밉맵 끔 · Read/Write 끔 · 도트는 Point · 여백 4 |
+| **아틀라스 밖 큰 그림** | 방 바닥 · 배경 · 화면 한 장 그림 | 안드로이드 **ASTC 4x4** · 최대 크기 ≥ 원본 긴 변 · 밉맵 끔 · Read/Write 끔 |
+| 예외 — 읽어야 하는 그림 | 컷신(색 빼기 `GetPixels32`) | Read/Write **켬** · 압축 없음 유지 — 압축하면 색 빼기가 안 될 수 있다 |
 | **BGM** | `Sounds/BGM` | Vorbis · Compressed In Memory · 품질 0.7 |
 | **효과음** | `Sounds/SFX` | ADPCM · Decompress On Load · 짧은 것은 Mono |
 | **폰트** | `BaseResource/Fonts` | 동적 SDF · `Clear Dynamic Data On Build` 켬 |
 
 - **압축 없음(RGBA32)은 쓰지 않는다.** 꼭 필요하면(압축 무늬가 눈에 띄는 작은 그림) 이유를 적고 PD 에게 보인다.
+- **ASTC 4x4 로 정했다**(PD 2026-10-12 — 인게임 아틀라스 비교 `_exchange/ref/resource_audit/compress/compare_ingamemainui.png`: 원본과 구별 안 됨, 272MB → 약 32MB. 6x6 은 잔 점이 뭉개져 안 쓴다).
 - 압축 형식을 처음 바꾸는 종류는 **바꾸기 전 · 후를 같은 크기로 나란히** 찍어 PD 에게 한 번 보인다(도트가 뭉개지는지).
   통과한 뒤로는 그 종류의 기본값이 된다.
 - 최대 크기가 원본보다 작으면 그림이 **줄어 흐려진다** — 원본 긴 변 이상으로 둔다.

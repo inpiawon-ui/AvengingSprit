@@ -96,7 +96,7 @@ powershell -File Projects/AVSR/_exchange/run_mock_<주제>.ps1
 
 ## 6-1. 포맷 세팅 (넣자마자 — 빼먹지 않는다)
 > PD 2026-10-09 「포맷이 제대로 안 되어 있으면 생성하고 나서 포맷을 세팅하는 걸 기본으로」. 규칙: `.claude/rules/project/09_import_settings.md`
-- 새 그림 · 아틀라스 · 소리의 임포트 설정을 규칙 표대로 맞춘다 — 도트는 Point · 밉맵 끔 · Read/Write 끔, 아틀라스는 안드로이드 ASTC(도트 4x4 · 일러스트 6x6).
+- 새 그림 · 아틀라스 · 소리의 임포트 설정을 규칙 표대로 맞춘다 — 도트는 Point · 밉맵 끔 · Read/Write 끔, 아틀라스 · 큰 그림은 안드로이드 ASTC 4x4.
 - 갈아 끼운 옛 그림은 아틀라스 폴더에서 뺀다(안 써도 아틀라스 메모리를 먹는다). 지우지 않고 PD 확인 뒤 Assets 밖으로.
 - `python Projects/AVSR/Tools/resource_audit.py` 를 돌려 새로 넣은 파일에 경고가 없는지 본다. 보고에 「포맷 세팅 · 점검 통과」 한 줄.
 
