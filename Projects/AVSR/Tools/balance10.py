@@ -28,7 +28,9 @@ RUN_GOLD_MUL = [1.0, 1.3, 1.7, 2.2, 2.8, 3.5, 4.3, 5.2, 6.2, 7.3]
 RUN_GOLD_CH1 = 232
 SHOP_SPEND = 0.20          # 판 골드 가운데 상점에 쓰는 몫
 DEATH_PROGRESS = 0.45      # 죽는 판은 평균 이만큼 가서 죽는다(주운 골드 비율)
-CLEAR_BONUS = [200, 300, 450, 650, 900, 1200, 1550, 1950, 2400, 3000]
+# 클리어 골드는 없다(PD 2026-10-13) — 깨면 판 골드 + 상자(조각 + 골드)뿐. ⚠ 지금 chapters.tsv 의 hpMul · bossHp 는 예전 CLEAR_BONUS 로 돌린 값을 PD 체감으로 맞춘 것 —
+#   모델을 다시 돌려도 그 열은 덮지 말 것(power 열만 옮겨 적는다). 예전 [200, 300, 450, 650, 900, 1200, 1550, 1950, 2400, 3000]
+CLEAR_BONUS = [0] * 10
 CHEST = ['silver', 'silver', 'silver', 'gold', 'gold', 'gold', 'platinum', 'platinum', 'platinum', 'platinum']
 CHEST_GOLD = {'silver': (100, 200), 'gold': (300, 500), 'platinum': (700, 1000)}
 

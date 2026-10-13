@@ -9770,13 +9770,14 @@ namespace Game.Module.InGame
                 return;
             }
 
-            // 클리어 — 챕터가 높을수록 골드가 많고 상자 등급이 높다.
-            // 이미 깬 챕터를 다시 깨도 준다(기획). 골드는 **지금** 넣는다 —
+            // 클리어 — 결과 창이 주는 골드는 **판에서 주운 골드뿐**이고, 나머지는 상자(조각 + 골드) 안에 있다.
+            //   따로 붙는 클리어 골드는 없다(PD 2026-10-13 「특정 골드 보상은 없는 거야」 — 예전에는 챕터 표 clearGold 200~3,000 을 얹었다).
+            // 이미 깬 챕터를 다시 깨도 상자를 준다(기획). 골드는 **지금** 넣는다 —
             // 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
             int ch = Mathf.Clamp(_runChapter, 1, ChapterCount);
             var row = ChapterRow(ch);
-            int legacy = Mathf.Clamp(ch, 1, ChapterClearGold.Length) - 1;
-            int gold = (row.ClearGold > 0 ? row.ClearGold : ChapterClearGold[legacy]) + carried;
+            int legacy = Mathf.Clamp(ch, 1, ChapterChestKey.Length) - 1;
+            int gold = carried;
             string chestKey = !string.IsNullOrEmpty(row.Chest) ? row.Chest : ChapterChestKey[legacy];
 
             bool accepted = false;
@@ -9800,11 +9801,6 @@ namespace Game.Module.InGame
                 ShardCounts = shardCounts,
             });
         }
-
-        /// <summary>
-        /// 챕터 클리어 골드 — ⚠ **챕터 표가 없을 때의 대비책이다.** 정본은 `chapters.tsv` 의 `clearGold`.
-        /// </summary>
-        private static readonly int[] ChapterClearGold = { 150, 200, 300, 400, 550, 700 };
 
         /// <summary>챕터 클리어 상자 — 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18). 키는 `ChestTable`.</summary>
         private static readonly string[] ChapterChestKey =

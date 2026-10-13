@@ -491,9 +491,10 @@ namespace Game.Module.Lobby
                 boss.preserveAspect = true;
             }
 
-            // 받는 골드 = 클리어 골드 + 판에서 주워 남긴 골드. 상점에서 얼마나 쓰느냐로 범위가 생긴다.
-            int min = row.ClearGold + Mathf.RoundToInt(row.RunGold * RunGoldKeepRatio);
-            int max = row.ClearGold + row.RunGold;
+            // 받는 골드 = 판에서 주워 남긴 골드(클리어 골드는 따로 없다 — 나머지는 상자 안, PD 2026-10-13).
+            // 상점에서 얼마나 쓰느냐로 범위가 생긴다.
+            int min = Mathf.RoundToInt(row.RunGold * RunGoldKeepRatio);
+            int max = row.RunGold;
             _ui.SetText("CHRewardGoldText", $"{min:N0} ~ {max:N0}");
             var chest = _ui.Get<Image>("CHRewardChestIcon");
             if (chest != null)

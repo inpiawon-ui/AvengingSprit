@@ -594,7 +594,7 @@ namespace Game.Character
             public float EnemyAtkMul;
             public int BossHp;
             public int BossAtk;
-            [Tooltip("깼을 때 계정에 들어오는 골드(판에서 주운 골드는 따로 얹힌다).")]
+            [Tooltip("⚠ 쓰지 않는다(PD 2026-10-13 클리어 골드 없음 — 결과 창은 판에서 주운 골드 + 상자). 표 열이 남아 있어 칸만 둔다.")]
             public int ClearGold;
             [Tooltip("깼을 때 받는 상자 키(ChestTable).")]
             public string Chest;
