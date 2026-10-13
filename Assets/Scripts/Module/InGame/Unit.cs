@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Game.Module.Common.UI;
 using UnityEngine.UI;
 
 namespace Game.Module.InGame
@@ -423,6 +424,7 @@ namespace Game.Module.InGame
             _walkPhase = 0f;
             _dying = false;
             _deathTimer = 0f;
+            HideCastBadge();   // 풀에서 돌려 쓰는 몸 — 앞서 쓰던 스킬 아이콘이 남지 않게
             _body.transform.localScale = Vector3.one;
             _body.preserveAspect = true;
             _body.raycastTarget = false;
@@ -566,7 +568,7 @@ namespace Game.Module.InGame
                                    float progress = 1f, float scale = 1f)
         {
             if (_possessMark == null) return;
-            bool on = state != PossessMark.None;
+            bool on = state != PossessMark.None && !IsCastBadgeShown;   // 스킬 아이콘이 같은 자리에 떠 있는 동안은 접는다
             if (_possessMark.gameObject.activeSelf != on) _possessMark.gameObject.SetActive(on);
             if (!on) return;
 
@@ -646,7 +648,7 @@ namespace Game.Module.InGame
         /// <summary>지금 내 몸으로 때리면 유리한가(▲) 불리한가(▼). null 이면 끈다(보통).</summary>
         public void SetMatchArrow(Sprite arrow)
         {
-            bool on = arrow != null;
+            bool on = arrow != null && !IsCastBadgeShown;   // 스킬 아이콘이 같은 자리에 떠 있는 동안은 접는다
             if (_matchArrow == null)
             {
                 if (!on) return;
@@ -672,7 +674,7 @@ namespace Game.Module.InGame
         /// </summary>
         public void SetTakeMark(Sprite mark)
         {
-            bool on = mark != null;
+            bool on = mark != null && !IsCastBadgeShown;   // 스킬 아이콘이 같은 자리에 떠 있는 동안은 접는다
             if (_takeMark == null)
             {
                 if (!on) return;
@@ -1394,6 +1396,7 @@ namespace Game.Module.InGame
             if (_body == null || _dying) return;
 
             TickCastWhite(dt);
+            TickCastBadge(dt);
 
             // 윤곽은 무적과 **따로** 켠다(기획 2026-09-15) — 스킬이 준 무적에만 그린다.
             // 방 입장·빙의 직후·공중에 뜬 잡몹처럼 규칙상 무적인 것까지 그리면
@@ -1576,9 +1579,14 @@ namespace Game.Module.InGame
 
         private Image _castWhite;
         private float _castWhiteTimer;
+        private float _castWhiteSeconds = CastWhiteSeconds;
 
         /// <summary>스킬을 썼다. 몸을 잠깐 하얗게 덮는다.</summary>
-        public void BeginCastWhite() => _castWhiteTimer = CastWhiteSeconds;
+        public void BeginCastWhite(float seconds = CastWhiteSeconds)
+        {
+            _castWhiteSeconds = Mathf.Max(0.01f, seconds);
+            _castWhiteTimer = _castWhiteSeconds;
+        }
 
         private void TickCastWhite(float dt)
         {
@@ -1609,10 +1617,93 @@ namespace Game.Module.InGame
             _castWhite.sprite = _body.sprite;
             _castWhite.enabled = _castWhite.sprite != null;
 
-            float fade = CastWhiteSeconds - CastWhiteHoldSeconds;
+            // 짧게 번쩍일 때(적 스킬 0.1초)는 머묾도 그만큼 줄인다 — 고정 0.08초면 페이드가 남지 않는다
+            float fade = _castWhiteSeconds - Mathf.Min(CastWhiteHoldSeconds, _castWhiteSeconds * 0.5f);
             float a = _castWhiteTimer >= fade ? 1f : _castWhiteTimer / fade;
             _castWhite.color = new Color(1f, 1f, 1f, a);
             if (!_castWhite.gameObject.activeSelf) _castWhite.gameObject.SetActive(true);
+        }
+
+        // ── 적 스킬 표시 — 몸 번쩍 + 머리 위 작은 스킬 아이콘 ──────────
+        //
+        // PD 2026-10-13 시안 `mock_cast3_flashicon` 선택. 적 호스트는 한 방에 여럿일 수 있어
+        // 집중선 · 큰 말풍선은 과했다 — 「누가 · 무슨 스킬」만 몸 둘레에서 읽히게 한다.
+        // 적에게만 쓴다(플레이어는 지금의 띠 컷씬 그대로).
+
+        private static Sprite s_castBadgeRing;
+        public static void SetCastBadgeRing(Sprite s) => s_castBadgeRing = s;
+
+        public const float EnemyCastWhiteSeconds = 0.06f;  // 무적 윤곽과 헷갈리지 않게 한 번만 짧게
+        private const float CastRimSeconds = 0.35f;         // 흰 윤곽이 빠지는 시간 — 무적 윤곽(하늘빛 점멸)과 달리 한 번 빠지고 끝
+        private const float CastBadgeSize = 40f;            // 시안 실측 지름(720 기준)
+        private const float CastBadgeIconSize = 32f;        // 64px 아이콘의 절반 — 점이 고르게 줄어든다
+        private const float CastBadgePopSeconds = 0.14f;
+        private const float CastBadgeHoldSeconds = 0.8f;
+        private const float CastBadgeFadeSeconds = 0.25f;
+        private const float CastBadgeRise = 10f;
+
+        private Image _castBadge;
+        private Image _castBadgeIcon;
+        private float _castBadgeTime = -1f;
+
+        /// <summary>지금 머리 위에 스킬 아이콘이 떠 있는가. 그동안은 빙의 표식을 접는다(같은 자리).</summary>
+        private bool IsCastBadgeShown => _castBadgeTime >= 0f;
+
+        /// <summary>적이 스킬을 쓴다 — 몸을 짧게 번쩍이고 체력바 위에 그 스킬 아이콘을 띄운다.</summary>
+        public void ShowSkillCast(Sprite icon)
+        {
+            // 시안은 몸이 통째로 하얘지는 것이 아니라 **흰 윤곽**이 남는다 — 아주 짧게 하얗게 친 뒤 윤곽이 빠진다
+            BeginCastWhite(EnemyCastWhiteSeconds);
+            FlashRim(Color.white, CastRimSeconds);
+            if (icon == null || _hpBarBg == null) return;
+
+            if (_castBadge == null)
+            {
+                _castBadge = GetOrCreate("CastBadge", new Vector2(CastBadgeSize, CastBadgeSize), Vector2.zero);
+                _castBadge.preserveAspect = true;
+                _castBadgeIcon = GetOrCreate("CastBadgeIcon", new Vector2(CastBadgeIconSize, CastBadgeIconSize),
+                                             Vector2.zero, _castBadge.transform);
+                _castBadgeIcon.preserveAspect = true;
+            }
+            _castBadge.sprite = s_castBadgeRing;
+            _castBadge.enabled = s_castBadgeRing != null;   // 테두리 그림이 없으면 아이콘만
+            _castBadgeIcon.sprite = icon;
+            _castBadge.transform.SetAsLastSibling();          // 체력바 · 표식보다 앞
+            _castBadgeTime = 0f;
+            // 체력바 위 같은 자리를 쓰는 표시들(빙의 표식 · 유리 화살표 · 탈 수 있다)은 아이콘이 떠 있는 동안 접는다
+            if (_possessMark != null) _possessMark.gameObject.SetActive(false);
+            if (_matchArrow != null) _matchArrow.gameObject.SetActive(false);
+            if (_takeMark != null) _takeMark.gameObject.SetActive(false);
+            TickCastBadge(0f);
+            _castBadge.gameObject.SetActive(true);
+        }
+
+        private void HideCastBadge()
+        {
+            _castBadgeTime = -1f;
+            if (_castBadge != null && _castBadge.gameObject.activeSelf) _castBadge.gameObject.SetActive(false);
+        }
+
+        private void TickCastBadge(float dt)
+        {
+            if (!IsCastBadgeShown) return;
+            _castBadgeTime += dt;
+            float t = _castBadgeTime;
+            if (t >= CastBadgeHoldSeconds + CastBadgeFadeSeconds) { HideCastBadge(); return; }
+
+            // 체력바(와 쉴드 바) 바로 위에 붙는다
+            var bar = (RectTransform)_hpBarBg.transform;
+            float baseY = bar.anchoredPosition.y + bar.sizeDelta.y * 0.5f + CastBadgeSize * 0.5f;   // 시안처럼 체력바에 바로 얹는다
+
+            float scale = t < CastBadgePopSeconds ? Ease.OutBack(t / CastBadgePopSeconds) : 1f;
+            float fade = t <= CastBadgeHoldSeconds ? 0f : (t - CastBadgeHoldSeconds) / CastBadgeFadeSeconds;
+            float rise = CastBadgeRise * Ease.OutCubic(fade);
+            var rt = (RectTransform)_castBadge.transform;
+            rt.anchoredPosition = new Vector2(0f, baseY + rise);
+            rt.localScale = Vector3.one * scale;
+            var c = new Color(1f, 1f, 1f, 1f - fade);
+            _castBadge.color = c;
+            _castBadgeIcon.color = c;
         }
 
         // ── 분신 ────────────────────────────────────────────────

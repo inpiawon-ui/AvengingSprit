@@ -2252,6 +2252,7 @@ namespace Game.Module.InGame
         private void CachePossessMarkSprites()
         {
             Unit.SetShieldFillSprite(GetSprite("hostshieldfill"));
+            Unit.SetCastBadgeRing(GetSprite("enemycast_ring"));   // 적 스킬 아이콘 테두리(2026-10-13)
 
             _markArrow = GetSprite("possessmark_arrow");
             CacheAffinitySprites();   // 상성 시험판 — 계열 아이콘 · 유리 표시

@@ -394,7 +394,10 @@ namespace Game.Module.InGame
 
         private const float EnemySkillCoolMul = 3f;
         private const float EnemySkillFirstDelay = 8f;
-        private const float EnemySkillTelegraph = 1.0f;
+        // 시전 시간은 따로 두지 않는다(PD 2026-10-13 「스킬 시전 시간은 따로 필요하지 않고」) —
+        //   몸 번쩍 + 머리 위 스킬 아이콘이 먼저 톡 뜨고, 아이콘이 다 펴질 만큼만 기다렸다 나간다.
+        //   예전 1.0초 노란 예고는 평타 예고와 똑같아 「스킬이다」가 안 읽혔다.
+        private const float EnemySkillTelegraph = 0.25f;
 
         /// <summary>방 안에서 한 번에 하나만 시전한다. 둘이 동시에 쓰면 소개가 아니라 폭격이다.</summary>
         private Unit _enemyCasting;
@@ -445,6 +448,9 @@ namespace Game.Module.InGame
                 return true;
             }
 
+            // 시전하던 몸이 죽거나 빼앗겼으면 자리를 푼다 — 안 풀면 그 방에서 다시는 아무도 스킬을 못 쓴다
+            if (_enemyCasting != null && (!_enemyCasting.IsAlive || _enemyCasting.Side != UnitSide.Enemy))
+                _enemyCasting = null;
             if (_enemyCasting != null) return false;   // 다른 몸이 쓰는 중이다
 
             // 대장은 제 시계를 따로 쓴다 — 부하가 스킬을 쓸 때마다 대장 시계까지 0 으로 돌아가면 영영 안 나온다
@@ -462,9 +468,14 @@ namespace Game.Module.InGame
 
             _enemyCasting = e;
             e.PatternTimer = e == _midBoss ? MidBossSkillTelegraph : EnemySkillTelegraph;
-            e.SetTelegraph(true);
-            // 몸 위에 표식을 띄운다 — 평타 예고(0.45~0.75초)보다 길어야 구별된다.
-            PlayFx("mark", e.Position + new Vector2(0f, 52f), 48f, loop: false);
+            // 누가 · 무슨 스킬 — 몸이 짧게 번쩍이고 체력바 위에 그 스킬 아이콘이 뜬다(시안 mock_cast3_flashicon).
+            e.ShowSkillCast(CachedSkillIcon(e.Key));
+            // 대장은 관문이라 예전처럼 길게 예고한다(노란 자세 + 표식). 일반 적 호스트는 아이콘만으로 읽힌다.
+            if (e == _midBoss)
+            {
+                e.SetTelegraph(true);
+                PlayFx("mark", e.Position + new Vector2(0f, 52f), 48f, loop: false);
+            }
             return true;
         }
 
@@ -476,6 +487,18 @@ namespace Game.Module.InGame
         ///   적이 부르면 **내 숙련도로** 적이 때리게 된다.
         ///   여기서는 Lv1 고정 · 보스 전용 항 무시로 **줄여서** 낸다.
         /// </summary>
+        // `SpriteAtlas.GetSprite` 는 부를 때마다 새 Sprite 를 만든다 — 호스트마다 한 번만 받아 둔다
+        private readonly System.Collections.Generic.Dictionary<string, Sprite> _skillIconCache = new();
+
+        private Sprite CachedSkillIcon(string hostKey)
+        {
+            if (hostKey == null) return null;
+            if (_skillIconCache.TryGetValue(hostKey, out var s) && s != null) return s;
+            s = ActiveSkillIcon(hostKey);
+            if (s != null) _skillIconCache[hostKey] = s;
+            return s;
+        }
+
         private void CastEnemySkill(Unit e, Unit me)
         {
             if (e == null || me == null) return;
