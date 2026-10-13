@@ -133,8 +133,8 @@ namespace Game.User
         /// <summary>다음 단계 골드. 0 이면 상한.</summary>
         int GhostStatCost(HostStat stat);
         int HostStatCost(string hostKey, HostStat stat);
-        /// <summary>그 레벨까지 오른 % (예: Lv15 → 30).</summary>
-        float StatPercent(HostStat stat, int level);
+        /// <summary>그 탭에서 그 레벨까지 오른 % — 유령 탭은 무게 0.2, 호스트 탭은 1.75 가 곱해진다(2026-10-13).</summary>
+        float StatPercent(HostStat stat, int level, bool ghost);
         /// <summary>골드를 쓰고 한 단계 올린다. 모자라거나 상한이면 false. 저장은 부르는 쪽이.</summary>
         bool BuyGhostStat(HostStat stat);
         bool BuyHostStat(string hostKey, HostStat stat);
@@ -146,8 +146,8 @@ namespace Game.User
         /// </summary>
         float StatBonusFlat(string hostKey, HostStat stat);
 
-        /// <summary>그 능력치의 강화 레벨 합 — 유령 탭 + 이 몸의 호스트 탭.</summary>
-        int StatLevelTotal(string hostKey, HostStat stat);
+        /// <summary>그 능력치의 강화 레벨 — 탭 무게를 곱해 더한 값(유령 × 0.2 + 호스트 × 1.75). 사거리 강화가 쓴다.</summary>
+        float StatLevelEffective(string hostKey, HostStat stat);
 
         // ── 유령 성장 경로 ──────────────────────────────────
 

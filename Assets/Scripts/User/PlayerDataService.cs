@@ -589,7 +589,7 @@ namespace Game.User
             if (_config == null || !_config.HasChapterTable) return 0;
             var def = _config.ChapterOf(chapter);
             if (def.PowerMul <= 0f) return 0;
-            int mastery = Mathf.Max(1, def.PowerStar * 2 - 1);   // 별 n 의 첫 숙련도(1성 = 1 · 2성 = 3 · 3성 = 5)
+            int mastery = Mathf.Max(1, def.PowerStar * 2);   // 모델의 성급 n = 숙련도 2n(강화 상한 10n 과 같은 자 — balance10.py)
             float v = BasePower * def.PowerMul * (1f + HostCombat.PowerPerMastery * mastery);
             return Mathf.RoundToInt(v / 10f) * 10;   // 10 단위 — 끝자리가 흔들리면 「정확한 값」처럼 읽힌다
         }
@@ -645,8 +645,8 @@ namespace Game.User
             return _config == null || lv >= HostStatCap(hostKey) ? 0 : _config.StatCost(false, lv);
         }
 
-        public float StatPercent(HostStat stat, int level)
-            => _config != null ? _config.StatPercentPerLevel(stat) * level : 0f;
+        public float StatPercent(HostStat stat, int level, bool ghost)
+            => _config != null ? _config.StatPercentPerLevel(stat) * _config.StatShare(ghost) * level : 0f;
 
         public bool BuyGhostStat(HostStat stat)
         {
@@ -670,17 +670,21 @@ namespace Game.User
             return true;
         }
 
-        public int StatLevelTotal(string hostKey, HostStat stat)
-            => GhostStatLevel(stat) + (string.IsNullOrEmpty(hostKey) ? 0 : HostStatLevel(hostKey, stat));
+        public float StatLevelEffective(string hostKey, HostStat stat)
+        {
+            if (_config == null) return 0f;
+            return GhostStatLevel(stat) * _config.StatShare(true)
+                 + (string.IsNullOrEmpty(hostKey) ? 0f : HostStatLevel(hostKey, stat) * _config.StatShare(false));
+        }
 
         public float StatBonusFlat(string hostKey, HostStat stat)
-            => StatPercent(stat, GhostStatLevel(stat))
-             + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat)));
+            => StatPercent(stat, GhostStatLevel(stat), true)
+             + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
 
         public float StatBonusMul(string hostKey, HostStat stat)
         {
-            float pct = StatPercent(stat, GhostStatLevel(stat))
-                      + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat)));
+            float pct = StatPercent(stat, GhostStatLevel(stat), true)
+                      + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
             return 1f + pct / 100f;
         }
 

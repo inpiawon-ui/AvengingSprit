@@ -569,6 +569,7 @@ ui.starup.label	성급	星級	Stars
 ui.starup.value	★ {0} / 5	★ {0} / 5	★ {0} / 5
 ui.starup.rises	함께 오르는 것	一緒に上がるもの	Also improves
 ui.starup.skill_lv	스킬 Lv	スキル Lv	Skill Lv
+ui.starup.stat_up	체력 · 공격	HP・攻撃	HP · ATK
 ui.starup.stat_cap	능력치 강화 상한	能力値強化の上限	Stat upgrade cap
 ui.starup.cap_short	강화 상한 Lv {0}	強化上限 Lv {0}	Upgrade cap Lv {0}
 ui.starup.spec_lock	Lv.{0} 특수 효과	Lv.{0} 特殊効果	Lv.{0} special

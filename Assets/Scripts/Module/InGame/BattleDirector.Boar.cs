@@ -99,7 +99,7 @@ namespace Game.Module.InGame
             if (e.PatternAngle > 0.5f || _host == null || me == null) return;
             if (Vector2.Distance(e.Position, me.Position) > Meters(spec.WidthMeters * 0.5f + BoarHitReachMeters)) return;
             e.PatternAngle = 1f;
-            DamagePlayer(Mathf.Max(1, e.Atk));
+            DamagePlayer(Mathf.Max(1, e.Atk), e.Key);
         }
 
         private DiveSpec DiveSpecOf(Unit e)

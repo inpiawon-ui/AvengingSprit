@@ -242,6 +242,20 @@ namespace Game.Module.InGame
         /// <summary>불리한 쪽을 때리는 중인가. 맞기 **전에** 묻는다 — 움찔할지 말지가 여기서 갈린다.</summary>
         private bool IsDullAgainst(Unit victim) => OutcomeAgainst(victim) < 0;
 
+        /// <summary>
+        /// 맞을 때 상성(PD 2026-10-13 「때릴 때 상성이면 맞을 때도 상성이 적용되는 것 아니냐」).
+        /// 때릴 때와 **같은 배율의 거울**이다 — 내 몸이 이기는 적에게 맞으면 ×0.7, 지는 적에게 맞으면 ×1.3.
+        /// 쏜 쪽을 모르는 피해(지형 · 기믹 · 장판)는 상성을 안 탄다.
+        /// </summary>
+        private int WithDefenseAffinity(int amount, string sourceKey)
+        {
+            if (!AffinityRule.Enabled || _host == null || string.IsNullOrEmpty(sourceKey)) return amount;
+            int outcome = AffinityRule.Outcome(MyKind, AffinityRule.KindOf(sourceKey));
+            if (outcome > 0) return Mathf.Max(1, Mathf.RoundToInt(amount * AffinityRule.LoseDamageMul));
+            if (outcome < 0) return Mathf.Max(1, Mathf.RoundToInt(amount * AffinityRule.WinDamageMul));
+            return amount;
+        }
+
         private const float StrongHoldSeconds = 0.28f;
         private const float StrongShake = 3f;
         /// <summary>연사 몸이 맞힐 때마다 밀면 적이 영영 못 온다 — 적마다 이 간격에 한 번만.</summary>

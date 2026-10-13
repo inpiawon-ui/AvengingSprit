@@ -896,9 +896,20 @@ namespace Game.Character
         // 한 단계 값은 `Projects/AVSR/Tools/balance10.py` 의 모델에서 나왔다 — 10챕터를 67판쯤에 깨는
         // 수입(누적 약 7만 9천 골드)으로 유령 15 · 주력 몸 25 레벨쯤 사게 맞춘 값이다.
         // 예전 200 은 한 판 수입(300~1,550)에 비해 14배쯤 비쌌다.
-        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령(모든 몸에 붙는다)이 비싸고 호스트(그 몸만)가 싸다.")]
-        [SerializeField] private int _ghostStatCostStep = 100;
+        [Tooltip("한 단계 골드 = 이 값 × 다음 레벨. 유령 탭은 효과가 작아(무게 0.2) 값도 내렸다(100 → 30, 2026-10-13).")]
+        [SerializeField] private int _ghostStatCostStep = 30;
         [SerializeField] private int _hostStatCostStep = 60;
+
+        // 계정 20 : 개별 80 (PD 2026-10-13 「고스트 스텟 20% · 개별 호스트 80%」) — 유령 탭(모든 몸)이 크면 아무 몸이나 다 세져서
+        //   속성마다 몸을 따로 키울 이유가 없다. 레벨당 값(`_statPercentPerLevel` 등)에 탭마다 이 무게를 곱한다.
+        //   둘 다 50 단계면 합이 예전(1 + 1 = 2)과 거의 같다(0.2 + 1.75 = 1.95).
+        [Tooltip("유령 탭 강화의 무게 — 레벨당 값 × 이 값. 0.2 = 체력 단계당 0.4%.")]
+        [SerializeField] private float _ghostStatShare = 0.2f;
+        [Tooltip("호스트 탭 강화의 무게 — 레벨당 값 × 이 값. 1.75 = 체력 단계당 3.5%.")]
+        [SerializeField] private float _hostStatShare = 1.75f;
+
+        /// <summary>그 탭 강화 한 단계의 무게. 유령 탭 0.2 · 호스트 탭 1.75.</summary>
+        public float StatShare(bool ghost) => Mathf.Max(0f, ghost ? _ghostStatShare : _hostStatShare);
 
         [Header("성장 — 유저(유령) 레벨")]
         [Tooltip("다음 레벨까지 경험치 = 기본 + 증가폭 × (레벨 - 1).")]

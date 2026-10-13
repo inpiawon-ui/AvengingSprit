@@ -2910,3 +2910,7 @@ MonoBehaviour:
     _ko: "\uAD8C\uC7A5 \uC804\uD22C\uB825 {0}"
     _ja: "\u63A8\u5968\u6226\u95D8\u529B {0}"
     _en: Rec. Power {0}
+  - _key: ui.starup.stat_up
+    _ko: "\uCCB4\uB825 \xB7 \uACF5\uACA9"
+    _ja: "HP\u30FB\u653B\u6483"
+    _en: "HP \xB7 ATK"

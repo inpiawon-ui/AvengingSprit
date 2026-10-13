@@ -42,7 +42,7 @@ namespace Game.Character
         /// <param name="baseRange">강화 전 사거리(단위는 부르는 쪽 그대로 — px 이든 m 이든)</param>
         /// <param name="unitsPerMeter">상한(m)을 baseRange 단위로 바꾸는 값</param>
         public static float UpgradedRange(GameConfig config, HostEntry host, float baseRange,
-                                          int upgradeLevels, float unitsPerMeter)
+                                          float upgradeLevels, float unitsPerMeter)
         {
             if (config == null || host == null) return baseRange;
             int job = JobIndex(host);

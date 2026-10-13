@@ -140,7 +140,7 @@ MonoBehaviour:
     MixBlade: 11
     MixForce: 9
     MixMagic: 10
-    PowerMul: 1.01
+    PowerMul: 1.09
     PowerStar: 1
   - Chapter: 2
     Name: "\uBBF8\uC0AC\uC77C \uC800\uC7A5\uAE30\uC9C0"
@@ -175,7 +175,7 @@ MonoBehaviour:
     MixBlade: 29
     MixForce: 16
     MixMagic: 0
-    PowerMul: 1.11
+    PowerMul: 1.18
     PowerStar: 1
   - Chapter: 3
     Name: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
@@ -209,7 +209,7 @@ MonoBehaviour:
     MixBlade: 5
     MixForce: 17
     MixMagic: 31
-    PowerMul: 1.21
+    PowerMul: 1.26
     PowerStar: 1
   - Chapter: 4
     Name: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
@@ -243,7 +243,7 @@ MonoBehaviour:
     MixBlade: 15
     MixForce: 28
     MixMagic: 15
-    PowerMul: 1.32
+    PowerMul: 1.35
     PowerStar: 1
   - Chapter: 5
     Name: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
@@ -278,7 +278,7 @@ MonoBehaviour:
     MixBlade: 35
     MixForce: 16
     MixMagic: 19
-    PowerMul: 1.46
+    PowerMul: 1.45
     PowerStar: 1
   - Chapter: 6
     Name: "\uC57C\uAC04 \uC815\uC720\uC18C"
@@ -313,7 +313,7 @@ MonoBehaviour:
     MixBlade: 20
     MixForce: 21
     MixMagic: 39
-    PowerMul: 1.74
+    PowerMul: 1.95
     PowerStar: 2
   - Chapter: 7
     Name: "\uBD88\uD0C0\uB294 \uC9D1\uC801\uC7A5"
@@ -348,7 +348,7 @@ MonoBehaviour:
     MixBlade: 21
     MixForce: 40
     MixMagic: 20
-    PowerMul: 1.9
+    PowerMul: 2.06
     PowerStar: 2
   - Chapter: 8
     Name: "\uBD09\uC1C4\uB41C \uC800\uC7A5\uAE30\uC9C0"
@@ -383,7 +383,7 @@ MonoBehaviour:
     MixBlade: 43
     MixForce: 23
     MixMagic: 26
-    PowerMul: 2.11
+    PowerMul: 2.22
     PowerStar: 2
   - Chapter: 9
     Name: "\uB9DD\uB839\uC758 \uAC70\uB9AC"
@@ -418,7 +418,7 @@ MonoBehaviour:
     MixBlade: 24
     MixForce: 24
     MixMagic: 44
-    PowerMul: 2.56
+    PowerMul: 3.02
     PowerStar: 3
   - Chapter: 10
     Name: "\uCD5C\uD6C4\uC758 \uC625\uC0C1"
@@ -454,7 +454,7 @@ MonoBehaviour:
     MixBlade: 35
     MixForce: 33
     MixMagic: 35
-    PowerMul: 2.84
+    PowerMul: 3.2
     PowerStar: 3
   _roomEnemyCap: 12
   _shardCurve: 080000000c000000100000001400000023000000280000002e000000340000003a0000005a000000
@@ -571,8 +571,10 @@ MonoBehaviour:
   - 1
   _critDamagePerLevel: 1
   _defensePerLevel: 0.2
-  _ghostStatCostStep: 100
+  _ghostStatCostStep: 30
   _hostStatCostStep: 60
+  _ghostStatShare: 0.2
+  _hostStatShare: 1.75
   _userExpBase: 100
   _userExpStep: 60
   _chapterClearExp: 2c010000f401000020030000b0040000a4060000fc080000

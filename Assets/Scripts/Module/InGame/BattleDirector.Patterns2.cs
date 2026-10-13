@@ -316,6 +316,7 @@ namespace Game.Module.InGame
                 var shot = RentShot();
                 if (shot == null) return;
                 shot.SetSprite(ShotFrames(SplitOrbKind), SplitOrbKind, LoopsFrames(SplitOrbKind));
+                shot.SourceKey = e.Key;
                 shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
                           false, null, _config.ShotSize * 1.3f, ShotEnemyColor,
                           reach / Mathf.Max(1f, speed) + 0.25f);
@@ -336,6 +337,7 @@ namespace Game.Module.InGame
                     var shot = RentShot();
                     if (shot == null) return;
                     shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
+                    shot.SourceKey = e.Key;
                     shot.Fire(e.Position, me.Position, speed, dmg, false, null,
                               _config.ShotSize * 1.15f, ShotEnemyColor, life,
                               angleOffsetDeg: off, bounces: BounceShotBounces);
@@ -411,6 +413,7 @@ namespace Game.Module.InGame
                     if (shot != null)
                     {
                         shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
+                        shot.SourceKey = e.Key;
                         shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
                                   false, null, _config.ShotSize, ShotEnemyColor,
                                   reach / Mathf.Max(1f, speed) + 0.25f);

@@ -223,10 +223,11 @@ namespace Game.Module.Lobby
         private string PctText(HostStat stat, int lv, bool ghost)
         {
             var c = _player.Config;
-            if (stat != HostStat.Range || c == null) return $"+{_player.StatPercent(stat, lv):0.0}%";
-            if (!ghost) return $"+{c.RangePercentPerLevel(HostStats.JobIndex(_player.GetHost(_hostKey))) * lv:0.0}%";
-            float lo = c.RangePercentPerLevel(HostStats.JobRanged) * lv;
-            float hi = c.RangePercentPerLevel(HostStats.JobMelee) * lv;
+            if (stat != HostStat.Range || c == null) return $"+{_player.StatPercent(stat, lv, ghost):0.0}%";
+            float share = c.StatShare(ghost);
+            if (!ghost) return $"+{c.RangePercentPerLevel(HostStats.JobIndex(_player.GetHost(_hostKey))) * lv * share:0.0}%";
+            float lo = c.RangePercentPerLevel(HostStats.JobRanged) * lv * share;
+            float hi = c.RangePercentPerLevel(HostStats.JobMelee) * lv * share;
             return $"+{lo:0.#}~{hi:0.#}%";
         }
 

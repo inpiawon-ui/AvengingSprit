@@ -404,7 +404,7 @@ namespace Game.Module.InGame
                 var me = Avatar;
                 if (me != null && _danger.Contains(me.Position, _roomSize))
                     DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(
-                        _boss.Atk * _dangerMove.DamageMul * MeltTickShare)));
+                        _boss.Atk * _dangerMove.DamageMul * MeltTickShare)), _boss.Key);
 
                 // 방울 비 — 박자마다 섬 밖 아무 데나 몇 방울 떨어뜨린다.
                 // 이게 없으면 바닥만 붉고 **아무것도 안 떨어진다.**
@@ -1348,7 +1348,7 @@ namespace Game.Module.InGame
             bool playerHit = me != null && _danger.Contains(me.Position, _roomSize);
             if (playerHit && ShapeHurts(m.Draw))
             {
-                DamagePlayer(dmg);
+                DamagePlayer(dmg, boss.Key);
 
                 float stun = StunOnHitSeconds(m.Draw);
                 // 유령은 굳지 않는다. 맞지도 않는 몸을 붙들면 남은 시간만 깎인다.

@@ -196,6 +196,7 @@ namespace Game.Module.InGame
                 var shot = RentShot();
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
+                shot.SourceKey = e.Key;
                 shot.Fire(e.Position, e.Position + dir * reach, speed, dmg,
                           false, null, _config.ShotSize, ShotEnemyColor, life);
             }
@@ -550,7 +551,7 @@ namespace Game.Module.InGame
                     var to = ClampedInField(e, e.Position + dir * Meters(boss ? 4.5f : 3f));
                     e.Position = to;
                     PlayFx("dash", to, boss ? 72f : 48f, loop: false);
-                    if (Vector2.Distance(to, me.Position) <= Meters(boss ? 3.2f : 2.5f)) DamagePlayer(dmg);
+                    if (Vector2.Distance(to, me.Position) <= Meters(boss ? 3.2f : 2.5f)) DamagePlayer(dmg, e.Key);
                     break;
                 }
 
@@ -652,6 +653,7 @@ namespace Game.Module.InGame
             string kind = kindOverride ?? ShotKindOf(e);
             shot.SetSprite(kindOverride != null ? ShotFrames(kindOverride) : ShotSpriteOf(e),
                            kind, LoopsFrames(kind));
+            shot.SourceKey = e.Key;
             shot.Fire(e.Position, e.Position + dir * reach, speed, damage > 0 ? damage : Mathf.Max(1, e.Atk),
                       false, null, _config.ShotSize * sizeMul, ShotEnemyColor, life);
             if (homing > 0f) shot.SetHoming(homing);

@@ -35,15 +35,19 @@ CHEST_GOLD = {'silver': (100, 200), 'gold': (300, 500), 'platinum': (700, 1000)}
 # ── 유저(유령) 레벨 ──
 CLEAR_EXP = [300, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700]
 EXP_BASE, EXP_STEP = 100, 60                 # 다음 레벨까지 = 100 + 60 × (Lv − 1)
-GHOST_HP_PER_LV, GHOST_ATK_PER_LV = 0.03, 0.016
+# 계정 20 : 개별 80(PD 2026-10-13) — 유령 레벨 몫 3% · 1.6% → 0.6% · 0.3%, 덜어 낸 몫은 성급으로(HostCombat.MasteryStatMul)
+GHOST_HP_PER_LV, GHOST_ATK_PER_LV = 0.006, 0.003
+MASTERY_STAT = 0.07          # 숙련도 한 단계마다 체력 · 공격 ×1.07(숙련도 = 성급 × 2)
 PATH_GOLD = {10: 5000, 20: 10000, 30: 20000, 40: 30000, 50: 50000}
 
 # ── 골드 강화 ──
 # 한 단계 값 = STEP × (다음 레벨). 유령(모든 몸)은 비싸고, 호스트(그 몸만)는 싸다.
-GHOST_STEP, HOST_STEP = 100, 60
+GHOST_STEP, HOST_STEP = 30, 60     # 유령 탭은 효과가 작아(무게 0.2) 100 → 30(2026-10-13)
 GHOST_CAP = 50
 STAR_CAP = 10                                # 호스트 강화 상한 = 10 × 성급
 PCT = {'hp': 0.02, 'atk': 0.02, 'aspd': 0.01}
+# 탭 무게(GameConfig._ghostStatShare · _hostStatShare) — 유령 탭 한 단계는 0.2 배, 호스트 탭은 1.75 배
+SHARE = {'ghost': 0.2, 'host': 1.75}
 
 # ── 손잡이 ──
 SKILL_HP = 0.06      # 챕터가 오를수록 카드 · 손이 느는 몫(적 체력에 더 얹는다) — 챕터당
@@ -77,13 +81,18 @@ class Player:
     def lv(self):
         return level_of(self.exp)
 
+    def up(self, stat):
+        return PCT[stat] * (SHARE['ghost'] * self.ghost[stat] + SHARE['host'] * self.host[stat])
+
+    def mastery_mul(self):
+        return (1 + MASTERY_STAT) ** max(0, 2 * self.star - 1)
+
     def hp_mul(self):
-        return (1 + PCT['hp'] * (self.ghost['hp'] + self.host['hp'])) * (1 + GHOST_HP_PER_LV * (self.lv - 1))
+        return (1 + self.up('hp')) * (1 + GHOST_HP_PER_LV * (self.lv - 1)) * self.mastery_mul()
 
     def dps_mul(self):
-        return ((1 + PCT['atk'] * (self.ghost['atk'] + self.host['atk']))
-                * (1 + PCT['aspd'] * (self.ghost['aspd'] + self.host['aspd']))
-                * (1 + GHOST_ATK_PER_LV * (self.lv - 1)))
+        return ((1 + self.up('atk')) * (1 + self.up('aspd'))
+                * (1 + GHOST_ATK_PER_LV * (self.lv - 1)) * self.mastery_mul())
 
     def power(self):
         return math.sqrt(self.hp_mul() * self.dps_mul())

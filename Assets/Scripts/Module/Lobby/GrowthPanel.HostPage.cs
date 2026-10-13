@@ -229,8 +229,11 @@ namespace Game.Module.Lobby
                 SetHalfFill(_ui.Find(win, $"H5WinStar1_{i}"), m + 1, i);
             }
 
-            // 함께 오르는 넷 — 스킬 Lv · 액티브 값 · 패시브 값 · 강화 상한
-            WinRow(0, _starBigOn, Localize.Get("ui.starup.skill_lv"), Arrow(m.ToString(), (m + 1).ToString()));
+            // 함께 오르는 넷 — 체력 · 공격 · 액티브 값 · 패시브 값 · 강화 상한
+            // 첫 줄은 「스킬 Lv」(= 창 위 별 숫자와 같은 값)였다 — 성급이 체력 · 공격을 키우게 되면서(2026-10-13) 그 자리에 쓴다
+            WinRow(0, (int)HostStat.Hp < _statIcons.Length ? _statIcons[(int)HostStat.Hp] : _starBigOn,
+                   Localize.Get("ui.starup.stat_up"),
+                   Arrow($"+{(HostCombat.MasteryStatMul(m) - 1f) * 100f:0}%", $"+{(HostCombat.MasteryStatMul(m + 1) - 1f) * 100f:0}%"));
 
             var active = e != null ? _player.GetActiveSkill(e.ActiveSkillKey) : null;
             string aName = active != null ? active.DisplayName : "—";

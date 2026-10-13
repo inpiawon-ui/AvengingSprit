@@ -14,12 +14,21 @@ namespace Game.Character
         // ── 고스트 Lv 이 몸에 얹는 배율 ─────────────────────────
         //
         // ⚠ **임시 폴백**이다. 호스트 표(`_levelStats`)에 값이 들어오면 표가 이긴다.
-        //   레벨은 생존을 사고(체력 3%/Lv), 화력은 몸이 판다(공격 1.6%/Lv).
-        public const float GhostHpPerLevel = 0.03f;
-        public const float GhostAtkPerLevel = 0.016f;
+        //   레벨은 생존을 사고, 화력은 몸이 판다.
+        // ⚠ 3% · 1.6% → 0.6% · 0.3%(PD 2026-10-13 계정 20 : 개별 80). 유령 레벨은 모든 몸에 공짜로 붙어서
+        //   그 몫이 크면 아무 몸이나 다 세진다 — 덜어 낸 몫은 성급(그 몸만)으로 옮겼다(`MasteryStatMul`).
+        public const float GhostHpPerLevel = 0.006f;
+        public const float GhostAtkPerLevel = 0.003f;
 
         public static float GhostHpMul(int ghostLevel) => 1f + GhostHpPerLevel * (Mathf.Max(1, ghostLevel) - 1);
         public static float GhostAtkMul(int ghostLevel) => 1f + GhostAtkPerLevel * (Mathf.Max(1, ghostLevel) - 1);
+
+        // ── 성급(숙련도)이 주는 체력 · 공격 — 그 몸에만 쌓인다 (PD 2026-10-13) ──
+        //   숙련도 한 단계마다 7% 씩 곱한다. 1 = ×1.00 · 5 = ×1.31 · 10 = ×1.84. 0(봉인)은 1.
+        public const float MasteryStatPerLevel = 0.07f;
+
+        public static float MasteryStatMul(int mastery)
+            => Mathf.Pow(1f + MasteryStatPerLevel, Mathf.Max(0, mastery - 1));
 
         // ── 손 속도 — 기획 2026-09-15 아마존 2배 · 근접 1.5배(겹치지 않는다) ──
         public const float AmazonHandSpeedMul = 2f;
@@ -94,7 +103,7 @@ namespace Game.Character
         public static float Dps(GameConfig config, HostEntry e, in Growth g)
         {
             if (config == null || e == null) return 0f;
-            float hit = LeveledAtk(config, e, g.GhostLevel) * g.AtkMul;
+            float hit = LeveledAtk(config, e, g.GhostLevel) * g.AtkMul * MasteryStatMul(g.Mastery);
             float rate = config.RateOfGrade(e.RateGrade) * HandSpeedMul(e) * g.AtkSpeedMul;
             // 판(`BattleDirector.CritPercent`)과 같이 확률에 곱한다 — 100% 를 넘으면 늘 치명이다
             float critP = Mathf.Clamp01(HostStats.CritPercent(config, e, g.GhostLevel, g.GhostLevelMax) * g.CritMul / 100f);
@@ -106,7 +115,7 @@ namespace Game.Character
         public static float EffectiveHp(GameConfig config, HostEntry e, in Growth g)
         {
             if (config == null || e == null) return 0f;
-            float hp = LeveledHp(config, e, g.GhostLevel) * g.HpMul;
+            float hp = LeveledHp(config, e, g.GhostLevel) * g.HpMul * MasteryStatMul(g.Mastery);
             float def = Mathf.Min(e.DefensePercent + g.DefenseFlat, GameConfig.DefenseCapPercent) / 100f;
             return hp / Mathf.Max(0.05f, 1f - def);
         }

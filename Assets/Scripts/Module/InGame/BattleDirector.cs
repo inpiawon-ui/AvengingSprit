@@ -4454,6 +4454,10 @@ namespace Game.Module.InGame
 
         private int LeveledAtk(HostEntry e) => HostCombat.LeveledAtk(_config, e, GhostLevel);
 
+        /// <summary>그 몸의 성급(숙련도)이 주는 체력 · 공격 배율. 저장이 없으면 1.</summary>
+        private float MasteryStatMulOf(string key)
+            => _player != null && key != null ? HostCombat.MasteryStatMul(_player.GetMastery(key)) : 1f;
+
         // ── 내가 입은 몸의 능력치는 전부 등급에서 나온다 (2026-09-15) ──
         //
         // ⚠ 예전에는 정본 절대값(`CanonHostHp` 등)을 그대로 썼다. 그래서 확정본이 준
@@ -4683,7 +4687,7 @@ namespace Game.Module.InGame
                     && EdgeDistance(me, boss) <= _config.ShotHitRadius * 1.6f)
                 {
                     _chargeHitDone = true;
-                    DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(boss.Atk * _chargeDamageMul)));
+                    DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(boss.Atk * _chargeDamageMul)), boss.Key);
                     // 터지는 것은 **닿은 자리**다. 도형 중심에서 터뜨리면 보스가
                     // 출발한 자리에서 폭발이 나 무엇에 맞았는지 알 수 없다.
                     PlayFx(_chargeFx, me.Position, _chargeFxSize, loop: false);
@@ -5000,6 +5004,7 @@ namespace Game.Module.InGame
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from),
                                LoopsFrames(ShotKindOf(from)));
+                if (!fromPlayer) shot.SourceKey = from.Key;
                 shot.Fire(from.Position, at, speed, damage,
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
@@ -5237,7 +5242,7 @@ namespace Game.Module.InGame
             // 멈춰 선 것처럼 보이므로 **휘두르기는 남기고 명중만 없앤다.**
             Burst(target.Position, false);
             if (_host == null) return;
-            DamagePlayer(attacker.Atk);
+            DamagePlayer(attacker.Atk, attacker.Key);
         }
 
         /// <summary>피해 없는 시각 효과. 근접 공격이 화면에서 아무 일도 없어 보이는 것을 막는다.</summary>
@@ -6608,6 +6613,7 @@ namespace Game.Module.InGame
             if (shot == null) return;
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
+            if (!fromPlayer) shot.SourceKey = attacker.Key;
             // 난사 중이면 굵은 탄 대신 가는 예광탄(퀄업 연출 2026-10-07)
             kind = WpTracerShot(attacker, shot, fromPlayer, attacker.MuzzlePosition, kind);
             var p = attacker.Profile;
@@ -6718,7 +6724,7 @@ namespace Game.Module.InGame
             if (!shot.FromPlayer)
             {
                 var me = Avatar;
-                if (me != null && Vector2.Distance(at, me.Position) <= r) DamagePlayer(shot.Damage);
+                if (me != null && Vector2.Distance(at, me.Position) <= r) DamagePlayer(shot.Damage, shot.SourceKey);
                 return;
             }
 
@@ -7136,7 +7142,7 @@ namespace Game.Module.InGame
         private Projectile RentShot()
         {
             for (int i = 0; i < _shots.Count; i++)
-                if (!_shots[i].IsActive) return _shots[i];
+                if (!_shots[i].IsActive) { _shots[i].SourceKey = null; return _shots[i]; }
 
             if (_shots.Count >= MaxShots) return null;   // 폭주 방지 상한
             var go = new GameObject("Shot", typeof(RectTransform));
@@ -7301,7 +7307,7 @@ namespace Game.Module.InGame
                     if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
                     p.Despawn();
                     SpawnImpact(ImpactPointOn(me, p.Position), p.Kind);
-                    DamagePlayer(p.Damage);
+                    DamagePlayer(p.Damage, p.SourceKey);
                 }
             }
         }
@@ -7440,7 +7446,7 @@ namespace Game.Module.InGame
         private const float HurtGraceSeconds = 0.4f;
         private float _hurtGrace;
 
-        private void DamagePlayer(int amount)
+        private void DamagePlayer(int amount, string sourceKey = null)
         {
             if (IsInvulnerable) return;
             if (_hurtGrace > 0f) return;
@@ -7453,6 +7459,9 @@ namespace Game.Module.InGame
             //   ⚠ 방벽(`AbsorbWithBarrier`)보다 **먼저** 빠져나간다. 뒤에 두면
             //     맞지도 않는 피해에 방벽이 닳아 없어진다.
             if (_host == null) return;
+
+            // 맞을 때도 상성(PD 2026-10-13) — 내 몸이 이기는 적에게는 덜, 지는 적에게는 더 아프다
+            amount = WithDefenseAffinity(amount, sourceKey);
 
             // 회피 — 깎는 것이 아니라 **없던 일**이 된다(닌자(사슬) 패시브).
             // 동료·방벽보다 먼저 본다: 흘릴 피해에 동료가 맞거나 방벽이 닳으면 안 된다.
@@ -8659,12 +8668,14 @@ namespace Game.Module.InGame
                         // 고스트가 들고 온 Lv 로 이 몸의 능력치를 정한다.
                         // 악마 계약을 샀으면 여기서 깎인다 - 몸이 아니라 판에 붙은 빚이다.
                         // 로비 능력치 강화(유령 공통 + 이 몸)가 여기서 곱해진다(2026-09-21)
-                        WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul * UpgradeMul(key, HostStat.Hp))),
-                        Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk))),
+                        // 성급(숙련도)도 체력 · 공격을 키운다 — 그 몸에만 쌓이는 성장(PD 2026-10-13)
+                        WithMaxHpDebt(Mathf.RoundToInt(LeveledHp(entry) * _buffs.HostHpMul * UpgradeMul(key, HostStat.Hp)
+                                                       * MasteryStatMulOf(key))),
+                        Mathf.Max(1, Mathf.RoundToInt(LeveledAtk(entry) * UpgradeMul(key, HostStat.Atk) * MasteryStatMulOf(key))),
                         HostSpeedOf(entry) * UpgradeMul(key, HostStat.MoveSpeed),
                         // 사거리 강화는 직업마다 다르게 붙고 직업 상한에서 멈춘다(2026-10-06)
                         HostStats.UpgradedRange(_config, entry, HostRangeOf(entry),
-                            _player != null ? _player.StatLevelTotal(key, HostStat.Range) : 0, _pxPerMeter),
+                            _player != null ? _player.StatLevelEffective(key, HostStat.Range) : 0f, _pxPerMeter),
                         HostIntervalOf(entry) / UpgradeMul(key, HostStat.AtkSpeed),
                         UnitBox(96f, 92f), isBoss: false, profile: entry);
             _host.Position = pos;

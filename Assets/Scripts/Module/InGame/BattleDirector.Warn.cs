@@ -113,7 +113,7 @@ namespace Game.Module.InGame
                 // (도형 가장자리에 발만 걸친 것과 몸만 걸친 것 둘 다 「안」이다).
                 var foot = new Vector2(me.Position.x, me.Position.y - FootDrop(me));
                 if (w.Shape.Contains(foot, _roomSize) || w.Shape.Contains(me.Position, _roomSize))
-                    DamagePlayer(w.Damage);
+                    DamagePlayer(w.Damage, w.Owner != null ? w.Owner.Key : null);
             }
 
             if (w.EnemyHpRatio <= 0f) return;
