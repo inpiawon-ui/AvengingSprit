@@ -834,11 +834,11 @@ namespace Game.Module.Lobby
 
         /// <summary>이 몸의 지금 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercentOf(HostEntry e)
-            => HostStats.CritPercent(_config, e, _player.GhostLevel, _player.GhostLevelMax);
+            => HostStats.CritPercent(_config, e);
 
         /// <summary>이 몸의 지금 사거리(m). 직업 밴드 상한에서 잘린 값이다.</summary>
         private float RangeOf(HostEntry e)
-            => HostStats.Range(_config, e, (int)JobOf(e), _player.GhostLevel, _player.GhostLevelMax);
+            => HostStats.Range(_config, e, (int)JobOf(e));
 
         private void SetStat(string stat, int value)
             => SetStat(stat, value, value.ToString(), MaxStat, value);

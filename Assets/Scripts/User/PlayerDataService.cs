@@ -545,8 +545,6 @@ namespace Game.User
             if (host == null || host.IsGhost || _config == null) return 0;
             var g = new HostCombat.Growth
             {
-                GhostLevel = Mathf.Clamp(GhostLevel, 1, GhostLevelMax),
-                GhostLevelMax = GhostLevelMax,
                 Mastery = GetMastery(hostKey),
                 HpMul = StatBonusMul(hostKey, HostStat.Hp),
                 AtkMul = StatBonusMul(hostKey, HostStat.Atk),
@@ -559,7 +557,7 @@ namespace Game.User
         }
 
         // 권장 전투력 = 기준 힘 × 그 챕터 배율(`chapters.tsv` power) × 그때의 성급 몫(powerStar).
-        //   기준 힘 = 몸을 막 얻은 상태(고스트 Lv1 · 강화 없음 · 숙련도 0)의 23명 평균.
+        //   기준 힘 = 몸을 막 얻은 상태(강화 없음 · 숙련도 0)의 23명 평균.
         //   챕터 배율은 `Tools/balance10.py` 가 「그 챕터를 깨는 판에 들어설 때의 내 힘」으로 낸다 —
         //   적 체력 · 공격력 배율이 거기서 나왔으니 같은 모델로 거꾸로 잰 값이다.
         private int _basePower = -1;
@@ -572,7 +570,7 @@ namespace Game.User
                 var list = PlayableHosts;
                 if (_config == null || list == null) return 0;
                 long sum = 0; int n = 0;
-                var none = HostCombat.Growth.None(GhostLevelMax);
+                var none = HostCombat.Growth.None;
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (list[i] == null || list[i].IsGhost) continue;
@@ -611,6 +609,7 @@ namespace Game.User
         private static readonly int StatCount = Enum.GetValues(typeof(HostStat)).Length;
 
         public int GhostStatMax => _config != null ? _config.GhostStatMax : 50;
+        public int GhostStatCap => _config != null ? _config.GhostStatCap(GhostLevel) : GhostStatMax;
         public int HostStatMax => _config != null ? _config.HostStatMax : 50;
 
         /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
@@ -636,7 +635,7 @@ namespace Game.User
         public int GhostStatCost(HostStat stat)
         {
             int lv = GhostStatLevel(stat);
-            return _config == null || lv >= GhostStatMax ? 0 : _config.StatCost(true, lv);
+            return _config == null || lv >= GhostStatCap ? 0 : _config.StatCost(true, lv);
         }
 
         public int HostStatCost(string hostKey, HostStat stat)

@@ -52,52 +52,23 @@ namespace Game.Character
         }
 
         /// <summary>
-        /// Lv1 → 만렙 사이의 성장 배율.
+        /// 이 몸의 치명타 확률(%) — **등급 값 그대로**다. 강화(골드)만 그 위에 곱한다.
         ///
-        /// 성장폭(`GameConfig`)은 **만렙에서의 배율**이므로 Lv1 은 언제나 1 이다.
-        /// 보간은 여기 한 줄뿐이라 비선형으로 갈아끼울 자리도 여기다.
+        /// ⚠ 예전에는 유령 레벨로 등급 값 → 주 40% · 부 22% 까지 자랐다. 유령 레벨은 능력치를 안 준다(PD 2026-10-13).
         /// </summary>
-        public static float GrowthMul(GameConfig config, HostEntry host,
-                                      HostStat stat, int level, int levelMax)
-        {
-            if (config == null || host == null) return 1f;
-            float atMax = config.StatGrowth(stat, host.IsPrimary(stat));
-            if (levelMax <= 1) return 1f;
-            float t = Mathf.Clamp01((float)(level - 1) / (levelMax - 1));
-            return Mathf.Lerp(1f, atMax, t);
-        }
+        public static float CritPercent(GameConfig config, HostEntry host)
+            => config == null || host == null ? 0f : Mathf.Clamp(config.CritOfGrade(host.CritGrade), 0f, 100f);
 
         /// <summary>
-        /// 이 레벨의 치명타 확률(%).
-        ///
-        /// ⚠ 치명타 성장폭은 **만렙에서의 확률**이지 레벨당 증분이 아니다.
-        ///   증분으로 적으면 `10 + 2.5 × 49 = 132.5%` 로 폭주해 "확률" 이 아니게 된다.
-        ///   시작값(`_critPercent`)에서 그 끝점까지 보간한다 — 주 40% · 부 22%.
-        /// </summary>
-        public static float CritPercent(GameConfig config, HostEntry host, int level, int levelMax)
-        {
-            if (config == null || host == null) return 0f;
-            // 시작값은 **등급**에서 나온다. 확정본의 `_critPercent` 가 23명 전원 10 으로
-            // 같아 차등이 없었다 — 등급이 그 자리를 대신한다(기획 2026-09-15).
-            float start = config.CritOfGrade(host.CritGrade);
-            float atMax = config.StatGrowth(HostStat.Crit, host.IsPrimary(HostStat.Crit));
-            if (levelMax <= 1) return start;
-            float t = Mathf.Clamp01((float)(level - 1) / (levelMax - 1));
-            return Mathf.Clamp(Mathf.Lerp(start, Mathf.Max(start, atMax), t), 0f, 100f);
-        }
-
-        /// <summary>
-        /// 이 레벨의 실제 사거리(m). **직업 밴드 상한에서 잘린다.**
+        /// 이 몸의 사거리(m) — 표 값 그대로, **직업 밴드 상한에서 잘린다.** 사거리 강화는 판에서 `UpgradedRange` 가 얹는다.
         ///
         /// 자르지 않으면 중거리 몸이 6.0m 를 넘겨 원거리로 재분류되고,
         /// 그 순간 착탄 범위(중거리 상시 규칙)가 조용히 사라진다.
         /// </summary>
-        public static float Range(GameConfig config, HostEntry host, int jobIndex,
-                                  int level, int levelMax)
+        public static float Range(GameConfig config, HostEntry host, int jobIndex)
         {
             if (host == null) return 0f;
-            float grown = host.CanonHostRange * GrowthMul(config, host, HostStat.Range, level, levelMax);
-            return config == null ? grown : Mathf.Min(grown, config.RangeGrowthMax(jobIndex));
+            return config == null ? host.CanonHostRange : Mathf.Min(host.CanonHostRange, config.RangeGrowthMax(jobIndex));
         }
     }
 }

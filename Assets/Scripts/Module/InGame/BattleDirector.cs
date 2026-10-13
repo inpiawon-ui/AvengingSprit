@@ -4421,38 +4421,14 @@ namespace Game.Module.InGame
         // 내가 탄 몸. 정본은 같은 배우라도 **적일 때와 내가 탔을 때 교전값을 따로** 준다
         // (attacks 의 AP_E### / AP_H##). 체력·공격력은 몸 자체의 것이라 적일 때와 같다.
 
-        // ── 고스트 Lv 인계 ────────────────────────────────────
+        // ── 유령(유저) 레벨은 몸에 능력치를 얹지 않는다 (PD 2026-10-13) ──
         //
-        // **고스트 본체의 능력치는 의미가 없다.** 유령은 싸우지 않는다 —
-        // 15초 시계를 들고 다음 몸까지 가는 것이 전부다.
-        // 그래서 Lv 는 고스트가 **들고 다니다가 빙의하는 순간 그 몸에 얹는다.**
-        //
-        // ⚠ 고스트 HP(100)·감소 속도(초당 6.7)에는 **붙이지 않는다.**
-        //   그 시계가 이 게임의 심장이라, 레벨로 늘어나면
-        //   "몸을 안 갈아타도 버틴다" 가 되어 빙의를 고를 이유가 사라진다.
-        //
-        // HP 와 ATK 를 다르게 올리는 것도 같은 이유다. 둘 다 2.5배면 실질 전투력이
-        // 여섯 배가 된다 — 2.5배 오래 버티면서 2.5배 빨리 죽인다.
-        // **레벨은 생존을 사고, 화력은 몸이 판다.**
-        // ⚠ 아래 두 배율은 **임시 폴백**이다. 호스트 표(`_levelStats`)에 값이 들어오면
-        //   저절로 죽는다. 배율 하나를 전원에게 곱하면 23명이 같은 비율로 커져서
-        //   성장해도 몸끼리의 관계가 안 변한다 — 그래서 표가 정답이다.
-        // 배율 값은 로비 전투력과 같은 자로 재도록 `HostCombat` 한 곳에 있다(2026-10-13).
+        // 레벨이 여는 것은 유령 탭 강화 상한뿐이다(`GameConfig.GhostStatCap`). 몸의 체력 · 공격은
+        // 등급(표) × 골드 강화 × 성급에서만 나온다 — 셈은 로비 전투력과 같은 자 `HostCombat` 이다.
+        // ⚠ 예전에는 고스트 Lv 을 빙의하는 순간 몸에 얹었다(체력 3% · 공격 1.6% / Lv).
+        private int LeveledHp(HostEntry e) => HostCombat.BaseHp(_config, e);
 
-        /// <summary>지금 고스트 Lv. 저장이 없으면 1 이다. 상한은 `GameConfig` 가 갖는다.</summary>
-        private int GhostLevel
-            => _player == null ? 1 : Mathf.Clamp(_player.GhostLevel, 1, _player.GhostLevelMax);
-
-        /// <summary>
-        /// 이 레벨에서 이 몸의 체력.
-        ///
-        /// **호스트가 가진 레벨 표가 먼저다.** 표가 있으면 그대로 읽고,
-        /// 비어 있으면 임시로 배율을 곱한다 — 표 값이 아직 안 정해졌기 때문이다.
-        /// 표가 채워지는 순간 배율 경로는 저절로 죽는다.
-        /// </summary>
-        private int LeveledHp(HostEntry e) => HostCombat.LeveledHp(_config, e, GhostLevel);
-
-        private int LeveledAtk(HostEntry e) => HostCombat.LeveledAtk(_config, e, GhostLevel);
+        private int LeveledAtk(HostEntry e) => HostCombat.BaseAtk(_config, e);
 
         /// <summary>그 몸의 성급(숙련도)이 주는 체력 · 공격 배율. 저장이 없으면 1.</summary>
         private float MasteryStatMulOf(string key)
@@ -8085,8 +8061,7 @@ namespace Game.Module.InGame
 
         /// <summary>지금 몸의 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercent =>
-            HostStats.CritPercent(_config, _host?.Profile, GhostLevel,
-                                  _player != null ? _player.GhostLevelMax : 50)
+            HostStats.CritPercent(_config, _host?.Profile)
             * UpgradeMul(_host?.Profile?.HostKey, HostStat.Crit);
 
         /// <summary>

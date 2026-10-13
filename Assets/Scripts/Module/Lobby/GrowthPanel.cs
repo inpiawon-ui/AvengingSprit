@@ -248,8 +248,8 @@ namespace Game.Module.Lobby
                 var row = _rows[i];
                 var stat = StatOrder[i];
                 int lv = ghost ? _player.GhostStatLevel(stat) : _player.HostStatLevel(_hostKey, stat);
-                // 호스트는 성급이 상한을 연다 — 「/ 10」 이 「/ 20」 으로 바뀌는 것이 성급의 보상이다
-                int max = ghost ? _player.GhostStatMax : _player.HostStatCap(_hostKey);
+                // 호스트는 성급이, 유령은 유령 레벨이 상한을 연다 — 「/ 10」 이 「/ 20」 으로 바뀌는 것이 그 보상이다
+                int max = ghost ? _player.GhostStatCap : _player.HostStatCap(_hostKey);
                 int cost = ghost ? _player.GhostStatCost(stat) : _player.HostStatCost(_hostKey, stat);
                 TextIn(row, "RowNameText", Localize.Get($"ui.stat.{StatKeys[(int)stat]}"));
                 TextIn(row, "RowLvLabel", "Lv.");
@@ -257,7 +257,10 @@ namespace Game.Module.Lobby
                 TextIn(row, "RowLvMax", $"/ {max}");
                 TextIn(row, "RowPctText", PctText(stat, lv, ghost));
                 bool locked = !ghost && _player.GetMastery(_hostKey) < 1;
+                // 유령 탭이 레벨에 막혔으면 「MAX」 가 아니라 다음 레벨을 적는다 — 끝난 줄 알면 안 된다
+                bool levelGate = ghost && cost <= 0 && max < _player.GhostStatMax;
                 TextIn(row, "RowCostText", locked ? Localize.Get("ui.growth.locked")
+                                         : levelGate ? Localize.Format("ui.growth.need_level", _player.GhostLevel + 1)
                                          : cost > 0 ? cost.ToString("N0") : Localize.Get("ui.growth.max"));
                 var coin = _ui.Find(row, "RowCoin");
                 if (coin != null) coin.gameObject.SetActive(cost > 0);

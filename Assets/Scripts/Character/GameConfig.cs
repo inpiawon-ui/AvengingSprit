@@ -925,6 +925,13 @@ namespace Game.Character
         [SerializeField] private int[] _pathSpiritCore = { 5, 10, 20, 30, 50 };
 
         public int GhostStatMax => Mathf.Max(1, _ghostStatMax);
+
+        [Tooltip("유령 레벨 하나가 여는 유령 탭 강화 레벨. 1 = Lv10 이면 강화 10 까지(PD 2026-10-13 「레벨이 오르면 스텟을 찍을 수 있는 능력이 오른다」).")]
+        [SerializeField] private int _ghostStatPerLevel = 1;
+
+        /// <summary>이 유령 레벨이 여는 유령 탭 강화 상한. 성급 → 호스트 탭 상한과 같은 짝이다.</summary>
+        public int GhostStatCap(int ghostLevel)
+            => Mathf.Clamp(Mathf.Max(1, ghostLevel) * Mathf.Max(1, _ghostStatPerLevel), 1, GhostStatMax);
         public int HostStatMax => Mathf.Max(1, _hostStatMax);
 
         /// <summary>

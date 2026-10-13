@@ -35,8 +35,8 @@ CHEST_GOLD = {'silver': (100, 200), 'gold': (300, 500), 'platinum': (700, 1000)}
 # ── 유저(유령) 레벨 ──
 CLEAR_EXP = [300, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700]
 EXP_BASE, EXP_STEP = 100, 60                 # 다음 레벨까지 = 100 + 60 × (Lv − 1)
-# 계정 20 : 개별 80(PD 2026-10-13) — 유령 레벨 몫 3% · 1.6% → 0.6% · 0.3%, 덜어 낸 몫은 성급으로(HostCombat.MasteryStatMul)
-GHOST_HP_PER_LV, GHOST_ATK_PER_LV = 0.006, 0.003
+# 유령 레벨은 능력치를 안 준다 — 유령 탭 강화 상한만 연다(레벨 1 당 1, PD 2026-10-13). 예전 3% · 1.6% / Lv
+GHOST_HP_PER_LV, GHOST_ATK_PER_LV = 0.0, 0.0
 MASTERY_STAT = 0.07          # 숙련도 한 단계마다 체력 · 공격 ×1.07(숙련도 = 성급 × 2)
 PATH_GOLD = {10: 5000, 20: 10000, 30: 20000, 40: 30000, 50: 50000}
 
@@ -101,7 +101,7 @@ class Player:
         """가진 골드로 「골드당 힘이 가장 많이 오르는 것」부터 산다."""
         while True:
             best = None
-            for who, step, cap in (('ghost', GHOST_STEP, GHOST_CAP), ('host', HOST_STEP, STAR_CAP * self.star)):
+            for who, step, cap in (('ghost', GHOST_STEP, min(GHOST_CAP, self.lv)), ('host', HOST_STEP, STAR_CAP * self.star)):
                 d = self.ghost if who == 'ghost' else self.host
                 for stat in ('hp', 'atk', 'aspd'):
                     if d[stat] >= cap:

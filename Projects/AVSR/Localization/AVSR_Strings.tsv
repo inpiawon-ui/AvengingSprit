@@ -491,6 +491,7 @@ ui.growth.path_header	유령 성장 경로	ゴースト成長ルート	Ghost Gro
 ui.growth.host_list	호스트 목록	ホスト一覧	Host List
 ui.growth.sort.default	기본순	標準順	Default
 ui.growth.max	MAX	MAX	MAX
+ui.growth.need_level	Lv {0} 필요	Lv {0} 必要	Need Lv {0}
 ui.growth.gold_short	골드가 부족합니다	ゴールドが足りません	Not enough gold
 ui.growth.path_claim	받기	受取	Claim
 ui.growth.path_claimed	Lv {0} 보상을 받았습니다	Lv {0} の報酬を受け取りました	Lv {0} reward claimed

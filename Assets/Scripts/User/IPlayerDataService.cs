@@ -117,6 +117,8 @@ namespace Game.User
         // 판에서는 두 값을 더한 % 가 빙의한 몸의 능력치에 곱해진다.
 
         int GhostStatMax { get; }
+        /// <summary>지금 유령 레벨이 여는 유령 탭 강화 상한(레벨 1 당 1, 최대 GhostStatMax).</summary>
+        int GhostStatCap { get; }
         int HostStatMax { get; }
         /// <summary>이 몸의 강화 상한 — 성급 한 단계마다 열린다(Lv1 5 · Lv2 10 …).</summary>
         int HostStatCap(string hostKey);

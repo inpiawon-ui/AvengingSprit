@@ -2914,3 +2914,7 @@ MonoBehaviour:
     _ko: "\uCCB4\uB825 \xB7 \uACF5\uACA9"
     _ja: "HP\u30FB\u653B\u6483"
     _en: "HP \xB7 ATK"
+  - _key: ui.growth.need_level
+    _ko: "Lv {0} \uD544\uC694"
+    _ja: "Lv {0} \u5FC5\u8981"
+    _en: Need Lv {0}
