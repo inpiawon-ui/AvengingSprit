@@ -27,6 +27,8 @@ namespace Game.EditorTools
             public float Crowd, Fire;
             public int Music, Art, BossArt, ChestArt;
             public float HpMul, AtkMul, PriceMul;
+            public float Power;
+            public int PowerStar;
         }
 
         public static List<Row> Load()
@@ -61,6 +63,7 @@ namespace Game.EditorTools
                     RoomGold = I("roomGold"), MidGold = I("midGold"), BossGold = I("bossGold"),
                     ClearGold = I("clearGold"), Chest = S("chest"), Exp = I("exp"), PriceMul = F("priceMul"),
                     Music = I("music"), Art = I("art"), BossArt = I("bossArt"), ChestArt = I("chestArt"),
+                    Power = F("power"), PowerStar = I("powerStar"),
                     Name = S("name"), Desc = S("desc").Replace("\\n", "\n"),
                 });
             }
@@ -153,6 +156,8 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("Chest").stringValue = r.Chest;
                 e.FindPropertyRelative("ClearExp").intValue = r.Exp;
                 e.FindPropertyRelative("PriceMul").floatValue = r.PriceMul;
+                e.FindPropertyRelative("PowerMul").floatValue = r.Power;
+                e.FindPropertyRelative("PowerStar").intValue = r.PowerStar;
                 // 전투방 11 · 중간보스 1 · 보스 1
                 e.FindPropertyRelative("RunGold").intValue = r.RoomGold * 11 + r.MidGold + r.BossGold;
                 e.FindPropertyRelative("Music").intValue = r.Music;

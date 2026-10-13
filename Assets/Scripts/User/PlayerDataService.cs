@@ -533,29 +533,66 @@ namespace Game.User
         /// </summary>
         public int StarsOf(string hostKey) => Mathf.Clamp((GetMastery(hostKey) + 1) / 2, 0, 5);
 
-        // ── 전투력 ───────────────────────────────────────────
+        // ── 전투력 (2026-10-13) ─────────────────────────────
         //
-        // ⚠ **임시다 (2026-09-29 지시).** 등급만 본다 — 스탯 9종을 수치로 환산하는 일은
-        //   따로 하기로 했다. 지금은 고르는 화면에 「세다/약하다」가 보이기만 하면 된다.
-        //   숙련도를 조금 얹는 것은 **별을 올린 몸이 목록에서 앞서 보이게** 하기 위함이다.
+        // 판에서 실제로 쓰는 값(고스트 Lv · 골드 강화 · 숙련도)을 `HostCombat` 한 자로 잰다.
+        // 예전 임시값(등급만 — B 8000 · A 11000 · S 14000)은 걷었다. 등급은 힘을 거의 안 정한다.
 
-        private const int PowerB = 8000, PowerA = 11000, PowerS = 14000;
-        private const int PowerPerMastery = 300;
-
-        /// <summary>이 몸의 전투력. 유령은 몸이 아니라 0 이다.</summary>
-        public static int HostPowerOf(HostEntry host, int mastery)
+        /// <summary>이 몸의 지금 전투력. 유령은 몸이 아니라 0 이다.</summary>
+        public int PowerOf(string hostKey)
         {
-            if (host == null || host.IsGhost) return 0;
-            int by = host.Grade switch
+            var host = GetHost(hostKey);
+            if (host == null || host.IsGhost || _config == null) return 0;
+            var g = new HostCombat.Growth
             {
-                HostGrade.S => PowerS,
-                HostGrade.A => PowerA,
-                _           => PowerB,
+                GhostLevel = Mathf.Clamp(GhostLevel, 1, GhostLevelMax),
+                GhostLevelMax = GhostLevelMax,
+                Mastery = GetMastery(hostKey),
+                HpMul = StatBonusMul(hostKey, HostStat.Hp),
+                AtkMul = StatBonusMul(hostKey, HostStat.Atk),
+                CritMul = StatBonusMul(hostKey, HostStat.Crit),
+                AtkSpeedMul = StatBonusMul(hostKey, HostStat.AtkSpeed),
+                CritDamageFlat = StatBonusFlat(hostKey, HostStat.CritDamage),
+                DefenseFlat = StatBonusFlat(hostKey, HostStat.Defense),
             };
-            return by + Mathf.Max(0, mastery) * PowerPerMastery;
+            return HostCombat.Power(_config, host, g);
         }
 
-        public int PowerOf(string hostKey) => HostPowerOf(GetHost(hostKey), GetMastery(hostKey));
+        // 권장 전투력 = 기준 힘 × 그 챕터 배율(`chapters.tsv` power) × 그때의 성급 몫(powerStar).
+        //   기준 힘 = 몸을 막 얻은 상태(고스트 Lv1 · 강화 없음 · 숙련도 0)의 23명 평균.
+        //   챕터 배율은 `Tools/balance10.py` 가 「그 챕터를 깨는 판에 들어설 때의 내 힘」으로 낸다 —
+        //   적 체력 · 공격력 배율이 거기서 나왔으니 같은 모델로 거꾸로 잰 값이다.
+        private int _basePower = -1;
+
+        private int BasePower
+        {
+            get
+            {
+                if (_basePower >= 0) return _basePower;
+                var list = PlayableHosts;
+                if (_config == null || list == null) return 0;
+                long sum = 0; int n = 0;
+                var none = HostCombat.Growth.None(GhostLevelMax);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] == null || list[i].IsGhost) continue;
+                    sum += HostCombat.Power(_config, list[i], none);
+                    n++;
+                }
+                _basePower = n > 0 ? (int)(sum / n) : 0;
+                return _basePower;
+            }
+        }
+
+        public int RecommendedPower(int chapter)
+        {
+            if (_config == null || !_config.HasChapterTable) return 0;
+            var def = _config.ChapterOf(chapter);
+            if (def.PowerMul <= 0f) return 0;
+            int mastery = Mathf.Max(1, def.PowerStar * 2 - 1);   // 별 n 의 첫 숙련도(1성 = 1 · 2성 = 3 · 3성 = 5)
+            float v = BasePower * def.PowerMul * (1f + HostCombat.PowerPerMastery * mastery);
+            return Mathf.RoundToInt(v / 10f) * 10;   // 10 단위 — 끝자리가 흔들리면 「정확한 값」처럼 읽힌다
+        }
 
         /// <summary>
         /// 이 몸을 **가지고 있는가.** 고르는 목록에 내보낼지를 정한다.

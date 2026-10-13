@@ -827,12 +827,10 @@ namespace Game.Module.Lobby
         private void SetStatText(string stat, string text) => SetStatCell(stat, text, 0f);
 
         /// <summary>
-        /// 화면에 적는 한 방 피해. **`BattleDirector.HostAtkOf` 와 같은 식이어야 한다** —
+        /// 화면에 적는 한 방 피해 — 판과 같은 자(`HostCombat.BaseAtk`)로 잰다.
         /// 여기만 탄 수로 안 나누면 두 발씩 쏘는 몸이 카드에는 7, 판에서는 3 으로 뜬다.
         /// </summary>
-        private int AtkOf(HostEntry e)
-            => Mathf.Max(1, Mathf.RoundToInt(
-                   _config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
+        private int AtkOf(HostEntry e) => HostCombat.BaseAtk(_config, e);
 
         /// <summary>이 몸의 지금 치명타 확률(%). 고스트 Lv 이 얹힌 값이다.</summary>
         private float CritPercentOf(HostEntry e)

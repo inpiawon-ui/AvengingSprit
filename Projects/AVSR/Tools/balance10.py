@@ -189,6 +189,13 @@ def main():
         print(f'{ch:>2} {hp_mul:>6.2f} {atk_mul:>7.2f} {boss_hp:>7.0f} {boss_atk:>8.0f} {room:>9.0f} {mid:>8.0f}'
               f' {boss:>9.0f} {CLEAR_BONUS[c]:>10} {CHEST[c]:<9} {CLEAR_EXP[c]:>5}   {show_lo:>6.0f} ~ {show_hi:.0f}')
 
+    # 권장 전투력(2026-10-13) — 그 챕터를 깨는 판에 들어설 때의 내 힘 = √(체력배 × 화력배).
+    #   게임은 「막 얻은 몸 23명 평균 전투력 × power × (1 + 3% × 성급 숙련도)」로 띄운다(PlayerDataService.RecommendedPower).
+    print()
+    print('── chapters.tsv 권장 전투력 열(power · powerStar) ──')
+    for ch, tries, runs, gold, (hm, dm, lv, gh, ho, star) in rows:
+        print(f'{ch:>2}  power {math.sqrt(hm * dm):.2f}  powerStar {star}')
+
 
 if __name__ == '__main__':
     main()

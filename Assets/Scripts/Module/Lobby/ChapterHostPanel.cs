@@ -505,6 +505,24 @@ namespace Game.Module.Lobby
             _ui.SetText("CHRewardChestText", chestArt.ChestLabel ?? string.Empty);
 
             RefreshChapterAffinity();
+            RefreshRecPower();
+        }
+
+        // 고른 몸이 권장에 닿으면 초록, 모자라면 붉게 — 랜덤 · 유령은 견줄 몸이 없어 흰색
+        private const string RecPowerOkColor = "#7CFF8A";
+        private const string RecPowerLowColor = "#FF6A5C";
+
+        /// <summary>권장 전투력(2026-10-13). 챕터 표에 값이 없으면 숨긴다.</summary>
+        private void RefreshRecPower()
+        {
+            int rec = _player != null && _player.IsReady ? _player.RecommendedPower(_chapter) : 0;
+            _ui.SetActive("CHRecPowerText", rec > 0);
+            if (rec <= 0) return;
+            string color = "#FFFFFF";
+            if (!_pickedRandom && !string.IsNullOrEmpty(_pickedHost) && _pickedHost != HostEntry.GhostKey)
+                color = _player.PowerOf(_pickedHost) >= rec ? RecPowerOkColor : RecPowerLowColor;
+            _ui.SetText("CHRecPowerText",
+                        Localize.Format("ui.chapterhost.recpower", $"<color={color}>{rec:N0}</color>"));
         }
 
         /// <summary>
@@ -604,6 +622,7 @@ namespace Game.Module.Lobby
             // 고른 표시는 카드가 낸다 — 아래 칸의 체크는 예전 「랜덤 칸 = 버튼」 시절 것이다
             _ui.SetActive("RandomCheck", false);
             RefreshInfo();
+            RefreshRecPower();   // 고른 몸이 바뀌면 권장 대비 색도 바뀐다
         }
 
         /// <summary>

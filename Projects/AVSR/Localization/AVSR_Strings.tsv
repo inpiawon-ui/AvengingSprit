@@ -621,6 +621,7 @@ ui.affinity.blade	무기	武器	Weapon
 ui.affinity.force	파워	パワー	Power
 ui.affinity.magic	마법	魔法	Magic
 ui.chapterhost.random_badge	랜덤	ランダム	Random
+ui.chapterhost.recpower	권장 전투력 {0}	推奨戦闘力 {0}	Rec. Power {0}
 ui.chapterhost.random	랜덤 선택	ランダム選択	Random Pick
 ui.chapterhost.randomdesc1	모든 호스트 중 하나가 랜덤으로 선택됩니다.	全ホストの中から1体がランダムで選ばれます。	One of all hosts is picked at random.
 ui.chapterhost.randomdesc2	낮은 확률로 전설 호스트 등장!	低確率で伝説のホストが登場！	Small chance of a legendary host!

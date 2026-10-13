@@ -4437,15 +4437,11 @@ namespace Game.Module.InGame
         // ⚠ 아래 두 배율은 **임시 폴백**이다. 호스트 표(`_levelStats`)에 값이 들어오면
         //   저절로 죽는다. 배율 하나를 전원에게 곱하면 23명이 같은 비율로 커져서
         //   성장해도 몸끼리의 관계가 안 변한다 — 그래서 표가 정답이다.
-        private const float GhostHpPerLevel = 0.03f;
-        private const float GhostAtkPerLevel = 0.016f;
+        // 배율 값은 로비 전투력과 같은 자로 재도록 `HostCombat` 한 곳에 있다(2026-10-13).
 
         /// <summary>지금 고스트 Lv. 저장이 없으면 1 이다. 상한은 `GameConfig` 가 갖는다.</summary>
         private int GhostLevel
             => _player == null ? 1 : Mathf.Clamp(_player.GhostLevel, 1, _player.GhostLevelMax);
-
-        private float GhostHpMul  => 1f + GhostHpPerLevel  * (GhostLevel - 1);
-        private float GhostAtkMul => 1f + GhostAtkPerLevel * (GhostLevel - 1);
 
         /// <summary>
         /// 이 레벨에서 이 몸의 체력.
@@ -4454,25 +4450,9 @@ namespace Game.Module.InGame
         /// 비어 있으면 임시로 배율을 곱한다 — 표 값이 아직 안 정해졌기 때문이다.
         /// 표가 채워지는 순간 배율 경로는 저절로 죽는다.
         /// </summary>
-        private int LeveledHp(HostEntry e)
-        {
-            if (e != null && e.HasLevelStats)
-            {
-                var st = e.StatAt(GhostLevel);
-                if (st.Hp > 0) return st.Hp;
-            }
-            return Mathf.RoundToInt(HostHpOf(e) * GhostHpMul);
-        }
+        private int LeveledHp(HostEntry e) => HostCombat.LeveledHp(_config, e, GhostLevel);
 
-        private int LeveledAtk(HostEntry e)
-        {
-            if (e != null && e.HasLevelStats)
-            {
-                var st = e.StatAt(GhostLevel);
-                if (st.Atk > 0) return st.Atk;
-            }
-            return Mathf.Max(1, Mathf.RoundToInt(HostAtkOf(e) * GhostAtkMul));
-        }
+        private int LeveledAtk(HostEntry e) => HostCombat.LeveledAtk(_config, e, GhostLevel);
 
         // ── 내가 입은 몸의 능력치는 전부 등급에서 나온다 (2026-09-15) ──
         //
@@ -4482,9 +4462,7 @@ namespace Game.Module.InGame
         //   차등을 전혀 못 만들고 있었다(기획 2026-09-15).
         //   이제 다섯 자리 전부 등급을 읽는다. 수치 곡선은 `GameConfig` 한 곳이다.
 
-        private int HostHpOf(HostEntry e)
-            => e == null ? 100 : _config.HpOfGrade(e.HpGrade);
-
+        // 체력 · 한 방 피해는 `HostCombat.BaseHp` · `BaseAtk` 가 잰다(로비 전투력과 같은 자).
         // 한 방 피해는 **공격력 등급(DPS) ÷ 공속 등급(횟수) ÷ 한 번에 나가는 탄 수** 다.
         // 공격력 등급만 보고 정하면 공속이 빠른 몸이 총량까지 같이 가져간다.
         //
@@ -4493,10 +4471,6 @@ namespace Game.Module.InGame
         //   실제로 폭력배가 DPS 11.7, 화이트 위저드가 45.0 으로 네 배 가까이 벌어졌다.
         //   대신 **탄 수로 나눈다.** 두 발씩 나가는 몸(호퍼SMG · 코만도MG)이
         //   같은 등급으로 두 배를 때리면 안 된다.
-        private int HostAtkOf(HostEntry e)
-            => e == null ? 10
-             : Mathf.Max(1, Mathf.RoundToInt(
-                   _config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
 
         // 이동속도만은 교전 프로필이 안 맞아도 호스트 값을 쓴다 — 근접이냐 원거리냐와
         // 상관없는 값이라, 적 걸음으로 조종하게 두면 그 몸만 못 쓰게 된다.
@@ -4550,13 +4524,7 @@ namespace Game.Module.InGame
 
         // 기획 2026-09-15 — 아마존 공격 속도 2배, 근접 몸 1.5배. **아마존은 2배만** — 둘을 겹치지 않는다.
         // ⚠ 로비에 적힌 초당 횟수는 등급으로만 계산하므로 이 배율이 안 보인다.
-        private const float AmazonHandSpeedMul = 2f;
-        private const float MeleeHandSpeedMul = 1.5f;
-
-        private static float HostHandSpeedOf(HostEntry e)
-            => e.HostKey == "amazon" ? AmazonHandSpeedMul
-             : e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse ? MeleeHandSpeedMul
-             : 1f;
+        private static float HostHandSpeedOf(HostEntry e) => HostCombat.HandSpeedMul(e);
 
         /// <summary>
         /// 옮겨 갈 자리. 플레이어를 계속 사거리 안에 두되 **옆으로** 돈다 —

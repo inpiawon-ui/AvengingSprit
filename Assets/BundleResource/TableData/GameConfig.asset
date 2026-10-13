@@ -140,6 +140,8 @@ MonoBehaviour:
     MixBlade: 11
     MixForce: 9
     MixMagic: 10
+    PowerMul: 1.01
+    PowerStar: 1
   - Chapter: 2
     Name: "\uBBF8\uC0AC\uC77C \uC800\uC7A5\uAE30\uC9C0"
     Desc: "\uB3C4\uC2DC \uC678\uACFD\uC5D0 \uC704\uCE58\uD55C \uC218\uC218\uAED8\uB07C\uC758
@@ -173,6 +175,8 @@ MonoBehaviour:
     MixBlade: 29
     MixForce: 16
     MixMagic: 0
+    PowerMul: 1.11
+    PowerStar: 1
   - Chapter: 3
     Name: "\uBC24\uC758 \uB3C4\uC2DC \uAC70\uB9AC"
     Desc: "\uB124\uC628\uC774 \uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBC24\uC758 \uAC70\uB9AC\n\uACE8\uBAA9\uB9C8\uB2E4
@@ -205,6 +209,8 @@ MonoBehaviour:
     MixBlade: 5
     MixForce: 17
     MixMagic: 31
+    PowerMul: 1.21
+    PowerStar: 1
   - Chapter: 4
     Name: "\uBC24\uC758 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1"
     Desc: "\uBE57\uBB3C\uC774 \uACE0\uC778 \uACF5\uC911\uAE30\uC9C0 \uC625\uC0C1\n\uBC1C\uBC11\uC774
@@ -237,6 +243,8 @@ MonoBehaviour:
     MixBlade: 15
     MixForce: 28
     MixMagic: 15
+    PowerMul: 1.32
+    PowerStar: 1
   - Chapter: 5
     Name: "\uC720\uB839 \uC5F0\uAD6C\uC18C"
     Desc: "\uC7A0\uAE30\uC9C0 \uC54A\uC740 \uC5F0\uAD6C\uC18C\uC758 \uBB38\n\uC2E4\uD328\uD55C
@@ -270,6 +278,8 @@ MonoBehaviour:
     MixBlade: 35
     MixForce: 16
     MixMagic: 19
+    PowerMul: 1.46
+    PowerStar: 1
   - Chapter: 6
     Name: "\uC57C\uAC04 \uC815\uC720\uC18C"
     Desc: "\uBD88\uAE38\uC774 \uBA48\uCD94\uC9C0 \uC54A\uB294 \uC815\uC720\uC18C\n\uBAA8\uB4E0
@@ -303,6 +313,8 @@ MonoBehaviour:
     MixBlade: 20
     MixForce: 21
     MixMagic: 39
+    PowerMul: 1.74
+    PowerStar: 2
   - Chapter: 7
     Name: "\uBD88\uD0C0\uB294 \uC9D1\uC801\uC7A5"
     Desc: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBD88\uC774 \uACE0\uCCA0\uC744 \uB179\uC778\uB2E4\n\uAE38\uC740
@@ -336,6 +348,8 @@ MonoBehaviour:
     MixBlade: 21
     MixForce: 40
     MixMagic: 20
+    PowerMul: 1.9
+    PowerStar: 2
   - Chapter: 8
     Name: "\uBD09\uC1C4\uB41C \uC800\uC7A5\uAE30\uC9C0"
     Desc: "\uBB38\uC774 \uC804\uBD80 \uC7A0\uAE34 \uAE30\uC9C0 \uAE4A\uC740 \uACF3\n\uC0AC\uC120\uACFC
@@ -369,6 +383,8 @@ MonoBehaviour:
     MixBlade: 43
     MixForce: 23
     MixMagic: 26
+    PowerMul: 2.11
+    PowerStar: 2
   - Chapter: 9
     Name: "\uB9DD\uB839\uC758 \uAC70\uB9AC"
     Desc: "\uBD88\uC774 \uAEBC\uC9C4 \uAC70\uB9AC\uC5D0 \uB9DD\uC790\uAC00 \uAC77\uB294\uB2E4\n\uC774\uC81C\uB294
@@ -402,6 +418,8 @@ MonoBehaviour:
     MixBlade: 24
     MixForce: 24
     MixMagic: 44
+    PowerMul: 2.56
+    PowerStar: 3
   - Chapter: 10
     Name: "\uCD5C\uD6C4\uC758 \uC625\uC0C1"
     Desc: "\uBAA8\uB4E0 \uAC83\uC774 \uC2DC\uC791\uB41C \uC625\uC0C1\n\uBC30\uC6B4
@@ -436,6 +454,8 @@ MonoBehaviour:
     MixBlade: 35
     MixForce: 33
     MixMagic: 35
+    PowerMul: 2.84
+    PowerStar: 3
   _roomEnemyCap: 12
   _shardCurve: 080000000c000000100000001400000023000000280000002e000000340000003a0000005a000000
   _gradeMultiplier:

@@ -1,0 +1,122 @@
+using UnityEngine;
+
+namespace Game.Character
+{
+    /// <summary>
+    /// 몸의 전투 수치(체력 · 한 대 피해 · 초당 타수)와 **전투력**을 재는 단 한 곳 (2026-10-13).
+    ///
+    /// 전투(`BattleDirector.EnterHost`)와 로비 전투력이 같은 자로 잰다 — 두 곳이 따로 셈하면
+    /// 「전투력이 높은데 더 약하다」가 생긴다. 등급 → 실수 곡선은 `GameConfig`, 강화 배율은 `PlayerDataService` 가 갖고,
+    /// 여기는 그 둘을 「판에서 실제로 쓰는 순서」대로 곱한다.
+    /// </summary>
+    public static class HostCombat
+    {
+        // ── 고스트 Lv 이 몸에 얹는 배율 ─────────────────────────
+        //
+        // ⚠ **임시 폴백**이다. 호스트 표(`_levelStats`)에 값이 들어오면 표가 이긴다.
+        //   레벨은 생존을 사고(체력 3%/Lv), 화력은 몸이 판다(공격 1.6%/Lv).
+        public const float GhostHpPerLevel = 0.03f;
+        public const float GhostAtkPerLevel = 0.016f;
+
+        public static float GhostHpMul(int ghostLevel) => 1f + GhostHpPerLevel * (Mathf.Max(1, ghostLevel) - 1);
+        public static float GhostAtkMul(int ghostLevel) => 1f + GhostAtkPerLevel * (Mathf.Max(1, ghostLevel) - 1);
+
+        // ── 손 속도 — 기획 2026-09-15 아마존 2배 · 근접 1.5배(겹치지 않는다) ──
+        public const float AmazonHandSpeedMul = 2f;
+        public const float MeleeHandSpeedMul = 1.5f;
+
+        public static float HandSpeedMul(HostEntry e)
+            => e == null ? 1f
+             : e.HostKey == "amazon" ? AmazonHandSpeedMul
+             : e.Kind == AttackKind.Melee || e.Kind == AttackKind.Pulse ? MeleeHandSpeedMul
+             : 1f;
+
+        /// <summary>등급에서 나온 기본 체력.</summary>
+        public static int BaseHp(GameConfig config, HostEntry e)
+            => e == null || config == null ? 100 : config.HpOfGrade(e.HpGrade);
+
+        /// <summary>
+        /// 등급에서 나온 한 대 피해 = 공격력 등급(DPS) ÷ 공속 등급(횟수) ÷ 한 번에 나가는 탄 수.
+        /// 공격력 등급만 보면 공속이 빠른 몸이 총량까지 같이 가져간다.
+        /// </summary>
+        public static int BaseAtk(GameConfig config, HostEntry e)
+            => e == null || config == null ? 10
+             : Mathf.Max(1, Mathf.RoundToInt(config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
+
+        /// <summary>이 고스트 Lv 에서 이 몸의 체력. 호스트 레벨 표가 있으면 표가 먼저다.</summary>
+        public static int LeveledHp(GameConfig config, HostEntry e, int ghostLevel)
+        {
+            if (e != null && e.HasLevelStats)
+            {
+                var st = e.StatAt(ghostLevel);
+                if (st.Hp > 0) return st.Hp;
+            }
+            return Mathf.RoundToInt(BaseHp(config, e) * GhostHpMul(ghostLevel));
+        }
+
+        public static int LeveledAtk(GameConfig config, HostEntry e, int ghostLevel)
+        {
+            if (e != null && e.HasLevelStats)
+            {
+                var st = e.StatAt(ghostLevel);
+                if (st.Atk > 0) return st.Atk;
+            }
+            return Mathf.Max(1, Mathf.RoundToInt(BaseAtk(config, e) * GhostAtkMul(ghostLevel)));
+        }
+
+        // ── 전투력 ───────────────────────────────────────────
+        //
+        // 전투력 = √(공격 지수 × 생존 지수) × 10 × (1 + 숙련도 × 3%).
+        //   공격 지수 = 실제 초당 피해 — 한 대 피해 × 초당 타수 × 치명 기대값
+        //   생존 지수 = 실제로 버티는 체력 — 체력 ÷ (1 − 방어)
+        // 곱의 제곱근이라 공격만 · 체력만 몰아 올리면 덜 오르고, 고르게 올리면 더 오른다.
+        // ⚠ 사거리 · 이동속도는 넣지 않는다. 근접 · 원거리라는 몸의 성격이라, 넣으면 원거리가 늘 높게 나온다.
+        // ⚠ 숙련도는 스킬 · 패시브를 키운다(수치로 바로 안 바뀐다) — 그 몫을 3%씩 얹는다.
+
+        public const float PowerScale = 10f;
+        public const float PowerPerMastery = 0.03f;
+
+        /// <summary>로비 강화 · 레벨을 얹어 전투력을 잴 재료. 배율(Mul)은 1 = 강화 없음, Flat 은 %p.</summary>
+        public struct Growth
+        {
+            public int GhostLevel, GhostLevelMax, Mastery;
+            public float HpMul, AtkMul, CritMul, AtkSpeedMul;
+            public float CritDamageFlat, DefenseFlat;
+
+            public static Growth None(int ghostLevelMax) => new Growth
+            {
+                GhostLevel = 1, GhostLevelMax = Mathf.Max(1, ghostLevelMax), Mastery = 0,
+                HpMul = 1f, AtkMul = 1f, CritMul = 1f, AtkSpeedMul = 1f,
+            };
+        }
+
+        /// <summary>실제 초당 피해(치명 기대값 포함).</summary>
+        public static float Dps(GameConfig config, HostEntry e, in Growth g)
+        {
+            if (config == null || e == null) return 0f;
+            float hit = LeveledAtk(config, e, g.GhostLevel) * g.AtkMul;
+            float rate = config.RateOfGrade(e.RateGrade) * HandSpeedMul(e) * g.AtkSpeedMul;
+            // 판(`BattleDirector.CritPercent`)과 같이 확률에 곱한다 — 100% 를 넘으면 늘 치명이다
+            float critP = Mathf.Clamp01(HostStats.CritPercent(config, e, g.GhostLevel, g.GhostLevelMax) * g.CritMul / 100f);
+            float critX = config.CritMultiplier + g.CritDamageFlat / 100f;
+            return hit * rate * (1f + critP * (critX - 1f));
+        }
+
+        /// <summary>실제로 버티는 체력 = 체력 ÷ (1 − 방어).</summary>
+        public static float EffectiveHp(GameConfig config, HostEntry e, in Growth g)
+        {
+            if (config == null || e == null) return 0f;
+            float hp = LeveledHp(config, e, g.GhostLevel) * g.HpMul;
+            float def = Mathf.Min(e.DefensePercent + g.DefenseFlat, GameConfig.DefenseCapPercent) / 100f;
+            return hp / Mathf.Max(0.05f, 1f - def);
+        }
+
+        /// <summary>전투력. 유령(몸 아님)은 0.</summary>
+        public static int Power(GameConfig config, HostEntry e, in Growth g)
+        {
+            if (config == null || e == null || e.IsGhost) return 0;
+            float raw = Mathf.Sqrt(Mathf.Max(0f, Dps(config, e, g)) * Mathf.Max(0f, EffectiveHp(config, e, g)));
+            return Mathf.RoundToInt(raw * PowerScale * (1f + PowerPerMastery * Mathf.Max(0, g.Mastery)));
+        }
+    }
+}

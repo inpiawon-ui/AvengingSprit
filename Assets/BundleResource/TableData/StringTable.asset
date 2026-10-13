@@ -2906,3 +2906,7 @@ MonoBehaviour:
     _ko: "\uB354 \uBE60\uB974\uAC8C \uC3DC\uB2E4."
     _ja: "\u653B\u6483\u304C\u3088\u308A\u901F\u304F\u306A\u308B\u3002"
     _en: Attack faster.
+  - _key: ui.chapterhost.recpower
+    _ko: "\uAD8C\uC7A5 \uC804\uD22C\uB825 {0}"
+    _ja: "\u63A8\u5968\u6226\u95D8\u529B {0}"
+    _en: Rec. Power {0}

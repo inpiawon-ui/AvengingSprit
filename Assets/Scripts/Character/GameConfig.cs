@@ -612,6 +612,10 @@ namespace Game.Character
             public int ChestArt;
             [Tooltip("잡몹의 무기 · 파워 · 마법 수(전투방 11칸 합계). 방 배치에서 센 값이다.")]
             public int MixBlade, MixForce, MixMagic;
+            [Tooltip("권장 전투력 배율 — 그 챕터를 깨는 판에 들어설 때의 내 힘(1챕터 = 1). Tools/balance10.py 가 낸다. 0 이면 권장 전투력을 안 띄운다.")]
+            public float PowerMul;
+            [Tooltip("그때 주력 몸의 성급(권장 전투력에 숙련도 몫으로 얹는다).")]
+            public int PowerStar;
         }
 
         [Header("챕터 표 — chapters.tsv 에서 굽는다")]

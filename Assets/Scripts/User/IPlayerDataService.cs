@@ -58,8 +58,11 @@ namespace Game.User
         /// </summary>
         bool IsHostOwned(HostEntry host);
 
-        /// <summary>그 몸의 전투력. ⚠ 지금은 등급 기준 임시값이다(2026-09-29).</summary>
+        /// <summary>그 몸의 지금 전투력 — 고스트 Lv · 골드 강화 · 숙련도를 판과 같은 자(`HostCombat`)로 잰다.</summary>
         int PowerOf(string hostKey);
+
+        /// <summary>그 챕터의 권장 전투력. 챕터 표에 값이 없으면 0.</summary>
+        int RecommendedPower(int chapter);
 
         /// <summary>골드를 낸다. 모자라면 아무 일도 없다. 몸값이 아닌 지불(랜덤 선택 등)에 쓴다.</summary>
         bool TrySpendGold(int amount);

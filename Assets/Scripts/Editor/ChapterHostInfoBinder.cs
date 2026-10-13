@@ -109,6 +109,13 @@ namespace Game.Editor
                 Skill(box, "CHInfoSkillA", 338, 1011, font);
                 Skill(box, "CHInfoSkillP", 573, 1011, font);
 
+                // 권장 전투력(2026-10-13) — 챕터 칸 상성 줄 오른쪽 끝. 글자색 · 값은 판 코드(내 몸이 모자라면 붉게)
+                var kindFont = box.Find("CHKindCount0")?.GetComponent<TMP_Text>();
+                var rec = Txt(box, "CHRecPowerText", kindFont != null ? kindFont : font, 22f, Color.white, true);
+                C(rec.rectTransform, 560, 387, 240, 32);
+                rec.alignment = TextAlignmentOptions.MidlineRight;
+                Line(rec, 13f);
+
                 Bind(panel);
                 PrefabUtility.SaveAsPrefabAsset(root, LobbyPrefab);
                 Debug.Log("[챕터·호스트 설명] 꽂음 — 「?」 카드 · 설명 칸");
