@@ -26,8 +26,8 @@ askill.psg_h01.name	번개 무희	雷光の舞	Lightning Dance
 askill.psg_h01.desc	번개를 두르고 주변 적 최대 6명 사이를 옮겨 다니며 한 명씩 친 뒤, 하늘 번개로 내려찍는다. 시전 중 무적.	雷をまとい、周囲の敵最大6体の間を駆け抜けて1体ずつ打ち、最後に天からの雷で叩きつける。発動中は無敵。	Wrapped in lightning, dash between up to 6 nearby enemies striking each, then slam down with a bolt from the sky. Invincible while active.
 askill.psg_h02.name	(미정)	（未定）	(TBD)
 askill.psg_h02.desc	스킬 보류 — 정해지면 채운다.	スキル保留 — 決まり次第追加する。	Skill on hold — to be added.
-askill.psg_h03.name	융단 폭격	絨毯爆撃	Carpet Bomb
-askill.psg_h03.desc	수류탄 5발을 부채꼴로 동시에 던진다.	グレネード5発を扇状に同時に投げる。	Throw 5 grenades in a fan at once.
+askill.psg_h03.name	C4	C4	C4
+askill.psg_h03.desc	폭탄 원반을 던져 적 최대 6명에게 폭탄을 붙이고, 붙인 순서대로 연쇄 폭발시킨다.	爆弾ディスクを投げて最大6体の敵に爆弾を貼り付け、貼った順に連鎖爆発させる。	Throw a bomb disc that sticks bombs on up to 6 enemies, then detonate them in a chain.
 askill.psg_h04.name	연쇄 방전	連鎖放電	Chain Discharge
 askill.psg_h04.desc	3초간 주변 적에게 전기가 계속 튄다.	3秒間、周囲の敵に電撃が走り続ける。	Shock nearby enemies nonstop for 3s.
 askill.psg_h05.name	방벽 전개	防壁展開	Barrier
@@ -42,16 +42,16 @@ askill.psg_h09.name	화염 지대	火炎地帯	Fire Zone
 askill.psg_h09.desc	가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.	最も近い敵の足元に火の海を広げる。上に立つ敵は燃え続ける。	Spread fire under the nearest enemy. Enemies on it keep burning.
 askill.psg_h10.name	일제 표식	一斉マーキング	Mass Mark
 askill.psg_h10.desc	방 안 모든 적에게 3초간 표식을 새긴다.	部屋にいるすべての敵に3秒間マーキングを刻む。	Mark every enemy in the room for 3s.
-askill.psg_h11.name	난사	乱射	Bullet Storm
-askill.psg_h11.desc	1초간 3방향으로 쏟아붓는다.	1秒間、3方向に撃ちまくる。	Fire in 3 directions for 1s.
+askill.psg_h11.name	회전 난사	回転乱射	Spin Barrage
+askill.psg_h11.desc	두 손 권총으로 2.5초 동안 돌며 사방으로 쏟아붓고, 멈추며 사방으로 한 발씩 쏜다.	両手の拳銃で2.5秒間回転しながら四方に撃ちまくり、止まる瞬間に全方位へ一発ずつ撃つ。	Spin for 2.5s firing both pistols in every direction, then stop with a final shot all around.
 askill.psg_h12.name	수호 결계	守護結界	Guardian Ward
 askill.psg_h12.desc	3초간 받는 피해 −50% · 쉴드 획득 2배.	3秒間、被ダメージ−50%・シールド獲得量2倍。	For 3s: damage taken −50%, Shield gain x2.
 askill.psg_h13.name	정조준	精密照準	Dead Aim
 askill.psg_h13.desc	5초간 치명타 확률이 90% 로 고정된다.	5秒間、クリティカル率が90%に固定される。	Crit chance locked at 90% for 5s.
 askill.psg_h14.name	도약 강습	跳躍強襲	Leap Assault
 askill.psg_h14.desc	가장 먼 적에게 뛰어들고 2초간 무적.	最も遠い敵に飛び込み、2秒間無敵になる。	Leap at the farthest enemy; Invincible for 2s.
-askill.psg_h15.name	골렘 소환	ゴーレム召喚	Summon Golem
-askill.psg_h15.desc	골렘을 세운다. 해골보다 크고 오래 싸운다.	ゴーレムを呼び出す。スケルトンより大きく、長く戦う。	Summon a golem. Bigger and longer-lasting than skeletons.
+askill.psg_h15.name	원혼 강림	怨霊降臨	Wraith Descent
+askill.psg_h15.desc	6초 동안 등 뒤에 원혼이 깃들어 평타가 맞을 때마다 혼불을 단다. 혼불 3개가 모이면 터진다.	6秒間、背後に怨霊が宿り、通常攻撃が当たるたびに魂火を付ける。魂火が3つ集まると爆発する。	For 6s a wraith haunts your back, marking each enemy you hit with a soulflame. Three soulflames explode.
 askill.psg_h16.name	광휘 확산	光輝拡散	Radiant Burst
 askill.psg_h16.desc	부채꼴 8방향으로 광탄을 쏜다.	扇状8方向に光弾を放つ。	Fire light orbs in 8 directions in a fan.
 askill.psg_h17.name	사슬 결박	鎖の束縛	Chain Bind
@@ -60,8 +60,8 @@ askill.psg_h18.name	그림자 분신	影分身	Shadow Clone
 askill.psg_h18.desc	방 한가운데 분신을 세운다. 5초간 적이 전부 분신을 노린다.	部屋の中央に分身を置く。5秒間、敵はすべて分身を狙う。	Place a clone mid-room. All enemies target it for 5s.
 askill.psg_h19.name	포탑 전개	砲台展開	Deploy Turret
 askill.psg_h19.desc	10초간 자동으로 쏘는 포탑을 세운다.	10秒間、自動で撃つ砲台を設置する。	Deploy an auto-firing turret for 10s.
-askill.psg_h20.name	전탄 반사	全弾反射	Full Reflect
-askill.psg_h20.desc	5초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.	5秒間、飛んでくる弾を跳ね返す。反射弾は威力が高い。	Reflect incoming bullets for 5s. Reflected shots hit harder.
+askill.psg_h20.name	풀스윙 회오리	フルスイング旋風	Full Swing Cyclone
+askill.psg_h20.desc	회오리로 주변 적을 2초간 끌어당기고 날아온 탄은 금빛 탄으로 되받아친 뒤, 풀스윙으로 한꺼번에 날려 버린다.	旋風で周囲の敵を2秒間引き寄せ、飛んできた弾は金色の弾で打ち返し、最後にフルスイングでまとめて吹き飛ばす。	A cyclone pulls nearby enemies in for 2s and bats incoming shots back as golden homing balls, then a full swing sends them all flying.
 askill.psg_h21.name	얼음 감옥	氷の牢獄	Ice Prison
 askill.psg_h21.desc	1초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.	1秒間、氷に閉じこもる。攻撃を受けず与えず、体力を30%回復する。	Encase yourself in ice for 1s. No damage dealt or taken; heal 30% HP.
 askill.psg_h22.name	혈연	血宴	Blood Feast

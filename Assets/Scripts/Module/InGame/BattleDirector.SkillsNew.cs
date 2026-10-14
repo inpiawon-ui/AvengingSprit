@@ -697,6 +697,10 @@ namespace Game.Module.InGame
             TickLz(dt);   // 연쇄 방전 — 조준이 걸린 적에게 낙뢰(퀄업 연출 2026-10-07)
             TickWp(dt);   // 무기 7종 퀄업 연출
             TickLightningDance(dt);   // 아마존 번개 무희
+            TickSpinFire(dt);         // 폭력배 회전 난사
+            TickStickyBomb(dt);       // 코만도(수류탄) C4
+            TickFullSwing(dt);        // 슬러거 풀스윙 회오리
+            TickWraithFlame(dt);      // 영매 원혼 강림
             TickQx();     // 파워 · 마법 퀄업 연출 — 몸을 따라다니는 부품
             for (int i = _spits.Count - 1; i >= 0; i--)
             {

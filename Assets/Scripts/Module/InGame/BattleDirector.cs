@@ -67,7 +67,7 @@ namespace Game.Module.InGame
 
         /// <summary>탄이 터지는 그림. 탄과 같은 풀 방식이다.</summary>
         // 24 → 48 (2026-10-07) — 연쇄 방전 퀄업은 한 번 튈 때 적 셋에 조준선 · 고리 · 낙뢰 · 코어 · 파편 · 전기가 겹친다
-        private const int MaxImpacts = 48;
+        private const int MaxImpacts = 64;   // 48 → 64(2026-10-14) — C4 붙은 폭탄 · 영매 혼불 표시가 한꺼번에 뜬다
         private readonly List<Impact> _impacts = new();
 
         private const int MaxShots = 64;
@@ -7391,6 +7391,7 @@ namespace Game.Module.InGame
                 if (crit) HitStop(HitStopOnCrit);
             }
             bool dead = victim.TakeDamage(dmg);
+            if (shot.FromPlayer && !dead) WfOnShotHit(victim);   // 영매 원혼 강림 — 맞은 적에게 혼불
             // 원거리 몸이 근접 몹을 맞히면 뒤로 민다(기획 2026-09-16). 적 탄이 나를 맞힐 때는 이 길을 안 지난다.
             // 상성이 안 맞으면 이 경직도 없다 — 맞으면서 그대로 걸어온다.
             if (!dead && shot.FromPlayer && !dull) RangedKnockback(victim);

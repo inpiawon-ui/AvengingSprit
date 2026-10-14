@@ -645,6 +645,10 @@ namespace Game.Module.InGame
         private void ClearWp()
         {
             StopLightningDance();   // 몸이 바뀌거나 방을 나가면 순회도 끊는다
+            StopSpinFire();
+            StopStickyBomb();
+            StopFullSwing();
+            StopWraithFlame(popRemaining: false);
             _wpPending.Clear();
             _wpFollow.Clear();
             _gangTargets.Clear();

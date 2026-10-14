@@ -148,6 +148,15 @@ namespace Game.Module.InGame
 
         public void SetHoming(float strength) => _homing = Mathf.Max(0f, strength);
 
+        /// <summary>쫓을 적을 바꾼다 — 되받아친 탄이 쏜 놈이 아니라 가까운 적을 쫓게(슬러거 풀스윙 회오리).</summary>
+        public void Retarget(Unit target) => _target = target;
+
+        /// <summary>탄 색을 바꾼다. 되받아친 탄을 금빛으로(슬러거 풀스윙 회오리 시안).</summary>
+        public void SetColor(Color color)
+        {
+            if (_image != null) _image.color = color;
+        }
+
         private void TickHoming(float dt)
         {
             if (_homing <= 0f || _target == null || !_target.IsAlive) return;

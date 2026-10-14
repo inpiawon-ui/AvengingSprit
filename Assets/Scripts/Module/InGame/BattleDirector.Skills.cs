@@ -421,13 +421,13 @@ namespace Game.Module.InGame
                 case "amazon":           AmazonLightningDance(me); break;   // 번개 무희(2026-10-14, 던파 라이트닝 댄스) — 예전 도약 강타(AmazonLeapStrike)
                 // 아마존 정예는 **스킬 보류**다(확정본 2026-09-14). 아무 일도 안 한다.
                 case "amazon_elite":                            break;
-                case "baseball":         ReflectAll(me);        break;
+                case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리(2026-10-14, 던파 대회전격) — 예전 전탄 반사(ReflectAll)
                 case "death":            ReaperWindow(me);      break;
                 case "guru":             GuardianWard(me);      break;
                 case "ninja_chain":      ChainBind(me);         break;
 
                 // ── 중거리 3 (기관총 셋) ──
-                case "thug":             SprayFire(me);         break;
+                case "thug":             ThugSpinFire(me);      break;   // 회전 난사(2026-10-14, 던파 레인저 난사) — 예전 3방향 난사(SprayFire)
                 case "hopper_smg":       LeapFar(me);           break;
                 case "commando_mg":      CommandoBarrier(me);   break;
 
@@ -435,14 +435,14 @@ namespace Game.Module.InGame
                 case "dragoon":          DragoonFireField(me);  break;
                 case "salamander":       SalamanderVenom(me);   break;
                 case "dragon_blue":      DragonSurge(me);       break;
-                case "commando_grenade": CarpetBomb(me);        break;
+                case "commando_grenade": CommandoStickyBomb(me); break;  // C4(2026-10-14, 던파 C4) — 예전 융단 폭격(CarpetBomb)
                 case "snowwoman":        SnowIceShell(me);      break;
                 case "ninja":            NinjaCloneSkill(me);   break;
                 case "vampire":          VampireFeast(me);      break;
                 case "gangster":         GangsterMarkAll(me);   break;
                 case "hopper":           HopperCritSurge(me);   break;
                 case "commando_missile": MissileFan(me);        break;
-                case "medium":           MediumGolem(me);       break;
+                case "medium":           MediumWraithFlame(me); break;   // 원혼 강림(2026-10-14, 던파 흑염의 칼라) — 예전 골렘 소환(MediumGolem)
                 case "white_wizard":     WizardFan(me);         break;
                 case "commando_laser":   LaserBounce(me);       break;
                 case "robot":            DeployTurret(me);      break;

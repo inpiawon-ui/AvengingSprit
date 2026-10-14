@@ -39,10 +39,11 @@ MonoBehaviour:
     _growthUnit: 0
     _growthMul: 1
   - _activeSkillKey: psg_h03
-    _nameEn: Carpet Bombing
-    _nameKr: "\uC735\uB2E8 \uD3ED\uACA9"
-    _description: "\uC218\uB958\uD0C4 5\uBC1C\uC744 \uBD80\uCC44\uAF34\uB85C \uB3D9\uC2DC\uC5D0
-      \uB358\uC9C4\uB2E4."
+    _nameEn: C4
+    _nameKr: C4
+    _description: "\uD3ED\uD0C4 \uC6D0\uBC18\uC744 \uB358\uC838 \uC801 \uCD5C\uB300
+      6\uBA85\uC5D0\uAC8C \uD3ED\uD0C4\uC744 \uBD99\uC774\uACE0, \uBD99\uC778 \uC21C\uC11C\uB300\uB85C
+      \uC5F0\uC1C4 \uD3ED\uBC1C\uC2DC\uD0A8\uB2E4."
     _scaling:
       _baseValue: 1.2
       _baseValueMax: 1.8
@@ -135,9 +136,11 @@ MonoBehaviour:
     _growthUnit: 1
     _growthMul: 1
   - _activeSkillKey: psg_h11
-    _nameEn: Street Barrage
-    _nameKr: "\uB09C\uC0AC"
-    _description: "1\uCD08\uAC04 3\uBC29\uD5A5\uC73C\uB85C \uC3DF\uC544\uBD93\uB294\uB2E4."
+    _nameEn: Spin Barrage
+    _nameKr: "\uD68C\uC804 \uB09C\uC0AC"
+    _description: "\uB450 \uC190 \uAD8C\uCD1D\uC73C\uB85C 2.5\uCD08 \uB3D9\uC548
+      \uB3CC\uBA70 \uC0AC\uBC29\uC73C\uB85C \uC3DF\uC544\uBD93\uACE0, \uBA48\uCD94\uBA70
+      \uC0AC\uBC29\uC73C\uB85C \uD55C \uBC1C\uC529 \uC3DC\uB2E4."
     _scaling:
       _baseValue: 1
       _baseValueMax: 1.5
@@ -182,10 +185,11 @@ MonoBehaviour:
     _growthUnit: 1
     _growthMul: 1
   - _activeSkillKey: psg_h15
-    _nameEn: Summon Golem
-    _nameKr: "\uACE8\uB818 \uC18C\uD658"
-    _description: "\uACE8\uB818\uC744 \uC138\uC6B4\uB2E4. \uD574\uACE8\uBCF4\uB2E4
-      \uD06C\uACE0 \uC624\uB798 \uC2F8\uC6B4\uB2E4."
+    _nameEn: Wraith Descent
+    _nameKr: "\uC6D0\uD63C \uAC15\uB9BC"
+    _description: "6\uCD08 \uB3D9\uC548 \uB4F1 \uB4A4\uC5D0 \uC6D0\uD63C\uC774 \uAE43\uB4E4\uC5B4
+      \uD3C9\uD0C0\uAC00 \uB9DE\uC744 \uB54C\uB9C8\uB2E4 \uD63C\uBD88\uC744 \uB2E8\uB2E4.
+      \uD63C\uBD88 3\uAC1C\uAC00 \uBAA8\uC774\uBA74 \uD130\uC9C4\uB2E4."
     _scaling:
       _baseValue: 0.2
       _baseValueMax: 0.35
@@ -242,10 +246,12 @@ MonoBehaviour:
     _growthUnit: 2
     _growthMul: 1
   - _activeSkillKey: psg_h20
-    _nameEn: Full Reflect
-    _nameKr: "\uC804\uD0C4 \uBC18\uC0AC"
-    _description: "5\uCD08\uAC04 \uB0A0\uC544\uC624\uB294 \uD0C4\uC744 \uB418\uBC1B\uC544\uCE5C\uB2E4.
-      \uBC18\uC0AC\uD0C4\uC740 \uB354 \uC544\uD504\uB2E4."
+    _nameEn: Full Swing Cyclone
+    _nameKr: "\uD480\uC2A4\uC719 \uD68C\uC624\uB9AC"
+    _description: "\uD68C\uC624\uB9AC\uB85C \uC8FC\uBCC0 \uC801\uC744 2\uCD08\uAC04
+      \uB04C\uC5B4\uB2F9\uAE30\uACE0 \uB0A0\uC544\uC628 \uD0C4\uC740 \uAE08\uBE5B
+      \uD0C4\uC73C\uB85C \uB418\uBC1B\uC544\uCE5C \uB4A4, \uD480\uC2A4\uC719\uC73C\uB85C
+      \uD55C\uAEBC\uBC88\uC5D0 \uB0A0\uB824 \uBC84\uB9B0\uB2E4."
     _scaling:
       _baseValue: 5
       _baseValueMax: 7

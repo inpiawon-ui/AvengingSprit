@@ -343,7 +343,8 @@ namespace Game.Module.InGame
             {
                 // 슬러거 — 막타에 주변이 날아간다. 야구 방망이다.
                 case "baseball":
-                    if (Roll(PassivePct(SluggerFlingChancePercent))) FlingAround(victim.Position);
+                    // 풀스윙 회오리가 끌어당기는 동안은 밀어내지 않는다 — 끌기와 밀기가 부딪히고, 잡힐 때마다 흙먼지 폭발이 화면을 덮었다(녹화 rw_sl_3)
+                    if (!_fsActive && Roll(PassivePct(SluggerFlingChancePercent))) FlingAround(victim.Position);
                     break;
 
                 // 닌자 — 잡으면 잠깐 빨라진다.
