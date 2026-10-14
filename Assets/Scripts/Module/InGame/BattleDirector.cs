@@ -3961,6 +3961,9 @@ namespace Game.Module.InGame
             // 설녀 — 얼음 안에서는 손도 멈춘다(명세: 맞지도 때리지도 않는다).
             if (IsSelfFrozen) { IsFiring = false; return; }
 
+            // C4 — 붙이고 터질 때까지 평타를 쉰다. 던지면서 평타까지 나가면 복잡해서 스킬 느낌이 하나도 안 났다(PD 2026-10-14)
+            if (IsStickyBombBusy) { IsFiring = false; return; }
+
             var target = Nearest(_host.Position);
 
             // 노리는 쪽을 바라본다. 사거리 밖이라 아직 안 쏘더라도 몸은 돌려 둔다 —

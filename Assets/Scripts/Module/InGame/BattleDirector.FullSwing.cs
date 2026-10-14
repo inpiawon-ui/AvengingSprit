@@ -10,7 +10,7 @@ namespace Game.Module.InGame
     ///
     /// 박자: 시작(몸 둘레에 회오리, 반경 안 적을 끌어당긴다) → 한창(2.2초 동안 끌려온 적이 몸 둘레에 붙잡히고,
     ///       날아온 적 탄은 금빛 탄으로 되받아쳐 가까운 적을 쫓는다) → 마무리(풀스윙 — 모인 적을 한쪽으로 한꺼번에 날린다, 가장 세게).
-    /// 그림: 받은 부품 3종(`fx_slvortex` 회오리 · `fx_slswing` 금빛 호 · `fx_slball` 금빛 탄) + 원작 몸 잔상 · 히트스톱.
+    /// 그림: 받은 부품 3종(`fx_slwind` 회오리 · `fx_sltendril` 바람 팔 · `fx_slswing` 금빛 호 · `fx_slball` 금빛 탄) + 원작 몸 잔상 · 히트스톱.
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -26,7 +26,6 @@ namespace Game.Module.InGame
         private const float FsLaunchMeters = 7f;        // 날아가는 거리
         private const float FsLaunchSeconds = 0.42f;
         private const float FsReflectMul = 2f;
-        private const float FsVortexSize = 340f;        // 예전 둥근 회오리(`slvortex`) — 새 그림이 없을 때만
         private const float FsWindHeightPerPull = 1.25f; // 새 회오리(`slwind`, 2:1 납작한 타원) 높이 = 끌어당기는 반경 × 1.25 → 화면 폭의 약 60%(시안 실측 430px / 720)
         private const float FsWindSquash = 1.25f;        // 시안 회오리는 가로 : 세로가 약 1.6 : 1 — 그림(2 : 1)을 세로로 조금 늘린다
         private const float FsDebrisEvery = 0.04f;
@@ -74,24 +73,15 @@ namespace Game.Module.InGame
             float h = Meters(FsPullMeters) * FsWindHeightPerPull;
             _fsVortexMid?.Stop();
             _fsVortex = TakeLoopFx("slwind", me.Position, h);
-            if (_fsVortex != null)
-            {
-                // 세 겹 — 바깥(느리게) · 가운데 · 안쪽(빠르게). 한 겹만으론 시안보다 성기고 어두웠다
-                _fsVortex.SetFrameSeconds(0.07f);
-                _fsVortex.SetSquash(FsWindSquash);
-                _fsVortexMid = TakeLoopFx("slwind", me.Position, h * 0.75f);
-                _fsVortexMid?.SetFrameSeconds(0.05f);
-                _fsVortexMid?.SetSquash(FsWindSquash);
-                _fsVortexInner = TakeLoopFx("slwind", me.Position, h * 0.45f);
-                _fsVortexInner?.SetFrameSeconds(0.035f);
-                _fsVortexInner?.SetSquash(FsWindSquash);
-            }
-            else
-            {
-                _fsVortex = TakeLoopFx("slvortex", me.Position, FsVortexSize);
-                _fsVortex?.SetFrameSeconds(0.05f);
-                _fsVortex?.SetTint(new Color(1f, 1f, 1f, 0.55f));   // 회오리 너머로 몸이 보여야 한다 — 불투명하면 슬러거가 통째로 가려졌다
-            }
+            // 세 겹 — 바깥(느리게) · 가운데 · 안쪽(빠르게). 한 겹만으론 시안보다 성기고 어두웠다
+            _fsVortex?.SetFrameSeconds(0.07f);
+            _fsVortex?.SetSquash(FsWindSquash);
+            _fsVortexMid = TakeLoopFx("slwind", me.Position, h * 0.75f);
+            _fsVortexMid?.SetFrameSeconds(0.05f);
+            _fsVortexMid?.SetSquash(FsWindSquash);
+            _fsVortexInner = TakeLoopFx("slwind", me.Position, h * 0.45f);
+            _fsVortexInner?.SetFrameSeconds(0.035f);
+            _fsVortexInner?.SetSquash(FsWindSquash);
         }
 
         private void StopFullSwing()

@@ -8,19 +8,22 @@ namespace Game.Module.InGame
     /// PD 2026-10-14 「폭탄을 몹들한테 설치하는 느낌이 하나도 안 나 — 스킬을 켜면 중복되지 않게 주변에 장착하고 3초 정도 있다가 설치된 게 터지는 느낌」.
     /// 시안 `Projects/AVSR/_exchange/in/mock_skill_commando_grenade.png`.
     ///
-    /// 박자: 시작(주변 적 최대 6명에게 폭탄을 한 개씩 휙휙 던져 붙인다 — 한 명에 하나, 붙는 순간 「탁」)
-    ///       → 한창(3초 동안 붙은 폭탄이 적을 따라다니며 깜빡인다, 터질 때가 다가올수록 빨라진다)
+    /// PD 2026-10-14(2차) 「C4 일 때는 평타를 치지 말고 장착만 · 빠르게 탁탁 던지고 2초 있다가 터지는 게 맞아 보인다 · 해 보고 시간은 나중에 조정」.
+    ///
+    /// 박자: 시작(주변 적 최대 6명에게 폭탄을 탁 · 탁 던져 붙인다 — 한 명에 하나, 붙는 순간 「탁」)
+    ///       → 한창(다 붙인 뒤 2초 — 붙은 폭탄이 적을 따라다니며 깜빡인다, 터질 때가 다가올수록 빨라진다. 그동안 평타는 쉰다)
     ///       → 마무리(붙인 순서대로 펑 · 펑 · 펑, 마지막이 가장 크다).
+    /// 시간 조정은 아래 `C4ThrowEvery`(던지는 간격) · `C4FuseSeconds`(다 붙인 뒤 터질 때까지) 두 줄이다.
     /// 그림: 받은 부품(`fx_c4bomb` 붙은 폭탄) + 기존 폭발(`fx_grenade_burst` · `fx_burst`).
     /// </summary>
     public sealed partial class BattleDirector
     {
         private const int C4MaxTargets = 6;
         private const float C4RangeMeters = 5.5f;      // 이 안의 화면 속 적에게 붙인다
-        private const float C4ThrowEvery = 0.08f;      // 한 개씩 휙 · 휙 — 여섯 개가 0.5초 안에 다 붙는다
-        private const float C4ThrowSeconds = 0.2f;     // 날아가는 시간
+        private const float C4ThrowEvery = 0.1f;       // 탁 · 탁 — 하나씩 던지는 게 읽히는 간격(여섯 개 0.5초)
+        private const float C4ThrowSeconds = 0.16f;    // 날아가는 시간
         private const float C4ThrowArc = 70f;          // 던지는 포물선 높이
-        private const float C4FuseSeconds = 3f;        // 붙이고 터질 때까지(PD 「3초 정도 있다가」)
+        private const float C4FuseSeconds = 2f;        // **다 붙인 뒤** 터질 때까지(PD 「2초 있다가」 — 처음엔 3초)
         private const float C4ChainEvery = 0.08f;      // 펑 · 펑 · 펑 간격
         private const float C4StickMul = 0.3f;
         private const float C4BlastMul = 2.2f;
@@ -48,6 +51,9 @@ namespace Game.Module.InGame
         private int _c4Detonated;
         private float _c4ChainTimer;
 
+        /// <summary>폭탄을 던지고 붙여 놓고 터지기를 기다리는 중 — 평타를 쉰다.</summary>
+        private bool IsStickyBombBusy => _c4Active;
+
         private void CommandoStickyBomb(Unit me)
         {
             StopStickyBomb();
@@ -60,7 +66,8 @@ namespace Game.Module.InGame
                 return;
             }
             _c4Active = true;
-            _c4Fuse = C4FuseSeconds;
+            // 마지막 폭탄이 붙는 순간부터 2초 — 던지는 시간을 앞에 더한다
+            _c4Fuse = (targets.Count - 1) * C4ThrowEvery + C4ThrowSeconds + C4FuseSeconds;
             _c4Detonated = -1;
             for (int i = 0; i < targets.Count; i++)
                 _c4Bombs.Add(new C4Bomb { Target = targets[i], LastAt = targets[i].Position + C4StickOffset, Delay = i * C4ThrowEvery });
@@ -99,7 +106,7 @@ namespace Game.Module.InGame
 
             _c4Fuse -= dt;
             // 깜빡임이 터질 때가 다가올수록 빨라진다 — 0.25초 → 0.04초
-            float blink = Mathf.Lerp(0.04f, 0.25f, Mathf.Clamp01(_c4Fuse / C4FuseSeconds));
+            float blink = Mathf.Lerp(0.04f, 0.25f, Mathf.Clamp01(_c4Fuse / C4FuseSeconds));   // 다 붙인 뒤 2초 동안 0.25 → 0.04
             for (int i = 0; i < _c4Bombs.Count; i++)
             {
                 var b = _c4Bombs[i];
