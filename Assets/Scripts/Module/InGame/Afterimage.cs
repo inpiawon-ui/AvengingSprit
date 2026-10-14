@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Module.InGame
@@ -24,6 +24,7 @@ namespace Game.Module.InGame
         private float _life;
         private float _lifeMax;
         private float _alpha;
+        private Color _tint = Tint;
 
         public static Afterimage Create(Transform parent)
         {
@@ -42,11 +43,12 @@ namespace Game.Module.InGame
         /// 사는 동안 그 값을 **유지하다가 끝에 사라진다** — 서서히 옅어지지 않는다.
         /// </summary>
         public void Play(Sprite sprite, Vector2 at, Vector2 size, bool flipX,
-                         float alpha, float seconds)
+                         float alpha, float seconds, Color? tint = null)
         {
             if (sprite == null) { gameObject.SetActive(false); return; }
+            _tint = tint ?? Tint;
             _image.sprite = sprite;
-            _image.color = new Color(Tint.r, Tint.g, Tint.b, alpha);
+            _image.color = new Color(_tint.r, _tint.g, _tint.b, alpha);
             _rect.sizeDelta = size;
             _rect.anchoredPosition = at;
             _rect.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
@@ -73,7 +75,7 @@ namespace Game.Module.InGame
             if (_life <= 0f) return;
             float t = _life / _lifeMax;
             float a = t > 0.5f ? _alpha : _alpha * 0.5f;   // 계단 두 칸 — 흐르지 않는다
-            _image.color = new Color(Tint.r, Tint.g, Tint.b, a);
+            _image.color = new Color(_tint.r, _tint.g, _tint.b, a);
         }
     }
 }

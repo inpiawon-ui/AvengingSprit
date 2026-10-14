@@ -1025,9 +1025,10 @@ namespace Game.Module.InGame
         /// 방향·프레임 체계를 통째로 무시하고 이 한 장만 그린다.
         /// 빙의 연출처럼 **방향이 없는 동작**에 쓴다 — null 을 넣으면 원래대로 돌아간다.
         /// </summary>
-        public void SetSpriteOverride(Sprite s)
+        public void SetSpriteOverride(Sprite s, bool flipX = false)
         {
             _override = s;
+            _overrideFlip = s != null && flipX;
             if (_body == null) return;
             if (s != null)
             {
@@ -1047,6 +1048,7 @@ namespace Game.Module.InGame
         }
 
         private Sprite _override;
+        private bool _overrideFlip;   // 방향이 있는 연출 그림(스킬 자세)만 켠다 — 오른쪽 그림을 뒤집어 왼쪽으로 쓴다
 
         /// <summary>현재 (프레임 × 방향) 을 화면에 반영한다. 바뀐 게 없으면 아무것도 하지 않는다.</summary>
         private void Apply()
@@ -1088,7 +1090,7 @@ namespace Game.Module.InGame
         {
             if (_body == null) return;
             // 연출 그림(빙의 등)이 쥐고 있을 때는 반전을 풀어 준다 — 방향이 없는 그림이다.
-            bool flip = _facingFlip && _override == null;
+            bool flip = _override == null ? _facingFlip : _overrideFlip;
             _body.transform.localScale =
                 new Vector3(flip ? -_breatheX : _breatheX, _breatheY, 1f);
         }

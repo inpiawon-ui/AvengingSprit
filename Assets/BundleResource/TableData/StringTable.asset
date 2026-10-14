@@ -145,14 +145,17 @@ MonoBehaviour:
     _ja: "\u6B7B\u795E"
     _en: Death
   - _key: askill.psg_h01.name
-    _ko: "\uB3C4\uC57D \uAC15\uD0C0"
-    _ja: "\u8DF3\u8E8D\u5F37\u6253"
-    _en: Leap Smash
+    _ko: "\uBC88\uAC1C \uBB34\uD76C"
+    _ja: "\u96F7\u5149\u306E\u821E"
+    _en: Lightning Dance
   - _key: askill.psg_h01.desc
-    _ko: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uC5B4
-      \uB458\uB808\uB97C 300% \uD53C\uD574\uB85C \uCE5C\uB2E4."
-    _ja: "\u6700\u3082\u8FD1\u3044\u6575\u306B\u98DB\u3073\u8FBC\u307F\u3001\u5468\u56F2\u306B300%\u306E\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B\u3002"
-    _en: Leap at the nearest enemy, dealing 300% damage around you.
+    _ko: "\uBC88\uAC1C\uB97C \uB450\uB974\uACE0 \uC8FC\uBCC0 \uC801 \uCD5C\uB300
+      6\uBA85 \uC0AC\uC774\uB97C \uC62E\uACA8 \uB2E4\uB2C8\uBA70 \uD55C \uBA85\uC529
+      \uCE5C \uB4A4, \uD558\uB298 \uBC88\uAC1C\uB85C \uB0B4\uB824\uCC0D\uB294\uB2E4.
+      \uC2DC\uC804 \uC911 \uBB34\uC801."
+    _ja: "\u96F7\u3092\u307E\u3068\u3044\u3001\u5468\u56F2\u306E\u6575\u6700\u59276\u4F53\u306E\u9593\u3092\u99C6\u3051\u629C\u3051\u30661\u4F53\u305A\u3064\u6253\u3061\u3001\u6700\u5F8C\u306B\u5929\u304B\u3089\u306E\u96F7\u3067\u53E9\u304D\u3064\u3051\u308B\u3002\u767A\u52D5\u4E2D\u306F\u7121\u6575\u3002"
+    _en: Wrapped in lightning, dash between up to 6 nearby enemies striking each,
+      then slam down with a bolt from the sky. Invincible while active.
   - _key: askill.psg_h02.name
     _ko: "(\uBBF8\uC815)"
     _ja: "\uFF08\u672A\u5B9A\uFF09"

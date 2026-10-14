@@ -418,7 +418,7 @@ namespace Game.Module.InGame
                 // ⚠ 직업은 **근거리 6 · 중거리 3 · 원거리 14** 셋이다(확정본 2026-09-14).
                 //   예전의 「중거리 5 · 관통 4」 묶음은 폐기됐다 — 관통은 직업이 아니라
                 //   공격 종류(`AttackKind.Pierce`)다.
-                case "amazon":           AmazonLeapStrike(me);  break;
+                case "amazon":           AmazonLightningDance(me); break;   // 번개 무희(2026-10-14, 던파 라이트닝 댄스) — 예전 도약 강타(AmazonLeapStrike)
                 // 아마존 정예는 **스킬 보류**다(확정본 2026-09-14). 아무 일도 안 한다.
                 case "amazon_elite":                            break;
                 case "baseball":         ReflectAll(me);        break;

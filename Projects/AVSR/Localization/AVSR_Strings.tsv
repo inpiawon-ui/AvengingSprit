@@ -22,8 +22,8 @@ host.snowwoman.name	설녀	雪女	Snow Woman
 host.vampire.name	흡혈귀	ヴァンパイア	Vampire
 host.commando_missile.name	코만도(미사일)	コマンドーMSL	Commando (Missile)
 host.death.name	사신	死神	Death
-askill.psg_h01.name	도약 강타	跳躍強打	Leap Smash
-askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.	最も近い敵に飛び込み、周囲に300%のダメージを与える。	Leap at the nearest enemy, dealing 300% damage around you.
+askill.psg_h01.name	번개 무희	雷光の舞	Lightning Dance
+askill.psg_h01.desc	번개를 두르고 주변 적 최대 6명 사이를 옮겨 다니며 한 명씩 친 뒤, 하늘 번개로 내려찍는다. 시전 중 무적.	雷をまとい、周囲の敵最大6体の間を駆け抜けて1体ずつ打ち、最後に天からの雷で叩きつける。発動中は無敵。	Wrapped in lightning, dash between up to 6 nearby enemies striking each, then slam down with a bolt from the sky. Invincible while active.
 askill.psg_h02.name	(미정)	（未定）	(TBD)
 askill.psg_h02.desc	스킬 보류 — 정해지면 채운다.	スキル保留 — 決まり次第追加する。	Skill on hold — to be added.
 askill.psg_h03.name	융단 폭격	絨毯爆撃	Carpet Bomb
