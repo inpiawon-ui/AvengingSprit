@@ -13,14 +13,17 @@ namespace Game.Module.InGame
     /// 박자: 시작(주변 적 최대 6명에게 폭탄을 탁 · 탁 던져 붙인다 — 한 명에 하나, 붙는 순간 「탁」)
     ///       → 한창(다 붙인 뒤 2초 — 붙은 폭탄이 적을 따라다니며 깜빡인다, 터질 때가 다가올수록 빨라진다. 그동안 평타는 쉰다)
     ///       → 마무리(붙인 순서대로 펑 · 펑 · 펑, 마지막이 가장 크다).
-    /// 시간 조정은 아래 `C4ThrowEvery`(던지는 간격) · `C4FuseSeconds`(다 붙인 뒤 터질 때까지) 두 줄이다.
+    /// PD 2026-10-14(3차) 「왜 4마리밖에 안 붙어? · 캐릭터 반경 안에 있으면 모든 몹을 붙여 줘」 — 반경 안의 적은 몇 명이든 다 붙인다.
+    /// 조정: `C4RangeMeters`(반경) · `C4ThrowEvery`(던지는 간격) · `C4ThrowWindow`(몹이 많을 때 다 던지는 시간) · `C4FuseSeconds`(다 붙인 뒤 터질 때까지).
     /// 그림: 받은 부품(`fx_c4bomb` 붙은 폭탄) + 기존 폭발(`fx_grenade_burst` · `fx_burst`).
     /// </summary>
     public sealed partial class BattleDirector
     {
-        private const int C4MaxTargets = 6;
-        private const float C4RangeMeters = 5.5f;      // 이 안의 화면 속 적에게 붙인다
-        private const float C4ThrowEvery = 0.1f;       // 탁 · 탁 — 하나씩 던지는 게 읽히는 간격(여섯 개 0.5초)
+        // ⚠ 예전엔 「최대 6명 · 5.5m 안」이라 4마리만 붙었다 — 이제 반경 안이면 몇 명이든 다 붙인다
+        private const float C4RangeMeters = 7f;        // 캐릭터 반경 — 5.5 는 녹화 방에서 둘레 적이 빠졌다
+        private const int C4MaxTargets = 40;           // 안전 상한(반경 안에 이보다 많을 일은 없다)
+        private const float C4ThrowEvery = 0.1f;       // 탁 · 탁 — 하나씩 던지는 게 읽히는 간격
+        private const float C4ThrowWindow = 0.6f;      // 몹이 많으면 간격을 줄여 0.6초 안에 다 던진다 — 스무 마리를 0.1초씩 던지면 2초가 걸린다
         private const float C4ThrowSeconds = 0.16f;    // 날아가는 시간
         private const float C4ThrowArc = 70f;          // 던지는 포물선 높이
         private const float C4FuseSeconds = 2f;        // **다 붙인 뒤** 터질 때까지(PD 「2초 있다가」 — 처음엔 3초)
@@ -67,13 +70,14 @@ namespace Game.Module.InGame
             }
             _c4Active = true;
             // 마지막 폭탄이 붙는 순간부터 2초 — 던지는 시간을 앞에 더한다
-            _c4Fuse = (targets.Count - 1) * C4ThrowEvery + C4ThrowSeconds + C4FuseSeconds;
+            float every = targets.Count > 1 ? Mathf.Min(C4ThrowEvery, C4ThrowWindow / (targets.Count - 1)) : C4ThrowEvery;
+            _c4Fuse = (targets.Count - 1) * every + C4ThrowSeconds + C4FuseSeconds;
             _c4Detonated = -1;
             for (int i = 0; i < targets.Count; i++)
-                _c4Bombs.Add(new C4Bomb { Target = targets[i], LastAt = targets[i].Position + C4StickOffset, Delay = i * C4ThrowEvery });
+                _c4Bombs.Add(new C4Bomb { Target = targets[i], LastAt = targets[i].Position + C4StickOffset, Delay = i * every });
         }
 
-        /// <summary>가까운 순으로 최대 6명 — 한 명에 하나씩(중복 없음).</summary>
+        /// <summary>반경 안의 모든 적 — 가까운 순으로 던진다, 한 명에 하나씩(중복 없음).</summary>
         private List<Unit> C4PickTargets(Unit me)
         {
             var list = new List<Unit>();

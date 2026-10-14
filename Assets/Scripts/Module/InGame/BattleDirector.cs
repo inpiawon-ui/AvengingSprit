@@ -67,7 +67,7 @@ namespace Game.Module.InGame
 
         /// <summary>탄이 터지는 그림. 탄과 같은 풀 방식이다.</summary>
         // 24 → 48 (2026-10-07) — 연쇄 방전 퀄업은 한 번 튈 때 적 셋에 조준선 · 고리 · 낙뢰 · 코어 · 파편 · 전기가 겹친다
-        private const int MaxImpacts = 64;   // 48 → 64(2026-10-14) — C4 붙은 폭탄 · 영매 혼불 표시가 한꺼번에 뜬다
+        private const int MaxImpacts = 96;   // 48 → 96(2026-10-14) — C4 가 화면 안 모든 적에게 폭탄을 붙인다(한 개당 한 칸) · 영매 혼불
         private readonly List<Impact> _impacts = new();
 
         private const int MaxShots = 64;
