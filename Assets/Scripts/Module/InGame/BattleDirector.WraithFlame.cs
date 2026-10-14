@@ -19,7 +19,7 @@ namespace Game.Module.InGame
         private const int WfStacksToPop = 3;
         private const float WfPopMul = 2.5f;
         private const float WfPopMeters = 1.3f;
-        private const float WfWraithSize = 290f;     // 시안처럼 몸보다 세 배 크게, 등 뒤에서 솟는다(210 은 시안 대조에서 작았다)
+        private const float WfWraithSize = 145f;     // PD 2026-10-14 「악마가 너무 커 · 절반으로」 — 290 → 145
         private const float WfFlameSize = 60f;       // 34 · 46 은 녹화에서 평타 구슬과 구별이 안 됐다
         private const float WfStackSize = 64f;       // 화면 배율(약 0.45) 때문에 36 은 12px 로 찍혀 안 보였다(녹화 rw_md_4)
         private const float WfPopSize = 250f;
@@ -47,11 +47,11 @@ namespace Game.Module.InGame
             // 몸 **뒤**(장판 레이어)에 띄운다 — 탄 레이어에 올렸더니 원혼이 영매를 통째로 덮었다(녹화 rw_md_1)
             _wfWraith = PlayFloorFx("mdwraith", WfWraithAt(me), WfWraithSize, loop: true);
             _wfWraith?.SetFrameSeconds(0.09f);
-            PlayFx("mdpop", WfWraithAt(me), WfPopSize * 0.8f, loop: false)?.SetFrameSeconds(0.05f);   // 내려앉는 순간
+            PlayFx("mdpop", WfWraithAt(me), WfWraithSize, loop: false)?.SetFrameSeconds(0.05f);   // 내려앉는 순간
         }
 
         /// <summary>등 뒤 — 바라보는 반대쪽으로 조금, 머리 위로.</summary>
-        private static Vector2 WfWraithAt(Unit me) => me.Position - me.Facing * 18f + new Vector2(0f, 110f);
+        private static Vector2 WfWraithAt(Unit me) => me.Position - me.Facing * 12f + new Vector2(0f, 58f);
 
         private void StopWraithFlame(bool popRemaining)
         {
@@ -65,7 +65,7 @@ namespace Game.Module.InGame
             }
             _wfMarks.Clear();
             if (popRemaining && _wfWraith != null && me != null)
-                PlayFx("mdpop", WfWraithAt(me), WfPopSize, loop: false)?.SetFrameSeconds(0.06f);   // 원혼이 떠난다
+                PlayFx("mdpop", WfWraithAt(me), WfWraithSize, loop: false)?.SetFrameSeconds(0.06f);   // 원혼이 떠난다
             _wfWraith?.Stop();
             _wfWraith = null;
             _wfActive = false;

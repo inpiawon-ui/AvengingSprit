@@ -29,6 +29,8 @@ PARTS = {
     'part_md_pop':    ('mdpop',    192, 192, 6, 1, 'black'),
     'part_md_slash':  ('mdslash',  192, 128, 1, 4, 'black'),
     'part_md_stack':  ('mdstack',   32,  40, 4, 1, 'pink'),
+    'part_sl_wind':   ('slwind',   512, 256, 1, 6, 'black'),
+    'part_sl_tendril':('sltendril',384, 128, 1, 6, 'black'),
 }
 
 
@@ -60,7 +62,16 @@ def cut(sheet_name):
     frames = []
     for i in range(cols * rows):
         c = sheet.crop(((i % cols) * w, (i // cols) * h, (i % cols + 1) * w, (i // cols + 1) * h))
-        f = black_to_alpha(c.convert('RGB')) if bg == 'black' else pink_to_alpha(c)
+        if bg == 'black':
+            # ⚠ 이미 알파가 있는 시트(코덱스가 뚫어서 보냄)는 RGB 만 쓰면 투명한 칸의 색(하늘색 등)이 그대로 칠해진다 —
+            #   회오리 · 원혼이 꽉 찬 덩어리로 보였던 원인(2026-10-14). 검정 위에 먼저 얹고 밝기를 알파로 바꾼다
+            if c.mode in ('RGBA', 'LA', 'P'):
+                k = Image.new('RGBA', c.size, (0, 0, 0, 255))
+                k.alpha_composite(c.convert('RGBA'))
+                c = k
+            f = black_to_alpha(c.convert('RGB'))
+        else:
+            f = pink_to_alpha(c)
         frames.append(f)
     return name, frames
 
