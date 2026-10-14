@@ -388,6 +388,7 @@ function update(dt) {
     if (e.dead) continue;
     e.bob += dt * 6; if (e.flash > 0) e.flash -= dt;
     if (e.d.boss || e.elite) { bigAI(e, dt); continue; }
+    if (e.stun) continue;
     const b = G.body; if (!b) continue;
     const dx = b.x - e.x, dy = b.y - e.y, dist = Math.hypot(dx, dy) || 1;
     if (dist > e.d.range * .85) { e.x += dx / dist * e.d.spd * .75 * dt; e.y += dy / dist * e.d.spd * .75 * dt; }
@@ -683,8 +684,9 @@ MODES.night = {
   goal: '목표: 5분 버티고 마지막 보스 처치',
   reward: '(보상은 모드를 다 정한 뒤에 — 지금은 재미 검증)',
   rules: [
-    '언제나 <b>유령으로 입장</b>. 오늘의 요일 조건에 맞는 호스트만 몸으로 깔린다 — 하나를 빼앗아 시작',
-    '무리가 쉬지 않고 내려온다. 무리마다 <b>빼앗을 몸이 섞여 온다</b> — 몸을 잃어도 금방 다음 몸이 있다',
+    '언제나 <b>유령으로 입장</b>. 오늘의 요일 조건에 맞는 호스트 셋 중 <b>하나를 고르면 나머지 둘은 사라진다</b>',
+    '무리는 <b>잔몹</b>. 45초마다 오늘의 호스트가 <b>크게(대형)</b> 나온다 — 그대로는 못 빼앗고, 체력을 35% 아래로 깎으면 <b>경직</b>(본편 규칙) → 8초 안에 빼앗거나 잡는다',
+    '몸을 잃으면 1초 뒤 구조 몸이 걸어 들어온다(본편 규칙). <b>처치 수</b>가 기록이고 보상 기준',
     '적을 쓰러뜨리면 경험치 → <b>레벨업 카드</b> 3택1. 카드는 지금 몸 · 앞으로 빼앗을 몸 모두에 걸린다',
     '1분마다 무리의 속성이 바뀐다 — 상성 맞는 몸으로 갈아탈지(나오기 −8) 판단',
     '1분 버틸 때마다 · 대장을 잡으면 <b>유령 에너지와 몸 체력 회복</b> (본편의 「방을 비우면 회복」과 같은 규칙)',
@@ -698,11 +700,11 @@ MODES.night = {
   start(G, opt) {
     const day = DAYS[opt.day != null ? +opt.day : new Date().getDay()];
     G.buff = {};
-    G.S = { day, pool: day.pool(), time: 0, spawnT: 2, hostT: 9, waveAff: pick(AFFS), waveT: 60, xp: 0, level: 1, next: 6,
+    G.S = { day, pool: day.pool(), time: 0, spawnT: 2, hostT: 40, waveAff: pick(AFFS), waveT: 60, xp: 0, level: 1, next: 6,
             elites: [120, 210], bossAt: 300, bossOut: false, bossKey: pick(['crusher', 'kingpin', 'python']) };
     G.enemies = []; G.shots = []; G.doors = []; G.floor = 'street';
     // 첫 몸 셋 — 오늘의 호스트만
-    bodyLine(G.S.pool, 3).forEach((k, i) => G.enemies.push(unit(k, 80 + i * 100, 470 + (i % 2) * 30)));
+    bodyLine(G.S.pool, 3).forEach((k, i) => { const u = unit(k, 80 + i * 100, 470 + (i % 2) * 30); u.start = true; G.enemies.push(u); });
     G.gx = 180; G.gy = 600;
     banner(`${day.day}요일 · ${day.name}`, 2);
     log(`${day.day}요일 · ${day.name} — 몸으로 나오는 호스트: ${G.S.pool.map(k => DEF[k].name + (isTrained(k) ? '★' : '')).join(', ')}`);
@@ -726,7 +728,18 @@ MODES.night = {
     }
     // 무리에 섞여 오는 몸
     S.hostT -= dt;
-    if (S.hostT <= 0) { S.hostT = 9; this.edgeSpawn(pick(S.pool)); }
+    if (S.hostT <= 0) {
+      S.hostT = 45;
+      const k = pick(S.pool), u = unit(k, 60 + Math.random() * 240, FT + 30, { hpMul: 5 + S.time / 90, atkMul: 1.3, scale: 1.35 });
+      u.possessable = false; u.bigHost = true; u.tag = '대형'; G.enemies.push(u);
+      banner(`대형 ${DEF[k].name} — 깎아서 경직시키면 빼앗는다`, 1.8); log(`대형 호스트 — ${DEF[k].name}(${AFF_NAME[DEF[k].aff]}) · 체력 35% 아래면 경직`);
+    }
+    // 경직 — 본편처럼 깎으면 열리고, 몰아치지 않으면 식는다
+    for (const e of G.enemies) {
+      if (!e.bigHost || e.dead) continue;
+      if (!e.stun && e.hp <= e.hpMax * .35) { e.stun = 8; e.possessable = true; e.tag = '경직 — 빼앗기'; ring(e.x, e.y, 50, '#8fd6ff'); log(`${e.d.name} 경직 — 8초 안에 빼앗을 수 있다`); }
+      else if (e.stun) { e.stun -= dt; if (e.stun <= 0) { e.stun = 0; e.possessable = false; e.tag = null; e.hp = Math.round(e.hpMax * .6); log(`${e.d.name} 경직이 풀렸다 — 체력 회복`); } }
+    }
     // 속성 바뀜
     S.waveT -= dt;
     if (S.waveT <= 0) { S.waveT = 60; this.heal(G, 15, '1분 버팀'); const old = S.waveAff; S.waveAff = pick(AFFS.filter(a => a !== old)); banner(`무리가 ${AFF_NAME[S.waveAff]}로 바뀐다`, 1.6); log(`무리 속성 — ${AFF_NAME[old]} → ${AFF_NAME[S.waveAff]} (${AFF_NAME[COUNTER[S.waveAff]]} 몸이 유리)`); }
@@ -743,11 +756,15 @@ MODES.night = {
       banner(`보스 ${DEF[S.bossKey].name}`, 1.8); log(`보스 — ${DEF[S.bossKey].name}(${AFF_NAME[DEF[S.bossKey].aff]}) · 쓰러뜨리면 끝`);
     }
   },
+  onPossess(G) {
+    // 고른 몸 말고 시작 몸 둘은 사라진다
+    for (const e of G.enemies) if (e.start) { e.dead = true; puff(e.x, e.y, '#9a92c4', 8); }
+  },
   onKill(G, e) {
     const S = G.S;
     if (e.d.boss) { endRun(true, `${DEF[e.key].name} 처치 — 밤을 버텼다`); return; }
     if (e.elite) this.heal(G, 25, '대장 처치');
-    S.xp += e.elite ? 12 : e.possessable ? 2 : 1;
+    S.xp += e.elite ? 12 : e.bigHost ? 8 : 1;
     if (S.xp >= S.next) { S.xp -= S.next; S.level++; S.next = Math.round(S.next * 1.35 + 2); offerCards(); }
   },
   // 본편의 「방을 비우면 유령 · 몸 회복」(HealOnClear)을 밤에는 1분 구간 · 대장 처치에 건다 — 없으면 에너지가 깎이기만 한다
@@ -760,7 +777,7 @@ MODES.night = {
   onClear() {},            // 방이 비어도 끝이 아니다 — 무리가 계속 온다
   enterDoor() {},
   rescuePool(G) { return G.S.pool; },
-  hud(G) { const S = G.S; const m = Math.floor(S.time / 60), s = Math.floor(S.time % 60); return [`${m}:${String(s).padStart(2, '0')} · Lv ${S.level}`, `${S.day.day} ${S.day.name.replace('의 날', '')} · 무리 ${AFF_NAME[S.waveAff]}`]; },
+  hud(G) { const S = G.S; const m = Math.floor(S.time / 60), s = Math.floor(S.time % 60); return [`${m}:${String(s).padStart(2, '0')} · Lv ${S.level} · 처치 ${G.kills}`, `${S.day.day} ${S.day.name.replace('의 날', '')} · 무리 ${AFF_NAME[S.waveAff]}`]; },
   hint(G) {
     if (!G.running) return null;
     const S = G.S, want = COUNTER[S.waveAff];
@@ -770,7 +787,12 @@ MODES.night = {
     if (m < 1) return `무리가 ${AFF_NAME[S.waveAff]} — 이 몸은 불리(▼). ${AFF_NAME[want]} 몸이 오면 갈아탈까?`;
     return m > 1 ? '유리한 몸(▲) — 멈춰서 쓸어 담아라' : `보통 — ${AFF_NAME[want]} 몸이면 더 빠르다`;
   },
-  result(G, win) { const S = G.S; const m = Math.floor(S.time / 60), s = Math.floor(S.time % 60); return `<p class="reward">버틴 시간 ${m}:${String(s).padStart(2, '0')} · 레벨 ${S.level} · 처치 ${G.kills}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p>`; },
+  result(G, win) {
+    const S = G.S; const m = Math.floor(S.time / 60), s = Math.floor(S.time % 60);
+    // 보상 가안 — 처치 50마다 오늘의 호스트 조각 1 · 보스까지 잡으면 +3 (숫자는 모드 확정 뒤에 정한다)
+    const shards = Math.floor(G.kills / 50) + (win ? 3 : 0);
+    let best = 0; try { best = +localStorage.getItem('avsr.night.kills.' + S.day.day) || 0; if (G.kills > best) localStorage.setItem('avsr.night.kills.' + S.day.day, G.kills); } catch (e) {}
+    return `<p class="big">처치 ${G.kills}${G.kills > best ? ' · 최고 기록!' : ` (최고 ${best})`}</p><p class="reward">보상(가안) — 오늘의 호스트 조각 ${shards}개 (처치 50마다 1 · 보스 처치 +3)</p><p class="reward">버틴 시간 ${m}:${String(s).padStart(2, '0')} · 레벨 ${S.level} · 처치 ${G.kills}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p>`; },
 };
 
 // ── 망령의 탑 ───────────────────────────────────────────
