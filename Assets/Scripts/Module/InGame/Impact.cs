@@ -93,6 +93,13 @@ namespace Game.Module.InGame
             _snapLeft = _snapSpan;
         }
 
+        /// <summary>도는 중에 크기를 바꾼다(회오리가 자라고 줄어드는 것). 줄기(Beam)는 건드리지 않는다.</summary>
+        public void SetSize(float size)
+        {
+            _baseSize = size;
+            if (!_isBeam && _rect != null) _rect.sizeDelta = new Vector2(size, size);
+        }
+
         public void Cache(RectTransform parent, float size)
         {
             _rect = (RectTransform)transform;

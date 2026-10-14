@@ -3961,8 +3961,8 @@ namespace Game.Module.InGame
             // 설녀 — 얼음 안에서는 손도 멈춘다(명세: 맞지도 때리지도 않는다).
             if (IsSelfFrozen) { IsFiring = false; return; }
 
-            // C4 — 붙이고 터질 때까지 평타를 쉰다. 던지면서 평타까지 나가면 복잡해서 스킬 느낌이 하나도 안 났다(PD 2026-10-14)
-            if (IsStickyBombBusy) { IsFiring = false; return; }
+            // C4 · 풀스윙 회오리 — 스킬이 도는 동안 평타를 쉰다. 평타까지 나가면 복잡해서 스킬 느낌이 하나도 안 났다(PD 2026-10-14)
+            if (IsStickyBombBusy || _fsActive) { IsFiring = false; return; }
 
             var target = Nearest(_host.Position);
 
@@ -3989,6 +3989,7 @@ namespace Game.Module.InGame
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
             if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
+            WfOnHostAttack(target);   // 영매 원혼 강림 — 원혼도 같이 친다(혼불을 던진다)
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
         }
@@ -7394,7 +7395,6 @@ namespace Game.Module.InGame
                 if (crit) HitStop(HitStopOnCrit);
             }
             bool dead = victim.TakeDamage(dmg);
-            if (shot.FromPlayer && !dead) WfOnShotHit(victim);   // 영매 원혼 강림 — 맞은 적에게 혼불
             // 원거리 몸이 근접 몹을 맞히면 뒤로 민다(기획 2026-09-16). 적 탄이 나를 맞힐 때는 이 길을 안 지난다.
             // 상성이 안 맞으면 이 경직도 없다 — 맞으면서 그대로 걸어온다.
             if (!dead && shot.FromPlayer && !dull) RangedKnockback(victim);

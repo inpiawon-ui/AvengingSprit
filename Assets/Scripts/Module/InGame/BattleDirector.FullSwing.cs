@@ -8,8 +8,15 @@ namespace Game.Module.InGame
     /// 「일정 반경의 적을 끌어들이고 원거리 공격은 반사시키고 2~3초 있다가 끌어들인 적을 한 방에 날리는 거」).
     /// 시안 `Projects/AVSR/_exchange/in/mock_skill_baseball_v2.png`.
     ///
-    /// 박자: 시작(몸 둘레에 회오리, 반경 안 적을 끌어당긴다) → 한창(2.2초 동안 끌려온 적이 몸 둘레에 붙잡히고,
-    ///       날아온 적 탄은 금빛 탄으로 되받아쳐 가까운 적을 쫓는다) → 마무리(풀스윙 — 모인 적을 한쪽으로 한꺼번에 날린다, 가장 세게).
+    /// PD 2026-10-14(3차) 「시안을 보면 슬러거가 돌면서 회오리를 만드는 느낌이 강한데, 너가 만든 건 캐릭터 위에 이펙트만 올려 놓은 느낌 ·
+    /// 내가 회오리를 만들어서 애들이 끌려오게 했다가 한 방에 날리는 느낌으로」.
+    ///
+    /// 박자: ① 감아올리기(0~0.5초) — 슬러거가 배트를 휘두르며 빠르게 돈다. 배트 끝에서 바람이 일어 몸 둘레에 감기고,
+    ///          회오리가 작게 생겨 돌수록 커진다. 끌어당기는 힘도 회오리 크기만큼 자란다.
+    ///       ② 한창(~2초) — 다 자란 회오리가 적을 나선으로 빨아들인다. 몸은 계속 돌며 파란 잔상을 남기고(시안의 겹친 몸),
+    ///          날아온 적 탄은 금빛 탄으로 되받아쳐 가까운 적을 쫓는다.
+    ///       ③ 모으기(마지막 0.25초) — 회오리가 배트로 빨려 들며 작아진다, 몸은 휘두를 쪽을 보고 멈춘다.
+    ///       ④ 풀스윙 — 모인 적을 한쪽으로 한꺼번에 날린다, 몸 뒤로 잔상(가장 세게).
     /// 그림: 받은 부품 3종(`fx_slwind` 회오리 · `fx_sltendril` 바람 팔 · `fx_slswing` 금빛 호 · `fx_slball` 금빛 탄) + 원작 몸 잔상 · 히트스톱.
     /// </summary>
     public sealed partial class BattleDirector
@@ -19,9 +26,7 @@ namespace Game.Module.InGame
         private const float FsHoldMeters = 1.6f;        // 몸 둘레 이 고리에 붙잡혀 돈다 — 시안처럼 둘레에 둥글게(1.1 은 한 덩어리로 겹쳤다)
         private const float FsOrbitMeters = 3.2f;       // 초당 둘레로 도는 거리 — 곧장 끌려오면 「빨려 든다」가 아니라 「걸어온다」로 보였다(PD 「빨아들이는 느낌이 구려」)
         private const float FsPullSpeedMeters = 7f;     // 초당 끌려오는 거리
-        private const float FsTickEvery = 0.4f;         // 회오리에 갈리는 피해 간격
-        private const float FsTickMul = 0.12f;       // 갈리는 피해는 얕게 — 마무리 풀스윙에 날아갈 몸이 남아야 한다(0.3 은 다 죽어 헛스윙이었다)
-        private const float FsSwingMul = 4.0f;
+        private const float FsSwingMul = 4.6f;
         private const float FsSwingMeters = 2.6f;       // 풀스윙이 닿는 거리(끌려온 적은 모두 안쪽)
         private const float FsLaunchMeters = 7f;        // 날아가는 거리
         private const float FsLaunchSeconds = 0.42f;
@@ -41,6 +46,18 @@ namespace Game.Module.InGame
         private const float FsSwingLength = 440f;   // 시안의 풀스윙은 화면 반을 가른다 — 300 은 몸 둘레에 그쳤다
         private const float FsSwingThickness = 280f;
         private static readonly Color FsGold = new(1f, 0.86f, 0.35f, 1f);
+        // 「슬러거가 돌면서 회오리를 만든다」 — 몸 · 배트 쪽 연출
+        private const float FsSpinUpSeconds = 0.5f;      // 회오리가 작게 생겨 다 자라는 시간
+        private const float FsGatherSeconds = 0.25f;     // 마지막에 회오리가 배트로 빨려 드는 시간
+        private const float FsStartScale = 0.15f;        // 처음 회오리 크기(다 자란 것의 비율)
+        private const float FsTurnsPerSecond = 2.6f;     // 몸이 도는 빠르기 — 1.2 는 「돈다」가 아니라 「두리번」으로 보였다
+        private const float FsBatReach = 40f;            // 몸 가운데 → 배트 끝(칸 단위)
+        private const float FsBatWindEvery = 0.03f;      // 배트 끝 바람 한 줄 간격 — 몸 둘레에 고리가 이어져 보이는 빽빽함
+        private const float FsBatWindLength = 120f;
+        private const float FsBatWindThickness = 46f;
+        private const float FsBodyGhostEvery = 0.045f;   // 몸 잔상 간격 — 시안의 겹친 슬러거
+        private const float FsBodyGhostOrbit = 12f;      // 잔상을 몸 둘레로 이만큼 비켜 놓는다 — 같은 자리에 겹치면 안 보인다
+        private static readonly Color FsBodyGhostTint = new(0.55f, 0.75f, 1f, 1f);
 
         private struct FsFlyer
         {
@@ -53,7 +70,6 @@ namespace Game.Module.InGame
         private readonly List<FsFlyer> _fsFlyers = new();
         private bool _fsActive;
         private float _fsLeft;
-        private float _fsTick;
         private Impact _fsVortex;
         private Impact _fsVortexInner;
         private Impact _fsVortexMid;
@@ -61,25 +77,35 @@ namespace Game.Module.InGame
         private float _fsTrailTick;
         private float _fsTendrilTick;
         private int _fsTendrilAmbient;
+        private float _fsAngle;
+        private float _fsBatWindTick;
+        private float _fsGhostTick;
+        private float _fsWindHeight;
+        private Vector2 _fsSwingDir;
 
         private void SluggerFullSwing(Unit me)
         {
             _fsActive = true;
             _fsLeft = FsSeconds;
-            _fsTick = FsTickEvery;
+            var f = me.Facing;
+            _fsAngle = Mathf.Atan2(f.y, f.x) * Mathf.Rad2Deg;
+            _fsBatWindTick = _fsGhostTick = 0f;
             _fsVortex?.Stop();
             _fsVortexInner?.Stop();
             // 시안 회오리 — 납작한 타원의 가는 바람 줄기 + 안쪽에 더 빨리 도는 작은 겹(PD 「회오리가 시안이랑 달라」 → 새 그림)
             float h = Meters(FsPullMeters) * FsWindHeightPerPull;
+            _fsWindHeight = h;
             _fsVortexMid?.Stop();
-            _fsVortex = TakeLoopFx("slwind", me.Position, h);
+            // 작게 생긴다 — 크기는 TickFullSwing 이 감아올리며 키운다.
+            // 바닥 층(몸 아래)에 깐다 — 탄 층에 올렸더니 회오리가 슬러거를 통째로 덮어 「도는 몸」이 안 보였다(녹화 rw_sl_9)
+            _fsVortex = PlayFloorFx("slwind", me.Position, h * FsStartScale, loop: true);
             // 세 겹 — 바깥(느리게) · 가운데 · 안쪽(빠르게). 한 겹만으론 시안보다 성기고 어두웠다
             _fsVortex?.SetFrameSeconds(0.07f);
             _fsVortex?.SetSquash(FsWindSquash);
-            _fsVortexMid = TakeLoopFx("slwind", me.Position, h * 0.75f);
+            _fsVortexMid = PlayFloorFx("slwind", me.Position, h * 0.75f * FsStartScale, loop: true);
             _fsVortexMid?.SetFrameSeconds(0.05f);
             _fsVortexMid?.SetSquash(FsWindSquash);
-            _fsVortexInner = TakeLoopFx("slwind", me.Position, h * 0.45f);
+            _fsVortexInner = PlayFloorFx("slwind", me.Position, h * 0.45f * FsStartScale, loop: true);
             _fsVortexInner?.SetFrameSeconds(0.035f);
             _fsVortexInner?.SetSquash(FsWindSquash);
         }
@@ -101,12 +127,21 @@ namespace Game.Module.InGame
             if (!_fsActive) return;
             var me = _host;
             if (me == null || !me.IsAlive || me.Key != "baseball") { StopFullSwing(); return; }
-            _fsVortex?.MoveTo(me.Position);
-            _fsVortexInner?.MoveTo(me.Position);
-            _fsVortexMid?.MoveTo(me.Position);
+            float elapsed = FsSeconds - _fsLeft;
+            bool gathering = _fsLeft <= FsGatherSeconds;
+            // 회오리 크기 — 감아올리며 자라고(OutCubic), 마지막에 배트로 빨려 들며 줄어든다
+            float grow = Game.Module.Common.UI.Ease.OutCubic(Mathf.Clamp01(elapsed / FsSpinUpSeconds));
+            float k = Mathf.Lerp(FsStartScale, 1f, grow);
+            if (gathering) k *= Mathf.Lerp(0.2f, 1f, _fsLeft / FsGatherSeconds);
+            FsPlaceVortex(_fsVortex, me.Position, _fsWindHeight * k);
+            FsPlaceVortex(_fsVortexMid, me.Position, _fsWindHeight * 0.75f * k);
+            FsPlaceVortex(_fsVortexInner, me.Position, _fsWindHeight * 0.45f * k);
+
+            FsSpinBody(me, dt, gathering);
 
             // 소용돌이로 빨아들인다 — 안쪽으로 끌리면서 둘레로 돈다(나선). 고리에 닿으면 그 둘레를 계속 돈다. 보스는 안 끌린다
-            float pull = Meters(FsPullMeters), hold = Meters(FsHoldMeters);
+            // 끌어당기는 반경은 회오리 크기를 따라 자란다 — 회오리가 다 생기기 전엔 멀리 있는 적이 안 끌린다
+            float pull = Meters(FsPullMeters) * Mathf.Max(0.3f, k), hold = Meters(FsHoldMeters);
             float step = Meters(FsPullSpeedMeters) * dt, orbit = Meters(FsOrbitMeters) * dt;
             _fsTrailTick -= dt;
             bool trail = _fsTrailTick <= 0f;
@@ -126,7 +161,7 @@ namespace Game.Module.InGame
                 if (trail) FsTrail(e, 0.45f);
             }
             FsDebris(me, dt, pull);
-            FsTendrils(me, dt, pull, hold);
+            if (grow >= 1f && !gathering) FsTendrils(me, dt, pull, hold);
 
             // 반경 안 적 탄 → 금빛 탄(가까운 적을 쫓는다)
             for (int i = 0; i < _shots.Count; i++)
@@ -143,23 +178,70 @@ namespace Game.Module.InGame
                 PlayFx("hit", s.Position, 48f, loop: false);
             }
 
-            _fsTick -= dt;
-            if (_fsTick <= 0f)
-            {
-                _fsTick += FsTickEvery;
-                int dmg = SkillDamage(me, FsTickMul * BaseAxis(1f));
-                var list = EnemiesInRange(me.Position, hold * 1.8f);
-                for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
-                me.PlayAttack();   // 배트를 휘두르며 돈다
-            }
-            // 회오리 안에서 몸이 돈다 — 8방향 자세가 넘어간다
-            float a = (FsSeconds - _fsLeft) * 360f * 1.2f * Mathf.Deg2Rad;
-            me.SetFacing(new Vector2(Mathf.Cos(a), Mathf.Sin(a)));
+            // ⚠ 회오리 안에서 갈리는 피해(0.4초마다)는 뺐다 — 맞을 때마다 주황 타격 불꽃이 열 개씩 터져 화면이 어지러웠다(녹화 rw_sl_11).
+            //   그 몫은 풀스윙 한 방에 얹었다(FsSwingMul 4.0 → 4.6). 「끌어모았다가 한 방에」가 이 스킬이다
 
             _fsLeft -= dt;
             if (_fsLeft > 0f) return;
             FsSwing(me);
             StopFullSwing();
+        }
+
+        private static void FsPlaceVortex(Impact im, Vector2 at, float size)
+        {
+            if (im == null) return;
+            im.MoveTo(at);
+            im.SetSize(size);
+        }
+
+        /// <summary>
+        /// 몸이 회오리를 만든다 — 배트를 휘두르며 빠르게 돌고(8방향 자세), 배트 끝에서 바람 줄기가 몸 둘레로 감기며,
+        /// 둘레로 비켜 놓은 파란 잔상이 겹친다(시안 1 · 2컷의 겹친 슬러거). 모으는 동안은 휘두를 쪽을 보고 멈춘다.
+        /// </summary>
+        private void FsSpinBody(Unit me, float dt, bool gathering)
+        {
+            if (gathering)
+            {
+                if (_fsSwingDir == Vector2.zero)
+                {
+                    var list = EnemiesInRange(me.Position, Meters(FsSwingMeters) * _buffs.AoeMul);
+                    _fsSwingDir = list.Count > 0 ? FsSwingDirection(me, new List<Unit>(list)) : AimDirection(me);
+                }
+                // 뒤로 젖힌다 — 휘두를 쪽의 반대를 본다(시안 3컷 직전의 백스윙)
+                me.SetFacing(-_fsSwingDir);
+                return;
+            }
+            _fsSwingDir = Vector2.zero;
+            _fsAngle += 360f * FsTurnsPerSecond * dt;
+            float rad = _fsAngle * Mathf.Deg2Rad;
+            var dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+            me.SetFacing(dir);
+
+            _fsGhostTick -= dt;
+            if (_fsGhostTick <= 0f)
+            {
+                _fsGhostTick = FsBodyGhostEvery;
+                me.PlayAttack();   // 휘두르는 자세가 계속 넘어간다
+                var sprite = me.BodySprite;
+                var img = sprite != null ? RentAfterimage() : null;
+                img?.Play(sprite, me.Position - dir * FsBodyGhostOrbit, me.GetComponent<RectTransform>().sizeDelta,
+                          me.BodyFlipX, 0.55f, 0.16f, FsBodyGhostTint);
+            }
+
+            // 배트 끝에서 바람이 인다 — 지나간 길(뒤쪽 접선)로 짧은 줄기, 몸 둘레에 고리가 이어진다
+            _fsBatWindTick -= dt;
+            if (_fsBatWindTick > 0f) return;
+            _fsBatWindTick = FsBatWindEvery;
+            var frames = FxFrames("sltendril");
+            if (frames == null) return;
+            var tip = me.Position + dir * FsBatReach + Vector2.up * 8f;
+            var back = new Vector2(dir.y, -dir.x);   // 도는 쪽(시계 반대)의 반대 = 지나온 쪽
+            var im = FreeImpact(FsBatWindThickness);
+            if (im == null) return;
+            // 바깥 끝(갈고리)이 배트 끝, 안쪽 끝이 지나온 길 — 그림의 감기는 쪽과 맞춘다
+            im.PlayBeam(tip + back * FsBatWindLength, tip, frames, FsBatWindThickness);
+            im.SetFrameSeconds(0.04f);
+            im.SetTint(new Color(1f, 1f, 1f, 0.9f));
         }
 
         /// <summary>돌 파편 · 바람 줄기가 바깥에서 나선으로 빨려 든다(파티클) — 시안의 날리는 돌멩이.</summary>
@@ -245,9 +327,18 @@ namespace Game.Module.InGame
             float reach = Meters(FsSwingMeters) * _buffs.AoeMul;
             var list = new List<Unit>(EnemiesInRange(me.Position, reach));
             // 날리는 쪽: 적이 없는 쪽(벽이 먼 쪽)보다 화면 가운데 쪽 — 시안처럼 옆으로 시원하게
-            var dir = list.Count > 0 ? FsSwingDirection(me, list) : AimDirection(me);
+            var dir = _fsSwingDir != Vector2.zero ? _fsSwingDir : list.Count > 0 ? FsSwingDirection(me, list) : AimDirection(me);
+            _fsSwingDir = Vector2.zero;
             me.SetFacing(dir);
             me.PlayAttack();
+            // 휘두른 몸 뒤로 잔상 두 장 — 시안 3컷(뒤에 겹친 파란 슬러거 둘)
+            var body = me.BodySprite;
+            for (int g = 1; g <= 2 && body != null; g++)
+            {
+                var img = RentAfterimage();
+                img?.Play(body, me.Position - dir * (22f * g), me.GetComponent<RectTransform>().sizeDelta,
+                          me.BodyFlipX, 0.6f - 0.2f * g, 0.3f, FsBodyGhostTint);
+            }
             int dmg = SkillDamage(me, FsSwingMul * BaseAxis(1f));
             for (int i = 0; i < list.Count; i++)
             {
@@ -271,12 +362,16 @@ namespace Game.Module.InGame
             HitStop(0.14f);
         }
 
-        /// <summary>몸 → 적 무리 평균 쪽. 평균이 몸 위면 바라보는 쪽.</summary>
+        /// <summary>
+        /// 옆으로 휘두른다 — 적 무리가 많은 쪽(왼 · 오른). 시안처럼 가로로 시원하게 날아가야 읽힌다;
+        /// 무리 평균 쪽으로 휘둘렀더니 아래로 나가 금빛 호가 HUD 쪽에 묻혔다(녹화 rw_sl_10).
+        /// </summary>
         private static Vector2 FsSwingDirection(Unit me, List<Unit> list)
         {
-            var sum = Vector2.zero;
-            for (int i = 0; i < list.Count; i++) if (list[i] != null) sum += list[i].Position - me.Position;
-            return sum.sqrMagnitude > 1f ? sum.normalized : me.Facing;
+            float sx = 0f;
+            for (int i = 0; i < list.Count; i++) if (list[i] != null) sx += list[i].Position.x - me.Position.x;
+            if (Mathf.Abs(sx) < 1f) sx = me.Facing.x;
+            return new Vector2(sx >= 0f ? 1f : -1f, 0.15f).normalized;
         }
 
         private void FsLaunch(Unit e, Vector2 dir)
