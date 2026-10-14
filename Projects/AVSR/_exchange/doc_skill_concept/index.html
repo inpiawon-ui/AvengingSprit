@@ -1,0 +1,253 @@
+
+<title>AVSR 호스트 스킬 컨셉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 한 줄 읽기 폭의 문서 + 캐릭터마다 시안 두 줄(액티브 · 필살기) — 게임 HUD 의 남색 · 금색 · 하늘색을 그대로 빌린다 */
+:root {
+  --bg: #f3f4f8; --surface: #ffffff; --ink: #1b1f2e; --muted: #5d6478; --line: #d9dce6;
+  --gold: #a8740a; --sky: #1f6fb8; --red: #b8323a; --chip: #e8ebf3; --badge-bg: #fbe8e8; --badge-fg: #9b2a31;
+  --display: "Black Han Sans", "Noto Sans KR", system-ui, sans-serif;
+  --body: "Noto Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11131c; --surface: #1a1d2a; --ink: #e9ebf2; --muted: #9aa1b5; --line: #2b3042;
+  --gold: #f2c45a; --sky: #7cc0ff; --red: #ff8a8f; --chip: #242838; --badge-bg: #3a1e22; --badge-fg: #ffb3b6; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #11131c; --surface: #1a1d2a; --ink: #e9ebf2; --muted: #9aa1b5; --line: #2b3042;
+  --gold: #f2c45a; --sky: #7cc0ff; --red: #ff8a8f; --chip: #242838; --badge-bg: #3a1e22; --badge-fg: #ffb3b6; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.65; margin: 0 }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 80px; display: grid; gap: 40px }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: .01em; text-wrap: balance; margin: 0 }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.15 }
+h2 { font-size: 26px }
+h3 { font-size: 22px }
+p { margin: 0 }
+.lede { color: var(--muted); max-width: 68ch; margin-top: 10px }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px }
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 8px; min-width: 0 }
+.rule h3 { font-size: 19px }
+.rule.act h3 { color: var(--sky) }
+.rule.ult h3 { color: var(--red) }
+.rule.pas h3 { color: var(--gold) }
+.rule ul { margin: 0; padding-left: 18px; display: grid; gap: 4px }
+.map { display: grid; gap: 10px }
+.maprow { display: grid; grid-template-columns: 240px 1fr; gap: 12px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line) }
+.maprow b { font-weight: 700 }
+.chips { display: flex; flex-wrap: wrap; gap: 6px }
+.chips a { background: var(--chip); color: var(--ink); text-decoration: none; padding: 2px 10px; border-radius: 999px; font-size: 14px }
+.chips a:hover, .chips a:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px }
+.group { display: grid; gap: 22px }
+.group > header { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 10px }
+.host { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 18px; scroll-margin-top: 16px }
+.hosthead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px }
+.hosthead .num { font-family: var(--mono); color: var(--muted); font-size: 14px }
+.hosthead .concept { color: var(--gold); font-weight: 700 }
+.badge { margin-left: auto; background: var(--badge-bg); color: var(--badge-fg); font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 6px }
+.pas { display: grid; grid-template-columns: 90px 1fr; gap: 8px; align-items: baseline }
+.label { font-size: 12px; font-weight: 700; letter-spacing: .06em }
+.label.act { color: var(--sky) } .label.ult { color: var(--red) } .label.pas { color: var(--gold) }
+.skill { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px; align-items: start }
+.skill figure { margin: 0 }
+.skill img { width: 100%; height: auto; border-radius: 8px; display: block; background: var(--chip) }
+.skill .txt { display: grid; gap: 6px; min-width: 0 }
+.skill .name { font-size: 18px; font-weight: 700 }
+.skill .cuts { color: var(--muted); font-size: 13px }
+.missing { aspect-ratio: 16/9; display: grid; place-items: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; display: grid; gap: 10px }
+.ask ol { margin: 0; padding-left: 20px; display: grid; gap: 6px }
+@media (max-width: 760px) {
+  .skill { grid-template-columns: 1fr }
+  .maprow { grid-template-columns: 1fr; gap: 6px }
+  .pas { grid-template-columns: 1fr; gap: 2px }
+  .badge { margin-left: 0 }
+}
+</style>
+
+<div class="wrap">
+<header>
+<p class="meta">Avenging Spirit RE:BORN · 기획 · 2026-10-14 · PD 확인 전 안</p>
+<h1>호스트 23명 스킬 컨셉</h1>
+<p class="lede">몸마다 컨셉을 하나 정하고, 그 컨셉을 작게 쓰는 것이 액티브, 크게 터뜨리는 것이 필살기입니다. 패시브는 그 컨셉이 평타에 늘 묻어나는 자리입니다. 모든 시안은 PD 피드백 12개 기준(기승전결 · 캐릭터가 스킬을 만든다 · 소환물도 같이 공격 · 크기 절제 등)으로 검수했습니다.</p>
+</header>
+<section class="rules" aria-label="규칙">
+<div class="rule act"><h3>액티브 · 일반 스킬</h3><ul>
+<li>평타가 맞을 때마다 충전(지금 30대)</li><li>컷인 없이 바로 나간다</li><li>예전 스킬을 살려 위력만 낮춘다</li><li>적 호스트도 이 스킬(약식판)만 쓴다</li></ul></div>
+<div class="rule ult"><h3>필살기</h3><ul>
+<li>빙의할 때 1회 — 쓰면 다음 빙의까지 잠김</li><li>컷인 + 전투 멈춤, 가장 강한 연출</li><li>이번 시안(던파 레퍼런스) 연출</li><li>적 호스트는 쓰지 않는다(대장은 결정 필요)</li></ul></div>
+<div class="rule pas"><h3>패시브</h3><ul>
+<li>몸에 늘 붙어 있는 효과(지금 값 그대로)</li><li>숙련도 0 이면 액티브와 같이 잠김</li><li>시안 세 번째 컷이 패시브가 터지는 순간</li></ul></div>
+</section>
+<section class="map" aria-label="컨셉군"><h2>컨셉군 7개</h2>
+<div class="maprow"><div><b>한 놈을 세게 — 단일 강타</b></div><div class="chips"><a href="#h-gangster">갱스터</a><a href="#h-hopper">호퍼</a><a href="#h-ninja_chain">닌자(사슬)</a></div></div>
+<div class="maprow"><div><b>불러서 같이 싸운다 — 소환</b></div><div class="chips"><a href="#h-medium">영매</a><a href="#h-death">사신 (히든)</a><a href="#h-robot">로봇</a><a href="#h-ninja">닌자</a></div></div>
+<div class="maprow"><div><b>몸이 날아다닌다 — 돌격 난무</b></div><div class="chips"><a href="#h-amazon">아마존</a><a href="#h-hopper_smg">호퍼(기관단총)</a><a href="#h-vampire">흡혈귀</a><a href="#h-dragoon">드라군</a></div></div>
+<div class="maprow"><div><b>끌어모아 한 방 — 제압</b></div><div class="chips"><a href="#h-baseball">슬러거</a><a href="#h-guru">구루</a></div></div>
+<div class="maprow"><div><b>깔아 두고 터진다 — 설치 · 함정</b></div><div class="chips"><a href="#h-commando_grenade">코만도(수류탄)</a><a href="#h-salamander">샐러맨더</a><a href="#h-snowwoman">설녀</a></div></div>
+<div class="maprow"><div><b>쏟아붓는다 — 탄막 · 포격</b></div><div class="chips"><a href="#h-thug">폭력배</a><a href="#h-commando_missile">코만도(미사일)</a><a href="#h-commando_laser">코만도(레이저)</a><a href="#h-white_wizard">화이트 위저드</a><a href="#h-dragon_blue">청룡</a></div></div>
+<div class="maprow"><div><b>버티고 돌려준다 — 수호 · 반격</b></div><div class="chips"><a href="#h-commando_mg">코만도(기관총)</a><a href="#h-amazon_elite">아마존 정예</a></div></div>
+</section>
+<section class="group" aria-label="한 놈을 세게 — 단일 강타"><header><h2>한 놈을 세게 — 단일 강타</h2><p class="lede">보스 · 엘리트처럼 한 놈을 빨리 지울 때 고르는 몸.</p></header>
+<article class="host" id="h-gangster">
+<div class="hosthead"><span class="num">01</span><h3>갱스터</h3><span class="concept">청부 저격수 — 보스 킬러</span><span class="badge">★ 필살기 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>처형 계약</b> — 표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.</p></div>
+<div class="skill"><figure><a href="img/active_gangster.jpg" target="_blank"><img src="img/active_gangster.jpg" alt="갱스터 액티브 일제 표식 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">일제 표식</span><p>방 안 모든 적에게 3초간 표식을 새긴다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_gangster.jpg" target="_blank"><img src="img/ult_gangster.jpg" alt="갱스터 필살기 청부 처형 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">청부 처형</span><p>가장 체력이 높은 적(보스 포함)을 1.5초 조준한 뒤 초대형 한 발. 보스는 최대 체력의 % 피해.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-hopper">
+<div class="hosthead"><span class="num">02</span><h3>호퍼</h3><span class="concept">급소 사냥꾼 — 여럿에게 치명</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>급소</b> — 치명타 피해 +30%.</p></div>
+<div class="skill"><figure><a href="img/active_hopper.jpg" target="_blank"><img src="img/active_hopper.jpg" alt="호퍼 액티브 정조준 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">정조준</span><p>5초간 치명타 확률이 90% 로 고정된다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_hopper.jpg" target="_blank"><img src="img/ult_hopper.jpg" alt="호퍼 필살기 킬 포인트 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">킬 포인트</span><p>칼날로 앞의 적들을 묶고, 묶인 적 전원에게 치명 확정.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-ninja_chain">
+<div class="hosthead"><span class="num">03</span><h3>닌자(사슬)</h3><span class="concept">사슬 사냥꾼 — 하나를 끌어와 처리</span><span class="badge">★ 필살기 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>흘리기</b> — 10% 로 피해를 통째로 흘린다.</p></div>
+<div class="skill"><figure><a href="img/active_ninja_chain.jpg" target="_blank"><img src="img/active_ninja_chain.jpg" alt="닌자(사슬) 액티브 사슬 결박 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">사슬 결박</span><p>방 안 모든 적을 5초간 묶는다. 묶인 적은 더 아프게 맞는다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_ninja_chain.jpg" target="_blank"><img src="img/ult_ninja_chain.jpg" alt="닌자(사슬) 필살기 사슬 처형 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">사슬 처형</span><p>가장 강한 적 하나를 사슬로 끌어와 연타 뒤 내려찍는다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="불러서 같이 싸운다 — 소환"><header><h2>불러서 같이 싸운다 — 소환</h2><p class="lede">내 편을 세워 같이 싸운다. 소환물은 시전자와 같이 움직이고 같이 친다.</p></header>
+<article class="host" id="h-medium">
+<div class="hosthead"><span class="num">04</span><h3>영매</h3><span class="concept">강령술사 — 혼과 함께 싸운다</span><span class="badge">★ 액티브 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>강령</b> — 적을 잡으면 30% 로 해골이 일어선다.</p></div>
+<div class="skill"><figure><a href="img/active_medium.jpg" target="_blank"><img src="img/active_medium.jpg" alt="영매 액티브 해골 소환 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">해골 소환</span><p>해골 2기를 불러 같이 싸운다(골렘 대신 — 패시브 「강령」과 같은 해골).</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_medium.jpg" target="_blank"><img src="img/ult_medium.jpg" alt="영매 필살기 원혼 강림 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">원혼 강림</span><p>6초간 원혼이 같이 쳐서 혼불을 붙이고, 3개면 터진다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-death">
+<div class="hosthead"><span class="num">05</span><h3>사신 (히든)</h3><span class="concept">죽음의 군주</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>망자 소집</b> — 적을 잡을 때마다 그 자리에서 해골이 일어선다.</p></div>
+<div class="skill"><figure><a href="img/active_death.jpg" target="_blank"><img src="img/active_death.jpg" alt="사신 (히든) 액티브 사신의 시간 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">사신의 시간</span><p>3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_death.jpg" target="_blank"><img src="img/ult_death.jpg" alt="사신 (히든) 필살기 팬텀 스트롬 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">팬텀 스트롬</span><p>혼 소용돌이로 빨아들이고 유령 무리가 돌격한 뒤 폭발.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-robot">
+<div class="hosthead"><span class="num">06</span><h3>로봇</h3><span class="concept">포탑 기술자</span><span class="badge">★ 필살기 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>예비 회로</b> — 평타가 2% 로 액티브 쿨을 1초 당긴다.</p></div>
+<div class="skill"><figure><a href="img/active_robot.jpg" target="_blank"><img src="img/active_robot.jpg" alt="로봇 액티브 포탑 전개 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">포탑 전개</span><p>10초간 자동으로 쏘는 포탑을 하나 세운다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_robot.jpg" target="_blank"><img src="img/ult_robot.jpg" alt="로봇 필살기 요새 모드 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">요새 모드</span><p>로봇이 제자리에 고정해 포대로 변형, 포탑 3대와 함께 사방 일제 사격.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-ninja">
+<div class="hosthead"><span class="num">07</span><h3>닌자</h3><span class="concept">분신술사 — 속이고 협공</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>질주</b> — 적을 잡으면 1.5초간 이동속도 +30%.</p></div>
+<div class="skill"><figure><a href="img/active_ninja.jpg" target="_blank"><img src="img/active_ninja.jpg" alt="닌자 액티브 그림자 분신 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">그림자 분신</span><p>방 한가운데 분신을 세운다. 5초간 적이 전부 분신을 노린다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_ninja.jpg" target="_blank"><img src="img/ult_ninja.jpg" alt="닌자 필살기 잔영 분신 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">잔영 분신</span><p>6초간 분신이 닌자의 공격을 똑같이 따라 한다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="몸이 날아다닌다 — 돌격 난무"><header><h2>몸이 날아다닌다 — 돌격 난무</h2><p class="lede">몸이 적 사이를 날아다니며 친다. 이동은 잔상을 끌며 부드럽게.</p></header>
+<article class="host" id="h-amazon">
+<div class="hosthead"><span class="num">08</span><h3>아마존</h3><span class="concept">번개 돌격수</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>쉴드 질주</b> — 쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.</p></div>
+<div class="skill"><figure><a href="img/active_amazon.jpg" target="_blank"><img src="img/active_amazon.jpg" alt="아마존 액티브 도약 강타 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">도약 강타</span><p>가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_amazon.jpg" target="_blank"><img src="img/ult_amazon.jpg" alt="아마존 필살기 번개 무희 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">번개 무희</span><p>적 사이를 잔상으로 옮겨 다니며 치고 내려찍기, 시전 중 무적.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-hopper_smg">
+<div class="hosthead"><span class="num">09</span><h3>호퍼(기관단총)</h3><span class="concept">돌파 특공</span><span class="badge">★ 액티브 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>충격 반동</b> — 10% 로 맞은 적을 밀어낸다.</p></div>
+<div class="skill"><figure><a href="img/active_hopper_smg.jpg" target="_blank"><img src="img/active_hopper_smg.jpg" alt="호퍼(기관단총) 액티브 백스텝 사격 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">백스텝 사격</span><p>뒤로 크게 뛰며 앞으로 쏟아붓는다(붙은 적에게서 빠지는 기술).</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_hopper_smg.jpg" target="_blank"><img src="img/ult_hopper_smg.jpg" alt="호퍼(기관단총) 필살기 돌진 난사 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">돌진 난사</span><p>가장 먼 적까지 일직선 돌진하며 양옆 난사, 도착하면 무적.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-vampire">
+<div class="hosthead"><span class="num">10</span><h3>흡혈귀</h3><span class="concept">피의 군주 — 깎이며 폭주</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>흡혈</b> — 8% 로 공격력의 5% 만큼 회복한다.</p></div>
+<div class="skill"><figure><a href="img/active_vampire.jpg" target="_blank"><img src="img/active_vampire.jpg" alt="흡혈귀 액티브 혈연 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">혈연</span><p>둘레 5 m 의 적 머릿수만큼 최대 체력의 2% 씩 회복한다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_vampire.jpg" target="_blank"><img src="img/ult_vampire.jpg" alt="흡혈귀 필살기 피의 폭주 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">피의 폭주</span><p>5초간 체력을 내주고 폭주, 처치하면 피 구슬로 회복.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-dragoon">
+<div class="hosthead"><span class="num">11</span><h3>드라군</h3><span class="concept">용기병 — 탈것</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>불씨</b> — 명중한 적에게 10% 로 화상. 겹치지 않는다.</p></div>
+<div class="skill"><figure><a href="img/active_dragoon.jpg" target="_blank"><img src="img/active_dragoon.jpg" alt="드라군 액티브 화염 지대 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">화염 지대</span><p>가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_dragoon.jpg" target="_blank"><img src="img/ult_dragoon.jpg" alt="드라군 필살기 용 돌격 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">용 돌격</span><p>불을 뿜는 용을 타고 3초간 돌진.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="끌어모아 한 방 — 제압"><header><h2>끌어모아 한 방 — 제압</h2><p class="lede">적을 한곳에 모아 붙잡았다가 한 방에 정리한다.</p></header>
+<article class="host" id="h-baseball">
+<div class="hosthead"><span class="num">12</span><h3>슬러거</h3><span class="concept">장외 타자 — 받아치고 날린다</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>장외 타구</b> — 막타에 20% 로 주변 적을 날려 버린다.</p></div>
+<div class="skill"><figure><a href="img/active_baseball.jpg" target="_blank"><img src="img/active_baseball.jpg" alt="슬러거 액티브 전탄 반사 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">전탄 반사</span><p>5초간 날아오는 탄을 전부 되받아친다. 반사탄은 더 아프다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_baseball.jpg" target="_blank"><img src="img/ult_baseball.jpg" alt="슬러거 필살기 풀스윙 회오리 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">풀스윙 회오리</span><p>돌며 회오리를 키워 끌어당기고 풀스윙으로 날린다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-guru">
+<div class="hosthead"><span class="num">13</span><h3>구루</h3><span class="concept">결계 수도승</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>무형보</b> — 걸어 다닐 때 지형지물을 통과한다.</p></div>
+<div class="skill"><figure><a href="img/active_guru.jpg" target="_blank"><img src="img/active_guru.jpg" alt="구루 액티브 수호 결계 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">수호 결계</span><p>3초간 받는 피해 −50% · 쉴드 획득 2배.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_guru.jpg" target="_blank"><img src="img/ult_guru.jpg" alt="구루 필살기 결계 가두기 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">결계 가두기</span><p>결계로 적을 가운데로 모아 가두고 터뜨린다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="깔아 두고 터진다 — 설치 · 함정"><header><h2>깔아 두고 터진다 — 설치 · 함정</h2><p class="lede">깔아 두면 시간이 지나 터진다. 설치하는 순간과 터지는 순간이 둘 다 보인다.</p></header>
+<article class="host" id="h-commando_grenade">
+<div class="hosthead"><span class="num">14</span><h3>코만도(수류탄)</h3><span class="concept">폭파 전문가</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>파편탄</b> — 상대 방어력을 50% 무시한다.</p></div>
+<div class="skill"><figure><a href="img/active_commando_grenade.jpg" target="_blank"><img src="img/active_commando_grenade.jpg" alt="코만도(수류탄) 액티브 융단 폭격 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">융단 폭격</span><p>수류탄을 표적 둘레에 한 줄로 떨군다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_commando_grenade.jpg" target="_blank"><img src="img/ult_commando_grenade.jpg" alt="코만도(수류탄) 필살기 C4 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">C4</span><p>반경 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발(그동안 평타 쉼).</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-salamander">
+<div class="hosthead"><span class="num">15</span><h3>샐러맨더</h3><span class="concept">독술사 — 지속 피해</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>독니</b> — 명중한 적에게 10% 로 독. 겹치지 않는다.</p></div>
+<div class="skill"><figure><a href="img/active_salamander.jpg" target="_blank"><img src="img/active_salamander.jpg" alt="샐러맨더 액티브 독 뿜기 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">독 뿜기</span><p>둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_salamander.jpg" target="_blank"><img src="img/ult_salamander.jpg" alt="샐러맨더 필살기 독 늪 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">독 늪</span><p>독 늪을 깔고 빠지며, 늪이 끝날 때 터진다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-snowwoman">
+<div class="hosthead"><span class="num">16</span><h3>설녀</h3><span class="concept">빙결 마녀 — 얼려서 깬다</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>서릿발</b> — 30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다.</p></div>
+<div class="skill"><figure><a href="img/active_snowwoman.jpg" target="_blank"><img src="img/active_snowwoman.jpg" alt="설녀 액티브 얼음 감옥 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">얼음 감옥</span><p>2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_snowwoman.jpg" target="_blank"><img src="img/ult_snowwoman.jpg" alt="설녀 필살기 얼음 진 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">얼음 진</span><p>얼음 진을 깔아 기둥이 솟고 가둔 뒤 파쇄.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="쏟아붓는다 — 탄막 · 포격"><header><h2>쏟아붓는다 — 탄막 · 포격</h2><p class="lede">탄 · 빔 · 번개로 화면을 채운다. 몸마다 탄의 모양(부채 · 추적 · 관통 · 축적 · 위성)이 다르다.</p></header>
+<article class="host" id="h-thug">
+<div class="hosthead"><span class="num">17</span><h3>폭력배</h3><span class="concept">난사 갱 — 막 쏟아붓는다</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>삥</b> — 주운 골드가 10% 더 들어온다.</p></div>
+<div class="skill"><figure><a href="img/active_thug.jpg" target="_blank"><img src="img/active_thug.jpg" alt="폭력배 액티브 3방향 난사 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">3방향 난사</span><p>1초간 3방향으로 쏟아붓는다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_thug.jpg" target="_blank"><img src="img/ult_thug.jpg" alt="폭력배 필살기 회전 난사 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">회전 난사</span><p>2.5초 돌며 사방 연사, 멈추며 사방 16발.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-commando_missile">
+<div class="hosthead"><span class="num">18</span><h3>코만도(미사일)</h3><span class="concept">폭격 지원 — 여럿을 추적</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>고폭탄</b> — 투사체가 지형지물을 무시한다.</p></div>
+<div class="skill"><figure><a href="img/active_commando_missile.jpg" target="_blank"><img src="img/active_commando_missile.jpg" alt="코만도(미사일) 액티브 다중 유도 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">다중 유도</span><p>반원으로 퍼진 8발이 한 대상으로 모여 든다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_commando_missile.jpg" target="_blank"><img src="img/ult_commando_missile.jpg" alt="코만도(미사일) 필살기 자폭 미사일 떼 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">자폭 미사일 떼</span><p>6기가 각자 다른 적을 쫓아 동시 폭발.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-commando_laser">
+<div class="hosthead"><span class="num">19</span><h3>코만도(레이저)</h3><span class="concept">관통 포격 — 일직선</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>집속 광선</b> — 투사체가 지형지물을 무시하고 적을 관통한다.</p></div>
+<div class="skill"><figure><a href="img/active_commando_laser.jpg" target="_blank"><img src="img/active_commando_laser.jpg" alt="코만도(레이저) 액티브 연쇄 방전 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">연쇄 방전</span><p>3초간 주변 적에게 전기가 계속 튄다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_commando_laser.jpg" target="_blank"><img src="img/ult_commando_laser.jpg" alt="코만도(레이저) 필살기 충전 레이저 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">충전 레이저</span><p>0.5초 차지 뒤 굵은 관통 빔, 반동.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-white_wizard">
+<div class="hosthead"><span class="num">20</span><h3>화이트 위저드</h3><span class="concept">축적 마법사 — 모아서 쏜다</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>관통 광선</b> — 투사체가 지형지물을 무시하고 적을 관통한다.</p></div>
+<div class="skill"><figure><a href="img/active_white_wizard.jpg" target="_blank"><img src="img/active_white_wizard.jpg" alt="화이트 위저드 액티브 광휘 확산 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">광휘 확산</span><p>부채꼴 8방향으로 광탄을 쏜다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_white_wizard.jpg" target="_blank"><img src="img/ult_white_wizard.jpg" alt="화이트 위저드 필살기 빛 구슬 일제 발사 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">빛 구슬 일제 발사</span><p>평타로 쌓은 빛 구슬을 한꺼번에 유도 발사.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-dragon_blue">
+<div class="hosthead"><span class="num">21</span><h3>청룡</h3><span class="concept">뇌신 — 번개가 튄다</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>낙뢰</b> — 10% 로 옆 적에게 번개가 튄다.</p></div>
+<div class="skill"><figure><a href="img/active_dragon_blue.jpg" target="_blank"><img src="img/active_dragon_blue.jpg" alt="청룡 액티브 뇌전 폭주 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">뇌전 폭주</span><p>2초간 번개 튕김이 반드시 터진다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_dragon_blue.jpg" target="_blank"><img src="img/ult_dragon_blue.jpg" alt="청룡 필살기 번개 구슬 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">번개 구슬</span><p>구슬 3개가 몸 둘레를 돌며 번개, 끝에 낙뢰.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="group" aria-label="버티고 돌려준다 — 수호 · 반격"><header><h2>버티고 돌려준다 — 수호 · 반격</h2><p class="lede">맞으면서 버티고, 버틴 만큼 돌려준다.</p></header>
+<article class="host" id="h-commando_mg">
+<div class="hosthead"><span class="num">22</span><h3>코만도(기관총)</h3><span class="concept">방패병 — 막으며 전진</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>중장갑</b> — 방어력 20% 증가.</p></div>
+<div class="skill"><figure><a href="img/active_commando_mg.jpg" target="_blank"><img src="img/active_commando_mg.jpg" alt="코만도(기관총) 액티브 방벽 전개 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">방벽 전개</span><p>5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_commando_mg.jpg" target="_blank"><img src="img/ult_commando_mg.jpg" alt="코만도(기관총) 필살기 디플렉트 월 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">디플렉트 월</span><p>방벽을 세워 4초간 밀고 나가며 탄을 막는다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+<article class="host" id="h-amazon_elite">
+<div class="hosthead"><span class="num">23</span><h3>아마존 정예</h3><span class="concept">불굴의 반격자</span><span class="badge">★ 필살기 변경</span></div>
+<div class="pas"><span class="label pas">패시브</span><p><b>역전의 자세</b> — 쉴드가 남아 있는 동안 공격력이 오른다.</p></div>
+<div class="skill"><figure><a href="img/active_amazon_elite.jpg" target="_blank"><img src="img/active_amazon_elite.jpg" alt="아마존 정예 액티브 불굴 시안" loading="lazy"></a></figure><div class="txt"><span class="label act">액티브 · 평타로 충전</span><span class="name">불굴</span><p>무적 2.5초 + 쉴드 상한 해제. 해제가 무적보다 1.5초 더 간다.</p><p class="cuts">세 컷: 액티브 발동 → 결과 → 패시브 순간</p></div></div>
+<div class="skill"><figure><a href="img/ult_amazon_elite.jpg" target="_blank"><img src="img/ult_amazon_elite.jpg" alt="아마존 정예 필살기 역린 시안" loading="lazy"></a></figure><div class="txt"><span class="label ult">필살기 · 빙의할 때 1회</span><span class="name">역린</span><p>3초간 받은 피해를 모았다가 주변으로 되돌려 터뜨린다.</p><p class="cuts">세 컷: 기 → 승 · 전 → 결</p></div></div>
+</article>
+</section>
+<section class="ask"><h2>정해 주실 것</h2><ol>
+<li>컨셉군 7개와 캐릭터 배정</li>
+<li>★ 변경 6곳 — 필살기 4(갱스터 청부 처형 · 닌자(사슬) 사슬 처형 · 로봇 요새 모드 · 아마존 정예 역린) · 액티브 2(영매 해골 소환 · 호퍼(기관단총) 백스텝 사격)</li>
+<li>액티브와 필살기 차이가 약한 몸 — 코만도(미사일)(둘 다 미사일 무리) · 샐러맨더(둘 다 독 장판)</li>
+<li>버튼 — 두 개 / 액티브 자동 발동 + 필살기 버튼 하나</li>
+<li>같은 몸에 다시 빙의하면 필살기를 다시 줄지</li>
+<li>갱스터 청부 처형의 보스 피해 상한(제안 15~20%)</li>
+</ol></section>
+</div>
