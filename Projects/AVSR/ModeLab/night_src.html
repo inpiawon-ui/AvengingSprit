@@ -677,10 +677,18 @@ function offerCards() {
   });
 }
 
+// 밤 입장 — 하루 3번(이기든 지든 −1) · 젬 추가. 시험판은 날짜 대신 시험용 버튼으로 넘긴다
+const NW = { lives: 3, bought: 0 };
+try { Object.assign(NW, JSON.parse(localStorage.getItem('avsr.night.entries') || '{}')); } catch (e) {}
+const nwSave = () => { try { localStorage.setItem('avsr.night.entries', JSON.stringify(NW)); } catch (e) {} };
+function nwBuy() { if (NW.bought >= 3) return; NW.bought++; NW.lives++; nwSave(); intro('night'); }
+function nwNextDay() { NW.lives = 3; NW.bought = 0; nwSave(); intro('night'); }
+const nwButtons = () => `<button type="button" class="sec" onclick="nwBuy()"${NW.bought >= 3 ? ' disabled' : ''}>입장 +1 (젬 ${[50, 100, 200][Math.min(NW.bought, 2)]} · 오늘 ${NW.bought}/3)</button> <button type="button" class="sec" onclick="nwNextDay()">시험용 — 다음 날</button>`;
+
 // ── 망령의 밤 ───────────────────────────────────────────
 // 시간마다 무리가 계속 내려온다. 무리마다 빼앗을 몸이 섞여 온다 — 몸이 다 떨어져 유령으로 버티는 일이 없게
 MODES.night = {
-  name: '망령의 밤', tab: '망령의 밤', cycle: '매일 · 요일 조건',
+  name: '망령의 밤', tab: '망령의 밤', cycle: '하루 3번 · 요일 조건',
   goal: '목표: 5분 버티고 마지막 보스 처치',
   reward: '(보상은 모드를 다 정한 뒤에 — 지금은 재미 검증)',
   rules: [
@@ -695,8 +703,9 @@ MODES.night = {
   rescueDelay: 1,
   options: () => {
     const today = new Date().getDay();
-    return `<label>요일 <select id="optDay">${DAYS.map((d, i) => `<option value="${i}"${i === today ? ' selected' : ''}>${d.day} · ${d.name} (${d.desc})</option>`).join('')}</select></label>`;
+    return `<label>요일 <select id="optDay">${DAYS.map((d, i) => `<option value="${i}"${i === today ? ' selected' : ''}>${d.day} · ${d.name} (${d.desc})</option>`).join('')}</select></label><div style="flex-basis:100%">오늘 남은 입장 <b>${NW.lives}</b> — 시작하면 이기든 지든 1번 줄어든다</div>${nwButtons()}`;
   },
+  canStart() { if (NW.lives > 0) { NW.lives--; nwSave(); return true; } alert('오늘 입장을 다 썼다 — 입장을 사거나 「시험용 — 다음 날」'); return false; },
   start(G, opt) {
     const day = DAYS[opt.day != null ? +opt.day : new Date().getDay()];
     G.buff = {};
@@ -792,7 +801,7 @@ MODES.night = {
     // 보상 가안 — 처치 50마다 오늘의 호스트 조각 1 · 보스까지 잡으면 +3 (숫자는 모드 확정 뒤에 정한다)
     const shards = Math.floor(G.kills / 50) + (win ? 3 : 0);
     let best = 0; try { best = +localStorage.getItem('avsr.night.kills.' + S.day.day) || 0; if (G.kills > best) localStorage.setItem('avsr.night.kills.' + S.day.day, G.kills); } catch (e) {}
-    return `<p class="big">처치 ${G.kills}${G.kills > best ? ' · 최고 기록!' : ` (최고 ${best})`}</p><p class="reward">보상(가안) — 오늘의 호스트 조각 ${shards}개 (처치 50마다 1 · 보스 처치 +3)</p><p class="reward">버틴 시간 ${m}:${String(s).padStart(2, '0')} · 레벨 ${S.level} · 처치 ${G.kills}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p>`; },
+    return `<p>오늘 남은 입장 ${NW.lives}</p><div class="row">${nwButtons()}</div><p class="big">처치 ${G.kills}${G.kills > best ? ' · 최고 기록!' : ` (최고 ${best})`}</p><p class="reward">보상(가안) — 오늘의 호스트 조각 ${shards}개 (처치 50마다 1 · 보스 처치 +3)</p><p class="reward">버틴 시간 ${m}:${String(s).padStart(2, '0')} · 레벨 ${S.level} · 처치 ${G.kills}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p>`; },
 };
 
 // ── 망령의 탑 ───────────────────────────────────────────

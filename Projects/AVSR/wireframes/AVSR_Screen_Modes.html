@@ -114,7 +114,7 @@ flowchart LR
           <img src="modes_mock/modeart_survival.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85">
           <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,20,.1),rgba(4,8,20,.88) 62%)"></div>
           <div class="a t-d" style="left:16px;top:66px;font-size:36px;text-shadow:0 2px 0 #000">망령의 밤</div>
-          <div class="a chip" style="left:14px;top:106px;font-size:19px;padding:2px 12px;border-color:#8fd6ff"><img class="gem" src="modes_mock/rps_gem_force.png" alt="" style="width:24px;height:24px">오늘: 원거리의 날</div>
+          <div class="a chip" style="left:14px;top:106px;font-size:19px;padding:2px 12px;border-color:#8fd6ff">원거리의 날 · 입장 3/3</div>
         </div>
         <!-- 디펜스 칸 → 망령의 탑 -->
         <div class="a pnl" style="left:365px;top:929px;width:330px;height:149px;overflow:hidden;padding:0;border-radius:14px">
@@ -123,6 +123,7 @@ flowchart LR
           <div class="a t-d" style="left:16px;top:66px;font-size:36px;text-shadow:0 2px 0 #000">망령의 탑</div>
           <div class="a chip" style="left:14px;top:106px;font-size:19px;padding:2px 12px;border-color:#ffcb2e">이번 주 12층 · 입장 2/3</div>
         </div>
+        <div class="red-dot" style="left:336px;top:918px">!</div>
         <div class="red-dot" style="left:674px;top:918px">!</div>
         <div class="pin" style="left:300px;top:900px">1</div>
         <div class="pin" style="left:640px;top:1040px">2</div>
@@ -132,7 +133,7 @@ flowchart LR
         <h3><small>L</small>로비 · PLAY 탭</h3>
         <p>지금 자물쇠로 막힌 두 칸을 연다. 시나리오(챕터) 칸은 그대로.</p>
         <ol>
-          <li><b>서바이벌 칸 → 망령의 밤</b> (<code>ModeSurvivalCard</code>). 아래 줄에 오늘 요일 조건. 누르면 밤 입장 패널.</li>
+          <li><b>서바이벌 칸 → 망령의 밤</b> (<code>ModeSurvivalCard</code>). 「오늘 요일 조건 · 입장 남음/3」. 빨간 점 = 오늘 입장이 남음. 누르면 밤 입장 패널.</li>
           <li><b>디펜스 칸 → 망령의 탑</b> (<code>ModeDefenseCard</code>). 「이번 주 N층 · 입장 남음/3」. <b>빨간 점</b> = 오늘 입장이 남았거나 소탕을 안 받음.</li>
           <li>카드 그림은 지금 칸 그림을 그대로 쓴다. 탑 칸은 포탑 그림이라 나중에 「탑」 그림으로 바꿀 후보(발주 목록).</li>
         </ol>
@@ -470,7 +471,7 @@ flowchart LR
 
 <!-- ───────────── 망령의 밤 ───────────── -->
 <section>
-  <h2>2. 망령의 밤 — 요일 조건 · 5분 서바이벌 · 처치 수 보상</h2>
+  <h2>2. 망령의 밤 — 하루 3번 · 요일 조건 · 5분 서바이벌 · 처치 수 보상</h2>
   <div class="row">
 
     <!-- N1 -->
@@ -519,8 +520,12 @@ flowchart LR
           <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">45초마다</b><br>대형 호스트</div>
           <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">5:00</b><br>보스</div>
         </div>
-        <div class="a" style="left:20px;top:986px;width:680px;height:64px;border:3px dashed #5b6f99;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9fb6e6">입장 횟수 자리 — 정해지면 탑과 같은 모양(점 3개)</div>
+        <div class="a" style="left:20px;top:986px;width:680px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:14px;font-size:22px">오늘 입장 <span class="pips"><i></i><i></i><i></i></span><b class="t-d" style="font-size:30px">3 / 3</b></div>
+          <div class="btn-x" style="height:52px;padding:0 16px;font-size:20px;gap:6px">＋ <img src="modes_mock/ch_icon_gem.png" alt="" style="width:26px"> 추가 입장</div>
+        </div>
         <div class="a btn-g" style="left:110px;top:1072px;width:500px;height:120px;font-size:52px">시작 ▶</div>
+        <div class="a" style="left:0;top:1206px;width:720px;text-align:center;font-size:17px;color:#9fb6e6">입장 1번 사용 · 이기든 지든 줄어든다</div>
         <div class="pin" style="left:668px;top:200px">1</div>
         <div class="pin" style="left:668px;top:330px">2</div>
         <div class="pin" style="left:668px;top:520px">3</div>
@@ -537,7 +542,7 @@ flowchart LR
           <li><b>오늘 호스트</b> — 키운 몸(금테 ★) 먼저. 누르면 성장 화면.</li>
           <li>이 요일 <b>최고 처치</b> · 보상 규칙(처치 50마다 조각 1 · 보스 +3, 가안).</li>
           <li>한 판의 흐름 4칸 — 처음 하는 사람이 무엇을 기대할지.</li>
-          <li><b>입장 횟수는 아직 미정</b> — 정하면 이 자리에 탑과 같은 점 3개.</li>
+          <li><b>하루 입장 3번</b>(탑과 같음) — 점 3개 · 「＋ 추가 입장」(젬). 시작하면 이기든 지든 1번 줄어든다. 0이면 시작 버튼이 「💎50 추가 입장」으로.</li>
         </ol>
       </div>
     </div>
@@ -711,6 +716,7 @@ flowchart LR
             </div>
           </div>
           <div style="margin-top:16px;font-size:19px;color:#9fb6e6">버틴 시간 5:12 · Lv 10 · 빙의 4 · 몸 잃음 2</div>
+          <div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:21px">오늘 입장 <span class="pips"><i></i><i></i><i class="off"></i></span> <b>2 / 3</b></div>
           <div class="a" style="left:26px;right:26px;bottom:26px;display:flex;gap:16px">
             <div class="btn-x" style="flex:1;height:96px;font-size:30px">로비</div>
             <div class="btn-g" style="flex:1.4;height:96px;font-size:36px">다시 ▶</div>
@@ -726,7 +732,7 @@ flowchart LR
         <ol>
           <li>제목 · 요일 · 끝난 이유.</li>
           <li><b>처치 수</b>가 가장 크게 — 0부터 올라가는 숫자. 이 요일 최고면 「최고 기록!」.</li>
-          <li>받은 조각(그날 호스트에게 나눠서 · 키운 몸 쪽 무게). 쓰러져도 그때까지 처치한 만큼은 받는다.</li>
+          <li>받은 조각(그날 호스트에게 나눠서 · 키운 몸 쪽 무게). 쓰러져도 그때까지 처치한 만큼은 받는다. 아래에 오늘 남은 입장 — 「다시」는 입장 −1(0이면 젬 추가 입장).</li>
         </ol>
       </div>
     </div>
@@ -735,7 +741,7 @@ flowchart LR
 </section>
 
 <section class="note">
-  <b>이 시안에서 정할 것</b> — ① 탑 칸 그림(지금 포탑 그림) 교체 여부 ② 밤 입장 횟수(정하면 N1 점선 자리) ③ 소탕 계단 · 첫 클리어 보상 · 젬 값 숫자 ④ 인게임 위 가운데 판(TOWER / NIGHT) 모양 — 통과하면 패널 · 판 · 띠 그림을 이 배치 그대로 발주한다.
+  <b>이 시안에서 정할 것</b> — ① 탑 칸 그림(지금 포탑 그림) 교체 여부 ② 밤 · 탑 모두 하루 입장 3번(정함) — 젬 추가 값 ③ 소탕 계단 · 첫 클리어 보상 · 젬 값 숫자 ④ 인게임 위 가운데 판(TOWER / NIGHT) 모양 — 통과하면 패널 · 판 · 띠 그림을 이 배치 그대로 발주한다.
 </section>
 
 </div>

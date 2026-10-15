@@ -2,7 +2,7 @@
 
 - **화면**: 로비 모드 칸 → 입장 패널 → 팝업 → 인게임 HUD → 결과 · **소속 콘텐츠**: [`AVSR_Content_Tower.md`](../AVSR_Content_Tower.md) · [`AVSR_Content_NightMode.md`](../AVSR_Content_NightMode.md)
 - **시안**: [`AVSR_Screen_Modes.html`](AVSR_Screen_Modes.html) — 프레임 L · T1~T9 · N1~N7 (그림 바탕 `modes_mock/`)
-- **Version**: `0.1` · **Status**: 시안 — PD 확인 대기 · **Last Updated**: 2026-10-15
+- **Version**: `0.2` · **Status**: 시안 — PD 확인 대기 · **Last Updated**: 2026-10-15
 - 규약: 요소 이름 = 프리팹 GameObject 이름 = 클라 바인딩 키. 좌표는 기준 해상도 720×1280(constants.md 3절) 대략값. 가로 앵커는 가운데 또는 스트레치(05_prefabs 「왼쪽에 못 박지 않는다」).
 - 글자는 전부 언어팩 키(6절) — 그림에 글자를 넣지 않는다. 3언어 전 문장을 `GetPreferredValues` 로 칸 확인.
 
@@ -37,11 +37,12 @@
 |---|---|---|
 | 로비 PLAY 탭 | `ModeSurvivalCard` | N1 `NightEntryPanel` |
 | N1 | 요일 칸(다른 요일) | 그 요일 조건 · 호스트를 미리보기(시작 버튼은 「오늘만」으로 잠김) |
-| N1 | `NightStartButton` | 로딩 → N2 |
+| N1 | `NightStartButton` (입장 ≥ 1) | 입장 −1 저장 → 로딩 → N2 |
+| N1 | `NightStartButton` (입장 0) · `NightBuyButton` | `NightBuyPopup`(T3 과 같은 모양) — 사면 바로 로딩 / 입장만 +1 |
 | N2 | 시작 몸 셋 중 하나에 빙의 | 나머지 둘 사라짐 → N3 |
 | N3 | 45초마다 / 1분마다 / 레벨업 | N4 / N5 / N6(카드 고르는 동안 전투 정지) |
 | N3 | 보스 처치 · 유령 에너지 0 | N7 |
-| N7 | `NightRetryButton` / `NightLobbyButton` | N1 다시 / 로비 → N1 |
+| N7 | `NightRetryButton` (입장 ≥ 1 → 입장 −1 → 로딩 · 0 → `NightBuyPopup`) / `NightLobbyButton` | N2 / 로비 → N1 |
 
 > 뒤로가기(06_ui): 팝업 → 패널 → 로비 순. 인게임에서는 본편 그대로(일시정지 창).
 
@@ -55,7 +56,8 @@
 |---|---|---|---|---|
 | `ModeSurvivalCard` | Button (있음) | 아래 왼쪽 칸 | 그림 `modeart_survival` | → N1 |
 | └ `ModeSurvivalTitleText` | TMP | 칸 아래 1/3 | 「망령의 밤」 `ui.lobby.mode.survival.name` | — |
-| └ `ModeSurvivalSubText` | TMP + 보석 Image | 제목 아래 칩 | 「오늘: 원거리의 날」 | — |
+| └ `ModeSurvivalSubText` | TMP + 보석 Image | 제목 아래 칩 | 「원거리의 날 · 입장 2/3」 | — |
+| └ `ModeSurvivalBadge` | Image | 칸 오른쪽 위 | 빨간 점 — 오늘 입장이 남음 | — |
 | `ModeDefenseCard` | Button (있음) | 아래 오른쪽 칸 | 그림 `modeart_defense` (교체 후보) | → T1 |
 | └ `ModeDefenseTitleText` | TMP | | 「망령의 탑」 `ui.lobby.mode.defense.name` | — |
 | └ `ModeDefenseSubText` | TMP | | 「이번 주 12층 · 입장 2/3」 | — |
@@ -176,8 +178,10 @@
 | └ `NightBestBox` | | 「화요일 최고 처치 238」 | — |
 | └ `NightRewardBox` | | 「처치 50마다 조각 1 · 보스 처치 +3」 | — |
 | `NightFlowRow` > 4칸 | (20,820) | 「0:00 몸 셋 중 하나」 「매 1분 속성 바뀜 · 회복」 「45초마다 대형」 「5:00 보스」 | — |
-| `NightEntrySlot` | (20,986) | **입장 횟수 미정** — 정하면 탑과 같은 점 + 숫자 | — |
-| `NightStartButton` | (110,1072) 500×120 | 「시작 ▶」 — 다른 요일을 보는 중이면 「오늘만 시작할 수 있다」로 잠김 | 로딩 → N2 |
+| `NightEntryPips` > `NightEntryPip` ×3 · `NightEntryText` | (20,986) | 오늘 남은 입장 점 3 · 「2 / 3」 | — |
+| `NightBuyButton` | 오른쪽 | 「＋ 💎 추가 입장」 — 오늘 산 횟수 3이면 잠김 | → `NightBuyPopup` |
+| `NightStartButton` | (110,1072) 500×120 | 「시작 ▶」 / 입장 0 이면 「💎50 추가 입장」 — 다른 요일을 보는 중이면 「오늘만 시작할 수 있다」로 잠김 | 입장 −1 → 로딩 → N2 |
+| `NightStartHintText` | 버튼 아래 | 「입장 1번 사용 · 이기든 지든 줄어든다」 | — |
 
 ### N2 ~ N5. 인게임 — `InGameMainUI` 에 노드 추가 (밤일 때만 켬)
 
@@ -205,7 +209,8 @@
 | `NightResultBestRibbon` | 「최고 기록! (이전 238)」 — 갱신일 때만 |
 | `NightResultShardList` > `NightResultShardItem` | 「보상 — 처치 50마다 1 (×5) + 보스 처치 3」 초상 × 개수 |
 | `NightResultStatText` | 「버틴 시간 5:12 · Lv 10 · 빙의 4 · 몸 잃음 2」 |
-| `NightLobbyButton` · `NightRetryButton` | 「로비」 · 「다시 ▶」 |
+| `NightResultEntryPips` | 「오늘 입장 ●○○ 1 / 3」 |
+| `NightLobbyButton` · `NightRetryButton` | 「로비」 · 「다시 ▶」 — 입장 0 이면 「💎50 추가 입장」 |
 
 ---
 
@@ -236,20 +241,21 @@
 `tower.rule.{rule}.name` / `.desc`(8종) · `tower.floor.{n}.name`
 
 밤: `ui.night.title` · `ui.night.day.{mon…sun}` · `ui.night.day_rule.{mon…sun}` · `ui.night.today` 「오늘 · {0}」 · `ui.night.fit` 「오늘 나오는 호스트 {0} · 내가 키운 ★{1}」 · `ui.night.best` 「{0} 최고 처치」 · `ui.night.reward` ·
-`ui.night.flow.{start,wave,big,boss}` · `ui.night.start` 「시작 ▶」 · `ui.night.today_only` 「오늘만 시작할 수 있다」 · `ui.night.kills` 「처치 {0}」 · `ui.night.wave` 「무리: {0}」 · `ui.night.next_big` 「대형 호스트 {0}」 · `ui.night.next_boss` 「보스 {0}」 ·
+`ui.night.flow.{start,wave,big,boss}` · `ui.night.entries` 「{0} / {1}」 · `ui.night.buy` 「추가 입장」 · `ui.night.start_hint` 「입장 1번 사용 · 이기든 지든 줄어든다」 · `ui.night.start` 「시작 ▶」 · `ui.night.today_only` 「오늘만 시작할 수 있다」 · `ui.night.kills` 「처치 {0}」 · `ui.night.wave` 「무리: {0}」 · `ui.night.next_big` 「대형 호스트 {0}」 · `ui.night.next_boss` 「보스 {0}」 ·
 `ui.night.start_hint` · `ui.night.start_hint_sub` · `ui.night.banner.big` 「대형 {0} 등장」 · `ui.night.banner.big_sub` · `ui.night.banner.wave` 「무리가 {0}로」 · `ui.night.banner.heal` 「버텼다 — {0}% 회복」 · `ui.night.counter` 「{0} 몸이 오면 ▲」 ·
 `ui.night.result.clear` 「밤을 버텼다」 · `ui.night.result.fail` 「쓰러졌다」 · `ui.night.result.best` 「최고 기록! (이전 {0})」 · `ui.night.result.reward` · `ui.night.result.stat`
 
-로비: `ui.lobby.mode.survival.name/.desc` → 「망령의 밤」 · 「오늘: {0}」 / `ui.lobby.mode.defense.name/.desc` → 「망령의 탑」 · 「이번 주 {0}층 · 입장 {1}/{2}」
+로비: `ui.lobby.mode.survival.name/.desc` → 「망령의 밤」 · 「{0} · 입장 {1}/{2}」 / `ui.lobby.mode.defense.name/.desc` → 「망령의 탑」 · 「이번 주 {0}층 · 입장 {1}/{2}」
 
 ---
 
 ## 7. 미정
 
-- 탑 칸 로비 그림 교체(`modeart_tower`) · 밤 입장 횟수(N1 `NightEntrySlot`) · 소탕 · 첫 클리어 · 젬 값 숫자 · 인게임 판 모양(TOWER / NIGHT).
+- 탑 칸 로비 그림 교체(`modeart_tower`) · 소탕 · 첫 클리어 · 젬 값 숫자 · 인게임 판 모양(TOWER / NIGHT).
 
 ## 개정 이력
 
 | 버전 | 날짜 | 변경 |
 |---|---|---|
+| 0.2 | 2026-10-15 | 밤도 하루 입장 3번 — N1 입장 점 · 추가 입장 · 결과 창 입장 표시 · 로비 칸 |
 | 0.1 | 2026-10-15 | 최초 작성 — 시안 L · T1~T9 · N1~N7 |
