@@ -48,6 +48,8 @@ Stage 4  클라이언트   프리팹 바인딩 + 기능 구현
 
 ---
 
+> **UI · 시안 작업은 스킬 `ui-mockup-to-game` 으로 한다** — 하네스 메뉴 `Tools/Game/Verify/UI Harness (Lobby)`, 이 게임 값은 `.claude/skills/ui-mockup-to-game/project.md`(키트 `Tools/ui-mockup-kit/APPLY.md`, 2026-10-15).
+
 ## 클로드 구조 (Claude Convention)
 
 ```

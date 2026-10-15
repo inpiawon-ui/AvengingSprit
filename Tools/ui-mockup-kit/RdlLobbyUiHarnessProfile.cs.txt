@@ -1,0 +1,205 @@
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Game.Module.Lobby;
+using GameFramework.Game.Editor.UiHarness;
+using UnityEditor;
+using UnityEngine;
+
+namespace Game.Editor.UiHarness
+{
+    /// <summary>
+    /// RDL 로비 UI 하네스 프로필 — 로비·챕터·지도·원코인 상태와 판·예외. 범용 실행기는 <see cref="UiHarnessRunner"/>.
+    /// 상태는 지난 사용자 지적이 나온 곳을 다 덮는다(누름 · 탭 · 언어 · 오모테/우라). 상태를 더하면 세 해상도로 자동으로 찍고 잰다.
+    /// </summary>
+    public sealed class RdlLobbyUiHarnessProfile : IUiHarnessProfile
+    {
+        private const string LobbyScene = "RDL_Lobby";
+
+        [MenuItem("RodLand/Verify/UI Harness (Lobby)")]
+        public static void RunMenu() => UiHarnessRunner.Run(new RdlLobbyUiHarnessProfile());
+
+        public string Name => "RdlLobby";
+        public string BootScene => "Assets/Scenes/RDL_Boot.unity";
+        public string MockFolder => "Projects/RDL/Mockups/Lobby";
+
+        public IReadOnlyList<(string ViewName, string Tag)> Resolutions { get; } = new[]
+        {
+            ("RDL 16x9", "169"), ("RDL 209", "209"), ("RDL 4x3", "43"),
+        };
+
+        public UiHarnessRules Rules { get; } = new UiHarnessRules()
+            .ExclusiveChildren(@"/CabinetScreen$", @"^(HomeScreen|Screen_\w+)$")   // 화면 창 속 화면들 — 맨 위 하나만 보인다(로비 첫 화면이 챕터·지도·원코인 뒤에 남는다)
+            .ExclusiveChildren(@"/DeckKeys$", @"^Deck_\w+$")        // 조작판 단추 묶음 — 화면마다 하나
+            .Contain(@"Pill_(Arcade|Coin|Wand)$", 0.06f, "재화 칸 — 아이콘·숫자·+ 는 금테 안(2026-10-14 아이콘 이탈)")
+            .Contain(@"/(Btn_Start|Btn_WorldGo|Btn_MapStart|Btn_CoinStart)$", 0f, "START — 눌린 돔·글자가 받침 밖으로 나가지 않는다(2026-10-14)")
+            .Contain(@"/RankingPanel$", 0f, "원코인 랭킹 판")
+            .Contain(@"/(RewardPanel|StagePanel)$", 0f, "지도 오른쪽 패널")
+            .Modal(@"^QuestDetail$")
+            .Contain(@"/ChapterPanel$", 0f, "챕터 오른쪽 패널")
+            .AllowRule("C2", @"/ChapterGrid/Content/", "챕터 «전체» 탭 스크롤 — 가장자리 칸이 잘리는 것은 정상")
+            .AllowRule("C2", @"/CabinetScreen/[^/]+/Background$", "화면 배경 — 창을 덮게(cover) 깔고 창이 잘라 낸다")
+            .AllowRule("C2", @"/Screen_Map/(MapPageBack_\d+|Design/StoryMapPanel/MapPage_\d+)$", "지도 그림 — 키워 깔고 창이 잘라 낸다(MapArtZoom)")
+            .AllowRule("C2", @"/CoinMonitor/Screen/Attract_\d+/", "게임기 모니터 속 원작 타이틀 — 모니터 창이 잘라 낸다")
+            .AllowRule("C3", @"/CoinMonitor/Screen/Attract_\d+/Composition/(Wide|PanelBack|WideEdge(Left|Right))$",
+                       "원작 화면 양옆 넓은 그림·거울 띠 — 4:3 의 높은 모니터에서는 화면 밖까지 뻗고 모니터 창이 잘라 낸다")
+            .AllowRule("R3", @"/CabinetScreen/[^/]+/Background$|/MapPage(Back)?_\d+|/Attract_\d+/|/CabinetBody$",
+                       "배경·원작 픽셀 그림 — 확대해 쓰는 것이 의도")
+            .AllowRule("*", @"(^|/)(Fx_[^/]*|Dust[^/]*|Glow)(/|$)", "빛·파티클 연출 — 번지는 것이 정상")
+            .AllowRule("C1", @"/Node_\d+/(Star\d|BossChip)", "지도 마디 아래 별·보스 딱지 — 시안에서 메달 아래로 매달린다")
+            .AllowRule("C5", @"/OneCoinPanel/(Tall_\w+/)?Title(Rim)?$", "원코인 간판 제목 — 같은 글자를 두 겹(분홍 테 + 면) 겹쳐 그린 장식");
+
+        public IReadOnlyList<UiHarnessScenario> Scenarios { get; } = BuildScenarios();
+
+        public Transform Root()
+        {
+            var canvas = GameObject.Find("LobbyCanvas");
+            return canvas != null ? canvas.transform : null;
+        }
+
+        /// <summary> 상태마다 로비를 새로 연다 — 앞 상태의 누름·탭·언어가 남지 않게. 모드는 스토리로 맞춘다. </summary>
+        public async UniTask GotoStart(UiHarnessDriver driver)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(LobbyScene);
+            await UniTask.Yield();
+            for (int i = 0; i < 600 && GameObject.Find("Btn_Story") == null; i++) await UniTask.Yield();
+            await UiHarnessDriver.Seconds(1f);
+            var localization = GameFramework.Core.Base.CoreModule.Get<GameFramework.Core.Module.Localization.ILocalizationManager>();
+            if (localization.CurrentLocale != "ko") await Locale("ko");   // 일본어 상태가 다음 상태에 남지 않게
+            if (Screen() != null && Screen().IsOneCoinModeSelected) await driver.Click("Btn_Story");
+        }
+
+        private static RdlLobbyScreen Screen() => Object.FindAnyObjectByType<RdlLobbyScreen>();
+
+        private static string Need(bool ok, string what) => ok ? null : what;
+
+        private static bool On(string name) => GameObject.Find(name) != null;
+
+        /// <summary> START 가 정말 눌린 그림인가 — 해상도를 바꾼 뒤에도 눌림이 유지됐는지(하네스가 해상도마다 다시 묻는다). </summary>
+        private static bool Pressed(string button)
+        {
+            var go = GameObject.Find(button);
+            var dome = go != null ? go.transform.Find("Dome") : null;
+            var image = dome != null ? dome.GetComponent<UnityEngine.UI.Image>() : null;
+            return image != null && image.sprite != null && image.sprite.name == "Btn_Start_DomePressed";
+        }
+
+        private static string LocaleIs(string locale)
+        {
+            var manager = GameFramework.Core.Base.CoreModule.Get<GameFramework.Core.Module.Localization.ILocalizationManager>();
+            return manager.CurrentLocale == locale ? null : "언어가 " + manager.CurrentLocale + " 이다(" + locale + " 기대)";
+        }
+
+        private static async UniTask Locale(string locale)
+        {
+            var manager = GameFramework.Core.Base.CoreModule.Get<GameFramework.Core.Module.Localization.ILocalizationManager>();
+            await manager.SetLocaleAsync(locale);
+            await UiHarnessDriver.Seconds(0.5f);
+        }
+
+        private static IReadOnlyList<UiHarnessScenario> BuildScenarios()
+        {
+            UniTask None(UiHarnessDriver d) => UniTask.CompletedTask;
+            bool Home() => Screen() != null && !Screen().IsWorldSelectOpen && !Screen().IsStoryMapOpen && !Screen().IsOneCoinOpen;
+
+            return new List<UiHarnessScenario>
+            {
+                new UiHarnessScenario { Name = "home", Mock = "mock_lobby", Enter = None, Expect = () => Need(Home(), "로비 첫 화면이 아니다") },
+                new UiHarnessScenario
+                {
+                    Name = "home_start_down", Mock = "mock_lobby",
+                    Enter = d => { d.PressDown("Btn_Start"); return UniTask.CompletedTask; },
+                    Expect = () => Need(Home() && Pressed("Btn_Start"), "로비 START 가 눌린 상태가 아니다"),
+                    Settle = d => d.PressDown("Btn_Start"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "chapter_1to8", Mock = "mock_chapter",
+                    Enter = d => d.Click("Btn_StageSwap"),
+                    Expect = () => Need(Screen().IsWorldSelectOpen && On("WorldCard_0") && !On("EmptyCard_9"), "1-8 탭이 아니다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "chapter_9to16", Mock = "mock_chapter",
+                    Enter = async d => { await d.Click("Btn_StageSwap"); await d.Click("Tab_Chapter1"); },
+                    Expect = () => Need(Screen().IsWorldSelectOpen && On("WorldCard_8") && On("EmptyCard_9") && !On("WorldCard_0"), "9-16 탭이 아니다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "chapter_all", Mock = "mock_chapter",
+                    Enter = async d => { await d.Click("Btn_StageSwap"); await d.Click("Tab_Chapter2"); },
+                    Expect = () => Need(Screen().IsWorldSelectOpen && On("WorldCard_0") && On("WorldCard_8") && !On("EmptyCard_9"), "«전체» 탭이 아니다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "chapter_start_down", Mock = "mock_chapter",
+                    Enter = async d => { await d.Click("Btn_StageSwap"); d.PressDown("Btn_WorldGo"); },
+                    Expect = () => Need(Screen().IsWorldSelectOpen && Pressed("Btn_WorldGo"), "챕터 START 가 눌린 상태가 아니다"),
+                    Settle = d => d.PressDown("Btn_WorldGo"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "map", Mock = "mock_stagemap",
+                    Enter = async d => { await d.Click("Btn_StageSwap"); await d.Click("Btn_WorldGo", 1.5f); },
+                    Expect = () => Need(Screen().IsStoryMapOpen, "지도가 열리지 않았다"),
+                },
+                // 퀘스트 판(시안 RDL-QUEST-UX-02) — 3챕터 9칸: 열쇠 · 꽃 8개 이상 · 처치 2마리 이하. 잠겨 있으면 «모든 챕터·스테이지 열기»를 켠다.
+                new UiHarnessScenario
+                {
+                    Name = "map_quest", Mock = "mock_quest",
+                    Enter = async d =>
+                    {
+                        await d.Click("Btn_StageSwap", 1.2f); await d.Click("Tab_Chapter0", 0.6f);
+                        await d.Click("WorldCard_2"); await d.Click("Btn_WorldGo", 1.5f);
+                        await d.Click("Node_28");
+                    },
+                    Expect = () => Need(Screen().IsStoryMapOpen && Screen().SelectedStageSlot == 28, "3챕터 9칸이 골라지지 않았다(잠김?)"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "map_quest_detail", Mock = "mock_quest",
+                    Enter = async d =>
+                    {
+                        await d.Click("Btn_StageSwap", 1.2f); await d.Click("Tab_Chapter0", 0.6f);
+                        await d.Click("WorldCard_3"); await d.Click("Btn_WorldGo", 1.5f);
+                        await d.Click("Node_38"); await d.Click("Btn_QuestDetail");
+                    },
+                    Expect = () => Need(Screen().IsQuestDetailOpen && Screen().SelectedStageSlot == 38, "4챕터 9칸 조건 자세히가 열리지 않았다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "map_start_down", Mock = "mock_stagemap",
+                    Enter = async d => { await d.Click("Btn_StageSwap"); await d.Click("Btn_WorldGo", 1.5f); d.PressDown("Btn_MapStart"); },
+                    Expect = () => Need(Screen().IsStoryMapOpen && Pressed("Btn_MapStart"), "지도 START 가 눌린 상태가 아니다"),
+                    Settle = d => d.PressDown("Btn_MapStart"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "onecoin_omote", Mock = "mock_onecoin",
+                    Enter = async d => { await d.Click("Btn_OneCoin"); await d.Click("Btn_Start", 1.5f); },
+                    Expect = () => Need(Screen().IsOneCoinOpen && Screen().OneCoinEpisode == global::Game.Module.Chapter.RdlPlayRequest.OmoteEpisode,
+                                        "원코인(오모테)이 아니다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "onecoin_ura", Mock = "mock_onecoin",
+                    Enter = async d => { await d.Click("Btn_OneCoin"); await d.Click("Btn_Start", 1.5f); await d.Click("Btn_CoinUra"); },
+                    Expect = () => Need(Screen().IsOneCoinOpen && Screen().OneCoinEpisode == global::Game.Module.Chapter.RdlPlayRequest.UraEpisode,
+                                        "원코인(우라)이 아니다"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "onecoin_start_down", Mock = "mock_onecoin",
+                    Enter = async d => { await d.Click("Btn_OneCoin"); await d.Click("Btn_Start", 1.5f); d.PressDown("Btn_CoinStart"); },
+                    Expect = () => Need(Screen().IsOneCoinOpen && Pressed("Btn_CoinStart"), "원코인 START 가 눌린 상태가 아니다"),
+                    Settle = d => d.PressDown("Btn_CoinStart"),
+                },
+                new UiHarnessScenario
+                {
+                    Name = "onecoin_ja", Mock = "mock_onecoin",
+                    Enter = async d => { await d.Click("Btn_OneCoin"); await d.Click("Btn_Start", 1.5f); await Locale("ja"); },
+                    Expect = () => Screen().IsOneCoinOpen ? LocaleIs("ja") : "원코인이 열리지 않았다",
+                },
+            };
+        }
+    }
+}
