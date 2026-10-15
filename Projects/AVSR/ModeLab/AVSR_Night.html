@@ -244,11 +244,11 @@ function moveInput() {
 function loadRoom(spec) {
   G.enemies = []; G.shots = []; G.doors = []; G.cleared = false; G.roomT = 0; G.hostless = 0;
   G.floor = spec.floor || 'junkyard'; G.roomLabel = spec.label || '';
-  const hpMul = spec.hpMul || 1;
+  const hpMul = spec.hpMul || 1, atkMul = spec.atkMul || 1;
   const tr = spec.trash || [], hs = spec.hosts || [];
-  tr.forEach((k, i) => { const n = tr.length; G.enemies.push(unit(k, 50 + (260 / Math.max(1, n - 1 || 1)) * (n === 1 ? .5 : i) + (Math.random() * 20 - 10), 200 + (i % 3) * 55 + Math.random() * 20, { hpMul })); });
-  hs.forEach((k, i) => { const n = hs.length; G.enemies.push(unit(k, n === 1 ? 180 : 60 + (240 / (n - 1)) * i, 440 + (i % 2) * 38, { hpMul })); });
-  if (spec.boss) G.enemies.push(unit(spec.boss, 180, 250, { hpMul: spec.bossHpMul || 1 }));
+  tr.forEach((k, i) => { const n = tr.length; G.enemies.push(unit(k, 50 + (260 / Math.max(1, n - 1 || 1)) * (n === 1 ? .5 : i) + (Math.random() * 20 - 10), 200 + (i % 3) * 55 + Math.random() * 20, { hpMul, atkMul })); });
+  hs.forEach((k, i) => { const n = hs.length; G.enemies.push(unit(k, n === 1 ? 180 : 60 + (240 / (n - 1)) * i, 440 + (i % 2) * 38, { hpMul, atkMul })); });
+  if (spec.boss) G.enemies.push(unit(spec.boss, 180, 250, { hpMul: spec.bossHpMul || 1, atkMul }));
   if (spec.elite) G.enemies.push(unit(spec.elite, 180, 250, { hpMul: 7 * hpMul, atkMul: 1.4, scale: 1.45, elite: true }));
   if (G.body) { G.body.x = 180; G.body.y = 590; } else { G.gx = 180; G.gy = 590; }
 }
@@ -810,43 +810,46 @@ const TOWER = [
   { name: '보스 — 킹핀', text: '킹핀(무기). 부하는 파워 호스트만', pool: () => hostsWhere(k => DEF[k].aff === 'force'), boss: 'kingpin', n: 0 },
 ];
 // 주간 진행 — 이번 주에 깬 층 · 오늘 남은 기회 · 오늘 산 기회. 시험판은 날짜 대신 시험용 버튼으로 넘긴다
-const TW = { cleared: 0, lives: 1, bought: 0, best: 0 };
-const TW_FREE = 1, TW_BUY_MAX = 3, TW_BUY_GEM = [50, 100, 200];
+const TW = { cleared: 0, lives: 3, bought: 0, best: 0, swept: false };
+const TW_FREE = 3, TW_BUY_MAX = 3, TW_BUY_GEM = [50, 100, 200];
 try { Object.assign(TW, JSON.parse(localStorage.getItem('avsr.night.tower.week') || '{}')); } catch (e) {}
 const twSave = () => { try { localStorage.setItem('avsr.night.tower.week', JSON.stringify(TW)); } catch (e) {} };
-// 일일 보상 · 층 돌파 보상은 가안 — 숫자는 모드 확정 뒤
+// 소탕(하루 1번) · 첫 클리어 보상은 가안 — 숫자는 모드 확정 뒤
 const twDaily = f => { if (f <= 0) return '없음(1층을 깨면)'; const st = Math.min(5, 1 + Math.floor(f / 10)); return `조각 ${st} · 골드 ${st * 100}`; };
 function twBuy() { if (TW.bought >= TW_BUY_MAX) return; TW.bought++; TW.lives++; twSave(); intro('tower'); }
-function twNextDay() { TW.lives = TW_FREE; TW.bought = 0; twSave(); intro('tower'); }
-function twWeekReset() { TW.cleared = 0; TW.lives = TW_FREE; TW.bought = 0; twSave(); intro('tower'); }
-const twButtons = () => `<button type="button" class="sec" onclick="twBuy()"${TW.bought >= TW_BUY_MAX ? ' disabled' : ''}>기회 +1 (젬 ${TW_BUY_GEM[Math.min(TW.bought, 2)]} · 오늘 ${TW.bought}/${TW_BUY_MAX})</button>
+function twNextDay() { TW.lives = TW_FREE; TW.bought = 0; TW.swept = false; twSave(); intro('tower'); }
+function twWeekReset() { TW.cleared = 0; TW.lives = TW_FREE; TW.bought = 0; TW.swept = false; twSave(); intro('tower'); }
+function twSweep() { if (TW.swept || TW.cleared <= 0) return; TW.swept = true; twSave(); alert(`소탕 — ${TW.cleared}층 기준 보상: ${twDaily(TW.cleared)} (오늘은 끝)`); intro('tower'); }
+const twButtons = () => `<button type="button" class="sec" onclick="twSweep()"${TW.swept || TW.cleared <= 0 ? ' disabled' : ''}>${TW.swept ? '소탕 완료(오늘)' : `소탕 — ${TW.cleared}층 기준 받기`}</button> <button type="button" class="sec" onclick="twBuy()"${TW.bought >= TW_BUY_MAX ? ' disabled' : ''}>기회 +1 (젬 ${TW_BUY_GEM[Math.min(TW.bought, 2)]} · 오늘 ${TW.bought}/${TW_BUY_MAX})</button>
   <button type="button" class="sec" onclick="twNextDay()">시험용 — 다음 날</button> <button type="button" class="sec" onclick="twWeekReset()">시험용 — 월요일 초기화</button>`;
 MODES.tower = {
-  name: '망령의 탑', tab: '망령의 탑', cycle: '하루 1번 · 매주 월요일 초기화',
-  goal: '목표: 한 번의 기회로 지기 전까지 최대한 높이 — 이번 주 진행은 남는다',
+  name: '망령의 탑', tab: '망령의 탑', cycle: '하루 3번 · 매주 월요일 초기화',
+  goal: '목표: 입장 1번에 한 층 — 이번 주에 최대한 높이',
   reward: '(보상은 모드를 다 정한 뒤에 — 지금은 재미 검증)',
   rules: [
     '층마다 <b>유령으로 입장</b>. 층 조건에 맞는 호스트만 몸으로 깔린다 — 그 중 하나를 빼앗아 시작',
     '조건 예: 근거리만 · 원거리만 · 중거리만 · 적이 전부 마법 · 첫 몸으로 끝까지 · 호스트 하나만 · 빙의 한 번',
     '조건에 맞는 호스트를 <b>키워 뒀으면(★)</b> 쉽고, 안 키웠으면 스킬 봉인이라 힘들다 — 여러 호스트를 키울 이유',
-    '<b>하루 기회 1번</b>(젬으로 하루 3번까지 더). 한 번의 기회로 <b>지기 전까지 계속 오른다</b> — 유령 에너지는 그 도전 내내 이어진다',
-    '지면 오늘 기회 끝. 다음 기회는 <b>진 층부터</b> 에너지 가득으로. 이번 주에 깬 층은 남는다 · <b>매주 월요일 오전 5시</b> 1층으로',
-    '층을 깰 때마다 층 보상(매주 다시 받는다) · 이번 주 최고 층에 따라 <b>매일 보상</b>',
+    '<b>하루 입장 3번</b>(젬으로 더 살 수 있다). <b>입장 1번 = 한 층</b> — 이기든 지든 1번이 줄어든다',
+    '깨면 <b>첫 클리어 보상</b> · 다음 입장은 다음 층. 지면 같은 층을 다시. <b>매주 월요일 오전 5시</b> 1층으로(첫 클리어 보상도 다시)',
+    '<b>소탕</b> — 하루 1번, 이번 주 깬 최고 층 기준 보상을 싸우지 않고 받는다(입장 횟수를 쓰지 않는다)',
     '5층마다 보스. 10층 뒤로는 같은 조건이 더 단단한 적으로 되풀이된다',
   ],
-  options: () => `<div style="flex-basis:100%">이번 주 깬 층 <b>${TW.cleared}</b> · 다음 도전 <b>${TW.cleared + 1}층</b>부터 · 오늘 남은 기회 <b>${TW.lives}</b> · 매일 보상(지금 기준) ${twDaily(TW.cleared)}</div>${twButtons()}`,
+  options: () => `<div style="flex-basis:100%">이번 주 깬 층 <b>${TW.cleared}</b> · 다음 도전 <b>${TW.cleared + 1}층</b> · 오늘 남은 입장 <b>${TW.lives}</b> · 소탕(지금 기준) ${twDaily(TW.cleared)}</div>${twButtons()}`,
   canStart() { if (TW.lives > 0) return true; alert('오늘 기회를 다 썼다 — 기회를 사거나 「시험용 — 다음 날」'); return false; },
   start(G) { TW.lives--; twSave(); G.S = { floor: TW.cleared, from: TW.cleared + 1, got: 0 }; this.next(G); },
+  // 층이 오를수록 — 바퀴 배율에 층마다 체력 +15% · 공격 +6% (입장 1번 = 한 층이라 에너지가 이어지지 않는다. 세기로 가른다)
+  scale(f) { const loop = Math.floor((f - 1) / TOWER.length); return { hp: (1 + (f - 1) * .1 + loop * .5) * (1 + (f - 1) * .15), boss: (.55 + loop * .4) * (1 + (f - 1) * .15), atk: 1 + (f - 1) * .06 }; },
   next(G) {
     const S = G.S; S.floor++;
     const T = TOWER[(S.floor - 1) % TOWER.length], loop = Math.floor((S.floor - 1) / TOWER.length);
     S.T = T; S.pool = T.pool(); S.p0 = G.possess;
-    const hp = 1 + (S.floor - 1) * .1 + loop * .5;
+    const sc = this.scale(S.floor);
     // 층마다 유령으로 입장 — 앞 층의 몸은 놓고 온다(비용 없음)
     if (G.body) { G.body = null; }
     const enemy = T.enemyAff ? [...TRASH[T.enemyAff], ...HOSTS_OF(T.enemyAff)] : T.enemy;
     const trash = []; for (let i = 0; i < T.n; i++) trash.push(pick(enemy));
-    loadRoom({ trash: T.boss ? [] : trash, hosts: bodyLine(S.pool, 3), boss: T.boss, bossHpMul: .55 + loop * .4, hpMul: hp, floor: T.boss || FLOORS[S.floor % 3] });
+    loadRoom({ trash: T.boss ? [] : trash, hosts: bodyLine(S.pool, 3), boss: T.boss, bossHpMul: sc.boss, hpMul: sc.hp, atkMul: sc.atk, floor: T.boss || FLOORS[S.floor % 3] });
     // 적으로 섞인 호스트는 몸 표시를 떼고 그냥 적으로 둔다 — 층 조건 밖의 몸이 생기면 조건이 무너진다
     for (const e of G.enemies) if (e.possessable && !S.pool.includes(e.key)) e.possessable = false;
     G.noLeave = !!T.noLeave;
@@ -860,12 +863,11 @@ MODES.tower = {
   onClear(G) {
     const S = G.S;
     TW.cleared = Math.max(TW.cleared, S.floor); TW.best = Math.max(TW.best, S.floor); S.got++; twSave();
-    log(`${S.floor}층 돌파 — 층 보상(가안: 조각 1${S.floor % 5 === 0 ? ' + 보스 층 조각 2' : ''})`);
-    G.doors = [{ x: 180, open: true, label: '다음 층' }];
+    endRun(true, `${S.floor}층 클리어 — 첫 클리어 보상(가안: 조각 ${S.floor % 5 === 0 ? 3 : 1} · 골드 ${S.floor % 5 === 0 ? 150 : 50})`);
   },
   enterDoor(G) { this.next(G); },
   bossPattern: 2.4,
-  hud(G) { const S = G.S; return [`${S.floor}층 · 이번 도전 ${S.from}층부터`, S.T.name]; },
+  hud(G) { const S = G.S; return [`망령의 탑 ${S.floor}층 · 남은 입장 ${TW.lives}`, S.T.name]; },
   hint(G) {
     if (!G.running || G.doors.some(d => d.open)) return null;
     const S = G.S;
@@ -876,7 +878,7 @@ MODES.tower = {
     if (G.body.trained && G.skillG >= 1) return '스킬 준비 — 스킬 버튼(E)';
     return `조건: ${S.T.text}`;
   },
-  result(G) { const S = G.S; return `<p class="reward">이번 도전 ${S.from}층 → ${S.floor}층에서 끝 · 깬 층 ${S.got}개(층 보상 ${S.got}번)</p><p>이번 주 깬 층 ${TW.cleared} · 매일 보상(가안) ${twDaily(TW.cleared)} · 오늘 남은 기회 ${TW.lives}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p><div class="row">${twButtons()}</div>`; },
+  result(G, win) { const S = G.S; return `<p class="reward">${win ? `다음 입장은 ${TW.cleared + 1}층` : `${S.floor}층 — 다음 입장에 다시`} · 오늘 남은 입장 ${TW.lives}</p><p>이번 주 깬 층 ${TW.cleared} · 소탕(가안) ${twDaily(TW.cleared)}${TW.swept ? ' — 오늘 받음' : ''}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p><div class="row">${twButtons()}</div>`; },
 };
 
 // ─────────────────────────────────────────────────────────

@@ -1,0 +1,741 @@
+<meta charset="utf-8">
+<title>AVSR 모드 UI 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 화면 흐름을 왼쪽→오른쪽으로 읽는 폰 프레임 줄 · 프레임 안은 실제 게임 해상도 720×1280 좌표 */
+:root{
+  --bg:#0a0f1c; --paper:#111a2e; --line:#24345a; --fg:#e7ecf7; --mute:#93a1c4;
+  --cyan:#45d4ff; --gold:#ffd23f; --red:#ff4d6d; --green:#5ef0a0;
+  --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif; --body:"Noto Sans KR",system-ui,sans-serif;
+  --s:.42; color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);margin:0;padding-block:28px 60px;padding-inline:20px;line-height:1.55}
+.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+h1{font-family:var(--display);font-weight:400;font-size:40px;margin:0;letter-spacing:.01em}
+h2{font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 4px;color:var(--gold)}
+.lead{color:var(--mute);max-width:70ch;margin:6px 0 0}
+.key{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--mute);font-size:13px;margin-top:10px}
+.key b{color:var(--fg)}
+.flowbox{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto}
+.row{display:flex;flex-wrap:wrap;gap:22px 18px;align-items:flex-start}
+.frame{width:calc(720px*var(--s));display:flex;flex-direction:column;gap:10px;min-width:0}
+.ph{width:calc(720px*var(--s));height:calc(1280px*var(--s));border-radius:16px;overflow:hidden;box-shadow:0 0 0 2px #1b2a4a,0 10px 30px rgba(0,0,0,.5);position:relative;background:#000}
+.cap h3{font-family:var(--display);font-weight:400;font-size:21px;margin:0;color:var(--fg)}
+.cap h3 small{color:var(--cyan);font-size:14px;margin-right:6px;font-family:var(--body);font-weight:700}
+.cap p{margin:2px 0 6px;color:var(--mute);font-size:13px}
+.cap ol{margin:0;padding-left:20px;font-size:13px;display:flex;flex-direction:column;gap:3px}
+.cap ol li::marker{color:var(--red);font-weight:900}
+.cap code{font-size:11.5px;color:#9fe3ff;background:#0d1a33;padding:0 4px;border-radius:4px;word-break:break-all}
+.arrow{align-self:center;color:var(--cyan);font-size:30px;font-family:var(--display);margin-top:calc(-640px*var(--s))}
+.note{background:#151f37;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--mute);max-width:80ch}
+.note b{color:var(--fg)}
+
+/* ── 화면 안 (720×1280 좌표) ── */
+.scr{position:absolute;left:0;top:0;width:720px;height:1280px;transform:scale(var(--s));transform-origin:0 0;overflow:hidden;font-family:var(--body);color:#fff}
+.scr *{box-sizing:border-box}
+.a{position:absolute}
+.bgimg{position:absolute;inset:0;width:720px;height:1280px;object-fit:cover}
+.dim{position:absolute;inset:0;background:rgba(3,6,16,.72)}
+.px{image-rendering:pixelated}
+.topband{position:absolute;left:0;top:0;width:720px;height:132px;background:url(modes_mock/lobby.png) 0 0/720px 1279px no-repeat}
+.pnl{background:linear-gradient(180deg,#0f2142,#081428);border:3px solid #3fc8ff;border-radius:16px;box-shadow:0 0 14px rgba(63,200,255,.45),inset 0 0 18px rgba(63,200,255,.18)}
+.pnl.gold{border-color:#ffcb2e;box-shadow:0 0 16px rgba(255,203,46,.55),inset 0 0 18px rgba(255,203,46,.15)}
+.pnl.dimp{border-color:#2d4a7a;box-shadow:none;opacity:.8}
+.t-d{font-family:var(--display);font-weight:400}
+.btn-g{background:linear-gradient(180deg,#fff08a,#ffc61f 55%,#e59a0b);border:4px solid #6b3f00;border-radius:18px;color:#2a1600;font-family:var(--display);display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 5px 0 #6b3f00,0 0 18px rgba(255,200,40,.5)}
+.btn-c{background:linear-gradient(180deg,#5fe3ff,#1a9bd6);border:3px solid #063a5c;border-radius:14px;color:#03182b;font-family:var(--display);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 0 #063a5c}
+.btn-x{background:#1a2747;border:3px solid #3b5a8f;border-radius:14px;color:#cfe0ff;font-family:var(--display);display:flex;align-items:center;justify-content:center}
+.chip{display:inline-flex;align-items:center;gap:8px;background:rgba(5,12,28,.85);border:2px solid #3fc8ff;border-radius:999px;padding:4px 16px;font-family:var(--display);font-size:24px;white-space:nowrap}
+.face{border-radius:12px;border:3px solid #3b5a8f;background:#0b1730;object-fit:cover}
+.face.tr{border-color:#ffcb2e;box-shadow:0 0 10px rgba(255,203,46,.6)}
+.star{position:absolute;right:-6px;top:-10px;color:#ffd23f;font-size:26px;text-shadow:0 0 4px #000,0 0 2px #000}
+.pin{position:absolute;width:44px;height:44px;border-radius:50%;background:#ff3d63;color:#fff;font:900 26px/44px var(--body);text-align:center;box-shadow:0 0 0 4px #fff,0 4px 10px rgba(0,0,0,.6);z-index:50}
+.tag{position:absolute;background:rgba(8,14,30,.9);border-left:5px solid #45d4ff;padding:2px 10px;font:700 17px/1.3 var(--body);white-space:nowrap}
+.tag.trn{color:#ffd23f}
+.mark{position:absolute;border:3px dashed rgba(143,214,255,.85);border-radius:50%}
+.banner{position:absolute;left:0;width:720px;text-align:center;background:linear-gradient(90deg,transparent,rgba(5,10,24,.92) 18%,rgba(5,10,24,.92) 82%,transparent);border-top:2px solid rgba(69,212,255,.6);border-bottom:2px solid rgba(69,212,255,.6);padding:14px 0}
+.gem{width:34px;height:34px;object-fit:contain;vertical-align:middle}
+.bar{height:12px;border-radius:6px;background:#1a2747;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd23f,#ff8a2b)}
+.pips{display:inline-flex;gap:8px}
+.pips i{width:22px;height:22px;border-radius:50%;background:#45d4ff;box-shadow:0 0 8px #45d4ff;display:block}
+.pips i.off{background:#1a2747;box-shadow:inset 0 0 0 2px #3b5a8f}
+.red-dot{position:absolute;width:30px;height:30px;border-radius:50%;background:#ff3d3d;border:3px solid #fff;color:#fff;font:900 18px/24px var(--body);text-align:center}
+.hostpanel-name{position:absolute;left:503px;top:52px;width:116px;height:44px;background:#071026;font-family:var(--display);font-size:24px;line-height:22px;color:#fff;padding-top:2px}
+.hostpanel-name small{display:block;font-size:16px;color:#aab}
+.hostface{position:absolute;left:622px;top:38px;width:76px;height:76px;border-radius:50%;object-fit:cover;background:#0b1730;border:2px solid #3fc8ff}
+@media (max-width:420px){ :root{--s:.40} body{padding-inline:16px} }
+@media (prefers-reduced-motion:no-preference){ .blink{animation:bl 1.2s ease-in-out infinite} @keyframes bl{50%{opacity:.45}} }
+</style>
+
+<div class="wrap">
+
+<header>
+  <h1>망령의 밤 · 망령의 탑 — UI 시안</h1>
+  <p class="lead">로비에서 버튼을 누르는 순간부터 인게임 HUD · 결과 창까지 화면 순서대로 늘어놓았다. 바탕은 지금 게임 화면(로비 · 인게임 HUD)이고, 새로 들어가는 UI만 그 위에 그렸다. 빨간 번호는 아래 설명과 짝이다.</p>
+  <div class="key"><span><b>프레임</b> 실제 720×1280 좌표로 그려 축소</span><span><b>글자</b> 한국어로 그림(게임 기본은 일본어 — 언어팩 키로 바뀐다)</span><span><b>그림</b> 새 그림 없음 — 패널 · 버튼 모양은 자리 표시, 최종 그림은 시안 통과 뒤 발주</span><span><b>스펙</b> <code>AVSR_Content_Tower.md</code> · <code>AVSR_Content_NightMode.md</code> · <code>wireframes/AVSR_Screen_Modes.md</code></span></div>
+</header>
+
+<section class="flowbox">
+<pre class="mermaid">
+flowchart LR
+  L[로비 · PLAY 탭<br/>게임 모드 카드] -->|망령의 탑 카드| T1[탑 입장 패널<br/>층 사다리 · 조건 · 소탕]
+  T1 -->|맞는 호스트 보기| T2[맞는 호스트 팝업]
+  T1 -->|입장 0일 때 도전| T3[젬 추가 입장 팝업]
+  T1 -->|소탕 하루 1번| T4[소탕 보상 팝업]
+  T1 -->|N층 도전 · 입장 −1| T5[인게임 입장<br/>층 소개 띠]
+  T5 --> T6[인게임 · 탑 HUD]
+  T6 -->|층의 적 전멸| T8[클리어 결과<br/>첫 클리어 보상]
+  T6 -->|유령 에너지 0| T9[실패 결과]
+  T8 -->|다음 층 도전| T5
+  T9 -->|다시 도전| T5
+  T8 & T9 -->|로비| T1
+  L -->|망령의 밤 카드| N1[밤 입장 패널<br/>오늘 요일 · 호스트]
+  N1 -->|시작| N2[인게임 · 시작 몸 셋]
+  N2 --> N3[인게임 · 밤 HUD]
+  N3 --> N4[대형 호스트 · 경직]
+  N3 --> N5[1분 · 무리 속성 전환]
+  N3 --> N6[레벨업 카드<br/>본편 화면]
+  N3 -->|보스 처치 / 에너지 0| N7[밤 결과]
+  N7 -->|다시 · 로비| N1
+</pre>
+</section>
+
+<!-- ───────────── 공통 입구 ───────────── -->
+<section>
+  <h2>0. 로비 입구</h2>
+  <div class="row">
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/lobby.png" alt="">
+        <!-- 서바이벌 칸 → 망령의 밤 -->
+        <div class="a pnl" style="left:27px;top:929px;width:327px;height:149px;overflow:hidden;padding:0;border-radius:14px">
+          <img src="modes_mock/modeart_survival.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,20,.1),rgba(4,8,20,.88) 62%)"></div>
+          <div class="a t-d" style="left:16px;top:66px;font-size:36px;text-shadow:0 2px 0 #000">망령의 밤</div>
+          <div class="a chip" style="left:14px;top:106px;font-size:19px;padding:2px 12px;border-color:#8fd6ff"><img class="gem" src="modes_mock/rps_gem_force.png" alt="" style="width:24px;height:24px">오늘: 원거리의 날</div>
+        </div>
+        <!-- 디펜스 칸 → 망령의 탑 -->
+        <div class="a pnl" style="left:365px;top:929px;width:330px;height:149px;overflow:hidden;padding:0;border-radius:14px">
+          <img src="modes_mock/modeart_defense.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,20,.1),rgba(4,8,20,.88) 62%)"></div>
+          <div class="a t-d" style="left:16px;top:66px;font-size:36px;text-shadow:0 2px 0 #000">망령의 탑</div>
+          <div class="a chip" style="left:14px;top:106px;font-size:19px;padding:2px 12px;border-color:#ffcb2e">이번 주 12층 · 입장 2/3</div>
+        </div>
+        <div class="red-dot" style="left:674px;top:918px">!</div>
+        <div class="pin" style="left:300px;top:900px">1</div>
+        <div class="pin" style="left:640px;top:1040px">2</div>
+        <div class="pin" style="left:400px;top:742px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>L</small>로비 · PLAY 탭</h3>
+        <p>지금 자물쇠로 막힌 두 칸을 연다. 시나리오(챕터) 칸은 그대로.</p>
+        <ol>
+          <li><b>서바이벌 칸 → 망령의 밤</b> (<code>ModeSurvivalCard</code>). 아래 줄에 오늘 요일 조건. 누르면 밤 입장 패널.</li>
+          <li><b>디펜스 칸 → 망령의 탑</b> (<code>ModeDefenseCard</code>). 「이번 주 N층 · 입장 남음/3」. <b>빨간 점</b> = 오늘 입장이 남았거나 소탕을 안 받음.</li>
+          <li>카드 그림은 지금 칸 그림을 그대로 쓴다. 탑 칸은 포탑 그림이라 나중에 「탑」 그림으로 바꿀 후보(발주 목록).</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 망령의 탑 ───────────── -->
+<section>
+  <h2>1. 망령의 탑 — 하루 3번 · 입장 1번 = 한 층 · 매주 월요일 05:00 초기화</h2>
+  <div class="row">
+
+    <!-- T1 입장 패널 -->
+    <div class="frame">
+      <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
+        <div class="topband"></div>
+        <!-- 제목줄 -->
+        <div class="a btn-x" style="left:20px;top:146px;width:64px;height:56px;font-size:30px">◀</div>
+        <div class="a t-d" style="left:0;top:142px;width:720px;text-align:center;font-size:48px;text-shadow:0 0 14px rgba(69,212,255,.6)">망령의 탑</div>
+        <div class="a" style="left:520px;top:160px;font-size:17px;color:#9fb6e6">초기화까지 <b style="color:#fff">3일 4시간</b></div>
+        <!-- 주간 줄 -->
+        <div class="a pnl" style="left:20px;top:214px;width:680px;height:64px;display:flex;align-items:center;justify-content:space-around;font-size:22px">
+          <span>이번 주 <b class="t-d" style="font-size:34px;color:#ffd23f">12층</b></span><span style="color:#5b6f99">|</span><span style="color:#9fb6e6">지난주 최고 <b style="color:#fff">18층</b></span>
+        </div>
+        <!-- 층 사다리 -->
+        <div class="a" style="left:20px;top:296px;width:270px;display:flex;flex-direction:column;gap:10px">
+          <div class="pnl dimp" style="height:92px;padding:10px 14px;display:flex;align-items:center;gap:12px"><img class="face px" src="modes_mock/unit_crusher.png" alt="" style="width:56px;height:56px;border-color:#7a2a2a;object-fit:contain"><div><div class="t-d" style="font-size:30px">15층 <span style="color:#ff6b6b;font-size:20px">보스</span></div><div style="font-size:15px;color:#9fb6e6">크러셔 · 마법 몸만</div></div></div>
+          <div class="pnl dimp" style="height:92px;padding:10px 14px"><div class="t-d" style="font-size:30px">14층</div><div style="font-size:15px;color:#9fb6e6">첫 몸으로 끝까지</div></div>
+          <div class="pnl gold" style="height:104px;padding:10px 14px;position:relative"><div class="t-d" style="font-size:36px;color:#ffd23f">13층</div><div style="font-size:16px">마법의 무리</div><div class="a btn-g blink" style="right:10px;top:30px;width:74px;height:40px;font-size:20px;box-shadow:none;border-width:3px">도전</div></div>
+          <div class="pnl dimp" style="height:80px;padding:8px 14px;opacity:.6"><div class="t-d" style="font-size:26px">12층 <span style="color:#5ef0a0">✓</span></div><div style="font-size:14px;color:#9fb6e6">원거리의 층</div></div>
+          <div class="pnl dimp" style="height:80px;padding:8px 14px;opacity:.6"><div class="t-d" style="font-size:26px">11층 <span style="color:#5ef0a0">✓</span></div><div style="font-size:14px;color:#9fb6e6">근거리의 층</div></div>
+        </div>
+        <!-- 층 카드 -->
+        <div class="a pnl gold" style="left:304px;top:296px;width:396px;height:500px;padding:18px">
+          <div class="t-d" style="font-size:44px;color:#ffd23f;line-height:1">13층</div>
+          <div class="t-d" style="font-size:30px;margin-top:4px">마법의 무리</div>
+          <div style="margin-top:12px;font-size:18px;line-height:1.45">적이 전부 <b style="color:#c9a6ff">마법</b>. 몸은 세 속성이 섞여 나온다.</div>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:8px;font-size:18px"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="">적 <span style="color:#5b6f99">→</span> <img class="gem" src="modes_mock/rps_gem_blade.png" alt=""><b style="color:#5ef0a0">무기 몸 유리 ▲</b></div>
+          <div style="margin-top:16px;font-size:16px;color:#9fb6e6">맞는 호스트 <b style="color:#fff">22</b> · 내가 키운 <b style="color:#ffd23f">★5</b></div>
+          <div style="margin-top:8px;display:flex;gap:10px">
+            <div style="position:relative"><img class="face tr" src="modes_mock/face_amazon.png" alt="" style="width:76px;height:76px"><span class="star">★</span></div>
+            <div style="position:relative"><img class="face tr" src="modes_mock/face_gangster.png" alt="" style="width:76px;height:76px"><span class="star">★</span></div>
+            <div style="position:relative"><img class="face" src="modes_mock/face_ninja.png" alt="" style="width:76px;height:76px;opacity:.7"></div>
+            <div class="btn-x" style="width:76px;height:76px;font-size:18px;line-height:1.1;text-align:center">전체<br>보기 ›</div>
+          </div>
+          <div style="margin-top:18px;border-top:2px solid #2d4a7a;padding-top:12px">
+            <div style="font-size:16px;color:#9fb6e6">첫 클리어 보상 <span style="font-size:13px">(매주 다시)</span></div>
+            <div style="display:flex;align-items:center;gap:14px;margin-top:6px;font-family:var(--display);font-size:28px"><img src="modes_mock/ch_icon_coin.png" alt="" style="width:40px">50 <img class="face" src="modes_mock/face_amazon.png" alt="" style="width:44px;height:44px;border-width:2px">조각 ×1</div>
+          </div>
+        </div>
+        <!-- 소탕 -->
+        <div class="a pnl" style="left:20px;top:816px;width:680px;height:120px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between">
+          <div><div class="t-d" style="font-size:28px">오늘의 소탕 <span style="font-size:18px;color:#9fb6e6">12층 기준</span></div>
+            <div style="display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:26px;margin-top:4px"><img src="modes_mock/ch_icon_coin.png" alt="" style="width:34px">200 <span style="color:#9fb6e6">·</span> 조각 ×2</div></div>
+          <div class="btn-c" style="width:170px;height:70px;font-size:28px">소탕</div>
+        </div>
+        <div class="a" style="left:40px;top:942px;font-size:15px;color:#9fb6e6">하루 1번 · 입장 횟수를 쓰지 않는다 · 싸우지 않고 받는다</div>
+        <!-- 입장 -->
+        <div class="a" style="left:20px;top:986px;width:680px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:14px;font-size:22px">오늘 입장 <span class="pips"><i></i><i></i><i class="off"></i></span><b class="t-d" style="font-size:30px">2 / 3</b></div>
+          <div class="btn-x" style="height:52px;padding:0 16px;font-size:20px;gap:6px">＋ <img src="modes_mock/ch_icon_gem.png" alt="" style="width:26px"> 추가 입장</div>
+        </div>
+        <div class="a btn-g" style="left:110px;top:1072px;width:500px;height:120px;font-size:48px">13층 도전 ▶</div>
+        <div class="a" style="left:0;top:1206px;width:720px;text-align:center;font-size:17px;color:#9fb6e6">입장 1번 사용 · 이기든 지든 줄어든다</div>
+        <div class="pin" style="left:668px;top:200px">1</div>
+        <div class="pin" style="left:8px;top:284px">2</div>
+        <div class="pin" style="left:668px;top:380px">3</div>
+        <div class="pin" style="left:668px;top:590px">4</div>
+        <div class="pin" style="left:668px;top:720px">5</div>
+        <div class="pin" style="left:668px;top:800px">6</div>
+        <div class="pin" style="left:8px;top:984px">7</div>
+        <div class="pin" style="left:76px;top:1070px">8</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T1</small>탑 입장 패널 <code>TowerEntryPanel</code></h3>
+        <p>로비 위에 덮는 <code>~Panel</code>. 위 재화 줄(128px)은 로비 것 그대로 보인다.</p>
+        <ol>
+          <li>이번 주 깬 층 · 지난주 최고(나와 비교) · 초기화까지 남은 시간(월 05:00).</li>
+          <li><b>층 사다리</b> — 지금 층(금테 · 깜빡임)을 가운데, 아래 2층은 ✓, 위 2층은 앞으로. 위로 밀면 더 위 층 미리보기. 보스 층은 보스 그림.</li>
+          <li><b>지금 층 카드</b> — 층 이름 · 조건 한 줄 · 상성 힌트(적 속성 → 유리한 몸).</li>
+          <li><b>맞는 호스트</b> — 조건에 맞는 수 · 키운 수(★). 키운 몸이 0이면 빨간색. 「전체 보기」 → T2.</li>
+          <li><b>첫 클리어 보상</b> — 그 층을 이번 주 처음 깨면. 매주 다시 받는다(약하게).</li>
+          <li><b>소탕</b> — 하루 1번. 이번 주 깬 층 기준 계단 보상을 바로 받는다 → T4. 받으면 「받음 ✓」로 잠김.</li>
+          <li><b>오늘 입장</b> 점 3개 · 숫자. 「＋ 추가 입장」 = 젬 구매 → T3.</li>
+          <li><b>도전</b> — 입장 −1 하고 인게임으로(T5). 입장 0이면 같은 버튼이 「💎50 추가 입장」으로 바뀌고 T3을 띄운다.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T2 맞는 호스트 팝업 -->
+    <div class="frame">
+      <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
+        <div class="topband"></div><div class="dim"></div>
+        <div class="a pnl" style="left:50px;top:250px;width:620px;height:780px;padding:24px">
+          <div class="t-d" style="font-size:38px">13층에 맞는 호스트</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:19px;margin-top:6px"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="">적이 전부 마법 → <img class="gem" src="modes_mock/rps_gem_blade.png" alt=""><b style="color:#5ef0a0">무기 몸이 유리 ▲</b></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px 12px;margin-top:22px">
+            <div style="position:relative;text-align:center"><img class="face tr" src="modes_mock/face_amazon.png" alt="" style="width:118px;height:118px"><span class="star">★</span><div style="font-size:16px">아마존</div><div style="font-size:13px;color:#5ef0a0">무기 ▲</div></div>
+            <div style="position:relative;text-align:center"><img class="face tr" src="modes_mock/face_gangster.png" alt="" style="width:118px;height:118px"><span class="star">★</span><div style="font-size:16px">갱스터</div><div style="font-size:13px;color:#5ef0a0">무기 ▲</div></div>
+            <div style="position:relative;text-align:center"><img class="face" src="modes_mock/face_ninja.png" alt="" style="width:118px;height:118px;opacity:.6"><div style="font-size:16px">닌자</div><div style="font-size:13px;color:#5ef0a0">무기 ▲</div></div>
+            <div style="position:relative;text-align:center"><img class="face" src="modes_mock/face_hopper.png" alt="" style="width:118px;height:118px;opacity:.6"><div style="font-size:16px">호퍼</div><div style="font-size:13px;color:#5ef0a0">무기 ▲</div></div>
+            <div style="position:relative;text-align:center"><img class="face tr" src="modes_mock/face_robot.png" alt="" style="width:118px;height:118px"><span class="star">★</span><div style="font-size:16px">로봇</div><div style="font-size:13px;color:#9fb6e6">파워</div></div>
+            <div style="position:relative;text-align:center"><img class="face" src="modes_mock/face_guru.png" alt="" style="width:118px;height:118px;opacity:.6"><div style="font-size:16px">구루</div><div style="font-size:13px;color:#9fb6e6">파워</div></div>
+            <div style="position:relative;text-align:center"><img class="face tr" src="modes_mock/face_snowwoman.png" alt="" style="width:118px;height:118px"><span class="star">★</span><div style="font-size:16px">설녀</div><div style="font-size:13px;color:#ff8a8a">마법 ▼</div></div>
+            <div style="position:relative;text-align:center"><img class="face" src="modes_mock/face_vampire.png" alt="" style="width:118px;height:118px;opacity:.6"><div style="font-size:16px">흡혈귀</div><div style="font-size:13px;color:#ff8a8a">마법 ▼</div></div>
+          </div>
+          <div style="text-align:center;color:#9fb6e6;font-size:15px;margin-top:10px">… 22명 (위아래로 밀어 보기)</div>
+          <div class="a" style="left:24px;bottom:24px;right:24px;display:flex;gap:16px">
+            <div class="btn-x" style="flex:1;height:84px;font-size:30px">닫기</div>
+            <div class="btn-c" style="flex:1.4;height:84px;font-size:30px">육성하러 가기</div>
+          </div>
+        </div>
+        <div class="pin" style="left:640px;top:236px">1</div>
+        <div class="pin" style="left:30px;top:420px">2</div>
+        <div class="pin" style="left:640px;top:930px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T2</small>맞는 호스트 팝업 <code>TowerFitPopup</code></h3>
+        <p>T1의 「전체 보기」. 「다음에 누구를 키울지」를 정해 주는 화면.</p>
+        <ol>
+          <li>층 조건과 상성 힌트를 다시 보여 준다.</li>
+          <li>맞는 호스트 전부 — <b>키운 몸(금테 ★) 먼저</b>, 그다음 유리한 속성 순. 안 키운 몸은 흐리게. 아래 줄에 이 층에서의 상성(▲ 유리 · ▼ 불리).</li>
+          <li>「육성하러 가기」 → 성장 화면. 초상을 누르면 그 호스트로 바로.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T3 젬 추가 입장 -->
+    <div class="frame">
+      <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
+        <div class="topband"></div><div class="dim"></div>
+        <div class="a pnl" style="left:70px;top:430px;width:580px;height:430px;padding:28px;text-align:center">
+          <div class="t-d" style="font-size:38px">오늘 입장을 다 썼다</div>
+          <div style="font-size:19px;color:#9fb6e6;margin-top:8px">무료 입장은 내일 05:00에 3번으로 다시 찬다</div>
+          <div style="margin:26px auto 0;display:flex;align-items:center;justify-content:center;gap:14px;font-family:var(--display);font-size:34px"><img src="modes_mock/ch_icon_gem.png" alt="" style="width:50px">50 으로 1번 더 입장</div>
+          <div style="font-size:17px;color:#9fb6e6;margin-top:6px">오늘 추가 입장 <b style="color:#fff">0 / 3</b> · 다음 값 100 → 200</div>
+          <div class="a" style="left:28px;right:28px;bottom:28px;display:flex;gap:16px">
+            <div class="btn-x" style="flex:1;height:84px;font-size:30px">취소</div>
+            <div class="btn-g" style="flex:1.4;height:84px;font-size:32px"><img src="modes_mock/ch_icon_gem.png" alt="" style="width:38px">50 입장</div>
+          </div>
+        </div>
+        <div class="pin" style="left:620px;top:416px">1</div>
+        <div class="pin" style="left:620px;top:600px">2</div>
+        <div class="pin" style="left:620px;top:790px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T3</small>젬 추가 입장 <code>TowerBuyPopup</code></h3>
+        <p>입장 0에서 도전을 누르거나 「＋ 추가 입장」을 누르면.</p>
+        <ol>
+          <li>왜 막혔는지 + 언제 다시 차는지(05:00).</li>
+          <li>값 · 오늘 산 횟수 / 상한 · 다음 값. <b>값 · 상한은 가안</b>(50 → 100 → 200, 하루 3번) — 상점 붙일 때 정한다.</li>
+          <li>사면 젬 차감 → 입장 +1 → <b>바로 인게임으로</b>(도전에서 열렸을 때). 「＋ 추가 입장」에서 열렸으면 입장만 늘고 패널로. 젬이 모자라면 젬 상점으로.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T4 소탕 -->
+    <div class="frame">
+      <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
+        <div class="topband"></div><div class="dim"></div>
+        <div class="a pnl gold" style="left:70px;top:380px;width:580px;height:540px;padding:28px;text-align:center">
+          <div class="t-d" style="font-size:42px;color:#ffd23f">소탕 완료</div>
+          <div style="font-size:19px;color:#9fb6e6">이번 주 12층 기준</div>
+          <div style="display:flex;justify-content:center;gap:24px;margin-top:26px">
+            <div class="pnl" style="width:150px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><img src="modes_mock/ch_icon_coin.png" alt="" style="width:70px"><b class="t-d" style="font-size:30px">200</b></div>
+            <div class="pnl" style="width:150px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><img class="face" src="modes_mock/face_robot.png" alt="" style="width:80px;height:80px"><b class="t-d" style="font-size:26px">로봇 ×1</b></div>
+            <div class="pnl" style="width:150px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><img class="face" src="modes_mock/face_amazon.png" alt="" style="width:80px;height:80px"><b class="t-d" style="font-size:26px">아마존 ×1</b></div>
+          </div>
+          <div style="font-size:17px;color:#9fb6e6;margin-top:18px">다음 계단 <b style="color:#fff">20층</b> — 조각 ×3 · 골드 300</div>
+          <div class="a btn-g" style="left:140px;right:140px;bottom:28px;height:84px;font-size:34px">받기</div>
+        </div>
+        <div class="pin" style="left:620px;top:366px">1</div>
+        <div class="pin" style="left:620px;top:520px">2</div>
+        <div class="pin" style="left:620px;top:760px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T4</small>소탕 보상 <code>TowerSweepPopup</code></h3>
+        <p>T1 「소탕」. 싸우지 않고 받는다 · 입장 횟수를 안 쓴다 · 하루 1번.</p>
+        <ol>
+          <li>기준 층 = 이번 주 깬 층(받는 순간). 그래서 오늘 한 판 깨고 받으면 더 높은 계단으로 받는다.</li>
+          <li>계단 보상(가안): 1~9층 골드 100 · 조각 1 / 10~19층 200 · 2 / 20~29층 300 · 3 / 30~39층 400 · 4 / 40~ 500 · 5. 조각은 키운 몸 쪽에 무게.</li>
+          <li>다음 계단까지 몇 층인지 — 한 층 더 오를 이유. 받으면 T1의 소탕 칸은 「오늘 받음 ✓」.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T5 인게임 입장 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <!-- 위 가운데 — 탑 판 -->
+        <div class="a pnl" style="left:306px;top:28px;width:108px;height:100px;text-align:center;padding-top:6px;border-radius:12px"><div style="font:700 13px var(--body);color:#45d4ff;letter-spacing:.08em">TOWER</div><div class="t-d" style="font-size:44px;line-height:1">13F</div><div style="font-size:13px;color:#9fb6e6">남은 적 9</div></div>
+        <!-- 적 · 몸 -->
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:110px;top:260px;width:110px">
+        <img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:300px;top:230px;width:110px">
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:500px;top:270px;width:110px">
+        <img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:200px;top:340px;width:110px">
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:420px;top:350px;width:110px">
+        <div class="mark" style="left:96px;top:660px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_amazon.png" alt="" style="left:96px;top:560px;width:120px"><div class="tag trn" style="left:96px;top:700px">아마존 ★</div>
+        <div class="mark" style="left:300px;top:690px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:300px;top:590px;width:120px"><div class="tag trn" style="left:310px;top:730px">로봇 ★</div>
+        <div class="mark" style="left:504px;top:660px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_dragoon.png" alt="" style="left:504px;top:560px;width:120px"><div class="tag" style="left:514px;top:700px">드라군</div>
+        <img class="a px" src="modes_mock/unit_ghost.png" alt="" style="left:304px;top:740px;width:112px;opacity:.9">
+        <!-- 층 소개 띠 -->
+        <div class="banner" style="top:420px">
+          <div class="t-d" style="font-size:66px;line-height:1;color:#ffd23f;text-shadow:0 0 16px rgba(255,210,63,.6)">13층</div>
+          <div class="t-d" style="font-size:40px;margin-top:4px">마법의 무리</div>
+          <div style="display:inline-flex;align-items:center;gap:10px;margin-top:8px;font-size:22px"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="">적 전부 마법 <span style="color:#5b6f99">·</span> <img class="gem" src="modes_mock/rps_gem_blade.png" alt=""><b style="color:#5ef0a0">무기 몸 유리 ▲</b></div>
+        </div>
+        <div class="pin" style="left:420px;top:20px">1</div>
+        <div class="pin" style="left:640px;top:420px">2</div>
+        <div class="pin" style="left:30px;top:600px">3</div>
+        <div class="pin" style="left:420px;top:760px">4</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T5</small>인게임 입장 — 층 소개</h3>
+        <p>로딩(본편 로딩 화면, 팁 줄에 「13층 · 마법의 무리 — 무기 몸이 유리」) 뒤 바로.</p>
+        <ol>
+          <li>위 가운데 챕터 · 방 칸이 <b>탑 판</b>으로 바뀐다 — 「TOWER 13F · 남은 적 N」. 골드 칸은 없다(탑은 골드를 안 떨군다). 일시정지는 왼쪽으로.</li>
+          <li><b>층 소개 띠</b> 2.2초 — 층 · 이름 · 조건 · 상성 힌트. 띠가 떠 있는 동안도 게임은 돈다(적은 아직 안 움직임 — 입장 무적 1초).</li>
+          <li>조건에 맞는 몸 3 — 본편 「몸」 표식(점선 원) + 이름표, 키운 몸은 금색 ★.</li>
+          <li>언제나 <b>유령으로 입장</b>. 몸에 다가가 빙의 버튼.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T6 인게임 HUD -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <div class="a pnl" style="left:306px;top:28px;width:108px;height:100px;text-align:center;padding-top:6px;border-radius:12px"><div style="font:700 13px var(--body);color:#45d4ff;letter-spacing:.08em">TOWER</div><div class="t-d" style="font-size:44px;line-height:1">13F</div><div style="font-size:13px;color:#9fb6e6">남은 적 4</div></div>
+        <div class="a chip" style="left:240px;top:146px;font-size:22px"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="" style="width:28px;height:28px">마법의 무리 · <span style="color:#5ef0a0">무기 ▲</span></div>
+        <img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:150px;top:300px;width:110px">
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:450px;top:280px;width:110px">
+        <img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:520px;top:420px;width:110px">
+        <img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:110px;top:520px;width:120px"><div class="tag trn" style="left:118px;top:654px">로봇 ★</div>
+        <img class="a px" src="modes_mock/unit_gangster.png" alt="" style="left:310px;top:600px;width:124px">
+        <div class="a" style="left:330px;top:604px;width:84px" ><div class="bar" style="height:8px"><i style="width:80%;background:#5ef0a0"></i></div></div>
+        <div class="a" style="left:120px;top:850px;width:480px;height:84px;border:3px dashed #ffcb2e;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#ffd23f;background:rgba(10,16,32,.7)">「빙의는 한 번」 층이면 여기: <b style="margin-left:6px">빙의 남음 1</b></div>
+        <div class="a" style="left:590px;top:1090px;width:116px;height:134px;border-radius:18px;background:rgba(5,10,24,.55);display:flex;align-items:center;justify-content:center"><img src="modes_mock/modelockicon.png" alt="" style="width:62px"></div>
+        <div class="a" style="left:470px;top:1040px;font-size:16px;color:#ffd23f;background:rgba(5,10,24,.85);padding:2px 8px;border-radius:6px">「첫 몸으로 끝까지」 층 — 나가기 잠김</div>
+        <div class="pin" style="left:420px;top:20px">1</div>
+        <div class="pin" style="left:520px;top:140px">2</div>
+        <div class="pin" style="left:80px;top:860px">3</div>
+        <div class="pin" style="left:660px;top:1060px">4</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T6</small>인게임 · 탑 HUD</h3>
+        <p>유령 · 호스트 패널 · 조이스틱 · 스킬 · 나가기는 본편 그대로. 경험치 막대 없음(탑은 레벨업 없음).</p>
+        <ol>
+          <li><b>탑 판</b> <code>TowerFloorText</code> — 층 + 남은 적 수(0이 되면 클리어).</li>
+          <li><b>조건 칩</b> <code>TowerRuleText</code> — 층 이름 · 상성 힌트. 누르면 조건 설명 한 줄이 2초 펼쳐진다.</li>
+          <li>규칙 층에만: 「빙의 남음 1 → 0」 <code>TowerPossessLeftText</code>. 0이 되면 몸 표식이 모두 꺼진다.</li>
+          <li>「첫 몸으로 끝까지」 층: 나가기 버튼 위에 자물쇠 <code>TowerNoLeaveIcon</code>. 누르면 「이 층은 나갈 수 없다」.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T8 클리어 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
+        <div class="a pnl gold" style="left:50px;top:250px;width:620px;height:780px;padding:26px;text-align:center">
+          <div class="t-d" style="font-size:64px;color:#ffd23f;line-height:1">13F CLEAR</div>
+          <div class="t-d" style="font-size:28px;margin-top:6px">마법의 무리</div>
+          <div class="pnl" style="margin-top:22px;padding:16px;text-align:left">
+            <div style="font-size:18px;color:#9fb6e6">첫 클리어 보상 <span style="font-size:14px">(이번 주)</span></div>
+            <div style="display:flex;align-items:center;gap:18px;margin-top:8px;font-family:var(--display);font-size:34px"><img src="modes_mock/ch_icon_coin.png" alt="" style="width:52px">+50 <img class="face" src="modes_mock/face_amazon.png" alt="" style="width:60px;height:60px">아마존 ×1</div>
+          </div>
+          <div class="pnl dimp" style="margin-top:16px;padding:14px 16px;text-align:left;opacity:1">
+            <div style="font-size:17px;color:#9fb6e6">다음 층</div>
+            <div class="t-d" style="font-size:32px">14층 · 첫 몸으로 끝까지</div>
+            <div style="font-size:16px;color:#9fb6e6">스스로 나올 수 없다 — 첫 빙의가 승부</div>
+          </div>
+          <div style="margin-top:18px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:21px">오늘 입장 <span class="pips"><i></i><i class="off"></i><i class="off"></i></span> <b>1 / 3</b></div>
+          <div class="a" style="left:26px;right:26px;bottom:26px;display:flex;gap:16px">
+            <div class="btn-x" style="flex:1;height:96px;font-size:30px">나가기</div>
+            <div class="btn-g" style="flex:1.6;height:96px;font-size:36px">14층 도전 ▶</div>
+          </div>
+        </div>
+        <div class="pin" style="left:640px;top:236px">1</div>
+        <div class="pin" style="left:640px;top:440px">2</div>
+        <div class="pin" style="left:640px;top:600px">3</div>
+        <div class="pin" style="left:640px;top:910px">4</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T8</small>클리어 결과 <code>TowerResultPopup</code></h3>
+        <p>층의 적이 다 죽은 순간 저장 · 보상 지급 → 0.6초 뒤 이 창. 문 · 다음 방은 없다(입장 1번 = 한 층).</p>
+        <ol>
+          <li>층 + CLEAR. 틀은 본편 챕터 결과 창과 같은 계열(같은 프레임 그림을 쓴다).</li>
+          <li><b>첫 클리어 보상</b> — 조각은 그 층 조건 호스트 중 하나(키운 몸 쪽에 무게).</li>
+          <li><b>다음 층 미리보기</b> — 조건이 바뀌므로 「다음엔 어떤 몸이 필요하지」를 여기서 본다.</li>
+          <li>「14층 도전」 = 입장 −1 하고 바로 다음 층(로딩만). 입장 0이면 「💎50 추가 입장」 → T3. 「나가기」 → T1.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- T9 실패 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
+        <div class="a pnl" style="left:50px;top:270px;width:620px;height:740px;padding:26px;text-align:center;border-color:#ff5a6e;box-shadow:0 0 16px rgba(255,90,110,.5)">
+          <div class="t-d" style="font-size:58px;color:#ff8a9a;line-height:1">13층 실패</div>
+          <div class="t-d" style="font-size:26px;margin-top:6px">마법의 무리</div>
+          <div class="pnl" style="margin-top:22px;padding:16px;text-align:left;border-color:#ff5a6e;box-shadow:none">
+            <div style="font-size:18px;color:#ffb0bb">이 층에 맞는 키운 몸 <b style="font-size:24px">★2</b> / 22</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:19px"><img class="gem" src="modes_mock/rps_gem_blade.png" alt="">무기 호스트를 키우면 쉬워진다</div>
+            <div style="display:flex;gap:10px;margin-top:10px"><img class="face" src="modes_mock/face_ninja.png" alt="" style="width:64px;height:64px"><img class="face" src="modes_mock/face_hopper.png" alt="" style="width:64px;height:64px"><img class="face" src="modes_mock/face_thug.png" alt="" style="width:64px;height:64px"></div>
+          </div>
+          <div style="margin-top:20px;font-size:19px;color:#9fb6e6">빙의 3 · 몸 잃음 2 · 1분 12초</div>
+          <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:21px">오늘 입장 <span class="pips"><i></i><i class="off"></i><i class="off"></i></span> <b>1 / 3</b></div>
+          <div class="a" style="left:26px;right:26px;bottom:26px;display:flex;gap:12px">
+            <div class="btn-x" style="flex:1;height:96px;font-size:26px">나가기</div>
+            <div class="btn-c" style="flex:1;height:96px;font-size:26px">육성</div>
+            <div class="btn-g" style="flex:1.4;height:96px;font-size:32px">다시 ▶</div>
+          </div>
+        </div>
+        <div class="pin" style="left:640px;top:256px">1</div>
+        <div class="pin" style="left:640px;top:460px">2</div>
+        <div class="pin" style="left:640px;top:890px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>T9</small>실패 결과</h3>
+        <p>유령 에너지 0 또는 일시정지 → 나가기. 입장은 이미 썼다.</p>
+        <ol>
+          <li>몇 층에서 졌는지. 같은 층을 다시 한다(체크포인트 없음 · 이번 주 깬 층은 그대로).</li>
+          <li><b>다음에 키울 몸</b> — 이 층 조건에 맞는데 안 키운 호스트 중 유리한 속성 셋. 초상을 누르면 그 호스트 성장 화면.</li>
+          <li>「다시」 = 입장 −1(0이면 T3) · 「육성」 → 성장 화면 · 「나가기」 → T1.</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────── 망령의 밤 ───────────── -->
+<section>
+  <h2>2. 망령의 밤 — 요일 조건 · 5분 서바이벌 · 처치 수 보상</h2>
+  <div class="row">
+
+    <!-- N1 -->
+    <div class="frame">
+      <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#2a1d56,#090716 72%)">
+        <div class="topband"></div>
+        <div class="a btn-x" style="left:20px;top:146px;width:64px;height:56px;font-size:30px">◀</div>
+        <div class="a t-d" style="left:0;top:142px;width:720px;text-align:center;font-size:48px;text-shadow:0 0 14px rgba(170,130,255,.7)">망령의 밤</div>
+        <!-- 요일 줄 -->
+        <div class="a" style="left:20px;top:220px;width:680px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center">
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">월</div><div style="font-size:13px;color:#9fb6e6">근거리</div></div>
+          <div class="pnl gold" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px;color:#ffd23f">화</div><div style="font-size:13px">원거리</div></div>
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">수</div><div style="font-size:13px;color:#9fb6e6">중거리</div></div>
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">목</div><div style="font-size:13px;color:#9fb6e6">파워</div></div>
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">금</div><div style="font-size:13px;color:#9fb6e6">무기</div></div>
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">토</div><div style="font-size:13px;color:#9fb6e6">마법</div></div>
+          <div class="pnl dimp" style="padding:8px 0;border-radius:12px"><div class="t-d" style="font-size:26px">일</div><div style="font-size:13px;color:#9fb6e6">자유</div></div>
+        </div>
+        <!-- 오늘 카드 -->
+        <div class="a pnl gold" style="left:20px;top:330px;width:680px;height:470px;padding:20px;overflow:hidden">
+          <img src="modes_mock/modeart_survival.png" alt="" style="position:absolute;right:0;top:0;width:300px;height:200px;object-fit:cover;opacity:.35;-webkit-mask-image:linear-gradient(90deg,transparent,#000 50%);mask-image:linear-gradient(90deg,transparent,#000 50%)">
+          <div style="position:relative">
+            <div style="font-size:18px;color:#9fb6e6">오늘 · 화요일</div>
+            <div class="t-d" style="font-size:52px;color:#ffd23f;line-height:1.05">원거리의 날</div>
+            <div style="font-size:20px;margin-top:6px">원거리 호스트만 몸으로 나온다</div>
+            <div style="font-size:17px;color:#9fb6e6;margin-top:18px">오늘 나오는 호스트 7 · 내가 키운 <b style="color:#ffd23f">★2</b></div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px">
+              <div style="position:relative"><img class="face tr" src="modes_mock/face_robot.png" alt="" style="width:84px;height:84px"><span class="star">★</span></div>
+              <div style="position:relative"><img class="face tr" src="modes_mock/face_snowwoman.png" alt="" style="width:84px;height:84px"><span class="star">★</span></div>
+              <img class="face" src="modes_mock/face_medium.png" alt="" style="width:84px;height:84px;opacity:.65">
+              <img class="face" src="modes_mock/face_white_wizard.png" alt="" style="width:84px;height:84px;opacity:.65">
+              <img class="face" src="modes_mock/face_commando_laser.png" alt="" style="width:84px;height:84px;opacity:.65">
+              <img class="face" src="modes_mock/face_commando_grenade.png" alt="" style="width:84px;height:84px;opacity:.65">
+              <img class="face" src="modes_mock/face_commando_missile.png" alt="" style="width:84px;height:84px;opacity:.65">
+            </div>
+            <div style="display:flex;gap:16px;margin-top:22px">
+              <div class="pnl" style="flex:1;padding:12px 16px"><div style="font-size:15px;color:#9fb6e6">화요일 최고 처치</div><div class="t-d" style="font-size:42px">238</div></div>
+              <div class="pnl" style="flex:1.3;padding:12px 16px"><div style="font-size:15px;color:#9fb6e6">보상</div><div style="font-size:18px;line-height:1.4">처치 <b>50</b>마다 조각 1<br>보스 처치 <b>+3</b></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- 흐름 요약 -->
+        <div class="a" style="left:20px;top:820px;width:680px;display:flex;gap:10px;font-size:17px;text-align:center">
+          <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">0:00</b><br>몸 셋 중 하나에 빙의</div>
+          <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">매 1분</b><br>무리 속성 바뀜 · 회복</div>
+          <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">45초마다</b><br>대형 호스트</div>
+          <div class="pnl" style="flex:1;padding:10px 6px"><b class="t-d" style="font-size:24px">5:00</b><br>보스</div>
+        </div>
+        <div class="a" style="left:20px;top:986px;width:680px;height:64px;border:3px dashed #5b6f99;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9fb6e6">입장 횟수 자리 — 정해지면 탑과 같은 모양(점 3개)</div>
+        <div class="a btn-g" style="left:110px;top:1072px;width:500px;height:120px;font-size:52px">시작 ▶</div>
+        <div class="pin" style="left:668px;top:200px">1</div>
+        <div class="pin" style="left:668px;top:330px">2</div>
+        <div class="pin" style="left:668px;top:520px">3</div>
+        <div class="pin" style="left:668px;top:660px">4</div>
+        <div class="pin" style="left:668px;top:820px">5</div>
+        <div class="pin" style="left:668px;top:984px">6</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N1</small>밤 입장 패널 <code>NightEntryPanel</code></h3>
+        <p>로비 위에 덮는 <code>~Panel</code>. 요일이 바뀌는 시각은 탑과 같은 05:00.</p>
+        <ol>
+          <li><b>요일 줄</b> — 오늘 금테. 다른 요일을 누르면 그 날 조건과 호스트를 미리 본다(시작은 오늘만).</li>
+          <li><b>오늘 조건</b> — 「원거리의 날 · 원거리 호스트만 몸으로 나온다」.</li>
+          <li><b>오늘 호스트</b> — 키운 몸(금테 ★) 먼저. 누르면 성장 화면.</li>
+          <li>이 요일 <b>최고 처치</b> · 보상 규칙(처치 50마다 조각 1 · 보스 +3, 가안).</li>
+          <li>한 판의 흐름 4칸 — 처음 하는 사람이 무엇을 기대할지.</li>
+          <li><b>입장 횟수는 아직 미정</b> — 정하면 이 자리에 탑과 같은 점 3개.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N2 시작 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <div class="a pnl" style="left:296px;top:28px;width:128px;height:100px;text-align:center;padding-top:6px;border-radius:12px;border-color:#a98bff"><div style="font:700 13px var(--body);color:#c6b3ff;letter-spacing:.08em">NIGHT</div><div class="t-d" style="font-size:44px;line-height:1">0:00</div><div style="font-size:13px;color:#9fb6e6">처치 0</div></div>
+        <div class="a chip" style="left:236px;top:146px;font-size:22px;border-color:#a98bff">화 · 원거리의 날</div>
+        <div class="mark" style="left:100px;top:640px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:100px;top:540px;width:120px"><div class="tag trn" style="left:110px;top:680px">로봇 ★</div>
+        <div class="mark" style="left:300px;top:670px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_snowwoman.png" alt="" style="left:300px;top:570px;width:120px"><div class="tag trn" style="left:310px;top:710px">설녀 ★</div>
+        <div class="mark" style="left:500px;top:640px;width:120px;height:40px"></div><img class="a px" src="modes_mock/unit_medium.png" alt="" style="left:500px;top:540px;width:120px"><div class="tag" style="left:518px;top:680px">영매</div>
+        <img class="a px" src="modes_mock/unit_ghost.png" alt="" style="left:304px;top:740px;width:112px">
+        <div class="banner" style="top:320px">
+          <div class="t-d" style="font-size:44px">셋 중 하나에 빙의</div>
+          <div style="font-size:22px;color:#c9d6f5;margin-top:4px">고른 몸 말고 나머지 둘은 사라진다</div>
+        </div>
+        <div class="a" style="left:0;top:250px;width:720px;text-align:center;font-size:20px;color:#ffd23f">무리가 내려오기까지 2초</div>
+        <div class="pin" style="left:430px;top:20px">1</div>
+        <div class="pin" style="left:520px;top:140px">2</div>
+        <div class="pin" style="left:640px;top:330px">3</div>
+        <div class="pin" style="left:30px;top:560px">4</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N2</small>인게임 시작 — 시작 몸 셋</h3>
+        <p>언제나 유령으로 들어온다. 무리는 2초 뒤부터.</p>
+        <ol>
+          <li><b>밤 판</b> — 「NIGHT · 경과 시간 · 처치 수」. 챕터 · 방 칸 자리. 골드 칸 없음.</li>
+          <li>오늘 조건 칩.</li>
+          <li>안내 띠 「셋 중 하나에 빙의 — 나머지 둘은 사라진다」. 빙의하면 바로 꺼진다.</li>
+          <li>시작 몸 셋 — 서로 다른 호스트, 해금된 몸이 하나는 끼게. 이 2초 동안은 공격하지 않는다.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N3 HUD -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
+        <div class="a pnl" style="left:296px;top:28px;width:128px;height:100px;text-align:center;padding-top:6px;border-radius:12px;border-color:#a98bff"><div style="font:700 13px var(--body);color:#c6b3ff;letter-spacing:.08em">NIGHT</div><div class="t-d" style="font-size:44px;line-height:1">2:47</div><div style="font-size:13px;color:#fff">처치 <b>132</b></div></div>
+        <div class="a" style="left:236px;top:140px;display:flex;flex-direction:column;align-items:center;gap:6px;width:248px">
+          <div class="chip" style="font-size:22px;border-color:#a98bff"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="" style="width:28px;height:28px">무리: 마법</div>
+          <div style="font-size:17px;color:#ffd23f;background:rgba(5,10,24,.8);padding:1px 10px;border-radius:6px">대형 호스트 0:12</div>
+        </div>
+        <div class="a" style="left:20px;top:208px;width:680px;display:flex;align-items:center;gap:10px"><b class="t-d" style="font-size:24px;color:#ffd23f">Lv 6</b><div class="bar" style="flex:1"><i style="width:62%"></i></div></div>
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:60px;top:270px;width:100px"><img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:180px;top:300px;width:100px"><img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:520px;top:260px;width:100px"><img class="a px" src="modes_mock/unit_bat.png" alt="" style="left:400px;top:300px;width:90px"><img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:300px;top:380px;width:100px"><img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:560px;top:420px;width:100px"><img class="a px" src="modes_mock/unit_bat.png" alt="" style="left:90px;top:440px;width:90px"><img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:200px;top:480px;width:100px">
+        <img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:300px;top:610px;width:124px">
+        <div class="a" style="left:236px;top:1000px;width:248px;text-align:center"><div class="chip" style="font-size:20px;border-color:#5ef0a0;color:#5ef0a0">무기 몸이 오면 ▲</div></div>
+        <div class="pin" style="left:430px;top:20px">1</div>
+        <div class="pin" style="left:480px;top:136px">2</div>
+        <div class="pin" style="left:8px;top:196px">3</div>
+        <div class="pin" style="left:186px;top:990px">4</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N3</small>인게임 · 밤 HUD</h3>
+        <p>유령 · 호스트 패널 · 조이스틱 · 스킬 · 나가기는 본편 그대로.</p>
+        <ol>
+          <li><b>밤 판</b> <code>NightTimerText</code> · <code>NightKillText</code> — 경과 시간이 가장 크게. 4:30부터 시간 숫자가 빨갛게.</li>
+          <li><b>무리 속성</b> <code>NightWaveText</code> + <b>다음 사건</b> <code>NightNextEventText</code>(대형 호스트까지 · 보스까지).</li>
+          <li><b>레벨 · 경험치 막대</b> — 본편 것(밤은 레벨업 카드가 있다). 자리는 본편 막대를 쓴다.</li>
+          <li><b>상성 힌트</b> <code>NightCounterHint</code> — 지금 몸이 무리에 불리할 때만 조이스틱 위에 잠깐. 「무기 몸이 오면 ▲」.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N4 대형 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
+        <div class="a pnl" style="left:296px;top:28px;width:128px;height:100px;text-align:center;padding-top:6px;border-radius:12px;border-color:#a98bff"><div style="font:700 13px var(--body);color:#c6b3ff;letter-spacing:.08em">NIGHT</div><div class="t-d" style="font-size:44px;line-height:1">3:41</div><div style="font-size:13px;color:#fff">처치 <b>187</b></div></div>
+        <div class="banner" style="top:180px"><div class="t-d" style="font-size:38px">대형 설녀 등장</div><div style="font-size:20px;color:#c9d6f5">몰아쳐서 경직시키면 빼앗는다</div></div>
+        <!-- 대형 -->
+        <div class="a" style="left:230px;top:330px;width:260px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#ffd23f">대형 · 설녀</div>
+          <div class="bar" style="height:12px;margin-top:4px"><i style="width:72%;background:linear-gradient(90deg,#ff5a5a,#ff8a8a)"></i></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:15px;color:#8fd6ff">경직<div class="bar" style="flex:1;height:10px"><i style="width:80%;background:linear-gradient(90deg,#45d4ff,#bff1ff)"></i></div></div>
+        </div>
+        <img class="a px" src="modes_mock/unit_snowwoman.png" alt="" style="left:240px;top:380px;width:240px">
+        <div class="a" style="left:240px;top:600px;width:240px;height:60px;border:4px solid rgba(255,203,46,.85);border-radius:50%"></div>
+        <img class="a px" src="modes_mock/unit_skeleton.png" alt="" style="left:60px;top:430px;width:100px"><img class="a px" src="modes_mock/unit_bat.png" alt="" style="left:560px;top:360px;width:90px"><img class="a px" src="modes_mock/unit_mummy.png" alt="" style="left:540px;top:520px;width:100px">
+        <img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:300px;top:690px;width:124px">
+        <!-- 경직 후 작은 그림 -->
+        <div class="a pnl" style="left:30px;top:850px;width:300px;height:210px;padding:10px;overflow:hidden">
+          <div style="font-size:16px;color:#8fd6ff">경직 순간(1.5초)</div>
+          <div class="mark" style="left:96px;top:140px;width:110px;height:36px"></div>
+          <img class="a px" src="modes_mock/unit_snowwoman.png" alt="" style="left:90px;top:44px;width:120px">
+          <div class="a" style="left:186px;top:62px;font-size:15px;color:#fff;background:#1a6fd6;padding:2px 8px;border-radius:6px">빼앗기!</div>
+        </div>
+        <div class="a" style="left:568px;top:1060px;width:150px;text-align:center;font-size:16px;color:#8fd6ff">빙의 버튼이 빛남</div>
+        <div class="pin" style="left:640px;top:180px">1</div>
+        <div class="pin" style="left:500px;top:330px">2</div>
+        <div class="pin" style="left:8px;top:840px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N4</small>대형 호스트 · 경직</h3>
+        <p>45초마다 오늘의 호스트가 크게. 그대로는 못 빼앗는다 — 본편 경직 규칙.</p>
+        <ol>
+          <li>등장 띠 1.8초 — 「대형 ○○ 등장 · 몰아쳐서 경직시키면 빼앗는다」.</li>
+          <li>머리 위 <b>체력 + 경직 게이지</b>(본편 경직 표식). 발밑 금테 = 대형(엘리트 표시).</li>
+          <li>게이지가 차면 1.5초 창 — 본편 「몸」 표식 + 빙의 버튼이 빛난다. 그냥 잡아도 된다(경험치 ×8).</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N5 속성 전환 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
+        <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
+        <div class="a pnl" style="left:296px;top:28px;width:128px;height:100px;text-align:center;padding-top:6px;border-radius:12px;border-color:#a98bff"><div style="font:700 13px var(--body);color:#c6b3ff;letter-spacing:.08em">NIGHT</div><div class="t-d" style="font-size:44px;line-height:1">3:00</div><div style="font-size:13px;color:#fff">처치 <b>151</b></div></div>
+        <div class="a" style="left:236px;top:140px;width:248px;text-align:center"><div class="chip" style="font-size:22px;border-color:#ffcb2e;box-shadow:0 0 16px #ffcb2e"><img class="gem" src="modes_mock/rps_gem_force.png" alt="" style="width:28px;height:28px">무리: 파워</div></div>
+        <div class="a t-d" style="left:120px;top:74px;font-size:30px;color:#5ef0a0">+15%</div>
+        <div class="a t-d" style="left:520px;top:74px;font-size:30px;color:#5ef0a0">+15%</div>
+        <div class="banner" style="top:330px">
+          <div style="font-size:20px;color:#9fb6e6">3:00</div>
+          <div class="t-d" style="font-size:44px;display:flex;align-items:center;justify-content:center;gap:12px"><img class="gem" src="modes_mock/rps_gem_magic.png" alt="" style="width:46px;height:46px">→<img class="gem" src="modes_mock/rps_gem_force.png" alt="" style="width:46px;height:46px">무리가 파워로</div>
+          <div style="font-size:21px;margin-top:4px">버텼다 — 유령 · 몸 <b style="color:#5ef0a0">15% 회복</b> · <span style="color:#5ef0a0">마법 몸이 유리 ▲</span></div>
+        </div>
+        <img class="a px" src="modes_mock/unit_boar.png" alt="" style="left:80px;top:200px;width:110px"><img class="a px" src="modes_mock/unit_boar.png" alt="" style="left:500px;top:220px;width:110px">
+        <img class="a px" src="modes_mock/unit_robot.png" alt="" style="left:300px;top:640px;width:124px">
+        <div class="pin" style="left:490px;top:136px">1</div>
+        <div class="pin" style="left:640px;top:330px">2</div>
+        <div class="pin" style="left:80px;top:70px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N5</small>1분마다 — 무리 속성 전환 + 회복</h3>
+        <p>1:00 · 2:00 · 3:00 · 4:00. 「갈아탈까」를 묻는 순간.</p>
+        <ol>
+          <li>무리 칩의 보석이 바뀌며 한 번 번쩍.</li>
+          <li>띠 1.6초 — 이전 → 새 속성 · 회복 · 이제 유리한 몸.</li>
+          <li>유령 · 호스트 패널 위에 「+15%」 회복 숫자(본편 방 비우기 회복과 같은 연출).</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N6 레벨업 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/levelup.png" alt="">
+        <div class="a" style="left:20px;top:1180px;width:680px;text-align:center;font-size:22px;background:rgba(5,10,24,.85);padding:8px;border-radius:10px">카드를 고르는 동안 <b style="color:#ffd23f">시간 · 무리 · 유령 감소 모두 멈춤</b></div>
+        <div class="pin" style="left:30px;top:1160px">1</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N6</small>레벨업 카드 — 본편 화면 그대로</h3>
+        <p>밤은 방이 안 비므로 레벨업하면 <b>바로</b> 뜬다(본편은 방이 비어야 뜬다 — 밤만 다르게).</p>
+        <ol>
+          <li>고르는 동안 전투가 멈춘다. 화면은 본편 카드 창을 그대로 쓴다 — 새 UI 없음.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- N7 결과 -->
+    <div class="frame">
+      <div class="ph"><div class="scr">
+        <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
+        <div class="a pnl gold" style="left:50px;top:220px;width:620px;height:840px;padding:26px;text-align:center;border-color:#c6b3ff;box-shadow:0 0 18px rgba(198,179,255,.55)">
+          <div class="t-d" style="font-size:54px;color:#ffd23f;line-height:1">밤을 버텼다</div>
+          <div style="font-size:19px;color:#9fb6e6;margin-top:6px">화 · 원거리의 날 · 보스 크러셔 처치</div>
+          <div style="margin-top:20px;font-size:20px;color:#9fb6e6">처치</div>
+          <div class="t-d" style="font-size:110px;line-height:1">284</div>
+          <div style="display:inline-block;margin-top:6px;background:#ff3d63;color:#fff;font-family:var(--display);font-size:26px;padding:2px 18px;border-radius:8px">최고 기록! (이전 238)</div>
+          <div class="pnl" style="margin-top:22px;padding:14px;text-align:left">
+            <div style="font-size:17px;color:#9fb6e6">보상 — 처치 50마다 1 (×5) + 보스 처치 3</div>
+            <div style="display:flex;gap:14px;margin-top:8px;align-items:center;font-family:var(--display);font-size:26px">
+              <img class="face" src="modes_mock/face_robot.png" alt="" style="width:62px;height:62px">×3
+              <img class="face" src="modes_mock/face_snowwoman.png" alt="" style="width:62px;height:62px">×3
+              <img class="face" src="modes_mock/face_medium.png" alt="" style="width:62px;height:62px">×2
+            </div>
+          </div>
+          <div style="margin-top:16px;font-size:19px;color:#9fb6e6">버틴 시간 5:12 · Lv 10 · 빙의 4 · 몸 잃음 2</div>
+          <div class="a" style="left:26px;right:26px;bottom:26px;display:flex;gap:16px">
+            <div class="btn-x" style="flex:1;height:96px;font-size:30px">로비</div>
+            <div class="btn-g" style="flex:1.4;height:96px;font-size:36px">다시 ▶</div>
+          </div>
+        </div>
+        <div class="pin" style="left:640px;top:206px">1</div>
+        <div class="pin" style="left:640px;top:420px">2</div>
+        <div class="pin" style="left:640px;top:680px">3</div>
+      </div></div>
+      <div class="cap">
+        <h3><small>N7</small>밤 결과 <code>NightResultPopup</code></h3>
+        <p>보스 처치(「밤을 버텼다」) 또는 유령 에너지 0(「쓰러졌다」). 보스 막타 슬로우가 끝난 뒤에 뜬다.</p>
+        <ol>
+          <li>제목 · 요일 · 끝난 이유.</li>
+          <li><b>처치 수</b>가 가장 크게 — 0부터 올라가는 숫자. 이 요일 최고면 「최고 기록!」.</li>
+          <li>받은 조각(그날 호스트에게 나눠서 · 키운 몸 쪽 무게). 쓰러져도 그때까지 처치한 만큼은 받는다.</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="note">
+  <b>이 시안에서 정할 것</b> — ① 탑 칸 그림(지금 포탑 그림) 교체 여부 ② 밤 입장 횟수(정하면 N1 점선 자리) ③ 소탕 계단 · 첫 클리어 보상 · 젬 값 숫자 ④ 인게임 위 가운데 판(TOWER / NIGHT) 모양 — 통과하면 패널 · 판 · 띠 그림을 이 배치 그대로 발주한다.
+</section>
+
+</div>

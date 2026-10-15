@@ -1,8 +1,9 @@
 # 콘텐츠 세부 기획서 — 망령의 밤 (요일 서바이벌 모드)
 
 - **콘텐츠명**: 망령의 밤 · **카테고리**: 추가 모드(반복 콘텐츠) · **우선순위**: P1
-- **Version**: `1.1` · **Last Updated**: `2026-10-15` · **Status**: 개발 스펙 — 시험판으로 재미 검증을 마쳤고, 이 문서대로 유니티에 옮긴다
+- **Version**: `1.2` · **Last Updated**: `2026-10-15` · **Status**: 개발 스펙 — 시험판으로 재미 검증을 마쳤고, 이 문서대로 유니티에 옮긴다
 - **시험판**: `Projects/AVSR/ModeLab/AVSR_Night.html` (브라우저로 바로 열림) · 원본 `night_src.html` · 굽기 `python build.py night_assets.json night`
+- **UI 시안**: [`wireframes/AVSR_Screen_Modes.html`](wireframes/AVSR_Screen_Modes.html) (화면 N1~N7) · 화면 흐름 · 요소 이름 정본: [`wireframes/AVSR_Screen_Modes.md`](wireframes/AVSR_Screen_Modes.md)
 - **관련**: [`AVSR_Content_Economy.md`](AVSR_Content_Economy.md) 6절(신규 모드) · `Assets/Scripts/Module/CLAUDE.md`
 - **이 문서의 원칙**: **새 전투 규칙을 만들지 않는다.** 빙의 · 경직 · 상성 · 성장 · 레벨업 카드 · 구조 몸 · 유령 에너지는 본편 코드를 그대로 쓴다.
   모드가 바꾸는 것은 **판(아레나) · 등장 순서 · 목표 · 보상**뿐이다. 본편과 다른 값은 전부 `NightModeTable` 한 곳에 둔다.
@@ -45,6 +46,8 @@
 ---
 
 ## 2. 화면 구성 (UI 요소)
+
+> **화면 흐름 · 요소 트리 · 위치는 화면 설계서 [`wireframes/AVSR_Screen_Modes.md`](wireframes/AVSR_Screen_Modes.md) 4절이 정본이다**(10-15 시안). 시안에서 더한 것: 입장 패널의 **요일 줄**(`NightDayStrip`, 다른 요일 미리보기) · 한 판 흐름 4칸 · 인게임 위 가운데 **밤 판**(`NightPlate` — 시간 · 처치) · 시작 안내 띠 · 골드 칸 숨김. 입장 횟수는 아직 미정(`NightEntrySlot` 자리만).
 
 > 이름 = 프리팹 GameObject 이름 = 코드 바인딩 키(세 곳 동일). 글자는 전부 언어팩 키(8절). 그림에 글자를 넣지 않는다.
 
@@ -460,5 +463,6 @@
 
 | 버전 | 날짜 | 변경 내용 |
 |---|---|---|
+| 1.2 | 2026-10-15 | UI 시안 연결 — 화면 설계서 `wireframes/AVSR_Screen_Modes.md` 를 화면 정본으로 |
 | 1.1 | 2026-10-15 | 잔몹 상한 40 → 30 (PD: 30마리 쌓이기 전에 못 잡으면 죽는다) |
 | 1.0 | 2026-10-15 | 최초 작성 — 시험판(AVSR_Night.html, 커밋 d01df0c1) 결과 + 본편 코드 재사용 지점 조사 |

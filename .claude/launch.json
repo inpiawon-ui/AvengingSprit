@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "Projects/AVSR/ModeLab"],
       "port": 8765
+    },
+    {
+      "name": "wireframes",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "Projects/AVSR/wireframes"],
+      "port": 8766
     }
   ]
 }
