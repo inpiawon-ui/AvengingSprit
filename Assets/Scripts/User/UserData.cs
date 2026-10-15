@@ -23,7 +23,9 @@ namespace Game.User
         //      옛 저장은 배열이 비어 있어 **전부 Lv0 · 보상 안 받음**으로 읽힌다. 길이는 읽을 때 맞춘다.
         // v5 — 라이브 기준(2026-10-04). 시작 몸 지급 표시(`starterGranted`). 시작 젬 0.
         // v6 — 정수 · 일일 상점(2026-10-04). 옛 저장은 정수 0 · 상점 빈 칸으로 읽혀 그날 다시 짠다.
-        public const int CurrentSaveVersion = 6;
+        // v7 — 행동력 회복 시계 · 오늘의 몸(2026-10-15, AVSR_Content_Store.md B-12). 옛 저장은 30/30 이라
+        //      불러올 때 표의 최대(20)로 자른다(`LocalUserDataRepository`). 회복 시계 0 은 「지금부터 센다」.
+        public const int CurrentSaveVersion = 7;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -38,8 +40,8 @@ namespace Game.User
         public int ghostExpMax = 100;
 
         [Header("재화")]
-        public int stamina = 30;
-        public int staminaMax = 30;
+        public int stamina = 20;
+        public int staminaMax = 20;
         public int gold;
         // 라이브 기준 0 (2026-10-04). 테스트 모드를 켜면 불러올 때 100만으로 채운다
         // (`PlayerDataService.LoadAsync`) — 저장 기본값에 테스트 값을 두지 않는다.
@@ -113,6 +115,10 @@ namespace Game.User
 
         public DailyShopData dailyShop = new DailyShopData();
 
+        // ── 행동력 · 출전 (v7) ───────────────────────────────
+        [Header("행동력 · 출전")]
+        public RunEntryData runEntry = new RunEntryData();
+
         /// <summary>
         /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —
         /// 옛 저장(v2)은 배열이 비어 있고, 칸 수가 바뀌면 길이가 어긋난다.
@@ -176,5 +182,25 @@ namespace Game.User
         public string[] keys = Array.Empty<string>();
         public int[] counts = Array.Empty<int>();
         public int[] prices = Array.Empty<int>();
+    }
+
+    /// <summary>
+    /// 행동력 회복 시계 · 젬 채우기 횟수 · 오늘의 몸(기획서 `AVSR_Content_Store.md` B-12).
+    /// 규칙은 `IStaminaService` · `ITodayHostService` 가 갖고, 여기는 값만 둔다.
+    /// </summary>
+    [Serializable]
+    public sealed class RunEntryData
+    {
+        /// <summary>마지막으로 회복을 계산한 시각(UTC 초). 0 이면 아직 센 적이 없다 — 지금부터 센다.</summary>
+        public long staminaTickUtc;
+        /// <summary>젬 채우기를 센 날(하루 경계 기준 yyyyMMdd)과 그날 횟수.</summary>
+        public int refillDay;
+        public int refillCount;
+        /// <summary>
+        /// 오늘의 몸을 뽑은 날과 그 몸들. **다시 계산하지 않고 저장한다** — 그날 몸을 새로 얻어도
+        /// 목록이 바뀌면 안 된다(아침에 본 무료 몸이 낮에 사라지면 속은 느낌이 든다).
+        /// </summary>
+        public int todayDay;
+        public string[] todayHosts = Array.Empty<string>();
     }
 }

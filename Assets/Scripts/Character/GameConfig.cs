@@ -222,6 +222,55 @@ namespace Game.Character
         public int ShopRefreshGems(int used)
             => _shopRefreshGems != null && used >= 0 && used < _shopRefreshGems.Length ? _shopRefreshGems[used] : 0;
 
+        // ── 하루 경계 · 행동력 · 출전 (2026-10-15) ─────────────────
+        //
+        // 기획서 `Projects/AVSR/AVSR_Content_Store.md` B-1 · B-12. 행동력은 궁수의 전설과 같은 규칙이다 —
+        // 최대 20 · 판 입장 5 · 12분에 1 · 깨면 5 돌려줌 · 젬 100 으로 가득.
+        [Header("하루 경계 · 행동력 · 출전")]
+        [Tooltip("하루가 바뀌는 시각(UTC 시). 일본 05:00 = 20(PD 2026-10-15 — 상점 · 탑 · 밤 통일). 한국 00:00 이면 15.")]
+        [SerializeField] private int _dailyResetUtcHour = 20;
+        [Tooltip("주가 바뀌는 요일(하루 경계 시각에).")]
+        [SerializeField] private System.DayOfWeek _weekResetDay = System.DayOfWeek.Monday;
+
+        [Tooltip("행동력 최대 — 자연 회복은 여기까지만.")]
+        [SerializeField] private int _staminaMax = 20;
+        [Tooltip("판 하나 들어가는 값.")]
+        [SerializeField] private int _staminaPerRun = 5;
+        [Tooltip("1 회복에 걸리는 초.")]
+        [SerializeField] private int _staminaRegenSeconds = 720;
+        [Tooltip("챕터를 깨면 돌려주는 값.")]
+        [SerializeField] private int _staminaOnClear = 5;
+        [Tooltip("구매 · 보상으로 최대를 넘어 쌓을 수 있는 한도.")]
+        [SerializeField] private int _staminaCap = 999;
+        [Tooltip("젬으로 최대까지 채우는 값 · 하루 횟수.")]
+        [SerializeField] private int _staminaRefillGem = 100;
+        [SerializeField] private int _staminaRefillPerDay = 6;
+
+        [Tooltip("오늘의 몸 — 하루마다 가진 몸 중 이만큼 골드 출전비가 무료.")]
+        [SerializeField] private int _todayFreeHosts = 3;
+        [Tooltip("? 랜덤 출전 · 클리어 시 행운 보너스 — 나온 몸 조각 · 판 골드 %.")]
+        [SerializeField] private int _randomLuckShards = 3;
+        [SerializeField] private int _randomLuckGoldPct = 20;
+        [Tooltip("? 랜덤 출전에 아직 없는 몸도 나오는가(숙련도 0 이면 스킬 봉인 그대로).")]
+        [SerializeField] private bool _randomIncludesUnowned = true;
+        [Tooltip("유령 출전 · 클리어 시 유령 경험치 %.")]
+        [SerializeField] private int _ghostStartExpPct = 50;
+
+        public int DailyResetUtcHour => Mathf.Clamp(_dailyResetUtcHour, 0, 23);
+        public System.DayOfWeek WeekResetDay => _weekResetDay;
+        public int StaminaMax => Mathf.Max(1, _staminaMax);
+        public int StaminaPerRun => Mathf.Max(0, _staminaPerRun);
+        public int StaminaRegenSeconds => Mathf.Max(1, _staminaRegenSeconds);
+        public int StaminaOnClear => Mathf.Max(0, _staminaOnClear);
+        public int StaminaCap => Mathf.Max(StaminaMax, _staminaCap);
+        public int StaminaRefillGem => Mathf.Max(0, _staminaRefillGem);
+        public int StaminaRefillPerDay => Mathf.Max(0, _staminaRefillPerDay);
+        public int TodayFreeHosts => Mathf.Max(0, _todayFreeHosts);
+        public int RandomLuckShards => Mathf.Max(0, _randomLuckShards);
+        public int RandomLuckGoldPct => Mathf.Max(0, _randomLuckGoldPct);
+        public bool RandomIncludesUnowned => _randomIncludesUnowned;
+        public int GhostStartExpPct => Mathf.Max(0, _ghostStartExpPct);
+
         // ── 테스트 판 (2026-09-15) ────────────────────────────
         //
         // ⚠ **켜면 게임이 아니다.** 적이 안 죽고 스킬이 계속 나간다 —

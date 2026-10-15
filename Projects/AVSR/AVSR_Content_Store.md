@@ -35,7 +35,7 @@
 |---|---|---|---|
 | 1 | 광고 | **일단 제외** | 상품 · 보상에 광고 자리 없음 |
 | 2 | 값 | **1차 값 확정(위임)** — 한국 기준 P1 ₩1,200 ~ P9 ₩129,000 | `price_tiers.tsv` · `store_products.tsv` |
-| 3 | 하루 초기화 | **한국 00:00**(UTC 15:00) — 칸으로 두어 나중에 바꾼다. 오늘의 상점도 이 시계로 | `GameConfig._dailyResetUtcHour = 15` · `_weekResetDay = Monday` |
+| 3 | 하루 초기화 | ~~한국 00:00~~ → **일본 05:00**(UTC 20:00) · 주는 월요일 05:00(일본) — PD 2026-10-15 상점 · 탑 · 밤 통일(기획 세션 경유). 칸으로 둔다. 오늘의 상점도 이 시계로 | `GameConfig._dailyResetUtcHour = 20` · `_weekResetDay = Monday` |
 | 4 | 큰 계약 편의 | 상자 시간 단축은 뺐다(상자 검토 중 — 0-3). **무료 새로고침 1 · 판 골드 +10% · 판마다 레벨업 카드 다시 뽑기 1** | `cards.tsv` |
 | 5 | 외형 | **외형 판매는 추후 · 뺀다.** 대신 **프로필 꾸미기**(테두리 · 대표 얼굴 · 칭호, B-9) | `profile.tsv` |
 | 6 | 젬 쓰는 순서 | **무상 먼저**, 칸 하나로 바꿀 수 있게 | `GameConfig._gemSpendOrder = FreeFirst`(B-3) |
@@ -145,7 +145,7 @@
 
 | 모듈 | 제공 | 의존 | 한 줄 |
 |---|---|---|---|
-| `ResetClockModule` | `IResetClock` | — | 하루 · 주 경계를 한 곳에서 잰다(한국 00:00 = `GameConfig._dailyResetUtcHour` 15 · 주 시작 `_weekResetDay`). 오늘의 상점(`DailyShopModule`)도 기기 자정 대신 이것을 쓰게 바꾼다 |
+| `ResetClockModule` | `IResetClock` | — | 하루 · 주 경계를 한 곳에서 잰다(일본 05:00 = `GameConfig._dailyResetUtcHour` 20 · 주 시작 `_weekResetDay` 월요일 — 요일은 「일본 시각 − 5시간」 날짜로 센다). 오늘의 상점(`DailyShopModule`)도 기기 자정 대신 이것을 쓰게 바꾼다 |
 | `IapModule` | `IIapService` | `IEventBus` | 스토어 결제 감싸기. 에디터 · 테스트는 가짜 스토어(`FakeStoreBackend`) |
 | `RewardGrantModule` | `IRewardGranter` | `IPlayerDataService` · `IChestService` · `IPassService`(선택) | 보상 문자열(`gem:120;chest:gold`)을 풀어 지급 — 상점 · 패스 · 미션 · 계약이 같은 길을 쓴다 |
 | `StoreModule` | `IStoreService` | 위 넷 + `IResourceManager` | 상품 목록 · 보이기 조건 · 구매 제한 · 젬 구매 · 결제 상품 지급 · 계약 |
@@ -157,7 +157,7 @@
 
 ```csharp
 public interface IResetClock {
-    int DayKey { get; }                 // 하루 경계(지금 한국 00:00) 기준 yyyyMMdd
+    int DayKey { get; }                 // 하루 경계(지금 일본 05:00) 기준 yyyyMMdd
     int WeekKey { get; }                // 그 주 월요일의 DayKey
     TimeSpan UntilNextDay { get; }
     TimeSpan UntilNextWeek { get; }
@@ -248,7 +248,7 @@ TSV(사람이 고친다) → 임포터 → ScriptableObject(어드레서블). �
 
 | 칸 | 값 | 뜻 |
 |---|---|---|
-| `_dailyResetUtcHour` | 15 | 하루 경계(UTC). 15 = 한국 00:00(PD 2026-10-15). 일본 05:00 으로 바꾸려면 20 |
+| `_dailyResetUtcHour` | 20 | 하루 경계(UTC). 20 = 일본 05:00(PD 2026-10-15 통일). 한국 00:00 이면 15 |
 | `_weekResetDay` | Monday | 주 경계 요일 |
 | `_gemSpendOrder` | FreeFirst | 젬 쓰는 순서 — `FreeFirst`(무상 먼저) · `PaidFirst`(유상 먼저) |
 | `_seasonId` · `_seasonStartUtc` · `_seasonDays` | `s1` · `2026-11-01T20:00Z` · 28 | 시즌. 끝나면 다음 시즌 표로 |
@@ -503,7 +503,7 @@ BuyAsync(productId)
 |---|---|---|
 | 1 | 표 · 임포터 · `ResetClock` · `RewardGranter` · 저장 v7 | 임포트 후 SO 29 · 30 · 13 줄 · 옛 저장이 v7 로 열리고 `gem` 이 `gemFree` 로 옮겨짐 |
 | 2 | `StoreModule` · `IapModule`(가짜 스토어) · `IChestService.OpenImmediate` | 에디터에서 젬 상품 · 결제 상품(가짜) 전부 사서 지급 확인 · 제한(1회 · 하루 N · 7일 · 챕터) 확인 · 결제 중 앱 종료 → 다음 실행 지급 |
-| 3 | `PassModule` · `MissionModule` · `GachaModule` · `ProfileModule` · 새 이벤트 발행(인게임 2곳 · 육성 1곳) | 미션 13개 전부 실제 플레이로 오름 · 하루/주 경계(한국 00:00) 넘김 초기화 · 단계 받기 · 건너뛰기 · 프리미엄 · **뽑기 10만 회 모의 실행으로 표 확률과 실제 비율이 0.5%p 안 · 천장 · 10회 보장 확인** · 프로필 받기 · 장착 |
+| 3 | `PassModule` · `MissionModule` · `GachaModule` · `ProfileModule` · 새 이벤트 발행(인게임 2곳 · 육성 1곳) | 미션 13개 전부 실제 플레이로 오름 · 하루/주 경계(일본 05:00 · 월요일) 넘김 초기화 · 단계 받기 · 건너뛰기 · 프리미엄 · **뽑기 10만 회 모의 실행으로 표 확률과 실제 비율이 0.5%p 안 · 천장 · 10회 보장 확인** · 프로필 받기 · 장착 |
 | 4 | 시안 3컷 → PD 선택 → 부품 발주 | PD 가 고른 시안 파일 경로 |
 | 5 | 화면(`LobbyShopPanel` · `SummonPanel` · `SeasonPassPanel` · 뽑기 팝업 셋 · `ProfilePopup` · 팝업 둘 · 하단 바 4칸 · 로비 진입점) | 시안과 나란히 대조 시트 · 3언어 글자 점검 0 넘침(하단 바 「SUMMON」 포함) · 뒤로가기 순서 · 확률 창 숫자 = 표 |
 | 6 | 실제 스토어(구글 내부 테스트 · 애플 샌드박스) | 젬 묶음 하나 · 패스 · 계약 실결제 → 지급 · 아이폰 복원 |
@@ -518,7 +518,7 @@ BuyAsync(productId)
 - 몸별 확률(지금 표 기준): B급 11명 각 6.82% · 픽업(A) 12.5% · 나머지 A급 10명 각 1.25%. 사신(히든)은 안 나온다. 해금 안 된 몸도 나온다(조각으로 해금).
 - **10회**: 마지막 칸 전에 A급이 없었으면 마지막 칸은 A급 안에서 굴린다.
 - **천장**: 대박 없이 49회면 50번째는 대박 확정. 대박이 나오면 0 부터. (천장 없이도 50회 안에 대박이 나올 확률 92.3%)
-- 값: 1회 젬 60 / 소환권 1 · 10회 젬 540 / 소환권 10 · **하루 무료 1회**(하루 경계 = 한국 00:00).
+- 값: 1회 젬 60 / 소환권 1 · 10회 젬 540 / 소환권 10 · **하루 무료 1회**(하루 경계 = 일본 05:00).
 - 다 키운 몸의 조각은 그 자리에서 **정수**로 바뀐다(이미 있는 규칙) — 결과 칸에 「정수 +n」으로 보여 준다.
 - 한 번 평균 조각 3.65 개. A급 한 명을 끝까지(452개) 모으는 데 평균 약 124회(픽업이면 그 몸에 몰린다).
 
@@ -599,7 +599,7 @@ public interface IStaminaService {
 - **화면(시안 S22 · PD 고름)**: 로비에 「출전 방식」 칸 — 몸 골라 · ? 랜덤 · 유령 큰 카드 셋. 그 아래 호스트 선택 줄 · 설명 칸 · 시작 버튼.
   - **몸 골라**: 호스트 줄이 살아 있고 고른 몸이 설명 칸에 나온다.
   - **? 랜덤 · 유령**: 호스트 줄은 **어둡게 덮고(딤 60%) 가운데 안내 한 줄** — 「랜덤 출전 — 몸은 판이 시작될 때 정해져요」 / 「유령 출전 — 판 안에서 몸을 빼앗아 싸워요」. 누르면 아무 일도 없다(몸 골라로 바꾸려면 위 카드). 설명 칸은 그 출전 방식 설명으로 바뀐다.
-- **오늘의 몸**(PD 2026-10-15 「랜덤으로 오늘의 캐릭」): 하루 경계(한국 00:00)마다 **가진 몸 중 3명**을 무작위로 뽑는다(가진 몸이 3 미만이면 있는 만큼 · 사신 제외). 그날은 그 몸들의 골드 출전비가 0 — 판 수 제한은 행동력이 한다.
+- **오늘의 몸**(PD 2026-10-15 「랜덤으로 오늘의 캐릭」): 하루 경계(일본 05:00)마다 **가진 몸 중 3명**을 무작위로 뽑는다(가진 몸이 3 미만이면 있는 만큼 · 사신 제외). 그날은 그 몸들의 골드 출전비가 0 — 판 수 제한은 행동력이 한다.
 - `GameConfig` 「출전」: `_todayFreeHosts` 3 · `_randomLuckShards` 3 · `_randomLuckGoldPct` 20 · `_randomIncludesUnowned` true · `_ghostStartExpPct` 50.
 - 저장: `todayHostsDay` · `todayHosts[]`(그날 뽑은 몸 키 — 다시 계산하지 않고 저장해 둔다. 몸을 새로 얻어도 그날 목록은 그대로).
 - 판 결과에 행운 보너스 · 유령 보너스를 한 줄로(「행운 보너스 — 아마존 조각 +3 · 골드 +20%」).

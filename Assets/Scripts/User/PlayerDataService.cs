@@ -167,6 +167,8 @@ namespace Game.User
             _data.ghostExpMax = ExpToNext(_data.ghostLevel);   // 곡선이 바뀌면 막대 끝도 따라온다
             GrantStarter();
             if (s_testMode && _data.gem < TestGem) _data.gem = TestGem;
+            _data.runEntry ??= new RunEntryData();
+            if (_config != null) _data.staminaMax = _config.StaminaMax;   // 최대는 표가 정한다
             _bus?.Publish(new UserDataReadyEvent { LoadedGhostLevel = _data.ghostLevel });
             PublishCurrency();
         }
@@ -763,6 +765,30 @@ namespace Game.User
             return true;
         }
 
+        public void SetStamina(int value)
+        {
+            if (_data == null) return;
+            int cap = _config != null ? _config.StaminaCap : 999;
+            int v = Mathf.Clamp(value, 0, cap);
+            if (v == _data.stamina) return;
+            _data.stamina = v;
+            PublishCurrency();
+        }
+
+        public RunEntryData RunEntry
+        {
+            get
+            {
+                if (_data == null) return null;
+                _data.runEntry ??= new RunEntryData();
+                return _data.runEntry;
+            }
+        }
+
+        public RunStartMode RunStartMode { get; set; }
+
+        public string RunHostKey { get; set; }
+
         // ── 정수 · 일일 상점 ─────────────────────────────────
 
         public int Essence => _data?.essence ?? 0;
@@ -913,15 +939,39 @@ namespace Game.User
         public async UniTask GrantChapterClearAsync(int chapter, int gold)
         {
             if (_data == null) return;
-            _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold));
+            // 출전 방식 보너스(AVSR_Content_Store.md B-12) — 깼을 때만. 결과 창이 같은 값을 보이게 계산은 한 곳에서.
+            ClearBonusOf(gold, chapter, out int bonusGold, out int bonusShards, out int exp);
+            _data.gold = Mathf.Max(0, _data.gold + Mathf.Max(0, gold) + bonusGold);
             PublishCurrency();
+            if (bonusShards > 0 && !string.IsNullOrEmpty(RunHostKey))
+                AddShards(RunHostKey, bonusShards);   // 랜덤으로 나온 몸 — 안 가진 몸이면 이 조각이 해금 길이 된다
             // 유저(유령) 경험치는 **챕터를 깼을 때만** 준다(기획 2026-09-21) — 죽으면 없다
-            if (_config != null) AddUserExp(_config.ChapterClearExp(chapter));
+            if (exp > 0) AddUserExp(exp);
 
             // 격파 기록은 **올라가기만** 한다 — 1챕터를 다시 깨도 3챕터 기록이 안 내려간다.
             _data.clearedChapter = Mathf.Clamp(Mathf.Max(_data.clearedChapter, chapter), 0, ChapterCount);
             SetProgress(chapter, _data.reachedStage);   // 해금 재평가 + ProgressChangedEvent
             await SaveAsync();
+        }
+
+        /// <summary>
+        /// 깼을 때 출전 방식이 더 주는 것 — ? 랜덤은 판 골드 +20% · 나온 몸 조각 +3, 유령은 유령 경험치 +50%.
+        /// 결과 창이 미리 보여 줄 수 있게 지급과 따로 계산한다.
+        /// </summary>
+        public void ClearBonusOf(int runGold, int chapter, out int bonusGold, out int bonusShards, out int exp)
+        {
+            bonusGold = 0; bonusShards = 0;
+            exp = _config != null ? _config.ChapterClearExp(chapter) : 0;
+            if (_config == null) return;
+            if (RunStartMode == RunStartMode.Random)
+            {
+                bonusGold = Mathf.Max(0, runGold) * _config.RandomLuckGoldPct / 100;
+                bonusShards = _config.RandomLuckShards;
+            }
+            else if (RunStartMode == RunStartMode.Ghost)
+            {
+                exp += exp * _config.GhostStartExpPct / 100;
+            }
         }
 
         private void PublishCurrency()

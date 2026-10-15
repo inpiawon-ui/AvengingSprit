@@ -207,6 +207,26 @@ namespace Game.User
         /// <summary>스테이지 진입 비용 차감. 부족하면 false 를 돌려주고 아무것도 바꾸지 않는다.</summary>
         bool TrySpendStamina(int amount);
 
+        /// <summary>행동력을 그 값으로 둔다(0 ~ 표의 한도). 회복 · 반환 · 채우기는 `IStaminaService` 가 계산해 부른다.</summary>
+        void SetStamina(int value);
+
+        /// <summary>행동력 회복 시계 · 젬 채우기 횟수 · 오늘의 몸(저장에 들어 있다).</summary>
+        RunEntryData RunEntry { get; }
+
+        /// <summary>
+        /// 이번 판의 출전 방식. 저장하지 않는다 — 로비가 정하고, 클리어 보너스(`GrantChapterClearAsync`)가 읽는다.
+        /// </summary>
+        RunStartMode RunStartMode { get; set; }
+
+        /// <summary>
+        /// 이번 판을 시작한 몸(랜덤이면 뽑힌 몸). 저장하지 않는다 — 안 가진 몸은 `SelectHost` 가 저장에 안 남겨서
+        /// 행운 보너스 조각이 엉뚱한 몸에 가지 않게 따로 든다.
+        /// </summary>
+        string RunHostKey { get; set; }
+
+        /// <summary>깼을 때 출전 방식이 더 주는 것(골드 · 조각 · 유령 경험치 합계). 지급과 같은 계산이다.</summary>
+        void ClearBonusOf(int runGold, int chapter, out int bonusGold, out int bonusShards, out int exp);
+
         void AddCurrency(int gold, int gem);
 
         /// <summary>영구 재화 네 가지를 한 번에 더한다. 상자를 열 때 쓴다.</summary>

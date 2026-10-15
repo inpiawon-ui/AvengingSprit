@@ -36,6 +36,10 @@ namespace Game.User
             if (loaded.saveVersion < UserData.CurrentSaveVersion)
             {
                 Debug.Log($"[UserData] 마이그레이션 v{loaded.saveVersion} → v{UserData.CurrentSaveVersion}");
+                // v7 — 행동력이 30/30 으로 시작했다. 표의 최대(20)를 넘는 몫은 「구매로 넘친 값」으로 읽혀
+                //      회복이 멈추므로 그 시절 값으로 자른다. 최대는 불러온 뒤 표 값으로 다시 덮는다.
+                if (loaded.saveVersion < 7 && loaded.stamina > 20) loaded.stamina = 20;
+                loaded.runEntry ??= new RunEntryData();
                 loaded.saveVersion = UserData.CurrentSaveVersion;
             }
             return loaded;
