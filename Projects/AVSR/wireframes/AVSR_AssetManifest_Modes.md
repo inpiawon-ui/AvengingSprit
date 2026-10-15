@@ -27,7 +27,7 @@
 | `mode_band` | `InGameMainUI/mode_intro_band` | 720×207 | — | `TowerIntroBanner` · `NightStartHintBanner` · `NightBannerText` 바탕 (밤도 같은 띠) |
 | `bighost_plate` | `InGameMainUI/bighost_plate` | 204×92 | — | 대형 호스트 머리 위 이름 · 체력 · 경직 홈 (N3 · N4) |
 | `mode_frame` | `ModeCommon/mode_frame` | 340×120 | 16·16·16·16 | `TowerWeekBar` · `TowerSweepBox` · 입장 줄 · `NightFlowRow` 칸 · `NightBestBox` · `NightRewardBox` · 결과 창 안 칸 |
-| `entry_pip_1` / `_2` | `ModeCommon/mode_entry_pip_on` / `_off` | 24×24 | — | `TowerEntryPip` · `NightEntryPip` · 결과 창 입장 점 |
+| `entry_pip_1` / `_2` | `ModeCommon/mode_entry_pip_on` / `_off` | 24×24 | — (켜짐 점은 번진 빛을 반경 11px 에서 끊음 — 코덱스 검수) | `TowerEntryPip` · `NightEntryPip` · 결과 창 입장 점 |
 | `tower_ladder_cell_1` | `TowerEntryPanel/tower_ladder_cell_past` | 270×96 | 24 | `TowerLadderCell` 지난 층 |
 | `tower_ladder_cell_2` | `TowerEntryPanel/tower_ladder_cell_next` | 270×96 | 24 | 앞 층 |
 | `tower_ladder_cell_3` | `TowerEntryPanel/tower_ladder_cell_now` | 270×96 | 26 | 지금 층 |
@@ -64,7 +64,15 @@
 | 나가기 자물쇠 | `LobbyMainUI/modelockicon.png` |
 | 딤 | `ChapterHost/ch_dim.png` |
 
-## 4. 남은 것
+## 4. 코덱스 검수 (2026-10-15, `_exchange/review_modeui_parts_answer.md`)
+
+17종 중 15종 통과. 지적 둘과 처리:
+- `entry_pip_1` 켜짐 점의 빛이 동그라미 밖으로 번짐 → 자르기에서 반경 11px 밖을 끊었다(그림은 그대로).
+- `tower_ladder_cell` 1(지난) · 2(앞)이 너무 비슷 · 4(보스) 안쪽 붉은 네모가 어색 → **다시 발주하지 않는다.**
+  시안에서도 지난 층은 칸 자체가 아니라 **흐리게(알파 0.6) + ✓** 로 구분했고, 보스 칸 붉은 네모는 **보스 초상이 앉는 자리**다(초상이 덮는다).
+  적용 뒤 화면에서 구분이 약하면 그때 1장만 다시 받는다.
+
+## 5. 남은 것
 
 - 밤 전용 띠(보라)는 따로 발주하지 않았다 — 탑 띠(`mode_intro_band`)를 같이 쓴다. 밤 화면에서 어색하면 그때 변형 1장.
 - 글자는 그림에 없다 — 전부 TMP · 언어팩 키(화면 설계서 6절). 3언어 넣고 칸 확인.
