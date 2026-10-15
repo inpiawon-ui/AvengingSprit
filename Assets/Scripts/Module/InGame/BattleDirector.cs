@@ -391,6 +391,9 @@ namespace Game.Module.InGame
                     t => _eventTable = t, "EventTable 없음 — 이벤트 방은 그냥 지나간다", warnOnly: true),
                 LoadTableAsync<ShopTable>(res, "TableData/ShopTable",
                     t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true));
+            // 추가 모드(탑 · 밤) — 표를 읽고 층 · 요일을 정한다. 아래 캐릭터 목록이 그 몸들을 같이 올린다
+            await LoadModeTableAsync(res);
+            PrepareModeRun();
             // 스폰은 동기 코드다. 테이블이 다 올라온 뒤에 이 런이 쓸 캐릭터를 먼저 올린다.
             await LoadUnitAtlasesAsync(res, RunUnitKeys());
             // 위험 예고 그림도 미리 — 첫 예고가 뜰 때 받기 시작하면 그 예고만 끝이 하얗게 번쩍였다(PD 2026-10-08)
@@ -443,7 +446,7 @@ namespace Game.Module.InGame
             await LoadParticleArtAsync(res);   // 층은 위에서 만들었다 — 여기서 재질을 꽂는다
 
             SpawnGhost();
-            EnterStartHost();
+            if (!IsModeRun) EnterStartHost();   // 모드는 언제나 유령으로 들어선다(탑 3-2 · 밤 3-2)
 
             // ⚠ **한 판은 언제나 1챕터 1스테이지에서 시작한다**(기획 2026-09-08).
             //
@@ -458,13 +461,13 @@ namespace Game.Module.InGame
             //   전부 이 값을 보므로, 여기 하나만 맞춰 두면 나머지가 따라온다.
             //   (2026-09-18) 이제 한 판 = **고른 챕터 하나**다. 챕터 선택 화면이 고른 값을
             //   받아 그 챕터 001 에서 시작하고, 그 챕터 보스(015)를 잡으면 끝난다.
-            _runChapter = StartChapter;
+            _runChapter = IsModeRun ? 1 : StartChapter;   // 모드의 세기 기준은 1챕터(탑 3-6 · 밤 3-5)
             _runStage = 1;
             _maxHpDebt = 0;   // 계약은 판 한정이다
             ClearCardRuntime();
             ClearShopExtras();
 
-            _canonRoomId = FirstCanonRoom;
+            _canonRoomId = IsModeRun ? ModeStartRoom() : FirstCanonRoom;
             EnterRoom(0);
 
             // 첫 방까지 다 세운 **뒤에** 걷는다. 씬이 올라온 순간 걷으면
@@ -2768,6 +2771,7 @@ namespace Game.Module.InGame
             var emergency = PickPlayerHost();
             if (emergency != null) keys.Add(emergency.SpriteKey);
 
+            AddModeUnitKeys(keys);   // 모드 — 조건으로 뽑히는 몸 · 무리 잡몹
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return keys;
 
@@ -3097,11 +3101,11 @@ namespace Game.Module.InGame
                            bossKey,
                            canon ? _canonRoom.BossName : def?.DisplayName ?? "BOSS",
                            bossArt,
-                           Mathf.RoundToInt(BossHpMul * (
+                           Mathf.RoundToInt(BossHpMul * ModeBossHpMul * (
                                canon ? _canonRoom.BossHp
                                  : def != null && def.HasCanonStats ? def.CanonHp
                                  : Mathf.RoundToInt(_config.BossHp(chapter) * (def?.HpMul ?? 1f)))),
-                           Mathf.RoundToInt(BossAtkMulOf(bossKey) * (
+                           Mathf.RoundToInt(BossAtkMulOf(bossKey) * ModeAtkMul * (
                                canon ? _canonRoom.BossAtk
                                  : def != null && def.HasCanonStats ? def.CanonAtk
                                  : Mathf.RoundToInt(_config.BossAtk * (def?.AtkMul ?? 1f)))),
@@ -3144,6 +3148,7 @@ namespace Game.Module.InGame
                     BossHp = boss.Hp, BossHpMax = boss.HpMax,
                     BossName = bossName, Phase = 1,
                 });
+                if (IsTowerRun) SpawnTowerBodies();   // 탑 보스 층 — 보스 + 그 보스를 이기는 몸 3
             }
             else if (_roomKind == RoomKind.Event)
             {
@@ -3175,7 +3180,9 @@ namespace Game.Module.InGame
             }
             else if (_canonRoom != null)
             {
-                SpawnRoom(_canonRoom);
+                if (IsTowerRun) SpawnTowerFloor();          // 탑 — 층 표의 잔몹 + 조건 몸 3
+                else if (IsNightRun) SpawnNightStart();     // 밤 — 시작 몸 3, 무리는 시계가 부른다
+                else SpawnRoom(_canonRoom);
                 // 상점에서 사 둔 것은 **적이 설 때까지 기다렸다가** 터진다
                 // (`TickConsumable` 주석 참조). 여기서 따로 켤 것이 없다.
                 // ⚠ 중간보스 방이면 끄지 않는다 — `SpawnRoom` 안에서 중간보스가 이름 · 체력을 띄운 직후라,
@@ -3209,7 +3216,7 @@ namespace Game.Module.InGame
 
             // 나갈 문을 **닫힌 채로** 미리 세운다. 위 분기에서 이미 문을 연 방
             // (회복·상점처럼 들어서자마자 볼일이 끝나는 방)은 건드리지 않는다.
-            if (!_exitOpen) PlaceClosedExit();
+            if (!_exitOpen && !IsModeRun) PlaceClosedExit();   // 모드 방에는 문이 없다
 
             // 정본 방은 들어서는 자리가 정해져 있다(layout.playerSpawns).
             // 방마다 입구 위치가 달라 여기서 옮겨 놓지 않으면 벽 속에서 시작한다.
@@ -3240,6 +3247,7 @@ namespace Game.Module.InGame
                 ChapterTotal = ChapterRoomCount(ch),
                 IsBossRoom = isBoss, Kind = _roomKind,
             });
+            if (IsTowerRun) PublishTowerFloorEntered();
         }
 
         /// <summary>
@@ -3532,6 +3540,7 @@ namespace Game.Module.InGame
             // 빙의 조건이 "몸이 있느냐" 로 갈린다. 판정 직전에 채워야 한 프레임도 안 어긋난다.
             Unit.PlayerHasHost = _host != null;
             RefreshPossessTarget();
+            TickModeClock(dt);     // 모드 — 판 시간 · 밤 무리 · 대형 · 대장 · 보스
             TickRescue(dt);
             TickEmergency(dt);
             if (!_running) return;      // 긴급 호스트를 못 써서 졌을 수 있다
@@ -3720,15 +3729,18 @@ namespace Game.Module.InGame
             if (_rescueCool > 0f) _rescueCool = Mathf.Max(0f, _rescueCool - dt);
 
             // 몸이 있거나, 빼앗을 몸이 이미 방에 있으면 구조할 이유가 없다.
+            if (TowerOneShot) return;   // 탑 「빙의는 한 번」 — 구조 몸 없음
             if (_host != null || _awaitingBuff || HasFutureHost()) { _rescueWait = 0f; return; }
             // 보스방은 긴급 호스트가 맡는다. 보스와 싸우는 중에 몸이 걸어 들어오면
-            // 보스 패턴과 구조 목표가 화면에서 서로를 가린다.
-            if (_boss != null) { _rescueWait = 0f; return; }
+            // 보스 패턴과 구조 목표가 화면에서 서로를 가린다. 밤은 보스 뒤에도 무리가 남아 구조가 계속 온다
+            if (_boss != null && !IsNightRun) { _rescueWait = 0f; return; }
 
             _rescueWait += dt;
-            if (_rescueWait < RescueDelaySeconds || _rescueCool > 0f) return;
+            // 밤은 1초 · 쿨다운 없음 — 무리는 계속 온다(밤 3-9)
+            float delay = IsNightRun ? _modeTable.RescueDelay : RescueDelaySeconds;
+            if (_rescueWait < delay || _rescueCool > 0f) return;
             _rescueWait = 0f;
-            _rescueCool = RescueCooldownSeconds;
+            _rescueCool = IsNightRun ? _modeTable.RescueCooldown : RescueCooldownSeconds;
             SpawnRescueHost();
         }
 
@@ -3741,7 +3753,7 @@ namespace Game.Module.InGame
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return;
 
-            var e = EnemyAt(hosts, _roomIndex, _enemies.Count);
+            var e = ModeRescueEntry() ?? EnemyAt(hosts, _roomIndex, _enemies.Count);
             var u = NewUnit($"RescueHost_{e.HostKey}");
             NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
             u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, UnitGet(e.SpriteKey),
@@ -3769,6 +3781,7 @@ namespace Game.Module.InGame
         /// </summary>
         private void TickEmergency(float dt)
         {
+            if (TowerOneShot) return;   // 탑 「빙의는 한 번」 — 되살림도 없다
             if (_host != null || _awaitingBuff || IsChanneling) { _emergencyWait = 0f; return; }
             if (_possessTarget != null || HasFutureHost()) { _emergencyWait = 0f; return; }
 
@@ -3832,6 +3845,7 @@ namespace Game.Module.InGame
                 if (e == null || !e.IsAlive || e.IsBoss) continue;
                 if (e.Side != UnitSide.Enemy || e.RepossessBanned) continue;
                 if (!e.IsHostBody) continue;      // 잡몹은 아무리 깎아도 몸이 되지 않는다
+                if (e.RequiresStagger && _host == null) continue;   // 밤 대형 호스트 — 유령은 깎을 수 없다
                 if (e.Profile != null &&
                     e.Profile.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
                 return true;
@@ -3855,6 +3869,8 @@ namespace Game.Module.InGame
             //   그 규칙이 말하려던 것은 "**첫 몸**은 직접 빼앗아라" 였지
             //   "이 판 내내 구제 없다" 가 아니다.
             if (_lastHostEntry != null) return _lastHostEntry;
+            // 모드는 데려온 몸이 없다 — 판 안에서 처음 빼앗은 몸부터가 내 몸이다
+            if (IsModeRun) return null;
 
             // 유령으로 골라 들어왔고 아직 한 번도 몸을 안 입었다 —
             // 1번 방에서 직접 빼앗는다. 원작이 그랬다.
@@ -4421,9 +4437,10 @@ namespace Game.Module.InGame
         /// <summary>일반 몬스터 · 엘리트 공격 속도 1.5배(간격 ÷ 1.5).</summary>
         private const float EnemyHandSpeedMul = 1.5f;
 
-        private float SpawnHpMul(bool elite) => elite && _runChapter == 1 ? Ch1EliteStatMul : 1f;
+        // 모드 배율(탑 층 세기 · 밤 경과 시간)을 같이 곱한다 — 본편이면 1 (BattleDirector.Modes)
+        private float SpawnHpMul(bool elite) => (elite && _runChapter == 1 ? Ch1EliteStatMul : 1f) * ModeHpMul;
         private float SpawnAtkMul(bool elite)
-            => elite ? (_runChapter == 1 ? Ch1EliteStatMul : 1f) : NormalEnemyAtkMul;
+            => (elite ? (_runChapter == 1 ? Ch1EliteStatMul : 1f) : NormalEnemyAtkMul) * ModeAtkMul;
 
         /// <summary>
         /// 적이 얼마나 자주 때리는가. 배율은 `GameConfig` 에 있다 —
@@ -7527,8 +7544,9 @@ namespace Game.Module.InGame
             Retire(_host);       // 몸은 쓰러진다 — 유령이 그 자리에서 빠져나온다
             _host = null;
 
-            // 쓰다 잃은 몸이 가장 많이 준다. 타 본 값이다.
-            GrantShards(key, lost: true);
+            // 쓰다 잃은 몸이 가장 많이 준다. 타 본 값이다. 모드는 판 안 조각이 없다
+            if (!IsModeRun) GrantShards(key, lost: true);
+            NoteModeLostHost();
 
             // 기획서 1-2 A — 몸을 잃는 값(-20%)이 놓아주는 값(-15%)보다 커야
             // "죽기 전에 버리고 나온다" 가 선택지가 된다.
@@ -7685,12 +7703,15 @@ namespace Game.Module.InGame
             if (u.IsBoss) NoteBossDown(u);   // 막타 슬로우 — 결과 창은 슬로우가 풀린 뒤 (BattleDirector.BossDown)
 
             // 마지막 보스의 경험치는 안 준다 — 판이 끝나는데 레벨업 창이 먼저 떠 막타 슬로우 · 폭발을 가렸다(2026-10-08 녹화)
-            if (!(u.IsBoss && IsLastRoom)) GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
-            // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다.
-            if (!u.IsBoss) GrantShards(u.Key, lost: false);
+            // 탑은 레벨업 · 카드가 없다(탑 3-8). 밤 보스도 판의 끝이라 안 준다
+            if (!IsTowerRun && !(u.IsBoss && (IsLastRoom || IsNightRun)))
+                GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+            // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다. 모드는 판 안 조각 · 골드가 없다(보상은 첫 클리어 · 처치 수)
+            if (!u.IsBoss && !IsModeRun) GrantShards(u.Key, lost: false);
 
             PassiveOnKill(u);
-            DropGold(u);
+            if (!IsModeRun) DropGold(u);
+            NoteModeKill(u);
         }
 
         // ── 바닥에 떨어지는 골드 ─────────────────────────────────
@@ -7943,7 +7964,8 @@ namespace Game.Module.InGame
             if (_pendingLevelUps <= 0 || _awaitingBuff) return;
 
             // 살아 있는 적도, 쓰러지는 중인 몸도 없어야 "다 죽었다" 이다.
-            if (_enemies.Count > 0 || _dying.Count > 0 || IsChanneling)
+            // 밤은 방이 안 빈다 — 빙의 연출 중일 때만 기다린다(밤 3-10). 창이 떠 있는 동안은 Update 가 판을 세운다
+            if ((!IsNightRun && (_enemies.Count > 0 || _dying.Count > 0)) || IsChanneling)
             {
                 _buffOfferTimer = BuffOfferDelay;
                 return;
@@ -8645,6 +8667,7 @@ namespace Game.Module.InGame
                                Vector2 pos, int startHpPercent)
         {
             if (entry != null) _lastHostEntry = entry;
+            NoteModeEnterHost(entry);
             SoulFxOnEnterHost(pos);
             _dashTime = 0f;   // 몸이 바뀌면 돌진도 끊는다
             _ghost.gameObject.SetActive(false);
@@ -8928,6 +8951,10 @@ namespace Game.Module.InGame
 
         private void OnRoomCleared()
         {
+            // 탑 — 문 대신 저장 · 첫 클리어 → 결과. 밤 — 방이 비어도 끝나지 않는다(보스 처치가 끝)
+            if (IsTowerRun) { TowerOnRoomCleared(); return; }
+            if (IsNightRun) return;
+
             // 매복을 걸고 싸운 방이면 여기서 삯을 치른다.
             // 3택1 이 뜨면 `_awaitingBuff` 때문에 출구가 뒤로 밀린다 — 아래 흐름 그대로다.
             PayFightReward();
@@ -9751,6 +9778,7 @@ namespace Game.Module.InGame
         {
             if (!_running) return;
             _running = false;
+            if (IsModeRun) { GiveUpMode(); return; }
             int carried = Mathf.Max(0, _runGold);
             // 골드가 0 이어도 저장한다 — 판 안에서 모은 조각이 남아야 한다
             if (_player != null && _player.IsReady)
@@ -9761,6 +9789,11 @@ namespace Game.Module.InGame
         {
             if (!_running) return;
             _running = false;
+
+            // 모드는 챕터 진행도 · 상자 · 챕터 지급이 없다 — 그 모드의 결과로
+            if (IsTowerRun) { FinishTower(cleared); return; }
+            // 보스를 잡은 뒤 막타 슬로우 동안 유령이 다해도 클리어다 — 잡은 순간이 판의 끝이다
+            if (IsNightRun) { FinishNight(cleared || _nightCleared); return; }
 
             // ⚠ **판이 끝나는 지금, 딱 한 번 저장에 옮긴다.**
             //   걷는 동안에는 `_runChapter`·`_runStage` 만 움직였다 —

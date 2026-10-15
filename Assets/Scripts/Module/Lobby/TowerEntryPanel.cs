@@ -217,16 +217,7 @@ namespace Game.Module.Lobby
         /// <summary>그 층 조건에 맞는 호스트(조건 밖이면 빈 목록이 아니라 전부 — 기획서 3-9 예외).</summary>
         private List<string> FitHosts(TowerFloor def)
         {
-            if (_progress == null) return new List<string>();
-            var table = _progress.Table;
-            Func<HostEntry, bool> match = def == null ? null : def.Rule switch
-            {
-                TowerRule.BodyRange => h => table.RangeOf(h.HostKey) == def.Range,
-                TowerRule.BodyAffinity or TowerRule.Boss => h => AffinityRule.KindOf(h.HostKey) == def.Affinity,
-                _ => null,
-            };
-            var list = _progress.HostsWhere(match);
-            return list.Count > 0 ? list : _progress.HostsWhere(null);
+            return _progress != null ? _progress.TowerFitHosts(def) : new List<string>();
         }
 
         // ── 버튼 ────────────────────────────────────────────

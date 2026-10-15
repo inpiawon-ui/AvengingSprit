@@ -169,14 +169,7 @@ namespace Game.Module.Lobby
         {
             if (!CoreModule.TryGet<IModeProgress>(out var progress)) return new List<string>();
             var day = table != null && table.Days != null && dayIndex < table.Days.Length ? table.Days[dayIndex] : null;
-            Func<HostEntry, bool> match = day == null ? null : day.Filter switch
-            {
-                NightFilter.Range => h => table.RangeOf(h.HostKey) == day.Range,
-                NightFilter.Affinity => h => AffinityRule.KindOf(h.HostKey) == day.Affinity,
-                _ => null,
-            };
-            var list = progress.HostsWhere(match);
-            return list.Count > 0 ? list : progress.HostsWhere(null);
+            return progress.NightDayHosts(day);
         }
 
         private void AskBuy(bool thenStart)

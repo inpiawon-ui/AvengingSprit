@@ -54,6 +54,10 @@ namespace Game.Module.Common.Modes
 
         /// <summary>조건에 맞는 호스트(숨긴 몸 뺌).</summary>
         List<string> HostsWhere(Func<HostEntry, bool> match);
+        /// <summary>그 층에서 몸으로 나오는 호스트 — 입장 패널 · 인게임이 같이 쓴다. 맞는 호스트가 없으면 전부(기획서 3-9).</summary>
+        List<string> TowerFitHosts(TowerFloor def);
+        /// <summary>그 요일 밤에 몸으로 나오는 호스트. 맞는 호스트가 없으면 전부.</summary>
+        List<string> NightDayHosts(NightDay day);
         bool IsTrained(string hostKey);
 
         /// <summary>하루 · 주 경계를 넘었으면 채운다. 화면이 열릴 때 부른다.</summary>
@@ -309,6 +313,34 @@ namespace Game.Module.Common.Modes
                 if (match == null || match(h)) list.Add(h.HostKey);
             }
             return list;
+        }
+
+        public List<string> TowerFitHosts(TowerFloor def)
+        {
+            var table = _table;
+            Func<HostEntry, bool> match = def == null || table == null ? null : def.Rule switch
+            {
+                TowerRule.BodyRange => h => table.RangeOf(h.HostKey) == def.Range,
+                TowerRule.BodyAffinity or TowerRule.Boss => h => AffinityRule.KindOf(h.HostKey) == def.Affinity,
+                _ => null,
+            };
+            var list = HostsWhere(match);
+            if (list.Count > 0) return list;
+            if (match != null) Debug.LogWarning($"[탑] {def.Floor}층 조건에 맞는 호스트가 없다 — 전부에서 뽑는다");
+            return HostsWhere(null);
+        }
+
+        public List<string> NightDayHosts(NightDay day)
+        {
+            var table = _table;
+            Func<HostEntry, bool> match = day == null || table == null ? null : day.Filter switch
+            {
+                NightFilter.Range => h => table.RangeOf(h.HostKey) == day.Range,
+                NightFilter.Affinity => h => AffinityRule.KindOf(h.HostKey) == day.Affinity,
+                _ => null,
+            };
+            var list = HostsWhere(match);
+            return list.Count > 0 ? list : HostsWhere(null);
         }
 
         public bool IsTrained(string hostKey) => Player != null && Player.GetMastery(hostKey) >= 1;
