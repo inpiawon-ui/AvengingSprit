@@ -253,6 +253,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<PossessDeniedEvent>(OnPossessDenied));
             _tokens.Add(bus.Subscribe<RepossessLockEvent>(OnRepossessLock));
             _tokens.Add(bus.Subscribe<StageFinishedEvent>(OnStageFinished));
+            SubscribeModes(bus);   // 추가 모드(탑 · 밤) — 모드 판일 때만 (InGameMainUI.Modes)
             _tokens.Add(bus.Subscribe<BuffOfferEvent>(OnBuffOffer));
             _tokens.Add(bus.Subscribe<EventOfferEvent>(OnEventOffer));
             _tokens.Add(bus.Subscribe<ShrineOpenedEvent>(OnShrineOpened));
@@ -322,6 +323,7 @@ namespace Game.Module.InGame
             await RemoveCoverAsync();   // 여기까지 와야 방에 그림이 다 올라와 있다
             // 덮개가 **다 걷힌 뒤에** 판을 연다 — 보이지도 않는데 적이 먼저 움직이지 않게(기획 2026-09-15).
             _battle.BeginBattle();
+            ShowPendingModeBanner();   // 모드 — 덮개 뒤에서 들어온 층 소개 띠를 이제 띄운다
         }
 
         private void Update()
@@ -1744,6 +1746,7 @@ namespace Game.Module.InGame
 
         private async UniTaskVoid GoLobbyAsync()
         {
+            Game.Module.Common.Modes.RunModeContext.Clear();   // 모드 판을 포기하고 나가도 다음 판은 본편
             await CoreModule.Get<ISceneManager>().LoadAsync(new SceneLoadRequest
             {
                 SceneName = SceneNames.Lobby,

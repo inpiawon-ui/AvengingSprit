@@ -4428,3 +4428,170 @@ MonoBehaviour:
     _ko: "\uC9C0\uAE08 \uC870\uAC01 <color=#FFD94A>{0}</color>"
     _ja: "\u73FE\u5728\u306E\u304B\u3051\u3089 <color=#FFD94A>{0}</color>"
     _en: Shards <color=#FFD94A>{0}</color>
+  - _key: ui.tower.floor_f
+    _ko: '{0}F'
+    _ja: '{0}F'
+    _en: '{0}F'
+  - _key: ui.tower.enemies_left
+    _ko: "\uB0A8\uC740 \uC801 {0}"
+    _ja: "\u6B8B\u308A\u306E\u6575 {0}"
+    _en: Enemies left {0}
+  - _key: ui.tower.possess_left
+    _ko: "\uBE59\uC758 \uB0A8\uC74C {0}"
+    _ja: "\u6191\u4F9D\u306E\u6B8B\u308A {0}"
+    _en: Possess left {0}
+  - _key: ui.tower.no_leave
+    _ko: "\uC774 \uCE35\uC740 \uB098\uAC08 \uC218 \uC5C6\uB2E4"
+    _ja: "\u3053\u306E\u968E\u3067\u306F\u629C\u3051\u51FA\u305B\u306A\u3044"
+    _en: You can't leave a body on this floor
+  - _key: ui.tower.result.clear
+    _ko: '{0}F CLEAR'
+    _ja: '{0}F CLEAR'
+    _en: '{0}F CLEAR'
+  - _key: ui.tower.result.fail
+    _ko: "{0}\uCE35 \uC2E4\uD328"
+    _ja: "{0}\u968E \u5931\u6557"
+    _en: F{0} Failed
+  - _key: ui.tower.result.next
+    _ko: "\uB2E4\uC74C \uCE35"
+    _ja: "\u6B21\u306E\u968E"
+    _en: Next floor
+  - _key: ui.tower.result.hint
+    _ko: "\uC774 \uCE35\uC5D0 \uB9DE\uB294 \uD0A4\uC6B4 \uBAB8 \u2605{0} / {1}"
+    _ja: "\u3053\u306E\u968E\u306B\u5408\u3046\u80B2\u3066\u305F\u4F53 \u2605{0}
+      / {1}"
+    _en: "Trained bodies for this floor \u2605{0} / {1}"
+  - _key: ui.tower.result.suggest
+    _ko: "{0} \uD638\uC2A4\uD2B8\uB97C \uD0A4\uC6B0\uBA74 \uC26C\uC6CC\uC9C4\uB2E4"
+    _ja: "{0} \u3092\u80B2\u3066\u308B\u3068\u697D\u306B\u306A\u308B"
+    _en: Training {0} will make it easier
+  - _key: ui.tower.retry
+    _ko: "\uB2E4\uC2DC \u25B6"
+    _ja: "\u3082\u3046\u4E00\u5EA6 \u25B6"
+    _en: "Retry \u25B6"
+  - _key: ui.tower.leave
+    _ko: "\uB098\uAC00\uAE30"
+    _ja: "\u51FA\u308B"
+    _en: Leave
+  - _key: ui.night.kills
+    _ko: "\uCC98\uCE58 {0}"
+    _ja: "\u6483\u7834 {0}"
+    _en: Kills {0}
+  - _key: ui.night.start_hint
+    _ko: "\uBAB8 \uD558\uB098\uB97C \uACE8\uB77C \uBE59\uC758\uD558\uB77C"
+    _ja: "\u4F53\u3092\u3072\u3068\u3064\u9078\u3093\u3067\u6191\u4F9D\u3057\u3088\u3046"
+    _en: Pick a body and possess it
+  - _key: ui.night.start_hint_sub
+    _ko: "\uB098\uBA38\uC9C0 \uB458\uC740 \uC0AC\uB77C\uC9C4\uB2E4"
+    _ja: "\u6B8B\u308A\u306E2\u4F53\u306F\u6D88\u3048\u308B"
+    _en: The other two will vanish
+  - _key: ui.night.banner.wave
+    _ko: "\uBB34\uB9AC\uAC00 {0}(\uC73C)\uB85C"
+    _ja: "\u7FA4\u308C\u304C{0}\u306B\u5909\u308F\u308B"
+    _en: The horde turns {0}
+  - _key: ui.night.banner.heal
+    _ko: "\uBC84\uD17C\uB2E4 \u2014 {0}% \uD68C\uBCF5"
+    _ja: "\u8010\u3048\u305F \u2014 {0}% \u56DE\u5FA9"
+    _en: "Survived \u2014 {0}% healed"
+  - _key: ui.night.banner.big
+    _ko: "\uB300\uD615 {0} \uB4F1\uC7A5"
+    _ja: "\u5927\u578B {0} \u51FA\u73FE"
+    _en: Giant {0} appears
+  - _key: ui.night.banner.big_sub
+    _ko: "\uBAB8\uC5D0 \uB4E0 \uCC44\uB85C \uAE4E\uC544\uC57C \uBE7C\uC557\uB294\uB2E4"
+    _ja: "\u4F53\u306B\u5165\u3063\u305F\u307E\u307E\u524A\u308C\u3070\u596A\u3048\u308B"
+    _en: Wear it down while in a body to take it
+  - _key: ui.night.banner.chief
+    _ko: "\uB300\uC7A5 {0} \uB4F1\uC7A5"
+    _ja: "\u968A\u9577 {0} \u51FA\u73FE"
+    _en: Chief {0} appears
+  - _key: ui.night.banner.boss
+    _ko: "\uBCF4\uC2A4 {0} \uB4F1\uC7A5"
+    _ja: "\u30DC\u30B9 {0} \u51FA\u73FE"
+    _en: Boss {0} appears
+  - _key: ui.night.banner.boss_sub
+    _ko: "\uC4F0\uB7EC\uB728\uB9AC\uBA74 \uBC24\uC744 \uBC84\uD2F4\uB2E4"
+    _ja: "\u5012\u305B\u3070\u591C\u3092\u8D8A\u3048\u3089\u308C\u308B"
+    _en: Defeat it to survive the night
+  - _key: ui.night.result.clear
+    _ko: "\uBC24\uC744 \uBC84\uD17C\uB2E4"
+    _ja: "\u591C\u3092\u8D8A\u3048\u305F"
+    _en: You survived the night
+  - _key: ui.night.result.fail
+    _ko: "\uC4F0\uB7EC\uC84C\uB2E4"
+    _ja: "\u5012\u308C\u305F"
+    _en: You fell
+  - _key: ui.night.result.best
+    _ko: "\uCD5C\uACE0 \uAE30\uB85D! (\uC774\uC804 {0})"
+    _ja: "\u6700\u9AD8\u8A18\u9332!(\u524D\u56DE {0})"
+    _en: New best! (prev. {0})
+  - _key: ui.night.result.stat
+    _ko: "\uBC84\uD2F4 \uC2DC\uAC04 {0} \xB7 \uB808\uBCA8 {1}"
+    _ja: "\u8010\u3048\u305F\u6642\u9593 {0}\u30FB\u30EC\u30D9\u30EB {1}"
+    _en: "Survived {0} \xB7 Lv {1}"
+  - _key: ui.tower.banner_enemy
+    _ko: "\uC801 \uC804\uBD80 {0} \xB7 {1} \uBAB8 \uC720\uB9AC \u25B2"
+    _ja: "\u6575\u306F\u3059\u3079\u3066{0}\u30FB{1}\u306E\u4F53\u304C\u6709\u5229
+      \u25B2"
+    _en: "All enemies {0} \xB7 {1} bodies favored \u25B2"
+  - _key: ui.tower.first_clear_done
+    _ko: "\uC774\uBC88 \uC8FC \uBCF4\uC0C1\uC740 \uC774\uBBF8 \uBC1B\uC558\uB2E4"
+    _ja: "\u4ECA\u9031\u306E\u5831\u916C\u306F\u53D7\u53D6\u6E08\u307F"
+    _en: This week's reward already claimed
+  - _key: ui.tower.result.next_try
+    _ko: "\uB2E4\uC74C \uB3C4\uC804"
+    _ja: "\u6B21\u306E\u6311\u6226"
+    _en: Next try
+  - _key: ui.tower.result.fail_desc
+    _ko: "\uC785\uC7A5 1\uBC88\uC73C\uB85C \uB2E4\uC2DC \u2014 \uBAB8\uC744 \uBC14\uAFD4
+      \uBCF4\uC790"
+    _ja: "\u5165\u58341\u56DE\u3067\u3082\u3046\u4E00\u5EA6 \u2014 \u4F53\u3092\u5909\u3048\u3066\u307F\u3088\u3046"
+    _en: "Retry with 1 entry \u2014 try another body"
+  - _key: ui.night.wave
+    _ko: "\uBB34\uB9AC: {0}"
+    _ja: "\u7FA4\u308C: {0}"
+    _en: 'Horde: {0}'
+  - _key: ui.night.next_big
+    _ko: "\uB300\uD615 \uD638\uC2A4\uD2B8 {0}"
+    _ja: "\u5927\u578B\u30DB\u30B9\u30C8 {0}"
+    _en: Giant host {0}
+  - _key: ui.night.next_boss
+    _ko: "\uBCF4\uC2A4 {0}"
+    _ja: "\u30DC\u30B9 {0}"
+    _en: Boss {0}
+  - _key: ui.night.counter
+    _ko: "{0} \uBAB8\uC774 \uC624\uBA74 \u25B2"
+    _ja: "{0}\u306E\u4F53\u306A\u3089\u6709\u5229 \u25B2"
+    _en: "{0} bodies favored \u25B2"
+  - _key: ui.night.result.boss
+    _ko: "\uBCF4\uC2A4 {0} \uCC98\uCE58"
+    _ja: "\u30DC\u30B9{0}\u6483\u7834"
+    _en: Defeated {0}
+  - _key: ui.night.result.kills
+    _ko: "\uCC98\uCE58"
+    _ja: "\u6483\u7834"
+    _en: Kills
+  - _key: ui.night.result.reward
+    _ko: "\uBCF4\uC0C1 \u2014 \uCC98\uCE58 {0}\uB9C8\uB2E4 \uC870\uAC01 1"
+    _ja: "\u5831\u916C \u2014 {0}\u6483\u7834\u3054\u3068\u306B\u304B\u3051\u30891"
+    _en: "Reward \u2014 1 shard per {0} kills"
+  - _key: ui.night.result.reward_clear
+    _ko: "\uBCF4\uC0C1 \u2014 \uCC98\uCE58 {0}\uB9C8\uB2E4 1 + \uBCF4\uC2A4 \uCC98\uCE58
+      {1}"
+    _ja: "\u5831\u916C \u2014 {0}\u6483\u7834\u3054\u3068\u306B1 + \u30DC\u30B9\u6483\u7834{1}"
+    _en: "Reward \u2014 1 per {0} kills + boss {1}"
+  - _key: ui.night.result.reward_none
+    _ko: "\uC774\uBC88\uC5D4 \uC870\uAC01\uC774 \uC5C6\uB2E4 \u2014 {0}\uB9C8\uB9AC\uB97C
+      \uC7A1\uC73C\uBA74 1"
+    _ja: "\u4ECA\u56DE\u306F\u304B\u3051\u3089\u306A\u3057 \u2014 {0}\u4F53\u30671"
+    _en: "No shards this time \u2014 1 per {0} kills"
+  - _key: ui.night.result.stat_full
+    _ko: "\uBC84\uD2F4 \uC2DC\uAC04 {0} \xB7 Lv {1} \xB7 \uBE59\uC758 {2} \xB7 \uBAB8
+      \uC783\uC74C {3}"
+    _ja: "\u8010\u3048\u305F\u6642\u9593 {0}\u30FBLv {1}\u30FB\u6191\u4F9D {2}\u30FB\u4F53\u3092\u5931\u3063\u305F
+      {3}"
+    _en: "Survived {0} \xB7 Lv {1} \xB7 Possessed {2} \xB7 Lost {3}"
+  - _key: ui.night.result.lobby
+    _ko: "\uB85C\uBE44"
+    _ja: "\u30ED\u30D3\u30FC"
+    _en: Lobby

@@ -994,3 +994,43 @@ ui.summon.history_shard	조각	かけら	Shards
 ui.summon.history_pay	사용	使用	Paid
 ui.summon.history_free	무료	無料	Free
 ui.summon.shards_now	지금 조각 <color=#FFD94A>{0}</color>	現在のかけら <color=#FFD94A>{0}</color>	Shards <color=#FFD94A>{0}</color>
+ui.tower.floor_f	{0}F	{0}F	{0}F
+ui.tower.enemies_left	남은 적 {0}	残りの敵 {0}	Enemies left {0}
+ui.tower.possess_left	빙의 남음 {0}	憑依の残り {0}	Possess left {0}
+ui.tower.no_leave	이 층은 나갈 수 없다	この階では抜け出せない	You can't leave a body on this floor
+ui.tower.result.clear	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR
+ui.tower.result.fail	{0}층 실패	{0}階 失敗	F{0} Failed
+ui.tower.result.next	다음 층	次の階	Next floor
+ui.tower.result.hint	이 층에 맞는 키운 몸 ★{0} / {1}	この階に合う育てた体 ★{0} / {1}	Trained bodies for this floor ★{0} / {1}
+ui.tower.result.suggest	{0} 호스트를 키우면 쉬워진다	{0} を育てると楽になる	Training {0} will make it easier
+ui.tower.retry	다시 ▶	もう一度 ▶	Retry ▶
+ui.tower.leave	나가기	出る	Leave
+ui.night.kills	처치 {0}	撃破 {0}	Kills {0}
+ui.night.start_hint	몸 하나를 골라 빙의하라	体をひとつ選んで憑依しよう	Pick a body and possess it
+ui.night.start_hint_sub	나머지 둘은 사라진다	残りの2体は消える	The other two will vanish
+ui.night.banner.wave	무리가 {0}(으)로	群れが{0}に変わる	The horde turns {0}
+ui.night.banner.heal	버텼다 — {0}% 회복	耐えた — {0}% 回復	Survived — {0}% healed
+ui.night.banner.big	대형 {0} 등장	大型 {0} 出現	Giant {0} appears
+ui.night.banner.big_sub	몸에 든 채로 깎아야 빼앗는다	体に入ったまま削れば奪える	Wear it down while in a body to take it
+ui.night.banner.chief	대장 {0} 등장	隊長 {0} 出現	Chief {0} appears
+ui.night.banner.boss	보스 {0} 등장	ボス {0} 出現	Boss {0} appears
+ui.night.banner.boss_sub	쓰러뜨리면 밤을 버틴다	倒せば夜を越えられる	Defeat it to survive the night
+ui.night.result.clear	밤을 버텼다	夜を越えた	You survived the night
+ui.night.result.fail	쓰러졌다	倒れた	You fell
+ui.night.result.best	최고 기록! (이전 {0})	最高記録!(前回 {0})	New best! (prev. {0})
+ui.night.result.stat	버틴 시간 {0} · 레벨 {1}	耐えた時間 {0}・レベル {1}	Survived {0} · Lv {1}
+ui.tower.banner_enemy	적 전부 {0} · {1} 몸 유리 ▲	敵はすべて{0}・{1}の体が有利 ▲	All enemies {0} · {1} bodies favored ▲
+ui.tower.first_clear_done	이번 주 보상은 이미 받았다	今週の報酬は受取済み	This week's reward already claimed
+ui.tower.result.next_try	다음 도전	次の挑戦	Next try
+ui.tower.result.fail_desc	입장 1번으로 다시 — 몸을 바꿔 보자	入場1回でもう一度 — 体を変えてみよう	Retry with 1 entry — try another body
+ui.night.wave	무리: {0}	群れ: {0}	Horde: {0}
+ui.night.next_big	대형 호스트 {0}	大型ホスト {0}	Giant host {0}
+ui.night.next_boss	보스 {0}	ボス {0}	Boss {0}
+ui.night.counter	{0} 몸이 오면 ▲	{0}の体なら有利 ▲	{0} bodies favored ▲
+ui.night.result.boss	보스 {0} 처치	ボス{0}撃破	Defeated {0}
+ui.night.result.kills	처치	撃破	Kills
+ui.night.result.reward	보상 — 처치 {0}마다 조각 1	報酬 — {0}撃破ごとにかけら1	Reward — 1 shard per {0} kills
+ui.night.result.reward_clear	보상 — 처치 {0}마다 1 + 보스 처치 {1}	報酬 — {0}撃破ごとに1 + ボス撃破{1}	Reward — 1 per {0} kills + boss {1}
+ui.night.result.reward_none	이번엔 조각이 없다 — {0}마리를 잡으면 1	今回はかけらなし — {0}体で1	No shards this time — 1 per {0} kills
+ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 몸 잃음 {3}	耐えた時間 {0}・Lv {1}・憑依 {2}・体を失った {3}	Survived {0} · Lv {1} · Possessed {2} · Lost {3}
+ui.night.result.lobby	로비	ロビー	Lobby
