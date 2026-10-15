@@ -69,6 +69,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e6f762a119a79946ae34972e2a01211
+    m_Address: atlas/summon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2e94f4b81c5bb2c4b8e2798922e56d23
     m_Address: atlas/nightentrypanel
     m_ReadOnly: 0
@@ -195,6 +201,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88d25ec2b19adb547bc09aeb7b1f9664
+    m_Address: atlas/store
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c5afb6bf839233419e29e16c79139a4
     m_Address: atlas/unit_salamander
     m_ReadOnly: 0
@@ -249,6 +261,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a48b589f85eed8e458a8a437fbc0a252
+    m_Address: atlas/profile
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7e0e0b8d992cfc4980b4a7c1d91dd71
     m_Address: atlas/unit_armadillo
     m_ReadOnly: 0
@@ -281,6 +299,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c7dad6791b753c24c993d028206ec232
     m_Address: atlas/unit_white_wizard
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8ae33050a528ee42b67c020f7cfbb4a
+    m_Address: atlas/summonfx
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf6456d3a823d4046b03a741cddf84df
+    m_Address: atlas/pass
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

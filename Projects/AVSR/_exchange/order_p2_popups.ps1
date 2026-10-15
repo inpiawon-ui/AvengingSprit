@@ -1,0 +1,24 @@
+﻿$env:OPENAI_API_KEY = $null
+Set-Location "C:\won\UnityProject\AvengingSprit"
+$prompt = @'
+이미지 생성 도구로 직접 그린다. API 키를 쓰는 CLI 폴백은 쓰지 마라. 스크립트로 도형을 그려 때우지 마라(사각형 · 원을 코드로 찍은 것은 반려). 한 장만 그린다.
+게임 「Avenging Spirit RE:BORN」(도트 픽셀 아트) — 로비 상점 · 소환 · 패스 · 출전 **부품 시트**. 게임에 그대로 잘라 넣을 부품이다.
+[먼저 볼 것]
+- 정답 장면(PD 확정 시안): Projects/AVSR/_exchange/in/scene_s05_confirm.png · Projects/AVSR/_exchange/in/scene_s06_noGem.png · Projects/AVSR/_exchange/in/scene_s07_reward.png · Projects/AVSR/_exchange/in/scene_s21_staminaShort.png
+- 부품 목록 · 원칙: Projects/AVSR/_exchange/order_store_parts.md · 장면 구성: Projects/AVSR/_exchange/store_scenes.md
+- 지금 로비 부품(같은 결 · 같은 두께로): Assets/BaseResource/ChapterHost/ 의 ch_card_frame.png · ch_start_button.png · ch_pill.png · ch_panel.png, 1차 견본 Projects/AVSR/_exchange/in/parts1_cardkit.png
+- 유령은 Projects/AVSR/Reference/Hosts/idle/ghost_anchor_user_x8.png 모습 그대로.
+[그리는 법] **분홍(#FF00FF) 바탕 한 장**에 아래 부품을 **위에서 아래 · 왼쪽에서 오른쪽 순서로** 줄지어, 부품끼리 40px 이상 띄워 그린다. **글자 · 이름표 · 숫자 없이**(목록에서 「이 글자만 그림에」라고 한 것만 예외). 판 · 틀은 남색 바탕 + 하늘 네온 결이 기본, 빛 번짐은 테두리 옆 2~3px 까지만(분홍 위로 넓게 퍼뜨리지 않는다). 물건 그림에는 빛 · 아우라를 굽지 않는다.
+[부품 — 이 순서대로]
+1. 확인 팝업 판(머리 띠 자리 · 닫기 X 자리 · 남색 · 하늘 네온) — 약 560x640
+2. 획득 팝업 판(조금 큰 · 화려한 테) — 약 640x700
+3. 작은 팝업 판(젬 부족 · 행동력 부족) — 약 520x420
+4. 보상 칸 판(아이콘 + 수량 자리) — 약 150x150
+5. 내용 목록 한 줄 판(아이콘 · 이름 · 수량 자리) — 약 440x46
+6. 닫기 X 버튼 — 약 56x56
+7. 확인 · 구매 큰 버튼 판(노랑) — 약 360x70
+8. 닫기 버튼 판(남색) — 약 300x56
+
+[저장] Projects/AVSR/_exchange/in/p2_popups.png
+'@
+codex exec --sandbox workspace-write --skip-git-repo-check $prompt

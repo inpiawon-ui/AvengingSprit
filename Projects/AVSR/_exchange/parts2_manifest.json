@@ -1,0 +1,200 @@
+{
+ "p2_bottombar": {
+  "bg": "pink",
+  "parts": [
+   "nav_plate",
+   "nav_plate_summon",
+   "nav_sel_rim",
+   "nav_icon_summon"
+  ]
+ },
+ "p2_topbar": {
+  "bg": "pink",
+  "parts": [
+   "top_stamina_plate",
+   "icon_stamina",
+   "top_pass_plate",
+   "icon_season_crown",
+   "icon_reddot"
+  ]
+ },
+ "p2_startmode": {
+  "bg": "pink",
+  "parts": [
+   "mode_card_plate",
+   "mode_card_sel",
+   "mode_random_art",
+   "row_dim",
+   "row_notice_band",
+   "start_btn_off",
+   "ribbon_luck",
+   "ribbon_ghost",
+   "ribbon_today"
+  ]
+ },
+ "p2_shop_a": {
+  "bg": "pink",
+  "parts": [
+   "shop_header_plate",
+   "shop_tab",
+   "shop_tab_sel",
+   "daily_slot",
+   "daily_slot_free",
+   "ribbon_new",
+   "sold_overlay",
+   "chest_slot",
+   "ribbon_open_now",
+   "btn_rate"
+  ]
+ },
+ "p2_shop_b": {
+  "bg": "pink",
+  "parts": [
+   "card_slot_small",
+   "card_slot_big",
+   "starter_slot",
+   "ribbon_best",
+   "chapter_pack_plate",
+   "gem_slot",
+   "ribbon_first2x",
+   "gold_slot",
+   "btn_price",
+   "btn_small"
+  ]
+ },
+ "p2_products_gem": {
+  "bg": "pink",
+  "parts": [
+   "prod_gem_1",
+   "prod_gem_2",
+   "prod_gem_3",
+   "prod_gem_4",
+   "prod_gem_5",
+   "prod_gem_6"
+  ]
+ },
+ "p2_products_misc": {
+  "bg": "pink",
+  "parts": [
+   "prod_gold_1",
+   "prod_gold_2",
+   "prod_gold_3",
+   "prod_card_small",
+   "prod_card_big",
+   "prod_starter_1",
+   "prod_starter_2",
+   "prod_starter_3",
+   "prod_chapter",
+   "icon_ticket",
+   "prod_stamina"
+  ]
+ },
+ "p2_popups": {
+  "bg": "pink",
+  "parts": [
+   "popup_plate",
+   "popup_plate_wide",
+   "popup_small",
+   "reward_cell",
+   "content_row",
+   "btn_close_x",
+   "btn_confirm",
+   "btn_cancel"
+  ]
+ },
+ "p2_summon_bg": {
+  "bg": "pink",
+  "parts": [
+   "summon_bg",
+   "summon_circle",
+   "summon_ghost"
+  ]
+ },
+ "p2_summon_ui": {
+  "bg": "pink",
+  "parts": [
+   "pickup_plate",
+   "pull_plate",
+   "pull_plate_10",
+   "pity_bar_bg",
+   "pity_bar_fill",
+   "card_back",
+   "card_front_b",
+   "card_front_a",
+   "card_front_jackpot",
+   "ribbon_pickup",
+   "stamp_new",
+   "summary_plate",
+   "rate_row"
+  ]
+ },
+ "p2_pass": {
+  "bg": "pink",
+  "parts": [
+   "pass_banner_art",
+   "tier_row_free",
+   "tier_row_premium",
+   "tier_num_plate",
+   "mark_claimed",
+   "btn_claim",
+   "mission_row",
+   "mission_bar_bg",
+   "mission_bar_fill",
+   "premium_slot",
+   "premium_slot_plus"
+  ]
+ },
+ "p2_mission_icons": {
+  "bg": "pink",
+  "parts": [
+   "micon_login",
+   "micon_run",
+   "micon_possess",
+   "micon_advantage",
+   "micon_shop",
+   "micon_upgrade",
+   "micon_boss",
+   "micon_chest",
+   "micon_hosts"
+  ]
+ },
+ "p2_profile": {
+  "bg": "pink",
+  "parts": [
+   "profile_frame_default",
+   "profile_frame_s1",
+   "profile_frame_ch10",
+   "title_ribbon",
+   "profile_tab",
+   "profile_cell"
+  ]
+ },
+ "p2_fx_pillar_cyan": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_pillar_purple": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_pillar_gold": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_split": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_flip": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_jackpot": {
+  "bg": "black",
+  "parts": "frames"
+ },
+ "p2_fx_essence": {
+  "bg": "black",
+  "parts": "frames"
+ }
+}
