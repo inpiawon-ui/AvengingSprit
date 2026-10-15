@@ -69,6 +69,8 @@ namespace Game.Editor
                 ti.mipmapEnabled = false;
                 ti.isReadable = false;
                 ti.alphaIsTransparency = true;
+                // 원본은 압축 없이 — 압축은 아틀라스(ASTC 4x4)에서 한다(규칙 09). 원본이 압축이면 묶을 때 경고가 나고 두 번 깎인다
+                ti.textureCompression = TextureImporterCompression.Uncompressed;
                 ti.spriteBorder = kv.Value;
                 ti.SaveAndReimport();
                 done++;
