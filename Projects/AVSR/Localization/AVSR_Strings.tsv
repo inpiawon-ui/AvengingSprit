@@ -680,3 +680,34 @@ ui.ingame.ultimate	필살기	必殺技	SPECIAL
 ui.ingame.ult_trial	체험	お試し	TRIAL
 ui.ingame.ult_locked	잠김	ロック	LOCKED
 ui.ingame.ult_trial_spent	조각을 모으면 매번 쓸 수 있어요	欠片を集めると毎回使えます	Get shards to use it every time
+ui.start.title	출전 방식	出撃方法	Start Mode
+ui.start.mode.host	몸 골라	体を選ぶ	Pick a Body
+ui.start.mode.host_today	오늘의 몸 · 골드 무료	今日の体・ゴールド無料	Today's Body · Free
+ui.start.mode.random	? 랜덤	? ランダム	? Random
+ui.start.mode.random_note	클리어 시\n조각 +{0} · 골드 +{1}%	クリア時\n欠片+{0}・ゴールド+{1}%	On clear\nShards +{0} · Gold +{1}%
+ui.start.mode.ghost	유령	ゴースト	Ghost
+ui.start.mode.ghost_note	클리어 시\n유령 경험치 +{0}%	クリア時\nゴースト経験値+{0}%	On clear\nGhost EXP +{0}%
+ui.start.dim.random	랜덤 출전 — 몸은 판이 시작될 때 정해져요	ランダム出撃 — 体はステージ開始時に決まります	Random — your body is chosen when the run starts
+ui.start.dim.ghost	유령 출전 — 판 안에서 몸을 빼앗아 싸워요	ゴースト出撃 — ステージ内で体を奪って戦います	Ghost — steal bodies inside the run
+ui.start.today	오늘의 몸	今日の体	Today
+ui.start.today_note	오늘의 몸 {0}명 무료 · {1} 뒤 바뀜	今日の体 {0}人無料・{1}後に交代	{0} free today · changes in {1}
+ui.start.info.random	? 랜덤 출전	? ランダム出撃	? Random Start
+ui.start.info.random1	몸은 판이 시작될 때 정해져요.	体はステージ開始時に決まります。	Your body is decided when the run starts.
+ui.start.note.grown	빼앗은 몸도 내가 키운 만큼 세요.	奪った体も育てた分だけ強い。	Stolen bodies are as strong as you've trained them.
+ui.start.ribbon.today	오늘의 몸 무료	今日の体 無料	Today's Free
+ui.start.ribbon.luck	행운 보너스	ラッキーボーナス	Luck Bonus
+ui.start.ribbon.ghost	유령 출전	ゴースト出撃	Ghost Start
+ui.stamina.short	행동력이 부족해요\n필요 {0} · 보유 {1} · 다음 회복 {2}	スタミナが足りません\n必要{0}・所持{1}・次の回復{2}	Not enough stamina\nNeed {0} · Have {1} · Next in {2}
+ui.stamina.refill_none	오늘 젬 채우기를 다 썼어요	本日のジェム回復は上限です	No gem refills left today
+ui.stamina.refill_line	젬 {0} 으로 {1} 채우기 · 오늘 {2}/{3}	ジェム{0}で{1}回復・本日{2}/{3}	Refill {1} for {0} gems · Today {2}/{3}
+ui.stamina.refill_btn	젬 {0} 채우기	ジェム{0}で回復	Refill ({0} gems)
+ui.stamina.fail.gem	젬이 모자라요	ジェムが足りません	Not enough gems
+ui.stamina.fail.limit	오늘 젬 채우기를 다 썼어요	本日のジェム回復は上限です	No gem refills left today
+ui.stamina.fail.notready	아직 준비 중이에요	準備中です	Not ready yet
+ui.lobby.summon_button.sub	소환	召喚	Summon
+ui.chapterhost.boss	BOSS	BOSS	BOSS
+ui.chapterhost.reward	클리어 보상	クリア報酬	Clear Reward
+ui.chapterhost.hosttitle	호스트 선택	ホスト選択	Select Host
+ui.chapterhost.ownedonly	보유한 호스트만 선택 가능합니다.	所持しているホストのみ選択できます。	Only owned hosts can be selected.
+ui.chapterhost.start	도전하기	挑戦する	Start
+ui.chapterhost.chapter	CHAPTER	CHAPTER	CHAPTER

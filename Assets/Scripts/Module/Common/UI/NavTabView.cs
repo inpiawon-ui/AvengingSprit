@@ -16,6 +16,11 @@ namespace Game.Module.Common.UI
         [SerializeField] private Color _subOn = Color.yellow;
         [SerializeField] private Color _subOff = Color.white;
 
+        // 4칸(S22e, 2026-10-15) — 제목(HOST · PLAY …)이 그림이 아니라 글자다. 없으면(옛 탭) 건드리지 않는다
+        [SerializeField] private TextMeshProUGUI _title;
+        [SerializeField] private Color _titleOn = Color.yellow;
+        [SerializeField] private Color _titleOff = Color.white;
+
         public void Set(GameObject on, GameObject off, TextMeshProUGUI sub, Color subOn, Color subOff)
         {
             _on = on; _off = off; _sub = sub; _subOn = subOn; _subOff = subOff;
@@ -26,6 +31,7 @@ namespace Game.Module.Common.UI
             if (_on != null) _on.SetActive(selected);
             if (_off != null) _off.SetActive(!selected);
             if (_sub != null) _sub.color = selected ? _subOn : _subOff;
+            if (_title != null) _title.color = selected ? _titleOn : _titleOff;
         }
     }
 }

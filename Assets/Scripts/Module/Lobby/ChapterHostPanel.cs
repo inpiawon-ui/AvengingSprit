@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
 using Game.Module.Common;
+using Game.Module.Common.Store;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
@@ -32,9 +33,14 @@ namespace Game.Module.Lobby
     ///   아래 칸은 **고른 카드의 설명**이다 — 「?」 면 랜덤 설명, 몸이면 초상 · 이름 · 상성 · 설명 · 액티브 · 패시브(스탯은 없다).
     ///   새 팝업을 띄우지 않는다. 시안: `Projects/AVSR/_exchange/in/mock_hostinfo_v6.png`
     ///
+    /// ⚠ 2026-10-15 PD — **출전 방식 셋**(몸 골라 · ? 랜덤 · 유령)이 카드 줄 위 큰 카드로 올라갔다(시안 S22e,
+    ///   기획서 `AVSR_Content_Store.md` B-12). 카드 줄에는 가진 몸만 남고(「?」 · 유령 카드 없음), 랜덤 · 유령을 고르면
+    ///   카드 줄을 어둡게 덮는다. 시작은 행동력 + (몸 골라만) 골드 출전비 — 오늘의 몸은 골드 무료.
+    ///   새 노드(`CHModeHost` …)는 `LobbyS22eBinder` 가 꽂는다. 노드가 없는 옛 프리팹이면 예전 동작 그대로다.
+    ///
     /// 노드 이름 = 바인딩 키다. `ChapterHostBuilder` 가 세우며, 이름을 바꾸면 거기도 바꾼다.
     /// </summary>
-    public sealed class ChapterHostPanel : MonoBehaviour
+    public sealed partial class ChapterHostPanel : MonoBehaviour
     {
         /// <summary>카드에 쓸 그림. 초상(발주본)이 있으면 그것, 없으면 유닛 그림이다.</summary>
         [Serializable]
@@ -82,6 +88,11 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _kindGems = Array.Empty<Sprite>();
         [SerializeField] private Sprite _matchUp, _matchDown;
 
+        // 카드 키트(S22e) — 등급 순서 B · A · S. 별 반 칸은 숙련도 홀수(별 = 숙련도 / 2)
+        [SerializeField] private Sprite[] _gradeFrames = Array.Empty<Sprite>();
+        [SerializeField] private Sprite[] _gradeBadges = Array.Empty<Sprite>();
+        [SerializeField] private Sprite _starHalf;
+
         // ⚠ 클리어 보상 · 챕터 설명 · 그림 칸은 **챕터 표**(`GameConfig.ChapterOf`)에서 온다.
         //   예전에는 여기 6칸 배열로 적혀 있었고, 보상 골드는 실제 지급액의 4~14배였다(임시표).
         //   화면에 적힌 값과 받는 값이 달라서는 안 된다 — 같은 표를 읽는다.
@@ -110,6 +121,13 @@ namespace Game.Module.Lobby
         private bool _pickedRandom;
         private bool _built;
 
+        // 출전 방식(S22e). `_pickedRandom` 은 예전 코드와 같이 쓰려고 `_mode == Random` 과 늘 같게 둔다
+        private RunStartMode _mode = RunStartMode.Host;
+        private bool _hasModes;
+
+        /// <summary>설명 칸 · 권장 전투력 · 시작이 보는 몸 — 유령 출전이면 유령이다.</summary>
+        private string ShownHost => _hasModes && _mode == RunStartMode.Ghost ? HostEntry.GhostKey : _pickedHost;
+
         public bool IsOpen => gameObject.activeSelf;
 
         private void Awake()
@@ -125,6 +143,10 @@ namespace Game.Module.Lobby
             _ui.OnClick("CHStartButton", OnStart);
             _ui.OnClick("CHHostPrev", () => ScrollCards(-1));
             _ui.OnClick("CHHostNext", () => ScrollCards(+1));
+            _hasModes = _ui.Find("CHModeHost") != null;
+            _ui.OnClick("CHModeHost", () => PickMode(RunStartMode.Host));
+            _ui.OnClick("CHModeRandom", () => PickMode(RunStartMode.Random));
+            _ui.OnClick("CHModeGhost", () => PickMode(RunStartMode.Ghost));
             _hostScroll = _ui.Get<ScrollRect>("CHHostViewport");
             // 창 뒤 어둡게 막 — 로비가 눌리지 않게 막기만 한다
             // ⚠ 여기서 SetActive(false) 를 하지 않는다. 처음 닫아 두는 것은 주인인 LobbyMainUI 다.
@@ -155,10 +177,21 @@ namespace Game.Module.Lobby
 
             Game.Module.InGame.AffinityRule.Bind(_player.Config);
             _chapter = Mathf.Clamp(_player.SelectedChapter, 1, ChapterCount);
+            if (CoreModule.TryGet<IStaminaService>(out var stamina)) stamina.Sync();
             BuildCards();
             _pickedRandom = false;
+            _mode = RunStartMode.Host;
             _pickedHost = _player.SelectedHostId;
-            if (!_cardKeys.Contains(_pickedHost)) _pickedHost = HostEntry.GhostKey;
+            if (_hasModes)
+            {
+                // 지난번 유령으로 들어갔으면 유령 출전으로 연다. 고른 몸 자리는 첫 카드로 채워 둔다
+                if (_pickedHost == HostEntry.GhostKey || !_cardKeys.Contains(_pickedHost))
+                {
+                    if (_pickedHost == HostEntry.GhostKey || _cardKeys.Count == 0) _mode = RunStartMode.Ghost;
+                    _pickedHost = _cardKeys.Count > 0 ? _cardKeys[0] : null;
+                }
+            }
+            else if (!_cardKeys.Contains(_pickedHost)) _pickedHost = HostEntry.GhostKey;
             RefreshAll();
             ShowPicked();
         }
@@ -183,6 +216,13 @@ namespace Game.Module.Lobby
 
             // 0번 칸 = 「?」 랜덤 카드. 몸들은 1번부터 — 한 칸씩 밀린다
             _randomCard = content.childCount > 0 ? content.GetChild(0) : null;
+            int first = _randomCard != null ? 1 : 0;
+            if (_hasModes && _randomCard != null)
+            {
+                // 출전 방식이 랜덤 · 유령을 맡는다 — 카드 줄에는 몸만(PD 2026-10-15 S22e)
+                _randomCard.gameObject.SetActive(false);
+                _randomCard = null;
+            }
             if (_randomCard != null)
             {
                 _randomCard.gameObject.SetActive(true);
@@ -195,11 +235,12 @@ namespace Game.Module.Lobby
             }
 
             var playable = _player.PlayableHosts;
-            int slot = _randomCard != null ? 1 : 0;
+            int slot = first;
             for (int i = 0; i < playable.Count && slot < content.childCount; i++)
             {
                 var e = playable[i];
                 if (e == null || !_player.IsHostOwned(e)) continue;
+                if (_hasModes && e.IsGhost) continue;   // 유령은 출전 방식 카드다
 
                 var card = content.GetChild(slot);
                 string key = e.HostKey;   // 클로저가 루프 변수를 잡지 않게 복사한다
@@ -238,12 +279,12 @@ namespace Game.Module.Lobby
         private void LayoutCards()
         {
             if (_ui.Find("CHHostContent") is not RectTransform content) return;
-            float step = ChapterHostLayout.CardWidth + ChapterHostLayout.CardGap;
+            float step = CardW + CardGapW;
             // ⚠ 첫 칸은 **여백 없이 0 에서** 시작한다. 앞에 여백을 주면 줄 전체가 밀려
             //   여섯째 칸이 오른쪽에서 잘린다(시안은 여섯 장이 꽉 찬다).
             int lead = _randomCard != null ? 1 : 0;   // 「?」 카드가 맨 앞 한 칸
-            float total = Mathf.Max(ChapterHostLayout.ViewWidth,
-                                    (_cards.Count + lead) * step - ChapterHostLayout.CardGap);
+            float total = Mathf.Max(ViewW,
+                                    (_cards.Count + lead) * step - CardGapW);
             content.sizeDelta = new Vector2(total, content.sizeDelta.y);
             if (_randomCard is RectTransform rr) PlaceCard(rr, 0, step);
             for (int i = 0; i < _cards.Count; i++)
@@ -261,6 +302,8 @@ namespace Game.Module.Lobby
 
         private void PickHost(string key)
         {
+            // 출전 방식이 랜덤 · 유령이면 카드 줄은 덮여 있다 — 눌러도 아무 일 없다(기획서 B-12)
+            if (_hasModes && _mode != RunStartMode.Host) return;
             _pickedHost = key;
             _pickedRandom = false;      // 규칙 3 — 둘은 같은 자리다. 하나를 고르면 하나가 풀린다
             // ⚠ 저장에도 넣는다. 창 안의 변수만 바꾸면 **게임은 지난번에 고른 몸으로 시작한다**
@@ -270,6 +313,17 @@ namespace Game.Module.Lobby
             RefreshHosts();
             RefreshStart();
             ShowPicked();
+        }
+
+        private void PickMode(RunStartMode mode)
+        {
+            if (_mode == mode) return;
+            _mode = mode;
+            _pickedRandom = mode == RunStartMode.Random;
+            GameSound.Cue("ui.select");
+            RefreshHosts();
+            RefreshStart();
+            if (mode == RunStartMode.Host) ShowPicked();
         }
 
         private void PickRandom()
@@ -303,16 +357,16 @@ namespace Game.Module.Lobby
             int at = _pickedRandom ? 0 : _cardKeys.IndexOf(_pickedHost);
             if (at < 0) return;
             if (!_pickedRandom) at += lead;
-            float hidden = _hostScroll.content.rect.width - ChapterHostLayout.ViewWidth;
+            float hidden = _hostScroll.content.rect.width - ViewW;
             if (hidden <= 1f) return;
-            float step = ChapterHostLayout.CardWidth + ChapterHostLayout.CardGap;
+            float step = CardW + CardGapW;
             float left = at * step;
             float now = _hostScroll.horizontalNormalizedPosition * hidden;
             // 이미 보이면 건드리지 않는다 — 누를 때마다 목록이 튀면 멀미가 난다
-            if (left >= now && left + ChapterHostLayout.CardWidth <= now + ChapterHostLayout.ViewWidth) return;
-            float want = left < now ? left - ChapterHostLayout.CardGap
-                                    : left + ChapterHostLayout.CardWidth - ChapterHostLayout.ViewWidth
-                                      + ChapterHostLayout.CardGap;
+            if (left >= now && left + CardW <= now + ViewW) return;
+            float want = left < now ? left - CardGapW
+                                    : left + CardW - ViewW
+                                      + CardGapW;
             _hostScroll.horizontalNormalizedPosition = Mathf.Clamp01(want / hidden);
         }
 
@@ -320,9 +374,9 @@ namespace Game.Module.Lobby
         private void ScrollCards(int dir)
         {
             if (_hostScroll == null || _hostScroll.content == null) return;
-            float hidden = _hostScroll.content.rect.width - ChapterHostLayout.ViewWidth;
+            float hidden = _hostScroll.content.rect.width - ViewW;
             if (hidden <= 1f) return;   // 다 보이면 움직일 것이 없다
-            float step = (ChapterHostLayout.CardWidth + ChapterHostLayout.CardGap) / hidden;
+            float step = (CardW + CardGapW) / hidden;
             _hostScroll.horizontalNormalizedPosition =
                 Mathf.Clamp01(_hostScroll.horizontalNormalizedPosition + dir * step);
         }
@@ -503,7 +557,10 @@ namespace Game.Module.Lobby
                 chest.enabled = chest.sprite != null;
                 chest.preserveAspect = true;
             }
-            _ui.SetText("CHRewardChestText", chestArt.ChestLabel ?? string.Empty);
+            // 상자 이름은 언어팩에서 — 빌더가 박아 둔 `ChestLabel` 은 한국어라 일본어 화면에도 한국어가 나왔다
+            string chestName = !string.IsNullOrEmpty(row.Chest) ? Localize.Get($"chest.{row.Chest}.name") : null;
+            _ui.SetText("CHRewardChestText", !string.IsNullOrEmpty(chestName) && chestName != $"chest.{row.Chest}.name"
+                ? chestName : chestArt.ChestLabel ?? string.Empty);
 
             RefreshChapterAffinity();
             RefreshRecPower();
@@ -520,8 +577,8 @@ namespace Game.Module.Lobby
             _ui.SetActive("CHRecPowerText", rec > 0);
             if (rec <= 0) return;
             string color = "#FFFFFF";
-            if (!_pickedRandom && !string.IsNullOrEmpty(_pickedHost) && _pickedHost != HostEntry.GhostKey)
-                color = _player.PowerOf(_pickedHost) >= rec ? RecPowerOkColor : RecPowerLowColor;
+            if (!_pickedRandom && !string.IsNullOrEmpty(ShownHost) && ShownHost != HostEntry.GhostKey)
+                color = _player.PowerOf(ShownHost) >= rec ? RecPowerOkColor : RecPowerLowColor;
             _ui.SetText("CHRecPowerText",
                         Localize.Format("ui.chapterhost.recpower", $"<color={color}>{rec:N0}</color>"));
         }
@@ -569,7 +626,7 @@ namespace Game.Module.Lobby
                 var card = _cards[i];
                 string key = _cardKeys[i];
                 var e = _player.GetHost(key);
-                bool sel = !_pickedRandom && key == _pickedHost;
+                bool sel = !_pickedRandom && key == _pickedHost && (!_hasModes || _mode == RunStartMode.Host);
 
                 // 빈 칸은 화면 그림에 있다 — 고른 칸에만 금색 액자를 덮는다
                 var sel2 = _ui.Find(card, "CardFrameSel");
@@ -608,17 +665,23 @@ namespace Game.Module.Lobby
                         : _player.PowerOf(key).ToString("N0");
                     power.color = ghost ? DimText : GoldText;
                     // 유령은 별 · 칼이 없다 — 시안대로 그 두 줄 사이 가운데에 쓴다(2026-10-06 실측)
-                    var r = power.rectTransform;
-                    r.pivot = new Vector2(ghost ? 0.5f : 0f, 0.5f);
-                    r.anchoredPosition = ghost ? ChapterHostLayout.GhostNote : ChapterHostLayout.PowerText;
-                    power.alignment = ghost ? TextAlignmentOptions.Center : TextAlignmentOptions.Left;
+                    // 출전 방식 화면(S22e)에는 유령 카드가 없고 자리는 바인더가 정한다 — 건드리지 않는다
+                    if (!_hasModes)
+                    {
+                        var r = power.rectTransform;
+                        r.pivot = new Vector2(ghost ? 0.5f : 0f, 0.5f);
+                        r.anchoredPosition = ghost ? ChapterHostLayout.GhostNote : ChapterHostLayout.PowerText;
+                        power.alignment = ghost ? TextAlignmentOptions.Center : TextAlignmentOptions.Left;
+                    }
                 }
                 var powerIcon = _ui.Find(card, "CardPowerIcon");
                 if (powerIcon != null) powerIcon.gameObject.SetActive(!ghost);
 
                 RefreshCardAffinity(card, key);
+                if (_hasModes) ApplyCardKit(card, key, e);
             }
 
+            RefreshModes();
             RefreshRandomCard();
             // 고른 표시는 카드가 낸다 — 아래 칸의 체크는 예전 「랜덤 칸 = 버튼」 시절 것이다
             _ui.SetActive("RandomCheck", false);
@@ -676,8 +739,8 @@ namespace Game.Module.Lobby
         /// </summary>
         private void RefreshInfo()
         {
-            bool random = _pickedRandom || string.IsNullOrEmpty(_pickedHost);
-            var e = random ? null : _player.GetHost(_pickedHost);
+            bool random = _pickedRandom || string.IsNullOrEmpty(ShownHost);
+            var e = random ? null : _player.GetHost(ShownHost);
 
             // 왼쪽 네모 — 랜덤이면 가린 사신 + 주사위, 몸이면 초상.
             //   설명 칸 노드가 없는(꽂기 전) 프리팹이면 예전 주사위 그림을 그대로 둔다
@@ -686,7 +749,7 @@ namespace Game.Module.Lobby
             _ui.SetActive("CHIconDice", portrait == null && random);
             if (portrait != null)
             {
-                portrait.sprite = random ? _randomDeath : ArtOf(_pickedHost).Thumb;
+                portrait.sprite = random ? _randomDeath : ArtOf(ShownHost).Thumb;
                 portrait.color = random ? SilhouetteTint : Color.white;
                 portrait.material = random ? _silhouette : null;   // 몸을 고르면 원래 그림으로 돌아온다
                 portrait.enabled = portrait.sprite != null;
@@ -715,10 +778,10 @@ namespace Game.Module.Lobby
             }
 
             bool ghost = e != null && e.IsGhost;
-            _ui.SetText("CHInfoName", e != null ? e.DisplayName : _pickedHost);
+            _ui.SetText("CHInfoName", e != null ? e.DisplayName : ShownHost);
             // 유령은 몸이 아니다 — 설명 자리에 유령 규칙을 적는다(호스트 선택 화면에 쓰던 글)
-            _ui.SetText("CHInfoDesc", ghost ? Localize.Get("ui.hostselect.ghost.rule") : Localize.Get($"host.{_pickedHost}.desc"));
-            SetInfoKind(ghost ? Game.Module.InGame.Affinity.None : Game.Module.InGame.AffinityRule.KindOf(_pickedHost));
+            _ui.SetText("CHInfoDesc", ghost ? Localize.Get("ui.hostselect.ghost.rule") : Localize.Get($"host.{ShownHost}.desc"));
+            SetInfoKind(ghost ? Game.Module.InGame.Affinity.None : Game.Module.InGame.AffinityRule.KindOf(ShownHost));
             SetSkills(ghost ? null : e);
         }
 
@@ -769,6 +832,7 @@ namespace Game.Module.Lobby
 
         private void RefreshStart()
         {
+            if (_hasModes) { RefreshStartModes(); return; }
             int cost = DisplayCost;
             _ui.SetText("CHStartCostText", cost.ToString("N0"));
             _ui.SetActive("CHStartCostIcon", cost > 0);
@@ -828,6 +892,12 @@ namespace Game.Module.Lobby
         {
             get
             {
+                if (_hasModes)
+                {
+                    // 랜덤 · 유령은 행동력만, 오늘의 몸은 그날 골드 무료(기획서 B-12)
+                    if (_mode != RunStartMode.Host || IsToday(_pickedHost)) return 0;
+                    return _player.EntryPriceOf(_player.GetHost(_pickedHost), _chapter);
+                }
                 if (_pickedRandom) return _player.RandomEntryPrice(_chapter);
                 return _player.EntryPriceOf(_player.GetHost(_pickedHost), _chapter);
             }
@@ -857,6 +927,8 @@ namespace Game.Module.Lobby
                                  Localize.Get("ui.common.ok"), null);
                 return;
             }
+
+            if (_hasModes) { StartWithMode(); return; }
 
             string key = _pickedRandom ? RollRandomHost() : _pickedHost;
             var e = _player.GetHost(key);
@@ -914,7 +986,10 @@ namespace Game.Module.Lobby
                 var e = playable[i];
                 if (e == null || e.IsGhost) continue;   // 유령은 랜덤에서 뺀다 — 몸을 받으러 온 자리다
                 if (_player.IsHostOwned(e)) owned.Add(e.HostKey);
-                else if (e.Grade == HostGrade.S) legend.Add(e.HostKey);
+                else if (e.Grade == HostGrade.S
+                         || (_hasModes && _player.Config != null && _player.Config.RandomIncludesUnowned
+                             && !PlayerDataService.IsHiddenHost(e.HostKey)))
+                    legend.Add(e.HostKey);
             }
 
             if (legend.Count > 0 && UnityEngine.Random.Range(0, 100) < LegendChancePercent)
@@ -944,6 +1019,12 @@ namespace Game.Module.Lobby
         public const float CardHeight = 225f;
         public const float CardGap = 13f;
         public const float ViewWidth = 630f;
+
+        // 시안 S22e(2026-10-15) — 출전 방식이 위로 올라가 카드 줄이 낮아졌다. 여섯 장이 보이는 폭
+        public const float ModeCardWidth = 100f;
+        public const float ModeCardHeight = 168f;
+        public const float ModeCardGap = 9f;
+        public const float ModeViewWidth = 644f;
         public const float ViewHeight = 225f;
         /// <summary>카드 가운데 기준 — 전투력 글자(왼쪽 끝) · 유령의 「몸 없음」(가운데).</summary>
         public static readonly Vector2 PowerText = new(-20f, -92f), GhostNote = new(0f, -80.5f);

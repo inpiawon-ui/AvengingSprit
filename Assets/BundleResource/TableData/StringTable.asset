@@ -3126,3 +3126,133 @@ MonoBehaviour:
       \uC218 \uC788\uB2E4."
     _ja: "\u4ECA\u306E\u4F53\u306E\u5FC5\u6BBA\u6280\u3092\u3082\u3046\u4E00\u5EA6\u4F7F\u3048\u308B\u3002"
     _en: Use your current body's Special again.
+  - _key: ui.start.title
+    _ko: "\uCD9C\uC804 \uBC29\uC2DD"
+    _ja: "\u51FA\u6483\u65B9\u6CD5"
+    _en: Start Mode
+  - _key: ui.start.mode.host
+    _ko: "\uBAB8 \uACE8\uB77C"
+    _ja: "\u4F53\u3092\u9078\u3076"
+    _en: Pick a Body
+  - _key: ui.start.mode.host_today
+    _ko: "\uC624\uB298\uC758 \uBAB8 \xB7 \uACE8\uB4DC \uBB34\uB8CC"
+    _ja: "\u4ECA\u65E5\u306E\u4F53\u30FB\u30B4\u30FC\u30EB\u30C9\u7121\u6599"
+    _en: "Today's Body \xB7 Free"
+  - _key: ui.start.mode.random
+    _ko: "? \uB79C\uB364"
+    _ja: "? \u30E9\u30F3\u30C0\u30E0"
+    _en: '? Random'
+  - _key: ui.start.mode.random_note
+    _ko: "\uD074\uB9AC\uC5B4 \uC2DC\n\uC870\uAC01 +{0} \xB7 \uACE8\uB4DC +{1}%"
+    _ja: "\u30AF\u30EA\u30A2\u6642\n\u6B20\u7247+{0}\u30FB\u30B4\u30FC\u30EB\u30C9+{1}%"
+    _en: "On clear\nShards +{0} \xB7 Gold +{1}%"
+  - _key: ui.start.mode.ghost
+    _ko: "\uC720\uB839"
+    _ja: "\u30B4\u30FC\u30B9\u30C8"
+    _en: Ghost
+  - _key: ui.start.mode.ghost_note
+    _ko: "\uD074\uB9AC\uC5B4 \uC2DC\n\uC720\uB839 \uACBD\uD5D8\uCE58 +{0}%"
+    _ja: "\u30AF\u30EA\u30A2\u6642\n\u30B4\u30FC\u30B9\u30C8\u7D4C\u9A13\u5024+{0}%"
+    _en: 'On clear
+
+      Ghost EXP +{0}%'
+  - _key: ui.start.dim.random
+    _ko: "\uB79C\uB364 \uCD9C\uC804 \u2014 \uBAB8\uC740 \uD310\uC774 \uC2DC\uC791\uB420
+      \uB54C \uC815\uD574\uC838\uC694"
+    _ja: "\u30E9\u30F3\u30C0\u30E0\u51FA\u6483 \u2014 \u4F53\u306F\u30B9\u30C6\u30FC\u30B8\u958B\u59CB\u6642\u306B\u6C7A\u307E\u308A\u307E\u3059"
+    _en: "Random \u2014 your body is chosen when the run starts"
+  - _key: ui.start.dim.ghost
+    _ko: "\uC720\uB839 \uCD9C\uC804 \u2014 \uD310 \uC548\uC5D0\uC11C \uBAB8\uC744
+      \uBE7C\uC557\uC544 \uC2F8\uC6CC\uC694"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u51FA\u6483 \u2014 \u30B9\u30C6\u30FC\u30B8\u5185\u3067\u4F53\u3092\u596A\u3063\u3066\u6226\u3044\u307E\u3059"
+    _en: "Ghost \u2014 steal bodies inside the run"
+  - _key: ui.start.today
+    _ko: "\uC624\uB298\uC758 \uBAB8"
+    _ja: "\u4ECA\u65E5\u306E\u4F53"
+    _en: Today
+  - _key: ui.start.today_note
+    _ko: "\uC624\uB298\uC758 \uBAB8 {0}\uBA85 \uBB34\uB8CC \xB7 {1} \uB4A4 \uBC14\uB01C"
+    _ja: "\u4ECA\u65E5\u306E\u4F53 {0}\u4EBA\u7121\u6599\u30FB{1}\u5F8C\u306B\u4EA4\u4EE3"
+    _en: "{0} free today \xB7 changes in {1}"
+  - _key: ui.start.info.random
+    _ko: "? \uB79C\uB364 \uCD9C\uC804"
+    _ja: "? \u30E9\u30F3\u30C0\u30E0\u51FA\u6483"
+    _en: '? Random Start'
+  - _key: ui.start.info.random1
+    _ko: "\uBAB8\uC740 \uD310\uC774 \uC2DC\uC791\uB420 \uB54C \uC815\uD574\uC838\uC694."
+    _ja: "\u4F53\u306F\u30B9\u30C6\u30FC\u30B8\u958B\u59CB\u6642\u306B\u6C7A\u307E\u308A\u307E\u3059\u3002"
+    _en: Your body is decided when the run starts.
+  - _key: ui.start.note.grown
+    _ko: "\uBE7C\uC557\uC740 \uBAB8\uB3C4 \uB0B4\uAC00 \uD0A4\uC6B4 \uB9CC\uD07C
+      \uC138\uC694."
+    _ja: "\u596A\u3063\u305F\u4F53\u3082\u80B2\u3066\u305F\u5206\u3060\u3051\u5F37\u3044\u3002"
+    _en: Stolen bodies are as strong as you've trained them.
+  - _key: ui.start.ribbon.today
+    _ko: "\uC624\uB298\uC758 \uBAB8 \uBB34\uB8CC"
+    _ja: "\u4ECA\u65E5\u306E\u4F53 \u7121\u6599"
+    _en: Today's Free
+  - _key: ui.start.ribbon.luck
+    _ko: "\uD589\uC6B4 \uBCF4\uB108\uC2A4"
+    _ja: "\u30E9\u30C3\u30AD\u30FC\u30DC\u30FC\u30CA\u30B9"
+    _en: Luck Bonus
+  - _key: ui.start.ribbon.ghost
+    _ko: "\uC720\uB839 \uCD9C\uC804"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u51FA\u6483"
+    _en: Ghost Start
+  - _key: ui.stamina.short
+    _ko: "\uD589\uB3D9\uB825\uC774 \uBD80\uC871\uD574\uC694\n\uD544\uC694 {0} \xB7
+      \uBCF4\uC720 {1} \xB7 \uB2E4\uC74C \uD68C\uBCF5 {2}"
+    _ja: "\u30B9\u30BF\u30DF\u30CA\u304C\u8DB3\u308A\u307E\u305B\u3093\n\u5FC5\u8981{0}\u30FB\u6240\u6301{1}\u30FB\u6B21\u306E\u56DE\u5FA9{2}"
+    _en: "Not enough stamina\nNeed {0} \xB7 Have {1} \xB7 Next in {2}"
+  - _key: ui.stamina.refill_none
+    _ko: "\uC624\uB298 \uC82C \uCC44\uC6B0\uAE30\uB97C \uB2E4 \uC37C\uC5B4\uC694"
+    _ja: "\u672C\u65E5\u306E\u30B8\u30A7\u30E0\u56DE\u5FA9\u306F\u4E0A\u9650\u3067\u3059"
+    _en: No gem refills left today
+  - _key: ui.stamina.refill_line
+    _ko: "\uC82C {0} \uC73C\uB85C {1} \uCC44\uC6B0\uAE30 \xB7 \uC624\uB298 {2}/{3}"
+    _ja: "\u30B8\u30A7\u30E0{0}\u3067{1}\u56DE\u5FA9\u30FB\u672C\u65E5{2}/{3}"
+    _en: "Refill {1} for {0} gems \xB7 Today {2}/{3}"
+  - _key: ui.stamina.refill_btn
+    _ko: "\uC82C {0} \uCC44\uC6B0\uAE30"
+    _ja: "\u30B8\u30A7\u30E0{0}\u3067\u56DE\u5FA9"
+    _en: Refill ({0} gems)
+  - _key: ui.stamina.fail.gem
+    _ko: "\uC82C\uC774 \uBAA8\uC790\uB77C\uC694"
+    _ja: "\u30B8\u30A7\u30E0\u304C\u8DB3\u308A\u307E\u305B\u3093"
+    _en: Not enough gems
+  - _key: ui.stamina.fail.limit
+    _ko: "\uC624\uB298 \uC82C \uCC44\uC6B0\uAE30\uB97C \uB2E4 \uC37C\uC5B4\uC694"
+    _ja: "\u672C\u65E5\u306E\u30B8\u30A7\u30E0\u56DE\u5FA9\u306F\u4E0A\u9650\u3067\u3059"
+    _en: No gem refills left today
+  - _key: ui.stamina.fail.notready
+    _ko: "\uC544\uC9C1 \uC900\uBE44 \uC911\uC774\uC5D0\uC694"
+    _ja: "\u6E96\u5099\u4E2D\u3067\u3059"
+    _en: Not ready yet
+  - _key: ui.lobby.summon_button.sub
+    _ko: "\uC18C\uD658"
+    _ja: "\u53EC\u559A"
+    _en: Summon
+  - _key: ui.chapterhost.boss
+    _ko: BOSS
+    _ja: BOSS
+    _en: BOSS
+  - _key: ui.chapterhost.reward
+    _ko: "\uD074\uB9AC\uC5B4 \uBCF4\uC0C1"
+    _ja: "\u30AF\u30EA\u30A2\u5831\u916C"
+    _en: Clear Reward
+  - _key: ui.chapterhost.hosttitle
+    _ko: "\uD638\uC2A4\uD2B8 \uC120\uD0DD"
+    _ja: "\u30DB\u30B9\u30C8\u9078\u629E"
+    _en: Select Host
+  - _key: ui.chapterhost.ownedonly
+    _ko: "\uBCF4\uC720\uD55C \uD638\uC2A4\uD2B8\uB9CC \uC120\uD0DD \uAC00\uB2A5\uD569\uB2C8\uB2E4."
+    _ja: "\u6240\u6301\u3057\u3066\u3044\u308B\u30DB\u30B9\u30C8\u306E\u307F\u9078\u629E\u3067\u304D\u307E\u3059\u3002"
+    _en: Only owned hosts can be selected.
+  - _key: ui.chapterhost.start
+    _ko: "\uB3C4\uC804\uD558\uAE30"
+    _ja: "\u6311\u6226\u3059\u308B"
+    _en: Start
+  - _key: ui.chapterhost.chapter
+    _ko: CHAPTER
+    _ja: CHAPTER
+    _en: CHAPTER

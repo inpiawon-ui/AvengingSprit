@@ -29,9 +29,11 @@ namespace Game.Editor
         private static readonly (string src, string dst, string atlas)[] Routes =
         {
             ("parts1", "Assets/BaseResource/ChapterHost", null),
+            ("lobby_s22e", "Assets/BaseResource/ChapterHost", null),
             ("parts2/startmode", "Assets/BaseResource/ChapterHost", null),
             ("parts2/bottombar", "Assets/BaseResource/LobbyMainUI/Nav", null),
             ("parts2/topbar", "Assets/BaseResource/LobbyMainUI/Nav", null),
+            ("lobby_nav", "Assets/BaseResource/LobbyMainUI/Nav", null),
             ("parts2/shop_a", "Assets/BaseResource/Store", "store"),
             ("parts2/shop_b", "Assets/BaseResource/Store", "store"),
             ("parts2/popups", "Assets/BaseResource/Store", "store"),
@@ -73,6 +75,9 @@ namespace Game.Editor
             }
             AssetDatabase.Refresh();
             foreach (var p in copied) SetSprite(p);
+            // ChapterHost 는 어느 아틀라스에도 안 묶인다 — 그림마다 안드로이드 ASTC 4x4(09_import_settings 「아틀라스 밖 그림」)
+            foreach (var p in copied)
+                if (p.StartsWith(OutsideAtlas)) SetAstc(p);
 
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             var group = settings.FindGroup(AtlasGroup) ?? settings.CreateGroup(AtlasGroup, false, false, true, null,
@@ -86,6 +91,18 @@ namespace Game.Editor
             AssetDatabase.SaveAssets();
             Debug.Log($"[상점 부품] 넣음 {copied.Count}개 · 동일 {same}개\n  "
                       + string.Join("\n  ", copied.Select(Path.GetFileName)));
+        }
+
+        private const string OutsideAtlas = "Assets/BaseResource/ChapterHost/";
+
+        private static void SetAstc(string path)
+        {
+            if (!(AssetImporter.GetAtPath(path) is TextureImporter ti)) return;
+            ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+            {
+                name = "Android", overridden = true, maxTextureSize = 2048, format = TextureImporterFormat.ASTC_4x4,
+            });
+            ti.SaveAndReimport();
         }
 
         private static void SetSprite(string path)

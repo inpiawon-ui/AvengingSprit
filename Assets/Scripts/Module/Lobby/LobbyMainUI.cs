@@ -102,6 +102,10 @@ namespace Game.Module.Lobby
             _ui.OnClick("LobbyProfile", OpenGhostGrowth);
             _ui.OnClick("ChapterButton", () => SelectTab(Tab.Play));
             _ui.OnClick("ShopButton", () => NotifyNotReady("상점"));
+            // 소환은 상점과 칸을 나눴다(PD 2026-10-15 A안). 소환 화면은 다음 단계 — 지금은 준비 중 안내
+            _ui.OnClick("SummonButton", () => NotifyNotReady("소환"));
+            // 위 막대 행동력 「+」 — 젬으로 채우기(기획서 B-12)
+            _ui.OnClick("StaminaPlusButton", OpenStaminaRefill);
             SelectTab(Tab.Play);
 
             // 게임 모드 — 열린 것은 시나리오뿐이다. 잠긴 두 칸은 이름을 알려 준다
@@ -154,11 +158,11 @@ namespace Game.Module.Lobby
                 _playLabelDirty = false;
                 PlacePlayLabel();
             }
-            if (_chests == null) return;
             _chestTick += Time.unscaledDeltaTime;
             if (_chestTick < ChestTickSeconds) return;
             _chestTick = 0f;
-            ApplyChests();
+            RefreshStamina();   // 회복 시계 글자 — 1초에 한 번(매 프레임 계산하지 않는다)
+            if (_chests != null) ApplyChests();
         }
 
         private void ApplyChests()
@@ -381,6 +385,7 @@ namespace Game.Module.Lobby
             bool host = tab == Tab.Host;
             SetNav("HostButton", host);
             SetNav("ChapterButton", !host);
+            SetNav("SummonButton", false);
             SetNav("ShopButton", false);
             SetDots(host ? 0 : 1);
             // 아래 바는 챕터 창 위에 있어 창이 열린 채로 눌린다 — HOST 든 PLAY 든 누르면 창을 닫고 그 화면으로
@@ -398,7 +403,7 @@ namespace Game.Module.Lobby
 
         private void SetDots(int lit)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)   // 4칸(S22e) — 넷째 점이 없는 옛 프리팹이면 건너뛴다
             {
                 var dot = _ui.Find("NavDot" + i)?.GetComponent<UnityEngine.UI.Image>();
                 if (dot != null) dot.sprite = i == lit ? _navDotOn : _navDotOff;
@@ -518,6 +523,36 @@ namespace Game.Module.Lobby
             if (_player == null || !_player.IsReady) return;
             _ui.SetText("GoldText", _player.Gold.ToString("N0"));
             _ui.SetText("GemText", _player.Gem.ToString("N0"));
+            RefreshStamina();
+        }
+
+        // 넘쳐 있으면(구매 · 보상으로 최대 초과) 금색 — 그동안 자연 회복은 멈춘다
+        private static readonly Color StaminaOverColor = new(1f, 0.85f, 0.32f);
+
+        /// <summary>「18/20」 · 다음 회복 「09:12」(가득이면 숨김). 노드가 없는(꽂기 전) 프리팹이면 아무 일 없다.</summary>
+        private void RefreshStamina()
+        {
+            if (_player == null || !_player.IsReady) return;
+            if (!CoreModule.TryGet<Game.Module.Common.Store.IStaminaService>(out var st)) return;
+            var text = _ui.Get<TMPro.TextMeshProUGUI>("StaminaText");
+            if (text == null) return;
+            st.Sync();
+            int cur = st.Current, max = st.Max;
+            text.text = $"{cur}/{max}";
+            text.color = cur > max ? StaminaOverColor : Color.white;
+            var until = st.UntilNext;
+            bool counting = until > TimeSpan.Zero;
+            // 시계가 없으면(가득 · 넘침) 「20/20」 한 줄을 칸 세로 가운데로, 있으면 위 줄로
+            var tr = text.rectTransform;
+            tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, counting ? -22f : -33f);
+            _ui.SetActive("StaminaTimerText", counting);
+            if (counting) _ui.SetText("StaminaTimerText", $"{(int)until.TotalMinutes:00}:{until.Seconds:00}");
+        }
+
+        private void OpenStaminaRefill()
+        {
+            if (!CoreModule.TryGet<Game.Module.Common.Store.IStaminaService>(out var st)) return;
+            StaminaPopup.Show(st, _player, false, RefreshStamina);
         }
 
         private void OpenHostSelect(bool isChapterStart)
