@@ -1,0 +1,9 @@
+# 외형(꾸미기) — 능력치 없음. Tools/Game/상점 표 임포트 → CosmeticTable.asset (주소 TableData/CosmeticTable)
+# type: ghost_skin(유령 외형 — 유령 그림 한 벌 교체) · frame(프로필 테두리 — 로비 왼쪽 위 · 결과창) 
+# art: ghost_skin 은 유닛 그림 키 접두(unit_{art}_s.png …, 지금 유령과 같은 43장) · frame 은 테두리 그림 한 장 · icon 은 고르는 칸 그림
+# source: 얻는 곳(화면 문구 키) — default 기본 · pass_s1 시즌 1 패스 · soon 곧 공개(잠긴 칸)
+key	type	art	icon	source	nameKey	order
+ghost_default	ghost_skin	ghost	cos_icon_ghost_default	default	cosmetic.ghost_default.name	0
+ghost_s1	ghost_skin	ghost_s1	cos_icon_ghost_s1	pass_s1	cosmetic.ghost_s1.name	10
+frame_default	frame	frame_default	cos_icon_frame_default	default	cosmetic.frame_default.name	0
+frame_s1	frame	frame_s1	cos_icon_frame_s1	pass_s1	cosmetic.frame_s1.name	10
