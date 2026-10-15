@@ -94,19 +94,6 @@ namespace Game.Module.InGame
                            SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
                            profile: Skeleton, intervalOverride: SkullAttackInterval, drains: true);
 
-        /// <summary>
-        /// 영매 액티브 — 골렘. 해골보다 크고 오래 간다.
-        /// **적이 골렘을 노리고 때린다**(도발 — 기획 2026-09-15). 안 그러면 몬스터가 골렘을 본체만체 지나쳤다.
-        ///
-        /// 제 그림이 들어오기 전에는 해골을 1.35 배로 키워 썼다. 이제 제 몸이 있으므로
-        /// **배율을 1 로 돌린다** — 골렘은 원래 어깨가 넓게 그려져 있어, 키우면
-        /// 해골 자리에 맞춰 두었던 크기만 두 번 곱해진다.
-        /// </summary>
-        private void SummonGolem(Vector2 at)
-            => SpawnSummon(GolemKey, "골렘", GolemHpPercent, GolemAtkPercent,
-                           float.PositiveInfinity, attacks: true, mobile: true, taunt: true, at: at,
-                           profile: GolemProfile);
-
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
         private void SummonClone(Vector2 at)
         {

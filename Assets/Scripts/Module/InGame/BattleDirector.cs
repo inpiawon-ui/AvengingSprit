@@ -2708,6 +2708,11 @@ namespace Game.Module.InGame
         /// <summary>이번 웨이브에서 몸이 될 스폰 인덱스. 매번 재사용한다(hot path 는 아니지만 습관).</summary>
         private readonly List<int> _hostSlots = new();
 
+#if UNITY_EDITOR
+        /// <summary>에디터 녹화 전용 — 판 시작 때 같이 올릴 그림 키(`SkillReworkRecorder` 의 swapTo).</summary>
+        public static string EditorExtraUnitKey;
+#endif
+
         /// <summary>이 런이 건드릴 수 있는 캐릭터 키를 모은다.</summary>
         private List<string> RunUnitKeys()
         {
@@ -2723,6 +2728,10 @@ namespace Game.Module.InGame
             // 골렘은 잡몹도 호스트도 아니다 — 영매가 **불러내는** 몸이라 방 어디에도 안 서 있다.
             // 여기 안 넣으면 아틀라스가 안 올라오고, 그림이 없으면 소환 자체가 조용히 취소된다.
             var keys = new List<string> { "ghost", GolemKey };
+#if UNITY_EDITOR
+            // 녹화 도구가 판 안에서 갈아입힐 숨은 몸(아마존 정예 · 사신) — 안 올리면 흰 사각형으로 찍힌다
+            if (!string.IsNullOrEmpty(EditorExtraUnitKey)) keys.Add(EditorExtraUnitKey);
+#endif
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
             for (int c = 1; c <= ChapterCount; c++)

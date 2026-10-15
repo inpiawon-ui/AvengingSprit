@@ -28,6 +28,20 @@ PARTS = {
     'part_md_stack':  ('mdstack',   32,  40, 4, 1, 'pink'),
     'part_sl_wind':   ('slwind',   512, 256, 1, 6, 'black'),
     'part_sl_tendril':('sltendril',384, 128, 1, 6, 'black'),
+    'part_el_aura':   ('elaura',   192, 192, 6, 1, 'black'),
+    'part_el_burst':  ('elburst',  320, 320, 4, 2, 'black'),
+    'part_el_crack':  ('elcrack',  288, 160, 1, 1, 'pink'),
+    'part_dg_dragon': ('dgdragon', 192, 160, 4, 1, 'pink'),
+    'part_dg_dragon_up': ('dgdragonup', 160, 192, 4, 1, 'pink'),
+    'part_dg_breath': ('dgbreath', 384,  96, 1, 6, 'black'),
+    'part_dg_blast':  ('dgblast',  256, 256, 4, 2, 'black'),
+    'part_dg_rise':   ('dgrise',   192, 256, 6, 1, 'black'),
+    'part_md_rune':   ('mdrune',   320, 256, 3, 2, 'black'),
+    'part_md_slam':   ('mdslam',   384, 224, 4, 2, 'black'),
+    'part_md_dust':   ('mddust',   224, 224, 6, 1, 'black'),
+    'part_vp_claw':   ('vpclaw',   160, 160, 5, 1, 'black'),
+    'part_vp_orb':    ('vporb',     32,  32, 4, 1, 'pink'),
+    'part_vp_burst':  ('vpburst',  288, 288, 4, 2, 'black'),
 }
 
 
@@ -39,11 +53,36 @@ def black_to_alpha(rgb):
     return Image.fromarray(np.concatenate([color * 255, alpha * 255], axis=2).astype(np.uint8), 'RGBA')
 
 
+# 분홍 기가 정당하게 없는 그림(돌 · 흙) — 금 사이에 낀 분홍 번짐을 회색으로 죽인다
+DESPILL = {'part_el_crack'}
+
+
+def despill(rgba):
+    a = np.asarray(rgba).astype(int)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    spill = (a[..., 3] > 0) & (r - g > 30) & (b - g > 30)
+    v = (g + np.minimum(r, b)) // 2
+    for ch in range(3):
+        a[..., ch] = np.where(spill, v, a[..., ch])
+    return Image.fromarray(a.astype(np.uint8), 'RGBA')
+
+
 def pink_to_alpha(rgba):
     a = np.asarray(rgba.convert('RGBA')).astype(int)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     key = (r > 170) & (b > 170) & (g < 120)
     a[..., 3] = np.where(key, 0, np.where(a[..., 3] > 0, 255, 0))
+    # 테두리 분홍 번짐 — 바탕과 섞인 보랏빛 점이 게임에서 보라 테두리로 남았다(역린 균열, 2026-10-15).
+    #   뚫린 자리에 붙어 있으면서 분홍 기가 도는 점만 두 겹 더 뚫는다(안쪽 보라 그림은 건드리지 않는다)
+    fringe = (r - g > 50) & (b - g > 50)
+    for _ in range(2):
+        hole = a[..., 3] == 0
+        near = np.zeros_like(hole)
+        near[1:, :] |= hole[:-1, :]
+        near[:-1, :] |= hole[1:, :]
+        near[:, 1:] |= hole[:, :-1]
+        near[:, :-1] |= hole[:, 1:]
+        a[..., 3] = np.where(near & fringe & ~hole, 0, a[..., 3])
     return Image.fromarray(a.astype(np.uint8), 'RGBA')
 
 
@@ -69,6 +108,8 @@ def cut(sheet_name):
             f = black_to_alpha(c.convert('RGB'))
         else:
             f = pink_to_alpha(c)
+            if sheet_name in DESPILL:
+                f = despill(f)
         frames.append(f)
     return name, frames
 

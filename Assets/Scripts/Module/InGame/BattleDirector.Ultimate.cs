@@ -41,7 +41,7 @@ namespace Game.Module.InGame
                 case "thug":             ThugSpinFire(me);      break;   // 회전 난사
                 case "commando_grenade": CommandoStickyBomb(me); break;  // C4
                 case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리
-                case "medium":           MediumGolemUlt(me);    break;   // 골렘 강령
+                case "medium":           SsrGolem(me);          break;   // 골렘 강령(SSR 다듬기 — BattleDirector.UltSsr)
                 case "gangster":         UltGangster(me);       break;   // 청부 처형
                 case "hopper":           UltHopper(me);         break;   // 킬 포인트
                 case "ninja_chain":      UltNinjaChain(me);     break;   // 사슬 돌격 연격
@@ -49,8 +49,8 @@ namespace Game.Module.InGame
                 case "robot":            UltRobot(me);          break;   // 포탑 군단
                 case "ninja":            UltNinja(me);          break;   // 그림자 삼분신
                 case "hopper_smg":       UltHopperSmg(me);      break;   // 돌진 난사
-                case "vampire":          UltVampire(me);        break;   // 피의 폭주
-                case "dragoon":          UltDragoon(me);        break;   // 용 돌격
+                case "vampire":          SsrVampire(me);        break;   // 피의 폭주(SSR)
+                case "dragoon":          SsrDragoon(me);        break;   // 용 돌격(SSR)
                 case "guru":             UltGuru(me);           break;   // 결계 가두기
                 case "salamander":       UltSalamander(me);     break;   // 독 늪
                 case "snowwoman":        UltSnowwoman(me);      break;   // 얼음 진
@@ -138,9 +138,6 @@ namespace Game.Module.InGame
                 PlayFx("soulripple", at, Meters(1.2f), loop: false);
             }
         }
-
-        /// <summary>영매 필살기 — 골렘 강령. 예전 액티브 「골렘 소환」(룬 원 + 도발 골렘)을 필살기로 올렸다.</summary>
-        private void MediumGolemUlt(Unit me) => MediumGolem(me);
 
         /// <summary>아마존 정예 액티브 — 불굴. 2.5초 무적(스킬 무적 윤곽).</summary>
         private const float EliteUnyieldingSeconds = 2.5f;

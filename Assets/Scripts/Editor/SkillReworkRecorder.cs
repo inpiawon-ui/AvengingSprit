@@ -59,6 +59,8 @@ namespace Game.Editor
                         var pt = typeof(Game.Module.Lobby.ChapterHostPanel);
                         pt.GetMethod("Step", F).Invoke(panel, new object[] { -9 });
                         pt.GetMethod("PickHost", F).Invoke(panel, new object[] { hostKey });
+                        if (swapTo != null)
+                            Game.Module.InGame.BattleDirector.EditorExtraUnitKey = p.GetHost(swapTo)?.SpriteKey;
                         pt.GetMethod("OnStart", F).Invoke(panel, null);
                         phase = 1;
                         wait = 60;
@@ -67,6 +69,8 @@ namespace Game.Editor
                     var bd = UnityEngine.Object.FindAnyObjectByType<Game.Module.InGame.BattleDirector>();
                     if (bd == null) { wait = 10; return; }
                     bt.GetField("_invuln", F).SetValue(bd, 999f);
+                    // 녹화 중 레벨업 창이 화면을 덮는다(녹화 ssr_md1) — 경험치를 바닥에 붙여 둔다
+                    bt.GetField("_exp", F).SetValue(bd, -1000000);
                     if (phase == 1)
                     {
                         if (Click("SkipButton")) { wait = 20; return; }

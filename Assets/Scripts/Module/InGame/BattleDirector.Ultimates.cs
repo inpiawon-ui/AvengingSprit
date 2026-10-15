@@ -31,6 +31,12 @@ namespace Game.Module.InGame
 
         private void StopUltimates()
         {
+            for (int i = 0; i < _vpOrbs.Count; i++) _vpOrbs[i].Fx?.Stop();
+            _vpOrbs.Clear();
+            _golemUlt = null;
+            _golemUltOn = false;
+            _dgMount = _dgBreath = null;
+            _vpFollowAura = null;
             _ultQueue.Clear();
             _ultKind = null;
             for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
@@ -58,6 +64,8 @@ namespace Game.Module.InGame
                 if (_host != null) q.Run();
             }
             TickUltDash(dt);
+            TickVpOrbs(dt);
+            TickSsrGolem(dt);
             if (_ultKind == null) return;
             var me = _host;
             if (me == null || !me.IsAlive) { StopUltimates(); return; }
@@ -68,7 +76,7 @@ namespace Game.Module.InGame
                 case "dragon_blue": TickThunderOrbs(me, dt); break;
                 case "commando_mg": TickDeflectWall(me, dt); break;
                 case "amazon_elite": TickWrath(me, dt); break;
-                case "dragoon": TickDragonCharge(me, dt); break;
+                case "dragoon": TickDragonCharge(me, dt); TickSsrDragoon(me, dt); break;
                 case "gangster": TickContract(me); break;
             }
         }
@@ -399,57 +407,17 @@ namespace Game.Module.InGame
             });
         }
 
-        // 흡혈귀 — 피의 폭주: 체력 10% 를 내주고 5초 폭주(가속 · 흡혈 확정 · 회복 2배), 끝에 피의 폭발
-        private void UltVampire(Unit me)
-        {
-            int pay = Mathf.Max(1, me.HpMax / 10);
-            if (me.Hp > pay + 1) me.TakeDamage(pay);
-            GrantHaste(70f, 5f);
-            _drainSeconds = Mathf.Max(_drainSeconds, 5f);
-            _drainMul = 2.5f;
-            UltLoop("rpaura", me.Position, 150f);
-            PlayFx("drain", me.Position, Meters(2f), loop: false);
-            UltAfter(5f, () =>
-            {
-                for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
-                _ultFx.Clear();
-                UltAoe(me, me.Position, 2.5f, 3.5f, "burst");
-                me.Heal(Mathf.Max(1, me.HpMax * 15 / 100));
-                Shake(8f);
-            });
-        }
-
-        // 드라군 — 용 돌격: 1.2초 동안 앞으로 돌진하며 불길을 남기고, 끝에 화염구
+        // 드라군 — 용 돌격의 돌진 중 불길 · 길 위 피해(연출은 BattleDirector.UltSsr `SsrDragoon`)
         private Vector2 _dcDir;
         private float _dcDrop;
 
-        private void UltDragoon(Unit me)
-        {
-            var near = NearestEnemy(me.Position);
-            _dcDir = near != null ? (near.Position - me.Position).normalized : me.Facing;
-            if (_dcDir.sqrMagnitude < 0.01f) _dcDir = Vector2.up;
-            _ultKind = "dragoon";
-            _ultT = 0f;
-            _dcDrop = 0f;
-            UltLoop("breath_fire", me.Position + _dcDir * 80f, 180f);
-            UltDashTo(me, me.Position + _dcDir * Meters(7f), 1.2f, new Color(1f, 0.6f, 0.4f, 1f), () =>
-            {
-                _ultKind = null;
-                for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
-                _ultFx.Clear();
-                UltAoe(me, me.Position + _dcDir * Meters(1f), 2.5f, 4f, "burst");
-                Shake(12f);
-                HitStop(0.1f);
-            });
-        }
-
         private void TickDragonCharge(Unit me, float dt)
         {
-            if (_ultFx.Count > 0) _ultFx[0]?.MoveTo(me.Position + _dcDir * 80f);
             _dcDrop -= dt;
             if (_dcDrop > 0f) return;
             _dcDrop = 0.15f;
-            SpawnField(me.Position, Meters(1f), 3f, FieldEffect.Burn, UltDamage(me, 0.3f), fromPlayer: true);
+            // 시안 「지나간 바닥이 탄다」 — 빈 주황 고리 말고 솟는 불길(`fx_dgrise`). 불바다(`lava`)는 검붉어 피로 보였다(녹화 ssr_dg8)
+            SpawnField(me.Position, Meters(1f), 3f, FieldEffect.Burn, UltDamage(me, 0.3f), fromPlayer: true, artKey: "dgrise");
             UltAoe(me, me.Position + _dcDir * Meters(0.8f), 1.3f, 0.9f, null);
         }
 
@@ -713,7 +681,7 @@ namespace Game.Module.InGame
             _wrathStacks = 0;
             _wrathTick = 0f;
             UltInvuln(3f);
-            UltLoop("rpaura", me.Position, 140f);
+            SsrWrathOpen(me);
             UltAfter(3f, () =>
             {
                 _ultKind = null;
@@ -721,8 +689,7 @@ namespace Game.Module.InGame
                 _ultFx.Clear();
                 float mul = 3f + Mathf.Min(_wrathStacks, 12) * 0.35f;   // 최대 ×7.2
                 me.PlayAttack();
-                UltAoe(me, me.Position, 3f, mul, "slam", 2.2f, knockMeters: 2f);
-                PlayFx("burst", me.Position, Meters(5f), loop: false);
+                SsrWrathBurst(me, mul);
                 Shake(14f);
                 HitStop(0.14f);
             });
@@ -733,14 +700,17 @@ namespace Game.Module.InGame
             if (_ultFx.Count > 0)
             {
                 _ultFx[0]?.MoveTo(me.Position);
-                _ultFx[0]?.SetSize(140f + Mathf.Min(_wrathStacks, 12) * 10f);   // 모을수록 붉은 기운이 커진다
+                _ultFx[0]?.SetSize(SsrBody * 2f + Mathf.Min(_wrathStacks, 12) * 8f);   // 모을수록 붉은 기운이 커진다
             }
             for (int i = 0; i < _shots.Count; i++)
             {
                 var s = _shots[i];
                 if (!s.IsActive || s.FromPlayer) continue;
                 if (Vector2.Distance(s.Position, me.Position) > Meters(1.2f)) continue;
-                _pfx?.Dart(s.Position, me.Position, ParticleElement.Fire, 0.15f, 2);
+                // 시안 「피격 빛 조각이 몸으로 흡수」 — 붉은 빛줄이 몸으로 빨려 든다
+                _pfx?.Spray(ParticleFxKind.Streak, s.Position, (me.Position - s.Position).normalized, 6f, 3,
+                            Vector2.Distance(s.Position, me.Position) * 4f, Vector2.Distance(s.Position, me.Position) * 5f,
+                            new Vector2(30f, 5f), 0.2f, new Color(1f, 0.25f, 0.35f, 1f));
                 s.Despawn();
                 _wrathStacks++;
             }
@@ -748,6 +718,16 @@ namespace Game.Module.InGame
             if (_wrathTick > 0f) return;
             _wrathTick = 0.5f;
             _wrathStacks += EnemiesInRange(me.Position, Meters(1.8f)).Count;
+            // 둘레 적에게서도 붉은 빛 조각이 몸으로 빨려 든다 — 시안 가운데 컷(「흡수」가 읽혀야 마지막 폭발에 이유가 생긴다)
+            var near = EnemiesInRange(me.Position, Meters(3.5f));
+            for (int i = 0; i < near.Count && i < 8; i++)
+            {
+                var from = near[i].Position;
+                float d = Vector2.Distance(from, me.Position);
+                if (d < 1f) continue;
+                _pfx?.Spray(ParticleFxKind.Streak, from, (me.Position - from) / d, 8f, 2, d * 3.2f, d * 4f,
+                            new Vector2(26f, 5f), 0.25f, new Color(1f, 0.25f, 0.35f, 1f));
+            }
         }
     }
 }

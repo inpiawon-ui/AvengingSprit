@@ -650,14 +650,6 @@ namespace Game.Module.InGame
         //  관통
         // ═══════════════════════════════════════════════════════════
 
-        /// <summary>영매 — 골렘을 세운다. 해골(패시브)보다 크고 오래 간다.</summary>
-        private void MediumGolem(Unit me)
-        {
-            var at = ClampedInField(me, me.Position + me.Facing * Meters(1.5f));
-            QxGolemRune(at);   // 퀄업(2026-10-07) — 바닥에 그려지는 룬 원(솟는 파편은 SpawnSummon)
-            SummonGolem(at);
-        }
-
         /// <summary>화이트 위저드 — 부채꼴 8방향. 관통은 패시브가 준다.</summary>
         private void WizardFan(Unit me)
         {

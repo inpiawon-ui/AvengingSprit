@@ -227,6 +227,9 @@ namespace Game.Module.InGame
         /// <summary>그림을 초당 <paramref name="degreesPerSecond"/> 만큼 돌린다.</summary>
         public void SetSpin(float degreesPerSecond) => _spin = degreesPerSecond;
 
+        /// <summary>줄기(`PlayBeam`)처럼 한 번 재생으로 시작한 것을 계속 돌린다 — 돌진 내내 뿜는 불줄기.</summary>
+        public void SetLoop(bool loop) => _loop = loop;
+
         /// <summary>
         /// <paramref name="seconds"/> 뒤에 꺼진다. 마지막 <paramref name="fadeSeconds"/> 동안 흐려진다.
         /// 한 장짜리를 loop 로 틀어 두고 이걸로 거둔다.
