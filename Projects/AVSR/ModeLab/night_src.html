@@ -714,7 +714,7 @@ MODES.night = {
     const x = side < .6 ? 30 + Math.random() * 300 : side < .8 ? 20 : 340;
     const y = side < .6 ? FT + 16 : FT + 30 + Math.random() * 220;
     // 상한은 무리에만 — 몸까지 막히면 유령이 빙의할 곳이 없어 에너지만 마른다
-    if (DEF[key].host || G.enemies.length < 46) G.enemies.push(unit(key, x, y, o));
+    if (DEF[key].host || G.enemies.filter(e => !e.d.host && !e.elite && !e.d.boss).length < 30) G.enemies.push(unit(key, x, y, o));
   },
   update(G, dt) {
     const S = G.S; S.time += dt;
