@@ -808,3 +808,120 @@ tower.floor.9.name	빙의는 한 번	憑依は一度だけ	One Possession
 tower.floor.9.desc	빙의를 한 번만 할 수 있다 · 구조 몸이 없다	憑依は一度だけ・救助の体はない	Possess only once · no rescue bodies
 tower.floor.10.name	보스 — 킹핀	ボス — キングピン	Boss — Kingpin
 tower.floor.10.desc	킹핀(무기). 파워 몸만 나온다	キングピン(武器)。パワーの体だけが出る	Kingpin (Weapon). Only Power bodies appear
+ui.store.title	상점	ショップ	Shop
+ui.store.tab.today	오늘	今日	Today
+ui.store.tab.chest	상자	宝箱	Chests
+ui.store.tab.currency	재화	通貨	Currency
+ui.store.today.title	오늘의 상점	今日のショップ	Today's Shop
+ui.store.today.refresh	새로고침	更新	Refresh
+ui.store.today.left	오늘 {0}회 남음	本日あと{0}回	{0} left today
+ui.store.today.timer	새 상품까지 {0}	入れ替えまで {0}	New items in {0}
+ui.store.today.free_gold	무료 골드	無料ゴールド	Free Gold
+ui.store.today.shard	{0} 조각	{0}の欠片	{0} Shards
+ui.store.sold	구매 완료	購入済み	Purchased
+ui.store.free	무료	無料	Free
+ui.store.price_gem	젬 {0}	ジェム {0}	{0} Gems
+ui.store.price_gold	골드 {0}	ゴールド {0}	{0} Gold
+ui.store.chest.open_now	바로 열림	すぐ開く	Opens now
+ui.store.chest.gold	골드 {0} ~ {1}	ゴールド {0}～{1}	Gold {0}–{1}
+ui.store.chest.shard	몸 {0} ~ {1}명 조각	体 {0}～{1}人の欠片	Shards for {0}–{1} bodies
+ui.store.chest.rate	확률 보기	確率を見る	View odds
+ui.store.chest.rate_body	{0}\n조각 등급 확률\n{1}	{0}\n欠片の等級確率\n{1}	{0}\nShard grade odds\n{1}
+ui.store.chest.note	상자는 사는 즉시 열립니다 · 상자 칸을 쓰지 않음	宝箱は購入後すぐ開きます・宝箱スロットは使いません	Chests open right away · no chest slot used
+ui.store.card.days	남은 {0}일	残り{0}日	{0} days left
+ui.store.card.claim	오늘 받기	本日受け取る	Claim today
+ui.store.card.claimed	받음	受取済み	Claimed
+ui.store.once	1회 한정	1回限定	Once only
+ui.store.starter.title	입문 패키지	スターターパック	Starter Packs
+ui.store.days_left	{0}일 남음	残り{0}日	{0} days left
+ui.store.chapter.title	챕터 {0} 돌파 기념	チャプター{0}突破記念	Chapter {0} Clear Pack
+ui.store.gem.title	젬 묶음	ジェム	Gem Packs
+ui.store.first_double	첫 구매 2배	初回2倍	First ×2
+ui.store.gold.title	골드	ゴールド	Gold
+ui.store.legal	특정상거래법 · 자금결제법 표기	特定商取引法・資金決済法に基づく表記	Legal notices
+ui.store.legal_body	특정상거래법 · 자금결제법 표기는 출시 전에 채웁니다.	特定商取引法・資金決済法に基づく表記はリリース前に掲載します。	Legal notices will be added before release.
+ui.store.restore	구매 복원	購入の復元	Restore
+ui.store.restore_done	복원할 구매가 없어요.	復元する購入はありません。	No purchases to restore.
+ui.store.today_count	오늘 {0}/{1}	本日 {0}/{1}	Today {0}/{1}
+ui.store.soldout	오늘은 다 샀어요.	本日の購入上限です。	Sold out for today.
+ui.store.confirm.title	구매 확인	購入確認	Confirm
+ui.store.confirm.buy	{0} 구매	{0} で購入	Buy for {0}
+ui.store.confirm.close	닫기	閉じる	Close
+ui.store.confirm.note	결제는 스토어 계정으로 진행됩니다	決済はストアのアカウントで行われます	Payment is made through your store account
+ui.store.no_gem	젬이 모자라요. 젬 묶음을 볼까요?	ジェムが足りません。ジェムを見ますか？	Not enough gems. View gem packs?
+ui.store.go_gem	젬 사러 가기	ジェムを買う	Get gems
+ui.store.reward.title	획득!	獲得！	Got it!
+ui.store.reward.done	구매 완료	購入完了	Purchased
+ui.store.reward.gold	골드 {0}	ゴールド {0}	Gold {0}
+ui.store.reward.shard	{0} 조각 ×{1}	{0}の欠片 ×{1}	{0} Shards ×{1}
+ui.store.r.gem	젬	ジェム	Gems
+ui.store.r.gold	골드	ゴールド	Gold
+ui.store.r.essence	정수	エッセンス	Essence
+ui.store.r.ticket	소환권	召喚券	Summon Tickets
+ui.store.r.stamina	행동력	スタミナ	Stamina
+ui.pass.badge	SEASON 1 · GHOST REVENGE	SEASON 1 · GHOST REVENGE	SEASON 1 · GHOST REVENGE
+store.card_small.name	영혼 계약	魂の契約	Soul Pact
+store.card_small.desc	즉시 젬 300 + 30일 매일 90	即時ジェム300＋30日間毎日90	300 gems now + 90 daily for 30 days
+store.card_big.name	망령 군주의 계약	亡霊君主の契約	Wraith Lord's Pact
+store.card_big.desc	즉시 1,000 + 매일 200 + 편의	即時1,000＋毎日200＋特典	1,000 now + 200 daily + perks
+store.starter_1.name	입문 패키지 Ⅰ	スターターパック Ⅰ	Starter Pack I
+store.starter_2.name	입문 패키지 Ⅱ	スターターパック Ⅱ	Starter Pack II
+store.starter_3.name	입문 패키지 Ⅲ	スターターパック Ⅲ	Starter Pack III
+store.chest_silver.name	은 상자	シルバーチェスト	Silver Chest
+store.chest_gold.name	금 상자	ゴールドチェスト	Golden Chest
+store.chest_platinum.name	백금 상자	プラチナチェスト	Platinum Chest
+store.gold_s.name	골드 한 줌	ゴールド（小）	Pile of Gold
+store.gold_m.name	골드 자루	ゴールド（中）	Bag of Gold
+store.gold_l.name	골드 상자	ゴールド（大）	Crate of Gold
+store.gem_60.name	젬 60	ジェム 60	60 Gems
+store.gem_320.name	젬 320	ジェム 320	320 Gems
+store.gem_680.name	젬 680	ジェム 680	680 Gems
+store.gem_2100.name	젬 2,100	ジェム 2,100	2,100 Gems
+store.gem_3600.name	젬 3,600	ジェム 3,600	3,600 Gems
+store.gem_7500.name	젬 7,500	ジェム 7,500	7,500 Gems
+store.stamina_refill.name	행동력 채우기	スタミナ回復	Stamina Refill
+store.chapter_01.name	챕터 1 돌파 기념	チャプター1突破記念	Chapter 1 Clear Pack
+store.chapter_02.name	챕터 2 돌파 기념	チャプター2突破記念	Chapter 2 Clear Pack
+store.chapter_03.name	챕터 3 돌파 기념	チャプター3突破記念	Chapter 3 Clear Pack
+store.chapter_04.name	챕터 4 돌파 기념	チャプター4突破記念	Chapter 4 Clear Pack
+store.chapter_05.name	챕터 5 돌파 기념	チャプター5突破記念	Chapter 5 Clear Pack
+store.chapter_06.name	챕터 6 돌파 기념	チャプター6突破記念	Chapter 6 Clear Pack
+store.chapter_07.name	챕터 7 돌파 기념	チャプター7突破記念	Chapter 7 Clear Pack
+store.chapter_08.name	챕터 8 돌파 기념	チャプター8突破記念	Chapter 8 Clear Pack
+store.chapter_09.name	챕터 9 돌파 기념	チャプター9突破記念	Chapter 9 Clear Pack
+store.chapter_10.name	챕터 10 돌파 기념	チャプター10突破記念	Chapter 10 Clear Pack
+ui.mode.back	◀ 뒤로	◀ 戻る	◀ Back
+ui.tower.fit_all	전체\n보기 ›	すべて\n見る ›	View\nall ›
+ui.tower.badge_go	도전	挑戦	GO
+ui.summon.title	소환	召喚	Summon
+ui.summon.pickup	이번 주 픽업:	今週のピックアップ：	This week's pick:
+ui.summon.pickup_note	A급이 나오면 {0}% 확률로 픽업 호스트	A級が出たら{0}%でピックアップ	A-grade pulls are the pick-up {0}% of the time
+ui.summon.left	남은 <color=#FFD94A>{0}</color>일 <color=#FFD94A>{1}</color>시간	残り<color=#FFD94A>{0}</color>日<color=#FFD94A>{1}</color>時間	<color=#FFD94A>{0}</color>d <color=#FFD94A>{1}</color>h left
+ui.summon.tickets	보유 소환권 <color=#FFD94A>{0}</color>	召喚券 <color=#FFD94A>{0}</color>	Tickets <color=#FFD94A>{0}</color>
+ui.summon.today	오늘	本日	Today
+ui.summon.free	무료 1회	無料1回	1 Free
+ui.summon.free_used	내일 다시	また明日	Tomorrow
+ui.summon.pull1	1회	1回	x1
+ui.summon.pull10	10회	10回	x10
+ui.summon.pull10_note	A급 1회 보장	A級1回確定	1 A-grade guaranteed
+ui.summon.price	젬 {0} / 소환권 {1}	ジェム{0} / 召喚券{1}	{0} gems / {1} tickets
+ui.summon.price_ticket	소환권 {0}	召喚券 {0}	{0} tickets
+ui.summon.pity	대박까지 <color=#FFD94A>{0} / {1}</color>	大当たりまで <color=#FFD94A>{0} / {1}</color>	Jackpot in <color=#FFD94A>{0} / {1}</color>
+ui.summon.rates	확률 보기	提供割合	Odds
+ui.summon.history	뽑기 기록	召喚履歴	History
+ui.summon.history_empty	아직 뽑은 기록이 없어요.	まだ履歴がありません。	No pulls yet.
+ui.summon.result	소환 결과	召喚結果	Summon Results
+ui.summon.result_count	{0}회 소환	{0}回召喚	x{0} Summon
+ui.summon.grade	{0}급	{0}級	{0}-grade
+ui.summon.essence	정수 +{0}	エッセンス +{0}	Essence +{0}
+ui.summon.jackpot	대박	大当たり	Jackpot
+ui.summon.new_body	새 몸	新しい体	New
+ui.summon.again	{0}회 더	もう{0}回	x{0} again
+ui.summon.rate_grade	등급 확률	等級別の割合	Grade odds
+ui.summon.rate_amount	조각 수 확률	欠片数の割合	Shard count odds
+ui.summon.rate_host	몸별 확률	ホスト別の割合	Odds per host
+ui.summon.rate_rules	10회 소환은 A급 1회 보장 · {0}회 안에 대박이 없으면 {0}번째는 대박 확정	10回召喚はA級1回確定・{0}回以内に大当たりが無ければ{0}回目は大当たり確定	x10 guarantees one A-grade · no jackpot in {0} pulls makes the {0}th a jackpot
+ui.summon.fail.notready	아직 준비 중이에요	準備中です	Not ready yet
+ui.summon.fail.free	오늘 무료 소환을 이미 썼어요	本日の無料召喚は使用済みです	Free summon already used today
+ui.summon.fail.ticket	소환권이 모자라요	召喚券が足りません	Not enough tickets
+ui.summon.fail.gem	젬이 모자라요.	ジェムが足りません。	Not enough gems.

@@ -95,7 +95,8 @@ namespace Game.Editor
                 LeftIn(floorT.rectTransform, 14, -h * 0.18f, 140, 40);
                 var nameT = Txt(r, "TowerLadderNameText", "마법의 무리", 15, TextAlignmentOptions.MidlineLeft,
                                 Dim, 0, 0, 0, 0);
-                LeftIn(nameT.rectTransform, 14, h * 0.25f, 180, 24);
+                LeftIn(nameT.rectTransform, 14, h * 0.25f, c[2] - c[0] - 24, 24);
+                LeftIn(floorT.rectTransform, 14, -h * 0.18f, Mathf.Min(140, c[2] - c[0] - 44), 40);
                 var check = Img(Node(r, "TowerLadderCheck"), Sp("ChapterHost/ch_check"));
                 check.preserveAspect = true;
                 LeftIn(check.rectTransform, 92, -h * 0.18f, 30, 30);
@@ -137,6 +138,7 @@ namespace Game.Editor
             {
                 int x0 = 340 + i * 81;
                 var frame = Img(Node(box, $"TowerFitFace{i}Frame"), Sp("ChapterHost/ch_thumbframe"));
+                frame.preserveAspect = true;
                 Box(frame.rectTransform, x0, 622, x0 + 74, 696);
                 var face = Img(Node(frame.rectTransform, $"TowerFitFace{i}"), null);
                 InsetFull(face.rectTransform, 4);
@@ -155,7 +157,7 @@ namespace Game.Editor
 
             // 소탕
             Frame(box, "TowerSweepBox", 24, 878, 696, 986);
-            Txt(box, "TowerSweepTitleText", "오늘의 소탕", 24, TextAlignmentOptions.MidlineLeft, Color.white, 52, 892, 196, 924);
+            Txt(box, "TowerSweepTitleText", "오늘의 소탕", 24, TextAlignmentOptions.MidlineLeft, Color.white, 52, 892, 300, 924);
             Txt(box, "TowerSweepSubText", "12층 기준", 15, TextAlignmentOptions.MidlineLeft, Dim, 192, 898, 330, 922);
             Icon(box, "TowerSweepGoldIcon", Sp("ChapterHost/ch_icon_coin"), 50, 932, 86, 968);
             Txt(box, "TowerSweepGoldText", "200 · 조각 ×2", 22, TextAlignmentOptions.MidlineLeft, Color.white, 98, 932, 470, 968);
@@ -167,13 +169,13 @@ namespace Game.Editor
 
             // 입장 · 도전
             Frame(box, "TowerEntryBox", 78, 1032, 352, 1080);
-            Txt(box, "TowerEntryLabel", "오늘 입장", 20, TextAlignmentOptions.MidlineLeft, Color.white, 90, 1040, 180, 1072);
+            Txt(box, "TowerEntryLabel", "오늘 입장", 20, TextAlignmentOptions.MidlineLeft, Color.white, 88, 1040, 166, 1072);
             for (int i = 0; i < 3; i++)
                 Icon(box, $"TowerEntryPip{i}", Sp("ModeCommon/mode_entry_pip_on"), 173 + i * 31, 1043, 199 + i * 31, 1069);
             Txt(box, "TowerEntryText", "2 / 3", 26, TextAlignmentOptions.MidlineLeft, Color.white, 272, 1038, 350, 1074);
             var buy = Btn(Frame(box, "TowerBuyButton", 458, 1032, 658, 1080));
             BuyContents(buy, "Tower");
-            var start = Btn(Img(Node(box, "TowerStartButton"), Sp("ChapterHost/ch_start_button")).rectTransform);
+            var start = Btn(GoldButton(box, "TowerStartButton"));
             Box(start, 148, 1104, 568, 1212);
             Txt(start, "TowerStartText", "13층 도전 ▶", 44, TextAlignmentOptions.Center, Dark, Fill, plain: true);
             Txt(box, "TowerStartHintText", "입장 1번 사용 · 이기든 지든 줄어든다", 15, TextAlignmentOptions.Center, Dim,
@@ -204,15 +206,14 @@ namespace Game.Editor
 
             var back = Btn(Frame(box, "NightBackButton", 22, 182, 102, 240));
             Txt(back, "NightBackText", "◀", 30, TextAlignmentOptions.Center, Cyan, Fill);
-            var plate = Img(Node(box, "NightTitlePlate"), Sp("ChapterHost/ch_titlebar"));
-            Box(plate.rectTransform, 232, 178, 490, 242);
-            Txt(box, "NightTitleText", "망령의 밤", 34, TextAlignmentOptions.Center, Color.white, 232, 180, 490, 240);
+            Frame(box, "NightTitlePlate", 232, 178, 490, 242);
+            Txt(box, "NightTitleText", "망령의 밤", 34, TextAlignmentOptions.Center, Color.white, 246, 182, 476, 238);
 
             for (int i = 0; i < 7; i++)
             {
-                int x0 = Mathf.RoundToInt(18 + i * 98.4f);
+                float cx = 18 + i * 98.4f + 46;
                 var cell = Btn(Img(Node(box, $"NightDayCell{i}"), Sp("NightEntryPanel/night_day_cell")).rectTransform);
-                Box(cell, x0, 252, x0 + 92, 330);
+                Box(cell, cx - 43, 252, cx + 43, 330);
                 var d = Txt(cell, $"NightDayName{i}", "화", 22, TextAlignmentOptions.Center, Color.white, 0, 0, 0, 0);
                 CenterIn(d.rectTransform, 0, 11, 80, 30);
                 var r = Txt(cell, $"NightDayRule{i}", "원거리", 15, TextAlignmentOptions.Center, Dim, 0, 0, 0, 0);
@@ -223,7 +224,7 @@ namespace Game.Editor
             Box(card.rectTransform, 14, 350, 706, 800);
             var art = Img(Node(box, "NightTodayArt"), Sp("NightEntryPanel/night_today_art"));
             art.preserveAspect = false;
-            Box(art.rectTransform, 330, 368, 698, 562);
+            Box(art.rectTransform, 351, 368, 698, 562);
             Txt(box, "NightDayText", "오늘 · 화요일", 17, TextAlignmentOptions.MidlineLeft, Cyan, 50, 380, 330, 404);
             Txt(box, "NightRuleTitleText", "원거리의 날", 44, TextAlignmentOptions.MidlineLeft, Gold, 48, 404, 400, 458);
             Txt(box, "NightRuleText", "원거리 호스트만 몸으로 나온다", 21, TextAlignmentOptions.MidlineLeft, Color.white, 50, 470, 440, 500);
@@ -232,6 +233,7 @@ namespace Game.Editor
             {
                 int x0 = 48 + i * 92;
                 var slot = Img(Node(box, $"NightHostSlot{i}"), Sp("ChapterHost/ch_thumbframe"));
+                slot.preserveAspect = true;
                 Box(slot.rectTransform, x0, 553, x0 + 80, 633);
                 var face = Img(Node(slot.rectTransform, $"NightHostFace{i}"), null);
                 InsetFull(face.rectTransform, 4);
@@ -261,13 +263,13 @@ namespace Game.Editor
             }
 
             Frame(box, "NightEntryBox", 22, 958, 494, 1018);
-            Txt(box, "NightEntryLabel", "오늘 입장", 20, TextAlignmentOptions.MidlineLeft, Color.white, 40, 972, 130, 1004);
+            Txt(box, "NightEntryLabel", "오늘 입장", 20, TextAlignmentOptions.MidlineLeft, Color.white, 38, 972, 126, 1004);
             for (int i = 0; i < 3; i++)
                 Icon(box, $"NightEntryPip{i}", Sp("ModeCommon/mode_entry_pip_on"), 135 + i * 32, 975, 161 + i * 32, 1001);
             Txt(box, "NightEntryText", "3 / 3", 26, TextAlignmentOptions.MidlineLeft, Color.white, 238, 970, 320, 1006);
             var buy = Btn(Frame(box, "NightBuyButton", 512, 958, 700, 1018));
             BuyContents(buy, "Night");
-            var start = Btn(Img(Node(box, "NightStartButton"), Sp("ChapterHost/ch_start_button")).rectTransform);
+            var start = Btn(GoldButton(box, "NightStartButton"));
             Box(start, 140, 1040, 580, 1140);
             Txt(start, "NightStartText", "시작 ▶", 48, TextAlignmentOptions.Center, Dark, Fill, plain: true);
             Txt(box, "NightStartHintText", "입장 1번 사용 · 이기든 지든 줄어든다", 16, TextAlignmentOptions.Center, Dim,
@@ -281,6 +283,15 @@ namespace Game.Editor
             so.FindProperty("_pipOff").objectReferenceValue = Sp("ModeCommon/mode_entry_pip_off");
             so.ApplyModifiedPropertiesWithoutUndo();
             return comp;
+        }
+
+        /// <summary>큰 금 버튼(시안 T1 · N1 「도전 ▶」 · 「시작 ▶」) — 비율 그대로.</summary>
+        private static RectTransform GoldButton(Transform parent, string name)
+        {
+            var img = Img(Node(parent, name), Sp("ChapterScreens/button_yellow_wide"));
+            img.type = Image.Type.Simple;
+            img.preserveAspect = true;
+            return img.rectTransform;
         }
 
         /// <summary>「＋ 💎 추가 입장」 — 버튼 안 가운데 덩어리.</summary>
@@ -303,11 +314,11 @@ namespace Game.Editor
         /// </summary>
         private static void ModeCards(Transform root)
         {
-            Cover(root, "ModeSurvivalCard", "ModeSurvivalArt", Sp("LobbyMainUI/modeart_survival"), "ModeSurvivalBadge");
-            Cover(root, "ModeDefenseCard", "ModeDefenseArt", Sp("LobbyMainUI/modeart_tower"), "ModeDefenseBadge");
+            Cover(root, "ModeSurvivalCard", "ModeSurvivalArt", Sp("LobbyMainUI/modeart_survival"), "ModeSurvivalBadge", "ModeSurvival");
+            Cover(root, "ModeDefenseCard", "ModeDefenseArt", Sp("LobbyMainUI/modeart_tower"), "ModeDefenseBadge", "ModeDefense");
         }
 
-        private static void Cover(Transform root, string cardName, string artName, Sprite art, string badgeName)
+        private static void Cover(Transform root, string cardName, string artName, Sprite art, string badgeName, string prefix)
         {
             var card = FindDeep(root, cardName);
             if (card == null) { Debug.LogWarning($"[모드 UI] {cardName} 없음"); return; }
@@ -315,10 +326,69 @@ namespace Game.Editor
             if (old != null) Object.DestroyImmediate(old.gameObject);
             var oldBadge = card.Find(badgeName);
             if (oldBadge != null) Object.DestroyImmediate(oldBadge.gameObject);
-            var img = Img(Node(card, artName), art);
-            img.preserveAspect = false;
-            InsetFull(img.rectTransform, 6);
-            img.transform.SetAsFirstSibling();
+            var mask = Node(card, artName);
+            InsetFull(mask, 6);
+            mask.gameObject.AddComponent<RectMask2D>();
+            mask.SetAsFirstSibling();
+            var img = Img(Node(mask, "Art"), art);
+            var ir = img.rectTransform;
+            ir.anchorMin = ir.anchorMax = ir.pivot = new Vector2(0.5f, 0.5f);
+            ir.sizeDelta = new Vector2(320, 140);
+            var fit = img.gameObject.AddComponent<AspectRatioFitter>();
+            fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fit.aspectRatio = art != null ? art.rect.width / art.rect.height : 2f;
+            // 제목 · 칩 — 칸 왼쪽 아래(시안 L). 글자는 코드가 채운다(LobbyMainUI.RefreshModeCards) — 고정 번역은 뗀다
+            var title = FindDeep(root, $"{prefix}TitleText");
+            var sub = FindDeep(root, $"{prefix}SubText");
+            var oldChip = card.Find($"{prefix}SubChip");
+            if (oldChip != null) Object.DestroyImmediate(oldChip.gameObject);
+            var chip = Img(Node(card, $"{prefix}SubChip"), Sp("ChapterHost/ch_pill"));
+            var cr = chip.rectTransform;
+            cr.anchorMin = cr.anchorMax = cr.pivot = new Vector2(0f, 0f);
+            cr.anchoredPosition = new Vector2(14, 10);
+            cr.sizeDelta = new Vector2(250, 34);
+            foreach (var t in new[] { title, sub })
+            {
+                if (t == null) continue;
+                foreach (var c in t.GetComponents<Component>())
+                    if (c != null && c.GetType().Name == "LocalizedText") Object.DestroyImmediate(c);
+            }
+            if (title != null)
+            {
+                title.SetParent(card, false);
+                var tr = (RectTransform)title;
+                tr.anchorMin = tr.anchorMax = tr.pivot = new Vector2(0f, 0f);
+                tr.anchoredPosition = new Vector2(16, 44);
+                tr.sizeDelta = new Vector2(290, 46);
+                var tmp = title.GetComponent<TextMeshProUGUI>();
+                if (tmp != null)
+                {
+                    tmp.alignment = TextAlignmentOptions.MidlineLeft;
+                    tmp.enableAutoSizing = true;
+                    tmp.fontSizeMax = 34;
+                    tmp.fontSizeMin = 20;
+                    if (s_outline != null) tmp.fontSharedMaterial = s_outline;
+                }
+            }
+            if (sub != null)
+            {
+                sub.SetParent(chip.rectTransform, false);
+                var sr = (RectTransform)sub;
+                sr.anchorMin = Vector2.zero;
+                sr.anchorMax = Vector2.one;
+                sr.offsetMin = new Vector2(12, 2);
+                sr.offsetMax = new Vector2(-12, -2);
+                var tmp = sub.GetComponent<TextMeshProUGUI>();
+                if (tmp != null)
+                {
+                    tmp.alignment = TextAlignmentOptions.Center;
+                    tmp.enableAutoSizing = true;
+                    tmp.fontSizeMax = 18;
+                    tmp.fontSizeMin = 11;
+                    tmp.color = Color.white;
+                }
+            }
+
             var badge = Img(Node(card, badgeName), Sp("LobbyMainUI/notifybadge"));
             badge.preserveAspect = true;
             var b = badge.rectTransform;

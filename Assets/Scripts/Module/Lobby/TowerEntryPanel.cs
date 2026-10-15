@@ -100,6 +100,8 @@ namespace Game.Module.Lobby
             int next = _progress.TowerNextFloor;
 
             _ui.SetText("TowerTitleText", Localize.Get("ui.tower.title"));
+            _ui.SetText("TowerBackText", Localize.Get("ui.mode.back"));
+            _ui.SetText("TowerFloorFitButtonText", Localize.Get("ui.tower.fit_all"));
             if (CoreModule.TryGet<IResetClock>(out var clock))
                 _ui.SetText("TowerResetText", Localize.Format("ui.tower.reset_in", Span(clock.UntilNextWeek)));
             _ui.SetText("TowerWeekText", Localize.Format("ui.tower.week", cleared));
@@ -125,6 +127,7 @@ namespace Game.Module.Lobby
                 SetCellText(cell, "TowerLadderFloorText", Localize.Format("ui.tower.floor", floor));
                 SetCellText(cell, "TowerLadderNameText", FloorName(def, floor));
                 SetCellActive(cell, "TowerLadderBadge", now);
+                SetCellText(cell, "TowerLadderBadgeText", Localize.Get("ui.tower.badge_go"));
                 SetCellActive(cell, "TowerLadderCheck", past);
                 SetCellActive(cell, "TowerLadderBossIcon", boss);
                 var cg = cell.GetComponent<CanvasGroup>();
@@ -165,6 +168,7 @@ namespace Game.Module.Lobby
             bool swept = _progress.TowerSweptToday;
             _ui.SetText("TowerSweepTitleText", Localize.Get("ui.tower.sweep"));
             _ui.SetText("TowerSweepSubText", Localize.Format("ui.tower.sweep_basis", cleared));
+            FollowTitle("TowerSweepTitleText", "TowerSweepSubText");
             _ui.SetText("TowerSweepGoldText", step != null
                 ? Localize.Format("ui.tower.sweep_reward", step.Gold, step.Shards)
                 : Localize.Get("ui.tower.sweep_locked"));
@@ -299,6 +303,19 @@ namespace Game.Module.Lobby
             try { _faceAtlas = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
             catch (Exception e) { Debug.LogWarning($"[탑] 얼굴 아틀라스 로드 실패 — {e.Message}"); }
             if (this != null && gameObject.activeSelf) Refresh();
+        }
+
+        // 제목 길이가 언어마다 달라(영어가 길다) 곁글을 제목 바로 뒤에 붙인다
+        private void FollowTitle(string titleNode, string subNode)
+        {
+            var title = _ui.Get<TMPro.TMP_Text>(titleNode);
+            var sub = _ui.Get<TMPro.TMP_Text>(subNode);
+            if (title == null || sub == null) return;
+            var t = title.rectTransform;
+            var s = sub.rectTransform;
+            float shift = t.offsetMin.x + title.preferredWidth + 10f - s.offsetMin.x;
+            s.offsetMin += new Vector2(shift, 0f);
+            s.offsetMax += new Vector2(shift, 0f);
         }
 
         private void SetFace(string node, string hostKey)

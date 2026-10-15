@@ -110,6 +110,7 @@ namespace Game.Module.Common.Modes
                 Debug.LogError($"[모드] 표를 못 읽었다({TableAddress}): {ex.Message}");
             }
             Refresh();
+            Publish();   // 표가 늦게 왔다 — 로비 모드 칸 · 입장 패널이 다시 그리게(바뀐 것이 없어도)
         }
 
         // ── 하루 · 주 ─────────────────────────────────────
@@ -342,6 +343,11 @@ namespace Game.Module.Common.Modes
         {
             var p = Player;
             if (p != null) p.SaveAsync().Forget();   // fire-and-forget: 진행은 바로 저장한다 — 판 중 앱이 꺼져도 남게
+            Publish();
+        }
+
+        private void Publish()
+        {
             if (CoreModule.TryGet<IEventBus>(out var bus))
                 bus.Publish(new ModeProgressChangedEvent
                 {

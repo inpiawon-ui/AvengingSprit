@@ -51,6 +51,11 @@ namespace Game.Editor.UiHarness
             .AllowRule("R3", @"/(TowerBg|NightBg)$|/CitySide[LR]$|/NavSide[LR]$|/FixedTopBarEdge[LR]$|/LobbyV4\w+$|/NavBg$",
                        "바탕 · 이음 띠 — 키워 쓰는 것이 의도")
             .AllowRule("R1", @"/ProfileExpFill$", "경험치 막대 채움")
+            // 로비 아래 바 · 위 막대는 로비 프로필(아웃게임 세션) 소관 — 여기서는 모드 화면만 판정한다
+            .AllowRule("R1", @"/BottomNav/\w+/NavPlate$|/FixedTopBar$", "로비 아래 바 · 위 막대 — AvsrLobby 프로필이 잰다")
+            .AllowRule("C6", @"/BottomNav/", "로비 아래 바 — AvsrLobby 프로필이 잰다")
+            .AllowRule("C1?", @"/(TowerFitStar|NightHostStar)\d+(/|$)", "키운 몸 ★ — 초상 틀 모서리에 걸쳐 단다(시안 T1 · N1)")
+            .AllowRule("C2", @"/Mode(Survival|Defense)Art/Art$", "모드 칸 그림 — 칸을 덮게 깔고 가리개가 잘라 낸다(비율 그대로)")
             .AllowRule("*", @"(^|/)(RandomFx|Fx\w*)(/|$)", "빛 연출");
 
         public IReadOnlyList<UiHarnessScenario> Scenarios { get; } = new[]
