@@ -80,6 +80,7 @@
 
 - 자리: `LobbyShopPanel` 아래쪽 `GemShopSection` > `GemPack0` ~ `GemPack5`.
 - 결제(안드로이드 · 아이폰 동시)는 서버 · 결제 모듈과 함께 붙인다(로드맵 4단계). 지금은 칸만 둔다.
+- → 상점 전체(탭 · 상품 · 결제 · 시즌 패스 · 미션 · 월정액) 기획 + 개발 스펙은 [`AVSR_Content_Store.md`](AVSR_Content_Store.md)(2026-10-15).
 
 ---
 

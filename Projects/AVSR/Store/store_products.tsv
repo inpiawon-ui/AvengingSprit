@@ -1,0 +1,37 @@
+# 로비 상점 상품 — Tools/Game/상점 표 임포트 → Assets/BundleResource/TableData/StoreTable.asset (주소 TableData/StoreTable)
+# tab: featured 추천 · card 계약 · chest 상자 · currency 재화 · pass 패스 화면 전용 | kind: package · card · chest · gold · gem · pass
+# priceType: iap(결제, price=가격 등급) · gem(젬, price=젬 수) · free | limit: once · daily:N · weekly:N · season · none
+# show: always · days_since_install<=N · chapter_cleared>=N · season_active
+# rewards: gem:N · gold:N · goldrun:N(판 골드 N판분 × priceMul) · essence:N · chest:키[*N] · passxp:N · passpremium:1 · card:카드키 (항목은 ; 로 잇는다)
+# badge: best(추천 띠) · first_double(첫 구매 2배) — 글자는 언어팩 키 store.badge.*
+# 수치는 초안(2026-10-15) — PD 확인 전.
+id	tab	kind	priceType	price	limit	show	rewards	badge	order	storeId	nameKey	descKey
+starter_1	featured	package	iap	P1	once	days_since_install<=7	gem:120;chest:gold;essence:30	best	10	avsr.starter1	store.starter_1.name	store.starter_1.desc
+starter_2	featured	package	iap	P3	once	days_since_install<=7	gem:600;chest:platinum;essence:50		11	avsr.starter2	store.starter_2.name	store.starter_2.desc
+starter_3	featured	package	iap	P4	once	days_since_install<=7	gem:1200;chest:platinum*2;essence:100		12	avsr.starter3	store.starter_3.name	store.starter_3.desc
+chapter_01	featured	package	iap	P2	once	chapter_cleared>=1	gem:200;goldrun:5;chest:gold		21	avsr.chapter01	store.chapter_01.name	store.chapter_01.desc
+chapter_02	featured	package	iap	P2	once	chapter_cleared>=2	gem:200;goldrun:5;chest:gold		22	avsr.chapter02	store.chapter_02.name	store.chapter_02.desc
+chapter_03	featured	package	iap	P3	once	chapter_cleared>=3	gem:500;goldrun:10;chest:platinum;essence:30		23	avsr.chapter03	store.chapter_03.name	store.chapter_03.desc
+chapter_04	featured	package	iap	P3	once	chapter_cleared>=4	gem:500;goldrun:10;chest:platinum;essence:30		24	avsr.chapter04	store.chapter_04.name	store.chapter_04.desc
+chapter_05	featured	package	iap	P3	once	chapter_cleared>=5	gem:500;goldrun:10;chest:platinum;essence:30		25	avsr.chapter05	store.chapter_05.name	store.chapter_05.desc
+chapter_06	featured	package	iap	P4	once	chapter_cleared>=6	gem:1000;goldrun:15;chest:platinum*2;essence:60		26	avsr.chapter06	store.chapter_06.name	store.chapter_06.desc
+chapter_07	featured	package	iap	P4	once	chapter_cleared>=7	gem:1000;goldrun:15;chest:platinum*2;essence:60		27	avsr.chapter07	store.chapter_07.name	store.chapter_07.desc
+chapter_08	featured	package	iap	P4	once	chapter_cleared>=8	gem:1000;goldrun:15;chest:platinum*2;essence:60		28	avsr.chapter08	store.chapter_08.name	store.chapter_08.desc
+chapter_09	featured	package	iap	P4	once	chapter_cleared>=9	gem:1000;goldrun:15;chest:platinum*2;essence:60		29	avsr.chapter09	store.chapter_09.name	store.chapter_09.desc
+chapter_10	featured	package	iap	P4	once	chapter_cleared>=10	gem:1000;goldrun:15;chest:platinum*2;essence:60		30	avsr.chapter10	store.chapter_10.name	store.chapter_10.desc
+card_small	card	card	iap	P3	none	always	card:soul_small		30	avsr.card.small	store.card_small.name	store.card_small.desc
+card_big	card	card	iap	P5	none	always	card:soul_big		31	avsr.card.big	store.card_big.name	store.card_big.desc
+chest_silver	chest	chest	gem	60	none	always	chest:silver		40		store.chest_silver.name	store.chest_silver.desc
+chest_gold	chest	chest	gem	160	none	always	chest:gold		41		store.chest_gold.name	store.chest_gold.desc
+chest_platinum	chest	chest	gem	320	none	always	chest:platinum		42		store.chest_platinum.name	store.chest_platinum.desc
+gold_s	currency	gold	gem	30	daily:3	always	goldrun:1		50		store.gold_s.name	store.gold_s.desc
+gold_m	currency	gold	gem	150	none	always	goldrun:6		51		store.gold_m.name	store.gold_m.desc
+gold_l	currency	gold	gem	450	none	always	goldrun:20		52		store.gold_l.name	store.gold_l.desc
+gem_60	currency	gem	iap	P1	none	always	gem:60	first_double	60	avsr.gem60	store.gem_60.name	store.gem_60.desc
+gem_320	currency	gem	iap	P3	none	always	gem:320	first_double	61	avsr.gem320	store.gem_320.name	store.gem_320.desc
+gem_680	currency	gem	iap	P4	none	always	gem:680	first_double	62	avsr.gem680	store.gem_680.name	store.gem_680.desc
+gem_2100	currency	gem	iap	P7	none	always	gem:2100	first_double	63	avsr.gem2100	store.gem_2100.name	store.gem_2100.desc
+gem_3600	currency	gem	iap	P8	none	always	gem:3600	first_double	64	avsr.gem3600	store.gem_3600.name	store.gem_3600.desc
+gem_7500	currency	gem	iap	P9	none	always	gem:7500	first_double	65	avsr.gem7500	store.gem_7500.name	store.gem_7500.desc
+pass_premium	pass	pass	iap	P4	season	season_active	passpremium:1		70	avsr.pass.premium	store.pass_premium.name	store.pass_premium.desc
+pass_bundle	pass	pass	iap	P6	season	season_active	passpremium:1;passxp:1500		71	avsr.pass.bundle	store.pass_bundle.name	store.pass_bundle.desc

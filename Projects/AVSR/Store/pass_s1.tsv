@@ -1,0 +1,35 @@
+# 시즌 패스 1 「GHOST REVENGE」 — 28일 · 30단계 · 단계당 패스 경험치 100. Tools/Game/상점 표 임포트 → PassTable.asset (주소 TableData/PassTable)
+# season: id=s1 · startUtc · endUtc 는 GameConfig 「시즌」 칸에(이 표는 보상만). 단계 건너뛰기 = 단계당 젬 100.
+# 무료 합계: 젬 250 · 정수 90 · 은 상자 2 · 금 상자 1 · 판 골드 12판분 / 프리미엄 합계: 젬 1,020 · 정수 200 · 백금 상자 2 · 시즌 테두리(cosmetic, 외형 시스템 전까지 보류)
+# cosmetic:* 은 외형 시스템이 생기기 전까지 받기만 하고 효과 없음 — 화면엔 「곧 공개」 표시.
+tier	xp	free	premium
+1	100	goldrun:1	gem:30
+2	100	essence:5	gem:30
+3	100	goldrun:1	gem:30
+4	100	essence:5	gem:30
+5	100	gem:50	essence:50
+6	100	essence:5	gem:30
+7	100	goldrun:1	gem:30
+8	100	essence:5	gem:30
+9	100	goldrun:1	gem:30
+10	100	chest:silver;gem:50	essence:50
+11	100	goldrun:1	gem:30
+12	100	essence:5	gem:30
+13	100	goldrun:1	gem:30
+14	100	essence:5	gem:30
+15	100	gem:50	chest:platinum
+16	100	essence:5	gem:30
+17	100	goldrun:1	gem:30
+18	100	essence:5	gem:30
+19	100	goldrun:1	gem:30
+20	100	chest:silver;gem:50	essence:50
+21	100	goldrun:1	gem:30
+22	100	essence:5	gem:30
+23	100	goldrun:1	gem:30
+24	100	essence:5	gem:30
+25	100	gem:50	essence:50
+26	100	essence:5	gem:30
+27	100	goldrun:1	gem:30
+28	100	essence:5	gem:30
+29	100	goldrun:1	gem:30
+30	100	chest:gold;essence:30	gem:300;chest:platinum;cosmetic:frame_s1

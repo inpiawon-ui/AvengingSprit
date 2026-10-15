@@ -1,0 +1,18 @@
+# 미션 — 매일(daily) · 매주(weekly). 초기화는 GameConfig 「하루 초기화 시각」(제안: 일본 05:00 = UTC 20:00) · 주는 월요일 기준.
+# type: 세는 일 — 카운터는 EventBus 이벤트로 올린다(스펙 B-5). target: 목표 수. param: 조건(비우면 없음).
+# passXp · gem: 받기 누르면 주는 것. *_all_done 은 같은 주기의 다른 미션을 다 받으면 열린다.
+# 하루 최대 패스 경험치 95 · 주 최대 330 → 28일에 약 3,980(30단계 3,000 은 미션 75% 로 끝난다).
+id	period	type	target	param	passXp	gem
+d_login	daily	login	1		10	0
+d_run	daily	run_start	1		15	0
+d_possess	daily	possess	5		15	0
+d_adv_kill	daily	kill_advantage	20		15	0
+d_shop	daily	daily_shop_buy	1		10	0
+d_upgrade	daily	stat_upgrade	1		10	0
+d_all	daily	daily_all_done	6		20	20
+w_clear	weekly	run_clear	3		60	0
+w_possess	weekly	possess	50		60	0
+w_boss	weekly	kill_boss	3		60	0
+w_chest	weekly	chest_open	7		40	0
+w_hosts	weekly	distinct_hosts_possessed	5		60	0
+w_all	weekly	weekly_all_done	5		50	100

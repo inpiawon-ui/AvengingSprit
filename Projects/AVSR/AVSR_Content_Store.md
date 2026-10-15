@@ -1,0 +1,449 @@
+# 콘텐츠 세부 기획서 + 개발 스펙 — 로비 상점 · 시즌 패스 · 미션 · 결제
+
+- **콘텐츠명**: 로비 상점(상품 판매) · 시즌 패스 · 매일/매주 미션 · 월정액(계약) · 결제 · **카테고리**: 아웃게임 수익 · **우선순위**: P0
+- **Version**: `0.1` · **Last Updated**: `2026-10-15` · **Status**: 초안 — PD 확인 전(0-2 「정해 주실 것」)
+- 관련: [`AVSR_Content_Economy.md`](AVSR_Content_Economy.md)(재화 · 오늘의 상점 · 정수 — 구현됨) · [`AVSR_Balance10.md`](AVSR_Balance10.md) · `Assets/Scripts/Module/CLAUDE.md` 6절(상자) · 7절(오늘의 상점)
+- 데이터 초안: [`Store/`](Store/) — `price_tiers.tsv` · `store_products.tsv` · `cards.tsv` · `pass_s1.tsv` · `missions.tsv`
+
+이 문서는 둘로 나뉜다.
+- **A. 참고 · 방향** — 다른 게임은 어떻게 파는가, 우리는 무엇을 가져오고 무엇을 안 가져오나.
+- **B. 개발 스펙** — 모듈 · 표 · 저장 · 결제 흐름 · 이벤트 · 화면 이름표 · 언어팩 · 그림 · 작업 순서 · 완료 조건. **B 만 보고 바로 만들 수 있게** 썼다.
+
+---
+
+## 0. 한눈에
+
+### 0-1. 요약
+
+| 무엇 | 어떻게 | 왜 |
+|---|---|---|
+| **상점** `LobbyShopPanel` | 탭 넷 — **추천**(입문 3단 · 챕터 돌파) · **오늘의 상점**(구현됨) · **상자**(젬) · **재화**(골드 · 젬). 월정액은 추천 탭 맨 위 칸 | 궁수의 전설 2 상점과 같은 뼈대 — 플레이어가 이미 아는 모양 |
+| **시즌 패스** `SeasonPassPanel` | 28일 · 30단계 · 무료 줄 + 프리미엄 줄(P4 ≈ $9.99) · 묶음(P6 ≈ $19.99 = 프리미엄 + 15단계) | 궁수의 전설 2 의 패스는 28일 · 매일/매주 목표로 오른다. 시즌 1 이름은 정해 둔 「GHOST REVENGE」 |
+| **미션** | 패스 화면의 탭. 매일 6 + 전부 완료 1 · 매주 5 + 전부 완료 1. **빙의 · 유리한 상성 · 여러 몸 쓰기**에 묶는다 | 패스 경험치의 길이자 「이 게임다운 놀이」를 매일 시키는 장치 |
+| **월정액(계약)** | 작은 계약(P3) — 즉시 젬 300 + 30일 매일 90 / 큰 계약(P5) — 즉시 1,000 + 매일 200 + 편의 셋 | 일본 · 한국 모바일에서 가장 많이 팔리는 상품. 매일 접속 이유 |
+| **결제** | Unity IAP · 안드로이드 · 아이폰 동시 · 서버 없이 기기 검증(서버는 나중) · 유상/무상 젬 분리 저장 | 결정 4(서버 나중) · 6(동시 출시). 일본 납품이라 유상 재화 따로 센다 |
+| **안 하는 것** | 가챠 · 에너지(행동력) · 확률 상품 | 정해 둔 원칙 「가챠 없음」 |
+
+### 0-2. 정해 주실 것 (PD)
+
+| # | 질문 | 제안 | 비고 |
+|---|---|---|---|
+| 1 | **광고를 넣나** | 넣지 않는다(지금 결정 3 해석) | 넣으면 「상자 시간 단축 · 상점 무료 칸 한 번 더」 두 자리만. 궁수의 전설 2 도 광고 보상은 일부러 약하게 둔다 |
+| 2 | 값(가격 등급) | `Store/store_products.tsv` 초안 | 젬 묶음 6 · 입문 3 · 챕터 돌파 10 · 계약 2 · 패스 2 |
+| 3 | 하루 초기화 시각 | **일본 05:00**(UTC 20:00) — 오늘의 상점도 이 시계로 옮긴다 | 지금 오늘의 상점은 기기 자정 |
+| 4 | 큰 계약 편의 셋 | 상자 해제 −25% · 오늘의 상점 하루 1회 무료 새로고침 · 판 골드 +10% | 판 골드 +10% 만 「힘」 쪽이다. 빼려면 「상자 칸 4번째」 대신 |
+| 5 | 패스 마지막 보상 외형 | 「시즌 테두리」(프로필 테두리)로 자리만 — 외형 시스템은 나중 | 원칙 「코스튬 중심」. 지금은 받기만 하고 「곧 공개」 표시 |
+| 6 | 유상 젬 · 무상 젬 쓰는 순서 | **무상 먼저** | 일본 게임 관례. 출시 전 법무 확인(B-4-5) |
+
+---
+
+## A. 참고 · 방향
+
+### A-1. 참고 게임
+
+같은 장르(방 단위 · 피하며 쏘기 · 레벨업 스킬 고르기)의 모바일 게임만 본다. 가장 가까운 궁수의 전설 2 를 기준으로 삼는다.
+
+| 항목 | 궁수의 전설 2 (Habby) | 궁수의 전설 1 · 생존자의 전설 (Habby) | 우리 |
+|---|---|---|---|
+| 상점 칸 | 챕터 선물 패키지 · 오늘의 상점 · 장비 상자 · 소원 · 매일/매주/매월 특가 · 젬 · 골드 | 비슷한 구성 + 한정 패키지 | 추천 · 오늘의 상점 · 상자 · 재화 |
+| 유료 재화 | 젬(다이아). 특권 화면에서 매일 20 무료 | 젬 | 젬(유상/무상 분리 저장) |
+| 시즌 패스 | 28일, 매일·매주 목표로 오름, 단계 건너뛰기 가능. 작은 값($9.99) — 유물 + 끝에 젬 1,000 / 큰 값($29.99) — 캐릭터 조각 + 끝에 젬 3,000 | 생존자의 전설: 무료 줄 + 유료 줄($19.99), 매일 활동으로 경험치 | 28일 · 30단계 · 무료 + 프리미엄(P4) · 묶음(P6) |
+| 월정액 · 특권 | 30일 카드(매일 젬 + 사냥 편의 + 도전 횟수) · 영구 카드(광고 제거 + 매일 젬) | 월정액 | 작은 계약 · 큰 계약(편의) — 광고가 없으니 영구 카드는 없다 |
+| 입문 패키지 | 세 값, 초반에만 보이고 늦으면 비싼 칸부터 사라진다 | 첫 결제 · 초보 패키지 | 입문 3단, 첫 실행 7일 |
+| 챕터 패키지 | 챕터를 처음 깰 때마다 영구 상품이 하나씩 늘고, 뒤로 갈수록 비싸진다 | — | 챕터 돌파 10종 |
+| 광고 | 상점 특가 · 골드 · 재도전 · 에너지 · 빠른 사냥 — 보상은 일부러 약하게(결제를 갉아먹지 않게) | 비슷함 | 미정(0-2 #1) |
+| 기타 | 캐릭터 직접 판매 — 패스 값의 기준점이자 늦게 온 사람 따라잡기 | — | 조각은 상자 · 오늘의 상점 · 정수로 — 몸 직접 판매는 안 함 |
+
+출처는 문서 끝 「참고 자료」.
+
+### A-2. 우리 게임에 맞게 고른 것
+
+**가져온다**
+- **챕터 돌파 패키지** — 「막 깼다 = 다음 챕터가 어렵다」 순간에 맞는 상품. 우리는 챕터 표가 있어 값 · 내용을 챕터 따라 올리기 쉽다.
+- **입문 3단(7일 한정)** — 초반 전환. 늦으면 사라진다.
+- **28일 패스 + 쉬운 매일·매주 목표** — 대부분이 끝까지 가게(완주율이 높아야 다음 시즌도 산다).
+- **월정액** — 매일 접속 이유. 받는 칸은 상점 「계약」 칸.
+- **상자를 젬으로** — 이미 있는 상자 3종(은 · 금 · 백금)을 그대로 판다. 상점에서 산 상자는 **칸에 안 넣고 바로 연다**(칸 3개가 차 있어도 산다).
+
+**바꿔서 가져온다**
+- 궁수의 전설 2 의 「캐릭터 조각 직접 판매」 → 우리는 **정수**로 준다. 정수는 원하는 몸의 조각으로 바뀐다(B 2 · A 3 · S 5) — 고르는 창을 새로 만들 필요가 없고, 이미 있는 교환 화면을 쓴다.
+- 미션을 **우리 핵심 놀이**에 묶는다 — 빙의 · 유리한 상성 처치 · 서로 다른 몸 5종 빙의. 상점 · 강화 같은 아웃게임 미션은 하루 2개만.
+
+**안 가져온다**
+- 가챠 · 확률 상품 · 소원(뽑기) — 원칙.
+- 에너지(행동력) — 판은 골드 입장료로 이미 막혀 있다. 에너지를 더하면 이중 제한이 된다.
+- 영구 광고 제거 카드 — 광고가 없으면 필요 없다(0-2 #1 이 「넣는다」면 다시 본다).
+
+### A-3. 재화 흐름
+
+| 재화 | 새로 생기는 길 | 새로 생기는 쓸 곳 |
+|---|---|---|
+| 골드 | 패스 무료 줄(판 골드 12판분) · 챕터 돌파 · 골드 상품(젬) | — |
+| 젬 | **결제**(유상) · 패스 · 미션 전부 완료 · 계약 매일 | 상자 구매 · 골드 구매 · 패스 단계 건너뛰기 |
+| 정수 | 패스 · 입문 · 챕터 돌파 | (있던 대로) 원하는 몸의 조각 |
+| 상자 | 패스 · 패키지 · 젬 구매 — **바로 열림** | — |
+| 패스 경험치 | 미션 | 패스 단계 |
+
+**무과금 젬 수지(시즌 28일)**
+- 들어옴: 매일 미션 전부 완료 20 × 28 = 560 · 매주 전부 완료 100 × 4 = 400 · 패스 무료 줄 250 → **약 1,210**(+ 성장 경로 보상).
+- 나감 예: 백금 상자 한 주 하나(320 × 4 = 1,280) 또는 은 상자 즉시 열기(약 18) 매일 + 오늘의 상점 새로고침 1회(10) 매일(약 780).
+- → 무과금도 「한 주에 백금 하나」 정도는 고를 수 있다. 큰 계약(매일 200)은 이걸 다섯 배로 만든다.
+
+**값 대비 젬(기준 USD)**: 젬 묶음 61~75 젬/$ · 입문 1단 약 5배 · 작은 계약 약 600 젬/$(10배) · 패스 프리미엄 약 100 젬/$ + 상자 · 정수.
+
+### A-4. 화면 흐름
+
+```
+로비 ─ ShopButton(하단 SHOP) ─────────▶ LobbyShopPanel [추천 | 오늘 | 상자 | 재화]
+     ─ GemPlusButton / GoldPlusButton ─▶ LobbyShopPanel [재화] (골드 칸 / 젬 칸으로 스크롤)
+     ─ PassButton (새로) ───────────────▶ SeasonPassPanel [보상 | 미션]
+상품 누름 ─▶ PurchaseConfirmPopup ─▶ (결제 / 젬 차감) ─▶ StoreRewardPopup (받은 것 · 상자는 그 자리에서 열림)
+```
+
+빨간 점(새 소식): 받을 미션 · 받을 패스 단계 · 계약 오늘 받기 · 오늘의 상점 무료 칸 · 새 챕터 돌파 상품.
+
+---
+
+## B. 개발 스펙
+
+> 규칙: 새 코드는 `Assets/Scripts/Module/Common/Store/`(네임스페이스 `Game.Module.Common`) · 화면은 `Assets/Scripts/Module/Lobby/`.
+> 프레임워크(`Assets/GameFramework/`) 수정 금지 · C# event 금지(EventBus) · UniTask · 숫자는 표에(코드에 적지 않는다) · 글자는 언어팩 키.
+> 이름 = 프리팹 GameObject 이름 = 바인딩 키. ⚠ 인게임 판 안 상점이 이미 `ShopTable` · `ShopPanel` 이라 로비 것은 **`Store`** 로 이름을 가른다(`StoreTable` · `LobbyShopPanel`).
+
+### B-1. 모듈
+
+전부 `[Module(Layer = ModuleLayer.Game)]` 자동 등록. 의존은 `Initialize` 에서 `CoreModule.Get`.
+
+| 모듈 | 제공 | 의존 | 한 줄 |
+|---|---|---|---|
+| `ResetClockModule` | `IResetClock` | — | 하루 · 주 경계를 한 곳에서 잰다(일본 05:00 = `GameConfig._dailyResetUtcHour` 20) |
+| `IapModule` | `IIapService` | `IEventBus` | 스토어 결제 감싸기. 에디터 · 테스트는 가짜 스토어(`FakeStoreBackend`) |
+| `RewardGrantModule` | `IRewardGranter` | `IPlayerDataService` · `IChestService` · `IPassService`(선택) | 보상 문자열(`gem:120;chest:gold`)을 풀어 지급 — 상점 · 패스 · 미션 · 계약이 같은 길을 쓴다 |
+| `StoreModule` | `IStoreService` | 위 넷 + `IResourceManager` | 상품 목록 · 보이기 조건 · 구매 제한 · 젬 구매 · 결제 상품 지급 · 계약 |
+| `PassModule` | `IPassService` | `IResetClock` · `IRewardGranter` · `IEventBus` | 시즌 · 경험치 · 단계 받기 · 프리미엄 |
+| `MissionModule` | `IMissionService` | `IResetClock` · `IRewardGranter` · `IPassService` · `IEventBus` | 이벤트를 듣고 카운터를 올린다 · 받기 |
+
+```csharp
+public interface IResetClock {
+    int DayKey { get; }                 // 일본 05:00 기준 yyyyMMdd
+    int WeekKey { get; }                // 그 주 월요일의 DayKey
+    TimeSpan UntilNextDay { get; }
+    TimeSpan UntilNextWeek { get; }
+}
+
+public interface IRewardGranter {
+    /// <summary>보상 문자열을 지급하고, 화면에 보여 줄 목록을 돌려준다. 상자는 그 자리에서 열어 결과까지 담는다.</summary>
+    RewardResult Grant(string rewards, RewardSource source);
+}
+public enum RewardSource { Store, Pass, Mission, Card }
+public readonly struct RewardLine { public readonly RewardKind Kind; public readonly string Key; public readonly int Amount; }
+public enum RewardKind { Gold, Gem, Essence, Shard, Chest, PassXp, PassPremium, Card, Cosmetic }
+public sealed class RewardResult { public IReadOnlyList<RewardLine> Lines; public IReadOnlyList<ChestReward> OpenedChests; }
+
+public interface IStoreService {
+    IReadOnlyList<StoreProduct> Visible(StoreTab tab);      // 보이기 조건 · 제한을 거른 것
+    bool IsSoldOut(string productId);
+    string PriceLabel(string productId);                    // 결제: 스토어 지역 가격 / 젬: 숫자 / 무료: 키
+    bool IsFirstDouble(string productId);                   // 젬 묶음 첫 구매 2배가 남았나
+    UniTask<PurchaseOutcome> BuyAsync(string productId, CancellationToken ct = default);
+    // 계약
+    CardState Card(string cardKey);                         // 남은 날 · 오늘 받았나
+    bool TryClaimCard(string cardKey, out RewardResult result);
+}
+public enum PurchaseOutcome { Granted, NotEnoughGem, SoldOut, Cancelled, Failed, Pending }
+
+public interface IIapService {
+    bool IsReady { get; }
+    string LocalizedPrice(string storeId);                  // 「¥160」 「₩1,200」 — 스토어가 준 그대로
+    UniTask<IapResult> PurchaseAsync(string storeId, CancellationToken ct = default);
+    UniTask RestoreAsync(CancellationToken ct = default);   // 아이폰 「구매 복원」
+}
+
+public interface IPassService {
+    string SeasonId { get; }
+    bool IsActive { get; }
+    TimeSpan UntilEnd { get; }
+    int Xp { get; } int Tier { get; } int TierMax { get; }
+    bool HasPremium { get; }
+    bool CanClaim(int tier, bool premium);
+    bool TryClaim(int tier, bool premium, out RewardResult result);
+    bool TryClaimAll(out RewardResult result);
+    int SkipGemCost { get; }                                // 단계당
+    bool TrySkipTier();
+    void AddXp(int xp);                                     // 미션 · 보상에서
+    void GrantPremium();                                    // 결제 성공 때 StoreModule 이 부른다
+}
+
+public interface IMissionService {
+    IReadOnlyList<MissionState> List(MissionPeriod period);
+    bool TryClaim(string missionId, out RewardResult result);
+    bool HasClaimable { get; }
+}
+```
+
+### B-2. 데이터 표
+
+TSV(사람이 고친다) → 임포터 → ScriptableObject(어드레서블). 메뉴 하나 `Tools/Game/상점 표 임포트` 가 다섯 표를 다 굽는다.
+
+| TSV (`Projects/AVSR/Store/`) | SO · 주소 | 내용 |
+|---|---|---|
+| `price_tiers.tsv` | `StoreTable`(같이) | P1~P9 · 기준 USD — **값은 등급으로만** 적는다. 나라별 실제 값은 스토어 |
+| `store_products.tsv` | `TableData/StoreTable` | 상품 29종 — id · 탭 · 종류 · 값 종류 · 값 · 제한 · 보이기 · 보상 · 띠 · 순서 · storeId · 글자 키 |
+| `cards.tsv` | `StoreTable`(같이) | 계약 2종 — 기간 · 즉시 젬 · 매일 젬 · 편의 |
+| `pass_s1.tsv` | `TableData/PassTable` | 30단계 — 단계 경험치 · 무료 보상 · 프리미엄 보상 |
+| `missions.tsv` | `TableData/MissionTable` | 13개 — 주기 · 종류 · 목표 · 패스 경험치 · 젬 |
+
+라벨 `label_tabledata` 그대로. 각 TSV 머리말에 칸 설명이 있다.
+
+**보상 문자열 문법**(상품 · 패스 · 미션 공통): 항목을 `;` 로 잇는다.
+
+| 항목 | 뜻 |
+|---|---|
+| `gem:N` | 젬 N(무상). **결제 상품의 젬은 유상**으로 넣는다(`RewardSource.Store` + 결제 상품일 때) |
+| `gold:N` | 골드 N |
+| `goldrun:N` | 판 골드 N판분 = `232 × N × 열린 가장 높은 챕터 priceMul`(`balance10.py` RUN_GOLD_CH1 과 같은 자) — 뒤 챕터에서도 쓸모 있게 |
+| `essence:N` | 정수 N |
+| `chest:키[*N]` | 상자 N개 — **그 자리에서 열어** 결과를 지급(`IChestService.OpenImmediate`) |
+| `passxp:N` · `passpremium:1` | 패스 경험치 · 프리미엄 열기 |
+| `card:키` | 계약 시작(또는 기간 연장) |
+| `cosmetic:키` | 외형 — 외형 시스템 전까지 저장만 하고 「곧 공개」 |
+
+**`GameConfig` 에 더할 칸**(「상점 · 패스」 머리):
+
+| 칸 | 값 | 뜻 |
+|---|---|---|
+| `_dailyResetUtcHour` | 20 | 하루 경계(UTC). 20 = 일본 05:00 |
+| `_seasonId` · `_seasonStartUtc` · `_seasonDays` | `s1` · `2026-11-01T20:00Z` · 28 | 시즌. 끝나면 다음 시즌 표로 |
+| `_passSkipGem` | 100 | 단계 건너뛰기 젬 |
+| `_firstDoubleGemPacks` | true | 젬 묶음 첫 구매 2배 |
+| `_starterDays` | 7 | 입문 패키지가 보이는 날 |
+| `_cardStackMaxDays` | 180 | 계약 기간 이어 붙이기 상한 |
+
+### B-3. 저장 (`UserData` v6 → **v7**)
+
+`CurrentSaveVersion = 7`. 옛 저장은 빈 값으로 채운다(`Normalize`). 기존 `gem` 은 **무상 젬으로 옮긴다**.
+
+| 필드 | 타입 | 뜻 |
+|---|---|---|
+| `gemPaid` · `gemFree` | int | 유상 · 무상 젬. `Gem` = 합. 옛 `gem` → `gemFree` |
+| `installUtcDay` | int | 첫 실행 날(입문 패키지 7일) |
+| `store.ids[]` · `store.counts[]` · `store.lastDay[]` · `store.lastWeek[]` | 배열 | 상품별 산 횟수 · 마지막으로 산 날/주(제한 계산) |
+| `store.firstDoubleUsed[]` | string[] | 첫 구매 2배를 쓴 젬 묶음 |
+| `cards.keys[]` · `cards.endDay[]` · `cards.lastClaimDay[]` | 배열 | 계약 끝나는 날 · 마지막으로 받은 날 |
+| `pass.seasonId` · `pass.xp` · `pass.premium` | string · int · bool | 시즌이 바뀌면 xp · 받기 · 프리미엄을 비운다 |
+| `pass.claimedFree` · `pass.claimedPremium` | long(비트 30) | 받은 단계 |
+| `missions.dayKey` · `missions.weekKey` | int | 경계가 바뀌면 그 주기 카운터를 비운다 |
+| `missions.ids[]` · `missions.progress[]` · `missions.claimed[]` | 배열 | 미션별 진행 · 받았나 |
+| `missions.hostsThisWeek[]` | string[] | 「서로 다른 몸 5종」용 |
+| `cosmetics[]` | string[] | 받은 외형 키 |
+| `iap.pending[]` | string[] | 결제는 됐는데 지급 전에 꺼진 거래 id(다음 실행 때 지급) |
+
+`IPlayerDataService` 에 더할 것: `GemPaid` · `GemFree` · `AddGem(int amount, bool paid)` · `TrySpendGem` 은 **무상 먼저**(0-2 #6) · `AddEssence(int)` · `AddGold(int)`(이미 `AddCurrency` 가 있으면 그것을 쓴다).
+`IChestService` 에 더할 것: `ChestReward OpenImmediate(string chestKey)` — 칸을 안 거치고 보상을 굴려 바로 지급(상자 굴리기는 `TryClaim` 과 같은 함수를 쓴다).
+
+### B-4. 결제
+
+#### B-4-1. 패키지 · 상품 등록
+- `com.unity.purchasing`(Unity IAP)을 설치한다 — 버전은 설치 때 고정해 `Packages/manifest.json` 에 적는다.
+- 스토어 상품 ID = `store_products.tsv` 의 `storeId`(`avsr.gem60` …). 종류: 젬 · 패키지 · 계약 · 패스 **전부 소모형(Consumable)** — 받은 것은 우리 저장이 기억한다(서버가 붙으면 서버로).
+- 구글 · 애플 콘솔에 같은 ID 로 등록한다. 값은 콘솔에서 등급(P1~P9)에 맞는 가격을 고른다.
+
+#### B-4-2. 흐름
+```
+BuyAsync(productId)
+ ├ 젬 상품: 제한 확인 → TrySpendGem → Grant → Granted
+ └ 결제 상품: 제한 확인 → PurchaseAsync(storeId)
+      ├ 성공: 영수증 기기 검증(Unity IAP CrossPlatformValidator) → iap.pending 에 거래 id 저장 → Grant(유상)
+      │       → 저장 → pending 에서 지움 → 스토어에 「지급 완료」 알림(ConfirmPendingPurchase) → Granted
+      ├ 사용자가 취소: Cancelled (토스트 없음)
+      ├ 보류(가족 승인 등): Pending — 「승인 대기 중」 토스트, 나중에 들어오면 같은 길로 지급
+      └ 실패: Failed — 토스트 ui.store.fail.*
+시작할 때: iap.pending 에 남은 거래가 있으면 먼저 지급(꺼져도 잃지 않게)
+```
+
+#### B-4-3. 에디터 · 테스트
+- `FakeStoreBackend` — 에디터에서는 결제 창 없이 0.5초 뒤 성공(메뉴 `Tools/Game/상점/가짜 결제 실패로` 로 실패 · 취소 · 보류를 골라 볼 수 있게).
+- 테스트 모드(`GameConfig.TestMode`)에서는 결제 상품을 「무료로 받기」 버튼으로 바꿔 흐름만 돈다.
+
+#### B-4-4. 서버 없이 막지 못하는 것 (TBD-SRV)
+- 기기 시계 돌리기(하루 제한 · 계약 날짜), 저장 파일 조작, 환불 뒤 회수. → 서버가 붙을 때 영수증 서버 검증 · 서버 시간 · 환불 알림(구글 Voided Purchases · 애플 서버 알림)을 붙인다.
+- 그 전까지 계약 날짜는 **마지막으로 본 날짜보다 뒤로 가면 무시**(상자 시간과 같은 방어).
+
+#### B-4-5. 출시 전 확인 (일본)
+- **유상 · 무상 재화 구분** — 자금결제법상 유상 재화 잔고를 따로 셀 수 있어야 한다(그래서 `gemPaid` 를 나눈다). 쓰는 순서 · 표시는 법무 확인.
+- **특정상거래법 표기** · **자금결제법 표기** 화면 — 상점 아래 「표기」 버튼(`StoreLegalButton`)으로 연다. 문구는 법무가 준다.
+- **미성년 결제 상한** — 업계 지침(연령별 월 상한)을 따를지, 따른다면 생년월 입력 창이 필요하다. 법무 확인.
+- 확률 상품이 없으므로 확률 표시는 필요 없다(가챠 없음 원칙 유지 시).
+
+### B-5. 이벤트 · 미션 카운터
+
+**새 이벤트**(`Assets/Scripts/Module/Events/StoreEvents.cs`) — 규칙대로 `public struct`, 필드에 `readonly` 금지, 발행자 프로퍼티와 다른 이름.
+
+| 이벤트 | 필드 | 발행 |
+|---|---|---|
+| `StoreChangedEvent` | `ChangedProductId` | 구매 · 날 바뀜 · 계약 받기 |
+| `PurchaseCompletedEvent` | `PurchasedProductId` · `WasPaid` | 구매 성공 |
+| `PassChangedEvent` | `NewXp` · `NewTier` · `PremiumOn` | 경험치 · 받기 · 프리미엄 |
+| `MissionChangedEvent` | `ChangedMissionId` · `NowClaimable` | 진행 · 받기 |
+| `EnemyKilledEvent` | `KilledKey` · `WithAdvantage` · `WasBoss` | 인게임 — 적이 죽을 때(`BattleDirector.KillEnemy`) |
+| `HostStatUpgradedEvent` | `UpgradedHostKey` · `IsGhostTab` | 육성 강화 성공 |
+
+**미션 종류 → 듣는 이벤트**
+
+| `type` | 이벤트 · 조건 |
+|---|---|
+| `login` | 그날 첫 `UserDataReadyEvent` |
+| `run_start` | 판 시작(`RoomEnteredEvent` 의 첫 방) |
+| `run_clear` | `StageFinishedEvent.IsCleared` |
+| `possess` | `PossessedEvent`(유령 키 제외) |
+| `distinct_hosts_possessed` | `PossessedEvent` — `missions.hostsThisWeek` 에 없는 키만 |
+| `kill_advantage` | `EnemyKilledEvent.WithAdvantage` |
+| `kill_boss` | `EnemyKilledEvent.WasBoss` |
+| `daily_shop_buy` | `DailyShopChangedEvent.BoughtSlot >= 0`(−1 은 날 바뀜 · 새로고침) |
+| `stat_upgrade` | `HostStatUpgradedEvent` |
+| `chest_open` | `ChestOpenedEvent` + 상점에서 바로 연 상자 |
+| `daily_all_done` · `weekly_all_done` | 같은 주기의 다른 미션을 **다 받았을 때** 열린다 |
+
+⚠ hot path 규칙: `EnemyKilledEvent` 는 판 안에서 자주 나온다 — 미션 모듈은 카운터만 올리고 저장은 **판이 끝날 때 · 로비로 올 때** 한 번만 한다(매 처치 저장 금지). 문자열 조립 · LINQ 금지.
+
+### B-6. 화면
+
+> UI 규칙: `~Panel` 은 상단 HUD 아래 고정 높이(`constants.md` 3절 H), 맨 아래 자식 `PopupParent`. `~Popup` 은 `PopupParent` 아래, 닫을 때 `SetActive(false)`.
+> 뒤로가기: `LobbyMainUI.OnBackPressed` 에 팝업 → 패널 순서로 더한다. 글자는 3언어 전 문장이 그림 속 칸에 들어가야 한다(`06_ui.md`).
+> 모양은 **코덱스 시안을 먼저**(B-8) — 아래는 노드 이름과 동작이다.
+
+#### B-6-1. 로비 진입점 (`LobbyMainUI`)
+
+| 요소 | 지금 | 바꿀 것 |
+|---|---|---|
+| `ShopButton` | 「준비 중」 토스트 | `LobbyShopPanel` 열기(추천 탭). 빨간 점 `ShopButtonBadge` |
+| `GemPlusButton` · `GoldPlusButton` | 「준비 중」 | `LobbyShopPanel` 재화 탭 · 해당 칸으로 스크롤 |
+| `PassButton` (새) > `PassButtonBadge` · `PassTierText` | 없음 | `SeasonPassPanel` 열기. 「Lv 12」 · 받을 것 있으면 빨간 점. **자리는 시안으로 정한다** — 후보: 챕터 카드 오른쪽 위 모서리 / 위 재화 줄 아래 작은 띠 |
+
+#### B-6-2. `LobbyShopPanel` (~Panel)
+
+| 요소 | 설명 · 동작 |
+|---|---|
+| `StoreGoldText` · `StoreGemText` · `StoreEssenceText` | 보유 재화 — `CurrencyChangedEvent` |
+| `StoreTabFeatured` · `StoreTabDaily` · `StoreTabChest` · `StoreTabCurrency` | 탭 넷. 고른 탭은 금색 테두리(공통 규칙). 탭마다 빨간 점 `*Badge` |
+| `StoreScroll` > `Viewport`(RectMask2D) > `Content` | 탭 내용 — 재사용 스크롤(오브젝트 풀) |
+| `StoreCardSection` (추천 맨 위) > `CardSmall` · `CardBig` | 계약 칸 둘 — 안에 `CardTitleText` · `CardDescText` · `CardDaysText`(「남은 12일」) · `CardBuyButton` > `CardPriceText` · `CardClaimButton`(「오늘 받기」, 오늘 받았으면 흐림) |
+| `StoreProductCard` (반복 프리팹) | 상품 한 칸 — 아래 표 |
+| 오늘 탭 | `DailyShopSection` — 이미 구현된 `IDailyShopService` 화면(`AVSR_Content_Economy.md` 3-2 의 `DailyShopSlot0~5` 등)을 이 탭에 넣는다 |
+| `StoreLegalButton` | 표기 화면(B-4-5) |
+| `StoreRestoreButton` | 아이폰만 보임 — 구매 복원 |
+| `PopupParent` | — |
+
+`StoreProductCard` 안(이름은 칸마다 같다):
+
+| 요소 | 설명 |
+|---|---|
+| `ProductArt` | 상품 그림(상자 · 젬 더미 · 패키지 그림) |
+| `ProductNameText` · `ProductDescText` | 이름 · 내용 한 줄(「젬 600 · 백금 상자 · 정수 50」 — 보상 문자열로 만든다) |
+| `ProductBadge` > `ProductBadgeText` | 「추천」 · 「첫 구매 2배」 |
+| `ProductLimitText` | 「1회 한정」 · 「오늘 2/3」 · 「6일 남음」(입문) |
+| `ProductBuyButton` > `ProductPriceIcon` · `ProductPriceText` | 젬 아이콘 + 숫자 / 지역 가격 문자열 |
+| `ProductSoldMark` | 「구매 완료」 덮개 |
+
+#### B-6-3. `PurchaseConfirmPopup` · `StoreRewardPopup` (~Popup)
+
+| 요소 | 설명 |
+|---|---|
+| `ConfirmArt` · `ConfirmNameText` · `ConfirmContentText` · `ConfirmPriceText` | 무엇을 · 얼마에 |
+| `ConfirmBuyButton` · `ConfirmCancelButton` | 사기 · 닫기. 결제 중에는 `ConfirmBusy`(빙글) 켜고 버튼 막음 |
+| `RewardList` > `RewardItem`(반복: `RewardIcon` · `RewardAmountText`) | 받은 것. 상자는 이미 있는 상자 열기 연출(`ChestRewardPopup`)을 이어서 띄운다 |
+| `RewardCloseButton` | 닫기 |
+
+#### B-6-4. `SeasonPassPanel` (~Panel)
+
+| 요소 | 설명 |
+|---|---|
+| `PassBanner` > `PassSeasonText` · `PassTimeText` | 「SEASON 1 · GHOST REVENGE」 · 「남은 12일 4시간」 |
+| `PassLevelText` · `PassXpBar` > `PassXpFill` · `PassXpText` | 지금 단계 · 다음 단계까지 |
+| `PassTabRewards` · `PassTabMissions` | 탭 둘 |
+| `PassBuyButton` > `PassBuyPriceText` · `PassBundleButton` > `PassBundlePriceText` | 프리미엄 · 묶음. 샀으면 `PassPremiumMark` |
+| `PassSkipButton` > `PassSkipCostText` | 단계 건너뛰기(젬) |
+| `PassClaimAllButton` | 받을 것 다 받기 |
+| `PassTierScroll` > … > `PassTierRow`(반복) | 단계 한 줄 — `TierNumberText` · `FreeSlot`(`SlotIcon` · `SlotAmountText` · `SlotClaimedMark` · `SlotLockMark`) · `PremiumSlot`(같은 이름, 프리미엄 아니면 `PremiumLock`) |
+| `MissionList` > `MissionRow`(반복) | `MissionIcon` · `MissionText`(「빙의 5회」) · `MissionProgressText`(「3/5」) · `MissionBar` > `MissionFill` · `MissionRewardText`(「+15」) · `MissionClaimButton` · `MissionDoneMark` |
+| `MissionDailyResetText` · `MissionWeeklyResetText` | 「초기화까지 3:12:05」 |
+| `PopupParent` | — |
+
+#### B-6-5. 빨간 점 규칙
+- `ShopButtonBadge`: 계약 오늘 안 받음 ∨ 오늘의 상점 무료 칸 안 받음 ∨ 새 챕터 돌파 상품 안 봄.
+- `PassButtonBadge`: 받을 패스 단계 ∨ 받을 미션.
+- 탭 점은 그 탭 안의 같은 조건.
+
+### B-7. 언어팩 키 (`Projects/AVSR/Localization/AVSR_Strings.tsv` 에 더한다 · 한국어 · 일본어 · 영어)
+
+| 키 | 한국어 예 |
+|---|---|
+| `ui.store.title` · `ui.store.tab.featured/daily/chest/currency` | 상점 · 추천 / 오늘 / 상자 / 재화 |
+| `ui.store.buy` · `ui.store.free` · `ui.store.soldout` · `ui.store.limit.once` · `ui.store.limit.daily` (`{0}/{1}`) · `ui.store.limit.days` (`{0}일 남음`) | 구매 · 무료 · 구매 완료 · 1회 한정 · 오늘 {0}/{1} · {0}일 남음 |
+| `store.badge.best` · `store.badge.first_double` | 추천 · 첫 구매 2배 |
+| `store.{id}.name` · `store.{id}.desc` | 상품마다(29종) — 이름만 쓰고 desc 는 보상 문자열로 자동이면 비워도 된다 |
+| `ui.store.card.claim` · `ui.store.card.claimed` · `ui.store.card.days` | 오늘 받기 · 받음 · 남은 {0}일 |
+| `ui.store.confirm.title` · `ui.store.confirm.buy` · `ui.store.reward.title` | 구매 확인 · 구매 · 획득 |
+| `ui.store.fail.gem` · `ui.store.fail.soldout` · `ui.store.fail.network` · `ui.store.fail.unknown` · `ui.store.pending` | 젬이 부족해요 · 이미 샀어요 · 연결을 확인해 주세요 · 구매하지 못했어요 · 승인을 기다리는 중이에요 |
+| `ui.store.legal` · `ui.store.restore` · `ui.store.restored` | 표기 · 구매 복원 · 복원했어요 |
+| `ui.pass.title` · `ui.pass.season` (`SEASON {0}`) · `pass.s1.name` · `ui.pass.remain` · `ui.pass.level` | 시즌 패스 · SEASON {0} · GHOST REVENGE · 남은 {0} · Lv {0} |
+| `ui.pass.free` · `ui.pass.premium` · `ui.pass.buy` · `ui.pass.bundle` · `ui.pass.skip` · `ui.pass.claimall` · `ui.pass.soon` | 무료 · 프리미엄 · 프리미엄 열기 · 프리미엄 + 15단계 · 단계 올리기 · 모두 받기 · 곧 공개 |
+| `ui.mission.tab` · `ui.mission.daily` · `ui.mission.weekly` · `ui.mission.reset` · `ui.mission.claim` | 미션 · 매일 · 매주 · 초기화까지 {0} · 받기 |
+| `mission.{type}.text` | `mission.possess.text` 「빙의 {0}회」 · `mission.kill_advantage.text` 「유리한 상성으로 {0}마리 처치」 · `mission.distinct_hosts_possessed.text` 「서로 다른 몸 {0}종 빙의」 … (11종) |
+| `ui.reward.gem/gold/essence/chest.*` | 젬 · 골드 · 정수 · 은/금/백금 상자 (있는 키가 있으면 그것을 쓴다) |
+
+### B-8. 그림 (코덱스 — 시안 먼저)
+
+순서는 스킬 `fx-art-pipeline` 과 같다. **완성 화면 시안 → PD 선택 → 그 화풍으로 부품 → 반영 → 시안과 나란히 대조.**
+
+1. **시안 3컷**(완성 화면): ① 로비(패스 버튼 자리 포함) ② 상점 추천 탭 ③ 패스 보상 탭. 바탕 = 지금 로비 캡처 · 기준 = HUD 3차 · 하단 바 화풍.
+2. 고른 시안을 앵커로 부품 발주(글자 없이 — 글자는 언어팩):
+
+| 부품 | 수 |
+|---|---|
+| 탭 판 · 고른 탭 테두리 | 2 |
+| 상품 칸 판(보통 · 추천 · 구매 완료 덮개) | 3 |
+| 계약 칸 판(작은 · 큰) | 2 |
+| 상품 그림 — 젬 더미 6단 · 골드 더미 3단 · 입문 3 · 챕터 돌파 1(공통) · 계약 2 · 패스 2 | 17 |
+| 패스 띠(시즌 1) · 단계 줄 판(무료 · 프리미엄) · 자물쇠 · 받음 표시 · 프리미엄 표시 | 6 |
+| 미션 줄 판 · 미션 아이콘(빙의 · 상성 · 보스 · 상자 · 상점 · 강화 · 판 · 몸) | 9 |
+| 빨간 점 · 확인 팝업 판 · 보상 팝업 판 | 3 |
+
+포맷: 도트 그림은 Sprite · Point · 밉맵 끔 → 인게임/로비 아틀라스(ASTC 4x4) · 만든 뒤 `resource_audit.py` 통과(`09_import_settings.md`).
+
+### B-9. 작업 순서 · 완료 조건
+
+| 단계 | 할 일 | 완료 조건 |
+|---|---|---|
+| 1 | 표 · 임포터 · `ResetClock` · `RewardGranter` · 저장 v7 | 임포트 후 SO 29 · 30 · 13 줄 · 옛 저장이 v7 로 열리고 `gem` 이 `gemFree` 로 옮겨짐 |
+| 2 | `StoreModule` · `IapModule`(가짜 스토어) · `IChestService.OpenImmediate` | 에디터에서 젬 상품 · 결제 상품(가짜) 전부 사서 지급 확인 · 제한(1회 · 하루 N · 7일 · 챕터) 확인 · 결제 중 앱 종료 → 다음 실행 지급 |
+| 3 | `PassModule` · `MissionModule` · 새 이벤트 발행(인게임 2곳 · 육성 1곳) | 미션 13개 전부 실제 플레이로 오름 · 하루/주 경계 넘김(시계 바꿔) 초기화 · 단계 받기 · 건너뛰기 · 프리미엄 |
+| 4 | 시안 3컷 → PD 선택 → 부품 발주 | PD 가 고른 시안 파일 경로 |
+| 5 | 화면(`LobbyShopPanel` · `SeasonPassPanel` · 팝업 둘 · 로비 진입점) | 시안과 나란히 대조 시트 · 3언어 글자 점검 0 넘침 · 뒤로가기 순서 |
+| 6 | 실제 스토어(구글 내부 테스트 · 애플 샌드박스) | 젬 묶음 하나 · 패스 · 계약 실결제 → 지급 · 아이폰 복원 |
+| 7 | 출시 전 확인(B-4-5) | 법무 회신 반영 |
+
+**하지 말 것**: 상품 값 · 보상을 코드에 적기 · 결제 성공 전에 지급하기 · 지급 전에 스토어에 완료 알리기 · 판 안에서 매 처치 저장 · 글자를 그림에 넣기.
+
+---
+
+## 7. 미정 · 결정 필요
+
+0-2 의 여섯 가지. 그 밖에:
+- 2시즌부터 시즌 표를 어떻게 바꿀지(새 TSV `pass_s2.tsv` 를 더하고 `GameConfig._seasonId` 만 바꾸는 구조로 만들어 둔다).
+- 외형(코스튬) 시스템 — 원칙상 수익의 중심이지만 아직 기획이 없다. 패스 마지막 칸은 자리만 둔다.
+- 신규 모드(요일 던전 등)의 특수 재화 상점 — `AVSR_Content_Economy.md` 6절, 모드를 만들 때.
+
+## 참고 자료
+- [Tiny Teardown — Archero 2 (Habby Games)](https://someselectedstories.substack.com/p/tiny-teardown-archero-2-habby-games) — 상점 칸 · 패스 두 값 · 특권 카드 · 입문 · 챕터 패키지 · 광고
+- [Archero 2 Smart Spending Guide](https://archero2hub.com/en/guide/best-plan) — 혜택 카드 · 프리미엄 패스 · 젬 가격표
+- [Archero 2 Shop Guide — Theria Games](https://theriagames.com/guide/archero-2-shop-guide/) · [PocketGamer — Archero 2 guide](https://www.pocketgamer.com/archero-2/guide/) — 오늘의 상점
+- [Survivor Pass — Survivor.io 위키](https://survivorio.fandom.com/wiki/Survivor_Pass) — 무료 + 유료 줄, 매일 활동 경험치
+- [Battle pass — Wikipedia](https://en.wikipedia.org/wiki/Battle_pass)
+- 값 · 구성은 지역 · 시기마다 다르다(가이드 기준 2024~2026). 출시 전 실제 게임에서 다시 본다.
+
+## 개정 이력
+
+| 버전 | 날짜 | 변경 내용 |
+|---|---|---|
+| 0.1 | 2026-10-15 | 최초 작성 — 참고 게임 정리 · 상점 · 패스 · 미션 · 계약 · 결제 스펙 · 데이터 초안 5종 |

@@ -1,0 +1,6 @@
+# 월정액(계약) — 산 날 instantGem 을 바로 주고, 그날부터 days 일 동안 매일 dailyGem 을 우편함이 아니라 「계약」 칸에서 받는다(놓친 날은 사라진다).
+# perks: chest_time:-25(상자 해제 시간 %) · free_refresh:1(오늘의 상점 하루 무료 새로고침) · run_gold:+10(판 골드 %) — PD 확인 전
+# 이미 기간 안에 다시 사면 기간이 뒤로 이어 붙는다(최대 180일).
+key	productId	days	instantGem	dailyGem	perks
+soul_small	card_small	30	300	90	
+soul_big	card_big	30	1000	200	chest_time:-25;free_refresh:1;run_gold:+10
