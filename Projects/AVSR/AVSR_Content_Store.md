@@ -3,6 +3,7 @@
 - **콘텐츠명**: 로비 상점 — 판매 넷(**시즌 패스 · 재화 · 상자 · 조각 뽑기**) · 매일/매주 미션 · 월정액(계약) · 프로필 꾸미기 · 결제 · **카테고리**: 아웃게임 수익 · **우선순위**: P0
 - **Version**: `0.4` · **Last Updated**: `2026-10-15` · **Status**: PD 답 반영(0-2) — 조각 뽑기는 **하단 바 「소환」으로 상점과 분리**(A안) · 상자를 보상에서 뺄지만 검토 중(0-3)
 - 관련: [`AVSR_Content_Economy.md`](AVSR_Content_Economy.md)(재화 · 오늘의 상점 · 정수 — 구현됨) · [`AVSR_Balance10.md`](AVSR_Balance10.md) · `Assets/Scripts/Module/CLAUDE.md` 6절(상자) · 7절(오늘의 상점)
+- **장면 기획**(화면 19장면 · 판매 구성표): [`_exchange/store_scenes.md`](_exchange/store_scenes.md) · **소환 연출 박자표**: [`_exchange/guide_summon_fx.md`](_exchange/guide_summon_fx.md) — 장면 시안 `_exchange/in/scene_s01~s18_*.png`
 - 데이터: [`Store/`](Store/) — `price_tiers.tsv` · `store_products.tsv` · `cards.tsv` · `pass_s1.tsv` · `missions.tsv` · `gacha.tsv` · `profile.tsv`
 - 시안(정답): 로비 `_exchange/in/mock_store_lobby.png` · 재화 탭 `mock_store_currency.png` · 패스 `mock_store_pass.png` · 프로필 `mock_store_profile.png` · **소환 `mock_summon_a.png`(PD 고름 — 하단 바 4칸)**. 대체된 시안(옛 추천 탭 · 상점 안 뽑기 탭 · B안)은 지웠다
 
@@ -544,7 +545,7 @@ public readonly struct GachaPull { public readonly string HostKey; public readon
 | `PopupParent` | — |
 | `GachaHistoryPopup` (~Popup) | 최근 100회(날짜 · 몸 · 조각 수) |
 
-연출은 짧게 — 영혼 불꽃이 칸에 내려앉고 얼굴이 뒤집혀 나온다. 대박 · 픽업만 힘준다(등급별 연출 레벨링 규칙). 연출 그림은 `fx-art-pipeline` 순서로.
+연출은 [`_exchange/guide_summon_fx.md`](_exchange/guide_summon_fx.md) 박자표대로 — 1회 약 2.5초 · 10회 약 4초 · 0.4초 뒤부터 건너뛰기 · **불꽃 기둥 색 = 그 판 최고 등급 예고**(하늘 B · 보라 A · 금 대박, 속이지 않음) · 10회는 대박/픽업 카드를 맨 뒤로 미뤄 따로 뒤집는다 · 대박 > 픽업 > 새 몸 > 정수 전환 순으로 힘준다. 콘티 시안 `scene_s09~s11`.
 
 ---
 
