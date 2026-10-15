@@ -69,6 +69,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e94f4b81c5bb2c4b8e2798922e56d23
+    m_Address: atlas/nightentrypanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 31c71bc3917c5f240aaa8fe349c7c21c
     m_Address: atlas/unit_commando_mg
     m_ReadOnly: 0
@@ -107,6 +113,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4269d7d5e5bb7284689dfeb420b60c0b
     m_Address: atlas/unit_mantis
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 432826d26a48480448434d08ff4ffef6
+    m_Address: atlas/modecommon
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -167,6 +179,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 71063443ad3255b48a7cccf48bdfbeb7
     m_Address: atlas/unit_assault_gangster
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78ae5bbc6d11a144e80cbe8db2b21f22
+    m_Address: atlas/nightresultpopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -233,6 +251,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7e0e0b8d992cfc4980b4a7c1d91dd71
     m_Address: atlas/unit_armadillo
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd6a0097397b70840bc06080052daab1
+    m_Address: atlas/towerentrypanel
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

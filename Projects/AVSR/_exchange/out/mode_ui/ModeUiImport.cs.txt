@@ -3,6 +3,7 @@
 // 목록 · 값의 정본: Projects/AVSR/wireframes/AVSR_AssetManifest_Modes.md (apply_mode_ui_parts.py 의 MAP 과 같다).
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -118,6 +119,24 @@ namespace Game.Editor
                 name = "Android", overridden = true, maxTextureSize = 2048, format = TextureImporterFormat.ASTC_4x4,
             });
             imp.SaveAndReimport();
+            RegisterAtlas(atlasPath, name);
+        }
+
+        /// <summary>
+        /// 아틀라스를 Addressable `atlas` 그룹에 건다 — 주소 `atlas/{소문자}` · 라벨 `label_atlas`.
+        /// Atlas 폴더 자동 등록기는 지금 없다(규칙 02 의 설명과 다르다) — 다른 빌더처럼 직접 건다.
+        /// </summary>
+        private static void RegisterAtlas(string atlasPath, string name)
+        {
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            var group = settings != null ? settings.FindGroup("atlas") : null;
+            if (group == null) { Debug.LogError("[모드 UI] Addressable 그룹 atlas 없음"); return; }
+            var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(atlasPath), group);
+            entry.address = $"atlas/{name.ToLowerInvariant()}";
+            entry.SetLabel("label_atlas", true);
+            EditorUtility.SetDirty(group);
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();   // 안 하면 주소 등록이 파일에 안 남는다(InGamePopupCLayout 2026-10-08)
         }
     }
 }
