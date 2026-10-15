@@ -50,7 +50,7 @@
 
 ### 2-1. 로비 입구 — 기존 `ModeSurvivalCard` 를 쓴다
 
-- 로비 `LobbyMainUI.cs:108-111` 의 `ModeSurvivalCard` 는 지금 `NotifyNotReady` 로 막혀 있다. 이 칸을 **망령의 밤 입구**로 연다.
+- 로비 `Assets/Scripts/Module/Lobby/LobbyMainUI.cs:110` 의 `ModeSurvivalCard` 는 지금 `NotifyNotReady` 로 막혀 있다. 이 칸을 **망령의 밤 입구**로 연다.
 - 칸 글자: 이미 있는 `ui.lobby.mode.survival.name` 을 「망령의 밤」으로, `.desc` 를 오늘 조건(예: 「오늘: 원거리의 날」)으로 바꾼다.
 - 누르면 `NightEntryPanel` 이 열린다.
 
@@ -371,8 +371,8 @@
 | `Assets/Scripts/Module/InGame/BattleDirector.Night.cs` | `partial class BattleDirector` — `EnterNightArena` · `TickNight(dt)` · 스폰 · 대형 호스트 · 속성 전환 · 대장 · 보스 · 처치 수 · 결과. 사신의 수확(`BattleDirector.Reap.cs`)과 같은 끼우기 방식 |
 | `Assets/Scripts/Module/InGame/Night/NightModeTable.cs` | 4-1 표 |
 | `Assets/Scripts/Module/Common/RunModeContext.cs` | `RunMode { Chapter, Night }` · `Current` · `NightDay` (저장 안 하는 정적 값) |
-| `Assets/Scripts/Module/Lobby/UI/NightEntryPanel.cs` | 2-2 |
-| `Assets/Scripts/Module/InGame/UI/NightResultPopup.cs` | 2-4 |
+| `Assets/Scripts/Module/Lobby/NightEntryPanel.cs` | 2-2 |
+| `Assets/Scripts/Module/InGame/NightResultPopup.cs` | 2-4 |
 | `Assets/Scripts/Module/Events/NightEvents.cs` | 6-3 이벤트 |
 
 ### 6-2. 본편 코드를 고치는 곳 (밤일 때만 갈라지게 — 본편 동작은 그대로)
@@ -391,7 +391,7 @@
 | `KillEnemy` 처치 처리(7633 · 7670-7682) | 밤이면 `_nightKills++` · 대형 · 대장 경험치 배율 · `GrantShards` · `DropGold` 끔 |
 | `Finish(bool)`(9744줄) | 밤이면 챕터 진행 · 상자 대신 4-4 보상 · `NightFinishedEvent` |
 | `EnterRoom` 보스 세우기(3055-3136) | `SpawnBoss(bossKey)` 로 떼어 내 같이 씀 |
-| `LobbyMainUI.cs:108-111` | `ModeSurvivalCard` → `NightEntryPanel` 열기 |
+| `Module/Lobby/LobbyMainUI.cs:110` | `ModeSurvivalCard` → `NightEntryPanel` 열기 |
 
 ### 6-3. 이벤트
 
