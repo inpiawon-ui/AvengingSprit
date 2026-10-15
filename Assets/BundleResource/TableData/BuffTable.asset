@@ -254,3 +254,24 @@ MonoBehaviour:
     _category: PROJECTILE
     _levelValues: 0a0000000f00000014000000190000001e000000
     _implemented: 1
+  - _buffKey: c013
+    _nameKr: "\uD544\uC0B4\uAE30 \uCD08\uAE30\uD654"
+    _description: "\uC9C0\uAE08 \uBAB8\uC758 \uD544\uC0B4\uAE30\uB97C \uB2E4\uC2DC
+      \uC4F8 \uC218 \uC788\uB2E4."
+    _kind: 53
+    _value: 1
+    _stackable: 1
+    _colorHex: '#F0F0F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C013
+    _rarity: 1
+    _category: UTILITY
+    _levelValues: 0100000001000000010000000100000001000000
+    _implemented: 1

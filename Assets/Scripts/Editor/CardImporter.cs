@@ -93,6 +93,11 @@ namespace Game.EditorTools
             new("c012", "속사", BuffKind.AttackSpeed, CardRarity.Rare,
                 "PROJECTILE", new[] { 10, 15, 20, 25, 30 },
                 "더 빠르게 쏜다."),
+
+            // 즉발 카드 — 고를 때마다 한 번. 다섯 번 고르면 3택1 에서 빠진다(다른 카드와 같은 규칙)
+            new("c013", "필살기 초기화", BuffKind.UltReset, CardRarity.Rare,
+                "UTILITY", new[] { 1, 1, 1, 1, 1 },
+                "지금 몸의 필살기를 다시 쓸 수 있다."),
         };
 
         private static readonly System.Collections.Generic.Dictionary<string, string> CategoryColor = new()

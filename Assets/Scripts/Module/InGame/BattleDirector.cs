@@ -9477,6 +9477,10 @@ namespace Game.Module.InGame
                 _host.Heal(Mathf.Max(1, _host.HpMax * e.Value / 100));
                 PublishHp();
             }
+            else if (e.Kind == BuffKind.UltReset)
+            {
+                ApplyUltResetCard();
+            }
 
             _awaitingBuff = false;
             _offer.Clear();

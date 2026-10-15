@@ -56,6 +56,7 @@ namespace Game.Module.InGame
 
         private void TickUltimates(float dt)
         {
+            TickUltReadyMarks();
             for (int i = _ultQueue.Count - 1; i >= 0; i--)
             {
                 var q = _ultQueue[i];

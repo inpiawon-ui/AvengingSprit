@@ -138,6 +138,8 @@ card.c011.name	공격 강화	攻撃強化	Power Up
 card.c011.desc	공격 피해가 늘어난다.	攻撃ダメージが上がる。	More attack damage.
 card.c012.name	속사	速射	Rapid Fire
 card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.
+card.c013.name	필살기 초기화	必殺技リセット	Special Reset
+card.c013.desc	지금 몸의 필살기를 다시 쓸 수 있다.	今の体の必殺技をもう一度使える。	Use your current body's Special again.
 boss.robot_snakes.name	로봇 스네이크	ロボットスネーク	Robot Snakes
 bossmove.BurrowStrike.name	솟아오름	突き上げ	Burrow Strike
 bossmove.RailLaser.name	레이저	レーザー	Laser

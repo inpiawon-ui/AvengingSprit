@@ -138,6 +138,8 @@ namespace Game.Character
         GuardInvuln,
         /// <summary>궁지 — 체력이 절반 아래면 피해 +n%</summary>
         LowHpPower,
+        /// <summary>필살기 초기화 — 지금 몸의 필살기를 다시 채운다(즉발 · 못 채우면 한 번 남겨 둠). PD 2026-10-15</summary>
+        UltReset,
     }
 
     /// <summary>

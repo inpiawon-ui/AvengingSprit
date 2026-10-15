@@ -49,6 +49,52 @@ namespace Game.Module.InGame
         /// <summary>빙의할 때 필살기를 채울지 — 가진 몸은 늘, 못 가진 몸은 이 판에서 처음일 때만.</summary>
         private bool UltReadyOnEnter(string hostKey) => OwnsHostForUlt(hostKey) || !_ultTrialUsed.Contains(hostKey);
 
+        // ── 「필살기 가능」 표시 (PD 2026-10-15 C안 승인) ─────────────────
+        //
+        // 지금 필살기를 못 쓸 때(다 썼거나 유령)만 띄운다 — 가진 몸은 빙의마다 차므로 늘 띄우면 모든 적 호스트에 별이 붙어
+        // 아무 말도 안 하게 된다. 「필살기를 다 썼다 → 저 몸을 뺏으면 다시 쓸 수 있다」가 이 표시의 할 말이다.
+        // 못 가진 몸이 이 판의 체험을 이미 썼으면 별이 없다.
+        private Sprite[] _ultMarkFrames;
+        private bool _ultMarkLoaded;
+        private bool _ultMarksShown;
+
+        private void TickUltReadyMarks()
+        {
+            if (!_ultMarkLoaded) { _ultMarkLoaded = true; _ultMarkFrames = FxFrames("ultready"); }
+            bool want = _running && _ultMarkFrames != null && (_host == null || !_ultReady);
+            if (!want && !_ultMarksShown) return;
+            _ultMarksShown = want;
+            Sprite frame = want ? _ultMarkFrames[(int)(Time.time * 6f) % _ultMarkFrames.Length] : null;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null) continue;
+                bool show = want && e.IsHostBody && e.IsAlive && !e.IsBoss && e.Side == UnitSide.Enemy
+                            && UltReadyOnEnter(e.Key);
+                e.SetUltReadyMark(show ? frame : null);
+            }
+        }
+
+        // ── 필살기 초기화 카드 (PD 2026-10-15 D안 승인 · c013) ─────────────
+        //
+        // 고르는 순간 지금 몸의 필살기를 다시 채운다. 이미 차 있거나 유령이면 **한 번 남겨 둔다** —
+        // 다음에 필살기가 비었을 때 버튼을 누르면 그것을 쓴다. 고른 카드가 그냥 사라지면 안 된다.
+        // 못 가진 몸의 체험을 다 쓴 뒤에도 먹힌다(카드 값어치).
+        private int _ultSpare;
+
+        private void ApplyUltResetCard()
+        {
+            if (_host != null && !_ultReady) { _ultReady = true; UltResetFx(); }
+            else _ultSpare++;
+        }
+
+        private void UltResetFx()
+        {
+            if (_host == null) return;
+            _pfx?.Burst(ParticleFxKind.Star4, ParticleElement.Curse, _host.Position, 10, 180f, 16f, 0.5f, 0f);
+            _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Curse, _host.Position, 4, 60f, 70f, 0.5f, 0f);
+        }
+
         /// <summary>필살기 버튼을 눌러 쓸 수 있는가(몸 · 봉인 · 1회).</summary>
         public bool IsUltReady => _running && _ultReady && _host != null && !IsSkillSealed(_host.Key);
 
@@ -60,6 +106,12 @@ namespace Game.Module.InGame
             if (!_running || IsCastFrozen || IsChanneling) return;
             var me = _host;
             if (me == null) return;
+            if (!_ultReady && _ultSpare > 0)
+            {
+                // 필살기 초기화 카드로 남겨 둔 한 번
+                _ultSpare--;
+                _ultReady = true;
+            }
             if (!_ultReady)
             {
                 // 체험을 다 쓴 몸 — 왜 안 나가는지 버튼 위에 알린다

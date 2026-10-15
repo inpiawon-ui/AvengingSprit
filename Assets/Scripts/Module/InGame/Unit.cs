@@ -56,6 +56,7 @@ namespace Game.Module.InGame
 
         public static void SetShieldFillSprite(Sprite s) => s_shieldFillSprite = s;
         private Image _possessMark;
+        private Image _ultReadyMark;
 
         private float _attackTimer;
         private float _flashTimer;
@@ -468,6 +469,12 @@ namespace Game.Module.InGame
                                                new Vector2(0f, size.y * 0.5f + MarkSize * 0.9f));
                     _possessMark.preserveAspect = true;
                     _possessMark.gameObject.SetActive(false);
+
+                    // 「필살기 가능」 — 체력바 오른쪽 끝(시안 mock_feat_ult_ready_mark · PD 2026-10-15 승인)
+                    _ultReadyMark = GetOrCreate("UltReadyMark", new Vector2(UltMarkSize, UltMarkSize),
+                                                new Vector2(barSize.x * 0.5f + UltMarkSize * 0.55f, barPos.y + 1f));
+                    _ultReadyMark.preserveAspect = true;
+                    _ultReadyMark.gameObject.SetActive(false);
                 }
             }
             RefreshHpBar();
@@ -513,6 +520,21 @@ namespace Game.Module.InGame
 
         /// <summary>표식 그림의 원본 크기. 이 값으로 띄워야 링이 또렷하다.</summary>
         private const float MarkSize = 32f;
+
+        /// <summary>「필살기 가능」 표시 크기 — 그림 32px 를 체력바 높이에 맞춰 줄인다(시안: 몸의 1/4 쯤).</summary>
+        private const float UltMarkSize = 56f;   // 방 화면이 약 0.47배로 줄어 보인다 — 화면에서 약 26 px(시안)
+
+        /// <summary>
+        /// 「필살기 가능」 표시. 이 몸을 뺏으면 필살기를 쓸 수 있을 때 그림을 넘긴다(null = 끔).
+        /// 부르는 쪽이 매 프레임 지금 컷을 넘긴다 — 숨쉬는 반복.
+        /// </summary>
+        public void SetUltReadyMark(Sprite frame)
+        {
+            if (_ultReadyMark == null) return;
+            bool on = frame != null && !_dying;
+            if (on) _ultReadyMark.sprite = frame;
+            if (_ultReadyMark.gameObject.activeSelf != on) _ultReadyMark.gameObject.SetActive(on);
+        }
 
         private Image _possessMeter;
 
@@ -933,6 +955,7 @@ namespace Game.Module.InGame
 
             _dying = true;
             _deathTimer = 0f;
+            if (_ultReadyMark != null) _ultReadyMark.gameObject.SetActive(false);
             _frame = FrameDie1;
             _frameTimer = 0f;
             _moving = false;

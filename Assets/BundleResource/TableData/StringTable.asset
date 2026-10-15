@@ -3117,3 +3117,12 @@ MonoBehaviour:
     _ko: "\uC870\uAC01\uC744 \uBAA8\uC73C\uBA74 \uB9E4\uBC88 \uC4F8 \uC218 \uC788\uC5B4\uC694"
     _ja: "\u6B20\u7247\u3092\u96C6\u3081\u308B\u3068\u6BCE\u56DE\u4F7F\u3048\u307E\u3059"
     _en: Get shards to use it every time
+  - _key: card.c013.name
+    _ko: "\uD544\uC0B4\uAE30 \uCD08\uAE30\uD654"
+    _ja: "\u5FC5\u6BBA\u6280\u30EA\u30BB\u30C3\u30C8"
+    _en: Special Reset
+  - _key: card.c013.desc
+    _ko: "\uC9C0\uAE08 \uBAB8\uC758 \uD544\uC0B4\uAE30\uB97C \uB2E4\uC2DC \uC4F8
+      \uC218 \uC788\uB2E4."
+    _ja: "\u4ECA\u306E\u4F53\u306E\u5FC5\u6BBA\u6280\u3092\u3082\u3046\u4E00\u5EA6\u4F7F\u3048\u308B\u3002"
+    _en: Use your current body's Special again.
