@@ -80,6 +80,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e34883e552877de46960ec0f49c9546a
+    m_Address: TableData/ModeTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ee3bbf389d59fdc4a9a4937f6dafbb5b
     m_Address: TableData/ShopTable
     m_ReadOnly: 0

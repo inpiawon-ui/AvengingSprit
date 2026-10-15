@@ -1,0 +1,292 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85d53f75a7fa29d4fba23f1956fd10f4, type: 3}
+  m_Name: ModeTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.Modes.ModeTable
+  _ranges:
+  - _hostKey: amazon
+    _range: 0
+  - _hostKey: amazon_elite
+    _range: 0
+  - _hostKey: ninja_chain
+    _range: 0
+  - _hostKey: baseball
+    _range: 0
+  - _hostKey: vampire
+    _range: 0
+  - _hostKey: salamander
+    _range: 0
+  - _hostKey: dragoon
+    _range: 0
+  - _hostKey: dragon_blue
+    _range: 0
+  - _hostKey: guru
+    _range: 0
+  - _hostKey: gangster
+    _range: 1
+  - _hostKey: thug
+    _range: 1
+  - _hostKey: hopper
+    _range: 1
+  - _hostKey: hopper_smg
+    _range: 1
+  - _hostKey: commando_mg
+    _range: 1
+  - _hostKey: ninja
+    _range: 1
+  - _hostKey: commando_laser
+    _range: 2
+  - _hostKey: commando_grenade
+    _range: 2
+  - _hostKey: white_wizard
+    _range: 2
+  - _hostKey: medium
+    _range: 2
+  - _hostKey: robot
+    _range: 2
+  - _hostKey: snowwoman
+    _range: 2
+  - _hostKey: commando_missile
+    _range: 2
+  _freeEntriesPerDay: 3
+  _buyEntriesMax: 3
+  _buyEntryGem: 3200000064000000c8000000
+  _floors:
+  - _floor: 1
+    _nameKey: tower.floor.1.name
+    _descKey: tower.rule.bodyrange.desc
+    _rule: 1
+    _range: 0
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - skeleton
+    - bat
+    - boar
+    _trashCount: 6
+    _roomId: ROOM_CH1_001
+  - _floor: 2
+    _nameKey: tower.floor.2.name
+    _descKey: tower.rule.bodyrange.desc
+    _rule: 1
+    _range: 2
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - scrapgunner
+    - skeleton
+    _trashCount: 7
+    _roomId: ROOM_CH1_001
+  - _floor: 3
+    _nameKey: tower.floor.3.name
+    _descKey: tower.rule.enemyaffinity.desc
+    _rule: 3
+    _range: 1
+    _affinity: 3
+    _bossKey: 
+    _trashKeys: []
+    _trashCount: 8
+    _roomId: ROOM_CH1_001
+  - _floor: 4
+    _nameKey: tower.floor.4.name
+    _descKey: tower.rule.noleave.desc
+    _rule: 4
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - boar
+    - scrapgunner
+    - skeleton
+    _trashCount: 7
+    _roomId: ROOM_CH1_001
+  - _floor: 5
+    _nameKey: tower.floor.5.name
+    _descKey: tower.rule.boss.desc
+    _rule: 7
+    _range: 1
+    _affinity: 3
+    _bossKey: crusher
+    _trashKeys: []
+    _trashCount: 0
+    _roomId: ROOM_CH1_001
+  - _floor: 6
+    _nameKey: tower.floor.6.name
+    _descKey: tower.rule.bodyrange.desc
+    _rule: 1
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - bat
+    - bat
+    - boar
+    _trashCount: 9
+    _roomId: ROOM_CH1_001
+  - _floor: 7
+    _nameKey: tower.floor.7.name
+    _descKey: tower.rule.singlehost.desc
+    _rule: 5
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - skeleton
+    - scrapgunner
+    - boar
+    _trashCount: 7
+    _roomId: ROOM_CH1_001
+  - _floor: 8
+    _nameKey: tower.floor.8.name
+    _descKey: tower.rule.enemyaffinity.desc
+    _rule: 3
+    _range: 1
+    _affinity: 2
+    _bossKey: 
+    _trashKeys: []
+    _trashCount: 9
+    _roomId: ROOM_CH1_001
+  - _floor: 9
+    _nameKey: tower.floor.9.name
+    _descKey: tower.rule.oneshot.desc
+    _rule: 6
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+    _trashKeys:
+    - scrapgunner
+    - skeleton
+    - boar
+    _trashCount: 7
+    _roomId: ROOM_CH1_001
+  - _floor: 10
+    _nameKey: tower.floor.10.name
+    _descKey: tower.rule.boss.desc
+    _rule: 7
+    _range: 1
+    _affinity: 2
+    _bossKey: kingpin
+    _trashKeys: []
+    _trashCount: 0
+    _roomId: ROOM_CH1_001
+  _loopLength: 10
+  _hpPerFloor: 0.1
+  _hpPerLoop: 0.5
+  _hpGrowth: 0.15
+  _bossHpBase: 0.55
+  _bossHpPerLoop: 0.4
+  _atkGrowth: 0.06
+  _bodyCount: 3
+  _firstClear:
+    _shards: 1
+    _gold: 50
+  _firstClearBoss:
+    _shards: 3
+    _gold: 150
+  _sweepSteps:
+  - _fromFloor: 1
+    _shards: 1
+    _gold: 100
+  - _fromFloor: 10
+    _shards: 2
+    _gold: 200
+  - _fromFloor: 20
+    _shards: 3
+    _gold: 300
+  - _fromFloor: 30
+    _shards: 4
+    _gold: 400
+  - _fromFloor: 40
+    _shards: 5
+    _gold: 500
+  _days:
+  - _dayKey: mon
+    _filter: 1
+    _range: 0
+    _affinity: 0
+    _bossKey: 
+  - _dayKey: tue
+    _filter: 1
+    _range: 2
+    _affinity: 0
+    _bossKey: 
+  - _dayKey: wed
+    _filter: 1
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+  - _dayKey: thu
+    _filter: 2
+    _range: 1
+    _affinity: 2
+    _bossKey: 
+  - _dayKey: fri
+    _filter: 2
+    _range: 1
+    _affinity: 1
+    _bossKey: 
+  - _dayKey: sat
+    _filter: 2
+    _range: 1
+    _affinity: 3
+    _bossKey: 
+  - _dayKey: sun
+    _filter: 0
+    _range: 1
+    _affinity: 0
+    _bossKey: 
+  _arenaRoomId: ROOM_CH1_001
+  _trashFirstDelay: 2
+  _spawnIntervalStart: 3.4
+  _spawnIntervalSlope: 160
+  _spawnIntervalMin: 1.6
+  _spawnCountStep: 75
+  _trashHpSlope: 300
+  _enemyCap: 30
+  _trashBlade:
+  - bat
+  - scrapgunner
+  - roadwarden
+  - mantis
+  - mole
+  _trashForce:
+  - boar
+  - armadillo
+  _trashMagic:
+  - skeleton
+  - mushroom
+  - mummy
+  - spider
+  - sludge
+  - coilwalker
+  _bigHostFirst: 40
+  _bigHostInterval: 45
+  _bigHostScale: 1.35
+  _bigHostHpBase: 5
+  _bigHostHpSlope: 90
+  _bigHostAtkMul: 1.3
+  _bigHostStaggerMul: 1.5
+  _waveInterval: 60
+  _waveHealPercent: 15
+  _chiefTimes:
+  - 120
+  - 210
+  _chiefHpMul: 1
+  _chiefHealPercent: 25
+  _bossTime: 300
+  _bossHpMul: 0.9
+  _rescueDelay: 1
+  _rescueCooldown: 0
+  _expMulBigHost: 8
+  _expMulChief: 12
+  _killsPerShard: 50
+  _clearShardBonus: 3
