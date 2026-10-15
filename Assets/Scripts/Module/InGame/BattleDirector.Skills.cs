@@ -46,7 +46,8 @@ namespace Game.Module.InGame
         private const float ActivePowerPerLevel = 0.06f;
         private const float UltPowerPerLevel = 0.04f;
         private float ActivePowerMul => 1f + ActivePowerPerLevel * Mathf.Max(0, HostMastery - 1);
-        private float UltPowerMul => 1f + UltPowerPerLevel * Mathf.Max(0, HostMastery - 1);
+        private float UltPowerMul => (1f + UltPowerPerLevel * Mathf.Max(0, HostMastery - 1))
+                                     * (_config != null && _host?.Profile != null ? _config.GradeUltMul(_host.Profile.Grade) : 1f);
 
         /// <summary>Lv1 → Lv4 에 자라는 축. Lv5 부터는 끝값에서 멈춘다.</summary>
         private float BaseAxis(float fallback)

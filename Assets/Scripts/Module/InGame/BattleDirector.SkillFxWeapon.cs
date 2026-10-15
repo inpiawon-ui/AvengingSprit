@@ -649,6 +649,7 @@ namespace Game.Module.InGame
             StopStickyBomb();
             StopFullSwing();
             StopWraithFlame(popRemaining: false);
+            StopUltimates();
             _wpPending.Clear();
             _wpFollow.Clear();
             _gangTargets.Clear();

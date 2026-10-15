@@ -34,7 +34,8 @@ namespace Game.Character
 
         /// <summary>등급에서 나온 기본 체력.</summary>
         public static int BaseHp(GameConfig config, HostEntry e)
-            => e == null || config == null ? 100 : config.HpOfGrade(e.HpGrade);
+            => e == null || config == null ? 100
+             : Mathf.Max(1, Mathf.RoundToInt(config.HpOfGrade(e.HpGrade) * config.GradeStatMul(e.Grade)));
 
         /// <summary>
         /// 등급에서 나온 한 대 피해 = 공격력 등급(DPS) ÷ 공속 등급(횟수) ÷ 한 번에 나가는 탄 수.
@@ -42,7 +43,8 @@ namespace Game.Character
         /// </summary>
         public static int BaseAtk(GameConfig config, HostEntry e)
             => e == null || config == null ? 10
-             : Mathf.Max(1, Mathf.RoundToInt(config.AtkOfGrade(e.AtkGrade, e.RateGrade) / Mathf.Max(1, e.ShotCount)));
+             : Mathf.Max(1, Mathf.RoundToInt(config.AtkOfGrade(e.AtkGrade, e.RateGrade) * config.GradeStatMul(e.Grade)
+                                             / Mathf.Max(1, e.ShotCount)));
 
         // ── 전투력 ───────────────────────────────────────────
         //

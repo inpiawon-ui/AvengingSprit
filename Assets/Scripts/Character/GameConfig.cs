@@ -982,6 +982,26 @@ namespace Game.Character
             => _starUpGold == null || level < 0 || level >= _starUpGold.Length ? 0 : _starUpGold[level];
 
         /// <summary>등급별 요구량 배수. 표가 짧으면 마지막 칸을 쓴다.</summary>
+        // ── 등급 차등(가챠, PD 2026-10-15 「등급에 따라 차등을 줘야 확률로 좋고 나쁨이 갈린다」) ──
+        // R(B) · SR(A) · SSR(S). 성급 · 옵션 구조는 등급과 상관없이 같고, 출발점과 필살기 세기만 다르다 —
+        // 그래야 R 도 성급을 올리면 쓸 만해진다. 기획: `_exchange/doc_skill_concept`
+        [Tooltip("등급별 기본 체력 · 공격 배율 (R · SR · SSR)")]
+        [SerializeField] private float[] _gradeStatMul = { 1.0f, 1.1f, 1.2f };
+        [Tooltip("등급별 필살기 위력 배율 (R · SR · SSR)")]
+        [SerializeField] private float[] _gradeUltMul = { 1.0f, 1.15f, 1.3f };
+        [Tooltip("가챠 확률 % (R · SR · SSR) — 가챠가 들어오면 쓴다")]
+        [SerializeField] private float[] _gachaRatePercent = { 79f, 18f, 3f };
+        [Tooltip("가챠 천장 — 이 횟수 안에 SSR 확정")]
+        [SerializeField] private int _gachaPity = 80;
+
+        public float GradeStatMul(HostGrade g) => ByGradeF(_gradeStatMul, g, 1f);
+        public float GradeUltMul(HostGrade g) => ByGradeF(_gradeUltMul, g, 1f);
+        public float GachaRatePercent(HostGrade g) => ByGradeF(_gachaRatePercent, g, 0f);
+        public int GachaPity => _gachaPity;
+
+        private static float ByGradeF(float[] a, HostGrade g, float fallback)
+            => a == null || a.Length == 0 ? fallback : a[Mathf.Clamp((int)g, 0, a.Length - 1)];
+
         public float GradeMultiplier(HostGrade grade)
         {
             if (_gradeMultiplier == null || _gradeMultiplier.Length == 0) return 1f;

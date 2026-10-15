@@ -25,7 +25,7 @@ namespace Game.Editor
         /// <param name="ultAt">녹화 시작 뒤 이 초에 필살기를 누른다(0 이하면 안 누름). 액티브는 0.5초에 누른다.</param>
         /// <param name="activeAt">액티브를 누를 초(0 이하면 안 누름).</param>
         public static void Run(string hostKey, string clip, float recordSeconds, float liftMeters = 3f,
-                               float ultAt = -1f, float activeAt = 0.5f)
+                               float ultAt = -1f, float activeAt = 0.5f, string swapTo = null)
         {
             int phase = 0, wait = 0;
             double t0 = EditorApplication.timeSinceStartup, recAt = 0;
@@ -99,6 +99,16 @@ namespace Game.Editor
                                 as Game.Module.InGame.Unit;
                             // 시험판은 숙련도 10(×1.84)이라 1챕터 잡몹이 한 대에 죽는다 — 연출(끌려오기 · 날아가기 · 3중첩)이 보이게 체력만 늘린다
                             if (u != null) SetHp(u, u.HpMax * EnemyHpMul);
+                        }
+                        // 로비에서 못 고르는 몸(사신 · 아마존 정예 — 숨김)은 판 안에서 갈아입힌다
+                        if (swapTo != null && host.Key != swapTo)
+                        {
+                            var pd = GameFramework.Core.Base.CoreModule.Get<Game.User.IPlayerDataService>();
+                            var entry = pd.GetHost(swapTo);
+                            var oldHost = host;
+                            bt.GetMethod("EnterHost", F).Invoke(bd, new object[] { entry, swapTo, swapTo, host.Position, 100 });
+                            host = (Game.Module.InGame.Unit)bt.GetField("_host", F).GetValue(bd);
+                            if (oldHost != host && oldHost != null) oldHost.gameObject.SetActive(false);
                         }
                         bt.GetField("_skillCooldown", F).SetValue(bd, 999f);
                         Debug.Log($"[RW] {hostKey} enemies {alive} melee {melee?.Key} gun {gun?.Key}");

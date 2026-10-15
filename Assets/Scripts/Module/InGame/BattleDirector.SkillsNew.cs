@@ -701,6 +701,7 @@ namespace Game.Module.InGame
             TickStickyBomb(dt);       // 코만도(수류탄) C4
             TickFullSwing(dt);        // 슬러거 풀스윙 회오리
             TickWraithFlame(dt);      // 영매 원혼 강림
+            TickUltimates(dt);        // 필살기 18종(BattleDirector.Ultimates)
             TickQx();     // 파워 · 마법 퀄업 연출 — 몸을 따라다니는 부품
             for (int i = _spits.Count - 1; i >= 0; i--)
             {

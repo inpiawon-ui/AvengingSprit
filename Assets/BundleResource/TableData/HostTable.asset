@@ -232,7 +232,7 @@ MonoBehaviour:
     _activeSkillKey: psg_h02
     _activeSkillCooldown: 28
     _passiveSkillKey: psv_counter
-    _grade: 1
+    _grade: 2
     _levelStats: []
     _unlockType: 2
     _unlockChapter: 1
@@ -624,7 +624,7 @@ MonoBehaviour:
     _activeSkillKey: psg_h09
     _activeSkillCooldown: 20
     _passiveSkillKey: psv_dragoon
-    _grade: 1
+    _grade: 2
     _levelStats: []
     _unlockType: 1
     _unlockChapter: 2
@@ -848,7 +848,7 @@ MonoBehaviour:
     _activeSkillKey: psg_h15
     _activeSkillCooldown: 14
     _passiveSkillKey: psv_medium
-    _grade: 1
+    _grade: 2
     _levelStats: []
     _unlockType: 1
     _unlockChapter: 2
@@ -1072,7 +1072,7 @@ MonoBehaviour:
     _activeSkillKey: psg_h20
     _activeSkillCooldown: 14
     _passiveSkillKey: psv_slugger
-    _grade: 1
+    _grade: 2
     _levelStats: []
     _unlockType: 1
     _unlockChapter: 3
@@ -1184,7 +1184,7 @@ MonoBehaviour:
     _activeSkillKey: psg_h22
     _activeSkillCooldown: 20
     _passiveSkillKey: psv_leech
-    _grade: 1
+    _grade: 2
     _levelStats: []
     _unlockType: 1
     _unlockChapter: 3

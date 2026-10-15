@@ -42,7 +42,25 @@ namespace Game.Module.InGame
                 case "commando_grenade": CommandoStickyBomb(me); break;  // C4
                 case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리
                 case "medium":           MediumGolemUlt(me);    break;   // 골렘 강령
-                default:                 UltFallback(me);       break;   // ⚠ 아직 안 만든 필살기 — 아래 참고
+                case "gangster":         UltGangster(me);       break;   // 청부 처형
+                case "hopper":           UltHopper(me);         break;   // 킬 포인트
+                case "ninja_chain":      UltNinjaChain(me);     break;   // 사슬 돌격 연격
+                case "death":            UltDeath(me);          break;   // 망자 군단
+                case "robot":            UltRobot(me);          break;   // 포탑 군단
+                case "ninja":            UltNinja(me);          break;   // 그림자 삼분신
+                case "hopper_smg":       UltHopperSmg(me);      break;   // 돌진 난사
+                case "vampire":          UltVampire(me);        break;   // 피의 폭주
+                case "dragoon":          UltDragoon(me);        break;   // 용 돌격
+                case "guru":             UltGuru(me);           break;   // 결계 가두기
+                case "salamander":       UltSalamander(me);     break;   // 독 늪
+                case "snowwoman":        UltSnowwoman(me);      break;   // 얼음 진
+                case "commando_missile": UltMissile(me);        break;   // 자폭 미사일 떼
+                case "commando_laser":   UltLaser(me);          break;   // 충전 레이저
+                case "white_wizard":     UltWizard(me);         break;   // 빛 구슬 일제 발사
+                case "dragon_blue":      UltDragonBlue(me);     break;   // 번개 구슬
+                case "commando_mg":      UltCommandoMg(me);     break;   // 디플렉트 월
+                case "amazon_elite":     UltAmazonElite(me);    break;   // 역린
+                default:                 UltFallback(me);       break;   // 표에 없는 몸 — 아래 참고
             }
         }
 
