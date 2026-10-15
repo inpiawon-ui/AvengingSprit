@@ -1,0 +1,7 @@
+완성했습니다.
+
+- 저장: [modeui_mode_frame.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/modeui_mode_frame.png)
+- 크기: 680×240
+- 도트: 모든 픽셀을 2×2 블록으로 정렬
+- 배경: 순수 마젠타 `#FF00FF`
+- 내장 이미지 생성 도구만 사용, 한 장 생성 완료

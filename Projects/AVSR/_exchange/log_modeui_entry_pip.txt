@@ -1,0 +1,7 @@
+완성했습니다.
+
+- 저장: [modeui_entry_pip.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/modeui_entry_pip.png)
+- 크기: 192×96, 2열×1행
+- 배경: 순수 `#FF00FF`
+- 방식: 내장 이미지 생성 도구 사용, CLI/API 키 폴백 미사용
+- 켜짐/꺼짐 모두 완전한 원형으로 검증했습니다.

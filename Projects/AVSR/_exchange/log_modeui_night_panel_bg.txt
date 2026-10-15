@@ -1,0 +1,8 @@
+완성 이미지를 저장했습니다.
+
+- 파일: [modeui_night_panel_bg.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_night_panel_bg.png)
+- 크기: 1440 × 2560
+- 형식: 불투명 RGB PNG
+- 생성: 내장 이미지 생성 도구 사용
+- UI·글자 제거, 밤 도시·보랏빛 달·유령·가로등·고양이·A-2 환경물 유지
+- 최종 크기는 픽셀 선명도를 유지하는 nearest-neighbor 방식으로 정규화했습니다.

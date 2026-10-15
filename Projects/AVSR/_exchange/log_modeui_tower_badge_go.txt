@@ -1,0 +1,9 @@
+완성했습니다.
+
+- 저장: [modeui_tower_badge_go.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/modeui_tower_badge_go.png)
+- 규격: 312×160 PNG
+- 배경: 순수 `#FF00FF`
+- 검증: 비순수 분홍 픽셀 없음
+- 글자·숫자·아이콘·추가 장식 없음
+- 앵커 기반 입체 금색 명암과 갈색 외곽선 적용
+- 내장 이미지 생성 도구만 사용했으며 CLI/API 폴백은 사용하지 않았습니다.

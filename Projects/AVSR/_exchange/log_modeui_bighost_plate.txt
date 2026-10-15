@@ -1,0 +1,8 @@
+완성했습니다.
+
+- 파일: [modeui_bighost_plate.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_bighost_plate.png)
+- 규격: 408×184 PNG
+- 배경: 순수 `#FF00FF`
+- 이름판 및 막대 홈 2줄만 포함
+- 글자, 숫자, 아이콘, 막대 채움, 추가 장식 없음
+- 내장 이미지 생성 도구 사용, CLI/API 키 미사용

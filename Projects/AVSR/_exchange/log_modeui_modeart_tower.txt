@@ -1,0 +1,5 @@
+완성 이미지를 생성하고 660×300 PNG로 저장했습니다.
+
+[modeui_modeart_tower.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_modeart_tower.png)
+
+내장 이미지 생성 도구만 사용했으며, CLI/API 키 폴백은 사용하지 않았습니다.

@@ -1,0 +1,9 @@
+완성 이미지를 저장했습니다.
+
+- 파일: [modeui_tower_panel_bg.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_tower_panel_bg.png)
+- 크기: 1440 × 2560
+- 형식: 불투명 PNG, 2×2 픽셀 도트
+- UI·글자·버튼·패널 제외
+- 내장 이미지 생성 도구 사용, CLI/API 폴백 미사용
+
+프롬프트에는 앵커의 석조 구조, 왼쪽 계단과 기둥, 혼불, 유령 깃발, 창과 달빛의 배치 및 색·재질 고정 조건을 반영했습니다.

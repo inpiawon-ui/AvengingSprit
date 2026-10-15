@@ -1,0 +1,10 @@
+완성 이미지를 저장했습니다.
+
+[modeui_night_plate.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_night_plate.png)
+
+- 크기: 288×212
+- 배경: `#FF00FF`
+- 내장 이미지 생성 도구 사용
+- 텍스트·숫자·추가 장식 제거
+- 2×2 픽셀 블록 유지
+- CLI/API 키 미사용

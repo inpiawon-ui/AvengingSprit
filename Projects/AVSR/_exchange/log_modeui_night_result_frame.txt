@@ -1,0 +1,7 @@
+완성했습니다.
+
+- 파일: [modeui_night_result_frame.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/modeui_night_result_frame.png)
+- 규격: 1324×1752 PNG
+- 배경: 불투명 순수 마젠타 `#FF00FF`
+- 생성 방식: 내장 이미지 생성 도구
+- 최종 프롬프트: 앵커 디자인 고정, 모든 글자·숫자·초상·버튼·내부 칸 제거, 남색 내부 판으로 통합, 추가 장식 금지, 선명한 도트 스타일 유지.

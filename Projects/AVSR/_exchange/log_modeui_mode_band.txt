@@ -1,0 +1,10 @@
+완성했습니다.
+
+- 파일: [modeui_mode_band.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\modeui_mode_band.png)
+- 규격: 1440×414 PNG
+- 배경: 순수 마젠타 `#FF00FF`
+- 중앙의 글자·숫자·아이콘·보석 제거
+- 내장 이미지 생성 도구로 한 장만 생성
+- 720×207 논리 해상도를 2배 처리해 2×2 도트 구조로 저장
+
+`imagegen` 스킬 지침에 따라 CLI/API 키 폴백 없이 생성하고 프로젝트 경로에 배치했습니다.
