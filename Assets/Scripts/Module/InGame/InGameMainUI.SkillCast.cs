@@ -280,7 +280,7 @@ namespace Game.Module.InGame
                 _cutInPortrait.enabled = _cutInPortrait.sprite != null;
                 // 띠 그림은 푸른 빛이 들어 있다 — 몸 색을 반만 섞어 빛이 죽지 않게
                 _cutInBand.color = Color.Lerp(Color.white, color, 0.55f);
-                _cutInTag.text = "ACTIVE SKILL";
+                _cutInTag.text = "SPECIAL";   // 컷인은 필살기만 뜬다(2026-10-15 — 액티브는 컷인 없이 나간다)
                 _cutInTag.color = color;
                 _cutInName.text = e.SkillName;
                 _cutInName.color = Color.white;

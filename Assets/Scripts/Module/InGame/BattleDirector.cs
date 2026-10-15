@@ -8533,15 +8533,11 @@ namespace Game.Module.InGame
 
             // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다.
             // 몸이 있을 때 이 버튼은 **탈출**이다.
+            // 몸이 있을 때 이 버튼은 **필살기**다(PD 2026-10-15 「영혼 탈출을 빼고 액티브 · 필살기 두 개」).
+            // 예전엔 탈출(`LeaveHost`)이었다 — 이제 몸을 떠나는 길은 몸이 쓰러질 때뿐이다.
             if (_host != null)
             {
-                // 옮겨 탈 몸이 없으면 못 나간다 — 이유를 화면에 알린다(기획 2026-10-02).
-                if (!CanLeaveHost())
-                {
-                    _bus.Publish(new PossessDeniedEvent { NoHostToPossess = true });
-                    return;
-                }
-                LeaveHost();
+                TryUltimate();
                 return;
             }
 
@@ -8678,7 +8674,10 @@ namespace Game.Module.InGame
             // ⚠ 쿨 게이지를 **가득 채운 채로** 시작한다. 0 에서 시작하면 뺏자마자
             //   8~28초 동안 버튼이 덮개에 가려져 "고장난 버튼" 으로 보인다.
             //   몸을 뺏는 순간이 이 게임에서 가장 쓰고 싶은 순간이기도 하다.
-            _skillCooldown = SkillCooldownOf(entry);
+            // 액티브는 빈 채로 시작해 평타로 채우고, 필살기는 빙의할 때마다 한 번 쓸 수 있다(PD 2026-10-15).
+            // (예전엔 액티브를 가득 찬 채로 시작했다 — 「몸을 뺏는 순간이 가장 쓰고 싶은 순간」은 이제 필살기의 몫)
+            _skillCooldown = 0f;
+            _ultReady = true;
             // ⚠ 지속형 스킬은 **몸에 붙은 것**이지 판에 붙은 것이 아니다.
             //   안 끄면 오버히트를 켜고 다른 몸으로 갈아타는 것이 이득이 된다.
             ClearSkillState();
@@ -8719,8 +8718,9 @@ namespace Game.Module.InGame
             if (IsSkillSealed(me.Key)) return;
 
             if (!SandboxKeepsGauge) _skillCooldown = 0f;
-            // 스킬은 컷인이 끝난 뒤에 나간다(`BattleDirector.SkillCast`) — 그동안 전투는 멈춘다
-            BeginCast(me);
+            // 액티브는 컷인 없이 바로 나간다(PD 2026-10-15) — 컷인 · 멈춤은 필살기(`TryUltimate`)만
+            ActiveCastPop(me);
+            CastActiveSkill(me);
         }
 
         // ── 돌풍 돌진 (아마존) ───────────────────────────────────

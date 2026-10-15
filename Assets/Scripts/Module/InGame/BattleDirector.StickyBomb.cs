@@ -151,7 +151,7 @@ namespace Game.Module.InGame
             // 붙었다 — 「탁」
             b.Stuck = true;
             if (b.Target != null && b.Target.IsAlive)
-                HitEnemyWith(b.Target, SkillDamage(me, C4StickMul * BaseAxis(1f)), me.Profile);
+                HitEnemyWith(b.Target, UltDamage(me, C4StickMul * BaseAxis(1f)), me.Profile);
             PlayFx("hit", b.LastAt, 70f, loop: false);
             HitStop(0.02f);
         }
@@ -173,7 +173,7 @@ namespace Game.Module.InGame
             bool last = index == _c4Bombs.Count - 1;
             var at = b.LastAt - C4StickOffset;
             float r = Meters(last ? C4LastMeters : C4BlastMeters) * _buffs.AoeMul;
-            int dmg = SkillDamage(me, (last ? C4LastMul : C4BlastMul) * BaseAxis(1f));
+            int dmg = UltDamage(me, (last ? C4LastMul : C4BlastMul) * BaseAxis(1f));
             var list = EnemiesInRange(at, r);
             for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
             // 연쇄는 알갱이(연기 · 파편)를 얹지 않는다 — 여섯 번 겹치면 연기 구름이 화면을 덮었다(녹화 rw_c4_2). 마지막 한 방만 얹는다

@@ -330,6 +330,7 @@ namespace Game.Module.InGame
                 _skillCooldownFill.fillAmount = 1f - _battle.SkillCooldownRatio;
 
             TickSkillReady(Time.unscaledDeltaTime);
+            TickUltButton();
             TickBossTrail(Time.deltaTime);
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();
@@ -1066,6 +1067,8 @@ namespace Game.Module.InGame
                                      bool isLeave = false, bool leaveDenied = false)
         {
             _possessCost = cost;
+            // 몸이 있으면 이 버튼은 필살기다 — 나가기(탈출) 얼굴은 더 안 쓴다(`InGameMainUI.Ultimate`)
+            if (isLeave) { _ultShown = false; TickUltButton(); return; }
             bool usable = hasTarget && !blocked && !leaveDenied;
 
             // 빙의 / 나가기 — 같은 버튼이지만 얼굴이 다르다(`InGameMainUI.SoulFx`).

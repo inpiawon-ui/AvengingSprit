@@ -22,12 +22,15 @@ namespace Game.Editor
             new(1.2f, 6.5f), new(-3.5f, 5.5f), new(3.5f, 1.2f),
         };
 
-        public static void Run(string hostKey, string clip, float recordSeconds, float liftMeters = 3f)
+        /// <param name="ultAt">녹화 시작 뒤 이 초에 필살기를 누른다(0 이하면 안 누름). 액티브는 0.5초에 누른다.</param>
+        /// <param name="activeAt">액티브를 누를 초(0 이하면 안 누름).</param>
+        public static void Run(string hostKey, string clip, float recordSeconds, float liftMeters = 3f,
+                               float ultAt = -1f, float activeAt = 0.5f)
         {
             int phase = 0, wait = 0;
             double t0 = EditorApplication.timeSinceStartup, recAt = 0;
             float battleAt = 0f;
-            bool cast = false;
+            bool cast = false, ulted = false;
             var bt = typeof(Game.Module.InGame.BattleDirector);
             EditorApplication.CallbackFunction cb = null;
             cb = () =>
@@ -104,7 +107,12 @@ namespace Game.Editor
                         phase = 2;
                         return;
                     }
-                    if (!cast && now - recAt > 0.5)
+                    if (!ulted && ultAt > 0f && now - recAt > ultAt)
+                    {
+                        ulted = true;
+                        bt.GetMethod("TryUltimate", F).Invoke(bd, null);
+                    }
+                    if (!cast && activeAt > 0f && now - recAt > activeAt)
                     {
                         cast = true;
                         bt.GetField("_skillCooldown", F).SetValue(bd, 999f);

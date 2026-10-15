@@ -80,7 +80,6 @@ namespace Game.Module.InGame
         {
             if (me == null) return;
             // 아마존 정예는 스킬 보류 — 아무 일도 안 일어나는데 연출만 터지면 거짓말이다
-            if (me.Key == "amazon_elite") { CastHostSkill(me); return; }
 
             _castColor = _config != null ? _config.CastColorOf(me.Key) : Color.white;
             var body = me.Position;
@@ -109,17 +108,13 @@ namespace Game.Module.InGame
             _castPending = me;
             _castFreezeLeft = CastFreezeSeconds;
 
-            var skill = SkillEntryOf(me.Key);
-            // 영어 화면은 큰 글씨가 곧 영문 이름이다. 번역 표에 영어 칸이 비어 있어
-            // `DisplayName` 이 한국어로 떨어졌다 — 표의 영문 이름을 쓰고 아래 줄은 비운다.
+            // 컷인은 필살기 이름(문자열 표 `uskill.{호스트}.name`) — 액티브는 컷인 없이 나간다(PD 2026-10-15)
             bool english = global::Game.Module.Common.Localize.Current == global::Game.Module.Common.Language.English;
-            string bigName = skill == null ? string.Empty
-                : english || string.IsNullOrEmpty(skill.DisplayName) ? skill.NameEn : skill.DisplayName;
             _bus.Publish(new SkillCastEvent
             {
                 CastHostKey = me.Key,
-                SkillName = bigName,
-                SkillNameEn = english ? string.Empty : skill?.NameEn ?? string.Empty,
+                SkillName = UltimateName(me.Key),
+                SkillNameEn = english ? string.Empty : UltimateNameEn(me.Key),
                 CastColor = _castColor,
             });
         }
@@ -178,7 +173,7 @@ namespace Game.Module.InGame
             // 퀄업 연출 스킬은 붉은 불티를 뺀다 — 전기 스킬에 불이 튀면 속성이 흐려진다(검수 2026-10-07)
             if (!HasQualityFx(me)) _pfx?.Hit(me.Position, ParticleElement.Fire, CastParticlePower);
             _pfx?.Puff(feet, ParticleElement.Dust, CastSmokePower);
-            CastHostSkill(me);
+            CastUltimate(me);
         }
 
         /// <summary>링 넷째 장 대신 **가장 가는 둘째 장** 한 장을 멈춰 둔 그림으로 쓴다.</summary>

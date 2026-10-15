@@ -34,7 +34,19 @@ namespace Game.Module.InGame
         /// <summary>`평타 ×N`. 정본은 스킬 피해를 전부 평타 배수로 적는다.</summary>
         private int SkillDamage(Unit me, float mul)
             => me == null ? 1
-             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul));
+             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * ActivePowerMul * _ultFallbackMul));
+
+        /// <summary>필살기 피해 — 성급 위력만 다르다(단계마다 +4%).</summary>
+        private int UltDamage(Unit me, float mul)
+            => me == null ? 1
+             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * UltPowerMul));
+
+        // 성급 성장(PD 2026-10-15 「성급이 올라가면 액티브가 더 좋아져야」) — 몸 공격력(×1.07/단계)과 따로 곱한다.
+        // 기획: `Projects/AVSR/_exchange/doc_skill_concept` 성급 성장 표
+        private const float ActivePowerPerLevel = 0.06f;
+        private const float UltPowerPerLevel = 0.04f;
+        private float ActivePowerMul => 1f + ActivePowerPerLevel * Mathf.Max(0, HostMastery - 1);
+        private float UltPowerMul => 1f + UltPowerPerLevel * Mathf.Max(0, HostMastery - 1);
 
         /// <summary>Lv1 → Lv4 에 자라는 축. Lv5 부터는 끝값에서 멈춘다.</summary>
         private float BaseAxis(float fallback)
@@ -405,7 +417,11 @@ namespace Game.Module.InGame
         //  분기 — 몸 하나에 스킬 하나
         // ═══════════════════════════════════════════════════════════
 
-        private void CastHostSkill(Unit me)
+        /// <summary>
+        /// 액티브(일반 스킬) — 평타로 채워 컷인 없이 바로 나간다(PD 2026-10-15 「액티브 · 필살기 버튼 두 개」).
+        /// 예전 스킬을 그대로 쓰고, 이번 개편(던파 레퍼런스) 스킬은 필살기(`CastUltimate`)로 옮겼다.
+        /// </summary>
+        private void CastActiveSkill(Unit me)
         {
             if (me == null) return;
             global::Game.Module.Common.GameSound.Skill(me.Key);
@@ -418,31 +434,30 @@ namespace Game.Module.InGame
                 // ⚠ 직업은 **근거리 6 · 중거리 3 · 원거리 14** 셋이다(확정본 2026-09-14).
                 //   예전의 「중거리 5 · 관통 4」 묶음은 폐기됐다 — 관통은 직업이 아니라
                 //   공격 종류(`AttackKind.Pierce`)다.
-                case "amazon":           AmazonLightningDance(me); break;   // 번개 무희(2026-10-14, 던파 라이트닝 댄스) — 예전 도약 강타(AmazonLeapStrike)
-                // 아마존 정예는 **스킬 보류**다(확정본 2026-09-14). 아무 일도 안 한다.
-                case "amazon_elite":                            break;
-                case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리(2026-10-14, 던파 대회전격) — 예전 전탄 반사(ReflectAll)
+                case "amazon":           AmazonLeapStrike(me);  break;   // 도약 강타 — 필살기는 번개 무희
+                case "amazon_elite":     EliteUnyielding(me);   break;   // 불굴(2026-10-15 다시 살림) — 필살기는 역린
+                case "baseball":         ReflectAll(me);        break;   // 전탄 반사 — 필살기는 풀스윙 회오리
                 case "death":            ReaperWindow(me);      break;
                 case "guru":             GuardianWard(me);      break;
                 case "ninja_chain":      ChainBind(me);         break;
 
                 // ── 중거리 3 (기관총 셋) ──
-                case "thug":             ThugSpinFire(me);      break;   // 회전 난사(2026-10-14, 던파 레인저 난사) — 예전 3방향 난사(SprayFire)
-                case "hopper_smg":       LeapFar(me);           break;
+                case "thug":             SprayFire(me);         break;   // 3방향 난사 — 필살기는 회전 난사
+                case "hopper_smg":       SmgBackstep(me);       break;   // 백스텝 사격(2026-10-15) — 필살기는 돌진 난사
                 case "commando_mg":      CommandoBarrier(me);   break;
 
                 // ── 원거리 14 ──
                 case "dragoon":          DragoonFireField(me);  break;
                 case "salamander":       SalamanderVenom(me);   break;
                 case "dragon_blue":      DragonSurge(me);       break;
-                case "commando_grenade": CommandoStickyBomb(me); break;  // C4(2026-10-14, 던파 C4) — 예전 융단 폭격(CarpetBomb)
+                case "commando_grenade": CarpetBomb(me);        break;   // 융단 폭격 — 필살기는 C4
                 case "snowwoman":        SnowIceShell(me);      break;
                 case "ninja":            NinjaCloneSkill(me);   break;
                 case "vampire":          VampireFeast(me);      break;
                 case "gangster":         GangsterMarkAll(me);   break;
                 case "hopper":           HopperCritSurge(me);   break;
                 case "commando_missile": MissileFan(me);        break;
-                case "medium":           MediumWraithFlame(me); break;   // 원혼 강림(2026-10-14, 던파 흑염의 칼라) — 예전 골렘 소환(MediumGolem)
+                case "medium":           MediumSkeletons(me);   break;   // 해골 소환(2026-10-15) — 필살기는 골렘 강령
                 case "white_wizard":     WizardFan(me);         break;
                 case "commando_laser":   LaserBounce(me);       break;
                 case "robot":            DeployTurret(me);      break;

@@ -215,7 +215,7 @@ namespace Game.Module.InGame
             m.Incoming = Mathf.Max(0, m.Incoming - 1);
             var body = m.Target.Position + WfBodyCenter;
             PlayFx("mdpop", body, 70f, loop: false)?.SetFrameSeconds(0.04f);   // 붙는 순간 작은 「탁」
-            HitEnemyWith(m.Target, SkillDamage(me, 0.3f * BaseAxis(1f)), me.Profile);
+            HitEnemyWith(m.Target, UltDamage(me, 0.3f * BaseAxis(1f)), me.Profile);
             int k = m.Stacks;
             m.Stacks++;
             if (k < m.Flames.Length)
@@ -231,7 +231,7 @@ namespace Game.Module.InGame
         {
             var at = mark.Target.Position + WfBodyCenter;
             float r = Meters(WfPopMeters) * _buffs.AoeMul;
-            int dmg = SkillDamage(me, WfPopMul * scale * BaseAxis(1f));
+            int dmg = UltDamage(me, WfPopMul * scale * BaseAxis(1f));
             var list = EnemiesInRange(mark.Target.Position, r);
             for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
             var pop = PlayFx("mdpop", at, WfPopSize * Mathf.Lerp(0.6f, 1f, scale), loop: false);

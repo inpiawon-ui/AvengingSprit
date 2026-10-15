@@ -228,7 +228,7 @@ namespace Game.Module.InGame
             if (target != null && target.IsAlive) me.SetFacing(target.Position - me.Position);
             if (!LdPose(me, LdPoseHit)) me.PlayAttack();
             if (target == null || !target.IsAlive) return;   // 가는 사이 다른 것이 잡았다 — 헛치지 않고 다음으로
-            HitEnemyWith(target, SkillDamage(me, LdHitMul * BaseAxis(1f)), me.Profile);
+            HitEnemyWith(target, UltDamage(me, LdHitMul * BaseAxis(1f)), me.Profile);
             var spark = PlayFx("ldspark", target.Position, LdSparkSize, loop: false);
             if (spark != null) spark.SetFrameSeconds(0.045f);
             else PlayFx("bolt", target.Position, 72f, loop: false);
@@ -240,7 +240,7 @@ namespace Game.Module.InGame
             me.SetSpriteLift(0f);
             var at = me.Position;
             float r = Meters(LdSlamRadiusMeters) * _buffs.AoeMul;
-            int dmg = SkillDamage(me, LdSlamMul * BaseAxis(1f));
+            int dmg = UltDamage(me, LdSlamMul * BaseAxis(1f));
             var list = EnemiesInRange(at, r);
             for (int i = 0; i < list.Count; i++)
             {

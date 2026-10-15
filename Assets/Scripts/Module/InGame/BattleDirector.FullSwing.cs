@@ -339,7 +339,7 @@ namespace Game.Module.InGame
                 img?.Play(body, me.Position - dir * (22f * g), me.GetComponent<RectTransform>().sizeDelta,
                           me.BodyFlipX, 0.6f - 0.2f * g, 0.3f, FsBodyGhostTint);
             }
-            int dmg = SkillDamage(me, FsSwingMul * BaseAxis(1f));
+            int dmg = UltDamage(me, FsSwingMul * BaseAxis(1f));
             for (int i = 0; i < list.Count; i++)
             {
                 var e = list[i];

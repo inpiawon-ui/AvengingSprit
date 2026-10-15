@@ -74,7 +74,7 @@ namespace Game.Module.InGame
                 // 두 손 권총 — 앞 · 뒤로 번갈아. 한 손씩 쏘아야 총구 불꽃이 원을 그린다
                 var d = _sfLeftHand ? -dir : dir;
                 _sfLeftHand = !_sfLeftHand;
-                SfShoot(me, d, SkillDamage(me, SfShotMul * BaseAxis(1f)));
+                SfShoot(me, d, UltDamage(me, SfShotMul * BaseAxis(1f)));
             }
 
             _sfShellTick -= dt;
@@ -111,7 +111,7 @@ namespace Game.Module.InGame
         /// <summary>회전을 멈추며 사방으로 한 발씩 — 흰 섬광 고리.</summary>
         private void SfFinale(Unit me)
         {
-            int dmg = SkillDamage(me, SfFinaleMul * BaseAxis(1f));
+            int dmg = UltDamage(me, SfFinaleMul * BaseAxis(1f));
             FireFan(me, me.Position + me.Facing * 2000f, SfFinaleShots, 360f - 360f / SfFinaleShots, dmg, fromPlayer: true);
             var ring = PlayFx("thring", me.Position, SfRingSize, loop: false);
             if (ring != null) ring.SetFrameSeconds(0.05f);

@@ -36,7 +36,7 @@ namespace Game.Character
         public float SpecValueMax => _specValueMax;
 
         /// <summary>특수 효과가 열리는 숙련도. 두 구간이 여기서 갈린다.</summary>
-        public const int SpecLevel = 5;
+        public const int SpecLevel = 6;   // 5 → 6(2026-10-15) — 성급 ★3(6단계)에 추가 옵션이 열린다
 
         /// <summary>
         /// **기본 축**의 값. Lv1 → Lv4 에 자라고, **Lv5 부터는 끝값에서 멈춘다.**

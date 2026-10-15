@@ -145,36 +145,31 @@ MonoBehaviour:
     _ja: "\u6B7B\u795E"
     _en: Death
   - _key: askill.psg_h01.name
-    _ko: "\uBC88\uAC1C \uBB34\uD76C"
-    _ja: "\u96F7\u5149\u306E\u821E"
-    _en: Lightning Dance
+    _ko: "\uB3C4\uC57D \uAC15\uD0C0"
+    _ja: "\u8DF3\u8E8D\u5F37\u6253"
+    _en: Leap Smash
   - _key: askill.psg_h01.desc
-    _ko: "\uBC88\uAC1C\uB97C \uB450\uB974\uACE0 \uC8FC\uBCC0 \uC801 \uCD5C\uB300
-      6\uBA85 \uC0AC\uC774\uB97C \uC62E\uACA8 \uB2E4\uB2C8\uBA70 \uD55C \uBA85\uC529
-      \uCE5C \uB4A4, \uD558\uB298 \uBC88\uAC1C\uB85C \uB0B4\uB824\uCC0D\uB294\uB2E4.
-      \uC2DC\uC804 \uC911 \uBB34\uC801."
-    _ja: "\u96F7\u3092\u307E\u3068\u3044\u3001\u5468\u56F2\u306E\u6575\u6700\u59276\u4F53\u306E\u9593\u3092\u99C6\u3051\u629C\u3051\u30661\u4F53\u305A\u3064\u6253\u3061\u3001\u6700\u5F8C\u306B\u5929\u304B\u3089\u306E\u96F7\u3067\u53E9\u304D\u3064\u3051\u308B\u3002\u767A\u52D5\u4E2D\u306F\u7121\u6575\u3002"
-    _en: Wrapped in lightning, dash between up to 6 nearby enemies striking each,
-      then slam down with a bolt from the sky. Invincible while active.
+    _ko: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uC5B4
+      \uB458\uB808\uB97C 300% \uD53C\uD574\uB85C \uCE5C\uB2E4."
+    _ja: "\u6700\u3082\u8FD1\u3044\u6575\u306B\u98DB\u3073\u8FBC\u307F\u3001\u5468\u56F2\u306B300%\u306E\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B\u3002"
+    _en: Leap at the nearest enemy, dealing 300% damage around you.
   - _key: askill.psg_h02.name
-    _ko: "(\uBBF8\uC815)"
-    _ja: "\uFF08\u672A\u5B9A\uFF09"
-    _en: (TBD)
+    _ko: "\uBD88\uAD74"
+    _ja: "\u4E0D\u5C48"
+    _en: Unyielding
   - _key: askill.psg_h02.desc
-    _ko: "\uC2A4\uD0AC \uBCF4\uB958 \u2014 \uC815\uD574\uC9C0\uBA74 \uCC44\uC6B4\uB2E4."
-    _ja: "\u30B9\u30AD\u30EB\u4FDD\u7559 \u2014 \u6C7A\u307E\u308A\u6B21\u7B2C\u8FFD\u52A0\u3059\u308B\u3002"
-    _en: "Skill on hold \u2014 to be added."
+    _ko: "2.5\uCD08\uAC04 \uBB34\uC801\uC774 \uB41C\uB2E4."
+    _ja: "2.5\u79D2\u9593\u3001\u7121\u6575\u306B\u306A\u308B\u3002"
+    _en: Become invincible for 2.5s.
   - _key: askill.psg_h03.name
-    _ko: C4
-    _ja: C4
-    _en: C4
+    _ko: "\uC735\uB2E8 \uD3ED\uACA9"
+    _ja: "\u7D68\u6BEF\u7206\u6483"
+    _en: Carpet Bomb
   - _key: askill.psg_h03.desc
-    _ko: "\uD3ED\uD0C4 \uC6D0\uBC18\uC744 \uB358\uC838 \uC801 \uCD5C\uB300 6\uBA85\uC5D0\uAC8C
-      \uD3ED\uD0C4\uC744 \uBD99\uC774\uACE0, \uBD99\uC778 \uC21C\uC11C\uB300\uB85C
-      \uC5F0\uC1C4 \uD3ED\uBC1C\uC2DC\uD0A8\uB2E4."
-    _ja: "\u7206\u5F3E\u30C7\u30A3\u30B9\u30AF\u3092\u6295\u3052\u3066\u6700\u59276\u4F53\u306E\u6575\u306B\u7206\u5F3E\u3092\u8CBC\u308A\u4ED8\u3051\u3001\u8CBC\u3063\u305F\u9806\u306B\u9023\u9396\u7206\u767A\u3055\u305B\u308B\u3002"
-    _en: Throw a bomb disc that sticks bombs on up to 6 enemies, then detonate them
-      in a chain.
+    _ko: "\uD45C\uC801 \uB458\uB808\uC5D0 \uC218\uB958\uD0C4\uC744 \uD55C \uC904\uB85C
+      \uB5A8\uAD70\uB2E4."
+    _ja: "\u6A19\u7684\u306E\u5468\u308A\u306B\u624B\u69B4\u5F3E\u3092\u4E00\u5217\u306B\u843D\u3068\u3059\u3002"
+    _en: Drop a line of grenades around the target.
   - _key: askill.psg_h04.name
     _ko: "\uC5F0\uC1C4 \uBC29\uC804"
     _ja: "\u9023\u9396\u653E\u96FB"
@@ -238,16 +233,13 @@ MonoBehaviour:
     _ja: "\u90E8\u5C4B\u306B\u3044\u308B\u3059\u3079\u3066\u306E\u6575\u306B3\u79D2\u9593\u30DE\u30FC\u30AD\u30F3\u30B0\u3092\u523B\u3080\u3002"
     _en: Mark every enemy in the room for 3s.
   - _key: askill.psg_h11.name
-    _ko: "\uD68C\uC804 \uB09C\uC0AC"
-    _ja: "\u56DE\u8EE2\u4E71\u5C04"
-    _en: Spin Barrage
+    _ko: "\uB09C\uC0AC"
+    _ja: "\u4E71\u5C04"
+    _en: Bullet Storm
   - _key: askill.psg_h11.desc
-    _ko: "\uB450 \uC190 \uAD8C\uCD1D\uC73C\uB85C 2.5\uCD08 \uB3D9\uC548 \uB3CC\uBA70
-      \uC0AC\uBC29\uC73C\uB85C \uC3DF\uC544\uBD93\uACE0, \uBA48\uCD94\uBA70 \uC0AC\uBC29\uC73C\uB85C
-      \uD55C \uBC1C\uC529 \uC3DC\uB2E4."
-    _ja: "\u4E21\u624B\u306E\u62F3\u9283\u30672.5\u79D2\u9593\u56DE\u8EE2\u3057\u306A\u304C\u3089\u56DB\u65B9\u306B\u6483\u3061\u307E\u304F\u308A\u3001\u6B62\u307E\u308B\u77AC\u9593\u306B\u5168\u65B9\u4F4D\u3078\u4E00\u767A\u305A\u3064\u6483\u3064\u3002"
-    _en: Spin for 2.5s firing both pistols in every direction, then stop with a final
-      shot all around.
+    _ko: "1\uCD08\uAC04 3\uBC29\uD5A5\uC73C\uB85C \uC3DF\uC544\uBD93\uB294\uB2E4."
+    _ja: "1\u79D2\u9593\u30013\u65B9\u5411\u306B\u6483\u3061\u307E\u304F\u308B\u3002"
+    _en: Fire in 3 directions for 1s.
   - _key: askill.psg_h12.name
     _ko: "\uC218\uD638 \uACB0\uACC4"
     _ja: "\u5B88\u8B77\u7D50\u754C"
@@ -266,25 +258,22 @@ MonoBehaviour:
     _ja: "5\u79D2\u9593\u3001\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u7387\u304C90%\u306B\u56FA\u5B9A\u3055\u308C\u308B\u3002"
     _en: Crit chance locked at 90% for 5s.
   - _key: askill.psg_h14.name
-    _ko: "\uB3C4\uC57D \uAC15\uC2B5"
-    _ja: "\u8DF3\u8E8D\u5F37\u8972"
-    _en: Leap Assault
+    _ko: "\uBC31\uC2A4\uD15D \uC0AC\uACA9"
+    _ja: "\u30D0\u30C3\u30AF\u30B9\u30C6\u30C3\u30D7\u5C04\u6483"
+    _en: Backstep Fire
   - _key: askill.psg_h14.desc
-    _ko: "\uAC00\uC7A5 \uBA3C \uC801\uC5D0\uAC8C \uB6F0\uC5B4\uB4E4\uACE0 2\uCD08\uAC04
-      \uBB34\uC801."
-    _ja: "\u6700\u3082\u9060\u3044\u6575\u306B\u98DB\u3073\u8FBC\u307F\u30012\u79D2\u9593\u7121\u6575\u306B\u306A\u308B\u3002"
-    _en: Leap at the farthest enemy; Invincible for 2s.
+    _ko: "\uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C\uC11C \uB4A4\uB85C \uD06C\uAC8C \uB6F0\uBA70
+      \uC55E\uC73C\uB85C \uBD80\uCC44\uAF34 \uC5F0\uC0AC."
+    _ja: "\u8FD1\u304F\u306E\u6575\u304B\u3089\u5927\u304D\u304F\u5F8C\u308D\u3078\u8DF3\u3073\u3001\u524D\u65B9\u3078\u6247\u72B6\u306B\u9023\u5C04\u3059\u308B\u3002"
+    _en: Leap back from the nearest enemy while spraying a fan of shots forward.
   - _key: askill.psg_h15.name
-    _ko: "\uC6D0\uD63C \uAC15\uB9BC"
-    _ja: "\u6028\u970A\u964D\u81E8"
-    _en: Wraith Descent
+    _ko: "\uD574\uACE8 \uC18C\uD658"
+    _ja: "\u9AB8\u9AA8\u53EC\u559A"
+    _en: Summon Skeletons
   - _key: askill.psg_h15.desc
-    _ko: "6\uCD08 \uB3D9\uC548 \uB4F1 \uB4A4\uC5D0 \uC6D0\uD63C\uC774 \uAE43\uB4E4\uC5B4
-      \uD3C9\uD0C0\uAC00 \uB9DE\uC744 \uB54C\uB9C8\uB2E4 \uD63C\uBD88\uC744 \uB2E8\uB2E4.
-      \uD63C\uBD88 3\uAC1C\uAC00 \uBAA8\uC774\uBA74 \uD130\uC9C4\uB2E4."
-    _ja: "6\u79D2\u9593\u3001\u80CC\u5F8C\u306B\u6028\u970A\u304C\u5BBF\u308A\u3001\u901A\u5E38\u653B\u6483\u304C\u5F53\u305F\u308B\u305F\u3073\u306B\u9B42\u706B\u3092\u4ED8\u3051\u308B\u3002\u9B42\u706B\u304C3\u3064\u96C6\u307E\u308B\u3068\u7206\u767A\u3059\u308B\u3002"
-    _en: For 6s a wraith haunts your back, marking each enemy you hit with a soulflame.
-      Three soulflames explode.
+    _ko: "\uD574\uACE8 2\uAE30\uB97C \uBD88\uB7EC \uAC19\uC774 \uC2F8\uC6B4\uB2E4."
+    _ja: "\u9AB8\u9AA8\u30922\u4F53\u547C\u3073\u51FA\u3057\u3001\u4E00\u7DD2\u306B\u6226\u3046\u3002"
+    _en: Summon 2 skeletons to fight alongside you.
   - _key: askill.psg_h16.name
     _ko: "\uAD11\uD718 \uD655\uC0B0"
     _ja: "\u5149\u8F1D\u62E1\u6563"
@@ -321,17 +310,14 @@ MonoBehaviour:
     _ja: "10\u79D2\u9593\u3001\u81EA\u52D5\u3067\u6483\u3064\u7832\u53F0\u3092\u8A2D\u7F6E\u3059\u308B\u3002"
     _en: Deploy an auto-firing turret for 10s.
   - _key: askill.psg_h20.name
-    _ko: "\uD480\uC2A4\uC719 \uD68C\uC624\uB9AC"
-    _ja: "\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0\u65CB\u98A8"
-    _en: Full Swing Cyclone
+    _ko: "\uC804\uD0C4 \uBC18\uC0AC"
+    _ja: "\u5168\u5F3E\u53CD\u5C04"
+    _en: Full Reflect
   - _key: askill.psg_h20.desc
-    _ko: "\uD68C\uC624\uB9AC\uB85C \uC8FC\uBCC0 \uC801\uC744 2\uCD08\uAC04 \uB04C\uC5B4\uB2F9\uAE30\uACE0
-      \uB0A0\uC544\uC628 \uD0C4\uC740 \uAE08\uBE5B \uD0C4\uC73C\uB85C \uB418\uBC1B\uC544\uCE5C
-      \uB4A4, \uD480\uC2A4\uC719\uC73C\uB85C \uD55C\uAEBC\uBC88\uC5D0 \uB0A0\uB824
-      \uBC84\uB9B0\uB2E4."
-    _ja: "\u65CB\u98A8\u3067\u5468\u56F2\u306E\u6575\u30922\u79D2\u9593\u5F15\u304D\u5BC4\u305B\u3001\u98DB\u3093\u3067\u304D\u305F\u5F3E\u306F\u91D1\u8272\u306E\u5F3E\u3067\u6253\u3061\u8FD4\u3057\u3001\u6700\u5F8C\u306B\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0\u3067\u307E\u3068\u3081\u3066\u5439\u304D\u98DB\u3070\u3059\u3002"
-    _en: A cyclone pulls nearby enemies in for 2s and bats incoming shots back as
-      golden homing balls, then a full swing sends them all flying.
+    _ko: "5\uCD08\uAC04 \uB0A0\uC544\uC624\uB294 \uD0C4\uC744 \uB418\uBC1B\uC544\uCE5C\uB2E4.
+      \uBC18\uC0AC\uD0C4\uC740 \uB354 \uC544\uD504\uB2E4."
+    _ja: "5\u79D2\u9593\u3001\u98DB\u3093\u3067\u304F\u308B\u5F3E\u3092\u8DF3\u306D\u8FD4\u3059\u3002\u53CD\u5C04\u5F3E\u306F\u5A01\u529B\u304C\u9AD8\u3044\u3002"
+    _en: Reflect incoming bullets for 5s. Reflected shots hit harder.
   - _key: askill.psg_h21.name
     _ko: "\uC5BC\uC74C \uAC10\uC625"
     _ja: "\u6C37\u306E\u7262\u7344"
@@ -2931,3 +2917,191 @@ MonoBehaviour:
     _ko: "Lv {0} \uD544\uC694"
     _ja: "Lv {0} \u5FC5\u8981"
     _en: Need Lv {0}
+  - _key: uskill.gangster.name
+    _ko: "\uCCAD\uBD80 \uCC98\uD615"
+    _ja: "\u8ACB\u8CA0\u51E6\u5211"
+    _en: Contract Execution
+  - _key: uskill.gangster.en
+    _ko: Contract Execution
+    _ja: Contract Execution
+    _en: Contract Execution
+  - _key: uskill.hopper.name
+    _ko: "\uD0AC \uD3EC\uC778\uD2B8"
+    _ja: "\u30AD\u30EB\u30DD\u30A4\u30F3\u30C8"
+    _en: Kill Point
+  - _key: uskill.hopper.en
+    _ko: Kill Point
+    _ja: Kill Point
+    _en: Kill Point
+  - _key: uskill.ninja_chain.name
+    _ko: "\uC0AC\uC2AC \uB3CC\uACA9 \uC5F0\uACA9"
+    _ja: "\u9396\u7A81\u6483\u9023\u6483"
+    _en: Chain Rush Combo
+  - _key: uskill.ninja_chain.en
+    _ko: Chain Rush Combo
+    _ja: Chain Rush Combo
+    _en: Chain Rush Combo
+  - _key: uskill.medium.name
+    _ko: "\uACE8\uB818 \uAC15\uB839"
+    _ja: "\u30B4\u30FC\u30EC\u30E0\u964D\u970A"
+    _en: Golem Invocation
+  - _key: uskill.medium.en
+    _ko: Golem Invocation
+    _ja: Golem Invocation
+    _en: Golem Invocation
+  - _key: uskill.death.name
+    _ko: "\uB9DD\uC790 \uAD70\uB2E8"
+    _ja: "\u4EA1\u8005\u306E\u8ECD\u56E3"
+    _en: Legion of the Dead
+  - _key: uskill.death.en
+    _ko: Legion of the Dead
+    _ja: Legion of the Dead
+    _en: Legion of the Dead
+  - _key: uskill.robot.name
+    _ko: "\uD3EC\uD0D1 \uAD70\uB2E8"
+    _ja: "\u7832\u53F0\u8ECD\u56E3"
+    _en: Turret Legion
+  - _key: uskill.robot.en
+    _ko: Turret Legion
+    _ja: Turret Legion
+    _en: Turret Legion
+  - _key: uskill.ninja.name
+    _ko: "\uADF8\uB9BC\uC790 \uC0BC\uBD84\uC2E0"
+    _ja: "\u5F71\u4E09\u5206\u8EAB"
+    _en: Triple Shadow
+  - _key: uskill.ninja.en
+    _ko: Triple Shadow
+    _ja: Triple Shadow
+    _en: Triple Shadow
+  - _key: uskill.amazon.name
+    _ko: "\uBC88\uAC1C \uBB34\uD76C"
+    _ja: "\u96F7\u5149\u306E\u821E"
+    _en: Lightning Dance
+  - _key: uskill.amazon.en
+    _ko: Lightning Dance
+    _ja: Lightning Dance
+    _en: Lightning Dance
+  - _key: uskill.hopper_smg.name
+    _ko: "\uB3CC\uC9C4 \uB09C\uC0AC"
+    _ja: "\u7A81\u9032\u4E71\u5C04"
+    _en: Rush Barrage
+  - _key: uskill.hopper_smg.en
+    _ko: Rush Barrage
+    _ja: Rush Barrage
+    _en: Rush Barrage
+  - _key: uskill.vampire.name
+    _ko: "\uD53C\uC758 \uD3ED\uC8FC"
+    _ja: "\u8840\u306E\u66B4\u8D70"
+    _en: Blood Frenzy
+  - _key: uskill.vampire.en
+    _ko: Blood Frenzy
+    _ja: Blood Frenzy
+    _en: Blood Frenzy
+  - _key: uskill.dragoon.name
+    _ko: "\uC6A9 \uB3CC\uACA9"
+    _ja: "\u7ADC\u7A81\u6483"
+    _en: Dragon Charge
+  - _key: uskill.dragoon.en
+    _ko: Dragon Charge
+    _ja: Dragon Charge
+    _en: Dragon Charge
+  - _key: uskill.baseball.name
+    _ko: "\uD480\uC2A4\uC719 \uD68C\uC624\uB9AC"
+    _ja: "\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0\u65CB\u98A8"
+    _en: Full Swing Cyclone
+  - _key: uskill.baseball.en
+    _ko: Full Swing Cyclone
+    _ja: Full Swing Cyclone
+    _en: Full Swing Cyclone
+  - _key: uskill.guru.name
+    _ko: "\uACB0\uACC4 \uAC00\uB450\uAE30"
+    _ja: "\u7D50\u754C\u5C01\u3058"
+    _en: Sealing Barrier
+  - _key: uskill.guru.en
+    _ko: Sealing Barrier
+    _ja: Sealing Barrier
+    _en: Sealing Barrier
+  - _key: uskill.commando_grenade.name
+    _ko: C4
+    _ja: C4
+    _en: C4
+  - _key: uskill.commando_grenade.en
+    _ko: C4
+    _ja: C4
+    _en: C4
+  - _key: uskill.salamander.name
+    _ko: "\uB3C5 \uB2AA"
+    _ja: "\u6BD2\u6CBC"
+    _en: Venom Swamp
+  - _key: uskill.salamander.en
+    _ko: Venom Swamp
+    _ja: Venom Swamp
+    _en: Venom Swamp
+  - _key: uskill.snowwoman.name
+    _ko: "\uC5BC\uC74C \uC9C4"
+    _ja: "\u6C37\u306E\u9663"
+    _en: Frost Formation
+  - _key: uskill.snowwoman.en
+    _ko: Frost Formation
+    _ja: Frost Formation
+    _en: Frost Formation
+  - _key: uskill.thug.name
+    _ko: "\uD68C\uC804 \uB09C\uC0AC"
+    _ja: "\u56DE\u8EE2\u4E71\u5C04"
+    _en: Spin Barrage
+  - _key: uskill.thug.en
+    _ko: Spin Barrage
+    _ja: Spin Barrage
+    _en: Spin Barrage
+  - _key: uskill.commando_missile.name
+    _ko: "\uC790\uD3ED \uBBF8\uC0AC\uC77C \uB5BC"
+    _ja: "\u81EA\u7206\u30DF\u30B5\u30A4\u30EB\u7FA4"
+    _en: Missile Swarm
+  - _key: uskill.commando_missile.en
+    _ko: Missile Swarm
+    _ja: Missile Swarm
+    _en: Missile Swarm
+  - _key: uskill.commando_laser.name
+    _ko: "\uCDA9\uC804 \uB808\uC774\uC800"
+    _ja: "\u30C1\u30E3\u30FC\u30B8\u30EC\u30FC\u30B6\u30FC"
+    _en: Charged Laser
+  - _key: uskill.commando_laser.en
+    _ko: Charged Laser
+    _ja: Charged Laser
+    _en: Charged Laser
+  - _key: uskill.white_wizard.name
+    _ko: "\uBE5B \uAD6C\uC2AC \uC77C\uC81C \uBC1C\uC0AC"
+    _ja: "\u5149\u7403\u4E00\u6589\u767A\u5C04"
+    _en: Orb Volley
+  - _key: uskill.white_wizard.en
+    _ko: Orb Volley
+    _ja: Orb Volley
+    _en: Orb Volley
+  - _key: uskill.dragon_blue.name
+    _ko: "\uBC88\uAC1C \uAD6C\uC2AC"
+    _ja: "\u96F7\u7403"
+    _en: Thunder Orbs
+  - _key: uskill.dragon_blue.en
+    _ko: Thunder Orbs
+    _ja: Thunder Orbs
+    _en: Thunder Orbs
+  - _key: uskill.commando_mg.name
+    _ko: "\uB514\uD50C\uB809\uD2B8 \uC6D4"
+    _ja: "\u30C7\u30A3\u30D5\u30EC\u30AF\u30C8\u30A6\u30A9\u30FC\u30EB"
+    _en: Deflect Wall
+  - _key: uskill.commando_mg.en
+    _ko: Deflect Wall
+    _ja: Deflect Wall
+    _en: Deflect Wall
+  - _key: uskill.amazon_elite.name
+    _ko: "\uC5ED\uB9B0"
+    _ja: "\u9006\u9C57"
+    _en: Wrath Unleashed
+  - _key: uskill.amazon_elite.en
+    _ko: Wrath Unleashed
+    _ja: Wrath Unleashed
+    _en: Wrath Unleashed
+  - _key: ui.ingame.ultimate
+    _ko: "\uD544\uC0B4\uAE30"
+    _ja: "\u5FC5\u6BBA\u6280"
+    _en: SPECIAL
