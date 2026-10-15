@@ -3105,3 +3105,15 @@ MonoBehaviour:
     _ko: "\uD544\uC0B4\uAE30"
     _ja: "\u5FC5\u6BBA\u6280"
     _en: SPECIAL
+  - _key: ui.ingame.ult_trial
+    _ko: "\uCCB4\uD5D8"
+    _ja: "\u304A\u8A66\u3057"
+    _en: TRIAL
+  - _key: ui.ingame.ult_locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF"
+    _en: LOCKED
+  - _key: ui.ingame.ult_trial_spent
+    _ko: "\uC870\uAC01\uC744 \uBAA8\uC73C\uBA74 \uB9E4\uBC88 \uC4F8 \uC218 \uC788\uC5B4\uC694"
+    _ja: "\u6B20\u7247\u3092\u96C6\u3081\u308B\u3068\u6BCE\u56DE\u4F7F\u3048\u307E\u3059"
+    _en: Get shards to use it every time

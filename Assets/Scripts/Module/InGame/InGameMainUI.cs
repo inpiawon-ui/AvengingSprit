@@ -822,6 +822,9 @@ namespace Game.Module.InGame
             //   날아오는데, 그대로 그리면 CURRENT HOST 칸에 **유령이 호스트로** 앉는다.
             if (e.PossessedHostKey == Game.Character.HostEntry.GhostKey) { ShowNoHost(); return; }
             _hasRealHost = true;
+            // 빙의가 버튼(밝기 · 누를 수 있음)을 건드린다 — 같은 몸으로 다시 빙의하면 필살기 상태가 그대로라
+            // `TickUltButton` 이 다시 안 그려 버튼이 반투명으로 꺼져 보였다(녹화 trial_1). 새로 그리게 한다
+            _ultShown = false;
             _ui.SetActive("CurrentHostPanel", true);
             _ui.SetActive("Hud3HostEmptyFace", false);
             _ui.SetActive("Hud3HostEmptyBar", false);

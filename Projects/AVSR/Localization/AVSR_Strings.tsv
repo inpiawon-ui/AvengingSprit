@@ -675,3 +675,6 @@ uskill.commando_mg.en	Deflect Wall	Deflect Wall	Deflect Wall
 uskill.amazon_elite.name	역린	逆鱗	Wrath Unleashed
 uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed
 ui.ingame.ultimate	필살기	必殺技	SPECIAL
+ui.ingame.ult_trial	체험	お試し	TRIAL
+ui.ingame.ult_locked	잠김	ロック	LOCKED
+ui.ingame.ult_trial_spent	조각을 모으면 매번 쓸 수 있어요	欠片を集めると毎回使えます	Get shards to use it every time

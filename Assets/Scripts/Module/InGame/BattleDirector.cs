@@ -2709,7 +2709,7 @@ namespace Game.Module.InGame
         private readonly List<int> _hostSlots = new();
 
 #if UNITY_EDITOR
-        /// <summary>에디터 녹화 전용 — 판 시작 때 같이 올릴 그림 키(`SkillReworkRecorder` 의 swapTo).</summary>
+        /// <summary>에디터 녹화 전용 — 판 시작 때 같이 올릴 그림 키(쉼표로 여럿, `SkillReworkRecorder` 의 swapTo · 적 호스트).</summary>
         public static string EditorExtraUnitKey;
 #endif
 
@@ -2730,7 +2730,9 @@ namespace Game.Module.InGame
             var keys = new List<string> { "ghost", GolemKey };
 #if UNITY_EDITOR
             // 녹화 도구가 판 안에서 갈아입힐 숨은 몸(아마존 정예 · 사신) — 안 올리면 흰 사각형으로 찍힌다
-            if (!string.IsNullOrEmpty(EditorExtraUnitKey)) keys.Add(EditorExtraUnitKey);
+            if (!string.IsNullOrEmpty(EditorExtraUnitKey))
+                foreach (var k in EditorExtraUnitKey.Split(','))
+                    if (k.Length > 0 && !keys.Contains(k)) keys.Add(k);
 #endif
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
@@ -8686,7 +8688,7 @@ namespace Game.Module.InGame
             // 액티브는 빈 채로 시작해 평타로 채우고, 필살기는 빙의할 때마다 한 번 쓸 수 있다(PD 2026-10-15).
             // (예전엔 액티브를 가득 찬 채로 시작했다 — 「몸을 뺏는 순간이 가장 쓰고 싶은 순간」은 이제 필살기의 몫)
             _skillCooldown = 0f;
-            _ultReady = true;
+            _ultReady = UltReadyOnEnter(key);
             // ⚠ 지속형 스킬은 **몸에 붙은 것**이지 판에 붙은 것이 아니다.
             //   안 끄면 오버히트를 켜고 다른 몸으로 갈아타는 것이 이득이 된다.
             ClearSkillState();

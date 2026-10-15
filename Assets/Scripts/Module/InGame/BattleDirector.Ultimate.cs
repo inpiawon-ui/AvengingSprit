@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Game.Module.Events;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -15,6 +17,38 @@ namespace Game.Module.InGame
         /// <summary>이 몸에서 아직 필살기를 안 썼다.</summary>
         private bool _ultReady;
 
+        // ── 못 가진 몸은 1회 체험 (PD 2026-10-15 「그 표대로 1회 체험으로」) ──────────
+        //
+        // 가진 몸(숙련도 ≥ 1)은 빙의할 때마다 1회. 못 가진 몸은 **이 판에서 그 몸으로 처음 빙의할 때만** 1회.
+        // 판이 바뀌면(이 컴포넌트가 새로 생기면) 다시 1회가 생긴다 — 판마다 한 번씩은 「이 몸 필살기 좋았지」를 본다.
+        // 나중에 「필살기 초기화」 카드가 생기면 두 경우 모두 `_ultReady` 만 다시 켜면 된다.
+        private readonly HashSet<string> _ultTrialUsed = new();
+
+        /// <summary>그 몸을 가졌는가 — 못 가졌으면 필살기는 판당 1회 체험.</summary>
+        private bool OwnsHostForUlt(string hostKey)
+        {
+#if UNITY_EDITOR
+            // 녹화 도구 전용 — 시험 세이브는 전부 숙련도 10 이라 「못 가진 몸」을 흉내 낸다(세이브는 안 건드린다)
+            if (EditorUnownedHost != null && EditorUnownedHost == hostKey) return false;
+#endif
+            return _player == null || !_player.IsReady || _player.GetMastery(hostKey) >= 1;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>에디터 녹화 전용 — 이 몸을 못 가진 몸으로 친다(필살기 1회 체험 확인).</summary>
+        public static string EditorUnownedHost;
+#endif
+
+        /// <summary>지금 몸이 못 가진 몸이고 이번이 체험 1회다(아직 안 씀).</summary>
+        public bool IsUltTrial => _host != null && _ultReady && !OwnsHostForUlt(_host.Key);
+
+        /// <summary>지금 몸이 못 가진 몸이고 이 판의 체험을 이미 썼다 — 다시 빙의해도 안 채워진다.</summary>
+        public bool IsUltTrialSpent => _host != null && !_ultReady && !OwnsHostForUlt(_host.Key)
+                                       && _ultTrialUsed.Contains(_host.Key);
+
+        /// <summary>빙의할 때 필살기를 채울지 — 가진 몸은 늘, 못 가진 몸은 이 판에서 처음일 때만.</summary>
+        private bool UltReadyOnEnter(string hostKey) => OwnsHostForUlt(hostKey) || !_ultTrialUsed.Contains(hostKey);
+
         /// <summary>필살기 버튼을 눌러 쓸 수 있는가(몸 · 봉인 · 1회).</summary>
         public bool IsUltReady => _running && _ultReady && _host != null && !IsSkillSealed(_host.Key);
 
@@ -25,8 +59,16 @@ namespace Game.Module.InGame
         {
             if (!_running || IsCastFrozen || IsChanneling) return;
             var me = _host;
-            if (me == null || !_ultReady || IsSkillSealed(me.Key)) return;
+            if (me == null) return;
+            if (!_ultReady)
+            {
+                // 체험을 다 쓴 몸 — 왜 안 나가는지 버튼 위에 알린다
+                if (IsUltTrialSpent) _bus.Publish(new PossessDeniedEvent { UltTrialSpent = true });
+                return;
+            }
+            if (IsSkillSealed(me.Key)) return;
             _ultReady = false;
+            if (!OwnsHostForUlt(me.Key)) _ultTrialUsed.Add(me.Key);
             BeginCast(me);   // 컷인 → 멈춤 → `ReleaseCast` → `CastUltimate`
         }
 
@@ -117,6 +159,9 @@ namespace Game.Module.InGame
         }
 
         /// <summary>필살기 버튼 아이콘(`ulticon_{호스트}`). 아직 없으면 액티브 아이콘.</summary>
+        /// <summary>체험을 다 쓴 필살기 버튼에 얹는 자물쇠 — 호스트 상세의 잠금 그림을 같이 쓴다.</summary>
+        public Sprite UltimateLockIcon => _panelAtlas != null ? _panelAtlas.GetSprite("hostdetaillockicon") : null;
+
         public Sprite UltimateIcon(string hostKey)
         {
             if (_panelAtlas == null || hostKey == null) return null;

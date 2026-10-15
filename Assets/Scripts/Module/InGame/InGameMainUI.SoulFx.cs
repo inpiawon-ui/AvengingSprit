@@ -86,7 +86,7 @@ namespace Game.Module.InGame
         {
             var text = _ui.Get<TMP_Text>("PossessDeniedToast");
             if (text == null) return;
-            text.text = Localize.Get("ui.ingame.no_host_to_possess");
+            text.text = Localize.Get(e.UltTrialSpent ? "ui.ingame.ult_trial_spent" : "ui.ingame.no_host_to_possess");
             ShowDeniedToastAsync(text, ++_deniedToastId).Forget();   // fire-and-forget: 잠깐 떴다 사라지는 알림
         }
 

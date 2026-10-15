@@ -255,6 +255,23 @@ namespace Game.Module.InGame
 
         public bool IsShowing => gameObject.activeSelf && !_shape.IsNone && _flash <= 0f;
 
+        private float _strength = 1f;
+
+        /// <summary>
+        /// 진하기 배율(1 = 보스 패턴). 적 호스트 액티브 예고는 보스보다 옅게 쓴다(PD 2026-10-15 「과하지 않지만 잘 보이게」).
+        /// 차오름 · 테두리 겹에도 같이 먹는다.
+        /// </summary>
+        public float Strength
+        {
+            get => _strength;
+            set
+            {
+                _strength = Mathf.Clamp01(value);
+                if (_core != null) _core._strength = _strength;
+                if (_edge != null) _edge._strength = _strength;
+            }
+        }
+
         /// <summary>
         /// 예고가 얼마나 찼는지(0~1) 알려 준다. 끝이 가까울수록 빠르게 숨 쉰다.
         /// </summary>
@@ -321,7 +338,8 @@ namespace Game.Module.InGame
                     c.a = 0.6f;
                     break;
             }
-            if (flash > 0f) c.a = Mathf.Max(c.a, flash * 0.7f);   // 터지는 순간 한 번 진해진다(그래도 화면을 덮지 않게)
+            c.a *= _strength;
+            if (flash > 0f) c.a = Mathf.Max(c.a, flash * 0.7f * _strength);   // 터지는 순간 한 번 진해진다(그래도 화면을 덮지 않게)
             return c;
         }
 

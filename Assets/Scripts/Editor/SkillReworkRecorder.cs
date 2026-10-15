@@ -25,12 +25,18 @@ namespace Game.Editor
         /// <param name="ultAt">녹화 시작 뒤 이 초에 필살기를 누른다(0 이하면 안 누름). 액티브는 0.5초에 누른다.</param>
         /// <param name="activeAt">액티브를 누를 초(0 이하면 안 누름).</param>
         public static void Run(string hostKey, string clip, float recordSeconds, float liftMeters = 3f,
-                               float ultAt = -1f, float activeAt = 0.5f, string swapTo = null)
+                               float ultAt = -1f, float activeAt = 0.5f, string swapTo = null,
+                               string[] enemyHosts = null, float perEnemy = 2.6f, bool trialCheck = false)
         {
+            // 필살기 1회 체험 확인 — swapTo 몸을 못 가진 몸으로 친다. 필살기를 쓰고, 다시 빙의해도 잠긴 채인지 본다
+            Game.Module.InGame.BattleDirector.EditorUnownedHost = trialCheck ? swapTo : null;
+            bool reEntered = false;
             int phase = 0, wait = 0;
             double t0 = EditorApplication.timeSinceStartup, recAt = 0;
             float battleAt = 0f;
             bool cast = false, ulted = false;
+            int enemyIndex = 0;
+            Game.Module.InGame.Unit enemyHost = null;
             var bt = typeof(Game.Module.InGame.BattleDirector);
             EditorApplication.CallbackFunction cb = null;
             cb = () =>
@@ -59,8 +65,10 @@ namespace Game.Editor
                         var pt = typeof(Game.Module.Lobby.ChapterHostPanel);
                         pt.GetMethod("Step", F).Invoke(panel, new object[] { -9 });
                         pt.GetMethod("PickHost", F).Invoke(panel, new object[] { hostKey });
-                        if (swapTo != null)
-                            Game.Module.InGame.BattleDirector.EditorExtraUnitKey = p.GetHost(swapTo)?.SpriteKey;
+                        var extra = new System.Collections.Generic.List<string>();
+                        if (swapTo != null) extra.Add(p.GetHost(swapTo)?.SpriteKey);
+                        if (enemyHosts != null) foreach (var k in enemyHosts) extra.Add(p.GetHost(k)?.SpriteKey);
+                        Game.Module.InGame.BattleDirector.EditorExtraUnitKey = string.Join(",", extra);
                         pt.GetMethod("OnStart", F).Invoke(panel, null);
                         phase = 1;
                         wait = 60;
@@ -95,7 +103,8 @@ namespace Game.Editor
                         // 입구(아래 벽)에 서 있으면 화면 아래가 기계 그림이라 연출이 잘린다 — 방 안쪽으로 올린다
                         host.Position += new Vector2(0f, liftMeters * m);
                         var spawn = bt.GetMethod("SpawnRoomUnit", F);
-                        for (int i = 0; i < Offsets.Length && src != null; i++, alive++)
+                        // 적 호스트 예고 녹화면 잡몹을 더 세우지 않는다 — 바닥 예고가 잡몹에 가린다
+                        for (int i = 0; i < Offsets.Length && src != null && enemyHosts == null; i++, alive++)
                         {
                             // 근접만 더 세운다 — 1챕터 원거리는 수류탄병이라 더 세우면 수류탄 폭발이 화면을 덮었다(녹화 rw_sl_1 · rw_sl_2)
                             var pick = src;
@@ -121,6 +130,38 @@ namespace Game.Editor
                         phase = 2;
                         return;
                     }
+                    // 적 호스트를 하나씩 세워 액티브를 쓰게 한다(바닥 예고 확인 — BattleDirector.EnemySkillTell)
+                    if (enemyHosts != null && enemyIndex < enemyHosts.Length && now - recAt > 0.3 + enemyIndex * perEnemy)
+                    {
+                        var host = (Game.Module.InGame.Unit)bt.GetField("_host", F).GetValue(bd);
+                        if (enemyHost != null && enemyHost.IsAlive) bt.GetMethod("KillEnemy", F).Invoke(bd, new object[] { enemyHost });
+                        var pd = GameFramework.Core.Base.CoreModule.Get<Game.User.IPlayerDataService>();
+                        var entry = pd.GetHost(enemyHosts[enemyIndex]);
+                        float m = (float)bt.GetMethod("Meters", F).Invoke(bd, new object[] { 1f });
+                        var at = host.Position + new Vector2(enemyIndex % 2 == 0 ? -1.2f : 1.2f, 3.4f) * m;
+                        enemyHost = bt.GetMethod("SpawnRoomUnit", F).Invoke(bd, new object[] { entry, true, false, at, "RwHost" + enemyIndex })
+                            as Game.Module.InGame.Unit;
+                        if (enemyHost != null) SetHp(enemyHost, enemyHost.HpMax * 20);
+                        bt.GetField("_enemySkillSeen", F).SetValue(bd, false);
+                        bt.GetField("_enemySkillClock", F).SetValue(bd, 7.6f);
+                        enemyIndex++;
+                    }
+                    // 체험 확인: 필살기를 쓴 뒤 같은 몸으로 다시 빙의해 본다 — 자물쇠 · 「잠김」이 떠야 한다
+                    if (trialCheck && ulted && !reEntered && now - recAt > ultAt + 3.0)
+                    {
+                        reEntered = true;
+                        var pd = GameFramework.Core.Base.CoreModule.Get<Game.User.IPlayerDataService>();
+                        var host = (Game.Module.InGame.Unit)bt.GetField("_host", F).GetValue(bd);
+                        bt.GetMethod("EnterHost", F).Invoke(bd, new object[] { pd.GetHost(swapTo), swapTo, swapTo, host.Position, 100 });
+                        if (host != null && host != (Game.Module.InGame.Unit)bt.GetField("_host", F).GetValue(bd)) host.gameObject.SetActive(false);
+                        Debug.Log("[RW] trial re-enter ready=" + bt.GetField("_ultReady", F).GetValue(bd)
+                                  + " spent=" + bt.GetProperty("IsUltTrialSpent", F).GetValue(bd));
+                    }
+                    if (trialCheck && reEntered && !cast && now - recAt > ultAt + 4.0)
+                    {
+                        cast = true;   // 잠긴 필살기를 눌러 본다 — 알림이 떠야 한다
+                        bt.GetMethod("TryUltimate", F).Invoke(bd, null);
+                    }
                     if (!ulted && ultAt > 0f && now - recAt > ultAt)
                     {
                         ulted = true;
@@ -135,6 +176,7 @@ namespace Game.Editor
                     if (now - recAt > recordSeconds + 2.0)
                     {
                         EditorApplication.update -= cb;
+                        Game.Module.InGame.BattleDirector.EditorUnownedHost = null;
                         Debug.Log("[RW] done " + clip);
                         EditorApplication.isPlaying = false;
                     }

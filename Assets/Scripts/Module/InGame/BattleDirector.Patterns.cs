@@ -395,10 +395,9 @@ namespace Game.Module.InGame
 
         private const float EnemySkillCoolMul = 3f;
         private const float EnemySkillFirstDelay = 8f;
-        // 시전 시간은 따로 두지 않는다(PD 2026-10-13 「스킬 시전 시간은 따로 필요하지 않고」) —
-        //   몸 번쩍 + 머리 위 스킬 아이콘이 먼저 톡 뜨고, 아이콘이 다 펴질 만큼만 기다렸다 나간다.
-        //   예전 1.0초 노란 예고는 평타 예고와 똑같아 「스킬이다」가 안 읽혔다.
-        private const float EnemySkillTelegraph = 0.25f;
+        // 몸 번쩍 + 머리 위 스킬 아이콘은 그대로 두고, 그 사이 바닥에 맞을 범위를 그린다(0.7초 · BattleDirector.EnemySkillTell).
+        //   PD 2026-10-13 엔 「시전 시간은 따로 필요 없다」였고 아이콘 0.25초만 기다렸는데,
+        //   PD 2026-10-15 「적 액티브는 피할 수 있어야 한다 · 예고제로」로 바뀌었다 — 예전 1.0초 노란 자세 예고는 다시 쓰지 않는다.
 
         /// <summary>방 안에서 한 번에 하나만 시전한다. 둘이 동시에 쓰면 소개가 아니라 폭격이다.</summary>
         private Unit _enemyCasting;
@@ -407,6 +406,7 @@ namespace Game.Module.InGame
 
         private void ResetEnemySkills()
         {
+            if (_enemyCasting != null) EndEnemyTell();
             _enemyCasting = null;
             _enemySkillClock = 0f;
             _enemySkillSeen = false;
@@ -439,6 +439,7 @@ namespace Game.Module.InGame
                 e.SetMoving(false);
                 e.SetState(EnemyState.Attack);
                 e.PatternTimer -= dt;
+                TickEnemyTell(e.PatternTimer, dt);
                 if (e.PatternTimer > 0f) return true;
 
                 e.SetTelegraph(false);
@@ -451,7 +452,10 @@ namespace Game.Module.InGame
 
             // 시전하던 몸이 죽거나 빼앗겼으면 자리를 푼다 — 안 풀면 그 방에서 다시는 아무도 스킬을 못 쓴다
             if (_enemyCasting != null && (!_enemyCasting.IsAlive || _enemyCasting.Side != UnitSide.Enemy))
+            {
+                EndEnemyTell();   // 예고하던 몸이 죽거나 빼앗겼다 — 바닥 예고도 거둔다
                 _enemyCasting = null;
+            }
             if (_enemyCasting != null) return false;   // 다른 몸이 쓰는 중이다
 
             // 대장은 제 시계를 따로 쓴다 — 부하가 스킬을 쓸 때마다 대장 시계까지 0 으로 돌아가면 영영 안 나온다
@@ -468,7 +472,8 @@ namespace Game.Module.InGame
             }
 
             _enemyCasting = e;
-            e.PatternTimer = e == _midBoss ? MidBossSkillTelegraph : EnemySkillTelegraph;
+            // 바닥에 맞을 범위를 그리고 다 차면 친다(BattleDirector.EnemySkillTell) — 아이콘만으로는 못 피했다
+            e.PatternTimer = BeginEnemyTell(e, me, e == _midBoss);
             // 누가 · 무슨 스킬 — 몸이 짧게 번쩍이고 체력바 위에 그 스킬 아이콘이 뜬다(시안 mock_cast3_flashicon).
             e.ShowSkillCast(CachedSkillIcon(e.Key));
             // 대장은 관문이라 예전처럼 길게 예고한다(노란 자세 + 표식). 일반 적 호스트는 아이콘만으로 읽힌다.
@@ -505,8 +510,12 @@ namespace Game.Module.InGame
             if (e == null || me == null) return;
             e.PlayAttack();
 
-            var dir = me.Position - e.Position;
+            // 겨냥은 예고를 띄운 순간의 방향이다 — 지금 내 자리로 다시 겨누면 비킨 것이 소용없다
+            var dir = _enemyTell.IsNone ? me.Position - e.Position : _enemyTell.Dir;
             dir = dir.sqrMagnitude < 0.0001f ? e.Facing : dir.normalized;
+            var aimAt = e.Position + dir * Meters(TellLineLength);
+            bool hit = InEnemyTell(me);
+            EndEnemyTell();
             int dmg = Mathf.Max(1, e.Atk);
             // 대장은 「소개」가 아니라 관문이다 — 탄 수 · 피해 · 돌진 거리를 키운다 (BattleDirector.MidBoss)
             bool boss = e == _midBoss;
@@ -520,25 +529,33 @@ namespace Game.Module.InGame
                 case "dragon_blue":
                 case "salamander":
                 case "commando_grenade":
-                    FireFan(e, e.Position + dir * 400f, 5 * fan, boss ? 80f : 50f, Mathf.Max(1, dmg / 2));
+                {
+                    // 예고한 부채꼴 안만 친다 — 불길 그림도 부채꼴 크기에 맞춘다
+                    float reach = Meters(boss ? TellWedgeRadiusBoss : TellWedgeRadius);
                     PlayFx(e.Key == "dragon_blue" ? "breath_ice" : "breath_fire",
-                           e.Position + dir * 160f, 200f, loop: false);
+                           e.Position + dir * (reach * 0.55f), reach * 0.9f, loop: false);
+                    if (hit) DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(dmg * TellWedgeDamageMul)), e.Key);
                     break;
+                }
 
                 // 사방으로 흩뿌린다 — 광역기 무리
                 case "amazon_elite":
                 case "death":
                 case "snowwoman":
                 case "white_wizard":
-                    FireFan(e, e.Position + dir * 400f, 8 * fan, 360f, Mathf.Max(1, dmg / 3));
-                    PlayFx("burst", e.Position, 96f, loop: false);
+                {
+                    float rr = Meters(boss ? TellRadialRadiusBoss : TellRadialRadius);
+                    PlayFx("burst", e.Position, rr * 2f, loop: false);
+                    if (hit) DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(dmg * TellRadialDamageMul)), e.Key);
                     break;
+                }
 
                 // 한 줄로 길게 — 관통 무리
                 case "medium":
                 case "commando_laser":
                 case "commando_missile":
-                    FireFan(e, e.Position + dir * 400f, 3 * fan, boss ? 20f : 8f, Mathf.Max(1, dmg / 2));
+                    // 띠를 따라 탄이 나간다 — 띠 밖으로 비키면 빈다
+                    FireFan(e, aimAt, 3 * fan, boss ? 12f : 6f, Mathf.Max(1, dmg / 2));
                     PlayFx("muzzle", e.MuzzlePosition, 48f, loop: false);
                     break;
 
@@ -548,16 +565,18 @@ namespace Game.Module.InGame
                 case "hopper":
                 case "ninja":
                 {
-                    var to = ClampedInField(e, e.Position + dir * Meters(boss ? 4.5f : 3f));
+                    // 예고한 띠(돌진 길) 안에 있으면 맞는다 — 판정은 움직이기 전에 그린 도형으로
+                    var to = ClampedInField(e, e.Position + dir * Meters(boss ? TellDashLengthBoss : TellDashLength));
                     e.Position = to;
                     PlayFx("dash", to, boss ? 72f : 48f, loop: false);
-                    if (Vector2.Distance(to, me.Position) <= Meters(boss ? 3.2f : 2.5f)) DamagePlayer(dmg, e.Key);
+                    if (hit) DamagePlayer(Mathf.Max(1, Mathf.RoundToInt(dmg * TellDashDamageMul)), e.Key);
                     break;
                 }
 
                 // 나머지는 연사로 낸다. 몸짓이 없어도 "무언가 크게 했다" 는 읽힌다.
                 default:
-                    FireFan(e, me.Position, 3 * fan, boss ? 48f : 24f, Mathf.Max(1, dmg / 2));
+                    // 예고한 띠를 따라 연사 — 겨냥은 예고 때 방향(지금 내 자리 아님)
+                    FireFan(e, aimAt, 3 * fan, boss ? 16f : 8f, Mathf.Max(1, dmg / 2));
                     PlayFx("muzzle", e.MuzzlePosition, 48f, loop: false);
                     break;
             }

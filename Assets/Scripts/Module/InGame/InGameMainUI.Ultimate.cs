@@ -1,3 +1,4 @@
+using Game.Module.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,10 @@ namespace Game.Module.InGame
 
         private bool _ultShown;          // 지금 버튼이 필살기 얼굴인가
         private bool _ultShownReady;
+        private bool _ultShownTrial;
+        private bool _ultShownSpent;
         private string _ultShownHost;
+        private Sprite _ultLockSprite;
 
         /// <summary>매 프레임 — 몸이 있으면 필살기 얼굴로, 쓸 수 있는지에 따라 밝기 · 빛.</summary>
         private void TickUltButton()
@@ -33,19 +37,28 @@ namespace Game.Module.InGame
             }
             string host = _affinityHostKey;
             bool ready = _battle.IsUltReady;
-            if (_ultShown && ready == _ultShownReady && host == _ultShownHost) return;
+            // 못 가진 몸 — 아직 안 쓴 체험이면 「체험」, 다 썼으면 자물쇠 (PD 2026-10-15)
+            bool trial = _battle.IsUltTrial;
+            bool spent = _battle.IsUltTrialSpent;
+            if (_ultShown && ready == _ultShownReady && trial == _ultShownTrial && spent == _ultShownSpent
+                && host == _ultShownHost) return;
             _ultShown = true;
             _ultShownReady = ready;
+            _ultShownTrial = trial;
+            _ultShownSpent = spent;
             _ultShownHost = host;
 
             var icon = _ui.Get<Image>("PossessGhostIcon");
             if (icon != null)
             {
-                var sprite = _battle.UltimateIcon(host);
+                if (spent && _ultLockSprite == null) _ultLockSprite = _battle.UltimateLockIcon;
+                var sprite = spent && _ultLockSprite != null ? _ultLockSprite : _battle.UltimateIcon(host);
                 if (sprite != null) icon.sprite = sprite;
-                icon.color = ready ? Color.white : UltUsedTint;
+                icon.preserveAspect = true;   // 자물쇠는 세로로 길다 — 정사각 칸에 늘이지 않는다
+                icon.color = ready || spent ? Color.white : UltUsedTint;
             }
-            _ui.SetText("PossessButtonLabel", UltLabel);
+            _ui.SetText("PossessButtonLabel", trial ? Localize.Get("ui.ingame.ult_trial")
+                                             : spent ? Localize.Get("ui.ingame.ult_locked") : UltLabel);
             _ui.SetText("PossessCostText", string.Empty);
             // ⚠ 다 쓴 필살기도 interactable 은 켜 둔다 — 버튼의 비활성 색(반투명)이 회색 위에 겹쳐 버튼이 통째로 사라져 보였다(녹화 tb_medium1).
             //   눌러도 `TryUltimate` 가 1회 규칙으로 거른다

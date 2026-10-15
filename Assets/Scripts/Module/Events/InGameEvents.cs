@@ -206,6 +206,8 @@ namespace Game.Module.Events
     public struct PossessDeniedEvent : IEvent
     {
         public bool NoHostToPossess;
+        /// <summary>못 가진 몸의 필살기 체험(판당 1회)을 이미 썼다.</summary>
+        public bool UltTrialSpent;
     }
 
 
