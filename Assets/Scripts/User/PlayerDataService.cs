@@ -168,6 +168,8 @@ namespace Game.User
             GrantStarter();
             if (s_testMode && _data.gem < TestGem) _data.gem = TestGem;
             _data.runEntry ??= new RunEntryData();
+            _data.modes ??= new ModeProgressData();
+            _data.modes.Normalize();
             if (_config != null) _data.staminaMax = _config.StaminaMax;   // 최대는 표가 정한다
             _bus?.Publish(new UserDataReadyEvent { LoadedGhostLevel = _data.ghostLevel });
             PublishCurrency();
@@ -782,6 +784,16 @@ namespace Game.User
                 if (_data == null) return null;
                 _data.runEntry ??= new RunEntryData();
                 return _data.runEntry;
+            }
+        }
+
+        public ModeProgressData Modes
+        {
+            get
+            {
+                if (_data == null) return null;
+                _data.modes ??= new ModeProgressData();
+                return _data.modes;
             }
         }
 

@@ -40,6 +40,7 @@ namespace Game.User
                 //      회복이 멈추므로 그 시절 값으로 자른다. 최대는 불러온 뒤 표 값으로 다시 덮는다.
                 if (loaded.saveVersion < 7 && loaded.stamina > 20) loaded.stamina = 20;
                 loaded.runEntry ??= new RunEntryData();
+                loaded.modes ??= new ModeProgressData();   // v8 — 빈 진행. 입장은 하루 경계를 처음 넘을 때 채운다
                 loaded.saveVersion = UserData.CurrentSaveVersion;
             }
             return loaded;

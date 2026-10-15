@@ -25,7 +25,9 @@ namespace Game.User
         // v6 — 정수 · 일일 상점(2026-10-04). 옛 저장은 정수 0 · 상점 빈 칸으로 읽혀 그날 다시 짠다.
         // v7 — 행동력 회복 시계 · 오늘의 몸(2026-10-15, AVSR_Content_Store.md B-12). 옛 저장은 30/30 이라
         //      불러올 때 표의 최대(20)로 자른다(`LocalUserDataRepository`). 회복 시계 0 은 「지금부터 센다」.
-        public const int CurrentSaveVersion = 7;
+        // v8 — 추가 모드 망령의 탑 · 망령의 밤(2026-10-15, AVSR_Content_Tower · NightMode). 옛 저장은 빈 진행으로 읽혀
+        //      이번 주 0층 · 오늘 입장은 하루 경계를 처음 넘을 때 채운다(`IModeProgress`).
+        public const int CurrentSaveVersion = 8;
 
         public int saveVersion = CurrentSaveVersion;
 
@@ -119,6 +121,10 @@ namespace Game.User
         [Header("행동력 · 출전")]
         public RunEntryData runEntry = new RunEntryData();
 
+        // ── 추가 모드 (v8) ────────────────────────────────────
+        [Header("추가 모드")]
+        public ModeProgressData modes = new ModeProgressData();
+
         /// <summary>
         /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —
         /// 옛 저장(v2)은 배열이 비어 있고, 칸 수가 바뀌면 길이가 어긋난다.
@@ -202,5 +208,47 @@ namespace Game.User
         /// </summary>
         public int todayDay;
         public string[] todayHosts = Array.Empty<string>();
+    }
+
+    /// <summary>
+    /// 망령의 탑 · 망령의 밤 진행(기획서 AVSR_Content_Tower 4-3 · NightMode 4-3). 규칙은 `IModeProgress` 가 갖고 여기는 값만.
+    /// 하루 · 주는 `IResetClock` 의 DayKey · WeekKey(일본 05:00 · 월요일).
+    /// </summary>
+    [Serializable]
+    public sealed class ModeProgressData
+    {
+        // 탑
+        public int towerWeekId;          // 이번 주(WeekKey). 바뀌면 주간 초기화
+        public int towerWeekCleared;     // 이번 주 깬 층
+        public int towerLastWeekBest;    // 지난주 최고(비교 표시)
+        public int towerAllTimeBest;
+        public int towerDayId;           // 오늘(DayKey). 바뀌면 입장 · 젬 횟수 · 소탕 채움
+        public int towerEntries;         // 오늘 남은 입장(무료 + 산 것)
+        public int towerBoughtToday;
+        public bool towerSweptToday;
+
+        // 밤
+        public int nightDayId;
+        public int nightEntries;
+        public int nightBoughtToday;
+        public int[] nightBestKills = new int[7];   // 요일(월 0 … 일 6)별 최고 처치
+        public int[] nightBestTime = new int[7];    // 요일별 최고 버틴 초
+        public int nightClears;
+
+        /// <summary>시각을 뒤로 돌린 것을 알아보는 마지막 채운 시각(UTC 초).</summary>
+        public long lastRefillUtc;
+
+        public void Normalize()
+        {
+            if (nightBestKills == null || nightBestKills.Length != 7) nightBestKills = Resize(nightBestKills);
+            if (nightBestTime == null || nightBestTime.Length != 7) nightBestTime = Resize(nightBestTime);
+        }
+
+        private static int[] Resize(int[] src)
+        {
+            var a = new int[7];
+            if (src != null) Array.Copy(src, a, Math.Min(7, src.Length));
+            return a;
+        }
     }
 }

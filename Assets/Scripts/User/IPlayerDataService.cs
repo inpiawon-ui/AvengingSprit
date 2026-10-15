@@ -218,6 +218,9 @@ namespace Game.User
         /// </summary>
         RunStartMode RunStartMode { get; set; }
 
+        /// <summary>망령의 탑 · 망령의 밤 진행 값(저장 v8). 규칙은 `Game.Module.Common.Modes.IModeProgress`.</summary>
+        ModeProgressData Modes { get; }
+
         /// <summary>
         /// 이번 판을 시작한 몸(랜덤이면 뽑힌 몸). 저장하지 않는다 — 안 가진 몸은 `SelectHost` 가 저장에 안 남겨서
         /// 행운 보너스 조각이 엉뚱한 몸에 가지 않게 따로 든다.
