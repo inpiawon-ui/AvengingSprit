@@ -1,26 +1,27 @@
 # 로비 상점 상품 — Tools/Game/상점 표 임포트 → Assets/BundleResource/TableData/StoreTable.asset (주소 TableData/StoreTable)
-# tab: featured 추천 · card 계약 · chest 상자 · currency 재화 · pass 패스 화면 전용 | kind: package · card · chest · gold · gem · pass
+# tab: chest 상자 · currency 재화(계약 · 입문 · 챕터 돌파 · 젬 · 골드) · pass 패스 화면 전용 — 「오늘」 탭은 오늘의 상점, 「조각 뽑기」 탭은 gacha.tsv (PD 2026-10-15 판매 넷: 패스 · 재화 · 상자 · 조각 뽑기)
+# kind: package · card · chest · gold · gem · pass
 # priceType: iap(결제, price=가격 등급) · gem(젬, price=젬 수) · free | limit: once · daily:N · weekly:N · season · none
 # show: always · days_since_install<=N · chapter_cleared>=N · season_active
-# rewards: gem:N · gold:N · goldrun:N(판 골드 N판분 × priceMul) · essence:N · chest:키[*N] · passxp:N · passpremium:1 · card:카드키 (항목은 ; 로 잇는다)
+# rewards: gem:N · gold:N · goldrun:N(판 골드 N판분 × priceMul) · essence:N · ticket:N(소환권) · chest:키[*N] · passxp:N · passpremium:1 · card:카드키 · profile:키 (항목은 ; 로 잇는다)
 # badge: best(추천 띠) · first_double(첫 구매 2배) — 글자는 언어팩 키 store.badge.*
 # 수치는 초안(2026-10-15) — PD 확인 전.
 id	tab	kind	priceType	price	limit	show	rewards	badge	order	storeId	nameKey	descKey
-starter_1	featured	package	iap	P1	once	days_since_install<=7	gem:120;chest:gold;essence:30	best	10	avsr.starter1	store.starter_1.name	store.starter_1.desc
-starter_2	featured	package	iap	P3	once	days_since_install<=7	gem:600;chest:platinum;essence:50		11	avsr.starter2	store.starter_2.name	store.starter_2.desc
-starter_3	featured	package	iap	P4	once	days_since_install<=7	gem:1200;chest:platinum*2;essence:100		12	avsr.starter3	store.starter_3.name	store.starter_3.desc
-chapter_01	featured	package	iap	P2	once	chapter_cleared>=1	gem:200;goldrun:5;chest:gold		21	avsr.chapter01	store.chapter_01.name	store.chapter_01.desc
-chapter_02	featured	package	iap	P2	once	chapter_cleared>=2	gem:200;goldrun:5;chest:gold		22	avsr.chapter02	store.chapter_02.name	store.chapter_02.desc
-chapter_03	featured	package	iap	P3	once	chapter_cleared>=3	gem:500;goldrun:10;chest:platinum;essence:30		23	avsr.chapter03	store.chapter_03.name	store.chapter_03.desc
-chapter_04	featured	package	iap	P3	once	chapter_cleared>=4	gem:500;goldrun:10;chest:platinum;essence:30		24	avsr.chapter04	store.chapter_04.name	store.chapter_04.desc
-chapter_05	featured	package	iap	P3	once	chapter_cleared>=5	gem:500;goldrun:10;chest:platinum;essence:30		25	avsr.chapter05	store.chapter_05.name	store.chapter_05.desc
-chapter_06	featured	package	iap	P4	once	chapter_cleared>=6	gem:1000;goldrun:15;chest:platinum*2;essence:60		26	avsr.chapter06	store.chapter_06.name	store.chapter_06.desc
-chapter_07	featured	package	iap	P4	once	chapter_cleared>=7	gem:1000;goldrun:15;chest:platinum*2;essence:60		27	avsr.chapter07	store.chapter_07.name	store.chapter_07.desc
-chapter_08	featured	package	iap	P4	once	chapter_cleared>=8	gem:1000;goldrun:15;chest:platinum*2;essence:60		28	avsr.chapter08	store.chapter_08.name	store.chapter_08.desc
-chapter_09	featured	package	iap	P4	once	chapter_cleared>=9	gem:1000;goldrun:15;chest:platinum*2;essence:60		29	avsr.chapter09	store.chapter_09.name	store.chapter_09.desc
-chapter_10	featured	package	iap	P4	once	chapter_cleared>=10	gem:1000;goldrun:15;chest:platinum*2;essence:60		30	avsr.chapter10	store.chapter_10.name	store.chapter_10.desc
-card_small	card	card	iap	P3	none	always	card:soul_small		30	avsr.card.small	store.card_small.name	store.card_small.desc
-card_big	card	card	iap	P5	none	always	card:soul_big		31	avsr.card.big	store.card_big.name	store.card_big.desc
+starter_1	currency	package	iap	P1	once	days_since_install<=7	gem:120;ticket:5;essence:30	best	10	avsr.starter1	store.starter_1.name	store.starter_1.desc
+starter_2	currency	package	iap	P3	once	days_since_install<=7	gem:600;ticket:15;chest:platinum		11	avsr.starter2	store.starter_2.name	store.starter_2.desc
+starter_3	currency	package	iap	P4	once	days_since_install<=7	gem:1200;ticket:30;chest:platinum*2		12	avsr.starter3	store.starter_3.name	store.starter_3.desc
+chapter_01	currency	package	iap	P2	once	chapter_cleared>=1	gem:200;goldrun:5;ticket:3		21	avsr.chapter01	store.chapter_01.name	store.chapter_01.desc
+chapter_02	currency	package	iap	P2	once	chapter_cleared>=2	gem:200;goldrun:5;ticket:3		22	avsr.chapter02	store.chapter_02.name	store.chapter_02.desc
+chapter_03	currency	package	iap	P3	once	chapter_cleared>=3	gem:500;goldrun:10;ticket:8;chest:platinum		23	avsr.chapter03	store.chapter_03.name	store.chapter_03.desc
+chapter_04	currency	package	iap	P3	once	chapter_cleared>=4	gem:500;goldrun:10;ticket:8;chest:platinum		24	avsr.chapter04	store.chapter_04.name	store.chapter_04.desc
+chapter_05	currency	package	iap	P3	once	chapter_cleared>=5	gem:500;goldrun:10;ticket:8;chest:platinum		25	avsr.chapter05	store.chapter_05.name	store.chapter_05.desc
+chapter_06	currency	package	iap	P4	once	chapter_cleared>=6	gem:1000;goldrun:15;ticket:15;chest:platinum*2		26	avsr.chapter06	store.chapter_06.name	store.chapter_06.desc
+chapter_07	currency	package	iap	P4	once	chapter_cleared>=7	gem:1000;goldrun:15;ticket:15;chest:platinum*2		27	avsr.chapter07	store.chapter_07.name	store.chapter_07.desc
+chapter_08	currency	package	iap	P4	once	chapter_cleared>=8	gem:1000;goldrun:15;ticket:15;chest:platinum*2		28	avsr.chapter08	store.chapter_08.name	store.chapter_08.desc
+chapter_09	currency	package	iap	P4	once	chapter_cleared>=9	gem:1000;goldrun:15;ticket:15;chest:platinum*2		29	avsr.chapter09	store.chapter_09.name	store.chapter_09.desc
+chapter_10	currency	package	iap	P4	once	chapter_cleared>=10	gem:1000;goldrun:15;ticket:15;chest:platinum*2		30	avsr.chapter10	store.chapter_10.name	store.chapter_10.desc
+card_small	currency	card	iap	P3	none	always	card:soul_small		30	avsr.card.small	store.card_small.name	store.card_small.desc
+card_big	currency	card	iap	P5	none	always	card:soul_big		31	avsr.card.big	store.card_big.name	store.card_big.desc
 chest_silver	chest	chest	gem	60	none	always	chest:silver		40		store.chest_silver.name	store.chest_silver.desc
 chest_gold	chest	chest	gem	160	none	always	chest:gold		41		store.chest_gold.name	store.chest_gold.desc
 chest_platinum	chest	chest	gem	320	none	always	chest:platinum		42		store.chest_platinum.name	store.chest_platinum.desc
