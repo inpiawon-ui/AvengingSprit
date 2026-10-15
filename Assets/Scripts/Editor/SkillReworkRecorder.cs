@@ -125,6 +125,19 @@ namespace Game.Editor
                         }
                         bt.GetField("_skillCooldown", F).SetValue(bd, 999f);
                         Debug.Log($"[RW] {hostKey} enemies {alive} melee {melee?.Key} gun {gun?.Key}");
+                        // 방에 해골이 수십 마리 서는 판이 있다(녹화 r_gs1) — 가까운 14명만 남겨 연출이 읽히게
+                        {
+                            var all = new System.Collections.Generic.List<Game.Module.InGame.Unit>();
+                            foreach (var o in enemies)
+                            {
+                                var u = o as Game.Module.InGame.Unit;
+                                if (u != null && u.IsAlive && !u.IsBoss) all.Add(u);
+                            }
+                            var hp = host.Position;
+                            all.Sort((x, y) => (x.Position - hp).sqrMagnitude.CompareTo((y.Position - hp).sqrMagnitude));
+                            var kill = bt.GetMethod("KillEnemy", F);
+                            for (int i = MaxEnemies; i < all.Count; i++) kill.Invoke(bd, new object[] { all[i] });
+                        }
                         SkillFxRecorder.RecordClip(clip, recordSeconds);
                         recAt = now;
                         phase = 2;
@@ -191,6 +204,7 @@ namespace Game.Editor
         }
 
         private const int EnemyHpMul = 4;
+        private const int MaxEnemies = 14;
 
         private static void SetHp(Game.Module.InGame.Unit u, int hp)
         {

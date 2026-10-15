@@ -46,6 +46,26 @@ PARTS = {
     'part_nc_hook':   ('nchook',    96,  96, 5, 1, 'black'),
     'part_rb_drop':   ('rbdrop',   128, 256, 6, 1, 'black'),
     'part_cm_lock':   ('cmlock',    64,  64, 4, 1, 'black'),
+    # R 필살기 다듬기(2026-10-15) — 시안 `doc_skill_concept/img/ult_*.jpg`
+    'part_gs_lock':     ('gslock',    192, 192, 6, 1, 'black'),
+    'part_gs_beam':     ('gsbeam',    512,  96, 1, 6, 'black'),
+    'part_gs_burst':    ('gsburst',   224, 224, 4, 2, 'black'),
+    'part_hp_bind':     ('hpbind',    160,  96, 4, 1, 'black'),
+    'part_hp_slash':    ('hpslash',   224, 224, 6, 1, 'black'),
+    'part_mg_wall':     ('mgwall',    320, 160, 3, 2, 'black'),
+    'part_mg_shatter':  ('mgshatter', 320, 224, 4, 2, 'black'),
+    'part_sm_spit':     ('smspit',    384, 128, 1, 6, 'black'),
+    'part_sm_pool':     ('smpool',    384, 256, 3, 2, 'alpha'),
+    'part_sm_geyser':   ('smgeyser',  160, 256, 4, 2, 'black'),
+    'part_db_orb':      ('dborb',      64,  64, 6, 1, 'black'),
+    'part_db_strike':   ('dbstrike',  160, 384, 6, 1, 'black'),
+    'part_gr_mandala':  ('grmandala', 384, 256, 3, 2, 'black'),
+    'part_gr_burst':    ('grburst',   320, 320, 4, 2, 'black'),
+    'part_ww_orb':      ('wworb',      48,  48, 4, 1, 'black'),
+    'part_ww_burst':    ('wwburst',   160, 160, 6, 1, 'black'),
+    'part_sw_circle':   ('swcircle',  192, 128, 6, 1, 'black'),
+    'part_sw_crystal':  ('swcrystal', 160, 192, 4, 1, 'alpha'),
+    'part_sw_shatter':  ('swshatter', 224, 224, 4, 2, 'black'),
     'part_dg_breath': ('dgbreath', 384,  96, 1, 6, 'black'),
     'part_dg_blast':  ('dgblast',  256, 256, 4, 2, 'black'),
     'part_dg_rise':   ('dgrise',   192, 256, 6, 1, 'black'),
@@ -119,6 +139,9 @@ def cut(sheet_name):
                 k.alpha_composite(c.convert('RGBA'))
                 c = k
             f = black_to_alpha(c.convert('RGB'))
+        elif bg == 'alpha' and c.mode == 'RGBA' and c.getextrema()[3][0] < 255:
+            # 코덱스가 투명 바탕으로 보낸 반투명 그림(독 늪 · 얼음 결정) — 알파를 그대로 둔다(분홍 뚫기는 반투명을 다 불투명으로 만든다)
+            f = c.copy()
         else:
             f = pink_to_alpha(c)
             if sheet_name in DESPILL:

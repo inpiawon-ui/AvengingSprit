@@ -345,6 +345,9 @@ namespace Game.Module.InGame
             public Vector2 Last;
             public Vector2 Prev;
             public float Smoke;
+            public bool Light;      // 빛 구슬(화이트 위저드) — 연기 대신 금빛 빛꼬리
+            public string Boom;     // 맞은 자리 그림(없으면 화염구)
+            public float BoomSize;
         }
 
         private readonly List<SrMissileTrack> _srMissiles = new();
@@ -384,21 +387,28 @@ namespace Game.Module.InGame
                     // 시안 가운데 컷 — 끊기지 않는 흰 연기 꼬리. 미사일이 빨라 프레임마다 한 점이면 점선이 됐다(녹화 sr_cm4) —
                     //   지난 자리부터 지금 자리까지 12 px 마다 한 덩이씩 채운다
                     m.Smoke += dist;
-                    while (m.Smoke >= 12f)
+                    float gap = m.Light ? 9f : 12f;
+                    while (m.Smoke >= gap)
                     {
-                        m.Smoke -= 12f;
+                        m.Smoke -= gap;
                         var at = now + back * m.Smoke;
-                        _pfx?.Spray(ParticleFxKind.Smoke, at, back, 30f, 1, 5f, 25f, new Vector2(40f, 40f), 0.9f,
-                                    Color.white, element: ParticleElement.Ice);
+                        if (m.Light)
+                            // 시안 가운데 컷(화이트 위저드) — 휘어 나가는 금빛 빛꼬리
+                            _pfx?.Spray(ParticleFxKind.Glow, at, back, 20f, 1, 5f, 20f, new Vector2(20f, 20f), 0.55f,
+                                        new Color(1f, 0.9f, 0.55f, 0.9f));
+                        else
+                            _pfx?.Spray(ParticleFxKind.Smoke, at, back, 30f, 1, 5f, 25f, new Vector2(40f, 40f), 0.9f,
+                                        Color.white, element: ParticleElement.Ice);
                     }
-                    _pfx?.Spray(ParticleFxKind.Streak, now, back, 8f, 1, 60f, 120f, new Vector2(22f, 6f), 0.12f,
-                                new Color(1f, 0.75f, 0.3f, 1f));
+                    if (!m.Light)
+                        _pfx?.Spray(ParticleFxKind.Streak, now, back, 8f, 1, 60f, 120f, new Vector2(22f, 6f), 0.12f,
+                                    new Color(1f, 0.75f, 0.3f, 1f));
                     m.Prev = now;
                     continue;
                 }
                 // 맞았다(또는 사라졌다) — 그 자리에서 화염구
                 m.Lock?.Stop();
-                var boom = PlayFx("dgblast", m.Last, SsrBody * 1.9f, loop: false);
+                var boom = PlayFx(m.Boom ?? "dgblast", m.Last, m.BoomSize > 0f ? m.BoomSize : SsrBody * 1.9f, loop: false);
                 boom?.SetFrameSeconds(0.05f);
                 _srMissiles.RemoveAt(i);
             }

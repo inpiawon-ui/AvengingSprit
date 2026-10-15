@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Module.InGame
 {
@@ -211,8 +212,14 @@ namespace Game.Module.InGame
             if (_contractTarget == null) { UltFallback(me); return; }
             _ultKind = "gangster";
             _ultT = 0f;
-            _contractLock = UltLoop("critlock", _contractTarget.Position, 150f);
-            _contractLock?.SetSnap(2.2f, 1.4f);   // 크게 시작해 1.5초에 걸쳐 조여든다
+            // R 시안(ult_gangster) — 붉은 저격 조준경이 조여든다 · 총구에 붉은 빛이 모인다
+            _contractLock = UltLoop("gslock", _contractTarget.Position, SsrBody * 2f)
+                            ?? UltLoop("critlock", _contractTarget.Position, 150f);
+            // 새 조준경은 그림 6컷이 스스로 조여든다(1.56초 — 1.5초 안에 다시 처음으로 안 돌게). 옛 그림만 크기로 조인다
+            if (FxFrames("gslock") != null) _contractLock?.SetFrameSeconds(0.26f);
+            else _contractLock?.SetSnap(2.2f, 1.4f);
+            _pfx?.Spray(ParticleFxKind.Streak, me.MuzzlePosition, Vector2.up, 180f, 10, 60f, 140f, new Vector2(18f, 4f), 0.4f,
+                        new Color(1f, 0.25f, 0.3f, 1f), spread: 26f);
             me.SetFacing(_contractTarget.Position - me.Position);
             UltAfter(1.5f, () =>
             {
@@ -222,10 +229,17 @@ namespace Game.Module.InGame
                 if (t == null || !t.IsAlive) return;
                 me.SetFacing(t.Position - me.Position);
                 me.PlayAttack();
-                UltBeam("wpbeam", me.MuzzlePosition, t.Position, 70f);
+                if (FxFrames("gsbeam") != null) UltBeam("gsbeam", me.MuzzlePosition, t.Position, 130f, 0.04f);
+                else UltBeam("wpbeam", me.MuzzlePosition, t.Position, 70f);
                 UltHit(me, t, 14f, capBoss: true);
                 CritBurst(t.Position);
-                PlayFx("crit", t.Position, 220f, loop: false);
+                (PlayFx("gsburst", t.Position, SsrBody * 2.6f, loop: false) ?? PlayFx("crit", t.Position, 220f, loop: false))
+                    ?.SetFrameSeconds(0.05f);
+                _pfx?.Spray(ParticleFxKind.Spark, t.Position, (t.Position - me.Position).normalized, 50f, 14, 200f, 420f,
+                            new Vector2(10f, 10f), 0.4f, new Color(0.85f, 0.05f, 0.1f, 1f));
+                // 총구 연기 — 쏘고 난 뒤의 한 박자
+                _pfx?.Spray(ParticleFxKind.Smoke, me.MuzzlePosition, Vector2.up, 25f, 5, 20f, 50f, new Vector2(30f, 30f), 0.9f,
+                            Color.white, element: ParticleElement.Ice);
                 Shake(12f);
                 HitStop(0.14f);
             });
@@ -238,31 +252,48 @@ namespace Game.Module.InGame
             me.SetFacing(_contractTarget.Position - me.Position);
         }
 
-        // 호퍼 — 킬 포인트: 앞 적들에게 칼날 → 3초 묶음 → 차례로 치명 확정
+        // 호퍼 — 킬 포인트: 앞 적들에게 붉은 칼날 → 붉은 사슬 고리로 묶음 → 적 사이를 돌진하며 X 베기(R 시안 ult_hopper)
         private void UltHopper(Unit me)
         {
             var list = UltTargets(me.Position, Meters(7f));
             if (list.Count == 0) { UltFallback(me); return; }
             if (list.Count > 8) list.RemoveRange(8, list.Count - 8);
             me.PlayAttack();
+            UltInvuln(0.8f + list.Count * 0.2f);
             for (int i = 0; i < list.Count; i++)
             {
                 var e = list[i];
                 UltBeam("wptracer", me.MuzzlePosition, e.Position, 26f, 0.04f);
+                _pfx?.Spray(ParticleFxKind.Streak, me.MuzzlePosition, (e.Position - me.Position).normalized, 4f, 2, 900f, 1100f,
+                            new Vector2(40f, 5f), 0.18f, new Color(1f, 0.3f, 0.35f, 1f));
                 e.ApplyRoot(3f);
-                PlayFx("critlock", e.Position, 90f, loop: false);
+                var bind = PlayFloorFx("hpbind", e.Position, SsrBody * 1.5f, loop: true);
+                if (bind != null) { bind.SetFrameSeconds(0.08f); bind.SetLife(0.6f + list.Count * 0.2f + 0.4f, 0.3f); }
+                else PlayFx("critlock", e.Position, 90f, loop: false);
             }
-            for (int i = 0; i < list.Count; i++)
+            UltAfter(0.6f, () => HpDashNext(me, list, 0));
+        }
+
+        /// <summary>묶인 적 사이를 차례로 돌진하며 X 자로 벤다 — 시안 마지막 컷(잔상 · 붉은 X 칼빛).</summary>
+        private void HpDashNext(Unit me, List<Unit> list, int i)
+        {
+            while (i < list.Count && (list[i] == null || !list[i].IsAlive)) i++;
+            if (i >= list.Count) return;
+            var e = list[i];
+            var to = e.Position + (e.Position - me.Position).normalized * Meters(0.6f);
+            UltDashTo(me, to, 0.1f, new Color(0.55f, 0.65f, 1f, 1f), () =>
             {
-                var e = list[i];
-                UltAfter(0.6f + i * 0.12f, () =>
+                if (e != null && e.IsAlive)
                 {
-                    if (e == null || !e.IsAlive) return;
                     UltHit(me, e, 3.5f * CritMultiplier, capBoss: true);
                     CritBurst(e.Position);
+                    PlayFx("hpslash", e.Position, SsrBody * 2.4f, loop: false)?.SetFrameSeconds(0.045f);
+                    _pfx?.Spray(ParticleFxKind.Spark, e.Position, Random.insideUnitCircle.normalized, 70f, 8, 160f, 340f,
+                                new Vector2(9f, 9f), 0.35f, new Color(0.85f, 0.05f, 0.1f, 1f));
                     HitStop(0.03f);
-                });
-            }
+                }
+                UltAfter(0.06f, () => HpDashNext(me, list, i + 1));
+            });
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -328,7 +359,10 @@ namespace Game.Module.InGame
             _sealAt = ClampedInField(me, near != null ? near.Position : me.Position + me.Facing * Meters(2.5f));
             _ultKind = "guru";
             _ultT = 0f;
-            UltLoop("gddome", _sealAt, Meters(5f));
+            // R 시안(ult_guru) — 바닥에 금빛 만다라 · 가장자리 빛기둥 → 적이 끌려 들어 묶임 → 금빛 폭발
+            var mandala = PlayFloorFx("grmandala", _sealAt, Meters(5.6f), loop: true);
+            if (mandala != null) { mandala.SetFrameSeconds(0.09f); mandala.SetLife(1.7f, 0.3f); }
+            else UltLoop("gddome", _sealAt, Meters(5f));
             _wardSeconds = Mathf.Max(_wardSeconds, 2f);
             _wardReduce = 0.5f;
             UltAfter(1.6f, () =>
@@ -336,7 +370,10 @@ namespace Game.Module.InGame
                 _ultKind = null;
                 for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
                 _ultFx.Clear();
-                UltAoe(me, _sealAt, 2.6f, 5f, "burst", 2.4f);
+                var boom = PlayFx("grburst", _sealAt, Meters(5.2f), loop: false);
+                boom?.SetFrameSeconds(0.05f);
+                UltAoe(me, _sealAt, 2.6f, 5f, boom == null ? "burst" : null, 2.4f);
+                _pfx?.Burst(ParticleFxKind.Shard, ParticleElement.Dust, _sealAt, 18, 380f, 28f, 0.7f, 360f);
                 Shake(12f);
                 HitStop(0.12f);
             });
@@ -354,6 +391,10 @@ namespace Game.Module.InGame
                 if (dist > pull || dist < Meters(0.4f)) continue;
                 e.Position = ClampedInField(e, e.Position + d / dist * Mathf.Min(step, dist - Meters(0.4f)));
                 e.ApplyRoot(0.3f);
+                // 시안 가운데 컷 — 끌려 드는 적에게서 결계 쪽으로 금빛 줄기
+                if (Random.value < dt * 6f)
+                    _pfx?.Spray(ParticleFxKind.Streak, e.Position, d / dist, 6f, 1, dist * 2.5f, dist * 3f, new Vector2(36f, 5f), 0.3f,
+                                new Color(1f, 0.82f, 0.35f, 1f));
             }
         }
 
@@ -363,14 +404,42 @@ namespace Game.Module.InGame
             var near = NearestEnemy(me.Position);
             var at = ClampedInField(me, near != null ? near.Position : me.Position + me.Facing * Meters(2.5f));
             me.PlayAttack();
-            PlayFx("venom", at, Meters(2f), loop: false);
-            SpawnField(at, Meters(2.6f), 4f, FieldEffect.Slow, UltDamage(me, 0.45f), fromPlayer: true);
-            UltLoop("vncloud", at, Meters(5f));
-            UltAfter(4f, () =>
+            // R 시안(ult_salamander) — 입에서 독 줄기 → 넓은 독 늪(거품) → 늪 곳곳에서 독이 솟구친다
+            var spit = FxFrames("smspit");
+            if (spit != null)
+            {
+                var beam = FreeImpact(150f);
+                beam?.PlayBeam(me.MuzzlePosition, at, spit, 150f);
+                beam?.SetLoop(true);
+                beam?.SetFrameSeconds(0.05f);
+                beam?.SetLife(0.5f, 0.2f);
+            }
+            else PlayFx("venom", at, Meters(2f), loop: false);
+            UltAfter(0.35f, () =>
+            {
+                var field = SpawnField(at, Meters(2.6f), 4f, FieldEffect.Slow, UltDamage(me, 0.45f), fromPlayer: true);
+                var pool = PlayFloorFx("smpool", at, Meters(6f), loop: true);
+                if (pool != null)
+                {
+                    pool.SetFrameSeconds(0.1f);
+                    pool.SetLife(4.1f, 0.4f);
+                    // 감속 장판 제 그림(파란 소용돌이)이 독 늪 둘레에 겹쳐 보였다(녹화 r_sm1) — 판정만 쓰고 그림은 끈다
+                    if (field != null) field.SetSprite(null);
+                }
+                else UltLoop("vncloud", at, Meters(5f));
+                _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Venom, at, 8, 140f, 50f, 0.6f, 0f);
+            });
+            UltAfter(4.2f, () =>
             {
                 for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
                 _ultFx.Clear();
-                UltAoe(me, at, 2.6f, 4f, "goo_burst", 2.3f);
+                UltAoe(me, at, 2.6f, 4f, FxFrames("smgeyser") == null ? "goo_burst" : null, 2.3f);
+                for (int k = 0; k < 7; k++)
+                {
+                    var p = at + Random.insideUnitCircle * Meters(2.2f);
+                    UltAfter(k * 0.06f, () => PlayFx("smgeyser", p + new Vector2(0f, SsrBody * 0.7f), SsrBody * 2.2f, loop: false)
+                        ?.SetFrameSeconds(0.05f));
+                }
                 Shake(8f);
             });
         }
@@ -380,17 +449,40 @@ namespace Game.Module.InGame
         {
             var list = UltTargets(me.Position, Meters(5f));
             if (list.Count == 0) { UltFallback(me); return; }
-            PlayFx("freeze", me.Position, Meters(5f), loop: false);
+            // R 시안(ult_snowwoman) — 바닥에 서리 마법진 → 적마다 얼음 결정 감옥 → 한꺼번에 깨진다
+            var cryst = new List<Impact>(list.Count);
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].ApplyFreeze(2f);
-                PlayFx("iceblock", list[i].Position, 120f, loop: false);
+                var e = list[i];
+                var ring = PlayFloorFx("swcircle", e.Position, SsrBody * 2f, loop: true);
+                if (ring != null) { ring.SetFrameSeconds(0.08f); ring.SetLife(0.55f, 0.25f); }
+                _pfx?.Spray(ParticleFxKind.Star4, e.Position, Vector2.up, 40f, 3, 40f, 100f, new Vector2(10f, 10f), 0.6f,
+                            new Color(0.75f, 0.95f, 1f, 1f), element: ParticleElement.Ice);
             }
-            UltAfter(2f, () =>
+            if (FxFrames("swcircle") == null) PlayFx("freeze", me.Position, Meters(5f), loop: false);
+            UltAfter(0.35f, () =>
             {
                 for (int i = 0; i < list.Count; i++)
+                {
+                    var e = list[i];
+                    if (e == null || !e.IsAlive) continue;
+                    e.ApplyFreeze(2f);
+                    var c = PlayFx("swcrystal", e.Position + new Vector2(0f, SsrBody * 0.15f), SsrBody * 1.6f, loop: true);
+                    if (c != null) { c.SetFrameSeconds(0.12f); c.SetLife(1.7f, 0.1f); cryst.Add(c); }
+                    else PlayFx("iceblock", e.Position, 120f, loop: false);
+                }
+            });
+            UltAfter(2.05f, () =>
+            {
+                for (int i = 0; i < cryst.Count; i++) cryst[i]?.Stop();
+                for (int i = 0; i < list.Count; i++)
                     if (list[i] != null && list[i].IsAlive)
-                        Shatter(me, list[i].Position, Meters(1.2f), UltDamage(me, 3.5f), 0);
+                    {
+                        var at = list[i].Position;
+                        Shatter(me, at, Meters(1.2f), UltDamage(me, 3.5f), 0);
+                        PlayFx("swshatter", at, SsrBody * 2.4f, loop: false)?.SetFrameSeconds(0.05f);
+                        _pfx?.Burst(ParticleFxKind.Star4, ParticleElement.Ice, at, 8, 260f, 14f, 0.7f, 0f);
+                    }
                 Shake(9f);
                 HitStop(0.08f);
             });
@@ -405,19 +497,40 @@ namespace Game.Module.InGame
         {
             var list = UltTargets(me.Position, Meters(14f));
             if (list.Count == 0) { UltFallback(me); return; }
+            // R 시안(ult_white_wizard) — 몸 둘레에 빛 구슬이 모였다가 → 금빛 꼬리를 끌며 휘어 날아가 → 맞은 자리마다 반짝 폭발
             PlayFx("holy_beam", me.MuzzlePosition, 140f, loop: false);
+            var orbFrames = FxFrames("wworb");
+            var gather = new List<Impact>(8);
             for (int i = 0; i < 8; i++)
             {
-                var t = list[i % list.Count];
                 float a = i * 45f * Mathf.Deg2Rad;
-                var from = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(0.8f);
-                var shot = RentShot();
-                if (shot == null) break;
-                shot.SetSprite(ShotSpriteOf(me), ShotKindOf(me), LoopsFrames(ShotKindOf(me)));
-                shot.Fire(from, from + (from - me.Position).normalized * 300f, _config.ShotSpeedPlayer, UltDamage(me, 2.2f),
-                          true, t, _config.ShotSize * 1.4f, ShotPlayerColor, _config.ShotLifeSeconds * 1.5f, pierce: true);
-                shot.SetHoming(2.2f);
+                var p = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.7f) * Meters(0.9f);
+                var o = orbFrames != null ? TakeLoopFx("wworb", p, 40f) : null;
+                if (o != null) { o.SetFrameSeconds(0.08f); gather.Add(o); }
             }
+            UltAfter(0.45f, () =>
+            {
+                for (int i = 0; i < gather.Count; i++) gather[i]?.Stop();
+                var now = UltTargets(me.Position, Meters(14f));
+                if (now.Count == 0) return;
+                for (int i = 0; i < 8; i++)
+                {
+                    var t = now[i % now.Count];
+                    float a = i * 45f * Mathf.Deg2Rad;
+                    var from = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.7f) * Meters(0.9f);
+                    var shot = RentShot();
+                    if (shot == null) break;
+                    if (orbFrames != null) shot.SetSprite(orbFrames, "wworb", true);
+                    else shot.SetSprite(ShotSpriteOf(me), ShotKindOf(me), LoopsFrames(ShotKindOf(me)));
+                    // 새 구슬은 맞으면 그 자리에서 터진다(시안) — 관통이면 화면 끝까지 빛꼬리를 끌고 날아갔다(녹화 r_ww1)
+                    bool pierce = orbFrames == null;
+                    shot.Fire(from, from + (from - me.Position).normalized * 300f, _config.ShotSpeedPlayer, UltDamage(me, 2.2f),
+                              true, t, _config.ShotSize * 1.4f, ShotPlayerColor, _config.ShotLifeSeconds * 1.5f, pierce: pierce);
+                    shot.SetHoming(2.2f);
+                    _srMissiles.Add(new SrMissileTrack { Shot = shot, Target = t, Last = from, Prev = from, Light = true,
+                                                         Boom = "wwburst", BoomSize = SsrBody * 1.6f });
+                }
+            });
         }
 
         // 청룡 — 번개 구슬: 5초 동안 구슬 셋이 몸 둘레를 돌며 번개, 끝에 낙뢰
@@ -428,7 +541,9 @@ namespace Game.Module.InGame
             _ultKind = "dragon_blue";
             _ultT = 0f;
             _orbZap = 0f;
-            for (int i = 0; i < 3; i++) UltLoop("vmorb", me.Position, 60f);
+            // R 시안(ult_dragon_blue) — 몸 둘레를 도는 번개 구슬 → 적에게 번개가 이어진다 → 하늘에서 거대 낙뢰
+            bool newOrb = FxFrames("dborb") != null;
+            for (int i = 0; i < 3; i++) (newOrb ? UltLoop("dborb", me.Position, 120f) : UltLoop("vmorb", me.Position, 60f))?.SetFrameSeconds(0.06f);
             UltAfter(5f, () =>
             {
                 _ultKind = null;
@@ -436,8 +551,13 @@ namespace Game.Module.InGame
                 _ultFx.Clear();
                 var t = UltStrongest(me.Position) ?? NearestEnemy(me.Position);
                 if (t == null) return;
-                UltBeam("dsbolt", t.Position + new Vector2(0f, Meters(6f)), t.Position, 120f);
-                UltAoe(me, t.Position, 2.4f, 4f, "lzhit", 2f);
+                var at = t.Position;
+                var strike = PlayFx("dbstrike", at + new Vector2(0f, SsrBody * 1.9f), SsrBody * 4.6f, loop: false);
+                if (strike != null) strike.SetFrameSeconds(0.05f);
+                else UltBeam("dsbolt", at + new Vector2(0f, Meters(6f)), at, 120f);
+                UltAoe(me, at, 2.4f, 4f, "lzhit", 2f);
+                _pfx?.Spray(ParticleFxKind.Streak, at, Vector2.up, 180f, 18, 300f, 600f, new Vector2(40f, 5f), 0.3f,
+                            new Color(0.6f, 0.9f, 1f, 1f));
                 Shake(12f);
                 HitStop(0.1f);
             });
@@ -460,7 +580,7 @@ namespace Game.Module.InGame
                 var at = OrbPos(me, i);
                 var t = NearestEnemy(at, Meters(4.5f));
                 if (t == null) continue;
-                UltBeam("dsbolt", at, t.Position, 50f, 0.04f);
+                UltBeam("dsbolt", at, t.Position, 90f, 0.04f);   // 50 은 방 화면(×0.47)에서 실처럼 가늘었다(녹화 r_db1)
                 UltHit(me, t, 0.9f);
             }
         }
@@ -478,24 +598,41 @@ namespace Game.Module.InGame
             var near = NearestEnemy(me.Position);
             _wallDir = near != null ? (near.Position - me.Position).normalized : me.Facing;
             if (_wallDir.sqrMagnitude < 0.01f) _wallDir = Vector2.up;
-            _wallAt = me.Position + _wallDir * Meters(1.4f);
+            _wallAt = me.Position + _wallDir * Meters(1.6f);
             _ultKind = "commando_mg";
             _ultT = 0f;
             _wallTick = 0f;
-            UltLoop("cmwall", _wallAt, 170f);
+            // R 시안(ult_commando_mg) — 몸 앞에 하늘색 에너지 방벽 → 탄을 막으며 밀고 나감 → 깨져 흩어진다
+            var wall = UltLoop("mgwall", _wallAt, Meters(3.4f)) ?? UltLoop("cmwall", _wallAt, 170f);
+            if (wall != null)
+            {
+                wall.SetFrameSeconds(0.07f);
+                // 방벽 그림은 가로로 누운 판 — 미는 방향에 직각으로 세운다
+                wall.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(_wallDir.y, _wallDir.x) * Mathf.Rad2Deg - 90f);
+            }
+            _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Ice, _wallAt, 8, 120f, 40f, 0.5f, 0f);
             UltAfter(4f, () =>
             {
                 _ultKind = null;
                 for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
                 _ultFx.Clear();
-                UltAoe(me, _wallAt, 2f, 3f, "shatter", 2.2f, knockMeters: 2f);
+                var crash = PlayFx("mgshatter", _wallAt + _wallDir * Meters(0.4f), Meters(3.8f), loop: false);
+                if (crash != null)
+                {
+                    crash.SetFrameSeconds(0.05f);
+                    crash.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(_wallDir.y, _wallDir.x) * Mathf.Rad2Deg - 90f);
+                }
+                UltAoe(me, _wallAt, 2f, 3f, crash == null ? "shatter" : null, 2.2f, knockMeters: 2f);
+                _pfx?.Spray(ParticleFxKind.Shard, _wallAt, _wallDir, 50f, 16, 300f, 600f, new Vector2(16f, 16f), 0.6f,
+                            new Color(0.6f, 0.9f, 1f, 1f), element: ParticleElement.Ice);
                 Shake(9f);
             });
         }
 
         private void TickDeflectWall(Unit me, float dt)
         {
-            _wallAt = ClampedInField(me, _wallAt + _wallDir * Meters(1.4f) * dt);
+            // 시안 — 방벽은 몸 바로 앞에 붙어 다닌다. 예전처럼 혼자 밀고 나가면 화면 밖에서 깨졌다(녹화 r_mg1)
+            _wallAt = ClampedInField(me, me.Position + _wallDir * Meters(1.6f));
             if (_ultFx.Count > 0) _ultFx[0]?.MoveTo(_wallAt);
             float r = Meters(1.3f);
             for (int i = 0; i < _shots.Count; i++)
@@ -504,6 +641,8 @@ namespace Game.Module.InGame
                 if (!s.IsActive || s.FromPlayer) continue;
                 if (Vector2.Distance(s.Position, _wallAt) > r) continue;
                 PlayFx("hit", s.Position, 50f, loop: false);
+                _pfx?.Spray(ParticleFxKind.Spark, s.Position, -_wallDir, 50f, 4, 120f, 260f, new Vector2(8f, 8f), 0.25f,
+                            new Color(0.6f, 0.9f, 1f, 1f));
                 s.Despawn();
             }
             _wallTick -= dt;
