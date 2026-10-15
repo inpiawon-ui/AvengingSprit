@@ -63,7 +63,7 @@ MonoBehaviour:
   _floors:
   - _floor: 1
     _nameKey: tower.floor.1.name
-    _descKey: tower.rule.bodyrange.desc
+    _descKey: tower.floor.1.desc
     _rule: 1
     _range: 0
     _affinity: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 2
     _nameKey: tower.floor.2.name
-    _descKey: tower.rule.bodyrange.desc
+    _descKey: tower.floor.2.desc
     _rule: 1
     _range: 2
     _affinity: 0
@@ -88,7 +88,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 3
     _nameKey: tower.floor.3.name
-    _descKey: tower.rule.enemyaffinity.desc
+    _descKey: tower.floor.3.desc
     _rule: 3
     _range: 1
     _affinity: 3
@@ -98,7 +98,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 4
     _nameKey: tower.floor.4.name
-    _descKey: tower.rule.noleave.desc
+    _descKey: tower.floor.4.desc
     _rule: 4
     _range: 1
     _affinity: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 5
     _nameKey: tower.floor.5.name
-    _descKey: tower.rule.boss.desc
+    _descKey: tower.floor.5.desc
     _rule: 7
     _range: 1
     _affinity: 3
@@ -121,7 +121,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 6
     _nameKey: tower.floor.6.name
-    _descKey: tower.rule.bodyrange.desc
+    _descKey: tower.floor.6.desc
     _rule: 1
     _range: 1
     _affinity: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 7
     _nameKey: tower.floor.7.name
-    _descKey: tower.rule.singlehost.desc
+    _descKey: tower.floor.7.desc
     _rule: 5
     _range: 1
     _affinity: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 8
     _nameKey: tower.floor.8.name
-    _descKey: tower.rule.enemyaffinity.desc
+    _descKey: tower.floor.8.desc
     _rule: 3
     _range: 1
     _affinity: 2
@@ -157,7 +157,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 9
     _nameKey: tower.floor.9.name
-    _descKey: tower.rule.oneshot.desc
+    _descKey: tower.floor.9.desc
     _rule: 6
     _range: 1
     _affinity: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
     _roomId: ROOM_CH1_001
   - _floor: 10
     _nameKey: tower.floor.10.name
-    _descKey: tower.rule.boss.desc
+    _descKey: tower.floor.10.desc
     _rule: 7
     _range: 1
     _affinity: 2

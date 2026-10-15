@@ -432,11 +432,11 @@ ui.consumable.ally.name	동료	仲間	Ally
 ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	次の部屋で体がひとつ一緒に戦う	A body fights beside you next Room
 ui.consumable.freeze.name	정지	停止	Freeze
 ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部屋で敵が{0:0}秒止まる	Foes freeze {0:0}s in the next Room
-ui.lobby.mode.survival.name	서바이벌 모드	サバイバルモード	Survival Mode
+ui.lobby.mode.survival.name	망령의 밤	亡霊の夜	Night of Specters
 ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	Survive to the end
 ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	Scenario Mode
 ui.lobby.mode.scenario.desc	되살아난 영혼의 새 이야기	魂が蘇る新たな物語	A soul reborn
-ui.lobby.mode.defense.name	디펜스 모드	ディフェンスモード	Defense Mode
+ui.lobby.mode.defense.name	망령의 탑	亡霊の塔	Tower of Specters
 ui.lobby.mode.defense.desc	몰려오는 적을 격퇴하라	押し寄せる敵を撃退せよ	Repel the incoming horde
 ui.lobby.game_mode	게임 모드	ゲームモード	Game Mode
 ui.lobby.continue	이어서 하기	続きから	Continue
@@ -711,3 +711,100 @@ ui.chapterhost.hosttitle	호스트 선택	ホスト選択	Select Host
 ui.chapterhost.ownedonly	보유한 호스트만 선택 가능합니다.	所持しているホストのみ選択できます。	Only owned hosts can be selected.
 ui.chapterhost.start	도전하기	挑戦する	Start
 ui.chapterhost.chapter	CHAPTER	CHAPTER	CHAPTER
+ui.affinity.none	없음	なし	None
+ui.tower.title	망령의 탑	亡霊の塔	Tower of Specters
+ui.tower.reset_in	초기화까지 {0}	リセットまで {0}	Resets in {0}
+ui.tower.week	이번 주 <color=#FFD23F>{0}층</color>	今週 <color=#FFD23F>{0}階</color>	This week <color=#FFD23F>F{0}</color>
+ui.tower.last_week	지난주 최고 {0}층	先週の最高 {0}階	Last week best F{0}
+ui.tower.floor	{0}층	{0}階	F{0}
+ui.tower.adv_enemy	적	敵	Foes
+ui.tower.adv	{0} 몸 유리 ▲	{0}の体が有利 ▲	{0} bodies ▲
+ui.tower.fit	맞는 호스트 {0} · 내가 키운 ★{1}	対応ホスト {0}・育成済み ★{1}	Eligible {0} · Trained ★{1}
+ui.tower.fit_title	{0}층에 맞는 호스트	{0}階に対応するホスト	Hosts for F{0}
+ui.tower.first_clear	첫 클리어 보상 (매주 다시)	初回クリア報酬(毎週リセット)	First clear reward (weekly)
+ui.tower.shard_count	조각 ×{0}	かけら ×{0}	Shards ×{0}
+ui.tower.sweep	오늘의 소탕	今日の掃討	Today's Sweep
+ui.tower.sweep_basis	{0}층 기준	{0}階基準	Based on F{0}
+ui.tower.sweep_reward	{0} · 조각 ×{1}	{0}・かけら ×{1}	{0} · Shards ×{1}
+ui.tower.sweep_locked	1층을 깨면 받을 수 있다	1階をクリアすると受け取れる	Clear F1 to unlock
+ui.tower.sweep_btn	소탕	掃討	Sweep
+ui.tower.sweep_done	오늘 받음	本日受取済	Claimed today
+ui.tower.sweep_hint	하루 1번 · 입장 횟수를 쓰지 않는다 · 싸우지 않고 받는다	1日1回・入場回数を使わない・戦わずに受け取る	Once a day · no entry used · no battle
+ui.tower.sweep_result	소탕 완료	掃討完了	Sweep complete
+ui.tower.entries_label	오늘 입장	今日の入場	Entries
+ui.tower.entries	{0} / {1}	{0} / {1}	{0} / {1}
+ui.tower.buy	추가 입장	追加入場	Extra entry
+ui.tower.start	{0}층 도전 ▶	{0}階に挑戦 ▶	Challenge F{0} ▶
+ui.tower.start_buy	젬 {0} 추가 입장	ジェム{0} 追加入場	{0} gems: extra entry
+ui.tower.no_entries	내일 05:00에 3번	明日05:00に3回	3 more at 05:00 tomorrow
+ui.tower.start_hint	입장 1번 사용 · 이기든 지든 줄어든다	入場1回使用・勝敗に関わらず減る	Uses 1 entry · win or lose
+ui.mode.buy_ask	젬 {0}으로 1번 더 입장할까?\n(오늘 추가 입장 {1} / {2})	ジェム{0}で1回追加入場しますか?\n(今日の追加入場 {1} / {2})	Buy 1 more entry for {0} gems?\n(Extra today {1} / {2})
+ui.mode.buy_no_gem	젬이 모자라다	ジェムが足りない	Not enough gems
+ui.mode.reward_gold	골드 {0}	ゴールド {0}	Gold {0}
+ui.mode.span_dh	{0}일 {1}시간	{0}日{1}時間	{0}d {1}h
+ui.mode.span_hm	{0}시간 {1}분	{0}時間{1}分	{0}h {1}m
+ui.lobby.mode.night.sub	{0} · 입장 {1}/{2}	{0}・入場 {1}/{2}	{0} · Entries {1}/{2}
+ui.lobby.mode.tower.sub	이번 주 {0}층 · 입장 {1}/{2}	今週 {0}階・入場 {1}/{2}	This week F{0} · Entries {1}/{2}
+ui.night.title	망령의 밤	亡霊の夜	Night of Specters
+ui.night.today	오늘 · {0}요일	今日・{0}曜日	Today · {0}
+ui.night.other_day	미리보기 · {0}요일	プレビュー・{0}曜日	Preview · {0}
+ui.night.fit	오늘 나오는 호스트 {0} · 내가 키운 ★{1}	今日のホスト {0}・育成済み ★{1}	Today's hosts {0} · Trained ★{1}
+ui.night.best	{0}요일 최고 처치	{0}曜日の最高撃破	Best kills ({0})
+ui.night.reward_label	보상	報酬	Rewards
+ui.night.reward	처치 {0}마다 조각 1\n보스 처치 +{1}	{0}体撃破ごとにかけら1\nボス撃破 +{1}	1 shard per {0} kills\nBoss kill +{1}
+ui.night.flow.start	몸 셋 중 하나에 빙의	3体のうち1体に憑依	Possess 1 of 3
+ui.night.flow.wave_title	매 1분	毎1分	Every 1 min
+ui.night.flow.wave	무리 속성 · 회복	群れの属性・回復	Horde type · heal
+ui.night.flow.big_title	{0}초마다	{0}秒ごと	Every {0}s
+ui.night.flow.big	대형 호스트	大型ホスト	Giant host
+ui.night.flow.boss	보스	ボス	Boss
+ui.night.today_only	오늘만 시작할 수 있다	今日の分のみ開始できる	Only today can start
+ui.night.start	시작 ▶	スタート ▶	Start ▶
+ui.night.day.mon	월	月	Mon
+ui.night.day_short.mon	근거리	近距離	Melee
+ui.night.day_rule.mon	근거리의 날	近距離の日	Melee Day
+ui.night.day_desc.mon	근거리 호스트만 몸으로 나온다	近距離ホストだけが体として出る	Only melee hosts appear as bodies
+ui.night.day.tue	화	火	Tue
+ui.night.day_short.tue	원거리	遠距離	Ranged
+ui.night.day_rule.tue	원거리의 날	遠距離の日	Ranged Day
+ui.night.day_desc.tue	원거리 호스트만 몸으로 나온다	遠距離ホストだけが体として出る	Only ranged hosts appear as bodies
+ui.night.day.wed	수	水	Wed
+ui.night.day_short.wed	중거리	中距離	Mid
+ui.night.day_rule.wed	중거리의 날	中距離の日	Mid-range Day
+ui.night.day_desc.wed	중거리 호스트만 몸으로 나온다	中距離ホストだけが体として出る	Only mid-range hosts appear as bodies
+ui.night.day.thu	목	木	Thu
+ui.night.day_short.thu	파워	パワー	Power
+ui.night.day_rule.thu	파워의 날	パワーの日	Power Day
+ui.night.day_desc.thu	파워 호스트만 몸으로 나온다	パワーホストだけが体として出る	Only Power hosts appear as bodies
+ui.night.day.fri	금	金	Fri
+ui.night.day_short.fri	무기	武器	Weapon
+ui.night.day_rule.fri	무기의 날	武器の日	Weapon Day
+ui.night.day_desc.fri	무기 호스트만 몸으로 나온다	武器ホストだけが体として出る	Only Weapon hosts appear as bodies
+ui.night.day.sat	토	土	Sat
+ui.night.day_short.sat	마법	魔法	Magic
+ui.night.day_rule.sat	마법의 날	魔法の日	Magic Day
+ui.night.day_desc.sat	마법 호스트만 몸으로 나온다	魔法ホストだけが体として出る	Only Magic hosts appear as bodies
+ui.night.day.sun	일	日	Sun
+ui.night.day_short.sun	자유	自由	Free
+ui.night.day_rule.sun	자유의 날	自由の日	Free Day
+ui.night.day_desc.sun	모든 호스트가 몸으로 나온다	すべてのホストが体として出る	Every host can appear
+tower.floor.1.name	근거리의 층	近距離の階	Melee Floor
+tower.floor.1.desc	근거리 호스트만 몸으로 나온다	近距離ホストだけが体として出る	Only melee hosts appear as bodies
+tower.floor.2.name	원거리의 층	遠距離の階	Ranged Floor
+tower.floor.2.desc	원거리 호스트만 몸으로 나온다	遠距離ホストだけが体として出る	Only ranged hosts appear as bodies
+tower.floor.3.name	마법의 무리	魔法の群れ	Magic Horde
+tower.floor.3.desc	적이 전부 마법. 몸은 세 속성이 섞여 나온다.	敵はすべて魔法。体は3属性が混ざって出る。	All foes are Magic. Bodies of all three types appear.
+tower.floor.4.name	첫 몸으로 끝까지	最初の体で最後まで	First Body Only
+tower.floor.4.desc	스스로 나올 수 없다 — 첫 빙의가 승부	自ら出られない — 最初の憑依が勝負	You cannot leave — the first possession decides
+tower.floor.5.name	보스 — 크러셔	ボス — クラッシャー	Boss — Crusher
+tower.floor.5.desc	크러셔(파워). 마법 몸만 나온다	クラッシャー(パワー)。魔法の体だけが出る	Crusher (Power). Only Magic bodies appear
+tower.floor.6.name	중거리의 층	中距離の階	Mid-range Floor
+tower.floor.6.desc	중거리 호스트만 몸으로 나온다 · 빠른 박쥐 떼	中距離ホストだけが体として出る・速いコウモリの群れ	Only mid-range hosts · fast bat swarm
+tower.floor.7.name	한 호스트의 층	ひとりのホストの階	One Host Floor
+tower.floor.7.desc	호스트 하나만 몸으로 나온다	1種類のホストだけが体として出る	Only one host appears as bodies
+tower.floor.8.name	파워의 무리	パワーの群れ	Power Horde
+tower.floor.8.desc	적이 전부 파워. 마법 몸이 유리	敵はすべてパワー。魔法の体が有利	All foes are Power. Magic bodies have the edge
+tower.floor.9.name	빙의는 한 번	憑依は一度だけ	One Possession
+tower.floor.9.desc	빙의를 한 번만 할 수 있다 · 구조 몸이 없다	憑依は一度だけ・救助の体はない	Possess only once · no rescue bodies
+tower.floor.10.name	보스 — 킹핀	ボス — キングピン	Boss — Kingpin
+tower.floor.10.desc	킹핀(무기). 파워 몸만 나온다	キングピン(武器)。パワーの体だけが出る	Kingpin (Weapon). Only Power bodies appear

@@ -116,7 +116,7 @@ namespace Game.Editor
 
         private static TowerFloor F(int floor, TowerRule rule, RangeClass range, Affinity affinity, string boss,
                                     string[] trash, int count)
-            => new(floor, $"tower.floor.{floor}.name", $"tower.rule.{rule.ToString().ToLowerInvariant()}.desc",
+            => new(floor, $"tower.floor.{floor}.name", $"tower.floor.{floor}.desc",
                    rule, range, affinity, boss, trash, count, OpenRoom);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game.Module.Common;
 using Game.Module.Common.Chest;
+using Game.Module.Common.Modes;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
@@ -36,6 +37,10 @@ namespace Game.Module.Lobby
 
         /// <summary>육성 화면 — 하단 바 HOST 칸(기획 2026-09-21).</summary>
         [SerializeField] private GrowthPanel _growthPanel;
+
+        /// <summary>추가 모드 입장 패널 — 디펜스 칸 → 망령의 탑 · 서바이벌 칸 → 망령의 밤(PD 2026-10-15).</summary>
+        [SerializeField] private TowerEntryPanel _towerEntryPanel;
+        [SerializeField] private NightEntryPanel _nightEntryPanel;
 
         /// <summary>
         /// 상자 등급별 그림. 어느 칸에 무슨 등급이 오는지가 매번 달라 코드가 갈아 끼운다.
@@ -93,6 +98,8 @@ namespace Game.Module.Lobby
             if (_chapterSelectPanel != null) _chapterSelectPanel.Close();
             if (_chapterHostPanel != null) _chapterHostPanel.Close();
             if (_chestRewardPopup != null) _chestRewardPopup.Close();
+            if (_towerEntryPanel != null) _towerEntryPanel.Close();
+            if (_nightEntryPanel != null) _nightEntryPanel.Close();
 
             // 하단 바 — 로비 · 육성이 **같이 쓴다**. 누른 칸이 선택 모습이 되고 위 화면만 바뀐다(기획 2026-09-21)
             //   HOST → 육성 화면 · PLAY → 로비 · SHOP → 준비 중(선택은 그대로)
@@ -111,8 +118,17 @@ namespace Game.Module.Lobby
             // 게임 모드 — 열린 것은 시나리오뿐이다. 잠긴 두 칸은 이름을 알려 준다
             _ui.OnClick("ModeScenarioCard", PlayScenario);
             _ui.OnClick("ModePlayButton", PlayScenario);
-            _ui.OnClick("ModeSurvivalCard", () => NotifyNotReady(Localize.Get("ui.lobby.mode.survival.name")));
-            _ui.OnClick("ModeDefenseCard", () => NotifyNotReady(Localize.Get("ui.lobby.mode.defense.name")));
+            // 서바이벌 칸 = 망령의 밤 · 디펜스 칸 = 망령의 탑(PD 2026-10-15). 판이 아직 프리팹에 없으면 예전 안내로
+            _ui.OnClick("ModeSurvivalCard", () =>
+            {
+                if (_nightEntryPanel != null) { GameSound.Cue("ui.play"); _nightEntryPanel.Open(); }
+                else NotifyNotReady(Localize.Get("ui.lobby.mode.survival.name"));
+            });
+            _ui.OnClick("ModeDefenseCard", () =>
+            {
+                if (_towerEntryPanel != null) { GameSound.Cue("ui.play"); _towerEntryPanel.Open(); }
+                else NotifyNotReady(Localize.Get("ui.lobby.mode.defense.name"));
+            });
 
             // 상자 세 칸 — 카드를 누르면 다 됐으면 보상을 받고, 세는 중이면 젬으로 열지 묻는다
             for (int i = 0; i < ChestSlots; i++)
@@ -438,6 +454,7 @@ namespace Game.Module.Lobby
             // 코드가 채우는 글자(상자 문구 · 플레이 자리)는 LocalizedText 가 없다 — 언어가 바뀌면 다시 채운다
             _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => { _playLabelDirty = true; ApplyChests(); }));
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
+            _tokens.Add(bus.Subscribe<ModeProgressChangedEvent>(_ => RefreshModeCards()));
             _tokens.Add(bus.Subscribe<ChapterSelectRequestedEvent>(_ =>
             {
                 if (_chapterSelectPanel != null) _chapterSelectPanel.Open();
@@ -491,6 +508,24 @@ namespace Game.Module.Lobby
             RefreshCurrency();
             RefreshProfile();
             ApplyChests();
+            RefreshModeCards();
+        }
+
+        /// <summary>모드 칸 아래 글자 · 빨간 점 — 「원거리의 날 · 입장 3/3」 · 「이번 주 12층 · 입장 2/3」(시안 L).</summary>
+        private void RefreshModeCards()
+        {
+            if (!CoreModule.TryGet<IModeProgress>(out var modes)) return;
+            modes.Refresh();
+            int free = modes.Table != null ? modes.Table.FreeEntriesPerDay : 3;
+            string[] days = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
+            _ui.SetText("ModeSurvivalTitleText", Localize.Get("ui.night.title"));
+            _ui.SetText("ModeSurvivalSubText", Localize.Format("ui.lobby.mode.night.sub",
+                Localize.Get($"ui.night.day_rule.{days[modes.TodayIndex]}"), modes.NightEntries, free));
+            _ui.SetText("ModeDefenseTitleText", Localize.Get("ui.tower.title"));
+            _ui.SetText("ModeDefenseSubText", Localize.Format("ui.lobby.mode.tower.sub",
+                modes.TowerWeekCleared, modes.TowerEntries, free));
+            _ui.SetActive("ModeSurvivalBadge", modes.NightEntries > 0);
+            _ui.SetActive("ModeDefenseBadge", modes.TowerEntries > 0 || (!modes.TowerSweptToday && modes.SweepNow != null));
         }
 
         /// <summary>경험치 채움의 가득 찬 폭 — `FixedBarsBinder.ProfileFillWidth` 와 같아야 한다.</summary>
@@ -574,6 +609,16 @@ namespace Game.Module.Lobby
         /// <summary>로비에서 열리는 창을 위에서부터 닫는다.</summary>
         public bool OnBackPressed()
         {
+            if (_towerEntryPanel != null && _towerEntryPanel.IsOpen)
+            {
+                _towerEntryPanel.Close();
+                return true;
+            }
+            if (_nightEntryPanel != null && _nightEntryPanel.IsOpen)
+            {
+                _nightEntryPanel.Close();
+                return true;
+            }
             if (_growthPanel != null && _growthPanel.IsOpen)
             {
                 SelectTab(Tab.Play);   // 육성 화면에서 뒤로 = 로비(PLAY 칸)
