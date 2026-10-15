@@ -4146,3 +4146,285 @@ MonoBehaviour:
     _ko: "\uC82C\uC774 \uBAA8\uC790\uB77C\uC694."
     _ja: "\u30B8\u30A7\u30E0\u304C\u8DB3\u308A\u307E\u305B\u3093\u3002"
     _en: Not enough gems.
+  - _key: ui.pass.buy_confirm
+    _ko: "{0}\n{1} \uB85C \uC0B4\uAE4C\uC694?"
+    _ja: "{0}\n{1} \u3067\u8CFC\u5165\u3057\u307E\u3059\u304B\uFF1F"
+    _en: 'Buy {0}
+
+      for {1}?'
+  - _key: ui.pass.claim
+    _ko: "\uBC1B\uAE30"
+    _ja: "\u53D7\u53D6"
+    _en: Claim
+  - _key: ui.pass.claim_all
+    _ko: "\uBAA8\uB450 \uBC1B\uAE30"
+    _ja: "\u4E00\u62EC\u53D7\u53D6"
+    _en: Claim All
+  - _key: ui.pass.claimed
+    _ko: "\uBC1B\uC74C"
+    _ja: "\u53D7\u53D6\u6E08"
+    _en: Claimed
+  - _key: ui.pass.daily
+    _ko: "\uB9E4\uC77C"
+    _ja: "\u30C7\u30A4\u30EA\u30FC"
+    _en: Daily
+  - _key: ui.pass.weekly
+    _ko: "\uB9E4\uC8FC"
+    _ja: "\u30A6\u30A3\u30FC\u30AF\u30EA\u30FC"
+    _en: Weekly
+  - _key: ui.pass.doing
+    _ko: "\uC9C4\uD589 \uC911"
+    _ja: "\u9032\u884C\u4E2D"
+    _en: In Progress
+  - _key: ui.pass.free
+    _ko: "\uBB34\uB8CC \uBCF4\uC0C1"
+    _ja: "\u7121\u6599\u5831\u916C"
+    _en: Free Rewards
+  - _key: ui.pass.premium_rewards
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 \uBCF4\uC0C1"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\u5831\u916C"
+    _en: Premium Rewards
+  - _key: ui.pass.goldrun
+    _ko: "{0}\uD310\uBD84"
+    _ja: "{0}\u56DE\u5206"
+    _en: '{0} runs'
+  - _key: ui.pass.left
+    _ko: "\uB0A8\uC740 {0}\uC77C {1}\uC2DC\uAC04"
+    _ja: "\u6B8B\u308A{0}\u65E5{1}\u6642\u9593"
+    _en: '{0}d {1}h left'
+  - _key: ui.pass.locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF"
+    _en: Locked
+  - _key: ui.pass.premium
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 \uC5F4\uAE30"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\u89E3\u653E"
+    _en: Unlock Premium
+  - _key: ui.pass.premium_plus
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 + 15\uB2E8\uACC4"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\uFF0B15\u6BB5\u968E"
+    _en: Premium + 15 Tiers
+  - _key: ui.pass.reset_days
+    _ko: "\uCD08\uAE30\uD654\uAE4C\uC9C0 {0}\uC77C"
+    _ja: "\u30EA\u30BB\u30C3\u30C8\u307E\u3067{0}\u65E5"
+    _en: Resets in {0}d
+  - _key: ui.pass.reset_in
+    _ko: "\uCD08\uAE30\uD654\uAE4C\uC9C0 {0}"
+    _ja: "\u30EA\u30BB\u30C3\u30C8\u307E\u3067{0}"
+    _en: Resets in {0}
+  - _key: ui.pass.slogan
+    _ko: "\uC9C0\uAE08, \uBCF5\uC218\uC758 \uC2DC\uAC04\uC774 \uC2DC\uC791\uB41C\uB2E4."
+    _ja: "\u4ECA\u3001\u5FA9\u8B90\u306E\u6642\u304C\u59CB\u307E\u308B\u3002"
+    _en: Now, the hour of revenge begins.
+  - _key: ui.pass.tab.missions
+    _ko: "\uBBF8\uC158"
+    _ja: "\u30DF\u30C3\u30B7\u30E7\u30F3"
+    _en: Missions
+  - _key: ui.pass.tab.rewards
+    _ko: "\uBCF4\uC0C1"
+    _ja: "\u5831\u916C"
+    _en: Rewards
+  - _key: ui.pass.tier
+    _ko: "\uB2E8\uACC4"
+    _ja: "\u6BB5\u968E"
+    _en: Tier
+  - _key: ui.pass.xp
+    _ko: "\uD328\uC2A4 \uACBD\uD5D8\uCE58 +{0}"
+    _ja: "\u30D1\u30B9\u7D4C\u9A13\u5024+{0}"
+    _en: Pass XP +{0}
+  - _key: ui.profile.title
+    _ko: "\uD504\uB85C\uD544 \uAFB8\uBBF8\uAE30"
+    _ja: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u7DE8\u96C6"
+    _en: Customize Profile
+  - _key: ui.profile.tab.frame
+    _ko: "\uD14C\uB450\uB9AC"
+    _ja: "\u30D5\u30EC\u30FC\u30E0"
+    _en: Frame
+  - _key: ui.profile.tab.face
+    _ko: "\uB300\uD45C \uC5BC\uAD74"
+    _ja: "\u30A2\u30A4\u30B3\u30F3"
+    _en: Face
+  - _key: ui.profile.tab.title
+    _ko: "\uCE6D\uD638"
+    _ja: "\u79F0\u53F7"
+    _en: Title
+  - _key: ui.profile.note
+    _ko: "\uB2A5\uB825\uCE58 \uBCC0\uD654 \uC5C6\uC74C \xB7 \uAFB8\uBBF8\uAE30 \uC804\uC6A9"
+    _ja: "\u80FD\u529B\u5024\u306E\u5909\u5316\u306A\u3057\u30FB\u898B\u305F\u76EE\u5C02\u7528"
+    _en: "Cosmetic only \xB7 no stat change"
+  - _key: ui.profile.equip
+    _ko: "\uC7A5\uCC29"
+    _ja: "\u88C5\u5099"
+    _en: Equip
+  - _key: ui.profile.equipped
+    _ko: "\uC7A5\uCC29 \uC911"
+    _ja: "\u88C5\u5099\u4E2D"
+    _en: Equipped
+  - _key: ui.profile.owned
+    _ko: "\uBCF4\uC720"
+    _ja: "\u6240\u6301"
+    _en: Owned
+  - _key: ui.profile.soon
+    _ko: "\uACE7 \uACF5\uAC1C"
+    _ja: "\u8FD1\u65E5\u516C\u958B"
+    _en: Coming Soon
+  - _key: ui.profile.source
+    _ko: "\uC5BB\uB294 \uACF3: {0}"
+    _ja: "\u5165\u624B: {0}"
+    _en: 'From: {0}'
+  - _key: ui.profile.src_chapter
+    _ko: "\uCC55\uD130 {0} \uD074\uB9AC\uC5B4"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC{0}\u30AF\u30EA\u30A2"
+    _en: Clear Chapter {0}
+  - _key: ui.profile.src_pass
+    _ko: "\uC2DC\uC98C \uD328\uC2A4"
+    _ja: "\u30B7\u30FC\u30BA\u30F3\u30D1\u30B9"
+    _en: Season Pass
+  - _key: mission.login
+    _ko: "\uC811\uC18D"
+    _ja: "\u30ED\u30B0\u30A4\u30F3"
+    _en: Log In
+  - _key: mission.run_start
+    _ko: "\uD310 \uC2DC\uC791"
+    _ja: "\u30D7\u30EC\u30A4\u958B\u59CB"
+    _en: Start a Run
+  - _key: mission.possess
+    _ko: "\uBE59\uC758"
+    _ja: "\u6191\u4F9D"
+    _en: Possess
+  - _key: mission.kill_advantage
+    _ko: "\uC720\uB9AC\uD55C \uC0C1\uC131 \uCC98\uCE58"
+    _ja: "\u6709\u5229\u76F8\u6027\u3067\u6483\u7834"
+    _en: Advantage Kills
+  - _key: mission.daily_shop_buy
+    _ko: "\uC624\uB298\uC758 \uC0C1\uC810 \uAD6C\uB9E4"
+    _ja: "\u672C\u65E5\u306E\u30B7\u30E7\u30C3\u30D7\u3067\u8CFC\u5165"
+    _en: Buy in Daily Shop
+  - _key: mission.stat_upgrade
+    _ko: "\uAC15\uD654"
+    _ja: "\u5F37\u5316"
+    _en: Upgrade
+  - _key: mission.daily_all_done
+    _ko: "\uB9E4\uC77C \uC804\uBD80 \uC644\uB8CC"
+    _ja: "\u30C7\u30A4\u30EA\u30FC\u5168\u9054\u6210"
+    _en: All Dailies Done
+  - _key: mission.run_clear
+    _ko: "\uCC55\uD130 \uD074\uB9AC\uC5B4"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC\u30AF\u30EA\u30A2"
+    _en: Clear a Chapter
+  - _key: mission.kill_boss
+    _ko: "\uBCF4\uC2A4 \uCC98\uCE58"
+    _ja: "\u30DC\u30B9\u6483\u7834"
+    _en: Defeat Bosses
+  - _key: mission.chest_open
+    _ko: "\uC0C1\uC790 \uC5F4\uAE30"
+    _ja: "\u5B9D\u7BB1\u3092\u958B\u3051\u308B"
+    _en: Open Chests
+  - _key: mission.distinct_hosts_possessed
+    _ko: "\uC11C\uB85C \uB2E4\uB978 \uBAB8"
+    _ja: "\u7570\u306A\u308B\u4F53\u306B\u6191\u4F9D"
+    _en: Different Bodies
+  - _key: mission.weekly_all_done
+    _ko: "\uB9E4\uC8FC \uC804\uBD80 \uC644\uB8CC"
+    _ja: "\u30A6\u30A3\u30FC\u30AF\u30EA\u30FC\u5168\u9054\u6210"
+    _en: All Weeklies Done
+  - _key: profile.frame_default.name
+    _ko: "\uAE30\uBCF8 \uD14C\uB450\uB9AC"
+    _ja: "\u57FA\u672C\u30D5\u30EC\u30FC\u30E0"
+    _en: Basic Frame
+  - _key: profile.frame_s1.name
+    _ko: HOST REVENGE
+    _ja: HOST REVENGE
+    _en: HOST REVENGE
+  - _key: profile.frame_ch10.name
+    _ko: "\uCC55\uD130 10 \uC815\uBCF5"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC10\u5236\u8987"
+    _en: Chapter 10 Conqueror
+  - _key: profile.title_none.name
+    _ko: "\uCE6D\uD638 \uC5C6\uC74C"
+    _ja: "\u79F0\u53F7\u306A\u3057"
+    _en: No Title
+  - _key: profile.title_s1.name
+    _ko: "\uC2DC\uC98C 1 \uBCF5\uC218\uC790"
+    _ja: "\u30B7\u30FC\u30BA\u30F31\u306E\u5FA9\u8B90\u8005"
+    _en: Season 1 Avenger
+  - _key: profile.title_ch10.name
+    _ko: "\uCC55\uD130 10 \uC815\uBCF5\uC790"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC10\u5236\u8987\u8005"
+    _en: Chapter 10 Conqueror
+  - _key: ui.summon.shards
+    _ko: "\uC870\uAC01 \xD7 {0}"
+    _ja: "\u304B\u3051\u3089 \xD7 {0}"
+    _en: "Shards \xD7 {0}"
+  - _key: ui.summon.next_star
+    _ko: "\uC9C0\uAE08 \uC870\uAC01 <color=#FFD94A>{0}</color> / {1}  \u2192  \uB2E4\uC74C
+      \uC131\uAE09\uAE4C\uC9C0 <color=#FFD94A>{2}</color>"
+    _ja: "\u304B\u3051\u3089 <color=#FFD94A>{0}</color> / {1}  \u2192  \u6B21\u306E\u661F\u307E\u3067
+      <color=#FFD94A>{2}</color>"
+    _en: "Shards <color=#FFD94A>{0}</color> / {1}  \u2192  <color=#FFD94A>{2}</color>
+      to next star"
+  - _key: ui.summon.star_max
+    _ko: "\uCD5C\uB300 \uC131\uAE09"
+    _ja: "\u6700\u5927\u306E\u661F"
+    _en: Max Stars
+  - _key: ui.summon.rates_title
+    _ko: "\uC18C\uD658 \uD655\uB960"
+    _ja: "\u53EC\u559A\u78BA\u7387"
+    _en: Summon Rates
+  - _key: ui.summon.rate_hosts
+    _ko: "{0}\uAE09 \uD638\uC2A4\uD2B8 {1}\uBA85"
+    _ja: "{0}\u30E9\u30F3\u30AF\u306E\u30DB\u30B9\u30C8 {1}\u4EBA"
+    _en: "{0}-Grade Hosts \xD7{1}"
+  - _key: ui.summon.rate_each
+    _ko: "\uAC01 {0}"
+    _ja: "\u5404 {0}"
+    _en: '{0} each'
+  - _key: ui.summon.rate_pickup
+    _ko: "\uD53D\uC5C5 {0}"
+    _ja: "\u30D4\u30C3\u30AF\u30A2\u30C3\u30D7 {0}"
+    _en: Pick Up {0}
+  - _key: ui.summon.rate_shards
+    _ko: "\uC870\uAC01 \xD7{0}"
+    _ja: "\u304B\u3051\u3089 \xD7{0}"
+    _en: "Shards \xD7{0}"
+  - _key: ui.summon.rate_guarantee
+    _ko: "10\uD68C \uC18C\uD658 \uC2DC <color=#FFD94A>A\uAE09 \uC774\uC0C1 1\uBA85</color>
+      \uBCF4\uC7A5"
+    _ja: "10\u56DE\u53EC\u559A\u3067<color=#FFD94A>A\u30E9\u30F3\u30AF\u4EE5\u4E0A1\u4EBA</color>\u78BA\u5B9A"
+    _en: 10-pull guarantees <color=#FFD94A>1 A-Grade or better</color>
+  - _key: ui.summon.rate_pity
+    _ko: "\uCC9C\uC7A5 <color=#FFD94A>{0}</color> / {1}"
+    _ja: "\u5929\u4E95 <color=#FFD94A>{0}</color> / {1}"
+    _en: Pity <color=#FFD94A>{0}</color> / {1}
+  - _key: ui.summon.rate_pity_note
+    _ko: "\uCC9C\uC7A5 \uD69F\uC218\uB294 \uC774\uC6D4\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+    _ja: "\u5929\u4E95\u30AB\u30A6\u30F3\u30C8\u306F\u6301\u3061\u8D8A\u3055\u308C\u307E\u305B\u3093\u3002"
+    _en: Pity count does not carry over.
+  - _key: ui.summon.history_recent
+    _ko: "\uCD5C\uADFC 100\uD68C"
+    _ja: "\u6700\u8FD1100\u56DE"
+    _en: Last 100
+  - _key: ui.summon.history_date
+    _ko: "\uB0A0\uC9DC"
+    _ja: "\u65E5\u4ED8"
+    _en: Date
+  - _key: ui.summon.history_host
+    _ko: "\uD638\uC2A4\uD2B8"
+    _ja: "\u30DB\u30B9\u30C8"
+    _en: Host
+  - _key: ui.summon.history_shard
+    _ko: "\uC870\uAC01"
+    _ja: "\u304B\u3051\u3089"
+    _en: Shards
+  - _key: ui.summon.history_pay
+    _ko: "\uC0AC\uC6A9"
+    _ja: "\u4F7F\u7528"
+    _en: Paid
+  - _key: ui.summon.history_free
+    _ko: "\uBB34\uB8CC"
+    _ja: "\u7121\u6599"
+    _en: Free
+  - _key: ui.summon.shards_now
+    _ko: "\uC9C0\uAE08 \uC870\uAC01 <color=#FFD94A>{0}</color>"
+    _ja: "\u73FE\u5728\u306E\u304B\u3051\u3089 <color=#FFD94A>{0}</color>"
+    _en: Shards <color=#FFD94A>{0}</color>

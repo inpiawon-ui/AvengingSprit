@@ -1,0 +1,446 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee32283049014e44869682a3f6dba57, type: 3}
+  m_Name: StoreTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.Store.StoreTable
+  _products:
+  - Id: starter_1
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P1
+    Limit: once
+    Show: days_since_install<=7
+    Rewards: gem:120;ticket:5;essence:30;stamina:40
+    Badge: best
+    Order: 10
+    StoreId: avsr.starter1
+    NameKey: store.starter_1.name
+    DescKey: store.starter_1.desc
+  - Id: starter_2
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P3
+    Limit: once
+    Show: days_since_install<=7
+    Rewards: gem:600;ticket:15;chest:platinum;stamina:100
+    Badge: 
+    Order: 11
+    StoreId: avsr.starter2
+    NameKey: store.starter_2.name
+    DescKey: store.starter_2.desc
+  - Id: starter_3
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: days_since_install<=7
+    Rewards: gem:1200;ticket:30;chest:platinum*2;stamina:200
+    Badge: 
+    Order: 12
+    StoreId: avsr.starter3
+    NameKey: store.starter_3.name
+    DescKey: store.starter_3.desc
+  - Id: chapter_01
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P2
+    Limit: once
+    Show: chapter_cleared>=1
+    Rewards: gem:200;goldrun:5;ticket:3
+    Badge: 
+    Order: 21
+    StoreId: avsr.chapter01
+    NameKey: store.chapter_01.name
+    DescKey: store.chapter_01.desc
+  - Id: chapter_02
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P2
+    Limit: once
+    Show: chapter_cleared>=2
+    Rewards: gem:200;goldrun:5;ticket:3
+    Badge: 
+    Order: 22
+    StoreId: avsr.chapter02
+    NameKey: store.chapter_02.name
+    DescKey: store.chapter_02.desc
+  - Id: chapter_03
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P3
+    Limit: once
+    Show: chapter_cleared>=3
+    Rewards: gem:500;goldrun:10;ticket:8;chest:platinum
+    Badge: 
+    Order: 23
+    StoreId: avsr.chapter03
+    NameKey: store.chapter_03.name
+    DescKey: store.chapter_03.desc
+  - Id: chapter_04
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P3
+    Limit: once
+    Show: chapter_cleared>=4
+    Rewards: gem:500;goldrun:10;ticket:8;chest:platinum
+    Badge: 
+    Order: 24
+    StoreId: avsr.chapter04
+    NameKey: store.chapter_04.name
+    DescKey: store.chapter_04.desc
+  - Id: chapter_05
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P3
+    Limit: once
+    Show: chapter_cleared>=5
+    Rewards: gem:500;goldrun:10;ticket:8;chest:platinum
+    Badge: 
+    Order: 25
+    StoreId: avsr.chapter05
+    NameKey: store.chapter_05.name
+    DescKey: store.chapter_05.desc
+  - Id: chapter_06
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: chapter_cleared>=6
+    Rewards: gem:1000;goldrun:15;ticket:15;chest:platinum*2
+    Badge: 
+    Order: 26
+    StoreId: avsr.chapter06
+    NameKey: store.chapter_06.name
+    DescKey: store.chapter_06.desc
+  - Id: chapter_07
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: chapter_cleared>=7
+    Rewards: gem:1000;goldrun:15;ticket:15;chest:platinum*2
+    Badge: 
+    Order: 27
+    StoreId: avsr.chapter07
+    NameKey: store.chapter_07.name
+    DescKey: store.chapter_07.desc
+  - Id: chapter_08
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: chapter_cleared>=8
+    Rewards: gem:1000;goldrun:15;ticket:15;chest:platinum*2
+    Badge: 
+    Order: 28
+    StoreId: avsr.chapter08
+    NameKey: store.chapter_08.name
+    DescKey: store.chapter_08.desc
+  - Id: chapter_09
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: chapter_cleared>=9
+    Rewards: gem:1000;goldrun:15;ticket:15;chest:platinum*2
+    Badge: 
+    Order: 29
+    StoreId: avsr.chapter09
+    NameKey: store.chapter_09.name
+    DescKey: store.chapter_09.desc
+  - Id: chapter_10
+    Tab: currency
+    Kind: package
+    PriceType: iap
+    Price: P4
+    Limit: once
+    Show: chapter_cleared>=10
+    Rewards: gem:1000;goldrun:15;ticket:15;chest:platinum*2
+    Badge: 
+    Order: 30
+    StoreId: avsr.chapter10
+    NameKey: store.chapter_10.name
+    DescKey: store.chapter_10.desc
+  - Id: card_small
+    Tab: currency
+    Kind: card
+    PriceType: iap
+    Price: P3
+    Limit: none
+    Show: always
+    Rewards: card:soul_small
+    Badge: 
+    Order: 30
+    StoreId: avsr.card.small
+    NameKey: store.card_small.name
+    DescKey: store.card_small.desc
+  - Id: card_big
+    Tab: currency
+    Kind: card
+    PriceType: iap
+    Price: P5
+    Limit: none
+    Show: always
+    Rewards: card:soul_big
+    Badge: 
+    Order: 31
+    StoreId: avsr.card.big
+    NameKey: store.card_big.name
+    DescKey: store.card_big.desc
+  - Id: chest_silver
+    Tab: chest
+    Kind: chest
+    PriceType: gem
+    Price: 60
+    Limit: none
+    Show: always
+    Rewards: chest:silver
+    Badge: 
+    Order: 40
+    StoreId: 
+    NameKey: store.chest_silver.name
+    DescKey: store.chest_silver.desc
+  - Id: chest_gold
+    Tab: chest
+    Kind: chest
+    PriceType: gem
+    Price: 160
+    Limit: none
+    Show: always
+    Rewards: chest:gold
+    Badge: 
+    Order: 41
+    StoreId: 
+    NameKey: store.chest_gold.name
+    DescKey: store.chest_gold.desc
+  - Id: chest_platinum
+    Tab: chest
+    Kind: chest
+    PriceType: gem
+    Price: 320
+    Limit: none
+    Show: always
+    Rewards: chest:platinum
+    Badge: 
+    Order: 42
+    StoreId: 
+    NameKey: store.chest_platinum.name
+    DescKey: store.chest_platinum.desc
+  - Id: stamina_refill
+    Tab: currency
+    Kind: stamina
+    PriceType: gem
+    Price: 100
+    Limit: daily:6
+    Show: always
+    Rewards: stamina:20
+    Badge: 
+    Order: 45
+    StoreId: 
+    NameKey: store.stamina_refill.name
+    DescKey: store.stamina_refill.desc
+  - Id: gold_s
+    Tab: currency
+    Kind: gold
+    PriceType: gem
+    Price: 30
+    Limit: daily:3
+    Show: always
+    Rewards: goldrun:1
+    Badge: 
+    Order: 50
+    StoreId: 
+    NameKey: store.gold_s.name
+    DescKey: store.gold_s.desc
+  - Id: gold_m
+    Tab: currency
+    Kind: gold
+    PriceType: gem
+    Price: 150
+    Limit: none
+    Show: always
+    Rewards: goldrun:6
+    Badge: 
+    Order: 51
+    StoreId: 
+    NameKey: store.gold_m.name
+    DescKey: store.gold_m.desc
+  - Id: gold_l
+    Tab: currency
+    Kind: gold
+    PriceType: gem
+    Price: 450
+    Limit: none
+    Show: always
+    Rewards: goldrun:20
+    Badge: 
+    Order: 52
+    StoreId: 
+    NameKey: store.gold_l.name
+    DescKey: store.gold_l.desc
+  - Id: gem_60
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P1
+    Limit: none
+    Show: always
+    Rewards: gem:60
+    Badge: first_double
+    Order: 60
+    StoreId: avsr.gem60
+    NameKey: store.gem_60.name
+    DescKey: store.gem_60.desc
+  - Id: gem_320
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P3
+    Limit: none
+    Show: always
+    Rewards: gem:320
+    Badge: first_double
+    Order: 61
+    StoreId: avsr.gem320
+    NameKey: store.gem_320.name
+    DescKey: store.gem_320.desc
+  - Id: gem_680
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P4
+    Limit: none
+    Show: always
+    Rewards: gem:680
+    Badge: first_double
+    Order: 62
+    StoreId: avsr.gem680
+    NameKey: store.gem_680.name
+    DescKey: store.gem_680.desc
+  - Id: gem_2100
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P7
+    Limit: none
+    Show: always
+    Rewards: gem:2100
+    Badge: first_double
+    Order: 63
+    StoreId: avsr.gem2100
+    NameKey: store.gem_2100.name
+    DescKey: store.gem_2100.desc
+  - Id: gem_3600
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P8
+    Limit: none
+    Show: always
+    Rewards: gem:3600
+    Badge: first_double
+    Order: 64
+    StoreId: avsr.gem3600
+    NameKey: store.gem_3600.name
+    DescKey: store.gem_3600.desc
+  - Id: gem_7500
+    Tab: currency
+    Kind: gem
+    PriceType: iap
+    Price: P9
+    Limit: none
+    Show: always
+    Rewards: gem:7500
+    Badge: first_double
+    Order: 65
+    StoreId: avsr.gem7500
+    NameKey: store.gem_7500.name
+    DescKey: store.gem_7500.desc
+  - Id: pass_premium
+    Tab: pass
+    Kind: pass
+    PriceType: iap
+    Price: P4
+    Limit: season
+    Show: season_active
+    Rewards: passpremium:1
+    Badge: 
+    Order: 70
+    StoreId: avsr.pass.premium
+    NameKey: store.pass_premium.name
+    DescKey: store.pass_premium.desc
+  - Id: pass_bundle
+    Tab: pass
+    Kind: pass
+    PriceType: iap
+    Price: P6
+    Limit: season
+    Show: season_active
+    Rewards: passpremium:1;passxp:1500
+    Badge: 
+    Order: 71
+    StoreId: avsr.pass.bundle
+    NameKey: store.pass_bundle.name
+    DescKey: store.pass_bundle.desc
+  _tiers:
+  - Tier: P1
+    Krw: 1200
+    Usd: 0.99
+  - Tier: P2
+    Krw: 2500
+    Usd: 1.99
+  - Tier: P3
+    Krw: 5900
+    Usd: 4.99
+  - Tier: P4
+    Krw: 12000
+    Usd: 9.99
+  - Tier: P5
+    Krw: 19000
+    Usd: 14.99
+  - Tier: P6
+    Krw: 25000
+    Usd: 19.99
+  - Tier: P7
+    Krw: 39000
+    Usd: 29.99
+  - Tier: P8
+    Krw: 65000
+    Usd: 49.99
+  - Tier: P9
+    Krw: 129000
+    Usd: 99.99
+  _cards:
+  - Key: soul_small
+    ProductId: card_small
+    Days: 30
+    InstantGem: 300
+    DailyGem: 90
+    Perks: daily_stamina:20
+  - Key: soul_big
+    ProductId: card_big
+    Days: 30
+    InstantGem: 1000
+    DailyGem: 200
+    Perks: stamina_max:+20;daily_stamina:40;free_refresh:1;card_reroll:1

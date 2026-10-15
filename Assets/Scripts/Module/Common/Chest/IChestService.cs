@@ -59,6 +59,12 @@ namespace Game.Module.Common.Chest
         /// <summary>완료된 칸을 열어 보상을 지급하고 칸을 비운다.</summary>
         bool TryClaim(int slot, out ChestReward reward);
 
+        /// <summary>
+        /// 칸을 안 거치고 바로 열어 보상을 지급한다 — 상점에서 산 상자(기획서 B-3). 굴리기는 칸 열기와 같다.
+        /// 표에 없는 상자면 false.
+        /// </summary>
+        bool TryOpenImmediate(string chestKey, out ChestReward reward);
+
         /// <summary>표에 그런 상자가 있는가. 인게임이 상자를 고를 때 쓴다.</summary>
         bool Has(string chestKey);
 

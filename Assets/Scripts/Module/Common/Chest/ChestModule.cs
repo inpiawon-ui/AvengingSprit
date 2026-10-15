@@ -200,6 +200,27 @@ namespace Game.Module.Common.Chest
             return true;
         }
 
+        public bool TryOpenImmediate(string chestKey, out ChestReward reward)
+        {
+            reward = default;
+            var p = Player;
+            if (p == null || !p.IsReady || _table == null) return false;
+            var e = _table.Find(chestKey);
+            if (e == null) return false;
+            reward = Roll(e, p);
+            p.AddGrowthCurrency(reward.Gold, 0, 0, 0);
+            for (int i = 0; i < reward.ShardHostKeys.Length; i++)
+                p.AddShards(reward.ShardHostKeys[i], reward.ShardCounts[i]);
+            _bus?.Publish(new ChestOpenedEvent
+            {
+                OpenedChestKey = e.Key,
+                RewardGold = reward.Gold,
+                RewardShardHostKeys = reward.ShardHostKeys,
+                RewardShardCounts = reward.ShardCounts,
+            });
+            return true;
+        }
+
         /// <summary>
         /// 골드 + 호스트 조각을 굴린다(기획 2026-09-18).
         ///

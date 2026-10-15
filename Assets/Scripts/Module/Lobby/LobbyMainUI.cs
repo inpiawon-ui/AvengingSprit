@@ -42,6 +42,18 @@ namespace Game.Module.Lobby
         [SerializeField] private TowerEntryPanel _towerEntryPanel;
         [SerializeField] private NightEntryPanel _nightEntryPanel;
 
+        /// <summary>로비 상점 — 하단 바 SHOP 칸(PD 2026-10-15, 시안 S02~S07). 노드는 `LobbyShopBuilder` 가 세운다.</summary>
+        [SerializeField] private LobbyShopPanel _shopPanel;
+
+        /// <summary>소환(조각 뽑기) — 하단 바 SUMMON 칸(PD 2026-10-15 A안). 노드는 `SummonBuilder` 가 세운다.</summary>
+        [SerializeField] private SummonPanel _summonPanel;
+
+        /// <summary>시즌 패스 — 위 막대 시즌 배지로 연다(시안 S16 · S17). 노드는 `SeasonPassBuilder` 가 세운다.</summary>
+        [SerializeField] private SeasonPassPanel _passPanel;
+
+        /// <summary>프로필 꾸미기 — 왼쪽 위 프로필을 누르면 뜬다(시안 `mock_store_profile`). 노드는 `ProfileBuilder`.</summary>
+        [SerializeField] private ProfilePopup _profilePopup;
+
         /// <summary>
         /// 상자 등급별 그림. 어느 칸에 무슨 등급이 오는지가 매번 달라 코드가 갈아 끼운다.
         ///
@@ -106,11 +118,35 @@ namespace Game.Module.Lobby
             if (_growthPanel != null) _growthPanel.Close();
             _ui.OnClick("HostButton", () => SelectTab(Tab.Host));
             // 왼쪽 위 유령 프로필 — 누르면 육성의 유령 탭으로(유령 = 플레이어 자신)
-            _ui.OnClick("LobbyProfile", OpenGhostGrowth);
+            // 꾸미기 창이 있으면 그것(시안 「프로필은 로비 왼쪽 위에서 변경」), 없으면 예전처럼 유령 육성
+            if (_profilePopup != null) _profilePopup.Close();
+            _ui.OnClick("LobbyProfile", () =>
+            {
+                if (_profilePopup != null) _profilePopup.Open();
+                else OpenGhostGrowth();
+            });
             _ui.OnClick("ChapterButton", () => SelectTab(Tab.Play));
-            _ui.OnClick("ShopButton", () => NotifyNotReady("상점"));
+            // 상점 창이 없는(세우기 전) 프리팹이면 예전처럼 준비 중 안내
+            if (_shopPanel != null) _shopPanel.Close();
+            _ui.OnClick("ShopButton", () =>
+            {
+                if (_shopPanel != null) SelectTab(Tab.Shop);
+                else NotifyNotReady("상점");
+            });
             // 소환은 상점과 칸을 나눴다(PD 2026-10-15 A안). 소환 화면은 다음 단계 — 지금은 준비 중 안내
-            _ui.OnClick("SummonButton", () => NotifyNotReady("소환"));
+            if (_summonPanel != null) _summonPanel.Close();
+            if (_passPanel != null) _passPanel.Close();
+            _ui.OnClick("PassBadge", () =>
+            {
+                if (_passPanel == null) { NotifyNotReady("시즌 패스"); return; }
+                if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
+                _passPanel.Open();
+            });
+            _ui.OnClick("SummonButton", () =>
+            {
+                if (_summonPanel != null) SelectTab(Tab.Summon);
+                else NotifyNotReady("소환");
+            });
             // 위 막대 행동력 「+」 — 젬으로 채우기(기획서 B-12)
             _ui.OnClick("StaminaPlusButton", OpenStaminaRefill);
             SelectTab(Tab.Play);
@@ -392,18 +428,31 @@ namespace Game.Module.Lobby
 
         // ── 하단 바 ──────────────────────────────────────────────
 
-        private enum Tab { Play, Host }
+        private enum Tab { Play, Host, Summon, Shop }
 
         private static readonly string[] LobbyPageNodes = { "LobbyV4Gap", "LobbyV4Top", "LobbyV4Mid" };
 
         private void SelectTab(Tab tab)
         {
             bool host = tab == Tab.Host;
+            bool shop = tab == Tab.Shop;
             SetNav("HostButton", host);
-            SetNav("ChapterButton", !host);
-            SetNav("SummonButton", false);
-            SetNav("ShopButton", false);
-            SetDots(host ? 0 : 1);
+            SetNav("ChapterButton", tab == Tab.Play);
+            bool summon = tab == Tab.Summon;
+            SetNav("SummonButton", summon);
+            SetNav("ShopButton", shop);
+            SetDots(host ? 0 : summon ? 2 : shop ? 3 : 1);
+            if (_summonPanel != null)
+            {
+                if (summon) _summonPanel.Open();
+                else _summonPanel.Close();
+            }
+            if (_passPanel != null) _passPanel.Close();   // 아래 바를 누르면 패스 창은 닫고 그 화면으로
+            if (_shopPanel != null)
+            {
+                if (shop) _shopPanel.Open();
+                else _shopPanel.Close();
+            }
             // 아래 바는 챕터 창 위에 있어 창이 열린 채로 눌린다 — HOST 든 PLAY 든 누르면 창을 닫고 그 화면으로
             if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
             // 위 화면만 바꾼다 — 육성 화면이 켜지면 로비 판은 끈다(가려져 안 보이는데 그리기만 한다)
@@ -415,6 +464,29 @@ namespace Game.Module.Lobby
             if (_growthPanel == null) return;
             if (host) _growthPanel.Open();
             else _growthPanel.Close();
+        }
+
+        /// <summary>상점 위에 뜬 팝업 · 상점을 닫는다. 닫은 것이 없으면 false.</summary>
+        private bool BackFromShop()
+        {
+            if (_profilePopup != null && _profilePopup.IsOpen)
+            {
+                _profilePopup.Close();
+                return true;
+            }
+            if (_passPanel != null && _passPanel.IsOpen)
+            {
+                _passPanel.Close();
+                return true;
+            }
+            if (_summonPanel != null && _summonPanel.IsOpen)
+            {
+                if (!_summonPanel.CloseTopPopup()) SelectTab(Tab.Play);
+                return true;
+            }
+            if (_shopPanel == null || !_shopPanel.IsOpen) return false;
+            if (!_shopPanel.CloseTopPopup()) SelectTab(Tab.Play);   // 상점에서 뒤로 = 로비(PLAY 칸)
+            return true;
         }
 
         private void SetDots(int lit)
@@ -609,6 +681,7 @@ namespace Game.Module.Lobby
         /// <summary>로비에서 열리는 창을 위에서부터 닫는다.</summary>
         public bool OnBackPressed()
         {
+            if (BackFromShop()) return true;
             if (_towerEntryPanel != null && _towerEntryPanel.IsOpen)
             {
                 _towerEntryPanel.Close();

@@ -179,6 +179,17 @@ namespace Game.User
         /// <summary>젬을 낸다. 모자라면 아무 일도 없다.</summary>
         bool TrySpendGem(int amount);
 
+        /// <summary>로비 상점 기록(저장에 들어 있다). 규칙은 `IStoreService` 가 갖는다.</summary>
+        StoreSaveData Store { get; }
+
+        /// <summary>소환권.</summary>
+        int Tickets { get; }
+        void AddTickets(int amount);
+        bool TrySpendTickets(int amount);
+
+        /// <summary>정수를 더한다(상점 · 보상).</summary>
+        void AddEssence(int amount);
+
         /// <summary>파편을 쓰고 숙련도를 한 단계 올린다. 봉인 해제도 같은 동작이다.</summary>
         bool SpendShards(string hostKey, int cost);
 

@@ -114,6 +114,7 @@ namespace Game.Module.Lobby
         private readonly List<string> _cardKeys = new();
         private readonly List<Transform> _cards = new();
         private Transform _randomCard;   // 카드 줄 0번 칸 — 「?」
+        private readonly List<(Transform card, string key)> _lockedCards = new();
 
         private ScrollRect _hostScroll;
         private int _chapter = 1;
@@ -255,6 +256,20 @@ namespace Game.Module.Lobby
                 _cardKeys.Add(key);
                 slot++;
             }
+            // 미보유 몸 — 시안 S22e 「???」 잠긴 카드. 고를 수 없다(누르면 아무 일 없다)
+            _lockedCards.Clear();
+            if (_hasModes)
+                for (int i = 0; i < playable.Count && slot < content.childCount; i++)
+                {
+                    var e = playable[i];
+                    if (e == null || e.IsGhost || _player.IsHostOwned(e) || PlayerDataService.IsHiddenHost(e.HostKey)) continue;
+                    var card = content.GetChild(slot);
+                    card.gameObject.SetActive(true);
+                    var button = card.GetComponent<Button>();
+                    if (button != null) button.onClick.RemoveAllListeners();
+                    _lockedCards.Add((card, e.HostKey));
+                    slot++;
+                }
             for (int i = slot; i < content.childCount; i++)
                 content.GetChild(i).gameObject.SetActive(false);
 
@@ -283,12 +298,13 @@ namespace Game.Module.Lobby
             // ⚠ 첫 칸은 **여백 없이 0 에서** 시작한다. 앞에 여백을 주면 줄 전체가 밀려
             //   여섯째 칸이 오른쪽에서 잘린다(시안은 여섯 장이 꽉 찬다).
             int lead = _randomCard != null ? 1 : 0;   // 「?」 카드가 맨 앞 한 칸
-            float total = Mathf.Max(ViewW,
-                                    (_cards.Count + lead) * step - CardGapW);
+            float total = Mathf.Max(ViewW, (_cards.Count + _lockedCards.Count + lead) * step - CardGapW);
             content.sizeDelta = new Vector2(total, content.sizeDelta.y);
             if (_randomCard is RectTransform rr) PlaceCard(rr, 0, step);
             for (int i = 0; i < _cards.Count; i++)
                 if (_cards[i] is RectTransform r) PlaceCard(r, i + lead, step);
+            for (int i = 0; i < _lockedCards.Count; i++)
+                if (_lockedCards[i].card is RectTransform r) PlaceCard(r, _cards.Count + i + lead, step);
         }
 
         private static void PlaceCard(RectTransform r, int index, float step)
@@ -679,8 +695,12 @@ namespace Game.Module.Lobby
 
                 RefreshCardAffinity(card, key);
                 if (_hasModes) ApplyCardKit(card, key, e);
+                var lockIcon = _ui.Find(card, "CardLock");
+                if (lockIcon != null) lockIcon.gameObject.SetActive(false);
+                if (thumb != null) { thumb.material = null; thumb.color = Color.white; }
             }
 
+            for (int i = 0; i < _lockedCards.Count; i++) ApplyLockedCard(_lockedCards[i].card, _lockedCards[i].key);
             RefreshModes();
             RefreshRandomCard();
             // 고른 표시는 카드가 낸다 — 아래 칸의 체크는 예전 「랜덤 칸 = 버튼」 시절 것이다

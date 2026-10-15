@@ -26,6 +26,8 @@ namespace Game.Editor
         private static readonly Color Dark = new(0.08f, 0.1f, 0.24f, 1f);
         private static readonly Color Gold = new(1f, 0.85f, 0.32f, 1f);
         private static readonly Color Soft = new(0.78f, 0.84f, 0.95f, 1f);
+        private static readonly Color Ink = new(0.16f, 0.08f, 0.03f, 1f);        // 시안 도전하기 글자 — 짙은 고동
+        private static readonly Color CostRed = new(0.72f, 0.12f, 0.06f, 1f);    // 시안 「5 + 132」
 
         // 출전 카드 셋 — 가운데 x(화면), 가운데 y 620, 205 × 228
         private static readonly float[] ModeX = { 144.5f, 359.5f, 574.5f };
@@ -74,6 +76,7 @@ namespace Game.Editor
         [MenuItem("Tools/Game/로비 — 위 막대 행동력 칸 꽂기 (S22e)")]
         public static void RunTop()
         {
+            Border($"{Nav}/top_pass_plate.png", new Vector4(70, 40, 70, 40));
             var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
             try
             {
@@ -83,6 +86,17 @@ namespace Game.Editor
                 var sprite = Spr($"{Nav}/fixed_top_band_s22e.png");
                 if (band == null || sprite == null) { Debug.LogError("[S22e] 띠 그림 없음"); return; }
                 band.sprite = sprite;
+                // 칸 판이 그려진 한 장 그림이라 가로로 늘리면(4:3 에서 960) 판과 글자가 어긋난다 —
+                // 720 가운데로 고정하고 남는 양옆은 이음 띠(FixedTopBarEdgeL · R)가 메운다
+                var barRect = (RectTransform)bar;
+                float barH = barRect.rect.height > 0f ? barRect.rect.height : barRect.sizeDelta.y;
+                barRect.anchorMin = barRect.anchorMax = new Vector2(0.5f, 1f);
+                barRect.pivot = new Vector2(0.5f, 1f);
+                barRect.sizeDelta = new Vector2(720f, barH);
+                barRect.anchoredPosition = new Vector2(0f, barRect.anchoredPosition.y);
+                // ScreenFit 이 「화면 폭을 채우는 판」으로 보고 다시 늘리지 않게
+                if (bar.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null)
+                    bar.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
 
                 if (bar.Find("LobbyProfile") is Transform profile) profile.localScale = new Vector3(0.75f, 0.75f, 1f);
 
@@ -113,6 +127,57 @@ namespace Game.Editor
                 TLn(bar, "GemPlusButton", 575, 24, 34, 34);
                 TLn(bar, "MailButton", 621, 20, 52, 48);
                 TLn(bar, "SettingsButton", 680, 22, 40, 44);
+
+                // 시즌 패스 배지 — 시안 오른쪽 아래 x 318~532 · y 80~114. 누르면 패스(값은 LobbyMainUI 가 채운다)
+                var pass = Img(bar, "PassBadge", $"{Nav}/top_pass_plate.png");
+                pass.raycastTarget = true;
+                pass.type = Image.Type.Sliced;
+                pass.pixelsPerUnitMultiplier = 2.6f;
+                if (pass.GetComponent<Button>() == null) pass.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
+                TL(pass.rectTransform, 318, 80, 380, 36);
+                var crown = Img(pass.transform, "PassCrown", $"{Nav}/icon_season_crown.png");
+                crown.preserveAspect = true;
+                crown.raycastTarget = false;
+                At(crown.rectTransform, -168, 0, 26, 22);
+                // 글자는 배지 밑으로 옮겨 두어 막대에서 다시 못 찾는다 — 다시 돌릴 때마다 겹쳐 쌓이지 않게 먼저 지운다
+                for (int i = pass.transform.childCount - 1; i >= 0; i--)
+                {
+                    var old = pass.transform.GetChild(i);
+                    // 예전 이름(PassTitleText · PassLevelText)은 패스 창 글자와 이름이 겹쳐 값이 엉뚱한 칸에 들어갔다
+                    if (old.name.StartsWith("PassTitleText") || old.name.StartsWith("PassLevelText")
+                        || old.name.StartsWith("PassBadgeTitle") || old.name.StartsWith("PassBadgeLevel"))
+                        Object.DestroyImmediate(old.gameObject);
+                }
+                var ptxt = CloneTop(bar, "GoldText", "PassBadgeTitleText");
+                ptxt.transform.SetParent(pass.transform, false);
+                ptxt.fontSize = 14;
+                ptxt.fontSizeMax = 14;
+                ptxt.alignment = TextAlignmentOptions.Left;
+                ptxt.color = Color.white;
+                ptxt.rectTransform.anchorMin = ptxt.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                ptxt.rectTransform.pivot = new Vector2(0f, 0.5f);
+                ptxt.rectTransform.anchoredPosition = new Vector2(-148, 0);
+                ptxt.rectTransform.sizeDelta = new Vector2(240, 24);
+                var plv = CloneTop(bar, "GoldText", "PassBadgeLevelText");
+                plv.transform.SetParent(pass.transform, false);
+                plv.fontSize = 17;
+                plv.fontSizeMax = 17;
+                plv.alignment = TextAlignmentOptions.Right;
+                plv.color = Gold;
+                plv.rectTransform.anchorMin = plv.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                plv.rectTransform.pivot = new Vector2(1f, 0.5f);
+                plv.rectTransform.anchoredPosition = new Vector2(166, 0);   // 오른쪽 화살 끝 · 「!」 안쪽
+                plv.rectTransform.sizeDelta = new Vector2(70, 26);
+                var pdot = Img(pass.transform, "PassBadgeDot", $"{Nav}/icon_reddot.png");
+                pdot.preserveAspect = true;
+                pdot.raycastTarget = false;
+                At(pdot.rectTransform, 192, 16, 22, 22);   // 시안처럼 배지 오른쪽 위 모서리에 걸친다
+                Bang(pdot.transform, bar.Find("GoldText"));
+                pdot.gameObject.SetActive(false);
+
+                // 시즌 배지 글자 · 아래 바 「!」 를 채우는 것 — 로비 전체(위 막대 · 아래 바를 다 찾는다)
+                if (lobby.GetComponent<Game.Module.Lobby.LobbyNewsBadges>() == null)
+                    lobby.AddComponent<Game.Module.Lobby.LobbyNewsBadges>();
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(lobby); }
@@ -153,7 +218,8 @@ namespace Game.Editor
         private static readonly string[] Tabs = { "HostButton", "ChapterButton", "SummonButton", "ShopButton" };
         private static readonly string[] TabTitles = { "HOST", "PLAY", "SUMMON", "SHOP" };
         private static readonly string[] TabIcons = { "nav_icon_host", "nav_icon_play", "nav_icon_summon", "nav_icon_shop" };
-        private const float TabW = 168f, TabH = 84f, TabGap = 6f, TabLeft = 15f;
+        // 시안 S22e 아래 바 — 칸 163 × 80, 간격 9, 왼쪽 18 (시안 941 폭을 0.765 배)
+        private const float TabW = 163f, TabH = 80f, TabGap = 9f, TabLeft = 18f;
 
         /// <summary>
         /// 아래 바를 4칸으로. 예전 탭은 아이콘 · 「HOST」 글자까지 구운 236 폭 통그림이라 4칸(168 폭)에 못 넣는다 —
@@ -163,6 +229,8 @@ namespace Game.Editor
         public static void RunNav()
         {
             Border($"{Nav}/nav_sel_rim.png", 48);
+            Border($"{Nav}/nav_plate.png", 60);
+            Border($"{Nav}/nav_plate_summon.png", 60);
             var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
             try
             {
@@ -188,6 +256,15 @@ namespace Game.Editor
                         sub.GetComponent<TMP_Text>().text = "소환";
                     }
                 }
+                // 육성 화면의 nav_bg 는 탭 셋이 그려진 그림이라 새 4칸 사이로 옛 탭 · 글자가 비친다 — 무늬 없는 띠(양옆 이음 그림)로
+                var bgNode = nav.Find("NavBg");
+                var bg = bgNode != null ? bgNode.GetComponent<Image>() : null;
+                var band = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/BaseResource/Growth/nav_side_l.png");
+                if (bg != null && band != null)
+                {
+                    bg.sprite = band;
+                    bg.preserveAspect = false;
+                }
                 for (int i = 0; i < Tabs.Length; i++) Tab(nav, i);
                 Dots(nav);
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
@@ -200,13 +277,15 @@ namespace Game.Editor
         {
             if (nav.Find(Tabs[i]) is not RectTransform tab) { Debug.LogWarning($"[S22e] 칸 없음: {Tabs[i]}"); return; }
             tab.anchorMin = tab.anchorMax = tab.pivot = new Vector2(0f, 1f);
-            tab.anchoredPosition = new Vector2(TabLeft + i * (TabW + TabGap), -13f);
+            tab.anchoredPosition = new Vector2(TabLeft + i * (TabW + TabGap), -14f);
             tab.sizeDelta = new Vector2(TabW, TabH);
             if (tab.GetComponent<Image>() is Image hit) hit.color = new Color(1f, 1f, 1f, 0f);   // 누를 자리만
 
             bool summon = Tabs[i] == "SummonButton";
             var plate = Img(tab, "NavPlate", $"{Nav}/{(summon ? "nav_plate_summon" : "nav_plate")}.png");
             plate.raycastTarget = false;
+            plate.type = Image.Type.Sliced;   // 칸 비율이 그림과 달라 9분할로 늘린다(하네스 R1)
+            plate.pixelsPerUnitMultiplier = 2.4f;
             Stretch(plate.rectTransform, 0f);
             plate.transform.SetAsFirstSibling();
 
@@ -216,12 +295,12 @@ namespace Game.Editor
             on.type = Image.Type.Sliced;
             on.pixelsPerUnitMultiplier = 2.6f;
             on.raycastTarget = false;
-            Stretch(on.rectTransform, -5f);
+            Stretch(on.rectTransform, 0f);   // 칸 안 — 밖으로 내면 칸 밖이 된다(하네스 C1)
 
             var icon = Img(tab, "NavIcon", $"{Nav}/{TabIcons[i]}.png");
             icon.preserveAspect = true;
             icon.raycastTarget = false;
-            At(icon.rectTransform, -56f, 1f, 44f, 44f);
+            At(icon.rectTransform, -50f, 1f, 58f, 56f);
 
             var sub = FindSub(tab);
             var title = tab.Find("NavTitle")?.GetComponent<TextMeshProUGUI>();
@@ -236,12 +315,16 @@ namespace Game.Editor
             if (title != null)
             {
                 title.text = TabTitles[i];
-                title.fontSize = 20;
+                title.fontSize = 25;
+                title.fontStyle = FontStyles.Bold;
                 title.alignment = TextAlignmentOptions.Center;
                 title.enableAutoSizing = true;
-                title.fontSizeMin = 12;
-                title.fontSizeMax = 20;
-                At(title.rectTransform, 22f, 11f, 104f, 26f);
+                title.fontSizeMin = 13;
+                title.fontSizeMax = 25;
+                At(title.rectTransform, 30f, 11f, 94f, 30f);
+                // 시안 제목은 굵은 글자 + 검은 외곽선(옛 탭 그림의 「HOST」 결)
+                if (title.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText heavy)
+                    heavy.Set(0.18f, 0.22f, new Color32(8, 10, 30, 255));
             }
             if (sub != null)
             {
@@ -251,9 +334,23 @@ namespace Game.Editor
                 st.enableAutoSizing = true;
                 st.fontSizeMin = 9;
                 st.fontSizeMax = 13;
-                At(st.rectTransform, 22f, -14f, 104f, 20f);
+                st.fontSize = 14;
+                st.fontSizeMax = 14;
+                At(st.rectTransform, 30f, -16f, 94f, 20f);
             }
-            on.transform.SetAsLastSibling();
+            on.transform.SetSiblingIndex(plate.transform.GetSiblingIndex() + 1);   // 판 바로 위 · 아이콘 · 글자 아래(하네스 C6)
+
+            // 새 소식 「!」 — 소환(오늘 무료) · 상점(오늘의 무료 선물). 켜고 끄는 것은 LobbyMainUI
+            if (summon || Tabs[i] == "ShopButton")
+            {
+                var badge = Img(tab, "NavBadge", $"{Nav}/icon_reddot.png");
+                badge.preserveAspect = true;
+                badge.raycastTarget = false;
+                At(badge.rectTransform, TabW * 0.5f - 6f, TabH * 0.5f - 4f, 24f, 24f);   // 시안처럼 칸 모서리에 걸친다(제목을 안 가린다)
+                badge.transform.SetAsLastSibling();
+                Bang(badge.transform, FindSub(tab));
+                badge.gameObject.SetActive(false);
+            }
 
             var view = tab.GetComponent<Game.Module.Common.UI.NavTabView>();
             if (view == null) view = tab.gameObject.AddComponent<Game.Module.Common.UI.NavTabView>();
@@ -282,6 +379,7 @@ namespace Game.Editor
                 Object.Instantiate(d2.gameObject, dots, false).name = "NavDot3";
             for (int i = 0; i < 4; i++)
                 if (dots.Find($"NavDot{i}") is RectTransform r) r.anchoredPosition = new Vector2(-45f + i * 30f, 0f);
+            dots.gameObject.SetActive(false);   // 시안 S22e 아래 바에는 점이 없다 — 고른 칸은 금 테가 보인다
         }
 
         private static void Stretch(RectTransform r, float pad)
@@ -305,6 +403,8 @@ namespace Game.Editor
             Border($"{Ch}/ch_card_frame_s.png", 30);
             Border($"{Ch}/ch_card_sel_overlay.png", 34);
             Border($"{Ch}/mode_card_sel.png", 44);
+            Border($"{Ch}/mode_card_sel_plain.png", 44);
+            Border($"{Ch}/ribbon_today.png", new Vector4(40, 20, 40, 20));
             Border($"{Ch}/row_dim.png", 30);
             Border($"{Ch}/row_notice_band.png", new Vector4(40, 0, 40, 0));
             Border($"{Ch}/ch_start_button.png", new Vector4(110, 60, 110, 60));
@@ -340,12 +440,12 @@ namespace Game.Editor
             at = Sec(box, "CHSecBossFrame", "ch_s22e_bossframe", 37, 348, 170, 432, at);
             at = Sec(box, "CHSecReward", "ch_s22e_box", 321, 335, 696, 445, at);
             at = Sec(box, "CHSecMode", "ch_s22e_box", 22, 456, 696, 744, at);
-            at = Sec(box, "CHSecModeTick", "ch_s22e_tick", 41, 469, 53, 491, at, sliced: false);
+            at = Sec(box, "CHSecModeTick", "ch_s22e_tick", 41, 467, 54, 489, at, sliced: false);
             at = Sec(box, "CHSecModeLine", "ch_s22e_hline", 36, 498, 684, 503, at);
             at = Sec(box, "CHSecHost", "ch_s22e_box", 22, 751, 696, 964, at);
-            at = Sec(box, "CHSecHostTick", "ch_s22e_tick", 41, 762, 53, 784, at, sliced: false);
+            at = Sec(box, "CHSecHostTick", "ch_s22e_tick", 41, 762, 54, 784, at, sliced: false);
             at = Sec(box, "CHSecHostLine", "ch_s22e_hline", 36, 790, 684, 795, at);
-            Sec(box, "CHSecInfoFrame", "ch_s22e_bossframe", 37, 968, 165, 1072, at);
+            Sec(box, "CHSecInfoFrame", "ch_s22e_bossframe", 30, 968, 182, 1072, at);
         }
 
         private static int Sec(Transform box, string name, string sprite, float x0, float y0, float x1, float y1, int at,
@@ -374,6 +474,8 @@ namespace Game.Editor
                   "CHChapterNoText", "CHChapterNameText", "CHChapterDescText", "CHLockIcon", "CHRecPowerText",
                   "CHKindGem0", "CHKindCount0", "CHKindGem1", "CHKindCount1", "CHKindGem2", "CHKindCount2");
             // 설명은 두 줄 칸(적 구성 줄 위까지) — 넘치면 줄인다
+            if (box.Find("CHIconSkull") is Transform skull && skull.GetComponent<Image>() is Image skullImg)
+                skullImg.preserveAspect = true;   // 칸(33 × 39)이 그림(0.73)보다 넓다
             if (box.Find("CHChapterDescText") is RectTransform desc)
                 desc.sizeDelta = new Vector2(desc.sizeDelta.x, 46);
             Shrink(box, "CHChapterDescText", 11);
@@ -393,7 +495,7 @@ namespace Game.Editor
         {
             if (first) MoveY(box, MapBoss, "CHIconSkull", "CHIconCoin", "CHBossPortrait", "CHBossLabel", "CHBossDash", "CHRewardLabel",
                   "CHBossNameText", "CHRewardGoldText", "CHRewardChestIcon", "CHRewardChestText", "CHBossKindGem");
-            C(box, "CHBossPortrait", 103.5f, 390, 120, 76);
+            BossMask(box);
             Scale(box, "CHRewardChestIcon", 0.8f);
         }
 
@@ -402,7 +504,7 @@ namespace Game.Editor
         private static void ModeSection(Transform box)
         {
             var title = CloneText(box, "CHHostTitle", "CHModeTitle");
-            L(box, "CHModeTitle", 64, 480, 300, 30, title.fontSize);
+            L(box, "CHModeTitle", 66, 480, 300, 34, 27);
             title.text = "출전 방식";
 
             var art = new[] { (Sprite)null, Spr($"{Ch}/mode_random_art.png"), null };
@@ -419,42 +521,44 @@ namespace Game.Editor
                 a.sprite = art[i];
                 a.preserveAspect = true;
                 a.raycastTarget = false;
-                At(a.rectTransform, 0, 22, 136, 100);
+                At(a.rectTransform, 0, 18, 168, 122);
 
-                var sel = Img(t, "ModeSel", $"{Ch}/mode_card_sel.png");
+                // 시안의 고른 카드는 금 테만 — 체크 칸이 없다(체크는 호스트 카드에만). 체크를 뺀 테를 쓴다
+                var sel = Img(t, "ModeSel", $"{Ch}/mode_card_sel_plain.png");
                 sel.type = Image.Type.Sliced;
-                sel.pixelsPerUnitMultiplier = 1.5f;
+                sel.pixelsPerUnitMultiplier = 1.4f;
                 sel.raycastTarget = false;
-                At(sel.rectTransform, 0, 0, 215, 238);
+                At(sel.rectTransform, 0, 0, 205, 228);
 
                 var tt = CloneText(t, "CHHostTitle", "ModeTitle", box);
                 tt.alignment = TextAlignmentOptions.Center;
-                tt.fontSize = 19;
+                tt.fontSize = 22;
                 tt.enableAutoSizing = true;
                 tt.fontSizeMin = 12;
-                tt.fontSizeMax = 19;
-                At(tt.rectTransform, -12, 80, 136, 26);   // 판 위 제목 띠 안 — 오른쪽은 고른 금 테의 체크 칸
+                tt.fontSizeMax = 22;
+                At(tt.rectTransform, 0, 81, 160, 28);   // 판 위 제목 띠 안
 
                 var si = Img(t, "ModeStaminaIcon", $"{Nav}/icon_stamina.png");
                 si.preserveAspect = true;
                 si.raycastTarget = false;
-                At(si.rectTransform, -14, -40, 16, 24);
+                At(si.rectTransform, -16, -50, 19, 28);
                 var st = CloneText(t, "CHHostTitle", "ModeStaminaText", box);
                 st.alignment = TextAlignmentOptions.Left;
-                st.fontSize = 24;
+                st.fontSize = 30;
                 st.color = Gold;
                 st.rectTransform.pivot = new Vector2(0f, 0.5f);
-                At(st.rectTransform, -4, -40, 40, 28);
+                At(st.rectTransform, -4, -50, 44, 34);
 
                 var note = CloneText(t, "CHInfoDesc", "ModeNote", box);
                 note.alignment = TextAlignmentOptions.Center;
-                note.fontSize = 13;
-                note.color = Soft;
+                note.fontSize = 15;
+                note.color = Color.white;
                 note.enableAutoSizing = true;
                 note.fontSizeMin = 9;
-                note.fontSizeMax = 13;
-                At(note.rectTransform, 0, -73, 176, 34);
-                sel.transform.SetAsLastSibling();   // 금 테가 맨 위
+                note.fontSizeMax = 15;
+                At(note.rectTransform, 0, -86, 186, 38);
+                // 금 테는 판 테두리를 덮고 글자 · 그림 **뒤** — 맨 위에 두면 제목을 가린다(하네스 C6)
+                sel.transform.SetAsFirstSibling();
             }
         }
 
@@ -462,7 +566,7 @@ namespace Game.Editor
 
         private static void HostSection(Transform box)
         {
-            L(box, "CHHostTitle", 64, 773, 300, 30, Find(box, "CHHostTitle").GetComponent<TMP_Text>().fontSize);
+            L(box, "CHHostTitle", 66, 773, 300, 32, 24);
             var note = CloneText(box, "CHInfoDesc", "CHTodayNote");
             note.alignment = TextAlignmentOptions.Right;
             note.fontSize = 14;
@@ -513,19 +617,32 @@ namespace Game.Editor
         {
             if (card is RectTransform cr) cr.sizeDelta = new Vector2(ChapterHostLayout.ModeCardWidth, ChapterHostLayout.ModeCardHeight);
             Fit(card, "CardFrame", 0, 0, 100, 168, sliced: true);
-            Fit(card, "CardFrameSel", 0, 0, 108, 176, sliced: true, sprite: $"{Ch}/ch_card_sel_overlay.png");
+            Fit(card, "CardFrameSel", 0, 0, 100, 168, sliced: true, sprite: $"{Ch}/ch_card_sel_overlay.png");
+            // 고른 테는 판 바로 위 · 글자 아래 — 위에 그리면 아래 전투력 글자 끝을 테가 덮는다
+            if (card.Find("CardFrame") is Transform frame && card.Find("CardFrameSel") is Transform selFrame)
+                selFrame.SetSiblingIndex(frame.GetSiblingIndex() + 1);
             Fit(card, "CardThumb", 0, 30, 90, 84);
-            Fit(card, "CardKindGem", 37, 70, 22, 22);
-            Fit(card, "CardMatchArrow", 21, 70, 14, 14);
+            Fit(card, "CardKindGem", 33, 68, 22, 22);
+            Fit(card, "CardMatchArrow", 17, 68, 14, 14);
             for (int s = 0; s < 5; s++) Fit(card, $"CardStar{s}", -30 + s * 15, -18, 14, 14);
-            Fit(card, "CardName", 0, -35, 96, 18, font: 14);
+            Fit(card, "CardName", 0, -36, 90, 18, font: 14);
+            if (card.Find("CardName")?.GetComponent<TMP_Text>() is TMP_Text cn)
+            {
+                cn.enableAutoSizing = true;
+                cn.fontSizeMin = 9;
+                cn.fontSizeMax = 14;
+            }
             Fit(card, "CardPowerIcon", -28, -53, 14, 14);
             if (card.Find("CardPowerText") is RectTransform pt)
             {
                 pt.pivot = new Vector2(0f, 0.5f);
                 pt.anchoredPosition = new Vector2(-18, -53);
-                pt.sizeDelta = new Vector2(66, 18);
-                pt.GetComponent<TMP_Text>().fontSize = 15;
+                pt.sizeDelta = new Vector2(56, 18);   // 오른쪽 금 테(약 6) 안쪽까지
+                var ptText = pt.GetComponent<TMP_Text>();
+                ptText.fontSize = 15;
+                ptText.enableAutoSizing = true;
+                ptText.fontSizeMin = 10;
+                ptText.fontSizeMax = 15;
             }
             // 체크는 고른 금 테 그림에 들어 있다 — 노드는 두고(코드가 켜고 끈다) 그림만 끈다
             if (card.Find("CardCheck")?.GetComponent<Image>() is Image check) check.enabled = false;
@@ -533,11 +650,11 @@ namespace Game.Editor
             var grade = Img(card, "CardGrade", $"{Ch}/ch_grade_b.png");
             grade.preserveAspect = true;
             grade.raycastTarget = false;
-            At(grade.rectTransform, -36, 70, 24, 25);
+            At(grade.rectTransform, -34, 68, 24, 25);
 
             var today = Img(card, "CardToday", $"{Ch}/ch_today_band.png");
             today.raycastTarget = false;
-            At(today.rectTransform, 0, -76, 98, 19);
+            At(today.rectTransform, 0, -73, 94, 18);
             var tt = CloneText(today.transform, "CHInfoDesc", "CardTodayText", box);
             tt.alignment = TextAlignmentOptions.Center;
             tt.fontSize = 12;
@@ -545,29 +662,36 @@ namespace Game.Editor
             tt.enableAutoSizing = true;
             tt.fontSizeMin = 8;
             tt.fontSizeMax = 12;
-            At(tt.rectTransform, 0, 1, 92, 17);
+            At(tt.rectTransform, 0, 0, 84, 15);
             today.gameObject.SetActive(false);
 
-            // 금 테는 맨 위, 띠는 그 아래
+            // 미보유 카드(시안 「???」) — 자물쇠
+            var lockImg = Img(card, "CardLock", $"{Ch}/ch_lock.png");
+            lockImg.preserveAspect = true;
+            lockImg.raycastTarget = false;
+            At(lockImg.rectTransform, 0, 30, 30, 38);
+            lockImg.gameObject.SetActive(false);
+
+            // 금 테는 카드 위, 「오늘의 몸」 띠는 테 위(테가 띠 글자를 덮지 않게)
             card.Find("CardFrameSel")?.SetAsLastSibling();
+            card.Find("CardToday")?.SetAsLastSibling();
         }
 
         // ── 설명 줄 ───────────────────────────────────────────
 
         private static void InfoRow(Transform box)
         {
-            C(box, "CHInfoPortrait", 101, 1020, 116, 94);
-            C(box, "CHInfoRandomFx", 101, 1020, 150, 150);
+            C(box, "CHInfoPortrait", 106, 1020, 150, 100);
+            C(box, "CHInfoRandomFx", 106, 1020, 150, 150);
             Scale(box, "CHInfoRandomFx", 0.65f);
-            L(box, "CHInfoName", 176, 984, 130, 26, 20);
-            C(box, "CHInfoKindIcon", 184, 1007, 18, 18);
-            L(box, "CHInfoKindText", 196, 1007, 80, 20, 14);
-            L(box, "CHInfoDesc", 176, 1034, 106, 46, 12);
+            L(box, "CHInfoName", 197, 980, 104, 30, 24);
+            Shrink(box, "CHInfoName", 12);
+            C(box, "CHInfoKindIcon", 206, 1006, 20, 20);
+            L(box, "CHInfoKindText", 219, 1006, 80, 22, 16);
+            L(box, "CHInfoDesc", 197, 1040, 104, 52, 13);
             Shrink(box, "CHInfoDesc", 8);
-            C(box, "CHInfoSkillA", 404, 1004, 230, 64);
-            C(box, "CHInfoSkillP", 594, 1004, 230, 64);
-            Scale(box, "CHInfoSkillA", 0.82f);
-            Scale(box, "CHInfoSkillP", 0.82f);
+            SkillBox(box, "CHInfoSkillA", 396, 1012);
+            SkillBox(box, "CHInfoSkillP", 591, 1012);
             L(box, "CHRandomTitle", 176, 982, 320, 26, 20);
             L(box, "CHRandomDesc1", 176, 1005, 480, 20, 14);
             L(box, "CHRandomDesc2", 176, 1025, 480, 20, 14);
@@ -588,21 +712,24 @@ namespace Game.Editor
             img.pixelsPerUnitMultiplier = 3.2f;
             img.color = Color.white;
             img.raycastTarget = true;
-            C(box, "CHStartButton", 360, 1094, 236, 80);
+            C(box, "CHStartButton", 365, 1094, 200, 70);
             b.SetAsLastSibling();
 
             var icon = Img(b, "CHStartStaminaIcon", $"{Nav}/icon_stamina.png");
             icon.preserveAspect = true;
             icon.raycastTarget = false;
-            At(icon.rectTransform, -40, 16, 13, 19);
+            At(icon.rectTransform, -40, 15, 15, 22);
             var st = CloneText(b, "CHStartCostText", "CHStartStaminaText", box);
             var plus = CloneText(b, "CHStartCostText", "CHStartPlus", box);
             plus.text = "+";
             foreach (var t in new[] { st, plus, b.Find("CHStartCostText")?.GetComponent<TextMeshProUGUI>() })
             {
                 if (t == null) continue;
-                t.fontSize = 18;
-                t.color = Dark;
+                t.fontSize = 21;
+                t.color = CostRed;
+                // 시안은 굵은 빨강 — 외곽선 없이 굵기만 올린다
+                if (t.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText th)
+                    th.Set(0.3f, 0f, new Color32(0, 0, 0, 0));
                 t.rectTransform.pivot = new Vector2(0f, 0.5f);
                 t.rectTransform.anchoredPosition = new Vector2(t.rectTransform.anchoredPosition.x, 16);
                 t.rectTransform.sizeDelta = new Vector2(40, 24);
@@ -618,17 +745,28 @@ namespace Game.Editor
             {
                 lr.SetParent(b, false);
                 lr.anchorMin = lr.anchorMax = lr.pivot = new Vector2(0.5f, 0.5f);
-                lr.anchoredPosition = new Vector2(0, -13);
-                lr.sizeDelta = new Vector2(200, 28);
+                lr.anchoredPosition = new Vector2(0, -11);   // 아래 금 테에 안 걸리게
+                lr.sizeDelta = new Vector2(180, 30);
                 var lt = lr.GetComponent<TMP_Text>();
-                lt.fontSize = 22;
+                lt.fontSize = 27;
+                lt.fontStyle = FontStyles.Bold;
                 lt.alignment = TextAlignmentOptions.Center;
-                lt.color = Dark;
+                lt.color = Ink;
+                lt.enableAutoSizing = true;
+                lt.fontSizeMin = 14;
+                lt.fontSizeMax = 26;
+                Plain(lt);
+                // 시안의 「도전하기 ▶」 는 두꺼운 먹색 — Plain 뒤에 굵기만 다시 올린다
+                if (lt.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText lh)
+                    lh.Set(0.35f, 0f, new Color32(0, 0, 0, 0));
             }
 
             var rib = Img(box, "CHStartRibbon", $"{Ch}/ribbon_today.png");
             rib.raycastTarget = false;
-            C(box, "CHStartRibbon", 360, 1047, 146, 26);
+            // 띠 그림(3.8)보다 칸이 길다 — 9분할로 늘린다. 왼쪽 설명 글자와 안 겹치게 조금 오른쪽
+            rib.type = Image.Type.Sliced;
+            rib.pixelsPerUnitMultiplier = 3f;
+            C(box, "CHStartRibbon", 374, 1047, 146, 26);
             rib.transform.SetAsLastSibling();
             var rt = CloneText(rib.transform, "CHInfoDesc", "CHStartRibbonText", box);
             rt.alignment = TextAlignmentOptions.Center;
@@ -649,6 +787,88 @@ namespace Game.Editor
             so.FindProperty("_starHalf").objectReferenceValue = Spr($"{Ch}/ch_star_half.png");
             so.FindProperty("_ribbonToday").objectReferenceValue = Spr($"{Ch}/ribbon_today.png");
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>빨간 점 위 흰 「!」 — 시안의 새 소식 표시. 점 그림에는 글자가 없다(그림에 글자를 넣지 않는다).</summary>
+        private static void Bang(Transform dot, Transform template)
+        {
+            if (template == null || dot.Find("BangText") != null) return;
+            var go = Object.Instantiate(template.gameObject, dot, false);
+            go.name = "BangText";
+            var loc = go.GetComponent("LocalizedText");
+            if (loc != null) Object.DestroyImmediate(loc);
+            for (int i = go.transform.childCount - 1; i >= 0; i--) Object.DestroyImmediate(go.transform.GetChild(i).gameObject);
+            var t = go.GetComponent<TextMeshProUGUI>();
+            t.text = "!";
+            t.enableAutoSizing = false;
+            t.fontSize = 17;
+            t.fontStyle = FontStyles.Bold;
+            t.color = Color.white;
+            t.alignment = TextAlignmentOptions.Center;
+            At(t.rectTransform, 0, 1, 20, 22);
+        }
+
+        /// <summary>보스 그림은 256 칸 안에 여백이 있다 — 크게 그리고 칸 안쪽(마스크)으로 자른다(시안은 칸에 꽉 찬다).</summary>
+        private static void BossMask(Transform box)
+        {
+            var portrait = box.Find("CHBossPortrait") ?? Find(box, "CHBossPortrait");
+            if (portrait == null) return;
+            var mask = box.Find("CHBossMask");
+            if (mask == null)
+            {
+                var go = new GameObject("CHBossMask", typeof(RectTransform), typeof(RectMask2D));
+                go.layer = box.gameObject.layer;
+                mask = go.transform;
+                mask.SetParent(box, false);
+            }
+            mask.SetSiblingIndex(box.Find("CHSecBossFrame").GetSiblingIndex() + 1);
+            C(box, "CHBossMask", 103.5f, 390, 128, 79);
+            portrait.SetParent(mask, false);
+            if (portrait is RectTransform pr) At(pr, 0, -6, 150, 116);
+        }
+
+        /// <summary>스킬 칸 — 시안은 큰 아이콘 + 이름 + 두 줄 설명(183 × 80). 알약 그림을 9분할로 늘린다.</summary>
+        private static void SkillBox(Transform box, string node, float cx, float cy)
+        {
+            if (box.Find(node) is not RectTransform r) return;
+            r.localScale = Vector3.one;
+            C(box, node, cx, cy, 186, 78);
+            if (r.GetComponent<Image>() is Image img)
+            {
+                img.type = Image.Type.Sliced;
+                img.pixelsPerUnitMultiplier = 2f;
+            }
+            string k = node.EndsWith("A") ? "A" : "P";
+            if (r.Find($"CHInfoSkill{k}Icon") is RectTransform icon) At(icon, -60, 0, 52, 52);
+            if (r.Find($"CHInfoSkill{k}Name")?.GetComponent<TMP_Text>() is TMP_Text n)
+            {
+                n.rectTransform.pivot = new Vector2(0f, 0.5f);
+                At(n.rectTransform, -30, 20, 116, 22);
+                n.rectTransform.anchoredPosition = new Vector2(-30, 20);
+                n.fontSize = 15;
+                n.alignment = TextAlignmentOptions.Left;
+                n.enableAutoSizing = true;
+                n.fontSizeMin = 9;
+                n.fontSizeMax = 15;
+            }
+            if (r.Find($"CHInfoSkill{k}Desc")?.GetComponent<TMP_Text>() is TMP_Text d)
+            {
+                d.rectTransform.pivot = new Vector2(0f, 0.5f);
+                At(d.rectTransform, -30, -10, 116, 40);
+                d.rectTransform.anchoredPosition = new Vector2(-30, -10);
+                d.fontSize = 12;
+                d.alignment = TextAlignmentOptions.TopLeft;
+                d.enableAutoSizing = true;
+                d.fontSizeMin = 8;
+                d.fontSizeMax = 12;
+            }
+        }
+
+        /// <summary>외곽선 · 그림자 없는 맨 글자 — 노란 버튼 위 짙은 글자(외곽선이 있으면 회색으로 뭉갠다).</summary>
+        private static void Plain(TMP_Text t)
+        {
+            if (t.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText h) h.Set(0.1f, 0f, new Color32(0, 0, 0, 0));
+            if (t.font != null && t.font.material != null) t.fontSharedMaterial = t.font.material;
         }
 
         // ── 도우미 ───────────────────────────────────────────

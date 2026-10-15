@@ -1,4 +1,4 @@
-# 시즌 패스 1 「GHOST REVENGE」 — 28일 · 30단계 · 단계당 패스 경험치 100. Tools/Game/상점 표 임포트 → PassTable.asset (주소 TableData/PassTable)
+# 시즌 패스 1 「GHOST REVENGE」 — 28일 · 30단계 · 단계당 패스 경험치 100. Tools/Game/로비 상점 표 임포트 (Store) → PassTable.asset (주소 TableData/PassTable)
 # season: id=s1 · startUtc · endUtc 는 GameConfig 「시즌」 칸에(이 표는 보상만). 단계 건너뛰기 = 단계당 젬 100.
 # 무료 합계: 젬 200 · 정수 60 · 행동력 60 · 소환권 2 · 은 상자 2 · 판 골드 12판분 · 프로필 테두리 「GHOST REVENGE」 / 프리미엄 합계: 젬 1,020 · 소환권 16 · 정수 100 · 백금 상자 1 · 칭호 「시즌 1 복수자」
 # profile:* 는 profile.tsv 의 키 — 능력치 없음(꾸미기 전용).

@@ -68,10 +68,50 @@ namespace Game.Module.Lobby
                 img.sprite = s < full ? _starOn : s == full && half && _starHalf != null ? _starHalf : _starOff;
             }
 
+            // 유리 ▲ · 불리 ▼ 화살표는 시안 S22e 카드에 없다 — 속성 아이콘만
+            var arrow = _ui.Find(card, "CardMatchArrow");
+            if (arrow != null) arrow.gameObject.SetActive(false);
+            var frameImg = _ui.Find(card, "CardFrame")?.GetComponent<Image>();
+            if (frameImg != null) frameImg.color = Color.white;
+
             bool today = IsToday(key);
             var band = _ui.Find(card, "CardToday");
             if (band != null) band.gameObject.SetActive(today);
             if (today) TextIn(card, "CardTodayText", Localize.FromTable("ui.start.today", "오늘의 몸"));
+        }
+
+        // 미보유 카드 — 실루엣 · 자물쇠 · 빈 별 · 「???」 (시안 S22e 맨 오른쪽)
+        private static readonly Color LockedTint = new(0.16f, 0.17f, 0.24f, 1f);
+
+        private void ApplyLockedCard(Transform card, string key)
+        {
+            var frame = _ui.Find(card, "CardFrame")?.GetComponent<Image>();
+            if (frame != null && _gradeFrames.Length > 0) { frame.sprite = _gradeFrames[0]; frame.color = new Color(0.55f, 0.58f, 0.68f, 1f); }
+            foreach (var n in new[] { "CardFrameSel", "CardCheck", "CardGrade", "CardKindGem", "CardMatchArrow",
+                                      "CardPowerIcon", "CardPowerText", "CardToday" })
+            {
+                var t = _ui.Find(card, n);
+                if (t != null) t.gameObject.SetActive(false);
+            }
+            var thumb = _ui.Find(card, "CardThumb")?.GetComponent<Image>();
+            if (thumb != null)
+            {
+                thumb.sprite = ArtOf(key).Thumb;
+                thumb.material = _silhouette;
+                thumb.color = LockedTint;
+                thumb.enabled = thumb.sprite != null;
+                thumb.preserveAspect = true;
+            }
+            var lockIcon = _ui.Find(card, "CardLock");
+            if (lockIcon != null) lockIcon.gameObject.SetActive(true);
+            for (int s = 0; s < 5; s++)
+            {
+                var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
+                if (img == null) continue;
+                img.gameObject.SetActive(true);
+                img.sprite = _starOff;
+            }
+            TextIn(card, "CardName", "???");
         }
 
         // ── 출전 방식 ─────────────────────────────────────────

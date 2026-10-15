@@ -125,6 +125,12 @@ namespace Game.User
         [Header("추가 모드")]
         public ModeProgressData modes = new ModeProgressData();
 
+        // ── 로비 상점 · 소환권 (2026-10-15, 기획서 B-3) ──────────
+        // 버전은 올리지 않는다 — 옛 저장은 빈 값(new)으로 읽혀 그대로 맞다(산 것 없음 · 소환권 0).
+        [Header("로비 상점")]
+        public StoreSaveData store = new StoreSaveData();
+        public int tickets;
+
         /// <summary>
         /// 상자 배열 셋의 길이를 칸 수에 맞춘다. 저장을 읽은 직후에 한 번 부른다 —
         /// 옛 저장(v2)은 배열이 비어 있고, 칸 수가 바뀌면 길이가 어긋난다.
@@ -169,6 +175,58 @@ namespace Game.User
         }
 
         public static UserData CreateNew() => new UserData();
+    }
+
+    /// <summary>
+    /// 로비 상점 기록 — 상품별 산 횟수 · 마지막 산 날/주(제한 계산) · 첫 구매 2배 쓴 젬 묶음 · 계약 · 첫 실행 날.
+    /// JsonUtility 가 Dictionary 를 못 써서 나란한 배열로 둔다(같은 첨자 = 같은 상품).
+    /// </summary>
+    [Serializable]
+    public sealed class StoreSaveData
+    {
+        /// <summary>첫 실행 날(하루 경계 기준 yyyyMMdd) — 입문 패키지 7일. 0 이면 상점이 처음 열릴 때 채운다.</summary>
+        public int installDay;
+        public string[] ids = Array.Empty<string>();
+        public int[] counts = Array.Empty<int>();
+        public int[] lastDay = Array.Empty<int>();
+        public int[] lastWeek = Array.Empty<int>();
+        public int[] dayCounts = Array.Empty<int>();
+        public int[] weekCounts = Array.Empty<int>();
+        public string[] firstDoubleUsed = Array.Empty<string>();
+        /// <summary>계약 — 끝나는 날(그날까지 받는다) · 마지막으로 받은 날.</summary>
+        public string[] cardKeys = Array.Empty<string>();
+        public int[] cardEndDay = Array.Empty<int>();
+        public int[] cardLastClaimDay = Array.Empty<int>();
+        /// <summary>결제는 됐는데 지급 전에 꺼진 거래(상품 id) — 다음 실행 때 지급한다.</summary>
+        public string[] pending = Array.Empty<string>();
+
+        /// <summary>조각 뽑기 — 대박까지 센 수 · 무료를 쓴 날 · 뽑은 수 · 최근 100회(「yyyyMMdd,hostKey,shards,MMddHHmm,pay,jackpot」).</summary>
+        public int gachaPity;
+        public int gachaFreeDay;
+        public int gachaTotal;
+        public string[] gachaHist = Array.Empty<string>();
+
+        /// <summary>시즌 패스 — 시즌이 바뀌면 경험치 · 받기 · 프리미엄을 비운다. 받은 단계는 비트(단계 n → 1 &lt;&lt; n).</summary>
+        public string passSeason = string.Empty;
+        public int passXp;
+        public bool passPremium;
+        public long passClaimedFree;
+        public long passClaimedPremium;
+
+        /// <summary>미션 — 경계가 바뀌면 그 주기 카운터를 비운다. 같은 첨자 = 같은 미션.</summary>
+        public int missionDay;
+        public int missionWeek;
+        public string[] missionIds = Array.Empty<string>();
+        public int[] missionProgress = Array.Empty<int>();
+        public bool[] missionClaimed = Array.Empty<bool>();
+        public string[] hostsThisWeek = Array.Empty<string>();
+        public int loginDay;
+
+        /// <summary>프로필 꾸미기 — 가진 테두리 · 칭호 키, 장착(대표 얼굴은 ghost 또는 호스트 키).</summary>
+        public string[] profileOwned = Array.Empty<string>();
+        public string profileFrame = string.Empty;
+        public string profileTitle = string.Empty;
+        public string profileFace = string.Empty;
     }
 
     /// <summary>

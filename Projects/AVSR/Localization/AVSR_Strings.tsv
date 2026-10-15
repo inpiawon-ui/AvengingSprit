@@ -925,3 +925,72 @@ ui.summon.fail.notready	아직 준비 중이에요	準備中です	Not ready yet
 ui.summon.fail.free	오늘 무료 소환을 이미 썼어요	本日の無料召喚は使用済みです	Free summon already used today
 ui.summon.fail.ticket	소환권이 모자라요	召喚券が足りません	Not enough tickets
 ui.summon.fail.gem	젬이 모자라요.	ジェムが足りません。	Not enough gems.
+ui.pass.buy_confirm	{0}\n{1} 로 살까요?	{0}\n{1} で購入しますか？	Buy {0}\nfor {1}?
+ui.pass.claim	받기	受取	Claim
+ui.pass.claim_all	모두 받기	一括受取	Claim All
+ui.pass.claimed	받음	受取済	Claimed
+ui.pass.daily	매일	デイリー	Daily
+ui.pass.weekly	매주	ウィークリー	Weekly
+ui.pass.doing	진행 중	進行中	In Progress
+ui.pass.free	무료 보상	無料報酬	Free Rewards
+ui.pass.premium_rewards	프리미엄 보상	プレミアム報酬	Premium Rewards
+ui.pass.goldrun	{0}판분	{0}回分	{0} runs
+ui.pass.left	남은 {0}일 {1}시간	残り{0}日{1}時間	{0}d {1}h left
+ui.pass.locked	잠김	ロック	Locked
+ui.pass.premium	프리미엄 열기	プレミアム解放	Unlock Premium
+ui.pass.premium_plus	프리미엄 + 15단계	プレミアム＋15段階	Premium + 15 Tiers
+ui.pass.reset_days	초기화까지 {0}일	リセットまで{0}日	Resets in {0}d
+ui.pass.reset_in	초기화까지 {0}	リセットまで{0}	Resets in {0}
+ui.pass.slogan	지금, 복수의 시간이 시작된다.	今、復讐の時が始まる。	Now, the hour of revenge begins.
+ui.pass.tab.missions	미션	ミッション	Missions
+ui.pass.tab.rewards	보상	報酬	Rewards
+ui.pass.tier	단계	段階	Tier
+ui.pass.xp	패스 경험치 +{0}	パス経験値+{0}	Pass XP +{0}
+ui.profile.title	프로필 꾸미기	プロフィール編集	Customize Profile
+ui.profile.tab.frame	테두리	フレーム	Frame
+ui.profile.tab.face	대표 얼굴	アイコン	Face
+ui.profile.tab.title	칭호	称号	Title
+ui.profile.note	능력치 변화 없음 · 꾸미기 전용	能力値の変化なし・見た目専用	Cosmetic only · no stat change
+ui.profile.equip	장착	装備	Equip
+ui.profile.equipped	장착 중	装備中	Equipped
+ui.profile.owned	보유	所持	Owned
+ui.profile.soon	곧 공개	近日公開	Coming Soon
+ui.profile.source	얻는 곳: {0}	入手: {0}	From: {0}
+ui.profile.src_chapter	챕터 {0} 클리어	チャプター{0}クリア	Clear Chapter {0}
+ui.profile.src_pass	시즌 패스	シーズンパス	Season Pass
+mission.login	접속	ログイン	Log In
+mission.run_start	판 시작	プレイ開始	Start a Run
+mission.possess	빙의	憑依	Possess
+mission.kill_advantage	유리한 상성 처치	有利相性で撃破	Advantage Kills
+mission.daily_shop_buy	오늘의 상점 구매	本日のショップで購入	Buy in Daily Shop
+mission.stat_upgrade	강화	強化	Upgrade
+mission.daily_all_done	매일 전부 완료	デイリー全達成	All Dailies Done
+mission.run_clear	챕터 클리어	チャプタークリア	Clear a Chapter
+mission.kill_boss	보스 처치	ボス撃破	Defeat Bosses
+mission.chest_open	상자 열기	宝箱を開ける	Open Chests
+mission.distinct_hosts_possessed	서로 다른 몸	異なる体に憑依	Different Bodies
+mission.weekly_all_done	매주 전부 완료	ウィークリー全達成	All Weeklies Done
+profile.frame_default.name	기본 테두리	基本フレーム	Basic Frame
+profile.frame_s1.name	HOST REVENGE	HOST REVENGE	HOST REVENGE
+profile.frame_ch10.name	챕터 10 정복	チャプター10制覇	Chapter 10 Conqueror
+profile.title_none.name	칭호 없음	称号なし	No Title
+profile.title_s1.name	시즌 1 복수자	シーズン1の復讐者	Season 1 Avenger
+profile.title_ch10.name	챕터 10 정복자	チャプター10制覇者	Chapter 10 Conqueror
+ui.summon.shards	조각 × {0}	かけら × {0}	Shards × {0}
+ui.summon.next_star	지금 조각 <color=#FFD94A>{0}</color> / {1}  →  다음 성급까지 <color=#FFD94A>{2}</color>	かけら <color=#FFD94A>{0}</color> / {1}  →  次の星まで <color=#FFD94A>{2}</color>	Shards <color=#FFD94A>{0}</color> / {1}  →  <color=#FFD94A>{2}</color> to next star
+ui.summon.star_max	최대 성급	最大の星	Max Stars
+ui.summon.rates_title	소환 확률	召喚確率	Summon Rates
+ui.summon.rate_hosts	{0}급 호스트 {1}명	{0}ランクのホスト {1}人	{0}-Grade Hosts ×{1}
+ui.summon.rate_each	각 {0}	各 {0}	{0} each
+ui.summon.rate_pickup	픽업 {0}	ピックアップ {0}	Pick Up {0}
+ui.summon.rate_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}
+ui.summon.rate_guarantee	10회 소환 시 <color=#FFD94A>A급 이상 1명</color> 보장	10回召喚で<color=#FFD94A>Aランク以上1人</color>確定	10-pull guarantees <color=#FFD94A>1 A-Grade or better</color>
+ui.summon.rate_pity	천장 <color=#FFD94A>{0}</color> / {1}	天井 <color=#FFD94A>{0}</color> / {1}	Pity <color=#FFD94A>{0}</color> / {1}
+ui.summon.rate_pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.
+ui.summon.history_recent	최근 100회	最近100回	Last 100
+ui.summon.history_date	날짜	日付	Date
+ui.summon.history_host	호스트	ホスト	Host
+ui.summon.history_shard	조각	かけら	Shards
+ui.summon.history_pay	사용	使用	Paid
+ui.summon.history_free	무료	無料	Free
+ui.summon.shards_now	지금 조각 <color=#FFD94A>{0}</color>	現在のかけら <color=#FFD94A>{0}</color>	Shards <color=#FFD94A>{0}</color>

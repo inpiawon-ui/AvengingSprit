@@ -658,6 +658,7 @@ namespace Game.User
             _data.gold -= cost;
             _data.ghostStatLevels[(int)stat]++;
             PublishCurrency();
+            _bus?.Publish(new HostStatUpgradedEvent { UpgradedHostKey = HostEntry.GhostKey, IsGhostTab = true });
             return true;
         }
 
@@ -670,6 +671,7 @@ namespace Game.User
             _data.gold -= cost;
             _data.hostStatLevels[i * StatCount + (int)stat]++;
             PublishCurrency();
+            _bus?.Publish(new HostStatUpgradedEvent { UpgradedHostKey = hostKey, IsGhostTab = false });
             return true;
         }
 
@@ -821,6 +823,40 @@ namespace Game.User
             _data.hostShards[i] += shards;
             PublishCurrency();
             return true;
+        }
+
+        public StoreSaveData Store
+        {
+            get
+            {
+                if (_data == null) return null;
+                _data.store ??= new StoreSaveData();
+                return _data.store;
+            }
+        }
+
+        public int Tickets => _data?.tickets ?? 0;
+
+        public void AddTickets(int amount)
+        {
+            if (_data == null || amount == 0) return;
+            _data.tickets = Mathf.Max(0, _data.tickets + amount);
+            PublishCurrency();
+        }
+
+        public bool TrySpendTickets(int amount)
+        {
+            if (_data == null || amount < 0 || _data.tickets < amount) return false;
+            _data.tickets -= amount;
+            PublishCurrency();
+            return true;
+        }
+
+        public void AddEssence(int amount)
+        {
+            if (_data == null || amount == 0) return;
+            _data.essence = Mathf.Max(0, _data.essence + amount);
+            PublishCurrency();
         }
 
         public DailyShopData DailyShop

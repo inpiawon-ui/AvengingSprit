@@ -256,6 +256,15 @@ namespace Game.Character
         [Tooltip("유령 출전 · 클리어 시 유령 경험치 %.")]
         [SerializeField] private int _ghostStartExpPct = 50;
 
+        [Tooltip("지금 시즌 패스 — 키 · 시작일(하루 경계 기준 yyyyMMdd) · 일수. 끝나면 패스 표의 다음 시즌으로 바꾼다.")]
+        [SerializeField] private string _seasonId = "s1";
+        [SerializeField] private int _seasonStartDay = 20261012;
+        [SerializeField] private int _seasonDays = 28;
+
+        public string SeasonId => string.IsNullOrEmpty(_seasonId) ? "s1" : _seasonId;
+        public int SeasonStartDay => _seasonStartDay;
+        public int SeasonDays => Mathf.Max(1, _seasonDays);
+
         public int DailyResetUtcHour => Mathf.Clamp(_dailyResetUtcHour, 0, 23);
         public System.DayOfWeek WeekResetDay => _weekResetDay;
         public int StaminaMax => Mathf.Max(1, _staminaMax);

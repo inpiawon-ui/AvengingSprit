@@ -1,0 +1,251 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d43d0095c995594196cb121317ac8d3, type: 3}
+  m_Name: SeasonTable
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.Store.SeasonTable
+  _tiers:
+  - Level: 1
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 2
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 3
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 4
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 5
+    Xp: 100
+    Free: gem:50
+    Premium: ticket:3
+  - Level: 6
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 7
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 8
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 9
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 10
+    Xp: 100
+    Free: chest:silver;gem:50
+    Premium: essence:50
+  - Level: 11
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 12
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 13
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 14
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 15
+    Xp: 100
+    Free: ticket:2
+    Premium: chest:platinum
+  - Level: 16
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 17
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 18
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 19
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 20
+    Xp: 100
+    Free: chest:silver;gem:50
+    Premium: ticket:3
+  - Level: 21
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 22
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 23
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 24
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 25
+    Xp: 100
+    Free: gem:50
+    Premium: essence:50
+  - Level: 26
+    Xp: 100
+    Free: essence:5
+    Premium: gem:30
+  - Level: 27
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 28
+    Xp: 100
+    Free: stamina:10
+    Premium: gem:30
+  - Level: 29
+    Xp: 100
+    Free: goldrun:1
+    Premium: gem:30
+  - Level: 30
+    Xp: 100
+    Free: profile:frame_s1;essence:30
+    Premium: gem:300;ticket:10;profile:title_s1
+  _missions:
+  - Id: d_login
+    Period: daily
+    Type: login
+    Target: 1
+    PassXp: 10
+    Rewards: 
+  - Id: d_run
+    Period: daily
+    Type: run_start
+    Target: 1
+    PassXp: 15
+    Rewards: 
+  - Id: d_possess
+    Period: daily
+    Type: possess
+    Target: 5
+    PassXp: 15
+    Rewards: 
+  - Id: d_adv_kill
+    Period: daily
+    Type: kill_advantage
+    Target: 20
+    PassXp: 15
+    Rewards: 
+  - Id: d_shop
+    Period: daily
+    Type: daily_shop_buy
+    Target: 1
+    PassXp: 10
+    Rewards: 
+  - Id: d_upgrade
+    Period: daily
+    Type: stat_upgrade
+    Target: 1
+    PassXp: 10
+    Rewards: 
+  - Id: d_all
+    Period: daily
+    Type: daily_all_done
+    Target: 6
+    PassXp: 20
+    Rewards: gem:20;stamina:10
+  - Id: w_clear
+    Period: weekly
+    Type: run_clear
+    Target: 3
+    PassXp: 60
+    Rewards: 
+  - Id: w_possess
+    Period: weekly
+    Type: possess
+    Target: 50
+    PassXp: 60
+    Rewards: 
+  - Id: w_boss
+    Period: weekly
+    Type: kill_boss
+    Target: 3
+    PassXp: 60
+    Rewards: 
+  - Id: w_chest
+    Period: weekly
+    Type: chest_open
+    Target: 7
+    PassXp: 40
+    Rewards: 
+  - Id: w_hosts
+    Period: weekly
+    Type: distinct_hosts_possessed
+    Target: 5
+    PassXp: 60
+    Rewards: 
+  - Id: w_all
+    Period: weekly
+    Type: weekly_all_done
+    Target: 5
+    PassXp: 50
+    Rewards: gem:100;stamina:20
+  _profile:
+  - Key: frame_default
+    Type: frame
+    Art: profile_frame_default
+    Source: default
+    NameKey: profile.frame_default.name
+    Order: 0
+  - Key: frame_s1
+    Type: frame
+    Art: profile_frame_s1
+    Source: pass_s1
+    NameKey: profile.frame_s1.name
+    Order: 10
+  - Key: frame_ch10
+    Type: frame
+    Art: profile_frame_ch10
+    Source: chapter_clear:10
+    NameKey: profile.frame_ch10.name
+    Order: 20
+  - Key: title_none
+    Type: title
+    Art: 
+    Source: default
+    NameKey: profile.title_none.name
+    Order: 0
+  - Key: title_s1
+    Type: title
+    Art: 
+    Source: pass_s1
+    NameKey: profile.title_s1.name
+    Order: 10
+  - Key: title_ch10
+    Type: title
+    Art: 
+    Source: chapter_clear:10
+    NameKey: profile.title_ch10.name
+    Order: 20
