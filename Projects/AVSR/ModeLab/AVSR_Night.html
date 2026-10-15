@@ -809,21 +809,34 @@ const TOWER = [
   { name: '빙의는 한 번', text: '빙의를 한 번만 할 수 있다 · 구조 몸이 없다', pool: () => HOSTS, enemy: ['scrapgunner', 'skeleton', 'boar'], n: 7, oneShot: true },
   { name: '보스 — 킹핀', text: '킹핀(무기). 부하는 파워 호스트만', pool: () => hostsWhere(k => DEF[k].aff === 'force'), boss: 'kingpin', n: 0 },
 ];
-let towerBest = 0, towerCleared = 0;
-try { towerBest = +(localStorage.getItem('avsr.night.tower') || 0); towerCleared = +(localStorage.getItem('avsr.night.tower.cleared') || 0); } catch (e) {}
+// 주간 진행 — 이번 주에 깬 층 · 오늘 남은 기회 · 오늘 산 기회. 시험판은 날짜 대신 시험용 버튼으로 넘긴다
+const TW = { cleared: 0, lives: 1, bought: 0, best: 0 };
+const TW_FREE = 1, TW_BUY_MAX = 3, TW_BUY_GEM = [50, 100, 200];
+try { Object.assign(TW, JSON.parse(localStorage.getItem('avsr.night.tower.week') || '{}')); } catch (e) {}
+const twSave = () => { try { localStorage.setItem('avsr.night.tower.week', JSON.stringify(TW)); } catch (e) {} };
+// 일일 보상 · 층 돌파 보상은 가안 — 숫자는 모드 확정 뒤
+const twDaily = f => { if (f <= 0) return '없음(1층을 깨면)'; const st = Math.min(5, 1 + Math.floor(f / 10)); return `조각 ${st} · 골드 ${st * 100}`; };
+function twBuy() { if (TW.bought >= TW_BUY_MAX) return; TW.bought++; TW.lives++; twSave(); intro('tower'); }
+function twNextDay() { TW.lives = TW_FREE; TW.bought = 0; twSave(); intro('tower'); }
+function twWeekReset() { TW.cleared = 0; TW.lives = TW_FREE; TW.bought = 0; twSave(); intro('tower'); }
+const twButtons = () => `<button type="button" class="sec" onclick="twBuy()"${TW.bought >= TW_BUY_MAX ? ' disabled' : ''}>기회 +1 (젬 ${TW_BUY_GEM[Math.min(TW.bought, 2)]} · 오늘 ${TW.bought}/${TW_BUY_MAX})</button>
+  <button type="button" class="sec" onclick="twNextDay()">시험용 — 다음 날</button> <button type="button" class="sec" onclick="twWeekReset()">시험용 — 월요일 초기화</button>`;
 MODES.tower = {
-  name: '망령의 탑', tab: '망령의 탑', cycle: '상시 · 층 조건',
-  goal: '목표: 5층(구간)을 한 번에 올라 보스를 잡기 — 돌파한 구간은 남는다',
+  name: '망령의 탑', tab: '망령의 탑', cycle: '하루 1번 · 매주 월요일 초기화',
+  goal: '목표: 한 번의 기회로 지기 전까지 최대한 높이 — 이번 주 진행은 남는다',
   reward: '(보상은 모드를 다 정한 뒤에 — 지금은 재미 검증)',
   rules: [
     '층마다 <b>유령으로 입장</b>. 층 조건에 맞는 호스트만 몸으로 깔린다 — 그 중 하나를 빼앗아 시작',
     '조건 예: 근거리만 · 원거리만 · 중거리만 · 적이 전부 마법 · 첫 몸으로 끝까지 · 호스트 하나만 · 빙의 한 번',
     '조건에 맞는 호스트를 <b>키워 뒀으면(★)</b> 쉽고, 안 키웠으면 스킬 봉인이라 힘들다 — 여러 호스트를 키울 이유',
-    '<b>5층이 한 구간</b>. 유령 에너지는 구간 내내 이어진다(층 사이 회복 없음) — 늦게 깨면 다음 층이 어렵다',
-    '구간 끝 층은 보스. 잡으면 구간 돌파 → 다음엔 다음 구간부터. 쓰러지면 그 구간 첫 층부터 다시',
-    '10층 뒤로는 같은 조건이 더 단단한 적으로 되풀이된다',
+    '<b>하루 기회 1번</b>(젬으로 하루 3번까지 더). 한 번의 기회로 <b>지기 전까지 계속 오른다</b> — 유령 에너지는 그 도전 내내 이어진다',
+    '지면 오늘 기회 끝. 다음 기회는 <b>진 층부터</b> 에너지 가득으로. 이번 주에 깬 층은 남는다 · <b>매주 월요일 오전 5시</b> 1층으로',
+    '층을 깰 때마다 층 보상(매주 다시 받는다) · 이번 주 최고 층에 따라 <b>매일 보상</b>',
+    '5층마다 보스. 10층 뒤로는 같은 조건이 더 단단한 적으로 되풀이된다',
   ],
-  start(G) { G.S = { floor: towerCleared, segStart: towerCleared + 1 }; this.next(G); },
+  options: () => `<div style="flex-basis:100%">이번 주 깬 층 <b>${TW.cleared}</b> · 다음 도전 <b>${TW.cleared + 1}층</b>부터 · 오늘 남은 기회 <b>${TW.lives}</b> · 매일 보상(지금 기준) ${twDaily(TW.cleared)}</div>${twButtons()}`,
+  canStart() { if (TW.lives > 0) return true; alert('오늘 기회를 다 썼다 — 기회를 사거나 「시험용 — 다음 날」'); return false; },
+  start(G) { TW.lives--; twSave(); G.S = { floor: TW.cleared, from: TW.cleared + 1, got: 0 }; this.next(G); },
   next(G) {
     const S = G.S; S.floor++;
     const T = TOWER[(S.floor - 1) % TOWER.length], loop = Math.floor((S.floor - 1) / TOWER.length);
@@ -846,18 +859,13 @@ MODES.tower = {
   rescuePool(G) { return G.S.T.oneShot ? [] : G.S.pool; },
   onClear(G) {
     const S = G.S;
-    if (S.floor > towerBest) { towerBest = S.floor; try { localStorage.setItem('avsr.night.tower', String(towerBest)); } catch (e) {} }
-    log(`${S.floor}층 돌파`);
-    if (S.floor % 5 === 0) {
-      towerCleared = Math.max(towerCleared, S.floor);
-      try { localStorage.setItem('avsr.night.tower.cleared', String(towerCleared)); } catch (e) {}
-      endRun(true, `${S.segStart}~${S.floor}층 구간 돌파`); return;
-    }
+    TW.cleared = Math.max(TW.cleared, S.floor); TW.best = Math.max(TW.best, S.floor); S.got++; twSave();
+    log(`${S.floor}층 돌파 — 층 보상(가안: 조각 1${S.floor % 5 === 0 ? ' + 보스 층 조각 2' : ''})`);
     G.doors = [{ x: 180, open: true, label: '다음 층' }];
   },
   enterDoor(G) { this.next(G); },
   bossPattern: 2.4,
-  hud(G) { const S = G.S; return [`${S.floor}층 (구간 ${S.segStart}~${S.segStart + 4}) · 최고 ${Math.max(towerBest, S.floor)}`, S.T.name]; },
+  hud(G) { const S = G.S; return [`${S.floor}층 · 이번 도전 ${S.from}층부터`, S.T.name]; },
   hint(G) {
     if (!G.running || G.doors.some(d => d.open)) return null;
     const S = G.S;
@@ -868,7 +876,7 @@ MODES.tower = {
     if (G.body.trained && G.skillG >= 1) return '스킬 준비 — 스킬 버튼(E)';
     return `조건: ${S.T.text}`;
   },
-  result(G) { return `<p class="reward">도달 ${G.S.floor}층 · 최고 ${towerBest}층 · 다음 도전 ${towerCleared + 1}층부터</p><p><button type="button" class="sec" onclick="towerCleared=0;try{localStorage.setItem('avsr.night.tower.cleared','0')}catch(e){};this.textContent='1층부터로 되돌림'">시험용 — 1층부터로 되돌리기</button></p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p>`; },
+  result(G) { const S = G.S; return `<p class="reward">이번 도전 ${S.from}층 → ${S.floor}층에서 끝 · 깬 층 ${S.got}개(층 보상 ${S.got}번)</p><p>이번 주 깬 층 ${TW.cleared} · 매일 보상(가안) ${twDaily(TW.cleared)} · 오늘 남은 기회 ${TW.lives}</p><p>빙의 ${G.possess} · 몸 잃음 ${G.lost} · 스킬 ${G.skills}</p><div class="row">${twButtons()}</div>`; },
 };
 
 // ─────────────────────────────────────────────────────────
@@ -878,6 +886,7 @@ const ov = document.getElementById('ov');
 function showOverlay(html) { ov.innerHTML = html; ov.hidden = false; }
 function startMode(key) {
   const M = MODES[key], opt = {};
+  if (M.canStart && !M.canStart()) return;
   const o1 = document.getElementById('optDay');
   if (o1) opt.day = o1.value;
   G = { M, running: true, t: 0, roomT: 0, energy: 100, body: null, gx: 180, gy: 590, channel: 0, chTarget: null, target: null,
