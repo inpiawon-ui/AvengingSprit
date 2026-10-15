@@ -1,7 +1,7 @@
 # 월정액(계약) — 산 날 instantGem 을 바로 주고, 그날부터 days 일 동안 매일 dailyGem 을 우편함이 아니라 「계약」 칸에서 받는다(놓친 날은 사라진다).
-# perks: free_refresh:1(오늘의 상점 하루 무료 새로고침) · run_gold:+10(판 골드 %) · card_reroll:1(판마다 레벨업 카드 다시 뽑기 1회)
+# perks: free_refresh:1(오늘의 상점 하루 무료 새로고침) · run_gold:+10(판 골드 %) · card_reroll:1(판마다 레벨업 카드 다시 뽑기 1회) · stamina_max:+20(행동력 최대 — 궁수의 전설 2 의 사냥 카드와 같은 몫) · daily_stamina:N(매일 받기에 행동력 N 더함)
 #   상자 시간 단축은 뺐다 — 상자를 보상에서 뺄지 검토 중(문서 0-3)이라 상자에 기대는 편의는 두지 않는다.
 # 이미 기간 안에 다시 사면 기간이 뒤로 이어 붙는다(최대 180일).
 key	productId	days	instantGem	dailyGem	perks
-soul_small	card_small	30	300	90	
-soul_big	card_big	30	1000	200	free_refresh:1;run_gold:+10;card_reroll:1
+soul_small	card_small	30	300	90	daily_stamina:20
+soul_big	card_big	30	1000	200	stamina_max:+20;daily_stamina:40;free_refresh:1;card_reroll:1

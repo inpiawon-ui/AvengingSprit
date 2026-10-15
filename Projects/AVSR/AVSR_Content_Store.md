@@ -1,7 +1,7 @@
 # 콘텐츠 세부 기획서 + 개발 스펙 — 로비 상점 · 시즌 패스 · 조각 뽑기 · 미션 · 결제
 
 - **콘텐츠명**: 로비 상점 — 판매 넷(**시즌 패스 · 재화 · 상자 · 조각 뽑기**) · 매일/매주 미션 · 월정액(계약) · 프로필 꾸미기 · 결제 · **카테고리**: 아웃게임 수익 · **우선순위**: P0
-- **Version**: `0.4` · **Last Updated**: `2026-10-15` · **Status**: PD 답 반영(0-2) — 조각 뽑기는 **하단 바 「소환」으로 상점과 분리**(A안) · 상자를 보상에서 뺄지만 검토 중(0-3)
+- **Version**: `0.5` · **Last Updated**: `2026-10-15` · **Status**: PD 답 반영(0-2) — 조각 뽑기는 **하단 바 「소환」으로 상점과 분리**(A안) · 상자를 보상에서 뺄지만 검토 중(0-3)
 - 관련: [`AVSR_Content_Economy.md`](AVSR_Content_Economy.md)(재화 · 오늘의 상점 · 정수 — 구현됨) · [`AVSR_Balance10.md`](AVSR_Balance10.md) · `Assets/Scripts/Module/CLAUDE.md` 6절(상자) · 7절(오늘의 상점)
 - **장면 기획**(화면 19장면 · 판매 구성표): [`_exchange/store_scenes.md`](_exchange/store_scenes.md) · **소환 연출 박자표**: [`_exchange/guide_summon_fx.md`](_exchange/guide_summon_fx.md) — 장면 시안 `_exchange/in/scene_s01~s18_*.png`
 - 데이터: [`Store/`](Store/) — `price_tiers.tsv` · `store_products.tsv` · `cards.tsv` · `pass_s1.tsv` · `missions.tsv` · `gacha.tsv` · `profile.tsv`
@@ -26,7 +26,8 @@
 | **월정액(계약)** | 작은 계약(₩5,900) — 즉시 젬 300 + 30일 매일 90 / 큰 계약(₩19,000) — 즉시 1,000 + 매일 200 + 편의 셋 | 일본 · 한국 모바일에서 가장 많이 팔리는 상품. 매일 접속 이유 |
 | **결제** | Unity IAP · 안드로이드 · 아이폰 동시 · 서버 없이 기기 검증(서버는 나중) · 유상/무상 젬 분리 저장 | 결정 4(서버 나중) · 6(동시 출시). 일본 납품이라 유상 재화 따로 센다 |
 | **프로필 꾸미기** | 테두리 · 대표 얼굴(유령 · 가진 호스트) · 칭호 — 능력치 없음. 패스 · 챕터 클리어로 얻는다(판매 없음) | PD 2026-10-15 「외형 구입은 추후, 프로필을 꾸밀 수 있게」 |
-| **안 하는 것** | 에너지(행동력) · **광고** · **외형(코스튬) 판매** | PD 2026-10-15 — 광고 제외 · 외형 판매는 추후 |
+| **행동력** | 판(챕터) 입장마다 5 · 최대 20 · 12분에 1 회복 · 챕터를 깨면 5 돌려줌 · 상단 바에 표시 · 젬 100 으로 20 채우기(하루 6회) · 계약 · 패키지 · 패스 · 미션이 준다(B-12) | PD 2026-10-15 「궁수의 전설처럼 입장마다 스태미나」 — 궁수의 전설 1 · 2 와 같은 값 |
+| **안 하는 것** | **광고** · **외형(코스튬) 판매** | PD 2026-10-15 — 광고 제외(그래서 궁수의 전설의 「광고로 행동력」은 없다) · 외형 판매는 추후 |
 
 ### 0-2. 정한 것 (PD 2026-10-15)
 
@@ -41,6 +42,9 @@
 | 7 | 판매 품목 | **시즌 패스 · 재화 · 상자 · 조각 뽑기** 넷. 계약(월정액) · 입문 · 챕터 돌파 패키지는 「재화」 탭 안에 둔다 | `store_products.tsv` · `gacha.tsv` |
 | 8 | 가챠 | **조각 뽑기는 넣는다** — 옛 원칙 「가챠 없음」을 이 결정이 대체한다 | B-11 |
 | 9 | 뽑기 자리 | **상점과 분리 — 하단 바를 HOST · PLAY · SUMMON · SHOP 네 칸으로**, 소환 전용 화면(A안 · 시안 `mock_summon_a.png`) | B-6-1 · B-11 |
+| 10 | 행동력 | **넣는다 — 궁수의 전설과 같은 규칙**(입장 5 · 최대 20 · 12분 1 · 클리어 +5) · 상단 바 · 판매 | B-12 · `GameConfig` 「행동력」 |
+
+**아직 정할 것 — 골드 입장료**: 지금 판에 들어갈 때 몸값(골드, 로비 「132 도전하기」)을 낸다. 행동력이 들어오면 입장이 두 번 막힌다. **제 의견: 골드 입장료는 빼고 행동력만**(궁수의 전설도 행동력 하나). 남기려면 「몸 고용비」처럼 이름을 바꿔 성격을 가른다.
 
 **6번 참고 — 「보통은 유료부터 쓰지 않나」**: 게임마다 다르다. 일본 게임은 무상을 먼저 쓰는 쪽이 많고(유상 잔고가 남아 있어야 플레이어에게 유리하다는 인식), 회사 쪽 회계 · 법정 잔고(유상 미사용분)만 보면 유상을 먼저 쓰는 쪽이 줄어들어 유리하다. 그래서 순서를 칸으로 두고, 출시 전 법무 · 회계와 정한다.
 
@@ -91,7 +95,6 @@
 - 미션을 **우리 핵심 놀이**에 묶는다 — 빙의 · 유리한 상성 처치 · 서로 다른 몸 5종 빙의. 상점 · 강화 같은 아웃게임 미션은 하루 2개만.
 
 **안 가져온다**
-- 에너지(행동력) — 판은 골드 입장료로 이미 막혀 있다. 에너지를 더하면 이중 제한이 된다.
 - 광고 · 영구 광고 제거 카드 — 광고는 일단 제외(PD 2026-10-15).
 - 외형(코스튬) 판매 — 추후(PD 2026-10-15). 지금은 프로필 꾸미기만.
 
@@ -102,6 +105,7 @@
 | 골드 | 패스 무료 줄(판 골드 12판분) · 챕터 돌파 · 골드 상품(젬) | — |
 | 젬 | **결제**(유상) · 패스 · 미션 전부 완료 · 계약 매일 | 상자 구매 · 골드 구매 · 패스 단계 건너뛰기 |
 | 소환권 | 패스 · 입문 · 챕터 돌파 | 조각 뽑기 1회 |
+| 행동력 | 12분에 1 · 챕터 클리어 +5 · 젬 · 계약 매일 · 입문 · 패스 · 미션 전부 완료 | 판 입장 5 |
 | 프로필 꾸미기 | 패스 30단계 · 챕터 클리어 | 장착(능력치 없음) |
 | 정수 | 패스 · 입문 · 챕터 돌파 | (있던 대로) 원하는 몸의 조각 |
 | 상자 | 패스 · 패키지 · 젬 구매 — **바로 열림** | — |
@@ -147,6 +151,7 @@
 | `StoreModule` | `IStoreService` | 위 넷 + `IResourceManager` | 상품 목록 · 보이기 조건 · 구매 제한 · 젬 구매 · 결제 상품 지급 · 계약 |
 | `PassModule` | `IPassService` | `IResetClock` · `IRewardGranter` · `IEventBus` | 시즌 · 경험치 · 단계 받기 · 프리미엄 |
 | `MissionModule` | `IMissionService` | `IResetClock` · `IRewardGranter` · `IPassService` · `IEventBus` | 이벤트를 듣고 카운터를 올린다 · 받기 |
+| `StaminaModule` | `IStaminaService` | `IPlayerDataService` · `IEventBus` | 행동력 — 회복 시계 · 입장 차감 · 클리어 반환 · 젬 채우기(B-12) |
 | `GachaModule` | `IGachaService` | `IPlayerDataService` · `IResetClock` · `IEventBus` | 조각 뽑기 — 확률 · 천장 · 픽업 · 무료 · 기록(B-11) |
 | `ProfileModule` | `IProfileService` | `IPlayerDataService` · `IEventBus` | 가진 테두리 · 칭호 · 대표 얼굴 · 장착(B-9) |
 
@@ -164,7 +169,7 @@ public interface IRewardGranter {
 }
 public enum RewardSource { Store, Pass, Mission, Card }
 public readonly struct RewardLine { public readonly RewardKind Kind; public readonly string Key; public readonly int Amount; }
-public enum RewardKind { Gold, Gem, Essence, Ticket, Shard, Chest, PassXp, PassPremium, Card, Profile }
+public enum RewardKind { Gold, Gem, Essence, Ticket, Stamina, Shard, Chest, PassXp, PassPremium, Card, Profile }
 public sealed class RewardResult { public IReadOnlyList<RewardLine> Lines; public IReadOnlyList<ChestReward> OpenedChests; }
 
 public interface IStoreService {
@@ -233,6 +238,7 @@ TSV(사람이 고친다) → 임포터 → ScriptableObject(어드레서블). �
 | `goldrun:N` | 판 골드 N판분 = `232 × N × 열린 가장 높은 챕터 priceMul`(`balance10.py` RUN_GOLD_CH1 과 같은 자) — 뒤 챕터에서도 쓸모 있게 |
 | `essence:N` | 정수 N |
 | `ticket:N` | 소환권 N(조각 뽑기 1회 = 1장) |
+| `stamina:N` | 행동력 N — **최대를 넘어 쌓인다**(자연 회복만 최대까지) |
 | `chest:키[*N]` | 상자 N개 — **그 자리에서 열어** 결과를 지급(`IChestService.OpenImmediate`) |
 | `passxp:N` · `passpremium:1` | 패스 경험치 · 프리미엄 열기 |
 | `card:키` | 계약 시작(또는 기간 연장) |
@@ -268,6 +274,9 @@ TSV(사람이 고친다) → 임포터 → ScriptableObject(어드레서블). �
 | `missions.ids[]` · `missions.progress[]` · `missions.claimed[]` | 배열 | 미션별 진행 · 받았나 |
 | `missions.hostsThisWeek[]` | string[] | 「서로 다른 몸 5종」용 |
 | `tickets` | int | 소환권 |
+| `stamina` · `staminaMax` | int | 이미 있다(30/30) → 기본 최대 20 으로. 표의 값으로 덮는다 |
+| `staminaTickUtc` | long | 마지막으로 회복을 계산한 시각(UTC 초). 열 때마다 지난 시간만큼 채운다 |
+| `staminaRefillDay` · `staminaRefillCount` | int | 젬 채우기 하루 횟수 |
 | `gacha.pity` · `gacha.freeDay` · `gacha.total` | int | 대박까지 센 수 · 무료를 쓴 날 · 뽑은 수 |
 | `gacha.hist[]` | string[] | 최근 100회 「dayKey,hostKey,amount」 — 뽑기 기록 창 |
 | `profile.owned[]` | string[] | 가진 테두리 · 칭호 키(기본은 처음부터) |
@@ -426,6 +435,7 @@ BuyAsync(productId)
 |---|---|
 | `ui.store.title` · `ui.store.tab.daily/chest/currency` | 상점 · 오늘 / 상자 / 재화 |
 | `ui.nav.summon` · `ui.summon.title` | SUMMON(하단 바 큰 글씨) · 소환 |
+| `ui.stamina.name` · `ui.stamina.next` (`{0} 후 +1`) · `ui.stamina.full` · `ui.stamina.short.title` · `ui.stamina.short.body` (`필요 {0} · 보유 {1}`) · `ui.stamina.refill` (`젬 {0}로 {1} 채우기 · 오늘 {2}/{3}`) · `ui.stamina.refill.limit` | 행동력 · 1 회복까지 · 가득 참 · 행동력이 부족해요 · … · 오늘은 더 채울 수 없어요 |
 | `ui.gacha.pickup` (`이번 주 픽업: {0}`) · `ui.gacha.pickup.note` · `ui.gacha.free` · `ui.gacha.pull1` · `ui.gacha.pull10` · `ui.gacha.ten_guarantee` · `ui.gacha.pity` (`대박까지 {0} / {1}`) · `ui.gacha.tickets` · `ui.gacha.rates` · `ui.gacha.history` · `ui.gacha.jackpot` | 이번 주 픽업 · A급이 나오면 50% 확률로 픽업 · 오늘 무료 · 1회 · 10회 · A급 1회 보장 · 대박까지 · 소환권 · 확률 보기 · 뽑기 기록 · 대박! |
 | `ui.gacha.rate.*` | 확률 창 머리 · 칸 이름(등급 · 몸 · 조각 수 · 천장 · 보장) |
 | `ui.profile.title` · `ui.profile.tab.frame/face/title` · `ui.profile.equip` · `ui.profile.equipped` · `ui.profile.nostat` · `ui.profile.source.*` · `profile.{key}.name` | 프로필 · 테두리 / 대표 얼굴 / 칭호 · 장착 · 장착 중 · 능력치 변화 없음 · 꾸미기 전용 · 얻는 곳 · 이름 |
@@ -460,6 +470,7 @@ BuyAsync(productId)
 | 미션 줄 판 · 미션 아이콘(빙의 · 상성 · 보스 · 상자 · 상점 · 강화 · 판 · 몸) | 9 |
 | 빨간 점 · 확인 팝업 판 · 보상 팝업 판 | 3 |
 | 하단 바 4칸 — 소환 칸 판(보라) · 소환 아이콘(유령 + 영혼 불꽃) · 네 칸에 맞춘 다른 칸 판 | 3 |
+| 행동력 — 아이콘(영혼 불꽃 번개) · 상단 바 칸 판 · 행동력 부족 창 판 | 3 |
 | 소환 — 보라 제단 배경 · 뽑기 버튼 판 3 · 천장 막대 · 소환권 아이콘 · 결과 칸(×2 · ×5 · ×20 대박) · 결과 연출 그림 | 약 10 |
 | 프로필 — 테두리 3(기본 · 시즌 1 · 챕터 10) · 프로필 창 판 · 칭호 띠 | 5 |
 
@@ -547,10 +558,48 @@ public readonly struct GachaPull { public readonly string HostKey; public readon
 
 연출은 [`_exchange/guide_summon_fx.md`](_exchange/guide_summon_fx.md) 박자표대로 — 1회 약 2.5초 · 10회 약 4초 · 0.4초 뒤부터 건너뛰기 · **불꽃 기둥 색 = 그 판 최고 등급 예고**(하늘 B · 보라 A · 금 대박, 속이지 않음) · 10회는 대박/픽업 카드를 맨 뒤로 미뤄 따로 뒤집는다 · 대박 > 픽업 > 새 몸 > 정수 전환 순으로 힘준다. 콘티 시안 `scene_s09~s11`.
 
+### B-12. 행동력
+
+**궁수의 전설 1 · 2 와 같은 규칙**(PD 2026-10-15): 최대 20 · 판 입장 5(= 가득 차면 네 판) · 12분에 1 회복(0 → 20 은 4시간) · 젬 100 으로 20 채우기 · 챕터를 깨면 5 돌려줌. 우리는 광고가 없으니 「광고 보고 5」 길은 없다.
+
+| 규칙 | 값(`GameConfig` 「행동력」) | 비고 |
+|---|---|---|
+| 최대 | `_staminaMax` 20 | 큰 계약 동안 +20(40) |
+| 판 입장 | `_staminaPerRun` 5 | 「도전하기」를 누를 때 깎는다. 모자라면 들어가지 않고 부족 창 |
+| 자연 회복 | `_staminaRegenSeconds` 720 | 최대까지만. 기기 시간 기준(서버 전까지 시계 조작은 못 막음 — 뒤로 가면 무시) |
+| 클리어 반환 | `_staminaOnClear` 5 | 그 판 챕터를 깨면 바로 돌려준다(궁수의 전설 2 와 같다). 죽거나 포기하면 없음 |
+| 넘침 | — | 구매 · 보상으로 받은 것은 최대를 넘어 쌓인다(999 까지). 넘친 동안 자연 회복은 멈춘다 |
+| 젬 채우기 | `_staminaRefillGem` 100 · `_staminaRefillPerDay` 6 | 한 번에 최대치(20)만큼. 하루 경계 = 하루 초기화 |
+
+**들어오는 길**: 자연 회복(하루 최대 약 120) · 클리어 반환 · 젬 채우기 · 작은 계약 매일 +20 · 큰 계약 매일 +40 · 최대 +20 · 입문 패키지 40/100/200 · 패스 무료 줄 60 · 미션 매일 전부 완료 +10 · 매주 전부 완료 +20.
+
+```csharp
+public interface IStaminaService {
+    int Current { get; } int Max { get; }
+    TimeSpan UntilNext { get; }                 // 가득 차 있거나 넘쳤으면 Zero
+    bool CanEnter { get; }                      // Current >= 입장 값
+    bool TryPayEntry();                          // 판 시작 — 모자라면 false(부족 창은 화면이 띄운다)
+    void RefundClear();                          // 클리어 반환
+    int RefillGemCost { get; } int RefillLeftToday { get; }
+    bool TryRefillWithGem(out string failKey);
+}
+```
+- 매 프레임 계산하지 않는다 — 로비가 열릴 때 · 1초 타이머(상단 바 글자)에서 `staminaTickUtc` 와 지금의 차이로 채운다. 바뀌면 이미 있는 `CurrencyChangedEvent.NewStamina`.
+- 판 입장 흐름: `ChapterHostPanel` 「도전하기」 → `TryPayEntry` → 실패면 `StaminaShortPopup` → 성공이면 지금처럼 판 시작. 클리어는 `StageFinishedEvent.IsCleared` 에서 `RefundClear`.
+
+**화면**
+
+| 요소 | 설명 |
+|---|---|
+| 상단 바 `StaminaCounter` > `StaminaIcon` · `StaminaText`(「18/20」, 넘치면 「45/20」 금색) · `StaminaTimerText`(「09:12」, 가득이면 숨김) · `StaminaPlusButton` | 유령 Lv 과 골드 사이(또는 골드 왼쪽). 자리는 시안 S20 으로 정한다. `+` → 부족 창(채우기) |
+| 「도전하기」 버튼 | 값 표시를 행동력 「⚡5」로(골드 입장료를 빼면) |
+| `StaminaShortPopup` (~Popup) > `ShortText` · `ShortTimerText` · `RefillButton` > `RefillCostText` · `RefillLeftText` · `ShortCloseButton` | 「행동력이 부족해요 — 필요 5 · 보유 3 · 다음 회복 08:12」 · 「젬 100 으로 20 채우기 · 오늘 5/6」 · 젬도 모자라면 버튼이 「젬 사러 가기」로 |
+
 ---
 
 ## 7. 미정 · 결정 필요
 
+- **골드 입장료를 뺄지**(0-2 아래) — 제 의견: 빼고 행동력만.
 - **상자를 보상에서 뺄지**(0-3) — 정해 주시면 챕터 표 · 결과창 · 로비 상자 칸 · 상점 상자를 한 번에 바꾼다.
 - 2시즌부터 시즌 표 — 새 TSV `pass_s2.tsv` 를 더하고 `GameConfig._seasonId` 만 바꾸는 구조로 만들어 둔다.
 - 외형(코스튬) 판매 — 추후(PD 2026-10-15). 그때 유령 외형 · 호스트 외형을 함께 본다.
@@ -572,5 +621,6 @@ public readonly struct GachaPull { public readonly string HostKey; public readon
 |---|---|---|
 | 0.1 | 2026-10-15 | 최초 작성 — 참고 게임 정리 · 상점 · 패스 · 미션 · 계약 · 결제 스펙 · 데이터 초안 5종 |
 | 0.2 | 2026-10-15 | PD 답 반영 — 광고 제외 · 값 1차 확정(한국 기준) · 한국 00:00 초기화(칸) · 큰 계약 편의 교체 · 외형 설계 · 젬 순서 칸 · 상자 검토(0-3) · 시안 4컷 발주 |
+| 0.5 | 2026-10-15 | PD 「궁수의 전설처럼 입장마다 스태미나 · 상단 바 · 판매」 — 행동력(B-12, 입장 5 · 최대 20 · 12분 1 · 클리어 +5 · 젬 100 = 20 하루 6회) · 상품 `stamina_refill` · 계약(작은 매일 +20 · 큰 최대 +20 · 매일 +40) · 입문 · 패스 · 미션 보상에 행동력 · 미션 보상 칸을 보상 문자열로 |
 | 0.4 | 2026-10-15 | PD 「가챠랑 일반 구매랑 구분돼야」 → A안: 하단 바 HOST · PLAY · SUMMON · SHOP · 소환 전용 `SummonPanel` · 상점 탭 셋(오늘 · 상자 · 재화) |
 | 0.3 | 2026-10-15 | PD 「조각 가챠 넣는다 · 판매는 패스 · 재화 · 상자 · 조각 뽑기 · 외형 판매는 추후, 프로필을 꾸미게」 — 조각 뽑기(B-11, `gacha.tsv`) · 탭 재구성(오늘 · 상자 · 조각 뽑기 · 재화) · 소환권 · 외형 → 프로필 꾸미기(B-9, `profile.tsv`) · 확률 공개 · 2차 시안 3컷 |

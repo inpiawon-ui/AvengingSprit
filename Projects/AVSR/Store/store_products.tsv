@@ -1,15 +1,15 @@
 # 로비 상점 상품 — Tools/Game/상점 표 임포트 → Assets/BundleResource/TableData/StoreTable.asset (주소 TableData/StoreTable)
 # tab: chest 상자 · currency 재화(계약 · 입문 · 챕터 돌파 · 젬 · 골드) · pass 패스 화면 전용 — 「오늘」 탭은 오늘의 상점. 조각 뽑기는 상점이 아니라 하단 바 SUMMON 화면(gacha.tsv, PD 2026-10-15 A안)
-# kind: package · card · chest · gold · gem · pass
+# kind: package · card · chest · gold · gem · stamina · pass
 # priceType: iap(결제, price=가격 등급) · gem(젬, price=젬 수) · free | limit: once · daily:N · weekly:N · season · none
 # show: always · days_since_install<=N · chapter_cleared>=N · season_active
-# rewards: gem:N · gold:N · goldrun:N(판 골드 N판분 × priceMul) · essence:N · ticket:N(소환권) · chest:키[*N] · passxp:N · passpremium:1 · card:카드키 · profile:키 (항목은 ; 로 잇는다)
+# rewards: gem:N · gold:N · goldrun:N(판 골드 N판분 × priceMul) · essence:N · ticket:N(소환권) · stamina:N(행동력 — 최대를 넘어 쌓인다) · chest:키[*N] · passxp:N · passpremium:1 · card:카드키 · profile:키 (항목은 ; 로 잇는다)
 # badge: best(추천 띠) · first_double(첫 구매 2배) — 글자는 언어팩 키 store.badge.*
 # 수치는 초안(2026-10-15) — PD 확인 전.
 id	tab	kind	priceType	price	limit	show	rewards	badge	order	storeId	nameKey	descKey
-starter_1	currency	package	iap	P1	once	days_since_install<=7	gem:120;ticket:5;essence:30	best	10	avsr.starter1	store.starter_1.name	store.starter_1.desc
-starter_2	currency	package	iap	P3	once	days_since_install<=7	gem:600;ticket:15;chest:platinum		11	avsr.starter2	store.starter_2.name	store.starter_2.desc
-starter_3	currency	package	iap	P4	once	days_since_install<=7	gem:1200;ticket:30;chest:platinum*2		12	avsr.starter3	store.starter_3.name	store.starter_3.desc
+starter_1	currency	package	iap	P1	once	days_since_install<=7	gem:120;ticket:5;essence:30;stamina:40	best	10	avsr.starter1	store.starter_1.name	store.starter_1.desc
+starter_2	currency	package	iap	P3	once	days_since_install<=7	gem:600;ticket:15;chest:platinum;stamina:100		11	avsr.starter2	store.starter_2.name	store.starter_2.desc
+starter_3	currency	package	iap	P4	once	days_since_install<=7	gem:1200;ticket:30;chest:platinum*2;stamina:200		12	avsr.starter3	store.starter_3.name	store.starter_3.desc
 chapter_01	currency	package	iap	P2	once	chapter_cleared>=1	gem:200;goldrun:5;ticket:3		21	avsr.chapter01	store.chapter_01.name	store.chapter_01.desc
 chapter_02	currency	package	iap	P2	once	chapter_cleared>=2	gem:200;goldrun:5;ticket:3		22	avsr.chapter02	store.chapter_02.name	store.chapter_02.desc
 chapter_03	currency	package	iap	P3	once	chapter_cleared>=3	gem:500;goldrun:10;ticket:8;chest:platinum		23	avsr.chapter03	store.chapter_03.name	store.chapter_03.desc
@@ -25,6 +25,7 @@ card_big	currency	card	iap	P5	none	always	card:soul_big		31	avsr.card.big	store.
 chest_silver	chest	chest	gem	60	none	always	chest:silver		40		store.chest_silver.name	store.chest_silver.desc
 chest_gold	chest	chest	gem	160	none	always	chest:gold		41		store.chest_gold.name	store.chest_gold.desc
 chest_platinum	chest	chest	gem	320	none	always	chest:platinum		42		store.chest_platinum.name	store.chest_platinum.desc
+stamina_refill	currency	stamina	gem	100	daily:6	always	stamina:20		45		store.stamina_refill.name	store.stamina_refill.desc
 gold_s	currency	gold	gem	30	daily:3	always	goldrun:1		50		store.gold_s.name	store.gold_s.desc
 gold_m	currency	gold	gem	150	none	always	goldrun:6		51		store.gold_m.name	store.gold_m.desc
 gold_l	currency	gold	gem	450	none	always	goldrun:20		52		store.gold_l.name	store.gold_l.desc
