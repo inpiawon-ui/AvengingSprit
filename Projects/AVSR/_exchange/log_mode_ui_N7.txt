@@ -1,0 +1,3 @@
+완성 화면을 [mock_mode_N7.png](C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/mock_mode_N7.png)에 720×1280으로 저장했습니다.  
+내장 이미지 생성 도구로 지정 배치·문구·초상을 유지하고, 남색 금속·청록 네온·금색 버튼·보랏빛 밤 장식을 적용했습니다.  
+기존 결과 창과 한 벌처럼 보이면서도 「망령의 밤」의 분위기와 정보 위계가 선명하도록 디자인했습니다.

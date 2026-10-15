@@ -1,0 +1,3 @@
+완성된 탑 인게임 UI 한 장을 제작했습니다.  
+기존 픽셀 HUD를 유지하고 석조·혼불 탑 테마를 적용했습니다.  
+저장: [mock_mode_T5.png](C:\won\UnityProject\AvengingSprit\Projects\AVSR\_exchange\in\mock_mode_T5.png)

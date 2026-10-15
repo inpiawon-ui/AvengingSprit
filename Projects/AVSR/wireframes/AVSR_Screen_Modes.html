@@ -106,7 +106,7 @@ flowchart LR
 <section>
   <h2>0. 로비 입구</h2>
   <div class="row">
-    <div class="frame">
+    <div class="frame" id="fL">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/lobby.png" alt="">
         <!-- 서바이벌 칸 → 망령의 밤 -->
@@ -148,7 +148,7 @@ flowchart LR
   <div class="row">
 
     <!-- T1 입장 패널 -->
-    <div class="frame">
+    <div class="frame" id="fT1">
       <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
         <div class="topband"></div>
         <!-- 제목줄 -->
@@ -225,7 +225,7 @@ flowchart LR
     </div>
 
     <!-- T2 맞는 호스트 팝업 -->
-    <div class="frame">
+    <div class="frame" id="fT2">
       <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
         <div class="topband"></div><div class="dim"></div>
         <div class="a pnl" style="left:50px;top:250px;width:620px;height:780px;padding:24px">
@@ -263,7 +263,7 @@ flowchart LR
     </div>
 
     <!-- T3 젬 추가 입장 -->
-    <div class="frame">
+    <div class="frame" id="fT3">
       <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
         <div class="topband"></div><div class="dim"></div>
         <div class="a pnl" style="left:70px;top:430px;width:580px;height:430px;padding:28px;text-align:center">
@@ -292,7 +292,7 @@ flowchart LR
     </div>
 
     <!-- T4 소탕 -->
-    <div class="frame">
+    <div class="frame" id="fT4">
       <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#1b2f5e,#070d1c 70%)">
         <div class="topband"></div><div class="dim"></div>
         <div class="a pnl gold" style="left:70px;top:380px;width:580px;height:540px;padding:28px;text-align:center">
@@ -322,7 +322,7 @@ flowchart LR
     </div>
 
     <!-- T5 인게임 입장 -->
-    <div class="frame">
+    <div class="frame" id="fT5">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <!-- 위 가운데 — 탑 판 -->
@@ -361,7 +361,7 @@ flowchart LR
     </div>
 
     <!-- T6 인게임 HUD -->
-    <div class="frame">
+    <div class="frame" id="fT6">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <div class="a pnl" style="left:306px;top:28px;width:108px;height:100px;text-align:center;padding-top:6px;border-radius:12px"><div style="font:700 13px var(--body);color:#45d4ff;letter-spacing:.08em">TOWER</div><div class="t-d" style="font-size:44px;line-height:1">13F</div><div style="font-size:13px;color:#9fb6e6">남은 적 4</div></div>
@@ -393,7 +393,7 @@ flowchart LR
     </div>
 
     <!-- T8 클리어 -->
-    <div class="frame">
+    <div class="frame" id="fT8">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
         <div class="a pnl gold" style="left:50px;top:250px;width:620px;height:780px;padding:26px;text-align:center">
@@ -432,7 +432,7 @@ flowchart LR
     </div>
 
     <!-- T9 실패 -->
-    <div class="frame">
+    <div class="frame" id="fT9">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
         <div class="a pnl" style="left:50px;top:270px;width:620px;height:740px;padding:26px;text-align:center;border-color:#ff5a6e;box-shadow:0 0 16px rgba(255,90,110,.5)">
@@ -475,7 +475,7 @@ flowchart LR
   <div class="row">
 
     <!-- N1 -->
-    <div class="frame">
+    <div class="frame" id="fN1">
       <div class="ph"><div class="scr" style="background:radial-gradient(120% 60% at 50% 0%,#2a1d56,#090716 72%)">
         <div class="topband"></div>
         <div class="a btn-x" style="left:20px;top:146px;width:64px;height:56px;font-size:30px">◀</div>
@@ -548,7 +548,7 @@ flowchart LR
     </div>
 
     <!-- N2 시작 -->
-    <div class="frame">
+    <div class="frame" id="fN2">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <div class="a pnl" style="left:296px;top:28px;width:128px;height:100px;text-align:center;padding-top:6px;border-radius:12px;border-color:#a98bff"><div style="font:700 13px var(--body);color:#c6b3ff;letter-spacing:.08em">NIGHT</div><div class="t-d" style="font-size:44px;line-height:1">0:00</div><div style="font-size:13px;color:#9fb6e6">처치 0</div></div>
@@ -580,7 +580,7 @@ flowchart LR
     </div>
 
     <!-- N3 HUD -->
-    <div class="frame">
+    <div class="frame" id="fN3">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
@@ -611,7 +611,7 @@ flowchart LR
     </div>
 
     <!-- N4 대형 -->
-    <div class="frame">
+    <div class="frame" id="fN4">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
@@ -651,7 +651,7 @@ flowchart LR
     </div>
 
     <!-- N5 속성 전환 -->
-    <div class="frame">
+    <div class="frame" id="fN5">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt="">
         <div class="hostpanel-name">ROBOT<small>로봇</small></div><img class="hostface" src="modes_mock/face_robot.png" alt="">
@@ -682,7 +682,7 @@ flowchart LR
     </div>
 
     <!-- N6 레벨업 -->
-    <div class="frame">
+    <div class="frame" id="fN6">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/levelup.png" alt="">
         <div class="a" style="left:20px;top:1180px;width:680px;text-align:center;font-size:22px;background:rgba(5,10,24,.85);padding:8px;border-radius:10px">카드를 고르는 동안 <b style="color:#ffd23f">시간 · 무리 · 유령 감소 모두 멈춤</b></div>
@@ -698,7 +698,7 @@ flowchart LR
     </div>
 
     <!-- N7 결과 -->
-    <div class="frame">
+    <div class="frame" id="fN7">
       <div class="ph"><div class="scr">
         <img class="bgimg" src="modes_mock/ingame_mode.png" alt=""><div class="dim"></div>
         <div class="a pnl gold" style="left:50px;top:220px;width:620px;height:840px;padding:26px;text-align:center;border-color:#c6b3ff;box-shadow:0 0 18px rgba(198,179,255,.55)">
@@ -745,3 +745,10 @@ flowchart LR
 </section>
 
 </div>
+
+<script>
+// #soloT1 처럼 열면 그 화면 하나만 실제 크기(720×1280)로 — 발주서 앵커 캡처용
+(function(){var m=/^#solo([A-Z0-9]+)$/.exec(location.hash);if(!m)return;var f=document.getElementById('f'+m[1]);if(!f)return;
+var ph=f.querySelector('.ph');document.body.innerHTML='';document.body.style.cssText='margin:0;padding:0;background:#000';
+document.documentElement.style.setProperty('--s','1');ph.style.borderRadius='0';ph.style.boxShadow='none';ph.querySelectorAll('.pin').forEach(function(e){e.remove();});document.body.appendChild(ph);})();
+</script>
