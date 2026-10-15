@@ -238,7 +238,7 @@
 
 ### 4-5. 하루 · 주의 기준 시각
 
-- **하루 = 오전 5시(일본 시각)** · **주 = 월요일 오전 5시.** 망령의 밤 요일 · 오늘의 상점과 같은 함수 하나(`DayClock`, 밤 문서 4-3절).
+- **하루 = 오전 5시(일본 시각)** · **주 = 월요일 오전 5시.** 망령의 밤 요일 · 오늘의 상점과 같은 함수 하나 — `IResetClock`(`Assets/Scripts/Module/Common/Store/ResetClockModule.cs` — `DayKey` · `UntilNextDay` · `WeekKey` · `UntilNextWeek`, 값은 GameConfig 「하루 경계」 칸. 아웃게임 세션이 만든 것을 같이 쓴다). PD 10-15 「오전 5시로 통일」(상점 · 탑 · 밤 전부).
 - 서버 전까지 기기 시각, 붙으면 서버 시각(TBD-SRV).
 
 ---
@@ -270,7 +270,7 @@
 | `Assets/Scripts/Module/InGame/BattleDirector.Tower.cs` | `partial class BattleDirector` — `EnterTowerFloor(int)` · 몸 뽑기 · 규칙 적용 · 클리어(저장 · 보상) · 판 끝 |
 | `Assets/Scripts/Module/InGame/Tower/TowerTable.cs` | 4-1 |
 | `Assets/Scripts/Module/Common/Tower/TowerProgressService.cs` | 4-3 저장 · 하루/주 넘김 · 입장 쓰기 · 젬 사기 · 소탕 · 첫 클리어 지급. 로비 · 인게임이 같이 쓴다 |
-| `Assets/Scripts/Module/Common/DayClock.cs` | 「오늘」 · 「이번 주」(05:00 기준) — 밤 · 탑 · 오늘의 상점이 같이 |
+| (만들지 않음) | 하루 · 주 경계는 이미 있는 `IResetClock` 을 쓴다(4-5) |
 | `Assets/Scripts/Module/Lobby/TowerEntryPanel.cs` · `TowerFitPopup.cs` · `TowerBuyPopup.cs` · `TowerSweepPopup.cs` | T1~T4 |
 | `Assets/Scripts/Module/InGame/TowerResultPopup.cs` | T8 · T9 |
 | `Assets/Scripts/Module/Events/TowerEvents.cs` | 6-3 |
@@ -307,7 +307,7 @@
 
 | 단계 | 할 일 | 확인 |
 |---|---|---|
-| 1 | `DayClock` · `TowerProgressService` — 입장 · 젬 · 소탕 · 하루/주 넘김 | 기기 시각 04:59 → 05:01 로 입장 3 · 일 → 월 05:01 로 1층 · 지난주 기록 |
+| 1 | `TowerProgressService`(`IResetClock` 사용) — 입장 · 젬 · 소탕 · 하루/주 넘김 | 기기 시각 04:59 → 05:01 로 입장 3 · 일 → 월 05:01 로 1층 · 지난주 기록 |
 | 2 | `TowerTable` · 로비 칸 · T1 · `EnterTowerFloor` 로 1층 | 유령으로 1층 · 근거리 몸 3 · 잔몹 6 · 입장 3 → 2 |
 | 3 | 클리어 → 저장 · 첫 클리어 → T8 · 다음 층 도전 / 실패 → T9 · 다시 | 클리어 순간 앱 종료해도 1층 저장 · 실패해도 입장 줄어듦 |
 | 4 | 규칙 8종 | 층마다 스크린샷 — 조건 밖 몸 표식 없음 · `NoLeave` 자물쇠 · `OneShot` 두 번째 빙의 안 됨 · 구조 없음 |

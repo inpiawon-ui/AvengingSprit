@@ -338,7 +338,7 @@
 | `nightBoughtToday` | int | 오늘 젬으로 산 횟수 |
 | `nightLastRefill` | long | 마지막으로 채운 시각 — 시각 되돌림 감지(탑과 같은 규칙) |
 
-- 요일 계산: 기기 시각에서 `ResetHourLocal`(기본 5시)을 뺀 날짜의 요일. 경제 문서의 「오늘의 상점 초기화 일본 시각 오전 5시」 제안과 같은 기준으로 맞춘다.
+- 요일 계산: `IResetClock.DayKey` 의 요일 — 하루 경계는 **일본 시각 오전 5시**(PD 10-15 「오전 5시로 통일」, 상점 · 탑 · 밤 같은 값). `NightModeTable.ResetHourLocal` 칸은 쓰지 않는다.
   서버가 붙기 전까지 시계 돌리기는 막지 못한다(TBD-SRV) — 요일을 골라 들어가는 것뿐이라 피해가 작다.
 
 ### 4-4. 보상 (가안 — 10-14)
@@ -354,7 +354,7 @@
 ### 4-5. 입장 (10-15)
 
 - 무료 하루 **3번** · 젬 추가 하루 **3번까지** 50 → 100 → 200 젬(탑과 같은 값 · 가안 — 상점 붙일 때 정한다).
-- 입장 · 젬 · 하루 넘김은 탑의 `TowerProgressService` 와 같은 틀로 `NightProgressService` 에 둔다(하루 기준은 같은 `DayClock`).
+- 입장 · 젬 · 하루 넘김은 탑의 `TowerProgressService` 와 같은 틀로 `NightProgressService` 에 둔다(하루 기준은 `IResetClock`(`Assets/Scripts/Module/Common/Store/ResetClockModule.cs` — `DayKey` · `UntilNextDay` · `WeekKey` · `UntilNextWeek`, 값은 GameConfig 「하루 경계」 칸. 아웃게임 세션이 만든 것을 같이 쓴다)).
 - `NightModeTable` 칸: `FreeEntriesPerDay` 3 · `BuyEntriesMax` 3 · `BuyEntryGem` [50, 100, 200].
 
 ---
