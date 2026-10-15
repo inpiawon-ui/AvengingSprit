@@ -1,10 +1,10 @@
 # 콘텐츠 세부 기획서 + 개발 스펙 — 로비 상점 · 시즌 패스 · 조각 뽑기 · 미션 · 결제
 
 - **콘텐츠명**: 로비 상점 — 판매 넷(**시즌 패스 · 재화 · 상자 · 조각 뽑기**) · 매일/매주 미션 · 월정액(계약) · 프로필 꾸미기 · 결제 · **카테고리**: 아웃게임 수익 · **우선순위**: P0
-- **Version**: `0.3` · **Last Updated**: `2026-10-15` · **Status**: PD 답 반영(0-2) — 조각 뽑기 넣음 · 외형 판매 뺌 · 상자를 보상에서 뺄지만 검토 중(0-3)
+- **Version**: `0.4` · **Last Updated**: `2026-10-15` · **Status**: PD 답 반영(0-2) — 조각 뽑기는 **하단 바 「소환」으로 상점과 분리**(A안) · 상자를 보상에서 뺄지만 검토 중(0-3)
 - 관련: [`AVSR_Content_Economy.md`](AVSR_Content_Economy.md)(재화 · 오늘의 상점 · 정수 — 구현됨) · [`AVSR_Balance10.md`](AVSR_Balance10.md) · `Assets/Scripts/Module/CLAUDE.md` 6절(상자) · 7절(오늘의 상점)
 - 데이터: [`Store/`](Store/) — `price_tiers.tsv` · `store_products.tsv` · `cards.tsv` · `pass_s1.tsv` · `missions.tsv` · `gacha.tsv` · `profile.tsv`
-- 시안: 1차 `_exchange/in/mock_store_{lobby,shop,pass}.png` · 2차 `mock_store_{gacha,currency,profile}.png`(코덱스, 2026-10-15). 1차 `mock_store_cosmetic.png` 은 외형 판매를 빼면서 버렸다
+- 시안(정답): 로비 `_exchange/in/mock_store_lobby.png` · 재화 탭 `mock_store_currency.png` · 패스 `mock_store_pass.png` · 프로필 `mock_store_profile.png` · **소환 `mock_summon_a.png`(PD 고름 — 하단 바 4칸)**. 대체된 시안(옛 추천 탭 · 상점 안 뽑기 탭 · B안)은 지웠다
 
 이 문서는 둘로 나뉜다.
 - **A. 참고 · 방향** — 다른 게임은 어떻게 파는가, 우리는 무엇을 가져오고 무엇을 안 가져오나.
@@ -18,8 +18,8 @@
 
 | 무엇 | 어떻게 | 왜 |
 |---|---|---|
-| **상점** `LobbyShopPanel` | 탭 넷 — **오늘**(오늘의 상점, 구현됨) · **상자**(젬) · **조각 뽑기** · **재화**(계약 · 입문 · 챕터 돌파 · 젬 · 골드) | PD 2026-10-15 판매 넷(패스 · 재화 · 상자 · 조각 뽑기). 궁수의 전설 2 와 같은 뼈대 |
-| **조각 뽑기** | 한 번에 「몸 하나 + 조각 ×2/×5/×20」. 젬 60 · 10회 540(A급 1회 보장) · 소환권 · 하루 무료 1회 · 대박(×20) 천장 50회 · 주간 픽업 | PD 2026-10-15 「조각 가챠 넣는다」. 확률은 화면에 공개(법) |
+| **상점** `LobbyShopPanel` (하단 SHOP) | **확정 구매만** — 탭 셋 **오늘**(오늘의 상점, 구현됨) · **상자**(젬) · **재화**(계약 · 입문 · 챕터 돌파 · 젬 · 골드). 남색 · 하늘 네온 | 값을 내면 무엇을 받는지 다 보이는 것만 |
+| **소환** `SummonPanel` (하단 **SUMMON**, 새 칸) | **조각 뽑기 전용 화면** — 보라 제단 · 영혼 불꽃. 한 번에 「몸 하나 + 조각 ×2/×5/×20」. 젬 60 · 10회 540(A급 1회 보장) · 소환권 · 하루 무료 1회 · 대박 천장 50회 · 주간 픽업 · 확률 보기 · 뽑기 기록 | PD 2026-10-15 「가챠랑 일반 구매랑 구분돼야」 → A안. 확률 상품은 문 · 색 · 분위기가 다르다(법 · 신뢰) |
 | **시즌 패스** `SeasonPassPanel` | 28일 · 30단계 · 무료 줄 + 프리미엄 줄(₩12,000) · 묶음(₩25,000 = 프리미엄 + 15단계). 소환권 · 젬 · 정수 · 상자, 마지막 단계 = 프로필 테두리(무료) · 칭호(프리미엄) | 궁수의 전설 2 의 패스는 28일 · 매일/매주 목표로 오른다. 시즌 1 이름은 정해 둔 「GHOST REVENGE」 |
 | **미션** | 패스 화면의 탭. 매일 6 + 전부 완료 1 · 매주 5 + 전부 완료 1. **빙의 · 유리한 상성 · 여러 몸 쓰기**에 묶는다 | 패스 경험치의 길이자 「이 게임다운 놀이」를 매일 시키는 장치 |
 | **월정액(계약)** | 작은 계약(₩5,900) — 즉시 젬 300 + 30일 매일 90 / 큰 계약(₩19,000) — 즉시 1,000 + 매일 200 + 편의 셋 | 일본 · 한국 모바일에서 가장 많이 팔리는 상품. 매일 접속 이유 |
@@ -39,6 +39,7 @@
 | 6 | 젬 쓰는 순서 | **무상 먼저**, 칸 하나로 바꿀 수 있게 | `GameConfig._gemSpendOrder = FreeFirst`(B-3) |
 | 7 | 판매 품목 | **시즌 패스 · 재화 · 상자 · 조각 뽑기** 넷. 계약(월정액) · 입문 · 챕터 돌파 패키지는 「재화」 탭 안에 둔다 | `store_products.tsv` · `gacha.tsv` |
 | 8 | 가챠 | **조각 뽑기는 넣는다** — 옛 원칙 「가챠 없음」을 이 결정이 대체한다 | B-11 |
+| 9 | 뽑기 자리 | **상점과 분리 — 하단 바를 HOST · PLAY · SUMMON · SHOP 네 칸으로**, 소환 전용 화면(A안 · 시안 `mock_summon_a.png`) | B-6-1 · B-11 |
 
 **6번 참고 — 「보통은 유료부터 쓰지 않나」**: 게임마다 다르다. 일본 게임은 무상을 먼저 쓰는 쪽이 많고(유상 잔고가 남아 있어야 플레이어에게 유리하다는 인식), 회사 쪽 회계 · 법정 잔고(유상 미사용분)만 보면 유상을 먼저 쓰는 쪽이 줄어들어 유리하다. 그래서 순서를 칸으로 두고, 출시 전 법무 · 회계와 정한다.
 
@@ -115,7 +116,8 @@
 ### A-4. 화면 흐름
 
 ```
-로비 ─ ShopButton(하단 SHOP) ─────────▶ LobbyShopPanel [오늘 | 상자 | 조각 뽑기 | 재화]
+로비 ─ ShopButton(하단 SHOP) ─────────▶ LobbyShopPanel [오늘 | 상자 | 재화]
+     ─ SummonButton(하단 SUMMON, 새) ──▶ SummonPanel (조각 뽑기 · 확률 보기 · 뽑기 기록)
      ─ GemPlusButton / GoldPlusButton ─▶ LobbyShopPanel [재화] (골드 칸 / 젬 칸으로 스크롤)
      ─ PassButton (새) ───────────────▶ SeasonPassPanel [보상 | 미션]
      ─ LobbyProfile 길게 누름 / 육성(유령) ProfileEditButton (새) ─▶ ProfilePopup [테두리 | 대표 얼굴 | 칭호]
@@ -354,7 +356,9 @@ BuyAsync(productId)
 
 | 요소 | 지금 | 바꿀 것 |
 |---|---|---|
-| `ShopButton` | 「준비 중」 토스트 | `LobbyShopPanel` 열기(「오늘」 탭 — 오늘 무료 뽑기가 남았으면 「조각 뽑기」 탭). 빨간 점 `ShopButtonBadge` |
+| 하단 바 | HOST · PLAY · SHOP 세 칸 | **HOST · PLAY · SUMMON · SHOP 네 칸** — 칸 폭을 넷으로 나눈다. 로비 · 육성 공통 바(빌더 「위 · 아래 고정 꽂기」)도 같이 |
+| `SummonButton` (새) > `SummonButtonBadge` | 없음 | `SummonPanel` 열기. 보라 불꽃 칸(고르면 금색 테두리는 공통 규칙). 오늘 무료 뽑기 남으면 빨간 점 |
+| `ShopButton` | 「준비 중」 토스트 | `LobbyShopPanel` 열기(「오늘」 탭). 빨간 점 `ShopButtonBadge` |
 | `LobbyProfile` | 유령 육성 열기 | 그대로 + 테두리 · 대표 얼굴 · 칭호를 그린다(`ProfileFrameImage` · `ProfileFaceImage` · `ProfileTitleText`) |
 | `GemPlusButton` · `GoldPlusButton` | 「준비 중」 | `LobbyShopPanel` 재화 탭 · 해당 칸으로 스크롤 |
 | `PassButton` (새) > `PassButtonBadge` · `PassTierText` | 없음 | `SeasonPassPanel` 열기. 「SEASON 1 · GHOST REVENGE · Lv 12」 작은 띠 — 1차 시안 ①처럼 **위 재화 줄 바로 아래 오른쪽** · 받을 것 있으면 빨간 점 |
@@ -364,12 +368,11 @@ BuyAsync(productId)
 | 요소 | 설명 · 동작 |
 |---|---|
 | `StoreGoldText` · `StoreGemText` · `StoreEssenceText` | 보유 재화 — `CurrencyChangedEvent` |
-| `StoreTabDaily` · `StoreTabChest` · `StoreTabGacha` · `StoreTabCurrency` | 탭 넷. 고른 탭은 금색 테두리(공통 규칙). 탭마다 빨간 점 `*Badge` |
+| `StoreTabDaily` · `StoreTabChest` · `StoreTabCurrency` | 탭 셋. 고른 탭은 금색 테두리(공통 규칙). 탭마다 빨간 점 `*Badge` |
 | `StoreScroll` > `Viewport`(RectMask2D) > `Content` | 탭 내용 — 재사용 스크롤(오브젝트 풀) |
 | `StoreCardSection` (재화 탭 맨 위) > `CardSmall` · `CardBig` | 계약 칸 둘 — 안에 `CardTitleText` · `CardDescText` · `CardDaysText`(「남은 12일」) · `CardBuyButton` > `CardPriceText` · `CardClaimButton`(「오늘 받기」, 오늘 받았으면 흐림) |
 | `StoreProductCard` (반복 프리팹) | 상품 한 칸 — 아래 표 |
 | 오늘 탭 | `DailyShopSection` — 이미 구현된 `IDailyShopService` 화면(`AVSR_Content_Economy.md` 3-2 의 `DailyShopSlot0~5` 등)을 이 탭에 넣는다 |
-| 조각 뽑기 탭 | `GachaSection` — B-11 |
 | 상자 탭 | 상자 칸 아래 `ChestRateButton`(「확률 보기」) |
 | `StoreLegalButton` | 표기 화면(B-4-5) |
 | `StoreRestoreButton` | 아이폰만 보임 — 구매 복원 |
@@ -412,6 +415,7 @@ BuyAsync(productId)
 
 #### B-6-5. 빨간 점 규칙
 - `ShopButtonBadge`: 계약 오늘 안 받음 ∨ 오늘의 상점 무료 칸 안 받음 ∨ 새 챕터 돌파 상품 안 봄.
+- `SummonButtonBadge`: 오늘 무료 뽑기 남음.
 - `PassButtonBadge`: 받을 패스 단계 ∨ 받을 미션.
 - 탭 점은 그 탭 안의 같은 조건.
 
@@ -419,7 +423,8 @@ BuyAsync(productId)
 
 | 키 | 한국어 예 |
 |---|---|
-| `ui.store.title` · `ui.store.tab.daily/chest/gacha/currency` | 상점 · 오늘 / 상자 / 조각 뽑기 / 재화 |
+| `ui.store.title` · `ui.store.tab.daily/chest/currency` | 상점 · 오늘 / 상자 / 재화 |
+| `ui.nav.summon` · `ui.summon.title` | SUMMON(하단 바 큰 글씨) · 소환 |
 | `ui.gacha.pickup` (`이번 주 픽업: {0}`) · `ui.gacha.pickup.note` · `ui.gacha.free` · `ui.gacha.pull1` · `ui.gacha.pull10` · `ui.gacha.ten_guarantee` · `ui.gacha.pity` (`대박까지 {0} / {1}`) · `ui.gacha.tickets` · `ui.gacha.rates` · `ui.gacha.history` · `ui.gacha.jackpot` | 이번 주 픽업 · A급이 나오면 50% 확률로 픽업 · 오늘 무료 · 1회 · 10회 · A급 1회 보장 · 대박까지 · 소환권 · 확률 보기 · 뽑기 기록 · 대박! |
 | `ui.gacha.rate.*` | 확률 창 머리 · 칸 이름(등급 · 몸 · 조각 수 · 천장 · 보장) |
 | `ui.profile.title` · `ui.profile.tab.frame/face/title` · `ui.profile.equip` · `ui.profile.equipped` · `ui.profile.nostat` · `ui.profile.source.*` · `profile.{key}.name` | 프로필 · 테두리 / 대표 얼굴 / 칭호 · 장착 · 장착 중 · 능력치 변화 없음 · 꾸미기 전용 · 얻는 곳 · 이름 |
@@ -440,7 +445,7 @@ BuyAsync(productId)
 
 순서는 스킬 `fx-art-pipeline` 과 같다. **완성 화면 시안 → PD 선택 → 그 화풍으로 부품 → 반영 → 시안과 나란히 대조.**
 
-1. **시안**(완성 화면, 2026-10-15): 1차 ① 로비(패스 배지) ② 상점(옛 추천 탭) ③ 패스 보상 · 2차 ④ 조각 뽑기 탭 ⑤ 재화 탭 ⑥ 프로필 꾸미기. 바탕 = 지금 로비 캡처 · 기준 = HUD 3차 · 하단 바 화풍.
+1. **시안**(완성 화면, 2026-10-15): 로비(패스 배지) · 재화 탭 · 패스 보상 · 프로필 꾸미기 · **소환(A안 — 하단 바 4칸)**. 바탕 = 지금 로비 캡처 · 기준 = HUD 3차 · 하단 바 화풍.
    → 받음: 1차 `_exchange/in/mock_store_{lobby,shop,pass}.png` · 2차 `mock_store_{gacha,currency,profile}.png` · 모음 `_exchange/ref/store_mock/store_mocks_2nd.png`. 시안 속 패스 칸 내용 · 숫자는 예시다 — **보상 · 값은 표(`Store/*.tsv`)가 정답.** 산 계약 칸은 「구매 완료」 덮개 대신 「남은 n일 · 오늘 받기」만 보인다.
 2. 고른 시안을 앵커로 부품 발주(글자 없이 — 글자는 언어팩):
 
@@ -453,7 +458,8 @@ BuyAsync(productId)
 | 패스 띠(시즌 1) · 단계 줄 판(무료 · 프리미엄) · 자물쇠 · 받음 표시 · 프리미엄 표시 | 6 |
 | 미션 줄 판 · 미션 아이콘(빙의 · 상성 · 보스 · 상자 · 상점 · 강화 · 판 · 몸) | 9 |
 | 빨간 점 · 확인 팝업 판 · 보상 팝업 판 | 3 |
-| 조각 뽑기 — 제단 배경 · 뽑기 버튼 판 3 · 천장 막대 · 소환권 아이콘 · 결과 칸(×2 · ×5 · ×20 대박) · 결과 연출 그림 | 약 10 |
+| 하단 바 4칸 — 소환 칸 판(보라) · 소환 아이콘(유령 + 영혼 불꽃) · 네 칸에 맞춘 다른 칸 판 | 3 |
+| 소환 — 보라 제단 배경 · 뽑기 버튼 판 3 · 천장 막대 · 소환권 아이콘 · 결과 칸(×2 · ×5 · ×20 대박) · 결과 연출 그림 | 약 10 |
 | 프로필 — 테두리 3(기본 · 시즌 1 · 챕터 10) · 프로필 창 판 · 칭호 띠 | 5 |
 
 포맷: 도트 그림은 Sprite · Point · 밉맵 끔 → 인게임/로비 아틀라스(ASTC 4x4) · 만든 뒤 `resource_audit.py` 통과(`09_import_settings.md`).
@@ -487,7 +493,7 @@ BuyAsync(productId)
 | 2 | `StoreModule` · `IapModule`(가짜 스토어) · `IChestService.OpenImmediate` | 에디터에서 젬 상품 · 결제 상품(가짜) 전부 사서 지급 확인 · 제한(1회 · 하루 N · 7일 · 챕터) 확인 · 결제 중 앱 종료 → 다음 실행 지급 |
 | 3 | `PassModule` · `MissionModule` · `GachaModule` · `ProfileModule` · 새 이벤트 발행(인게임 2곳 · 육성 1곳) | 미션 13개 전부 실제 플레이로 오름 · 하루/주 경계(한국 00:00) 넘김 초기화 · 단계 받기 · 건너뛰기 · 프리미엄 · **뽑기 10만 회 모의 실행으로 표 확률과 실제 비율이 0.5%p 안 · 천장 · 10회 보장 확인** · 프로필 받기 · 장착 |
 | 4 | 시안 3컷 → PD 선택 → 부품 발주 | PD 가 고른 시안 파일 경로 |
-| 5 | 화면(`LobbyShopPanel` · `SeasonPassPanel` · 뽑기 팝업 셋 · `ProfilePopup` · 팝업 둘 · 로비 진입점) | 시안과 나란히 대조 시트 · 3언어 글자 점검 0 넘침 · 뒤로가기 순서 · 확률 창 숫자 = 표 |
+| 5 | 화면(`LobbyShopPanel` · `SummonPanel` · `SeasonPassPanel` · 뽑기 팝업 셋 · `ProfilePopup` · 팝업 둘 · 하단 바 4칸 · 로비 진입점) | 시안과 나란히 대조 시트 · 3언어 글자 점검 0 넘침(하단 바 「SUMMON」 포함) · 뒤로가기 순서 · 확률 창 숫자 = 표 |
 | 6 | 실제 스토어(구글 내부 테스트 · 애플 샌드박스) | 젬 묶음 하나 · 패스 · 계약 실결제 → 지급 · 아이폰 복원 |
 | 7 | 출시 전 확인(B-4-5) | 법무 회신 반영 |
 
@@ -521,18 +527,21 @@ public readonly struct GachaPull { public readonly string HostKey; public readon
 - 굴리기는 `System.Random`(시드 = 기기 시간) — 서버가 붙으면 서버에서 굴린다(TBD-SRV). 저장 조작은 막지 못한다.
 - 결과는 **값을 받은 뒤 · 저장한 뒤** 화면에 낸다(연출 도중 꺼져도 결과는 이미 들어가 있다).
 
-**화면 — 상점 「조각 뽑기」 탭 `GachaSection` + 팝업 셋**
+**화면 — `SummonPanel` (~Panel, 하단 바 SUMMON) + 팝업 셋** — 시안 `mock_summon_a.png`. 상점과 다른 **보라 · 검붉은 영혼 불꽃 제단** 판(상점은 남색 · 하늘 네온)
 
 | 요소 | 설명 |
 |---|---|
+| `SummonTitleText` | 「소환」 |
 | `GachaPickupBanner` > `PickupArt` · `PickupNameText` · `PickupNoteText` · `PickupTimeText` | 이번 주 픽업 몸 · 「A급이 나오면 50% 확률로 픽업」 · 남은 시간 |
+| `SummonAltar` | 제단 · 유령 · 영혼 불꽃(은은히 도는 장식 — 연출 규칙) |
 | `GachaFreeButton` | 오늘 무료 1회 — 썼으면 숨김 |
 | `GachaPull1Button` > `Pull1PriceText` · `GachaPull10Button` > `Pull10PriceText` · `Pull10NoteText` | 1회 · 10회(「A급 1회 보장」). 소환권이 있으면 소환권 값이 먼저 보인다 |
 | `GachaTicketText` | 보유 소환권 |
 | `GachaPityBar` > `GachaPityFill` · `GachaPityText` | 「대박까지 37 / 50」 |
 | `GachaRateButton` · `GachaHistoryButton` | 확률 보기 · 뽑기 기록 — **또렷하게**(법) |
 | `GachaResultPopup` (~Popup) | 결과 1칸 · 10칸(`ResultCell` 반복: `CellFace` · `CellAmountText` · `CellJackpotMark` · `CellPickupMark` · `CellEssenceText`) · `ResultAgainButton` · `ResultCloseButton` |
-| `GachaRatePopup` (~Popup) | 등급 % · 몸별 % 목록 · 조각 수 % · 천장 · 10회 보장 문구. 상자 탭 「확률 보기」도 이 창을 쓴다 |
+| `GachaRatePopup` (~Popup) | 등급 % · 몸별 % 목록 · 조각 수 % · 천장 · 10회 보장 문구. 상점 상자 탭 「확률 보기」도 같은 창 프리팹을 쓴다 |
+| `PopupParent` | — |
 | `GachaHistoryPopup` (~Popup) | 최근 100회(날짜 · 몸 · 조각 수) |
 
 연출은 짧게 — 영혼 불꽃이 칸에 내려앉고 얼굴이 뒤집혀 나온다. 대박 · 픽업만 힘준다(등급별 연출 레벨링 규칙). 연출 그림은 `fx-art-pipeline` 순서로.
@@ -562,4 +571,5 @@ public readonly struct GachaPull { public readonly string HostKey; public readon
 |---|---|---|
 | 0.1 | 2026-10-15 | 최초 작성 — 참고 게임 정리 · 상점 · 패스 · 미션 · 계약 · 결제 스펙 · 데이터 초안 5종 |
 | 0.2 | 2026-10-15 | PD 답 반영 — 광고 제외 · 값 1차 확정(한국 기준) · 한국 00:00 초기화(칸) · 큰 계약 편의 교체 · 외형 설계 · 젬 순서 칸 · 상자 검토(0-3) · 시안 4컷 발주 |
+| 0.4 | 2026-10-15 | PD 「가챠랑 일반 구매랑 구분돼야」 → A안: 하단 바 HOST · PLAY · SUMMON · SHOP · 소환 전용 `SummonPanel` · 상점 탭 셋(오늘 · 상자 · 재화) |
 | 0.3 | 2026-10-15 | PD 「조각 가챠 넣는다 · 판매는 패스 · 재화 · 상자 · 조각 뽑기 · 외형 판매는 추후, 프로필을 꾸미게」 — 조각 뽑기(B-11, `gacha.tsv`) · 탭 재구성(오늘 · 상자 · 조각 뽑기 · 재화) · 소환권 · 외형 → 프로필 꾸미기(B-9, `profile.tsv`) · 확률 공개 · 2차 시안 3컷 |

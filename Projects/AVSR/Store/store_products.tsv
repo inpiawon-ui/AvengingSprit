@@ -1,5 +1,5 @@
 # 로비 상점 상품 — Tools/Game/상점 표 임포트 → Assets/BundleResource/TableData/StoreTable.asset (주소 TableData/StoreTable)
-# tab: chest 상자 · currency 재화(계약 · 입문 · 챕터 돌파 · 젬 · 골드) · pass 패스 화면 전용 — 「오늘」 탭은 오늘의 상점, 「조각 뽑기」 탭은 gacha.tsv (PD 2026-10-15 판매 넷: 패스 · 재화 · 상자 · 조각 뽑기)
+# tab: chest 상자 · currency 재화(계약 · 입문 · 챕터 돌파 · 젬 · 골드) · pass 패스 화면 전용 — 「오늘」 탭은 오늘의 상점. 조각 뽑기는 상점이 아니라 하단 바 SUMMON 화면(gacha.tsv, PD 2026-10-15 A안)
 # kind: package · card · chest · gold · gem · pass
 # priceType: iap(결제, price=가격 등급) · gem(젬, price=젬 수) · free | limit: once · daily:N · weekly:N · season · none
 # show: always · days_since_install<=N · chapter_cleared>=N · season_active
