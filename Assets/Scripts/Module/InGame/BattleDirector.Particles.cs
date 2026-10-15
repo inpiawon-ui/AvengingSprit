@@ -50,7 +50,7 @@ namespace Game.Module.InGame
             (ParticleFxKind.Glow,   ParticleElement.Dust,  "ParticleFx/glow"),
             (ParticleFxKind.Smoke,  ParticleElement.Fire,  "ParticleFx/smoke"),
             (ParticleFxKind.Smoke,  ParticleElement.Dust,  "ParticleFx/smoke_dust"),
-            (ParticleFxKind.Smoke,  ParticleElement.Ice,   "ParticleFx/smoke_dust"),
+            (ParticleFxKind.Smoke,  ParticleElement.Ice,   "ParticleFx/smoke_white"),   // 흰 연기 — 미사일 꼬리(SR 2026-10-15)
             (ParticleFxKind.Smoke,  ParticleElement.Venom, "ParticleFx/smoke_dust"),
             (ParticleFxKind.Smoke,  ParticleElement.Curse, "ParticleFx/smoke_dust"),
             (ParticleFxKind.Shard,  ParticleElement.Ice,   "ParticleFx/shard"),

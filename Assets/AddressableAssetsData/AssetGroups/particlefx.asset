@@ -93,6 +93,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_particlefx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6944f38b3f0ca794687d0c19b6d1f54c
+    m_Address: ParticleFx/smoke_white
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_particlefx
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ea2dbdc0674e9d4fa97010eed0781e0
     m_Address: ParticleFx/smoke
     m_ReadOnly: 0

@@ -254,10 +254,11 @@ namespace Game.Module.InGame
         /// </summary>
         public void Spray(ParticleFxKind kind, Vector2 at, Vector2 dir, float halfConeDeg, int count,
                           float speedMin, float speedMax, Vector2 size, float life, Color color,
-                          float spread = 0f, float stagger = 0f)
+                          float spread = 0f, float stagger = 0f, ParticleElement element = ParticleElement.Fire)
         {
             if (count <= 0) return;
-            var ps = SystemOf(kind, ParticleElement.Fire);
+            // 원소는 그림(입자 텍스처)을 고른다 — 연기는 불 것이 주황이라, 흰 연기 꼬리는 흙먼지 것을 쓴다
+            var ps = SystemOf(kind, element);
             float baseRad = Mathf.Atan2(dir.y, dir.x);
             var p = new ParticleSystem.EmitParams { applyShapeToPosition = false, startColor = color };
             for (int i = 0; i < count; i++)

@@ -40,6 +40,7 @@ namespace Game.Module.InGame
             _rect.anchorMin = _rect.anchorMax = new Vector2(0f, 1f);
             _rect.pivot = new Vector2(0.5f, 0.5f);
             _rect.sizeDelta = size;
+            _baseSize = size;
             _image = GetComponent<Image>();
             if (_image == null) _image = gameObject.AddComponent<Image>();
             _image.sprite = sprite;
@@ -60,6 +61,22 @@ namespace Game.Module.InGame
             _image.enabled = sprite != null;
         }
 
+        /// <summary>쏘는 탄 그림(없으면 `pulse`). 닌자 분신은 표창을 던진다(SR 필살기 2026-10-15).</summary>
+        public string ShotKey { get; set; }
+
+        private Color _tint = Color.white;
+        private Vector2 _baseSize;
+
+        /// <summary>색 · 진하기 — 분신은 보라빛 반투명. `Spawn` 뒤에 부른다(Spawn 이 흰색으로 되돌린다).</summary>
+        public void SetTint(Color tint)
+        {
+            _tint = tint;
+            _image.color = tint;
+        }
+
+        /// <summary>그림 크기(px) — 필살기 포탑은 기본(56)보다 크게.</summary>
+        public void SetSize(Vector2 size) => _rect.sizeDelta = size;
+
         public void Spawn(Vector2 at, float seconds, float range, int damage, float fireInterval,
                           bool ghostly = false)
         {
@@ -72,7 +89,10 @@ namespace Game.Module.InGame
             FireInterval = fireInterval;
             // 놓자마자 한 발 나간다. 첫 발을 기다리게 하면 "설치했는데 아무 일도 없다" 가 된다.
             _fireTimer = 0f;
+            _tint = Color.white;
             _image.color = Color.white;
+            ShotKey = null;
+            _rect.sizeDelta = _baseSize;   // 풀에서 돌려 쓴다 — 지난번 필살기 포탑 크기가 남지 않게
             gameObject.SetActive(true);
         }
 
@@ -86,8 +106,8 @@ namespace Game.Module.InGame
             // 사라지기 전에 흐려진다 — 언제까지 믿고 있어도 되는지 보여야 한다
             if (_life < FadeSeconds)
             {
-                var c = _image.color;
-                c.a = _life / FadeSeconds;
+                var c = _tint;
+                c.a = _tint.a * _life / FadeSeconds;
                 _image.color = c;
             }
 

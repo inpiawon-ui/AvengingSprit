@@ -5632,7 +5632,8 @@ namespace Game.Module.InGame
                 var shot = RentShot();
                 if (shot == null) continue;
                 // `shot_pulse` 한 장짜리 이름은 없다 — 원작 그림은 shot_pulse_1..4 다.
-                shot.SetSprite(ShotFrames("pulse"), "pulse");
+                var shotKey = d.ShotKey ?? "pulse";
+                shot.SetSprite(ShotFrames(shotKey), shotKey);
                 shot.Fire(d.Position, target.Position, _config.ShotSpeedPlayer * _buffs.ShotSpeedMul, d.Damage,
                           fromPlayer: true, target, _config.ShotSize, ShotPlayerColor,
                           _config.ShotLifeSeconds,

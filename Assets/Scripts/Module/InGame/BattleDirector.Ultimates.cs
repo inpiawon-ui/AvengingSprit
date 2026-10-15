@@ -35,6 +35,7 @@ namespace Game.Module.InGame
             _vpOrbs.Clear();
             _golemUlt = null;
             _golemUltOn = false;
+            StopSrMissiles();
             _dgMount = _dgBreath = null;
             _vpFollowAura = null;
             _ultQueue.Clear();
@@ -65,6 +66,7 @@ namespace Game.Module.InGame
             }
             TickUltDash(dt);
             TickVpOrbs(dt);
+            TickSrMissiles(dt);
             TickSsrGolem(dt);
             if (_ultKind == null) return;
             var me = _host;
@@ -78,6 +80,7 @@ namespace Game.Module.InGame
                 case "amazon_elite": TickWrath(me, dt); break;
                 case "dragoon": TickDragonCharge(me, dt); TickSsrDragoon(me, dt); break;
                 case "gangster": TickContract(me); break;
+                case "hopper_smg": TickSrHopperSmg(me); break;
             }
         }
 
@@ -261,37 +264,6 @@ namespace Game.Module.InGame
             }
         }
 
-        // 닌자(사슬) — 사슬 돌격 연격: 사슬을 걸고 **내가 날아가** 연타 → 내리찍기(보스를 끌어오지 않는다)
-        private void UltNinjaChain(Unit me)
-        {
-            var t = UltStrongest(me.Position);
-            if (t == null) { UltFallback(me); return; }
-            UltBeam("chain", me.Position, t.Position, 40f, 0.06f);
-            var to = t.Position - (t.Position - me.Position).normalized * Meters(0.8f);
-            UltDashTo(me, to, 0.25f, new Color(1f, 0.6f, 0.85f, 1f), () =>
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    int n = i;
-                    UltAfter(n * 0.1f, () =>
-                    {
-                        if (t == null || !t.IsAlive) return;
-                        me.PlayAttack();
-                        UltHit(me, t, 1.6f, capBoss: true);
-                        PlayFx(n % 2 == 0 ? "rpslash" : "hxslash", t.Position, 130f, loop: false);
-                        HitStop(0.025f);
-                    });
-                }
-                UltAfter(0.6f, () =>
-                {
-                    var at = t != null && t.IsAlive ? t.Position : me.Position;
-                    UltAoe(me, at, 2f, 4f, "slam");
-                    Shake(10f);
-                    HitStop(0.1f);
-                });
-            });
-        }
-
         // ═══════════════════════════════════════════════════════════
         //  불러서 같이 싸운다
         // ═══════════════════════════════════════════════════════════
@@ -324,88 +296,9 @@ namespace Game.Module.InGame
             });
         }
 
-        // 로봇 — 포탑 군단: 포탑 셋이 둘레에 내려앉아 쏘고, 2.5초 뒤 미사일 8발 일제 사격
-        private void UltRobot(Unit me)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                float a = (i * 120f + 90f) * Mathf.Deg2Rad;
-                var at = ClampedInField(me, me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.6f) * Meters(1.6f));
-                SpawnDeployable(at, ghostly: false, seconds: 8f, range: Meters(8f), damage: UltDamage(me, 0.8f), fireInterval: 0.35f);
-                PlayFx("turret", at, 90f, loop: false);
-            }
-            UltAfter(2.5f, () =>
-            {
-                var list = UltTargets(me.Position, Meters(12f));
-                if (list.Count == 0) return;
-                for (int i = 0; i < 8; i++)
-                {
-                    var t = list[i % list.Count];
-                    float a = (-70f + i * 20f) * Mathf.Deg2Rad;
-                    var from = me.Position + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * Meters(0.8f);
-                    FireSkillMissile(me, from, t.Position, t, UltDamage(me, 2.2f), Meters(1.5f));
-                }
-                Shake(6f);
-            });
-        }
-
-        // 닌자 — 그림자 삼분신: 분신 셋이 6초 동안 같이 표창을 던진다
-        private void UltNinja(Unit me)
-        {
-            PlayFx("smoke", me.Position, Meters(2.5f), loop: false);
-            for (int i = 0; i < 3; i++)
-            {
-                float a = (i * 120f + 90f) * Mathf.Deg2Rad;
-                var at = ClampedInField(me, me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(1.4f));
-                SpawnClone(at, 6f, UltDamage(me, 0.8f), 0.3f);
-            }
-        }
-
         // ═══════════════════════════════════════════════════════════
         //  몸이 날아다닌다
         // ═══════════════════════════════════════════════════════════
-
-        // 호퍼(기관단총) — 돌진 난사: 가장 먼 적까지 돌파하며 지나는 길의 적을 쏘고, 도착하면 무적
-        private void UltHopperSmg(Unit me)
-        {
-            var list = UltTargets(me.Position, Meters(14f));
-            if (list.Count == 0) { UltFallback(me); return; }
-            var far = list[list.Count - 1];
-            var from = me.Position;
-            var to = far.Position - (far.Position - from).normalized * Meters(1f);
-            var dir = (to - from).normalized;
-            var side = new Vector2(-dir.y, dir.x);
-            // 지나는 길 1.2m 안의 적은 지나갈 때 맞는다
-            var path = new List<Unit>();
-            float len = Vector2.Distance(from, to);
-            for (int i = 0; i < list.Count; i++)
-            {
-                var d = list[i].Position - from;
-                float along = Vector2.Dot(d, dir);
-                if (along < 0f || along > len + Meters(1f)) continue;
-                if (Mathf.Abs(Vector2.Dot(d, side)) > Meters(1.2f)) continue;
-                path.Add(list[i]);
-            }
-            for (int i = 0; i < 6; i++)
-            {
-                UltAfter(i * 0.06f, () =>
-                {
-                    FireFan(me, me.Position + side * 600f, 1, 0f, UltDamage(me, 0.6f), fromPlayer: true);
-                    FireFan(me, me.Position - side * 600f, 1, 0f, UltDamage(me, 0.6f), fromPlayer: true);
-                });
-            }
-            UltDashTo(me, to, 0.35f, new Color(1f, 0.85f, 0.55f, 1f), () =>
-            {
-                for (int i = 0; i < path.Count; i++)
-                {
-                    UltHit(me, path[i], 3f);
-                    PlayFx("hit", path[i].Position, 90f, loop: false);
-                }
-                UltInvuln(1.2f);
-                PlayFx("guard", me.Position, Meters(1.4f), loop: false);
-                Shake(7f);
-            });
-        }
 
         // 드라군 — 용 돌격의 돌진 중 불길 · 길 위 피해(연출은 BattleDirector.UltSsr `SsrDragoon`)
         private Vector2 _dcDir;
@@ -505,51 +398,6 @@ namespace Game.Module.InGame
         // ═══════════════════════════════════════════════════════════
         //  쏟아붓는다
         // ═══════════════════════════════════════════════════════════
-
-        // 코만도(미사일) — 자폭 미사일 떼: 6기가 각자 다른 적을 쫓아 터진다
-        private void UltMissile(Unit me)
-        {
-            var list = UltTargets(me.Position, Meters(14f));
-            if (list.Count == 0) { UltFallback(me); return; }
-            for (int i = 0; i < 6; i++)
-            {
-                var t = list[i % list.Count];
-                float a = (-75f + i * 30f) * Mathf.Deg2Rad;
-                var from = me.Position + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * Meters(0.7f);
-                FireSkillMissile(me, from, from + (from - me.Position).normalized * Meters(3f), t,
-                                 UltDamage(me, 3.2f), Meters(1.6f));
-                PlayFx("missile_trail", from, 32f, loop: false);
-            }
-        }
-
-        // 코만도(레이저) — 충전 레이저: 0.5초 차지 → 일직선 관통 빔, 쏜 몸은 뒤로 밀린다
-        private void UltLaser(Unit me)
-        {
-            var t = NearestEnemy(me.Position);
-            var dir = t != null ? (t.Position - me.Position).normalized : me.Facing;
-            me.SetFacing(dir);
-            PlayFx("wfgather", me.MuzzlePosition, 140f, loop: false);
-            UltAfter(0.5f, () =>
-            {
-                var from = me.MuzzlePosition;
-                var to = from + dir * Meters(14f);
-                UltBeam("laser_wide", from, to, 110f, 0.05f);
-                var side = new Vector2(-dir.y, dir.x);
-                for (int i = 0; i < _enemies.Count; i++)
-                {
-                    var e = _enemies[i];
-                    if (!Targetable(e)) continue;
-                    var d = e.Position - from;
-                    float along = Vector2.Dot(d, dir);
-                    if (along < 0f || along > Meters(14f) || Mathf.Abs(Vector2.Dot(d, side)) > Meters(0.9f)) continue;
-                    UltHit(me, e, 6f);
-                    PlayFx("lzhit", e.Position, 100f, loop: false);
-                }
-                me.Position = ClampedInField(me, me.Position - dir * Meters(1f));
-                Shake(10f);
-                HitStop(0.1f);
-            });
-        }
 
         // 화이트 위저드 — 빛 구슬 일제 발사: 몸 둘레에서 8발이 각자 적을 쫓는다
         private void UltWizard(Unit me)

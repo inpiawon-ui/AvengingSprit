@@ -189,6 +189,20 @@ namespace Game.Module.InGame
             _isBeam = true;
         }
 
+        /// <summary>
+        /// 줄기(`PlayBeam`)의 양 끝만 옮긴다 — 프레임은 그대로 돈다. 돌진 자국처럼 늘어나는 줄기가 쓴다.
+        /// </summary>
+        public void Restretch(Vector2 from, Vector2 to)
+        {
+            if (!IsActive || !_isBeam) return;
+            var d = to - from;
+            float len = d.magnitude;
+            if (len < 1f) return;
+            _rect.anchoredPosition = (from + to) * 0.5f;
+            _rect.sizeDelta = new Vector2(len, _rect.sizeDelta.y);
+            _rect.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+        }
+
         /// <summary>줄기였던 자리를 되돌린다. 풀에서 돌려 쓰므로 반드시 필요하다.</summary>
         private bool _isBeam;
 
