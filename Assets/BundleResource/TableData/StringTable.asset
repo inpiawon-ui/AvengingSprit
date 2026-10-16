@@ -4594,3 +4594,851 @@ MonoBehaviour:
     _ko: "\uB85C\uBE44"
     _ja: "\u30ED\u30D3\u30FC"
     _en: Lobby
+  - _key: ui.growth6.rank
+    _ko: "\uC131\uAE09 {0}/10"
+    _ja: "\u30E9\u30F3\u30AF {0}/10"
+    _en: Rank {0}/10
+  - _key: ui.growth6.power
+    _ko: "\uC804\uD22C\uB825 <color=#5CFF7A>{0}</color>"
+    _ja: "\u6226\u95D8\u529B <color=#5CFF7A>{0}</color>"
+    _en: Power <color=#5CFF7A>{0}</color>
+  - _key: ui.growth6.summary
+    _ko: "{0}\uC131 \u2192 {1}\uC131  \xB7  \uCCB4\uB825\xB7\uACF5\uACA9 \xD71.07 
+      \xB7  \uC2A4\uD0AC Lv {0}\u2192<color=#5CFF7A>{1}</color>  \xB7  \uAC15\uD654
+      \uC0C1\uD55C {2}\u2192<color=#5CFF7A>{3}</color>"
+    _ja: "{0}\u2192{1}  \xB7  HP\xB7\u653B\u6483 \xD71.07  \xB7  \u30B9\u30AD\u30EBLv
+      {0}\u2192<color=#5CFF7A>{1}</color>  \xB7  \u5F37\u5316\u4E0A\u9650 {2}\u2192<color=#5CFF7A>{3}</color>"
+    _en: "{0}\u2605\u2192{1}\u2605  \xB7  HP/ATK \xD71.07  \xB7  Skill Lv {0}\u2192<color=#5CFF7A>{1}</color> 
+      \xB7  Cap {2}\u2192<color=#5CFF7A>{3}</color>"
+  - _key: ui.growth6.summary_max
+    _ko: "10\uC131 \u2014 \uCD5C\uB300 \uC131\uAE09"
+    _ja: "\u30E9\u30F3\u30AF10 \u2014 \u6700\u5927"
+    _en: "Rank 10 \u2014 Max"
+  - _key: ui.growth6.summary_unlock
+    _ko: "\uC870\uAC01\uC744 \uBAA8\uC544 \uD574\uAE08\uD558\uBA74 \uC2A4\uD0AC \xB7
+      \uB2A5\uB825\uCE58 \uAC15\uD654\uAC00 \uC5F4\uB9BD\uB2C8\uB2E4"
+    _ja: "\u304B\u3051\u3089\u3067\u89E3\u653E\u3059\u308B\u3068\u30B9\u30AD\u30EB\u30FB\u5F37\u5316\u304C\u958B\u304D\u307E\u3059"
+    _en: Unlock with shards to open skills & upgrades
+  - _key: ui.growth6.ult_tag
+    _ko: "SPECIAL \xB7 \uD544\uC0B4\uAE30"
+    _ja: "SPECIAL \xB7 \u5FC5\u6BBA\u6280"
+    _en: SPECIAL
+  - _key: ui.growth6.act_tag
+    _ko: "ACTIVE \xB7 \uC561\uD2F0\uBE0C"
+    _ja: "ACTIVE \xB7 \u30A2\u30AF\u30C6\u30A3\u30D6"
+    _en: ACTIVE
+  - _key: ui.growth6.pas_tag
+    _ko: "PASSIVE \xB7 \uD328\uC2DC\uBE0C"
+    _ja: "PASSIVE \xB7 \u30D1\u30C3\u30B7\u30D6"
+    _en: PASSIVE
+  - _key: ui.growth6.ult_cond
+    _ko: "\uBE59\uC758\uD560 \uB54C 1\uD68C"
+    _ja: "\u6191\u4F9D\u3054\u3068\u306B1\u56DE"
+    _en: Once per possession
+  - _key: ui.growth6.act_cond
+    _ko: "\uD3C9\uD0C0 30\uD0C0 \uCDA9\uC804"
+    _ja: "\u901A\u5E38\u653B\u648330\u56DE\u3067\u5145\u586B"
+    _en: Charges in 30 hits
+  - _key: ui.growth6.power_line
+    _ko: "\uD604\uC7AC \xD7{0} \u2192 {1}\uC131 \xD7<color=#5CFF7A>{2}</color>"
+    _ja: "\u73FE\u5728 \xD7{0} \u2192 \u30E9\u30F3\u30AF{1} \xD7<color=#5CFF7A>{2}</color>"
+    _en: "Now \xD7{0} \u2192 {1}\u2605 \xD7<color=#5CFF7A>{2}</color>"
+  - _key: ui.growth6.power_max
+    _ko: "\uC704\uB825 \xD7{0} (\uCD5C\uB300)"
+    _ja: "\u5A01\u529B \xD7{0}\uFF08\u6700\u5927\uFF09"
+    _en: "Power \xD7{0} (max)"
+  - _key: ui.growth6.pas_line
+    _ko: "{0} {1} \u2192 <color=#5CFF7A>{2}</color>"
+    _ja: "{0} {1} \u2192 <color=#5CFF7A>{2}</color>"
+    _en: "{0} {1} \u2192 <color=#5CFF7A>{2}</color>"
+  - _key: ui.growth6.pas_max
+    _ko: "{0} {1} (\uCD5C\uB300)"
+    _ja: "{0} {1}\uFF08\u6700\u5927\uFF09"
+    _en: '{0} {1} (max)'
+  - _key: ui.growth6.opt_locked
+    _ko: "{0}\uC131 \uAC01\uC131 \uC635\uC158 \xB7 \uC7A0\uAE40"
+    _ja: "\u30E9\u30F3\u30AF{0} \u899A\u9192\u30AA\u30D7\u30B7\u30E7\u30F3\u30FB\u30ED\u30C3\u30AF"
+    _en: "{0}\u2605 Awakening \xB7 Locked"
+  - _key: ui.growth6.opt_open
+    _ko: "{0}\uC131 \uAC01\uC131 \uC635\uC158"
+    _ja: "\u30E9\u30F3\u30AF{0} \u899A\u9192\u30AA\u30D7\u30B7\u30E7\u30F3"
+    _en: "{0}\u2605 Awakening"
+  - _key: ui.growth6.opt_max
+    _ko: "10\uC131 \uAC01\uC131 \uAC15\uD654 \xB7 \uD6A8\uACFC \xD72"
+    _ja: "\u30E9\u30F3\u30AF10 \u899A\u9192\u5F37\u5316\u30FB\u52B9\u679C\xD72"
+    _en: "10\u2605 Awakening \xB7 Effect \xD72"
+  - _key: ui.growth6.step
+    _ko: "{0}\uC131 \uBCF4\uC870\u2191"
+    _ja: "\u30E9\u30F3\u30AF{0} \u88DC\u52A9\u2191"
+    _en: "{0}\u2605 Bonus\u2191"
+  - _key: ui.growth6.cap
+    _ko: "{0}\uC131 \uAC15\uD654 \uC0C1\uD55C Lv {1}"
+    _ja: "\u30E9\u30F3\u30AF{0} \u5F37\u5316\u4E0A\u9650 Lv {1}"
+    _en: "{0}\u2605 Upgrade cap Lv {1}"
+  - _key: ui.growth6.row_lv
+    _ko: Lv <color=#FFD94A>{0}</color> / {1}
+    _ja: Lv <color=#FFD94A>{0}</color> / {1}
+    _en: Lv <color=#FFD94A>{0}</color> / {1}
+  - _key: ui.growth6.card_rank
+    _ko: "{0}\uC131"
+    _ja: '{0}'
+    _en: "{0}\u2605"
+  - _key: ui.growth6.win_rank
+    _ko: "{0}\uC131 \u2192 <color=#5CFF7A>{1}\uC131</color>"
+    _ja: "\u30E9\u30F3\u30AF{0} \u2192 <color=#5CFF7A>\u30E9\u30F3\u30AF{1}</color>"
+    _en: "{0}\u2605 \u2192 <color=#5CFF7A>{1}\u2605</color>"
+  - _key: ui.growth6.w.body
+    _ko: "\uBAB8 \uB2A5\uB825\uCE58"
+    _ja: "\u4F53\u306E\u80FD\u529B"
+    _en: Body stats
+  - _key: ui.growth6.w.body_val
+    _ko: "\uCCB4\uB825\xB7\uACF5\uACA9 \xD7<color=#5CFF7A>1.07</color>"
+    _ja: "HP\xB7\u653B\u6483 \xD7<color=#5CFF7A>1.07</color>"
+    _en: "HP/ATK \xD7<color=#5CFF7A>1.07</color>"
+  - _key: ui.growth6.w.skill_lv
+    _ko: "\uC2A4\uD0AC Lv"
+    _ja: "\u30B9\u30AD\u30EBLv"
+    _en: Skill Lv
+  - _key: ui.growth6.w.act
+    _ko: "\uC561\uD2F0\uBE0C \uC704\uB825"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6\u5A01\u529B"
+    _en: Active power
+  - _key: ui.growth6.w.act_step
+    _ko: "\uC561\uD2F0\uBE0C \uBCF4\uC870\uAC12"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6\u88DC\u52A9\u5024"
+    _en: Active bonus
+  - _key: ui.growth6.w.ult
+    _ko: "\uD544\uC0B4\uAE30 \uC704\uB825"
+    _ja: "\u5FC5\u6BBA\u6280\u5A01\u529B"
+    _en: Special power
+  - _key: ui.growth6.w.pas
+    _ko: "\uD328\uC2DC\uBE0C"
+    _ja: "\u30D1\u30C3\u30B7\u30D6"
+    _en: Passive
+  - _key: ui.growth6.w.opt
+    _ko: "6\uC131 \uAC01\uC131 \uC635\uC158"
+    _ja: "\u30E9\u30F3\u30AF6 \u899A\u9192\u30AA\u30D7\u30B7\u30E7\u30F3"
+    _en: "6\u2605 Awakening"
+  - _key: ui.growth6.w.opt_open
+    _ko: "<color=#5CFF7A>\uC5F4\uB9BC</color>"
+    _ja: "<color=#5CFF7A>\u89E3\u653E</color>"
+    _en: <color=#5CFF7A>Unlocked</color>
+  - _key: ui.growth6.w.opt_max
+    _ko: "10\uC131 \uAC01\uC131 \uAC15\uD654"
+    _ja: "\u30E9\u30F3\u30AF10 \u899A\u9192\u5F37\u5316"
+    _en: "10\u2605 Awakening"
+  - _key: ui.growth6.w.opt_double
+    _ko: "\uD6A8\uACFC <color=#5CFF7A>\xD72</color>"
+    _ja: "\u52B9\u679C <color=#5CFF7A>\xD72</color>"
+    _en: "Effect <color=#5CFF7A>\xD72</color>"
+  - _key: ui.growth6.w.cap
+    _ko: "\uB2A5\uB825\uCE58 \uAC15\uD654 \uC0C1\uD55C"
+    _ja: "\u80FD\u529B\u5F37\u5316\u4E0A\u9650"
+    _en: Upgrade cap
+  - _key: ui.growth6.next_mile
+    _ko: "\uB2E4\uC74C \uC774\uC815\uD45C  {0}\uC131: {1}"
+    _ja: "\u6B21\u306E\u7BC0\u76EE  \u30E9\u30F3\u30AF{0}: {1}"
+    _en: "Next milestone  {0}\u2605: {1}"
+  - _key: ui.growth6.mile_opt
+    _ko: "\uAC01\uC131 \uC635\uC158 \uC5F4\uB9BC"
+    _ja: "\u899A\u9192\u30AA\u30D7\u30B7\u30E7\u30F3\u89E3\u653E"
+    _en: Awakening unlocked
+  - _key: ui.growth6.mile_gold
+    _ko: "\uD070 \uAE08\uBCC4"
+    _ja: "\u5927\u304D\u306A\u91D1\u306E\u661F"
+    _en: Big gold star
+  - _key: ui.growth6.mile_max
+    _ko: "\uAC01\uC131 \uAC15\uD654 \xD72"
+    _ja: "\u899A\u9192\u5F37\u5316 \xD72"
+    _en: "Awakening \xD72"
+  - _key: ui.growth6.mile_step
+    _ko: "\uC561\uD2F0\uBE0C \uBCF4\uC870\u2191"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6\u88DC\u52A9\u2191"
+    _en: "Active bonus\u2191"
+  - _key: host.gangster.concept
+    _ko: "\uCCAD\uBD80 \uC800\uACA9\uC218 \u2014 \uBCF4\uC2A4 \uD0AC\uB7EC"
+    _ja: "\u8ACB\u8CA0\u72D9\u6483\u624B \u2014 \u30DC\u30B9\u30AD\u30E9\u30FC"
+    _en: "Hired sniper \u2014 boss killer"
+  - _key: ult.gangster.name
+    _ko: "\uCCAD\uBD80 \uCC98\uD615"
+    _ja: "\u8ACB\u8CA0\u51E6\u5211"
+    _en: Contract Kill
+  - _key: ult.gangster.desc
+    _ko: "\uAC00\uC7A5 \uCCB4\uB825\uC774 \uB192\uC740 \uC801(\uBCF4\uC2A4 \uD3EC\uD568)\uC744
+      1.5\uCD08 \uC870\uC900\uD55C \uB4A4 \uCD08\uB300\uD615 \uD55C \uBC1C. \uBCF4\uC2A4\uB294
+      \uCD5C\uB300 \uCCB4\uB825\uC758 % \uD53C\uD574."
+    _ja: "\u6700\u3082\u4F53\u529B\u306E\u9AD8\u3044\u6575\uFF08\u30DC\u30B9\u542B\u3080\uFF09\u30921.5\u79D2\u72D9\u3044\u3001\u8D85\u7279\u5927\u306E\u4E00\u767A\u3092\u653E\u3064\u3002\u30DC\u30B9\u306B\u306F\u6700\u5927\u4F53\u529B\u306E\u5272\u5408\u30C0\u30E1\u30FC\u30B8\u3002"
+    _en: Aim 1.5s at the highest-HP enemy (bosses too), then fire one huge shot.
+      Deals % max HP damage to bosses.
+  - _key: ult.gangster.short
+    _ko: "\uAC00\uC7A5 \uAC15\uD55C \uC801\uC5D0\uAC8C \uCD08\uB300\uD615 \uD55C
+      \uBC1C"
+    _ja: "\u6700\u5F37\u306E\u6575\u306B\u8D85\u7279\u5927\u306E\u4E00\u767A"
+    _en: Huge shot at the toughest foe
+  - _key: askill.gangster.short
+    _ko: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C \uD45C\uC2DD"
+    _ja: "\u90E8\u5C4B\u306E\u5168\u3066\u306E\u6575\u306B\u30DE\u30FC\u30AD\u30F3\u30B0"
+    _en: Mark every enemy in the room
+  - _key: pskill.gangster.short
+    _ko: "\uD45C\uC2DD \uBD99\uC740 \uC801\uC744 \uD655\uB960\uB85C \uC989\uC0AC"
+    _ja: "\u30DE\u30FC\u30AD\u30F3\u30B0\u4E2D\u306E\u6575\u3092\u78BA\u7387\u3067\u5373\u6B7B"
+    _en: Chance to execute marked foes
+  - _key: askill.gangster.opt
+    _ko: "\uD45C\uC2DD \uBD99\uC740 \uC801\uC774 \uBC1B\uB294 \uD53C\uD574 +15%"
+    _ja: "\u30DE\u30FC\u30AD\u30F3\u30B0\u4E2D\u306E\u6575\u306E\u88AB\u30C0\u30E1\u30FC\u30B8+15%"
+    _en: Marked enemies take +15% damage
+  - _key: host.hopper.concept
+    _ko: "\uAE09\uC18C \uC0AC\uB0E5\uAFBC \u2014 \uC5EC\uB7FF\uC5D0\uAC8C \uCE58\uBA85"
+    _ja: "\u6025\u6240\u30CF\u30F3\u30BF\u30FC \u2014 \u591A\u6570\u306B\u81F4\u547D"
+    _en: "Vital hunter \u2014 mass crits"
+  - _key: ult.hopper.name
+    _ko: "\uD0AC \uD3EC\uC778\uD2B8"
+    _ja: "\u30AD\u30EB\u30DD\u30A4\u30F3\u30C8"
+    _en: Kill Point
+  - _key: ult.hopper.desc
+    _ko: "\uCE7C\uB0A0\uB85C \uC55E\uC758 \uC801\uB4E4\uC744 \uBB36\uACE0, \uBB36\uC778
+      \uC801 \uC804\uC6D0\uC5D0\uAC8C \uCE58\uBA85 \uD655\uC815."
+    _ja: "\u5203\u3067\u524D\u65B9\u306E\u6575\u3092\u307E\u3068\u3081\u3066\u62D8\u675F\u3057\u3001\u62D8\u675F\u3057\u305F\u6575\u5168\u54E1\u306B\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u78BA\u5B9A\u3002"
+    _en: Bind the enemies ahead with blades. Every bound enemy takes a guaranteed
+      crit.
+  - _key: ult.hopper.short
+    _ko: "\uC55E\uC758 \uC801\uC744 \uBB36\uACE0 \uCE58\uBA85 \uD655\uC815"
+    _ja: "\u524D\u65B9\u306E\u6575\u3092\u62D8\u675F\u3057\u78BA\u5B9A\u30AF\u30EA"
+    _en: Bind foes, guaranteed crits
+  - _key: askill.hopper.short
+    _ko: "5\uCD08\uAC04 \uCE58\uBA85\uD0C0 \uD655\uB960 90%"
+    _ja: "5\u79D2\u9593\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u738790%"
+    _en: Crit chance 90% for 5s
+  - _key: pskill.hopper.short
+    _ko: "\uCE58\uBA85\uD0C0 \uD53C\uD574 +30%"
+    _ja: "\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u30C0\u30E1\u30FC\u30B8+30%"
+    _en: Crit damage +30%
+  - _key: askill.hopper.opt
+    _ko: "\uCE58\uBA85\uD0C0\uB97C \uB9DE\uD790 \uB54C\uB9C8\uB2E4 \uC815\uC870\uC900
+      +0.3\uCD08 (\uCD5C\uB300 +2\uCD08)"
+    _ja: "\u30AF\u30EA\u30C6\u30A3\u30AB\u30EB\u547D\u4E2D\u3054\u3068\u306B\u7CBE\u5BC6\u7167\u6E96+0.3\u79D2\uFF08\u6700\u5927+2\u79D2\uFF09"
+    _en: Each crit extends Dead Aim by 0.3s (max +2s)
+  - _key: host.ninja_chain.concept
+    _ko: "\uC0AC\uC2AC \uC0AC\uB0E5\uAFBC \u2014 \uC0AC\uC2AC\uC744 \uAC78\uACE0
+      \uB0B4\uAC00 \uB0A0\uC544\uAC04\uB2E4"
+    _ja: "\u9396\u306E\u72E9\u4EBA \u2014 \u9396\u3067\u6575\u3078\u98DB\u3076"
+    _en: "Chain hunter \u2014 hook and fly"
+  - _key: ult.ninja_chain.name
+    _ko: "\uC0AC\uC2AC \uB3CC\uACA9 \uC5F0\uACA9"
+    _ja: "\u9396\u7A81\u6483\u9023\u6483"
+    _en: Chain Rush Combo
+  - _key: ult.ninja_chain.desc
+    _ko: "\uAC00\uC7A5 \uAC15\uD55C \uC801\uC5D0\uAC8C \uC0AC\uC2AC\uC744 \uAC78\uACE0
+      \uB0B4\uAC00 \uB0A0\uC544\uAC00 \uC5F0\uD0C0 \uB4A4 \uB0B4\uB824\uCC0D\uB294\uB2E4(\uBCF4\uC2A4\uB97C
+      \uB04C\uC5B4\uC624\uC9C0 \uC54A\uB294\uB2E4)."
+    _ja: "\u6700\u3082\u5F37\u3044\u6575\u306B\u9396\u3092\u304B\u3051\u3066\u81EA\u3089\u98DB\u3073\u8FBC\u307F\u3001\u9023\u6253\u306E\u3042\u3068\u53E9\u304D\u3064\u3051\u308B\uFF08\u30DC\u30B9\u306F\u5F15\u304D\u5BC4\u305B\u306A\u3044\uFF09\u3002"
+    _en: Hook the strongest foe with a chain, fly to it, strike repeatedly, then
+      slam down (bosses are not pulled).
+  - _key: ult.ninja_chain.short
+    _ko: "\uAC15\uD55C \uC801\uC5D0\uAC8C \uB0A0\uC544\uAC00 \uC5F0\uD0C0"
+    _ja: "\u5F37\u6575\u3078\u98DB\u3073\u8FBC\u3093\u3067\u9023\u6483"
+    _en: Fly to the strongest foe, combo
+  - _key: askill.ninja_chain.short
+    _ko: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801 5\uCD08 \uACB0\uBC15"
+    _ja: "\u90E8\u5C4B\u306E\u5168\u3066\u306E\u6575\u30925\u79D2\u62D8\u675F"
+    _en: Bind every enemy for 5s
+  - _key: pskill.ninja_chain.short
+    _ko: "10% \uB85C \uD53C\uD574\uB97C \uD758\uB9B0\uB2E4"
+    _ja: "10%\u3067\u30C0\u30E1\u30FC\u30B8\u3092\u53D7\u3051\u6D41\u3059"
+    _en: 10% chance to negate damage
+  - _key: askill.ninja_chain.opt
+    _ko: "\uBB36\uC784\uC774 \uD480\uB9B4 \uB54C \uC0AC\uC2AC\uC774 \uB04A\uAE30\uBA70
+      \uB458\uB808 \uD53C\uD574"
+    _ja: "\u62D8\u675F\u304C\u89E3\u3051\u308B\u6642\u3001\u9396\u304C\u5F3E\u3051\u3066\u5468\u56F2\u306B\u30C0\u30E1\u30FC\u30B8"
+    _en: Chains snap on release, damaging nearby foes
+  - _key: host.medium.concept
+    _ko: "\uAC15\uB839\uC220\uC0AC \u2014 \uD63C\uACFC \uD568\uAED8 \uC2F8\uC6B4\uB2E4"
+    _ja: "\u964D\u970A\u8853\u5E2B \u2014 \u970A\u3068\u5171\u306B\u6226\u3046"
+    _en: "Necromancer \u2014 spirit allies"
+  - _key: ult.medium.name
+    _ko: "\uACE8\uB818 \uAC15\uB839"
+    _ja: "\u30B4\u30FC\u30EC\u30E0\u964D\u970A"
+    _en: Golem Summoning
+  - _key: ult.medium.desc
+    _ko: "\uAC70\uB300 \uACE8\uB818\uC744 \uBD88\uB7EC 8\uCD08\uAC04 \uAC19\uC774
+      \uC2F8\uC6B4\uB2E4 \u2014 \uB0B4\uB9AC\uCC0D\uAE30\uB85C \uB458\uB808\uB97C
+      \uBD80\uC218\uACE0 \uC601\uB9E4 \uC55E\uC744 \uB9C9\uB294\uB2E4."
+    _ja: "\u5DE8\u5927\u30B4\u30FC\u30EC\u30E0\u3092\u547C\u3073\u51FA\u30578\u79D2\u9593\u5171\u306B\u6226\u3046\u3002\u53E9\u304D\u3064\u3051\u3067\u5468\u56F2\u3092\u7815\u304D\u3001\u970A\u5A92\u5E2B\u306E\u524D\u306B\u7ACB\u3061\u306F\u3060\u304B\u308B\u3002"
+    _en: Summon a giant golem that fights for 8s, crushing nearby foes with slams
+      and guarding you.
+  - _key: ult.medium.short
+    _ko: "\uAC70\uB300 \uACE8\uB818\uACFC 8\uCD08\uAC04 \uD568\uAED8 \uC2F8\uC6C0"
+    _ja: "\u5DE8\u5927\u30B4\u30FC\u30EC\u30E0\u30688\u79D2\u5171\u95D8"
+    _en: Giant golem fights for 8s
+  - _key: askill.medium.short
+    _ko: "\uD574\uACE8 2\uAE30\uB97C \uBD88\uB7EC \uD568\uAED8 \uC2F8\uC6C0"
+    _ja: "\u9AB8\u9AA82\u4F53\u3092\u547C\u3093\u3067\u5171\u306B\u6226\u3046"
+    _en: Summon 2 skeletons
+  - _key: pskill.medium.short
+    _ko: "\uCC98\uCE58 \uC2DC 30% \uB85C \uD574\uACE8 \uC18C\uD658"
+    _ja: "\u6483\u7834\u664230%\u3067\u9AB8\u9AA8\u304C\u8D77\u304D\u4E0A\u304C\u308B"
+    _en: 30% to raise a skeleton on kill
+  - _key: askill.medium.opt
+    _ko: "\uD574\uACE8 +1\uAE30 (3\uAE30)"
+    _ja: "\u9AB8\u9AA8+1\u4F53\uFF083\u4F53\uFF09"
+    _en: +1 skeleton (3 total)
+  - _key: host.death.concept
+    _ko: "\uC8FD\uC74C\uC758 \uAD70\uC8FC"
+    _ja: "\u6B7B\u306E\u541B\u4E3B"
+    _en: Lord of Death
+  - _key: ult.death.name
+    _ko: "\uB9DD\uC790 \uAD70\uB2E8"
+    _ja: "\u4EA1\u8005\u306E\u8ECD\u52E2"
+    _en: Legion of the Dead
+  - _key: ult.death.desc
+    _ko: "\uD574\uACE8 \xB7 \uC720\uB839 \uAD70\uB2E8\uC744 \uBD88\uB7EC \uB3CC\uACA9\uC2DC\uD0A4\uACE0,
+      \uAD70\uB2E8\uC774 \uC0AC\uB77C\uC9C8 \uB54C \uD63C\uBD88\uB85C \uD130\uC9C4\uB2E4."
+    _ja: "\u9AB8\u9AA8\u3068\u5E7D\u970A\u306E\u8ECD\u52E2\u3092\u547C\u3093\u3067\u7A81\u6483\u3055\u305B\u3001\u8ECD\u52E2\u304C\u6D88\u3048\u308B\u6642\u306B\u9B3C\u706B\u3068\u306A\u3063\u3066\u7206\u767A\u3059\u308B\u3002"
+    _en: Summon a legion of skeletons and ghosts to charge. They burst into soul
+      fire as they vanish.
+  - _key: ult.death.short
+    _ko: "\uD574\uACE8 \uAD70\uB2E8 \uB3CC\uACA9 \uB4A4 \uD63C\uBD88 \uD3ED\uBC1C"
+    _ja: "\u8ECD\u52E2\u304C\u7A81\u6483\u3057\u9B3C\u706B\u3067\u7206\u767A"
+    _en: Undead legion charge & burst
+  - _key: askill.death.short
+    _ko: "3\uCD08\uAC04 \uB54C\uB9AC\uB294 \uC801\uC744 \uC989\uC0AC"
+    _ja: "3\u79D2\u9593\u3001\u653B\u6483\u3057\u305F\u6575\u3092\u5373\u6B7B"
+    _en: Enemies you hit die for 3s
+  - _key: pskill.death.short
+    _ko: "\uCC98\uCE58\uD55C \uC790\uB9AC\uC5D0 \uD574\uACE8\uC774 \uC120\uB2E4"
+    _ja: "\u5012\u3057\u305F\u5834\u6240\u306B\u9AB8\u9AA8\u304C\u8D77\u304D\u4E0A\u304C\u308B"
+    _en: Kills raise skeletons
+  - _key: askill.death.opt
+    _ko: "\uC989\uC0AC\uC2DC\uD0A8 \uC801 \uD558\uB098\uB9C8\uB2E4 \uC2DC\uAC04 +0.3\uCD08"
+    _ja: "\u5373\u6B7B\u3055\u305B\u305F\u65751\u4F53\u3054\u3068\u306B\u6642\u9593+0.3\u79D2"
+    _en: +0.3s for each enemy slain
+  - _key: host.robot.concept
+    _ko: "\uD3EC\uD0D1 \uAE30\uC220\uC790"
+    _ja: "\u7832\u53F0\u6280\u5E2B"
+    _en: Turret engineer
+  - _key: ult.robot.name
+    _ko: "\uD3EC\uD0D1 \uAD70\uB2E8"
+    _ja: "\u7832\u53F0\u8ECD\u56E3"
+    _en: Turret Legion
+  - _key: ult.robot.desc
+    _ko: "\uD3EC\uD0D1 3\uB300 + \uB300\uD615 \uBBF8\uC0AC\uC77C \uD3EC\uD0D1 1\uB300\uB97C
+      \uBD88\uB7EC \uAD50\uCC28 \uC0AC\uACA9, \uB9C8\uC9C0\uB9C9\uC5D0 \uBBF8\uC0AC\uC77C
+      \uC77C\uC81C \uC0AC\uACA9."
+    _ja: "\u7832\u53F03\u57FA\uFF0B\u5927\u578B\u30DF\u30B5\u30A4\u30EB\u7832\u53F01\u57FA\u3092\u547C\u3093\u3067\u5341\u5B57\u7832\u706B\u3001\u6700\u5F8C\u306B\u30DF\u30B5\u30A4\u30EB\u4E00\u6589\u5C04\u6483\u3002"
+    _en: Call 3 turrets and 1 big missile turret for crossfire, ending in a missile
+      salvo.
+  - _key: ult.robot.short
+    _ko: "\uD3EC\uD0D1 4\uB300 \uAD50\uCC28 \uC0AC\uACA9 + \uBBF8\uC0AC\uC77C"
+    _ja: "\u7832\u53F04\u57FA\u306E\u5341\u5B57\u7832\u706B"
+    _en: 4 turrets crossfire + missiles
+  - _key: askill.robot.short
+    _ko: "10\uCD08\uAC04 \uC790\uB3D9 \uD3EC\uD0D1 \uC124\uCE58"
+    _ja: "10\u79D2\u9593\u3001\u81EA\u52D5\u7832\u53F0\u3092\u8A2D\u7F6E"
+    _en: Deploy an auto-turret for 10s
+  - _key: pskill.robot.short
+    _ko: "\uD3C9\uD0C0 2% \uB85C \uCFE8 1\uCD08 \uB2E8\uCD95"
+    _ja: "\u901A\u5E38\u653B\u64832%\u3067\u30AF\u30FC\u30EB1\u79D2\u77ED\u7E2E"
+    _en: "2% on hit: cooldown \u22121s"
+  - _key: askill.robot.opt
+    _ko: "\uD3EC\uD0D1 +1\uB300 (2\uB300)"
+    _ja: "\u7832\u53F0+1\u57FA\uFF082\u57FA\uFF09"
+    _en: +1 turret (2 total)
+  - _key: host.ninja.concept
+    _ko: "\uBD84\uC2E0\uC220\uC0AC \u2014 \uC18D\uC774\uACE0 \uD611\uACF5"
+    _ja: "\u5206\u8EAB\u8853\u5E2B \u2014 \u6B3A\u3044\u3066\u631F\u6483"
+    _en: "Clone master \u2014 trick & flank"
+  - _key: ult.ninja.name
+    _ko: "\uADF8\uB9BC\uC790 \uC0BC\uBD84\uC2E0"
+    _ja: "\u5F71\u4E09\u5206\u8EAB"
+    _en: Triple Shadow
+  - _key: ult.ninja.desc
+    _ko: "\uBD84\uC2E0 \uC14B\uC744 \uBD88\uB7EC 6\uCD08\uAC04 \uAC19\uC774 \uACF5\uACA9\uD55C\uB2E4
+      \u2014 \uB2CC\uC790\uAC00 \uB358\uC9C8 \uB54C \uC14B\uB3C4 \uAC19\uC774 \uB358\uC9C4\uB2E4."
+    _ja: "\u5206\u8EAB\u30923\u4F53\u547C\u3073\u51FA\u30576\u79D2\u9593\u5171\u306B\u653B\u6483\u3059\u308B\u3002\u5FCD\u8005\u304C\u6295\u3052\u308B\u30683\u4F53\u3082\u540C\u6642\u306B\u6295\u3052\u308B\u3002"
+    _en: Summon 3 clones that attack with you for 6s, throwing whenever you throw.
+  - _key: ult.ninja.short
+    _ko: "\uBD84\uC2E0 \uC14B\uC774 6\uCD08\uAC04 \uD568\uAED8 \uACF5\uACA9"
+    _ja: "\u5206\u8EAB3\u4F53\u304C6\u79D2\u5171\u306B\u653B\u6483"
+    _en: 3 clones attack with you for 6s
+  - _key: askill.ninja.short
+    _ko: "\uBD84\uC2E0\uC73C\uB85C 5\uCD08\uAC04 \uC801\uC744 \uC720\uC778"
+    _ja: "\u5206\u8EAB\u30675\u79D2\u9593\u6575\u3092\u5F15\u304D\u3064\u3051\u308B"
+    _en: Clone draws all aggro for 5s
+  - _key: pskill.ninja.short
+    _ko: "\uCC98\uCE58 \uC2DC \uC774\uB3D9\uC18D\uB3C4 +30%"
+    _ja: "\u6483\u7834\u6642\u3001\u79FB\u52D5\u901F\u5EA6+30%"
+    _en: On kill, Speed +30%
+  - _key: askill.ninja.opt
+    _ko: "\uBD84\uC2E0\uC774 \uC0AC\uB77C\uC9C8 \uB54C \uC5F0\uB9C9 \uD3ED\uBC1C
+      \u2014 \uB458\uB808 \uC801 \uB454\uD654"
+    _ja: "\u5206\u8EAB\u304C\u6D88\u3048\u308B\u6642\u306B\u7159\u5E55\u304C\u7206\u767A\u3057\u3001\u5468\u56F2\u306E\u6575\u3092\u920D\u8DB3"
+    _en: Clone vanishes in a smoke blast, slowing foes
+  - _key: host.amazon.concept
+    _ko: "\uBC88\uAC1C \uB3CC\uACA9\uC218"
+    _ja: "\u7A32\u59BB\u306E\u7A81\u6483\u624B"
+    _en: Lightning striker
+  - _key: ult.amazon.name
+    _ko: "\uBC88\uAC1C \uBB34\uD76C"
+    _ja: "\u7A32\u59BB\u306E\u821E\u59EB"
+    _en: Lightning Dancer
+  - _key: ult.amazon.desc
+    _ko: "\uC801 \uC0AC\uC774\uB97C \uC794\uC0C1\uC73C\uB85C \uC62E\uACA8 \uB2E4\uB2C8\uBA70
+      \uCE58\uACE0 \uB0B4\uB824\uCC0D\uAE30, \uC2DC\uC804 \uC911 \uBB34\uC801."
+    _ja: "\u6B8B\u50CF\u3092\u6B8B\u3057\u3066\u6575\u306E\u9593\u3092\u99C6\u3051\u5DE1\u308A\u3001\u65AC\u308A\u3064\u3051\u3066\u53E9\u304D\u3064\u3051\u308B\u3002\u767A\u52D5\u4E2D\u306F\u7121\u6575\u3002"
+    _en: Dart between foes in afterimages, striking and slamming. Invincible while
+      casting.
+  - _key: ult.amazon.short
+    _ko: "\uC801 \uC0AC\uC774\uB97C \uB204\uBE44\uBA70 \uBB34\uC801 \uC5F0\uACA9"
+    _ja: "\u6575\u306E\u9593\u3092\u99C6\u3051\u308B\u7121\u6575\u9023\u6483"
+    _en: Invincible dash-strike combo
+  - _key: askill.amazon.short
+    _ko: "\uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C \uB3C4\uC57D \uAC15\uD0C0"
+    _ja: "\u8FD1\u304F\u306E\u6575\u3078\u8DF3\u8E8D\u5F37\u6253"
+    _en: Leap smash the nearest foe
+  - _key: pskill.amazon.short
+    _ko: "\uC274\uB4DC\uAC00 \uCC30\uC218\uB85D \uBE68\uB77C\uC9C4\uB2E4"
+    _ja: "\u30B7\u30FC\u30EB\u30C9\u304C\u591A\u3044\u307B\u3069\u901F\u304F\u306A\u308B"
+    _en: Faster as Shield fills
+  - _key: askill.amazon.opt
+    _ko: "\uCC29\uC9C0 \uB458\uB808 \uC801 0.5\uCD08 \uAE30\uC808"
+    _ja: "\u7740\u5730\u70B9\u5468\u56F2\u306E\u6575\u30920.5\u79D2\u6C17\u7D76"
+    _en: Stun foes near the landing for 0.5s
+  - _key: host.hopper_smg.concept
+    _ko: "\uB3CC\uD30C \uD2B9\uACF5"
+    _ja: "\u7A81\u7834\u7279\u653B"
+    _en: Breakthrough raider
+  - _key: ult.hopper_smg.name
+    _ko: "\uB3CC\uC9C4 \uB09C\uC0AC"
+    _ja: "\u7A81\u9032\u4E71\u5C04"
+    _en: Rush Fire
+  - _key: ult.hopper_smg.desc
+    _ko: "\uAC00\uC7A5 \uBA3C \uC801\uAE4C\uC9C0 \uC77C\uC9C1\uC120 \uB3CC\uC9C4\uD558\uBA70
+      \uC591\uC606 \uB09C\uC0AC, \uB3C4\uCC29\uD558\uBA74 \uBB34\uC801."
+    _ja: "\u6700\u3082\u9060\u3044\u6575\u307E\u3067\u4E00\u76F4\u7DDA\u306B\u7A81\u9032\u3057\u306A\u304C\u3089\u5DE6\u53F3\u306B\u4E71\u5C04\u3002\u5230\u7740\u3059\u308B\u3068\u7121\u6575\u3002"
+    _en: Charge straight to the farthest foe, spraying both sides. Invincible on
+      arrival.
+  - _key: ult.hopper_smg.short
+    _ko: "\uBA3C \uC801\uAE4C\uC9C0 \uB3CC\uC9C4\uD558\uBA70 \uB09C\uC0AC"
+    _ja: "\u9060\u3044\u6575\u307E\u3067\u7A81\u9032\u4E71\u5C04"
+    _en: Charge and spray to far foes
+  - _key: askill.hopper_smg.short
+    _ko: "\uB4A4\uB85C \uB6F0\uBA70 \uC55E\uC73C\uB85C \uC5F0\uC0AC"
+    _ja: "\u5F8C\u308D\u306B\u8DF3\u3073\u3064\u3064\u524D\u65B9\u3078\u9023\u5C04"
+    _en: Leap back while firing ahead
+  - _key: pskill.hopper_smg.short
+    _ko: "10% \uB85C \uB9DE\uC740 \uC801\uC744 \uBC00\uC5B4\uB0C4"
+    _ja: "10%\u3067\u6575\u3092\u62BC\u3057\u8FD4\u3059"
+    _en: 10% chance to knock back
+  - _key: askill.hopper_smg.opt
+    _ko: "\uCC29\uC9C0 \uB4A4 1\uCD08\uAC04 \uACF5\uACA9 \uC18D\uB3C4 +50%"
+    _ja: "\u7740\u5730\u5F8C1\u79D2\u9593\u3001\u653B\u6483\u901F\u5EA6+50%"
+    _en: Attack speed +50% for 1s after landing
+  - _key: host.vampire.concept
+    _ko: "\uD53C\uC758 \uAD70\uC8FC \u2014 \uAE4E\uC774\uBA70 \uD3ED\uC8FC"
+    _ja: "\u8840\u306E\u541B\u4E3B \u2014 \u8EAB\u3092\u524A\u308A\u66B4\u8D70"
+    _en: "Blood lord \u2014 reckless frenzy"
+  - _key: ult.vampire.name
+    _ko: "\uD53C\uC758 \uD3ED\uC8FC"
+    _ja: "\u8840\u306E\u66B4\u8D70"
+    _en: Blood Frenzy
+  - _key: ult.vampire.desc
+    _ko: "5\uCD08\uAC04 \uCCB4\uB825\uC744 \uB0B4\uC8FC\uACE0 \uD3ED\uC8FC, \uCC98\uCE58\uD558\uBA74
+      \uD53C \uAD6C\uC2AC\uB85C \uD68C\uBCF5."
+    _ja: "5\u79D2\u9593\u3001\u4F53\u529B\u3092\u4EE3\u511F\u306B\u66B4\u8D70\u3059\u308B\u3002\u6575\u3092\u5012\u3059\u3068\u8840\u306E\u7389\u3067\u56DE\u5FA9\u3002"
+    _en: Sacrifice HP to go berserk for 5s. Kills drop blood orbs that heal you.
+  - _key: ult.vampire.short
+    _ko: "\uCCB4\uB825\uC744 \uB0B4\uC8FC\uACE0 5\uCD08 \uD3ED\uC8FC"
+    _ja: "\u4F53\u529B\u3092\u524A\u3063\u30665\u79D2\u66B4\u8D70"
+    _en: Trade HP for a 5s frenzy
+  - _key: askill.vampire.short
+    _ko: "\uB458\uB808 \uC801 \uC218\uB9CC\uD07C \uCCB4\uB825 \uD68C\uBCF5"
+    _ja: "\u5468\u56F2\u306E\u6575\u306E\u6570\u3060\u3051\u56DE\u5FA9"
+    _en: Heal per nearby enemy
+  - _key: pskill.vampire.short
+    _ko: "8% \uB85C \uACF5\uACA9\uB825 5% \uD68C\uBCF5"
+    _ja: "8%\u3067\u653B\u6483\u529B\u306E5%\u56DE\u5FA9"
+    _en: 8% chance to heal on hit
+  - _key: askill.vampire.opt
+    _ko: "\uB118\uCE5C \uD68C\uBCF5\uB7C9\uB9CC\uD07C \uC274\uB4DC"
+    _ja: "\u56DE\u5FA9\u3057\u3059\u304E\u305F\u5206\u3092\u30B7\u30FC\u30EB\u30C9\u306B"
+    _en: Overheal becomes Shield
+  - _key: host.dragoon.concept
+    _ko: "\uC6A9\uAE30\uBCD1 \u2014 \uD0C8\uAC83"
+    _ja: "\u7ADC\u9A0E\u5175 \u2014 \u9A0E\u4E57"
+    _en: "Dragoon \u2014 dragon rider"
+  - _key: ult.dragoon.name
+    _ko: "\uC6A9 \uB3CC\uACA9"
+    _ja: "\u7ADC\u7A81\u6483"
+    _en: Dragon Charge
+  - _key: ult.dragoon.desc
+    _ko: "\uBD88\uC744 \uBFDC\uB294 \uC6A9\uC744 \uD0C0\uACE0 3\uCD08\uAC04 \uB3CC\uC9C4."
+    _ja: "\u706B\u3092\u5410\u304F\u7ADC\u306B\u4E57\u3063\u30663\u79D2\u9593\u7A81\u9032\u3002"
+    _en: Ride a fire-breathing dragon on a 3s charge.
+  - _key: ult.dragoon.short
+    _ko: "\uBD88 \uBFDC\uB294 \uC6A9\uC744 \uD0C0\uACE0 3\uCD08 \uB3CC\uC9C4"
+    _ja: "\u706B\u7ADC\u306B\u4E57\u3063\u30663\u79D2\u7A81\u9032"
+    _en: 3s charge on a fire dragon
+  - _key: askill.dragoon.short
+    _ko: "\uAC00\uAE4C\uC6B4 \uC801 \uBC1C\uBC11\uC5D0 \uBD88\uBC14\uB2E4"
+    _ja: "\u8FD1\u304F\u306E\u6575\u306E\u8DB3\u5143\u306B\u706B\u306E\u6D77"
+    _en: Fire pool under nearest foe
+  - _key: pskill.dragoon.short
+    _ko: "10% \uB85C \uC801\uC5D0\uAC8C \uD654\uC0C1"
+    _ja: "10%\u3067\u6575\u3092\u71C3\u713C"
+    _en: 10% chance to Burn
+  - _key: askill.dragoon.opt
+    _ko: "\uBD88\uBC14\uB2E4 2\uACF3 (\uAC00\uAE4C\uC6B4 \uC801 \uB458)"
+    _ja: "\u706B\u306E\u6D772\u304B\u6240\uFF08\u8FD1\u304F\u306E\u65752\u4F53\uFF09"
+    _en: 2 fire pools (nearest 2 foes)
+  - _key: host.baseball.concept
+    _ko: "\uC7A5\uC678 \uD0C0\uC790 \u2014 \uBC1B\uC544\uCE58\uACE0 \uB0A0\uB9B0\uB2E4"
+    _ja: "\u5834\u5916\u6253\u8005 \u2014 \u6253\u3061\u8FD4\u3057\u3066\u98DB\u3070\u3059"
+    _en: "Slugger \u2014 hits it back"
+  - _key: ult.baseball.name
+    _ko: "\uD480\uC2A4\uC719 \uD68C\uC624\uB9AC"
+    _ja: "\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0\u65CB\u98A8"
+    _en: Full-Swing Cyclone
+  - _key: ult.baseball.desc
+    _ko: "\uB3CC\uBA70 \uD68C\uC624\uB9AC\uB97C \uD0A4\uC6CC \uB04C\uC5B4\uB2F9\uAE30\uACE0
+      \uD480\uC2A4\uC719\uC73C\uB85C \uB0A0\uB9B0\uB2E4."
+    _ja: "\u56DE\u8EE2\u3057\u3066\u65CB\u98A8\u3092\u5927\u304D\u304F\u3057\u3001\u6575\u3092\u5F15\u304D\u5BC4\u305B\u3066\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0\u3067\u5439\u304D\u98DB\u3070\u3059\u3002"
+    _en: Spin up a whirlwind that pulls foes in, then launch them with a full swing.
+  - _key: ult.baseball.short
+    _ko: "\uD68C\uC624\uB9AC\uB85C \uBAA8\uC544 \uD480\uC2A4\uC719"
+    _ja: "\u65CB\u98A8\u3067\u96C6\u3081\u3066\u30D5\u30EB\u30B9\u30A4\u30F3\u30B0"
+    _en: Pull foes in, full-swing them
+  - _key: askill.baseball.short
+    _ko: "5\uCD08\uAC04 \uB0A0\uC544\uC628 \uD0C4\uC744 \uBC18\uC0AC"
+    _ja: "5\u79D2\u9593\u3001\u98DB\u6765\u3059\u308B\u5F3E\u3092\u53CD\u5C04"
+    _en: Reflect bullets for 5s
+  - _key: pskill.baseball.short
+    _ko: "\uB9C9\uD0C0\uC5D0 20% \uB85C \uC8FC\uBCC0 \uB0A0\uB9BC"
+    _ja: "\u3068\u3069\u3081\u306720%\u5468\u56F2\u3092\u5439\u304D\u98DB\u3070\u3059"
+    _en: 20% fling on final blow
+  - _key: askill.baseball.opt
+    _ko: "\uBC18\uC0AC\uD0C4\uC774 \uAD00\uD1B5"
+    _ja: "\u53CD\u5C04\u5F3E\u304C\u8CAB\u901A"
+    _en: Reflected shots pierce
+  - _key: host.guru.concept
+    _ko: "\uACB0\uACC4 \uC218\uB3C4\uC2B9"
+    _ja: "\u7D50\u754C\u306E\u4FEE\u884C\u50E7"
+    _en: Warding monk
+  - _key: ult.guru.name
+    _ko: "\uACB0\uACC4 \uAC00\uB450\uAE30"
+    _ja: "\u7D50\u754C\u5C01\u3058"
+    _en: Ward Prison
+  - _key: ult.guru.desc
+    _ko: "\uACB0\uACC4\uB85C \uC801\uC744 \uAC00\uC6B4\uB370\uB85C \uBAA8\uC544 \uAC00\uB450\uACE0
+      \uD130\uB728\uB9B0\uB2E4."
+    _ja: "\u7D50\u754C\u3067\u6575\u3092\u4E2D\u592E\u306B\u96C6\u3081\u3066\u9589\u3058\u8FBC\u3081\u3001\u70B8\u88C2\u3055\u305B\u308B\u3002"
+    _en: Draw foes into a ward, trap them, then detonate it.
+  - _key: ult.guru.short
+    _ko: "\uACB0\uACC4\uB85C \uC801\uC744 \uBAA8\uC544 \uD3ED\uD30C"
+    _ja: "\u7D50\u754C\u3067\u6575\u3092\u96C6\u3081\u3066\u70B8\u88C2"
+    _en: Trap foes in a ward and burst
+  - _key: askill.guru.short
+    _ko: "3\uCD08\uAC04 \uD53C\uD574 \u221250%, \uC274\uB4DC 2\uBC30"
+    _ja: "3\u79D2\u9593\u88AB\u30C0\u30E1\u221250%\u30FB\u30B7\u30FC\u30EB\u30C92\u500D"
+    _en: "3s: \u221250% damage, 2x Shield"
+  - _key: pskill.guru.short
+    _ko: "\uAC78\uC744 \uB54C \uC9C0\uD615\uC9C0\uBB3C \uD1B5\uACFC"
+    _ja: "\u6B69\u884C\u4E2D\u306B\u969C\u5BB3\u7269\u3092\u3059\u308A\u629C\u3051\u308B"
+    _en: Walk through obstacles
+  - _key: askill.guru.opt
+    _ko: "\uACB0\uACC4 \uC548\uC5D0\uC11C \uC274\uB4DC\uAC00 \uB2E4\uC2DC \uCC2C\uB2E4"
+    _ja: "\u7D50\u754C\u5185\u3067\u30B7\u30FC\u30EB\u30C9\u304C\u518D\u3073\u6E9C\u307E\u308B"
+    _en: Shield refills inside the ward
+  - _key: host.commando_grenade.concept
+    _ko: "\uD3ED\uD30C \uC804\uBB38\uAC00"
+    _ja: "\u7206\u7834\u306E\u30D7\u30ED"
+    _en: Demolitions expert
+  - _key: ult.commando_grenade.name
+    _ko: C4
+    _ja: C4
+    _en: C4
+  - _key: ult.commando_grenade.desc
+    _ko: "\uBC18\uACBD \uC548 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C \uD3ED\uD0C4\uC744
+      \uBD99\uC774\uACE0 2\uCD08 \uB4A4 \uC5F0\uC1C4 \uD3ED\uBC1C(\uADF8\uB3D9\uC548
+      \uD3C9\uD0C0 \uC27C)."
+    _ja: "\u7BC4\u56F2\u5185\u306E\u5168\u3066\u306E\u6575\u306B\u7206\u5F3E\u3092\u8CBC\u308A\u4ED8\u3051\u30012\u79D2\u5F8C\u306B\u9023\u9396\u7206\u767A\uFF08\u305D\u306E\u9593\u306F\u901A\u5E38\u653B\u6483\u505C\u6B62\uFF09\u3002"
+    _en: Plant bombs on every enemy in range. They chain-explode after 2s (no basic
+      attacks meanwhile).
+  - _key: ult.commando_grenade.short
+    _ko: "\uC801\uB9C8\uB2E4 \uD3ED\uD0C4, 2\uCD08 \uB4A4 \uC5F0\uC1C4 \uD3ED\uBC1C"
+    _ja: "\u6575\u306B\u7206\u5F3E\u30012\u79D2\u5F8C\u306B\u9023\u9396\u7206\u767A"
+    _en: Bomb foes; chain blast in 2s
+  - _key: askill.commando_grenade.short
+    _ko: "\uD45C\uC801 \uB458\uB808\uC5D0 \uC218\uB958\uD0C4 \uD55C \uC904"
+    _ja: "\u6A19\u7684\u306E\u5468\u308A\u306B\u624B\u69B4\u5F3E\u3092\u4E00\u5217"
+    _en: Line of grenades at the target
+  - _key: pskill.commando_grenade.short
+    _ko: "\uBC29\uC5B4\uB825 50% \uBB34\uC2DC"
+    _ja: "\u9632\u5FA1\u529B50%\u7121\u8996"
+    _en: Ignore 50% defense
+  - _key: askill.commando_grenade.opt
+    _ko: "\uCC29\uD0C4\uB9C8\uB2E4 \uC791\uC740 \uD654\uC0C1 \uC7A5\uD310"
+    _ja: "\u7740\u5F3E\u3054\u3068\u306B\u5C0F\u3055\u306A\u71C3\u713C\u30A8\u30EA\u30A2"
+    _en: Each blast leaves a small fire patch
+  - _key: host.salamander.concept
+    _ko: "\uB3C5\uC220\uC0AC \u2014 \uC9C0\uC18D \uD53C\uD574"
+    _ja: "\u6BD2\u8853\u5E2B \u2014 \u7D99\u7D9A\u30C0\u30E1\u30FC\u30B8"
+    _en: "Venomancer \u2014 lasting damage"
+  - _key: ult.salamander.name
+    _ko: "\uB3C5 \uB2AA"
+    _ja: "\u6BD2\u306E\u6CBC"
+    _en: Venom Swamp
+  - _key: ult.salamander.desc
+    _ko: "\uB3C5 \uB2AA\uC744 \uAE54\uACE0 \uBE60\uC9C0\uBA70, \uB2AA\uC774 \uB05D\uB0A0
+      \uB54C \uD130\uC9C4\uB2E4."
+    _ja: "\u6BD2\u306E\u6CBC\u3092\u5E83\u3052\u3066\u96E2\u8131\u3057\u3001\u6CBC\u304C\u6D88\u3048\u308B\u6642\u306B\u7206\u767A\u3059\u308B\u3002"
+    _en: Lay a toxic swamp and back away. It explodes when it ends.
+  - _key: ult.salamander.short
+    _ko: "\uB3C5 \uB2AA\uC744 \uAE54\uACE0 \uB05D\uC5D0 \uD3ED\uBC1C"
+    _ja: "\u6BD2\u6CBC\u3092\u5E83\u3052\u6700\u5F8C\u306B\u7206\u767A"
+    _en: Toxic swamp that explodes
+  - _key: askill.salamander.short
+    _ko: "\uB458\uB808 5m \uC801\uC744 \uBAA8\uB450 \uC911\uB3C5"
+    _ja: "\u5468\u56F25m\u306E\u6575\u3092\u5168\u3066\u6BD2\u306B"
+    _en: Poison all foes within 5 m
+  - _key: pskill.salamander.short
+    _ko: "10% \uB85C \uC801\uC5D0\uAC8C \uB3C5"
+    _ja: "10%\u3067\u6575\u3092\u6BD2\u306B"
+    _en: 10% chance to Poison
+  - _key: askill.salamander.opt
+    _ko: "\uC911\uB3C5\uB41C \uC801\uC774 \uC8FD\uC73C\uBA74 \uB3C5\uC774 \uD130\uC838
+      \uC606\uC73C\uB85C \uC62E\uB294\uB2E4"
+    _ja: "\u6BD2\u72B6\u614B\u306E\u6575\u304C\u5012\u308C\u308B\u3068\u6BD2\u304C\u5F3E\u3051\u3066\u5468\u308A\u306B\u5E83\u304C\u308B"
+    _en: Poisoned foes burst on death, spreading poison
+  - _key: host.snowwoman.concept
+    _ko: "\uBE59\uACB0 \uB9C8\uB140 \u2014 \uC5BC\uB824\uC11C \uAE6C\uB2E4"
+    _ja: "\u6C37\u7D50\u306E\u9B54\u5973 \u2014 \u51CD\u3089\u305B\u3066\u7815\u304F"
+    _en: "Ice witch \u2014 freeze & shatter"
+  - _key: ult.snowwoman.name
+    _ko: "\uC5BC\uC74C \uC9C4"
+    _ja: "\u6C37\u9663"
+    _en: Ice Formation
+  - _key: ult.snowwoman.desc
+    _ko: "\uC5BC\uC74C \uC9C4\uC744 \uAE54\uC544 \uAE30\uB465\uC774 \uC19F\uACE0
+      \uAC00\uB454 \uB4A4 \uD30C\uC1C4."
+    _ja: "\u6C37\u306E\u9663\u3092\u6577\u3044\u3066\u6C37\u67F1\u3092\u7A81\u304D\u51FA\u3057\u3001\u6575\u3092\u9589\u3058\u8FBC\u3081\u3066\u304B\u3089\u7C89\u7815\u3059\u308B\u3002"
+    _en: Lay an ice circle. Pillars erupt, trap foes, then shatter.
+  - _key: ult.snowwoman.short
+    _ko: "\uC5BC\uC74C \uAE30\uB465\uC73C\uB85C \uAC00\uB450\uACE0 \uD30C\uC1C4"
+    _ja: "\u6C37\u67F1\u3067\u9589\u3058\u8FBC\u3081\u3066\u7C89\u7815"
+    _en: Ice pillars trap, then shatter
+  - _key: askill.snowwoman.short
+    _ko: "2\uCD08\uAC04 \uC5BC\uC74C \uC18D\uC5D0\uC11C \uCCB4\uB825 \uD68C\uBCF5"
+    _ja: "2\u79D2\u9593\u6C37\u306B\u3053\u3082\u308A\u4F53\u529B\u56DE\u5FA9"
+    _en: Encase in ice 2s, heal 30%
+  - _key: pskill.snowwoman.short
+    _ko: "30% \uB85C \uC801\uC744 \uC5BC\uB9B0\uB2E4"
+    _ja: "30%\u3067\u6575\u3092\u51CD\u7D50"
+    _en: 30% chance to Freeze
+  - _key: askill.snowwoman.opt
+    _ko: "\uC5BC\uC74C\uC774 \uAE68\uC9C8 \uB54C \uB458\uB808 \uC801 \uBE59\uACB0"
+    _ja: "\u6C37\u304C\u5272\u308C\u308B\u6642\u3001\u5468\u56F2\u306E\u6575\u3092\u51CD\u7D50"
+    _en: Shattering ice freezes nearby foes
+  - _key: host.thug.concept
+    _ko: "\uB09C\uC0AC \uAC31 \u2014 \uB9C9 \uC3DF\uC544\uBD93\uB294\uB2E4"
+    _ja: "\u4E71\u5C04\u30AE\u30E3\u30F3\u30B0 \u2014 \u6483\u3061\u307E\u304F\u308B"
+    _en: "Spray gang \u2014 all-out fire"
+  - _key: ult.thug.name
+    _ko: "\uD68C\uC804 \uB09C\uC0AC"
+    _ja: "\u56DE\u8EE2\u4E71\u5C04"
+    _en: Spin Barrage
+  - _key: ult.thug.desc
+    _ko: "2.5\uCD08 \uB3CC\uBA70 \uC0AC\uBC29 \uC5F0\uC0AC, \uBA48\uCD94\uBA70 \uC0AC\uBC29
+      16\uBC1C."
+    _ja: "2.5\u79D2\u9593\u56DE\u8EE2\u3057\u306A\u304C\u3089\u5168\u65B9\u4F4D\u306B\u9023\u5C04\u3057\u3001\u6B62\u307E\u308B\u77AC\u9593\u306B\u5168\u65B9\u4F4D\u307816\u767A\u3002"
+    _en: Spin for 2.5s firing in all directions, then burst 16 shots as you stop.
+  - _key: ult.thug.short
+    _ko: "\uB3CC\uBA70 \uC0AC\uBC29\uC73C\uB85C \uC3DF\uC544\uBD93\uAE30"
+    _ja: "\u56DE\u8EE2\u3057\u3066\u5168\u65B9\u4F4D\u306B\u4E71\u5C04"
+    _en: Spin and fire in all directions
+  - _key: askill.thug.short
+    _ko: "1\uCD08\uAC04 3\uBC29\uD5A5 \uB09C\uC0AC"
+    _ja: "1\u79D2\u95933\u65B9\u5411\u306B\u4E71\u5C04"
+    _en: Fire 3 ways for 1s
+  - _key: pskill.thug.short
+    _ko: "\uC8FC\uC6B4 \uACE8\uB4DC +10%"
+    _ja: "\u62FE\u3063\u305F\u30B4\u30FC\u30EB\u30C9+10%"
+    _en: +10% Gold picked up
+  - _key: askill.thug.opt
+    _ko: "\uD0C4 \uAD00\uD1B5 + \uAC08\uB798 3 \u2192 5"
+    _ja: "\u5F3E\u304C\u8CAB\u901A\uFF0B3\u65B9\u5411\u21925\u65B9\u5411"
+    _en: "Shots pierce + 3 \u2192 5 streams"
+  - _key: host.commando_missile.concept
+    _ko: "\uD3ED\uACA9 \uC9C0\uC6D0 \u2014 \uC5EC\uB7FF\uC744 \uCD94\uC801"
+    _ja: "\u7206\u6483\u652F\u63F4 \u2014 \u591A\u6570\u3092\u8FFD\u5C3E"
+    _en: "Air support \u2014 multi-homing"
+  - _key: ult.commando_missile.name
+    _ko: "\uC790\uD3ED \uBBF8\uC0AC\uC77C \uB5BC"
+    _ja: "\u81EA\u7206\u30DF\u30B5\u30A4\u30EB\u7FA4"
+    _en: Kamikaze Swarm
+  - _key: ult.commando_missile.desc
+    _ko: "6\uAE30\uAC00 \uAC01\uC790 \uB2E4\uB978 \uC801\uC744 \uCAD3\uC544 \uB3D9\uC2DC
+      \uD3ED\uBC1C."
+    _ja: "6\u6A5F\u304C\u305D\u308C\u305E\u308C\u5225\u306E\u6575\u3092\u8FFD\u5C3E\u3057\u3001\u540C\u6642\u306B\u7206\u767A\u3059\u308B\u3002"
+    _en: 6 missiles each chase a different foe and explode at once.
+  - _key: ult.commando_missile.short
+    _ko: "\uBBF8\uC0AC\uC77C 6\uAE30\uAC00 \uAC01\uC790 \uCD94\uC801 \uD3ED\uBC1C"
+    _ja: "6\u6A5F\u304C\u5225\u3005\u306E\u6575\u3092\u8FFD\u5C3E\u7206\u767A"
+    _en: 6 missiles hunt separate foes
+  - _key: askill.commando_missile.short
+    _ko: "8\uBC1C\uC774 \uD55C \uB300\uC0C1\uC5D0 \uBAA8\uC5EC \uB4E0\uB2E4"
+    _ja: "8\u767A\u304C1\u4F53\u306E\u6575\u306B\u53CE\u675F"
+    _en: 8 shots converge on one foe
+  - _key: pskill.commando_missile.short
+    _ko: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C \uBB34\uC2DC"
+    _ja: "\u5F3E\u304C\u969C\u5BB3\u7269\u3092\u7121\u8996"
+    _en: Shots ignore obstacles
+  - _key: askill.commando_missile.opt
+    _ko: "\uB9DE\uC740 \uC790\uB9AC\uB9C8\uB2E4 \uC791\uC740 \uD3ED\uBC1C"
+    _ja: "\u547D\u4E2D\u5730\u70B9\u3054\u3068\u306B\u5C0F\u7206\u767A"
+    _en: Small blast at each hit
+  - _key: host.commando_laser.concept
+    _ko: "\uAD00\uD1B5 \uD3EC\uACA9 \u2014 \uC77C\uC9C1\uC120"
+    _ja: "\u8CAB\u901A\u7832\u6483 \u2014 \u4E00\u76F4\u7DDA"
+    _en: "Piercing beam \u2014 one line"
+  - _key: ult.commando_laser.name
+    _ko: "\uCDA9\uC804 \uB808\uC774\uC800"
+    _ja: "\u30C1\u30E3\u30FC\u30B8\u30EC\u30FC\u30B6\u30FC"
+    _en: Charged Laser
+  - _key: ult.commando_laser.desc
+    _ko: "0.5\uCD08 \uCC28\uC9C0 \uB4A4 \uAD75\uC740 \uAD00\uD1B5 \uBE54, \uBC18\uB3D9."
+    _ja: "0.5\u79D2\u30C1\u30E3\u30FC\u30B8\u5F8C\u3001\u6975\u592A\u306E\u8CAB\u901A\u30D3\u30FC\u30E0\u3092\u653E\u3064\u3002\u53CD\u52D5\u3042\u308A\u3002"
+    _en: Charge for 0.5s, then fire a thick piercing beam. Has recoil.
+  - _key: ult.commando_laser.short
+    _ko: "\uCC28\uC9C0 \uB4A4 \uAD75\uC740 \uAD00\uD1B5 \uBE54"
+    _ja: "\u30C1\u30E3\u30FC\u30B8\u5F8C\u306B\u6975\u592A\u8CAB\u901A\u30D3\u30FC\u30E0"
+    _en: Charged thick piercing beam
+  - _key: askill.commando_laser.short
+    _ko: "3\uCD08\uAC04 \uC8FC\uBCC0\uC5D0 \uC804\uAE30 \uC5F0\uC1C4"
+    _ja: "3\u79D2\u9593\u3001\u5468\u56F2\u306B\u9023\u9396\u653E\u96FB"
+    _en: Chain shock nearby for 3s
+  - _key: pskill.commando_laser.short
+    _ko: "\uC9C0\uD615 \uBB34\uC2DC \xB7 \uC801 \uAD00\uD1B5"
+    _ja: "\u969C\u5BB3\u7269\u7121\u8996\u30FB\u6575\u8CAB\u901A"
+    _en: Shots ignore cover and pierce
+  - _key: askill.commando_laser.opt
+    _ko: "\uC804\uAE30\uAC00 \uD288 \uB54C\uB9C8\uB2E4 \uAC10\uC804 (\uB454\uD654)"
+    _ja: "\u653E\u96FB\u306E\u305F\u3073\u306B\u611F\u96FB\uFF08\u920D\u8DB3\uFF09"
+    _en: Each arc shocks and slows
+  - _key: host.white_wizard.concept
+    _ko: "\uCD95\uC801 \uB9C8\uBC95\uC0AC \u2014 \uBAA8\uC544\uC11C \uC3DC\uB2E4"
+    _ja: "\u84C4\u7A4D\u306E\u9B54\u6CD5\u4F7F\u3044 \u2014 \u6E9C\u3081\u3066\u6483\u3064"
+    _en: "Charge mage \u2014 store & fire"
+  - _key: ult.white_wizard.name
+    _ko: "\uBE5B \uAD6C\uC2AC \uC77C\uC81C \uBC1C\uC0AC"
+    _ja: "\u5149\u7403\u4E00\u6589\u767A\u5C04"
+    _en: Orb Volley
+  - _key: ult.white_wizard.desc
+    _ko: "\uD3C9\uD0C0\uB85C \uC313\uC740 \uBE5B \uAD6C\uC2AC\uC744 \uD55C\uAEBC\uBC88\uC5D0
+      \uC720\uB3C4 \uBC1C\uC0AC."
+    _ja: "\u901A\u5E38\u653B\u6483\u3067\u6E9C\u3081\u305F\u5149\u306E\u7389\u3092\u3001\u307E\u3068\u3081\u3066\u8A98\u5C0E\u767A\u5C04\u3059\u308B\u3002"
+    _en: Fire every light orb stored by basic attacks as homing shots.
+  - _key: ult.white_wizard.short
+    _ko: "\uBAA8\uC740 \uBE5B \uAD6C\uC2AC\uC744 \uD55C\uAEBC\uBC88\uC5D0 \uC720\uB3C4"
+    _ja: "\u6E9C\u3081\u305F\u5149\u7403\u3092\u4E00\u6589\u8A98\u5C0E\u767A\u5C04"
+    _en: Unleash stored orbs, homing
+  - _key: askill.white_wizard.short
+    _ko: "\uBD80\uCC44\uAF34 8\uBC29\uD5A5 \uAD11\uD0C4"
+    _ja: "\u6247\u72B68\u65B9\u5411\u306B\u5149\u5F3E"
+    _en: 8-way fan of light orbs
+  - _key: pskill.white_wizard.short
+    _ko: "\uC9C0\uD615 \uBB34\uC2DC \xB7 \uC801 \uAD00\uD1B5"
+    _ja: "\u969C\u5BB3\u7269\u7121\u8996\u30FB\u6575\u8CAB\u901A"
+    _en: Shots ignore cover and pierce
+  - _key: askill.white_wizard.opt
+    _ko: "\uAD11\uD0C4\uC774 \uBCBD\uC5D0 \uD55C \uBC88 \uD295\uAE34\uB2E4"
+    _ja: "\u5149\u5F3E\u304C\u58C1\u30671\u56DE\u8DF3\u306D\u8FD4\u308B"
+    _en: Light orbs bounce off walls once
+  - _key: host.dragon_blue.concept
+    _ko: "\uB1CC\uC2E0 \u2014 \uBC88\uAC1C\uAC00 \uD284\uB2E4"
+    _ja: "\u96F7\u795E \u2014 \u96F7\u304C\u8DF3\u3076"
+    _en: "Storm god \u2014 chain lightning"
+  - _key: ult.dragon_blue.name
+    _ko: "\uBC88\uAC1C \uAD6C\uC2AC"
+    _ja: "\u96F7\u306E\u5B9D\u73E0"
+    _en: Thunder Orbs
+  - _key: ult.dragon_blue.desc
+    _ko: "\uAD6C\uC2AC 3\uAC1C\uAC00 \uBAB8 \uB458\uB808\uB97C \uB3CC\uBA70 \uBC88\uAC1C,
+      \uB05D\uC5D0 \uB099\uB8B0."
+    _ja: "3\u3064\u306E\u5B9D\u73E0\u304C\u4F53\u306E\u5468\u308A\u3092\u56DE\u3063\u3066\u96F7\u3092\u653E\u3061\u3001\u6700\u5F8C\u306B\u843D\u96F7\u3002"
+    _en: 3 orbs circle you, zapping foes, and end in a thunderbolt.
+  - _key: ult.dragon_blue.short
+    _ko: "\uAD6C\uC2AC 3\uAC1C\uAC00 \uB3CC\uBA70 \uBC88\uAC1C + \uB099\uB8B0"
+    _ja: "\u5B9D\u73E03\u3064\u304C\u56DE\u308A\u96F7\uFF0B\u843D\u96F7"
+    _en: 3 orbs zap, then a thunderbolt
+  - _key: askill.dragon_blue.short
+    _ko: "2\uCD08\uAC04 \uBC88\uAC1C \uD295\uAE40 \uD655\uC815"
+    _ja: "2\u79D2\u9593\u3001\u9023\u9396\u96F7\u304C\u78BA\u5B9A"
+    _en: Chain lightning sure for 2s
+  - _key: pskill.dragon_blue.short
+    _ko: "10% \uB85C \uC606 \uC801\uC5D0\uAC8C \uBC88\uAC1C"
+    _ja: "10%\u3067\u96A3\u306E\u6575\u306B\u96F7"
+    _en: 10% chain lightning
+  - _key: askill.dragon_blue.opt
+    _ko: "\uB05D\uB0A0 \uB54C \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC5D0\uAC8C
+      \uB099\uB8B0"
+    _ja: "\u7D42\u4E86\u6642\u3001\u6700\u3082\u8FD1\u3044\u6575\u306B\u843D\u96F7"
+    _en: Ends with a bolt on the nearest foe
+  - _key: host.commando_mg.concept
+    _ko: "\uBC29\uD328\uBCD1 \u2014 \uB9C9\uC73C\uBA70 \uC804\uC9C4"
+    _ja: "\u76FE\u5175 \u2014 \u9632\u304E\u3064\u3064\u524D\u9032"
+    _en: "Shieldbearer \u2014 block & push"
+  - _key: ult.commando_mg.name
+    _ko: "\uB514\uD50C\uB809\uD2B8 \uC6D4"
+    _ja: "\u30C7\u30A3\u30D5\u30EC\u30AF\u30C8\u30A6\u30A9\u30FC\u30EB"
+    _en: Deflect Wall
+  - _key: ult.commando_mg.desc
+    _ko: "\uBC29\uBCBD\uC744 \uC138\uC6CC 4\uCD08\uAC04 \uBC00\uACE0 \uB098\uAC00\uBA70
+      \uD0C4\uC744 \uB9C9\uB294\uB2E4."
+    _ja: "\u9632\u58C1\u3092\u7ACB\u3066\u30664\u79D2\u9593\u62BC\u3057\u9032\u307F\u3001\u5F3E\u3092\u9632\u3050\u3002"
+    _en: Raise a barrier and push forward for 4s, blocking shots.
+  - _key: ult.commando_mg.short
+    _ko: "\uBC29\uBCBD\uC744 \uBC00\uACE0 \uB098\uAC00\uBA70 \uD0C4 \uCC28\uB2E8"
+    _ja: "\u9632\u58C1\u3067\u62BC\u3057\u9032\u307F\u5F3E\u3092\u9632\u3050"
+    _en: Advance behind a bullet wall
+  - _key: askill.commando_mg.short
+    _ko: "5\uCD08\uAC04 \uCD5C\uB300 \uCCB4\uB825\uB9CC\uD07C \uC274\uB4DC"
+    _ja: "5\u79D2\u9593\u3001\u6700\u5927\u4F53\u529B\u5206\u306E\u30B7\u30FC\u30EB\u30C9"
+    _en: Shield = max HP for 5s
+  - _key: pskill.commando_mg.short
+    _ko: "\uBC29\uC5B4\uB825 20% \uC99D\uAC00"
+    _ja: "\u9632\u5FA1\u529B20%\u4E0A\u6607"
+    _en: Defense +20%
+  - _key: askill.commando_mg.opt
+    _ko: "\uC274\uB4DC\uAC00 \uAE68\uC9C8 \uB54C \uB458\uB808 \uC801\uC744 \uBC00\uCCD0\uB0B8\uB2E4"
+    _ja: "\u30B7\u30FC\u30EB\u30C9\u304C\u5272\u308C\u308B\u6642\u3001\u5468\u56F2\u306E\u6575\u3092\u62BC\u3057\u8FD4\u3059"
+    _en: Broken Shield knocks back foes
+  - _key: host.amazon_elite.concept
+    _ko: "\uBD88\uAD74\uC758 \uBC18\uACA9\uC790"
+    _ja: "\u4E0D\u5C48\u306E\u53CD\u6483\u8005"
+    _en: Unyielding avenger
+  - _key: ult.amazon_elite.name
+    _ko: "\uC5ED\uB9B0"
+    _ja: "\u9006\u9C57"
+    _en: Wrath
+  - _key: ult.amazon_elite.desc
+    _ko: "3\uCD08\uAC04 \uBC1B\uC740 \uD53C\uD574\uB97C \uBAA8\uC558\uB2E4\uAC00
+      \uC8FC\uBCC0\uC73C\uB85C \uB418\uB3CC\uB824 \uD130\uB728\uB9B0\uB2E4."
+    _ja: "3\u79D2\u9593\u53D7\u3051\u305F\u30C0\u30E1\u30FC\u30B8\u3092\u6E9C\u3081\u3001\u5468\u56F2\u3078\u7206\u767A\u3068\u3057\u3066\u8FD4\u3059\u3002"
+    _en: Store damage taken for 3s, then unleash it around you.
+  - _key: ult.amazon_elite.short
+    _ko: "\uBC1B\uC740 \uD53C\uD574\uB97C \uBAA8\uC544 \uB418\uB3CC\uB824 \uD3ED\uBC1C"
+    _ja: "\u53D7\u3051\u305F\u30C0\u30E1\u30FC\u30B8\u3092\u6E9C\u3081\u3066\u7206\u767A"
+    _en: Store damage, blast it back
+  - _key: askill.amazon_elite.short
+    _ko: "2.5\uCD08 \uBB34\uC801 + \uC274\uB4DC \uC0C1\uD55C \uD574\uC81C"
+    _ja: "2.5\u79D2\u7121\u6575\uFF0B\u30B7\u30FC\u30EB\u30C9\u4E0A\u9650\u89E3\u9664"
+    _en: 2.5s invincible, Shield cap off
+  - _key: pskill.amazon_elite.short
+    _ko: "\uC274\uB4DC \uC788\uB294 \uB3D9\uC548 \uACF5\uACA9\uB825 \uC99D\uAC00"
+    _ja: "\u30B7\u30FC\u30EB\u30C9\u4E2D\u306F\u653B\u6483\u529B\u30A2\u30C3\u30D7"
+    _en: Attack up while Shielded
+  - _key: askill.amazon_elite.opt
+    _ko: "\uBB34\uC801 \uB3D9\uC548 \uBC1B\uC740 \uACF5\uACA9\uC758 30% \uB97C \uB418\uB3CC\uB824
+      \uC900\uB2E4"
+    _ja: "\u7121\u6575\u4E2D\u306B\u53D7\u3051\u305F\u653B\u6483\u306E30%\u3092\u53CD\u5C04"
+    _en: Reflect 30% of hits taken while invincible

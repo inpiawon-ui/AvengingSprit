@@ -33,6 +33,7 @@ namespace Game.Module.Lobby
             public Sprite Thumb;      // 목록 칸 — 초상이 있으면 같은 그림, 없으면 유닛 그림(남동 · 대기)
             public Sprite Skill;      // 액티브 스킬 아이콘
             public Sprite Passive;    // 패시브 스킬 아이콘(호스트 선택 화면과 같은 그림)
+            public Sprite Ult;        // 필살기 아이콘(ulticon_, v6 — GrowthV6Builder)
             public bool IsPortrait;   // 초상인가 — 유닛 그림은 투명 여백이 있어 칸을 키워 쓴다
         }
 

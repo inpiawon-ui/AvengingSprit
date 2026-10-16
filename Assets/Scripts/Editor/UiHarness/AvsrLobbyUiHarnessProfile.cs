@@ -74,6 +74,7 @@ namespace Game.Editor.UiHarness
             .Modal(@"/SummonPanel/SummonContent$")
             .Modal(@"/SeasonPassPanel$")
             .Modal(@"/ProfilePopup$")
+            .Modal(@"/GrowthPanel/H6StarUpWindow$")
             .Modal(@"/GachaResultPopup$")
             .Modal(@"/GachaInfoPopup$")
             .Modal(@"/StoreConfirm$")
@@ -97,6 +98,9 @@ namespace Game.Editor.UiHarness
                        "이음 띠 · 배경 · 챕터 그림 — 키워 쓰는 것이 의도")
             .AllowRule("C1", @"/BottomNav/\w+Button/NavBadge(/|$)", "새 소식 「!」 — 시안처럼 칸 모서리에 걸쳐 밖으로 나온다")
             .AllowRule("C3", @"/(SummonContent/SummonAltar|GachaResultPopup/ResultAltar)$", "소환 제단 배경 그림 — 긴 화면에서도 덮게 키워 깐다")
+            .AllowRule("C3", @"/GrowthPanel/Page/(GrowthSide[LR]|GrowthFiller)$", "육성 판 가장자리 이음 띠 — 화면 밖까지 이어 그린다")
+            .AllowRule("R1", @"/GrowthPanel/Page/(GrowthSide[LR]|GrowthFiller)$", "육성 판 가장자리 이음 띠 — 1px 그림을 늘려 쓴다")
+            .AllowRule("C2", @"/H6StatContent/H6Row\d+(/|$)", "능력치 8줄 스크롤 — 창 가장자리 줄이 잘리는 것은 정상")
             .AllowRule("R1", @"/ProfileExpFill$", "경험치 막대 채움 — 폭이 값에 따라 줄어든다")
             .AllowRule("R1", @"/CHChapterArtBox/CHChapterDim$", "챕터 그림 위 어둡게 덮는 판 — 칸 크기로 늘려 쓴다")
             .AllowRule("C2", @"/CHBossMask/CHBossPortrait$",
@@ -223,6 +227,31 @@ namespace Game.Editor.UiHarness
             },
             new UiHarnessScenario
             {
+                Name = "growth_host", Mock = "mock_growth_v6_page",
+                Enter = async d => { await d.Click("HostButton"); await d.Click("TabHostButton"); },
+                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
+                Leave = d => d.Click("ChapterButton"),
+            },
+            new UiHarnessScenario
+            {
+                // 성급 창은 최대 성급이면 안 열린다 — 아직 덜 자란 몸을 골라 연다(없으면 실패로 남는다)
+                Name = "growth_starup", Mock = "mock_growth_v6_starup",
+                Enter = async d =>
+                {
+                    // 「모든 호스트 열기」(GameConfig._openAllHosts)면 모든 몸이 최대 성급으로 읽혀 창이 안 열린다 — 이 상태 동안만 끈다
+                    SetOpenAll(false);
+                    await d.Click("HostButton");
+                    await d.Click("TabHostButton");
+                    string key = NotMaxedHost();
+                    // 목록 카드는 가로 스크롤 밖일 수 있다 — 단추를 직접 누른다
+                    if (key != null && Invoke($"H6HostCard_{key}")) await UiHarnessDriver.Seconds(0.3f);
+                    await d.Click("H6StarUpButton");
+                },
+                Expect = () => Active("H6Window") ? null : "성급 창이 안 열렸다(덜 자란 몸이 없을 수 있다)",
+                Leave = async d => { await d.Click("H6WinCancel"); SetOpenAll(true); await d.Click("ChapterButton"); },
+            },
+            new UiHarnessScenario
+            {
                 Name = "profile", Mock = "mock_store_profile",
                 Enter = d => d.Click("LobbyProfile"),
                 Expect = () => Active("ProfileGrid") ? null : "프로필 창이 안 열렸다",
@@ -247,6 +276,32 @@ namespace Game.Editor.UiHarness
                 Name = "ch_host_en", Mock = "scene_s22e_host",
                 Enter = async d => { SetLang(Language.English); await UiHarnessDriver.Seconds(0.5f); await d.Click("ModePlayButton"); },
                 Expect = () => Active("CHModeHost") ? null : "챕터 창이 안 열렸다",
+                Leave = async d => { await d.Click("ChapterButton"); RestoreLang(); },
+            },
+            new UiHarnessScenario
+            {
+                Name = "growth_host_ja", Mock = "mock_growth_v6_page",
+                Enter = async d =>
+                {
+                    SetLang(Language.Japanese);
+                    await UiHarnessDriver.Seconds(0.5f);
+                    await d.Click("HostButton");
+                    await d.Click("TabHostButton");
+                },
+                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
+                Leave = async d => { await d.Click("ChapterButton"); SetLang(Language.Korean); },
+            },
+            new UiHarnessScenario
+            {
+                Name = "growth_host_en", Mock = "mock_growth_v6_page",
+                Enter = async d =>
+                {
+                    SetLang(Language.English);
+                    await UiHarnessDriver.Seconds(0.5f);
+                    await d.Click("HostButton");
+                    await d.Click("TabHostButton");
+                },
+                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
                 Leave = async d => { await d.Click("ChapterButton"); RestoreLang(); },
             },
         };
@@ -294,6 +349,27 @@ namespace Game.Editor.UiHarness
         {
             var go = GameObject.Find(name);
             return go != null && go.activeInHierarchy;
+        }
+
+        private static bool s_openAllWas = true;
+
+        private static void SetOpenAll(bool on)
+        {
+            var f = typeof(PlayerDataService).GetField("s_openAllHosts",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            if (f == null) return;
+            if (!on) s_openAllWas = (bool)f.GetValue(null);
+            f.SetValue(null, on && s_openAllWas);
+        }
+
+        private static string NotMaxedHost()
+        {
+            if (!CoreModule.TryGet<IPlayerDataService>(out var p) || p.PlayableHosts == null) return null;
+            foreach (var h in p.PlayableHosts)
+                if (h != null && !h.IsGhost && !PlayerDataService.IsHiddenHost(h.HostKey)
+                    && p.GetMastery(h.HostKey) < p.MasteryMax && GameObject.Find($"H6HostCard_{h.HostKey}") != null)
+                    return h.HostKey;
+            return null;
         }
 
         private static bool Interactable(string name)

@@ -294,8 +294,9 @@ namespace Game.Editor
         private static void BindHostPage(GrowthPanel gp)
         {
             var so = new SerializedObject(gp);
-            so.FindProperty("_h5RowPitch").floatValue = s_rowPitch5;
-            so.FindProperty("_h5CardPitch").floatValue = s_cardPitch5;
+            // v6(GrowthV6Builder)가 호스트 판을 다시 세운다 — v5 칸 간격 필드는 없어졌다
+            if (so.FindProperty("_h5RowPitch") is SerializedProperty rp) rp.floatValue = s_rowPitch5;
+            if (so.FindProperty("_h5CardPitch") is SerializedProperty cp) cp.floatValue = s_cardPitch5;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

@@ -336,7 +336,7 @@ namespace Game.Editor
                 st.fontSizeMax = 13;
                 st.fontSize = 14;
                 st.fontSizeMax = 14;
-                At(st.rectTransform, 30f, -16f, 94f, 20f);
+                At(st.rectTransform, 27f, -16f, 88f, 20f);   // 오른쪽 테두리 안쪽까지(영 「Train Hosts」 · 일 「ホスト育成」 가 테에 닿았다)
             }
             on.transform.SetSiblingIndex(plate.transform.GetSiblingIndex() + 1);   // 판 바로 위 · 아이콘 · 글자 아래(하네스 C6)
 
@@ -672,8 +672,9 @@ namespace Game.Editor
             At(lockImg.rectTransform, 0, 30, 30, 38);
             lockImg.gameObject.SetActive(false);
 
-            // 금 테는 카드 위, 「오늘의 몸」 띠는 테 위(테가 띠 글자를 덮지 않게)
-            card.Find("CardFrameSel")?.SetAsLastSibling();
+            // 고른 금 테는 판 바로 위 · 얼굴 · 글자 아래(이름 · 전투력을 덮지 않게), 「오늘의 몸」 띠는 맨 위
+            if (card.Find("CardFrame") is Transform cf && card.Find("CardFrameSel") is Transform cs)
+                cs.SetSiblingIndex(cf.GetSiblingIndex() + 1);
             card.Find("CardToday")?.SetAsLastSibling();
         }
 
