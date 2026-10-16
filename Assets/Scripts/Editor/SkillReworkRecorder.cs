@@ -14,6 +14,56 @@ namespace Game.Editor
     /// </summary>
     public static class SkillReworkRecorder
     {
+        // ── 일괄 녹화 (2026-10-16 「캐릭터별 액티브 · 필살기 다 플레이해서 영상으로」) ──────────
+        //
+        // 녹화 하나마다 플레이를 껐다 켜야 한다(도메인 리로드로 콜백이 날아간다). 줄을 SessionState 에 두고,
+        // 플레이에 들어갈 때마다 한 줄씩 꺼내 돌린다 — 끝나면 `Run` 이 플레이를 끄고, 여기서 다시 켠다.
+        // 줄 형식: 호스트|클립|녹화초|필살기초|액티브초|갈아입을몸  (줄끼리는 ;)
+        private const string QueueKey = "AVSR.RecQueue";
+        private const string LastMark = "#LAST";
+
+        public static void Batch(string spec)
+        {
+            SessionState.SetString(QueueKey, spec ?? string.Empty);
+            if (!EditorApplication.isPlaying) EditorApplication.isPlaying = true;
+        }
+
+        public static void CancelBatch() => SessionState.EraseString(QueueKey);
+
+        [InitializeOnLoadMethod]
+        private static void HookBatch()
+        {
+            EditorApplication.playModeStateChanged -= OnBatchMode;
+            EditorApplication.playModeStateChanged += OnBatchMode;
+        }
+
+        private static void OnBatchMode(PlayModeStateChange state)
+        {
+            var q = SessionState.GetString(QueueKey, string.Empty);
+            if (string.IsNullOrEmpty(q)) return;
+            if (state == PlayModeStateChange.EnteredPlayMode)
+            {
+                int cut = q.IndexOf(';');
+                string head = cut < 0 ? q : q.Substring(0, cut);
+                string rest = cut < 0 ? string.Empty : q.Substring(cut + 1);
+                SessionState.SetString(QueueKey, rest);
+                if (string.IsNullOrEmpty(rest)) SessionState.SetString(QueueKey, LastMark);   // 마지막 줄 — 끝나고 다시 켜지 않게 표시
+                var f = head.Split('|');
+                if (f.Length < 5 || f[0] == LastMark) { SessionState.EraseString(QueueKey); return; }
+                float.TryParse(f[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var sec);
+                float.TryParse(f[3], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var ult);
+                float.TryParse(f[4], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var act);
+                string swap = f.Length > 5 && f[5].Length > 0 ? f[5] : null;
+                Debug.Log("[RW] batch " + f[1] + " (남은 줄 " + (string.IsNullOrEmpty(rest) ? 0 : rest.Split(';').Length) + ")");
+                Run(f[0], f[1], sec, 3f, ult, act, swap);
+            }
+            else if (state == PlayModeStateChange.EnteredEditMode)
+            {
+                if (q == LastMark) { SessionState.EraseString(QueueKey); Debug.Log("[RW] batch done"); return; }
+                EditorApplication.delayCall += () => EditorApplication.isPlaying = true;
+            }
+        }
+
         private const BindingFlags F = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public;
 
         private static readonly Vector2[] Offsets =
@@ -44,7 +94,13 @@ namespace Game.Editor
                 try
                 {
                     double now = EditorApplication.timeSinceStartup;
-                    if (now - t0 > 260) { EditorApplication.update -= cb; Debug.Log("[RW] timeout " + phase); return; }
+                    if (now - t0 > 260)
+                    {
+                        EditorApplication.update -= cb;
+                        Debug.Log("[RW] timeout " + phase);
+                        if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;   // 일괄 녹화가 멈추지 않게 다음으로 넘긴다
+                        return;
+                    }
                     if (!EditorApplication.isPlaying) return;
                     if (wait > 0) { wait--; return; }
                     if (phase == 0)
@@ -69,6 +125,8 @@ namespace Game.Editor
                         if (swapTo != null) extra.Add(p.GetHost(swapTo)?.SpriteKey);
                         if (enemyHosts != null) foreach (var k in enemyHosts) extra.Add(p.GetHost(k)?.SpriteKey);
                         Game.Module.InGame.BattleDirector.EditorExtraUnitKey = string.Join(",", extra);
+                        // 판마다 행동력이 빠진다(2026-10-16~) — 녹화를 연달아 돌리면 바닥나 판이 안 열린다. 시험 세이브는 끝나면 되돌린다
+                        p.SetStamina(p.StaminaMax);
                         pt.GetMethod("OnStart", F).Invoke(panel, null);
                         phase = 1;
                         wait = 60;
