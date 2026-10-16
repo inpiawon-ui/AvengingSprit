@@ -102,13 +102,18 @@ namespace Game.Editor
             ("SkillCooldown", 705, 1655, 148, 146),
             ("SkillSealIcon", 747, 1695, 64, 64),
             ("SkillButtonLabel", 714, 1817, 134, 40),
-            ("PossessButton", 877, 1630, 190, 235),
-            ("PossessGhostIcon", 920, 1672, 104, 100),
-            ("PossessCooldown", 900, 1655, 145, 146),
-            ("PossessCooldownText", 877, 1690, 190, 70),
-            ("PossessCostText", 900, 1762, 145, 40),
-            ("PossessButtonLabel", 902, 1817, 140, 40),
-            ("PossessButtonGlow", 857, 1610, 230, 275),
+            // 빙의 버튼은 액티브 왼쪽, 필살기는 그 옛 자리(PD 2026-10-16 「빙의 버튼이 따로」 — InGameUltButtonSplit 이 UltButton 을 만든다)
+            ("PossessButton", 483, 1630, 190, 235),
+            ("PossessGhostIcon", 526, 1672, 104, 100),
+            ("PossessCooldown", 506, 1655, 145, 146),
+            ("PossessCooldownText", 483, 1690, 190, 70),
+            ("PossessCostText", 506, 1762, 145, 40),
+            ("PossessButtonLabel", 508, 1817, 140, 40),
+            ("PossessButtonGlow", 463, 1610, 230, 275),
+            ("UltButton", 877, 1630, 190, 235),
+            ("UltIcon", 920, 1672, 104, 100),
+            ("UltButtonLabel", 902, 1817, 140, 40),
+            ("UltButtonGlow", 857, 1610, 230, 275),
         };
 
         private static readonly Color Yellow = new(1f, 0.82f, 0.24f);
@@ -139,6 +144,7 @@ namespace Game.Editor
             ("GoldText", 30f, TextAlignmentOptions.Left, Color.white),
             ("SkillButtonLabel", 15f, TextAlignmentOptions.Center, Yellow),
             ("PossessButtonLabel", 15f, TextAlignmentOptions.Center, Color.white),
+            ("UltButtonLabel", 15f, TextAlignmentOptions.Center, Color.white),
             ("PossessCostText", 24f, TextAlignmentOptions.Center, LightCyan),
         };
 
@@ -224,6 +230,7 @@ namespace Game.Editor
                 SetSprite(root, "DPadKnob", sprites, "hud3_pad_knob");
                 SetSprite(root, "SkillButton", sprites, "hud3_skill_frame");
                 SetSprite(root, "PossessButton", sprites, "hud3_possess_frame");
+                SetSprite(root, "UltButton", sprites, "hud3_possess_frame");
                 SetSprite(root, "GhostHpBarFill", sprites, "hud3_fill_red");
                 SetSprite(root, "HostHpBarFill", sprites, "hud3_fill_purple");
                 SetSprite(root, "RoomProgressFill", sprites, "hud3_fill_cyan");

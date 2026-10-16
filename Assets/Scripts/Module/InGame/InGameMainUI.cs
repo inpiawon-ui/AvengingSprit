@@ -166,6 +166,8 @@ namespace Game.Module.InGame
             HookDPad();
             CacheGoldFx();
             _ui.OnClick("PossessButton", () => _battle?.TryPossess());
+            _ui.OnClick("UltButton", () => _battle?.TryUltimate());   // 빙의와 나눴다(PD 2026-10-16)
+            _ultButtonImage = _ui.Get<Image>("UltButton");
             _ui.OnClick("SkillButton", () => _battle?.TryActiveSkill());
             _ui.OnClick("PauseButton", OnPause);
 
@@ -887,6 +889,7 @@ namespace Game.Module.InGame
             //   정리했고, 로비 카드도 `ACTIVE SKILL` 로 맞춰 놨다.
             _ui.SetText("SkillButtonLabel", "ACTIVE");
             _ui.SetText("PossessButtonLabel", "POSSESS");
+            _ui.SetText("UltButtonLabel", UltLabel);
 
             // 두 LV 배지는 **같은 값**이다. 몸은 고스트가 들고 온 레벨로 굴러간다 —
             // 호스트마다 레벨을 따로 쌓지 않는 것이 이 게임의 규칙이다.
@@ -1072,16 +1075,19 @@ namespace Game.Module.InGame
                                      bool isLeave = false, bool leaveDenied = false)
         {
             _possessCost = cost;
-            // 몸이 있으면 이 버튼은 필살기다 — 나가기(탈출) 얼굴은 더 안 쓴다(`InGameMainUI.Ultimate`)
-            if (isLeave) { _ultShown = false; TickUltButton(); return; }
+            // 몸이 있으면 빙의 버튼은 쉰다 — 갈아타기는 유령을 거쳐서만(탈출 없음, 2026-10-15). 필살기는 옆 버튼(`InGameMainUI.Ultimate`)
+            // ⚠ 꺼 둘 때도 interactable 은 켜 둔다 — 버튼의 비활성 색(반투명)이 회색 위에 겹쳐 버튼이 통째로 사라져 보였다(녹화 pd_alert).
+            //   눌러도 `TryPossess` 가 몸이 있으면 거른다
+            if (isLeave) { hasTarget = false; blocked = false; leaveDenied = true; }
             bool usable = hasTarget && !blocked && !leaveDenied;
 
-            // 빙의 / 나가기 — 같은 버튼이지만 얼굴이 다르다(`InGameMainUI.SoulFx`).
-            SetPossessFace(isLeave, !usable);
+            // 나가기 얼굴은 더 안 쓴다 — 늘 빙의 얼굴(`InGameMainUI.SoulFx`)
+            SetPossessFace(false, !usable);
 
             var btn = _ui.Get<Button>("PossessButton");
-            // ⚠ 옮겨 탈 몸이 없는 「나가기」 는 회색이지만 **눌리기는 한다** — 눌러야 이유를 듣는다.
-            if (btn != null) btn.interactable = usable || leaveDenied;
+            // ⚠ 늘 눌리게 둔다 — 회색 칠만으로 꺼진 것을 보인다. 비활성 색(반투명)이 겹치면 버튼이 사라져 보였다(녹화 pd_alert).
+            //   못 누르는 때는 `TryPossess` 가 거른다(대상 없음 · 쿨다운 · 몸이 있음)
+            if (btn != null) btn.interactable = true;
             if (_possessButtonImage != null)
                 _possessButtonImage.color =
                     usable ? Color.white

@@ -64,14 +64,14 @@ namespace Game.Module.InGame
             var img = _ui.Get<Image>("PossessButtonGlow");
             if (img == null) return;
             img.gameObject.SetActive(on);
-            if (on) PulseGlowAsync(img, ++_possessGlowId).Forget();   // fire-and-forget: 꺼질 때까지 도는 맥박
+            if (on) PulseGlowAsync(img, ++_possessGlowId, ult: false).Forget();   // fire-and-forget: 꺼질 때까지 도는 맥박
             else _possessGlowId++;
         }
 
-        private async UniTaskVoid PulseGlowAsync(Image img, int id)
+        private async UniTaskVoid PulseGlowAsync(Image img, int id, bool ult)
         {
             float t = 0f;
-            while (this != null && img != null && id == _possessGlowId)
+            while (this != null && img != null && id == (ult ? _ultGlowId : _possessGlowId))
             {
                 float k = Mathf.PingPong(t / GlowPulseSeconds * 2f, 1f);
                 img.color = new Color(1f, 1f, 1f, Mathf.Lerp(GlowMinAlpha, 1f, k));
@@ -84,7 +84,9 @@ namespace Game.Module.InGame
         /// <summary>나가기가 거절됐다 — 버튼 위에 이유를 잠깐 띄운다.</summary>
         private void OnPossessDenied(PossessDeniedEvent e)
         {
-            var text = _ui.Get<TMP_Text>("PossessDeniedToast");
+            // 필살기 체험을 다 쓴 알림은 필살기 버튼 위에(빙의와 버튼을 나눈 뒤, 2026-10-16)
+            var text = e.UltTrialSpent ? _ui.Get<TMP_Text>("UltDeniedToast") : null;
+            if (text == null) text = _ui.Get<TMP_Text>("PossessDeniedToast");
             if (text == null) return;
             text.text = Localize.Get(e.UltTrialSpent ? "ui.ingame.ult_trial_spent" : "ui.ingame.no_host_to_possess");
             ShowDeniedToastAsync(text, ++_deniedToastId).Forget();   // fire-and-forget: 잠깐 떴다 사라지는 알림

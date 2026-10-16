@@ -967,6 +967,12 @@ namespace Game.Module.InGame
             // 죽은 몸은 더 이상 정보가 아니다. 체력바·빙의 표식을 지운다.
             if (_hpBarBg != null) _hpBarBg.gameObject.SetActive(false);
             if (_possessMark != null) _possessMark.gameObject.SetActive(false);
+            // 머리 위 스킬 아이콘 · 상성 표시도 — 죽는 동안엔 틱이 멈춰(TickFlash) 쓰러지는 몸 위에 그대로 굳어 있었다(PD 2026-10-16)
+            HideCastBadge();
+            if (_kindGem != null) _kindGem.gameObject.SetActive(false);
+            if (_matchArrow != null) _matchArrow.gameObject.SetActive(false);
+            if (_takeMark != null) _takeMark.gameObject.SetActive(false);
+            SetTelegraph(false);   // 기 모으던 노란 빛을 띤 채 쓰러지지 않게
 
             Apply();
             return true;

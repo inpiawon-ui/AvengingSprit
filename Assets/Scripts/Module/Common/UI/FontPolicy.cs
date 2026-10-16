@@ -49,7 +49,7 @@ namespace Game.Module.Common.UI
             "PlayerSoulLabel", "GhostNameText", "LevelText", "HpLabelGhost", "GhostHpText",
             "HostLabel", "HostLevelText", "HpLabelHost", "HostHpText",
             "ChapterLabel", "RoomLabel", "RoomNumberText", "RoomTotalText",
-            "SkillButtonLabel", "PossessButtonLabel", "PossessCostText",
+            "SkillButtonLabel", "PossessButtonLabel", "PossessCostText", "UltButtonLabel",
             // 영문 라벨
             "GhostLabelText", "ChapterNumberText",
             "BossLabel", "ProgressLabel", "StatLabelText",

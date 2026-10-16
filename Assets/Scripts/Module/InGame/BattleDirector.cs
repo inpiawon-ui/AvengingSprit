@@ -2966,6 +2966,7 @@ namespace Game.Module.InGame
         private void EnterRoom(int index)
         {
             _roomIndex = index;
+            ResetStageLevel();
             DespawnExit();
             _exitOpen = false;
             _exitOpenTime = -1f;
@@ -3554,6 +3555,7 @@ namespace Game.Module.InGame
             // 빙의 중에는 방을 닫지 않는다 — 빼앗기는 몸은 이미 적 목록에서 빠져 있어서
             // 마지막 한 마리를 빼앗는 순간 방이 클리어된 것으로 보인다.
             if (_combatStep > 0f) _combatStep -= dt;
+            TickStageLevel();
             TickPendingLevelUp(dt);
             // 레벨업 팝업이 대기 중이면 출구를 먼저 열지 않는다 —
             // 고르기도 전에 다음 방으로 갈 수 있으면 성장이 선택이 아니라 사고가 된다.
@@ -7724,7 +7726,11 @@ namespace Game.Module.InGame
             // 마지막 보스의 경험치는 안 준다 — 판이 끝나는데 레벨업 창이 먼저 떠 막타 슬로우 · 폭발을 가렸다(2026-10-08 녹화)
             // 탑은 레벨업 · 카드가 없다(탑 3-8). 밤 보스도 판의 끝이라 안 준다
             if (!IsTowerRun && !(u.IsBoss && (IsLastRoom || IsNightRun)))
-                GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+            {
+                // 밤은 방이 안 비어 잡는 만큼 오른다. 그 밖은 스테이지(방) 하나 = 레벨업 한 번(BattleDirector.StageLevel)
+                if (IsNightRun) GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
+                else FillStageExp();
+            }
             // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다. 모드는 판 안 조각 · 골드가 없다(보상은 첫 클리어 · 처치 수)
             if (!u.IsBoss && !IsModeRun) GrantShards(u.Key, lost: false);
 
@@ -8042,6 +8048,12 @@ namespace Game.Module.InGame
                 // 벽 보스는 제 죽는 연출이 따로 있다 — 그냥 두면 선 채로 투명해진다.
                 BeginPythonDeath(u);
             }
+
+            // 예고를 건 채 죽으면 예고가 바닥에 남았다(PD 2026-10-16 「얼럿이 뜬 상태에서 죽으면 얼럿이 남는다」).
+            // 적 호스트 스킬 예고는 **다른** 적 호스트가 다음 스킬을 고를 때에야 거둬져서, 그 방에 다른 적 호스트가 없거나
+            // 내가 유령이면 방을 나갈 때까지 남았다. 잡몹만 거두던 예고(돌진 띠 · 박격 등)도 몸 종류와 상관없이 같이 거둔다.
+            if (u == _enemyCasting) { EndEnemyTell(); _enemyCasting = null; }
+            CancelWarnsOf(u);
 
             // 벽 보스는 방향별 die 그림이 없다(있어도 옛 옆모습이라 안 쓴다).
             // 사라지는 시간만 받아 그동안 제 연출을 돈다.
@@ -8627,15 +8639,10 @@ namespace Game.Module.InGame
         {
             if (!_running || _awaitingBuff || IsChanneling || IsCastFrozen) return;
 
-            // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다.
-            // 몸이 있을 때 이 버튼은 **탈출**이다.
-            // 몸이 있을 때 이 버튼은 **필살기**다(PD 2026-10-15 「영혼 탈출을 빼고 액티브 · 필살기 두 개」).
-            // 예전엔 탈출(`LeaveHost`)이었다 — 이제 몸을 떠나는 길은 몸이 쓰러질 때뿐이다.
-            if (_host != null)
-            {
-                TryUltimate();
-                return;
-            }
+            // 기획서 1-7 — 빙의 중에는 다른 몸으로 갈아탈 수 없다. 몸을 떠나는 길은 몸이 쓰러질 때뿐이다.
+            // 빙의 버튼은 따로 있다(PD 2026-10-16 「빙의 버튼이 따로 있어야」) — 예전엔 몸이 있으면 이 버튼이 필살기였다.
+            // 필살기는 `UltButton` → `TryUltimate`.
+            if (_host != null) return;
 
             if (_possessTarget == null || _repossessLock > 0f) return;
 
@@ -8649,6 +8656,7 @@ namespace Game.Module.InGame
             //   영혼이 방 입구 바닥에서 날아온다.
             var from = Avatar != null ? Avatar.Position : _ghost.Position;
 
+            _stageFought = true;   // 마지막 적을 빼앗아 방이 비어도 스테이지 레벨업은 나온다(BattleDirector.StageLevel)
             // 적 목록에서만 빼고 **지우지는 않는다.** 채널이 도는 동안 그 자리에서
             // 빼앗기는 자세로 굳어 있어야 한다. 총알·AI 는 목록을 보므로 더는 안 건드린다.
             _enemies.Remove(target);

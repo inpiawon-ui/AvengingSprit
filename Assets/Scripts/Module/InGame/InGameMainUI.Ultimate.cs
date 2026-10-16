@@ -5,8 +5,9 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 필살기 버튼 — 예전 빙의 · 탈출 버튼 자리(PD 2026-10-15 「영혼 탈출을 빼고 액티브 · 필살기 버튼 두 개」).
-    /// 유령이면 「빙의」, 몸이 있으면 「필살기」. 필살기는 빙의마다 한 번 — 쓰면 회색으로 잠긴다.
+    /// 필살기 버튼(`UltButton`) — PD 2026-10-15 「영혼 탈출을 빼고 액티브 · 필살기 버튼 두 개」 뒤,
+    /// 2026-10-16 「빙의 버튼이 따로 있어야」로 빙의(`PossessButton`)와 나눴다. 예전엔 한 버튼이 유령이면 빙의, 몸이 있으면 필살기였다.
+    /// 필살기는 빙의마다 한 번 — 쓰면 회색으로 잠긴다. 유령일 때는 쓸 몸이 없어 꺼진 채로 둔다.
     /// </summary>
     public sealed partial class InGameMainUI
     {
@@ -19,6 +20,9 @@ namespace Game.Module.InGame
         private bool _ultShownSpent;
         private string _ultShownHost;
         private Sprite _ultLockSprite;
+        private Image _ultButtonImage;
+        private bool _ultGlowOn;
+        private int _ultGlowId;
 
         /// <summary>매 프레임 — 몸이 있으면 필살기 얼굴로, 쓸 수 있는지에 따라 밝기 · 빛.</summary>
         private void TickUltButton()
@@ -26,12 +30,19 @@ namespace Game.Module.InGame
             if (_battle == null) return;
             if (!_battle.HasHostBody)
             {
-                if (_ultShown)
+                if (_ultShown || _ultShownHost == null)
                 {
-                    // 유령으로 돌아왔다 — 빙의 얼굴로 되돌린다
+                    // 유령 — 쓸 몸이 없다. 빈 칸 · 회색으로 둔다
                     _ultShown = false;
-                    _possessFaceSet = false;
-                    SetPossessReady(false);
+                    _ultShownHost = string.Empty;
+                    var off = _ui.Get<Image>("UltIcon");
+                    if (off != null) off.color = new Color(1f, 1f, 1f, 0f);
+                    _ui.SetText("UltButtonLabel", UltLabel);
+                    // interactable 은 켜 둔다(아래와 같은 이유) — 눌러도 `TryUltimate` 가 몸이 없으면 거른다
+                    var offBtn = _ui.Get<Button>("UltButton");
+                    if (offBtn != null) offBtn.interactable = true;
+                    if (_ultButtonImage != null) _ultButtonImage.color = UltUsedTint;
+                    SetUltGlow(false);
                 }
                 return;
             }
@@ -48,7 +59,7 @@ namespace Game.Module.InGame
             _ultShownSpent = spent;
             _ultShownHost = host;
 
-            var icon = _ui.Get<Image>("PossessGhostIcon");
+            var icon = _ui.Get<Image>("UltIcon");
             if (icon != null)
             {
                 if (spent && _ultLockSprite == null) _ultLockSprite = _battle.UltimateLockIcon;
@@ -57,15 +68,25 @@ namespace Game.Module.InGame
                 icon.preserveAspect = true;   // 자물쇠는 세로로 길다 — 정사각 칸에 늘이지 않는다
                 icon.color = ready || spent ? Color.white : UltUsedTint;
             }
-            _ui.SetText("PossessButtonLabel", trial ? Localize.Get("ui.ingame.ult_trial")
-                                             : spent ? Localize.Get("ui.ingame.ult_locked") : UltLabel);
-            _ui.SetText("PossessCostText", string.Empty);
+            _ui.SetText("UltButtonLabel", trial ? Localize.Get("ui.ingame.ult_trial")
+                                         : spent ? Localize.Get("ui.ingame.ult_locked") : UltLabel);
             // ⚠ 다 쓴 필살기도 interactable 은 켜 둔다 — 버튼의 비활성 색(반투명)이 회색 위에 겹쳐 버튼이 통째로 사라져 보였다(녹화 tb_medium1).
             //   눌러도 `TryUltimate` 가 1회 규칙으로 거른다
-            var btn = _ui.Get<Button>("PossessButton");
+            var btn = _ui.Get<Button>("UltButton");
             if (btn != null) btn.interactable = true;
-            if (_possessButtonImage != null) _possessButtonImage.color = ready ? Color.white : UltUsedTint;
-            SetPossessGlow(ready);
+            if (_ultButtonImage != null) _ultButtonImage.color = ready ? Color.white : UltUsedTint;
+            SetUltGlow(ready);
+        }
+
+        private void SetUltGlow(bool on)
+        {
+            if (on == _ultGlowOn) return;
+            _ultGlowOn = on;
+            var img = _ui.Get<Image>("UltButtonGlow");
+            if (img == null) return;
+            img.gameObject.SetActive(on);
+            if (on) PulseGlowAsync(img, ++_ultGlowId, ult: true).Forget();   // fire-and-forget: 꺼질 때까지 도는 맥박
+            else _ultGlowId++;
         }
     }
 }
