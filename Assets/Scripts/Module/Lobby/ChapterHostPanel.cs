@@ -93,6 +93,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _gradeBadges = Array.Empty<Sprite>();
         [SerializeField] private Sprite _starHalf;
 
+        /// <summary>성급 별 — 1~4성 은별 · 5성마다 큰 금별(PD 2026-10-16). 둘 다 있으면 반 칸 별 대신 이것을 쓴다.</summary>
+        [SerializeField] private Sprite _starGold, _starSilver;
+
         // ⚠ 클리어 보상 · 챕터 설명 · 그림 칸은 **챕터 표**(`GameConfig.ChapterOf`)에서 온다.
         //   예전에는 여기 6칸 배열로 적혀 있었고, 보상 골드는 실제 지급액의 4~14배였다(임시표).
         //   화면에 적힌 값과 받는 값이 달라서는 안 된다 — 같은 표를 읽는다.

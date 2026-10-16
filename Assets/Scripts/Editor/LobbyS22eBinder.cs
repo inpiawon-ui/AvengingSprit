@@ -785,6 +785,8 @@ namespace Game.Editor
             Arr(so, "_gradeFrames", $"{Ch}/ch_card_frame_b.png", $"{Ch}/ch_card_frame_a.png", $"{Ch}/ch_card_frame_s.png");
             Arr(so, "_gradeBadges", $"{Ch}/ch_grade_b.png", $"{Ch}/ch_grade_a.png", $"{Ch}/ch_grade_s.png");
             so.FindProperty("_starHalf").objectReferenceValue = Spr($"{Ch}/ch_star_half.png");
+            so.FindProperty("_starGold").objectReferenceValue = Spr($"{Ch}/ch_star_gold.png");
+            so.FindProperty("_starSilver").objectReferenceValue = Spr($"{Ch}/ch_star_silver.png");
             so.FindProperty("_ribbonToday").objectReferenceValue = Spr($"{Ch}/ribbon_today.png");
             so.ApplyModifiedPropertiesWithoutUndo();
         }

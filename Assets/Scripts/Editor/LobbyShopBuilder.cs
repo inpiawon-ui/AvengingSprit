@@ -558,6 +558,8 @@ namespace Game.Editor
             so.FindProperty("_essenceIcon").objectReferenceValue = Spr($"{Pass}/micon_possess.png");
             so.FindProperty("_staminaIcon").objectReferenceValue = Spr($"{Pr}/prod_stamina.png");
             so.FindProperty("_tab").objectReferenceValue = Spr($"{St}/shop_tab.png");
+            so.FindProperty("_starGold").objectReferenceValue = Spr($"{Ch}/ch_star_gold.png");
+            so.FindProperty("_starSilver").objectReferenceValue = Spr($"{Ch}/ch_star_silver.png");
             so.FindProperty("_tabSelected").objectReferenceValue = Spr($"{St}/shop_tab_sel.png");
             so.FindProperty("_silhouette").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISilhouette.mat")

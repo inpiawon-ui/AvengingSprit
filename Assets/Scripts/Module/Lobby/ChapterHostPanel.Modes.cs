@@ -29,6 +29,10 @@ namespace Game.Module.Lobby
 
         private const float StartIconGap = 4f, StartPartGap = 10f;
 
+        // 카드(100 × 168) 별 줄 — 이름(-36) 위 · 얼굴 아래. 큰 금별은 1.6배라 은별을 12 로 둔다
+        private static readonly Vector2 CardStarCenter = new(0f, -19f);
+        private const float CardStarSize = 12f;
+
         // 카드 줄 치수 — 출전 방식 화면(S22e)이면 작은 카드
         private float CardW => _hasModes ? ChapterHostLayout.ModeCardWidth : ChapterHostLayout.CardWidth;
         private float CardGapW => _hasModes ? ChapterHostLayout.ModeCardGap : ChapterHostLayout.CardGap;
@@ -57,15 +61,20 @@ namespace Game.Module.Lobby
                 badge.gameObject.SetActive(badge.sprite != null);
             }
 
-            // 별 = 숙련도 / 2, 홀수면 반 칸. 숙련도 0(봉인)은 빈 별만 — 출전은 된다
+            // 성급 = 숙련도(1~10) — 은별 1~4 · 5성마다 큰 금별. 숙련도 0(봉인)은 별 없음 — 출전은 된다
             int m = _player.GetMastery(key);
-            int full = m / 2;
-            bool half = m % 2 == 1;
-            for (int s = 0; s < 5; s++)
+            if (_starGold != null && _starSilver != null)
+                StarRank.Apply(card, "CardStar", m, _starGold, _starSilver, CardStarCenter, CardStarSize, 1f);
+            else
             {
-                var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
-                if (img == null) continue;
-                img.sprite = s < full ? _starOn : s == full && half && _starHalf != null ? _starHalf : _starOff;
+                int full = m / 2;
+                bool half = m % 2 == 1;
+                for (int s = 0; s < 5; s++)
+                {
+                    var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
+                    if (img == null) continue;
+                    img.sprite = s < full ? _starOn : s == full && half && _starHalf != null ? _starHalf : _starOff;
+                }
             }
 
             // 유리 ▲ · 불리 ▼ 화살표는 시안 S22e 카드에 없다 — 속성 아이콘만
@@ -108,7 +117,8 @@ namespace Game.Module.Lobby
             {
                 var img = _ui.Find(card, $"CardStar{s}")?.GetComponent<Image>();
                 if (img == null) continue;
-                img.gameObject.SetActive(true);
+                // 새 별 표기에는 「빈 별」이 없다 — 못 가진 몸은 별을 숨기고 「???」 와 자물쇠로만
+                img.gameObject.SetActive(_starGold == null);
                 img.sprite = _starOff;
             }
             TextIn(card, "CardName", "???");

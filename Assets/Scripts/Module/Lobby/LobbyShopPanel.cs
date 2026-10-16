@@ -38,6 +38,7 @@ namespace Game.Module.Lobby
         [SerializeField] private KeyedSprite[] _products = Array.Empty<KeyedSprite>();  // 상품 id → 그림
         [SerializeField] private Sprite _gemIcon, _goldIcon, _ticketIcon, _essenceIcon, _staminaIcon, _goldPile;
         [SerializeField] private Sprite _tab, _tabSelected;
+        [SerializeField] private Sprite _starGold, _starSilver;   // 성급 별(StarRank) — 오늘의 상점 조각 칸
         [SerializeField] private Material _silhouette;
 
         private enum Page { Today, Chest, Currency }
@@ -57,6 +58,7 @@ namespace Game.Module.Lobby
         private Page _page = Page.Currency;
         private float _tick;
         private string _pending;   // 확인 창에 띄운 상품
+        private static readonly Vector2 SlotStarCenter = new(0f, -71f);   // 오늘의 상점 칸 별 줄(빌더 자리)
         private float _confirmRowTop = float.NaN, _confirmRowHeight;   // 확인 창 첫 줄 위 끝 · 줄 높이(빌더 값)
         private bool _busy;
 
@@ -243,14 +245,9 @@ namespace Game.Module.Lobby
                 var count = countNode != null ? countNode.GetComponent<TextMeshProUGUI>() : null;
                 if (count != null) count.color = free ? GoldColor : Color.white;
 
-                int stars = host != null && p != null ? p.StarsOf(host.HostKey) : 0;
-                for (int k = 0; k < 5; k++)
-                {
-                    var star = Img(root, $"SlotStar{k}");
-                    if (star == null) continue;
-                    star.gameObject.SetActive(s.IsShard);
-                    star.color = k < stars ? Color.white : new Color(0.3f, 0.33f, 0.45f);
-                }
+                // 그 몸의 성급(1~10) — 은별 1~4 · 5성마다 큰 금별. 조각 칸이 아니면 별 없음
+                int rank = s.IsShard && host != null && p != null ? p.GetMastery(host.HostKey) : 0;
+                StarRank.Apply(root, "SlotStar", rank, _starGold, _starSilver, SlotStarCenter, 14f, 2f);
 
                 In(root, "SlotPriceIconGold", !free && !s.PaidWithGem && !s.Bought);
                 In(root, "SlotPriceIconGem", !free && s.PaidWithGem && !s.Bought);
