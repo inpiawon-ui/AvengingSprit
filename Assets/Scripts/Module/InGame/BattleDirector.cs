@@ -368,6 +368,7 @@ namespace Game.Module.InGame
             try { _atlas = await res.LoadAsync<SpriteAtlas>(AtlasAddress); }
             catch (Exception e) { Debug.LogError($"[Battle] 아틀라스 로드 실패 — {e.Message}"); }
             CachePossessMarkSprites();
+            CacheDamageDigits();
             try { _config = await res.LoadAsync<GameConfig>("TableData/GameConfig"); AffinityRule.Bind(_config); }
             catch (Exception e) { Debug.LogError($"[Battle] GameConfig 로드 실패 — {e.Message}"); }
             if (_config == null) return;
@@ -8052,7 +8053,8 @@ namespace Game.Module.InGame
         // ── 피해 수치 ──────────────────────────────────────────────
         // 색은 "누가 맞았나"로 나눈다. 내가 때린 것과 내가 맞은 것이 같은 색이면
         // 화면이 숫자로 덮였을 때 상황 판단이 안 된다.
-        private static readonly Color DamageToEnemy = new(1f, 0.95f, 0.75f, 1f);
+        // 던파 — 평타는 금빛 노랑, 치명타는 붉게(숫자 그림은 흰 → 회색 그라데이션이라 색을 곱해 입힌다)
+        private static readonly Color DamageToEnemy = new(1f, 0.86f, 0.32f, 1f);
         private static readonly Color DamageToPlayer = new(1f, 0.42f, 0.38f, 1f);
         // 유령 HP 색(#5AC8F0)과 같은 계열. 피해 숫자와 섞이면 안 된다 — 성격이 다른 값이다.
         private static readonly Color GhostCostColor = new(0.35f, 0.78f, 0.94f, 1f);
@@ -8073,6 +8075,38 @@ namespace Game.Module.InGame
             return t;
         }
 
+        // 데미지 숫자 글꼴(던파식, 2026-10-16) — 그림이 없으면 null 로 두고 DamageText 가 TMP 로 그린다
+        private static readonly string[] DigitNames =
+            { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "plus", "minus" };
+
+        private void CacheDamageDigits()
+        {
+            var d = new Sprite[DigitNames.Length];
+            for (int i = 0; i < d.Length; i++)
+            {
+                d[i] = GetSprite("dmg_digit_" + DigitNames[i]);
+                if (d[i] == null) { DamageText.SetDigits(null); return; }
+            }
+            DamageText.SetDigits(d);
+        }
+
+        /// <summary>
+        /// 같은 적 위에 꽂힌 숫자들 — 새 숫자가 오면 앞 숫자들을 한 줄씩 밀어 올린다(던파). 「같은 적」은 뜬 자리가 가까운 것으로 잰다.
+        /// </summary>
+        private const float StackRadiusX = 70f, StackRadiusY = 60f;
+
+        private void PushStack(DamageText fresh, Vector2 at)
+        {
+            for (int i = 0; i < _damageTexts.Count; i++)
+            {
+                var o = _damageTexts[i];
+                if (o == fresh || !o.IsActive || o.IsLeaving) continue;
+                var d = o.Origin - at;
+                if (Mathf.Abs(d.x) > StackRadiusX || Mathf.Abs(d.y) > StackRadiusY) continue;
+                o.PushUp();
+            }
+        }
+
         /// <summary>맞은 자리에 피해 수치를 띄운다. 풀이 다 차면 조용히 넘어간다.</summary>
         private void ShowDamage(Vector2 at, int damage, bool toEnemy)
             => ShowDamage(at, damage, toEnemy, false);
@@ -8088,15 +8122,17 @@ namespace Game.Module.InGame
             var t = RentDamageText();
             if (t == null) return;
             if (dull && !crit) { t.ShowMinor(at, damage.ToString(), DullDamageColor); return; }
-            var color = weak ? WeakDamageColor
-                      : crit ? CritDamageColor
+            // 치명타가 먼저다 — 던파처럼 치명타는 늘 붉다. 상성 유리(주황)에 덮이면 터진 것이 안 읽혔다(녹화 dmg_hopper)
+            var color = crit ? CritDamageColor
+                      : weak ? WeakDamageColor
                       : toEnemy ? DamageToEnemy : DamageToPlayer;
             // 큰 글씨는 치명타만 쓴다 — 상성까지 크게 뜨면 둘이 구별되지 않는다(2026-10-02).
+            PushStack(t, at);
             t.Show(at, damage, color, crit);
         }
 
-        /// <summary>치명타 숫자 색. 평타(흰색)와 한눈에 갈려야 한다.</summary>
-        private static readonly Color CritDamageColor = new(1f, 0.83f, 0.29f, 1f);
+        /// <summary>치명타 숫자 색 — 던파처럼 붉게. 평타(금빛)와 한눈에 갈려야 한다.</summary>
+        private static readonly Color CritDamageColor = new(1f, 0.3f, 0.2f, 1f);
 
         // ── 치명타 ──────────────────────────────────────────────
         //
