@@ -54,6 +54,17 @@ namespace Game.Module.InGame
 
         private const int MaxGlyphs = 10;
 
+        // ── 합산 숫자 (다단 히트, PD 2026-10-16 「다단 히트 느낌을 살려야」) ─────────
+        // 한 적이 스킬에 연달아 맞으면 쌓이는 숫자 위에 **합계가 하나 더** 뜬다(던파 합산 표시).
+        // 맞을 때마다 합계가 바뀌며 한 번씩 튀고, 연타가 끝나면 크게 한 번 꽂히고 사라진다.
+        private const float TotalHeight = 60f;
+        private const float TotalLift = 178f;         // 쌓인 숫자 4줄(26 + 33×3 + 반 줄) 위
+        private const float TotalSlamFrom = 1.9f;
+        private const float BumpSeconds = 0.1f;
+        private const float BumpFrom = 1.3f;          // 한 대 더 들어갈 때마다 튄다
+        private const float FinishFrom = 1.75f;       // 연타가 끝나는 순간 크게 한 번
+        private const float FinishHold = 0.7f;
+
         // 숫자 그림 — 판이 그림을 받은 뒤 한 번 꽂는다(BattleDirector.SetDamageDigits). 순서 0~9, +, −
         private static Sprite[] s_digits;
         public static void SetDigits(Sprite[] digits) => s_digits = digits;
@@ -84,11 +95,18 @@ namespace Game.Module.InGame
         private float _stackLift;       // 지금 밀려 올라간 높이
         private float _stackTarget;     // 가야 할 높이
 
+        private bool _total;            // 합산 숫자인가
+        private bool _totalOpen;        // 아직 연타가 이어지는 중 — 꺼지지 않고 버틴다
+        private float _bump = 99f, _bumpFrom = 1f;
+        private float _echoAge, _echoFrom;
+
         public bool IsActive { get; private set; }
         public Vector2 Origin { get; private set; }
         public int StackLevel { get; private set; }
         /// <summary>사라지는 중 — 더는 밀어 올리지 않는다.</summary>
         public bool IsLeaving => _age > SlamSeconds + _hold;
+        /// <summary>합산 숫자 — 쌓이기에서 빠진다.</summary>
+        public bool IsTotal => _total && IsActive;
 
         public void Init(TMP_FontAsset font)
         {
@@ -188,46 +206,81 @@ namespace Game.Module.InGame
         /// <summary>곁다리 수치(피흡 등) — 작게, 덜 튀게, 잔상 없이. 피해 숫자를 덮지 않는다.</summary>
         public void ShowMinor(Vector2 at, string text, Color color)
         {
-            Begin(at, text, color, false, true);
+            Begin(at, text, color, false, true, false);
         }
 
         public void Show(Vector2 at, string text, Color color, bool crit)
         {
-            Begin(at, text, color, crit, false);
+            Begin(at, text, color, crit, false, false);
         }
 
-        private void Begin(Vector2 at, string text, Color color, bool crit, bool minor)
+        /// <summary>연타 합계를 띄운다. <see cref="FinishTotal"/> 을 부를 때까지 꺼지지 않는다.</summary>
+        public void ShowTotal(Vector2 at, string text, Color color)
+        {
+            Begin(at, text, color, false, false, true);
+        }
+
+        /// <summary>한 대 더 들어갔다 — 합계를 바꾸고 한 번 튄다.</summary>
+        public void UpdateTotal(string text)
+        {
+            if (!IsTotal || !_totalOpen) return;
+            SetText(text);
+            _bump = 0f;
+            _bumpFrom = BumpFrom;
+        }
+
+        /// <summary>연타가 끝났다 — 크게 한 번 꽂히고(잔상과 함께) 잠깐 버틴 뒤 사라진다.</summary>
+        public void FinishTotal()
+        {
+            if (!IsTotal || !_totalOpen) return;
+            _totalOpen = false;
+            _hold = Mathf.Max(0f, _age - SlamSeconds) + FinishHold;
+            _bump = 0f;
+            _bumpFrom = FinishFrom;
+            _echoAge = 0f;
+            _echoFrom = FinishFrom;
+        }
+
+        private void Begin(Vector2 at, string text, Color color, bool crit, bool minor, bool total)
         {
             _crit = crit;
             _minor = minor;
+            _total = total;
+            _totalOpen = total;
+            _bump = 99f;
             _color = color;
             _age = 0f;
-            _hold = crit ? CritHoldSeconds : HoldSeconds;
-            _height = minor ? MinorHeight : crit ? CritHeight : NormalHeight;
-            _slamFrom = minor ? 1.25f : crit ? CritSlamFrom : SlamFrom;
-            _drift = Random.Range(-8f, 8f);
+            _echoAge = 0f;
+            _hold = total ? 999f : crit ? CritHoldSeconds : HoldSeconds;
+            _height = total ? TotalHeight : minor ? MinorHeight : crit ? CritHeight : NormalHeight;
+            _slamFrom = total ? TotalSlamFrom : minor ? 1.25f : crit ? CritSlamFrom : SlamFrom;
+            _echoFrom = _slamFrom;
+            _drift = total ? 0f : Random.Range(-8f, 8f);
             Origin = at;
             StackLevel = 0;
             _stackLift = _stackTarget = 0f;
             IsActive = true;
 
-            _useGlyphs = HasDigits && Layout(text);
-            _tmp.enabled = !_useGlyphs;
-            if (_shadow != null) _shadow.enabled = !_useGlyphs;
-            _echoTmp.enabled = !_useGlyphs && !minor;
-            if (!_useGlyphs)
-            {
-                for (int i = 0; i < _glyphCount; i++) { _faceGlyphs[i].enabled = false; _echoGlyphs[i].enabled = false; }
-                _glyphCount = 0;
-                _tmp.fontSize = _height;
-                _tmp.text = text;
-                if (_shadow != null) { _shadow.fontSize = _height; _shadow.text = text; }
-                _echoTmp.fontSize = _height;
-                _echoTmp.text = text;
-            }
+            SetText(text);
 
             gameObject.SetActive(true);
             Apply();
+        }
+
+        private void SetText(string text)
+        {
+            _useGlyphs = HasDigits && Layout(text);
+            _tmp.enabled = !_useGlyphs;
+            if (_shadow != null) _shadow.enabled = !_useGlyphs;
+            _echoTmp.enabled = !_useGlyphs && !_minor;
+            if (_useGlyphs) return;
+            for (int i = 0; i < _glyphCount; i++) { _faceGlyphs[i].enabled = false; _echoGlyphs[i].enabled = false; }
+            _glyphCount = 0;
+            _tmp.fontSize = _height;
+            _tmp.text = text;
+            if (_shadow != null) { _shadow.fontSize = _height; _shadow.text = text; }
+            _echoTmp.fontSize = _height;
+            _echoTmp.text = text;
         }
 
         /// <summary>글자마다 숫자 그림을 놓는다. 그림에 없는 글자가 있으면 false(TMP 로 그린다).</summary>
@@ -286,6 +339,8 @@ namespace Game.Module.InGame
         {
             if (!IsActive) return;
             _age += dt;
+            _bump += dt;
+            _echoAge += dt;
             if (_age >= SlamSeconds + _hold + ExitSeconds) { Despawn(); return; }
             _stackLift += (_stackTarget - _stackLift) * Mathf.Min(1f, StackLerp * dt);
             Apply();
@@ -299,7 +354,8 @@ namespace Game.Module.InGame
 
         private void Apply()
         {
-            float y = StartLift + _stackLift;
+            float y = (_total ? TotalLift : StartLift) + _stackLift;
+            float drift = _total ? 0f : HoldDrift;
             float scale, alpha;
             if (_age < SlamSeconds)
             {
@@ -313,18 +369,29 @@ namespace Game.Module.InGame
             else if (_age < SlamSeconds + _hold)
             {
                 float k = (_age - SlamSeconds) / _hold;
-                // 꽂힌 순간 한 번 눌렸다 튄다(1 → 0.92 → 1) — 박힌 무게
-                float squash = k < 0.12f ? Mathf.Lerp(0.92f, 1f, k / 0.12f) : 1f;
+                // 꽂힌 순간 한 번 눌렸다 튄다(1 → 0.92 → 1) — 박힌 무게. 시간으로 잰다(합산 숫자는 버티는 시간이 길다)
+                float t = _age - SlamSeconds;
+                float squash = t < 0.06f ? Mathf.Lerp(0.92f, 1f, t / 0.06f) : 1f;
                 scale = _minor ? 1f : squash;
                 alpha = 1f;
-                y += HoldDrift * k;
+                y += drift * k;
             }
             else
             {
                 float k = (_age - SlamSeconds - _hold) / ExitSeconds;
                 scale = Mathf.Lerp(1f, 0.85f, k);
                 alpha = 1f - k * k;
-                y += HoldDrift + ExitRise * k;
+                y += drift + ExitRise * k;
+            }
+
+            // 합산 숫자 — 한 대 더 들어갈 때마다 튀고 하얗게 번쩍인다
+            float bumpFlash = 0f;
+            if (_bump < BumpSeconds)
+            {
+                float b = _bump / BumpSeconds;
+                float e = 1f - (1f - b) * (1f - b) * (1f - b);
+                scale *= Mathf.Lerp(_bumpFrom, 1f, e);
+                bumpFlash = (1f - e) * 0.6f;
             }
 
             // 픽셀아트라 소수 좌표로 두면 글자가 흐릿하게 떨린다. 정수로 스냅한다.
@@ -338,16 +405,17 @@ namespace Game.Module.InGame
                 float flash = Mathf.Clamp01(1f - Mathf.Abs(_age - SlamSeconds) / 0.08f);
                 c = Color.Lerp(c, Color.white, flash * 0.7f);
             }
+            if (bumpFlash > 0f) c = Color.Lerp(c, Color.white, bumpFlash);
             c.a = alpha;
             ApplyFace(c);
 
-            // 잔상 — 꽂히는 동안 큰 크기로 남아 조금 더 커지며 사라진다
-            float ea = 0f, es = _slamFrom;
-            if (!_minor && _age < EchoSeconds)
+            // 잔상 — 꽂히는 동안 큰 크기로 남아 조금 더 커지며 사라진다(합산 숫자는 연타가 끝날 때 한 번 더)
+            float ea = 0f, es = _echoFrom;
+            if (!_minor && _echoAge < EchoSeconds)
             {
-                float k = _age / EchoSeconds;
+                float k = _echoAge / EchoSeconds;
                 ea = EchoAlpha * (1f - k);
-                es = _slamFrom * Mathf.Lerp(1f, EchoGrow, k);
+                es = _echoFrom * Mathf.Lerp(1f, EchoGrow, k);
             }
             _echo.gameObject.SetActive(ea > 0.01f);
             if (ea > 0.01f)

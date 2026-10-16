@@ -129,6 +129,7 @@ namespace Game.Module.InGame
         {
             if (me == null) return;
             global::Game.Module.Common.GameSound.Skill(me.Key);
+            OpenSkillChainWindow();
             switch (me.Key)
             {
                 case "amazon":           AmazonLightningDance(me); break;   // 번개 무희

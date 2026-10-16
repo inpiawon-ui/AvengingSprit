@@ -54,8 +54,9 @@ namespace Game.Editor
                 float.TryParse(f[3], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var ult);
                 float.TryParse(f[4], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var act);
                 string swap = f.Length > 5 && f[5].Length > 0 ? f[5] : null;
+                bool solo = f.Length > 6 && f[6] == "solo";
                 Debug.Log("[RW] batch " + f[1] + " (남은 줄 " + (string.IsNullOrEmpty(rest) ? 0 : rest.Split(';').Length) + ")");
-                Run(f[0], f[1], sec, 3f, ult, act, swap);
+                Run(f[0], f[1], sec, 3f, ult, act, swap, solo: solo);
             }
             else if (state == PlayModeStateChange.EnteredEditMode)
             {
@@ -76,7 +77,8 @@ namespace Game.Editor
         /// <param name="activeAt">액티브를 누를 초(0 이하면 안 누름).</param>
         public static void Run(string hostKey, string clip, float recordSeconds, float liftMeters = 3f,
                                float ultAt = -1f, float activeAt = 0.5f, string swapTo = null,
-                               string[] enemyHosts = null, float perEnemy = 2.6f, bool trialCheck = false)
+                               string[] enemyHosts = null, float perEnemy = 2.6f, bool trialCheck = false,
+                               bool solo = false)
         {
             // 필살기 1회 체험 확인 — swapTo 몸을 못 가진 몸으로 친다. 필살기를 쓰고, 다시 빙의해도 잠긴 채인지 본다
             Game.Module.InGame.BattleDirector.EditorUnownedHost = trialCheck ? swapTo : null;
@@ -162,7 +164,7 @@ namespace Game.Editor
                         host.Position += new Vector2(0f, liftMeters * m);
                         var spawn = bt.GetMethod("SpawnRoomUnit", F);
                         // 적 호스트 예고 녹화면 잡몹을 더 세우지 않는다 — 바닥 예고가 잡몹에 가린다
-                        for (int i = 0; i < Offsets.Length && src != null && enemyHosts == null; i++, alive++)
+                        for (int i = 0; i < Offsets.Length && src != null && enemyHosts == null && !solo; i++, alive++)
                         {
                             // 근접만 더 세운다 — 1챕터 원거리는 수류탄병이라 더 세우면 수류탄 폭발이 화면을 덮었다(녹화 rw_sl_1 · rw_sl_2)
                             var pick = src;
@@ -194,7 +196,14 @@ namespace Game.Editor
                             var hp = host.Position;
                             all.Sort((x, y) => (x.Position - hp).sqrMagnitude.CompareTo((y.Position - hp).sqrMagnitude));
                             var kill = bt.GetMethod("KillEnemy", F);
-                            for (int i = MaxEnemies; i < all.Count; i++) kill.Invoke(bd, new object[] { all[i] });
+                            // 한 명 판(다단 히트 확인, 2026-10-16) — 가장 가까운 하나만 앞에 세우고 맷집을 크게
+                            int keep = solo ? 1 : MaxEnemies;
+                            for (int i = keep; i < all.Count; i++) kill.Invoke(bd, new object[] { all[i] });
+                            if (solo && all.Count > 0)
+                            {
+                                all[0].Position = hp + new Vector2(0f, 2.6f * m);
+                                SetHp(all[0], all[0].HpMax * SoloHpMul);
+                            }
                         }
                         SkillFxRecorder.RecordClip(clip, recordSeconds);
                         recAt = now;
@@ -263,6 +272,7 @@ namespace Game.Editor
 
         private const int EnemyHpMul = 4;
         private const int MaxEnemies = 14;
+        private const int SoloHpMul = 60;
 
         private static void SetHp(Game.Module.InGame.Unit u, int hp)
         {

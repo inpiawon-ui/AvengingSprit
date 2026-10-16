@@ -32,6 +32,9 @@ namespace Game.Module.InGame
 
         /// <summary>쏜 적의 키 — 맞을 때 상성(2026-10-13)을 잰다. 없으면(지형 · 기믹) 상성을 안 탄다. `RentShot` 이 비운다.</summary>
         public string SourceKey { get; set; }
+
+        /// <summary>평타로 쏜 탄인가 — 다단 히트 합계(BattleDirector.MultiHit)는 스킬 탄만 센다. `RentShot` 이 비운다.</summary>
+        public bool IsBasic { get; set; }
         public int Damage => _damage;
         public Unit Target => _target;
         public Vector2 Position => _rect.anchoredPosition;

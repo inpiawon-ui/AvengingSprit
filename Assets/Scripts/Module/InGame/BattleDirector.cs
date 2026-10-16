@@ -3041,6 +3041,7 @@ namespace Game.Module.InGame
             _dying.Clear();
 
             for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Despawn();
+            ClearMultiHit();
             for (int i = 0; i < _impacts.Count; i++) _impacts[i].gameObject.SetActive(false);
 
             // 빙의가 도는 중에 방이 바뀌면 빼앗기던 몸이 그대로 남는다.
@@ -5062,6 +5063,14 @@ namespace Game.Module.InGame
 
         private void PerformAttack(Unit attacker, Unit target, bool fromPlayer)
         {
+            // 평타 안에서 나간 타격은 다단 히트 합계에서 뺀다(BattleDirector.MultiHit)
+            _basicAttackDepth++;
+            try { PerformAttackCore(attacker, target, fromPlayer); }
+            finally { _basicAttackDepth--; }
+        }
+
+        private void PerformAttackCore(Unit attacker, Unit target, bool fromPlayer)
+        {
             // 공격 방식과 무관하게 몸은 똑같이 쏘는 동작을 한다.
             // 여기 한 곳에서 켜야 근접·원거리·보스가 따로 놀지 않는다.
             attacker.PlayAttack();
@@ -6520,7 +6529,7 @@ namespace Game.Module.InGame
         {
             victim.IsAggro = true;
             // 상성 — 안 맞는 몸으로 때리면 **움찔하지 않는다.** 맞아도 꿈쩍 않는 것이 「덜 들어간다」다.
-            if (!IsDullAgainst(victim)) victim.SetState(EnemyState.Hit);
+            if (!IsDullAgainst(victim)) { victim.SetState(EnemyState.Hit); victim.HitJitter(); }
             // 저주는 받는 피해를 늘린다. 표시되는 숫자도 늘어난 값이어야 —
             // 저주를 걸어 놓고 숫자가 그대로면 걸린 줄 모른다.
             damage = Mathf.Max(1, Mathf.RoundToInt(damage * victim.CurseDamageMul));
@@ -6558,6 +6567,7 @@ namespace Game.Module.InGame
             NoteBossDamage(victim, damage);
             damage = SandboxDamage(damage);   // Sandbox — 테스트 피해 고정
             ShowDamage(victim.Position, damage, toEnemy: true, crit: false, weak, dull);
+            if (_basicAttackDepth == 0) NoteHitChain(victim, damage);
             // 안 맞는 몸 — 불똥만 작게 튀고 화면은 안 흔들린다.
             if (!HxSkillHit(victim, weak, dull))
             {
@@ -6620,6 +6630,7 @@ namespace Game.Module.InGame
         {
             var shot = RentShot();
             if (shot == null) return;
+            shot.IsBasic = _basicAttackDepth > 0;
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
             if (!fromPlayer) shot.SourceKey = attacker.Key;
@@ -7151,7 +7162,7 @@ namespace Game.Module.InGame
         private Projectile RentShot()
         {
             for (int i = 0; i < _shots.Count; i++)
-                if (!_shots[i].IsActive) { _shots[i].SourceKey = null; return _shots[i]; }
+                if (!_shots[i].IsActive) { _shots[i].SourceKey = null; _shots[i].IsBasic = false; return _shots[i]; }
 
             if (_shots.Count >= MaxShots) return null;   // 폭주 방지 상한
             var go = new GameObject("Shot", typeof(RectTransform));
@@ -7360,7 +7371,7 @@ namespace Game.Module.InGame
             // 저격하면 적이 맞고도 가만히 있는 그림이 된다.
             victim.IsAggro = true;
             // 상성 — 안 맞는 몸으로 때리면 **움찔하지 않는다.** 맞아도 꿈쩍 않는 것이 「덜 들어간다」다.
-            if (!IsDullAgainst(victim)) victim.SetState(EnemyState.Hit);
+            if (!IsDullAgainst(victim)) { victim.SetState(EnemyState.Hit); victim.HitJitter(); }
             int dmg = BouncedDamage(shot, shot.Damage);
             if (dmg <= 0) return;   // 버프 없이 튕긴 탄은 스쳐 지나간다
 
@@ -7409,6 +7420,7 @@ namespace Game.Module.InGame
             if (shot.FromPlayer) dmg = SandboxDamage(dmg);   // Sandbox — 테스트 피해 고정
 
             ShowDamage(victim.Position, dmg, toEnemy: true, crit, weak, dull);
+            if (shot.FromPlayer && !shot.IsBasic) NoteHitChain(victim, dmg);
             if (shot.FromPlayer)
             {
                 // 안 맞는 몸 — 「팅」 하고 튕기는 소리, 작은 불똥, 흔들림 없음.
@@ -8100,7 +8112,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _damageTexts.Count; i++)
             {
                 var o = _damageTexts[i];
-                if (o == fresh || !o.IsActive || o.IsLeaving) continue;
+                if (o == fresh || !o.IsActive || o.IsLeaving || o.IsTotal) continue;
                 var d = o.Origin - at;
                 if (Mathf.Abs(d.x) > StackRadiusX || Mathf.Abs(d.y) > StackRadiusY) continue;
                 o.PushUp();
@@ -8119,6 +8131,13 @@ namespace Game.Module.InGame
         private void ShowDamage(Vector2 at, int damage, bool toEnemy, bool crit, bool weak, bool dull = false)
         {
             if (damage <= 0) return;
+            // 한 프레임에 여러 마리가 맞았다 — 숫자를 조금씩 늦춰 「다다다닥」 물결로 꽂는다(BattleDirector.MultiHit)
+            if (toEnemy && QueueRipple(at, damage, crit, weak, dull)) return;
+            ShowDamageNow(at, damage, toEnemy, crit, weak, dull);
+        }
+
+        private void ShowDamageNow(Vector2 at, int damage, bool toEnemy, bool crit, bool weak, bool dull)
+        {
             var t = RentDamageText();
             if (t == null) return;
             if (dull && !crit) { t.ShowMinor(at, damage.ToString(), DullDamageColor); return; }
@@ -8194,6 +8213,7 @@ namespace Game.Module.InGame
 
         private void TickDamageTexts(float dt)
         {
+            TickMultiHit(dt);
             for (int i = 0; i < _damageTexts.Count; i++) _damageTexts[i].Tick(dt);
         }
 
@@ -8797,6 +8817,7 @@ namespace Game.Module.InGame
             if (!SandboxKeepsGauge) _skillCooldown = 0f;
             // 액티브는 컷인 없이 바로 나간다(PD 2026-10-15) — 컷인 · 멈춤은 필살기(`TryUltimate`)만
             ActiveCastPop(me);
+            OpenSkillChainWindow();
             CastActiveSkill(me);
         }
 

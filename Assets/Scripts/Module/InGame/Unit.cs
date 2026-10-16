@@ -1424,6 +1424,7 @@ namespace Game.Module.InGame
             // 사망 중에는 페이드가 색을 쥐고 있다. 여기서 흰색으로 되돌리면 페이드가 풀린다.
             if (_body == null || _dying) return;
 
+            TickJitter(dt);
             TickCastWhite(dt);
             TickCastBadge(dt);
 
@@ -2267,7 +2268,33 @@ namespace Game.Module.InGame
             if (Mathf.Approximately(_spriteLift, pixels)) return;
             _spriteLift = pixels;
             if (_body != null)
-                _body.rectTransform.anchoredPosition = new Vector2(0f, pixels);
+                _body.rectTransform.anchoredPosition = new Vector2(_jitterX, pixels);
+        }
+
+        // ── 피격 떨림 (다단 히트, PD 2026-10-16) ─────────────────
+        //
+        // 맞으면 몸 그림이 제자리에서 좌우로 짧게 떨린다(던파 피격 경직). 연타를 맞으면 계속 떨려서
+        // 한 대 한 대가 「들어갔다」가 몸에 보인다. 붉은 점멸은 연사에서 쉬게 해 두었으므로(FlashRestSeconds)
+        // 다단 히트를 몸으로 말해 줄 것이 이것이다. 자리(`Position`)는 그대로 — 그림만 흔든다.
+        private const float JitterSeconds = 0.1f;
+        private const float JitterPixels = 3f;
+        private const float JitterHz = 30f;       // 좌우 바뀜(초당)
+        private float _jitterLeft;
+        private float _jitterX;
+
+        public void HitJitter() => _jitterLeft = JitterSeconds;
+
+        private void TickJitter(float dt)
+        {
+            if (_jitterLeft <= 0f && _jitterX == 0f) return;
+            _jitterLeft = Mathf.Max(0f, _jitterLeft - dt);
+            float x = _jitterLeft > 0f
+                ? ((Mathf.FloorToInt(_jitterLeft * JitterHz) & 1) == 0 ? JitterPixels : -JitterPixels)
+                : 0f;
+            if (Mathf.Approximately(x, _jitterX)) return;
+            _jitterX = x;
+            if (_body != null)
+                _body.rectTransform.anchoredPosition = new Vector2(x, _spriteLift);
         }
 
         // ── 숨기 — 벽 뒤 · 구멍 안 · 천장 ────────────────────────
