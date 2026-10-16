@@ -7694,6 +7694,13 @@ namespace Game.Module.InGame
                 GameSound.StopEffects();
                 GameSound.Cue("boss.down");
             }
+            // 시즌 패스 미션 「유리한 상성 처치」 · 「보스 처치」(SeasonModule 이 받는다). 몸을 갈아타기 전 지금 몸으로 잰다
+            _bus.Publish(new EnemyKilledEvent
+            {
+                KilledKey = u.Key,
+                WithAdvantage = OutcomeAgainst(u) > 0,
+                WasBoss = u.IsBoss,
+            });
             _enemies.Remove(u);
             if (u == _possessTarget) _possessTarget = null;
             Retire(u);
