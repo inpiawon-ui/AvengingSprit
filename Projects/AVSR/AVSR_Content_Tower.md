@@ -99,7 +99,7 @@
 | `BodyRange(근/중/원)` | 그 거리의 호스트만 몸으로 나온다 | 몸 3을 그 분류에서 뽑는다. 분류는 **밤 문서 3-4절**의 `RangeClassOf` |
 | `BodyAffinity(파워/무기/마법)` | 그 속성 호스트만 몸으로 나온다 | `AffinityRule.KindOf` |
 | `EnemyAffinity(파워/무기/마법)` | 적이 전부 그 속성. 몸은 세 속성에서 하나씩 | 잔몹 = 그 속성 잔몹 + **그 속성 호스트(빼앗기 막음)** |
-| `NoLeave` | 첫 몸으로 끝까지 | `CanLeaveHost`(`BattleDirector.SoulFx.cs:680`) 첫 줄에서 `false`. 몸이 죽으면 본편대로 유령 → 남은 몸 · 구조 몸은 탈 수 있다 |
+| `Elite` | 정예 층 — 적 수는 적고 하나하나가 세다 | 잔몹마다 `MarkAsElite()` · 체력 ×2(층 세기 위에). 10-16 PD — 탈출이 없어져(10-15) 「첫 몸으로 끝까지」(`NoLeave`)를 대신한다 |
 | `SingleHost` | 호스트 하나만(3명 다 같은 호스트) | 층에 들어갈 때 1명 뽑기(3-4) |
 | `OneShot` | 빙의 한 번 · 구조 몸 없음 | 이 층 빙의 1회 뒤 `IsPossessable` 전부 `false` · `TickRescue` 끔 |
 | `Boss(bossKey, 몸 조건)` | 보스 + 그 보스를 이기는 속성의 몸 3 | 밤 문서 3-8절의 `SpawnBoss(bossKey)` |
@@ -120,7 +120,7 @@
 | 1 | 근거리의 층 | `BodyRange(근)` | `skeleton` · `bat` · `boar` × 6 | |
 | 2 | 원거리의 층 | `BodyRange(원)` | `scrapgunner` · `skeleton` × 7 | 적이 흩어진 방 |
 | 3 | 마법의 무리 | `EnemyAffinity(마법)` | 마법 잔몹 + 마법 호스트(막음) × 8 | 무기 몸 유리 |
-| 4 | 첫 몸으로 끝까지 | `NoLeave` | `boar` · `scrapgunner` · `skeleton` × 7 | |
+| 4 | 정예의 층 | `Elite` | `boar` · `scrapgunner` · `skeleton` × 4 (정예 · 체력 ×2) | 10-16 변경 |
 | 5 | 보스 — 크러셔 | `Boss(crusher, 마법)` | 없음 | 마법 몸만 |
 | 6 | 중거리의 층 | `BodyRange(중)` | `bat` · `bat` · `boar` × 9 | 빠른 박쥐 떼 |
 | 7 | 한 호스트의 층 | `SingleHost` | `skeleton` · `scrapgunner` · `boar` × 7 | |
@@ -149,7 +149,7 @@
 |---|---|---|
 | 유령 최대 체력 | 100 | 판마다 가득 |
 | 유령일 때 감소 | 초당 3.35 | 같음 |
-| 몸이 죽음 / 스스로 나옴 | −20% / −8% | 같음(`NoLeave` 층은 못 나옴) |
+| 몸이 죽음 | −20% | 같음(스스로 나오는 탈출은 10-15 에 없어졌다) |
 | 빙의 | 체력 100% · 무적 1.25초 · 스킬 가득 · 성장 적용 | 같음 |
 | 구조 몸 | 3초 뒤 · 쿨다운 20초 | 같음. 조건 호스트에서, `OneShot` 층은 없음 |
 
@@ -164,7 +164,6 @@
 - 판 도중 05:00 · 월요일 05:00 이 지나도 그 판은 끝까지. 깬 층은 **판을 시작한 주**로 센다 — 월요일을 넘겨 끝난 판의 층은 새 주에 넣지 않는다. 입장은 이미 썼다.
 - 클리어 순간 저장 · 지급하므로 결과 창 전에 앱이 꺼져도 깬 층 · 보상은 남는다.
 - 조건 호스트 0명(표 실수) → 경고 로그 + 전 호스트에서 뽑는다.
-- `NoLeave` 층에서 몸이 죽으면 본편대로 유령 → 남은 몸 · 구조 몸에 빙의 가능(「스스로」 나오는 것만 막는다).
 - 기기 시각을 뒤로 돌린 것이 보이면(마지막 채운 시각보다 이르면) 입장을 채우지 않는다. 앞으로 돌리는 것은 서버 전까지 못 막는다(TBD-SRV).
 
 ---
@@ -190,7 +189,7 @@
 | `PreviewBelow` · `PreviewAbove` | int | 2 · 2 | T1 사다리에 보일 층 수 |
 
 `TowerFloor`: `Floor` · `NameKey` · `DescKey` · `Rule`(`TowerRule`) · `RuleRange` · `RuleAffinity` · `BossKey` · `TrashKeys` · `TrashCount` · `RoomId`
-`TowerRule`: `None` · `BodyRange` · `BodyAffinity` · `EnemyAffinity` · `NoLeave` · `SingleHost` · `OneShot` · `Boss` — enum 번호로 저장되므로 새 규칙은 **끝에** 붙인다.
+`TowerRule`: `None` · `BodyRange` · `BodyAffinity` · `EnemyAffinity` · `NoLeave`(안 씀) · `SingleHost` · `OneShot` · `Boss` · `Elite` — enum 번호로 저장되므로 새 규칙은 **끝에** 붙인다.
 `TowerReward`: `Shards` · `Gold` / `TowerSweepStep`: `FromFloor` · `Shards` · `Gold`
 거리 분류 `RangeClassOf` 는 `NightModeTable` 의 것을 같이 읽는다(한 곳).
 
@@ -366,6 +365,7 @@
 
 | 버전 | 날짜 | 변경 내용 |
 |---|---|---|
+| 3.1 | 2026-10-16 | 탈출 폐지(10-15)에 맞춰 4층 「첫 몸으로 끝까지」(`NoLeave`) → 정예 층(`Elite`, 적 4 · 정예 · 체력 ×2) — PD 결정. 인게임 구현(커밋 8f00e5a9 · 4c9f83f1) |
 | 3.0 | 2026-10-15 | PD 결정 — 하루 입장 3번(이기든 지든 −1) · 입장 1번 = 한 층 · 젬 추가 입장 · 보상 = 첫 클리어 + 소탕(하루 1번). 에너지가 이어지지 않으므로 층 세기 식 강화(체력 +15% · 공격 +6%/층) · 주간 · 층별 재측정 · UI 시안(T1~T9) 연결 |
 | 2.0 | 2026-10-15 | 주간 초기화 · 하루 기회 · 이어 오르기 · 층 보상 + 일일 보상 |
 | 1.0 | 2026-10-15 | 최초 작성 — 5층 구간 · 체크포인트 |

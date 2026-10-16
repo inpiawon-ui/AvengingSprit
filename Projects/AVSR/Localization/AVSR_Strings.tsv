@@ -794,8 +794,8 @@ tower.floor.2.name	원거리의 층	遠距離の階	Ranged Floor
 tower.floor.2.desc	원거리 호스트만 몸으로 나온다	遠距離ホストだけが体として出る	Only ranged hosts appear as bodies
 tower.floor.3.name	마법의 무리	魔法の群れ	Magic Horde
 tower.floor.3.desc	적이 전부 마법. 몸은 세 속성이 섞여 나온다.	敵はすべて魔法。体は3属性が混ざって出る。	All foes are Magic. Bodies of all three types appear.
-tower.floor.4.name	첫 몸으로 끝까지	最初の体で最後まで	First Body Only
-tower.floor.4.desc	스스로 나올 수 없다 — 첫 빙의가 승부	自ら出られない — 最初の憑依が勝負	You cannot leave — the first possession decides
+tower.floor.4.name	정예의 층	精鋭の階	Elite Floor
+tower.floor.4.desc	적은 적지만 하나하나가 세다	敵は少ないが一体一体が強い	Fewer enemies, but each one is tough
 tower.floor.5.name	보스 — 크러셔	ボス — クラッシャー	Boss — Crusher
 tower.floor.5.desc	크러셔(파워). 마법 몸만 나온다	クラッシャー(パワー)。魔法の体だけが出る	Crusher (Power). Only Magic bodies appear
 tower.floor.6.name	중거리의 층	中距離の階	Mid-range Floor

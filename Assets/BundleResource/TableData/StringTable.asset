@@ -3602,14 +3602,13 @@ MonoBehaviour:
     _ja: "\u6575\u306F\u3059\u3079\u3066\u9B54\u6CD5\u3002\u4F53\u306F3\u5C5E\u6027\u304C\u6DF7\u3056\u3063\u3066\u51FA\u308B\u3002"
     _en: All foes are Magic. Bodies of all three types appear.
   - _key: tower.floor.4.name
-    _ko: "\uCCAB \uBAB8\uC73C\uB85C \uB05D\uAE4C\uC9C0"
-    _ja: "\u6700\u521D\u306E\u4F53\u3067\u6700\u5F8C\u307E\u3067"
-    _en: First Body Only
+    _ko: "\uC815\uC608\uC758 \uCE35"
+    _ja: "\u7CBE\u92ED\u306E\u968E"
+    _en: Elite Floor
   - _key: tower.floor.4.desc
-    _ko: "\uC2A4\uC2A4\uB85C \uB098\uC62C \uC218 \uC5C6\uB2E4 \u2014 \uCCAB \uBE59\uC758\uAC00
-      \uC2B9\uBD80"
-    _ja: "\u81EA\u3089\u51FA\u3089\u308C\u306A\u3044 \u2014 \u6700\u521D\u306E\u6191\u4F9D\u304C\u52DD\u8CA0"
-    _en: "You cannot leave \u2014 the first possession decides"
+    _ko: "\uC801\uC740 \uC801\uC9C0\uB9CC \uD558\uB098\uD558\uB098\uAC00 \uC138\uB2E4"
+    _ja: "\u6575\u306F\u5C11\u306A\u3044\u304C\u4E00\u4F53\u4E00\u4F53\u304C\u5F37\u3044"
+    _en: Fewer enemies, but each one is tough
   - _key: tower.floor.5.name
     _ko: "\uBCF4\uC2A4 \u2014 \uD06C\uB7EC\uC154"
     _ja: "\u30DC\u30B9 \u2014 \u30AF\u30E9\u30C3\u30B7\u30E3\u30FC"

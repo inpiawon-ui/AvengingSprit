@@ -51,8 +51,11 @@ namespace Game.Module.InGame
         }
 
         /// <summary>잡몹 · 적 몸 체력 배율 — 탑은 층 세기, 밤은 지난 시간.</summary>
-        private float ModeHpMul => IsTowerRun && _towerDef != null ? _modeTable.TowerHpMul(_towerFloorNo)
-                                 : IsNightRun ? NightTrashHpMul : 1f;
+        private float ModeHpMul => (IsTowerRun && _towerDef != null ? _modeTable.TowerHpMul(_towerFloorNo)
+                                  : IsNightRun ? NightTrashHpMul : 1f) * _modeHpExtra;
+
+        /// <summary>한 기만 더 세게 세울 때(탑 정예 층) 잠깐 거는 배율. 세운 뒤 1 로 되돌린다.</summary>
+        private float _modeHpExtra = 1f;
 
         private float ModeAtkMul => IsTowerRun && _towerDef != null ? _modeTable.TowerAtkMul(_towerFloorNo) : 1f;
 

@@ -684,8 +684,6 @@ namespace Game.Module.InGame
             for (int i = 0; i < _enemies.Count; i++)
             {
                 var e = _enemies[i];
-                // 밤 대형 호스트는 경직됐을 때만 갈아탈 몸이다 — 아무 때나 나와 유령으로 버티지 않게(밤 3-6)
-                if (e != null && e.RequiresStagger && !e.IsStaggered) continue;
                 if (e != null && e.HasPossessCondition) return true;
             }
             return false;

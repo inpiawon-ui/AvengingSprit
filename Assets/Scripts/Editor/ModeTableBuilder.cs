@@ -54,7 +54,7 @@ namespace Game.Editor
                 F(1, TowerRule.BodyRange, RangeClass.Melee, Affinity.None, "", sbb, 6),
                 F(2, TowerRule.BodyRange, RangeClass.Long, Affinity.None, "", ssk, 7),
                 F(3, TowerRule.EnemyAffinity, RangeClass.Mid, Affinity.Magic, "", none, 8),
-                F(4, TowerRule.NoLeave, RangeClass.Mid, Affinity.None, "", bsk, 7),
+                F(4, TowerRule.Elite, RangeClass.Mid, Affinity.None, "", bsk, 4),   // 탈출이 없어져(10-15) 「첫 몸으로 끝까지」 → 정예 층(PD 10-16)
                 F(5, TowerRule.Boss, RangeClass.Mid, Affinity.Magic, "crusher", none, 0),
                 F(6, TowerRule.BodyRange, RangeClass.Mid, Affinity.None, "", bbb, 9),
                 F(7, TowerRule.SingleHost, RangeClass.Mid, Affinity.None, "", sgb, 7),

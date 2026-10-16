@@ -99,7 +99,7 @@ MonoBehaviour:
   - _floor: 4
     _nameKey: tower.floor.4.name
     _descKey: tower.floor.4.desc
-    _rule: 4
+    _rule: 8
     _range: 1
     _affinity: 0
     _bossKey: 
@@ -107,7 +107,7 @@ MonoBehaviour:
     - boar
     - scrapgunner
     - skeleton
-    _trashCount: 7
+    _trashCount: 4
     _roomId: ROOM_CH1_001
   - _floor: 5
     _nameKey: tower.floor.5.name

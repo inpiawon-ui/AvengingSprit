@@ -23,6 +23,8 @@ namespace Game.Module.Common.Modes
         SingleHost,
         OneShot,
         Boss,
+        /// <summary>정예 층 — 적 수는 적고 하나하나가 세다(정예 표시 · 체력 ×EliteHpMul). PD 2026-10-16 「첫 몸으로 끝까지」 대신.</summary>
+        Elite,
     }
 
     /// <summary>밤 요일 조건 종류.</summary>

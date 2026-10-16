@@ -3845,7 +3845,6 @@ namespace Game.Module.InGame
                 if (e == null || !e.IsAlive || e.IsBoss) continue;
                 if (e.Side != UnitSide.Enemy || e.RepossessBanned) continue;
                 if (!e.IsHostBody) continue;      // 잡몹은 아무리 깎아도 몸이 되지 않는다
-                if (e.RequiresStagger && _host == null) continue;   // 밤 대형 호스트 — 유령은 깎을 수 없다
                 if (e.Profile != null &&
                     e.Profile.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
                 return true;

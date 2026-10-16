@@ -212,7 +212,7 @@ namespace Game.Module.InGame
             return null;
         }
 
-        /// <summary>대형 호스트 — 오늘 목록에서 하나. ×1.35 · 체력 ×(5 + t/90) · 공격 ×1.3 · 깎아야 빼앗는다.</summary>
+        /// <summary>대형 호스트 — 오늘 목록에서 하나. ×1.35 · 체력 ×(5 + t/90) · 공격 ×1.3. 유령이면 바로 빼앗는다.</summary>
         private void SpawnBigHost()
         {
             if (_nightPool.Count == 0) return;
@@ -224,7 +224,7 @@ namespace Game.Module.InGame
             _nightHpOverride = 0f;
             u.IsAggro = true;
             u.MarkAsElite();
-            u.SetStaggerRule(true, _modeTable.BigHostStaggerMul / Mathf.Max(0.01f, hpMul));
+            // 유령이면 다른 몸처럼 바로 탄다(PD 2026-10-16 — 탈출이 없어져 「몸에 든 채로 깎아 빼앗기」가 불가능해졌다)
             u.transform.localScale = Vector3.one * _modeTable.BigHostScale;
             u.ScaleAttack(_modeTable.BigHostAtkMul);
             _nightBigHosts.Add(u);

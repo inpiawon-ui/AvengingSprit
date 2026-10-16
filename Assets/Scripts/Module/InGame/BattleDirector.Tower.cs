@@ -25,6 +25,12 @@ namespace Game.Module.InGame
         private readonly List<int> _towerRewardCounts = new();
 
         private bool TowerLeaveLocked => IsTowerRun && _towerDef != null && _towerDef.Rule == TowerRule.NoLeave;
+
+        /// <summary>정예 층의 잔몹 체력 배율(층 세기 위에 곱한다).</summary>
+        private const float TowerEliteHpMul = 2f;
+
+        /// <summary>잔몹이 설 가장 위 줄(방 높이 비율) — 위 HUD 밑.</summary>
+        private const float TowerTrashTopY = 0.16f;
         private bool TowerOneShot => IsTowerRun && _towerDef != null && _towerDef.Rule == TowerRule.OneShot;
 
         /// <summary>판 시작 — 층 정의 · 몸 후보를 정한다(방을 세우기 전).</summary>
@@ -78,6 +84,8 @@ namespace Game.Module.InGame
             for (int i = 0; i < n; i++)
             {
                 var at = SpawnSlot(i, n);
+                // 본편 자리표는 방 맨 위(6%)부터라 위 HUD 에 가린다 — 탑 방은 HUD 아래부터 세운다
+                at.y = Mathf.Min(at.y, -_roomSize.y * TowerTrashTopY);
                 if (i < nBlocked)
                 {
                     // 몸 표식(MarkAsHostBody)을 안 붙인다 → 빼앗을 수 없고 「몸」 표식도 안 뜬다
@@ -87,7 +95,12 @@ namespace Game.Module.InGame
                 }
                 if (trash == null || trash.Length == 0) continue;
                 var e = TrashEntryOf(TrashKeyAlias(trash[i % trash.Length]));
-                if (e != null) SpawnRoomUnit(e, false, false, at, $"Trash_{e.HostKey}_{i}");
+                if (e == null) continue;
+                bool elite = def.Rule == TowerRule.Elite;
+                _modeHpExtra = elite ? TowerEliteHpMul : 1f;
+                var u = SpawnRoomUnit(e, false, false, at, $"Trash_{e.HostKey}_{i}");
+                _modeHpExtra = 1f;
+                if (elite) u.MarkAsElite();   // 정예 표시 — 잡몹 상자 그대로(128 상자에 넣으면 너무 커진다)
             }
             SpawnTowerBodies();
             PublishTowerEnemiesLeft();

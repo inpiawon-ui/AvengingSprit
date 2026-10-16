@@ -176,28 +176,11 @@ namespace Game.Module.InGame
         /// </summary>
         public float StaggerProgress
             => IsStaggered || !PlayerHasHost
-             ? (RequiresStagger && !IsStaggered ? Mathf.Clamp01(_stagger / Mathf.Max(1f, StaggerNeed)) : 1f)
-             : Mathf.Clamp01(_stagger / Mathf.Max(1f, StaggerNeed));
-
-        /// <summary>경직에 필요한 누적 피해. 밤의 대형 호스트는 배율을 곱하기 전 체력 기준(<see cref="SetStaggerRule"/>).</summary>
-        private float StaggerNeed => HpMax * StaggerNeedRatio * _staggerNeedMul;
-
-        private float _staggerNeedMul = 1f;
-
-        /// <summary>
-        /// 유령 상태에서도 **경직 중에만** 탈 수 있는 몸 — 망령의 밤 대형 호스트(기획서 3-6).
-        /// 본편 몸은 유령이면 바로 탄다. 이 몸은 몸에 든 채로 깎아야 빼앗는다.
-        /// </summary>
-        public bool RequiresStagger { get; private set; }
+             ? 1f : Mathf.Clamp01(_stagger / Mathf.Max(1f, HpMax * StaggerNeedRatio));
 
         /// <summary>공격력에 배율을 곱한다 — 밤의 대형 호스트(×1.3).</summary>
         public void ScaleAttack(float mul) => Atk = Mathf.Max(1, Mathf.RoundToInt(Atk * mul));
 
-        public void SetStaggerRule(bool requiresStagger, float needMul)
-        {
-            RequiresStagger = requiresStagger;
-            _staggerNeedMul = Mathf.Max(0.01f, needMul);
-        }
 
         /// <summary>
         /// 게이지를 식히고 창을 닫는다. 매 프레임 부른다.
@@ -292,7 +275,7 @@ namespace Game.Module.InGame
                 if (!IsHostBody) return false;                       // 잡몹은 못 뺏는다
                 if (Profile != null &&
                     Profile.PossessKind == Game.Character.PossessKind.NotPossessable) return false;
-                return (!PlayerHasHost && !RequiresStagger) || IsStaggered;
+                return !PlayerHasHost || IsStaggered;
             }
         }
 
@@ -1238,7 +1221,7 @@ namespace Game.Module.InGame
                 {
                     if (_stagger >= HpMax * ReapRule.StaggerNeedRatio) _soulExposed = ReapRule.ExposeSeconds;
                 }
-                else if (_stagger >= StaggerNeed) _staggerWindow = StaggerWindowSeconds;
+                else if (_stagger >= HpMax * StaggerNeedRatio) _staggerWindow = StaggerWindowSeconds;
             }
             return Hp == 0;
         }
