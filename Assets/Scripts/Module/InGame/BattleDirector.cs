@@ -404,6 +404,7 @@ namespace Game.Module.InGame
             _runGold = 0;     // 판 골드도 런 한정이다
             _runShardKeys.Clear();
             _runShardCounts.Clear();
+            _metHosts.Clear();
             _possessReachMul = 0f;
             _shopDiscount = 0;
             _bossShieldBreak = false;
@@ -841,6 +842,7 @@ namespace Game.Module.InGame
             // 빼앗을 수 있는 몸이다. 나머지는 잡몹 — 두들겨도 경직이 쌓이지 않는다.
             if (isHost && !elite) { u.MarkAsHostBody(); u.MarkAsNextBody(); }
             if (elite) u.MarkAsElite();
+            if (isHost) NoteMetHost(u.Key);   // 클리어 보상 「만난 호스트 조각」(PD 2026-10-17)
             u.PossessPriority = e.PossessPriority;
             u.PossessRange = 0f;
             u.SetState(EnemyState.Idle);
@@ -8737,6 +8739,7 @@ namespace Game.Module.InGame
                                Vector2 pos, int startHpPercent)
         {
             if (entry != null) _lastHostEntry = entry;
+            NoteMetHost(key);
             NoteModeEnterHost(entry);
             SoulFxOnEnterHost(pos);
             _dashTime = 0f;   // 몸이 바뀌면 돌진도 끊는다
@@ -9894,22 +9897,23 @@ namespace Game.Module.InGame
                 return;
             }
 
-            // 클리어 — 결과 창이 주는 골드는 **판에서 주운 골드뿐**이고, 나머지는 상자(조각 + 골드) 안에 있다.
+            // 클리어 — 판에서 주운 골드 + 챕터 등급만큼의 골드 · 조각(예전 상자 한 개 몫)을 **이번 판에 만난 호스트**에게 나눠 바로 준다.
+            //   보물상자는 없앴다(PD 2026-10-17 「인게임 보상에서도 상자 안 줌 · 추후 상점 판매만」).
             //   따로 붙는 클리어 골드는 없다(PD 2026-10-13 「특정 골드 보상은 없는 거야」 — 예전에는 챕터 표 clearGold 200~3,000 을 얹었다).
-            // 이미 깬 챕터를 다시 깨도 상자를 준다(기획). 골드는 **지금** 넣는다 —
-            // 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
+            // 이미 깬 챕터를 다시 깨도 준다(기획). 지금 넣는다 — 결과 창에서 확인을 누르기 전에 앱을 꺼도 받은 것은 남아야 한다.
             int ch = Mathf.Clamp(_runChapter, 1, ChapterCount);
             var row = ChapterRow(ch);
             int legacy = Mathf.Clamp(ch, 1, ChapterChestKey.Length) - 1;
             int gold = carried;
             string chestKey = !string.IsNullOrEmpty(row.Chest) ? row.Chest : ChapterChestKey[legacy];
 
-            bool accepted = false;
-            if (CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests))
+            int clearGold = 0;
+            if (CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests)
+                && chests.GrantChapterClear(chestKey, _metHosts, out var reward))
             {
-                accepted = chests.TryGrant(chestKey, out int slot);
-                // 칸이 다 차서 못 받았으면 **조용히 버리지 않는다.** 결과 창이 알린다.
-                _bus.Publish(new ChestGrantedEvent { GrantedChestKey = chestKey, Slot = slot, Accepted = accepted });
+                clearGold = reward.Gold;
+                // 결과 창의 조각 줄은 하나로 — 판에서 모은 조각과 클리어 보상 조각을 합쳐 많은 것부터
+                MergeShards(ref shardKeys, ref shardCounts, reward.ShardHostKeys, reward.ShardCounts);
             }
             if (_player != null && _player.IsReady)
                 _player.GrantChapterClearAsync(ch, gold).Forget();   // fire-and-forget: 저장 완료를 기다릴 화면이 없다
@@ -9917,16 +9921,42 @@ namespace Game.Module.InGame
             _bus.Publish(new StageFinishedEvent
             {
                 IsCleared = true,
-                RewardGold = gold,
+                RewardGold = gold + clearGold,
                 FinishedChapter = ch,
-                RewardChestKey = chestKey,
-                ChestAccepted = accepted,
                 ShardHostKeys = shardKeys,
                 ShardCounts = shardCounts,
             });
         }
 
-        /// <summary>챕터 클리어 상자 — 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18). 키는 `ChestTable`.</summary>
+        // ── 만난 호스트 (클리어 보상, PD 2026-10-17) ─────────────────
+        // 방에 선 숙주(빼앗을 몸 · 정예)와 빙의한 몸. 숨은 몸(사신) · 유령은 보상 쪽(`ChestModule.GrantChapterClear`)이 거른다.
+        private readonly List<string> _metHosts = new();
+
+        private void NoteMetHost(string key)
+        {
+            if (!string.IsNullOrEmpty(key) && !_metHosts.Contains(key)) _metHosts.Add(key);
+        }
+
+        /// <summary>두 조각 목록을 합쳐 많은 것부터 다시 늘어놓는다.</summary>
+        private static void MergeShards(ref string[] keys, ref int[] counts, string[] addKeys, int[] addCounts)
+        {
+            if (addKeys == null || addKeys.Length == 0) return;
+            var k = new List<string>(keys);
+            var c = new List<int>(counts);
+            for (int i = 0; i < addKeys.Length && i < addCounts.Length; i++)
+            {
+                int at = k.IndexOf(addKeys[i]);
+                if (at < 0) { k.Add(addKeys[i]); c.Add(addCounts[i]); }
+                else c[at] += addCounts[i];
+            }
+            keys = k.ToArray();
+            counts = c.ToArray();
+            System.Array.Sort(counts, keys);
+            System.Array.Reverse(counts);
+            System.Array.Reverse(keys);
+        }
+
+        /// <summary>챕터 클리어 보상 등급(예전 상자 등급) — 1·2 은, 3·4 금, 5·6 백금 (기획 2026-09-18). 키는 `ChestTable`.</summary>
         private static readonly string[] ChapterChestKey =
             { "silver", "silver", "gold", "gold", "platinum", "platinum" };
 

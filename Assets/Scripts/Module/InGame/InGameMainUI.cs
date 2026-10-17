@@ -1731,12 +1731,10 @@ namespace Game.Module.InGame
 
         private static string ClearMessage(StageFinishedEvent e)
         {
-            string chest = e.ChestAccepted
-                ? Localize.Format("ui.result.chest", Localize.Get($"chest.{e.RewardChestKey}.name"))
-                : Localize.Get("ui.result.chest_full");
+            // 상자는 없앴다(PD 2026-10-17) — 골드 + 만난 호스트 조각(ShardLine)
             return Localize.Format("ui.result.clear", e.FinishedChapter) + "\n\n"
-                 + Localize.Format("ui.result.gold", e.RewardGold.ToString("N0")) + "\n"
-                 + chest;
+                 + Localize.Format("ui.result.gold", e.RewardGold.ToString("N0"))
+                 + ShardLine(e);
         }
 
         private void OnPause()

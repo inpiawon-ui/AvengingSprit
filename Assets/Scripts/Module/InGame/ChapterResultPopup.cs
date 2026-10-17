@@ -14,8 +14,8 @@ namespace Game.Module.InGame
     /// 챕터 클리어 결과 (기획 2026-09-18 · 시안 ui_new_chapter_result_v1).
     ///
     /// 클리어했을 때만 뜬다 — 죽으면 보상이 없어 알림창 하나로 끝난다.
-    /// 골드와 상자는 **전투가 이미 넣었다.** 여기는 보여 주고 OK 로 로비에 보낼 뿐이다.
-    /// 상자 칸이 가득 차 상자를 못 받았으면 빨간 띠로 알린다(골드는 그래도 받았다).
+    /// 골드와 조각은 **전투가 이미 넣었다.** 여기는 보여 주고 OK 로 로비에 보낼 뿐이다.
+    /// 아래 칸은 예전 상자 자리 — 상자를 없애고(PD 2026-10-17) 「만난 호스트 조각」 줄이 뜬다(상자 그림 · 가득 참 경고는 안 쓴다).
     ///
     /// 노드는 `ChapterScreensBuilder` 가 세운다. 그림은 발주 부품이 오면 같은 이름으로 갈아 끼운다.
     /// </summary>
@@ -28,6 +28,7 @@ namespace Game.Module.InGame
             public Sprite Sprite;
         }
 
+        // 상자 폐지(2026-10-17)로 화면에선 안 쓴다 — 빌더(ChapterScreensBuilder)가 이 칸을 채우므로 남겨 둔다
         [SerializeField] private ChestArt[] _chestArts = Array.Empty<ChestArt>();
 
         private UIBinder _ui;
@@ -59,21 +60,21 @@ namespace Game.Module.InGame
             // 흐리게라도 상자를 보여 주면 받은 것처럼 읽혔다(PD 2026-10-08 「가득 차 있으면 상자를 주면 안 되는데」)
             // 아래 칸은 늘 선다 — 그 칸에 상자가 놓이거나 「상자 칸이 가득 찼다」가 뜬다
             // (PD 10-08 2차 「밑에 네모가 생기면서 박스 연출 또는 상자가 없습니다」)
-            _ui.SetActive("ResultChestRow", true);
-            _ui.SetActive("ResultChestArt", e.ChestAccepted);
-            _ui.SetActive("ResultChestNameText", e.ChestAccepted);
-            if (e.ChestAccepted)
+            // 아래 칸 = 만난 호스트 조각 줄(상자 자리). 상자 그림 · 가득 참 경고는 끈다(PD 2026-10-17 상자 폐지)
+            string shards = InGameMainUI.ShardLine(e).TrimStart('\n');
+            _ui.SetActive("ResultChestRow", shards.Length > 0);
+            _ui.SetActive("ResultChestArt", false);
+            _ui.SetActive("ResultChestNameText", shards.Length > 0);
+            _ui.SetActive("ResultWarnBar", false);
+            _ui.SetText("ResultChestNameText", shards);
+            if (_ui.Get<TMPro.TMP_Text>("ResultChestNameText") is TMPro.TMP_Text shardTmp)
             {
-                var chest = _ui.Get<Image>("ResultChestArt");
-                var art = ChestArtOf(e.RewardChestKey);
-                if (chest != null && art != null) chest.sprite = art;
-                if (chest != null) chest.color = Color.white;
-                _ui.SetText("ResultChestNameText", Localize.Get($"chest.{e.RewardChestKey}.name"));
+                // 이름이 여럿 늘어선다 — 3언어 모두 칸 안에 들게 줄여 넣는다(06_ui 「글자는 삐져나가지 않는다」)
+                shardTmp.textWrappingMode = TMPro.TextWrappingModes.Normal;
+                shardTmp.enableAutoSizing = true;
+                shardTmp.fontSizeMax = shardTmp.fontSize > 0f ? Mathf.Max(shardTmp.fontSizeMax, shardTmp.fontSize) : 24f;
+                shardTmp.fontSizeMin = 12f;
             }
-            _ui.SetActive("ResultWarnBar", !e.ChestAccepted);
-            // 짧은 문구 — 긴 「받지 못했습니다」는 일본어 · 영어가 띠(346px)를 넘어 경고 아이콘을 덮었다(2026-10-08 게임 검사).
-            // 상자 그림이 빠져 있으니 「가득 찼다」만으로 못 받았다는 것이 읽힌다
-            _ui.SetText("ResultWarnText", Localize.Get("ui.lobby.chest.full"));
 
             // 아래 경고 띠 자리가 비므로 두 줄을 띠 몫의 절반만큼 내려 위아래를 고른다. 경고는 상자 줄 자리 가운데에
             ShiftRow("ResultGoldRow", ref _goldRowY, RowDropWithoutWarn);
@@ -87,8 +88,8 @@ namespace Game.Module.InGame
                 warn.anchoredPosition = new Vector2(warn.anchoredPosition.x,
                     row.anchoredPosition.y - (row.rect.height - warn.rect.height) * 0.5f);
             }
-            // 모은 조각 — 노드(`ResultShardText`)는 결과 창을 다시 짤 때 들어온다. 없으면 조용히 넘어간다
-            _ui.SetText("ResultShardText", InGameMainUI.ShardLine(e).TrimStart('\n'));
+            // 조각은 아래 칸(예전 상자 자리)에 한 줄로 — 따로 두면 같은 내용이 두 번 뜬다
+            _ui.SetText("ResultShardText", string.Empty);
             _ui.SetText("ResultOkText", "OK");
 
             // 연출 표 층 — OK 숨쉬기(fx_story.py layers_clear)
@@ -204,7 +205,8 @@ namespace Game.Module.InGame
                     SetAlpha(chestGroup, Mathf.Clamp01(ck * 4f));
                     SetAlpha(chestName, Ease.OutCubic(Mathf.Clamp01((t - ChestDrop - ChestFall) / 0.25f)));
                 }
-                if (!e.ChestAccepted) SetAlpha(warnGroup, Ease.OutCubic(Mathf.Clamp01((t - ChestDrop) / 0.25f)));
+                // 만난 호스트 조각 줄 — 아래 칸이 선 뒤 떠오른다(예전 상자 착지 자리)
+                if (!e.ChestAccepted) SetAlpha(chestName, Ease.OutCubic(Mathf.Clamp01((t - ChestDrop) / 0.25f)));
 
                 if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
             }
@@ -300,13 +302,6 @@ namespace Game.Module.InGame
             rt.anchorMax = Vector2.one;
             rt.offsetMin = rt.offsetMax = Vector2.zero;
             art.SetParent(rt, true);
-        }
-
-        private Sprite ChestArtOf(string key)
-        {
-            for (int i = 0; i < _chestArts.Length; i++)
-                if (_chestArts[i].Key == key) return _chestArts[i].Sprite;
-            return null;
         }
 
         private void OnOk()
