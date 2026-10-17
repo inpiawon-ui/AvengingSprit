@@ -767,7 +767,8 @@ namespace Game.Editor
             // 띠 그림(3.8)보다 칸이 길다 — 9분할로 늘린다. 왼쪽 설명 글자와 안 겹치게 조금 오른쪽
             rib.type = Image.Type.Sliced;
             rib.pixelsPerUnitMultiplier = 3f;
-            C(box, "CHStartRibbon", 372, 1047, 128, 26);   // 왼쪽 설명 · 아래 스킬 설명 글자를 덮지 않게 폭을 줄인다
+            // 왼쪽 설명 · 위 스킬 설명 글자를 덮지 않게 폭을 줄이고 버튼 위 변에 걸친다(1047 은 스킬 칸 아래 글자를 5~8 덮었다, 2026-10-17)
+            C(box, "CHStartRibbon", 372, 1058, 128, 26);
             rib.transform.SetAsLastSibling();
             var rt = CloneText(rib.transform, "CHInfoDesc", "CHStartRibbonText", box);
             rt.alignment = TextAlignmentOptions.Center;

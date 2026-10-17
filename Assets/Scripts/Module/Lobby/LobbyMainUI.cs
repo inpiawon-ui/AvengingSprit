@@ -134,12 +134,9 @@ namespace Game.Module.Lobby
             // 소환은 상점과 칸을 나눴다(PD 2026-10-15 A안). 소환 화면은 다음 단계 — 지금은 준비 중 안내
             if (_summonPanel != null) _summonPanel.Close();
             if (_passPanel != null) _passPanel.Close();
-            _ui.OnClick("PassBadge", () =>
-            {
-                if (_passPanel == null) { NotifyNotReady("시즌 패스"); return; }
-                if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
-                _passPanel.Open();
-            });
+            _ui.OnClick("PassBadge", OpenPass);
+            // 홈 v5 진열 칸의 PASS 단추(PD 2026-10-17 — 패스는 칸을 차지하지 않고 떠 있는 단추로)
+            _ui.OnClick("HomePassButton", OpenPass);
             _ui.OnClick("SummonButton", () =>
             {
                 if (_summonPanel != null) SelectTab(Tab.Summon);
@@ -153,16 +150,16 @@ namespace Game.Module.Lobby
             _ui.OnClick("ModeScenarioCard", PlayScenario);
             _ui.OnClick("ModePlayButton", PlayScenario);
             // 서바이벌 칸 = 망령의 밤 · 디펜스 칸 = 망령의 탑(PD 2026-10-15). 판이 아직 프리팹에 없으면 예전 안내로
-            _ui.OnClick("ModeSurvivalCard", () =>
-            {
-                if (_nightEntryPanel != null) { GameSound.Cue("ui.play"); _nightEntryPanel.Open(); }
-                else NotifyNotReady(Localize.Get("ui.lobby.mode.survival.name"));
-            });
-            _ui.OnClick("ModeDefenseCard", () =>
-            {
-                if (_towerEntryPanel != null) { GameSound.Cue("ui.play"); _towerEntryPanel.Open(); }
-                else NotifyNotReady(Localize.Get("ui.lobby.mode.defense.name"));
-            });
+            _ui.OnClick("ModeSurvivalCard", OpenNight);
+            _ui.OnClick("ModeDefenseCard", OpenTower);
+            // 홈 v5 — 시나리오 · 탑 · 밤 큰 카드(PD 2026-10-17 「모드 각각 눌러서 들어간다」)
+            _ui.OnClick("HomeScenarioCard", PlayScenario);
+            _ui.OnClick("HomeContinueButton", PlayScenario);
+            _ui.OnClick("HomeTowerCard", OpenTower);
+            _ui.OnClick("HomeNightCard", OpenNight);
+            // 미션 · 업적은 화면이 아직 없다 — 자리만 먼저(PD 「나중에 미션이나 업적 들어갈 수도」)
+            _ui.OnClick("HomeMissionButton", () => NotifyNotReady(Localize.Get("ui.home.mission")));
+            _ui.OnClick("HomeAchieveButton", () => NotifyNotReady(Localize.Get("ui.home.achieve")));
 
             // 보물상자 칸은 없앴다(PD 2026-10-17 「상자 기능 제거 — 인게임 보상에서도 안 준다, 추후 상점 판매만」).
             // 칸 노드 · 그림 필드는 새 로비 UI(v3)를 지을 때 빌더와 함께 걷어 낸다
@@ -230,6 +227,8 @@ namespace Game.Module.Lobby
         private enum Tab { Play, Host, Summon, Shop }
 
         private static readonly string[] LobbyPageNodes = { "LobbyV4Gap", "LobbyV4Top", "LobbyV4Mid" };
+        /// <summary>홈 v5 가 있으면 예전 판(V4)은 꺼 둔 채 이것만 켜고 끈다.</summary>
+        private static readonly string[] HomeV5Nodes = { "HomeV5" };
 
         private void SelectTab(Tab tab)
         {
@@ -255,9 +254,10 @@ namespace Game.Module.Lobby
             // 아래 바는 챕터 창 위에 있어 창이 열린 채로 눌린다 — HOST 든 PLAY 든 누르면 창을 닫고 그 화면으로
             if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
             // 위 화면만 바꾼다 — 육성 화면이 켜지면 로비 판은 끈다(가려져 안 보이는데 그리기만 한다)
-            for (int i = 0; i < LobbyPageNodes.Length; i++)
+            var pages = transform.Find("HomeV5") != null ? HomeV5Nodes : LobbyPageNodes;
+            for (int i = 0; i < pages.Length; i++)
             {
-                var t = transform.Find(LobbyPageNodes[i]);
+                var t = transform.Find(pages[i]);
                 if (t != null) t.gameObject.SetActive(!host);
             }
             if (_growthPanel == null) return;
@@ -304,6 +304,25 @@ namespace Game.Module.Lobby
         }
 
         // ── 게임 모드 ────────────────────────────────────────────
+
+        private void OpenPass()
+        {
+            if (_passPanel == null) { NotifyNotReady("시즌 패스"); return; }
+            if (_chapterHostPanel != null && _chapterHostPanel.IsOpen) _chapterHostPanel.Close();
+            _passPanel.Open();
+        }
+
+        private void OpenTower()
+        {
+            if (_towerEntryPanel != null) { GameSound.Cue("ui.play"); _towerEntryPanel.Open(); }
+            else NotifyNotReady(Localize.Get("ui.lobby.mode.defense.name"));
+        }
+
+        private void OpenNight()
+        {
+            if (_nightEntryPanel != null) { GameSound.Cue("ui.play"); _nightEntryPanel.Open(); }
+            else NotifyNotReady(Localize.Get("ui.lobby.mode.survival.name"));
+        }
 
         private void PlayScenario()
         {

@@ -112,6 +112,10 @@ namespace Game.Editor.UiHarness
             .AllowRule("C3", @"/(ProfilePreviewMask/ProfilePreviewBg|PassBannerMask/PassBannerArt)$", "프로필 미리보기 배경 — 칸 밖은 잘려 안 보인다")
             .AllowRule("C2", @"/LobbyV4Mid/Mode\w+Card/Mode\w+Art/Art$",
                        "로비 모드 카드 그림 — 칸(마스크)으로 잘라 쓴다(모드 칸, 기획 세션)")
+            .AllowRule("C2", @"/HomeV5/HomeBody/.*/(HomeShowcaseArt|HomeScenarioArt|HomeTowerArt|HomeNightArt)$",
+                       "홈 v5 칸 그림 — 칸을 덮게 키워 깔고 칸(RectMask2D)이 잘라 낸다(Envelope)")
+            .AllowRule("C3", @"/HomeV5/(HomePageBg|HomeBody/.*/(HomeShowcaseArt|HomeScenarioArt|HomeTowerArt|HomeNightArt))$",
+                       "홈 v5 바탕 · 칸 그림 — 화면 · 칸 밖은 잘려 안 보인다")
             .AllowRule("C2", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(FillBox)")
             .AllowRule("C3", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸 밖은 잘려 안 보인다(FillBox)")
             .AllowRule("C6", @"/CHHostContent/CHHostCard\d+/CardPowerText$",
@@ -130,7 +134,7 @@ namespace Game.Editor.UiHarness
             new UiHarnessScenario
             {
                 Name = "ch_host", Mock = "scene_s22e_host",
-                Enter = async d => { await d.Click("ModePlayButton"); await d.Click("CHModeHost"); },
+                Enter = async d => { await d.Click("HomeContinueButton"); await d.Click("CHModeHost"); },
                 Expect = () => !Active("CHModeHost") ? "챕터 창이 안 열렸다"
                     : !Interactable("CHStartButton") ? "도전하기가 꺼져 있다(반투명)" : null,
                 Leave = d => d.Click("ChapterButton"),
@@ -138,14 +142,14 @@ namespace Game.Editor.UiHarness
             new UiHarnessScenario
             {
                 Name = "ch_random", Mock = "scene_s22b_random",
-                Enter = async d => { await d.Click("ModePlayButton"); await d.Click("CHModeRandom"); },
+                Enter = async d => { await d.Click("HomeContinueButton"); await d.Click("CHModeRandom"); },
                 Expect = () => Active("CHHostDim") ? null : "랜덤 — 호스트 줄 덮개가 없다",
                 Leave = d => d.Click("ChapterButton"),
             },
             new UiHarnessScenario
             {
                 Name = "ch_ghost", Mock = "scene_s22c_ghost",
-                Enter = async d => { await d.Click("ModePlayButton"); await d.Click("CHModeGhost"); },
+                Enter = async d => { await d.Click("HomeContinueButton"); await d.Click("CHModeGhost"); },
                 Expect = () => Active("CHHostDim") ? null : "유령 — 호스트 줄 덮개가 없다",
                 Leave = d => d.Click("ChapterButton"),
             },
@@ -214,14 +218,14 @@ namespace Game.Editor.UiHarness
             new UiHarnessScenario
             {
                 Name = "pass_rewards", Mock = "scene_s16_pass",
-                Enter = d => d.Click("PassBadge"),
+                Enter = d => d.Click("HomePassButton"),
                 Expect = () => Active("PassRewardsPage") ? null : "패스 창이 안 열렸다",
                 Leave = d => d.Click("ChapterButton"),
             },
             new UiHarnessScenario
             {
                 Name = "pass_missions", Mock = "scene_s17_mission",
-                Enter = async d => { await d.Click("PassBadge"); await d.Click("PassTabMissions"); },
+                Enter = async d => { await d.Click("HomePassButton"); await d.Click("PassTabMissions"); },
                 Expect = () => Active("PassMissionsPage") ? null : "미션 탭이 안 열렸다",
                 Leave = d => d.Click("ChapterButton"),
             },
@@ -267,14 +271,14 @@ namespace Game.Editor.UiHarness
             new UiHarnessScenario
             {
                 Name = "ch_host_ja", Mock = "scene_s22e_host",
-                Enter = async d => { SetLang(Language.Japanese); await UiHarnessDriver.Seconds(0.5f); await d.Click("ModePlayButton"); },
+                Enter = async d => { SetLang(Language.Japanese); await UiHarnessDriver.Seconds(0.5f); await d.Click("HomeContinueButton"); },
                 Expect = () => Active("CHModeHost") ? null : "챕터 창이 안 열렸다",
                 Leave = async d => { await d.Click("ChapterButton"); SetLang(Language.Korean); },
             },
             new UiHarnessScenario
             {
                 Name = "ch_host_en", Mock = "scene_s22e_host",
-                Enter = async d => { SetLang(Language.English); await UiHarnessDriver.Seconds(0.5f); await d.Click("ModePlayButton"); },
+                Enter = async d => { SetLang(Language.English); await UiHarnessDriver.Seconds(0.5f); await d.Click("HomeContinueButton"); },
                 Expect = () => Active("CHModeHost") ? null : "챕터 창이 안 열렸다",
                 Leave = async d => { await d.Click("ChapterButton"); RestoreLang(); },
             },
