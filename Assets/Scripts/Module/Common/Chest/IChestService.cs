@@ -50,8 +50,20 @@ namespace Game.Module.Common.Chest
 
         ChestSlotState Get(int slot);
 
-        /// <summary>빈 칸에 담고 그 순간부터 시간을 센다. 칸이 다 차면 false.</summary>
+        /// <summary>
+        /// 예전: 빈 칸에 담고 시간을 셌다. **2026-10-17 로비 상자 칸 폐지** — 지금은 그 자리에서 바로 열어 지급한다(slot = -1).
+        /// 챕터 클리어는 <see cref="GrantChapterClear"/> 를 쓴다.
+        /// </summary>
         bool TryGrant(string chestKey, out int slot);
+
+        /// <summary>그 등급 상자의 골드 범위(챕터 창 「클리어 보상」 표시용). 표에 없으면 (0, 0).</summary>
+        (int min, int max) GoldRange(string chestKey);
+
+        /// <summary>
+        /// 챕터 클리어 보상(PD 2026-10-17 「상자 대신 만난 호스트 조각 + 골드」) — 그 챕터 등급 상자의 골드 · 조각 총량을
+        /// **이번 판에서 만난 호스트**에게 나눠 바로 지급한다. 만난 몸이 없으면 예전 상자처럼 고를 수 있는 몸에서 뽑는다.
+        /// </summary>
+        bool GrantChapterClear(string chestKey, System.Collections.Generic.IReadOnlyList<string> metHostKeys, out ChestReward reward);
 
         /// <summary>젬을 치르고 즉시 완료로. 젬이 모자라거나 열 게 없으면 false.</summary>
         bool TryOpenNow(int slot);

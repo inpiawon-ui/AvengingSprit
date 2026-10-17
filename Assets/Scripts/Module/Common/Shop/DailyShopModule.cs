@@ -155,10 +155,10 @@ namespace Game.Module.Common.Shop
             { failKey = "ui.shop.daily.fail.unknown"; return false; }
             if (s.Bought) { failKey = "ui.shop.daily.fail.bought"; return false; }
 
-            // 상자는 칸이 없으면 **값을 받기 전에** 막는다 — 젬만 나가고 상자가 안 들어오면 안 된다
+            // 상자는 로비 칸 없이 **산 자리에서 바로 연다**(PD 2026-10-17 로비 상자 칸 제거) — 표가 없으면 값을 받기 전에 막는다
             IChestService chests = null;
-            if (s.Kind == DailyShopKind.Chest && !HasFreeChestSlot(out chests))
-            { failKey = "ui.shop.daily.fail.chest_full"; return false; }
+            if (s.Kind == DailyShopKind.Chest && !CoreModule.TryGet(out chests))
+            { failKey = "ui.shop.daily.fail.unknown"; return false; }
 
             bool paid = s.Price <= 0 || (s.PaidWithGem ? p.TrySpendGem(s.Price) : p.TrySpendGold(s.Price));
             if (!paid) { failKey = s.PaidWithGem ? "ui.shop.daily.fail.gem" : "ui.shop.daily.fail.gold"; return false; }
@@ -166,7 +166,7 @@ namespace Game.Module.Common.Shop
             switch (s.Kind)
             {
                 case DailyShopKind.FreeGold: p.AddCurrency(s.Count, 0); break;
-                case DailyShopKind.Chest: chests.TryGrant(s.Key, out _); break;
+                case DailyShopKind.Chest: chests.TryOpenImmediate(s.Key, out _); break;
                 default: p.AddShards(s.Key, s.Count); break;
             }
             p.DailyShop.bought |= 1 << slot;
@@ -189,14 +189,6 @@ namespace Game.Module.Common.Shop
             p.SaveAsync().Forget();   // fire-and-forget: 낸 젬과 새 진열을 같이 남긴다
             _bus?.Publish(new DailyShopChangedEvent { BoughtSlot = -1 });
             return true;
-        }
-
-        private static bool HasFreeChestSlot(out IChestService chests)
-        {
-            if (!CoreModule.TryGet<IChestService>(out chests)) return false;
-            for (int i = 0; i < chests.SlotCount; i++)
-                if (chests.Get(i).IsEmpty) return true;
-            return false;
         }
 
         // ── 진열 짜기 ────────────────────────────────────────────

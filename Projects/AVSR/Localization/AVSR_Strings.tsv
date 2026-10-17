@@ -1234,3 +1234,4 @@ ult.amazon_elite.short	받은 피해를 모아 되돌려 폭발	受けたダメ�
 askill.amazon_elite.short	2.5초 무적 + 쉴드 상한 해제	2.5秒無敵＋シールド上限解除	2.5s invincible, Shield cap off
 pskill.amazon_elite.short	쉴드 있는 동안 공격력 증가	シールド中は攻撃力アップ	Attack up while Shielded
 askill.amazon_elite.opt	무적 동안 받은 공격의 30% 를 되돌려 준다	無敵中に受けた攻撃の30%を反射	Reflect 30% of hits taken while invincible
+ui.chapterhost.reward_met_shards	만난 호스트 조각	出会ったホストのかけら	Shards of hosts met

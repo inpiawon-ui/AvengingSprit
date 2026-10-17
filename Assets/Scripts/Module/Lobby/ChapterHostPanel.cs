@@ -96,6 +96,9 @@ namespace Game.Module.Lobby
         /// <summary>성급 별 — 1~4성 은별 · 5성마다 큰 금별(PD 2026-10-16). 둘 다 있으면 반 칸 별 대신 이것을 쓴다.</summary>
         [SerializeField] private Sprite _starGold, _starSilver;
 
+        /// <summary>클리어 보상 칸 — 상자 대신 「만난 호스트 조각」(PD 2026-10-17). 있으면 상자 그림 대신 이것.</summary>
+        [SerializeField] private Sprite _shardIcon;
+
         // ⚠ 클리어 보상 · 챕터 설명 · 그림 칸은 **챕터 표**(`GameConfig.ChapterOf`)에서 온다.
         //   예전에는 여기 6칸 배열로 적혀 있었고, 보상 골드는 실제 지급액의 4~14배였다(임시표).
         //   화면에 적힌 값과 받는 값이 달라서는 안 된다 — 같은 표를 읽는다.
@@ -564,22 +567,31 @@ namespace Game.Module.Lobby
                 boss.preserveAspect = true;
             }
 
-            // 받는 골드 = 판에서 주워 남긴 골드(클리어 골드는 따로 없다 — 나머지는 상자 안, PD 2026-10-13).
+            // 받는 골드 = 판에서 주워 남긴 골드 + 클리어 골드(예전 상자 안 골드, 이제 바로 준다 — PD 2026-10-17).
             // 상점에서 얼마나 쓰느냐로 범위가 생긴다.
-            int min = Mathf.RoundToInt(row.RunGold * RunGoldKeepRatio);
-            int max = row.RunGold;
+            int clearMin = 0, clearMax = 0;
+            if (_shardIcon != null && !string.IsNullOrEmpty(row.Chest)
+                && CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chestSvc))
+                (clearMin, clearMax) = chestSvc.GoldRange(row.Chest);
+            int min = Mathf.RoundToInt(row.RunGold * RunGoldKeepRatio) + clearMin;
+            int max = row.RunGold + clearMax;
             _ui.SetText("CHRewardGoldText", $"{min:N0} ~ {max:N0}");
             var chest = _ui.Get<Image>("CHRewardChestIcon");
             if (chest != null)
             {
-                chest.sprite = chestArt.Chest;
+                chest.sprite = _shardIcon != null ? _shardIcon : chestArt.Chest;
                 chest.enabled = chest.sprite != null;
                 chest.preserveAspect = true;
             }
-            // 상자 이름은 언어팩에서 — 빌더가 박아 둔 `ChestLabel` 은 한국어라 일본어 화면에도 한국어가 나왔다
-            string chestName = !string.IsNullOrEmpty(row.Chest) ? Localize.Get($"chest.{row.Chest}.name") : null;
-            _ui.SetText("CHRewardChestText", !string.IsNullOrEmpty(chestName) && chestName != $"chest.{row.Chest}.name"
-                ? chestName : chestArt.ChestLabel ?? string.Empty);
+            if (_shardIcon != null)
+                _ui.SetText("CHRewardChestText", Localize.Get("ui.chapterhost.reward_met_shards"));
+            else
+            {
+                // 상자 이름은 언어팩에서 — 빌더가 박아 둔 `ChestLabel` 은 한국어라 일본어 화면에도 한국어가 나왔다
+                string chestName = !string.IsNullOrEmpty(row.Chest) ? Localize.Get($"chest.{row.Chest}.name") : null;
+                _ui.SetText("CHRewardChestText", !string.IsNullOrEmpty(chestName) && chestName != $"chest.{row.Chest}.name"
+                    ? chestName : chestArt.ChestLabel ?? string.Empty);
+            }
 
             RefreshChapterAffinity();
             RefreshRecPower();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Module.Events;
 using Game.User;
@@ -130,26 +131,51 @@ namespace Game.Module.Common.Chest
 
         // ── 담기 · 열기 ──────────────────────────────────────────
 
+        // 로비 상자 칸은 없앴다(PD 2026-10-17) — 담지 않고 그 자리에서 열어 지급한다
         public bool TryGrant(string chestKey, out int slot)
         {
             slot = -1;
+            bool ok = TryOpenImmediate(chestKey, out _);
+            if (ok) Save();
+            return ok;
+        }
+
+        public (int min, int max) GoldRange(string chestKey)
+        {
+            var e = _table?.Find(chestKey);
+            return e != null ? (e.GoldMin, e.GoldMax) : (0, 0);
+        }
+
+        public bool GrantChapterClear(string chestKey, IReadOnlyList<string> metHostKeys, out ChestReward reward)
+        {
+            reward = default;
             var p = Player;
-            var entry = _table?.Find(chestKey);
-            if (p == null || !p.IsReady || entry == null) return false;
+            if (p == null || !p.IsReady || _table == null) return false;
+            var e = _table.Find(chestKey);
+            if (e == null) return false;
 
-            for (int i = 0; i < SlotCount; i++)
-            {
-                if (!string.IsNullOrEmpty(p.GetChestKey(i))) continue;
-                slot = i;
-                break;
-            }
-            if (slot < 0) return false;   // 칸이 다 찼다 — 조용히 버리지 않고 알린다
+            // 만난 몸 — 중복 · 유령 · 히든(사신) · 모르는 키를 뺀다
+            var met = new List<string>();
+            if (metHostKeys != null)
+                for (int i = 0; i < metHostKeys.Count; i++)
+                {
+                    string k = metHostKeys[i];
+                    var h = string.IsNullOrEmpty(k) ? null : p.GetHost(k);
+                    if (h == null || h.IsGhost || PlayerDataService.IsHiddenHost(k) || met.Contains(k)) continue;
+                    met.Add(k);
+                }
+            if (met.Count == 0) return TryOpenImmediate(chestKey, out reward);
 
-            // 테스트 모드면 1/60 — 3시간 상자가 3분에 열린다(라이브 값은 표에 그대로 있다)
-            int seconds = p.TestMode ? Mathf.Max(5, entry.UnlockSeconds / 60) : entry.UnlockSeconds;
-            p.SetChestSlot(slot, chestKey, NowMs() + (long)seconds * 1000L, seconds);
+            int gold = UnityEngine.Random.Range(e.GoldMin, e.GoldMax + 1);
+            int shards = Mathf.Max(met.Count, UnityEngine.Random.Range(e.ShardMin, e.ShardMax + 1));
+            // 모두 1개씩, 나머지는 고르게 돌려 얹는다(무작위로 몰리면 「만났는데 하나뿐」이 잦다)
+            var counts = new int[met.Count];
+            for (int i = 0; i < shards; i++) counts[i % met.Count]++;
+            var keys = met.ToArray();
+            reward = new ChestReward(e.Key, gold, keys, counts);
+            p.AddGrowthCurrency(gold, 0, 0, 0);
+            for (int i = 0; i < keys.Length; i++) p.AddShards(keys[i], counts[i]);
             Save();
-            _bus?.Publish(new ChestChangedEvent());
             return true;
         }
 
@@ -281,6 +307,29 @@ namespace Game.Module.Common.Chest
             return from[UnityEngine.Random.Range(0, from.Count)];
         }
 
+        private bool _flushed;
+
+        /// <summary>
+        /// 칸 폐지 전 저장에 남은 상자 — 시간과 상관없이 한 번에 열어 지급하고 칸을 비운다(안 보이는 칸에 묵히지 않는다).
+        /// </summary>
+        private void FlushOldSlots()
+        {
+            if (_flushed) return;
+            var p = Player;
+            if (p == null || !p.IsReady || _table == null) return;
+            _flushed = true;
+            bool any = false;
+            for (int i = 0; i < SlotCount; i++)
+            {
+                string key = p.GetChestKey(i);
+                if (string.IsNullOrEmpty(key)) continue;
+                TryOpenImmediate(key, out _);
+                p.SetChestSlot(i, string.Empty, 0, 0);
+                any = true;
+            }
+            if (any) { Save(); _bus?.Publish(new ChestChangedEvent()); }
+        }
+
         private void Save()
         {
             var p = Player;
@@ -297,6 +346,7 @@ namespace Game.Module.Common.Chest
             _pollTimer += deltaTime;
             if (_pollTimer < PollSeconds) return;
             _pollTimer = 0f;
+            FlushOldSlots();
 
             bool r0 = Get(0).IsReady, r1 = Get(1).IsReady, r2 = Get(2).IsReady;
             if (r0 == _wasReady0 && r1 == _wasReady1 && r2 == _wasReady2) return;

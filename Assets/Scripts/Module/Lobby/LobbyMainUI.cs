@@ -80,7 +80,6 @@ namespace Game.Module.Lobby
 
         private UIBinder _ui;
         private IPlayerDataService _player;
-        private IChestService _chests;
         private readonly List<IDisposable> _tokens = new();
 
         // 1차 범위 밖 — 버튼은 두되 누르면 준비중 안내만 띄운다.
@@ -98,7 +97,6 @@ namespace Game.Module.Lobby
             // 본문 폰트를 지금 언어 것으로 — 일본어를 한글 폰트로 그리면 한자가 한국식으로 나온다
             Localize.ApplyFonts(transform);
             CoreModule.TryGet<IPlayerDataService>(out _player);
-            CoreModule.TryGet<IChestService>(out _chests);
 
             gameObject.AddComponent<BackButtonRouter>();
             global::Game.Module.Common.GameSound.Music("screen.lobby");
@@ -166,14 +164,9 @@ namespace Game.Module.Lobby
                 else NotifyNotReady(Localize.Get("ui.lobby.mode.defense.name"));
             });
 
-            // 상자 세 칸 — 카드를 누르면 다 됐으면 보상을 받고, 세는 중이면 젬으로 열지 묻는다
-            for (int i = 0; i < ChestSlots; i++)
-            {
-                int slot = i;   // 클로저가 루프 변수를 잡지 않게 복사한다
-                var root = _ui.Find($"ChestSlot{i + 1}");
-                var button = root != null ? root.GetComponent<UnityEngine.UI.Button>() : null;
-                if (button != null) button.onClick.AddListener(() => OnChestAction(slot));
-            }
+            // 보물상자 칸은 없앴다(PD 2026-10-17 「상자 기능 제거 — 인게임 보상에서도 안 준다, 추후 상점 판매만」).
+            // 칸 노드 · 그림 필드는 새 로비 UI(v3)를 지을 때 빌더와 함께 걷어 낸다
+            _ui.SetActive("ChestBand", false);
 
             foreach (var (element, label) in NotReady)
             {
@@ -182,22 +175,11 @@ namespace Game.Module.Lobby
             }
 
             _playLabelDirty = true;
-            ApplyChests();
         }
 
-        // ── 보물상자 ─────────────────────────────────────────────
-        //
-        // 칸마다 세 가지 모습이 있다. 어느 것이 켜지는지가 곧 상태다 —
-        //   빈 칸      「空きスロット」 글자만
-        //   세는 중    제목 · 상자 · 시간 판(시계 + 남은 시간)   ← 시안 그대로
-        //   다 됨      제목 · 상자 · 시간 판(「完了!」)
-        //
-        // ⚠ 매 프레임 다시 그리지 않는다. 1초에 한 번 `ChestChangedEvent` 가 오고,
-        //   세는 동안의 「남은 시간」 글자만 따로 1초마다 고친다.
-
-        private const int ChestSlots = 3;
-        private const float ChestTickSeconds = 1f;
-        private float _chestTick;
+        // 1초 시계 — 행동력 회복 글자만 1초에 한 번 고친다(매 프레임 계산하지 않는다)
+        private const float TickSeconds = 1f;
+        private float _tick;
 
         // 「プレイ」 글자는 `LocalizedText` 가 채운다 — 채우기 전에 재면 빌더 기본 글자(한국어) 폭으로 ▶ 가
         // 멀리 떨어진다(2026-09-21). 글자가 바뀐 **다음 프레임**에 잰다.
@@ -210,121 +192,10 @@ namespace Game.Module.Lobby
                 _playLabelDirty = false;
                 PlacePlayLabel();
             }
-            _chestTick += Time.unscaledDeltaTime;
-            if (_chestTick < ChestTickSeconds) return;
-            _chestTick = 0f;
+            _tick += Time.unscaledDeltaTime;
+            if (_tick < TickSeconds) return;
+            _tick = 0f;
             RefreshStamina();   // 회복 시계 글자 — 1초에 한 번(매 프레임 계산하지 않는다)
-            if (_chests != null) ApplyChests();
-        }
-
-        private void ApplyChests()
-        {
-            if (_chests == null && !CoreModule.TryGet<IChestService>(out _chests)) return;
-
-            for (int i = 0; i < ChestSlots; i++)
-            {
-                var root = _ui.Find($"ChestSlot{i + 1}");
-                if (root == null) continue;
-
-                var s = _chests.Get(i);
-                bool has = !s.IsEmpty;
-                bool ready = s.IsReady;
-
-                SetIn(root, "ChestEmptyText", !has);
-                SetIn(root, "ChestTitleText", has);
-                SetIn(root, "ChestArt", has);
-                SetIn(root, "ChestTimePlate", has);
-                SetIn(root, "ChestTimeIcon", has && !ready);
-                SetIn(root, "ChestTimeText", has);
-
-                if (!has) continue;
-
-                var art = _ui.Find(root, "ChestArt")?.GetComponent<UnityEngine.UI.Image>();
-                if (art != null)
-                {
-                    var sprite = ChestSpriteOf(s.ChestKey);
-                    if (sprite != null && art.sprite != sprite)
-                    {
-                        art.sprite = sprite;
-                        art.color = Color.white;   // 자리표시 색이 남아 있으면 그림이 물든다
-                    }
-                    // 그림이 없으면 네모가 뜬다 — 차라리 안 보이는 편이 낫다
-                    art.enabled = sprite != null;
-                    var layout = root.GetComponent<ChestSlotLayout>();
-                    if (layout != null) layout.Apply(art.rectTransform, s.ChestKey);
-                }
-
-                TextIn(root, "ChestTitleText", Localize.Get($"chest.{s.ChestKey}.name"));
-                TextIn(root, "ChestTimeText", ready ? Localize.Get("ui.lobby.chest.ready") : Remain(s.RemainSeconds));
-                if (ready) CenterAlone(root, "ChestTimePlate", "ChestTimeText");
-                else CenterRow(root, "ChestTimePlate", "ChestTimeIcon", "ChestTimeText", _timeRowGap, _timeRowShift);
-            }
-        }
-
-        /// <summary>
-        /// 남은 시간 — 시안대로 「3時間 12分」 꼴. 1분 미만은 초로 적는다.
-        ///
-        /// ⚠ 단위 자리가 언어마다 달라(「3h 12m」) 꼴을 통째로 표에서 읽는다.
-        ///   숫자만 갈아 끼우면 일본어·영어에서 말이 안 된다.
-        /// </summary>
-        private static string Remain(int seconds)
-        {
-            if (seconds <= 0) return Localize.Format("ui.lobby.chest.time_s", 0);
-            int h = seconds / 3600, m = seconds % 3600 / 60;
-            if (h > 0) return Localize.Format("ui.lobby.chest.time_h", h, m);
-            if (m > 0) return Localize.Format("ui.lobby.chest.time_m", m);
-            return Localize.Format("ui.lobby.chest.time_s", seconds);
-        }
-
-        /// <summary>
-        /// 아이콘 + 글자 한 줄을 판 가운데에 둔다.
-        /// 글자 길이가 「1分」 부터 「3時間 12分」 까지 달라서 자리를 고정하면 짧을 때 덩어리가 쏠린다.
-        /// ⚠ 가로 정렬만 바꾼다 — 세로는 글자 모양 기준(Geometry)이어야 시안 줄에 앉는다.
-        /// </summary>
-        private void CenterRow(Transform slot, string plateName, string iconName, string textName, float gap, float shift)
-        {
-            var plate = _ui.Find(slot, plateName) as RectTransform;
-            var icon = _ui.Find(slot, iconName) as RectTransform;
-            var text = _ui.Find(slot, textName)?.GetComponent<TMPro.TextMeshProUGUI>();
-            if (plate == null || icon == null || text == null) return;
-
-            var textRect = text.rectTransform;
-            text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Left;
-            text.ForceMeshUpdate();
-            // 글자 칸은 가로로 눌려 있을 수 있다(시안 글꼴 폭 맞춤) — 보이는 폭은 × localScale.x
-            float sx = textRect.localScale.x;
-            float textW = text.textBounds.size.x * sx;
-            float iconW = icon.rect.width;
-            float group = iconW + gap + textW;
-
-            // 셋 다 같은 부모 안이라 localPosition 으로 맞춘다 — 앵커가 달라도 같은 자로 잰다
-            float center = plate.localPosition.x + (0.5f - plate.pivot.x) * plate.rect.width;
-            float left = center + shift - group * 0.5f;
-
-            var ip = icon.localPosition;
-            ip.x = left + icon.pivot.x * iconW;
-            icon.localPosition = ip;
-
-            // 글자 잉크의 왼쪽 끝을 맞춘다 — textBounds 는 글자 칸 기준점(pivot) 기준이다
-            var tp = textRect.localPosition;
-            tp.x = left + iconW + gap - text.textBounds.min.x * sx;
-            textRect.localPosition = tp;
-        }
-
-        /// <summary>시계 없이 글자만 — 「完了!」 는 판 가운데에 선다.</summary>
-        private void CenterAlone(Transform slot, string plateName, string textName)
-        {
-            var plate = _ui.Find(slot, plateName) as RectTransform;
-            var text = _ui.Find(slot, textName)?.GetComponent<TMPro.TextMeshProUGUI>();
-            if (plate == null || text == null) return;
-            var rt = text.rectTransform;
-            text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Left;
-            text.ForceMeshUpdate();
-            float sx = rt.localScale.x;
-            float center = plate.localPosition.x + (0.5f - plate.pivot.x) * plate.rect.width;
-            var tp = rt.localPosition;
-            tp.x = center - text.textBounds.size.x * sx * 0.5f - text.textBounds.min.x * sx;
-            rt.localPosition = tp;
         }
 
         /// <summary>
@@ -352,78 +223,6 @@ namespace Game.Module.Lobby
             var ip = icon.anchoredPosition;
             ip.x = left + textW + _playArrowGap;
             icon.anchoredPosition = ip;
-        }
-
-        private Sprite ChestSpriteOf(string chestKey)
-        {
-            if (_chestArts == null || string.IsNullOrEmpty(chestKey)) return null;
-            for (int i = 0; i < _chestArts.Length; i++)
-                if (_chestArts[i].Key == chestKey) return _chestArts[i].Sprite;
-            return null;
-        }
-
-        private void SetIn(Transform root, string name, bool on)
-        {
-            var t = _ui.Find(root, name);
-            if (t != null && t.gameObject.activeSelf != on) t.gameObject.SetActive(on);
-        }
-
-        private void TextIn(Transform root, string name, string value)
-        {
-            var t = _ui.Find(root, name)?.GetComponent<TMPro.TextMeshProUGUI>();
-            if (t != null && t.text != value) t.text = value;
-        }
-
-        private void OnChestAction(int slot)
-        {
-            if (_chests == null) return;
-            var s = _chests.Get(slot);
-            if (s.IsEmpty) return;
-
-            if (s.IsReady)
-            {
-                if (_chests.TryClaim(slot, out var reward))
-                {
-                    global::Game.Module.Common.GameSound.Cue("run.gold");
-                    ShowChestReward(reward);
-                }
-                return;
-            }
-
-            // 시안엔 젬 버튼이 없다 — 카드를 누르면 젬으로 지금 열지 묻는다
-            SystemPopup.Show(Localize.Format("ui.lobby.chest.open_confirm", s.GemCost.ToString("N0")),
-                             () => OpenNow(slot));
-        }
-
-        private void OpenNow(int slot)
-        {
-            var s = _chests.Get(slot);
-            if (s.IsEmpty || s.IsReady) return;
-            // 젬이 모자라면 아무 일도 안 일어난 듯 보인다 — 왜 안 열렸는지 알려 준다
-            if (!_chests.TryOpenNow(slot))
-                NotifyNotReady(Localize.Format("ui.lobby.chest.need_gem", s.GemCost.ToString("N0")));
-            else global::Game.Module.Common.GameSound.Cue("run.shop");
-        }
-
-        /// <summary>
-        /// 연 상자의 보상 목록. 보상은 이미 들어갔다 — 확인을 누르면 창만 닫힌다.
-        /// 보상 창이 프리팹에 없으면(빌더 미실행) 알림창으로 대신한다.
-        /// </summary>
-        private void ShowChestReward(ChestReward reward)
-        {
-            if (_chestRewardPopup != null) { _chestRewardPopup.Show(reward); return; }
-
-            var sb = new System.Text.StringBuilder();
-            sb.Append(Localize.Format("ui.chest.reward.title", Localize.Get($"chest.{reward.ChestKey}.name")));
-            sb.Append("\n\n").Append(Localize.Format("ui.chest.reward.gold", reward.Gold.ToString("N0")));
-            for (int i = 0; i < reward.ShardHostKeys.Length; i++)
-            {
-                var host = _player?.GetHost(reward.ShardHostKeys[i]);
-                string name = host != null ? host.DisplayName : reward.ShardHostKeys[i];
-                string grade = host != null ? host.Grade.ToString() : "?";
-                sb.Append('\n').Append(Localize.Format("ui.chest.reward.shard", name, grade, reward.ShardCounts[i]));
-            }
-            SystemPopup.Show(sb.ToString(), null, Localize.Get("ui.common.ok"), null);
         }
 
         // ── 하단 바 ──────────────────────────────────────────────
@@ -522,9 +321,8 @@ namespace Game.Module.Lobby
             _tokens.Add(bus.Subscribe<UserDataReadyEvent>(_ => Refresh()));
             _tokens.Add(bus.Subscribe<CurrencyChangedEvent>(_ => RefreshCurrency()));
             _tokens.Add(bus.Subscribe<GhostProgressChangedEvent>(_ => RefreshProfile()));
-            _tokens.Add(bus.Subscribe<ChestChangedEvent>(_ => ApplyChests()));
             // 코드가 채우는 글자(상자 문구 · 플레이 자리)는 LocalizedText 가 없다 — 언어가 바뀌면 다시 채운다
-            _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => { _playLabelDirty = true; ApplyChests(); }));
+            _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => _playLabelDirty = true));
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
             _tokens.Add(bus.Subscribe<ModeProgressChangedEvent>(_ => RefreshModeCards()));
             _tokens.Add(bus.Subscribe<ChapterSelectRequestedEvent>(_ =>
@@ -579,7 +377,6 @@ namespace Game.Module.Lobby
             if (_player == null || !_player.IsReady) return;
             RefreshCurrency();
             RefreshProfile();
-            ApplyChests();
             RefreshModeCards();
         }
 

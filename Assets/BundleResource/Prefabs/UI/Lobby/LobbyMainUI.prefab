@@ -70310,8 +70310,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 14, y: -407}
-  m_SizeDelta: {x: 146, y: 26}
+  m_AnchoredPosition: {x: 12, y: -407}
+  m_SizeDelta: {x: 128, y: 26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8387786897915647946
 CanvasRenderer:
@@ -150827,6 +150827,7 @@ MonoBehaviour:
   _starHalf: {fileID: 21300000, guid: fa11aef2d33d3c941ada6e231040fedf, type: 3}
   _starGold: {fileID: 21300000, guid: 6bf864dda6cafa0418f89988f609a269, type: 3}
   _starSilver: {fileID: 21300000, guid: 85ed73fce2e2a894f9c31575c144c01d, type: 3}
+  _shardIcon: {fileID: 21300000, guid: c3885b68df15d5c4a8b5947c79278f69, type: 3}
 --- !u!1 &4256042204886052447
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,6 @@ d_all	daily	daily_all_done	6		20	gem:20;stamina:10
 w_clear	weekly	run_clear	3		60	
 w_possess	weekly	possess	50		60	
 w_boss	weekly	kill_boss	3		60	
-w_chest	weekly	chest_open	7		40	
+w_upgrade	weekly	stat_upgrade	10		40	
 w_hosts	weekly	distinct_hosts_possessed	5		60	
 w_all	weekly	weekly_all_done	5		50	gem:100;stamina:20

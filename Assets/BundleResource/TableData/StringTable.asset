@@ -5442,3 +5442,7 @@ MonoBehaviour:
       \uC900\uB2E4"
     _ja: "\u7121\u6575\u4E2D\u306B\u53D7\u3051\u305F\u653B\u6483\u306E30%\u3092\u53CD\u5C04"
     _en: Reflect 30% of hits taken while invincible
+  - _key: ui.chapterhost.reward_met_shards
+    _ko: "\uB9CC\uB09C \uD638\uC2A4\uD2B8 \uC870\uAC01"
+    _ja: "\u51FA\u4F1A\u3063\u305F\u30DB\u30B9\u30C8\u306E\u304B\u3051\u3089"
+    _en: Shards of hosts met

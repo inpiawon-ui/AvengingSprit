@@ -767,7 +767,7 @@ namespace Game.Editor
             // 띠 그림(3.8)보다 칸이 길다 — 9분할로 늘린다. 왼쪽 설명 글자와 안 겹치게 조금 오른쪽
             rib.type = Image.Type.Sliced;
             rib.pixelsPerUnitMultiplier = 3f;
-            C(box, "CHStartRibbon", 374, 1047, 146, 26);
+            C(box, "CHStartRibbon", 372, 1047, 128, 26);   // 왼쪽 설명 · 아래 스킬 설명 글자를 덮지 않게 폭을 줄인다
             rib.transform.SetAsLastSibling();
             var rt = CloneText(rib.transform, "CHInfoDesc", "CHStartRibbonText", box);
             rt.alignment = TextAlignmentOptions.Center;
@@ -787,6 +787,7 @@ namespace Game.Editor
             Arr(so, "_gradeBadges", $"{Ch}/ch_grade_b.png", $"{Ch}/ch_grade_a.png", $"{Ch}/ch_grade_s.png");
             so.FindProperty("_starHalf").objectReferenceValue = Spr($"{Ch}/ch_star_half.png");
             so.FindProperty("_starGold").objectReferenceValue = Spr($"{Ch}/ch_star_gold.png");
+            so.FindProperty("_shardIcon").objectReferenceValue = Spr("Assets/BaseResource/Growth/shard_icon.png");
             so.FindProperty("_starSilver").objectReferenceValue = Spr($"{Ch}/ch_star_silver.png");
             so.FindProperty("_ribbonToday").objectReferenceValue = Spr($"{Ch}/ribbon_today.png");
             so.ApplyModifiedPropertiesWithoutUndo();

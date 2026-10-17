@@ -1,6 +1,6 @@
 # 시즌 패스 1 「GHOST REVENGE」 — 28일 · 30단계 · 단계당 패스 경험치 100. Tools/Game/로비 상점 표 임포트 (Store) → PassTable.asset (주소 TableData/PassTable)
 # season: id=s1 · startUtc · endUtc 는 GameConfig 「시즌」 칸에(이 표는 보상만). 단계 건너뛰기 = 단계당 젬 100.
-# 무료 합계: 젬 200 · 정수 60 · 행동력 60 · 소환권 2 · 은 상자 2 · 판 골드 12판분 · 프로필 테두리 「GHOST REVENGE」 / 프리미엄 합계: 젬 1,020 · 소환권 16 · 정수 100 · 백금 상자 1 · 칭호 「시즌 1 복수자」
+# 무료 합계: 젬 200 · 정수 60 · 행동력 60 · 소환권 2 · 정수 40(은 상자 2 대신) · 판 골드 12판분 · 프로필 테두리 「GHOST REVENGE」 / 프리미엄 합계: 젬 1,020 · 소환권 16 · 정수 100 · 소환권 3(백금 상자 대신) · 칭호 「시즌 1 복수자」
 # profile:* 는 profile.tsv 의 키 — 능력치 없음(꾸미기 전용).
 tier	xp	free	premium
 1	100	goldrun:1	gem:30
@@ -12,17 +12,17 @@ tier	xp	free	premium
 7	100	goldrun:1	gem:30
 8	100	stamina:10	gem:30
 9	100	goldrun:1	gem:30
-10	100	chest:silver;gem:50	essence:50
+10	100	essence:20;gem:50	essence:50
 11	100	goldrun:1	gem:30
 12	100	stamina:10	gem:30
 13	100	goldrun:1	gem:30
 14	100	essence:5	gem:30
-15	100	ticket:2	chest:platinum
+15	100	ticket:2	ticket:3
 16	100	stamina:10	gem:30
 17	100	goldrun:1	gem:30
 18	100	essence:5	gem:30
 19	100	goldrun:1	gem:30
-20	100	chest:silver;gem:50	ticket:3
+20	100	essence:20;gem:50	ticket:3
 21	100	goldrun:1	gem:30
 22	100	essence:5	gem:30
 23	100	goldrun:1	gem:30

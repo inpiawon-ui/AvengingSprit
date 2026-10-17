@@ -51,7 +51,7 @@ MonoBehaviour:
     Premium: gem:30
   - Level: 10
     Xp: 100
-    Free: chest:silver;gem:50
+    Free: essence:20;gem:50
     Premium: essence:50
   - Level: 11
     Xp: 100
@@ -72,7 +72,7 @@ MonoBehaviour:
   - Level: 15
     Xp: 100
     Free: ticket:2
-    Premium: chest:platinum
+    Premium: ticket:3
   - Level: 16
     Xp: 100
     Free: stamina:10
@@ -91,7 +91,7 @@ MonoBehaviour:
     Premium: gem:30
   - Level: 20
     Xp: 100
-    Free: chest:silver;gem:50
+    Free: essence:20;gem:50
     Premium: ticket:3
   - Level: 21
     Xp: 100
@@ -194,10 +194,10 @@ MonoBehaviour:
     Target: 3
     PassXp: 60
     Rewards: 
-  - Id: w_chest
+  - Id: w_upgrade
     Period: weekly
-    Type: chest_open
-    Target: 7
+    Type: stat_upgrade
+    Target: 10
     PassXp: 40
     Rewards: 
   - Id: w_hosts
