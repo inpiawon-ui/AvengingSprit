@@ -291,6 +291,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c166ffcebea24136a9ffa1968140a51e
+    m_Address: atlas/uikit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c4ef0c4136f93134393363d386e3f46b
     m_Address: atlas/unit_gangster
     m_ReadOnly: 0
