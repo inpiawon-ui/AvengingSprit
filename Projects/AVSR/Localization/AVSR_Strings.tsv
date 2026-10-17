@@ -1036,7 +1036,7 @@ ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 몸 잃�
 ui.night.result.lobby	로비	ロビー	Lobby
 ui.growth6.rank	성급 {0}/10	ランク {0}/10	Rank {0}/10
 ui.growth6.power	전투력 <color=#5CFF7A>{0}</color>	戦闘力 <color=#5CFF7A>{0}</color>	Power <color=#5CFF7A>{0}</color>
-ui.growth6.summary	{0}성 → {1}성  ·  체력·공격 ×1.07  ·  스킬 Lv {0}→<color=#5CFF7A>{1}</color>  ·  강화 상한 {2}→<color=#5CFF7A>{3}</color>	{0}→{1}  ·  HP·攻撃 ×1.07  ·  スキルLv {0}→<color=#5CFF7A>{1}</color>  ·  強化上限 {2}→<color=#5CFF7A>{3}</color>	{0}★→{1}★  ·  HP/ATK ×1.07  ·  Skill Lv {0}→<color=#5CFF7A>{1}</color>  ·  Cap {2}→<color=#5CFF7A>{3}</color>
+ui.growth6.summary	{0}성 → {1}성  ·  체력·공격 +7%  ·  스킬 Lv {0}→<color=#5CFF7A>{1}</color>  ·  강화 상한 {2}→<color=#5CFF7A>{3}</color>	{0}→{1}  ·  HP·攻撃 +7%  ·  スキルLv {0}→<color=#5CFF7A>{1}</color>  ·  強化上限 {2}→<color=#5CFF7A>{3}</color>	{0}★→{1}★  ·  HP/ATK +7%  ·  Skill Lv {0}→<color=#5CFF7A>{1}</color>  ·  Cap {2}→<color=#5CFF7A>{3}</color>
 ui.growth6.summary_max	10성 — 최대 성급	ランク10 — 最大	Rank 10 — Max
 ui.growth6.summary_unlock	조각을 모아 해금하면 스킬 · 능력치 강화가 열립니다	かけらで解放するとスキル・強化が開きます	Unlock with shards to open skills & upgrades
 ui.growth6.ult_tag	SPECIAL · 필살기	SPECIAL · 必殺技	SPECIAL
@@ -1044,20 +1044,20 @@ ui.growth6.act_tag	ACTIVE · 액티브	ACTIVE · アクティブ	ACTIVE
 ui.growth6.pas_tag	PASSIVE · 패시브	PASSIVE · パッシブ	PASSIVE
 ui.growth6.ult_cond	빙의할 때 1회	憑依ごとに1回	Once per possession
 ui.growth6.act_cond	평타 30타 충전	通常攻撃30回で充填	Charges in 30 hits
-ui.growth6.power_line	현재 ×{0} → {1}성 ×<color=#5CFF7A>{2}</color>	現在 ×{0} → ランク{1} ×<color=#5CFF7A>{2}</color>	Now ×{0} → {1}★ ×<color=#5CFF7A>{2}</color>
-ui.growth6.power_max	위력 ×{0} (최대)	威力 ×{0}（最大）	Power ×{0} (max)
+ui.growth6.power_line	현재 {0}% → {1}성 <color=#5CFF7A>{2}%</color>	現在 {0}% → ランク{1} <color=#5CFF7A>{2}%</color>	Now {0}% → {1}★ <color=#5CFF7A>{2}%</color>
+ui.growth6.power_max	위력 {0}% (최대)	威力 {0}%（最大）	Power {0}% (max)
 ui.growth6.pas_line	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>
 ui.growth6.pas_max	{0} {1} (최대)	{0} {1}（最大）	{0} {1} (max)
 ui.growth6.opt_locked	{0}성 각성 옵션 · 잠김	ランク{0} 覚醒オプション・ロック	{0}★ Awakening · Locked
 ui.growth6.opt_open	{0}성 각성 옵션	ランク{0} 覚醒オプション	{0}★ Awakening
-ui.growth6.opt_max	10성 각성 강화 · 효과 ×2	ランク10 覚醒強化・効果×2	10★ Awakening · Effect ×2
+ui.growth6.opt_max	10성 각성 강화 · 효과 2배	ランク10 覚醒強化・効果2倍	10★ Awakening · Effect ×2
 ui.growth6.step	{0}성 보조↑	ランク{0} 補助↑	{0}★ Bonus↑
 ui.growth6.cap	{0}성 강화 상한 Lv {1}	ランク{0} 強化上限 Lv {1}	{0}★ Upgrade cap Lv {1}
 ui.growth6.row_lv	Lv <color=#FFD94A>{0}</color> / {1}	Lv <color=#FFD94A>{0}</color> / {1}	Lv <color=#FFD94A>{0}</color> / {1}
 ui.growth6.card_rank	{0}성	{0}	{0}★
 ui.growth6.win_rank	{0}성 → <color=#5CFF7A>{1}성</color>	ランク{0} → <color=#5CFF7A>ランク{1}</color>	{0}★ → <color=#5CFF7A>{1}★</color>
 ui.growth6.w.body	몸 능력치	体の能力	Body stats
-ui.growth6.w.body_val	체력·공격 ×<color=#5CFF7A>1.07</color>	HP·攻撃 ×<color=#5CFF7A>1.07</color>	HP/ATK ×<color=#5CFF7A>1.07</color>
+ui.growth6.w.body_val	체력·공격 <color=#5CFF7A>+7%</color>	HP·攻撃 <color=#5CFF7A>+7%</color>	HP/ATK <color=#5CFF7A>+7%</color>
 ui.growth6.w.skill_lv	스킬 Lv	スキルLv	Skill Lv
 ui.growth6.w.act	액티브 위력	アクティブ威力	Active power
 ui.growth6.w.act_step	액티브 보조값	アクティブ補助値	Active bonus
@@ -1066,12 +1066,12 @@ ui.growth6.w.pas	패시브	パッシブ	Passive
 ui.growth6.w.opt	6성 각성 옵션	ランク6 覚醒オプション	6★ Awakening
 ui.growth6.w.opt_open	<color=#5CFF7A>열림</color>	<color=#5CFF7A>解放</color>	<color=#5CFF7A>Unlocked</color>
 ui.growth6.w.opt_max	10성 각성 강화	ランク10 覚醒強化	10★ Awakening
-ui.growth6.w.opt_double	효과 <color=#5CFF7A>×2</color>	効果 <color=#5CFF7A>×2</color>	Effect <color=#5CFF7A>×2</color>
+ui.growth6.w.opt_double	효과 <color=#5CFF7A>2배</color>	効果 <color=#5CFF7A>2倍</color>	Effect <color=#5CFF7A>×2</color>
 ui.growth6.w.cap	능력치 강화 상한	能力強化上限	Upgrade cap
 ui.growth6.next_mile	다음 이정표  {0}성: {1}	次の節目  ランク{0}: {1}	Next milestone  {0}★: {1}
 ui.growth6.mile_opt	각성 옵션 열림	覚醒オプション解放	Awakening unlocked
 ui.growth6.mile_gold	큰 금별	大きな金の星	Big gold star
-ui.growth6.mile_max	각성 강화 ×2	覚醒強化 ×2	Awakening ×2
+ui.growth6.mile_max	각성 강화 2배	覚醒強化 2倍	Awakening ×2
 ui.growth6.mile_step	액티브 보조↑	アクティブ補助↑	Active bonus↑
 host.gangster.concept	청부 저격수 — 보스 킬러	請負狙撃手 — ボスキラー	Hired sniper — boss killer
 ult.gangster.name	청부 처형	請負処刑	Contract Kill
@@ -1235,3 +1235,12 @@ askill.amazon_elite.short	2.5초 무적 + 쉴드 상한 해제	2.5秒無敵＋�
 pskill.amazon_elite.short	쉴드 있는 동안 공격력 증가	シールド中は攻撃力アップ	Attack up while Shielded
 askill.amazon_elite.opt	무적 동안 받은 공격의 30% 를 되돌려 준다	無敵中に受けた攻撃の30%を反射	Reflect 30% of hits taken while invincible
 ui.chapterhost.reward_met_shards	만난 호스트 조각	出会ったホストのかけら	Shards of hosts met
+ui.home.scenario	시나리오	シナリオ	Scenario
+ui.home.chapter	챕터 {0}	チャプター {0}	Chapter {0}
+ui.home.continue	이어 하기	続きから	Continue
+ui.home.pass_buy	구매	購入	Buy
+ui.home.mission	미션	ミッション	Missions
+ui.home.achieve	업적	実績	Feats
+ui.home.entries	오늘 입장 {0}/{1}	今日の入場 {0}/{1}	Today {0}/{1}
+ui.home.best	최고 기록 <color=#FFD23F>{0}</color>	最高記録 <color=#FFD23F>{0}</color>	Best <color=#FFD23F>{0}</color>
+ui.home.night_sub	오늘 {0}요일 · {1}	今日 {0}曜日・{1}	Today {0} · {1}

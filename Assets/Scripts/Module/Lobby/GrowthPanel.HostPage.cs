@@ -214,9 +214,9 @@ namespace Game.Module.Lobby
             _ui.SetText("H6UltCond", Localize.Get("ui.growth6.ult_cond"));
             _ui.SetText("H6UltDesc", Localize.Get($"ult.{e.HostKey}.short"));
             _ui.SetText("H6UltPower", maxed
-                ? Localize.Format("ui.growth6.power_max", SkillPower.Ult(m).ToString("0.00"))
-                : Localize.Format("ui.growth6.power_line", SkillPower.Ult(now).ToString("0.00"), Next(next),
-                                  SkillPower.Ult(next).ToString("0.00")));
+                ? Localize.Format("ui.growth6.power_max", Pct(SkillPower.Ult(m)))
+                : Localize.Format("ui.growth6.power_line", Pct(SkillPower.Ult(now)), Next(next),
+                                  Pct(SkillPower.Ult(next))));
 
             // 액티브
             var active = _player.GetActiveSkill(e.ActiveSkillKey);
@@ -227,9 +227,9 @@ namespace Game.Module.Lobby
             _ui.SetText("H6ActCond", Localize.Get("ui.growth6.act_cond"));
             _ui.SetText("H6ActDesc", Localize.Get($"askill.{e.HostKey}.short"));
             _ui.SetText("H6ActPower", maxed
-                ? Localize.Format("ui.growth6.power_max", SkillPower.Active(m).ToString("0.00"))
-                : Localize.Format("ui.growth6.power_line", SkillPower.Active(now).ToString("0.00"), Next(next),
-                                  SkillPower.Active(next).ToString("0.00")));
+                ? Localize.Format("ui.growth6.power_max", Pct(SkillPower.Active(m)))
+                : Localize.Format("ui.growth6.power_line", Pct(SkillPower.Active(now)), Next(next),
+                                  Pct(SkillPower.Active(next))));
             // 보조값(지속 · 개수 · 범위) — 다음 성급에 실제로 달라질 때만 상자를 보인다
             bool step = !maxed && m >= 1 && active != null && active.GrowthUnit != SkillGrowthUnit.None
                         && !Mathf.Approximately(active.GrowthAt(now), active.GrowthAt(next));
@@ -358,7 +358,7 @@ namespace Game.Module.Lobby
                  Localize.Get("ui.growth6.w.body"), Localize.Get("ui.growth6.w.body_val")),
                 (_starGold, Localize.Get("ui.growth6.w.skill_lv"), Arrow(m.ToString(), to.ToString())),
                 (art.Skill, Localize.Get("ui.growth6.w.act"),
-                 Arrow($"×{SkillPower.Active(now):0.00}", $"×{SkillPower.Active(to):0.00}")),
+                 Arrow($"{Pct(SkillPower.Active(now))}%", $"{Pct(SkillPower.Active(to))}%")),
             };
             var active = e != null ? _player.GetActiveSkill(e.ActiveSkillKey) : null;
             if (m >= 1 && active != null && active.GrowthUnit != SkillGrowthUnit.None
@@ -367,7 +367,7 @@ namespace Game.Module.Lobby
                            $"{active.GrowthLabel} " + Arrow(Unit(active.GrowthUnit, active.GrowthAt(now)),
                                                             Unit(active.GrowthUnit, active.GrowthAt(to)))));
             lines.Add((art.Ult != null ? art.Ult : art.Skill, Localize.Get("ui.growth6.w.ult"),
-                       Arrow($"×{SkillPower.Ult(now):0.00}", $"×{SkillPower.Ult(to):0.00}")));
+                       Arrow($"{Pct(SkillPower.Ult(now))}%", $"{Pct(SkillPower.Ult(to))}%")));
             var passive = e != null ? _player.GetPassiveSkill(e.PassiveSkillKey) : null;
             if (passive != null && passive.HasGrowth)
                 lines.Add((art.Passive, $"{Localize.Get("ui.growth6.w.pas")} {passive.GrowthLabel}",
@@ -458,12 +458,15 @@ namespace Game.Module.Lobby
             RefreshAll();
         }
 
+        /// <summary>배율 1.08 → 「108」. 화면은 배율 대신 퍼센트로 보인다(PD 2026-10-17).</summary>
+        private static string Pct(float multiplier) => (multiplier * 100f).ToString("0.#");
+
         private static string Arrow(string now, string next) => $"{now}  →  <color={NextColor}>{next}</color>";
 
         private static string Unit(SkillGrowthUnit unit, float v) => unit switch
         {
             SkillGrowthUnit.Seconds => Localize.Format("ui.unit.seconds", v),
-            SkillGrowthUnit.Multiplier => $"×{v:0.0#}",
+            SkillGrowthUnit.Multiplier => $"{Pct(v)}%",
             SkillGrowthUnit.Percent => $"{v:0.#}%",
             _ => "—",
         };
