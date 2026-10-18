@@ -130,7 +130,7 @@ namespace Game.Editor
                 SpreadNav((RectTransform)nav);
                 // 위 막대가 커지면 화면 꼭대기 제목을 덮는 창들 — 막대 밑으로 살짝 줄여 들인다(홈은 HomeV5View 가 직접 맞춘다)
                 foreach (var n in new[] { "ChapterHostPanel", "LobbyShopPanel", "SummonPanel", "SeasonPassPanel",
-                                          "TowerEntryPanel", "NightEntryPanel" })
+                                          "TowerEntryPanel", "NightEntryPanel", "GrowthPanel" })
                     if (lobby.transform.Find(n) is Transform panel && panel.GetComponent<Game.Module.Common.UI.UnderTopBar>() == null)
                         panel.gameObject.AddComponent<Game.Module.Common.UI.UnderTopBar>();
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
@@ -408,15 +408,16 @@ namespace Game.Editor
 
         // ── 도우미 ───────────────────────────────────────────
 
-        private static TextMeshProUGUI T(Transform parent, string name, float size, Color color, bool bold, TextAlignmentOptions align)
+        internal static TextMeshProUGUI T(Transform parent, string name, float size, Color color, bool bold, TextAlignmentOptions align)
         {
             var t = bold ? Title(parent, name, 0, 0, 0, 0, size, color) : Body(parent, name, 0, 0, 0, 0, size, color);
+            t.gameObject.SetActive(true);   // 본(CHHostTitle)을 다른 화면이 숨겼으면 꺼진 채로 복제된다
             t.alignment = align;
             return t;
         }
 
         /// <summary>고정 글자는 언어팩이 채운다(코드가 안 채우는 칸).</summary>
-        private static void Localized(TextMeshProUGUI t, string key)
+        internal static void Localized(TextMeshProUGUI t, string key)
         {
             var c = t.gameObject.AddComponent<Game.Module.Common.LocalizedText>();
             var so = new SerializedObject(c);
@@ -425,7 +426,7 @@ namespace Game.Editor
         }
 
         /// <summary>시안의 먹색 굵은 글자 — 외곽선을 빼고(Plain) 굵기만 올린다.</summary>
-        private static void Heavy(TextMeshProUGUI t, float dilate)
+        internal static void Heavy(TextMeshProUGUI t, float dilate)
         {
             Plain(t);
             // 본(CHHostTitle)에 굵기 표시가 없으면 붙인다 — 없으면 언어 모듈이 굵은 폰트 · 획 보정을 안 입힌다
@@ -434,7 +435,7 @@ namespace Game.Editor
             h.Set(dilate, 0f, new Color32(0, 0, 0, 0));
         }
 
-        private static void Dot(Transform parent, string name)
+        internal static void Dot(Transform parent, string name)
         {
             var d = Pic(parent, name, $"{Kit}/dot_red.png", 0, 0, 0, 0);
             Box(d.rectTransform, 1f, 1f, 8f, 8f, 26f, 26f, 1f, 1f);
@@ -442,7 +443,7 @@ namespace Game.Editor
         }
 
         /// <summary>기준점(ax, ay) = 피벗(기본 같은 값)에 (x, y) 만큼.</summary>
-        private static void Box(RectTransform r, float ax, float ay, float x, float y, float w, float h, float px = -1f, float py = -1f)
+        internal static void Box(RectTransform r, float ax, float ay, float x, float y, float w, float h, float px = -1f, float py = -1f)
         {
             r.anchorMin = r.anchorMax = new Vector2(ax, ay);
             r.pivot = new Vector2(px < 0f ? ax : px, py < 0f ? ay : py);
@@ -451,7 +452,7 @@ namespace Game.Editor
         }
 
         /// <summary>가로로 늘고(좌우 여백) 아래 변에서 y 만큼 위, 높이 h.</summary>
-        private static void HStretch(RectTransform r, float padL, float padR, float y, float h)
+        internal static void HStretch(RectTransform r, float padL, float padR, float y, float h)
         {
             r.anchorMin = new Vector2(0f, 0f);
             r.anchorMax = new Vector2(1f, 0f);
@@ -460,7 +461,7 @@ namespace Game.Editor
             r.offsetMax = new Vector2(-padR, y + h);
         }
 
-        private static void Inset(RectTransform r, float pad)
+        internal static void Inset(RectTransform r, float pad)
         {
             r.anchorMin = Vector2.zero;
             r.anchorMax = Vector2.one;
@@ -470,7 +471,7 @@ namespace Game.Editor
         }
 
         /// <summary>그림이 칸을 덮게(넘치는 쪽은 부모 마스크가 자른다).</summary>
-        private static void Envelope(Image img, float aspect)
+        internal static void Envelope(Image img, float aspect)
         {
             var r = img.rectTransform;
             r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);

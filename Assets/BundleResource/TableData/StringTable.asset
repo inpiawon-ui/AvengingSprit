@@ -3253,8 +3253,8 @@ MonoBehaviour:
     _ja: "\u6311\u6226\u3059\u308B"
     _en: Start
   - _key: ui.chapterhost.chapter
-    _ko: CHAPTER
-    _ja: CHAPTER
+    _ko: "\uCC55\uD130"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC"
     _en: CHAPTER
   - _key: ui.affinity.none
     _ko: "\uC5C6\uC74C"
@@ -4047,13 +4047,13 @@ MonoBehaviour:
     _ja: "\u307E\u305F\u660E\u65E5"
     _en: Tomorrow
   - _key: ui.summon.pull1
-    _ko: "1\uD68C"
-    _ja: "1\u56DE"
-    _en: x1
+    _ko: "1\uD68C \uC18C\uD658"
+    _ja: "1\u56DE\u53EC\u559A"
+    _en: "Summon \xD71"
   - _key: ui.summon.pull10
-    _ko: "10\uD68C"
-    _ja: "10\u56DE"
-    _en: x10
+    _ko: "10\uD68C \uC18C\uD658"
+    _ja: "10\u56DE\u53EC\u559A"
+    _en: "Summon \xD710"
   - _key: ui.summon.pull10_note
     _ko: "A\uAE09 1\uD68C \uBCF4\uC7A5"
     _ja: "A\u7D1A1\u56DE\u78BA\u5B9A"
@@ -4604,12 +4604,12 @@ MonoBehaviour:
     _en: Power <color=#5CFF7A>{0}</color>
   - _key: ui.growth6.summary
     _ko: "{0}\uC131 \u2192 {1}\uC131  \xB7  \uCCB4\uB825\xB7\uACF5\uACA9 +7%  \xB7 
-      \uC2A4\uD0AC Lv {0}\u2192<color=#5CFF7A>{1}</color>  \xB7  \uAC15\uD654 \uC0C1\uD55C
-      {2}\u2192<color=#5CFF7A>{3}</color>"
+      \uC2A4\uD0AC Lv {0}\u2192<color=#1E8E3E>{1}</color>  \xB7  \uAC15\uD654 \uC0C1\uD55C
+      {2}\u2192<color=#1E8E3E>{3}</color>"
     _ja: "{0}\u2192{1}  \xB7  HP\xB7\u653B\u6483 +7%  \xB7  \u30B9\u30AD\u30EBLv
-      {0}\u2192<color=#5CFF7A>{1}</color>  \xB7  \u5F37\u5316\u4E0A\u9650 {2}\u2192<color=#5CFF7A>{3}</color>"
-    _en: "{0}\u2605\u2192{1}\u2605  \xB7  HP/ATK +7%  \xB7  Skill Lv {0}\u2192<color=#5CFF7A>{1}</color> 
-      \xB7  Cap {2}\u2192<color=#5CFF7A>{3}</color>"
+      {0}\u2192<color=#1E8E3E>{1}</color>  \xB7  \u5F37\u5316\u4E0A\u9650 {2}\u2192<color=#1E8E3E>{3}</color>"
+    _en: "{0}\u2605\u2192{1}\u2605  \xB7  HP/ATK +7%  \xB7  Skill Lv {0}\u2192<color=#1E8E3E>{1}</color> 
+      \xB7  Cap {2}\u2192<color=#1E8E3E>{3}</color>"
   - _key: ui.growth6.summary_max
     _ko: "10\uC131 \u2014 \uCD5C\uB300 \uC131\uAE09"
     _ja: "\u30E9\u30F3\u30AF10 \u2014 \u6700\u5927"
@@ -4640,9 +4640,9 @@ MonoBehaviour:
     _ja: "\u901A\u5E38\u653B\u648330\u56DE\u3067\u5145\u586B"
     _en: Charges in 30 hits
   - _key: ui.growth6.power_line
-    _ko: "\uD604\uC7AC {0}% \u2192 {1}\uC131 <color=#5CFF7A>{2}%</color>"
-    _ja: "\u73FE\u5728 {0}% \u2192 \u30E9\u30F3\u30AF{1} <color=#5CFF7A>{2}%</color>"
-    _en: "Now {0}% \u2192 {1}\u2605 <color=#5CFF7A>{2}%</color>"
+    _ko: "\uD604\uC7AC {0}% \u2192 {1}\uC131 <color=#1E8E3E>{2}%</color>"
+    _ja: "\u73FE\u5728 {0}% \u2192 \u30E9\u30F3\u30AF{1} <color=#1E8E3E>{2}%</color>"
+    _en: "Now {0}% \u2192 {1}\u2605 <color=#1E8E3E>{2}%</color>"
   - _key: ui.growth6.power_max
     _ko: "\uC704\uB825 {0}% (\uCD5C\uB300)"
     _ja: "\u5A01\u529B {0}%\uFF08\u6700\u5927\uFF09"
@@ -4676,9 +4676,9 @@ MonoBehaviour:
     _ja: "\u30E9\u30F3\u30AF{0} \u5F37\u5316\u4E0A\u9650 Lv {1}"
     _en: "{0}\u2605 Upgrade cap Lv {1}"
   - _key: ui.growth6.row_lv
-    _ko: Lv <color=#FFD94A>{0}</color> / {1}
-    _ja: Lv <color=#FFD94A>{0}</color> / {1}
-    _en: Lv <color=#FFD94A>{0}</color> / {1}
+    _ko: Lv <color=#B8860B>{0}</color> / {1}
+    _ja: Lv <color=#B8860B>{0}</color> / {1}
+    _en: Lv <color=#B8860B>{0}</color> / {1}
   - _key: ui.growth6.card_rank
     _ko: "{0}\uC131"
     _ja: '{0}'
@@ -4692,9 +4692,9 @@ MonoBehaviour:
     _ja: "\u4F53\u306E\u80FD\u529B"
     _en: Body stats
   - _key: ui.growth6.w.body_val
-    _ko: "\uCCB4\uB825\xB7\uACF5\uACA9 <color=#5CFF7A>+7%</color>"
-    _ja: "HP\xB7\u653B\u6483 <color=#5CFF7A>+7%</color>"
-    _en: HP/ATK <color=#5CFF7A>+7%</color>
+    _ko: "\uCCB4\uB825\xB7\uACF5\uACA9 <color=#1E8E3E>+7%</color>"
+    _ja: "HP\xB7\u653B\u6483 <color=#1E8E3E>+7%</color>"
+    _en: HP/ATK <color=#1E8E3E>+7%</color>
   - _key: ui.growth6.w.skill_lv
     _ko: "\uC2A4\uD0AC Lv"
     _ja: "\u30B9\u30AD\u30EBLv"
@@ -4728,9 +4728,9 @@ MonoBehaviour:
     _ja: "\u30E9\u30F3\u30AF10 \u899A\u9192\u5F37\u5316"
     _en: "10\u2605 Awakening"
   - _key: ui.growth6.w.opt_double
-    _ko: "\uD6A8\uACFC <color=#5CFF7A>2\uBC30</color>"
-    _ja: "\u52B9\u679C <color=#5CFF7A>2\u500D</color>"
-    _en: "Effect <color=#5CFF7A>\xD72</color>"
+    _ko: "\uD6A8\uACFC <color=#1E8E3E>2\uBC30</color>"
+    _ja: "\u52B9\u679C <color=#1E8E3E>2\u500D</color>"
+    _en: "Effect <color=#1E8E3E>\xD72</color>"
   - _key: ui.growth6.w.cap
     _ko: "\uB2A5\uB825\uCE58 \uAC15\uD654 \uC0C1\uD55C"
     _ja: "\u80FD\u529B\u5F37\u5316\u4E0A\u9650"
@@ -5482,3 +5482,68 @@ MonoBehaviour:
     _ko: "\uC624\uB298 {0}\uC694\uC77C \xB7 {1}"
     _ja: "\u4ECA\u65E5 {0}\u66DC\u65E5\u30FB{1}"
     _en: "Today {0} \xB7 {1}"
+  - _key: ui.sortie.title
+    _ko: "\uCD9C\uC804"
+    _ja: "\u51FA\u6483"
+    _en: Sortie
+  - _key: ui.sortie.affinity
+    _ko: "\uC774 \uCC55\uD130 \uC801: {0} \uB9CE\uC74C \u2192 {1} \uC720\uB9AC"
+    _ja: "\u3053\u306E\u30C1\u30E3\u30D7\u30BF\u30FC\u306E\u6575: {0}\u304C\u591A\u3044
+      \u2192 {1}\u304C\u6709\u5229"
+    _en: "Foes here: mostly {0} \u2192 {1} has the edge"
+  - _key: ui.sortie.tag_ult
+    _ko: "\uD544\uC0B4\uAE30"
+    _ja: "\u5FC5\u6BBA\u6280"
+    _en: Special
+  - _key: ui.sortie.tag_act
+    _ko: "\uC561\uD2F0\uBE0C"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6"
+    _en: Active
+  - _key: ui.top.ghost_lv
+    _ko: "\uC720\uB839 Lv {0}"
+    _ja: "\u30B4\u30FC\u30B9\u30C8 Lv {0}"
+    _en: Ghost Lv {0}
+  - _key: ui.growth5.title
+    _ko: "\uD638\uC2A4\uD2B8 \uC721\uC131"
+    _ja: "\u30DB\u30B9\u30C8\u80B2\u6210"
+    _en: Host Training
+  - _key: ui.growth5.tab_stats
+    _ko: "\uAE30\uBCF8 \uB2A5\uB825"
+    _ja: "\u57FA\u672C\u80FD\u529B"
+    _en: Stats
+  - _key: ui.growth5.tab_skill
+    _ko: "\uC2A4\uD0AC"
+    _ja: "\u30B9\u30AD\u30EB"
+    _en: Skills
+  - _key: ui.growth5.tab_star
+    _ko: "\uC131\uAE09"
+    _ja: "\u30E9\u30F3\u30AF"
+    _en: Rank
+  - _key: ui.sortie.tag_pas
+    _ko: "\uD328\uC2DC\uBE0C"
+    _ja: "\u30D1\u30C3\u30B7\u30D6"
+    _en: Passive
+  - _key: ui.summon.ledger
+    _ko: "\uC601\uD63C \uBA85\uBD80"
+    _ja: "\u9B42\u306E\u540D\u7C3F"
+    _en: Soul Ledger
+  - _key: ui.summon.rate_banner
+    _ko: "\uB4F1\uAE09 \uD655\uB960"
+    _ja: "\u30E9\u30F3\u30AF\u78BA\u7387"
+    _en: Grade Rates
+  - _key: ui.summon.pity_note
+    _ko: "\uB300\uBC15 \uD655\uC815"
+    _ja: "\u5927\u5F53\u305F\u308A\u78BA\u5B9A"
+    _en: Jackpot guaranteed
+  - _key: ui.summon.free_ribbon
+    _ko: "\uC624\uB298 \uBB34\uB8CC 1\uD68C"
+    _ja: "\u672C\u65E5\u7121\u65991\u56DE"
+    _en: Free today
+  - _key: ui.pass.title_v5
+    _ko: "\uC2DC\uC98C \uD328\uC2A4"
+    _ja: "\u30B7\u30FC\u30BA\u30F3\u30D1\u30B9"
+    _en: Season Pass
+  - _key: ui.tower.sweep_preview
+    _ko: "{0}\uCE35\uC744 \uAE68\uBA74 \xB7 {1} \xB7 \uC870\uAC01 \xD7{2}"
+    _ja: "{0}\u968E\u30AF\u30EA\u30A2\u3067\u30FB{1}\u30FB\u304B\u3051\u3089 \xD7{2}"
+    _en: "Clear F{0} \u2192 {1} \xB7 Shards \xD7{2}"

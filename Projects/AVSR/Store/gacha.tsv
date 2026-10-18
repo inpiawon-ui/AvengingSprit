@@ -11,7 +11,7 @@ setting	cost_ticket_10	10	10회 소환권
 setting	free_per_day	1	하루 무료 1회(하루 경계 = GameConfig 하루 초기화)
 setting	ten_min_grade	A	10회에 A급 몸 1회 이상 보장(마지막 칸에서 채운다)
 setting	pity_count	50	대박(조각 x20)이 이 횟수 안에 안 나오면 이 번째에 확정. 대박이 나오면 0 부터 다시
-setting	pickup_host	ninja_chain	이번 주 픽업 — 주마다 바꾼다(주 경계 = GameConfig 주 초기화)
+setting	pickup_host		이번 주 픽업 — 비우면 픽업 없음(PD 2026-10-17 기본 소환만). 새 캐릭터가 나올 때 키를 적는다
 setting	pickup_share	50	A급이 나오면 이 % 로 픽업 몸
 grade	B	75	B급 11명 — 한 명당 약 6.82%
 grade	A	25	A급 11명 — 픽업 12.5% · 나머지 10명 한 명당 1.25%

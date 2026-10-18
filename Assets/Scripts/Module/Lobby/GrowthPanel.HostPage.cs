@@ -29,9 +29,21 @@ namespace Game.Module.Lobby
         /// <summary>안 가진 몸의 그림 색 — 잠겨 있다는 것이 한눈에 읽혀야 한다.</summary>
         private static readonly Color LockedTint = new(0.32f, 0.34f, 0.4f, 1f);
         /// <summary>창의 「다음 값」 색 — 오르는 것은 초록(시안).</summary>
-        private const string NextColor = "#5CFF7A";
+        /// <summary>v6 은 어두운 판이라 연두, v5 는 양피지라 짙은 초록(연두는 양피지 위에서 안 읽힌다).</summary>
+        private static string NextColor = "#5CFF7A";
         private const string ShortColor = "#FF6B6B";
         private const int OptionLevel = SkillScaling.SpecLevel;
+
+        // ── UI v5(PD 2026-10-17 시안 mock_uiv4_growth_stats · mock_uiv5_growth_skill · mock_uiv3_growth_star) ──
+        // 쇼케이스 진열 칸 + 탭 셋(기본 능력 · 스킬 · 성급). 노드는 `UiV5Screens.RunGrowth` 가 세운다. 꺼져 있으면 v6 그대로다.
+        [SerializeField] private bool _h6V5;
+        /// <summary>능력치 칸 열 수(v5 = 2열 큰 카드) · 열 간격.</summary>
+        [SerializeField] private int _h6Cols = 1;
+        [SerializeField] private float _h6ColPitch;
+        /// <summary>속성 아이콘 — 무기 · 파워 · 마법(Affinity 1~3 순).</summary>
+        [SerializeField] private Sprite[] _kindIcons = System.Array.Empty<Sprite>();
+        private int _h6Tab = 1;
+        private static readonly string[] H6Groups = { "H6GroupStats", "H6GroupSkill", "H6GroupStar" };
 
         private readonly List<Transform> _h6Rows = new();
         private readonly List<Transform> _h6Cards = new();
@@ -48,6 +60,71 @@ namespace Game.Module.Lobby
             _ui.OnClick("H6Dim", CloseStarUp);
             _ui.OnClick("H6WinCancel", CloseStarUp);
             _ui.OnClick("H6WinConfirm", ConfirmStarUp);
+            if (_h6V5) NextColor = "#1E8E3E";
+            for (int i = 0; i < H6Groups.Length; i++)
+            {
+                int tab = i;
+                _ui.OnClick($"H6V5Tab{i}", () => SelectH6Tab(tab));
+            }
+        }
+
+        /// <summary>v5 탭 — 그룹 하나만 켠다. 성급 탭은 「성급 올리기」 창 내용을 그 자리에 채운다(팝업 없이).</summary>
+        private void SelectH6Tab(int tab)
+        {
+            if (!_h6V5) return;
+            _h6Tab = tab;
+            for (int i = 0; i < H6Groups.Length; i++)
+            {
+                SetActive(H6Groups[i], i == tab);
+                SetActive($"H6V5Tab{i}On", i == tab);
+                var label = _ui.Get<TextMeshProUGUI>($"H6V5Tab{i}Text");
+                if (label != null) label.color = i == tab ? new Color(1f, 0.9f, 0.4f) : new Color(0.86f, 0.88f, 0.95f);
+            }
+            if (tab == 2) FillStarTab();
+        }
+
+        private void FillStarTab()
+        {
+            if (string.IsNullOrEmpty(_hostKey) || _player == null) return;
+            int m = _player.GetMastery(_hostKey);
+            bool maxed = m >= _player.MasteryMax;
+            if (maxed)
+            {
+                _ui.SetText("H6WinRank", Localize.Get("ui.starup.maxed"));
+                _ui.SetText("H6WinRises", string.Empty);
+                LayoutWindow(new List<(Sprite icon, string label, string value)>());
+                SetActive("H6WinFoot", false);
+            }
+            else
+            {
+                SetActive("H6WinFoot", true);
+                FillStarUpWindow(m);
+            }
+            RefreshLadder(m);
+        }
+
+        /// <summary>성급 사다리 1~10 — 은별 · 5성마다 큰 금별, 얻은 칸은 밝게, 다음 칸에 테.</summary>
+        private void RefreshLadder(int m)
+        {
+            int max = _player.MasteryMax;
+            for (int i = 1; i <= 10; i++)
+            {
+                var star = _ui.Get<Image>($"H6V5LadderStar{i}");
+                if (star == null) continue;
+                bool gold = i % StarRank.PerGold == 0;
+                star.sprite = gold ? _starGold : _starSilver;
+                star.preserveAspect = true;
+                star.color = i <= m ? Color.white : new Color(0.3f, 0.32f, 0.4f, 1f);
+                var num = _ui.Get<TextMeshProUGUI>($"H6V5LadderNum{i}");
+                if (num != null) num.color = i == m + 1 ? new Color(0.1f, 0.55f, 0.35f) : new Color(0.36f, 0.24f, 0.14f);
+            }
+            var sel = _ui.Find("H6V5LadderSel") as RectTransform;
+            var target = _ui.Find($"H6V5LadderStar{Mathf.Clamp(m + 1, 1, 10)}") as RectTransform;
+            if (sel != null)
+            {
+                sel.gameObject.SetActive(target != null && m < max);
+                if (target != null) sel.anchoredPosition = target.anchoredPosition;
+            }
         }
 
         private void BuildHostPageOnce()
@@ -60,8 +137,10 @@ namespace Game.Module.Lobby
                 {
                     var row = i == 0 ? rowTemplate : Instantiate(rowTemplate.gameObject, content).transform;
                     row.name = $"H6Row{i}";
+                    int cols = Mathf.Max(1, _h6Cols);
                     ((RectTransform)row).anchoredPosition =
-                        ((RectTransform)rowTemplate).anchoredPosition + new Vector2(0f, -_h6RowPitch * i);
+                        ((RectTransform)rowTemplate).anchoredPosition
+                        + new Vector2(_h6ColPitch * (i % cols), -_h6RowPitch * (i / cols));
                     var stat = StatOrder[i];
                     var icon = _ui.Find(row, "H6RowIcon")?.GetComponent<Image>();
                     if (icon != null && (int)stat < _statIcons.Length)
@@ -72,7 +151,8 @@ namespace Game.Module.Lobby
                     _ui.Find(row, "H6RowButton")?.GetComponent<Button>()?.onClick.AddListener(() => BuyStat(stat));
                     _h6Rows.Add(row);
                 }
-                if (content != null) content.sizeDelta = new Vector2(content.sizeDelta.x, _h6RowPitch * StatOrder.Length + 4f);
+                int rowsDown = (StatOrder.Length + Mathf.Max(1, _h6Cols) - 1) / Mathf.Max(1, _h6Cols);
+                if (content != null) content.sizeDelta = new Vector2(content.sizeDelta.x, _h6RowPitch * rowsDown + 4f);
             }
 
             var cardTemplate = _ui.Find("H6HostCard");
@@ -131,11 +211,19 @@ namespace Game.Module.Lobby
 
             _ui.SetText("H6RankLabel", Localize.Format("ui.growth6.rank", m));
             _ui.SetText("H6StatHeader", Localize.Get("ui.growth.stat_header"));
-            PlaceAfterText("H6StatHeader", "H6StatHelp", 8f);
+            if (!_h6V5) PlaceAfterText("H6StatHeader", "H6StatHelp", 8f);   // v5 는 빌더가 상한 띠 오른쪽 끝에 둔다
             _ui.SetText("H6ListHeader", Localize.Get("ui.growth.host_list"));
             _ui.SetText("H6SortText", Localize.Get("ui.growth.sort.default"));
             var stars = _ui.Find("H6Stars");
-            StarRank.Apply(stars, "H6Star", m, _starGold, _starSilver, Vector2.zero, 26f, 3f);
+            StarRank.Apply(stars, "H6Star", m, _starGold, _starSilver, Vector2.zero, _h6V5 ? 34f : 26f, 3f);
+
+            if (_h6V5)
+            {
+                var kind = Game.Module.InGame.AffinityRule.KindOf(_hostKey);
+                int ki = (int)kind - 1;
+                SetIcon("H6V5Kind", ki >= 0 && ki < _kindIcons.Length ? _kindIcons[ki] : null);
+                SelectH6Tab(_h6Tab);   // 그룹 표시 · 성급 탭이면 내용까지(몸을 바꾸거나 올린 뒤)
+            }
 
             RefreshSummary(m);
             RefreshStarUpBox();
@@ -209,7 +297,7 @@ namespace Game.Module.Lobby
 
             // 필살기
             SetIcon("H6UltIcon", art.Ult != null ? art.Ult : art.Skill);
-            _ui.SetText("H6UltTagText", Localize.Get("ui.growth6.ult_tag"));
+            _ui.SetText("H6UltTagText", Localize.Get(_h6V5 ? "ui.sortie.tag_ult" : "ui.growth6.ult_tag"));
             _ui.SetText("H6UltName", Localize.Get($"ult.{e.HostKey}.name"));
             _ui.SetText("H6UltCond", Localize.Get("ui.growth6.ult_cond"));
             _ui.SetText("H6UltDesc", Localize.Get($"ult.{e.HostKey}.short"));
@@ -221,7 +309,7 @@ namespace Game.Module.Lobby
             // 액티브
             var active = _player.GetActiveSkill(e.ActiveSkillKey);
             SetIcon("H6ActIcon", art.Skill);
-            _ui.SetText("H6ActTagText", Localize.Get("ui.growth6.act_tag"));
+            _ui.SetText("H6ActTagText", Localize.Get(_h6V5 ? "ui.sortie.tag_act" : "ui.growth6.act_tag"));
             _ui.SetText("H6ActName", active != null
                 ? (string.IsNullOrEmpty(active.DisplayName) ? active.NameEn : active.DisplayName) : "—");
             _ui.SetText("H6ActCond", Localize.Get("ui.growth6.act_cond"));
@@ -257,7 +345,7 @@ namespace Game.Module.Lobby
             // 패시브
             var passive = _player.GetPassiveSkill(e.PassiveSkillKey);
             SetIcon("H6PasIcon", art.Passive);
-            _ui.SetText("H6PasTagText", Localize.Get("ui.growth6.pas_tag"));
+            _ui.SetText("H6PasTagText", Localize.Get(_h6V5 ? "ui.sortie.tag_pas" : "ui.growth6.pas_tag"));
             _ui.SetText("H6PasName", passive != null ? passive.DisplayName : "—");
             _ui.SetText("H6PasDesc", Localize.Get($"pskill.{e.HostKey}.short"));
             string pas = string.Empty;
@@ -332,11 +420,16 @@ namespace Game.Module.Lobby
             if (string.IsNullOrEmpty(_hostKey)) return;
             int m = _player.GetMastery(_hostKey);
             if (m >= _player.MasteryMax) { Toast(Localize.Get("ui.starup.maxed")); return; }
+            if (_h6V5) { SelectH6Tab(2); return; }   // v5 — 창 대신 성급 탭이 같은 내용을 보인다
             FillStarUpWindow(m);
             SetActive("H6StarUpWindow", true);
         }
 
-        private void CloseStarUp() => SetActive("H6StarUpWindow", false);
+        private void CloseStarUp()
+        {
+            if (_h6V5) return;   // v5 성급 탭은 닫는 창이 아니다
+            SetActive("H6StarUpWindow", false);
+        }
 
         private void FillStarUpWindow(int m)
         {
@@ -393,8 +486,12 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>줄 수만큼 창 높이 · 세로선 · 아래 묶음을 맞춘다(빌더 값: 줄 50 + 사이 4, 첫 줄 262).</summary>
+        /// <summary>v5 성급 탭 — 첫 줄 · 줄 간격(창 위 변 기준). 창은 탭 칸에 고정이라 높이 · 자리를 바꾸지 않는다.</summary>
+        [SerializeField] private float _h6V5RowFirst = 176f, _h6V5RowPitch = 34f;
+
         private void LayoutWindow(List<(Sprite icon, string label, string value)> lines)
         {
+            if (_h6V5) { LayoutStarTab(lines); return; }
             const float first = 262f, pitch = 54f, rowH = 50f, footH = 150f;
             int shown = 0;
             for (int i = 0; ; i++)
@@ -425,6 +522,24 @@ namespace Game.Module.Lobby
                 float h = rowsBottom + 8f + footH;
                 win.sizeDelta = new Vector2(win.sizeDelta.x, h);
                 win.anchoredPosition = new Vector2(win.anchoredPosition.x, h * 0.5f);   // 화면 가운데
+            }
+        }
+
+        private void LayoutStarTab(List<(Sprite icon, string label, string value)> lines)
+        {
+            for (int i = 0; ; i++)
+            {
+                var row = _ui.Find($"H6WinRow{i}");
+                if (row == null) break;
+                bool on = i < lines.Count;
+                row.gameObject.SetActive(on);
+                if (!on) continue;
+                if (row is RectTransform rr) rr.anchoredPosition = new Vector2(rr.anchoredPosition.x, -(_h6V5RowFirst + _h6V5RowPitch * i));
+                var (icon, label, value) = lines[i];
+                var img = _ui.Find(row, "Icon")?.GetComponent<Image>();
+                if (img != null) { img.sprite = icon; img.enabled = icon != null; img.preserveAspect = true; }
+                TextIn(row, "Label", label);
+                TextIn(row, "Value", value);
             }
         }
 

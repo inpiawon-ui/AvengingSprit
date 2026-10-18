@@ -137,6 +137,8 @@ namespace Game.Module.Lobby
             _ui.OnClick("PassBadge", OpenPass);
             // 홈 v5 진열 칸의 PASS 단추(PD 2026-10-17 — 패스는 칸을 차지하지 않고 떠 있는 단추로)
             _ui.OnClick("HomePassButton", OpenPass);
+            // UI v5 소환 「<」 — 로비(PLAY)로
+            _ui.OnClick("SummonBackButton", () => SelectTab(Tab.Play));
             _ui.OnClick("SummonButton", () =>
             {
                 if (_summonPanel != null) SelectTab(Tab.Summon);
@@ -246,6 +248,9 @@ namespace Game.Module.Lobby
                 else _summonPanel.Close();
             }
             if (_passPanel != null) _passPanel.Close();   // 아래 바를 누르면 패스 창은 닫고 그 화면으로
+            // UI v5 — 탑 · 밤 창도 아래 바 밑에 깔린다(아래 바가 보인다). 누르면 닫고 그 화면으로
+            if (_towerEntryPanel != null) _towerEntryPanel.Close();
+            if (_nightEntryPanel != null) _nightEntryPanel.Close();
             if (_shopPanel != null)
             {
                 if (shop) _shopPanel.Open();
@@ -341,7 +346,7 @@ namespace Game.Module.Lobby
             _tokens.Add(bus.Subscribe<CurrencyChangedEvent>(_ => RefreshCurrency()));
             _tokens.Add(bus.Subscribe<GhostProgressChangedEvent>(_ => RefreshProfile()));
             // 코드가 채우는 글자(상자 문구 · 플레이 자리)는 LocalizedText 가 없다 — 언어가 바뀌면 다시 채운다
-            _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => _playLabelDirty = true));
+            _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => { _playLabelDirty = true; RefreshProfile(); }));   // 「유령 Lv N」 도 언어를 따른다
             _tokens.Add(bus.Subscribe<HostSelectRequestedEvent>(OnHostSelectRequested));
             _tokens.Add(bus.Subscribe<ModeProgressChangedEvent>(_ => RefreshModeCards()));
             _tokens.Add(bus.Subscribe<ChapterSelectRequestedEvent>(_ =>
@@ -417,7 +422,7 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>경험치 채움의 가득 찬 폭 — `FixedBarsBinder.ProfileFillWidth` 와 같아야 한다.</summary>
-        private const float ProfileFillWidth = 117f;
+        private const float ProfileFillWidth = 134f;
 
         /// <summary>
         /// 왼쪽 위 유령 프로필(A안, PD 확정 2026-10-06) — 유령 레벨 · 경험치.
@@ -429,7 +434,8 @@ namespace Game.Module.Lobby
             int lv = _player.GhostLevel;
             bool max = lv >= _player.GhostLevelMax;
             // 픽셀 글꼴의 띄어쓰기는 한 글자만큼 넓어 「LV.   1」 로 벌어졌다 — 좁은 칸을 준다
-            _ui.SetText("ProfileLevelText", $"LV.<space=0.25em>{lv}");
+            // UI v5 위 막대(PD 2026-10-17 시안) — 「유령 Lv 10」
+            _ui.SetText("ProfileLevelText", Localize.Format("ui.top.ghost_lv", lv));
             _ui.SetText("ProfileExpText", max ? "MAX" : $"{_player.GhostExp:N0} / {_player.GhostExpMax:N0}");
             float ratio = max ? 1f : _player.GhostExpMax > 0 ? (float)_player.GhostExp / _player.GhostExpMax : 0f;
             _ui.SetFill("ProfileExpFill", ratio, ProfileFillWidth);
@@ -467,7 +473,8 @@ namespace Game.Module.Lobby
             bool counting = until > TimeSpan.Zero;
             // 시계가 없으면(가득 · 넘침) 「20/20」 한 줄을 칸 세로 가운데로, 있으면 위 줄로
             var tr = text.rectTransform;
-            tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, counting ? -22f : -33f);
+            // UI v5 위 막대(재화 칸 y 22~66) — 시계가 있으면 숫자를 위로, 없으면 칸 세로 가운데
+            tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, counting ? -13f : -22f);
             _ui.SetActive("StaminaTimerText", counting);
             if (counting) _ui.SetText("StaminaTimerText", $"{(int)until.TotalMinutes:00}:{until.Seconds:00}");
         }

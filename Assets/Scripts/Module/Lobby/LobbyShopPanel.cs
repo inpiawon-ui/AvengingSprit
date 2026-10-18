@@ -39,6 +39,13 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _gemIcon, _goldIcon, _ticketIcon, _essenceIcon, _staminaIcon, _goldPile;
         [SerializeField] private Sprite _tab, _tabSelected;
         [SerializeField] private Sprite _starGold, _starSilver;   // 성급 별(StarRank) — 오늘의 상점 조각 칸
+
+        /// <summary>UI v5(시안 mock_uiv2_c_shop) — 오늘의 상점 칸이 양피지라 글자를 짙게 칠한다 · 별 줄 자리. 빌더 UiV5Screens.RunShop.</summary>
+        [SerializeField] private bool _v5;
+        [SerializeField] private Vector2 _v5StarCenter = new(70f, -24f);
+        private static readonly Color V5Ink = new(0.16f, 0.08f, 0.03f);
+        private static readonly Color V5Gold = new(0.62f, 0.42f, 0.02f);
+        private static readonly Color V5Green = new(0.1f, 0.5f, 0.25f);
         [SerializeField] private Material _silhouette;
 
         private enum Page { Today, Chest, Currency }
@@ -243,11 +250,11 @@ namespace Game.Module.Lobby
                 Text(root, "SlotCount", free ? s.Count.ToString("N0") : s.IsShard ? $"×{s.Count}" : string.Empty);
                 var countNode = Find(root, "SlotCount");
                 var count = countNode != null ? countNode.GetComponent<TextMeshProUGUI>() : null;
-                if (count != null) count.color = free ? GoldColor : Color.white;
+                if (count != null) count.color = _v5 ? (free ? V5Gold : V5Ink) : free ? GoldColor : Color.white;
 
                 // 그 몸의 성급(1~10) — 은별 1~4 · 5성마다 큰 금별. 조각 칸이 아니면 별 없음
                 int rank = s.IsShard && host != null && p != null ? p.GetMastery(host.HostKey) : 0;
-                StarRank.Apply(root, "SlotStar", rank, _starGold, _starSilver, SlotStarCenter, 14f, 2f);
+                StarRank.Apply(root, "SlotStar", rank, _starGold, _starSilver, _v5 ? _v5StarCenter : SlotStarCenter, _v5 ? 20f : 14f, 2f);
 
                 In(root, "SlotPriceIconGold", !free && !s.PaidWithGem && !s.Bought);
                 In(root, "SlotPriceIconGem", !free && s.PaidWithGem && !s.Bought);
@@ -257,7 +264,9 @@ namespace Game.Module.Lobby
                     : string.Format(Localize.FromTable("ui.store.price_gold", "골드 {0}"), s.Price.ToString("N0")));
                 var priceNode = Find(root, "SlotPriceText");
                 var priceText = priceNode != null ? priceNode.GetComponent<TextMeshProUGUI>() : null;
-                if (priceText != null) priceText.color = s.Bought ? new Color(0.6f, 0.65f, 0.75f) : free ? new Color(0.45f, 1f, 0.45f) : Color.white;
+                if (priceText != null)
+                    priceText.color = _v5 ? (s.Bought ? new Color(0.4f, 0.36f, 0.3f) : free ? V5Green : V5Ink)
+                                          : s.Bought ? new Color(0.6f, 0.65f, 0.75f) : free ? new Color(0.45f, 1f, 0.45f) : Color.white;
                 Text(root, "SlotSoldText", Localize.FromTable("ui.store.sold", "구매 완료"));
             }
         }

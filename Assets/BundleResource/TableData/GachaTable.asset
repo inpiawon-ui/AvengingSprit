@@ -28,7 +28,7 @@ MonoBehaviour:
   - Key: pity_count
     Value: 50
   - Key: pickup_host
-    Value: ninja_chain
+    Value: 
   - Key: pickup_share
     Value: 50
   _grades:

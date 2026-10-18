@@ -51,6 +51,7 @@ namespace Game.Module.Lobby
             public bool IsPortrait;   // 유닛 그림은 투명 여백이 있어 칸을 키워 쓴다
             public Sprite Skill;      // 설명 칸 — 액티브 · 패시브 아이콘(육성 화면과 같은 그림)
             public Sprite Passive;
+            public Sprite Ult;        // UI v5 스킬 띠 — 필살기 아이콘(없으면 액티브 그림)
         }
 
         /// <summary>챕터마다 붙는 것 — 보스 이름·얼굴과 클리어 상자.</summary>
@@ -98,6 +99,12 @@ namespace Game.Module.Lobby
 
         /// <summary>클리어 보상 칸 — 상자 대신 「만난 호스트 조각」(PD 2026-10-17). 있으면 상자 그림 대신 이것.</summary>
         [SerializeField] private Sprite _shardIcon;
+
+        /// <summary>
+        /// UI v5 출전(시안 mock_uiv3_sortie) — 스킬 띠에 필살기 · 액티브만 둔다. 초상 · 이름 · 설명은 **유령 출전일 때만**
+        /// (유령은 스킬이 없어 띠가 비니 유령 규칙을 적는다). 빌더 `UiV5Screens.RunSortie` 가 켠다.
+        /// </summary>
+        [SerializeField] private bool _v5Info;
 
         // ⚠ 클리어 보상 · 챕터 설명 · 그림 칸은 **챕터 표**(`GameConfig.ChapterOf`)에서 온다.
         //   예전에는 여기 6칸 배열로 적혀 있었고, 보상 골드는 실제 지급액의 4~14배였다(임시표).
@@ -434,6 +441,22 @@ namespace Game.Module.Lobby
             SetKindCount(1, Game.Module.InGame.Affinity.Force, force, on);
             SetKindCount(2, Game.Module.InGame.Affinity.Magic, magic, on);
 
+            // 상성 한 줄 — 「이 챕터 적: 마법 많음 → 파워 유리」(시안 출전). 가장 많은 쪽을 이기는 쪽을 알려 준다
+            var major = on ? Game.Module.InGame.AffinityRule.MajorOf(_chapter) : Game.Module.InGame.Affinity.None;
+            _ui.SetActive("CHAffinityLine", major != Game.Module.InGame.Affinity.None);
+            _ui.SetActive("CHV5AffinityStrip", major != Game.Module.InGame.Affinity.None);
+            if (major != Game.Module.InGame.Affinity.None)
+            {
+                var counter = major switch
+                {
+                    Game.Module.InGame.Affinity.Blade => Game.Module.InGame.Affinity.Force,
+                    Game.Module.InGame.Affinity.Force => Game.Module.InGame.Affinity.Magic,
+                    _ => Game.Module.InGame.Affinity.Blade,
+                };
+                _ui.SetText("CHAffinityLine", Localize.Format("ui.sortie.affinity",
+                    KindName(major, "#2F6FD6"), KindName(counter, "#C0392B")));
+            }
+
             var bossGem = _ui.Get<Image>("CHBossKindGem");
             if (bossGem != null)
             {
@@ -441,6 +464,9 @@ namespace Game.Module.Lobby
                 bossGem.gameObject.SetActive(bossGem.sprite != null);
             }
         }
+
+        private static string KindName(Game.Module.InGame.Affinity kind, string color)
+            => $"<color={color}>{Localize.Get($"ui.affinity.{kind.ToString().ToLowerInvariant()}")}</color>";
 
         private void SetKindCount(int slot, Game.Module.InGame.Affinity kind, int count, bool on)
         {
@@ -530,9 +556,8 @@ namespace Game.Module.Lobby
             int chestAt = (row.ChestArt > 0 ? row.ChestArt : _chapter) - 1;
             // 「CHAPTER」와 번호는 **한 글자칸**이다. 따로 두면 가로로 늘어나는 화면(4:3)에서
             // 글자는 제 폭을 지키고 자리만 벌어져 둘 사이가 뜬다(2026-10-01).
-            _ui.SetText("CHChapterLabel",
-                        $"{Localize.FromTable("ui.chapterhost.chapter", "CHAPTER")} "
-                        + $"<size=128%><color=#5CC7FF>{_chapter:00}</color></size>");
+            // UI v5(PD 2026-10-18 시안 「챕터 4」) — 양피지 위 짙은 빨강 한 줄. 색은 글자 칸이 쥔다
+            _ui.SetText("CHChapterLabel", $"{Localize.Get("ui.chapterhost.chapter")} {_chapter}");
             _ui.SetText("CHChapterNoText", string.Empty);
             _ui.SetText("CHChapterNameText",
                         Localize.FromTable($"stage.{_chapter}.1.name", row.Name ?? string.Empty));
@@ -818,6 +843,12 @@ namespace Game.Module.Lobby
             _ui.SetText("CHInfoDesc", ghost ? Localize.Get("ui.hostselect.ghost.rule") : Localize.Get($"host.{ShownHost}.desc"));
             SetInfoKind(ghost ? Game.Module.InGame.Affinity.None : Game.Module.InGame.AffinityRule.KindOf(ShownHost));
             SetSkills(ghost ? null : e);
+            if (_v5Info)
+            {
+                _ui.SetActive("CHInfoPortrait", ghost);
+                _ui.SetActive("CHInfoName", ghost);
+                _ui.SetActive("CHInfoDesc", ghost);
+            }
         }
 
         /// <summary>상성 배지 — 보석 + 「무기 · 파워 · 마법」. 유령 · 랜덤은 숨긴다.</summary>
@@ -835,7 +866,10 @@ namespace Game.Module.Lobby
             if (on) _ui.SetText("CHInfoKindText", Localize.Get($"ui.affinity.{kind.ToString().ToLowerInvariant()}"));
         }
 
-        /// <summary>액티브 · 패시브 두 칸. 몸이 아니면(랜덤 · 유령) 숨긴다. 없는 패시브는 「—」.</summary>
+        /// <summary>
+        /// 스킬 두 칸 — UI v5(시안 출전): 왼쪽 필살기 · 오른쪽 액티브. 몸이 아니면(랜덤 · 유령) 숨긴다.
+        /// 노드 이름은 예전(A = 액티브 · P = 패시브) 그대로라 칸 순서만 바뀌었다.
+        /// </summary>
         private void SetSkills(HostEntry e)
         {
             bool on = e != null;
@@ -844,16 +878,15 @@ namespace Game.Module.Lobby
             if (!on) return;
 
             var art = ArtOf(e.HostKey);
-            var active = _player.GetActiveSkill(e.ActiveSkillKey);
-            _ui.SetText("CHInfoSkillAName", active != null
-                ? (string.IsNullOrEmpty(active.DisplayName) ? active.NameEn : active.DisplayName) : "—");
-            _ui.SetText("CHInfoSkillADesc", active?.DisplayDescription ?? string.Empty);
-            SetInfoIcon("CHInfoSkillAIcon", art.Skill);
+            _ui.SetText("CHInfoSkillAName", Localize.Get($"ult.{e.HostKey}.name"));
+            _ui.SetText("CHInfoSkillADesc", Localize.Get($"ult.{e.HostKey}.short"));
+            SetInfoIcon("CHInfoSkillAIcon", art.Ult != null ? art.Ult : art.Skill);
 
-            var passive = _player.GetPassiveSkill(e.PassiveSkillKey);
-            _ui.SetText("CHInfoSkillPName", passive != null ? passive.DisplayName : "—");
-            _ui.SetText("CHInfoSkillPDesc", passive != null ? passive.DisplayDescription : string.Empty);
-            SetInfoIcon("CHInfoSkillPIcon", art.Passive);
+            var active = _player.GetActiveSkill(e.ActiveSkillKey);
+            _ui.SetText("CHInfoSkillPName", active != null
+                ? (string.IsNullOrEmpty(active.DisplayName) ? active.NameEn : active.DisplayName) : "—");
+            _ui.SetText("CHInfoSkillPDesc", active?.DisplayDescription ?? string.Empty);
+            SetInfoIcon("CHInfoSkillPIcon", art.Skill);
         }
 
         private void SetInfoIcon(string name, Sprite sprite)

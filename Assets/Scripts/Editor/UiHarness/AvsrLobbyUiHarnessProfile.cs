@@ -73,6 +73,8 @@ namespace Game.Editor.UiHarness
             .Modal(@"/LobbyShopPanel/ShopContent$")
             .Modal(@"/SummonPanel/SummonContent$")
             .Modal(@"/SeasonPassPanel$")
+            .Modal(@"/TowerEntryPanel$")
+            .Modal(@"/NightEntryPanel$")
             .Modal(@"/ProfilePopup$")
             .Modal(@"/GrowthPanel/H6StarUpWindow$")
             .Modal(@"/GachaResultPopup$")
@@ -116,6 +118,19 @@ namespace Game.Editor.UiHarness
                        "홈 v5 칸 그림 — 칸을 덮게 키워 깔고 칸(RectMask2D)이 잘라 낸다(Envelope)")
             .AllowRule("C3", @"/HomeV5/(HomePageBg|HomeBody/.*/(HomeShowcaseArt|HomeScenarioArt|HomeTowerArt|HomeNightArt))$",
                        "홈 v5 바탕 · 칸 그림 — 화면 · 칸 밖은 잘려 안 보인다")
+            .AllowRule("C3", @"/FixedTopBar/TopV5Plate$", "UI v5 위 막대 금테 판 — 옆 테가 안 보이게 화면 양끝 너머까지 늘려 깐다")
+            .AllowRule("C2", @"/CHV5Head/CHV5HeadArt$", "UI v5 출전 머리 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C3", @"/CHV5Head/CHV5HeadArt$", "UI v5 출전 머리 그림 — 칸 밖은 잘려 안 보인다")
+            .AllowRule("C3", @"/CHHostContent/CHHostCard\d+/", "카드 줄 스크롤 — 화면 밖 카드는 창이 잘라 낸다")
+            .AllowRule("C2", @"/H6V5ShowView/H6V5ShowArt$", "UI v5 육성 진열 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C2", @"/H6ListContent/H6HostCard_\w+/", "호스트 목록 가로 스크롤 — 창 가장자리 카드가 잘리는 것은 정상")
+            .AllowRule("C2", @"/SummonV5AltarView/SummonAltar$", "UI v5 소환 영혼 명부 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C3", @"/SummonV5AltarView(/SummonAltar)?$", "UI v5 소환 위 장면 — 화면 밖은 잘려 안 보인다")
+            .AllowRule("C2", @"/PassScrollContent/PassV5Track$", "UI v5 패스 가운데 줄 — 30단계 길이라 스크롤 창이 잘라 낸다")
+            .AllowRule("C3", @"/PassScrollContent/PassV5Track$", "UI v5 패스 가운데 줄 — 스크롤 밖은 안 보인다")
+            .AllowRule("C2", @"/NightV5View/NightV5Art$", "UI v5 밤 오늘 카드 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C2", @"/ShopV5Head/ShopV5HeadArt$", "UI v5 상점 머리 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C3", @"/ShopV5Head(/ShopV5HeadArt)?$", "UI v5 상점 머리 그림 — 화면 밖은 잘려 안 보인다")
             .AllowRule("C2", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(FillBox)")
             .AllowRule("C3", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸 밖은 잘려 안 보인다(FillBox)")
             .AllowRule("C6", @"/CHHostContent/CHHostCard\d+/CardPowerText$",
@@ -183,7 +198,7 @@ namespace Game.Editor.UiHarness
             },
             new UiHarnessScenario
             {
-                Name = "summon", Mock = "mock_summon_a",
+                Name = "summon", Mock = "mock_uiv5_summon",
                 Enter = d => d.Click("SummonButton"),
                 Expect = () => Active("GachaPull10Button") ? null : "소환 창이 안 열렸다",
                 Leave = d => d.Click("ChapterButton"),
@@ -202,7 +217,7 @@ namespace Game.Editor.UiHarness
                 Enter = async d =>
                 {
                     await d.Click("SummonButton");
-                    await d.Click("GachaFreeButton");
+                    await d.Click("GachaPull1Button");   // v5 — 오늘 무료가 남아 있으면 1회 단추가 무료로 뽑는다
                     await UiHarnessDriver.Seconds(3f);
                 },
                 Expect = () => Active("GachaResultPopup") ? null : "결과 창이 안 열렸다(무료 소환을 이미 썼을 수 있다)",
@@ -231,15 +246,22 @@ namespace Game.Editor.UiHarness
             },
             new UiHarnessScenario
             {
-                Name = "growth_host", Mock = "mock_growth_v6_page",
-                Enter = async d => { await d.Click("HostButton"); await d.Click("TabHostButton"); },
-                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
+                Name = "growth_host", Mock = "mock_uiv5_growth_skill",
+                Enter = async d => { await d.Click("HostButton"); await d.Click("TabHostButton"); await d.Click("H6V5Tab1"); },
+                Expect = () => Active("H6GroupSkill") ? null : "호스트 육성 스킬 탭이 안 열렸다",
                 Leave = d => d.Click("ChapterButton"),
             },
             new UiHarnessScenario
             {
+                Name = "growth_stats", Mock = "mock_uiv4_growth_stats",
+                Enter = async d => { await d.Click("HostButton"); await d.Click("TabHostButton"); await d.Click("H6V5Tab0"); },
+                Expect = () => Active("H6GroupStats") ? null : "호스트 육성 기본 능력 탭이 안 열렸다",
+                Leave = async d => { await d.Click("H6V5Tab1"); await d.Click("ChapterButton"); },
+            },
+            new UiHarnessScenario
+            {
                 // 성급 창은 최대 성급이면 안 열린다 — 아직 덜 자란 몸을 골라 연다(없으면 실패로 남는다)
-                Name = "growth_starup", Mock = "mock_growth_v6_starup",
+                Name = "growth_starup", Mock = "mock_uiv3_growth_star",
                 Enter = async d =>
                 {
                     // 「모든 호스트 열기」(GameConfig._openAllHosts)면 모든 몸이 최대 성급으로 읽혀 창이 안 열린다 — 이 상태 동안만 끈다
@@ -251,8 +273,23 @@ namespace Game.Editor.UiHarness
                     if (key != null && Invoke($"H6HostCard_{key}")) await UiHarnessDriver.Seconds(0.3f);
                     await d.Click("H6StarUpButton");
                 },
-                Expect = () => Active("H6Window") ? null : "성급 창이 안 열렸다(덜 자란 몸이 없을 수 있다)",
-                Leave = async d => { await d.Click("H6WinCancel"); SetOpenAll(true); await d.Click("ChapterButton"); },
+                // v5 — 성급 UP 은 창 대신 성급 탭을 연다
+                Expect = () => Active("H6GroupStar") && Active("H6WinRow0") ? null : "성급 탭이 안 열렸다(덜 자란 몸이 없을 수 있다)",
+                Leave = async d => { await d.Click("H6V5Tab1"); SetOpenAll(true); await d.Click("ChapterButton"); },
+            },
+            new UiHarnessScenario
+            {
+                Name = "tower", Mock = "mock_uiv3_tower",
+                Enter = d => d.Click("HomeTowerCard"),
+                Expect = () => Active("TowerContent") ? null : "망령의 탑 창이 안 열렸다",
+                Leave = d => d.Click("TowerBackButton"),
+            },
+            new UiHarnessScenario
+            {
+                Name = "night", Mock = "mock_uiv3_night",
+                Enter = d => d.Click("HomeNightCard"),
+                Expect = () => Active("NightContent") ? null : "망령의 밤 창이 안 열렸다",
+                Leave = d => d.Click("NightBackButton"),
             },
             new UiHarnessScenario
             {
@@ -284,7 +321,7 @@ namespace Game.Editor.UiHarness
             },
             new UiHarnessScenario
             {
-                Name = "growth_host_ja", Mock = "mock_growth_v6_page",
+                Name = "growth_host_ja", Mock = "mock_uiv5_growth_skill",
                 Enter = async d =>
                 {
                     SetLang(Language.Japanese);
@@ -292,12 +329,12 @@ namespace Game.Editor.UiHarness
                     await d.Click("HostButton");
                     await d.Click("TabHostButton");
                 },
-                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
+                Expect = () => Active("H6GroupSkill") ? null : "호스트 육성 스킬 탭이 안 열렸다",
                 Leave = async d => { await d.Click("ChapterButton"); SetLang(Language.Korean); },
             },
             new UiHarnessScenario
             {
-                Name = "growth_host_en", Mock = "mock_growth_v6_page",
+                Name = "growth_host_en", Mock = "mock_uiv5_growth_skill",
                 Enter = async d =>
                 {
                     SetLang(Language.English);
@@ -305,7 +342,7 @@ namespace Game.Editor.UiHarness
                     await d.Click("HostButton");
                     await d.Click("TabHostButton");
                 },
-                Expect = () => Active("H6CardPlate") ? null : "호스트 육성 v6 판이 안 열렸다",
+                Expect = () => Active("H6GroupSkill") ? null : "호스트 육성 스킬 탭이 안 열렸다",
                 Leave = async d => { await d.Click("ChapterButton"); RestoreLang(); },
             },
         };

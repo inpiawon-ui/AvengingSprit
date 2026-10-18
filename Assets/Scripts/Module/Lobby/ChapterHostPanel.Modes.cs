@@ -224,7 +224,7 @@ namespace Game.Module.Lobby
             LayoutStartRow(gold > 0, tag != null);
 
             // 유령은 스킬 칸이 없다 — 설명(유령 규칙)을 넓게 쓴다
-            if (_ui.Find("CHInfoDesc") is RectTransform desc)
+            if (!_v5Info && _ui.Find("CHInfoDesc") is RectTransform desc)   // v5 는 띠 폭을 빌더가 정했다
                 desc.sizeDelta = new Vector2(_mode == RunStartMode.Ghost ? 300f : 106f, desc.sizeDelta.y);
 
             var btn = _ui.Get<Button>("CHStartButton");
@@ -236,6 +236,9 @@ namespace Game.Module.Lobby
         /// 「⚡ 5 + (동전) 132」 을 한 덩어리로 재서 버튼 가운데에 세운다 — 값 자릿수 · 언어마다 폭이 다르다.
         /// 노드는 전부 버튼 안에 있다(`LobbyS22eBinder`).
         /// </summary>
+        /// <summary>비용 덩어리를 세울 버튼 안 가운데 x. 0 = 버튼 가운데(예전). UI v5 는 오른쪽 절반(「도전하기 | ⚡5 + 골드」).</summary>
+        [SerializeField] private float _startRowCenter;
+
         private void LayoutStartRow(bool hasGold, bool hasTag)
         {
             var icon = _ui.Find("CHStartStaminaIcon") as RectTransform;
@@ -251,7 +254,7 @@ namespace Game.Module.Lobby
             else if (hasTag && cost != null)
                 w += StartIconGap * 2f + Pref(cost);
 
-            float x = -w * 0.5f;
+            float x = _startRowCenter - w * 0.5f;
             x = PlaceIcon(icon, x) + StartIconGap;
             x = PlaceText(stText, x);
             if (!hasGold && hasTag && cost != null)

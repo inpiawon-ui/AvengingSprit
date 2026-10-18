@@ -169,9 +169,19 @@ namespace Game.Module.Lobby
             _ui.SetText("TowerSweepTitleText", Localize.Get("ui.tower.sweep"));
             _ui.SetText("TowerSweepSubText", Localize.Format("ui.tower.sweep_basis", cleared));
             FollowTitle("TowerSweepTitleText", "TowerSweepSubText");
+            // 잠겨 있어도 받을 것을 보인다(PD 2026-10-18 「소탕 버튼은 있는데 보상은 안 보여준다」) — 첫 단계 미리보기
+            SweepStep first = null;
+            if (step == null && table.SweepSteps != null)
+                for (int i = 0; i < table.SweepSteps.Length; i++)
+                {
+                    var sw = table.SweepSteps[i];
+                    if (sw != null && (first == null || sw.FromFloor < first.FromFloor)) first = sw;
+                }
             _ui.SetText("TowerSweepGoldText", step != null
                 ? Localize.Format("ui.tower.sweep_reward", step.Gold, step.Shards)
-                : Localize.Get("ui.tower.sweep_locked"));
+                : first != null
+                    ? Localize.Format("ui.tower.sweep_preview", Mathf.Max(1, first.FromFloor), first.Gold, first.Shards)
+                    : Localize.Get("ui.tower.sweep_locked"));
             _ui.SetText("TowerSweepButtonText", Localize.Get(swept ? "ui.tower.sweep_done" : "ui.tower.sweep_btn"));
             var sweepBtn = _ui.Get<Button>("TowerSweepButton");
             if (sweepBtn != null) sweepBtn.interactable = step != null && !swept;

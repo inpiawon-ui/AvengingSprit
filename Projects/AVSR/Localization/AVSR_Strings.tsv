@@ -710,7 +710,7 @@ ui.chapterhost.reward	클리어 보상	クリア報酬	Clear Reward
 ui.chapterhost.hosttitle	호스트 선택	ホスト選択	Select Host
 ui.chapterhost.ownedonly	보유한 호스트만 선택 가능합니다.	所持しているホストのみ選択できます。	Only owned hosts can be selected.
 ui.chapterhost.start	도전하기	挑戦する	Start
-ui.chapterhost.chapter	CHAPTER	CHAPTER	CHAPTER
+ui.chapterhost.chapter	챕터	チャプター	CHAPTER
 ui.affinity.none	없음	なし	None
 ui.tower.title	망령의 탑	亡霊の塔	Tower of Specters
 ui.tower.reset_in	초기화까지 {0}	リセットまで {0}	Resets in {0}
@@ -901,8 +901,8 @@ ui.summon.tickets	보유 소환권 <color=#FFD94A>{0}</color>	召喚券 <color=#
 ui.summon.today	오늘	本日	Today
 ui.summon.free	무료 1회	無料1回	1 Free
 ui.summon.free_used	내일 다시	また明日	Tomorrow
-ui.summon.pull1	1회	1回	x1
-ui.summon.pull10	10회	10回	x10
+ui.summon.pull1	1회 소환	1回召喚	Summon ×1
+ui.summon.pull10	10회 소환	10回召喚	Summon ×10
 ui.summon.pull10_note	A급 1회 보장	A級1回確定	1 A-grade guaranteed
 ui.summon.price	젬 {0} / 소환권 {1}	ジェム{0} / 召喚券{1}	{0} gems / {1} tickets
 ui.summon.price_ticket	소환권 {0}	召喚券 {0}	{0} tickets
@@ -1036,7 +1036,7 @@ ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 몸 잃�
 ui.night.result.lobby	로비	ロビー	Lobby
 ui.growth6.rank	성급 {0}/10	ランク {0}/10	Rank {0}/10
 ui.growth6.power	전투력 <color=#5CFF7A>{0}</color>	戦闘力 <color=#5CFF7A>{0}</color>	Power <color=#5CFF7A>{0}</color>
-ui.growth6.summary	{0}성 → {1}성  ·  체력·공격 +7%  ·  스킬 Lv {0}→<color=#5CFF7A>{1}</color>  ·  강화 상한 {2}→<color=#5CFF7A>{3}</color>	{0}→{1}  ·  HP·攻撃 +7%  ·  スキルLv {0}→<color=#5CFF7A>{1}</color>  ·  強化上限 {2}→<color=#5CFF7A>{3}</color>	{0}★→{1}★  ·  HP/ATK +7%  ·  Skill Lv {0}→<color=#5CFF7A>{1}</color>  ·  Cap {2}→<color=#5CFF7A>{3}</color>
+ui.growth6.summary	{0}성 → {1}성  ·  체력·공격 +7%  ·  스킬 Lv {0}→<color=#1E8E3E>{1}</color>  ·  강화 상한 {2}→<color=#1E8E3E>{3}</color>	{0}→{1}  ·  HP·攻撃 +7%  ·  スキルLv {0}→<color=#1E8E3E>{1}</color>  ·  強化上限 {2}→<color=#1E8E3E>{3}</color>	{0}★→{1}★  ·  HP/ATK +7%  ·  Skill Lv {0}→<color=#1E8E3E>{1}</color>  ·  Cap {2}→<color=#1E8E3E>{3}</color>
 ui.growth6.summary_max	10성 — 최대 성급	ランク10 — 最大	Rank 10 — Max
 ui.growth6.summary_unlock	조각을 모아 해금하면 스킬 · 능력치 강화가 열립니다	かけらで解放するとスキル・強化が開きます	Unlock with shards to open skills & upgrades
 ui.growth6.ult_tag	SPECIAL · 필살기	SPECIAL · 必殺技	SPECIAL
@@ -1044,7 +1044,7 @@ ui.growth6.act_tag	ACTIVE · 액티브	ACTIVE · アクティブ	ACTIVE
 ui.growth6.pas_tag	PASSIVE · 패시브	PASSIVE · パッシブ	PASSIVE
 ui.growth6.ult_cond	빙의할 때 1회	憑依ごとに1回	Once per possession
 ui.growth6.act_cond	평타 30타 충전	通常攻撃30回で充填	Charges in 30 hits
-ui.growth6.power_line	현재 {0}% → {1}성 <color=#5CFF7A>{2}%</color>	現在 {0}% → ランク{1} <color=#5CFF7A>{2}%</color>	Now {0}% → {1}★ <color=#5CFF7A>{2}%</color>
+ui.growth6.power_line	현재 {0}% → {1}성 <color=#1E8E3E>{2}%</color>	現在 {0}% → ランク{1} <color=#1E8E3E>{2}%</color>	Now {0}% → {1}★ <color=#1E8E3E>{2}%</color>
 ui.growth6.power_max	위력 {0}% (최대)	威力 {0}%（最大）	Power {0}% (max)
 ui.growth6.pas_line	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>
 ui.growth6.pas_max	{0} {1} (최대)	{0} {1}（最大）	{0} {1} (max)
@@ -1053,11 +1053,11 @@ ui.growth6.opt_open	{0}성 각성 옵션	ランク{0} 覚醒オプション	{0}�
 ui.growth6.opt_max	10성 각성 강화 · 효과 2배	ランク10 覚醒強化・効果2倍	10★ Awakening · Effect ×2
 ui.growth6.step	{0}성 보조↑	ランク{0} 補助↑	{0}★ Bonus↑
 ui.growth6.cap	{0}성 강화 상한 Lv {1}	ランク{0} 強化上限 Lv {1}	{0}★ Upgrade cap Lv {1}
-ui.growth6.row_lv	Lv <color=#FFD94A>{0}</color> / {1}	Lv <color=#FFD94A>{0}</color> / {1}	Lv <color=#FFD94A>{0}</color> / {1}
+ui.growth6.row_lv	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}
 ui.growth6.card_rank	{0}성	{0}	{0}★
 ui.growth6.win_rank	{0}성 → <color=#5CFF7A>{1}성</color>	ランク{0} → <color=#5CFF7A>ランク{1}</color>	{0}★ → <color=#5CFF7A>{1}★</color>
 ui.growth6.w.body	몸 능력치	体の能力	Body stats
-ui.growth6.w.body_val	체력·공격 <color=#5CFF7A>+7%</color>	HP·攻撃 <color=#5CFF7A>+7%</color>	HP/ATK <color=#5CFF7A>+7%</color>
+ui.growth6.w.body_val	체력·공격 <color=#1E8E3E>+7%</color>	HP·攻撃 <color=#1E8E3E>+7%</color>	HP/ATK <color=#1E8E3E>+7%</color>
 ui.growth6.w.skill_lv	스킬 Lv	スキルLv	Skill Lv
 ui.growth6.w.act	액티브 위력	アクティブ威力	Active power
 ui.growth6.w.act_step	액티브 보조값	アクティブ補助値	Active bonus
@@ -1066,7 +1066,7 @@ ui.growth6.w.pas	패시브	パッシブ	Passive
 ui.growth6.w.opt	6성 각성 옵션	ランク6 覚醒オプション	6★ Awakening
 ui.growth6.w.opt_open	<color=#5CFF7A>열림</color>	<color=#5CFF7A>解放</color>	<color=#5CFF7A>Unlocked</color>
 ui.growth6.w.opt_max	10성 각성 강화	ランク10 覚醒強化	10★ Awakening
-ui.growth6.w.opt_double	효과 <color=#5CFF7A>2배</color>	効果 <color=#5CFF7A>2倍</color>	Effect <color=#5CFF7A>×2</color>
+ui.growth6.w.opt_double	효과 <color=#1E8E3E>2배</color>	効果 <color=#1E8E3E>2倍</color>	Effect <color=#1E8E3E>×2</color>
 ui.growth6.w.cap	능력치 강화 상한	能力強化上限	Upgrade cap
 ui.growth6.next_mile	다음 이정표  {0}성: {1}	次の節目  ランク{0}: {1}	Next milestone  {0}★: {1}
 ui.growth6.mile_opt	각성 옵션 열림	覚醒オプション解放	Awakening unlocked
@@ -1244,3 +1244,19 @@ ui.home.achieve	업적	実績	Feats
 ui.home.entries	오늘 입장 {0}/{1}	今日の入場 {0}/{1}	Today {0}/{1}
 ui.home.best	최고 기록 <color=#FFD23F>{0}</color>	最高記録 <color=#FFD23F>{0}</color>	Best <color=#FFD23F>{0}</color>
 ui.home.night_sub	오늘 {0}요일 · {1}	今日 {0}曜日・{1}	Today {0} · {1}
+ui.sortie.title	출전	出撃	Sortie
+ui.sortie.affinity	이 챕터 적: {0} 많음 → {1} 유리	このチャプターの敵: {0}が多い → {1}が有利	Foes here: mostly {0} → {1} has the edge
+ui.sortie.tag_ult	필살기	必殺技	Special
+ui.sortie.tag_act	액티브	アクティブ	Active
+ui.top.ghost_lv	유령 Lv {0}	ゴースト Lv {0}	Ghost Lv {0}
+ui.growth5.title	호스트 육성	ホスト育成	Host Training
+ui.growth5.tab_stats	기본 능력	基本能力	Stats
+ui.growth5.tab_skill	스킬	スキル	Skills
+ui.growth5.tab_star	성급	ランク	Rank
+ui.sortie.tag_pas	패시브	パッシブ	Passive
+ui.summon.ledger	영혼 명부	魂の名簿	Soul Ledger
+ui.summon.rate_banner	등급 확률	ランク確率	Grade Rates
+ui.summon.pity_note	대박 확정	大当たり確定	Jackpot guaranteed
+ui.summon.free_ribbon	오늘 무료 1회	本日無料1回	Free today
+ui.pass.title_v5	시즌 패스	シーズンパス	Season Pass
+ui.tower.sweep_preview	{0}층을 깨면 · {1} · 조각 ×{2}	{0}階クリアで・{1}・かけら ×{2}	Clear F{0} → {1} · Shards ×{2}

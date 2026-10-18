@@ -35,6 +35,14 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _jackpot = Array.Empty<Sprite>();
         [SerializeField] private Sprite[] _flip = Array.Empty<Sprite>();
 
+        /// <summary>
+        /// UI v5(PD 2026-10-17 시안 mock_uiv5_summon) — 픽업 없이 기본 소환. 단추는 1회 · 10회 둘이고,
+        /// 오늘 무료가 남아 있으면 1회 단추가 무료로 뽑는다(「오늘 무료 1회」 꼬리표). 등급 확률은 판에 늘 보인다.
+        /// 빌더 `UiV5Screens.RunSummon` 이 켠다.
+        /// </summary>
+        [SerializeField] private bool _v5;
+        [SerializeField] private Sprite[] _gradeBadges = Array.Empty<Sprite>();   // B · A · S = R · SR · SSR
+
         private const float FrameSeconds = 0.12f;
         private const float SkipAfter = 0.4f;
         private const int Cells = 10;
@@ -59,7 +67,11 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             Localize.ApplyFonts(transform);
             _ui.OnClick("GachaFreeButton", () => Pull(1, GachaPay.Free));
-            _ui.OnClick("GachaPull1Button", () => Pull(1, PayFor(1)));
+            _ui.OnClick("GachaPull1Button", () =>
+            {
+                bool free = _v5 && CoreModule.TryGet<IGachaService>(out var gs) && gs.FreeAvailable;
+                Pull(1, free ? GachaPay.Free : PayFor(1));
+            });
             _ui.OnClick("GachaPull10Button", () => Pull(10, PayFor(10)));
             _ui.OnClick("GachaRateButton", ShowRates);
             _ui.OnClick("GachaHistoryButton", ShowHistory);
@@ -145,8 +157,9 @@ namespace Game.Module.Lobby
             if (freeBtn != null) freeBtn.interactable = free;
             _ui.SetText("FreeTagText", Localize.FromTable("ui.summon.today", "오늘"));
             _ui.SetText("FreeTitleText", free ? Localize.FromTable("ui.summon.free", "무료 1회") : Localize.FromTable("ui.summon.free_used", "내일 다시"));
-            _ui.SetText("Pull1TitleText", Localize.FromTable("ui.summon.pull1", "1회"));
-            _ui.SetText("Pull10TitleText", Localize.FromTable("ui.summon.pull10", "10회"));
+            // FromTable 은 한국어면 코드의 원문을 쓴다 — v5 는 언어팩 글자(「1회 소환」)를 쓴다
+            _ui.SetText("Pull1TitleText", _v5 ? Localize.Get("ui.summon.pull1") : Localize.FromTable("ui.summon.pull1", "1회"));
+            _ui.SetText("Pull10TitleText", _v5 ? Localize.Get("ui.summon.pull10") : Localize.FromTable("ui.summon.pull10", "10회"));
             _ui.SetText("Pull10NoteText", Localize.FromTable("ui.summon.pull10_note", "A급 1회 보장"));
             _ui.SetText("Pull1PriceText", Price(g, 1));
             _ui.SetText("Pull10PriceText", Price(g, 10));
@@ -155,7 +168,27 @@ namespace Game.Module.Lobby
             var fill = _ui.Get<Image>("GachaPityFill");
             if (fill != null) fill.fillAmount = g.PityMax > 0 ? Mathf.Clamp01((float)g.PityCount / g.PityMax) : 0f;
             _ui.SetText("GachaRateText", Localize.FromTable("ui.summon.rates", "확률 보기"));
+            if (_v5) RefreshV5(g, free);
             _ui.SetText("GachaHistoryText", Localize.FromTable("ui.summon.history", "뽑기 기록"));
+        }
+
+        /// <summary>v5 — 등급 확률 판(R · SR · SSR) · 무료 꼬리표. 표에 없는 등급 칸은 숨긴다.</summary>
+        private void RefreshV5(IGachaService g, bool free)
+        {
+            _ui.SetActive("GachaFreeButton", false);
+            _ui.SetActive("SummonV5FreeRibbon", free);
+            var grades = g.GradeRates();
+            for (int i = 0; i < 3; i++)
+            {
+                int at = -1;
+                string key = i == 0 ? "B" : i == 1 ? "A" : "S";
+                for (int k = 0; k < grades.Count; k++) if (grades[k].key == key) at = k;
+                _ui.SetActive($"SummonV5Badge{i}", at >= 0);
+                _ui.SetActive($"SummonV5Rate{i}", at >= 0);
+                if (at >= 0) _ui.SetText($"SummonV5Rate{i}", $"{grades[at].pct:0.#}%");
+                var badge = _ui.Get<Image>($"SummonV5Badge{i}");
+                if (badge != null && i < _gradeBadges.Length) { badge.sprite = _gradeBadges[i]; badge.preserveAspect = true; }
+            }
         }
 
         private void RefreshTime()
