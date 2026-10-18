@@ -47,6 +47,9 @@ namespace Game.Module.Lobby
         /// <summary>유령 탭은 「능력치 · 스킬」 탭 줄이 없어 능력치 판이 이만큼 위로 늘었다(px).</summary>
         [SerializeField] private float _ghostStatLift = 50f;
         [SerializeField] private float _rowPitch = 50.6f;
+        /// <summary>UI v5 유령 탭 — 능력치 칸 열 수 · 열 간격(2열 큰 카드). 빌더 `UiV5Screens.RunGhost`.</summary>
+        [SerializeField] private int _ghostCols = 1;
+        [SerializeField] private float _ghostColPitch;
 
         // 목록 순서 — 시안 첫 줄이 공격력이다
         private static readonly HostStat[] StatOrder =
@@ -146,7 +149,9 @@ namespace Game.Module.Lobby
                     var row = i == 0 ? rowTemplate : Instantiate(rowTemplate.gameObject, content).transform;
                     row.name = $"StatRow{i}";
                     var rt = (RectTransform)row;
-                    rt.anchoredPosition = ((RectTransform)rowTemplate).anchoredPosition + new Vector2(0f, -_rowPitch * i);
+                    int cols = Mathf.Max(1, _ghostCols);
+                    rt.anchoredPosition = ((RectTransform)rowTemplate).anchoredPosition
+                                          + new Vector2(_ghostColPitch * (i % cols), -_rowPitch * (i / cols));
                     var stat = StatOrder[i];
                     var icon = _ui.Find(row, "RowIcon")?.GetComponent<Image>();
                     if (icon != null && (int)stat < _statIcons.Length)
@@ -159,7 +164,8 @@ namespace Game.Module.Lobby
                     _rows.Add(row);
                 }
                 if (content != null)
-                    content.sizeDelta = new Vector2(content.sizeDelta.x, _rowPitch * StatOrder.Length + 4f);
+                    content.sizeDelta = new Vector2(content.sizeDelta.x,
+                        _rowPitch * ((StatOrder.Length + Mathf.Max(1, _ghostCols) - 1) / Mathf.Max(1, _ghostCols)) + 8f);
             }
 
             BuildHostPageOnce();
@@ -198,6 +204,7 @@ namespace Game.Module.Lobby
             SetActive("SkillSection", false);
             SetActive("HostList", false);
             SetActive("GhostPath", ghost);
+            SetActive("GhostV5Deco", ghost);   // UI v5 유령 탭 — 제목 · 진열 칸(없으면 아무 일 없다)
 
             // 유령 탭은 탭 줄이 없어 능력치 판이 위로 늘었다 — 판 · 창을 올리고 늘린다
             var section = _ui.Find("StatSection") as RectTransform;

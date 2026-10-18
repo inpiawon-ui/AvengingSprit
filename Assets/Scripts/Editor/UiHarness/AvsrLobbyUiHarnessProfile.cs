@@ -131,6 +131,8 @@ namespace Game.Editor.UiHarness
             .AllowRule("C2", @"/NightV5View/NightV5Art$", "UI v5 밤 오늘 카드 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
             .AllowRule("C2", @"/ShopV5Head/ShopV5HeadArt$", "UI v5 상점 머리 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
             .AllowRule("C3", @"/ShopV5Head(/ShopV5HeadArt)?$", "UI v5 상점 머리 그림 — 화면 밖은 잘려 안 보인다")
+            .AllowRule("C2", @"/GhostV5View/GhostV5Art$", "UI v5 유령 진열 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
+            .AllowRule("C2", @"/StatContent/StatRow\d*(/|$)", "유령 능력치 2열 스크롤 — 창 가장자리 카드가 잘리는 것은 정상")
             .AllowRule("C2", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(FillBox)")
             .AllowRule("C3", @"/CHChapterArtBox/CHChapterArt$", "챕터 그림 — 칸 밖은 잘려 안 보인다(FillBox)")
             .AllowRule("C6", @"/CHHostContent/CHHostCard\d+/CardPowerText$",
@@ -250,6 +252,13 @@ namespace Game.Editor.UiHarness
                 Enter = async d => { await d.Click("HostButton"); await d.Click("TabHostButton"); await d.Click("H6V5Tab1"); },
                 Expect = () => Active("H6GroupSkill") ? null : "호스트 육성 스킬 탭이 안 열렸다",
                 Leave = d => d.Click("ChapterButton"),
+            },
+            new UiHarnessScenario
+            {
+                Name = "growth_ghost", Mock = "mock_uiv2_d_ghost",
+                Enter = async d => { await d.Click("HostButton"); await d.Click("TabGhostButton"); },
+                Expect = () => Active("GhostV5Deco") ? null : "유령 육성 화면이 안 열렸다",
+                Leave = async d => { await d.Click("TabHostButton"); await d.Click("ChapterButton"); },
             },
             new UiHarnessScenario
             {

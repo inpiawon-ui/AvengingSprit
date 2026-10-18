@@ -5547,3 +5547,7 @@ MonoBehaviour:
     _ko: "{0}\uCE35\uC744 \uAE68\uBA74 \xB7 {1} \xB7 \uC870\uAC01 \xD7{2}"
     _ja: "{0}\u968E\u30AF\u30EA\u30A2\u3067\u30FB{1}\u30FB\u304B\u3051\u3089 \xD7{2}"
     _en: "Clear F{0} \u2192 {1} \xB7 Shards \xD7{2}"
+  - _key: ui.growth5.ghost_title
+    _ko: "\uC720\uB839 \uC721\uC131"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u80B2\u6210"
+    _en: Ghost Training

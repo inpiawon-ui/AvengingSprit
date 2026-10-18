@@ -182,6 +182,7 @@ namespace Game.Editor
         {
             "ChapterHostPanel/CHContent", "GrowthPanel/HostPage", "SummonPanel/SummonContent", "SeasonPassPanel/PassContent",
             "TowerEntryPanel/TowerContent", "NightEntryPanel/NightContent", "LobbyShopPanel/ShopContent",
+            "GrowthPanel/Page",
         };
 
         /// <summary>
@@ -247,7 +248,7 @@ namespace Game.Editor
                && Mathf.Abs(c.offsetMin.x) < 1f && Mathf.Abs(c.offsetMax.x) < 1f;
 
         /// <summary>화면 바탕 — 비율 자리로 바꾸면 옆으로 늘어난다. 덮기(Envelope)로 바꾼다.</summary>
-        private static readonly string[] Backdrops = { "CHScreen", "H6Bg", "SummonBackdrop", "PassBackdrop", "ShopBackdrop" };
+        private static readonly string[] Backdrops = { "CHScreen", "H6Bg", "SummonBackdrop", "PassBackdrop", "ShopBackdrop", "BgGhost" };
         /// <summary>런타임이 다른 글자 끝을 따라 옮기는 칸 — 비율 자리면 옮긴 값이 어긋난다(가운데 기준 고정).</summary>
         private static readonly string[] RuntimeFollowers = { "TowerSweepTitleText", "TowerSweepSubText" };
 
@@ -258,17 +259,21 @@ namespace Game.Editor
                 if (parent.GetChild(i) is not RectTransform c) continue;
                 if (System.Array.IndexOf(Backdrops, c.name) >= 0)
                 {
+                    // 판(1280)보다 크게 — 긴 폰(20:9, 보이는 높이 1600)에서도 판 위아래 틈을 덮어야 뒤의 홈 화면이 비치지 않는다.
+                    // 높이 2200 고정 · 폭은 그림 비율대로(1237) — 4:3 폭 960 도 덮는다
                     c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
                     c.anchoredPosition = Vector2.zero;
-                    if (c.GetComponent<AspectRatioFitter>() == null)
-                    {
-                        var f = c.gameObject.AddComponent<AspectRatioFitter>();
-                        f.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-                        f.aspectRatio = 1080f / 1920f;
-                    }
+                    c.sizeDelta = new Vector2(1240f, 2200f);
+                    var f = c.GetComponent<AspectRatioFitter>();
+                    if (f == null) f = c.gameObject.AddComponent<AspectRatioFitter>();
+                    f.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
+                    f.aspectRatio = 1080f / 1920f;
                     continue;
                 }
                 if (System.Array.IndexOf(RuntimeFollowers, c.name) >= 0) { CenterX(c, parent); continue; }
+                // 유령 성장 경로 — 런타임이 칸 x 로 표시 · 줄을 놓는다(같은 기준이어야 한다)
+                if (parent.name == "GhostPath" && (c.name.StartsWith("PathLine") || c.name.StartsWith("PathNode")
+                    || c.name.StartsWith("PathLabel") || c.name.StartsWith("PathMarker"))) { CenterX(c, parent); continue; }
                 // 얼굴 칸 — 자리만 비율로 옮기고 크기는 그대로(넓히면 얼굴이 옆으로 늘어난다)
                 if (c.name.Contains("Face") || c.name.StartsWith("NightHostSlot")) { PropPoint(c, parent); continue; }
                 if (IsFullOf(c, parent)) { Spread(c); continue; }
@@ -878,6 +883,207 @@ namespace Game.Editor
             if (page != null)
                 foreach (var n in new[] { "GrowthSideL", "GrowthSideR", "GrowthFiller" })
                     if (page.Find(n)?.GetComponent<Image>() is Image side) side.enabled = false;   // 네온 이음 띠 — 바탕은 HostPage 가 깐다
+        }
+
+        // ── 유령 육성 ─────────────────────────────────────────
+
+        [MenuItem("Tools/Game/UI v5 — 유령 육성 (mock_uiv2_d_ghost · c_ghost)")]
+        public static void RunGhost()
+        {
+            var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
+            try
+            {
+                if (!UseTemplates(lobby.transform)) { Debug.LogError("[UI v5] 글자 본이 없다"); return; }
+                var page = lobby.transform.Find("GrowthPanel/Page") as RectTransform;
+                if (page == null) { Debug.LogError("[UI v5] GrowthPanel/Page 없음"); return; }
+                Narrow(page);
+                Ghost(page);
+                var so = new SerializedObject(lobby.transform.Find("GrowthPanel").GetComponent<GrowthPanel>());
+                so.FindProperty("_ghostCols").intValue = 2;
+                so.FindProperty("_ghostColPitch").floatValue = 342f;
+                so.FindProperty("_rowPitch").floatValue = 112f;
+                so.FindProperty("_ghostStatLift").floatValue = 0f;
+                so.FindProperty("_labelDone").colorValue = new Color(0.1f, 0.45f, 0.5f, 1f);
+                so.FindProperty("_labelNow").colorValue = Ink;
+                so.FindProperty("_labelNext").colorValue = new Color(0.62f, 0.42f, 0.02f, 1f);
+                so.FindProperty("_labelLock").colorValue = InkSoft;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(lobby); }
+            Debug.Log("[UI v5] 유령 육성");
+        }
+
+        /// <summary>Page 는 화면 y 58 에서 시작한다 — 화면 좌표(왼쪽 위)로 놓는다.</summary>
+        private const float PageTop = 58f;
+
+        private static void G(Transform root, string name, float x0, float y0, float x1, float y1)
+        {
+            if (Find(root, name) is RectTransform r) TL(r, x0, y0 - PageTop, x1 - x0, y1 - y0);
+            else Debug.LogWarning($"[UI v5] 노드 없음: {name}");
+        }
+
+        /// <summary>InkRun 조각 사이 간격 — 옛 배치 값(넓은 간격)을 새 글자 크기에 맞게 줄인다.</summary>
+        private static void Gaps(Transform root, string runNode, params float[] gaps)
+        {
+            if (Find(root, runNode)?.GetComponent<Game.Module.Common.UI.InkRun>() is not Component run) return;
+            var so = new SerializedObject(run);
+            var g = so.FindProperty("_gaps");
+            g.arraySize = gaps.Length;
+            for (int i = 0; i < gaps.Length; i++) g.GetArrayElementAtIndex(i).floatValue = gaps[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>그 칸의 위에서부터 잰 가운데(부모 위 변 기준, 아래로 +).</summary>
+        private static float CenterTd(RectTransform r) => -r.anchoredPosition.y - (0.5f - r.pivot.y) * r.rect.height;
+        private static float TopTd(RectTransform r) => -r.anchoredPosition.y - (1f - r.pivot.y) * r.rect.height;
+
+        private static void Ghost(RectTransform page)
+        {
+            // 바탕 — 유령이 박힌 통그림 대신 홈 바탕(유령은 진열 칸에 따로 선다)
+            if (page.Find("BgGhost")?.GetComponent<Image>() is Image bg)
+            {
+                bg.sprite = Spr($"{Art}/page_bg.png");
+                bg.preserveAspect = false;
+                var r = bg.rectTransform;
+                r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+                r.anchoredPosition = Vector2.zero;
+                if (bg.GetComponent<AspectRatioFitter>() == null) Envelope(bg, 1080f / 1920f);
+            }
+            int at = page.Find("BgGhost") is Transform b0 ? b0.GetSiblingIndex() + 1 : 0;
+
+            // 장식 묶음(제목 · 진열 칸) — 런타임이 유령 탭에서만 켠다
+            if (page.Find("GhostV5Deco") is Transform od) Object.DestroyImmediate(od.gameObject);
+            var deco = new GameObject("GhostV5Deco", typeof(RectTransform)).GetComponent<RectTransform>();
+            deco.gameObject.layer = page.gameObject.layer;
+            deco.SetParent(page, false);
+            deco.anchorMin = Vector2.zero; deco.anchorMax = Vector2.one; deco.offsetMin = deco.offsetMax = Vector2.zero;
+            deco.SetSiblingIndex(at);
+            var title = T(deco, "GhostV5Title", 46f, Color.white, true, TextAlignmentOptions.Left);
+            TL(title.rectTransform, 22f, 124f - PageTop, 440f, 56f);
+            Localized(title, "ui.growth5.ghost_title");
+            if (title.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText th) th.Set(0.25f, 0.2f, new Color32(10, 12, 30, 255));
+            var frame = Sliced(deco, "GhostV5Frame", $"{Kit}/panel_navy_big.png", 0, 0, 0, 0, 1.2f);
+            TL(frame.rectTransform, 22f, 186f - PageTop, 676f, 276f);
+            var view = new GameObject("GhostV5View", typeof(RectTransform)).GetComponent<RectTransform>();
+            view.gameObject.layer = page.gameObject.layer;
+            view.SetParent(deco, false);
+            TL(view, 29f, 193f - PageTop, 662f, 262f);
+            view.gameObject.AddComponent<RectMask2D>();
+            var art = Pic(view, "GhostV5Art", $"{Art}/showcase_bg.png", 0, 0, 0, 0);
+            art.preserveAspect = false;
+            Envelope(art, 1600f / 830f);
+            var ghost = Pic(deco, "GhostV5Portrait", $"{Gr}/Portraits/portrait_ghost.png", 0, 0, 0, 0);
+            TL(ghost.rectTransform, 80f, 200f - PageTop, 290f, 250f);
+
+            // 진열 칸 오른쪽 — 「유령」 · Lv · 경험치 막대 · 설명
+            foreach (var n in new[] { "CardNameEnText", "CardStar0", "CardStar1", "CardStar2", "CardStar3", "CardStar4" })
+                if (Find(page, n) is Transform h) h.localScale = Vector3.zero;   // 「GHOST」 · 꺼진 별 — 런타임이 켜도 안 보이게
+            G(page, "CardNameText", 420f, 206f, 690f, 250f);
+            Txt(page, "CardNameText", 32f, Color.white, TextAlignmentOptions.Left, 0.3f);
+            G(page, "CardLvLabel", 420f, 250f, 470f, 312f);
+            G(page, "CardLvNum", 470f, 250f, 560f, 312f);
+            G(page, "CardLvMax", 560f, 250f, 640f, 312f);
+            foreach (var (n, sz, c) in new[] { ("CardLvLabel", 30f, Gold), ("CardLvNum", 54f, Gold), ("CardLvMax", 26f, Color.white) })
+                if (Find(page, n)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI t)
+                {
+                    t.fontSize = t.fontSizeMax = sz; t.enableAutoSizing = false; t.color = c;
+                    t.alignment = TextAlignmentOptions.BaselineLeft;
+                }
+            Gaps(page, "CardLvRun", 8f, 8f);
+            G(page, "ExpLabelText", 420f, 322f, 480f, 352f);
+            Txt(page, "ExpLabelText", 20f, Gold, TextAlignmentOptions.Left, 0.2f);
+            G(page, "ExpBarFrame", 420f, 354f, 690f, 378f);
+            Spr9(page, "ExpBarFrame", $"{Kit}/bar_bg.png", 3f);
+            G(page, "ExpBarFill", 423f, 357f, 687f, 375f);
+            if (Find(page, "ExpBarFill")?.GetComponent<Image>() is Image ef) { ef.sprite = Spr($"{Kit}/bar_fill.png"); ef.type = Image.Type.Filled; ef.fillMethod = Image.FillMethod.Horizontal; ef.preserveAspect = false; }
+            G(page, "ExpValueText", 420f, 380f, 690f, 408f);
+            Txt(page, "ExpValueText", 20f, Color.white, TextAlignmentOptions.Right, 0.2f);
+            G(page, "CardDescText", 420f, 410f, 690f, 452f);
+            if (Txt(page, "CardDescText", 16f, new Color(0.86f, 0.9f, 1f), TextAlignmentOptions.TopLeft) is TextMeshProUGUI dt) dt.textWrappingMode = TextWrappingModes.Normal;
+
+            // 능력치 — 머리 띠 + 2열 큰 카드 스크롤(호스트 탭과 같은 카드)
+            var sec = Find(page, "StatSection");
+            if (sec != null)
+            {
+                var strip = Plate(sec, "GhostV5StatStrip", $"{Kit}/panel_parch_wide.png", 2.2f);
+                TL(strip.rectTransform, 22f, 470f - PageTop, 676f, 48f);
+                strip.transform.SetAsFirstSibling();
+            }
+            G(page, "StatHeaderText", 40f, 474f, 600f, 514f);
+            Txt(page, "StatHeaderText", 26f, Ink, TextAlignmentOptions.Left, 0.35f);
+            G(page, "StatHelpButton", 654f, 480f, 682f, 508f);
+            G(page, "StatViewport", 22f, 526f, 698f, 900f);
+            if (Find(page, "StatRow") is RectTransform row)
+            {
+                row.anchorMin = row.anchorMax = row.pivot = new Vector2(0f, 1f);
+                row.anchoredPosition = new Vector2(2f, -4f);
+                row.sizeDelta = new Vector2(330f, 104f);
+                if (row.GetComponent<Image>() is Image rp) { rp.sprite = Spr($"{Kit}/panel_parch_big.png"); rp.type = Image.Type.Sliced; rp.pixelsPerUnitMultiplier = 2.4f; rp.preserveAspect = false; }
+                Mid(row, "RowIcon", -118f, 0f, 62f, 62f);
+                Mid(row, "RowNameText", -82f, 28f, 140f, 32f, 0f);
+                Txt(row, "RowNameText", 22f, Ink, TextAlignmentOptions.Left, 0.3f);
+                Mid(row, "RowLvLabel", -82f, 0f, 30f, 28f, 0f);
+                Mid(row, "RowLvNum", -52f, 0f, 40f, 28f, 0f);
+                Mid(row, "RowLvMax", -16f, 0f, 60f, 28f, 0f);
+                foreach (var (n, sz, c) in new[] { ("RowLvLabel", 17f, InkSoft), ("RowLvNum", 21f, new Color(0.62f, 0.42f, 0.02f, 1f)), ("RowLvMax", 17f, InkSoft) })
+                    if (Find(row, n)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI t)
+                    {
+                        t.fontSize = t.fontSizeMax = sz; t.enableAutoSizing = false; t.color = c;
+                        t.alignment = TextAlignmentOptions.BaselineLeft;
+                    }
+                Gaps(row, "RowLvRun", 4f, 4f);
+                Mid(row, "RowPctText", -82f, -28f, 140f, 28f, 0f);
+                Txt(row, "RowPctText", 21f, new Color(0.1f, 0.5f, 0.25f, 1f), TextAlignmentOptions.Left, 0.25f);
+                Mid(row, "RowButton", 110f, 0f, 92f, 50f);
+                if (row.Find("RowButton") is RectTransform rb)
+                {
+                    if (rb.GetComponent<Image>() is Image bi) { bi.sprite = Spr($"{Kit}/btn_gold_small.png"); bi.type = Image.Type.Sliced; bi.pixelsPerUnitMultiplier = 3.2f; bi.preserveAspect = false; bi.color = Color.white; }
+                    foreach (Transform c in rb)
+                        if (c.GetComponent<Image>() is Image ci && c.GetComponent<TextMeshProUGUI>() == null && c.name != "RowCoin") ci.enabled = false;   // 옛 버튼 그림 조각
+                    Mid(rb, "RowCoin", -28f, 0f, 22f, 22f);
+                    Mid(rb, "RowCostText", -14f, 0f, 58f, 32f, 0f);
+                    Txt(rb, "RowCostText", 20f, Ink, TextAlignmentOptions.Left, 0.3f);
+                }
+            }
+
+            // 성장 경로 — 양피지 판 · 제목 · 칸 줄 · 보상 상자(아래 바 위까지)
+            var path = Find(page, "GhostPath") as RectTransform;
+            if (path != null)
+            {
+                var pp = Plate(path, "GhostV5PathPlate", $"{Kit}/panel_parch_big.png", 1.6f);
+                TL(pp.rectTransform, 22f, 906f - PageTop, 676f, 258f);
+                pp.transform.SetAsFirstSibling();
+                float titleC = 934f - PageTop, rowC = 984f - PageTop, boxTop = 1040f - PageTop;
+                var title2 = Find(path, "PathTitleText") as RectTransform;
+                var node0 = Find(path, "PathNode0") as RectTransform;
+                var box = Find(path, "PathBox") as RectTransform;
+                float dTitle = title2 != null ? titleC - CenterTd(title2) : 0f;
+                float dRow = node0 != null ? rowC - CenterTd(node0) : 0f;
+                float dBox = box != null ? boxTop - TopTd(box) : 0f;
+                // 보상 묶음(PathRewards)은 화면 크기 틀이다 — 틀은 제자리(0), 안의 칸만 옮긴다(틀까지 옮기면 두 번 움직인다)
+                if (Find(path, "PathRewards") is RectTransform rewards)
+                {
+                    rewards.offsetMin = new Vector2(rewards.offsetMin.x, 0f);
+                    rewards.offsetMax = new Vector2(rewards.offsetMax.x, 0f);
+                }
+                foreach (var r in path.GetComponentsInChildren<RectTransform>(true))
+                {
+                    if (r == path || r.parent == null || r.name == "PathRewards") continue;
+                    if (r.parent != path && r.parent.name != "PathRewards") continue;
+                    string n = r.name;
+                    float d = n.StartsWith("PathTitle") || n.StartsWith("PathHelp") ? dTitle
+                            : n.StartsWith("PathLine") || n.StartsWith("PathNode") || n.StartsWith("PathLabel") || n.StartsWith("PathMarker") ? dRow
+                            : n.StartsWith("PathBox") || n.StartsWith("PathReward") || n.StartsWith("BoxLv") || n.StartsWith("BoxBar") || n.StartsWith("BoxValue") ? dBox
+                            : 0f;
+                    if (d != 0f) r.anchoredPosition -= new Vector2(0f, d);
+                }
+                Txt(path, "PathTitleText", 26f, Ink, TextAlignmentOptions.Left, 0.35f);
+                if (Find(path, "PathMarkerLabel")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI ml) ml.color = Ink;
+                Spr9(path, "PathBox", $"{Kit}/panel_navy_mid.png", 2f);
+                Spr9(path, "BoxBarFrame", $"{Kit}/bar_bg.png", 3f);
+                if (Find(path, "BoxBarFill")?.GetComponent<Image>() is Image bf) { bf.sprite = Spr($"{Kit}/bar_fill.png"); bf.type = Image.Type.Filled; bf.fillMethod = Image.FillMethod.Horizontal; bf.preserveAspect = false; }
+            }
         }
 
         /// <summary>스킬 한 줄 — 양피지 판 · 아이콘 · 꼬리표(색 글자) · 이름 · 조건 · 위력.</summary>
@@ -1774,6 +1980,52 @@ namespace Game.Editor
                 string n = t.sprite.name;
                 if (n == "ch_s22e_box") { t.sprite = Spr($"{Kit}/panel_navy_mid.png"); t.type = Image.Type.Sliced; t.pixelsPerUnitMultiplier = 2f; }
                 else if (n == "btn_small") { t.sprite = Spr($"{Kit}/btn_navy.png"); t.type = Image.Type.Sliced; t.pixelsPerUnitMultiplier = 2.6f; }
+            }
+            ShopTabs(box);
+        }
+
+        /// <summary>
+        /// 상점 상자 · 재화 탭(PD 2026-10-18) — 오늘의 상점과 같은 결: 겉판은 양피지(짙은 글자), 안 칸은 남색 + 금테(흰 글자),
+        /// 사는 단추는 금 단추. 네온 하늘색 칸(gem_slot · starter_slot · gold_slot · btn_rate · btn_price)을 걷는다. 자리는 그대로.
+        /// </summary>
+        private static void ShopTabs(RectTransform box)
+        {
+            foreach (var page in new[] { "ShopPageChest", "ShopPageCurrency" })
+            {
+                if (Find(box, page) is not Transform pg) continue;
+                foreach (var img in pg.GetComponentsInChildren<Image>(true))
+                {
+                    if (img.sprite == null) continue;
+                    string sn = img.sprite.name, n = img.name;
+                    bool outer = n == "RowPlate" || n == "CardPlate" || n == "StarterPlate" || n == "GemSection" || n == "GoldSection"
+                                 || (n == "Plate" && img.transform.parent != null && img.transform.parent.name == "ChapterPack");
+                    string to = outer ? $"{Kit}/panel_parch_big.png"
+                              : sn is "gem_slot" or "starter_slot" or "gold_slot" or "panel_navy_mid" ? $"{Kit}/panel_navy_mid.png"
+                              : sn is "btn_rate" or "btn_navy" ? $"{Kit}/btn_navy.png"
+                              : sn == "btn_price" ? $"{Kit}/btn_gold_small.png"
+                              : null;
+                    if (to == null) continue;
+                    img.sprite = Spr(to);
+                    img.type = Image.Type.Sliced;
+                    img.pixelsPerUnitMultiplier = outer ? 1.6f : sn == "btn_price" ? 2.8f : 2.4f;
+                    img.preserveAspect = false;
+                    img.color = Color.white;
+                }
+                // 양피지 위 글자는 짙게
+                foreach (var t in pg.GetComponentsInChildren<TextMeshProUGUI>(true))
+                {
+                    switch (t.name)
+                    {
+                        case "RowTitle": case "CardTitle": case "StarterHead": case "ChapterPackTitle": case "GemHead": case "GoldHead":
+                            t.color = Ink; Heavy(t, 0.3f); break;
+                        case "RowPrice":   // 상자 값 — 단추 판이 없어 양피지 위에 바로 앉는다
+                            t.color = Ink; Heavy(t, 0.3f); break;
+                        case "CardDesc": case "ChapterPackDesc":
+                            t.color = InkSoft; break;
+                        case "ShopLegalText": case "ShopRestoreText":
+                            t.color = InkSoft; break;
+                    }
+                }
             }
         }
 
