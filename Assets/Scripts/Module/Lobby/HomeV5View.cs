@@ -165,6 +165,8 @@ namespace Game.Module.Lobby
         // ── 화면 채우기 ──────────────────────────────────────
 
         /// <summary>9:16 에서 진열 · 시나리오 · 모드 칸의 높이(위 막대 · 아래 바 사이 1048 을 나눈 값).</summary>
+        /// <summary>막대 높이(배율 1) — 빌더 LobbyHomeV5Builder 의 TopBar · NavBar 와 같다.</summary>
+        private const float TopBar = 120f, NavBar = 112f;
         private const float BaseBody = 1048f, BaseShow = 418f, BaseScenario = 284f, BaseMode = 326f, Gap = 10f;
 
         /// <summary>
@@ -178,8 +180,13 @@ namespace Game.Module.Lobby
             var cards = _ui?.Find("HomeCards") as RectTransform;
             var show = _ui?.Find("HomeShowcase") as RectTransform;
             if (body == null || cards == null || show == null) return;
+            // 위 막대가 태블릿에서 커진 만큼(BarZoom) 위 여백도 같이. 아래 바는 높이가 그대로다(폭만 넓힌다)
+            float bar = body.parent is RectTransform home ? BarZoom.ScaleFor(home.rect.width) : 1f;
+            body.offsetMin = new Vector2(body.offsetMin.x, NavBar);
+            body.offsetMax = new Vector2(body.offsetMax.x, -TopBar * bar);
             float k = Mathf.Max(0.85f, body.rect.height / BaseBody);
-            float scen = BaseScenario * k, mode = BaseMode * k;
+            // 시나리오 카드는 기본 높이 밑으로 줄이지 않는다 — 줄이면 챕터 이름이 이어 하기 버튼에 덮였다(4:3)
+            float scen = BaseScenario * Mathf.Max(1f, k), mode = BaseMode * k;
             float cardsH = scen + Gap + mode;
             SetHeight(cards, 0f, cardsH);
             if (_ui.Find("HomeScenarioCard") is RectTransform sc)

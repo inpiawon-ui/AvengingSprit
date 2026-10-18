@@ -87,6 +87,136 @@ namespace Game.Editor
             Debug.Log("[홈 v5] 세움");
         }
 
+        // ── 아래 바 ──────────────────────────────────────────
+
+        private static readonly string[] NavTabs = { "HostButton", "ChapterButton", "SummonButton", "ShopButton" };
+        private static readonly string[] NavIcons = { "nav_host", "nav_play", "nav_summon", "nav_shop" };
+        private static readonly Color NavTitleOff = new(0.95f, 0.86f, 0.66f, 1f);   // 시안 양피지색 글자
+        private static readonly Color NavTitleOn = new(1f, 0.9f, 0.25f, 1f);
+
+        /// <summary>
+        /// 아래 바 4칸을 시안(mock_uiv5_home) 하나로 통일한다(PD 2026-10-18 「시안처럼 통일해서 — 컷마다 다 다르다」).
+        /// 네 칸 같은 남색 판 + 금테, 고른 칸만 금빛 판 · 노란 글자. 아이콘 위 · 영문 글자 아래, 한글 부제는 시안에 없어 숨긴다.
+        /// 칸 크기 · 자리(163 × 80)는 그대로다(PD 2026-10-17 「사이즈 그대로, 누르면 활성화 느낌만」).
+        /// `로비 — 아래 바 4칸 꽂기 (S22e)` 뒤에 돌린다 — 그 빌더가 만든 노드(NavPlate · NavOn · NavIcon · NavTitle)를 다시 칠한다.
+        /// </summary>
+        [MenuItem("Tools/Game/로비 — 아래 바 v5 시안 통일 (mock_uiv5_home)")]
+        public static void RunNav()
+        {
+            var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
+            try
+            {
+                var nav = Find(lobby.transform, "BottomNav");
+                if (nav == null) { Debug.LogError("[아래 바 v5] BottomNav 없음"); return; }
+                foreach (var n in new[] { "NavBg", "NavSideL", "NavSideR" })
+                    if (nav.Find(n)?.GetComponent<Image>() is Image band)
+                    {
+                        // 판 사이로 비치는 바탕 — 시안처럼 테 없는 먹색. 홈 바탕 그림 아랫단을 같은 비율로 잘라 쓴다
+                        // (키트 남색 판은 바 전체에 금테가 한 겹 더 둘러져 시안과 달랐다)
+                        band.sprite = Spr(n == "NavBg" ? $"{Art}/nav_band.png" : $"{Art}/nav_band_side.png");
+                        band.type = Image.Type.Simple;
+                        band.preserveAspect = false;
+                        band.color = Color.white;
+                    }
+                for (int i = 0; i < NavTabs.Length; i++) NavTab(nav, i);
+                // 태블릿 4:3 채우기(PD 2026-10-18 「4:3 탑뷰 이상 — 스케일링」)
+                //  · 위 막대: 프로필 · 재화 칸은 늘리면 찌그러진다 → 통째로 배율(BarZoom)
+                //  · 아래 바: 배율로 키우면 높이가 40 늘어 육성 목록 아래를 덮었다 → 높이 그대로, 9분할 판을 화면 폭만큼 넓힌다
+                if (nav.GetComponent<Game.Module.Common.UI.BarZoom>() is Game.Module.Common.UI.BarZoom navZoom)
+                    Object.DestroyImmediate(navZoom);
+                var top = Find(lobby.transform, "FixedTopBar");
+                if (top != null && top.GetComponent<Game.Module.Common.UI.BarZoom>() == null)
+                    top.gameObject.AddComponent<Game.Module.Common.UI.BarZoom>();
+                SpreadNav((RectTransform)nav);
+                // 위 막대가 커지면 화면 꼭대기 제목을 덮는 창들 — 막대 밑으로 살짝 줄여 들인다(홈은 HomeV5View 가 직접 맞춘다)
+                foreach (var n in new[] { "ChapterHostPanel", "LobbyShopPanel", "SummonPanel", "SeasonPassPanel",
+                                          "TowerEntryPanel", "NightEntryPanel" })
+                    if (lobby.transform.Find(n) is Transform panel && panel.GetComponent<Game.Module.Common.UI.UnderTopBar>() == null)
+                        panel.gameObject.AddComponent<Game.Module.Common.UI.UnderTopBar>();
+                PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(lobby); }
+            Debug.Log("[아래 바 v5] 시안 통일");
+        }
+
+        /// <summary>
+        /// 아래 바를 화면 폭으로 늘리고 네 칸을 4등분 자리에 둔다. 720 에서는 예전 자리(18 · 190 · 362 · 534, 폭 163) 그대로다.
+        /// 칸 i 왼쪽 = 폭 × i/4 + (18 − 8i), 오른쪽 = 폭 × (i+1)/4 + (1 − 8i) — 양끝 여백 18 · 23, 사이 9 를 유지한다.
+        /// </summary>
+        private static void SpreadNav(RectTransform nav)
+        {
+            if (nav.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null)
+                nav.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();   // 로비 ScreenFit 이 가운데 720 으로 되돌리지 않게
+            nav.anchorMin = new Vector2(0f, 0f);
+            nav.anchorMax = new Vector2(1f, 0f);
+            nav.pivot = new Vector2(0.5f, 0f);
+            nav.offsetMin = Vector2.zero;
+            nav.offsetMax = new Vector2(0f, 110f);
+            if (nav.Find("NavBg") is RectTransform bg)
+            {
+                bg.anchorMin = Vector2.zero;
+                bg.anchorMax = Vector2.one;
+                bg.pivot = new Vector2(0.5f, 0.5f);
+                bg.offsetMin = bg.offsetMax = Vector2.zero;
+            }
+            foreach (var n in new[] { "NavSideL", "NavSideR" })
+                if (nav.Find(n) is Transform side) side.gameObject.SetActive(false);   // 바가 화면 끝까지 가니 이음 띠가 필요 없다
+            for (int i = 0; i < NavTabs.Length; i++)
+            {
+                if (nav.Find(NavTabs[i]) is not RectTransform tab) continue;
+                tab.anchorMin = new Vector2(i / 4f, 1f);
+                tab.anchorMax = new Vector2((i + 1) / 4f, 1f);
+                tab.pivot = new Vector2(0.5f, 1f);
+                tab.offsetMin = new Vector2(18f - 8f * i, -14f - 80f);
+                tab.offsetMax = new Vector2(1f - 8f * i, -14f);
+            }
+        }
+
+        private static void NavTab(Transform nav, int i)
+        {
+            if (nav.Find(NavTabs[i]) is not RectTransform tab) { Debug.LogWarning($"[아래 바 v5] 칸 없음: {NavTabs[i]}"); return; }
+            if (tab.Find("NavPlate")?.GetComponent<Image>() is Image plate)
+            {
+                plate.sprite = Spr($"{Kit}/btn_navy.png");
+                plate.type = Image.Type.Sliced;
+                plate.pixelsPerUnitMultiplier = 2f;
+            }
+            if (tab.Find("NavOn")?.GetComponent<Image>() is Image on)
+            {
+                on.sprite = Spr($"{Kit}/card_sel.png");   // 시안 고른 칸 — 밝은 금테 + 빛(탭 켜짐 판은 너무 약했다)
+                on.type = Image.Type.Sliced;
+                on.pixelsPerUnitMultiplier = 2.2f;
+            }
+            if (tab.Find("NavIcon")?.GetComponent<Image>() is Image icon)
+            {
+                var s = Spr($"{Kit}/{NavIcons[i]}.png");
+                if (s != null) icon.sprite = s;
+                else Debug.LogWarning($"[아래 바 v5] 아이콘 없음: {NavIcons[i]} — 옛 아이콘 유지");
+                icon.preserveAspect = true;
+                Box(icon.rectTransform, 0.5f, 1f, 0f, -3f, 66f, 50f, 0.5f, 1f);
+            }
+            if (tab.Find("NavTitle")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI title)
+            {
+                title.fontSize = title.fontSizeMax = 22f;
+                title.fontSizeMin = 12f;
+                title.alignment = TextAlignmentOptions.Center;
+                Box(title.rectTransform, 0.5f, 0f, 0f, 5f, 150f, 26f, 0.5f, 0f);
+                if (title.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText heavy)
+                    heavy.Set(0.18f, 0.22f, new Color32(8, 10, 30, 255));
+            }
+            foreach (Transform c in tab)
+                if (c.name.EndsWith("SubText")) c.gameObject.SetActive(false);   // 시안에 한글 부제가 없다
+
+            if (tab.GetComponent<Game.Module.Common.UI.NavTabView>() is Game.Module.Common.UI.NavTabView view)
+            {
+                var so = new SerializedObject(view);
+                so.FindProperty("_sub").objectReferenceValue = null;
+                so.FindProperty("_titleOn").colorValue = NavTitleOn;
+                so.FindProperty("_titleOff").colorValue = NavTitleOff;   // 칸마다 다르던 색(소환 보라)을 하나로
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+        }
+
         // ── 진열 칸 ──────────────────────────────────────────
 
         private static void Showcase(RectTransform show)
