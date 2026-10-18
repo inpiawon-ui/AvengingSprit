@@ -176,6 +176,163 @@ namespace Game.Editor
             r.sizeDelta = new Vector2(w, h);
         }
 
+        // ── 태블릿 4:3 가로 채우기 ─────────────────────────────
+
+        private static readonly string[] WideRoots =
+        {
+            "ChapterHostPanel/CHContent", "GrowthPanel/HostPage", "SummonPanel/SummonContent", "SeasonPassPanel/PassContent",
+            "TowerEntryPanel/TowerContent", "NightEntryPanel/NightContent", "LobbyShopPanel/ShopContent",
+        };
+
+        /// <summary>
+        /// PD 2026-10-18 「4:3 도 다른 화면들 꽉 차게」 — 화면 판을 **가로만** 부모 폭으로 늘리고, 안의 칸을 720 기준 **비율 자리**로 바꾼다.
+        /// 5 %~45 % 에 있던 판은 4:3(960 폭)에서도 5 %~45 % — 판 · 카드 · 단추가 고르게 넓어지고, 그림(캐릭터 · 아이콘)은
+        /// 제 비율(preserveAspect)을 지켜 찌그러지지 않는다. 세로는 그대로라 20:9 은 지금 배치 그대로다. 9:16 · 20:9 은 폭이 720 이라 같다.
+        /// (ScreenFit 의 「90 % 넘는 판만 늘리기」는 판만 늘고 글자 · 카드는 가운데에 남아 반쯤만 찼다.)
+        /// 다른 UI v5 메뉴 **뒤**에 돌린다 — 빌더는 시작할 때 판을 720 으로 되돌린다(Narrow).
+        /// </summary>
+        [MenuItem("Tools/Game/UI v5 — 4:3 가로 채우기")]
+        public static void RunWide()
+        {
+            var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
+            try
+            {
+                foreach (var path in WideRoots)
+                {
+                    if (lobby.transform.Find(path) is not RectTransform root) { Debug.LogWarning($"[UI v5] 없음: {path}"); continue; }
+                    if (root.GetComponent<Game.Module.Common.UI.ScreenFit>() is Component sf) Object.DestroyImmediate(sf);
+                    if (root.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null) root.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+                    Narrow(root);
+                    Spread(root);
+                    KeepAspect(root);
+                    // 능력치 2열 카드 — 런타임이 왼쪽 위부터 깐다. 묶음(684 폭)을 넓어진 창 가운데에
+                    if (Find(root, "H6StatContent") is RectTransform sc)
+                    {
+                        float ch = sc.sizeDelta.y;
+                        sc.anchorMin = new Vector2(0.5f, 1f); sc.anchorMax = new Vector2(0.5f, 1f); sc.pivot = new Vector2(0.5f, 1f);
+                        sc.sizeDelta = new Vector2(684f, ch);
+                        sc.anchoredPosition = new Vector2(0f, sc.anchoredPosition.y);
+                    }
+                    float y = root.anchoredPosition.y, h = root.sizeDelta.y;
+                    root.anchorMin = new Vector2(0f, root.anchorMin.y);
+                    root.anchorMax = new Vector2(1f, root.anchorMax.y);
+                    root.sizeDelta = new Vector2(0f, h);
+                    root.anchoredPosition = new Vector2(0f, y);
+                }
+                PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(lobby); }
+            Debug.Log("[UI v5] 4:3 가로 채우기");
+        }
+
+        /// <summary>
+        /// 넓어진 칸 안에서 얼굴 · 아이콘 그림이 늘어나지 않게 — 늘려 쓰는 판(9분할) · 채우기(Filled) · 덮기 그림(Envelope)은 그대로.
+        /// </summary>
+        private static void KeepAspect(RectTransform root)
+        {
+            foreach (var img in root.GetComponentsInChildren<Image>(true))
+            {
+                if (img.type != Image.Type.Simple || img.sprite == null) continue;
+                if (img.GetComponent<AspectRatioFitter>() != null) continue;
+                string n = img.name;
+                if (n.Contains("Dim") || n.Contains("Mask") || n.Contains("Hit") || n.Contains("Backdrop") || n == "H6Bg" || n == "CHScreen"
+                    || n == "CHChapterArt") continue;   // 챕터 그림은 칸을 덮어야 한다(런타임 FillBox)
+                img.preserveAspect = true;
+            }
+        }
+
+        /// <summary>판 크기와 같은(꽉 채운) 묶음 — 그 안의 칸도 화면 좌표라 같이 비율로 바꾼다.</summary>
+        private static bool IsFullOf(RectTransform c, RectTransform p)
+            => c.anchorMin == Vector2.zero && c.anchorMax == Vector2.one
+               && Mathf.Abs(c.offsetMin.x) < 1f && Mathf.Abs(c.offsetMax.x) < 1f;
+
+        /// <summary>화면 바탕 — 비율 자리로 바꾸면 옆으로 늘어난다. 덮기(Envelope)로 바꾼다.</summary>
+        private static readonly string[] Backdrops = { "CHScreen", "H6Bg", "SummonBackdrop", "PassBackdrop", "ShopBackdrop" };
+        /// <summary>런타임이 다른 글자 끝을 따라 옮기는 칸 — 비율 자리면 옮긴 값이 어긋난다(가운데 기준 고정).</summary>
+        private static readonly string[] RuntimeFollowers = { "TowerSweepTitleText", "TowerSweepSubText" };
+
+        private static void Spread(RectTransform parent)
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                if (parent.GetChild(i) is not RectTransform c) continue;
+                if (System.Array.IndexOf(Backdrops, c.name) >= 0)
+                {
+                    c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
+                    c.anchoredPosition = Vector2.zero;
+                    if (c.GetComponent<AspectRatioFitter>() == null)
+                    {
+                        var f = c.gameObject.AddComponent<AspectRatioFitter>();
+                        f.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+                        f.aspectRatio = 1080f / 1920f;
+                    }
+                    continue;
+                }
+                if (System.Array.IndexOf(RuntimeFollowers, c.name) >= 0) { CenterX(c, parent); continue; }
+                // 얼굴 칸 — 자리만 비율로 옮기고 크기는 그대로(넓히면 얼굴이 옆으로 늘어난다)
+                if (c.name.Contains("Face") || c.name.StartsWith("NightHostSlot")) { PropPoint(c, parent); continue; }
+                if (IsFullOf(c, parent)) { Spread(c); continue; }
+                if (c.name.StartsWith("H6V5Ladder")) { CenterX(c, parent); continue; }   // 사다리는 덩어리째 가운데(런타임이 테를 별 자리로 옮긴다)
+                Prop(c, parent);
+                // 성급 탭 창 · 그 아래 묶음은 안의 칸도 화면처럼 놓여 있다(빌더가 왼쪽 위 기준으로 놓았다)
+                if (c.name == "H6Window" || c.name == "H6WinFoot") Spread(c);
+            }
+        }
+
+        /// <summary>가로 자리를 부모 폭에 대한 비율 앵커로(세로는 그대로).</summary>
+        private static void Prop(RectTransform c, RectTransform p)
+        {
+            float pw = p.rect.width;
+            if (pw <= 1f) return;
+            float left = c.localPosition.x + c.rect.xMin - p.rect.xMin;
+            float right = left + c.rect.width;
+            Vector2 aMin = c.anchorMin, aMax = c.anchorMax, oMin = c.offsetMin, oMax = c.offsetMax;
+            c.anchorMin = new Vector2(left / pw, aMin.y);
+            c.anchorMax = new Vector2(right / pw, aMax.y);
+            c.offsetMin = new Vector2(0f, oMin.y);
+            c.offsetMax = new Vector2(0f, oMax.y);
+        }
+
+        /// <summary>가로 가운데 점만 비율 자리로 — 크기는 그대로.</summary>
+        private static void PropPoint(RectTransform c, RectTransform p)
+        {
+            float pw = p.rect.width;
+            if (pw <= 1f) return;
+            float left = c.localPosition.x + c.rect.xMin - p.rect.xMin;
+            float w = c.rect.width, cx = (left + w * 0.5f) / pw;
+            Vector2 aMin = c.anchorMin, aMax = c.anchorMax, oMin = c.offsetMin, oMax = c.offsetMax;
+            c.anchorMin = new Vector2(cx, aMin.y);
+            c.anchorMax = new Vector2(cx, aMax.y);
+            c.offsetMin = new Vector2(-w * 0.5f, oMin.y);
+            c.offsetMax = new Vector2(w * 0.5f, oMax.y);
+        }
+
+        /// <summary>가로를 부모 가운데 기준 고정 자리로(덩어리가 가운데에 모인 채 남는다).</summary>
+        private static void CenterX(RectTransform c, RectTransform p)
+        {
+            float left = c.localPosition.x + c.rect.xMin - p.rect.xMin;
+            float w = c.rect.width;
+            Vector2 aMin = c.anchorMin, aMax = c.anchorMax, oMin = c.offsetMin, oMax = c.offsetMax;
+            c.anchorMin = new Vector2(0.5f, aMin.y);
+            c.anchorMax = new Vector2(0.5f, aMax.y);
+            c.offsetMin = new Vector2(left - p.rect.width * 0.5f, oMin.y);
+            c.offsetMax = new Vector2(left - p.rect.width * 0.5f + w, oMax.y);
+        }
+
+        /// <summary>
+        /// 빌더는 화면 판이 720 폭 고정(가운데)이라는 전제로 좌표를 잡는다 — 가로 채우기(RunWide)가 걸려 있으면 먼저 되돌린다.
+        /// 다 지은 뒤 「UI v5 — 4:3 가로 채우기」 를 다시 돌린다.
+        /// </summary>
+        internal static void Narrow(RectTransform root)
+        {
+            if (root == null || root.anchorMin.x == root.anchorMax.x) return;
+            float y = root.anchoredPosition.y, h = root.sizeDelta.y;
+            root.anchorMin = new Vector2(0.5f, root.anchorMin.y);
+            root.anchorMax = new Vector2(0.5f, root.anchorMax.y);
+            root.sizeDelta = new Vector2(720f, h);
+            root.anchoredPosition = new Vector2(0f, y);
+        }
+
         // ── 출전 ─────────────────────────────────────────────
 
         [MenuItem("Tools/Game/UI v5 — 출전 (mock_uiv3_sortie)")]
@@ -188,6 +345,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("ChapterHostPanel");
                 var box = panel != null ? panel.Find("CHContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] CHContent 없음"); return; }
+                Narrow(box);
                 Sortie(box);
                 BindSortie(panel.GetComponent<ChapterHostPanel>());
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
@@ -480,6 +638,7 @@ namespace Game.Editor
                 var growth = lobby.transform.Find("GrowthPanel");
                 var hp = growth != null ? growth.Find("HostPage") as RectTransform : null;
                 if (hp == null) { Debug.LogError("[UI v5] GrowthPanel/HostPage 없음 — 육성 v6 빌더부터"); return; }
+                Narrow(hp);
                 Growth(growth, hp);
                 BindGrowth(growth.GetComponent<GrowthPanel>());
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
@@ -862,6 +1021,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("SummonPanel");
                 var box = panel != null ? panel.Find("SummonContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] SummonContent 없음"); return; }
+                Narrow(box);
                 Summon(box);
                 var so = new SerializedObject(panel.GetComponent<SummonPanel>());
                 so.FindProperty("_v5").boolValue = true;
@@ -906,11 +1066,24 @@ namespace Game.Editor
                 altar.sprite = Spr($"{Art}/summon_altar.png");
                 altar.preserveAspect = false;
                 if (altar.GetComponent<AspectRatioFitter>() == null) Envelope(altar, 1440f / 1100f);
+                // 아래 변 기준 — 넓은 화면(4:3)에서 그림이 커지면 위(하늘)가 잘리고 책 · 명부 판은 남는다
+                var ar = altar.rectTransform;
+                ar.anchorMin = ar.anchorMax = ar.pivot = new Vector2(0.5f, 0f);
+                ar.anchoredPosition = Vector2.zero;
             }
             // 그림 속 「영혼 명부」 한국어 판 위에 언어팩 판을 덮는다(일 · 영 화면)
-            var plate = Plate(box, "SummonV5LedgerPlate", $"{Kit}/panel_parch_wide.png", 3.2f);
-            Screen(plate.rectTransform, 246f, 642f, 474f, 690f);
-            plate.transform.SetSiblingIndex(view.GetSiblingIndex() + 1);
+            // 덮개 판은 그림의 **자식** — 그림이 화면에 따라 커져도 그림 속 판 자리(가로 36~64 % · 세로 아래 16~23 %)에 붙는다
+            if (box.Find("SummonV5LedgerPlate") is Transform stale) Object.DestroyImmediate(stale.gameObject);
+            var altarRt = Find(box, "SummonAltar") as RectTransform;
+            var plate = Plate(altarRt != null ? altarRt : box, "SummonV5LedgerPlate", $"{Kit}/panel_parch_wide.png", 3.2f);
+            if (altarRt != null)
+            {
+                var pr = plate.rectTransform;
+                pr.anchorMin = new Vector2(0.36f, 0.165f);
+                pr.anchorMax = new Vector2(0.64f, 0.232f);
+                pr.offsetMin = pr.offsetMax = Vector2.zero;
+            }
+            else Screen(plate.rectTransform, 246f, 642f, 474f, 690f);
             if (Find(box, "SummonV5LedgerText") is Transform ol) Object.DestroyImmediate(ol.gameObject);
             var ledger = T(plate.transform, "SummonV5LedgerText", 26f, Ink, true, TextAlignmentOptions.Center);
             StretchIn(ledger.rectTransform);
@@ -934,7 +1107,7 @@ namespace Game.Editor
             // 등급 확률 판
             var rates = Plate(box, "SummonV5RatePlate", $"{Kit}/panel_parch_big.png", 1.6f);
             Screen(rates.rectTransform, 20f, Sy(712f), 700f, Sy(905f));
-            rates.transform.SetSiblingIndex(plate.transform.GetSiblingIndex() + 1);
+            rates.transform.SetSiblingIndex(view.GetSiblingIndex() + 1);
             if (Find(box, "SummonV5RateBanner") is Transform orb) Object.DestroyImmediate(orb.gameObject);
             var banner = T(box, "SummonV5RateBanner", 32f, new Color(0.6f, 0.1f, 0.06f, 1f), true, TextAlignmentOptions.Center);
             Screen(banner.rectTransform, 40f, Sy(728f), 390f, Sy(780f));
@@ -1020,6 +1193,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("SeasonPassPanel");
                 var box = panel != null ? panel.Find("PassContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] PassContent 없음"); return; }
+                Narrow(box);
                 Pass(box);
                 var so = new SerializedObject(panel.GetComponent<SeasonPassPanel>());
                 if (so.FindProperty("_tab") is SerializedProperty tab) tab.objectReferenceValue = Spr($"{Kit}/tab_off.png");
@@ -1221,6 +1395,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("NightEntryPanel");
                 var box = panel != null ? panel.Find("NightContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] NightContent 없음"); return; }
+                Narrow(box);
                 Night(panel, box);
                 UnderNav(lobby.transform, panel);
                 var so = new SerializedObject(panel.GetComponent<NightEntryPanel>());
@@ -1372,6 +1547,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("TowerEntryPanel");
                 var box = panel != null ? panel.Find("TowerContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] TowerContent 없음"); return; }
+                Narrow(box);
                 Tower(panel, box);
                 UnderNav(lobby.transform, panel);
                 var so = new SerializedObject(panel.GetComponent<TowerEntryPanel>());
@@ -1504,6 +1680,7 @@ namespace Game.Editor
                 var panel = lobby.transform.Find("LobbyShopPanel");
                 var box = panel != null ? panel.Find("ShopContent") as RectTransform : null;
                 if (box == null) { Debug.LogError("[UI v5] ShopContent 없음"); return; }
+                Narrow(box);
                 Shop(box);
                 var so = new SerializedObject(panel.GetComponent<LobbyShopPanel>());
                 so.FindProperty("_v5").boolValue = true;
