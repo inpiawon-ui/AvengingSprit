@@ -413,6 +413,7 @@ namespace Game.Module.InGame
             _body = GetOrCreate("Body", size, Vector2.zero);
             _body.sprite = sprite;
             _baseSprite = sprite;
+            FitBodyCell(sprite);
             ApplyFloatShadow(size);
             ApplyGroundShadow(size);
             for (int i = 0; i < _frames.Length; i++) _frames[i] = null;
@@ -721,7 +722,21 @@ namespace Game.Module.InGame
         {
             if (_body != null) _body.sprite = s;
             _baseSprite = s;
+            FitBodyCell(s);
         }
+
+        /// <summary>
+        /// 128 칸 그림은 96 칸 그림에 사방 16 px 여백을 둔 것이다 — 공격 팔 · 무기가 칸 끝에서 잘리지 않게(2026-10-19 구루).
+        /// 몸 칸을 그만큼 키워 몸 크기를 96 칸 그림과 같게 둔다. 보스(256 칸)는 몸 칸이 그 그림 기준이라 그대로.
+        /// </summary>
+        private void FitBodyCell(Sprite s)
+        {
+            if (_body == null) return;
+            float k = s != null && Mathf.Approximately(s.rect.width, PaddedCellPx) ? PaddedCellPx / BaseCellPx : 1f;
+            _body.rectTransform.sizeDelta = _rect.sizeDelta * k;
+        }
+
+        private const float BaseCellPx = 96f, PaddedCellPx = 128f;
 
         // ── 8방향 바라보기 ───────────────────────────────────────
         // 그리는 것은 다섯 방향(↓ ↘ → ↗ ↑)뿐이고, 왼쪽 절반은 좌우 반전으로 만든다.
@@ -1066,6 +1081,7 @@ namespace Game.Module.InGame
             if (s != null)
             {
                 _body.sprite = s;
+                FitBodyCell(s);   // 연출 그림(빙의 · 스킬 자세)은 96 칸일 수 있다
                 // 반전이 걸려 있으면 연출 그림까지 뒤집힌다. ApplyBodyScale 이 풀어 준다.
                 ApplyBodyScale();
                 return;
@@ -1078,6 +1094,7 @@ namespace Game.Module.InGame
             //    되돌릴 곳이 없으면 처음 받은 그림으로 직접 돌려놓는다.
             if (_frames[FrameIdle] != null && _facingIndex >= 0) Apply();
             else if (_baseSprite != null) _body.sprite = _baseSprite;
+            FitBodyCell(_body.sprite);
         }
 
         private Sprite _override;
@@ -1097,6 +1114,7 @@ namespace Game.Module.InGame
             _shownIndex = _facingIndex;
             _shownFlip = _facingFlip;
             _body.sprite = _frames[f][_facingIndex];
+            FitBodyCell(_body.sprite);
             ApplyBodyScale();
         }
 
@@ -1526,14 +1544,14 @@ namespace Game.Module.InGame
             }
             if (_lightRim == null)
             {
-                _lightRim = GetOrCreate("LightRim", _rect.sizeDelta * LightRimScale, Vector2.zero);
+                _lightRim = GetOrCreate("LightRim", _body.rectTransform.sizeDelta * LightRimScale, Vector2.zero);
                 _lightRim.transform.SetAsFirstSibling();   // 몸 뒤 — 앞에 오면 몸을 덮는다
                 _lightRim.preserveAspect = true;
                 _lightRim.material = SilhouetteMaterial();
             }
             _lightRim.sprite = _body.sprite;
             var rt = (RectTransform)_lightRim.transform;
-            rt.sizeDelta = _rect.sizeDelta * LightRimScale;
+            rt.sizeDelta = _body.rectTransform.sizeDelta * LightRimScale;   // 몸 칸 기준 — 128 칸 그림은 몸 칸이 더 크다
             rt.localScale = new Vector3(Mathf.Sign(_body.transform.localScale.x), 1f, 1f);
             _lightRim.color = flash
                 ? new Color(_rimFlashColor.r, _rimFlashColor.g, _rimFlashColor.b, _rimFlashColor.a * (_rimFlashLeft / _rimFlashSeconds))
