@@ -34,6 +34,8 @@ STATES = ['', '_walk1', '_walk2', '_atk1', '_atk2', '_hit', '_die1', '_die2']
 DIRS = ['s', 'se', 'e', 'ne', 'n']
 CELL, PAD = 128, 16
 INK_H = 76          # 96 칸 규격 잉크 높이(대기 기준)
+# 옆으로 넓은 몸 — 76 이면 공격 칸이 128 칸 끝에서 잘린다(유령 e_atk1 35px)
+INK_OVERRIDE = {'ghost': 68}
 FOOT = 96 - 8       # 96 칸 안 발밑 y
 MID_X = 48
 BIG = 3             # 로비 칸 = 128 × 3 = 384
@@ -79,7 +81,8 @@ def jobs_for(key, d):
     W = sheet.width // 3
     cells = [sheet.crop(((i % 3) * W, (i // 3) * W, (i % 3 + 1) * W, (i // 3 + 1) * W)) for i in range(8)]
     ib = bbox(cells[0])
-    s = INK_H / (ib[3] - ib[1] + 1)                  # 대기 키 = 76 — 모든 자세 같은 배율(같은 사람 · 같은 키)
+    ink = INK_OVERRIDE.get(key, INK_H)
+    s = ink / (ib[3] - ib[1] + 1)                  # 대기 키 = 76 — 모든 자세 같은 배율(같은 사람 · 같은 키)
     cx = (ib[0] + ib[2]) / 2
     jobs = {st: (c, s, MID_X - cx * s, FOOT - ib[3] * s) for st, c in zip(STATES, cells)}
     fp = os.path.join(IN, f'charv2_{key}_float_{d}.png')
@@ -88,7 +91,7 @@ def jobs_for(key, d):
         FW = F.width // 2
         fc = [F.crop((0, 0, FW, F.height)), F.crop((FW, 0, 2 * FW, F.height))]
         fb = [bbox(c) for c in fc]
-        sf = INK_H / (fb[0][3] - fb[0][1] + 1)
+        sf = ink / (fb[0][3] - fb[0][1] + 1)
         drop = min(3, max(1, round((fb[1][3] - fb[0][3]) * sf)))
         for k, st in enumerate(['_walk1', '_walk2']):
             b = fb[k]
@@ -107,8 +110,14 @@ def main():
         os.makedirs(os.path.join(LARGE, key), exist_ok=True)
     problems = []
     for d in DIRS:
-        if not os.path.exists(os.path.join(IN, f'charv2_{key}_{d}.png')):
+        src = os.path.join(IN, f'charv2_{key}_{d}.png')
+        if not os.path.exists(src):
             problems.append(f'{d}: 납품 없음')
+            continue
+        # 바탕이 마젠타가 아니면(검은 바탕 납품이 있었다) 자르지 않는다 — 검은 외곽선과 섞여 뚫을 수 없다
+        r, g, b = Image.open(src).convert('RGB').getpixel((4, 4))
+        if not (r > 150 and b > 150 and g < 110):
+            problems.append(f'{d}: 바탕이 마젠타가 아님 {(r, g, b)} — 다시 발주')
             continue
         for st, (c, s, ox, oy) in jobs_for(key, d).items():
             name = f'{key}_{d}{st}'

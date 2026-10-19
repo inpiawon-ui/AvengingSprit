@@ -26,12 +26,16 @@ namespace Game.Module.Common.UI
         [SerializeField, Range(0.5f, 1.2f)] private float _fill = 0.95f;   // 붙인 칸 높이 대비 몸 높이
         [SerializeField] private float _idleSeconds = 2.4f;
         [SerializeField] private float _frameSeconds = 0.16f;
+        /// <summary>고정 진열(유령 · 패스 · 밤의 갱스터 등) — 코드가 Show 를 안 부르는 칸은 이 몸을 스스로 띄운다.</summary>
+        [SerializeField] private string _autoKey;
+        /// <summary>떠다니는 몸(유령) — 공격 대신 대기 ↔ 이동 두 칸으로 둥실거린다.</summary>
+        [SerializeField] private bool _float;
 
         private Image _fallback;
         private Image _body;
         private string _key;
         private string _address;
-        private Sprite _idle, _atk1, _atk2;
+        private Sprite _idle, _atk1, _atk2, _walk1, _walk2;
         private Color _tint = Color.white;
         private bool _shown;
         private float _timer;
@@ -41,6 +45,14 @@ namespace Game.Module.Common.UI
         private void Awake()
         {
             _fallback = GetComponent<Image>();
+        }
+
+        /// <summary>떠다니는 몸으로 둥실거리게 한다(코드가 붙이는 칸 — 홈 유령).</summary>
+        public void SetFloat(bool on) => _float = on;
+
+        private void Start()
+        {
+            if (!string.IsNullOrEmpty(_autoKey) && _key == null) Show(_autoKey);
         }
 
         private void OnDisable()
@@ -65,7 +77,7 @@ namespace Game.Module.Common.UI
             }
             Release();
             _key = key;
-            _idle = _atk1 = _atk2 = null;
+            _idle = _atk1 = _atk2 = _walk1 = _walk2 = null;
             SetBodyVisible(false);
             if (string.IsNullOrEmpty(key)) return;
             LoadAsync(key, ++_loadTicket).Forget();   // fire-and-forget: 그림이 오면 그때 바꿔 낀다 — 그동안은 초상이 선다
@@ -88,6 +100,8 @@ namespace Game.Module.Common.UI
             _idle = atlas.GetSprite(n);
             _atk1 = atlas.GetSprite(n + "_atk1");
             _atk2 = atlas.GetSprite(n + "_atk2");
+            _walk1 = atlas.GetSprite(n + "_walk1");
+            _walk2 = atlas.GetSprite(n + "_walk2");
             if (_idle == null) return;
             EnsureBody();
             _body.sprite = _idle;
@@ -102,6 +116,14 @@ namespace Game.Module.Common.UI
             Fit();
             _timer -= Time.unscaledDeltaTime;
             if (_timer > 0f) return;
+            if (_float)
+            {
+                // 대기 → 이동1 → 대기 → 이동2 — 제자리에서 둥실거린다
+                _step = (_step + 1) % 4;
+                _body.sprite = _step == 1 && _walk1 != null ? _walk1 : _step == 3 && _walk2 != null ? _walk2 : _idle;
+                _timer = _frameSeconds * 2.5f;
+                return;
+            }
             // 대기 → 공격1 → 공격2 → 대기 — 진열 칸에서 가만히 서 있지 않게, 몸마다 제 동작을 보여 준다
             _step = (_step + 1) % 3;
             _body.sprite = _step == 1 && _atk1 != null ? _atk1 : _step == 2 && _atk2 != null ? _atk2 : _idle;

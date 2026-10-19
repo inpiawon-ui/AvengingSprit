@@ -47,6 +47,41 @@ namespace Game.Editor
             Debug.Log($"[UnitLarge] 그림 {sprites}장 · 아틀라스 {atlases}개");
         }
 
+        // 코드가 Show 를 안 부르는 고정 진열 칸 — 빌드 때 박힌 초상 대신 큰 몸 그림(유령은 둥실, 패스 · 밤의 호스트는 갱스터)
+        private static readonly (string node, string key, bool floating)[] Fixed =
+        {
+            ("GhostV5Portrait", "ghost", true), ("PassV5Ghost", "ghost", true), ("NightV5Ghost", "ghost", true),
+            ("ShopV5Ghost", "ghost", true), ("H6V5Ghost", "ghost", true),
+            ("PassV5Host", "gangster", false), ("NightV5Host", "gangster", false),
+        };
+
+        /// <summary>
+        /// 로비 프리팹의 고정 진열 칸에 `UnitShowcase` 를 꽂는다. UI v5 빌더가 칸을 새로 만들면 빠지므로
+        /// 「UI v5 — 4:3 가로 채우기」(늘 마지막에 돈다) 끝에서 다시 부른다.
+        /// </summary>
+        internal static void AttachFixed(GameObject lobby)
+        {
+            foreach (var (node, key, floating) in Fixed)
+            {
+                var t = FindDeep(lobby.transform, node);
+                if (t == null || t.GetComponent<UnityEngine.UI.Image>() == null) continue;
+                var show = t.GetComponent<Game.Module.Common.UI.UnitShowcase>();
+                if (show == null) show = t.gameObject.AddComponent<Game.Module.Common.UI.UnitShowcase>();
+                var so = new SerializedObject(show);
+                so.FindProperty("_autoKey").stringValue = key;
+                so.FindProperty("_float").boolValue = floating;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+        }
+
+        private static Transform FindDeep(Transform root, string name)
+        {
+            if (root.name == name) return root;
+            foreach (Transform c in root)
+                if (FindDeep(c, name) is Transform f) return f;
+            return null;
+        }
+
         private static void EnsureAtlas(string name, string folder)
         {
             string atlasPath = $"{AtlasDir}/{name}.spriteatlasv2";

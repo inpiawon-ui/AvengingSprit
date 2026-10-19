@@ -85,6 +85,7 @@ namespace Game.Module.Lobby
             bool ghost = e == null || e.IsGhost;
             SetImage("HomeHost", ghost ? null : PortraitOf(key));
             ShowUnit("HomeHost", ghost ? null : key);
+            ShowUnit("HomeGhost", Game.Character.HostEntry.GhostKey, floating: true);
 
             var grade = _ui.Get<Image>("HomeGrade");
             if (grade != null)
@@ -216,11 +217,12 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>인게임과 같은 몸 그림(큰 칸)을 띄운다 — 큰 그림이 없는 몸은 초상이 그대로 선다.</summary>
-        private void ShowUnit(string node, string key)
+        private void ShowUnit(string node, string key, bool floating = false)
         {
             var t = _ui.Find(node);
             if (t == null || t.GetComponent<Image>() == null) return;
             if (!t.TryGetComponent<UnitShowcase>(out var show)) show = t.gameObject.AddComponent<UnitShowcase>();
+            show.SetFloat(floating);
             show.Show(key);
         }
 

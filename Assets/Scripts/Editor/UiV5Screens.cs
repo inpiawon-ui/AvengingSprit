@@ -231,6 +231,8 @@ namespace Game.Editor
                     root.offsetMin = new Vector2(0f, 1280f - bottom);
                     root.offsetMax = new Vector2(0f, -top);
                 }
+                // 고정 진열 칸(유령 · 패스 · 밤)에 큰 몸 그림 — 빌더가 칸을 새로 만들면 빠지므로 늘 마지막인 여기서 다시 꽂는다
+                UnitLargeImport.AttachFixed(lobby);
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(lobby); }
