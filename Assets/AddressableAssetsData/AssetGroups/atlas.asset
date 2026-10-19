@@ -33,6 +33,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f56d5b7fe3ff3c449d6e2254fdb21af
+    m_Address: atlas/unitl_guru
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1627dc06b00f2e24a845b087d81392a5
     m_Address: atlas/unit_roadwarden
     m_ReadOnly: 0
@@ -305,6 +311,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c7dad6791b753c24c993d028206ec232
     m_Address: atlas/unit_white_wizard
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c808b5d5c08dfd84dbb3e25a2440d680
+    m_Address: atlas/unitl_medium
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

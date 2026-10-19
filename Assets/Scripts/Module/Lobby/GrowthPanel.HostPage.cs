@@ -199,6 +199,10 @@ namespace Game.Module.Lobby
                 portrait.enabled = portrait.sprite != null;
                 portrait.preserveAspect = true;
                 portrait.color = m >= 1 ? Color.white : LockedTint;
+                // 인게임과 같은 몸 그림(큰 칸) — 큰 그림이 없는 몸은 초상이 그대로 선다
+                if (!portrait.TryGetComponent<Game.Module.Common.UI.UnitShowcase>(out var show))
+                    show = portrait.gameObject.AddComponent<Game.Module.Common.UI.UnitShowcase>();
+                show.Show(_hostKey, m >= 1 ? Color.white : LockedTint);
             }
             var grade = _ui.Get<Image>("H6Grade");
             if (grade != null)
