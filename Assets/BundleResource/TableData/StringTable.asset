@@ -5551,3 +5551,11 @@ MonoBehaviour:
     _ko: "\uC720\uB839 \uC721\uC131"
     _ja: "\u30B4\u30FC\u30B9\u30C8\u80B2\u6210"
     _en: Ghost Training
+  - _key: ui.growth5.path_done
+    _ko: "\uBC1B\uC74C"
+    _ja: "\u53D7\u53D6\u6E08"
+    _en: Claimed
+  - _key: ui.growth5.path_locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF"
+    _en: Locked

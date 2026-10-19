@@ -30,8 +30,8 @@ namespace Game.Editor
         private const string Ch = "Assets/BaseResource/ChapterHost";
         private const string Gr = "Assets/BaseResource/Growth";
 
-        internal static readonly Color Ink = new(0.16f, 0.08f, 0.03f, 1f);
-        internal static readonly Color InkSoft = new(0.36f, 0.24f, 0.14f, 1f);
+        internal static readonly Color Ink = new(0.27f, 0.17f, 0.09f, 1f);
+        internal static readonly Color InkSoft = new(0.42f, 0.31f, 0.2f, 1f);
         internal static readonly Color Gold = new(1f, 0.85f, 0.32f, 1f);
         internal static readonly Color ChapterRed = new(0.66f, 0.14f, 0.08f, 1f);
 
@@ -248,7 +248,7 @@ namespace Game.Editor
                 if (img.GetComponent<AspectRatioFitter>() != null) continue;
                 string n = img.name;
                 if (n.Contains("Dim") || n.Contains("Mask") || n.Contains("Hit") || n.Contains("Backdrop") || n == "H6Bg" || n == "CHScreen"
-                    || n == "CHChapterArt") continue;   // 챕터 그림은 칸을 덮어야 한다(런타임 FillBox)
+                    || n == "CHChapterArt" || n.StartsWith("PathLine")) continue;   // 챕터 그림은 칸을 덮어야 한다(런타임 FillBox)
                 img.preserveAspect = true;
             }
         }
@@ -325,7 +325,7 @@ namespace Game.Editor
                 if (System.Array.IndexOf(RuntimeFollowers, c.name) >= 0) { if (doY) PropY(c, parent, true); CenterX(c, parent); continue; }
                 // 유령 성장 경로 — 런타임이 칸 x 로 표시 · 줄을 놓는다(같은 기준이어야 한다)
                 if (parent.name == "GhostPath" && (c.name.StartsWith("PathLine") || c.name.StartsWith("PathNode")
-                    || c.name.StartsWith("PathLabel") || c.name.StartsWith("PathMarker"))) { if (doY) PropY(c, parent, true); CenterX(c, parent); continue; }
+                    || c.name.StartsWith("PathLabel") || c.name.StartsWith("PathMarker") || c.name.StartsWith("PathPill"))) { if (doY) PropY(c, parent, true); CenterX(c, parent); continue; }
                 // 얼굴 칸 — 자리만 비율로 옮기고 크기는 그대로(넓히면 얼굴이 옆으로 늘어난다)
                 if (c.name.Contains("Face") || c.name.StartsWith("NightHostSlot") || c.name.StartsWith("TowerLadderCell"))
                 { if (doY) PropY(c, parent, true); PropPoint(c, parent); continue; }
@@ -965,13 +965,28 @@ namespace Game.Editor
                 var so = new SerializedObject(lobby.transform.Find("GrowthPanel").GetComponent<GrowthPanel>());
                 so.FindProperty("_ghostCols").intValue = 2;
                 so.FindProperty("_ghostColPitch").floatValue = 342f;
-                so.FindProperty("_rowPitch").floatValue = 112f;
+                so.FindProperty("_rowPitch").floatValue = 96f;
                 so.FindProperty("_ghostStatLift").floatValue = 0f;
                 so.FindProperty("_labelDone").colorValue = new Color(0.1f, 0.45f, 0.5f, 1f);
                 so.FindProperty("_labelNow").colorValue = Ink;
                 so.FindProperty("_labelNext").colorValue = new Color(0.62f, 0.42f, 0.02f, 1f);
                 so.FindProperty("_labelLock").colorValue = InkSoft;
+                so.FindProperty("_pillDone").objectReferenceValue = Spr($"{Kit}/tab_on.png");
+                so.FindProperty("_pillReady").objectReferenceValue = Spr($"{Kit}/btn_gold_small.png");
+                so.FindProperty("_pillLock").objectReferenceValue = Spr($"{Kit}/tab_off.png");
+                so.FindProperty("_pillTextDone").colorValue = new Color(0.5f, 0.95f, 0.88f, 1f);
+                so.FindProperty("_pillTextReady").colorValue = Ink;
+                so.FindProperty("_pillTextLock").colorValue = new Color(0.62f, 0.67f, 0.78f, 1f);
                 so.ApplyModifiedPropertiesWithoutUndo();
+                // 유령 · 호스트 탭 글자 — 남색 탭 위 검은 글자는 안 보인다(PD 2026-10-19). 고른 탭 = 금빛, 안 고른 탭 = 밝은 회청
+                foreach (var n in new[] { "TabGhostText", "TabHostText" })
+                    if (Find(page, n)?.GetComponent<Game.Module.Common.UI.TabTextColors>() is Component tc)
+                    {
+                        var ts = new SerializedObject(tc);
+                        ts.FindProperty("_on").colorValue = Gold;
+                        ts.FindProperty("_off").colorValue = new Color(0.82f, 0.86f, 0.95f, 1f);
+                        ts.ApplyModifiedPropertiesWithoutUndo();
+                    }
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
             }
             finally { PrefabUtility.UnloadPrefabContents(lobby); }
@@ -1004,6 +1019,7 @@ namespace Game.Editor
 
         private static void Ghost(RectTransform page)
         {
+            // 시안 D(mock_uiv2_d_ghost) 배치 · 혼합 톤 — 남색 진열 칸 + 양피지 판(PD 2026-10-19 「하얀 시안처럼 레이아웃을 새로」)
             // 바탕 — 유령이 박힌 통그림 대신 홈 바탕(유령은 진열 칸에 따로 선다)
             if (page.Find("BgGhost")?.GetComponent<Image>() is Image bg)
             {
@@ -1026,128 +1042,161 @@ namespace Game.Editor
             var title = T(deco, "GhostV5Title", 46f, Color.white, true, TextAlignmentOptions.Left);
             TL(title.rectTransform, 22f, 124f - PageTop, 440f, 56f);
             Localized(title, "ui.growth5.ghost_title");
-            if (title.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText th) th.Set(0.25f, 0.2f, new Color32(10, 12, 30, 255));
+            if (title.GetComponent<Game.Module.Common.HeavyText>() is Game.Module.Common.HeavyText th) th.Set(0.05f, 0.18f, new Color32(10, 12, 30, 255));
+
+            // 진열 칸 — 왼쪽 유령 · 오른쪽 남색 정보 판
             var frame = Sliced(deco, "GhostV5Frame", $"{Kit}/panel_navy_big.png", 0, 0, 0, 0, 1.2f);
-            TL(frame.rectTransform, 22f, 186f - PageTop, 676f, 276f);
+            TL(frame.rectTransform, 22f, 186f - PageTop, 676f, 280f);
             var view = new GameObject("GhostV5View", typeof(RectTransform)).GetComponent<RectTransform>();
             view.gameObject.layer = page.gameObject.layer;
             view.SetParent(deco, false);
-            TL(view, 29f, 193f - PageTop, 662f, 262f);
+            TL(view, 29f, 193f - PageTop, 662f, 266f);
             view.gameObject.AddComponent<RectMask2D>();
             var art = Pic(view, "GhostV5Art", $"{Art}/showcase_bg.png", 0, 0, 0, 0);
             art.preserveAspect = false;
             Envelope(art, 1600f / 830f);
             var ghost = Pic(deco, "GhostV5Portrait", $"{Gr}/Portraits/portrait_ghost.png", 0, 0, 0, 0);
-            TL(ghost.rectTransform, 80f, 200f - PageTop, 290f, 250f);
+            TL(ghost.rectTransform, 48f, 198f - PageTop, 300f, 258f);
+            var info = Sliced(deco, "GhostV5Info", $"{Kit}/panel_navy_mid.png", 0, 0, 0, 0, 2f);
+            TL(info.rectTransform, 372f, 200f - PageTop, 316f, 252f);
 
-            // 진열 칸 오른쪽 — 「유령」 · Lv · 경험치 막대 · 설명
+            // 정보 판 — 「유령」 · Lv(큰 흰 글자) · 경험치 · 막대 · 설명
             foreach (var n in new[] { "CardNameEnText", "CardStar0", "CardStar1", "CardStar2", "CardStar3", "CardStar4" })
                 if (Find(page, n) is Transform h) h.localScale = Vector3.zero;   // 「GHOST」 · 꺼진 별 — 런타임이 켜도 안 보이게
-            G(page, "CardNameText", 420f, 206f, 690f, 250f);
-            Txt(page, "CardNameText", 32f, Color.white, TextAlignmentOptions.Left, 0.3f);
-            G(page, "CardLvLabel", 420f, 250f, 470f, 312f);
-            G(page, "CardLvNum", 470f, 250f, 560f, 312f);
-            G(page, "CardLvMax", 560f, 250f, 640f, 312f);
-            foreach (var (n, sz, c) in new[] { ("CardLvLabel", 30f, Gold), ("CardLvNum", 54f, Gold), ("CardLvMax", 26f, Color.white) })
+            G(page, "CardNameText", 390f, 206f, 676f, 236f);
+            Txt(page, "CardNameText", 24f, new Color(0.74f, 0.85f, 1f), TextAlignmentOptions.Left, 0f);
+            G(page, "CardLvLabel", 390f, 244f, 428f, 302f);
+            G(page, "CardLvNum", 428f, 244f, 510f, 302f);
+            G(page, "CardLvMax", 510f, 244f, 620f, 302f);
+            foreach (var (n, sz, c) in new[] { ("CardLvLabel", 30f, Color.white), ("CardLvNum", 56f, Color.white),
+                                               ("CardLvMax", 26f, new Color(0.78f, 0.84f, 0.95f)) })
                 if (Find(page, n)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI t)
                 {
                     t.fontSize = t.fontSizeMax = sz; t.enableAutoSizing = false; t.color = c;
                     t.alignment = TextAlignmentOptions.BaselineLeft;
                 }
-            Gaps(page, "CardLvRun", 8f, 8f);
-            G(page, "ExpLabelText", 420f, 322f, 480f, 352f);
-            Txt(page, "ExpLabelText", 20f, Gold, TextAlignmentOptions.Left, 0.2f);
-            G(page, "ExpBarFrame", 420f, 354f, 690f, 378f);
+            Gaps(page, "CardLvRun", 6f, 8f);
+            G(page, "ExpLabelText", 390f, 302f, 500f, 330f);
+            Txt(page, "ExpLabelText", 20f, new Color(0.78f, 0.86f, 1f), TextAlignmentOptions.Left, 0f);
+            G(page, "ExpValueText", 500f, 302f, 676f, 330f);
+            Txt(page, "ExpValueText", 22f, new Color(0.5f, 0.95f, 0.88f), TextAlignmentOptions.Right, 0f);
+            G(page, "ExpBarFrame", 390f, 334f, 676f, 356f);
             Spr9(page, "ExpBarFrame", $"{Kit}/bar_bg.png", 3f);
-            G(page, "ExpBarFill", 423f, 357f, 687f, 375f);
+            G(page, "ExpBarFill", 393f, 337f, 673f, 353f);
             if (Find(page, "ExpBarFill")?.GetComponent<Image>() is Image ef) { ef.sprite = Spr($"{Kit}/bar_fill.png"); ef.type = Image.Type.Filled; ef.fillMethod = Image.FillMethod.Horizontal; ef.preserveAspect = false; }
-            G(page, "ExpValueText", 420f, 380f, 690f, 408f);
-            Txt(page, "ExpValueText", 20f, Color.white, TextAlignmentOptions.Right, 0.2f);
-            G(page, "CardDescText", 420f, 410f, 690f, 452f);
-            if (Txt(page, "CardDescText", 16f, new Color(0.86f, 0.9f, 1f), TextAlignmentOptions.TopLeft) is TextMeshProUGUI dt) dt.textWrappingMode = TextWrappingModes.Normal;
+            G(page, "CardDescText", 390f, 364f, 680f, 448f);
+            if (Txt(page, "CardDescText", 18f, new Color(0.93f, 0.95f, 1f), TextAlignmentOptions.TopLeft) is TextMeshProUGUI dt)
+            {
+                dt.textWrappingMode = TextWrappingModes.Normal;
+                dt.fontSizeMin = 13f;
+            }
 
-            // 능력치 — 머리 띠 + 2열 큰 카드 스크롤(호스트 탭과 같은 카드)
+            // 능력치 — 양피지 판 하나에 머리 줄 + 2열 × 4줄(스크롤 없이 다 보인다)
             var sec = Find(page, "StatSection");
             if (sec != null)
             {
-                var strip = Plate(sec, "GhostV5StatStrip", $"{Kit}/panel_parch_wide.png", 2.2f);
-                TL(strip.rectTransform, 22f, 470f - PageTop, 676f, 48f);
+                var strip = Plate(sec, "GhostV5StatStrip", $"{Kit}/panel_parch_big.png", 1.6f);
+                TL(strip.rectTransform, 22f, 474f - PageTop, 676f, 458f);
                 strip.transform.SetAsFirstSibling();
             }
-            G(page, "StatHeaderText", 40f, 474f, 600f, 514f);
-            Txt(page, "StatHeaderText", 26f, Ink, TextAlignmentOptions.Left, 0.35f);
-            G(page, "StatHelpButton", 654f, 480f, 682f, 508f);
-            G(page, "StatViewport", 22f, 526f, 698f, 900f);
+            G(page, "StatHeaderText", 40f, 486f, 600f, 526f);
+            Txt(page, "StatHeaderText", 26f, Ink, TextAlignmentOptions.Left, 0f);
+            G(page, "StatHelpButton", 656f, 492f, 684f, 520f);
+            G(page, "StatViewport", 28f, 536f, 692f, 924f);
             if (Find(page, "StatRow") is RectTransform row)
             {
                 row.anchorMin = row.anchorMax = row.pivot = new Vector2(0f, 1f);
-                row.anchoredPosition = new Vector2(2f, -4f);
-                row.sizeDelta = new Vector2(330f, 104f);
-                if (row.GetComponent<Image>() is Image rp) { rp.sprite = Spr($"{Kit}/panel_parch_big.png"); rp.type = Image.Type.Sliced; rp.pixelsPerUnitMultiplier = 2.4f; rp.preserveAspect = false; }
-                Mid(row, "RowIcon", -118f, 0f, 62f, 62f);
-                Mid(row, "RowNameText", -82f, 28f, 140f, 32f, 0f);
-                Txt(row, "RowNameText", 22f, Ink, TextAlignmentOptions.Left, 0.3f);
-                Mid(row, "RowLvLabel", -82f, 0f, 30f, 28f, 0f);
-                Mid(row, "RowLvNum", -52f, 0f, 40f, 28f, 0f);
-                Mid(row, "RowLvMax", -16f, 0f, 60f, 28f, 0f);
-                foreach (var (n, sz, c) in new[] { ("RowLvLabel", 17f, InkSoft), ("RowLvNum", 21f, new Color(0.62f, 0.42f, 0.02f, 1f)), ("RowLvMax", 17f, InkSoft) })
+                row.anchoredPosition = new Vector2(2f, -2f);
+                row.sizeDelta = new Vector2(326f, 88f);
+                if (row.GetComponent<Image>() is Image rp) { rp.sprite = Spr($"{Kit}/panel_parch_wide.png"); rp.type = Image.Type.Sliced; rp.pixelsPerUnitMultiplier = 2.4f; rp.preserveAspect = false; }
+                Mid(row, "RowIcon", -122f, 0f, 56f, 56f);
+                Mid(row, "RowNameText", -88f, 25f, 150f, 28f, 0f);
+                Txt(row, "RowNameText", 20f, Ink, TextAlignmentOptions.Left, 0f);
+                Mid(row, "RowLvLabel", -88f, -1f, 28f, 26f, 0f);
+                Mid(row, "RowLvNum", -62f, -1f, 36f, 26f, 0f);
+                Mid(row, "RowLvMax", -28f, -1f, 56f, 26f, 0f);
+                foreach (var (n, sz, c) in new[] { ("RowLvLabel", 16f, InkSoft), ("RowLvNum", 20f, new Color(0.62f, 0.42f, 0.02f, 1f)), ("RowLvMax", 16f, InkSoft) })
                     if (Find(row, n)?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI t)
                     {
                         t.fontSize = t.fontSizeMax = sz; t.enableAutoSizing = false; t.color = c;
                         t.alignment = TextAlignmentOptions.BaselineLeft;
                     }
                 Gaps(row, "RowLvRun", 4f, 4f);
-                Mid(row, "RowPctText", -82f, -28f, 140f, 28f, 0f);
-                Txt(row, "RowPctText", 21f, new Color(0.1f, 0.5f, 0.25f, 1f), TextAlignmentOptions.Left, 0.25f);
-                Mid(row, "RowButton", 110f, 0f, 92f, 50f);
+                Mid(row, "RowPctText", -88f, -26f, 140f, 26f, 0f);
+                Txt(row, "RowPctText", 19f, new Color(0.1f, 0.5f, 0.25f, 1f), TextAlignmentOptions.Left, 0f);
+                Mid(row, "RowButton", 108f, 0f, 92f, 48f);
                 if (row.Find("RowButton") is RectTransform rb)
                 {
                     if (rb.GetComponent<Image>() is Image bi) { bi.sprite = Spr($"{Kit}/btn_gold_small.png"); bi.type = Image.Type.Sliced; bi.pixelsPerUnitMultiplier = 3.2f; bi.preserveAspect = false; bi.color = Color.white; }
                     foreach (Transform c in rb)
                         if (c.GetComponent<Image>() is Image ci && c.GetComponent<TextMeshProUGUI>() == null && c.name != "RowCoin") ci.enabled = false;   // 옛 버튼 그림 조각
-                    Mid(rb, "RowCoin", -28f, 0f, 22f, 22f);
-                    Mid(rb, "RowCostText", -14f, 0f, 58f, 32f, 0f);
-                    Txt(rb, "RowCostText", 20f, Ink, TextAlignmentOptions.Left, 0.3f);
+                    Mid(rb, "RowCoin", -26f, 0f, 22f, 22f);
+                    Mid(rb, "RowCostText", -12f, 0f, 56f, 30f, 0f);
+                    Txt(rb, "RowCostText", 20f, Ink, TextAlignmentOptions.Left, 0f);
                 }
             }
 
-            // 성장 경로 — 양피지 판 · 제목 · 칸 줄 · 보상 상자(아래 바 위까지)
+            // 성장 경로 — 양피지 판 · 제목 줄(오른쪽에 다음 보상) · Lv 글자 → 칸 → 상태 알약
             var path = Find(page, "GhostPath") as RectTransform;
             if (path != null)
             {
                 var pp = Plate(path, "GhostV5PathPlate", $"{Kit}/panel_parch_big.png", 1.6f);
-                TL(pp.rectTransform, 22f, 906f - PageTop, 676f, 258f);
+                TL(pp.rectTransform, 22f, 940f - PageTop, 676f, 222f);
                 pp.transform.SetAsFirstSibling();
-                float titleC = 934f - PageTop, rowC = 984f - PageTop, boxTop = 1040f - PageTop;
-                var title2 = Find(path, "PathTitleText") as RectTransform;
-                var node0 = Find(path, "PathNode0") as RectTransform;
-                var box = Find(path, "PathBox") as RectTransform;
-                float dTitle = title2 != null ? titleC - CenterTd(title2) : 0f;
-                float dRow = node0 != null ? rowC - CenterTd(node0) : 0f;
-                float dBox = box != null ? boxTop - TopTd(box) : 0f;
-                // 보상 묶음(PathRewards)은 화면 크기 틀이다 — 틀은 제자리(0), 안의 칸만 옮긴다(틀까지 옮기면 두 번 움직인다)
+                G(path, "PathTitleText", 40f, 950f, 380f, 990f);
+                Txt(path, "PathTitleText", 26f, Ink, TextAlignmentOptions.Left, 0f);
+                G(path, "PathHelpButton", 658f, 956f, 686f, 984f);
+
+                // 다음 보상 — 아래 상자 대신 제목 줄 오른쪽에 작게(받을 수 있는 칸은 알약이 알린다)
                 if (Find(path, "PathRewards") is RectTransform rewards)
                 {
-                    rewards.offsetMin = new Vector2(rewards.offsetMin.x, 0f);
-                    rewards.offsetMax = new Vector2(rewards.offsetMax.x, 0f);
+                    rewards.anchorMin = Vector2.zero; rewards.anchorMax = Vector2.one;
+                    rewards.offsetMin = rewards.offsetMax = Vector2.zero;
                 }
-                foreach (var r in path.GetComponentsInChildren<RectTransform>(true))
+                foreach (var (icon, text, x) in new[] { ("PathRewardIcon0", "PathRewardGold", 392f), ("PathRewardIcon1", "PathRewardGem", 496f),
+                                                        ("PathRewardIcon2", "PathRewardCore", 580f) })
                 {
-                    if (r == path || r.parent == null || r.name == "PathRewards") continue;
-                    if (r.parent != path && r.parent.name != "PathRewards") continue;
-                    string n = r.name;
-                    float d = n.StartsWith("PathTitle") || n.StartsWith("PathHelp") ? dTitle
-                            : n.StartsWith("PathLine") || n.StartsWith("PathNode") || n.StartsWith("PathLabel") || n.StartsWith("PathMarker") ? dRow
-                            : n.StartsWith("PathBox") || n.StartsWith("PathReward") || n.StartsWith("BoxLv") || n.StartsWith("BoxBar") || n.StartsWith("BoxValue") ? dBox
-                            : 0f;
-                    if (d != 0f) r.anchoredPosition -= new Vector2(0f, d);
+                    G(path, icon, x, 957f, x + 26f, 983f);
+                    G(path, text, x + 28f, 954f, x + (text == "PathRewardGold" ? 100f : text == "PathRewardGem" ? 80f : 72f), 986f);
+                    Txt(path, text, 18f, Ink, TextAlignmentOptions.Left, 0f);
                 }
-                Txt(path, "PathTitleText", 26f, Ink, TextAlignmentOptions.Left, 0.35f);
-                if (Find(path, "PathMarkerLabel")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI ml) ml.color = Ink;
-                Spr9(path, "PathBox", $"{Kit}/panel_navy_mid.png", 2f);
-                Spr9(path, "BoxBarFrame", $"{Kit}/bar_bg.png", 3f);
-                if (Find(path, "BoxBarFill")?.GetComponent<Image>() is Image bf) { bf.sprite = Spr($"{Kit}/bar_fill.png"); bf.type = Image.Type.Filled; bf.fillMethod = Image.FillMethod.Horizontal; bf.preserveAspect = false; }
+                Hide(path, "PathBox", "PathBoxButton", "BoxLvLabel", "BoxLvNum", "BoxLvMax", "BoxLvRun", "BoxBarFrame", "BoxBarFill", "BoxValueText");
+                foreach (var n in new[] { "PathMarker", "PathMarkerLabel" })
+                    if (Find(path, n) is Transform h) h.localScale = Vector3.zero;   // 시안엔 지금 자리 표시가 없다 — 런타임이 켜도 안 보이게
+
+                const float x0 = 92f, pitch = 135.25f, labelY = 1012f, nodeY = 1060f, pillY = 1118f;
+                foreach (var n in new[] { "PathLineDone", "PathLineNow", "PathLineLock" })
+                {
+                    GC(path, n, x0, nodeY, 100f, 8f);
+                    if (Find(path, n)?.GetComponent<Image>() is Image li) li.preserveAspect = false;   // 런타임이 폭을 늘린다 — 그림 비율을 지키면 점처럼 줄어든다
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    float cx = x0 + i * pitch;
+                    GC(path, $"PathLabel{i}", cx, labelY, 110f, 34f);
+                    Txt(path, $"PathLabel{i}", 22f, Ink, TextAlignmentOptions.Center, 0f);
+                    GC(path, $"PathNode{i}", cx, nodeY, 56f, 56f);
+                    if (Find(path, $"PathPill{i}") is Transform old) Object.DestroyImmediate(old.gameObject);
+                    var pill = Sliced(path, $"PathPill{i}", $"{Kit}/tab_off.png", 0, 0, 0, 0, 2.4f);
+                    GC(path, $"PathPill{i}", cx, pillY, 108f, 40f);
+                    pill.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
+                    var pt = T(pill.transform, $"PathPillText{i}", 20f, Color.white, true, TextAlignmentOptions.Center);
+                    var pr = pt.rectTransform;
+                    pr.anchorMin = Vector2.zero; pr.anchorMax = Vector2.one; pr.offsetMin = pr.offsetMax = Vector2.zero;
+                    pt.fontSizeMax = 20f; pt.fontSizeMin = 12f; pt.enableAutoSizing = true;
+                    Heavy(pt, 0f);
+                }
             }
+        }
+
+        /// <summary>Page 좌표(화면 왼쪽 위)의 가운데 점에 놓는다 — 런타임이 x 로 칸 · 줄을 잇는 경로 칸은 가운데 기준이어야 한다.</summary>
+        private static void GC(Transform root, string name, float cx, float cy, float w, float h)
+        {
+            if (Find(root, name) is not RectTransform r) { Debug.LogWarning($"[UI v5] 노드 없음: {name}"); return; }
+            r.anchorMin = r.anchorMax = new Vector2(0f, 1f);
+            r.pivot = new Vector2(0.5f, 0.5f);
+            r.anchoredPosition = new Vector2(cx, -(cy - PageTop));
+            r.sizeDelta = new Vector2(w, h);
         }
 
         /// <summary>스킬 한 줄 — 양피지 판 · 아이콘 · 꼬리표(색 글자) · 이름 · 조건 · 위력.</summary>

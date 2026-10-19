@@ -29,7 +29,7 @@ namespace Game.Editor
         private const float TopBar = 120f, NavBar = 112f;   // 위 막대 판(120)은 투명 칸까지 눌림을 막는다 — 그 아래부터
         private const float ScenarioH = 284f, ModeH = 326f, Gap = 10f;
 
-        private static readonly Color Ink = new(0.16f, 0.08f, 0.03f, 1f);
+        private static readonly Color Ink = new(0.27f, 0.17f, 0.09f, 1f);
         private static readonly Color Gold = new(1f, 0.85f, 0.32f, 1f);
         private static readonly Color Soft = new(0.86f, 0.9f, 1f, 1f);
 
@@ -432,7 +432,8 @@ namespace Game.Editor
             // 본(CHHostTitle)에 굵기 표시가 없으면 붙인다 — 없으면 언어 모듈이 굵은 폰트 · 획 보정을 안 입힌다
             var h = t.GetComponent<Game.Module.Common.HeavyText>();
             if (h == null) h = t.gameObject.AddComponent<Game.Module.Common.HeavyText>();
-            h.Set(dilate, 0f, new Color32(0, 0, 0, 0));
+            // 획 불리기(dilate)는 먹색 글자를 뭉개 지저분하게 만든다(PD 2026-10-19) — 굵은 폰트 그대로 쓰고 아주 조금만
+            h.Set(Mathf.Min(dilate, 0.05f), 0f, new Color32(0, 0, 0, 0));
         }
 
         internal static void Dot(Transform parent, string name)

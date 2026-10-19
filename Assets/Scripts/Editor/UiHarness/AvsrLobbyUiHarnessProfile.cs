@@ -96,6 +96,8 @@ namespace Game.Editor.UiHarness
                        "가장자리 이음 띠 — 판 밖 좌우로 이어 그린다")
             .AllowRule("R1", @"/CitySide[LR]$|/NavSide[LR]$|/FixedTopBarEdge[LR]$|/BottomNav/NavBg$",
                        "가장자리 이음 띠 — 1~6px 폭 그림을 옆으로 늘려 화면 끝까지 잇는다")
+            .AllowRule("R1", @"/GhostPath/PathLine(Done|Now|Lock)$",
+                       "유령 성장 경로 줄 — 8×9 단색 띠를 런타임이 칸 사이 폭으로 늘린다(늘려도 모양이 안 변한다)")
             .AllowRule("R3", @"/CitySide[LR]$|/NavSide[LR]$|/FixedTopBarEdge[LR]$|/CHScreen$|/CHChapterArt$|/LobbyV4\w+$|/NavBg$",
                        "이음 띠 · 배경 · 챕터 그림 — 키워 쓰는 것이 의도")
             .AllowRule("C1", @"/BottomNav/\w+Button/NavBadge(/|$)", "새 소식 「!」 — 시안처럼 칸 모서리에 걸쳐 밖으로 나온다")

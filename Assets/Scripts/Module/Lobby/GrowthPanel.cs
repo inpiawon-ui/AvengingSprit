@@ -44,6 +44,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _nodeDone, _nodeNext, _nodeLock;
         [SerializeField] private Color _labelDone = Color.cyan, _labelNow = Color.white,
                                        _labelNext = Color.yellow, _labelLock = Color.white;
+        /// <summary>UI v5 유령 탭 — 칸 아래 상태 알약(받음 · 받기 · 잠김). 빌더 `UiV5Screens.RunGhost`.</summary>
+        [SerializeField] private Sprite _pillDone, _pillReady, _pillLock;
+        [SerializeField] private Color _pillTextDone = Color.cyan, _pillTextReady = Color.black, _pillTextLock = Color.gray;
         /// <summary>유령 탭은 「능력치 · 스킬」 탭 줄이 없어 능력치 판이 이만큼 위로 늘었다(px).</summary>
         [SerializeField] private float _ghostStatLift = 50f;
         [SerializeField] private float _rowPitch = 50.6f;
@@ -69,6 +72,7 @@ namespace Game.Module.Lobby
         private string _hostKey;
         private bool _built;
         private Vector2 _statSectionPos, _statViewportSize;
+        private Vector2 _ghostRowSize;
 
         public bool IsOpen => gameObject.activeSelf;
 
@@ -83,7 +87,11 @@ namespace Game.Module.Lobby
             _ui.OnClick("StatHelpButton", () => Toast(Localize.Get("ui.growth.help.stats")));
             _ui.OnClick("PathHelpButton", () => Toast(Localize.Get("ui.growth.help.path")));
             _ui.OnClick("PathBoxButton", () => ClaimNext());
-            for (int i = 0; i < 5; i++) _ui.OnClick($"PathNode{i}", () => ClaimNext());
+            for (int i = 0; i < 5; i++)
+            {
+                _ui.OnClick($"PathNode{i}", () => ClaimNext());
+                _ui.OnClick($"PathPill{i}", () => ClaimNext());
+            }
             foreach (var (node, label) in new[] { ("GrowthGoldPlusButton", "상점"), ("GrowthMailButton", "우편"),
                                                   ("GrowthSettingsButton", "설정"), ("SortButton", "정렬") })
             {
@@ -105,6 +113,12 @@ namespace Game.Module.Lobby
             _tokens.Add(bus.Subscribe<GhostProgressChangedEvent>(_ => RefreshAll()));
             _tokens.Add(bus.Subscribe<LanguageChangedEvent>(_ => RefreshAll()));
             _tokens.Add(bus.Subscribe<UserDataReadyEvent>(_ => RefreshAll()));
+        }
+
+        // 해상도가 바뀌면(20:9 · 4:3) 능력치 판 크기가 바뀐다 — 칸을 다시 편다
+        private void OnRectTransformDimensionsChange()
+        {
+            if (_built && _page == Page.Ghost && isActiveAndEnabled) FitGhostRows();
         }
 
         private void OnDisable()
@@ -144,6 +158,7 @@ namespace Game.Module.Lobby
             if (rowTemplate != null)
             {
                 var content = rowTemplate.parent as RectTransform;
+                _ghostRowSize = ((RectTransform)rowTemplate).sizeDelta;
                 for (int i = 0; i < StatOrder.Length; i++)
                 {
                     var row = i == 0 ? rowTemplate : Instantiate(rowTemplate.gameObject, content).transform;
@@ -213,7 +228,7 @@ namespace Game.Module.Lobby
             if (viewport != null) viewport.sizeDelta = _statViewportSize + new Vector2(0f, ghost ? _ghostStatLift : 0f);
 
             RefreshGoldAndRows();
-            if (ghost) { RefreshGhostCard(); RefreshPath(); }
+            if (ghost) { FitGhostRows(); RefreshGhostCard(); RefreshPath(); }
             else RefreshHostPage();
         }
 
@@ -237,6 +252,40 @@ namespace Game.Module.Lobby
             float lo = c.RangePercentPerLevel(HostStats.JobRanged) * lv * share;
             float hi = c.RangePercentPerLevel(HostStats.JobMelee) * lv * share;
             return $"+{lo:0.#}~{hi:0.#}%";
+        }
+
+        /// <summary>
+        /// UI v5 유령 탭 2열 카드 — 판(StatViewport) 크기에 맞춰 칸을 고르게 편다.
+        /// 9:16 은 빌더 값 그대로, 20:9 는 줄 간격 · 칸 높이가, 4:3 은 열 간격이 판을 따라 넓어진다(PD 2026-10-19 「꽉 차게」).
+        /// </summary>
+        private void FitGhostRows()
+        {
+            int cols = _ghostCols;
+            if (cols <= 1 || _rows.Count == 0) return;
+            var content = _rows[0].parent as RectTransform;
+            var view = content != null ? content.parent as RectTransform : null;
+            if (view == null) return;
+            float vw = view.rect.width, vh = view.rect.height;
+            if (vw <= 1f || vh <= 1f) return;
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.offsetMin = new Vector2(0f, content.offsetMin.y);
+            content.offsetMax = new Vector2(0f, content.offsetMax.y);
+            int lines = (_rows.Count + cols - 1) / cols;
+            float pitchY = Mathf.Max(_rowPitch, vh / lines);
+            float h = Mathf.Min(pitchY - 8f, _ghostRowSize.y * 1.25f);
+            float colW = vw / cols;
+            float w = Mathf.Min(colW - 8f, _ghostRowSize.x * 1.15f);
+            for (int i = 0; i < _rows.Count; i++)
+            {
+                var rt = (RectTransform)_rows[i];
+                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
+                rt.sizeDelta = new Vector2(w, h);
+                rt.anchoredPosition = new Vector2(colW * (i % cols) + (colW - w) * 0.5f,
+                                                  -(pitchY * (i / cols) + (pitchY - h) * 0.5f));
+            }
+            content.sizeDelta = new Vector2(content.sizeDelta.x, pitchY * lines);
         }
 
         private void SetTabText(string node, bool on)
@@ -354,6 +403,15 @@ namespace Game.Module.Lobby
                     label.text = $"Lv. {need}";
                     // 받음 = 하늘색, 받을 수 있음 · 다음 목표 = 노랑, 그 뒤 = 흰색(시안)
                     label.color = claimed ? _labelDone : (reached || i == next) ? _labelNext : _labelLock;
+                }
+                // 상태 알약 — 받을 수 있는 칸만 금빛 「받기」
+                var pill = _ui.Find($"PathPill{i}");
+                if (pill == null) continue;
+                if (pill.GetComponent<Image>() is Image pillImg) pillImg.sprite = claimed ? _pillDone : reached ? _pillReady : _pillLock;
+                if (_ui.Find($"PathPillText{i}")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI pillText)
+                {
+                    pillText.text = Localize.Get(claimed ? "ui.growth5.path_done" : reached ? "ui.growth.path_claim" : "ui.growth5.path_locked");
+                    pillText.color = claimed ? _pillTextDone : reached ? _pillTextReady : _pillTextLock;
                 }
             }
             PlaceX("PathMarker", markX);
