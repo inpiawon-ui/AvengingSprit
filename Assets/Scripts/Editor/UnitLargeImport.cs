@@ -48,11 +48,12 @@ namespace Game.Editor
         }
 
         // 코드가 Show 를 안 부르는 고정 진열 칸 — 빌드 때 박힌 초상 대신 큰 몸 그림(유령은 둥실, 패스 · 밤의 호스트는 갱스터)
-        private static readonly (string node, string key, bool floating)[] Fixed =
+        // fill = 칸 높이 대비 몸 높이 — 유령 육성 진열 칸(300×258)은 0.95 면 유령이 칸을 꽉 메운다(2026-10-19 캡처)
+        private static readonly (string node, string key, bool floating, float fill)[] Fixed =
         {
-            ("GhostV5Portrait", "ghost", true), ("PassV5Ghost", "ghost", true), ("NightV5Ghost", "ghost", true),
-            ("ShopV5Ghost", "ghost", true), ("H6V5Ghost", "ghost", true),
-            ("PassV5Host", "gangster", false), ("NightV5Host", "gangster", false),
+            ("GhostV5Portrait", "ghost", true, 0.72f), ("PassV5Ghost", "ghost", true, 0.85f), ("NightV5Ghost", "ghost", true, 0.85f),
+            ("ShopV5Ghost", "ghost", true, 0.85f), ("H6V5Ghost", "ghost", true, 0.85f),
+            ("PassV5Host", "gangster", false, 0.95f), ("NightV5Host", "gangster", false, 0.95f),
         };
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Game.Editor
         /// </summary>
         internal static void AttachFixed(GameObject lobby)
         {
-            foreach (var (node, key, floating) in Fixed)
+            foreach (var (node, key, floating, fill) in Fixed)
             {
                 var t = FindDeep(lobby.transform, node);
                 if (t == null || t.GetComponent<UnityEngine.UI.Image>() == null) continue;
@@ -70,6 +71,7 @@ namespace Game.Editor
                 var so = new SerializedObject(show);
                 so.FindProperty("_autoKey").stringValue = key;
                 so.FindProperty("_float").boolValue = floating;
+                so.FindProperty("_fill").floatValue = fill;
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
         }

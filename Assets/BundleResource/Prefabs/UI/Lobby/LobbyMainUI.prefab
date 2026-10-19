@@ -41945,7 +41945,7 @@ RectTransform:
   m_AnchorMin: {x: 0.18055555, y: 0.16785717}
   m_AnchorMax: {x: 0.9583333, y: 0.1892857}
   m_AnchoredPosition: {x: 0, y: 68.92857}
-  m_SizeDelta: {x: 0, y: -4.928566}
+  m_SizeDelta: {x: 0, y: -4.9285583}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5073721953764817722
 CanvasRenderer:
@@ -46254,6 +46254,7 @@ GameObject:
   - component: {fileID: 3189498395318803458}
   - component: {fileID: 4513872983209952435}
   - component: {fileID: 4286448859012733479}
+  - component: {fileID: 3134565239952708150}
   m_Layer: 0
   m_Name: PassV5Ghost
   m_TagString: Untagged
@@ -46318,6 +46319,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3134565239952708150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211420206724320554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.85
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: ghost
+  _float: 1
 --- !u!1 &1214984031017041360
 GameObject:
   m_ObjectHideFlags: 0
@@ -50957,6 +50976,7 @@ GameObject:
   - component: {fileID: 6319667938301337926}
   - component: {fileID: 5045757424545089214}
   - component: {fileID: 2950805356371702751}
+  - component: {fileID: 1020386590732561763}
   m_Layer: 5
   m_Name: NightV5Ghost
   m_TagString: Untagged
@@ -51021,6 +51041,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1020386590732561763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342785476162116553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.85
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: ghost
+  _float: 1
 --- !u!1 &1345402138573723009
 GameObject:
   m_ObjectHideFlags: 0
@@ -76231,6 +76269,7 @@ GameObject:
   - component: {fileID: 2915759141178741159}
   - component: {fileID: 4585783499833321330}
   - component: {fileID: 8239938813317185780}
+  - component: {fileID: 2732612140490201203}
   m_Layer: 5
   m_Name: NightV5Host
   m_TagString: Untagged
@@ -76295,6 +76334,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2732612140490201203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028576967751182349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.95
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: gangster
+  _float: 0
 --- !u!1 &2033125220242336430
 GameObject:
   m_ObjectHideFlags: 0
@@ -76451,7 +76508,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.1047619}
   m_AnchorMax: {x: 0.5, y: 0.1047619}
   m_AnchoredPosition: {x: -268, y: 45.42859}
-  m_SizeDelta: {x: 100, y: 8.000008}
+  m_SizeDelta: {x: 100, y: 8.000023}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7901082710877580733
 CanvasRenderer:
@@ -99484,7 +99541,7 @@ RectTransform:
   m_AnchorMin: {x: 0.056944445, y: 0.36761904}
   m_AnchorMax: {x: 0.075, y: 0.38857144}
   m_AnchoredPosition: {x: 0, y: 23.038094}
-  m_SizeDelta: {x: 0, y: -4.8190613}
+  m_SizeDelta: {x: 0, y: -4.819071}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4278952657939297788
 CanvasRenderer:
@@ -119784,6 +119841,7 @@ GameObject:
   - component: {fileID: 8107844661970264638}
   - component: {fileID: 9153463873624645579}
   - component: {fileID: 961553367669982518}
+  - component: {fileID: 3114794880036089127}
   m_Layer: 0
   m_Name: H6V5Ghost
   m_TagString: Untagged
@@ -119848,6 +119906,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3114794880036089127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3180450845046017307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.85
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: ghost
+  _float: 1
 --- !u!1 &3180981619218314471
 GameObject:
   m_ObjectHideFlags: 0
@@ -166009,7 +166085,7 @@ RectTransform:
   m_AnchorMin: {x: 0.49166667, y: 0.6254717}
   m_AnchorMax: {x: 0.9583333, y: 0.6537736}
   m_AnchoredPosition: {x: 0, y: -37.113205}
-  m_SizeDelta: {x: 0, y: -6.509445}
+  m_SizeDelta: {x: 0, y: -6.50943}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8753950421149656001
 CanvasRenderer:
@@ -196073,6 +196149,7 @@ GameObject:
   - component: {fileID: 2948662863093457496}
   - component: {fileID: 1761172091104053863}
   - component: {fileID: 8647468961338181326}
+  - component: {fileID: 8911936719661622568}
   m_Layer: 0
   m_Name: PassV5Host
   m_TagString: Untagged
@@ -196137,6 +196214,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8911936719661622568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5192834961475645839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.95
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: gangster
+  _float: 0
 --- !u!1 &5195389601305858164
 GameObject:
   m_ObjectHideFlags: 0
@@ -203004,6 +203099,7 @@ GameObject:
   - component: {fileID: 2726676878322495253}
   - component: {fileID: 8424748886561081939}
   - component: {fileID: 8992608939836224740}
+  - component: {fileID: 1275802005860748665}
   m_Layer: 5
   m_Name: GhostV5Portrait
   m_TagString: Untagged
@@ -203068,6 +203164,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1275802005860748665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5396553911786785891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.72
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: ghost
+  _float: 1
 --- !u!1 &5397253614874553914
 GameObject:
   m_ObjectHideFlags: 0
@@ -281308,6 +281422,7 @@ GameObject:
   - component: {fileID: 5306774603396627173}
   - component: {fileID: 3956209071315711169}
   - component: {fileID: 7074937169193104748}
+  - component: {fileID: 6276047629243131712}
   m_Layer: 0
   m_Name: ShopV5Ghost
   m_TagString: Untagged
@@ -281372,6 +281487,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6276047629243131712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389931012934813626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33df6eb1fe70da642baa7ebd5c6fe645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnitShowcase
+  _facing: se
+  _fill: 0.85
+  _idleSeconds: 2.4
+  _frameSeconds: 0.16
+  _autoKey: ghost
+  _float: 1
 --- !u!1 &7396922906508192378
 GameObject:
   m_ObjectHideFlags: 0
@@ -305696,7 +305829,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.1047619}
   m_AnchorMax: {x: 0.5, y: 0.1047619}
   m_AnchoredPosition: {x: -268, y: 45.42859}
-  m_SizeDelta: {x: 100, y: 8.000008}
+  m_SizeDelta: {x: 100, y: 8.000023}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8642456429457485793
 CanvasRenderer:
@@ -307716,7 +307849,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.1047619}
   m_AnchorMax: {x: 0.5, y: 0.1047619}
   m_AnchoredPosition: {x: -268, y: 45.42859}
-  m_SizeDelta: {x: 100, y: 8.000008}
+  m_SizeDelta: {x: 100, y: 8.000023}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8059537098315912450
 CanvasRenderer:
@@ -322188,10 +322321,10 @@ RectTransform:
   - {fileID: 3208538729178795186}
   m_Father: {fileID: 9138717014153727317}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.041666668, y: 0.00952369}
+  m_AnchorMin: {x: 0.041666668, y: 0.009523809}
   m_AnchorMax: {x: 0.9583333, y: 0.13333333}
   m_AnchoredPosition: {x: 0, y: 93.57153}
-  m_SizeDelta: {x: 0, y: -28.47615}
+  m_SizeDelta: {x: 0, y: -28.476128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2602180740854795468
 MonoBehaviour:

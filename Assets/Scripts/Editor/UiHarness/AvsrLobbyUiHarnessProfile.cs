@@ -96,6 +96,9 @@ namespace Game.Editor.UiHarness
                        "가장자리 이음 띠 — 판 밖 좌우로 이어 그린다")
             .AllowRule("R1", @"/CitySide[LR]$|/NavSide[LR]$|/FixedTopBarEdge[LR]$|/BottomNav/NavBg$",
                        "가장자리 이음 띠 — 1~6px 폭 그림을 옆으로 늘려 화면 끝까지 잇는다")
+            .AllowRule("C2", @"/UnitShowcaseBody$", "진열 큰 몸 그림 — 128 칸 규격이라 몸 둘레 투명 여백까지 칸 상자다(보이는 몸은 판 안 · 캡처 확인 2026-10-19)")
+            .AllowRule("C3", @"/UnitShowcaseBody$", "진열 큰 몸 그림 — 투명 여백 칸 상자만 화면 끝을 넘는다(보이는 몸은 화면 안 · 캡처 확인 2026-10-19)")
+            .AllowRule("C6", @"/UnitShowcaseBody$", "진열 큰 몸 그림 — 투명 여백 칸 상자가 제목과 겹칠 뿐 보이는 몸은 글자를 가리지 않는다(캡처 확인 2026-10-19)")
             .AllowRule("R1", @"/GhostPath/PathLine(Done|Now|Lock)$",
                        "유령 성장 경로 줄 — 8×9 단색 띠를 런타임이 칸 사이 폭으로 늘린다(늘려도 모양이 안 변한다)")
             .AllowRule("R3", @"/CitySide[LR]$|/NavSide[LR]$|/FixedTopBarEdge[LR]$|/CHScreen$|/CHChapterArt$|/LobbyV4\w+$|/NavBg$",
