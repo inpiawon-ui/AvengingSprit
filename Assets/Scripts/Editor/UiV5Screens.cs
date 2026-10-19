@@ -204,6 +204,8 @@ namespace Game.Editor
                     if (root.GetComponent<Game.Module.Common.UI.ScreenFit>() is Component sf) Object.DestroyImmediate(sf);
                     if (root.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null) root.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
                     Narrow(root);
+                    s_rootTop = DesignY(root).top;
+                    s_rootBottom = DesignY(root).bottom;
                     Spread(root);
                     KeepAspect(root);
                     // 능력치 2열 카드 — 런타임이 왼쪽 위부터 깐다. 묶음(684 폭)을 넓어진 창 가운데에
@@ -214,11 +216,20 @@ namespace Game.Editor
                         sc.sizeDelta = new Vector2(684f, ch);
                         sc.anchoredPosition = new Vector2(0f, sc.anchoredPosition.y);
                     }
-                    float y = root.anchoredPosition.y, h = root.sizeDelta.y;
-                    root.anchorMin = new Vector2(0f, root.anchorMin.y);
-                    root.anchorMax = new Vector2(1f, root.anchorMax.y);
-                    root.sizeDelta = new Vector2(0f, h);
-                    root.anchoredPosition = new Vector2(0f, y);
+                    if (Find(root, "StatContent") is RectTransform gc && gc.parent != null && gc.parent.name == "StatViewport")
+                    {
+                        float gh = gc.sizeDelta.y;
+                        gc.anchorMin = new Vector2(0.5f, 1f); gc.anchorMax = new Vector2(0.5f, 1f); gc.pivot = new Vector2(0.5f, 1f);
+                        gc.sizeDelta = new Vector2(684f, gh);
+                        gc.anchoredPosition = new Vector2(0f, gc.anchoredPosition.y);
+                    }
+                    // 판을 부모(화면)에 가득 — 가로 · 세로 둘 다. 그린 위 · 아래 변 밖(Page 의 58 · 52)은 그만큼 띄운다
+                    var (top, bottom, _) = DesignY(root);
+                    root.anchorMin = Vector2.zero;
+                    root.anchorMax = Vector2.one;
+                    root.pivot = new Vector2(0.5f, 0.5f);
+                    root.offsetMin = new Vector2(0f, 1280f - bottom);
+                    root.offsetMax = new Vector2(0f, -top);
                 }
                 PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
             }
@@ -242,6 +253,9 @@ namespace Game.Editor
             }
         }
 
+        private static bool IsFullY(RectTransform c)
+            => c.anchorMin.y == 0f && c.anchorMax.y == 1f && Mathf.Abs(c.offsetMin.y) < 1f && Mathf.Abs(c.offsetMax.y) < 1f;
+
         /// <summary>판 크기와 같은(꽉 채운) 묶음 — 그 안의 칸도 화면 좌표라 같이 비율로 바꾼다.</summary>
         private static bool IsFullOf(RectTransform c, RectTransform p)
             => c.anchorMin == Vector2.zero && c.anchorMax == Vector2.one
@@ -252,7 +266,45 @@ namespace Game.Editor
         /// <summary>런타임이 다른 글자 끝을 따라 옮기는 칸 — 비율 자리면 옮긴 값이 어긋난다(가운데 기준 고정).</summary>
         private static readonly string[] RuntimeFollowers = { "TowerSweepTitleText", "TowerSweepSubText" };
 
-        private static void Spread(RectTransform parent)
+        // ── 세로(20:9) ── 위 막대(화면 0~120) · 아래 바(1170~1280) 사이 1050 을 화면 높이에 맞춰 늘린다(PD 2026-10-19 「20:9 도 꽉 차게」).
+        // 그 사이에 있는 칸은 위에서 잰 비율 자리 + 고정 몫으로 둔다 — 9:16(1280)에서는 그린 자리 그대로다.
+        private const float TopBand = 120f, NavBand = 1170f, DesignH = 1280f;
+        private static float s_rootTop, s_rootBottom = DesignH;
+
+        /// <summary>그린 화면 세로 D(위에서) → (판 높이 비율 a, 고정 몫 b) — 판 안 위에서 = a·판높이 + b.</summary>
+        private static (float a, float b) MapY(float d)
+        {
+            float cc = s_rootTop + (DesignH - s_rootBottom);
+            if (d <= TopBand) return (0f, d - s_rootTop);
+            if (d >= NavBand) return (1f, -(s_rootBottom - d));
+            float a = (d - TopBand) / (NavBand - TopBand);
+            return (a, TopBand - s_rootTop + a * (cc - (TopBand + DesignH - NavBand)));
+        }
+
+        /// <summary>판 안의 칸을 세로 비율 자리로. point = 크기는 그대로 가운데만 옮긴다.</summary>
+        private static void PropY(RectTransform c, RectTransform p, bool point)
+        {
+            float top = p.rect.yMax - (c.localPosition.y + c.rect.yMax);
+            float h = c.rect.height;
+            float d0 = s_rootTop + top, d1 = d0 + h;
+            if (point)
+            {
+                var (a, b) = MapY((d0 + d1) * 0.5f);
+                c.anchorMin = new Vector2(c.anchorMin.x, 1f - a);
+                c.anchorMax = new Vector2(c.anchorMax.x, 1f - a);
+                c.offsetMax = new Vector2(c.offsetMax.x, -b + h * 0.5f);
+                c.offsetMin = new Vector2(c.offsetMin.x, -b - h * 0.5f);
+                return;
+            }
+            var (a0, b0) = MapY(d0);
+            var (a1, b1) = MapY(d1);
+            c.anchorMax = new Vector2(c.anchorMax.x, 1f - a0);
+            c.anchorMin = new Vector2(c.anchorMin.x, 1f - a1);
+            c.offsetMax = new Vector2(c.offsetMax.x, -b0);
+            c.offsetMin = new Vector2(c.offsetMin.x, -b1);
+        }
+
+        private static void Spread(RectTransform parent, bool doY = true)
         {
             for (int i = 0; i < parent.childCount; i++)
             {
@@ -270,17 +322,19 @@ namespace Game.Editor
                     f.aspectRatio = 1080f / 1920f;
                     continue;
                 }
-                if (System.Array.IndexOf(RuntimeFollowers, c.name) >= 0) { CenterX(c, parent); continue; }
+                if (System.Array.IndexOf(RuntimeFollowers, c.name) >= 0) { if (doY) PropY(c, parent, true); CenterX(c, parent); continue; }
                 // 유령 성장 경로 — 런타임이 칸 x 로 표시 · 줄을 놓는다(같은 기준이어야 한다)
                 if (parent.name == "GhostPath" && (c.name.StartsWith("PathLine") || c.name.StartsWith("PathNode")
-                    || c.name.StartsWith("PathLabel") || c.name.StartsWith("PathMarker"))) { CenterX(c, parent); continue; }
+                    || c.name.StartsWith("PathLabel") || c.name.StartsWith("PathMarker"))) { if (doY) PropY(c, parent, true); CenterX(c, parent); continue; }
                 // 얼굴 칸 — 자리만 비율로 옮기고 크기는 그대로(넓히면 얼굴이 옆으로 늘어난다)
-                if (c.name.Contains("Face") || c.name.StartsWith("NightHostSlot")) { PropPoint(c, parent); continue; }
-                if (IsFullOf(c, parent)) { Spread(c); continue; }
+                if (c.name.Contains("Face") || c.name.StartsWith("NightHostSlot") || c.name.StartsWith("TowerLadderCell"))
+                { if (doY) PropY(c, parent, true); PropPoint(c, parent); continue; }
+                if (IsFullOf(c, parent) && IsFullY(c)) { Spread(c, doY); continue; }
                 if (c.name.StartsWith("H6V5Ladder")) { CenterX(c, parent); continue; }   // 사다리는 덩어리째 가운데(런타임이 테를 별 자리로 옮긴다)
+                if (doY) PropY(c, parent, false);
                 Prop(c, parent);
-                // 성급 탭 창 · 그 아래 묶음은 안의 칸도 화면처럼 놓여 있다(빌더가 왼쪽 위 기준으로 놓았다)
-                if (c.name == "H6Window" || c.name == "H6WinFoot") Spread(c);
+                // 성급 탭 창 · 그 아래 묶음은 안의 칸도 화면처럼 놓여 있다(빌더가 왼쪽 위 기준으로 놓았다) — 세로는 창 위에서 고정
+                if (c.name == "H6Window" || c.name == "H6WinFoot") Spread(c, false);
             }
         }
 
@@ -330,13 +384,23 @@ namespace Game.Editor
         /// </summary>
         internal static void Narrow(RectTransform root)
         {
-            if (root == null || root.anchorMin.x == root.anchorMax.x) return;
-            float y = root.anchoredPosition.y, h = root.sizeDelta.y;
-            root.anchorMin = new Vector2(0.5f, root.anchorMin.y);
-            root.anchorMax = new Vector2(0.5f, root.anchorMax.y);
-            root.sizeDelta = new Vector2(720f, h);
-            root.anchoredPosition = new Vector2(0f, y);
+            if (root == null) return;
+            var (top, bottom, topAnchored) = DesignY(root);
+            root.anchorMin = new Vector2(0.5f, topAnchored ? 1f : 0.5f);
+            root.anchorMax = new Vector2(0.5f, topAnchored ? 1f : 0.5f);
+            root.pivot = new Vector2(0.5f, topAnchored ? 1f : 0.5f);
+            root.sizeDelta = new Vector2(720f, bottom - top);
+            root.anchoredPosition = new Vector2(0f, topAnchored ? -top : 0f);
         }
+
+        /// <summary>
+        /// 화면 판의 그린 세로 자리(9:16 화면 위에서 잰 위 · 아래 변) — 호스트 판은 위에 붙은 1280,
+        /// 유령 판(Page)은 탭 밑 58 에서 1170, 나머지는 가운데 1280.
+        /// </summary>
+        private static (float top, float bottom, bool topAnchored) DesignY(RectTransform root)
+            => root.name == "Page" ? (58f, 1228f, true)
+             : root.name == "HostPage" ? (0f, 1280f, true)
+             : (0f, 1280f, false);
 
         // ── 출전 ─────────────────────────────────────────────
 

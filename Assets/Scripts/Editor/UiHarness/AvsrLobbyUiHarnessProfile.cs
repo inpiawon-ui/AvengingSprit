@@ -128,6 +128,7 @@ namespace Game.Editor.UiHarness
             .AllowRule("C3", @"/SummonV5AltarView(/SummonAltar)?$", "UI v5 소환 위 장면 — 화면 밖은 잘려 안 보인다")
             .AllowRule("C2", @"/PassScrollContent/PassV5Track$", "UI v5 패스 가운데 줄 — 30단계 길이라 스크롤 창이 잘라 낸다")
             .AllowRule("C3", @"/PassScrollContent/PassV5Track$", "UI v5 패스 가운데 줄 — 스크롤 밖은 안 보인다")
+            .AllowRule("C3", @"/NightV5View/NightV5Art$", "UI v5 밤 오늘 카드 그림 — 긴 화면에서 칸이 길어져 덮기 그림이 화면 밖까지 커진다(칸이 잘라 낸다)")
             .AllowRule("C2", @"/NightV5View/NightV5Art$", "UI v5 밤 오늘 카드 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
             .AllowRule("C2", @"/ShopV5Head/ShopV5HeadArt$", "UI v5 상점 머리 그림 — 칸을 덮게 키워 깔고 칸이 잘라 낸다(Envelope)")
             .AllowRule("C3", @"/ShopV5Head(/ShopV5HeadArt)?$", "UI v5 상점 머리 그림 — 화면 밖은 잘려 안 보인다")
