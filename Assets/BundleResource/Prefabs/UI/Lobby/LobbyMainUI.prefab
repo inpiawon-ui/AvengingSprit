@@ -118953,7 +118953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.SummonReveal
   _stage: {fileID: 21300000, guid: 6f7c7518c4ad47f4b9054bdfe0f21db3, type: 3}
   _revealStage: {fileID: 21300000, guid: d3d3c4968c8b55848ba412f50f90b586, type: 3}
-  _plate: {fileID: 21300000, guid: b6a254b84cf21c34fb17b6ab9fff649f, type: 3}
+  _plate: {fileID: 21300000, guid: 8ced77600ced37f47a503e8f46fc949b, type: 3}
   _rays: {fileID: 21300000, guid: 56da302f61bd74c47b0202fabe09f44e, type: 3}
   _pillar:
   - {fileID: 21300000, guid: 936ad3285b683d4499bfa0917810d996, type: 3}

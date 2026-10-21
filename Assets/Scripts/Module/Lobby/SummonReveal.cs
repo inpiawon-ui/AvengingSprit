@@ -287,14 +287,21 @@ namespace Game.Module.Lobby
             _body = Img("RevealBody", false, null);
             _body.rectTransform.pivot = new Vector2(0.5f, 0f);
             _impactImg = Img("RevealImpact", false, null, new Vector2(0.36f, 0.36f));
-            _plateImg = Img("RevealPlate", false, null, new Vector2(0.62f, 0.15f));
+            _plateImg = Img("RevealPlate", false, null, new Vector2(0.62f, 0.13f));   // 높이 0.13 → 판 비율 3.3 이면 폭 약 550(720 화면 안)
             _plateImg.sprite = _plate;
             _plateImg.type = Image.Type.Simple;
             _plateImg.enabled = true;   // Img() 는 꺼진 채로 만든다 — 판은 켜 두고 오브젝트로 껐다 켠다
-            _tagImg = Child(_plateImg.rectTransform, "RevealTagImg", new Vector2(-0.38f, 0.5f), new Vector2(0.3f, 0.5f));
-            _tagText = Text(_plateImg.rectTransform, "RevealTagText", new Vector2(-0.18f, 0.22f), new Vector2(0.6f, 0.3f), 30f, new Color(1f, 0.84f, 0.32f));
-            _nameText = Text(_plateImg.rectTransform, "RevealNameText", new Vector2(-0.05f, -0.08f), new Vector2(0.8f, 0.36f), 44f, Color.white);
-            _gradeText = Text(_plateImg.rectTransform, "RevealGradeText", new Vector2(-0.18f, -0.34f), new Vector2(0.6f, 0.2f), 22f, new Color(0.8f, 0.85f, 0.96f));
+            // 칸을 판 그림 비율에 맞춘다 — 비율이 다르면 글자 자리(칸 비율)가 그림 속 칸과 어긋난다
+            if (_plate != null)
+            {
+                var ps = _plateImg.rectTransform.sizeDelta;
+                _plateImg.rectTransform.sizeDelta = new Vector2(ps.y * _plate.rect.width / _plate.rect.height, ps.y);
+            }
+            _tagImg = Child(_plateImg.rectTransform, "RevealTagImg", new Vector2(0.4f, 0.42f), new Vector2(0.17f, 0.42f));
+            _tagText = Text(_plateImg.rectTransform, "RevealTagText", new Vector2(-0.285f, 0.36f), new Vector2(0.27f, 0.2f), 30f, new Color(1f, 0.84f, 0.32f));
+            _tagText.alignment = TextAlignmentOptions.Center;
+            _nameText = Text(_plateImg.rectTransform, "RevealNameText", new Vector2(-0.04f, -0.04f), new Vector2(0.78f, 0.34f), 46f, Color.white);
+            _gradeText = Text(_plateImg.rectTransform, "RevealGradeText", new Vector2(-0.2f, -0.32f), new Vector2(0.46f, 0.17f), 22f, new Color(0.8f, 0.85f, 0.96f));
             _tapText = Text(_root, "RevealTapText", new Vector2(0f, -0.42f), new Vector2(0.8f, 0.05f), 24f, new Color(0.9f, 0.92f, 1f));
             _tapText.alignment = TextAlignmentOptions.Center;
             Localize.ApplyFonts(_root);
