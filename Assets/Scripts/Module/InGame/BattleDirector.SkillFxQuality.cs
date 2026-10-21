@@ -206,14 +206,7 @@ namespace Game.Module.InGame
             return true;
         }
 
-        // ── 화이트 위저드 · 광휘 확산 ──────────────────────────
-        private bool QxWizardGather(Unit me)
-        {
-            if (!Qx("wfgather")) return false;
-            QxOnce("wfgather", me.MuzzlePosition, 0.05f, 0.7f);
-            return true;
-        }
-
+        // ── 화이트 위저드 · 광탄 ───────────────────────────────
         /// <summary>광탄(lightorb)이 맞은 자리 — 빛 조각. 다뤘으면 true(도트 폭발 대신).</summary>
         private bool QxOrbPop(string kind, Vector2 at)
         {

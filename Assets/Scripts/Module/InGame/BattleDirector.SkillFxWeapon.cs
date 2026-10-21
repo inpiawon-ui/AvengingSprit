@@ -23,7 +23,7 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        private enum WpStep { SprayAim, AmazonLand, SmgLeap, BarrierUp, BarrierLoop, GangAim, GangFire, GangMark, HopBuild, HopLoop, CloneBeam, CloneUp }
+        private enum WpStep { AmazonLand, SmgLeap, BarrierUp, BarrierLoop, GangAim, GangFire, GangMark, HopBuild, HopLoop }
 
         /// <summary>조준이 걸리고 실제 동작이 나갈 때까지(예비 박자).</summary>
         private const float WpWindup = 0.10f;
@@ -41,14 +41,6 @@ namespace Game.Module.InGame
         private const float WpCutSize = 120f;
         private const float WpLockRingSize = 104f;
         private const float WpMuzzleSize = 44f;
-
-        /// <summary>
-        /// 난사 예광탄이 맞은 자리 — 연사라 몇 발에 한 번만 그린다.
-        /// 0.05초로는 코어가 쉬지 않고 터져 맞은 몸을 덮는 덩어리가 됐다(검수 2026-10-07).
-        /// </summary>
-        private const float WpTracerHitGap = 0.12f;
-        private const float WpTracerMuzzleGap = 0.07f;
-        private const string WpTracerKind = "wptracer";
 
         private readonly List<(float Left, WpStep Step, Unit Target, int Index)> _wpPending = new();
 
@@ -205,69 +197,6 @@ namespace Game.Module.InGame
         private const float AmPulseSize = 168f;
         private const float AmPulseSquash = 56f / 168f;
         private const float AmLandSize = 128f;
-
-        // ─────────────────────────────────────────
-        //  폭력배 · 난사
-        // ─────────────────────────────────────────
-
-        private float _wpTracerHitAt = -1f;
-        private float _wpTracerMuzzleAt = -1f;
-
-        private bool WpTracerReady => WpReady && FxFrames(WpTracerKind) != null;
-
-        /// <summary>총구에 빛이 모이고 세 갈래 조준선이 벌어진다. 탄은 예광탄으로 나간다(<see cref="FireShot"/>).</summary>
-        private bool WpSprayOpen(Unit me, float degrees)
-        {
-            if (!WpTracerReady) return false;
-            PlayLz("lzmuzzle", me.MuzzlePosition, WpMuzzleSize, 0.025f);
-            var target = NearestEnemy(me.Position);
-            var from = me.MuzzlePosition;
-            _sprayAim = target != null && (target.Position - from).sqrMagnitude > 1f
-                      ? target.Position - from : me.Facing * 320f;
-            _sprayHalfDeg = degrees * 0.5f;
-            // 세 갈래를 한꺼번에 켜면 한 덩어리로 읽힌다 — 가운데 → 좌 → 우 를 0.03초씩(검수 2026-10-07)
-            for (int i = 0; i < 3; i++) _wpPending.Add((SprayAimGap * i, WpStep.SprayAim, null, i));
-            return true;
-        }
-
-        private const float SprayAimGap = 0.03f;
-        private Vector2 _sprayAim;
-        private float _sprayHalfDeg;
-
-        private void WpSprayAim(Unit me, int index)
-        {
-            int side = index == 0 ? 0 : index == 1 ? -1 : 1;
-            var from = me.MuzzlePosition;
-            var line = WpBeam("wpbeam", from, from + Rotate(_sprayAim, _sprayHalfDeg * side), WpTrailThickness * 0.75f, 0.025f, 0.45f);
-            line?.SetLife(0.1f, 0.05f);
-        }
-
-        /// <summary>난사 중이면 탄 그림을 예광탄으로 바꾼다. 바꿨으면 그 종류 이름을 돌려준다.</summary>
-        private string WpTracerShot(Unit attacker, Projectile shot, bool fromPlayer, Vector2 muzzle, string kind)
-        {
-            if (!fromPlayer || SprayExtraShots <= 0 || attacker != _host || !WpTracerReady) return kind;
-            shot.SetSprite(FxFrames(WpTracerKind), WpTracerKind);
-            float now = Time.time;
-            if (now - _wpTracerMuzzleAt >= WpTracerMuzzleGap)
-            {
-                _wpTracerMuzzleAt = now;
-                var flash = PlayLz("lzmuzzle", muzzle, WpMuzzleSize * 0.6f, 0.02f);
-                flash?.SetTint(new Color(1f, 1f, 1f, 0.7f));
-            }
-            return WpTracerKind;
-        }
-
-        /// <summary>예광탄이 맞은 자리 — 작은 코어와 파편. 큰 노란 별은 쓰지 않는다.</summary>
-        private void WpTracerHit(Vector2 at)
-        {
-            float now = Time.time;
-            if (now - _wpTracerHitAt < WpTracerHitGap) return;
-            _wpTracerHitAt = now;
-            var hit = PlayLz("lzhit", at, 38f, 0.02f);
-            hit?.SetTint(new Color(1f, 1f, 1f, 0.85f));
-            var debris = PlayLz("lzdebris", at, 44f, 0.045f);
-            debris?.SetTint(new Color(1f, 1f, 1f, 0.35f));
-        }
 
         // ─────────────────────────────────────────
         //  호퍼(기관단총) · 도약 강습
@@ -536,55 +465,6 @@ namespace Game.Module.InGame
         }
 
         // ─────────────────────────────────────────
-        //  닌자 · 그림자 분신
-        // ─────────────────────────────────────────
-
-        private Impact _cloneStateFx;
-        private Unit _cloneUnit;
-        private Vector2 _cloneAt;
-
-        /// <summary>분신을 세울 때 연기 · 폭발을 띄우지 않는다(퀄업 연출이 대신한다).</summary>
-        private bool _wpQuietSummon;
-
-        private bool WpCloneOpen(Unit me, Vector2 center)
-        {
-            if (!WpReady) return false;
-            _cloneAt = center;
-            WpLock(me.Position, center, WpLockRingSize * 1.1f, 0.35f);
-            _wpPending.Add((WpWindup, WpStep.CloneBeam, me, 0));
-            return true;
-        }
-
-        private void WpCloneBeam(Unit me)
-        {
-            WpBeam("wpbeam", me.Position, _cloneAt, WpTrailThickness, 0.03f, 1f);
-            PlayLz("wpcut", _cloneAt - Vector2.up * LzFootDrop, WpCutSize * 0.9f, 0.03f);
-            _wpPending.Add((0.12f, WpStep.CloneUp, me, 0));
-        }
-
-        private void WpCloneUp()
-        {
-            _wpQuietSummon = true;
-            SummonClone(_cloneAt);
-            _wpQuietSummon = false;
-            var feet = _cloneAt - Vector2.up * LzFootDrop;
-            WpFloor("wppulse", feet, WpAuraSize * 0.9f, 0.04f, 0.9f, LzRingSquash);
-            var debris = PlayLz("lzdebris", feet, WpDebrisSize * 0.8f, 0.05f);
-            debris?.SetTint(new Color(1f, 1f, 1f, 0.4f));
-            _cloneUnit = _summons.Count > 0 ? _summons[_summons.Count - 1].U : null;
-            _cloneStateFx?.Stop();
-            _cloneStateFx = _cloneUnit != null
-                ? WpLoop(FxFrames("wpstate"), _cloneUnit.Position, WpAuraSize, 0.1f, 0.35f) : null;
-        }
-
-        private void TickCloneState()
-        {
-            if (_cloneStateFx == null) return;
-            if (_cloneUnit == null || !_cloneUnit.IsAlive) { WpRelease(ref _cloneStateFx, 0.15f); _cloneUnit = null; return; }
-            _cloneStateFx.MoveTo(_cloneUnit.Position);
-        }
-
-        // ─────────────────────────────────────────
         //  시간 흐르기 · 정리
         // ─────────────────────────────────────────
 
@@ -611,7 +491,6 @@ namespace Game.Module.InGame
             TickCmWall(dt);
             TickGaMarks(dt);
             TickHopAim();
-            TickCloneState();
         }
 
         private void RunWpStep(WpStep step, Unit target, int index)
@@ -621,7 +500,6 @@ namespace Game.Module.InGame
             bool targetGone = target == null || !target.IsAlive || target.IsDying;
             switch (step)
             {
-                case WpStep.SprayAim:    if (me.Key == "thug") WpSprayAim(me, index); break;
                 case WpStep.AmazonLand:
                     if (me.Key != "amazon") return;
                     AmazonLeapLand(me, targetGone ? NearestEnemy(me.Position) : target);
@@ -637,8 +515,6 @@ namespace Game.Module.InGame
                 case WpStep.GangMark:    if (me.Key == "gangster") WpGangMark(); break;
                 case WpStep.HopBuild:    if (me.Key == "hopper") WpHopBuild(me); break;
                 case WpStep.HopLoop:     if (me.Key == "hopper") WpHopLoop(me); break;
-                case WpStep.CloneBeam:   if (me.Key == "ninja") WpCloneBeam(me); break;
-                case WpStep.CloneUp:     if (me.Key == "ninja") WpCloneUp(); break;
             }
         }
 
@@ -648,7 +524,6 @@ namespace Game.Module.InGame
             StopSpinFire();
             StopStickyBomb();
             StopFullSwing();
-            StopWraithFlame(popRemaining: false);
             StopUltimates();
             _wpPending.Clear();
             _wpFollow.Clear();
@@ -656,8 +531,6 @@ namespace Game.Module.InGame
             _hsInvFx?.Stop(); _hsInvFx = null;
             _cmWallFx?.Stop(); _cmWallFx = null;
             _hopAimFx?.Stop(); _hopAimFx = null;
-            _cloneStateFx?.Stop(); _cloneStateFx = null;
-            _cloneUnit = null;
             // 표식(_gaMarks)은 몸을 갈아타도 남는다 — 판에 걸린 것이다. 적이 죽으면 스스로 거둔다
         }
     }

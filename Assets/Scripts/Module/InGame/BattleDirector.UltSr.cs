@@ -96,60 +96,10 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  코만도(레이저) — 충전 레이저: 총구에 하늘색 기운이 모였다가 굵은 관통 빔, 지나간 자리마다 전기 폭발, 반동
+        //  코만도(레이저) 빔 그림 칸 — 프리즘 레이저(BattleDirector.Rework1021)가 쓴다
         // ═══════════════════════════════════════════════════════════
 
         private const float LzBeamDraw = 260f;   // 그림 칸 높이 — 빛줄이 칸의 약 1/4 이라 실제 굵기는 약 65 px(시안 실측)
-
-        private void SrLaser(Unit me)
-        {
-            var t = NearestEnemy(me.Position);
-            var dir = t != null ? (t.Position - me.Position).normalized : me.Facing;
-            me.SetFacing(dir);
-            var charge = PlayFx("lzcharge", me.MuzzlePosition, SsrBody * 1.6f, loop: false) ?? PlayFx("wfgather", me.MuzzlePosition, 140f, loop: false);
-            charge?.SetFrameSeconds(0.085f);
-            _pfx?.Spray(ParticleFxKind.Streak, me.MuzzlePosition + dir * 60f, -dir, 70f, 14, 120f, 260f, new Vector2(30f, 4f), 0.4f,
-                        new Color(0.5f, 0.9f, 1f, 1f));
-            UltInvuln(1.2f);
-            UltAfter(0.5f, () =>
-            {
-                var from = me.MuzzlePosition;
-                float reach = Meters(14f);
-                var to = from + dir * reach;
-                var frames = FxFrames("lzbeam");
-                if (frames != null)
-                {
-                    var beam = FreeImpact(LzBeamDraw);
-                    beam?.PlayBeam(from, to, frames, LzBeamDraw);
-                    beam?.SetLoop(true);
-                    beam?.SetFrameSeconds(0.04f);
-                    beam?.SetLife(0.55f, 0.2f);
-                }
-                else UltBeam("laser_wide", from, to, 110f, 0.05f);
-                var side = new Vector2(-dir.y, dir.x);
-                for (int i = 0; i < _enemies.Count; i++)
-                {
-                    var e = _enemies[i];
-                    if (!Targetable(e)) continue;
-                    var d = e.Position - from;
-                    float along = Vector2.Dot(d, dir);
-                    if (along < 0f || along > reach || Mathf.Abs(Vector2.Dot(d, side)) > Meters(0.9f)) continue;
-                    UltHit(me, e, 6f);
-                    // 시안 마지막 컷 — 빔이 지나간 적마다 차례로 전기 폭발(가까운 쪽부터)
-                    var at = e.Position;
-                    UltAfter(0.05f + along / reach * 0.3f, () =>
-                    {
-                        var boom = PlayFx("lzblast", at, SsrBody * 2.2f, loop: false) ?? PlayFx("lzhit", at, 100f, loop: false);
-                        boom?.SetFrameSeconds(0.05f);
-                    });
-                }
-                // 반동 — 쏜 몸이 뒤로 밀리며 발밑 먼지
-                me.Position = ClampedInField(me, me.Position - dir * Meters(1f));
-                _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, me.Position, 8, 120f, 40f, 0.6f, 0f);
-                Shake(10f);
-                HitStop(0.1f);
-            });
-        }
 
         // ═══════════════════════════════════════════════════════════
         //  닌자 — 그림자 삼분신: 보라 연막 속에서 보라빛 분신 셋이 서서 같이 표창을 던지고, 마지막에 분신이 뛰어들어 벤다

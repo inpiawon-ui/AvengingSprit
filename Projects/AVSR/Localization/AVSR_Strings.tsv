@@ -52,8 +52,8 @@ askill.psg_h14.name	백스텝 사격	バックステップ射撃	Backstep Fire
 askill.psg_h14.desc	가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。	Leap back from the nearest enemy while spraying a fan of shots forward.
 askill.psg_h15.name	미니 골렘	ミニゴーレム	Mini Golem
 askill.psg_h15.desc	미니 골렘을 불러 10초간 데리고 다니며 같이 싸운다.	ミニゴーレムを呼び、10秒間連れて一緒に戦う。	Summon a mini golem that follows and fights with you for 10s.
-askill.psg_h16.name	광휘 확산	光輝拡散	Radiant Burst
-askill.psg_h16.desc	부채꼴 8방향으로 광탄을 쏜다.	扇状8方向に光弾を放つ。	Fire light orbs in 8 directions in a fan.
+askill.psg_h16.name	중력진	重力陣	Gravity Well
+askill.psg_h16.desc	적이 가장 몰린 자리에 황금 마법진을 펼쳐 1.2초 동안 가운데로 빨아들이며 깎다가, 빛으로 터뜨린다.	敵が最も集まった場所に黄金の魔法陣を広げ、1.2秒間中心へ引き寄せながら削り、光で爆発させる。	Open a golden circle where foes crowd, pull them to the center for 1.2s while chipping away, then burst in light.
 askill.psg_h17.name	사슬 끌어오기	鎖引き寄せ	Chain Pull
 askill.psg_h17.desc	둘레 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다. 묶인 적은 더 아프게 맞는다.	周囲の敵5体を鎖で目の前に引き寄せて縛り、まとめて薙ぎ払う。縛られた敵へのダメージ増加。	Chain up to 5 nearby foes, yank them in front of you, bind them and strike them all. Bound foes take more damage.
 askill.psg_h18.name	그림자 걸음	影走り	Shadow Step
@@ -650,8 +650,8 @@ uskill.hopper_smg.name	돌진 난사	突進乱射	Rush Barrage
 uskill.hopper_smg.en	Rush Barrage	Rush Barrage	Rush Barrage
 uskill.vampire.name	피의 웅덩이	血の池	Blood Pool
 uskill.vampire.en	Blood Pool	Blood Pool	Blood Pool
-uskill.dragoon.name	용 돌격	竜突撃	Dragon Charge
-uskill.dragoon.en	Dragon Charge	Dragon Charge	Dragon Charge
+uskill.dragoon.name	메테오	メテオ	Meteor
+uskill.dragoon.en	Meteor	Meteor	Meteor
 uskill.baseball.name	풀스윙 회오리	フルスイング旋風	Full Swing Cyclone
 uskill.baseball.en	Full Swing Cyclone	Full Swing Cyclone	Full Swing Cyclone
 uskill.guru.name	결계 가두기	結界封じ	Sealing Barrier
@@ -666,14 +666,14 @@ uskill.thug.name	회전 난사	回転乱射	Spin Barrage
 uskill.thug.en	Spin Barrage	Spin Barrage	Spin Barrage
 uskill.commando_missile.name	집중 포격	集中砲撃	Focus Barrage
 uskill.commando_missile.en	Focus Barrage	Focus Barrage	Focus Barrage
-uskill.commando_laser.name	충전 레이저	チャージレーザー	Charged Laser
-uskill.commando_laser.en	Charged Laser	Charged Laser	Charged Laser
+uskill.commando_laser.name	프리즘 레이저	プリズムレーザー	Prism Laser
+uskill.commando_laser.en	Prism Laser	Prism Laser	Prism Laser
 uskill.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain
 uskill.white_wizard.en	Pillar Rain	Pillar Rain	Pillar Rain
 uskill.dragon_blue.name	천뢰	天雷	Heaven's Thunder
 uskill.dragon_blue.en	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder
-uskill.commando_mg.name	디플렉트 월	ディフレクトウォール	Deflect Wall
-uskill.commando_mg.en	Deflect Wall	Deflect Wall	Deflect Wall
+uskill.commando_mg.name	회전 난사	回転乱射	Spin Barrage
+uskill.commando_mg.en	Spin Barrage	Spin Barrage	Spin Barrage
 uskill.amazon_elite.name	역린	逆鱗	Wrath Unleashed
 uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed
 ui.ingame.ultimate	필살기	必殺技	SPECIAL
@@ -1144,9 +1144,9 @@ askill.vampire.short	박쥐가 피를 빨아 와 회복	コウモリが血を吸
 pskill.vampire.short	8% 로 공격력 5% 회복	8%で攻撃力の5%回復	8% chance to heal on hit
 askill.vampire.opt	넘친 회복량만큼 쉴드	回復しすぎた分をシールドに	Overheal becomes Shield
 host.dragoon.concept	용기병 — 탈것	竜騎兵 — 騎乗	Dragoon — dragon rider
-ult.dragoon.name	용 돌격	竜突撃	Dragon Charge
-ult.dragoon.desc	불을 뿜는 용을 타고 3초간 돌진.	火を吐く竜に乗って3秒間突進。	Ride a fire-breathing dragon on a 3s charge.
-ult.dragoon.short	불 뿜는 용을 타고 3초 돌진	火竜に乗って3秒突進	3s charge on a fire dragon
+ult.dragoon.name	메테오	メテオ	Meteor
+ult.dragoon.desc	가장 센 적에게 불덩이를 떨어뜨려 크게 터뜨리고, 그 자리를 4초 동안 불바다로 만든다.	最も強い敵に火の塊を落として大爆発させ、その場所を4秒間火の海にする。	Drop a meteor on the strongest foe for a huge blast, leaving a sea of fire for 4s.
+ult.dragoon.short	가장 센 적에게 메테오 + 불바다	最強の敵にメテオ＋火の海	Meteor + fire field
 askill.dragoon.short	가까운 적 발밑에 불바다	近くの敵の足元に火の海	Fire pool under nearest foe
 pskill.dragoon.short	10% 로 적에게 화상	10%で敵を燃焼	10% chance to Burn
 askill.dragoon.opt	불바다 2곳 (가까운 적 둘)	火の海2か所（近くの敵2体）	2 fire pools (nearest 2 foes)
@@ -1200,9 +1200,9 @@ askill.commando_missile.short	7발이 여러 적에게 한 발씩	7発が複数�
 pskill.commando_missile.short	투사체가 지형지물 무시	弾が障害物を無視	Shots ignore obstacles
 askill.commando_missile.opt	맞은 자리마다 작은 폭발	命中地点ごとに小爆発	Small blast at each hit
 host.commando_laser.concept	관통 포격 — 일직선	貫通砲撃 — 一直線	Piercing beam — one line
-ult.commando_laser.name	충전 레이저	チャージレーザー	Charged Laser
-ult.commando_laser.desc	0.5초 차지 뒤 굵은 관통 빔, 반동.	0.5秒チャージ後、極太の貫通ビームを放つ。反動あり。	Charge for 0.5s, then fire a thick piercing beam. Has recoil.
-ult.commando_laser.short	차지 뒤 굵은 관통 빔	チャージ後に極太貫通ビーム	Charged thick piercing beam
+ult.commando_laser.name	프리즘 레이저	プリズムレーザー	Prism Laser
+ult.commando_laser.desc	굵은 레이저가 가까운 적에 꽂히고, 거기서 네 갈래로 갈라져 둘레 적에게 꺾여 든다.	太いレーザーが近くの敵に刺さり、そこから4本に分かれて周囲の敵へ折れ曲がって飛ぶ。	A thick laser strikes the nearest foe, then splits into 4 beams that bend into nearby foes.
+ult.commando_laser.short	레이저가 맞은 자리에서 네 갈래로	命中地点から4本に分裂	Laser splits into 4 on hit
 askill.commando_laser.short	3초간 주변에 전기 연쇄	3秒間、周囲に連鎖放電	Chain shock nearby for 3s
 pskill.commando_laser.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce
 askill.commando_laser.opt	전기가 튈 때마다 감전 (둔화)	放電のたびに感電（鈍足）	Each arc shocks and slows
@@ -1210,9 +1210,9 @@ host.white_wizard.concept	축적 마법사 — 모아서 쏜다	蓄積の魔法�
 ult.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain
 ult.white_wizard.desc	3초 동안 둘레 적 머리 위로 빛기둥 14개가 차례로 꽂힌다.	3秒間、周囲の敵の頭上に光の柱が14本次々と降り注ぐ。	For 3s, 14 pillars of light crash down on nearby foes one after another.
 ult.white_wizard.short	3초간 빛기둥 14개가 쏟아짐	3秒間光柱14本が降り注ぐ	14 light pillars over 3s
-askill.white_wizard.short	부채꼴 8방향 광탄	扇状8方向に光弾	8-way fan of light orbs
+askill.white_wizard.short	적을 끌어모아 빛 폭발	敵を引き寄せて光の爆発	Pull foes in, then burst
 pskill.white_wizard.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce
-askill.white_wizard.opt	광탄이 벽에 한 번 튕긴다	光弾が壁で1回跳ね返る	Light orbs bounce off walls once
+askill.white_wizard.opt	중력진 범위 2.2 → 2.7 m	重力陣の範囲2.2→2.7m	Gravity Well radius 2.2 → 2.7 m
 host.dragon_blue.concept	뇌신 — 번개가 튄다	雷神 — 雷が跳ぶ	Storm god — chain lightning
 ult.dragon_blue.name	천뢰	天雷	Heaven's Thunder
 ult.dragon_blue.desc	둘레 모든 적에게 낙뢰가 세 번 떨어지고, 끝에 가장 센 적에게 큰 낙뢰.	周囲の全ての敵に落雷が3回落ち、最後に最も強い敵へ巨大な落雷。	Lightning strikes every nearby foe 3 times, then a huge bolt hits the strongest.
@@ -1221,9 +1221,9 @@ askill.dragon_blue.short	2초간 번개 튕김 확정	2秒間、連鎖雷が確�
 pskill.dragon_blue.short	10% 로 옆 적에게 번개	10%で隣の敵に雷	10% chain lightning
 askill.dragon_blue.opt	끝날 때 가장 가까운 적에게 낙뢰	終了時、最も近い敵に落雷	Ends with a bolt on the nearest foe
 host.commando_mg.concept	방패병 — 막으며 전진	盾兵 — 防ぎつつ前進	Shieldbearer — block & push
-ult.commando_mg.name	디플렉트 월	ディフレクトウォール	Deflect Wall
-ult.commando_mg.desc	방벽을 세워 4초간 밀고 나가며 탄을 막는다.	防壁を立てて4秒間押し進み、弾を防ぐ。	Raise a barrier and push forward for 4s, blocking shots.
-ult.commando_mg.short	방벽을 밀고 나가며 탄 차단	防壁で押し進み弾を防ぐ	Advance behind a bullet wall
+ult.commando_mg.name	회전 난사	回転乱射	Spin Barrage
+ult.commando_mg.desc	기관총을 세우고 3초 동안 돌며 사방으로 쏟아붓다가, 멈추며 사방으로 산탄 24발.	機関銃を構えて3秒間回りながら全方位に撃ちまくり、止まる瞬間に全方位へ24発の散弾。	Brace the machine gun and spin firing in all directions for 3s, then blast 24 pellets all around.
+ult.commando_mg.short	3초 회전 난사 + 사방 산탄	3秒回転乱射＋全方位散弾	3s spin fire + pellet burst
 askill.commando_mg.short	5초간 최대 체력만큼 쉴드	5秒間、最大体力分のシールド	Shield = max HP for 5s
 pskill.commando_mg.short	방어력 20% 증가	防御力20%上昇	Defense +20%
 askill.commando_mg.opt	쉴드가 깨질 때 둘레 적을 밀쳐낸다	シールドが割れる時、周囲の敵を押し返す	Broken Shield knocks back foes

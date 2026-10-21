@@ -63,7 +63,6 @@ namespace Game.Module.InGame
         private const float ReaperWindowSeconds = 3f;          // 명세 「3초간 유지」
         private const int ReaperBossPercent = 10;
         private const int ReaperMidBossPercent = 50;
-        private const float BindSeconds = 5f;
         private const float BindDamageMul = 1.3f;
         private const float VenomRadiusMeters = 5f;
         /// <summary>독 지속에 얹는 시간. 표의 성장 축이 피해 계수와 같은 값(Lv1 0.5)이라 독이 0.5초뿐이었다.</summary>
@@ -97,7 +96,6 @@ namespace Game.Module.InGame
         private const float MissileBlastMeters = 1.9f;
         // 반원(180°)은 옆 · 아래로 가는 탄이 많아 시안의 전방 부채꼴(약 115°)과 달랐다(검수 2026-10-07)
         private const float MissileFanSpreadDeg = 115f;
-        private const int WizardFanShots = 8;
         // ── 스케일 연출 기본값 (기획 2026-09-15) ────────────────
         //
         // **돌아가는 표시는 0.8 ~ 1.0 사이를 천천히 오간다.** 사장님 지정값이다.
@@ -111,7 +109,6 @@ namespace Game.Module.InGame
         /// <summary>표식이 걸린 몸과 그 위의 표적. 시간이 다하면 거둔다.</summary>
         private readonly System.Collections.Generic.List<(Unit U, Impact Fx, float Life)> _markFx = new();
 
-        private const float WizardFanSpreadDeg = 120f;
         private const float BounceSeconds = 3f;
         private const float BounceInterval = 0.4f;
         private const float BounceRangeMeters = 6f;
@@ -192,23 +189,6 @@ namespace Game.Module.InGame
             }
             KillEnemy(victim);
             return true;
-        }
-
-        /// <summary>
-        /// 닌자(사슬) — 방 전체를 묶는다. 발만 묶고 손은 살아 있어서(`Unit.ApplyRoot`)
-        /// 원거리 적은 계속 쏜다 — 묶었다고 판이 멈추면 안 된다.
-        /// </summary>
-        private void ChainBind(Unit me)
-        {
-            float seconds = BaseAxis(BindSeconds);   // Lv1 5 → Lv4 7초
-            _bindBonusSeconds = seconds;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying) continue;
-                e.ApplyRoot(seconds);
-                if (!QxChainCast(me, e)) PlayFx("chain", e.Position, 64f, loop: false);
-            }
         }
 
         /// <summary>묶여 있는 적에게 더 아프다. 얼린 적 보너스(설녀)와 같은 층이다.</summary>
@@ -421,31 +401,6 @@ namespace Game.Module.InGame
             else PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
         }
 
-        /// <summary>
-        /// 분신이 설 자리 — **방 한가운데**, 단 지금 화면에 보이는 칸 안으로 당긴다.
-        /// ⚠ 방(세로 1152)이 창(1050)보다 길어, 캐릭터가 아래쪽에 서 있으면 방 한가운데가
-        ///   화면 위 HUD 밑에 숨었다 — 분신이 서 있는지조차 안 보였다(검수 2026-10-07).
-        /// ⚠ 창 한가운데로 옮겼더니 이번엔 캐릭터가 서는 자리(`ViewFocus`)와 겹쳐 닌자가 둘로 포개졌다.
-        ///   방 한가운데에서 가장 가까운, 창 위아래 가장자리(HUD · 체력바 자리)를 비운 자리로 당긴다.
-        /// </summary>
-        private Vector2 CloneSpot()
-        {
-            var spot = new Vector2(_roomSize.x * 0.5f, -_roomSize.y * 0.5f);
-            if (_field == null) return spot;
-            const float TopMargin = 220f, BottomMargin = 160f;
-            float viewTop = ViewToRoom(new Vector2(0f, -TopMargin)).y;
-            float viewBottom = ViewToRoom(new Vector2(0f, -_field.rect.height + BottomMargin)).y;
-            if (viewTop > viewBottom) spot.y = Mathf.Clamp(spot.y, viewBottom, viewTop);
-            return spot;
-        }
-
-        /// <summary>창 좌표 → 방 좌표 (`RoomToView` 의 거꾸로).</summary>
-        private Vector2 ViewToRoom(Vector2 view)
-        {
-            var f = ViewFocus;
-            return f + (view - f) / Mathf.Max(_zoom, 0.01f) - _scroll;
-        }
-
         /// <summary>흡혈귀 — 화면에 보이는 적 **머릿수만큼** 돌려받는다.</summary>
         private void VampireFeast(Unit me)
         {
@@ -618,22 +573,6 @@ namespace Game.Module.InGame
         //  관통
         // ═══════════════════════════════════════════════════════════
 
-        /// <summary>화이트 위저드 — 부채꼴 8방향. 관통은 패시브가 준다.</summary>
-        private void WizardFan(Unit me)
-        {
-            var target = NearestEnemy(me.Position);
-            // ⚠ `FireShot` 은 표적의 자리를 보고 쏜다 — 표적이 없으면 그 안에서 터진다.
-            //   방이 비었으면 쏠 이유도 없다.
-            if (target == null) return;
-            for (int i = 0; i < WizardFanShots; i++)
-            {
-                float off = -WizardFanSpreadDeg * 0.5f
-                          + WizardFanSpreadDeg * i / (WizardFanShots - 1);
-                FireShot(me, target, fromPlayer: true, angleOffsetDeg: off);
-            }
-            if (!QxWizardGather(me)) PlayFx("holy_beam", me.MuzzlePosition, 96f, loop: false);
-        }
-
         /// <summary>코만도(레이저) — 3초 동안 주변 적에게 계속 튄다.</summary>
         private void LaserBounce(Unit me)
         {
@@ -660,7 +599,6 @@ namespace Game.Module.InGame
             TickSpinFire(dt);         // 폭력배 회전 난사
             TickStickyBomb(dt);       // 코만도(수류탄) C4
             TickFullSwing(dt);        // 슬러거 풀스윙 회오리
-            TickWraithFlame(dt);      // 영매 원혼 강림
             TickUltimates(dt);        // 필살기 18종(BattleDirector.Ultimates)
             TickEvade(dt);            // 닌자 몸놀림 (BattleDirector.Rework1021)
             TickWraiths(dt);          // 사신 원혼

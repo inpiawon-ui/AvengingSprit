@@ -145,15 +145,15 @@ namespace Game.Module.InGame
                 case "ninja":            SrNinja(me);           break;   // 그림자 삼분신(SR)
                 case "hopper_smg":       SrHopperSmg(me);       break;   // 돌진 난사(SR)
                 case "vampire":          BloodPool(me);         break;   // 피의 웅덩이(PD 2026-10-21)
-                case "dragoon":          SsrDragoon(me);        break;   // 용 돌격(SSR)
+                case "dragoon":          DragoonMeteor(me);     break;   // 메테오 + 불바다(PD 2026-10-21)
                 case "guru":             UltGuru(me);           break;   // 결계 가두기
                 case "salamander":       UltSalamander(me);     break;   // 독 늪
                 case "snowwoman":        UltSnowwoman(me);      break;   // 얼음 진
                 case "commando_missile": MissileFocus(me);      break;   // 집중 포격 — 가장 센 적에게 8발(PD 2026-10-21)
-                case "commando_laser":   SrLaser(me);           break;   // 충전 레이저(SR)
+                case "commando_laser":   PrismLaser(me);        break;   // 프리즘 레이저(PD 2026-10-21)
                 case "white_wizard":     LightRain(me);         break;   // 빛기둥 비(PD 2026-10-21)
                 case "dragon_blue":      UltDragonStorm(me);    break;   // 천뢰 — 둘레 모든 적에게 낙뢰(PD 2026-10-21)
-                case "commando_mg":      UltCommandoMg(me);     break;   // 디플렉트 월
+                case "commando_mg":      MgSpinFire(me);        break;   // 회전 난사 + 사방 산탄(PD 2026-10-21)
                 case "amazon_elite":     UltAmazonElite(me);    break;   // 역린
                 default:                 UltFallback(me);       break;   // 표에 없는 몸 — 아래 참고
             }

@@ -306,7 +306,8 @@ namespace Game.Module.InGame
                 var hit = new List<Unit>(EnemiesInRange(front, Meters(ChainPullSlamMeters) * _buffs.AoeMul));
                 for (int i = 0; i < hit.Count; i++) HitEnemyWith(hit[i], dmg, me.Profile);
                 PlayFx("cbsnap", front, Meters(2.4f), loop: false);
-                PlayFx("slam", front, Meters(ChainPullSlamMeters) * 2f, loop: false);
+                // 연기 그림(`slam`)은 줄여도 끌려온 무리 위에 회색 덩어리로 1초 가까이 남아 적을 가렸다 — 흙먼지 알갱이만
+                _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, front, 6, 160f, 30f, 0.5f, 0f);
                 Shake(5f);
                 HitStop(0.05f);
             });
@@ -439,6 +440,251 @@ namespace Game.Module.InGame
                 PlayFx("soulripple", at, Meters(GiantWraithBlastMeters) * 2f, loop: false);
                 Shake(12f);
                 HitStop(0.1f);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  코만도(레이저) — 프리즘 레이저: 굵은 빔이 첫 적에 꽂히고, 거기서 갈래로 갈라져 둘레 적에게 꺾여 든다
+        //  PD 2026-10-21 「몬스터가 일자로 있지 않아서」 · 「ㄷ(프리즘 분열)」 — 예전 충전 레이저는 14 m 일직선이라 한두 놈만 맞았다
+        // ═══════════════════════════════════════════════════════════
+
+        private const float PrismRangeMeters = 10f;
+        private const float PrismSplitMeters = 5f;
+        private const int PrismBranches = 4;
+        private const float PrismMainMul = 4f;
+        private const float PrismBranchMul = 2.5f;
+        private const float PrismBranchDraw = 150f;
+
+        private void PrismLaser(Unit me)
+        {
+            var t = NearestEnemy(me.Position, Meters(PrismRangeMeters));
+            var dir = t != null ? (t.Position - me.Position).normalized : me.Facing;
+            me.SetFacing(dir);
+            var charge = PlayFx("lzcharge", me.MuzzlePosition, SsrBody * 1.6f, loop: false) ?? PlayFx("wfgather", me.MuzzlePosition, 140f, loop: false);
+            charge?.SetFrameSeconds(0.085f);
+            _pfx?.Spray(ParticleFxKind.Streak, me.MuzzlePosition + dir * 60f, -dir, 70f, 14, 120f, 260f, new Vector2(30f, 4f), 0.4f,
+                        new Color(0.5f, 0.9f, 1f, 1f));
+            UltInvuln(1.2f);
+            UltAfter(0.5f, () =>
+            {
+                var from = me.MuzzlePosition;
+                var first = t != null && t.IsAlive ? t : NearestEnemy(me.Position, Meters(PrismRangeMeters));
+                var hitAt = first != null ? first.Position : from + dir * Meters(PrismRangeMeters);
+                PrismBeam(from, hitAt, LzBeamDraw, 0.5f);
+                if (first == null) { Shake(6f); return; }
+                UltHit(me, first, PrismMainMul);
+                (PlayFx("lzblast", hitAt, SsrBody * 2.4f, loop: false) ?? PlayFx("lzhit", hitAt, 110f, loop: false))?.SetFrameSeconds(0.05f);
+                PlayFx("lzring", hitAt, SsrBody * 2f, loop: false);   // 갈라지는 자리 — 프리즘
+                Shake(8f);
+                HitStop(0.08f);
+
+                // 첫 적 둘레에서 가까운 넷에게 갈래가 꺾여 든다
+                var near = UltTargets(hitAt, Meters(PrismSplitMeters));
+                int n = 0;
+                for (int i = 0; i < near.Count && n < PrismBranches; i++)
+                {
+                    var e = near[i];
+                    if (e == first) continue;
+                    float delay = 0.08f + n * 0.05f;
+                    n++;
+                    UltAfter(delay, () =>
+                    {
+                        if (e == null || !e.IsAlive) return;
+                        PrismBeam(hitAt, e.Position, PrismBranchDraw, 0.3f);
+                        UltHit(me, e, PrismBranchMul);
+                        (PlayFx("lzblast", e.Position, SsrBody * 1.7f, loop: false) ?? PlayFx("lzhit", e.Position, 90f, loop: false))?.SetFrameSeconds(0.05f);
+                        Shake(3f);
+                    });
+                }
+            });
+        }
+
+        private void PrismBeam(Vector2 from, Vector2 to, float draw, float life)
+        {
+            var frames = FxFrames("lzbeam");
+            if (frames == null) { UltBeam("laser_wide", from, to, draw * 0.42f, 0.05f); return; }
+            var beam = FreeImpact(draw);
+            beam?.PlayBeam(from, to, frames, draw);
+            beam?.SetLoop(true);
+            beam?.SetFrameSeconds(0.04f);
+            beam?.SetLife(life, 0.15f);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  화이트 위저드 액티브 — 중력진: 적이 가장 몰린 자리에 황금 마법진 → 1.2초 동안 가운데로 빨아들이며 깎다가
+        //  → 빛 폭발로 마무리 (PD 2026-10-21 「냇 할로우 중력진」 · 시안 in/mock_wizard_gravity.png)
+        //  그림은 마법진 `gvcircle` · 소용돌이 `gvswirl` · 마무리 `gvburst`. 아직 없으면 조준 원 · `wwburst` 로 돈다.
+        // ═══════════════════════════════════════════════════════════
+
+        private const float GravityRangeMeters = 8f;
+        // 2.6 m 는 마법진이 화면 폭의 83% 를 덮어 적이 다 가려졌다(시안은 약 67%) — 녹화 검수 2026-10-21
+        private const float GravityMeters = 2.2f;
+        private const float GravitySpecMeters = 2.7f;   // Lv5 옵션 — 범위가 넓어진다
+        private const float GravitySwirlDelay = 0.15f;  // 시안 순서 — 마법진이 먼저 깔리고 소용돌이가 돈다
+        private const float GravityPullSeconds = 1.2f;
+        private const int GravitySteps = 24;            // 0.05초마다 끌어당긴다
+        private const int GravityTickEvery = 6;         // 0.3초마다 한 번 깎는다
+        private const float GravityPullRate = 0.18f;    // 한 걸음에 남은 거리의 18% — 처음엔 확 끌리고 가운데서 느려진다
+        private const float GravityHoldMeters = 0.35f;  // 한 점에 겹치지 않게 가운데서 이만큼 떨어져 선다
+        private const float GravityTickMul = 0.3f;
+        private const float GravityBurstMul = 2.4f;
+        private static readonly Color GravityMarkTint = new(1f, 0.85f, 0.35f, 1f);
+
+        private void GravityWell(Unit me)
+        {
+            var near = UltTargets(me.Position, Meters(GravityRangeMeters));
+            if (near.Count == 0) { PlayFx("holy_beam", me.MuzzlePosition, 96f, loop: false); return; }
+            float r = Meters(SpecOpen ? GravitySpecMeters : GravityMeters) * _buffs.AoeMul;
+            var c = DensestSpot(near, r);
+            me.SetFacing(c - me.Position);
+            me.PlayAttack();
+
+            float life = GravityPullSeconds + 0.25f;
+            var circle = PlayFloorFx("gvcircle", c, r * 2.2f, loop: true);
+            if (circle != null) { circle.SetFrameSeconds(0.08f); circle.SetLife(life, 0.2f); }
+            else
+            {
+                var mark = PlayFloorFx("castring", c, r * 2f, loop: true);
+                if (mark != null) { mark.SetTint(GravityMarkTint); mark.SetLife(life, 0.2f); }
+            }
+            UltAfter(GravitySwirlDelay, () =>
+            {
+                // 소용돌이는 마법진 안쪽 테두리까지만 — 바깥 룬 띠는 보이게 둔다
+                var swirl = PlayFx("gvswirl", c, r * 1.9f, loop: true);
+                if (swirl != null) { swirl.SetFrameSeconds(0.07f); swirl.SetLife(GravityPullSeconds - GravitySwirlDelay, 0.2f); }
+            });
+
+            int tickDmg = SkillDamage(me, GravityTickMul);
+            float hold = Meters(GravityHoldMeters);
+            for (int s = 1; s <= GravitySteps; s++)
+            {
+                bool tick = s % GravityTickEvery == 0;   // 루프 변수를 람다에 잡지 않는다
+                UltAfter(GravityPullSeconds * s / GravitySteps, () =>
+                {
+                    if (_host != me || me == null || !me.IsAlive) return;
+                    var list = new List<Unit>(EnemiesInRange(c, r * 1.15f));
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        var e = list[i];
+                        var off = e.Position - c;
+                        float dist = off.magnitude;
+                        // 보스는 끌지 않는다(사슬 끌어오기 · 필살기와 같은 규칙) — 깎기만 한다
+                        if (!e.IsBoss && dist > hold)
+                            e.Position = ClampedInField(e, c + off / dist * (dist - (dist - hold) * GravityPullRate));
+                        if (!tick) continue;
+                        HitEnemyWith(e, tickDmg, me.Profile);
+                        _pfx?.Dart(e.Position, c, ParticleElement.Fire, 0.3f, 1);
+                    }
+                });
+            }
+            UltAfter(GravityPullSeconds + 0.05f, () =>
+            {
+                if (_host != me || me == null || !me.IsAlive) return;
+                int dmg = SkillDamage(me, GravityBurstMul);
+                var hit = new List<Unit>(EnemiesInRange(c, r));
+                for (int i = 0; i < hit.Count; i++) HitEnemyWith(hit[i], dmg, me.Profile);
+                (PlayFx("gvburst", c, r * 2.6f, loop: false) ?? PlayFx("wwburst", c, r * 2.2f, loop: false))?.SetFrameSeconds(0.05f);
+                _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, c, 16, 260f, 40f, 0.7f, 0f);
+                Shake(6f);
+                HitStop(0.06f);
+            });
+        }
+
+        /// <summary>반경 안에 이웃이 가장 많은 적의 자리 — 무리의 한가운데.</summary>
+        private static Vector2 DensestSpot(List<Unit> list, float radius)
+        {
+            float r2 = radius * radius;
+            int best = -1;
+            var at = list[0].Position;
+            for (int i = 0; i < list.Count; i++)
+            {
+                int n = 0;
+                for (int j = 0; j < list.Count; j++)
+                    if ((list[j].Position - list[i].Position).sqrMagnitude <= r2) n++;
+                if (n > best) { best = n; at = list[i].Position; }
+            }
+            return at;
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  드라군 — 메테오: 가장 센 적에게 조준 → 하늘에서 불덩이가 떨어져 터지고, 그 자리가 4초 동안 불바다가 된다
+        //  PD 2026-10-21 「용 돌격 말고 가장 센 몬스터에 메테오 · 터질 때 데미지랑 거기를 용암 지대로」
+        //  그림은 시안(in/mock_dragoon_meteor.png)대로 받은 운석 `mtrock` · 폭발 빛 `mtblast` · 바위 파편 `mtdebris` · 용암 `mtlava`.
+        //  아직 없으면 예전 그림(드라군 불덩이 탄 · `dgblast` · 불바다)으로 돈다.
+        // ═══════════════════════════════════════════════════════════
+
+        private const float MeteorFallSeconds = 0.85f;
+        private const float MeteorSize = 190f;
+        private const float MeteorArtSize = 320f;   // 전용 운석 — 바위(칸 256 중 약 100 px)가 왼쪽 아래, 꼬리가 오른쪽 위
+        private const float MeteorBlastMeters = 2.6f;
+        private const float MeteorBlastMul = 6f;
+        private const float MeteorFieldMeters = 2.4f;
+        private const float MeteorFieldSeconds = 4f;
+        private const float MeteorFieldMul = 0.6f;
+        private static readonly Color MeteorMarkTint = new(1f, 0.45f, 0.2f, 1f);
+
+        private void DragoonMeteor(Unit me)
+        {
+            var t = UltStrongest(me.Position) ?? NearestEnemy(me.Position);
+            if (t == null) { UltFallback(me); return; }
+            var at = t.Position;
+            me.PlayAttack();
+            // 예고 — 발밑 조준 원
+            var mark = PlayFloorFx("castring", at, Meters(MeteorBlastMeters) * 2f, loop: true);
+            if (mark != null) { mark.SetTint(MeteorMarkTint); mark.SetLife(MeteorFallSeconds + 0.1f, 0.1f); }
+            PlayFx("dgrise", me.Position, SsrBody * 1.6f, loop: false);
+
+            // 떨어지는 불덩이 — 전용 운석은 그림의 꼬리 방향대로 오른쪽 위(약 31°)에서 온다
+            var rockArt = FxFrames("mtrock");
+            var frames = rockArt ?? ShotFrames("dragoon");
+            float size = rockArt != null ? MeteorArtSize : MeteorSize;
+            // 6 m 에서 출발하면 화면 밖에서 시간을 다 쓰고 마지막 0.2초만 보였다(녹화 검수) — 화면 안에서 출발
+            var sky = rockArt != null ? at + new Vector2(Meters(4.5f), Meters(2.7f)) : at + new Vector2(-Meters(3f), Meters(9f));
+            // 운석 그림은 바위가 칸 가운데가 아니라 왼쪽 아래(칸 256 중 x 64 · y 162)에 있다 — 그만큼 옮겨 바위가 조준 원에 닿게
+            var lift = rockArt != null ? new Vector2(size * 0.25f, size * 0.13f) : Vector2.zero;
+            var rock = frames != null ? FreeImpact(size) : null;
+            rock?.Play(sky + lift, frames, size, loop: true);
+            if (rockArt != null) rock?.SetFrameSeconds(0.07f);
+            var d = at - sky;
+            if (rock != null)
+                rock.transform.localEulerAngles = rockArt != null ? Vector3.zero
+                                                : new Vector3(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+            const int Steps = 14;
+            for (int s = 1; s <= Steps; s++)
+            {
+                float k = s / (float)Steps;
+                UltAfter(MeteorFallSeconds * k, () =>
+                {
+                    var p = Vector2.Lerp(sky, at, Mathf.Pow(k, 1.4f));   // 점점 빨라진다(제곱은 처음이 너무 느려 안 보였다)
+                    rock?.MoveTo(p + lift);
+                    _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, p, 3, 60f, 30f, 0.4f, 0f);
+                });
+            }
+            UltAfter(MeteorFallSeconds + 0.02f, () =>
+            {
+                rock?.Stop();
+                // 착탄 — 가장 셀 때. 빛(더하기) 위에 검은 바위 파편을 겹친다
+                bool art = Qx("mtblast");
+                if (art)
+                {
+                    PlayFx("mtblast", at, SsrBody * 4.6f, loop: false)?.SetFrameSeconds(0.06f);
+                    PlayFx("mtdebris", at, SsrBody * 4.6f, loop: false)?.SetFrameSeconds(0.06f);
+                }
+                else
+                {
+                    PlayFx("dgblast", at, SsrBody * 4.2f, loop: false)?.SetFrameSeconds(0.05f);
+                    PlayFx("elcrack", at, Meters(MeteorBlastMeters) * 2f, loop: false);
+                }
+                UltAoe(me, at, MeteorBlastMeters, MeteorBlastMul, art ? null : "slam", 2f, knockMeters: 1f);
+                _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, at, 18, 320f, 60f, 0.8f, 0f);
+                _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, at, 10, 200f, 50f, 0.9f, 0f);
+                Shake(14f);
+                HitStop(0.12f);
+                // 남는 것 — 4초 용암 지대(밟은 적이 탄다). 용암 그림은 가로로 긴 탑뷰 타원이라 비율을 지킨다
+                bool lava = Qx("mtlava");
+                SpawnField(at, Meters(MeteorFieldMeters) * _buffs.AoeMul, MeteorFieldSeconds, FieldEffect.Burn,
+                           UltDamage(me, MeteorFieldMul), fromPlayer: true, artKey: lava ? "mtlava" : FireFieldArt,
+                           keepAspect: lava);
             });
         }
 

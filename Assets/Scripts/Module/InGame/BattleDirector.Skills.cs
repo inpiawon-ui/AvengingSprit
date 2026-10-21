@@ -153,13 +153,6 @@ namespace Game.Module.InGame
         private float _beamWidth = 1f;
         private float BeamWidthMul => _beamSeconds > 0f ? _beamWidth : 1f;
 
-        // ── 난사 (폭력배) ────────────────────────────────────────
-        private float _spraySeconds;
-        private int _sprayShots;
-        private float _sprayDegrees = 20f;
-        private int SprayExtraShots => _spraySeconds > 0f ? _sprayShots : 0;
-        private float SprayDegrees => _sprayDegrees;
-
         // ── 연속 명중 카운터 (호퍼 기관단총 · 탄창 과열) ─────────
         //
         // ⚠ C032 영혼 복제(`_echoHits`)와 **주기가 같아도 카운터는 나눈다.**
@@ -258,7 +251,6 @@ namespace Game.Module.InGame
             Countdown(ref _hasteSeconds, dt);
             Countdown(ref _pierceSeconds, dt);
             Countdown(ref _beamSeconds, dt);
-            Countdown(ref _spraySeconds, dt);
             Countdown(ref _reflectSeconds, dt);
             Countdown(ref _wardSeconds, dt);
             Countdown(ref _drainSeconds, dt);
@@ -281,7 +273,7 @@ namespace Game.Module.InGame
         /// <summary>몸을 갈아입거나 방을 나갈 때 걸려 있던 것을 전부 끈다.</summary>
         private void ClearSkillState()
         {
-            _hasteSeconds = _pierceSeconds = _beamSeconds = _spraySeconds = 0f;
+            _hasteSeconds = _pierceSeconds = _beamSeconds = 0f;
             _reflectSeconds = _wardSeconds = _drainSeconds = 0f;
             _cloneSeconds = _turretHasteSeconds = 0f;
             // 정조준(호퍼)은 몸에 붙은 표시가 있다 — 안 끄면 갈아탄 다른 몸에 금빛 고리가 따라붙는다.
@@ -461,7 +453,7 @@ namespace Game.Module.InGame
                 case "hopper":           HopperCritSurge(me);   break;
                 case "commando_missile": MissileVolley(me);     break;   // 여러 적에게 한 발씩(PD 2026-10-21)
                 case "medium":           MediumMiniGolem(me);   break;   // 미니 골렘(PD 2026-10-21) — 필살기는 골렘 강령
-                case "white_wizard":     WizardFan(me);         break;
+                case "white_wizard":     GravityWell(me);       break;   // 중력진(PD 2026-10-21)
                 case "commando_laser":   LaserBounce(me);       break;
                 case "robot":            DeployTurret(me);      break;
 

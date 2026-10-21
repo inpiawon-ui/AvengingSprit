@@ -102,7 +102,7 @@ namespace Game.Module.InGame
         }
 
         public void Spawn(Vector2 at, float radius, float seconds, FieldEffect effect,
-                          int damagePerTick, bool fromPlayer, Color color)
+                          int damagePerTick, bool fromPlayer, Color color, bool keepAspect = false)
         {
             Center = at;
             Radius = radius;
@@ -115,6 +115,7 @@ namespace Game.Module.InGame
 
             _rect.anchoredPosition = new Vector2(Mathf.Round(at.x), Mathf.Round(at.y));
             _rect.sizeDelta = new Vector2(radius * 2f, radius * 2f);
+            _image.preserveAspect = keepAspect;   // 풀에서 돌려 쓰므로 깔 때마다 정한다
             _image.color = color;
             gameObject.SetActive(true);
         }

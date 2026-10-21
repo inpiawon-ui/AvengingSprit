@@ -36,10 +36,23 @@ namespace Game.Module.InGame
         private bool _sfLeftHand;
         private Impact _sfSpinFx;
 
-        private void ThugSpinFire(Unit me)
+        private void ThugSpinFire(Unit me) => StartSpinFire(me, SfSeconds, SfFinaleShots);
+
+        // 코만도(기관총) 필살기도 같은 틀 — 기관총을 세워 3초 돌며 쏘고, 마지막에 사방 산탄(PD 2026-10-21 「일단 그렇게 적용」)
+        private const float MgSpinSeconds = 3f;
+        private const int MgFinaleShots = 24;
+
+        private void MgSpinFire(Unit me) => StartSpinFire(me, MgSpinSeconds, MgFinaleShots);
+
+        private string _sfKey;
+        private int _sfFinaleShots;
+
+        private void StartSpinFire(Unit me, float seconds, int finaleShots)
         {
             _sfActive = true;
-            _sfLeft = SfSeconds;
+            _sfKey = me.Key;
+            _sfFinaleShots = finaleShots;
+            _sfLeft = seconds;
             var f = me.Facing;
             _sfAngle = Mathf.Atan2(f.y, f.x) * Mathf.Rad2Deg;
             _sfShotTick = _sfShellTick = _sfTrailTick = 0f;
@@ -59,7 +72,7 @@ namespace Game.Module.InGame
         {
             if (!_sfActive) return;
             var me = _host;
-            if (me == null || !me.IsAlive || me.Key != "thug") { StopSpinFire(); return; }
+            if (me == null || !me.IsAlive || me.Key != _sfKey) { StopSpinFire(); return; }
             _sfSpinFx?.MoveTo(me.Position);
 
             _sfAngle += 360f * SfTurnsPerSecond * dt;
@@ -112,7 +125,7 @@ namespace Game.Module.InGame
         private void SfFinale(Unit me)
         {
             int dmg = UltDamage(me, SfFinaleMul * BaseAxis(1f));
-            FireFan(me, me.Position + me.Facing * 2000f, SfFinaleShots, 360f - 360f / SfFinaleShots, dmg, fromPlayer: true);
+            FireFan(me, me.Position + me.Facing * 2000f, _sfFinaleShots, 360f - 360f / _sfFinaleShots, dmg, fromPlayer: true);
             var ring = PlayFx("thring", me.Position, SfRingSize, loop: false);
             if (ring != null) ring.SetFrameSeconds(0.05f);
             else PlayFx("crit", me.Position, SfRingSize * 0.6f, loop: false);

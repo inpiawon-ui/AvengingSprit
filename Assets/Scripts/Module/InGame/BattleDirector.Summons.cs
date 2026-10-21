@@ -53,14 +53,6 @@ namespace Game.Module.InGame
         private const float GolemHpPercent = 1.20f;   // 기획 2026-09-15 — 체력 두 배
         private const float GolemAtkPercent = 0.60f;
 
-        // ── 분신 — 닌자 액티브 ─────────────────────────────────
-        //
-        // 명세 2026-09-14 — 5초 · 최대 체력 100% · 맵 가운데 · 모든 적이 분신을 본다.
-        // 때리지도 움직이지도 않는다. **맞아 주는 것이 전부**다.
-        private const float CloneLifeSeconds = 5f;
-        private const float CloneHpPercent = 1.00f;
-        private const float CloneAtkPercent = 0.40f;   // 해골과 같은 몫
-
         private sealed class Summon
         {
             public Unit U;
@@ -111,32 +103,6 @@ namespace Game.Module.InGame
             u.SetHpBarVisible(false);
         }
 
-        /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
-        private void SummonClone(Vector2 at)
-        {
-            string key = _host != null ? _host.Key : TrashSkeletonKey;
-            // 분신도 **같이 싸운다**(기획 2026-09-15) — 서서 적을 끌기만 하면 멀뚱한 인형이다.
-            // 싸우는 방식은 닌자 것을 그대로 쓴다(표창).
-            SpawnSummon(key, "분신", CloneHpPercent, CloneAtkPercent, CloneLifeSeconds,
-                        attacks: true, mobile: false, taunt: true, at: at,
-                        profile: _host != null ? _host.Profile : null);
-
-            // ⚠ 분신은 **닌자와 같은 그림**이다. 그냥 두면 화면에 닌자가 둘이라
-            //   어느 쪽이 나인지 모른다(기획 2026-09-15). 색으로 가른다 —
-            //   푸르게 식히고 반쯤 비쳐서 "저건 내가 아니다" 가 한눈에 읽히게.
-            if (_summons.Count > 0)
-            {
-                var u = _summons[_summons.Count - 1].U;
-                if (u != null)
-                {
-                    u.MarkPhantom();
-                    // 나타나는 순간에도 표가 나야 한다 — 연기 위에 한 번 더 터뜨린다.
-                    // (퀄업 연출이 세울 때는 그쪽이 바닥 펄스 · 절삭으로 대신한다)
-                    if (!_wpQuietSummon) PlayFx("burst", u.Position, 120f, loop: false);
-                }
-            }
-        }
-
         /// <param name="profile">
         /// 이 몸의 **싸우는 방식**. 넣지 않으면 공격 방식이 「기본 = 쏘기」로 떨어지고
         /// 사거리·간격까지 불러낸 몸의 것을 물려받는다 — 그래서 골렘과 해골이
@@ -171,7 +137,7 @@ namespace Game.Module.InGame
             _summons.Add(new Summon { U = u, Life = life, LifeMax = life, Drains = drains,
                                       Attacks = attacks, Mobile = mobile, Taunt = taunt });
             // 골렘은 룬 원에서 솟는다(영매 퀄업 2026-10-07) — 돌 파편 · 보라 빛
-            if (!_wpQuietSummon && !(key == GolemKey && QxGolemRise(u.Position)))
+            if (!(key == GolemKey && QxGolemRise(u.Position)))
                 PlayFx(taunt ? "smoke" : "burst", u.Position, 96f, loop: false);
         }
 

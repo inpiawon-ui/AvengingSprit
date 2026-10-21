@@ -3968,10 +3968,7 @@ namespace Game.Module.InGame
 
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
                 // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
-                // 폭력배 난사 1초 동안은 **걸으면서도 쏜다**(기획 2026-09-15) —
-                // 쏟아붓는 기술이 걸음 한 번에 끊기면 난사가 아니라 멈춤 버튼이 된다.
-                bool moveAttack = (_host != null && _host.Profile != null && _host.Profile.MoveAttack)
-                               || _spraySeconds > 0f;
+                bool moveAttack = _host != null && _host.Profile != null && _host.Profile.MoveAttack;
                 if (!moveAttack)
                 {
                     _stopTimer = 0f;
@@ -4021,7 +4018,6 @@ namespace Game.Module.InGame
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
             if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
             PerformAttack(_host, target, true);
-            WfOnHostAttack(target);   // 영매 원혼 강림 — 원혼도 같이 친다(혼불을 던진다)
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
         }
@@ -5108,7 +5104,7 @@ namespace Game.Module.InGame
                     // 구루는 주변을 한꺼번에 치지 않고 **하나만** 친다(기획 2026-09-15).
                     // 추가 발사 카드가 붙으면 탄 수 대신 **맞는 적 수**가 늘어난다.
                     bool single = attacker.Key == "guru";
-                    int maxHits = single && fromPlayer ? 1 + _buffs.ExtraShots + SprayExtraShots : 1;
+                    int maxHits = single && fromPlayer ? 1 + _buffs.ExtraShots : 1;
                     MeleeStrike(attacker, target, fromPlayer,
                                 hitAll: kind == AttackKind.Pulse && !single, maxHits: maxHits);
                     break;
@@ -5118,7 +5114,7 @@ namespace Game.Module.InGame
                 {
                     // 다중 사격 버프는 확산이 아닌 방식에도 탄을 더한다 (플레이어 한정).
                     // 카드 한 장 = 한 발. 확률이 아니라 **항상** 붙는다.
-                    int extra = fromPlayer ? _buffs.ExtraShots + SprayExtraShots : 0;
+                    int extra = fromPlayer ? _buffs.ExtraShots : 0;
                     // 정본 projectiles 는 확산이 아닌 몸에도 탄 수를 준다 (갱스터 3발).
                     // 확산일 때만 세면 그 값이 버려진다.
                     int shots = p == null ? 1 : fromPlayer ? p.ShotCount : p.EnemyShotCount;
@@ -5143,8 +5139,6 @@ namespace Game.Module.InGame
                     float span = kind == AttackKind.Spread && p.SpreadDegrees > 0f
                                ? p.SpreadDegrees : 0f;
                     if (fan && n > 1) span = Mathf.Max(span, ExtraFanDegrees * (n - 1));
-                    // 난사(폭력배)는 각도를 스스로 정한다 — Lv6~10 에 20° 가 40° 로 벌어진다
-                    if (fromPlayer && SprayExtraShots > 0) span = Mathf.Max(span, SprayDegrees);
 
                     // 정본은 공격력을 **한 번의 공격**에 준다. 탄 수는 따로 적혀 있으므로
                     // 나눠 실어야 탄 수가 그대로 화력 배수가 되지 않는다 — 확산은 맞히기
@@ -5759,7 +5753,7 @@ namespace Game.Module.InGame
         /// </param>
         private Field SpawnField(Vector2 at, float radius, float seconds,
                                  FieldEffect effect, int damagePerTick, bool fromPlayer,
-                                 string artKey = null)
+                                 string artKey = null, bool keepAspect = false)
         {
             Field f = null;
             for (int i = 0; i < _fields.Count; i++)
@@ -5796,7 +5790,7 @@ namespace Game.Module.InGame
             // 정본 BUF_A02 — 장판이 더 오래 남는다
             f.Spawn(at, radius, seconds + _buffs.FieldExtraSeconds,
                     effect, damagePerTick, fromPlayer,
-                    generic ? ColorOf(effect) : Color.white);
+                    generic ? ColorOf(effect) : Color.white, keepAspect);
             return f;
         }
 
@@ -6638,8 +6632,6 @@ namespace Game.Module.InGame
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
             if (!fromPlayer) shot.SourceKey = attacker.Key;
-            // 난사 중이면 굵은 탄 대신 가는 예광탄(퀄업 연출 2026-10-07)
-            kind = WpTracerShot(attacker, shot, fromPlayer, attacker.MuzzlePosition, kind);
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -7049,7 +7041,6 @@ namespace Game.Module.InGame
 
         private void SpawnImpact(Vector2 at, string kind, float size = 0f)
         {
-            if (kind == WpTracerKind) { WpTracerHit(at); return; }   // 난사 예광탄 — 작은 코어만
             // 낱장 그림 위에 **알갱이**를 얹는다. 그림은 «터졌다»를 말하고
             // 알갱이는 «부서진 것이 사방으로 날아갔다»를 말한다 — 둘은 다른 일이다.
             _pfx?.Hit(at, ParticleElement.Fire, 0.8f);

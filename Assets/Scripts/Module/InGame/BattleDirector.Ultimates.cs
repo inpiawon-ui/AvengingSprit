@@ -32,13 +32,7 @@ namespace Game.Module.InGame
 
         private void StopUltimates()
         {
-            for (int i = 0; i < _vpOrbs.Count; i++) _vpOrbs[i].Fx?.Stop();
-            _vpOrbs.Clear();
-            _golemUlt = null;
-            _golemUltOn = false;
             StopSrMissiles();
-            _dgMount = _dgBreath = null;
-            _vpFollowAura = null;
             _ultQueue.Clear();
             ClearWraiths();
             _ultKind = null;
@@ -68,9 +62,7 @@ namespace Game.Module.InGame
                 if (_host != null) q.Run();
             }
             TickUltDash(dt);
-            TickVpOrbs(dt);
             TickSrMissiles(dt);
-            TickSsrGolem(dt);
             if (_ultKind == null) return;
             var me = _host;
             if (me == null || !me.IsAlive) { StopUltimates(); return; }
@@ -78,9 +70,7 @@ namespace Game.Module.InGame
             switch (_ultKind)
             {
                 case "guru": TickSealing(me, dt); break;
-                case "commando_mg": TickDeflectWall(me, dt); break;
                 case "amazon_elite": TickWrath(me, dt); break;
-                case "dragoon": TickDragonCharge(me, dt); TickSsrDragoon(me, dt); break;
                 case "gangster": TickContract(me); break;
                 case "hopper_smg": TickSrHopperSmg(me); break;
             }
@@ -332,24 +322,6 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  몸이 날아다닌다
-        // ═══════════════════════════════════════════════════════════
-
-        // 드라군 — 용 돌격의 돌진 중 불길 · 길 위 피해(연출은 BattleDirector.UltSsr `SsrDragoon`)
-        private Vector2 _dcDir;
-        private float _dcDrop;
-
-        private void TickDragonCharge(Unit me, float dt)
-        {
-            _dcDrop -= dt;
-            if (_dcDrop > 0f) return;
-            _dcDrop = 0.15f;
-            // 시안 「지나간 바닥이 탄다」 — 빈 주황 고리 말고 솟는 불길(`fx_dgrise`). 불바다(`lava`)는 검붉어 피로 보였다(녹화 ssr_dg8)
-            SpawnField(me.Position, Meters(1f), 3f, FieldEffect.Burn, UltDamage(me, 0.3f), fromPlayer: true, artKey: "dgrise");
-            UltAoe(me, me.Position + _dcDir * Meters(0.8f), 1.3f, 0.9f, null);
-        }
-
-        // ═══════════════════════════════════════════════════════════
         //  끌어모아 한 방 · 깔아 두고 터진다
         // ═══════════════════════════════════════════════════════════
 
@@ -509,123 +481,8 @@ namespace Game.Module.InGame
         }
 
         // ═══════════════════════════════════════════════════════════
-        //  쏟아붓는다
-        // ═══════════════════════════════════════════════════════════
-
-        // 화이트 위저드 — 빛 구슬 일제 발사: 몸 둘레에서 8발이 각자 적을 쫓는다
-        private void UltWizard(Unit me)
-        {
-            var list = UltTargets(me.Position, Meters(14f));
-            if (list.Count == 0) { UltFallback(me); return; }
-            // R 시안(ult_white_wizard) — 몸 둘레에 빛 구슬이 모였다가 → 금빛 꼬리를 끌며 휘어 날아가 → 맞은 자리마다 반짝 폭발
-            PlayFx("holy_beam", me.MuzzlePosition, 140f, loop: false);
-            var orbFrames = FxFrames("wworb");
-            var gather = new List<Impact>(8);
-            for (int i = 0; i < 8; i++)
-            {
-                float a = i * 45f * Mathf.Deg2Rad;
-                var p = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.7f) * Meters(0.9f);
-                var o = orbFrames != null ? TakeLoopFx("wworb", p, 40f) : null;
-                if (o != null) { o.SetFrameSeconds(0.08f); gather.Add(o); }
-            }
-            UltAfter(0.45f, () =>
-            {
-                for (int i = 0; i < gather.Count; i++) gather[i]?.Stop();
-                var now = UltTargets(me.Position, Meters(14f));
-                if (now.Count == 0) return;
-                for (int i = 0; i < 8; i++)
-                {
-                    var t = now[i % now.Count];
-                    float a = i * 45f * Mathf.Deg2Rad;
-                    var from = me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.7f) * Meters(0.9f);
-                    var shot = RentShot();
-                    if (shot == null) break;
-                    if (orbFrames != null) shot.SetSprite(orbFrames, "wworb", true);
-                    else shot.SetSprite(ShotSpriteOf(me), ShotKindOf(me), LoopsFrames(ShotKindOf(me)));
-                    // 새 구슬은 맞으면 그 자리에서 터진다(시안) — 관통이면 화면 끝까지 빛꼬리를 끌고 날아갔다(녹화 r_ww1)
-                    bool pierce = orbFrames == null;
-                    shot.Fire(from, from + (from - me.Position).normalized * 300f, _config.ShotSpeedPlayer, UltDamage(me, 2.2f),
-                              true, t, _config.ShotSize * 1.4f, ShotPlayerColor, _config.ShotLifeSeconds * 1.5f, pierce: pierce);
-                    shot.SetHoming(2.2f);
-                    _srMissiles.Add(new SrMissileTrack { Shot = shot, Target = t, Last = from, Prev = from, Light = true,
-                                                         Boom = "wwburst", BoomSize = SsrBody * 1.6f });
-                }
-            });
-        }
-
-
-        // ═══════════════════════════════════════════════════════════
         //  버티고 돌려준다
         // ═══════════════════════════════════════════════════════════
-
-        // 코만도(기관총) — 디플렉트 월: 앞에 방벽이 4초 동안 밀고 나가며 탄을 막고 적을 민다, 끝에 깨진다
-        private Vector2 _wallAt, _wallDir;
-        private float _wallTick;
-
-        private void UltCommandoMg(Unit me)
-        {
-            var near = NearestEnemy(me.Position);
-            _wallDir = near != null ? (near.Position - me.Position).normalized : me.Facing;
-            if (_wallDir.sqrMagnitude < 0.01f) _wallDir = Vector2.up;
-            _wallAt = me.Position + _wallDir * Meters(1.6f);
-            _ultKind = "commando_mg";
-            _ultT = 0f;
-            _wallTick = 0f;
-            // R 시안(ult_commando_mg) — 몸 앞에 하늘색 에너지 방벽 → 탄을 막으며 밀고 나감 → 깨져 흩어진다
-            var wall = UltLoop("mgwall", _wallAt, Meters(3.4f)) ?? UltLoop("cmwall", _wallAt, 170f);
-            if (wall != null)
-            {
-                wall.SetFrameSeconds(0.07f);
-                // 방벽 그림은 가로로 누운 판 — 미는 방향에 직각으로 세운다
-                wall.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(_wallDir.y, _wallDir.x) * Mathf.Rad2Deg - 90f);
-            }
-            _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Ice, _wallAt, 8, 120f, 40f, 0.5f, 0f);
-            UltAfter(4f, () =>
-            {
-                _ultKind = null;
-                for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
-                _ultFx.Clear();
-                var crash = PlayFx("mgshatter", _wallAt + _wallDir * Meters(0.4f), Meters(3.8f), loop: false);
-                if (crash != null)
-                {
-                    crash.SetFrameSeconds(0.05f);
-                    crash.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Atan2(_wallDir.y, _wallDir.x) * Mathf.Rad2Deg - 90f);
-                }
-                UltAoe(me, _wallAt, 2f, 3f, crash == null ? "shatter" : null, 2.2f, knockMeters: 2f);
-                _pfx?.Spray(ParticleFxKind.Shard, _wallAt, _wallDir, 50f, 16, 300f, 600f, new Vector2(16f, 16f), 0.6f,
-                            new Color(0.6f, 0.9f, 1f, 1f), element: ParticleElement.Ice);
-                Shake(9f);
-            });
-        }
-
-        private void TickDeflectWall(Unit me, float dt)
-        {
-            // 시안 — 방벽은 몸 바로 앞에 붙어 다닌다. 예전처럼 혼자 밀고 나가면 화면 밖에서 깨졌다(녹화 r_mg1)
-            _wallAt = ClampedInField(me, me.Position + _wallDir * Meters(1.6f));
-            if (_ultFx.Count > 0) _ultFx[0]?.MoveTo(_wallAt);
-            float r = Meters(1.3f);
-            for (int i = 0; i < _shots.Count; i++)
-            {
-                var s = _shots[i];
-                if (!s.IsActive || s.FromPlayer) continue;
-                if (Vector2.Distance(s.Position, _wallAt) > r) continue;
-                PlayFx("hit", s.Position, 50f, loop: false);
-                _pfx?.Spray(ParticleFxKind.Spark, s.Position, -_wallDir, 50f, 4, 120f, 260f, new Vector2(8f, 8f), 0.25f,
-                            new Color(0.6f, 0.9f, 1f, 1f));
-                s.Despawn();
-            }
-            _wallTick -= dt;
-            bool hit = _wallTick <= 0f;
-            if (hit) _wallTick = 0.4f;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (!Targetable(e) || e.IsBoss) continue;
-                if (Vector2.Distance(e.Position, _wallAt) > r) continue;
-                e.Position = ClampedInField(e, e.Position + _wallDir * Meters(1.4f) * dt * 1.2f);
-                if (hit) UltHit(me, e, 0.5f);
-            }
-        }
 
         // 아마존 정예 — 역린: 3초 버티며 날아온 탄 · 붙은 적을 몸에 모으고, 모은 만큼 둘레로 되돌려 터뜨린다
         private int _wrathStacks;

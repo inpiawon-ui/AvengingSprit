@@ -113,7 +113,7 @@ namespace Game.Module.InGame
 
         /// <summary>탄 고유 터짐(impact_*)을 도트 폭발이 대신하는가 — 폭발탄 · 난사 예광탄은 제 터짐을 쓴다.</summary>
         private bool DotHitCovers(string kind)
-            => DotHitReady && kind != WpTracerKind && kind != "grenade" && kind != "missile";
+            => DotHitReady && kind != "grenade" && kind != "missile";
 
         /// <summary>보통 타격 한 번. <paramref name="dull"/> 이면 작게 + 회색 먼지.</summary>
         private void HitPop(Vector2 at, bool dull = false)

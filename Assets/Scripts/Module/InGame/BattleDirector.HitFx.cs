@@ -94,7 +94,7 @@ namespace Game.Module.InGame
             _hxShotFrame = Time.frameCount;
             _hxShotAt = at;
             _hxShotDir = p.Direction.sqrMagnitude > 0.01f ? p.Direction.normalized : Vector2.up;
-            _hxShotOwnFx = p.Kind == WpTracerKind || p.Kind == "grenade" || p.Kind == "missile";
+            _hxShotOwnFx = p.Kind == "grenade" || p.Kind == "missile";
             return !_hxShotOwnFx;
         }
 
