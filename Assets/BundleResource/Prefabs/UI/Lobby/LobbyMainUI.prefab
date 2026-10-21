@@ -118740,6 +118740,7 @@ GameObject:
   - component: {fileID: 6831582999448993254}
   - component: {fileID: 4592906625974618859}
   - component: {fileID: 5015562298388037379}
+  - component: {fileID: 6115902625615749327}
   m_Layer: 0
   m_Name: SummonPanel
   m_TagString: Untagged
@@ -118938,6 +118939,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec58104ae9ddd14fb11e8ceab741e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.UnderTopBar
+--- !u!114 &6115902625615749327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3156878648472772864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f12f4415bea9934a9ccd2690ccf7573, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.SummonReveal
+  _stage: {fileID: 21300000, guid: 6f7c7518c4ad47f4b9054bdfe0f21db3, type: 3}
+  _revealStage: {fileID: 21300000, guid: d3d3c4968c8b55848ba412f50f90b586, type: 3}
+  _plate: {fileID: 21300000, guid: b6a254b84cf21c34fb17b6ab9fff649f, type: 3}
+  _rays: {fileID: 21300000, guid: 56da302f61bd74c47b0202fabe09f44e, type: 3}
+  _pillar:
+  - {fileID: 21300000, guid: 936ad3285b683d4499bfa0917810d996, type: 3}
+  - {fileID: 21300000, guid: b1b58e89518c4f54080f7854f6d141c1, type: 3}
+  - {fileID: 21300000, guid: 5dd346c0f4fc86342885912cfcf4826f, type: 3}
+  - {fileID: 21300000, guid: ed41bc5d4c7e28146a0e2c5fc4a13889, type: 3}
+  - {fileID: 21300000, guid: be7104cbd0a020e4baab630034a3dc39, type: 3}
+  - {fileID: 21300000, guid: 8c33ae000b356f642ba8bca5ad8230bc, type: 3}
+  _ring:
+  - {fileID: 21300000, guid: 60d78bbba7a5a1c449859e7f188aed5a, type: 3}
+  - {fileID: 21300000, guid: 44b234c634566a94cbf230f0b990e3d3, type: 3}
+  - {fileID: 21300000, guid: 401582d846347764f9a255333725a51c, type: 3}
+  - {fileID: 21300000, guid: 5b6a13bef3b25bf448ad0b1aa64dfd8e, type: 3}
+  - {fileID: 21300000, guid: 74144743503f6154eb521c33a4a4aeb7, type: 3}
+  - {fileID: 21300000, guid: a126e278f0eacc444861c9c9037aa802, type: 3}
+  _burst: []
+  _impact: []
+  _stampNew: {fileID: 21300000, guid: 28cc324e8393ba24b8258308c14e7072, type: 3}
+  _ribbonPickup: {fileID: 21300000, guid: f222295d8bea0a84cb8a309989110a36, type: 3}
+  _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
+  _silhouette: {fileID: 2100000, guid: 43001d9f02ceec74fb08f287c54e4578, type: 2}
+  _font: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
 --- !u!1 &3159021965591444944
 GameObject:
   m_ObjectHideFlags: 0

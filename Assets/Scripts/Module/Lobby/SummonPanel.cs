@@ -234,7 +234,10 @@ namespace Game.Module.Lobby
                     return;
                 }
                 _lastCount = count;
-                await PlayFxAsync(pulls, this.GetCancellationTokenOnDestroy());
+                var ct = this.GetCancellationTokenOnDestroy();
+                await PlayFxAsync(pulls, ct);
+                _ui.SetActive("SummonFx", false);
+                await RevealAsync(pulls, ct);
                 ShowResult(pulls, count);
             }
             finally
@@ -264,6 +267,30 @@ namespace Game.Module.Lobby
             var img = _ui.Get<Image>("SummonFxPillar");
             await Frames(img, frames, ct);
             if (jackpot && !_skip) await Frames(img, _jackpot, ct);
+        }
+
+        /// <summary>
+        /// 「실루엣 → 공개」 — 대박 · 픽업 · 새 몸이 있으면 그중 가장 높은 한 명만(PD 2026-10-21 · 10회가 길어지지 않게).
+        /// 평범한 조각뿐이면 아무 일 없이 결과 창으로.
+        /// </summary>
+        private async UniTask RevealAsync(IReadOnlyList<GachaPull> pulls, CancellationToken ct)
+        {
+            if (!TryGetComponent<SummonReveal>(out var reveal)) return;
+            int best = -1;
+            SummonReveal.Tier tier = SummonReveal.Tier.NewBody;
+            for (int i = 0; i < pulls.Count; i++)
+            {
+                var x = pulls[i];
+                var t = x.Jackpot ? SummonReveal.Tier.Jackpot : x.Pickup ? SummonReveal.Tier.Pickup : SummonReveal.Tier.NewBody;
+                if (!x.Jackpot && !x.Pickup && !x.IsNew) continue;
+                if (best < 0 || t > tier) { best = i; tier = t; }
+            }
+            if (best < 0) return;
+            CoreModule.TryGet<IPlayerDataService>(out var p);
+            var h = p?.GetHost(pulls[best].HostKey);
+            string name = h != null ? h.DisplayName : pulls[best].HostKey;
+            string grade = h == null ? string.Empty : h.Grade == HostGrade.S ? "SSR" : h.Grade == HostGrade.A ? "SR" : "R";
+            await reveal.PlayAsync(pulls[best].HostKey, name, grade, tier, ct);
         }
 
         private async UniTask Frames(Image img, Sprite[] frames, CancellationToken ct)

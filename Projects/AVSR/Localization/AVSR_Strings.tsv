@@ -1263,3 +1263,7 @@ ui.tower.sweep_preview	{0}층을 깨면 · {1} · 조각 ×{2}	{0}階クリア�
 ui.growth5.ghost_title	유령 육성	ゴースト育成	Ghost Training
 ui.growth5.path_done	받음	受取済	Claimed
 ui.growth5.path_locked	잠김	ロック	Locked
+ui.summon.reveal.new	새 몸!	新しい体!	New Body!
+ui.summon.reveal.pickup	PICK UP!	PICK UP!	PICK UP!
+ui.summon.reveal.jackpot	대박!	大当たり!	Jackpot!
+ui.summon.reveal.tap	화면을 눌러 계속	タップして続ける	Tap to continue
