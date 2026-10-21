@@ -5937,7 +5937,8 @@ namespace Game.Module.InGame
                 m *= 1f + _buffs.ExecuteBonus * t;
             }
 
-            if (_buffs.BossBonus > 0f && victim.IsBoss) m *= 1f + _buffs.BossBonus;
+            // 중간보스(8번 방 대장)도 보스다 — 표시는 `IsBoss` 가 아니라 `_midBoss` 라 따로 본다(2026-10-21 카드 검수)
+            if (_buffs.BossBonus > 0f && (victim.IsBoss || victim == _midBoss)) m *= 1f + _buffs.BossBonus;
 
             if (_buffs.SustainBonus > 0f)
             {
