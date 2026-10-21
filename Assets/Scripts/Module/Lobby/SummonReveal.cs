@@ -37,7 +37,8 @@ namespace Game.Module.Lobby
         [SerializeField] private TMP_FontAsset _font;
 
         private const float Dark = 0.35f, Cut = 2.38f, PanelIn = 2.85f, Landed = 3.2f, SkipAfter = 0.4f;
-        private const float FigureH = 0.34f;          // 실루엣 · 진짜 몸 키 = 화면 높이 비율(세로 화면)
+        private const float FigureH = 0.34f;
+        private const float RevealFootDown = 0.08f;   // 공개 장면 발 높이 = 화면 가운데에서 아래로(화면 높이 비율)          // 실루엣 · 진짜 몸 키 = 화면 높이 비율(세로 화면)
         private const float InkOfCell = 76f / 128f, FootFromBottom = 24f / 128f;
         private static readonly string[] SpinOrder = { "", "_walk1", "_atk1", "_walk2", "_hit", "_atk2" };
         private static readonly Color SilhouetteColor = new(0.03f, 0.02f, 0.11f, 1f);
@@ -161,10 +162,12 @@ namespace Game.Module.Lobby
             _pillarA.enabled = _pillarB.enabled = _ringImg.enabled = false;
             float w = _root.rect.width;
             float landX = -w * 0.18f;
+            float footY = -_root.rect.height * RevealFootDown;   // 공개 무대는 바닥(물가)에 선다
 
             // 빛살 터짐(8장 한 번) → 빛살 그림이 천천히 돈다 — 대박이 가장 세다(등급 계단)
             bool burstOn = Once(_burstImg, _burst, u, tier == Tier.NewBody ? 0.06f : 0.07f);
-            _burstImg.rectTransform.anchoredPosition = new Vector2(landX, -_root.rect.height * 0.02f);
+            // 빛살 그림은 아치 — 아래 가운데가 몸 자리다. 아치 밑변을 발에 맞춘다
+            _burstImg.rectTransform.anchoredPosition = new Vector2(landX, footY + _burstImg.rectTransform.sizeDelta.y * 0.45f);
             float raysA = tier == Tier.Jackpot ? 0.6f : tier == Tier.Pickup ? 0.45f : 0.3f;
             if (_rays != null)
             {
@@ -172,7 +175,7 @@ namespace Game.Module.Lobby
                 _raysImg.sprite = _rays;
                 _raysImg.color = WithAlpha(_raysImg.color, raysA * Mathf.Clamp01(u / 0.15f));
                 _raysImg.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -u * 25f);
-                _raysImg.rectTransform.anchoredPosition = new Vector2(landX, cell * 0.25f);
+                _raysImg.rectTransform.anchoredPosition = new Vector2(landX, footY + cell * 0.25f);
             }
 
             // 진짜 몸 — 오른쪽 밖 → 포물선으로 왼쪽 가운데 착지(0.8초, 감속) → 대기 숨쉬기
@@ -183,13 +186,13 @@ namespace Game.Module.Lobby
             {
                 float k = u / jump;
                 x = Mathf.Lerp(w * 0.5f + cell * 0.5f, landX, Ease.OutCubic(k));
-                y = Mathf.Sin(Mathf.PI * k) * cell * 0.45f;
+                y = footY + Mathf.Sin(Mathf.PI * k) * cell * 0.45f;
                 pose = k < 0.45f ? poses[2] : k < 0.85f ? poses[5] : poses[1];
             }
             else
             {
                 x = landX;
-                y = 0f;
+                y = footY;
                 pose = Mathf.FloorToInt((u - jump) / 0.5f) % 2 == 0 ? poses[0] : poses[3];
             }
             _body.enabled = true;
@@ -203,7 +206,8 @@ namespace Game.Module.Lobby
 
             // 착지 충격 — 착지 순간 한 번
             Once(_impactImg, _impact, u - jump + 0.05f, 0.06f);
-            _impactImg.rectTransform.anchoredPosition = new Vector2(landX, -cell * 0.08f);
+            // 충격 그림의 바닥 줄은 칸 아래에서 22% — 그 줄을 발에 맞춘다
+            _impactImg.rectTransform.anchoredPosition = new Vector2(landX, footY + _impactImg.rectTransform.sizeDelta.y * 0.28f);
 
             // 정보 판 — 2.85 에 0.1초 슉 · 작은 넘침
             float pu = u - (PanelIn - Cut);
@@ -214,7 +218,7 @@ namespace Game.Module.Lobby
                 float k = Mathf.Clamp01(pu / 0.1f);
                 float over = pu < 0.22f ? 0.06f * Mathf.Sin(Mathf.Clamp01(pu / 0.22f) * Mathf.PI) : 0f;
                 float target = w * 0.12f;
-                _plateImg.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(w, target, k) - over * w, -_root.rect.height * 0.12f);
+                _plateImg.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(w, target, k) - over * w, footY - _root.rect.height * 0.16f);
                 _tagImg.sprite = tier == Tier.Pickup ? _ribbonPickup : _stampNew;
                 _tagImg.enabled = _tagImg.sprite != null && tier != Tier.Jackpot;
             }
@@ -279,13 +283,14 @@ namespace Game.Module.Lobby
             _pillarA = Img("RevealPillarA", false, _additive, new Vector2(0.28f, 1.1f), new Vector2(-0.02f, 0.05f));
             _pillarB = Img("RevealPillarB", false, _additive, new Vector2(0.2f, 1.0f), new Vector2(0.06f, 0.08f));
             _ringImg = Img("RevealRing", false, _additive, new Vector2(0.62f, 0.16f), new Vector2(0f, -0.005f));
-            _burstImg = Img("RevealBurst", false, _additive, new Vector2(1.0f, 0.56f));
+            _burstImg = Img("RevealBurst", false, _additive, new Vector2(0.62f, 0.62f));
             _body = Img("RevealBody", false, null);
             _body.rectTransform.pivot = new Vector2(0.5f, 0f);
-            _impactImg = Img("RevealImpact", false, null, new Vector2(0.7f, 0.18f));
+            _impactImg = Img("RevealImpact", false, null, new Vector2(0.36f, 0.36f));
             _plateImg = Img("RevealPlate", false, null, new Vector2(0.62f, 0.15f));
             _plateImg.sprite = _plate;
             _plateImg.type = Image.Type.Simple;
+            _plateImg.enabled = true;   // Img() 는 꺼진 채로 만든다 — 판은 켜 두고 오브젝트로 껐다 켠다
             _tagImg = Child(_plateImg.rectTransform, "RevealTagImg", new Vector2(-0.38f, 0.5f), new Vector2(0.3f, 0.5f));
             _tagText = Text(_plateImg.rectTransform, "RevealTagText", new Vector2(-0.18f, 0.22f), new Vector2(0.6f, 0.3f), 30f, new Color(1f, 0.84f, 0.32f));
             _nameText = Text(_plateImg.rectTransform, "RevealNameText", new Vector2(-0.05f, -0.08f), new Vector2(0.8f, 0.36f), 44f, Color.white);
