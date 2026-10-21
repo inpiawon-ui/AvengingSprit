@@ -62,6 +62,24 @@ namespace Game.Module.InGame
         public bool Direct;
 
         /// <summary>
+        /// 실제 규칙대로 스킬을 쓴다 — 게이지를 채우지 않고 액티브는 쿨이 찰 때마다, 필살기는 빙의마다 한 번(적 3명 이상 · 보스전).
+        /// 스킬 손질 확인 영상용(PD 2026-10-21 「변경한 애들 인게임으로 플레이해서 영상으로 다 찍어」).
+        /// </summary>
+        public static bool RealSkills;
+        private float _ultIn = 2f;
+
+        private void RealSkillUse(int alive, float dt)
+        {
+            if (_fHost.GetValue(_bd) == null) return;
+            _bd.TryActiveSkill();   // 쿨이 안 찼으면 그냥 돌아온다
+            _ultIn -= dt;
+            if (_ultIn > 0f || !_bd.IsUltReady || (alive < 3 && _fBoss.GetValue(_bd) == null)) return;
+            _bd.TryUltimate();
+            Mark("ult");
+            _ultIn = 2f;
+        }
+
+        /// <summary>
         /// 장면 기록 「이름:프레임;」 — 편집할 때 방 · 창 · 보스 격파 자리를 찾는다.
         /// 녹화기가 프레임을 30fps 로 고정하므로 (프레임 − 녹화 시작 프레임) / 30 이 영상 속 초다.
         /// </summary>
@@ -506,8 +524,9 @@ namespace Game.Module.InGame
             }
 
             // 6) 스킬 — 몸이 있을 때, 적이 많거나 보스전일 때
+            if (RealSkills) RealSkillUse(alive, dt);
             _skillIn -= dt;
-            if (_skillIn <= 0f && _fHost.GetValue(_bd) != null
+            if (!RealSkills && _skillIn <= 0f && _fHost.GetValue(_bd) != null
                 && (alive >= 3 || _fBoss.GetValue(_bd) != null))
             {
                 // 녹화용 — 게이지를 채워 두고 쓴다(게이지는 0 에서 차오른다). 영상에 스킬이 꼭 나오게.
@@ -583,8 +602,9 @@ namespace Game.Module.InGame
                 return;
             }
 
+            if (RealSkills) RealSkillUse(alive, dt);
             _skillIn -= dt;
-            if (_skillIn <= 0f && _fHost.GetValue(_bd) != null
+            if (!RealSkills && _skillIn <= 0f && _fHost.GetValue(_bd) != null
                 && (alive >= 3 || _fBoss.GetValue(_bd) != null))
             {
                 _fSkillGauge.SetValue(_bd, 999f);

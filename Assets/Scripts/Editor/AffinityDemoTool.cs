@@ -33,6 +33,7 @@ namespace Game.EditorTools
     ///   AffinityDemo.refill  켜면 무적 대신 몸 체력을 채워 살린다 — 맞을 때 붉은 점멸이 영상에 남는다
     ///   AffinityDemo.bossCapSeconds  보스방이 이 초를 넘기면 내 공격력을 `bossCapAtkMul`(기본 3)배로 — 영상이 끝나게
     ///   AffinityDemo.recordPerHost  켜면 영상 파일 이름에 `_{호스트}` 를 붙인다 — 줄 선 호스트마다 따로 남긴다
+    ///   AffinityDemo.realSkills  켜면 게이지를 채우지 않고 실제 쿨대로 액티브 · 빙의마다 필살기를 쓴다(스킬 확인 영상)
     ///
     /// ── 밸런스 검증 (2026-10-02) ─────────────────────────────────
     ///   AffinityDemo.chapter   들어갈 챕터(기본 1)
@@ -96,6 +97,8 @@ namespace Game.EditorTools
             var dataField = player.GetType().GetField("_data", F);
             if (!(dataField?.GetValue(player) is Game.User.UserData data)) return;
             data.clearedChapter = Mathf.Max(data.clearedChapter, chapter - 1);
+            // 판마다 행동력이 빠진다 — 줄 세운 판을 연달아 돌리면 바닥나 판이 안 열린다(시험 세이브는 끝나면 되돌린다)
+            player.SetStamina(player.StaminaMax);
             // 시험용 골드 — 몸을 골라 시작하는 값(60~)이 없으면 「골드가 모자란다」 창에 막힌다(2026-10-08)
             int gold = SessionState.GetInt("AffinityDemo.gold", 0);
             if (gold > 0 && data.gold < gold) data.gold = gold;
@@ -194,6 +197,10 @@ namespace Game.EditorTools
                         var t = panel.GetType();
                         t.GetField("_chapter", F).SetValue(panel, chapter);
                         t.GetField("_pickedRandom", F).SetValue(panel, false);
+                        // 출전 방식도 「몸으로」 — 창은 지난번이 유령이면 유령 출전으로 열린다. 사신(숨긴 몸) 판 뒤에는
+                        // 저장된 선택이 유령으로 남아, 다음 판들이 고른 몸 대신 유령으로 시작했다(2026-10-21 녹화 10판)
+                        var mode = t.GetField("_mode", F);
+                        if (mode != null) mode.SetValue(panel, System.Enum.Parse(mode.FieldType, "Host"));
                         t.GetField("_pickedHost", F).SetValue(panel,
                             string.IsNullOrEmpty(host) ? Game.Character.HostEntry.GhostKey : host);
                         t.GetMethod("OnStart", F).Invoke(panel, null);
@@ -201,6 +208,10 @@ namespace Game.EditorTools
                         return;
                     }
                     if (Click("ModePlayButton")) { _wait = 60; return; }
+                    // 로비 개편 뒤 「ModePlayButton」이 없다 — 시나리오 시작(챕터 · 호스트 고르기 창)을 직접 연다(SkillReworkRecorder 와 같은 길)
+                    var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.LobbyMainUI>();
+                    var play = lobby != null ? typeof(Game.Module.Lobby.LobbyMainUI).GetMethod("PlayScenario", F) : null;
+                    if (play != null) { play.Invoke(lobby, null); _wait = 60; return; }
                 }
                 _wait = 15;
                 return;
@@ -223,6 +234,7 @@ namespace Game.EditorTools
                 pilot.KeepAlive = SessionState.GetBool("AffinityDemo.keepAlive", true);
                 pilot.Direct = SessionState.GetBool("AffinityDemo.direct", false);   // 곧장 가서 때리기만(전 챕터 검수 영상)
                 pilot.RefillInsteadOfInvuln = SessionState.GetBool("AffinityDemo.refill", false);   // 무적 대신 체력 채우기 — 맞는 연출이 보이게
+                PromoPilot.RealSkills = SessionState.GetBool("AffinityDemo.realSkills", false);     // 실제 쿨대로 액티브 · 빙의마다 필살기
                 PromoPilot.Log.Clear();
 
                 // 타격 반응을 견줄 때 — 1챕터 잡몹은 두세 방에 죽어 반응을 볼 틈이 없다.
