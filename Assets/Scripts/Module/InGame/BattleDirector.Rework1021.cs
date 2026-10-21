@@ -699,6 +699,7 @@ namespace Game.Module.InGame
         private const float WraithFlySeconds = 0.45f;
         private const float WraithHoverSeconds = 0.6f;
         private const float WraithSize = 150f;
+        private const float WraithRingMeters = 2.2f;   // 떠 있는 둘레(가로 반경, 세로는 절반)
 
         private sealed class Wraith
         {
@@ -718,8 +719,10 @@ namespace Game.Module.InGame
         /// <param name="target">없거나 머무는 사이 죽으면 그때 가장 가까운 적으로 바꾼다.</param>
         private void LaunchWraith(Unit me, Unit target, int slot, int slots)
         {
+            // 둘레 1.2 m 는 여섯이 겹쳐 파란 덩어리로 보였다(PD 「더 넓게 벌려서 하나씩 보이게」) — 2.2 m 타원 + 높이를 엇갈리게
             float a = slot * Mathf.PI * 2f / Mathf.Max(1, slots);
-            var hold = me.Position + new Vector2(Mathf.Cos(a) * Meters(1.2f), SsrBody * 0.8f + Mathf.Sin(a) * Meters(0.5f));
+            float lift = SsrBody * (slot % 2 == 0 ? 0.7f : 1.1f);
+            var hold = me.Position + new Vector2(Mathf.Cos(a) * Meters(WraithRingMeters), lift + Mathf.Sin(a) * Meters(WraithRingMeters * 0.5f));
             var fx = FxFrames("mdwraith") != null ? TakeLoopFx("mdwraith", me.Position, WraithSize) : null;
             fx?.SetFrameSeconds(0.07f);
             _wraiths.Add(new Wraith
