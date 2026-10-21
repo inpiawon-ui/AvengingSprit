@@ -75,6 +75,14 @@ PARTS = {
     'part_vp_claw':   ('vpclaw',   160, 160, 5, 1, 'black'),
     'part_vp_orb':    ('vporb',     32,  32, 4, 1, 'pink'),
     'part_vp_burst':  ('vpburst',  288, 288, 4, 2, 'black'),
+    # 스킬 손질(2026-10-21) — 시안 in/mock_dragoon_meteor.png · in/mock_wizard_gravity.png (발주 Tools/order_rework1021_parts.py)
+    'part_mt_rock':   ('mtrock',   256, 256, 6, 1, 'pink'),
+    'part_mt_blast':  ('mtblast',  320, 320, 4, 2, 'black'),
+    'part_mt_debris': ('mtdebris', 320, 320, 4, 2, 'alpha'),   # 코덱스가 투명 바탕으로 보냈다
+    'part_mt_lava':   ('mtlava',   384, 256, 3, 2, 'alpha'),    # 코덱스가 투명 바탕으로 보냈다
+    'part_gv_circle': ('gvcircle', 384, 320, 3, 2, 'black'),
+    'part_gv_swirl':  ('gvswirl',  384, 320, 3, 2, 'black'),
+    'part_gv_burst':  ('gvburst',  384, 384, 4, 2, 'black'),
 }
 
 
@@ -87,7 +95,7 @@ def black_to_alpha(rgb):
 
 
 # 분홍 기가 정당하게 없는 그림(돌 · 흙) — 금 사이에 낀 분홍 번짐을 회색으로 죽인다
-DESPILL = {'part_el_crack'}
+DESPILL = {'part_el_crack', 'part_mt_rock', 'part_mt_debris', 'part_mt_lava'}
 
 
 def despill(rgba):
