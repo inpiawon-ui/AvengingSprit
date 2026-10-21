@@ -122,7 +122,7 @@ namespace Game.Module.InGame
                 if (k < 1f) { _vpOrbs[i] = o; continue; }
                 o.Fx?.Stop();
                 _vpOrbs.RemoveAt(i);
-                me.Heal(Mathf.Max(1, me.HpMax / 100));
+                Leech(Mathf.Max(1, me.HpMax / 100));   // 숫자 · 체력바까지(예전 Unit.Heal 은 발밑 막대만 고쳤다)
             }
         }
 
@@ -134,7 +134,7 @@ namespace Game.Module.InGame
             var burst = PlayFx("vpburst", me.Position, SsrBody * 4.8f, loop: false);
             burst?.SetFrameSeconds(0.07f);
             UltAoe(me, me.Position, 2.5f, 3.5f, burst == null ? "burst" : null);
-            me.Heal(Mathf.Max(1, me.HpMax * 10 / 100));
+            Leech(Mathf.Max(1, me.HpMax * 10 / 100));
             Shake(10f);
             HitStop(0.1f);
         }

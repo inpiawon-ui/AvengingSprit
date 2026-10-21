@@ -136,23 +136,23 @@ namespace Game.Module.InGame
                 case "thug":             ThugSpinFire(me);      break;   // 회전 난사
                 case "commando_grenade": CommandoStickyBomb(me); break;  // C4
                 case "baseball":         SluggerFullSwing(me);  break;   // 풀스윙 회오리
-                case "medium":           SsrGolem(me);          break;   // 골렘 강령(SSR 다듬기 — BattleDirector.UltSsr)
+                case "medium":           GiantWraith(me);       break;   // 거대 원혼(PD 2026-10-21) — 골렘은 액티브(미니 골렘)로 갔다
                 case "gangster":         UltGangster(me);       break;   // 청부 처형
                 case "hopper":           UltHopper(me);         break;   // 킬 포인트
                 case "ninja_chain":      SrNinjaChain(me);      break;   // 사슬 돌격 연격(SR — BattleDirector.UltSr)
                 case "death":            UltDeath(me);          break;   // 망자 군단
-                case "robot":            SrRobot(me);           break;   // 포탑 군단(SR)
+                case "robot":            RobotSquad(me);        break;   // 로봇 특공대(PD 2026-10-21)
                 case "ninja":            SrNinja(me);           break;   // 그림자 삼분신(SR)
                 case "hopper_smg":       SrHopperSmg(me);       break;   // 돌진 난사(SR)
-                case "vampire":          SsrVampire(me);        break;   // 피의 폭주(SSR)
+                case "vampire":          BloodPool(me);         break;   // 피의 웅덩이(PD 2026-10-21)
                 case "dragoon":          SsrDragoon(me);        break;   // 용 돌격(SSR)
                 case "guru":             UltGuru(me);           break;   // 결계 가두기
                 case "salamander":       UltSalamander(me);     break;   // 독 늪
                 case "snowwoman":        UltSnowwoman(me);      break;   // 얼음 진
-                case "commando_missile": SrMissileSwarm(me);    break;   // 자폭 미사일 떼(SR)
+                case "commando_missile": MissileFocus(me);      break;   // 집중 포격 — 가장 센 적에게 8발(PD 2026-10-21)
                 case "commando_laser":   SrLaser(me);           break;   // 충전 레이저(SR)
-                case "white_wizard":     UltWizard(me);         break;   // 빛 구슬 일제 발사
-                case "dragon_blue":      UltDragonBlue(me);     break;   // 번개 구슬
+                case "white_wizard":     LightRain(me);         break;   // 빛기둥 비(PD 2026-10-21)
+                case "dragon_blue":      UltDragonStorm(me);    break;   // 천뢰 — 둘레 모든 적에게 낙뢰(PD 2026-10-21)
                 case "commando_mg":      UltCommandoMg(me);     break;   // 디플렉트 월
                 case "amazon_elite":     UltAmazonElite(me);    break;   // 역린
                 default:                 UltFallback(me);       break;   // 표에 없는 몸 — 아래 참고
@@ -225,17 +225,6 @@ namespace Game.Module.InGame
 
         /// <summary>영매 액티브 — 해골 2기(패시브 「강령」과 같은 해골).</summary>
         private const int MediumSkeletonCount = 2;
-
-        private void MediumSkeletons(Unit me)
-        {
-            for (int i = 0; i < MediumSkeletonCount; i++)
-            {
-                var side = new Vector2(i == 0 ? -1f : 1f, 0.4f);
-                var at = ClampedInField(me, me.Position + side * Meters(1.1f));
-                SummonSkull(at);
-                PlayFx("soulripple", at, Meters(1.2f), loop: false);
-            }
-        }
 
         /// <summary>아마존 정예 액티브 — 불굴. 2.5초 무적(스킬 무적 윤곽).</summary>
         private const float EliteUnyieldingSeconds = 2.5f;

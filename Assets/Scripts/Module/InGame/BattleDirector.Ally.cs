@@ -155,7 +155,12 @@ namespace Game.Module.InGame
 
             _ally.SetMoving(false);
             // ⚠ `fromPlayer: true` — 이래야 피해가 적에게 간다(파일 머리 주석 참조).
-            if (_ally.TickAttack(dt)) PerformAttack(_ally, target, true);
+            if (_ally.TickAttack(dt))
+            {
+                _summonStriking = true;   // 동료가 친 것도 사신 즉사를 굴리지 않는다
+                try { PerformAttack(_ally, target, true); }
+                finally { _summonStriking = false; }
+            }
             else _ally.SetState(EnemyState.Cooldown);
         }
     }

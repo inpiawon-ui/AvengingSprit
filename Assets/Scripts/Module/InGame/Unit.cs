@@ -1782,8 +1782,20 @@ namespace Game.Module.InGame
             if (_body != null) _body.color = PhantomColor;
         }
 
-        /// <summary>아무 일도 없을 때의 색. 분신만 흰색이 아니다.</summary>
-        private Color RestColor => IsPhantom ? PhantomColor : Color.white;
+        // 내가 불러낸 해골(사신 · 영매) — 적 해골과 같은 그림이라 혼빛(청록)으로 물들이고 살짝 비친다(PD 2026-10-21)
+        private static readonly Color SpiritColor = new(0.55f, 1f, 0.85f, 0.85f);
+
+        /// <summary>내가 불러낸 해골인가.</summary>
+        public bool IsSpirit { get; private set; }
+
+        public void MarkSpirit()
+        {
+            IsSpirit = true;
+            if (_body != null) _body.color = SpiritColor;
+        }
+
+        /// <summary>아무 일도 없을 때의 색. 분신 · 내 해골만 흰색이 아니다.</summary>
+        private Color RestColor => IsPhantom ? PhantomColor : IsSpirit ? SpiritColor : Color.white;
 
         /// <summary>
         /// 보스 패턴 예고. 피할 시간을 주지 않으면 패턴이 아니라 사고가 된다.

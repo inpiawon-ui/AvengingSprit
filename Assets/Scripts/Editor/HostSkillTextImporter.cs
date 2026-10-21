@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Character;
 using UnityEditor;
 using UnityEngine;
@@ -33,21 +33,21 @@ namespace Game.EditorTools
             new[]{ "baseball", "전탄 반사", "5초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.", "Full Reflect" },
             new[]{ "death",            "사신의 시간",   "3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.", "Death Harvest" },
             new[]{ "guru",             "수호 결계",     "3초간 받는 피해 −50% · 쉴드 획득 2배.", "Guardian Ward" },
-            new[]{ "ninja_chain",      "사슬 결박",     "방 안 모든 적을 5초간 묶는다. 묶인 적은 더 아프게 맞는다.", "Chain Bind" },
+            new[]{ "ninja_chain",      "사슬 끌어오기", "둘레 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다. 묶인 적은 더 아프게 맞는다.", "Chain Pull" },   // PD 2026-10-21
             new[]{ "dragoon",          "화염 지대",     "가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.", "Inferno Field" },
             new[]{ "salamander",       "독 뿜기",       "둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.", "Venom Spray" },
             new[]{ "dragon_blue",      "뇌전 폭주",     "2초간 번개 튕김이 반드시 터진다.", "Thunder Rampage" },
-            new[]{ "commando_grenade", "융단 폭격", "표적 둘레에 수류탄을 한 줄로 떨군다.", "Carpet Bomb" },
+            new[]{ "commando_grenade", "융단 폭격", "내 둘레에 수류탄을 원으로 떨군다. 가까운 적이 있으면 그 적에게 떨어진다.", "Carpet Bomb" },   // PD 2026-10-21
             new[]{ "snowwoman",        "얼음 감옥",     "2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.", "Ice Prison" },
-            new[]{ "thug", "난사", "1초간 3방향으로 쏟아붓는다.", "Bullet Storm" },
+            new[]{ "thug", "난사", "다섯 갈래로 세 번 빠르게 쏜다.", "Bullet Storm" },   // PD 2026-10-21
             new[]{ "hopper_smg", "백스텝 사격", "가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.", "Backstep Fire" },
-            new[]{ "ninja",            "그림자 분신",   "방 한가운데 분신을 세운다. 5초간 적이 전부 분신을 노린다.", "Shadow Clone" },
-            new[]{ "vampire",          "혈연",          "둘레 5 m 의 적 머릿수만큼 최대 체력의 2% 씩 회복한다.", "Blood Feast" },
+            new[]{ "ninja",            "그림자 걸음",   "4초간 회피 50% · 이동 속도 +35%, 잔상이 남는다.", "Shadow Step" },   // PD 2026-10-21
+            new[]{ "vampire",          "혈연",          "화면의 적마다 박쥐가 날아가 피를 빨아 온다. 적 수만큼 최대 체력의 2%씩 회복.", "Blood Feast" },
             new[]{ "commando_mg",      "방벽 전개",     "5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.", "Barrier Deploy" },
             new[]{ "gangster",         "일제 표식",     "방 안 모든 적에게 3초간 표식을 새긴다.", "Mass Death Mark" },
             new[]{ "hopper",           "정조준",        "5초간 치명타 확률이 90% 로 고정된다.", "Dead Aim" },
-            new[]{ "commando_missile", "다중 유도",     "반원으로 퍼진 8발이 한 대상으로 모여 든다.", "Multi Homing" },
-            new[]{ "medium", "해골 소환", "해골 2기를 불러 같이 싸운다.", "Summon Skeletons" },
+            new[]{ "commando_missile", "다중 유도",     "미사일 7발이 둘레 적들에게 한 발씩 날아간다.", "Multi Homing" },   // PD 2026-10-21
+            new[]{ "medium", "미니 골렘", "미니 골렘을 불러 10초간 데리고 다니며 같이 싸운다.", "Mini Golem" },   // PD 2026-10-21
             new[]{ "white_wizard",     "광휘 확산",     "부채꼴 8방향으로 광탄을 쏜다.", "Radiant Burst" },
             new[]{ "commando_laser",   "연쇄 방전",     "3초간 주변 적에게 전기가 계속 튄다.", "Chain Discharge" },
             new[]{ "robot",            "포탑 전개",     "10초간 자동으로 쏘는 포탑을 세운다.", "Turret Deploy" },
@@ -63,7 +63,7 @@ namespace Game.EditorTools
             new object[]{ "guru",             "psv_guru",             "무형보",      "걸어 다닐 때 지형지물을 통과한다.", 0 },
             new object[]{ "ninja_chain",      "psv_ninja_chain",      "흘리기",      "10% 로 피해를 통째로 흘린다.", 10 },
             new object[]{ "dragoon",          "psv_dragoon",          "불씨",        "명중한 적에게 10% 로 화상. 겹치지 않는다.", 10 },
-            new object[]{ "salamander",       "psv_salamander",       "독니",        "명중한 적에게 10% 로 독. 겹치지 않는다.", 10 },
+            new object[]{ "salamander",       "psv_salamander",       "독니",        "명중한 적에게 10% 로 독. 중독된 적은 25% 더 아프게 맞는다.", 10 },
             new object[]{ "dragon_blue",      "psv_dragon_blue",      "낙뢰",        "10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.", 10 },
             new object[]{ "commando_grenade", "psv_commando_grenade", "파편탄",      "상대 방어력을 50% 무시한다.", 0 },
             new object[]{ "snowwoman",        "psv_snowwoman",        "서릿발",      "30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.", 30 },
@@ -75,7 +75,7 @@ namespace Game.EditorTools
             new object[]{ "gangster",         "psv_gangster",         "처형 계약",   "표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.", 20 },
             new object[]{ "hopper",           "psv_momentum",         "급소",        "치명타 피해 +30%.", 0 },
             new object[]{ "commando_missile", "psv_commando_missile", "고폭탄",      "투사체가 지형지물을 무시한다.", 0 },
-            new object[]{ "medium",           "psv_medium",           "강령",        "적을 잡으면 30% 로 해골이 일어선다.", 30 },
+            new object[]{ "medium",           "psv_medium",           "강령",        "적을 잡으면 30% 로 내 해골이 일어선다. 해골은 적이 노리지 않고 3초 뒤 사라진다.", 30 },
             new object[]{ "white_wizard",     "psv_white_wizard",     "관통 광선",   "투사체가 지형지물을 무시하고 적을 관통한다.", 0 },
             new object[]{ "commando_laser",   "psv_commando_laser",   "집속 광선",   "투사체가 지형지물을 무시하고 적을 관통한다.", 0 },
             new object[]{ "robot",            "psv_spare_circuit",    "예비 회로",   "평타가 2% 로 액티브 쿨을 1초 당긴다.", 2 },

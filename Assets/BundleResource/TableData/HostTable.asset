@@ -62,7 +62,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h10
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_gangster
     _grade: 0
     _levelStats: []
@@ -118,7 +118,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h11
-    _activeSkillCooldown: 8
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_thug
     _grade: 0
     _levelStats: []
@@ -174,7 +174,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h01
-    _activeSkillCooldown: 8
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_amazon
     _grade: 0
     _levelStats: []
@@ -230,7 +230,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h02
-    _activeSkillCooldown: 28
+    _activeSkillCooldown: 8
     _passiveSkillKey: psv_counter
     _grade: 2
     _levelStats: []
@@ -286,7 +286,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h13
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 8
     _passiveSkillKey: psv_momentum
     _grade: 0
     _levelStats: []
@@ -342,7 +342,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h14
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_hopper_smg
     _grade: 1
     _levelStats: []
@@ -398,7 +398,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h05
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 8
     _passiveSkillKey: psv_commando_mg
     _grade: 0
     _levelStats: []
@@ -454,7 +454,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h04
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_commando_laser
     _grade: 1
     _levelStats: []
@@ -510,7 +510,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h03
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_commando_grenade
     _grade: 0
     _levelStats: []
@@ -566,7 +566,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h08
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_salamander
     _grade: 0
     _levelStats: []
@@ -622,7 +622,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h09
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_dragoon
     _grade: 2
     _levelStats: []
@@ -678,7 +678,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h07
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_dragon_blue
     _grade: 0
     _levelStats: []
@@ -734,7 +734,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h12
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_guru
     _grade: 0
     _levelStats: []
@@ -790,7 +790,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h16
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_white_wizard
     _grade: 0
     _levelStats: []
@@ -846,7 +846,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h15
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 10
     _passiveSkillKey: psv_medium
     _grade: 2
     _levelStats: []
@@ -902,7 +902,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h18
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 7
     _passiveSkillKey: psv_ninja
     _grade: 1
     _levelStats: []
@@ -958,7 +958,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h17
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_ninja_chain
     _grade: 1
     _levelStats: []
@@ -1014,7 +1014,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h19
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 10
     _passiveSkillKey: psv_spare_circuit
     _grade: 1
     _levelStats: []
@@ -1070,7 +1070,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h20
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 8
     _passiveSkillKey: psv_slugger
     _grade: 2
     _levelStats: []
@@ -1126,7 +1126,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h21
-    _activeSkillCooldown: 14
+    _activeSkillCooldown: 6
     _passiveSkillKey: psv_snowwoman
     _grade: 0
     _levelStats: []
@@ -1182,7 +1182,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h22
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_leech
     _grade: 2
     _levelStats: []
@@ -1238,7 +1238,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h06
-    _activeSkillCooldown: 20
+    _activeSkillCooldown: 5
     _passiveSkillKey: psv_commando_missile
     _grade: 1
     _levelStats: []
@@ -1294,7 +1294,7 @@ MonoBehaviour:
     _actorOnly: 0
     _spriteKey: 
     _activeSkillKey: psg_h23
-    _activeSkillCooldown: 28
+    _activeSkillCooldown: 10
     _passiveSkillKey: psv_death
     _grade: 2
     _levelStats: []

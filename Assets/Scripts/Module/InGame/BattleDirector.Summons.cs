@@ -22,6 +22,8 @@ namespace Game.Module.InGame
     {
         /// <summary>한 번에 설 수 있는 수. 넘으면 가장 오래된 것부터 지운다.</summary>
         private const int SummonMaxCount = 6;
+        /// <summary>칠 적이 없을 때 이만큼보다 멀면 나를 따라온다.</summary>
+        private const float SummonFollowMeters = 1.6f;
 
         // ── 해골 — 사신 · 영매가 처치할 때 ──────────────────────
         // 기획 2026-09-15 — 3초 뒤 사라진다. 남은 시간이 **체력바가 줄어드는 것**으로 보인다.
@@ -71,6 +73,8 @@ namespace Game.Module.InGame
         }
 
         private readonly List<Summon> _summons = new();
+        /// <summary>불러낸 몸이 때리는 중 — 사신 즉사(내 손으로만)를 가른다.</summary>
+        private bool _summonStriking;
 
         /// <summary>적이 대신 쫓아갈 몸. 없으면 null — 그때는 평소대로 나를 쫓는다.</summary>
         private Unit TauntUnit
@@ -89,10 +93,23 @@ namespace Game.Module.InGame
         // ── 세우기 ───────────────────────────────────────────
 
         /// <summary>사신 · 영매 — 죽은 자리에서 해골이 일어선다.</summary>
-        private void SummonSkull(Vector2 at)
-            => SpawnSummon(TrashSkeletonKey, "해골", SkullHpPercent, SkullAtkPercent,
-                           SkullLifeSeconds, attacks: true, mobile: true, taunt: false, at: at,
-                           profile: Skeleton, intervalOverride: SkullAttackInterval, drains: true);
+        private void SummonSkull(Vector2 at) => SummonSkull(at, SkullLifeSeconds);
+
+        /// <summary>
+        /// 해골은 적이 못 노리고 시간이 다하면 사라진다 — 체력이 의미가 없어 체력바를 끈다.
+        /// 적 해골과 같은 그림이라 **혼빛으로 물들여** 가른다(PD 2026-10-21 「내 해골이랑 몬스터 해골이 구분」).
+        /// </summary>
+        private void SummonSkull(Vector2 at, float life)
+        {
+            SpawnSummon(TrashSkeletonKey, "해골", SkullHpPercent, SkullAtkPercent,
+                        life, attacks: true, mobile: true, taunt: false, at: at,
+                        profile: Skeleton, intervalOverride: SkullAttackInterval);
+            if (_summons.Count == 0) return;
+            var u = _summons[_summons.Count - 1].U;
+            if (u == null || u.Key != TrashSkeletonKey) return;
+            u.MarkSpirit();
+            u.SetHpBarVisible(false);
+        }
 
         /// <summary>닌자 액티브 — 분신. 방 한가운데 서서 맞아 준다.</summary>
         private void SummonClone(Vector2 at)
@@ -178,7 +195,20 @@ namespace Game.Module.InGame
                 if (!s.Attacks && !s.Mobile) { s.U.SetMoving(false); continue; }
 
                 var target = NearestEnemyTo(s.U.Position);
-                if (target == null) { s.U.SetMoving(false); continue; }
+                if (target == null)
+                {
+                    // 칠 것이 없으면 내 곁으로 — 방을 비운 뒤 제자리에 서 있으면 데리고 다니는 느낌이 안 났다
+                    var me = Avatar;
+                    if (s.Mobile && me != null && Vector2.Distance(me.Position, s.U.Position) > Meters(SummonFollowMeters))
+                    {
+                        s.U.SetFacing(me.Position - s.U.Position);
+                        s.U.SetState(EnemyState.Approach);
+                        s.U.Position = SlideMove(s.U, s.U.Position, s.U.StepToward(me.Position, dt));
+                        s.U.SetMoving(true);
+                    }
+                    else s.U.SetMoving(false);
+                    continue;
+                }
 
                 s.U.SetFacing(target.Position - s.U.Position);
                 float d = Vector2.Distance(target.Position, s.U.Position);
@@ -195,7 +225,12 @@ namespace Game.Module.InGame
                 // 골렘은 주먹이 아니라 충격파 — 모아서 둘레를 친다 (BattleDirector.Fixtures)
                 if (s.U.Key == GolemKey && GolemSlamReady() && TickGolemSlam(s.U, target, d, dt)) continue;
                 // ⚠ `fromPlayer: true` — 이래야 피해가 적에게 간다(동료와 같은 규칙).
-                if (s.Attacks && s.U.TickAttack(dt)) PerformAttack(s.U, target, true);
+                if (s.Attacks && s.U.TickAttack(dt))
+                {
+                    _summonStriking = true;
+                    try { PerformAttack(s.U, target, true); }
+                    finally { _summonStriking = false; }
+                }
                 else s.U.SetState(EnemyState.Cooldown);
             }
         }

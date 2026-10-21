@@ -139,6 +139,8 @@ namespace Game.Editor
                     bt.GetField("_invuln", F).SetValue(bd, 999f);
                     // 녹화 중 레벨업 창이 화면을 덮는다(녹화 ssr_md1) — 경험치를 바닥에 붙여 둔다
                     bt.GetField("_exp", F).SetValue(bd, -1000000);
+                    // 방을 비우면 레벨업 카드가 한 번 뜬다(스테이지 레벨업 2026-10-16) — 녹화 중엔 이미 준 것으로 둔다
+                    bt.GetField("_stageLevelGiven", F)?.SetValue(bd, true);
                     if (phase == 1)
                     {
                         if (Click("SkipButton")) { wait = 20; return; }

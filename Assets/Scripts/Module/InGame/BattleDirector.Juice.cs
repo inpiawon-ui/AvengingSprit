@@ -120,8 +120,19 @@ namespace Game.Module.InGame
         {
             if (dull) _pfx?.Puff(at, ParticleElement.Dust, 0.3f);
             var im = DotHitReady ? PlayFx("dothit", at, dull ? DotHitSize * DotDullScale : DotHitSize, loop: false) : null;
-            if (im != null) im.SetFrameSeconds(DotHitFrameSeconds);
-            else _pfx?.Hit(at, dull ? ParticleElement.Dust : ParticleElement.Fire, dull ? 0.4f : 0.9f);
+            if (im != null) { im.SetFrameSeconds(DotHitFrameSeconds); TintVenomHit(im, at); }
+            else _pfx?.Hit(at, dull ? ParticleElement.Dust : IsVenomBody ? ParticleElement.Venom : ParticleElement.Fire, dull ? 0.4f : 0.9f);
+        }
+
+        // 샐러맨더는 독을 쏜다 — 맞은 자리 도트 폭발이 주황이라 「붉은 불을 쏜다」로 보였다(PD 2026-10-21 「녹색으로」)
+        private static readonly Color VenomHitTint = new(0.45f, 1f, 0.45f, 1f);
+        private bool IsVenomBody => _host != null && _host.Key == "salamander";
+
+        private void TintVenomHit(Impact im, Vector2 at)
+        {
+            if (!IsVenomBody) return;
+            im.SetTint(VenomHitTint);
+            _pfx?.Hit(at, ParticleElement.Venom, 0.6f);
         }
 
         private void CritBurst(Vector2 at)
@@ -130,8 +141,8 @@ namespace Game.Module.InGame
             if (now - _lastCritBurstAt < CritBurstGap) { HitPop(at); return; }
             _lastCritBurstAt = now;
             var im = DotHitReady ? PlayFx("dotcrit", at, DotCritSize, loop: false) : null;
-            if (im != null) im.SetFrameSeconds(DotCritFrameSeconds);
-            else _pfx?.Hit(at, ParticleElement.Fire, 1.4f);
+            if (im != null) { im.SetFrameSeconds(DotCritFrameSeconds); TintVenomHit(im, at); }
+            else _pfx?.Hit(at, IsVenomBody ? ParticleElement.Venom : ParticleElement.Fire, 1.4f);
         }
 
         private void TickKick(float dt)

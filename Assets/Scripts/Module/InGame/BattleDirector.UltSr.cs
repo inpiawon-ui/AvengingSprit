@@ -278,62 +278,7 @@ namespace Game.Module.InGame
             }));
         }
 
-        // ═══════════════════════════════════════════════════════════
-        //  로봇 — 포탑 군단: 하늘색 빛기둥으로 포탑 셋이 내려앉아 같이 쏘고, 마지막에 미사일 일제 사격
-        // ═══════════════════════════════════════════════════════════
-
-        private static readonly Vector2 RbTurretSize = new(84f, 84f);   // 기본 56 — 시안 포탑은 로봇 몸만 하다
-
-        private void SrRobot(Unit me)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                float a = (i * 120f + 90f) * Mathf.Deg2Rad;
-                var at = ClampedInField(me, me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.6f) * Meters(1.6f));
-                PlayFx("rbdrop", at + new Vector2(0f, SsrBody * 0.9f), SsrBody * 2.6f, loop: false)?.SetFrameSeconds(0.05f);
-                UltAfter(0.12f + i * 0.12f, () =>
-                {
-                    SpawnDeployable(at, ghostly: false, seconds: 8f, range: Meters(8f), damage: UltDamage(me, 0.8f), fireInterval: 0.35f);
-                    for (int k = _deployables.Count - 1; k >= 0; k--)
-                        if (_deployables[k].IsActive && Vector2.Distance(_deployables[k].Position, at) < 1f)
-                        { _deployables[k].SetSize(RbTurretSize); break; }
-                    _pfx?.Burst(ParticleFxKind.Smoke, ParticleElement.Dust, at, 6, 90f, 36f, 0.5f, 0f);
-                    Shake(3f);
-                });
-            }
-            UltAfter(2.5f, () =>
-            {
-                var list = UltTargets(me.Position, Meters(12f));
-                if (list.Count == 0) return;
-                for (int i = 0; i < 8; i++)
-                {
-                    var t = list[i % list.Count];
-                    float a = (-70f + i * 20f) * Mathf.Deg2Rad;
-                    var from = me.Position + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * Meters(0.8f);
-                    SrMissile(me, from, from + (from - me.Position).normalized * Meters(2.5f), t, UltDamage(me, 2.2f), Meters(1.5f), false);
-                }
-                Shake(6f);
-            });
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        //  코만도(미사일) — 자폭 미사일 떼: 쫓을 적마다 붉은 조준 표식 → 6기가 흰 연기를 끌며 휘어 날아가 화염구로 터진다
-        // ═══════════════════════════════════════════════════════════
-
-        private void SrMissileSwarm(Unit me)
-        {
-            var list = UltTargets(me.Position, Meters(14f));
-            if (list.Count == 0) { UltFallback(me); return; }
-            for (int i = 0; i < 6; i++)
-            {
-                var t = list[i % list.Count];
-                float a = (-75f + i * 30f) * Mathf.Deg2Rad;
-                var from = me.Position + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * Meters(0.7f);
-                SrMissile(me, from, from + (from - me.Position).normalized * Meters(3f), t, UltDamage(me, 3.2f), Meters(1.6f), true);
-                PlayFx("missile_trail", from, 32f, loop: false);
-            }
-            Shake(4f);
-        }
+        // 로봇 특공대 · 코만도(미사일) 집중 포격은 BattleDirector.Rework1021 (PD 2026-10-21)
 
         // ── 미사일 공용 — 연기 꼬리 · 조준 표식 · 맞으면 화염구 ──────────────
 

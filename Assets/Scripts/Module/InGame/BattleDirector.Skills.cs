@@ -34,7 +34,7 @@ namespace Game.Module.InGame
         /// <summary>`평타 ×N`. 정본은 스킬 피해를 전부 평타 배수로 적는다.</summary>
         private int SkillDamage(Unit me, float mul)
             => me == null ? 1
-             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * ActivePowerMul * _ultFallbackMul));
+             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * ActivePowerMul * ActiveRebaseMul * _ultFallbackMul));
 
         /// <summary>필살기 피해 — 성급 위력만 다르다(단계마다 +4%).</summary>
         private int UltDamage(Unit me, float mul)
@@ -339,6 +339,8 @@ namespace Game.Module.InGame
         private const float PoiseFirstShotBonus = 0.25f;
         private const float PoiseChargeSeconds = 0.3f;  // 이만큼은 움직여야 충전된다
         private const float ScorchVsBurningBonus = 0.20f;
+        // PD 2026-10-21 「독에 걸리면 20~30% 추가 데미지」 — 예전엔 불탄 적에게만 붙어 독 몸에게는 거의 안 터졌다
+        private const float VenomVsPoisonedBonus = 0.25f;
 
         /// <summary>
         /// 역전의 자세 (아마존 정예) — 쉴드가 남아 있는 동안 공격력 +15%.
@@ -395,9 +397,9 @@ namespace Game.Module.InGame
         /// 순서를 지키면 이득이 되는 것이 이 몸의 리듬이다.
         /// </summary>
         private float ScorchMul(Unit victim)
-            => victim != null && victim.BurnStack > 0
+            => victim != null && (victim.BurnStack > 0 || victim.IsPoisoned)
             && _host != null && _host.Key == "salamander"
-             ? 1f + ScorchVsBurningBonus : 1f;
+             ? 1f + (victim.IsPoisoned ? VenomVsPoisonedBonus : ScorchVsBurningBonus) : 1f;
 
         /// <summary>
         /// 이번 평타 한 번에 실리는 배수. <see cref="PerformAttack"/> 이 시작할 때 한 번 잡는다.
@@ -440,10 +442,10 @@ namespace Game.Module.InGame
                 case "baseball":         ReflectAll(me);        break;   // 전탄 반사 — 필살기는 풀스윙 회오리
                 case "death":            ReaperWindow(me);      break;
                 case "guru":             GuardianWard(me);      break;
-                case "ninja_chain":      ChainBind(me);         break;
+                case "ninja_chain":      ChainPull(me);         break;   // 사슬 끌어오기(PD 2026-10-21)
 
                 // ── 중거리 3 (기관총 셋) ──
-                case "thug":             SprayFire(me);         break;   // 3방향 난사 — 필살기는 회전 난사
+                case "thug":             ThugBurst(me);         break;   // 3연발 난사(PD 2026-10-21 「파파팍 쏘고 끝」) — 필살기는 회전 난사
                 case "hopper_smg":       SmgBackstep(me);       break;   // 백스텝 사격(2026-10-15) — 필살기는 돌진 난사
                 case "commando_mg":      CommandoBarrier(me);   break;
 
@@ -453,12 +455,12 @@ namespace Game.Module.InGame
                 case "dragon_blue":      DragonSurge(me);       break;
                 case "commando_grenade": CarpetBomb(me);        break;   // 융단 폭격 — 필살기는 C4
                 case "snowwoman":        SnowIceShell(me);      break;
-                case "ninja":            NinjaCloneSkill(me);   break;
+                case "ninja":            NinjaEvade(me);        break;   // 몸놀림(PD 2026-10-21 — 분신 대신 회피 · 이속)
                 case "vampire":          VampireFeast(me);      break;
                 case "gangster":         GangsterMarkAll(me);   break;
                 case "hopper":           HopperCritSurge(me);   break;
-                case "commando_missile": MissileFan(me);        break;
-                case "medium":           MediumSkeletons(me);   break;   // 해골 소환(2026-10-15) — 필살기는 골렘 강령
+                case "commando_missile": MissileVolley(me);     break;   // 여러 적에게 한 발씩(PD 2026-10-21)
+                case "medium":           MediumMiniGolem(me);   break;   // 미니 골렘(PD 2026-10-21) — 필살기는 골렘 강령
                 case "white_wizard":     WizardFan(me);         break;
                 case "commando_laser":   LaserBounce(me);       break;
                 case "robot":            DeployTurret(me);      break;
@@ -659,42 +661,29 @@ namespace Game.Module.InGame
         //
         // 상한은 던질 때 적용한다. 던진 뒤 세면 이미 날아간 탄을 못 되돌린다.
 
-        private const int CarpetShots = 5;
-        /// <summary>이 거리 안에 적이 있으면 그 적을 가운데 두고 던진다.</summary>
-        private const float CarpetFocusMeters = 9.0f;
-        /// <summary>옆으로 한 발씩 벌리는 간격 · 앞뒤로 엇갈리는 거리.</summary>
-        private const float CarpetSideStepMeters = 1.3f;
-        private const float CarpetStaggerMeters = 0.5f;
-        private const float CarpetRangeMeters = 6.0f;
+        // PD 2026-10-21 「일자로 말고 내 반경 위주로 동그랗게」 — 예전엔 표적 둘레에 옆으로 한 줄이었다
+        private const int CarpetShots = 6;
+        /// <summary>내 둘레 원의 반지름. 둘레 가까이 적이 있으면 그 적에게 떨어진다.</summary>
+        private const float CarpetRingMeters = 2.4f;
+        private const float CarpetSnapMeters = 1.4f;
         private const int CarpetMaxPerTarget = 2;
 
         private void CarpetBomb(Unit me)
         {
             float perShot = BaseAxis(1.2f);         // Lv1 ×1.2 → Lv4 ×1.8
-            int shots = SpecOpen ? Mathf.RoundToInt(SpecAxis(5f)) : CarpetShots;  // 5 → 8발
+            int shots = SpecOpen ? Mathf.Max(CarpetShots, Mathf.RoundToInt(SpecAxis(5f)) + 1) : CarpetShots;  // 6 → 9발
             int dmg = SkillDamage(me, perShot);
 
-            // ⚠ **표적 기준으로 퍼뜨린다**(기획 2026-09-15). 예전에는 바라보는 쪽 6 m 앞에
-            //   부채꼴로 떨궈서, 코앞에 적이 있어도 수류탄이 머리 위를 넘어 멀리 떨어졌다.
-            //   가까운 적이 있으면 그 적을 가운데 두고, 없으면 앞으로 던진다.
-            var focus = NearestEnemy(me.Position, Meters(CarpetFocusMeters));
-            var toFocus = focus != null ? focus.Position - me.Position : Vector2.zero;
-            var dir = toFocus.sqrMagnitude > 1f ? toFocus.normalized : AimDirection(me);
-            float reach = focus != null ? toFocus.magnitude : Meters(CarpetRangeMeters);
-            var side = new Vector2(-dir.y, dir.x);
-
-            // 적마다 몇 발이 갈지 미리 센다. 같은 적을 겨눈 세 번째 발은 옆으로 밀어낸다.
+            // 내 둘레 한 바퀴 — 바라보는 쪽에서 시작해 돌아가며 차례로 떨어진다(PwCarpetThrown 이 순서대로 터뜨린다)
+            var dir = AimDirection(me);
+            float a0 = Mathf.Atan2(dir.y, dir.x);
             var quota = new Dictionary<Unit, int>();
             for (int i = 0; i < shots; i++)
             {
-                // 표적(또는 앞 지점) 둘레에 **옆으로 한 줄**, 앞뒤로 살짝 엇갈려 떨어진다.
-                // 각도로 벌리면 가까운 적일수록 다섯 발이 한 점에 겹친다.
-                float k = shots == 1 ? 0f : i - (shots - 1) * 0.5f;
-                float stagger = (i % 2 == 0 ? 1f : -1f) * Meters(CarpetStaggerMeters);
-                var at = ClampedInField(me, me.Position + dir * (reach + stagger)
-                                            + side * (k * Meters(CarpetSideStepMeters)));
+                float a = a0 + i * Mathf.PI * 2f / shots;
+                var at = ClampedInField(me, me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Meters(CarpetRingMeters));
 
-                var near = NearestEnemy(at, Meters(1.8f));
+                var near = NearestEnemy(at, Meters(CarpetSnapMeters));
                 if (near != null)
                 {
                     quota.TryGetValue(near, out int used);
@@ -748,36 +737,6 @@ namespace Game.Module.InGame
         // ═══════════════════════════════════════════════════════════
         //  원거리 8종
         // ═══════════════════════════════════════════════════════════
-
-        // ── 폭력배 · 난사 ────────────────────────────────────────
-        //
-        // 단일 대상에게는 평타와 **같다.** 이득은 오직 여럿을 동시에 맞힐 때다 —
-        // 23명 중 "언제 쓸지" 가 전부인 스킬이 하나는 있어야 한다.
-        //
-        // ⚠ 발당 피해가 평타 그대로여야 한다. 그래서 `_buffs.ExtraShots` 와 같은 자리에
-        //   얹는다 — 저기는 `split`(나누기)에 안 들어가는 자리다.
-
-        /// <summary>
-        /// 난사 동안 발사 간격을 얼마나 줄이는가(%).
-        ///
-        /// 3방향만 얹으면 1초에 15발이라 **평타가 조금 굵어진 것**으로 보였다.
-        /// 「난사」는 쏟아지는 것이 눈에 보여야 이름값을 한다 — 간격을 4분의 1로 줄여
-        /// 초당 60발쯤 나가게 한다. 발당 피해는 그대로이므로 화력이 아니라 **밀도**만 는다.
-        /// 따로 쏘는 루프를 만들지 않고 이미 있는 가속 한 곳(`GrantHaste`)을 쓴다.
-        /// </summary>
-        private const float SprayHastePercent = 75f;
-
-        private void SprayFire(Unit me)
-        {
-            _spraySeconds = BaseAxis(1f);           // 명세 2026-09-14 — 1초간 3방향
-            int total = SpecOpen ? Mathf.RoundToInt(SpecAxis(3f)) : 3;   // Lv5 3 → Lv10 7발
-            _sprayShots = Mathf.Max(1, total - 1);  // 원래 1발에 얹는 몫
-            _sprayDegrees = SpecOpen ? Mathf.Lerp(20f, 40f, Mathf.InverseLerp(3f, 7f, total)) : 20f;
-            if (SpecOpen) _pierceSeconds = _spraySeconds;   // Lv5 — 탄이 관통
-            GrantHaste(SprayHastePercent, _spraySeconds);
-            // 퀄업 연출(2026-10-07) — 세 갈래 조준이 벌어지고 탄은 가는 예광탄으로 나간다
-            if (!WpSprayOpen(me, _sprayDegrees)) PlayFx("muzzle", me.MuzzlePosition, 48f, loop: false);
-        }
 
         // ── 호퍼(기관단총) · 도약 연사 ───────────────────────────
         //

@@ -113,8 +113,8 @@ MonoBehaviour:
   - _passiveSkillKey: psv_salamander
     _nameEn: SALAMANDER
     _nameKr: "\uB3C5\uB2C8"
-    _description: "\uBA85\uC911\uD55C \uC801\uC5D0\uAC8C 10% \uB85C \uB3C5. \uACB9\uCE58\uC9C0
-      \uC54A\uB294\uB2E4."
+    _description: "\uBA85\uC911\uD55C \uC801\uC5D0\uAC8C 10% \uB85C \uB3C5. \uC911\uB3C5\uB41C
+      \uC801\uC740 25% \uB354 \uC544\uD504\uAC8C \uB9DE\uB294\uB2E4."
     _kind: 1
     _chancePercent: 10
     _scaling:
@@ -276,8 +276,9 @@ MonoBehaviour:
   - _passiveSkillKey: psv_medium
     _nameEn: MEDIUM
     _nameKr: "\uAC15\uB839"
-    _description: "\uC801\uC744 \uC7A1\uC73C\uBA74 30% \uB85C \uD574\uACE8\uC774
-      \uC77C\uC5B4\uC120\uB2E4."
+    _description: "\uC801\uC744 \uC7A1\uC73C\uBA74 30% \uB85C \uB0B4 \uD574\uACE8\uC774
+      \uC77C\uC5B4\uC120\uB2E4. \uD574\uACE8\uC740 \uC801\uC774 \uB178\uB9AC\uC9C0
+      \uC54A\uACE0 3\uCD08 \uB4A4 \uC0AC\uB77C\uC9C4\uB2E4."
     _kind: 1
     _chancePercent: 30
     _scaling:

@@ -85,11 +85,12 @@ namespace Game.Module.InGame
         private const float SprayBurstSeconds = 1f;            // 명세 「1초간 3방향」
         private const float LeapFarInvulnSeconds = 2f;
         private const float VampireFeastPercentPerEnemy = 0.02f;
+        private const float VampireBiteMul = 0.5f;
+        private bool _batBitten;
         private const float BarrierSeconds = 5f;
         private const float GangsterMarkSeconds = 3f;
         private const float CritLockSeconds = 5f;              // 명세에 시간이 없어 5초로 잡았다
         private const float CritLockPercent = 90f;             // 「90퍼 고정」
-        private const int MissileFanShots = 8;
         /// <summary>발사 지점을 반원으로 벌리는 거리. 이만큼 떨어져 날아올라 한 점에서 모인다.</summary>
         private const float MissileFanOutMeters = 0.45f;
         /// <summary>미사일 한 발의 폭발 반경. 1.2 m 는 기본 폭발(130px)보다 작아 안 터진 것처럼 보였다.</summary>
@@ -172,6 +173,9 @@ namespace Game.Module.InGame
         {
             if (SandboxBlocksExecute) return false;   // Sandbox — 지울 때 이 줄도 함께
             if (_reaperSeconds <= 0f || victim == null || !victim.IsAlive) return false;
+            // 사신이 **직접** 친 것만 — 해골이 친 것까지 즉사시키면, 죽은 자리에 선 해골이 또 옆을 즉사시켜
+            // 폭발이 한 줄로 번졌다(PD 2026-10-21 「근접인데 투사체가 나가면서 일자로 터진다」)
+            if (_summonStriking) return false;
 
             int percent = victim.IsBoss ? ReaperBossPercent
                         : victim == _midBoss ? ReaperMidBossPercent : 100;
@@ -355,7 +359,7 @@ namespace Game.Module.InGame
             _iceShellSeconds = seconds;
             _invuln = Mathf.Max(_invuln, seconds);
             _skillInvuln = Mathf.Max(_skillInvuln, seconds);
-            int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent));
+            int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent * ActiveRebaseMul));
             Leech(heal);
             // 얼음은 **버티는 내내** 서 있어야 한다 — 한 번 터지고 사라지면 무적인지 알 수 없다.
             _iceFx?.Stop();
@@ -417,15 +421,6 @@ namespace Game.Module.InGame
             else PlayFx("dash", me.Position, GaleDashFxSize, loop: false);
         }
 
-        /// <summary>닌자 — 화면 한가운데에 분신을 세운다(`CloneSpot`). 서 있는 동안 적이 전부 그쪽을 본다.</summary>
-        private void NinjaCloneSkill(Unit me)
-        {
-            var center = CloneSpot();
-            // 퀄업 연출(2026-10-07) — 한가운데 조준 → 훑는 선 · 절삭 → 분신이 선다
-            if (WpCloneOpen(me, center)) return;
-            SummonClone(center);
-        }
-
         /// <summary>
         /// 분신이 설 자리 — **방 한가운데**, 단 지금 화면에 보이는 칸 안으로 당긴다.
         /// ⚠ 방(세로 1152)이 창(1050)보다 길어, 캐릭터가 아래쪽에 서 있으면 방 한가운데가
@@ -462,13 +457,14 @@ namespace Game.Module.InGame
                 if (Targetable(_enemies[i]) && IsOnScreen(_enemies[i])) list.Add(_enemies[i]);
             if (list.Count == 0) { PlayFx("drain", me.Position, 64f, loop: false); return; }
 
-            float per = VampireFeastPercentPerEnemy * BaseAxis(1f);   // Lv1 2% → Lv4 3%
+            float per = VampireFeastPercentPerEnemy * BaseAxis(1f) * ActiveRebaseMul;   // Lv1 2% → Lv4 3% · 쿨 비율(BattleDirector.Rework1021)
             int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * per * list.Count));
 
             // ⚠ **즉발이 아니다.** 머릿수만큼 박쥐를 날려 보내고, 돌아온 뒤에 피가 찬다
             //   (기획 2026-09-15). 즉시 차면 무엇 때문에 찼는지가 안 보인다.
             _batHeal = heal;
             _batSeconds = BatFlySeconds;
+            _batBitten = false;
             _batTargets.Clear();
             QxFeastOpen(me, BatFlySeconds);   // 퀄업(2026-10-07) — 발밑 붉은 원, 박쥐 대신 피 구슬
             for (int i = 0; i < list.Count; i++)
@@ -484,7 +480,7 @@ namespace Game.Module.InGame
         /// <summary>코만도(기관총) — 최대 체력만큼 쉴드를 두른다. 5초가 지나거나 깎이면 끝난다.</summary>
         private void CommandoBarrier(Unit me)
         {
-            int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * BaseAxis(1f)));   // Lv1 100% → Lv4 150%
+            int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * BaseAxis(1f) * ActiveRebaseMul));   // Lv1 100% → Lv4 150% · 쿨 비율
             me.AddShield(amount, me.HpMax * 2);
             _barrierSeconds = BarrierSeconds;
             // 퀄업 연출(2026-10-07) — 둥근 비눗방울 대신 몸 앞을 비운 분절 방벽
@@ -602,34 +598,6 @@ namespace Game.Module.InGame
             StartSkillAura(ref _critAuraFx, "critlock");
         }
 
-        /// <summary>코만도(미사일) — 반원으로 퍼진 8발이 **한 대상**으로 모인다.</summary>
-        private void MissileFan(Unit me)
-        {
-            var target = NearestEnemy(me.Position);
-            int dmg = SkillDamage(me, BaseAxis(1f));
-            float radius = Meters(MissileBlastMeters);
-            for (int i = 0; i < MissileFanShots; i++)
-            {
-                float off = -MissileFanSpreadDeg * 0.5f
-                          + MissileFanSpreadDeg * i / (MissileFanShots - 1);
-                // ⚠ **출발점을 벌린다.** 예전에는 각도를 계산해 놓고 타겟이 있으면
-                //   쓰지 않아, 8발이 총구 한 점에서 같은 점으로 날아 완전히 겹쳤다 —
-                //   화면에서 두 발로 보였다(기획 2026-09-15).
-                //   반원으로 벌어졌다가 한 대상에서 모이는 것이 명세다.
-                // ⚠ **몸 가까이에서 부채꼴로 뻗어 나갔다가 휘어 모인다**(기획 2026-09-15).
-                //   1.6 m 밖에서 출발시켰더니 옆에 붙은 적 몸 안에서 태어나 그 자리에서 다 터졌다.
-                //   출발은 몸 곁(0.6 m), 첫 방향은 제 각도, 표적 쪽으로는 유도가 휘어 준다.
-                var aim = target != null && (target.Position - me.Position).sqrMagnitude > 1f
-                        ? (target.Position - me.Position).normalized
-                        : me.Facing;
-                var fan = Rotate(aim, off);
-                var from = ClampedInField(me, me.Position + fan * Meters(MissileFanOutMeters));
-                var at = from + fan * Meters(6f);
-                FireSkillMissile(me, from, at, target, dmg, radius);
-                PlayFx("missile_trail", from, 32f, loop: false);
-            }
-        }
-
         /// <summary>
         /// 코만도(미사일) 한 발 — **곧게 날아간다.** 수류탄처럼 포물선으로 던졌더니
         /// 로켓이 아니라 폭탄을 던지는 것으로 보였다(기획 2026-09-15). 머리가 나는 쪽을 보고,
@@ -694,6 +662,8 @@ namespace Game.Module.InGame
             TickFullSwing(dt);        // 슬러거 풀스윙 회오리
             TickWraithFlame(dt);      // 영매 원혼 강림
             TickUltimates(dt);        // 필살기 18종(BattleDirector.Ultimates)
+            TickEvade(dt);            // 닌자 몸놀림 (BattleDirector.Rework1021)
+            TickWraiths(dt);          // 사신 원혼
             TickQx();     // 파워 · 마법 퀄업 연출 — 몸을 따라다니는 부품
             for (int i = _spits.Count - 1; i >= 0; i--)
             {
@@ -740,6 +710,18 @@ namespace Game.Module.InGame
                 {
                     var (fx, _, to) = _batTargets[i];
                     fx?.MoveTo(Vector2.Lerp(home, to, t));
+                }
+                // 박쥐가 적에게 닿는 순간 한 번 문다 — 피가 튀고 조금 아프다(무엇을 빨아 왔는지가 보이게)
+                if (!_batBitten && k >= 0.5f)
+                {
+                    _batBitten = true;
+                    for (int i = 0; i < _batTargets.Count; i++)
+                    {
+                        var to = _batTargets[i].To;
+                        var victim = NearestEnemy(to, Meters(1f));
+                        if (victim != null && _host != null) HitEnemyWith(victim, SkillDamage(_host, VampireBiteMul), _host.Profile);
+                        PlayFx("drain", to, 72f, loop: false);
+                    }
                 }
                 if (_batSeconds <= 0f)
                 {

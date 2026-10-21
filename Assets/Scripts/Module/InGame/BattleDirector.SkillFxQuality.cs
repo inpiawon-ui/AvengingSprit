@@ -253,13 +253,13 @@ namespace Game.Module.InGame
         }
 
         // ── 흡혈귀 · 혈연 ───────────────────────────────────────
-        private Sprite[] BatFrames => Qx("vmorb") ? FxFrames("vmorb") : FxFrames("bat");
-        // 납품 피 구슬이 칸의 약 16 px 로 작다 — 시안(약 24 px)에 맞게 키운다
-        private float BatFxSizeQ => Qx("vmorb") ? QxCell * 1.5f : BatFxSize;
+        // 박쥐가 날아가 피를 빨아 온다(PD 2026-10-21 「원래 박쥐를 보내서 · 지금은 이상한 원」) — 피 구슬 · 발밑 원은 쓰지 않는다
+        private Sprite[] BatFrames => FxFrames("bat") ?? FxFrames("vmorb");
+        private float BatFxSizeQ => FxFrames("bat") != null ? BatFxSize : QxCell * 1.5f;
 
         private void QxFeastOpen(Unit me, float seconds)
         {
-            if (!Qx("vmcircle")) return;
+            if (FxFrames("bat") != null || !Qx("vmcircle")) return;
             _vmCircleFx?.Stop();
             // 시안(약 150 px)보다 15~20% 작아 발동이 약했다(검수 2026-10-07)
             _vmCircleFx = QxLoop("vmcircle", QxFeet(me.Position), 0.1f, 1.15f, life: seconds + 0.2f);

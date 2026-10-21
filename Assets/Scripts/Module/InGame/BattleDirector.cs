@@ -6671,7 +6671,8 @@ namespace Game.Module.InGame
                       fromPlayer ? _config.ShotSize * BeamWidthMul : _config.ShotSize,
                       ShotTint(fromPlayer, kind),
                       _config.ShotLifeSeconds,
-                      pierce: (p != null && p.Kind == AttackKind.Pierce)
+                      // 영매는 관통하지 않는다(PD 2026-10-21) — 표의 공격 방식(관통)은 그대로 두고 탄만 맞으면 멈춘다
+                      pierce: (p != null && p.Kind == AttackKind.Pierce && attacker.Key != "medium")
                               || (fromPlayer && (_buffs.Pierce || IsPierceGranted)),
                       slowPercent: (p?.SlowPercent ?? 0) + (fromPlayer ? _buffs.SlowPercent : 0),
                       lifestealPercent: (p?.LifestealPercent ?? 0) + (fromPlayer ? _buffs.LifestealPercent : 0),

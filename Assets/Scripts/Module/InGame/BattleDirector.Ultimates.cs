@@ -40,6 +40,7 @@ namespace Game.Module.InGame
             _dgMount = _dgBreath = null;
             _vpFollowAura = null;
             _ultQueue.Clear();
+            ClearWraiths();
             _ultKind = null;
             for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
             _ultFx.Clear();
@@ -77,7 +78,6 @@ namespace Game.Module.InGame
             switch (_ultKind)
             {
                 case "guru": TickSealing(me, dt); break;
-                case "dragon_blue": TickThunderOrbs(me, dt); break;
                 case "commando_mg": TickDeflectWall(me, dt); break;
                 case "amazon_elite": TickWrath(me, dt); break;
                 case "dragoon": TickDragonCharge(me, dt); TickSsrDragoon(me, dt); break;
@@ -300,7 +300,11 @@ namespace Game.Module.InGame
         //  불러서 같이 싸운다
         // ═══════════════════════════════════════════════════════════
 
-        // 사신 — 망자 군단: 해골 다섯이 일어나 싸우고, 4초 뒤 혼불이 적마다 날아가 터진다
+        // 사신 — 망자 군단: 해골 다섯이 일어나 싸우고(6초), 원혼이 두 번 적마다 날아가 터진다
+        // PD 2026-10-21 「해골 및 유령 군단이라는데 그냥 해골 5마리」 — 예전 유령은 빛 알갱이(파티클)뿐이라 안 보였다.
+        //   이제 원혼 그림(`mdwraith`)이 직접 날아간다(BattleDirector.Rework1021 `LaunchWraith`)
+        private const float DeathSkullSeconds = 6f;
+
         private void UltDeath(Unit me)
         {
             for (int i = 0; i < 5; i++)
@@ -308,24 +312,23 @@ namespace Game.Module.InGame
                 float a = (-60f + i * 30f) * Mathf.Deg2Rad;
                 var dir = new Vector2(Mathf.Sin(a), Mathf.Cos(a));
                 var at = ClampedInField(me, me.Position + dir * Meters(1.4f));
-                SummonSkull(at);
+                SummonSkull(at, DeathSkullSeconds);
                 PlayFx("soulripple", at, Meters(1.2f), loop: false);
             }
-            UltAfter(4f, () =>
+            for (int wave = 0; wave < 2; wave++)
             {
-                var list = UltTargets(me.Position, Meters(12f));
-                for (int i = 0; i < list.Count && i < 8; i++)
+                UltAfter(1.6f + wave * 2.2f, () =>
                 {
-                    var e = list[i];
-                    _pfx?.Dart(me.Position, e.Position, ParticleElement.Ice, 0.3f, 4);
-                    UltAfter(0.3f, () =>
+                    var list = UltTargets(me.Position, Meters(12f));
+                    for (int i = 0; i < list.Count && i < 6; i++)
                     {
-                        if (e == null || !e.IsAlive) return;
-                        UltAoe(me, e.Position, 1.3f, 3f, "mdpop", 2.6f);
-                    });
-                }
-                Shake(8f);
-            });
+                        var e = list[i];
+                        UltAfter(i * 0.08f, () => LaunchWraith(me, e));
+                    }
+                    PlayFx("soulripple", me.Position, Meters(2.4f), loop: false);
+                    Shake(5f);
+                });
+            }
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -398,7 +401,22 @@ namespace Game.Module.InGame
             }
         }
 
-        // 샐러맨더 — 독 늪: 앞에 독 늪(감속 · 지속 피해) 4초 → 늪 전체가 터진다
+        private const float VenomPoolMeters = 3.4f;
+
+        /// <summary>늪 안의 적은 늘 중독 — 독이 남아 있어도 시간을 다시 채운다.</summary>
+        private void PoisonInPool(Vector2 at)
+        {
+            float r = Meters(VenomPoolMeters) * _buffs.AoeMul;
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (e == null || !e.IsAlive || e.IsDying) continue;
+                if ((e.Position - at).sqrMagnitude > r * r) continue;
+                e.ApplyPoison(PassiveAilmentSeconds);
+            }
+        }
+
+        // 샐러맨더 — 독 늪: 앞에 독 늪(감속 · 지속 피해 · 100% 중독) 4초 → 늪 전체가 터진다
         private void UltSalamander(Unit me)
         {
             var near = NearestEnemy(me.Position);
@@ -417,8 +435,10 @@ namespace Game.Module.InGame
             else PlayFx("venom", at, Meters(2f), loop: false);
             UltAfter(0.35f, () =>
             {
-                var field = SpawnField(at, Meters(2.6f), 4f, FieldEffect.Slow, UltDamage(me, 0.45f), fromPlayer: true);
-                var pool = PlayFloorFx("smpool", at, Meters(6f), loop: true);
+                // 범위를 키웠다(2.6 → 3.4 m) · 늪 안에 있으면 100% 중독(PD 2026-10-21)
+                var field = SpawnField(at, Meters(VenomPoolMeters), 4f, FieldEffect.Slow, UltDamage(me, 0.45f), fromPlayer: true);
+                for (int k = 0; k <= 13; k++) UltAfter(k * 0.3f, () => PoisonInPool(at));
+                var pool = PlayFloorFx("smpool", at, Meters(VenomPoolMeters * 2.3f), loop: true);
                 if (pool != null)
                 {
                     pool.SetFrameSeconds(0.1f);
@@ -433,10 +453,10 @@ namespace Game.Module.InGame
             {
                 for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
                 _ultFx.Clear();
-                UltAoe(me, at, 2.6f, 4f, FxFrames("smgeyser") == null ? "goo_burst" : null, 2.3f);
-                for (int k = 0; k < 7; k++)
+                UltAoe(me, at, VenomPoolMeters, 4f, FxFrames("smgeyser") == null ? "goo_burst" : null, 2.3f);
+                for (int k = 0; k < 9; k++)
                 {
-                    var p = at + Random.insideUnitCircle * Meters(2.2f);
+                    var p = at + Random.insideUnitCircle * Meters(VenomPoolMeters - 0.4f);
                     UltAfter(k * 0.06f, () => PlayFx("smgeyser", p + new Vector2(0f, SsrBody * 0.7f), SsrBody * 2.2f, loop: false)
                         ?.SetFrameSeconds(0.05f));
                 }
@@ -533,57 +553,6 @@ namespace Game.Module.InGame
             });
         }
 
-        // 청룡 — 번개 구슬: 5초 동안 구슬 셋이 몸 둘레를 돌며 번개, 끝에 낙뢰
-        private float _orbZap;
-
-        private void UltDragonBlue(Unit me)
-        {
-            _ultKind = "dragon_blue";
-            _ultT = 0f;
-            _orbZap = 0f;
-            // R 시안(ult_dragon_blue) — 몸 둘레를 도는 번개 구슬 → 적에게 번개가 이어진다 → 하늘에서 거대 낙뢰
-            bool newOrb = FxFrames("dborb") != null;
-            for (int i = 0; i < 3; i++) (newOrb ? UltLoop("dborb", me.Position, 120f) : UltLoop("vmorb", me.Position, 60f))?.SetFrameSeconds(0.06f);
-            UltAfter(5f, () =>
-            {
-                _ultKind = null;
-                for (int i = 0; i < _ultFx.Count; i++) _ultFx[i]?.Stop();
-                _ultFx.Clear();
-                var t = UltStrongest(me.Position) ?? NearestEnemy(me.Position);
-                if (t == null) return;
-                var at = t.Position;
-                var strike = PlayFx("dbstrike", at + new Vector2(0f, SsrBody * 1.9f), SsrBody * 4.6f, loop: false);
-                if (strike != null) strike.SetFrameSeconds(0.05f);
-                else UltBeam("dsbolt", at + new Vector2(0f, Meters(6f)), at, 120f);
-                UltAoe(me, at, 2.4f, 4f, "lzhit", 2f);
-                _pfx?.Spray(ParticleFxKind.Streak, at, Vector2.up, 180f, 18, 300f, 600f, new Vector2(40f, 5f), 0.3f,
-                            new Color(0.6f, 0.9f, 1f, 1f));
-                Shake(12f);
-                HitStop(0.1f);
-            });
-        }
-
-        private Vector2 OrbPos(Unit me, int i)
-        {
-            float a = _ultT * 3.2f + i * Mathf.PI * 2f / 3f;
-            return me.Position + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.6f) * Meters(1.5f) + new Vector2(0f, 20f);
-        }
-
-        private void TickThunderOrbs(Unit me, float dt)
-        {
-            for (int i = 0; i < _ultFx.Count && i < 3; i++) _ultFx[i]?.MoveTo(OrbPos(me, i));
-            _orbZap -= dt;
-            if (_orbZap > 0f) return;
-            _orbZap = 0.35f;
-            for (int i = 0; i < 3; i++)
-            {
-                var at = OrbPos(me, i);
-                var t = NearestEnemy(at, Meters(4.5f));
-                if (t == null) continue;
-                UltBeam("dsbolt", at, t.Position, 90f, 0.04f);   // 50 은 방 화면(×0.47)에서 실처럼 가늘었다(녹화 r_db1)
-                UltHit(me, t, 0.9f);
-            }
-        }
 
         // ═══════════════════════════════════════════════════════════
         //  버티고 돌려준다

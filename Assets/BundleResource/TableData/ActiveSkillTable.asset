@@ -39,8 +39,9 @@ MonoBehaviour:
   - _activeSkillKey: psg_h03
     _nameEn: Carpet Bomb
     _nameKr: "\uC735\uB2E8 \uD3ED\uACA9"
-    _description: "\uD45C\uC801 \uB458\uB808\uC5D0 \uC218\uB958\uD0C4\uC744 \uD55C
-      \uC904\uB85C \uB5A8\uAD70\uB2E4."
+    _description: "\uB0B4 \uB458\uB808\uC5D0 \uC218\uB958\uD0C4\uC744 \uC6D0\uC73C\uB85C
+      \uB5A8\uAD70\uB2E4. \uAC00\uAE4C\uC6B4 \uC801\uC774 \uC788\uC73C\uBA74 \uADF8
+      \uC801\uC5D0\uAC8C \uB5A8\uC5B4\uC9C4\uB2E4."
     _scaling:
       _baseValue: 1.2
       _baseValueMax: 1.8
@@ -75,8 +76,8 @@ MonoBehaviour:
   - _activeSkillKey: psg_h06
     _nameEn: Multi Homing
     _nameKr: "\uB2E4\uC911 \uC720\uB3C4"
-    _description: "\uBC18\uC6D0\uC73C\uB85C \uD37C\uC9C4 8\uBC1C\uC774 \uD55C \uB300\uC0C1\uC73C\uB85C
-      \uBAA8\uC5EC \uB4E0\uB2E4."
+    _description: "\uBBF8\uC0AC\uC77C 7\uBC1C\uC774 \uB458\uB808 \uC801\uB4E4\uC5D0\uAC8C
+      \uD55C \uBC1C\uC529 \uB0A0\uC544\uAC04\uB2E4."
     _scaling:
       _baseValue: 1
       _baseValueMax: 1.5
@@ -135,7 +136,8 @@ MonoBehaviour:
   - _activeSkillKey: psg_h11
     _nameEn: Bullet Storm
     _nameKr: "\uB09C\uC0AC"
-    _description: "1\uCD08\uAC04 3\uBC29\uD5A5\uC73C\uB85C \uC3DF\uC544\uBD93\uB294\uB2E4."
+    _description: "\uB2E4\uC12F \uAC08\uB798\uB85C \uC138 \uBC88 \uBE60\uB974\uAC8C
+      \uC3DC\uB2E4."
     _scaling:
       _baseValue: 1
       _baseValueMax: 1.5
@@ -180,9 +182,10 @@ MonoBehaviour:
     _growthUnit: 1
     _growthMul: 1
   - _activeSkillKey: psg_h15
-    _nameEn: Summon Skeletons
-    _nameKr: "\uD574\uACE8 \uC18C\uD658"
-    _description: "\uD574\uACE8 2\uAE30\uB97C \uBD88\uB7EC \uAC19\uC774 \uC2F8\uC6B4\uB2E4."
+    _nameEn: Mini Golem
+    _nameKr: "\uBBF8\uB2C8 \uACE8\uB818"
+    _description: "\uBBF8\uB2C8 \uACE8\uB818\uC744 \uBD88\uB7EC 10\uCD08\uAC04 \uB370\uB9AC\uACE0
+      \uB2E4\uB2C8\uBA70 \uAC19\uC774 \uC2F8\uC6B4\uB2E4."
     _scaling:
       _baseValue: 0.2
       _baseValueMax: 0.35
@@ -203,9 +206,10 @@ MonoBehaviour:
     _growthUnit: 0
     _growthMul: 1
   - _activeSkillKey: psg_h17
-    _nameEn: Chain Bind
-    _nameKr: "\uC0AC\uC2AC \uACB0\uBC15"
-    _description: "\uBC29 \uC548 \uBAA8\uB4E0 \uC801\uC744 5\uCD08\uAC04 \uBB36\uB294\uB2E4.
+    _nameEn: Chain Pull
+    _nameKr: "\uC0AC\uC2AC \uB04C\uC5B4\uC624\uAE30"
+    _description: "\uB458\uB808 \uC801 5\uBA85\uC744 \uC0AC\uC2AC\uB85C \uB0B4 \uC55E\uC5D0
+      \uB04C\uC5B4\uC640 \uBB36\uACE0 \uD55C \uBC88\uC5D0 \uD6C4\uB824\uCE5C\uB2E4.
       \uBB36\uC778 \uC801\uC740 \uB354 \uC544\uD504\uAC8C \uB9DE\uB294\uB2E4."
     _scaling:
       _baseValue: 5
@@ -215,10 +219,10 @@ MonoBehaviour:
     _growthUnit: 1
     _growthMul: 1
   - _activeSkillKey: psg_h18
-    _nameEn: Shadow Clone
-    _nameKr: "\uADF8\uB9BC\uC790 \uBD84\uC2E0"
-    _description: "\uBC29 \uD55C\uAC00\uC6B4\uB370 \uBD84\uC2E0\uC744 \uC138\uC6B4\uB2E4.
-      5\uCD08\uAC04 \uC801\uC774 \uC804\uBD80 \uBD84\uC2E0\uC744 \uB178\uB9B0\uB2E4."
+    _nameEn: Shadow Step
+    _nameKr: "\uADF8\uB9BC\uC790 \uAC78\uC74C"
+    _description: "4\uCD08\uAC04 \uD68C\uD53C 50% \xB7 \uC774\uB3D9 \uC18D\uB3C4
+      +35%, \uC794\uC0C1\uC774 \uB0A8\uB294\uB2E4."
     _scaling:
       _baseValue: 0.5
       _baseValueMax: 0.8
@@ -265,8 +269,9 @@ MonoBehaviour:
   - _activeSkillKey: psg_h22
     _nameEn: Blood Feast
     _nameKr: "\uD608\uC5F0"
-    _description: "\uB458\uB808 5 m \uC758 \uC801 \uBA38\uB9BF\uC218\uB9CC\uD07C
-      \uCD5C\uB300 \uCCB4\uB825\uC758 2% \uC529 \uD68C\uBCF5\uD55C\uB2E4."
+    _description: "\uD654\uBA74\uC758 \uC801\uB9C8\uB2E4 \uBC15\uC950\uAC00 \uB0A0\uC544\uAC00
+      \uD53C\uB97C \uBE68\uC544 \uC628\uB2E4. \uC801 \uC218\uB9CC\uD07C \uCD5C\uB300
+      \uCCB4\uB825\uC758 2%\uC529 \uD68C\uBCF5."
     _scaling:
       _baseValue: 1
       _baseValueMax: 1.5
