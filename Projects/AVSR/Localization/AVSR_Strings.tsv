@@ -140,6 +140,52 @@ card.c012.name	속사	速射	Rapid Fire
 card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.
 card.c013.name	필살기 초기화	必殺技リセット	Special Reset
 card.c013.desc	지금 몸의 필살기를 다시 쓸 수 있다.	今の体の必殺技をもう一度使える。	Use your current body's Special again.
+card.c014.name	관통탄	貫通弾	Piercing Shot
+card.c014.desc	탄이 적을 뚫고 지나간다.	弾が敵を貫通する。	Shots pierce through foes.
+card.c015.name	벽 반사	壁反射	Ricochet
+card.c015.desc	탄이 벽과 엄폐물에서 튕겨 다시 날아간다.	弾が壁や障害物で跳ね返る。	Shots bounce off walls and cover.
+card.c016.name	유도탄	誘導弾	Homing Shot
+card.c016.desc	탄이 가까운 적 쪽으로 휘어 날아간다.	弾が近くの敵へ曲がって飛ぶ。	Shots curve toward nearby foes.
+card.c017.name	냉기 각인	冷気の刻印	Frost Brand
+card.c017.desc	공격에 빙결을 붙인다. 걸린 적은 느려진다.	攻撃に凍結を付与。かかった敵は遅くなる。	Attacks may freeze. Frozen foes slow down.
+card.c018.name	저주 각인	呪いの刻印	Curse Brand
+card.c018.desc	공격에 저주를 붙인다. 걸린 적은 더 아프게 맞는다.	攻撃に呪いを付与。かかった敵は被ダメージが増える。	Attacks may curse. Cursed foes take more damage.
+card.c019.name	화상 번짐	延焼	Wildfire
+card.c019.desc	화상이 3단계가 된 적 둘레로 화상이 옮는다.	火傷が3段階になった敵の周りに火傷が広がる。	Max-stack burns spread to nearby foes.
+card.c020.name	상태이상 번짐	状態異常伝播	Contagion
+card.c020.desc	상태이상을 걸 때 옆 적에게도 옮긴다.	状態異常をかけると隣の敵にも移る。	Status effects may jump to a nearby foe.
+card.c021.name	둔화탄	鈍化弾	Slowing Shot
+card.c021.desc	맞은 적이 잠시 느려진다.	命中した敵が少しの間遅くなる。	Hit foes are slowed briefly.
+card.c022.name	갑옷 분쇄	鎧砕き	Armor Break
+card.c022.desc	때릴수록 그 적이 받는 피해가 쌓여 늘어난다.	攻撃するほどその敵の被ダメージが蓄積して増える。	Each hit makes that foe take more damage.
+card.c023.name	연속 압박	連続圧迫	Relentless
+card.c023.desc	같은 적을 연달아 칠수록 세진다.	同じ敵を続けて攻撃するほど強くなる。	Hitting the same foe in a row deals more.
+card.c024.name	마무리 본능	仕留めの本能	Finisher
+card.c024.desc	체력이 낮은 적에게 더 아프다.	体力の低い敵にダメージ増加。	More damage to low-HP foes.
+card.c025.name	보스 사냥	ボス狩り	Boss Hunter
+card.c025.desc	보스에게 주는 피해가 늘어난다.	ボスへのダメージが増える。	More damage to bosses.
+card.c026.name	폭발 메아리	爆発の残響	Blast Echo
+card.c026.desc	내 탄이 터지면 같은 자리에 작은 폭발이 한 번 더.	自分の弾が爆発すると同じ場所でもう一度小爆発。	Your blasts echo with a second small blast.
+card.c027.name	범위 확대	範囲拡大	Wide Reach
+card.c027.desc	스킬 · 필살기 · 폭발 범위가 넓어진다.	スキル・必殺技・爆発の範囲が広がる。	Wider skill, ultimate and blast areas.
+card.c028.name	장판 지속	フィールド持続	Lingering Field
+card.c028.desc	내가 깐 장판이 더 오래 남는다.	自分が張ったフィールドが長く残る。	Your fields last longer.
+card.c029.name	유령 포대	幽霊砲台	Ghost Turret
+card.c029.desc	평타 8번마다 유령 포대가 잠시 선다.	通常攻撃8回ごとに幽霊砲台が少しの間現れる。	Every 8 attacks, a ghost turret appears briefly.
+card.c030.name	영혼 복제	魂の複製	Soul Echo
+card.c030.desc	평타 8번째마다 같은 공격이 한 번 더 나간다.	通常攻撃8回目ごとに同じ攻撃がもう一度出る。	Every 8th attack fires once more.
+card.c031.name	유령 갑주	幽霊の甲冑	Ghost Armor
+card.c031.desc	받는 피해가 줄어든다.	受けるダメージが減る。	Take less damage.
+card.c032.name	흡혈	吸血	Lifesteal
+card.c032.desc	공격하면 확률로 준 피해의 절반만큼 회복한다.	攻撃時に確率で与ダメージの半分を回復。	Hits may heal half the damage dealt.
+card.c033.name	위기 방벽	危機の防壁	Last Barrier
+card.c033.desc	체력이 위험해지면 방마다 한 번 방벽이 선다.	体力が危険になると部屋ごとに一度防壁が張られる。	Once per room, a barrier forms at low HP.
+card.c034.name	가속	加速	Swift
+card.c034.desc	이동 속도가 빨라진다.	移動速度が上がる。	Move faster.
+card.c035.name	사거리	射程	Long Reach
+card.c035.desc	근접 공격이 닿는 거리가 늘어난다.	近接攻撃の届く距離が伸びる。	Melee attacks reach farther.
+card.c036.name	스킬 쿨 감소	スキル短縮	Quick Skill
+card.c036.desc	액티브 스킬 쿨타임이 줄어든다.	アクティブスキルのクールタイムが短くなる。	Shorter active skill cooldown.
 boss.robot_snakes.name	로봇 스네이크	ロボットスネーク	Robot Snakes
 bossmove.BurrowStrike.name	솟아오름	突き上げ	Burrow Strike
 bossmove.RailLaser.name	레이저	レーザー	Laser
@@ -257,6 +303,10 @@ event.EV_DEAL_06.title	굶주림	飢え	Hunger
 event.EV_DEAL_06.body	굶주린 것이 제 이빨을 내민다.\n그릇을 조금 내주면 남의 피로 채우는 법을 알려 준다.	飢えたものが自らの牙を差し出す。\n器を少し渡せば、他者の血で満たす術を教えてやると言う。	A starving thing bares its fangs to you.\nGive up some of your vessel, and learn to fill it with others' blood.
 event.EV_DEAL_06.accept	이빨을 받는다	牙を受け取る	Take the Fangs
 event.EV_DEAL_06.decline	등을 돌린다	背を向ける	Turn Away
+event.EV_DEAL_07.title	악마의 진열	悪魔の陳列	Devil's Display
+event.EV_DEAL_07.body	제단 위에 카드 세 장이 떠오른다.\n그릇을 깎아 내면 그중 하나를 쥐게 해 준다.	祭壇の上にカードが三枚浮かぶ。\n器を削れば、そのうち一枚を握らせてやろう。	Three cards rise above the Altar.\nCarve away your vessel, and one is yours.
+event.EV_DEAL_07.accept	그릇을 깎는다	器を削る	Carve Vessel
+event.EV_DEAL_07.decline	등을 돌린다	背を向ける	Turn Away
 stage.1.1.name	쓰레기 집적장	ゴミ集積場	Junkyard
 stage.2.1.name	미사일 저장기지	ミサイル貯蔵基地	Missile Depot
 stage.3.1.name	밤의 도시 거리	夜の街	Night City Streets
@@ -400,6 +450,10 @@ ui.shrine.speed.result	공격이 빨라졌다	攻撃が速くなった	Attacks g
 ui.shrine.range.title	멀리 닿는다	遠くまで届く	Reach Farther
 ui.shrine.range.desc	사거리가 늘어난다	射程が伸びる	Range increases
 ui.shrine.range.result	사거리가 늘어났다	射程が伸びた	Range increased
+ui.shrine.card_pick.title	카드를 고른다	カードを選ぶ	Pick a Card
+ui.shrine.card_pick.desc	레어 이상 카드 셋 중 하나를 가져간다	レア以上のカード3枚から1枚選ぶ	Choose 1 of 3 Rare+ cards
+ui.shrine.card_up.title	카드를 벼린다	カードを鍛える	Hone a Card
+ui.shrine.card_up.desc	가진 카드 하나의 레벨이 오른다	所持カード1枚のレベルが上がる	Level up one of your cards
 ui.opening.skip	건너뛰기	スキップ	Skip
 ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력	肉体とは別に保たれる魂の体力	Soul HP, kept apart from the body
 ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}	緊急憑依 — GHOST -{0}	Emergency Possess — GHOST -{0}
@@ -445,6 +499,9 @@ ui.common.quit.message	게임을 종료하시겠습니까?	ゲームを終了し
 ui.common.quit	종료	終了	Quit
 ui.common.cancel	취소	キャンセル	Cancel
 ui.shop.leave	나간다	店を出る	Leave
+ui.shop.upgrade.name	{0} 강화	{0} 強化	Hone {0}
+ui.shop.upgrade.desc	가진 카드 Lv.{0} → Lv.{1}	所持カード Lv.{0} → Lv.{1}	Your card Lv.{0} → Lv.{1}
+ui.shop.reroll	다시 뽑기  {0:N0} G	引き直し  {0:N0} G	Reroll  {0:N0} G
 ui.shop.title	상점	ショップ	Shop
 ui.lobby.host_button.sub	호스트 육성	ホスト育成	Train Hosts
 ui.lobby.shop_button.sub	상점	ショップ	Shop

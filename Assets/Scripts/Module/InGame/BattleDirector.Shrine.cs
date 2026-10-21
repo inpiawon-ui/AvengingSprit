@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Character;
 using Game.Module.Events;
 using UnityEngine;
 using Localize = Game.Module.Common.Localize;
@@ -36,6 +37,11 @@ namespace Game.Module.InGame
             SpeedUp,
             /// <summary>사거리 +25%</summary>
             RangeUp,
+            // ── 카드 기능 (PD 2026-10-21 「천사 · 악마 · 상점도 기존 것 + 레벨업 카드 기능」) — 끝에 붙인다(아이콘 번호)
+            /// <summary>카드 3택1 — 레어 이상만</summary>
+            CardPick,
+            /// <summary>가진 카드 중 가장 낮은 것 레벨 +1</summary>
+            CardUpgrade,
         }
 
         private const int ShrinePickCount = 3;
@@ -60,6 +66,8 @@ namespace Game.Module.InGame
             ShrineGift.MaxHpUp  => Localize.Get("ui.shrine.max_hp.title"),
             ShrineGift.AtkUp    => Localize.Get("ui.shrine.atk.title"),
             ShrineGift.SpeedUp  => Localize.Get("ui.shrine.speed.title"),
+            ShrineGift.CardPick => Localize.Get("ui.shrine.card_pick.title"),
+            ShrineGift.CardUpgrade => Localize.Get("ui.shrine.card_up.title"),
             _                   => Localize.Get("ui.shrine.range.title"),
         };
 
@@ -76,6 +84,8 @@ namespace Game.Module.InGame
             ShrineGift.MaxHpUp  => Localize.Get("ui.shrine.max_hp.desc"),
             ShrineGift.AtkUp    => Localize.Get("ui.shrine.atk.desc"),
             ShrineGift.SpeedUp  => Localize.Get("ui.shrine.speed.desc"),
+            ShrineGift.CardPick => Localize.Get("ui.shrine.card_pick.desc"),
+            ShrineGift.CardUpgrade => Localize.Get("ui.shrine.card_up.desc"),
             _                   => Localize.Get("ui.shrine.range.desc"),
         };
 
@@ -87,6 +97,8 @@ namespace Game.Module.InGame
             2 => "shrine_max_hp",     // 그릇을 넓힌다
             3 => "shrine_atk",        // 힘을 받는다
             4 => "shrine_speed",      // 손이 빨라진다
+            6 => "shrine_card_pick",  // 카드를 고른다 — 그림은 새 카드 아이콘과 같이 발주(없으면 칸만 보임)
+            7 => "shrine_card_up",    // 카드를 벼린다
             _ => "shrine_range",      // 멀리 닿는다
         };
 
@@ -106,6 +118,9 @@ namespace Game.Module.InGame
                 ShrineGift.AtkUp, ShrineGift.SpeedUp, ShrineGift.RangeUp,
             };
             if (_host != null) pool.Insert(0, ShrineGift.FullHeal);
+            // 카드 기능 — 고를 것이 있을 때만 후보에 넣는다(고를 수는 있는데 아무 일도 없으면 함정)
+            if (CanOfferShrineCards()) pool.Add(ShrineGift.CardPick);
+            if (PickUpgradable() != null) pool.Add(ShrineGift.CardUpgrade);
 
             for (int i = 0; i < ShrinePickCount && pool.Count > 0; i++)
             {
@@ -142,6 +157,18 @@ namespace Game.Module.InGame
             SpawnExit();
         }
 
+
+        private readonly List<BuffEntry> _shrineCardProbe = new(3);
+
+        /// <summary>지금 카드 3택1 을 열면 한 장이라도 나오는가.</summary>
+        private bool CanOfferShrineCards()
+        {
+            if (_buffTable == null) return false;
+            _buffTable.Draw(_shrineCardProbe, 1, _buffs.ExcludedKeys, _rng, _host?.Profile, _runChapter, rule: this);
+            bool any = _shrineCardProbe.Count > 0;
+            _shrineCardProbe.Clear();
+            return any;
+        }
 
         private string ApplyShrine(ShrineGift g)
         {
@@ -183,6 +210,21 @@ namespace Game.Module.InGame
                 case ShrineGift.SpeedUp:
                     _buffs.AddShrineAttackSpeedPercent(ShrineSpeedUpPercent);
                     return Localize.Get("ui.shrine.speed.result");
+
+                // 카드 3택1 — 레벨업과 같은 창이 바로 뜬다(레어 이상, 모자라면 등급을 풀어 채움)
+                case ShrineGift.CardPick:
+                    OfferBuff(CardRarity.Rare);
+                    return _awaitingBuff ? Localize.Get("ui.event.result.pick_card") : Localize.Get("ui.event.result.nothing_to_pick");
+
+                case ShrineGift.CardUpgrade:
+                {
+                    var up = PickUpgradable();
+                    if (up == null) return Localize.Get("ui.event.result.nothing_to_upgrade");
+                    int lv = _buffs.LevelOf(up.BuffKey);
+                    _buffs.Apply(up);
+                    _bus.Publish(new BuffChosenEvent { ChosenKey = up.BuffKey, TotalBuffCount = _buffs.Count });
+                    return $"{up.DisplayName} Lv.{lv} → Lv.{_buffs.LevelOf(up.BuffKey)}";
+                }
 
                 default:
                     _buffs.AddShrineRangePercent(ShrineRangeUpPercent);

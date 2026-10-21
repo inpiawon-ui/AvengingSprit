@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1단계 레벨업 카드</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fffdf8;--fg:#24221d;--mute:#6f6a5f;--line:#ddd6c8;--accent:#a8551b;--ok:#2f7a4a;--warn:#a03a2a;--ask:#2d5f9a;--chip:#efe7d8}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1b19;--card:#252320;--fg:#ece8df;--mute:#a39d90;--line:#3a3631;--accent:#e08a4a;--ok:#6cc08a;--warn:#e07a68;--ask:#7fb0ea;--chip:#2f2c27}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:20px;margin:38px 0 10px;padding-top:14px;border-top:2px solid var(--line)}
+h3{font-size:16px;margin:22px 0 6px;color:var(--accent)}
+p{margin:6px 0}.sub{color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:6px 0}
+th,td{border-bottom:1px solid var(--line);padding:6px 7px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600;white-space:nowrap}
+td.lv{white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.s{display:inline-block;font-size:12px;padding:0 6px;border-radius:4px;white-space:nowrap}
+.s.ok{background:rgba(47,122,74,.15);color:var(--ok)}
+.s.fix{background:rgba(160,58,42,.15);color:var(--warn)}
+.s.ask{background:rgba(45,95,154,.15);color:var(--ask)}
+.s.now{background:var(--chip);color:var(--mute)}
+.s.cut{background:var(--chip);color:var(--mute);text-decoration:line-through}
+.note{color:var(--mute);font-size:13px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0}
+.q{background:var(--card);border-left:4px solid var(--accent);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.ans{background:var(--card);border-left:4px solid var(--ask);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+ul,ol{margin:6px 0;padding-left:22px}li{margin:3px 0}
+code{font-family:Consolas,monospace;font-size:12.5px;background:var(--chip);padding:0 4px;border-radius:3px}
+pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;line-height:1.55}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>1단계 — 레벨업 카드 <span class="s ask">PD 결정 반영 · 2차</span></h1>
+<p class="sub">2026-10-21 PD 결정 33건 반영. 카드마다 무엇을 하는지 · 레벨 1~5 수치 · 어느 몸에서 효과가 있는지 · 앞 카드가 있어야 나오는지. 수치는 실제 전투 코드 계산 기준.</p>
+
+<div class="box">
+<b>표 보는 법</b> —
+<span class="s now">지금 있음</span> 이미 게임에 있음 ·
+<span class="s ok">추가</span> 코드에 효과가 있어 카드로 올림 ·
+<span class="s fix">고쳐서 추가</span> 버그 · 빈틈을 고친 뒤 올림 ·
+<span class="s cut">뺌</span> PD 결정으로 뺌<br>
+<span class="note">카드 이름은 임시(확정 때 세계관에 맞게). 「정본」 = 예전 기획 레벨표(<code>Projects/AVSR/Canon/v23/CARD_MASTER_RUNTIME.json</code>), 「제안」 = 새로 잡은 값.</span>
+</div>
+
+<!-- ───────────── 질문 답 ───────────── -->
+<h2>질문하신 것</h2>
+
+<div class="ans"><b>Q. 화염 · 냉기 · 저주 각인, 화상 번짐 — 하나를 고르면 다른 카드는 안 나오나?</b>
+<p>아닙니다. 지금은 <b>카드끼리 막는 규칙이 없습니다.</b> 세 각인을 다 가질 수 있고, 한 번 공격에 화상 · 빙결 · 저주가 각각 따로 확률을 굴려 같이 붙을 수 있습니다. 3택1에서 빠지는 것은 그 카드를 5레벨까지 올렸을 때뿐입니다.</p>
+<p><b>제안: 막지 않고 그대로 둡니다.</b> 셋은 하는 일이 달라서(화상 = 피해 · 빙결 = 느리게 · 저주 = 더 아프게) 같이 모으면 「상태이상 빌드」가 됩니다. 아래 테크트리로 그 빌드에 이어지는 카드를 붙입니다.</p></div>
+
+<div class="ans"><b>Q. 화상 번짐도 화염 각인을 먹어야 뜨나?</b>
+<p>지금은 <b>아닙니다</b> — 아무 때나 뜹니다. 화상을 거는 수단이 없으면 고르고도 아무 일이 없습니다. → 결정대로 <b>화염 각인을 가졌을 때만 뜨게</b> 바꿉니다(아래 테크트리).</p></div>
+
+<div class="ans"><b>Q. 둔화탄 — 「고정」이라 레벨이 안 들어간다는 게 무슨 말이고, 「고쳐서 넣기」와 「제안」은 왜 다른가?</b>
+<p><b>지금 코드:</b> 둔화 카드를 1장이라도 가지면 → 맞힐 때 <b>35% 확률</b>로 → 1.5초 동안 <b>40% 느려짐</b>. 이 세 숫자가 코드에 박혀 있어서, 카드를 2레벨 · 5레벨로 올려도 <b>똑같습니다</b>(레벨 값을 읽지 않음). 흡혈도 같은 문제(25% 확률 · 피해 50% 회복 고정).</p>
+<p><b>고쳐서 넣기 = 레벨이 확률을 정하게 코드를 고친다</b>는 뜻이고, <b>제안 = 그때 쓸 레벨별 확률 값</b>(20 → 28 → 36 → 44 → 52%)입니다. 둘은 같은 이야기입니다 — 「고치고(코드), 이 값으로(수치)」.</p></div>
+
+<div class="ans"><b>Q. 카드 테크트리는 어떻게 적용되나? 정본(예전 기획)에서는 레벨업하면 카드를 어떻게 보여 줬나?</b>
+<p><b>원본(궁수 전설):</b> 테크트리가 사실상 없습니다. 무게를 붙여 9장을 뽑고 그중 3장을 보여 주며, 고른 카드는 다시 안 나옵니다(같은 효과를 또 쌓을 땐 이름이 같은 다른 카드로). 「앞 카드가 있어야 뜨는」 카드는 1장뿐이고, 나머지는 시너지만 있습니다(원소 강화 → 원소 카드 등). 후보가 70장을 넘으면 묶음 단위로 일부를 판마다 빼 다양하게 합니다.</p>
+<p><b>정본(우리 예전 기획 v2.3):</b> 「진화」가 있었습니다. <b>카드 A + 카드 B를 둘 다 가지면</b>(예: 마무리 본능 + 공격 강화) 다음 카드 선택 때 <b>진화 카드 한 칸이 예약</b>되어 나오고, 재료 카드는 그대로 남습니다. 진화는 따로 쿨이 도는 강한 공격(예: 「죽음의 낫」 12초마다)이고, 한 판에 최대 3개, 11종. 조합식은 처음 2개만 열려 있고 나머지는 호스트 숙련도로 열립니다(<code>Canon/v23/RECIPE_RUNTIME.json</code>). 지금 게임에서는 걷어낸 상태입니다.</p>
+<p><b>우리 제안 — 두 층:</b></p>
+<ol>
+<li><b>앞 카드(이번에 넣음):</b> 앞 카드를 가져야 3택1에 뜨는 카드. 레벨은 따로 오릅니다.</li>
+<li><b>진화(2차 후보):</b> 정본 방식 그대로 — 두 카드를 모으면 진화 칸이 예약. 이번 1단계에는 넣지 않고, 카드 40장이 자리 잡은 뒤 따로 검수.</li>
+</ol>
+</div>
+
+<h3>테크트리 (이번에 넣을 것)</h3>
+<pre class="tree">감전 ─────────────▶ 번개 사슬          (전기가 더 여러 번 튐)
+화염 각인 ─────────▶ 화상 번짐          (화상 3단계가 둘레로 옮음)
+화염 · 냉기 · 저주 각인,
+둔화탄 중 하나 ────▶ 상태이상 번짐       (걸린 상태가 옆 적에게 옮음)</pre>
+<ul>
+<li>앞 카드가 없으면 뒤 카드는 3택1에 안 뜹니다. 앞 카드를 처음 고른 뒤부터 뜹니다.</li>
+<li>카드 화면에 뒤 카드가 뜰 때 「감전 연계」처럼 이어지는 카드를 작게 표시합니다.</li>
+</ul>
+
+<h3>몸에 맞을 때만 뜨는 카드 (결정 18 · 30)</h3>
+<ul>
+<li><b>폭발 메아리</b> — 지금 몸이 「탄이 터지는 몸」(수류탄 · 미사일 코만도, 로봇)일 때만 3택1에 뜸. 먹은 뒤 다른 몸으로 갈아타면 <b>꺼지고</b>, 다시 폭발 몸이 되면 <b>켜짐</b>(카드와 레벨은 그대로 남음).</li>
+<li><b>사거리</b> — 지금 몸이 근접 몸일 때만 뜨고, 원거리 몸이 되면 꺼짐.</li>
+<li>켜고 끄는 구조는 이미 코드에 있습니다(<code>RunBuffs</code> 「태그형 버프는 지금 쓰는 몸에 따라 켜지고 꺼진다」). 3택1에 뜨는 조건만 더합니다.</li>
+<li><span class="s ask">판단 부탁</span> 같은 방식으로 <b>관통탄 · 유도탄 · 벽 반사 · 추가 발사</b>도 원거리 몸일 때만 띄울까요? 근접 몸에서는 아무 일도 안 하는 카드입니다.</li>
+</ul>
+
+<!-- ───────────── 카드 목록 ───────────── -->
+<h2>카드 목록 — 13장 → 36장 (결정 반영)</h2>
+
+<h3>① 기본 화력</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>공격 강화</td><td>모든 공격 피해 증가(평타 · 스킬 · 필살기)</td><td class="lv">+12 / 18 / 24 / 30 / 36%</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>속사</td><td>평타 발사 간격 감소</td><td class="lv">−10 / 15 / 20 / 25 / 30%</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>추가 발사</td><td>한 번에 탄이 더 나가 부채꼴로 퍼짐</td><td class="lv">+1 / 2 / 3 / 4 / 5발</td><td>원거리</td><td><span class="s now">지금 있음</span></td></tr>
+</table></div>
+
+<h3>② 탄 모양</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>관통탄</td><td>탄이 적을 뚫고 계속 날아감 — 일렬로 선 적을 한 번에</td><td class="lv">관통 1 / 1 / 2 / 2 / 3명 <span class="note">정본</span></td><td>원거리(터지는 탄 제외)</td><td><span class="s fix">고쳐서 추가</span> 지금은 무제한 관통 → 관통 수 제한</td></tr>
+<tr><td>벽 반사</td><td>벽 · 엄폐물에 맞은 탄이 튕겨 다시 날아감(같은 적을 또 칠 수 있음)</td><td class="lv">튕김 1 / 1 / 2 / 2 / 3회<br>튕긴 탄 피해 50 / 60 / 65 / 75 / 80%</td><td>원거리</td><td><span class="s fix">고쳐서 추가</span> 두 카드를 하나로 · <b>슬러거 기본 반사와 되튕기는 벽 지형은 카드 없이도 제 피해로</b>(지금은 0)</td></tr>
+<tr><td>유도탄</td><td>탄이 가까운 적 쪽으로 휘어 날아감</td><td class="lv">꺾는 힘 12 / 20 / 28 / 36 / 44 <span class="note">정본</span></td><td>원거리 평타</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>마지막 한 발</td><td colspan="3">—</td><td><span class="s cut">뺌</span> (결정 6)</td></tr>
+<tr><td>가속 탄체</td><td colspan="3">—</td><td><span class="s cut">뺌</span> (결정 7)</td></tr>
+</table></div>
+
+<h3>③ 원소 · 상태이상</h3>
+<p class="note">공통(코드 실측) — 화상: 최대 3단계 · 단계당 초당 6 피해 / 빙결: 이동 55% 느려짐 + 공격 간격 1.55배 / 저주: 단계당 받는 피해 +15%(최대 3단계 +45%). 각인 상태는 1.6초. 각인은 평타 · 스킬 · 필살기 · 포대 · 폭발 타격에 모두 붙습니다.</p>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>앞 카드</th><th>상태</th></tr>
+<tr><td>감전</td><td>맞히면 전기가 옆 적에게 튐</td><td class="lv">튄 전기 피해 25 / 35 / 45 / 55 / 65%</td><td>—</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>번개 사슬</td><td>전기가 튀는 횟수 증가</td><td class="lv">+1 / 1 / 2 / 2 / 3회</td><td><b>감전</b></td><td><span class="s fix">고쳐서 추가</span> 앞 카드 조건 추가(결정 8)</td></tr>
+<tr><td>화염 각인</td><td>공격에 화상</td><td class="lv">확률 30 / 40 / 50 / 60 / 70%</td><td>—</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>냉기 각인</td><td>공격에 빙결 — 적이 느려지고 공격도 느려짐</td><td class="lv">확률 25 / 35 / 45 / 55 / 65% <span class="note">제안</span></td><td>—</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>저주 각인</td><td>공격에 저주 — 그 적이 모든 피해를 더 받음</td><td class="lv">확률 20 / 28 / 36 / 44 / 52% <span class="note">제안</span></td><td>—</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>화상 번짐</td><td>화상 3단계가 된 적 둘레(약 2 m) 모든 적에게 화상이 옮음</td><td class="lv">레벨 없음(1회 카드)</td><td><b>화염 각인</b></td><td><span class="s fix">고쳐서 추가</span> 앞 카드 조건 · 1회 카드로(결정 11)</td></tr>
+<tr><td>상태이상 번짐</td><td>상태를 걸 때 확률로 가까운 적 1명에게 같은 상태가 옮음</td><td class="lv">확률 18 / 25 / 32 / 39 / 46% <span class="note">정본</span></td><td><b>각인 셋 · 둔화탄 중 하나</b></td><td><span class="s ok">추가</span> + 앞 카드 조건</td></tr>
+<tr><td>둔화탄</td><td>맞은 적이 1.5초 동안 40% 느려짐(이동 · 공격)</td><td class="lv">확률 20 / 28 / 36 / 44 / 52% <span class="note">제안</span></td><td>—</td><td><span class="s fix">고쳐서 추가</span> 레벨이 확률을 정하게(지금 35% 고정)</td></tr>
+</table></div>
+
+<h3>④ 표적 · 마무리</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>처형</td><td>체력이 낮은 적을 확률로 즉사(보스 제외)</td><td class="lv">3 / 5 / 7 / 9 / 12%</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>궁지</td><td>내 체력 절반 아래면 피해 증가</td><td class="lv">+15 / 25 / 35 / 45 / 55%</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>갑옷 분쇄</td><td>때릴수록 적에게 겹이 쌓여 그 적이 받는 피해 증가(최대 5겹, 3초 안 맞으면 풀림)</td><td class="lv">겹당 +5 / 9 / 13 / 17 / 21% <span class="note">정본</span> <span class="note">· 5겹 +25~105%</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>연속 압박</td><td>같은 적을 연달아 칠수록 세짐(4타째 최대, 대상이 바뀌거나 1.5초 쉬면 처음부터)</td><td class="lv">4타째 +10 / 16 / 22 / 28 / 35% <span class="note">제안</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>마무리 본능</td><td>적 체력이 낮을수록 더 아프게(70%부터, 30% 이하 최대)</td><td class="lv">최대 +10 / 18 / 26 / 34 / 42% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>보스 사냥</td><td>보스 · 중간보스에게 주는 피해 증가</td><td class="lv">+18 / 24 / 30 / 36 / 42% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+</table></div>
+
+<h3>⑤ 폭발 · 범위 · 장판</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>폭발 메아리</td><td>내 탄이 터지면 0.3초 뒤 같은 자리에 작은 2차 폭발</td><td class="lv">2차 피해 20 / 28 / 36 / 44 / 52% <span class="note">정본</span></td><td><b>폭발 몸일 때만 뜨고 · 그 몸일 때만 켜짐</b></td><td><span class="s fix">고쳐서 추가</span> 몸 조건(결정 18) · 숨은 적을 치는 문제도 함께</td></tr>
+<tr><td>범위 확대</td><td>스킬 · 필살기 · 폭발 · 장판 범위 증가</td><td class="lv">+8 / 14 / 20 / 26 / 32% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>장판 지속</td><td>내가 깐 장판이 더 오래 남음</td><td class="lv">+1.2 / 2.0 / 2.8 / 3.6 / 4.4초 <span class="note">정본</span></td><td>장판 몸</td><td><span class="s fix">고쳐서 추가</span> 적 · 보스 장판은 안 늘게</td></tr>
+</table></div>
+
+<h3>⑥ 소환 · 복제</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>수호 방패</td><td>방패가 내 주위를 돌며 적 탄을 막음</td><td class="lv">3 / 3 / 4 / 4 / 5개</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>유령 포대</td><td>평타 8번마다 내 자리에 유령 포대 3초(0.75초마다 터지는 탄)</td><td class="lv">한 발 = 공격력 22 / 27 / 32 / 37 / 42% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>영혼 복제</td><td>평타 8번째마다 같은 공격이 한 번 더</td><td class="lv">복제 피해 35 / 40 / 45 / 50 / 55% <span class="note">정본</span></td><td>모두</td><td><span class="s fix">고쳐서 추가</span> 0.1~0.15초 늦게 · 반투명으로 보이게</td></tr>
+</table></div>
+
+<h3>⑦ 생존</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>흡혼</td><td>적을 잡을 때마다 체력 회복</td><td class="lv">최대 체력의 3 / 5 / 7 / 9 / 11%</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>찰나의 불사</td><td>맞는 순간 2초 무적</td><td class="lv">쿨 30 / 26 / 22 / 18 / 14초</td><td>모두</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>유령 갑주</td><td>받는 피해 감소</td><td class="lv">−5 / 8 / 11 / 14 / 17% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>흡혈</td><td>공격하면 확률로 준 피해의 절반만큼 회복</td><td class="lv">확률 10 / 15 / 20 / 25 / 30% <span class="note">제안</span></td><td>모두</td><td><span class="s fix">고쳐서 추가</span> 레벨이 확률을 정하게(지금 25% 고정)</td></tr>
+<tr><td>위기 방벽</td><td>체력 30% 아래로 떨어지면 방마다 한 번 방벽</td><td class="lv">방벽 = 최대 체력의 12 / 18 / 24 / 30 / 36% <span class="note">정본</span></td><td>몸이 있을 때</td><td><span class="s fix">고쳐서 추가</span> 유령일 땐 안 터지게 · 남은 방벽 표시</td></tr>
+<tr><td>회피 잔상</td><td colspan="3">—</td><td><span class="s cut">뺌</span> (결정 27)</td></tr>
+</table></div>
+
+<h3>⑧ 움직임 · 사거리</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>가속</td><td>이동 속도 증가(몸 · 유령 모두)</td><td class="lv">+5 / 9 / 13 / 17 / 21% <span class="note">정본</span></td><td>모두</td><td><span class="s ok">추가</span></td></tr>
+<tr><td>사거리</td><td>근접 몸이 닿는 거리 증가</td><td class="lv">+10 / 15 / 20 / 25 / 30% <span class="note">제안</span></td><td><b>근접 몸일 때만 뜨고 · 그 몸일 때만 켜짐</b></td><td><span class="s fix">고쳐서 추가</span> 몸 조건(결정 30)</td></tr>
+<tr><td>전투 스텝</td><td colspan="3">—</td><td><span class="s cut">뺌</span> (결정 29)</td></tr>
+</table></div>
+
+<h3>⑨ 스킬(두 버튼)</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>필살기 초기화</td><td>지금 몸의 필살기를 다시 채움</td><td class="lv">레벨 없음(고를 때마다 1회, 다섯 번까지)</td><td>몸이 있을 때</td><td><span class="s now">지금 있음</span></td></tr>
+<tr><td>스킬 쿨 감소</td><td>액티브 스킬 쿨타임이 줄어듦</td><td class="lv">−8 / 14 / 20 / 26 / 32% <span class="note">제안</span></td><td>모두</td><td><span class="s fix">고쳐서 추가</span> <b>액티브를 「맞혀서 채우는 게이지」 → 「시간으로 도는 쿨」로 바꾼다</b>(결정 32 — 지난번 지시가 미적용이었음)</td></tr>
+</table></div>
+<p class="note">액티브를 시간 쿨로 바꾸면 함께 바뀌는 것: 맞힐 때 게이지가 차던 코드 · 패시브 중 「스킬 게이지를 채우는」 효과 · 빙의할 때 0에서 시작하던 규칙. 쿨 값은 이미 표(HostTable)에 5~10초로 들어 있으니 그 값이 그대로 「시간 쿨」이 됩니다.</p>
+
+<h3>⑩ 유틸</h3>
+<div class="scroll"><table>
+<tr><th>카드</th><th>무엇을 하나</th><th>Lv1 → Lv5</th><th>효과 있는 몸</th><th>상태</th></tr>
+<tr><td>성장 가속</td><td>얻는 경험치 증가 → 레벨업이 빨라져 카드를 더 일찍 · 더 많이</td><td class="lv">+12 / 20 / 28 / 36 / 44%</td><td>—</td><td><span class="s fix">고쳐서 추가</span> 아래 「경험치로 레벨업」을 하면 저절로 살아남</td></tr>
+</table></div>
+
+<h3>장수 정리</h3>
+<div class="scroll"><table>
+<tr><th>상태</th><th>장수</th><th>카드</th></tr>
+<tr><td><span class="s now">지금 있음</span></td><td>11</td><td>공격 강화 · 속사 · 추가 발사 · 감전 · 화염 각인 · 처형 · 궁지 · 수호 방패 · 흡혼 · 찰나의 불사 · 필살기 초기화</td></tr>
+<tr><td><span class="s ok">추가</span></td><td>12</td><td>유도탄 · 냉기 각인 · 저주 각인 · 상태이상 번짐 · 갑옷 분쇄 · 연속 압박 · 마무리 본능 · 보스 사냥 · 범위 확대 · 유령 포대 · 유령 갑주 · 가속</td></tr>
+<tr><td><span class="s fix">고쳐서 추가 · 고쳐서 유지</span></td><td>13</td><td>관통탄 · 벽 반사 · 번개 사슬 · 화상 번짐 · 둔화탄 · 폭발 메아리 · 장판 지속 · 영혼 복제 · 흡혈 · 위기 방벽 · 사거리 · 스킬 쿨 감소 · 성장 가속</td></tr>
+<tr><td><b>합계</b></td><td><b>36</b></td><td>뺀 것 6: 마지막 한 발 · 가속 탄체 · 회피 잔상 · 전투 스텝 (+ 앞서 뺀 정밀 조준 · 집중)</td></tr>
+</table></div>
+
+<!-- ───────────── 카드 받는 속도 ───────────── -->
+<h2>카드를 받는 속도 — 30방 기준 (결정 2)</h2>
+<div class="scroll"><table>
+<tr><th>구분</th><th>방</th><th>레벨업</th><th>천사</th><th>악마</th><th>합계</th><th>카드 1장당 방</th></tr>
+<tr><td>원본 30방 장</td><td>30</td><td>약 8</td><td>3</td><td>—</td><td>약 11</td><td>2.7</td></tr>
+<tr><td>우리 지금</td><td>15</td><td>12</td><td>(능력치만)</td><td>계약 1</td><td>12~13</td><td>1.2</td></tr>
+<tr><td><b>우리 제안</b></td><td><b>30</b></td><td><b>8</b></td><td><b>2</b></td><td><b>1</b></td><td><b>11</b> (+ 상점에서 사기)</td><td><b>2.7</b></td></tr>
+</table></div>
+<ul>
+<li><b>레벨업을 「방 1개 = 1레벨」에서 「경험치」로 바꿉니다.</b> 원본처럼 초반에 빠르고(방 2개마다) 후반에 느려집니다(5개마다). 예: 2 · 4 · 6 · 9 · 12 · 16 · 21 · 26번 방 무렵 레벨업 — 정확한 위치는 적 경험치 · 필요 경험치 표로 맞춥니다.</li>
+<li>경험치로 바꾸면 <b>「성장 가속」이 저절로 의미가 생깁니다</b>(지금 버그의 원인이 「방 1개 = 1레벨」이라서).</li>
+<li>천사는 30방에 2번(결정 2 「천사를 한두 번」), 악마는 중간보스 뒤 1번.</li>
+<li>30방의 방 배치(천사 · 악마 · 상점 · 보물 몬스터 · 보스가 몇 번 방인지)는 <b>3단계(방 배치)</b>에서 정합니다. 1단계에서는 「한 판 카드 약 11장」만 맞춰 둡니다.</li>
+</ul>
+
+<h2>천사 · 악마 · 상점 — 카드 기능</h2>
+<div class="scroll"><table>
+<tr><th>방</th><th>지금</th><th>제안</th></tr>
+<tr><td>천사 제단(30방에 2번)</td><td>능력치 6종 중 3택1</td><td>6종 + 카드 2종을 섞어 3택1: <b>카드 3택1(레어 이상)</b> · <b>가진 카드 한 장 레벨 +1</b></td></tr>
+<tr><td>악마 계약(중간보스 뒤 1번)</td><td>대가를 치르고 카드 받기 · 3택1 · 레벨 +1 · 그 밖</td><td>대가를 치르면 <b>에픽 · 레전더리만 나오는 3택1</b> 추가 — 「천사는 안전하게 조금, 악마는 비싸게 크게」</td></tr>
+<tr><td>상점</td><td>몸 · 치료 · 소모품 · 카드 판매</td><td><b>카드 다시 뽑기</b> · <b>카드 레벨 +1 구매</b> 추가, 카드 값은 등급별</td></tr>
+</table></div>
+<p class="note">이 부분은 결정을 아직 못 받았습니다 — 아래 확인 2번.</p>
+
+<h2>작업 순서 (확인 받으면 바로)</h2>
+<ol>
+<li><b>버그 · 빈틈 고치기</b> — 튕긴 탄 피해 0(슬러거 · 되튕기는 벽 포함) · 둔화 · 흡혈 레벨 값 · 장판 지속(적 장판) · 위기 방벽(유령) · 영혼 복제 보이게 · 관통 수 · 폭발 메아리 숨은 적</li>
+<li><b>액티브 시간 쿨로 전환</b> + 스킬 쿨 감소 카드</li>
+<li><b>뜨는 조건</b> — 앞 카드(테크트리 3줄) · 몸 조건(폭발 메아리 · 사거리)</li>
+<li><b>카드 36장 표</b> — 이름 · 등급 · 레벨값 · 풀리는 챕터 · 3개 언어 문구 · 아이콘(새 카드 아이콘은 발주)</li>
+<li><b>검증</b> — 카드마다 게임에서 효과가 나는지 녹화해 영상으로 보여 드림</li>
+<li><b>경험치 레벨업 · 쉬는 방 카드 기능</b>은 30방 구성(3단계)과 함께 — 먼저 할지 확인 3번</li>
+</ol>
+
+<div class="q"><b>확인 받을 것</b>
+<ol>
+<li>관통탄 · 유도탄 · 벽 반사 · 추가 발사도 <b>원거리 몸일 때만</b> 띄울지</li>
+<li>천사 · 악마 · 상점 카드 기능(위 표)</li>
+<li>「경험치 레벨업」을 1단계에서 먼저 할지, 30방을 만드는 3단계에서 같이 할지 — 저는 <b>3단계와 같이</b>를 권합니다(방 수가 바뀌어야 경험치 표를 맞출 수 있음)</li>
+<li>카드 등급(커먼 · 레어 · 에픽 · 레전더리)과 풀리는 챕터는 제가 안을 짜서 확정표로 보여 드려도 될지</li>
+</ol></div>
+
+<p class="note">근거: <code>Assets/Scripts/Editor/CardImporter.cs</code> · <code>Assets/Scripts/Module/InGame/RunBuffs.cs</code> · <code>BattleDirector.cs</code> · 정본 <code>Projects/AVSR/Canon/v23/</code>(CARD_MASTER_RUNTIME · RECIPE_RUNTIME · EVOLUTION_RUNTIME · CARD_ACQUISITION_TABLES) · 원본 <code>WA-Game-LegendOfArcher/Docs/design/origin-report/</code></p>
+
+</div></body></html>

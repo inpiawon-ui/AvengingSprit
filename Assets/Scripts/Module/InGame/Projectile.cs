@@ -86,6 +86,28 @@ namespace Game.Module.InGame
 
         /// <summary>도탄을 한 번이라도 했는가 (정본 BUF_T05 뱅크 샷의 조건).</summary>
         public bool HasBounced { get; private set; }
+
+        /// <summary>
+        /// 튕긴 뒤 피해(%). 쏠 때 정한다 — 벽 반사 카드로 튕기는 탄만 카드 값(50~80%),
+        /// 슬러거 기본 반사 · 되튕기는 벽 지형은 제 피해(100%). 예전엔 카드가 없으면 0 이라
+        /// 슬러거가 되받아친 탄이 맞혀도 피해가 없었다(PD 2026-10-21).
+        /// </summary>
+        public int BounceDamagePercent { get; set; } = 100;
+
+        /// <summary>남은 관통 수. 음수면 끝까지 뚫는다(관통이 몸의 성질인 레이저 · 로봇 등).</summary>
+        private int _pierceLeft = -1;
+
+        /// <summary>관통탄 카드 — 이만큼만 뚫고 다음 적에서 멈춘다(정본 C008 관통 1·1·2·2·3).</summary>
+        public void LimitPierce(int count) => _pierceLeft = Mathf.Max(0, count);
+
+        /// <summary>적 하나를 뚫는다. 더 뚫을 수 없으면 false — 부르는 쪽이 탄을 지운다.</summary>
+        public bool UsePierce()
+        {
+            if (_pierceLeft < 0) return true;
+            if (_pierceLeft == 0) return false;
+            _pierceLeft--;
+            return true;
+        }
         public int SlowPercent { get; private set; }
         public int LifestealPercent { get; private set; }
 
@@ -275,6 +297,8 @@ namespace Game.Module.InGame
             Pierce = pierce;
             BouncesLeft = bounces;
             HasBounced = false;
+            BounceDamagePercent = 100;   // 풀에서 돌려 쓰므로 쏠 때마다 다시 정한다
+            _pierceLeft = -1;
             _ricochets = 0;        // 풀에서 돌려 쓰므로 지난 발의 튕김 횟수를 지운다
             SplitCount = 0;        // 갈라짐도 마찬가지다 — 쏠 때마다 다시 정한다
             _splitTimer = 0f;

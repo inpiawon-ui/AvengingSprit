@@ -160,7 +160,8 @@ namespace Game.Character
 
     /// <summary>
     /// 카드 등급 (정본 v2.3). 뽑힐 확률과 테두리 색을 가른다.
-    ///   COMMON 8종 60% · RARE 12종 28% · EPIC 8종 9.5% · LEGENDARY 4종 2.5%
+    ///   지금 무게는 <see cref="BuffEntry.WeightOf"/> — 커먼 45 · 레어 30 · 에픽 18 · 레전더리 7.
+    ///   (정본의 60 / 28 / 9.5 / 2.5 는 커먼 8장 기준이라 쓰지 않는다)
     /// </summary>
     public enum CardRarity
     {
@@ -184,6 +185,35 @@ namespace Game.Character
         Deploy,
         /// <summary>브레스</summary>
         Breath,
+    }
+
+    /// <summary>
+    /// 카드가 쓸모 있는 몸 (PD 2026-10-21). 안 맞는 몸이면 3택1 에 안 뜨고, 이미 먹었어도
+    /// 그 몸인 동안은 꺼진다 — 맞는 몸으로 돌아오면 다시 켜진다(카드 · 레벨은 남는다).
+    /// </summary>
+    public enum CardBodyRule
+    {
+        /// <summary>어느 몸이든</summary>
+        Any,
+        /// <summary>탄을 쏘는 몸(근접이 아닌 몸) — 관통 · 유도 · 벽 반사 · 추가 발사</summary>
+        Ranged,
+        /// <summary>붙어 치는 몸 — 사거리</summary>
+        Melee,
+        /// <summary>탄이 터지는 몸(수류탄 · 미사일 코만도, 로봇) — 폭발 메아리</summary>
+        Blast,
+    }
+
+    /// <summary>
+    /// 카드를 지금 띄워도 되는가 · 지금 켜 둬도 되는가를 판정한다.
+    /// 몸 종류(폭발 탄 등)는 전투 쪽만 아는 정보라 전투가 구현해서 넘긴다.
+    /// </summary>
+    public interface ICardRule
+    {
+        /// <summary>이 몸으로 이 카드가 쓸모 있는가.</summary>
+        bool BodyMatches(CardBodyRule rule, HostEntry host);
+
+        /// <summary>이 카드를 갖고 있는가(테크트리의 앞 카드 확인).</summary>
+        bool Owns(string cardKey);
     }
 
     [Serializable]
@@ -227,6 +257,12 @@ namespace Game.Character
         [Tooltip("레벨 1~5 의 수치. 같은 카드를 다시 고르면 레벨이 오른다(최대 5).")]
         [SerializeField] private int[] _levelValues = Array.Empty<int>();
 
+        [Header("뜨는 조건 (PD 2026-10-21)")]
+        [Tooltip("이 몸일 때만 뜨고 · 그 몸인 동안만 켜진다")]
+        [SerializeField] private CardBodyRule _body = CardBodyRule.Any;
+        [Tooltip("테크트리 — 이 카드 중 **하나라도** 가져야 뜬다(예: 번개 사슬 ← 감전). 비면 조건 없음")]
+        [SerializeField] private string[] _requiresAny = Array.Empty<string>();
+
         [Tooltip("지금 실제로 동작하는가. " +
                  "정본 효과는 산문이라(예: 표식 대상 명중 시 릴레이 탄 1발) 표식·장판·저주 같은 " +
                  "시스템이 있어야 구현된다. 아직 없는 것은 꺼 두고 풀에서 뺀다 — " +
@@ -258,6 +294,17 @@ namespace Game.Character
         public string CardId => _cardId;
         public CardRarity Rarity => _rarity;
         public string Category => _category;
+        public CardBodyRule Body => _body;
+        public IReadOnlyList<string> RequiresAny => _requiresAny ?? Array.Empty<string>();
+
+        /// <summary>앞 카드 조건을 채웠는가. 조건이 없으면 늘 true.</summary>
+        public bool PrerequisiteMet(ICardRule rule)
+        {
+            if (_requiresAny == null || _requiresAny.Length == 0 || rule == null) return true;
+            for (int i = 0; i < _requiresAny.Length; i++)
+                if (rule.Owns(_requiresAny[i])) return true;
+            return false;
+        }
         public int MaxLevel => _levelValues != null && _levelValues.Length > 0 ? _levelValues.Length : 1;
 
         /// <summary>이 레벨에서의 수치. 레벨표가 없으면 예전 단일 값으로 떨어진다.</summary>
@@ -329,8 +376,11 @@ namespace Game.Character
         /// 태그형·전용은 **지금 쓰는 호스트에 맞는 것만** 후보로 넣는다. 안 맞는 카드는
         /// 고르는 순간 꺼져 있어서, 3택1 이 사실상 2택이 되어 버린다.
         /// </summary>
+        /// <param name="rule">몸 조건 · 테크트리 판정. 없으면 둘 다 보지 않는다.</param>
+        /// <param name="minRarity">이 등급 이상만(천사 · 악마 카드 3택1). 기본은 전부.</param>
         public void Draw(List<BuffEntry> into, int count, HashSet<string> exclude,
-                         System.Random rng, HostEntry host = null, int chapter = 1)
+                         System.Random rng, HostEntry host = null, int chapter = 1,
+                         ICardRule rule = null, CardRarity minRarity = CardRarity.Common)
         {
             into.Clear();
             _draw.Clear();
@@ -343,7 +393,11 @@ namespace Game.Character
                 // 카드가 섞이면 3택1 이라는 선택 자체가 거짓이 된다.
                 if (!e.Implemented) continue;
                 if (e.FromChapter > chapter) continue;
+                if (e.Rarity < minRarity) continue;
                 if (!e.IsActiveFor(host)) continue;
+                // 지금 몸에 쓸모없는 카드 · 앞 카드가 없는 카드는 띄우지 않는다(PD 2026-10-21)
+                if (rule != null && !rule.BodyMatches(e.Body, host)) continue;
+                if (!e.PrerequisiteMet(rule)) continue;
                 _draw.Add(e);
             }
 

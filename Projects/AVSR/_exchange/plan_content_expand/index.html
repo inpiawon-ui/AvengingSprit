@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>콘텐츠 확장 단계 계획</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fffdf8;--fg:#24221d;--mute:#6f6a5f;--line:#ddd6c8;--accent:#a8551b;--ok:#2f7a4a;--warn:#a03a2a;--chip:#efe7d8}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1b19;--card:#252320;--fg:#ece8df;--mute:#a39d90;--line:#3a3631;--accent:#e08a4a;--ok:#6cc08a;--warn:#e07a68;--chip:#2f2c27}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 "Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;margin:0 0 4px;text-wrap:balance}
+h2{font-size:20px;margin:40px 0 10px;padding-top:14px;border-top:2px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px}
+p{margin:6px 0}
+.sub{color:var(--mute)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:16px 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.step b{color:var(--accent)}
+.step .n{font-size:12px;color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600}
+.scroll{overflow-x:auto}
+.tag{display:inline-block;font-size:12px;padding:0 6px;border-radius:4px;background:var(--chip);color:var(--mute);margin-left:4px}
+.new{color:var(--ok);font-weight:600}
+.code{color:var(--warn);font-weight:600}
+.q{background:var(--card);border-left:4px solid var(--accent);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.q li{margin:4px 0}
+.note{color:var(--mute);font-size:13px}
+ul{margin:6px 0;padding-left:22px}
+.drop{background:var(--card);border:1px dashed var(--warn);padding:8px 12px;border-radius:6px;margin:8px 0}
+code{font-family:Consolas,monospace;font-size:13px;background:var(--chip);padding:0 4px;border-radius:3px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>콘텐츠 확장 — 단계별 계획</h1>
+<p class="sub">원본(궁수 전설 분석 자료)과 우리 게임 실측을 비교해 정리했습니다. 단계마다 PD 검수를 받고 다음으로 넘어갑니다. · 2026-10-21</p>
+<p class="note">원본에서는 <b>이름과 내용이 아니라 구조</b>(갈래 · 조합 · 배치 틀 · 진행 박자)만 가져옵니다. 카드 이름 · 몬스터는 우리 세계관으로 새로 짓습니다.</p>
+
+<div class="steps">
+  <div class="step"><div class="n">1단계</div><b>레벨업 카드</b><br>13장 → 41장 정도. 천사 · 악마 · 상점에 카드 기능 넣기</div>
+  <div class="step"><div class="n">2단계</div><b>몬스터 조합</b><br>「이동 × 공격 × 변종」 구조로 잡몹 14종 → 40종 이상</div>
+  <div class="step"><div class="n">3단계</div><b>방 배치</b><br>배치 틀 + 자동 채우기, 챕터별 스테이지 수 늘리기</div>
+</div>
+
+<!-- ───────────────────────────── 비교 ───────────────────────────── -->
+<h2>원본과 우리 게임 비교 (실측)</h2>
+<div class="scroll"><table>
+<tr><th>항목</th><th>원본</th><th>우리 게임 지금</th></tr>
+<tr><td>레벨업 카드</td><td>실제로 나오는 카드 107장, 12갈래. 장마다 3~7장씩 새로 풀림. 3장 중 1장</td><td><b>13장</b>, 1챕터부터 전부 나옴. 3장 중 1장 · 최대 5레벨. 효과 종류는 코드에 54개(전부 전투 코드에 연결)인데 표에는 13장만. 「성장 가속」은 일반 판에서 효과 없음(버그)</td></tr>
+<tr><td>잡몹</td><td>일반 129종. 대부분 같은 모양에 무기 · 수치만 바꾼 변종(Lv2 · 원소 · 엘리트)</td><td><b>14종</b>. 챕터마다 행동 단계(1~7)가 바뀌는데 7단계가 끝 → 11챕터부터 더 안 달라짐</td></tr>
+<tr><td>이동 방식</td><td>약 20가지(순간이동 · 플레이어 쪽 점프 · 대각선 반사 · 격자 걸음 · 구르기 · 매복 · 땅굴 등)</td><td>6가지(추격 · 돌진 · 거리 두기 · 점프 사격 · 땅속 · 고정)</td></tr>
+<tr><td>공격 방식</td><td>약 25가지(예고선 레이저 · 바닥 경고 범위 · 포물선 · 유도탄 · 부메랑 · 쪼개지는 탄 · 물결탄 · 죽을 때 분열/탄)</td><td>8가지(근접 · 몸통 돌진 · 자폭 · 직선/저격 · 부채꼴 · 박격 · 사방 탄막 · 소환)</td></tr>
+<tr><td>보스</td><td>85종. 뒤 보스 = 앞 보스 + 새 기술 1~2개</td><td>6종(종마다 패턴 4개), 7~10챕터에서 재사용</td></tr>
+<tr><td>챕터 구성</td><td>장 하나 = 방 10~50개. 「일반 4 → 천사 → 일반 3 → 보물 몬스터 → 보스」 10방 묶음 반복. 웨이브 · 보스 연전 · 함정 던전 같은 특수 장</td><td>10챕터 모두 같은 15방(전투 11 · 천사 · 중간보스 · 상점 · 보스). 7~10챕터는 1~4챕터 무대 · 보스 재사용</td></tr>
+<tr><td>방 배치</td><td>배치 틀 9가지를 좌우 대칭으로 재사용. 같은 칸 배치에 장마다 다른 몬스터. 새 몬스터는 「소개 방」에서 혼자 먼저</td><td>전투방 110개를 손으로 그림. 소개 방 없음</td></tr>
+<tr><td>난이도</td><td>주로 <b>배율</b>(공격 · 체력). 방당 4~6마리 유지</td><td>주로 <b>적 수</b>(1챕터 방당 4 → 10챕터 11). 배율도 0.8 → 4.72</td></tr>
+<tr><td>쉬는 방</td><td>천사: 천사 카드 1장 또는 체력 40% 회복 중 택1</td><td>천사: 능력치 6종 중 3택1(카드 없음) · 악마(중간보스 뒤 계약): 대가를 치르고 카드 받기 · 3택1 · 레벨 +1 · 상점: 몸 · 치료 · 소모품 · 카드 판매</td></tr>
+</table></div>
+
+<!-- ───────────────────────────── 1단계 ───────────────────────────── -->
+<h2>1단계 — 레벨업 카드 <span class="tag">지금 검수할 단계</span></h2>
+
+<h3>방향</h3>
+<ul>
+<li>카드는 <b>빌드 갈래</b>로 묶습니다. 같은 갈래 카드를 모을수록 플레이가 달라지게 — 원본의 다양성은 장 수보다 갈래 수에서 나옵니다.</li>
+<li>먼저 <b>코드에 이미 있는 효과</b>로 카드를 늘립니다(새 코드 거의 없음). 원본 갈래 중 우리에게 없는 것은 2차로 따로 둡니다.</li>
+<li>챕터마다 3~5장씩 풀리게 해서, 뒤 챕터로 갈수록 처음 보는 카드가 나오게 합니다(지금은 1챕터에 전부 나옴).</li>
+</ul>
+<div class="drop"><b>뺀 것:</b> 빙의 카드(빙의할 때 폭발 · 갈아탈 때 회복) · 상성 카드 · 근접 · 원거리 전용 카드 — PD 「의미가 약하고 타당하지 않다, 빙의만 넣는다고 특색이 살지 않는다」(2026-10-21).</div>
+
+<h3>갈래 배치 (지금 13장 → 1차 41장)</h3>
+<div class="scroll"><table>
+<tr><th>갈래</th><th>지금 있는 카드</th><th>1차로 더할 카드 <span class="tag">기존 효과 사용</span></th><th>원본에 있고 우리에 없는 것 <span class="tag">2차 · 새 코드</span></th></tr>
+<tr><td>탄 모양</td><td>추가 발사 · 속사</td><td class="new">관통탄 · 벽 반사 · 튕긴 탄 강화 · 유도탄 · 마지막 한 발(확산 끝 탄 강화) · 탄속</td><td>좌우 · 뒤 · 대각 발사</td></tr>
+<tr><td>원소 · 상태이상</td><td>감전 · 번개 사슬 · 화염 각인</td><td class="new">냉기 각인 · 저주 각인 · 화상 번짐 · 상태이상 번짐 · 둔화</td><td>원소 피해 강화 · 원소 치명</td></tr>
+<tr><td>집중 · 표적</td><td>처형 · 궁지</td><td class="new">연속 압박(같은 적을 칠수록 강해짐) · 갑옷 분쇄 · 정밀 조준(적이 하나일 때) · 보스 사냥</td><td>—</td></tr>
+<tr><td>폭발 · 범위</td><td>—</td><td class="new">폭발 메아리 · 범위 확대 · 장판 지속</td><td>처치 시 폭발 · 동결 · 신성 폭발</td></tr>
+<tr><td>소환 · 주위를 도는 것</td><td>수호 방패</td><td class="new">유령 포대 · 영혼 복제(8번째 공격을 한 번 더)</td><td>원소 구체 · 회전 검 · 메테오 · 별</td></tr>
+<tr><td>생존</td><td>흡혼 · 찰나의 불사</td><td class="new">위기 방벽 · 회피 잔상 · 받는 피해 감소 · 피해 흡혈</td><td>오로라(주기 버프)</td></tr>
+<tr><td>기본 능력치</td><td>공격 강화</td><td class="new">이동 속도 · 전투 스텝(공격 직후 빨라짐) · 사거리</td><td>—</td></tr>
+<tr><td>스킬(두 버튼) <span class="tag">판단 부탁</span></td><td>필살기 초기화</td><td class="new">액티브 충전 가속</td><td>액티브 피해 · 범위 강화 등</td></tr>
+<tr><td>위험과 보상</td><td>—</td><td>—</td><td>탐욕(골드↑ · 받는 피해↑) · 과부하(공속↑ · 보상↓)</td></tr>
+<tr><td>유틸</td><td>성장 가속 <span class="code">(버그)</span></td><td>—</td><td>—</td></tr>
+</table></div>
+<p class="note">1차 28장 + 지금 13장 = 41장. 이름은 표에 적힌 효과를 설명한 임시 이름이고, 확정 때 우리 세계관으로 짓습니다. 「스킬」 갈래는 액티브가 주 버튼(쿨 5~10초)이 된 지금 플레이 리듬을 바꾸는 카드라 후보로 올렸습니다 — 넣을지 PD 판단을 받습니다.</p>
+
+<h3>뽑는 규칙</h3>
+<div class="scroll"><table>
+<tr><th>규칙</th><th>지금</th><th>제안</th></tr>
+<tr><td>선택지</td><td>3장 중 1장</td><td>그대로</td></tr>
+<tr><td>등급 무게</td><td>커먼 45 · 레어 30 · 에픽 18 · 레전더리 7</td><td>그대로(카드가 늘면 같은 등급 안 확률이 자연히 낮아짐)</td></tr>
+<tr><td>중복</td><td>같은 카드 다시 고르면 레벨 +1, 최대 5</td><td>그대로</td></tr>
+<tr><td>풀리는 시점</td><td>1챕터에 13장 전부</td><td>1챕터 15장 → 챕터마다 3~5장 추가</td></tr>
+<tr><td>리롤</td><td>없음(상점 표에 혜택 문자열만 있고 읽는 코드 없음)</td><td>상점 · 천사에서 다시 뽑기(아래)</td></tr>
+<tr><td>성장 가속 버그</td><td>일반 판은 방 하나 = 레벨 하나라 경험치가 의미 없음</td><td>효과를 바꾼다(예: 다음 레벨업 선택지 3장 → 4장) 또는 뺀다</td></tr>
+</table></div>
+
+<h3>천사 · 악마 · 상점에 카드 기능</h3>
+<div class="scroll"><table>
+<tr><th>방</th><th>지금</th><th>제안 (기존 것 + 카드 기능)</th></tr>
+<tr><td>천사 제단(4번 방)</td><td>능력치 6종(체력 회복 · 영혼 회복 · 최대 체력 · 공격 · 공속 · 사거리) 중 3택1</td><td>기존 6종에 카드 2종을 더해 섞어 냄: <b>카드 3택1(레어 이상)</b> · <b>가진 카드 한 장 레벨 +1</b></td></tr>
+<tr><td>악마 계약(중간보스 뒤)</td><td>대가(최대 체력 영구 감소 · 체력)를 치르고 카드 받기 · 카드 3택1 · 레벨 +1 · 그 밖(사거리 · 할인 · 보스 방어막 무효 등)</td><td>대가를 치르면 <b>에픽 · 레전더리만 나오는 3택1</b>을 추가. 「천사는 안전하게 조금, 악마는 비싸게 크게」로 역할을 가름</td></tr>
+<tr><td>상점(12번 방)</td><td>몸 · 치료 · 소모품 · 카드 판매</td><td><b>카드 다시 뽑기</b>(골드) · <b>카드 레벨 +1 구매</b> 추가, 카드 값은 등급별</td></tr>
+</table></div>
+
+<div class="q"><b>1단계 검수 받을 것</b>
+<ol>
+<li>갈래 배치와 1차 28장 후보가 괜찮은지(빼거나 더할 갈래)</li>
+<li>「스킬(두 버튼)」 갈래를 넣을지</li>
+<li>성장 가속 — 효과를 바꿀지 뺄지</li>
+<li>천사 · 악마 · 상점 카드 기능 방향</li>
+</ol>
+<p>통과하면 → 카드 41장 확정표(이름 · 효과 · 등급 · 풀리는 챕터 · 3개 언어 문구)를 만들고, 효과가 화면에서 실제로 나는지 카드마다 실측한 뒤 넣습니다. 새 카드 그림(아이콘)이 필요하면 그때 발주합니다.</p>
+</div>
+
+<!-- ───────────────────────────── 2단계 ───────────────────────────── -->
+<h2>2단계 — 몬스터 조합 <span class="tag">1단계 뒤</span></h2>
+<ul>
+<li>몬스터 하나를 <b>「모양 + 이동 방식 + 공격 방식 + 수치」</b>로 정의하는 구조로 바꿉니다. 같은 그림으로 여러 종을 만듭니다.</li>
+<li>박자는 원본과 같은 「공격 → 0.4~1.5초 쉼 → 짧은 이동」 — 우리 규칙(위험 동작 사이에 근접으로 칠 틈)과 맞습니다.</li>
+</ul>
+<div class="scroll"><table>
+<tr><th>더할 것</th><th>후보</th></tr>
+<tr><td>공격 6가지</td><td>예고선 레이저 · 바닥 경고 범위(낙뢰 · 운석) · 벽을 넘는 포물선 · 유도탄 · 쪼개지는 탄 · 부메랑</td></tr>
+<tr><td>이동 4가지</td><td>순간이동 · 플레이어 쪽 점프 · 대각선 반사 · 매복(가까이 가야 깨어남)</td></tr>
+<tr><td>변종 3갈래</td><td>Lv2(탄 수 · 행동 하나 추가) · 원소(불 · 얼음 · 독 — 색과 이펙트만) · 엘리트(크게 · 연속 공격)</td></tr>
+<tr><td>효과</td><td>잡몹 14종 → 40종 이상 · 7단계에서 멈추던 문제가 풀림(11챕터 이후에도 새 조합)</td></tr>
+</table></div>
+<p class="note">검수 방법(예정): 조합마다 게임 녹화 GIF로 보여 드립니다. 새 그림은 새 모양이 필요할 때만 발주합니다.</p>
+
+<!-- ───────────────────────────── 3단계 ───────────────────────────── -->
+<h2>3단계 — 방 배치 · 챕터별 스테이지 늘리기 <span class="tag">2단계 뒤</span></h2>
+<ul>
+<li>원본의 배치 틀 9가지(모서리 포탑 · 도랑 속 포탑 · 중앙 십자벽 · 벽 줄 뒤 원거리 · 함정 고리 · 가시 격자 · 큰 웅덩이 + 비행 · 대칭 산개 · 긴 방 포탑 열)를 우리 방(10×16)용으로 만듭니다.</li>
+<li>틀에는 「근접 · 원거리 · 포탑 · 비행」 자리만 표시하고, 챕터마다 그 챕터 몬스터로 채웁니다 — 방마다 손으로 그리지 않아도 되니 스테이지를 늘리는 비용이 크게 줄어듭니다.</li>
+<li>새 자리 두 개: <b>소개 방</b>(새 몬스터를 혼자 먼저) · <b>보물 몬스터 방</b>(보스 직전, 잡으면 보상이 큰 방).</li>
+</ul>
+<h3>챕터별 스테이지 수 (안)</h3>
+<div class="scroll"><table>
+<tr><th>안</th><th>방 수</th><th>구성 예</th><th>비고</th></tr>
+<tr><td>지금</td><td>15</td><td>전투 11 · 천사 · 중간보스 · 상점 · 보스</td><td>—</td></tr>
+<tr><td>A</td><td>20</td><td>전투 14 · 소개 방 · 천사 · 중간보스 · 상점 · 보물 몬스터 · 보스</td><td>한 판 길이 약 1.3배</td></tr>
+<tr><td>B</td><td>25</td><td>10방 묶음 둘 + 마무리 5방(천사 2 · 중간보스 2 · 상점 · 보물 몬스터 · 보스)</td><td>원본 30방 장에 가까움 · 한 판 길이 약 1.7배</td></tr>
+</table></div>
+<p class="note">스테이지를 늘리는 일은 배치 틀이 생긴 뒤에 하는 것이 싸서 3단계에 같이 둡니다. 특수 챕터(보스 연전 · 웨이브 · 함정 던전)도 이때 후보로 올립니다.</p>
+
+<div class="q"><b>나중 단계에서 정할 것 (미리 적어 둠)</b>
+<ul>
+<li>방당 적 수 — 지금처럼 늘려 갈지(10챕터 11마리), 6~8마리로 묶고 배율 · 변종으로 올릴지. 빙의 게임은 「어느 몸을 뺏을지」가 읽혀야 해서 저는 후자를 권합니다.</li>
+<li>챕터 스테이지 수 A(20) / B(25) / 그 밖</li>
+</ul></div>
+
+<h2>근거 자료</h2>
+<ul class="note">
+<li>원본: <code>WA-Game-LegendOfArcher/Docs/design/origin-report/</code> (cards.html · monsters.html · chapters/*.html · index.html)</li>
+<li>우리 카드: <code>Assets/BundleResource/TableData/BuffTable.asset</code> · 효과 종류 <code>Assets/Scripts/Character/BuffTable.cs</code> · 카드 목록 <code>Assets/Scripts/Editor/CardImporter.cs</code></li>
+<li>우리 몬스터: <code>Assets/Scripts/Module/InGame/BattleDirector.Patterns*.cs</code> · 보스 <code>BossTable.asset</code></li>
+<li>우리 챕터: <code>Projects/AVSR/Rooms/chapters.tsv</code> · 방 <code>rooms90_ch*.txt</code></li>
+</ul>
+
+</div></body></html>

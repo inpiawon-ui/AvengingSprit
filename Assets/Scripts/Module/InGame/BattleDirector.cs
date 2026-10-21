@@ -113,24 +113,22 @@ namespace Game.Module.InGame
         private float _skillCooldown;
 
         /// <summary>
-        /// 액티브 스킬은 **때려서** 찬다 (2026-09-09). 예전에는 시간이 알아서 채웠다.
+        /// 액티브 스킬은 **시간으로** 찬다 (PD 2026-10-21 「시간으로 분배해서 적용하라고 했는데 미적용」).
         ///
-        /// 시간제는 싸우든 안 싸우든 똑같이 차서, 스킬이 「내가 번 것」이 아니라
-        /// 「기다리면 오는 것」이었다. 가만히 서 있다가 꽉 차면 쓰는 것이 최적이 된다.
-        /// 때려서 채우면 붙어서 싸우는 쪽이 이득이 된다.
-        ///
-        /// 한 대에 <see cref="SkillHitsToFull"/> 분의 1 씩. 몸마다 쿨이 다르므로
-        /// 초가 아니라 **비율**로 채운다 — 쿨 긴 몸이 20대보다 더 맞아야 하면
-        /// 「이 몸은 스킬을 못 쓴다」가 되어 버린다.
+        /// 2026-09-09 부터 「때려서 30대에 찬다」였는데, 쿨을 몸마다 5~10초로 다시 나눈 뒤에도
+        /// 게이지는 여전히 맞힌 수로 찼다 — 표의 쿨이 실제 쿨이 아니었다. 이제 표의 쿨(초)이 곧 쿨이다.
+        /// 스킬 쿨 감소 카드는 그 초를 % 로 줄인다(<see cref="RunBuffs.ActiveCooldownMul"/>).
+        /// ⚠ 카드 몫은 <see cref="SkillCooldownOf"/> 에 넣지 않는다 — 그 값으로 액티브 위력 배율(쿨 비례)을 재므로
+        ///   카드를 먹을수록 액티브가 약해진다.
         /// </summary>
-        private const int SkillHitsToFull = 30;   // 기획 2026-09-15 — 20대 → 1.5배 더 때려야 찬다
+        private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul;
 
-        private void ChargeSkillOnHit()
+        private void TickSkillCharge(float dt)
         {
-            float full = SkillCooldownOf(_host?.Profile);
+            if (!_running || _host == null) return;
+            float full = PlayerSkillCooldown;
             if (full <= 0f) return;
-            _skillCooldown = Mathf.Min(
-                _skillCooldown + full / SkillHitsToFull * _buffs.ActiveSkillChargeMul, full);
+            _skillCooldown = Mathf.Min(_skillCooldown + dt, full);
         }
         private bool _running;
         private Unit _possessTarget;
@@ -312,7 +310,7 @@ namespace Game.Module.InGame
         /// <summary>지금 사격 중인가. 멈춰서 사거리 안에 적이 있을 때만 true (궁수의 전설 규칙).</summary>
         public bool IsFiring { get; private set; }
         public float SkillCooldownRatio => _config == null ? 0f
-            : Mathf.Clamp01(_skillCooldown / SkillCooldownOf(_host?.Profile));
+            : Mathf.Clamp01(_skillCooldown / PlayerSkillCooldown);
 
         /// <summary>
         /// 지금 탄 몸의 액티브 스킬 쿨(초).
@@ -400,6 +398,7 @@ namespace Game.Module.InGame
             // 위험 예고 그림도 미리 — 첫 예고가 뜰 때 받기 시작하면 그 예고만 끝이 하얗게 번쩍였다(PD 2026-10-08)
             await DangerView.PreloadAsync();
             _buffs.Clear();   // 버프는 런 한정 — 스테이지 진입마다 초기화한다
+            _buffs.Rule = this;   // 몸 조건 카드(폭발 메아리 · 사거리 · 원거리 카드)가 몸에 따라 켜지고 꺼지게
             _eventsUsed.Clear();
             _runGold = 0;     // 판 골드도 런 한정이다
             _runShardKeys.Clear();
@@ -3539,6 +3538,7 @@ namespace Game.Module.InGame
             TickCastPresentation(dt);
             TickStatusFx(dt);
             TickHostPassives(dt);
+            TickSkillCharge(dt);   // 액티브 쿨 — 시간으로 찬다
             TickNewSkills(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
@@ -5020,10 +5020,11 @@ namespace Game.Module.InGame
                           life, angleOffsetDeg: off,
                           // 액티브 스킬 탄에도 버프가 실려야 한다. 여기만 빠져 있어서
                           // 흡혈 카드를 먹고 액티브 스킬을 쓰면 한 방울도 안 돌았다.
-                          slowPercent: fromPlayer ? _buffs.SlowPercent : 0,
-                          lifestealPercent: fromPlayer ? _buffs.LifestealPercent : 0,
+                          slowPercent: fromPlayer ? SlowChanceOf(0, _buffs.SlowPercent) : 0,
+                          lifestealPercent: fromPlayer ? LeechChanceOf(0, _buffs.LifestealPercent) : 0,
                           pierce: fromPlayer && _buffs.Pierce,
                           bounces: fromPlayer ? _buffs.Bounces : 0);
+                if (fromPlayer) ApplyCardShotRules(shot, innateBounce: false, innatePierce: false);
             }
         }
 
@@ -5082,12 +5083,19 @@ namespace Game.Module.InGame
             if (fromPlayer && !_echoing) GameSound.HostAttack(attacker.Key);
 
             // C032 영혼 복제 — 8타째면 이 공격을 한 번 더 낸다.
-            // 자세를 다시 잡지 않고 **같은 프레임에** 한 번 더 내보낸다.
+            // 같은 프레임에 내면 원래 공격에 겹쳐 안 보였다 — 조금 늦게, 흐린 탄으로(PD 2026-10-21)
             if (fromPlayer && CountEcho())
             {
-                _echoing = true;
-                PerformAttack(attacker, target, true);
-                _echoing = false;
+                var echoFrom = attacker;
+                var echoAt = target;
+                UltAfter(EchoDelaySeconds, () =>
+                {
+                    if (_host != echoFrom || echoFrom == null || !echoFrom.IsAlive) return;
+                    if (echoAt == null || !echoAt.IsAlive) return;
+                    _echoing = true;
+                    PerformAttack(echoFrom, echoAt, true);
+                    _echoing = false;
+                });
             }
 
             // C030 유령 포대 — 복제된 공격은 세지 않는다(유효 기본 공격이 아니다)
@@ -5787,8 +5795,8 @@ namespace Game.Module.InGame
             if (frames != null && frames.Length > 1) f.SetFrames(frames);
             else f.SetSprite(art ?? GetSprite("field"));
 
-            // 정본 BUF_A02 — 장판이 더 오래 남는다
-            f.Spawn(at, radius, seconds + _buffs.FieldExtraSeconds,
+            // 정본 BUF_A02 — **내** 장판만 더 오래 남는다. 예전엔 적 · 보스 장판까지 늘었다(PD 2026-10-21)
+            f.Spawn(at, radius, seconds + (fromPlayer ? _buffs.FieldExtraSeconds : 0f),
                     effect, damagePerTick, fromPlayer,
                     generic ? ColorOf(effect) : Color.white, keepAspect);
             return f;
@@ -6043,6 +6051,8 @@ namespace Game.Module.InGame
                 {
                     var e = _enemies[k];
                     if (e == null || !e.IsAlive) continue;
+                    // 땅속 · 숨은 적과 아직 드러나지 않은 보스는 2차 충격도 안 닿는다 — 첫 폭발과 같은 규칙
+                    if (e.IsHidden || (e.IsBoss && !_bossExposed)) continue;
                     if (Vector2.Distance(b.At, e.Position) > b.Radius) continue;
                     e.IsAggro = true;
                     HurtByField(e, b.Damage, toEnemy: true);
@@ -6069,6 +6079,13 @@ namespace Game.Module.InGame
         /// <summary>이 상점에서 치료를 이미 샀는가. 한 번만 판다.</summary>
         private bool _shopHealBought;
         private bool _shopOpen;
+        /// <summary>
+        /// 가진 카드 강화 칸 — 가장 낮은 카드 Lv +1 (PD 2026-10-21 「상점에도 레벨업 카드 기능」).
+        /// 카드 세 칸 중 하나를 쓴다 — 액자가 여섯 칸뿐이라 칸을 늘리지 않는다.
+        /// </summary>
+        private BuffEntry _shopUpgrade;
+        /// <summary>이 상점에서 카드 진열을 다시 뽑은 횟수. 뽑을수록 비싸다.</summary>
+        private int _shopRerolls;
 
         public bool IsShopOpen => _shopOpen;
 
@@ -6076,6 +6093,7 @@ namespace Game.Module.InGame
         {
             _shopOpen = false;
             _shopOffers.Clear();
+            _shopUpgrade = null;
             if (_shopTable == null || _buffTable == null) { SpawnExit(); return; }
 
             int ch = ShopChapter;
@@ -6084,6 +6102,7 @@ namespace Game.Module.InGame
 
             _shopBought = _shopCardsBought = 0;
             _shopHealBought = false;
+            _shopRerolls = 0;
 
             // 이 판에서 만난 몸 중 지금 안 타고 있는 것 하나를 진열한다.
             _hostOffers.Clear();
@@ -6108,11 +6127,46 @@ namespace Game.Module.InGame
             for (int i = 0; i < _shopTable.Offers.Count; i++)
             {
                 var key = _shopTable.Offers[i].BuffKey;
-                if (_buffTable == null || _buffTable.Get(key) == null) _shopFilter.Add(key);
+                var card = _buffTable != null ? _buffTable.Get(key) : null;
+                // 레벨업 3택1 과 같은 규칙 — 꺼 둔 카드 · 아직 안 풀린 카드 · 지금 몸에 쓸모없는 카드 ·
+                // 앞 카드가 없는 카드는 진열하지 않는다(PD 2026-10-21)
+                if (card == null || !card.Implemented || card.FromChapter > _runChapter
+                    || !BodyMatches(card.Body, _host?.Profile) || !card.PrerequisiteMet(this))
+                    _shopFilter.Add(key);
             }
 
-            _shopTable.Draw(_shopOffers, ch, Mathf.Max(1, _shopRules.OfferCount), _shopFilter, _rng);
+            // 강화할 카드는 새 카드 칸에 또 걸리지 않게 뺀다 — 같은 카드가 두 칸에 서면 고를 것이 줄어든다
+            _shopUpgrade = PickUpgradable();
+            if (_shopUpgrade != null) _shopFilter.Add(_shopUpgrade.BuffKey);
+
+            DrawShopCards();
             _shopOpen = true;
+            PublishShop();
+        }
+
+        private void DrawShopCards()
+            => _shopTable.Draw(_shopOffers, ShopChapter,
+                               Mathf.Max(1, _shopRules.OfferCount - (_shopUpgrade != null ? 1 : 0)), _shopFilter, _rng);
+
+        /// <summary>
+        /// 다시 뽑기 값 — 소모품과 같은 줄(카드 평균의 1/3)에서 시작해 뽑을 때마다 한 줄씩 오른다.
+        /// 공짜거나 값이 그대로면 마음에 들 때까지 눌러 「고르는」 자리가 「찾는」 자리가 된다.
+        /// </summary>
+        public int ShopRerollPrice => ConsumablePrice() * (_shopRerolls + 1);
+
+        public bool CanRerollShop => _shopOpen && _shopRules != null && _shopCardsBought < _shopRules.CardPurchaseLimit
+                                  && _runGold >= ShopRerollPrice;
+
+        /// <summary>
+        /// 카드 진열(새 카드 칸)만 다시 뽑는다. **창은 닫지 않는다** — 사기 전에 고를 것을 바꾸는 일이라
+        /// 구매 횟수도 안 쓴다. 강화 칸 · 몸 · 소모품 · 회복은 그대로다. UI 가 호출한다.
+        /// </summary>
+        public void RerollShop()
+        {
+            if (!CanRerollShop) return;
+            AddRunGold(-ShopRerollPrice);
+            _shopRerolls++;
+            DrawShopCards();
             PublishShop();
         }
 
@@ -6136,18 +6190,38 @@ namespace Game.Module.InGame
         /// 진열 순서. 이 순서가 곧 `BuyShopItem` 의 번호다 — 두 곳이 어긋나면
         /// 「A 를 눌렀는데 B 가 팔린다」가 된다. 한 곳에서 세고 한 곳에서 판다.
         ///
-        ///   0 ~ n-1  카드
-        ///   n        몸 (`_hostOffers` 가 비어 있으면 이 칸이 없다)
-        ///   n+1      소모품
+        ///   0 ~ n-1  새 카드
+        ///   n        가진 카드 강화 (`_shopUpgrade` 가 없으면 이 칸이 없다)
+        ///   다음     몸 (`_hostOffers` 가 비어 있으면 이 칸이 없다)
+        ///   다음     소모품
         ///   마지막   회복
         /// </summary>
-        private int ShopHostIndex => _hostOffers.Count > 0 ? _shopOffers.Count : -1;
+        private int ShopUpgradeIndex => _shopUpgrade != null ? _shopOffers.Count : -1;
+        private int ShopCardSlots => _shopOffers.Count + (_shopUpgrade != null ? 1 : 0);
+        private int ShopHostIndex => _hostOffers.Count > 0 ? ShopCardSlots : -1;
         private int ShopConsumableIndex
             => _shopConsumable == Consumable.None ? -1
-             : _shopOffers.Count + (_hostOffers.Count > 0 ? 1 : 0);
+             : ShopCardSlots + (_hostOffers.Count > 0 ? 1 : 0);
         private int ShopHealIndex
-            => _shopOffers.Count + (_hostOffers.Count > 0 ? 1 : 0)
+            => ShopCardSlots + (_hostOffers.Count > 0 ? 1 : 0)
              + (_shopConsumable == Consumable.None ? 0 : 1);
+
+        /// <summary>강화 값 — 그 카드를 상점에서 살 때와 같다(등급별 · 챕터별 · 할인 포함).</summary>
+        private int ShopUpgradePrice()
+        {
+            if (_shopUpgrade == null) return 0;
+            var all = _shopTable.Offers;
+            int ch = ShopChapter;
+            for (int i = 0; i < all.Count; i++)
+                if (all[i].Chapter == ch && all[i].BuffKey == _shopUpgrade.BuffKey) return PriceOf(all[i]);
+            return HostPriceOf();   // 표에 없으면(표가 낡음) 그 챕터 가장 비싼 줄로
+        }
+
+        private bool CanBuyUpgrade()
+            => _shopUpgrade != null
+            && _shopBought < _shopRules.TotalPurchaseLimit
+            && _shopCardsBought < _shopRules.CardPurchaseLimit
+            && _runGold >= ShopUpgradePrice();
 
         private void PublishShop()
         {
@@ -6170,6 +6244,17 @@ namespace Game.Module.InGame
                 prices[i] = PriceOf(o);
                 can[i] = CanBuyCard(o);
                 icons[i] = BuffIconOf(card);
+            }
+
+            int upAt = ShopUpgradeIndex;
+            if (upAt >= 0)
+            {
+                int lv = _buffs.LevelOf(_shopUpgrade.BuffKey);
+                names[upAt] = Localize.Format("ui.shop.upgrade.name", _shopUpgrade.DisplayName);
+                descs[upAt] = Localize.Format("ui.shop.upgrade.desc", lv, lv + 1);
+                prices[upAt] = ShopUpgradePrice();
+                can[upAt] = CanBuyUpgrade();
+                icons[upAt] = BuffIconOf(_shopUpgrade);
             }
 
             int hostAt = ShopHostIndex;
@@ -6217,6 +6302,8 @@ namespace Game.Module.InGame
                 Gold = _runGold,
                 LimitLine = Localize.Format("ui.shop.limit", _shopRules.TotalPurchaseLimit - _shopBought,
                                           _shopRules.CardPurchaseLimit - _shopCardsBought),
+                RerollPrice = ShopRerollPrice,
+                CanReroll = CanRerollShop,
             });
         }
 
@@ -6278,6 +6365,19 @@ namespace Game.Module.InGame
                 _shopHealPending = true;
                 line = Localize.Format("ui.shop.heal.desc", _shopRules.HostHealPct, _shopRules.GhostHealPct);
             }
+            else if (index == ShopUpgradeIndex)
+            {
+                if (!CanBuyUpgrade()) return;
+                var card = _shopUpgrade;
+                int lv = _buffs.LevelOf(card.BuffKey);
+                AddRunGold(-ShopUpgradePrice());
+                _shopBought++;
+                _shopCardsBought++;
+                _buffs.Apply(card);
+                _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
+                _shopUpgrade = null;
+                line = $"{card.DisplayName} Lv.{lv} → Lv.{_buffs.LevelOf(card.BuffKey)}";
+            }
             else
             {
                 var o = _shopOffers[index];
@@ -6314,6 +6414,7 @@ namespace Game.Module.InGame
             if (!_shopOpen) return;
             _shopOpen = false;
             _shopOffers.Clear();
+            _shopUpgrade = null;
             SpawnExit();
         }
 
@@ -6428,10 +6529,11 @@ namespace Game.Module.InGame
         private void CheckCrisisBarrier()
         {
             if (_buffs.CrisisBarrierPercent <= 0f || _barrierUsedThisRoom) return;
+            // 유령일 때는 세우지 않는다 — 유령 체력은 시간으로 줄어서 방마다 저절로 터져
+            // 그 방의 한 번을 써 버렸다(PD 2026-10-21). 몸이 위험할 때만.
+            if (_host == null) return;
 
-            int hp, hpMax;
-            if (_host != null) { hp = _host.Hp; hpMax = _host.HpMax; }
-            else { hp = _ghostHp; hpMax = GhostHpMax; }
+            int hp = _host.Hp, hpMax = _host.HpMax;
             if (hpMax <= 0 || hp * 100 > hpMax * CrisisHpPercent) return;
 
             _barrierUsedThisRoom = true;
@@ -6513,15 +6615,32 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 튕긴 뒤의 탄이 주는 피해. 정본 BUF_A03 은 50% 로 못박았고,
-        /// 버프가 없으면 튕긴 탄은 **피해가 없다** — 그냥 다 때리면 벽이 공짜 이득이 된다.
+        /// 튕긴 뒤의 탄이 주는 피해 — 탄이 쏠 때 받은 비율(`Projectile.BounceDamagePercent`)을 쓴다.
+        /// 예전엔 「튕긴 탄 강화」 카드가 없으면 0 이라 슬러거 기본 반사 · 되튕기는 벽도 헛맞았다(PD 2026-10-21).
         /// </summary>
-        private int BouncedDamage(Projectile shot, int damage)
+        private static int BouncedDamage(Projectile shot, int damage)
         {
             if (!shot.HasBounced) return damage;
-            if (_buffs.ReturnDamagePercent <= 0) return 0;
-            return Mathf.Max(1, damage * _buffs.ReturnDamagePercent / 100);
+            return Mathf.Max(1, damage * shot.BounceDamagePercent / 100);
         }
+
+        /// <summary>
+        /// 내 탄의 튕김 피해 · 관통 수를 정한다. 몸이 원래 튕기거나 뚫는 탄(슬러거 · 레이저 등)은 제 성질 그대로,
+        /// 카드로 얻은 튕김 · 관통만 카드 값을 따른다.
+        /// </summary>
+        private void ApplyCardShotRules(Projectile shot, bool innateBounce, bool innatePierce)
+        {
+            shot.BounceDamagePercent = innateBounce || _buffs.ReturnDamagePercent <= 0 ? 100 : _buffs.ReturnDamagePercent;
+            if (!innatePierce && _buffs.Pierce && _buffs.PierceCount > 0) shot.LimitPierce(_buffs.PierceCount);
+        }
+
+        // 둔화 · 흡혈 확률 — 몸이 원래 가진 효과(흡혈귀 등)는 기본 확률, 카드는 레벨 값(%)을 더한다.
+        // 예전엔 카드 레벨과 상관없이 「가졌는가」만 봐서 5레벨도 1레벨과 같았다(PD 2026-10-21).
+        private static int SlowChanceOf(int hostPercent, int cardPercent)
+            => Mathf.Min(95, (hostPercent > 0 ? SlowChance : 0) + Mathf.Max(0, cardPercent));
+
+        private static int LeechChanceOf(int hostPercent, int cardPercent)
+            => Mathf.Min(95, (hostPercent > 0 ? LeechChance : 0) + Mathf.Max(0, cardPercent));
 
         private void HitEnemyWith(Unit victim, int damage, HostEntry p)
         {
@@ -6575,11 +6694,12 @@ namespace Game.Module.InGame
             bool dead = victim.TakeDamage(damage);
             // 둔화·흡혈은 이제 확률이다. 세기는 호스트마다 다르지 않고 한 값으로 묶는다 —
             // 터졌는지 아닌지가 읽혀야지, 25% 냐 45% 냐는 화면에서 구별되지 않는다.
-            if (((p?.SlowPercent ?? 0) + _buffs.SlowPercent) > 0 && Roll(SlowChance))
+            if (Roll(SlowChanceOf(p?.SlowPercent ?? 0, _buffs.SlowPercent)))
                 ApplySlowProc(victim);
             // 혈갈이 도는 동안은 확률이 아니라 확정이고, 도는 양도 배율이 붙는다.
-            if (((p?.LifestealPercent ?? 0) + _buffs.LifestealPercent) > 0 && _host != null
-                && (IsDrainForced || Roll(LeechChance)))
+            int leechChance = LeechChanceOf(p?.LifestealPercent ?? 0, _buffs.LifestealPercent);
+            if (leechChance > 0 && _host != null
+                && (IsDrainForced || Roll(leechChance)))
                 Leech(Mathf.Max(1, Mathf.RoundToInt(damage * LeechPercent / 100f * DrainMul)));
 
             MeleeJobProc(victim, p);
@@ -6588,7 +6708,6 @@ namespace Game.Module.InGame
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 이 경로는 전부 플레이어 공격이다
             // (근접 타격과 액티브 스킬). 적 공격은 `DamagePlayer` 로 간다.
             Overcharge(victim, damage);
-            ChargeSkillOnHit();
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -6661,19 +6780,24 @@ namespace Game.Module.InGame
                           : Mathf.Max(1, Mathf.RoundToInt(attacker.Atk / (float)split)),
                       fromPlayer, target,
                       fromPlayer ? _config.ShotSize * BeamWidthMul : _config.ShotSize,
-                      ShotTint(fromPlayer, kind),
+                      EchoTint(ShotTint(fromPlayer, kind)),
                       _config.ShotLifeSeconds,
                       // 영매는 관통하지 않는다(PD 2026-10-21) — 표의 공격 방식(관통)은 그대로 두고 탄만 맞으면 멈춘다
                       pierce: (p != null && p.Kind == AttackKind.Pierce && attacker.Key != "medium")
                               || (fromPlayer && (_buffs.Pierce || IsPierceGranted)),
-                      slowPercent: (p?.SlowPercent ?? 0) + (fromPlayer ? _buffs.SlowPercent : 0),
-                      lifestealPercent: (p?.LifestealPercent ?? 0) + (fromPlayer ? _buffs.LifestealPercent : 0),
+                      // 이제 「확률(%)」이다 — 몸 기본 확률 + 카드 레벨 확률
+                      slowPercent: SlowChanceOf(p?.SlowPercent ?? 0, fromPlayer ? _buffs.SlowPercent : 0),
+                      lifestealPercent: LeechChanceOf(p?.LifestealPercent ?? 0, fromPlayer ? _buffs.LifestealPercent : 0),
                       angleOffsetDeg: angleOffsetDeg,
                       // 슬러거는 탄을 되받아치는 것이 정체성이다(`ReflectsShots`).
                       // 그 몸에 들어가면 쏘는 탄도 튕긴다 — 버프 없이도 한 번은 튕긴다.
                       bounces: fromPlayer
                           ? _buffs.Bounces + ((p != null && p.ReflectsShots) ? 1 : 0)
                           : 0);
+            if (fromPlayer)
+                ApplyCardShotRules(shot, innateBounce: p != null && p.ReflectsShots,
+                                   innatePierce: (p != null && p.Kind == AttackKind.Pierce && attacker.Key != "medium")
+                                                 || IsPierceGranted);
 
             if (fromPlayer && _buffs.HomingStrength > 0f) shot.SetHoming(_buffs.HomingStrength);
             // 정본이 유도라고 적은 적만 휜다(지금은 코만도(미사일) 하나).
@@ -7029,7 +7153,9 @@ namespace Game.Module.InGame
             }
 
             // 코만도(기관총) 방벽이 서 있으면 거품을 겹쳐 그리지 않는다
-            bool wantShield = me != null && me.IsAlive && me.Shield > 0 && !IsCmWallShowing;
+            // 위기 방벽이 남아 있는 동안도 같은 거품으로 보인다 — 숫자 한 번만 뜨고 사라져 남은 줄 몰랐다
+            bool wantShield = me != null && me.IsAlive && (me.Shield > 0 || (_barrier > 0 && _host != null))
+                              && !IsCmWallShowing;
             if (wantShield)
             {
                 if (_shieldFx == null || !_shieldFx.IsActive)
@@ -7285,7 +7411,7 @@ namespace Game.Module.InGame
                     if (hit == null) continue;
                     // 터지는 탄은 **닿은 자리에서 터진다.** 반경 안이 다 맞는다.
                     if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }
-                    if (p.Pierce) p.MarkHit(hit); else p.Despawn();
+                    if (p.Pierce && p.UsePierce()) p.MarkHit(hit); else p.Despawn();   // 관통탄 카드는 관통 수만큼
                     // 공통 피격(2026-10-07) — 자리 · 방향만 적어 두고 `ApplyShotHit` 이 치명 · 상성을 보고 그린다
                     var hitAt = ImpactPointOn(hit, p.Position);
                     if (!HxNoteShot(p, hitAt) && !DotHitCovers(p.Kind)) SpawnImpact(hitAt, p.Kind);   // 도트 폭발이 대신(ApplyShotHit)
@@ -7435,13 +7561,14 @@ namespace Game.Module.InGame
             // 원거리 몸이 근접 몹을 맞히면 뒤로 민다(기획 2026-09-16). 적 탄이 나를 맞힐 때는 이 길을 안 지난다.
             // 상성이 안 맞으면 이 경직도 없다 — 맞으면서 그대로 걸어온다.
             if (!dead && shot.FromPlayer && !dull) RangedKnockback(victim);
-            if (shot.SlowPercent > 0 && Roll(SlowChance))
+            // 탄에 실린 값이 곧 확률이다(쏠 때 몸 기본 + 카드 레벨로 정함)
+            if (Roll(shot.SlowPercent))
                 ApplySlowProc(victim);
-            if (shot.LifestealPercent > 0 && _host != null && Roll(LeechChance))
+            if (shot.LifestealPercent > 0 && _host != null && Roll(shot.LifestealPercent))
                 Leech(Mathf.Max(1, shot.Damage * LeechPercent / 100));
 
             // C031 과충전 — 맞은 자리에서 전기가 튄다. 죽은 뒤에도 옆으로는 튄다.
-            if (shot.FromPlayer) { Overcharge(victim, dmg); ChargeSkillOnHit(); PassiveOnHit(victim, dmg); }
+            if (shot.FromPlayer) { Overcharge(victim, dmg); PassiveOnHit(victim, dmg); }
 
             if (dead) { KillEnemy(victim); return; }
             if (victim.IsBoss)
@@ -8002,7 +8129,8 @@ namespace Game.Module.InGame
             => _bus.Publish(new RunExpChangedEvent { Level = _level, Exp = _exp, ExpToNext = need });
 
         /// <summary>버프 3택1 을 연다. 이미 열려 있으면 아무것도 하지 않는다.</summary>
-        private void OfferBuff()
+        /// <param name="minRarity">이 등급 이상만 — 천사 제단(레어 이상) · 악마 계약(에픽 이상) 카드 3택1.</param>
+        private void OfferBuff(CardRarity minRarity = CardRarity.Common)
         {
             if (_awaitingBuff) return;
 
@@ -8011,7 +8139,10 @@ namespace Game.Module.InGame
             // 화면에 아무 표시가 없어 8종을 채운 순간 새 카드가 조용히 사라졌다.
             // 카드 종류가 적은 지금은 방해만 된다 — 종류가 크게 늘면 그때 다시 본다.
             _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile,
-                             _runChapter);
+                             _runChapter, rule: this, minRarity: minRarity);
+            // 높은 등급만 뽑다 후보가 마르면 등급을 풀어 채운다 — 값을 치르고 빈손이면 안 된다
+            if (_offer.Count == 0 && minRarity > CardRarity.Common)
+                _buffTable?.Draw(_offer, 3, _buffs.ExcludedKeys, _rng, _host?.Profile, _runChapter, rule: this);
             if (_offer.Count == 0) return;
 
             _awaitingBuff = true;
@@ -8420,6 +8551,12 @@ namespace Game.Module.InGame
         /// </summary>
         private float EchoMul => _echoing ? Mathf.Max(0.05f, _buffs.EchoPercent) : 1f;
 
+        /// <summary>영혼 복제는 원래 공격 뒤 이만큼 늦게 나간다 — 같은 순간이면 겹쳐 안 보인다.</summary>
+        private const float EchoDelaySeconds = 0.12f;
+
+        /// <summary>복제된 탄은 푸르스름하게 비친다 — 「한 번 더 나갔다」가 읽히게.</summary>
+        private Color EchoTint(Color c) => _echoing ? new Color(c.r * 0.75f, c.g * 0.9f, c.b, c.a * 0.6f) : c;
+
         /// <summary>
         /// 갱스터가 때린 적에 표식을 남긴다. 갱스터의 유지 훅이 "표식 릴레이" 인 것과
         /// 같은 뿌리다 — 이 몸이 세상에 남기는 흔적이 곧 다음 몸의 재료가 된다.
@@ -8808,7 +8945,7 @@ namespace Game.Module.InGame
 
         public void TryActiveSkill()
         {
-            if (!_running || IsCastFrozen || _skillCooldown < SkillCooldownOf(_host?.Profile)) return;
+            if (!_running || IsCastFrozen || _skillCooldown < PlayerSkillCooldown) return;
             // 유령은 싸우지 않는다. 자동 사격은 막혀 있었는데 액티브 스킬은 뚫려 있어서,
             // 몸이 없는 상태로 화면 전체를 쓸어버릴 수 있었다.
             // 게이지는 그대로 둔다 — 몸을 얻으면 그때 쓴다.
@@ -9408,7 +9545,8 @@ namespace Game.Module.InGame
                 }
 
                 case EventReward.CardOffer:
-                    OfferBuff();
+                    // 이벤트 표의 등급 이상만 — 악마 계약 「에픽 3택1」이 예전엔 등급을 안 보고 보통 3택1 을 열었다
+                    OfferBuff(rarity);
                     return _awaitingBuff ? Localize.Get("ui.event.result.pick_card") : Localize.Get("ui.event.result.nothing_to_pick");
 
                 case EventReward.UpgradeCard:
@@ -9538,6 +9676,9 @@ namespace Game.Module.InGame
                     var e = list[i];
                     if (e == null || !e.Implemented || (int)e.Rarity != r) continue;
                     if (_buffs.ExcludedKeys.Contains(e.BuffKey)) continue;
+                    // 레벨업 3택1 과 같은 규칙 — 안 풀린 카드 · 몸에 안 맞는 카드 · 앞 카드가 없는 카드는 빼고
+                    if (e.FromChapter > _runChapter || !BodyMatches(e.Body, _host?.Profile)
+                        || !e.PrerequisiteMet(this)) continue;
                     if (_rng.Next(++seen) == 0) pick = e;
                 }
                 if (pick != null) return pick;

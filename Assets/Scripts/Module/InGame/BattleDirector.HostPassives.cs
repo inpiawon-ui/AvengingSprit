@@ -326,7 +326,7 @@ namespace Game.Module.InGame
         /// <summary>로봇 — 스킬 게이지를 이만큼 더 채운다(쿨이 그만큼 줄어든 것과 같다).</summary>
         private void GainSkillCharge(float seconds)
         {
-            float full = SkillCooldownOf(_lastHostEntry);
+            float full = SkillCooldownOf(_lastHostEntry) * _buffs.ActiveCooldownMul;
             _skillCooldown = Mathf.Min(full, _skillCooldown + seconds);
         }
 

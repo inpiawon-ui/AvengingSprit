@@ -33,6 +33,8 @@ MonoBehaviour:
     _rarity: 2
     _category: ATTACK
     _levelValues: 19000000230000002d0000003700000041000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c002
     _nameKr: "\uC131\uC7A5 \uAC00\uC18D"
@@ -53,7 +55,9 @@ MonoBehaviour:
     _rarity: 1
     _category: UTILITY
     _levelValues: 0c000000140000001c000000240000002c000000
-    _implemented: 1
+    _body: 0
+    _requiresAny: []
+    _implemented: 0
   - _buffKey: c003
     _nameKr: "\uC218\uD638 \uBC29\uD328"
     _description: "\uBC29\uD328\uAC00 \uB0B4 \uC8FC\uC704\uB97C \uB3CC\uBA70 \uB9C9\uB294\uB2E4."
@@ -73,6 +77,8 @@ MonoBehaviour:
     _rarity: 1
     _category: SURVIVAL
     _levelValues: 0300000003000000040000000400000005000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c004
     _nameKr: "\uCC98\uD615"
@@ -87,12 +93,14 @@ MonoBehaviour:
     _canonId: 
     _canonEffect: 
     _pool: ATTACK
-    _fromChapter: 1
+    _fromChapter: 6
     _weight: 1
     _cardId: C004
     _rarity: 3
     _category: ATTACK
     _levelValues: 030000000500000007000000090000000c000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c005
     _nameKr: "\uBC88\uAC1C \uC0AC\uC2AC"
@@ -107,12 +115,15 @@ MonoBehaviour:
     _canonId: 
     _canonEffect: 
     _pool: AREA
-    _fromChapter: 1
+    _fromChapter: 2
     _weight: 1
     _cardId: C005
     _rarity: 2
     _category: AREA
     _levelValues: 0100000001000000020000000200000003000000
+    _body: 0
+    _requiresAny:
+    - c001
     _implemented: 1
   - _buffKey: c006
     _nameKr: "\uD761\uD63C"
@@ -133,6 +144,8 @@ MonoBehaviour:
     _rarity: 0
     _category: SURVIVAL
     _levelValues: 030000000500000007000000090000000b000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c007
     _nameKr: "\uCC30\uB098\uC758 \uBD88\uC0AC"
@@ -153,6 +166,8 @@ MonoBehaviour:
     _rarity: 2
     _category: SURVIVAL
     _levelValues: 1e0000001a00000016000000120000000e000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c008
     _nameKr: "\uCD94\uAC00 \uBC1C\uC0AC"
@@ -173,6 +188,8 @@ MonoBehaviour:
     _rarity: 1
     _category: PROJECTILE
     _levelValues: 0100000002000000030000000400000005000000
+    _body: 1
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c009
     _nameKr: "\uD654\uC5FC \uAC01\uC778"
@@ -193,6 +210,8 @@ MonoBehaviour:
     _rarity: 1
     _category: UTILITY
     _levelValues: 1e00000028000000320000003c00000046000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c010
     _nameKr: "\uAD81\uC9C0"
@@ -213,6 +232,8 @@ MonoBehaviour:
     _rarity: 1
     _category: ATTACK
     _levelValues: 0f00000019000000230000002d00000037000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c011
     _nameKr: "\uACF5\uACA9 \uAC15\uD654"
@@ -233,6 +254,8 @@ MonoBehaviour:
     _rarity: 0
     _category: ATTACK
     _levelValues: 0c00000012000000180000001e00000024000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c012
     _nameKr: "\uC18D\uC0AC"
@@ -253,6 +276,8 @@ MonoBehaviour:
     _rarity: 1
     _category: PROJECTILE
     _levelValues: 0a0000000f00000014000000190000001e000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1
   - _buffKey: c013
     _nameKr: "\uD544\uC0B4\uAE30 \uCD08\uAE30\uD654"
@@ -274,4 +299,532 @@ MonoBehaviour:
     _rarity: 1
     _category: UTILITY
     _levelValues: 0100000001000000010000000100000001000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c014
+    _nameKr: "\uAD00\uD1B5\uD0C4"
+    _description: "\uD0C4\uC774 \uC801\uC744 \uB6AB\uACE0 \uC9C0\uB098\uAC04\uB2E4."
+    _kind: 7
+    _value: 1
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: PROJECTILE
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C014
+    _rarity: 1
+    _category: PROJECTILE
+    _levelValues: 0100000001000000020000000200000003000000
+    _body: 1
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c015
+    _nameKr: "\uBCBD \uBC18\uC0AC"
+    _description: "\uD0C4\uC774 \uBCBD\uACFC \uC5C4\uD3D0\uBB3C\uC5D0\uC11C \uD295\uACA8
+      \uB2E4\uC2DC \uB0A0\uC544\uAC04\uB2E4."
+    _kind: 21
+    _value: 50
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: PROJECTILE
+    _fromChapter: 3
+    _weight: 1
+    _cardId: C015
+    _rarity: 1
+    _category: PROJECTILE
+    _levelValues: 320000003c000000410000004b00000050000000
+    _body: 1
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c016
+    _nameKr: "\uC720\uB3C4\uD0C4"
+    _description: "\uD0C4\uC774 \uAC00\uAE4C\uC6B4 \uC801 \uCABD\uC73C\uB85C \uD718\uC5B4
+      \uB0A0\uC544\uAC04\uB2E4."
+    _kind: 38
+    _value: 12
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: PROJECTILE
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C016
+    _rarity: 0
+    _category: PROJECTILE
+    _levelValues: 0c000000140000001c000000240000002c000000
+    _body: 1
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c017
+    _nameKr: "\uB0C9\uAE30 \uAC01\uC778"
+    _description: "\uACF5\uACA9\uC5D0 \uBE59\uACB0\uC744 \uBD99\uC778\uB2E4. \uAC78\uB9B0
+      \uC801\uC740 \uB290\uB824\uC9C4\uB2E4."
+    _kind: 34
+    _value: 25
+    _stackable: 1
+    _colorHex: '#F0F0F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
+    _fromChapter: 2
+    _weight: 1
+    _cardId: C017
+    _rarity: 1
+    _category: UTILITY
+    _levelValues: 19000000230000002d0000003700000041000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c018
+    _nameKr: "\uC800\uC8FC \uAC01\uC778"
+    _description: "\uACF5\uACA9\uC5D0 \uC800\uC8FC\uB97C \uBD99\uC778\uB2E4. \uAC78\uB9B0
+      \uC801\uC740 \uB354 \uC544\uD504\uAC8C \uB9DE\uB294\uB2E4."
+    _kind: 36
+    _value: 20
+    _stackable: 1
+    _colorHex: '#F0F0F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
+    _fromChapter: 3
+    _weight: 1
+    _cardId: C018
+    _rarity: 1
+    _category: UTILITY
+    _levelValues: 140000001c000000240000002c00000034000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c019
+    _nameKr: "\uD654\uC0C1 \uBC88\uC9D0"
+    _description: "\uD654\uC0C1\uC774 3\uB2E8\uACC4\uAC00 \uB41C \uC801 \uB458\uB808\uB85C
+      \uD654\uC0C1\uC774 \uC62E\uB294\uB2E4."
+    _kind: 16
+    _value: 1
+    _stackable: 0
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 3
+    _weight: 1
+    _cardId: C019
+    _rarity: 2
+    _category: AREA
+    _levelValues: 01000000
+    _body: 0
+    _requiresAny:
+    - c009
+    _implemented: 1
+  - _buffKey: c020
+    _nameKr: "\uC0C1\uD0DC\uC774\uC0C1 \uBC88\uC9D0"
+    _description: "\uC0C1\uD0DC\uC774\uC0C1\uC744 \uAC78 \uB54C \uC606 \uC801\uC5D0\uAC8C\uB3C4
+      \uC62E\uAE34\uB2E4."
+    _kind: 43
+    _value: 18
+    _stackable: 1
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 5
+    _weight: 1
+    _cardId: C020
+    _rarity: 2
+    _category: AREA
+    _levelValues: 120000001900000020000000270000002e000000
+    _body: 0
+    _requiresAny:
+    - c009
+    - c017
+    - c018
+    - c021
+    _implemented: 1
+  - _buffKey: c021
+    _nameKr: "\uB454\uD654\uD0C4"
+    _description: "\uB9DE\uC740 \uC801\uC774 \uC7A0\uC2DC \uB290\uB824\uC9C4\uB2E4."
+    _kind: 9
+    _value: 20
+    _stackable: 1
+    _colorHex: '#F0F0F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C021
+    _rarity: 0
+    _category: UTILITY
+    _levelValues: 140000001c000000240000002c00000034000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c022
+    _nameKr: "\uAC11\uC637 \uBD84\uC1C4"
+    _description: "\uB54C\uB9B4\uC218\uB85D \uADF8 \uC801\uC774 \uBC1B\uB294 \uD53C\uD574\uAC00
+      \uC313\uC5EC \uB298\uC5B4\uB09C\uB2E4."
+    _kind: 42
+    _value: 5
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 2
+    _weight: 1
+    _cardId: C022
+    _rarity: 2
+    _category: ATTACK
+    _levelValues: 05000000090000000d0000001100000015000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c023
+    _nameKr: "\uC5F0\uC18D \uC555\uBC15"
+    _description: "\uAC19\uC740 \uC801\uC744 \uC5F0\uB2EC\uC544 \uCE60\uC218\uB85D
+      \uC138\uC9C4\uB2E4."
+    _kind: 37
+    _value: 10
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 4
+    _weight: 1
+    _cardId: C023
+    _rarity: 0
+    _category: ATTACK
+    _levelValues: 0a00000010000000160000001c00000023000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c024
+    _nameKr: "\uB9C8\uBB34\uB9AC \uBCF8\uB2A5"
+    _description: "\uCCB4\uB825\uC774 \uB0AE\uC740 \uC801\uC5D0\uAC8C \uB354 \uC544\uD504\uB2E4."
+    _kind: 30
+    _value: 10
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 2
+    _weight: 1
+    _cardId: C024
+    _rarity: 1
+    _category: ATTACK
+    _levelValues: 0a000000120000001a000000220000002a000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c025
+    _nameKr: "\uBCF4\uC2A4 \uC0AC\uB0E5"
+    _description: "\uBCF4\uC2A4\uC5D0\uAC8C \uC8FC\uB294 \uD53C\uD574\uAC00 \uB298\uC5B4\uB09C\uB2E4."
+    _kind: 31
+    _value: 18
+    _stackable: 1
+    _colorHex: '#F0645A'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: ATTACK
+    _fromChapter: 3
+    _weight: 1
+    _cardId: C025
+    _rarity: 1
+    _category: ATTACK
+    _levelValues: 12000000180000001e000000240000002a000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c026
+    _nameKr: "\uD3ED\uBC1C \uBA54\uC544\uB9AC"
+    _description: "\uB0B4 \uD0C4\uC774 \uD130\uC9C0\uBA74 \uAC19\uC740 \uC790\uB9AC\uC5D0
+      \uC791\uC740 \uD3ED\uBC1C\uC774 \uD55C \uBC88 \uB354."
+    _kind: 40
+    _value: 20
+    _stackable: 1
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 5
+    _weight: 1
+    _cardId: C026
+    _rarity: 2
+    _category: AREA
+    _levelValues: 140000001c000000240000002c00000034000000
+    _body: 3
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c027
+    _nameKr: "\uBC94\uC704 \uD655\uB300"
+    _description: "\uC2A4\uD0AC \xB7 \uD544\uC0B4\uAE30 \xB7 \uD3ED\uBC1C \uBC94\uC704\uAC00
+      \uB113\uC5B4\uC9C4\uB2E4."
+    _kind: 23
+    _value: 8
+    _stackable: 1
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 4
+    _weight: 1
+    _cardId: C027
+    _rarity: 1
+    _category: AREA
+    _levelValues: 080000000e000000140000001a00000020000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c028
+    _nameKr: "\uC7A5\uD310 \uC9C0\uC18D"
+    _description: "\uB0B4\uAC00 \uAE50 \uC7A5\uD310\uC774 \uB354 \uC624\uB798 \uB0A8\uB294\uB2E4."
+    _kind: 18
+    _value: 12
+    _stackable: 1
+    _colorHex: '#B478F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: AREA
+    _fromChapter: 6
+    _weight: 1
+    _cardId: C028
+    _rarity: 0
+    _category: AREA
+    _levelValues: 0c000000140000001c000000240000002c000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c029
+    _nameKr: "\uC720\uB839 \uD3EC\uB300"
+    _description: "\uD3C9\uD0C0 8\uBC88\uB9C8\uB2E4 \uC720\uB839 \uD3EC\uB300\uAC00
+      \uC7A0\uC2DC \uC120\uB2E4."
+    _kind: 41
+    _value: 22
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: SPECIAL
+    _fromChapter: 5
+    _weight: 1
+    _cardId: C029
+    _rarity: 2
+    _category: SPECIAL
+    _levelValues: 160000001b00000020000000250000002a000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c030
+    _nameKr: "\uC601\uD63C \uBCF5\uC81C"
+    _description: "\uD3C9\uD0C0 8\uBC88\uC9F8\uB9C8\uB2E4 \uAC19\uC740 \uACF5\uACA9\uC774
+      \uD55C \uBC88 \uB354 \uB098\uAC04\uB2E4."
+    _kind: 39
+    _value: 35
+    _stackable: 1
+    _colorHex: '#F0B428'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: SPECIAL
+    _fromChapter: 6
+    _weight: 1
+    _cardId: C030
+    _rarity: 3
+    _category: SPECIAL
+    _levelValues: 23000000280000002d0000003200000037000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c031
+    _nameKr: "\uC720\uB839 \uAC11\uC8FC"
+    _description: "\uBC1B\uB294 \uD53C\uD574\uAC00 \uC904\uC5B4\uB4E0\uB2E4."
+    _kind: 14
+    _value: 5
+    _stackable: 1
+    _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: SURVIVAL
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C031
+    _rarity: 0
+    _category: SURVIVAL
+    _levelValues: 05000000080000000b0000000e00000011000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c032
+    _nameKr: "\uD761\uD608"
+    _description: "\uACF5\uACA9\uD558\uBA74 \uD655\uB960\uB85C \uC900 \uD53C\uD574\uC758
+      \uC808\uBC18\uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4."
+    _kind: 8
+    _value: 10
+    _stackable: 1
+    _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: SURVIVAL
+    _fromChapter: 4
+    _weight: 1
+    _cardId: C032
+    _rarity: 1
+    _category: SURVIVAL
+    _levelValues: 0a0000000f00000014000000190000001e000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c033
+    _nameKr: "\uC704\uAE30 \uBC29\uBCBD"
+    _description: "\uCCB4\uB825\uC774 \uC704\uD5D8\uD574\uC9C0\uBA74 \uBC29\uB9C8\uB2E4
+      \uD55C \uBC88 \uBC29\uBCBD\uC774 \uC120\uB2E4."
+    _kind: 44
+    _value: 12
+    _stackable: 1
+    _colorHex: '#5CC850'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: SURVIVAL
+    _fromChapter: 5
+    _weight: 1
+    _cardId: C033
+    _rarity: 1
+    _category: SURVIVAL
+    _levelValues: 0c00000012000000180000001e00000024000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c034
+    _nameKr: "\uAC00\uC18D"
+    _description: "\uC774\uB3D9 \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4."
+    _kind: 3
+    _value: 5
+    _stackable: 1
+    _colorHex: '#50C8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: MOBILITY
+    _fromChapter: 1
+    _weight: 1
+    _cardId: C034
+    _rarity: 0
+    _category: MOBILITY
+    _levelValues: 05000000090000000d0000001100000015000000
+    _body: 0
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c035
+    _nameKr: "\uC0AC\uAC70\uB9AC"
+    _description: "\uADFC\uC811 \uACF5\uACA9\uC774 \uB2FF\uB294 \uAC70\uB9AC\uAC00
+      \uB298\uC5B4\uB09C\uB2E4."
+    _kind: 2
+    _value: 10
+    _stackable: 1
+    _colorHex: '#50C8F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: MOBILITY
+    _fromChapter: 4
+    _weight: 1
+    _cardId: C035
+    _rarity: 0
+    _category: MOBILITY
+    _levelValues: 0a0000000f00000014000000190000001e000000
+    _body: 2
+    _requiresAny: []
+    _implemented: 1
+  - _buffKey: c036
+    _nameKr: "\uC2A4\uD0AC \uCFE8 \uAC10\uC18C"
+    _description: "\uC561\uD2F0\uBE0C \uC2A4\uD0AC \uCFE8\uD0C0\uC784\uC774 \uC904\uC5B4\uB4E0\uB2E4."
+    _kind: 10
+    _value: 8
+    _stackable: 1
+    _colorHex: '#F0F0F0'
+    _scope: 0
+    _tag: 0
+    _hostKey: 
+    _canonId: 
+    _canonEffect: 
+    _pool: UTILITY
+    _fromChapter: 6
+    _weight: 1
+    _cardId: C036
+    _rarity: 1
+    _category: UTILITY
+    _levelValues: 080000000e000000140000001a00000020000000
+    _body: 0
+    _requiresAny: []
     _implemented: 1

@@ -22,6 +22,12 @@ namespace Game.Module.InGame
         private readonly Dictionary<string, int> _level = new();
         private HostEntry _host;
 
+        /// <summary>
+        /// 몸 조건 판정(전투가 넣는다). 맞지 않는 몸이면 그 카드는 다시 셀 때 빠진다 —
+        /// 먹은 카드 · 레벨은 남아 있어 맞는 몸으로 돌아오면 다시 켜진다(PD 2026-10-21).
+        /// </summary>
+        public ICardRule Rule { get; set; }
+
         // ── 무엇이 3택1 에서 빠지는가 ────────────────────────────
         //
         // **5레벨을 다 찍은 카드뿐이다**(`Apply` 참조). 그 아래면 계속 후보에 남는다.
@@ -63,7 +69,13 @@ namespace Game.Module.InGame
         public float RangeMul { get; private set; } = 1f;
         public float MoveMul { get; private set; } = 1f;
         public float ShotSpeedMul { get; private set; } = 1f;
-        public float ActiveSkillChargeMul { get; private set; } = 1f;
+
+        /// <summary>
+        /// 스킬 쿨 감소 카드 — 액티브 쿨(초)에 곱한다. 0.4 아래로는 안 내려간다(쿨 10초 몸이 4초 밑으로 안 떨어지게).
+        /// 액티브가 「맞혀서 채우는 게이지」였을 때의 충전 배율(`ActiveSkillChargeMul`)을 바꾼 것이다(PD 2026-10-21).
+        /// </summary>
+        public float ActiveCooldownMul { get; private set; } = 1f;
+        private const float ActiveCooldownFloor = 0.4f;
         public int GhostHpBonus { get; private set; }
 
         // ── 정본 BUFF_DB 에서 온 것들 ────────────────────────────
@@ -129,6 +141,11 @@ namespace Game.Module.InGame
         /// <summary>포탑이 불을 물려받는가 (정본 BUF_S01)</summary>
         public bool DeployablesBurn { get; private set; }
         public bool Pierce { get; private set; }
+        /// <summary>관통탄 카드로 뚫는 적 수(정본 C008 1·1·2·2·3). 0 이면 카드가 없다.</summary>
+        public int PierceCount { get; private set; }
+
+        /// <summary>벽 반사 카드 — 레벨별 튕김 횟수. 카드 값(레벨표)은 튕긴 탄 피해 % 다.</summary>
+        private static readonly int[] RicochetBouncesByLevel = { 1, 1, 2, 2, 3 };
 
         // ── 정본 v2.3 카드 ───────────────────────────────────────
         /// <summary>C002 정밀 조준 — 유효 타깃이 하나뿐일 때의 추가 피해 비율</summary>
@@ -249,9 +266,10 @@ namespace Game.Module.InGame
 
         private void Recompute()
         {
-            AttackMul = IntervalMul = RangeMul = MoveMul = ShotSpeedMul = ActiveSkillChargeMul = 1f;
+            AttackMul = IntervalMul = RangeMul = MoveMul = ShotSpeedMul = ActiveCooldownMul = 1f;
             GhostHpBonus = ExtraShots = LifestealPercent = SlowPercent = 0;
             Pierce = false;
+            PierceCount = 0;
             HostHpMul = DamageTakenMul = 1f;
             StopDelayCut = SwitchShieldSeconds = 0f;
             BurnSpreads = MinesFreeze = false;
@@ -286,6 +304,7 @@ namespace Game.Module.InGame
             {
                 var e = _taken[i];
                 if (!e.IsActiveFor(_host)) continue;
+                if (Rule != null && !Rule.BodyMatches(e.Body, _host)) continue;   // 지금 몸에 안 맞으면 쉰다
 
                 // 카드는 레벨마다 수치가 다르다. 중첩 합산이 아니라 **레벨표를 읽는다.**
                 int value = e.ValueAt(LevelOf(e.BuffKey));
@@ -298,13 +317,18 @@ namespace Game.Module.InGame
                     case BuffKind.Range:          RangeMul += v; break;
                     case BuffKind.MoveSpeed:      MoveMul += v; break;
                     case BuffKind.ShotSpeed:      ShotSpeedMul += v; break;
-                    case BuffKind.ActiveSkillCharge: ActiveSkillChargeMul += v; break;
+                    case BuffKind.ActiveSkillCharge:
+                        ActiveCooldownMul = Mathf.Max(ActiveCooldownFloor, ActiveCooldownMul - v);
+                        break;
                     case BuffKind.GhostHp:        GhostHpBonus += value; break;
                     // 값이 아니라 **레벨**을 쓴다. 한 장 = 한 발.
                     case BuffKind.MultiShot:      ExtraShots += LevelOf(e.BuffKey); break;
                     case BuffKind.Lifesteal:      LifestealPercent += value; break;
                     case BuffKind.Slow:           SlowPercent = Mathf.Min(80, SlowPercent + value); break;
-                    case BuffKind.Pierce:         Pierce = true; break;
+                    case BuffKind.Pierce:
+                        Pierce = true;
+                        PierceCount = Mathf.Max(PierceCount, Mathf.Max(1, value));
+                        break;
                     case BuffKind.Heal:           break;   // 즉발 — BattleDirector 가 처리
 
                     // 정본 BUFF_DB 에서 온 것들
@@ -318,7 +342,12 @@ namespace Game.Module.InGame
                     case BuffKind.FieldDuration:   FieldExtraSeconds += value / 10f; break;
                     case BuffKind.SlowFieldEdge:   SlowFieldEdgeDamage += value; break;
                     case BuffKind.FreezeRune:      MinesFreeze = true; break;
-                    case BuffKind.Ricochet:        Bounces += value; break;
+                    // 벽 반사 — 튕김과 튕긴 탄 피해를 **한 장**이 같이 준다(예전엔 둘로 나뉘어
+                    //   튕김 카드만 먹으면 튕긴 탄 피해가 0 이었다). 값 = 피해 %, 튕김 수는 레벨표
+                    case BuffKind.Ricochet:
+                        Bounces += RicochetBouncesByLevel[Mathf.Clamp(LevelOf(e.BuffKey), 1, 5) - 1];
+                        ReturnDamagePercent = Mathf.Max(ReturnDamagePercent, value);
+                        break;
                     case BuffKind.ReturnDamage:
                         // 튕긴 탄의 피해 % 와 **한 번 튕기는 것**을 같이 준다.
                         // 피해만 주면 튕길 일이 없어 카드가 아무 일도 안 한다.
