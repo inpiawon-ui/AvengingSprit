@@ -518,8 +518,9 @@ namespace Game.Module.InGame
 
         private const float GravityRangeMeters = 8f;
         // 2.6 m 는 마법진이 화면 폭의 83% 를 덮어 적이 다 가려졌다(시안은 약 67%) — 녹화 검수 2026-10-21
-        private const float GravityMeters = 2.2f;
-        private const float GravitySpecMeters = 2.7f;   // Lv5 옵션 — 범위가 넓어진다
+        // 2.2 m 도 PD 「조금 더 줄여」(2026-10-21) → 1.8 m
+        private const float GravityMeters = 1.8f;
+        private const float GravitySpecMeters = 2.2f;   // Lv5 옵션 — 범위가 넓어진다
         private const float GravitySwirlDelay = 0.15f;  // 시안 순서 — 마법진이 먼저 깔리고 소용돌이가 돈다
         private const float GravityPullSeconds = 1.2f;
         private const int GravitySteps = 24;            // 0.05초마다 끌어당긴다
@@ -692,8 +693,12 @@ namespace Game.Module.InGame
         //  사신 — 원혼: 몸에서 떠올라 적에게 날아가 붙어 터진다(망자 군단의 「유령」)
         // ═══════════════════════════════════════════════════════════
 
+        // PD 2026-10-21 「사신은 또 그냥 해골만 나오네 유령은 왜 반영이 안 되는 거지」 —
+        //   원혼은 적이 있을 때만 0.45초 날아갔는데, 1.6초 뒤엔 해골이 방을 이미 비워 한 번도 안 떴다.
+        //   이제 해골과 함께 **바로 떠올라 사신 둘레에 머물다가** 내리꽂힌다. 적이 없으면 흩어진다.
         private const float WraithFlySeconds = 0.45f;
-        private const float WraithSize = 110f;
+        private const float WraithHoverSeconds = 0.6f;
+        private const float WraithSize = 150f;
 
         private sealed class Wraith
         {
@@ -701,20 +706,28 @@ namespace Game.Module.InGame
             public Unit Target;
             public Unit Caster;
             public Vector2 From;
+            public Vector2 Hold;    // 떠올라 머무는 자리
             public Vector2 Last;
+            public float Hover;     // 남은 머묾 시간 — 0 이 되면 내리꽂힌다
+            public float Phase;     // 둥실거림이 다 같이 움직이지 않게
             public float T;
         }
 
         private readonly List<Wraith> _wraiths = new();
 
-        private void LaunchWraith(Unit me, Unit target)
+        /// <param name="target">없거나 머무는 사이 죽으면 그때 가장 가까운 적으로 바꾼다.</param>
+        private void LaunchWraith(Unit me, Unit target, int slot, int slots)
         {
-            if (target == null || !target.IsAlive) return;
-            var from = me.Position + new Vector2(Random.Range(-30f, 30f), SsrBody * 0.6f);
-            var fx = FxFrames("mdwraith") != null ? TakeLoopFx("mdwraith", from, WraithSize) : null;
+            float a = slot * Mathf.PI * 2f / Mathf.Max(1, slots);
+            var hold = me.Position + new Vector2(Mathf.Cos(a) * Meters(1.2f), SsrBody * 0.8f + Mathf.Sin(a) * Meters(0.5f));
+            var fx = FxFrames("mdwraith") != null ? TakeLoopFx("mdwraith", me.Position, WraithSize) : null;
             fx?.SetFrameSeconds(0.07f);
-            _wraiths.Add(new Wraith { Fx = fx, Target = target, Caster = me, From = from, Last = target.Position });
-            if (fx == null) _pfx?.Dart(from, target.Position, ParticleElement.Ice, WraithFlySeconds, 4);
+            _wraiths.Add(new Wraith
+            {
+                Fx = fx, Target = target, Caster = me, From = me.Position, Hold = hold,
+                Last = target != null ? target.Position : hold, Hover = WraithHoverSeconds, Phase = a,
+            });
+            if (fx == null) _pfx?.Dart(me.Position, hold, ParticleElement.Ice, WraithHoverSeconds, 4);
         }
 
         private void TickWraiths(float dt)
@@ -722,6 +735,25 @@ namespace Game.Module.InGame
             for (int i = _wraiths.Count - 1; i >= 0; i--)
             {
                 var w = _wraiths[i];
+                if (w.Hover > 0f)
+                {
+                    // 몸에서 빠져나와 둘레 자리로 떠오르고, 둥실거리며 머문다
+                    w.Hover -= dt;
+                    w.Phase += dt * 6f;
+                    float rise = Ease.OutCubic(Mathf.Clamp01((WraithHoverSeconds - w.Hover) / (WraithHoverSeconds * 0.5f)));
+                    var hover = Vector2.Lerp(w.From, w.Hold, rise) + new Vector2(0f, Mathf.Sin(w.Phase) * 6f);
+                    w.Fx?.MoveTo(hover);
+                    if (w.Hover > 0f) continue;
+                    w.From = hover;
+                    if (w.Target == null || !w.Target.IsAlive) w.Target = NearestEnemy(hover);
+                    if (w.Target == null)
+                    {
+                        w.Fx?.SetLife(0.3f, 0.3f);   // 남은 적이 없다 — 그 자리에서 흩어진다
+                        _wraiths.RemoveAt(i);
+                        continue;
+                    }
+                    w.Last = w.Target.Position;
+                }
                 if (w.Target != null && w.Target.IsAlive) w.Last = w.Target.Position;
                 w.T += dt / WraithFlySeconds;
                 // 위로 휘었다가 내리꽂힌다 — 곧게 가면 탄처럼 보인다

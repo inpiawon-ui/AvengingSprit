@@ -305,15 +305,19 @@ namespace Game.Module.InGame
                 SummonSkull(at, DeathSkullSeconds);
                 PlayFx("soulripple", at, Meters(1.2f), loop: false);
             }
+            // 원혼은 해골과 함께 **바로** 떠오른다 — 1.6초 뒤엔 해골이 방을 비워 원혼이 한 번도 안 떴다(PD 2026-10-21)
+            const int Wraiths = 6;
             for (int wave = 0; wave < 2; wave++)
             {
-                UltAfter(1.6f + wave * 2.2f, () =>
+                UltAfter(0.3f + wave * 2.2f, () =>
                 {
                     var list = UltTargets(me.Position, Meters(12f));
-                    for (int i = 0; i < list.Count && i < 6; i++)
+                    for (int i = 0; i < Wraiths; i++)
                     {
-                        var e = list[i];
-                        UltAfter(i * 0.08f, () => LaunchWraith(me, e));
+                        // 적이 여섯보다 적으면 돌려 쓰고, 없으면 대상 없이 떠올라 머무는 사이 다시 찾는다
+                        var e = list.Count > 0 ? list[i % list.Count] : null;
+                        int slot = i;
+                        UltAfter(i * 0.06f, () => LaunchWraith(me, e, slot, Wraiths));
                     }
                     PlayFx("soulripple", me.Position, Meters(2.4f), loop: false);
                     Shake(5f);

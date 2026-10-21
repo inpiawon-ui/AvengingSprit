@@ -1212,7 +1212,7 @@ ult.white_wizard.desc	3초 동안 둘레 적 머리 위로 빛기둥 14개가 �
 ult.white_wizard.short	3초간 빛기둥 14개가 쏟아짐	3秒間光柱14本が降り注ぐ	14 light pillars over 3s
 askill.white_wizard.short	적을 끌어모아 빛 폭발	敵を引き寄せて光の爆発	Pull foes in, then burst
 pskill.white_wizard.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce
-askill.white_wizard.opt	중력진 범위 2.2 → 2.7 m	重力陣の範囲2.2→2.7m	Gravity Well radius 2.2 → 2.7 m
+askill.white_wizard.opt	중력진 범위 1.8 → 2.2 m	重力陣の範囲1.8→2.2m	Gravity Well radius 1.8 → 2.2 m
 host.dragon_blue.concept	뇌신 — 번개가 튄다	雷神 — 雷が跳ぶ	Storm god — chain lightning
 ult.dragon_blue.name	천뢰	天雷	Heaven's Thunder
 ult.dragon_blue.desc	둘레 모든 적에게 낙뢰가 세 번 떨어지고, 끝에 가장 센 적에게 큰 낙뢰.	周囲の全ての敵に落雷が3回落ち、最後に最も強い敵へ巨大な落雷。	Lightning strikes every nearby foe 3 times, then a huge bolt hits the strongest.

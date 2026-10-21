@@ -5368,9 +5368,9 @@ MonoBehaviour:
     _ja: "\u969C\u5BB3\u7269\u7121\u8996\u30FB\u6575\u8CAB\u901A"
     _en: Shots ignore cover and pierce
   - _key: askill.white_wizard.opt
-    _ko: "\uC911\uB825\uC9C4 \uBC94\uC704 2.2 \u2192 2.7 m"
-    _ja: "\u91CD\u529B\u9663\u306E\u7BC4\u56F22.2\u21922.7m"
-    _en: "Gravity Well radius 2.2 \u2192 2.7 m"
+    _ko: "\uC911\uB825\uC9C4 \uBC94\uC704 1.8 \u2192 2.2 m"
+    _ja: "\u91CD\u529B\u9663\u306E\u7BC4\u56F21.8\u21922.2m"
+    _en: "Gravity Well radius 1.8 \u2192 2.2 m"
   - _key: host.dragon_blue.concept
     _ko: "\uB1CC\uC2E0 \u2014 \uBC88\uAC1C\uAC00 \uD284\uB2E4"
     _ja: "\u96F7\u795E \u2014 \u96F7\u304C\u8DF3\u3076"
