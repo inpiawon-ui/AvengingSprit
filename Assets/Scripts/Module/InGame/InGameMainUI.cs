@@ -1361,7 +1361,7 @@ namespace Game.Module.InGame
         // 옆 칸이 아직 살 수 있는 것처럼 남는다.
 
         /// <summary>
-        /// 진열 칸 수. 카드 3 · 몸 1 · 소모품 1 · 회복 1 = 여섯이다(기획 2026-09-08 §6).
+        /// 진열 칸 수. 카드 3(가진 카드가 있으면 그중 하나는 강화) · 몸 1 · 소모품 1 · 회복 1 = 여섯이다(기획 2026-09-08 §6).
         /// 액자 목록 구간이 348px 라 한 칸 52px · 간격 58px 로 딱 여섯 줄이 들어간다.
         /// </summary>
         private const int ShopSlots = 6;
@@ -1431,6 +1431,18 @@ namespace Game.Module.InGame
                     if (_battle != null) _battle.CloseShop();
                 });
             }
+
+            // 다시 뽑기 — 창을 닫지 않고 카드 칸만 새로 깐다(BattleDirector.RerollShop → ShopOpenedEvent 다시)
+            _ui.SetText("ShopRerollText", Localize.Format("ui.shop.reroll", e.RerollPrice));
+            var rerollBtn = _ui.Get<Button>("ShopRerollButton");
+            if (rerollBtn != null)
+            {
+                rerollBtn.onClick.RemoveAllListeners();
+                rerollBtn.interactable = e.CanReroll;
+                if (e.CanReroll) rerollBtn.onClick.AddListener(() => { if (_battle != null) _battle.RerollShop(); });
+            }
+            var rerollImg = _ui.Get<Image>("ShopRerollButton");
+            if (rerollImg != null) rerollImg.color = e.CanReroll ? Color.white : new Color(0.45f, 0.45f, 0.5f, 1f);
 
             EqualizeText("ShopItem0Name", "ShopItem1Name", "ShopItem2Name", "ShopItem3Name", "ShopItem4Name", "ShopItem5Name");
             EqualizeText("ShopItem0Price", "ShopItem1Price", "ShopItem2Price", "ShopItem3Price", "ShopItem4Price", "ShopItem5Price");
@@ -1633,6 +1645,7 @@ namespace Game.Module.InGame
             Skin("ShopBox", "shopframe");
             Skin("ShopGoldPill", "shopgoldpill");
             Skin("ShopLeaveButton", "shopleavebutton");
+            Skin("ShopRerollButton", "shopleavebutton");   // 전용 그림이 오기 전까지 「나간다」 단추 그림을 같이 쓴다
             for (int i = 0; i < ShopSlots; i++) Skin($"ShopItem{i}", "shopitemslot");
 
             // 악마의 거래
