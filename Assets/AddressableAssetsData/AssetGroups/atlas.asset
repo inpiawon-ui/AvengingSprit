@@ -285,6 +285,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c4b682e1463f6b4b84ae97ab47ea97e
+    m_Address: atlas/unit_roadwarden_fire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 84c5f58e7b9bccb42a6e303bafc8cd18
     m_Address: atlas/unit_gorilla_fire
     m_ReadOnly: 0
@@ -447,6 +453,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb5d0f548ec29ae43a34309e027c0812
+    m_Address: atlas/unit_coilwalker_ice
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cc5a978ca5d092c49b605a887543c912
     m_Address: atlas/unitl_hopper
     m_ReadOnly: 0
@@ -515,6 +527,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e392cd2af6417b24696414d46edf0d62
     m_Address: atlas/unit_ghost
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4f6ce280ef8bf84088232fd11c2620f
+    m_Address: atlas/unit_shadow_cat
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

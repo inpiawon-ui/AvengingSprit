@@ -789,7 +789,7 @@ MonoBehaviour:
     _spreadDegrees: 0
   - _key: roadwarden_fire
     _body: roadwarden
-    _sprite: roadwarden
+    _sprite: roadwarden_fire
     _nameKr: "\uBD88 \uC21C\uCC30\uAE30"
     _level: 2
     _role: 1
@@ -825,7 +825,7 @@ MonoBehaviour:
     _spreadDegrees: 0
   - _key: coilwalker_ice
     _body: coilwalker
-    _sprite: coilwalker
+    _sprite: coilwalker_ice
     _nameKr: "\uC5BC\uC74C \uCF54\uC77C"
     _level: 3
     _role: 1

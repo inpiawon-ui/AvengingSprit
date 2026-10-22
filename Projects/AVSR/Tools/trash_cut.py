@@ -24,22 +24,27 @@ ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
 CELL, INK_H, FOOT_UP = 96, 76, 8
 ACTS = ['', '_walk1', '_walk2', '_atk1', '_atk2', '_hit', '_die1', '_die2']
 # 아홉째 칸을 쓰는 몸 — 두더지의 땅속 흙더미(`_under`) · 살쾡이 사라짐 · 미믹 잠든 상자(`SetPose` 가 부른다)
-NINTH = {'mole': '_under', 'shadow_cat': '_vanish', 'mimic': '_sleep'}
+NINTH = {'mole': '_under', 'shadow_cat': '_vanish', 'mimic': '_sleep', 'saw_monkey_m': '_empty'}
 STANDING = [0, 1, 2, 5]
 # 옆으로 넓은 몸 — 키로 맞추면 날개가 칸 밖으로 나가 잘린다(박쥐 2026-10-22 PD 「날개가 계속 짤려 있다」).
 # 여덟 칸 중 가장 넓은 칸이 칸 폭(여백 2 px씩)에 들어오는 배율을 키 배율과 견줘 작은 쪽을 쓴다.
-WIDE = {'bat', 'bat_poison', 'shadow_cat', 'mimic'}
+WIDE = {'bat', 'bat_poison', 'shadow_cat', 'mimic', 'boar_m', 'armadillo_m', 'saw_monkey_m'}
 # 판에 그림자를 그려 온 떠 있는 몸 — 게임이 그림자를 따로 그리므로 몸 아래 납작한 덩어리를 뺀다(감시 눈 2026-10-22)
 DROP_SHADOW = {'watcher_eye'}
 # 새 그림 → 게임이 부르는 키. 돌 고릴라는 집행자 자리에 들어간다(키를 바꾸면 방 표 · 챕터 표를 다 고쳐야 한다)
-GAME_KEY = {'gorilla': 'actor_enforcer', 'scorpion': 'scrapgunner'}
+GAME_KEY = {'gorilla': 'actor_enforcer', 'scorpion': 'scrapgunner',
+            # 빨강 5종 기계 겉모습(PD 10-22) — 몸 키는 그대로 두고 그림만 바꾼다. 옛 그림은 자르기 전에 _archive 로
+            'boar_m': 'boar', 'mantis_m': 'mantis', 'armadillo_m': 'armadillo', 'mushroom_m': 'mushroom',
+            'saw_monkey_m': 'saw_monkey'}
 # 몸 키(잉크 높이). 사람(호스트)은 76 이다. 덩치 큰 짐승은 폭이 넓어 같은 키여도 훨씬 커 보인다 —
 # 돌 고릴라 76 은 「너무 크다」(PD 2026-10-07) → 68. 크게 보인 진짜 이유는 옛 집행자의 128 상자에 그려진 것이었다
 #   (96 칸이 1.33 배로 커졌다) — 지금은 잡몹 상자(84)에 그린다. 사람보다 조금 낮고 폭이 넓다
 BODY_H = {'gorilla': 68, 'boar': 60, 'mole': 58, 'mantis': 64, 'scorpion': 74,
           'armadillo': 52, 'mushroom': 56, 'mummy': 64, 'spider': 58, 'spiderling': 62,
           # 원소판은 원래 몸과 같은 키 · 2단계 새 몸(2026-10-22) — 떠 있는 둘은 해골보다 조금 작게, 살쾡이는 낮고 길게
-          'gorilla_fire': 68, 'scrapgunner_ice': 74, 'watcher_eye': 58, 'lantern': 60, 'shadow_cat': 54, 'mimic': 72}   # 2026-10-07 묶음 넷 — 아르마딜로 · 거미는 낮고 넓다   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
+          'gorilla_fire': 68, 'scrapgunner_ice': 74, 'watcher_eye': 58, 'lantern': 60, 'shadow_cat': 54, 'mimic': 72,
+          # 기계 5종 — 발주 크기(쇄석기 · 방패 로봇은 낮고 길게, 저격기는 해골보다 조금 크게)
+          'boar_m': 56, 'mantis_m': 74, 'armadillo_m': 54, 'mushroom_m': 62, 'saw_monkey_m': 68}   # 2026-10-07 묶음 넷 — 아르마딜로 · 거미는 낮고 넓다   # 멧돼지는 네발짐승 — 키가 낮고 길다(52 는 사람 몸의 반이라 안 보였다)
 
 
 def drop_shadow(tile):
@@ -60,7 +65,12 @@ def drop_shadow(tile):
 
 
 def cells(path, key=''):
-    rgba = np.asarray(key_out(Image.open(path).convert('RGB')))
+    src = Image.open(path)
+    # 가끔 마젠타 대신 진짜 투명 바탕으로 온다(얼음 코일 s 2026-10-22) — 그때는 그 알파를 그대로 쓴다
+    if src.mode == 'RGBA' and np.asarray(src)[..., 3].min() == 0:
+        rgba = np.asarray(src).copy()
+    else:
+        rgba = np.asarray(key_out(src.convert('RGB')))
     h, w = rgba.shape[:2]
     out = []
     for i in range(9):
@@ -95,6 +105,10 @@ ELEMENT_BASE = {'gorilla_fire': 'actor_enforcer', 'scrapgunner_ice': 'scrapgunne
                 'bat_poison': 'bat', 'coilwalker_ice': 'coilwalker', 'roadwarden_fire': 'roadwarden'}
 
 
+# 방향마다 키를 따로 — 살쾡이 앞 · 뒷모습은 꼬리가 머리 위로 말려 같은 키면 몸이 옆모습보다 작아 보인다(2026-10-22)
+DIR_H = {'shadow_cat': {'s': 68, 'n': 68}}
+
+
 def base_height(base, d):
     hs = []
     for act in [ACTS[i] for i in STANDING]:
@@ -110,7 +124,8 @@ def main(key, d, path, out_dir=None):
     tiles = cells(path, key)
     heights = sorted(bbox(tiles[i])[3] - bbox(tiles[i])[1] for i in STANDING)
     target = base_height(ELEMENT_BASE[key], d) if key in ELEMENT_BASE else None
-    scale = (target or BODY_H.get(key, INK_H)) / heights[len(heights) // 2]
+    target = target or DIR_H.get(key, {}).get(d) or BODY_H.get(key, INK_H)
+    scale = target / heights[len(heights) // 2]
     if key in WIDE:
         widest = max(bbox(t)[2] - bbox(t)[0] for t in tiles[:len(ACTS) + (key in NINTH)] if (t[..., 3] > 40).any())
         scale = min(scale, (CELL - 4) / widest)

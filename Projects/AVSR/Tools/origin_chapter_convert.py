@@ -56,18 +56,27 @@ def load_ours(ch):
     head = rows[0]
     row = next(r for r in rows[1:] if r[0] == str(ch))
     c = dict(zip(head, row))
-    roster = {}
+    roster, body = {}, {}
     for ln in open(os.path.join(ROOMS, 'trash_roster.tsv'), encoding='utf-8'):
         t = ln.rstrip('\n').split('\t')
         if t[0] != 'key':
-            roster[t[0]] = t[2]
+            roster[t[0]], body[t[0]] = t[2], t[1]
     trash = c['trash'].split(',')
-    by_role = {}
-    for k in trash:
-        r = roster.get(k, 'melee')
-        r = 'ranged' if r in ('ranged', 'support') else r
-        by_role.setdefault(r, []).append(k)
-    return c, by_role
+    # 소개 방(PD 10-22 — 원작 지형 · 마리 수에 새 몬스터만). 「새」는 앞 챕터들에 없던 **몸** — Lv 변종은 새 몬스터가 아니다
+    seen = set()
+    for r in rows[1:]:
+        if r[0].isdigit() and int(r[0]) < ch:
+            seen |= {body.get(k, k) for k in dict(zip(head, r))['trash'].split(',')}
+    new = [k for k in trash if body.get(k, k) not in seen] or [k for k in trash if k not in seen] or trash
+
+    def group(keys):
+        out = {}
+        for k in keys:
+            r = roster.get(k, 'melee')
+            r = 'ranged' if r in ('ranged', 'support') else r
+            out.setdefault(r, []).append(k)
+        return out
+    return c, group(trash), new
 
 
 def seat_roles(grid, w, counts):
@@ -105,7 +114,7 @@ def main(ch, src):
     data = json.load(open(os.path.join(ROOMS, 'origin_rooms.json'), encoding='utf-8'))
     maps, chapters = data['maps'], {c['id']: c for c in data['chapters']}
     roles = load_monster_roles()
-    ours, by_role = load_ours(ch)
+    ours, by_role, new = load_ours(ch)
     rnd = random.Random(f'{ch}-{src}')
     used, rooms = set(), []
     source = chapters[str(src)]
@@ -128,7 +137,12 @@ def main(ch, src):
             seat = seat_roles(cells, w, counts)
             fill = {}
             for p, role in seat.items():
-                pick = by_role.get(role) or by_role.get('ranged' if role == 'turret' else 'melee') or sum(by_role.values(), [])
+                pool_role = by_role
+                if kind == '소개':   # 새 몬스터만 — 그 역할의 새 몬스터가 없으면 새 몬스터 아무나
+                    pool_role = {rk: [k for k in v if k in new] for rk, v in by_role.items()}
+                    pool_role = {rk: v for rk, v in pool_role.items() if v} or {'melee': new}
+                pick = (pool_role.get(role) or pool_role.get('ranged' if role == 'turret' else 'melee')
+                        or sum(pool_role.values(), []))
                 fill[f'{p[0]},{p[1]}'] = {'role': role, 'monster': rnd.choice(pick)}
             out.update({'source': key, 'w': w, 'h': len(cells) // w, 'cells': cells, 'spawns': fill,
                         'origin_monsters': counts})

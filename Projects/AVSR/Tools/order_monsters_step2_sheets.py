@@ -97,7 +97,71 @@ ELEMENTS = {
                        how='몸이 보라, 날개막이 연두, 송곳니에 독 방울.'),
 }
 
+# 빨강 5종 기계로 겉모습 바꾸기 — PD 10-22 「빨강 5종 기계 오컬트로」 · 시안 in/mock_lineup_v4.png 통과 ·
+# 「몸마다 대표 색만 갈라서」(시안은 다섯 다 남색 + 주황이라 한 방에 섞이면 구별이 안 된다). 몸 키 · 하는 일은 그대로.
+# 발주 이름은 trash_<옛 키>_m_<방향> — 옛 납품 판과 이름이 겹치면 발주 줄이 건너뛴다
+MACHINE_SRC = 'mock_lineup_v4.png'
+MACHINE_CROPS = {
+    'boar': (30, 250, 380, 480), 'mantis': (375, 180, 640, 480), 'armadillo': (605, 240, 1120, 480),
+    'mushroom': (1115, 235, 1330, 480), 'saw_monkey': (1335, 240, 1650, 480),
+}
+MACHINE = {
+    'boar': dict(name='돌진 쇄석기', color='**중장비 노랑**이 몸의 대부분 + 검정 경고 줄무늬 · 쇠색 파쇄 날 · 붉은 경광등 하나(남색은 쓰지 않는다)',
+                 job='평타 없이 **일직선으로 돌진**한다. 벽에 박으면 잠깐 휘청.',
+                 cells='1 대기 · 2 전진1(궤도 굴러감) · 3 전진2 / 4 공격1(돌진 준비 — 몸을 낮추고 배기통에서 연기 없이 떨림) · 5 공격2(돌진 — 날을 앞으로 내밂) · 6 피격 / '
+                       '7 부서짐1(날이 빠지고 기울어짐) · 8 부서짐2(바닥에 주저앉은 잔해) · 9 빈 칸',
+                 size='바닥에서 등까지 50~56 px · 길이 76~84 px(낮고 길게)'),
+    'mantis': dict(name='삼각대 저격기', color='**무광 강철 회색** + 검정 관절 · 붉은 외눈 렌즈 하나(주황 · 남색은 쓰지 않는다)',
+                   job='멀리서 **조준선을 긋고 한 발** 쏜다(조준선 · 탄은 게임이 그린다).',
+                   cells='1 대기 · 2 걷기1(세 다리 중 하나를 듦) · 3 걷기2 / 4 공격1(총열을 겨누고 렌즈가 빛남 — 빛 번짐 없이 렌즈 색만) · 5 공격2(쏘는 반동 — 총열이 뒤로) · 6 피격 / '
+                         '7 부서짐1(다리 하나가 꺾임) · 8 부서짐2(쓰러진 삼각대) · 9 빈 칸',
+                   size='바닥에서 총열까지 70~78 px(해골보다 조금 크게, 가늘게)'),
+    'armadillo': dict(name='방패 로봇', color='**짙은 남색 몸** + 흰색과 검정 줄무늬 방패판 · 붉은 경광등(주황 · 노랑은 쓰지 않는다)',
+                      job='정면 **방패판**으로 앞에서 온 탄을 막는다 — 등 뒤는 얇다. 가끔 몸을 접어 둥근 쇠공으로 구른다(구르는 그림은 따로 받는다).',
+                      cells='1 대기(방패를 앞에) · 2 걷기1(궤도) · 3 걷기2 / 4 공격1(방패를 들어 밀칠 준비) · 5 공격2(방패로 밀침) · 6 피격 / '
+                            '7 부서짐1(방패가 떨어져 나감) · 8 부서짐2(주저앉은 잔해) · 9 빈 칸',
+                      size='바닥에서 방패 끝까지 50~56 px · 폭 70~80 px(낮고 넓게)'),
+    'mushroom': dict(name='폭탄 드럼통', color='**녹슨 빨강 드럼통** + 노랑과 검정 위험 줄무늬 · 쇠색 다리 · 붉은 경광등(남색은 쓰지 않는다)',
+                     job='다가와 **깜빡이다 자폭**한다(폭발 · 깜빡임 빛은 게임이 그린다).',
+                     cells='1 대기 · 2 걷기1(짧은 다리) · 3 걷기2 / 4 공격1(웅크려 떨림 — 경광등만 밝은 색) · 5 공격2(부풀어 오름 — 터지기 직전, 빛 없이 몸이 둥글게) · 6 피격 / '
+                           '7 부서짐1(뚜껑이 튀어나감) · 8 부서짐2(찌그러진 통) · 9 빈 칸',
+                     size='바닥에서 경광등까지 58~64 px'),
+    'saw_monkey': dict(name='톱날 투척기', color='**주황 고철 몸** + 갈색 녹 · 쇠색 톱날(남색은 쓰지 않는다)',
+                       job='한 팔의 **톱날 발사대**로 톱날을 던진다 — 톱날은 돌아와 다시 끼운다(날아가는 톱날은 게임이 따로 그린다).',
+                       cells='1 대기(팔에 톱날) · 2 걷기1 · 3 걷기2 / 4 공격1(발사대를 겨눔) · 5 공격2(톱날을 쏘고 팔이 튕김 — **발사대가 빔**) · 6 피격 / '
+                             '7 부서짐1 · 8 부서짐2 · 9 **빈손 대기**(톱날을 쏜 뒤 기다리는 자세 — 발사대가 빔)',
+                       size='바닥에서 머리 끝까지 62~70 px'),
+}
+
 ACTS = ['', '_walk1', '_walk2', '_atk1', '_atk2', '_hit', '_die1', '_die2']
+
+
+def order_machine(key, d):
+    m = MACHINE[key]
+    os.makedirs(os.path.join(EX, 'ref', 'trash_v4'), exist_ok=True)
+    concept = os.path.join(EX, 'ref', 'trash_v4', f'ref_{key}_machine.png')
+    Image.open(os.path.join(EX, 'in', MACHINE_SRC)).convert('RGB').crop(MACHINE_CROPS[key]).save(concept)
+    concept = concept.replace('\\', '/')
+    name = f'trash_{key}_m_{d}'
+    east = '' if d == 'e' else (f"동쪽 판(통과) : {os.path.join(EX, 'in', f'trash_{key}_m_e.png')}".replace('\\', '/') +
+                                ' — **같은 몸 · 같은 색 · 같은 크기 · 같은 그림체**로 방향만 바꾼다. 칸 차례도 같다.\n')
+    return name, f"""{HEAD}
+
+AVENGING SPIRIT: RE:BORN — 잡몹 「{m['name']}」 게임 그림 ({d} 방향 · 9칸) — 원작 결(기계)로 겉모습을 바꾼 몹
+
+생김새 정답 : {concept} (통과한 기계 시안 {P}Projects/AVSR/_exchange/in/{MACHINE_SRC} 에서 자른 것) — **모양은 그대로, 색만 아래처럼 바꾼다.**
+  대표 색 : {m['color']}. 다섯 기계가 한 방에 섞여도 색으로 바로 구별되게 — 시안의 남색 + 주황을 그대로 쓰지 않는다.
+원작 결 앵커 : {P}Assets/BaseResource/Unit/robot/unit_robot_s.png · {P}Assets/BaseResource/Unit/roadwarden/unit_roadwarden_s.png
+하는 일 : {m['job']}
+칸 · 동작 형식 · 그림체는 먼저 통과한 잡몹과 같게 : {P}Projects/AVSR/_exchange/in/trash_watcher_eye_e.png · {P}Projects/AVSR/_exchange/in/trash_mimic_e.png
+{east}
+■ 만들 것 : {P}Projects/AVSR/_exchange/in/{name}.png — 정사각(864 x 864 쯤, 96 x 96 칸 3 x 3 을 3배), 배경 **마젠타 #FF00FF 단색**
+  · 방향 : {DIRS[d]}. 아홉 칸 모두 같은 방향.
+  · 칸 차례 : {m['cells']}
+  · 크기 : {m['size']}.
+{SHEET_RULE}
+끝나면 경로만 알려라.
+"""
 
 
 def crop_concept(key):
@@ -225,9 +289,17 @@ def main():
     ap.add_argument('--dir', default='e')
     ap.add_argument('--only', default='')
     ap.add_argument('--extra', action='store_true', help='톱날 탄 · 아르마딜로 구르기 발주문만')
+    ap.add_argument('--machine', action='store_true', help='빨강 5종 기계 겉모습 방향 판만')
     a = ap.parse_args()
     only = set(filter(None, a.only.split(',')))
     names = []
+    if a.machine:
+        for d in a.dir.split(','):
+            for key in MACHINE:
+                if not only or key in only:
+                    names.append(write(*order_machine(key, d)))
+        print(','.join(names))
+        return
     if a.extra:
         print(','.join(write(k, v) for k, v in EXTRA.items()))
         return
