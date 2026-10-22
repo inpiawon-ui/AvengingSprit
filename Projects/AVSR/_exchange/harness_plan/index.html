@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>하네스 정리안</title>
+<style>
+:root{--bg:#f6f5f1;--panel:#ffffff;--fg:#1d2230;--mut:#5d6577;--line:#dedbd2;--acc:#2f6fd6;--ok:#1f8a4c;--warn:#b5651d;--no:#a83a3a;--chip:#eef2fa}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14171f;--panel:#1c212c;--fg:#e6eaf2;--mut:#98a2b5;--line:#2c3342;--acc:#6aa2ff;--ok:#5cc98a;--warn:#e0a060;--no:#ef7b7b;--chip:#243049;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14171f;--panel:#1c212c;--fg:#e6eaf2;--mut:#98a2b5;--line:#2c3342;--acc:#6aa2ff;--ok:#5cc98a;--warn:#e0a060;--no:#ef7b7b;--chip:#243049;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding-block:32px 64px;padding-inline:16px}
+h1{font-size:26px;margin:0 0 6px;text-wrap:balance} h2{font-size:19px;margin:40px 0 10px;padding-top:14px;border-top:2px solid var(--line)}
+h3{font-size:16px;margin:22px 0 6px}
+.lead{color:var(--mut);max-width:72ch;margin:0}
+.tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:20px 0}
+.tri div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.tri b{display:block;font-size:16px;margin-bottom:4px}
+.tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-size:13px;color:var(--mut);font-weight:600;background:var(--chip)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;color:var(--mut);width:28px}
+.tag{display:inline-block;font-size:12px;padding:0 8px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.done{color:var(--ok)} .todo{color:var(--acc)} .dec{color:var(--warn)} .skip{color:var(--no)}
+code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--chip);padding:0 4px;border-radius:4px}
+ol.steps{padding-left:20px} ol.steps li{margin:6px 0}
+.note{border-left:3px solid var(--warn);padding:8px 12px;background:var(--panel);border-radius:0 8px 8px 0;margin:12px 0;color:var(--fg)}
+.small{font-size:13px;color:var(--mut)}
+</style></head><body><div class="wrap">
+
+<h1>하네스 정리안 — AVSR 에 넣을 것 · 원본으로 올릴 것 · 새 게임 출발 세트</h1>
+<p class="lead">2026-10-22. 비교한 것: ① 스튜디오 원본 <code>WA-Framework-Unity</code> 0.7.0(10-18) ② 지금 AVSR 하네스 ③ 바깥 템플릿 <code>Claude-Code-Game-Studios</code>(아트 · VFX 쪽만).
+원칙 — <b>원본은 「필요한 것만」 가져오고, 우리가 게임을 만들며 키운 것은 원본으로 올려</b> 다음 게임이 첫날부터 받게 한다.</p>
+
+<div class="tri">
+  <div><b>① AVSR 에 지금 넣을 것</b>개발 중인 게임에 바로 이득. 원본에서 골라 온 7가지.</div>
+  <div><b>② 원본으로 올릴 것</b>우리가 키운 범용 하네스 8가지. 원본에 있으면 새 게임이 자동으로 받는다.</div>
+  <div><b>③ 새 게임 출발 세트</b>스튜디오 공식 절차(<code>Docs/game/new-game-repo.md</code>) + 첫날 할 일.</div>
+</div>
+
+<div class="note"><b>먼저 알아 둘 것 — 지금 AVSR 세션은 공정표 · 모드 · 상수를 못 보고 있다.</b><br>
+<code>.claude/CLAUDE.md</code> 안의 <code>@Template/Planning_Flow.md</code> · <code>@project_state.md</code> · <code>@constants.md</code> 등은 <b>펼쳐지지 않는다</b>(한 번 더 안쪽의 @ 참조).
+이 세션에 실제로 실린 것은 <code>.claude/rules/</code> 의 규칙 파일과 메모리 목록뿐이었다. 원본도 같은 것을 실측해 구조를 바꿔 두었다. ①-1 이 이것을 고친다.</div>
+
+<h2>① AVSR 에 지금 넣을 것 (원본에서 골라 온 것)</h2>
+<div class="tbl"><table>
+<tr><th></th><th>무엇</th><th>우리 어디에</th><th>왜 · 효과</th><th>주의</th></tr>
+<tr><td class="n">1</td><td><b>규칙 로딩 정리</b><br>매번 필요한 것만 「실리는 자리」에, 가끔 쓰는 것은 「착수할 때 읽는 표」로</td>
+<td>공정 요약 · 모드 · 핵심 상수 → <code>.claude/rules/</code> 새 파일<br>Addressable · 에디터 툴 · 씬 · 서버 규칙 → <code>.claude/refs/</code> + <code>CLAUDE.md</code> 의 「이 일을 할 때 읽는다」 표</td>
+<td>매 세션 공정 순서 · 게임 모드 · 상수를 실제로 보게 된다. 안 쓰는 규칙이 매번 실리지 않아 토큰도 준다</td>
+<td>이펙트 · 포맷 · UI 규칙(08 · 09 · 05 · 06)은 매번 필요해 그대로 둔다</td></tr>
+<tr><td class="n">2</td><td><b>에이전트 보관 전환</b><br>켜 둘 것 2~3개, 나머지는 보관 폴더</td>
+<td>켜 둠: <code>rule-compliance-reviewer</code> · <code>wa-client-team-qa</code><br>나머지 44개 → <code>.claude/agent-profiles/</code>(필요할 때 복사)</td>
+<td>지금 47개 설명 약 2.8만 자(어림 1만~1.5만 토큰)가 <b>매 요청</b> 앞에 붙는다. 이번 세션엔 한 번도 안 불렀다</td>
+<td><code>CLAUDE.md</code> 의 PD 부트스트랩 문구를 먼저 고친다 · 다른 세션이 쓰는 에이전트가 있는지 확인</td></tr>
+<tr><td class="n">3</td><td><b>점검 규칙 두 절</b><br>「검증 경로 — UI 는 UI 로 조작해 확인」 · 「사용자에게 넘기기 전에 — 내가 돌릴 수 있는지부터」</td>
+<td><code>.claude/rules/checklist.md</code></td>
+<td>오늘 실제 사례: 카드 녹화 1차에서 내부 함수를 바로 불러 <b>레벨업 창이 안 닫힌 채</b> 찍혔다. 단추를 누르게 고치자 정상</td><td>오늘 넣은 「못 잰 것은 미검」 절과 합친다</td></tr>
+<tr><td class="n">4</td><td><b>GPT 이미지 한계표 + 착수 3입력 · 받으면 직접 잰다</b></td>
+<td><code>fx-art-pipeline</code> 5 · 7단계, 코덱스 발주 요령</td>
+<td>원본 실측: 크기를 강제 못 함(128 → 1254) · 시드 · 금지 프롬프트 없음 · 평면 단색 실패. 브리프 · 규격 · 레인이 없으면 착수 안 함 → 「시안만큼 안 나온다」 줄임</td>
+<td>알파는 <b>우리 실측이 이긴다</b>(원본 「대체로 붙는다」 ↔ 우리 「안 뚫려 온다」)</td></tr>
+<tr><td class="n">5</td><td><b>위험 명령 차단 목록</b></td><td><code>.claude/settings.json</code> 의 deny</td>
+<td>강제 푸시 · 강제 리셋 · <code>git clean -f</code> · <code>.env</code> · <code>.pem</code> · <code>.key</code> 읽기 차단. 여러 세션이 한 리포를 같이 쓰는 우리에게 특히 필요</td><td>프레임워크 보호 훅은 그대로 둔다(우리는 아직 <code>Assets/GameFramework</code>)</td></tr>
+<tr><td class="n">6</td><td><b>Unity 공식 스킬 3개만</b><br><code>optimize-text-mesh-pro</code> · <code>manage-sprite-atlas</code> · <code>sprite-editor</code></td>
+<td><code>.claude/skills/</code></td>
+<td>3언어 폰트(정적 + 동적 폴백) · 아틀라스 플랫폼 오버라이드 · 스프라이트 자르기 — 지금 하는 일과 바로 맞닿는다</td>
+<td>「압축은 09 규칙(ASTC 4x4)이 이긴다」를 붙인다. <code>2d-pixel-perfect</code> 는 「압축 없음」이 기본이라 들이지 않는다</td></tr>
+<tr><td class="n">7</td><td><b>Unity 작업 원칙</b><br>캡처보다 라이브 데이터로 검증 · 연 것은 정리 · 모달 대화창 감시</td>
+<td><code>.claude/rules/unity_rule.md</code></td>
+<td>화면 캡처가 낡은 화면을 줄 때가 있다. 에디터 모달이 뜨면 MCP 가 멈춘다</td><td>원본의 「Unity CLI 만」은 가져오지 않는다 — 우리는 MCP</td></tr>
+</table></div>
+
+<h3>이미 넣은 것 (10-21 ~ 10-22)</h3>
+<div class="tbl"><table>
+<tr><th>무엇</th><th>어디</th><th>상태</th></tr>
+<tr><td>색의 뜻 표(게임 코드 실측) · 장면별 분위기 표 · 기준 그림마다 「가져올 것 · 피할 것」</td><td><code>_exchange/codex_brief_fx.md</code> 0 · 0-1 · 2절</td><td><span class="tag done">적용</span></td></tr>
+<tr><td>부품 사양 덩이(번호 · 근거 · 크기 · 바탕 · 앵커 · 금지 · 상태) · 판정 한 줄(통과 / 우려 / 반려 / 미검)</td><td><code>fx-art-pipeline</code> 5 · 7단계</td><td><span class="tag done">적용</span></td></tr>
+<tr><td>파티클 성능(공용 풀 · 한 번 40개 · 상시 루프 prewarm)</td><td><code>08_fx.md</code> 1-1</td><td><span class="tag done">적용</span></td></tr>
+<tr><td>「못 잰 것은 통과가 아니다」</td><td><code>rules/checklist.md</code></td><td><span class="tag done">적용</span></td></tr>
+<tr><td>코덱스 발주 한 줄로만 · 5번 · 2분 간격(429 교훈)</td><td><code>_exchange/run_rework1021_parts.ps1</code> · 메모리</td><td><span class="tag done">적용</span></td></tr>
+</table></div>
+
+<h2>② 원본(WA-Framework-Unity)으로 올릴 것 — 새 게임이 첫날부터 받게</h2>
+<p class="small">원본 저장소에 쓰는 일이라 PR 로 올리고, 올리기 전에 한 번 더 확인받는다. 게임마다 다른 값은 <code>project.md</code> 로 떼어 낸다(이미 <code>ui-mockup-to-game</code> 이 그렇게 나뉘어 있다).</p>
+<div class="tbl"><table>
+<tr><th></th><th>무엇(AVSR 에서 키운 것)</th><th>원본 어디로</th><th>왜 범용인가</th></tr>
+<tr><td class="n">1</td><td><b>이펙트 · 아트 제작 순서</b> — <code>fx-art-pipeline</code> + <code>08_fx</code> 범용부 + 코덱스 브리프 <b>양식</b>(색의 뜻 · 장면 분위기 · 가져올/피할 칸)</td><td><code>.claude/skills/</code> (원본에 「art-pipeline」 계획이 이미 있음)</td><td>자유 시안 → PD 선택 → 부품 → 나란히 검수, 강약 박자표, 등급 레벨링은 어느 게임이든 같다. 값(색 · 기준 그림)만 게임마다</td></tr>
+<tr><td class="n">2</td><td><b>UI 시안 → 게임 옮기기</b> — <code>ui-mockup-to-game</code> + 해상도 하네스</td><td><code>.claude/skills/</code> + <code>Tools/</code></td><td>이미 게임 값이 <code>project.md</code> 로 분리돼 있다. 네임스페이스만 맞추면 된다</td></tr>
+<tr><td class="n">3</td><td><b>리소스 포맷 규칙</b> — <code>09_import_settings</code> + <code>resource_audit.py</code> + 근거(인게임 아틀라스 272MB → 약 32MB)</td><td><code>.claude/refs/game/project/</code> + <code>Tools/</code></td><td>원본 도트 스킬의 「압축 없음」 기본값을 데이터로 바로잡는다</td></tr>
+<tr><td class="n">4</td><td><b>화면 맞춤 버그 수정</b> — contain 판정 · 가로 앵커 · 3언어 글자 넘침 점검(<code>GetPreferredValues</code>)</td><td><code>.claude/refs/game/project/05_prefabs.md</code> · <code>06_ui.md</code></td><td>원본에는 우리가 태블릿 잘림으로 고친 <b>옛 규칙(비율 &lt; 1.778 → match 0)이 아직 남아 있다</b></td></tr>
+<tr><td class="n">5</td><td><b>코덱스 발주 도구 묶음</b> — 한 장씩 실행기 · 발주문 생성기 패턴 · 납품 배경 뚫기 · 아이콘 검수 시트 · 「못 그렸다여도 원본은 남는다」</td><td><code>Tools/</code> + 원본 <code>image_pipeline.md</code> 한계표 정정</td><td>원본도 GPT 이미지(코덱스)를 쓴다. 우리가 겪은 함정(알파 · 429 · 묶음 발주 때우기)을 다음 게임이 안 겪는다</td></tr>
+<tr><td class="n">6</td><td><b>게임 안 검증 녹화 패턴</b> — 실제 판에서 조건 세팅 → 실제 UI 로 고르기 → 녹화 + 전후 수치 로그 → 검수 페이지(<code>CardCheckRecorder</code> · <code>card_check_page.py</code>)</td><td><code>.claude/skills/</code> 에 절차로 + 게임별 녹화기는 게임 쪽</td><td>「찍힌 것을 확인」을 자동으로 — 카드 · 스킬 · 보스 어디에나 같은 틀</td></tr>
+<tr><td class="n">7</td><td><b>「못 잰 것은 미검」</b> 점검 절</td><td><code>.claude/rules/game/checklist.md</code></td><td>원본의 검증 경로 규칙과 짝이 된다</td></tr>
+<tr><td class="n">8</td><td><b>PD 작업 방식(범용 부분)</b> — 한국어 보고 · 현황 → 결정 → 제작 · 발주는 샘플 하나 먼저 · 정지 스샷 말고 움직이는 걸로 · 증거와 파일 경로로 보고</td><td><code>.claude/agent-profiles/game/COLLABORATION.md</code> 또는 <code>rules/game/</code></td><td>지금은 AVSR 메모리에만 있다 — 새 게임은 이걸 처음부터 다시 배운다</td></tr>
+</table></div>
+
+<h2>③ 새 게임 출발 세트</h2>
+<p>스튜디오에 이미 공식 절차가 있다 — <code>Docs/game/new-game-repo.md</code>. 원본을 복제해 <b>부모(upstream)로 두고</b>, 원본이 바뀌면 동기화 명령으로 받는 구조다.
+그래서 「출발 세트」를 따로 만들지 않고 <b>②를 원본에 올려 두는 것</b>이 곧 출발 세트다.</p>
+<ol class="steps">
+  <li><b>리포 만들기</b> — 공식 절차 0~4절(원본 복제 · upstream 연결 · 계층 선언 · 패키지를 git URL 로).</li>
+  <li><b>켤 에이전트 고르기</b> — 보관 프로필에서 그 게임에 필요한 것만 복사(①-2 와 같은 방식).</li>
+  <li><b>게임 값 채우기</b> — <code>constants</code> · <code>summary</code> · <code>terminology</code>, 이펙트 · UI 스킬의 <code>project.md</code>.</li>
+  <li><b>코덱스 브리프 새로</b> — ②-1 양식에 그 게임의 색의 뜻 · 장면 분위기 · 기준 그림을 채운다(첫 시안 통과 뒤).</li>
+  <li><b>포맷 기준 확인</b> — 대상 기기 · 압축(ASTC 등)을 ②-3 규칙으로 처음부터.</li>
+  <li><b>기획 공정</b> — 아래 「정할 것」 1.</li>
+</ol>
+
+<h2>정할 것 (PD 결정)</h2>
+<div class="tbl"><table>
+<tr><th></th><th>무엇</th><th>제 의견</th></tr>
+<tr><td class="n">1</td><td><b>기획 공정(Stage 0~4 · 게이트)을 원본에 올릴까</b> — 원본은 모드 · PD 부트스트랩을 없앴고, 우리는 <code>Planning_Flow</code> 로 기획을 진행 중</td><td><span class="tag dec">결정</span> 올리는 쪽. 다만 「문서를 많이 쓰면 게임이 나아지지 않는다」(바깥 템플릿 실측)를 반영해 게이트는 남기고 양식은 가볍게</td></tr>
+<tr><td class="n">2</td><td><b>AVSR 을 원본의 4층 · 패키지 구조로 옮길까</b> — 프레임워크 경로 · 네임스페이스가 전부 바뀌는 대공사</td><td><span class="tag dec">결정</span> AVSR 은 지금 구조로 끝까지(출시 후 판단). 새 게임부터 새 구조</td></tr>
+<tr><td class="n">3</td><td><b>원본 저장소에 PR 을 올려도 되는가</b>(②)</td><td><span class="tag dec">결정</span> 하나씩 PR — 먼저 ②-4(버그 수정), 그다음 ②-1 · 3</td></tr>
+</table></div>
+
+<h2>가져오지 않을 것</h2>
+<div class="tbl"><table>
+<tr><th>무엇</th><th>왜</th></tr>
+<tr><td>원본 <code>CLAUDE.md</code> · <code>rules/game/</code> 통째로 덮어쓰기</td><td>우리 모드 · 공정 · 08/09 참조가 사라지고 같은 규칙이 두 벌 실린다</td></tr>
+<tr><td>「Unity 는 CLI 로만」</td><td>지금 우리 MCP 작업과 충돌</td></tr>
+<tr><td>원본 작업 기록 흐름(<code>.wa/features.json</code> 수용 기준 · verify · learn) 전면 도입</td><td>개발 중인 게임엔 무겁다 — 「증거가 있어야 통과」 원칙만 ①-3 · 미검 절로 가져온다</td></tr>
+<tr><td><code>2d-pixel-perfect</code> 스킬</td><td>압축 없음이 기본 — 우리 포맷 규칙과 정면으로 부딪힌다</td></tr>
+<tr><td>바깥 템플릿의 아트 바이블 9칸 승인 의례 · 3D / Shader Graph 규칙</td><td>핑퐁만 늘고, 2D uGUI 게임엔 해당이 없다(필요한 칸 — 색의 뜻 · 장면 분위기 · 가져올/피할 — 은 이미 가져왔다)</td></tr>
+</table></div>
+
+<h2>진행 순서 제안</h2>
+<ol class="steps">
+  <li><b>AVSR 정리</b> — ①-1 규칙 로딩 · ①-2 에이전트 보관 · ①-3 점검 두 절 · ①-5 차단 목록. 한 번에 한 세션에서(다른 세션은 끝난 뒤 새로 연다).</li>
+  <li><b>AVSR 보강</b> — ①-4 이미지 한계표 · ①-6 Unity 스킬 3개 · ①-7 Unity 원칙.</li>
+  <li><b>원본으로 올리기</b> — ② 를 PR 로 하나씩(원본 쓰기는 PD 확인 뒤).</li>
+  <li><b>새 게임 때</b> — ③ 절차대로. ② 가 올라가 있으면 이펙트 · UI · 포맷 · 발주 · 검증 하네스를 첫날부터 쓴다.</li>
+</ol>
+<p class="small">근거: 원본 <code>Docs/game/new-game-repo.md</code> · <code>image_pipeline.md</code> · <code>.claude/rules/game/checklist.md</code> · <code>.claude/settings.json</code>, AVSR <code>.claude/</code> · <code>_exchange/codex_brief_fx.md</code>, 이번 세션 실측(실린 규칙 · 에이전트 설명 분량 · 카드 녹화).</p>
+</div></body></html>

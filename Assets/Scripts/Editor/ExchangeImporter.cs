@@ -179,6 +179,11 @@ namespace Game.EditorTools
             // 고른 것은 `roomfloor_env_*` 로 따로 들어간다.
             if (name.StartsWith("concept_")) return true;
 
+            // 카드 아이콘 **발주 원본**(320 분홍 바탕) — 게임에는 `fit_step1_card_icons.py` 가 맞춘
+            // `card_cXXX`(160) · `buffcard_cXXX`(96)만 들어간다. 원본까지 들이면 인게임 아틀라스에 큰 그림 24장이 섞인다.
+            // 제단 아이콘 원본은 `shrine_card_*_raw` 로 남는다(2026-10-22).
+            if (name.StartsWith("card_icon_") || name.EndsWith("_raw") || name.EndsWith("_alpha")) return true;
+
             return false;
         }
 
@@ -301,8 +306,10 @@ namespace Game.EditorTools
             //   이름 색인(`IndexProject`)이 알아서 잡는다. 문제는 **처음 오는 이름**이다 —
             //   `leveluptitle` 이 잡을 것이 없어 기본값(인게임)으로 흘렀고,
             //   UI 는 카드 아틀라스에서 찾으므로 제목이 영영 안 붙었다.
+            // 카드 그림(`card_cXXX`)도 — 카드가 늘면(2026-10-22 c033~c036) 처음 오는 이름이라 인게임 쪽으로 흘렀다.
             if (name.StartsWith("cardpanel") || name.StartsWith("card_frame")
-                || name.StartsWith("cardchip") || name.StartsWith("leveluptitle"))
+                || name.StartsWith("cardchip") || name.StartsWith("leveluptitle")
+                || System.Text.RegularExpressions.Regex.IsMatch(name, @"^card_c\d{3}\.png$"))
                 return new[] { $"{CardRes}/{name}" };
 
             // 상점 팝업 부품 — 인게임 화면에서만 쓴다.
