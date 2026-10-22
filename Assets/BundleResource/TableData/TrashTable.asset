@@ -861,7 +861,7 @@ MonoBehaviour:
     _spreadDegrees: 0
   - _key: bat_poison
     _body: bat
-    _sprite: bat
+    _sprite: bat_poison
     _nameKr: "\uB3C5 \uBC15\uC950"
     _level: 2
     _role: 2

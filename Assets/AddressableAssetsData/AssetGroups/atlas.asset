@@ -249,6 +249,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 698252aea734d224fa4e2c317a0cfbb3
+    m_Address: atlas/unit_bat_poison
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 71063443ad3255b48a7cccf48bdfbeb7
     m_Address: atlas/unit_assault_gangster
     m_ReadOnly: 0
@@ -335,6 +341,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9a9a09c8fe3a10247910beafb282d3e5
     m_Address: atlas/unit_robot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d28449aa95c47342b01a977eaafc7e2
+    m_Address: atlas/unit_mimic
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
