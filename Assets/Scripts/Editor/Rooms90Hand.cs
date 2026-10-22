@@ -13,14 +13,24 @@ namespace Game.EditorTools
     /// 여기서는 **한 글자도 다시 셈하지 않는다.** 파이썬과 C# 이 같은 규칙을 두 번 들고 있으면
     /// 한쪽이 반드시 낡는다.
     ///
-    /// 표는 탭으로 나눈 세 종류의 줄이다.
+    /// 표는 탭으로 나눈 줄이다.
     ///   ROOM   id  이름  설명
+    ///   SIZE   폭m  높이m  칸m                         (원작 방만 — 없으면 10 × 16 · 1 m)
     ///   OBJ    종류  x  y  폭  높이  이동막음  탄막음  적탄막음  해저드종류  해저드피해  해저드간격
     ///   SPAWN  배우  x  y  빼앗을수있음
+    ///   TRACK  고리(0/1)  톱수  x,y;x,y;…              (원작 레일 — 톱이 칸 차례대로 따라간다)
+    ///
+    /// ── 원작 30방 (3단계, 2026-10-22) ──────────────────────────
+    /// 궁수의 전설 원작 방을 그대로 옮긴 표 `rooms30.tsv`(`Tools/origin_rooms_bake.py`)가 있으면 **그것만** 읽는다.
+    /// 방 번호가 30방 기준이라 15방 손배치 표(`rooms90.tsv`)와 섞으면 번호가 어긋난다.
     /// </summary>
     public static class Rooms90Hand
     {
         public const string Path = "Projects/AVSR/Rooms/rooms90.tsv";
+        public const string OriginPath = "Projects/AVSR/Rooms/rooms30.tsv";
+
+        /// <summary>원작 30방 표가 있으면 30방 체계로 굽는다.</summary>
+        public static bool HasOrigin => File.Exists(OriginPath);
 
         public sealed class Obj
         {
@@ -39,26 +49,38 @@ namespace Game.EditorTools
             public bool Host;
         }
 
+        public sealed class Track
+        {
+            public bool Loop;
+            public int Saws;
+            public readonly List<Vector2> Points = new();
+        }
+
         public sealed class Room
         {
             public string Id, Name, Note;
+            /// <summary>SIZE 줄이 없으면 0 — 굽는 쪽이 기본 규격을 쓴다.</summary>
+            public float Width, Height, Cell;
             public readonly List<Obj> Objects = new();
             public readonly List<Spawn> Spawns = new();
+            public readonly List<Track> Tracks = new();
         }
 
-        /// <summary>방 ID → 방. 파일이 없으면 빈 사전 — 예전 배치 틀로 굽는다.</summary>
-        public static Dictionary<string, Room> Load()
+        /// <summary>방 ID → 방. 원작 30방 표가 있으면 그것을, 없으면 15방 손배치 표를 읽는다.</summary>
+        public static Dictionary<string, Room> Load() => Load(HasOrigin ? OriginPath : Path);
+
+        public static Dictionary<string, Room> Load(string path)
         {
             var map = new Dictionary<string, Room>();
-            if (!File.Exists(Path))
+            if (!File.Exists(path))
             {
-                Debug.LogWarning($"[90방] 손배치 표가 없다: {Path} — rooms90_build.py 를 먼저 돌린다");
+                Debug.LogWarning($"[90방] 손배치 표가 없다: {path} — rooms90_build.py 를 먼저 돌린다");
                 return map;
             }
 
             Room cur = null;
             var inv = CultureInfo.InvariantCulture;
-            foreach (var raw in File.ReadAllLines(Path))
+            foreach (var raw in File.ReadAllLines(path))
             {
                 if (raw.Length == 0 || raw[0] == '#') continue;
                 var t = raw.Split('\t');
@@ -83,6 +105,22 @@ namespace Game.EditorTools
                         {
                             Actor = t[1], X = float.Parse(t[2], inv), Y = float.Parse(t[3], inv), Host = t[4] == "1",
                         });
+                        break;
+                    case "SIZE":
+                        if (cur == null) break;
+                        cur.Width = float.Parse(t[1], inv);
+                        cur.Height = float.Parse(t[2], inv);
+                        cur.Cell = float.Parse(t[3], inv);
+                        break;
+                    case "TRACK":
+                        if (cur == null) break;
+                        var tr = new Track { Loop = t[1] == "1", Saws = int.Parse(t[2], inv) };
+                        foreach (var pair in t[3].Split(';'))
+                        {
+                            var xy = pair.Split(',');
+                            tr.Points.Add(new Vector2(float.Parse(xy[0], inv), float.Parse(xy[1], inv)));
+                        }
+                        cur.Tracks.Add(tr);
                         break;
                 }
             }

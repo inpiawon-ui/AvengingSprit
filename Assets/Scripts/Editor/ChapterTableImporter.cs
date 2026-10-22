@@ -21,7 +21,7 @@ namespace Game.EditorTools
         public sealed class Row
         {
             public int Ch;
-            public string Stage, Boss, Leader, Lean, Chest, Name, Desc;
+            public string Stage, Boss, Leader, Leader2, Lean, Chest, Name, Desc;
             public string[] Trash;
             public int Elite, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
             public float Crowd, Fire;
@@ -56,7 +56,7 @@ namespace Game.EditorTools
 
                 rows.Add(new Row
                 {
-                    Ch = I("ch"), Stage = S("stage"), Boss = S("boss"), Leader = S("leader"),
+                    Ch = I("ch"), Stage = S("stage"), Boss = S("boss"), Leader = S("leader"), Leader2 = S("leader2"),
                     Trash = S("trash").Split(','), Lean = S("lean"), Elite = I("elite"),
                     Crowd = F("crowd"), Fire = F("fire"),
                     HpMul = F("hpMul"), AtkMul = F("atkMul"), BossHp = I("bossHp"), BossAtk = I("bossAtk"),
@@ -138,6 +138,7 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("Stage").stringValue = r.Stage;
                 e.FindPropertyRelative("Boss").stringValue = r.Boss;
                 e.FindPropertyRelative("Leader").stringValue = r.Leader;
+                e.FindPropertyRelative("Leader2").stringValue = string.IsNullOrEmpty(r.Leader2) ? r.Leader : r.Leader2;
                 var trash = e.FindPropertyRelative("Trash");
                 trash.ClearArray();
                 for (int k = 0; k < r.Trash.Length; k++)
@@ -158,8 +159,10 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("PriceMul").floatValue = r.PriceMul;
                 e.FindPropertyRelative("PowerMul").floatValue = r.Power;
                 e.FindPropertyRelative("PowerStar").intValue = r.PowerStar;
-                // 전투방 11 · 중간보스 1 · 보스 1
-                e.FindPropertyRelative("RunGold").intValue = r.RoomGold * 11 + r.MidGold + r.BossGold;
+                // 30방(원작 방 표가 있을 때) = 전투 24 · 중간보스 2 · 보스 1 / 15방 = 전투 11 · 중간보스 1 · 보스 1
+                bool thirty = Rooms90Hand.HasOrigin;
+                e.FindPropertyRelative("RunGold").intValue =
+                    r.RoomGold * (thirty ? 24 : 11) + r.MidGold * (thirty ? 2 : 1) + r.BossGold;
                 e.FindPropertyRelative("Music").intValue = r.Music;
                 e.FindPropertyRelative("Art").intValue = r.Art;
                 e.FindPropertyRelative("BossArt").intValue = r.BossArt;

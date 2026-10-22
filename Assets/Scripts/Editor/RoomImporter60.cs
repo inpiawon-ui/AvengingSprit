@@ -43,7 +43,9 @@ namespace Game.EditorTools
         private const float GateBandMeters = 2.5f;
 
         private const int SourceRoomsPerChapter = 10;
-        private const int RoomsPerChapter = 15;
+
+        /// <summary>원작 30방 표(`rooms30.tsv`)가 있으면 30방, 없으면 예전 15방.</summary>
+        private static int RoomsPerChapter => Rooms90Hand.HasOrigin ? 30 : 15;
 
         // ── 챕터당 15방 (기획 2026-09-18) ────────────────────────────
         //
@@ -59,7 +61,7 @@ namespace Game.EditorTools
         //   009 의 적 배치는 일반 전투로 쓴다.
 
         /// <summary>새 방 번호(1~15) → 배정표의 원래 방 번호.</summary>
-        private static readonly string[] SourceOf =
+        private static readonly string[] SourceOf15 =
         {
             null,                                   // 0 은 안 쓴다
             "001", "002", "003", "004",             // 1~4   (4 = 천사 — 원래 이벤트 방)
@@ -67,6 +69,29 @@ namespace Game.EditorTools
             "002", "006", "008", "007",             // 9~12  (12 = 상점)
             "003", "009", "010",                    // 13~15 (15 = 보스)
         };
+
+        // ── 챕터당 30방 (3단계, PD 2026-10-22) ────────────────────────
+        //
+        //   1 소개 · 2–4 · 5 천사 · 6–9 · 10 중간보스(→ 악마 제단) · 11 소개 · 12–14 · 15 상점 ·
+        //   16–19 · 20 중간보스 2 · 21–24 · 25 천사 · 26–29 · 30 보스
+        //
+        // 전투 · 소개 방 24개는 원작(궁수의 전설) 방을 그대로 옮긴 표(`rooms30.tsv`)가 덮는다 —
+        // 여기 적은 「001」은 그 표가 빠졌을 때의 대비책일 뿐이다. 천사 · 상점 · 중간보스 · 보스는 배정표 틀.
+        private static readonly string[] SourceOf30 =
+        {
+            null,
+            "001", "001", "001", "001", "004",      // 1–5    (5 천사)
+            "001", "001", "001", "001", "005",      // 6–10   (10 중간보스)
+            "001", "001", "001", "001", "007",      // 11–15  (15 상점)
+            "001", "001", "001", "001", "005",      // 16–20  (20 중간보스 2)
+            "001", "001", "001", "001", "004",      // 21–25  (25 천사)
+            "001", "001", "001", "001", "010",      // 26–30  (30 보스)
+        };
+
+        private static string[] SourceOf => Rooms90Hand.HasOrigin ? SourceOf30 : SourceOf15;
+
+        /// <summary>두 번째 중간보스 방 번호 — 대장 2 가 서고 악마 제단은 서지 않는다. 15방에는 없다.</summary>
+        private const int SecondMidBossNo = 20;
 
         /// <summary>
         /// 무대 → 배정표(`RoomDef60`)에서 그 무대를 쓰는 챕터. 천사 · 중간보스 · 상점 · 보스 방의
@@ -112,6 +137,8 @@ namespace Game.EditorTools
 
                     bool isBoss = !string.IsNullOrEmpty(s.Boss);
                     bool isMid = !string.IsNullOrEmpty(s.Captain);
+                    string leader = no == SecondMidBossNo && RoomsPerChapter == 30 && !string.IsNullOrEmpty(row.Leader2)
+                        ? row.Leader2 : row.Leader;
                     list.Add(new RoomDef60.Room
                     {
                         Ch = ch,
@@ -126,7 +153,7 @@ namespace Game.EditorTools
                         Comp = s.Comp,
                         Pool = s.Pool,
                         Boss = isBoss && !string.IsNullOrEmpty(row.Boss) ? row.Boss : s.Boss,
-                        Captain = isMid && !string.IsNullOrEmpty(row.Leader) ? row.Leader : s.Captain,
+                        Captain = isMid && !string.IsNullOrEmpty(leader) ? leader : s.Captain,
                         Minions = s.Minions,
                         MinionFrom = s.MinionFrom,
                         Elite = false,
@@ -137,7 +164,7 @@ namespace Game.EditorTools
             return list.ToArray();
         }
 
-        [MenuItem("Tools/Game/90방 임포트 (챕터 표 × 15방)")]
+        [MenuItem("Tools/Game/90방 임포트 (챕터 표 × 30방)")]
         public static void Import()
         {
             var table = AssetDatabase.LoadAssetAtPath<RoomTable>(TablePath);
@@ -179,8 +206,11 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("_intent").stringValue = d.LayoutKo ?? string.Empty;
                 e.FindPropertyRelative("_isChapterStart").boolValue = d.No == "001";
                 e.FindPropertyRelative("_handEdited").boolValue = false;
+                // 원작에서 옮긴 방은 제 높이를 들고 온다(15줄 16 m · 21줄 21.5 m) — 카메라가 세로로 따라간다
+                float height = d.Kind == "전투" && hand.TryGetValue(roomId, out var sized) && sized.Height > 0f
+                    ? sized.Height : RoomHeight;
                 e.FindPropertyRelative("_width").floatValue = RoomWidth;
-                e.FindPropertyRelative("_height").floatValue = RoomHeight;
+                e.FindPropertyRelative("_height").floatValue = height;
                 e.FindPropertyRelative("_cameraMode").stringValue = "VERTICAL_FOLLOW";
                 e.FindPropertyRelative("_template").stringValue = LayoutOf(d) ?? string.Empty;
                 e.FindPropertyRelative("_unlockRule").stringValue = "ROOM_CLEAR";
@@ -192,7 +222,7 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("_playerSpawn").vector2Value = new Vector2(RoomWidth * 0.5f, 1.7f);
 
                 WriteReward(e, d);
-                WriteExit(e, i, defs);
+                WriteExit(e, i, defs, height);
 
                 // ── 보스 방 ───────────────────────────────────────
                 var bossProp = e.FindPropertyRelative("_bossId");
@@ -211,6 +241,9 @@ namespace Game.EditorTools
                 //   (`roomfloor_env_holding`)을 써야 한다.
                 e.FindPropertyRelative("_midBossKey").stringValue = d.Captain ?? string.Empty;
                 if (!string.IsNullOrEmpty(d.Captain)) midBossRooms++;
+                // 악마 제단은 챕터의 첫 중간보스 뒤에만(30방의 20번 중간보스 2 는 제외)
+                bool secondMid = RoomsPerChapter == 30 && d.No == SecondMidBossNo.ToString("000");
+                e.FindPropertyRelative("_devilAltar").boolValue = !string.IsNullOrEmpty(d.Captain) && !secondMid;
 
                 e.FindPropertyRelative("_eventPool").stringValue = d.Pool ?? string.Empty;
                 if (!string.IsNullOrEmpty(d.Pool)) eventRooms++;
@@ -223,15 +256,18 @@ namespace Game.EditorTools
                     // 손으로 그린 방 — 표를 **그대로** 옮긴다. 뒤집기·밀기·펼치기는 없다.
                     // 그것들은 틀 18종을 90방이 돌려쓰던 시절 「같은 방으로 안 보이게」 하던 장치다.
                     e.FindPropertyRelative("_intent").stringValue = h.Name;
-                    e.FindPropertyRelative("_template").stringValue = "HAND";
+                    // 원작(궁수의 전설)에서 옮긴 방은 칸 크기를 들고 온다 — 게임이 물건을 칸 꽉 채워 그린다(`IsOriginRoom`)
+                    e.FindPropertyRelative("_template").stringValue = h.Cell > 0f ? "ORIGIN" : "HAND";
                     spawns += WriteSpawnsHand(e, h, roomId);
                     WriteObjectsHand(e, h);
+                    WriteTracks(e, h);
                     handRooms++;
                 }
                 else
                 {
                     spawns += WriteSpawns(e, d, roomId, ref eliteRooms);
                     WriteObjects(e, d);
+                    e.FindPropertyRelative("_tracks").ClearArray();
                 }
             }
             if (handRooms > 0) Debug.Log($"[90방] 손으로 그린 전투방 {handRooms}개를 그대로 옮겼다");
@@ -412,7 +448,7 @@ namespace Game.EditorTools
         /// 출구. 같은 챕터 안에서는 다음 번호로, 010 은 다음 챕터 001 로 간다.
         /// 마지막 방(CH6 010)은 출구가 없다 — 거기가 끝이다.
         /// </summary>
-        private static void WriteExit(SerializedProperty e, int index, RoomDef60.Room[] defs)
+        private static void WriteExit(SerializedProperty e, int index, RoomDef60.Room[] defs, float height)
         {
             var exits = e.FindPropertyRelative("_exits");
             exits.ClearArray();
@@ -434,7 +470,29 @@ namespace Game.EditorTools
             var x = exits.GetArrayElementAtIndex(0);
             x.FindPropertyRelative("_exitId").stringValue = "EXIT_MAIN";
             x.FindPropertyRelative("_nextRoomId").stringValue = $"ROOM_CH{next.Ch}_{next.No}";
-            x.FindPropertyRelative("_at").vector2Value = new Vector2(RoomWidth * 0.5f, RoomHeight - 0.6f);
+            x.FindPropertyRelative("_at").vector2Value = new Vector2(RoomWidth * 0.5f, height - 0.6f);
+        }
+
+        /// <summary>원작 레일 — 점들을 그대로 옮긴다(`Rooms90Hand.Track`).</summary>
+        private static void WriteTracks(SerializedProperty e, Rooms90Hand.Room h)
+        {
+            var arr = e.FindPropertyRelative("_tracks");
+            arr.ClearArray();
+            for (int i = 0; i < h.Tracks.Count; i++)
+            {
+                var src = h.Tracks[i];
+                arr.InsertArrayElementAtIndex(i);
+                var t = arr.GetArrayElementAtIndex(i);
+                t.FindPropertyRelative("_loop").boolValue = src.Loop;
+                t.FindPropertyRelative("_saws").intValue = Mathf.Max(1, src.Saws);
+                var pts = t.FindPropertyRelative("_points");
+                pts.ClearArray();
+                for (int k = 0; k < src.Points.Count; k++)
+                {
+                    pts.InsertArrayElementAtIndex(k);
+                    pts.GetArrayElementAtIndex(k).vector2Value = src.Points[k];
+                }
+            }
         }
 
         private static int WriteSpawns(SerializedProperty e, RoomDef60.Room d,

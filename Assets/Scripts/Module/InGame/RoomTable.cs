@@ -111,6 +111,17 @@ namespace Game.Module.InGame
         [SerializeField] private string _midBossKey;
 
         /// <summary>
+        /// 이긴 뒤 악마 제단이 서는 중간보스 방인가. 30방(3단계 2026-10-22)은 중간보스가 둘(10 · 20)인데
+        /// 악마 제단은 첫째 뒤에만 선다(1단계 결정 「악마 1」).
+        /// </summary>
+        [SerializeField] private bool _devilAltar;
+
+        /// <summary>
+        /// 원작 레일(궁수의 전설 `t` 칸) — 톱이 칸 차례대로 따라간다. 고리면 돌고, 외줄이면 끝에서 끝을 오간다.
+        /// </summary>
+        [SerializeField] private TrackEntry[] _tracks = Array.Empty<TrackEntry>();
+
+        /// <summary>
         /// 이 방이 깔 바닥. 배정표가 방마다 지정한다(`roomfloor_env_junkyard` 등).
         ///
         /// ⚠ 예전에는 코드가 **챕터로 유추**했다(`FloorKeyOf`). 3챕터일 때는 그럭저럭
@@ -197,11 +208,31 @@ namespace Game.Module.InGame
         /// <summary>중간 보스 방인가 (방 005).</summary>
         public bool IsMidBoss => !string.IsNullOrEmpty(_midBossKey);
 
+        /// <summary>이긴 뒤 악마 제단이 서는가 — 챕터의 첫 중간보스 방만.</summary>
+        public bool HasDevilAltar => _devilAltar;
+
+        public IReadOnlyList<TrackEntry> Tracks => _tracks;
+
         /// <summary>이벤트 방이 뽑을 풀 (`BODY` · `STAKE`). 없으면 빈 문자열.</summary>
         public string EventPool => _eventPool;
 
         /// <summary>이벤트 방인가 (방 004 · 007).</summary>
         public bool IsEvent => !string.IsNullOrEmpty(_eventPool);
+    }
+
+    /// <summary>원작 레일 한 줄 — 칸 가운데 점들(미터, 아래가 0)을 차례대로.</summary>
+    [Serializable]
+    public sealed class TrackEntry
+    {
+        [Tooltip("고리면 한 방향으로 돈다, 아니면 끝에서 끝을 오간다")]
+        [SerializeField] private bool _loop;
+        [Tooltip("이 레일을 도는 톱 수")]
+        [SerializeField] private int _saws = 1;
+        [SerializeField] private Vector2[] _points = Array.Empty<Vector2>();
+
+        public bool Loop => _loop;
+        public int Saws => _saws;
+        public IReadOnlyList<Vector2> Points => _points;
     }
 
     /// <summary>

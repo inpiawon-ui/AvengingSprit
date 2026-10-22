@@ -42,6 +42,10 @@ MonoBehaviour:
   _expPerBoss: 60
   _expToLevelBase: 40
   _expGrowthPercent: 45
+  _stageExpStep: 30
+  _stageExpPerEnemy: 8
+  _stageExpEliteMul: 2
+  _stageExpMidBoss: 30
   _hpAtGrade1: 105
   _hpPerGrade: 10
   _dpsAtGrade1: 22
@@ -133,13 +137,14 @@ MonoBehaviour:
     Stage: junkyard
     Boss: robot_snakes
     Leader: salamander
+    Leader2: robot
     Trash:
     - skeleton
     - bat
     - scrapgunner
     - actor_enforcer
     Elite: 0
-    Crowd: 0.25
+    Crowd: 0
     Fire: 0.9
     EnemyHpMul: 0.8
     EnemyAtkMul: 1
@@ -149,14 +154,14 @@ MonoBehaviour:
     Chest: silver
     ClearExp: 300
     PriceMul: 1
-    RunGold: 232
+    RunGold: 244
     Music: 1
     Art: 1
     BossArt: 1
     ChestArt: 1
-    MixBlade: 11
-    MixForce: 9
-    MixMagic: 10
+    MixBlade: 125
+    MixForce: 15
+    MixMagic: 11
     PowerMul: 1.09
     PowerStar: 1
   - Chapter: 2
@@ -167,6 +172,7 @@ MonoBehaviour:
     Stage: missile
     Boss: crusher
     Leader: robot
+    Leader2: vampire
     Trash:
     - bat
     - roadwarden
@@ -175,7 +181,7 @@ MonoBehaviour:
     - actor_enforcer
     - boar
     Elite: 0
-    Crowd: 0.8
+    Crowd: 0
     Fire: 0.85
     EnemyHpMul: 1.25
     EnemyAtkMul: 1
@@ -185,13 +191,13 @@ MonoBehaviour:
     Chest: silver
     ClearExp: 500
     PriceMul: 1.3
-    RunGold: 306
+    RunGold: 298
     Music: 2
     Art: 2
     BossArt: 2
     ChestArt: 1
-    MixBlade: 29
-    MixForce: 16
+    MixBlade: 81
+    MixForce: 58
     MixMagic: 0
     PowerMul: 1.14
     PowerStar: 1
@@ -202,6 +208,7 @@ MonoBehaviour:
     Stage: street
     Boss: python
     Leader: vampire
+    Leader2: dragon_blue
     Trash:
     - skeleton
     - skeleton_2
@@ -211,7 +218,7 @@ MonoBehaviour:
     - mole
     - boar
     Elite: 0
-    Crowd: 0.75
+    Crowd: 0
     Fire: 0.82
     EnemyHpMul: 1.45
     EnemyAtkMul: 1
@@ -221,14 +228,14 @@ MonoBehaviour:
     Chest: silver
     ClearExp: 800
     PriceMul: 1.7
-    RunGold: 390
+    RunGold: 386
     Music: 3
     Art: 3
     BossArt: 3
     ChestArt: 1
-    MixBlade: 5
-    MixForce: 17
-    MixMagic: 31
+    MixBlade: 26
+    MixForce: 53
+    MixMagic: 39
     PowerMul: 1.2
     PowerStar: 1
   - Chapter: 4
@@ -238,6 +245,7 @@ MonoBehaviour:
     Stage: rooftop
     Boss: sludge
     Leader: dragon_blue
+    Leader2: ninja_chain
     Trash:
     - actor_enforcer
     - actor_enforcer_2
@@ -248,7 +256,7 @@ MonoBehaviour:
     - armadillo
     - mole
     Elite: 0
-    Crowd: 0.7
+    Crowd: 0
     Fire: 0.8
     EnemyHpMul: 1.66
     EnemyAtkMul: 1.03
@@ -258,14 +266,14 @@ MonoBehaviour:
     Chest: gold
     ClearExp: 1200
     PriceMul: 2.2
-    RunGold: 506
+    RunGold: 508
     Music: 4
     Art: 4
     BossArt: 4
     ChestArt: 3
-    MixBlade: 15
-    MixForce: 28
-    MixMagic: 15
+    MixBlade: 60
+    MixForce: 31
+    MixMagic: 33
     PowerMul: 1.25
     PowerStar: 1
   - Chapter: 5
@@ -275,6 +283,7 @@ MonoBehaviour:
     Stage: lab
     Boss: guardian
     Leader: ninja_chain
+    Leader2: medium
     Trash:
     - roadwarden
     - roadwarden_2
@@ -288,7 +297,7 @@ MonoBehaviour:
     - mushroom
     - armadillo
     Elite: 1
-    Crowd: 0.6
+    Crowd: 0
     Fire: 0.78
     EnemyHpMul: 1.93
     EnemyAtkMul: 1.08
@@ -298,14 +307,14 @@ MonoBehaviour:
     Chest: gold
     ClearExp: 1700
     PriceMul: 2.8
-    RunGold: 654
+    RunGold: 664
     Music: 5
     Art: 5
     BossArt: 5
     ChestArt: 3
-    MixBlade: 35
-    MixForce: 16
-    MixMagic: 19
+    MixBlade: 21
+    MixForce: 4
+    MixMagic: 13
     PowerMul: 1.34
     PowerStar: 1
   - Chapter: 6
@@ -315,6 +324,7 @@ MonoBehaviour:
     Stage: refinery
     Boss: kingpin
     Leader: medium
+    Leader2: baseball
     Trash:
     - skeleton_3
     - skeleton_4
@@ -329,7 +339,7 @@ MonoBehaviour:
     - mushroom
     - mole
     Elite: 1
-    Crowd: 0.5
+    Crowd: 0
     Fire: 0.76
     EnemyHpMul: 2.42
     EnemyAtkMul: 1.2
@@ -339,14 +349,14 @@ MonoBehaviour:
     Chest: gold
     ClearExp: 2300
     PriceMul: 3.5
-    RunGold: 812
+    RunGold: 806
     Music: 6
     Art: 6
     BossArt: 6
     ChestArt: 3
-    MixBlade: 20
-    MixForce: 21
-    MixMagic: 39
+    MixBlade: 32
+    MixForce: 0
+    MixMagic: 15
     PowerMul: 1.81
     PowerStar: 2
   - Chapter: 7
@@ -356,6 +366,7 @@ MonoBehaviour:
     Stage: junkyard
     Boss: python
     Leader: baseball
+    Leader2: commando_missile
     Trash:
     - actor_enforcer_4
     - gorilla_charger
@@ -368,7 +379,7 @@ MonoBehaviour:
     - mantis
     - mushroom
     Elite: 1
-    Crowd: 0.45
+    Crowd: 0
     Fire: 0.74
     EnemyHpMul: 2.77
     EnemyAtkMul: 1.33
@@ -378,14 +389,14 @@ MonoBehaviour:
     Chest: platinum
     ClearExp: 3000
     PriceMul: 4.3
-    RunGold: 1002
+    RunGold: 1006
     Music: 1
     Art: 1
     BossArt: 3
     ChestArt: 5
-    MixBlade: 21
-    MixForce: 40
-    MixMagic: 20
+    MixBlade: 16
+    MixForce: 0
+    MixMagic: 11
     PowerMul: 1.87
     PowerStar: 2
   - Chapter: 8
@@ -395,6 +406,7 @@ MonoBehaviour:
     Stage: missile
     Boss: sludge
     Leader: commando_missile
+    Leader2: dragoon
     Trash:
     - bat_2
     - roadwarden_3
@@ -405,7 +417,7 @@ MonoBehaviour:
     - mole_2
     - mantis_2
     Elite: 1
-    Crowd: 0.45
+    Crowd: 0
     Fire: 0.74
     EnemyHpMul: 3.22
     EnemyAtkMul: 1.41
@@ -415,14 +427,14 @@ MonoBehaviour:
     Chest: platinum
     ClearExp: 3800
     PriceMul: 5.2
-    RunGold: 1202
+    RunGold: 1192
     Music: 2
     Art: 2
     BossArt: 4
     ChestArt: 5
-    MixBlade: 43
-    MixForce: 23
-    MixMagic: 26
+    MixBlade: 0
+    MixForce: 0
+    MixMagic: 22
     PowerMul: 1.97
     PowerStar: 2
   - Chapter: 9
@@ -432,6 +444,7 @@ MonoBehaviour:
     Stage: street
     Boss: guardian
     Leader: dragoon
+    Leader2: amazon
     Trash:
     - skeleton_mage
     - coilwalker_3
@@ -443,7 +456,7 @@ MonoBehaviour:
     - mushroom_2
     - spider
     Elite: 1
-    Crowd: 0.45
+    Crowd: 0
     Fire: 0.74
     EnemyHpMul: 4.1
     EnemyAtkMul: 1.71
@@ -453,14 +466,14 @@ MonoBehaviour:
     Chest: platinum
     ClearExp: 4700
     PriceMul: 6.2
-    RunGold: 1434
+    RunGold: 1436
     Music: 3
     Art: 3
     BossArt: 5
     ChestArt: 5
-    MixBlade: 24
-    MixForce: 24
-    MixMagic: 44
+    MixBlade: 0
+    MixForce: 0
+    MixMagic: 49
     PowerMul: 2.66
     PowerStar: 3
   - Chapter: 10
@@ -470,6 +483,7 @@ MonoBehaviour:
     Stage: rooftop
     Boss: kingpin
     Leader: death
+    Leader2: guru
     Trash:
     - skeleton_4
     - skeleton_mage
@@ -484,7 +498,7 @@ MonoBehaviour:
     - mantis_2
     - mole_2
     Elite: 2
-    Crowd: 0.45
+    Crowd: 0
     Fire: 0.74
     EnemyHpMul: 4.72
     EnemyAtkMul: 1.8
@@ -494,14 +508,14 @@ MonoBehaviour:
     Chest: platinum
     ClearExp: 5700
     PriceMul: 7.3
-    RunGold: 1698
+    RunGold: 1690
     Music: 4
     Art: 4
     BossArt: 6
     ChestArt: 5
-    MixBlade: 35
-    MixForce: 33
-    MixMagic: 35
+    MixBlade: 0
+    MixForce: 0
+    MixMagic: 0
     PowerMul: 2.76
     PowerStar: 3
   _roomEnemyCap: 12

@@ -1041,6 +1041,11 @@ namespace Game.Module.InGame
             public Color BaseColor = Color.white;   // 예고 색을 되돌릴 원래 색
             public Image Img2;           // 불바닥 위 불꽃처럼 본체 위에 얹어 돌리는 두 번째 그림
             public Image[] Puffs;        // 화염 분사구의 불기둥 덩이들 (BattleDirector.Hazards)
+
+            // ── 원작 레일 톱 (BattleDirector.RailTrack) ──────────
+            public Vector2[] Track;      // 레일 점(픽셀, 우리 좌표계) — 톱이 차례대로 따라간다
+            public bool TrackLoop;       // 고리면 한 방향으로 돈다, 아니면 끝에서 끝을 오간다
+            public float TrackLength;    // 레일 전체 길이(픽셀)
         }
 
         private readonly List<Obstacle> _obstacles = new();
@@ -1099,7 +1104,23 @@ namespace Game.Module.InGame
             { "SCRAP_PILE",       24f },   // 납작한 고철 더미 — 2×1 · 그림 144×96
             { "WRECK_CAR",        30f },   // 납작한 폐차 — 2×1 · 그림 144×102
             { "PIT",               0f },   // 바닥 구덩이 — 눕는다(도랑처럼 탄은 넘어간다)
+            // 원작(궁수의 전설)에서 옮긴 방의 칸 셋(3단계 2026-10-22) — 물 · 가시는 눕고 울타리는 낮게 선다
+            { "WATER",             0f },
+            { "SPIKE",             0f },
+            { "FENCE",            30f },
         };
+
+        /// <summary>
+        /// 원작에서 옮긴 방(`RoomEntry.Template == "ORIGIN"`)의 한 칸(m) — 방 폭 10 m 를 11 칸으로 나눴다.
+        /// 솟음 표(`ObstacleRise`)는 1 m 칸에 맞춘 픽셀이라 이 배율을 곱한다.
+        /// </summary>
+        private const float OriginCellMeters = 10f / 11f;
+
+        /// <summary>
+        /// 원작 방은 물건을 칸 **꽉 채워** 그린다(`ObstacleViewScale` 을 안 쓴다) — 원작은 옆 칸끼리 이어 붙어
+        /// 벽 · 웅덩이가 되는 방이라, 칸마다 여백을 두면 벽이 점선이 되고 물이 조각난다.
+        /// </summary>
+        private static bool IsOriginRoom(RoomEntry room) => room != null && room.Template == "ORIGIN";
 
         /// <summary>
         /// 판정 상자 / 그림 발자국 비율. 없으면 1 — 그림 그대로 막는다.
@@ -1153,6 +1174,9 @@ namespace Game.Module.InGame
             { "RICOCHET_WALL", new Color(0.44f, 0.44f, 0.52f, 1f) },
             { "HAZARD",        new Color(0.86f, 0.34f, 0.18f, 0.45f) },
             { "BLOCK",         new Color(0.78f, 0.85f, 0.86f, 1f) },
+            { "WATER",         new Color(0.18f, 0.32f, 0.46f, 0.92f) },
+            { "SPIKE",         new Color(0.70f, 0.30f, 0.28f, 0.90f) },
+            { "FENCE",         new Color(0.55f, 0.47f, 0.30f, 1f) },
             // 그림이 없을 때 쓰는 자리표시자 색. 파일이 들어오면 자동으로 그림이 이긴다.
             { "CRATE",          new Color(0.52f, 0.38f, 0.22f, 1f) },
             { "BULK",           new Color(0.44f, 0.40f, 0.34f, 1f) },
@@ -1263,6 +1287,7 @@ namespace Game.Module.InGame
             }
             _obstacles.Clear();
             ClearBladeRigs();
+            ClearRailBeds();   // 원작 레일 바닥 (BattleDirector.RailTrack)
 
             for (int i = 0; i < _obstacleShadows.Count; i++)
                 if (_obstacleShadows[i] != null) Destroy(_obstacleShadows[i]);
@@ -1326,6 +1351,7 @@ namespace Game.Module.InGame
         private void SpawnObstacles(RoomEntry room)
         {
             bool bossRoom = _roomKind == RoomKind.Boss;
+            bool origin = IsOriginRoom(room);
             var list = room.Objects;
             for (int i = 0; i < list.Count; i++)
             {
@@ -1336,7 +1362,7 @@ namespace Game.Module.InGame
                 // ⚠ **물건 자체를 줄인다.** 판정만 줄이면 눈에는 아무 변화가 없다 —
                 //   그림은 칸을 꽉 채운 채 몸만 몰래 지나가서, 왜 지나가는지·왜 안 지나가는지
                 //   화면만 봐서는 알 수가 없다. 칸에 여백이 보여야 통로가 통로로 읽힌다.
-                const float vs = ObstacleViewScale;
+                float vs = origin ? 1f : ObstacleViewScale;
                 var size = o.Size * _pxPerMeter * vs;
 
                 // 판정은 그림 그대로다. **보이는 것이 곧 막는 것**이어야 한다.
@@ -1350,7 +1376,7 @@ namespace Game.Module.InGame
                 // 그림은 발자국보다 위로 솟는다. 아래쪽을 발자국에 맞물려 놓아야
                 // 발밑이 어긋나지 않는다. 물건을 줄였으면 솟음도 같은 비율로 줄인다 —
                 // 안 줄이면 납작한 발자국 위에 예전 높이가 얹혀 비율이 무너진다.
-                float rise = (ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f) * vs;
+                float rise = (ObstacleRise.TryGetValue(o.Kind ?? "", out var r) ? r : 0f) * (origin ? OriginCellMeters : vs);
                 var viewSize = new Vector2(size.x, size.y + rise);
                 var viewCenter = new Vector2(center.x, center.y + rise * 0.5f);
 
@@ -1385,7 +1411,18 @@ namespace Game.Module.InGame
                 string kind = (o.Kind ?? "").ToLowerInvariant();
                 string art = SpritePrefixOf(o.Kind);
                 Sprite sprite;
-                if (o.Kind == "BLOCK")
+                if (o.Kind == "WATER" || o.Kind == "SPIKE" || o.Kind == "FENCE")
+                {
+                    // 원작 칸 셋 — 무대 그림(`obj_{무대}_water_1` 등)이 오면 그것이 이긴다. 오기 전에는 비슷한 일을 하는
+                    // 지금 물건 그림을 빌린다(물 = 도랑 · 가시 = 솟은 가시판 · 울타리 = 낮은 엄폐). 그림 발주 중(3단계).
+                    sprite = o.Kind switch
+                    {
+                        "WATER" => EnvSprite("obj_water_1") ?? EnvSprite("obj_channel_h"),
+                        "SPIKE" => EnvSprite("obj_spike_1") ?? EnvSprite("obj_timed_spike_3"),
+                        _ => EnvSprite("obj_fence_1") ?? EnvSprite("obj_low_cover"),
+                    };
+                }
+                else if (o.Kind == "BLOCK")
                 {
                     // 격자 블록은 세 장이 거의 같고 잔무늬만 다르다. 한 장만 쓰면
                     // 벽이 인쇄물처럼 보이므로 **자리로** 골라 섞는다 —
@@ -1421,7 +1458,8 @@ namespace Game.Module.InGame
                 };
                 // 도랑은 **바닥에 파인 것**이다. 다른 소품·캐릭터보다 아래로 내린다 —
                 // 위에 있으면 도랑이 사람을 덮어 어디 서 있는지 안 보인다.
-                if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V" || o.Kind == "PIT") go.transform.SetAsFirstSibling();
+                if (o.Kind == "CHANNEL_H" || o.Kind == "CHANNEL_V" || o.Kind == "PIT"
+                    || o.Kind == "WATER" || o.Kind == "SPIKE") go.transform.SetAsFirstSibling();
                 ob.Phase = HazardPhase(ob, center);   // 파도 순서 · 교대 개폐 (BattleDirector.Motion)
                 SetupMoving(ob, kind);
                 _obstacles.Add(ob);
@@ -1527,6 +1565,18 @@ namespace Game.Module.InGame
                 case "WALL_TURRET_W":
                     // 포탑마다 박자를 어긋낸다 — 셋이 한 박자로 쏘면 사선이 한꺼번에 열리고 닫힌다
                     ob.Timer = WallTurretInterval * (0.5f + ob.Phase * 0.5f);
+                    break;
+
+                // 원작 칸 셋(3단계 2026-10-22). 물 · 울타리는 막음 표시만으로 일을 한다(몸 막음 · 탄 통과 — 방 표가 정한다).
+                case "WATER":
+                case "FENCE":
+                    break;
+
+                case "SPIKE":
+                    // 원작 가시 — 늘 솟아 있다. 밟으면 아프다(시간차 가시 `TIMED_SPIKE` 와 다르다)
+                    ob.IsHazard = true;
+                    if (ob.Damage <= 0) ob.Damage = 6;
+                    if (ob.Tick <= 0f) ob.Tick = 0.8f;
                     break;
 
                 case "HAZARD":
@@ -1935,6 +1985,10 @@ namespace Game.Module.InGame
                         SetFrame(o, o.Hp > CrateHp / 2 ? 0 : 1);
                         break;
 
+                    case "RAIL_SAW":
+                        TickRailSaw(o, rt);   // 원작 레일 톱 (BattleDirector.RailTrack)
+                        break;
+
                     case "HAZARD":
                         // 불바닥 — 위에 얹은 불꽃 넉 장을 돌린다. 물건마다 위상이 달라 방 전체가 한 박자로 안 깜빡인다.
                         if (o.Frames != null && o.Img2 != null)
@@ -2063,6 +2117,7 @@ namespace Game.Module.InGame
                 _floor.sizeDelta = _roomSize;
             }
             LayoutPythonStage();
+            RefreshTallFloor();   // 같은 무대 바닥이라도 21줄 방이면 잘라 쌓는다 (BattleDirector.TallFloor)
             // 방이 바뀌면 창도 다시 잰다 — 보스방(16 m)은 더 보여 줄 수 있다.
             FitFieldHeight();
             ApplyScroll();
@@ -3068,7 +3123,7 @@ namespace Game.Module.InGame
 
             _boss = null;
             ClearObstacles();
-            if (_canonRoom != null) SpawnObstacles(_canonRoom);
+            if (_canonRoom != null) { SpawnObstacles(_canonRoom); SpawnTracks(_canonRoom); }
 
             // 이전 룸의 탄이 다음 룸까지 날아가 첫 적을 때리는 일을 막는다
             for (int i = 0; i < _shots.Count; i++) _shots[i].Despawn();
@@ -4400,14 +4455,14 @@ namespace Game.Module.InGame
         private float EnemyGrowth()      // 공격력용
         {
             int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
-            return _config.EnemyChapterMul(_runChapter) * _config.EnemyRoomMul(roomNo);
+            return _config.EnemyChapterMul(_runChapter) * _config.EnemyRoomMul(roomNo, ChapterRoomCount(_runChapter));
         }
 
         /// <summary>체력용 배율. 챕터별 체력 손질이 더 곱해진다(1챕터는 절반).</summary>
         private float EnemyHpGrowth()
         {
             int roomNo = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
-            return _config.EnemyChapterHpMul(_runChapter) * _config.EnemyRoomMul(roomNo);
+            return _config.EnemyChapterHpMul(_runChapter) * _config.EnemyRoomMul(roomNo, ChapterRoomCount(_runChapter));
         }
 
         private int EnemyHpOf(HostEntry e)
@@ -5541,10 +5596,14 @@ namespace Game.Module.InGame
             if (art != null)
             {
                 // 전용 바닥은 방 한 칸을 통째로 그린 그림이라 늘려서 채운다.
+                // 21줄(21.5 m) 원작 방은 늘리지 않고 잘라 쌓는다 (BattleDirector.TallFloor)
                 _floorImage.sprite = art;
                 _floorImage.type = Image.Type.Simple;
+                _floorArt = art;
+                RefreshTallFloor();
                 return;
             }
+            _floorArt = null;
             // ⚠ 못 읽었을 때 기대는 곳은 **챕터 타일**이다.
             //   예전에는 720×900 자리표시자 한 장(`roomfloor.png`)을 물고 있었는데,
             //   그 한 장이 인게임 아틀라스를 2048 에서 못 벗어나게 붙들고 있었다.
@@ -5552,6 +5611,7 @@ namespace Game.Module.InGame
             int ch = Mathf.Clamp(_runChapter, 1, 3);
             _floorImage.sprite = GetSprite($"floor_tile_ch{ch}") ?? _defaultFloor;
             _floorImage.type = Image.Type.Tiled;
+            RefreshTallFloor();   // 타일은 늘어나지 않는다 — 잘라 쌓은 조각만 치운다
         }
 
         /// <summary>챕터 바닥 타일을 반복해서 깐다. 방이 아무리 길어도 무늬가 안 늘어난다.</summary>
@@ -5560,6 +5620,7 @@ namespace Game.Module.InGame
             if (_floorImage == null) return;
             _floorImage.sprite = tile;
             _floorImage.type = Image.Type.Tiled;
+            RefreshTallFloor();   // 키 큰 방 조각이 남아 있으면 치우고 한 장 바닥을 다시 켠다
         }
 
         /// <summary>
@@ -7865,9 +7926,9 @@ namespace Game.Module.InGame
             // 탑은 레벨업 · 카드가 없다(탑 3-8). 밤 보스도 판의 끝이라 안 준다
             if (!IsTowerRun && !(u.IsBoss && (IsLastRoom || IsNightRun)))
             {
-                // 밤은 방이 안 비어 잡는 만큼 오른다. 그 밖은 스테이지(방) 하나 = 레벨업 한 번(BattleDirector.StageLevel)
+                // 밤은 예전 값 그대로. 그 밖은 원작처럼 몹마다 경험치(BattleDirector.StageLevel)
                 if (IsNightRun) GainExp(u.IsBoss ? _config.ExpPerBoss : _config.ExpPerEnemy);
-                else FillStageExp();
+                else FillStageExp(u);
             }
             // 보스는 빼앗을 몸이 아니다 — 파편도 안 나온다. 모드는 판 안 조각 · 골드가 없다(보상은 첫 클리어 · 처치 수)
             if (!u.IsBoss && !IsModeRun) GrantShards(u.Key, lost: false);
@@ -8091,7 +8152,7 @@ namespace Game.Module.InGame
                 amount = Mathf.Max(1, Mathf.RoundToInt(amount * _buffs.ExpGainMul));
             _exp += amount;
 
-            int need = _config.ExpToNext(_level);
+            int need = NeedExp(_level);
             if (_exp < need)
             {
                 PublishExp(need);
@@ -8100,7 +8161,7 @@ namespace Game.Module.InGame
 
             _exp -= need;
             _level++;
-            PublishExp(_config.ExpToNext(_level));
+            PublishExp(NeedExp(_level));
 
             // 바로 띄우지 않는다. 마지막 한 대를 때린 순간 팝업이 뜨면
             // **적이 죽기도 전에 먼저 뜬 것처럼** 보인다.
@@ -8804,7 +8865,8 @@ namespace Game.Module.InGame
             //   영혼이 방 입구 바닥에서 날아온다.
             var from = Avatar != null ? Avatar.Position : _ghost.Position;
 
-            _stageFought = true;   // 마지막 적을 빼앗아 방이 비어도 스테이지 레벨업은 나온다(BattleDirector.StageLevel)
+            // 빼앗은 몸도 잡은 것과 같은 경험치 — 빙의가 손해가 되면 안 된다(BattleDirector.StageLevel)
+            if (StageLevelRule) FillStageExp(target);
             // 적 목록에서만 빼고 **지우지는 않는다.** 채널이 도는 동안 그 자리에서
             // 빼앗기는 자세로 굳어 있어야 한다. 총알·AI 는 목록을 보므로 더는 안 건드린다.
             _enemies.Remove(target);
@@ -9204,7 +9266,8 @@ namespace Game.Module.InGame
             // 전에는 챕터 보스를 잡은 자리였다). 다가서면 계약을 묻는다. 출구는 같이 열린다.
             // ⚠ 계약으로 매복이 붙으면 그 싸움을 비운 뒤 여기로 다시 온다. 제단을 또 세우면
             //   다 쓴 제단이 새것으로 되살아나므로, 이미 서 있으면 세우지 않는다.
-            if (_canonRoom != null && _canonRoom.IsMidBoss && _roomProp == null)
+            // 30방(3단계 2026-10-22)은 중간보스가 둘이다 — 제단은 방 표가 「여기」라고 한 첫째(10번) 뒤에만.
+            if (_canonRoom != null && _canonRoom.IsMidBoss && _canonRoom.HasDevilAltar && _roomProp == null)
             {
                 ClearRoomForAltar();   // 물건을 걷고 제단만 남긴다 — 섞여 있으면 장식으로 읽혀 지나친다 (BattleDirector.AltarClear)
                 SpawnDevilAltarCenter();

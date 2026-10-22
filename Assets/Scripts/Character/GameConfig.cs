@@ -125,6 +125,16 @@ namespace Game.Character
         [Tooltip("레벨이 오를 때마다 필요량이 몇 % 늘어나는가")]
         [SerializeField] private int _expGrowthPercent = 45;
 
+        [Header("판 레벨 — 일반 판(밤 · 탑 제외). 원작(궁수의 전설)처럼 잡아서 모은다 (3단계 2026-10-22)")]
+        [Tooltip("필요량 = 이 값 × 레벨(원작 30 · 60 · 90 …)")]
+        [SerializeField] private int _stageExpStep = 30;
+        [Tooltip("잡몹 · 적 몸 1기 경험치 — 챕터마다 몹이 130~153기라 8 이면 30방 끝에 Lv9(레벨업 8번, 원작 Lv9~10). 챕터 · Lv 와 상관없이 같다(PD 10-16 「챕터 상관없이 비슷해야」)")]
+        [SerializeField] private int _stageExpPerEnemy = 8;
+        [Tooltip("엘리트는 몇 배")]
+        [SerializeField] private int _stageExpEliteMul = 2;
+        [Tooltip("중간보스 대장 경험치")]
+        [SerializeField] private int _stageExpMidBoss = 30;
+
         // ── 등급 1~10 → 실제 수치 ────────────────────────────────
         //
         // 확정본이 준 0~100 눈금은 `HostEntry` 가 등급으로 읽고, **수치로 바꾸는 곳은 여기 하나다.**
@@ -433,7 +443,14 @@ namespace Game.Character
         public int ExpPerEnemy => _expPerEnemy;
         public int ExpPerBoss => _expPerBoss;
 
-        /// <summary>해당 레벨에서 다음 레벨까지 필요한 EXP. 레벨마다 등비로 늘어난다.</summary>
+        /// <summary>일반 판 — 해당 레벨에서 다음 레벨까지 필요한 EXP. 원작처럼 레벨에 비례(30 × Lv).</summary>
+        public int StageExpToNext(int level) => Mathf.Max(1, _stageExpStep * Mathf.Max(1, level));
+
+        public int StageExpPerEnemy => Mathf.Max(0, _stageExpPerEnemy);
+        public int StageExpEliteMul => Mathf.Max(1, _stageExpEliteMul);
+        public int StageExpMidBoss => Mathf.Max(0, _stageExpMidBoss);
+
+        /// <summary>밤 모드 — 해당 레벨에서 다음 레벨까지 필요한 EXP. 레벨마다 등비로 늘어난다.</summary>
         public int ExpToNext(int level)
         {
             float need = _expToLevelBase;
@@ -634,10 +651,12 @@ namespace Game.Character
             public string Desc;
             [Tooltip("무대 — 방 바닥 · 옆벽 · 소품을 고른다(roomfloor_env_{stage}).")]
             public string Stage;
-            [Tooltip("15번 방 보스 키.")]
+            [Tooltip("마지막 방(30번) 보스 키.")]
             public string Boss;
-            [Tooltip("8번 방 중간보스 대장(호스트 키).")]
+            [Tooltip("첫 중간보스(10번 방) 대장(호스트 키). 이긴 뒤 악마 제단이 선다.")]
             public string Leader;
+            [Tooltip("두 번째 중간보스(20번 방) 대장(호스트 키). 악마 제단은 서지 않는다.")]
+            public string Leader2;
             [Tooltip("이 챕터에 서는 몬스터 키(몬스터 표). 같은 몸이 여럿이면 앞 방 → 뒤 방으로 Lv 가 오른다.")]
             public string[] Trash;
             [Tooltip("챕터 뒤쪽 절반 전투방마다 세우는 엘리트 수.")]
@@ -660,7 +679,7 @@ namespace Game.Character
             public int ClearExp;
             [Tooltip("판 안 값(방 골드 · 상점 값 · 이벤트 골드)의 배율. 1챕터가 1.")]
             public float PriceMul;
-            [Tooltip("판에서 주울 수 있는 골드 총액(15방). 표시용 — 실제 값은 방 표에 구워져 있다.")]
+            [Tooltip("판에서 주울 수 있는 골드 총액(30방). 표시용 — 실제 값은 방 표에 구워져 있다.")]
             public int RunGold;
             [Tooltip("음악을 빌려 쓰는 챕터(SoundTable 의 `chapter.{n}.*` 큐).")]
             public int Music;
@@ -693,10 +712,13 @@ namespace Game.Character
         public ChapterDef ChapterOf(int chapter)
             => HasChapters ? _chapters[Mathf.Clamp(chapter, 1, _chapters.Length) - 1] : default;
 
-        /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 001 은 1.00, 009 는 1.20.</summary>
-        public float EnemyRoomMul(int roomNo)
-            // 보스 직전 방(14)에서 최대 — 챕터가 15방이 됐다(2026-09-18, 예전 10방은 9 에서 최대)
-            => 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, 14) - 1) / 13f);
+        /// <summary>같은 챕터 안에서 방이 뒤로 갈수록 붙는 배율. 첫 방 1.00 → 보스 직전 방 1 + 폭.</summary>
+        /// <param name="roomCount">챕터 방 수 — 보스 직전 방(roomCount − 1)에서 최대. 30방(3단계 2026-10-22) · 예전 15방.</param>
+        public float EnemyRoomMul(int roomNo, int roomCount = 15)
+        {
+            int last = Mathf.Max(2, roomCount - 1);
+            return 1f + EnemyRoomMulSpan * Mathf.Clamp01((Mathf.Clamp(roomNo, 1, last) - 1) / (float)(last - 1));
+        }
 
         /// <summary>
         /// 방 배율의 폭 — 0.20 → 0.60(PD 2026-10-12 「너무 쉽다 · 레벨업 안 해도 깬다」).
