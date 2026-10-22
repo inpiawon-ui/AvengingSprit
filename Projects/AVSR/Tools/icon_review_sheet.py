@@ -37,6 +37,16 @@ def cut(path):
     return Image.fromarray(a), int(left), fill
 
 
+def shape(img):
+    """그림 덩어리의 가로세로비와 짧은 변 비율 — 규격은 가로세로비 1.0 ~ 1.3(09 규칙 2-1절)."""
+    al = np.asarray(img.getchannel('A')) > 24
+    ys, xs = np.nonzero(al)
+    if not len(xs):
+        return 0.0, 0.0
+    w, h = xs.max() - xs.min() + 1, ys.max() - ys.min() + 1
+    return w / h, min(w, h) / max(w, h)
+
+
 def font(size):
     for f in (r'C:\Windows\Fonts\malgun.ttf', r'C:\Windows\Fonts\gulim.ttc'):
         if os.path.exists(f):
@@ -45,7 +55,14 @@ def font(size):
 
 
 def main():
-    have = [n for n in NAMES if os.path.exists(os.path.join(IN, n + '.png'))]
+    # 정사각 재발주(_sq) > _v2 > 첫 판 — 지금 쓰는 판을 본다
+    pick = {}
+    for n in NAMES:
+        for v in ('_sq', '_v2', '_raw', ''):
+            if os.path.exists(os.path.join(IN, n + v + '.png')):
+                pick[n] = n + v
+                break
+    have = [n for n in NAMES if n in pick]
     cell_w, cell_h = 420, 300
     cols = 5
     rows = (len(have) + cols - 1) // cols
@@ -54,8 +71,9 @@ def main():
     f, fs = font(20), font(15)
     report = []
     for i, n in enumerate(have):
-        img, left, fill = cut(os.path.join(IN, n + '.png'))
+        img, left, fill = cut(os.path.join(IN, pick[n] + '.png'))
         img.save(os.path.join(IN, n + '_alpha.png'))
+        ratio, tall = shape(img)
         game = 96 if n.startswith('shrine') else 160
         small = img.resize((game, game), Image.NEAREST)
         big = img.resize((game * 2 if game < 120 else 200, game * 2 if game < 120 else 200), Image.NEAREST)
@@ -63,13 +81,15 @@ def main():
         sheet.alpha_composite(big, (x + 10, y + 40))
         sheet.alpha_composite(small, (x + 230, y + 40))
         key = n.replace('card_icon_', '')
-        d.text((x + 10, y + 8), f'{key}  {LABEL.get(key, "")}', font=f, fill=(230, 236, 245))
+        ver = pick[n][len(n):]
+        d.text((x + 10, y + 8), f'{key}{ver}  {LABEL.get(key, "")}', font=f, fill=(230, 236, 245))
         warn = []
         if left > 30: warn.append(f'분홍 {left}')
         if fill < 0.7: warn.append(f'작음 {fill:.0%}')
-        d.text((x + 230, y + 210), f'채움 {fill:.0%}', font=fs, fill=(150, 160, 180))
+        if ratio > 1.3 or ratio < 1 / 1.3: warn.append(f'비율 {ratio:.2f}')
+        d.text((x + 230, y + 210), f'채움 {fill:.0%} · 비율 {ratio:.2f}', font=fs, fill=(150, 160, 180))
         if warn: d.text((x + 230, y + 232), ' · '.join(warn), font=fs, fill=(255, 110, 90))
-        report.append(f'{key}\t채움 {fill:.0%}\t분홍 {left}')
+        report.append(f'{key}{ver}\t비율 {ratio:.2f}\t짧은 변 {tall:.0%}\t분홍 {left}' + ('\t⚠' if warn else ''))
     out = os.path.join(OUT, 'icon_review_sheet.png')
     sheet.save(out)
     print('\n'.join(report))
