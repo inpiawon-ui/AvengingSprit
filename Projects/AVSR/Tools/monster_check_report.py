@@ -14,15 +14,16 @@ ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
 LOG = os.path.join(os.environ['LOCALAPPDATA'], 'Unity', 'Editor', 'Editor.log')
 OUT = os.path.join(ROOT, 'Projects', 'AVSR', '_exchange', 'plan_content_expand', 'step2_check', 'monster_recording.md')
 CLIPS = 'Projects/AVSR/_exchange/skillfx_now'
-NEW_BODIES = {'watcher_eye', 'shadow_cat', 'saw_monkey', 'mimic', 'lantern', 'soul_hound'}
+NEW_BODIES = {'watcher_eye', 'shadow_cat', 'saw_monkey', 'mimic', 'lantern'}
+DROPPED = {'soul_hound'}   # 혼 사냥개 — 뺐다(PD 2026-10-22)
 NEEDS_TELL = ('Slam', 'Snipe', 'Mortar', 'Dive', 'ArmadilloRoll', 'Laser', 'Teleport', 'MantisDouble', 'SpiderPool')
 NEEDS_ZONE = ('MushroomPool', 'SpiderPool')
 
 # 사람이 본 것 — 녹화를 직접 보고 적는다(값만으로 판정할 수 없는 것)
 NOTES = {
-    'skeleton': ('우려', '연사 몸(갱스터)에 맞을 때마다 예고(0.45초)가 끊겨 한 대도 못 침 — 예전 해골도 같다. 3단계 밸런스에서 본다'),
+    # 서 있으면 내 몸이 자동으로 쏜다 — 시험 몹은 체력 ×40 이라 계속 맞으며 피격 경직(0.1초)에 묶인다(실제 판에선 먼저 죽는다)
+    'skeleton': ('우려', '서 있는 녹화에선 계속 맞아 피격 경직에 묶여 못 침 · 움직이는 녹화에선 0.45초 예고가 매번 비껴감 — 예전 해골도 같다. 3단계 밸런스에서 본다'),
     'skeleton_poison': ('우려', '독 자국은 깔린다(4). 몸으로 치는 독은 위와 같은 이유로 못 봄'),
-    'soul_hound': ('미검', '몸을 버리자 유령이 곧바로 다시 빙의해 쫓을 시간이 없었다 — 몸이 없는 방에서 다시 잰다'),
     'saw_monkey': ('우려', '10초에 228 — 톱날이 갈 때 · 올 때 다 맞아 세다. 3단계 밸런스에서 줄인다'),
 }
 
@@ -42,6 +43,8 @@ def main():
     lines = []
     count = {'통과': 0, '우려': 0, '미검': 0, '실패': 0}
     for key in order:
+        if key in DROPPED:
+            continue
         kv = rows[key]
         traits = kv.get('성질', '').replace(',', '')
         el = kv.get('원소', 'None')

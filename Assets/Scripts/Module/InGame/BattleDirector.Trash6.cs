@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 2단계 몬스터 조합(PD 2026-10-22)의 새 모양 여섯 — 라인업 3차 시안(`_exchange/in/mock_lineup_v3.png`).
+    /// 2단계 몬스터 조합(PD 2026-10-22)의 새 모양 다섯 — 라인업 3차 시안(`_exchange/in/mock_lineup_v3.png`).
     /// 모두 **예고 → 실행 → 빈틈** 세 박자이고, 빈틈에 붙어 칠 수 있다(패턴은 근접 틈을 남긴다).
     ///
     ///   감시 눈(무기 · 비행)     떠다니며 거리를 둔다 · 조준선 0.8초(굳음) → 레이저 세 줄기 → 1.5초 선다
@@ -14,8 +14,7 @@ namespace Game.Module.InGame
     ///                            톱날이 날아가 있는 동안은 빈손이라 안 던진다
     ///   미믹 상자(파워)          상자인 척 가만히 — 2.5 m 안에 오거나 맞으면 깨어나(0.5초) 쫓아와 문다 · 4초마다 8발 고리
     ///   수호 등불(마법)          뒤로 숨는다 · 5초마다 곁(5 m)의 적 하나에 방패 4초(받는 피해 90% 줄임) — 등불부터 끊어야 한다
-    ///   혼 사냥개(무기)          몸이 있을 땐 느리게 쫓고, 내가 유령이 되면 빨라져 쫓아와 **붙잡는다**(1.2초 느려짐 — 피해는 없다,
-    ///                            유령은 적 공격을 받지 않는다는 규칙은 지킨다). 다음 몸으로 서둘러 가야 한다
+    /// (여섯째였던 혼 사냥개는 뺐다 — PD 2026-10-22 「개념 자체가 잘 이해가 안 된다」)
     /// </summary>
     public sealed partial class BattleDirector
     {
@@ -24,7 +23,6 @@ namespace Game.Module.InGame
         private const string TrashSawMonkeyKey = "saw_monkey";
         private const string TrashMimicKey = "mimic";
         private const string TrashLanternKey = "lantern";
-        private const string TrashHoundKey = "soul_hound";
 
         // ── 감시 눈 ──
         private const float WatcherKeepMeters = 5.0f;
@@ -66,25 +64,14 @@ namespace Game.Module.InGame
         private const float LanternShieldSeconds = 4.0f;
         private const float LanternCastSeconds = 0.6f;
 
-        // ── 혼 사냥개 ──
-        private const float HoundGhostMoveMul = 2.2f;    // 유령이 되면 내달린다(몸이 있을 땐 표의 느린 걸음)
-        private const float HoundHoldSeconds = 1.2f;
-        private const float HoundHoldSlow = 0.5f;
-        private const float HoundHoldMeters = 0.7f;
-
         private readonly Dictionary<Unit, float> _lanternShield = new();
         private readonly List<Unit> _lanternShieldDone = new();
         private readonly HashSet<Unit> _mimicAwake = new();
-        private readonly Dictionary<Unit, float> _sideClock = new();
-        private float _ghostHeldLeft;
 
         private struct SawFlight { public Unit Owner; public Vector2 Turn; public float Left; }
         private readonly List<SawFlight> _saws = new();
 
-        /// <summary>혼 사냥개에게 붙잡힌 유령의 이동 배율.</summary>
-        private float GhostHeldMoveMul => _host == null && _ghostHeldLeft > 0f ? 1f - HoundHoldSlow : 1f;
-
-        /// <summary>새 모양 여섯의 한 프레임. 처리했으면 true(`TickPatterns3` 가 부른다).</summary>
+        /// <summary>새 모양 다섯의 한 프레임. 처리했으면 true(`TickPatterns3` 가 부른다).</summary>
         private bool TickNewShapes(Unit e, Unit me, float distance, float dt)
         {
             switch (e.Key)
@@ -94,7 +81,6 @@ namespace Game.Module.InGame
                 case TrashSawMonkeyKey: return TickSawMonkey(e, me, distance, dt);
                 case TrashMimicKey: return TickMimic(e, me, distance, dt);
                 case TrashLanternKey: return TickLantern(e, me, distance, dt);
-                case TrashHoundKey: return TickHound(e, me, distance, dt);
             }
             return false;
         }
@@ -398,32 +384,6 @@ namespace Game.Module.InGame
             _lanternShieldDone.Clear();
         }
 
-        // ═══ 혼 사냥개 ═════════════════════════════════════════════
-
-        private bool TickHound(Unit e, Unit me, float distance, float dt)
-        {
-            if (_host != null) return false;   // 몸이 있을 땐 평소처럼 쫓아와 문다 — 표의 걸음이 느리다
-            // 유령을 쫓는다 — 닿으면 붙잡는다(피해 없음)
-            var to = me.Position - e.Position;
-            var dir = to.sqrMagnitude < 0.0001f ? e.Facing : to.normalized;
-            e.SetFacing(dir);
-            e.SetState(EnemyState.Approach);
-            e.SetMoving(true);
-            e.IsAggro = true;
-            e.Position = SlideMove(e, e.Position, dir * (e.MoveSpeed * HoundGhostMoveMul * dt));
-            _sideClock.TryGetValue(e, out float c);
-            c -= dt;
-            if (c <= 0f && distance <= Meters(HoundHoldMeters))
-            {
-                c = HoundHoldSeconds;
-                _ghostHeldLeft = HoundHoldSeconds;
-                e.PlayAttack();
-                _pfx?.Puff(me.Position, ParticleElement.Ice, 0.6f);
-            }
-            _sideClock[e] = c;
-            return true;
-        }
-
         // ═══ 공용 ══════════════════════════════════════════════════
 
         /// <summary>알맞은 거리를 지키며 천천히 — 너무 가까우면 물러난다(미라와 같은 걸음).</summary>
@@ -449,12 +409,11 @@ namespace Game.Module.InGame
             e.SetSpriteOverride(s);
         }
 
-        /// <summary>매 프레임 — 톱날 되돌리기 · 등불 방패 · 붙잡힘. `TickGimmicks` 가 부른다.</summary>
+        /// <summary>매 프레임 — 톱날 되돌리기 · 등불 방패. `TickGimmicks` 가 부른다.</summary>
         private void TickNewShapeFlights(float dt)
         {
             TickSaws(dt);
             TickLanternShields(dt);
-            if (_ghostHeldLeft > 0f) _ghostHeldLeft -= dt;
         }
 
         /// <summary>방을 나갈 때.</summary>
@@ -462,9 +421,7 @@ namespace Game.Module.InGame
         {
             _lanternShield.Clear();
             _mimicAwake.Clear();
-            _sideClock.Clear();
             _saws.Clear();
-            _ghostHeldLeft = 0f;
         }
     }
 }

@@ -73,8 +73,7 @@ namespace Game.EditorTools
             B("mimic", "미믹 상자", AttackKind.Melee, TrashRole.Melee, 44, 11, 1.1f, 2.2f, 1.3f, 1.8f, 0.5f),
             // 수호 등불 — 곁의 적에게 방패를 씌우고 뒤로 숨는다. 직접은 약하다
             B("lantern", "수호 등불", AttackKind.Single, TrashRole.Support, 22, 4, 1.4f, 1.8f, 8f, 3.5f, 0.6f),
-            // 혼 사냥개 — 몸이 있을 땐 느리고, 유령이 되면 빨라져 쫓아온다
-            B("soul_hound", "혼 사냥개", AttackKind.Melee, TrashRole.Melee, 26, 8, 1.0f, 1.6f, 1.2f, 1.2f, 0.4f),
+            // 혼 사냥개는 뺐다(PD 2026-10-22 「개념 자체가 잘 이해가 안 된다」) — 그림 · 발주문은 Projects/AVSR/_archive/soul_hound_1022
         };
 
         private readonly struct Row
@@ -155,7 +154,6 @@ namespace Game.EditorTools
             R("saw_monkey", "saw_monkey", "톱날 원숭이", 1, T.Boomerang),
             R("mimic", "mimic", "미믹 상자", 1, T.Mimic),
             R("lantern", "lantern", "수호 등불", 1, T.ShieldAlly),
-            R("soul_hound", "soul_hound", "혼 사냥개", 1, T.GhostHunt),
         };
 
         // Lv 가 하나 오를 때 — 체력 ×1.2 · 공격 ×1.1(원본 Lv2 · Lv3 은 체력 1.2~1.6배)

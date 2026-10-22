@@ -9,7 +9,8 @@ namespace Game.Module.InGame
     ///
     ///   구르는 아르마딜로(`armadillo_2`)  몸을 말아(0.5초 · 띠 예고) 점점 빨라지며 굴러온다 — 구르는 몸에 닿으면 아프다.
     ///                                    벽 · 물건에 박거나 끝까지 구르면 **1.2초 휘청** — 이때는 정면도 안 막는다(배가 드러남)
-    ///   튕기는 박쥐(`bat_bounce`)        대각선으로 날며 방 벽 · 물건에 세 번 튕기고 1.2초 내려앉는다 — 날아다닐 때 닿으면 아프다
+    ///   튕기는 박쥐(`bat_bounce`)        나를 겨눠 날다 벽 · 물건에 튕길 때마다 다시 겨눈다 — 세 번 튕기고 1.2초 내려앉는다.
+    ///                                    날아다닐 때 닿으면 아프다(돌진처럼 예고는 없다 — 겨눈 방향이 몸 방향으로 보인다)
     ///
     /// ⚠ 구르는 모습 그림은 아직 없다 — 말린 몸 그림이 오기 전엔 서 있는 그림으로 구른다(미검).
     /// </summary>
@@ -31,7 +32,7 @@ namespace Game.Module.InGame
         private const float BounceMps = 4.2f;
         private const int BounceTimes = 3;
         private const float BounceRestSeconds = 1.2f;
-        private const float BounceHitMeters = 0.6f;
+        private const float BounceHitMeters = 0.95f;   // 0.6 은 몸을 스쳐도 안 맞았다(2026-10-22 녹화) — 돌진 박쥐 띠 폭(0.9)과 맞춘다
         private const float BounceHitEverySeconds = 0.6f;
 
         private readonly Dictionary<Unit, float> _rollSpeed = new();
@@ -112,11 +113,11 @@ namespace Game.Module.InGame
                 return true;
             }
 
-            // 처음 — 나를 향한 대각선 하나를 고른다(±1, ±1)
+            // 처음 — 나를 겨눠 날아간다(대각선 45° 로만 날면 그 선 위에 서 있어야만 맞았다 — 2026-10-22 녹화)
             if (e.PatternFrom == Vector2.zero)
             {
                 var to = me.Position - e.Position;
-                e.PatternFrom = new Vector2(to.x >= 0f ? 1f : -1f, to.y >= 0f ? 1f : -1f).normalized;
+                e.PatternFrom = to.sqrMagnitude < 0.0001f ? Vector2.one.normalized : to.normalized;
                 e.PatternAngle = 0f;   // 튕긴 수
                 _contactClock[e] = 0f;
             }
@@ -126,10 +127,15 @@ namespace Game.Module.InGame
             var dir = e.PatternFrom;
             var want = e.Position + dir * (Meters(BounceMps) * dt);
             var got = ClampedInField(e, SlideMove(e, e.Position, want - e.Position));
-            if (Mathf.Abs(got.x - want.x) > 1f) dir.x = -dir.x;
-            if (Mathf.Abs(got.y - want.y) > 1f) dir.y = -dir.y;
-            if (dir != e.PatternFrom)
+            bool hitX = Mathf.Abs(got.x - want.x) > 1f, hitY = Mathf.Abs(got.y - want.y) > 1f;
+            if (hitX || hitY)
             {
+                // 튕기면 다시 나를 겨눈다 — 다만 부딪힌 벽 쪽으로는 못 가게 그 축은 벽에서 나오는 쪽으로
+                var to = me.Position - e.Position;
+                var aim = to.sqrMagnitude < 0.0001f ? -dir : to.normalized;
+                if (hitX && Mathf.Sign(aim.x) == Mathf.Sign(dir.x)) aim.x = -aim.x;
+                if (hitY && Mathf.Sign(aim.y) == Mathf.Sign(dir.y)) aim.y = -aim.y;
+                dir = aim.normalized;
                 e.PatternFrom = dir;
                 e.PatternAngle += 1f;
                 _pfx?.Puff(got, ParticleElement.Dust, 0.35f);

@@ -180,7 +180,7 @@ KIND = {
     'actor_enforcer': 'force', 'turret_cross': 'force', 'boar': 'force', 'armadillo': 'force',
     'skeleton': 'magic', 'coilwalker': 'magic', 'mushroom': 'magic', 'mummy': 'magic', 'spider': 'magic',
     # 2단계 새 몸(2026-10-22) — 무기 · 파워 · 마법
-    'watcher_eye': 'blade', 'soul_hound': 'blade', 'saw_monkey': 'force', 'mimic': 'force',
+    'watcher_eye': 'blade', 'saw_monkey': 'force', 'mimic': 'force',
     'shadow_cat': 'magic', 'lantern': 'magic',
     'gangster': 'blade', 'thug': 'blade', 'hopper': 'blade', 'hopper_smg': 'blade', 'commando_mg': 'blade',
     'ninja': 'blade', 'amazon': 'blade', 'amazon_elite': 'blade',

@@ -36,7 +36,7 @@ pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;backgroun
 </head>
 <body><div class="wrap">
 
-<h1>2단계 — 몬스터 조합 <span class="s fix">구현 중</span></h1>
+<h1>2단계 — 몬스터 조합 <span class="s fix">마무리 중 — 그림 반영 · 다시 녹화</span></h1>
 <p class="sub">2026-10-22 조사 — 우리 몬스터 실측(코드 · 표 · 방 지도) + 원본 몬스터 214종 구조 분석. 원본에서는 <b>이름 · 내용이 아니라 구조</b>(갈래 · 조합 · 박자 · 나오는 순서)만 가져옵니다. 몬스터 이름은 전부 임시입니다. 같은 날 PD 답 7개를 받아 구현을 시작했습니다.</p>
 
 <!-- ───────────── 받은 답 ───────────── -->
@@ -63,16 +63,19 @@ pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;backgroun
 <tr><td>새 모양 6종</td><td><span class="s ok">코드 끝</span> <span class="s art">그림 발주 중</span></td><td>라인업 시안 통과(<code>_exchange/in/mock_lineup_v3.png</code>) · 동쪽 판 4장 통과 · 2장 반려(검정 바탕) 재발주 · 나머지 네 방향은 동쪽 판 통과 뒤</td></tr>
 <tr><td>원소판 그림 6종</td><td><span class="s art">그림 발주 중</span></td><td>시안 통과(<code>_exchange/in/mock_elements_v1.png</code>) · 동쪽 판 받는 중</td></tr>
 <tr><td>엘리트</td><td><span class="s ok">코드 끝</span> <span class="s art">표식 시안 대기</span></td><td>챕터 표 <code>elite</code> 칸(1~4챕터 0 · 5~9챕터 1 · 10챕터 2) — 챕터 뒤쪽 절반 전투방에서 덩치 큰 잡몹부터 크기 ×1.25 · 체력 ×2.4 · 공격 ×1.5 · 보상 4배. 중간보스 · 보스 방은 안 올림. 표식은 코덱스 시안(<code>_exchange/guide_elite.md</code>) 통과 뒤 — 지금은 크기로만 읽힘</td></tr>
-<tr><td>보스 패턴</td><td><span class="s ask">확인 부탁</span></td><td>아래 「보스 패턴 새 구성」 — 챕터별로 기술 3 → 6, 원본 기술 9개 추가, 빈 거리 없게</td></tr>
+<tr><td>보스 패턴</td><td><span class="s now">맨 마지막에</span></td><td>아래 「보스 패턴 새 구성」 방향 확정(PD 10-22 「보스는 그대로 진행」) — 다만 <b>디테일은 맨 마지막에 한 번 더 보고</b> 만든다(PD 「2단계 빨리 끝나면 다음 단계로」). 새 보스 몸은 안 만든다 — 원작 보스를 바꿔 IP 느낌을 지킨다</td></tr>
+<tr><td>혼 사냥개</td><td><span class="s cut">뺌</span></td><td>PD 10-22 「개념 자체가 잘 이해가 안 된다」 — 몬스터 표 · 코드 · 발주에서 뺌(53종). 받은 판 3장 · 발주문은 <code>Projects/AVSR/_archive/soul_hound_1022/</code></td></tr>
 <tr><td>박쥐 날개 잘림</td><td><span class="s ok">끝</span></td><td>납품 판에는 날개가 다 있었는데, 자르는 도구가 키(76 px) · 발 위치로 맞춰 날개가 칸 밖으로 밀려 잘렸다. 판 원본(<code>ref/char_up/out_bat_*_raw.png</code>)에서 「가장 넓은 칸이 들어오는 배율」로 40장 다시 자름 — 칸 끝에 닿는 그림 0장 · 게임 녹화로 확인. 옛 그림은 <code>Projects/AVSR/_archive/bat_clipped_1022/</code>. 독 박쥐도 같은 이유로 잘려 있어 원래 판 앵커로 재발주</td></tr>
 <tr><td>검증</td><td><span class="s ok">1차 끝</span></td><td>기능 테스트 <b>통과 9 · 실패 0 · 미검 2</b>(그림 대기) — <code>step2_check/feature_test.md</code><br>
-몬스터 녹화 53종 <b>통과 45 · 우려 3 · 미검 5 · 실패 0</b> — <code>step2_check/monster_recording.md</code>(종마다 영상 경로 · 내 피해 · 예고 · 자국 · 원소 걸림)<br>
-우려: 보통 해골 · 독 해골(연사 몸에 맞을 때마다 예고가 끊겨 못 침 — 예전과 같음) · 톱날 원숭이(10초에 228, 셈) / 미검: 새 모양 5종(그림 전이라 흰 네모로 행동만 확인) · 혼 사냥개(유령 붙잡기 못 잼)<br>
+몬스터 녹화 52종 <b>통과 45 · 우려 3 · 미검 4 · 실패 0</b> — <code>step2_check/monster_recording.md</code>(종마다 영상 경로 · 내 피해 · 예고 · 자국 · 원소 걸림)<br>
+우려: 보통 해골 · 독 해골(시험 몹이 체력 ×40 이라 서 있는 내 연사에 피격 경직으로 묶임 — 예전과 같음) · 톱날 원숭이(10초에 228, 셈) / 미검: 새 모양 4종(그림 전이라 흰 네모로 행동만 확인 — 수호 등불은 방패 확인)<br>
+튕기는 박쥐는 45° 대각선으로만 날아 서 있는 몸을 늘 비껴갔다 → 튕길 때마다 나를 다시 겨누게 고침 · 닿음 판정 0.6 → 0.95 m<br>
 ⚠ 지금 영상은 동작 확인용 — 원소판 · 새 모양 그림이 다 오면 전체를 다시 찍어 보여 드립니다</td></tr>
 </table></div>
 
 <!-- ───────────── 보스 패턴 새 구성 ───────────── -->
-<h2>보스 패턴 새 구성 <span class="s ask">확인 부탁</span></h2>
+<h2>보스 패턴 새 구성 <span class="s now">방향 확정 · 디테일은 맨 마지막</span></h2>
+<p class="note">PD 10-22 — 「보스는 그대로 진행 · 새 보스는 추가 안 함(원작 보스를 바꿔야 IP 느낌을 지킨다) · 보스 패턴은 제일 나중에 디테일하게 한 번 더」. 아래는 그때 다시 볼 바탕안이다.</p>
 <div class="ans"><b>받은 답 (2026-10-22 오후)</b>
 <ol>
 <li>기존 보스 그대로 · 패턴이 <b>단계별로 늘게</b> — 원본 보스 기술 중 어울리는 것을 하나씩 더한다. 1챕터 보스는 몇 개 빼도 된다.</li>
@@ -121,10 +124,10 @@ pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;backgroun
 <li>새 동작 <b>9개</b>(충격파 · 독덩이 떼 · 오물 비 · 튕기는 돌진 · 돌며 난사 · 독 장판 · 거품 폭탄 · 회전 돌진 · 미사일 비) — 그림 0장, 예고 빗금 · 탄 · 폭발 · 충격파는 공용 그림.</li>
 <li>보스 표에 「몇 챕터부터」 칸 · 보스를 「키 + 챕터」로 고르게.</li>
 <li>검수: 보스마다 챕터별로 게임 녹화(기술이 한 번씩 다 나올 때까지) + 거리 점검 테스트.</li>
-<li><span class="s ask">판단 부탁</span> <b>새 보스 몸</b>(한 몸 그림 약 49장)은 30스테이지 챕터에 보스가 몇 번 서는지(3단계)를 정한 뒤 만들까요? 원본 30방 장은 10 · 20 · 30번 방에 보스가 섭니다.</li>
+<li><b>새 보스 몸은 만들지 않는다</b>(PD 10-22) — 원작 보스 6종을 바꿔 쓴다.</li>
 </ul>
 
-<div class="q"><b>혼 사냥개 — 「유저가 알아볼까」 (PD 10-22 의문)</b>
+<div class="q"><b>혼 사냥개 — 「유저가 알아볼까」 (PD 10-22 의문) → <span class="s cut">뺌</span></b>
 <p>맞습니다. 「유령일 때만 빨라진다」는 몸이 있을 땐 안 보이고, 유령 시간은 짧아서 무엇이 바뀌었는지 읽히기 어렵습니다. 안 셋:</p>
 <ol>
 <li><b>몸 먹는 개로 바꾼다(추천)</b> — 경직돼 빼앗을 수 있게 된 몸에게 달려가 물어뜯어 그 몸을 없앤다. 「탐나는 몸을 먼저 빼앗을지, 개부터 잡을지」가 화면에서 바로 보인다(개가 몸을 물고 있고 그 몸 체력이 준다). 수호 등불(몸에 방패)과 짝이 된다 — 하나는 지키고 하나는 빼앗는다.</li>

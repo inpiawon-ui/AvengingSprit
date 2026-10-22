@@ -16,7 +16,7 @@ namespace Game.Editor
     ///
     /// 쓰기: `MonsterCheckRecorder.Batch("skeleton_2|die;bat_bounce|")` — 줄 = 몬스터 키|조건(쉼표), 줄끼리 `;`
     /// 조건: still(걷지 않고 서 있음) · near(2 m 앞에 세움) · die(6초에 잡아 죽을 때 하는 짓을 본다)
-    ///       ghost(몸을 버려 유령으로 맞선다 — 혼 사냥개)
+    ///       ghost(몸을 버려 유령으로 맞선다)
     /// 내 몸은 무적을 끄고 체력을 크게 잡는다 — 원소 · 피해가 실제로 들어가는지 본다.
     /// 영상: `Projects/AVSR/_exchange/skillfx_now/clip_mon_{키}.mp4`
     /// </summary>
@@ -65,7 +65,7 @@ namespace Game.Editor
             double t0 = EditorApplication.timeSinceStartup, recAt = 0;
             float battleAt = 0f, moveClock = 0f;
             int hpBefore = 0, warnsSeen = 0, zonesSeen = 0;
-            bool burnSeen = false, poisonSeen = false, chillSeen = false, shieldSeen = false, heldSeen = false;
+            bool burnSeen = false, poisonSeen = false, chillSeen = false, shieldSeen = false;
             string key = null;
             HashSet<string> flags = null;
             Game.Module.InGame.Unit mon = null;
@@ -169,7 +169,7 @@ namespace Game.Editor
                         if (host != null) SetHp(host, 5000);
                         hpBefore = host != null ? host.Hp : 0;
                         warnsSeen = zonesSeen = 0;
-                        burnSeen = poisonSeen = chillSeen = shieldSeen = heldSeen = false;
+                        burnSeen = poisonSeen = chillSeen = shieldSeen = false;
                         moveClock = 0f;
                         SkillFxRecorder.RecordClip("mon_" + key, RecordSeconds);
                         recAt = now;
@@ -195,13 +195,12 @@ namespace Game.Editor
                         poisonSeen |= (float)bt.GetField("_playerPoisonLeft", F).GetValue(bd) > 0f;
                         chillSeen |= (float)bt.GetField("_playerChillLeft", F).GetValue(bd) > 0f;
                         shieldSeen |= ((IDictionary)bt.GetField("_lanternShield", F).GetValue(bd)).Count > 0;
-                        heldSeen |= (float)bt.GetField("_ghostHeldLeft", F).GetValue(bd) > 0f;
                         if (t < RecordSeconds + 0.5) return;
                         bd.MoveInput = Vector2.zero;
                         Debug.Log($"[MON] done {key} 몸={def?.Body} 성질={def?.Traits} 원소={def?.Element}"
                                   + $" 살아있음={mon != null && mon.IsAlive} 내피해={(host != null ? hpBefore - host.Hp : -1)}"
                                   + $" 예고최대={warnsSeen} 자국최대={zonesSeen} 화상={burnSeen} 독={poisonSeen} 냉기={chillSeen}"
-                                  + $" 등불방패={shieldSeen} 유령붙잡힘={heldSeen}");
+                                  + $" 등불방패={shieldSeen}");
                         // 유령으로 맞선 판은 몸이 없다 — 다음 줄은 몸으로 서야 하니 여기서 끝낸다
                         if (flags.Contains("ghost")) { Stop(cb, null); return; }
                         phase = 2;

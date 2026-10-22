@@ -87,7 +87,7 @@ namespace Game.Module.InGame
             "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
                 or "amazon" or "amazon_elite"
                 or "bat" or "roadwarden" or "scrapgunner" or "mole" or "mantis"
-                or "watcher_eye" or "soul_hound"
+                or "watcher_eye"
                 or "python" or "kingpin"
                 => Affinity.Blade,
             // ── 파워: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──

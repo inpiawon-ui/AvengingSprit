@@ -967,21 +967,3 @@ MonoBehaviour:
     _telegraph: 0.6
     _shotCount: 1
     _spreadDegrees: 0
-  - _key: soul_hound
-    _body: soul_hound
-    _sprite: soul_hound
-    _nameKr: "\uD63C \uC0AC\uB0E5\uAC1C"
-    _level: 1
-    _role: 0
-    _element: 0
-    _traits: 2199023255552
-    _attackKind: 0
-    _hp: 26
-    _atk: 8
-    _moveMps: 1
-    _engageMps: 1.6
-    _rangeMeters: 1.2
-    _interval: 1.2
-    _telegraph: 0.4
-    _shotCount: 1
-    _spreadDegrees: 0

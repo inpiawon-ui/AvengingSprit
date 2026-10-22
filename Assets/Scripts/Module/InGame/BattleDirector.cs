@@ -3960,7 +3960,7 @@ namespace Game.Module.InGame
                 var before = me.Position;
                 var p = SlideMove(me, me.Position,
                                   MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul
-                                               * PoolMoveMul * ElementMoveMul * GhostHeldMoveMul) * dt);
+                                               * PoolMoveMul * ElementMoveMul) * dt);
                 // 테두리·문 한계는 `ClampedInField` 한 곳이 갖는다.
                 p = ClampedInField(me, p);
                 me.Position = p;

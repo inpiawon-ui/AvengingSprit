@@ -45,7 +45,7 @@ namespace Game.Editor
             ("bat_bounce", T.BatBounce),
         };
 
-        private static readonly string[] NewBodies = { "watcher_eye", "shadow_cat", "saw_monkey", "mimic", "lantern", "soul_hound" };
+        private static readonly string[] NewBodies = { "watcher_eye", "shadow_cat", "saw_monkey", "mimic", "lantern" };
 
         public static void Run()
         {
@@ -81,8 +81,8 @@ namespace Game.Editor
                 if (System.Array.IndexOf(NewBodies, b) >= 0) waiting.Add(b); else noArt.Add(b);
             }
             Add("그림", "있던 몸의 그림", noArt.Count == 0 ? "통과" : "실패", noArt.Count == 0 ? "모두 있음" : string.Join(", ", noArt));
-            Add("그림", "새 모양 6종 그림", waiting.Count == 0 ? "통과" : "미검",
-                waiting.Count == 0 ? "6종 모두" : "발주 중 — " + string.Join(", ", waiting));
+            Add("그림", "새 모양 5종 그림", waiting.Count == 0 ? "통과" : "미검",
+                waiting.Count == 0 ? "5종 모두" : "발주 중 — " + string.Join(", ", waiting));
             var elemArt = new List<string>();
             foreach (var d in table.Entries)
                 if (d.Element != TrashElement.None && d.Sprite == d.Body) elemArt.Add(d.Key);

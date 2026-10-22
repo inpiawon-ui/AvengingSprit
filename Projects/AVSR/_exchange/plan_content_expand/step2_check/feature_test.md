@@ -4,11 +4,11 @@
 
 | 묶음 | 항목 | 결과 | 근거 |
 |---|---|---|---|
-| 표 | 몬스터 수 · 키 겹침 | 통과 | 54종 · 겹침 0 |
+| 표 | 몬스터 수 · 키 겹침 | 통과 | 53종 · 겹침 0 |
 | 표 | Addressable 주소 | 통과 | TableData/TrashTable |
-| 표 | 몸마다 쪽(파워 · 무기 · 마법) | 통과 | 몸 21개 모두 |
+| 표 | 몸마다 쪽(파워 · 무기 · 마법) | 통과 | 몸 20개 모두 |
 | 그림 | 있던 몸의 그림 | 통과 | 모두 있음 |
-| 그림 | 새 모양 6종 그림 | 미검 | 발주 중 — watcher_eye, shadow_cat, saw_monkey, mimic, lantern, soul_hound |
+| 그림 | 새 모양 5종 그림 | 미검 | 발주 중 — watcher_eye, shadow_cat, saw_monkey, mimic, lantern |
 | 그림 | 원소판 제 그림 | 미검 | 발주 중(몸 그림으로 섬) — gorilla_fire, roadwarden_fire, scrapgunner_ice, coilwalker_ice, skeleton_poison, bat_poison |
 | 성질 | 예전 단계 행동 → 변종 22종 | 통과 | 모두 맞음 |
 | 성질 | 새 Lv2 7종 | 통과 | 모두 맞음 |
