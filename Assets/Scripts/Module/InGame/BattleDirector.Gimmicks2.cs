@@ -203,7 +203,7 @@ namespace Game.Module.InGame
             {
                 var e = _enemies[i];
                 if (e == null) continue;
-                bool on = _shielded.Contains(e) && e.IsAlive && !e.IsDying;
+                bool on = IsShielded(e) && e.IsAlive && !e.IsDying;
                 if (!_bubbles.TryGetValue(e, out var img))
                 {
                     if (!on) continue;
@@ -225,7 +225,8 @@ namespace Game.Module.InGame
             }
         }
 
-        private bool IsShielded(Unit u) => u != null && _shielded.Contains(u);
+        // 방패 발전기 둘레 · 수호 등불이 씌운 방패(BattleDirector.Trash6)
+        private bool IsShielded(Unit u) => u != null && (_shielded.Contains(u) || _lanternShield.ContainsKey(u));
 
         private void TickConveyor(Obstacle o, Unit me, Vector2 foot, float dt)
         {

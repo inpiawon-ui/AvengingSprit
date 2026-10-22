@@ -1,3 +1,4 @@
+using Game.Character;
 using UnityEngine;
 
 namespace Game.Module.InGame
@@ -14,10 +15,6 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        private const int SnipeFromStage = 5;
-        private const int MortarFromStage = 7;
-        private const int RingFromStage = 7;
-
         // ── 저격 ──────────────────────────────────────────────────
         private const float SnipeTriggerMeters = 7.5f;
         private const float SnipeTellSeconds = 1.0f;
@@ -47,15 +44,18 @@ namespace Game.Module.InGame
         /// </summary>
         private bool TickPatterns3(Unit e, Unit me, float distance, float dt)
         {
-            int stage = PatternChapter;
             if (e.Key == TrashMushroomKey) return TickMushroom(e, me, distance, dt);   // 폭탄 버섯 — 다가와 자폭 (BattleDirector.Trash4)
             if (e.Key == TrashMummyKey) return TickMummy(e, me, distance, dt);         // 미라 — 빈틈 있는 고리
             if (e.Key == TrashSpiderKey && !_spiderlings.Contains(e)) return TickSpider(e, me, distance, dt);   // 알 거미 — 새끼는 평소 흐름
             if (e.Key == TrashMoleKey) return TickMole(e, me, distance, dt);   // 드릴 두더지 — 숨었다 솟아 미사일 (BattleDirector.Mole)
             if (e.Key == TrashMantisKey) return TickMantis(e, me, distance, dt); // 외눈 사마귀 — 저격만 (BattleDirector.Mantis)
-            if (e.Key == TrashGunnerKey && stage >= SnipeFromStage) return TickSnipe(e, me, distance, dt);
-            if (e.Key == TrashCoilKey && stage >= MortarFromStage) return TickMortar(e, me, dt);
-            if (e.Key == TrashSkeletonKey && stage >= RingFromStage) TickRing(e, dt);   // 쫓으면서 뿌린다 — 흐름을 안 막는다
+            if (TickNewShapes(e, me, distance, dt)) return true;   // 2단계 새 모양 여섯 (BattleDirector.Trash6)
+            if (e.Key == TrashArmadilloKey && HasTrait(e, TrashTrait.ArmadilloRoll)
+                && TickArmadilloRoll(e, me, distance, dt)) return true;   // 구르기 (BattleDirector.Trash5)
+            if (e.Key == TrashBatKey && HasTrait(e, TrashTrait.BatBounce)) return TickBatBounce(e, me, dt);
+            if (e.Key == TrashGunnerKey && HasTrait(e, TrashTrait.Snipe)) return TickSnipe(e, me, distance, dt);
+            if (e.Key == TrashCoilKey && HasTrait(e, TrashTrait.Mortar)) return TickMortar(e, me, dt);
+            if (e.Key == TrashSkeletonKey && HasTrait(e, TrashTrait.Ring)) TickRing(e, dt);   // 쫓으면서 뿌린다 — 흐름을 안 막는다
             return false;
         }
 
@@ -72,22 +72,7 @@ namespace Game.Module.InGame
                     e.PatternTimer -= dt;
                     if (e.PatternTimer > 0f || distance > Meters(SnipeTriggerMeters)) return false;
                     if (!EnemyLineClear(e.Position, me.Position)) return false;
-                    {
-                        var dir = (me.Position - e.Position).normalized;
-                        e.SetFacing(dir);
-                        e.SetTelegraph(true);
-                        // 조준선은 예고만 한다 — 피해는 다 찬 뒤 **실제로 날아가는 탄**이 낸다.
-                        // 예전엔 선이 곧 탄이라(선 안에 남으면 그냥 깎였다) 화면에 아무것도 안 날아가
-                        // 「워닝만 뜨고 공격을 안 한다 · 무슨 공격인지 안 보인다」였다(PD 2026-10-08 사마귀 · 전갈).
-                        StartWarn(BandShape(e.Position, dir, Meters(SnipeWidthMeters), _roomSize.magnitude),
-                                  SnipeTellSeconds, 0, owner: e);
-                        e.PatternTo = e.Position + dir * _roomSize.magnitude;   // 쏠 방향은 예고를 긋는 순간 굳는다
-                        // 공용 꺾쇠 — 탄이 날아올 쪽 (BattleDirector.Rush)
-                        StartRushFx(e, e.Position, e.Position + dir * _roomSize.magnitude, Meters(SnipeWidthMeters),
-                                    SnipeTellSeconds, dust: false);
-                        e.PatternPhase = 1;
-                        e.PatternTimer = SnipeTellSeconds;
-                    }
+                    BeginSnipeAim(e, me, SnipeTellSeconds);
                     return true;
 
                 case 1:
@@ -109,6 +94,13 @@ namespace Game.Module.InGame
                               damage: Mathf.Max(1, Mathf.RoundToInt(e.Atk * SnipeDamageMul)), sizeMul: SnipeShotSizeMul);
                     PlayFx("muzzle", e.MuzzlePosition, 88f, loop: false);
                     Shake(ShakeOnKill * 0.6f);
+                    // 쌍발 사마귀(`mantis_2`) — 한 발 피한 자리로 짧게 다시 겨눠 한 발 더. 두 번째 뒤엔 평소처럼 쉰다
+                    if (HasTrait(e, TrashTrait.MantisDouble) && _snipeSecond.Add(e))
+                    {
+                        BeginSnipeAim(e, me, SnipeSecondTellSeconds);
+                        return true;
+                    }
+                    _snipeSecond.Remove(e);
                     e.PatternPhase = 2;
                     e.PatternTimer = SnipeRecoverSeconds;
                     return true;
@@ -123,6 +115,28 @@ namespace Game.Module.InGame
                     e.PatternTimer = SnipeEverySeconds;   // 다음 모아 쏘기까지 — 그 사이는 평소처럼 쏜다
                     return true;
             }
+        }
+
+        // 쌍발 사마귀 — 두 번째 조준은 짧다(피한 직후라 길면 또 피한다 — 짧아도 띠는 보인다)
+        private const float SnipeSecondTellSeconds = 0.5f;
+        private readonly System.Collections.Generic.HashSet<Unit> _snipeSecond = new();
+
+        /// <summary>조준선을 긋는다 — 그은 자리에 굳는다(따라오면 피할 수 없다).</summary>
+        private void BeginSnipeAim(Unit e, Unit me, float tell)
+        {
+            var dir = (me.Position - e.Position).normalized;
+            e.SetFacing(dir);
+            e.SetTelegraph(true);
+            // 조준선은 예고만 한다 — 피해는 다 찬 뒤 **실제로 날아가는 탄**이 낸다.
+            // 예전엔 선이 곧 탄이라(선 안에 남으면 그냥 깎였다) 화면에 아무것도 안 날아가
+            // 「워닝만 뜨고 공격을 안 한다 · 무슨 공격인지 안 보인다」였다(PD 2026-10-08 사마귀 · 전갈).
+            StartWarn(BandShape(e.Position, dir, Meters(SnipeWidthMeters), _roomSize.magnitude), tell, 0, owner: e);
+            e.PatternTo = e.Position + dir * _roomSize.magnitude;   // 쏠 방향은 예고를 긋는 순간 굳는다
+            // 공용 꺾쇠 — 탄이 날아올 쪽 (BattleDirector.Rush)
+            StartRushFx(e, e.Position, e.Position + dir * _roomSize.magnitude, Meters(SnipeWidthMeters),
+                        tell, dust: false);
+            e.PatternPhase = 1;
+            e.PatternTimer = tell;
         }
 
         /// <summary>
@@ -146,8 +160,9 @@ namespace Game.Module.InGame
             float r = Meters(MortarRadiusMeters);
             e.PlayAttack();
             e.SetTelegraph(true);
-            StartWarn(DiscShape(me.Position, r), MortarTellSeconds, Mathf.Max(1, e.Atk), owner: e,
-                      impactKind: "grenade", fxSize: r * 2f);
+            var w = StartWarn(DiscShape(me.Position, r), MortarTellSeconds, Mathf.Max(1, e.Atk), owner: e,
+                              impactKind: "grenade", fxSize: r * 2f);
+            w.ZoneElement = ElementOf(e);   // 얼음 코일 — 떨어진 자리가 느린 바닥 (BattleDirector.Elements)
             e.PatternPhase = 1;
             e.PatternTimer = MortarTellSeconds;
             return true;

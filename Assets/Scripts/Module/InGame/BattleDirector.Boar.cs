@@ -59,11 +59,10 @@ namespace Game.Module.InGame
         private const float BoarHitReachMeters = 0.45f;   // 띠 반폭에 더하는 몸 반경 — 이만큼 닿으면 부딪힌 것
         private const float BoarOrbitDegrees = 55f;   // 내게서 멀어지는 방향을 이만큼 옆으로 꺾어 돈다 — 다음 돌진은 다른 각에서
 
-        // ── 연속 돌진 (패턴 단계 7 부터 — 기획 6절 「7챕터 돌진형 연속 돌진」) ──
+        // ── 연속 돌진 (폭주 멧돼지 `boar_2` — 성질 `BoarChain`) ──
         //   한 번 달린 뒤 쉬지 않고 짧은 예고로 **한 번 더** 들이받는다. 두 번째가 끝나면 평소처럼 쉰다.
         //   벽 · 물건에 박으면 이어 달리지 않는다 — 박은 휘청이 근접 몸이 치는 틈이다(패턴은 근접 틈을 남긴다).
         //   이어 달리기는 붙어 있어도 건다(최소 거리 1.2 m) — 돌진을 피한 자리로 곧장 꺾어 오는 게 이 패턴이다.
-        private const int BoarChainFromStage = 7;
         private const float BoarChainRecoverSeconds = 0.2f;   // 첫 돌진 뒤 숨 고르기 — 0.5초 멈춤 대신
         private const float BoarChainTellRatio = 0.65f;       // 두 번째 예고는 짧게(0.75 → 0.49초)
         private const float BoarChainMinMeters = 1.2f;
@@ -79,7 +78,7 @@ namespace Game.Module.InGame
         /// </summary>
         private float AfterBoarDash(Unit e, bool crashed, in DiveSpec spec)
         {
-            if (e.Key != TrashBoarKey || PatternChapter < BoarChainFromStage)
+            if (e.Key != TrashBoarKey || !HasTrait(e, TrashTrait.BoarChain))
                 return crashed ? spec.WallStunSeconds : spec.RecoverSeconds;
             if (crashed || _boarChain.Remove(e))   // 박았거나 두 번째였다 → 평소처럼 쉰다
                 return crashed ? spec.WallStunSeconds : spec.RecoverSeconds;

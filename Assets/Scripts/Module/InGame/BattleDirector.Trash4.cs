@@ -67,7 +67,7 @@ namespace Game.Module.InGame
         private const float MushroomEnemyHpRatio = 0.4f;
 
         /// <summary>미뤄 둔 폭발. 적 목록을 도는 도중에 적을 지우지 않으려고 목록 밖(`TickBlasts`)에서 터뜨린다.</summary>
-        private struct Blast { public Vector2 At; public float Timer; public Unit Self; }
+        private struct Blast { public Vector2 At; public float Timer; public Unit Self; public bool Pool; }
         private readonly List<Blast> _blasts = new();
         private readonly HashSet<Unit> _mushroomBlown = new();
 
@@ -79,6 +79,7 @@ namespace Game.Module.InGame
         private const int MummyGapShots = 2;
         private const float MummyGapAwayDegrees = 70f;   // 빈틈은 내 쪽에서 이만큼 이상 비켜 난다
         private const float MummyShotSpeedMul = 0.6f;
+        private const float MummySecondRingSeconds = 0.6f;   // 겹고리 — 두 번째 고리까지
         private const string MummyShotKind = "darkorb";   // 영매의 어둠 구슬을 같이 쓴다 — 화면에선 흰 · 청록빛이라 보라 바닥(9챕터)에서 오히려 잘 읽힌다
 
         // ── 알 거미 ──────────────────────────────────────────────
@@ -198,7 +199,10 @@ namespace Game.Module.InGame
                 e.SetTelegraph(false);
                 e.PatternPhase = 2;
                 _mushroomBlown.Add(e);
-                _blasts.Add(new Blast { At = e.Position, Timer = 0f, Self = e });
+                _blasts.Add(new Blast
+                {
+                    At = e.Position, Timer = 0f, Self = e, Pool = HasTrait(e, TrashTrait.MushroomPool),
+                });
                 return true;
             }
 
@@ -227,7 +231,10 @@ namespace Game.Module.InGame
             {
                 float r = Meters(MushroomRadiusMeters);
                 StartWarn(DiscShape(u.Position, r), MushroomDeathDelay, Mathf.Max(1, u.Atk));
-                _blasts.Add(new Blast { At = u.Position, Timer = MushroomDeathDelay });
+                _blasts.Add(new Blast
+                {
+                    At = u.Position, Timer = MushroomDeathDelay, Pool = HasTrait(u, TrashTrait.MushroomPool),
+                });
             }
         }
 
@@ -242,6 +249,8 @@ namespace Game.Module.InGame
                 _blasts.RemoveAt(i);
                 BlastEnemies(b.At, b.Self);
                 SpawnImpact(b.At, "grenade", Meters(MushroomRadiusMeters) * 2f);
+                // 독 버섯(`mushroom_2`) — 터진 자리에 독 웅덩이. 터뜨린 자리를 피해 다녀야 한다 (BattleDirector.Elements)
+                if (b.Pool) AddElementZone(b.At, MushroomRadiusMeters * 0.8f, PoisonPoolSeconds, TrashElement.Poison);
                 if (b.Self != null && b.Self.IsAlive && !b.Self.IsDying) KillEnemy(b.Self);
             }
         }
@@ -268,7 +277,7 @@ namespace Game.Module.InGame
 
         private bool TickMummy(Unit e, Unit me, float distance, float dt)
         {
-            if (e.PatternPhase == 1)
+            if (e.PatternPhase == 1 || e.PatternPhase == 2)
             {
                 e.SetMoving(false);
                 e.SetState(EnemyState.Attack);
@@ -276,6 +285,13 @@ namespace Game.Module.InGame
                 if (e.PatternTimer > 0f) return true;
                 e.SetTelegraph(false);
                 FireMummyRing(e, me);
+                // 겹고리 미라(`mummy_2`) — 0.6초 뒤 한 겹 더. 빈틈은 새로 뽑는다(첫 빈틈에 서 있으면 맞는다)
+                if (e.PatternPhase == 1 && HasTrait(e, TrashTrait.MummyDouble))
+                {
+                    e.PatternPhase = 2;
+                    e.PatternTimer = MummySecondRingSeconds;
+                    return true;
+                }
                 e.PatternPhase = 0;
                 e.PatternTimer = MummyRingSeconds;
                 return true;
@@ -360,6 +376,14 @@ namespace Game.Module.InGame
             {
                 spit = SpiderSpitSeconds;
                 FireAimed(e, me.Position, SpiderSpitSpeedMul, SpiderSpitKind);
+                // 독샘 거미(`spider_2`) — 방울이 닿을 즈음 겨눈 자리에 독 웅덩이가 남는다. 예고 빗금이 그 자리를 먼저 보여 준다
+                if (HasTrait(e, TrashTrait.SpiderPool))
+                {
+                    float travel = Vector2.Distance(e.Position, me.Position)
+                                 / Mathf.Max(1f, _config.ShotSpeedEnemy * SpiderSpitSpeedMul);
+                    var w = StartWarn(DiscShape(me.Position, Meters(PoisonPoolMeters)), travel, 0, owner: e);
+                    w.ZoneElement = TrashElement.Poison;
+                }
             }
             _spiderSpit[e] = spit;
             // 뱉기 몸짓 — 직전에 웅크리고(1) · 뱉고(2) · 돌아온다(3)
@@ -420,6 +444,7 @@ namespace Game.Module.InGame
             _spiderlings.Clear();
             _spiderSpit.Clear();
             _spiderFramesTried = false;   // 아틀라스는 판마다 다시 올라온다
+            ClearTrash5();
         }
     }
 }

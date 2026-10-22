@@ -75,6 +75,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_tabledata
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba483cb5f7488094a9d9d2a8fdaa8acf
+    m_Address: TableData/TrashTable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_tabledata
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c17cdd2e0417da9478869bbd9afa8aef
     m_Address: TableData/GachaTable
     m_ReadOnly: 0

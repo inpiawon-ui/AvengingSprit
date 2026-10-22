@@ -23,40 +23,16 @@ namespace Game.Module.InGame
     /// </summary>
     public sealed partial class BattleDirector
     {
-        /// <summary>
-        /// 패턴을 고를 때 보는 챕터 — **지금 선 방의 챕터**다.
-        ///
-        /// ⚠ `_runChapter`(판의 진행 챕터)를 보면 안 된다. 그 값은 시작 챕터에서 출발해
-        ///   올라가기만 하므로, 뒤 챕터에서 시작한 판이 앞 챕터 방에 서면 1챕터 박쥐가
-        ///   급강하를 한다(2026-09-28 검수 스샷에서 실제로 그랬다). 방이 제 챕터를 안다.
-        /// </summary>
-        /// ⚠ 챕터 번호가 아니라 **패턴 단계**다(챕터 표의 `pattern`). 아래 `…FromChapter` 문턱은
-        ///   1~6 챕터에서 배우는 순서이고, 7챕터부터는 전부 6단계로 싸운다.
-        private int PatternChapter => PatternStageOf(_canonRoom != null ? _canonRoom.Chapter : _runChapter);
-
-        // 같은 몸이 달라지는 챕터. 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다(`TrashKeysFor`).
-        // 1 챕터부터 — 「띠를 보면 옆으로」를 처음 방에서 배운다(기획 2026-10-07 「근접은 그냥 가서 때리는 수준」)
-        private const int DiveFromChapter       = 1;   // 박쥐 → 급강하
-        private const int ChargeFromChapter     = 7;   // 돌 고릴라 → 돌진이 먼저(도약과 번갈아)
-        private const int GorillaMixFromStage   = 5;   // 돌 고릴라 → 도약 · 돌진을 번갈아
+        // 같은 몸이 무엇을 더 하는지는 몬스터 성질(`TrashTrait`)이 정한다 — 예전 챕터 단계 문턱은 걷어냈다(2단계 PD 2026-10-22).
 
         /// <summary>돌 고릴라가 지금 「둘째 수」를 할 차례인가. 한 수가 끝날 때마다 뒤집는다.</summary>
         private readonly System.Collections.Generic.HashSet<Unit> _gorillaCharge = new();
 
         private void ToggleGorillaMove(Unit e)
         {
-            if (PatternChapter < GorillaMixFromStage) return;
+            if (!HasTrait(e, TrashTrait.GorillaMix)) return;
             if (!_gorillaCharge.Remove(e)) _gorillaCharge.Add(e);
         }
-        private const int WeaveFromChapter      = 4;   // 박쥐 → 지그재그 (CH4)
-        private const int SlamFromChapter       = 4;   // 집행자 → 내려찍기
-        private const int SplitFromChapter      = 6;   // 집행자 → 죽으면 갈라진다
-        private const int DeathBurstFromChapter = 3;   // 해골 → 죽을 때 4방향
-        private const int DeathBurst8FromChapter = 6;  // 해골 → 죽을 때 8방향
-        private const int BounceShotFromChapter = 5;   // 코일 → 튕기는 탄
-        private const int SplitShotFromChapter  = 6;   // 코일 → 갈라지는 탄
-        private const int CrossAltFromChapter   = 5;   // 십자 포탑 → 4·8 번갈아
-        private const int CrossStreamFromChapter = 6;  // 십자 포탑 → 회전 연사
 
         // ═══════════════════════════════════════════════════════════
         //  DIVE — 급강하 돌진 (박쥐)
@@ -123,7 +99,7 @@ namespace Game.Module.InGame
                     // 멧돼지는 물지 않는다 — 돌진 사이엔 다가오거나 숨을 고른다
                     if (HoldBetweenCharges(e, me, distance, dt)) return true;
                     // 아직 멀거나 쉬는 중 — 평소처럼 쫓는다. CH4 부터는 좌우로 흔들며 온다.
-                    if (PatternChapter < WeaveFromChapter || distance <= EffectiveRange(e)) return false;
+                    if (!HasTrait(e, TrashTrait.Weave) || distance <= EffectiveRange(e)) return false;
                     e.PatternAngle += dt * WeaveHz * Mathf.PI * 2f;
                     var to = me.Position - e.Position;
                     var fwd = to.sqrMagnitude < 0.0001f ? e.Facing : to.normalized;
@@ -193,11 +169,12 @@ namespace Game.Module.InGame
         /// <summary>집행자가 도약을 마쳤다. `TickHop` 이 착지할 때 부른다.</summary>
         private void OnHopLanded(Unit e)
         {
-            if (PatternChapter < SlamFromChapter) return;
+            if (!HasTrait(e, TrashTrait.Slam)) return;
             float r = Meters(HopSlamRadiusMeters);
             // 맞을 때 터지는 듯한 `slam` 한 장 대신 골렘과 같은 충격파 — 고릴라가 「기술을 썼다」로 읽히게(PD 2026-10-08)
-            StartWarn(DiscShape(e.Position, r), HopSlamTellSeconds, Mathf.Max(1, e.Atk), owner: e,
-                      fxName: GetSprite("fx_golem_ring") != null ? "shockwave" : "slam", fxSize: r * 2f);
+            var w = StartWarn(DiscShape(e.Position, r), HopSlamTellSeconds, Mathf.Max(1, e.Atk), owner: e,
+                              fxName: GetSprite("fx_golem_ring") != null ? "shockwave" : "slam", fxSize: r * 2f);
+            w.ZoneElement = ElementOf(e);   // 불 고릴라 — 찍은 자리에 불이 남는다 (BattleDirector.Elements)
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -222,19 +199,19 @@ namespace Game.Module.InGame
             _spiderlings.Remove(u);
             if (u.Key == TrashSpiderKey) { u.SetSpriteOverride(null); _spiderSpit.Remove(u); }   // 뱉기 · 낳기 그림을 쥔 채 죽으면 쓰러지는 그림이 안 나온다
 
-            if (u.Key == TrashSkeletonKey && PatternChapter >= DeathBurstFromChapter)
+            if (u.Key == TrashSkeletonKey && (HasTrait(u, TrashTrait.DeathBurst4) || HasTrait(u, TrashTrait.DeathBurst8)))
             {
-                int n = PatternChapter >= DeathBurst8FromChapter ? 8 : 4;
+                int n = HasTrait(u, TrashTrait.DeathBurst8) ? 8 : 4;
                 // 4발은 ×자로 — 상하좌우(십자 포탑)와 겹치지 않게
                 FireRadial(u.Position, n, n == 4 ? 45f : 0f, DeathShotKind,
                            Mathf.Max(1, u.Atk / 2), DeathShotSpeedMul);
             }
-            else if (u.Key == TrashEnforcerKey && PatternChapter >= SplitFromChapter)
+            else if (u.Key == TrashEnforcerKey && HasTrait(u, TrashTrait.SplitBats))
             {
                 for (int i = 0; i < SplitChildren; i++)
                 {
                     float side = i == 0 ? -1f : 1f;
-                    SpawnTrashAt(Bat, u.Position + new Vector2(side * Meters(SplitSpreadMeters), 0f),
+                    SpawnTrashAt(TrashEntryOf(TrashBatKey), u.Position + new Vector2(side * Meters(SplitSpreadMeters), 0f),
                                  SplitChildHpRatio);
                 }
             }
@@ -306,7 +283,7 @@ namespace Game.Module.InGame
         private void FireVaultVolley(Unit e, Unit me)
         {
             int dmg = Mathf.Max(1, e.Atk / VaultShots);
-            if (PatternChapter >= SplitShotFromChapter)
+            if (HasTrait(e, TrashTrait.SplitShot))
             {
                 e.PlayAttack();
                 var dir = me.Position - e.Position;
@@ -316,7 +293,7 @@ namespace Game.Module.InGame
                 var shot = RentShot();
                 if (shot == null) return;
                 shot.SetSprite(ShotFrames(SplitOrbKind), SplitOrbKind, LoopsFrames(SplitOrbKind));
-                shot.SourceKey = e.Key;
+                shot.SourceKey = e.Key; shot.Element = ElementOf(e);
                 shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
                           false, null, _config.ShotSize * 1.3f, ShotEnemyColor,
                           reach / Mathf.Max(1f, speed) + 0.25f);
@@ -324,7 +301,7 @@ namespace Game.Module.InGame
                 return;
             }
 
-            if (PatternChapter >= BounceShotFromChapter)
+            if (HasTrait(e, TrashTrait.BounceShot))
             {
                 e.PlayAttack();
                 float reach = _roomSize.magnitude;
@@ -337,7 +314,7 @@ namespace Game.Module.InGame
                     var shot = RentShot();
                     if (shot == null) return;
                     shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
-                    shot.SourceKey = e.Key;
+                    shot.SourceKey = e.Key; shot.Element = ElementOf(e);
                     shot.Fire(e.Position, me.Position, speed, dmg, false, null,
                               _config.ShotSize * 1.15f, ShotEnemyColor, life,
                               angleOffsetDeg: off, bounces: BounceShotBounces);
@@ -369,7 +346,7 @@ namespace Game.Module.InGame
         /// <summary>이번 발이 몇 방향인가. CH5 부터 4방향과 8방향을 번갈아 쏜다.</summary>
         private int CrossDirsNow(Unit e)
         {
-            if (PatternChapter < CrossAltFromChapter) return CrossDirs;
+            if (!HasTrait(e, TrashTrait.CrossAlt)) return CrossDirs;
             // 축이 쏠 때마다 45° 돈다 — 짝수 번째가 4방향, 홀수 번째가 8방향
             bool odd = Mathf.RoundToInt(e.PatternAngle / CrossRotateDeg) % 2 != 0;
             return odd ? CrossDirs * 2 : CrossDirs;
@@ -413,7 +390,7 @@ namespace Game.Module.InGame
                     if (shot != null)
                     {
                         shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
-                        shot.SourceKey = e.Key;
+                        shot.SourceKey = e.Key; shot.Element = ElementOf(e);
                         shot.Fire(e.Position, e.Position + dir * reach, speed, Mathf.Max(1, e.Atk),
                                   false, null, _config.ShotSize, ShotEnemyColor,
                                   reach / Mathf.Max(1f, speed) + 0.25f);

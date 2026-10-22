@@ -106,6 +106,12 @@ namespace Game.Module.InGame
         private static string TrashKeyAlias(string key)
             => key == "turret_cross" ? TrashCrossKey : key;
 
+        /// <summary>
+        /// 방 자리의 키 → 그 챕터 잡몹. 방 지도는 **몸 키**(`skeleton`)를 적고 챕터 표는 **몬스터 키**(`skeleton_2`)를 적는다.
+        ///
+        /// 같은 몸의 몬스터가 챕터 목록에 여럿이면 **방이 뒤로 갈수록 높은 Lv** 를 세운다(원본 1장: 앞 절반 Lv1, 뒤 Lv2).
+        /// 방 지도를 다시 그리지 않고 챕터 표만 바꿔 몬스터 구성을 바꾼다(2단계 PD 2026-10-22).
+        /// </summary>
         private HostEntry TrashByKey(string key, int chapter)
         {
             if (string.IsNullOrEmpty(key)) return null;
@@ -113,14 +119,35 @@ namespace Game.Module.InGame
             var allow = TrashKeysFor(chapter);
             for (int i = 0; i < allow.Length; i++)
                 if (allow[i] == key) return TrashEntryOf(key);
+
+            // 같은 몸의 몬스터들 — 목록 순서가 곧 Lv 순서다(챕터 표에 낮은 것부터 적는다)
+            int n = 0;
+            for (int i = 0; i < allow.Length; i++)
+                if (BodyOfTrash(allow[i]) == key) n++;
+            if (n == 0) return null;
+            int pick = Mathf.Clamp(Mathf.FloorToInt(RoomProgress(chapter) * n), 0, n - 1);
+            for (int i = 0; i < allow.Length; i++)
+                if (BodyOfTrash(allow[i]) == key && pick-- == 0) return TrashEntryOf(allow[i]);
             return null;
         }
 
-        /// <summary>쏘는 잡몹인가. 자리를 대체할 때 **역할**을 살리려고 본다.</summary>
-        private static bool IsRangedTrashKey(string key)
-            => key == TrashGunnerKey || key == TrashWardenKey
-            || key == TrashCoilKey || key == TrashCrossKey || key == TrashMoleKey || key == TrashMantisKey
-            || key == TrashMummyKey || key == TrashSpiderKey;
+        /// <summary>이 챕터에서 지금 방이 어디쯤인가(0 = 첫 방, 1 에 가까울수록 끝).</summary>
+        private float RoomProgress(int chapter)
+        {
+            int total = Mathf.Max(1, ChapterRoomCount(chapter));
+            int at = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
+            return Mathf.Clamp01((at - 1f) / total);
+        }
+
+        /// <summary>쏘는 잡몹인가. 자리를 대체할 때 **역할**을 살리려고 본다. 몬스터 키 · 몸 키 둘 다 받는다.</summary>
+        private bool IsRangedTrashKey(string key)
+        {
+            var def = TrashDefOf(key);
+            if (def != null) return def.IsRanged;
+            return key == TrashGunnerKey || key == TrashWardenKey
+                || key == TrashCoilKey || key == TrashCrossKey || key == TrashMoleKey || key == TrashMantisKey
+                || key == TrashMummyKey || key == TrashSpiderKey;
+        }
 
         /// <summary>
         /// 이 자리에 세울 잡몹. 방 데이터가 지정한 키를 **그 챕터 것으로 갈아 끼운다.**

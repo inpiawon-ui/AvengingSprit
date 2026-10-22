@@ -389,7 +389,9 @@ namespace Game.Module.InGame
                 LoadTableAsync<EventTable>(res, "TableData/EventTable",
                     t => _eventTable = t, "EventTable 없음 — 이벤트 방은 그냥 지나간다", warnOnly: true),
                 LoadTableAsync<ShopTable>(res, "TableData/ShopTable",
-                    t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true));
+                    t => _shopTable = t, "ShopTable 없음 — 상점 방은 그냥 지나간다", warnOnly: true),
+                LoadTableAsync<TrashTable>(res, "TableData/TrashTable",
+                    t => _trashTable = t, "TrashTable 없음 — 잡몹은 예전 정의(Lv1)로 선다", warnOnly: true));
             // 추가 모드(탑 · 밤) — 표를 읽고 층 · 요일을 정한다. 아래 캐릭터 목록이 그 몸들을 같이 올린다
             await LoadModeTableAsync(res);
             PrepareModeRun();
@@ -791,6 +793,7 @@ namespace Game.Module.InGame
                 if (!isHost && !elite) _crowdSeeds.Add(u);
             }
             SpawnCrowd(room);
+            PromoteElites(room);   // 챕터 뒤쪽 방 — 잡몹 몇을 엘리트로 (BattleDirector.Elite)
             EnsureHostBodies();
             SpawnMidBoss(room, hosts);
 
@@ -2741,11 +2744,17 @@ namespace Game.Module.InGame
 #endif
             // ⚠ 전용 아틀라스가 있는 것만 올린다. 십자 포탑은 공용 아틀라스를 쓰므로
             //   여기 넣으면 `obj_turret` 이라는 없는 아틀라스를 부르다 실패가 쌓인다.
+            // 몬스터 키가 아니라 **그림 키**를 올린다 — 변종은 몸 그림을, 원소판은 제 그림을 쓴다(몬스터 표)
             for (int c = 1; c <= ChapterCount; c++)
                 foreach (var k in TrashKeysFor(c))
-                    if (k != TrashCrossKey && !keys.Contains(k)) keys.Add(k);
+                {
+                    var t = TrashEntryOf(TrashKeyAlias(k));
+                    if (t != null && t.SpriteKey != TrashCrossKey && !keys.Contains(t.SpriteKey)) keys.Add(t.SpriteKey);
+                }
             // 알 거미가 낳는 새끼는 방에 서 있지 않아 위 목록에 없다 — 안 올리면 흰 사각형으로 태어난다 (BattleDirector.Trash4)
             if (keys.Contains(TrashSpiderKey) && !keys.Contains(TrashSpiderlingKey)) keys.Add(TrashSpiderlingKey);
+            // 갈라지는 고릴라는 박쥐 둘로 갈라진다 — 박쥐가 없는 챕터에서도 그림이 있어야 한다
+            if (keys.Contains(TrashEnforcerKey) && !keys.Contains(TrashBatKey)) keys.Add(TrashBatKey);
             var bossDef = _bossTable != null ? _bossTable.ForChapter(chapter) : null;
             keys.Add(UnitKeyOf(bossDef != null ? bossDef.SpriteName : "unit_boss"));
             // 그림이 하나도 안 걸렸을 때를 위한 마지막 대비책
@@ -3950,7 +3959,8 @@ namespace Game.Module.InGame
                 // 막힌 것을 타고 미끄러진다. 밀어 넣고 빼내면 벽에서 캐릭터가 떨린다.
                 var before = me.Position;
                 var p = SlideMove(me, me.Position,
-                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul * PoolMoveMul) * dt);
+                                  MoveInput * (me.MoveSpeed * _buffs.MoveMul * CombatStepMul
+                                               * PoolMoveMul * ElementMoveMul * GhostHeldMoveMul) * dt);
                 // 테두리·문 한계는 `ClampedInField` 한 곳이 갖는다.
                 p = ClampedInField(me, p);
                 me.Position = p;
@@ -5013,7 +5023,7 @@ namespace Game.Module.InGame
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(from), ShotKindOf(from),
                                LoopsFrames(ShotKindOf(from)));
-                if (!fromPlayer) shot.SourceKey = from.Key;
+                if (!fromPlayer) { shot.SourceKey = from.Key; shot.Element = ElementOf(from); }
                 shot.Fire(from.Position, at, speed, damage,
                           fromPlayer, null, _config.ShotSize * 1.15f,
                           fromPlayer ? ShotPlayerColor : ShotBossColor,
@@ -5266,6 +5276,7 @@ namespace Game.Module.InGame
             Burst(target.Position, false);
             if (_host == null) return;
             DamagePlayer(attacker.Atk, attacker.Key);
+            ApplyElementToPlayer(ElementOf(attacker));   // 원소판 근접(독 박쥐 · 독 해골) (BattleDirector.Elements)
         }
 
         /// <summary>피해 없는 시각 효과. 근접 공격이 화면에서 아무 일도 없어 보이는 것을 막는다.</summary>
@@ -6751,7 +6762,7 @@ namespace Game.Module.InGame
             shot.IsBasic = _basicAttackDepth > 0;
             var kind = ShotKindOf(attacker);
             shot.SetSprite(ShotSpriteOf(attacker), kind, LoopsFrames(kind));
-            if (!fromPlayer) shot.SourceKey = attacker.Key;
+            if (!fromPlayer) { shot.SourceKey = attacker.Key; shot.Element = ElementOf(attacker); }
             var p = attacker.Profile;
             bool snipe = p != null && p.Kind == AttackKind.Snipe;
 
@@ -7285,7 +7296,11 @@ namespace Game.Module.InGame
         private Projectile RentShot()
         {
             for (int i = 0; i < _shots.Count; i++)
-                if (!_shots[i].IsActive) { _shots[i].SourceKey = null; _shots[i].IsBasic = false; return _shots[i]; }
+                if (!_shots[i].IsActive)
+                {
+                    _shots[i].SourceKey = null; _shots[i].IsBasic = false; _shots[i].Element = TrashElement.None;
+                    return _shots[i];
+                }
 
             if (_shots.Count >= MaxShots) return null;   // 폭주 방지 상한
             var go = new GameObject("Shot", typeof(RectTransform));
@@ -7451,6 +7466,7 @@ namespace Game.Module.InGame
                     p.Despawn();
                     SpawnImpact(ImpactPointOn(me, p.Position), p.Kind);
                     DamagePlayer(p.Damage, p.SourceKey);
+                    ApplyElementToPlayer(p.Element);   // 원소판 잡몹의 탄 — 화상 · 냉기 · 독 (BattleDirector.Elements)
                 }
             }
         }

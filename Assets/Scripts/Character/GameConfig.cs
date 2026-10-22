@@ -638,10 +638,10 @@ namespace Game.Character
             public string Boss;
             [Tooltip("8번 방 중간보스 대장(호스트 키).")]
             public string Leader;
-            [Tooltip("이 챕터에 서는 잡몹 키.")]
+            [Tooltip("이 챕터에 서는 몬스터 키(몬스터 표). 같은 몸이 여럿이면 앞 방 → 뒤 방으로 Lv 가 오른다.")]
             public string[] Trash;
-            [Tooltip("잡몹 패턴 단계(1~6). 같은 잡몹도 단계가 오르면 다르게 싸운다.")]
-            public int Pattern;
+            [Tooltip("챕터 뒤쪽 절반 전투방마다 세우는 엘리트 수.")]
+            public int Elite;
             [Tooltip("잡몹 자리마다 같은 잡몹을 한 기 더 세울 몫(0.6 = 잡몹 10자리에 6기 더). 방 상한은 RoomEnemyCap.")]
             public float Crowd;
             [Tooltip("방 적(잡몹 · 적 몸)의 공격 간격 배율. 작을수록 자주 쏜다. 0 이면 1.")]

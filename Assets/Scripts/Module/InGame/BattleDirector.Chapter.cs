@@ -28,8 +28,8 @@ namespace Game.Module.InGame
         private readonly Dictionary<int, string[]> _trashKeysByChapter = new();
         private readonly Dictionary<int, HostEntry[]> _trashPoolByChapter = new();
 
-        /// <summary>잡몹 키 → 잡몹. 잡몹은 `HostTable` 에 없고 코드가 만든다.</summary>
-        private static HostEntry TrashEntryOf(string key)
+        /// <summary>몬스터 표가 없을 때(임포트 전)의 잡몹 — 예전 코드 정의 그대로, 변종 없이 Lv1 만.</summary>
+        private static HostEntry LegacyTrashEntryOf(string key)
             => key == TrashSkeletonKey ? Skeleton
              : key == TrashBatKey      ? Bat
              : key == TrashGunnerKey   ? Scrapgunner
@@ -83,16 +83,6 @@ namespace Game.Module.InGame
             var pool = list.ToArray();
             _trashPoolByChapter[chapter] = pool;
             return pool;
-        }
-
-        /// <summary>
-        /// 잡몹 패턴 단계. 같은 잡몹도 단계가 오르면 다르게 싸운다(`BattleDirector.Patterns2`).
-        /// 표의 `pattern` 칸 — 1~6 챕터는 제 번호, 7챕터부터는 7(집행자 돌진, 2026-10-07).
-        /// </summary>
-        private int PatternStageOf(int chapter)
-        {
-            int p = ChapterRow(chapter).Pattern;
-            return p > 0 ? p : chapter;
         }
 
         // ── 값 ──────────────────────────────────────────────────

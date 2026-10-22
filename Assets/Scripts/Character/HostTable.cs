@@ -344,14 +344,15 @@ namespace Game.Character
         public static HostEntry CreateTrash(string key, string nameKr, AttackKind kind,
                                             int hp, int atk, float moveMps, float engageMps,
                                             float rangeMeters, float interval, float telegraph,
-                                            int shotCount = 1, float spreadDegrees = 0f)
+                                            int shotCount = 1, float spreadDegrees = 0f, string spriteKey = null)
         {
             return new HostEntry
             {
                 _hostKey = key,
                 _nameKr = nameKr,
                 _nameEn = key,
-                _spriteKey = key,
+                // 원소판은 몸(행동 · 쪽)은 같고 그림만 제 것이다(몬스터 표 `TrashDef.Sprite`)
+                _spriteKey = string.IsNullOrEmpty(spriteKey) ? key : spriteKey,
                 _attackKind = kind,
                 _possessKind = PossessKind.NotPossessable,
                 _canonHp = hp,

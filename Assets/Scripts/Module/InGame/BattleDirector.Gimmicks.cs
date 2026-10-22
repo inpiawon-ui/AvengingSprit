@@ -388,6 +388,8 @@ namespace Game.Module.InGame
             TickWallTurrets(dt);
             TickHazards2(dt);   // 분사구 · 낙하물 · 웅덩이 · 지뢰 (BattleDirector.Hazards)
             TickWarns(dt);      // 바닥 예고 (BattleDirector.Warn)
+            TickElements(dt);   // 원소판 잡몹의 자국 · 내 몸의 화상 · 독 · 냉기 (BattleDirector.Elements)
+            TickNewShapeFlights(dt);   // 톱날 되돌리기 · 등불 방패 · 사냥개 붙잡힘 (BattleDirector.Trash6)
         }
 
         private void ClearGimmicks()

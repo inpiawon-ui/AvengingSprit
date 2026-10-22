@@ -75,44 +75,35 @@ namespace Game.Module.InGame
         /// 새 잡몹을 늘리는 대신 **행동을 바꾼다.** 그림이 같으니 플레이어는
         /// "아는 놈" 이라고 생각하고 들어왔다가 한 번 당하고 다시 배운다.
         /// </summary>
-        // ⚠ 챕터 숫자는 **그 몹이 실제로 나오는 챕터**여야 한다.
-        //   처음엔 3연발을 폐품 사수(CH1 전용)에 붙였는데, 그러면 CH3 부터라는 말이
-        //   무색하게 **한 번도 안 나온다.** 순찰기는 CH2·CH4·CH6 에 있어서
-        //   부채꼴 → 3연발 → 회오리로 세 번 달라진다 — 같은 그림, 다른 적.
-        private const int BurstFromChapter  = 4;   // 순찰기 → 3연발
-        // 고철 전갈(사수)도 2단계부터 연발 — 한 발씩 띄엄띄엄 쏘니 쉽다(PD 2026-10-12 「궁수의 전설 2챕터는 3~4발 쏘고 텀을 두고 또 쏜다」).
-        // 1챕터는 한 발씩 그대로 둔다 — 탄을 보고 비키는 것을 처음 배우는 곳이다.
-        private const int GunnerBurstFromChapter = 2;
-        private const int BurstFourFromChapter   = 4;   // 이 단계부터 4연발
-        private const int AmbushFromChapter = 5;   // 해골   → 매복
-        private const int SpiralFromChapter = 6;   // 순찰기 → 회오리 유도탄
+        // 같은 몸이 무엇을 더 하는지는 몬스터 성질이 정한다(몬스터 표 `TrashTrait`, 2단계 PD 2026-10-22).
+        //   예전에는 챕터 단계 문턱(`…FromChapter`)이었다 — 한 방에 두 판을 섞을 수 없었고 단계가 7에서 끝났다.
 
         private EnemyPattern PatternOf(Unit e)
         {
             if (e == null) return EnemyPattern.Chase;
-            int ch = PatternChapter;
             switch (e.Key)
             {
                 case TrashEnforcerKey:
-                    // 돌 고릴라 — 5단계부터 도약(내려찍기)과 돌진을 **번갈아** 한다(PD 「다양한 공격 패턴」).
-                    //   한 놈이 두 수를 섞으니 다음이 뭔지 읽어야 한다. 7단계부터는 돌진이 먼저 나온다
-                    if (ch >= GorillaMixFromStage)
-                        return _gorillaCharge.Contains(e) != (ch >= ChargeFromChapter) ? EnemyPattern.Dive : EnemyPattern.Hop;
+                    // 돌 고릴라 — 도약(내려찍기)과 돌진을 **번갈아** 하는 판이 있다(PD 「다양한 공격 패턴」).
+                    //   한 놈이 두 수를 섞으니 다음이 뭔지 읽어야 한다. 돌격 고릴라는 돌진이 먼저 나온다
+                    if (HasTrait(e, TrashTrait.GorillaMix))
+                        return _gorillaCharge.Contains(e) != HasTrait(e, TrashTrait.ChargeFirst) ? EnemyPattern.Dive : EnemyPattern.Hop;
                     return EnemyPattern.Hop;
                 case TrashCoilKey:     return EnemyPattern.Vault;
                 case TrashBoarKey:     return EnemyPattern.Dive;   // 멧돼지 — 돌진만(평타 없음, BattleDirector.Boar)
                 case TrashCrossKey:
-                    return ch >= CrossStreamFromChapter ? EnemyPattern.Stream : EnemyPattern.Cross;
+                    return HasTrait(e, TrashTrait.CrossStream) ? EnemyPattern.Stream : EnemyPattern.Cross;
                 case TrashBatKey:
-                    return ch >= DiveFromChapter ? EnemyPattern.Dive : EnemyPattern.Chase;
+                    return HasTrait(e, TrashTrait.Dive) ? EnemyPattern.Dive : EnemyPattern.Chase;
                 case TrashGunnerKey:
-                    return ch >= GunnerBurstFromChapter ? EnemyPattern.Burst : EnemyPattern.Strafe;
+                    // 1판은 한 발씩 — 탄을 보고 비키는 것을 처음 배운다. 연발판은 3~4발 쏘고 텀(PD 2026-10-12)
+                    return HasTrait(e, TrashTrait.GunnerBurst) ? EnemyPattern.Burst : EnemyPattern.Strafe;
                 case TrashWardenKey:
-                    return ch >= SpiralFromChapter ? EnemyPattern.Spiral
-                         : ch >= BurstFromChapter  ? EnemyPattern.Burst
+                    return HasTrait(e, TrashTrait.Spiral) ? EnemyPattern.Spiral
+                         : HasTrait(e, TrashTrait.WardenBurst) ? EnemyPattern.Burst
                          : EnemyPattern.Fan;
                 case TrashSkeletonKey:
-                    return ch >= AmbushFromChapter ? EnemyPattern.Ambush : EnemyPattern.Chase;
+                    return HasTrait(e, TrashTrait.Ambush) ? EnemyPattern.Ambush : EnemyPattern.Chase;
                 default:               return IsMelee(e) ? EnemyPattern.Chase : EnemyPattern.Strafe;
             }
         }
@@ -196,7 +187,7 @@ namespace Game.Module.InGame
                 var shot = RentShot();
                 if (shot == null) return;
                 shot.SetSprite(ShotSpriteOf(e), ShotKindOf(e), LoopsFrames(ShotKindOf(e)));
-                shot.SourceKey = e.Key;
+                shot.SourceKey = e.Key; shot.Element = ElementOf(e);
                 shot.Fire(e.Position, e.Position + dir * reach, speed, dmg,
                           false, null, _config.ShotSize, ShotEnemyColor, life);
             }
@@ -602,7 +593,7 @@ namespace Game.Module.InGame
         private const float BurstGapSeconds  = 0.22f;
 
         private float BurstIdleOf(Unit e) => Mathf.Max(BurstIdleMinSeconds, e.AttackInterval * BurstIdlePerInterval);
-        private int BurstShotsOf() => PatternChapter >= BurstFourFromChapter ? 4 : 3;
+        private int BurstShotsOf(Unit e) => HasTrait(e, TrashTrait.Burst4) ? 4 : 3;
 
         private bool TickBurst(Unit e, Unit me, float distance, float dt)
         {
@@ -643,7 +634,7 @@ namespace Game.Module.InGame
                     if (e.PatternTimer > 0f) return true;
                     FireAimed(e, e.PatternTo, 1f);
                     e.PatternAngle += 1f;
-                    if (e.PatternAngle >= BurstShotsOf())
+                    if (e.PatternAngle >= BurstShotsOf(e))
                     {
                         e.PatternPhase = 0;
                         e.PatternTimer = BurstIdleOf(e);
@@ -672,7 +663,7 @@ namespace Game.Module.InGame
             string kind = kindOverride ?? ShotKindOf(e);
             shot.SetSprite(kindOverride != null ? ShotFrames(kindOverride) : ShotSpriteOf(e),
                            kind, LoopsFrames(kind));
-            shot.SourceKey = e.Key;
+            shot.SourceKey = e.Key; shot.Element = ElementOf(e);
             shot.Fire(e.Position, e.Position + dir * reach, speed, damage > 0 ? damage : Mathf.Max(1, e.Atk),
                       false, null, _config.ShotSize * sizeMul, ShotEnemyColor, life);
             if (homing > 0f) shot.SetHoming(homing);

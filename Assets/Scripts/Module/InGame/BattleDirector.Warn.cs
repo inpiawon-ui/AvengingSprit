@@ -34,6 +34,8 @@ namespace Game.Module.InGame
             /// <summary>이 예고를 건 몸. 그 몸이 죽으면 예고도 거둔다.</summary>
             public Unit Owner;
             public bool Active;
+            /// <summary>터진 자리에 남길 원소 자국(얼음 코일 박격 · 불 고릴라 착지). None 이면 안 남긴다.</summary>
+            public Game.Character.TrashElement ZoneElement;
         }
 
         private readonly List<Warn> _warns = new();
@@ -75,6 +77,7 @@ namespace Game.Module.InGame
             w.FxName = fxName;
             w.FxSize = fxSize;
             w.Owner = owner;
+            w.ZoneElement = Game.Character.TrashElement.None;
             w.Active = true;
             if (w.View != null) w.View.Show(shape, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
             return w;
@@ -105,6 +108,8 @@ namespace Game.Module.InGame
             if (!string.IsNullOrEmpty(w.ImpactKind)) SpawnImpact(at, w.ImpactKind, w.FxSize);
             if (w.FxName == "shockwave") SpawnShockwave(at, w.FxSize);   // 공용 충격파 (BattleDirector.Fixtures)
             else if (!string.IsNullOrEmpty(w.FxName)) PlayFx(w.FxName, at, w.FxSize, loop: false);
+            if (w.ZoneElement != Game.Character.TrashElement.None && w.Shape.Shape == DangerShape.Kind.Disc)
+                AddElementZone(at, w.Shape.Radius / Mathf.Max(1f, Meters(1f)), ZoneSecondsOf(w.ZoneElement), w.ZoneElement);
 
             var me = Avatar;
             if (w.Damage > 0 && _host != null && me != null)
@@ -158,6 +163,7 @@ namespace Game.Module.InGame
             _pistons.Clear();
             ClearTrash4();
             ClearGimmick2();   // 피스톤 그림은 물건과 같이 지워진다 — 표만 비운다
+            ClearElements();   // 원소 자국 · 내 몸의 원소 상태 (BattleDirector.Elements)
         }
     }
 }

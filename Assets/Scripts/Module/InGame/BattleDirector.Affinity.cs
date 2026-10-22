@@ -87,18 +87,21 @@ namespace Game.Module.InGame
             "gangster" or "thug" or "hopper" or "hopper_smg" or "commando_mg" or "ninja"
                 or "amazon" or "amazon_elite"
                 or "bat" or "roadwarden" or "scrapgunner" or "mole" or "mantis"
+                or "watcher_eye" or "soul_hound"
                 or "python" or "kingpin"
                 => Affinity.Blade,
             // ── 파워: 둔기 · 폭발 · 중화기, 그리고 쇠로 된 것 ──
             "baseball" or "guru" or "ninja_chain" or "commando_grenade" or "commando_missile"
                 or "commando_laser" or "robot"
                 or "actor_enforcer" or "boar" or "armadillo" or "obj_turret" or "turret_cross"
+                or "saw_monkey" or "mimic"
                 or "robot_snakes" or "crusher" or "guardian"
                 => Affinity.Force,
             // ── 마법: 불 · 얼음 · 번개 · 독 · 빛 · 어둠, 그리고 망자와 괴이 ──
             "dragoon" or "snowwoman" or "dragon_blue" or "salamander" or "vampire"
                 or "white_wizard" or "medium" or "death"
                 or "skeleton" or "coilwalker" or "mushroom" or "mummy" or "spider" or "spiderling" or "sludge"
+                or "shadow_cat" or "lantern"
                 => Affinity.Magic,
             _ => Affinity.None,
         };

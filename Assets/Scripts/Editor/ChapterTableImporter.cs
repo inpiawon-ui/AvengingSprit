@@ -23,7 +23,7 @@ namespace Game.EditorTools
             public int Ch;
             public string Stage, Boss, Leader, Lean, Chest, Name, Desc;
             public string[] Trash;
-            public int Pattern, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
+            public int Elite, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
             public float Crowd, Fire;
             public int Music, Art, BossArt, ChestArt;
             public float HpMul, AtkMul, PriceMul;
@@ -57,7 +57,7 @@ namespace Game.EditorTools
                 rows.Add(new Row
                 {
                     Ch = I("ch"), Stage = S("stage"), Boss = S("boss"), Leader = S("leader"),
-                    Trash = S("trash").Split(','), Lean = S("lean"), Pattern = I("pattern"),
+                    Trash = S("trash").Split(','), Lean = S("lean"), Elite = I("elite"),
                     Crowd = F("crowd"), Fire = F("fire"),
                     HpMul = F("hpMul"), AtkMul = F("atkMul"), BossHp = I("bossHp"), BossAtk = I("bossAtk"),
                     RoomGold = I("roomGold"), MidGold = I("midGold"), BossGold = I("bossGold"),
@@ -87,9 +87,9 @@ namespace Game.EditorTools
         /// <summary>잡몹의 쪽 — `AffinityRule.KindOf` · `rooms90_build.py` 의 KIND 와 같아야 한다.</summary>
         private static int KindIndex(string actor) => actor switch
         {
-            "bat" or "roadwarden" or "scrapgunner" or "mole" or "mantis" => 0,   // 무기
-            "actor_enforcer" or "boar" or "armadillo" or "turret_cross" => 1,   // 파워
-            "skeleton" or "coilwalker" or "mushroom" or "mummy" or "spider" => 2,   // 마법
+            "bat" or "roadwarden" or "scrapgunner" or "mole" or "mantis" or "watcher_eye" or "soul_hound" => 0,   // 무기
+            "actor_enforcer" or "boar" or "armadillo" or "turret_cross" or "saw_monkey" or "mimic" => 1,   // 파워
+            "skeleton" or "coilwalker" or "mushroom" or "mummy" or "spider" or "shadow_cat" or "lantern" => 2,   // 마법
             _ => -1,
         };
 
@@ -145,7 +145,7 @@ namespace Game.EditorTools
                     trash.InsertArrayElementAtIndex(k);
                     trash.GetArrayElementAtIndex(k).stringValue = r.Trash[k].Trim();
                 }
-                e.FindPropertyRelative("Pattern").intValue = r.Pattern;
+                e.FindPropertyRelative("Elite").intValue = r.Elite;
                 e.FindPropertyRelative("Crowd").floatValue = r.Crowd;
                 e.FindPropertyRelative("Fire").floatValue = r.Fire;
                 e.FindPropertyRelative("EnemyHpMul").floatValue = r.HpMul;

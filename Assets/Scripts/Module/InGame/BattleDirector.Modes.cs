@@ -80,13 +80,14 @@ namespace Game.Module.InGame
             AddTrashKeys(keys, _modeTable.TrashOf(Affinity.Magic));
         }
 
-        private static void AddTrashKeys(List<string> keys, string[] trash)
+        private void AddTrashKeys(List<string> keys, string[] trash)
         {
             if (trash == null) return;
             for (int i = 0; i < trash.Length; i++)
             {
                 var k = TrashKeyAlias(trash[i]);
-                if (k != TrashCrossKey && TrashEntryOf(k) != null && !keys.Contains(k)) keys.Add(k);
+                var e = k != TrashCrossKey ? TrashEntryOf(k) : null;
+                if (e != null && !keys.Contains(e.SpriteKey)) keys.Add(e.SpriteKey);
             }
         }
 

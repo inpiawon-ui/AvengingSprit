@@ -40,6 +40,10 @@ namespace Game.Module.InGame
 
         private readonly Dictionary<Unit, Image> _moleMounds = new();
 
+        // 쌍굴 두더지(`mole_2`) — 솟아 쏘고 숨은 뒤 짧게 파고 한 번 더 솟아 다섯 발. 두 번째 뒤엔 평소처럼 오래 판다
+        private const float MoleSecondDigSeconds = 0.6f;
+        private readonly HashSet<Unit> _moleSecond = new();
+
         /// <summary>두더지 한 프레임. 늘 true — 다른 패턴으로 내려가지 않는다(`TickPatterns3` 가 부른다).</summary>
         private bool TickMole(Unit e, Unit me, float distance, float dt)
         {
@@ -48,7 +52,13 @@ namespace Game.Module.InGame
             {
                 case 0:   // 땅속 이동
                 {
-                    if (!e.IsHidden) { e.SetHidden(true); e.PatternTimer = MoleDigMaxSeconds; e.PatternTo = MoleSurfaceSpot(e, me); }
+                    if (!e.IsHidden)
+                    {
+                        e.SetHidden(true);
+                        // 쌍굴 두더지 — 두 번째 굴은 짧게 파고 곧장 솟는다(쉴 틈 없이 두 번)
+                        e.PatternTimer = _moleSecond.Contains(e) ? MoleSecondDigSeconds : MoleDigMaxSeconds;
+                        e.PatternTo = MoleSurfaceSpot(e, me);
+                    }
                     ShowMound(e, true);
                     e.SetMoving(true);
                     e.SetState(EnemyState.Approach);
@@ -82,7 +92,11 @@ namespace Game.Module.InGame
                     if (e.PatternTimer > 0f) return true;
                     e.SetTelegraph(false);
                     if (_host != null && me != null)
-                        for (int k = -1; k <= 1; k++) FireShot(e, me, fromPlayer: false, k * MoleFanDegrees, lastShot: k == 1);
+                    {
+                        int half = _moleSecond.Contains(e) ? 2 : 1;   // 쌍굴의 두 번째는 다섯 발
+                        for (int k = -half; k <= half; k++)
+                            FireShot(e, me, fromPlayer: false, k * MoleFanDegrees, lastShot: k == half);
+                    }
                     e.PatternPhase = 3;
                     e.PatternTimer = MoleStandSeconds;
                     return true;
@@ -92,6 +106,8 @@ namespace Game.Module.InGame
                     e.SetState(EnemyState.Cooldown);
                     if (e.PatternTimer > 0f) return true;
                     PlayFx("burrow", e.Position, Meters(1.4f), loop: false);
+                    // 쌍굴 — 첫 굴이 끝났으면 두 번째를 표시, 두 번째가 끝났으면 지운다
+                    if (!_moleSecond.Remove(e) && HasTrait(e, TrashTrait.MoleDouble)) _moleSecond.Add(e);
                     e.PatternPhase = 0;   // 다음 프레임에 숨는다
                     return true;
             }
@@ -160,6 +176,7 @@ namespace Game.Module.InGame
             foreach (var pair in _moleMounds)
                 if (pair.Value != null) Object.Destroy(pair.Value.gameObject);
             _moleMounds.Clear();
+            _moleSecond.Clear();
         }
     }
 }
