@@ -26,6 +26,9 @@ ACTS = ['', '_walk1', '_walk2', '_atk1', '_atk2', '_hit', '_die1', '_die2']
 # 아홉째 칸을 쓰는 몸 — 두더지의 땅속 흙더미(`_under`)
 NINTH = {'mole': '_under'}
 STANDING = [0, 1, 2, 5]
+# 옆으로 넓은 몸 — 키로 맞추면 날개가 칸 밖으로 나가 잘린다(박쥐 2026-10-22 PD 「날개가 계속 짤려 있다」).
+# 여덟 칸 중 가장 넓은 칸이 칸 폭(여백 2 px씩)에 들어오는 배율을 키 배율과 견줘 작은 쪽을 쓴다.
+WIDE = {'bat', 'bat_poison'}
 # 새 그림 → 게임이 부르는 키. 돌 고릴라는 집행자 자리에 들어간다(키를 바꾸면 방 표 · 챕터 표를 다 고쳐야 한다)
 GAME_KEY = {'gorilla': 'actor_enforcer', 'scorpion': 'scrapgunner'}
 # 몸 키(잉크 높이). 사람(호스트)은 76 이다. 덩치 큰 짐승은 폭이 넓어 같은 키여도 훨씬 커 보인다 —
@@ -61,6 +64,9 @@ def main(key, d, path, out_dir=None):
     tiles = cells(path)
     heights = sorted(bbox(tiles[i])[3] - bbox(tiles[i])[1] for i in STANDING)
     scale = BODY_H.get(key, INK_H) / heights[len(heights) // 2]
+    if key in WIDE:
+        widest = max(bbox(t)[2] - bbox(t)[0] for t in tiles[:8] if (t[..., 3] > 40).any())
+        scale = min(scale, (CELL - 4) / widest)
     game = GAME_KEY.get(key, key)
     dst = out_dir or os.path.join(ROOT, 'Assets', 'BaseResource', 'Unit', game)
     os.makedirs(dst, exist_ok=True)

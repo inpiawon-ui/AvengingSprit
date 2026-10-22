@@ -5,7 +5,7 @@ $prompt = @"
 
 AVENGING SPIRIT: RE:BORN — 잡몹 원소판 「독 박쥐」 게임 그림 (ne 방향 · 8칸)
 
-원래 몸(지금 게임 그림 8장을 3배로 붙인 판) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/trash_v3/game_bat_ne_x3.png
+원래 몸(지금 게임 그림 8장을 3배로 붙인 판) : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/ref/char_up/out_bat_ne_raw.png
   → **칸 · 자세 · 실루엣 · 크기를 그대로 두고 색 · 작은 부속만** 바꾼다. 한 칸이라도 자세가 달라지면 안 된다.
 원소 생김새 정답 : C:/won/UnityProject/AvengingSprit/Projects/AVSR/_exchange/in/mock_elements_v1.png 의 3줄 오른쪽(독 해골)의 색 · 독 표현.
 바꿀 것 : 몸이 보라, 날개막이 연두, 송곳니에 독 방울.

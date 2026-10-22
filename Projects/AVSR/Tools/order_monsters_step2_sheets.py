@@ -163,7 +163,9 @@ AVENGING SPIRIT: RE:BORN — 새 잡몹 「{m['name']}」 게임 그림 ({d} 방
 
 def order_element(key, d):
     m = ELEMENTS[key]
-    game = compose_game_sheet(m['body'], d).replace('\\', '/')
+    # 박쥐 게임 그림은 날개가 칸 밖으로 잘려 있었다(2026-10-22) — 앵커는 잘리기 전 납품 판으로
+    raw = os.path.join(EX, 'ref', 'char_up', f"out_{m['body']}_{d}_raw.png")
+    game = (raw if m['body'] == 'bat' and os.path.exists(raw) else compose_game_sheet(m['body'], d)).replace('\\', '/')
     name = f'trash_{key}_{d}'
     return name, f"""{HEAD}
 
