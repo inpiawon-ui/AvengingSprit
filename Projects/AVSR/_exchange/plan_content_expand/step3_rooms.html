@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3단계 방 배치</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fffdf8;--fg:#24221d;--mute:#6f6a5f;--line:#ddd6c8;--accent:#a8551b;--ok:#2f7a4a;--warn:#a03a2a;--ask:#2d5f9a;--chip:#efe7d8}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1b19;--card:#252320;--fg:#ece8df;--mute:#a39d90;--line:#3a3631;--accent:#e08a4a;--ok:#6cc08a;--warn:#e07a68;--ask:#7fb0ea;--chip:#2f2c27}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:20px;margin:38px 0 10px;padding-top:14px;border-top:2px solid var(--line)}
+h3{font-size:16px;margin:22px 0 6px;color:var(--accent)}
+p{margin:6px 0}.sub{color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:6px 0}
+th,td{border-bottom:1px solid var(--line);padding:6px 7px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600;white-space:nowrap}
+td.lv{white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.s{display:inline-block;font-size:12px;padding:0 6px;border-radius:4px;white-space:nowrap}
+.s.ok{background:rgba(47,122,74,.15);color:var(--ok)}
+.s.fix{background:rgba(160,58,42,.15);color:var(--warn)}
+.s.ask{background:rgba(45,95,154,.15);color:var(--ask)}
+.s.now{background:var(--chip);color:var(--mute)}
+.note{color:var(--mute);font-size:13px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0}
+.q{background:var(--card);border-left:4px solid var(--accent);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+ul,ol{margin:6px 0;padding-left:22px}li{margin:3px 0}
+code{font-family:Consolas,monospace;font-size:12.5px;background:var(--chip);padding:0 4px;border-radius:3px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>3단계 — 방 배치 · 30스테이지 챕터 · 경험치 레벨업 <span class="s ask">검수 차례</span></h1>
+<p class="sub">2026-10-22 조사 — 원본 30방 장 40개 + 경험치 표 · 지형 재사용 / 우리 15방 골격 · 레벨업 코드 실측. 원본에서는 구조 · 수치만 가져온다. <b>PD 확인 전에는 구현하지 않는다.</b> 2단계(그림 반영 · 최종 녹화)가 끝나는 대로 시작한다.</p>
+<p class="note">조사 원문: <code>step3_research/origin.md</code> · <code>step3_research/ours.md</code></p>
+
+<div class="box"><b>한 줄 요약</b> — 원본 30방 장은 전부 「천사 5 · 15 · 25 / 보스 10 · 20 · 30 / 보물 몹 9 · 19 · 29」 같은 골격이고, 경험치로 30방 끝에 Lv9~10(레벨업 8~9번)이 된다. 우리는 이 골격에 상점 · 중간보스 · 악마 제단을 얹고, 방은 <b>지형 틀 + 그 챕터 몬스터로 채우기</b>로 바꿔 챕터를 늘리는 비용을 크게 줄인다.</div>
+
+<!-- ───────────── 비교 ───────────── -->
+<h2>지금 우리 vs 원본</h2>
+<div class="scroll"><table>
+<tr><th>무엇</th><th>원본 30방 장</th><th>우리 지금</th></tr>
+<tr><td>골격</td><td>천사 5·15·25 · 보스 10·20·30 · 보물상자 몹 9·19·29 · 첫 방 빈 방 · 상점 · 이벤트 없음</td><td>15방 — 1~3 전투 · 4 천사 · 5~7 · 8 중간보스(→ 악마 제단) · 9~11 · 12 상점 · 13~14 · 15 보스</td></tr>
+<tr><td>레벨업</td><td>경험치 — 필요량 30·60·…·300(만렙 11) · 일반 몹 4~13 · 보스 · 보물 몹 29 · 30방 끝 Lv9~10</td><td>「싸움 있던 방을 비우면 +1」 — 한 챕터 약 12번. 경험치 코드는 있는데 밤 모드만 씀 · 적마다 값 없음(전부 10)</td></tr>
+<tr><td>방 지도</td><td>지형 841가지로 맵 8121개 — 같은 지형 · 같은 스폰 칸에 몬스터만 바꿈 · 판에서 쓴 맵은 다 쓸 때까지 안 나옴</td><td>방 110개를 손으로 그림(챕터당 11) · 몬스터를 몸 키로 박음 · 11챕터부터는 지도 파일이 없어 막힘</td></tr>
+<tr><td>방 크기</td><td>폭 11 · 높이 11(천사)/15/21 — 11방부터 21칸으로 커져 몹이 는다</td><td>10 × 16 하나</td></tr>
+<tr><td>세기</td><td>장 안에서 HP 약 5~8배 · 공격 약 1.8배(1~3방마다 계단)</td><td>방 배율 체력 1.0 → 1.6(14번 방) · 공격은 챕터 배율만</td></tr>
+<tr><td>마리 수</td><td>1~4방 2~5 · 11~19방 6~11 · 21~29방 5~10</td><td>챕터 표 count(1챕터 3~5 → 10챕터 10~12)</td></tr>
+<tr><td>보물 몹</td><td>9·19·29방에 1마리(잡으면 보상 큼)</td><td>없음(예전에 걷어냄)</td></tr>
+</table></div>
+
+<!-- ───────────── 골격안 ───────────── -->
+<h2>30방 골격안</h2>
+<div class="scroll"><table>
+<tr><th>방</th><th>원본</th><th>제안</th><th>이유</th></tr>
+<tr><td class="lv">1</td><td>빈 방</td><td><b>소개 방</b> — 이 챕터 새 몬스터만 2~3마리 · 쉬움</td><td>2단계 「소개 방 해 보자」 · 원본도 새 몹을 작은 방에 먼저 혼자</td></tr>
+<tr><td class="lv">2 – 4</td><td>일반</td><td>전투(쉬움)</td><td></td></tr>
+<tr><td class="lv">5</td><td>천사</td><td><b>천사 제단</b></td><td>1단계 결정 「천사 2」 — 5 · 25</td></tr>
+<tr><td class="lv">6 – 8</td><td>일반</td><td>전투</td><td></td></tr>
+<tr><td class="lv">9</td><td>보물 몹 + 일반</td><td><b>보물 몹 방</b> — 미믹 상자 1 + 일반</td><td>미믹이 곧 「잡으면 큰 보상」 — 새 그림 없이 원본 보물상자 몹 자리를 채운다</td></tr>
+<tr><td class="lv">10</td><td>보스</td><td><b>중간보스</b>(호스트 대장) → <b>악마 제단</b></td><td>지금 8번 방 자리 · 1단계 결정 「악마 1」</td></tr>
+<tr><td class="lv">11</td><td>일반</td><td><b>소개 방 2</b>(두 번째 새 몬스터)</td><td>챕터마다 새 것이 1~2개라 둘째 소개</td></tr>
+<tr><td class="lv">12 – 14</td><td>일반</td><td>전투(중간)</td><td></td></tr>
+<tr><td class="lv">15</td><td>천사</td><td><b>상점</b></td><td>천사는 2번으로 정함 — 가운데 자리는 상점</td></tr>
+<tr><td class="lv">16 – 18</td><td>일반</td><td>전투 · 엘리트 시작</td><td>엘리트는 「뒤쪽 절반」</td></tr>
+<tr><td class="lv">19</td><td>보물 몹 + 일반</td><td><b>보물 몹 방</b></td><td></td></tr>
+<tr><td class="lv">20</td><td>보스</td><td><b>중간보스 2</b>(다른 호스트 대장) <span class="s ask">판단 부탁</span></td><td>원본은 보스 셋 — 우리는 새 보스 몸을 안 만드니 대장 호스트로</td></tr>
+<tr><td class="lv">21 – 24</td><td>일반</td><td>전투(어려움)</td><td></td></tr>
+<tr><td class="lv">25</td><td>천사</td><td><b>천사 제단</b></td><td></td></tr>
+<tr><td class="lv">26 – 28</td><td>일반</td><td>전투(가장 어려움) · 엘리트 2</td><td></td></tr>
+<tr><td class="lv">29</td><td>보물 몹 + 일반</td><td><b>보물 몹 방</b></td><td></td></tr>
+<tr><td class="lv">30</td><td>보스</td><td><b>보스</b>(원작 보스 6종)</td><td></td></tr>
+</table></div>
+<p class="note">합계: 전투 19 · 소개 2 · 보물 몹 3 · 천사 2 · 상점 1 · 중간보스 2 · 보스 1. 카드 받는 속도(1단계 목표 「한 판 약 11장」): 레벨업 8~9 · 천사 2 · 악마 1 + 상점.</p>
+
+<!-- ───────────── 경험치 ───────────── -->
+<h2>경험치 레벨업</h2>
+<ul>
+<li><b>방 하나 = 1레벨을 버리고 경험치로.</b> 필요량은 원본과 같은 <b>30 × 레벨</b>(30 · 60 · 90 …) — 지금 공식(40×1.45^Lv)은 뒤로 갈수록 너무 가팔라 쓰지 않는다.</li>
+<li>몬스터 표에 <b>경험치 칸</b>을 더한다 — Lv1 6 · Lv2 8 · Lv3 10 · Lv4 12 · 엘리트 ×2 · 중간보스 · 보스 · 보물 몹 30(원본 일반 4~13 · 보스 29).</li>
+<li>우리 방은 몹이 원본보다 많다(뒤 챕터 방당 10기 넘음) — 그대로 쓰면 레벨이 너무 빨리 오른다. <b>30방 끝 Lv9~10</b>(레벨업 8~9번)이 되게 몹 경험치 배율을 시뮬레이션으로 맞춘다.</li>
+<li>레벨업 순간은 지금처럼 <b>방을 비운 뒤</b> 3택1(싸우는 도중에 창이 뜨지 않게) — 경험치는 처치 때 쌓이고, 창은 방이 끝나면 한꺼번에.</li>
+<li><b>성장 가속 카드(c002)를 켠다</b> — 1단계에서 「경험치 레벨업 때 켠다」로 미뤄 둔 것.</li>
+</ul>
+
+<!-- ───────────── 방 틀 ───────────── -->
+<h2>방 = 지형 틀 + 챕터 몬스터로 채우기</h2>
+<ul>
+<li>지금 손으로 그린 110방을 <b>지형 틀</b>로 바꾼다 — 지도의 몬스터 글자를 몸 키(<code>skeleton</code>)가 아니라 <b>자리 역할</b>(근접 · 원거리 · 비행 · 포탑 · 빼앗을 몸 · 보물 몹)로.</li>
+<li>챕터마다 그 챕터 몬스터(2단계 챕터 표)로 자리를 채운다 — 같은 역할 · 방 진행에 따라 Lv. 원본처럼 <b>한 판에서 쓴 틀은 다 쓸 때까지 다시 안 나온다</b>.</li>
+<li>틀마다 <b>난이도 칸</b>(쉬움 · 중간 · 어려움 — 마리 수 · 위험물로)을 매겨 방 번호 구간에 맞는 틀만 고른다.</li>
+<li>기믹이 특색인 방(엄폐 · 위험물 연습 방)은 그 챕터 전용 틀로 남긴다 — 챕터마다 새 기믹(「방 물건은 역할이 있어야」).</li>
+<li>효과: 11챕터부터 막히던 「챕터마다 방 지도 11장」이 사라진다 — 새 챕터 = 챕터 표 한 줄(목표 100챕터).</li>
+</ul>
+
+<!-- ───────────── 세기 ───────────── -->
+<h2>방마다 세기</h2>
+<ul>
+<li>지금 방 배율(체력 1 → 1.6)은 14번 방에서 멈춘다 — 30방으로 늘리고 <b>1~3방마다 계단</b>으로 오르게(원본).</li>
+<li>오름 폭은 원본(HP 5~8배)을 그대로 쓰지 않는다 — 우리는 몸을 갈아타며 세지는 게임이라 시뮬레이션으로 정한다(가안: 체력 1 → 2.5 · 공격 1 → 1.5).</li>
+<li>마리 수는 방 구간마다 — 1~9방 적게 · 11~19방 많이 · 21~29방 많고 엘리트.</li>
+</ul>
+
+<!-- ───────────── 비용 ───────────── -->
+<h2>고칠 곳 · 비용</h2>
+<div class="scroll"><table>
+<tr><th>무엇</th><th>어디</th><th>그림</th></tr>
+<tr><td>30방 골격</td><td>방 임포터 배정표(<code>RoomImporter60.cs</code> 46 · 48-69) · 굽기 도구 전투방 목록 · 골드 계산 · 방 배율 · 중간 구역 곡 범위</td><td>0</td></tr>
+<tr><td>경험치</td><td>레벨업(<code>BattleDirector.StageLevel.cs</code>) · 필요량 공식 · 몬스터 표 경험치 칸 · c002 켜기</td><td>0</td></tr>
+<tr><td>지형 틀</td><td>지도 범례를 역할 글자로 · 굽기 검사를 역할 기준으로 · 틀 → 챕터 배정 · 임포터에서 채우기</td><td>0</td></tr>
+<tr><td>보물 몹</td><td>미믹 상자를 보물 몹으로(잡으면 골드 · 카드) · 9 · 19 · 29방</td><td>0(미믹 그림 발주 중)</td></tr>
+<tr><td>중간보스 2</td><td>20번 방 대장 호스트 — 챕터 표에 칸 하나</td><td>0</td></tr>
+<tr><td>11챕터 이후</td><td>상점 표 6챕터 · 무대 6종 · 로비 상품 10개 · 문자열</td><td>새 무대는 바닥 그림</td></tr>
+<tr><td>검증</td><td>30방 한 판 자동 진행(레벨이 몇 번 방에 오르나 · 몇 분 걸리나) · 방마다 녹화 몇 개</td><td>—</td></tr>
+</table></div>
+
+<!-- ───────────── 질문 ───────────── -->
+<h2>판단 부탁</h2>
+<div class="q"><b>1. 30방 골격</b> — 위 표(소개 2 · 보물 몹 3 · 천사 2 · 상점 1 · 중간보스 2 · 보스 1)로 갈까요?</div>
+<div class="q"><b>2. 20번 방</b> — 중간보스 2(다른 대장 호스트)로 할까요, 아니면 강한 엘리트 방으로 할까요? 악마 제단은 10번 방 뒤 한 번만(1단계 결정) 그대로?</div>
+<div class="q"><b>3. 보물 몹</b> — 미믹 상자를 보물 몹으로 써도 될까요? (상자인 척하다 깨어나는 놈이라 「보물」과 바로 이어진다)</div>
+<div class="q"><b>4. 방 틀</b> — 손으로 그린 110방을 역할 자리 틀로 바꾸고 챕터 몬스터로 채우는 방식으로 갈까요? 챕터 전용 기믹 방은 남깁니다.</div>
+<div class="q"><b>5. 한 판 길이</b> — 30방이면 지금(15방)의 두 배쯤입니다. 목표 시간이 있을까요? (원본 자료에는 없음. 정해 주시면 방당 마리 수 · 세기를 거기에 맞춥니다)</div>
+
+<p class="note">근거 — 원본: <code>WA-Game-LegendOfArcher/Docs/design/origin-report/</code>(chapters 112 · 115 · 117 · 122 · 151 · 1103 · 1199) · <code>origin-data.md</code> §4·5 · <code>origin-analysis/</code>(levelup-cards · stage-selection · stage-composition). 우리: <code>Assets/Scripts/Editor/RoomImporter60.cs</code> · <code>Projects/AVSR/Tools/rooms90_build.py</code> · <code>BattleDirector.StageLevel.cs</code> · <code>GameConfig.cs</code>.</p>
+
+</div></body></html>
