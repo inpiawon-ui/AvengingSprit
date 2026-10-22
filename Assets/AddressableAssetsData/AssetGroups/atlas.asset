@@ -63,6 +63,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ba622b5984565340ba483255ef9bc17
+    m_Address: atlas/unit_saw_monkey
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d9e040fd5d0a854ba4f86cdb01ea10c
     m_Address: atlas/popupfx
     m_ReadOnly: 0

@@ -53,11 +53,12 @@ namespace Game.EditorTools
             B("roadwarden", "순찰기", AttackKind.Single, TrashRole.Ranged, 34, 9, 1.1f, 1.9f, 11.2f, 1.8f, 0.75f, 3, 40f),
             B("coilwalker", "코일 보행기", AttackKind.Single, TrashRole.Ranged, 26, 10, 1.6f, 2.4f, 12.4f, 2.4f, 0.7f),
             B("obj_turret", "십자 포탑", AttackKind.Single, TrashRole.Turret, 30, 8, 0f, 0f, 99f, 2.2f, 0.8f),
-            B("boar", "쇠뿔 멧돼지", AttackKind.Melee, TrashRole.Melee, 30, 8, 1.6f, 2.4f, 1.2f, 1.6f, 0.7f),
+            // 빨강 5종(멧돼지 · 사마귀 · 아르마딜로 · 버섯 · 원숭이)은 원작 결(기계)로 겉모습을 바꿨다(PD 2026-10-22) — 키 · 하는 일은 그대로
+            B("boar", "돌진 쇄석기", AttackKind.Melee, TrashRole.Melee, 30, 8, 1.6f, 2.4f, 1.2f, 1.6f, 0.7f),
             B("mole", "드릴 두더지", AttackKind.Single, TrashRole.Ranged, 28, 8, 1.6f, 2.4f, 10f, 2.2f, 0.6f),
-            B("mantis", "외눈 사마귀", AttackKind.Single, TrashRole.Ranged, 26, 9, 1.4f, 2.0f, 12f, 2.4f, 1.0f),
-            B("armadillo", "갑옷 아르마딜로", AttackKind.Melee, TrashRole.Melee, 40, 9, 0.9f, 1.2f, 1.1f, 1.6f, 0.5f),
-            B("mushroom", "폭탄 버섯", AttackKind.Melee, TrashRole.Melee, 18, 16, 1.5f, 2.0f, 1.3f, 9f, 1.0f),
+            B("mantis", "삼각대 저격기", AttackKind.Single, TrashRole.Ranged, 26, 9, 1.4f, 2.0f, 12f, 2.4f, 1.0f),
+            B("armadillo", "방패 로봇", AttackKind.Melee, TrashRole.Melee, 40, 9, 0.9f, 1.2f, 1.1f, 1.6f, 0.5f),
+            B("mushroom", "폭탄 드럼통", AttackKind.Melee, TrashRole.Melee, 18, 16, 1.5f, 2.0f, 1.3f, 9f, 1.0f),
             B("mummy", "미라", AttackKind.Single, TrashRole.Ranged, 30, 8, 0.8f, 1.0f, 11f, 3.2f, 0.7f),
             B("spider", "알 거미", AttackKind.Single, TrashRole.Support, 34, 6, 1.2f, 1.6f, 10f, 4.5f, 0.6f),
             B("spiderling", "새끼 거미", AttackKind.Melee, TrashRole.Melee, 6, 4, 2.4f, 3.0f, 0.8f, 1.0f, 0.25f),
@@ -67,8 +68,8 @@ namespace Game.EditorTools
             B("watcher_eye", "감시 눈", AttackKind.Single, TrashRole.Flying, 26, 10, 1.3f, 1.8f, 11f, 3.0f, 0.8f),
             // 그림자 살쾡이 — 멀면 사라졌다 옆에 나타나 벤다. 벤 뒤 1초 선다
             B("shadow_cat", "그림자 살쾡이", AttackKind.Melee, TrashRole.Melee, 24, 9, 1.6f, 2.8f, 1.3f, 1.5f, 0.5f),
-            // 톱날 원숭이 — 거리를 두고 돌아오는 톱날. 톱날이 날아가 있는 동안은 빈손
-            B("saw_monkey", "톱날 원숭이", AttackKind.Single, TrashRole.Ranged, 30, 9, 1.3f, 2.0f, 9f, 3.0f, 0.6f),
+            // 톱날 투척기 — 거리를 두고 돌아오는 톱날. 톱날이 날아가 있는 동안은 발사대가 빈다
+            B("saw_monkey", "톱날 투척기", AttackKind.Single, TrashRole.Ranged, 30, 9, 1.3f, 2.0f, 9f, 3.0f, 0.6f),
             // 미믹 상자 — 물건인 척 가만히. 깨면 깨물고 원형 탄
             B("mimic", "미믹 상자", AttackKind.Melee, TrashRole.Melee, 44, 11, 1.1f, 2.2f, 1.3f, 1.8f, 0.5f),
             // 수호 등불 — 곁의 적에게 방패를 씌우고 뒤로 숨는다. 직접은 약하다
@@ -121,18 +122,18 @@ namespace Game.EditorTools
             R("obj_turret", "obj_turret", "십자 포탑", 1, T.None),
             R("obj_turret_2", "obj_turret", "팔방 포탑", 2, T.CrossAlt),
             R("obj_turret_3", "obj_turret", "회전 포탑", 3, T.CrossStream),
-            R("boar", "boar", "쇠뿔 멧돼지", 1, T.Dive),
-            R("boar_2", "boar", "폭주 멧돼지", 2, T.Dive | T.BoarChain),
+            R("boar", "boar", "돌진 쇄석기", 1, T.Dive),
+            R("boar_2", "boar", "폭주 쇄석기", 2, T.Dive | T.BoarChain),
 
             // ② 단계 변화가 없던 몹 + 새 Lv2
             R("mole", "mole", "드릴 두더지", 1, T.None),
             R("mole_2", "mole", "쌍굴 두더지", 2, T.MoleDouble),
-            R("mantis", "mantis", "외눈 사마귀", 1, T.None),
-            R("mantis_2", "mantis", "쌍발 사마귀", 2, T.MantisDouble),
-            R("armadillo", "armadillo", "갑옷 아르마딜로", 1, T.None),
-            R("armadillo_2", "armadillo", "구르는 아르마딜로", 2, T.ArmadilloRoll),
-            R("mushroom", "mushroom", "폭탄 버섯", 1, T.None),
-            R("mushroom_2", "mushroom", "독 버섯", 2, T.MushroomPool),
+            R("mantis", "mantis", "삼각대 저격기", 1, T.None),
+            R("mantis_2", "mantis", "쌍발 저격기", 2, T.MantisDouble),
+            R("armadillo", "armadillo", "방패 로봇", 1, T.None),
+            R("armadillo_2", "armadillo", "구르는 방패 로봇", 2, T.ArmadilloRoll),
+            R("mushroom", "mushroom", "폭탄 드럼통", 1, T.None),
+            R("mushroom_2", "mushroom", "독 드럼통", 2, T.MushroomPool),
             R("mummy", "mummy", "미라", 1, T.None),
             R("mummy_2", "mummy", "겹고리 미라", 2, T.MummyDouble),
             R("spider", "spider", "알 거미", 1, T.None),
@@ -151,7 +152,7 @@ namespace Game.EditorTools
             // ④ 새 모양 · 우리 게임만의 안
             R("watcher_eye", "watcher_eye", "감시 눈", 1, T.Laser),
             R("shadow_cat", "shadow_cat", "그림자 살쾡이", 1, T.Teleport),
-            R("saw_monkey", "saw_monkey", "톱날 원숭이", 1, T.Boomerang),
+            R("saw_monkey", "saw_monkey", "톱날 투척기", 1, T.Boomerang),
             R("mimic", "mimic", "미믹 상자", 1, T.Mimic),
             R("lantern", "lantern", "수호 등불", 1, T.ShieldAlly),
         };

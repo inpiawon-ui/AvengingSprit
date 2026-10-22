@@ -484,7 +484,7 @@ MonoBehaviour:
   - _key: boar
     _body: boar
     _sprite: boar
-    _nameKr: "\uC1E0\uBFD4 \uBA67\uB3FC\uC9C0"
+    _nameKr: "\uB3CC\uC9C4 \uC1C4\uC11D\uAE30"
     _level: 1
     _role: 0
     _element: 0
@@ -502,7 +502,7 @@ MonoBehaviour:
   - _key: boar_2
     _body: boar
     _sprite: boar
-    _nameKr: "\uD3ED\uC8FC \uBA67\uB3FC\uC9C0"
+    _nameKr: "\uD3ED\uC8FC \uC1C4\uC11D\uAE30"
     _level: 2
     _role: 0
     _element: 0
@@ -556,7 +556,7 @@ MonoBehaviour:
   - _key: mantis
     _body: mantis
     _sprite: mantis
-    _nameKr: "\uC678\uB208 \uC0AC\uB9C8\uADC0"
+    _nameKr: "\uC0BC\uAC01\uB300 \uC800\uACA9\uAE30"
     _level: 1
     _role: 1
     _element: 0
@@ -574,7 +574,7 @@ MonoBehaviour:
   - _key: mantis_2
     _body: mantis
     _sprite: mantis
-    _nameKr: "\uC30D\uBC1C \uC0AC\uB9C8\uADC0"
+    _nameKr: "\uC30D\uBC1C \uC800\uACA9\uAE30"
     _level: 2
     _role: 1
     _element: 0
@@ -592,7 +592,7 @@ MonoBehaviour:
   - _key: armadillo
     _body: armadillo
     _sprite: armadillo
-    _nameKr: "\uAC11\uC637 \uC544\uB974\uB9C8\uB51C\uB85C"
+    _nameKr: "\uBC29\uD328 \uB85C\uBD07"
     _level: 1
     _role: 0
     _element: 0
@@ -610,7 +610,7 @@ MonoBehaviour:
   - _key: armadillo_2
     _body: armadillo
     _sprite: armadillo
-    _nameKr: "\uAD6C\uB974\uB294 \uC544\uB974\uB9C8\uB51C\uB85C"
+    _nameKr: "\uAD6C\uB974\uB294 \uBC29\uD328 \uB85C\uBD07"
     _level: 2
     _role: 0
     _element: 0
@@ -628,7 +628,7 @@ MonoBehaviour:
   - _key: mushroom
     _body: mushroom
     _sprite: mushroom
-    _nameKr: "\uD3ED\uD0C4 \uBC84\uC12F"
+    _nameKr: "\uD3ED\uD0C4 \uB4DC\uB7FC\uD1B5"
     _level: 1
     _role: 0
     _element: 0
@@ -646,7 +646,7 @@ MonoBehaviour:
   - _key: mushroom_2
     _body: mushroom
     _sprite: mushroom
-    _nameKr: "\uB3C5 \uBC84\uC12F"
+    _nameKr: "\uB3C5 \uB4DC\uB7FC\uD1B5"
     _level: 2
     _role: 0
     _element: 0
@@ -916,7 +916,7 @@ MonoBehaviour:
   - _key: saw_monkey
     _body: saw_monkey
     _sprite: saw_monkey
-    _nameKr: "\uD1B1\uB0A0 \uC6D0\uC22D\uC774"
+    _nameKr: "\uD1B1\uB0A0 \uD22C\uCC99\uAE30"
     _level: 1
     _role: 1
     _element: 0

@@ -25,16 +25,16 @@ coil_mortar	coilwalker	ranged	3	none	박격 코일
 obj_turret	obj_turret	turret	1	none	십자 포탑
 obj_turret_2	obj_turret	turret	2	none	팔방 포탑
 obj_turret_3	obj_turret	turret	3	none	회전 포탑
-boar	boar	melee	1	none	쇠뿔 멧돼지
-boar_2	boar	melee	2	none	폭주 멧돼지
+boar	boar	melee	1	none	돌진 쇄석기
+boar_2	boar	melee	2	none	폭주 쇄석기
 mole	mole	ranged	1	none	드릴 두더지
 mole_2	mole	ranged	2	none	쌍굴 두더지
-mantis	mantis	ranged	1	none	외눈 사마귀
-mantis_2	mantis	ranged	2	none	쌍발 사마귀
-armadillo	armadillo	melee	1	none	갑옷 아르마딜로
-armadillo_2	armadillo	melee	2	none	구르는 아르마딜로
-mushroom	mushroom	melee	1	none	폭탄 버섯
-mushroom_2	mushroom	melee	2	none	독 버섯
+mantis	mantis	ranged	1	none	삼각대 저격기
+mantis_2	mantis	ranged	2	none	쌍발 저격기
+armadillo	armadillo	melee	1	none	방패 로봇
+armadillo_2	armadillo	melee	2	none	구르는 방패 로봇
+mushroom	mushroom	melee	1	none	폭탄 드럼통
+mushroom_2	mushroom	melee	2	none	독 드럼통
 mummy	mummy	ranged	1	none	미라
 mummy_2	mummy	ranged	2	none	겹고리 미라
 spider	spider	support	1	none	알 거미
@@ -49,6 +49,6 @@ skeleton_poison	skeleton	melee	2	poison	독 해골
 bat_poison	bat	flying	2	poison	독 박쥐
 watcher_eye	watcher_eye	flying	1	none	감시 눈
 shadow_cat	shadow_cat	melee	1	none	그림자 살쾡이
-saw_monkey	saw_monkey	ranged	1	none	톱날 원숭이
+saw_monkey	saw_monkey	ranged	1	none	톱날 투척기
 mimic	mimic	melee	1	none	미믹 상자
 lantern	lantern	support	1	none	수호 등불
