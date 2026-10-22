@@ -42,12 +42,12 @@ Material:
     - _EdgeSoft: 0.12
     - _FadeBottom: 0.08
     - _FadeTop: 0.3
-    - _RingGlow: 0.18
-    - _RingRadius: 0.8
-    - _RingWhite: 0.7
-    - _RingWidth: 0.06
+    - _RingGlow: 0.5
+    - _RingRadius: 0
+    - _RingWhite: 0
+    - _RingWidth: 0.001
     - _Scroll: 0.6
-    - _Shape: 0
+    - _Shape: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0

@@ -118951,17 +118951,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f12f4415bea9934a9ccd2690ccf7573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.SummonReveal
-  _stage: {fileID: 21300000, guid: 6f7c7518c4ad47f4b9054bdfe0f21db3, type: 3}
-  _revealStage: {fileID: 21300000, guid: d3d3c4968c8b55848ba412f50f90b586, type: 3}
+  _stage: {fileID: 21300000, guid: 3003e91c5cc52ce4dbdbb48b215acc97, type: 3}
+  _tank: {fileID: 21300000, guid: b34fe8e862f333e4ab851ec8653e2ccb, type: 3}
+  _tankBroken: {fileID: 21300000, guid: cbe2e2c92b2ee454aad35a4c6a2f710f, type: 3}
+  _tankGlass: {fileID: 21300000, guid: 8603896e6501b6543b2cb4ab46f2991b, type: 3}
   _plate: {fileID: 21300000, guid: 8ced77600ced37f47a503e8f46fc949b, type: 3}
-  _rays: {fileID: 21300000, guid: 56da302f61bd74c47b0202fabe09f44e, type: 3}
-  _pillar:
-  - {fileID: 21300000, guid: 936ad3285b683d4499bfa0917810d996, type: 3}
-  - {fileID: 21300000, guid: b1b58e89518c4f54080f7854f6d141c1, type: 3}
-  - {fileID: 21300000, guid: 5dd346c0f4fc86342885912cfcf4826f, type: 3}
-  - {fileID: 21300000, guid: ed41bc5d4c7e28146a0e2c5fc4a13889, type: 3}
-  - {fileID: 21300000, guid: be7104cbd0a020e4baab630034a3dc39, type: 3}
-  - {fileID: 21300000, guid: 8c33ae000b356f642ba8bca5ad8230bc, type: 3}
+  _revealLight:
+  - {fileID: 21300000, guid: 346c3efb213cbb44e954159acee7ad0a, type: 3}
+  - {fileID: 21300000, guid: 593bb0621a76ed540a7798e935782256, type: 3}
+  - {fileID: 21300000, guid: 766eecded07ec6240987914aeb4afc5b, type: 3}
+  - {fileID: 21300000, guid: 2ab2acb781b62184fba9c46d2c2057b4, type: 3}
+  - {fileID: 21300000, guid: 290671537c2db6e43840805d54d875f5, type: 3}
+  - {fileID: 21300000, guid: 39f3007a8918c994395fc474a882d620, type: 3}
+  _revealLightSr:
+  - {fileID: 21300000, guid: dfa60388a844485469a3725ad1da7c5b, type: 3}
+  - {fileID: 21300000, guid: 56fa6a94a3f982a4999b3ed0be4e22f6, type: 3}
+  - {fileID: 21300000, guid: 602be137ba1dfca4894f03c6b0ca6dd8, type: 3}
+  - {fileID: 21300000, guid: 846a1fbcdeac92741bc15c7b1adb1eb2, type: 3}
+  - {fileID: 21300000, guid: f56c3545b935e974298d803f035a7e45, type: 3}
+  - {fileID: 21300000, guid: ad42ea1e68ba6204bb29a848cd48a8b8, type: 3}
+  _revealLightR:
+  - {fileID: 21300000, guid: 8fc06fb12e29ae145818c833d8863956, type: 3}
+  - {fileID: 21300000, guid: 320664fd6396f1445b9dc1781fbcf611, type: 3}
+  - {fileID: 21300000, guid: fad1342ac4bf9204095caf1c6b7f84dc, type: 3}
+  - {fileID: 21300000, guid: 450a0c26e830e2d45bb9aeeaae6c4a9b, type: 3}
+  - {fileID: 21300000, guid: 350ac9eece1a7794db3e12ef70c9bcaf, type: 3}
+  - {fileID: 21300000, guid: b0aea6c1dc183fa489e3403aba65ed79, type: 3}
+  _crack:
+  - {fileID: 21300000, guid: 9c7dd11cae7a10a4cb489948b360434f, type: 3}
+  - {fileID: 21300000, guid: 3dd129be33d4e1f4ca69d2060bcd396c, type: 3}
+  - {fileID: 21300000, guid: 06116cfe53a0fda46a58e69f9dfb8b13, type: 3}
+  _shardSheet: {fileID: 2800000, guid: fab1c1d0c23f252419c3165311780611, type: 3}
+  _spark: {fileID: 2800000, guid: e00f4f73593e5dc44a8bad0542864eea, type: 3}
   _ring:
   - {fileID: 21300000, guid: 60d78bbba7a5a1c449859e7f188aed5a, type: 3}
   - {fileID: 21300000, guid: 44b234c634566a94cbf230f0b990e3d3, type: 3}
@@ -118969,26 +118990,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5b6a13bef3b25bf448ad0b1aa64dfd8e, type: 3}
   - {fileID: 21300000, guid: 74144743503f6154eb521c33a4a4aeb7, type: 3}
   - {fileID: 21300000, guid: a126e278f0eacc444861c9c9037aa802, type: 3}
-  _burst:
-  - {fileID: 21300000, guid: c8a93f95b748dbb4bbc0e6bc31e95692, type: 3}
-  - {fileID: 21300000, guid: fdf8f5b94643527439aed0560c61454b, type: 3}
-  - {fileID: 21300000, guid: dd3e13fc2272f114d86845d89481c23b, type: 3}
-  - {fileID: 21300000, guid: 6fe31fdc4938ad740aff59ba8c89794a, type: 3}
-  - {fileID: 21300000, guid: 6a6f7d7e94f262549af3526c40c380e0, type: 3}
-  - {fileID: 21300000, guid: 989ee55989b643a4daa3fac3dbfc9343, type: 3}
-  - {fileID: 21300000, guid: 7b0c542f9ccbde2459c1f0fb407a24f0, type: 3}
-  - {fileID: 21300000, guid: d3c8e780402d0c14f94f49e4b61a0e3a, type: 3}
-  _impact:
-  - {fileID: 21300000, guid: 101dd1ca411927c408045c635de8a724, type: 3}
-  - {fileID: 21300000, guid: afd522ea3e6f07949a76318bcde4c51b, type: 3}
-  - {fileID: 21300000, guid: 2ae8f698f36daef4db444409df9b6b02, type: 3}
-  - {fileID: 21300000, guid: 9eb94ae344a5b3448ba26304c714fd5a, type: 3}
-  - {fileID: 21300000, guid: b75e9b6891d55394380701c53673f213, type: 3}
-  - {fileID: 21300000, guid: b2e8f10cdaa94ab46ba22447ecffd853, type: 3}
   _stampNew: {fileID: 21300000, guid: 28cc324e8393ba24b8258308c14e7072, type: 3}
   _ribbonPickup: {fileID: 21300000, guid: f222295d8bea0a84cb8a309989110a36, type: 3}
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
   _silhouette: {fileID: 2100000, guid: 43001d9f02ceec74fb08f287c54e4578, type: 2}
+  _softGlow: {fileID: 2100000, guid: e0b93116c67a1f0499dcfb35bbd188cb, type: 2}
   _font: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
 --- !u!1 &3159021965591444944
 GameObject:

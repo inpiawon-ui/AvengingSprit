@@ -235,9 +235,9 @@ namespace Game.Module.Lobby
                 }
                 _lastCount = count;
                 var ct = this.GetCancellationTokenOnDestroy();
-                await PlayFxAsync(pulls, ct);
-                _ui.SetActive("SummonFx", false);
-                await RevealAsync(pulls, ct);
+                // 「영혼 배양실」(gacha_reveal_1) 이 있으면 그것만 — 옛 불꽃 기둥은 그것이 없을 때의 대신
+                if (TryGetComponent<SummonReveal>(out var reveal)) await reveal.PlayAsync(RevealEntries(pulls), ct);
+                else await PlayFxAsync(pulls, ct);
                 ShowResult(pulls, count);
             }
             finally
@@ -270,27 +270,24 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>
-        /// 「실루엣 → 공개」 — 대박 · 픽업 · 새 몸이 있으면 그중 가장 높은 한 명만(PD 2026-10-21 · 10회가 길어지지 않게).
-        /// 평범한 조각뿐이면 아무 일 없이 결과 창으로.
+        /// 배양실 연출에 넘길 몸 목록(PD 2026-10-22 매 뽑기). 등급 예고 = 대박 · 픽업 금 · A 보라 · B 하늘(속이지 않는다).
+        /// 이름 판 꼬리표: 대박 > 픽업 > 새 몸 > 획득.
         /// </summary>
-        private async UniTask RevealAsync(IReadOnlyList<GachaPull> pulls, CancellationToken ct)
+        private static List<SummonReveal.Entry> RevealEntries(IReadOnlyList<GachaPull> pulls)
         {
-            if (!TryGetComponent<SummonReveal>(out var reveal)) return;
-            int best = -1;
-            SummonReveal.Tier tier = SummonReveal.Tier.NewBody;
-            for (int i = 0; i < pulls.Count; i++)
-            {
-                var x = pulls[i];
-                var t = x.Jackpot ? SummonReveal.Tier.Jackpot : x.Pickup ? SummonReveal.Tier.Pickup : SummonReveal.Tier.NewBody;
-                if (!x.Jackpot && !x.Pickup && !x.IsNew) continue;
-                if (best < 0 || t > tier) { best = i; tier = t; }
-            }
-            if (best < 0) return;
             CoreModule.TryGet<IPlayerDataService>(out var p);
-            var h = p?.GetHost(pulls[best].HostKey);
-            string name = h != null ? h.DisplayName : pulls[best].HostKey;
-            string grade = h == null ? string.Empty : h.Grade == HostGrade.S ? "SSR" : h.Grade == HostGrade.A ? "SR" : "R";
-            await reveal.PlayAsync(pulls[best].HostKey, name, grade, tier, ct);
+            var list = new List<SummonReveal.Entry>(pulls.Count);
+            foreach (var x in pulls)
+            {
+                var h = p?.GetHost(x.HostKey);
+                var rarity = x.Jackpot || x.Pickup ? SummonReveal.Rarity.SSR
+                           : h != null && h.Grade != HostGrade.B ? SummonReveal.Rarity.SR : SummonReveal.Rarity.R;
+                string tag = x.Jackpot ? "ui.summon.reveal.jackpot" : x.Pickup ? "ui.summon.reveal.pickup"
+                           : x.IsNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get";
+                string grade = h == null ? string.Empty : h.Grade == HostGrade.S ? "SSR" : h.Grade == HostGrade.A ? "SR" : "R";
+                list.Add(new SummonReveal.Entry(x.HostKey, h != null ? h.DisplayName : x.HostKey, grade, tag, rarity));
+            }
+            return list;
         }
 
         private async UniTask Frames(Image img, Sprite[] frames, CancellationToken ct)

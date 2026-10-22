@@ -16,7 +16,7 @@ namespace Game.Editor
         private const string LobbyPrefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string Dir = "Assets/BaseResource/SummonReveal";
 
-        [MenuItem("Tools/Game/소환 — 공개 연출 그림 꽂기 (실루엣 → 공개)")]
+        [MenuItem("Tools/Game/소환 — 공개 연출 그림 꽂기 (영혼 배양실)")]
         public static void Run()
         {
             ImportSettings();
@@ -28,16 +28,22 @@ namespace Game.Editor
                 var reveal = panel.GetComponent<SummonReveal>();
                 if (reveal == null) reveal = panel.gameObject.AddComponent<SummonReveal>();
                 var so = new SerializedObject(reveal);
-                so.FindProperty("_stage").objectReferenceValue = Spr($"{Dir}/reveal_stage.png");
-                so.FindProperty("_revealStage").objectReferenceValue = Spr("Assets/BaseResource/HomeV5Art/showcase_bg.png");
+                // 「영혼 배양실」(gacha_reveal_1, PD 2026-10-22) — 배양실 부품이 오기 전엔 있는 그림으로 대신
+                so.FindProperty("_stage").objectReferenceValue = Spr($"{Dir}/lab_stage.png") ?? Spr("Assets/BundleResource/RoomFloor/roomfloor_env_lab_full.png");
+                so.FindProperty("_tank").objectReferenceValue = Spr($"{Dir}/lab_tank.png") ?? Spr("Assets/BaseResource/InGameMainUI/obj_lab_bulk.png");
+                so.FindProperty("_tankGlass").objectReferenceValue = Spr($"{Dir}/lab_tank_glass.png");
+                so.FindProperty("_tankBroken").objectReferenceValue = Spr($"{Dir}/lab_tank_broken.png");
+                so.FindProperty("_softGlow").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISoftGlow.mat");
+                Frames(so, "_crack", "lab_crack_");
+                so.FindProperty("_shardSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_glass_shards_sheet.png");
+                so.FindProperty("_spark").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_spark.png");
                 so.FindProperty("_plate").objectReferenceValue = Spr($"{Dir}/reveal_plate.png") ?? Spr("Assets/BaseResource/UiKit/panel_navy_big.png");   // 전용 판이 오기 전엔 남색 판
-                so.FindProperty("_rays").objectReferenceValue = Spr("Assets/BaseResource/PopupFx/fx_levelup_emblem_rays_1.png");
                 so.FindProperty("_stampNew").objectReferenceValue = Spr("Assets/BaseResource/Summon/stamp_new.png");
                 so.FindProperty("_ribbonPickup").objectReferenceValue = Spr("Assets/BaseResource/Summon/ribbon_pickup.png");
-                Frames(so, "_pillar", "reveal_pillar_");
                 Frames(so, "_ring", "reveal_ring_");
-                Frames(so, "_burst", "reveal_burst_");
-                Frames(so, "_impact", "reveal_impact_");
+                Frames(so, "_revealLight", "lab_reveal_light_");
+                Frames(so, "_revealLightSr", "lab_reveal_light_sr_");
+                Frames(so, "_revealLightR", "lab_reveal_light_r_");
                 so.FindProperty("_additive").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UIAdditiveSprite.mat");
                 so.FindProperty("_silhouette").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISilhouette.mat");
                 so.FindProperty("_font").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset");
@@ -60,7 +66,7 @@ namespace Game.Editor
                 if (AssetImporter.GetAtPath(path) is not TextureImporter ti) continue;
                 ti.textureType = TextureImporterType.Sprite;
                 ti.spriteImportMode = SpriteImportMode.Single;
-                ti.filterMode = path.EndsWith("reveal_stage.png") ? FilterMode.Bilinear : FilterMode.Point;
+                ti.filterMode = (path.EndsWith("reveal_stage.png") || path.EndsWith("lab_stage.png")) ? FilterMode.Bilinear : FilterMode.Point;
                 ti.mipmapEnabled = false;
                 ti.isReadable = false;
                 ti.alphaIsTransparency = true;

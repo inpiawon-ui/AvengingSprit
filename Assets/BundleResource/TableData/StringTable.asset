@@ -5843,3 +5843,7 @@ MonoBehaviour:
     _ko: "\uB2E4\uC2DC \uBF51\uAE30  {0:N0} G"
     _ja: "\u5F15\u304D\u76F4\u3057  {0:N0} G"
     _en: Reroll  {0:N0} G
+  - _key: ui.summon.reveal.get
+    _ko: "\uD68D\uB4DD!"
+    _ja: "\u7372\u5F97!"
+    _en: Got it!
