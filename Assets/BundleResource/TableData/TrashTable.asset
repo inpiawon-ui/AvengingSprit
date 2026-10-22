@@ -771,7 +771,7 @@ MonoBehaviour:
     _spreadDegrees: 0
   - _key: gorilla_fire
     _body: actor_enforcer
-    _sprite: actor_enforcer
+    _sprite: gorilla_fire
     _nameKr: "\uBD88 \uACE0\uB9B4\uB77C"
     _level: 3
     _role: 0
@@ -807,7 +807,7 @@ MonoBehaviour:
     _spreadDegrees: 40
   - _key: scrapgunner_ice
     _body: scrapgunner
-    _sprite: scrapgunner
+    _sprite: scrapgunner_ice
     _nameKr: "\uC5BC\uC74C \uC804\uAC08"
     _level: 2
     _role: 1
@@ -843,7 +843,7 @@ MonoBehaviour:
     _spreadDegrees: 0
   - _key: skeleton_poison
     _body: skeleton
-    _sprite: skeleton
+    _sprite: skeleton_poison
     _nameKr: "\uB3C5 \uD574\uACE8"
     _level: 2
     _role: 0

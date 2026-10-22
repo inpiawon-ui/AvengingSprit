@@ -279,6 +279,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 84c5f58e7b9bccb42a6e303bafc8cd18
+    m_Address: atlas/unit_gorilla_fire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87aaa0c2a297e2f4a80bb4eabe2f349e
+    m_Address: atlas/unit_lantern
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88d25ec2b19adb547bc09aeb7b1f9664
     m_Address: atlas/store
     m_ReadOnly: 0
@@ -351,6 +363,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0280a1b85ff6e144aa8f86b497512a4
+    m_Address: atlas/unit_watcher_eye
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7e0e0b8d992cfc4980b4a7c1d91dd71
     m_Address: atlas/unit_armadillo
     m_ReadOnly: 0
@@ -419,6 +437,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cc5a978ca5d092c49b605a887543c912
     m_Address: atlas/unitl_hopper
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccd502f1f5bb7f841ae0bdae828c0308
+    m_Address: atlas/unit_scrapgunner_ice
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -551,6 +575,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fc99eb58bd301674e887cdcad06391e9
     m_Address: atlas/unit_spiderling
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc9dbd8ad95bea54b956afecbb4b26d0
+    m_Address: atlas/unit_skeleton_poison
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
