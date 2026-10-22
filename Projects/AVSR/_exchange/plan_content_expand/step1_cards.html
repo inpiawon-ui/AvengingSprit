@@ -36,8 +36,25 @@ pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;backgroun
 </head>
 <body><div class="wrap">
 
-<h1>1단계 — 레벨업 카드 <span class="s ask">PD 결정 반영 · 2차</span></h1>
-<p class="sub">2026-10-21 PD 결정 33건 반영. 카드마다 무엇을 하는지 · 레벨 1~5 수치 · 어느 몸에서 효과가 있는지 · 앞 카드가 있어야 나오는지. 수치는 실제 전투 코드 계산 기준.</p>
+<h1>1단계 — 레벨업 카드 <span class="s ok">구현 완료 · 3차</span></h1>
+<p class="sub">2026-10-21 PD 결정 33건 + 「1번은 원거리만, 나머지는 제안대로」 반영 → 2026-10-22 구현 · 녹화 · 기능 테스트 · 아이콘까지 끝. 카드마다 무엇을 하는지 · 레벨 1~5 수치 · 어느 몸에서 효과가 있는지 · 앞 카드가 있어야 나오는지. 수치는 실제 전투 코드 계산 기준.</p>
+
+<!-- ───────────── 구현 결과 ───────────── -->
+<h2>구현 결과 (2026-10-22)</h2>
+<div class="scroll"><table>
+<tr><th>무엇</th><th>결과</th><th>확인</th></tr>
+<tr><td>카드 표</td><td><b>36장</b>(켜짐 35 · 성장 가속은 3단계 경험치 레벨업 때 켬). 카드마다 등급 · 풀리는 챕터 · 몸 조건 · 앞 카드</td><td>기능 테스트 통과</td></tr>
+<tr><td>버그 고침</td><td>관통 수(정본 1/1/2/2/3) · 튕긴 탄 피해(슬러거 기본 튕김 0 안 됨) · 둔화 · 흡혈 레벨 값 · 위기 방벽(유령일 땐 안 섬) · 장판 지속 · 영혼 복제 0.12초 뒤 · 폭발 메아리가 숨은 적 · 무적 보스를 안 침 · <b>보스 사냥이 중간보스에도</b>(찍다가 찾음)</td><td>기능 테스트 · 녹화</td></tr>
+<tr><td>몸 조건</td><td>원거리만: 관통 · 유도 · 벽 반사 · 추가 발사 / 근접만: 사거리 / 폭발 몸만: 폭발 메아리 — 갈아타면 꺼지고 돌아오면 켜짐</td><td>기능 테스트 통과</td></tr>
+<tr><td>테크트리</td><td>감전 → 번개 사슬 · 화염 각인 → 화상 번짐 · 각인 셋 · 둔화탄 중 하나 → 상태이상 번짐</td><td>기능 테스트 통과</td></tr>
+<tr><td>액티브 스킬</td><td>맞혀서 채우기 → <b>시간 쿨</b>. 스킬 쿨 감소 Lv5 = 쿨 ×0.68(하한 ×0.4)</td><td>8초 → 5.44초</td></tr>
+<tr><td>천사 제단</td><td>선물 후보에 <b>카드를 고른다(레어 이상 3택1)</b> · <b>카드를 벼린다(가장 낮은 카드 Lv +1)</b></td><td>게임 캡처 · 테스트</td></tr>
+<tr><td>악마 제단</td><td>새 거래 <b>「악마의 진열」</b> — 최대 체력 20% → 에픽 이상 3택1. ⚠ 악마 제단은 이벤트 23종에서 하나를 뽑아 이 거래가 걸릴 확률은 약 13% — 늘 나오게 할지는 3단계에서</td><td>테스트 통과</td></tr>
+<tr><td>상점</td><td>카드 3칸 중 1칸 = <b>가진 카드 강화</b>(가장 낮은 카드 Lv +1 · 값은 그 카드 등급 값) · 「나간다」 옆 <b>다시 뽑기</b>(창 유지 · 구매 횟수 안 씀 · 10 → 20 → 30G)</td><td>게임 캡처 · 테스트</td></tr>
+<tr><td>아이콘</td><td>새 카드 23장 + 제단 2장 발주 → 옆으로 긴 17장은 정사각 구도로 재발주 → 전부 <b>128 × 128 정사각</b> 한 장(레벨업 · 상점 · 제단이 같이 씀). 규격: <code>.claude/rules/project/09_import_settings.md</code> 2-1절</td><td>게임 캡처 · 포맷 점검 0</td></tr>
+<tr><td>검증</td><td>카드 35장 게임 녹화(<code>step1_cards_play/index.html</code>) · 기능 테스트 <b>통과 34 · 실패 0 · 미검 0</b>(<code>step1_check/feature_test.md</code>)</td><td>—</td></tr>
+</table></div>
+<p class="note">남은 것: 성장 가속 켜기 · 30방에서 카드 받는 속도(레벨업 8 · 천사 2 · 악마 1)는 <b>3단계(30방 · 경험치 레벨업)</b>에서. 아이콘 우려 2장(유도탄은 상점 칸에서 작음 · 제단 「카드 고르기」 비율 1.36)은 그대로 둠. 상점 · 악마 · 천사 칸이 가로형인 UI 는 나중에 UI 를 다시 짤 때.</p>
 
 <div class="box">
 <b>표 보는 법</b> —
@@ -216,26 +233,27 @@ pre.tree{font-family:Consolas,"Malgun Gothic",monospace;font-size:13px;backgroun
 <tr><td>악마 계약(중간보스 뒤 1번)</td><td>대가를 치르고 카드 받기 · 3택1 · 레벨 +1 · 그 밖</td><td>대가를 치르면 <b>에픽 · 레전더리만 나오는 3택1</b> 추가 — 「천사는 안전하게 조금, 악마는 비싸게 크게」</td></tr>
 <tr><td>상점</td><td>몸 · 치료 · 소모품 · 카드 판매</td><td><b>카드 다시 뽑기</b> · <b>카드 레벨 +1 구매</b> 추가, 카드 값은 등급별</td></tr>
 </table></div>
-<p class="note">이 부분은 결정을 아직 못 받았습니다 — 아래 확인 2번.</p>
+<p class="note">PD 「제안대로」(10-21) → 구현됨. 실제 모습은 위 「구현 결과」 표.</p>
 
-<h2>작업 순서 (확인 받으면 바로)</h2>
+<h2>작업 순서 — 전부 끝</h2>
 <ol>
-<li><b>버그 · 빈틈 고치기</b> — 튕긴 탄 피해 0(슬러거 · 되튕기는 벽 포함) · 둔화 · 흡혈 레벨 값 · 장판 지속(적 장판) · 위기 방벽(유령) · 영혼 복제 보이게 · 관통 수 · 폭발 메아리 숨은 적</li>
-<li><b>액티브 시간 쿨로 전환</b> + 스킬 쿨 감소 카드</li>
-<li><b>뜨는 조건</b> — 앞 카드(테크트리 3줄) · 몸 조건(폭발 메아리 · 사거리)</li>
-<li><b>카드 36장 표</b> — 이름 · 등급 · 레벨값 · 풀리는 챕터 · 3개 언어 문구 · 아이콘(새 카드 아이콘은 발주)</li>
-<li><b>검증</b> — 카드마다 게임에서 효과가 나는지 녹화해 영상으로 보여 드림</li>
-<li><b>경험치 레벨업 · 쉬는 방 카드 기능</b>은 30방 구성(3단계)과 함께 — 먼저 할지 확인 3번</li>
+<li><span class="s ok">끝</span> <b>버그 · 빈틈 고치기</b> — 튕긴 탄 피해 0(슬러거 · 되튕기는 벽 포함) · 둔화 · 흡혈 레벨 값 · 장판 지속 · 위기 방벽(유령) · 영혼 복제 보이게 · 관통 수 · 폭발 메아리 숨은 적 (+ 보스 사냥 중간보스)</li>
+<li><span class="s ok">끝</span> <b>액티브 시간 쿨로 전환</b> + 스킬 쿨 감소 카드</li>
+<li><span class="s ok">끝</span> <b>뜨는 조건</b> — 앞 카드(테크트리 3줄) · 몸 조건(원거리 · 근접 · 폭발)</li>
+<li><span class="s ok">끝</span> <b>카드 36장 표</b> — 이름 · 등급 · 레벨값 · 풀리는 챕터 · 3개 언어 문구 · 아이콘(정사각 128)</li>
+<li><span class="s ok">끝</span> <b>검증</b> — 카드 35장 녹화 + 기능 테스트 34개</li>
+<li><span class="s now">3단계로</span> <b>경험치 레벨업 · 성장 가속 · 30방 카드 속도</b></li>
 </ol>
 
-<div class="q"><b>확인 받을 것</b>
+<div class="ans"><b>받은 답 (2026-10-21)</b>
 <ol>
-<li>관통탄 · 유도탄 · 벽 반사 · 추가 발사도 <b>원거리 몸일 때만</b> 띄울지</li>
-<li>천사 · 악마 · 상점 카드 기능(위 표)</li>
-<li>「경험치 레벨업」을 1단계에서 먼저 할지, 30방을 만드는 3단계에서 같이 할지 — 저는 <b>3단계와 같이</b>를 권합니다(방 수가 바뀌어야 경험치 표를 맞출 수 있음)</li>
-<li>카드 등급(커먼 · 레어 · 에픽 · 레전더리)과 풀리는 챕터는 제가 안을 짜서 확정표로 보여 드려도 될지</li>
+<li>관통탄 · 유도탄 · 벽 반사 · 추가 발사 — <b>원거리 몸일 때만</b> (「1번은 원거리만」)</li>
+<li>천사 · 악마 · 상점 카드 기능 — <b>제안대로</b></li>
+<li>경험치 레벨업 — <b>3단계와 같이</b>(제안대로)</li>
+<li>등급 · 풀리는 챕터 — 제 안으로(제안대로). 확정 값은 위 카드 목록 표</li>
 </ol></div>
 
-<p class="note">근거: <code>Assets/Scripts/Editor/CardImporter.cs</code> · <code>Assets/Scripts/Module/InGame/RunBuffs.cs</code> · <code>BattleDirector.cs</code> · 정본 <code>Projects/AVSR/Canon/v23/</code>(CARD_MASTER_RUNTIME · RECIPE_RUNTIME · EVOLUTION_RUNTIME · CARD_ACQUISITION_TABLES) · 원본 <code>WA-Game-LegendOfArcher/Docs/design/origin-report/</code></p>
+<p class="note">구현 커밋: <code>9006f81d</code>(카드 · 천사 · 악마) · <code>4e9edcc1</code>(상점) · <code>983f9147</code>(녹화 도구 · 보스 사냥) · <code>5eb42163</code> · <code>d2588c75</code>(아이콘 · 기능 테스트).<br>
+근거: <code>Assets/Scripts/Editor/CardImporter.cs</code> · <code>Assets/Scripts/Module/InGame/RunBuffs.cs</code> · <code>BattleDirector.cs</code> · 정본 <code>Projects/AVSR/Canon/v23/</code>(CARD_MASTER_RUNTIME · RECIPE_RUNTIME · EVOLUTION_RUNTIME · CARD_ACQUISITION_TABLES) · 원본 <code>WA-Game-LegendOfArcher/Docs/design/origin-report/</code></p>
 
 </div></body></html>
