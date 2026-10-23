@@ -21,6 +21,7 @@ namespace Game.Editor
         // 프리셋의 본보기 — 이름 꼬리(` - Outline` 등)가 같아야 LanguageModule 이 짝을 찾는다
         private const string PresetSource = "Assets/BaseResource/Fonts/NotoSansKR SDF - {0}.mat";
         private static readonly string[] Tails = { "GlowBlue", "GlowGold", "GlowPurple", "Label", "Outline", "Shadow", "Soft", "Title" };
+        private const string NumberFont = "Galmuri11-Bold.ttf";
 
         // 언어 → (본문 파일, 굵은 파일)
         private static readonly (Language lang, string body, string heavy)[] Map =
@@ -42,6 +43,8 @@ namespace Game.Editor
                 if (!made.ContainsKey(body)) { made[body] = Ensure(body); presets[body] = EnsurePresets(made[body]); }
                 if (!made.ContainsKey(heavy)) made[heavy] = Ensure(heavy);
             }
+            // 숫자 · 고정 영문(재화 · 능력치 값 · 등급) — 언어와 상관없이 같은 도트 글꼴(묶음 지시). 언어팩이 바꾸지 않는다
+            EnsurePresets(Ensure(NumberFont));
 
             // 번역이 빈 줄은 한국어 원문으로 떨어진다 — 한글이 없는 글꼴(중국어)은 한국어 글꼴을 대체로 건다
             var korean = made["Pretendard-SemiBold.otf"];

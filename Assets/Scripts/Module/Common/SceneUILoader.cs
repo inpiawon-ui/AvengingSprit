@@ -27,7 +27,7 @@ namespace Game.Module.Common
             if (_loadOnStart && !string.IsNullOrEmpty(_uiAddress))
             {
                 // fire-and-forget: 씬 진입 UI 로드 완료를 이 시점에 기다릴 필요가 없다.
-                LoadSceneUIAsync(_uiAddress).Forget();
+                LoadSceneUIAsync(RebornUiSwitch.Resolve(_uiAddress)).Forget();
             }
         }
 

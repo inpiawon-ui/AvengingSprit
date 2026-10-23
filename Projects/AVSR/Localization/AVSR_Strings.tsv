@@ -1343,3 +1343,37 @@ ui.summon.reveal.pickup	PICK UP!	PICK UP!	PICK UP!	PICK UP!	PICK UP!
 ui.summon.reveal.jackpot	대박!	大当たり!	Jackpot!	大獎！	大奖！
 ui.summon.reveal.tap	화면을 눌러 계속	タップして続ける	Tap to continue	點擊畫面繼續	点击屏幕继续
 ui.summon.reveal.get	획득!	獲得!	Got it!	獲得！	获得！
+
+ui.rb.rail.mail	우편	メール	Mail	郵件	邮件
+ui.rb.rail.mission	미션	ミッション	Missions	任務	任务
+ui.rb.rail.settings	설정	設定	Settings	設定	设置
+ui.rb.rail.event	이벤트	イベント	Events	活動	活动
+ui.rb.rail.daily	오늘 무료	本日無料	Daily Free	今日免費	今日免费
+ui.rb.lobby.prompt	어떤 몸과 만날까요?	どの体と出会う？	Which body awaits?	要與哪個身體相遇？	要与哪个身体相遇？
+ui.rb.lobby.sortie_title	출전 호스트	出撃ホスト	Sortie Host	出擊宿主	出击宿主
+ui.rb.tab.shop	상점	ショップ	Shop	商店	商店
+ui.rb.tab.host	호스트	ホスト	Hosts	宿主	宿主
+ui.rb.tab.battle	전투	バトル	Battle	戰鬥	战斗
+ui.rb.tab.summon	소환	召喚	Summon	召喚	召唤
+ui.rb.tab.challenge	도전	チャレンジ	Challenge	挑戰	挑战
+ui.rb.lobby.cleared	클리어	クリア	Cleared	已通關	已通关
+ui.rb.lobby.best	최고 {0}/{1}방	最高 {0}/{1}部屋	Best {0}/{1} rooms	最佳 {0}/{1} 房	最佳 {0}/{1} 房
+ui.rb.lobby.locked	잠김	ロック中	Locked	未解鎖	未解锁
+ui.rb.lobby.chapter_info	{0} · 권장 <color=#FFFFFF>{1:N0}</color>	{0} · 推奨 <color=#FFFFFF>{1:N0}</color>	{0} · Rec. <color=#FFFFFF>{1:N0}</color>	{0} · 建議 <color=#FFFFFF>{1:N0}</color>	{0} · 推荐 <color=#FFFFFF>{1:N0}</color>
+ui.rb.lobby.today	오늘	本日	Today	今日	今日
+ui.rb.lobby.random	? 랜덤	? ランダム	? Random	? 隨機	? 随机
+ui.rb.lobby.free	무료	無料	Free	免費	免费
+ui.rb.lobby.chip.hidden	히든 등장 가능	隠しキャラ出現あり	Hidden may appear	可能出現隱藏	可能出现隐藏
+ui.rb.lobby.chip.shards	조각 +{0}	欠片 +{0}	Shards +{0}	碎片 +{0}	碎片 +{0}
+ui.rb.lobby.chip.gold	골드 +{0}%	ゴールド +{0}%	Gold +{0}%	金幣 +{0}%	金币 +{0}%
+ui.rb.lobby.note.random	클리어 보너스 · 히든은 이번 판 체험, 조각 미지급	クリアボーナス · 隠しは今回のみ体験、欠片なし	Clear bonus · Hidden is a one-run trial, no shards	通關獎勵 · 隱藏僅限本局體驗，不給碎片	通关奖励 · 隐藏仅限本局体验，不给碎片
+ui.rb.lobby.chip.ghost_exp	유령 경험치 +{0}%	ゴースト経験値 +{0}%	Ghost EXP +{0}%	幽靈經驗 +{0}%	幽灵经验 +{0}%
+ui.rb.lobby.note.ghost	몸 없이 시작 · 판 안에서 몸을 빼앗아 싸워요	体なしで開始 · 中で体を奪って戦う	Start bodiless · Steal a body in the run	無身體開局 · 在局內奪取身體作戰	无身体开局 · 在局内夺取身体作战
+ui.rb.lobby.chip.power	전투력 {0:N0}	戦闘力 {0:N0}	Power {0:N0}	戰鬥力 {0:N0}	战斗力 {0:N0}
+ui.rb.lobby.note.today	오늘의 몸 · 골드 없이 출전	今日の体 · ゴールド不要で出撃	Today's body · Sortie with no gold	今日身體 · 不花金幣出擊	今日身体 · 不花金币出击
+ui.rb.lobby.note.host	고른 몸으로 바로 시작해요	選んだ体ですぐ開始	Start with the chosen body	以選擇的身體直接開始	以选择的身体直接开始
+ui.rb.lobby.sortie_with	{0}{1} 출전	{0}で出撃	Sortie: {0}	以{0}出擊	以{0}出击
+ui.rb.lobby.sortie_ghost	유령으로 출전	ゴーストで出撃	Sortie as Ghost	以幽靈出擊	以幽灵出击
+ui.rb.lobby.sortie	출전	出撃	Sortie	出擊	出击
+ui.rb.lobby.gold_short_random	랜덤으로 출전 · 골드 없음	ランダムで出撃 · ゴールド不要	Random sortie · No gold	隨機出擊 · 免金幣	随机出击 · 免金币
+ui.rb.soon	준비 중이에요 · 업데이트로 열려요	準備中です · アップデートで開放	Coming soon · Opens in an update	準備中 · 將於更新開放	准备中 · 将于更新开放

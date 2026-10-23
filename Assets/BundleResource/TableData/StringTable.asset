@@ -8721,3 +8721,204 @@ MonoBehaviour:
       on this launchpad.'
     _zhHant: "\u4E00\u5207\n\u90FD\u5C07\u5728\u9019\u5EA7\u767C\u5C04\u81FA\u7D42\u7D50\u3002"
     _zhHans: "\u4E00\u5207\n\u90FD\u5C06\u5728\u8FD9\u5EA7\u53D1\u5C04\u53F0\u7EC8\u7ED3\u3002"
+  - _key: ui.rb.rail.mail
+    _ko: "\uC6B0\uD3B8"
+    _ja: "\u30E1\u30FC\u30EB"
+    _en: Mail
+    _zhHant: "\u90F5\u4EF6"
+    _zhHans: "\u90AE\u4EF6"
+  - _key: ui.rb.rail.mission
+    _ko: "\uBBF8\uC158"
+    _ja: "\u30DF\u30C3\u30B7\u30E7\u30F3"
+    _en: Missions
+    _zhHant: "\u4EFB\u52D9"
+    _zhHans: "\u4EFB\u52A1"
+  - _key: ui.rb.rail.settings
+    _ko: "\uC124\uC815"
+    _ja: "\u8A2D\u5B9A"
+    _en: Settings
+    _zhHant: "\u8A2D\u5B9A"
+    _zhHans: "\u8BBE\u7F6E"
+  - _key: ui.rb.rail.event
+    _ko: "\uC774\uBCA4\uD2B8"
+    _ja: "\u30A4\u30D9\u30F3\u30C8"
+    _en: Events
+    _zhHant: "\u6D3B\u52D5"
+    _zhHans: "\u6D3B\u52A8"
+  - _key: ui.rb.rail.daily
+    _ko: "\uC624\uB298 \uBB34\uB8CC"
+    _ja: "\u672C\u65E5\u7121\u6599"
+    _en: Daily Free
+    _zhHant: "\u4ECA\u65E5\u514D\u8CBB"
+    _zhHans: "\u4ECA\u65E5\u514D\u8D39"
+  - _key: ui.rb.lobby.prompt
+    _ko: "\uC5B4\uB5A4 \uBAB8\uACFC \uB9CC\uB0A0\uAE4C\uC694?"
+    _ja: "\u3069\u306E\u4F53\u3068\u51FA\u4F1A\u3046\uFF1F"
+    _en: Which body awaits?
+    _zhHant: "\u8981\u8207\u54EA\u500B\u8EAB\u9AD4\u76F8\u9047\uFF1F"
+    _zhHans: "\u8981\u4E0E\u54EA\u4E2A\u8EAB\u4F53\u76F8\u9047\uFF1F"
+  - _key: ui.rb.lobby.sortie_title
+    _ko: "\uCD9C\uC804 \uD638\uC2A4\uD2B8"
+    _ja: "\u51FA\u6483\u30DB\u30B9\u30C8"
+    _en: Sortie Host
+    _zhHant: "\u51FA\u64CA\u5BBF\u4E3B"
+    _zhHans: "\u51FA\u51FB\u5BBF\u4E3B"
+  - _key: ui.rb.tab.shop
+    _ko: "\uC0C1\uC810"
+    _ja: "\u30B7\u30E7\u30C3\u30D7"
+    _en: Shop
+    _zhHant: "\u5546\u5E97"
+    _zhHans: "\u5546\u5E97"
+  - _key: ui.rb.tab.host
+    _ko: "\uD638\uC2A4\uD2B8"
+    _ja: "\u30DB\u30B9\u30C8"
+    _en: Hosts
+    _zhHant: "\u5BBF\u4E3B"
+    _zhHans: "\u5BBF\u4E3B"
+  - _key: ui.rb.tab.battle
+    _ko: "\uC804\uD22C"
+    _ja: "\u30D0\u30C8\u30EB"
+    _en: Battle
+    _zhHant: "\u6230\u9B25"
+    _zhHans: "\u6218\u6597"
+  - _key: ui.rb.tab.summon
+    _ko: "\uC18C\uD658"
+    _ja: "\u53EC\u559A"
+    _en: Summon
+    _zhHant: "\u53EC\u559A"
+    _zhHans: "\u53EC\u5524"
+  - _key: ui.rb.tab.challenge
+    _ko: "\uB3C4\uC804"
+    _ja: "\u30C1\u30E3\u30EC\u30F3\u30B8"
+    _en: Challenge
+    _zhHant: "\u6311\u6230"
+    _zhHans: "\u6311\u6218"
+  - _key: ui.rb.lobby.cleared
+    _ko: "\uD074\uB9AC\uC5B4"
+    _ja: "\u30AF\u30EA\u30A2"
+    _en: Cleared
+    _zhHant: "\u5DF2\u901A\u95DC"
+    _zhHans: "\u5DF2\u901A\u5173"
+  - _key: ui.rb.lobby.best
+    _ko: "\uCD5C\uACE0 {0}/{1}\uBC29"
+    _ja: "\u6700\u9AD8 {0}/{1}\u90E8\u5C4B"
+    _en: Best {0}/{1} rooms
+    _zhHant: "\u6700\u4F73 {0}/{1} \u623F"
+    _zhHans: "\u6700\u4F73 {0}/{1} \u623F"
+  - _key: ui.rb.lobby.locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF\u4E2D"
+    _en: Locked
+    _zhHant: "\u672A\u89E3\u9396"
+    _zhHans: "\u672A\u89E3\u9501"
+  - _key: ui.rb.lobby.chapter_info
+    _ko: "{0} \xB7 \uAD8C\uC7A5 <color=#FFFFFF>{1:N0}</color>"
+    _ja: "{0} \xB7 \u63A8\u5968 <color=#FFFFFF>{1:N0}</color>"
+    _en: "{0} \xB7 Rec. <color=#FFFFFF>{1:N0}</color>"
+    _zhHant: "{0} \xB7 \u5EFA\u8B70 <color=#FFFFFF>{1:N0}</color>"
+    _zhHans: "{0} \xB7 \u63A8\u8350 <color=#FFFFFF>{1:N0}</color>"
+  - _key: ui.rb.lobby.today
+    _ko: "\uC624\uB298"
+    _ja: "\u672C\u65E5"
+    _en: Today
+    _zhHant: "\u4ECA\u65E5"
+    _zhHans: "\u4ECA\u65E5"
+  - _key: ui.rb.lobby.random
+    _ko: "? \uB79C\uB364"
+    _ja: "? \u30E9\u30F3\u30C0\u30E0"
+    _en: '? Random'
+    _zhHant: "? \u96A8\u6A5F"
+    _zhHans: "? \u968F\u673A"
+  - _key: ui.rb.lobby.free
+    _ko: "\uBB34\uB8CC"
+    _ja: "\u7121\u6599"
+    _en: Free
+    _zhHant: "\u514D\u8CBB"
+    _zhHans: "\u514D\u8D39"
+  - _key: ui.rb.lobby.chip.hidden
+    _ko: "\uD788\uB4E0 \uB4F1\uC7A5 \uAC00\uB2A5"
+    _ja: "\u96A0\u3057\u30AD\u30E3\u30E9\u51FA\u73FE\u3042\u308A"
+    _en: Hidden may appear
+    _zhHant: "\u53EF\u80FD\u51FA\u73FE\u96B1\u85CF"
+    _zhHans: "\u53EF\u80FD\u51FA\u73B0\u9690\u85CF"
+  - _key: ui.rb.lobby.chip.shards
+    _ko: "\uC870\uAC01 +{0}"
+    _ja: "\u6B20\u7247 +{0}"
+    _en: Shards +{0}
+    _zhHant: "\u788E\u7247 +{0}"
+    _zhHans: "\u788E\u7247 +{0}"
+  - _key: ui.rb.lobby.chip.gold
+    _ko: "\uACE8\uB4DC +{0}%"
+    _ja: "\u30B4\u30FC\u30EB\u30C9 +{0}%"
+    _en: Gold +{0}%
+    _zhHant: "\u91D1\u5E63 +{0}%"
+    _zhHans: "\u91D1\u5E01 +{0}%"
+  - _key: ui.rb.lobby.note.random
+    _ko: "\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4 \xB7 \uD788\uB4E0\uC740 \uC774\uBC88
+      \uD310 \uCCB4\uD5D8, \uC870\uAC01 \uBBF8\uC9C0\uAE09"
+    _ja: "\u30AF\u30EA\u30A2\u30DC\u30FC\u30CA\u30B9 \xB7 \u96A0\u3057\u306F\u4ECA\u56DE\u306E\u307F\u4F53\u9A13\u3001\u6B20\u7247\u306A\u3057"
+    _en: "Clear bonus \xB7 Hidden is a one-run trial, no shards"
+    _zhHant: "\u901A\u95DC\u734E\u52F5 \xB7 \u96B1\u85CF\u50C5\u9650\u672C\u5C40\u9AD4\u9A57\uFF0C\u4E0D\u7D66\u788E\u7247"
+    _zhHans: "\u901A\u5173\u5956\u52B1 \xB7 \u9690\u85CF\u4EC5\u9650\u672C\u5C40\u4F53\u9A8C\uFF0C\u4E0D\u7ED9\u788E\u7247"
+  - _key: ui.rb.lobby.chip.ghost_exp
+    _ko: "\uC720\uB839 \uACBD\uD5D8\uCE58 +{0}%"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u7D4C\u9A13\u5024 +{0}%"
+    _en: Ghost EXP +{0}%
+    _zhHant: "\u5E7D\u9748\u7D93\u9A57 +{0}%"
+    _zhHans: "\u5E7D\u7075\u7ECF\u9A8C +{0}%"
+  - _key: ui.rb.lobby.note.ghost
+    _ko: "\uBAB8 \uC5C6\uC774 \uC2DC\uC791 \xB7 \uD310 \uC548\uC5D0\uC11C \uBAB8\uC744
+      \uBE7C\uC557\uC544 \uC2F8\uC6CC\uC694"
+    _ja: "\u4F53\u306A\u3057\u3067\u958B\u59CB \xB7 \u4E2D\u3067\u4F53\u3092\u596A\u3063\u3066\u6226\u3046"
+    _en: "Start bodiless \xB7 Steal a body in the run"
+    _zhHant: "\u7121\u8EAB\u9AD4\u958B\u5C40 \xB7 \u5728\u5C40\u5167\u596A\u53D6\u8EAB\u9AD4\u4F5C\u6230"
+    _zhHans: "\u65E0\u8EAB\u4F53\u5F00\u5C40 \xB7 \u5728\u5C40\u5185\u593A\u53D6\u8EAB\u4F53\u4F5C\u6218"
+  - _key: ui.rb.lobby.chip.power
+    _ko: "\uC804\uD22C\uB825 {0:N0}"
+    _ja: "\u6226\u95D8\u529B {0:N0}"
+    _en: Power {0:N0}
+    _zhHant: "\u6230\u9B25\u529B {0:N0}"
+    _zhHans: "\u6218\u6597\u529B {0:N0}"
+  - _key: ui.rb.lobby.note.today
+    _ko: "\uC624\uB298\uC758 \uBAB8 \xB7 \uACE8\uB4DC \uC5C6\uC774 \uCD9C\uC804"
+    _ja: "\u4ECA\u65E5\u306E\u4F53 \xB7 \u30B4\u30FC\u30EB\u30C9\u4E0D\u8981\u3067\u51FA\u6483"
+    _en: "Today's body \xB7 Sortie with no gold"
+    _zhHant: "\u4ECA\u65E5\u8EAB\u9AD4 \xB7 \u4E0D\u82B1\u91D1\u5E63\u51FA\u64CA"
+    _zhHans: "\u4ECA\u65E5\u8EAB\u4F53 \xB7 \u4E0D\u82B1\u91D1\u5E01\u51FA\u51FB"
+  - _key: ui.rb.lobby.note.host
+    _ko: "\uACE0\uB978 \uBAB8\uC73C\uB85C \uBC14\uB85C \uC2DC\uC791\uD574\uC694"
+    _ja: "\u9078\u3093\u3060\u4F53\u3067\u3059\u3050\u958B\u59CB"
+    _en: Start with the chosen body
+    _zhHant: "\u4EE5\u9078\u64C7\u7684\u8EAB\u9AD4\u76F4\u63A5\u958B\u59CB"
+    _zhHans: "\u4EE5\u9009\u62E9\u7684\u8EAB\u4F53\u76F4\u63A5\u5F00\u59CB"
+  - _key: ui.rb.lobby.sortie_with
+    _ko: "{0}{1} \uCD9C\uC804"
+    _ja: "{0}\u3067\u51FA\u6483"
+    _en: 'Sortie: {0}'
+    _zhHant: "\u4EE5{0}\u51FA\u64CA"
+    _zhHans: "\u4EE5{0}\u51FA\u51FB"
+  - _key: ui.rb.lobby.sortie_ghost
+    _ko: "\uC720\uB839\uC73C\uB85C \uCD9C\uC804"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u3067\u51FA\u6483"
+    _en: Sortie as Ghost
+    _zhHant: "\u4EE5\u5E7D\u9748\u51FA\u64CA"
+    _zhHans: "\u4EE5\u5E7D\u7075\u51FA\u51FB"
+  - _key: ui.rb.lobby.sortie
+    _ko: "\uCD9C\uC804"
+    _ja: "\u51FA\u6483"
+    _en: Sortie
+    _zhHant: "\u51FA\u64CA"
+    _zhHans: "\u51FA\u51FB"
+  - _key: ui.rb.lobby.gold_short_random
+    _ko: "\uB79C\uB364\uC73C\uB85C \uCD9C\uC804 \xB7 \uACE8\uB4DC \uC5C6\uC74C"
+    _ja: "\u30E9\u30F3\u30C0\u30E0\u3067\u51FA\u6483 \xB7 \u30B4\u30FC\u30EB\u30C9\u4E0D\u8981"
+    _en: "Random sortie \xB7 No gold"
+    _zhHant: "\u96A8\u6A5F\u51FA\u64CA \xB7 \u514D\u91D1\u5E63"
+    _zhHans: "\u968F\u673A\u51FA\u51FB \xB7 \u514D\u91D1\u5E01"
+  - _key: ui.rb.soon
+    _ko: "\uC900\uBE44 \uC911\uC774\uC5D0\uC694 \xB7 \uC5C5\uB370\uC774\uD2B8\uB85C
+      \uC5F4\uB824\uC694"
+    _ja: "\u6E96\u5099\u4E2D\u3067\u3059 \xB7 \u30A2\u30C3\u30D7\u30C7\u30FC\u30C8\u3067\u958B\u653E"
+    _en: "Coming soon \xB7 Opens in an update"
+    _zhHant: "\u6E96\u5099\u4E2D \xB7 \u5C07\u65BC\u66F4\u65B0\u958B\u653E"
+    _zhHans: "\u51C6\u5907\u4E2D \xB7 \u5C06\u4E8E\u66F4\u65B0\u5F00\u653E"

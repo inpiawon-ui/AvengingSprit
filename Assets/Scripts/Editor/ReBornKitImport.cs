@@ -83,6 +83,15 @@ namespace Game.Editor
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 if (AssetImporter.GetAtPath(path) is not TextureImporter ti) continue;
+                string bkey = path.Substring(Kit.Length + 1);
+                bkey = bkey.Substring(0, bkey.Length - System.IO.Path.GetExtension(bkey).Length);
+                var wantBorder = borders.TryGetValue(bkey, out var wb) ? wb : Vector4.zero;
+                // 이미 맞게 세팅된 그림은 건너뛴다 — 다시 임포트하면 500장에 몇 분씩 걸린다
+                if (ti.textureType == TextureImporterType.Sprite && ti.filterMode == filter && !ti.mipmapEnabled && !ti.isReadable
+                    && ti.spriteBorder == wantBorder
+                    && (standalone ? ti.GetPlatformTextureSettings("Android").format == TextureImporterFormat.ASTC_4x4
+                                   : ti.textureCompression == TextureImporterCompression.Uncompressed))
+                    continue;
                 ti.textureType = TextureImporterType.Sprite;
                 ti.spriteImportMode = SpriteImportMode.Single;
                 ti.filterMode = filter;

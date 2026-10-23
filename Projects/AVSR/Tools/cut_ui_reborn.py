@@ -47,6 +47,7 @@ SHEETS = {
     'rb_pass_node': ('Components', [('pass_claim', 144, N), ('pass_claimed', 144, N), ('pass_current', 144, N), ('pass_locked', 144, N)]),
     'rb_summon_card': ('Components', [('summon_card_r', 200, B), ('summon_card_sr', 200, B), ('summon_card_ssr', 200, B)]),
     'rb_result_panels': ('Components', [('result_record_panel', 520, B), ('result_reward_row', 520, B), ('chest_reward_row', 520, B), ('awaken_banner', 520, B)]),
+    'rb_misc': ('Components', [('fade_bottom', 128, N), ('dot_red', 32, N)]),
     'rb_hud_bars': ('Hud', [('hud_top_bar', 520, B), ('hud_mode_panel', 460, B), ('hud_boss_bar', 520, B), ('hud_warning_band', 520, B)]),
     'rb_hud_hp': ('Hud', [('hp_ghost_base', 320, B), ('hp_ghost_fill', 320, B), ('hp_ghost_trail', 320, B),
                           ('hp_host_base', 320, B), ('hp_host_fill', 320, B), ('hp_host_trail', 320, B),

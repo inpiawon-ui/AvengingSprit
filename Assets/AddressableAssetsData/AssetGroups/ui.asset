@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: ui
   m_GUID: d78444df26df12246a540cebe42e97d0
   m_SerializeEntries:
+  - m_GUID: 1ef2770cf65296442945b1fb6873a72d
+    m_Address: UI/Lobby/RbLobbyUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_lobby
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3719384aa77b7b7478e358d7f9d8abda
     m_Address: UI/InGame/InGameMainUI
     m_ReadOnly: 0

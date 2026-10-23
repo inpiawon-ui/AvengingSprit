@@ -88,6 +88,20 @@ namespace Game.EditorTools
             return true;
         }
 
+        // ── RE:BORN UI 리뉴얼 미리 보기 (2026-10-23) ──────────────
+        private const string RebornMenu = "Tools/Game/테스트 — 새 UI(RE:BORN)로 보기";
+
+        [MenuItem(RebornMenu)]
+        private static void ToggleReborn()
+            => Game.Module.Common.RebornUiSwitch.Enabled = !Game.Module.Common.RebornUiSwitch.Enabled;
+
+        [MenuItem(RebornMenu, true)]
+        private static bool ToggleRebornValidate()
+        {
+            Menu.SetChecked(RebornMenu, Game.Module.Common.RebornUiSwitch.Enabled);
+            return true;
+        }
+
         [MenuItem(OneEnemyMenu)]
         private static void ToggleOneEnemy()
             => BattleDirector.OneEnemyPerRoom = !BattleDirector.OneEnemyPerRoom;

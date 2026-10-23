@@ -2,7 +2,8 @@
 
 PD 「720 기준으로 새로 구성 · 우리 규칙 기준으로」 — 묶음의 `Assets/REBORN_UI/` 통째 복사 · 임포터는 쓰지 않는다.
 옮기는 것: 아이콘 90종(48 · 96 · 144) · 워드아트 16 · 숫자 비트맵 12 · 그림 생성 일러스트(챕터 배너 1~10 · 결과 · 소환 · 상점 · 패스 · 받침 ·
-재사용 그림). 안 옮기는 것: 판 · 버튼 · HUD · 연출(코드 그림 — 다시 발주) · 히든 실루엣(다시 발주) · 예전 전투 바닥 `bg_stage_ch*`.
+재사용 그림 · 로비 무대 배경 `bg_stage_ch01~10`). 안 옮기는 것: 판 · 버튼 · HUD · 연출(코드 그림 — 다시 발주) · 히든 실루엣(다시 발주).
+⚠ `bg_stage_ch*` 는 로비 무대 배경(챕터별 야경)이다 — 처음에 전투 바닥으로 잘못 보고 뺐다가 넣었다(2026-10-23).
 
 크기: 묶음 1x 는 1080 폭 기준이다. 720 화면에는 **2/3 크기로 놓는다**(1080 폭 기기에서 그림 1픽셀 = 화면 1픽셀).
 이름: 묶음 `ui_{id}@WxH.png` → `rb_{종류}_{id}[_{크기}].png` (아틀라스 안 이름이 겹치지 않게)
@@ -18,7 +19,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')
 SRC = os.path.join(ROOT, 'Projects', 'AVSR', '_handoff', 'reborn_ui_1023', '03_리소스_및_시안', 'REBORN_UI_FINAL', 'REBORN_UI')
 DST = os.path.join(ROOT, 'Assets', 'BaseResource', 'ReBornKit')
 
-SKIP_ART = re.compile(r'(hidden_silhouette|bg_stage_ch\d+)')
+SKIP_ART = re.compile(r'(hidden_silhouette)')
 NAME = re.compile(r'^ui_(.+?)@(\d+)(?:x(\d+))?\.(png|fnt|json)$')
 
 
