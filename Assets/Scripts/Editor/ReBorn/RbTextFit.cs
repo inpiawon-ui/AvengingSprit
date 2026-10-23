@@ -29,9 +29,19 @@ namespace Game.Editor.ReBorn
         public static void Run()
         {
             var table = AssetDatabase.LoadAssetAtPath<StringTable>("Assets/BundleResource/TableData/StringTable.asset");
-            var root = PrefabUtility.LoadPrefabContents(RbLobbyBuilder.PrefabPath);
             var sb = new StringBuilder();
             int checkedCount = 0, bad = 0;
+            foreach (var path in new[] { RbLobbyBuilder.PrefabPath, RbInGameBuilder.PrefabPath })
+                bad += RunOne(table, path, sb, ref checkedCount);
+            string head = $"[RE:BORN 글자] 점검 {checkedCount}개(칸 × 언어) · 넘침 {bad}";
+            System.IO.File.WriteAllText("Projects/AVSR/_exchange/ref/ui_reborn_1023/textfit.txt", head + "\n" + sb);
+            Debug.Log(head + (sb.Length > 0 ? "\n" + sb : ""));
+        }
+
+        private static int RunOne(StringTable table, string path, StringBuilder sb, ref int checkedCount)
+        {
+            var root = PrefabUtility.LoadPrefabContents(path);
+            int bad = 0;
             try
             {
                 var rt = (RectTransform)root.transform;
@@ -49,14 +59,12 @@ namespace Game.Editor.ReBorn
                 {
                     var tr = root.transform.Find(node) ?? FindDeep(root.transform, node);
                     var t = tr != null ? tr.GetComponent<TextMeshProUGUI>() : null;
-                    if (t == null) { sb.AppendLine($"  ? 칸 없음: {node}"); continue; }
+                    if (t == null) continue;   // 그 프리팹에 없는 칸
                     bad += Check(table, t, keys, sb, ref checkedCount);
                 }
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
-            string head = $"[RE:BORN 글자] 점검 {checkedCount}개(칸 × 언어) · 넘침 {bad}";
-            System.IO.File.WriteAllText("Projects/AVSR/_exchange/ref/ui_reborn_1023/textfit.txt", head + "\n" + sb);
-            Debug.Log(head + (sb.Length > 0 ? "\n" + sb : ""));
+            return bad;
         }
 
         private static Transform FindDeep(Transform root, string path)

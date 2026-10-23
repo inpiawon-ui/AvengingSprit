@@ -1,2 +1,14 @@
 key	ko	ja	en	zh_hant	zh_hans
 ui.rb.levelup.hint	카드를 골라 주세요	カードを選んでください	Pick a card	請選擇一張卡片	请选择一张卡片
+ui.rb.shop.title	떠돌이 상인	流れの商人	Wandering Merchant	流浪商人	流浪商人
+ui.rb.result.unlocked	CH {0} 열림!  <color=#FFC93D>NEW</color>	CH {0} 解放！  <color=#FFC93D>NEW</color>	CH {0} unlocked!  <color=#FFC93D>NEW</color>	CH {0} 已開啟！  <color=#FFC93D>NEW</color>	CH {0} 已开启！  <color=#FFC93D>NEW</color>
+ui.rb.result.shard	{0} 조각	{0}のかけら	{0} Shards	{0} 碎片	{0} 碎片
+ui.rb.result.next	다음 챕터 ▶	次のチャプター ▶	Next Chapter ▶	下一章 ▶	下一章 ▶
+ui.rb.result.again	다시 도전	再挑戦	Try Again	再次挑戰	再次挑战
+ui.rb.result.rooms	도달한 방	到達した部屋	Rooms Reached	到達房間	到达房间
+ui.rb.result.kills	처치	撃破	Kills	擊敗	击败
+ui.rb.result.time	플레이 시간	プレイ時間	Play Time	遊戲時間	游戏时间
+ui.rb.result.rewards	획득 보상	獲得報酬	Rewards	獲得獎勵	获得奖励
+ui.rb.result.gold	골드	ゴールド	Gold	金幣	金币
+ui.rb.result.ghost_exp	유령 경험치	ゴースト経験値	Ghost EXP	幽靈經驗值	幽灵经验值
+ui.rb.result.lobby	로비로	ロビーへ	Lobby	回大廳	回大厅

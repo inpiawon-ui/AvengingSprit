@@ -516,7 +516,12 @@ namespace Game.Module.InGame
         public void BeginBattle()
         {
             if (_bootDone) _running = true;
+            _runStartedAt = Time.time;
         }
+
+        // 결과 창(RE:BORN 「도달한 방 · 처치 · 플레이 시간」) — 판 끝에 StageFinishedEvent 로 싣는다
+        private int _runKills;
+        private float _runStartedAt;
 
         // ─────────────────────────────────────────────────────────
         private void SpawnGhost()
@@ -8477,7 +8482,7 @@ namespace Game.Module.InGame
             for (int i = 0; i < _dead.Count; i++)
             {
                 _enemies.Remove(_dead[i]);
-                if (_dead[i] != null) Retire(_dead[i]);
+                if (_dead[i] != null) { Retire(_dead[i]); _runKills++; }
             }
             _dead.Clear();
         }
@@ -10143,6 +10148,8 @@ namespace Game.Module.InGame
                 {
                     IsCleared = false, FinishedChapter = _runChapter, RewardGold = carried,
                     ShardHostKeys = shardKeys, ShardCounts = shardCounts,
+                    ReachedRoom = _runStage, ChapterRooms = ChapterRoomCount(_runChapter),
+                    Kills = _runKills, PlaySeconds = Time.time - _runStartedAt,
                 });
                 return;
             }
@@ -10175,6 +10182,8 @@ namespace Game.Module.InGame
                 FinishedChapter = ch,
                 ShardHostKeys = shardKeys,
                 ShardCounts = shardCounts,
+                ReachedRoom = ChapterRoomCount(ch), ChapterRooms = ChapterRoomCount(ch),
+                Kills = _runKills, PlaySeconds = Time.time - _runStartedAt,
             });
         }
 

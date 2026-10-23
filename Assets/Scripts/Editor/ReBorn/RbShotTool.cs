@@ -49,6 +49,17 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "ingame:levelup", "levelup_ja"),
             (720, 1280, Language.English, "ingame:levelup", "levelup_en"),
             (1080, 2400, Language.Korean, "ingame:levelup", "levelup_20x9"),
+            (720, 1280, Language.Korean, "ingame:shop", "shop_16x9"),
+            (720, 1280, Language.Japanese, "ingame:shop", "shop_ja"),
+            (720, 1280, Language.Korean, "ingame:event", "event_16x9"),
+            (720, 1280, Language.English, "ingame:event", "event_en"),
+            (720, 1280, Language.Korean, "ingame:shrine", "shrine_16x9"),
+            (1080, 2400, Language.Korean, "ingame:shrine", "shrine_20x9"),
+            (720, 1280, Language.Korean, "ingame:result_clear", "result_clear_16x9"),
+            (720, 1280, Language.Korean, "ingame:result_fail", "result_fail_16x9"),
+            (1080, 2400, Language.Korean, "ingame:result_clear", "result_clear_20x9"),
+            (720, 1280, Language.Japanese, "ingame:result_clear", "result_clear_ja"),
+            (768, 1024, Language.English, "ingame:result_fail", "result_fail_4x3"),
         };
 
         private static (int w, int h, Language lang, string state, string name)[] Current
@@ -154,8 +165,21 @@ namespace Game.Editor.ReBorn
                 if (CoreModule.TryGet<ILanguageService>(out var lang)) lang.SetLanguage(s.lang);
                 if (ingame) ShowInGame(battleUi, s.state);
                 else Show(lobby, player, s.state);
-                _wait = 90;
+                _wait = s.state.StartsWith("ingame:") ? 300 : 90;   // 창 여는 연출이 끝날 때까지
                 return;
+            }
+            if (ingame && battleUi != null)
+            {
+                // 그리기 순서 기록 — 창보다 HUD 가 위에 그려진 적이 있다(제단 16:9)
+                var sb = new System.Text.StringBuilder($"[RbShot] 순서 {s.name}:");
+                for (int i = 0; i < battleUi.transform.childCount; i++)
+                {
+                    var c = battleUi.transform.GetChild(i);
+                    if (!c.gameObject.activeSelf) continue;
+                    var cv = c.GetComponent<Canvas>();
+                    sb.Append($" {i}:{c.name}({(cv != null ? cv.sortingOrder.ToString() : "-")})");
+                }
+                Debug.Log(sb.ToString());
             }
             Directory.CreateDirectory(OutDir);
             ScreenCapture.CaptureScreenshot(Path.Combine(OutDir, s.name + ".png"));
@@ -213,11 +237,42 @@ namespace Game.Editor.ReBorn
         private static void ShowInGame(Game.Module.InGame.InGameMainUI ui, string state)
         {
             Time.timeScale = 0.05f;
-            if (state != "ingame:levelup") return;
+            // 앞 장의 창은 닫는다 — 같은 화면에 겹쳐 찍히지 않게
+            foreach (var t in ui.GetComponentsInChildren<Transform>(true))
+                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel") t.gameObject.SetActive(false);
+            if (state == "ingame") return;
+            // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
+            Time.timeScale = 1f;
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
             const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            typeof(Game.Module.InGame.BattleDirector).GetField("_awaitingBuff", F)?.SetValue(battle, false);
-            typeof(Game.Module.InGame.BattleDirector).GetMethod("OfferBuff", F)?.Invoke(battle, new object[] { Game.Character.CardRarity.Common });
+            var bt = typeof(Game.Module.InGame.BattleDirector);
+            switch (state)
+            {
+                case "ingame:levelup":
+                    bt.GetField("_awaitingBuff", F)?.SetValue(battle, false);
+                    bt.GetMethod("OfferBuff", F)?.Invoke(battle, new object[] { Game.Character.CardRarity.Common });
+                    break;
+                case "ingame:shop": bt.GetMethod("OpenShop", F)?.Invoke(battle, null); break;
+                case "ingame:event":
+                    // 이 판에서 본 이벤트는 다시 안 나온다 — 장마다 비운다
+                    var used = bt.GetField("_eventsUsed", F)?.GetValue(battle);
+                    used?.GetType().GetMethod("Clear")?.Invoke(used, null);
+                    bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
+                    break;
+                case "ingame:shrine": bt.GetMethod("OpenShrine", F)?.Invoke(battle, null); break;
+                case "ingame:result_clear":
+                case "ingame:result_fail":
+                    // 결과 화면만 띄운다(판을 끝내지 않는다 — 저장 · 보상 지급이 일어나지 않게). 숫자는 시안 예시
+                    var faces = typeof(Game.Module.InGame.InGameMainUI).GetField("_faceAtlas", F)?.GetValue(ui) as UnityEngine.U2D.SpriteAtlas;
+                    bool clear = state.EndsWith("clear");
+                    ui.GetComponentInChildren<Game.Module.InGame.RbRunResult>(true)?.Show(new Game.Module.Events.StageFinishedEvent
+                    {
+                        IsCleared = clear, FinishedChapter = 1, RewardGold = clear ? 432 : 96, RewardGhostExp = 30,
+                        ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 },
+                        ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
+                    }, faces);
+                    break;
+            }
         }
 
         private static bool Click(string name)

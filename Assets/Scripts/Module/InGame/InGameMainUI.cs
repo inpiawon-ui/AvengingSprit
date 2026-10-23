@@ -58,6 +58,10 @@ namespace Game.Module.InGame
         [SerializeField] private bool _reborn;
         /// <summary>레벨업 카드 판 — `CardRarity` 순서(Common · Rare · Epic · Legendary).</summary>
         [SerializeField] private Sprite[] _rbCardPanels = Array.Empty<Sprite>();
+        /// <summary>상점 값 알약 — 살 수 있음 / 모자람.</summary>
+        [SerializeField] private Sprite _rbPrice, _rbPricePoor;
+        /// <summary>이벤트 그림(rb_art_ev_*) — 이름으로 찾는다(<see cref="EventArtOf"/>).</summary>
+        [SerializeField] private Sprite[] _rbEventArts = Array.Empty<Sprite>();
         private float _ghostBarWidth = GhostBarWidth, _hostBarWidth = HostBarWidth, _bossBarWidth = BossBarWidth, _expBarWidth;
 
         private RectTransform _dpad;
@@ -181,6 +185,8 @@ namespace Game.Module.InGame
 
             _ui.SetActive("BossGroup", false);
             _ui.SetActive("BuffChoicePanel", false);
+            // RE:BORN 결과 화면 — 프리팹에서 켜 둔 채 정렬 밴드를 건 뒤(SetupSortingBands) 끈다(꺼진 채면 순서 0 으로 남는다)
+            _ui.SetActive("RbResultPanel", false);
             SetPossessReady(false);
 
             // 딤 — 뒤 화면을 덮고 조작 입력을 막는다
@@ -199,11 +205,11 @@ namespace Game.Module.InGame
                 eventDim.raycastTarget = true;
             }
             var box = _ui.Get<Image>("EventBox");
-            if (box != null) box.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+            if (box != null && !_reborn) box.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
             var accept = _ui.Get<Image>("EventAcceptButton");
-            if (accept != null) accept.color = new Color(0.941f, 0.706f, 0.157f, 1f);
+            if (accept != null && !_reborn) accept.color = new Color(0.941f, 0.706f, 0.157f, 1f);
             var decline = _ui.Get<Image>("EventDeclineButton");
-            if (decline != null) decline.color = new Color(0.16f, 0.19f, 0.26f, 1f);
+            if (decline != null && !_reborn) decline.color = new Color(0.16f, 0.19f, 0.26f, 1f);
             _ui.SetActive("EventPanel", false);
 
             // 제단 창도 같은 딤을 쓴다. `EventPanel` 을 복제해 만든 창이라 뿌리 이미지가
@@ -215,7 +221,7 @@ namespace Game.Module.InGame
                 shrineDim.raycastTarget = true;
             }
             var shrineBox = _ui.Get<Image>("ShrineBox");
-            if (shrineBox != null) shrineBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+            if (shrineBox != null && !_reborn) shrineBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
 
             // 제단 글자색 — **바닥색을 재서** 정한다.
             // ⚠ 안내 문구가 청록(#8CCCC7)이었는데 명판 바닥도 어두운 청록(밝기 37)이라
@@ -242,9 +248,9 @@ namespace Game.Module.InGame
             // 그림은 아틀라스가 온 뒤에 입힌다(`SkinPopups`). 여기서는 단색만 깔아 둔다 —
             // 아틀라스 로드가 실패해도 창이 보이기는 해야 한다.
             var shopBox = _ui.Get<Image>("ShopBox");
-            if (shopBox != null) shopBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
+            if (shopBox != null && !_reborn) shopBox.color = new Color(0.078f, 0.102f, 0.157f, 0.98f);
             var leave = _ui.Get<Image>("ShopLeaveButton");
-            if (leave != null) leave.color = new Color(0.941f, 0.706f, 0.157f, 1f);
+            if (leave != null && !_reborn) leave.color = new Color(0.941f, 0.706f, 0.157f, 1f);
             _ui.SetActive("ShopPanel", false);
         }
 
@@ -259,6 +265,27 @@ namespace Game.Module.InGame
         }
 
         private float WidthOf(string node, float fallback) => _ui.Find(node) is RectTransform r ? r.sizeDelta.x : fallback;
+
+        /// <summary>이벤트 그림(키트 rb_art_ev_*) — 빌더가 이벤트 순서대로 꽂는다. 거래(악마) 이벤트는 「심연의 거래」 그림을 같이 쓴다.</summary>
+        private Sprite EventArtOf(string eventId)
+        {
+            string key = eventId switch
+            {
+                "EV_CH1_01" => "soul_shrine", "EV_CH1_02" => "abandoned_supply", "EV_CH1_03" => "locked_safe",
+                "EV_CH1_04" => "lost_soul", "EV_CH1_05" => "field_medic", "EV_CH1_06" => "narrow_path",
+                "EV_CH2_01" => "cursed_cache", "EV_CH2_02" => "famous_body", "EV_CH2_03" => "sealed_chest",
+                "EV_CH2_04" => "crossfire", "EV_CH2_05" => "black_market", "EV_CH2_06" => "broken_altar",
+                "EV_CH3_01" => "soul_wager", "EV_CH3_02" => "deadly_challenge", "EV_CH3_03" => "boss_prep",
+                "EV_CH3_04" => "fallen_host", "EV_CH3_05" => "abyss_deal", "EV_CH3_06" => "last_airdrop",
+                "EV_DEAL_01" => "blood_pact",
+                _ => eventId != null && eventId.StartsWith("EV_DEAL") ? "abyss_deal" : null,
+            };
+            if (key == null) return null;
+            string name = "rb_art_ev_" + key;
+            for (int i = 0; i < _rbEventArts.Length; i++)
+                if (_rbEventArts[i] != null && _rbEventArts[i].name == name) return _rbEventArts[i];
+            return null;
+        }
 
         private void OnEnable()
         {
@@ -1207,6 +1234,11 @@ namespace Game.Module.InGame
         {
             _lastOffer = e;
             _ui.SetText("EventTitleText", e.Title);
+            if (_reborn && _ui.Get<Image>("EventArt") is Image evArt)
+            {
+                evArt.sprite = EventArtOf(e.EventId);
+                evArt.enabled = evArt.sprite != null;
+            }
             // 본문은 분위기만 적혀 있어 무엇을 받는지 알 수 없었다 — 받는 것은 금빛 알약 판에 따로 올린다.
             // (C 원혼 회로 2026-10-08: 본문 끝에 덧붙이면 본문 칸이 넘쳐 글자가 같이 줄었다)
             bool hasReward = !string.IsNullOrEmpty(e.RewardLabel);
@@ -1327,9 +1359,11 @@ namespace Game.Module.InGame
                         // C 원혼 회로 선택 칸(2026-10-08) — 칸 왼쪽 아이콘 틀 가운데에 맞춘다.
                         // 틀 = 칸 그림 440 폭 중 x 27~99 → 칸 폭 비율로 환산한 가운데(407 폭이면 58)
                         float slotH = slot.rect.height;
-                        float iconMid = slot.rect.width * (63f / 440f);
-                        grt.anchoredPosition = new Vector2(iconMid - 30f, -(slotH - 60f) * 0.5f);
-                        grt.sizeDelta = new Vector2(60f, 60f);
+                        // RE:BORN 판(키트 목록 줄) — 아이콘은 줄 왼쪽 안쪽 70 칸
+                        float iconSize = _reborn ? 72f : 60f;
+                        float iconMid = _reborn ? 84f : slot.rect.width * (63f / 440f);
+                        grt.anchoredPosition = new Vector2(iconMid - iconSize * 0.5f, -(slotH - iconSize) * 0.5f);
+                        grt.sizeDelta = new Vector2(iconSize, iconSize);
                         gi.sprite = sp2;
                         gi.enabled = sp2 != null;
                         gi.color = Color.white;
@@ -1399,7 +1433,8 @@ namespace Game.Module.InGame
 
         private void OnShopOpened(ShopOpenedEvent e)
         {
-            _ui.SetText("ShopGoldText", Localize.Format("ui.shop.gold", e.Gold));
+            // RE:BORN 판은 동전 그림 옆 숫자만(시안 「🪙 148」)
+            _ui.SetText("ShopGoldText", _reborn ? e.Gold.ToString("N0") : Localize.Format("ui.shop.gold", e.Gold));
             // 「남은 구매 2회 · 카드 1장」은 안 띄운다 — 상점은 하나 사면 바로 닫혀서(ShopPurchasedEvent) 남은 횟수가
             // 의미가 없고 틀린 말이 된다(PD 2026-10-08 「상점 한번 선택하면 끝인데 저거 지워」)
             _ui.SetActive("ShopLimitText", false);
@@ -1414,11 +1449,18 @@ namespace Game.Module.InGame
 
                 _ui.SetText($"ShopItem{i}Name", e.Names[i]);
                 _ui.SetText($"ShopItem{i}Desc", e.Descs[i]);
-                _ui.SetText($"ShopItem{i}Price", $"{e.Prices[i]:N0} G");
+                _ui.SetText($"ShopItem{i}Price", _reborn ? e.Prices[i].ToString("N0") : $"{e.Prices[i]:N0} G");
 
                 bool can = e.CanBuy[i];
                 var img = _ui.Get<Image>($"ShopItem{i}");
-                if (img != null)
+                if (_reborn)
+                {
+                    // 칸은 투명(누름만 받는다) · 값 알약이 살 수 있는지를 말한다(초록 / 회색 · 빨간 값 — 시안 merchant)
+                    if (img != null) img.color = new Color(1f, 1f, 1f, 0f);
+                    if (_ui.Find(_ui.Find($"ShopItem{i}"), $"ShopItem{i}Pill")?.GetComponent<Image>() is Image pill)
+                        pill.sprite = can ? _rbPrice : _rbPricePoor;
+                }
+                else if (img != null)
                 {
                     // 못 사는 줄은 **회색 그림**으로 갈아 끼운다. 색만 어둡게 하면
                     // 그림의 금색 테두리가 그대로 남아 살 수 있는 것처럼 보인다.
@@ -1440,7 +1482,8 @@ namespace Game.Module.InGame
                 // 값을 못 치르는 칸은 값도 흐리게 — 무엇이 모자란지가 값에 있다
                 var price = _ui.Get<TMPro.TMP_Text>($"ShopItem{i}Price");
                 if (price != null)
-                    price.color = can ? new Color(0.941f, 0.753f, 0.220f)
+                    price.color = _reborn ? (can ? Color.white : new Color(1f, 0.42f, 0.42f))
+                                : can ? new Color(0.941f, 0.753f, 0.220f)
                                       : new Color(0.42f, 0.38f, 0.28f);
 
                 var btn = _ui.Get<Button>($"ShopItem{i}");
@@ -1693,6 +1736,8 @@ namespace Game.Module.InGame
         /// </summary>
         private void SkinPopups()
         {
+            // RE:BORN 판은 빌더가 키트 그림을 꽂아 두었다 — 옛 아틀라스 그림으로 덮지 않는다
+            if (_reborn) return;
             // 상점 「유령 노점」
             Skin("ShopBox", "shopframe");
             Skin("ShopGoldPill", "shopgoldpill");
@@ -1760,6 +1805,8 @@ namespace Game.Module.InGame
         {
             if (_finished) return;
             _finished = true;
+            // RE:BORN 판 — 클리어 · 실패 모두 결과 화면(시안 result-story · result-fail)
+            if (_reborn && GetComponentInChildren<RbRunResult>(true) is RbRunResult rb) { rb.Show(e, _faceAtlas); return; }
             // 보상은 전투가 이미 넣었다. 여기는 보여 주고 로비로 보낼 뿐이다.
             // 클리어는 결과창(시안), 죽음은 알림창 하나 — 죽으면 보여 줄 보상이 없다.
             var result = e.IsCleared ? GetComponentInChildren<ChapterResultPopup>(true) : null;
@@ -1811,6 +1858,9 @@ namespace Game.Module.InGame
                 },
                 confirmText: Localize.Get("ui.ingame.pause.give_up"), cancelText: Localize.Get("ui.ingame.pause.continue"));
         }
+
+        /// <summary>결과 화면(RbRunResult)의 「로비로 · 다음」.</summary>
+        public void LeaveToLobby() => GoLobbyAsync().Forget();   // fire-and-forget: 씬 전환 대기 불필요
 
         private async UniTaskVoid GoLobbyAsync()
         {

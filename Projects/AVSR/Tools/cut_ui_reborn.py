@@ -63,6 +63,9 @@ SHEETS = {
 GRID = {'rb_panels': (4, 1), 'rb_card_option': (4, 2)}
 # 칸 줄과 다른 높이에 그린 시트(가는 바 5줄) — 진한 덩어리 순서대로
 BLOB_ONLY = {'rb_bars'}
+# 한 줄로 늘어선 판 — 빈 세로 줄로 가른다. rb_panels 는 판 넷의 폭이 제각각이고 둘이 5px 붙어 있어,
+# 칸 격자로는 모달 칸에 옆 판이 같이 들어오고 덩어리 찾기(1/4 축소)는 둘을 하나로 붙였다(2026-10-23 인게임 창 캡처)
+COLUMNS = {'rb_panels'}
 
 
 def _order_grid():
@@ -225,6 +228,22 @@ def border(im):
     return [l, b, r, t]
 
 
+def column_boxes(im, thresh):
+    """불투명 세로 줄이 이어진 구간마다 하나 — 그 구간 안 불투명 행 범위가 위아래."""
+    a = im.getchannel('A').point(lambda v: 255 if v > thresh else 0)
+    w, h = a.size
+    cols = [a.crop((x, 0, x + 1, h)).getbbox() is not None for x in range(w)]
+    out, start = [], None
+    for x, on in enumerate(cols + [False]):
+        if on and start is None:
+            start = x
+        elif not on and start is not None:
+            bb = a.crop((start, 0, x, h)).getbbox()
+            out.append([start, bb[1], x, bb[3]])
+            start = None
+    return out
+
+
 def main():
     report, borders = [], {}
     for sheet, (folder, names) in SHEETS.items():
@@ -235,7 +254,9 @@ def main():
         im = alpha_of(Image.open(path))
         # 발주 시트 크기 그대로 왔으면 칸 격자를 지킨 것 — 칸대로 자른다(덩어리 찾기는 빛 번짐에 이름 순서가 꼬였다)
         grid = ORDER_GRID.get(sheet)
-        if sheet in BLOB_ONLY:
+        if sheet in COLUMNS:
+            bs = column_boxes(im, 40)
+        elif sheet in BLOB_ONLY:
             bs = reading_order(_boxes(im, 40, 2))
         elif grid and im.size == (grid[0] * grid[2], grid[1] * grid[3]):
             bs = grid_boxes(im, grid[2], grid[3])[:len(names)]

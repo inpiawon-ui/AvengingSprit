@@ -292,5 +292,11 @@ namespace Game.Module.Events
         /// </summary>
         public string[] ShardHostKeys;
         public int[] ShardCounts;
+
+        /// <summary>결과 기록(RE:BORN 결과 창) — 도달한 방 · 챕터 방 수 · 처치 · 플레이 초.</summary>
+        public int ReachedRoom;
+        public int ChapterRooms;
+        public int Kills;
+        public float PlaySeconds;
     }
 }

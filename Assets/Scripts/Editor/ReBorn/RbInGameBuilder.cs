@@ -28,6 +28,10 @@ namespace Game.Editor.ReBorn
                 BuildHud(root.transform);
                 BuildControls(root.transform);
                 BuildLevelUp(root.transform);
+                BuildShop(root.transform);
+                BuildEvent(root.transform);
+                BuildShrine(root.transform);
+                BuildResult(root.transform);
                 Wire(root.GetComponent<Game.Module.InGame.InGameMainUI>());
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
@@ -383,6 +387,7 @@ namespace Game.Editor.ReBorn
             extImg.color = new Color(0.02f, 0.03f, 0.06f, 0.95f);   // InGameMainUI Awake 의 딤 색과 같게
             extImg.raycastTarget = true;
             ext.SetAsFirstSibling();
+            Lock(panel);
             FixLevelUpFx(panel);
             Mute(root, "BuffFrame", "BuffTitleText", "BuffNoteText");
             var title = F(root, "BuffTitleArt");
@@ -421,6 +426,271 @@ namespace Game.Editor.ReBorn
             var ht = hint.Find("BuffHintText") as RectTransform ?? Node(hint, "BuffHintText");
             if (ht.GetComponent<TextMeshProUGUI>() == null)
                 Text(Stretch(ht), "ui.rb.levelup.hint", "카드를 골라 주세요", 40, Dim, TA.Center);
+        }
+
+        // ── 방 안 창: 상인 · 이벤트 · 제단 ───────────────────────
+
+        /// <summary>창 판을 화면 가운데 720×1280 으로 · 딤 덧판으로 위아래까지 덮는다(레벨업과 같은 방식).</summary>
+        private static RectTransform CenterPanel(Transform root, string name)
+        {
+            var panel = F(root, name);
+            panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
+            panel.sizeDelta = new Vector2(720f, 1280f);
+            panel.anchoredPosition = Vector2.zero;
+            var ext = panel.Find(name + "DimExtend") as RectTransform ?? Node(panel, name + "DimExtend");
+            ext.anchorMin = Vector2.zero; ext.anchorMax = Vector2.one; ext.pivot = new Vector2(0.5f, 0.5f);
+            ext.offsetMin = new Vector2(-400f, -800f); ext.offsetMax = new Vector2(400f, 800f);
+            var img = ext.GetComponent<Image>() ?? ext.gameObject.AddComponent<Image>();
+            img.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);   // InGameMainUI Awake 의 창 딤 색과 같게
+            img.raycastTarget = true;
+            ext.SetAsFirstSibling();
+            Lock(panel);
+            return panel;
+        }
+
+        /// <summary>
+        /// 가운데 720×1280 판은 화면 비율 맞추기(루트의 ScreenFit)에서 뺀다 — 안 그러면 판 안 요소를 화면 양끝으로 벌린다
+        /// (2026-10-23 4:3 결과 캡처: 골드 칸 · 로비로 버튼이 왼쪽 끝으로 · 20:9 레벨업 제목이 위 끝으로).
+        /// </summary>
+        private static void Lock(RectTransform rt)
+        {
+            if (rt.GetComponent<Game.Module.Common.UI.ScreenFitLock>() == null)
+                rt.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
+        }
+
+        /// <summary>창 연출에서 옛 틀에 붙어 있던 장식(관 · 배관 · 사슬 · 촛불 · 거품 · 보석)을 뺀다 — 새 판에는 그 자리가 없다.</summary>
+        private static void DropFrameFx(RectTransform panel, params string[] keys)
+        {
+            var spec = panel.GetComponent<Game.Module.InGame.PopupFxSpec>();
+            if (spec == null) return;
+            var so = new SerializedObject(spec);
+            var layers = so.FindProperty("_layers");
+            for (int i = layers.arraySize - 1; i >= 0; i--)
+            {
+                string frames = layers.GetArrayElementAtIndex(i).FindPropertyRelative("Frames").stringValue;
+                foreach (var k in keys) if (frames.Contains(k)) { layers.DeleteArrayElementAtIndex(i); break; }
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static RectTransform TitlePlate(RectTransform panel, RectTransform title, float x0, float y0, float x1, float y1)
+        {
+            var plate = panel.Find(title.name + "Plate") as RectTransform ?? Node(panel, title.name + "Plate");
+            PutPx(plate, panel, (x0 + x1) * 0.5f, (y0 + y1) * 0.5f, x1 - x0, y1 - y0);
+            Skin(plate, "Components/rb_popup_title_plate");
+            PutPx(title, panel, (x0 + x1) * 0.5f, (y0 + y1) * 0.5f, x1 - x0 - 24f, y1 - y0 - 10f);
+            Style(title, 46, White, TA.Center, heavy: true);
+            plate.SetSiblingIndex(title.GetSiblingIndex());
+            return plate;
+        }
+
+        private static void BuildShop(Transform root)
+        {
+            var panel = CenterPanel(root, "ShopPanel");
+            DropFrameFx(panel, "tube", "pipe");
+            var box = PutPx(F(root, "ShopBox"), panel, 360f, 660f, 648f, 920f);
+            Skin(box, "Components/rb_modal");
+            var title = F(root, "ShopTitleText");
+            TitlePlate(panel, title, 220f, 176f, 500f, 236f);   // 키트 모달의 위 가운데 턱에 얹는다
+            // 옛 제목(「상점」 ui.shop.title)이 이미 고정 글자로 붙어 있다 — 키만 「떠돌이 상인」으로 바꾼다
+            var loc = title.GetComponent<Game.Module.Common.LocalizedText>() ?? title.gameObject.AddComponent<Game.Module.Common.LocalizedText>();
+            loc.SetKey("ui.rb.shop.title");
+            // 골드 — 동전 + 숫자(시안 왼쪽 위)
+            var pill = PutPx(F(root, "ShopGoldPill"), panel, 140f, 278f, 170f, 44f);
+            Skin(pill, "Components/rb_info_chip");   // 재화 알약(rb_currency_pill)은 오른쪽에 + 칸이 붙어 있어 안 맞는다
+            var gold = PutPx(F(root, "ShopGoldText"), panel, 156f, 278f, 120f, 40f);
+            Style(gold, 46, Yellow, TA.Left, number: true);
+            var coin = panel.Find("ShopGoldCoin") as RectTransform ?? Node(panel, "ShopGoldCoin");
+            PutPx(coin, panel, 80f, 278f, 36f, 36f);
+            Img(coin, "Icons/rb_icon_currency_gold_48");
+            Mute(root, "ShopLimitText", "ShopResultText");
+
+            // 6칸 — 2열 × 3줄(카드 셋 · 몸 · 소모품 · 회복). 칸 = 아이콘 · 이름 · 설명 · 값 알약
+            for (int i = 0; i < 6; i++)
+            {
+                float cx = i % 2 == 0 ? 205f : 515f, top = 322f + 236f * (i / 2);
+                var cell = PutPx(F(root, $"ShopItem{i}"), panel, cx, top + 112f, 300f, 224f);
+                if (cell.TryGetComponent<Image>(out var ci)) { ci.sprite = null; ci.color = new Color(1, 1, 1, 0); }
+                Inside(F(root, $"ShopItem{i}Icon"), 150f, 46f, 72f, 72f);
+                var name = F(root, $"ShopItem{i}Name");
+                Inside(name, 150f, 106f, 288f, 40f);
+                Style(name, 40, White, TA.Center, heavy: true);
+                var desc = F(root, $"ShopItem{i}Desc");
+                Inside(desc, 150f, 144f, 288f, 34f);
+                Style(desc, 32, Dim, TA.Center);
+                var pl = cell.Find($"ShopItem{i}Pill") as RectTransform ?? Node(cell, $"ShopItem{i}Pill");
+                Inside(pl, 150f, 194f, 150f, 52f);
+                Skin(pl, "Components/rb_btn_price");
+                pl.SetSiblingIndex(0);
+                var pc = cell.Find($"ShopItem{i}Coin") as RectTransform ?? Node(cell, $"ShopItem{i}Coin");
+                Inside(pc, 108f, 194f, 34f, 34f);
+                Img(pc, "Icons/rb_icon_currency_gold_48");
+                var price = F(root, $"ShopItem{i}Price");
+                price.SetAsLastSibling();
+                Inside(price, 168f, 194f, 90f, 40f);
+                Style(price, 44, White, TA.Left, number: true);
+            }
+            var leave = PutPx(F(root, "ShopLeaveButton"), panel, 360f, 1062f, 580f, 74f);
+            Skin(leave, "Components/rb_btn_secondary");
+            SwapPressed(leave, "Components/rb_btn_secondary_pressed");
+            Style(F(root, "ShopLeaveText"), 44, White, TA.Center, heavy: true);
+        }
+
+        private static void BuildEvent(Transform root)
+        {
+            var panel = CenterPanel(root, "EventPanel");
+            DropFrameFx(panel, "chain", "flame");
+            var box = PutPx(F(root, "EventBox"), panel, 360f, 640f, 648f, 800f);
+            Skin(box, "Components/rb_modal");
+            TitlePlate(panel, F(root, "EventTitleText"), 190f, 222f, 530f, 282f);
+            // 이벤트 그림(키트 rb_art_ev_*) — 화면 스크립트가 이벤트마다 꽂는다
+            var art = panel.Find("EventArt") as RectTransform ?? Node(panel, "EventArt");
+            PutPx(art, panel, 360f, 455f, 580f, 300f);
+            var artImg = art.GetComponent<Image>() ?? art.gameObject.AddComponent<Image>();
+            artImg.preserveAspect = true;
+            artImg.raycastTarget = false;
+            art.SetSiblingIndex(box.GetSiblingIndex() + 1);
+            var body = PutPx(F(root, "EventBodyText"), panel, 360f, 672f, 580f, 110f);
+            Style(body, 36, White, TA.TopLeft);
+            if (body.TryGetComponent<TextMeshProUGUI>(out var bt)) bt.enableWordWrapping = true;
+            PutPx(F(root, "EventRewardPill"), panel, 360f, 752f, 580f, 44f);
+            Skin(F(root, "EventRewardPill"), "Components/rb_info_chip");
+            PutPx(F(root, "EventRewardText"), panel, 360f, 752f, 556f, 40f);
+            Style(F(root, "EventRewardText"), 34, Green, TA.Center);
+            PutPx(F(root, "EventCostPill"), panel, 360f, 802f, 580f, 44f);
+            Skin(F(root, "EventCostPill"), "Components/rb_info_chip");
+            PutPx(F(root, "EventCostText"), panel, 360f, 802f, 556f, 40f);
+            Style(F(root, "EventCostText"), 34, Red, TA.Center);
+            var accept = PutPx(F(root, "EventAcceptButton"), panel, 360f, 876f, 580f, 72f);
+            Skin(accept, "Components/rb_btn_secondary");
+            SwapPressed(accept, "Components/rb_btn_secondary_pressed");
+            Style(F(root, "EventAcceptText"), 42, White, TA.Center, heavy: true);
+            var decline = PutPx(F(root, "EventDeclineButton"), panel, 360f, 962f, 580f, 72f);
+            Skin(decline, "Components/rb_btn_secondary");
+            SwapPressed(decline, "Components/rb_btn_secondary_pressed");
+            Style(F(root, "EventDeclineText"), 42, White, TA.Center, heavy: true);
+            PutPx(F(root, "EventResultText"), panel, 360f, 876f, 580f, 72f);
+            Style(F(root, "EventResultText"), 38, White, TA.Center);
+        }
+
+        private static void BuildShrine(Transform root)
+        {
+            var panel = CenterPanel(root, "ShrinePanel");
+            // 프리팹에서 꺼져 있으면 정렬 밴드 캔버스(InGameMainUI.SetupSortingBands)가 순서 0 으로 남아 HUD(20)가 창 위에 그려졌다
+            // (2026-10-23 캡처 기록). 켜 두면 Awake 가 밴드를 건 뒤 스스로 끈다
+            panel.gameObject.SetActive(true);
+            DropFrameFx(panel, "tube", "bubble", "gem");
+            Mute(root, "ShrineBox", "ShrineHintPill", "ShrineBodyText");
+            var title = PutPx(F(root, "ShrineTitleText"), panel, 360f, 150f, 600f, 64f);
+            Style(title, 60, White, TA.Center, heavy: true);
+            var hint = PutPx(F(root, "ShrineHintText"), panel, 360f, 204f, 600f, 40f);
+            Style(hint, 36, Dim, TA.Center);
+            for (int i = 0; i < 3; i++)
+            {
+                var row = PutPx(F(root, $"ShrineChoice{i}"), panel, 360f, 340f + 220f * i, 660f, 200f);
+                Skin(row, "Components/rb_list_row");
+                if (row.TryGetComponent<Button>(out var b))
+                {
+                    b.transition = Selectable.Transition.SpriteSwap;
+                    b.spriteState = new SpriteState { pressedSprite = KitSprite("Components/rb_list_row_selected") };
+                }
+                var t = F(root, $"ShrineChoice{i}Text");
+                Inside(t, 400f, 74f, 460f, 52f);
+                Style(t, 48, White, TA.Left, heavy: true);
+                var d = F(root, $"ShrineChoice{i}Desc");
+                Inside(d, 400f, 128f, 460f, 44f);
+                Style(d, 36, Dim, TA.Left);
+            }
+            PutPx(F(root, "ShrineResultText"), panel, 360f, 1060f, 600f, 60f);
+            Style(F(root, "ShrineResultText"), 38, White, TA.Center);
+        }
+
+        // ── 결과 화면(스토리 클리어 · 실패) ─────────────────────────
+
+        private static void BuildResult(Transform root)
+        {
+            // 화면 전체 — 맨 뒤 형제(정렬 밴드 20). 켠 채 저장한다: InGameMainUI Awake 가 밴드를 건 뒤 끈다
+            var old = root.Find("RbResultPanel");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var page = Stretch(Node((RectTransform)root, "RbResultPanel"));
+            var dim = page.gameObject.AddComponent<Image>();
+            dim.color = new Color(0.02f, 0.03f, 0.06f, 1f);
+            dim.raycastTarget = true;
+            var bg = Stretch(Node(page, "RbResultBg"));
+            var bgImg = Img(bg, "Art/rb_art_result_clear_bg");
+            bgImg.preserveAspect = false;
+            var fit = bg.gameObject.AddComponent<AspectRatioFitter>();
+            fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fit.aspectRatio = 1080f / 2340f;
+
+            var c = Node(page, "RbResultContent");   // 가운데 720×1280
+            Lock(c);
+            c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
+            c.sizeDelta = new Vector2(720f, 1280f);
+            Text(PutPx(Node(c, "RbResultChapter"), c, 360f, 128f, 400f, 36f), null, "CHAPTER 1", 36, Cyan, TA.Center, number: true);
+            Img(PutPx(Node(c, "RbResultWord"), c, 360f, 200f, 300f, 96f), "WordArt/rb_word_word_clear");
+            Img(PutPx(Node(c, "RbResultGhost"), c, 360f, 318f, 120f, 120f), "Art/rb_art_mascot_ghost_cheer");
+            var nw = PutPx(Node(c, "RbResultNew"), c, 360f, 420f, 330f, 54f);
+            Img(nw, "Components/rb_info_chip");
+            Text(Stretch(Node(nw, "RbResultNewText")), null, "CH 2 열림!  NEW", 34, Cyan, TA.Center, heavy: true);
+
+            // 기록 판 — 도달한 방 · 처치 · 플레이 시간
+            var rec = PutPx(Node(c, "RbResultRecord"), c, 360f, 535f, 680f, 132f);
+            Img(rec, "Components/rb_result_record_panel");
+            string[] keys = { "ui.rb.result.rooms", "ui.rb.result.kills", "ui.rb.result.time" };
+            string[] ko = { "도달한 방", "처치", "플레이 시간" };
+            string[] vals = { "RbResultRoomValue", "RbResultKillValue", "RbResultTimeValue" };
+            for (int i = 0; i < 3; i++)
+            {
+                float y = 20f + 36f * i;   // 셋째 줄이 판 아래 테두리에 걸렸다(첫 캡처)
+                Text(Inside2(Node(rec, $"RbResultRecLabel{i}"), 24f, y, 360f, 36f), keys[i], ko[i], 34, Dim, TA.Left);
+                Text(Inside2(Node(rec, vals[i]), 420f, y, 236f, 36f), null, "16/16", 40, White, TA.Right, number: true);
+            }
+
+            // 획득 보상 3칸
+            Text(PutPx(Node(c, "RbResultRewardTitle"), c, 200f, 640f, 360f, 44f), "ui.rb.result.rewards", "획득 보상", 42, White, TA.Left, heavy: true);
+            Tile(c, "RbResultGoldTile", 128f, "Icons/rb_icon_currency_gold_144", "RbResultGoldValue", "RbResultGoldLabel", "ui.rb.result.gold", "골드");
+            var shard = Tile(c, "RbResultShardTile", 360f, "Icons/rb_icon_shard_144", "RbResultShardValue", "RbResultShardLabel", null, "아마존 조각");
+            var face = Node(shard, "RbResultShardFace");
+            Inside2(face, 128f, 18f, 60f, 60f);
+            Img(face, "Icons/rb_icon_mode_ghost_96");
+            Tile(c, "RbResultExpTile", 592f, "Icons/rb_icon_ghost_xp_144", "RbResultExpValue", "RbResultExpLabel", "ui.rb.result.ghost_exp", "유령 경험치");
+
+            // 로비로 · 다음 챕터 ▶(다시 도전)
+            var lobby = PutPx(Node(c, "RbResultLobby"), c, 135f, 1010f, 230f, 84f);
+            Btn(lobby, "Components/rb_btn_secondary");
+            Text(Stretch(Node(lobby, "RbResultLobbyText")), "ui.rb.result.lobby", "로비로", 44, White, TA.Center, heavy: true);
+            var next = PutPx(Node(c, "RbResultNext"), c, 475f, 1010f, 430f, 92f);
+            Btn(next, "Components/rb_btn_primary");
+            Text(Stretch(Node(next, "RbResultNextText")), null, "다음 챕터 ▶", 48, Ink, TA.Center, heavy: true);
+
+            var view = page.gameObject.AddComponent<Game.Module.InGame.RbRunResult>();
+            var so = new SerializedObject(view);
+            so.FindProperty("_bgClear").objectReferenceValue = KitSprite("Art/rb_art_result_clear_bg");
+            so.FindProperty("_bgFail").objectReferenceValue = KitSprite("Art/rb_art_result_fail_bg");
+            so.FindProperty("_wordClear").objectReferenceValue = KitSprite("WordArt/rb_word_word_clear");
+            so.FindProperty("_wordFailed").objectReferenceValue = KitSprite("WordArt/rb_word_word_failed");
+            so.FindProperty("_ghostCheer").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_cheer");
+            so.FindProperty("_ghostSad").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_sad");
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>보상 칸 — 판 · 아이콘 · 값 · 이름(칸 216×200, 가운데 x).</summary>
+        private static RectTransform Tile(RectTransform c, string name, float cx, string icon, string value, string label, string key, string korean)
+        {
+            var t = PutPx(Node(c, name), c, cx, 770f, 216f, 200f);
+            Img(t, "Components/rb_result_reward_row");
+            Img(Inside2(Node(t, name + "Icon"), 68f, 22f, 80f, 80f), icon);
+            Text(Inside2(Node(t, value), 8f, 108f, 200f, 46f), null, "432", 48, White, TA.Center, number: true);
+            Text(Inside2(Node(t, label), 8f, 154f, 200f, 34f), key, korean, 30, Dim, TA.Center);
+            return t;
+        }
+
+        /// <summary>부모 위 왼쪽 기준 상자(게임 px) — Corner 와 같지만 돌려준다.</summary>
+        private static RectTransform Inside2(RectTransform rt, float x, float y, float w, float h)
+        {
+            Corner(rt, x, y, w, h);
+            return rt;
         }
 
         /// <summary>
@@ -463,6 +733,13 @@ namespace Game.Editor.ReBorn
             string[] p = { "rb_card_common", "rb_card_rare", "rb_card_epic", "rb_card_top" };
             panels.arraySize = p.Length;
             for (int i = 0; i < p.Length; i++) panels.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Components/{p[i]}");
+            so.FindProperty("_rbPrice").objectReferenceValue = KitSprite("Components/rb_btn_price");
+            so.FindProperty("_rbPricePoor").objectReferenceValue = KitSprite("Components/rb_btn_price_poor");
+            var arts = AssetDatabase.FindAssets("rb_art_ev_ t:Sprite", new[] { $"{Kit}/Art" });
+            var ev = so.FindProperty("_rbEventArts");
+            ev.arraySize = arts.Length;
+            for (int i = 0; i < arts.Length; i++)
+                ev.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(arts[i]));
             so.ApplyModifiedPropertiesWithoutUndo();
         }
     }

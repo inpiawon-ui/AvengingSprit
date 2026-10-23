@@ -9148,3 +9148,75 @@ MonoBehaviour:
     _en: Pick a card
     _zhHant: "\u8ACB\u9078\u64C7\u4E00\u5F35\u5361\u7247"
     _zhHans: "\u8BF7\u9009\u62E9\u4E00\u5F20\u5361\u7247"
+  - _key: ui.rb.shop.title
+    _ko: "\uB5A0\uB3CC\uC774 \uC0C1\uC778"
+    _ja: "\u6D41\u308C\u306E\u5546\u4EBA"
+    _en: Wandering Merchant
+    _zhHant: "\u6D41\u6D6A\u5546\u4EBA"
+    _zhHans: "\u6D41\u6D6A\u5546\u4EBA"
+  - _key: ui.rb.result.unlocked
+    _ko: "CH {0} \uC5F4\uB9BC!  <color=#FFC93D>NEW</color>"
+    _ja: "CH {0} \u89E3\u653E\uFF01  <color=#FFC93D>NEW</color>"
+    _en: CH {0} unlocked!  <color=#FFC93D>NEW</color>
+    _zhHant: "CH {0} \u5DF2\u958B\u555F\uFF01  <color=#FFC93D>NEW</color>"
+    _zhHans: "CH {0} \u5DF2\u5F00\u542F\uFF01  <color=#FFC93D>NEW</color>"
+  - _key: ui.rb.result.shard
+    _ko: "{0} \uC870\uAC01"
+    _ja: "{0}\u306E\u304B\u3051\u3089"
+    _en: '{0} Shards'
+    _zhHant: "{0} \u788E\u7247"
+    _zhHans: "{0} \u788E\u7247"
+  - _key: ui.rb.result.next
+    _ko: "\uB2E4\uC74C \uCC55\uD130 \u25B6"
+    _ja: "\u6B21\u306E\u30C1\u30E3\u30D7\u30BF\u30FC \u25B6"
+    _en: "Next Chapter \u25B6"
+    _zhHant: "\u4E0B\u4E00\u7AE0 \u25B6"
+    _zhHans: "\u4E0B\u4E00\u7AE0 \u25B6"
+  - _key: ui.rb.result.again
+    _ko: "\uB2E4\uC2DC \uB3C4\uC804"
+    _ja: "\u518D\u6311\u6226"
+    _en: Try Again
+    _zhHant: "\u518D\u6B21\u6311\u6230"
+    _zhHans: "\u518D\u6B21\u6311\u6218"
+  - _key: ui.rb.result.rooms
+    _ko: "\uB3C4\uB2EC\uD55C \uBC29"
+    _ja: "\u5230\u9054\u3057\u305F\u90E8\u5C4B"
+    _en: Rooms Reached
+    _zhHant: "\u5230\u9054\u623F\u9593"
+    _zhHans: "\u5230\u8FBE\u623F\u95F4"
+  - _key: ui.rb.result.kills
+    _ko: "\uCC98\uCE58"
+    _ja: "\u6483\u7834"
+    _en: Kills
+    _zhHant: "\u64CA\u6557"
+    _zhHans: "\u51FB\u8D25"
+  - _key: ui.rb.result.time
+    _ko: "\uD50C\uB808\uC774 \uC2DC\uAC04"
+    _ja: "\u30D7\u30EC\u30A4\u6642\u9593"
+    _en: Play Time
+    _zhHant: "\u904A\u6232\u6642\u9593"
+    _zhHans: "\u6E38\u620F\u65F6\u95F4"
+  - _key: ui.rb.result.rewards
+    _ko: "\uD68D\uB4DD \uBCF4\uC0C1"
+    _ja: "\u7372\u5F97\u5831\u916C"
+    _en: Rewards
+    _zhHant: "\u7372\u5F97\u734E\u52F5"
+    _zhHans: "\u83B7\u5F97\u5956\u52B1"
+  - _key: ui.rb.result.gold
+    _ko: "\uACE8\uB4DC"
+    _ja: "\u30B4\u30FC\u30EB\u30C9"
+    _en: Gold
+    _zhHant: "\u91D1\u5E63"
+    _zhHans: "\u91D1\u5E01"
+  - _key: ui.rb.result.ghost_exp
+    _ko: "\uC720\uB839 \uACBD\uD5D8\uCE58"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u7D4C\u9A13\u5024"
+    _en: Ghost EXP
+    _zhHant: "\u5E7D\u9748\u7D93\u9A57\u503C"
+    _zhHans: "\u5E7D\u7075\u7ECF\u9A8C\u503C"
+  - _key: ui.rb.result.lobby
+    _ko: "\uB85C\uBE44\uB85C"
+    _ja: "\u30ED\u30D3\u30FC\u3078"
+    _en: Lobby
+    _zhHant: "\u56DE\u5927\u5EF3"
+    _zhHans: "\u56DE\u5927\u5385"
