@@ -30,12 +30,22 @@ SHEETS = {
 }
 
 
-def cells(path, cols, rows):
-    rgba = np.asarray(key_out(Image.open(path).convert('RGB'))).copy()
+def load_sheet(path):
+    """판을 RGBA 로 — 마젠타 바탕이면 뚫고, 투명 바탕으로 왔으면 그 알파를 그대로 쓴다(옥상 · 연구소 2026-10-23)."""
+    src = Image.open(path)
+    if src.mode == 'RGBA' and np.asarray(src)[..., 3].min() == 0:
+        rgba = np.asarray(src).copy()
+    else:
+        rgba = np.asarray(key_out(src.convert('RGB'))).copy()
     # 울타리 철망 · 쇠창살 사이처럼 **안에 갇힌 마젠타**도 뚫는다 — 방 물건에는 마젠타 색이 없다
     #   (key_out 은 사람 옷 색을 지키려고 가장자리와 이어진 마젠타만 뚫는다)
     r, g, b = (rgba[..., i].astype(int) for i in range(3))
     rgba[((r > 180) & (b > 180) & (g < 110)) | ((r - g > 60) & (b - g > 60) & (b > 110)), 3] = 0   # 마젠타 + 둘레에 남는 분홍 번짐
+    return rgba
+
+
+def cells(path, cols, rows):
+    rgba = load_sheet(path)
     h, w = rgba.shape[:2]
     out = []
     for i in range(cols * rows):
@@ -76,9 +86,7 @@ def cut_water(stage, dst):
     if not os.path.exists(path):
         print('없음', path)
         return
-    rgba = np.asarray(key_out(Image.open(path).convert('RGB'))).copy()
-    r, g, b = (rgba[..., i].astype(int) for i in range(3))
-    rgba[((r > 180) & (b > 180) & (g < 110)) | ((r - g > 60) & (b - g > 60) & (b > 110)), 3] = 0   # 마젠타 + 둘레에 남는 분홍 번짐
+    rgba = load_sheet(path)
     mask = rgba[..., 3] > 40
     cols, rows = bands(mask, 0), bands(mask, 1)
     k = 0
