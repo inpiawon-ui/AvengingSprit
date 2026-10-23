@@ -1046,6 +1046,11 @@ namespace Game.Module.Lobby
         /// </summary>
         private string RollRandomHost()
         {
+            // 히든(사신) — 그 판만 체험, 조각 없음(PD 2026-10-23). 목록 · 상자 · 상점에는 여전히 안 나온다
+            if (_player.Config != null && UnityEngine.Random.Range(0f, 100f) < _player.Config.RandomHiddenChancePct
+                && _player.GetHost(PlayerDataService.HiddenTrialHostKey) != null)
+                return PlayerDataService.HiddenTrialHostKey;
+
             var playable = _player.PlayableHosts;
             var owned = new List<string>();
             var legend = new List<string>();

@@ -118,6 +118,12 @@ namespace Game.User
         public static bool IsHiddenHost(string hostKey) => hostKey == "amazon_elite" || hostKey == "death";
 
         /// <summary>
+        /// 히든 캐릭터 — ? 랜덤 출전에서만 아주 드물게 나와 **그 판만** 쓴다. 조각은 안 준다(PD 2026-10-23).
+        /// 아마존 정예는 빼 둔 몸이지 히든이 아니다.
+        /// </summary>
+        public const string HiddenTrialHostKey = "death";
+
+        /// <summary>
         /// 호스트 선택 화면에 내보낼 몸. 방패병·센서드론·엘리트처럼 정본이 배우로만 쓰는 행은 뺀다.
         /// 전투는 그 배우들도 세워야 하므로 <see cref="AllHosts"/> 는 전부 그대로 준다.
         /// </summary>
@@ -1014,7 +1020,8 @@ namespace Game.User
             if (RunStartMode == RunStartMode.Random)
             {
                 bonusGold = Mathf.Max(0, runGold) * _config.RandomLuckGoldPct / 100;
-                bonusShards = _config.RandomLuckShards;
+                // 히든은 그 판 체험뿐 — 조각을 주면 얻는 길이 생긴다
+                bonusShards = RunHostKey == HiddenTrialHostKey ? 0 : _config.RandomLuckShards;
             }
             else if (RunStartMode == RunStartMode.Ghost)
             {

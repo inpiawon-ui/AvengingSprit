@@ -3993,6 +3993,9 @@ namespace Game.Module.InGame
             // 유령으로 골라 들어왔고 아직 한 번도 몸을 안 입었다 —
             // 1번 방에서 직접 빼앗는다. 원작이 그랬다.
             if (_player.StartAsGhost) return null;
+            // 히든 체험 — 저장된 선택(`SelectedHostId`)은 히든을 걸러 유령으로 돌아오므로 이 판의 몸 키를 직접 본다
+            if (_player.RunStartMode == RunStartMode.Random && _player.RunHostKey == PlayerDataService.HiddenTrialHostKey)
+                return _player.GetHost(PlayerDataService.HiddenTrialHostKey);
             var picked = _player.GetHost(_player.SelectedHostId);
             // ⚠ 고른 몸이 잠겼거나 숨긴 몸이면 `SelectedHostId` 가 **유령**으로 돌아온다 — 그 유령 항목을
             //   몸으로 입히면 유령이 호스트처럼 평타를 쳤다(PD 2026-10-08 「고스트가 왜 싸워」). 그때는 유령으로 시작한다
@@ -7873,6 +7876,8 @@ namespace Game.Module.InGame
             if (_player == null || string.IsNullOrEmpty(hostKey)) return;
             // 호스트 표에 없는 키(해골·박쥐 같은 잡몹)는 거른다.
             if (_player.GetHost(hostKey) == null) return;
+            // 히든(사신)은 그 판 체험뿐 — 조각을 주면 얻는 길이 생긴다(PD 2026-10-23)
+            if (hostKey == PlayerDataService.HiddenTrialHostKey) return;
             int n = _player.ShardDropFor(hostKey, lost);
             _player.AddShards(hostKey, n);
             int at = _runShardKeys.IndexOf(hostKey);

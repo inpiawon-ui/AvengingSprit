@@ -263,6 +263,8 @@ namespace Game.Character
         [SerializeField] private int _randomLuckGoldPct = 20;
         [Tooltip("? 랜덤 출전에 아직 없는 몸도 나오는가(숙련도 0 이면 스킬 봉인 그대로).")]
         [SerializeField] private bool _randomIncludesUnowned = true;
+        [Tooltip("? 랜덤 출전에 히든(사신)이 나올 확률 %. 그 판만 체험 · 조각 없음(PD 2026-10-23).")]
+        [SerializeField] private float _randomHiddenChancePct = 1f;
         [Tooltip("유령 출전 · 클리어 시 유령 경험치 %.")]
         [SerializeField] private int _ghostStartExpPct = 50;
 
@@ -288,6 +290,7 @@ namespace Game.Character
         public int RandomLuckShards => Mathf.Max(0, _randomLuckShards);
         public int RandomLuckGoldPct => Mathf.Max(0, _randomLuckGoldPct);
         public bool RandomIncludesUnowned => _randomIncludesUnowned;
+        public float RandomHiddenChancePct => Mathf.Clamp(_randomHiddenChancePct, 0f, 100f);
         public int GhostStartExpPct => Mathf.Max(0, _ghostStartExpPct);
 
         // ── 테스트 판 (2026-09-15) ────────────────────────────
