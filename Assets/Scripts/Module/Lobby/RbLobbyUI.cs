@@ -42,6 +42,9 @@ namespace Game.Module.Lobby
         private readonly List<IDisposable> _tokens = new();
         private readonly List<(Transform card, RunStartMode mode, string key)> _cards = new();
         private SpriteAtlas _faces;
+        private RbHostPage _hostPage;
+        private RbGrowthPage _growthPage;
+        private string _tab = "Battle";
 
         private int _chapter = 1;
         private RunStartMode _mode = RunStartMode.Random;
@@ -62,8 +65,12 @@ namespace Game.Module.Lobby
                 string node = r;
                 _ui.OnClick(node, () => Soon("ui.rb.soon"));
             }
-            foreach (var tab in new[] { "Shop", "Host", "Summon", "Challenge" })
+            foreach (var tab in new[] { "Shop", "Summon", "Challenge" })
                 _ui.OnClick($"Tab{tab}", () => Soon("ui.rb.soon"));
+            _ui.OnClick("TabHost", () => { GameSound.Cue("ui.tap"); SelectTab("Host"); });
+            _ui.OnClick("TabBattle", () => { GameSound.Cue("ui.tap"); SelectTab("Battle"); });
+            _hostPage = GetComponentInChildren<RbHostPage>(true);
+            _growthPage = GetComponentInChildren<RbGrowthPage>(true);
             _ui.SetActive("SortieCardTemplate", false);
         }
 
@@ -128,8 +135,13 @@ namespace Game.Module.Lobby
             _tokens.Clear();
         }
 
-        // 뒤로가기 — 로비 첫 화면에는 닫을 것이 없다(라우터가 종료 확인을 띄운다)
-        public bool OnBackPressed() => false;
+        // 뒤로가기 — 성장 → 도감 → 전투 탭 순으로 물러난다. 전투 탭이면 닫을 것이 없다(라우터가 종료 확인을 띄운다)
+        public bool OnBackPressed()
+        {
+            if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
+            if (_tab != "Battle") { SelectTab("Battle"); return true; }
+            return false;
+        }
 
         private void RefreshAll()
         {
@@ -138,11 +150,13 @@ namespace Game.Module.Lobby
             RefreshChapter();
             RefreshCards();
             RefreshSortie();
+            if (_hostPage != null && _hostPage.gameObject.activeSelf) _hostPage.Refresh();
+            if (_growthPage != null && _growthPage.gameObject.activeSelf) _growthPage.Refresh();
         }
 
         // ── 위 막대 ──────────────────────────────────────────
 
-        private void RefreshHeader()
+        public void RefreshHeader()
         {
             if (_player == null) return;
             int now = _player.Stamina, max = _player.StaminaMax;
@@ -472,14 +486,36 @@ namespace Game.Module.Lobby
 
         private static readonly Color TabOn = new(1f, 0.79f, 0.24f), TabOff = new(0.70f, 0.74f, 0.84f);
 
-        private void SelectTab(string tab)
+        /// <summary>아래 탭 — 쪽을 바꾼다. 위 막대 · 아래 탭은 모든 쪽이 같이 쓴다.</summary>
+        public void SelectTab(string tab)
         {
+            _tab = tab;
             foreach (var t in new[] { "Shop", "Host", "Battle", "Summon", "Challenge" })
             {
                 var label = _ui.Get<TextMeshProUGUI>($"Tab{t}Label");
                 if (label != null) label.color = t == tab ? TabOn : TabOff;
             }
+            _ui.SetActive("PageBattle", tab == "Battle");
+            if (_growthPage != null) _growthPage.gameObject.SetActive(false);
+            if (_hostPage != null)
+            {
+                if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
+                else _hostPage.gameObject.SetActive(false);
+            }
+            if (tab == "Battle" && _player != null && _player.IsReady) { RefreshCards(); RefreshSortie(); }
+            RefreshHeader();
         }
+
+        /// <summary>도감 카드 → 호스트 성장 한 화면. 아래 탭은 「호스트」 그대로다.</summary>
+        public void OpenGrowth(string hostKey)
+        {
+            if (_growthPage == null || _player == null) return;
+            if (_hostPage != null) _hostPage.gameObject.SetActive(false);
+            _growthPage.Open(_player, hostKey);
+        }
+
+        /// <summary>유령 성장 — 다음 차례에 새 화면(시안 ghost-growth)으로 바꾼다.</summary>
+        public void OpenGhostGrowth() => Soon("ui.rb.soon");
 
         private static void Soon(string key)
             => SystemPopup.Show(Localize.FromTable(key, "준비 중이에요 · 업데이트로 열려요"), null, Localize.Get("ui.common.ok"), null);

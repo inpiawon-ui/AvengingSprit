@@ -1,0 +1,35 @@
+key	ko	ja	en	zh_hant	zh_hans
+ui.rb.host.title	호스트	ホスト	Hosts	宿主	宿主
+ui.rb.host.ghost_desc	모든 호스트에 붙는 성장	すべてのホストに効く成長	Growth for every host	所有宿主共享的成長	所有宿主共享的成长
+ui.rb.host.grow	성장 ›	成長 ›	Grow ›	成長 ›	成长 ›
+ui.rb.host.filter_all	전체	すべて	All	全部	全部
+ui.rb.host.sort_power	전투력 순	戦闘力順	By Power	戰力排序	战力排序
+ui.rb.host.sort_grade	등급 순	等級順	By Grade	等級排序	等级排序
+ui.rb.host.ghost_lv	유령 Lv <size=120%>{0}</size>	ゴースト Lv <size=120%>{0}</size>	Ghost Lv <size=120%>{0}</size>	幽靈 Lv <size=120%>{0}</size>	幽灵 Lv <size=120%>{0}</size>
+ui.rb.host.owned	보유 <color=#FFFFFF>{0}</color> /{1}	所持 <color=#FFFFFF>{0}</color> /{1}	Owned <color=#FFFFFF>{0}</color> /{1}	持有 <color=#FFFFFF>{0}</color> /{1}	拥有 <color=#FFFFFF>{0}</color> /{1}
+ui.rb.host.shards	조각 {0}/{1}	かけら {0}/{1}	Shards {0}/{1}	碎片 {0}/{1}	碎片 {0}/{1}
+ui.rb.host.locked	미보유	未所持	Not owned	未持有	未拥有
+ui.rb.host.help	호스트를 눌러 능력치 · 성급을 올려요.\n조각을 모으면 새 호스트를 해금해요.	ホストをタップして能力・星級を上げます。\nかけらを集めると新しいホストを解放できます。	Tap a host to upgrade stats and stars.\nCollect shards to unlock new hosts.	點擊宿主提升能力值與星級。\n收集碎片即可解鎖新宿主。	点击宿主提升属性与星级。\n收集碎片即可解锁新宿主。
+ui.rb.growth.title	호스트 성장	ホスト成長	Host Growth	宿主成長	宿主成长
+ui.rb.growth.help	능력치는 골드로 · 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한 · 스킬 위력이 함께 올라요.	能力はゴールドで、星級はかけらとゴールドで上げます。\n星級が上がると強化上限とスキル威力も上がります。	Stats use gold; stars use shards and gold.\nHigher stars raise the upgrade cap and skill power.	能力值用金幣、星級用碎片和金幣提升。\n星級提升後，強化上限與技能威力也會提升。	属性用金币、星级用碎片和金币提升。\n星级提升后，强化上限与技能威力也会提升。
+ui.rb.growth.power	전투력	戦闘力	Power	戰力	战力
+ui.rb.growth.ult	필살기	必殺技	Ultimate	必殺技	必杀技
+ui.rb.growth.act	액티브	アクティブ	Active	主動	主动
+ui.rb.growth.pas	패시브	パッシブ	Passive	被動	被动
+ui.rb.growth.stat_header	◆ 능력치	◆ 能力	◆ Stats	◆ 能力值	◆ 属性
+ui.rb.growth.hold_hint	길게 누르면 연속 강화	長押しで連続強化	Hold to upgrade repeatedly	長按連續強化	长按连续强化
+ui.rb.growth.up	▲ 강화	▲ 強化	▲ Up	▲ 強化	▲ 强化
+ui.rb.growth.shard_where	조각 획득처 ›	かけら入手先 ›	Get Shards ›	碎片來源 ›	碎片来源 ›
+ui.rb.growth.shard_where_body	조각은 랜덤 출전 클리어 · 소환 · 상점에서 얻어요.	かけらはランダム出撃のクリア・召喚・ショップで入手できます。	Get shards from Random sortie clears, Summons, and the Shop.	碎片可從隨機出戰通關、召喚、商店獲得。	碎片可从随机出战通关、召唤、商店获得。
+ui.rb.growth.starup	성급 올리기	星級を上げる	Raise Stars	提升星級	提升星级
+ui.rb.growth.unlock	해금하기	解放する	Unlock	解鎖	解锁
+ui.rb.growth.unlock_rank	해금 <size=70%>›</size> 1성	解放 <size=70%>›</size> 星1	Unlock <size=70%>›</size> 1★	解鎖 <size=70%>›</size> 1星	解锁 <size=70%>›</size> 1星
+ui.rb.growth.rank	성급 {0} <size=70%>›</size> {1}	星級 {0} <size=70%>›</size> {1}	Stars {0} <size=70%>›</size> {1}	星級 {0} <size=70%>›</size> {1}	星级 {0} <size=70%>›</size> {1}
+ui.rb.growth.star_info	{0}/{1} · <color=#4AE08A>체력·공격 +7%</color>	{0}/{1} · <color=#4AE08A>HP·攻撃 +7%</color>	{0}/{1} · <color=#4AE08A>HP/ATK +7%</color>	{0}/{1} · <color=#4AE08A>HP·攻擊 +7%</color>	{0}/{1} · <color=#4AE08A>HP·攻击 +7%</color>
+ui.rb.growth.shard_short	조각 {0}개 부족	かけら {0}個不足	{0} shards short	碎片差 {0} 個	碎片差 {0} 个
+ui.rb.growth.gold_short	골드 {0:N0} 부족	ゴールド {0:N0} 不足	{0:N0} gold short	金幣差 {0:N0}	金币差 {0:N0}
+ui.rb.growth.cost	골드 {0:N0}	ゴールド {0:N0}	{0:N0} gold	金幣 {0:N0}	金币 {0:N0}
+ui.rb.growth.starup_ask	{0}성 → {1}성\n조각 {2} · 골드 {3:N0} 을 써요	星{0} → 星{1}\nかけら {2}・ゴールド {3:N0} を使います	{0}★ → {1}★\nUses {2} shards and {3:N0} gold	{0}星 → {1}星\n消耗碎片 {2} · 金幣 {3:N0}	{0}星 → {1}星\n消耗碎片 {2} · 金币 {3:N0}
+ui.rb.growth.rank_max	성급 {0} · 최대	星級 {0}・最大	Stars {0} · Max	星級 {0} · 最高	星级 {0} · 最高
+ui.rb.growth.max_info	남는 조각은 영혼 정수로 바뀌어요	余ったかけらは魂のエッセンスになります	Extra shards turn into Soul Essence	多餘碎片會轉為靈魂精華	多余碎片会转为灵魂精华
+ui.rb.growth.max_sub	최대 성급	最大星級	Max stars	最高星級	最高星级

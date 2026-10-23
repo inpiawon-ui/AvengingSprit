@@ -79,6 +79,51 @@ namespace Game.Editor.ReBorn
             return rt;
         }
 
+        /// <summary>
+        /// 스크롤 내용 안 — 위 기준 줄(refTop, 시안 y)에서 잰 상자. 내용 판은 위에 붙고 가로 가운데가 시안 540 이다.
+        /// </summary>
+        public static RectTransform PlaceIn(RectTransform rt, float refTop, float x0, float y0, float x1, float y1)
+        {
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2((x1 - x0) * S, (y1 - y0) * S);
+            rt.anchoredPosition = new Vector2(((x0 + x1) * 0.5f - 540f) * S, -((y0 + y1) * 0.5f - refTop) * S);
+            return rt;
+        }
+
+        /// <summary>
+        /// 세로 스크롤 판 — 시안 y top ~ bottom 사이(위는 위 가장자리, 아래는 아래 가장자리 기준이라 16:9 에서 줄어든다).
+        /// 보기 칸은 RectMask2D 만(규칙 05). 내용 판(돌려줌)은 위에 붙고 높이는 시안 contentH.
+        /// 내용이 판보다 작으면(20:9) 움직이지 않는다(Clamped).
+        /// </summary>
+        public static RectTransform VScroll(RectTransform parent, string name, float top, float bottom, float contentH)
+        {
+            var view = Node(parent, name);
+            view.anchorMin = Vector2.zero; view.anchorMax = Vector2.one; view.pivot = new Vector2(0.5f, 0.5f);
+            view.offsetMin = new Vector2(0f, (MockBottom - bottom) * S);
+            view.offsetMax = new Vector2(0f, -(top - MockTop) * S);
+            view.gameObject.AddComponent<RectMask2D>();
+            var hit = view.gameObject.AddComponent<Image>(); hit.color = new Color(1, 1, 1, 0);   // 끌기를 받을 칸(보이지 않음)
+            var content = Node(view, name + "Content");
+            content.anchorMin = new Vector2(0f, 1f); content.anchorMax = new Vector2(1f, 1f); content.pivot = new Vector2(0.5f, 1f);
+            content.sizeDelta = new Vector2(0f, contentH * S); content.anchoredPosition = Vector2.zero;
+            var scroll = view.gameObject.AddComponent<ScrollRect>();
+            scroll.content = content; scroll.viewport = view; scroll.horizontal = false; scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped; scroll.inertia = true;
+            return content;
+        }
+
+        /// <summary>막대 — 바탕 + 채움(채움은 왼쪽 기준, 코드가 anchorMax.x 로 비율을 건다).</summary>
+        public static RectTransform Bar(RectTransform rt, string fillName, string fillPath)
+        {
+            Img(rt, "Components/rb_bar_track").preserveAspect = false;
+            var fill = Node(rt, fillName);
+            fill.anchorMin = Vector2.zero; fill.anchorMax = new Vector2(0.5f, 1f); fill.pivot = new Vector2(0f, 0.5f);
+            fill.sizeDelta = Vector2.zero; fill.anchoredPosition = Vector2.zero;
+            Img(fill, fillPath).preserveAspect = false;
+            return fill;
+        }
+
         public static RectTransform Stretch(RectTransform rt)
         {
             rt.anchorMin = Vector2.zero;

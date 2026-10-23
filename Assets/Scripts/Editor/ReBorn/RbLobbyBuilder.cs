@@ -18,9 +18,11 @@ namespace Game.Editor.ReBorn
         {
             var root = Root("RbLobbyUI");
             var rt = (RectTransform)root.transform;
+            // 쪽(page) — 전투 탭(출전 준비) · 호스트 도감 · 호스트 성장. 위 막대 · 아래 탭은 맨 뒤 형제(모든 쪽 위)
+            var battle = Stretch(Node(rt, "PageBattle"));
 
             // ── 무대 배경 — 가로를 꽉 채우고 위에 붙인다(세로는 그림 비율, 아래로 넘치는 곳은 그림 자체가 어둡게 끝난다)
-            var bg = Node(rt, "StageBg");
+            var bg = Node(battle, "StageBg");
             bg.anchorMin = new Vector2(0f, 1f); bg.anchorMax = new Vector2(1f, 1f); bg.pivot = new Vector2(0.5f, 1f);
             bg.sizeDelta = new Vector2(0f, 2520f * S); bg.anchoredPosition = new Vector2(0f, MockTop * S);
             var bgImg = Img(bg, "Art/rb_art_bg_stage_ch01");
@@ -30,19 +32,29 @@ namespace Game.Editor.ReBorn
             fit.aspectRatio = 1080f / 2520f;
 
             // 챕터 카드 아래를 시안처럼 짙은 남색으로 가라앉힌다 — 16:9 는 가운데가 줄어 무대 그림의 물 반사가 카드 아래까지 내려온다
-            var fade = Node(rt, "StageFade");
+            var fade = Node(battle, "StageFade");
             fade.anchorMin = new Vector2(0f, 0f); fade.anchorMax = new Vector2(1f, 0f); fade.pivot = new Vector2(0.5f, 0f);
             // 그림의 위 절반은 옅은 띠라 길게 깐다 — 짙은 곳이 출전 줄 위(시안 1400)부터 시작하게
             // (16:9 플레이 캡처: 1213 로는 카드 뒤 물 반사가 비쳤다 — 더 위에서 시작)
             fade.sizeDelta = new Vector2(0f, (2340f - 300f) * S); fade.anchoredPosition = new Vector2(0f, -110f * S);
             Img(fade, "Components/rb_fade_bottom").preserveAspect = false;
 
+            BuildRails(battle);
+            BuildStage(battle);
+            BuildChapterCard(battle);
+            BuildSortieRow(battle);
+            BuildSortieButton(battle);
+
+            RbHostBuilder.BuildCollection(rt);
+            RbHostBuilder.BuildGrowth(rt);
+            var host = rt.Find("PageHost");
+            var growth = rt.Find("PageGrowth");
+            RbHostBuilder.WireCollection(host.gameObject.AddComponent<RbHostPage>());
+            RbHostBuilder.WireGrowth(growth.gameObject.AddComponent<RbGrowthPage>());
+            host.gameObject.SetActive(false);
+            growth.gameObject.SetActive(false);
+
             BuildHeader(rt);
-            BuildRails(rt);
-            BuildStage(rt);
-            BuildChapterCard(rt);
-            BuildSortieRow(rt);
-            BuildSortieButton(rt);
             BuildTabBar(rt);
 
             Wire(root.AddComponent<RbLobbyUI>());
@@ -85,10 +97,12 @@ namespace Game.Editor.ReBorn
         {
             var prof = Place(Node(rt, "HeaderProfile"), Edge.Top, 35, 145, 160, 262);
             HitArea(prof);
-            Img(Local(Node(prof, "HeaderProfileFace"), 35, 145, 160, 262, 35, 148, 130, 243), "Icons/rb_icon_mode_ghost_96");
-            var lv = Local(Node(prof, "HeaderLevelBadge"), 35, 145, 160, 262, 92, 214, 154, 260);
+            // 원 테 안에 유령 얼굴 · 오른쪽 아래 레벨 배지(배지 그림이 짙은 남색이라 글자는 흰색)
+            Img(Local(Node(prof, "HeaderProfileRing"), 35, 145, 160, 262, 30, 140, 140, 250), "Components/rb_profile_frame");
+            Img(Local(Node(prof, "HeaderProfileFace"), 35, 145, 160, 262, 46, 156, 124, 234), "Icons/rb_icon_mode_ghost_96");
+            var lv = Local(Node(prof, "HeaderLevelBadge"), 35, 145, 160, 262, 88, 210, 160, 260);
             Img(lv, "Components/rb_level_badge");
-            Text(Stretch(Node(lv, "HeaderLevelText")), null, "12", 34, Ink, TA.Center, number: true);
+            Text(Stretch(Node(lv, "HeaderLevelText")), null, "12", 34, White, TA.Center, number: true);
 
             Chip(rt, "ChipStamina", "StaminaText", "Icons/rb_icon_currency_energy_48", 135, 360, "20/20");
             Chip(rt, "ChipGold", "GoldText", "Icons/rb_icon_currency_gold_48", 375, 640, "4,676");

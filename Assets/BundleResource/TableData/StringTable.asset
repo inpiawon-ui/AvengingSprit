@@ -8922,3 +8922,223 @@ MonoBehaviour:
     _en: "Coming soon \xB7 Opens in an update"
     _zhHant: "\u6E96\u5099\u4E2D \xB7 \u5C07\u65BC\u66F4\u65B0\u958B\u653E"
     _zhHans: "\u51C6\u5907\u4E2D \xB7 \u5C06\u4E8E\u66F4\u65B0\u5F00\u653E"
+  - _key: ui.rb.host.title
+    _ko: "\uD638\uC2A4\uD2B8"
+    _ja: "\u30DB\u30B9\u30C8"
+    _en: Hosts
+    _zhHant: "\u5BBF\u4E3B"
+    _zhHans: "\u5BBF\u4E3B"
+  - _key: ui.rb.host.ghost_desc
+    _ko: "\uBAA8\uB4E0 \uD638\uC2A4\uD2B8\uC5D0 \uBD99\uB294 \uC131\uC7A5"
+    _ja: "\u3059\u3079\u3066\u306E\u30DB\u30B9\u30C8\u306B\u52B9\u304F\u6210\u9577"
+    _en: Growth for every host
+    _zhHant: "\u6240\u6709\u5BBF\u4E3B\u5171\u4EAB\u7684\u6210\u9577"
+    _zhHans: "\u6240\u6709\u5BBF\u4E3B\u5171\u4EAB\u7684\u6210\u957F"
+  - _key: ui.rb.host.grow
+    _ko: "\uC131\uC7A5 \u203A"
+    _ja: "\u6210\u9577 \u203A"
+    _en: "Grow \u203A"
+    _zhHant: "\u6210\u9577 \u203A"
+    _zhHans: "\u6210\u957F \u203A"
+  - _key: ui.rb.host.filter_all
+    _ko: "\uC804\uCCB4"
+    _ja: "\u3059\u3079\u3066"
+    _en: All
+    _zhHant: "\u5168\u90E8"
+    _zhHans: "\u5168\u90E8"
+  - _key: ui.rb.host.sort_power
+    _ko: "\uC804\uD22C\uB825 \uC21C"
+    _ja: "\u6226\u95D8\u529B\u9806"
+    _en: By Power
+    _zhHant: "\u6230\u529B\u6392\u5E8F"
+    _zhHans: "\u6218\u529B\u6392\u5E8F"
+  - _key: ui.rb.host.sort_grade
+    _ko: "\uB4F1\uAE09 \uC21C"
+    _ja: "\u7B49\u7D1A\u9806"
+    _en: By Grade
+    _zhHant: "\u7B49\u7D1A\u6392\u5E8F"
+    _zhHans: "\u7B49\u7EA7\u6392\u5E8F"
+  - _key: ui.rb.host.ghost_lv
+    _ko: "\uC720\uB839 Lv <size=120%>{0}</size>"
+    _ja: "\u30B4\u30FC\u30B9\u30C8 Lv <size=120%>{0}</size>"
+    _en: Ghost Lv <size=120%>{0}</size>
+    _zhHant: "\u5E7D\u9748 Lv <size=120%>{0}</size>"
+    _zhHans: "\u5E7D\u7075 Lv <size=120%>{0}</size>"
+  - _key: ui.rb.host.owned
+    _ko: "\uBCF4\uC720 <color=#FFFFFF>{0}</color> /{1}"
+    _ja: "\u6240\u6301 <color=#FFFFFF>{0}</color> /{1}"
+    _en: Owned <color=#FFFFFF>{0}</color> /{1}
+    _zhHant: "\u6301\u6709 <color=#FFFFFF>{0}</color> /{1}"
+    _zhHans: "\u62E5\u6709 <color=#FFFFFF>{0}</color> /{1}"
+  - _key: ui.rb.host.shards
+    _ko: "\uC870\uAC01 {0}/{1}"
+    _ja: "\u304B\u3051\u3089 {0}/{1}"
+    _en: Shards {0}/{1}
+    _zhHant: "\u788E\u7247 {0}/{1}"
+    _zhHans: "\u788E\u7247 {0}/{1}"
+  - _key: ui.rb.host.locked
+    _ko: "\uBBF8\uBCF4\uC720"
+    _ja: "\u672A\u6240\u6301"
+    _en: Not owned
+    _zhHant: "\u672A\u6301\u6709"
+    _zhHans: "\u672A\u62E5\u6709"
+  - _key: ui.rb.host.help
+    _ko: "\uD638\uC2A4\uD2B8\uB97C \uB20C\uB7EC \uB2A5\uB825\uCE58 \xB7 \uC131\uAE09\uC744
+      \uC62C\uB824\uC694.\n\uC870\uAC01\uC744 \uBAA8\uC73C\uBA74 \uC0C8 \uD638\uC2A4\uD2B8\uB97C
+      \uD574\uAE08\uD574\uC694."
+    _ja: "\u30DB\u30B9\u30C8\u3092\u30BF\u30C3\u30D7\u3057\u3066\u80FD\u529B\u30FB\u661F\u7D1A\u3092\u4E0A\u3052\u307E\u3059\u3002\n\u304B\u3051\u3089\u3092\u96C6\u3081\u308B\u3068\u65B0\u3057\u3044\u30DB\u30B9\u30C8\u3092\u89E3\u653E\u3067\u304D\u307E\u3059\u3002"
+    _en: 'Tap a host to upgrade stats and stars.
+
+      Collect shards to unlock
+      new hosts.'
+    _zhHant: "\u9EDE\u64CA\u5BBF\u4E3B\u63D0\u5347\u80FD\u529B\u503C\u8207\u661F\u7D1A\u3002\n\u6536\u96C6\u788E\u7247\u5373\u53EF\u89E3\u9396\u65B0\u5BBF\u4E3B\u3002"
+    _zhHans: "\u70B9\u51FB\u5BBF\u4E3B\u63D0\u5347\u5C5E\u6027\u4E0E\u661F\u7EA7\u3002\n\u6536\u96C6\u788E\u7247\u5373\u53EF\u89E3\u9501\u65B0\u5BBF\u4E3B\u3002"
+  - _key: ui.rb.growth.title
+    _ko: "\uD638\uC2A4\uD2B8 \uC131\uC7A5"
+    _ja: "\u30DB\u30B9\u30C8\u6210\u9577"
+    _en: Host Growth
+    _zhHant: "\u5BBF\u4E3B\u6210\u9577"
+    _zhHans: "\u5BBF\u4E3B\u6210\u957F"
+  - _key: ui.rb.growth.help
+    _ko: "\uB2A5\uB825\uCE58\uB294 \uACE8\uB4DC\uB85C \xB7 \uC131\uAE09\uC740 \uC870\uAC01\uACFC
+      \uACE8\uB4DC\uB85C \uC62C\uB824\uC694.\n\uC131\uAE09\uC774 \uC624\uB974\uBA74
+      \uAC15\uD654 \uC0C1\uD55C \xB7 \uC2A4\uD0AC \uC704\uB825\uC774 \uD568\uAED8
+      \uC62C\uB77C\uC694."
+    _ja: "\u80FD\u529B\u306F\u30B4\u30FC\u30EB\u30C9\u3067\u3001\u661F\u7D1A\u306F\u304B\u3051\u3089\u3068\u30B4\u30FC\u30EB\u30C9\u3067\u4E0A\u3052\u307E\u3059\u3002\n\u661F\u7D1A\u304C\u4E0A\u304C\u308B\u3068\u5F37\u5316\u4E0A\u9650\u3068\u30B9\u30AD\u30EB\u5A01\u529B\u3082\u4E0A\u304C\u308A\u307E\u3059\u3002"
+    _en: 'Stats use gold; stars use shards and gold.
+
+      Higher stars raise the
+      upgrade cap and skill power.'
+    _zhHant: "\u80FD\u529B\u503C\u7528\u91D1\u5E63\u3001\u661F\u7D1A\u7528\u788E\u7247\u548C\u91D1\u5E63\u63D0\u5347\u3002\n\u661F\u7D1A\u63D0\u5347\u5F8C\uFF0C\u5F37\u5316\u4E0A\u9650\u8207\u6280\u80FD\u5A01\u529B\u4E5F\u6703\u63D0\u5347\u3002"
+    _zhHans: "\u5C5E\u6027\u7528\u91D1\u5E01\u3001\u661F\u7EA7\u7528\u788E\u7247\u548C\u91D1\u5E01\u63D0\u5347\u3002\n\u661F\u7EA7\u63D0\u5347\u540E\uFF0C\u5F3A\u5316\u4E0A\u9650\u4E0E\u6280\u80FD\u5A01\u529B\u4E5F\u4F1A\u63D0\u5347\u3002"
+  - _key: ui.rb.growth.power
+    _ko: "\uC804\uD22C\uB825"
+    _ja: "\u6226\u95D8\u529B"
+    _en: Power
+    _zhHant: "\u6230\u529B"
+    _zhHans: "\u6218\u529B"
+  - _key: ui.rb.growth.ult
+    _ko: "\uD544\uC0B4\uAE30"
+    _ja: "\u5FC5\u6BBA\u6280"
+    _en: Ultimate
+    _zhHant: "\u5FC5\u6BBA\u6280"
+    _zhHans: "\u5FC5\u6740\u6280"
+  - _key: ui.rb.growth.act
+    _ko: "\uC561\uD2F0\uBE0C"
+    _ja: "\u30A2\u30AF\u30C6\u30A3\u30D6"
+    _en: Active
+    _zhHant: "\u4E3B\u52D5"
+    _zhHans: "\u4E3B\u52A8"
+  - _key: ui.rb.growth.pas
+    _ko: "\uD328\uC2DC\uBE0C"
+    _ja: "\u30D1\u30C3\u30B7\u30D6"
+    _en: Passive
+    _zhHant: "\u88AB\u52D5"
+    _zhHans: "\u88AB\u52A8"
+  - _key: ui.rb.growth.stat_header
+    _ko: "\u25C6 \uB2A5\uB825\uCE58"
+    _ja: "\u25C6 \u80FD\u529B"
+    _en: "\u25C6 Stats"
+    _zhHant: "\u25C6 \u80FD\u529B\u503C"
+    _zhHans: "\u25C6 \u5C5E\u6027"
+  - _key: ui.rb.growth.hold_hint
+    _ko: "\uAE38\uAC8C \uB204\uB974\uBA74 \uC5F0\uC18D \uAC15\uD654"
+    _ja: "\u9577\u62BC\u3057\u3067\u9023\u7D9A\u5F37\u5316"
+    _en: Hold to upgrade repeatedly
+    _zhHant: "\u9577\u6309\u9023\u7E8C\u5F37\u5316"
+    _zhHans: "\u957F\u6309\u8FDE\u7EED\u5F3A\u5316"
+  - _key: ui.rb.growth.up
+    _ko: "\u25B2 \uAC15\uD654"
+    _ja: "\u25B2 \u5F37\u5316"
+    _en: "\u25B2 Up"
+    _zhHant: "\u25B2 \u5F37\u5316"
+    _zhHans: "\u25B2 \u5F3A\u5316"
+  - _key: ui.rb.growth.shard_where
+    _ko: "\uC870\uAC01 \uD68D\uB4DD\uCC98 \u203A"
+    _ja: "\u304B\u3051\u3089\u5165\u624B\u5148 \u203A"
+    _en: "Get Shards \u203A"
+    _zhHant: "\u788E\u7247\u4F86\u6E90 \u203A"
+    _zhHans: "\u788E\u7247\u6765\u6E90 \u203A"
+  - _key: ui.rb.growth.shard_where_body
+    _ko: "\uC870\uAC01\uC740 \uB79C\uB364 \uCD9C\uC804 \uD074\uB9AC\uC5B4 \xB7 \uC18C\uD658
+      \xB7 \uC0C1\uC810\uC5D0\uC11C \uC5BB\uC5B4\uC694."
+    _ja: "\u304B\u3051\u3089\u306F\u30E9\u30F3\u30C0\u30E0\u51FA\u6483\u306E\u30AF\u30EA\u30A2\u30FB\u53EC\u559A\u30FB\u30B7\u30E7\u30C3\u30D7\u3067\u5165\u624B\u3067\u304D\u307E\u3059\u3002"
+    _en: Get shards from Random sortie clears, Summons, and the Shop.
+    _zhHant: "\u788E\u7247\u53EF\u5F9E\u96A8\u6A5F\u51FA\u6230\u901A\u95DC\u3001\u53EC\u559A\u3001\u5546\u5E97\u7372\u5F97\u3002"
+    _zhHans: "\u788E\u7247\u53EF\u4ECE\u968F\u673A\u51FA\u6218\u901A\u5173\u3001\u53EC\u5524\u3001\u5546\u5E97\u83B7\u5F97\u3002"
+  - _key: ui.rb.growth.starup
+    _ko: "\uC131\uAE09 \uC62C\uB9AC\uAE30"
+    _ja: "\u661F\u7D1A\u3092\u4E0A\u3052\u308B"
+    _en: Raise Stars
+    _zhHant: "\u63D0\u5347\u661F\u7D1A"
+    _zhHans: "\u63D0\u5347\u661F\u7EA7"
+  - _key: ui.rb.growth.unlock
+    _ko: "\uD574\uAE08\uD558\uAE30"
+    _ja: "\u89E3\u653E\u3059\u308B"
+    _en: Unlock
+    _zhHant: "\u89E3\u9396"
+    _zhHans: "\u89E3\u9501"
+  - _key: ui.rb.growth.unlock_rank
+    _ko: "\uD574\uAE08 <size=70%>\u203A</size> 1\uC131"
+    _ja: "\u89E3\u653E <size=70%>\u203A</size> \u661F1"
+    _en: "Unlock <size=70%>\u203A</size> 1\u2605"
+    _zhHant: "\u89E3\u9396 <size=70%>\u203A</size> 1\u661F"
+    _zhHans: "\u89E3\u9501 <size=70%>\u203A</size> 1\u661F"
+  - _key: ui.rb.growth.rank
+    _ko: "\uC131\uAE09 {0} <size=70%>\u203A</size> {1}"
+    _ja: "\u661F\u7D1A {0} <size=70%>\u203A</size> {1}"
+    _en: "Stars {0} <size=70%>\u203A</size> {1}"
+    _zhHant: "\u661F\u7D1A {0} <size=70%>\u203A</size> {1}"
+    _zhHans: "\u661F\u7EA7 {0} <size=70%>\u203A</size> {1}"
+  - _key: ui.rb.growth.star_info
+    _ko: "{0}/{1} \xB7 <color=#4AE08A>\uCCB4\uB825\xB7\uACF5\uACA9 +7%</color>"
+    _ja: "{0}/{1} \xB7 <color=#4AE08A>HP\xB7\u653B\u6483 +7%</color>"
+    _en: "{0}/{1} \xB7 <color=#4AE08A>HP/ATK +7%</color>"
+    _zhHant: "{0}/{1} \xB7 <color=#4AE08A>HP\xB7\u653B\u64CA +7%</color>"
+    _zhHans: "{0}/{1} \xB7 <color=#4AE08A>HP\xB7\u653B\u51FB +7%</color>"
+  - _key: ui.rb.growth.shard_short
+    _ko: "\uC870\uAC01 {0}\uAC1C \uBD80\uC871"
+    _ja: "\u304B\u3051\u3089 {0}\u500B\u4E0D\u8DB3"
+    _en: '{0} shards short'
+    _zhHant: "\u788E\u7247\u5DEE {0} \u500B"
+    _zhHans: "\u788E\u7247\u5DEE {0} \u4E2A"
+  - _key: ui.rb.growth.gold_short
+    _ko: "\uACE8\uB4DC {0:N0} \uBD80\uC871"
+    _ja: "\u30B4\u30FC\u30EB\u30C9 {0:N0} \u4E0D\u8DB3"
+    _en: '{0:N0} gold short'
+    _zhHant: "\u91D1\u5E63\u5DEE {0:N0}"
+    _zhHans: "\u91D1\u5E01\u5DEE {0:N0}"
+  - _key: ui.rb.growth.cost
+    _ko: "\uACE8\uB4DC {0:N0}"
+    _ja: "\u30B4\u30FC\u30EB\u30C9 {0:N0}"
+    _en: '{0:N0} gold'
+    _zhHant: "\u91D1\u5E63 {0:N0}"
+    _zhHans: "\u91D1\u5E01 {0:N0}"
+  - _key: ui.rb.growth.starup_ask
+    _ko: "{0}\uC131 \u2192 {1}\uC131\n\uC870\uAC01 {2} \xB7 \uACE8\uB4DC {3:N0} \uC744
+      \uC368\uC694"
+    _ja: "\u661F{0} \u2192 \u661F{1}\n\u304B\u3051\u3089 {2}\u30FB\u30B4\u30FC\u30EB\u30C9
+      {3:N0} \u3092\u4F7F\u3044\u307E\u3059"
+    _en: "{0}\u2605 \u2192 {1}\u2605\nUses {2} shards and {3:N0} gold"
+    _zhHant: "{0}\u661F \u2192 {1}\u661F\n\u6D88\u8017\u788E\u7247 {2} \xB7 \u91D1\u5E63
+      {3:N0}"
+    _zhHans: "{0}\u661F \u2192 {1}\u661F\n\u6D88\u8017\u788E\u7247 {2} \xB7 \u91D1\u5E01
+      {3:N0}"
+  - _key: ui.rb.growth.rank_max
+    _ko: "\uC131\uAE09 {0} \xB7 \uCD5C\uB300"
+    _ja: "\u661F\u7D1A {0}\u30FB\u6700\u5927"
+    _en: "Stars {0} \xB7 Max"
+    _zhHant: "\u661F\u7D1A {0} \xB7 \u6700\u9AD8"
+    _zhHans: "\u661F\u7EA7 {0} \xB7 \u6700\u9AD8"
+  - _key: ui.rb.growth.max_info
+    _ko: "\uB0A8\uB294 \uC870\uAC01\uC740 \uC601\uD63C \uC815\uC218\uB85C \uBC14\uB00C\uC5B4\uC694"
+    _ja: "\u4F59\u3063\u305F\u304B\u3051\u3089\u306F\u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9\u306B\u306A\u308A\u307E\u3059"
+    _en: Extra shards turn into Soul Essence
+    _zhHant: "\u591A\u9918\u788E\u7247\u6703\u8F49\u70BA\u9748\u9B42\u7CBE\u83EF"
+    _zhHans: "\u591A\u4F59\u788E\u7247\u4F1A\u8F6C\u4E3A\u7075\u9B42\u7CBE\u534E"
+  - _key: ui.rb.growth.max_sub
+    _ko: "\uCD5C\uB300 \uC131\uAE09"
+    _ja: "\u6700\u5927\u661F\u7D1A"
+    _en: Max stars
+    _zhHant: "\u6700\u9AD8\u661F\u7D1A"
+    _zhHans: "\u6700\u9AD8\u661F\u7EA7"
