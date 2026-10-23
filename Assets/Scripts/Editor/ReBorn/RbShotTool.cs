@@ -79,6 +79,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
             (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
             (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
+            (720, 1280, Language.Korean, "chapters", "chapters_16x9"),
+            (1080, 2400, Language.Korean, "chapters", "chapters_20x9"),
+            (768, 1024, Language.Korean, "chapters", "chapters_4x3"),
+            (720, 1280, Language.English, "chapters", "chapters_en"),
+            (720, 1280, Language.Japanese, "chapters", "chapters_ja"),
             (720, 1280, Language.Korean, "notice:reward", "notice_reward_16x9"),
             (720, 1280, Language.Korean, "notice:reward4", "notice_reward4_16x9"),
             (720, 1280, Language.Korean, "notice:stamina", "notice_stamina_16x9"),
@@ -328,6 +333,7 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("chapters")) { LowMode(state.EndsWith("low")); lobby.SelectTab("Chapters"); return; }
             if (state.StartsWith("notice:"))
             {
                 // 알림 창 — 값은 시안 예시(보상 432 골드 · 조각 3 · 유령 경험치 30 / 골드 필요 200 보유 40 / 입문 패키지 ₩5,900)

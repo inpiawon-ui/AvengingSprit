@@ -53,7 +53,8 @@ namespace Game.Editor.ReBorn
             RbHostBuilder.WireGrowth(growth.gameObject.AddComponent<RbGrowthPage>());
             host.gameObject.SetActive(false);
             growth.gameObject.SetActive(false);
-            RbHostLockBuilder.Build(rt);   // 미보유 호스트 · 새 몸/각성 보여주기 쪽
+            RbHostLockBuilder.Build(rt);
+            RbChapterBuilder.Build(rt);    // 챕터 선택 쪽   // 미보유 호스트 · 새 몸/각성 보여주기 쪽
             RbSummonBuilder.Build(rt);
             RbShopBuilder.Build(rt);
             RbChallengeBuilder.Build(rt);
@@ -177,6 +178,7 @@ namespace Game.Editor.ReBorn
             const float x0 = 30, y0 = 1030, x1 = 1050, y1 = 1250;
             var card = Place(Node(rt, "ChapterCard"), Edge.Bottom, x0, y0, x1, y1);
             Img(card, "Components/rb_panel_hero");
+            HitArea(Local(Node(card, "ChapterOpen"), x0, y0, x1, y1, 40, 1040, 755, 1240));   // 챕터 카드 왼쪽 → 챕터 선택(앞뒤 버튼은 그 위)
             Text(Local(Node(card, "ChapterNoText"), x0, y0, x1, y1, 50, 1060, 190, 1115), null, "CH 1", 56, White, TA.Left, number: true);
             Text(Local(Node(card, "ChapterNameText"), x0, y0, x1, y1, 200, 1060, 750, 1115), null, "쓰레기 집적장", 50, White, TA.Left, heavy: true);
             Text(Local(Node(card, "ChapterInfoText"), x0, y0, x1, y1, 50, 1150, 750, 1205), null, "최고 7/30방 · 권장 1,200 · 파워 ▲", 38, Dim, TA.Left);

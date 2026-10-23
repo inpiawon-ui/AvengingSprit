@@ -54,3 +54,9 @@ ui.rb.notice.buy_name	{0} 구매	{0} を購入	Buy {0}	購買 {0}	购买 {0}
 ui.rb.notice.gem_have	보유 젬 {0:N0}	所持ジェム {0:N0}	You have {0:N0} gems	擁有寶石 {0:N0}	拥有宝石 {0:N0}
 ui.rb.notice.store_pay	결제는 스토어 계정으로 진행됩니다	決済はストアアカウントで行われます	Payment goes through your store account	將透過商店帳號付款	将通过商店账号付款
 ui.rb.notice.close	닫기	閉じる	Close	關閉	关闭
+ui.rb.chs.title	챕터 선택	チャプター選択	Chapters	選擇章節	选择章节
+ui.rb.chs.open	도전 가능	挑戦可能	Available	可挑戰	可挑战
+ui.rb.chs.locked	잠김	ロック	Locked	未解鎖	未解锁
+ui.rb.chs.unlock_hint	챕터 {0} 을(를) 클리어하면 열립니다	チャプター{0}をクリアすると開きます	Clear Chapter {0} to unlock	通關章節 {0} 後開放	通关章节 {0} 后开放
+ui.rb.chs.no_record	최고 기록 없음	最高記録なし	No record yet	尚無最高紀錄	尚无最高纪录
+ui.rb.chs.help	챕터를 깨면 다음 챕터가 열려요.\n깬 챕터도 다시 도전할 수 있어요.	チャプターをクリアすると次が開きます。\nクリアしたチャプターにも再挑戦できます。	Clear a chapter to open the next.\nCleared chapters can be replayed.	通關章節即可開放下一章。\n已通關的章節也能重新挑戰。	通关章节即可开放下一章。\n已通关的章节也能重新挑战。

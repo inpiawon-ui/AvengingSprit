@@ -48,6 +48,7 @@ namespace Game.Module.Lobby
         private RbLockedPage _lockedPage;
         private RbRevealPage _revealPage;
         private RbNotice _notice;
+        private RbChapterPage _chapterPage;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -97,6 +98,8 @@ namespace Game.Module.Lobby
             _lockedPage = GetComponentInChildren<RbLockedPage>(true);
             _revealPage = GetComponentInChildren<RbRevealPage>(true);
             _notice = GetComponentInChildren<RbNotice>(true);
+            _chapterPage = GetComponentInChildren<RbChapterPage>(true);
+            _ui.OnClick("ChapterOpen", () => { GameSound.Cue("ui.tap"); SelectTab("Chapters"); });
             _ui.SetActive("SortieCardTemplate", false);
         }
 
@@ -541,6 +544,12 @@ namespace Game.Module.Lobby
             if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
             if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);
             if (_revealPage != null) _revealPage.gameObject.SetActive(false);
+            if (_chapterPage != null)
+            {
+                // 챕터 선택은 아래 탭 없이 한 화면(시안 chapter-select)
+                if (tab == "Chapters" && _player != null) { SetTabBar(false); _chapterPage.Open(_player, _stageBgs, _chapter); }
+                else _chapterPage.gameObject.SetActive(false);
+            }
             if (_hostPage != null)
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
@@ -639,6 +648,15 @@ namespace Game.Module.Lobby
 
         /// <summary>유령 성장(시안 ghost-growth) — 도감 「성장 ›」 에서 오면 뒤로가 도감으로.</summary>
         public void OpenGhostGrowth() => OpenRail("GhostFromHost");
+
+        /// <summary>챕터 선택에서 고른 챕터로 — 전투 탭으로 돌아간다.</summary>
+        public void PickChapter(int chapter)
+        {
+            _chapter = Mathf.Clamp(chapter, 1, Mathf.Max(1, _player.ChapterCount));
+            SelectTab("Battle");
+            RefreshChapter();
+            RefreshSortie();
+        }
 
         /// <summary>로비 공용 알림 창(보상 · 모자라요 · 구매 확인).</summary>
         public RbNotice Notice => _notice;
