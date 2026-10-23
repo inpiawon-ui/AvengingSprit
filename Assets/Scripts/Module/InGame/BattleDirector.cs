@@ -1352,7 +1352,10 @@ namespace Game.Module.InGame
         {
             bool bossRoom = _roomKind == RoomKind.Boss;
             bool origin = IsOriginRoom(room);
+            _blockPicks.Clear();
+            _blockVariantsHere = 0;   // 무대가 바뀌었을 수 있다 — 방마다 다시 센다
             var list = room.Objects;
+            CollectWaterCells(room);   // 물 가장자리를 고르려면 이웃 칸이 물인지 먼저 알아야 한다 (BattleDirector.WaterEdge)
             for (int i = 0; i < list.Count; i++)
             {
                 var o = list[i];
@@ -1384,6 +1387,8 @@ namespace Game.Module.InGame
                 //   0.0001 이 남고, 그 반 픽셀 때문에 블록을 옆으로 이어 붙였을 때
                 //   경계에 실금이 생기거나 한 줄이 두 번 그려진다.
                 viewSize = new Vector2(Mathf.Round(viewSize.x), Mathf.Round(viewSize.y));
+                // 원작 방은 칸이 65.45 px 라 반올림하면 칸 사이에 1 px 틈이 생긴다 — 물 · 벽이 이어져야 하므로 올림으로 살짝 겹친다
+                if (origin) viewSize = new Vector2(Mathf.Ceil(size.x) + 1f, Mathf.Ceil(size.y + rise) + 1f);
                 viewCenter = new Vector2(Mathf.Round(viewCenter.x * 2f) * 0.5f,
                                          Mathf.Round(viewCenter.y * 2f) * 0.5f);
 
@@ -1415,11 +1420,13 @@ namespace Game.Module.InGame
                 {
                     // 원작 칸 셋 — 무대 그림(`obj_{무대}_water_1` 등)이 오면 그것이 이긴다. 오기 전에는 비슷한 일을 하는
                     // 지금 물건 그림을 빌린다(물 = 도랑 · 가시 = 솟은 가시판 · 울타리 = 낮은 엄폐). 그림 발주 중(3단계).
+                    // 가시 · 울타리는 두 장을 칸 자리로 엇갈려 놓는다(되풀이가 덜 보이게)
+                    int alt = (Mathf.FloorToInt(o.At.x / OriginCellMeters) + Mathf.FloorToInt(o.At.y / OriginCellMeters)) % 2 + 1;
                     sprite = o.Kind switch
                     {
-                        "WATER" => EnvSprite("obj_water_1") ?? EnvSprite("obj_channel_h"),
-                        "SPIKE" => EnvSprite("obj_spike_1") ?? EnvSprite("obj_timed_spike_3"),
-                        _ => EnvSprite("obj_fence_1") ?? EnvSprite("obj_low_cover"),
+                        "WATER" => EnvSprite($"obj_water_{alt}") ?? EnvSprite("obj_water_1") ?? EnvSprite("obj_channel_h"),
+                        "SPIKE" => EnvSprite($"obj_spike_{alt}") ?? EnvSprite("obj_spike_1") ?? EnvSprite("obj_timed_spike_3"),
+                        _ => EnvSprite($"obj_fence_{alt}") ?? EnvSprite("obj_fence_1") ?? EnvSprite("obj_low_cover"),
                     };
                 }
                 else if (o.Kind == "BLOCK")
@@ -1427,7 +1434,8 @@ namespace Game.Module.InGame
                     // 격자 블록은 세 장이 거의 같고 잔무늬만 다르다. 한 장만 쓰면
                     // 벽이 인쇄물처럼 보이므로 **자리로** 골라 섞는다 —
                     // 자리가 같으면 늘 같은 그림이라 방을 다시 들어와도 안 바뀐다.
-                    int pick = Mathf.Abs(Mathf.RoundToInt(o.At.x * 7f + o.At.y * 13f)) % BlockVariants + 1;
+                    int pick = origin ? OriginBlockPick(o.At)
+                                      : Mathf.Abs(Mathf.RoundToInt(o.At.x * 7f + o.At.y * 13f)) % BlockVariants + 1;
                     sprite = EnvSprite($"obj_block_{pick}") ?? EnvSprite("obj_block_1");
                 }
                 else
@@ -1443,6 +1451,7 @@ namespace Game.Module.InGame
                     : ObstacleColor.TryGetValue(o.Kind ?? "", out var c)   // 그림 오기 전 자리표시자
                         ? c : new Color(0.33f, 0.32f, 0.40f, 1f);
                 img.raycastTarget = false;
+                if (o.Kind == "WATER" && origin) AddWaterEdges(go, o.At);   // 둑 · 귀퉁이 (BattleDirector.WaterEdge)
 
                 var ob = new Obstacle
                 {
@@ -1489,6 +1498,46 @@ namespace Game.Module.InGame
         /// </summary>
         /// <summary>격자 블록 그림 장수. 잔무늬만 다른 세 장을 자리로 골라 섞는다.</summary>
         private const int BlockVariants = 3;
+
+        /// <summary>원작 방 막는 물건 그림 장수 상한 — 무대마다 서로 다른 모양 여섯(쓰레기장 2026-10-23: 고철 큐브 · 타이어 · 냉장고 · 드럼통 · 폐차 · 컨테이너).</summary>
+        private const int OriginBlockVariantsMax = 6;
+
+        private readonly Dictionary<Vector2Int, int> _blockPicks = new();
+        private int _blockVariantsHere;   // 이 무대에 실제로 있는 장수(그림이 적은 무대는 적게 섞는다)
+
+        /// <summary>
+        /// 원작 방 막는 칸의 그림 고르기 — 자리로 흩뿌리되 **왼쪽 · 위 칸과 같은 그림은 피한다.**
+        /// 예전 식(x·7 + y·13)은 대각선을 따라 같은 그림이 줄지어 섰다(2026-10-23 미리보기 — 드럼통 셋이 대각선으로).
+        /// 칸은 위 줄부터 차례로 온다(origin_rooms_bake.py) — 왼쪽 · 위 칸은 이미 골라져 있다.
+        /// </summary>
+        private int OriginBlockPick(Vector2 at)
+        {
+            if (_blockVariantsHere <= 0)
+            {
+                _blockVariantsHere = 0;
+                for (int i = 1; i <= OriginBlockVariantsMax; i++)
+                    if (!string.IsNullOrEmpty(_floorEnv) && GetSprite($"obj_{_floorEnv}_block_{i}") != null) _blockVariantsHere = i;
+                if (_blockVariantsHere == 0) _blockVariantsHere = BlockVariants;
+            }
+            int n = _blockVariantsHere;
+            var cell = new Vector2Int(Mathf.FloorToInt(at.x / OriginCellMeters), Mathf.FloorToInt(at.y / OriginCellMeters));
+            uint h = unchecked((uint)(cell.x * 31 + cell.y * 17) * 2654435761u) >> 16;
+            int pick = (int)(h % (uint)n);
+            for (int tries = 0; tries < n; tries++)
+            {
+                bool clash = false;
+                foreach (var d in BlockNeighbors)
+                    if (_blockPicks.TryGetValue(cell + d, out int p) && p == pick) { clash = true; break; }
+                if (!clash) break;
+                pick = (pick + 1) % n;
+            }
+            _blockPicks[cell] = pick;
+            return pick + 1;
+        }
+
+        // 왼쪽 · 위 · 위왼쪽 · 위오른쪽(y 는 위가 큰 쪽)
+        private static readonly Vector2Int[] BlockNeighbors =
+            { new(-1, 0), new(0, 1), new(-1, 1), new(1, 1) };
 
         private static string SpritePrefixOf(string kind) => kind switch
         {
