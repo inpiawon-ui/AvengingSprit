@@ -14,28 +14,34 @@
   자동 조종으로 몇 판 돌려 맞는지 보고, 틀리면 TRIES 가 아니라 아래 손잡이(SKILL_*)를 돌린다.
 """
 import math
+import os
 
-CHAPTERS = 10
-# 챕터를 깨는 데 걸리는 판 수(무과금 · 평범한 실력)
-TRIES = [1.5, 1.5, 3.5, 3.5, 6, 6, 9, 9, 13.5, 13.5]
+# ── 챕터 표에서 읽는 것(2026-10-23 · 4단계 20챕터) — 챕터 수 · 방당 적 · 상자 · 클리어 경험치 · 판 골드 배율 ──
+_TSV = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'Rooms', 'chapters.tsv')
+_ROWS = [ln.rstrip('\n').split('\t') for ln in open(_TSV, encoding='utf-8') if ln.strip() and not ln.startswith('#')]
+_HEAD, _ROWS = _ROWS[0], _ROWS[1:]
+_COL = {h: i for i, h in enumerate(_HEAD)}
+CHAPTERS = len(_ROWS)
+# 챕터를 깨는 데 걸리는 판 수(무과금 · 평범한 실력) — 1~10 은 기획 2026-10-02, 11~ 은 13.5 에서 완만하게(+1.5 씩 두 챕터마다)
+TRIES = [1.5, 1.5, 3.5, 3.5, 6, 6, 9, 9, 13.5, 13.5] + [13.5 + 1.5 * ((c - 10) // 2 + 1) for c in range(10, CHAPTERS)]
 # 방당 적 수(가운데 값) — chapters.tsv 의 count
-COUNT = [4, 5, 6, 7, 8, 9, 9, 10, 10, 11]
+COUNT = [sum(map(int, r[_COL['count']].split('-'))) / 2 for r in _ROWS]
 
 # ── 골드 ──
 # 판 안에서 줍는 골드 총액(15방을 다 비웠을 때). 1챕터 464(방 24 · 중간보스 80 · 보스 120) → 232 로 반
 # (PD 2026-10-12 「골드 획득을 왜 이렇게 많이 해 주냐」). 방 · 중간보스 · 보스 골드가 같은 비율로 준다.
-RUN_GOLD_MUL = [1.0, 1.3, 1.7, 2.2, 2.8, 3.5, 4.3, 5.2, 6.2, 7.3]
+RUN_GOLD_MUL = [float(r[_COL['priceMul']]) for r in _ROWS]   # 1~10 은 예전 손 값과 같다(1.0 · 1.3 … 7.3)
 RUN_GOLD_CH1 = 232
 SHOP_SPEND = 0.20          # 판 골드 가운데 상점에 쓰는 몫
 DEATH_PROGRESS = 0.45      # 죽는 판은 평균 이만큼 가서 죽는다(주운 골드 비율)
 # 클리어 골드는 없다(PD 2026-10-13) — 깨면 판 골드 + 상자(조각 + 골드)뿐. ⚠ 지금 chapters.tsv 의 hpMul · bossHp 는 예전 CLEAR_BONUS 로 돌린 값을 PD 체감으로 맞춘 것 —
 #   모델을 다시 돌려도 그 열은 덮지 말 것(power 열만 옮겨 적는다). 예전 [200, 300, 450, 650, 900, 1200, 1550, 1950, 2400, 3000]
-CLEAR_BONUS = [0] * 10
-CHEST = ['silver', 'silver', 'silver', 'gold', 'gold', 'gold', 'platinum', 'platinum', 'platinum', 'platinum']
+CLEAR_BONUS = [0] * CHAPTERS
+CHEST = [r[_COL['chest']] for r in _ROWS]
 CHEST_GOLD = {'silver': (100, 200), 'gold': (300, 500), 'platinum': (700, 1000)}
 
 # ── 유저(유령) 레벨 ──
-CLEAR_EXP = [300, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700]
+CLEAR_EXP = [int(r[_COL['exp']]) for r in _ROWS]
 EXP_BASE, EXP_STEP = 100, 60                 # 다음 레벨까지 = 100 + 60 × (Lv − 1)
 # 유령 레벨은 능력치를 안 준다 — 유령 탭 강화 상한만 연다(레벨 1 당 1, PD 2026-10-13). 예전 3% · 1.6% / Lv
 GHOST_HP_PER_LV, GHOST_ATK_PER_LV = 0.0, 0.0
