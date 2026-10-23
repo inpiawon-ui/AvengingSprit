@@ -8015,6 +8015,9 @@ namespace Game.Module.InGame
 
         private int _goldPool;          // 아직 안 나눠 준 액수
         private int _goldWeightLeft;    // 아직 안 죽은 것들의 가중치 합
+        // 이 방 골드를 이미 나눠 주기로 했는가(잡을 때마다 날아온다). 그러면 방을 비울 때
+        // 방 골드를 통째로 다시 주지 않는다 — 2026-10-23 한 판 검증에서 판 골드가 정확히 2배로 들어왔다.
+        private bool _roomGoldSettled;
 
         /// <summary>이 몹이 가져가는 몫. 잡몹 1 · 빼앗을 몸 2 · 엘리트 4 · 보스 8.</summary>
         private static int GoldWeightOf(Unit u)
@@ -8045,6 +8048,7 @@ namespace Game.Module.InGame
             _goldWeightLeft = 0;
             _goldCollected = 0;
             _goldCollecting = false;
+            _roomGoldSettled = false;
 
             int gold = _canonRoom != null ? _canonRoom.Gold : 0;
             if (gold <= 0 || _enemies.Count == 0) return;
@@ -8055,6 +8059,7 @@ namespace Game.Module.InGame
 
             _goldPool = gold;
             _goldWeightLeft = weight;
+            _roomGoldSettled = true;
         }
 
         /// <summary>흩어지는 무더기 수의 흔들림. 매번 같은 수면 기계처럼 보인다.</summary>
@@ -8139,8 +8144,8 @@ namespace Game.Module.InGame
             }
 
             if (!any) { GiveCollectedGold(true); return; }
+            // ⚠ 모은 액수를 0 으로 지우지 않는다 — 벌써 닿았지만 아직 안 넣은 무더기 몫이 날아간다.
             _goldCollecting = true;
-            _goldCollected = 0;
         }
 
         private void TickGoldPiles(float dt)
@@ -8167,14 +8172,17 @@ namespace Game.Module.InGame
         private void GiveCollectedGold(bool useRoomTotal)
         {
             _goldCollecting = false;
-            int amount = useRoomTotal
-                ? (_canonRoom != null ? _canonRoom.Gold : 0)   // 적이 없던 방
+            // 방 골드를 통째로 주는 것은 **적이 없던 방**뿐이다. 적이 있던 방은 잡을 때마다
+            // 이미 날아와 들어왔다 — 여기서 또 주면 2배가 된다.
+            int amount = useRoomTotal && !_roomGoldSettled
+                ? (_canonRoom != null ? _canonRoom.Gold : 0)
                 : _goldCollected;
+            _roomGoldSettled = true;
 
             // 마지막 한 마리를 **빼앗아서** 방이 비면 떨굴 몸이 남지 않는다.
             // 그때 통에 남은 것은 갈 곳이 없으므로 여기서 함께 넣는다 —
             // 방을 비웠으면 방 골드는 다 받는다는 규칙을 어느 길로 와도 지킨다.
-            if (!useRoomTotal && _goldPool > 0) { amount += _goldPool; _goldPool = 0; }
+            if (_goldPool > 0) { amount += _goldPool; _goldPool = 0; }
 
             _goldCollected = 0;
             if (amount > 0) AddRunGoldAtPlayer(amount);

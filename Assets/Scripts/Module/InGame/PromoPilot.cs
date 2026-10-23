@@ -153,9 +153,12 @@ namespace Game.Module.InGame
         // 방을 격자로 나눠 너비 우선으로 길을 찾고, 그 길의 두세 칸 앞을 보고 걷는다.
         // 막힘 판정은 전투와 **같은 자**(`BattleDirector.BlockedAt`)다 — 자가 둘이면 한쪽이 낡는다.
 
-        private const float PathCell = 24f;
+        // ⚠ 원작 방은 물건이 칸을 꽉 채워 통로가 한 칸(65 px)뿐이다(2026-10-23). 발(42) + 여유 양쪽이면
+        //   지나갈 수 있는 중심 자리가 폭 몇 px 밖에 안 남아, 칸이 굵으면 격자 점이 그 틈을 건너뛰어
+        //   「길 없음」이 된다 — 5챕터 19방에서 탱크 줄 앞에 4분 서 있었다. 칸 16 · 여유 2 면 틈이 칸보다 넓다.
+        private const float PathCell = 16f;
         /// <summary>발자국을 이만큼 부풀려 잰다(px) — 모서리를 스치는 길을 고르지 않게.</summary>
-        private const float PathPad = 6f;
+        private const float PathPad = 2f;
         private const float PathEvery = 0.25f;
 
         private MethodInfo _mBlockedAt, _mFootHalf, _mFootDrop, _mRange;
@@ -363,8 +366,9 @@ namespace Game.Module.InGame
             if (major == Affinity.None) { _seekBody = null; return false; }
 
             var host = _fHost.GetValue(_bd) as Unit;
-            if (host != null && AffinityRule.Beats(AffinityRule.KindOf(host.Key), major))
-            { _seekBody = null; return false; }
+            // 빙의 중에는 몸을 버릴 수 없다(PD 2026-10-16 · BattleDirector.TryPossess) — 버리려고 매 프레임 붙잡혀
+            // 싸우지도 못하던 것을 막는다. 유령일 때만 유리한 몸을 고른다.
+            if (host != null) { _seekBody = null; return false; }
 
             Unit want = null; float wd = float.MaxValue;
             for (int i = 0; i < enemies.Count; i++)
@@ -378,15 +382,6 @@ namespace Game.Module.InGame
 
             if (want != _seekBody) { _seekBody = want; _seekWait = 2.8f; }   // 안 맞는 몸으로 때리는 모습이 보일 만큼 지켜본다
             if (_seekWait > 0f) { _seekWait -= dt; return false; }
-
-            if (host != null)
-            {
-                // 몸을 버린다 — 빙의 버튼이 몸이 있을 때는 「나오기」다
-                _bd.TryPossess();
-                Mark("eject");
-                _possessIn = 0.55f;   // 다시 들어갈 수 있게 되는 시간(0.5초)만 기다린다
-                return true;
-            }
 
             if (ReferenceEquals(_fPossessTarget.GetValue(_bd), want))
             {
