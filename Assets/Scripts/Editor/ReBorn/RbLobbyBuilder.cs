@@ -121,6 +121,8 @@ namespace Game.Editor.ReBorn
             var plus = Place(Node(rt, "HeaderPlus"), Edge.Top, 938, 143, 1042, 245);
             Btn(plus, "Components/rb_btn_primary");
             Text(Stretch(Node(plus, "HeaderPlusText")), null, "+", 64, Ink, TA.Center, heavy: true);
+            // 레벨 배지가 행동력 칩 왼쪽 끝에 걸친다 — 칩보다 뒤에 그리면 숫자가 칩에 가렸다(하네스 C6)
+            prof.SetSiblingIndex(plus.GetSiblingIndex());
         }
 
         /// <summary>재화 칩 — 칸 폭 고정(행동력 230 · 골드 · 젬 260, 묶음 규칙), 아이콘은 칩 안 왼쪽, 숫자는 오른쪽 정렬.</summary>
@@ -225,7 +227,8 @@ namespace Game.Editor.ReBorn
             Img(badge, "Components/rb_badge_today");
             Text(Stretch(Node(badge, "CardBadgeText")), null, "오늘", 34, Ink, TA.Center, heavy: true);
             Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
-            Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 40, 1572, 227, 1618), null, "? 랜덤", 36, White, TA.Center, heavy: true);
+            // 일본어 몸 이름(「コマンドー（ミサイル）」)이 칸보다 길어 옆 카드 이름과 겹쳤다(하네스 C5) — 하한을 더 낮춘다
+            Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 40, 1572, 227, 1618), null, "? 랜덤", 36, White, TA.Center, heavy: true).fontSizeMin = 13f;
             Img(Local(Node(card, "CardPriceIcon"), cx0, cy0, cx1, cy1, 60, 1628, 104, 1668), "Icons/rb_icon_currency_gold_48");
             Text(Local(Node(card, "CardPrice"), cx0, cy0, cx1, cy1, 40, 1622, 227, 1674), null, "무료", 40, Green, TA.Center, heavy: true);
 

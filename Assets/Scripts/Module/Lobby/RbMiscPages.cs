@@ -24,13 +24,15 @@ namespace Game.Module.Lobby
             { Language.Korean, Language.English, Language.Japanese, Language.ChineseTraditional, Language.ChineseSimplified };
 
         private UIBinder _ui;
+        private UIBinder _page;
         private RbLobbyUI _shell;
 
         private void Awake()
         {
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>();
-            _ui.OnClick("MailBack", () => _shell.SelectTab("Battle"));
+            _page = new UIBinder(_shell.transform);   // 우편함은 덮개 층 밖(쪽 층)에 있다
+            _page.OnClick("MailBack", () => _shell.SelectTab("Battle"));
             _ui.OnClick("DailyClose", () => Close("RbDaily"));
             _ui.OnClick("DailyGoldClaim", ClaimGold);
             _ui.OnClick("DailySummonGo", () => { Close("RbDaily"); _shell.SelectTab("Summon"); });
@@ -53,7 +55,7 @@ namespace Game.Module.Lobby
             }
         }
 
-        public void ShowMail() { Hide(); _ui.SetActive("RbMail", true); }
+        public void ShowMail() { Hide(); _page.SetActive("RbMail", true); }
 
         // ── 프로필 — 대표 얼굴 · 칭호(꾸미기 전용) · 유령 성장 가기 ─────────────
         // 테두리 꾸미기는 옛 테두리 그림뿐이라 RE:BORN 화풍 그림이 오면 탭을 더한다
@@ -138,7 +140,8 @@ namespace Game.Module.Lobby
 
         public void Hide()
         {
-            foreach (var n in new[] { "RbMail", "RbDaily", "RbSettings", "RbLanguage", "RbProfile" }) _ui.SetActive(n, false);
+            foreach (var n in new[] { "RbDaily", "RbSettings", "RbLanguage", "RbProfile" }) _ui.SetActive(n, false);
+            _page?.SetActive("RbMail", false);
         }
 
         /// <summary>뒤로가기 — 맨 위 창 하나를 닫는다. 닫을 것이 없으면 false.</summary>

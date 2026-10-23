@@ -53,7 +53,14 @@ namespace Game.Editor.ReBorn
             // 픽업 배너 — 키트 일러스트 + 글
             const float bx0 = 33, by0 = 439, bx1 = 1049, by1 = 1089;
             var banner = PlaceIn(Node(body, "SumBanner"), Top, bx0, by0, bx1, by1);
-            Img(banner, "Art/rb_art_banner_summon").preserveAspect = false;
+            // 그림(1.42)이 칸(1.56)보다 높다 — 늘리면 10% 옆으로 퍼졌다(하네스 R1). 칸을 덮게 깔고 칸이 잘라 낸다
+            banner.gameObject.AddComponent<RectMask2D>();
+            var bannerArt = Stretch(Node(banner, "SumBannerArt"));
+            var bannerImg = Img(bannerArt, "Art/rb_art_banner_summon");
+            bannerImg.preserveAspect = false;
+            var bannerFit = bannerArt.gameObject.AddComponent<AspectRatioFitter>();
+            bannerFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            bannerFit.aspectRatio = bannerImg.sprite != null ? bannerImg.sprite.rect.width / bannerImg.sprite.rect.height : 1.42f;
             // 글이 놓이는 왼쪽을 가라앉힌다 — 그림 왼쪽 아래 불빛 위에서 안내 글이 묻혔다(첫 캡처). 아래 그늘을 -90도로 눕혀 왼쪽이 짙게
             var shade = Node(banner, "SumBannerShade");
             shade.anchorMin = shade.anchorMax = new Vector2(0.5f, 0.5f);

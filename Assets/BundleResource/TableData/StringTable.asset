@@ -8837,7 +8837,7 @@ MonoBehaviour:
     _zhHans: "\u514D\u8D39"
   - _key: ui.rb.lobby.chip.hidden
     _ko: "\uD788\uB4E0 \uB4F1\uC7A5 \uAC00\uB2A5"
-    _ja: "\u96A0\u3057\u30AD\u30E3\u30E9\u51FA\u73FE\u3042\u308A"
+    _ja: "\u96A0\u3057\u51FA\u73FE\u3042\u308A"
     _en: Hidden may appear
     _zhHant: "\u53EF\u80FD\u51FA\u73FE\u96B1\u85CF"
     _zhHans: "\u53EF\u80FD\u51FA\u73B0\u9690\u85CF"

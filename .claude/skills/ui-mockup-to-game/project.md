@@ -11,6 +11,10 @@
 - 결과: `Temp/UiHarness/AvsrLobby_<시각>/report.md` — 맨 위 «기계 검사 통과» 가 합격선
 - 비교판: `python Tools/uiharness/contact_sheet.py <결과 폴더>` · 요약 `python Tools/uiharness/summary.py <결과 폴더>`
 - 새 화면(상점 · 소환 · 패스 · 프로필)은 프로필을 화면마다 하나 더 만들거나 이 프로필에 상태를 더한다
+- **RE:BORN 화면(2026-10-24~ 기본)**: 프로필 `Assets/Scripts/Editor/UiHarness/AvsrRebornUiHarnessProfile.cs` · 메뉴 `Tools/Game/Verify/UI Harness (RE:BORN)` ·
+  결과 `Temp/UiHarness/AvsrReborn_<시각>/` · 시안 `Projects/AVSR/_handoff/reborn_ui_1023/03_리소스_및_시안/REBORN_UI_FINAL/Screens`(1080 × 2340).
+  옛 로비 프로필(위)은 찍는 동안 RE:BORN 을 끄고 끝에 되돌린다. 하네스는 끝나도 플레이를 켜 둔다 — 세이브를 되돌리기 전에 플레이를 끈다
+- RE:BORN 화면 캡처 도구: `Tools/Game/RE:BORN 화면/플레이 캡처`(— 인게임) · 거르개 SessionState `avsr.rbshot.only`(이름 앞머리) · 글자 점검 `글자 넘침 점검`
 
 ## 시안
 

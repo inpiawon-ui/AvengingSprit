@@ -3,8 +3,9 @@ using UnityEngine;
 namespace Game.Module.Common
 {
     /// <summary>
-    /// RE:BORN UI 리뉴얼(2026-10-23) 동안 새 화면을 미리 보는 스위치 — 다 바꾸기 전에는 새 화면에 없는 기능(상점 · 육성 …)이 사라지므로
-    /// 기본은 꺼 둔다. 메뉴 `Tools/Game/테스트 — 새 UI(RE:BORN)로 보기` 로 켠다. 전부 바꾸면 이 스위치와 옛 주소를 지운다.
+    /// RE:BORN UI 리뉴얼(2026-10-23) 스위치 — 2026-10-24 부터 **기본은 새 화면**이다(빌드도).
+    /// 옛 화면은 PD 확인 전까지 남겨 두고, 메뉴 `Tools/Game/테스트 — 새 UI(RE:BORN)로 보기` 를 끄면 옛 화면으로 돌아간다.
+    /// PD 가 새 화면을 확정하면 이 스위치와 옛 주소 · 옛 프리팹을 걷는다(Assets 밖 보관).
     /// </summary>
     public static class RebornUiSwitch
     {
@@ -12,7 +13,7 @@ namespace Game.Module.Common
 
         public static bool Enabled
         {
-            get => PlayerPrefs.GetInt(Key, 0) == 1;
+            get => PlayerPrefs.GetInt(Key, 1) == 1;
             set { PlayerPrefs.SetInt(Key, value ? 1 : 0); PlayerPrefs.Save(); }
         }
 

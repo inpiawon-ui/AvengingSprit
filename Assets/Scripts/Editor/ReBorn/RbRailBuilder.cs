@@ -19,13 +19,13 @@ namespace Game.Editor.ReBorn
             BuildGhost(rt);
             BuildMissions(rt);
             BuildPass(rt);
+            BuildMail(rt);   // 우편함은 쪽이다 — 위 막대 · 아래 탭이 보여야 한다(덮개 층에 두면 막대를 가렸다, 하네스 C6)
         }
 
         /// <summary>덧판 — 위 막대 · 아래 탭보다 위(모든 것 위에 뜨는 창).</summary>
         public static void BuildOverlay(RectTransform rt)
         {
             var root = Stretch(Node(rt, "RbMisc"));
-            BuildMail(root);
             BuildDaily(root);
             BuildSettings(root);
             BuildLanguage(root);

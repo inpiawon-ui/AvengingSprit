@@ -17,6 +17,7 @@ namespace Game.Editor.UiHarness
     public sealed class AvsrLobbyUiHarnessProfile : IUiHarnessProfile
     {
         private const string LangKey = "avsr.uiharness.lang";
+        private const string RebornKey = "avsr.uiharness.reborn";
 
         // 세로 게임 — 16:9 휴대폰 · 20:9 긴 휴대폰 · 4:3 태블릿. Game 뷰에 이 이름으로 등록한다(EnsureSizes)
         private static readonly (string Name, int W, int H, string Tag)[] Sizes =
@@ -30,6 +31,9 @@ namespace Game.Editor.UiHarness
             EnsureSizes();
             // 찍는 동안 언어를 바꾼다 — 끝(마지막 상태의 Leave)에 이 값으로 되돌린다(2026-10-12 녹화 뒤 일본어로 남은 일)
             SessionState.SetInt(LangKey, PlayerPrefs.GetInt("game.language", (int)Language.Korean));
+            // 2026-10-24 부터 기본은 RE:BORN 화면 — 이 프로필은 옛 로비를 잰다. 찍는 동안만 끄고 끝에 되돌린다
+            SessionState.SetInt(RebornKey, RebornUiSwitch.Enabled ? 1 : 0);
+            RebornUiSwitch.Enabled = false;
             UiHarnessRunner.Run(new AvsrLobbyUiHarnessProfile());
         }
 
@@ -445,6 +449,7 @@ namespace Game.Editor.UiHarness
             SetLang((Language)before);
             PlayerPrefs.SetInt("game.language", before);
             PlayerPrefs.Save();
+            RebornUiSwitch.Enabled = SessionState.GetInt(RebornKey, 1) == 1;
         }
     }
 }
