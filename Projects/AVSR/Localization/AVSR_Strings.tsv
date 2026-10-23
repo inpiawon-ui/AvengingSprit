@@ -1424,3 +1424,14 @@ ui.rb.result.rewards	획득 보상	獲得報酬	Rewards	獲得獎勵	获得奖�
 ui.rb.result.gold	골드	ゴールド	Gold	金幣	金币
 ui.rb.result.ghost_exp	유령 경험치	ゴースト経験値	Ghost EXP	幽靈經驗值	幽灵经验值
 ui.rb.result.lobby	로비로	ロビーへ	Lobby	回大廳	回大厅
+ui.rb.pause.title	일시정지	一時停止	Paused	暫停	暂停
+ui.rb.pause.story	스토리	ストーリー	Story	劇情	剧情
+ui.rb.pause.build	지금 빌드	現在のビルド	Current Build	目前配置	当前配置
+ui.rb.pause.no_card	아직 고른 카드가 없어요	まだカードを選んでいません	No cards picked yet	尚未選擇卡片	尚未选择卡片
+ui.rb.pause.no_host	몸 없음 · 유령	体なし・ゴースト	No body · Ghost	無身體 · 幽靈	无身体 · 幽灵
+ui.rb.pause.abandon	포기하기	あきらめる	Give Up	放棄	放弃
+ui.rb.pause.continue	계속하기	続ける	Continue	繼續	继续
+ui.rb.pause.abandon_title	스테이지 포기	ステージ放棄	Give Up Stage	放棄關卡	放弃关卡
+ui.rb.pause.abandon_ask	스테이지를 포기하고 로비로 돌아갈까요?	ステージをあきらめてロビーに戻りますか？	Give up and return to the lobby?	要放棄關卡並返回大廳嗎？	要放弃关卡并返回大厅吗？
+ui.rb.pause.give_up	포기	放棄	Give Up	放棄	放弃
+ui.rb.pause.keep	계속	続ける	Keep Going	繼續	继续

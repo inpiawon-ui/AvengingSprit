@@ -187,6 +187,7 @@ namespace Game.Module.InGame
             _ui.SetActive("BuffChoicePanel", false);
             // RE:BORN 결과 화면 — 프리팹에서 켜 둔 채 정렬 밴드를 건 뒤(SetupSortingBands) 끈다(꺼진 채면 순서 0 으로 남는다)
             _ui.SetActive("RbResultPanel", false);
+            _ui.SetActive("RbPausePanel", false);
             SetPossessReady(false);
 
             // 딤 — 뒤 화면을 덮고 조작 입력을 막는다
@@ -1076,6 +1077,7 @@ namespace Game.Module.InGame
             //   무대는 챕터 안에서 또 한 번 바뀌므로 이름도 방 번호를 따라간다.
             // RE:BORN 판은 가운데 한 줄 「1-07」(방 진행 칸은 뺐다 — PD 2026-10-23)
             _ui.SetText("ChapterLabel", _reborn ? $"{e.Chapter}-{e.StageInChapter:00}" : $"CHAPTER {e.Chapter}");
+            _rbStageLine = $"{e.Chapter}-{e.StageInChapter:00} /{e.ChapterTotal}";
             _ui.SetText("ChapterNameText",
                         _battle != null ? _battle.StageNameOf(e.Chapter, e.StageInChapter) : string.Empty);
             _ui.SetText("RoomLabel", "ROOM");
@@ -1848,8 +1850,30 @@ namespace Game.Module.InGame
                  + ShardLine(e);
         }
 
+        // ── RE:BORN 일시정지 창이 읽는 것 ─────────────────────────
+        private string _rbStageLine = string.Empty;
+
+        /// <summary>「1-07 /16」.</summary>
+        public string StageLine => _rbStageLine;
+        public BattleDirector Battle => _battle;
+        /// <summary>지금 입은 몸(유령이면 null).</summary>
+        public string ShownHostKey => _hasRealHost ? _affinityHostKey : null;
+        public Sprite FaceOf(string hostKey) => _faceAtlas != null && hostKey != null ? _faceAtlas.GetSprite($"face_{hostKey}") : null;
+
+        /// <summary>카드 그림(card_{CardId}) — 표가 아직 안 왔으면 null.</summary>
+        public Sprite CardIconOf(string buffKey)
+        {
+            var entry = _buffTable != null ? _buffTable.Get(buffKey) : null;
+            return entry != null && _cardAtlas != null && !string.IsNullOrEmpty(entry.CardId)
+                ? _cardAtlas.GetSprite($"card_{entry.CardId.ToLowerInvariant()}") : null;
+        }
+
+        public string CardNameOf(string buffKey) => _buffTable != null && _buffTable.Get(buffKey) is BuffEntry e ? e.DisplayName : buffKey;
+
         private void OnPause()
         {
+            // RE:BORN 판 — 시안 pause(지금 빌드 · 설정 · 포기하기 · 계속하기). 열린 동안 판을 멈춘다
+            if (_reborn && GetComponentInChildren<RbPausePanel>(true) is RbPausePanel rb) { rb.Open(this); return; }
             SystemPopup.Show(Localize.Get("ui.ingame.pause.message"),
                 onConfirm: () =>
                 {

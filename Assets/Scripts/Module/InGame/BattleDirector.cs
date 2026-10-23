@@ -305,6 +305,9 @@ namespace Game.Module.InGame
         /// <summary>이 카드의 지금 레벨. 안 가졌으면 0. (UI 가 "Lv.2 → Lv.3" 를 그린다)</summary>
         public int CardLevel(string cardKey) => _buffs.LevelOf(cardKey);
 
+        /// <summary>이번 판에 가진 카드와 레벨 — 일시정지 창 「지금 빌드」(RE:BORN).</summary>
+        public System.Collections.Generic.IReadOnlyDictionary<string, int> CardLevels => _buffs.Levels;
+
         public Vector2 MoveInput { get; set; }
 
         /// <summary>지금 사격 중인가. 멈춰서 사거리 안에 적이 있을 때만 true (궁수의 전설 규칙).</summary>

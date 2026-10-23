@@ -32,6 +32,7 @@ namespace Game.Editor.ReBorn
                 BuildEvent(root.transform);
                 BuildShrine(root.transform);
                 BuildResult(root.transform);
+                BuildPause(root.transform);
                 Wire(root.GetComponent<Game.Module.InGame.InGameMainUI>());
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
@@ -673,6 +674,85 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_ghostCheer").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_cheer");
             so.FindProperty("_ghostSad").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_sad");
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // ── 일시정지 · 포기 확인 ─────────────────────────────────
+
+        private static void BuildPause(Transform root)
+        {
+            var old = root.Find("RbPausePanel");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            // 켠 채 저장(정렬 밴드) — InGameMainUI Awake 가 끈다
+            var page = Stretch(Node((RectTransform)root, "RbPausePanel"));
+            var dim = page.gameObject.AddComponent<Image>();
+            dim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
+            dim.raycastTarget = true;
+            var c = Node(page, "RbPauseContent");
+            c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
+            c.sizeDelta = new Vector2(720f, 1280f);
+            Lock(c);
+
+            var box = PutPx(Node(c, "RbPauseBox"), c, 360f, 640f, 620f, 560f);
+            Img(box, "Components/rb_modal");
+            var title = Node(c, "RbPauseTitle");
+            TitlePlate(c, title, 220f, 340f, 500f, 400f);
+            if (title.GetComponent<TextMeshProUGUI>() == null) Text(title, "ui.rb.pause.title", "일시정지", 46, White, TA.Center, heavy: true);
+            CloseX(c, "RbPauseClose", 618f, 370f);
+
+            Text(PutPx(Node(c, "RbPauseStage"), c, 200f, 450f, 260f, 56f), null, "1-07 /16", 56, White, TA.Left, number: true);
+            Text(PutPx(Node(c, "RbPauseMode"), c, 520f, 450f, 220f, 40f), "ui.rb.pause.story", "스토리", 32, Dim, TA.Right);
+            Text(PutPx(Node(c, "RbPauseBuildTitle"), c, 200f, 506f, 260f, 40f), "ui.rb.pause.build", "지금 빌드", 38, White, TA.Left, heavy: true);
+            for (int i = 0; i < 6; i++)
+            {
+                var slot = PutPx(Node(c, $"RbPauseCard{i}"), c, 116f + 88f * i, 580f, 80f, 92f);
+                Img(Inside2(Node(slot, $"RbPauseCard{i}Frame"), 0f, 0f, 80f, 80f), "Components/rb_slot_common").preserveAspect = false;
+                Img(Inside2(Node(slot, $"RbPauseCard{i}Icon"), 6f, 6f, 68f, 68f), "Icons/rb_icon_card_up_96");
+                Text(Inside2(Node(slot, $"RbPauseCard{i}Lv"), 0f, 64f, 80f, 28f), null, "Lv 2", 28, Yellow, TA.Center, number: true);
+            }
+            Text(PutPx(Node(c, "RbPauseNoCard"), c, 360f, 580f, 540f, 40f), "ui.rb.pause.no_card", "아직 고른 카드가 없어요", 34, Dim, TA.Center);
+            Img(PutPx(Node(c, "RbPauseHostFace"), c, 106f, 668f, 56f, 56f), "Icons/rb_icon_mode_ghost_96");
+            Text(PutPx(Node(c, "RbPauseHostName"), c, 260f, 668f, 220f, 40f), null, "아마존", 36, White, TA.Left, heavy: true);
+            Img(PutPx(Node(c, "RbPauseSkill0"), c, 420f, 668f, 56f, 56f), "Icons/rb_icon_skill_base_144");
+            Img(PutPx(Node(c, "RbPauseSkill1"), c, 486f, 668f, 56f, 56f), "Icons/rb_icon_skill_base_144");
+
+            var settings = PutPx(Node(c, "RbPauseSettings"), c, 225f, 750f, 250f, 70f);
+            Btn(settings, "Components/rb_btn_secondary");
+            Text(Stretch(Node(settings, "RbPauseSettingsText")), "ui.rb.rail.settings", "설정", 40, White, TA.Center, heavy: true);
+            var abandon = PutPx(Node(c, "RbPauseAbandon"), c, 495f, 750f, 250f, 70f);
+            Btn(abandon, "Components/rb_btn_secondary");
+            Text(Stretch(Node(abandon, "RbPauseAbandonText")), "ui.rb.pause.abandon", "포기하기", 40, Red, TA.Center, heavy: true);
+            var cont = PutPx(Node(c, "RbPauseContinue"), c, 360f, 846f, 520f, 92f);
+            Btn(cont, "Components/rb_btn_primary");
+            Text(Stretch(Node(cont, "RbPauseContinueText")), "ui.rb.pause.continue", "계속하기", 50, Ink, TA.Center, heavy: true);
+
+            // 포기 확인 — 한 번 더 묻는다
+            var ab = Stretch(Node(c, "RbAbandon"));
+            var abDim = ab.gameObject.AddComponent<Image>();
+            abDim.color = new Color(0.02f, 0.03f, 0.06f, 0.6f);
+            abDim.raycastTarget = true;
+            Img(PutPx(Node(ab, "RbAbandonBox"), ab, 360f, 640f, 560f, 250f), "Components/rb_modal");
+            var at = Node(ab, "RbAbandonTitle");
+            TitlePlate(ab, at, 210f, 500f, 510f, 556f);
+            if (at.GetComponent<TextMeshProUGUI>() == null) Text(at, "ui.rb.pause.abandon_title", "스테이지 포기", 42, White, TA.Center, heavy: true);
+            CloseX(ab, "RbAbandonClose", 606f, 528f);
+            Text(PutPx(Node(ab, "RbAbandonText"), ab, 360f, 610f, 500f, 50f), "ui.rb.pause.abandon_ask", "스테이지를 포기하고 로비로 돌아갈까요?", 36, White, TA.Center);
+            var no = PutPx(Node(ab, "RbAbandonConfirm"), ab, 230f, 696f, 200f, 72f);
+            Btn(no, "Components/rb_btn_secondary");
+            Text(Stretch(Node(no, "RbAbandonConfirmText")), "ui.rb.pause.give_up", "포기", 40, White, TA.Center, heavy: true);
+            var yes = PutPx(Node(ab, "RbAbandonCancel"), ab, 460f, 696f, 240f, 80f);
+            Btn(yes, "Components/rb_btn_primary");
+            Text(Stretch(Node(yes, "RbAbandonCancelText")), "ui.rb.pause.keep", "계속", 46, Ink, TA.Center, heavy: true);
+            ab.gameObject.SetActive(false);
+
+            page.gameObject.AddComponent<Game.Module.InGame.RbPausePanel>();
+        }
+
+        /// <summary>오른쪽 위 닫기(X) — 키트 둥근 버튼 + 닫기 아이콘.</summary>
+        private static void CloseX(RectTransform parent, string name, float cx, float cy)
+        {
+            var x = PutPx(Node(parent, name), parent, cx, cy, 66f, 66f);
+            Btn(x, "Components/rb_btn_icon_round");
+            Img(Inside2(Node(x, name + "Icon"), 15f, 15f, 36f, 36f), "Icons/rb_icon_sys_close_48");
         }
 
         /// <summary>보상 칸 — 판 · 아이콘 · 값 · 이름(칸 216×200, 가운데 x).</summary>

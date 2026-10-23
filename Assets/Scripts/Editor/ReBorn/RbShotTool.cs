@@ -60,6 +60,9 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "ingame:result_clear", "result_clear_20x9"),
             (720, 1280, Language.Japanese, "ingame:result_clear", "result_clear_ja"),
             (768, 1024, Language.English, "ingame:result_fail", "result_fail_4x3"),
+            (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
+            (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
+            (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
         };
 
         private static (int w, int h, Language lang, string state, string name)[] Current
@@ -239,7 +242,7 @@ namespace Game.Editor.ReBorn
             Time.timeScale = 0.05f;
             // 앞 장의 창은 닫는다 — 같은 화면에 겹쳐 찍히지 않게
             foreach (var t in ui.GetComponentsInChildren<Transform>(true))
-                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel") t.gameObject.SetActive(false);
+                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel") t.gameObject.SetActive(false);
             if (state == "ingame") return;
             // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
             Time.timeScale = 1f;
@@ -260,6 +263,13 @@ namespace Game.Editor.ReBorn
                     bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
                     break;
                 case "ingame:shrine": bt.GetMethod("OpenShrine", F)?.Invoke(battle, null); break;
+                case "ingame:pause":
+                case "ingame:abandon":
+                    var pause = ui.GetComponentInChildren<Game.Module.InGame.RbPausePanel>(true);
+                    pause?.Open(ui);
+                    if (state.EndsWith("abandon") && pause != null)
+                        foreach (var t in pause.GetComponentsInChildren<Transform>(true)) if (t.name == "RbAbandon") t.gameObject.SetActive(true);
+                    break;
                 case "ingame:result_clear":
                 case "ingame:result_fail":
                     // 결과 화면만 띄운다(판을 끝내지 않는다 — 저장 · 보상 지급이 일어나지 않게). 숫자는 시안 예시

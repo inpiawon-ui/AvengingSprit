@@ -9220,3 +9220,70 @@ MonoBehaviour:
     _en: Lobby
     _zhHant: "\u56DE\u5927\u5EF3"
     _zhHans: "\u56DE\u5927\u5385"
+  - _key: ui.rb.pause.title
+    _ko: "\uC77C\uC2DC\uC815\uC9C0"
+    _ja: "\u4E00\u6642\u505C\u6B62"
+    _en: Paused
+    _zhHant: "\u66AB\u505C"
+    _zhHans: "\u6682\u505C"
+  - _key: ui.rb.pause.story
+    _ko: "\uC2A4\uD1A0\uB9AC"
+    _ja: "\u30B9\u30C8\u30FC\u30EA\u30FC"
+    _en: Story
+    _zhHant: "\u5287\u60C5"
+    _zhHans: "\u5267\u60C5"
+  - _key: ui.rb.pause.build
+    _ko: "\uC9C0\uAE08 \uBE4C\uB4DC"
+    _ja: "\u73FE\u5728\u306E\u30D3\u30EB\u30C9"
+    _en: Current Build
+    _zhHant: "\u76EE\u524D\u914D\u7F6E"
+    _zhHans: "\u5F53\u524D\u914D\u7F6E"
+  - _key: ui.rb.pause.no_card
+    _ko: "\uC544\uC9C1 \uACE0\uB978 \uCE74\uB4DC\uAC00 \uC5C6\uC5B4\uC694"
+    _ja: "\u307E\u3060\u30AB\u30FC\u30C9\u3092\u9078\u3093\u3067\u3044\u307E\u305B\u3093"
+    _en: No cards picked yet
+    _zhHant: "\u5C1A\u672A\u9078\u64C7\u5361\u7247"
+    _zhHans: "\u5C1A\u672A\u9009\u62E9\u5361\u7247"
+  - _key: ui.rb.pause.no_host
+    _ko: "\uBAB8 \uC5C6\uC74C \xB7 \uC720\uB839"
+    _ja: "\u4F53\u306A\u3057\u30FB\u30B4\u30FC\u30B9\u30C8"
+    _en: "No body \xB7 Ghost"
+    _zhHant: "\u7121\u8EAB\u9AD4 \xB7 \u5E7D\u9748"
+    _zhHans: "\u65E0\u8EAB\u4F53 \xB7 \u5E7D\u7075"
+  - _key: ui.rb.pause.abandon
+    _ko: "\uD3EC\uAE30\uD558\uAE30"
+    _ja: "\u3042\u304D\u3089\u3081\u308B"
+    _en: Give Up
+    _zhHant: "\u653E\u68C4"
+    _zhHans: "\u653E\u5F03"
+  - _key: ui.rb.pause.continue
+    _ko: "\uACC4\uC18D\uD558\uAE30"
+    _ja: "\u7D9A\u3051\u308B"
+    _en: Continue
+    _zhHant: "\u7E7C\u7E8C"
+    _zhHans: "\u7EE7\u7EED"
+  - _key: ui.rb.pause.abandon_title
+    _ko: "\uC2A4\uD14C\uC774\uC9C0 \uD3EC\uAE30"
+    _ja: "\u30B9\u30C6\u30FC\u30B8\u653E\u68C4"
+    _en: Give Up Stage
+    _zhHant: "\u653E\u68C4\u95DC\u5361"
+    _zhHans: "\u653E\u5F03\u5173\u5361"
+  - _key: ui.rb.pause.abandon_ask
+    _ko: "\uC2A4\uD14C\uC774\uC9C0\uB97C \uD3EC\uAE30\uD558\uACE0 \uB85C\uBE44\uB85C
+      \uB3CC\uC544\uAC08\uAE4C\uC694?"
+    _ja: "\u30B9\u30C6\u30FC\u30B8\u3092\u3042\u304D\u3089\u3081\u3066\u30ED\u30D3\u30FC\u306B\u623B\u308A\u307E\u3059\u304B\uFF1F"
+    _en: Give up and return to the lobby?
+    _zhHant: "\u8981\u653E\u68C4\u95DC\u5361\u4E26\u8FD4\u56DE\u5927\u5EF3\u55CE\uFF1F"
+    _zhHans: "\u8981\u653E\u5F03\u5173\u5361\u5E76\u8FD4\u56DE\u5927\u5385\u5417\uFF1F"
+  - _key: ui.rb.pause.give_up
+    _ko: "\uD3EC\uAE30"
+    _ja: "\u653E\u68C4"
+    _en: Give Up
+    _zhHant: "\u653E\u68C4"
+    _zhHans: "\u653E\u5F03"
+  - _key: ui.rb.pause.keep
+    _ko: "\uACC4\uC18D"
+    _ja: "\u7D9A\u3051\u308B"
+    _en: Keep Going
+    _zhHant: "\u7E7C\u7E8C"
+    _zhHans: "\u7EE7\u7EED"
