@@ -90,6 +90,9 @@ namespace Game.EditorTools
                     { _wait = 30; return; }
                     if (Screen.width != 720 || Screen.height != 1280) { SetSize(720, 1280); _wait = 120; return; }
                     if (Click("PossessStartButton")) { _wait = 120; return; }
+                    // 새 홈 화면(2026-10) — 시나리오 카드 → 챕터 · 몸 고르기 창의 시작
+                    if (Click("CHStartButton")) { _wait = 120; return; }
+                    if (Click("HomeScenarioCard")) { _wait = 60; return; }
                     if (Click("ChapterStartButton")) { _wait = 60; return; }
                     if (Click("ModePlayButton")) { _wait = 60; return; }
                 }
