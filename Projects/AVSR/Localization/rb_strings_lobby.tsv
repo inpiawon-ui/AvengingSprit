@@ -60,3 +60,13 @@ ui.rb.chs.locked	잠김	ロック	Locked	未解鎖	未解锁
 ui.rb.chs.unlock_hint	챕터 {0} 을(를) 클리어하면 열립니다	チャプター{0}をクリアすると開きます	Clear Chapter {0} to unlock	通關章節 {0} 後開放	通关章节 {0} 后开放
 ui.rb.chs.no_record	최고 기록 없음	最高記録なし	No record yet	尚無最高紀錄	尚无最高纪录
 ui.rb.chs.help	챕터를 깨면 다음 챕터가 열려요.\n깬 챕터도 다시 도전할 수 있어요.	チャプターをクリアすると次が開きます。\nクリアしたチャプターにも再挑戦できます。	Clear a chapter to open the next.\nCleared chapters can be replayed.	通關章節即可開放下一章。\n已通關的章節也能重新挑戰。	通关章节即可开放下一章。\n已通关的章节也能重新挑战。
+ui.rb.rnd.ask	어떤 몸과 만날까요?	どんな体に出会えるかな？	Who will you meet?	會遇到哪個身體呢？	会遇到哪个身体呢？
+ui.rb.rnd.hint	몸은 판이 시작될 때 정해져요.	体は出撃の時に決まります。	Your host is decided when the run starts.	宿主會在出戰時決定。	宿主会在出战时决定。
+ui.rb.rnd.reveal	공개하기	公開する	Reveal	公開	公开
+ui.rb.rnd.this_run	이번 판의 호스트	今回のホスト	This run's host	本局宿主	本局宿主
+ui.rb.rnd.hidden_sub	특별한 몸을 만났어요!	特別な体に出会いました！	You met a special host!	遇到了特別的宿主！	遇到了特别的宿主！
+ui.rb.rnd.hidden_name	히든 호스트	隠しホスト	Hidden Host	隱藏宿主	隐藏宿主
+ui.rb.rnd.hidden_line	이번 판 한정 체험 · 조각 미지급	今回限りの体験・かけらなし	This run only · no shards	僅限本局體驗・不給碎片	仅限本局体验・不给碎片
+ui.rb.rnd.owned_line	내가 키운 능력치로 출전	育てた能力で出撃	Runs with your upgrades	以培養的能力出戰	以培养的能力出战
+ui.rb.rnd.trial_line	이번 판 체험 · 깨면 조각을 받아요	今回は体験・クリアでかけら獲得	Trial run · clear to earn shards	本局體驗・通關可得碎片	本局体验・通关可得碎片
+ui.rb.rnd.start	전투 시작	戦闘開始	Start Battle	開始戰鬥	开始战斗

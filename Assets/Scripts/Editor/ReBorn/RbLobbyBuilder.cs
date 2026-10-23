@@ -64,6 +64,7 @@ namespace Game.Editor.ReBorn
             BuildTabBar(rt);
             RbRailBuilder.BuildOverlay(rt);   // 우편 · 오늘 무료 · 설정 · 언어 — 위 막대 · 아래 탭보다 위
             RbGrowthPopups.Build(rt);
+            RbRandomBuilder.Build(rt);        // 랜덤 출전 공개(한 화면 — 위 막대 · 아래 탭 위)
             RbNoticeBuilder.Build(rt);        // 보상 · 모자라요 · 구매 확인 — 맨 앞         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
             Wire(root.AddComponent<RbLobbyUI>());

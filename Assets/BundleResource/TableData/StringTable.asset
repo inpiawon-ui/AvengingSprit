@@ -10467,3 +10467,63 @@ MonoBehaviour:
     _en: '{0} KILLS'
     _zhHant: '{0} KILLS'
     _zhHans: '{0} KILLS'
+  - _key: ui.rb.rnd.ask
+    _ko: "\uC5B4\uB5A4 \uBAB8\uACFC \uB9CC\uB0A0\uAE4C\uC694?"
+    _ja: "\u3069\u3093\u306A\u4F53\u306B\u51FA\u4F1A\u3048\u308B\u304B\u306A\uFF1F"
+    _en: Who will you meet?
+    _zhHant: "\u6703\u9047\u5230\u54EA\u500B\u8EAB\u9AD4\u5462\uFF1F"
+    _zhHans: "\u4F1A\u9047\u5230\u54EA\u4E2A\u8EAB\u4F53\u5462\uFF1F"
+  - _key: ui.rb.rnd.hint
+    _ko: "\uBAB8\uC740 \uD310\uC774 \uC2DC\uC791\uB420 \uB54C \uC815\uD574\uC838\uC694."
+    _ja: "\u4F53\u306F\u51FA\u6483\u306E\u6642\u306B\u6C7A\u307E\u308A\u307E\u3059\u3002"
+    _en: Your host is decided when the run starts.
+    _zhHant: "\u5BBF\u4E3B\u6703\u5728\u51FA\u6230\u6642\u6C7A\u5B9A\u3002"
+    _zhHans: "\u5BBF\u4E3B\u4F1A\u5728\u51FA\u6218\u65F6\u51B3\u5B9A\u3002"
+  - _key: ui.rb.rnd.reveal
+    _ko: "\uACF5\uAC1C\uD558\uAE30"
+    _ja: "\u516C\u958B\u3059\u308B"
+    _en: Reveal
+    _zhHant: "\u516C\u958B"
+    _zhHans: "\u516C\u5F00"
+  - _key: ui.rb.rnd.this_run
+    _ko: "\uC774\uBC88 \uD310\uC758 \uD638\uC2A4\uD2B8"
+    _ja: "\u4ECA\u56DE\u306E\u30DB\u30B9\u30C8"
+    _en: This run's host
+    _zhHant: "\u672C\u5C40\u5BBF\u4E3B"
+    _zhHans: "\u672C\u5C40\u5BBF\u4E3B"
+  - _key: ui.rb.rnd.hidden_sub
+    _ko: "\uD2B9\uBCC4\uD55C \uBAB8\uC744 \uB9CC\uB0AC\uC5B4\uC694!"
+    _ja: "\u7279\u5225\u306A\u4F53\u306B\u51FA\u4F1A\u3044\u307E\u3057\u305F\uFF01"
+    _en: You met a special host!
+    _zhHant: "\u9047\u5230\u4E86\u7279\u5225\u7684\u5BBF\u4E3B\uFF01"
+    _zhHans: "\u9047\u5230\u4E86\u7279\u522B\u7684\u5BBF\u4E3B\uFF01"
+  - _key: ui.rb.rnd.hidden_name
+    _ko: "\uD788\uB4E0 \uD638\uC2A4\uD2B8"
+    _ja: "\u96A0\u3057\u30DB\u30B9\u30C8"
+    _en: Hidden Host
+    _zhHant: "\u96B1\u85CF\u5BBF\u4E3B"
+    _zhHans: "\u9690\u85CF\u5BBF\u4E3B"
+  - _key: ui.rb.rnd.hidden_line
+    _ko: "\uC774\uBC88 \uD310 \uD55C\uC815 \uCCB4\uD5D8 \xB7 \uC870\uAC01 \uBBF8\uC9C0\uAE09"
+    _ja: "\u4ECA\u56DE\u9650\u308A\u306E\u4F53\u9A13\u30FB\u304B\u3051\u3089\u306A\u3057"
+    _en: "This run only \xB7 no shards"
+    _zhHant: "\u50C5\u9650\u672C\u5C40\u9AD4\u9A57\u30FB\u4E0D\u7D66\u788E\u7247"
+    _zhHans: "\u4EC5\u9650\u672C\u5C40\u4F53\u9A8C\u30FB\u4E0D\u7ED9\u788E\u7247"
+  - _key: ui.rb.rnd.owned_line
+    _ko: "\uB0B4\uAC00 \uD0A4\uC6B4 \uB2A5\uB825\uCE58\uB85C \uCD9C\uC804"
+    _ja: "\u80B2\u3066\u305F\u80FD\u529B\u3067\u51FA\u6483"
+    _en: Runs with your upgrades
+    _zhHant: "\u4EE5\u57F9\u990A\u7684\u80FD\u529B\u51FA\u6230"
+    _zhHans: "\u4EE5\u57F9\u517B\u7684\u80FD\u529B\u51FA\u6218"
+  - _key: ui.rb.rnd.trial_line
+    _ko: "\uC774\uBC88 \uD310 \uCCB4\uD5D8 \xB7 \uAE68\uBA74 \uC870\uAC01\uC744 \uBC1B\uC544\uC694"
+    _ja: "\u4ECA\u56DE\u306F\u4F53\u9A13\u30FB\u30AF\u30EA\u30A2\u3067\u304B\u3051\u3089\u7372\u5F97"
+    _en: "Trial run \xB7 clear to earn shards"
+    _zhHant: "\u672C\u5C40\u9AD4\u9A57\u30FB\u901A\u95DC\u53EF\u5F97\u788E\u7247"
+    _zhHans: "\u672C\u5C40\u4F53\u9A8C\u30FB\u901A\u5173\u53EF\u5F97\u788E\u7247"
+  - _key: ui.rb.rnd.start
+    _ko: "\uC804\uD22C \uC2DC\uC791"
+    _ja: "\u6226\u95D8\u958B\u59CB"
+    _en: Start Battle
+    _zhHant: "\u958B\u59CB\u6230\u9B25"
+    _zhHans: "\u5F00\u59CB\u6218\u6597"

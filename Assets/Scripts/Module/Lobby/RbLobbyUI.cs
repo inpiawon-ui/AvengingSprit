@@ -49,6 +49,7 @@ namespace Game.Module.Lobby
         private RbRevealPage _revealPage;
         private RbNotice _notice;
         private RbChapterPage _chapterPage;
+        private RbRandomPage _randomPage;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -99,6 +100,7 @@ namespace Game.Module.Lobby
             _revealPage = GetComponentInChildren<RbRevealPage>(true);
             _notice = GetComponentInChildren<RbNotice>(true);
             _chapterPage = GetComponentInChildren<RbChapterPage>(true);
+            _randomPage = GetComponentInChildren<RbRandomPage>(true);
             _ui.OnClick("ChapterOpen", () => { GameSound.Cue("ui.tap"); SelectTab("Chapters"); });
             _ui.SetActive("SortieCardTemplate", false);
         }
@@ -168,6 +170,7 @@ namespace Game.Module.Lobby
         public bool OnBackPressed()
         {
             if (_notice != null && _notice.Back()) return true;
+            if (_randomPage != null && _randomPage.IsOpen) { _randomPage.Close(); return true; }
             if (_misc != null && _misc.Back()) return true;
             if (_growthPage != null && _growthPage.CloseModal()) return true;
             if (_revealPage != null && _revealPage.IsOpen) { _revealPage.Done(); return true; }
@@ -480,6 +483,14 @@ namespace Game.Module.Lobby
                                       Localize.FromTable("ui.rb.lobby.gold_short_random", "랜덤으로 출전 · 골드 없음"), () => Pick(RunStartMode.Random, null));
                 return;
             }
+            // 랜덤은 공개 화면부터(시안 random-shuffle · random-reveal) — 행동력 · 골드는 「전투 시작」 에서 낸다
+            if (_mode == RunStartMode.Random && _randomPage != null) { _randomPage.Show(_player, key, () => Launch(key, e, gold)); return; }
+            Launch(key, e, gold);
+        }
+
+        private void Launch(string key, HostEntry e, int gold)
+        {
+            CoreModule.TryGet<IStaminaService>(out var stamina);
             if (stamina != null && !stamina.TryPayEntry()) { _notice.ShowStamina(stamina, _player, true, RefreshHeader); return; }
             if (gold > 0) _player.TrySpendGold(gold);
 
@@ -535,6 +546,7 @@ namespace Game.Module.Lobby
             _tab = tab;
             SetTabBar(true);
             if (_notice != null) _notice.HideAll();
+            if (_randomPage != null) _randomPage.Close();
             foreach (var t in new[] { "Shop", "Host", "Battle", "Summon", "Challenge" })
             {
                 var label = _ui.Get<TextMeshProUGUI>($"Tab{t}Label");

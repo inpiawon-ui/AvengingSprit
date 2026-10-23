@@ -79,6 +79,13 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
             (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
             (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
+            (720, 1280, Language.Korean, "random:ask", "random_ask_16x9"),
+            (720, 1280, Language.Korean, "random:reveal", "random_reveal_16x9"),
+            (720, 1280, Language.Korean, "random:hidden", "random_hidden_16x9"),
+            (1080, 2400, Language.Korean, "random:reveal", "random_reveal_20x9"),
+            (768, 1024, Language.Korean, "random:ask", "random_ask_4x3"),
+            (720, 1280, Language.English, "random:reveal", "random_reveal_en"),
+            (720, 1280, Language.Japanese, "random:hidden", "random_hidden_ja"),
             (720, 1280, Language.Korean, "chapters", "chapters_16x9"),
             (1080, 2400, Language.Korean, "chapters", "chapters_20x9"),
             (768, 1024, Language.Korean, "chapters", "chapters_4x3"),
@@ -344,6 +351,20 @@ namespace Game.Editor.ReBorn
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
             if (state.StartsWith("chapters")) { LowMode(state.EndsWith("low")); lobby.SelectTab("Chapters"); return; }
+            if (state.StartsWith("random:"))
+            {
+                // 랜덤 공개 — 박자 1(?) · 박자 2(가진 몸 첫째 · 히든). 「전투 시작」 은 누르지 않는다
+                lobby.SelectTab("Battle");
+                var rnd = Object.FindAnyObjectByType<RbRandomPage>(FindObjectsInactive.Include);
+                if (rnd == null) return;
+                string pick = PlayerDataService.HiddenTrialHostKey;
+                if (!state.EndsWith("hidden"))
+                    foreach (var e in player.PlayableHosts)
+                        if (e != null && !e.IsGhost && player.IsHostOwned(e) && !PlayerDataService.IsHiddenHost(e.HostKey)) { pick = e.HostKey; break; }
+                rnd.Show(player, pick, null);
+                if (!state.EndsWith("ask")) typeof(RbRandomPage).GetMethod("Reveal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.Invoke(rnd, null);
+                return;
+            }
             if (state.StartsWith("notice:"))
             {
                 // 알림 창 — 값은 시안 예시(보상 432 골드 · 조각 3 · 유령 경험치 30 / 골드 필요 200 보유 40 / 입문 패키지 ₩5,900)
