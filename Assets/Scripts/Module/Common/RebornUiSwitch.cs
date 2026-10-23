@@ -22,6 +22,7 @@ namespace Game.Module.Common
             if (!Enabled) return address;
             return address switch
             {
+                "UI/Title/TitleMainUI" => "UI/Title/RbTitleUI",
                 "UI/Lobby/LobbyMainUI" => "UI/Lobby/RbLobbyUI",
                 "UI/InGame/InGameMainUI" => "UI/InGame/RbInGameMainUI",
                 _ => address,

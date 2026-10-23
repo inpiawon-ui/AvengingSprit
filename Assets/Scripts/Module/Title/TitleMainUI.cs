@@ -26,6 +26,9 @@ namespace Game.Module.Title
         private const int LogoFrames = 6;
         private const string AtlasAddress = "atlas/titlemainui";
 
+        /// <summary>RE:BORN 판(RbTitleUI) — 로고는 키트 한 장(색 순환 없음) · 화면 탭 대신 「시작하기」 버튼.</summary>
+        [SerializeField] private bool _reborn;
+
         private UIBinder _ui;
         private IDisposable _startToken;
         private Transform _tapText;
@@ -48,11 +51,18 @@ namespace Game.Module.Title
             _ui.SetText("CopyrightText", "©1991 JALECO / CITY CONNECTION");
             _ui.SetText("VersionText", $"v{Application.version}");
 
-            var logoTransform = _ui.Find("TitleLogo");
-            if (logoTransform != null) _logo = logoTransform.GetComponent<UnityEngine.UI.Image>();
-            LoadLogoFramesAsync().Forget(); // fire-and-forget: 못 불러와도 타이틀은 뜬다
-
-            _ui.OnClick("TouchArea", OnTapped);
+            if (_reborn)
+            {
+                _ui.OnClick("StartButton", OnTapped);
+                GhostLoadingView.Preload();   // 로비로 넘어갈 때 첫 가림막이 옛 판으로 뜨지 않게
+            }
+            else
+            {
+                var logoTransform = _ui.Find("TitleLogo");
+                if (logoTransform != null) _logo = logoTransform.GetComponent<UnityEngine.UI.Image>();
+                LoadLogoFramesAsync().Forget(); // fire-and-forget: 못 불러와도 타이틀은 뜬다
+                _ui.OnClick("TouchArea", OnTapped);
+            }
             gameObject.AddComponent<BackButtonRouter>();
             global::Game.Module.Common.GameSound.Music("screen.title");
         }

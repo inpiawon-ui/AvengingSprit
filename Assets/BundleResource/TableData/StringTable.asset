@@ -9902,3 +9902,9 @@ MonoBehaviour:
     _en: Profile
     _zhHant: "\u500B\u4EBA\u6A94\u6848"
     _zhHans: "\u4E2A\u4EBA\u8D44\u6599"
+  - _key: ui.rb.title.start
+    _ko: "\uC2DC\uC791\uD558\uAE30"
+    _ja: "\u30B9\u30BF\u30FC\u30C8"
+    _en: Start
+    _zhHant: "\u958B\u59CB\u904A\u6232"
+    _zhHans: "\u5F00\u59CB\u6E38\u620F"

@@ -112,7 +112,17 @@ namespace Game.Module.Common.UI
         /// <summary>한국어 원문은 위 배열이 쥐고, 번역은 문자열 표 `tip.loading.{번호}` 에 있다.</summary>
         private static string TipOf(int index) => Localize.FromTable($"tip.loading.{index}", Tips[index]);
 
+        /// <summary>RE:BORN 판 프리팹(RbTitleBuilder) — 흐린 밤 거리 · 로고 · LOADING · 막대 · 팁. 스위치가 켜졌을 때만 쓴다.</summary>
+        private const string RebornAddress = "UI/Common/RbLoadingView";
+
+        private static GhostLoadingView s_instance;
+
         private CanvasGroup _group;
+        private RectTransform _classic;
+        private GameObject _reborn;
+        private RectTransform _rebornFill;
+        private TextMeshProUGUI _rebornTip;
+        private bool _rebornRequested;
         private Image _backdrop;
         private Image _band;
         private Image _ghost;
@@ -170,7 +180,71 @@ namespace Game.Module.Common.UI
             var view = root.AddComponent<GhostLoadingView>();
             view.Build();
             root.SetActive(false);
+            s_instance = view;
             return view;
+        }
+
+        /// <summary>
+        /// RE:BORN 판을 미리 받아 둔다 — 타이틀이 뜰 때 부른다. 안 받아 두면 첫 전환(타이틀 → 로비)이 옛 판으로 뜬다.
+        /// 가림막은 그림을 기다리지 않으므로(즉시 떠야 한다) 받는 것은 미리 해 둔다.
+        /// </summary>
+        public static void Preload()
+        {
+            if (s_instance != null && RebornUiSwitch.Enabled) s_instance.LoadRebornAsync().Forget();   // fire-and-forget: 못 받으면 옛 판으로 뜬다
+        }
+
+        private async UniTaskVoid LoadRebornAsync()
+        {
+            if (_rebornRequested || !CoreModule.TryGet<IResourceManager>(out var res)) return;
+            _rebornRequested = true;
+            GameObject go;
+            try { go = await res.InstantiateAsync(RebornAddress, transform); }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[Loading] RE:BORN 판 로드 실패 — 옛 판으로 뜬다: {e.Message}");
+                return;
+            }
+            if (go == null) return;
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+            _reborn = go;
+            var fill = FindDeep(go.transform, "RbLoadingBarFill");
+            _rebornFill = fill as RectTransform;
+            var tip = FindDeep(go.transform, "RbLoadingTip");
+            if (tip != null) _rebornTip = tip.GetComponent<TextMeshProUGUI>();
+            ApplyMode();
+            if (_rebornTip != null && _tip != null) _rebornTip.text = _tip.text;
+            ApplyBar(_shown);
+        }
+
+        private static Transform FindDeep(Transform root, string name)
+        {
+            if (root.name == name) return root;
+            for (int i = 0; i < root.childCount; i++)
+            {
+                var hit = FindDeep(root.GetChild(i), name);
+                if (hit != null) return hit;
+            }
+            return null;
+        }
+
+        /// <summary>스위치에 따라 옛 판 · 새 판 중 하나만 켠다. 새 판은 언어가 바뀌었을 수 있어 뜰 때마다 폰트를 맞춘다.</summary>
+        private void ApplyMode()
+        {
+            bool reborn = _reborn != null && RebornUiSwitch.Enabled;
+            if (_classic != null) _classic.gameObject.SetActive(!reborn);
+            if (_reborn != null)
+            {
+                _reborn.SetActive(reborn);
+                if (reborn) Localize.ApplyFonts(_reborn.transform);
+            }
+        }
+
+        private void SetTip(string text)
+        {
+            if (_tip != null) _tip.text = text;
+            if (_rebornTip != null) _rebornTip.text = text;
         }
 
         // ─────────────────────────────────────────────────────────
@@ -187,6 +261,8 @@ namespace Game.Module.Common.UI
             _bobTime = 0f;
             ApplyBar(0f);
             if (_message != null) _message.text = string.Empty;
+            if (RebornUiSwitch.Enabled && !_rebornRequested) LoadRebornAsync().Forget();   // fire-and-forget: 이번엔 옛 판으로 뜨고 다음부터 새 판
+            ApplyMode();
 
             // 전환마다 다른 배경. 같은 그림만 나오면 몇 번만 봐도 로딩이 길게 느껴진다.
             PickBackdrop();
@@ -194,7 +270,7 @@ namespace Game.Module.Common.UI
             // 팁은 시작 지점만 무작위다. 이후로는 순서대로 돌아 한 바퀴 안에 겹치지 않는다.
             _tipIndex = Random.Range(0, Tips.Length);
             _tipTimer = TipSeconds;
-            if (_tip != null) _tip.text = TipOf(_tipIndex);
+            SetTip(TipOf(_tipIndex));
 
             // 그림은 한 번만 받아 둔다. 아직 안 왔으면 이번 전환에는 없는 대로 뜬다 —
             // 가림막이 즉시 뜨는 것 자체가 목적이라 그림을 기다리지 않는다.
@@ -301,7 +377,7 @@ namespace Game.Module.Common.UI
                     _tipTimer += TipSeconds;
                     // 한 바퀴 돌 때까지 같은 팁이 다시 나오지 않는다
                     _tipIndex = (_tipIndex + 1) % Tips.Length;
-                    _tip.text = TipOf(_tipIndex);
+                    SetTip(TipOf(_tipIndex));
                 }
             }
 
@@ -315,6 +391,7 @@ namespace Game.Module.Common.UI
 
         private void ApplyBar(float t)
         {
+            if (_rebornFill != null) _rebornFill.anchorMax = new Vector2(Mathf.Clamp01(t), 1f);
             if (_barFillRect == null) return;
             _barFillRect.sizeDelta = new Vector2(_barWidth * Mathf.Clamp01(t), 0f);
             if (_percent != null) _percent.text = $"{Mathf.RoundToInt(t * 100f)}%";
@@ -409,10 +486,15 @@ namespace Game.Module.Common.UI
         {
             var font = TMP_Settings.defaultFontAsset;   // 픽셀 — 영문·숫자 (FontPolicy)
             var kr = KoreanFont(font);                  // 고딕 — 한글 본문
-            var root = (RectTransform)transform;
 
             _group = gameObject.AddComponent<CanvasGroup>();
             _group.blocksRaycasts = true;
+
+            // 옛 판은 한 묶음 아래에 둔다 — RE:BORN 판이 오면 묶음째 끈다
+            _classic = new GameObject("Classic", typeof(RectTransform)).GetComponent<RectTransform>();
+            _classic.SetParent(transform, false);
+            Stretch(_classic);
+            var root = _classic;
 
             _backdrop = NewImage("Backdrop", root, Backdrop);
             Stretch(_backdrop.rectTransform);

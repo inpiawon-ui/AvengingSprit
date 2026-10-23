@@ -111,6 +111,7 @@ namespace Game.Editor.ReBorn
         }
 
         private static int _wait;
+        private static int _loadingSeen;
         private static int _prepared = -1;
         private static bool _sortie;
 
@@ -134,6 +135,9 @@ namespace Game.Editor.ReBorn
         private static void Start()
         {
             SessionState.SetInt(Key, 1);
+            SessionState.SetBool(Key + ".tShot", false);
+            SessionState.SetBool(Key + ".tWait", false);
+            SessionState.SetBool(Key + ".lShot", false);
             _prepared = -1;
             RebornUiSwitch.Enabled = true;
             if (!EditorApplication.isPlaying)
@@ -185,7 +189,8 @@ namespace Game.Editor.ReBorn
             { _wait = 30; return; }
             if (!ingame && (lobby == null || GameObject.Find("[LoadingView]") != null))
             {
-                if (Click("SkipButton") || Click("TouchArea")) _wait = 30; else _wait = 10;
+                if (PreShot()) return;
+                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) _wait = 30; else _wait = 10;
                 return;
             }
             if (!CoreModule.TryGet<IPlayerDataService>(out var player) || !player.IsReady) { _wait = 30; return; }
@@ -231,6 +236,45 @@ namespace Game.Editor.ReBorn
             Debug.Log($"[RbShot] {s.name} {Screen.width}x{Screen.height}");
             SessionState.SetInt(Key, step + 1);
             _wait = 45;
+        }
+
+        /// <summary>
+        /// 로비 앞 화면(타이틀 · 로딩)은 지나가며 한 번씩 찍는다 — 거르개가 「title」일 때만.
+        /// 크기는 SessionState `.preW` · `.preH`(기본 720 × 1280), 이름 꼬리는 `.preTag`(기본 16x9).
+        /// </summary>
+        private static bool PreShot()
+        {
+            if (SessionState.GetString(Key + ".only", string.Empty) != "title") return false;
+            int w = SessionState.GetInt(Key + ".preW", 720), h = SessionState.GetInt(Key + ".preH", 1280);
+            string tag = SessionState.GetString(Key + ".preTag", "16x9");
+            if (Screen.width != w || Screen.height != h) { SetSize(w, h); _wait = 150; return true; }
+            var title = Object.FindAnyObjectByType<Game.Module.Title.TitleMainUI>();
+            bool covered = GameObject.Find("[LoadingView]") != null;   // 부트 → 타이틀 전환도 가림막을 쓴다 — 걷힌 뒤에 찍는다
+            if (title != null && !SessionState.GetBool(Key + ".tShot", false))
+            {
+                if (covered) { _wait = 10; return true; }
+                if (!SessionState.GetBool(Key + ".tWait", false)) { SessionState.SetBool(Key + ".tWait", true); _wait = 120; return true; }
+                Capture($"title_{tag}");
+                SessionState.SetBool(Key + ".tShot", true);
+                _wait = 45;
+                return true;
+            }
+            var loading = GameObject.Find("RbLoadingView(Clone)");
+            if (loading != null && SessionState.GetBool(Key + ".tShot", false) && !SessionState.GetBool(Key + ".lShot", false))
+            {
+                if (_loadingSeen++ < 40) { _wait = 0; return true; }   // 막대가 조금 찬 뒤에 찍는다
+                Capture($"loading_{tag}");
+                SessionState.SetBool(Key + ".lShot", true);
+                return true;
+            }
+            return false;
+        }
+
+        private static void Capture(string name)
+        {
+            Directory.CreateDirectory(OutDir);
+            ScreenCapture.CaptureScreenshot(Path.Combine(OutDir, name + ".png"));
+            Debug.Log($"[RbShot] {name} {Screen.width}x{Screen.height}");
         }
 
         // 「모든 호스트 열어 둠」(GameConfig._openAllHosts)이면 성급이 늘 10으로 읽힌다 — 보통 상태를 찍는 동안만 끈다

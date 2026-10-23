@@ -27,10 +27,22 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_ingame
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 382151b5b3dab8241a3abb854dd89db7
+    m_Address: UI/Common/RbLoadingView
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_title
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7707ced5a6811ab4bbf1c1c01365ed63
     m_Address: UI/Opening/OpeningMainUI
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1153c3597cadfc46a1606b7b2f47a30
+    m_Address: UI/Title/RbTitleUI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_title
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c5e8f9346a966dd4898a9874a1cf2719
     m_Address: UI/InGame/RbInGameMainUI

@@ -32,3 +32,4 @@ ui.rb.lobby.sortie_ghost	유령으로 출전	ゴーストで出撃	Sortie as Gho
 ui.rb.lobby.sortie	출전	出撃	Sortie	出擊	出击
 ui.rb.lobby.gold_short_random	랜덤으로 출전 · 골드 없음	ランダムで出撃 · ゴールド不要	Random sortie · No gold	隨機出擊 · 免金幣	随机出击 · 免金币
 ui.rb.soon	준비 중이에요 · 업데이트로 열려요	準備中です · アップデートで開放	Coming soon · Opens in an update	準備中 · 將於更新開放	准备中 · 将于更新开放
+ui.rb.title.start	시작하기	スタート	Start	開始遊戲	开始游戏
