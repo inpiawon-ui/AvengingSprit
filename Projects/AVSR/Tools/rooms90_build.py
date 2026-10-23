@@ -683,8 +683,12 @@ def main():
         out = os.path.join(SRC_DIR, f'rooms90_sheet_ch{only}.png')
         print('배치도(이 챕터만):', sheet(rooms, out))
         return
-    # 챕터마다 전투방 11칸이 다 있어야 한다
+    # 챕터마다 전투방 11칸이 다 있어야 한다 — 손으로 그린 챕터만.
+    # 3단계(2026-10-22)부터 게임은 원작 30방 표(rooms30.tsv · origin_rooms_bake.py)를 쓴다. 손배치 파일이 없는 챕터(11~)는 건너뛴다
+    drawn = {r.chapter for r in rooms}
     for ch in CHAPTERS:
+        if ch not in drawn:
+            continue
         have = {r.no for r in rooms if r.chapter == ch}
         miss = [n for n in COMBAT_NO if n not in have]
         if miss:

@@ -1,0 +1,1076 @@
+{
+ "chapter": 11,
+ "origin_chapter": 178,
+ "origin_name": "악령의 숲",
+ "rooms": [
+  {
+   "room": 1,
+   "ours": "소개",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_0_"
+   ],
+   "source": "elevel/main78/Level_M_0_0018",
+   "w": 11,
+   "h": 15,
+   "cells": "~~.......~mm~.......~~~~..............................................................~~.........~m.........~~.................................~~.........m~.........",
+   "spawns": {
+    "0,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "10,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "10,0": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "0,14": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "flying": 4
+   }
+  },
+  {
+   "room": 2,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_0_"
+   ],
+   "source": "elevel/main78/Level_M_0_0002",
+   "w": 11,
+   "h": 15,
+   "cells": "~~~.....~~~~m~.....~m~~~~.....~~~......................................~......m..~.~..m......~.................................................~.........~~.........~",
+   "spawns": {
+    "1,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "9,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "1,7": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    },
+    "9,7": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "flying": 2,
+    "melee": 2
+   }
+  },
+  {
+   "room": 3,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_0_"
+   ],
+   "source": "elevel/main78/Level_M_0_0003",
+   "w": 11,
+   "h": 15,
+   "cells": "~~......~~~~.........~~....m.............................m.#m#.m.....................................##...##..................................~~.........~~~~......~~",
+   "spawns": {
+    "5,2": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,5": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "2,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 2,
+    "flying": 2
+   }
+  },
+  {
+   "room": 4,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_0_"
+   ],
+   "source": "elevel/main78/Level_M_0_0016",
+   "w": 11,
+   "h": 15,
+   "cells": "##.......###.........#.........................m.~.m.................~...~.................m.~.m...............................................~.........~...........",
+   "spawns": {
+    "3,4": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "7,4": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "3,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "7,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "flying": 2,
+    "ranged": 2
+   }
+  },
+  {
+   "room": 5,
+   "ours": "천사",
+   "origin_role": "천사",
+   "bands": [
+    "Level_E_"
+   ]
+  },
+  {
+   "room": 6,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_1_"
+   ],
+   "source": "elevel/main78/Level_M_1_0009",
+   "w": 11,
+   "h": 15,
+   "cells": "##.......###.........#...\"...\"...............\".m...m.\".................~..........m..........~............................\".m...m.\"..\".......\"....\"\".\"\"..............",
+   "spawns": {
+    "5,7": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "3,4": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "7,4": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "3,11": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "7,11": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    }
+   },
+   "origin_monsters": {
+    "melee": 2,
+    "flying": 1,
+    "ranged": 2
+   }
+  },
+  {
+   "room": 7,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_1_"
+   ],
+   "source": "elevel/main78/Level_M_1_0002",
+   "w": 11,
+   "h": 15,
+   "cells": "###.......m#..........#................................m....~...................~.m.~...................~....m................................#..........#m.......###",
+   "spawns": {
+    "10,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "0,5": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "10,9": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "5,7": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "0,14": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "flying": 2,
+    "ranged": 3
+   }
+  },
+  {
+   "room": 8,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_1_"
+   ],
+   "source": "elevel/main78/Level_M_1_0011",
+   "w": 11,
+   "h": 15,
+   "cells": "m....m....m.......................~~.....~~..~m.....o~......~..........~........~~\"~~........~..........~......~o.....m~..~~.....~~..................................",
+   "spawns": {
+    "2,4": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "8,10": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,0": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "0,0": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    },
+    "10,0": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    }
+   },
+   "origin_monsters": {
+    "melee": 2,
+    "flying": 1,
+    "ranged": 2
+   }
+  },
+  {
+   "room": 9,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_7_"
+   ],
+   "source": "elevel/main78/Level_M_7_0001",
+   "w": 11,
+   "h": 15,
+   "cells": "m....m....m...........tttttttttttm.........mttttttttttt...........mt.t...t.tm.t.t...t.t..t.t...t.t..t.t...t.t..t.t...t.t..t.t...t.t..t.t...t.t..t.t...t.t..t.t...t.t.",
+   "spawns": {
+    "0,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "10,0": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "0,3": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "10,3": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "0,6": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "10,6": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,0": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 6,
+    "melee": 1
+   }
+  },
+  {
+   "room": 10,
+   "ours": "중간보스",
+   "origin_role": "보스",
+   "bands": [
+    "Level_B_0_"
+   ]
+  },
+  {
+   "room": 11,
+   "ours": "소개",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_2_"
+   ],
+   "source": "elevel/main78/Level_M_2_0201",
+   "w": 11,
+   "h": 21,
+   "cells": "m~........t..~.......t...~.m....t..~.......t.~~.......tm~........t~~........t~.........t..........t...........m.........m...........t..........t.........~t........~~t........~mt.......~~.t.......~..t......~...t.......~..t........~m",
+   "spawns": {
+    "0,5": {
+     "role": "ranged",
+     "monster": "watcher_eye"
+    },
+    "10,15": {
+     "role": "ranged",
+     "monster": "watcher_eye"
+    },
+    "0,0": {
+     "role": "ranged",
+     "monster": "watcher_eye"
+    },
+    "5,2": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "0,10": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "10,10": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "10,20": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "flying": 4,
+    "ranged": 3
+   }
+  },
+  {
+   "room": 12,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_2_"
+   ],
+   "source": "elevel/main1/Level_M_2_0012",
+   "w": 11,
+   "h": 15,
+   "cells": "##.......###.........#...m...m..............#m.......m##.........##....m....##.........##.........##.........##.........#......................#.........###.......##",
+   "spawns": {
+    "1,4": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "9,4": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "3,2": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,6": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "7,2": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 3,
+    "flying": 2
+   }
+  },
+  {
+   "room": 13,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_2_"
+   ],
+   "source": "elevel/main104/Level_M_2_0013",
+   "w": 11,
+   "h": 15,
+   "cells": "...~...~..............~.........~.......................m.~.m.~.m.......................~..m...m..~.........................~...~.........................~.........~",
+   "spawns": {
+    "1,5": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "9,5": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "3,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "7,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "flying": 3,
+    "ranged": 2
+   }
+  },
+  {
+   "room": 14,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_2_"
+   ],
+   "source": "elevel/main108/Level_M_2_0202",
+   "w": 11,
+   "h": 21,
+   "cells": "~.........~~.m.....m.~~.........~...........o....m....m....................................~~~~~......~~~~~......~~m~~......~~~~~......~~~~~....................................m....m....o...........~.........~~.........~~.........~",
+   "spawns": {
+    "5,10": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,4": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "2,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "10,4": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,16": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    },
+    "0,16": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    }
+   },
+   "origin_monsters": {
+    "flying": 5,
+    "melee": 2
+   }
+  },
+  {
+   "room": 15,
+   "ours": "상점",
+   "origin_role": "천사",
+   "bands": [
+    "Level_E_"
+   ]
+  },
+  {
+   "room": 16,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_3_"
+   ],
+   "source": "elevel/main78/Level_M_3_0202",
+   "w": 11,
+   "h": 21,
+   "cells": "##...m...###.........#...................................=..m=............................m~.m.~m...........................m.~.m............................~.m.~...............................................##........###.......##",
+   "spawns": {
+    "2,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,0": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,14": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "3,11": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "7,11": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    }
+   },
+   "origin_monsters": {
+    "melee": 3,
+    "flying": 5
+   }
+  },
+  {
+   "room": 17,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_3_"
+   ],
+   "source": "elevel/main1/Level_M_3_0002",
+   "w": 11,
+   "h": 15,
+   "cells": "##.......######.m.####.....^......m...^...m.......................^^^^...^^^^.....m.....................^.....m....^....m.....^................#.........###.......##",
+   "spawns": {
+    "1,3": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "9,3": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "0,10": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "5,1": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    },
+    "5,7": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "10,10": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "melee": 3,
+    "ranged": 3
+   }
+  },
+  {
+   "room": 18,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_3_"
+   ],
+   "source": "elevel/main107/Level_M_3_0003",
+   "w": 11,
+   "h": 15,
+   "cells": "...........~~...m...~~^........m.^..........^..........^..m....^^^^........m^^.........^^m........^^^^....m..^..........^..........^m.........^~~.......~~~~.......~~",
+   "spawns": {
+    "9,2": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "9,6": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "1,8": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "0,12": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "5,1": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "3,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "7,9": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "melee": 1,
+    "ranged": 4,
+    "flying": 2
+   }
+  },
+  {
+   "room": 19,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_6_"
+   ],
+   "source": "elevel/main78/Level_M_6_0202",
+   "w": 11,
+   "h": 21,
+   "cells": "......................#..#~m~#..#........................m.###.m.........................###.m.###........................m.##.##.m.......................#..#.m.#..#..........................###.....................................",
+   "spawns": {
+    "1,11": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "9,11": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,2": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "2,5": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,5": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    },
+    "5,14": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    }
+   },
+   "origin_monsters": {
+    "melee": 2,
+    "flying": 2,
+    "ranged": 3
+   }
+  },
+  {
+   "room": 20,
+   "ours": "중간보스",
+   "origin_role": "보스",
+   "bands": [
+    "Level_B_0_"
+   ]
+  },
+  {
+   "room": 21,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_4_"
+   ],
+   "source": "elevel/main78/Level_M_4_0203",
+   "w": 11,
+   "h": 21,
+   "cells": "............~~~...~m~..~.~...~.~..~.~...~.~..~.~...~.~..~m~...~~~....................................m..m..m....................................#m#...###..#.#...#.#..#.#...#.#..#.#...#.#..###...#m#..................................",
+   "spawns": {
+    "8,1": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "2,5": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,9": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "2,9": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "2,13": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,17": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,9": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 4,
+    "flying": 3
+   }
+  },
+  {
+   "room": 22,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_4_"
+   ],
+   "source": "elevel/main102/Level_M_4_0001",
+   "w": 11,
+   "h": 15,
+   "cells": "##.......##m.........m...................................m..~...................~...~...................~..m...................................m.........m##.......##",
+   "spawns": {
+    "0,1": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "10,1": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "0,13": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "10,13": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "2,5": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    },
+    "8,9": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 4,
+    "melee": 2
+   }
+  },
+  {
+   "room": 23,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_4_"
+   ],
+   "source": "elevel/main1/Level_M_4_0003",
+   "w": 11,
+   "h": 15,
+   "cells": ".....m.......~.....~....~..m..~.......~..........~.......~..~..~....~..~..~..m.~..~..~.m..~.....~....~.....~.......~..........~...........................m.........m",
+   "spawns": {
+    "0,7": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "10,7": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "0,14": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "5,0": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "5,2": {
+     "role": "melee",
+     "monster": "actor_enforcer_3"
+    },
+    "10,14": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "melee": 3,
+    "ranged": 3
+   }
+  },
+  {
+   "room": 24,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_4_"
+   ],
+   "source": "elevel/main103/Level_M_4_0202",
+   "w": 11,
+   "h": 21,
+   "cells": "......................#..#.m.#..#.......................m.\"\"\"\"\".m........................\"\"\".m.\"\"\"........................#m#.m.#m#.......................#...#m#...#.........................#####....................................",
+   "spawns": {
+    "1,5": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "9,5": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,2": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,14": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "2,11": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,11": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "5,8": {
+     "role": "melee",
+     "monster": "skeleton_3"
+    },
+    "5,11": {
+     "role": "melee",
+     "monster": "mushroom_2"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 3,
+    "flying": 3,
+    "melee": 2
+   }
+  },
+  {
+   "room": 25,
+   "ours": "천사",
+   "origin_role": "천사",
+   "bands": [
+    "Level_E_"
+   ]
+  },
+  {
+   "room": 26,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_5_"
+   ],
+   "source": "elevel/main78/Level_M_5_0201",
+   "w": 11,
+   "h": 21,
+   "cells": "###..m..####.........##.........#^.m^.^.^m.^................m..................m.^^^.m...............^.~~~.^....^.~m~.^....^.~~~.^...............m.^^^.m...................................#.^.^.^.^.##.........##.........####.....###",
+   "spawns": {
+    "5,10": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "5,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,5": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "2,3": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "8,3": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "2,7": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,7": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "2,13": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "8,13": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    }
+   },
+   "origin_monsters": {
+    "flying": 3,
+    "melee": 1,
+    "ranged": 5
+   }
+  },
+  {
+   "room": 27,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_5_"
+   ],
+   "source": "elevel/main109/Level_M_5_0003",
+   "w": 11,
+   "h": 15,
+   "cells": "m~.......~m~~.......~~..................................m...................................................m..................................~~.......~~m~.......~m",
+   "spawns": {
+    "0,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "10,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "0,14": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "10,14": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "1,5": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "9,9": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 6
+   }
+  },
+  {
+   "room": 28,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_5_"
+   ],
+   "source": "elevel/main1/Level_M_5_0003",
+   "w": 11,
+   "h": 15,
+   "cells": "m~.......~m~~.......~~............................................~~.m.....~~m~.......~m~~.....m.~~............................................~~.......~~m~.......~m",
+   "spawns": {
+    "0,0": {
+     "role": "ranged",
+     "monster": "coilwalker_2"
+    },
+    "10,0": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "0,7": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "10,7": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "0,14": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "10,14": {
+     "role": "ranged",
+     "monster": "roadwarden_2"
+    },
+    "3,6": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    },
+    "7,8": {
+     "role": "flying",
+     "monster": "watcher_eye"
+    }
+   },
+   "origin_monsters": {
+    "ranged": 6,
+    "flying": 2
+   }
+  },
+  {
+   "room": 29,
+   "ours": "전투",
+   "origin_role": "일반",
+   "bands": [
+    "Level_M_6_"
+   ],
+   "source": "elevel/main11/Level_M_6_0003",
+   "w": 11,
+   "h": 15,
+   "cells": "#.........#####.m.####m.........m...............###...............#.........##....m....##.........##...###...##.........#.................................m.........m",
+   "spawns": {
+    "0,2": {
+     "role": "turret",
+     "monster": "roadwarden_2"
+    },
+    "10,2": {
+     "role": "turret",
+     "monster": "coilwalker_2"
+    },
+    "0,14": {
+     "role": "turret",
+     "monster": "coilwalker_2"
+    },
+    "10,14": {
+     "role": "turret",
+     "monster": "scrapgunner_3"
+    },
+    "5,1": {
+     "role": "ranged",
+     "monster": "scrapgunner_3"
+    },
+    "5,7": {
+     "role": "melee",
+     "monster": "gorilla_fire"
+    }
+   },
+   "origin_monsters": {
+    "melee": 1,
+    "turret": 4,
+    "ranged": 1
+   }
+  },
+  {
+   "room": 30,
+   "ours": "보스",
+   "origin_role": "보스",
+   "bands": [
+    "Level_B_0_"
+   ]
+  }
+ ]
+}
