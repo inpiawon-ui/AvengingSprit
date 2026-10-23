@@ -1567,3 +1567,15 @@ ui.rb.ess.need	필요 정수 {0} · 보유 {1}	必要 {0} ・所持 {1}	Need {0}
 ui.rb.ess.poor	정수가 부족합니다 ({0}/{1})	エッセンスが足りません ({0}/{1})	Not enough essence ({0}/{1})	精華不足 ({0}/{1})	精华不足 ({0}/{1})
 ui.rb.ess.short	정수 {0}개 부족	エッセンス {0} 不足	{0} essence short	精華不足 {0}	精华不足 {0}
 ui.rb.ess.fail	교환할 수 없어요	交換できません	Can't trade	無法兌換	无法兑换
+ui.rb.lock.title	미보유 호스트	未所持ホスト	Locked Host	未擁有宿主	未拥有宿主
+ui.rb.lock.need	해금 필요	解放が必要	Locked	需要解鎖	需要解锁
+ui.rb.lock.note	조각을 모아 해금하면\n스킬 · 능력치 강화가 열립니다	かけらを集めて解放すると\nスキル・能力強化が開きます	Collect shards to unlock\nskills and stat upgrades	收集碎片解鎖後\n開放技能・能力強化	收集碎片解锁后\n开放技能・属性强化
+ui.rb.lock.sources	얻는 곳: 소환 · 망령의 탑 · 망령의 밤	入手: 召喚・亡霊の塔・亡霊の夜	From: Summon · Tower · Night	獲取: 召喚・亡靈之塔・亡靈之夜	获取: 召唤・亡灵之塔・亡灵之夜
+ui.rb.lock.shards	조각 {0} /{1}	かけら {0} /{1}	Shards {0} /{1}	碎片 {0} /{1}	碎片 {0} /{1}
+ui.rb.lock.unlock	해금	解放	Unlock	解鎖	解锁
+ui.rb.lock.short	조각 {0}개 부족	かけら {0} 不足	{0} shards short	碎片不足 {0}	碎片不足 {0}
+ui.rb.lock.help	조각을 모으면 그 몸을 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요.	かけらを集めるとその体を解放できます。\n解放すると出撃・能力強化・星級強化が開きます。	Collect shards to unlock this host.\nUnlocking opens runs, stat and star upgrades.	收集碎片即可解鎖此宿主。\n解鎖後開放出戰・能力強化・星級強化。	收集碎片即可解锁此宿主。\n解锁后开放出战・属性强化・星级强化。
+ui.rb.reveal.new	새 몸!	新しい体！	New Host!	新宿主！	新宿主！
+ui.rb.reveal.awaken_title	각성	覚醒	Awaken	覺醒	觉醒
+ui.rb.reveal.awaken	{0}성 각성	{0}星 覚醒	{0}★ Awakened	{0}星 覺醒	{0}星 觉醒
+ui.rb.reveal.awaken_full	{0}성 각성 완성	{0}星 覚醒完了	{0}★ Fully Awakened	{0}星 覺醒完成	{0}星 觉醒完成

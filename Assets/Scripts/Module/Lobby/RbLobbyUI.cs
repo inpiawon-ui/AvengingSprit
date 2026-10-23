@@ -45,6 +45,8 @@ namespace Game.Module.Lobby
         private Sprite _ghostFace;
         private RbHostPage _hostPage;
         private RbGrowthPage _growthPage;
+        private RbLockedPage _lockedPage;
+        private RbRevealPage _revealPage;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -90,6 +92,9 @@ namespace Game.Module.Lobby
             _shopPage = GetComponentInChildren<RbShopPage>(true);
             _hostPage = GetComponentInChildren<RbHostPage>(true);
             _growthPage = GetComponentInChildren<RbGrowthPage>(true);
+            if (_growthPage != null) _growthPage.Init();   // 창(조각 획득처 등)은 미보유 쪽에서도 열린다 — 성장 쪽이 한 번도 안 켜졌어도 버튼을 건다
+            _lockedPage = GetComponentInChildren<RbLockedPage>(true);
+            _revealPage = GetComponentInChildren<RbRevealPage>(true);
             _ui.SetActive("SortieCardTemplate", false);
         }
 
@@ -158,7 +163,10 @@ namespace Game.Module.Lobby
         public bool OnBackPressed()
         {
             if (_misc != null && _misc.Back()) return true;
-            if (_growthPage != null && _growthPage.gameObject.activeSelf) { if (!_growthPage.CloseModal()) SelectTab("Host"); return true; }
+            if (_growthPage != null && _growthPage.CloseModal()) return true;
+            if (_revealPage != null && _revealPage.IsOpen) { _revealPage.Done(); return true; }
+            if (_lockedPage != null && _lockedPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
+            if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
             if (_summonPage != null && _summonPage.gameObject.activeSelf && _summonPage.Back()) return true;
             if (_challengePage != null && _challengePage.gameObject.activeSelf && _challengePage.Back()) return true;
             if (_tab != "Battle") { SelectTab("Battle"); return true; }
@@ -520,6 +528,7 @@ namespace Game.Module.Lobby
         public void SelectTab(string tab)
         {
             _tab = tab;
+            SetTabBar(true);
             foreach (var t in new[] { "Shop", "Host", "Battle", "Summon", "Challenge" })
             {
                 var label = _ui.Get<TextMeshProUGUI>($"Tab{t}Label");
@@ -527,6 +536,8 @@ namespace Game.Module.Lobby
             }
             _ui.SetActive("PageBattle", tab == "Battle");
             if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
+            if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);
+            if (_revealPage != null) _revealPage.gameObject.SetActive(false);
             if (_hostPage != null)
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
@@ -584,7 +595,43 @@ namespace Game.Module.Lobby
         {
             if (_growthPage == null || _player == null) return;
             if (_hostPage != null) _hostPage.gameObject.SetActive(false);
+            if (_revealPage != null) _revealPage.gameObject.SetActive(false);
+            var e = _player.GetHost(hostKey);
+            if (e != null && !_player.IsHostOwned(e) && _lockedPage != null) { _growthPage.gameObject.SetActive(false); SetTabBar(false); _lockedPage.Open(_player, hostKey); return; }
+            if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);
+            SetTabBar(true);
             _growthPage.Open(_player, hostKey);
+        }
+
+        /// <summary>새 몸(rank 0) · 6 · 10성 각성 보여주기. 확인하면 그 몸의 성장 화면.</summary>
+        public void ShowReveal(string hostKey, int rank)
+        {
+            if (_revealPage == null) { OpenGrowth(hostKey); return; }
+            if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
+            if (_lockedPage != null) _lockedPage.gameObject.SetActive(false);
+            SetTabBar(false);
+            _revealPage.Show(_player, hostKey, rank);
+        }
+
+        // 미보유 · 보여주기 쪽은 아래 탭 없이 한 화면이다(시안 host-locked · host-new) — 아래 버튼이 탭에 가린다
+        private static readonly string[] TabNodes = { "TabBar", "TabShop", "TabHost", "TabBattle", "TabSummon", "TabChallenge" };
+
+        private void SetTabBar(bool on)
+        {
+            foreach (var n in TabNodes) _ui.SetActive(n, on);
+        }
+
+        /// <summary>조각 획득처 창 — 성장 · 미보유 쪽이 같이 쓴다.</summary>
+        public void ShowShardSources(string hostKey)
+        {
+            if (_growthPage != null) _growthPage.ShowSourcesFor(_player, hostKey);
+        }
+
+        /// <summary>조각 · 정수가 바뀌었다 — 열린 성장 · 미보유 쪽을 다시 칠한다.</summary>
+        public void RefreshHostPages()
+        {
+            if (_growthPage != null && _growthPage.gameObject.activeSelf) _growthPage.Refresh();
+            if (_lockedPage != null) _lockedPage.Refresh();
         }
 
         /// <summary>유령 성장(시안 ghost-growth) — 도감 「성장 ›」 에서 오면 뒤로가 도감으로.</summary>

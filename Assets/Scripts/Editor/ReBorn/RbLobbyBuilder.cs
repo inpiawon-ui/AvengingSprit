@@ -53,6 +53,7 @@ namespace Game.Editor.ReBorn
             RbHostBuilder.WireGrowth(growth.gameObject.AddComponent<RbGrowthPage>());
             host.gameObject.SetActive(false);
             growth.gameObject.SetActive(false);
+            RbHostLockBuilder.Build(rt);   // 미보유 호스트 · 새 몸/각성 보여주기 쪽
             RbSummonBuilder.Build(rt);
             RbShopBuilder.Build(rt);
             RbChallengeBuilder.Build(rt);

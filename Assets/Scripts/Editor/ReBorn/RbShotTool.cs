@@ -79,6 +79,17 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
             (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
             (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
+            (720, 1280, Language.Korean, "host:lock_low", "hostlock_locked_16x9"),
+            (720, 1280, Language.Korean, "host:lockready_low", "hostlock_ready_16x9"),
+            (1080, 2400, Language.Korean, "host:lock_low", "hostlock_locked_20x9"),
+            (768, 1024, Language.Korean, "host:lock_low", "hostlock_locked_4x3"),
+            (720, 1280, Language.English, "host:lock_low", "hostlock_locked_en"),
+            (720, 1280, Language.Korean, "host:reveal", "hostlock_new_16x9"),
+            (720, 1280, Language.Korean, "host:awaken6", "hostlock_awaken6_16x9"),
+            (720, 1280, Language.Korean, "host:awaken10", "hostlock_awaken10_16x9"),
+            (1080, 2400, Language.Korean, "host:reveal", "hostlock_new_20x9"),
+            (768, 1024, Language.Korean, "host:reveal", "hostlock_new_4x3"),
+            (720, 1280, Language.Japanese, "host:reveal", "hostlock_new_ja"),
             (720, 1280, Language.Korean, "growth:sources_low", "growthsrc_sources_16x9"),
             (720, 1280, Language.Korean, "growth:sources_essence_low", "growthsrc_essence_16x9"),
             (768, 1024, Language.Korean, "growth:sources_low", "growthsrc_sources_4x3"),
@@ -368,11 +379,21 @@ namespace Game.Editor.ReBorn
                 return;
             }
             lobby.SelectTab("Host");
-            if (!state.StartsWith("growth:")) return;
             string key = null;
             foreach (var e in player.PlayableHosts)
                 if (e != null && !e.IsGhost && player.IsHostOwned(e) && !PlayerDataService.IsHiddenHost(e.HostKey)) { key = e.HostKey; break; }
             if (key == null) return;
+            // 미보유(조각 12 · 다 모음) · 새 몸 · 6 · 10성 각성 보여주기 — 미보유는 메모리에서만 성급 0 으로 만든다
+            if (state.StartsWith("host:lock"))
+            {
+                SeedHost(player, key, 0, 12);
+                if (state.StartsWith("host:lockready")) SeedHost(player, key, 0, player.MasteryCost(key));
+                lobby.OpenGrowth(key);
+                return;
+            }
+            if (state.StartsWith("host:reveal")) { lobby.ShowReveal(key, 0); return; }
+            if (state.StartsWith("host:awaken")) { lobby.ShowReveal(key, state.Contains("10") ? 10 : 6); return; }
+            if (!state.StartsWith("growth:")) return;
             if (state.EndsWith("low")) SeedLow(player, key);
             lobby.OpenGrowth(key);
             if (state.Contains("scroll") && GameObject.Find("GrwBody") is GameObject body && body.TryGetComponent<ScrollRect>(out var sr))
@@ -391,7 +412,9 @@ namespace Game.Editor.ReBorn
         /// 시험 세이브는 모든 몸이 10성이라 보통 상태(성급 2 · 조각 12/20)를 볼 수 없다 — 메모리에서만 바꾼다.
         /// 저장하지 않는다(캡처 전 세이브 백업 · 끝나면 되돌림).
         /// </summary>
-        private static void SeedLow(IPlayerDataService player, string key)
+        private static void SeedLow(IPlayerDataService player, string key) => SeedHost(player, key, 2, 12);
+
+        private static void SeedHost(IPlayerDataService player, string key, int rank, int shardCount)
         {
             var t = player.GetType();
             var data = t.GetField("_data", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(player);
@@ -400,8 +423,8 @@ namespace Game.Editor.ReBorn
             int i = (int)index.Invoke(player, new object[] { key });
             if (i < 0) return;
             var dt = data.GetType();
-            if (dt.GetField("hostMastery")?.GetValue(data) is int[] mastery && i < mastery.Length) mastery[i] = 2;
-            if (dt.GetField("hostShards")?.GetValue(data) is int[] shards && i < shards.Length) shards[i] = 12;
+            if (dt.GetField("hostMastery")?.GetValue(data) is int[] mastery && i < mastery.Length) mastery[i] = rank;
+            if (dt.GetField("hostShards")?.GetValue(data) is int[] shards && i < shards.Length) shards[i] = shardCount;
         }
 
         /// <summary>판을 거의 세운다(유령이 몇 초 만에 죽어 화면이 바뀐다 — 메모리 freeze-run-before-ingame-check). levelup 은 3택1 을 다시 연다(언어가 바뀌면 카드 글도 다시).</summary>

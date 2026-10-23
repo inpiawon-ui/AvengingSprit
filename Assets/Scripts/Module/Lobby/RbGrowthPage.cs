@@ -56,10 +56,14 @@ namespace Game.Module.Lobby
         private string _key;
         private int _essCount = 1;
 
-        private void Awake()
+        private void Awake() => Init();
+
+        /// <summary>버튼을 건다 — 한 번만. 화면(RbLobbyUI)이 먼저 부른다(이 쪽이 꺼져 있어도 창은 열린다).</summary>
+        public void Init()
         {
+            if (_ui != null) return;
             _ui = new UIBinder(transform);
-            _shell = GetComponentInParent<RbLobbyUI>();
+            _shell = GetComponentInParent<RbLobbyUI>(true);
             _ui.OnClick("GrwBack", () => _shell.SelectTab("Host"));
             _ui.OnClick("GrwHelp", () => Toast(Localize.FromTable("ui.rb.growth.help", "능력치는 골드로 · 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한 · 스킬 위력이 함께 올라요.")));
             _ui.OnClick("GrwSkillUlt", () => ShowSkill(0));
@@ -334,6 +338,9 @@ namespace Game.Module.Lobby
             _player.SaveAsync().Forget();   // fire-and-forget: 성급을 올리자마자 남긴다
             Refresh();
             _shell.RefreshHeader();
+            int now = _player.GetMastery(_key);
+            // 각성이 시작되는 6성 · 다 각성한 10성은 큰 화면으로 보여 준다(시안 awaken-6 · awaken-10)
+            if (now == RbRevealPage.AwakenStart || now == RbRevealPage.AwakenFull) { _shell.ShowReveal(_key, now); return; }
             ShowStarDone();
         }
 
@@ -406,6 +413,15 @@ namespace Game.Module.Lobby
 
         private string HostName => _player.GetHost(_key) is HostEntry h ? h.DisplayName : _key;
 
+        /// <summary>미보유 쪽에서 — 그 몸의 조각 획득처.</summary>
+        public void ShowSourcesFor(IPlayerDataService player, string hostKey)
+        {
+            Init();
+            _player = player;
+            _key = hostKey;
+            ShowSources();
+        }
+
         private void ShowSources()
         {
             if (_player == null) return;
@@ -466,7 +482,7 @@ namespace Game.Module.Lobby
             GameSound.Cue("run.shop");
             _player.SaveAsync().Forget();   // fire-and-forget: 바꾸자마자 남긴다
             _modals.SetActive("GrwEssence", false);
-            Refresh();
+            _shell.RefreshHostPages();
             _shell.RefreshHeader();
             if (_modals.Find("GrwSources") is Transform s && s.gameObject.activeSelf) ShowSources();
         }

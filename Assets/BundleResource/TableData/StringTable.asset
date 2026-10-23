@@ -10125,3 +10125,84 @@ MonoBehaviour:
     _en: Can't trade
     _zhHant: "\u7121\u6CD5\u514C\u63DB"
     _zhHans: "\u65E0\u6CD5\u5151\u6362"
+  - _key: ui.rb.lock.title
+    _ko: "\uBBF8\uBCF4\uC720 \uD638\uC2A4\uD2B8"
+    _ja: "\u672A\u6240\u6301\u30DB\u30B9\u30C8"
+    _en: Locked Host
+    _zhHant: "\u672A\u64C1\u6709\u5BBF\u4E3B"
+    _zhHans: "\u672A\u62E5\u6709\u5BBF\u4E3B"
+  - _key: ui.rb.lock.need
+    _ko: "\uD574\uAE08 \uD544\uC694"
+    _ja: "\u89E3\u653E\u304C\u5FC5\u8981"
+    _en: Locked
+    _zhHant: "\u9700\u8981\u89E3\u9396"
+    _zhHans: "\u9700\u8981\u89E3\u9501"
+  - _key: ui.rb.lock.note
+    _ko: "\uC870\uAC01\uC744 \uBAA8\uC544 \uD574\uAE08\uD558\uBA74\n\uC2A4\uD0AC
+      \xB7 \uB2A5\uB825\uCE58 \uAC15\uD654\uAC00 \uC5F4\uB9BD\uB2C8\uB2E4"
+    _ja: "\u304B\u3051\u3089\u3092\u96C6\u3081\u3066\u89E3\u653E\u3059\u308B\u3068\n\u30B9\u30AD\u30EB\u30FB\u80FD\u529B\u5F37\u5316\u304C\u958B\u304D\u307E\u3059"
+    _en: 'Collect shards to unlock
+
+      skills and stat upgrades'
+    _zhHant: "\u6536\u96C6\u788E\u7247\u89E3\u9396\u5F8C\n\u958B\u653E\u6280\u80FD\u30FB\u80FD\u529B\u5F37\u5316"
+    _zhHans: "\u6536\u96C6\u788E\u7247\u89E3\u9501\u540E\n\u5F00\u653E\u6280\u80FD\u30FB\u5C5E\u6027\u5F3A\u5316"
+  - _key: ui.rb.lock.sources
+    _ko: "\uC5BB\uB294 \uACF3: \uC18C\uD658 \xB7 \uB9DD\uB839\uC758 \uD0D1 \xB7 \uB9DD\uB839\uC758
+      \uBC24"
+    _ja: "\u5165\u624B: \u53EC\u559A\u30FB\u4EA1\u970A\u306E\u5854\u30FB\u4EA1\u970A\u306E\u591C"
+    _en: "From: Summon \xB7 Tower \xB7 Night"
+    _zhHant: "\u7372\u53D6: \u53EC\u559A\u30FB\u4EA1\u9748\u4E4B\u5854\u30FB\u4EA1\u9748\u4E4B\u591C"
+    _zhHans: "\u83B7\u53D6: \u53EC\u5524\u30FB\u4EA1\u7075\u4E4B\u5854\u30FB\u4EA1\u7075\u4E4B\u591C"
+  - _key: ui.rb.lock.shards
+    _ko: "\uC870\uAC01 {0} /{1}"
+    _ja: "\u304B\u3051\u3089 {0} /{1}"
+    _en: Shards {0} /{1}
+    _zhHant: "\u788E\u7247 {0} /{1}"
+    _zhHans: "\u788E\u7247 {0} /{1}"
+  - _key: ui.rb.lock.unlock
+    _ko: "\uD574\uAE08"
+    _ja: "\u89E3\u653E"
+    _en: Unlock
+    _zhHant: "\u89E3\u9396"
+    _zhHans: "\u89E3\u9501"
+  - _key: ui.rb.lock.short
+    _ko: "\uC870\uAC01 {0}\uAC1C \uBD80\uC871"
+    _ja: "\u304B\u3051\u3089 {0} \u4E0D\u8DB3"
+    _en: '{0} shards short'
+    _zhHant: "\u788E\u7247\u4E0D\u8DB3 {0}"
+    _zhHans: "\u788E\u7247\u4E0D\u8DB3 {0}"
+  - _key: ui.rb.lock.help
+    _ko: "\uC870\uAC01\uC744 \uBAA8\uC73C\uBA74 \uADF8 \uBAB8\uC744 \uD574\uAE08\uD574\uC694.\n\uD574\uAE08\uD558\uBA74
+      \uCD9C\uC804 \xB7 \uB2A5\uB825\uCE58 \uAC15\uD654 \xB7 \uC131\uAE09 \uAC15\uD654\uAC00
+      \uC5F4\uB824\uC694."
+    _ja: "\u304B\u3051\u3089\u3092\u96C6\u3081\u308B\u3068\u305D\u306E\u4F53\u3092\u89E3\u653E\u3067\u304D\u307E\u3059\u3002\n\u89E3\u653E\u3059\u308B\u3068\u51FA\u6483\u30FB\u80FD\u529B\u5F37\u5316\u30FB\u661F\u7D1A\u5F37\u5316\u304C\u958B\u304D\u307E\u3059\u3002"
+    _en: 'Collect shards to unlock this host.
+
+      Unlocking opens runs, stat and
+      star upgrades.'
+    _zhHant: "\u6536\u96C6\u788E\u7247\u5373\u53EF\u89E3\u9396\u6B64\u5BBF\u4E3B\u3002\n\u89E3\u9396\u5F8C\u958B\u653E\u51FA\u6230\u30FB\u80FD\u529B\u5F37\u5316\u30FB\u661F\u7D1A\u5F37\u5316\u3002"
+    _zhHans: "\u6536\u96C6\u788E\u7247\u5373\u53EF\u89E3\u9501\u6B64\u5BBF\u4E3B\u3002\n\u89E3\u9501\u540E\u5F00\u653E\u51FA\u6218\u30FB\u5C5E\u6027\u5F3A\u5316\u30FB\u661F\u7EA7\u5F3A\u5316\u3002"
+  - _key: ui.rb.reveal.new
+    _ko: "\uC0C8 \uBAB8!"
+    _ja: "\u65B0\u3057\u3044\u4F53\uFF01"
+    _en: New Host!
+    _zhHant: "\u65B0\u5BBF\u4E3B\uFF01"
+    _zhHans: "\u65B0\u5BBF\u4E3B\uFF01"
+  - _key: ui.rb.reveal.awaken_title
+    _ko: "\uAC01\uC131"
+    _ja: "\u899A\u9192"
+    _en: Awaken
+    _zhHant: "\u89BA\u9192"
+    _zhHans: "\u89C9\u9192"
+  - _key: ui.rb.reveal.awaken
+    _ko: "{0}\uC131 \uAC01\uC131"
+    _ja: "{0}\u661F \u899A\u9192"
+    _en: "{0}\u2605 Awakened"
+    _zhHant: "{0}\u661F \u89BA\u9192"
+    _zhHans: "{0}\u661F \u89C9\u9192"
+  - _key: ui.rb.reveal.awaken_full
+    _ko: "{0}\uC131 \uAC01\uC131 \uC644\uC131"
+    _ja: "{0}\u661F \u899A\u9192\u5B8C\u4E86"
+    _en: "{0}\u2605 Fully Awakened"
+    _zhHant: "{0}\u661F \u89BA\u9192\u5B8C\u6210"
+    _zhHans: "{0}\u661F \u89C9\u9192\u5B8C\u6210"
