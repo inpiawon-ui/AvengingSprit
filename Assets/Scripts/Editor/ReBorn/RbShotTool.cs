@@ -71,6 +71,14 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "growth:", "growth_ja"),
             (720, 1280, Language.English, "growth:", "growth_en"),
             (720, 1280, Language.ChineseSimplified, "growth:", "growth_zhs"),
+            (720, 1280, Language.Korean, "growth:ask_low", "growthpop_ask_16x9"),
+            (720, 1280, Language.Korean, "growth:done_low", "growthpop_done_16x9"),
+            (720, 1280, Language.Korean, "growth:skill", "growthpop_skill_16x9"),
+            (1080, 2400, Language.Korean, "growth:ask_low", "growthpop_ask_20x9"),
+            (768, 1024, Language.Korean, "growth:skill", "growthpop_skill_4x3"),
+            (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
+            (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
+            (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
         };
 
         /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
@@ -364,6 +372,12 @@ namespace Game.Editor.ReBorn
             lobby.OpenGrowth(key);
             if (state.Contains("scroll") && GameObject.Find("GrwBody") is GameObject body && body.TryGetComponent<ScrollRect>(out var sr))
                 sr.verticalNormalizedPosition = 0f;
+            // 창 — 성급 강화 확인(2 → 3 · 조각 20 · 골드 1,200 예시값) · 성급 올랐어요 · 스킬 정보(필살기)
+            var growthPage = Object.FindAnyObjectByType<RbGrowthPage>();
+            const System.Reflection.BindingFlags Private = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            if (state.Contains("ask")) typeof(RbGrowthPage).GetMethod("ShowStarAsk", Private)?.Invoke(growthPage, new object[] { 2, 20, 1200 });
+            if (state.Contains("done")) typeof(RbGrowthPage).GetMethod("ShowStarDone", Private)?.Invoke(growthPage, null);
+            if (state.Contains("skill")) typeof(RbGrowthPage).GetMethod("ShowSkill", Private)?.Invoke(growthPage, new object[] { 0 });
         }
 
         /// <summary>

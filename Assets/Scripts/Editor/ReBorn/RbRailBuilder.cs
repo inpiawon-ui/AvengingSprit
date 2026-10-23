@@ -267,11 +267,11 @@ namespace Game.Editor.ReBorn
         }
 
         /// <summary>가운데 창 — 딤 + 720×1280 판 + 모달 판 + 제목판 + 닫기.</summary>
-        private static RectTransform Modal(RectTransform root, string name, string titleKey, string korean, float x0, float y0, float x1, float y1, out RectTransform c)
+        internal static RectTransform Modal(RectTransform root, string name, string titleKey, string korean, float x0, float y0, float x1, float y1, out RectTransform c)
         {
             var page = Stretch(Node(root, name));
             var dim = page.gameObject.AddComponent<Image>();
-            dim.color = new Color(0.02f, 0.03f, 0.06f, 0.8f);
+            dim.color = new Color(0.02f, 0.03f, 0.06f, 0.92f);   // 0.8 은 선형 색 공간에서 절반쯤만 어두워졌다(흰 글자 255 → 124)
             dim.raycastTarget = true;
             c = Node(page, name + "Content");
             c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
@@ -291,7 +291,7 @@ namespace Game.Editor.ReBorn
         }
 
         /// <summary>판(720×1280) 안 위 왼쪽 기준 상자(게임 px).</summary>
-        private static RectTransform Corner(RectTransform rt, float x0, float y0, float x1, float y1)
+        internal static RectTransform Corner(RectTransform rt, float x0, float y0, float x1, float y1)
         {
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);
@@ -300,7 +300,7 @@ namespace Game.Editor.ReBorn
             return rt;
         }
 
-        private static RectTransform Inside(RectTransform rt, float cx, float cy, float w, float h)
+        internal static RectTransform Inside(RectTransform rt, float cx, float cy, float w, float h)
         {
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);

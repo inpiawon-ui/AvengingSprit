@@ -43,7 +43,11 @@ namespace Game.Module.Lobby
         private const float ColPitch = (550f - 25f) * 2f / 3f, RowPitch = 162.6f * 2f / 3f;
         private const string NextColor = "#4AE08A", ShortColor = "#FF5A5A";
 
+        // 창은 위 막대 · 아래 탭까지 딤으로 덮어야 해서 이 쪽이 아니라 화면 맨 뒤(RbLobbyUI 바로 아래)에 있다
+        private static readonly string[] Modals = { "GrwSkillInfo", "GrwStarDone", "GrwStarAsk" };
+
         private UIBinder _ui;
+        private UIBinder _modals;
         private IPlayerDataService _player;
         private RbLobbyUI _shell;
         private readonly List<Transform> _tiles = new();
@@ -60,6 +64,13 @@ namespace Game.Module.Lobby
             _ui.OnClick("GrwSkillPas", () => ShowSkill(2));
             _ui.OnClick("GrwStarWhere", () => Toast(Localize.FromTable("ui.rb.growth.shard_where_body", "조각은 랜덤 출전 클리어 · 소환 · 상점에서 얻어요.")));
             _ui.OnClick("GrwStarUp", StarUp);
+            _modals = new UIBinder(_shell.transform);
+            _modals.OnClick("GrwStarAskClose", () => _modals.SetActive("GrwStarAsk", false));
+            _modals.OnClick("GrwStarAskNo", () => _modals.SetActive("GrwStarAsk", false));
+            _modals.OnClick("GrwStarAskYes", ConfirmStarUp);
+            _modals.OnClick("GrwStarDoneClose", () => _modals.SetActive("GrwStarDone", false));
+            _modals.OnClick("GrwStarDoneOk", () => _modals.SetActive("GrwStarDone", false));
+            _modals.OnClick("GrwSkillInfoClose", () => _modals.SetActive("GrwSkillInfo", false));
             BuildTiles();
         }
 
@@ -285,31 +296,104 @@ namespace Game.Module.Lobby
             // 모자라면 얼마나 모자란지 숫자로 — 「부족합니다」 만으로는 몇 판을 더 돌아야 하는지 모른다
             if (shards < need) { Toast(Localize.Format("ui.starup.shard_short", shards, need, need - shards)); return; }
             if (_player.Gold < gold) { Toast(Localize.Format("ui.starup.gold_short", _player.Gold, gold, gold - _player.Gold)); return; }
-            string ask = string.Format(Localize.FromTable("ui.rb.growth.starup_ask", "{0}성 → {1}성\n조각 {2} · 골드 {3:N0} 을 써요"), m, m + 1, need, gold);
-            SystemPopup.Show(ask, ConfirmStarUp, Localize.FromTable("ui.rb.growth.starup", "성급 올리기"), Localize.Get("ui.common.cancel"));
+            ShowStarAsk(m, need, gold);
+        }
+
+        private void ShowStarAsk(int m, int need, int gold)
+        {
+            var host = _player.GetHost(_key);
+            string name = host != null ? host.DisplayName : _key;
+            SetFace("GrwStarAskFace");
+            SetFace("GrwStarAskShardFace");
+            _modals.SetText("GrwStarAskLine", string.Format(Localize.FromTable("ui.rb.growth.starup_line", "{0} 성급 {1} → {2}"), name, m, m + 1));
+            _modals.SetText("GrwStarAskShardCount", need.ToString());
+            _modals.SetText("GrwStarAskShardName", string.Format(Localize.FromTable("ui.rb.growth.shard_name", "{0} 조각"), name));
+            _modals.SetText("GrwStarAskGoldCount", gold.ToString("N0"));
+            _modals.SetText("GrwStarAskGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
+            _modals.SetActive("GrwStarAsk", true);
         }
 
         private void ConfirmStarUp()
         {
+            _modals.SetActive("GrwStarAsk", false);
             if (!_player.TryStarUp(_key)) return;
             GameSound.Cue("run.card");
             _player.SaveAsync().Forget();   // fire-and-forget: 성급을 올리자마자 남긴다
-            Toast(Localize.Get("ui.starup.done"));
             Refresh();
             _shell.RefreshHeader();
+            ShowStarDone();
+        }
+
+        private void ShowStarDone()
+        {
+            int m = _player.GetMastery(_key);
+            SetFace("GrwStarDoneFace");
+            RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _starOn, _starOff, _starAwaken);
+            _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.rank_now", "성급 {0}"), m));
+            _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
+            _modals.SetActive("GrwStarDone", true);
         }
 
         private void ShowSkill(int slot)
         {
             var e = _player != null ? _player.GetHost(_key) : null;
             if (e == null) return;
-            string body = slot switch
+            var art = ArtOf(e.HostKey);
+            string kind, name, desc;
+            Sprite icon;
+            switch (slot)
             {
-                0 => $"{Localize.Get($"ult.{e.HostKey}.name")}\n{Localize.Get($"ult.{e.HostKey}.desc")}",
-                1 => _player.GetActiveSkill(e.ActiveSkillKey) is ActiveSkillEntry a ? $"{a.DisplayName}\n{a.DisplayDescription}" : string.Empty,
-                _ => _player.GetPassiveSkill(e.PassiveSkillKey) is PassiveSkillEntry p ? $"{p.DisplayName}\n{p.DisplayDescription}" : string.Empty,
-            };
-            if (body.Length > 0) Toast(body);
+                case 0:
+                    kind = Localize.FromTable("ui.rb.growth.ult", "필살기");
+                    name = Localize.Get($"ult.{e.HostKey}.name");
+                    desc = Localize.Get($"ult.{e.HostKey}.desc");
+                    icon = art.Ult;
+                    break;
+                case 1:
+                    if (_player.GetActiveSkill(e.ActiveSkillKey) is not ActiveSkillEntry a) return;
+                    kind = Localize.FromTable("ui.rb.growth.act", "액티브");
+                    name = string.IsNullOrEmpty(a.DisplayName) ? a.NameEn : a.DisplayName;
+                    desc = a.DisplayDescription;
+                    icon = art.Active;
+                    break;
+                default:
+                    if (_player.GetPassiveSkill(e.PassiveSkillKey) is not PassiveSkillEntry p) return;
+                    kind = Localize.FromTable("ui.rb.growth.pas", "패시브");
+                    name = p.DisplayName;
+                    desc = p.DisplayDescription;
+                    icon = art.Passive;
+                    break;
+            }
+            if (_modals.Get<Image>("GrwSkillInfoIcon") is Image img && icon != null) img.sprite = icon;
+            _modals.SetText("GrwSkillInfoKind", kind);
+            _modals.SetText("GrwSkillInfoName", name);
+            _modals.SetText("GrwSkillInfoDesc", desc);
+            _modals.SetActive("GrwSkillInfo", true);
+        }
+
+        /// <summary>탭을 옮길 때 — 창은 이 쪽 밖(화면 맨 뒤)에 있어 쪽을 꺼도 안 닫힌다.</summary>
+        public void CloseModals()
+        {
+            if (_modals == null) return;
+            foreach (var n in Modals) _modals.SetActive(n, false);
+        }
+
+        /// <summary>뒤로 — 열린 창이 있으면 그것만 닫는다.</summary>
+        public bool CloseModal()
+        {
+            if (_modals == null) return false;
+            foreach (var n in Modals)
+            {
+                if (_modals.Find(n) is Transform t && t.gameObject.activeSelf) { t.gameObject.SetActive(false); return true; }
+            }
+            return false;
+        }
+
+        private void SetFace(string node)
+        {
+            if (_modals.Get<Image>(node) is not Image img) return;
+            var s = _shell.Face(_key);
+            if (s != null) img.sprite = s;
         }
 
         // ── 도구 ────────────────────────────────────────────────

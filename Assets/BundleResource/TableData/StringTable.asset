@@ -9908,3 +9908,57 @@ MonoBehaviour:
     _en: Start
     _zhHant: "\u958B\u59CB\u904A\u6232"
     _zhHans: "\u5F00\u59CB\u6E38\u620F"
+  - _key: ui.rb.growth.starup_title
+    _ko: "\uC131\uAE09 \uAC15\uD654"
+    _ja: "\u661F\u7D1A\u5F37\u5316"
+    _en: Star Up
+    _zhHant: "\u661F\u7D1A\u5F37\u5316"
+    _zhHans: "\u661F\u7EA7\u5F3A\u5316"
+  - _key: ui.rb.growth.starup_done
+    _ko: "\uC131\uAE09\uC774 \uC62C\uB790\uC5B4\uC694"
+    _ja: "\u661F\u7D1A\u30A2\u30C3\u30D7\uFF01"
+    _en: Star Rank Up!
+    _zhHant: "\u661F\u7D1A\u63D0\u5347\u4E86"
+    _zhHans: "\u661F\u7EA7\u63D0\u5347\u4E86"
+  - _key: ui.rb.growth.skill_title
+    _ko: "\uC2A4\uD0AC \uC815\uBCF4"
+    _ja: "\u30B9\u30AD\u30EB\u60C5\u5831"
+    _en: Skill Info
+    _zhHant: "\u6280\u80FD\u8CC7\u8A0A"
+    _zhHans: "\u6280\u80FD\u4FE1\u606F"
+  - _key: ui.rb.growth.cap_up
+    _ko: "\uB2A5\uB825\uCE58 \uAC15\uD654 \uC0C1\uD55C \uC0C1\uC2B9"
+    _ja: "\u80FD\u529B\u5F37\u5316\u306E\u4E0A\u9650\u30A2\u30C3\u30D7"
+    _en: Stat upgrade cap raised
+    _zhHant: "\u80FD\u529B\u5F37\u5316\u4E0A\u9650\u63D0\u5347"
+    _zhHans: "\u5C5E\u6027\u5F3A\u5316\u4E0A\u9650\u63D0\u5347"
+  - _key: ui.rb.growth.power_up
+    _ko: "\uC804\uD22C\uB825 \uC99D\uAC00"
+    _ja: "\u6226\u95D8\u529B\u30A2\u30C3\u30D7"
+    _en: Power up
+    _zhHant: "\u6230\u9B25\u529B\u63D0\u5347"
+    _zhHans: "\u6218\u6597\u529B\u63D0\u5347"
+  - _key: ui.rb.growth.starup_line
+    _ko: "{0} \uC131\uAE09 {1} \u2192 {2}"
+    _ja: "{0} \u661F\u7D1A {1} \u2192 {2}"
+    _en: "{0} Star {1} \u2192 {2}"
+    _zhHant: "{0} \u661F\u7D1A {1} \u2192 {2}"
+    _zhHans: "{0} \u661F\u7EA7 {1} \u2192 {2}"
+  - _key: ui.rb.growth.shard_name
+    _ko: "{0} \uC870\uAC01"
+    _ja: "{0}\u306E\u304B\u3051\u3089"
+    _en: '{0} Shards'
+    _zhHant: "{0} \u788E\u7247"
+    _zhHans: "{0} \u788E\u7247"
+  - _key: ui.rb.growth.star_gain
+    _ko: "\uCCB4\uB825\xB7\uACF5\uACA9 +7%"
+    _ja: "HP\u30FB\u653B\u6483 +7%"
+    _en: "HP \xB7 ATK +7%"
+    _zhHant: "\u9AD4\u529B\xB7\u653B\u64CA +7%"
+    _zhHans: "\u4F53\u529B\xB7\u653B\u51FB +7%"
+  - _key: ui.rb.growth.rank_now
+    _ko: "\uC131\uAE09 {0}"
+    _ja: "\u661F\u7D1A {0}"
+    _en: Star {0}
+    _zhHant: "\u661F\u7D1A {0}"
+    _zhHans: "\u661F\u7EA7 {0}"

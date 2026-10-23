@@ -158,7 +158,7 @@ namespace Game.Module.Lobby
         public bool OnBackPressed()
         {
             if (_misc != null && _misc.Back()) return true;
-            if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
+            if (_growthPage != null && _growthPage.gameObject.activeSelf) { if (!_growthPage.CloseModal()) SelectTab("Host"); return true; }
             if (_summonPage != null && _summonPage.gameObject.activeSelf && _summonPage.Back()) return true;
             if (_challengePage != null && _challengePage.gameObject.activeSelf && _challengePage.Back()) return true;
             if (_tab != "Battle") { SelectTab("Battle"); return true; }
@@ -330,7 +330,7 @@ namespace Game.Module.Lobby
             }
         }
 
-        private Sprite Face(string key) => _faces != null && key != null ? _faces.GetSprite($"face_{key}") : null;
+        public Sprite Face(string key) => _faces != null && key != null ? _faces.GetSprite($"face_{key}") : null;
 
         private static bool IsToday(string hostKey)
             => !string.IsNullOrEmpty(hostKey) && CoreModule.TryGet<ITodayHostService>(out var t) && t.IsToday(hostKey);
@@ -526,7 +526,7 @@ namespace Game.Module.Lobby
                 if (label != null) label.color = t == tab ? TabOn : TabOff;
             }
             _ui.SetActive("PageBattle", tab == "Battle");
-            if (_growthPage != null) _growthPage.gameObject.SetActive(false);
+            if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }
             if (_hostPage != null)
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);

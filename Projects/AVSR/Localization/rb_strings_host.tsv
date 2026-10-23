@@ -33,3 +33,12 @@ ui.rb.growth.starup_ask	{0}성 → {1}성\n조각 {2} · 골드 {3:N0} 을 써�
 ui.rb.growth.rank_max	성급 {0} · 최대	星級 {0}・最大	Stars {0} · Max	星級 {0} · 最高	星级 {0} · 最高
 ui.rb.growth.max_info	남는 조각은 영혼 정수로 바뀌어요	余ったかけらは魂のエッセンスになります	Extra shards turn into Soul Essence	多餘碎片會轉為靈魂精華	多余碎片会转为灵魂精华
 ui.rb.growth.max_sub	최대 성급	最大星級	Max stars	最高星級	最高星级
+ui.rb.growth.starup_title	성급 강화	星級強化	Star Up	星級強化	星级强化
+ui.rb.growth.starup_done	성급이 올랐어요	星級アップ！	Star Rank Up!	星級提升了	星级提升了
+ui.rb.growth.skill_title	스킬 정보	スキル情報	Skill Info	技能資訊	技能信息
+ui.rb.growth.cap_up	능력치 강화 상한 상승	能力強化の上限アップ	Stat upgrade cap raised	能力強化上限提升	属性强化上限提升
+ui.rb.growth.power_up	전투력 증가	戦闘力アップ	Power up	戰鬥力提升	战斗力提升
+ui.rb.growth.starup_line	{0} 성급 {1} → {2}	{0} 星級 {1} → {2}	{0} Star {1} → {2}	{0} 星級 {1} → {2}	{0} 星级 {1} → {2}
+ui.rb.growth.shard_name	{0} 조각	{0}のかけら	{0} Shards	{0} 碎片	{0} 碎片
+ui.rb.growth.star_gain	체력·공격 +7%	HP・攻撃 +7%	HP · ATK +7%	體力·攻擊 +7%	体力·攻击 +7%
+ui.rb.growth.rank_now	성급 {0}	星級 {0}	Star {0}	星級 {0}	星级 {0}
