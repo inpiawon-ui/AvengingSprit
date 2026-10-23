@@ -39,13 +39,43 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.ChineseSimplified, "growth:", "growth_zhs"),
         };
 
+        /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
+        private static readonly (int w, int h, Language lang, string state, string name)[] InGameShots =
+        {
+            (720, 1280, Language.Korean, "ingame", "fight_16x9"),
+            (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
+            (768, 1024, Language.Korean, "ingame", "fight_4x3"),
+            (720, 1280, Language.Korean, "ingame:levelup", "levelup_16x9"),
+            (720, 1280, Language.Japanese, "ingame:levelup", "levelup_ja"),
+            (720, 1280, Language.English, "ingame:levelup", "levelup_en"),
+            (1080, 2400, Language.Korean, "ingame:levelup", "levelup_20x9"),
+        };
+
+        private static (int w, int h, Language lang, string state, string name)[] Current
+            => SessionState.GetInt(Key + ".set", 0) == 1 ? InGameShots : Shots;
+
         private static int _wait;
         private static int _prepared = -1;
+        private static bool _sortie;
 
         static RbShotTool() { EditorApplication.update += Tick; }
 
+        [MenuItem("Tools/Game/RE:BORN 화면/플레이 캡처 — 인게임")]
+        private static void BeginInGame()
+        {
+            SessionState.SetInt(Key + ".set", 1);
+            _sortie = false;
+            Start();
+        }
+
         [MenuItem("Tools/Game/RE:BORN 화면/플레이 캡처")]
         private static void Begin()
+        {
+            SessionState.SetInt(Key + ".set", 0);
+            Start();
+        }
+
+        private static void Start()
         {
             SessionState.SetInt(Key, 1);
             _prepared = -1;
@@ -78,8 +108,26 @@ namespace Game.Editor.ReBorn
 
         private static void Step(int step)
         {
+            var shots = Current;
+            bool ingame = shots == InGameShots;
             var lobby = Object.FindAnyObjectByType<RbLobbyUI>();
-            if (lobby == null || GameObject.Find("[LoadingView]") != null)
+            var battleUi = ingame ? Object.FindAnyObjectByType<Game.Module.InGame.InGameMainUI>() : null;
+            if (ingame && battleUi == null)
+            {
+                // 아직 로비 — 출전을 한 번 누르고 판이 설 때까지 기다린다
+                if (lobby != null && !_sortie && CoreModule.TryGet<IPlayerDataService>(out var p0) && p0.IsReady)
+                {
+                    lobby.SelectTab("Battle");
+                    _sortie = Click("SortieButton");
+                    _wait = 120;
+                    return;
+                }
+                if (Click("SkipButton") || Click("TouchArea")) _wait = 30; else _wait = 20;
+                return;
+            }
+            if (ingame && (GameObject.Find("BootCover") != null || battleUi.GetComponent<Game.Module.InGame.BattleDirector>() == null))
+            { _wait = 30; return; }
+            if (!ingame && (lobby == null || GameObject.Find("[LoadingView]") != null))
             {
                 if (Click("SkipButton") || Click("TouchArea")) _wait = 30; else _wait = 10;
                 return;
@@ -87,9 +135,10 @@ namespace Game.Editor.ReBorn
             if (!CoreModule.TryGet<IPlayerDataService>(out var player) || !player.IsReady) { _wait = 30; return; }
 
             int shot = step - 1;
-            if (shot >= Shots.Length)
+            if (shot >= shots.Length)
             {
                 SessionState.SetInt(Key, 0);
+                Time.timeScale = 1f;
                 LowMode(false);
                 PlayerPrefs.SetInt("game.language", 0);   // PD 에디터 언어는 한국어(메모리 restore-language-after-recording)
                 PlayerPrefs.Save();
@@ -97,13 +146,14 @@ namespace Game.Editor.ReBorn
                 EditorApplication.ExitPlaymode();
                 return;
             }
-            var s = Shots[shot];
+            var s = shots[shot];
             if (Screen.width != s.w || Screen.height != s.h) { SetSize(s.w, s.h); _wait = 150; return; }
             if (_prepared < shot)
             {
                 _prepared = shot;
                 if (CoreModule.TryGet<ILanguageService>(out var lang)) lang.SetLanguage(s.lang);
-                Show(lobby, player, s.state);
+                if (ingame) ShowInGame(battleUi, s.state);
+                else Show(lobby, player, s.state);
                 _wait = 90;
                 return;
             }
@@ -157,6 +207,17 @@ namespace Game.Editor.ReBorn
             var dt = data.GetType();
             if (dt.GetField("hostMastery")?.GetValue(data) is int[] mastery && i < mastery.Length) mastery[i] = 2;
             if (dt.GetField("hostShards")?.GetValue(data) is int[] shards && i < shards.Length) shards[i] = 12;
+        }
+
+        /// <summary>판을 거의 세운다(유령이 몇 초 만에 죽어 화면이 바뀐다 — 메모리 freeze-run-before-ingame-check). levelup 은 3택1 을 다시 연다(언어가 바뀌면 카드 글도 다시).</summary>
+        private static void ShowInGame(Game.Module.InGame.InGameMainUI ui, string state)
+        {
+            Time.timeScale = 0.05f;
+            if (state != "ingame:levelup") return;
+            var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+            const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            typeof(Game.Module.InGame.BattleDirector).GetField("_awaitingBuff", F)?.SetValue(battle, false);
+            typeof(Game.Module.InGame.BattleDirector).GetMethod("OfferBuff", F)?.Invoke(battle, new object[] { Game.Character.CardRarity.Common });
         }
 
         private static bool Click(string name)

@@ -1411,3 +1411,4 @@ ui.rb.growth.starup_ask	{0}성 → {1}성\n조각 {2} · 골드 {3:N0} 을 써�
 ui.rb.growth.rank_max	성급 {0} · 최대	星級 {0}・最大	Stars {0} · Max	星級 {0} · 最高	星级 {0} · 最高
 ui.rb.growth.max_info	남는 조각은 영혼 정수로 바뀌어요	余ったかけらは魂のエッセンスになります	Extra shards turn into Soul Essence	多餘碎片會轉為靈魂精華	多余碎片会转为灵魂精华
 ui.rb.growth.max_sub	최대 성급	最大星級	Max stars	最高星級	最高星级
+ui.rb.levelup.hint	카드를 골라 주세요	カードを選んでください	Pick a card	請選擇一張卡片	请选择一张卡片

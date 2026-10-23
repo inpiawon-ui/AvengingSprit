@@ -9142,3 +9142,9 @@ MonoBehaviour:
     _en: Max stars
     _zhHant: "\u6700\u9AD8\u661F\u7D1A"
     _zhHans: "\u6700\u9AD8\u661F\u7EA7"
+  - _key: ui.rb.levelup.hint
+    _ko: "\uCE74\uB4DC\uB97C \uACE8\uB77C \uC8FC\uC138\uC694"
+    _ja: "\u30AB\u30FC\u30C9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
+    _en: Pick a card
+    _zhHant: "\u8ACB\u9078\u64C7\u4E00\u5F35\u5361\u7247"
+    _zhHans: "\u8BF7\u9009\u62E9\u4E00\u5F20\u5361\u7247"

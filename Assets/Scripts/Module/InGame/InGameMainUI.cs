@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -52,6 +52,13 @@ namespace Game.Module.InGame
         // ⚠ 몸이 없을 때는 «잠김»이 아니라 «비움»이다(PD 2026-10-04). 자물쇠는 숙련도 0 봉인에만 쓴다.
         [SerializeField] private Sprite _skillFrame;
         [SerializeField] private Sprite _skillFrameEmpty;
+
+        // RE:BORN UI 리뉴얼(2026-10-23) — 새 HUD 프리팹(RbInGameMainUI, 빌더 `RbInGameBuilder`)이면 켠다. 옛 프리팹은 꺼진 채 그대로 돈다.
+        // 새 판은 막대 폭이 달라 폭을 프리팹에서 잰다 · 판 레벨 경험치 막대 · 「1-07」 · 레벨업 카드 판(키트 rb_card_*).
+        [SerializeField] private bool _reborn;
+        /// <summary>레벨업 카드 판 — `CardRarity` 순서(Common · Rare · Epic · Legendary).</summary>
+        [SerializeField] private Sprite[] _rbCardPanels = Array.Empty<Sprite>();
+        private float _ghostBarWidth = GhostBarWidth, _hostBarWidth = HostBarWidth, _bossBarWidth = BossBarWidth, _expBarWidth;
 
         private RectTransform _dpad;
         private RectTransform _knob;
@@ -163,6 +170,7 @@ namespace Game.Module.InGame
                 _possessCooldown.fillAmount = 0f;
             }
 
+            MeasureBars();
             HookDPad();
             CacheGoldFx();
             _ui.OnClick("PossessButton", () => _battle?.TryPossess());
@@ -179,7 +187,8 @@ namespace Game.Module.InGame
             var dim = _ui.Get<Image>("BuffChoicePanel");
             if (dim != null)
             {
-                dim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
+                // RE:BORN 판은 시안처럼 거의 검게 — 제목 · 카드가 위 HUD 글자와 겹쳐 읽히지 않게
+                dim.color = new Color(0.02f, 0.03f, 0.06f, _reborn ? 0.95f : 0.86f);
                 dim.raycastTarget = true;
             }
 
@@ -238,6 +247,18 @@ namespace Game.Module.InGame
             if (leave != null) leave.color = new Color(0.941f, 0.706f, 0.157f, 1f);
             _ui.SetActive("ShopPanel", false);
         }
+
+        /// <summary>새 판(RE:BORN)은 막대 홈 폭이 프리팹마다 다르다 — 코드 상수 대신 `*Bg` 폭을 잰다.</summary>
+        private void MeasureBars()
+        {
+            if (!_reborn) return;
+            _ghostBarWidth = WidthOf("GhostHpBarBg", _ghostBarWidth);
+            _hostBarWidth = WidthOf("HostHpBarBg", _hostBarWidth);
+            _bossBarWidth = WidthOf("BossHpBarBg", _bossBarWidth);
+            _expBarWidth = WidthOf("RunExpBg", 0f);
+        }
+
+        private float WidthOf(string node, float fallback) => _ui.Find(node) is RectTransform r ? r.sizeDelta.x : fallback;
 
         private void OnEnable()
         {
@@ -725,7 +746,7 @@ namespace Game.Module.InGame
         {
             _ui.SetText("GhostHpText", $"{e.GhostHp}/{e.GhostHpMax}");
             _ghostHpRatio = Ratio(e.GhostHp, e.GhostHpMax);
-            SetFillSmooth("GhostHpBarFill", _ghostHpRatio, GhostBarWidth);
+            SetFillSmooth("GhostHpBarFill", _ghostHpRatio, _ghostBarWidth);
 
             // ⚠ `e.HasHost` 만 보면 안 된다. 전투는 **유령도 몸으로 센다** —
             //   판이 유령으로 시작하면 이 값이 참으로 오고, HP 바가 매 프레임
@@ -737,7 +758,7 @@ namespace Game.Module.InGame
             if (!_hostBarShown) return;
             _ui.SetText("HostHpText", $"{e.HostHp}/{e.HostHpMax}");
             _hostHpRatio = Ratio(e.HostHp, e.HostHpMax);
-            SetFillSmooth("HostHpBarFill", _hostHpRatio, HostBarWidth);
+            SetFillSmooth("HostHpBarFill", _hostHpRatio, _hostBarWidth);
         }
 
         private void OnBossHp(BossHpChangedEvent e)
@@ -763,7 +784,7 @@ namespace Game.Module.InGame
 
             float ratio = Ratio(e.BossHp, e.BossHpMax);
             _ui.SetText("BossHpText", $"{e.BossHp}/{e.BossHpMax}");
-            _ui.SetFill("BossHpBarFill", ratio, BossBarWidth);
+            _ui.SetFill("BossHpBarFill", ratio, _bossBarWidth);
             OnBossRatio(ratio, appeared);
 
             // 이름·페이즈는 바뀔 때만 다시 쓴다. 매 피격 갱신에 문자열을 만들지 않는다.
@@ -793,7 +814,7 @@ namespace Game.Module.InGame
             if (appeared || ratio >= _bossTrail) _bossTrail = ratio;   // 처음 · 회복은 잔상 없이
             else if (ratio < _bossRatio) _bossTrailHold = BossTrailHoldSeconds;
             _bossRatio = ratio;
-            _ui.SetFill("BossHpBarTrail", _bossTrail, BossBarWidth);
+            _ui.SetFill("BossHpBarTrail", _bossTrail, _bossBarWidth);
         }
 
         private void TickBossTrail(float dt)
@@ -801,7 +822,7 @@ namespace Game.Module.InGame
             if (!_bossShown || _bossTrail <= _bossRatio) return;
             if (_bossTrailHold > 0f) { _bossTrailHold -= dt; return; }
             _bossTrail = Mathf.MoveTowards(_bossTrail, _bossRatio, BossTrailDropPerSecond * dt);
-            _ui.SetFill("BossHpBarTrail", _bossTrail, BossBarWidth);
+            _ui.SetFill("BossHpBarTrail", _bossTrail, _bossBarWidth);
         }
 
         // 띠가 들어오는 동안 골드 · 일시정지 줄을 띠 높이만큼 내린다(시안 ② 그대로). 보스가 가면 제자리로.
@@ -811,6 +832,8 @@ namespace Game.Module.InGame
 
         private void ShiftUnderBossBand(bool down)
         {
+            // RE:BORN 판 — 보스 막대는 「Lv ━━」 줄 자리에 선다. 내리지 않고 그 줄을 잠깐 감춘다
+            if (_reborn) { _ui.SetActive("RunExpRow", !down); return; }
             for (int i = 0; i < UnderBossBand.Length; i++)
             {
                 if (_ui.Find(UnderBossBand[i]) is not RectTransform rt) continue;
@@ -894,8 +917,9 @@ namespace Game.Module.InGame
             // 두 LV 배지는 **같은 값**이다. 몸은 고스트가 들고 온 레벨로 굴러간다 —
             // 호스트마다 레벨을 따로 쌓지 않는 것이 이 게임의 규칙이다.
             int lv = _player != null ? _player.GhostLevel : 1;
-            _ui.SetText("LevelText", $"LV. {lv}");
+            _ui.SetText("LevelText", _reborn ? "Lv 1" : $"LV. {lv}");
             _ui.SetText("HostLevelText", $"LV. {lv}");
+            if (_reborn && _expBarWidth > 0f) _ui.SetFill("RunExpFill", 0f, _expBarWidth);
         }
 
         /// <summary>
@@ -1023,7 +1047,8 @@ namespace Game.Module.InGame
             // CHAPTER 칸 — 챕터 번호 · 무대 이름 · 방 번호.
             // ⚠ 런 통짜 번호(`13/45`)만 찍으면 **챕터가 어디서 갈리는지 안 보인다.**
             //   무대는 챕터 안에서 또 한 번 바뀌므로 이름도 방 번호를 따라간다.
-            _ui.SetText("ChapterLabel", $"CHAPTER {e.Chapter}");
+            // RE:BORN 판은 가운데 한 줄 「1-07」(방 진행 칸은 뺐다 — PD 2026-10-23)
+            _ui.SetText("ChapterLabel", _reborn ? $"{e.Chapter}-{e.StageInChapter:00}" : $"CHAPTER {e.Chapter}");
             _ui.SetText("ChapterNameText",
                         _battle != null ? _battle.StageNameOf(e.Chapter, e.StageInChapter) : string.Empty);
             _ui.SetText("RoomLabel", "ROOM");
@@ -1062,7 +1087,13 @@ namespace Game.Module.InGame
         ///   화면의 LV 배지는 **고스트 Lv** 다 — 판 안에서 안 바뀌므로 이벤트를
         ///   기다리면 영영 빈칸으로 남는다. 배지는 부팅에서 한 번 채운다.
         /// </summary>
-        private void OnExpChanged(RunExpChangedEvent e) { }
+        private void OnExpChanged(RunExpChangedEvent e)
+        {
+            // RE:BORN 판은 시안대로 「Lv 3 ━━━」 — 판 레벨(레벨업 카드가 나오는 레벨)과 다음 레벨까지의 경험치
+            if (!_reborn) return;
+            _ui.SetText("LevelText", $"Lv {e.Level}");
+            if (_expBarWidth > 0f) _ui.SetFill("RunExpFill", e.ExpToNext > 0 ? (float)e.Exp / e.ExpToNext : 1f, _expBarWidth);
+        }
 
         /// <summary>
         /// 빙의 버튼 상태. 세 가지를 구분해야 한다.
@@ -1461,17 +1492,21 @@ namespace Game.Module.InGame
             // 둘을 같이 띄우면 겹쳐 보인다.
             // C 원혼 회로(2026-10-08): 창 틀(`levelupframe`)에 빈 제목 판이 있어 글자가 그 위에 선다.
             // 예전 제목 그림(`leveluptitle`)은 판 위에 겹치므로 틀이 있으면 끈다.
-            var frameArt = _ui.Get<Image>("BuffFrame");
-            bool hasFrame = frameArt != null && frameArt.sprite != null;
-            var titleArt = _ui.Get<Image>("BuffTitleArt");
-            var titleSprite = !hasFrame && _cardAtlas != null ? _cardAtlas.GetSprite("leveluptitle") : null;
-            if (titleArt != null)
+            // RE:BORN 판은 제목 그림(키트 워드아트)을 빌더가 꽂아 둔다 — 건드리지 않는다
+            if (!_reborn)
             {
-                titleArt.sprite = titleSprite;
-                titleArt.enabled = titleSprite != null;
-                titleArt.color = Color.white;
+                var frameArt = _ui.Get<Image>("BuffFrame");
+                bool hasFrame = frameArt != null && frameArt.sprite != null;
+                var titleArt = _ui.Get<Image>("BuffTitleArt");
+                var titleSprite = !hasFrame && _cardAtlas != null ? _cardAtlas.GetSprite("leveluptitle") : null;
+                if (titleArt != null)
+                {
+                    titleArt.sprite = titleSprite;
+                    titleArt.enabled = titleSprite != null;
+                    titleArt.color = Color.white;
+                }
+                _ui.SetText("BuffTitleText", titleSprite != null ? string.Empty : "LEVEL UP!");
             }
-            _ui.SetText("BuffTitleText", titleSprite != null ? string.Empty : "LEVEL UP!");
             _ui.SetText("BuffSubText", Localize.Get("ui.buff.sub"));
 
             for (int i = 0; i < BuffCardCount; i++)
@@ -1488,9 +1523,16 @@ namespace Game.Module.InGame
                 // 칩 — 가진 카드면 레벨 변화, 새 카드면 등급. 목업 그대로.
                 // ⚠ 화살표는 `→` 만 쓴다. 픽셀 폰트에는 화살표가 아예 없고
                 //   한글 폴백(NotoSansKR)에 `→` 하나만 있다. `▸`·`►` 는 □ 로 나온다.
+                // RE:BORN 판 — 오른쪽 위 「Lv 1→2」 / 「NEW」, 등급은 이름 위 한 줄(시안 levelup)
                 _ui.SetText($"BuffCard{i}ChipText",
-                    lv > 0 ? $"Lv.{lv} → Lv.{Mathf.Min(lv + 1, entry.MaxLevel)}"
+                    _reborn ? (lv > 0 ? $"Lv {lv}→{Mathf.Min(lv + 1, entry.MaxLevel)}" : "NEW")
+                    : lv > 0 ? $"Lv.{lv} → Lv.{Mathf.Min(lv + 1, entry.MaxLevel)}"
                            : entry.Rarity.ToString().ToUpperInvariant());
+                if (_reborn && _ui.Find(_ui.Find($"BuffCard{i}"), $"BuffCard{i}Rarity")?.GetComponent<TMPro.TMP_Text>() is TMPro.TMP_Text rare)
+                {
+                    rare.text = entry.Rarity.ToString().ToUpperInvariant();
+                    rare.color = RarityColor(entry.Rarity);
+                }
 
                 _ui.SetText($"BuffCard{i}Name", entry.DisplayName);
                 _ui.SetText($"BuffCard{i}Desc", entry.DisplayDescription);
@@ -1527,6 +1569,28 @@ namespace Game.Module.InGame
 
             // ① 판때기 — 등급별 액자
             var panel = _ui.Get<Image>($"BuffCard{i}");
+            if (_reborn && _rbCardPanels.Length > (int)entry.Rarity)
+            {
+                // 키트 카드 판(9분할로 늘려 쓰는 가로 판) — 왕관 장식은 없다(최상위 판 그림이 따로 있다)
+                if (panel != null)
+                {
+                    panel.sprite = _rbCardPanels[(int)entry.Rarity];
+                    panel.type = Image.Type.Sliced;
+                    panel.color = Color.white;
+                }
+                SetCardCrown(panel != null ? panel.rectTransform : null, false);
+                if (_ui.Get<Image>($"BuffCard{i}Chip") is Image rbChip) rbChip.enabled = false;
+                if (_ui.Get<TMPro.TMP_Text>($"BuffCard{i}ChipText") is TMPro.TMP_Text rbChipText)
+                    rbChipText.color = owned ? new Color(0.94f, 0.71f, 0.16f) : Color.white;
+                var rbIcon = _ui.Get<Image>($"BuffCard{i}Icon");
+                if (rbIcon == null) return;
+                var rbArt = _cardAtlas != null && !string.IsNullOrEmpty(entry.CardId)
+                    ? _cardAtlas.GetSprite($"card_{entry.CardId.ToLowerInvariant()}") : null;
+                rbIcon.sprite = rbArt;
+                rbIcon.enabled = rbArt != null;
+                rbIcon.color = Color.white;
+                return;
+            }
             var panelArt = _cardAtlas != null ? _cardAtlas.GetSprite($"cardpanel_{rarity}") : null;
             if (panel != null)
             {
@@ -1647,8 +1711,8 @@ namespace Game.Module.InGame
             Skin("ShrineHintPill", "shrinehintpill");
             for (int i = 0; i < ShrineChoiceCount; i++) Skin($"ShrineChoice{i}", "shrinechoiceslot");
 
-            // 레벨업 창 틀(C 원혼 회로 2026-10-08)
-            Skin("BuffFrame", "levelupframe");
+            // 레벨업 창 틀(C 원혼 회로 2026-10-08) — RE:BORN 판은 틀 없이 제목 · 카드 줄만(시안 levelup)
+            if (!_reborn) Skin("BuffFrame", "levelupframe");
 
             // 늘려 쓰는 판(선택 칸 · 대가 알약)은 테두리를 지키고 가운데만 늘린다 — 테두리는 InGamePopupCLayout 이 임포트에 건다
             void Skin(string node, string art, bool sliced = false)

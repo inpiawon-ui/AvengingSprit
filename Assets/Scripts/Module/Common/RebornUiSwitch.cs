@@ -23,6 +23,7 @@ namespace Game.Module.Common
             return address switch
             {
                 "UI/Lobby/LobbyMainUI" => "UI/Lobby/RbLobbyUI",
+                "UI/InGame/InGameMainUI" => "UI/InGame/RbInGameMainUI",
                 _ => address,
             };
         }
