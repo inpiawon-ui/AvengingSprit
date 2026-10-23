@@ -270,18 +270,25 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>
-        /// 배양실 연출에 넘길 몸 목록(PD 2026-10-22 매 뽑기). 등급 예고 = 대박 · 픽업 금 · A 보라 · B 하늘(속이지 않는다).
+        /// 배양실 연출에 넘길 몸 목록(PD 2026-10-22 매 뽑기). 사다리 4단(PD 2026-10-23):
+        /// 하늘 = B · 보라 = A 가장 적은 조각 · 금 = A 더 많은 조각 또는 픽업 · 무지개 = 대박. 위 두 단(금 · 무지개)은 10회에서 따로 연출.
         /// 이름 판 꼬리표: 대박 > 픽업 > 새 몸 > 획득.
         /// </summary>
         private static List<SummonReveal.Entry> RevealEntries(IReadOnlyList<GachaPull> pulls)
         {
             CoreModule.TryGet<IPlayerDataService>(out var p);
+            // 가장 적은 조각 수(표의 첫 칸 — 지금 2) — 숫자를 코드에 적지 않는다
+            int minShards = int.MaxValue;
+            if (CoreModule.TryGet<IGachaService>(out var gs))
+                foreach (var a in gs.AmountRates()) minShards = Mathf.Min(minShards, a.shards);
             var list = new List<SummonReveal.Entry>(pulls.Count);
             foreach (var x in pulls)
             {
                 var h = p?.GetHost(x.HostKey);
-                var rarity = x.Jackpot || x.Pickup ? SummonReveal.Rarity.SSR
-                           : h != null && h.Grade != HostGrade.B ? SummonReveal.Rarity.SR : SummonReveal.Rarity.R;
+                bool high = h != null && h.Grade != HostGrade.B;
+                var rarity = x.Jackpot ? SummonReveal.Rarity.Jackpot
+                           : x.Pickup || (high && x.Shards > minShards) ? SummonReveal.Rarity.Super
+                           : high ? SummonReveal.Rarity.Rare : SummonReveal.Rarity.Normal;
                 string tag = x.Jackpot ? "ui.summon.reveal.jackpot" : x.Pickup ? "ui.summon.reveal.pickup"
                            : x.IsNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get";
                 string grade = h == null ? string.Empty : h.Grade == HostGrade.S ? "SSR" : h.Grade == HostGrade.A ? "SR" : "R";

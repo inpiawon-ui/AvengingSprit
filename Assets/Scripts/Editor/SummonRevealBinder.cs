@@ -48,7 +48,15 @@ namespace Game.Editor
                 so.FindProperty("_plate").objectReferenceValue = Spr($"{Dir}/reveal_plate.png") ?? Spr("Assets/BaseResource/UiKit/panel_navy_big.png");   // 전용 판이 오기 전엔 남색 판
                 so.FindProperty("_stampNew").objectReferenceValue = Spr("Assets/BaseResource/Summon/stamp_new.png");
                 so.FindProperty("_ribbonPickup").objectReferenceValue = Spr("Assets/BaseResource/Summon/ribbon_pickup.png");
-                Frames(so, "_ring", "reveal_ring_");
+                // 4단 사다리(PD 10-23) — 흰 고리를 단계색으로 물들인다 · 단계별 배양액 유리 · 대박 무지개 빛(Tools/prep_summon_tiers.py)
+                Frames(so, "_ring", "lab_ring_white_");
+                Frames(so, "_revealLightRainbow", "lab_reveal_light_rainbow_");
+                var glassTier = so.FindProperty("_tankGlassTier");
+                glassTier.arraySize = 4;
+                for (int i = 0; i < 4; i++) glassTier.GetArrayElementAtIndex(i).objectReferenceValue = Spr($"{Dir}/lab_tank_glass_t{i}.png");
+                var tankTier = so.FindProperty("_tankTier");
+                tankTier.arraySize = 4;
+                for (int i = 0; i < 4; i++) tankTier.GetArrayElementAtIndex(i).objectReferenceValue = Spr($"{Dir}/lab_tank_t{i}.png");
                 Frames(so, "_revealLight", "lab_reveal_light_");
                 Frames(so, "_revealLightSr", "lab_reveal_light_sr_");
                 Frames(so, "_revealLightR", "lab_reveal_light_r_");
