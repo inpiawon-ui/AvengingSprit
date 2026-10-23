@@ -5847,3 +5847,111 @@ MonoBehaviour:
     _ko: "\uD68D\uB4DD!"
     _ja: "\u7372\u5F97!"
     _en: Got it!
+  - _key: stage.11.1.name
+    _ko: "\uAC10\uC2DC \uAD6C\uC5ED"
+    _ja: "\u76E3\u8996\u533A\u57DF"
+    _en: Surveillance Zone
+  - _key: chapter.11.desc
+    _ko: "\uCC9C\uC7A5\uC758 \uB208\uC774 \uBAA8\uB4E0 \uAC78 \uC9C0\uCF1C\uBCF8\uB2E4\n\uBD89\uC740
+      \uB80C\uC988\uAC00 \uCF1C\uC9C0\uBA74 \uC774\uBBF8 \uB2A6\uC5C8\uB2E4."
+    _ja: "\u5929\u4E95\u306E\u76EE\u304C\u3059\u3079\u3066\u3092\u898B\u5F35\u3063\u3066\u3044\u308B\n\u8D64\u3044\u30EC\u30F3\u30BA\u304C\u706F\u308C\u3070\u3001\u3082\u3046\u9045\u3044\u3002"
+    _en: 'Eyes in the ceiling watch everything.
+
+      When the red lens lights up,
+      it is too late.'
+  - _key: stage.12.1.name
+    _ko: "\uADF8\uB9BC\uC790 \uACF5\uC7A5"
+    _ja: "\u5F71\u306E\u5DE5\u5834"
+    _en: Shadow Factory
+  - _key: chapter.12.desc
+    _ko: "\uBD88 \uAEBC\uC9C4 \uACF5\uC7A5 \uBC14\uB2E5\uC744\n\uBB34\uC5B8\uAC00
+      \uC18C\uB9AC \uC5C6\uC774 \uAC74\uB10C\uB2E4."
+    _ja: "\u706F\u308A\u306E\u6D88\u3048\u305F\u5DE5\u5834\u306E\u5E8A\u3092\n\u4F55\u304B\u304C\u97F3\u3082\u306A\u304F\u6E21\u3063\u3066\u3044\u304F\u3002"
+    _en: 'Across the dark factory floor
+
+      something moves without a sound.'
+  - _key: stage.13.1.name
+    _ko: "\uD1B1\uB0A0 \uACE0\uBB3C\uC0C1"
+    _ja: "\u30CE\u30B3\u30AE\u30EA\u5EC3\u54C1\u7F6E\u304D\u5834"
+    _en: Sawblade Scrapyard
+  - _key: chapter.13.desc
+    _ko: "\uACE0\uCCA0 \uB354\uBBF8 \uB108\uBA38\uB85C\n\uB3CC\uC544\uC624\uB294
+      \uD1B1\uB0A0 \uC18C\uB9AC."
+    _ja: "\u30B9\u30AF\u30E9\u30C3\u30D7\u306E\u5C71\u306E\u5411\u3053\u3046\u304B\u3089\n\u623B\u3063\u3066\u304F\u308B\u30CE\u30B3\u30AE\u30EA\u306E\u97F3\u3002"
+    _en: 'From beyond the scrap heaps
+
+      comes the whine of a returning blade.'
+  - _key: stage.14.1.name
+    _ko: "\uD478\uB978 \uB4F1\uBD88 \uAE30\uC9C0"
+    _ja: "\u9752\u3044\u706F\u306E\u57FA\u5730"
+    _en: Blue Lantern Base
+  - _key: chapter.14.desc
+    _ko: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uB4F1\uBD88\uC774\n\uC801\uC758 \uBAB8\uC744
+      \uAC10\uC2FC\uB2E4."
+    _ja: "\u6D88\u3048\u306A\u3044\u706F\u304C\n\u6575\u306E\u4F53\u3092\u5305\u307F\u8FBC\u3080\u3002"
+    _en: 'Lanterns that never go out
+
+      wrap your enemies in their light.'
+  - _key: stage.15.1.name
+    _ko: "\uC18D\uC784\uC218 \uACE8\uBAA9"
+    _ja: "\u307E\u3084\u304B\u3057\u306E\u8DEF\u5730"
+    _en: Alley of Tricks
+  - _key: chapter.15.desc
+    _ko: "\uAE38\uAC00\uC758 \uC0C1\uC790\uB3C4 \uC4F0\uB808\uAE30\uD1B5\uB3C4\n\uBBFF\uC9C0
+      \uB9C8\uB77C."
+    _ja: "\u9053\u7AEF\u306E\u7BB1\u3082\u30B4\u30DF\u7BB1\u3082\n\u4FE1\u3058\u308B\u306A\u3002"
+    _en: 'Not the crate on the curb,
+
+      not the trash can. Trust nothing.'
+  - _key: stage.16.1.name
+    _ko: "\uBD88\uD0C0\uB294 \uC625\uC0C1"
+    _ja: "\u71C3\u3048\u308B\u5C4B\u4E0A"
+    _en: Burning Rooftop
+  - _key: chapter.16.desc
+    _ko: "\uB3C4\uC2DC \uAF2D\uB300\uAE30\uAE4C\uC9C0\n\uBD88\uAE38\uC774 \uBC88\uC84C\uB2E4."
+    _ja: "\u8857\u306E\u3066\u3063\u307A\u3093\u307E\u3067\n\u708E\u304C\u71C3\u3048\u5E83\u304C\u3063\u305F\u3002"
+    _en: 'The flames have spread
+
+      all the way to the top of the city.'
+  - _key: stage.17.1.name
+    _ko: "\uC624\uC5FC \uC2E4\uD5D8\uB3D9"
+    _ja: "\u6C5A\u67D3\u5B9F\u9A13\u68DF"
+    _en: Contaminated Wing
+  - _key: chapter.17.desc
+    _ko: "\uB3C5\uACFC \uC5BC\uC74C\uC774 \uC11E\uC778 \uC2E4\uD5D8\uC2E4\n\uBB34\uC5C7\uC774
+      \uAE68\uC5B4\uB0AC\uB098."
+    _ja: "\u6BD2\u3068\u6C37\u304C\u6DF7\u3056\u3063\u305F\u5B9F\u9A13\u5BA4\n\u4F55\u304C\u76EE\u899A\u3081\u305F\u306E\u304B\u3002"
+    _en: 'A lab of poison and ice.
+
+      What has woken up in here?'
+  - _key: stage.18.1.name
+    _ko: "\uC6A9\uAD11\uB85C \uC2EC\uC7A5\uBD80"
+    _ja: "\u6EB6\u9271\u7089\u306E\u5FC3\u81D3\u90E8"
+    _en: Heart of the Furnace
+  - _key: chapter.18.desc
+    _ko: "\uC1F3\uBB3C\uC774 \uB053\uB294 \uACF3\n\uBC84\uD2F0\uB294 \uB188\uB9CC
+      \uC0B4\uC544\uB0A8\uB294\uB2E4."
+    _ja: "\u6EB6\u3051\u305F\u9244\u304C\u716E\u3048\u305F\u304E\u308B\u5834\u6240\n\u8010\u3048\u305F\u8005\u3060\u3051\u304C\u751F\u304D\u6B8B\u308B\u3002"
+    _en: 'Where the molten iron boils,
+
+      only the toughest survive.'
+  - _key: stage.19.1.name
+    _ko: "\uD3D0\uD5C8\uC758 \uC655\uAD6D"
+    _ja: "\u5EC3\u589F\u306E\u738B\u56FD"
+    _en: Kingdom of Ruins
+  - _key: chapter.19.desc
+    _ko: "\uBC84\uB824\uC9C4 \uAC83\uB4E4\uC774\n\uC655\uC744 \uC138\uC6E0\uB2E4."
+    _ja: "\u6368\u3066\u3089\u308C\u305F\u3082\u306E\u305F\u3061\u304C\n\u738B\u3092\u7ACB\u3066\u305F\u3002"
+    _en: 'The discarded things
+
+      have crowned a king.'
+  - _key: stage.20.1.name
+    _ko: "\uCD5C\uD6C4\uC758 \uBC1C\uC0AC\uB300"
+    _ja: "\u6700\u5F8C\u306E\u767A\u5C04\u53F0"
+    _en: The Final Launchpad
+  - _key: chapter.20.desc
+    _ko: "\uBAA8\uB4E0 \uAC83\uC774\n\uC774 \uBC1C\uC0AC\uB300\uC5D0\uC11C \uB05D\uB09C\uB2E4."
+    _ja: "\u3059\u3079\u3066\u306F\n\u3053\u306E\u767A\u5C04\u53F0\u3067\u7D42\u308F\u308B\u3002"
+    _en: 'Everything ends
+
+      on this launchpad.'

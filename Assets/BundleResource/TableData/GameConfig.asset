@@ -518,6 +518,385 @@ MonoBehaviour:
     MixMagic: 0
     PowerMul: 2.76
     PowerStar: 3
+  - Chapter: 11
+    Name: "\uAC10\uC2DC \uAD6C\uC5ED"
+    Desc: "\uCC9C\uC7A5\uC758 \uB208\uC774 \uBAA8\uB4E0 \uAC78 \uC9C0\uCF1C\uBCF8\uB2E4\n\uBD89\uC740
+      \uB80C\uC988\uAC00 \uCF1C\uC9C0\uBA74 \uC774\uBBF8 \uB2A6\uC5C8\uB2E4."
+    Stage: lab
+    Boss: robot_snakes
+    Leader: guru
+    Leader2: commando_mg
+    Trash:
+    - roadwarden_2
+    - scrapgunner_3
+    - watcher_eye
+    - coilwalker_2
+    - skeleton_3
+    - actor_enforcer_3
+    - gorilla_fire
+    - mushroom_2
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 5.1
+    EnemyAtkMul: 1.85
+    BossHp: 14455
+    BossAtk: 95
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 6306
+    PriceMul: 7.9
+    RunGold: 1851
+    Music: 5
+    Art: 5
+    BossArt: 1
+    ChestArt: 5
+    MixBlade: 51
+    MixForce: 0
+    MixMagic: 0
+    PowerMul: 2.86
+    PowerStar: 3
+  - Chapter: 12
+    Name: "\uADF8\uB9BC\uC790 \uACF5\uC7A5"
+    Desc: "\uBD88 \uAEBC\uC9C4 \uACF5\uC7A5 \uBC14\uB2E5\uC744\n\uBB34\uC5B8\uAC00
+      \uC18C\uB9AC \uC5C6\uC774 \uAC74\uB10C\uB2E4."
+    Stage: refinery
+    Boss: crusher
+    Leader: commando_mg
+    Leader2: snowwoman
+    Trash:
+    - shadow_cat
+    - skeleton_3
+    - scrapgunner_ice
+    - coilwalker_2
+    - mole_2
+    - boar_2
+    - actor_enforcer_4
+    - obj_turret_3
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 6.57
+    EnemyAtkMul: 2.08
+    BossHp: 18939
+    BossAtk: 106
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 6977
+    PriceMul: 8.7
+    RunGold: 1993
+    Music: 6
+    Art: 6
+    BossArt: 2
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 0
+    MixMagic: 31
+    PowerMul: 3.37
+    PowerStar: 3
+  - Chapter: 13
+    Name: "\uD1B1\uB0A0 \uACE0\uBB3C\uC0C1"
+    Desc: "\uACE0\uCCA0 \uB354\uBBF8 \uB108\uBA38\uB85C\n\uB3CC\uC544\uC624\uB294
+      \uD1B1\uB0A0 \uC18C\uB9AC."
+    Stage: junkyard
+    Boss: python
+    Leader: snowwoman
+    Leader2: hopper_smg
+    Trash:
+    - saw_monkey
+    - skeleton_poison
+    - bat_2
+    - scrapgunner_sniper
+    - actor_enforcer_4
+    - mantis_2
+    - armadillo_2
+    - mushroom_2
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 7.31
+    EnemyAtkMul: 2.07
+    BossHp: 21390
+    BossAtk: 110
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 7720
+    PriceMul: 9.4
+    RunGold: 2189
+    Music: 1
+    Art: 1
+    BossArt: 3
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 33
+    MixMagic: 0
+    PowerMul: 3.56
+    PowerStar: 3
+  - Chapter: 14
+    Name: "\uD478\uB978 \uB4F1\uBD88 \uAE30\uC9C0"
+    Desc: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uB4F1\uBD88\uC774\n\uC801\uC758 \uBAB8\uC744
+      \uAC10\uC2FC\uB2E4."
+    Stage: missile
+    Boss: sludge
+    Leader: hopper_smg
+    Leader2: white_wizard
+    Trash:
+    - lantern
+    - coilwalker_ice
+    - roadwarden_3
+    - scrapgunner_sniper
+    - bat_bounce
+    - gorilla_charger
+    - spider
+    - mole_2
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 8.05
+    EnemyAtkMul: 2.14
+    BossHp: 23891
+    BossAtk: 113
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 8541
+    PriceMul: 10.3
+    RunGold: 2369
+    Music: 2
+    Art: 2
+    BossArt: 4
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 0
+    MixMagic: 23
+    PowerMul: 3.74
+    PowerStar: 3
+  - Chapter: 15
+    Name: "\uC18D\uC784\uC218 \uACE8\uBAA9"
+    Desc: "\uAE38\uAC00\uC758 \uC0C1\uC790\uB3C4 \uC4F0\uB808\uAE30\uD1B5\uB3C4\n\uBBFF\uC9C0
+      \uB9C8\uB77C."
+    Stage: street
+    Boss: guardian
+    Leader: white_wizard
+    Leader2: commando_grenade
+    Trash:
+    - mimic
+    - bat_poison
+    - skeleton_mage
+    - coil_mortar
+    - roadwarden_3
+    - gorilla_fire
+    - mummy
+    - spider_2
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 8.94
+    EnemyAtkMul: 2.22
+    BossHp: 26871
+    BossAtk: 117
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 9449
+    PriceMul: 11.2
+    RunGold: 2580
+    Music: 3
+    Art: 3
+    BossArt: 5
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 18
+    MixMagic: 11
+    PowerMul: 3.95
+    PowerStar: 3
+  - Chapter: 16
+    Name: "\uBD88\uD0C0\uB294 \uC625\uC0C1"
+    Desc: "\uB3C4\uC2DC \uAF2D\uB300\uAE30\uAE4C\uC9C0\n\uBD88\uAE38\uC774 \uBC88\uC84C\uB2E4."
+    Stage: rooftop
+    Boss: kingpin
+    Leader: commando_grenade
+    Leader2: ninja
+    Trash:
+    - roadwarden_fire
+    - watcher_eye
+    - shadow_cat
+    - scrapgunner_ice
+    - actor_enforcer_4
+    - gorilla_charger
+    - mantis_2
+    - obj_turret_3
+    Elite: 2
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 9.32
+    EnemyAtkMul: 2.14
+    BossHp: 28331
+    BossAtk: 117
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 10455
+    PriceMul: 12.2
+    RunGold: 2799
+    Music: 4
+    Art: 4
+    BossArt: 6
+    ChestArt: 5
+    MixBlade: 40
+    MixForce: 0
+    MixMagic: 7
+    PowerMul: 3.97
+    PowerStar: 3
+  - Chapter: 17
+    Name: "\uC624\uC5FC \uC2E4\uD5D8\uB3D9"
+    Desc: "\uB3C5\uACFC \uC5BC\uC74C\uC774 \uC11E\uC778 \uC2E4\uD5D8\uC2E4\n\uBB34\uC5C7\uC774
+      \uAE68\uC5B4\uB0AC\uB098."
+    Stage: lab
+    Boss: robot_snakes
+    Leader: ninja
+    Leader2: commando_laser
+    Trash:
+    - skeleton_poison
+    - coilwalker_ice
+    - lantern
+    - saw_monkey
+    - watcher_eye
+    - mummy_2
+    - spider_2
+    - bat_bounce
+    Elite: 3
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 9.73
+    EnemyAtkMul: 2.16
+    BossHp: 29905
+    BossAtk: 118
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 11567
+    PriceMul: 13.2
+    RunGold: 3052
+    Music: 5
+    Art: 5
+    BossArt: 1
+    ChestArt: 5
+    MixBlade: 21
+    MixForce: 16
+    MixMagic: 16
+    PowerMul: 4.01
+    PowerStar: 3
+  - Chapter: 18
+    Name: "\uC6A9\uAD11\uB85C \uC2EC\uC7A5\uBD80"
+    Desc: "\uC1F3\uBB3C\uC774 \uB053\uB294 \uACF3\n\uBC84\uD2F0\uB294 \uB188\uB9CC
+      \uC0B4\uC544\uB0A8\uB294\uB2E4."
+    Stage: refinery
+    Boss: crusher
+    Leader: commando_laser
+    Leader2: thug
+    Trash:
+    - roadwarden_fire
+    - gorilla_fire
+    - mimic
+    - shadow_cat
+    - coil_mortar
+    - scrapgunner_sniper
+    - armadillo_2
+    - mushroom_2
+    Elite: 3
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 10.06
+    EnemyAtkMul: 2.16
+    BossHp: 31228
+    BossAtk: 118
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 12797
+    PriceMul: 14.4
+    RunGold: 3337
+    Music: 6
+    Art: 6
+    BossArt: 2
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 13
+    MixMagic: 9
+    PowerMul: 4.02
+    PowerStar: 3
+  - Chapter: 19
+    Name: "\uD3D0\uD5C8\uC758 \uC655\uAD6D"
+    Desc: "\uBC84\uB824\uC9C4 \uAC83\uB4E4\uC774\n\uC655\uC744 \uC138\uC6E0\uB2E4."
+    Stage: junkyard
+    Boss: python
+    Leader: thug
+    Leader2: amazon_elite
+    Trash:
+    - bat_poison
+    - scrapgunner_ice
+    - saw_monkey
+    - lantern
+    - gorilla_charger
+    - skeleton_mage
+    - mole_2
+    - mantis_2
+    Elite: 3
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 10.36
+    EnemyAtkMul: 2.08
+    BossHp: 32461
+    BossAtk: 118
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 14159
+    PriceMul: 15.7
+    RunGold: 3633
+    Music: 1
+    Art: 1
+    BossArt: 3
+    ChestArt: 5
+    MixBlade: 0
+    MixForce: 12
+    MixMagic: 16
+    PowerMul: 4.02
+    PowerStar: 3
+  - Chapter: 20
+    Name: "\uCD5C\uD6C4\uC758 \uBC1C\uC0AC\uB300"
+    Desc: "\uBAA8\uB4E0 \uAC83\uC774\n\uC774 \uBC1C\uC0AC\uB300\uC5D0\uC11C \uB05D\uB09C\uB2E4."
+    Stage: missile
+    Boss: sludge
+    Leader: amazon_elite
+    Leader2: amazon
+    Trash:
+    - watcher_eye
+    - shadow_cat
+    - mimic
+    - lantern
+    - coilwalker_ice
+    - roadwarden_fire
+    - gorilla_fire
+    - skeleton_poison
+    - spider_2
+    - obj_turret_3
+    Elite: 3
+    Crowd: 0
+    Fire: 0.74
+    EnemyHpMul: 10.66
+    EnemyAtkMul: 2.08
+    BossHp: 33693
+    BossAtk: 118
+    ClearGold: 0
+    Chest: platinum
+    ClearExp: 15665
+    PriceMul: 17.1
+    RunGold: 3941
+    Music: 2
+    Art: 2
+    BossArt: 4
+    ChestArt: 5
+    MixBlade: 37
+    MixForce: 9
+    MixMagic: 29
+    PowerMul: 4.02
+    PowerStar: 3
   _roomEnemyCap: 12
   _shardCurve: 080000000c000000100000001400000023000000280000002e000000340000003a0000005a000000
   _gradeMultiplier:
