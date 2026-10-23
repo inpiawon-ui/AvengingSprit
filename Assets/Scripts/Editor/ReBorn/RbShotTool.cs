@@ -91,6 +91,8 @@ namespace Game.Editor.ReBorn
             (768, 1024, Language.Korean, "chapters", "chapters_4x3"),
             (720, 1280, Language.English, "chapters", "chapters_en"),
             (720, 1280, Language.Japanese, "chapters", "chapters_ja"),
+            (720, 1280, Language.Korean, "rail:PassOptions", "notice_passopt_16x9"),
+            (720, 1280, Language.English, "rail:PassOptions", "notice_passopt_en"),
             (720, 1280, Language.Korean, "notice:reward", "notice_reward_16x9"),
             (720, 1280, Language.Korean, "notice:reward4", "notice_reward4_16x9"),
             (720, 1280, Language.Korean, "notice:stamina", "notice_stamina_16x9"),
@@ -398,6 +400,11 @@ namespace Game.Editor.ReBorn
                     lobby.OpenRail("Profile");
                     foreach (var b in Object.FindAnyObjectByType<RbMiscPages>().GetComponentsInChildren<UnityEngine.UI.Button>(true))
                         if (b.name == "ProfTabTitle") b.onClick.Invoke();
+                }
+                else if (what == "PassOptions")
+                {
+                    lobby.OpenRail("Pass");
+                    typeof(RbPassPage).GetMethod("BuyPremium", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.Invoke(Object.FindAnyObjectByType<RbPassPage>(), null);
                 }
                 else lobby.OpenRail(what);
                 return;

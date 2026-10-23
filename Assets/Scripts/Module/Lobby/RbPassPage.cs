@@ -127,9 +127,15 @@ namespace Game.Module.Lobby
         private void BuyPremium()
         {
             if (_busy || !CoreModule.TryGet<IStoreService>(out var store) || store.Find("pass_premium") is not StoreProduct p) return;
-            _shell.Notice.ShowConfirm("rb_icon_pass_xp_96", string.Format(Localize.FromTable("ui.rb.notice.buy_name", "{0} 구매"), Localize.Get(p.NameKey)), store.PriceLabel(p),
-                Localize.FromTable("ui.rb.notice.store_pay", "결제는 스토어 계정으로 진행됩니다"),
-                () => BuyAsync(store, p.Id).Forget());   // fire-and-forget: 결과는 다시 그린다
+            // 시안 pass-options — 「프리미엄 열기」 · 「프리미엄 + 단계」 둘 중 고른다(묶음 상품이 있으면)
+            var options = new List<(string, string, Action)>
+            {
+                (Localize.Get(p.NameKey), store.PriceLabel(p), () => BuyAsync(store, p.Id).Forget()),   // fire-and-forget: 결과는 다시 그린다
+            };
+            if (store.Find("pass_bundle") is StoreProduct bundle)
+                options.Add((Localize.Get(bundle.NameKey), store.PriceLabel(bundle), () => BuyAsync(store, bundle.Id).Forget()));   // fire-and-forget: 결과는 다시 그린다
+            _shell.Notice.ShowOptions(Localize.FromTable("ui.rb.pass.open_premium", "프리미엄 열기"),
+                                      Localize.FromTable("ui.rb.pass.premium_line", "지금, 복수의 시간이 시작된다."), options.ToArray());
         }
 
         private async UniTaskVoid BuyAsync(IStoreService store, string id)

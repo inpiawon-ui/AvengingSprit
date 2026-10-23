@@ -1632,3 +1632,9 @@ ui.rb.rnd.hidden_line	이번 판 한정 체험 · 조각 미지급	今回限り�
 ui.rb.rnd.owned_line	내가 키운 능력치로 출전	育てた能力で出撃	Runs with your upgrades	以培養的能力出戰	以培养的能力出战
 ui.rb.rnd.trial_line	이번 판 체험 · 깨면 조각을 받아요	今回は体験・クリアでかけら獲得	Trial run · clear to earn shards	本局體驗・通關可得碎片	本局体验・通关可得碎片
 ui.rb.rnd.start	전투 시작	戦闘開始	Start Battle	開始戰鬥	开始战斗
+ui.rb.pass.open_premium	프리미엄 열기	プレミアム解放	Unlock Premium	開啟高級	开启高级
+ui.rb.pass.premium_line	지금, 복수의 시간이 시작된다.	今、復讐の時が始まる。	Now, the hour of vengeance begins.	現在，復仇的時刻開始了。	现在，复仇的时刻开始了。
+store.pass_premium.name	프리미엄 패스	プレミアムパス	Premium Pass	高級通行證	高级通行证
+store.pass_premium.desc	프리미엄 보상 줄이 열려요	プレミアム報酬が開きます	Unlocks the premium reward track	開啟高級獎勵	开启高级奖励
+store.pass_bundle.name	프리미엄 + 15단계	プレミアム＋15段階	Premium + 15 Tiers	高級 + 15 階	高级 + 15 阶
+store.pass_bundle.desc	프리미엄 + 패스 경험치 1,500	プレミアム＋パス経験値1,500	Premium + 1,500 pass XP	高級 + 通行證經驗 1,500	高级 + 通行证经验 1,500

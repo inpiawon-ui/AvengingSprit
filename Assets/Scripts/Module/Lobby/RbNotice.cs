@@ -19,7 +19,7 @@ namespace Game.Module.Lobby
     {
         private const int RewardCells = 4;
         private const float CellPitch = 132f, CellWidth = 120f, CellsCenter = 360f;
-        private static readonly string[] Panels = { "RbNotConfirm", "RbNotShort", "RbNotGold", "RbNotReward" };
+        private static readonly string[] Panels = { "RbNotConfirm", "RbNotOptions", "RbNotShort", "RbNotGold", "RbNotReward" };
         private static readonly Color Ink = new(0.16f, 0.11f, 0.03f), Dim = new(0.70f, 0.74f, 0.84f);
 
         /// <summary>키트 아이콘(rb_icon_*_96) — 보상 · 재화 그림을 이름으로 찾는다.</summary>
@@ -28,6 +28,7 @@ namespace Game.Module.Lobby
         private UIBinder _ui;
         private RbLobbyUI _shell;
         private Action _onGo, _onYes;
+        private readonly Action[] _onOption = new Action[2];
         private readonly List<(string kind, string key, int amount)> _lines = new();
 
         private void Awake()
@@ -47,6 +48,12 @@ namespace Game.Module.Lobby
             _ui.OnClick("NotConfirmClose", () => Close("RbNotConfirm"));
             _ui.OnClick("NotConfirmNo", () => Close("RbNotConfirm"));
             _ui.OnClick("NotConfirmYes", () => { Close("RbNotConfirm"); _onYes?.Invoke(); });
+            _ui.OnClick("NotOptionsClose", () => Close("RbNotOptions"));
+            for (int i = 0; i < 2; i++)
+            {
+                int k = i;
+                _ui.OnClick($"NotOption{i}", () => { Close("RbNotOptions"); _onOption[k]?.Invoke(); });
+            }
         }
 
         // ── 보상 ───────────────────────────────────────────
@@ -163,6 +170,24 @@ namespace Game.Module.Lobby
             _ui.SetText("NotConfirmPrice", price);
             _ui.SetText("NotConfirmNote", note ?? string.Empty);
             Open("RbNotConfirm");
+        }
+
+        /// <summary>상품 고르기(둘까지) — 패스 프리미엄 · 프리미엄 + 단계. 누르면 그 상품의 onBuy.</summary>
+        public void ShowOptions(string title, string line, (string name, string price, Action onBuy)[] options)
+        {
+            Awake();
+            _ui.SetText("RbNotOptionsTitle", title);
+            _ui.SetText("NotOptionsLine", line);
+            for (int i = 0; i < 2; i++)
+            {
+                bool on = options != null && i < options.Length;
+                _ui.SetActive($"NotOption{i}", on);
+                _onOption[i] = on ? options[i].onBuy : null;
+                if (!on) continue;
+                _ui.SetText($"NotOption{i}Name", options[i].name);
+                _ui.SetText($"NotOption{i}Price", options[i].price);
+            }
+            Open("RbNotOptions");
         }
 
         // ── 열고 닫기 ───────────────────────────────────────

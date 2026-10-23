@@ -27,7 +27,8 @@ namespace Game.Editor.ReBorn
             BuildShort(root);
             BuildGold(root);
             BuildConfirm(root);
-            foreach (var n in new[] { "RbNotReward", "RbNotShort", "RbNotGold", "RbNotConfirm" }) root.Find(n)?.gameObject.SetActive(false);
+            BuildOptions(root);
+            foreach (var n in new[] { "RbNotReward", "RbNotShort", "RbNotGold", "RbNotConfirm", "RbNotOptions" }) root.Find(n)?.gameObject.SetActive(false);
 
             var view = root.gameObject.AddComponent<RbNotice>();
             var so = new SerializedObject(view);
@@ -95,6 +96,21 @@ namespace Game.Editor.ReBorn
                 var b = Corner(Node(c, $"NotGoldRow{i}Go"), 482f, y - 34f, 598f, y + 34f);
                 Btn(b, "Components/rb_btn_secondary");
                 Text(Stretch(Node(b, $"NotGoldRow{i}GoText")), "ui.rb.src.go", "이동 ›", 40, White, TA.Center, heavy: true).margin = new Vector4(8f, 0f, 8f, 0f);
+            }
+        }
+
+        /// <summary>고를 상품 두 개(패스 「프리미엄 열기」 · 「프리미엄 + 15단계」) — 시안 pass-options.png 상자 240~960 × 800~1440.</summary>
+        private static void BuildOptions(RectTransform root)
+        {
+            Modal(root, "RbNotOptions", null, "프리미엄 열기", 120f, 383f, 600f, 820f, out var c);
+            Text(Corner(Node(c, "NotOptionsLine"), 150f, 508f, 570f, 548f), null, "지금, 복수의 시간이 시작된다.", 40, White, TA.Center, heavy: true);
+            for (int i = 0; i < 2; i++)
+            {
+                float y0 = 584f + i * 106f;
+                var b = Corner(Node(c, $"NotOption{i}"), 152f, y0, 568f, y0 + 84f);
+                Btn(b, "Components/rb_list_row").GetComponent<UnityEngine.UI.Image>().preserveAspect = false;
+                Text(Corner(Node(b, $"NotOption{i}Name"), 22f, 0f, 250f, 84f), null, "프리미엄 열기", 40, White, TA.Left, heavy: true);
+                Text(Corner(Node(b, $"NotOption{i}Price"), 250f, 0f, 400f, 84f), null, "₩12,000", 44, White, TA.Right, number: true);
             }
         }
 

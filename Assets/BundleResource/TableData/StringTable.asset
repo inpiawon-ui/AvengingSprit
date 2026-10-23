@@ -10527,3 +10527,39 @@ MonoBehaviour:
     _en: Start Battle
     _zhHant: "\u958B\u59CB\u6230\u9B25"
     _zhHans: "\u5F00\u59CB\u6218\u6597"
+  - _key: ui.rb.pass.open_premium
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 \uC5F4\uAE30"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\u89E3\u653E"
+    _en: Unlock Premium
+    _zhHant: "\u958B\u555F\u9AD8\u7D1A"
+    _zhHans: "\u5F00\u542F\u9AD8\u7EA7"
+  - _key: ui.rb.pass.premium_line
+    _ko: "\uC9C0\uAE08, \uBCF5\uC218\uC758 \uC2DC\uAC04\uC774 \uC2DC\uC791\uB41C\uB2E4."
+    _ja: "\u4ECA\u3001\u5FA9\u8B90\u306E\u6642\u304C\u59CB\u307E\u308B\u3002"
+    _en: Now, the hour of vengeance begins.
+    _zhHant: "\u73FE\u5728\uFF0C\u5FA9\u4EC7\u7684\u6642\u523B\u958B\u59CB\u4E86\u3002"
+    _zhHans: "\u73B0\u5728\uFF0C\u590D\u4EC7\u7684\u65F6\u523B\u5F00\u59CB\u4E86\u3002"
+  - _key: store.pass_premium.name
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 \uD328\uC2A4"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\u30D1\u30B9"
+    _en: Premium Pass
+    _zhHant: "\u9AD8\u7D1A\u901A\u884C\u8B49"
+    _zhHans: "\u9AD8\u7EA7\u901A\u884C\u8BC1"
+  - _key: store.pass_premium.desc
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 \uBCF4\uC0C1 \uC904\uC774 \uC5F4\uB824\uC694"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\u5831\u916C\u304C\u958B\u304D\u307E\u3059"
+    _en: Unlocks the premium reward track
+    _zhHant: "\u958B\u555F\u9AD8\u7D1A\u734E\u52F5"
+    _zhHans: "\u5F00\u542F\u9AD8\u7EA7\u5956\u52B1"
+  - _key: store.pass_bundle.name
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 + 15\uB2E8\uACC4"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\uFF0B15\u6BB5\u968E"
+    _en: Premium + 15 Tiers
+    _zhHant: "\u9AD8\u7D1A + 15 \u968E"
+    _zhHans: "\u9AD8\u7EA7 + 15 \u9636"
+  - _key: store.pass_bundle.desc
+    _ko: "\uD504\uB9AC\uBBF8\uC5C4 + \uD328\uC2A4 \uACBD\uD5D8\uCE58 1,500"
+    _ja: "\u30D7\u30EC\u30DF\u30A2\u30E0\uFF0B\u30D1\u30B9\u7D4C\u9A13\u50241,500"
+    _en: Premium + 1,500 pass XP
+    _zhHant: "\u9AD8\u7D1A + \u901A\u884C\u8B49\u7D93\u9A57 1,500"
+    _zhHans: "\u9AD8\u7EA7 + \u901A\u884C\u8BC1\u7ECF\u9A8C 1,500"

@@ -34,3 +34,9 @@ ui.rb.set.support	고객센터	サポート	Support	客服中心	客服中心
 ui.rb.set.terms	약관	規約	Terms	條款	条款
 ui.rb.profile.grow	유령 성장 ›	ゴースト強化 ›	Ghost Growth ›	幽靈成長 ›	幽灵成长 ›
 ui.rb.profile.title	프로필	プロフィール	Profile	個人檔案	个人资料
+ui.rb.pass.open_premium	프리미엄 열기	プレミアム解放	Unlock Premium	開啟高級	开启高级
+ui.rb.pass.premium_line	지금, 복수의 시간이 시작된다.	今、復讐の時が始まる。	Now, the hour of vengeance begins.	現在，復仇的時刻開始了。	现在，复仇的时刻开始了。
+store.pass_premium.name	프리미엄 패스	プレミアムパス	Premium Pass	高級通行證	高级通行证
+store.pass_premium.desc	프리미엄 보상 줄이 열려요	プレミアム報酬が開きます	Unlocks the premium reward track	開啟高級獎勵	开启高级奖励
+store.pass_bundle.name	프리미엄 + 15단계	プレミアム＋15段階	Premium + 15 Tiers	高級 + 15 階	高级 + 15 阶
+store.pass_bundle.desc	프리미엄 + 패스 경험치 1,500	プレミアム＋パス経験値1,500	Premium + 1,500 pass XP	高級 + 通行證經驗 1,500	高级 + 通行证经验 1,500
