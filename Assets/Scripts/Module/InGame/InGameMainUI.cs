@@ -1432,18 +1432,6 @@ namespace Game.Module.InGame
                 });
             }
 
-            // 다시 뽑기 — 창을 닫지 않고 카드 칸만 새로 깐다(BattleDirector.RerollShop → ShopOpenedEvent 다시)
-            _ui.SetText("ShopRerollText", Localize.Format("ui.shop.reroll", e.RerollPrice));
-            var rerollBtn = _ui.Get<Button>("ShopRerollButton");
-            if (rerollBtn != null)
-            {
-                rerollBtn.onClick.RemoveAllListeners();
-                rerollBtn.interactable = e.CanReroll;
-                if (e.CanReroll) rerollBtn.onClick.AddListener(() => { if (_battle != null) _battle.RerollShop(); });
-            }
-            var rerollImg = _ui.Get<Image>("ShopRerollButton");
-            if (rerollImg != null) rerollImg.color = e.CanReroll ? Color.white : new Color(0.45f, 0.45f, 0.5f, 1f);
-
             EqualizeText("ShopItem0Name", "ShopItem1Name", "ShopItem2Name", "ShopItem3Name", "ShopItem4Name", "ShopItem5Name");
             EqualizeText("ShopItem0Price", "ShopItem1Price", "ShopItem2Price", "ShopItem3Price", "ShopItem4Price", "ShopItem5Price");
             EqualizeText("ShopItem0Desc", "ShopItem1Desc", "ShopItem2Desc", "ShopItem3Desc", "ShopItem4Desc", "ShopItem5Desc");
@@ -1645,7 +1633,6 @@ namespace Game.Module.InGame
             Skin("ShopBox", "shopframe");
             Skin("ShopGoldPill", "shopgoldpill");
             Skin("ShopLeaveButton", "shopleavebutton");
-            Skin("ShopRerollButton", "shopleavebutton");   // 전용 그림이 오기 전까지 「나간다」 단추 그림을 같이 쓴다
             for (int i = 0; i < ShopSlots; i++) Skin($"ShopItem{i}", "shopitemslot");
 
             // 악마의 거래

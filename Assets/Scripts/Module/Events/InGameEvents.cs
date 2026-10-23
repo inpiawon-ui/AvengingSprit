@@ -64,9 +64,6 @@ namespace Game.Module.Events
         public string[] Icons;
         public int Gold;
         public string LimitLine;
-        /// <summary>카드 진열 다시 뽑기 값 · 지금 누를 수 있는가</summary>
-        public int RerollPrice;
-        public bool CanReroll;
     }
 
     /// <summary>상점에서 하나를 샀다.</summary>

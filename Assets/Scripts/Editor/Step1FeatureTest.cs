@@ -368,20 +368,6 @@ namespace Game.Editor
             int offerCount = (int)rules.GetType().GetProperty("OfferCount").GetValue(rules);
             Row("상점", "가진 카드 중 가장 낮은 것이 강화 칸 · 새 카드 칸은 하나 줄어듦", up != null && up.BuffKey == "c016" && offers.Count == offerCount - 1 && offers.All(o => o.BuffKey != "c016"),
                 $"강화={up?.BuffKey ?? "없음"} · 새 카드 {offers.Count}/{offerCount}");
-            int gold0 = (int)T.GetField("_runGold", F).GetValue(s_bd);
-            int price0 = s_bd.ShopRerollPrice;
-            var before = string.Join(",", offers.Select(o => o.BuffKey));
-            bool changedOnce = false;
-            for (int i = 0; i < 3; i++)
-            {
-                s_bd.RerollShop();
-                changedOnce |= string.Join(",", offers.Select(o => o.BuffKey)) != before;
-            }
-            int gold1 = (int)T.GetField("_runGold", F).GetValue(s_bd);
-            int rerolls = (int)T.GetField("_shopRerolls", F).GetValue(s_bd);
-            int bought = (int)T.GetField("_shopBought", F).GetValue(s_bd);
-            Row("상점", "다시 뽑기 3번 — 창 유지 · 구매 횟수 안 씀 · 값이 한 줄씩 오름 · 진열이 바뀜", s_bd.IsShopOpen && bought == 0 && rerolls == 3 && gold0 - gold1 == price0 * 6 && changedOnce,
-                $"열림={s_bd.IsShopOpen} · 구매 {bought} · 쓴 골드 {gold0 - gold1}(= {price0}×(1+2+3)) · 진열 바뀜={changedOnce}");
             int idx = (int)T.GetProperty("ShopUpgradeIndex", F).GetValue(s_bd);
             s_bd.BuyShopItem(idx);
             int lv = s_buffs.LevelOf("c016");

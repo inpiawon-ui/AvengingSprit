@@ -6206,8 +6206,6 @@ namespace Game.Module.InGame
         /// 카드 세 칸 중 하나를 쓴다 — 액자가 여섯 칸뿐이라 칸을 늘리지 않는다.
         /// </summary>
         private BuffEntry _shopUpgrade;
-        /// <summary>이 상점에서 카드 진열을 다시 뽑은 횟수. 뽑을수록 비싸다.</summary>
-        private int _shopRerolls;
 
         public bool IsShopOpen => _shopOpen;
 
@@ -6224,7 +6222,6 @@ namespace Game.Module.InGame
 
             _shopBought = _shopCardsBought = 0;
             _shopHealBought = false;
-            _shopRerolls = 0;
 
             // 이 판에서 만난 몸 중 지금 안 타고 있는 것 하나를 진열한다.
             _hostOffers.Clear();
@@ -6270,27 +6267,7 @@ namespace Game.Module.InGame
             => _shopTable.Draw(_shopOffers, ShopChapter,
                                Mathf.Max(1, _shopRules.OfferCount - (_shopUpgrade != null ? 1 : 0)), _shopFilter, _rng);
 
-        /// <summary>
-        /// 다시 뽑기 값 — 소모품과 같은 줄(카드 평균의 1/3)에서 시작해 뽑을 때마다 한 줄씩 오른다.
-        /// 공짜거나 값이 그대로면 마음에 들 때까지 눌러 「고르는」 자리가 「찾는」 자리가 된다.
-        /// </summary>
-        public int ShopRerollPrice => ConsumablePrice() * (_shopRerolls + 1);
-
-        public bool CanRerollShop => _shopOpen && _shopRules != null && _shopCardsBought < _shopRules.CardPurchaseLimit
-                                  && _runGold >= ShopRerollPrice;
-
-        /// <summary>
-        /// 카드 진열(새 카드 칸)만 다시 뽑는다. **창은 닫지 않는다** — 사기 전에 고를 것을 바꾸는 일이라
-        /// 구매 횟수도 안 쓴다. 강화 칸 · 몸 · 소모품 · 회복은 그대로다. UI 가 호출한다.
-        /// </summary>
-        public void RerollShop()
-        {
-            if (!CanRerollShop) return;
-            AddRunGold(-ShopRerollPrice);
-            _shopRerolls++;
-            DrawShopCards();
-            PublishShop();
-        }
+        // 다시 뽑기는 없다 — PD 2026-10-23 「다시 뽑기는 일단 빼자」(RE:BORN UI 리뉴얼 「카드 리롤 금지」).
 
         private readonly HashSet<string> _shopFilter = new();
 
@@ -6424,8 +6401,6 @@ namespace Game.Module.InGame
                 Gold = _runGold,
                 LimitLine = Localize.Format("ui.shop.limit", _shopRules.TotalPurchaseLimit - _shopBought,
                                           _shopRules.CardPurchaseLimit - _shopCardsBought),
-                RerollPrice = ShopRerollPrice,
-                CanReroll = CanRerollShop,
             });
         }
 

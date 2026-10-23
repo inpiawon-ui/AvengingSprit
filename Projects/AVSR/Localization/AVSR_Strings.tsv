@@ -501,7 +501,6 @@ ui.common.cancel	취소	キャンセル	Cancel
 ui.shop.leave	나간다	店を出る	Leave
 ui.shop.upgrade.name	{0} 강화	{0} 強化	Hone {0}
 ui.shop.upgrade.desc	가진 카드 Lv.{0} → Lv.{1}	所持カード Lv.{0} → Lv.{1}	Your card Lv.{0} → Lv.{1}
-ui.shop.reroll	다시 뽑기  {0:N0} G	引き直し  {0:N0} G	Reroll  {0:N0} G
 ui.shop.title	상점	ショップ	Shop
 ui.lobby.host_button.sub	호스트 육성	ホスト育成	Train Hosts
 ui.lobby.shop_button.sub	상점	ショップ	Shop
