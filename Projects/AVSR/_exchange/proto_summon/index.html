@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소환 징조 시험판</title>
+<style>
+  :root { --bg:#0d1416; --panel:#162227; --line:#2b3f45; --text:#e6f1f2; --dim:#8fa7ab; --accent:#5ad1ff; --gold:#ffc94d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:"Malgun Gothic","Noto Sans KR",sans-serif; }
+  .wrap { display:flex; gap:16px; padding:12px 16px; align-items:flex-start; flex-wrap:wrap; }
+  canvas { height:calc(100vh - 24px); max-height:960px; aspect-ratio:720/1280; image-rendering:pixelated; background:#000; border-radius:6px; cursor:pointer; }
+  .side { width:300px; display:flex; flex-direction:column; gap:12px; }
+  .box { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:8px; }
+  h1 { font-size:18px; margin:0; }
+  h2 { font-size:14px; margin:0; color:var(--accent); }
+  p { margin:0; font-size:12px; color:var(--dim); line-height:1.5; }
+  label { font-size:13px; display:flex; gap:6px; align-items:center; cursor:pointer; }
+  .row { display:flex; gap:6px; flex-wrap:wrap; }
+  button { background:#22343a; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:7px 10px; font-size:13px; cursor:pointer; font-family:inherit; }
+  button:hover { border-color:var(--accent); }
+  button.go { background:#1f4f5e; border-color:var(--accent); font-weight:bold; }
+  button.on { background:#3a3220; border-color:var(--gold); color:var(--gold); }
+  .note { font-size:11px; color:#c9a24a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <canvas id="c" width="720" height="1280"></canvas>
+  <div class="side">
+    <div class="box">
+      <h1>소환 징조 시험판</h1>
+      <p>박자 · 흐름을 보는 시험판입니다. 화면을 누르면 건너뛰기 · 다음으로.</p>
+      <p class="note">경광등 · 계기판 · 연기는 그림이 없어 임시 도형입니다(고르시면 발주).</p>
+    </div>
+    <div class="box">
+      <h2>1회 뽑기</h2>
+      <div class="row" id="tiers">
+        <button data-tier="0" class="on">꽝(B)</button>
+        <button data-tier="1">좋음(A·금)</button>
+        <button data-tier="2">대박</button>
+      </div>
+      <label><input type="checkbox" id="g1" checked> ① 유령 입장(그냥 · 한 바퀴 · 두 바퀴)</label>
+      <label><input type="checkbox" id="g2"> ② 관 덜컹(0 · 1 · 3번)</label>
+      <label><input type="checkbox" id="g3" checked> ③ 실험실 경광등(없음 · 노랑 · 빨강)</label>
+      <label><input type="checkbox" id="g4"> ④ 계기판 바늘(초록 · 노랑 · 빨강 넘침)</label>
+      <label><input type="checkbox" id="g5" checked> ⑤ 실루엣 룰렛 감속</label>
+      <button class="go" id="one">1회 뽑기</button>
+    </div>
+    <div class="box">
+      <h2>10회 뽑기</h2>
+      <div class="row" id="mix">
+        <button data-mix="2" class="on">대박1 + 좋음1</button>
+        <button data-mix="1">좋음1</button>
+        <button data-mix="0">전부 꽝</button>
+      </div>
+      <button class="go" data-flow="A">A. 경광등 먼저</button>
+      <button class="go" data-flow="B">B. 슬롯 릴(리치)</button>
+      <button class="go" data-flow="C">C. 유령 10마리</button>
+      <p>좋은 칸은 1회 무대로 확대돼 룰렛 → 깨짐 → 공개, 끝나면 결과판.</p>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+g.imageSmoothingEnabled = false;
+const W = 720, H = 1280;
+const HOSTS = ['amazon','amazon_elite','baseball','commando_grenade','commando_laser','commando_mg','commando_missile','dragon_blue','dragoon','gangster','guru','hopper','hopper_smg','medium','ninja','ninja_chain','robot','salamander','snowwoman','thug','vampire','white_wizard'];
+const NAME = { dragon_blue:'블루 드래곤', amazon:'아마존', robot:'로봇', gangster:'갱스터', ninja:'닌자', thug:'불량배', hopper:'호퍼', baseball:'야구 선수', white_wizard:'백마법사', snowwoman:'설녀' };
+const TIER_COL = ['#5ad1ff', '#ffc94d', '#ff5a6e'];
+
+// ── 그림 ──
+const IMG = {};
+function load(key, src) { return new Promise(r => { const i = new Image(); i.onload = () => { IMG[key] = i; r(); }; i.onerror = () => r(); i.src = src; }); }
+const silCache = {};
+function sil(key) {   // 실루엣(짙은 남색)
+  if (silCache[key]) return silCache[key];
+  const s = IMG[key]; const o = document.createElement('canvas'); o.width = s.width; o.height = s.height;
+  const x = o.getContext('2d'); x.drawImage(s, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#0a0d21'; x.fillRect(0, 0, o.width, o.height);
+  return silCache[key] = o;
+}
+
+// ── 도구 ──
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const seg = (t, a, b) => b <= a ? (t >= b ? 1 : 0) : clamp((t - a) / (b - a));
+const outCubic = u => 1 - Math.pow(1 - u, 3);
+const inOut = u => -(Math.cos(Math.PI * u) - 1) / 2;
+const outBack = u => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); };
+const rnd = (a, b) => a + Math.random() * (b - a);
+function pick(arr, not) { let k; do { k = arr[Math.floor(Math.random() * arr.length)]; } while (k === not && arr.length > 1); return k; }
+
+// ── 장면 상태 ──
+let scene = null, t0 = 0, tapped = false;
+const parts = [];   // 파티클 {img, sx,sy,sw,sh, x,y,vx,vy,rot,av,size,life,age,g,add}
+
+function tankGeo(cx, feetY, tankH) {
+  const tw = tankH * 444 / 720, figure = tankH * 0.54;
+  const cell = figure / (76 / 128);
+  return { cx, feetY, tankH, tw, tankTop: feetY - tankH * 0.33 - tankH / 2, cell, figure,
+           glassC: { x: cx, y: feetY - tankH * 0.30 }, glassW: tw * 0.58, glassH: tankH * 0.64, chest: { x: cx, y: feetY - figure * 0.62 } };
+}
+function drawTank(geo, key, alpha = 1) {
+  const im = IMG[key]; if (!im) return;
+  g.globalAlpha = alpha; g.drawImage(im, geo.cx - geo.tw / 2, geo.tankTop, geo.tw, geo.tankH); g.globalAlpha = 1;
+}
+function drawBody(geo, key, silhouette, scale = 1, dx = 0, alpha = 1) {
+  const im = silhouette ? sil(key) : IMG[key]; if (!im) return;
+  const s = geo.cell * scale;
+  g.globalAlpha = alpha;
+  g.drawImage(im, geo.cx - s / 2 + dx, geo.feetY - s * (1 - 24 / 128), s, s);
+  g.globalAlpha = 1;
+}
+function glow(x, y, r, col, a) {
+  g.save(); g.globalCompositeOperation = 'lighter';
+  const gr = g.createRadialGradient(x, y, 0, x, y, r);
+  gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.globalAlpha = a; g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); g.restore();
+}
+function drawGhost(x, y, size, aura, col, a = 1) {
+  if (aura > 0) glow(x, y, size * 1.4, col, aura);
+  const im = IMG.ghost; if (!im) return;
+  g.globalAlpha = a; g.drawImage(im, x - size / 2, y - size / 2, size, size); g.globalAlpha = 1;
+}
+function caption(text) {
+  if (!text) return;
+  g.font = 'bold 30px "Malgun Gothic"'; g.textAlign = 'center';
+  const w = g.measureText(text).width + 40;
+  g.fillStyle = 'rgba(0,0,0,0.55)'; g.fillRect(360 - w / 2, 70, w, 52);
+  g.fillStyle = '#fff'; g.fillText(text, 360, 107);
+}
+
+// ── 파티클 ──
+function burst(geo, k) {
+  const n = Math.round(40 * k), plates = IMG.plateSheet, chips = IMG.chip, splash = IMG.splash;
+  for (let i = 0; i < n; i++) {
+    const side = Math.random() < 0.5 ? -1 : 1, kind = Math.random();
+    let im = chips, cols = 3, rows = 1, size = geo.tankH * rnd(0.015, 0.04);
+    if (kind < 0.25) { im = plates; cols = 5; size = geo.tankH * rnd(0.07, 0.17); }
+    else if (kind < 0.55) { im = splash; cols = 3; rows = 2; size = geo.tankH * rnd(0.03, 0.08); }
+    if (!im) continue;
+    const f = Math.floor(Math.random() * cols * rows), cw = im.width / cols, ch = im.height / rows;
+    const a = rnd(10, 80) * Math.PI / 180, sp = geo.tankH * rnd(0.6, 2.0);
+    parts.push({ im, sx: (f % cols) * cw, sy: Math.floor(f / cols) * ch, sw: cw, sh: ch,
+      x: geo.glassC.x + side * rnd(0.1, 0.5) * geo.glassW, y: geo.glassC.y + rnd(-0.5, 0.5) * geo.glassH,
+      vx: side * Math.sin(a) * sp, vy: -Math.cos(a) * sp * rnd(0.4, 1), rot: rnd(0, 6.28), av: rnd(-1.5, 1.5),
+      size, life: rnd(1.1, 1.7), age: 0, grav: H * 0.8 });
+  }
+}
+function stepParts(dt) {
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i]; p.age += dt;
+    if (p.age >= p.life) { parts.splice(i, 1); continue; }
+    p.vx *= 1 - 1.2 * dt; p.vy *= 1 - 1.2 * dt; p.vy += p.grav * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.av * dt;
+    const u = p.age / p.life; g.globalAlpha = u < 0.85 ? 1 : 1 - (u - 0.85) / 0.15;
+    g.translate(p.x, p.y); g.rotate(p.rot); g.drawImage(p.im, p.sx, p.sy, p.sw, p.sh, -p.size / 2, -p.size / 2, p.size, p.size);
+    g.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  g.restore(); g.globalAlpha = 1;
+}
+
+// ── 임시 도형: 경광등 · 계기판 · 연기 ──
+function beacon(t, col, strength, siren) {
+  if (strength <= 0) return;
+  const lamps = [[150, 230], [570, 230]];
+  for (const [x, y] of lamps) {
+    g.save(); g.globalCompositeOperation = 'lighter';
+    const ang = t * (siren ? 7 : 4.5) + (x > 360 ? Math.PI : 0);
+    g.translate(x, y); g.rotate(ang);
+    const gr = g.createLinearGradient(0, 0, 520, 0); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.globalAlpha = 0.35 * strength; g.fillStyle = gr;
+    g.beginPath(); g.moveTo(0, 0); g.lineTo(520, -90); g.lineTo(520, 90); g.closePath(); g.fill();
+    g.restore();
+    glow(x, y, 46, col, 0.9 * strength);
+    g.fillStyle = '#222'; g.fillRect(x - 20, y + 18, 40, 14);
+  }
+  if (siren) { g.save(); g.globalAlpha = 0.16 * strength * (0.5 + 0.5 * Math.sin(t * 14)); g.fillStyle = col; g.fillRect(0, 0, W, H); g.restore(); }
+}
+function gauge(x, y, r, val, shake) {
+  g.save(); g.translate(x + shake, y);
+  g.fillStyle = '#1b2427'; g.beginPath(); g.arc(0, 0, r + 10, Math.PI, 0); g.fill();
+  const arcs = [['#3ccf6e', 0, 0.5], ['#ffd34d', 0.5, 0.8], ['#ff4d5e', 0.8, 1]];
+  for (const [c, a, b] of arcs) { g.strokeStyle = c; g.lineWidth = 14; g.beginPath(); g.arc(0, 0, r, Math.PI + a * Math.PI, Math.PI + b * Math.PI); g.stroke(); }
+  const ang = Math.PI + clamp(val, 0, 1.08) * Math.PI;
+  g.strokeStyle = '#fff'; g.lineWidth = 5; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(ang) * (r - 6), Math.sin(ang) * (r - 6)); g.stroke();
+  g.fillStyle = '#fff'; g.beginPath(); g.arc(0, 0, 7, 0, 6.28); g.fill();
+  g.restore();
+}
+function smoke(x, y, u, a) {
+  if (u <= 0 || u >= 1) return;
+  g.save(); g.globalAlpha = a * (1 - u);
+  for (let i = 0; i < 5; i++) { g.fillStyle = '#b9c4c6'; g.beginPath(); g.arc(x + i * 18 * u + 10, y - 40 * u - i * 8, 18 + 22 * u, 0, 6.28); g.fill(); }
+  g.restore();
+}
+
+// ── 룰렛 일정: 바뀌는 시각들(점점 느려짐) → 마지막이 진짜 ──
+function rouletteSchedule(tier) {
+  const dur = [0.9, 1.7, 2.2][tier];
+  const times = []; let t = 0, iv = 0.06;
+  while (t < dur) { times.push(t); t += iv; iv *= tier === 0 ? 1.18 : 1.12; }
+  return { times, dur: t, extra: tier === 2 };   // 대박: 멈춘 듯 0.55초 뒤 한 칸 더
+}
+function rouletteKey(sched, real, t, seed) {
+  if (t < 0) return seed[0];
+  let i = 0; while (i + 1 < sched.times.length && t >= sched.times[i + 1]) i++;
+  const stop = sched.dur;
+  if (t >= stop) {
+    if (sched.extra && t < stop + 0.55) return seed[(sched.times.length) % seed.length];   // 멈춘 척(가짜 몸)
+    return real;
+  }
+  return seed[i % seed.length];
+}
+
+// ── 1회 무대 ──
+function makeSingle(tier, key, gm, fromTen) {
+  const geo = tankGeo(360, 877, 640);
+  const seed = []; for (let i = 0; i < 40; i++) seed.push(pick(HOSTS, key));
+  const tl = {}; let t = 0.4;
+  if (!fromTen) {
+    if (gm.g2) { tl.pipe = t; t += [0.2, 0.7, 1.5][tier]; }
+    tl.ghostFrom = t; tl.loops = gm.g1 ? tier : 0; tl.pause = gm.g1 && tier === 2 ? 0.35 : 0;
+    t += 0.9 + tl.loops * 0.9 + tl.pause + 0.4; tl.ghostIn = t;   // 마지막 0.4 = 가슴으로 쏙
+  } else { tl.ghostIn = 0.3; t = 0.3; }
+  tl.alarm = !fromTen && gm.g3 ? t : -1;
+  tl.gauge = !fromTen && gm.g4 ? t : -1;
+  const sched = rouletteSchedule(tier);
+  tl.roul = gm.g5 || fromTen ? t + (tl.alarm >= 0 ? 0.3 : 0.1) : -1;
+  let endTell = t;
+  if (tl.alarm >= 0) endTell = Math.max(endTell, t + [0.3, 1.4, 1.9][tier]);
+  if (tl.gauge >= 0) endTell = Math.max(endTell, t + [0.7, 1.2, 1.9][tier]);
+  if (tl.roul >= 0) endTell = Math.max(endTell, tl.roul + sched.dur + (sched.extra ? 0.6 : 0) + 0.2);
+  tl.crack = endTell; tl.reveal = endTell + 0.45 + (tier === 2 ? 0.2 : 0);
+  return { kind: 'single', tier, key, gm, geo, seed, tl, sched, fromTen, burst: false };
+}
+
+function drawSingle(s, t, dt) {
+  const { geo, tl, tier } = s;
+  const revealed = t >= tl.reveal;
+  // 관 덜컹 — 화면이 아래로 툭 · 연기
+  let bump = 0;
+  if (tl.pipe !== undefined) {
+    const n = [0, 1, 3][tier];
+    for (let i = 0; i < n; i++) { const u = seg(t, tl.pipe + i * 0.45, tl.pipe + i * 0.45 + 0.18); if (u > 0 && u < 1) bump = Math.sin(u * Math.PI) * (6 + i * 3); }
+  }
+  g.save(); g.translate(0, bump);
+  g.drawImage(IMG.stage, 0, 0, W, H);
+  g.fillStyle = `rgba(0,0,0,${0.3 * (1 - seg(t, tl.reveal, tl.reveal + 0.5))})`; g.fillRect(0, 0, W, H);
+  if (tl.pipe !== undefined) for (let i = 0; i < [0, 1, 3][tier]; i++) smoke(70, 1110, seg(t, tl.pipe + i * 0.45, tl.pipe + i * 0.45 + 0.8), 0.7);
+  // 경광등
+  if (tl.alarm >= 0 && !revealed) {
+    const on = tier === 0 ? 0 : seg(t, tl.alarm, tl.alarm + 0.2) * (1 - seg(t, tl.crack + 0.2, tl.crack + 0.6));
+    beacon(t, tier === 2 ? '#ff3b4f' : '#ffcc33', on, tier === 2);
+  }
+  // 공개 빛(하나로 통일)
+  if (revealed) {
+    const fr = IMG['light' + (1 + Math.floor((t - tl.reveal) / 0.25) % 6)];
+    const a = seg(t, tl.reveal, tl.reveal + 0.5), size = 742 * (0.85 + 0.15 * a);
+    g.save(); g.globalCompositeOperation = 'lighter'; g.globalAlpha = a;
+    g.translate(geo.cx, geo.feetY + size * 0.02); g.rotate(Math.sin((t - tl.reveal) * 0.8) * 0.08);
+    g.drawImage(fr, -size / 2, -size * 0.93, size, size); g.restore(); g.globalAlpha = 1;
+  }
+  // 배양조
+  const inU = outCubic(seg(t, 0, 0.5));
+  if (!revealed) drawTank(geo, 'tank', inU); else drawTank(geo, 'tankBroken', 1);
+  // 몸
+  if (!revealed) {
+    const inside = t >= tl.ghostIn;
+    let key = s.key;
+    if (tl.roul >= 0) key = rouletteKey(s.sched, s.key, t - tl.roul, s.seed);
+    let shake = 0;
+    if (t >= tl.crack) shake = Math.sin(t * 50) * (2 + 3 * tier) * seg(t, tl.crack, tl.reveal);
+    if (inside || tl.roul < 0) drawBody(geo, key, true, 1, shake, inU * (inside ? 1 : 0.5));
+    if (inside) glow(geo.glassC.x, geo.glassC.y, 220, '#5ad1ff', 0.18);
+    // 유리 금
+    if (t >= tl.crack) { const k = Math.min(2, Math.floor(seg(t, tl.crack, tl.reveal) * 3)); g.drawImage(IMG['crack' + (k + 1)], geo.cx - geo.tw / 2, geo.tankTop, geo.tw, geo.tankH); }
+  } else {
+    if (!s.burst) { s.burst = true; burst(geo, [0.4, 0.7, 1][tier]); }
+    const u = seg(t, tl.reveal, tl.reveal + 0.3), tr = t - tl.reveal;
+    const sy = u < 0.3 ? 1 + 0.15 * u / 0.3 : 1 + 0.15 * (1 - outBack((u - 0.3) / 0.7)), grow = 1 + 0.3 * outCubic(u);
+    const pose = tr >= 0.25 && tr < 1.1 && IMG[s.key + '_pose'] ? s.key + '_pose' : s.key;
+    const im = IMG[pose], sz = geo.cell * grow;
+    g.save(); g.translate(geo.cx, geo.feetY); g.scale((2 - sy), sy);
+    g.drawImage(im, -sz / 2, -sz * (1 - 24 / 128), sz, sz); g.restore();
+  }
+  // 유령
+  if (!s.fromTen && t < tl.ghostIn + 0.05) drawGhostPath(s, t);
+  // 계기판
+  if (tl.gauge >= 0 && !revealed && t >= tl.gauge - 0.3) {
+    const target = [0.35, 0.68, 1.06][tier], dur = [0.7, 1.2, 1.6][tier];
+    const u = seg(t, tl.gauge, tl.gauge + dur);
+    let v = target * outCubic(u); let sh = 0;
+    if (tier === 2 && u >= 1) { v = 1.06 + Math.sin(t * 40) * 0.02; sh = Math.sin(t * 60) * 3; }
+    gauge(600, 560, 70, v, sh);
+  }
+  g.restore();
+  // 대박 하양
+  if (tier === 2) { const f = t < tl.reveal ? seg(t, tl.reveal - 0.15, tl.reveal) : 1 - seg(t, tl.reveal, tl.reveal + 0.25); if (f > 0) { g.fillStyle = `rgba(255,255,255,${0.85 * f})`; g.fillRect(0, 0, W, H); } }
+  stepParts(dt);
+  // 이름 판
+  if (t >= tl.reveal + 0.6) {
+    const k = outBack(seg(t, tl.reveal + 0.6, tl.reveal + 1.05));
+    const pw = 600, ph = 166, x = -720 + (360 - pw / 2 + 720) * k, y = 1000;
+    if (IMG.plate) g.drawImage(IMG.plate, x, y, pw, ph);
+    g.fillStyle = '#fff'; g.font = 'bold 44px "Malgun Gothic"'; g.textAlign = 'left';
+    g.fillText(NAME[s.key] || s.key, x + 70, y + 100);
+    g.fillStyle = TIER_COL[tier]; g.font = 'bold 26px "Malgun Gothic"';
+    g.fillText(['B', 'A · 금', '대박'][tier], x + 70, y + 46);
+  }
+  if (!s.fromTen) caption(tellCaption(s, t));
+}
+
+function tellCaption(s, t) {
+  const tl = s.tl, tier = s.tier;
+  if (tl.pipe !== undefined && t >= tl.pipe && t < tl.ghostFrom) return ['② 관 — 덜컹 없음', '② 관 덜컹 ×1', '② 관 덜컹 ×3 · 뻥'][tier];
+  if (t >= tl.ghostFrom && t < tl.ghostIn) return s.gm.g1 ? ['① 흰 유령 — 그냥 들어감', '① 빛나며 한 바퀴', '① 두 바퀴 · 멈칫'][tier] : '유령 입장';
+  if (t >= tl.ghostIn && t < tl.crack) {
+    const a = [];
+    if (tl.alarm >= 0) a.push(['③ 경광등 없음', '③ 노란 경광등', '③ 빨간 경광등 · 사이렌'][tier]);
+    if (tl.gauge >= 0) a.push(['④ 초록', '④ 노랑', '④ 빨강 넘침'][tier]);
+    if (tl.roul >= 0) a.push('⑤ 룰렛');
+    return a.join(' · ');
+  }
+  return '';
+}
+
+function drawGhostPath(s, t) {
+  const { geo, tl, tier } = s;
+  const from = { x: 72, y: 1110 }, chest = geo.chest;
+  const fly = tl.ghostIn - tl.ghostFrom;
+  if (t < tl.ghostFrom) { drawGhost(from.x, from.y - 10 + Math.sin(t * 3) * 5, 100, 0, '#fff', seg(t, 0.2, 0.4)); return; }
+  const u = seg(t, tl.ghostFrom, tl.ghostIn);
+  const col = ['#ffffff', '#ffd76a', '#ff8fd0'][tier], aura = s.gm.g1 ? [0, 0.55, 0.85][tier] : 0;
+  let x, y;
+  const approach = 0.9 / fly, loopEnd = (0.9 + tl.loops * 0.9) / fly, pauseEnd = (0.9 + tl.loops * 0.9 + tl.pause) / fly;
+  const orbitC = { x: geo.cx, y: geo.glassC.y }, rx = 230, ry = 120;
+  if (u < approach) {   // 관 → 배양조 옆(둘레 시작점)
+    const k = inOut(u / approach), tx = tl.loops > 0 ? orbitC.x - rx : chest.x, ty = tl.loops > 0 ? orbitC.y : chest.y;
+    const cx = (from.x + tx) / 2 - 60, cy = Math.min(from.y, ty) - 180;
+    x = (1 - k) * (1 - k) * from.x + 2 * (1 - k) * k * cx + k * k * tx; y = (1 - k) * (1 - k) * from.y + 2 * (1 - k) * k * cy + k * k * ty;
+  } else if (u < loopEnd) {   // 둘레를 돈다(앞 → 뒤)
+    const k = (u - approach) / (loopEnd - approach), a = Math.PI + k * tl.loops * Math.PI * 2;
+    x = orbitC.x + Math.cos(a) * rx; y = orbitC.y + Math.sin(a) * ry * 0.9 - k * 40;
+  } else if (u < pauseEnd) { x = orbitC.x - rx; y = orbitC.y - 40 + Math.sin(t * 20) * 4; }   // 멈칫
+  else { const k = inOut((u - pauseEnd) / (1 - pauseEnd)); const sx = tl.loops > 0 ? orbitC.x - rx : chest.x, sy = tl.loops > 0 ? orbitC.y - 40 : chest.y; x = sx + (chest.x - sx) * k; y = sy + (chest.y - sy) * k; }
+  if (aura > 0) for (let i = 1; i <= 4; i++) glow(x - (x - geo.cx) * 0.05 * i, y + 8 * i, 30, col, aura * 0.25 * (5 - i) / 4);
+  drawGhost(x, y, 100, aura, col, 1 - seg(t, tl.ghostIn - 0.05, tl.ghostIn));
+}
+
+// ── 10회 ──
+function makeTen(flow, mix) {
+  const keys = []; for (let i = 0; i < 10; i++) keys.push(pick(HOSTS));
+  const tiers = new Array(10).fill(0);
+  if (mix >= 1) tiers[2] = 1;
+  if (mix >= 2) { tiers[7] = 2; keys[7] = 'dragon_blue'; }
+  if (mix >= 1) keys[2] = 'amazon';
+  const slots = keys.map((k, i) => {
+    const c = i % 5, row = Math.floor(i / 5);
+    return { key: k, tier: tiers[i], geo: tankGeo(360 + (-2 + c) * 136, 538 + row * 346 + 40, 256), seed: Array.from({ length: 40 }, () => pick(HOSTS, k)), broke: false };
+  });
+  const best = Math.max(...tiers);
+  const stars = slots.map((s, i) => i).filter(i => slots[i].tier >= 1).sort((a, b) => slots[b].tier - slots[a].tier);
+  const s = { kind: 'ten', flow, slots, best, stars, starIdx: 0, phase: 'ten', stopT: [] };
+  // 칸마다 멈추는 시각
+  if (flow === 'A') { s.alarmEnd = best > 0 ? 1.6 : 0.3; slots.forEach((sl, i) => { sl.spin = s.alarmEnd + 0.4; sl.stop = sl.tier >= 1 ? 1e9 : s.alarmEnd + 1.0 + i * 0.12; }); s.tenEnd = s.alarmEnd + 1.0 + 10 * 0.12 + 0.6; }
+  if (flow === 'B') { let t = 0.8; slots.forEach((sl, i) => { sl.spin = 0.4; if (sl.tier >= 1) { sl.reach = t; t += 1.6; sl.stop = 1e9; } else { sl.stop = t; t += 0.28; } }); s.tenEnd = t + 0.5; }
+  if (flow === 'C') { slots.forEach((sl, i) => { sl.ghost0 = 0.3 + i * 0.32; sl.ghostIn = sl.ghost0 + (sl.tier >= 1 ? 1.2 : 0.55); sl.spin = sl.ghostIn; }); const last = Math.max(...slots.map(x => x.ghostIn)); slots.forEach(sl => sl.stop = sl.tier >= 1 ? 1e9 : last + 0.5); s.tenEnd = last + 1.2; }
+  return s;
+}
+
+function drawTen(s, t, dt) {
+  g.drawImage(IMG.stage, 0, 0, W, H);
+  g.fillStyle = 'rgba(0,0,0,0.3)'; g.fillRect(0, 0, W, H);
+  if (s.flow === 'A' && t < s.alarmEnd + 0.4 && s.best > 0) beacon(t, s.best === 2 ? '#ff3b4f' : '#ffcc33', seg(t, 0.1, 0.3) * (1 - seg(t, s.alarmEnd, s.alarmEnd + 0.4)), s.best === 2);
+  for (const sl of s.slots) {
+    const geo = sl.geo, inU = outCubic(seg(t, 0.05, 0.4));
+    const broke = t >= sl.stop;
+    if (broke && !sl.broke) { sl.broke = true; burst(geo, 0.15); }
+    if (!broke) drawTank(geo, 'tank', inU); else drawTank(geo, 'tankBroken', 1);
+    if (broke) { drawBody(geo, sl.key, false); continue; }
+    const spinning = t >= sl.spin;
+    let key = spinning ? sl.seed[Math.floor((t - sl.spin) / (sl.reach !== undefined && t >= sl.reach ? 0.22 : 0.07)) % sl.seed.length] : null;
+    let shake = 0;
+    const reaching = sl.reach !== undefined && t >= sl.reach;
+    if (reaching) { shake = Math.sin(t * 40) * 4; glow(geo.glassC.x, geo.glassC.y, 190, TIER_COL[sl.tier], 0.7 + 0.25 * Math.sin(t * 8)); }
+    if (key) drawBody(geo, key, true, 1, shake);
+    if (reaching) { g.font = 'bold 34px "Malgun Gothic"'; g.textAlign = 'center'; g.fillStyle = TIER_COL[sl.tier]; g.fillText('리치!', geo.cx, geo.tankTop - 6); }
+    // C: 유령
+    if (s.flow === 'C' && t >= sl.ghost0 - 0.2 && t < sl.ghostIn) {
+      const u = seg(t, sl.ghost0, sl.ghostIn), from = { x: 72, y: 1110 };
+      let x, y;
+      if (sl.tier === 0) { const k = inOut(u); x = from.x + (geo.chest.x - from.x) * k; y = from.y + (geo.chest.y - from.y) * k - Math.sin(k * Math.PI) * 120; }
+      else if (u < 0.45) { const k = inOut(u / 0.45); x = from.x + (geo.cx - 90 - from.x) * k; y = from.y + (geo.glassC.y - from.y) * k - Math.sin(k * Math.PI) * 120; }
+      else { const k = (u - 0.45) / 0.55, a = Math.PI + k * Math.PI * 2 * (sl.tier === 2 ? 2 : 1); x = geo.cx + Math.cos(a) * 90 * (1 - k * 0.6); y = geo.glassC.y + Math.sin(a) * 50 * (1 - k * 0.6) - k * 30; }
+      drawGhost(x, y, 56, sl.tier ? 0.7 : 0, ['#fff', '#ffd76a', '#ff8fd0'][sl.tier]);
+    }
+  }
+  stepParts(dt);
+  caption({ A: 'A. 경광등 먼저', B: 'B. 슬롯 릴(리치)', C: 'C. 유령 10마리' }[s.flow] + (s.flow === 'A' && t < s.alarmEnd ? (s.best ? ' — 경광등 ' + (s.best === 2 ? '빨강' : '노랑') : ' — 경광등 없음(꽝 판)') : ''));
+}
+
+function drawResult(s, t) {
+  g.fillStyle = '#0c1a24'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#fff'; g.font = 'bold 40px "Malgun Gothic"'; g.textAlign = 'center'; g.fillText('소환 결과', 360, 180);
+  s.slots.forEach((sl, i) => {
+    const c = i % 5, row = Math.floor(i / 5), x = 40 + c * 130, y = 300 + row * 260, k = outBack(seg(t, i * 0.04, i * 0.04 + 0.3));
+    g.save(); g.translate(x + 60, y + 100); g.scale(k, k);
+    g.fillStyle = '#16303a'; g.fillRect(-58, -100, 116, 200);
+    g.strokeStyle = TIER_COL[sl.tier]; g.lineWidth = sl.tier ? 6 : 3; g.strokeRect(-58, -100, 116, 200);
+    g.drawImage(IMG[sl.key], -60, -90, 120, 120);
+    g.fillStyle = TIER_COL[sl.tier]; g.font = 'bold 20px "Malgun Gothic"'; g.fillText(['B', 'A · 금', '대박'][sl.tier], 0, 70);
+    g.restore();
+  });
+  g.fillStyle = '#8fa7ab'; g.font = '24px "Malgun Gothic"'; g.fillText('(결과판은 지금 게임 결과판을 그대로 씁니다 — 여긴 자리만)', 360, 1000);
+}
+
+// ── 진행 ──
+let last = 0;
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+  if (scene) {
+    let t = (now - t0) / 1000;
+    if (scene.kind === 'single') {
+      if (tapped) { tapped = false; if (t >= scene.tl.reveal + 1.2) { if (scene.next) { scene = scene.next(); t0 = now; t = 0; } } else if (t < scene.tl.reveal) { t0 = now - scene.tl.reveal * 1000; t = scene.tl.reveal; } }
+      drawSingle(scene, t, dt);
+      if (t >= scene.tl.reveal + 1.2) { g.fillStyle = 'rgba(255,255,255,0.7)'; g.font = '24px "Malgun Gothic"'; g.textAlign = 'center'; g.fillText('화면을 눌러 계속', 360, 1230); }
+    } else if (scene.kind === 'ten') {
+      if (tapped) { tapped = false; if (t > 0.6) t0 = now - scene.tenEnd * 1000; }
+      drawTen(scene, t, dt);
+      if (t >= scene.tenEnd) { const ten = scene; scene = nextStar(ten); t0 = now; }
+    } else if (scene.kind === 'result') {
+      drawResult(scene.ten, t);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+function nextStar(ten) {
+  if (ten.starIdx >= ten.stars.length) return { kind: 'result', ten };
+  const sl = ten.slots[ten.stars[ten.starIdx++]];
+  const s = makeSingle(sl.tier, sl.key, { g5: true }, true);
+  s.next = () => nextStar(ten);
+  return s;
+}
+cv.addEventListener('pointerdown', () => tapped = true);
+
+// ── 단추 ──
+let tier = 0, mix = 2;
+document.querySelectorAll('#tiers button').forEach(b => b.onclick = () => { tier = +b.dataset.tier; document.querySelectorAll('#tiers button').forEach(x => x.classList.toggle('on', x === b)); });
+document.querySelectorAll('#mix button').forEach(b => b.onclick = () => { mix = +b.dataset.mix; document.querySelectorAll('#mix button').forEach(x => x.classList.toggle('on', x === b)); });
+document.getElementById('one').onclick = () => {
+  const gm = {}; for (const k of ['g1', 'g2', 'g3', 'g4', 'g5']) gm[k] = document.getElementById(k).checked;
+  const key = tier === 2 ? 'dragon_blue' : tier === 1 ? 'amazon' : pick(['gangster', 'thug', 'hopper', 'baseball']);
+  parts.length = 0; scene = makeSingle(tier, key, gm, false); t0 = performance.now();
+};
+document.querySelectorAll('[data-flow]').forEach(b => b.onclick = () => { parts.length = 0; scene = makeTen(b.dataset.flow, mix); t0 = performance.now(); });
+
+// ── 시작 ──
+const list = [['stage', 'img/lab_stage.png'], ['tank', 'img/lab_tank.png'], ['tankBroken', 'img/lab_tank_broken.png'], ['ghost', 'img/unitL_ghost_se.png'],
+  ['plate', 'img/reveal_plate.png'], ['plateSheet', 'img/lab_shards_plate_sheet.png'], ['chip', 'img/lab_shards_chip_sheet.png'], ['splash', 'img/lab_splash_sheet.png']];
+for (let i = 1; i <= 3; i++) list.push(['crack' + i, `img/lab_crack_0${i}.png`]);
+for (let i = 1; i <= 6; i++) list.push(['light' + i, `img/lab_reveal_light_0${i}.png`]);
+for (const h of HOSTS) { list.push([h, `img/host/${h}.png`]); list.push([h + '_pose', `img/host/${h}_pose.png`]); }
+Promise.all(list.map(([k, s]) => load(k, s))).then(() => {
+  requestAnimationFrame(frame);
+  g.drawImage(IMG.stage, 0, 0, W, H); caption('오른쪽 단추로 시작');
+});
+</script>
+</body>
+</html>
