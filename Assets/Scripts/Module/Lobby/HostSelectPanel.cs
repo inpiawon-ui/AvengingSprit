@@ -895,7 +895,7 @@ namespace Game.Module.Lobby
             if (!_player.PayHostEntry(e))
             {
                 SystemPopup.Show(
-                    Localize.Format("ui.hostselect.gold_short", e.DisplayName, e.Grade, _player.Gold, cost),
+                    Localize.Format("ui.hostselect.gold_short", e.DisplayName, HostGradeLabel.Of(e.Grade), _player.Gold, cost),
                     null, Localize.Get("ui.common.ok"), null);
                 return;
             }

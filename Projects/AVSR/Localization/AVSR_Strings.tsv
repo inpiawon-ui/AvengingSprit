@@ -420,7 +420,7 @@ ui.job.mid.rule	직업 규칙 없음 — 빠른 연사와 짧은 사거리가 �
 ui.job.ranged.rule	직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다	職業ルールなし — 差はそれぞれのアクティブ・パッシブが担う	No class rule — each Active/Passive sets it apart
 ui.hostselect.tip	HOST마다 이동속도, 공격 방식, 스킬이 다릅니다.\n다양한 HOST를 경험해 보세요!	HOSTごとに移動速度、攻撃方法、スキルが異なります。\nいろいろなHOSTを試してみましょう！	Each HOST differs in speed, attack, and Skills.\nTry out many HOSTs!
 ui.hostselect.owned	보유 HOST  {0}/{1}	所持HOST  {0}/{1}	HOSTs Owned  {0}/{1}
-ui.hostselect.gold_short	골드가 모자란다.\n{0}({1}급) — {2:N0} / {3:N0}\n\n유령으로 시작하면 골드가 들지 않는다.	ゴールドが足りません。\n{0}（{1}ランク） — {2:N0} / {3:N0}\n\nゴーストで開始すればゴールドはかかりません。	Not enough Gold.\n{0} (Rank {1}) — {2:N0} / {3:N0}\n\nStarting as a Ghost costs no Gold.
+ui.hostselect.gold_short	골드가 모자란다.\n{0}({1}) — {2:N0} / {3:N0}\n\n유령으로 시작하면 골드가 들지 않는다.	ゴールドが足りません。\n{0}（{1}） — {2:N0} / {3:N0}\n\nゴーストで開始すればゴールドはかかりません。	Not enough Gold.\n{0} ({1}) — {2:N0} / {3:N0}\n\nStarting as a Ghost costs no Gold.
 ui.attack.melee_drain	근접 · 흡혈	近接・吸血	Melee · Drain
 ui.attack.melee	근접	近接	Melee
 ui.attack.single_slow	단발 · 둔화	単発・鈍足	Single · Slow
@@ -988,7 +988,6 @@ ui.summon.history	뽑기 기록	召喚履歴	History
 ui.summon.history_empty	아직 뽑은 기록이 없어요.	まだ履歴がありません。	No pulls yet.
 ui.summon.result	소환 결과	召喚結果	Summon Results
 ui.summon.result_count	{0}회 소환	{0}回召喚	x{0} Summon
-ui.summon.grade	{0}급	{0}級	{0}-grade
 ui.summon.essence	정수 +{0}	エッセンス +{0}	Essence +{0}
 ui.summon.jackpot	대박	大当たり	Jackpot
 ui.summon.new_body	새 몸	新しい体	New
@@ -1056,7 +1055,7 @@ ui.summon.shards	조각 × {0}	かけら × {0}	Shards × {0}
 ui.summon.next_star	지금 조각 <color=#FFD94A>{0}</color> / {1}  →  다음 성급까지 <color=#FFD94A>{2}</color>	かけら <color=#FFD94A>{0}</color> / {1}  →  次の星まで <color=#FFD94A>{2}</color>	Shards <color=#FFD94A>{0}</color> / {1}  →  <color=#FFD94A>{2}</color> to next star
 ui.summon.star_max	최대 성급	最大の星	Max Stars
 ui.summon.rates_title	소환 확률	召喚確率	Summon Rates
-ui.summon.rate_hosts	{0}급 호스트 {1}명	{0}ランクのホスト {1}人	{0}-Grade Hosts ×{1}
+ui.summon.rate_hosts	{0} 호스트 {1}명	{0}ホスト {1}人	{0} Hosts ×{1}
 ui.summon.rate_each	각 {0}	各 {0}	{0} each
 ui.summon.rate_pickup	픽업 {0}	ピックアップ {0}	Pick Up {0}
 ui.summon.rate_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}

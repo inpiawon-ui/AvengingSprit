@@ -291,7 +291,7 @@ namespace Game.Module.Lobby
                            : high ? SummonReveal.Rarity.Rare : SummonReveal.Rarity.Normal;
                 string tag = x.Jackpot ? "ui.summon.reveal.jackpot" : x.Pickup ? "ui.summon.reveal.pickup"
                            : x.IsNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get";
-                string grade = h == null ? string.Empty : h.Grade == HostGrade.S ? "SSR" : h.Grade == HostGrade.A ? "SR" : "R";
+                string grade = h == null ? string.Empty : HostGradeLabel.Of(h.Grade);
                 list.Add(new SummonReveal.Entry(x.HostKey, h != null ? h.DisplayName : x.HostKey, grade, tag, rarity));
             }
             return list;
@@ -355,7 +355,7 @@ namespace Game.Module.Lobby
                 var gt = Txt(cell, "CellGradeText");
                 if (gt != null)
                 {
-                    gt.text = string.Format(Localize.FromTable("ui.summon.grade", "{0}급"), grade);
+                    gt.text = HostGradeLabel.Of(grade);
                     gt.color = grade == HostGrade.B ? GradeB : GradeA;
                 }
                 var name = Txt(cell, "CellNameText");
@@ -378,7 +378,7 @@ namespace Game.Module.Lobby
 
             var sb = new StringBuilder();
             if (jackpots > 0) sb.Append($"<color=#FFD94A>{Localize.FromTable("ui.summon.jackpot", "대박")} {jackpots}</color>  ·  ");
-            sb.Append($"<color=#E09BFF>{string.Format(Localize.FromTable("ui.summon.grade", "{0}급"), "A")} {aCount}</color>");
+            sb.Append($"<color=#E09BFF>{HostGradeLabel.Of(HostGrade.A)} {aCount}</color>");
             if (news > 0) sb.Append($"  ·  <color=#8FE7FF>{Localize.FromTable("ui.summon.new_body", "새 몸")} {news}</color>");
             if (essence > 0) sb.Append($"  ·  <color=#8FE7FF>{string.Format(Localize.FromTable("ui.summon.essence", "정수 +{0}"), essence)}</color>");
             _ui.SetText("ResultSummaryText", sb.ToString());
@@ -411,7 +411,7 @@ namespace Game.Module.Lobby
             var gt = _ui.Get<TextMeshProUGUI>("SingleGradeText");
             if (gt != null)
             {
-                gt.text = grade.ToString();
+                gt.text = HostGradeLabel.Of(grade);
                 gt.color = grade == HostGrade.B ? GradeB : GradeA;
             }
             _ui.SetText("SingleNameText", host != null ? host.DisplayName : x.HostKey);
@@ -478,7 +478,7 @@ namespace Game.Module.Lobby
                 if (!on) continue;
                 var (k, pct) = grades[i];
                 var c = k == "A" ? GradeA : Color.white;
-                RateLine(node, string.Format(Localize.FromTable("ui.summon.grade", "{0}급"), k), $"{pct:0.00}%", c);
+                RateLine(node, HostGradeLabel.Of(k), $"{pct:0.00}%", c);
             }
 
             // 호스트 — 같은 등급은 한 줄(「B급 호스트 11명 · 각 6.82%」), 픽업은 따로 금 테 줄
@@ -496,12 +496,12 @@ namespace Game.Module.Lobby
                 else if (r.Grade == HostGrade.B) { bCount++; bEach = r.Percent; }
                 else { aCount++; aEach = r.Percent; }
             }
-            RateLine("RateRowHostB", string.Format(Localize.FromTable("ui.summon.rate_hosts", "{0}급 호스트 {1}명"), "B", bCount),
+            RateLine("RateRowHostB", string.Format(Localize.FromTable("ui.summon.rate_hosts", "{0} 호스트 {1}명"), HostGradeLabel.Of(HostGrade.B), bCount),
                 string.Format(Localize.FromTable("ui.summon.rate_each", "각 {0}"), $"{bEach:0.00}%"), Color.white);
             _ui.SetActive("RateRowPickup", pickName.Length > 0);
             RateLine("RateRowPickup", string.Format(Localize.FromTable("ui.summon.rate_pickup", "픽업 {0}"), pickName),
                 $"{pickPct:0.00}%", new Color(1f, 0.55f, 1f), Gold);
-            RateLine("RateRowHostA", string.Format(Localize.FromTable("ui.summon.rate_hosts", "{0}급 호스트 {1}명"), "A", aCount),
+            RateLine("RateRowHostA", string.Format(Localize.FromTable("ui.summon.rate_hosts", "{0} 호스트 {1}명"), HostGradeLabel.Of(HostGrade.A), aCount),
                 string.Format(Localize.FromTable("ui.summon.rate_each", "각 {0}"), $"{aEach:0.00}%"), GradeA);
 
             var amounts = g.AmountRates();

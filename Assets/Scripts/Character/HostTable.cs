@@ -11,6 +11,19 @@ namespace Game.Character
     public enum HostGrade { B, A, S }
 
     /// <summary>
+    /// 등급 화면 표기 — 표 안에서는 B · A · S, 화면에는 R · SR · SSR 로만 쓴다(PD 2026-10-23 「소환도 R/SR/SSR 로」).
+    /// 표기가 두 벌이면 같은 몸이 화면마다 다른 등급으로 보인다.
+    /// </summary>
+    public static class HostGradeLabel
+    {
+        public static string Of(HostGrade grade) => grade == HostGrade.S ? "SSR" : grade == HostGrade.A ? "SR" : "R";
+
+        /// <summary>표의 문자 키(「B」 · 「A」 · 「S」)도 같은 표기로.</summary>
+        public static string Of(string gradeKey)
+            => System.Enum.TryParse(gradeKey, out HostGrade g) ? Of(g) : gradeKey;
+    }
+
+    /// <summary>
     /// 성장하는 능력치 여섯. **순서가 곧 `GameConfig` 성장폭 배열의 첨자다** —
     /// 여기를 바꾸면 그 배열도 함께 바꿔야 한다.
     ///

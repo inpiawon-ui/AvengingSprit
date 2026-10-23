@@ -309,7 +309,7 @@ namespace Game.Module.Lobby
             if (gold > 0 && _player.Gold < gold)
             {
                 SystemPopup.Show(
-                    Localize.Format("ui.hostselect.gold_short", e.DisplayName, e.Grade, _player.Gold, gold),
+                    Localize.Format("ui.hostselect.gold_short", e.DisplayName, HostGradeLabel.Of(e.Grade), _player.Gold, gold),
                     null, Localize.Get("ui.common.ok"), null);
                 return;
             }
