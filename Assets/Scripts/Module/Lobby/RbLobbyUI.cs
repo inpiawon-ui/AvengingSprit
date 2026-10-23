@@ -44,6 +44,7 @@ namespace Game.Module.Lobby
         private SpriteAtlas _faces;
         private RbHostPage _hostPage;
         private RbGrowthPage _growthPage;
+        private RbSummonPage _summonPage;
         private string _tab = "Battle";
 
         private int _chapter = 1;
@@ -65,10 +66,12 @@ namespace Game.Module.Lobby
                 string node = r;
                 _ui.OnClick(node, () => Soon("ui.rb.soon"));
             }
-            foreach (var tab in new[] { "Shop", "Summon", "Challenge" })
+            foreach (var tab in new[] { "Shop", "Challenge" })
                 _ui.OnClick($"Tab{tab}", () => Soon("ui.rb.soon"));
             _ui.OnClick("TabHost", () => { GameSound.Cue("ui.tap"); SelectTab("Host"); });
             _ui.OnClick("TabBattle", () => { GameSound.Cue("ui.tap"); SelectTab("Battle"); });
+            _ui.OnClick("TabSummon", () => { GameSound.Cue("ui.tap"); SelectTab("Summon"); });
+            _summonPage = GetComponentInChildren<RbSummonPage>(true);
             _hostPage = GetComponentInChildren<RbHostPage>(true);
             _growthPage = GetComponentInChildren<RbGrowthPage>(true);
             _ui.SetActive("SortieCardTemplate", false);
@@ -139,6 +142,7 @@ namespace Game.Module.Lobby
         public bool OnBackPressed()
         {
             if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
+            if (_summonPage != null && _summonPage.gameObject.activeSelf && _summonPage.Back()) return true;
             if (_tab != "Battle") { SelectTab("Battle"); return true; }
             return false;
         }
@@ -501,6 +505,11 @@ namespace Game.Module.Lobby
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
                 else _hostPage.gameObject.SetActive(false);
+            }
+            if (_summonPage != null)
+            {
+                if (tab == "Summon" && _player != null) _summonPage.Open(_player, _faces);
+                else _summonPage.gameObject.SetActive(false);
             }
             if (tab == "Battle" && _player != null && _player.IsReady) { RefreshCards(); RefreshSortie(); }
             RefreshHeader();

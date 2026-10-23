@@ -9287,3 +9287,172 @@ MonoBehaviour:
     _en: Keep Going
     _zhHant: "\u7E7C\u7E8C"
     _zhHans: "\u7EE7\u7EED"
+  - _key: ui.rb.summon.help
+    _ko: "\uBAB8\uC758 \uC870\uAC01\uC744 \uBF51\uC544\uC694. \uC870\uAC01\uC744
+      \uBAA8\uC73C\uBA74 \uBAB8\uC744 \uD574\uAE08 \xB7 \uC131\uAE09\uC744 \uC62C\uB824\uC694.\n10\uD68C
+      \uC18C\uD658\uC740 SR 1\uD68C \uBCF4\uC7A5 \xB7 50\uD68C \uC548\uC5D0 \uB300\uBC15\uC774
+      \uC5C6\uC73C\uBA74 50\uBC88\uC9F8\uB294 \uB300\uBC15 \uD655\uC815\uC774\uC5D0\uC694."
+    _ja: "\u4F53\u306E\u304B\u3051\u3089\u3092\u5F15\u304D\u307E\u3059\u3002\u304B\u3051\u3089\u3092\u96C6\u3081\u308B\u3068\u4F53\u306E\u89E3\u653E\u30FB\u661F\u7D1A\u30A2\u30C3\u30D7\u304C\u3067\u304D\u307E\u3059\u3002\n10\u56DE\u53EC\u559A\u306FSR1\u56DE\u4FDD\u8A3C\u30FB50\u56DE\u4EE5\u5185\u306B\u5927\u5F53\u305F\u308A\u304C\u306A\u3051\u308C\u307050\u56DE\u76EE\u306F\u5927\u5F53\u305F\u308A\u78BA\u5B9A\u3067\u3059\u3002"
+    _en: 'Draw host shards. Collect shards to unlock hosts and raise stars.
+
+      10x
+      summons guarantee one SR. If no jackpot in 50 pulls, the 50th is a jackpot.'
+    _zhHant: "\u62BD\u53D6\u8EAB\u9AD4\u788E\u7247\u3002\u6536\u96C6\u788E\u7247\u53EF\u89E3\u9396\u8EAB\u9AD4\u3001\u63D0\u5347\u661F\u7D1A\u3002\n10\u9023\u53EC\u559A\u4FDD\u8B491\u500BSR
+      \xB7 50\u6B21\u5167\u672A\u51FA\u5927\u734E\u5247\u7B2C50\u6B21\u5FC5\u5B9A\u5927\u734E\u3002"
+    _zhHans: "\u62BD\u53D6\u8EAB\u4F53\u788E\u7247\u3002\u6536\u96C6\u788E\u7247\u53EF\u89E3\u9501\u8EAB\u4F53\u3001\u63D0\u5347\u661F\u7EA7\u3002\n10\u8FDE\u53EC\u5524\u4FDD\u8BC11\u4E2ASR
+      \xB7 50\u6B21\u5185\u672A\u51FA\u5927\u5956\u5219\u7B2C50\u6B21\u5FC5\u5B9A\u5927\u5956\u3002"
+  - _key: ui.rb.summon.pickup_rule
+    _ko: "SSR \uC774 \uB098\uC624\uBA74 <color=#FFC93D>{0}%</color> \uD655\uB960\uB85C
+      \uD53D\uC5C5 \uD638\uC2A4\uD2B8"
+    _ja: "SSR\u304C\u51FA\u308B\u3068<color=#FFC93D>{0}%</color>\u306E\u78BA\u7387\u3067\u30D4\u30C3\u30AF\u30A2\u30C3\u30D7\u30DB\u30B9\u30C8"
+    _en: SSR draws are the pickup host <color=#FFC93D>{0}%</color> of the time
+    _zhHant: "\u62BD\u5230SSR\u6642\u6709<color=#FFC93D>{0}%</color>\u6A5F\u7387\u70BAUP\u5BBF\u4E3B"
+    _zhHans: "\u62BD\u5230SSR\u65F6\u6709<color=#FFC93D>{0}%</color>\u6982\u7387\u4E3AUP\u5BBF\u4E3B"
+  - _key: ui.rb.summon.left
+    _ko: "\uB0A8\uC740 {0}\uC77C {1}\uC2DC\uAC04"
+    _ja: "\u6B8B\u308A{0}\u65E5{1}\u6642\u9593"
+    _en: '{0}d {1}h left'
+    _zhHant: "\u5269\u9918{0}\u5929{1}\u5C0F\u6642"
+    _zhHans: "\u5269\u4F59{0}\u5929{1}\u5C0F\u65F6"
+  - _key: ui.rb.summon.pity
+    _ko: "\uB300\uBC15\uAE4C\uC9C0 <color=#FFFFFF>{0}</color> /{1}"
+    _ja: "\u5927\u5F53\u305F\u308A\u307E\u3067 <color=#FFFFFF>{0}</color> /{1}"
+    _en: Jackpot in <color=#FFFFFF>{0}</color> /{1}
+    _zhHant: "\u8DDD\u96E2\u5927\u734E <color=#FFFFFF>{0}</color> /{1}"
+    _zhHans: "\u8DDD\u79BB\u5927\u5956 <color=#FFFFFF>{0}</color> /{1}"
+  - _key: ui.rb.summon.tickets
+    _ko: "\uBCF4\uC720 \uC18C\uD658\uAD8C <color=#FFFFFF>{0}</color>"
+    _ja: "\u6240\u6301\u53EC\u559A\u5238 <color=#FFFFFF>{0}</color>"
+    _en: Tickets <color=#FFFFFF>{0}</color>
+    _zhHant: "\u6301\u6709\u53EC\u559A\u5238 <color=#FFFFFF>{0}</color>"
+    _zhHans: "\u62E5\u6709\u53EC\u5524\u5238 <color=#FFFFFF>{0}</color>"
+  - _key: ui.rb.summon.free
+    _ko: "\uC624\uB298 \uBB34\uB8CC 1\uD68C"
+    _ja: "\u672C\u65E5\u7121\u65991\u56DE"
+    _en: Free Today x1
+    _zhHant: "\u4ECA\u65E5\u514D\u8CBB1\u6B21"
+    _zhHans: "\u4ECA\u65E5\u514D\u8D391\u6B21"
+  - _key: ui.rb.summon.pull
+    _ko: "{0}\uD68C \uC18C\uD658"
+    _ja: "{0}\u56DE\u53EC\u559A"
+    _en: Summon x{0}
+    _zhHant: "\u53EC\u559A{0}\u6B21"
+    _zhHans: "\u53EC\u5524{0}\u6B21"
+  - _key: ui.rb.summon.price_ticket
+    _ko: "\uC18C\uD658\uAD8C {0}"
+    _ja: "\u53EC\u559A\u5238 {0}"
+    _en: Ticket {0}
+    _zhHant: "\u53EC\u559A\u5238 {0}"
+    _zhHans: "\u53EC\u5524\u5238 {0}"
+  - _key: ui.rb.summon.price_gem
+    _ko: "\uC82C {0:N0}"
+    _ja: "\u30B8\u30A7\u30E0 {0:N0}"
+    _en: Gem {0:N0}
+    _zhHant: "\u5BF6\u77F3 {0:N0}"
+    _zhHans: "\u5B9D\u77F3 {0:N0}"
+  - _key: ui.rb.summon.count
+    _ko: "{0}\uD68C \uC18C\uD658"
+    _ja: "{0}\u56DE\u53EC\u559A"
+    _en: Summon x{0}
+    _zhHant: "\u53EC\u559A{0}\u6B21"
+    _zhHans: "\u53EC\u5524{0}\u6B21"
+  - _key: ui.rb.summon.jackpot
+    _ko: "\uB300\uBC15!"
+    _ja: "\u5927\u5F53\u305F\u308A\uFF01"
+    _en: Jackpot!
+    _zhHant: "\u5927\u734E\uFF01"
+    _zhHans: "\u5927\u5956\uFF01"
+  - _key: ui.rb.summon.result
+    _ko: "\uC18C\uD658 \uACB0\uACFC"
+    _ja: "\u53EC\u559A\u7D50\u679C"
+    _en: Results
+    _zhHant: "\u53EC\u559A\u7D50\u679C"
+    _zhHans: "\u53EC\u5524\u7ED3\u679C"
+  - _key: ui.rb.summon.essence
+    _ko: "+{0} \uC601\uD63C \uC815\uC218"
+    _ja: "+{0} \u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9"
+    _en: +{0} Soul Essence
+    _zhHant: "+{0} \u9748\u9B42\u7CBE\u83EF"
+    _zhHans: "+{0} \u7075\u9B42\u7CBE\u534E"
+  - _key: ui.rb.summon.again
+    _ko: "{0}\uD68C \uB354"
+    _ja: "\u3082\u3046{0}\u56DE"
+    _en: '{0} More'
+    _zhHant: "\u518D{0}\u6B21"
+    _zhHans: "\u518D{0}\u6B21"
+  - _key: ui.rb.summon.card_essence
+    _ko: "\uC815\uC218 \xD7{0}"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9 \xD7{0}"
+    _en: "Essence \xD7{0}"
+    _zhHant: "\u7CBE\u83EF \xD7{0}"
+    _zhHans: "\u7CBE\u534E \xD7{0}"
+  - _key: ui.rb.summon.card_shards
+    _ko: "\uC870\uAC01 \xD7{0}"
+    _ja: "\u304B\u3051\u3089 \xD7{0}"
+    _en: "Shards \xD7{0}"
+    _zhHant: "\u788E\u7247 \xD7{0}"
+    _zhHans: "\u788E\u7247 \xD7{0}"
+  - _key: ui.rb.summon.no_records
+    _ko: "\uC544\uC9C1 \uBF51\uC740 \uAE30\uB85D\uC774 \uC5C6\uC5B4\uC694."
+    _ja: "\u307E\u3060\u53EC\u559A\u8A18\u9332\u304C\u3042\u308A\u307E\u305B\u3093\u3002"
+    _en: No summons yet.
+    _zhHant: "\u5C1A\u7121\u53EC\u559A\u7D00\u9304\u3002"
+    _zhHans: "\u5C1A\u65E0\u53EC\u5524\u8BB0\u5F55\u3002"
+  - _key: ui.rb.summon.jackpot_tag
+    _ko: "\uB300\uBC15"
+    _ja: "\u5927\u5F53\u305F\u308A"
+    _en: Jackpot
+    _zhHant: "\u5927\u734E"
+    _zhHans: "\u5927\u5956"
+  - _key: ui.rb.summon.pickup
+    _ko: "\uC774\uBC88 \uC8FC \uD53D\uC5C5:"
+    _ja: "\u4ECA\u9031\u306E\u30D4\u30C3\u30AF\u30A2\u30C3\u30D7\uFF1A"
+    _en: 'This Week''s Pickup:'
+    _zhHant: "\u672C\u9031UP\uFF1A"
+    _zhHans: "\u672C\u5468UP\uFF1A"
+  - _key: ui.rb.summon.banner
+    _ko: "\uC601\uD63C \uBA85\uBD80"
+    _ja: "\u9B42\u306E\u540D\u7C3F"
+    _en: Soul Registry
+    _zhHant: "\u9748\u9B42\u540D\u7C3F"
+    _zhHans: "\u7075\u9B42\u540D\u7C3F"
+  - _key: ui.rb.summon.rates_title
+    _ko: "\uD655\uB960 \uBCF4\uAE30"
+    _ja: "\u78BA\u7387\u3092\u898B\u308B"
+    _en: Rates
+    _zhHant: "\u6A5F\u7387\u4E00\u89BD"
+    _zhHans: "\u6982\u7387\u4E00\u89C8"
+  - _key: ui.rb.summon.records_title
+    _ko: "\uBF51\uAE30 \uAE30\uB85D"
+    _ja: "\u53EC\u559A\u8A18\u9332"
+    _en: History
+    _zhHant: "\u53EC\u559A\u7D00\u9304"
+    _zhHans: "\u53EC\u5524\u8BB0\u5F55"
+  - _key: ui.rb.summon.pity_note
+    _ko: "\uCC9C\uC7A5 \uD69F\uC218\uB294 \uC774\uC6D4\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+    _ja: "\u5929\u4E95\u30AB\u30A6\u30F3\u30C8\u306F\u6301\u3061\u8D8A\u3055\u308C\u307E\u305B\u3093\u3002"
+    _en: Pity count does not carry over.
+    _zhHant: "\u4FDD\u5E95\u6B21\u6578\u4E0D\u6703\u5EF6\u7E8C\u3002"
+    _zhHans: "\u4FDD\u5E95\u6B21\u6570\u4E0D\u4F1A\u5EF6\u7EED\u3002"
+  - _key: ui.rb.summon.note
+    _ko: "10\uD68C \uC18C\uD658\uC740 SR 1\uD68C \uBCF4\uC7A5 \xB7 50\uD68C \uC548\uC5D0
+      \uB300\uBC15\uC774 \uC5C6\uC73C\uBA74\n50\uBC88\uC9F8\uB294 \uB300\uBC15 \uD655\uC815"
+    _ja: "10\u56DE\u53EC\u559A\u306FSR1\u56DE\u4FDD\u8A3C\u30FB50\u56DE\u4EE5\u5185\u306B\u5927\u5F53\u305F\u308A\u304C\u306A\u3051\u308C\u3070\n50\u56DE\u76EE\u306F\u5927\u5F53\u305F\u308A\u78BA\u5B9A"
+    _en: '10x summons guarantee one SR. No jackpot in 50 pulls?
+
+      The 50th is
+      guaranteed.'
+    _zhHant: "10\u9023\u53EC\u559A\u4FDD\u8B491\u500BSR \xB7 50\u6B21\u5167\u672A\u51FA\u5927\u734E\n\u7B2C50\u6B21\u5FC5\u5B9A\u5927\u734E"
+    _zhHans: "10\u8FDE\u53EC\u5524\u4FDD\u8BC11\u4E2ASR \xB7 50\u6B21\u5185\u672A\u51FA\u5927\u5956\n\u7B2C50\u6B21\u5FC5\u5B9A\u5927\u5956"
+  - _key: ui.rb.summon.new
+    _ko: "\uC0C8 \uBAB8!"
+    _ja: "\u65B0\u3057\u3044\u4F53\uFF01"
+    _en: New!
+    _zhHant: "\u65B0\u8EAB\u9AD4\uFF01"
+    _zhHans: "\u65B0\u8EAB\u4F53\uFF01"
+  - _key: ui.rb.summon.jackpot_card
+    _ko: "\uB300\uBC15 \uD655\uC815"
+    _ja: "\u5927\u5F53\u305F\u308A\u78BA\u5B9A"
+    _en: Jackpot
+    _zhHant: "\u5927\u734E\u78BA\u5B9A"
+    _zhHans: "\u5927\u5956\u786E\u5B9A"

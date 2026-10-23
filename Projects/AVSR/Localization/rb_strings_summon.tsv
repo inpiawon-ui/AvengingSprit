@@ -1,0 +1,27 @@
+key	ko	ja	en	zh_hant	zh_hans
+ui.rb.summon.help	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금 · 성급을 올려요.\n10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.	体のかけらを引きます。かけらを集めると体の解放・星級アップができます。\n10回召喚はSR1回保証・50回以内に大当たりがなければ50回目は大当たり確定です。	Draw host shards. Collect shards to unlock hosts and raise stars.\n10x summons guarantee one SR. If no jackpot in 50 pulls, the 50th is a jackpot.	抽取身體碎片。收集碎片可解鎖身體、提升星級。\n10連召喚保證1個SR · 50次內未出大獎則第50次必定大獎。	抽取身体碎片。收集碎片可解锁身体、提升星级。\n10连召唤保证1个SR · 50次内未出大奖则第50次必定大奖。
+ui.rb.summon.pickup_rule	SSR 이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트	SSRが出ると<color=#FFC93D>{0}%</color>の確率でピックアップホスト	SSR draws are the pickup host <color=#FFC93D>{0}%</color> of the time	抽到SSR時有<color=#FFC93D>{0}%</color>機率為UP宿主	抽到SSR时有<color=#FFC93D>{0}%</color>概率为UP宿主
+ui.rb.summon.left	남은 {0}일 {1}시간	残り{0}日{1}時間	{0}d {1}h left	剩餘{0}天{1}小時	剩余{0}天{1}小时
+ui.rb.summon.pity	대박까지 <color=#FFFFFF>{0}</color> /{1}	大当たりまで <color=#FFFFFF>{0}</color> /{1}	Jackpot in <color=#FFFFFF>{0}</color> /{1}	距離大獎 <color=#FFFFFF>{0}</color> /{1}	距离大奖 <color=#FFFFFF>{0}</color> /{1}
+ui.rb.summon.tickets	보유 소환권 <color=#FFFFFF>{0}</color>	所持召喚券 <color=#FFFFFF>{0}</color>	Tickets <color=#FFFFFF>{0}</color>	持有召喚券 <color=#FFFFFF>{0}</color>	拥有召唤券 <color=#FFFFFF>{0}</color>
+ui.rb.summon.free	오늘 무료 1회	本日無料1回	Free Today x1	今日免費1次	今日免费1次
+ui.rb.summon.pull	{0}회 소환	{0}回召喚	Summon x{0}	召喚{0}次	召唤{0}次
+ui.rb.summon.price_ticket	소환권 {0}	召喚券 {0}	Ticket {0}	召喚券 {0}	召唤券 {0}
+ui.rb.summon.price_gem	젬 {0:N0}	ジェム {0:N0}	Gem {0:N0}	寶石 {0:N0}	宝石 {0:N0}
+ui.rb.summon.count	{0}회 소환	{0}回召喚	Summon x{0}	召喚{0}次	召唤{0}次
+ui.rb.summon.jackpot	대박!	大当たり！	Jackpot!	大獎！	大奖！
+ui.rb.summon.result	소환 결과	召喚結果	Results	召喚結果	召唤结果
+ui.rb.summon.essence	+{0} 영혼 정수	+{0} 魂のエッセンス	+{0} Soul Essence	+{0} 靈魂精華	+{0} 灵魂精华
+ui.rb.summon.again	{0}회 더	もう{0}回	{0} More	再{0}次	再{0}次
+ui.rb.summon.card_essence	정수 ×{0}	エッセンス ×{0}	Essence ×{0}	精華 ×{0}	精华 ×{0}
+ui.rb.summon.card_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}	碎片 ×{0}	碎片 ×{0}
+ui.rb.summon.no_records	아직 뽑은 기록이 없어요.	まだ召喚記録がありません。	No summons yet.	尚無召喚紀錄。	尚无召唤记录。
+ui.rb.summon.jackpot_tag	대박	大当たり	Jackpot	大獎	大奖
+ui.rb.summon.pickup	이번 주 픽업:	今週のピックアップ：	This Week's Pickup:	本週UP：	本周UP：
+ui.rb.summon.banner	영혼 명부	魂の名簿	Soul Registry	靈魂名簿	灵魂名簿
+ui.rb.summon.rates_title	확률 보기	確率を見る	Rates	機率一覽	概率一览
+ui.rb.summon.records_title	뽑기 기록	召喚記録	History	召喚紀錄	召唤记录
+ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会延续。
+ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
+ui.rb.summon.new	새 몸!	新しい体！	New!	新身體！	新身体！
+ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定

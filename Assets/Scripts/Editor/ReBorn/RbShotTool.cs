@@ -22,6 +22,13 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (720, 1280, Language.Korean, "summon", "summon_16x9"),
+            (1080, 2400, Language.Korean, "summon", "summon_20x9"),
+            (720, 1280, Language.English, "summon", "summon_en"),
+            (720, 1280, Language.Korean, "summon:result10", "summon_result10_16x9"),
+            (720, 1280, Language.Korean, "summon:result1", "summon_result1_16x9"),
+            (720, 1280, Language.Korean, "summon:rates", "summon_rates_16x9"),
+            (720, 1280, Language.Korean, "summon:records", "summon_records_16x9"),
             (720, 1280, Language.Korean, "host", "host_16x9"),
             (1080, 2400, Language.Korean, "host", "host_20x9"),
             (768, 1024, Language.Korean, "host", "host_4x3"),
@@ -207,6 +214,28 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("summon"))
+            {
+                lobby.SelectTab("Summon");
+                var page = Object.FindAnyObjectByType<RbSummonPage>();
+                if (page == null) return;
+                const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                if (state == "summon:rates" || state == "summon:records")
+                    typeof(RbSummonPage).GetMethod("ShowSub", F)?.Invoke(page, new object[] { state == "summon:rates" ? "SumRates" : "SumRecords" });
+                else if (state.StartsWith("summon:result"))
+                {
+                    // 값을 내지 않고 결과 쪽만 — 가진 몸 열 개로 시안 같은 결과를 꾸민다(저장하지 않는다)
+                    var keys = new System.Collections.Generic.List<string>();
+                    foreach (var e in player.PlayableHosts)
+                        if (e != null && !e.IsGhost && !PlayerDataService.IsHiddenHost(e.HostKey)) keys.Add(e.HostKey);
+                    int n = state.EndsWith("1") ? 1 : 10;
+                    var pulls = new System.Collections.Generic.List<Game.Module.Common.Store.GachaPull>();
+                    for (int i = 0; i < n && keys.Count > 0; i++)
+                        pulls.Add(new Game.Module.Common.Store.GachaPull(keys[i % keys.Count], 1 + i % 3, i == 0 && state.EndsWith("jackpot"), false, i == 0, 0));
+                    typeof(RbSummonPage).GetMethod("ShowResult", F)?.Invoke(page, new object[] { pulls, n });
+                }
+                return;
+            }
             lobby.SelectTab("Host");
             if (!state.StartsWith("growth:")) return;
             string key = null;

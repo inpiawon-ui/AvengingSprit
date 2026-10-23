@@ -53,6 +53,7 @@ namespace Game.Editor.ReBorn
             RbHostBuilder.WireGrowth(growth.gameObject.AddComponent<RbGrowthPage>());
             host.gameObject.SetActive(false);
             growth.gameObject.SetActive(false);
+            RbSummonBuilder.Build(rt);
 
             BuildHeader(rt);
             BuildTabBar(rt);
