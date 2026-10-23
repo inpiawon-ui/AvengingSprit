@@ -1495,3 +1495,36 @@ ui.rb.chl.fit	맞는 호스트 보기	適したホストを見る	Fitting Hosts	
 ui.rb.chl.host_shards	호스트 조각	ホストのかけら	Host Shards	宿主碎片	宿主碎片
 ui.rb.chl.today_reward	◆ 오늘의 보상	◆ 本日の報酬	◆ Today's Rewards	◆ 今日獎勵	◆ 今日奖励
 ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	その日の体のかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日身體碎片 · 依擊敗數發放	当日身体碎片 · 按击败数发放
+ui.rb.ghost.title	유령	ゴースト	Ghost	幽靈	幽灵
+ui.rb.ghost.applies	모든 호스트에 적용	すべてのホストに適用	Applies to every host	適用於所有宿主	适用于所有宿主
+ui.rb.ghost.level	유령 레벨	ゴーストレベル	Ghost Level	幽靈等級	幽灵等级
+ui.rb.ghost.exp	유령 경험치	ゴースト経験値	Ghost EXP	幽靈經驗值	幽灵经验值
+ui.rb.ghost.exp_note	챕터 클리어로 획득 · 다음 보상 Lv {0}	チャプタークリアで獲得・次の報酬 Lv {0}	Earned by clearing chapters · next reward Lv {0}	通關章節獲得 · 下個獎勵 Lv {0}	通关章节获得 · 下个奖励 Lv {0}
+ui.rb.ghost.exp_note_max	챕터 클리어로 획득	チャプタークリアで獲得	Earned by clearing chapters	通關章節獲得	通关章节获得
+ui.rb.mis.help	미션을 끝내면 보상과 패스 경험치를 받아요.\n일일은 매일 · 주간은 매주 초기화돼요.	ミッションを達成すると報酬とパス経験値がもらえます。\nデイリーは毎日・ウィークリーは毎週リセットされます。	Finish missions for rewards and Pass XP.\nDaily resets every day · Weekly every week.	完成任務可獲得獎勵與通行證經驗。\n每日任務每日重置 · 每週任務每週重置。	完成任务可获得奖励与通行证经验。\n每日任务每日重置 · 每周任务每周重置。
+ui.rb.mis.daily	일일	デイリー	Daily	每日	每日
+ui.rb.mis.weekly	주간	ウィークリー	Weekly	每週	每周
+ui.rb.mis.achieve	업적	実績	Achievements	成就	成就
+ui.rb.mis.all_daily	◆ 오늘 미션 전부 완료	◆ 本日のミッションすべて達成	◆ Complete All Daily Missions	◆ 完成今日全部任務	◆ 完成今日全部任务
+ui.rb.mis.all_weekly	◆ 이번 주 미션 전부 완료	◆ 今週のミッションすべて達成	◆ Complete All Weekly Missions	◆ 完成本週全部任務	◆ 完成本周全部任务
+ui.rb.mis.count	{0}/{1}개 달성	{0}/{1}達成	{0}/{1} done	已達成 {0}/{1}	已达成 {0}/{1}
+ui.rb.mis.days	{0}일	{0}日	{0}d	{0}天	{0}天
+ui.rb.pass.title	시즌 패스	シーズンパス	Season Pass	賽季通行證	赛季通行证
+ui.rb.pass.help	미션을 끝내 패스 경험치를 모으면 단계마다 보상을 받아요.\n프리미엄을 열면 오른쪽 보상도 받을 수 있어요.	ミッションでパス経験値を集めると段階ごとに報酬がもらえます。\nプレミアムを開くと右側の報酬も受け取れます。	Earn Pass XP from missions to claim a reward each tier.\nUnlock Premium to claim the right column too.	完成任務累積通行證經驗即可領取各階獎勵。\n開啟高級版還能領取右側獎勵。	完成任务累积通行证经验即可领取各阶奖励。\n开启高级版还能领取右侧奖励。
+ui.rb.pass.left	남은 기간 {0}일	残り{0}日	{0} days left	剩餘{0}天	剩余{0}天
+ui.rb.pass.name	복수자	復讐者	The Avenger	復仇者	复仇者
+ui.rb.pass.perk	프리미엄 Lv 30 보상 — SSR 흡혈귀	プレミアム Lv 30 報酬 — SSR 吸血鬼	Premium Lv 30 reward — SSR Vampire	高級版 Lv 30 獎勵 — SSR 吸血鬼	高级版 Lv 30 奖励 — SSR 吸血鬼
+ui.rb.pass.missions	미션 ›	ミッション ›	Missions ›	任務 ›	任务 ›
+ui.rb.mail.title	우편함	郵便箱	Mailbox	郵件箱	邮件箱
+ui.rb.mail.empty	받은 우편이 없어요	届いた郵便はありません	No mail yet	沒有收到郵件	没有收到邮件
+ui.rb.daily.gold	무료 골드	無料ゴールド	Free Gold	免費金幣	免费金币
+ui.rb.daily.gold_sub	오늘의 상점	本日のショップ	Daily Shop	今日商店	今日商店
+ui.rb.daily.go_summon	소환하러 가기 ›	召喚へ ›	Go Summon ›	前往召喚 ›	前往召唤 ›
+ui.rb.set.music	배경음	BGM	Music	背景音樂	背景音乐
+ui.rb.set.sfx	효과음	効果音	Sound Effects	音效	音效
+ui.rb.set.vibrate	진동	振動	Vibration	震動	震动
+ui.rb.set.language	언어	言語	Language	語言	语言
+ui.rb.set.language_title	언어 선택	言語選択	Language	選擇語言	选择语言
+ui.rb.set.account	계정	アカウント	Account	帳號	账号
+ui.rb.set.support	고객센터	サポート	Support	客服中心	客服中心
+ui.rb.set.terms	약관	規約	Terms	條款	条款

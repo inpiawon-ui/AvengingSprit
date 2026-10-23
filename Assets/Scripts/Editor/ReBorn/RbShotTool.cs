@@ -22,6 +22,16 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (720, 1280, Language.Korean, "rail:Ghost", "ghost_16x9"),
+            (1080, 2400, Language.Korean, "rail:Ghost", "ghost_20x9"),
+            (720, 1280, Language.Korean, "rail:Missions", "missions_16x9"),
+            (720, 1280, Language.Korean, "rail:Pass", "pass_16x9"),
+            (720, 1280, Language.Korean, "rail:Mail", "mail_16x9"),
+            (720, 1280, Language.Korean, "rail:Daily", "daily_16x9"),
+            (720, 1280, Language.Korean, "rail:Settings", "settings_16x9"),
+            (720, 1280, Language.Korean, "rail:Language", "language_16x9"),
+            (720, 1280, Language.English, "rail:Pass", "pass_en"),
+            (720, 1280, Language.Japanese, "rail:Missions", "missions_ja"),
             (720, 1280, Language.Korean, "challenge", "challenge_16x9"),
             (720, 1280, Language.Korean, "challenge:tower", "tower_16x9"),
             (720, 1280, Language.Korean, "challenge:night", "night_16x9"),
@@ -226,6 +236,20 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("rail:"))
+            {
+                lobby.SelectTab("Battle");
+                string what = state.Substring(5);
+                if (what == "Language")
+                {
+                    lobby.OpenRail("Settings");
+                    var misc = Object.FindAnyObjectByType<RbMiscPages>();
+                    foreach (var t in misc.GetComponentsInChildren<Transform>(true)) if (t.name == "RbLanguage") t.gameObject.SetActive(true);
+                    typeof(RbMiscPages).GetMethod("FillLanguage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.Invoke(misc, null);
+                }
+                else lobby.OpenRail(what);
+                return;
+            }
             if (state.StartsWith("challenge"))
             {
                 lobby.SelectTab("Challenge");

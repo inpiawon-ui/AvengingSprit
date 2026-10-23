@@ -179,6 +179,8 @@ namespace Game.Editor.ReBorn
                                            TextAlignmentOptions align = TextAlignmentOptions.Center, bool heavy = false,
                                            bool number = false)
         {
+            // ⚠ 꺼진 계층에 붙인 TMP 는 실행 때 처음 켜지며 기본값(크기 36 · 최대 72)으로 돌아간다(2026-10-23 설정 창) — 다 만든 뒤에 끈다
+            if (!rt.gameObject.activeInHierarchy) Debug.LogWarning($"[RE:BORN 빌더] 꺼진 곳에 글자를 붙임 — 실행 때 크기가 풀린다: {rt.name}");
             var t = rt.gameObject.AddComponent<TextMeshProUGUI>();
             t.font = number ? Number : heavy ? Heavy : Body;
             t.text = korean;

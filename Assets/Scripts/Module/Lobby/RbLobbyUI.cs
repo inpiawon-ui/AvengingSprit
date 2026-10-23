@@ -47,6 +47,10 @@ namespace Game.Module.Lobby
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
+        private RbGhostPage _ghostPage;
+        private RbMissionsPage _missionsPage;
+        private RbPassPage _passPage;
+        private RbMiscPages _misc;
         private string _tab = "Battle";
 
         private int _chapter = 1;
@@ -62,12 +66,19 @@ namespace Game.Module.Lobby
             _ui.OnClick("ChapterPrev", () => StepChapter(-1));
             _ui.OnClick("ChapterNext", () => StepChapter(+1));
             _ui.OnClick("SortieButton", StartRun);
-            _ui.OnClick("SortieAll", () => Soon("ui.rb.soon"));
-            foreach (var r in new[] { "RailMail", "RailMission", "RailSettings", "RailPass", "RailEvent", "RailDaily", "HeaderProfile", "HeaderPlus" })
-            {
-                string node = r;
-                _ui.OnClick(node, () => Soon("ui.rb.soon"));
-            }
+            _ui.OnClick("SortieAll", () => SelectTab("Host"));
+            _ui.OnClick("RailEvent", () => Soon("ui.rb.soon"));
+            _ui.OnClick("RailMail", () => OpenRail("Mail"));
+            _ui.OnClick("RailMission", () => OpenRail("Missions"));
+            _ui.OnClick("RailSettings", () => OpenRail("Settings"));
+            _ui.OnClick("RailPass", () => OpenRail("Pass"));
+            _ui.OnClick("RailDaily", () => OpenRail("Daily"));
+            _ui.OnClick("HeaderProfile", () => OpenRail("Ghost"));
+            _ui.OnClick("HeaderPlus", () => OpenRail("Gems"));
+            _ghostPage = GetComponentInChildren<RbGhostPage>(true);
+            _missionsPage = GetComponentInChildren<RbMissionsPage>(true);
+            _passPage = GetComponentInChildren<RbPassPage>(true);
+            _misc = GetComponentInChildren<RbMiscPages>(true);
             _ui.OnClick("TabChallenge", () => { GameSound.Cue("ui.tap"); SelectTab("Challenge"); });
             _challengePage = GetComponentInChildren<RbChallengePage>(true);
             _ui.OnClick("TabHost", () => { GameSound.Cue("ui.tap"); SelectTab("Host"); });
@@ -145,6 +156,7 @@ namespace Game.Module.Lobby
         // 뒤로가기 — 성장 → 도감 → 전투 탭 순으로 물러난다. 전투 탭이면 닫을 것이 없다(라우터가 종료 확인을 띄운다)
         public bool OnBackPressed()
         {
+            if (_misc != null && _misc.Back()) return true;
             if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
             if (_summonPage != null && _summonPage.gameObject.activeSelf && _summonPage.Back()) return true;
             if (_challengePage != null && _challengePage.gameObject.activeSelf && _challengePage.Back()) return true;
@@ -511,6 +523,10 @@ namespace Game.Module.Lobby
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
                 else _hostPage.gameObject.SetActive(false);
             }
+            if (_ghostPage != null && tab != "Ghost") _ghostPage.gameObject.SetActive(false);
+            if (_missionsPage != null && tab != "Missions") _missionsPage.gameObject.SetActive(false);
+            if (_passPage != null && tab != "Pass") _passPage.gameObject.SetActive(false);
+            if (_misc != null) _misc.Hide();
             if (_challengePage != null)
             {
                 if (tab == "Challenge") _challengePage.Open(_faces);
@@ -530,6 +546,29 @@ namespace Game.Module.Lobby
             RefreshHeader();
         }
 
+        /// <summary>
+        /// 레일 · 프로필 · + 가 여는 화면. 쪽(유령 · 미션 · 패스)은 탭처럼 바꾸고(아래 탭 불은 끈다), 우편 · 오늘 무료 · 설정은 위에 덮는다.
+        /// </summary>
+        public void OpenRail(string what)
+        {
+            GameSound.Cue("ui.tap");
+            switch (what)
+            {
+                case "Ghost":
+                    string back = _tab == "Host" ? "Host" : "Battle";   // 쪽을 바꾸기 전의 탭으로 돌아간다
+                    SelectTab("Ghost");
+                    _ghostPage?.Open(_player, back);
+                    break;
+                case "GhostFromHost": SelectTab("Ghost"); _ghostPage?.Open(_player, "Host"); break;
+                case "Missions": SelectTab("Missions"); _missionsPage?.Open(); break;
+                case "Pass": SelectTab("Pass"); _passPage?.Open(); break;
+                case "Mail": SelectTab("Mail"); _misc?.ShowMail(); break;
+                case "Daily": _misc?.ShowDaily(); break;
+                case "Settings": _misc?.ShowSettings(); break;
+                case "Gems": SelectTab("Shop"); _shopPage?.ShowTab("currency"); break;
+            }
+        }
+
         /// <summary>도감 카드 → 호스트 성장 한 화면. 아래 탭은 「호스트」 그대로다.</summary>
         public void OpenGrowth(string hostKey)
         {
@@ -538,8 +577,8 @@ namespace Game.Module.Lobby
             _growthPage.Open(_player, hostKey);
         }
 
-        /// <summary>유령 성장 — 다음 차례에 새 화면(시안 ghost-growth)으로 바꾼다.</summary>
-        public void OpenGhostGrowth() => Soon("ui.rb.soon");
+        /// <summary>유령 성장(시안 ghost-growth) — 도감 「성장 ›」 에서 오면 뒤로가 도감으로.</summary>
+        public void OpenGhostGrowth() => OpenRail("GhostFromHost");
 
         private static void Soon(string key)
             => SystemPopup.Show(Localize.FromTable(key, "준비 중이에요 · 업데이트로 열려요"), null, Localize.Get("ui.common.ok"), null);

@@ -411,6 +411,12 @@ namespace Game.Module.Common
         {
             if (_root == null || !IsReady) return;
 
+            // 설정(RE:BORN 설정 창 배경음 · 효과음) — 끄면 소리만 죽이고 이음매 예약은 그대로 돈다(켜면 그 자리부터 들린다)
+            bool musicMute = !GameSound.MusicOn, sfxMute = !GameSound.SfxOn;
+            if (_musicA.mute != musicMute) { _musicA.mute = musicMute; _musicB.mute = musicMute; }
+            if (_voices[0] != null && _voices[0].mute != sfxMute)
+                for (int i = 0; i < _voices.Length; i++) if (_voices[i] != null) _voices[i].mute = sfxMute;
+
             TickEffectCuts();
 
             if (!Mathf.Approximately(_fade, _fadeTarget))

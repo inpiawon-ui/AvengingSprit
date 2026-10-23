@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using Game.Module.Common;
 using Game.Module.Common.Shop;
@@ -60,6 +59,13 @@ namespace Game.Module.Lobby
             _player = player;
             _faces = faces;
             gameObject.SetActive(true);
+            Refresh();
+        }
+
+        /// <summary>그 탭으로 연다(위 막대 「+」 → 재화).</summary>
+        public void ShowTab(string tab)
+        {
+            _tab = tab;
             Refresh();
         }
 
@@ -346,74 +352,15 @@ namespace Game.Module.Lobby
             Refresh();
         }
 
-        private string Received(RewardResult r)
-        {
-            var sb = new StringBuilder(Localize.FromTable("ui.rb.shop.received", "받았어요"));
-            sb.Append('\n');
-            for (int i = 0; i < r.Lines.Count; i++)
-            {
-                if (i > 0) sb.Append(" · ");
-                sb.Append(LabelOf(r.Lines[i].Kind.ToString().ToLowerInvariant(), r.Lines[i].Key)).Append(' ').Append(r.Lines[i].Amount.ToString("N0"));
-            }
-            return sb.ToString();
-        }
+        private static string Received(RewardResult r) => RbRewards.Received(r);
 
-        // ── 보상 문자열 · 아이콘 ──────────────────────────────────
+        private static List<(string kind, string key, int amount)> Parse(string rewards) => RbRewards.Parse(rewards);
 
-        private static List<(string kind, string key, int amount)> Parse(string rewards)
-        {
-            var list = new List<(string, string, int)>();
-            if (string.IsNullOrEmpty(rewards)) return list;
-            foreach (var part in rewards.Split(';'))
-            {
-                var kv = part.Split(':');
-                if (kv.Length < 2) continue;
-                string kind = kv[0].Trim(), val = kv[1].Trim();
-                int amount = 1;
-                string key = null;
-                if (kind == "chest")
-                {
-                    var c = val.Split('*');
-                    key = c[0];
-                    if (c.Length > 1) int.TryParse(c[1], out amount);
-                }
-                else if (!int.TryParse(val, out amount)) { key = val; amount = 1; }
-                list.Add((kind, key, amount));
-            }
-            return list;
-        }
+        private Sprite IconOf(string kind, string key) => RbRewards.IconOf(_icons, kind, key);
 
-        private Sprite IconOf(string kind, string key) => kind switch
-        {
-            "gem" => Find(_icons, "rb_icon_currency_gem_96"),
-            "gold" or "goldrun" => Find(_icons, "rb_icon_currency_gold_96"),
-            "ticket" => Find(_icons, "rb_icon_summon_ticket_96"),
-            "essence" => Find(_icons, "rb_icon_essence_96"),
-            "stamina" => Find(_icons, "rb_icon_currency_energy_96"),
-            "chest" => Find(_icons, $"rb_icon_chest_{key}_96"),
-            "passxp" => Find(_icons, "rb_icon_pass_xp_96"),
-            "shard" => Find(_icons, "rb_icon_shard_96"),
-            _ => Find(_icons, "rb_icon_reward_chest_96"),
-        };
+        private static string LabelOf(string kind, string key) => RbRewards.LabelOf(kind, key);
 
-        private static string LabelOf(string kind, string key) => kind switch
-        {
-            "gem" => Localize.FromTable("ui.rb.shop.r.gem", "젬"),
-            "gold" or "goldrun" => Localize.FromTable("ui.rb.shop.r.gold", "골드"),
-            "ticket" => Localize.FromTable("ui.store.r.ticket", "소환권"),
-            "essence" => Localize.FromTable("ui.rb.shop.r.essence", "영혼 정수"),
-            "stamina" => Localize.FromTable("ui.rb.shop.r.stamina", "행동력"),
-            "chest" => Localize.Get($"store.chest_{key}.name"),
-            "passxp" => Localize.FromTable("ui.rb.shop.r.passxp", "패스 경험치"),
-            "shard" => Localize.FromTable("ui.rb.shop.r.shard", "조각"),
-            _ => key ?? kind,
-        };
-
-        private static Sprite Find(Sprite[] list, string name)
-        {
-            for (int i = 0; i < list.Length; i++) if (list[i] != null && list[i].name == name) return list[i];
-            return null;
-        }
+        private static Sprite Find(Sprite[] list, string name) => RbRewards.Find(list, name);
 
         private void SetImage(Transform root, string node, Sprite s)
         {

@@ -56,9 +56,11 @@ namespace Game.Editor.ReBorn
             RbSummonBuilder.Build(rt);
             RbShopBuilder.Build(rt);
             RbChallengeBuilder.Build(rt);
+            RbRailBuilder.BuildPages(rt);
 
             BuildHeader(rt);
             BuildTabBar(rt);
+            RbRailBuilder.BuildOverlay(rt);   // 우편 · 오늘 무료 · 설정 · 언어 — 위 막대 · 아래 탭보다 위
 
             Wire(root.AddComponent<RbLobbyUI>());
             Save(root, PrefabPath);
