@@ -38,3 +38,4 @@ ui.rb.result.best	최고 처치 {0}	最高撃破 {0}	Best {0}	最高擊殺 {0}	�
 ui.rb.result.survived	버틴 시간	生存時間	Survived	存活時間	存活时间
 ui.rb.result.level	도달 Lv	到達Lv	Level reached	到達 Lv	到达 Lv
 ui.rb.result.leave	나가기	出る	Leave	離開	离开
+ui.rb.mode.kills	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS

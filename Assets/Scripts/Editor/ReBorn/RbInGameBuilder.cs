@@ -90,6 +90,25 @@ namespace Game.Editor.ReBorn
             fill.sizeDelta = new Vector2(parent.sizeDelta.x, 0f);
         }
 
+        /// <summary>
+        /// 탑 · 밤 판 — 위 막대 밑 한 줄(규칙 · 남은 적 / 무리 · 다음 일) + 알림 띠. 시안 tower-hud · night-hud.png(위 430~572 · 640~800).
+        /// 스토리 판에서는 꺼 둔다(InGameMainUI.ApplyModeHud 가 켠다). 글자는 켠 채 붙이고 마지막에 끈다.
+        /// </summary>
+        private static void BuildModeHud(RectTransform hud)
+        {
+            var bar = Node(hud, "RbModeBar");
+            Put(bar, hud, HudTop, 30, 430, 1050, 572);
+            Skin(bar, "Components/rb_panel_base");
+            Text(Local(Node(bar, "RbModeBarLeft"), 30, 430, 1050, 572, 60, 468, 600, 536), null, "빙의는 한 번", 44, White, TA.Left, heavy: true);
+            Text(Local(Node(bar, "RbModeBarRight"), 30, 430, 1050, 572, 600, 468, 1015, 536), null, "남은 적 12 · 빙의 남음 1", 40, White, TA.Right, heavy: true);
+            var band = Node(hud, "RbModeBanner");
+            Put(band, hud, HudTop, 60, 640, 1020, 800);
+            Skin(band, "Components/rb_toast");
+            Text(Local(Node(band, "RbModeBannerText"), 60, 640, 1020, 800, 130, 664, 990, 776), null, "이 층은 나갈 수 없다!", 54, Cyan, TA.Center, number: true);
+            bar.gameObject.SetActive(false);
+            band.gameObject.SetActive(false);
+        }
+
         private static void Skin(RectTransform rt, string path, bool sliced = true)
         {
             if (rt == null) return;
@@ -215,6 +234,7 @@ namespace Game.Editor.ReBorn
             Put(F(root, "AffinityTriangle"), hud, HudTop, 548, 172, 606, 230);
 
             BuildBossBar(root, hud);
+            BuildModeHud(hud);
 
             // 옛 판 · 이름표 · 칸 — 그림만 끄거나 통째로 끈다(화면 스크립트가 켜도 비어 있게)
             Off(root, "Hud3GhostPill", "Hud3HostPill", "Hud3StageTrack", "Hud3GoldChip", "Hud3AffRing", "GhostLabel");

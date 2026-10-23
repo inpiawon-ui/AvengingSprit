@@ -10461,3 +10461,9 @@ MonoBehaviour:
     _en: Leave
     _zhHant: "\u96E2\u958B"
     _zhHans: "\u79BB\u5F00"
+  - _key: ui.rb.mode.kills
+    _ko: '{0} KILLS'
+    _ja: '{0} KILLS'
+    _en: '{0} KILLS'
+    _zhHant: '{0} KILLS'
+    _zhHans: '{0} KILLS'

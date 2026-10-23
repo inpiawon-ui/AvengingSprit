@@ -50,6 +50,11 @@ namespace Game.Module.InGame
             _ui.SetActive("ModeCounterChip", !tower);
             _ui.SetText("ModeTowerLabel", "TOWER");
             _ui.SetText("ModeNightLabel", "NIGHT");
+            if (!_reborn) return;
+            // RE:BORN — 옛 모드 판 대신 위 가운데 칸(층 · 처치)과 막대 밑 한 줄(시안 tower-hud · night-hud)
+            foreach (var n in new[] { "ModeTowerPlate", "ModeNightPlate", "ModeWaveChip", "ModeNextText", "ModeCounterChip" }) _ui.SetActive(n, false);
+            _ui.SetActive("ChapterLabel", true);
+            _ui.SetActive("RbModeBar", true);
         }
 
         // ── 탑 ───────────────────────────────────────────────
@@ -67,10 +72,16 @@ namespace Game.Module.InGame
                 : e.PossessLimit > 0 ? Localize.Format("ui.tower.possess_left", e.PossessLimit)
                 : Localize.Get(e.RuleDescKey);
             ShowModeBanner(Localize.Format("ui.tower.floor", e.EnteredFloor), Localize.Get(e.FloorNameKey), rule);
+            if (!_reborn) return;
+            _ui.SetText("ChapterLabel", Localize.Format("ui.tower.floor_f", e.EnteredFloor));
+            _ui.SetText("RbModeBarLeft", rule);
         }
 
         private void OnTowerEnemiesLeft(TowerEnemiesLeftEvent e)
-            => _ui.SetText("ModeTowerEnemyText", Localize.Format("ui.tower.enemies_left", e.RemainingEnemies));
+        {
+            _ui.SetText("ModeTowerEnemyText", Localize.Format("ui.tower.enemies_left", e.RemainingEnemies));
+            if (_reborn) _ui.SetText("RbModeBarRight", Localize.Format("ui.tower.enemies_left", e.RemainingEnemies));
+        }
 
         private void OnTowerPossessLeft(TowerPossessLeftEvent e)
             => ShowModeBanner(null, Localize.Format("ui.tower.possess_left", e.RemainingPossess), null);
@@ -112,6 +123,12 @@ namespace Game.Module.InGame
             var bossBar = _ui.Find("BossGroup");
             ShiftUnderBossBar(bossBar != null && bossBar.gameObject.activeInHierarchy);
             _ui.SetText("ModeCounterText", Localize.Format("ui.night.counter", AffinityName((Affinity)e.CounterAffinityKind)));
+            if (!_reborn) return;
+            // 위 가운데 「128 KILLS」 · 막대 밑 「마법의 무리」 / 다음 일(없으면 버틴 시간)
+            _ui.SetText("ChapterLabel", string.Format(Localize.FromTable("ui.rb.mode.kills", "{0} KILLS"), e.KillCount));
+            _ui.SetText("RbModeBarLeft", Localize.Format("ui.night.wave", AffinityName(kind)));
+            _ui.SetText("RbModeBarRight", e.NextEventKind == 0 ? $"{s / 60}:{s % 60:00}"
+                : Localize.Format(e.NextEventKind == 2 ? "ui.night.next_boss" : "ui.night.next_big", $"{n / 60}:{n % 60:00}"));
         }
 
         private void OnNightBanner(NightBannerEvent e)
@@ -151,6 +168,7 @@ namespace Game.Module.InGame
         {
             _ui.SetActive("ModeBanner", false);
             _ui.SetActive("ModeCounterChip", false);
+            _ui.SetActive("RbModeBanner", false);
         }
 
         // ── 공통 ─────────────────────────────────────────────
@@ -173,6 +191,14 @@ namespace Game.Module.InGame
                 _pendingModeBanner = (title, name, sub);
                 return;
             }
+            if (_reborn)
+            {
+                // RE:BORN 띠는 한 줄 — 「보스 등장 · 쓰러뜨리면 밤을 버틴다」
+                _ui.SetText("RbModeBannerText", string.IsNullOrEmpty(sub) ? name ?? string.Empty : $"{name} · {sub}");
+                _ui.SetActive("RbModeBanner", true);
+                HideModeBannerAsync(++_modeBannerId).Forget();   // fire-and-forget: 정해진 시간 뒤 걷는다
+                return;
+            }
             _ui.SetText("ModeBannerTitle", title ?? string.Empty);
             _ui.SetText("ModeBannerName", name ?? string.Empty);
             _ui.SetText("ModeBannerSub", sub ?? string.Empty);
@@ -183,7 +209,8 @@ namespace Game.Module.InGame
 
         private async UniTaskVoid HideModeBannerAsync(int id)
         {
-            var band = _ui.Find("ModeBanner");
+            string node = _reborn ? "RbModeBanner" : "ModeBanner";
+            var band = _ui.Find(node);
             if (band == null) return;
             var group = band.GetComponent<CanvasGroup>();
             if (group == null) group = band.gameObject.AddComponent<CanvasGroup>();
@@ -195,7 +222,7 @@ namespace Game.Module.InGame
                 group.alpha = t < fade ? t / fade : t > ModeBannerSeconds - fade ? (ModeBannerSeconds - t) / fade : 1f;
                 if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
             }
-            if (id == _modeBannerId) _ui.SetActive("ModeBanner", false);
+            if (id == _modeBannerId) _ui.SetActive(node, false);
         }
 
         private static string AffinityName(Affinity a)

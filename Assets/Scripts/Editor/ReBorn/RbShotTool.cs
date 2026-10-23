@@ -134,6 +134,10 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "ingame:result_clear", "result_clear_20x9"),
             (720, 1280, Language.Japanese, "ingame:result_clear", "result_clear_ja"),
             (768, 1024, Language.English, "ingame:result_fail", "result_fail_4x3"),
+            (720, 1280, Language.Korean, "ingame:towerhud", "modehud_tower_16x9"),
+            (720, 1280, Language.Korean, "ingame:nighthud", "modehud_night_16x9"),
+            (1080, 2400, Language.Korean, "ingame:towerhud", "modehud_tower_20x9"),
+            (768, 1024, Language.Korean, "ingame:nighthud", "modehud_night_4x3"),
             (720, 1280, Language.Korean, "ingame:tower_clear", "moderesult_tower_clear_16x9"),
             (720, 1280, Language.Korean, "ingame:tower_fail", "moderesult_tower_fail_16x9"),
             (720, 1280, Language.Korean, "ingame:night", "moderesult_night_16x9"),
@@ -471,9 +475,10 @@ namespace Game.Editor.ReBorn
         private static void ShowInGame(Game.Module.InGame.InGameMainUI ui, string state)
         {
             Time.timeScale = 0.05f;
+            Game.Module.Common.Modes.RunModeContext.Clear();   // 모드 판 캡처가 켜 둔 것을 되돌린다
             // 앞 장의 창은 닫는다 — 같은 화면에 겹쳐 찍히지 않게
             foreach (var t in ui.GetComponentsInChildren<Transform>(true))
-                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel") t.gameObject.SetActive(false);
+                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner") t.gameObject.SetActive(false);
             if (state == "ingame") return;
             // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
             Time.timeScale = 1f;
@@ -513,6 +518,31 @@ namespace Game.Editor.ReBorn
                         ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
                     }, faces);
                     break;
+                case "ingame:towerhud":
+                case "ingame:nighthud":
+                {
+                    // 모드 판 모양만 — 판은 스토리 그대로 두고 모드 표시만 켠다(시안 예시값). 띠는 걷히지 않게 막는다
+                    var t = typeof(Game.Module.InGame.InGameMainUI);
+                    bool tower = state == "ingame:towerhud";
+                    if (tower) Game.Module.Common.Modes.RunModeContext.BeginTower(2, 0);
+                    else Game.Module.Common.Modes.RunModeContext.BeginNight(3, 0);
+                    t.GetMethod("ApplyModeHud", F)?.Invoke(ui, null);
+                    if (tower)
+                    {
+                        t.GetMethod("OnTowerFloorEntered", F)?.Invoke(ui, new object[] { new Game.Module.Events.TowerFloorEnteredEvent { EnteredFloor = 2, IsLeaveLocked = true, FloorNameKey = "tower.floor.2.name" } });
+                        t.GetMethod("OnTowerEnemiesLeft", F)?.Invoke(ui, new object[] { new Game.Module.Events.TowerEnemiesLeftEvent { RemainingEnemies = 12 } });
+                    }
+                    else
+                    {
+                        t.GetMethod("OnNightState", F)?.Invoke(ui, new object[] { new Game.Module.Events.NightStateEvent { ElapsedSeconds = 522, KillCount = 128, WaveAffinityKind = 3, NextEventKind = 2, NextEventSeconds = 80 } });
+                        t.GetMethod("ShowModeBanner", F)?.Invoke(ui, new object[] { null, Localize.Format("ui.night.banner.boss", "망령왕"), Localize.Get("ui.night.banner.boss_sub") });
+                    }
+                    var idField = t.GetField("_modeBannerId", F);
+                    if (idField != null) idField.SetValue(ui, (int)idField.GetValue(ui) + 1);
+                    foreach (var tr in ui.GetComponentsInChildren<Transform>(true))
+                        if (tr.name == "RbModeBanner" && tr.TryGetComponent<CanvasGroup>(out var g)) g.alpha = 1f;
+                    break;
+                }
                 case "ingame:tower_clear":
                 case "ingame:tower_fail":
                 case "ingame:night":

@@ -1076,7 +1076,8 @@ namespace Game.Module.InGame
             // ⚠ 런 통짜 번호(`13/45`)만 찍으면 **챕터가 어디서 갈리는지 안 보인다.**
             //   무대는 챕터 안에서 또 한 번 바뀌므로 이름도 방 번호를 따라간다.
             // RE:BORN 판은 가운데 한 줄 「1-07」(방 진행 칸은 뺐다 — PD 2026-10-23)
-            _ui.SetText("ChapterLabel", _reborn ? $"{e.Chapter}-{e.StageInChapter:00}" : $"CHAPTER {e.Chapter}");
+            // 탑 · 밤은 이 칸에 층 · 처치를 쓴다(InGameMainUI.Modes)
+            if (!(_reborn && Game.Module.Common.Modes.RunModeContext.IsMode)) _ui.SetText("ChapterLabel", _reborn ? $"{e.Chapter}-{e.StageInChapter:00}" : $"CHAPTER {e.Chapter}");
             _rbStageLine = $"{e.Chapter}-{e.StageInChapter:00} /{e.ChapterTotal}";
             _ui.SetText("ChapterNameText",
                         _battle != null ? _battle.StageNameOf(e.Chapter, e.StageInChapter) : string.Empty);
