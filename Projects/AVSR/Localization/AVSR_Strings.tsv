@@ -1606,3 +1606,18 @@ ui.rb.chs.locked	잠김	ロック	Locked	未解鎖	未解锁
 ui.rb.chs.unlock_hint	챕터 {0} 을(를) 클리어하면 열립니다	チャプター{0}をクリアすると開きます	Clear Chapter {0} to unlock	通關章節 {0} 後開放	通关章节 {0} 后开放
 ui.rb.chs.no_record	최고 기록 없음	最高記録なし	No record yet	尚無最高紀錄	尚无最高纪录
 ui.rb.chs.help	챕터를 깨면 다음 챕터가 열려요.\n깬 챕터도 다시 도전할 수 있어요.	チャプターをクリアすると次が開きます。\nクリアしたチャプターにも再挑戦できます。	Clear a chapter to open the next.\nCleared chapters can be replayed.	通關章節即可開放下一章。\n已通關的章節也能重新挑戰。	通关章节即可开放下一章。\n已通关的章节也能重新挑战。
+ui.rb.result.tower_clear	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR
+ui.rb.result.tower_fail	{0}F FAILED	{0}F FAILED	{0}F FAILED	{0}F FAILED	{0}F FAILED
+ui.rb.result.night_kills	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS
+ui.rb.result.entries	남은 입장 {0}/{1}	残り入場 {0}/{1}	Entries left {0}/{1}	剩餘入場 {0}/{1}	剩余入场 {0}/{1}
+ui.rb.result.floor	층	階	Floor	層	层
+ui.rb.result.possess	빙의 · 잃은 몸	憑依・失った体	Possessed · Lost	附身・失去宿主	附身・失去宿主
+ui.rb.result.first_clear	첫 클리어 보상	初回クリア報酬	First clear reward	首次通關獎勵	首次通关奖励
+ui.rb.result.suggest	이 층에 맞는 몸	この階に合う体	Good hosts for this floor	適合此層的宿主	适合此层的宿主
+ui.rb.result.to_tower	탑으로	塔へ	To Tower	回到塔	回到塔
+ui.rb.result.next_floor	다음 층 도전	次の階へ挑戦	Next Floor	挑戰下一層	挑战下一层
+ui.rb.result.best_new	최고 처치 {0}  <color=#FFC93D>NEW</color>	最高撃破 {0}  <color=#FFC93D>NEW</color>	Best {0}  <color=#FFC93D>NEW</color>	最高擊殺 {0}  <color=#FFC93D>NEW</color>	最高击杀 {0}  <color=#FFC93D>NEW</color>
+ui.rb.result.best	최고 처치 {0}	最高撃破 {0}	Best {0}	最高擊殺 {0}	最高击杀 {0}
+ui.rb.result.survived	버틴 시간	生存時間	Survived	存活時間	存活时间
+ui.rb.result.level	도달 Lv	到達Lv	Level reached	到達 Lv	到达 Lv
+ui.rb.result.leave	나가기	出る	Leave	離開	离开

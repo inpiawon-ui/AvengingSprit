@@ -630,6 +630,8 @@ namespace Game.Editor.ReBorn
             c.sizeDelta = new Vector2(720f, 1280f);
             Text(PutPx(Node(c, "RbResultChapter"), c, 360f, 128f, 400f, 36f), null, "CHAPTER 1", 36, Cyan, TA.Center, number: true);
             Img(PutPx(Node(c, "RbResultWord"), c, 360f, 200f, 300f, 96f), "WordArt/rb_word_word_clear");
+            // 탑 · 밤 결과의 머리글(「2F CLEAR」 · 「128 KILLS」) — 워드아트 자리에 글자로(시안 result-tower · result-night)
+            Text(PutPx(Node(c, "RbResultHeadline"), c, 360f, 200f, 640f, 100f), null, "2F CLEAR", 120, White, TA.Center, number: true);
             Img(PutPx(Node(c, "RbResultGhost"), c, 360f, 318f, 120f, 120f), "Art/rb_art_mascot_ghost_cheer");
             var nw = PutPx(Node(c, "RbResultNew"), c, 360f, 420f, 330f, 54f);
             Img(nw, "Components/rb_info_chip");

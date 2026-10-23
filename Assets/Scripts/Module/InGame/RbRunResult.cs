@@ -1,4 +1,4 @@
-﻿using Game.Module.Common;
+using Game.Module.Common;
 using Game.Module.Common.UI;
 using Game.Module.Events;
 using Game.User;
@@ -15,7 +15,7 @@ namespace Game.Module.InGame
     /// 보상은 전투가 이미 넣었다 — 여기는 보여 주기만 한다. 「다음 챕터 · 다시 도전」 은 그 챕터를 골라 둔 채 로비로 간다(출전 값은 로비에서 낸다).
     /// 프리팹은 빌더(RbInGameBuilder)가 세운다 — 노드 이름이 곧 키다.
     /// </summary>
-    public sealed class RbRunResult : MonoBehaviour
+    public sealed partial class RbRunResult : MonoBehaviour
     {
         [SerializeField] private Sprite _bgClear, _bgFail, _wordClear, _wordFailed, _ghostCheer, _ghostSad;
 
@@ -25,12 +25,8 @@ namespace Game.Module.InGame
 
         public void Show(StageFinishedEvent e, SpriteAtlas faces)
         {
-            if (_ui == null)
-            {
-                _ui = new UIBinder(transform);
-                _ui.OnClick("RbResultLobby", () => Leave(false));
-                _ui.OnClick("RbResultNext", () => Leave(true));
-            }
+            Bind();
+            _mode = ResultMode.Story;
             CoreModule.TryGet(out _player);
             gameObject.SetActive(true);
             transform.SetAsLastSibling();   // 06_ui — 열 때 맨 위
@@ -42,6 +38,9 @@ namespace Game.Module.InGame
 
             SetSprite("RbResultBg", clear ? _bgClear : _bgFail);
             SetSprite("RbResultWord", clear ? _wordClear : _wordFailed);
+            _ui.SetActive("RbResultHeadline", false);
+            _ui.SetActive("RbResultExpTile", true);
+            _ui.SetActive("RbResultGoldTile", true);
             SetSprite("RbResultGhost", clear ? _ghostCheer : _ghostSad);
             _ui.SetText("RbResultChapter", $"CHAPTER {ch}");
             bool unlocked = clear && ch < chapters;
@@ -84,8 +83,17 @@ namespace Game.Module.InGame
             img.enabled = s != null;
         }
 
+        private void Bind()
+        {
+            if (_ui != null) return;
+            _ui = new UIBinder(transform);
+            _ui.OnClick("RbResultLobby", () => Leave(false));
+            _ui.OnClick("RbResultNext", () => Leave(true));
+        }
+
         private void Leave(bool next)
         {
+            if (_mode != ResultMode.Story) { LeaveMode(next); return; }
             GameSound.Cue("ui.tap");
             if (next && _player != null) _player.SelectedChapter = _nextChapter;
             var main = GetComponentInParent<InGameMainUI>();

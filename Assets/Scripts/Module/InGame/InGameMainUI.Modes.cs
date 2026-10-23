@@ -80,6 +80,8 @@ namespace Game.Module.InGame
             if (_finished) return;
             _finished = true;
             HideModeOverlay();
+            // RE:BORN — 결과 화면(RbRunResult)의 탑 판(시안 result-tower)
+            if (_reborn && GetComponentInChildren<RbRunResult>(true) is RbRunResult rb) { rb.ShowTower(e, _faceAtlas); return; }
             var popup = GetComponentInChildren<TowerResultPopup>(true);
             if (popup != null) popup.Show(e);
             else Debug.LogError("[탑] 결과 창(TowerResultPopup)이 프리팹에 없다 — 「모드 UI/인게임 세우기」");
@@ -125,6 +127,8 @@ namespace Game.Module.InGame
             if (_finished) return;
             _finished = true;
             HideModeOverlay();
+            // RE:BORN — 결과 화면(RbRunResult)의 밤 판(시안 result-night)
+            if (_reborn && GetComponentInChildren<RbRunResult>(true) is RbRunResult rb) { rb.ShowNight(e, _faceAtlas); return; }
             var popup = GetComponentInChildren<NightResultPopup>(true);
             if (popup != null) popup.Show(e);
             else Debug.LogError("[밤] 결과 창(NightResultPopup)이 프리팹에 없다 — 「모드 UI/인게임 세우기」");

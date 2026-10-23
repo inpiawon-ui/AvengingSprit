@@ -134,6 +134,12 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "ingame:result_clear", "result_clear_20x9"),
             (720, 1280, Language.Japanese, "ingame:result_clear", "result_clear_ja"),
             (768, 1024, Language.English, "ingame:result_fail", "result_fail_4x3"),
+            (720, 1280, Language.Korean, "ingame:tower_clear", "moderesult_tower_clear_16x9"),
+            (720, 1280, Language.Korean, "ingame:tower_fail", "moderesult_tower_fail_16x9"),
+            (720, 1280, Language.Korean, "ingame:night", "moderesult_night_16x9"),
+            (720, 1280, Language.English, "ingame:night", "moderesult_night_en"),
+            (720, 1280, Language.Japanese, "ingame:tower_clear", "moderesult_tower_clear_ja"),
+            (1080, 2400, Language.Korean, "ingame:tower_clear", "moderesult_tower_clear_20x9"),
             (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
             (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
@@ -209,7 +215,7 @@ namespace Game.Editor.ReBorn
         private static void Step(int step)
         {
             var shots = Current;
-            bool ingame = shots == InGameShots;
+            bool ingame = SessionState.GetInt(Key + ".set", 0) == 1;   // 거르개를 쓰면 목록이 새 배열이라 참조로 비교하면 안 된다
             var lobby = Object.FindAnyObjectByType<RbLobbyUI>();
             var battleUi = ingame ? Object.FindAnyObjectByType<Game.Module.InGame.InGameMainUI>() : null;
             if (ingame && battleUi == null)
@@ -222,7 +228,7 @@ namespace Game.Editor.ReBorn
                     _wait = 120;
                     return;
                 }
-                if (Click("SkipButton") || Click("TouchArea")) _wait = 30; else _wait = 20;
+                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) _wait = 30; else _wait = 20;
                 return;
             }
             if (ingame && (GameObject.Find("BootCover") != null || battleUi.GetComponent<Game.Module.InGame.BattleDirector>() == null))
@@ -503,9 +509,33 @@ namespace Game.Editor.ReBorn
                     ui.GetComponentInChildren<Game.Module.InGame.RbRunResult>(true)?.Show(new Game.Module.Events.StageFinishedEvent
                     {
                         IsCleared = clear, FinishedChapter = 1, RewardGold = clear ? 432 : 96, RewardGhostExp = 30,
-                        ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 },
+                        ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 },
                         ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
                     }, faces);
+                    break;
+                case "ingame:tower_clear":
+                case "ingame:tower_fail":
+                case "ingame:night":
+                    // 탑 · 밤 결과 판만 띄운다(판을 끝내지 않는다). 숫자는 시안 예시(2F · 남은 입장 2 · 128 처치)
+                    var modeFaces = typeof(Game.Module.InGame.InGameMainUI).GetField("_faceAtlas", F)?.GetValue(ui) as UnityEngine.U2D.SpriteAtlas;
+                    var rb = ui.GetComponentInChildren<Game.Module.InGame.RbRunResult>(true);
+                    if (rb == null) break;
+                    if (state == "ingame:night")
+                        rb.ShowNight(new Game.Module.Events.NightFinishedEvent
+                        {
+                            IsCleared = true, NightDayIndex = 3, FinalKills = 128, PreviousBest = 96, IsNewBest = true,
+                            SurvivedSeconds = 522, ReachedLevel = 12, ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 }, EntriesLeft = 2,
+                        }, modeFaces);
+                    else
+                    {
+                        bool towerClear = state.EndsWith("clear");
+                        rb.ShowTower(new Game.Module.Events.TowerFinishedEvent
+                        {
+                            IsFloorCleared = towerClear, PlayedFloor = 2, NextFloor = 3, RewardGold = 500, EntriesLeft = 2,
+                            ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 }, SuggestHostKeys = new[] { "gangster" },
+                            PossessCount = 3, LostCount = 1, ElapsedSeconds = 162,
+                        }, modeFaces);
+                    }
                     break;
             }
         }

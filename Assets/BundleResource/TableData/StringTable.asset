@@ -10371,3 +10371,93 @@ MonoBehaviour:
       Cleared chapters can be replayed.'
     _zhHant: "\u901A\u95DC\u7AE0\u7BC0\u5373\u53EF\u958B\u653E\u4E0B\u4E00\u7AE0\u3002\n\u5DF2\u901A\u95DC\u7684\u7AE0\u7BC0\u4E5F\u80FD\u91CD\u65B0\u6311\u6230\u3002"
     _zhHans: "\u901A\u5173\u7AE0\u8282\u5373\u53EF\u5F00\u653E\u4E0B\u4E00\u7AE0\u3002\n\u5DF2\u901A\u5173\u7684\u7AE0\u8282\u4E5F\u80FD\u91CD\u65B0\u6311\u6218\u3002"
+  - _key: ui.rb.result.tower_clear
+    _ko: '{0}F CLEAR'
+    _ja: '{0}F CLEAR'
+    _en: '{0}F CLEAR'
+    _zhHant: '{0}F CLEAR'
+    _zhHans: '{0}F CLEAR'
+  - _key: ui.rb.result.tower_fail
+    _ko: '{0}F FAILED'
+    _ja: '{0}F FAILED'
+    _en: '{0}F FAILED'
+    _zhHant: '{0}F FAILED'
+    _zhHans: '{0}F FAILED'
+  - _key: ui.rb.result.night_kills
+    _ko: '{0} KILLS'
+    _ja: '{0} KILLS'
+    _en: '{0} KILLS'
+    _zhHant: '{0} KILLS'
+    _zhHans: '{0} KILLS'
+  - _key: ui.rb.result.entries
+    _ko: "\uB0A8\uC740 \uC785\uC7A5 {0}/{1}"
+    _ja: "\u6B8B\u308A\u5165\u5834 {0}/{1}"
+    _en: Entries left {0}/{1}
+    _zhHant: "\u5269\u9918\u5165\u5834 {0}/{1}"
+    _zhHans: "\u5269\u4F59\u5165\u573A {0}/{1}"
+  - _key: ui.rb.result.floor
+    _ko: "\uCE35"
+    _ja: "\u968E"
+    _en: Floor
+    _zhHant: "\u5C64"
+    _zhHans: "\u5C42"
+  - _key: ui.rb.result.possess
+    _ko: "\uBE59\uC758 \xB7 \uC783\uC740 \uBAB8"
+    _ja: "\u6191\u4F9D\u30FB\u5931\u3063\u305F\u4F53"
+    _en: "Possessed \xB7 Lost"
+    _zhHant: "\u9644\u8EAB\u30FB\u5931\u53BB\u5BBF\u4E3B"
+    _zhHans: "\u9644\u8EAB\u30FB\u5931\u53BB\u5BBF\u4E3B"
+  - _key: ui.rb.result.first_clear
+    _ko: "\uCCAB \uD074\uB9AC\uC5B4 \uBCF4\uC0C1"
+    _ja: "\u521D\u56DE\u30AF\u30EA\u30A2\u5831\u916C"
+    _en: First clear reward
+    _zhHant: "\u9996\u6B21\u901A\u95DC\u734E\u52F5"
+    _zhHans: "\u9996\u6B21\u901A\u5173\u5956\u52B1"
+  - _key: ui.rb.result.suggest
+    _ko: "\uC774 \uCE35\uC5D0 \uB9DE\uB294 \uBAB8"
+    _ja: "\u3053\u306E\u968E\u306B\u5408\u3046\u4F53"
+    _en: Good hosts for this floor
+    _zhHant: "\u9069\u5408\u6B64\u5C64\u7684\u5BBF\u4E3B"
+    _zhHans: "\u9002\u5408\u6B64\u5C42\u7684\u5BBF\u4E3B"
+  - _key: ui.rb.result.to_tower
+    _ko: "\uD0D1\uC73C\uB85C"
+    _ja: "\u5854\u3078"
+    _en: To Tower
+    _zhHant: "\u56DE\u5230\u5854"
+    _zhHans: "\u56DE\u5230\u5854"
+  - _key: ui.rb.result.next_floor
+    _ko: "\uB2E4\uC74C \uCE35 \uB3C4\uC804"
+    _ja: "\u6B21\u306E\u968E\u3078\u6311\u6226"
+    _en: Next Floor
+    _zhHant: "\u6311\u6230\u4E0B\u4E00\u5C64"
+    _zhHans: "\u6311\u6218\u4E0B\u4E00\u5C42"
+  - _key: ui.rb.result.best_new
+    _ko: "\uCD5C\uACE0 \uCC98\uCE58 {0}  <color=#FFC93D>NEW</color>"
+    _ja: "\u6700\u9AD8\u6483\u7834 {0}  <color=#FFC93D>NEW</color>"
+    _en: Best {0}  <color=#FFC93D>NEW</color>
+    _zhHant: "\u6700\u9AD8\u64CA\u6BBA {0}  <color=#FFC93D>NEW</color>"
+    _zhHans: "\u6700\u9AD8\u51FB\u6740 {0}  <color=#FFC93D>NEW</color>"
+  - _key: ui.rb.result.best
+    _ko: "\uCD5C\uACE0 \uCC98\uCE58 {0}"
+    _ja: "\u6700\u9AD8\u6483\u7834 {0}"
+    _en: Best {0}
+    _zhHant: "\u6700\u9AD8\u64CA\u6BBA {0}"
+    _zhHans: "\u6700\u9AD8\u51FB\u6740 {0}"
+  - _key: ui.rb.result.survived
+    _ko: "\uBC84\uD2F4 \uC2DC\uAC04"
+    _ja: "\u751F\u5B58\u6642\u9593"
+    _en: Survived
+    _zhHant: "\u5B58\u6D3B\u6642\u9593"
+    _zhHans: "\u5B58\u6D3B\u65F6\u95F4"
+  - _key: ui.rb.result.level
+    _ko: "\uB3C4\uB2EC Lv"
+    _ja: "\u5230\u9054Lv"
+    _en: Level reached
+    _zhHant: "\u5230\u9054 Lv"
+    _zhHans: "\u5230\u8FBE Lv"
+  - _key: ui.rb.result.leave
+    _ko: "\uB098\uAC00\uAE30"
+    _ja: "\u51FA\u308B"
+    _en: Leave
+    _zhHant: "\u96E2\u958B"
+    _zhHans: "\u79BB\u5F00"
