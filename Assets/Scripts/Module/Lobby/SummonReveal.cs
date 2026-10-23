@@ -44,10 +44,13 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _revealLightR = Array.Empty<Sprite>();
         [SerializeField] private Sprite[] _crack = Array.Empty<Sprite>();
         /// <summary>
-        /// 유리 조각 6종 시트(3×2, `lab_glass_shards_sheet`) · 반짝이(`lab_spark`) — **파티클 시스템**으로 뿌린다.
-        /// PD 2026-10-22 「깨지는 이펙트 이미지가 너무 지저분해」 → 「저런 식으로 리소스를 뽑고 파티클 시스템으로 이펙트 뿌리면 되잖아」.
+        /// 깨짐 알갱이 시트 — 유리 판(큰 · 중간) · 유리 부스러기 · 배양액 물방울, 반짝이(`lab_spark`). **파티클 시스템**으로 뿌린다.
+        /// PD 2026-10-22 「깨지는 이펙트 이미지가 너무 지저분해」 → 「저런 식으로 리소스를 뽑고 파티클 시스템으로 이펙트 뿌리면 되잖아」
+        /// → 「깨진 개수 차이도 크고 다르잖아」. 검은 바탕 그림이면 가산(속이 비쳐 뒤 빛이 보인다).
         /// </summary>
-        [SerializeField] private Texture2D _shardSheet, _spark;
+        [SerializeField] private Texture2D _shardSheet, _chipSheet, _splashSheet, _spark;
+        [SerializeField] private Vector2Int _shardGrid = new Vector2Int(3, 2), _chipGrid = new Vector2Int(1, 1), _splashGrid = new Vector2Int(3, 2);
+        [SerializeField] private bool _shardAdditive;
         [SerializeField] private Sprite[] _ring = Array.Empty<Sprite>();
         [SerializeField] private Sprite _stampNew, _ribbonPickup;
         [SerializeField] private Material _additive, _silhouette;
@@ -69,8 +72,10 @@ namespace Game.Module.Lobby
         {
             public Entry E;
             public Sprite Art, Ghost;
+            /// <summary>등장 자세 — 전용 그림(unitL_{키}_se_appear)이 있으면 그것, 없으면 원작 공격 자세 atk1 → atk2.</summary>
+            public Sprite[] Pose;
             public RectTransform Root;
-            public Image Tank, Broken, Light, Body, White, Glass, Crack, Core, GhostImg, GhostGlow, Ring;
+            public Image Tank, Broken, Light, Light2, Body, White, Glass, Crack, Core, GhostImg, GhostGlow, Ring;
             public Vector2 GlassCenter, GlassSize;
             public bool ImpactFx, RevealFx;
             public Image[] Trail;
@@ -82,7 +87,7 @@ namespace Game.Module.Lobby
         private RectTransform _root, _shake;
         // 파티클은 Overlay 캔버스 위에 안 그려진다 — 배양실만 메인 카메라 캔버스로 따로 띄우고, 도는 동안 로비 캔버스를 잠깐 숨긴다
         private Canvas _canvas, _lobbyCanvas;
-        private ParticleSystem _shardPs, _sparkPs;
+        private ParticleSystem _shardPs, _chipPs, _splashPs, _sparkPs;
         private Image _dim, _bg, _flash, _plateImg, _tagImg;
         private TextMeshProUGUI _tagText, _nameText, _gradeText, _tapText;
         private readonly List<Slot> _slots = new();
@@ -96,8 +101,7 @@ namespace Game.Module.Lobby
             int run = ++_run;
             // 앞 판이 끝나기 전에 새로 부르면 앞 판의 빛 · 이름판이 그림을 불러오는 동안 남는다
             if (_root != null) _root.gameObject.SetActive(false);
-            if (_shardPs != null) _shardPs.Clear();
-            if (_sparkPs != null) _sparkPs.Clear();
+            ClearParticles();
             var loaded = new List<string>();
             try
             {
@@ -111,7 +115,9 @@ namespace Game.Module.Lobby
                     var atlas = await Load(res, entries[i].HostKey, loaded);
                     var art = atlas != null ? atlas.GetSprite($"unitL_{entries[i].HostKey}_se") : null;
                     if (art == null) continue;
-                    _slots.Add(MakeSlot(entries[i], art, ghost));
+                    var slot = MakeSlot(entries[i], art, ghost);
+                    slot.Pose = PoseOf(atlas, entries[i].HostKey);
+                    _slots.Add(slot);
                     if (entries[i].Rarity > _slots[best].E.Rarity) best = _slots.Count - 1;
                 }
                 if (_slots.Count == 0) return;
@@ -124,8 +130,7 @@ namespace Game.Module.Lobby
                 if (_root != null && run == _run)
                 {
                     _root.gameObject.SetActive(false);
-                    if (_shardPs != null) _shardPs.Clear();
-                    if (_sparkPs != null) _sparkPs.Clear();
+                    ClearParticles();
                     _canvas.gameObject.SetActive(false);
                     if (_lobbyCanvas != null) _lobbyCanvas.enabled = true;
                 }
@@ -303,11 +308,15 @@ namespace Game.Module.Lobby
                 float u = Seg(t, s.RevealT, s.RevealT + 0.25f);
                 sy = u < 0.3f ? Mathf.Lerp(1f, 1.18f, u / 0.3f) : Mathf.Lerp(1.18f, 1f, Ease.OutBack((u - 0.3f) / 0.7f));
                 sx = 2f - sy;
-                float grow = Mathf.Lerp(1f, RevealGrow, Ease.OutCubic(u));
-                sx *= grow; sy *= grow;
+                // 10회는 칸이 붙어 있어 1.3배면 옆 칸 몸을 덮는다(녹화 10-23) — 1.1배
+                float grow = Mathf.Lerp(1f, _slots.Count == 1 ? RevealGrow : 1.1f, Ease.OutCubic(u));
+                // 자세를 잡은 뒤엔 숨쉬기(1.6초) — 가만히 서 있지 않게
+                float idle = Seg(t, s.RevealT + PoseEnd, s.RevealT + PoseEnd + 0.3f);
+                float breathe = Mathf.Sin((t - s.RevealT - PoseEnd) * Mathf.PI * 2f / 1.6f) * idle;
+                sx *= grow * (1f - 0.012f * breathe); sy *= grow * (1f + 0.025f * breathe);
             }
             s.Body.enabled = true;
-            s.Body.sprite = s.Art;
+            s.Body.sprite = revealed ? PoseSprite(s, t - s.RevealT) : s.Art;
             s.Body.material = revealed ? null : _silhouette;
             // 실루엣은 빙의 뒤 등급색 테두리 기운이 맥동한다(rim glow 대신 몸빛을 살짝 섞음)
             float rim = t >= s.ImpactT && !revealed ? 0.18f * (0.5f + 0.5f * Mathf.Sin(t * 18f)) : 0f;
@@ -378,40 +387,101 @@ namespace Game.Module.Lobby
             if (s.GhostGlow.enabled) { s.GhostGlow.color = WithA(c, gA * 0.9f); s.GhostGlow.rectTransform.anchoredPosition = gp; }
         }
 
-        // 알갱이 수 — 규칙 08 1-1(한 번에 40 이하). 빙의 반짝이 = gacha_reveal_1 입자 10/16/26 에서 조각 몫을 뺀 값
+        // 빙의 반짝이 수 — gacha_reveal_1 입자 10/16/26 에서 조각 몫을 뺀 값
         private static readonly int[] ImpactSparks = { 8, 12, 18 };
-        private static readonly int[] RevealShards = { 12, 16, 22 };
-        private const int SmallShards = 6;
 
-        /// <summary>깨짐 — 유리창 자리 곳곳에서 조각이 바깥 · 위로 튀고 중력으로 떨어진다(0.8초) + 반짝이.</summary>
+        /// <summary>깨짐 알갱이 한 종류의 뿌리는 값. 길이 단위는 배양조 높이(tankH), 중력은 화면 높이(H)/초².</summary>
+        private readonly struct BurstSpec
+        {
+            public readonly int Count;
+            public readonly Vector2 Size, Speed, Life, SpawnX, Angle, Up;
+            public readonly float Spin, FloorShare;
+            public readonly Vector2 FloorAngle, FloorSize;
+
+            public BurstSpec(int count, Vector2 size, Vector2 speed, Vector2 life, float spin, Vector2 spawnX, Vector2 angle, Vector2 up,
+                             float floorShare = 0f, Vector2 floorAngle = default, Vector2 floorSize = default)
+            {
+                Count = count; Size = size; Speed = speed; Life = life; Spin = spin; SpawnX = spawnX; Angle = angle; Up = up;
+                FloorShare = floorShare; FloorAngle = floorAngle; FloorSize = floorSize;
+            }
+        }
+
+        // 시안(mock_summon_lab_free_peak) 공개 순간을 같은 자로 재서 맞춘 값(2026-10-22, PD 「깨진 개수 차이도 크고 다르잖아」).
+        // 시안 154 덩어리(큰 판 29 · 중간 17 · 작은 조각 59 · 부스러기 49) — 터진 뒤 0.35초 합성이 평균 98(부스러기가 시안보다 적다 — 시안 수에는 용 몸 하이라이트도 섞여 있다).
+        // 큰 판은 유리창 가장자리에서 바깥으로 빨리 나가 몸을 덮지 않고, 부스러기 · 물방울이 몸 둘레를 채운다.
+        // 터진 뒤 중력으로 자연스럽게 떨어지고 끝난다(PD 10-23 「깨지면 자연스럽게 내려오면 끝내면 되지」) — 떨어지는 동안은 또렷하고 끝 15% 만 흐려진다.
+        // 규칙 08 1-1 「한 번에 40 이하」를 넘는다 — 최상위 등급 공개 한 박자(가이드 guide_summon_lab.md 에 이유).
+        private static readonly BurstSpec PlateSpec = new BurstSpec(26, new Vector2(0.07f, 0.19f), new Vector2(1.2f, 2.2f), new Vector2(1.3f, 1.7f), 120f,
+                                                                    new Vector2(0.3f, 0.5f), new Vector2(10f, 75f), new Vector2(0.5f, 1f));
+        private static readonly BurstSpec ChipSpec = new BurstSpec(75, new Vector2(0.012f, 0.035f), new Vector2(0.6f, 2.2f), new Vector2(1.1f, 1.5f), 300f,
+                                                                   new Vector2(0f, 0.5f), new Vector2(5f, 88f), new Vector2(0.3f, 1f));
+        private static readonly BurstSpec SplashSpec = new BurstSpec(60, new Vector2(0.03f, 0.09f), new Vector2(0.5f, 1.8f), new Vector2(0.9f, 1.3f), 60f,
+                                                                     new Vector2(0f, 0.5f), new Vector2(10f, 80f), new Vector2(0.3f, 1f),
+                                                                     0.3f, new Vector2(40f, 85f), new Vector2(0.05f, 0.1f));
+        // 등급 계단(R · SR · 대박) · 10회의 작은 칸
+        private static readonly float[] BurstScale = { 0.4f, 0.65f, 1f };
+        private const float SmallSlotBurst = 0.1f;
+
+        /// <summary>깨짐 — 유리 판 · 부스러기 · 배양액이 바깥 · 위로 튀었다가 공기에 멈춰 떠 있다 천천히 내려온다 + 반짝이.</summary>
         private void Shatter(Slot s, Color c)
         {
-            if (_shardPs == null) return;
-            int r = (int)s.E.Rarity;
-            int n = s.Best ? RevealShards[r] : SmallShards;
-            float tankH = s.GlassSize.y / 0.64f;
-            for (int i = 0; i < n; i++)
-            {
-                var p = s.GlassCenter + new Vector2((UnityEngine.Random.value - 0.5f) * s.GlassSize.x, (UnityEngine.Random.value - 0.5f) * s.GlassSize.y);
-                var dir = (p - s.GlassCenter + new Vector2(0f, tankH * 0.12f)).normalized;
-                var e = new ParticleSystem.EmitParams
-                {
-                    position = World(p),
-                    velocity = World(p + dir * tankH * UnityEngine.Random.Range(1.1f, 2.3f)) - World(p),
-                    startSize = WorldLen(tankH * UnityEngine.Random.Range(0.13f, 0.24f)),
-                    startLifetime = UnityEngine.Random.Range(0.6f, 0.9f),
-                    rotation = UnityEngine.Random.Range(0f, 360f),
-                    angularVelocity = UnityEngine.Random.Range(-450f, 450f),
-                    startColor = Color.white,
-                };
-                _shardPs.Emit(e, 1);
-            }
+            float scale = s.Best ? BurstScale[(int)s.E.Rarity] : SmallSlotBurst;
+            Burst(_shardPs, s, PlateSpec, scale);
+            Burst(_chipPs, s, ChipSpec, scale);
+            Burst(_splashPs, s, SplashSpec, scale);
             // 반짝이는 몸 둘레 바깥 양옆 · 머리 위에서 — 몸(글자 · 얼굴) 위를 덮지 않게
             float side = s.Cell * 0.42f;
             int k = s.Best ? 5 : 1;
             Sparks(s.Feet + new Vector2(-side, s.Cell * 0.3f), c, k, 0.8f);
             Sparks(s.Feet + new Vector2(side, s.Cell * 0.3f), c, k, 0.8f);
             Sparks(s.Feet + new Vector2(0f, s.Cell * 0.75f), c, k, 0.8f);
+        }
+
+        private void Burst(ParticleSystem ps, Slot s, in BurstSpec q, float scale)
+        {
+            if (ps == null) return;
+            int n = Mathf.Max(1, Mathf.RoundToInt(q.Count * scale));
+            float tankH = s.GlassSize.y / 0.64f;
+            for (int i = 0; i < n; i++)
+            {
+                float side = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+                bool floor = UnityEngine.Random.value < q.FloorShare;
+                Vector2 p, d;
+                if (floor)
+                {
+                    // 바닥 물보라 — 발 자리 받침에서 튀어 오른다
+                    p = new Vector2(s.Feet.x + (UnityEngine.Random.value - 0.5f) * s.GlassSize.x, s.Feet.y + tankH * 0.02f);
+                    float a = UnityEngine.Random.Range(q.FloorAngle.x, q.FloorAngle.y) * Mathf.Deg2Rad;
+                    d = new Vector2(side * Mathf.Sin(a), Mathf.Cos(a));
+                }
+                else
+                {
+                    p = s.GlassCenter + new Vector2(side * UnityEngine.Random.Range(q.SpawnX.x, q.SpawnX.y) * s.GlassSize.x,
+                                                    (UnityEngine.Random.value - 0.5f) * s.GlassSize.y);
+                    float a = UnityEngine.Random.Range(q.Angle.x, q.Angle.y) * Mathf.Deg2Rad;   // 수직에서 바깥으로 기운 각
+                    d = new Vector2(side * Mathf.Sin(a), Mathf.Cos(a) * UnityEngine.Random.Range(q.Up.x, q.Up.y));
+                }
+                var size = floor ? q.FloorSize : q.Size;
+                var e = new ParticleSystem.EmitParams
+                {
+                    position = World(p),
+                    velocity = World(p + d.normalized * tankH * UnityEngine.Random.Range(q.Speed.x, q.Speed.y)) - World(p),
+                    startSize = WorldLen(tankH * UnityEngine.Random.Range(size.x, size.y)),
+                    startLifetime = UnityEngine.Random.Range(q.Life.x, q.Life.y),
+                    rotation = UnityEngine.Random.Range(0f, 360f),
+                    angularVelocity = UnityEngine.Random.Range(-q.Spin, q.Spin),
+                    startColor = Color.white,
+                };
+                ps.Emit(e, 1);
+            }
+        }
+
+        private void ClearParticles()
+        {
+            if (_shardPs != null) _shardPs.Clear();
+            if (_chipPs != null) _chipPs.Clear();
+            if (_splashPs != null) _splashPs.Clear();
+            if (_sparkPs != null) _sparkPs.Clear();
         }
 
         /// <summary>반짝이 — 가운데에서 사방 · 조금 위로 흩어진다(가산, 등급색).</summary>
@@ -438,7 +508,7 @@ namespace Game.Module.Lobby
         private Vector3 World(Vector2 local) => _shake.TransformPoint(local);
         private float WorldLen(float local) => local * _shake.lossyScale.x;
 
-        private ParticleSystem NewParticles(string name, Texture2D tex, Material baseMat, int tilesX, int tilesY, float gravityPerH)
+        private ParticleSystem NewParticles(string name, Texture2D tex, Material baseMat, Vector2Int tiles, float gravityPerH, float drag, int max, float fadeFrom)
         {
             var go = new GameObject(name);
             go.layer = _root.gameObject.layer;
@@ -451,7 +521,7 @@ namespace Game.Module.Lobby
             main.useUnscaledTime = true;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.startSpeed = 0f;
-            main.maxParticles = 120;
+            main.maxParticles = max;
             // 중력 — 화면 높이 기준(캔버스가 카메라 앞 월드에 있어 월드 단위로 바꾼다)
             main.gravityModifier = gravityPerH * (H * _shake.lossyScale.y) / 9.81f;
             var emission = ps.emission; emission.enabled = false;
@@ -460,11 +530,12 @@ namespace Game.Module.Lobby
             col.enabled = true;
             var g = new Gradient();
             g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                      new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 0.55f), new GradientAlphaKey(0f, 1f) });
+                      new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, fadeFrom), new GradientAlphaKey(0f, 1f) });
             col.color = new ParticleSystem.MinMaxGradient(g);
             var limit = ps.limitVelocityOverLifetime;
-            limit.enabled = true; limit.drag = 1.2f;
+            limit.enabled = true; limit.drag = drag;
             limit.multiplyDragByParticleSize = false; limit.multiplyDragByParticleVelocity = false;
+            int tilesX = tiles.x, tilesY = tiles.y;
             if (tilesX * tilesY > 1)
             {
                 var sheet = ps.textureSheetAnimation;
@@ -511,15 +582,55 @@ namespace Game.Module.Lobby
             var img = best.Light;
             bool on = frames.Length > 0 && revealU > 0f;
             img.enabled = on;
+            best.Light2.enabled = on;
             if (!on) return;
             img.sprite = frames[Mathf.FloorToInt((t - best.RevealT) / 0.1f) % frames.Length];
             float k = best.E.Rarity == Rarity.SSR ? 1f : best.E.Rarity == Rarity.SR ? 0.8f : 0.6f;
             img.color = WithA(best.E.Rarity == Rarity.SSR ? SsrLightTint : Color.white, k * revealU);
             // 10회는 배양조가 0.2H(1회 0.5H) — 같은 비율로 줄인다
             float size = H * LightSize * (_slots.Count == 1 ? 1f : 0.4f) * (0.85f + 0.15f * revealU);
+            // 두 겹이 빛 뿌리(발 자리)를 축으로 반대 방향으로 천천히 흔들린다 — 빛이 도는 것처럼(PD 10-23 「오로라도 천천히 돌아가면서」)
+            float tr = t - best.RevealT;
+            PlaceLight(img, best, size, LightSwing * Mathf.Sin(tr * Mathf.PI * 2f / LightPeriod));
+            var img2 = best.Light2;
+            img2.enabled = true;
+            img2.sprite = frames[(Mathf.FloorToInt(tr / 0.1f) + frames.Length / 2) % frames.Length];
+            // 두 번째 겹은 옅게 · 같은 크기 — 0.5 · 1.08배였을 땐 빛 면적이 시안 13% 의 1.5배(19.7%)로 번졌다(녹화 실측 10-23)
+            img2.color = WithA(img.color, img.color.a * LightLayer2);
+            PlaceLight(img2, best, size, -LightSwing * Mathf.Sin(tr * Mathf.PI * 2f / LightPeriod + 1.3f));
+        }
+
+        private const float LightSwing = 9f, LightPeriod = 5f, LightLayer2 = 0.3f;
+        // 빛 그림의 빛 뿌리는 아래에서 7% — 거기를 축으로 돌린다
+        private const float LightRoot = 0.07f;
+
+        private static void PlaceLight(Image img, Slot best, float size, float angle)
+        {
             var rt = img.rectTransform;
+            rt.pivot = new Vector2(0.5f, LightRoot);
             rt.sizeDelta = new Vector2(size, size);
-            rt.anchoredPosition = best.Feet + new Vector2(0f, size * LightLift);
+            rt.anchoredPosition = best.Feet + new Vector2(0f, size * (LightLift - 0.5f + LightRoot));
+            rt.localRotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+        // 등장 자세 박자 — 늘어남(0~0.25) 뒤 0.2초에 자세 1 → 0.3초에 자세 2 를 잡고 0.9초까지 버틴다
+        private const float PoseStart = 0.2f, PoseMid = 0.3f, PoseEnd = 0.9f;
+
+        private static Sprite PoseSprite(Slot s, float tr)
+        {
+            if (s.Pose == null || s.Pose.Length == 0 || tr < PoseStart || tr >= PoseEnd) return s.Art;
+            return s.Pose.Length == 1 || tr >= PoseMid ? s.Pose[s.Pose.Length - 1] : s.Pose[0];
+        }
+
+        private static Sprite[] PoseOf(SpriteAtlas atlas, string key)
+        {
+            if (atlas == null) return Array.Empty<Sprite>();
+            var appear = atlas.GetSprite($"unitL_{key}_se_appear");
+            if (appear != null) return new[] { appear };
+            var a1 = atlas.GetSprite($"unitL_{key}_se_atk1");
+            var a2 = atlas.GetSprite($"unitL_{key}_se_atk2");
+            if (a1 == null || a2 == null) return Array.Empty<Sprite>();
+            return new[] { a1, a2 };
         }
 
         private void Flash(float t, Slot best)
@@ -556,6 +667,7 @@ namespace Game.Module.Lobby
             s.Tank = Img("Tank", s.Root, null);
             s.Broken = Img("Broken", s.Root, null);
             // 시안처럼 빛은 깨진 배양조 위에서 뿜어 나온다 — 배양조 뒤에 깔면 쇠 몸통에 가려 둘레만 물든다
+            s.Light2 = Img("Light2", s.Root, _additive);
             s.Light = Img("Light", s.Root, _additive);
             s.Body = Img("Body", s.Root, null);
             s.White = Img("White", s.Root, null);
@@ -637,8 +749,12 @@ namespace Game.Module.Lobby
             Localize.ApplyFonts(_root);
             if (_canvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
-                if (_shardSheet != null) _shardPs = NewParticles("ShardParticles", _shardSheet, Canvas.GetDefaultCanvasMaterial(), 3, 2, 3.2f);
-                if (_spark != null && _additive != null) _sparkPs = NewParticles("SparkParticles", _spark, _additive, 1, 1, -0.15f);
+                // 검은 바탕 유리 · 물 그림은 가산 — 속이 비쳐 뒤 금빛이 보인다(시안). 10회는 작은 칸 9개 몫까지 한꺼번에 뜬다
+                var glassMat = _shardAdditive && _additive != null ? _additive : Canvas.GetDefaultCanvasMaterial();
+                if (_shardSheet != null) _shardPs = NewParticles("ShardParticles", _shardSheet, glassMat, _shardGrid, 1.3f, 1.2f, 80, 0.85f);
+                if (_chipSheet != null) _chipPs = NewParticles("ChipParticles", _chipSheet, glassMat, _chipGrid, 1.3f, 1.2f, 200, 0.85f);
+                if (_splashSheet != null && _additive != null) _splashPs = NewParticles("SplashParticles", _splashSheet, _additive, _splashGrid, 1.6f, 1.2f, 160, 0.85f);
+                if (_spark != null && _additive != null) _sparkPs = NewParticles("SparkParticles", _spark, _additive, Vector2Int.one, -0.15f, 1.2f, 120, 0.55f);
             }
         }
 

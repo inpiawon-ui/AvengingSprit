@@ -118981,8 +118981,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9c7dd11cae7a10a4cb489948b360434f, type: 3}
   - {fileID: 21300000, guid: 3dd129be33d4e1f4ca69d2060bcd396c, type: 3}
   - {fileID: 21300000, guid: 06116cfe53a0fda46a58e69f9dfb8b13, type: 3}
-  _shardSheet: {fileID: 2800000, guid: fab1c1d0c23f252419c3165311780611, type: 3}
+  _shardSheet: {fileID: 2800000, guid: 4c0bf6f2f9575614bb263bc7e9ab3953, type: 3}
+  _chipSheet: {fileID: 2800000, guid: 251a04da322bc254fa62f18cd5461732, type: 3}
+  _splashSheet: {fileID: 2800000, guid: 929fa3830600949469c05f29a06d19f8, type: 3}
   _spark: {fileID: 2800000, guid: e00f4f73593e5dc44a8bad0542864eea, type: 3}
+  _shardGrid: {x: 5, y: 1}
+  _chipGrid: {x: 3, y: 1}
+  _splashGrid: {x: 3, y: 2}
+  _shardAdditive: 1
   _ring:
   - {fileID: 21300000, guid: 60d78bbba7a5a1c449859e7f188aed5a, type: 3}
   - {fileID: 21300000, guid: 44b234c634566a94cbf230f0b990e3d3, type: 3}

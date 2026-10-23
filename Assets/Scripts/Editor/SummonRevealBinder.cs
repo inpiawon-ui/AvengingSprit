@@ -35,7 +35,15 @@ namespace Game.Editor
                 so.FindProperty("_tankBroken").objectReferenceValue = Spr($"{Dir}/lab_tank_broken.png");
                 so.FindProperty("_softGlow").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISoftGlow.mat");
                 Frames(so, "_crack", "lab_crack_");
-                so.FindProperty("_shardSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_glass_shards_sheet.png");
+                // 깨짐 3차(PD 10-22 「깨진 개수 차이도 크고 다르잖아」) — 속이 비치는 유리 판 · 부스러기 · 배양액, 검은 바탕 가산.
+                // 자르기: Projects/AVSR/Tools/cut_summon_lab_parts3.py
+                so.FindProperty("_shardSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_shards_plate_sheet.png");
+                so.FindProperty("_shardGrid").vector2IntValue = new Vector2Int(5, 1);
+                so.FindProperty("_shardAdditive").boolValue = true;
+                so.FindProperty("_chipSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_shards_chip_sheet.png");
+                so.FindProperty("_chipGrid").vector2IntValue = new Vector2Int(3, 1);
+                so.FindProperty("_splashSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_splash_sheet.png");
+                so.FindProperty("_splashGrid").vector2IntValue = new Vector2Int(3, 2);
                 so.FindProperty("_spark").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_spark.png");
                 so.FindProperty("_plate").objectReferenceValue = Spr($"{Dir}/reveal_plate.png") ?? Spr("Assets/BaseResource/UiKit/panel_navy_big.png");   // 전용 판이 오기 전엔 남색 판
                 so.FindProperty("_stampNew").objectReferenceValue = Spr("Assets/BaseResource/Summon/stamp_new.png");
