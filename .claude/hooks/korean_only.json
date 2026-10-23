@@ -1,0 +1,1 @@
+{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[언어 규칙 — 매 메시지] 사용자는 한국인이고 영어를 모른다. 사용자에게 보이는 모든 글(최종 답변 · 도구 사이 진행 한 줄 · 표 · 계획 · 질문 · 커밋 보고)을 한국어로만 쓴다. 영어 문장이 떠오르면 쓰기 전에 한국어로 바꾼다. 코드 · 파일 경로 · 명령어만 원문 그대로 둔다."}}
