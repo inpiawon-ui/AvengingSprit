@@ -10,6 +10,9 @@ namespace Game.Module.Common
         Korean = 0,
         Japanese = 1,
         English = 2,
+        // 중국어 — PD 2026-10-23 「중국어도 추가해줘」(RE:BORN UI 리뉴얼). 번체 · 간체 따로
+        ChineseTraditional = 3,
+        ChineseSimplified = 4,
     }
 
     public static class LanguageCodes
@@ -19,6 +22,8 @@ namespace Game.Module.Common
         {
             Language.Japanese => "ja",
             Language.English  => "en",
+            Language.ChineseTraditional => "zh-Hant",
+            Language.ChineseSimplified  => "zh-Hans",
             _                 => "ko",
         };
 
@@ -27,6 +32,9 @@ namespace Game.Module.Common
         {
             SystemLanguage.Korean   => Language.Korean,
             SystemLanguage.Japanese => Language.Japanese,
+            SystemLanguage.ChineseTraditional => Language.ChineseTraditional,
+            SystemLanguage.ChineseSimplified  => Language.ChineseSimplified,
+            SystemLanguage.Chinese            => Language.ChineseSimplified,
             _                       => Language.English,
         };
     }

@@ -19,6 +19,8 @@ namespace Game.Module.Common
         [SerializeField, TextArea(1, 4)] private string _ko;
         [SerializeField, TextArea(1, 4)] private string _ja;
         [SerializeField, TextArea(1, 4)] private string _en;
+        [SerializeField, TextArea(1, 4)] private string _zhHant;
+        [SerializeField, TextArea(1, 4)] private string _zhHans;
 
         public StringEntry(string key, string korean)
         {
@@ -36,6 +38,8 @@ namespace Game.Module.Common
             {
                 Language.Japanese => _ja,
                 Language.English  => _en,
+                Language.ChineseTraditional => _zhHant,
+                Language.ChineseSimplified  => _zhHans,
                 _                 => _ko,
             };
             return string.IsNullOrEmpty(value) ? null : value;
@@ -48,6 +52,8 @@ namespace Game.Module.Common
             {
                 case Language.Japanese: _ja = value; break;
                 case Language.English:  _en = value; break;
+                case Language.ChineseTraditional: _zhHant = value; break;
+                case Language.ChineseSimplified:  _zhHans = value; break;
                 default:                _ko = value; break;
             }
         }

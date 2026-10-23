@@ -1,0 +1,337 @@
+key	zh_hant	zh_hans
+pskill.psv_thug.growth	金幣增加	金币增加
+pskill.psv_ninja.growth	移動速度	移动速度
+pskill.psv_leech.growth	發動機率	触发概率
+pskill.psv_gangster.growth	即死機率	即死概率
+pskill.psv_momentum.growth	暴擊傷害	暴击伤害
+pskill.psv_medium.growth	骷髏機率	骷髅概率
+pskill.psv_spare_circuit.growth	發動機率	触发概率
+askill.psg_h01.growth	傷害	伤害
+askill.psg_h03.growth	手榴彈傷害	手榴弹伤害
+askill.psg_h04.growth	持續時間	持续时间
+askill.psg_h05.growth	護盾量	护盾值
+askill.psg_h06.growth	飛彈傷害	导弹伤害
+askill.psg_h07.growth	暴走時間	暴走时间
+askill.psg_h08.growth	毒傷害	毒伤害
+askill.psg_h09.growth	每秒傷害	每秒伤害
+askill.psg_h10.growth	標記時間	标记时间
+askill.psg_h11.growth	掃射時間	扫射时间
+askill.psg_h12.growth	減傷	减伤
+askill.psg_h13.growth	瞄準時間	瞄准时间
+askill.psg_h14.growth	無敵時間	无敌时间
+askill.psg_h17.growth	束縛時間	束缚时间
+askill.psg_h19.growth	砲塔傷害	炮塔伤害
+askill.psg_h20.growth	反射時間	反射时间
+askill.psg_h21.growth	冰凍時間	冰冻时间
+askill.psg_h22.growth	每個敵人回復	每个敌人恢复
+ui.unit.seconds	{0:0.0}秒	{0:0.0}秒
+ui.affinity.blade	武器	武器
+ui.affinity.force	力量	力量
+ui.affinity.magic	魔法	魔法
+ui.chapterhost.random_badge	隨機	随机
+ui.chapterhost.recpower	建議戰鬥力 {0}	推荐战斗力 {0}
+ui.chapterhost.random	隨機選擇	随机选择
+ui.chapterhost.randomdesc1	將從所有宿主中隨機選出一名。	将从所有宿主中随机选出一名。
+ui.chapterhost.randomdesc2	低機率出現傳說宿主！	低概率出现传说宿主！
+ui.chapterhost.ghost_power	無身體	无身体
+uskill.gangster.name	契約處決	契约处决
+uskill.gangster.en	Contract Execution	Contract Execution
+uskill.hopper.name	擊殺點	击杀点
+uskill.hopper.en	Kill Point	Kill Point
+uskill.ninja_chain.name	鎖鏈突擊連擊	锁链突击连击
+uskill.ninja_chain.en	Chain Rush Combo	Chain Rush Combo
+uskill.medium.name	巨大怨靈	巨大怨灵
+uskill.medium.en	Giant Wraith	Giant Wraith
+uskill.death.name	亡者軍團	亡者军团
+uskill.death.en	Legion of the Dead	Legion of the Dead
+uskill.robot.name	機器人特攻隊	机器人特攻队
+uskill.robot.en	Robo Strike Team	Robo Strike Team
+uskill.ninja.name	影之三分身	影之三分身
+uskill.ninja.en	Triple Shadow	Triple Shadow
+uskill.amazon.name	雷光之舞	雷光之舞
+uskill.amazon.en	Lightning Dance	Lightning Dance
+uskill.hopper_smg.name	突進掃射	突进扫射
+uskill.hopper_smg.en	Rush Barrage	Rush Barrage
+uskill.vampire.name	鮮血之池	鲜血之池
+uskill.vampire.en	Blood Pool	Blood Pool
+uskill.dragoon.name	隕石	陨石
+uskill.dragoon.en	Meteor	Meteor
+uskill.baseball.name	全力揮棒旋風	全力挥棒旋风
+uskill.baseball.en	Full Swing Cyclone	Full Swing Cyclone
+uskill.guru.name	結界封印	结界封印
+uskill.guru.en	Sealing Barrier	Sealing Barrier
+uskill.commando_grenade.name	C4	C4
+uskill.commando_grenade.en	C4	C4
+uskill.salamander.name	毒沼	毒沼
+uskill.salamander.en	Venom Swamp	Venom Swamp
+uskill.snowwoman.name	冰之陣	冰之阵
+uskill.snowwoman.en	Frost Formation	Frost Formation
+uskill.thug.name	迴旋掃射	回旋扫射
+uskill.thug.en	Spin Barrage	Spin Barrage
+uskill.commando_missile.name	集中砲擊	集中炮击
+uskill.commando_missile.en	Focus Barrage	Focus Barrage
+uskill.commando_laser.name	稜鏡雷射	棱镜激光
+uskill.commando_laser.en	Prism Laser	Prism Laser
+uskill.white_wizard.name	光柱之雨	光柱之雨
+uskill.white_wizard.en	Pillar Rain	Pillar Rain
+uskill.dragon_blue.name	天雷	天雷
+uskill.dragon_blue.en	Heaven's Thunder	Heaven's Thunder
+uskill.commando_mg.name	迴旋掃射	回旋扫射
+uskill.commando_mg.en	Spin Barrage	Spin Barrage
+uskill.amazon_elite.name	逆鱗	逆鳞
+uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed
+ui.ingame.ultimate	必殺技	必杀技
+ui.ingame.ult_trial	體驗	体验
+ui.ingame.ult_locked	未解鎖	未解锁
+ui.ingame.ult_trial_spent	收集碎片即可每次使用	收集碎片即可每次使用
+ui.start.title	出擊方式	出击方式
+ui.start.mode.host	選擇身體	选择身体
+ui.start.mode.host_today	今日身體 · 免金幣	今日身体 · 免金币
+ui.start.mode.random	? 隨機	? 随机
+ui.start.mode.random_note	通關時\n碎片 +{0} · 金幣 +{1}%	通关时\n碎片 +{0} · 金币 +{1}%
+ui.start.mode.ghost	幽靈	幽灵
+ui.start.mode.ghost_note	通關時\n幽靈經驗 +{0}%	通关时\n幽灵经验 +{0}%
+ui.start.dim.random	隨機出擊 — 身體在關卡開始時決定	随机出击 — 身体在关卡开始时决定
+ui.start.dim.ghost	幽靈出擊 — 在關卡中奪取身體戰鬥	幽灵出击 — 在关卡中夺取身体战斗
+ui.start.today	今日身體	今日身体
+ui.start.today_note	今日身體 {0}名免費 · {1}後更換	今日身体 {0}个免费 · {1}后更换
+ui.start.info.random	? 隨機出擊	? 随机出击
+ui.start.info.random1	身體在關卡開始時決定。	身体在关卡开始时决定。
+ui.start.note.grown	奪來的身體也和你培養的一樣強。	夺来的身体也和你培养的一样强。
+ui.start.ribbon.today	今日身體免費	今日身体免费
+ui.start.ribbon.luck	幸運加成	幸运加成
+ui.start.ribbon.ghost	幽靈出擊	幽灵出击
+ui.stamina.short	體力不足\n需要 {0} · 持有 {1} · 下次回復 {2}	体力不足\n需要 {0} · 拥有 {1} · 下次恢复 {2}
+ui.stamina.refill_none	今日寶石補充次數已用完	今日宝石补充次数已用完
+ui.stamina.refill_line	寶石 {0} 補充 {1} · 今日 {2}/{3}	宝石 {0} 补充 {1} · 今日 {2}/{3}
+ui.stamina.refill_btn	寶石 {0} 補充	宝石 {0} 补充
+ui.stamina.fail.gem	寶石不足	宝石不足
+ui.stamina.fail.limit	今日寶石補充次數已用完	今日宝石补充次数已用完
+ui.stamina.fail.notready	準備中	准备中
+ui.lobby.summon_button.sub	召喚	召唤
+ui.chapterhost.boss	BOSS	BOSS
+ui.chapterhost.reward	通關獎勵	通关奖励
+ui.chapterhost.hosttitle	選擇宿主	选择宿主
+ui.chapterhost.ownedonly	僅能選擇已擁有的宿主。	仅可选择已拥有的宿主。
+ui.chapterhost.start	挑戰	挑战
+ui.chapterhost.chapter	章節	章节
+ui.affinity.none	無	无
+ui.tower.title	亡靈之塔	亡灵之塔
+ui.tower.reset_in	距離重置 {0}	距离重置 {0}
+ui.tower.week	本週 <color=#FFD23F>{0}層</color>	本周 <color=#FFD23F>{0}层</color>
+ui.tower.last_week	上週最高 {0}層	上周最高 {0}层
+ui.tower.floor	{0}層	{0}层
+ui.tower.adv_enemy	敵人	敌人
+ui.tower.adv	{0}身體有利 ▲	{0}身体有利 ▲
+ui.tower.fit	適用宿主 {0} · 已培養 ★{1}	适用宿主 {0} · 已培养 ★{1}
+ui.tower.fit_title	適用於{0}層的宿主	适用于{0}层的宿主
+ui.tower.first_clear	首次通關獎勵（每週重置）	首通奖励（每周重置）
+ui.tower.shard_count	碎片 ×{0}	碎片 ×{0}
+ui.tower.sweep	今日掃蕩	今日扫荡
+ui.tower.sweep_basis	以{0}層為準	以{0}层为准
+ui.tower.sweep_reward	{0} · 碎片 ×{1}	{0} · 碎片 ×{1}
+ui.tower.sweep_locked	通關第1層即可領取	通关第1层即可领取
+ui.tower.sweep_btn	掃蕩	扫荡
+ui.tower.sweep_done	今日已領	今日已领
+ui.tower.sweep_hint	每日1次 · 不消耗入場次數 · 無需戰鬥即可領取	每日1次 · 不消耗挑战次数 · 无需战斗即可领取
+ui.tower.sweep_result	掃蕩完成	扫荡完成
+ui.tower.entries_label	今日入場	今日次数
+ui.tower.entries	{0} / {1}	{0} / {1}
+ui.tower.buy	追加入場	增加次数
+ui.tower.start	挑戰{0}層 ▶	挑战{0}层 ▶
+ui.tower.start_buy	寶石 {0} 追加入場	宝石 {0} 增加次数
+ui.tower.no_entries	明天05:00恢復3次	明天05:00恢复3次
+ui.tower.start_hint	消耗1次入場 · 無論勝敗都會扣除	消耗1次挑战次数 · 无论胜负都会扣除
+ui.mode.buy_ask	花費寶石 {0} 追加1次入場？\n（今日追加入場 {1} / {2}）	花费宝石 {0} 增加1次挑战？\n（今日已增加 {1} / {2}）
+ui.mode.buy_no_gem	寶石不足	宝石不足
+ui.mode.reward_gold	金幣 {0}	金币 {0}
+ui.mode.span_dh	{0}天{1}小時	{0}天{1}小时
+ui.mode.span_hm	{0}小時{1}分	{0}小时{1}分
+ui.lobby.mode.night.sub	{0} · 入場 {1}/{2}	{0} · 次数 {1}/{2}
+ui.lobby.mode.tower.sub	本週 {0}層 · 入場 {1}/{2}	本周 {0}层 · 次数 {1}/{2}
+ui.night.title	亡靈之夜	亡灵之夜
+ui.night.today	今日 · 星期{0}	今日 · 星期{0}
+ui.night.other_day	預覽 · 星期{0}	预览 · 星期{0}
+ui.night.fit	今日出現宿主 {0} · 已培養 ★{1}	今日出现宿主 {0} · 已培养 ★{1}
+ui.night.best	星期{0}最高擊殺	星期{0}最高击杀
+ui.night.reward_label	獎勵	奖励
+ui.night.reward	每擊殺{0}隻得碎片1\n擊殺頭目 +{1}	每击杀{0}个得1碎片\n击杀头目 +{1}
+ui.night.flow.start	附身三個身體之一	附身三个身体之一
+ui.night.flow.wave_title	每1分鐘	每1分钟
+ui.night.flow.wave	敵群屬性 · 回復	敌群属性 · 恢复
+ui.night.flow.big_title	每{0}秒	每{0}秒
+ui.night.flow.big	大型宿主	大型宿主
+ui.night.flow.boss	頭目	头目
+ui.night.today_only	只能開始今日的關卡	只能开始今日的关卡
+ui.night.start	開始 ▶	开始 ▶
+ui.night.day.mon	一	一
+ui.night.day_short.mon	近戰	近战
+ui.night.day_rule.mon	近戰之日	近战日
+ui.night.day_desc.mon	只有近戰宿主會作為身體出現	只有近战宿主会作为身体出现
+ui.night.day.tue	二	二
+ui.night.day_short.tue	遠程	远程
+ui.night.day_rule.tue	遠程之日	远程日
+ui.night.day_desc.tue	只有遠程宿主會作為身體出現	只有远程宿主会作为身体出现
+ui.night.day.wed	三	三
+ui.night.day_short.wed	中程	中程
+ui.night.day_rule.wed	中程之日	中程日
+ui.night.day_desc.wed	只有中程宿主會作為身體出現	只有中程宿主会作为身体出现
+ui.night.day.thu	四	四
+ui.night.day_short.thu	力量	力量
+ui.night.day_rule.thu	力量之日	力量日
+ui.night.day_desc.thu	只有力量宿主會作為身體出現	只有力量宿主会作为身体出现
+ui.night.day.fri	五	五
+ui.night.day_short.fri	武器	武器
+ui.night.day_rule.fri	武器之日	武器日
+ui.night.day_desc.fri	只有武器宿主會作為身體出現	只有武器宿主会作为身体出现
+ui.night.day.sat	六	六
+ui.night.day_short.sat	魔法	魔法
+ui.night.day_rule.sat	魔法之日	魔法日
+ui.night.day_desc.sat	只有魔法宿主會作為身體出現	只有魔法宿主会作为身体出现
+ui.night.day.sun	日	日
+ui.night.day_short.sun	自由	自由
+ui.night.day_rule.sun	自由之日	自由日
+ui.night.day_desc.sun	所有宿主都會作為身體出現	所有宿主都会作为身体出现
+tower.floor.1.name	近戰之層	近战层
+tower.floor.1.desc	只有近戰宿主會作為身體出現	只有近战宿主会作为身体出现
+tower.floor.2.name	遠程之層	远程层
+tower.floor.2.desc	只有遠程宿主會作為身體出現	只有远程宿主会作为身体出现
+tower.floor.3.name	魔法敵群	魔法敌群
+tower.floor.3.desc	敵人全為魔法。身體會混合三種屬性出現。	敌人全是魔法。身体会混合三种属性出现。
+tower.floor.4.name	精英之層	精英层
+tower.floor.4.desc	敵人雖少，但個個強悍	敌人虽少，但个个强悍
+tower.floor.5.name	頭目 — 粉碎者	头目 — 粉碎者
+tower.floor.5.desc	粉碎者（力量）。只出現魔法身體	粉碎者（力量）。只出现魔法身体
+tower.floor.6.name	中程之層	中程层
+tower.floor.6.desc	只有中程宿主會作為身體出現 · 快速蝙蝠群	只有中程宿主会作为身体出现 · 快速蝙蝠群
+tower.floor.7.name	單一宿主之層	单一宿主层
+tower.floor.7.desc	只有一種宿主會作為身體出現	只有一种宿主会作为身体出现
+tower.floor.8.name	力量敵群	力量敌群
+tower.floor.8.desc	敵人全為力量。魔法身體有利	敌人全是力量。魔法身体有利
+tower.floor.9.name	只能附身一次	只能附身一次
+tower.floor.9.desc	只能附身一次 · 沒有救援身體	只能附身一次 · 没有救援身体
+tower.floor.10.name	頭目 — 黑幫老大	头目 — 黑帮老大
+tower.floor.10.desc	黑幫老大（武器）。只出現力量身體	黑帮老大（武器）。只出现力量身体
+ui.store.title	商店	商店
+ui.store.tab.today	今日	今日
+ui.store.tab.chest	寶箱	宝箱
+ui.store.tab.currency	貨幣	货币
+ui.store.today.title	今日商店	今日商店
+ui.store.today.refresh	重新整理	刷新
+ui.store.today.left	今日剩餘{0}次	今日剩余{0}次
+ui.store.today.timer	距離新商品 {0}	距离新商品 {0}
+ui.store.today.free_gold	免費金幣	免费金币
+ui.store.today.shard	{0}碎片	{0}碎片
+ui.store.sold	已購買	已购买
+ui.store.free	免費	免费
+ui.store.price_gem	寶石 {0}	宝石 {0}
+ui.store.price_gold	金幣 {0}	金币 {0}
+ui.store.chest.open_now	立即開啟	立即开启
+ui.store.chest.gold	金幣 {0} ~ {1}	金币 {0} ~ {1}
+ui.store.chest.shard	{0} ~ {1}名身體的碎片	{0} ~ {1}个身体的碎片
+ui.store.chest.rate	查看機率	查看概率
+ui.store.chest.rate_body	{0}\n碎片等級機率\n{1}	{0}\n碎片等级概率\n{1}
+ui.store.chest.note	寶箱購買後立即開啟 · 不佔用寶箱欄位	宝箱购买后立即开启 · 不占用宝箱栏位
+ui.store.card.days	剩餘{0}天	剩余{0}天
+ui.store.card.claim	今日領取	今日领取
+ui.store.card.claimed	已領取	已领取
+ui.store.once	限購1次	限购1次
+ui.store.starter.title	新手禮包	新手礼包
+ui.store.days_left	剩餘{0}天	剩余{0}天
+ui.store.chapter.title	第{0}章通關紀念	第{0}章通关纪念
+ui.store.gem.title	寶石禮包	宝石礼包
+ui.store.first_double	首購雙倍	首充双倍
+ui.store.gold.title	金幣	金币
+ui.store.legal	特定商業交易法 · 資金結算法標示	特定商业交易法 · 资金结算法标示
+ui.store.legal_body	特定商業交易法 · 資金結算法標示將於上市前補上。	特定商业交易法 · 资金结算法标示将于上线前补充。
+ui.store.restore	恢復購買	恢复购买
+ui.store.restore_done	沒有可恢復的購買。	没有可恢复的购买。
+ui.store.today_count	今日 {0}/{1}	今日 {0}/{1}
+ui.store.soldout	今日已售罄。	今日已售罄。
+ui.store.confirm.title	購買確認	购买确认
+ui.store.confirm.buy	以 {0} 購買	以 {0} 购买
+ui.store.confirm.close	關閉	关闭
+ui.store.confirm.note	將透過商店帳號付款	将通过商店账号付款
+ui.store.no_gem	寶石不足。要查看寶石禮包嗎？	宝石不足。要查看宝石礼包吗？
+ui.store.go_gem	購買寶石	购买宝石
+ui.store.reward.title	獲得！	获得！
+ui.store.reward.done	購買完成	购买完成
+ui.store.reward.gold	金幣 {0}	金币 {0}
+ui.store.reward.shard	{0}碎片 ×{1}	{0}碎片 ×{1}
+ui.store.r.gem	寶石	宝石
+ui.store.r.gold	金幣	金币
+ui.store.r.essence	精華	精华
+ui.store.r.ticket	召喚券	召唤券
+ui.store.r.stamina	體力	体力
+ui.pass.badge	SEASON 1 · GHOST REVENGE	SEASON 1 · GHOST REVENGE
+store.card_small.name	靈魂契約	灵魂契约
+store.card_small.desc	立即獲得寶石300 + 30天每日90	立即获得宝石300 + 30天每日90
+store.card_big.name	亡靈君主的契約	亡灵君主的契约
+store.card_big.desc	立即1,000 + 每日200 + 特權	立即1,000 + 每日200 + 特权
+store.starter_1.name	新手禮包 Ⅰ	新手礼包 Ⅰ
+store.starter_2.name	新手禮包 Ⅱ	新手礼包 Ⅱ
+store.starter_3.name	新手禮包 Ⅲ	新手礼包 Ⅲ
+store.chest_silver.name	銀寶箱	银宝箱
+store.chest_gold.name	金寶箱	金宝箱
+store.chest_platinum.name	白金寶箱	白金宝箱
+store.gold_s.name	一把金幣	一把金币
+store.gold_m.name	一袋金幣	一袋金币
+store.gold_l.name	一箱金幣	一箱金币
+store.gem_60.name	寶石 60	宝石 60
+store.gem_320.name	寶石 320	宝石 320
+store.gem_680.name	寶石 680	宝石 680
+store.gem_2100.name	寶石 2,100	宝石 2,100
+store.gem_3600.name	寶石 3,600	宝石 3,600
+store.gem_7500.name	寶石 7,500	宝石 7,500
+store.stamina_refill.name	體力補充	体力补充
+store.chapter_01.name	第1章通關紀念	第1章通关纪念
+store.chapter_02.name	第2章通關紀念	第2章通关纪念
+store.chapter_03.name	第3章通關紀念	第3章通关纪念
+store.chapter_04.name	第4章通關紀念	第4章通关纪念
+store.chapter_05.name	第5章通關紀念	第5章通关纪念
+store.chapter_06.name	第6章通關紀念	第6章通关纪念
+store.chapter_07.name	第7章通關紀念	第7章通关纪念
+store.chapter_08.name	第8章通關紀念	第8章通关纪念
+store.chapter_09.name	第9章通關紀念	第9章通关纪念
+store.chapter_10.name	第10章通關紀念	第10章通关纪念
+ui.mode.back	◀ 返回	◀ 返回
+ui.tower.fit_all	查看\n全部 ›	查看\n全部 ›
+ui.tower.badge_go	挑戰	挑战
+ui.summon.title	召喚	召唤
+ui.summon.pickup	本週精選：	本周UP：
+ui.summon.pickup_note	抽中A級時有{0}%機率為精選宿主	抽中A级时有{0}%概率为UP宿主
+ui.summon.left	剩餘 <color=#FFD94A>{0}</color>天 <color=#FFD94A>{1}</color>小時	剩余 <color=#FFD94A>{0}</color>天 <color=#FFD94A>{1}</color>小时
+ui.summon.tickets	持有召喚券 <color=#FFD94A>{0}</color>	拥有召唤券 <color=#FFD94A>{0}</color>
+ui.summon.today	今日	今日
+ui.summon.free	免費1次	免费1次
+ui.summon.free_used	明天再來	明天再来
+ui.summon.pull1	召喚1次	召唤1次
+ui.summon.pull10	召喚10次	召唤10次
+ui.summon.pull10_note	必得1次A級	必出1次A级
+ui.summon.price	寶石 {0} / 召喚券 {1}	宝石 {0} / 召唤券 {1}
+ui.summon.price_ticket	召喚券 {0}	召唤券 {0}
+ui.summon.pity	距離大獎 <color=#FFD94A>{0} / {1}</color>	距离大奖 <color=#FFD94A>{0} / {1}</color>
+ui.summon.rates	查看機率	查看概率
+ui.summon.history	召喚紀錄	召唤记录
+ui.summon.history_empty	尚無召喚紀錄。	暂无召唤记录。
+ui.summon.result	召喚結果	召唤结果
+ui.summon.result_count	召喚{0}次	召唤{0}次
+ui.summon.essence	精華 +{0}	精华 +{0}
+ui.summon.jackpot	大獎	大奖
+ui.summon.new_body	新身體	新身体
+ui.summon.again	再抽{0}次	再抽{0}次
+ui.summon.rate_grade	等級機率	等级概率
+ui.summon.rate_amount	碎片數量機率	碎片数量概率
+ui.summon.rate_host	各身體機率	各身体概率
+ui.summon.rate_rules	10次召喚必得1次A級 · {0}次內未出大獎則第{0}次必出大獎	10次召唤必出1次A级 · {0}次内未出大奖则第{0}次必出大奖
+ui.summon.fail.notready	準備中	准备中
+ui.summon.fail.free	今日免費召喚已使用	今日免费召唤已使用
+ui.summon.fail.ticket	召喚券不足	召唤券不足
+ui.summon.fail.gem	寶石不足。	宝石不足。
+ui.pass.buy_confirm	{0}\n要以 {1} 購買嗎？	{0}\n要以 {1} 购买吗？
+ui.pass.claim	領取	领取
+ui.pass.claim_all	全部領取	一键领取
+ui.pass.claimed	已領取	已领取
+ui.pass.daily	每日	每日
+ui.pass.weekly	每週	每周
+ui.pass.doing	進行中	进行中

@@ -1,0 +1,337 @@
+key	zh_hant	zh_hans
+ui.pass.free	免費獎勵	免费奖励
+ui.pass.premium_rewards	高級獎勵	高级奖励
+ui.pass.goldrun	{0}場份	{0}局份
+ui.pass.left	剩餘{0}天{1}小時	剩余{0}天{1}小时
+ui.pass.locked	未解鎖	未解锁
+ui.pass.premium	解鎖高級	解锁高级
+ui.pass.premium_plus	高級＋15階	高级＋15级
+ui.pass.reset_days	{0}天後重置	{0}天后重置
+ui.pass.reset_in	距離重置 {0}	距重置 {0}
+ui.pass.slogan	此刻，復仇的時刻開始了。	此刻，复仇的时刻开始了。
+ui.pass.tab.missions	任務	任务
+ui.pass.tab.rewards	獎勵	奖励
+ui.pass.tier	階段	等级
+ui.pass.xp	季票經驗值 +{0}	季票经验 +{0}
+ui.profile.title	個人檔案裝扮	个人资料装扮
+ui.profile.tab.frame	頭像框	头像框
+ui.profile.tab.face	代表頭像	代表头像
+ui.profile.tab.title	稱號	称号
+ui.profile.note	不影響能力值 · 僅限外觀	不影响属性 · 仅限外观
+ui.profile.equip	裝備	装备
+ui.profile.equipped	裝備中	装备中
+ui.profile.owned	已擁有	已拥有
+ui.profile.soon	即將公開	即将开放
+ui.profile.source	取得途徑：{0}	获取途径：{0}
+ui.profile.src_chapter	通關第{0}章	通关第{0}章
+ui.profile.src_pass	季票	季票
+mission.login	登入	登录
+mission.run_start	開始一局	开始一局
+mission.possess	附身	附身
+mission.kill_advantage	相剋優勢擊殺	相克优势击杀
+mission.daily_shop_buy	在今日商店購買	在今日商店购买
+mission.stat_upgrade	強化	强化
+mission.daily_all_done	完成全部每日任務	完成全部每日任务
+mission.run_clear	通關章節	通关章节
+mission.kill_boss	擊敗頭目	击败头目
+mission.chest_open	開啟寶箱	开启宝箱
+mission.distinct_hosts_possessed	附身不同身體	附身不同身体
+mission.weekly_all_done	完成全部每週任務	完成全部每周任务
+profile.frame_default.name	基本頭像框	基础头像框
+profile.frame_s1.name	HOST REVENGE	HOST REVENGE
+profile.frame_ch10.name	第10章征服	第10章征服
+profile.title_none.name	無稱號	无称号
+profile.title_s1.name	第1季復仇者	第1赛季复仇者
+profile.title_ch10.name	第10章征服者	第10章征服者
+ui.summon.shards	碎片 × {0}	碎片 × {0}
+ui.summon.next_star	目前碎片 <color=#FFD94A>{0}</color> / {1}  →  距下一星級 <color=#FFD94A>{2}</color>	当前碎片 <color=#FFD94A>{0}</color> / {1}  →  距下一星级 <color=#FFD94A>{2}</color>
+ui.summon.star_max	最高星級	最高星级
+ui.summon.rates_title	召喚機率	召唤概率
+ui.summon.rate_hosts	{0}宿主 {1}名	{0}宿主 {1}名
+ui.summon.rate_each	各 {0}	各 {0}
+ui.summon.rate_pickup	精選 {0}	精选 {0}
+ui.summon.rate_shards	碎片 ×{0}	碎片 ×{0}
+ui.summon.rate_guarantee	10連召喚必得<color=#FFD94A>A級以上1名</color>	十连召唤必得<color=#FFD94A>A级以上1名</color>
+ui.summon.rate_pity	保底 <color=#FFD94A>{0}</color> / {1}	保底 <color=#FFD94A>{0}</color> / {1}
+ui.summon.rate_pity_note	保底次數不會延續。	保底次数不会继承。
+ui.summon.history_recent	最近100次	最近100次
+ui.summon.history_date	日期	日期
+ui.summon.history_host	宿主	宿主
+ui.summon.history_shard	碎片	碎片
+ui.summon.history_pay	消耗	消耗
+ui.summon.history_free	免費	免费
+ui.summon.shards_now	目前碎片 <color=#FFD94A>{0}</color>	当前碎片 <color=#FFD94A>{0}</color>
+ui.tower.floor_f	{0}F	{0}F
+ui.tower.enemies_left	剩餘敵人 {0}	剩余敌人 {0}
+ui.tower.possess_left	剩餘附身 {0}	剩余附身 {0}
+ui.tower.no_leave	此層無法離開身體	本层无法离开身体
+ui.tower.result.clear	{0}F CLEAR	{0}F CLEAR
+ui.tower.result.fail	第{0}層失敗	第{0}层失败
+ui.tower.result.next	下一層	下一层
+ui.tower.result.hint	適合此層的培養身體 ★{0} / {1}	适合本层的已培养身体 ★{0} / {1}
+ui.tower.result.suggest	培養{0}會更輕鬆	培养{0}会更轻松
+ui.tower.retry	再戰 ▶	再来 ▶
+ui.tower.leave	離開	离开
+ui.night.kills	擊殺 {0}	击杀 {0}
+ui.night.start_hint	選擇一個身體附身	选择一个身体附身
+ui.night.start_hint_sub	其餘兩個將會消失	其余两个将会消失
+ui.night.banner.wave	敵群變為{0}	敌群变为{0}
+ui.night.banner.heal	撐住了 — 回復{0}%	撑住了 — 恢复{0}%
+ui.night.banner.big	大型{0}出現	大型{0}出现
+ui.night.banner.big_sub	附身狀態下削弱即可奪取	附身状态下削弱即可夺取
+ui.night.banner.chief	隊長{0}出現	队长{0}出现
+ui.night.banner.boss	頭目{0}出現	头目{0}出现
+ui.night.banner.boss_sub	擊倒即可撐過今夜	击倒即可撑过今夜
+ui.night.result.clear	撐過了夜晚	撑过了夜晚
+ui.night.result.fail	倒下了	倒下了
+ui.night.result.best	最高紀錄！（前次 {0}）	最高纪录！（上次 {0}）
+ui.night.result.stat	撐住時間 {0} · 等級 {1}	坚持时间 {0} · 等级 {1}
+ui.tower.banner_enemy	敵人全為{0} · {1}身體有利 ▲	敌人全为{0} · {1}身体有利 ▲
+ui.tower.first_clear_done	本週獎勵已領取	本周奖励已领取
+ui.tower.result.next_try	下次挑戰	下次挑战
+ui.tower.result.fail_desc	消耗1次入場再試 — 換個身體吧	消耗1次入场再试 — 换个身体吧
+ui.night.wave	敵群：{0}	敌群：{0}
+ui.night.next_big	大型宿主 {0}	大型宿主 {0}
+ui.night.next_boss	頭目 {0}	头目 {0}
+ui.night.counter	{0}身體有利 ▲	{0}身体有利 ▲
+ui.night.result.boss	擊敗頭目{0}	击败头目{0}
+ui.night.result.kills	擊殺	击杀
+ui.night.result.reward	獎勵 — 每擊殺{0}得碎片1	奖励 — 每击杀{0}得碎片1
+ui.night.result.reward_clear	獎勵 — 每擊殺{0}得1 + 擊敗頭目{1}	奖励 — 每击杀{0}得1 + 击败头目{1}
+ui.night.result.reward_none	這次沒有碎片 — 擊殺{0}隻得1	这次没有碎片 — 击杀{0}只得1
+ui.night.result.stat_full	撐住時間 {0} · Lv {1} · 附身 {2} · 失去身體 {3}	坚持时间 {0} · Lv {1} · 附身 {2} · 失去身体 {3}
+ui.night.result.lobby	大廳	大厅
+ui.growth6.rank	星級 {0}/10	星级 {0}/10
+ui.growth6.power	戰鬥力 <color=#5CFF7A>{0}</color>	战斗力 <color=#5CFF7A>{0}</color>
+ui.growth6.summary	{0}星 → {1}星  ·  HP·攻擊 +7%  ·  技能 Lv {0}→<color=#1E8E3E>{1}</color>  ·  強化上限 {2}→<color=#1E8E3E>{3}</color>	{0}星 → {1}星  ·  HP·攻击 +7%  ·  技能 Lv {0}→<color=#1E8E3E>{1}</color>  ·  强化上限 {2}→<color=#1E8E3E>{3}</color>
+ui.growth6.summary_max	10星 — 最高星級	10星 — 最高星级
+ui.growth6.summary_unlock	收集碎片解鎖後，開放技能 · 能力值強化	收集碎片解锁后，开放技能 · 属性强化
+ui.growth6.ult_tag	SPECIAL · 必殺技	SPECIAL · 必杀技
+ui.growth6.act_tag	ACTIVE · 主動	ACTIVE · 主动
+ui.growth6.pas_tag	PASSIVE · 被動	PASSIVE · 被动
+ui.growth6.ult_cond	每次附身1次	每次附身1次
+ui.growth6.act_cond	普攻30次充能	普攻30次充能
+ui.growth6.power_line	目前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>	当前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>
+ui.growth6.power_max	威力 {0}%（最高）	威力 {0}%（最高）
+ui.growth6.pas_line	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>
+ui.growth6.pas_max	{0} {1}（最高）	{0} {1}（最高）
+ui.growth6.opt_locked	{0}星覺醒選項 · 未解鎖	{0}星觉醒选项 · 未解锁
+ui.growth6.opt_open	{0}星覺醒選項	{0}星觉醒选项
+ui.growth6.opt_max	10星覺醒強化 · 效果2倍	10星觉醒强化 · 效果2倍
+ui.growth6.step	{0}星 輔助↑	{0}星 辅助↑
+ui.growth6.cap	{0}星 強化上限 Lv {1}	{0}星 强化上限 Lv {1}
+ui.growth6.row_lv	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}
+ui.growth6.card_rank	{0}星	{0}星
+ui.growth6.win_rank	{0}星 → <color=#5CFF7A>{1}星</color>	{0}星 → <color=#5CFF7A>{1}星</color>
+ui.growth6.w.body	身體能力值	身体属性
+ui.growth6.w.body_val	HP·攻擊 <color=#1E8E3E>+7%</color>	HP·攻击 <color=#1E8E3E>+7%</color>
+ui.growth6.w.skill_lv	技能 Lv	技能 Lv
+ui.growth6.w.act	主動技能威力	主动技能威力
+ui.growth6.w.act_step	主動輔助值	主动辅助值
+ui.growth6.w.ult	必殺技威力	必杀技威力
+ui.growth6.w.pas	被動技能	被动技能
+ui.growth6.w.opt	6星覺醒選項	6星觉醒选项
+ui.growth6.w.opt_open	<color=#5CFF7A>已解鎖</color>	<color=#5CFF7A>已解锁</color>
+ui.growth6.w.opt_max	10星覺醒強化	10星觉醒强化
+ui.growth6.w.opt_double	效果 <color=#1E8E3E>2倍</color>	效果 <color=#1E8E3E>2倍</color>
+ui.growth6.w.cap	能力值強化上限	属性强化上限
+ui.growth6.next_mile	下個里程碑  {0}星：{1}	下个里程碑  {0}星：{1}
+ui.growth6.mile_opt	覺醒選項解鎖	觉醒选项解锁
+ui.growth6.mile_gold	大金星	大金星
+ui.growth6.mile_max	覺醒強化 2倍	觉醒强化 2倍
+ui.growth6.mile_step	主動輔助↑	主动辅助↑
+host.gangster.concept	受僱狙擊手 — 頭目殺手	雇佣狙击手 — 头目杀手
+ult.gangster.name	契約處刑	契约处决
+ult.gangster.desc	瞄準HP最高的敵人（含頭目）1.5秒後射出超大一發。對頭目造成最大HP百分比傷害。	瞄准HP最高的敌人（含头目）1.5秒后射出超大一发。对头目造成最大HP百分比伤害。
+ult.gangster.short	對最強敵人射出超大一發	对最强敌人射出超大一发
+askill.gangster.short	標記房間內所有敵人	标记房间内所有敌人
+pskill.gangster.short	機率秒殺已標記敵人	概率秒杀已标记敌人
+askill.gangster.opt	已標記敵人受到傷害 +15%	已标记敌人受到伤害 +15%
+host.hopper.concept	要害獵人 — 群體暴擊	要害猎人 — 群体暴击
+ult.hopper.name	致命點	致命点
+ult.hopper.desc	以刀刃束縛前方敵人，被束縛的敵人全員必定暴擊。	以刀刃束缚前方敌人，被束缚的敌人全部必定暴击。
+ult.hopper.short	束縛前方敵人並必定暴擊	束缚前方敌人并必定暴击
+askill.hopper.short	5秒內暴擊率90%	5秒内暴击率90%
+pskill.hopper.short	暴擊傷害 +30%	暴击伤害 +30%
+askill.hopper.opt	每次暴擊命中，精準瞄準 +0.3秒（最多 +2秒）	每次暴击命中，精准瞄准 +0.3秒（最多 +2秒）
+host.ninja_chain.concept	鎖鏈獵人 — 掛上鎖鏈飛身而去	锁链猎人 — 挂上锁链飞身而去
+ult.ninja_chain.name	鎖鏈突擊連擊	锁链突击连击
+ult.ninja_chain.desc	對最強敵人掛上鎖鏈並飛身過去，連擊後向下重砸（不會拉動頭目）。	对最强敌人挂上锁链并飞身过去，连击后向下重砸（不会拉动头目）。
+ult.ninja_chain.short	飛向強敵連擊	飞向强敌连击
+askill.ninja_chain.short	拉來5名敵人一次橫掃	拉来5名敌人一次横扫
+pskill.ninja_chain.short	10%機率化解傷害	10%概率化解伤害
+askill.ninja_chain.opt	拉來敵人 5 → 7名	拉来敌人 5 → 7名
+host.medium.concept	降靈術師 — 與靈魂並肩作戰	降灵术师 — 与灵魂并肩作战
+ult.medium.name	巨大怨靈	巨大怨灵
+ult.medium.desc	召喚巨大怨靈，抓撕周圍敵人5秒，最後大爆炸。	召唤巨大怨灵，撕抓周围敌人5秒，最后大爆炸。
+ult.medium.short	巨大怨靈抓撕5秒後爆炸	巨大怨灵撕抓5秒后爆炸
+askill.medium.short	迷你魔像協同作戰10秒	迷你魔像协同作战10秒
+pskill.medium.short	擊殺時30%機率召喚骷髏	击杀时30%概率召唤骷髅
+askill.medium.opt	迷你魔像持續 +4秒	迷你魔像持续 +4秒
+host.death.concept	死亡君主	死亡君主
+ult.death.name	亡者軍團	亡者军团
+ult.death.desc	召喚骷髏 · 幽靈軍團衝鋒，軍團消失時化為鬼火爆炸。	召唤骷髅 · 幽灵军团冲锋，军团消失时化为鬼火爆炸。
+ult.death.short	骷髏軍團 + 怨靈兩次爆炸	骷髅军团 + 怨灵两次爆炸
+askill.death.short	3秒內擊中的敵人即死	3秒内击中的敌人即死
+pskill.death.short	擊殺處會站起骷髏	击杀处会站起骷髅
+askill.death.opt	每即死1名敵人，時間 +0.3秒	每即死1名敌人，时间 +0.3秒
+host.robot.concept	砲台技師	炮台技师
+ult.robot.name	機器人特攻隊	机器人特攻队
+ult.robot.desc	五台機器人乘光柱降下傾瀉飛彈，各自再射三發後返回。	五台机器人乘光柱降下倾泻导弹，各自再射三发后返回。
+ult.robot.short	五台機器人降下齊射	五台机器人降下齐射
+askill.robot.short	設置自動砲台10秒	设置自动炮台10秒
+pskill.robot.short	普攻2%機率冷卻縮短1秒	普攻2%概率冷却缩短1秒
+askill.robot.opt	砲台 +1座（共2座）	炮台 +1座（共2座）
+host.ninja.concept	分身術師 — 欺敵夾擊	分身术师 — 欺敌夹击
+ult.ninja.name	影三分身	影三分身
+ult.ninja.desc	召喚三個分身共同攻擊6秒 — 忍者投擲時三個分身也一起投擲。	召唤三个分身共同攻击6秒 — 忍者投掷时三个分身也一起投掷。
+ult.ninja.short	三個分身共同攻擊6秒	三个分身共同攻击6秒
+askill.ninja.short	4秒內迴避50% · 加速	4秒内闪避50% · 加速
+pskill.ninja.short	擊殺時移動速度 +30%	击杀时移动速度 +30%
+askill.ninja.opt	迴避 50% → 70%	闪避 50% → 70%
+host.amazon.concept	閃電突擊手	闪电突击手
+ult.amazon.name	閃電舞姬	闪电舞姬
+ult.amazon.desc	化作殘影穿梭於敵人之間斬擊並重砸，施放中無敵。	化作残影穿梭于敌人之间斩击并重砸，施放中无敌。
+ult.amazon.short	穿梭敵陣的無敵連擊	穿梭敌阵的无敌连击
+askill.amazon.short	跳躍重擊附近敵人	跳跃重击附近敌人
+pskill.amazon.short	護盾越滿速度越快	护盾越满速度越快
+askill.amazon.opt	落地處周圍敵人暈眩0.5秒	落地处周围敌人眩晕0.5秒
+host.hopper_smg.concept	突破特攻	突破特攻
+ult.hopper_smg.name	突進亂射	突进乱射
+ult.hopper_smg.desc	直線突進至最遠敵人並向兩側亂射，抵達後無敵。	直线突进至最远敌人并向两侧乱射，抵达后无敌。
+ult.hopper_smg.short	突進遠方敵人並亂射	突进远处敌人并乱射
+askill.hopper_smg.short	向後跳躍同時向前連射	向后跳跃同时向前连射
+pskill.hopper_smg.short	10%機率擊退命中的敵人	10%概率击退命中的敌人
+askill.hopper_smg.opt	落地後1秒內攻擊速度 +50%	落地后1秒内攻击速度 +50%
+host.vampire.concept	血之君主 — 以血換狂暴	血之君主 — 以血换狂暴
+ult.vampire.name	血池	血池
+ult.vampire.desc	在周圍展開血池並融入其中 — 池中所有敵人沾染鮮血，吸取2秒回復自身，最後爆裂。	在周围展开血池并融入其中 — 池中所有敌人沾染鲜血，吸取2秒恢复自身，最后爆裂。
+ult.vampire.short	血池吸血2秒後爆裂	血池吸血2秒后爆裂
+askill.vampire.short	蝙蝠吸血回復	蝙蝠吸血恢复
+pskill.vampire.short	8%機率回復攻擊力5%的HP	8%概率恢复攻击力5%的HP
+askill.vampire.opt	溢出的回復量轉為護盾	溢出的恢复量转为护盾
+host.dragoon.concept	龍騎兵 — 坐騎	龙骑兵 — 坐骑
+ult.dragoon.name	隕石	陨石
+ult.dragoon.desc	對最強敵人落下火球引發大爆炸，並使該處化為火海4秒。	对最强敌人落下火球引发大爆炸，并使该处化为火海4秒。
+ult.dragoon.short	最強敵人隕石 + 火海	最强敌人陨石 + 火海
+askill.dragoon.short	附近敵人腳下化為火海	附近敌人脚下化为火海
+pskill.dragoon.short	10%機率使敵人燃燒	10%概率使敌人燃烧
+askill.dragoon.opt	火海2處（附近2名敵人）	火海2处（附近2名敌人）
+host.baseball.concept	場外強打 — 擊回並轟飛	场外强打 — 击回并轰飞
+ult.baseball.name	全力揮擊旋風	全力挥击旋风
+ult.baseball.desc	旋轉擴大旋風將敵人吸引過來，再以全力揮擊打飛。	旋转扩大旋风将敌人吸过来，再以全力挥击打飞。
+ult.baseball.short	以旋風聚敵後全力揮擊	以旋风聚敌后全力挥击
+askill.baseball.short	5秒內反彈飛來的子彈	5秒内反弹飞来的子弹
+pskill.baseball.short	最後一擊20%機率擊飛周圍	最后一击20%概率击飞周围
+askill.baseball.opt	反彈子彈可貫穿	反弹子弹可贯穿
+host.guru.concept	結界修行僧	结界修行僧
+ult.guru.name	結界封印	结界封印
+ult.guru.desc	以結界將敵人聚向中央困住後引爆。	以结界将敌人聚向中央困住后引爆。
+ult.guru.short	以結界聚敵並引爆	以结界聚敌并引爆
+askill.guru.short	3秒內受到傷害 −50%，護盾2倍	3秒内受到伤害 −50%，护盾2倍
+pskill.guru.short	行走時穿越障礙物	行走时穿越障碍物
+askill.guru.opt	結界內護盾會重新充能	结界内护盾会重新充能
+host.commando_grenade.concept	爆破專家	爆破专家
+ult.commando_grenade.name	C4	C4
+ult.commando_grenade.desc	對範圍內所有敵人貼上炸彈，2秒後連鎖爆炸（期間停止普攻）。	对范围内所有敌人贴上炸弹，2秒后连锁爆炸（期间停止普攻）。
+ult.commando_grenade.short	每個敵人貼炸彈，2秒後連鎖爆炸	每个敌人贴炸弹，2秒后连锁爆炸
+askill.commando_grenade.short	在自身周圍環狀投擲手榴彈	在自身周围环状投掷手榴弹
+pskill.commando_grenade.short	無視50%防禦	无视50%防御
+askill.commando_grenade.opt	每次著彈留下小型燃燒區	每次着弹留下小型燃烧区
+host.salamander.concept	毒術師 — 持續傷害	毒术师 — 持续伤害
+ult.salamander.name	毒沼	毒沼
+ult.salamander.desc	展開大片毒沼 — 其中的敵人全部中毒，毒沼結束時爆炸。	展开大片毒沼 — 其中的敌人全部中毒，毒沼结束时爆炸。
+ult.salamander.short	大片毒沼 · 範圍內敵人全中毒	大片毒沼 · 范围内敌人全中毒
+askill.salamander.short	使周圍5m敵人全部中毒	使周围5m敌人全部中毒
+pskill.salamander.short	10%中毒 · 對中毒敵人傷害 +25%	10%中毒 · 对中毒敌人伤害 +25%
+askill.salamander.opt	中毒敵人死亡時毒素爆開並擴散到周圍	中毒敌人死亡时毒素爆开并扩散到周围
+host.snowwoman.concept	冰結魔女 — 冰凍後擊碎	冰结魔女 — 冰冻后击碎
+ult.snowwoman.name	冰陣	冰阵
+ult.snowwoman.desc	展開冰陣，冰柱竄出困住敵人後粉碎。	展开冰阵，冰柱窜出困住敌人后粉碎。
+ult.snowwoman.short	以冰柱困住後粉碎	以冰柱困住后粉碎
+askill.snowwoman.short	2秒內冰封自身回復HP	2秒内冰封自身恢复HP
+pskill.snowwoman.short	30%機率冰凍敵人	30%概率冰冻敌人
+askill.snowwoman.opt	冰塊碎裂時冰凍周圍敵人	冰块碎裂时冰冻周围敌人
+host.thug.concept	亂射幫派 — 火力全開	乱射帮派 — 火力全开
+ult.thug.name	旋轉亂射	旋转乱射
+ult.thug.desc	旋轉2.5秒向四方連射，停下時向四方射出16發。	旋转2.5秒向四方连射，停下时向四方射出16发。
+ult.thug.short	旋轉向四方傾瀉火力	旋转向四方倾泻火力
+askill.thug.short	5方向3連射	5方向3连射
+pskill.thug.short	拾取金幣 +10%	拾取金币 +10%
+askill.thug.opt	單次 5 → 9發	单次 5 → 9发
+host.commando_missile.concept	轟炸支援 — 追蹤多個目標	轰炸支援 — 追踪多个目标
+ult.commando_missile.name	集中砲擊	集中炮击
+ult.commando_missile.desc	將8發飛彈集中傾瀉於最強敵人。	将8发导弹集中倾泻于最强敌人。
+ult.commando_missile.short	對最強敵人集中8發	对最强敌人集中8发
+askill.commando_missile.short	7發飛彈分別射向多名敵人	7发导弹分别射向多名敌人
+pskill.commando_missile.short	投射物無視障礙物	投射物无视障碍物
+askill.commando_missile.opt	每個命中點小爆炸	每个命中点小爆炸
+host.commando_laser.concept	貫穿砲擊 — 一直線	贯穿炮击 — 一直线
+ult.commando_laser.name	稜鏡雷射	棱镜激光
+ult.commando_laser.desc	粗大雷射擊中最近的敵人，再從該處分成四道折向周圍敵人。	粗大激光击中最近的敌人，再从该处分成四道折向周围敌人。
+ult.commando_laser.short	雷射在命中處分成四道	激光在命中处分成四道
+askill.commando_laser.short	3秒內在周圍連鎖放電	3秒内在周围连锁放电
+pskill.commando_laser.short	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
+askill.commando_laser.opt	每次放電使敵人感電（緩速）	每次放电使敌人感电（减速）
+host.white_wizard.concept	蓄力魔法師 — 蓄力後發射	蓄力魔法师 — 蓄力后发射
+ult.white_wizard.name	光柱之雨	光柱之雨
+ult.white_wizard.desc	3秒內有14道光柱依序落在周圍敵人頭上。	3秒内有14道光柱依次落在周围敌人头上。
+ult.white_wizard.short	3秒內落下14道光柱	3秒内落下14道光柱
+askill.white_wizard.short	聚集敵人後引發光爆	聚集敌人后引发光爆
+pskill.white_wizard.short	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
+askill.white_wizard.opt	重力陣範圍 1.8 → 2.2 m	重力阵范围 1.8 → 2.2 m
+host.dragon_blue.concept	雷神 — 閃電彈跳	雷神 — 闪电弹跳
+ult.dragon_blue.name	天雷	天雷
+ult.dragon_blue.desc	周圍所有敵人遭落雷三次，最後對最強敵人降下巨雷。	周围所有敌人遭落雷三次，最后对最强敌人降下巨雷。
+ult.dragon_blue.short	周圍所有敵人落雷3次	周围所有敌人落雷3次
+askill.dragon_blue.short	2秒內閃電必定彈跳	2秒内闪电必定弹跳
+pskill.dragon_blue.short	10%機率雷擊鄰近敵人	10%概率雷击邻近敌人
+askill.dragon_blue.opt	結束時對最近敵人落雷	结束时对最近敌人落雷
+host.commando_mg.concept	盾兵 — 邊擋邊推進	盾兵 — 边挡边推进
+ult.commando_mg.name	旋轉亂射	旋转乱射
+ult.commando_mg.desc	架起機槍旋轉3秒向四方傾瀉，停下時向四方射出24發散彈。	架起机枪旋转3秒向四方倾泻，停下时向四方射出24发散弹。
+ult.commando_mg.short	3秒旋轉亂射 + 四方散彈	3秒旋转乱射 + 四方散弹
+askill.commando_mg.short	5秒內獲得等同最大HP的護盾	5秒内获得等同最大HP的护盾
+pskill.commando_mg.short	防禦 +20%	防御 +20%
+askill.commando_mg.opt	護盾破碎時擊退周圍敵人	护盾破碎时击退周围敌人
+host.amazon_elite.concept	不屈反擊者	不屈反击者
+ult.amazon_elite.name	逆鱗	逆鳞
+ult.amazon_elite.desc	累積3秒內承受的傷害，再向周圍反彈爆發。	累积3秒内承受的伤害，再向周围反弹爆发。
+ult.amazon_elite.short	累積承受傷害反彈爆發	累积承受伤害反弹爆发
+askill.amazon_elite.short	2.5秒無敵 + 解除護盾上限	2.5秒无敌 + 解除护盾上限
+pskill.amazon_elite.short	有護盾時攻擊力提升	有护盾时攻击力提升
+askill.amazon_elite.opt	無敵期間反彈所受攻擊的30%	无敌期间反弹所受攻击的30%
+ui.chapterhost.reward_met_shards	已遇宿主碎片	已遇宿主碎片
+ui.home.scenario	劇情	剧情
+ui.home.chapter	第{0}章	第{0}章
+ui.home.continue	繼續	继续
+ui.home.pass_buy	購買	购买
+ui.home.mission	任務	任务
+ui.home.achieve	成就	成就
+ui.home.entries	今日入場 {0}/{1}	今日入场 {0}/{1}
+ui.home.best	最高紀錄 <color=#FFD23F>{0}</color>	最高纪录 <color=#FFD23F>{0}</color>
+ui.home.night_sub	今日 週{0} · {1}	今日 周{0} · {1}
+ui.sortie.title	出擊	出击
+ui.sortie.affinity	本章敵人：{0}居多 → {1}有利	本章敌人：{0}居多 → {1}有利
+ui.sortie.tag_ult	必殺技	必杀技
+ui.sortie.tag_act	主動	主动
+ui.top.ghost_lv	幽靈 Lv {0}	幽灵 Lv {0}
+ui.growth5.title	宿主培養	宿主培养
+ui.growth5.tab_stats	基本能力	基础属性
+ui.growth5.tab_skill	技能	技能
+ui.growth5.tab_star	星級	星级
+ui.sortie.tag_pas	被動	被动
+ui.summon.ledger	靈魂名冊	灵魂名册
+ui.summon.rate_banner	品級機率	品级概率
+ui.summon.pity_note	必中大獎	必出大奖
+ui.summon.free_ribbon	今日免費1次	今日免费1次
+ui.pass.title_v5	季票	季票
+ui.tower.sweep_preview	通關第{0}層 · {1} · 碎片 ×{2}	通关第{0}层 · {1} · 碎片 ×{2}
+ui.growth5.ghost_title	幽靈培養	幽灵培养
+ui.growth5.path_done	已領取	已领取
+ui.growth5.path_locked	未解鎖	未解锁
+ui.summon.reveal.new	新身體！	新身体！
+ui.summon.reveal.pickup	PICK UP!	PICK UP!
+ui.summon.reveal.jackpot	大獎！	大奖！
+ui.summon.reveal.tap	點擊畫面繼續	点击屏幕继续
+ui.summon.reveal.get	獲得！	获得！

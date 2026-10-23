@@ -10,7 +10,7 @@ namespace Game.EditorTools
     /// 문자열 표 ↔ 탭 구분 파일(TSV) (2026-09-15, 언어팩).
     ///
     /// 번역은 스프레드시트에서 하는 게 빠르다. 인스펙터로 760줄을 고치면 틀린 칸을 못 찾는다.
-    /// 파일: `Projects/AVSR/Localization/AVSR_Strings.tsv` — 열은 `key · ko · ja · en`.
+    /// 파일: `Projects/AVSR/Localization/AVSR_Strings.tsv` — 열은 `key · ko · ja · en · zh_hant · zh_hans`(중국어 2026-10-23).
     ///
     /// **반영 규칙** — 빈 칸은 건드리지 않는다. 한국어만 적힌 줄을 반영해도
     /// 이미 들어간 일본어가 지워지지 않는다. 지우려면 표에서 직접 지운다.
@@ -46,6 +46,10 @@ namespace Game.EditorTools
                 if (!string.IsNullOrEmpty(ja)) { entry.Write(Language.Japanese, ja); written++; }
                 var en = Cell(cols, 3);
                 if (!string.IsNullOrEmpty(en)) { entry.Write(Language.English, en); written++; }
+                var zhHant = Cell(cols, 4);
+                if (!string.IsNullOrEmpty(zhHant)) { entry.Write(Language.ChineseTraditional, zhHant); written++; }
+                var zhHans = Cell(cols, 5);
+                if (!string.IsNullOrEmpty(zhHans)) { entry.Write(Language.ChineseSimplified, zhHans); written++; }
             }
 
             EditorUtility.SetDirty(table);
@@ -59,7 +63,7 @@ namespace Game.EditorTools
             var table = AssetDatabase.LoadAssetAtPath<StringTable>(TablePath);
             if (table == null) { Debug.LogError("[언어팩] 문자열 표가 없다: " + TablePath); return; }
 
-            var sb = new StringBuilder("key\tko\tja\ten\n");
+            var sb = new StringBuilder("key\tko\tja\ten\tzh_hant\tzh_hans\n");
             int missingJa = 0;
             foreach (var e in table.Entries)
             {
@@ -69,7 +73,9 @@ namespace Game.EditorTools
                 sb.Append(e.Key).Append('\t')
                   .Append(Escape(e.Korean)).Append('\t')
                   .Append(Escape(ja)).Append('\t')
-                  .Append(Escape(e.Raw(Language.English))).Append('\n');
+                  .Append(Escape(e.Raw(Language.English))).Append('\t')
+                  .Append(Escape(e.Raw(Language.ChineseTraditional))).Append('\t')
+                  .Append(Escape(e.Raw(Language.ChineseSimplified))).Append('\n');
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(SeedPath));

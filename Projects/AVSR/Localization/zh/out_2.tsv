@@ -1,0 +1,337 @@
+key	zh_hant	zh_hans
+opening.line.12	他們為了奪取我的幽靈能量研究，\n綁架了我女兒索要贖金。	他们为了夺取我的幽灵能量研究，\n绑架了我女儿索要赎金。
+opening.line.13	你的能量是有限的。	你的能量是有限的。
+opening.line.14	你的能量是有限的。	你的能量是有限的。
+opening.line.15	拜託了。救救我的女兒！	拜托了。救救我的女儿！
+ui.shop.host.name	身體 — {0}	身体 — {0}
+ui.shop.host.desc	當場奪取這具身體	当场夺取这具身体
+ui.shop.heal.name	治療	治疗
+ui.shop.heal.desc	宿主 {0}% · 幽靈 {1}% 回復	宿主 {0}% · 幽灵 {1}% 恢复
+ui.shop.limit	剩餘購買{0}次 · 卡片{1}張	剩余购买{0}次 · 卡片{1}张
+ui.shop.result.host	附身{0}	附身{0}
+ui.shop.result.consumable	購買{0} — 下個房間發動	购买{0} — 下个房间生效
+ui.shop.result.card	購買{0}	购买{0}
+ui.battle.barrier	屏障 {0}	屏障 {0}
+ui.rarity.legendary	傳說	传说
+ui.rarity.epic	史詩	史诗
+ui.rarity.rare	稀有	稀有
+ui.rarity.common	普通	普通
+ui.event.reward.card_grant	{0}卡片{1}張	{0}卡片{1}张
+ui.event.reward.card_offer	{0}卡片 3選1	{0}卡片 3选1
+ui.event.reward.upgrade	一張已有卡片等級+1	一张已有卡片等级+1
+ui.event.reward.host_heal	宿主生命回復{0}%	宿主生命恢复{0}%
+ui.event.reward.ghost_heal	幽靈生命回復{0}%	幽灵生命恢复{0}%
+ui.event.gold	金幣 {0}	金币 {0}
+ui.event.reward.reach	附身射程+{0}%（本局有效）	附身射程+{0}%（本局有效）
+ui.event.reward.discount	商店價格-{0}%（本局有效）	商店价格-{0}%（本局有效）
+ui.event.reward.shield_break	下個頭目的護盾無效一次	下个头目的护盾无效一次
+ui.event.reward.spawn_host	出現一具可奪取的身體	出现一具可夺取的身体
+ui.event.cost.ghost_hp	幽靈生命 {0}%	幽灵生命 {0}%
+ui.event.cost.host_hp	宿主生命 {0}%	宿主生命 {0}%
+ui.event.cost.max_hp	最大生命-{0}%（永久）	最大生命-{0}%（永久）
+ui.event.blocked.no_body	沒有身體	没有身体
+ui.event.blocked.cant_pay	無法支付	无法支付
+ui.event.result.passed	離開了。	离开了。
+ui.event.result.elite	精英擋住了去路。	精英挡住了去路。
+ui.event.result.ambush	是埋伏！	是埋伏！
+ui.event.result.missed	落空了。	落空了。
+ui.event.result.gold	金幣+{0}	金币+{0}
+ui.event.result.no_body	沒有身體，無法領取。	没有身体，无法领取。
+ui.event.result.nothing_left	已經沒有可拿的東西了。	已经没有可拿的东西了。
+ui.event.result.cards	獲得卡片{0}張	获得卡片{0}张
+ui.event.result.got	獲得{0}	获得{0}
+ui.event.result.pick_card	選擇卡片	选择卡片
+ui.event.result.nothing_to_pick	已經沒有可選的了。	已经没有可选的了。
+ui.event.result.nothing_to_upgrade	沒有可強化的東西。	没有可强化的东西。
+ui.event.result.reach	附身射程+{0}%	附身射程+{0}%
+ui.event.result.discount	商店卡片價格降低{0}%	商店卡片价格降低{0}%
+ui.event.result.shield_break	擊破下個頭目的護盾一次	击破下个头目的护盾一次
+ui.event.result.nobody	誰也沒來。	谁也没来。
+ui.event.result.appeared	{0}出現了	{0}出现了
+ui.hostselect.title.pick	請選擇HOST！	请选择HOST！
+ui.hostselect.title.codex	HOST圖鑑	HOST图鉴
+ui.hostselect.header_desc	死亡後會變回幽靈，可附身其他HOST。	死亡后会变回幽灵，可附身其他HOST。
+ui.hostselect.possess_start	開始附身	开始附身
+ui.hostselect.back	返回	返回
+ui.hostselect.stats	能力值	属性
+ui.hostselect.upgrade.title	HOST強化	HOST强化
+ui.hostselect.upgrade.sub	主動 · 被動技能強化	主动 · 被动技能强化
+ui.hostselect.mastery.maxed	{0}的熟練度已達上限。	{0}的熟练度已达上限。
+ui.common.ok	確認	确定
+ui.hostselect.mastery.short	碎片不足。\n{0} — {1} / {2}（還差{3}個）	碎片不足。\n{0} — {1} / {2}（还差{3}个）
+ui.hostselect.mastery.unseal	解除封印	解除封印
+ui.hostselect.mastery.step	熟練度 Lv {0} → {1}	熟练度 Lv {0} → {1}
+ui.hostselect.mastery.confirm	{0}  {1}\n消耗碎片{2}個。	{0}  {1}\n消耗碎片{2}个。
+ui.hostselect.mastery	熟練度	熟练度
+ui.hostselect.shard	靈魂碎片	灵魂碎片
+ui.hostselect.start_ghost	以幽靈開始	以幽灵开始
+ui.hostselect.ghost.badge	幽靈	幽灵
+ui.hostselect.ghost.trait	沒有身體	没有身体
+ui.hostselect.ghost.rule	沒有身體時HP會持續減少\n無身體時造成的傷害為60%	没有身体时HP会持续减少\n无身体时造成的伤害为60%
+ui.hostselect.ghost.skill	奪取身體	夺取身体
+ui.hostselect.ghost.skill_desc	奪取{0:0.#}格內的敵人，以其身體戰鬥	夺取{0:0.#}格内的敌人，用其身体战斗
+ui.hostselect.ghost.skill_desc_near	奪取附近的敵人，以其身體戰鬥	夺取附近的敌人，用其身体战斗
+ui.hostselect.ghost.level	幽靈等級	幽灵等级
+ui.hostselect.ghost.level_by_gold	用金幣提升	用金币提升
+ui.job.melee	近距離	近距离
+ui.job.mid	中距離	中距离
+ui.job.ranged	遠距離	远距离
+ui.job.melee.trait	邊打邊扛	边打边扛
+ui.job.mid.trait	貼身猛攻	贴身猛攻
+ui.job.ranged.trait	保持距離射擊	保持距离射击
+ui.job.melee.rule	每次攻擊獲得護盾（HP 3% · 上限30%）\n命中時12%機率暈眩0.8秒	每次攻击获得护盾（HP 3% · 上限30%）\n命中时12%概率眩晕0.8秒
+ui.job.mid.rule	無職業規則 — 快速連射與短射程就是特性	无职业规则 — 快速连射与短射程就是特性
+ui.job.ranged.rule	無職業規則 — 差異由各自的主動 · 被動技能決定	无职业规则 — 差异由各自的主动 · 被动技能决定
+ui.hostselect.tip	每個HOST的移動速度、攻擊方式與技能各不相同。\n多試試各種HOST吧！	每个HOST的移动速度、攻击方式和技能各不相同。\n多试试各种HOST吧！
+ui.hostselect.owned	已擁有HOST  {0}/{1}	已拥有HOST  {0}/{1}
+ui.hostselect.gold_short	金幣不足。\n{0}（{1}） — {2:N0} / {3:N0}\n\n以幽靈開始則不需金幣。	金币不足。\n{0}（{1}） — {2:N0} / {3:N0}\n\n以幽灵开始则不消耗金币。
+ui.attack.melee_drain	近戰 · 吸血	近战 · 吸血
+ui.attack.melee	近戰	近战
+ui.attack.single_slow	單發 · 緩速	单发 · 减速
+ui.attack.single	單發	单发
+ui.attack.rapid	連射	连射
+ui.attack.spread	擴散{0}發	散射{0}发
+ui.attack.pierce	貫穿	穿透
+ui.attack.snipe	狙擊	狙击
+ui.attack.pulse	周圍範圍	周围范围
+ui.unlock.stage	CH{0} · 第{1}關	CH{0} · 第{1}关
+ui.unlock.boss	擊敗CH{0}頭目	击败CH{0}头目
+ui.shrine.full_heal.title	治癒身體	治愈身体
+ui.shrine.full_heal.desc	宿主生命完全回復	宿主生命完全恢复
+ui.shrine.full_heal.result	宿主生命已完全回復	宿主生命已完全恢复
+ui.shrine.soul_heal.title	充盈靈魂	充盈灵魂
+ui.shrine.soul_heal.desc	幽靈生命完全回復	幽灵生命完全恢复
+ui.shrine.soul_heal.result	幽靈生命已完全回復	幽灵生命已完全恢复
+ui.shrine.max_hp.title	拓寬容器	拓宽容器
+ui.shrine.max_hp.desc	奪取的身體更加結實	夺取的身体更加结实
+ui.shrine.max_hp.result	奪取的身體變得更結實了	夺取的身体变得更结实了
+ui.shrine.atk.title	獲得力量	获得力量
+ui.shrine.atk.desc	攻擊力提升	攻击力提升
+ui.shrine.atk.result	攻擊力提升了	攻击力提升了
+ui.shrine.speed.title	加快出手	加快出手
+ui.shrine.speed.desc	攻擊變快	攻击变快
+ui.shrine.speed.result	攻擊變快了	攻击变快了
+ui.shrine.range.title	觸及遠方	触及远方
+ui.shrine.range.desc	射程增加	射程增加
+ui.shrine.range.result	射程增加了	射程增加了
+ui.shrine.card_pick.title	選擇卡片	选择卡片
+ui.shrine.card_pick.desc	從3張稀有以上卡片中選1張	从3张稀有以上卡片中选1张
+ui.shrine.card_up.title	強化卡片	强化卡片
+ui.shrine.card_up.desc	一張已有卡片等級提升	一张已有卡片等级提升
+ui.opening.skip	跳過	跳过
+ui.ingame.ghost_sub	獨立於肉體之外的靈魂生命	独立于肉体之外的灵魂生命
+ui.ingame.emergency_host	緊急附身 — GHOST -{0}	紧急附身 — GHOST -{0}
+ui.ingame.exit_opened	出口已開啟 — 穿過前往下一關	出口已开启 — 穿过前往下一关
+ui.ingame.no_host_to_possess	沒有可附身的宿主	没有可附身的宿主
+ui.ingame.event.reward	獎勵 · {0}	奖励 · {0}
+ui.ingame.event.decline	離開	离开
+ui.shrine.title	回復祭壇	恢复祭坛
+ui.shrine.hint	只能拿走一樣	只能拿走一样
+ui.shop.gold	持有金幣 {0:N0}	持有金币 {0:N0}
+ui.buff.sub	請選擇卡片	请选择卡片
+ui.ingame.result.clear	關卡通關！\n金幣+{0}   幽靈EXP+{1}	关卡通关！\n金币+{0}   幽灵EXP+{1}
+ui.ingame.result.dead	幽靈消散了。\n返回大廳。	幽灵消散了。\n返回大厅。
+ui.ingame.result.to_lobby	返回大廳	返回大厅
+ui.ingame.pause.message	要放棄關卡並返回大廳嗎？	要放弃关卡并返回大厅吗？
+ui.ingame.pause.give_up	放棄	放弃
+ui.ingame.pause.continue	繼續	继续
+ui.dodge.back	後退	后退
+ui.dodge.side	側移	侧移
+ui.dodge.gap	鑽空隙	钻空隙
+ui.dodge.perp	垂直閃避	垂直闪避
+ui.dodge.zone	去安全區	去安全区
+ui.dodge.close	貼近	贴近
+ui.dodge.swap	換身體	换身体
+ui.dodge.hold	別開火	别开火
+ui.battle.head_exposed	頭部暴露	头部暴露
+ui.consumable.bomb.name	炸彈	炸弹
+ui.consumable.bomb.desc	下個房間開啟時發動一次範圍攻擊	下个房间开启时释放一次范围攻击
+ui.consumable.ally.name	夥伴	伙伴
+ui.consumable.ally.desc	下個房間有一具身體並肩作戰	下个房间有一具身体并肩作战
+ui.consumable.freeze.name	靜止	静止
+ui.consumable.freeze.desc	下個房間敵人靜止{0:0}秒	下个房间敌人静止{0:0}秒
+ui.lobby.mode.survival.name	亡靈之夜	亡灵之夜
+ui.lobby.mode.survival.desc	堅持存活到最後	坚持存活到最后
+ui.lobby.mode.scenario.name	劇情模式	剧情模式
+ui.lobby.mode.scenario.desc	重生靈魂的新故事	重生灵魂的新故事
+ui.lobby.mode.defense.name	亡靈之塔	亡灵之塔
+ui.lobby.mode.defense.desc	擊退蜂擁而來的敵人	击退蜂拥而来的敌人
+ui.lobby.game_mode	遊戲模式	游戏模式
+ui.lobby.continue	繼續遊戲	继续游戏
+ui.lobby.play	開始遊戲	开始游戏
+ui.common.quit.message	要結束遊戲嗎？	要退出游戏吗？
+ui.common.quit	結束	退出
+ui.common.cancel	取消	取消
+ui.shop.leave	離開	离开
+ui.shop.upgrade.name	{0} 強化	{0} 强化
+ui.shop.upgrade.desc	已有卡片 Lv.{0} → Lv.{1}	已有卡片 Lv.{0} → Lv.{1}
+ui.shop.title	商店	商店
+ui.lobby.host_button.sub	宿主培養	宿主培养
+ui.lobby.shop_button.sub	商店	商店
+ui.lobby.search.title	幽靈觀察	幽灵观察
+ui.lobby.search.desc	幽靈在城市各處遊蕩，\n帶回金幣。	幽灵在城市各处游荡，\n带回金币。
+ui.lobby.season.title	季票	季票
+ui.lobby.season.sub	剩餘12天	剩余12天
+ui.lobby.event.title	活動	活动
+ui.lobby.event.sub	進行中	进行中
+ui.lobby.search.claim	領取獎勵	领取奖励
+ui.lobby.chest.empty	空欄位	空位
+ui.lobby.chest.ready	完成！	完成！
+ui.lobby.chest.open_now	立即開啟	立即开启
+ui.lobby.chest.claim	領取獎勵	领取奖励
+ui.lobby.chest.need_gem	需要{0}個寶石	需要{0}个宝石
+ui.lobby.chest.full	寶箱欄位已滿	宝箱栏位已满
+ui.lobby.chest.time_h	{0}小時 {1}分	{0}小时 {1}分
+ui.lobby.chest.time_m	{0}分	{0}分
+ui.lobby.chest.time_s	{0}秒	{0}秒
+ui.lobby.chest.open_confirm	要用{0}個寶石立即開啟嗎？	要用{0}个宝石立即开启吗？
+chest.wood.name	木寶箱	木宝箱
+chest.silver.name	銀寶箱	银宝箱
+chest.gold.name	金寶箱	金宝箱
+chest.magic.name	魔法寶箱	魔法宝箱
+chest.platinum.name	白金寶箱	白金宝箱
+ui.chest.reward.title	開啟{0}！	开启{0}！
+ui.chest.reward.gold	金幣  +{0}	金币  +{0}
+ui.chest.reward.shard	{0}（{1}級）碎片  ×{2}	{0}（{1}级）碎片  ×{2}
+ui.result.gold_label	獲得金幣	获得金币
+ui.chest.reward.header	獲得：	获得：
+ui.result.clear	第{0}章通關！	第{0}章通关！
+ui.result.gold	獲得金幣  +{0}	获得金币  +{0}
+ui.result.chest	獲得寶箱  {0}	获得宝箱  {0}
+ui.result.chest_full	寶箱欄位已滿，未能獲得寶箱\n（金幣已發放）	宝箱栏位已满，未能获得宝箱\n（金币已发放）
+ui.chapter.title	選擇章節	选择章节
+ui.chapter.locked	未解鎖	未解锁
+ui.chapter.cleared	已通關	已通关
+ui.chapter.new	可挑戰	可挑战
+ui.chapter.locked_hint	通關第{0}章後解鎖	通关第{0}章后解锁
+ui.growth.tab.ghost	幽靈培養	幽灵培养
+ui.growth.tab.host	宿主培養	宿主培养
+ui.growth.tab.stats	能力值	属性
+ui.growth.tab.skills	技能	技能
+ui.growth.stat_header	能力值強化	属性强化
+ui.growth.path_header	幽靈成長路線	幽灵成长路线
+ui.growth.host_list	宿主列表	宿主列表
+ui.growth.sort.default	預設排序	默认排序
+ui.growth.max	MAX	MAX
+ui.growth.need_level	需要Lv {0}	需要Lv {0}
+ui.growth.gold_short	金幣不足	金币不足
+ui.growth.path_claim	領取	领取
+ui.growth.path_claimed	已領取Lv {0}獎勵	已领取Lv {0}奖励
+ui.growth.path_locked	Lv {0}時可領取	Lv {0}时可领取
+ui.growth.help.stats	使用金幣永久提升能力值。\n幽靈培養適用於所有宿主，宿主培養僅適用於該宿主。	使用金币永久提升属性。\n幽灵培养适用于所有宿主，宿主培养仅适用于该宿主。
+ui.growth.help.path	通關章節可獲得幽靈經驗值。\n達到指定等級即可領取獎勵。	通关章节可获得幽灵经验值。\n达到指定等级即可领取奖励。
+ui.growth.ghost.name	幽靈	幽灵
+ui.growth.ghost.desc	遊蕩於世間的正義靈魂。\n為了尚未結束的故事，\n今天也並肩作戰。	游荡于世间的正义灵魂。\n为了尚未结束的故事，\n今天也并肩作战。
+ui.stat.hp	最大HP	最大HP
+ui.stat.atk	攻擊力	攻击力
+ui.stat.crit	暴擊率	暴击率
+ui.stat.atkspeed	攻擊速度	攻击速度
+ui.stat.range	射程	射程
+ui.stat.movespeed	移動速度	移动速度
+host.gangster.desc	稱霸後巷的老大。\n一把手槍殺出一條路。	称霸后巷的老大。\n一把手枪杀出一条路。
+host.thug.desc	街頭打架王。\n拳頭總是先出手。	街头打架王。\n拳头总是先出手。
+host.amazon.desc	叢林的戰士。\n以敏捷身手斬殺敵人。	丛林的战士。\n以敏捷身手斩杀敌人。
+host.amazon_elite.desc	亞馬遜戰士團的精英。\n以反擊扭轉局勢。	亚马逊战士团的精英。\n以反击扭转局势。
+host.hopper.desc	邊跳邊戰的亡命之徒。\n停不下來的氣勢就是武器。	边跳边战的亡命之徒。\n停不下来的气势就是武器。
+host.hopper_smg.desc	手持衝鋒槍的跳躍者。\n毫不停歇地傾瀉子彈。	手持冲锋枪的跳跃者。\n毫不停歇地倾泻子弹。
+host.commando_mg.desc	無論在何種戰場都能完成任務的\n特種部隊士兵。	无论在何种战场都能完成任务的\n特种部队士兵。
+host.commando_laser.desc	使用雷射步槍的突擊兵。\n從遠處一線貫穿敵人。	使用激光步枪的突击兵。\n从远处一线贯穿敌人。
+host.commando_grenade.desc	擅用手榴彈的突擊兵。\n把聚集的敵人一口氣炸飛。	擅用手榴弹的突击兵。\n把聚集的敌人一口气炸飞。
+host.salamander.desc	會噴火的蜥蜴人。\n燒盡靠近的敵人。	会喷火的蜥蜴人。\n烧尽靠近的敌人。
+host.dragoon.desc	手持長槍的龍騎兵。\n以沉重一擊突破重圍。	手持长枪的龙骑兵。\n以沉重一击突破重围。
+host.dragon_blue.desc	青色鱗片的龍。\n以迅捷吐息驅趕敵人。	青色鳞片的龙。\n以迅捷吐息驱赶敌人。
+host.guru.desc	懸浮於空中的修行者。\n忍耐，再忍耐。	悬浮于空中的修行者。\n忍耐，再忍耐。
+host.white_wizard.desc	白衣魔法師。\n從遠處射出魔力。	白衣魔法师。\n从远处射出魔力。
+host.medium.desc	召喚靈魂的巫女。\n以看不見的力量戰鬥。	召唤灵魂的巫女。\n以看不见的力量战斗。
+host.ninja.desc	潛伏於暗影中的忍者。\n以迅捷之手直取要害。	潜伏于暗影中的忍者。\n以迅捷之手直取要害。
+host.ninja_chain.desc	使用鎖鏈鐮的忍者。\n從遠處擒住敵人。	使用锁链镰的忍者。\n从远处擒住敌人。
+host.robot.desc	用廢鐵打造的戰鬥機器人。\n靠備用迴路一次次重新站起。	用废铁打造的战斗机器人。\n靠备用回路一次次重新站起。
+host.baseball.desc	手握球棒的強打者。\n一揮就打出全壘打。	手握球棒的强打者。\n一挥就打出本垒打。
+host.snowwoman.desc	召喚風雪的雪女。\n以冰冷之手凍結敵人。	召唤风雪的雪女。\n以冰冷之手冻结敌人。
+host.vampire.desc	暗夜貴族吸血鬼。\n以敵人之血癒合傷口。	暗夜贵族吸血鬼。\n以敌人之血愈合伤口。
+host.commando_missile.desc	發射飛彈的突擊兵。\n連遠處的敵人也能轟炸。	发射导弹的突击兵。\n连远处的敌人也能轰炸。
+host.death.desc	手持鐮刀的死亡本身。\n收割觸及的一切。	手持镰刀的死亡本身。\n收割触及的一切。
+stage.7.1.name	燃燒的集散場	燃烧的集散场
+stage.8.1.name	封鎖的儲藏基地	封锁的储藏基地
+stage.9.1.name	亡靈之街	亡灵之街
+stage.10.1.name	最後的頂樓	最后的天台
+chapter.1.desc	城市拋棄之物堆積之處\n有什麼在其下甦醒了。	城市抛弃之物堆积之处\n有什么在其下苏醒了。
+chapter.2.desc	位於城市郊外的神秘軍事設施\n更深處有人在行動。	位于城市郊外的神秘军事设施\n更深处有人在行动。
+chapter.3.desc	霓虹永不熄滅的夜街\n每條巷子都有不同的面孔在等待。	霓虹永不熄灭的夜街\n每条巷子都有不同的面孔在等待。
+chapter.4.desc	積滿雨水的空中基地頂樓\n腳下傳來崩塌的聲音。	积满雨水的空中基地天台\n脚下传来崩塌的声音。
+chapter.5.desc	沒有上鎖的研究所大門\n失敗品仍在呼吸。	没有上锁的研究所大门\n失败品仍在呼吸。
+chapter.6.desc	烈火不止的煉油廠\n一切的主宰就在這裡。	烈火不止的炼油厂\n一切的主宰就在这里。
+chapter.7.desc	不滅之火熔化了廢鐵\n只能炸出一條路。	不灭之火熔化了废铁\n只能炸出一条路。
+chapter.8.desc	所有門都被鎖上的基地深處\n必須看清射線與節奏才能通過。	所有门都被锁上的基地深处\n必须看清射线与节奏才能通过。
+chapter.9.desc	亡者行走在燈火熄滅的街道\n如今連地面都是敵人。	亡者行走在灯火熄灭的街道\n如今连地面都是敌人。
+chapter.10.desc	一切開始的頂樓\n拿出你學到的一切。	一切开始的天台\n拿出你学到的一切。
+stage.11.1.name	監視區域	监视区域
+chapter.11.desc	天花板上的眼睛監視著一切\n紅色鏡頭亮起時就已太遲。	天花板上的眼睛监视着一切\n红色镜头亮起时就已太迟。
+stage.12.1.name	暗影工廠	暗影工厂
+chapter.12.desc	熄燈的工廠地面上\n有東西無聲地穿過。	熄灯的工厂地面上\n有东西无声地穿过。
+stage.13.1.name	鋸片廢品場	锯片废品场
+chapter.13.desc	廢鐵堆的另一頭\n傳來鋸片迴旋的聲音。	废铁堆的另一头\n传来锯片回旋的声音。
+stage.14.1.name	藍燈基地	蓝灯基地
+chapter.14.desc	永不熄滅的燈火\n包覆著敵人的身體。	永不熄灭的灯火\n包裹着敌人的身体。
+stage.15.1.name	詭計巷弄	诡计小巷
+chapter.15.desc	路邊的箱子和垃圾桶\n都別相信。	路边的箱子和垃圾桶\n都别相信。
+stage.16.1.name	燃燒的頂樓	燃烧的天台
+chapter.16.desc	火勢已蔓延\n到城市的頂端。	火势已蔓延\n到城市的顶端。
+stage.17.1.name	汙染實驗棟	污染实验楼
+chapter.17.desc	毒與冰交雜的實驗室\n是什麼甦醒了？	毒与冰交杂的实验室\n是什么苏醒了？
+stage.18.1.name	熔爐核心	熔炉核心
+chapter.18.desc	鐵水沸騰之處\n只有撐得住的傢伙才能活下來。	铁水沸腾之处\n只有扛得住的家伙才能活下来。
+stage.19.1.name	廢墟王國	废墟王国
+chapter.19.desc	被遺棄之物\n擁立了一位王。	被遗弃之物\n拥立了一位王。
+stage.20.1.name	最後的發射臺	最后的发射台
+chapter.20.desc	一切\n都將在這座發射臺終結。	一切\n都将在这座发射台终结。
+ui.ingame.result.dead_gold	幽靈消散了。\n帶著撿到的金幣 +{0} 返回大廳。	幽灵消散了。\n带着捡到的金币 +{0} 返回大厅。
+ui.growth.locked	需要解鎖	需要解锁
+ui.growth.unlock	解鎖	解锁
+ui.result.shards	碎片  {0}	碎片  {0}
+ui.currency.essence	靈魂精華	灵魂精华
+ui.shop.daily.title	今日商店	今日商店
+ui.shop.daily.reset	{0}後更新商品	{0}后上新
+ui.shop.daily.free	免費	免费
+ui.shop.daily.bought	已購買	已购买
+ui.shop.daily.refresh	刷新	刷新
+ui.shop.daily.fail.bought	今天已購買。	今天已购买。
+ui.shop.daily.fail.gold	金幣不足。	金币不足。
+ui.shop.daily.fail.gem	寶石不足。	宝石不足。
+ui.shop.daily.fail.chest_full	寶箱欄位已滿。	宝箱栏位已满。
+ui.shop.daily.fail.refresh_limit	今天無法再刷新。	今天无法再刷新。
+ui.shop.daily.fail.unknown	目前無法購買。	目前无法购买。
+ui.growth.essence.exchange	{0}個精華換1個碎片	{0}个精华换1个碎片
+ui.growth.essence.short	精華不足 ({0}/{1})	精华不足 ({0}/{1})
+ui.ingame.nohost_hint	尋找可附身的身體	寻找可附身的身体
+ui.stat.critdmg	暴擊傷害	暴击伤害
+ui.stat.def	防禦力	防御力
+ui.starup.title	提升星級	提升星级
+ui.starup.button	星級UP	星级UP
+ui.starup.label	星級	星级
+ui.starup.value	★ {0} / 5	★ {0} / 5
+ui.starup.rises	同步提升	同步提升
+ui.starup.skill_lv	技能 Lv	技能 Lv
+ui.starup.stat_up	HP · 攻擊	HP · 攻击
+ui.starup.stat_cap	能力值強化上限	属性强化上限
+ui.starup.cap_short	強化上限 Lv {0}	强化上限 Lv {0}
+ui.starup.spec_lock	Lv.{0} 特殊效果	Lv.{0} 特殊效果
+ui.starup.maxed	已達最高星級。	已达最高星级。
+ui.starup.shard_short	碎片不足。\n{0} / {1}（還差{2}個）	碎片不足。\n{0} / {1}（还差{2}个）
+ui.starup.gold_short	金幣不足。\n{0} / {1}（還差{2}）	金币不足。\n{0} / {1}（还差{2}）
+ui.starup.confirm	{0}  {1}\n消耗碎片{2}個 · 金幣{3}。	{0}  {1}\n消耗碎片{2}个 · 金币{3}。
+ui.starup.done	星級提升了！	星级提升了！
+ui.growth.skill.active	ACTIVE SKILL	ACTIVE SKILL
+ui.growth.skill.passive	PASSIVE	PASSIVE
+ui.growth.skill.header	技能	技能
+pskill.psv_amazon.growth	移動速度	移动速度
+pskill.psv_counter.growth	攻擊力	攻击力
+pskill.psv_slugger.growth	擊飛機率	击飞概率
+pskill.psv_ninja_chain.growth	閃避	闪避
+pskill.psv_dragoon.growth	燒傷機率	灼烧概率
+pskill.psv_salamander.growth	中毒機率	中毒概率
+pskill.psv_dragon_blue.growth	落雷機率	落雷概率
+pskill.psv_commando_grenade.growth	無視防禦	无视防御
+pskill.psv_snowwoman.growth	冰凍機率	冰冻概率
+pskill.psv_hopper_smg.growth	擊退機率	击退概率
+pskill.psv_commando_mg.growth	防禦力提升	防御力提升
