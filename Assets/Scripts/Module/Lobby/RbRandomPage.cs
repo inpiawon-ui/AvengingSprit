@@ -73,8 +73,16 @@ namespace Game.Module.Lobby
             int gold = cfg != null ? cfg.RandomLuckGoldPct : 20;
             SetWord(hidden ? _wordHidden : _wordRandom);
             _ui.SetText("RndSub", hidden ? Localize.FromTable("ui.rb.rnd.hidden_sub", "특별한 몸을 만났어요!") : Localize.FromTable("ui.rb.rnd.this_run", "이번 판의 호스트"));
-            var face = _shell.Face(_key);
-            SetFace(!hidden && face != null ? face : _mystery);   // 히든은 얼굴을 숨긴다(시안 hidden-reveal — 「히든 호스트」 · ?)
+            // 받침 위 큰 몸(작업 지시서 4-2) — 히든은 실루엣(얼굴을 숨긴다)
+            SetFace(null);
+            _ui.SetActive("RndPedestal", true);
+            _ui.SetActive("RndSilhouette", hidden);
+            _ui.SetActive("RndArt", !hidden);
+            if (!hidden && _ui.Get<Image>("RndArt") is Image art)
+            {
+                if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
+                show.Show(_key, Color.white);
+            }
             _ui.SetText("RndName", hidden ? Localize.FromTable("ui.rb.rnd.hidden_name", "히든 호스트")
                                           : e != null ? $"{HostGradeLabel.Of(e.Grade)} {e.DisplayName}" : _key);
             bool owned = e != null && _player.IsHostOwned(e);
@@ -95,6 +103,7 @@ namespace Game.Module.Lobby
 
         private void Phase(bool revealed)
         {
+            if (!revealed) { _ui.SetActive("RndPedestal", false); _ui.SetActive("RndArt", false); _ui.SetActive("RndSilhouette", false); }
             _ui.SetActive("RndQuestion", !revealed);
             _ui.SetActive("RndHint", !revealed);
             _ui.SetActive("RndName", revealed);

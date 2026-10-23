@@ -30,6 +30,10 @@ namespace Game.Editor.ReBorn
             Img(Place(Node(page, "RndWord"), Edge.Top, 300, 330, 780, 470), "WordArt/rb_word_word_random");
             Text(Place(Node(page, "RndSub"), Edge.Top, 90, 495, 990, 565), null, "어떤 몸과 만날까요?", 52, White, TA.Center, heavy: true);
             Img(Place(Node(page, "RndFace"), Edge.Center, 390, 760, 690, 1060), "Icons/rb_icon_mode_random_144");
+            // 박자 2 — 받침 + 큰 몸(작업 지시서 4-2: 작은 얼굴 말고 정지컷 + 받침). 히든은 실루엣
+            Img(Place(Node(page, "RndPedestal"), Edge.Center, 360, 1050, 720, 1230), "Art/rb_art_host_pedestal");
+            Img(Place(Node(page, "RndArt"), Edge.Center, 330, 680, 750, 1160), "Art/rb_art_mascot_ghost_happy");
+            Img(Place(Node(page, "RndSilhouette"), Edge.Center, 340, 690, 740, 1140), "Art/rb_art_hidden_silhouette");
             Text(Place(Node(page, "RndQuestion"), Edge.Center, 440, 1270, 640, 1420), null, "?", 140, Yellow, TA.Center, number: true);
             Text(Place(Node(page, "RndHint"), Edge.Center, 90, 1430, 990, 1485), "ui.rb.rnd.hint", "몸은 판이 시작될 때 정해져요.", 40, Dim, TA.Center, heavy: true);
             Text(Place(Node(page, "RndName"), Edge.Center, 90, 1255, 990, 1325), null, "SSR 영매", 60, White, TA.Center, heavy: true);
