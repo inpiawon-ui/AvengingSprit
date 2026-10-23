@@ -1,0 +1,352 @@
+{
+  "id": "numbers_white_L",
+  "nominal_size": 96,
+  "scale": 1,
+  "texture": "ui_font_numbers_white_L@1160x264.png",
+  "lineHeight": 132,
+  "base": 98,
+  "texture_size": [
+    1160,
+    264
+  ],
+  "art_pixel_size": 4,
+  "outline_inner_px": 4,
+  "outline_outer_px": 4,
+  "extrusion_px": 8,
+  "tracking_ink_gap_px": 8,
+  "colors": {
+    "stops": [
+      "#FFFFFF",
+      "#E4E9F8",
+      "#C9D2F0"
+    ],
+    "inner": "#394565",
+    "depth": "#586687",
+    "highlight": "#FFFFFF"
+  },
+  "chars": [
+    {
+      "char": "0",
+      "id": 48,
+      "x": 0,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "1",
+      "id": 49,
+      "x": 116,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 48,
+      "ink_bounds": [
+        2,
+        2,
+        42,
+        114
+      ]
+    },
+    {
+      "char": "2",
+      "id": 50,
+      "x": 232,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "3",
+      "id": 51,
+      "x": 348,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "4",
+      "id": 52,
+      "x": 464,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "5",
+      "id": 53,
+      "x": 580,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "6",
+      "id": 54,
+      "x": 696,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "7",
+      "id": 55,
+      "x": 812,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "8",
+      "id": 56,
+      "x": 928,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "9",
+      "id": 57,
+      "x": 1044,
+      "y": 0,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 80,
+      "ink_bounds": [
+        2,
+        2,
+        74,
+        114
+      ]
+    },
+    {
+      "char": "+",
+      "id": 43,
+      "x": 0,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 88,
+      "ink_bounds": [
+        2,
+        18,
+        82,
+        106
+      ]
+    },
+    {
+      "char": "-",
+      "id": 45,
+      "x": 116,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 64,
+      "ink_bounds": [
+        2,
+        42,
+        58,
+        82
+      ]
+    },
+    {
+      "char": ",",
+      "id": 44,
+      "x": 232,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 40,
+      "ink_bounds": [
+        10,
+        74,
+        42,
+        130
+      ]
+    },
+    {
+      "char": ".",
+      "id": 46,
+      "x": 348,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 40,
+      "ink_bounds": [
+        10,
+        74,
+        42,
+        114
+      ]
+    },
+    {
+      "char": "/",
+      "id": 47,
+      "x": 464,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 72,
+      "ink_bounds": [
+        2,
+        2,
+        66,
+        114
+      ]
+    },
+    {
+      "char": "%",
+      "id": 37,
+      "x": 580,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 112,
+      "ink_bounds": [
+        2,
+        2,
+        106,
+        114
+      ]
+    },
+    {
+      "char": "×",
+      "id": 215,
+      "x": 696,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 88,
+      "ink_bounds": [
+        2,
+        18,
+        82,
+        106
+      ]
+    },
+    {
+      "char": ":",
+      "id": 58,
+      "x": 812,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 40,
+      "ink_bounds": [
+        10,
+        26,
+        42,
+        98
+      ]
+    },
+    {
+      "char": "▲",
+      "id": 9650,
+      "x": 928,
+      "y": 132,
+      "width": 116,
+      "height": 132,
+      "xoffset": 0,
+      "yoffset": 0,
+      "xadvance": 112,
+      "ink_bounds": [
+        2,
+        2,
+        106,
+        114
+      ]
+    }
+  ]
+}

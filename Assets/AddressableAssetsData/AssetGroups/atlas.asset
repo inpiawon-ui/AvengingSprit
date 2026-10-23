@@ -81,6 +81,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20bb601ec93f73c4a8667c5bdc16e8be
+    m_Address: atlas/rebornwordart
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2270da06fd7865e4088398b9f505beec
     m_Address: atlas/unit_guru
     m_ReadOnly: 0
@@ -491,6 +497,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d75554a68225d9d4b9998e8349277e68
     m_Address: atlas/card
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7d0c9af62fac5141a4784c9713db608
+    m_Address: atlas/rebornicons
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
