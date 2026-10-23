@@ -143,10 +143,6 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "ingame:result_clear", "result_clear_20x9"),
             (720, 1280, Language.Japanese, "ingame:result_clear", "result_clear_ja"),
             (768, 1024, Language.English, "ingame:result_fail", "result_fail_4x3"),
-            (720, 1280, Language.Korean, "ingame:towerhud", "modehud_tower_16x9"),
-            (720, 1280, Language.Korean, "ingame:nighthud", "modehud_night_16x9"),
-            (1080, 2400, Language.Korean, "ingame:towerhud", "modehud_tower_20x9"),
-            (768, 1024, Language.Korean, "ingame:nighthud", "modehud_night_4x3"),
             (720, 1280, Language.Korean, "ingame:tower_clear", "moderesult_tower_clear_16x9"),
             (720, 1280, Language.Korean, "ingame:tower_fail", "moderesult_tower_fail_16x9"),
             (720, 1280, Language.Korean, "ingame:night", "moderesult_night_16x9"),
@@ -156,6 +152,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
             (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
+            // 모드 판 표시는 맨 끝 — 위 가운데 칸 · 띠를 바꿔 두므로 뒤 장면에 남는다
+            (720, 1280, Language.Korean, "ingame:towerhud", "modehud_tower_16x9"),
+            (720, 1280, Language.Korean, "ingame:nighthud", "modehud_night_16x9"),
+            (1080, 2400, Language.Korean, "ingame:towerhud", "modehud_tower_20x9"),
+            (768, 1024, Language.Korean, "ingame:nighthud", "modehud_night_4x3"),
         };
 
         // 이름 앞머리 거르개(SessionState Key+".only") — 새 화면만 찍을 때 목록 전체를 돌지 않게
@@ -241,7 +242,8 @@ namespace Game.Editor.ReBorn
                     _wait = 120;
                     return;
                 }
-                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) _wait = 30; else _wait = 20;
+                // 랜덤 출전은 공개 쪽이 먼저 뜬다 — 「공개하기」 · 「전투 시작」 을 차례로 누른다
+                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton") || Click("RndGo")) _wait = 30; else _wait = 20;
                 return;
             }
             if (ingame && (GameObject.Find("BootCover") != null || battleUi.GetComponent<Game.Module.InGame.BattleDirector>() == null))
@@ -542,7 +544,7 @@ namespace Game.Editor.ReBorn
                     ui.GetComponentInChildren<Game.Module.InGame.RbRunResult>(true)?.Show(new Game.Module.Events.StageFinishedEvent
                     {
                         IsCleared = clear, FinishedChapter = 1, RewardGold = clear ? 432 : 96, RewardGhostExp = 30,
-                        ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 },
+                        ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 },
                         ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
                     }, faces);
                     break;
@@ -582,7 +584,7 @@ namespace Game.Editor.ReBorn
                         rb.ShowNight(new Game.Module.Events.NightFinishedEvent
                         {
                             IsCleared = true, NightDayIndex = 3, FinalKills = 128, PreviousBest = 96, IsNewBest = true,
-                            SurvivedSeconds = 522, ReachedLevel = 12, ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 }, EntriesLeft = 2,
+                            SurvivedSeconds = 522, ReachedLevel = 12, ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 }, EntriesLeft = 2,
                         }, modeFaces);
                     else
                     {
@@ -590,7 +592,7 @@ namespace Game.Editor.ReBorn
                         rb.ShowTower(new Game.Module.Events.TowerFinishedEvent
                         {
                             IsFloorCleared = towerClear, PlayedFloor = 2, NextFloor = 3, RewardGold = 500, EntriesLeft = 2,
-                            ShardHostKeys = new[] { "amazoness" }, ShardCounts = new[] { 3 }, SuggestHostKeys = new[] { "gangster" },
+                            ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 }, SuggestHostKeys = new[] { "gangster" },
                             PossessCount = 3, LostCount = 1, ElapsedSeconds = 162,
                         }, modeFaces);
                     }

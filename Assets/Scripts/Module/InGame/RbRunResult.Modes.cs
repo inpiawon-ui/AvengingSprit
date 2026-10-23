@@ -100,6 +100,7 @@ namespace Game.Module.InGame
 
         private void Open(bool clear)
         {
+            CoreModule.TryGet(out _player);   // 조각 칸의 몸 이름 — 스토리 판(Show)과 같이 여기서 받는다
             gameObject.SetActive(true);
             transform.SetAsLastSibling();   // 06_ui — 열 때 맨 위
             _leaving = false;
