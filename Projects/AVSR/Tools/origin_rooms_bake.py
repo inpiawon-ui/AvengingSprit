@@ -5,8 +5,9 @@ PD 10-22 「원작 배치를 따라서 정확하게 유저가 느낄 수 있게�
 
 ── 크기 ──────────────────────────────────────────────────────────
   방 폭은 지금처럼 10 m(화면 폭), 그것을 원작처럼 **11 칸**으로 나눈다 — 한 칸 10/11 m.
-  세로는 원작 줄 수 그대로(15 또는 21). 위에 문 구역(GATE) 을 얹는다 → 15줄 방 = 16.0 m(지금 방과 같다) · 21줄 방 = 21.5 m.
-  y 는 아래(입구)가 0. 원작 맨 아랫줄이 y 0 ~ 한 칸.
+  세로는 원작 줄 수 그대로(15 또는 21). 아래에 입구 난간 띠(BOTTOM 2.9 m), 위에 문 띠(GATE 2.36 m)를 둔다
+  → 15줄 방 = 18.9 m · 21줄 방 = 24.4 m(카메라가 세로로 따라간다 · 바닥은 잘라 쌓는다).
+  y 는 아래(입구)가 0. 원작 맨 아랫줄이 y 2.9 ~ 한 칸.
 
 ── 칸 → 물건(하는 일은 원작 그대로, 그림은 무대 물건) ────────────────
   #  BLOCK   몸 막음 · 탄 막음 · 적탄 막음        (막는 물건 — 무대마다 모양 여러 가지, 그림 발주 중)
@@ -34,7 +35,11 @@ OUT = os.path.join(ROOMS, 'rooms30.tsv')
 
 WIDTH_M, COLS = 10.0, 11
 CELL = WIDTH_M / COLS
-GATE = 16.0 - 15 * CELL      # 15줄 방이 지금 방(16 m)과 같아지는 문 구역 ≈ 2.36 m
+GATE = 16.0 - 15 * CELL      # 위 문 띠 ≈ 2.36 m — 무대 바닥 그림의 문 띠(2.4 m)와 맞다
+# 아래 입구 난간 띠 — 무대 바닥 그림 아래 2.9 m 는 입구 난간이다(BattleDirector.TallFloor 의 FloorBottomBandFrac).
+# 원작 칸을 그 위부터 깐다. 예전(2026-10-22)엔 0 에서 깔아 원작 맨 아랫줄 물건 · 물이 난간 그림 위에 얹혔다
+# (PD 10-23 실제 방 미리보기 — 1챕터 7 · 24 · 28번 방). 플레이어 시작 자리(1.7 m)는 그대로 난간 문 안이다.
+BOTTOM = 2.9
 SPIKE_DAMAGE, SPIKE_TICK = 6, 0.8   # 지금 불바닥 · 가시와 같은 값(rooms90_build.py HAZARD)
 
 # 칸 글자 → (종류, 몸 막음, 탄 막음, 적탄 막음, 해저드)
@@ -52,7 +57,7 @@ def fmt(v):
 
 
 def center(x, row, rows):
-    return (x + 0.5) * CELL, (rows - 1 - row + 0.5) * CELL
+    return (x + 0.5) * CELL, BOTTOM + (rows - 1 - row + 0.5) * CELL
 
 
 def tracks(cells, w, h):
@@ -114,7 +119,7 @@ def tracks(cells, w, h):
 def bake_room(ch, r, lines):
     rid = f'ROOM_CH{ch}_{r["room"]:03d}'
     w, rows, cells = r['w'], r['h'], r['cells']
-    height = rows * CELL + GATE
+    height = BOTTOM + rows * CELL + GATE
     lines.append('\t'.join(['ROOM', rid, f'원작 {r["source"].split("/")[-1]}', f'{r["ours"]} · 원작 {r["source"]}']))
     lines.append('\t'.join(['SIZE', fmt(WIDTH_M), fmt(height), fmt(CELL)]))
     for i, c in enumerate(cells):
