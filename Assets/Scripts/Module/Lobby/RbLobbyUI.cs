@@ -45,6 +45,7 @@ namespace Game.Module.Lobby
         private RbHostPage _hostPage;
         private RbGrowthPage _growthPage;
         private RbSummonPage _summonPage;
+        private RbShopPage _shopPage;
         private string _tab = "Battle";
 
         private int _chapter = 1;
@@ -66,12 +67,14 @@ namespace Game.Module.Lobby
                 string node = r;
                 _ui.OnClick(node, () => Soon("ui.rb.soon"));
             }
-            foreach (var tab in new[] { "Shop", "Challenge" })
+            foreach (var tab in new[] { "Challenge" })
                 _ui.OnClick($"Tab{tab}", () => Soon("ui.rb.soon"));
             _ui.OnClick("TabHost", () => { GameSound.Cue("ui.tap"); SelectTab("Host"); });
             _ui.OnClick("TabBattle", () => { GameSound.Cue("ui.tap"); SelectTab("Battle"); });
             _ui.OnClick("TabSummon", () => { GameSound.Cue("ui.tap"); SelectTab("Summon"); });
             _summonPage = GetComponentInChildren<RbSummonPage>(true);
+            _ui.OnClick("TabShop", () => { GameSound.Cue("ui.tap"); SelectTab("Shop"); });
+            _shopPage = GetComponentInChildren<RbShopPage>(true);
             _hostPage = GetComponentInChildren<RbHostPage>(true);
             _growthPage = GetComponentInChildren<RbGrowthPage>(true);
             _ui.SetActive("SortieCardTemplate", false);
@@ -505,6 +508,11 @@ namespace Game.Module.Lobby
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
                 else _hostPage.gameObject.SetActive(false);
+            }
+            if (_shopPage != null)
+            {
+                if (tab == "Shop" && _player != null) _shopPage.Open(_player, _faces);
+                else _shopPage.gameObject.SetActive(false);
             }
             if (_summonPage != null)
             {

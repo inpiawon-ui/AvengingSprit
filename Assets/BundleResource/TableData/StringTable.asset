@@ -9456,3 +9456,126 @@ MonoBehaviour:
     _en: Jackpot
     _zhHant: "\u5927\u734E\u78BA\u5B9A"
     _zhHans: "\u5927\u5956\u786E\u5B9A"
+  - _key: ui.rb.shop.tab.best
+    _ko: "\uCD94\uCC9C"
+    _ja: "\u304A\u3059\u3059\u3081"
+    _en: Featured
+    _zhHant: "\u63A8\u85A6"
+    _zhHans: "\u63A8\u8350"
+  - _key: ui.rb.shop.tab.today
+    _ko: "\uC624\uB298"
+    _ja: "\u672C\u65E5"
+    _en: Today
+    _zhHant: "\u4ECA\u65E5"
+    _zhHans: "\u4ECA\u65E5"
+  - _key: ui.rb.shop.tab.chest
+    _ko: "\uC0C1\uC790"
+    _ja: "\u30C1\u30A7\u30B9\u30C8"
+    _en: Chests
+    _zhHant: "\u5BF6\u7BB1"
+    _zhHans: "\u5B9D\u7BB1"
+  - _key: ui.rb.shop.tab.currency
+    _ko: "\uC7AC\uD654"
+    _ja: "\u901A\u8CA8"
+    _en: Currency
+    _zhHant: "\u8CA8\u5E63"
+    _zhHans: "\u8D27\u5E01"
+  - _key: ui.rb.shop.chest_title
+    _ko: "\u25C6 \uC0C1\uC790 \xB7 \uBC14\uB85C \uC5F4\uB9BC"
+    _ja: "\u25C6 \u30C1\u30A7\u30B9\u30C8\u30FB\u5373\u958B\u5C01"
+    _en: "\u25C6 Chests \xB7 Open Instantly"
+    _zhHant: "\u25C6 \u5BF6\u7BB1 \xB7 \u7ACB\u5373\u958B\u555F"
+    _zhHans: "\u25C6 \u5B9D\u7BB1 \xB7 \u7ACB\u5373\u5F00\u542F"
+  - _key: ui.rb.shop.chest_sub
+    _ko: "\uC0C1\uC790\uB294 \uC0AC\uB294 \uC989\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4 \xB7
+      \uC0C1\uC790 \uCE78\uC744 \uC4F0\uC9C0 \uC54A\uC74C"
+    _ja: "\u8CFC\u5165\u3059\u308B\u3068\u3059\u3050\u958B\u5C01\u30FB\u30C1\u30A7\u30B9\u30C8\u67A0\u3092\u4F7F\u3044\u307E\u305B\u3093"
+    _en: "Opens on purchase \xB7 doesn't use chest slots"
+    _zhHant: "\u8CFC\u8CB7\u5F8C\u7ACB\u5373\u958B\u555F \xB7 \u4E0D\u4F54\u5BF6\u7BB1\u6B04\u4F4D"
+    _zhHans: "\u8D2D\u4E70\u540E\u7ACB\u5373\u5F00\u542F \xB7 \u4E0D\u5360\u5B9D\u7BB1\u680F\u4F4D"
+  - _key: ui.rb.shop.gem_title
+    _ko: "\u25C6 \uC82C \xB7 \uCCAB \uAD6C\uB9E4 2\uBC30"
+    _ja: "\u25C6 \u30B8\u30A7\u30E0\u30FB\u521D\u56DE2\u500D"
+    _en: "\u25C6 Gems \xB7 First Purchase \xD72"
+    _zhHant: "\u25C6 \u5BF6\u77F3 \xB7 \u9996\u8CFC\u96D9\u500D"
+    _zhHans: "\u25C6 \u5B9D\u77F3 \xB7 \u9996\u5145\u53CC\u500D"
+  - _key: ui.rb.shop.gold_title
+    _ko: "\u25C6 \uACE8\uB4DC"
+    _ja: "\u25C6 \u30B4\u30FC\u30EB\u30C9"
+    _en: "\u25C6 Gold"
+    _zhHant: "\u25C6 \u91D1\u5E63"
+    _zhHans: "\u25C6 \u91D1\u5E01"
+  - _key: ui.rb.shop.stamina_title
+    _ko: "\u25C6 \uD589\uB3D9\uB825"
+    _ja: "\u25C6 \u30B9\u30BF\u30DF\u30CA"
+    _en: "\u25C6 Stamina"
+    _zhHant: "\u25C6 \u9AD4\u529B"
+    _zhHans: "\u25C6 \u4F53\u529B"
+  - _key: ui.rb.shop.claim
+    _ko: "\uC624\uB298 \uBC1B\uAE30"
+    _ja: "\u672C\u65E5\u53D7\u3051\u53D6\u308B"
+    _en: Claim Today
+    _zhHant: "\u9818\u53D6\u4ECA\u65E5"
+    _zhHans: "\u9886\u53D6\u4ECA\u65E5"
+  - _key: ui.rb.shop.confirm
+    _ko: "{0}\n{1} \uC5D0 \uC0B4\uAE4C\uC694?"
+    _ja: "{0}\n{1}\u3067\u8CFC\u5165\u3057\u307E\u3059\u304B\uFF1F"
+    _en: '{0}
+
+      Buy for {1}?'
+    _zhHant: "{0}\n\u8981\u4EE5{1}\u8CFC\u8CB7\u55CE\uFF1F"
+    _zhHans: "{0}\n\u8981\u4EE5{1}\u8D2D\u4E70\u5417\uFF1F"
+  - _key: ui.rb.shop.buy
+    _ko: "\uAD6C\uB9E4"
+    _ja: "\u8CFC\u5165"
+    _en: Buy
+    _zhHant: "\u8CFC\u8CB7"
+    _zhHans: "\u8D2D\u4E70"
+  - _key: ui.rb.shop.received
+    _ko: "\uBC1B\uC558\uC5B4\uC694"
+    _ja: "\u53D7\u3051\u53D6\u308A\u307E\u3057\u305F"
+    _en: Received
+    _zhHant: "\u5DF2\u7372\u5F97"
+    _zhHans: "\u5DF2\u83B7\u5F97"
+  - _key: ui.rb.shop.r.gem
+    _ko: "\uC82C"
+    _ja: "\u30B8\u30A7\u30E0"
+    _en: Gems
+    _zhHant: "\u5BF6\u77F3"
+    _zhHans: "\u5B9D\u77F3"
+  - _key: ui.rb.shop.r.gold
+    _ko: "\uACE8\uB4DC"
+    _ja: "\u30B4\u30FC\u30EB\u30C9"
+    _en: Gold
+    _zhHant: "\u91D1\u5E63"
+    _zhHans: "\u91D1\u5E01"
+  - _key: ui.rb.shop.r.essence
+    _ko: "\uC601\uD63C \uC815\uC218"
+    _ja: "\u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9"
+    _en: Soul Essence
+    _zhHant: "\u9748\u9B42\u7CBE\u83EF"
+    _zhHans: "\u7075\u9B42\u7CBE\u534E"
+  - _key: ui.rb.shop.r.stamina
+    _ko: "\uD589\uB3D9\uB825"
+    _ja: "\u30B9\u30BF\u30DF\u30CA"
+    _en: Stamina
+    _zhHant: "\u9AD4\u529B"
+    _zhHans: "\u4F53\u529B"
+  - _key: ui.rb.shop.r.passxp
+    _ko: "\uD328\uC2A4 \uACBD\uD5D8\uCE58"
+    _ja: "\u30D1\u30B9\u7D4C\u9A13\u5024"
+    _en: Pass XP
+    _zhHant: "\u901A\u884C\u8B49\u7D93\u9A57"
+    _zhHans: "\u901A\u884C\u8BC1\u7ECF\u9A8C"
+  - _key: ui.rb.shop.r.shard
+    _ko: "\uC870\uAC01"
+    _ja: "\u304B\u3051\u3089"
+    _en: Shards
+    _zhHant: "\u788E\u7247"
+    _zhHans: "\u788E\u7247"
+  - _key: ui.rb.shop.best
+    _ko: BEST
+    _ja: BEST
+    _en: BEST
+    _zhHant: BEST
+    _zhHans: BEST

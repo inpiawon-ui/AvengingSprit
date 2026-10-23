@@ -1461,3 +1461,23 @@ ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウ�
 ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
 ui.rb.summon.new	새 몸!	新しい体！	New!	新身體！	新身体！
 ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定
+ui.rb.shop.tab.best	추천	おすすめ	Featured	推薦	推荐
+ui.rb.shop.tab.today	오늘	本日	Today	今日	今日
+ui.rb.shop.tab.chest	상자	チェスト	Chests	寶箱	宝箱
+ui.rb.shop.tab.currency	재화	通貨	Currency	貨幣	货币
+ui.rb.shop.chest_title	◆ 상자 · 바로 열림	◆ チェスト・即開封	◆ Chests · Open Instantly	◆ 寶箱 · 立即開啟	◆ 宝箱 · 立即开启
+ui.rb.shop.chest_sub	상자는 사는 즉시 열립니다 · 상자 칸을 쓰지 않음	購入するとすぐ開封・チェスト枠を使いません	Opens on purchase · doesn't use chest slots	購買後立即開啟 · 不佔寶箱欄位	购买后立即开启 · 不占宝箱栏位
+ui.rb.shop.gem_title	◆ 젬 · 첫 구매 2배	◆ ジェム・初回2倍	◆ Gems · First Purchase ×2	◆ 寶石 · 首購雙倍	◆ 宝石 · 首充双倍
+ui.rb.shop.gold_title	◆ 골드	◆ ゴールド	◆ Gold	◆ 金幣	◆ 金币
+ui.rb.shop.stamina_title	◆ 행동력	◆ スタミナ	◆ Stamina	◆ 體力	◆ 体力
+ui.rb.shop.claim	오늘 받기	本日受け取る	Claim Today	領取今日	领取今日
+ui.rb.shop.confirm	{0}\n{1} 에 살까요?	{0}\n{1}で購入しますか？	{0}\nBuy for {1}?	{0}\n要以{1}購買嗎？	{0}\n要以{1}购买吗？
+ui.rb.shop.buy	구매	購入	Buy	購買	购买
+ui.rb.shop.received	받았어요	受け取りました	Received	已獲得	已获得
+ui.rb.shop.r.gem	젬	ジェム	Gems	寶石	宝石
+ui.rb.shop.r.gold	골드	ゴールド	Gold	金幣	金币
+ui.rb.shop.r.essence	영혼 정수	魂のエッセンス	Soul Essence	靈魂精華	灵魂精华
+ui.rb.shop.r.stamina	행동력	スタミナ	Stamina	體力	体力
+ui.rb.shop.r.passxp	패스 경험치	パス経験値	Pass XP	通行證經驗	通行证经验
+ui.rb.shop.r.shard	조각	かけら	Shards	碎片	碎片
+ui.rb.shop.best	BEST	BEST	BEST	BEST	BEST

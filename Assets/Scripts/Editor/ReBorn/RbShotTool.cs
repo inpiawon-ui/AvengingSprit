@@ -22,6 +22,12 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (720, 1280, Language.Korean, "shop:best", "shop_best_16x9"),
+            (720, 1280, Language.Korean, "shop:today", "shop_today_16x9"),
+            (720, 1280, Language.Korean, "shop:chest", "shop_chest_16x9"),
+            (720, 1280, Language.Korean, "shop:currency", "shop_currency_16x9"),
+            (1080, 2400, Language.Korean, "shop:best", "shop_best_20x9"),
+            (720, 1280, Language.Japanese, "shop:currency", "shop_currency_ja"),
             (720, 1280, Language.Korean, "summon", "summon_16x9"),
             (1080, 2400, Language.Korean, "summon", "summon_20x9"),
             (720, 1280, Language.English, "summon", "summon_en"),
@@ -214,6 +220,16 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("shop:"))
+            {
+                lobby.SelectTab("Shop");
+                var shop = Object.FindAnyObjectByType<RbShopPage>();
+                if (shop == null) return;
+                const System.Reflection.BindingFlags F2 = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                typeof(RbShopPage).GetField("_tab", F2)?.SetValue(shop, state.Substring(5));
+                typeof(RbShopPage).GetMethod("Refresh", F2)?.Invoke(shop, null);
+                return;
+            }
             if (state.StartsWith("summon"))
             {
                 lobby.SelectTab("Summon");
