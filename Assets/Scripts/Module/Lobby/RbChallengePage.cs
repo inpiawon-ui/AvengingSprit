@@ -66,6 +66,9 @@ namespace Game.Module.Lobby
             Show(null);
         }
 
+        /// <summary>탑 · 밤 쪽으로 바로 — 조각 획득처의 「보상 확인」에서 온다.</summary>
+        public void ShowSub(string sub) => Show(sub);
+
         public bool Back()
         {
             if (_ui == null) return false;

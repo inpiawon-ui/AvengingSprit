@@ -9962,3 +9962,166 @@ MonoBehaviour:
     _en: Star {0}
     _zhHant: "\u661F\u7D1A {0}"
     _zhHans: "\u661F\u7EA7 {0}"
+  - _key: ui.rb.src.title
+    _ko: "\uC870\uAC01 \uD68D\uB4DD\uCC98"
+    _ja: "\u304B\u3051\u3089\u5165\u624B\u5148"
+    _en: Shard Sources
+    _zhHant: "\u788E\u7247\u7372\u53D6\u9014\u5F91"
+    _zhHans: "\u788E\u7247\u83B7\u53D6\u9014\u5F84"
+  - _key: ui.rb.src.summon
+    _ko: "\uC18C\uD658"
+    _ja: "\u53EC\u559A"
+    _en: Summon
+    _zhHant: "\u53EC\u559A"
+    _zhHans: "\u53EC\u5524"
+  - _key: ui.rb.src.summon_sub
+    _ko: "\uC774 \uBAB8 \uD3EC\uD568 \xB7 \uC911\uBCF5 \uD68D\uB4DD \uC2DC \uC870\uAC01
+      \uC804\uD658"
+    _ja: "\u91CD\u8907\u306F\u304B\u3051\u3089\u306B\u5909\u63DB"
+    _en: Dupes become shards
+    _zhHant: "\u91CD\u8907\u8F49\u70BA\u788E\u7247"
+    _zhHans: "\u91CD\u590D\u8F6C\u4E3A\u788E\u7247"
+  - _key: ui.rb.src.summon_tag
+    _ko: "\uC911\uBCF5 \uC870\uAC01"
+    _ja: "\u91CD\u8907\u304B\u3051\u3089"
+    _en: Dupe shards
+    _zhHant: "\u91CD\u8907\u788E\u7247"
+    _zhHans: "\u91CD\u590D\u788E\u7247"
+  - _key: ui.rb.src.go
+    _ko: "\uC774\uB3D9 \u203A"
+    _ja: "\u79FB\u52D5 \u203A"
+    _en: "Go \u203A"
+    _zhHant: "\u524D\u5F80 \u203A"
+    _zhHans: "\u524D\u5F80 \u203A"
+  - _key: ui.rb.src.tower
+    _ko: "\uB9DD\uB839\uC758 \uD0D1"
+    _ja: "\u4EA1\u970A\u306E\u5854"
+    _en: Phantom Tower
+    _zhHant: "\u4EA1\u9748\u4E4B\u5854"
+    _zhHans: "\u4EA1\u7075\u4E4B\u5854"
+  - _key: ui.rb.src.tower_sub
+    _ko: "\uD574\uB2F9 \uD638\uC2A4\uD2B8\uC758 \uBCF4\uC0C1 \uD480 \uD655\uC778"
+    _ja: "\u3053\u306E\u30DB\u30B9\u30C8\u306E\u5831\u916C\u3092\u78BA\u8A8D"
+    _en: Check this host's rewards
+    _zhHant: "\u67E5\u770B\u6B64\u5BBF\u4E3B\u7684\u734E\u52F5"
+    _zhHans: "\u67E5\u770B\u6B64\u5BBF\u4E3B\u7684\u5956\u52B1"
+  - _key: ui.rb.src.reward_tag
+    _ko: "\uBCF4\uC0C1 \uD655\uC778"
+    _ja: "\u5831\u916C\u78BA\u8A8D"
+    _en: Rewards
+    _zhHant: "\u67E5\u770B\u734E\u52F5"
+    _zhHans: "\u67E5\u770B\u5956\u52B1"
+  - _key: ui.rb.src.reward
+    _ko: "\uBCF4\uC0C1 \uD655\uC778"
+    _ja: "\u5831\u916C\u78BA\u8A8D"
+    _en: Rewards
+    _zhHant: "\u67E5\u770B\u734E\u52F5"
+    _zhHans: "\u67E5\u770B\u5956\u52B1"
+  - _key: ui.rb.src.night
+    _ko: "\uB9DD\uB839\uC758 \uBC24"
+    _ja: "\u4EA1\u970A\u306E\u591C"
+    _en: Phantom Night
+    _zhHant: "\u4EA1\u9748\u4E4B\u591C"
+    _zhHans: "\u4EA1\u7075\u4E4B\u591C"
+  - _key: ui.rb.src.night_sub
+    _ko: "\uC624\uB298\uC758 \uC870\uAC01 \uBCF4\uC0C1 \uD655\uC778"
+    _ja: "\u4ECA\u65E5\u306E\u304B\u3051\u3089\u5831\u916C\u3092\u78BA\u8A8D"
+    _en: Check today's shard rewards
+    _zhHant: "\u67E5\u770B\u4ECA\u65E5\u788E\u7247\u734E\u52F5"
+    _zhHans: "\u67E5\u770B\u4ECA\u65E5\u788E\u7247\u5956\u52B1"
+  - _key: ui.rb.src.night_tag
+    _ko: "\uC694\uC77C \uBCF4\uC0C1"
+    _ja: "\u66DC\u65E5\u5831\u916C"
+    _en: Daily rewards
+    _zhHant: "\u6BCF\u65E5\u734E\u52F5"
+    _zhHans: "\u6BCF\u65E5\u5956\u52B1"
+  - _key: ui.rb.src.random
+    _ko: "\uB79C\uB364 \uCD9C\uC804"
+    _ja: "\u30E9\u30F3\u30C0\u30E0\u51FA\u6483"
+    _en: Random Run
+    _zhHant: "\u96A8\u6A5F\u51FA\u6230"
+    _zhHans: "\u968F\u673A\u51FA\u6218"
+  - _key: ui.rb.src.random_sub
+    _ko: "\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4 \uC870\uAC01 +{0}"
+    _ja: "\u30AF\u30EA\u30A2\u30DC\u30FC\u30CA\u30B9 \u304B\u3051\u3089 +{0}"
+    _en: 'Clear bonus: shards +{0}'
+    _zhHant: "\u901A\u95DC\u734E\u52F5 \u788E\u7247 +{0}"
+    _zhHans: "\u901A\u5173\u5956\u52B1 \u788E\u7247 +{0}"
+  - _key: ui.rb.src.random_tag
+    _ko: "\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4"
+    _ja: "\u30AF\u30EA\u30A2\u30DC\u30FC\u30CA\u30B9"
+    _en: Clear bonus
+    _zhHant: "\u901A\u95DC\u734E\u52F5"
+    _zhHans: "\u901A\u5173\u5956\u52B1"
+  - _key: ui.rb.src.essence
+    _ko: "\uC601\uD63C \uC815\uC218 \u2192 \uC870\uAC01"
+    _ja: "\u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9 \u2192 \u304B\u3051\u3089"
+    _en: "Essence \u2192 Shards"
+    _zhHant: "\u9748\u9B42\u7CBE\u83EF \u2192 \u788E\u7247"
+    _zhHans: "\u7075\u9B42\u7CBE\u534E \u2192 \u788E\u7247"
+  - _key: ui.rb.src.essence_sub
+    _ko: "\uC815\uC218 {0}\uAC1C\uB85C \uC870\uAC01 1\uAC1C"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9{0}\u500B\u3067\u304B\u3051\u30891\u500B"
+    _en: '{0} essence for 1 shard'
+    _zhHant: "\u7CBE\u83EF {0} \u500B\u63DB\u788E\u7247 1 \u500B"
+    _zhHans: "\u7CBE\u534E {0} \u4E2A\u6362\u788E\u7247 1 \u4E2A"
+  - _key: ui.rb.src.essence_tag
+    _ko: "\uC815\uC218 \uAD50\uD658"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9\u4EA4\u63DB"
+    _en: Exchange
+    _zhHant: "\u7CBE\u83EF\u514C\u63DB"
+    _zhHans: "\u7CBE\u534E\u5151\u6362"
+  - _key: ui.rb.src.exchange
+    _ko: "\uAD50\uD658 \u203A"
+    _ja: "\u4EA4\u63DB \u203A"
+    _en: "Trade \u203A"
+    _zhHant: "\u514C\u63DB \u203A"
+    _zhHans: "\u5151\u6362 \u203A"
+  - _key: ui.rb.src.owned
+    _ko: "\uBCF4\uC720 {0} /{1}"
+    _ja: "\u6240\u6301 {0} /{1}"
+    _en: Owned {0} /{1}
+    _zhHant: "\u64C1\u6709 {0} /{1}"
+    _zhHans: "\u62E5\u6709 {0} /{1}"
+  - _key: ui.rb.src.owned_max
+    _ko: "\uBCF4\uC720 {0}"
+    _ja: "\u6240\u6301 {0}"
+    _en: Owned {0}
+    _zhHant: "\u64C1\u6709 {0}"
+    _zhHans: "\u62E5\u6709 {0}"
+  - _key: ui.rb.ess.title
+    _ko: "\uC601\uD63C \uC815\uC218"
+    _ja: "\u9B42\u306E\u30A8\u30C3\u30BB\u30F3\u30B9"
+    _en: Soul Essence
+    _zhHant: "\u9748\u9B42\u7CBE\u83EF"
+    _zhHans: "\u7075\u9B42\u7CBE\u534E"
+  - _key: ui.rb.ess.go
+    _ko: "\uAD50\uD658"
+    _ja: "\u4EA4\u63DB"
+    _en: Trade
+    _zhHant: "\u514C\u63DB"
+    _zhHans: "\u5151\u6362"
+  - _key: ui.rb.ess.need
+    _ko: "\uD544\uC694 \uC815\uC218 {0} \xB7 \uBCF4\uC720 {1}"
+    _ja: "\u5FC5\u8981 {0} \u30FB\u6240\u6301 {1}"
+    _en: "Need {0} \xB7 Have {1}"
+    _zhHant: "\u9700\u8981 {0} \xB7 \u64C1\u6709 {1}"
+    _zhHans: "\u9700\u8981 {0} \xB7 \u62E5\u6709 {1}"
+  - _key: ui.rb.ess.poor
+    _ko: "\uC815\uC218\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4 ({0}/{1})"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9\u304C\u8DB3\u308A\u307E\u305B\u3093 ({0}/{1})"
+    _en: Not enough essence ({0}/{1})
+    _zhHant: "\u7CBE\u83EF\u4E0D\u8DB3 ({0}/{1})"
+    _zhHans: "\u7CBE\u534E\u4E0D\u8DB3 ({0}/{1})"
+  - _key: ui.rb.ess.short
+    _ko: "\uC815\uC218 {0}\uAC1C \uBD80\uC871"
+    _ja: "\u30A8\u30C3\u30BB\u30F3\u30B9 {0} \u4E0D\u8DB3"
+    _en: '{0} essence short'
+    _zhHant: "\u7CBE\u83EF\u4E0D\u8DB3 {0}"
+    _zhHans: "\u7CBE\u534E\u4E0D\u8DB3 {0}"
+  - _key: ui.rb.ess.fail
+    _ko: "\uAD50\uD658\uD560 \uC218 \uC5C6\uC5B4\uC694"
+    _ja: "\u4EA4\u63DB\u3067\u304D\u307E\u305B\u3093"
+    _en: Can't trade
+    _zhHant: "\u7121\u6CD5\u514C\u63DB"
+    _zhHans: "\u65E0\u6CD5\u5151\u6362"

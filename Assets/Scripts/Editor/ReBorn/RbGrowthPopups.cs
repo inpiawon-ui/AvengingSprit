@@ -15,7 +15,74 @@ namespace Game.Editor.ReBorn
             BuildStarAsk(growth);
             BuildStarDone(growth);
             BuildSkill(growth);
-            foreach (var n in new[] { "GrwStarAsk", "GrwStarDone", "GrwSkillInfo" }) growth.Find(n)?.gameObject.SetActive(false);
+            BuildSources(growth);
+            BuildEssence(growth);
+            foreach (var n in new[] { "GrwStarAsk", "GrwStarDone", "GrwSkillInfo", "GrwSources", "GrwEssence" }) growth.Find(n)?.gameObject.SetActive(false);
+        }
+
+        // 조각 획득처 줄 — 이름 · 설명 · 꼬리표 · 버튼(시안 fragments-exchange.png). 버튼 이름 = GrwSrc{i}Go
+        private static readonly (string icon, string title, string titleKo, string sub, string subKo, string tag, string tagKo, string btn, string btnKo)[] Sources =
+        {
+            ("Icons/rb_icon_tab_summon_96", "ui.rb.src.summon", "소환", "ui.rb.src.summon_sub", "이 몸 포함 · 중복 획득 시 조각 전환", "ui.rb.src.summon_tag", "중복 조각", "ui.rb.src.go", "이동 ›"),
+            ("Icons/rb_icon_tab_challenge_96", "ui.rb.src.tower", "망령의 탑", "ui.rb.src.tower_sub", "해당 호스트의 보상 풀 확인", "ui.rb.src.reward_tag", "보상 확인", "ui.rb.src.reward", "보상 확인"),
+            ("Icons/rb_icon_rail_event_96", "ui.rb.src.night", "망령의 밤", "ui.rb.src.night_sub", "오늘의 조각 보상 확인", "ui.rb.src.night_tag", "요일 보상", "ui.rb.src.reward", "보상 확인"),
+            ("Icons/rb_icon_mode_random_96", "ui.rb.src.random", "랜덤 출전", null, "클리어 보너스 조각 +3", "ui.rb.src.random_tag", "클리어 보너스", "ui.rb.src.go", "이동 ›"),
+            ("Icons/rb_icon_essence_96", "ui.rb.src.essence", "영혼 정수 → 조각", null, "정수 30개로 조각 1개", "ui.rb.src.essence_tag", "정수 교환", "ui.rb.src.exchange", "교환 ›"),
+        };
+
+        /// <summary>
+        /// 조각 획득처 — 머리(조각 아이콘 · 「갱스터 조각」 · 보유 12 /20) + 다섯 줄. 시안 상자 165~1033 × 610~1765(가로는 가운데로).
+        /// 줄 가운데(시안 y) 901 · 1084 · 1268 · 1452 · 1636 → 판 451 · 573 · 695 · 818 · 941.
+        /// </summary>
+        private static void BuildSources(RectTransform root)
+        {
+            Modal(root, "GrwSources", "ui.rb.src.title", "조각 획득처", 70f, 257f, 650f, 1037f, out var c);
+            Img(Corner(Node(c, "GrwSourcesIcon"), 100f, 296f, 153f, 350f), "Icons/rb_icon_shard_96");
+            Text(Corner(Node(c, "GrwSourcesName"), 177f, 302f, 620f, 338f), null, "갱스터 조각", 58, White, TA.Left, heavy: true);
+            Text(Corner(Node(c, "GrwSourcesOwned"), 177f, 340f, 620f, 370f), null, "보유 12 /20", 46, Dim, TA.Left, heavy: true);
+            float[] centers = { 461f, 583f, 705f, 828f, 951f };
+            for (int i = 0; i < Sources.Length; i++)
+            {
+                var s = Sources[i];
+                float y = centers[i];
+                Img(Corner(Node(c, $"GrwSrc{i}Icon"), 100f, y - 30f, 153f, y + 30f), s.icon);
+                Text(Corner(Node(c, $"GrwSrc{i}Title"), 163f, y - 58f, 490f, y - 22f), s.title, s.titleKo, 54, White, TA.Left, heavy: true);
+                Text(Corner(Node(c, $"GrwSrc{i}Sub"), 163f, y - 10f, 490f, y + 18f), s.sub, s.subKo, 40, Dim, TA.Left, heavy: true);
+                var tag = Corner(Node(c, $"GrwSrc{i}Tag"), 163f, y + 23f, 310f, y + 51f);
+                Img(tag, "Components/rb_info_chip").preserveAspect = false;
+                Text(Stretch(Node(tag, $"GrwSrc{i}TagText")), s.tag, s.tagKo, 38, Cyan, TA.Center, heavy: true);
+                var go = Corner(Node(c, $"GrwSrc{i}Go"), 499f, y - 42f, 622f, y + 41f);
+                Btn(go, "Components/rb_btn_secondary");
+                Text(Stretch(Node(go, $"GrwSrc{i}GoText")), s.btn, s.btnKo, 44, White, TA.Center, heavy: true).margin = new Vector4(10f, 0f, 10f, 0f);   // 둥근 모서리를 비켜
+            }
+        }
+
+        /// <summary>
+        /// 영혼 정수 → 조각 교환 — 정수 아이콘 → 조각(+얼굴) · 비율 줄 · − 수 + · 필요/보유 · 교환(모자라면 「정수 n개 부족」).
+        /// 시안 essence-exchange · essence-poor.png, 상자 330~870 × 600~1705(가로는 가운데로).
+        /// </summary>
+        private static void BuildEssence(RectTransform root)
+        {
+            Modal(root, "GrwEssence", "ui.rb.ess.title", "영혼 정수", 180f, 250f, 540f, 987f, out var c);
+            Img(Corner(Node(c, "GrwEssIcon"), 212f, 414f, 284f, 486f), "Icons/rb_icon_essence_96");
+            Text(Corner(Node(c, "GrwEssLabel"), 172f, 512f, 324f, 542f), "ui.rb.ess.title", "영혼 정수", 38, White, TA.Center, heavy: true);
+            Img(Corner(Node(c, "GrwEssArrow"), 338f, 460f, 366f, 488f), "Icons/rb_icon_sys_next_48");
+            Img(Corner(Node(c, "GrwEssShard"), 416f, 359f, 500f, 443f), "Icons/rb_icon_shard_96");
+            Img(Corner(Node(c, "GrwEssFace"), 440f, 470f, 490f, 520f), "Icons/rb_icon_mode_ghost_96");
+            var shardName = Text(Corner(Node(c, "GrwEssShardName"), 372f, 526f, 540f, 574f), null, "갱스터 조각", 38, White, TA.Top, heavy: true);
+            shardName.enableWordWrapping = true;   // 일본어 「ギャングスターのかけら」는 두 줄
+            Text(Corner(Node(c, "GrwEssRate"), 203f, 622f, 520f, 660f), null, "정수 30개로 조각 1개", 46, White, TA.Left, heavy: true);
+            var minus = Corner(Node(c, "GrwEssMinus"), 232f, 689f, 317f, 773f);
+            Btn(minus, "Components/rb_btn_icon_round");
+            Img(Inside(Node(minus, "GrwEssMinusIcon"), 42.5f, 42f, 36f, 36f), "Icons/rb_icon_sys_minus_48");
+            Text(Corner(Node(c, "GrwEssCount"), 320f, 695f, 400f, 767f), null, "1", 96, White, TA.Center, number: true);
+            var plus = Corner(Node(c, "GrwEssPlus"), 403f, 689f, 488f, 773f);
+            Btn(plus, "Components/rb_btn_icon_round");
+            Img(Inside(Node(plus, "GrwEssPlusIcon"), 42.5f, 42f, 36f, 36f), "Icons/rb_icon_sys_plus_48");
+            Text(Corner(Node(c, "GrwEssNeed"), 203f, 806f, 520f, 840f), null, "필요 정수 30 · 보유 120", 44, Dim, TA.Left, heavy: true);
+            var go = Corner(Node(c, "GrwEssGo"), 207f, 866f, 513f, 962f);
+            Btn(go, "Components/rb_btn_primary");
+            Text(Stretch(Node(go, "GrwEssGoText")), "ui.rb.ess.go", "교환", 60, Ink, TA.Center, heavy: true);
         }
 
         /// <summary>성급 강화 확인 — 얼굴 · 「갱스터 성급 2 → 3」 / 조각 칸 · 골드 칸 / 효과 두 줄 / 취소 · 성급 올리기.</summary>

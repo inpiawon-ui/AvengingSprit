@@ -1540,3 +1540,30 @@ ui.rb.growth.starup_line	{0} 성급 {1} → {2}	{0} 星級 {1} → {2}	{0} Star 
 ui.rb.growth.shard_name	{0} 조각	{0}のかけら	{0} Shards	{0} 碎片	{0} 碎片
 ui.rb.growth.star_gain	체력·공격 +7%	HP・攻撃 +7%	HP · ATK +7%	體力·攻擊 +7%	体力·攻击 +7%
 ui.rb.growth.rank_now	성급 {0}	星級 {0}	Star {0}	星級 {0}	星级 {0}
+ui.rb.src.title	조각 획득처	かけら入手先	Shard Sources	碎片獲取途徑	碎片获取途径
+ui.rb.src.summon	소환	召喚	Summon	召喚	召唤
+ui.rb.src.summon_sub	이 몸 포함 · 중복 획득 시 조각 전환	重複はかけらに変換	Dupes become shards	重複轉為碎片	重复转为碎片
+ui.rb.src.summon_tag	중복 조각	重複かけら	Dupe shards	重複碎片	重复碎片
+ui.rb.src.go	이동 ›	移動 ›	Go ›	前往 ›	前往 ›
+ui.rb.src.tower	망령의 탑	亡霊の塔	Phantom Tower	亡靈之塔	亡灵之塔
+ui.rb.src.tower_sub	해당 호스트의 보상 풀 확인	このホストの報酬を確認	Check this host's rewards	查看此宿主的獎勵	查看此宿主的奖励
+ui.rb.src.reward_tag	보상 확인	報酬確認	Rewards	查看獎勵	查看奖励
+ui.rb.src.reward	보상 확인	報酬確認	Rewards	查看獎勵	查看奖励
+ui.rb.src.night	망령의 밤	亡霊の夜	Phantom Night	亡靈之夜	亡灵之夜
+ui.rb.src.night_sub	오늘의 조각 보상 확인	今日のかけら報酬を確認	Check today's shard rewards	查看今日碎片獎勵	查看今日碎片奖励
+ui.rb.src.night_tag	요일 보상	曜日報酬	Daily rewards	每日獎勵	每日奖励
+ui.rb.src.random	랜덤 출전	ランダム出撃	Random Run	隨機出戰	随机出战
+ui.rb.src.random_sub	클리어 보너스 조각 +{0}	クリアボーナス かけら +{0}	Clear bonus: shards +{0}	通關獎勵 碎片 +{0}	通关奖励 碎片 +{0}
+ui.rb.src.random_tag	클리어 보너스	クリアボーナス	Clear bonus	通關獎勵	通关奖励
+ui.rb.src.essence	영혼 정수 → 조각	魂のエッセンス → かけら	Essence → Shards	靈魂精華 → 碎片	灵魂精华 → 碎片
+ui.rb.src.essence_sub	정수 {0}개로 조각 1개	エッセンス{0}個でかけら1個	{0} essence for 1 shard	精華 {0} 個換碎片 1 個	精华 {0} 个换碎片 1 个
+ui.rb.src.essence_tag	정수 교환	エッセンス交換	Exchange	精華兌換	精华兑换
+ui.rb.src.exchange	교환 ›	交換 ›	Trade ›	兌換 ›	兑换 ›
+ui.rb.src.owned	보유 {0} /{1}	所持 {0} /{1}	Owned {0} /{1}	擁有 {0} /{1}	拥有 {0} /{1}
+ui.rb.src.owned_max	보유 {0}	所持 {0}	Owned {0}	擁有 {0}	拥有 {0}
+ui.rb.ess.title	영혼 정수	魂のエッセンス	Soul Essence	靈魂精華	灵魂精华
+ui.rb.ess.go	교환	交換	Trade	兌換	兑换
+ui.rb.ess.need	필요 정수 {0} · 보유 {1}	必要 {0} ・所持 {1}	Need {0} · Have {1}	需要 {0} · 擁有 {1}	需要 {0} · 拥有 {1}
+ui.rb.ess.poor	정수가 부족합니다 ({0}/{1})	エッセンスが足りません ({0}/{1})	Not enough essence ({0}/{1})	精華不足 ({0}/{1})	精华不足 ({0}/{1})
+ui.rb.ess.short	정수 {0}개 부족	エッセンス {0} 不足	{0} essence short	精華不足 {0}	精华不足 {0}
+ui.rb.ess.fail	교환할 수 없어요	交換できません	Can't trade	無法兌換	无法兑换

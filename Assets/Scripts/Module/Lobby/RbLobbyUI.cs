@@ -590,6 +590,13 @@ namespace Game.Module.Lobby
         /// <summary>유령 성장(시안 ghost-growth) — 도감 「성장 ›」 에서 오면 뒤로가 도감으로.</summary>
         public void OpenGhostGrowth() => OpenRail("GhostFromHost");
 
+        /// <summary>도전 탭의 탑(ChlTower) · 밤(ChlNight) 쪽으로 바로 연다.</summary>
+        public void OpenChallenge(string sub)
+        {
+            SelectTab("Challenge");
+            if (_challengePage != null) _challengePage.ShowSub(sub);
+        }
+
         private static void Soon(string key)
             => SystemPopup.Show(Localize.FromTable(key, "준비 중이에요 · 업데이트로 열려요"), null, Localize.Get("ui.common.ok"), null);
     }

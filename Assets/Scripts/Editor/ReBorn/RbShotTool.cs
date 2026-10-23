@@ -79,6 +79,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
             (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
             (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
+            (720, 1280, Language.Korean, "growth:sources_low", "growthsrc_sources_16x9"),
+            (720, 1280, Language.Korean, "growth:sources_essence_low", "growthsrc_essence_16x9"),
+            (768, 1024, Language.Korean, "growth:sources_low", "growthsrc_sources_4x3"),
+            (720, 1280, Language.English, "growth:sources_low", "growthsrc_sources_en"),
+            (720, 1280, Language.Japanese, "growth:sources_essence_low", "growthsrc_essence_ja"),
         };
 
         /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
@@ -378,6 +383,8 @@ namespace Game.Editor.ReBorn
             if (state.Contains("ask")) typeof(RbGrowthPage).GetMethod("ShowStarAsk", Private)?.Invoke(growthPage, new object[] { 2, 20, 1200 });
             if (state.Contains("done")) typeof(RbGrowthPage).GetMethod("ShowStarDone", Private)?.Invoke(growthPage, null);
             if (state.Contains("skill")) typeof(RbGrowthPage).GetMethod("ShowSkill", Private)?.Invoke(growthPage, new object[] { 0 });
+            if (state.Contains("sources")) typeof(RbGrowthPage).GetMethod("ShowSources", Private)?.Invoke(growthPage, null);
+            if (state.Contains("essence")) typeof(RbGrowthPage).GetMethod("ShowEssence", Private)?.Invoke(growthPage, null);
         }
 
         /// <summary>

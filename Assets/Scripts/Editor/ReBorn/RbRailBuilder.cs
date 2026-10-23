@@ -281,7 +281,7 @@ namespace Game.Editor.ReBorn
             float cx = (x0 + x1) * 0.5f;
             var plate = Corner(Node(c, name + "TitlePlate"), cx - 120f, y0 - 24f, cx + 120f, y0 + 26f);
             Img(plate, "Components/rb_popup_title_plate");
-            Text(Corner(Node(c, name + "Title"), cx - 110f, y0 - 20f, cx + 110f, y0 + 22f), titleKey, korean, 44, White, TA.Center, heavy: true);
+            Text(Corner(Node(c, name + "Title"), cx - 95f, y0 - 20f, cx + 95f, y0 + 22f), titleKey, korean, 44, White, TA.Center, heavy: true);   // 판 양 끝 막대(각 15)를 비켜
             var x = Corner(Node(c, name.Replace("Rb", string.Empty) + "Close"), x1 - 54f, y0 - 22f, x1 + 2f, y0 + 34f);
             Btn(x, "Components/rb_btn_icon_round");
             Img(Inside(Node(x, x.name + "Icon"), 28f, 28f, 30f, 30f), "Icons/rb_icon_sys_close_48");

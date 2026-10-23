@@ -44,7 +44,9 @@ namespace Game.Module.Lobby
         private const string NextColor = "#4AE08A", ShortColor = "#FF5A5A";
 
         // 창은 위 막대 · 아래 탭까지 딤으로 덮어야 해서 이 쪽이 아니라 화면 맨 뒤(RbLobbyUI 바로 아래)에 있다
-        private static readonly string[] Modals = { "GrwSkillInfo", "GrwStarDone", "GrwStarAsk" };
+        // 뒤로는 앞(위에 뜬) 것부터 — 정수 교환은 획득처 위에서 열린다
+        private static readonly string[] Modals = { "GrwEssence", "GrwSources", "GrwSkillInfo", "GrwStarDone", "GrwStarAsk" };
+        private const int EssenceMaxPick = 99;
 
         private UIBinder _ui;
         private UIBinder _modals;
@@ -52,6 +54,7 @@ namespace Game.Module.Lobby
         private RbLobbyUI _shell;
         private readonly List<Transform> _tiles = new();
         private string _key;
+        private int _essCount = 1;
 
         private void Awake()
         {
@@ -62,7 +65,7 @@ namespace Game.Module.Lobby
             _ui.OnClick("GrwSkillUlt", () => ShowSkill(0));
             _ui.OnClick("GrwSkillAct", () => ShowSkill(1));
             _ui.OnClick("GrwSkillPas", () => ShowSkill(2));
-            _ui.OnClick("GrwStarWhere", () => Toast(Localize.FromTable("ui.rb.growth.shard_where_body", "조각은 랜덤 출전 클리어 · 소환 · 상점에서 얻어요.")));
+            _ui.OnClick("GrwStarWhere", ShowSources);
             _ui.OnClick("GrwStarUp", StarUp);
             _modals = new UIBinder(_shell.transform);
             _modals.OnClick("GrwStarAskClose", () => _modals.SetActive("GrwStarAsk", false));
@@ -71,6 +74,16 @@ namespace Game.Module.Lobby
             _modals.OnClick("GrwStarDoneClose", () => _modals.SetActive("GrwStarDone", false));
             _modals.OnClick("GrwStarDoneOk", () => _modals.SetActive("GrwStarDone", false));
             _modals.OnClick("GrwSkillInfoClose", () => _modals.SetActive("GrwSkillInfo", false));
+            _modals.OnClick("GrwSourcesClose", () => _modals.SetActive("GrwSources", false));
+            _modals.OnClick("GrwSrc0Go", () => Leave(() => _shell.SelectTab("Summon")));
+            _modals.OnClick("GrwSrc1Go", () => Leave(() => _shell.OpenChallenge("ChlTower")));
+            _modals.OnClick("GrwSrc2Go", () => Leave(() => _shell.OpenChallenge("ChlNight")));
+            _modals.OnClick("GrwSrc3Go", () => Leave(() => _shell.SelectTab("Battle")));
+            _modals.OnClick("GrwSrc4Go", ShowEssence);
+            _modals.OnClick("GrwEssenceClose", () => _modals.SetActive("GrwEssence", false));
+            _modals.OnClick("GrwEssMinus", () => { _essCount = Mathf.Max(1, _essCount - 1); FillEssence(); });
+            _modals.OnClick("GrwEssPlus", () => { _essCount = Mathf.Min(EssencePickMax(), _essCount + 1); FillEssence(); });
+            _modals.OnClick("GrwEssGo", Exchange);
             BuildTiles();
         }
 
@@ -387,6 +400,75 @@ namespace Game.Module.Lobby
                 if (_modals.Find(n) is Transform t && t.gameObject.activeSelf) { t.gameObject.SetActive(false); return true; }
             }
             return false;
+        }
+
+        // ── 조각 획득처 · 정수 교환 ─────────────────────────────
+
+        private string HostName => _player.GetHost(_key) is HostEntry h ? h.DisplayName : _key;
+
+        private void ShowSources()
+        {
+            if (_player == null) return;
+            int shards = _player.GetShards(_key), need = _player.MasteryCost(_key);
+            _modals.SetText("GrwSourcesName", string.Format(Localize.FromTable("ui.rb.growth.shard_name", "{0} 조각"), HostName));
+            _modals.SetText("GrwSourcesOwned", need > 0
+                ? string.Format(Localize.FromTable("ui.rb.src.owned", "보유 {0} /{1}"), shards, need)
+                : string.Format(Localize.FromTable("ui.rb.src.owned_max", "보유 {0}"), shards));
+            var cfg = _player.Config;
+            _modals.SetText("GrwSrc3Sub", string.Format(Localize.FromTable("ui.rb.src.random_sub", "클리어 보너스 조각 +{0}"), cfg != null ? cfg.RandomLuckShards : 3));
+            _modals.SetText("GrwSrc4Sub", string.Format(Localize.FromTable("ui.rb.src.essence_sub", "정수 {0}개로 조각 1개"), _player.EssencePriceOf(_key)));
+            _modals.SetActive("GrwSources", true);
+        }
+
+        /// <summary>다른 화면으로 — 창을 다 닫고 간다(창은 쪽 밖에 있어 남는다).</summary>
+        private void Leave(Action go)
+        {
+            CloseModals();
+            go();
+        }
+
+        private void ShowEssence()
+        {
+            _essCount = 1;
+            SetFace("GrwEssFace");
+            _modals.SetText("GrwEssShardName", string.Format(Localize.FromTable("ui.rb.growth.shard_name", "{0} 조각"), HostName));
+            FillEssence();
+            _modals.SetActive("GrwEssence", true);
+        }
+
+        private int EssencePickMax()
+        {
+            int price = Mathf.Max(1, _player.EssencePriceOf(_key));
+            return Mathf.Clamp(_player.Essence / price, 1, EssenceMaxPick);
+        }
+
+        private void FillEssence()
+        {
+            int price = _player.EssencePriceOf(_key), have = _player.Essence;
+            int cost = price * _essCount;
+            bool poor = have < cost;
+            _modals.SetText("GrwEssRate", string.Format(Localize.FromTable("ui.rb.src.essence_sub", "정수 {0}개로 조각 1개"), price));
+            _modals.SetText("GrwEssCount", _essCount.ToString());
+            _modals.SetText("GrwEssNeed", poor
+                ? string.Format(Localize.FromTable("ui.rb.ess.poor", "정수가 부족합니다 ({0}/{1})"), have, cost)
+                : string.Format(Localize.FromTable("ui.rb.ess.need", "필요 정수 {0} · 보유 {1}"), cost, have));
+            if (_modals.Get<TextMeshProUGUI>("GrwEssNeed") is TextMeshProUGUI need) need.color = poor ? new Color(1f, 0.35f, 0.35f) : new Color(0.70f, 0.74f, 0.84f);
+            if (_modals.Get<Button>("GrwEssGo") is Button b) b.interactable = !poor;
+            _modals.SetText("GrwEssGoText", poor
+                ? string.Format(Localize.FromTable("ui.rb.ess.short", "정수 {0}개 부족"), cost - have)
+                : Localize.FromTable("ui.rb.ess.go", "교환"));
+            if (_modals.Get<TextMeshProUGUI>("GrwEssGoText") is TextMeshProUGUI go) go.color = poor ? new Color(0.70f, 0.74f, 0.84f) : new Color(0.16f, 0.11f, 0.03f);
+        }
+
+        private void Exchange()
+        {
+            if (!_player.ExchangeEssence(_key, _essCount)) { Toast(Localize.FromTable("ui.rb.ess.fail", "교환할 수 없어요")); return; }
+            GameSound.Cue("run.shop");
+            _player.SaveAsync().Forget();   // fire-and-forget: 바꾸자마자 남긴다
+            _modals.SetActive("GrwEssence", false);
+            Refresh();
+            _shell.RefreshHeader();
+            if (_modals.Find("GrwSources") is Transform s && s.gameObject.activeSelf) ShowSources();
         }
 
         private void SetFace(string node)
