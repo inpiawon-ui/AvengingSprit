@@ -47,6 +47,7 @@ namespace Game.Module.Lobby
         private RbGrowthPage _growthPage;
         private RbLockedPage _lockedPage;
         private RbRevealPage _revealPage;
+        private RbNotice _notice;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -95,6 +96,7 @@ namespace Game.Module.Lobby
             if (_growthPage != null) _growthPage.Init();   // 창(조각 획득처 등)은 미보유 쪽에서도 열린다 — 성장 쪽이 한 번도 안 켜졌어도 버튼을 건다
             _lockedPage = GetComponentInChildren<RbLockedPage>(true);
             _revealPage = GetComponentInChildren<RbRevealPage>(true);
+            _notice = GetComponentInChildren<RbNotice>(true);
             _ui.SetActive("SortieCardTemplate", false);
         }
 
@@ -162,6 +164,7 @@ namespace Game.Module.Lobby
         // 뒤로가기 — 성장 → 도감 → 전투 탭 순으로 물러난다. 전투 탭이면 닫을 것이 없다(라우터가 종료 확인을 띄운다)
         public bool OnBackPressed()
         {
+            if (_notice != null && _notice.Back()) return true;
             if (_misc != null && _misc.Back()) return true;
             if (_growthPage != null && _growthPage.CloseModal()) return true;
             if (_revealPage != null && _revealPage.IsOpen) { _revealPage.Done(); return true; }
@@ -460,7 +463,7 @@ namespace Game.Module.Lobby
         {
             if (!ChapterOpen) return;
             CoreModule.TryGet<IStaminaService>(out var stamina);
-            if (stamina != null && !stamina.CanEnter) { StaminaPopup.Show(stamina, _player, true, RefreshHeader); return; }
+            if (stamina != null && !stamina.CanEnter) { _notice.ShowStamina(stamina, _player, true, RefreshHeader); return; }
 
             string key = _mode == RunStartMode.Random ? RollRandomHost()
                        : _mode == RunStartMode.Ghost ? HostEntry.GhostKey : _host;
@@ -470,12 +473,11 @@ namespace Game.Module.Lobby
             if (gold > 0 && _player.Gold < gold)
             {
                 // 골드 부족 — 대안 「랜덤으로 출전 · 골드 없음」(묶음 규칙)
-                SystemPopup.Show(string.Format(Localize.Get("ui.hostselect.gold_short"), e.DisplayName, HostGradeLabel.Of(e.Grade), _player.Gold, gold),
-                                 () => Pick(RunStartMode.Random, null), Localize.FromTable("ui.rb.lobby.gold_short_random", "랜덤으로 출전 · 골드 없음"),
-                                 Localize.Get("ui.common.ok"));
+                _notice.ShowGoldShort(gold, _player.Gold, Localize.FromTable("ui.rb.notice.gold_keep", "선택한 호스트는 그대로 유지됩니다."),
+                                      Localize.FromTable("ui.rb.lobby.gold_short_random", "랜덤으로 출전 · 골드 없음"), () => Pick(RunStartMode.Random, null));
                 return;
             }
-            if (stamina != null && !stamina.TryPayEntry()) { StaminaPopup.Show(stamina, _player, true, RefreshHeader); return; }
+            if (stamina != null && !stamina.TryPayEntry()) { _notice.ShowStamina(stamina, _player, true, RefreshHeader); return; }
             if (gold > 0) _player.TrySpendGold(gold);
 
             _player.SelectedChapter = _chapter;
@@ -529,6 +531,7 @@ namespace Game.Module.Lobby
         {
             _tab = tab;
             SetTabBar(true);
+            if (_notice != null) _notice.HideAll();
             foreach (var t in new[] { "Shop", "Host", "Battle", "Summon", "Challenge" })
             {
                 var label = _ui.Get<TextMeshProUGUI>($"Tab{t}Label");
@@ -636,6 +639,15 @@ namespace Game.Module.Lobby
 
         /// <summary>유령 성장(시안 ghost-growth) — 도감 「성장 ›」 에서 오면 뒤로가 도감으로.</summary>
         public void OpenGhostGrowth() => OpenRail("GhostFromHost");
+
+        /// <summary>로비 공용 알림 창(보상 · 모자라요 · 구매 확인).</summary>
+        public RbNotice Notice => _notice;
+
+        /// <summary>상점 탭의 그 쪽(추천 · 오늘 · 상자 · 재화).</summary>
+        public void ShowShopTab(string tab)
+        {
+            if (_shopPage != null) _shopPage.ShowTab(tab);
+        }
 
         /// <summary>도전 탭의 탑(ChlTower) · 밤(ChlNight) 쪽으로 바로 연다.</summary>
         public void OpenChallenge(string sub)

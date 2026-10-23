@@ -79,6 +79,17 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "growth:ask_low", "growthpop_ask_en"),
             (720, 1280, Language.Japanese, "growth:done_low", "growthpop_done_ja"),
             (720, 1280, Language.English, "growth:skill", "growthpop_skill_en"),
+            (720, 1280, Language.Korean, "notice:reward", "notice_reward_16x9"),
+            (720, 1280, Language.Korean, "notice:reward4", "notice_reward4_16x9"),
+            (720, 1280, Language.Korean, "notice:stamina", "notice_stamina_16x9"),
+            (720, 1280, Language.Korean, "notice:gem", "notice_gem_16x9"),
+            (720, 1280, Language.Korean, "notice:gold", "notice_gold_16x9"),
+            (720, 1280, Language.Korean, "notice:confirm", "notice_confirm_16x9"),
+            (768, 1024, Language.Korean, "notice:gold", "notice_gold_4x3"),
+            (1080, 2400, Language.Korean, "notice:reward", "notice_reward_20x9"),
+            (720, 1280, Language.English, "notice:gold", "notice_gold_en"),
+            (720, 1280, Language.Japanese, "notice:stamina", "notice_stamina_ja"),
+            (720, 1280, Language.English, "notice:reward4", "notice_reward4_en"),
             (720, 1280, Language.Korean, "host:lock_low", "hostlock_locked_16x9"),
             (720, 1280, Language.Korean, "host:lockready_low", "hostlock_ready_16x9"),
             (1080, 2400, Language.Korean, "host:lock_low", "hostlock_locked_20x9"),
@@ -317,6 +328,23 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("notice:"))
+            {
+                // 알림 창 — 값은 시안 예시(보상 432 골드 · 조각 3 · 유령 경험치 30 / 골드 필요 200 보유 40 / 입문 패키지 ₩5,900)
+                lobby.SelectTab("Battle");
+                var n = lobby.Notice;
+                string what = state.Substring(7);
+                if (what == "reward")
+                    n.ShowReward(new System.Collections.Generic.List<(string, string, int)> { ("gold", null, 432), ("shard", null, 3), ("passxp", null, 30) });
+                else if (what == "reward4")
+                    n.ShowReward(new System.Collections.Generic.List<(string, string, int)> { ("gem", null, 300), ("ticket", null, 10), ("gold", null, 5000), ("chest", "gold", 1) });
+                else if (what == "stamina" && CoreModule.TryGet<Game.Module.Common.Store.IStaminaService>(out var st)) n.ShowStamina(st, player, true, null);
+                else if (what == "gem") n.ShowGemShort();
+                else if (what == "gold") n.ShowGoldShort(200, 40, Localize.FromTable("ui.rb.notice.gold_keep", "선택한 호스트는 그대로 유지됩니다."),
+                                                       Localize.FromTable("ui.rb.lobby.gold_short_random", "랜덤으로 출전 · 골드 없음"), null);
+                else if (what == "confirm") n.ShowConfirm("rb_icon_currency_gem_96", "입문 패키지 I 구매", "₩5,900", Localize.FromTable("ui.rb.notice.store_pay", "결제는 스토어 계정으로 진행됩니다"), null);
+                return;
+            }
             if (state.StartsWith("rail:"))
             {
                 lobby.SelectTab("Battle");

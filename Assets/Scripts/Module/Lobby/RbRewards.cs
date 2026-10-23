@@ -36,7 +36,9 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>아이콘 이름(키트 rb_icon_*_96) — 화면이 가진 아이콘 목록에서 이름으로 찾는다.</summary>
-        public static Sprite IconOf(Sprite[] icons, string kind, string key) => Find(icons, kind switch
+        public static Sprite IconOf(Sprite[] icons, string kind, string key) => Find(icons, IconNameOf(kind, key));
+
+        public static string IconNameOf(string kind, string key) => kind switch
         {
             "gem" => "rb_icon_currency_gem_96",
             "gold" or "goldrun" => "rb_icon_currency_gold_96",
@@ -47,7 +49,7 @@ namespace Game.Module.Lobby
             "passxp" => "rb_icon_pass_xp_96",
             "shard" => "rb_icon_shard_96",
             _ => "rb_icon_reward_chest_96",
-        });
+        };
 
         public static string LabelOf(string kind, string key) => kind switch
         {

@@ -304,8 +304,13 @@ namespace Game.Module.Lobby
         private void Confirm(IStoreService store, StoreProduct p)
         {
             if (_busy) return;
-            string ask = string.Format(Localize.FromTable("ui.rb.shop.confirm", "{0}\n{1} 에 살까요?"), Localize.Get(p.NameKey), store.PriceLabel(p));
-            SystemPopup.Show(ask, () => BuyAsync(store, p.Id).Forget(), Localize.FromTable("ui.rb.shop.buy", "구매"), Localize.Get("ui.common.cancel"));   // fire-and-forget: 결과가 오면 알림으로
+            var lines = Parse(p.Rewards);
+            string icon = lines.Count > 0 ? RbRewards.IconNameOf(lines[0].kind, lines[0].key) : "rb_icon_currency_gem_96";
+            string note = p.PriceType == "gem"
+                ? string.Format(Localize.FromTable("ui.rb.notice.gem_have", "보유 젬 {0:N0}"), _player.Gem)
+                : Localize.FromTable("ui.rb.notice.store_pay", "결제는 스토어 계정으로 진행됩니다");
+            _shell.Notice.ShowConfirm(icon, string.Format(Localize.FromTable("ui.rb.notice.buy_name", "{0} 구매"), Localize.Get(p.NameKey)), store.PriceLabel(p), note,
+                                      () => BuyAsync(store, p.Id).Forget());   // fire-and-forget: 결과가 오면 보상 창으로
         }
 
         private async UniTaskVoid BuyAsync(IStoreService store, string id)
@@ -315,11 +320,11 @@ namespace Game.Module.Lobby
             {
                 var (outcome, result) = await store.BuyAsync(id);
                 if (this == null) return;
-                if (outcome == PurchaseOutcome.NotEnoughGem) { Toast(Localize.Get("ui.store.no_gem")); return; }
+                if (outcome == PurchaseOutcome.NotEnoughGem) { _shell.Notice.ShowGemShort(); return; }
                 if (outcome == PurchaseOutcome.SoldOut) { Toast(Localize.Get("ui.store.soldout")); return; }
                 if (outcome != PurchaseOutcome.Granted) return;
                 GameSound.Cue("run.shop");
-                Toast(Received(result));
+                _shell.Notice.ShowReward(result);
                 _shell.RefreshHeader();
                 Refresh();
             }
@@ -330,7 +335,7 @@ namespace Game.Module.Lobby
         {
             if (!store.TryClaimCard(key, out var result)) return;
             GameSound.Cue("run.gold");
-            Toast(Received(result));
+            _shell.Notice.ShowReward(result);
             _shell.RefreshHeader();
             Refresh();
         }
@@ -352,7 +357,6 @@ namespace Game.Module.Lobby
             Refresh();
         }
 
-        private static string Received(RewardResult r) => RbRewards.Received(r);
 
         private static List<(string kind, string key, int amount)> Parse(string rewards) => RbRewards.Parse(rewards);
 

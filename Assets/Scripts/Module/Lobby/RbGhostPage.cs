@@ -139,7 +139,7 @@ namespace Game.Module.Lobby
         private void Buy(HostStat stat)
         {
             if (_player.GhostStatCost(stat) <= 0) return;
-            if (!_player.BuyGhostStat(stat)) { Toast(Localize.Get("ui.growth.gold_short")); return; }
+            if (!_player.BuyGhostStat(stat)) { _shell.Notice.ShowGoldShort(_player.GhostStatCost(stat), _player.Gold, null, null, null); return; }
             GameSound.Cue("run.shop");
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장
             RefreshStats();

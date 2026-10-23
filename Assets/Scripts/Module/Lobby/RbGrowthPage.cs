@@ -297,7 +297,7 @@ namespace Game.Module.Lobby
         {
             int cost = _player.HostStatCost(_key, stat);
             if (cost <= 0) return;
-            if (!_player.BuyHostStat(_key, stat)) { Toast(Localize.Get("ui.growth.gold_short")); return; }
+            if (!_player.BuyHostStat(_key, stat)) { _shell.Notice.ShowGoldShort(cost, _player.Gold, null, null, null); return; }
             GameSound.Cue("run.shop");
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장 — 앱이 꺼져도 산 것은 남는다
             Refresh();
@@ -312,7 +312,7 @@ namespace Game.Module.Lobby
             int gold = _player.StarUpGoldCost(_key);
             // 모자라면 얼마나 모자란지 숫자로 — 「부족합니다」 만으로는 몇 판을 더 돌아야 하는지 모른다
             if (shards < need) { Toast(Localize.Format("ui.starup.shard_short", shards, need, need - shards)); return; }
-            if (_player.Gold < gold) { Toast(Localize.Format("ui.starup.gold_short", _player.Gold, gold, gold - _player.Gold)); return; }
+            if (_player.Gold < gold) { _shell.Notice.ShowGoldShort(gold, _player.Gold, null, null, null); return; }
             ShowStarAsk(m, need, gold);
         }
 

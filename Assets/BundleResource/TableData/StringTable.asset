@@ -10206,3 +10206,129 @@ MonoBehaviour:
     _en: "{0}\u2605 Fully Awakened"
     _zhHant: "{0}\u661F \u89BA\u9192\u5B8C\u6210"
     _zhHans: "{0}\u661F \u89C9\u9192\u5B8C\u6210"
+  - _key: ui.rb.notice.reward_title
+    _ko: REWARD
+    _ja: REWARD
+    _en: REWARD
+    _zhHant: REWARD
+    _zhHans: REWARD
+  - _key: ui.rb.notice.reward_line
+    _ko: "\uBCF4\uC0C1\uC744 \uBC1B\uC558\uC5B4\uC694"
+    _ja: "\u5831\u916C\u3092\u53D7\u3051\u53D6\u308A\u307E\u3057\u305F"
+    _en: Rewards received
+    _zhHant: "\u5DF2\u9818\u53D6\u734E\u52F5"
+    _zhHans: "\u5DF2\u9886\u53D6\u5956\u52B1"
+  - _key: ui.rb.notice.stamina_title
+    _ko: "\uD589\uB3D9\uB825\uC774 \uBD80\uC871\uD574\uC694"
+    _ja: "\u884C\u52D5\u529B\u304C\u8DB3\u308A\u307E\u305B\u3093"
+    _en: Not enough energy
+    _zhHant: "\u884C\u52D5\u529B\u4E0D\u8DB3"
+    _zhHans: "\u884C\u52A8\u529B\u4E0D\u8DB3"
+  - _key: ui.rb.notice.stamina_fill
+    _ko: "\uD589\uB3D9\uB825 \uCC44\uC6B0\uAE30"
+    _ja: "\u884C\u52D5\u529B\u3092\u56DE\u5FA9"
+    _en: Refill energy
+    _zhHant: "\u88DC\u5145\u884C\u52D5\u529B"
+    _zhHans: "\u8865\u5145\u884C\u52A8\u529B"
+  - _key: ui.rb.notice.need_have
+    _ko: "\uD544\uC694 {0} \xB7 \uBCF4\uC720 {1}"
+    _ja: "\u5FC5\u8981 {0} \u30FB\u6240\u6301 {1}"
+    _en: "Need {0} \xB7 Have {1}"
+    _zhHant: "\u9700\u8981 {0} \xB7 \u64C1\u6709 {1}"
+    _zhHans: "\u9700\u8981 {0} \xB7 \u62E5\u6709 {1}"
+  - _key: ui.rb.notice.next
+    _ko: "\uB2E4\uC74C \uD68C\uBCF5 {0}"
+    _ja: "\u6B21\u306E\u56DE\u5FA9 {0}"
+    _en: Next in {0}
+    _zhHant: "\u4E0B\u6B21\u6062\u5FA9 {0}"
+    _zhHans: "\u4E0B\u6B21\u6062\u590D {0}"
+  - _key: ui.rb.notice.gem_title
+    _ko: "\uC82C\uC774 \uBAA8\uC790\uB77C\uC694"
+    _ja: "\u30B8\u30A7\u30E0\u4E0D\u8DB3"
+    _en: Not enough gems
+    _zhHant: "\u5BF6\u77F3\u4E0D\u8DB3"
+    _zhHans: "\u5B9D\u77F3\u4E0D\u8DB3"
+  - _key: ui.rb.notice.gem_line
+    _ko: "\uC82C\uC774 \uBAA8\uC790\uB77C\uC694. \uC82C \uBB36\uC74C\uC744 \uBCFC\uAE4C\uC694?"
+    _ja: "\u30B8\u30A7\u30E0\u304C\u8DB3\u308A\u307E\u305B\u3093\u3002\u30B8\u30A7\u30E0\u30D1\u30C3\u30AF\u3092\u898B\u307E\u3059\u304B\uFF1F"
+    _en: Not enough gems. See gem packs?
+    _zhHant: "\u5BF6\u77F3\u4E0D\u8DB3\u3002\u8981\u770B\u770B\u5BF6\u77F3\u7D44\u5408\u55CE\uFF1F"
+    _zhHans: "\u5B9D\u77F3\u4E0D\u8DB3\u3002\u8981\u770B\u770B\u5B9D\u77F3\u7EC4\u5408\u5417\uFF1F"
+  - _key: ui.rb.notice.gem_go
+    _ko: "\uC82C \uC0AC\uB7EC \uAC00\uAE30"
+    _ja: "\u30B8\u30A7\u30E0\u3092\u8CB7\u3044\u306B\u884C\u304F"
+    _en: Get gems
+    _zhHant: "\u524D\u5F80\u8CFC\u8CB7\u5BF6\u77F3"
+    _zhHans: "\u524D\u5F80\u8D2D\u4E70\u5B9D\u77F3"
+  - _key: ui.rb.notice.gold_title
+    _ko: "\uACE8\uB4DC\uAC00 \uBAA8\uC790\uB77C\uC694"
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u4E0D\u8DB3"
+    _en: Not enough gold
+    _zhHant: "\u91D1\u5E63\u4E0D\u8DB3"
+    _zhHans: "\u91D1\u5E01\u4E0D\u8DB3"
+  - _key: ui.rb.notice.gold_line
+    _ko: "\uD544\uC694 {0:N0} / \uBCF4\uC720 <color=#FF5A5A>{1:N0}</color>"
+    _ja: "\u5FC5\u8981 {0:N0} / \u6240\u6301 <color=#FF5A5A>{1:N0}</color>"
+    _en: Need {0:N0} / Have <color=#FF5A5A>{1:N0}</color>
+    _zhHant: "\u9700\u8981 {0:N0} / \u64C1\u6709 <color=#FF5A5A>{1:N0}</color>"
+    _zhHans: "\u9700\u8981 {0:N0} / \u62E5\u6709 <color=#FF5A5A>{1:N0}</color>"
+  - _key: ui.rb.notice.gold_keep
+    _ko: "\uC120\uD0DD\uD55C \uD638\uC2A4\uD2B8\uB294 \uADF8\uB300\uB85C \uC720\uC9C0\uB429\uB2C8\uB2E4."
+    _ja: "\u9078\u3093\u3060\u30DB\u30B9\u30C8\u306F\u305D\u306E\u307E\u307E\u3067\u3059\u3002"
+    _en: Your selected host stays as is.
+    _zhHant: "\u5DF2\u9078\u5BBF\u4E3B\u5C07\u4FDD\u6301\u4E0D\u8B8A\u3002"
+    _zhHans: "\u5DF2\u9009\u5BBF\u4E3B\u5C06\u4FDD\u6301\u4E0D\u53D8\u3002"
+  - _key: ui.rb.notice.gold_where
+    _ko: "\uACE8\uB4DC \uC5BB\uB294 \uACF3"
+    _ja: "\u30B4\u30FC\u30EB\u30C9\u306E\u5165\u624B\u5148"
+    _en: Where to get gold
+    _zhHant: "\u91D1\u5E63\u7372\u53D6\u9014\u5F91"
+    _zhHans: "\u91D1\u5E01\u83B7\u53D6\u9014\u5F84"
+  - _key: ui.rb.notice.src_story
+    _ko: "\uCC55\uD130 \uD074\uB9AC\uC5B4"
+    _ja: "\u30C1\u30E3\u30D7\u30BF\u30FC\u30AF\u30EA\u30A2"
+    _en: Clear chapters
+    _zhHant: "\u901A\u95DC\u7AE0\u7BC0"
+    _zhHans: "\u901A\u5173\u7AE0\u8282"
+  - _key: ui.rb.notice.src_shop
+    _ko: "\uC624\uB298\uC758 \uC0C1\uC810"
+    _ja: "\u4ECA\u65E5\u306E\u30B7\u30E7\u30C3\u30D7"
+    _en: Today's shop
+    _zhHant: "\u4ECA\u65E5\u5546\u5E97"
+    _zhHans: "\u4ECA\u65E5\u5546\u5E97"
+  - _key: ui.rb.notice.src_mail
+    _ko: "\uC6B0\uD3B8"
+    _ja: "\u30E1\u30FC\u30EB"
+    _en: Mail
+    _zhHant: "\u90F5\u4EF6"
+    _zhHans: "\u90AE\u4EF6"
+  - _key: ui.rb.notice.buy_title
+    _ko: "\uAD6C\uB9E4 \uD655\uC778"
+    _ja: "\u8CFC\u5165\u78BA\u8A8D"
+    _en: Confirm Purchase
+    _zhHant: "\u78BA\u8A8D\u8CFC\u8CB7"
+    _zhHans: "\u786E\u8BA4\u8D2D\u4E70"
+  - _key: ui.rb.notice.buy_name
+    _ko: "{0} \uAD6C\uB9E4"
+    _ja: "{0} \u3092\u8CFC\u5165"
+    _en: Buy {0}
+    _zhHant: "\u8CFC\u8CB7 {0}"
+    _zhHans: "\u8D2D\u4E70 {0}"
+  - _key: ui.rb.notice.gem_have
+    _ko: "\uBCF4\uC720 \uC82C {0:N0}"
+    _ja: "\u6240\u6301\u30B8\u30A7\u30E0 {0:N0}"
+    _en: You have {0:N0} gems
+    _zhHant: "\u64C1\u6709\u5BF6\u77F3 {0:N0}"
+    _zhHans: "\u62E5\u6709\u5B9D\u77F3 {0:N0}"
+  - _key: ui.rb.notice.store_pay
+    _ko: "\uACB0\uC81C\uB294 \uC2A4\uD1A0\uC5B4 \uACC4\uC815\uC73C\uB85C \uC9C4\uD589\uB429\uB2C8\uB2E4"
+    _ja: "\u6C7A\u6E08\u306F\u30B9\u30C8\u30A2\u30A2\u30AB\u30A6\u30F3\u30C8\u3067\u884C\u308F\u308C\u307E\u3059"
+    _en: Payment goes through your store account
+    _zhHant: "\u5C07\u900F\u904E\u5546\u5E97\u5E33\u865F\u4ED8\u6B3E"
+    _zhHans: "\u5C06\u901A\u8FC7\u5546\u5E97\u8D26\u53F7\u4ED8\u6B3E"
+  - _key: ui.rb.notice.close
+    _ko: "\uB2EB\uAE30"
+    _ja: "\u9589\u3058\u308B"
+    _en: Close
+    _zhHant: "\u95DC\u9589"
+    _zhHans: "\u5173\u95ED"

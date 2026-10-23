@@ -110,7 +110,7 @@ namespace Game.Module.Lobby
         {
             if (!CoreModule.TryGet<ISeasonService>(out var s) || !s.TryClaim(level, premium, out var r)) return;
             GameSound.Cue("run.gold");
-            Toast(RbRewards.Received(r));
+            _shell.Notice.ShowReward(r);
             _shell.RefreshHeader();
             Refresh();
         }
@@ -119,7 +119,7 @@ namespace Game.Module.Lobby
         {
             if (!CoreModule.TryGet<ISeasonService>(out var s) || !s.TryClaimAll(out var r)) return;
             GameSound.Cue("run.gold");
-            Toast(RbRewards.Received(r));
+            _shell.Notice.ShowReward(r);
             _shell.RefreshHeader();
             Refresh();
         }
@@ -127,9 +127,9 @@ namespace Game.Module.Lobby
         private void BuyPremium()
         {
             if (_busy || !CoreModule.TryGet<IStoreService>(out var store) || store.Find("pass_premium") is not StoreProduct p) return;
-            SystemPopup.Show(string.Format(Localize.FromTable("ui.pass.buy_confirm", "{0}\n{1} 로 살까요?"), Localize.Get(p.NameKey), store.PriceLabel(p)),
-                () => BuyAsync(store, p.Id).Forget(),   // fire-and-forget: 결과는 다시 그린다
-                Localize.FromTable("ui.rb.shop.buy", "구매"), Localize.Get("ui.common.cancel"));
+            _shell.Notice.ShowConfirm("rb_icon_pass_xp_96", string.Format(Localize.FromTable("ui.rb.notice.buy_name", "{0} 구매"), Localize.Get(p.NameKey)), store.PriceLabel(p),
+                Localize.FromTable("ui.rb.notice.store_pay", "결제는 스토어 계정으로 진행됩니다"),
+                () => BuyAsync(store, p.Id).Forget());   // fire-and-forget: 결과는 다시 그린다
         }
 
         private async UniTaskVoid BuyAsync(IStoreService store, string id)

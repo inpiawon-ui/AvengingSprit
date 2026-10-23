@@ -33,3 +33,24 @@ ui.rb.lobby.sortie	출전	出撃	Sortie	出擊	出击
 ui.rb.lobby.gold_short_random	랜덤으로 출전 · 골드 없음	ランダムで出撃 · ゴールド不要	Random sortie · No gold	隨機出擊 · 免金幣	随机出击 · 免金币
 ui.rb.soon	준비 중이에요 · 업데이트로 열려요	準備中です · アップデートで開放	Coming soon · Opens in an update	準備中 · 將於更新開放	准备中 · 将于更新开放
 ui.rb.title.start	시작하기	スタート	Start	開始遊戲	开始游戏
+ui.rb.notice.reward_title	REWARD	REWARD	REWARD	REWARD	REWARD
+ui.rb.notice.reward_line	보상을 받았어요	報酬を受け取りました	Rewards received	已領取獎勵	已领取奖励
+ui.rb.notice.stamina_title	행동력이 부족해요	行動力が足りません	Not enough energy	行動力不足	行动力不足
+ui.rb.notice.stamina_fill	행동력 채우기	行動力を回復	Refill energy	補充行動力	补充行动力
+ui.rb.notice.need_have	필요 {0} · 보유 {1}	必要 {0} ・所持 {1}	Need {0} · Have {1}	需要 {0} · 擁有 {1}	需要 {0} · 拥有 {1}
+ui.rb.notice.next	다음 회복 {0}	次の回復 {0}	Next in {0}	下次恢復 {0}	下次恢复 {0}
+ui.rb.notice.gem_title	젬이 모자라요	ジェム不足	Not enough gems	寶石不足	宝石不足
+ui.rb.notice.gem_line	젬이 모자라요. 젬 묶음을 볼까요?	ジェムが足りません。ジェムパックを見ますか？	Not enough gems. See gem packs?	寶石不足。要看看寶石組合嗎？	宝石不足。要看看宝石组合吗？
+ui.rb.notice.gem_go	젬 사러 가기	ジェムを買いに行く	Get gems	前往購買寶石	前往购买宝石
+ui.rb.notice.gold_title	골드가 모자라요	ゴールド不足	Not enough gold	金幣不足	金币不足
+ui.rb.notice.gold_line	필요 {0:N0} / 보유 <color=#FF5A5A>{1:N0}</color>	必要 {0:N0} / 所持 <color=#FF5A5A>{1:N0}</color>	Need {0:N0} / Have <color=#FF5A5A>{1:N0}</color>	需要 {0:N0} / 擁有 <color=#FF5A5A>{1:N0}</color>	需要 {0:N0} / 拥有 <color=#FF5A5A>{1:N0}</color>
+ui.rb.notice.gold_keep	선택한 호스트는 그대로 유지됩니다.	選んだホストはそのままです。	Your selected host stays as is.	已選宿主將保持不變。	已选宿主将保持不变。
+ui.rb.notice.gold_where	골드 얻는 곳	ゴールドの入手先	Where to get gold	金幣獲取途徑	金币获取途径
+ui.rb.notice.src_story	챕터 클리어	チャプタークリア	Clear chapters	通關章節	通关章节
+ui.rb.notice.src_shop	오늘의 상점	今日のショップ	Today's shop	今日商店	今日商店
+ui.rb.notice.src_mail	우편	メール	Mail	郵件	邮件
+ui.rb.notice.buy_title	구매 확인	購入確認	Confirm Purchase	確認購買	确认购买
+ui.rb.notice.buy_name	{0} 구매	{0} を購入	Buy {0}	購買 {0}	购买 {0}
+ui.rb.notice.gem_have	보유 젬 {0:N0}	所持ジェム {0:N0}	You have {0:N0} gems	擁有寶石 {0:N0}	拥有宝石 {0:N0}
+ui.rb.notice.store_pay	결제는 스토어 계정으로 진행됩니다	決済はストアアカウントで行われます	Payment goes through your store account	將透過商店帳號付款	将通过商店账号付款
+ui.rb.notice.close	닫기	閉じる	Close	關閉	关闭

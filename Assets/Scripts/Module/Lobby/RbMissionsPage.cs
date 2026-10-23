@@ -134,7 +134,7 @@ namespace Game.Module.Lobby
         {
             if (!CoreModule.TryGet<ISeasonService>(out var s) || !s.TryClaimMission(id, out var r)) return;
             GameSound.Cue("run.gold");
-            Toast(RbRewards.Received(r));
+            _shell.Notice.ShowReward(r);
             _shell.RefreshHeader();
             Refresh();
         }
