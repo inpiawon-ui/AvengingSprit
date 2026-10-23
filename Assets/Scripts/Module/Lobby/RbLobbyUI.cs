@@ -42,6 +42,7 @@ namespace Game.Module.Lobby
         private readonly List<IDisposable> _tokens = new();
         private readonly List<(Transform card, RunStartMode mode, string key)> _cards = new();
         private SpriteAtlas _faces;
+        private Sprite _ghostFace;
         private RbHostPage _hostPage;
         private RbGrowthPage _growthPage;
         private RbSummonPage _summonPage;
@@ -73,7 +74,7 @@ namespace Game.Module.Lobby
             _ui.OnClick("RailSettings", () => OpenRail("Settings"));
             _ui.OnClick("RailPass", () => OpenRail("Pass"));
             _ui.OnClick("RailDaily", () => OpenRail("Daily"));
-            _ui.OnClick("HeaderProfile", () => OpenRail("Ghost"));
+            _ui.OnClick("HeaderProfile", () => OpenRail("Profile"));
             _ui.OnClick("HeaderPlus", () => OpenRail("Gems"));
             _ghostPage = GetComponentInChildren<RbGhostPage>(true);
             _missionsPage = GetComponentInChildren<RbMissionsPage>(true);
@@ -186,6 +187,14 @@ namespace Game.Module.Lobby
             _ui.SetText("GoldText", _player.Gold.ToString("N0"));
             _ui.SetText("GemText", _player.Gem.ToString("N0"));
             _ui.SetText("HeaderLevelText", _player.GhostLevel.ToString());
+            // 위 막대 얼굴 = 프로필 대표 얼굴(꾸미기 — 없으면 유령 그림 그대로)
+            if (_faces != null && CoreModule.TryGet<Game.Module.Common.Store.ISeasonService>(out var season) && season.IsReady
+                && _ui.Get<Image>("HeaderProfileFace") is Image face)
+            {
+                if (_ghostFace == null) _ghostFace = face.sprite;   // 유령은 얼굴 아틀라스에 없다 — 프리팹 그림을 기억해 되돌린다
+                var fs = _faces.GetSprite($"face_{season.Equipped("face")}");
+                face.sprite = fs != null ? fs : _ghostFace;
+            }
         }
 
         // ── 챕터 카드 ─────────────────────────────────────────
@@ -565,6 +574,7 @@ namespace Game.Module.Lobby
                 case "Mail": SelectTab("Mail"); _misc?.ShowMail(); break;
                 case "Daily": _misc?.ShowDaily(); break;
                 case "Settings": _misc?.ShowSettings(); break;
+                case "Profile": _misc?.ShowProfile(_faces); break;
                 case "Gems": SelectTab("Shop"); _shopPage?.ShowTab("currency"); break;
             }
         }

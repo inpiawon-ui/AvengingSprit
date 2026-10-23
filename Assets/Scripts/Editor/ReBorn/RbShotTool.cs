@@ -30,6 +30,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "rail:Daily", "daily_16x9"),
             (720, 1280, Language.Korean, "rail:Settings", "settings_16x9"),
             (720, 1280, Language.Korean, "rail:Language", "language_16x9"),
+            (720, 1280, Language.Korean, "rail:Profile", "profile_16x9"),
+            (1080, 2400, Language.Korean, "rail:Profile", "profile_20x9"),
+            (768, 1024, Language.Korean, "rail:Profile", "profile_4x3"),
+            (720, 1280, Language.English, "rail:Profile", "profile_en"),
+            (720, 1280, Language.Japanese, "rail:ProfileTitle", "profile_title_ja"),
             (720, 1280, Language.English, "rail:Pass", "pass_en"),
             (720, 1280, Language.Japanese, "rail:Missions", "missions_ja"),
             (720, 1280, Language.Korean, "challenge", "challenge_16x9"),
@@ -94,8 +99,16 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
         };
 
+        // 이름 앞머리 거르개(SessionState Key+".only") — 새 화면만 찍을 때 목록 전체를 돌지 않게
         private static (int w, int h, Language lang, string state, string name)[] Current
-            => SessionState.GetInt(Key + ".set", 0) == 1 ? InGameShots : Shots;
+        {
+            get
+            {
+                var all = SessionState.GetInt(Key + ".set", 0) == 1 ? InGameShots : Shots;
+                string only = SessionState.GetString(Key + ".only", string.Empty);
+                return string.IsNullOrEmpty(only) ? all : System.Array.FindAll(all, s => s.name.StartsWith(only));
+            }
+        }
 
         private static int _wait;
         private static int _prepared = -1;
@@ -246,6 +259,12 @@ namespace Game.Editor.ReBorn
                     var misc = Object.FindAnyObjectByType<RbMiscPages>();
                     foreach (var t in misc.GetComponentsInChildren<Transform>(true)) if (t.name == "RbLanguage") t.gameObject.SetActive(true);
                     typeof(RbMiscPages).GetMethod("FillLanguage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.Invoke(misc, null);
+                }
+                else if (what == "ProfileTitle")
+                {
+                    lobby.OpenRail("Profile");
+                    foreach (var b in Object.FindAnyObjectByType<RbMiscPages>().GetComponentsInChildren<UnityEngine.UI.Button>(true))
+                        if (b.name == "ProfTabTitle") b.onClick.Invoke();
                 }
                 else lobby.OpenRail(what);
                 return;

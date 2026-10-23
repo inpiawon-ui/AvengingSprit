@@ -1,4 +1,1 @@
-[RE:BORN 글자] 점검 475개(칸 × 언어) · 넘침 3
-  ✗ PageSummon/SumResult/SumGrid/SumCardTemplate/SumCardNew/SumCardNewText [Japanese] 「新しい体！」 75×19 > 칸 51×24
-  ✗ PageSummon/SumResult/SumGrid/SumCardTemplate/SumCardNew/SumCardNewText [ChineseTraditional] 「新身體！」 64×23 > 칸 51×24
-  ✗ PageSummon/SumResult/SumGrid/SumCardTemplate/SumCardNew/SumCardNewText [ChineseSimplified] 「新身体！」 64×23 > 칸 51×24
+[RE:BORN 글자] 점검 700개(칸 × 언어) · 넘침 0

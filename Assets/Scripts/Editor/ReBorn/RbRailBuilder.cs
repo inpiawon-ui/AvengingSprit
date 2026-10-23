@@ -29,7 +29,8 @@ namespace Game.Editor.ReBorn
             BuildDaily(root);
             BuildSettings(root);
             BuildLanguage(root);
-            foreach (var n in new[] { "RbMail", "RbDaily", "RbSettings", "RbLanguage" }) root.Find(n)?.gameObject.SetActive(false);
+            BuildProfile(root);
+            foreach (var n in new[] { "RbMail", "RbDaily", "RbSettings", "RbLanguage", "RbProfile" }) root.Find(n)?.gameObject.SetActive(false);
             var view = root.gameObject.AddComponent<RbMiscPages>();
             var so = new SerializedObject(view);
             so.FindProperty("_toggleOn").objectReferenceValue = KitSprite("Components/rb_toggle_on");
@@ -360,6 +361,53 @@ namespace Game.Editor.ReBorn
                 Btn(b, "Components/rb_btn_secondary");
                 Text(Stretch(Node(b, names[i] + "Text")), keys[i], ko[i], 34, White, TA.Center, heavy: true);
             }
+        }
+
+        /// <summary>프로필 — 대표 얼굴 · 이름 · 유령 Lv · 칭호 / 얼굴 · 칭호 탭 / 칸 30(세로 스크롤) / 유령 성장 ›. 시안이 없어 키트 부품으로 세웠다.</summary>
+        private static void BuildProfile(RectTransform root)
+        {
+            Modal(root, "RbProfile", "ui.rb.profile.title", "프로필", 50f, 220f, 670f, 1110f, out var c);
+            Img(Corner(Node(c, "ProfRing"), 86f, 268f, 234f, 416f), "Components/rb_profile_frame");
+            Img(Corner(Node(c, "ProfFace"), 100f, 282f, 220f, 402f), "Icons/rb_icon_mode_ghost_144");
+            Text(Corner(Node(c, "ProfName"), 252f, 282f, 640f, 330f), null, "유령", 44, White, TA.Left, heavy: true);
+            Text(Corner(Node(c, "ProfLevel"), 252f, 334f, 640f, 372f), null, "Lv 10", 38, Cyan, TA.Left, number: true);
+            Text(Corner(Node(c, "ProfTitleName"), 252f, 376f, 640f, 412f), null, "—", 32, Yellow, TA.Left);
+            string[] tabs = { "ProfTabFace", "ProfTabTitle" };
+            string[] keys = { "ui.profile.tab.face", "ui.profile.tab.title" };
+            string[] ko = { "대표 얼굴", "칭호" };
+            for (int i = 0; i < 2; i++)
+            {
+                var t = Corner(Node(c, tabs[i]), 80f + i * 284f, 440f, 354f + i * 284f, 506f);
+                Btn(t, "Components/rb_seg_track");
+                Img(Stretch(Node(t, tabs[i] + "On")), "Components/rb_seg_on");
+                Text(Stretch(Node(t, tabs[i] + "Text")), keys[i], ko[i], 36, White, TA.Center, heavy: true);
+            }
+            // 칸 — 세로 스크롤(보기 칸은 RectMask2D 만)
+            var view = Corner(Node(c, "ProfGrid"), 76f, 522f, 644f, 1000f);
+            view.gameObject.AddComponent<RectMask2D>();
+            var hit = view.gameObject.AddComponent<Image>(); hit.color = new Color(1, 1, 1, 0);
+            var content = Node(view, "ProfGridContent");
+            content.anchorMin = new Vector2(0f, 1f); content.anchorMax = new Vector2(1f, 1f); content.pivot = new Vector2(0.5f, 1f);
+            content.sizeDelta = new Vector2(0f, 6 * 112f + 8f); content.anchoredPosition = Vector2.zero;
+            var sr = view.gameObject.AddComponent<ScrollRect>();
+            sr.content = content; sr.viewport = view; sr.horizontal = false; sr.movementType = ScrollRect.MovementType.Clamped;
+            for (int i = 0; i < 30; i++)
+            {
+                float x = 8f + (i % 5) * 112f, y = 4f + (i / 5) * 112f;
+                var cell = Node(content, $"ProfCell{i}");
+                cell.anchorMin = cell.anchorMax = new Vector2(0f, 1f); cell.pivot = new Vector2(0f, 1f);
+                cell.sizeDelta = new Vector2(104f, 104f); cell.anchoredPosition = new Vector2(x, -y);
+                Btn(cell, "Components/rb_slot_common");
+                Img(Inside(Node(cell, $"ProfCell{i}Face"), 52f, 52f, 80f, 80f), "Icons/rb_icon_mode_ghost_96");
+                var tt = Text(Inside(Node(cell, $"ProfCell{i}Text"), 52f, 52f, 96f, 90f), null, "", 26, White, TA.Center, heavy: true);
+                tt.enableWordWrapping = true;
+                tt.fontSizeMin = 16f;
+                Img(Inside(Node(cell, $"ProfCell{i}Check"), 86f, 18f, 30f, 30f), "Icons/rb_icon_sys_check_48");
+                Img(Inside(Node(cell, $"ProfCell{i}Lock"), 20f, 20f, 30f, 30f), "Icons/rb_icon_sys_lock_48");   // 구석 — 칭호 글자를 가리지 않게
+            }
+            var grow = Corner(Node(c, "ProfGrow"), 90f, 1016f, 630f, 1090f);
+            Btn(grow, "Components/rb_btn_primary");
+            Text(Stretch(Node(grow, "ProfGrowText")), "ui.rb.profile.grow", "유령 성장 ›", 42, Ink, TA.Center, heavy: true);
         }
 
         private static void BuildLanguage(RectTransform root)

@@ -9890,3 +9890,15 @@ MonoBehaviour:
     _en: Terms
     _zhHant: "\u689D\u6B3E"
     _zhHans: "\u6761\u6B3E"
+  - _key: ui.rb.profile.grow
+    _ko: "\uC720\uB839 \uC131\uC7A5 \u203A"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u5F37\u5316 \u203A"
+    _en: "Ghost Growth \u203A"
+    _zhHant: "\u5E7D\u9748\u6210\u9577 \u203A"
+    _zhHans: "\u5E7D\u7075\u6210\u957F \u203A"
+  - _key: ui.rb.profile.title
+    _ko: "\uD504\uB85C\uD544"
+    _ja: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB"
+    _en: Profile
+    _zhHant: "\u500B\u4EBA\u6A94\u6848"
+    _zhHans: "\u4E2A\u4EBA\u8D44\u6599"
