@@ -23,5 +23,5 @@ ui.rb.summon.rates_title	확률 보기	確率を見る	Rates	機率一覽	概率
 ui.rb.summon.records_title	뽑기 기록	召喚記録	History	召喚紀錄	召唤记录
 ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会延续。
 ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
-ui.rb.summon.new	새 몸!	新しい体！	New!	新身體！	新身体！
+ui.rb.summon.new	새 몸!	NEW	New!	NEW	NEW
 ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定

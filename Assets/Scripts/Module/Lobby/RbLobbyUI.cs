@@ -46,6 +46,7 @@ namespace Game.Module.Lobby
         private RbGrowthPage _growthPage;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
+        private RbChallengePage _challengePage;
         private string _tab = "Battle";
 
         private int _chapter = 1;
@@ -67,8 +68,8 @@ namespace Game.Module.Lobby
                 string node = r;
                 _ui.OnClick(node, () => Soon("ui.rb.soon"));
             }
-            foreach (var tab in new[] { "Challenge" })
-                _ui.OnClick($"Tab{tab}", () => Soon("ui.rb.soon"));
+            _ui.OnClick("TabChallenge", () => { GameSound.Cue("ui.tap"); SelectTab("Challenge"); });
+            _challengePage = GetComponentInChildren<RbChallengePage>(true);
             _ui.OnClick("TabHost", () => { GameSound.Cue("ui.tap"); SelectTab("Host"); });
             _ui.OnClick("TabBattle", () => { GameSound.Cue("ui.tap"); SelectTab("Battle"); });
             _ui.OnClick("TabSummon", () => { GameSound.Cue("ui.tap"); SelectTab("Summon"); });
@@ -146,6 +147,7 @@ namespace Game.Module.Lobby
         {
             if (_growthPage != null && _growthPage.gameObject.activeSelf) { SelectTab("Host"); return true; }
             if (_summonPage != null && _summonPage.gameObject.activeSelf && _summonPage.Back()) return true;
+            if (_challengePage != null && _challengePage.gameObject.activeSelf && _challengePage.Back()) return true;
             if (_tab != "Battle") { SelectTab("Battle"); return true; }
             return false;
         }
@@ -508,6 +510,11 @@ namespace Game.Module.Lobby
             {
                 if (tab == "Host" && _player != null) _hostPage.Open(_player, _faces);
                 else _hostPage.gameObject.SetActive(false);
+            }
+            if (_challengePage != null)
+            {
+                if (tab == "Challenge") _challengePage.Open(_faces);
+                else _challengePage.gameObject.SetActive(false);
             }
             if (_shopPage != null)
             {

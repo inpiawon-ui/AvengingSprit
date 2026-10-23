@@ -1459,7 +1459,7 @@ ui.rb.summon.rates_title	확률 보기	確率を見る	Rates	機率一覽	概率
 ui.rb.summon.records_title	뽑기 기록	召喚記録	History	召喚紀錄	召唤记录
 ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会延续。
 ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
-ui.rb.summon.new	새 몸!	新しい体！	New!	新身體！	新身体！
+ui.rb.summon.new	새 몸!	NEW	New!	NEW	NEW
 ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定
 ui.rb.shop.tab.best	추천	おすすめ	Featured	推薦	推荐
 ui.rb.shop.tab.today	오늘	本日	Today	今日	今日
@@ -1481,3 +1481,17 @@ ui.rb.shop.r.stamina	행동력	スタミナ	Stamina	體力	体力
 ui.rb.shop.r.passxp	패스 경험치	パス経験値	Pass XP	通行證經驗	通行证经验
 ui.rb.shop.r.shard	조각	かけら	Shards	碎片	碎片
 ui.rb.shop.best	BEST	BEST	BEST	BEST	BEST
+ui.rb.chl.help	탑은 한 주 동안 층을 올라가고, 밤은 요일마다 다른 규칙으로 버텨요.\n입장은 하루 3번 · 젬으로 더 살 수 있어요.	塔は1週間かけて階を登り、夜は曜日ごとに違うルールで耐えます。\n入場は1日3回・ジェムで追加できます。	Climb the Tower floor by floor each week; survive the Night with a new rule each day.\n3 entries a day · buy more with gems.	塔要在一週內逐層攀登，夜晚每天規則不同。\n每日可入場3次 · 可用寶石購買更多。	塔要在一周内逐层攀登，夜晚每天规则不同。\n每日可入场3次 · 可用宝石购买更多。
+ui.rb.chl.entries	남은 입장 <color=#FFFFFF>{0}/{1}</color> · 초기화까지 {2}	残り入場 <color=#FFFFFF>{0}/{1}</color>・リセットまで {2}	Entries <color=#FFFFFF>{0}/{1}</color> · resets in {2}	剩餘入場 <color=#FFFFFF>{0}/{1}</color> · 重置剩 {2}	剩余入场 <color=#FFFFFF>{0}/{1}</color> · 重置剩 {2}
+ui.rb.chl.tower_info	이번 주 <color=#FFFFFF>{0}층</color> · 지난주 최고 <color=#FFFFFF>{1}층</color>	今週 <color=#FFFFFF>{0}階</color>・先週最高 <color=#FFFFFF>{1}階</color>	This week <color=#FFFFFF>{0}F</color> · last week best <color=#FFFFFF>{1}F</color>	本週 <color=#FFFFFF>{0}層</color> · 上週最高 <color=#FFFFFF>{1}層</color>	本周 <color=#FFFFFF>{0}层</color> · 上周最高 <color=#FFFFFF>{1}层</color>
+ui.rb.chl.night_info	{0} 최고 처치 <color=#FFFFFF>{1}</color>	{0} 最高撃破 <color=#FFFFFF>{1}</color>	{0} best kills <color=#FFFFFF>{1}</color>	{0} 最高擊敗 <color=#FFFFFF>{1}</color>	{0} 最高击败 <color=#FFFFFF>{1}</color>
+ui.rb.chl.now	현재 도전	挑戦中	Now	目前挑戰	当前挑战
+ui.rb.chl.cleared	클리어	クリア	Cleared	已通關	已通关
+ui.rb.chl.locked	잠김	ロック	Locked	未解鎖	未解锁
+ui.rb.chl.left	남은 입장 {0}/{1}	残り入場 {0}/{1}	Entries {0}/{1}	剩餘入場 {0}/{1}	剩余入场 {0}/{1}
+ui.rb.chl.enter	입장 ›	入場 ›	Enter ›	進入 ›	进入 ›
+ui.rb.chl.buy	추가 입장 ›	追加入場 ›	Buy Entry ›	追加入場 ›	追加入场 ›
+ui.rb.chl.fit	맞는 호스트 보기	適したホストを見る	Fitting Hosts	適合的宿主	适合的宿主
+ui.rb.chl.host_shards	호스트 조각	ホストのかけら	Host Shards	宿主碎片	宿主碎片
+ui.rb.chl.today_reward	◆ 오늘의 보상	◆ 本日の報酬	◆ Today's Rewards	◆ 今日獎勵	◆ 今日奖励
+ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	その日の体のかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日身體碎片 · 依擊敗數發放	当日身体碎片 · 按击败数发放

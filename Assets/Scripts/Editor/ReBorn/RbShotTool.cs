@@ -22,6 +22,12 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (720, 1280, Language.Korean, "challenge", "challenge_16x9"),
+            (720, 1280, Language.Korean, "challenge:tower", "tower_16x9"),
+            (720, 1280, Language.Korean, "challenge:night", "night_16x9"),
+            (1080, 2400, Language.Korean, "challenge", "challenge_20x9"),
+            (720, 1280, Language.English, "challenge:tower", "tower_en"),
+            (720, 1280, Language.Japanese, "challenge:night", "night_ja"),
             (720, 1280, Language.Korean, "shop:best", "shop_best_16x9"),
             (720, 1280, Language.Korean, "shop:today", "shop_today_16x9"),
             (720, 1280, Language.Korean, "shop:chest", "shop_chest_16x9"),
@@ -220,6 +226,15 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("challenge"))
+            {
+                lobby.SelectTab("Challenge");
+                var chl = Object.FindAnyObjectByType<RbChallengePage>();
+                if (chl == null || state == "challenge") return;
+                const System.Reflection.BindingFlags F3 = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                typeof(RbChallengePage).GetMethod("Show", F3)?.Invoke(chl, new object[] { state.EndsWith("tower") ? "ChlTower" : "ChlNight" });
+                return;
+            }
             if (state.StartsWith("shop:"))
             {
                 lobby.SelectTab("Shop");

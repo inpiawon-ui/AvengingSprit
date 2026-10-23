@@ -55,6 +55,7 @@ namespace Game.Editor.ReBorn
             growth.gameObject.SetActive(false);
             RbSummonBuilder.Build(rt);
             RbShopBuilder.Build(rt);
+            RbChallengeBuilder.Build(rt);
 
             BuildHeader(rt);
             BuildTabBar(rt);

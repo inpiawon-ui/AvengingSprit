@@ -1,0 +1,15 @@
+key	ko	ja	en	zh_hant	zh_hans
+ui.rb.chl.help	탑은 한 주 동안 층을 올라가고, 밤은 요일마다 다른 규칙으로 버텨요.\n입장은 하루 3번 · 젬으로 더 살 수 있어요.	塔は1週間かけて階を登り、夜は曜日ごとに違うルールで耐えます。\n入場は1日3回・ジェムで追加できます。	Climb the Tower floor by floor each week; survive the Night with a new rule each day.\n3 entries a day · buy more with gems.	塔要在一週內逐層攀登，夜晚每天規則不同。\n每日可入場3次 · 可用寶石購買更多。	塔要在一周内逐层攀登，夜晚每天规则不同。\n每日可入场3次 · 可用宝石购买更多。
+ui.rb.chl.entries	남은 입장 <color=#FFFFFF>{0}/{1}</color> · 초기화까지 {2}	残り入場 <color=#FFFFFF>{0}/{1}</color>・リセットまで {2}	Entries <color=#FFFFFF>{0}/{1}</color> · resets in {2}	剩餘入場 <color=#FFFFFF>{0}/{1}</color> · 重置剩 {2}	剩余入场 <color=#FFFFFF>{0}/{1}</color> · 重置剩 {2}
+ui.rb.chl.tower_info	이번 주 <color=#FFFFFF>{0}층</color> · 지난주 최고 <color=#FFFFFF>{1}층</color>	今週 <color=#FFFFFF>{0}階</color>・先週最高 <color=#FFFFFF>{1}階</color>	This week <color=#FFFFFF>{0}F</color> · last week best <color=#FFFFFF>{1}F</color>	本週 <color=#FFFFFF>{0}層</color> · 上週最高 <color=#FFFFFF>{1}層</color>	本周 <color=#FFFFFF>{0}层</color> · 上周最高 <color=#FFFFFF>{1}层</color>
+ui.rb.chl.night_info	{0} 최고 처치 <color=#FFFFFF>{1}</color>	{0} 最高撃破 <color=#FFFFFF>{1}</color>	{0} best kills <color=#FFFFFF>{1}</color>	{0} 最高擊敗 <color=#FFFFFF>{1}</color>	{0} 最高击败 <color=#FFFFFF>{1}</color>
+ui.rb.chl.now	현재 도전	挑戦中	Now	目前挑戰	当前挑战
+ui.rb.chl.cleared	클리어	クリア	Cleared	已通關	已通关
+ui.rb.chl.locked	잠김	ロック	Locked	未解鎖	未解锁
+ui.rb.chl.left	남은 입장 {0}/{1}	残り入場 {0}/{1}	Entries {0}/{1}	剩餘入場 {0}/{1}	剩余入场 {0}/{1}
+ui.rb.chl.enter	입장 ›	入場 ›	Enter ›	進入 ›	进入 ›
+ui.rb.chl.buy	추가 입장 ›	追加入場 ›	Buy Entry ›	追加入場 ›	追加入场 ›
+ui.rb.chl.fit	맞는 호스트 보기	適したホストを見る	Fitting Hosts	適合的宿主	适合的宿主
+ui.rb.chl.host_shards	호스트 조각	ホストのかけら	Host Shards	宿主碎片	宿主碎片
+ui.rb.chl.today_reward	◆ 오늘의 보상	◆ 本日の報酬	◆ Today's Rewards	◆ 今日獎勵	◆ 今日奖励
+ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	その日の体のかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日身體碎片 · 依擊敗數發放	当日身体碎片 · 按击败数发放

@@ -9446,10 +9446,10 @@ MonoBehaviour:
     _zhHans: "10\u8FDE\u53EC\u5524\u4FDD\u8BC11\u4E2ASR \xB7 50\u6B21\u5185\u672A\u51FA\u5927\u5956\n\u7B2C50\u6B21\u5FC5\u5B9A\u5927\u5956"
   - _key: ui.rb.summon.new
     _ko: "\uC0C8 \uBAB8!"
-    _ja: "\u65B0\u3057\u3044\u4F53\uFF01"
+    _ja: NEW
     _en: New!
-    _zhHant: "\u65B0\u8EAB\u9AD4\uFF01"
-    _zhHans: "\u65B0\u8EAB\u4F53\uFF01"
+    _zhHant: NEW
+    _zhHans: NEW
   - _key: ui.rb.summon.jackpot_card
     _ko: "\uB300\uBC15 \uD655\uC815"
     _ja: "\u5927\u5F53\u305F\u308A\u78BA\u5B9A"
@@ -9579,3 +9579,102 @@ MonoBehaviour:
     _en: BEST
     _zhHant: BEST
     _zhHans: BEST
+  - _key: ui.rb.chl.help
+    _ko: "\uD0D1\uC740 \uD55C \uC8FC \uB3D9\uC548 \uCE35\uC744 \uC62C\uB77C\uAC00\uACE0,
+      \uBC24\uC740 \uC694\uC77C\uB9C8\uB2E4 \uB2E4\uB978 \uADDC\uCE59\uC73C\uB85C
+      \uBC84\uD168\uC694.\n\uC785\uC7A5\uC740 \uD558\uB8E8 3\uBC88 \xB7 \uC82C\uC73C\uB85C
+      \uB354 \uC0B4 \uC218 \uC788\uC5B4\uC694."
+    _ja: "\u5854\u306F1\u9031\u9593\u304B\u3051\u3066\u968E\u3092\u767B\u308A\u3001\u591C\u306F\u66DC\u65E5\u3054\u3068\u306B\u9055\u3046\u30EB\u30FC\u30EB\u3067\u8010\u3048\u307E\u3059\u3002\n\u5165\u5834\u306F1\u65E53\u56DE\u30FB\u30B8\u30A7\u30E0\u3067\u8FFD\u52A0\u3067\u304D\u307E\u3059\u3002"
+    _en: "Climb the Tower floor by floor each week; survive the Night with a new
+      rule each day.\n3 entries a day \xB7 buy more with gems."
+    _zhHant: "\u5854\u8981\u5728\u4E00\u9031\u5167\u9010\u5C64\u6500\u767B\uFF0C\u591C\u665A\u6BCF\u5929\u898F\u5247\u4E0D\u540C\u3002\n\u6BCF\u65E5\u53EF\u5165\u58343\u6B21
+      \xB7 \u53EF\u7528\u5BF6\u77F3\u8CFC\u8CB7\u66F4\u591A\u3002"
+    _zhHans: "\u5854\u8981\u5728\u4E00\u5468\u5185\u9010\u5C42\u6500\u767B\uFF0C\u591C\u665A\u6BCF\u5929\u89C4\u5219\u4E0D\u540C\u3002\n\u6BCF\u65E5\u53EF\u5165\u573A3\u6B21
+      \xB7 \u53EF\u7528\u5B9D\u77F3\u8D2D\u4E70\u66F4\u591A\u3002"
+  - _key: ui.rb.chl.entries
+    _ko: "\uB0A8\uC740 \uC785\uC7A5 <color=#FFFFFF>{0}/{1}</color> \xB7 \uCD08\uAE30\uD654\uAE4C\uC9C0
+      {2}"
+    _ja: "\u6B8B\u308A\u5165\u5834 <color=#FFFFFF>{0}/{1}</color>\u30FB\u30EA\u30BB\u30C3\u30C8\u307E\u3067
+      {2}"
+    _en: "Entries <color=#FFFFFF>{0}/{1}</color> \xB7 resets in {2}"
+    _zhHant: "\u5269\u9918\u5165\u5834 <color=#FFFFFF>{0}/{1}</color> \xB7 \u91CD\u7F6E\u5269
+      {2}"
+    _zhHans: "\u5269\u4F59\u5165\u573A <color=#FFFFFF>{0}/{1}</color> \xB7 \u91CD\u7F6E\u5269
+      {2}"
+  - _key: ui.rb.chl.tower_info
+    _ko: "\uC774\uBC88 \uC8FC <color=#FFFFFF>{0}\uCE35</color> \xB7 \uC9C0\uB09C\uC8FC
+      \uCD5C\uACE0 <color=#FFFFFF>{1}\uCE35</color>"
+    _ja: "\u4ECA\u9031 <color=#FFFFFF>{0}\u968E</color>\u30FB\u5148\u9031\u6700\u9AD8
+      <color=#FFFFFF>{1}\u968E</color>"
+    _en: "This week <color=#FFFFFF>{0}F</color> \xB7 last week best <color=#FFFFFF>{1}F</color>"
+    _zhHant: "\u672C\u9031 <color=#FFFFFF>{0}\u5C64</color> \xB7 \u4E0A\u9031\u6700\u9AD8
+      <color=#FFFFFF>{1}\u5C64</color>"
+    _zhHans: "\u672C\u5468 <color=#FFFFFF>{0}\u5C42</color> \xB7 \u4E0A\u5468\u6700\u9AD8
+      <color=#FFFFFF>{1}\u5C42</color>"
+  - _key: ui.rb.chl.night_info
+    _ko: "{0} \uCD5C\uACE0 \uCC98\uCE58 <color=#FFFFFF>{1}</color>"
+    _ja: "{0} \u6700\u9AD8\u6483\u7834 <color=#FFFFFF>{1}</color>"
+    _en: '{0} best kills <color=#FFFFFF>{1}</color>'
+    _zhHant: "{0} \u6700\u9AD8\u64CA\u6557 <color=#FFFFFF>{1}</color>"
+    _zhHans: "{0} \u6700\u9AD8\u51FB\u8D25 <color=#FFFFFF>{1}</color>"
+  - _key: ui.rb.chl.now
+    _ko: "\uD604\uC7AC \uB3C4\uC804"
+    _ja: "\u6311\u6226\u4E2D"
+    _en: Now
+    _zhHant: "\u76EE\u524D\u6311\u6230"
+    _zhHans: "\u5F53\u524D\u6311\u6218"
+  - _key: ui.rb.chl.cleared
+    _ko: "\uD074\uB9AC\uC5B4"
+    _ja: "\u30AF\u30EA\u30A2"
+    _en: Cleared
+    _zhHant: "\u5DF2\u901A\u95DC"
+    _zhHans: "\u5DF2\u901A\u5173"
+  - _key: ui.rb.chl.locked
+    _ko: "\uC7A0\uAE40"
+    _ja: "\u30ED\u30C3\u30AF"
+    _en: Locked
+    _zhHant: "\u672A\u89E3\u9396"
+    _zhHans: "\u672A\u89E3\u9501"
+  - _key: ui.rb.chl.left
+    _ko: "\uB0A8\uC740 \uC785\uC7A5 {0}/{1}"
+    _ja: "\u6B8B\u308A\u5165\u5834 {0}/{1}"
+    _en: Entries {0}/{1}
+    _zhHant: "\u5269\u9918\u5165\u5834 {0}/{1}"
+    _zhHans: "\u5269\u4F59\u5165\u573A {0}/{1}"
+  - _key: ui.rb.chl.enter
+    _ko: "\uC785\uC7A5 \u203A"
+    _ja: "\u5165\u5834 \u203A"
+    _en: "Enter \u203A"
+    _zhHant: "\u9032\u5165 \u203A"
+    _zhHans: "\u8FDB\u5165 \u203A"
+  - _key: ui.rb.chl.buy
+    _ko: "\uCD94\uAC00 \uC785\uC7A5 \u203A"
+    _ja: "\u8FFD\u52A0\u5165\u5834 \u203A"
+    _en: "Buy Entry \u203A"
+    _zhHant: "\u8FFD\u52A0\u5165\u5834 \u203A"
+    _zhHans: "\u8FFD\u52A0\u5165\u573A \u203A"
+  - _key: ui.rb.chl.fit
+    _ko: "\uB9DE\uB294 \uD638\uC2A4\uD2B8 \uBCF4\uAE30"
+    _ja: "\u9069\u3057\u305F\u30DB\u30B9\u30C8\u3092\u898B\u308B"
+    _en: Fitting Hosts
+    _zhHant: "\u9069\u5408\u7684\u5BBF\u4E3B"
+    _zhHans: "\u9002\u5408\u7684\u5BBF\u4E3B"
+  - _key: ui.rb.chl.host_shards
+    _ko: "\uD638\uC2A4\uD2B8 \uC870\uAC01"
+    _ja: "\u30DB\u30B9\u30C8\u306E\u304B\u3051\u3089"
+    _en: Host Shards
+    _zhHant: "\u5BBF\u4E3B\u788E\u7247"
+    _zhHans: "\u5BBF\u4E3B\u788E\u7247"
+  - _key: ui.rb.chl.today_reward
+    _ko: "\u25C6 \uC624\uB298\uC758 \uBCF4\uC0C1"
+    _ja: "\u25C6 \u672C\u65E5\u306E\u5831\u916C"
+    _en: "\u25C6 Today's Rewards"
+    _zhHant: "\u25C6 \u4ECA\u65E5\u734E\u52F5"
+    _zhHans: "\u25C6 \u4ECA\u65E5\u5956\u52B1"
+  - _key: ui.rb.chl.night_shards
+    _ko: "\uADF8\uB0A0 \uBAB8\uC758 \uC870\uAC01 \xB7 \uD310\uC774 \uB05D\uB098\uBA74
+      \uCC98\uCE58 \uC218\uB9CC\uD07C"
+    _ja: "\u305D\u306E\u65E5\u306E\u4F53\u306E\u304B\u3051\u3089\u30FB\u7D42\u4E86\u6642\u306B\u6483\u7834\u6570\u306B\u5FDC\u3058\u3066"
+    _en: "Shards of the day's hosts \xB7 based on kills"
+    _zhHant: "\u7576\u65E5\u8EAB\u9AD4\u788E\u7247 \xB7 \u4F9D\u64CA\u6557\u6578\u767C\u653E"
+    _zhHans: "\u5F53\u65E5\u8EAB\u4F53\u788E\u7247 \xB7 \u6309\u51FB\u8D25\u6570\u53D1\u653E"
