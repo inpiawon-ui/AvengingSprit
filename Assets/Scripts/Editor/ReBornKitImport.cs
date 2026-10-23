@@ -21,30 +21,61 @@ namespace Game.Editor
         private const string Kit = "Assets/BaseResource/ReBornKit";
         private const string AtlasDir = "Assets/BundleResource/Atlas";
 
-        // 하위 폴더 → 아틀라스 이름
-        private static readonly Dictionary<string, string> Atlases = new()
+        // 하위 폴더 → (아틀라스 이름, 필터). 판 · 버튼 · HUD 는 매끈한 그라데이션이라 Bilinear(도트 아님 — 묶음 지시 pixel:false)
+        private static readonly Dictionary<string, (string atlas, FilterMode filter)> Atlases = new()
         {
-            { "Icons", "ReBornIcons" },
-            { "WordArt", "ReBornWordArt" },
+            { "Icons", ("ReBornIcons", FilterMode.Point) },
+            { "WordArt", ("ReBornWordArt", FilterMode.Point) },
+            { "Components", ("ReBornComponents", FilterMode.Bilinear) },
+            { "Hud", ("ReBornHud", FilterMode.Bilinear) },
         };
 
         [MenuItem("Tools/Game/RE:BORN 키트/임포트 설정")]
         public static void Apply()
         {
             int done = 0;
-            foreach (var kv in Atlases) done += SetFolder($"{Kit}/{kv.Key}", FilterMode.Point, false);
-            done += SetFolder($"{Kit}/Numbers", FilterMode.Point, true);
-            done += SetFolder($"{Kit}/Art", FilterMode.Bilinear, true);
-            foreach (var kv in Atlases) EnsureAtlas($"{Kit}/{kv.Key}", kv.Value);
+            var borders = LoadBorders();
+            foreach (var kv in Atlases) done += SetFolder($"{Kit}/{kv.Key}", kv.Value.filter, false, borders);
+            done += SetFolder($"{Kit}/Numbers", FilterMode.Point, true, borders);
+            done += SetFolder($"{Kit}/Art", FilterMode.Bilinear, true, borders);
+            foreach (var kv in Atlases) EnsureAtlas($"{Kit}/{kv.Key}", kv.Value.atlas, kv.Value.filter);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[RE:BORN 키트] 임포트 설정 {done}장 · 아틀라스 {Atlases.Count}개");
+            Debug.Log($"[RE:BORN 키트] 임포트 설정 {done}장 · 아틀라스 {Atlases.Count}개 · 9-slice {borders.Count}개");
+        }
+
+        /// <summary>
+        /// 9-slice 테두리(L · B · R · T) — 자르기 도구(cut_ui_reborn.py)가 그림에서 잰 값. 키는 `폴더/파일이름`.
+        /// JsonUtility 는 사전을 못 읽어 줄 단위로 읽는다(도구가 한 값씩 줄을 바꿔 쓴다).
+        /// </summary>
+        private static Dictionary<string, Vector4> LoadBorders()
+        {
+            var map = new Dictionary<string, Vector4>();
+            string path = $"{Kit}/borders.json";
+            if (!System.IO.File.Exists(path)) return map;
+            string key = null;
+            var nums = new List<float>(4);
+            foreach (var raw in System.IO.File.ReadAllLines(path))
+            {
+                string line = raw.Trim().TrimEnd(',');
+                if (line.StartsWith("\"") && line.Contains(":"))
+                {
+                    key = line.Substring(1, line.IndexOf('"', 1) - 1);
+                    nums.Clear();
+                }
+                else if (key != null && float.TryParse(line, out float v))
+                {
+                    nums.Add(v);
+                    if (nums.Count == 4) { map[key] = new Vector4(nums[0], nums[1], nums[2], nums[3]); key = null; }
+                }
+            }
+            return map;
         }
 
         /// <summary>
         /// 폴더 안 PNG 전부. standalone 이면 그림 자체에 안드로이드 ASTC 4x4(아틀라스 밖),
         /// 아니면 압축 없이 두고 아틀라스에서 압축한다(두 번 깎이지 않게).
         /// </summary>
-        private static int SetFolder(string folder, FilterMode filter, bool standalone)
+        private static int SetFolder(string folder, FilterMode filter, bool standalone, Dictionary<string, Vector4> borders)
         {
             if (!AssetDatabase.IsValidFolder(folder)) return 0;
             int n = 0;
@@ -59,6 +90,10 @@ namespace Game.Editor
                 ti.isReadable = false;
                 ti.alphaIsTransparency = true;
                 ti.npotScale = TextureImporterNPOTScale.None;
+                // 키 = `폴더/파일이름`(키트 기준) — 표에 없으면 9-slice 없음
+                string key = path.Substring(Kit.Length + 1);
+                key = key.Substring(0, key.Length - System.IO.Path.GetExtension(key).Length);
+                ti.spriteBorder = borders.TryGetValue(key, out var b) ? b : Vector4.zero;
                 if (standalone)
                 {
                     ti.GetSourceTextureWidthAndHeight(out int w, out int h);
@@ -86,7 +121,7 @@ namespace Game.Editor
             return size;
         }
 
-        private static void EnsureAtlas(string folder, string name)
+        private static void EnsureAtlas(string folder, string name, FilterMode filter)
         {
             string atlasPath = $"{AtlasDir}/{name}.spriteatlasv2";
             if (!AssetDatabase.IsValidFolder(folder)) return;
@@ -99,7 +134,7 @@ namespace Game.Editor
             }
             if (AssetImporter.GetAtPath(atlasPath) is not SpriteAtlasImporter imp) return;
             imp.packingSettings = new SpriteAtlasPackingSettings { enableRotation = false, enableTightPacking = false, padding = 4 };
-            imp.textureSettings = new SpriteAtlasTextureSettings { filterMode = FilterMode.Point, generateMipMaps = false, sRGB = true, readable = false };
+            imp.textureSettings = new SpriteAtlasTextureSettings { filterMode = filter, generateMipMaps = false, sRGB = true, readable = false };
             imp.SetPlatformSettings(new TextureImporterPlatformSettings
             {
                 name = "Android", overridden = true, maxTextureSize = 2048, format = TextureImporterFormat.ASTC_4x4,

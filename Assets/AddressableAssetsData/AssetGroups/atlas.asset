@@ -189,6 +189,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4476a842aab7e7d41a5197660aa3b3ea
+    m_Address: atlas/rebornhud
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4865145c909e3544da6c952c5d2c48be
     m_Address: atlas/unit_robot_snakes
     m_ReadOnly: 0
@@ -299,6 +305,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7c4b682e1463f6b4b84ae97ab47ea97e
     m_Address: atlas/unit_roadwarden_fire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - label_atlas
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8016811d40b6a6c4093f6c611d14554f
+    m_Address: atlas/reborncomponents
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
