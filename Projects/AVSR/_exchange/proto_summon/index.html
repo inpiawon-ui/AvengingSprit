@@ -221,10 +221,11 @@ function drawOne(s, t, dt) {
   const geo = s.geo, revealed = t >= s.reveal;
   g.drawImage(IMG.stage, 0, 0, W, H);
   g.fillStyle = `rgba(0,0,0,${0.32 * (1 - seg(t, s.reveal, s.reveal + 0.6))})`; g.fillRect(0, 0, W, H);
-  if (revealed) revealLight(geo.cx, geo.feetY, 760 * (0.85 + 0.15 * seg(t, s.reveal, s.reveal + 0.5)), t - s.reveal, seg(t, s.reveal, s.reveal + 0.5) * (s.good ? 1 : 0.6));
   drawGhost(s, t, true);   // 배양조 뒤로 도는 구간
   const inU = outCubic(seg(t, 0, 0.45));
   drawTank(geo, revealed ? 'tankBroken' : 'tank', revealed ? 1 : inU);
+  // 공개 빛 — 깨진 시험관 앞 · 캐릭터 바로 뒤
+  if (revealed) revealLight(geo.cx, geo.feetY, 760 * (0.85 + 0.15 * seg(t, s.reveal, s.reveal + 0.5)), t - s.reveal, seg(t, s.reveal, s.reveal + 0.5) * (s.good ? 1 : 0.6));
   if (!revealed) {
     const inside = t >= s.fly1;
     const key = reelKey(s.reel, s.key, s.seed, t - s.roul);
@@ -271,6 +272,8 @@ function makeTen(goodN) {
 function drawTen(s, t, dt) {
   g.drawImage(IMG.stage, 0, 0, W, H);
   g.fillStyle = 'rgba(0,0,0,0.38)'; g.fillRect(0, 0, W, H);
+  // 1) 시험관 전부 → 2) 공개 빛(깨진 시험관 앞 · 캐릭터 뒤) → 3) 캐릭터 · 칸 밑 UI
+  for (const sl of s.slots) { const broke = t >= sl.stop; drawTank(sl.geo, broke ? 'tankBroken' : 'tank', broke ? 1 : outCubic(seg(t, 0.05, 0.4))); }
   for (const sl of s.slots) {
     const geo = sl.geo, broke = t >= sl.stop;
     if (broke && sl.good) revealLight(geo.cx, geo.feetY, 300, t - sl.stop, seg(t, sl.stop, sl.stop + 0.4));
@@ -278,7 +281,6 @@ function drawTen(s, t, dt) {
   for (const sl of s.slots) {
     const geo = sl.geo, broke = t >= sl.stop, inU = outCubic(seg(t, 0.05, 0.4));
     if (broke && !sl.burst) { sl.burst = true; burst(geo, sl.good ? 0.5 : 0.12); }
-    drawTank(geo, broke ? 'tankBroken' : 'tank', broke ? 1 : inU);
     if (!broke) {
       const reaching = sl.reach !== undefined && t >= sl.reach;
       const iv = reaching ? 0.06 + 0.3 * seg(t, sl.reach, sl.stop) : 0.07;   // 리치 때 릴이 점점 느려진다
