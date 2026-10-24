@@ -388,6 +388,27 @@ namespace Game.Module.Lobby
             _modals.SetText("GrwSkillInfoKind", kind);
             _modals.SetText("GrwSkillInfoName", name);
             _modals.SetText("GrwSkillInfoDesc", desc);
+            // 각성 옵션 — 액티브에만 있다(6성에 열리고 10성에 2배, 옛 성장 화면과 같은 말). 없으면 창을 줄인다
+            string opt = slot == 1 ? Localize.Get($"askill.{e.HostKey}.opt") : null;
+            bool hasOpt = !string.IsNullOrEmpty(opt) && opt != $"askill.{e.HostKey}.opt";
+            _modals.SetActive("GrwSkillInfoAwakenTitle", hasOpt);
+            _modals.SetActive("GrwSkillInfoAwaken", hasOpt);
+            if (hasOpt)
+            {
+                int m = _player.GetMastery(e.HostKey);
+                bool open = m >= SkillScaling.SpecLevel;
+                _modals.SetText("GrwSkillInfoAwakenTitle", m >= _player.MasteryMax ? Localize.Get("ui.growth6.opt_max")
+                    : open ? string.Format(Localize.FromTable("ui.rb.growth.opt_open", "{0}성 각성 옵션 열림"), SkillScaling.SpecLevel)
+                    : Localize.Format("ui.growth6.opt_locked", SkillScaling.SpecLevel));
+                _modals.SetText("GrwSkillInfoAwaken", opt);
+                if (_modals.Get<TextMeshProUGUI>("GrwSkillInfoAwaken") is TextMeshProUGUI ot) ot.color = open ? new Color(0.29f, 0.88f, 0.54f) : new Color(0.70f, 0.74f, 0.84f);
+            }
+            if (_modals.Find("GrwSkillInfoBox") is RectTransform box)
+            {
+                float h = hasOpt ? 410f : 310f;   // 판 안 위 430 부터
+                box.sizeDelta = new Vector2(box.sizeDelta.x, h);
+                box.anchoredPosition = new Vector2(box.anchoredPosition.x, -(430f + h * 0.5f));
+            }
             _modals.SetActive("GrwSkillInfo", true);
         }
 

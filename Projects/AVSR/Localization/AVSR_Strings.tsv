@@ -1638,3 +1638,4 @@ store.pass_premium.name	프리미엄 패스	プレミアムパス	Premium Pass	�
 store.pass_premium.desc	프리미엄 보상 줄이 열려요	プレミアム報酬が開きます	Unlocks the premium reward track	開啟高級獎勵	开启高级奖励
 store.pass_bundle.name	프리미엄 + 15단계	プレミアム＋15段階	Premium + 15 Tiers	高級 + 15 階	高级 + 15 阶
 store.pass_bundle.desc	프리미엄 + 패스 경험치 1,500	プレミアム＋パス経験値1,500	Premium + 1,500 pass XP	高級 + 通行證經驗 1,500	高级 + 通行证经验 1,500
+ui.rb.growth.opt_open	{0}성 각성 옵션 열림	{0}星 覚醒オプション解放	{0}★ Awakening option unlocked	{0}星 覺醒選項開啟	{0}星 觉醒选项开启

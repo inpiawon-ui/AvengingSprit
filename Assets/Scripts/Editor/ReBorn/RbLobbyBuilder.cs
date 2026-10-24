@@ -227,8 +227,11 @@ namespace Game.Editor.ReBorn
             Img(badge, "Components/rb_badge_today");
             Text(Stretch(Node(badge, "CardBadgeText")), null, "오늘", 34, Ink, TA.Center, heavy: true);
             Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
-            // 일본어 몸 이름(「コマンドー（ミサイル）」)이 칸보다 길어 옆 카드 이름과 겹쳤다(하네스 C5) — 하한을 더 낮춘다
-            Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 40, 1572, 227, 1618), null, "? 랜덤", 36, White, TA.Center, heavy: true).fontSizeMin = 13f;
+            // 일본어 몸 이름(「コマンドー（ミサイル）」)이 칸보다 길어 옆 카드 이름과 겹쳤다(하네스 C5).
+            // 시안 규칙 「글자 32 미만 0」(PD 2026-10-24 「시안을 따라줘」) — 하한은 그대로 두고 긴 이름은 두 줄로 접는다
+            var cardName = Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 40, 1560, 227, 1622), null, "? 랜덤", 36, White, TA.Center, heavy: true);
+            cardName.enableWordWrapping = true;
+            cardName.lineSpacing = -28f;
             Img(Local(Node(card, "CardPriceIcon"), cx0, cy0, cx1, cy1, 60, 1628, 104, 1668), "Icons/rb_icon_currency_gold_48");
             Text(Local(Node(card, "CardPrice"), cx0, cy0, cx1, cy1, 40, 1622, 227, 1674), null, "무료", 40, Green, TA.Center, heavy: true);
 

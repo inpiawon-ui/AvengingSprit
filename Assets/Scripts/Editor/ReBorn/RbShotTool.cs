@@ -22,6 +22,8 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (720, 1280, Language.Japanese, "battle", "lobby_ja"),
+            (720, 1280, Language.English, "battle", "lobby_en"),
             (720, 1280, Language.Korean, "rail:Ghost", "ghost_16x9"),
             (1080, 2400, Language.Korean, "rail:Ghost", "ghost_20x9"),
             (720, 1280, Language.Korean, "rail:Missions", "missions_16x9"),
@@ -166,7 +168,9 @@ namespace Game.Editor.ReBorn
             {
                 var all = SessionState.GetInt(Key + ".set", 0) == 1 ? InGameShots : Shots;
                 string only = SessionState.GetString(Key + ".only", string.Empty);
-                return string.IsNullOrEmpty(only) ? all : System.Array.FindAll(all, s => s.name.StartsWith(only));
+                if (string.IsNullOrEmpty(only)) return all;
+                var heads = only.Split(',');   // 쉼표로 여러 앞머리
+                return System.Array.FindAll(all, s => System.Array.Exists(heads, h => s.name.StartsWith(h.Trim())));
             }
         }
 

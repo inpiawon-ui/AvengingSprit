@@ -400,6 +400,7 @@ namespace Game.Module.Lobby
                 _ui.SetActive($"BonusChip{i}", on);
                 if (on) _ui.SetText($"BonusChip{i}Text", chips[i]);
             }
+            LayoutBonusChips(chips.Length);
             _ui.SetText("BonusNote", note);
 
             int perRun = CoreModule.TryGet<IStaminaService>(out var st) ? st.PerRun : 5;
@@ -456,6 +457,36 @@ namespace Game.Module.Lobby
             Put(gIcon, x, gIcon.rect.width); x += gIcon.rect.width + 4;
             Put(gText.rectTransform, x, gw);
         }
+
+        /// <summary>
+        /// 보너스 칩을 글자 폭만큼 늘려 가운데에 나란히 — 칩 폭이 고정이라 영어 「Hidden may appear」 가 옆 칩과 겹쳤다(10-24 캡처).
+        /// 다 합쳐 화면 폭을 넘으면 같은 비율로 줄이고 글자는 자동 축소에 맡긴다.
+        /// </summary>
+        private void LayoutBonusChips(int count)
+        {
+            const float Pad = 14f, ChipGap = 10f, MaxTotal = 680f;
+            float total = 0f;
+            for (int i = 0; i < count; i++)
+            {
+                var t = _ui.Get<TextMeshProUGUI>($"BonusChip{i}Text");
+                if (t != null) t.fontSize = t.fontSizeMax;   // 자동 축소가 이미 줄인 크기로 재면 칩이 좁게 나온다
+                _chipWidths[i] = t != null ? t.GetPreferredValues(t.text, 9999f, 0f).x + Pad * 2f : 120f;
+                total += _chipWidths[i];
+            }
+            total += ChipGap * Mathf.Max(0, count - 1);
+            float scale = total > MaxTotal ? MaxTotal / total : 1f;
+            float x = -total * scale * 0.5f;
+            for (int i = 0; i < count; i++)
+            {
+                if (_ui.Find($"BonusChip{i}") is not RectTransform r) continue;
+                float w = _chipWidths[i] * scale;
+                r.sizeDelta = new Vector2(w, r.sizeDelta.y);
+                r.anchoredPosition = new Vector2(x + w * 0.5f, r.anchoredPosition.y);
+                x += w + ChipGap * scale;
+            }
+        }
+
+        private readonly float[] _chipWidths = new float[3];
 
         private static void Put(RectTransform r, float left, float width)
         {

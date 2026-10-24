@@ -81,3 +81,4 @@ ui.rb.reveal.new	새 몸!	新しい体！	New Host!	新宿主！	新宿主！
 ui.rb.reveal.awaken_title	각성	覚醒	Awaken	覺醒	觉醒
 ui.rb.reveal.awaken	{0}성 각성	{0}星 覚醒	{0}★ Awakened	{0}星 覺醒	{0}星 觉醒
 ui.rb.reveal.awaken_full	{0}성 각성 완성	{0}星 覚醒完了	{0}★ Fully Awakened	{0}星 覺醒完成	{0}星 觉醒完成
+ui.rb.growth.opt_open	{0}성 각성 옵션 열림	{0}星 覚醒オプション解放	{0}★ Awakening option unlocked	{0}星 覺醒選項開啟	{0}星 觉醒选项开启

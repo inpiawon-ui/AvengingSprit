@@ -13,7 +13,7 @@ namespace Game.Module.Lobby
     /// <summary>
     /// RE:BORN 새 몸 · 각성 보여주기 — 시안 Screens/host-new · awaken-6 · awaken-10.png.
     /// 머리글 색이 종류를 말한다(새 몸 · 6성 각성 = 시안색, 10성 = 금색). 확인 · 뒤로 → 그 몸의 성장 화면.
-    /// 시안의 각성 옵션 문구(「표식 붙은 적이 받는 피해 +15%」)는 게임에 각성 옵션 자료가 없어 성급 효과 줄로 대신한다.
+    /// 각성 줄은 그 몸 액티브의 각성 옵션(askill.{몸}.opt) — 6성에 열리고 10성에 효과 2배(SkillScaling.SpecLevel).
     /// </summary>
     public sealed class RbRevealPage : MonoBehaviour
     {
@@ -47,8 +47,8 @@ namespace Game.Module.Lobby
             bool fresh = rank < AwakenStart;
             _ui.SetText("RvlTitle", fresh ? Localize.FromTable("ui.rb.reveal.new", "새 몸!") : Localize.FromTable("ui.rb.reveal.awaken_title", "각성"));
             string head = fresh ? Localize.FromTable("ui.rb.reveal.new", "새 몸!")
-                        : rank >= AwakenFull ? string.Format(Localize.FromTable("ui.rb.reveal.awaken_full", "{0}성 각성 완성"), rank)
-                        : string.Format(Localize.FromTable("ui.rb.reveal.awaken", "{0}성 각성"), rank);
+                        : rank >= AwakenFull ? Localize.Get("ui.growth6.opt_max")   // 「10성 각성 강화 · 효과 2배」(옛 성장 화면과 같은 말)
+                        : string.Format(Localize.FromTable("ui.rb.growth.opt_open", "{0}성 각성 옵션 열림"), rank);
             _ui.SetText("RvlHead", head);
             if (_ui.Get<TextMeshProUGUI>("RvlHead") is TextMeshProUGUI h) h.color = rank >= AwakenFull ? Gold : Teal;
             _ui.SetText("RvlName", e.DisplayName);
@@ -56,7 +56,10 @@ namespace Game.Module.Lobby
             _ui.SetActive("RvlStars", !fresh);
             if (fresh) _ui.SetText("RvlChipText", TagLine(e));
             else RbHostPage.Stars(_ui.Find("RvlStars"), "RvlStar", rank, _starOn, _starOff, _starAwaken);
-            _ui.SetText("RvlDesc", fresh ? Localize.Get($"host.{hostKey}.desc") : Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
+            // 각성 — 그 몸 액티브의 각성 옵션(askill.{몸}.opt, 6성에 열리고 10성에 2배)
+            string opt = Localize.Get($"askill.{hostKey}.opt");
+            if (opt == $"askill.{hostKey}.opt") opt = Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%");
+            _ui.SetText("RvlDesc", fresh ? Localize.Get($"host.{hostKey}.desc") : opt);
             if (_ui.Get<Image>("RvlArt") is Image art)
             {
                 if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();

@@ -132,16 +132,19 @@ namespace Game.Editor.ReBorn
             Text(Stretch(Node(ok, "GrwStarDoneOkText")), "ui.common.ok", "확인", 64, Ink, TA.Center, heavy: true);
         }
 
-        /// <summary>스킬 정보 — 아이콘 · 종류 표 · 이름 / 설명. 시안의 「각성 옵션 열림」 줄은 게임에 각성 옵션 자료가 없어 뺐다.</summary>
+        /// <summary>스킬 정보 — 아이콘 · 종류 표 · 이름 / 설명 / 각성 옵션(액티브만, 시안 skill.png).</summary>
         private static void BuildSkill(RectTransform root)
         {
-            Modal(root, "GrwSkillInfo", "ui.rb.growth.skill_title", "스킬 정보", 48f, 430f, 672f, 740f, out var c);
+            Modal(root, "GrwSkillInfo", "ui.rb.growth.skill_title", "스킬 정보", 48f, 430f, 672f, 840f, out var c);
             Img(Corner(Node(c, "GrwSkillInfoIcon"), 76f, 484f, 182f, 590f), "Icons/rb_icon_skill_base_96");
             Text(Corner(Node(c, "GrwSkillInfoKind"), 205f, 496f, 640f, 530f), null, "필살기", 38, Yellow, TA.Left, heavy: true);
             Text(Corner(Node(c, "GrwSkillInfoName"), 205f, 536f, 640f, 586f), null, "청부 처형", 58, White, TA.Left, heavy: true);
             var desc = Text(Corner(Node(c, "GrwSkillInfoDesc"), 76f, 612f, 644f, 716f), null,
                             "가장 체력이 높은 적(보스 포함)을 1.5초 조준한 뒤 초대형 한 발. 보스는 최대 체력의 % 피해.", 42, White, TA.TopLeft, heavy: true);
             desc.enableWordWrapping = true;   // 설명은 두세 줄
+            // 각성 옵션(액티브만 — 6성에 열리고 10성에 2배, askill.{몸}.opt) · 없으면 창을 줄인다(RbGrowthPage.ShowSkill)
+            Text(Corner(Node(c, "GrwSkillInfoAwakenTitle"), 76f, 726f, 644f, 760f), null, "각성 옵션 열림", 44, White, TA.Left, heavy: true);
+            Text(Corner(Node(c, "GrwSkillInfoAwaken"), 76f, 764f, 644f, 800f), null, "표식 붙은 적이 받는 피해 +15%", 44, Green, TA.Left, heavy: true);
         }
     }
 }
