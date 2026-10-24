@@ -135,6 +135,47 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "chest:gold:open", "extra_chest_open_20x9"),
             (768, 1024, Language.Korean, "chest:silver", "extra_chest_closed_4x3"),
             (720, 1280, Language.English, "chest:gold:open", "extra_chest_open_en"),
+            // 아웃게임 연출(2026-10-24) — 「@초」 뒤에 찍는다(움직임을 장면별로 → GIF). 같은 연출은 장마다 다시 튼다
+            (720, 1280, Language.Korean, "fx:newbody@0.12", "fx_newbody_1"),
+            (720, 1280, Language.Korean, "fx:newbody@0.35", "fx_newbody_2"),
+            (720, 1280, Language.Korean, "fx:newbody@0.7", "fx_newbody_3"),
+            (720, 1280, Language.Korean, "fx:newbody@2", "fx_newbody_4"),
+            (720, 1280, Language.Korean, "fx:awaken6@0.12", "fx_awaken6_1"),
+            (720, 1280, Language.Korean, "fx:awaken6@0.35", "fx_awaken6_2"),
+            (720, 1280, Language.Korean, "fx:awaken6@0.7", "fx_awaken6_3"),
+            (720, 1280, Language.Korean, "fx:awaken6@2", "fx_awaken6_4"),
+            (720, 1280, Language.Korean, "fx:awaken10@0.12", "fx_awaken10_1"),
+            (720, 1280, Language.Korean, "fx:awaken10@0.35", "fx_awaken10_2"),
+            (720, 1280, Language.Korean, "fx:awaken10@0.7", "fx_awaken10_3"),
+            (720, 1280, Language.Korean, "fx:awaken10@2", "fx_awaken10_4"),
+            (720, 1280, Language.Korean, "fx:star@0.08", "fx_star_1"),
+            (720, 1280, Language.Korean, "fx:star@0.2", "fx_star_2"),
+            (720, 1280, Language.Korean, "fx:star@0.5", "fx_star_3"),
+            (720, 1280, Language.Korean, "fx:upgrade@0.06", "fx_upgrade_1"),
+            (720, 1280, Language.Korean, "fx:upgrade@0.15", "fx_upgrade_2"),
+            (720, 1280, Language.Korean, "fx:upgrade@0.4", "fx_upgrade_3"),
+            (720, 1280, Language.Korean, "fx:shine@0.2", "fx_shine_1"),
+            (720, 1280, Language.Korean, "fx:shine@0.3", "fx_shine_2"),
+            (720, 1280, Language.Korean, "fx:shine@0.4", "fx_shine_3"),
+            (720, 1280, Language.Korean, "fx:chest_silver@0.4", "fx_chestsilver_0"),
+            (720, 1280, Language.Korean, "fx:chest_silver:open@0.32", "fx_chestsilver_1"),
+            (720, 1280, Language.Korean, "fx:chest_silver:open@0.5", "fx_chestsilver_2"),
+            (720, 1280, Language.Korean, "fx:chest_gold@0.4", "fx_chestgold_0"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@0.32", "fx_chestgold_1"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@0.5", "fx_chestgold_2"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@0.75", "fx_chestgold_3"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@1.0", "fx_chestgold_4"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@1.5", "fx_chestgold_5"),
+            (720, 1280, Language.Korean, "fx:chest_gold:open@1.8", "fx_chestgold_6"),
+            (720, 1280, Language.Korean, "fx:chest_platinum@0.4", "fx_chestplatinum_0"),
+            (720, 1280, Language.Korean, "fx:chest_platinum:open@0.32", "fx_chestplatinum_1"),
+            (720, 1280, Language.Korean, "fx:chest_platinum:open@0.5", "fx_chestplatinum_2"),
+            (720, 1280, Language.Korean, "fx:chest_platinum:open@0.85", "fx_chestplatinum_3"),
+            (720, 1280, Language.Korean, "fx:reward@0.1", "fx_reward_1"),
+            (720, 1280, Language.Korean, "fx:reward@0.3", "fx_reward_2"),
+            (720, 1280, Language.Korean, "fx:reward@0.75", "fx_reward_3"),
+            (720, 1280, Language.Korean, "fx:reward@1.0", "fx_reward_4"),
+            (720, 1280, Language.Korean, "fx:reward@1.6", "fx_reward_5"),
         };
 
         /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
@@ -204,6 +245,7 @@ namespace Game.Editor.ReBorn
         private static int _wait;
         private static int _loadingSeen;
         private static int _prepared = -1;
+        private static float _shotAt;
         private static bool _sortie;
 
         static RbShotTool() { EditorApplication.update += Tick; }
@@ -342,8 +384,17 @@ namespace Game.Editor.ReBorn
                 if (ingame) ShowInGame(battleUi, s.state);
                 else Show(lobby, player, s.state);
                 _wait = s.state.StartsWith("ingame:") ? 300 : 90;   // 창 여는 연출이 끝날 때까지
+                // 「@초」 — 연출을 튼 뒤 그 시각에 찍는다(프레임 수가 아니라 실제 시간)
+                int at = s.state.IndexOf('@');
+                if (at > 0 && float.TryParse(s.state.Substring(at + 1), System.Globalization.NumberStyles.Float,
+                                             System.Globalization.CultureInfo.InvariantCulture, out float sec))
+                {
+                    _wait = 0;
+                    _shotAt = Time.realtimeSinceStartup + sec;
+                }
                 return;
             }
+            if (Time.realtimeSinceStartup < _shotAt) return;
             if (ingame && battleUi != null)
             {
                 // 그리기 순서 기록 — 창보다 HUD 가 위에 그려진 적이 있다(제단 16:9)
@@ -419,8 +470,9 @@ namespace Game.Editor.ReBorn
         {
             LowMode(state.EndsWith("low"));
             foreach (var t in lobby.GetComponentsInChildren<Transform>(true))
-                if (t.name is "RbGuide" or "RbChestOpen") t.gameObject.SetActive(false);
+                if (t.name is "RbGuide" or "RbChestOpen" or "PageReveal" or "GrwStarDone" or "RbNotReward") t.gameObject.SetActive(false);
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("fx:")) { ShowFx(lobby, player, state.Substring(3, state.IndexOf('@') - 3)); return; }
             if (state.StartsWith("guide"))
             {
                 // 로비 첫 안내(출전 · 성장 · 소환) — guide:2 는 「다음」 한 번
@@ -576,6 +628,68 @@ namespace Game.Editor.ReBorn
             if (state.Contains("skill")) typeof(RbGrowthPage).GetMethod("ShowSkill", Private)?.Invoke(growthPage, new object[] { 0 });
             if (state.Contains("sources")) typeof(RbGrowthPage).GetMethod("ShowSources", Private)?.Invoke(growthPage, null);
             if (state.Contains("essence")) typeof(RbGrowthPage).GetMethod("ShowEssence", Private)?.Invoke(growthPage, null);
+        }
+
+        /// <summary>아웃게임 연출을 처음부터 다시 튼다 — 값은 저장하지 않는다(강화 · 상자는 연출만 부른다).</summary>
+        private static void ShowFx(RbLobbyUI lobby, IPlayerDataService player, string what)
+        {
+            var fx = lobby.Fx;
+            if (fx == null) return;
+            string key = null;
+            foreach (var e in player.PlayableHosts)
+                if (e != null && !e.IsGhost && player.IsHostOwned(e) && !PlayerDataService.IsHiddenHost(e.HostKey)) { key = e.HostKey; break; }
+            const System.Reflection.BindingFlags Private = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            switch (what)
+            {
+                case "newbody": lobby.SelectTab("Host"); lobby.ShowReveal(key, 0); break;
+                case "awaken6": lobby.SelectTab("Host"); lobby.ShowReveal(key, 6); break;
+                case "awaken10": lobby.SelectTab("Host"); lobby.ShowReveal(key, 10); break;
+                case "star":
+                {
+                    lobby.SelectTab("Host");
+                    lobby.OpenGrowth(key);
+                    var page = Object.FindAnyObjectByType<RbGrowthPage>();
+                    typeof(RbGrowthPage).GetMethod("ShowStarDone", Private)?.Invoke(page, null);
+                    break;
+                }
+                case "upgrade":
+                {
+                    lobby.SelectTab("Host");
+                    lobby.OpenGrowth(key);
+                    if (GameObject.Find("GrwStat0") is GameObject tile)
+                        fx.UpgradeTick((RectTransform)tile.transform, tile.transform.Find("GrwStatValue") as RectTransform
+                                       ?? FindChild(tile.transform, "GrwStatValue"));
+                    break;
+                }
+                case "shine":
+                    lobby.SelectTab("Battle");
+                    if (GameObject.Find("SortieButton") is GameObject b) { fx.Stop((RectTransform)b.transform); fx.ButtonShine((RectTransform)b.transform); }
+                    break;
+                case "reward":
+                    lobby.SelectTab("Battle");
+                    lobby.Notice.ShowReward(new System.Collections.Generic.List<(string, string, int)> { ("gold", null, 432), ("shard", null, 3), ("passxp", null, 30) });
+                    break;
+                default:
+                    if (what.StartsWith("chest_"))
+                    {
+                        // chest_gold · chest_gold:open — 상자 열기 쪽을 직접(상점 구매는 하지 않는다)
+                        lobby.SelectTab("Shop");
+                        var parts = what.Substring(6).Split(':');
+                        var chest = lobby.GetComponentInChildren<RbChestOpen>(true);
+                        var icons = typeof(RbNotice).GetField("_icons", Private)?.GetValue(lobby.Notice) as Sprite[];
+                        var lines = new System.Collections.Generic.List<(string, string, int)> { ("gold", null, 1200) };
+                        if (key != null) lines.Add(("shard", key, 4));
+                        chest.Show(parts[0], lines, icons ?? System.Array.Empty<Sprite>());
+                        if (parts.Length > 1) Click("RbChestOpenTap");
+                    }
+                    break;
+            }
+        }
+
+        private static RectTransform FindChild(Transform root, string name)
+        {
+            foreach (var t in root.GetComponentsInChildren<Transform>(true)) if (t.name == name) return (RectTransform)t;
+            return null;
         }
 
         /// <summary>

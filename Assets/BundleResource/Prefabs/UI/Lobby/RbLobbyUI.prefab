@@ -106694,6 +106694,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7165407021028359124}
   - component: {fileID: 3357583109892393906}
+  - component: {fileID: 344331770167362429}
   m_Layer: 5
   m_Name: RbLobbyUI
   m_TagString: Untagged
@@ -106803,6 +106804,82 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 066b04b98efab6543b3d627e36201769, type: 3}
   _iconNext: {fileID: 21300000, guid: 8f57361c3df1d324a9b5799685f460e7, type: 3}
   _iconLock: {fileID: 21300000, guid: c591723856018fc49bfa9911a3822e3a, type: 3}
+--- !u!114 &344331770167362429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7133245953673350249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6c22744e485b14bbcb720f3d8eafbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.RbOutFx
+  _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
+  _ring6:
+  - {fileID: 21300000, guid: 21e2ab4bc0c63424083087eb155f3372, type: 3}
+  - {fileID: 21300000, guid: 4b43e36e3141c2d449246548fb75bc91, type: 3}
+  - {fileID: 21300000, guid: f17eedbf606d31c47a3705c332176bd6, type: 3}
+  - {fileID: 21300000, guid: 07064c1eee4c98f489670ebec6dd2b5d, type: 3}
+  - {fileID: 21300000, guid: 2863851922a41b6408642d46f86df455, type: 3}
+  - {fileID: 21300000, guid: 21066697ec3d9e4409d29690cc38eda6, type: 3}
+  - {fileID: 21300000, guid: 13d864f0605e1a8408fc3a7c1465b0ec, type: 3}
+  - {fileID: 21300000, guid: 36bda6df51a25274da61a71749e07155, type: 3}
+  _ring10:
+  - {fileID: 21300000, guid: 2562a3a6bf485a94782526fb99e9a0f8, type: 3}
+  - {fileID: 21300000, guid: b62b465c9ad2efc43b0548595aa144f5, type: 3}
+  - {fileID: 21300000, guid: 97cca6cdc0373e34b98f485563fa611b, type: 3}
+  - {fileID: 21300000, guid: 320a417adc0eae64da983cc04834dbc6, type: 3}
+  - {fileID: 21300000, guid: 339aeb20d960c1b459d1837f3b8ee6a5, type: 3}
+  - {fileID: 21300000, guid: 27c4ce21899dd444f9d4693dd1978b22, type: 3}
+  - {fileID: 21300000, guid: 929a05150451e56428e753a85350a58d, type: 3}
+  - {fileID: 21300000, guid: 2772a827890421e4a96232163010ad1f, type: 3}
+  _star:
+  - {fileID: 21300000, guid: a695f9ee9d297f54d8374a6707e954e2, type: 3}
+  - {fileID: 21300000, guid: dcf8795a187cc1f449ee67bb8bbfa4ed, type: 3}
+  - {fileID: 21300000, guid: 8789ddfdb17e81144be012e2eeecdaa5, type: 3}
+  - {fileID: 21300000, guid: bcca2390c8402ed46984ebf06d7426a3, type: 3}
+  - {fileID: 21300000, guid: aece492da980ff941ad699286801249d, type: 3}
+  - {fileID: 21300000, guid: baf75c91b6de31a4c9e42d13b38b6dcf, type: 3}
+  _flash:
+  - {fileID: 21300000, guid: ff707679d1cf760469d9e8581780498d, type: 3}
+  - {fileID: 21300000, guid: ccfb2ed1ba92e5e459043e9ae78471c5, type: 3}
+  - {fileID: 21300000, guid: 9e258d8616a82fe4082da25f6a2a7b7e, type: 3}
+  - {fileID: 21300000, guid: 31e9c150b1c2608479205081cac94954, type: 3}
+  - {fileID: 21300000, guid: b83c380f432af1d4889c7451d4af30ae, type: 3}
+  - {fileID: 21300000, guid: 9b95cfe2c3e833d4c9f1f64fc2d5e01a, type: 3}
+  _chestLight:
+  - {fileID: 21300000, guid: 8a34e773fbadcfb46b61ccb593e3ef02, type: 3}
+  - {fileID: 21300000, guid: fef1d1d7e99cc684dae492a8fe1a7cad, type: 3}
+  - {fileID: 21300000, guid: f23e2ed2056fe154f9beb0f63cd2d654, type: 3}
+  _coin:
+  - {fileID: 21300000, guid: 9e84e55fe7d90384aa876fc353e9663a, type: 3}
+  - {fileID: 21300000, guid: ee9ae1d087a06924192c675392bfc5bc, type: 3}
+  - {fileID: 21300000, guid: 8b55f5e4a0d86164188fcf38ef8b3cb9, type: 3}
+  - {fileID: 21300000, guid: dc2b0de15118a034c9db45ad34d178f9, type: 3}
+  - {fileID: 21300000, guid: 4ace4260ff47d934eb97a268ee077f23, type: 3}
+  - {fileID: 21300000, guid: 251e6d125e93cc644be545dec18622ed, type: 3}
+  - {fileID: 21300000, guid: f11c49744cdc0434d9e315401d98822d, type: 3}
+  - {fileID: 21300000, guid: 5a964b86bb5a80144bbb46c91826b18d, type: 3}
+  _chestSilver:
+  - {fileID: 21300000, guid: 4fbd78005994c544aad1b8e7dea9b2a7, type: 3}
+  - {fileID: 21300000, guid: 50ce444a5e86243469afea2eac2eed0b, type: 3}
+  - {fileID: 21300000, guid: 3033a96968dfe5e43bdd45cd0d5e4628, type: 3}
+  - {fileID: 21300000, guid: c17e17cda38cd0e40b540e2e55861d98, type: 3}
+  _chestGold:
+  - {fileID: 21300000, guid: 4d7ab7539f2291f41aa265213473b059, type: 3}
+  - {fileID: 21300000, guid: 160f53dd46bac1a4590e86d48d8f01ac, type: 3}
+  - {fileID: 21300000, guid: 5b86d1e86a3d7184c8f21cc345cbbb63, type: 3}
+  - {fileID: 21300000, guid: d6dabd0211d103c428d726f89c391366, type: 3}
+  _chestPlatinum:
+  - {fileID: 21300000, guid: 068dcc1742994f041952fb2ae71befbe, type: 3}
+  - {fileID: 21300000, guid: 3794812b34564cb4e84cc0d0ee2b842b, type: 3}
+  - {fileID: 21300000, guid: 2e7095a4b24773443b0273b20cb8b428, type: 3}
+  - {fileID: 21300000, guid: 726700c8ef984e34098dcb8a18ce5a84, type: 3}
+  _shine: {fileID: 21300000, guid: fffafa5d5a17f7640b569b1deda55903, type: 3}
+  _band: {fileID: 21300000, guid: 91200aefb9f528742bb9bb0e7a063c5b, type: 3}
+  _rays: {fileID: 21300000, guid: 37fcb1861b3799b4aa87fdf87d5847ec, type: 3}
 --- !u!1 &7138396664755958871
 GameObject:
   m_ObjectHideFlags: 0

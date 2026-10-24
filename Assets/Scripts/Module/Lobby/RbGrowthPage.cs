@@ -302,6 +302,10 @@ namespace Game.Module.Lobby
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장 — 앱이 꺼져도 산 것은 남는다
             Refresh();
             _shell.RefreshHeader();
+            // 강화 성공 틱(약) — 그 칸에 초록 맥박 · 값이 톡
+            int idx = Array.IndexOf(StatOrder, stat);
+            if (_shell.Fx != null && idx >= 0 && idx < _tiles.Count && _tiles[idx] is RectTransform tile)
+                _shell.Fx.UpgradeTick(tile, _ui.Find(tile, "GrwStatValue") as RectTransform);
         }
 
         private void StarUp()
@@ -352,6 +356,9 @@ namespace Game.Module.Lobby
             _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.rank_now", "성급 {0}"), m));
             _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
             _modals.SetActive("GrwStarDone", true);
+            // 새로 찬 별(1~5성은 m-1 째, 6~10성은 각성 별로 다시 m-6 째)이 작게 터진다
+            if (_shell.Fx != null && m > 0 && _modals.Find(_modals.Find("GrwStarDoneStars"), $"GrwStarDoneStar{(m - 1) % 5}") is RectTransform star)
+                _shell.Fx.StarFill(star);
         }
 
         private void ShowSkill(int slot)

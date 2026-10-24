@@ -64,6 +64,8 @@ namespace Game.Module.Lobby
             {
                 if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
                 show.Show(hostKey, Color.white);
+                // 몸 뒤 연출 — 새 몸 시안 빛살 · 6성 시안 링 · 10성 금 링 + 빛살(시안 new_body_badge · awaken_6 · awaken_10)
+                if (_shell != null && _shell.Fx != null) _shell.Fx.Reveal(art.rectTransform, rank);
             }
             GameSound.Cue("run.card");
         }
@@ -72,6 +74,7 @@ namespace Game.Module.Lobby
 
         public void Done()
         {
+            if (_shell != null && _shell.Fx != null && _ui.Get<Image>("RvlArt") is Image art) _shell.Fx.Stop(art.rectTransform);
             gameObject.SetActive(false);
             if (!string.IsNullOrEmpty(_key)) _shell.OpenGrowth(_key);
         }

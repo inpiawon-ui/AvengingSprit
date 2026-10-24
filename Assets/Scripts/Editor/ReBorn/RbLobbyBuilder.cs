@@ -85,6 +85,7 @@ namespace Game.Editor.ReBorn
             rt.Find("RbGuide").gameObject.SetActive(false);         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
             Wire(root.AddComponent<RbLobbyUI>());
+            RbFxBuilder.Attach(root);   // 아웃게임 연출(새 몸 · 각성 · 상자 · 보상 · 강화 · 별 · 버튼 빛)
             Save(root, PrefabPath);
             Register(PrefabPath, "UI/Lobby/RbLobbyUI", "label_lobby");
             Debug.Log($"[RE:BORN 화면] 로비 → {PrefabPath}");

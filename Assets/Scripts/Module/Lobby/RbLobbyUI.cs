@@ -52,6 +52,7 @@ namespace Game.Module.Lobby
         private RbRandomPage _randomPage;
         private RbGuide _guide;
         private RbChestOpen _chestOpen;
+        private RbOutFx _fx;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -105,6 +106,7 @@ namespace Game.Module.Lobby
             _randomPage = GetComponentInChildren<RbRandomPage>(true);
             _guide = GetComponentInChildren<RbGuide>(true);
             _chestOpen = GetComponentInChildren<RbChestOpen>(true);
+            _fx = GetComponent<RbOutFx>();
             _ui.OnClick("ChapterOpen", () => { GameSound.Cue("ui.tap"); SelectTab("Chapters"); });
             _ui.SetActive("SortieCardTemplate", false);
         }
@@ -130,6 +132,7 @@ namespace Game.Module.Lobby
             RefreshAll();
             SelectTab("Battle");
             LayoutRails();
+            if (_fx != null) _fx.ButtonShine(_ui.Find("SortieButton") as RectTransform);   // 주요 버튼 빛 띠(시안 button_shine)
             // 처음 로비에 온 사람에게 — 랜덤 출전 · 성장 · 소환(시안 guide, 쪽 점 셋)
             if (_guide != null) _guide.ShowOnce("lobby", false, "sortie", "growth", "summon");
         }
@@ -735,6 +738,10 @@ namespace Game.Module.Lobby
 
         /// <summary>로비 공용 알림 창(보상 · 모자라요 · 구매 확인).</summary>
         public RbNotice Notice => _notice;
+        /// <summary>아웃게임 연출(없으면 null — 연출 없이도 화면은 돈다).</summary>
+        public RbOutFx Fx => _fx;
+        /// <summary>위 막대 골드 칩 — 금화가 날아가 닿는 곳.</summary>
+        public RectTransform GoldChip => _ui.Find("ChipGold") as RectTransform;
 
         /// <summary>상점 탭의 그 쪽(추천 · 오늘 · 상자 · 재화).</summary>
         public void ShowShopTab(string tab)

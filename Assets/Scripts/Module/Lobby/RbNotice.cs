@@ -30,6 +30,7 @@ namespace Game.Module.Lobby
         private Action _onGo, _onYes;
         private readonly Action[] _onOption = new Action[2];
         private readonly List<(string kind, string key, int amount)> _lines = new();
+        private readonly List<RectTransform> _fxCells = new();
 
         private void Awake()
         {
@@ -87,6 +88,20 @@ namespace Game.Module.Lobby
             }
             Open("RbNotReward");
             GameSound.Cue("run.card");
+            // 칸이 차례로 열리고 금화는 위 막대 골드 칩으로(시안 reward_reveal · coin_burst)
+            if (_shell != null && _shell.Fx != null)
+            {
+                _fxCells.Clear();
+                RectTransform goldCell = null;
+                for (int i = 0; i < n; i++)
+                {
+                    if (_ui.Find($"NotRewardCell{i}") is not RectTransform c) continue;
+                    c.localScale = Vector3.one;   // 앞 연출이 덜 끝난 채 다시 열려도 제 크기에서 시작
+                    _fxCells.Add(c);
+                    if (goldCell == null && (lines[i].kind == "gold" || lines[i].kind == "goldrun")) goldCell = c;
+                }
+                _shell.Fx.RewardCells(_fxCells, goldCell, _shell.GoldChip);
+            }
         }
 
         /// <summary>
