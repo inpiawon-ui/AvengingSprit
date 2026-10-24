@@ -187,9 +187,13 @@ namespace Game.Module.Lobby
             int cost = tower ? _progress.TowerBuyCost : _progress.NightBuyCost;
             if (cost < 0) { Toast(Localize.Get("ui.tower.no_entries")); return; }
             int bought = tower ? _progress.TowerBoughtToday : _progress.NightBoughtToday;
-            SystemPopup.Show(Localize.Format("ui.mode.buy_ask", cost, bought, _progress.Table?.BuyEntriesMax ?? 3), () =>
+            // 시안 tower-entry — 공용 구매 확인 창(젬 아이콘 · 「추가 입장」 · 젬 값 · 오늘 n/m)
+            int max = _progress.Table?.BuyEntriesMax ?? 3;
+            _shell.Notice.ShowConfirm("rb_icon_currency_gem_96", Localize.FromTable("ui.rb.chl.extra_entry", "추가 입장"),
+                string.Format(Localize.FromTable("ui.rb.chl.extra_price", "젬 {0}"), cost),
+                string.Format(Localize.FromTable("ui.rb.chl.extra_today", "오늘 추가 입장 {0} / {1}"), bought, max), () =>
             {
-                if (!(tower ? _progress.TryBuyTowerEntry() : _progress.TryBuyNightEntry())) { Toast(Localize.Get("ui.mode.buy_no_gem")); return; }
+                if (!(tower ? _progress.TryBuyTowerEntry() : _progress.TryBuyNightEntry())) { _shell.Notice.ShowGemShort(); return; }
                 _shell.RefreshHeader();
                 if (tower) FillTower(); else FillNight();
                 if (thenStart) { if (tower) StartTower(); else StartNight(); }

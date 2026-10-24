@@ -130,6 +130,8 @@ namespace Game.Module.Lobby
             {
                 var (pulls, failKey) = await g.PullAsync(count, pay);
                 if (this == null) return;
+                // 젬이 모자라면 공용 「젬이 모자라요」 창(시안 summon-poor · gem-short) — 젬 사러 가기 → 상점 재화 탭
+                if (pulls == null && failKey == "ui.summon.fail.gem") { _shell.Notice.ShowGemShort(); return; }
                 if (pulls == null) { Toast(Localize.Get(failKey)); return; }
                 GameSound.Cue("run.card");
                 ShowResult(pulls, count);

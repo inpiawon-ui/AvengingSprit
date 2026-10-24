@@ -13,3 +13,6 @@ ui.rb.chl.fit	맞는 호스트 보기	適したホストを見る	Fitting Hosts	
 ui.rb.chl.host_shards	호스트 조각	ホストのかけら	Host Shards	宿主碎片	宿主碎片
 ui.rb.chl.today_reward	◆ 오늘의 보상	◆ 本日の報酬	◆ Today's Rewards	◆ 今日獎勵	◆ 今日奖励
 ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	その日の体のかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日身體碎片 · 依擊敗數發放	当日身体碎片 · 按击败数发放
+ui.rb.chl.extra_entry	추가 입장	追加入場	Extra Entry	追加入場	追加入场
+ui.rb.chl.extra_price	젬 {0}	ジェム {0}	{0} Gems	寶石 {0}	宝石 {0}
+ui.rb.chl.extra_today	오늘 추가 입장 {0} / {1}	本日の追加入場 {0} / {1}	Extra entries today {0} / {1}	今日追加入場 {0} / {1}	今日追加入场 {0} / {1}

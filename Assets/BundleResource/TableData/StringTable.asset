@@ -10569,3 +10569,21 @@ MonoBehaviour:
     _en: "{0}\u2605 Awakening option unlocked"
     _zhHant: "{0}\u661F \u89BA\u9192\u9078\u9805\u958B\u555F"
     _zhHans: "{0}\u661F \u89C9\u9192\u9009\u9879\u5F00\u542F"
+  - _key: ui.rb.chl.extra_entry
+    _ko: "\uCD94\uAC00 \uC785\uC7A5"
+    _ja: "\u8FFD\u52A0\u5165\u5834"
+    _en: Extra Entry
+    _zhHant: "\u8FFD\u52A0\u5165\u5834"
+    _zhHans: "\u8FFD\u52A0\u5165\u573A"
+  - _key: ui.rb.chl.extra_price
+    _ko: "\uC82C {0}"
+    _ja: "\u30B8\u30A7\u30E0 {0}"
+    _en: '{0} Gems'
+    _zhHant: "\u5BF6\u77F3 {0}"
+    _zhHans: "\u5B9D\u77F3 {0}"
+  - _key: ui.rb.chl.extra_today
+    _ko: "\uC624\uB298 \uCD94\uAC00 \uC785\uC7A5 {0} / {1}"
+    _ja: "\u672C\u65E5\u306E\u8FFD\u52A0\u5165\u5834 {0} / {1}"
+    _en: Extra entries today {0} / {1}
+    _zhHant: "\u4ECA\u65E5\u8FFD\u52A0\u5165\u5834 {0} / {1}"
+    _zhHans: "\u4ECA\u65E5\u8FFD\u52A0\u5165\u573A {0} / {1}"
