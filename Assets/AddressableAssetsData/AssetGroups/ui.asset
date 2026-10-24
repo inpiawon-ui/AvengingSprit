@@ -50,24 +50,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_ingame
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cdefceab91ae8e54b89565965d6e4c69
-    m_Address: UI/Lobby/HostSelectPanel
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_lobby
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dac6e9b6113c5c34a9c86817a4f40620
-    m_Address: UI/Lobby/LobbyMainUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_lobby
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ef33e130826fdde4ca91d0cdff808431
-    m_Address: UI/Title/TitleMainUI
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_title
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ae6c48c40acf3b740b3d1c167fa55d49, type: 2}
   m_SchemaSet:

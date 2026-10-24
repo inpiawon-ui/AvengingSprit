@@ -111,18 +111,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2e6f762a119a79946ae34972e2a01211
-    m_Address: atlas/summon
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2e94f4b81c5bb2c4b8e2798922e56d23
-    m_Address: atlas/nightentrypanel
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 315dc50beeec8ae4f976d0f6eabfc8c5
     m_Address: atlas/unitl_dragoon
     m_ReadOnly: 0
@@ -327,12 +315,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 88d25ec2b19adb547bc09aeb7b1f9664
-    m_Address: atlas/store
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c5afb6bf839233419e29e16c79139a4
     m_Address: atlas/unit_salamander
     m_ReadOnly: 0
@@ -399,12 +381,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a48b589f85eed8e458a8a437fbc0a252
-    m_Address: atlas/profile
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b0280a1b85ff6e144aa8f86b497512a4
     m_Address: atlas/unit_watcher_eye
     m_ReadOnly: 0
@@ -423,12 +399,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - label_atlas
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bd6a0097397b70840bc06080052daab1
-    m_Address: atlas/towerentrypanel
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: be6173d36216a664f8d37c01e1e83a1e
     m_Address: atlas/unit_mole
     m_ReadOnly: 0
@@ -437,12 +407,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c05cc5a4b46fead4088deae4e7cf571a
     m_Address: atlas/unit_commando_grenade
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c166ffcebea24136a9ffa1968140a51e
-    m_Address: atlas/uikit
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -491,12 +455,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ccd502f1f5bb7f841ae0bdae828c0308
     m_Address: atlas/unit_scrapgunner_ice
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cf6456d3a823d4046b03a741cddf84df
-    m_Address: atlas/pass
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas
@@ -593,12 +551,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: efd84b10d66d1b342ad368bb511b647d
     m_Address: atlas/unit_vampire
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - label_atlas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f008486b76a109f49a60ab1426524c6c
-    m_Address: atlas/titlemainui
     m_ReadOnly: 0
     m_SerializedLabels:
     - label_atlas

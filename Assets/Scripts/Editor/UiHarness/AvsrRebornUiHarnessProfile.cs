@@ -10,7 +10,7 @@ namespace Game.Editor.UiHarness
 {
     /// <summary>
     /// AVSR RE:BORN 로비 UI 하네스 프로필(2026-10-24) — 새 화면(RbLobbyUI)을 세 해상도로 찍고 잰다.
-    /// 옛 로비는 `AvsrLobbyUiHarnessProfile`(찍는 동안 RE:BORN 을 끈다). 시안은 묶음 Screens 폴더(1080 × 2340).
+    /// 옛 로비 프로필은 옛 화면과 함께 `Projects/AVSR/_archive/ui_old_1024/` 로 옮겼다(2026-10-24). 시안은 묶음 Screens 폴더(1080 × 2340).
     /// 상태는 시작 화면(전투 탭)에서 실제로 눌러 들어간다 — 가려진 버튼이면 도달 실패로 남는다.
     /// </summary>
     public sealed class AvsrRebornUiHarnessProfile : IUiHarnessProfile
@@ -20,12 +20,41 @@ namespace Game.Editor.UiHarness
         [MenuItem("Tools/Game/Verify/UI Harness (RE:BORN)")]
         public static void RunMenu()
         {
-            AvsrLobbyUiHarnessProfile.EnsureSizes();
+            EnsureSizes();
             SessionState.SetInt(LangKey, PlayerPrefs.GetInt("game.language", (int)Language.Korean));
             RebornUiSwitch.Enabled = true;
             UiHarnessRunner.Run(new AvsrRebornUiHarnessProfile());
         }
 
+        // 세로 게임 — 16:9 휴대폰 · 20:9 긴 휴대폰 · 4:3 태블릿. Game 뷰에 이 이름으로 등록한다(옛 로비 프로필에서 옮겨 옴)
+        private static readonly (string Name, int W, int H)[] Sizes =
+        {
+            ("AVSR 16x9", 720, 1280), ("AVSR 20x9", 1080, 2400), ("AVSR 4x3", 1536, 2048),
+        };
+
+        [MenuItem("Tools/Game/Verify/게임 뷰 해상도 등록 (AVSR)")]
+        public static void EnsureSizes()
+        {
+            var asm = typeof(UnityEditor.Editor).Assembly;
+            var sizesType = asm.GetType("UnityEditor.GameViewSizes");
+            var instance = typeof(ScriptableSingleton<>).MakeGenericType(sizesType).GetProperty("instance").GetValue(null);
+            var group = sizesType.GetProperty("currentGroup").GetValue(instance);
+            var gt = group.GetType();
+            var texts = (string[])gt.GetMethod("GetDisplayTexts").Invoke(group, null);
+            var sizeType = asm.GetType("UnityEditor.GameViewSize");
+            var kindType = asm.GetType("UnityEditor.GameViewSizeType");
+            var ctor = sizeType.GetConstructor(new[] { kindType, typeof(int), typeof(int), typeof(string) });
+            foreach (var s in Sizes)
+            {
+                bool have = false;
+                foreach (var t in texts)
+                    if (t == s.Name || t.StartsWith(s.Name + " ", System.StringComparison.Ordinal)) { have = true; break; }
+                if (have) continue;
+                var made = ctor.Invoke(new object[] { System.Enum.Parse(kindType, "FixedResolution"), s.W, s.H, s.Name });
+                gt.GetMethod("AddCustomSize").Invoke(group, new[] { made });
+            }
+            sizesType.GetMethod("SaveToHDD")?.Invoke(instance, null);
+        }
         public string Name => "AvsrReborn";
         public string BootScene => "Assets/Scenes/BootScene.unity";
         public string MockFolder => "Projects/AVSR/_handoff/reborn_ui_1023/03_리소스_및_시안/REBORN_UI_FINAL/Screens";

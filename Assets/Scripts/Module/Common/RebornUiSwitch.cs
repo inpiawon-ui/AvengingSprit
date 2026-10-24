@@ -4,8 +4,8 @@ namespace Game.Module.Common
 {
     /// <summary>
     /// RE:BORN UI 리뉴얼(2026-10-23) 스위치 — 2026-10-24 부터 **기본은 새 화면**이다(빌드도).
-    /// 옛 화면은 PD 확인 전까지 남겨 두고, 메뉴 `Tools/Game/테스트 — 새 UI(RE:BORN)로 보기` 를 끄면 옛 화면으로 돌아간다.
-    /// PD 가 새 화면을 확정하면 이 스위치와 옛 주소 · 옛 프리팹을 걷는다(Assets 밖 보관).
+    /// 타이틀 · 로비는 옛 프리팹을 Assets 밖(`Projects/AVSR/_archive/ui_old_1024/`)으로 옮겨 **언제나 새 화면**이다(PD 10-24 「정리해줘」).
+    /// 인게임만 스위치를 따른다 — 새 인게임 프리팹이 옛 InGameMainUI.prefab 을 복사해 세우므로 옛 것이 아직 남아 있다.
     /// </summary>
     public static class RebornUiSwitch
     {
@@ -17,17 +17,16 @@ namespace Game.Module.Common
             set { PlayerPrefs.SetInt(Key, value ? 1 : 0); PlayerPrefs.Save(); }
         }
 
-        /// <summary>옛 화면 주소 → 새 화면 주소. 새 화면이 아직 없는 씬은 그대로 둔다.</summary>
+        /// <summary>옛 화면 주소 → 새 화면 주소. 씬은 아직 옛 주소 문자열을 들고 있다(SceneUILoader).</summary>
         public static string Resolve(string address)
         {
-            if (!Enabled) return address;
-            return address switch
+            switch (address)
             {
-                "UI/Title/TitleMainUI" => "UI/Title/RbTitleUI",
-                "UI/Lobby/LobbyMainUI" => "UI/Lobby/RbLobbyUI",
-                "UI/InGame/InGameMainUI" => "UI/InGame/RbInGameMainUI",
-                _ => address,
-            };
+                case "UI/Title/TitleMainUI": return "UI/Title/RbTitleUI";      // 옛 프리팹 없음 — 스위치와 무관
+                case "UI/Lobby/LobbyMainUI": return "UI/Lobby/RbLobbyUI";
+            }
+            if (!Enabled) return address;
+            return address == "UI/InGame/InGameMainUI" ? "UI/InGame/RbInGameMainUI" : address;
         }
     }
 }
