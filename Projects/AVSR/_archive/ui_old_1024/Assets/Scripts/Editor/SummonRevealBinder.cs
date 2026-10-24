@@ -20,6 +20,8 @@ namespace Game.Editor
         public static void Run()
         {
             ImportSettings();
+            // 옛 로비(소환 패널)는 2026-10-24 Assets 밖으로 옮겼다 — 배양실 연출은 새 소환 화면(RbSummonPage)으로 옮겨 붙일 때 다시 잇는다
+            if (!System.IO.File.Exists(LobbyPrefab)) { Debug.LogWarning("[소환 배양실] 옛 로비 프리팹이 없다 — 그림 임포트 설정만 했다"); return; }
             var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
             try
             {
