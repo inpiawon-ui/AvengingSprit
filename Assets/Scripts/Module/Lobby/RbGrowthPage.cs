@@ -65,7 +65,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>(true);
             _ui.OnClick("GrwBack", () => _shell.SelectTab("Host"));
-            _ui.OnClick("GrwHelp", () => Toast(Localize.FromTable("ui.rb.growth.help", "능력치는 골드로 · 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한 · 스킬 위력이 함께 올라요.")));
+            _ui.OnClick("GrwHelp", () => _shell.ShowGuide("growth"));   // 시안 guide
             _ui.OnClick("GrwSkillUlt", () => ShowSkill(0));
             _ui.OnClick("GrwSkillAct", () => ShowSkill(1));
             _ui.OnClick("GrwSkillPas", () => ShowSkill(2));

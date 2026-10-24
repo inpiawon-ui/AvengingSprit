@@ -1,0 +1,220 @@
+using Cysharp.Threading.Tasks;
+using Game.Module.Common;
+using Game.Module.Common.Modes;
+using Game.Module.Common.UI;
+using Game.Module.Events;
+using GameFramework.Core.Module.EventBus;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Game.Module.InGame
+{
+    /// <summary>
+    /// RE:BORN 인게임 남은 화면(2026-10-24) — 보스 경고 띠(시안 boss) · 다음 방 창(exit) · 밤 몸 고르기(night-pick) · 안내(guide).
+    /// 노드는 빌더(RbExtraScreensBuilder.BuildInGame)가 세운다. 옛 화면(_reborn 꺼짐)에서는 아무것도 하지 않는다.
+    /// </summary>
+    public sealed partial class InGameMainUI
+    {
+        private const float BossWarnSeconds = 3.2f;
+        private static readonly string[] FirstRunGuide = { "possess", "stand_fire", "ghost_hp", "lock", "release", "rooms" };
+
+        private RbGuide _rbGuide;
+        private int _rbChapterTotal;
+        private int _rbStage;
+        private int _rbChapter = 1;
+        private int _rbBossWarnId;
+        private int _rbNightPick = -1;
+        private string[] _rbNightKeys;
+
+        private void SubscribeRbExtras(IEventBus bus)
+        {
+            if (!_reborn) return;
+            _rbGuide = GetComponentInChildren<RbGuide>(true);
+            foreach (var n in new[] { "RbBossWarn", "RbNextRoom", "RbNightPick", "RbGuide" }) _ui.SetActive(n, false);
+            _ui.OnClick("RbNextRoomGo", () => { _ui.SetActive("RbNextRoom", false); _battle?.TakeOnlyExit(); });
+            _ui.OnClick("RbNextRoomClose", () => _ui.SetActive("RbNextRoom", false));
+            for (int i = 0; i < 3; i++)
+            {
+                int k = i;
+                _ui.OnClick($"RbNightPickCard{i}", () => { _rbNightPick = k; GameSound.Cue("ui.tap"); FillNightPick(); });
+            }
+            _ui.OnClick("RbNightPickGo", ConfirmNightPick);
+            _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRbRoomEntered));
+            _tokens.Add(bus.Subscribe<ExitOpenedEvent>(_ => ShowNextRoom()));
+            _tokens.Add(bus.Subscribe<BossHpChangedEvent>(OnRbBoss));
+            _tokens.Add(bus.Subscribe<BuffOfferEvent>(_ => ShowGuideLater("cards", 0.8f, "cards")));
+            _tokens.Add(bus.Subscribe<ShopOpenedEvent>(_ => ShowGuideLater("merchant", 0.6f, "merchant")));
+            _tokens.Add(bus.Subscribe<NightBannerEvent>(OnRbNightBanner));
+        }
+
+        private void OnRbRoomEntered(RoomEnteredEvent e)
+        {
+            _rbChapterTotal = e.ChapterTotal;
+            _rbStage = e.StageInChapter;
+            _rbChapter = e.Chapter;
+            _ui.SetActive("RbNextRoom", false);
+            // 첫 판 첫 방 — 빙의 · 멈춰야 쏨 · 유령 에너지 · 자물쇠 · 놓아주기 · 다음 방(시안 guide, 판을 멈춘다)
+            if (!RunModeContext.IsMode && e.RoomIndex == 0) ShowGuideLater("ingame", 1.6f, FirstRunGuide);
+        }
+
+        /// <summary>안내는 판이 열린 뒤(가림막이 걷힌 뒤) — 처음 한 번만. 다른 창이 떠 있으면 그 창 위에 뜬다.</summary>
+        private void ShowGuideLater(string id, float delay, params string[] topics)
+        {
+            if (_rbGuide == null || RbGuide.HasSeen(id)) return;
+            ShowGuideLaterAsync(id, delay, topics).Forget();   // fire-and-forget: 정해진 시간 뒤 한 번 띄운다
+        }
+
+        private async UniTaskVoid ShowGuideLaterAsync(string id, float delay, string[] topics)
+        {
+            var token = this.GetCancellationTokenOnDestroy();
+            if (await UniTask.Delay(System.TimeSpan.FromSeconds(delay), DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
+            if (_finished || _rbGuide == null) return;
+            _rbGuide.ShowOnce(id, true, topics);
+        }
+
+        // ── 보스 경고 ─────────────────────────────────────────
+
+        private void OnRbBoss(BossHpChangedEvent e)
+        {
+            if (string.IsNullOrEmpty(e.AppearedBossKey)) return;
+            string weak = Localize.Get($"boss.{e.AppearedBossKey}.weak");
+            if (weak == $"boss.{e.AppearedBossKey}.weak") weak = string.IsNullOrEmpty(e.BossName) ? "BOSS" : e.BossName;
+            _ui.SetText("RbBossWarnWeak", weak);
+            if (_ui.Get<Image>("RbBossWarnFace") is Image face && _battle != null && _battle.BossSprite is Sprite s)
+            {
+                face.sprite = s;
+                face.preserveAspect = true;
+            }
+            _ui.SetActive("RbBossWarn", true);
+            if (_ui.Find("RbBossWarn") is Transform t) t.SetAsLastSibling();
+            HideBossWarnAsync(++_rbBossWarnId).Forget();   // fire-and-forget: 정해진 시간 뒤 걷는다
+            ShowGuideLater("boss", BossWarnSeconds + 0.2f, "boss");
+        }
+
+        private async UniTaskVoid HideBossWarnAsync(int id)
+        {
+            var band = _ui.Find("RbBossWarn");
+            if (band == null) return;
+            var group = band.GetComponent<CanvasGroup>();
+            var token = this.GetCancellationTokenOnDestroy();
+            const float fade = 0.3f;
+            for (float t = 0f; t < BossWarnSeconds; t += Time.unscaledDeltaTime)
+            {
+                if (id != _rbBossWarnId) return;
+                if (group != null) group.alpha = t < fade ? t / fade : t > BossWarnSeconds - fade ? (BossWarnSeconds - t) / fade : 1f;
+                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
+            }
+            if (id == _rbBossWarnId) _ui.SetActive("RbBossWarn", false);
+        }
+
+        // ── 다음 방 ───────────────────────────────────────────
+
+        private void ShowNextRoom()
+        {
+            if (_battle == null || _finished || !_battle.TryNextRoomPreview(out var kind, out bool midBoss)) return;
+            OpenNextRoom(kind, midBoss);
+        }
+
+        // 캡처 도구(RbShotTool)도 이 길로 연다
+        private void OpenNextRoom(RoomKind kind, bool midBoss)
+        {
+            string key = midBoss ? "midboss" : kind switch
+            {
+                RoomKind.Elite => "elite",
+                RoomKind.Boss => "boss",
+                RoomKind.Shop => "shop",
+                RoomKind.Rest => "rest",
+                RoomKind.Event => "event",
+                _ => "normal",
+            };
+            string icon = key switch
+            {
+                "elite" => "elite", "boss" => "boss", "midboss" => "midboss", "shop" => "merchant",
+                "rest" => "rest", "event" => "event", _ => "battle",
+            };
+            int total = Mathf.Max(1, _rbChapterTotal);
+            _ui.SetText("RbNextRoomStage", $"{_rbChapter}-{_rbStage + 1:00} /{total}");
+            _ui.SetText("RbNextRoomName", Localize.Get($"ui.rb.room.{key}"));
+            _ui.SetText("RbNextRoomDesc", Localize.Get($"ui.rb.room.{key}_desc"));
+            if (_ui.Get<Image>("RbNextRoomIcon") is Image img && FindKitIcon($"rb_icon_room_{icon}_96") is Sprite k) img.sprite = k;
+            _ui.SetActive("RbNextRoom", true);
+            if (_ui.Find("RbNextRoom") is Transform t) t.SetAsLastSibling();
+        }
+
+        [SerializeField] private Sprite[] _rbRoomIcons = System.Array.Empty<Sprite>();
+
+        private Sprite FindKitIcon(string name)
+        {
+            for (int i = 0; i < _rbRoomIcons.Length; i++)
+                if (_rbRoomIcons[i] != null && _rbRoomIcons[i].name == name) return _rbRoomIcons[i];
+            return null;
+        }
+
+        // ── 밤 몸 고르기 ──────────────────────────────────────
+
+        private void OnRbNightBanner(NightBannerEvent e)
+        {
+            if (e.BannerKey != "ui.night.start_hint" || _battle == null) return;
+            var keys = _battle.NightStartKeys();
+            if (keys.Count == 0) return;
+            OpenNightPick(keys.ToArray());
+        }
+
+        // 캡처 도구(RbShotTool)도 이 길로 연다
+        private void OpenNightPick(string[] keys)
+        {
+            _rbNightKeys = keys;
+            _rbNightPick = -1;
+            _ui.SetActive("RbNightPick", true);
+            if (_ui.Find("RbNightPick") is Transform t) t.SetAsLastSibling();
+            Time.timeScale = 0f;   // 고르는 동안 무리가 다가오지 않게(고르면 되돌린다)
+            FillNightPick();
+        }
+
+        private void FillNightPick()
+        {
+            if (_rbNightKeys == null) return;
+            for (int i = 0; i < 3; i++)
+            {
+                bool on = i < _rbNightKeys.Length;
+                _ui.SetActive($"RbNightPickCard{i}", on);
+                if (!on) continue;
+                string key = _rbNightKeys[i];
+                var e = _battle != null ? CoreModule_GetHost(key) : null;
+                SetRbText($"RbNightPickCard{i}Name", e != null ? e.DisplayName : key);
+                var kind = AffinityRule.KindOf(key);
+                _ui.SetActive($"RbNightPickCard{i}Chip", kind != Affinity.None);
+                SetRbText($"RbNightPickCard{i}ChipText", AffinityName(kind));
+                _ui.SetActive($"RbNightPickCard{i}Sel", i == _rbNightPick);
+                if (_ui.Get<Image>($"RbNightPickCard{i}Art") is Image art)
+                {
+                    if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
+                    show.Show(key, Color.white);
+                }
+            }
+            bool picked = _rbNightPick >= 0;
+            if (_ui.Get<Button>("RbNightPickGo") is Button b) b.interactable = picked;
+            string name = picked ? (CoreModule_GetHost(_rbNightKeys[_rbNightPick])?.DisplayName ?? _rbNightKeys[_rbNightPick]) : null;
+            SetRbText("RbNightPickGoText", picked ? string.Format(Localize.FromTable("ui.rb.nightpick.go", "{0}에 빙의"), name)
+                                              : Localize.FromTable("ui.rb.nightpick.pick", "몸을 선택하세요"));
+        }
+
+        private void ConfirmNightPick()
+        {
+            if (_rbNightPick < 0) return;
+            _ui.SetActive("RbNightPick", false);
+            Time.timeScale = 1f;
+            _battle?.PickNightStart(_rbNightPick);
+            _rbNightKeys = null;
+        }
+
+        private static Game.Character.HostEntry CoreModule_GetHost(string key)
+            => GameFramework.Core.Base.CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) ? p.GetHost(key) : null;
+
+        private void SetRbText(string node, string value)
+        {
+            if (_ui.Get<TextMeshProUGUI>(node) is TextMeshProUGUI t) t.text = value;
+        }
+    }
+}

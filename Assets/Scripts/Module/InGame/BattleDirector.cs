@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Character;
@@ -280,6 +280,9 @@ namespace Game.Module.InGame
         /// <summary>이 방에 서는 보스. 바닥·방 크기·무대가 모두 이 하나를 본다.</summary>
         private BossEntry _roomBoss;
         private Unit _boss;
+
+        /// <summary>지금 보스 그림(보스 경고 띠의 얼굴) — 보스가 없으면 null.</summary>
+        public Sprite BossSprite => _boss != null ? _boss.BodySprite : null;
         private float _telegraphPulse;
         private float _chargeDamageMul = 1f;
 
@@ -3271,7 +3274,7 @@ namespace Game.Module.InGame
                 _bus.Publish(new BossHpChangedEvent
                 {
                     BossHp = boss.Hp, BossHpMax = boss.HpMax,
-                    BossName = bossName, Phase = 1,
+                    BossName = bossName, Phase = 1, AppearedBossKey = bossKey,
                 });
                 if (IsTowerRun) SpawnTowerBodies();   // 탑 보스 층 — 보스 + 그 보스를 이기는 몸 3
             }
@@ -10072,6 +10075,32 @@ namespace Game.Module.InGame
             for (int i = 0; i < _exits.Count; i++)
                 if (_exits[i].View != null) Destroy(_exits[i].View.gameObject);
             _exits.Clear();
+        }
+
+        /// <summary>
+        /// RE:BORN 「다음 방」 창(시안 exit) — 문이 하나뿐일 때 그 너머 방의 종류. 갈림길(문 여럿) · 마지막 방 · 모드 판은 false
+        /// (갈림길은 문마다 이름표가 붙어 있어 창이 고르면 안 된다).
+        /// </summary>
+        public bool TryNextRoomPreview(out RoomKind kind, out bool midBoss)
+        {
+            kind = RoomKind.Normal;
+            midBoss = false;
+            if (!_exitOpen || _exits.Count != 1 || IsModeRun || _canonRoom == null || _rooms == null) return false;
+            var next = _rooms.Get(_exits[0].NextRoomId);
+            if (next == null) return false;
+            kind = KindOfCanon(next);
+            midBoss = next.IsMidBoss;
+            return true;
+        }
+
+        /// <summary>창의 「다음 방으로」 — 문까지 걷지 않고 바로 넘어간다(TickExit 과 같은 길).</summary>
+        public void TakeOnlyExit()
+        {
+            if (!_exitOpen || _exits.Count != 1 || !_running) return;
+            if (_canonRoom != null) _canonRoomId = _exits[0].NextRoomId;
+            DespawnExit();
+            if (_player != null) _runStage = _roomIndex + 2;
+            EnterRoom(_roomIndex + 1);
         }
 
         /// <summary>출구에 닿았으면 다음 스테이지로 넘어간다.</summary>

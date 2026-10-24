@@ -31,7 +31,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>();
             _ui.OnClick("PasBack", () => _shell.SelectTab("Battle"));
-            _ui.OnClick("PasHelp", () => Toast(Localize.FromTable("ui.rb.pass.help", "미션을 끝내 패스 경험치를 모으면 단계마다 보상을 받아요.\n프리미엄을 열면 오른쪽 보상도 받을 수 있어요.")));
+            _ui.OnClick("PasHelp", () => _shell.ShowGuide("pass"));   // 시안 guide
             _ui.OnClick("PasMissions", () => _shell.OpenRail("Missions"));
             _ui.OnClick("PasClaimAll", ClaimAll);
             _ui.OnClick("PasPremium", BuyPremium);

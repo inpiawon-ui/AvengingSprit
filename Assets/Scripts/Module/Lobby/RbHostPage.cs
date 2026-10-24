@@ -51,7 +51,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>();
             _ui.OnClick("ColBack", () => _shell.SelectTab("Battle"));
-            _ui.OnClick("ColHelp", () => Toast("ui.rb.host.help"));
+            _ui.OnClick("ColHelp", () => _shell.ShowGuide("growth", "summon"));   // 시안 guide
             _ui.OnClick("ColGhostGrow", () => _shell.OpenGhostGrowth());
             for (int i = 0; i < 4; i++)
             {

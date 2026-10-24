@@ -30,7 +30,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>(true);
             _ui.OnClick("LckBack", () => _shell.SelectTab("Host"));
-            _ui.OnClick("LckHelp", () => SystemPopup.Show(Localize.FromTable("ui.rb.lock.help", "조각을 모으면 그 몸을 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요."), null, Localize.Get("ui.common.ok"), null));
+            _ui.OnClick("LckHelp", () => _shell.ShowGuide("growth", "summon"));   // 시안 guide
             _ui.OnClick("LckWhere", () => _shell.ShowShardSources(_key));
             _ui.OnClick("LckUnlock", Unlock);
         }

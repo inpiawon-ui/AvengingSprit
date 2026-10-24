@@ -297,6 +297,7 @@ namespace Game.Module.InGame
             _tokens.Add(bus.Subscribe<HostLostEvent>(_ => OnHostLost()));
             _tokens.Add(bus.Subscribe<RoomEnteredEvent>(OnRoomEntered));
             _tokens.Add(bus.Subscribe<ExitOpenedEvent>(OnExitOpened));
+            SubscribeRbExtras(bus);   // RE:BORN 보스 경고 · 다음 방 · 밤 몸 고르기 · 안내(InGameMainUI.RbExtras)
             _tokens.Add(bus.Subscribe<RunExpChangedEvent>(OnExpChanged));
             _tokens.Add(bus.Subscribe<EmergencyHostEvent>(OnEmergencyHost));
             _tokens.Add(bus.Subscribe<PossessTargetChangedEvent>(

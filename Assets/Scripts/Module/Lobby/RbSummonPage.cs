@@ -40,7 +40,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>();
             _ui.OnClick("SumBack", () => _shell.SelectTab("Battle"));
-            _ui.OnClick("SumHelp", () => Toast(Localize.FromTable("ui.rb.summon.help", "몸의 조각을 뽑아요. 조각을 모으면 몸을 해금 · 성급을 올려요.\n10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.")));
+            _ui.OnClick("SumHelp", () => _shell.ShowGuide("summon"));   // 시안 guide
             _ui.OnClick("SumRatesButton", () => ShowSub("SumRates"));
             _ui.OnClick("SumRecordsButton", () => ShowSub("SumRecords"));
             _ui.OnClick("SumRatesBack", () => ShowSub(null));

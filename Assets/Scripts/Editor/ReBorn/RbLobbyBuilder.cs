@@ -65,7 +65,24 @@ namespace Game.Editor.ReBorn
             RbRailBuilder.BuildOverlay(rt);   // 우편 · 오늘 무료 · 설정 · 언어 — 위 막대 · 아래 탭보다 위
             RbGrowthPopups.Build(rt);
             RbRandomBuilder.Build(rt);        // 랜덤 출전 공개(한 화면 — 위 막대 · 아래 탭 위)
-            RbNoticeBuilder.Build(rt);        // 보상 · 모자라요 · 구매 확인 — 맨 앞         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
+            RbNoticeBuilder.Build(rt);        // 보상 · 모자라요 · 구매 확인 — 맨 앞
+            RbExtraScreensBuilder.BuildChestOpen(rt);   // 상자 열기(상점) — 알림 창 위
+            RbExtraScreensBuilder.BuildGuide(rt);       // 안내 — 가장 위
+            // 상자 열기는 시안처럼 위 막대 밑 · 아래 탭 위 — 아래 탭(TabBar · Tab*)을 위 막대 첫 노드(Chip* · Header*) 자리로
+            // 당기고 그 바로 뒤에 상자 열기를 둔다. 뒤에 있던 노드를 앞으로 당기면 그 자리에 정확히 놓인다
+            var chestOpen = rt.Find("RbChestOpen");
+            var tabs = new System.Collections.Generic.List<Transform>();
+            int firstHead = -1;
+            for (int i = 0; i < rt.childCount; i++)
+            {
+                var ch = rt.GetChild(i);
+                if (firstHead < 0 && (ch.name.StartsWith("Chip") || ch.name.StartsWith("Header"))) firstHead = i;
+                if (ch.name.StartsWith("Tab")) tabs.Add(ch);
+            }
+            for (int k = 0; k < tabs.Count; k++) tabs[k].SetSiblingIndex(firstHead + k);
+            chestOpen.SetSiblingIndex(firstHead + tabs.Count);
+            chestOpen.gameObject.SetActive(false);
+            rt.Find("RbGuide").gameObject.SetActive(false);         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
             Wire(root.AddComponent<RbLobbyUI>());
             Save(root, PrefabPath);

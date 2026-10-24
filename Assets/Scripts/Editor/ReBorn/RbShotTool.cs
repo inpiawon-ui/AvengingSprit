@@ -122,6 +122,19 @@ namespace Game.Editor.ReBorn
             (768, 1024, Language.Korean, "growth:sources_low", "growthsrc_sources_4x3"),
             (720, 1280, Language.English, "growth:sources_low", "growthsrc_sources_en"),
             (720, 1280, Language.Japanese, "growth:sources_essence_low", "growthsrc_essence_ja"),
+            // 남은 화면(2026-10-24) — 안내 · 상자 열기
+            (720, 1280, Language.Korean, "guide", "extra_guide_16x9"),
+            (720, 1280, Language.Korean, "guide:2", "extra_guide_p2_16x9"),
+            (1080, 2400, Language.Korean, "guide", "extra_guide_20x9"),
+            (768, 1024, Language.Korean, "guide", "extra_guide_4x3"),
+            (720, 1280, Language.English, "guide:2", "extra_guide_p2_en"),
+            (720, 1280, Language.Japanese, "guide", "extra_guide_ja"),
+            (720, 1280, Language.Korean, "chest:gold", "extra_chest_closed_16x9"),
+            (720, 1280, Language.Korean, "chest:gold:open", "extra_chest_open_16x9"),
+            (720, 1280, Language.Korean, "chest:platinum:open", "extra_chest_open4_16x9"),
+            (1080, 2400, Language.Korean, "chest:gold:open", "extra_chest_open_20x9"),
+            (768, 1024, Language.Korean, "chest:silver", "extra_chest_closed_4x3"),
+            (720, 1280, Language.English, "chest:gold:open", "extra_chest_open_en"),
         };
 
         /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
@@ -154,6 +167,20 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
             (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
+            // 남은 화면(2026-10-24) — 보스 경고 · 다음 방 · 밤 몸 고르기 · 첫 판 안내
+            (720, 1280, Language.Korean, "ingame:bosswarn", "extra_bosswarn_16x9"),
+            (1080, 2400, Language.Korean, "ingame:bosswarn", "extra_bosswarn_20x9"),
+            (720, 1280, Language.English, "ingame:bosswarn", "extra_bosswarn_en"),
+            (720, 1280, Language.Korean, "ingame:nextroom", "extra_nextroom_16x9"),
+            (768, 1024, Language.Korean, "ingame:nextroom", "extra_nextroom_4x3"),
+            (720, 1280, Language.Japanese, "ingame:nextroom", "extra_nextroom_ja"),
+            (720, 1280, Language.Korean, "ingame:nightpick", "extra_nightpick_16x9"),
+            (720, 1280, Language.Korean, "ingame:nightpick_sel", "extra_nightpick_sel_16x9"),
+            (1080, 2400, Language.Korean, "ingame:nightpick_sel", "extra_nightpick_sel_20x9"),
+            (720, 1280, Language.English, "ingame:nightpick_sel", "extra_nightpick_sel_en"),
+            (720, 1280, Language.Korean, "ingame:guide", "extra_ingameguide_16x9"),
+            (768, 1024, Language.Korean, "ingame:guide", "extra_ingameguide_4x3"),
+            (720, 1280, Language.Japanese, "ingame:guide", "extra_ingameguide_ja"),
             // 모드 판 표시는 맨 끝 — 위 가운데 칸 · 띠를 바꿔 두므로 뒤 장면에 남는다
             (720, 1280, Language.Korean, "ingame:towerhud", "modehud_tower_16x9"),
             (720, 1280, Language.Korean, "ingame:nighthud", "modehud_night_16x9"),
@@ -203,6 +230,7 @@ namespace Game.Editor.ReBorn
             SessionState.SetBool(Key + ".tWait", false);
             SessionState.SetBool(Key + ".lShot", false);
             _prepared = -1;
+            HoldGuides(true);
             RebornUiSwitch.Enabled = true;
             if (!EditorApplication.isPlaying)
             {
@@ -215,7 +243,38 @@ namespace Game.Editor.ReBorn
         }
 
         [MenuItem("Tools/Game/RE:BORN 화면/플레이 캡처 멈춤")]
-        private static void Cancel() => SessionState.SetInt(Key, 0);
+        private static void Cancel()
+        {
+            SessionState.SetInt(Key, 0);
+            HoldGuides(false);
+        }
+
+        // 첫 실행 안내(RbGuide.ShowOnce)가 다른 장면을 덮지 않게 찍는 동안만 「본 것」으로 둔다 —
+        // 끝나면 우리가 켠 표시만 지운다(PD 가 처음 볼 안내를 캡처가 써 버리지 않게)
+        private static readonly string[] FirstRunGuides = { "lobby", "ingame", "cards", "merchant", "boss" };
+
+        private static void HoldGuides(bool on)
+        {
+            if (on)
+            {
+                if (SessionState.GetString(Key + ".guides", string.Empty).Length > 0) return;   // 앞 캡처가 아직 쥐고 있다
+                var held = new System.Collections.Generic.List<string>();
+                foreach (var id in FirstRunGuides)
+                {
+                    if (Game.Module.Common.UI.RbGuide.HasSeen(id)) continue;
+                    held.Add(id);
+                    PlayerPrefs.SetInt("guide.seen." + id, 1);
+                }
+                SessionState.SetString(Key + ".guides", string.Join(",", held));
+            }
+            else
+            {
+                foreach (var id in SessionState.GetString(Key + ".guides", string.Empty).Split(','))
+                    if (id.Length > 0) PlayerPrefs.DeleteKey("guide.seen." + id);
+                SessionState.SetString(Key + ".guides", string.Empty);
+            }
+            PlayerPrefs.Save();
+        }
 
         private static void Tick()
         {
@@ -226,6 +285,7 @@ namespace Game.Editor.ReBorn
             catch (System.Exception e)
             {
                 SessionState.SetInt(Key, 0);
+                HoldGuides(false);
                 Debug.LogError($"[RbShot] 중단 — {e.GetType().Name}: {e.Message}");
             }
         }
@@ -266,6 +326,7 @@ namespace Game.Editor.ReBorn
                 SessionState.SetInt(Key, 0);
                 Time.timeScale = 1f;
                 LowMode(false);
+                HoldGuides(false);
                 PlayerPrefs.SetInt("game.language", 0);   // PD 에디터 언어는 한국어(메모리 restore-language-after-recording)
                 PlayerPrefs.Save();
                 Debug.Log($"[RbShot] 끝 → {OutDir}");
@@ -357,7 +418,38 @@ namespace Game.Editor.ReBorn
         private static void Show(RbLobbyUI lobby, IPlayerDataService player, string state)
         {
             LowMode(state.EndsWith("low"));
+            foreach (var t in lobby.GetComponentsInChildren<Transform>(true))
+                if (t.name is "RbGuide" or "RbChestOpen") t.gameObject.SetActive(false);
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("guide"))
+            {
+                // 로비 첫 안내(출전 · 성장 · 소환) — guide:2 는 「다음」 한 번
+                lobby.SelectTab("Battle");
+                lobby.ShowGuide("sortie", "growth", "summon");
+                if (state == "guide:2") Click("RbGuideNext");
+                return;
+            }
+            if (state.StartsWith("chest:"))
+            {
+                // 상자 열기 — 박자 1(닫힌 상자) · :open 이면 박자 2(받은 것). 값은 예시(저장하지 않는다)
+                lobby.SelectTab("Shop");
+                var parts = state.Split(':');
+                var chest = lobby.GetComponentInChildren<RbChestOpen>(true);
+                var icons = typeof(RbNotice).GetField("_icons", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(lobby.Notice) as Sprite[];
+                if (chest == null) return;
+                var lines = new System.Collections.Generic.List<(string, string, int)> { ("gold", null, 1200) };
+                int hosts = parts[1] == "platinum" ? 3 : 1;
+                foreach (var e in player.PlayableHosts)
+                {
+                    if (hosts == 0) break;
+                    if (e == null || e.IsGhost || PlayerDataService.IsHiddenHost(e.HostKey)) continue;
+                    lines.Add(("shard", e.HostKey, 3 + hosts));
+                    hosts--;
+                }
+                chest.Show(parts[1], lines, icons ?? System.Array.Empty<Sprite>());
+                if (parts.Length > 2) Click("RbChestOpenTap");
+                return;
+            }
             if (state.StartsWith("chapters")) { LowMode(state.EndsWith("low")); lobby.SelectTab("Chapters"); return; }
             if (state.StartsWith("random:"))
             {
@@ -512,7 +604,8 @@ namespace Game.Editor.ReBorn
             Game.Module.Common.Modes.RunModeContext.Clear();   // 모드 판 캡처가 켜 둔 것을 되돌린다
             // 앞 장의 창은 닫는다 — 같은 화면에 겹쳐 찍히지 않게
             foreach (var t in ui.GetComponentsInChildren<Transform>(true))
-                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner") t.gameObject.SetActive(false);
+                if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
+                    or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") return;
             // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
             Time.timeScale = 1f;
@@ -533,6 +626,36 @@ namespace Game.Editor.ReBorn
                     bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
                     break;
                 case "ingame:shrine": bt.GetMethod("OpenShrine", F)?.Invoke(battle, null); break;
+                case "ingame:bosswarn":
+                {
+                    // 보스 띠 — 3.2초 뒤 걷히므로 걷는 순서를 끊고(아이디 +1) 다 보이게 둔다
+                    var t = typeof(Game.Module.InGame.InGameMainUI);
+                    t.GetMethod("OnRbBoss", F)?.Invoke(ui, new object[] { new Game.Module.Events.BossHpChangedEvent { AppearedBossKey = "crusher", BossName = Localize.Get("boss.crusher.name") } });
+                    var idField = t.GetField("_rbBossWarnId", F);
+                    if (idField != null) idField.SetValue(ui, (int)idField.GetValue(ui) + 1);
+                    foreach (var tr in ui.GetComponentsInChildren<Transform>(true))
+                        if (tr.name == "RbBossWarn" && tr.TryGetComponent<CanvasGroup>(out var g)) g.alpha = 1f;
+                    break;
+                }
+                case "ingame:nextroom":
+                    typeof(Game.Module.InGame.InGameMainUI).GetMethod("OpenNextRoom", F)?.Invoke(ui, new object[] { Game.Module.Events.RoomKind.Elite, false });
+                    break;
+                case "ingame:nightpick":
+                case "ingame:nightpick_sel":
+                {
+                    // 몸 세 개 — 가진 몸 앞에서부터(시안은 무작위 셋)
+                    var keys = new System.Collections.Generic.List<string>();
+                    if (CoreModule.TryGet<IPlayerDataService>(out var p))
+                        foreach (var e in p.PlayableHosts)
+                            if (keys.Count < 3 && e != null && !e.IsGhost && !PlayerDataService.IsHiddenHost(e.HostKey)) keys.Add(e.HostKey);
+                    var t = typeof(Game.Module.InGame.InGameMainUI);
+                    t.GetMethod("OpenNightPick", F)?.Invoke(ui, new object[] { keys.ToArray() });
+                    if (state.EndsWith("sel")) Click("RbNightPickCard1");
+                    break;
+                }
+                case "ingame:guide":
+                    ui.GetComponentInChildren<Game.Module.Common.UI.RbGuide>(true)?.Show(true, "possess", "stand_fire", "ghost_hp", "lock", "release", "rooms");
+                    break;
                 case "ingame:pause":
                 case "ingame:abandon":
                     var pause = ui.GetComponentInChildren<Game.Module.InGame.RbPausePanel>(true);

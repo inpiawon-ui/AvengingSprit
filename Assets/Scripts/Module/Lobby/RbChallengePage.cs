@@ -39,7 +39,7 @@ namespace Game.Module.Lobby
             _ui = new UIBinder(transform);
             _shell = GetComponentInParent<RbLobbyUI>();
             _ui.OnClick("ChlBack", () => _shell.SelectTab("Battle"));
-            _ui.OnClick("ChlHelp", () => Toast(Localize.FromTable("ui.rb.chl.help", "탑은 한 주 동안 층을 올라가고, 밤은 요일마다 다른 규칙으로 버텨요.\n입장은 하루 3번 · 젬으로 더 살 수 있어요.")));
+            _ui.OnClick("ChlHelp", () => _shell.ShowGuide("tower", "night"));   // 시안 guide
             _ui.OnClick("ChlTowerEnter", () => Show("ChlTower"));
             _ui.OnClick("ChlNightEnter", () => Show("ChlNight"));
             _ui.OnClick("ChlTowerPageBack", () => Show(null));

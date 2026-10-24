@@ -324,7 +324,7 @@ namespace Game.Module.Lobby
                 if (outcome == PurchaseOutcome.SoldOut) { Toast(Localize.Get("ui.store.soldout")); return; }
                 if (outcome != PurchaseOutcome.Granted) return;
                 GameSound.Cue("run.shop");
-                _shell.Notice.ShowReward(result);
+                _shell.Notice.ShowPurchase(result);   // 상자면 상자 열기 쪽
                 _shell.RefreshHeader();
                 Refresh();
             }

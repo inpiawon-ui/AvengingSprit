@@ -1,4 +1,4 @@
-﻿using GameFramework.Core.Common;
+using GameFramework.Core.Common;
 
 namespace Game.Module.Events
 {
@@ -184,6 +184,8 @@ namespace Game.Module.Events
         public int BossHpMax;
         /// <summary>비어 있으면 이름 표기를 건드리지 않는다(체력만 갱신하는 호출).</summary>
         public string BossName;
+        /// <summary>보스가 처음 나온 순간에만 — 보스 키(boss.{키}.weak 약점 문구 · 경고 띠). 중간 보스 · 이후 갱신은 비어 있다.</summary>
+        public string AppearedBossKey;
         /// <summary>1~3. 0 이면 페이즈 표기를 건드리지 않는다.</summary>
         public int Phase;
     }

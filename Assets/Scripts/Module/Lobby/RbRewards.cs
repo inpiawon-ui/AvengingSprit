@@ -60,7 +60,9 @@ namespace Game.Module.Lobby
             "stamina" => Localize.FromTable("ui.rb.shop.r.stamina", "행동력"),
             "chest" => Localize.Get($"store.chest_{key}.name"),
             "passxp" => Localize.FromTable("ui.rb.shop.r.passxp", "패스 경험치"),
-            "shard" => Localize.FromTable("ui.rb.shop.r.shard", "조각"),
+            // 몸이 정해진 조각은 「갱스터 조각」(상자 열기 · 시안 chest-open) — 아니면 그냥 「조각」
+            "shard" => string.IsNullOrEmpty(key) ? Localize.FromTable("ui.rb.shop.r.shard", "조각")
+                     : string.Format(Localize.FromTable("ui.rb.result.shard", "{0} 조각"), HostName(key)),
             _ => key ?? kind,
         };
 
@@ -76,6 +78,10 @@ namespace Game.Module.Lobby
             }
             return sb.ToString();
         }
+
+        // 몸 이름은 표의 한국어 원문 + 언어팩 번역 — HostEntry.DisplayName 이 둘을 고른다
+        private static string HostName(string key)
+            => GameFramework.Core.Base.CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) && p.GetHost(key) is { } e ? e.DisplayName : key;
 
         public static Sprite Find(Sprite[] list, string name)
         {

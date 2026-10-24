@@ -89,6 +89,33 @@ namespace Game.Module.Lobby
             GameSound.Cue("run.card");
         }
 
+        /// <summary>
+        /// 상자를 샀다 — 열린 상자가 있으면 상자 열기 쪽(RbChestOpen, 시안 chest-opening · chest-open), 없으면 보상 창.
+        /// 여러 개를 샀으면 내용물을 합쳐 한 번에 보인다(상자 그림은 첫 상자 등급).
+        /// </summary>
+        public void ShowPurchase(RewardResult r)
+        {
+            Awake();
+            var chest = _shell != null ? _shell.GetComponentInChildren<RbChestOpen>(true) : null;
+            if (r == null || r.OpenedChests == null || r.OpenedChests.Count == 0 || chest == null) { ShowReward(r); return; }
+            _lines.Clear();
+            int gold = 0;
+            var shards = new Dictionary<string, int>();
+            for (int i = 0; i < r.OpenedChests.Count; i++)
+            {
+                var c = r.OpenedChests[i];
+                gold += c.Gold;
+                for (int k = 0; k < c.ShardHostKeys.Length; k++)
+                {
+                    shards.TryGetValue(c.ShardHostKeys[k], out int had);
+                    shards[c.ShardHostKeys[k]] = had + (k < c.ShardCounts.Length ? c.ShardCounts[k] : 1);
+                }
+            }
+            if (gold > 0) _lines.Add(("gold", null, gold));
+            foreach (var kv in shards) _lines.Add(("shard", kv.Key, kv.Value));
+            chest.Show(r.OpenedChests[0].ChestKey, _lines, _icons);
+        }
+
         // ── 모자라요 ───────────────────────────────────────
 
         /// <summary>행동력 — 부족(출전에서 막힘) 또는 채우기(위 막대). 젬 채우기를 다 썼거나 젬이 모자라면 버튼이 잿빛.</summary>

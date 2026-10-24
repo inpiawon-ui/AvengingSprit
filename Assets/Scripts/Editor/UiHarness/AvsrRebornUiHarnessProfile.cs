@@ -16,12 +16,14 @@ namespace Game.Editor.UiHarness
     public sealed class AvsrRebornUiHarnessProfile : IUiHarnessProfile
     {
         private const string LangKey = "avsr.uiharness.reborn.lang";
+        private const string GuideKey = "avsr.uiharness.reborn.guideUnseen";
 
         [MenuItem("Tools/Game/Verify/UI Harness (RE:BORN)")]
         public static void RunMenu()
         {
             EnsureSizes();
             SessionState.SetInt(LangKey, PlayerPrefs.GetInt("game.language", (int)Language.Korean));
+            SessionState.SetBool(GuideKey, !Game.Module.Common.UI.RbGuide.HasSeen("lobby"));
             RebornUiSwitch.Enabled = true;
             UiHarnessRunner.Run(new AvsrRebornUiHarnessProfile());
         }
@@ -156,6 +158,11 @@ namespace Game.Editor.UiHarness
             // 열린 쪽 · 창을 닫고 전투 탭으로 — 아래 탭이 없는 쪽(챕터 선택 · 미보유 · 보여주기)도 있어 화면 스크립트로 직접 간다
             var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.RbLobbyUI>();
             if (lobby != null) lobby.SelectTab("Battle");
+            // 로비 첫 안내(처음 한 번) · 상자 열기는 판 전체를 덮는다 — 닫고 시작한다.
+            // PD 가 아직 못 본 안내였으면 「본 것」 표시를 지워 다음에 다시 뜨게 둔다
+            if (Object.FindAnyObjectByType<Game.Module.Common.UI.RbGuide>() is { } guide) guide.Close();
+            if (Object.FindAnyObjectByType<Game.Module.Lobby.RbChestOpen>() is { } chest) chest.gameObject.SetActive(false);
+            if (SessionState.GetBool(GuideKey, false)) PlayerPrefs.DeleteKey("guide.seen.lobby");
             await UiHarnessDriver.Seconds(1f);
         }
 

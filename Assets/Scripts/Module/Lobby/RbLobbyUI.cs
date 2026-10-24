@@ -50,6 +50,8 @@ namespace Game.Module.Lobby
         private RbNotice _notice;
         private RbChapterPage _chapterPage;
         private RbRandomPage _randomPage;
+        private RbGuide _guide;
+        private RbChestOpen _chestOpen;
         private RbSummonPage _summonPage;
         private RbShopPage _shopPage;
         private RbChallengePage _challengePage;
@@ -101,6 +103,8 @@ namespace Game.Module.Lobby
             _notice = GetComponentInChildren<RbNotice>(true);
             _chapterPage = GetComponentInChildren<RbChapterPage>(true);
             _randomPage = GetComponentInChildren<RbRandomPage>(true);
+            _guide = GetComponentInChildren<RbGuide>(true);
+            _chestOpen = GetComponentInChildren<RbChestOpen>(true);
             _ui.OnClick("ChapterOpen", () => { GameSound.Cue("ui.tap"); SelectTab("Chapters"); });
             _ui.SetActive("SortieCardTemplate", false);
         }
@@ -126,6 +130,8 @@ namespace Game.Module.Lobby
             RefreshAll();
             SelectTab("Battle");
             LayoutRails();
+            // 처음 로비에 온 사람에게 — 랜덤 출전 · 성장 · 소환(시안 guide, 쪽 점 셋)
+            if (_guide != null) _guide.ShowOnce("lobby", false, "sortie", "growth", "summon");
         }
 
         // 화면 높이가 바뀌면(회전 · 창 크기) 양옆 아이콘 간격을 다시 잰다
@@ -169,6 +175,8 @@ namespace Game.Module.Lobby
         // 뒤로가기 — 성장 → 도감 → 전투 탭 순으로 물러난다. 전투 탭이면 닫을 것이 없다(라우터가 종료 확인을 띄운다)
         public bool OnBackPressed()
         {
+            if (_guide != null && _guide.IsOpen) { _guide.Close(); return true; }
+            if (_chestOpen != null && _chestOpen.IsOpen) { _chestOpen.gameObject.SetActive(false); return true; }
             if (_notice != null && _notice.Back()) return true;
             if (_randomPage != null && _randomPage.IsOpen) { _randomPage.Close(); return true; }
             if (_misc != null && _misc.Back()) return true;
@@ -717,6 +725,12 @@ namespace Game.Module.Lobby
             SelectTab("Battle");
             RefreshChapter();
             RefreshSortie();
+        }
+
+        /// <summary>안내 창 — 각 쪽의 「?」 가 그 주제를 연다.</summary>
+        public void ShowGuide(params string[] topics)
+        {
+            if (_guide != null) _guide.Show(false, topics);
         }
 
         /// <summary>로비 공용 알림 창(보상 · 모자라요 · 구매 확인).</summary>

@@ -1,0 +1,62 @@
+key	ko	ja	en	zh_hant	zh_hans
+ui.rb.guide.next	다음	次へ	Next	下一步	下一步
+ui.rb.guide.sortie.title	출전해요	出撃しよう	Time to sortie	出戰吧	出战吧
+ui.rb.guide.sortie.body	출전을 누르면 고른 몸으로 판이 시작돼요.\n랜덤 출전이면 아주 가끔 히든 호스트도 만나요.	出撃を押すと選んだ体でランが始まります。\nランダム出撃ならごくまれに隠しホストにも出会えます。	Tap Sortie to start a run with your chosen host.\nRandom runs may rarely bring a hidden host.	按下出戰即以所選宿主開始本局。\n隨機出戰偶爾會遇到隱藏宿主。	按下出战即以所选宿主开始本局。\n随机出战偶尔会遇到隐藏宿主。
+ui.rb.guide.growth.title	몸을 키워요	体を育てよう	Grow your hosts	培養宿主	培养宿主
+ui.rb.guide.growth.body	능력치는 골드로, 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한과 스킬 위력이 함께 올라요.	能力はゴールドで、星級はかけらとゴールドで上げます。\n星級が上がると強化上限とスキルの威力も上がります。	Raise stats with gold and stars with shards and gold.\nHigher stars raise the upgrade cap and skill power.	能力用金幣提升，星級用碎片和金幣提升。\n星級提升後強化上限與技能威力也會提升。	能力用金币提升，星级用碎片和金币提升。\n星级提升后强化上限与技能威力也会提升。
+ui.rb.guide.summon.title	영혼 명부에서 소환	魂の名簿で召喚	Summoning	從靈魂名冊召喚	从灵魂名册召唤
+ui.rb.guide.summon.body	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금하고 성급을 올려요.\n10회 소환은 SR 이상 1회 보장이에요.	体のかけらを引きます。集めると体の解放や星級アップに使えます。\n10回召喚はSR以上1回確定です。	Draw host shards to unlock hosts and raise stars.\nA 10x summon guarantees one SR or better.	抽取宿主碎片，收集後可解鎖宿主並提升星級。\n10連召喚保底一次SR以上。	抽取宿主碎片，收集后可解锁宿主并提升星级。\n10连召唤保底一次SR以上。
+ui.rb.guide.tower.title	망령의 탑	亡霊の塔	Phantom Tower	亡靈之塔	亡灵之塔
+ui.rb.guide.tower.body	한 주 동안 층을 올라가요. 층마다 조건이 달라요.\n첫 클리어 보상은 매주 다시 받아요.	1週間かけて階を登ります。階ごとに条件が違います。\n初回クリア報酬は毎週もらえます。	Climb floors over a week; each floor has its own rule.\nFirst-clear rewards reset every week.	一週內往上爬，每層的條件都不同。\n首次通關獎勵每週重新領取。	一周内往上爬，每层的条件都不同。\n首次通关奖励每周重新领取。
+ui.rb.guide.night.title	망령의 밤	亡霊の夜	Phantom Night	亡靈之夜	亡灵之夜
+ui.rb.guide.night.body	요일마다 다른 규칙으로 5분을 버텨요.\n쓰러뜨린 수만큼 조각을 받아요.	曜日ごとに違うルールで5分間耐えます。\n倒した数だけかけらがもらえます。	Survive 5 minutes under each day's rule.\nEarn shards by how many you defeat.	每天以不同規則撐過5分鐘。\n依擊倒數量獲得碎片。	每天以不同规则撑过5分钟。\n依击倒数量获得碎片。
+ui.rb.guide.pass.title	시즌 패스	シーズンパス	Season Pass	賽季通行證	赛季通行证
+ui.rb.guide.pass.body	미션을 끝내 패스 경험치를 모으면 단계마다 보상을 받아요.\n프리미엄을 열면 오른쪽 보상도 받아요.	ミッションでパス経験値を集めると段階ごとに報酬がもらえます。\nプレミアムを開くと右の報酬ももらえます。	Clear missions for pass XP and earn rewards each tier.\nUnlock premium to get the right-side rewards too.	完成任務累積通行證經驗，每階都能領獎。\n開啟高級後也能領取右側獎勵。	完成任务累积通行证经验，每阶都能领奖。\n开启高级后也能领取右侧奖励。
+ui.rb.guide.possess.title	몸을 빼앗아요	体を奪おう	Steal a body	奪取身體	夺取身体
+ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 몸으로 싸워요.	頭上に金の照準リングが出た敵に憑依ボタンを押すと\nその体で戦えます。	Tap Possess on an enemy with a gold ring overhead\nto fight in its body.	對頭上出現金色瞄準環的敵人按下附身鍵，\n就能用那個身體戰鬥。	对头上出现金色瞄准环的敌人按下附身键，\n就能用那个身体战斗。
+ui.rb.guide.stand_fire.title	멈춰야 쏴요	止まると撃つ	Stop to shoot	停下才會射擊	停下才会射击
+ui.rb.guide.stand_fire.body	움직이는 동안에는 자동 공격이 멈춰요.\n멈춰 서면 가까운 적을 쏴요.	移動中は自動攻撃が止まります。\n立ち止まると近くの敵を撃ちます。	Auto-attack stops while you move.\nStand still to shoot the nearest enemy.	移動時會停止自動攻擊。\n停下來就會射擊附近的敵人。	移动时会停止自动攻击。\n停下来就会射击附近的敌人。
+ui.rb.guide.ghost_hp.title	유령 에너지	ゴーストエネルギー	Ghost energy	幽靈能量	幽灵能量
+ui.rb.guide.ghost_hp.body	몸 없이 떠 있는 동안 유령 에너지가 줄어요.\n몸을 잃으면 크게 깎이니 조심해요.	体なしで漂っている間はエネルギーが減ります。\n体を失うと大きく減るので注意。	Ghost energy drains while you float without a body.\nLosing a body costs a lot, so be careful.	沒有身體漂浮時幽靈能量會減少。\n失去身體會大幅減少，要小心。	没有身体漂浮时幽灵能量会减少。\n失去身体会大幅减少，要小心。
+ui.rb.guide.lock.title	회색 자물쇠 링	灰色の鍵リング	Gray lock ring	灰色鎖環	灰色锁环
+ui.rb.guide.lock.body	링이 회색 자물쇠면 아직 빼앗을 수 없어요.\n더 때리면 열려요.	リングが灰色の鍵ならまだ奪えません。\nもっと攻撃すると開きます。	A gray lock ring means you can't steal it yet.\nHit it more to open it.	環是灰色鎖時還無法奪取。\n再多打幾下就會打開。	环是灰色锁时还无法夺取。\n再多打几下就会打开。
+ui.rb.guide.release.title	몸 놓아주기	体を手放す	Releasing a body	放開身體	放开身体
+ui.rb.guide.release.body	스스로 놓아준 몸은 이 방에서 다시 탈 수 없어요.	自分で手放した体はこの部屋では二度と乗れません。	A body you release can't be taken again in this room.	自己放開的身體在這個房間無法再附身。	自己放开的身体在这个房间无法再附身。
+ui.rb.guide.rooms.title	다음 방으로	次の部屋へ	On to the next room	前往下一個房間	前往下一个房间
+ui.rb.guide.rooms.body	적을 다 쓰러뜨리면 문이 열려요.\n문으로 들어가면 다음 방으로 가요.	敵を全て倒すと扉が開きます。\n扉に入ると次の部屋へ進みます。	Defeat every enemy to open the door.\nEnter it to move to the next room.	擊倒所有敵人後門會打開。\n走進門就會前往下一個房間。	击倒所有敌人后门会打开。\n走进门就会前往下一个房间。
+ui.rb.guide.cards.title	레벨업 카드	レベルアップカード	Level-up cards	升級卡	升级卡
+ui.rb.guide.cards.body	레벨이 오르면 카드 3장 중 하나를 골라요.\n카드는 유령에 붙어 몸이 바뀌어도 남아요.	レベルが上がると3枚から1枚選びます。\nカードはゴーストに付くので体が変わっても残ります。	Level up to pick one of three cards.\nCards stick to the ghost and stay when you swap bodies.	升級時從3張卡中選1張。\n卡附在幽靈身上，換身體也會保留。	升级时从3张卡中选1张。\n卡附在幽灵身上，换身体也会保留。
+ui.rb.guide.merchant.title	떠돌이 상인	さすらいの商人	Wandering merchant	流浪商人	流浪商人
+ui.rb.guide.merchant.body	판에서 모은 골드로 카드와 회복을 살 수 있어요.\n상인은 다시 오지 않아요.	集めたゴールドでカードや回復を買えます。\n商人は二度と来ません。	Spend run gold on cards and healing.\nThe merchant won't come back.	可用本局金幣購買卡片與回復。\n商人不會再來。	可用本局金币购买卡片与回复。\n商人不会再来。
+ui.rb.guide.boss.title	보스는 빼앗을 수 없어요	ボスは奪えない	Bosses can't be stolen	無法奪取頭目	无法夺取头目
+ui.rb.guide.boss.body	보스는 빙의할 수 없어요.\n타고 들어간 몸으로 끝내야 해요.	ボスには憑依できません。\n乗ってきた体で倒しましょう。	You can't possess a boss.\nFinish it with the body you brought in.	無法附身頭目。\n要用帶進來的身體打倒它。	无法附身头目。\n要用带进来的身体打倒它。
+ui.rb.boss.no_possess	보스는 빙의할 수 없어요	ボスには憑依できません	Bosses can't be possessed	無法附身頭目	无法附身头目
+boss.robot_snakes.weak	약점: 솟은 머리가 들어가기 전에 때려라	弱点：出た頭が引っ込む前に叩け	Weak point: hit the head before it ducks back in	弱點：趁頭縮回去前攻擊	弱点：趁头缩回去前攻击
+boss.crusher.weak	약점: 파괴구가 벽을 치게 안쪽으로 파고들어라	弱点：内側に入り鉄球を壁に当てさせろ	Weak point: get inside so the wrecking ball hits the wall	弱點：鑽到內側讓破壞球撞牆	弱点：钻到内侧让破坏球撞墙
+boss.python.weak	약점: 벽에서 나온 순간 때려라	弱点：壁から出た瞬間を叩け	Weak point: hit it the moment it leaves the wall	弱點：牠從牆裡出來的瞬間攻擊	弱点：它从墙里出来的瞬间攻击
+boss.sludge.weak	약점: 천장에 붙은 것을 떨어뜨려라	弱点：天井に張り付いたら落とせ	Weak point: knock it down off the ceiling	弱點：把黏在天花板上的打下來	弱点：把粘在天花板上的打下来
+boss.guardian.weak	약점: 마디를 3개 이하로 끊으면 머리가 열린다	弱点：節を3つ以下にすると頭が開く	Weak point: cut it to 3 segments or fewer to open the head	弱點：把節砍到3個以下頭就會打開	弱点：把节砍到3个以下头就会打开
+boss.kingpin.weak	약점: 저공 활강 뒤 멈춘 자리를 노려라	弱点：低空滑空後に止まった所を狙え	Weak point: strike where it stops after the low glide	弱點：低空滑翔後停下時攻擊	弱点：低空滑翔后停下时攻击
+ui.rb.next.title	다음 방	次の部屋	Next Room	下一個房間	下一个房间
+ui.rb.next.go	다음 방으로	次の部屋へ	Next Room	前往下一個房間	前往下一个房间
+ui.rb.room.normal	전투	戦闘	Battle	戰鬥	战斗
+ui.rb.room.normal_desc	적을 모두 쓰러뜨리면 문이 열려요.	敵を全て倒すと扉が開きます。	Defeat every enemy to open the door.	擊倒所有敵人後門會打開。	击倒所有敌人后门会打开。
+ui.rb.room.elite	정예	精鋭	Elite	精英	精英
+ui.rb.room.elite_desc	더 센 적이 기다려요.	より強い敵が待っています。	Tougher enemies await.	更強的敵人在等著。	更强的敌人在等着。
+ui.rb.room.midboss	중간 보스	中ボス	Mid-Boss	中頭目	中头目
+ui.rb.room.midboss_desc	대장 몸을 쓰러뜨려야 지나가요.	ボス格の体を倒すと進めます。	Defeat the leader to pass.	擊倒首領才能通過。	击倒首领才能通过。
+ui.rb.room.boss	보스	ボス	Boss	頭目	头目
+ui.rb.room.boss_desc	챕터의 마지막 싸움이에요.	チャプター最後の戦いです。	The chapter's final fight.	章節的最後一戰。	章节的最后一战。
+ui.rb.room.shop	떠돌이 상인	さすらいの商人	Wandering Merchant	流浪商人	流浪商人
+ui.rb.room.shop_desc	다음 방에서 상품을 확인할 수 있어요.	次の部屋で商品を確認できます。	Check the goods in the next room.	可在下一個房間查看商品。	可在下一个房间查看商品。
+ui.rb.room.rest	회복의 제단	回復の祭壇	Altar of Rest	恢復祭壇	恢复祭坛
+ui.rb.room.rest_desc	하나만 골라 가져갈 수 있어요.	1つだけ選んで持っていけます。	Pick one blessing to take.	只能選一個帶走。	只能选一个带走。
+ui.rb.room.event	사건	イベント	Event	事件	事件
+ui.rb.room.event_desc	무슨 일이 기다리고 있을까요?	何が待っているでしょう？	What awaits inside?	會有什麼在等著呢？	会有什么在等着呢？
+ui.rb.nightpick.title	몸 하나를 골라 빙의하라	体を1つ選んで憑依せよ	Pick one body to possess	選一個身體附身	选一个身体附身
+ui.rb.nightpick.sub	나머지 둘은 사라진다	残りの2体は消える	The other two will vanish	其餘兩個會消失	其余两个会消失
+ui.rb.nightpick.pick	몸을 선택하세요	体を選んでください	Choose a body	請選擇身體	请选择身体
+ui.rb.nightpick.go	{0}에 빙의	{0}に憑依	Possess {0}	附身{0}	附身{0}
+ui.rb.chest.open	{0} 열기!	{0}を開ける！	Open {0}!	開啟{0}！	开启{0}！
+ui.rb.chest.got	획득!	獲得！	Got it!	獲得！	获得！
+ui.rb.chest.tap	화면을 눌러 계속	画面をタップして続ける	Tap to continue	點擊畫面繼續	点击画面继续

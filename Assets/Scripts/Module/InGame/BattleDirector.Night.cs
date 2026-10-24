@@ -98,6 +98,27 @@ namespace Game.Module.InGame
             NightBanner("ui.night.start_hint", null, "ui.night.start_hint_sub", null);
         }
 
+        /// <summary>RE:BORN 밤 시작 고르기 창(시안 night-pick) — 아직 고르지 않은 시작 몸 셋의 키(없으면 빈 목록).</summary>
+        public List<string> NightStartKeys()
+        {
+            var keys = new List<string>(3);
+            if (_nightChosen) return keys;
+            for (int i = 0; i < _nightStartBodies.Count; i++)
+                if (_nightStartBodies[i] != null) keys.Add(_nightStartBodies[i].Key);
+            return keys;
+        }
+
+        /// <summary>창에서 고른 시작 몸에 바로 빙의한다 — 걸어가 링을 맞추는 대신(나머지 둘은 빙의 순간 사라진다).</summary>
+        public void PickNightStart(int index)
+        {
+            if (_nightChosen || index < 0 || index >= _nightStartBodies.Count) return;
+            var u = _nightStartBodies[index];
+            if (u == null || !_enemies.Contains(u)) return;
+            _possessTarget = u;
+            _repossessLock = 0f;
+            TryPossess();
+        }
+
         /// <summary>시작 몸 하나를 탔다 → 나머지 둘은 연기와 함께 사라진다(처치로 안 센다).</summary>
         private void NightOnPossessed()
         {
@@ -302,7 +323,7 @@ namespace Game.Module.InGame
             _bus.Publish(new BossHpChangedEvent
             {
                 BossHp = boss.Hp, BossHpMax = boss.HpMax,
-                BossName = named != null ? named.DisplayName : bossKey, Phase = 1,
+                BossName = named != null ? named.DisplayName : bossKey, Phase = 1, AppearedBossKey = bossKey,
             });
             NightBanner("ui.night.banner.boss", named != null ? named.DisplayName : bossKey, "ui.night.banner.boss_sub", null);
         }

@@ -15,6 +15,9 @@ namespace Game.Editor.ReBorn
         private static readonly Language[] Langs =
             { Language.Korean, Language.Japanese, Language.English, Language.ChineseTraditional, Language.ChineseSimplified };
 
+        // Dynamic 보다 먼저 — 정적 필드는 적힌 순서대로 초기화된다
+        private static readonly string[] Rooms = { "normal", "elite", "midboss", "boss", "shop", "rest", "event" };
+
         // 코드가 채우는 칸 — 칸 이름 → 들어갈 수 있는 키들
         private static readonly (string node, string[] keys)[] Dynamic =
         {
@@ -23,7 +26,23 @@ namespace Game.Editor.ReBorn
             ("GrwStarUpLabel", new[] { "ui.rb.growth.starup", "ui.rb.growth.unlock", "ui.growth.max" }),
             ("GrwStarInfo", new[] { "ui.rb.growth.max_info" }),
             ("ColCardPower", new[] { "ui.rb.host.locked" }),
+            // 남은 화면(2026-10-24) — 안내 · 보스 경고 · 다음 방 · 밤 몸 고르기 · 상자 열기
+            ("RbGuideTitle", Keys(RbExtraScreensBuilder.GuideTopics, "ui.rb.guide.{0}.title")),
+            ("RbGuideBody", Keys(RbExtraScreensBuilder.GuideTopics, "ui.rb.guide.{0}.body")),
+            ("RbBossWarnWeak", Keys(new[] { "robot_snakes", "crusher", "python", "sludge", "guardian", "kingpin" }, "boss.{0}.weak")),
+            ("RbNextRoomName", Keys(Rooms, "ui.rb.room.{0}")),
+            ("RbNextRoomDesc", Keys(Rooms, "ui.rb.room.{0}_desc")),
+            ("RbNightPickGoText", new[] { "ui.rb.nightpick.go", "ui.rb.nightpick.pick" }),
+            ("RbChestOpenTitle", new[] { "ui.rb.chest.open" }),
+            ("RbChestOpenGoText", new[] { "ui.rb.chest.tap", "ui.common.ok" }),
         };
+
+        private static string[] Keys(string[] ids, string format)
+        {
+            var keys = new string[ids.Length];
+            for (int i = 0; i < ids.Length; i++) keys[i] = string.Format(format, ids[i]);
+            return keys;
+        }
 
         [MenuItem("Tools/Game/RE:BORN 화면/글자 넘침 점검")]
         public static void Run()

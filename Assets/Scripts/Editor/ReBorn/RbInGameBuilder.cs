@@ -33,6 +33,7 @@ namespace Game.Editor.ReBorn
                 BuildShrine(root.transform);
                 BuildResult(root.transform);
                 BuildPause(root.transform);
+                RbExtraScreensBuilder.BuildInGame((RectTransform)root.transform);   // 보스 경고 · 다음 방 · 밤 몸 고르기 · 안내
                 Wire(root.GetComponent<Game.Module.InGame.InGameMainUI>());
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
@@ -707,7 +708,7 @@ namespace Game.Editor.ReBorn
             // 켠 채 저장(정렬 밴드) — InGameMainUI Awake 가 끈다
             var page = Stretch(Node((RectTransform)root, "RbPausePanel"));
             var dim = page.gameObject.AddComponent<Image>();
-            dim.color = new Color(0.02f, 0.03f, 0.06f, 0.86f);
+            dim.color = new Color(0.02f, 0.03f, 0.06f, RbExtraScreensBuilder.InGameDim);   // 0.86 은 인게임에서 거의 안 어두워졌다
             dim.raycastTarget = true;
             var c = Node(page, "RbPauseContent");
             c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
@@ -842,6 +843,18 @@ namespace Game.Editor.ReBorn
             ev.arraySize = arts.Length;
             for (int i = 0; i < arts.Length; i++)
                 ev.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(arts[i]));
+            // 다음 방 창의 방 아이콘(rb_icon_room_*_96)
+            var rooms = AssetDatabase.FindAssets("rb_icon_room_ t:Sprite", new[] { $"{Kit}/Icons" });
+            var ri = so.FindProperty("_rbRoomIcons");
+            int n = 0;
+            ri.arraySize = rooms.Length;
+            foreach (var g in rooms)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                if (!path.EndsWith("_96.png")) continue;
+                ri.GetArrayElementAtIndex(n++).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+            ri.arraySize = n;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
