@@ -154,64 +154,25 @@ namespace Game.EditorTools
                 if (director != null) { SessionState.SetInt(Key, 2); _wait = 10; return; }
 
                 if (GameObject.Find("[LoadingView]") != null) { _wait = 20; return; }
-                if (Click("SkipButton") || Click("TouchArea")) { _wait = 40; return; }
-                if (GameObject.Find("BottomNav") != null)
+                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) { _wait = 40; return; }
+                // 새 로비(RbLobbyUI)에서 바로 판을 연다 — 옛 로비 · 시나리오 창은 2026-10-24 Assets 밖으로 옮겼다.
+                // 옛 「로비 화면도 찍기」(AffinityDemo.lobbyShots)는 옛 시나리오 창 전용이라 같이 뺐다
+                var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.RbLobbyUI>();
+                if (lobby != null)
                 {
-                    if (!CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady)
+                    if (!lobby.IsReady || !CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady)
                     { _wait = 30; return; }
                     if (Screen.width != 720 || Screen.height != 1280) { SetSize(720, 1280); _wait = 120; return; }
 
-                    var panel = Object.FindAnyObjectByType<Game.Module.Lobby.ChapterHostPanel>();
-                    if (panel != null && panel.gameObject.activeInHierarchy)
-                    {
-                        // 로비 화면도 찍는다 — 판에 들어가기 전에 상성이 어떻게 보이는지.
-                        // `AffinityDemo.lobbyShots` 에 「챕터:경로」 를 `|` 로 이어 적으면 하나씩 찍고 넘어간다.
-                        string shots = SessionState.GetString("AffinityDemo.lobbyShots", string.Empty);
-                        if (!string.IsNullOrEmpty(shots))
-                        {
-                            int bar = shots.IndexOf('|');
-                            string head = bar < 0 ? shots : shots.Substring(0, bar);
-                            SessionState.SetString("AffinityDemo.lobbyShots", bar < 0 ? string.Empty : shots.Substring(bar + 1));
-                            if (SessionState.GetBool("AffinityDemo.lobbyArmed", false))
-                            {
-                                // 앞 차례에 챕터를 바꿔 놨다 — 이제 찍는다.
-                                ScreenCapture.CaptureScreenshot(head.Substring(head.IndexOf(':') + 1));
-                                SessionState.SetBool("AffinityDemo.lobbyArmed", false);
-                                _wait = 20;
-                                return;
-                            }
-                            var pt = panel.GetType();
-                            pt.GetField("_chapter", F).SetValue(panel, int.Parse(head.Substring(0, head.IndexOf(':'))));
-                            pt.GetMethod("RefreshAll", F).Invoke(panel, null);
-                            SessionState.SetString("AffinityDemo.lobbyShots", shots);   // 같은 항목을 다음 차례에 찍는다
-                            SessionState.SetBool("AffinityDemo.lobbyArmed", true);
-                            _wait = 20;
-                            return;
-                        }
-
-                        // 시작 직전에 녹화를 건다 — 고르는 장면부터 담긴다.
-                        StartRecording();
-                        string host = SessionState.GetString("AffinityDemo.host", string.Empty);
-                        int chapter = SessionState.GetInt("AffinityDemo.chapter", 1);
-                        ApplyProfile(p, host, chapter);
-                        var t = panel.GetType();
-                        t.GetField("_chapter", F).SetValue(panel, chapter);
-                        t.GetField("_pickedRandom", F).SetValue(panel, false);
-                        // 출전 방식도 「몸으로」 — 창은 지난번이 유령이면 유령 출전으로 열린다. 사신(숨긴 몸) 판 뒤에는
-                        // 저장된 선택이 유령으로 남아, 다음 판들이 고른 몸 대신 유령으로 시작했다(2026-10-21 녹화 10판)
-                        var mode = t.GetField("_mode", F);
-                        if (mode != null) mode.SetValue(panel, System.Enum.Parse(mode.FieldType, "Host"));
-                        t.GetField("_pickedHost", F).SetValue(panel,
-                            string.IsNullOrEmpty(host) ? Game.Character.HostEntry.GhostKey : host);
-                        t.GetMethod("OnStart", F).Invoke(panel, null);
-                        _wait = 120;
-                        return;
-                    }
-                    if (Click("ModePlayButton")) { _wait = 60; return; }
-                    // 로비 개편 뒤 「ModePlayButton」이 없다 — 시나리오 시작(챕터 · 호스트 고르기 창)을 직접 연다(SkillReworkRecorder 와 같은 길)
-                    var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.LobbyMainUI>();
-                    var play = lobby != null ? typeof(Game.Module.Lobby.LobbyMainUI).GetMethod("PlayScenario", F) : null;
-                    if (play != null) { play.Invoke(lobby, null); _wait = 60; return; }
+                    // 시작 직전에 녹화를 건다
+                    StartRecording();
+                    string host = SessionState.GetString("AffinityDemo.host", string.Empty);
+                    int chapter = SessionState.GetInt("AffinityDemo.chapter", 1);
+                    ApplyProfile(p, host, chapter);
+                    p.SetStamina(p.StaminaMax);
+                    lobby.StartRunDirect(chapter, string.IsNullOrEmpty(host) ? Game.Character.HostEntry.GhostKey : host);
+                    _wait = 120;
+                    return;
                 }
                 _wait = 15;
                 return;

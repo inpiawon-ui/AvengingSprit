@@ -108,28 +108,17 @@ namespace Game.Editor
                     if (phase == 0)
                     {
                         if (GameObject.Find("[LoadingView]") != null) { wait = 20; return; }
-                        if (Click("SkipButton") || Click("TouchArea")) { wait = 40; return; }
-                        var lobby = UnityEngine.Object.FindAnyObjectByType<Game.Module.Lobby.LobbyMainUI>();
-                        if (lobby == null) { wait = 15; return; }
-                        if (!GameFramework.Core.Base.CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady)
-                        { wait = 30; return; }
-                        var panel = lobby.GetComponentInChildren<Game.Module.Lobby.ChapterHostPanel>(true);
-                        if (!panel.IsOpen)
-                        {
-                            typeof(Game.Module.Lobby.LobbyMainUI).GetMethod("PlayScenario", F).Invoke(lobby, null);
-                            wait = 60;
-                            return;
-                        }
-                        var pt = typeof(Game.Module.Lobby.ChapterHostPanel);
-                        pt.GetMethod("Step", F).Invoke(panel, new object[] { -9 });
-                        pt.GetMethod("PickHost", F).Invoke(panel, new object[] { hostKey });
+                        if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) { wait = 40; return; }
+                        // 새 로비(RbLobbyUI)에서 바로 판을 연다 — 옛 로비 · 시나리오 창은 2026-10-24 Assets 밖으로 옮겼다
+                        var lobby = UnityEngine.Object.FindAnyObjectByType<Game.Module.Lobby.RbLobbyUI>();
+                        if (lobby == null || !lobby.IsReady) { wait = 15; return; }
+                        if (!GameFramework.Core.Base.CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady) { wait = 30; return; }
                         var extra = new System.Collections.Generic.List<string>();
                         if (swapTo != null) extra.Add(p.GetHost(swapTo)?.SpriteKey);
                         if (enemyHosts != null) foreach (var k in enemyHosts) extra.Add(p.GetHost(k)?.SpriteKey);
                         Game.Module.InGame.BattleDirector.EditorExtraUnitKey = string.Join(",", extra);
-                        // 판마다 행동력이 빠진다(2026-10-16~) — 녹화를 연달아 돌리면 바닥나 판이 안 열린다. 시험 세이브는 끝나면 되돌린다
-                        p.SetStamina(p.StaminaMax);
-                        pt.GetMethod("OnStart", F).Invoke(panel, null);
+                        p.SetStamina(p.StaminaMax);   // 판마다 행동력이 빠진다 — 연달아 돌리면 바닥난다(시험 세이브는 끝나면 되돌린다)
+                        lobby.StartRunDirect(1, hostKey);
                         phase = 1;
                         wait = 60;
                         return;

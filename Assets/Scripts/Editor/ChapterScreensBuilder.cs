@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Game.Module.InGame;
 using Game.Module.Lobby;
 using TMPro;
@@ -23,9 +23,7 @@ namespace Game.Editor
     /// </summary>
     public static class ChapterScreensBuilder
     {
-        private const string LobbyPrefab = "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab";
         private const string InGamePrefab = "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab";
-        private const string HostPrefab = "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab";
         private const string Incoming = "Projects/AVSR/_exchange/in";
         private const string PartsDir = "Assets/BaseResource/ChapterScreens";
         private const string Lobby = "Assets/BaseResource/LobbyMainUI/";
@@ -71,30 +69,8 @@ namespace Game.Editor
         public static void Run()
         {
             int pulled = ImportIncoming();
-
-            var lobby = PrefabUtility.LoadPrefabContents(LobbyPrefab);
-            try
-            {
-                PickFont(lobby);
-                var select = BuildChapterSelect(lobby.transform);
-                var reward = BuildChestReward(lobby.transform);
-
-                var so = new SerializedObject(lobby.GetComponent<LobbyMainUI>());
-                so.FindProperty("_chapterSelectPanel").objectReferenceValue = select;
-                so.FindProperty("_chestRewardPopup").objectReferenceValue = reward;
-                // 로비 상자 칸의 백금 그림도 같이 갈아 끼운다
-                var arts = so.FindProperty("_chestArts");
-                for (int i = 0; i < arts.arraySize; i++)
-                {
-                    var e = arts.GetArrayElementAtIndex(i);
-                    if (e.FindPropertyRelative("Key").stringValue == "platinum")
-                        e.FindPropertyRelative("Sprite").objectReferenceValue = P("chest_platinum");
-                }
-                so.ApplyModifiedPropertiesWithoutUndo();
-                PrefabUtility.SaveAsPrefabAsset(lobby, LobbyPrefab);
-            }
-            finally { PrefabUtility.UnloadPrefabContents(lobby); }
-
+            // 옛 로비의 챕터 선택 · 상자 보상 창과 호스트 선택 꾸미기는 옛 화면과 함께 2026-10-24 Assets 밖으로 옮겼다
+            // (새 화면 — RbChapterPage · RbNotice). 남은 것은 인게임 챕터 결과 창
             var ingame = PrefabUtility.LoadPrefabContents(InGamePrefab);
             try
             {
@@ -103,183 +79,9 @@ namespace Game.Editor
             }
             finally { PrefabUtility.UnloadPrefabContents(ingame); }
 
-            var host = PrefabUtility.LoadPrefabContents(HostPrefab);
-            try
-            {
-                BuildHostSelectExtras(host.transform);
-                PrefabUtility.SaveAsPrefabAsset(host, HostPrefab);
-            }
-            finally { PrefabUtility.UnloadPrefabContents(host); }
-
             int have = 0;
             foreach (var (part, _) in Parts) if (File.Exists($"{PartsDir}/{part}.png")) have++;
             Debug.Log($"[챕터 화면] 세움 — 부품 {have}/{Parts.Length} (이번에 가져온 것 {pulled})");
-        }
-
-        // ── 챕터 선택 (시안 ui_new_chapter_select_v1) ─────────────
-        //
-        // 배경만 화면을 채우고, 나머지는 시안 한 장 판(`Content`) 안에 시안 좌표 그대로 담는다.
-        // 판이 화면 가운데에 뜨므로 긴 폰에서는 위아래로, 태블릿에서는 좌우로 배경이 더 보인다.
-
-        private static ChapterSelectPanel BuildChapterSelect(Transform root)
-        {
-            var panel = Fresh(root, "ChapterSelectPanel");
-            Full(Img(Node(panel, "ChapterSelectBg"), P("chapterselect_bg")).rectTransform);
-            var box = Content(panel, "ChapterSelectContent");
-
-            // ⚠ 윗줄(뒤로가기 · 골드 · 젬)은 가운데 판이 아니라 **화면 맨 위**에 붙인다(2026-09-18 지적).
-            //   판 안에 두면 긴 폰에서 화면 위가 비고 윗줄이 가운데로 내려온다.
-            //   뒤로가기는 화면 왼쪽 위 모서리, 재화는 화면 위 가운데 — 태블릿에서도 제자리다.
-            var back = Img(Node(panel, "ChapterSelectBackButton"), P("button_back")).rectTransform;
-            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
-            back.anchoredPosition = new Vector2(20, -22);
-            back.sizeDelta = new Vector2(84, 60);
-            back.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
-            Btn(back);
-
-            var bar = Node(panel, "ChapterTopBar");
-            bar.anchorMin = bar.anchorMax = bar.pivot = new Vector2(0.5f, 1f);
-            bar.anchoredPosition = Vector2.zero;
-            bar.sizeDelta = new Vector2(720, 80);
-            bar.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
-
-            var gold = Img(Node(bar, "ChapterGoldPill"), L("hudpill")).rectTransform;
-            Top(gold, -30, -38, 230, 46);
-            Center(Img(Node(gold, "ChapterGoldIcon"), L("goldicon")).rectTransform, -88, 0, 42, 42);
-            Center(Txt(Node(gold, "ChapterGoldText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
-                   20, 0, 150, 40);
-            var gem = Img(Node(bar, "ChapterGemPill"), L("hudpill")).rectTransform;
-            Top(gem, 205, -38, 200, 46);   // 젬 1,000,000 도 들어가게
-            Center(Img(Node(gem, "ChapterGemIcon"), L("gemicon")).rectTransform, -72, 0, 40, 36);
-            Center(Txt(Node(gem, "ChapterGemText"), "0", 26, TextAlignmentOptions.MidlineRight).rectTransform,
-                   20, 0, 140, 40);
-
-            var title = Img(Node(box, "ChapterSelectTitle"), P("chapterselect_title"));
-            Top(title.rectTransform, 0, -148, 600, 110);
-            title.enabled = title.sprite != null;
-            var titleText = Txt(Node(box, "ChapterSelectTitleText"), "CHAPTER SELECT", 50, TextAlignmentOptions.Center);
-            Top(titleText.rectTransform, 0, -148, 600, 110);
-
-            // 카드 여섯 장 — 2열 × 3행. 시안 중심 (185, 337) (533, 337) … 행 간격 283
-            for (int i = 0; i < 6; i++)
-            {
-                int chapter = i + 1;
-                float x = i % 2 == 0 ? -175f : 173f;
-                float y = 303f - (i / 2) * 283f;
-                var card = Node(box, $"ChapterCard{chapter}");
-                Center(card, x, y, 330, 270);
-                Btn(card);
-
-                var art = Img(Node(card, "ChapterCardArt"), P($"chaptercard_art_{chapter}"));
-                art.preserveAspect = false;
-                Center(art.rectTransform, 0, -8, 300, 230);
-                Center(Img(Node(card, "ChapterCardFrame"), P("chaptercard_frame")).rectTransform, 0, 0, 330, 270);
-                Center(Txt(Node(card, "ChapterCardNoText"), $"CHAPTER {chapter}", 24, TextAlignmentOptions.Center)
-                           .rectTransform, 0, 96, 240, 34);
-                Center(Txt(Node(card, "ChapterCardNameText"), "", 21, TextAlignmentOptions.Center)
-                           .rectTransform, 0, 61, 280, 32);
-                Center(Img(Node(card, "ChapterCardLockIcon"), P("chaptercard_lock")).rectTransform, 0, -28, 64, 80);
-                var chest = Img(Node(card, "ChapterCardChestIcon"), ChestOfChapter(chapter));
-                chest.preserveAspect = true;
-                Center(chest.rectTransform, 105, -88, 82, 56);
-                foreach (var g in card.GetComponentsInChildren<Graphic>()) g.raycastTarget = g.transform == card;
-            }
-
-            var start = Img(Node(box, "ChapterStartButton"), P("chapterselect_startbutton")).rectTransform;
-            start.anchorMin = start.anchorMax = new Vector2(0.5f, 0f);
-            start.pivot = new Vector2(0.5f, 0.5f);
-            start.anchoredPosition = new Vector2(0, 110);
-            start.sizeDelta = new Vector2(380, 100);
-            Btn(start);
-            var startText = Txt(Node(start, "ChapterStartText"), "START", 42, TextAlignmentOptions.Center, plain: true);
-            startText.color = new Color(0.12f, 0.1f, 0.05f);
-            Center(startText.rectTransform, 20, 0, 170, 70);
-
-            var comp = panel.gameObject.AddComponent<ChapterSelectPanel>();
-            var so = new SerializedObject(comp);
-            so.FindProperty("_frameNormal").objectReferenceValue = P("chaptercard_frame");
-            so.FindProperty("_frameSelected").objectReferenceValue = P("chaptercard_frame_selected");
-            var chests = so.FindProperty("_chapterChest");
-            chests.arraySize = 6;
-            for (int i = 0; i < 6; i++) chests.GetArrayElementAtIndex(i).objectReferenceValue = ChestOfChapter(i + 1);
-            so.ApplyModifiedPropertiesWithoutUndo();
-            return comp;
-        }
-
-        private static Sprite ChestOfChapter(int chapter)
-            => chapter <= 2 ? L("chest_silver") : chapter <= 4 ? L("chest_gold") : P("chest_platinum");
-
-        // ── 상자 보상창 (시안 ui_new_chest_reward_v1) ─────────────
-        //
-        // 화면 가운데 기준. 시안(1280)의 가운데 640 을 0 으로 잰 값이다.
-
-        private static ChestRewardPopup BuildChestReward(Transform root)
-        {
-            var popup = Fresh(root, "ChestRewardPopup");
-            var dim = Img(Node(popup, "RewardDim"), null);
-            dim.color = new Color(0f, 0f, 0f, 0.95f);
-            Full(dim.rectTransform);
-            var box = Content(popup, "RewardContent");
-
-            Center(Img(Node(box, "RewardFrame"), P("chestreward_frame")).rectTransform, 0, -135, 640, 880);
-            var chest = Img(Node(box, "RewardChestArt"), P("chestreward_open_gold"));
-            chest.preserveAspect = true;
-            Center(chest.rectTransform, 0, 340, 420, 340);
-            // 납품 액자(640×880) 실측 — 제목 판 x 190~455 · y 195~262, 안쪽 판 x 118~522 · y 268~735.
-            // 액자 위 = 가운데 +305 이므로 제목 판 가운데 = +77. 시안 자리(+100)에 두면 글자가 판 위로 샜다.
-            var header = Txt(Node(box, "RewardHeaderText"), "獲得:", 36, TextAlignmentOptions.Center);
-            header.color = new Color(1f, 0.85f, 0.35f);
-            Center(header.rectTransform, 0, 77, 240, 52);
-            header.enableAutoSizing = true;
-            header.fontSizeMin = 22;
-            header.fontSizeMax = 36;
-
-            // 카드 칸 — 자리는 코드가 장 수에 맞춰 다시 잡는다(`ChestRewardPopup.Fill`)
-            var grid = Node(box, "RewardGrid");
-            Center(grid, 0, 0, 10, 10);
-            for (int i = 0; i < 6; i++)
-            {
-                var card = Node(grid, $"RewardCard{i}");
-                Center(card, i % 2 == 0 ? -112 : 112, -60 - (i / 2) * 217, 190, 190);
-                var icon = Img(Node(card, "RewardCardIcon"), i == 0 ? P("reward_goldpile") : null);
-                icon.preserveAspect = true;
-                // 납품 카드(190) 실측 — 그림 창 y 30~144 · 개수 띠 y 147~178 (위에서).
-                // 그림은 창 안에만, 글자는 띠 안에만 둔다. 띠가 31 px 로 낮아 글자를 키우면 밖으로 샌다.
-                Center(icon.rectTransform, 0, 8, 150, 108);
-                Center(Img(Node(card, "RewardCardFrame"), i == 0 ? P("rewardcard_gold") : P("rewardcard_b"))
-                           .rectTransform, 0, 0, 190, 190);
-                var count = Txt(Node(card, "RewardCardCountText"), "×0", 28, TextAlignmentOptions.Center);
-                Center(count.rectTransform, 0, -67, 150, 30);
-                count.enableAutoSizing = true;
-                count.fontSizeMin = 16;
-                count.fontSizeMax = 28;
-            }
-
-            var ok = Img(Node(box, "RewardOkButton"), P("button_yellow_wide")).rectTransform;
-            Center(ok, 0, -478, 290, 80);
-            Btn(ok);
-            var okText = Txt(Node(ok, "RewardOkText"), "OK", 40, TextAlignmentOptions.Center, plain: true);
-            okText.color = new Color(0.12f, 0.1f, 0.05f);
-            Full(okText.rectTransform);
-
-            var comp = popup.gameObject.AddComponent<ChestRewardPopup>();
-            var so = new SerializedObject(comp);
-            var arts = so.FindProperty("_openArts");
-            string[] keys = { "silver", "gold", "platinum" };
-            arts.arraySize = keys.Length;
-            for (int i = 0; i < keys.Length; i++)
-            {
-                var e = arts.GetArrayElementAtIndex(i);
-                e.FindPropertyRelative("Key").stringValue = keys[i];
-                e.FindPropertyRelative("Sprite").objectReferenceValue = P($"chestreward_open_{keys[i]}");
-            }
-            so.FindProperty("_cardGold").objectReferenceValue = P("rewardcard_gold");
-            so.FindProperty("_cardB").objectReferenceValue = P("rewardcard_b");
-            so.FindProperty("_cardA").objectReferenceValue = P("rewardcard_a");
-            so.FindProperty("_cardS").objectReferenceValue = P("rewardcard_s");
-            so.FindProperty("_goldPile").objectReferenceValue = P("reward_goldpile");
-            so.ApplyModifiedPropertiesWithoutUndo();
-            return comp;
         }
 
         // ── 챕터 클리어 결과창 (시안 ui_new_chapter_result_v1) ────
@@ -373,41 +175,6 @@ namespace Game.Editor
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             popup.gameObject.SetActive(false);
-        }
-
-        // ── 호스트 선택 — 뒤 어둡게 · 뒤로가기 ───────────────────
-        //
-        // 호스트 선택은 화면 위 105 아래부터 1175 높이인 판이라, 긴 폰에서는 위아래로
-        // 로비가 그대로 보였고 뒤로 갈 버튼도 없었다(2026-09-18 지적).
-
-        private static void BuildHostSelectExtras(Transform root)
-        {
-            // 판 뒤를 화면 끝까지 덮는 어둡게 막. 판보다 넓게 뻗어야 하므로 여백을 크게 준다.
-            // `ScreenFitLock` — `ScreenFit` 이 「판을 꽉 채운다」로 보고 판 크기로 되돌리지 않게.
-            var old = root.Find("HostSelectDim");
-            if (old != null) Object.DestroyImmediate(old.gameObject);
-            var dim = Img(Node(root, "HostSelectDim"), null);
-            dim.color = new Color(0f, 0f, 0f, 0.85f);
-            dim.raycastTarget = true;   // 뒤의 로비가 눌리지 않게
-            var drt = dim.rectTransform;
-            drt.anchorMin = Vector2.zero;
-            drt.anchorMax = Vector2.one;
-            drt.offsetMin = new Vector2(-800f, -1600f);
-            drt.offsetMax = new Vector2(800f, 600f);
-            dim.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
-            drt.SetAsFirstSibling();
-
-            // 뒤로가기 — 챕터 선택과 같은 그림 · 같은 자리(화면 왼쪽 위).
-            // 판 위가 화면 위에서 105 아래라, 판 위 기준 +83 이 화면 위 22 다.
-            old = root.Find("HostSelectBackButton");
-            if (old != null) Object.DestroyImmediate(old.gameObject);
-            var back = Img(Node(root, "HostSelectBackButton"), P("button_back")).rectTransform;
-            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
-            back.anchoredPosition = new Vector2(20f, 83f);
-            back.sizeDelta = new Vector2(84f, 60f);
-            back.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitLock>();
-            Btn(back);
-            back.SetAsLastSibling();
         }
 
         // ── 부품 가져오기 ────────────────────────────────────────

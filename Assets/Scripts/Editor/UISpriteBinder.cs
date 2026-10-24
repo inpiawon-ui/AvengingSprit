@@ -25,9 +25,6 @@ namespace Game.Editor
 
         private static readonly (string prefab, string path)[] Targets =
         {
-            ("TitleMainUI",     "Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab"),
-            ("LobbyMainUI",     "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab"),
-            ("HostSelectPanel", "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab"),
             ("InGameMainUI",    "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab"),
         };
 

@@ -24,9 +24,6 @@ namespace Game.Editor
         //    인게임 글자만 외곽선도 볼드도 없이 남아 있었다 — 실기에서 안 읽혔다.
         private static readonly string[] Prefabs =
         {
-            "Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab",
-            "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab",
-            "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab",
             "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
             "Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab",
         };
@@ -50,7 +47,8 @@ namespace Game.Editor
             int total = 0, pixelCount = 0;
             foreach (var path in Prefabs)
             {
-                var root = PrefabUtility.LoadPrefabContents(path);
+                if (!System.IO.File.Exists(path)) continue;   // 옛 화면 프리팹은 2026-10-24 Assets 밖으로 옮겼다
+            var root = PrefabUtility.LoadPrefabContents(path);
                 if (root == null) { Debug.LogError($"[ApplyFonts] 로드 실패: {path}"); continue; }
 
                 var texts = root.GetComponentsInChildren<TextMeshProUGUI>(true);

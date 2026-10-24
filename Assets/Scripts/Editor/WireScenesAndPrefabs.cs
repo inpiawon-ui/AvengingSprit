@@ -23,9 +23,6 @@ namespace Game.Editor
         // 프리팹 경로, Addressable 주소, 라벨
         private static readonly (string path, string address, string label)[] Prefabs =
         {
-            ($"{PrefabRoot}/Title/TitleMainUI.prefab",           "UI/Title/TitleMainUI",      "label_title"),
-            ($"{PrefabRoot}/Lobby/LobbyMainUI.prefab",           "UI/Lobby/LobbyMainUI",      "label_lobby"),
-            ($"{PrefabRoot}/HostSelect/HostSelectPanel.prefab",  "UI/Lobby/HostSelectPanel",  "label_lobby"),
             ($"{PrefabRoot}/InGame/InGameMainUI.prefab",         "UI/InGame/InGameMainUI",    "label_ingame"),
         };
 
@@ -50,43 +47,8 @@ namespace Game.Editor
 
         private static void AttachScripts()
         {
-            Attach<TitleMainUI>($"{PrefabRoot}/Title/TitleMainUI.prefab");
-            Attach<HostSelectPanel>($"{PrefabRoot}/HostSelect/HostSelectPanel.prefab");
+            // 옛 타이틀 · 로비 · 호스트 선택(중첩 배선 포함)은 2026-10-24 Assets 밖으로 옮겼다 — 남은 것은 인게임뿐
             Attach<InGameMainUI>($"{PrefabRoot}/InGame/InGameMainUI.prefab");
-
-            // 로비는 HostSelectPanel 참조를 함께 물려야 한다
-            var lobbyPath = $"{PrefabRoot}/Lobby/LobbyMainUI.prefab";
-            var root = PrefabUtility.LoadPrefabContents(lobbyPath);
-            if (root == null) { Debug.LogError($"[Wire] 로드 실패: {lobbyPath}"); return; }
-
-            var lobby = root.GetComponent<LobbyMainUI>() ?? root.AddComponent<LobbyMainUI>();
-
-            // 호스트 선택 패널을 로비 프리팹 안에 중첩 인스턴스로 넣는다.
-            // 별도 씬 로드 없이 로비 위에서 열고 닫기 위함이다.
-            var panelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
-                $"{PrefabRoot}/HostSelect/HostSelectPanel.prefab");
-            var existing = root.transform.Find("HostSelectPanel");
-            GameObject panelGo = existing != null ? existing.gameObject : null;
-            if (panelGo == null && panelAsset != null)
-            {
-                panelGo = (GameObject)PrefabUtility.InstantiatePrefab(panelAsset, root.transform);
-                panelGo.name = "HostSelectPanel";
-                panelGo.transform.SetAsLastSibling();
-            }
-            if (panelGo != null)
-            {
-                var so = new SerializedObject(lobby);
-                var prop = so.FindProperty("_hostSelectPanel");
-                if (prop != null)
-                {
-                    prop.objectReferenceValue = panelGo.GetComponent<HostSelectPanel>();
-                    so.ApplyModifiedPropertiesWithoutUndo();
-                }
-            }
-
-            PrefabUtility.SaveAsPrefabAsset(root, lobbyPath);
-            PrefabUtility.UnloadPrefabContents(root);
-            Debug.Log("[Wire] LobbyMainUI + HostSelectPanel 중첩 배선 완료");
         }
 
         private static void Attach<T>(string path) where T : Component

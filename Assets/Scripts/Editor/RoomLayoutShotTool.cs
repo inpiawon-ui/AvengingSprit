@@ -116,17 +116,18 @@ namespace Game.EditorTools
             {
                 Time.timeScale = 1f;
                 if (GameObject.Find("[LoadingView]") != null) { _wait = 20; return; }
-                if (Click("SkipButton") || Click("TouchArea")) { _wait = 40; return; }
-                var lobby = Object.FindAnyObjectByType<LobbyMainUI>();
+                if (Click("SkipButton") || Click("TouchArea") || Click("StartButton")) { _wait = 40; return; }
+                // 새 로비(RbLobbyUI)에서 가진 몸 첫째로 바로 판을 연다 — 옛 로비는 2026-10-24 Assets 밖으로 옮겼다
+                var lobby = Object.FindAnyObjectByType<Game.Module.Lobby.RbLobbyUI>();
                 if (lobby != null)
                 {
-                    if (!CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady) { _wait = 30; return; }
+                    if (!lobby.IsReady || !CoreModule.TryGet<Game.User.IPlayerDataService>(out var p) || !p.IsReady) { _wait = 30; return; }
                     if (Screen.width != 720 || Screen.height != 1280) { SetSize(720, 1280); _wait = 120; return; }
-                    var panel = lobby.GetComponentInChildren<ChapterHostPanel>(true);
-                    if (!panel.IsOpen) typeof(LobbyMainUI).GetMethod("PlayScenario", F).Invoke(lobby, null);
-                    var keys = (List<string>)typeof(ChapterHostPanel).GetField("_cardKeys", F).GetValue(panel);
-                    typeof(ChapterHostPanel).GetMethod("PickHost", F).Invoke(panel, new object[] { keys[0] });
-                    typeof(ChapterHostPanel).GetMethod("OnStart", F).Invoke(panel, null);
+                    string first = null;
+                    foreach (var e in p.PlayableHosts)
+                        if (e != null && !e.IsGhost && p.IsHostOwned(e)) { first = e.HostKey; break; }
+                    p.SetStamina(p.StaminaMax);
+                    lobby.StartRunDirect(1, first);
                     _wait = 120;
                     return;
                 }

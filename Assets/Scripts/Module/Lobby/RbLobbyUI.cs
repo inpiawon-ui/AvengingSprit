@@ -519,6 +519,24 @@ namespace Game.Module.Lobby
             Launch(key, e, gold);
         }
 
+        /// <summary>유저 데이터가 왔는가 — 시험 도구가 판을 열기 전에 본다.</summary>
+        public bool IsReady => _player != null && _player.IsReady;
+
+        /// <summary>
+        /// 시험 · 녹화 도구 전용 — 챕터 · 몸을 정해 바로 판을 연다(골드는 안 낸다 · 행동력은 부르는 쪽이 채운다).
+        /// 옛 로비의 「시나리오 창 → 몸 고르기 → 시작」 길을 대신한다(옛 로비는 2026-10-24 Assets 밖으로 옮겼다).
+        /// </summary>
+        public void StartRunDirect(int chapter, string hostKey)
+        {
+            if (!IsReady) return;
+            var e = _player.GetHost(string.IsNullOrEmpty(hostKey) ? HostEntry.GhostKey : hostKey);
+            if (e == null) return;
+            _chapter = Mathf.Clamp(chapter, 1, Mathf.Max(1, _player.ChapterCount));
+            _mode = e.IsGhost ? RunStartMode.Ghost : RunStartMode.Host;
+            _host = e.HostKey;
+            Launch(e.HostKey, e, 0);
+        }
+
         private void Launch(string key, HostEntry e, int gold)
         {
             CoreModule.TryGet<IStaminaService>(out var stamina);

@@ -16,10 +16,7 @@ namespace Game.Editor
     {
         private static readonly string[] Roots =
         {
-            "Assets/BundleResource/Prefabs/UI/Title/TitleMainUI.prefab",
             "Assets/BundleResource/Prefabs/UI/Opening/OpeningMainUI.prefab",
-            "Assets/BundleResource/Prefabs/UI/Lobby/LobbyMainUI.prefab",
-            "Assets/BundleResource/Prefabs/UI/HostSelect/HostSelectPanel.prefab",
             "Assets/BundleResource/Prefabs/UI/InGame/InGameMainUI.prefab",
         };
 
@@ -192,7 +189,8 @@ namespace Game.Editor
 
             foreach (var path in Roots)
             {
-                var root = PrefabUtility.LoadPrefabContents(path);
+                if (!System.IO.File.Exists(path)) continue;   // 옛 화면 프리팹은 2026-10-24 Assets 밖으로 옮겼다
+            var root = PrefabUtility.LoadPrefabContents(path);
                 if (root == null) { Debug.LogError($"[ScreenFit] 로드 실패: {path}"); continue; }
 
                 if (root.GetComponent<ScreenFit>() == null)
