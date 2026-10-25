@@ -55,6 +55,7 @@ namespace Game.Module.Lobby
         private readonly List<Transform> _tiles = new();
         private string _key;
         private int _essCount = 1;
+        private int _doneFromRank = -1, _doneFromCap = -1;
 
         private void Awake() => Init();
 
@@ -77,6 +78,7 @@ namespace Game.Module.Lobby
             _modals.OnClick("GrwStarAskYes", ConfirmStarUp);
             _modals.OnClick("GrwStarDoneClose", () => _modals.SetActive("GrwStarDone", false));
             _modals.OnClick("GrwStarDoneOk", () => _modals.SetActive("GrwStarDone", false));
+            _modals.OnClick("GrwStarDoneHelp", () => _shell.ShowGuide("growth"));
             _modals.OnClick("GrwSkillInfoClose", () => _modals.SetActive("GrwSkillInfo", false));
             _modals.OnClick("GrwSourcesClose", () => _modals.SetActive("GrwSources", false));
             _modals.OnClick("GrwSrc0Go", () => Leave(() => _shell.SelectTab("Summon")));
@@ -297,7 +299,10 @@ namespace Game.Module.Lobby
         {
             int cost = _player.HostStatCost(_key, stat);
             if (cost <= 0) return;
+            int powerBefore = _player.PowerOf(_key);
             if (!_player.BuyHostStat(_key, stat)) { _shell.Notice.ShowGoldShort(cost, _player.Gold, null, null, null); return; }
+            int powerGain = _player.PowerOf(_key) - powerBefore;
+            if (powerGain > 0) PowerUpAsync(powerGain).Forget();   // fire-and-forget: 띠가 1.2초 뒤 스스로 걷힌다
             GameSound.Cue("run.shop");
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장 — 앱이 꺼져도 산 것은 남는다
             Refresh();
@@ -306,6 +311,32 @@ namespace Game.Module.Lobby
             int idx = Array.IndexOf(StatOrder, stat);
             if (_shell.Fx != null && idx >= 0 && idx < _tiles.Count && _tiles[idx] is RectTransform tile)
                 _shell.Fx.UpgradeTick(tile, _ui.Find(tile, "GrwStatValue") as RectTransform);
+        }
+
+        // 「전투력 +n」 띠(시안 growth-success) — 톡 튀어나와 머물다 위로 사라진다. 길게 눌러 연속 강화하면 숫자만 갈아 끼운다
+        private int _powerUpId;
+
+        private async UniTaskVoid PowerUpAsync(int gain)
+        {
+            if (_ui.Find("GrwPowerUp") is not RectTransform up) return;
+            int id = ++_powerUpId;
+            _ui.SetText("GrwPowerUpText", string.Format(Localize.FromTable("ui.rb.growth.power_plus", "전투력 +{0}"), gain.ToString("N0")));
+            up.gameObject.SetActive(true);
+            var home = up.anchoredPosition;
+            if (!up.TryGetComponent<CanvasGroup>(out var group)) group = up.gameObject.AddComponent<CanvasGroup>();
+            var token = this.GetCancellationTokenOnDestroy();
+            const float total = 1.2f;
+            for (float t = 0f; t < total; t += Time.unscaledDeltaTime)
+            {
+                if (id != _powerUpId) { up.anchoredPosition = home; return; }
+                up.localScale = Vector3.one * (t < 0.2f ? Ease.OutBack(t / 0.2f) : 1f);
+                float fade = t < total - 0.3f ? 0f : (t - (total - 0.3f)) / 0.3f;
+                group.alpha = 1f - fade;
+                up.anchoredPosition = home + new Vector2(0f, 18f * fade);
+                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
+            }
+            up.anchoredPosition = home;
+            up.gameObject.SetActive(false);
         }
 
         private void StarUp()
@@ -337,6 +368,9 @@ namespace Game.Module.Lobby
         private void ConfirmStarUp()
         {
             _modals.SetActive("GrwStarAsk", false);
+            // 성공 화면의 「2성 → 3성 · 강화 상한 20 → 30」 — 올리기 전 값을 쥐어 둔다
+            _doneFromRank = _player.GetMastery(_key);
+            _doneFromCap = _player.HostStatCap(_key);
             if (!_player.TryStarUp(_key)) return;
             GameSound.Cue("run.card");
             _player.SaveAsync().Forget();   // fire-and-forget: 성급을 올리자마자 남긴다
@@ -348,13 +382,26 @@ namespace Game.Module.Lobby
             ShowStarDone();
         }
 
+        // 성급 강화 성공(시안 star-success-detail, 전체 화면) — 스킬 Lv 은 성급과 같이 오른다
         private void ShowStarDone()
         {
             int m = _player.GetMastery(_key);
-            SetFace("GrwStarDoneFace");
+            int from = _doneFromRank >= 0 ? _doneFromRank : Mathf.Max(0, m - 1);
+            int cap = _player.HostStatCap(_key);
+            int capFrom = _doneFromCap >= 0 ? _doneFromCap : cap;
+            _doneFromRank = _doneFromCap = -1;
+            var host = _player.GetHost(_key);
+            if (_modals.Get<Image>("GrwStarDoneArt") is Image art)
+            {
+                if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
+                show.Show(_key, Color.white);
+            }
+            _modals.SetText("GrwStarDoneName", host != null ? host.DisplayName : _key);
             RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _starOn, _starOff, _starAwaken);
-            _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.rank_now", "성급 {0}"), m));
             _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
+            _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.done_line1", "{0}성 → {1}성 · 체력·공격 +7%"), from, m));
+            _modals.SetText("GrwStarDoneLine2", string.Format(Localize.FromTable("ui.rb.growth.done_line2", "스킬 Lv {0}→{1} · 강화 상한 {2}→{3}"),
+                                                              from, m, capFrom, cap));
             _modals.SetActive("GrwStarDone", true);
             // 새로 찬 별(1~5성은 m-1 째, 6~10성은 각성 별로 다시 m-6 째)이 작게 터진다
             if (_shell.Fx != null && m > 0 && _modals.Find(_modals.Find("GrwStarDoneStars"), $"GrwStarDoneStar{(m - 1) % 5}") is RectTransform star)

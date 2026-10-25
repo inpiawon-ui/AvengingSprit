@@ -6247,6 +6247,9 @@ namespace Game.Module.InGame
                     if (he != null && !he.IsGhost) { _hostOffers.Add(he); break; }
                 }
             RollShopConsumable();
+            // 진열은 네 칸(PD 2026-10-25 「4칸으로, 우리 기획대로」) — 카드 2(강화 칸 포함) · 몸 또는 소모품 1 · 회복 1.
+            // 만난 몸이 있으면 몸을 건다 — 소모품보다 판이 크게 바뀐다
+            if (_hostOffers.Count > 0) _shopConsumable = Consumable.None;
 
             // 못 올리는 카드(5레벨을 다 찍은 것)는 진열하지 않는다 —
             // 살 수는 있는데 아무 일도 안 일어나면 값이 거짓이 된다.
@@ -6277,9 +6280,15 @@ namespace Game.Module.InGame
             PublishShop();
         }
 
+        /// <summary>상인 진열 칸 수(시안 merchant 2 × 2). 카드 칸 = 이 수 − 회복 − 몸/소모품.</summary>
+        private const int MerchantSlots = 4;
+
         private void DrawShopCards()
-            => _shopTable.Draw(_shopOffers, ShopChapter,
-                               Mathf.Max(1, _shopRules.OfferCount - (_shopUpgrade != null ? 1 : 0)), _shopFilter, _rng);
+        {
+            int extras = 1 + (_hostOffers.Count > 0 ? 1 : 0) + (_shopConsumable != Consumable.None ? 1 : 0);   // 회복 + 몸 · 소모품
+            int cards = Mathf.Min(_shopRules.OfferCount, MerchantSlots - extras) - (_shopUpgrade != null ? 1 : 0);
+            _shopTable.Draw(_shopOffers, ShopChapter, Mathf.Max(1, cards), _shopFilter, _rng);
+        }
 
         // 다시 뽑기는 없다 — PD 2026-10-23 「다시 뽑기는 일단 빼자」(RE:BORN UI 리뉴얼 「카드 리롤 금지」).
 

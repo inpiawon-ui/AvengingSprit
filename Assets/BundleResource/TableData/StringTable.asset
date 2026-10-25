@@ -11025,3 +11025,70 @@ MonoBehaviour:
     _en: Tap to continue
     _zhHant: "\u9EDE\u64CA\u756B\u9762\u7E7C\u7E8C"
     _zhHans: "\u70B9\u51FB\u753B\u9762\u7EE7\u7EED"
+  - _key: ui.rb.shrine.pick
+    _ko: "\uD558\uB098\uB97C \uACE8\uB77C \uC8FC\uC138\uC694"
+    _ja: "\u3072\u3068\u3064\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
+    _en: Choose one
+    _zhHant: "\u8ACB\u9078\u64C7\u4E00\u9805"
+    _zhHans: "\u8BF7\u9009\u62E9\u4E00\u9879"
+  - _key: ui.rb.shrine.go
+    _ko: "{0} \uC120\uD0DD"
+    _ja: "{0}\u3092\u9078\u3076"
+    _en: Choose {0}
+    _zhHant: "\u9078\u64C7{0}"
+    _zhHans: "\u9009\u62E9{0}"
+  - _key: ui.rb.shop.hello
+    _ko: "\uD544\uC694\uD55C \uAC78 \uACE8\uB77C \uBD10!"
+    _ja: "\u5FC5\u8981\u306A\u3082\u306E\u3092\u9078\u3073\u306A\uFF01"
+    _en: Pick what you need!
+    _zhHant: "\u6311\u4F60\u9700\u8981\u7684\u5427\uFF01"
+    _zhHans: "\u6311\u4F60\u9700\u8981\u7684\u5427\uFF01"
+  - _key: ui.rb.shop.leave
+    _ko: "\uC9C0\uB098\uAC04\uB2E4"
+    _ja: "\u901A\u308A\u904E\u304E\u308B"
+    _en: Move on
+    _zhHant: "\u96E2\u958B"
+    _zhHans: "\u79BB\u5F00"
+  - _key: ui.rb.shop.never
+    _ko: "\uC0C1\uC778\uC740 \uB2E4\uC2DC \uC624\uC9C0 \uC54A\uC544\uC694"
+    _ja: "\u5546\u4EBA\u306F\u4E8C\u5EA6\u3068\u6765\u307E\u305B\u3093"
+    _en: The merchant won't return
+    _zhHant: "\u5546\u4EBA\u4E0D\u6703\u518D\u4F86"
+    _zhHans: "\u5546\u4EBA\u4E0D\u4F1A\u518D\u6765"
+  - _key: ui.rb.hud.no_body
+    _ko: "\uBAB8 \uC5C6\uC74C"
+    _ja: "\u4F53\u306A\u3057"
+    _en: No body
+    _zhHant: "\u7121\u8EAB\u9AD4"
+    _zhHans: "\u65E0\u8EAB\u4F53"
+  - _key: ui.rb.hud.no_body_hint
+    _ko: "\uBAB8 \uC5C6\uC774 \uB5A0 \uC788\uB294 \uB3D9\uC548 \uC720\uB839 \uCCB4\uB825\uC774
+      \uC904\uC5B4\uC694"
+    _ja: "\u4F53\u306A\u3057\u3067\u6F02\u3046\u9593\u3001\u30B4\u30FC\u30B9\u30C8\u4F53\u529B\u304C\u6E1B\u308A\u307E\u3059"
+    _en: Your ghost HP drains while you have no body
+    _zhHant: "\u7121\u8EAB\u9AD4\u6F02\u6D6E\u6642\uFF0C\u5E7D\u9748\u9AD4\u529B\u6703\u6E1B\u5C11"
+    _zhHans: "\u65E0\u8EAB\u4F53\u6F02\u6D6E\u65F6\uFF0C\u5E7D\u7075\u4F53\u529B\u4F1A\u51CF\u5C11"
+  - _key: ui.rb.growth.starup_success
+    _ko: "\uC131\uAE09 \uAC15\uD654 \uC131\uACF5"
+    _ja: "\u661F\u7D1A\u5F37\u5316\u6210\u529F"
+    _en: Star Up Complete
+    _zhHant: "\u661F\u7D1A\u5F37\u5316\u6210\u529F"
+    _zhHans: "\u661F\u7EA7\u5F3A\u5316\u6210\u529F"
+  - _key: ui.rb.growth.done_line1
+    _ko: "{0}\uC131 \u2192 {1}\uC131 \xB7 \uCCB4\uB825\xB7\uACF5\uACA9 +7%"
+    _ja: "{0}\u661F \u2192 {1}\u661F\u30FB\u4F53\u529B\u30FB\u653B\u6483 +7%"
+    _en: "{0}\u2605 \u2192 {1}\u2605 \xB7 HP\xB7ATK +7%"
+    _zhHant: "{0}\u661F \u2192 {1}\u661F\u30FB\u9AD4\u529B\u30FB\u653B\u64CA +7%"
+    _zhHans: "{0}\u661F \u2192 {1}\u661F\u30FB\u4F53\u529B\u30FB\u653B\u51FB +7%"
+  - _key: ui.rb.growth.done_line2
+    _ko: "\uC2A4\uD0AC Lv {0}\u2192{1} \xB7 \uAC15\uD654 \uC0C1\uD55C {2}\u2192{3}"
+    _ja: "\u30B9\u30AD\u30EBLv {0}\u2192{1}\u30FB\u5F37\u5316\u4E0A\u9650 {2}\u2192{3}"
+    _en: "Skill Lv {0}\u2192{1} \xB7 Cap {2}\u2192{3}"
+    _zhHant: "\u6280\u80FDLv {0}\u2192{1}\u30FB\u5F37\u5316\u4E0A\u9650 {2}\u2192{3}"
+    _zhHans: "\u6280\u80FDLv {0}\u2192{1}\u30FB\u5F3A\u5316\u4E0A\u9650 {2}\u2192{3}"
+  - _key: ui.rb.growth.power_plus
+    _ko: "\uC804\uD22C\uB825 +{0}"
+    _ja: "\u6226\u95D8\u529B +{0}"
+    _en: Power +{0}
+    _zhHant: "\u6230\u9B25\u529B +{0}"
+    _zhHans: "\u6218\u6597\u529B +{0}"

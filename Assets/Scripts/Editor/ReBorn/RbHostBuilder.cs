@@ -161,6 +161,11 @@ namespace Game.Editor.ReBorn
             var stars = Local(Node(hero, "GrwStars"), hx0, hy0, hx1, hy1, 515, 740, 835, 795);
             for (int i = 0; i < 5; i++)
                 Img(Local(Node(stars, $"GrwStar{i}"), 515, 740, 835, 795, 520 + i * 63, 742, 572 + i * 63, 794), "Icons/rb_icon_star_off_48");
+            // 강화 성공 「전투력 +12」(시안 growth-success) — 판 왼쪽 위 무대 그림 위. 화면 스크립트가 잠깐 띄운다
+            var powerUp = Local(Node(hero, "GrwPowerUp"), hx0, hy0, hx1, hy1, 70, 458, 430, 532);
+            Img(powerUp, "Components/rb_info_chip").preserveAspect = false;
+            Text(Stretch(Node(powerUp, "GrwPowerUpText")), null, "전투력 +12", 46, Green, TA.Center, number: true);
+            powerUp.gameObject.SetActive(false);
 
             // 스킬 3칸 — 필살기 · 액티브 · 패시브(누르면 자세히)
             float[][] tiles = { new[] { 25f, 355f }, new[] { 372f, 705f }, new[] { 720f, 1050f } };

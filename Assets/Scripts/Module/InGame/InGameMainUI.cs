@@ -1386,12 +1386,33 @@ namespace Game.Module.InGame
                 int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다
                 btn.onClick.RemoveAllListeners();
                 btn.interactable = true;
-                btn.onClick.AddListener(() => ChooseShrine(pick));
+                // RE:BORN — 골라서 확정(시안 rest · rest-selected, PD 2026-10-25 「선택지는 우리 것, 모양은 시안」)
+                if (_reborn && _ui.Find("ShrineConfirm") != null) btn.onClick.AddListener(() => SelectShrine(pick, e.Titles));
+                else btn.onClick.AddListener(() => ChooseShrine(pick));
             }
+            if (_reborn) SelectShrine(-1, e.Titles);
             EqualizeText("ShrineChoice0Text", "ShrineChoice1Text", "ShrineChoice2Text");
             EqualizeText("ShrineChoice0Desc", "ShrineChoice1Desc", "ShrineChoice2Desc");
             SetPanel("ShrinePanel", true);
             _ui.Find("ShrinePanel")?.SetAsLastSibling();
+        }
+
+        // 고른 칸에 노란 테 · 아래 버튼이 「○○ 선택」으로 켜진다. -1 이면 아무것도 안 고른 처음 상태
+        private void SelectShrine(int index, string[] titles)
+        {
+            for (int i = 0; i < ShrineChoiceCount; i++) _ui.SetActive($"ShrineChoice{i}Sel", i == index);
+            var go = _ui.Get<Button>("ShrineConfirm");
+            if (go == null) return;
+            bool picked = index >= 0 && titles != null && index < titles.Length;
+            go.interactable = picked;
+            go.onClick.RemoveAllListeners();
+            if (picked)
+            {
+                GameSound.Cue("ui.tap");
+                go.onClick.AddListener(() => { go.interactable = false; ChooseShrine(index); });
+            }
+            _ui.SetText("ShrineConfirmText", picked ? string.Format(Localize.FromTable("ui.rb.shrine.go", "{0} 선택"), titles[index])
+                                                    : Localize.FromTable("ui.rb.shrine.pick", "하나를 골라 주세요"));
         }
 
         // 고른 칸 포커스 → 구슬이 몸으로 → 닿는 순간 적용 · 회복 연출(InGameMainUI.Rewards)

@@ -28,7 +28,12 @@ SHEETS = {
     'rbfx2_chest_silver': ('rbfx_chest_silver', 4, 1, 192, 'pink'),
     'rbfx2_chest_gold': ('rbfx_chest_gold', 4, 1, 192, 'pink'),
     'rbfx2_chest_platinum': ('rbfx_chest_platinum', 4, 1, 192, 'pink'),
+    'rbfx3_danger_edge': ('rbfx_danger_edge', 1, 1, 640, 'black'),
 }
+
+# 인게임에서 쓰는 것은 따로 묶는다(로비 연출 아틀라스를 판 안에서 통째로 올리지 않게) — Assets/BaseResource/ReBornFxGame
+INGAME = {'rbfx3_danger_edge'}
+DST_GAME = os.path.join(ROOT, 'Assets', 'BaseResource', 'ReBornFxGame')
 
 
 def cut_pink(im):
@@ -121,9 +126,11 @@ def run(sheet):
     if name.startswith('rbfx_chest_'):
         grade = name[len('rbfx_chest_'):]
         cells = fit_to_kit(cells, os.path.join(ROOT, 'Assets', 'BaseResource', 'ReBornKit', 'Icons', 'rb_icon_chest_%s_144.png' % grade), size)
+    dst = DST_GAME if sheet in INGAME else DST
+    os.makedirs(dst, exist_ok=True)
     n = 0
     for cell in cells:
-        cell.save(os.path.join(DST, name + ('_%d' % n if cols * rows > 1 else '') + '.png'))
+        cell.save(os.path.join(dst, name + ('_%d' % n if cols * rows > 1 else '') + '.png'))
         n += 1
     print(sheet, '→', name, n, '장')
     return n

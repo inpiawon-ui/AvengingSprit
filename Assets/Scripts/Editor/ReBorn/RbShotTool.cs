@@ -176,6 +176,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "fx:reward@0.75", "fx_reward_3"),
             (720, 1280, Language.Korean, "fx:reward@1.0", "fx_reward_4"),
             (720, 1280, Language.Korean, "fx:reward@1.6", "fx_reward_5"),
+            // PD 결정 반영(2026-10-25) — 성급 강화 성공 전체 화면 · 강화 「전투력 +n」 띠
+            (720, 1280, Language.Korean, "growth:done_low", "now_stardone_16x9"),
+            (1080, 2400, Language.Korean, "growth:done_low", "now_stardone_20x9"),
+            (720, 1280, Language.English, "growth:done_low", "now_stardone_en"),
+            (720, 1280, Language.Korean, "fx:powerup@0.3", "now_powerup_16x9"),
         };
 
         /// <summary>인게임 — 로비에서 출전을 눌러 판에 들어간 뒤 판을 거의 세우고(timeScale) 찍는다. levelup 은 3택1 을 바로 연다.</summary>
@@ -229,6 +234,14 @@ namespace Game.Editor.ReBorn
             (768, 1024, Language.Korean, "ingame:nighthud", "modehud_night_4x3"),
             // 몸 없음(유령으로 출전 — SessionState .ghost 를 켜고 거르개 now_ghost)
             (720, 1280, Language.Korean, "ingame", "now_ghost_16x9"),
+            (720, 1280, Language.Korean, "ingame:danger", "now_ghost_danger_16x9"),
+            // PD 결정 반영(2026-10-25) — 쉼터 골라서 확정 · 상인 4칸
+            (720, 1280, Language.Korean, "ingame:shrine", "now_shrine_16x9"),
+            (720, 1280, Language.Korean, "ingame:shrine_sel", "now_shrine_sel_16x9"),
+            (720, 1280, Language.Korean, "ingame:shop", "now_shop_16x9"),
+            (1080, 2400, Language.Korean, "ingame:shop", "now_shop_20x9"),
+            (720, 1280, Language.English, "ingame:shop", "now_shop_en"),
+            (720, 1280, Language.Japanese, "ingame:shrine_sel", "now_shrine_sel_ja"),
         };
 
         // 이름 앞머리 거르개(SessionState Key+".only") — 새 화면만 찍을 때 목록 전체를 돌지 않게
@@ -665,6 +678,14 @@ namespace Game.Editor.ReBorn
                                        ?? FindChild(tile.transform, "GrwStatValue"));
                     break;
                 }
+                case "powerup":
+                {
+                    lobby.SelectTab("Host");
+                    lobby.OpenGrowth(key);
+                    var page = Object.FindAnyObjectByType<RbGrowthPage>();
+                    typeof(RbGrowthPage).GetMethod("PowerUpAsync", Private)?.Invoke(page, new object[] { 12 });
+                    break;
+                }
                 case "shine":
                     lobby.SelectTab("Battle");
                     if (GameObject.Find("SortieButton") is GameObject b) { fx.Stop((RectTransform)b.transform); fx.ButtonShine((RectTransform)b.transform); }
@@ -744,6 +765,23 @@ namespace Game.Editor.ReBorn
                     bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
                     break;
                 case "ingame:shrine": bt.GetMethod("OpenShrine", F)?.Invoke(battle, null); break;
+                case "ingame:shrine_sel":
+                    bt.GetMethod("OpenShrine", F)?.Invoke(battle, null);
+                    Click("ShrineChoice1");   // 고른 상태(노란 테 · 「○○ 선택」)
+                    break;
+                case "ingame:danger":
+                {
+                    // 몸 없이 유령 체력을 20% 로 내린다 — 붉은 테두리가 켜진다(시험 판에서만, 저장하지 않는다)
+                    var hpField = bt.GetField("_ghostHp", F);
+                    var maxProp = bt.GetProperty("GhostHpMax", F | System.Reflection.BindingFlags.Public);
+                    if (hpField != null && maxProp != null)
+                    {
+                        hpField.SetValue(battle, Mathf.Max(1, (int)maxProp.GetValue(battle) / 5));
+                        bt.GetMethod("PublishHp", F)?.Invoke(battle, null);
+                    }
+                    Time.timeScale = 0.05f;   // 체력이 계속 깎여 0 이 되지 않게 판을 거의 세운다
+                    break;
+                }
                 case "ingame:bosswarn":
                 {
                     // 보스 띠 — 3.2초 뒤 걷히므로 걷는 순서를 끊고(아이디 +1) 다 보이게 둔다

@@ -60,3 +60,14 @@ ui.rb.nightpick.go	{0}에 빙의	{0}に憑依	Possess {0}	附身{0}	附身{0}
 ui.rb.chest.open	{0} 열기!	{0}を開ける！	Open {0}!	開啟{0}！	开启{0}！
 ui.rb.chest.got	획득!	獲得！	Got it!	獲得！	获得！
 ui.rb.chest.tap	화면을 눌러 계속	画面をタップして続ける	Tap to continue	點擊畫面繼續	点击画面继续
+ui.rb.shrine.pick	하나를 골라 주세요	ひとつ選んでください	Choose one	請選擇一項	请选择一项
+ui.rb.shrine.go	{0} 선택	{0}を選ぶ	Choose {0}	選擇{0}	选择{0}
+ui.rb.shop.hello	필요한 걸 골라 봐!	必要なものを選びな！	Pick what you need!	挑你需要的吧！	挑你需要的吧！
+ui.rb.shop.leave	지나간다	通り過ぎる	Move on	離開	离开
+ui.rb.shop.never	상인은 다시 오지 않아요	商人は二度と来ません	The merchant won't return	商人不會再來	商人不会再来
+ui.rb.hud.no_body	몸 없음	体なし	No body	無身體	无身体
+ui.rb.hud.no_body_hint	몸 없이 떠 있는 동안 유령 체력이 줄어요	体なしで漂う間、ゴースト体力が減ります	Your ghost HP drains while you have no body	無身體漂浮時，幽靈體力會減少	无身体漂浮时，幽灵体力会减少
+ui.rb.growth.starup_success	성급 강화 성공	星級強化成功	Star Up Complete	星級強化成功	星级强化成功
+ui.rb.growth.done_line1	{0}성 → {1}성 · 체력·공격 +7%	{0}星 → {1}星・体力・攻撃 +7%	{0}★ → {1}★ · HP·ATK +7%	{0}星 → {1}星・體力・攻擊 +7%	{0}星 → {1}星・体力・攻击 +7%
+ui.rb.growth.done_line2	스킬 Lv {0}→{1} · 강화 상한 {2}→{3}	スキルLv {0}→{1}・強化上限 {2}→{3}	Skill Lv {0}→{1} · Cap {2}→{3}	技能Lv {0}→{1}・強化上限 {2}→{3}	技能Lv {0}→{1}・强化上限 {2}→{3}
+ui.rb.growth.power_plus	전투력 +{0}	戦闘力 +{0}	Power +{0}	戰鬥力 +{0}	战斗力 +{0}

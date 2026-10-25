@@ -116,20 +116,45 @@ namespace Game.Editor.ReBorn
             Text(Stretch(Node(yes, "GrwStarAskYesText")), "ui.rb.growth.starup", "성급 올리기", 50, Ink, TA.Center, heavy: true);
         }
 
-        /// <summary>성급이 올랐어요 — 얼굴 · 별 다섯 · 「성급 3」 · 효과 · 전투력 증가 · 확인.</summary>
+        /// <summary>
+        /// 성급 강화 성공 — 시안 star-success-detail(전체 화면, PD 2026-10-25 「시안대로」). 자리는 시안 px(Place).
+        /// 머리줄(뒤로 · 「성급 강화」 · ?) · 몸 그림 · 「성급 강화 성공」 · 이름 · 별 다섯 · 효과 · 「2성 → 3성 · …」 · 「스킬 Lv … · 강화 상한 …」 · 확인.
+        /// 위 막대는 보이고 아래 탭은 덮는다(그리기 순서는 로비 빌더가 상자 열기 옆으로 옮긴다).
+        /// </summary>
         private static void BuildStarDone(RectTransform root)
         {
-            Modal(root, "GrwStarDone", "ui.rb.growth.starup_done", "성급이 올랐어요", 170f, 293f, 550f, 950f, out var c);
-            Img(Corner(Node(c, "GrwStarDoneFace"), 330f, 418f, 390f, 470f), "Icons/rb_icon_mode_ghost_96");
-            var stars = Corner(Node(c, "GrwStarDoneStars"), 193f, 525f, 527f, 585f);
+            var old = root.Find("GrwStarDone");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var page = Stretch(Node(root, "GrwStarDone"));
+            var bg = Stretch(Node(page, "GrwStarDoneBg"));
+            var bgImg = Img(bg, "Art/rb_art_bg_outgame_blur");
+            bgImg.preserveAspect = false;
+            bgImg.raycastTarget = true;   // 뒤 성장 화면을 못 누르게
+            var fit = bg.gameObject.AddComponent<UnityEngine.UI.AspectRatioFitter>();
+            fit.aspectMode = UnityEngine.UI.AspectRatioFitter.AspectMode.EnvelopeParent;
+            fit.aspectRatio = 1080f / 2340f;
+            var close = Place(Node(page, "GrwStarDoneClose"), Edge.Top, 37f, 280f, 163f, 411f);
+            Btn(close, "Components/rb_btn_icon_round");
+            Img(Local(Node(close, "GrwStarDoneCloseIcon"), 37f, 280f, 163f, 411f, 64f, 309f, 136f, 381f), "Icons/rb_icon_sys_back_48");
+            Text(Place(Node(page, "GrwStarDoneHead"), Edge.Top, 196f, 310f, 880f, 380f), "ui.rb.growth.starup_title", "성급 강화", 48, White, TA.Left, number: true);
+            var help = Place(Node(page, "GrwStarDoneHelp"), Edge.Top, 916f, 280f, 1043f, 411f);
+            Btn(help, "Components/rb_btn_icon_round");
+            Img(Local(Node(help, "GrwStarDoneHelpIcon"), 916f, 280f, 1043f, 411f, 943f, 309f, 1015f, 381f), "Icons/rb_icon_sys_help_48");
+            // 가운데 묶음(몸 그림 ~ 마지막 줄)은 화면 가운데 기준 — 위 기준으로 두니 16:9 에서 마지막 줄이 확인 버튼에 가렸다(첫 캡처).
+            // 시안 y 에서 72 를 뺀 자리 = 머리줄 아래 ~ 확인 버튼 위 한가운데(16:9 에서 262 ~ 1057)
+            const float dy = 72f;
+            Img(Place(Node(page, "GrwStarDoneArt"), Edge.Center, 330f, 690f - dy, 750f, 1140f - dy), "Art/rb_art_mascot_ghost_happy");
+            Text(Place(Node(page, "GrwStarDoneTitle"), Edge.Center, 120f, 1300f - dy, 960f, 1376f - dy), "ui.rb.growth.starup_success", "성급 강화 성공", 60, Cyan, TA.Center, number: true);
+            Text(Place(Node(page, "GrwStarDoneName"), Edge.Center, 120f, 1390f - dy, 960f, 1446f - dy), null, "갱스터", 44, White, TA.Center, heavy: true);
+            var stars = Place(Node(page, "GrwStarDoneStars"), Edge.Center, 285f, 1495f - dy, 795f, 1565f - dy);
             for (int i = 0; i < 5; i++)
-                Img(Corner(Node(stars, $"GrwStarDoneStar{i}"), 4f + i * 67f, 0f, 4f + i * 67f + 58f, 58f), "Icons/rb_icon_star_on_96");
-            Text(Corner(Node(c, "GrwStarDoneRank"), 200f, 620f, 520f, 670f), null, "성급 3", 72, White, TA.Center, heavy: true);
-            Text(Corner(Node(c, "GrwStarDoneGain"), 200f, 698f, 520f, 730f), null, "체력·공격 +7%", 48, Green, TA.Center, heavy: true);
-            Text(Corner(Node(c, "GrwStarDonePower"), 200f, 751f, 520f, 785f), "ui.rb.growth.power_up", "전투력 증가", 46, Green, TA.Center, heavy: true);
-            var ok = Corner(Node(c, "GrwStarDoneOk"), 197f, 827f, 523f, 925f);
+                Img(Local(Node(stars, $"GrwStarDoneStar{i}"), 285f, 1495f, 795f, 1565f, 285f + i * 104f, 1495f, 285f + i * 104f + 70f, 1565f), "Icons/rb_icon_star_on_96");
+            Text(Place(Node(page, "GrwStarDoneGain"), Edge.Center, 120f, 1630f - dy, 960f, 1690f - dy), null, "체력·공격 +7%", 44, White, TA.Center, heavy: true);
+            Text(Place(Node(page, "GrwStarDoneRank"), Edge.Center, 80f, 1750f - dy, 1000f, 1806f - dy), null, "2성 → 3성 · 체력·공격 +7%", 44, Green, TA.Center, heavy: true);
+            Text(Place(Node(page, "GrwStarDoneLine2"), Edge.Center, 80f, 1826f - dy, 1000f, 1882f - dy), null, "스킬 Lv 2→3 · 강화 상한 20→30", 44, Green, TA.Center, heavy: true);
+            var ok = Place(Node(page, "GrwStarDoneOk"), Edge.Bottom, 30f, 2016f, 1050f, 2160f);
             Btn(ok, "Components/rb_btn_primary");
-            Text(Stretch(Node(ok, "GrwStarDoneOkText")), "ui.common.ok", "확인", 64, Ink, TA.Center, heavy: true);
+            Text(Stretch(Node(ok, "GrwStarDoneOkText")), "ui.common.ok", "확인", 60, Ink, TA.Center, heavy: true);
         }
 
         /// <summary>스킬 정보 — 아이콘 · 종류 표 · 이름 / 설명 / 각성 옵션(액티브만, 시안 skill.png).</summary>

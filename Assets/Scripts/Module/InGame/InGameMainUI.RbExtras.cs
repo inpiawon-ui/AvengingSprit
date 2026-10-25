@@ -31,7 +31,8 @@ namespace Game.Module.InGame
         {
             if (!_reborn) return;
             _rbGuide = GetComponentInChildren<RbGuide>(true);
-            foreach (var n in new[] { "RbBossWarn", "RbNextRoom", "RbNightPick", "RbGuide" }) _ui.SetActive(n, false);
+            foreach (var n in new[] { "RbBossWarn", "RbNextRoom", "RbNightPick", "RbGuide", "RbDangerEdge", "RbNoBodyHint" }) _ui.SetActive(n, false);
+            _tokens.Add(bus.Subscribe<CombatHpChangedEvent>(OnRbHp));
             _ui.OnClick("RbNextRoomGo", () => { _ui.SetActive("RbNextRoom", false); _battle?.TakeOnlyExit(); });
             _ui.OnClick("RbNextRoomClose", () => _ui.SetActive("RbNextRoom", false));
             for (int i = 0; i < 3; i++)
@@ -71,6 +72,60 @@ namespace Game.Module.InGame
             if (await UniTask.Delay(System.TimeSpan.FromSeconds(delay), DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
             if (_finished || _rbGuide == null) return;
             _rbGuide.ShowOnce(id, true, topics);
+        }
+
+        // ── 몸 없음 · 위험 경고(시안 ghost-hud · fight-danger, PD 2026-10-25 「일단 추가해 보자」) ──
+        // 몸이 없으면 몸 칸 · 스킬 단추에 「몸 없음」, 판에서 처음 몸이 없을 때 안내 줄 3초.
+        // 몸 없이 유령 체력이 30% 이하면 화면 가장자리가 붉게 숨쉰다 — 빨리 빙의하라는 뜻(몸을 입고 있으면 호스트 막대가 따로 있다)
+
+        private const float DangerRatio = 0.3f;
+        private const float NoBodyHintSeconds = 3f;
+        private int _rbBodyState = -1;   // -1 모름 · 0 몸 없음 · 1 몸 있음
+        private bool _rbNoBodyHintShown, _rbDanger;
+
+        private void OnRbHp(CombatHpChangedEvent e)
+        {
+            int body = e.HasHost ? 1 : 0;
+            if (body != _rbBodyState)
+            {
+                _rbBodyState = body;
+                _ui.SetActive("RbNoBodyText", !e.HasHost);
+                _ui.SetActive("SkillNoBodyText", !e.HasHost);
+                _ui.SetActive("UltNoBodyText", !e.HasHost);
+                if (e.HasHost) _ui.SetActive("RbNoBodyHint", false);
+                else if (!_rbNoBodyHintShown && !_finished)
+                {
+                    _rbNoBodyHintShown = true;
+                    NoBodyHintAsync().Forget();   // fire-and-forget: 3초 뒤 걷는다
+                }
+            }
+            bool danger = !e.HasHost && !_finished && e.GhostHpMax > 0 && e.GhostHp > 0 && e.GhostHp <= e.GhostHpMax * DangerRatio;
+            if (danger == _rbDanger) return;
+            _rbDanger = danger;
+            if (danger) DangerPulseAsync().Forget();   // fire-and-forget: 위험이 풀리면 스스로 끈다
+        }
+
+        private async UniTaskVoid NoBodyHintAsync()
+        {
+            _ui.SetActive("RbNoBodyHint", true);
+            var token = this.GetCancellationTokenOnDestroy();
+            if (await UniTask.Delay(System.TimeSpan.FromSeconds(NoBodyHintSeconds), DelayType.UnscaledDeltaTime, cancellationToken: token).SuppressCancellationThrow()) return;
+            _ui.SetActive("RbNoBodyHint", false);
+        }
+
+        private async UniTaskVoid DangerPulseAsync()
+        {
+            var edge = _ui.Get<Image>("RbDangerEdge");
+            if (edge == null) return;
+            edge.gameObject.SetActive(true);
+            var token = this.GetCancellationTokenOnDestroy();
+            // 1초에 한 번 숨쉰다 — 그림이 시안보다 훨씬 진해(0.42 로 찍으니 가장자리가 통째로 빨갰다) 0.08 ~ 0.26 으로 옅게
+            for (float t = 0f; _rbDanger && !_finished; t += Time.unscaledDeltaTime)
+            {
+                edge.color = new Color(1f, 1f, 1f, 0.17f + 0.09f * Mathf.Sin(t * Mathf.PI * 2f));
+                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
+            }
+            edge.gameObject.SetActive(false);
         }
 
         // ── 보스 경고 ─────────────────────────────────────────

@@ -81,10 +81,29 @@ namespace Game.Editor.ReBorn
 
         public static void BuildInGame(RectTransform root)
         {
+            BuildDangerEdge(root);
             BuildBossWarn(root);
             BuildNextRoom(root);
             BuildNightPick(root);
             BuildGuide(root, InGameDim);
+        }
+
+        /// <summary>
+        /// 위험 경고 — 시안 fight-danger: 화면 가장자리 붉은 테두리(코덱스 rbfx3_danger_edge · 가산).
+        /// 몸 없이 유령 체력 30% 이하일 때 화면 스크립트가 켜고 숨쉬게 한다(PD 2026-10-25 「일단 추가 해보자」). 조작을 막지 않는다.
+        /// </summary>
+        private static void BuildDangerEdge(RectTransform root)
+        {
+            var old = root.Find("RbDangerEdge");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var edge = Stretch(Node(root, "RbDangerEdge"));
+            var img = edge.gameObject.AddComponent<Image>();
+            img.sprite = RbFxBuilder.GameSprite("rbfx_danger_edge");
+            img.material = RbFxBuilder.Additive;
+            img.preserveAspect = false;
+            img.raycastTarget = false;
+            img.color = new Color(1f, 1f, 1f, 0f);
+            edge.gameObject.AddComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
         /// <summary>보스 경고 — 시안 boss.png: 위 막대 밑 띠(WARNING · 보스 얼굴 · 약점 · 「보스는 빙의할 수 없어요」). 판을 멈추지 않는다.</summary>

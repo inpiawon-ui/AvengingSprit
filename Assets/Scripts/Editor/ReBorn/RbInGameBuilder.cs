@@ -237,6 +237,14 @@ namespace Game.Editor.ReBorn
             BuildBossBar(root, hud);
             BuildModeHud(hud);
 
+            // 몸 없음(시안 ghost-hud, PD 2026-10-25) — 몸 칸 자리 「몸 없음」 · 「Lv」 줄 아래 안내 줄. 화면 스크립트가 켜고 끈다
+            foreach (var n in new[] { "RbNoBodyText", "RbNoBodyHint" })
+                if (hud.Find(n) is Transform oldNode) Object.DestroyImmediate(oldNode.gameObject);
+            Text(Put(Node(hud, "RbNoBodyText"), hud, HudTop, 612, 176, 895, 232), "ui.rb.hud.no_body", "몸 없음", 44, Dim, TA.Left, heavy: true);
+            var hint = Put(Node(hud, "RbNoBodyHint"), hud, HudTop, 60, 430, 1020, 490);
+            Skin(hint, "Components/rb_info_chip");
+            Text(Stretch(Node(hint, "RbNoBodyHintText")), "ui.rb.hud.no_body_hint", "몸 없이 떠 있는 동안 유령 체력이 줄어요", 36, White, TA.Center, heavy: true);
+
             // 옛 판 · 이름표 · 칸 — 그림만 끄거나 통째로 끈다(화면 스크립트가 켜도 비어 있게)
             Off(root, "Hud3GhostPill", "Hud3HostPill", "Hud3StageTrack", "Hud3GoldChip", "Hud3AffRing", "GhostLabel");
             Mute(root, "Hud3HostEmptyFace", "Hud3HostEmptyBar", "PlayerSoulPanel", "PlayerSoulLabel", "GhostNameText",
@@ -344,6 +352,14 @@ namespace Game.Editor.ReBorn
             RoundIcon(ult, F(root, "UltIcon"), "UltIconMask");
             Mute(root, "UltButtonLabel");
 
+            // 몸 없음(시안 ghost-hud) — 액티브 · 필살기 단추 가운데 「몸 없음」. 화면 스크립트가 켜고 끈다
+            foreach (var (btn, n) in new[] { (skill, "SkillNoBodyText"), (ult, "UltNoBodyText") })
+            {
+                if (btn.Find(n) is Transform oldNode) Object.DestroyImmediate(oldNode.gameObject);
+                var t = Node(btn, n);
+                Inside(t, 50f, 50f, 92f, 40f);
+                Text(t, "ui.rb.hud.no_body", "몸 없음", 30, Dim, TA.Center, heavy: true);
+            }
             Mute(root, "ActionFrame", "ActionLabel", "FreeMoveLabel");
             var rowT = F(root, "ButtonRow");
             if (rowT != null && rowT.TryGetComponent<HorizontalLayoutGroup>(out var hl)) Object.DestroyImmediate(hl);
@@ -517,20 +533,38 @@ namespace Game.Editor.ReBorn
             // 옛 제목(「상점」 ui.shop.title)이 이미 고정 글자로 붙어 있다 — 키만 「떠돌이 상인」으로 바꾼다
             var loc = title.GetComponent<Game.Module.Common.LocalizedText>() ?? title.gameObject.AddComponent<Game.Module.Common.LocalizedText>();
             loc.SetKey("ui.rb.shop.title");
-            // 골드 — 동전 + 숫자(시안 왼쪽 위)
-            var pill = PutPx(F(root, "ShopGoldPill"), panel, 140f, 278f, 170f, 44f);
+            // 상인 — 그림 칸 · 말(시안 merchant: 「필요한 걸 골라 봐!」). 그림은 키트 안내 그림에서 상인만 보이게 틀로 자른다
+            foreach (var n in new[] { "ShopMerchant", "ShopHello", "ShopNever" })
+                if (panel.Find(n) is Transform oldNode) Object.DestroyImmediate(oldNode.gameObject);
+            var face = PutPx(Node((RectTransform)panel, "ShopMerchant"), panel, 150f, 300f, 190f, 130f);
+            Skin(face, "Components/rb_list_row");
+            if (face.TryGetComponent<Image>(out var fi)) fi.pixelsPerUnitMultiplier = 2f;
+            face.gameObject.AddComponent<RectMask2D>();
+            var art = Node(face, "ShopMerchantArt");
+            art.anchorMin = art.anchorMax = new Vector2(0.5f, 0.5f);
+            art.sizeDelta = new Vector2(330f, 220f);           // 그림 720 × 480 — 상인 얼굴 · 짐이 틀 가운데 오게
+            art.anchoredPosition = new Vector2(8f, -14f);
+            Img(art, "Art/rb_art_guide_merchant");
+            var hello = PutPx(Node((RectTransform)panel, "ShopHello"), panel, 445f, 300f, 330f, 64f);
+            Skin(hello, "Components/rb_info_chip");
+            Text(Stretch(Node(hello, "ShopHelloText")), "ui.rb.shop.hello", "필요한 걸 골라 봐!", 40, White, TA.Center, heavy: true);
+
+            // 골드 — 동전 + 숫자(시안 상인 칸 아래 왼쪽)
+            var pill = PutPx(F(root, "ShopGoldPill"), panel, 140f, 404f, 170f, 44f);
             Skin(pill, "Components/rb_info_chip");   // 재화 알약(rb_currency_pill)은 오른쪽에 + 칸이 붙어 있어 안 맞는다
-            var gold = PutPx(F(root, "ShopGoldText"), panel, 156f, 278f, 120f, 40f);
+            var gold = PutPx(F(root, "ShopGoldText"), panel, 156f, 404f, 120f, 40f);
             Style(gold, 46, Yellow, TA.Left, number: true);
             var coin = panel.Find("ShopGoldCoin") as RectTransform ?? Node(panel, "ShopGoldCoin");
-            PutPx(coin, panel, 80f, 278f, 36f, 36f);
+            PutPx(coin, panel, 80f, 404f, 36f, 36f);
             Img(coin, "Icons/rb_icon_currency_gold_48");
             Mute(root, "ShopLimitText", "ShopResultText");
 
-            // 6칸 — 2열 × 3줄(카드 셋 · 몸 · 소모품 · 회복). 칸 = 아이콘 · 이름 · 설명 · 값 알약
-            for (int i = 0; i < 6; i++)
+            // 4칸 — 2열 × 2줄(카드 2 · 몸 또는 소모품 · 회복, BattleDirector.MerchantSlots). 칸 = 아이콘 · 이름 · 설명 · 값 알약
+            // 5 · 6 째 칸은 안 쓴다(옛 6칸 판) — 꺼 둔다
+            for (int i = 4; i < 6; i++) F(root, $"ShopItem{i}")?.gameObject.SetActive(false);
+            for (int i = 0; i < 4; i++)
             {
-                float cx = i % 2 == 0 ? 205f : 515f, top = 322f + 236f * (i / 2);
+                float cx = i % 2 == 0 ? 205f : 515f, top = 448f + 262f * (i / 2);
                 var cell = PutPx(F(root, $"ShopItem{i}"), panel, cx, top + 112f, 300f, 224f);
                 if (cell.TryGetComponent<Image>(out var ci)) { ci.sprite = null; ci.color = new Color(1, 1, 1, 0); }
                 Inside(F(root, $"ShopItem{i}Icon"), 150f, 46f, 72f, 72f);
@@ -552,10 +586,14 @@ namespace Game.Editor.ReBorn
                 Inside(price, 168f, 194f, 90f, 40f);
                 Style(price, 44, White, TA.Left, number: true);
             }
-            var leave = PutPx(F(root, "ShopLeaveButton"), panel, 360f, 1062f, 580f, 74f);
+            var leave = PutPx(F(root, "ShopLeaveButton"), panel, 360f, 1018f, 580f, 74f);
             Skin(leave, "Components/rb_btn_secondary");
             SwapPressed(leave, "Components/rb_btn_secondary_pressed");
-            Style(F(root, "ShopLeaveText"), 44, White, TA.Center, heavy: true);
+            var leaveText = F(root, "ShopLeaveText");
+            Style(leaveText, 44, White, TA.Center, heavy: true);
+            if (!leaveText.TryGetComponent<Game.Module.Common.LocalizedText>(out var leaveLoc)) leaveLoc = leaveText.gameObject.AddComponent<Game.Module.Common.LocalizedText>();
+            leaveLoc.SetKey("ui.rb.shop.leave");   // 시안 「지나간다」
+            Text(PutPx(Node((RectTransform)panel, "ShopNever"), panel, 360f, 1082f, 580f, 36f), "ui.rb.shop.never", "상인은 다시 오지 않아요", 32, Dim, TA.Center);
         }
 
         private static void BuildEvent(Transform root)
@@ -622,9 +660,21 @@ namespace Game.Editor.ReBorn
                 var d = F(root, $"ShrineChoice{i}Desc");
                 Inside(d, 400f, 128f, 460f, 44f);
                 Style(d, 36, Dim, TA.Left);
+                // 고른 칸 — 노란 테 판(시안 rest-selected). 화면 스크립트가 켜고 끈다
+                var sel = row.Find($"ShrineChoice{i}Sel") as RectTransform ?? Node(row, $"ShrineChoice{i}Sel");
+                sel.anchorMin = Vector2.zero; sel.anchorMax = Vector2.one; sel.sizeDelta = Vector2.zero; sel.anchoredPosition = Vector2.zero;
+                Skin(sel, "Components/rb_list_row_selected");
+                if (sel.TryGetComponent<Image>(out var si)) si.raycastTarget = false;
+                sel.SetSiblingIndex(0);
             }
             PutPx(F(root, "ShrineResultText"), panel, 360f, 1060f, 600f, 60f);
             Style(F(root, "ShrineResultText"), 38, White, TA.Center);
+            // 골라서 확정(시안 rest · rest-selected) — 고르기 전엔 회색 「하나를 골라 주세요」, 고르면 노란 「○○ 선택」
+            var old = panel.Find("ShrineConfirm");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var go = PutPx(Node(panel, "ShrineConfirm"), panel, 360f, 1060f, 640f, 84f);
+            Btn(go, "Components/rb_btn_primary");
+            Text(Stretch(Node(go, "ShrineConfirmText")), null, "하나를 골라 주세요", 48, Ink, TA.Center, heavy: true);
         }
 
         // ── 결과 화면(스토리 클리어 · 실패) ─────────────────────────

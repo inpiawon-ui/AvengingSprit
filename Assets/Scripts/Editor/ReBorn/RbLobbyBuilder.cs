@@ -82,6 +82,8 @@ namespace Game.Editor.ReBorn
             for (int k = 0; k < tabs.Count; k++) tabs[k].SetSiblingIndex(firstHead + k);
             chestOpen.SetSiblingIndex(firstHead + tabs.Count);
             chestOpen.gameObject.SetActive(false);
+            // 성급 강화 성공(전체 화면, 시안 star-success-detail)도 같은 층 — 상자 열기 바로 뒤
+            if (rt.Find("GrwStarDone") is Transform starDone) starDone.SetSiblingIndex(chestOpen.GetSiblingIndex() + 1);
             rt.Find("RbGuide").gameObject.SetActive(false);         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
             Wire(root.AddComponent<RbLobbyUI>());
