@@ -227,6 +227,8 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:nighthud", "modehud_night_16x9"),
             (1080, 2400, Language.Korean, "ingame:towerhud", "modehud_tower_20x9"),
             (768, 1024, Language.Korean, "ingame:nighthud", "modehud_night_4x3"),
+            // 몸 없음(유령으로 출전 — SessionState .ghost 를 켜고 거르개 now_ghost)
+            (720, 1280, Language.Korean, "ingame", "now_ghost_16x9"),
         };
 
         // 이름 앞머리 거르개(SessionState Key+".only") — 새 화면만 찍을 때 목록 전체를 돌지 않게
@@ -344,7 +346,9 @@ namespace Game.Editor.ReBorn
                 if (lobby != null && !_sortie && CoreModule.TryGet<IPlayerDataService>(out var p0) && p0.IsReady)
                 {
                     lobby.SelectTab("Battle");
-                    _sortie = Click("SortieButton");
+                    // SessionState .ghost — 몸 없이(유령으로) 출전해 「몸 없음」 화면을 찍는다
+                    if (SessionState.GetBool(Key + ".ghost", false)) { lobby.StartRunDirect(1, Game.Character.HostEntry.GhostKey); _sortie = true; }
+                    else _sortie = Click("SortieButton");
                     _wait = 120;
                     return;
                 }
