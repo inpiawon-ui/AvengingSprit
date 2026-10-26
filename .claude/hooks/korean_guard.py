@@ -7,7 +7,6 @@ import json
 import re
 import sys
 
-MIN_LETTERS = 24        # 이보다 짧은 글은 따지지 않는다(「OK」 같은 것)
 MAX_LATIN_SHARE = 0.45  # 글자(한글 + 로마자) 중 로마자가 이 비율을 넘으면 영어 위주로 본다
 
 
@@ -33,33 +32,31 @@ def latin_share(text):
     return (latin / total if total else 0.0), total
 
 
-def last_assistant_text(path):
+def turn_texts(path):
+    """이번 차례(마지막 사용자 글 뒤)에 쓴 글 묶음 전부 — 도구 사이 짧은 진행 문장까지(10-26: 마지막 글만 봐서 중간 영어 문장이 지나갔다)."""
     texts = []
     try:
         with open(path, encoding="utf-8") as f:
             lines = f.readlines()
     except OSError:
-        return ""
+        return texts
     for line in reversed(lines):
         try:
             row = json.loads(line)
         except ValueError:
             continue
         if row.get("type") == "user":
-            msg = row.get("message", {})
-            content = msg.get("content")
-            # 사용자 실제 글(도구 결과 말고)이 나오면 거기서 멈춘다 — 이번 차례의 답만 본다
-            if isinstance(content, str) or (isinstance(content, list) and any(c.get("type") == "text" for c in content if isinstance(c, dict))):
+            content = row.get("message", {}).get("content")
+            # 사용자 실제 글(도구 결과 말고)이 나오면 거기서 멈춘다 — 이번 차례만 본다
+            if isinstance(content, str) or (isinstance(content, list) and any(isinstance(c, dict) and c.get("type") == "text" for c in content)):
                 break
             continue
         if row.get("type") != "assistant":
             continue
         for c in row.get("message", {}).get("content", []) or []:
-            if isinstance(c, dict) and c.get("type") == "text":
-                texts.append(c.get("text", ""))
-        if texts:
-            break   # 마지막 글 묶음만
-    return "\n".join(reversed(texts))
+            if isinstance(c, dict) and c.get("type") == "text" and c.get("text", "").strip():
+                texts.append(c["text"])
+    return texts
 
 
 def main():
@@ -83,14 +80,18 @@ def main():
         return
     if data.get("stop_hook_active"):
         return   # 다시 쓴 뒤에는 한 번만 본다(무한 반복 막기)
-    text = last_assistant_text(data.get("transcript_path", ""))
-    share, total = latin_share(text)
-    if total >= MIN_LETTERS and share > MAX_LATIN_SHARE:
+    bad = []
+    for t in turn_texts(data.get("transcript_path", "")):
+        share, total = latin_share(t)
+        # 짧은 진행 문장도 잡는다 — 로마자 글자 12 개 이상이고 절반 가까이가 로마자면 영어 문장
+        if total >= 12 and share > MAX_LATIN_SHARE:
+            bad.append(t.strip().splitlines()[0][:60])
+    if bad:
         print(json.dumps({
             "decision": "block",
-            "reason": "마지막 답이 영어 위주다 — PD 는 영어를 모른다. 같은 내용을 처음부터 끝까지 한국어로 다시 써라(코드 · 파일 경로만 원문).",
+            "reason": "이번 차례 글 중 영어로 쓴 문장이 있다 — PD 는 영어를 모른다: " + " / ".join(bad[:3])
+                      + " … 도구 사이 한 줄까지 한국어로만 쓴다. 이번 차례 보고를 처음부터 한국어로 다시 정리하라.",
         }, ensure_ascii=False))
-
 
 if __name__ == "__main__":
     main()
