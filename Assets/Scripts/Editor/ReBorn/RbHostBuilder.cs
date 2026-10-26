@@ -76,13 +76,19 @@ namespace Game.Editor.ReBorn
             float[][] chips = { new[] { 30f, 212f }, new[] { 228f, 410f }, new[] { 427f, 610f }, new[] { 626f, 808f }, new[] { 824f, 1050f } };
             string[] keys = { "ui.rb.host.filter_all", "ui.affinity.force", "ui.affinity.blade", "ui.affinity.magic", null };
             string[] ko = { "전체", "파워", "무기", "마법", "전투력 순" };
+            string[] affChip = { "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_magic_128" };
             for (int i = 0; i < chips.Length; i++)
             {
                 var c = Place(Node(page, $"ColFilter{i}"), Edge.Top, chips[i][0], 720, chips[i][1], 835);
                 // 시안은 알약(btn_chip)이 아니라 모서리만 둥근 직사각형 버튼(btn_secondary) — 묶음 final.css `button.btn`(PD 2026-10-26)
                 Btn(c, "Components/rb_btn_secondary");
+                // 속성 칩은 글자 앞에 카드와 같은 속성 아이콘 — 유저가 아이콘과 속성 이름을 짝지어 익히게(PD 2026-10-26 B안)
+                // 아이콘 60 · 글자 35, 묶음 가운데 맞춤 · 언어별 줄임은 화면 스크립트가 한다
                 Text(Local(Node(c, $"ColFilter{i}Text"), chips[i][0], 720, chips[i][1], 835, chips[i][0] + 12, 745, chips[i][1] - 12, 805),
-                     keys[i], ko[i], 38, Dim, TA.Center, heavy: true);
+                     keys[i], ko[i], i is >= 1 and <= 3 ? 35 : 38, Dim, TA.Center, heavy: true);
+                if (i is >= 1 and <= 3)
+                    Img(Local(Node(c, $"ColFilter{i}Icon"), chips[i][0], 720, chips[i][1], 835, chips[i][0] + 12, 748, chips[i][0] + 72, 808),
+                        affChip[i - 1]);
             }
             // 정렬 칩 — 글꼴에 ⇅ 가 없어 키트 아이콘을 글자 오른쪽에 둔다(화면 스크립트가 글자 폭을 재서 붙인다)
             Img(Local(Node(page.Find("ColFilter4") as RectTransform, "ColFilter4Icon"), 824, 720, 1050, 835, 990, 756, 1026, 792), "Icons/rb_icon_sys_sort_48");

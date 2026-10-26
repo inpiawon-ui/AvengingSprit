@@ -71,6 +71,12 @@ namespace Game.Editor.ReBorn
             (768, 1024, Language.Korean, "host", "host_4x3"),
             (720, 1280, Language.Japanese, "host", "host_ja"),
             (720, 1280, Language.English, "host", "host_en"),
+            (720, 1280, Language.Korean, "host:f1", "hostchip_force_ko"),
+            (720, 1280, Language.Japanese, "host:f2", "hostchip_blade_ja"),
+            (720, 1280, Language.English, "host:f2", "hostchip_blade_en"),
+            (720, 1280, Language.ChineseTraditional, "host:f3", "hostchip_magic_zht"),
+            (720, 1280, Language.ChineseSimplified, "host:f1", "hostchip_force_zhs"),
+            (768, 1024, Language.English, "host:f2", "hostchip_blade_en_4x3"),
             (720, 1280, Language.Korean, "growth:low", "growth_low_16x9"),
             (720, 1280, Language.Korean, "growth:scroll_low", "growth_low_16x9_bottom"),
             (720, 1280, Language.Korean, "host:low", "host_low_16x9"),
@@ -654,6 +660,9 @@ namespace Game.Editor.ReBorn
                 lobby.OpenGrowth(key);
                 return;
             }
+            // 거르기 칩 고름(host:f1 파워 · f2 무기 · f3 마법) — 칩 아이콘 색 · 언어별 넘침 확인
+            if (state.Length == 7 && state.StartsWith("host:f") && GameObject.Find($"ColFilter{state[6]}") is GameObject chip
+                && chip.TryGetComponent<Button>(out var chipBtn)) { chipBtn.onClick.Invoke(); return; }
             if (state.StartsWith("host:reveal")) { lobby.ShowReveal(key, 0); return; }
             if (state.StartsWith("host:awaken")) { lobby.ShowReveal(key, state.Contains("10") ? 10 : 6); return; }
             if (!state.StartsWith("growth:")) return;

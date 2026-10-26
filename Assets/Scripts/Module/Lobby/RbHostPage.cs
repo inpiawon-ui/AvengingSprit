@@ -41,6 +41,7 @@ namespace Game.Module.Lobby
             new(0.31f, 0.64f, 1f, 0.4f), new(0.71f, 0.49f, 1f, 0.4f), new(1f, 0.78f, 0.27f, 0.4f),
         };
         private static readonly Color ChipOn = new(0.24f, 0.90f, 1f, 1f), ChipOff = new(0.70f, 0.74f, 0.84f, 1f);
+        private static readonly Color ChipIconOff = new(0.45f, 0.48f, 0.58f, 1f);
 
         private enum Sort { Power, Grade }
 
@@ -110,7 +111,15 @@ namespace Game.Module.Lobby
         private void RefreshFilters()
         {
             for (int i = 0; i < 4; i++)
-                if (_ui.Get<TextMeshProUGUI>($"ColFilter{i}Text") is TextMeshProUGUI t) t.color = i == _filter ? ChipOn : ChipOff;
+            {
+                if (_ui.Get<TextMeshProUGUI>($"ColFilter{i}Text") is not TextMeshProUGUI t) continue;
+                t.color = i == _filter ? ChipOn : ChipOff;
+                if (i == 0) continue;
+                // 속성 칩 — 고른 칩만 아이콘 제 색, 나머지는 잿빛으로 눌러 고른 칸이 한눈에 보이게(PD 2026-10-26 C안)
+                var affIcon = _ui.Find($"ColFilter{i}Icon") as RectTransform;
+                if (affIcon != null && affIcon.GetComponent<Image>() is Image img) img.color = i == _filter ? Color.white : ChipIconOff;
+                FitChipRun(affIcon, t, (_ui.Find($"ColFilter{i}") as RectTransform)?.rect.width ?? 0f);
+            }
             _ui.SetText("ColFilter4Text", Localize.FromTable(_sort == Sort.Power ? "ui.rb.host.sort_power" : "ui.rb.host.sort_grade",
                                                              _sort == Sort.Power ? "전투력 순" : "등급 순"));
             CenterRun(null, _ui.Get<TextMeshProUGUI>("ColFilter4Text"), false);
@@ -256,6 +265,32 @@ namespace Game.Module.Lobby
             if (withIcon && icon != null) icon.anchoredPosition = new Vector2(left + icon.sizeDelta.x * 0.5f, icon.anchoredPosition.y);
             tr.sizeDelta = new Vector2(w + 2f, tr.sizeDelta.y);
             tr.anchoredPosition = new Vector2(left + iw + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
+            text.alignment = TextAlignmentOptions.Left;
+        }
+
+        // 칩 안 「아이콘 + 글자」 묶음을 가운데로. 칩 폭(양옆 8)을 넘으면 글자를 먼저 최소 크기까지, 그래도 넘으면 아이콘을 줄인다
+        // (영어 「Weapon」 이 한국어보다 길다)
+        private static void FitChipRun(RectTransform icon, TextMeshProUGUI text, float chipWidth)
+        {
+            if (icon == null || text == null || chipWidth <= 0f) return;
+            const float gap = 4f, pad = 8f;
+            float avail = chipWidth - pad * 2f;
+            const float iconMax = 60f * 2f / 3f;   // 빌더 값(시안 60) — sizeDelta 는 줄였다 되돌리므로 거기서 읽지 않는다
+            text.enableAutoSizing = false;
+            text.fontSize = text.fontSizeMax;
+            float w = text.GetPreferredValues(text.text).x;
+            if (w + iconMax + gap > avail)
+            {
+                text.fontSize = Mathf.Max(text.fontSizeMin, text.fontSizeMax * (avail - iconMax - gap) / w);
+                w = text.GetPreferredValues(text.text).x;
+            }
+            float iw = Mathf.Clamp(avail - gap - w, iconMax * 0.6f, iconMax);
+            icon.sizeDelta = new Vector2(iw, iw);
+            float left = -(w + iw + gap) * 0.5f;
+            icon.anchoredPosition = new Vector2(left + iw * 0.5f, icon.anchoredPosition.y);
+            var tr = text.rectTransform;
+            tr.sizeDelta = new Vector2(w + 2f, tr.sizeDelta.y);
+            tr.anchoredPosition = new Vector2(left + iw + gap + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
             text.alignment = TextAlignmentOptions.Left;
         }
 
