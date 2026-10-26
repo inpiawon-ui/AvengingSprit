@@ -22,6 +22,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _chestSilver = System.Array.Empty<Sprite>(), _chestGold = System.Array.Empty<Sprite>(),
                                           _chestPlatinum = System.Array.Empty<Sprite>();
         [SerializeField] private Sprite _shine, _rays;
+        // 강화(레벨업) — 용암 줄 8장 반복 · 금빛 번짐 · 반짝이 입자 3종(FX-statup-01~03)
+        [SerializeField] private Sprite[] _statLava = System.Array.Empty<Sprite>(), _statSparks = System.Array.Empty<Sprite>();
+        [SerializeField] private Sprite _statGlow;
 
         private static readonly Color Cyan = new(0.24f, 0.9f, 1f), Gold = new(1f, 0.79f, 0.24f);
 
@@ -43,39 +46,115 @@ namespace Game.Module.Lobby
         private readonly Stack<Image> _pool = new();
         private readonly Dictionary<RectTransform, CancellationTokenSource> _loops = new();
 
-        // ── 강화 성공 틱(약) ─────────────────────────────────────
-        // 값 글자 뒤 금빛 빛살이 한 번 퍼지고 + 금 알갱이 다섯이 오르고 · 값 글자가 톡
+        // ── 강화(레벨업) — 칸 아래 금빛 용암(약~중) ─────────────────
+        // PD 2026-10-26 고른 시안 `_exchange/in/mock_statup_free_idle.png`(가이드 `_exchange/guide_statup_fx.md`).
+        // 칸마다 용암 한 벌: 누르면 살짝 더 차오르며 불티가 튀고(약간의 터짐), 길게 눌러 연속이면 차오른 채 일렁이며 머물고,
+        // 손을 떼면 가라앉는다. 층: 칸 판 → 금빛 번짐 → 도트 용암 줄 → 글자 · 아이콘 → 떠오르는 반짝이(08_fx 3절 — 글자를 안 덮는다)
+
+        private const float LavaHold = 0.45f;     // 마지막 누름 뒤 이만큼은 「연속 강화 중」으로 머문다
+        private const float LavaHoldLevel = 0.75f;
+        private const float LavaFrameSeconds = 0.09f;
+
+        private sealed class LavaState
+        {
+            public float Kick, LastTick;
+            public bool Running;
+        }
+
+        private readonly Dictionary<RectTransform, LavaState> _lava = new();
 
         public void UpgradeTick(RectTransform tile, RectTransform value)
         {
             if (tile == null) return;
-            UpgradeTickAsync(tile, value, tile.GetCancellationTokenOnDestroy()).Forget();   // fire-and-forget: 0.3초 맥박
+            if (!_lava.TryGetValue(tile, out var st)) _lava[tile] = st = new LavaState();
+            st.LastTick = Time.unscaledTime;
+            st.Kick = 1f;
+            LavaBurst(tile, 5);
+            if (value != null) ValuePopAsync(value, value.GetCancellationTokenOnDestroy()).Forget();   // fire-and-forget: 0.3초 톡
+            if (st.Running) return;
+            st.Running = true;
+            LavaAsync(tile, st, tile.GetCancellationTokenOnDestroy()).Forget();   // fire-and-forget: 손을 떼면 가라앉고 스스로 끝난다
         }
 
-        private async UniTaskVoid UpgradeTickAsync(RectTransform tile, RectTransform value, CancellationToken ct)
+        private async UniTaskVoid LavaAsync(RectTransform tile, LavaState st, CancellationToken ct)
         {
-            // 노란 레벨업 — 값 글자 뒤에서 금빛 빛살이 한 번 퍼지고 금 알갱이가 위로 오른다(PD 2026-10-26
-            // 「녹색 레이저 같다, 노란색으로 레벨업 하는 느낌」 — 예전엔 초록 빛 띠 rbfx_band 가 칸을 가로질렀다).
-            // 빛살 그림은 흰색이라 금색을 곱해도 색이 맞다. 칸 판 위 · 글자 아래(08_fx 3절): 칸의 첫 자식으로
-            var center = value != null ? (Vector2)tile.InverseTransformPoint(value.TransformPoint(value.rect.center)) : tile.rect.center;
-            float s = tile.rect.height * 1.5f;
-            var rays = Get(tile, "FxBand", _rays, Vector2.one * s, true);
-            rays.rectTransform.anchoredPosition = center;
-            rays.rectTransform.SetSiblingIndex(0);
-            rays.color = Color.clear;
-            var at = value != null ? value : tile;
-            Sparks(at, Vector2.zero, 5, Gold, 90f, 0.7f, true, 16f);
-            const float dur = 0.4f;
-            for (float t = 0f; t < dur; t += Time.unscaledDeltaTime)
+            float w = tile.rect.width, h = tile.rect.height;
+            var glow = Get(tile, "FxStatGlow", _statGlow, new Vector2(w, h * 0.95f), true);
+            var lava = Get(tile, "FxStatLava", _statLava.Length > 0 ? _statLava[0] : null, new Vector2(w, w * 120f / 1360f), true);
+            foreach (var img in new[] { glow, lava })
             {
-                float u = t / dur;
-                rays.color = new Color(Gold.r, Gold.g, Gold.b, 0.8f * Mathf.Sin(u * Mathf.PI));
-                rays.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.5f, 1.1f, Ease.OutCubic(u));
-                if (value != null) value.localScale = Vector3.one * (1f + 0.15f * Mathf.Sin(Mathf.Min(1f, u * 1.5f) * Mathf.PI));
+                var rt = img.rectTransform;
+                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0f);
+                rt.anchoredPosition = new Vector2(0f, 2f);
+                img.preserveAspect = false;
+                img.color = Color.clear;
+            }
+            glow.rectTransform.SetSiblingIndex(0);
+            lava.rectTransform.SetSiblingIndex(1);
+            float level = 0f, frameTimer = 0f, sparkTimer = 0f;
+            int frame = 0;
+            while (true)
+            {
+                float dt = Time.unscaledDeltaTime;
+                bool holding = Time.unscaledTime - st.LastTick < LavaHold;
+                float target = holding ? LavaHoldLevel : 0f;
+                level = Mathf.MoveTowards(level, target, dt * (target > level ? 6f : 2.5f));
+                st.Kick = Mathf.Max(0f, st.Kick - dt / 0.25f);
+                float kick = Ease.OutCubic(st.Kick);
+                // 「약간 차오르고」 — 누를 때만 줄이 조금 더 높아지고 번짐이 밝아진다
+                float a = Mathf.Clamp01(level / LavaHoldLevel);
+                lava.color = new Color(1f, 1f, 1f, Mathf.Clamp01(a + 0.3f * kick));
+                lava.rectTransform.localScale = new Vector3(1f, 0.75f + 0.25f * a + 0.35f * kick, 1f);
+                glow.color = new Color(1f, 1f, 1f, Mathf.Clamp01(0.55f * a + 0.45f * kick));
+                frameTimer += dt;
+                if (frameTimer >= LavaFrameSeconds && _statLava.Length > 0)
+                {
+                    frameTimer = 0f;
+                    frame = (frame + 1) % _statLava.Length;
+                    lava.sprite = _statLava[frame];
+                }
+                // 연속 강화 중 — 반짝이가 몇 개씩 오른다
+                sparkTimer += dt;
+                if (holding && sparkTimer >= 0.14f)
+                {
+                    sparkTimer = 0f;
+                    LavaSpark(tile, Random.Range(20f, 50f), 0.9f, 0f);
+                }
+                if (!holding && level <= 0.001f && st.Kick <= 0f) break;
                 if (await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow()) return;
             }
-            if (value != null) value.localScale = Vector3.one;
-            Release(rays);
+            Release(glow);
+            Release(lava);
+            st.Running = false;
+            _lava.Remove(tile);
+        }
+
+        // 「약간의 터지는 것」 — 칸 아래에서 불티 몇 개가 튀어 올랐다 떨어진다
+        private void LavaBurst(RectTransform tile, int count)
+        {
+            for (int i = 0; i < count; i++) LavaSpark(tile, Random.Range(90f, 150f), 0.6f, 220f);
+        }
+
+        private void LavaSpark(RectTransform tile, float speed, float life, float gravity)
+        {
+            if (_statSparks.Length == 0) return;
+            var r = tile.rect;
+            var offset = new Vector2(Random.Range(-0.45f, 0.45f) * r.width, -r.height * 0.5f + 8f);
+            var v = new Vector2(Random.Range(-0.25f, 0.25f), 1f) * speed;
+            // 입자 그림이 이미 금빛이라 흰색 그대로 — 색을 곱하지 않는다(measure-fx-color)
+            Particle(tile, offset, _statSparks[Random.Range(0, _statSparks.Length)], Color.white, v, life * Random.Range(0.8f, 1.1f),
+                     Random.Range(10f, 16f), gravity, true);
+        }
+
+        private static async UniTaskVoid ValuePopAsync(RectTransform value, CancellationToken ct)
+        {
+            const float dur = 0.3f;
+            for (float t = 0f; t < dur; t += Time.unscaledDeltaTime)
+            {
+                value.localScale = Vector3.one * (1f + 0.15f * Mathf.Sin(t / dur * Mathf.PI));
+                if (await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow()) return;
+            }
+            value.localScale = Vector3.one;
         }
 
         // ── 별 채움(중 → 강) ─────────────────────────────────────

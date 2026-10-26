@@ -108386,6 +108386,20 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 726700c8ef984e34098dcb8a18ce5a84, type: 3}
   _shine: {fileID: 21300000, guid: fffafa5d5a17f7640b569b1deda55903, type: 3}
   _rays: {fileID: 21300000, guid: 37fcb1861b3799b4aa87fdf87d5847ec, type: 3}
+  _statLava:
+  - {fileID: 21300000, guid: c6ef859855fffa14d81deb88f8ad727b, type: 3}
+  - {fileID: 21300000, guid: c98bd7e4e1741014b815e58ddb2eef51, type: 3}
+  - {fileID: 21300000, guid: bcabbbf5620e5824f9655cf6fc39e0db, type: 3}
+  - {fileID: 21300000, guid: a8be9fa5a43254146b54043d125e4f17, type: 3}
+  - {fileID: 21300000, guid: 7e94099fa66908e43a78650b7187f894, type: 3}
+  - {fileID: 21300000, guid: 41bcc0de53b7a5f4aa831c4b409ff495, type: 3}
+  - {fileID: 21300000, guid: cef390d514c702f4990de36c1a20f984, type: 3}
+  - {fileID: 21300000, guid: 23e20b734d8451c46aa713b6110a1f33, type: 3}
+  _statSparks:
+  - {fileID: 21300000, guid: b5fd1d4d054807043a669983d546d212, type: 3}
+  - {fileID: 21300000, guid: b1792b812b1ca9d4ba9cf1edb7717adc, type: 3}
+  - {fileID: 21300000, guid: 4d2251d8c874f8f4a9a5a25d38dde38b, type: 3}
+  _statGlow: {fileID: 21300000, guid: 9704d6db574f5e8418b1bf85970efb2a, type: 3}
 --- !u!1 &7138396664755958871
 GameObject:
   m_ObjectHideFlags: 0

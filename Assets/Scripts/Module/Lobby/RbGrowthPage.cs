@@ -331,7 +331,7 @@ namespace Game.Module.Lobby
             _player.SaveAsync().Forget();   // fire-and-forget: 강화 한 번마다 저장 — 앱이 꺼져도 산 것은 남는다
             Refresh();
             _shell.RefreshHeader();
-            // 강화 성공 틱(약) — 그 칸에 초록 맥박 · 값이 톡
+            // 강화 성공 — 그 칸 아래 금빛 용암이 살짝 차오르고 불티 · 값이 톡(길게 누르면 차오른 채 머문다)
             int idx = Array.IndexOf(StatOrder, stat);
             if (_shell.Fx != null && idx >= 0 && idx < _tiles.Count && _tiles[idx] is RectTransform tile)
                 _shell.Fx.UpgradeTick(tile, _ui.Find(tile, "GrwStatValue") as RectTransform);
