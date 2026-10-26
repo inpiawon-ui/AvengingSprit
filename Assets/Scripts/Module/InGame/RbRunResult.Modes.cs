@@ -22,7 +22,7 @@ namespace Game.Module.InGame
     {
         private enum ResultMode { Story, Tower, Night }
 
-        private const float TilePitch = 232f, TileCenter = 360f;
+        private const float TilePitch = 524f * 2f / 3f, TileCenter = 360f;   // 재화 칸 500 · 간격 24(시안 1080)
         private static readonly Color FailRed = new(1f, 0.35f, 0.35f);
 
         private ResultMode _mode;
@@ -52,9 +52,10 @@ namespace Game.Module.InGame
                 : Localize.FromTable("ui.rb.result.suggest", "이 층에 맞는 몸"));
             _ui.SetActive("RbResultGoldTile", reward && e.RewardGold > 0);
             _ui.SetText("RbResultGoldValue", e.RewardGold.ToString("N0"));
+            // 몸 카드 줄 — 클리어는 받은 조각(×n), 실패는 이 층에 맞는 몸(조각 줄 없이 얼굴 · 이름만)
             string[] keys = clear ? e.ShardHostKeys : e.SuggestHostKeys;
-            bool face = keys != null && keys.Length > 0 && (reward || !clear);
-            ShardTile(face ? keys[0] : null, clear && e.ShardCounts != null && e.ShardCounts.Length > 0 ? e.ShardCounts[0].ToString("N0") : string.Empty, faces);
+            bool show = keys != null && keys.Length > 0 && (reward || !clear);
+            ShowHosts(show ? keys : null, clear ? e.ShardCounts : null, faces);
             _ui.SetActive("RbResultExpTile", false);
             CenterTiles();
 
@@ -85,8 +86,7 @@ namespace Game.Module.InGame
             // 처치 수만큼 골드(PD 2026-10-26 · 시안 result-night 「432 골드」)
             _ui.SetActive("RbResultGoldTile", e.EarnedGold > 0);
             _ui.SetText("RbResultGoldValue", e.EarnedGold.ToString("N0"));
-            bool any = e.ShardHostKeys != null && e.ShardHostKeys.Length > 0;
-            ShardTile(any ? e.ShardHostKeys[0] : null, any && e.ShardCounts != null ? e.ShardCounts[0].ToString("N0") : string.Empty, faces);
+            ShowHosts(e.ShardHostKeys, e.ShardCounts, faces);
             _ui.SetActive("RbResultExpTile", false);
             CenterTiles();
 
@@ -126,21 +126,11 @@ namespace Game.Module.InGame
             _ui.SetText(row == 0 ? "RbResultRoomValue" : row == 1 ? "RbResultKillValue" : "RbResultTimeValue", value);
         }
 
-        private void ShardTile(string hostKey, string value, SpriteAtlas faces)
-        {
-            _ui.SetActive("RbResultShardTile", hostKey != null);
-            if (hostKey == null) return;
-            var host = _player?.GetHost(hostKey);
-            _ui.SetText("RbResultShardValue", value);
-            _ui.SetText("RbResultShardLabel", string.Format(Localize.FromTable("ui.rb.result.shard", "{0} 조각"), host != null ? host.DisplayName : hostKey));
-            SetFace("RbResultShardFace", hostKey, faces);
-        }
-
-        /// <summary>켜진 보상 칸을 가운데로 모은다(탑 · 밤은 칸이 하나 · 둘).</summary>
+        /// <summary>켜진 재화 칸(골드 · 경험치)을 가운데로 모은다(탑 · 밤은 골드 하나뿐일 때가 많다).</summary>
         private void CenterTiles()
         {
-            var on = new System.Collections.Generic.List<RectTransform>(3);
-            foreach (var n in new[] { "RbResultGoldTile", "RbResultShardTile", "RbResultExpTile" })
+            var on = new System.Collections.Generic.List<RectTransform>(2);
+            foreach (var n in new[] { "RbResultGoldTile", "RbResultExpTile" })
                 if (_ui.Find(n) is RectTransform r && r.gameObject.activeSelf) on.Add(r);
             float left = TileCenter - TilePitch * (on.Count - 1) * 0.5f;
             for (int i = 0; i < on.Count; i++) on[i].anchoredPosition = new Vector2(left + TilePitch * i, on[i].anchoredPosition.y);

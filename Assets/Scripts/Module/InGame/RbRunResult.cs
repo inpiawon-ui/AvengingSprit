@@ -33,6 +33,8 @@ namespace Game.Module.InGame
         [Tooltip("스토리 클리어 배경 — 시안 .scene.quiet(흐림 14 · 밝기 0.3 · 채도 0.72 · 가장자리 어둡게)를 구운 그림. 탑 · 밤은 _bgClear 그대로")]
         [SerializeField] private Sprite _bgStory;
         [SerializeField] private Sprite _cellClear, _cellGold, _cellTeal, _expClear, _expFail;
+        [Tooltip("몸 카드 등급 테 · 꼬리표 — HostGrade 순서(B · A · S = 화면 R · SR · SSR)")]
+        [SerializeField] private Sprite[] _hostFrames = System.Array.Empty<Sprite>(), _gradeTags = System.Array.Empty<Sprite>();
         [SerializeField] private Slot[] _slots = System.Array.Empty<Slot>();
         [SerializeField] private float _clearHeight = 1280f, _failHeight = 1373f;
 
@@ -77,19 +79,9 @@ namespace Game.Module.InGame
             int sec = Mathf.Max(0, Mathf.RoundToInt(e.PlaySeconds));
             _ui.SetText("RbResultTimeValue", $"{sec / 60:00}:{sec % 60:00}");
 
-            // 보상 — 골드 · 가장 많이 모은 조각(얼굴) · 유령 경험치
+            // 보상 — 골드 · 유령 경험치 두 칸 + 받은 몸 조각 전부(몸 카드 줄)
             _ui.SetText("RbResultGoldValue", e.RewardGold.ToString("N0"));
-            bool shard = e.ShardHostKeys != null && e.ShardHostKeys.Length > 0;
-            _ui.SetActive("RbResultShardTile", shard);
-            if (shard)
-            {
-                string key = e.ShardHostKeys[0];
-                var host = _player?.GetHost(key);
-                _ui.SetText("RbResultShardValue", e.ShardCounts[0].ToString("N0"));
-                _ui.SetText("RbResultShardLabel", string.Format(Localize.FromTable("ui.rb.result.shard", "{0} 조각"), host != null ? host.DisplayName : key));
-                // 조각 칸의 몸 얼굴 — 실패 시안에만 있다(클리어 시안은 조각 그림 하나)
-                SetFace("RbResultShardFace", clear ? null : key, faces);
-            }
+            ShowHosts(e.ShardHostKeys, e.ShardCounts, faces);
             _ui.SetText("RbResultExpValue", e.RewardGhostExp.ToString("N0"));
             _ui.SetText("RbResultNextText", clear
                 ? (ch < chapters ? Localize.FromTable("ui.rb.result.next", "다음 챕터 ▶") : Localize.FromTable("ui.rb.result.again", "다시 도전"))
@@ -126,7 +118,6 @@ namespace Game.Module.InGame
                 fit.DesignHeight = fail ? _failHeight : _clearHeight;
             // 칸 테 — 클리어는 어두운 칸, 실패는 금 · 청록 테(시안 .reward-slot)
             SetSprite("RbResultGoldTile", fail ? _cellGold : _cellClear);
-            SetSprite("RbResultShardTile", fail ? _cellTeal : _cellClear);
             SetSprite("RbResultExpTile", fail ? _cellTeal : _cellClear);
             SetSprite("RbResultExpTileIcon", fail ? _expFail : _expClear);
             for (int i = 0; i < 3; i++) _ui.SetActive($"RbResultRecLine{i}", !fail);   // 줄 사이 가는 선은 클리어 시안에만
@@ -159,6 +150,80 @@ namespace Game.Module.InGame
             var br = badge.rectTransform;
             br.anchoredPosition = new Vector2(left + tw + gap + br.sizeDelta.x * 0.5f, br.anchoredPosition.y);
             badge.alignment = TextAlignmentOptions.Left;
+        }
+
+        // 몸 카드 — 시안 190 x 280 · 간격 18(1080) → 720
+        private const float HostCardW = 190f * 2f / 3f, HostCardGap = 18f * 2f / 3f, HostShardGap = 6f * 2f / 3f;
+        private const float HostCardOverflowScale = 0.9f;   // 넘칠 때 — 5.4 장이 보인다
+        private readonly System.Collections.Generic.List<RectTransform> _hostCards = new();
+
+        /// <summary>
+        /// 몸 카드 줄 — 몸 하나에 카드 한 장(등급 테 · 꼬리표 · 얼굴 · 이름 · 조각 ×n). 다 들어가면 가운데로 모으고, 넘치면 옆으로 민다.
+        /// counts 가 없으면(탑 실패의 「이 층에 맞는 몸」) 조각 줄을 감춘다.
+        /// </summary>
+        private void ShowHosts(string[] keys, int[] counts, SpriteAtlas faces)
+        {
+            int n = keys != null ? keys.Length : 0;
+            _ui.SetActive("RbResultHosts", n > 0);
+            if (n == 0) return;
+            if (_ui.Find("RbResultHostsContent") is not RectTransform content || _ui.Find("RbResultHostCard") is not RectTransform tpl) return;
+            while (_hostCards.Count < n)
+            {
+                var copy = (RectTransform)Instantiate(tpl.gameObject, content).transform;
+                copy.name = $"RbResultHostCard{_hostCards.Count}";
+                _hostCards.Add(copy);
+            }
+            var view = (RectTransform)content.parent;
+            // 다 들어가면 제 크기 · 넘치면 조금 줄여 다음 카드가 오른쪽 끝에 걸쳐 보이게 — 「옆으로 밀면 더 있다」가 읽히게
+            //   (제 크기로는 5장이 칸에 딱 차서 6번째가 전혀 안 보였다 · 2026-10-27 6종 캡처)
+            bool fits = n * HostCardW + (n - 1) * HostCardGap <= view.rect.width + 0.5f;
+            float k = fits ? 1f : HostCardOverflowScale;
+            for (int i = 0; i < _hostCards.Count; i++)
+            {
+                var card = _hostCards[i];
+                bool on = i < n;
+                card.gameObject.SetActive(on);
+                if (!on) continue;
+                card.localScale = new Vector3(k, k, 1f);
+                card.anchoredPosition = new Vector2(i * (HostCardW * k + HostCardGap), card.anchoredPosition.y);
+                FillHostCard(card, keys[i], counts != null && i < counts.Length ? counts[i] : -1, faces);
+            }
+
+            float width = n * HostCardW * k + (n - 1) * HostCardGap;
+            content.sizeDelta = new Vector2(width, content.sizeDelta.y);
+            content.anchoredPosition = new Vector2(fits ? (view.rect.width - width) * 0.5f : 0f, 0f);
+            if (view.TryGetComponent<ScrollRect>(out var scroll)) { scroll.enabled = !fits; scroll.StopMovement(); }
+        }
+
+        private void FillHostCard(RectTransform card, string key, int count, SpriteAtlas faces)
+        {
+            var host = _player?.GetHost(key);
+            int grade = host != null ? (int)host.Grade : 0;
+            SetChild(card, "RbHostCardFrame", grade < _hostFrames.Length ? _hostFrames[grade] : null);
+            SetChild(card, "RbHostCardTag", grade < _gradeTags.Length ? _gradeTags[grade] : null);
+            SetChild(card, "RbHostCardFace", faces != null ? faces.GetSprite($"face_{key}") : null);
+            if (card.Find("RbHostCardName") is Transform nameT && nameT.TryGetComponent<TMP_Text>(out var name))
+                name.text = host != null ? host.DisplayName : key;
+            bool hasCount = count > 0;
+            var shard = card.Find("RbHostCardShard") as RectTransform;
+            var countT = card.Find("RbHostCardCount") as RectTransform;
+            if (shard != null) shard.gameObject.SetActive(hasCount);
+            if (countT == null) return;
+            countT.gameObject.SetActive(hasCount);
+            if (!hasCount || shard == null || !countT.TryGetComponent<TMP_Text>(out var ct)) return;
+            ct.text = $"×{count}";
+            // 조각 아이콘 + 「×n」 을 한 덩어리로 카드 가운데에
+            float tw = ct.GetPreferredValues(ct.text, 9999f, countT.sizeDelta.y).x;
+            float left = (card.sizeDelta.x - (shard.sizeDelta.x + HostShardGap + tw)) * 0.5f;
+            shard.anchoredPosition = new Vector2(left, shard.anchoredPosition.y);
+            countT.anchoredPosition = new Vector2(left + shard.sizeDelta.x + HostShardGap, countT.anchoredPosition.y);
+        }
+
+        private static void SetChild(Transform card, string child, Sprite s)
+        {
+            if (card.Find(child) is not Transform t || !t.TryGetComponent<Image>(out var img)) return;
+            img.sprite = s;
+            img.enabled = s != null;
         }
 
         private void SetFace(string node, string hostKey, SpriteAtlas faces)

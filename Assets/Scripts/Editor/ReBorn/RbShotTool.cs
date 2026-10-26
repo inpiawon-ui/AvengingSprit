@@ -245,6 +245,8 @@ namespace Game.Editor.ReBorn
             (1080, 2400, Language.Korean, "ingame:result_fail", "result_fail_20x9"),
             (768, 1024, Language.Korean, "ingame:result_clear", "result_clear_4x3"),
             (720, 1280, Language.English, "ingame:result_fail", "result_fail_en"),
+            (1080, 2400, Language.Korean, "ingame:result_clear6", "result_hosts6_20x9"),
+            (720, 1280, Language.Korean, "ingame:result_clear6", "result_hosts6_16x9"),
             (720, 1280, Language.Korean, "ingame:shop", "shop_16x9"),
             (720, 1280, Language.Japanese, "ingame:shop", "shop_ja"),
             (720, 1280, Language.Korean, "ingame:event", "event_16x9"),
@@ -921,18 +923,24 @@ namespace Game.Editor.ReBorn
                         foreach (var t in pause.GetComponentsInChildren<Transform>(true)) if (t.name == "RbAbandon") t.gameObject.SetActive(true);
                     break;
                 case "ingame:result_clear":
+                case "ingame:result_clear6":
                 case "ingame:result_fail":
-                    // 결과 화면만 띄운다(판을 끝내지 않는다 — 저장 · 보상 지급이 일어나지 않게). 숫자는 시안 예시
+                {
+                    // 결과 화면만 띄운다(판을 끝내지 않는다 — 저장 · 보상 지급이 일어나지 않게). 숫자는 시안 예시 ·
+                    // 조각은 여러 몸(몸 카드 줄 A안) — 4종, 「clear6」 은 6종(옆으로 밀기)
                     var faces = typeof(Game.Module.InGame.InGameMainUI).GetField("_faceAtlas", F)?.GetValue(ui) as UnityEngine.U2D.SpriteAtlas;
-                    bool clear = state.EndsWith("clear");
+                    bool clear = !state.EndsWith("fail");
+                    bool six = state.EndsWith("6");
                     ui.GetComponentInChildren<Game.Module.InGame.RbRunResult>(true)?.Show(new Game.Module.Events.StageFinishedEvent
                     {
                         IsCleared = clear, FinishedChapter = 1, RewardGold = clear ? 432 : 96, RewardGhostExp = 30,
-                        ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 },
+                        ShardHostKeys = six ? new[] { "amazon", "gangster", "ninja", "medium", "guru", "robot" } : new[] { "amazon", "gangster", "ninja", "medium" },
+                        ShardCounts = six ? new[] { 3, 2, 2, 1, 1, 1 } : new[] { 3, 2, 2, 1 },
                         ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
                         LongestHostKey = "amazon",
                     }, faces);
                     break;
+                }
                 case "ingame:towerhud":
                 case "ingame:nighthud":
                 {

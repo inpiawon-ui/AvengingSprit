@@ -804,14 +804,13 @@ namespace Game.Editor.ReBorn
                 Img(line, "Components/rb_divider_line").preserveAspect = false;
             }
 
-            // 획득 보상 3칸 — 클리어 325 x 400(어두운 칸) / 실패 320 x 480(금 · 청록 테 — 망령의 밤 칸과 같은 판)
+            // 획득 보상 — 골드 · 유령 경험치 가로 두 칸 + 아래 몸 카드 줄(PD 2026-10-27 A안 「몸 카드 줄」 · 시안 _exchange/ref/shard_mock/shard_option_1.png).
+            // 여러 몸의 조각을 함께 받는다 — 카드 한 장이 몸 하나(등급 테 · 꼬리표 · 얼굴 · 이름 · 조각 ×n). 5장이 넘으면 옆으로 민다.
+            // 「몸 조각 N종 · 합계」 줄은 없다(PD 같은 날 「제거해줘」)
             Text(Two(slots, Node(c, "RbResultRewardTitle"), CBox(28, 1146, 600, 1204), CBox(40, 1113, 600, 1173)), "ui.rb.result.rewards", "획득 보상", 48, RsInk, TA.Left, heavy: true);
-            Tile(slots, c, "RbResultGoldTile", CBox(28, 1214, 353, 1614), CBox(40, 1209, 360, 1690), "Icons/rb_icon_currency_gold_144", "RbResultGoldValue", "RbResultGoldLabel", "ui.rb.result.gold", "골드");
-            var shard = Tile(slots, c, "RbResultShardTile", CBox(377, 1214, 703, 1614), CBox(380, 1222, 700, 1701), "Icons/rb_icon_shard_144", "RbResultShardValue", "RbResultShardLabel", null, "아마존 조각");
-            var face = Node(shard, "RbResultShardFace");
-            Two(slots, face, TBox(180, 70, 128, 128), TBox(180, 70, 128, 128));
-            Img(face, "Icons/rb_icon_mode_ghost_96");
-            Tile(slots, c, "RbResultExpTile", CBox(727, 1214, 1052, 1614), CBox(720, 1222, 1040, 1701), "Icons/rb_icon_stat_attack_144", "RbResultExpValue", "RbResultExpLabel", "ui.rb.result.ghost_exp", "유령 경험치");
+            Cell(slots, c, "RbResultGoldTile", CBox(28, 1222, 528, 1372), CBox(40, 1190, 528, 1340), "Icons/rb_icon_currency_gold_144", "RbResultGoldValue", "RbResultGoldLabel", "ui.rb.result.gold", "골드");
+            Cell(slots, c, "RbResultExpTile", CBox(552, 1222, 1052, 1372), CBox(552, 1190, 1040, 1340), "Icons/rb_icon_stat_attack_144", "RbResultExpValue", "RbResultExpLabel", "ui.rb.result.ghost_exp", "유령 경험치");
+            BuildHostCards(slots, c);
 
             // 실패 — 성장 추천 판 40~1040 x 1720~1908(얼굴 · 「공격력 강화 추천」 · 「가장 오래 쓴 몸 · 아마존」 · 성장 ›)
             var tip = Two(slots, Node(c, "RbResultTip"), CBox(40, 1720, 1040, 1908), CBox(40, 1720, 1040, 1908));
@@ -853,6 +852,16 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_cellTeal").objectReferenceValue = KitSprite("Components/rb_cell_line_teal");
             so.FindProperty("_expClear").objectReferenceValue = KitSprite("Icons/rb_icon_stat_attack_144");
             so.FindProperty("_expFail").objectReferenceValue = KitSprite("Icons/rb_icon_ghost_xp_144");
+            // 몸 카드 등급 — HostGrade 순서(B · A · S = 화면 R · SR · SSR)
+            string[] grades = { "r", "sr", "ssr" };
+            var frames = so.FindProperty("_hostFrames");
+            var tags = so.FindProperty("_gradeTags");
+            frames.arraySize = tags.arraySize = grades.Length;
+            for (int g = 0; g < grades.Length; g++)
+            {
+                frames.GetArrayElementAtIndex(g).objectReferenceValue = KitSprite($"Components/rb_host_frame_{grades[g]}");
+                tags.GetArrayElementAtIndex(g).objectReferenceValue = KitSprite($"Components/rb_rarity_{grades[g]}");
+            }
             so.FindProperty("_clearHeight").floatValue = ResultClearH;
             so.FindProperty("_failHeight").floatValue = ResultFailH;
             var sp = so.FindProperty("_slots");
@@ -1002,21 +1011,49 @@ namespace Game.Editor.ReBorn
             Img(Inside2(Node(x, name + "Icon"), 15f, 15f, 36f, 36f), "Icons/rb_icon_sys_close_48");
         }
 
-        /// <summary>
-        /// 보상 칸 — 판 · 아이콘 144 · 값(도트 44 / 실패 40) · 이름 36. 클리어 칸 325 x 400(아이콘 91,64 · 값 220 · 이름 291) ·
-        /// 실패 칸 320 x 480(아이콘 88,110 · 값 263 · 이름 325) — 시안 result-story · result-fail 을 브라우저에서 잰 값.
-        /// </summary>
-        private static RectTransform Tile(System.Collections.Generic.List<ResultSlot> slots, RectTransform c, string name,
+        /// <summary>재화 칸(가로 긴 판) — 아이콘 120 왼쪽 · 값 도트 56 · 이름 36. 클리어 500 x 150 / 실패 488 · 500 x 150(시안 A안).</summary>
+        private static RectTransform Cell(System.Collections.Generic.List<ResultSlot> slots, RectTransform c, string name,
                                           (Vector2 pos, Vector2 size) clear, (Vector2 pos, Vector2 size) fail,
                                           string icon, string value, string label, string key, string korean)
         {
             var t = Two(slots, Node(c, name), clear, fail);
             Img(t, "Components/rb_result_cell");
-            float cw = clear.size.x / S, fw = fail.size.x / S;
-            Img(Two(slots, Node(t, name + "Icon"), TBox(91, 64, 144, 144), TBox(88, 110, 144, 144)), icon);
-            Text(Two(slots, Node(t, value), TBox(0, 220, cw, 59), TBox(0, 263, fw, 54), 44f, 40f), null, "432", 44, RsInk, TA.Center, number: true);
-            Text(Two(slots, Node(t, label), TBox(0, 291, cw, 44), TBox(0, 325, fw, 45)), key, korean, 36, RsInk, TA.Center);
+            Img(Inside2(Node(t, name + "Icon"), 40f * S, 15f * S, 120f * S, 120f * S), icon);
+            Text(Inside2(Node(t, value), 190f * S, 22f * S, 290f * S, 66f * S), null, "432", 56, RsInk, TA.Left, number: true);
+            Text(Inside2(Node(t, label), 192f * S, 92f * S, 290f * S, 44f * S), key, korean, 36, RsMuted, TA.Left);
             return t;
+        }
+
+        // 몸 카드 — 시안 1080 px 190 x 280 · 간격 18
+        public const float HostCardW = 190f * S, HostCardH = 280f * S, HostCardGap = 18f * S;
+
+        /// <summary>
+        /// 몸 카드 줄 — 옆으로 미는 보기 칸(RectMask2D) + 내용 + 꺼 둔 카드 본(RbResultHostCard). 화면 스크립트가 몸 수만큼 복제해 채운다.
+        /// 카드: 어두운 칸 · 등급 테(R · SR · SSR) · 꼬리표 · 얼굴 118 · 이름 34 · 조각 아이콘 + 「×n」 도트 36.
+        /// </summary>
+        private static void BuildHostCards(System.Collections.Generic.List<ResultSlot> slots, RectTransform c)
+        {
+            var view = Two(slots, Node(c, "RbResultHosts"), CBox(28, 1400, 1052, 1680), CBox(40, 1366, 1040, 1646));
+            view.gameObject.AddComponent<RectMask2D>();
+            var hit = view.gameObject.AddComponent<Image>(); hit.color = new Color(1f, 1f, 1f, 0f);   // 밀기를 받을 칸(보이지 않음)
+            var content = Node(view, "RbResultHostsContent");
+            content.anchorMin = new Vector2(0f, 0f); content.anchorMax = new Vector2(0f, 1f); content.pivot = new Vector2(0f, 0.5f);
+            content.sizeDelta = new Vector2(HostCardW, 0f); content.anchoredPosition = Vector2.zero;
+            var scroll = view.gameObject.AddComponent<ScrollRect>();
+            scroll.content = content; scroll.viewport = view; scroll.horizontal = true; scroll.vertical = false;
+            scroll.movementType = ScrollRect.MovementType.Clamped; scroll.inertia = true;
+
+            var card = Node(content, "RbResultHostCard");
+            Corner(card, 0f, 0f, HostCardW, HostCardH);
+            Img(Stretch(Node(card, "RbHostCardBg")), "Components/rb_result_cell");
+            Img(Stretch(Node(card, "RbHostCardFrame")), "Components/rb_host_frame_r");
+            Img(Inside2(Node(card, "RbHostCardTag"), 10f * S, 10f * S, 71f * S, 48f * S), "Components/rb_rarity_r");
+            Img(Inside2(Node(card, "RbHostCardFace"), 36f * S, 44f * S, 118f * S, 118f * S), "Icons/rb_icon_mode_ghost_96");
+            // 긴 이름(영어 「Dark Magician」 · 일본어 「ギャングスター」)도 카드 안에 — 줄일 수 있는 하한을 24 까지 낮춘다
+            Text(Inside2(Node(card, "RbHostCardName"), 6f * S, 170f * S, 178f * S, 44f * S), null, "아마존", 34, RsInk, TA.Center, heavy: true).fontSizeMin = 24f * S;
+            Img(Inside2(Node(card, "RbHostCardShard"), 50f * S, 220f * S, 40f * S, 40f * S), "Icons/rb_icon_shard_48");
+            Text(Inside2(Node(card, "RbHostCardCount"), 96f * S, 216f * S, 90f * S, 48f * S), null, "×3", 36, RsInk, TA.Left, number: true);
+            card.gameObject.SetActive(false);
         }
 
         /// <summary>부모 위 왼쪽 기준 상자(게임 px) — Corner 와 같지만 돌려준다.</summary>
