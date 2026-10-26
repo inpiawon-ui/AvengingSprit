@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/korean_guard.py pre"
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/korean_guard.py\" pre"
           }
         ]
       }
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/korean_guard.py stop"
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/korean_guard.py\" stop"
           }
         ]
       }
