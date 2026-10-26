@@ -11,20 +11,22 @@ using UnityEngine.UI;
 namespace Game.Module.Lobby
 {
     /// <summary>
-    /// RE:BORN 미션(시안 Screens/missions · mission-complete) — 일일 · 주간 · 업적 탭. 업적은 미션 안의 탭(PD 2026-10-23) — 지금은 준비 중.
+    /// RE:BORN 미션(시안 Screens/missions · mission-complete) — 일일 · 주간 탭(시안). 업적 탭은 시안에 없어 뺐다(준비 중이었다 — PD 2026-10-26).
     /// 진행 · 받기는 ISeasonService 그대로. 「전부 완료」 미션은 맨 위 큰 줄로 따로 그린다.
     /// </summary>
     public sealed class RbMissionsPage : MonoBehaviour
     {
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();
-        [SerializeField] private Sprite _btnClaim, _btnIdle;
+        [SerializeField] private Sprite _btnIdle;
 
         private const int Rows = 8;
-        private static readonly Color TabOn = Color.white, TabOff = new(0.70f, 0.74f, 0.84f);
+        private static readonly Color TabOn = new(0.24f, 0.90f, 1f), TabOff = new(0.70f, 0.74f, 0.84f);
+        // 줄 버튼 글자 — 받기 금색 · 이동 흰색 · 받음 · 잠김 흐린 색(시안 missions)
+        private static readonly Color Gold = new(1f, 0.79f, 0.24f), Dim = new(0.70f, 0.74f, 0.84f);
 
         private UIBinder _ui;
         private RbLobbyUI _shell;
-        private int _tab;   // 0 일일 · 1 주간 · 2 업적
+        private int _tab;   // 0 일일 · 1 주간
         private readonly List<Transform> _rows = new();
 
         private void Awake()
@@ -33,7 +35,7 @@ namespace Game.Module.Lobby
             _shell = GetComponentInParent<RbLobbyUI>();
             _ui.OnClick("MisBack", () => _shell.SelectTab("Battle"));
             _ui.OnClick("MisHelp", () => Toast(Localize.FromTable("ui.rb.mis.help", "미션을 끝내면 보상과 패스 경험치를 받아요.\n일일은 매일 · 주간은 매주 초기화돼요.")));
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 int t = i;
                 _ui.OnClick($"MisTab{i}", () => { _tab = t; GameSound.Cue("ui.tap"); Refresh(); });
@@ -42,7 +44,7 @@ namespace Game.Module.Lobby
             var tpl = _ui.Find("MisRowTemplate");
             if (tpl == null) return;
             var start = ((RectTransform)tpl).anchoredPosition;
-            float step = ((RectTransform)tpl).sizeDelta.y + 14f;
+            float step = ((RectTransform)tpl).sizeDelta.y + 16f;   // 시안 줄 사이 24(1080) = 16
             for (int i = 0; i < Rows; i++)
             {
                 var r = i == 0 ? tpl : Instantiate(tpl.gameObject, tpl.parent).transform;
@@ -60,17 +62,14 @@ namespace Game.Module.Lobby
 
         private void Refresh()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 _ui.SetActive($"MisTab{i}On", i == _tab);
                 if (_ui.Get<TextMeshProUGUI>($"MisTab{i}Text") is TextMeshProUGUI t) t.color = i == _tab ? TabOn : TabOff;
             }
-            bool ach = _tab == 2;
-            _ui.SetActive("MisSoon", ach);
-            _ui.SetActive("MisAll", !ach);
-            _ui.SetActive("MisClaimAll", !ach);
+            _ui.SetActive("MisSoon", false);
             foreach (var r in _rows) r.gameObject.SetActive(false);
-            if (ach || !CoreModule.TryGet<ISeasonService>(out var s) || !s.IsReady) return;
+            if (!CoreModule.TryGet<ISeasonService>(out var s) || !s.IsReady) return;
 
             var list = s.Missions(_tab == 0 ? MissionPeriod.Daily : MissionPeriod.Weekly);
             int shown = 0, done = 0, total = 0;
@@ -84,7 +83,6 @@ namespace Game.Module.Lobby
                 FillRow(_rows[shown++], m);
             }
             // 맨 위 — 「오늘 미션 전부 완료 3/6개 달성」 + 보상
-            var t2 = s.UntilDayReset;
             _ui.SetText("MisAllTitle", Localize.FromTable(_tab == 0 ? "ui.rb.mis.all_daily" : "ui.rb.mis.all_weekly", _tab == 0 ? "◆ 오늘 미션 전부 완료" : "◆ 이번 주 미션 전부 완료"));
             _ui.SetText("MisAllCount", string.Format(Localize.FromTable("ui.rb.mis.count", "{0}/{1}개 달성"), done, total));
             if (_ui.Find("MisAllFill") is RectTransform f) f.anchorMax = new Vector2(total > 0 ? (float)done / total : 0f, 1f);
@@ -97,12 +95,12 @@ namespace Game.Module.Lobby
             {
                 bool can = all.HasValue && all.Value.Claimable;
                 allBtn.gameObject.SetActive(can);
+                // 받을 수 있으면 보상 글자 자리에 「받기」 — 둘이 겹친다
+                _ui.SetActive("MisAllReward", !can);
+                _ui.SetActive("MisAllHint", !can);
                 allBtn.onClick.RemoveAllListeners();
                 if (can) { string id = all.Value.Def.Id; allBtn.onClick.AddListener(() => ClaimOne(id)); }
             }
-            _ui.SetText("MisReset", string.Format(Localize.FromTable("ui.pass.reset_in", "초기화까지 {0}"),
-                _tab == 0 ? $"{(int)t2.TotalHours:00}:{t2.Minutes:00}:{t2.Seconds:00}"
-                          : string.Format(Localize.FromTable("ui.rb.mis.days", "{0}일"), Math.Max(1, (int)Math.Ceiling(s.UntilWeekReset.TotalDays)))));
             if (_ui.Get<Button>("MisClaimAll") is Button ca) ca.interactable = s.HasClaimableMission;
         }
 
@@ -121,13 +119,30 @@ namespace Game.Module.Lobby
             if (b == null) return;
             var btn = b.GetComponent<Button>();
             btn.onClick.RemoveAllListeners();
-            btn.interactable = m.Claimable;
-            if (b.GetComponent<Image>() is Image img) img.sprite = m.Claimable ? _btnClaim : _btnIdle;
+            // 시안: 남색 버튼 하나 — 다 했으면 「받기」(금색), 아직이면 「이동 ›」(그 미션을 할 화면으로), 받았으면 「받음」
+            bool go = !m.Claimed && !m.Claimable && !m.Locked;
+            btn.interactable = m.Claimable || go;
+            if (b.GetComponent<Image>() is Image img) img.sprite = _btnIdle;
             TextIn(b, "MisRowClaimText", m.Claimed ? Localize.FromTable("ui.pass.claimed", "받음")
                                        : m.Claimable ? Localize.FromTable("ui.pass.claim", "받기")
                                        : m.Locked ? Localize.FromTable("ui.pass.locked", "잠김")
-                                       : Localize.FromTable("ui.pass.doing", "진행 중"));
+                                       : Localize.FromTable("ui.rb.mis.go", "이동 ›"));
+            if (_ui.Find(b, "MisRowClaimText")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI bt) bt.color = m.Claimable ? Gold : go ? Color.white : Dim;
             if (m.Claimable) { string id = m.Def.Id; btn.onClick.AddListener(() => ClaimOne(id)); }
+            else if (go) { string type = m.Def.Type; btn.onClick.AddListener(() => GoTo(type)); }
+        }
+
+        /// <summary>「이동 ›」 — 그 미션을 할 수 있는 화면으로. 상점 구매 · 상자 = 상점, 강화 = 호스트, 나머지(판 · 빙의 · 처치) = 전투.</summary>
+        private void GoTo(string type)
+        {
+            GameSound.Cue("ui.tap");
+            switch (type)
+            {
+                case "daily_shop_buy": _shell.SelectTab("Shop"); _shell.ShowShopTab("today"); break;
+                case "chest_open": _shell.SelectTab("Shop"); _shell.ShowShopTab("chest"); break;
+                case "stat_upgrade": _shell.SelectTab("Host"); break;
+                default: _shell.SelectTab("Battle"); break;
+            }
         }
 
         private void ClaimOne(string id)

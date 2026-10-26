@@ -1719,3 +1719,12 @@ ui.rb.notice.first_bonus	첫 구매 보너스 {0}	初回購入ボーナス {0}	F
 ui.rb.shop.odds_gold	골드 {0} ~ {1}	ゴールド {0}～{1}	Gold {0} - {1}	金幣 {0}～{1}	金币 {0}～{1}
 ui.rb.shop.odds_shard	호스트 조각 {0} ~ {1}개 ({2} ~ {3}명)	ホストのかけら {0}～{1}個（{2}～{3}人）	Host shards {0} - {1} ({2} - {3} hosts)	宿主碎片 {0}～{1} 個（{2}～{3} 名）	宿主碎片 {0}～{1} 个（{2}～{3} 名）
 ui.rb.shop.odds_grade	조각이 나오는 호스트 등급	かけらが出るホストの等級	Shard host rarity	碎片宿主等級機率	碎片宿主等级概率
+ui.rb.chl.sweep_rule	소탕 조건 확인	掃討条件を確認	Sweep Conditions	查看掃蕩條件	查看扫荡条件
+ui.rb.chl.floor_n	{0}층	{0}階	F{0}	{0}層	{0}层
+ui.rb.chl.per_kills	처치 {0}마다	{0}体撃破ごと	Every {0} kills	每擊敗 {0}	每击败 {0}
+ui.rb.chl.boss_kill	보스 처치	ボス撃破	Boss kill	擊敗頭目	击败首领
+ui.rb.chl.cost_entry	입장 1	入場 1	Entry 1	入場 1	入场 1
+ui.rb.chl.challenge	도전	挑戦	Challenge	挑戰	挑战
+ui.rb.chl.sweep_short	하루 1번 · 입장 횟수를 쓰지 않는다	1日1回・入場回数を使わない	Once a day · no entry used	每天1次 · 不消耗入場次數	每天1次 · 不消耗入场次数
+ui.rb.mis.go	이동 ›	移動 ›	Go ›	前往 ›	前往 ›
+ui.rb.mis.all_hint	전체 완료 시	全達成時	When all done	全部完成時	全部完成时

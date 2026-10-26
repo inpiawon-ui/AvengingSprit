@@ -128,43 +128,49 @@ namespace Game.Editor.ReBorn
         {
             var page = RbHostBuilder.Page(rt, "PageMissions");
             RbHostBuilder.Head(page, "Mis", "ui.rb.rail.mission", "미션", 25, 280, 155, 400, 800, 922);
-            string[] keys = { "ui.rb.mis.daily", "ui.rb.mis.weekly", "ui.rb.mis.achieve" };
-            string[] ko = { "일일", "주간", "업적" };
-            for (int i = 0; i < 3; i++)
+            // 시안 missions(1080 기준, 탭 위 변 = 440) — PD 2026-10-26 「일일 · 주간 · 간격 · 완료 받기 등 시안과 똑같이」
+            // 탭은 둘(일일 · 주간) — 한 띠(rb_seg_track) 위에 고른 탭 판(rb_seg_on) · 청록 글자. 업적 탭은 시안에 없어 뺐다(준비 중이었다)
+            string[] keys = { "ui.rb.mis.daily", "ui.rb.mis.weekly" };
+            string[] ko = { "일일", "주간" };
+            Img(Place(Node(page, "MisTabTrack"), Edge.Top, 29, 440, 1047, 557), "Components/rb_seg_track");
+            for (int i = 0; i < 2; i++)
             {
-                float x0 = 35 + i * 340f, x1 = x0 + 330f;
-                var t = Place(Node(page, $"MisTab{i}"), Edge.Top, x0, 440, x1, 540);
-                Btn(t, "Components/rb_seg_track");
+                float x0 = 29 + i * 509f, x1 = x0 + 509f;
+                var t = Place(Node(page, $"MisTab{i}"), Edge.Top, x0, 440, x1, 557);
+                var hit = Img(t, "Components/rb_seg_on");
+                hit.color = new Color(1f, 1f, 1f, 0f);   // 누르는 칸 — 그림은 아래 「On」 이 맡는다
+                hit.raycastTarget = true;
+                t.gameObject.AddComponent<Button>().targetGraphic = hit;
                 Img(Stretch(Node(t, $"MisTab{i}On")), "Components/rb_seg_on");
-                Text(Stretch(Node(t, $"MisTab{i}Text")), keys[i], ko[i], 40, White, TA.Center, heavy: true);
+                Text(Stretch(Node(t, $"MisTab{i}Text")), keys[i], ko[i], 42, White, TA.Center, heavy: true);
             }
-            // 「전부 완료」 큰 줄
-            const float ax0 = 35, ay0 = 560, ax1 = 1045, ay1 = 790;
+            // 「전부 완료」 판 — 어두운 판 · 제목 · n/m개 달성 · 막대 · 상자 아이콘 · 「골드 상자 1 / 전체 완료 시」
+            const float ax0 = 29, ay0 = 572, ax1 = 1047, ay1 = 806;
             var all = Place(Node(page, "MisAll"), Edge.Top, ax0, ay0, ax1, ay1);
-            Img(all, "Components/rb_panel_hero");
-            Text(Local(Node(all, "MisAllTitle"), ax0, ay0, ax1, ay1, 66, 584, 700, 636), null, "◆ 오늘 미션 전부 완료", 42, White, TA.Left, heavy: true);
-            Text(Local(Node(all, "MisAllCount"), ax0, ay0, ax1, ay1, 66, 650, 600, 700), null, "3/6개 달성", 40, White, TA.Left, heavy: true);
-            Bar(Local(Node(all, "MisAllBar"), ax0, ay0, ax1, ay1, 66, 722, 640, 738), "MisAllFill", "Components/rb_bar_fill_cyan");
-            Img(Local(Node(all, "MisAllIcon"), ax0, ay0, ax1, ay1, 680, 600, 780, 700), "Icons/rb_icon_reward_chest_96");
-            Text(Local(Node(all, "MisAllReward"), ax0, ay0, ax1, ay1, 790, 610, 1030, 660), null, "골드 상자 1", 32, White, TA.Left);
-            Text(Local(Node(all, "MisReset"), ax0, ay0, ax1, ay1, 680, 740, 1030, 776), null, "초기화까지 12:00:00", 28, Dim, TA.Right);
-            var ac = Local(Node(all, "MisAllClaim"), ax0, ay0, ax1, ay1, 790, 664, 1020, 734);
+            Img(all, "Components/rb_panel_base");
+            Text(Local(Node(all, "MisAllTitle"), ax0, ay0, ax1, ay1, 55, 595, 680, 643), null, "◆ 오늘 미션 전부 완료", 44, White, TA.Left, heavy: true);
+            Text(Local(Node(all, "MisAllCount"), ax0, ay0, ax1, ay1, 55, 685, 600, 735), null, "3/6개 달성", 44, White, TA.Left, heavy: true);
+            Bar(Local(Node(all, "MisAllBar"), ax0, ay0, ax1, ay1, 55, 757, 614, 771), "MisAllFill", "Components/rb_bar_fill_cyan");
+            Img(Local(Node(all, "MisAllIcon"), ax0, ay0, ax1, ay1, 691, 688, 775, 772), "Icons/rb_icon_reward_chest_96");
+            Text(Local(Node(all, "MisAllReward"), ax0, ay0, ax1, ay1, 800, 682, 1030, 726), null, "골드 상자 1", 36, White, TA.Left, heavy: true);
+            Text(Local(Node(all, "MisAllHint"), ax0, ay0, ax1, ay1, 800, 728, 1030, 770), "ui.rb.mis.all_hint", "전체 완료 시", 32, Dim, TA.Left);
+            var ac = Local(Node(all, "MisAllClaim"), ax0, ay0, ax1, ay1, 800, 678, 1020, 774);
             Btn(ac, "Components/rb_btn_primary");
-            Text(Stretch(Node(ac, "MisAllClaimText")), "ui.pass.claim", "받기", 34, Ink, TA.Center, heavy: true);
+            Text(Stretch(Node(ac, "MisAllClaimText")), "ui.pass.claim", "받기", 38, Ink, TA.Center, heavy: true);
 
-            // 미션 줄(본보기 · 화면 스크립트가 8줄로 복제) — 세로 스크롤
-            var body = VScroll(page, "MisBody", 810, 1860, 8 * 196f + 20f);
-            const float rx0 = 35, ry0 = 815, rx1 = 1045, ry1 = 1001;
-            var row = PlaceIn(Node(body, "MisRowTemplate"), 810, rx0, ry0, rx1, ry1);
-            Img(row, "Components/rb_list_row");
-            Text(Local(Node(row, "MisRowName"), rx0, ry0, rx1, ry1, 66, ry0 + 26, 700, ry0 + 76), null, "챕터 클리어", 40, White, TA.Left, heavy: true);
-            Bar(Local(Node(row, "MisRowBar"), rx0, ry0, rx1, ry1, 66, ry0 + 116, 540, ry0 + 132), "MisRowFill", "Components/rb_bar_fill_cyan");
-            Text(Local(Node(row, "MisRowCount"), rx0, ry0, rx1, ry1, 550, ry0 + 100, 700, ry0 + 148), null, "1/1", 38, White, TA.Left, number: true);
-            Img(Local(Node(row, "MisRowRewardIcon"), rx0, ry0, rx1, ry1, 716, ry0 + 60, 766, ry0 + 110), "Icons/rb_icon_currency_gem_96");
-            Text(Local(Node(row, "MisRowReward"), rx0, ry0, rx1, ry1, 770, ry0 + 58, 860, ry0 + 112), null, "30", 40, White, TA.Left, number: true);
-            var rb = Local(Node(row, "MisRowClaim"), rx0, ry0, rx1, ry1, 870, ry0 + 40, 1030, ry0 + 146);
+            // 미션 줄(본보기 · 화면 스크립트가 8줄로 복제) — 어두운 판 174 · 사이 24(시안) · 세로 스크롤
+            var body = VScroll(page, "MisBody", 830, 1860, 8 * 198f + 20f);
+            const float rx0 = 29, ry0 = 846, rx1 = 1047, ry1 = 1020;
+            var row = PlaceIn(Node(body, "MisRowTemplate"), 830, rx0, ry0, rx1, ry1);
+            Img(row, "Components/rb_panel_base");
+            Text(Local(Node(row, "MisRowName"), rx0, ry0, rx1, ry1, 48, ry0 + 26, 700, ry0 + 78), null, "챕터 클리어", 42, White, TA.Left, heavy: true);
+            Bar(Local(Node(row, "MisRowBar"), rx0, ry0, rx1, ry1, 48, ry0 + 118, 517, ry0 + 132), "MisRowFill", "Components/rb_bar_fill_cyan");
+            Text(Local(Node(row, "MisRowCount"), rx0, ry0, rx1, ry1, 528, ry0 + 100, 690, ry0 + 150), null, "1/1", 40, White, TA.Left, number: true);
+            Img(Local(Node(row, "MisRowRewardIcon"), rx0, ry0, rx1, ry1, 700, ry0 + 70, 744, ry0 + 114), "Icons/rb_icon_currency_gem_96");
+            Text(Local(Node(row, "MisRowReward"), rx0, ry0, rx1, ry1, 750, ry0 + 66, 845, ry0 + 118), null, "30", 42, White, TA.Left, number: true);
+            var rb = Local(Node(row, "MisRowClaim"), rx0, ry0, rx1, ry1, 852, ry0 + 29, 1030, ry0 + 148);
             Btn(rb, "Components/rb_btn_secondary");
-            Text(Stretch(Node(rb, "MisRowClaimText")), null, "받기", 34, White, TA.Center, heavy: true);
+            Text(Stretch(Node(rb, "MisRowClaimText")), null, "받기", 40, Yellow, TA.Center, heavy: true);
 
             var soon = Place(Node(page, "MisSoon"), Edge.Top, 100, 700, 980, 900);
             Text(soon, "ui.rb.soon", "준비 중이에요 · 업데이트로 열려요", 40, Dim, TA.Center);
@@ -175,7 +181,6 @@ namespace Game.Editor.ReBorn
             var view = page.gameObject.AddComponent<RbMissionsPage>();
             var so = new SerializedObject(view);
             Icons(so);
-            so.FindProperty("_btnClaim").objectReferenceValue = KitSprite("Components/rb_btn_primary");
             so.FindProperty("_btnIdle").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);

@@ -26,6 +26,7 @@ namespace Game.Module.Lobby
 
         private static readonly string[] DayKeys = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
         private const int Ladder = 5;
+        private static readonly Color Cyan = new(0.24f, 0.90f, 1f), Dim = new(0.70f, 0.74f, 0.84f);
 
         private UIBinder _ui;
         private RbLobbyUI _shell;
@@ -47,7 +48,9 @@ namespace Game.Module.Lobby
             _ui.OnClick("ChlTowerStart", StartTower);
             _ui.OnClick("ChlTowerBuy", () => AskBuy(true, false));
             _ui.OnClick("ChlTowerSweep", Sweep);
-            _ui.OnClick("ChlTowerFit", ShowFit);
+            _ui.OnClick("ChlTowerFit", ShowSweepRule);   // 시안: 「소탕 조건 확인」(예전 「맞는 호스트 보기」)
+            _ui.OnClick("ChlTowerPageHelp", () => _shell.ShowGuide("tower"));
+            _ui.OnClick("ChlNightPageHelp", () => _shell.ShowGuide("night"));
             _ui.OnClick("ChlNightStart", StartNight);
             for (int i = 0; i < 7; i++)
             {
@@ -120,9 +123,11 @@ namespace Game.Module.Lobby
             var table = _progress.Table;
             if (table == null) return;
             int next = _progress.TowerNextFloor;
+            // 다섯 층 묶음(1~5 · 6~10 …) — 시안처럼 1층부터 5층까지 한 판에. 예전엔 지금 층 둘레(next-1 ~ next+3)라 1층 묶음이 안 보였다
+            int block = (next - 1) / Ladder * Ladder + 1;
             for (int i = 0; i < Ladder; i++)
             {
-                int floor = next + 3 - i;   // 위에서부터 next+3 … next-1
+                int floor = block + Ladder - 1 - i;   // 위에서부터 5층 … 1층
                 var row = _ui.Find($"ChlFloor{i}");
                 if (row == null) continue;
                 row.gameObject.SetActive(floor >= 1);
@@ -133,11 +138,13 @@ namespace Game.Module.Lobby
                 TextIn(row, $"ChlFloor{i}State", now ? Localize.FromTable("ui.rb.chl.now", "현재 도전")
                                                 : past ? "✓ " + Localize.FromTable("ui.rb.chl.cleared", "클리어")
                                                 : Localize.FromTable("ui.rb.chl.locked", "잠김"));
+                if (_ui.Find(row, $"ChlFloor{i}State")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st) st.color = now ? Cyan : past ? Color.white : Dim;
+                if (_ui.Find(row, $"ChlFloor{i}No")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI no) no.color = now ? Cyan : Color.white;
                 _ui.Find(row, $"ChlFloor{i}Lock")?.gameObject.SetActive(!now && !past);
             }
             var cur = table.FloorAt(next);
-            _ui.SetText("ChlFloorTitle", $"{next}F  {TowerEntryPanel.FloorName(cur, next)}");
-            _ui.SetText("ChlFloorDesc", cur != null ? Localize.Get(cur.DescKey) : string.Empty);
+            // 시안: 「2층」 + 「첫 클리어 보상 (매주 다시)」(고정 글자)
+            _ui.SetText("ChlFloorTitle", string.Format(Localize.FromTable("ui.rb.chl.floor_n", "{0}층"), next));
             var reward = cur != null && cur.IsBoss ? table.FirstClearBoss : table.FirstClear;
             _ui.SetText("ChlRewardGold", reward.Gold.ToString("N0"));
             _ui.SetText("ChlRewardShard", reward.Shards.ToString());
@@ -148,27 +155,44 @@ namespace Game.Module.Lobby
 
             var step = _progress.SweepNow;
             bool swept = _progress.TowerSweptToday;
-            _ui.SetText("ChlSweepInfo", step != null ? Localize.Format("ui.tower.sweep_reward", step.Gold, step.Shards) : Localize.Get("ui.tower.sweep_locked"));
+            _ui.SetText("ChlSweepInfo", step != null ? Localize.FromTable("ui.rb.chl.sweep_short", "하루 1번 · 입장 횟수를 쓰지 않는다") : Localize.Get("ui.tower.sweep_locked"));
             _ui.SetText("ChlTowerSweepText", Localize.Get(swept ? "ui.tower.sweep_done" : "ui.tower.sweep_btn"));
             if (_ui.Get<Button>("ChlTowerSweep") is Button sb) sb.interactable = step != null && !swept;
 
             int entries = _progress.TowerEntries, cost = _progress.TowerBuyCost;
             _ui.SetText("ChlTowerEntryLine", EntryLine(entries, table.FreeEntriesPerDay));
             if (_ui.Get<Button>("ChlTowerBuy") is Button bb) bb.interactable = cost >= 0;
-            _ui.SetText("ChlTowerStartText", entries > 0 ? Localize.Format("ui.tower.start", next)
-                                           : cost >= 0 ? Localize.Format("ui.tower.start_buy", cost) : Localize.Get("ui.tower.no_entries"));
+            StartLabel("ChlTowerStart", entries > 0, Localize.FromTable("ui.rb.chl.challenge", "도전"),
+                       cost >= 0 ? Localize.Format("ui.tower.start_buy", cost) : Localize.Get("ui.tower.no_entries"));
         }
 
-        private void ShowFit()
+        /// <summary>노란 시작 버튼 — 입장이 남았으면 「도전 | 입장 1」, 없으면 「젬 N 추가 입장」 한 줄(칸막이 · 입장 글자 숨김).</summary>
+        private void StartLabel(string node, bool hasEntry, string label, string noEntry)
         {
+            _ui.SetText(node + "Text", hasEntry ? label : noEntry);
+            _ui.SetActive(node + "Bar", hasEntry);
+            _ui.SetActive(node + "Cost", hasEntry);
+            if (_ui.Get<TextMeshProUGUI>(node + "Text") is TextMeshProUGUI t) t.alignment = hasEntry ? TextAlignmentOptions.Right : TextAlignmentOptions.Center;
+            if (!hasEntry && _ui.Find(node + "Text") is RectTransform rt) { rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero; }
+        }
+
+        /// <summary>「소탕 조건 확인」 — 이번 주 깬 층에 따라 받는 소탕 보상 단계(표) · 지금 단계.</summary>
+        private void ShowSweepRule()
+        {
+            var table = _progress.Table;
+            if (table == null) return;
             var sb = new System.Text.StringBuilder();
-            for (int i = 0; i < _fit.Count; i++)
+            sb.Append(Localize.Get("ui.tower.sweep_hint")).Append("\n\n");
+            var now = _progress.SweepNow;
+            foreach (var st in table.SweepSteps)
             {
-                if (i > 0) sb.Append(i % 3 == 0 ? "\n" : " · ");
-                sb.Append(TowerEntryPanel.HostName(_fit[i]));
-                if (_progress.IsTrained(_fit[i])) sb.Append(" ★");
+                bool cur = now != null && st.FromFloor == now.FromFloor;
+                if (cur) sb.Append("<color=#3EE6FF>");
+                sb.Append(Localize.Format("ui.tower.sweep_preview", st.FromFloor, st.Gold.ToString("N0"), st.Shards));
+                if (cur) sb.Append("</color>");
+                sb.Append("\n");
             }
-            Toast($"{Localize.Format("ui.tower.fit_title", _progress.TowerNextFloor)}\n\n{sb}");
+            _shell.Notice.ShowInfo("rb_icon_currency_gold_96", Localize.FromTable("ui.rb.chl.sweep_rule", "소탕 조건 확인"), sb.ToString().TrimEnd());
         }
 
         private void Sweep()
@@ -219,23 +243,29 @@ namespace Game.Module.Lobby
             int today = _progress.TodayIndex;
             for (int i = 0; i < 7; i++)
             {
-                _ui.SetActive($"ChlDay{i}On", i == _day);
                 _ui.SetText($"ChlDay{i}Text", Localize.Get($"ui.night.day.{DayKeys[i]}").Substring(0, 1));
+                if (_ui.Get<TextMeshProUGUI>($"ChlDay{i}Text") is TextMeshProUGUI dt) dt.color = i == _day ? Cyan : Dim;
             }
             string dayName = Localize.Get($"ui.night.day.{DayKeys[_day]}");
             _ui.SetText("ChlNightDayTitle", $"{dayName} · {Localize.Get($"ui.night.day_rule.{DayKeys[_day]}")}");
             _ui.SetText("ChlNightBest", string.Format(Localize.FromTable("ui.rb.chl.night_info", "{0} 최고 처치 <color=#FFFFFF>{1}</color>"), dayName, _progress.NightBest(_day)));
             _ui.SetText("ChlNightLeft", string.Format(Localize.FromTable("ui.rb.chl.left", "남은 입장 {0}/{1}"), _progress.NightEntries, table != null ? table.FreeEntriesPerDay : 3));
             _ui.SetText("ChlNightRule", Localize.Get($"ui.night.day_desc.{DayKeys[_day]}"));
-            _ui.SetText("ChlNightReward", Localize.Format("ui.night.reward", table != null ? table.KillsPerShard : 50, table != null ? table.ClearShardBonus : 3));
+            int perKills = table != null ? table.KillsPerShard : 50, bonus = table != null ? table.ClearShardBonus : 3;
+            _ui.SetText("ChlNightReward", Localize.Format("ui.night.reward", perKills, bonus).Replace("\n", " · "));
+            // 오늘의 보상 두 칸(시안 night) — 밤은 골드가 없다(기획 — 잔몹 골드 끔 · 결과도 조각뿐)라 「처치마다 조각」 · 「보스 처치 보너스」
+            _ui.SetText("ChlNightKillValue", "1");
+            _ui.SetText("ChlNightKillLabel", string.Format(Localize.FromTable("ui.rb.chl.per_kills", "처치 {0}마다"), perKills));
+            _ui.SetText("ChlNightBossValue", $"+{bonus}");
+            _ui.SetText("ChlNightBossLabel", Localize.FromTable("ui.rb.chl.boss_kill", "보스 처치"));
             var hosts = NightEntryPanel.DayHosts(table, _day);
             SetFace("ChlNightShardFace", hosts.Count > 0 ? hosts[0] : null);
             bool isToday = _day == today;
             int entries = _progress.NightEntries, cost = _progress.NightBuyCost;
             if (_ui.Get<Button>("ChlNightStart") is Button b) b.interactable = isToday;
-            _ui.SetText("ChlNightStartText", !isToday ? Localize.Get("ui.night.today_only")
-                                           : entries > 0 ? Localize.Get("ui.night.start")
-                                           : cost >= 0 ? Localize.Format("ui.tower.start_buy", cost) : Localize.Get("ui.tower.no_entries"));
+            StartLabel("ChlNightStart", isToday && entries > 0, Localize.Get("ui.night.start"),
+                       !isToday ? Localize.Get("ui.night.today_only")
+                       : cost >= 0 ? Localize.Format("ui.tower.start_buy", cost) : Localize.Get("ui.tower.no_entries"));
         }
 
         private void StartNight()

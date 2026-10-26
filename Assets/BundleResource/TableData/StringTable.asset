@@ -11122,3 +11122,58 @@ MonoBehaviour:
     _en: Shard host rarity
     _zhHant: "\u788E\u7247\u5BBF\u4E3B\u7B49\u7D1A\u6A5F\u7387"
     _zhHans: "\u788E\u7247\u5BBF\u4E3B\u7B49\u7EA7\u6982\u7387"
+  - _key: ui.rb.chl.sweep_rule
+    _ko: "\uC18C\uD0D5 \uC870\uAC74 \uD655\uC778"
+    _ja: "\u6383\u8A0E\u6761\u4EF6\u3092\u78BA\u8A8D"
+    _en: Sweep Conditions
+    _zhHant: "\u67E5\u770B\u6383\u8569\u689D\u4EF6"
+    _zhHans: "\u67E5\u770B\u626B\u8361\u6761\u4EF6"
+  - _key: ui.rb.chl.floor_n
+    _ko: "{0}\uCE35"
+    _ja: "{0}\u968E"
+    _en: F{0}
+    _zhHant: "{0}\u5C64"
+    _zhHans: "{0}\u5C42"
+  - _key: ui.rb.chl.per_kills
+    _ko: "\uCC98\uCE58 {0}\uB9C8\uB2E4"
+    _ja: "{0}\u4F53\u6483\u7834\u3054\u3068"
+    _en: Every {0} kills
+    _zhHant: "\u6BCF\u64CA\u6557 {0}"
+    _zhHans: "\u6BCF\u51FB\u8D25 {0}"
+  - _key: ui.rb.chl.boss_kill
+    _ko: "\uBCF4\uC2A4 \uCC98\uCE58"
+    _ja: "\u30DC\u30B9\u6483\u7834"
+    _en: Boss kill
+    _zhHant: "\u64CA\u6557\u982D\u76EE"
+    _zhHans: "\u51FB\u8D25\u9996\u9886"
+  - _key: ui.rb.chl.cost_entry
+    _ko: "\uC785\uC7A5 1"
+    _ja: "\u5165\u5834 1"
+    _en: Entry 1
+    _zhHant: "\u5165\u5834 1"
+    _zhHans: "\u5165\u573A 1"
+  - _key: ui.rb.chl.challenge
+    _ko: "\uB3C4\uC804"
+    _ja: "\u6311\u6226"
+    _en: Challenge
+    _zhHant: "\u6311\u6230"
+    _zhHans: "\u6311\u6218"
+  - _key: ui.rb.chl.sweep_short
+    _ko: "\uD558\uB8E8 1\uBC88 \xB7 \uC785\uC7A5 \uD69F\uC218\uB97C \uC4F0\uC9C0
+      \uC54A\uB294\uB2E4"
+    _ja: "1\u65E51\u56DE\u30FB\u5165\u5834\u56DE\u6570\u3092\u4F7F\u308F\u306A\u3044"
+    _en: "Once a day \xB7 no entry used"
+    _zhHant: "\u6BCF\u59291\u6B21 \xB7 \u4E0D\u6D88\u8017\u5165\u5834\u6B21\u6578"
+    _zhHans: "\u6BCF\u59291\u6B21 \xB7 \u4E0D\u6D88\u8017\u5165\u573A\u6B21\u6570"
+  - _key: ui.rb.mis.go
+    _ko: "\uC774\uB3D9 \u203A"
+    _ja: "\u79FB\u52D5 \u203A"
+    _en: "Go \u203A"
+    _zhHant: "\u524D\u5F80 \u203A"
+    _zhHans: "\u524D\u5F80 \u203A"
+  - _key: ui.rb.mis.all_hint
+    _ko: "\uC804\uCCB4 \uC644\uB8CC \uC2DC"
+    _ja: "\u5168\u9054\u6210\u6642"
+    _en: When all done
+    _zhHant: "\u5168\u90E8\u5B8C\u6210\u6642"
+    _zhHans: "\u5168\u90E8\u5B8C\u6210\u65F6"
