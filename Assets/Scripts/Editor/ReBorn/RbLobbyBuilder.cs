@@ -323,7 +323,8 @@ namespace Game.Editor.ReBorn
             const float x0 = 28, y0 = 1865, x1 = 1050, y1 = 2032;
             var b = Place(Node(rt, "SortieButton"), Edge.Bottom, x0, y0, x1, y1);
             Btn(b, "Components/rb_btn_primary");
-            // 「출전 | ⚡5」 — 비용 줄은 화면 스크립트가 글자 폭을 재서 가운데에 세운다
+            // 「[얼굴] 출전 | ⚡5」 — 누구로 나가는지는 얼굴 아이콘(랜덤 = 구슬 · 유령 = 유령). 줄은 화면 스크립트가 글자 폭을 재서 가운데에 세운다
+            Img(Local(Node(b, "SortieHostIcon"), x0, y0, x1, y1, 200, 1902, 288, 1990), "Icons/rb_icon_mode_random_144");
             Text(Local(Node(b, "SortieLabel"), x0, y0, x1, y1, 300, 1895, 530, 1985), null, "출전", 56, Ink, TA.Right, heavy: true);
             Img(Local(Node(b, "SortieStaminaIcon"), x0, y0, x1, y1, 562, 1918, 610, 1966), "Icons/rb_icon_currency_energy_48");
             Text(Local(Node(b, "SortieStaminaText"), x0, y0, x1, y1, 620, 1895, 700, 1985), null, "5", 60, Ink, TA.Left, number: true);

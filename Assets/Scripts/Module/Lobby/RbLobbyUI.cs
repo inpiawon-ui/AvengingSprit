@@ -510,17 +510,15 @@ namespace Game.Module.Lobby
 
             int perRun = CoreModule.TryGet<IStaminaService>(out var st) ? st.PerRun : 5;
             int gold = Cost;
-            string hostName = _host != null ? _player.GetHost(_host)?.DisplayName : null;
-            string label = _mode == RunStartMode.Host && hostName != null
-                ? string.Format(Localize.FromTable("ui.rb.lobby.sortie_with", "{0}{1} 출전"), hostName, KoreanRo(hostName))
-                : _mode == RunStartMode.Ghost ? Localize.FromTable("ui.rb.lobby.sortie_ghost", "유령으로 출전")
-                : Localize.FromTable("ui.rb.lobby.sortie", "출전");
-            _ui.SetText("SortieLabel", label);
+            // 「[얼굴] 출전 ⚡5 🪙440」 — 누구로 나가는지는 글(「갱스터로 출전」) 대신 얼굴 아이콘으로(PD 2026-10-26 「텍스트는 별로, 아이콘화」)
+            Sprite who = _mode == RunStartMode.Random ? _iconRandom : _mode == RunStartMode.Ghost ? _iconGhost : Face(_host);
+            if (_ui.Get<Image>("SortieHostIcon") is Image whoImg) { whoImg.sprite = who; whoImg.gameObject.SetActive(who != null); }
+            _ui.SetText("SortieLabel", Localize.FromTable("ui.rb.lobby.sortie", "출전"));
             _ui.SetText("SortieStaminaText", perRun.ToString());
             _ui.SetText("SortieGoldText", gold.ToString("N0"));
             _ui.SetActive("SortieGoldIcon", gold > 0);
             _ui.SetActive("SortieGoldText", gold > 0);
-            LayoutSortie(gold > 0);
+            LayoutSortie(gold > 0, who != null);
             SetActiveButton("SortieButton", ChapterOpen);
             RefreshStage();
         }
@@ -546,26 +544,12 @@ namespace Game.Module.Lobby
             show.Show(ghost ? null : _host);
         }
 
-        /// <summary>
-        /// 「영매로 · 청룡으로」 — 받침이 없거나 ㄹ 받침이면 「로」, 아니면 「으로」. 한국어 문구만 이 자리를 쓴다(다른 언어는 {1} 이 없다).
-        /// 괄호로 끝나는 이름(「코만도(기관총)」)은 괄호 안 마지막 글자로 본다.
-        /// </summary>
-        private static string KoreanRo(string name)
-        {
-            for (int i = name.Length - 1; i >= 0; i--)
-            {
-                char c = name[i];
-                if (c < 0xAC00 || c > 0xD7A3) continue;
-                int jong = (c - 0xAC00) % 28;
-                return jong == 0 || jong == 8 ? "로" : "으로";
-            }
-            return "로";
-        }
-
-        /// <summary>「출전 ⚡5 🪙200」 한 줄을 글자 폭을 재서 버튼 가운데에 세운다 — 언어 · 자릿수마다 폭이 다르다.</summary>
-        private void LayoutSortie(bool hasGold)
+        /// <summary>「[얼굴] 출전 ⚡5 🪙200」 한 줄을 글자 폭을 재서 버튼 가운데에 세운다 — 언어 · 자릿수마다 폭이 다르다.</summary>
+        private void LayoutSortie(bool hasGold, bool hasWho)
         {
             const float Gap = 10f;
+            var who = _ui.Find("SortieHostIcon") as RectTransform;
+            if (who == null) hasWho = false;
             var label = _ui.Get<TextMeshProUGUI>("SortieLabel");
             var sIcon = _ui.Find("SortieStaminaIcon") as RectTransform;
             var sText = _ui.Get<TextMeshProUGUI>("SortieStaminaText");
@@ -574,8 +558,10 @@ namespace Game.Module.Lobby
             if (label == null || sIcon == null || sText == null) return;
             float lw = label.GetPreferredValues(label.text).x, sw = sText.GetPreferredValues(sText.text).x;
             float gw = hasGold && gText != null ? gText.GetPreferredValues(gText.text).x : 0f;
-            float total = lw + Gap * 2 + sIcon.rect.width + 4 + sw + (hasGold ? Gap + gIcon.rect.width + 4 + gw : 0f);
+            float total = (hasWho ? who.rect.width + Gap : 0f) + lw + Gap * 2 + sIcon.rect.width + 4 + sw
+                        + (hasGold ? Gap + gIcon.rect.width + 4 + gw : 0f);
             float x = -total * 0.5f;
+            if (hasWho) { PutIcon(who, x); x += who.rect.width + Gap; }
             Put(label.rectTransform, x, lw); x += lw + Gap * 2;
             PutIcon(sIcon, x); x += sIcon.rect.width + 4;
             Put(sText.rectTransform, x, sw); x += sw;
