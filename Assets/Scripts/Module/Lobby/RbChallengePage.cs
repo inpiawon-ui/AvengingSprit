@@ -23,10 +23,11 @@ namespace Game.Module.Lobby
     public sealed class RbChallengePage : MonoBehaviour
     {
         [SerializeField] private Sprite _rowNow, _rowPast, _rowLocked;
+        /// <summary>망령의 밤 배너 — 요일(월~일) 테마 그림 7장(코덱스 납품 rb_art_night_day_*). 비어 있으면 대표 그림 그대로.</summary>
+        [SerializeField] private Sprite[] _nightDayArts = Array.Empty<Sprite>();
 
         private static readonly string[] DayKeys = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
         private const int Ladder = 5;
-        private const int NightLineup = 5;   // 밤 배너에 세우는 그날 몸 수(빌더 RbChallengeBuilder.NightLineup 과 같다)
         private static readonly Color Cyan = new(0.24f, 0.90f, 1f), Dim = new(0.70f, 0.74f, 0.84f);
 
         private UIBinder _ui;
@@ -275,18 +276,9 @@ namespace Game.Module.Lobby
             // 「◆」 는 작은 청록 마름모(시안)
             if (_ui.Get<TextMeshProUGUI>("ChlNightRewardTitle") is TextMeshProUGUI rt)
                 rt.text = Localize.Get("ui.rb.chl.today_reward").Replace("◆", "<size=60%><color=#3EE6FF>◆</color></size>");
-            // 배너 — 그날 몸으로 나오는 호스트 줄(요일마다 바뀐다 · PD 2026-10-26 「요일별로 이미지가 안 바뀐다 · 가운데가 비었다」)
-            var dayHosts = NightEntryPanel.DayHosts(table, _day);
-            for (int i = 0; i < NightLineup; i++)
-            {
-                if (_ui.Get<Image>($"ChlNightHost{i}") is not Image hi) continue;
-                bool on = i < dayHosts.Count;
-                hi.gameObject.SetActive(on);
-                if (!on) continue;
-                if (!hi.TryGetComponent<UnitShowcase>(out var show)) show = hi.gameObject.AddComponent<UnitShowcase>();
-                show.SetShadow(true);
-                show.Show(dayHosts[i]);
-            }
+            // 배너 — 요일 테마 그림(PD 2026-10-26 「캐릭터만 올려 놓지 말고 테마식으로 이미지를 만들어야지」)
+            if (_day >= 0 && _day < _nightDayArts.Length && _nightDayArts[_day] != null && _ui.Get<Image>("ChlNightArtArt") is Image art)
+                art.sprite = _nightDayArts[_day];
             int best = _progress.NightBest(_day);
             _ui.SetText("ChlNightGoldValue", _progress.NightGold(best).ToString("N0"));
             _ui.SetText("ChlNightShardValue", (best / Mathf.Max(1, perKills)).ToString("N0"));

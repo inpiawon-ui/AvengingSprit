@@ -25,6 +25,10 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_rowNow").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
             so.FindProperty("_rowPast").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
             so.FindProperty("_rowLocked").objectReferenceValue = KitSprite("Components/rb_list_row");
+            string[] days = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
+            var arts = so.FindProperty("_nightDayArts");
+            arts.arraySize = days.Length;
+            for (int i = 0; i < days.Length; i++) arts.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Art/rb_art_night_day_{days[i]}");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
         }
@@ -48,7 +52,7 @@ namespace Game.Editor.ReBorn
         }
 
         /// <summary>그림을 판 안에 덮어 깐다(넘치는 쪽은 잘림) + 아래 그늘.</summary>
-        private static void ArtCard(RectTransform card, string name, string art, float aspect)
+        private static void ArtCard(RectTransform card, string name, string art, float aspect, bool shade = true)
         {
             var clip = Stretch(Node(card, name + "Clip"));
             clip.offsetMin = new Vector2(4f, 4f); clip.offsetMax = new Vector2(-4f, -4f);
@@ -58,7 +62,7 @@ namespace Game.Editor.ReBorn
             var fit = a.gameObject.AddComponent<AspectRatioFitter>();
             fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             fit.aspectRatio = aspect;
-            Img(Stretch(Node(clip, name + "Shade")), "Components/rb_fade_bottom").preserveAspect = false;
+            if (shade) Img(Stretch(Node(clip, name + "Shade")), "Components/rb_fade_bottom").preserveAspect = false;
         }
 
         private static float AspectOf(string path)
@@ -151,7 +155,7 @@ namespace Game.Editor.ReBorn
         {
             // 시안 night(1080 기준) — 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게, 시작 버튼은 판 바로 아래
             // (PD 2026-10-26 「시작 버튼 좀 올리고 · 스크롤 될 필요 없다 · 여백에 맞춰 버튼 크기」)
-            var body = Group(page, "ChlNight", "ui.night.title", "망령의 밤", 1600 - Top, true);
+            var body = Group(page, "ChlNight", "ui.night.title", "망령의 밤", 1740 - Top, true);
             // 요일 7칸 — 폭을 꽉 채우는 네모 버튼(141 × 120, 사이 5) · 시안처럼 일곱 칸 다 흰 글자
             for (int i = 0; i < 7; i++)
             {
@@ -160,37 +164,28 @@ namespace Game.Editor.ReBorn
                 Btn(d, "Components/rb_btn_secondary");
                 Text(Stretch(Node(d, $"ChlDay{i}Text")), null, "월", 44, White, TA.Center, heavy: true);
             }
-            // 배너 — 판 폭 전체 밤거리 그림(rb_art_key_challenge_night — rb_art_key_night 는 왼쪽 절반이 빈 그림이었다) +
-            // 그날 몸으로 나오는 호스트 줄(요일마다 바뀐다 — 화면 스크립트가 UnitShowcase 로 세운다)
-            const float ax0 = 29, ay0 = 568, ax1 = 1047, ay1 = 812;
+            // 배너 — 요일 테마 그림(rb_art_night_day_mon~sun, 화면 스크립트가 요일마다 바꿔 낀다) · 없으면 판 폭 전체 밤거리 그림
+            // (rb_art_key_night 는 왼쪽 절반이 빈 그림이었다)
+            const float ax0 = 29, ay0 = 568, ax1 = 1047, ay1 = 948;   // 요일 그림 비율(약 2.66)에 맞춘 높이 380
             var art = PlaceIn(Node(body, "ChlNightArt"), Top, ax0, ay0, ax1, ay1);
             Img(art, "Components/rb_panel_base");
-            ArtCard(art, "ChlNightArt", "Art/rb_art_key_challenge_night", AspectOf("Art/rb_art_key_challenge_night"));
-            var clip = art.Find("ChlNightArtClip") as RectTransform;
-            for (int i = 0; i < NightLineup; i++)
-            {
-                // 왼쪽 ~ 가운데에 몸 다섯(오른쪽은 그림의 망령) · 발은 배너 아래에서 14 위
-                float cx = 120 + i * 128f;
-                Img(Local(Node(clip, $"ChlNightHost{i}"), ax0, ay0, ax1, ay1, cx - 62, ay0 + 40, cx + 62, ay1 - 14), "Art/rb_art_mascot_ghost_happy");
-            }
+            ArtCard(art, "ChlNightArt", "Art/rb_art_key_challenge_night", AspectOf("Art/rb_art_key_challenge_night"), shade: false);   // 글자가 없는 배너 — 아래 그늘이 요일 그림 가운데 장면을 가렸다
             // 정보 판 — 요일 · 최고 처치 · 남은 입장 · ◆ 오늘의 보상(두 칸) · 규칙 · 보상 줄
-            const float px0 = 29, py0 = 830, px1 = 1047, py1 = 1424;
+            const float px0 = 29, py0 = 966, px1 = 1047, py1 = 1560;
             Img(PlaceIn(Node(body, "ChlNightPanel"), Top, px0, py0, px1, py1), "Components/rb_panel_base");
-            Text(PlaceIn(Node(body, "ChlNightDayTitle"), Top, 55, 848, 1020, 908), null, "목 · 파워의 날", 56, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlNightBest"), Top, 55, 920, 640, 962), null, "목요일 최고 처치 128", 36, White, TA.Left);
-            Text(PlaceIn(Node(body, "ChlNightLeft"), Top, 640, 920, 1020, 962), null, "남은 입장 2/3", 36, White, TA.Right);
-            Text(PlaceIn(Node(body, "ChlNightRewardTitle"), Top, 55, 980, 700, 1028), "ui.rb.chl.today_reward", "◆ 오늘의 보상", 44, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlNightDayTitle"), Top, 55, 984, 1020, 1044), null, "목 · 파워의 날", 56, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlNightBest"), Top, 55, 1056, 640, 1098), null, "목요일 최고 처치 128", 36, White, TA.Left);
+            Text(PlaceIn(Node(body, "ChlNightLeft"), Top, 640, 1056, 1020, 1098), null, "남은 입장 2/3", 36, White, TA.Right);
+            Text(PlaceIn(Node(body, "ChlNightRewardTitle"), Top, 55, 1116, 700, 1164), "ui.rb.chl.today_reward", "◆ 오늘의 보상", 44, White, TA.Left, heavy: true);
             // 시안 night 그대로 — ① 금화 · 골드(처치 수만큼, PD 2026-10-26) ② 「?」 조각 · 호스트 조각. 값은 그 요일 최고 처치 기준 예상
-            NightCell(body, "ChlNightGold", 55, 527, 1044, 1264, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
-            NightCell(body, "ChlNightShard", 552, 1020, 1044, 1264, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
-            var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1282, 1020, 1324), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
+            NightCell(body, "ChlNightGold", 55, 527, 1180, 1400, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
+            NightCell(body, "ChlNightShard", 552, 1020, 1180, 1400, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
+            var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1418, 1020, 1460), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
             rule.enableWordWrapping = true;
-            Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1340, 1020, 1390), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1476, 1020, 1526), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
             // 시작 — 판과 같은 여백(29 ~ 1047)의 노란 큰 버튼 「시작 ▶ | 🎫1」 · 판 바로 아래
-            StartButton(body, "ChlNightStart", "시작 ▶", 29, 1446, 1047, 1586);
+            StartButton(body, "ChlNightStart", "시작 ▶", 29, 1582, 1047, 1722);
         }
-
-        private const int NightLineup = 5;
 
         /// <summary>오늘의 보상 칸 — 테두리 칸 · 아이콘(위) · 큰 숫자 · 이름(아래). 시안 night 의 「432 골드」 · 「3 호스트 조각」 칸.</summary>
         private static void NightCell(RectTransform body, string p, float x0, float x1, float y0, float y1, string frame, string icon, bool question,
