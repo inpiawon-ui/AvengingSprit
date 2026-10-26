@@ -99,9 +99,9 @@ namespace Game.Editor.ReBorn
 
             var view = page.gameObject.AddComponent<RbRevealPage>();
             var so = new SerializedObject(view);
-            so.FindProperty("_starOn").objectReferenceValue = KitSprite("Icons/rb_icon_star_on_96");
-            so.FindProperty("_starOff").objectReferenceValue = KitSprite("Icons/rb_icon_star_off_96");
-            so.FindProperty("_starAwaken").objectReferenceValue = KitSprite("Icons/rb_icon_star_awaken_96");
+            // 성급 별 — 5성마다 큰 금별 · 그 사이는 작은 은별(PD 2026-10-16 StarRank, 2026-10-26 되돌림)
+            so.FindProperty("_rankGold").objectReferenceValue = KitSprite("Icons/rb_icon_rank_gold_64");
+            so.FindProperty("_rankSilver").objectReferenceValue = KitSprite("Icons/rb_icon_rank_silver_64");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
         }

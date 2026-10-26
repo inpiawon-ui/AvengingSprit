@@ -94,10 +94,20 @@ namespace Game.Editor.ReBorn
             card.anchoredPosition = new Vector2((CardCols[0] + CardW * 0.5f - 540f) * S, -(CardTop + CardH * 0.5f - 850f) * S);
             HitArea(card);
             float x0 = 30, y0 = CardTop, x1 = 30 + CardW, y1 = CardTop + CardH;
-            // 등급색 안쪽 빛(키트 inner_glow 를 등급색으로 칠한다 — 시안 R 파랑 · SR 보라 · SSR 금)
-            // 키트 inner_glow(133×82)는 틀(133×166)의 아래 절반에 딱 맞게 그린 것 — 같은 폭으로 카드 아래 절반에 둔다
-            var glow = Img(Local(Node(card, "ColCardGlow"), x0, y0, x1, y1, x0, y1 - CardH * 82f / 166f, x1, y1), "Components/rb_host_inner_glow");
-            glow.type = Image.Type.Simple;   // 빛은 9-slice 로 늘리면 테두리가 각진 띠로 보인다
+            // 카드 바탕 — 시안(묶음 v6.css rarity-inner6)은 짙은 남색 위에 「카드 아래 75% 지점을 가운데로 폭 90% · 높이 70% 반지름」
+            // 등급색이 둥글게 퍼진다. 둥근 빛 한 장(rb_card_glow)을 그 자리 · 크기로 깔고 카드 안으로 잘라 낸다(PD 2026-10-26
+            // 「시안은 블러를 전체적으로 · 동그랗게 퍼진다, 지금은 사각 블러」 — 예전엔 아래 절반에 네모 판을 깔았다)
+            var inner = Stretch(Node(card, "ColCardInner"));
+            inner.sizeDelta = new Vector2(-6f, -6f);
+            inner.gameObject.AddComponent<RectMask2D>();
+            Img(inner, "Components/rb_panel_base");
+            var glowRt = Node(inner, "ColCardGlow");
+            glowRt.anchorMin = glowRt.anchorMax = new Vector2(0.5f, 0.25f);
+            glowRt.pivot = new Vector2(0.5f, 0.5f);
+            glowRt.sizeDelta = new Vector2(CardW * S * 1.8f, CardH * S * 1.4f);
+            glowRt.anchoredPosition = Vector2.zero;
+            var glow = Img(glowRt, "Components/rb_card_glow");
+            glow.type = Image.Type.Simple;
             glow.preserveAspect = false;
             // 틀은 몸통(테 선)이 카드 칸에 딱 맞게 — 화면 스크립트가 등급마다 다시 맞춘다(RbFrameFit)
             var frame = Node(card, "ColCardFrame");
@@ -113,12 +123,13 @@ namespace Game.Editor.ReBorn
             Img(Local(Node(card, "ColCardFace"), x0, y0, x1, y1, 136, 908, 254, 1026), "Icons/rb_icon_mode_ghost_144");
             Img(Local(Node(card, "ColCardLock"), x0, y0, x1, y1, 166, 938, 224, 996), "Icons/rb_icon_sys_lock_96");
             // 긴 이름은 RbCardName 이 괄호 앞에서 두 줄로 접는다
-            var colName = Text(Local(Node(card, "ColCardName"), x0, y0, x1, y1, 42, 1030, 346, 1090), null, "아마존", 40, White, TA.Center, heavy: true);
+            var colName = Text(Local(Node(card, "ColCardName"), x0, y0, x1, y1, 42, 1030, 346, 1090), null, "아마존", 36, White, TA.Center, heavy: true);
             colName.lineSpacing = -28f;
             var stars = Local(Node(card, "ColCardStars"), x0, y0, x1, y1, 66, 1090, 310, 1138);
             for (int i = 0; i < 5; i++)
                 Img(Local(Node(stars, $"ColCardStar{i}"), 66, 1090, 310, 1138, 68 + i * 48, 1092, 112 + i * 48, 1136), "Icons/rb_icon_star_off_48");
-            Text(Local(Node(card, "ColCardLv"), x0, y0, x1, y1, 42, 1138, 346, 1188), null, "Lv 30", 44, White, TA.Center, number: true);
+            // 「Lv 30」 은 시안처럼 본문 글꼴(도트 숫자 아님) — 전투력 숫자만 도트
+            Text(Local(Node(card, "ColCardLv"), x0, y0, x1, y1, 42, 1138, 346, 1188), null, "Lv 30", 40, White, TA.Center, heavy: true);
             Img(Local(Node(card, "ColCardPowerIcon"), x0, y0, x1, y1, 100, 1194, 140, 1230), "Icons/rb_icon_stat_power_48");
             Text(Local(Node(card, "ColCardPower"), x0, y0, x1, y1, 142, 1188, 330, 1234), null, "3,230", 44, White, TA.Left, number: true);
         }
@@ -289,9 +300,9 @@ namespace Game.Editor.ReBorn
 
         private static void Stars(SerializedObject so)
         {
-            so.FindProperty("_starOn").objectReferenceValue = KitSprite("Icons/rb_icon_star_on_48");
-            so.FindProperty("_starOff").objectReferenceValue = KitSprite("Icons/rb_icon_star_off_48");
-            so.FindProperty("_starAwaken").objectReferenceValue = KitSprite("Icons/rb_icon_star_awaken_48");
+            // 성급 별 — 5성마다 큰 금별 · 그 사이는 작은 은별(PD 2026-10-16 StarRank, 2026-10-26 되돌림)
+            so.FindProperty("_rankGold").objectReferenceValue = KitSprite("Icons/rb_icon_rank_gold_64");
+            so.FindProperty("_rankSilver").objectReferenceValue = KitSprite("Icons/rb_icon_rank_silver_64");
         }
     }
 }

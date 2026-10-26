@@ -27,7 +27,8 @@ namespace Game.Module.Lobby
         // 틀 그림마다 몸통(테 선) 상자 — 빌더가 그림에서 잰다(RbFrameFit)
         [SerializeField] private Sprite[] _fitSprites = Array.Empty<Sprite>();
         [SerializeField] private Vector4[] _fitBodies = Array.Empty<Vector4>();
-        [SerializeField] private Sprite _starOn, _starOff, _starAwaken;
+        // 성급 별 — 큰 금별(5성마다) · 작은 은별(StarRank)
+        [SerializeField] private Sprite _rankGold, _rankSilver;
 
         private const float CardW = 328f * 2f / 3f;
         private static readonly float[] ColX = { (30f + 164f - 540f) * 2f / 3f, (375f + 164f - 540f) * 2f / 3f, (722f + 164f - 540f) * 2f / 3f };
@@ -36,9 +37,10 @@ namespace Game.Module.Lobby
         private const float RowStep = (405f + CrownRoom) * 2f / 3f, FirstY = -(862f + 193f - 850f + CrownRoom) * 2f / 3f;
         private static readonly Color LockedTint = new(0.22f, 0.24f, 0.32f, 1f);
         // 등급(R · SR · SSR) 안쪽 빛 — 시안 카드 바탕색
+        // 시안 카드 빛 색(묶음 v6.css --card-glow: R #4fa3ff · SR #b67cff · SSR #ffc846, 알파 0x66 = 0.4)
         private static readonly Color[] GlowColors =
         {
-            new(0.30f, 0.58f, 1f, 0.75f), new(0.66f, 0.42f, 1f, 0.8f), new(1f, 0.74f, 0.28f, 0.8f),
+            new(0.31f, 0.64f, 1f, 0.4f), new(0.71f, 0.49f, 1f, 0.4f), new(1f, 0.78f, 0.27f, 0.4f),
         };
         private static readonly Color ChipOn = new(0.24f, 0.90f, 1f, 1f), ChipOff = new(0.70f, 0.74f, 0.84f, 1f);
 
@@ -244,18 +246,19 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>
-        /// 별 다섯 칸 — 1~5성은 금별을 왼쪽부터 채우고, 6~10성(각성)은 금별을 각성 별로 바꿔 간다(키트 star_awaken).
+        /// 성급 별 줄 — 1~4성은 작은 은별을 하나씩 더하고 5성마다 큰 금별 하나(3성 = 은 3 · 7성 = 금 1 + 은 2 · 10성 = 금 2).
+        /// PD 2026-10-16 결정(StarRank)으로 되돌렸다 — 리뉴얼 때 「금별 5 + 각성 별」로 바뀌어 있었다(PD 2026-10-26 「전에 정리한 양식대로」).
+        /// 별 크기는 별 줄 칸 높이에 맞춘다(은별 0.75 · 금별은 그 1.6배) — 화면마다 칸 크기가 달라서다.
+        /// (0.62 는 도감 카드에서 은별이 점처럼 작았다 — 2026-10-26 캡처)
         /// </summary>
-        public static void Stars(Transform root, string prefix, int rank, Sprite on, Sprite off, Sprite awaken)
+        public static void Stars(Transform root, string prefix, int rank, Sprite gold, Sprite silver)
         {
-            if (root == null) return;
-            int awakened = Mathf.Clamp(rank - 5, 0, 5), lit = Mathf.Clamp(rank, 0, 5);
-            for (int i = 0; i < 5; i++)
-                if (root.Find($"{prefix}{i}")?.GetComponent<Image>() is Image img)
-                    img.sprite = i < awakened ? awaken : i < lit ? on : off;
+            if (root is not RectTransform r) return;
+            float h = r.rect.height > 0f ? r.rect.height : r.sizeDelta.y;
+            StarRank.Apply(root, prefix, rank, gold, silver, Vector2.zero, h * 0.75f, h * 0.08f);
         }
 
-        private void ApplyStars(Transform root, string prefix, int rank) => Stars(root, prefix, rank, _starOn, _starOff, _starAwaken);
+        private void ApplyStars(Transform root, string prefix, int rank) => Stars(root, prefix, rank, _rankGold, _rankSilver);
 
         /// <summary>「⚔ 3,230」 — 아이콘 + 글자 한 줄을 글자 폭을 재서 가운데에 세운다.</summary>
         private static void CenterRun(RectTransform icon, TextMeshProUGUI text, bool withIcon)

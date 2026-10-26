@@ -19,7 +19,7 @@ namespace Game.Module.Lobby
     {
         public const int AwakenStart = 6, AwakenFull = 10;
 
-        [SerializeField] private Sprite _starOn, _starOff, _starAwaken;
+        [SerializeField] private Sprite _rankGold, _rankSilver;   // 성급 별 — 큰 금별(5성마다) · 작은 은별(RbHostPage.Stars)
 
         private static readonly Color Teal = new(0.42f, 0.85f, 0.92f), Gold = new(1f, 0.79f, 0.24f);
 
@@ -55,7 +55,7 @@ namespace Game.Module.Lobby
             _ui.SetActive("RvlChip", fresh);
             _ui.SetActive("RvlStars", !fresh);
             if (fresh) _ui.SetText("RvlChipText", TagLine(e));
-            else RbHostPage.Stars(_ui.Find("RvlStars"), "RvlStar", rank, _starOn, _starOff, _starAwaken);
+            else RbHostPage.Stars(_ui.Find("RvlStars"), "RvlStar", rank, _rankGold, _rankSilver);
             // 각성 — 그 몸 액티브의 각성 옵션(askill.{몸}.opt, 6성에 열리고 10성에 2배)
             string opt = Localize.Get($"askill.{hostKey}.opt");
             if (opt == $"askill.{hostKey}.opt") opt = Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%");

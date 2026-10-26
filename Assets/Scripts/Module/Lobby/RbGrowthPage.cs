@@ -29,7 +29,7 @@ namespace Game.Module.Lobby
         [SerializeField] private SkillArt[] _arts = Array.Empty<SkillArt>();
         /// <summary>`HostStat` 순서의 아이콘.</summary>
         [SerializeField] private Sprite[] _statIcons = Array.Empty<Sprite>();
-        [SerializeField] private Sprite _starOn, _starOff, _starAwaken;
+        [SerializeField] private Sprite _rankGold, _rankSilver;   // 성급 별 — 큰 금별(5성마다) · 작은 은별(RbHostPage.Stars)
         [SerializeField] private Sprite _tileNormal, _tileMax, _tilePoor;
         [SerializeField] private Sprite _btnReady, _btnShort;
         [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
@@ -165,7 +165,7 @@ namespace Game.Module.Lobby
             LayoutTags(tags);
 
             _ui.SetText("GrwPowerValue", _player.PowerOf(_key).ToString("N0"));
-            RbHostPage.Stars(_ui.Find("GrwStars"), "GrwStar", m, _starOn, _starOff, _starAwaken);
+            RbHostPage.Stars(_ui.Find("GrwStars"), "GrwStar", m, _rankGold, _rankSilver);
         }
 
         /// <summary>「R  무기  원거리」 칩 — 글자 폭만큼 칩을 늘려 이름 가운데 아래에 나란히 세운다(언어마다 길이가 다르다).</summary>
@@ -397,7 +397,7 @@ namespace Game.Module.Lobby
                 show.Show(_key, Color.white);
             }
             _modals.SetText("GrwStarDoneName", host != null ? host.DisplayName : _key);
-            RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _starOn, _starOff, _starAwaken);
+            RbHostPage.Stars(_modals.Find("GrwStarDoneStars"), "GrwStarDoneStar", m, _rankGold, _rankSilver);
             _modals.SetText("GrwStarDoneGain", Localize.FromTable("ui.rb.growth.star_gain", "체력·공격 +7%"));
             _modals.SetText("GrwStarDoneRank", string.Format(Localize.FromTable("ui.rb.growth.done_line1", "{0}성 → {1}성 · 체력·공격 +7%"), from, m));
             _modals.SetText("GrwStarDoneLine2", string.Format(Localize.FromTable("ui.rb.growth.done_line2", "스킬 Lv {0}→{1} · 강화 상한 {2}→{3}"),
