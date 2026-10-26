@@ -29,6 +29,25 @@
             "command": "powershell -NoProfile -File .claude/hooks/protect_framework.ps1"
           }
         ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/korean_guard.py pre"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/korean_guard.py stop"
+          }
+        ]
       }
     ]
   }
