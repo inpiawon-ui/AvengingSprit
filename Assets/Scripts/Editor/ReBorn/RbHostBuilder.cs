@@ -99,11 +99,17 @@ namespace Game.Editor.ReBorn
             var glow = Img(Local(Node(card, "ColCardGlow"), x0, y0, x1, y1, x0, y1 - CardH * 82f / 166f, x1, y1), "Components/rb_host_inner_glow");
             glow.type = Image.Type.Simple;   // 빛은 9-slice 로 늘리면 테두리가 각진 띠로 보인다
             glow.preserveAspect = false;
-            Img(Stretch(Node(card, "ColCardFrame")), "Components/rb_host_frame_r");
-            Img(Local(Node(card, "ColCardRarity"), x0, y0, x1, y1, 36, 866, 108, 916), "Components/rb_rarity_r");
-            // 내 속성(파워 · 무기 · 마법) — 얼굴 오른쪽 위, 빨간 점 아래(PD 2026-10-26)
-            Img(Local(Node(card, "ColCardAff"), x0, y0, x1, y1, 284, 918, 342, 976), "Icons/rb_icon_aff_force_128");
-            Img(Local(Node(card, "ColCardDot"), x0, y0, x1, y1, 300, 870, 344, 914), "Components/rb_dot_red");
+            // 틀은 몸통(테 선)이 카드 칸에 딱 맞게 — 화면 스크립트가 등급마다 다시 맞춘다(RbFrameFit)
+            var frame = Node(card, "ColCardFrame");
+            Img(frame, "Components/rb_host_frame_r").preserveAspect = false;
+            RbLobbyBuilder.RbFrameFitEditor(frame, "Components/rb_host_frame_r");
+            // 위 왼쪽 = 내 속성(네모 칸 안) · 위 오른쪽 = 등급 태그 — 로비 출전 카드와 같은 자리(PD 2026-10-26)
+            var affBox = Local(Node(card, "ColCardAffBox"), x0, y0, x1, y1, 40, 872, 100, 932);
+            Img(affBox, "Components/rb_level_badge").pixelsPerUnitMultiplier = 1.6f;
+            Img(Local(Node(affBox, "ColCardAff"), 40, 872, 100, 932, 45, 877, 95, 927), "Icons/rb_icon_aff_force_128");
+            Img(Local(Node(card, "ColCardRarity"), x0, y0, x1, y1, 272, 874, 346, 924), "Components/rb_rarity_r");
+            // 빨간 점 — 등급 태그 오른쪽 위 모서리에 얹는다(성급을 올릴 수 있다)
+            Img(Local(Node(card, "ColCardDot"), x0, y0, x1, y1, 326, 864, 354, 892), "Components/rb_dot_red");
             Img(Local(Node(card, "ColCardFace"), x0, y0, x1, y1, 136, 908, 254, 1026), "Icons/rb_icon_mode_ghost_144");
             Img(Local(Node(card, "ColCardLock"), x0, y0, x1, y1, 166, 938, 224, 996), "Icons/rb_icon_sys_lock_96");
             // 긴 이름은 RbCardName 이 괄호 앞에서 두 줄로 접는다
@@ -277,6 +283,7 @@ namespace Game.Editor.ReBorn
             Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
             Many("_rarityTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
             Many("_affIcons", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
+            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

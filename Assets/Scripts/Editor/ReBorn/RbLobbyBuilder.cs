@@ -109,6 +109,8 @@ namespace Game.Editor.ReBorn
             Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
             One("_frameRandom", "Components/rb_host_frame_random");
             One("_frameGhost", "Components/rb_host_frame_ghost");
+            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr",
+                            "Components/rb_host_frame_random", "Components/rb_host_frame_ghost");
             One("_badgeBest", "Components/rb_badge_best");
             One("_badgeToday", "Components/rb_badge_today");
             Many("_rarityTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
@@ -241,6 +243,15 @@ namespace Game.Editor.ReBorn
 
         // ── 출전 줄: 「출전 호스트」 · 「전체 N ›」 · 카드 줄 · 보너스 칩 · 안내 ─────────
         public const float CardW = 207f, CardH = 276f, CardStep = 220f;   // 시안 1080 기준
+        private const float CardDrop = 10f;   // 카드를 보기 칸 가운데보다 이만큼 아래로(윗변 위 BEST · 오늘 판 자리)
+
+        /// <summary>빌더에서 본보기 틀을 몸통 기준으로 맞춘다(화면 스크립트 RbFrameFit 과 같은 계산).</summary>
+        public static void RbFrameFitEditor(RectTransform frame, string path)
+        {
+            var card = (RectTransform)frame.parent;
+            var s = KitSprite(path);
+            RbFrameFit.Apply(frame, card.sizeDelta, s, new[] { s }, new[] { FrameBody(path) });
+        }
 
         private static void BuildSortieRow(RectTransform rt)
         {
@@ -250,7 +261,8 @@ namespace Game.Editor.ReBorn
             Text(Local(Node(all, "SortieAllText"), 775, 1262, 1050, 1395, 790, 1290, 1035, 1370), null, "전체 23 ›", 44, White, TA.Center, heavy: true);
 
             // 카드 줄 — 가로로 넘겨 보는 줄(오른쪽이 잘려 보여 넘김을 알린다). 보기 칸은 RectMask2D 만(규칙 05)
-            var view = Place(Node(rt, "SortieViewport"), Edge.Bottom, 0, 1405, 1080, 1695);
+            // 위로 조금 넓혔다 — BEST · 오늘 판이 카드 윗변 위로 올라와 잘리지 않게(카드도 10 내렸다)
+            var view = Place(Node(rt, "SortieViewport"), Edge.Bottom, 0, 1396, 1080, 1705);
             view.gameObject.AddComponent<RectMask2D>();
             var hit = view.gameObject.AddComponent<Image>(); hit.color = new Color(1, 1, 1, 0);   // 끌기를 받을 칸(보이지 않음)
             var content = Node(view, "SortieContent");
@@ -263,23 +275,28 @@ namespace Game.Editor.ReBorn
             // 카드 본보기 — 화면 스크립트가 몸 수만큼 복제한다(첫 카드 자리 = 시안 x 30~237)
             var card = Node(content, "SortieCardTemplate");
             card.anchorMin = card.anchorMax = new Vector2(0f, 0.5f); card.pivot = new Vector2(0f, 0.5f);
-            card.sizeDelta = new Vector2(CardW * S, CardH * S); card.anchoredPosition = new Vector2(30f * S, 0f);
+            card.sizeDelta = new Vector2(CardW * S, CardH * S); card.anchoredPosition = new Vector2(30f * S, -CardDrop * S);
             HitArea(card);
             float cx0 = 30, cy0 = 1412, cx1 = 237, cy1 = 1688;
-            Img(Stretch(Node(card, "CardFrame")), "Components/rb_host_frame_r");
+            // 틀은 몸통(테 선)이 카드 칸에 딱 맞게 놓는다 — 화면 스크립트가 등급마다 다시 맞춘다(RbFrameFit)
+            var frame = Node(card, "CardFrame");
+            Img(frame, "Components/rb_host_frame_r").preserveAspect = false;
+            RbFrameFitEditor(frame, "Components/rb_host_frame_r");
             var sel = Img(Local(Node(card, "CardSel"), cx0, cy0, cx1, cy1, 24, 1405, 243, 1695), "Components/rb_host_select_ring");
             sel.gameObject.SetActive(false);
-            // 위 왼쪽 = BEST · 오늘 판(테 윗변에 걸침), 위 오른쪽 = 등급 태그 — 둘을 따로 둔다(PD 2026-10-26 「등급이랑 오늘 두 개로 분기」).
-            // 예전에는 한 칸을 같이 써서 9-slice 판이 카드 폭으로 늘어났다. 그림 비율 그대로(판 80:41 · 태그 59:40)
-            var badge = Local(Node(card, "CardBadge"), cx0, cy0, cx1, cy1, 38, 1398, 138, 1449);
+            // 카드 안 위 왼쪽 = 내 속성(네모 칸 안) · 위 오른쪽 = 등급 태그 · 틀 윗변 위 = BEST · 오늘 판 (PD 2026-10-26)
+            var affBox = Local(Node(card, "CardAffBox"), cx0, cy0, cx1, cy1, 40, 1422, 86, 1468);
+            var affImg = Img(affBox, "Components/rb_level_badge");
+            affImg.pixelsPerUnitMultiplier = 2f;   // 배지 테(25 · 13 px)가 작은 네모에 맞게 — 테 두께가 위 막대 레벨 배지와 비슷해진다
+            Img(Local(Node(affBox, "CardAff"), 40, 1422, 86, 1468, 44, 1426, 82, 1464), "Icons/rb_icon_aff_force_128");
+            Img(Local(Node(card, "CardRarity"), cx0, cy0, cx1, cy1, 168, 1424, 228, 1465), "Components/rb_rarity_sr");
+            Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
+            // BEST · 오늘 판 — 틀 윗변 가운데에 얹는다(그림 비율 그대로 80:41 · 9분할로 늘리지 않는다)
+            var badge = Local(Node(card, "CardBadge"), cx0, cy0, cx1, cy1, 83, 1388, 183, 1439);
             var badgeImg = Img(badge, "Components/rb_badge_today");
             badgeImg.type = Image.Type.Simple;
             badgeImg.preserveAspect = true;
-            Text(Local(Node(badge, "CardBadgeText"), 38, 1398, 138, 1449, 46, 1402, 130, 1445), null, "오늘", 32, White, TA.Center, heavy: true);
-            Img(Local(Node(card, "CardRarity"), cx0, cy0, cx1, cy1, 168, 1402, 234, 1447), "Components/rb_rarity_sr");
-            Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
-            // 내 속성(파워 · 무기 · 마법) — 얼굴 왼쪽 위(PD 2026-10-26 「카드 프레임에 내 속성 표현」)
-            Img(Local(Node(card, "CardAff"), cx0, cy0, cx1, cy1, 38, 1478, 86, 1526), "Icons/rb_icon_aff_force_128");
+            Text(Local(Node(badge, "CardBadgeText"), 83, 1388, 183, 1439, 91, 1392, 175, 1435), null, "오늘", 32, White, TA.Center, heavy: true);
             // 긴 이름은 RbCardName 이 괄호 앞에서 두 줄로 접는다(「코만도 / (수류탄)」) — 두 줄이 들어가게 칸을 위아래로 조금 늘렸다.
             // 시안 규칙 「글자 32 미만 0」(PD 2026-10-24 「시안을 따라줘」) — 하한은 그대로
             // 폭은 틀 안쪽 끝까지(34~233) — 「サラマンダー」가 최소 크기에서 몇 px 넘쳐 글자 중간에서 접혔다(2026-10-26 캡처)

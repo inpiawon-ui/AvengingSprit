@@ -29,6 +29,9 @@ namespace Game.Module.Lobby
         // 등급 틀(R · SR · SSR) · 랜덤 · 유령 틀 · 배지 · 카드 아이콘 · 챕터 무대(1~20) — 빌더가 꽂는다
         [SerializeField] private Sprite[] _gradeFrames = Array.Empty<Sprite>();
         [SerializeField] private Sprite _frameRandom, _frameGhost;
+        // 틀 그림마다 몸통(테 선) 상자 — 빌더가 그림에서 잰다(RbFrameFit)
+        [SerializeField] private Sprite[] _fitSprites = Array.Empty<Sprite>();
+        [SerializeField] private Vector4[] _fitBodies = Array.Empty<Vector4>();
         [SerializeField] private Sprite _badgeBest, _badgeToday;
         [SerializeField] private Sprite[] _rarityTags = Array.Empty<Sprite>();
         // 속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1)
@@ -378,7 +381,8 @@ namespace Game.Module.Lobby
                 var c = Instantiate(tpl.gameObject, content).transform;
                 c.name = $"SortieCard{i}";
                 c.gameObject.SetActive(true);
-                ((RectTransform)c).anchoredPosition = new Vector2(CardLeft + i * CardStep, 0f);
+                // 세로 자리는 본보기 그대로(BEST · 오늘 판 자리만큼 내려 둔 값)
+                ((RectTransform)c).anchoredPosition = new Vector2(CardLeft + i * CardStep, ((RectTransform)tpl).anchoredPosition.y);
                 var (mode, key) = list[i];
                 var btn = c.GetComponent<Button>();
                 if (btn != null) btn.onClick.AddListener(() => Pick(mode, key));
@@ -409,6 +413,7 @@ namespace Game.Module.Lobby
                 if (frame != null)
                     frame.sprite = mode == RunStartMode.Random ? _frameRandom : mode == RunStartMode.Ghost ? _frameGhost
                                  : e != null && (int)e.Grade < _gradeFrames.Length ? _gradeFrames[(int)e.Grade] : frame.sprite;
+                if (frame != null) RbFrameFit.Apply(frame.rectTransform, ((RectTransform)card).sizeDelta, frame.sprite, _fitSprites, _fitBodies);
                 _ui.Find(card, "CardSel")?.gameObject.SetActive(sel);
 
                 // 위 왼쪽 판: 랜덤 = BEST · 오늘의 몸 = 「오늘」 / 위 오른쪽: 등급 태그(SR 이상만 — 시안). 둘은 따로 선다(PD 2026-10-26)
@@ -427,7 +432,7 @@ namespace Game.Module.Lobby
                 {
                     int a = mode == RunStartMode.Host ? (int)AffinityRule.KindOf(key) - 1 : -1;
                     aff.sprite = a >= 0 && a < _affIcons.Length ? _affIcons[a] : null;
-                    aff.gameObject.SetActive(aff.sprite != null);
+                    _ui.Find(card, "CardAffBox")?.gameObject.SetActive(aff.sprite != null);   // 랜덤 · 유령은 네모 칸째 숨긴다
                 }
 
                 var icon = _ui.Find(card, "CardIcon")?.GetComponent<Image>();

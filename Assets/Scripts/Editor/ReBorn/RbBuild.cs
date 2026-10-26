@@ -144,6 +144,55 @@ namespace Game.Editor.ReBorn
             return s;
         }
 
+        /// <summary>
+        /// 카드 틀 그림의 몸통(테 선) 상자 — 그림 기준 0~1(왼 · 위 · 오른 · 아래). 불투명 칸이 그 줄 · 열의 60% 이상인
+        /// 첫 · 끝 줄과 열이다(왕관 · 구름 같은 바깥 장식은 짧아서 빠진다). RbFrameFit 이 이 상자를 카드 칸에 맞춘다.
+        /// </summary>
+        public static Vector4 FrameBody(string path)
+        {
+            string file = $"{Kit}/{path}.png";
+            if (!System.IO.File.Exists(file)) return new Vector4(0f, 0f, 1f, 1f);
+            var tex = new Texture2D(2, 2);
+            tex.LoadImage(System.IO.File.ReadAllBytes(file));
+            int w = tex.width, h = tex.height;
+            var px = tex.GetPixels32();
+            Object.DestroyImmediate(tex);
+            bool On(int x, int yTop) => px[(h - 1 - yTop) * w + x].a > 128;
+            int top = -1, bottom = -1, left = -1, right = -1;
+            for (int y = 0; y < h; y++)
+            {
+                int n = 0;
+                for (int x = 0; x < w; x++) if (On(x, y)) n++;
+                if (n < w * 0.6f) continue;
+                if (top < 0) top = y;
+                bottom = y;
+            }
+            for (int x = 0; x < w; x++)
+            {
+                int n = 0;
+                for (int y = 0; y < h; y++) if (On(x, y)) n++;
+                if (n < h * 0.6f) continue;
+                if (left < 0) left = x;
+                right = x;
+            }
+            if (top < 0 || left < 0) return new Vector4(0f, 0f, 1f, 1f);
+            return new Vector4(left / (float)w, top / (float)h, (right + 1) / (float)w, (bottom + 1) / (float)h);
+        }
+
+        /// <summary>틀 그림들과 그 몸통 상자를 화면 스크립트의 두 배열(`_fitSprites` · `_fitBodies`)에 꽂는다.</summary>
+        public static void WireFrameBodies(SerializedObject so, params string[] paths)
+        {
+            var sp = so.FindProperty("_fitSprites");
+            var bp = so.FindProperty("_fitBodies");
+            sp.arraySize = paths.Length;
+            bp.arraySize = paths.Length;
+            for (int i = 0; i < paths.Length; i++)
+            {
+                sp.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite(paths[i]);
+                bp.GetArrayElementAtIndex(i).vector4Value = FrameBody(paths[i]);
+            }
+        }
+
         /// <summary>그림 판. 9-slice 테두리가 있으면 Sliced(늘려 쓰는 판 — R2).</summary>
         public static Image Img(RectTransform rt, string path, bool raycast = false)
         {

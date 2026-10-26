@@ -24,11 +24,16 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _rarityTags = Array.Empty<Sprite>();
         // 속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1)
         [SerializeField] private Sprite[] _affIcons = Array.Empty<Sprite>();
+        // 틀 그림마다 몸통(테 선) 상자 — 빌더가 그림에서 잰다(RbFrameFit)
+        [SerializeField] private Sprite[] _fitSprites = Array.Empty<Sprite>();
+        [SerializeField] private Vector4[] _fitBodies = Array.Empty<Vector4>();
         [SerializeField] private Sprite _starOn, _starOff, _starAwaken;
 
         private const float CardW = 328f * 2f / 3f;
         private static readonly float[] ColX = { (30f + 164f - 540f) * 2f / 3f, (375f + 164f - 540f) * 2f / 3f, (722f + 164f - 540f) * 2f / 3f };
-        private const float RowStep = 405f * 2f / 3f, FirstY = -(862f + 193f - 850f) * 2f / 3f;
+        // 줄 간격 · 첫 줄 위 여백에 SSR 왕관 자리(CrownRoom)를 더했다 — 틀 몸통을 칸에 맞추자(RbFrameFit) 왕관이 윗줄 전투력을 가렸다
+        private const float CrownRoom = 44f;
+        private const float RowStep = (405f + CrownRoom) * 2f / 3f, FirstY = -(862f + 193f - 850f + CrownRoom) * 2f / 3f;
         private static readonly Color LockedTint = new(0.22f, 0.24f, 0.32f, 1f);
         // 등급(R · SR · SSR) 안쪽 빛 — 시안 카드 바탕색
         private static readonly Color[] GlowColors =
@@ -168,7 +173,7 @@ namespace Game.Module.Lobby
                 if (on) ((RectTransform)_cards[i]).anchoredPosition = new Vector2(ColX[i % 3], FirstY - RowStep * (i / 3));
             }
             int rows = (_shown.Count + 2) / 3;
-            content.sizeDelta = new Vector2(content.sizeDelta.x, 12f * 2f / 3f + RowStep * rows);
+            content.sizeDelta = new Vector2(content.sizeDelta.x, (12f + CrownRoom) * 2f / 3f + RowStep * rows);
         }
 
         private void OpenCard(int index)
@@ -188,6 +193,7 @@ namespace Game.Module.Lobby
             {
                 frame.sprite = _gradeFrames[g];
                 frame.color = owned ? Color.white : new Color(0.55f, 0.58f, 0.68f, 1f);
+                RbFrameFit.Apply(frame.rectTransform, ((RectTransform)card).sizeDelta, frame.sprite, _fitSprites, _fitBodies);
             }
             if (_ui.Find(card, "ColCardRarity")?.GetComponent<Image>() is Image tag && g < _rarityTags.Length) tag.sprite = _rarityTags[g];
             if (_ui.Find(card, "ColCardGlow")?.GetComponent<Image>() is Image glow)
@@ -211,7 +217,7 @@ namespace Game.Module.Lobby
             {
                 int a = (int)AffinityRule.KindOf(key) - 1;
                 aff.sprite = a >= 0 && a < _affIcons.Length ? _affIcons[a] : null;
-                aff.enabled = aff.sprite != null;
+                _ui.Find(card, "ColCardAffBox")?.gameObject.SetActive(aff.sprite != null);
                 aff.color = owned ? Color.white : new Color(0.55f, 0.58f, 0.68f, 1f);   // 틀과 같은 잿빛 — 얼굴처럼 검게 누르면 무엇인지 안 보인다
             }
             RbCardName.Fit(_ui.Find(card, "ColCardName")?.GetComponent<TextMeshProUGUI>(), e.DisplayName);
