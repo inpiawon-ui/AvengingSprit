@@ -22,6 +22,9 @@ namespace Game.Module.Common.UI
         [SerializeField] private float _designWidth = 720f;
         [SerializeField] private float _designHeight;
         [SerializeField] private float[] _breaks = System.Array.Empty<float>();
+        // 층 줄 모드 — 남는 세로를 띠 사이가 아니라 한 판(_growNode) 안 줄(_rowPrefix…) 간격에 준다(탑 층 사다리)
+        [SerializeField] private string _growNode, _rowPrefix;
+        private Vector2 _growHomeSize;
 
         private RectTransform _rt;
         private Vector2[] _home;
@@ -32,6 +35,13 @@ namespace Game.Module.Common.UI
         {
             _designHeight = designHeight;
             _breaks = breaks ?? System.Array.Empty<float>();
+        }
+
+        /// <summary>남는 세로를 판 하나(bg) 안 줄들(이름 앞머리 rowPrefix) 간격에 준다 — 판은 그만큼 길어지고, 그 아래는 통째로 내려간다.</summary>
+        public void GrowRows(string bg, string rowPrefix)
+        {
+            _growNode = bg;
+            _rowPrefix = rowPrefix;
         }
 
         private void Awake() => _rt = (RectTransform)transform;
@@ -73,6 +83,7 @@ namespace Game.Module.Common.UI
             // 다 들어가면 스크롤을 끈다(PD 「스크롤 될 필요 없다」) — 켜 두면 스크롤이 내용 자리를 위로 되돌린다
             if (scroll != null) scroll.enabled = _designHeight * k > view.y + 1f;
             _rt.anchoredPosition = new Vector2(0f, -gap * k);
+            if (!string.IsNullOrEmpty(_growNode)) { GrowRowsApply(spare / k); return; }
             for (int i = 0; i < _kids.Length; i++)
             {
                 if (_kids[i] == null) continue;
@@ -83,5 +94,41 @@ namespace Game.Module.Common.UI
                 _kids[i].anchoredPosition = _home[i] + new Vector2(0f, -gap * band);
             }
         }
+
+        // 남는 세로(내용 단위) 전부를 판 안 줄 간격에 — 줄 n 개는 길어진 판 안에 고르게, 판 아래 묶음은 통째로 아래로
+        private void GrowRowsApply(float extra)
+        {
+            _rt.anchoredPosition = Vector2.zero;
+            RectTransform bg = null;
+            int bgIndex = -1;
+            var rows = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < _kids.Length; i++)
+            {
+                if (_kids[i] == null) continue;
+                if (_kids[i].name == _growNode) { bg = _kids[i]; bgIndex = i; }
+                else if (IsRow(_kids[i].name)) rows.Add(i);
+            }
+            if (bg == null) return;
+            if (_growHomeSize == Vector2.zero) _growHomeSize = bg.sizeDelta;
+            float bgBottom = -(_home[bgIndex].y - _growHomeSize.y * bg.pivot.y);   // 판 아랫변 깊이
+            rows.Sort((a, b) => _home[b].y.CompareTo(_home[a].y));               // 위 → 아래
+            for (int i = 0; i < _kids.Length; i++)
+            {
+                if (_kids[i] == null || i == bgIndex || rows.Contains(i)) continue;
+                float top = -(_home[i].y + _kids[i].rect.height * (1f - _kids[i].pivot.y));
+                _kids[i].anchoredPosition = _home[i] + new Vector2(0f, top >= bgBottom - 0.5f ? -extra : 0f);
+            }
+            // 판 — 위 변은 그대로, 아래로 extra 만큼 길어진다
+            bg.sizeDelta = _growHomeSize + new Vector2(0f, extra);
+            bg.anchoredPosition = _home[bgIndex] + new Vector2(0f, -extra * (1f - bg.pivot.y));
+            // 줄 — 줄 사이 n-1 칸 + 위 · 아래 반 칸씩에 고르게
+            int n = rows.Count;
+            for (int r = 0; r < n; r++)
+                _kids[rows[r]].anchoredPosition = _home[rows[r]] + new Vector2(0f, -extra * (r + 0.5f) / n);
+        }
+
+        // 앞머리 바로 뒤가 숫자인 것만 줄이다 — ChlFloor0 은 줄, ChlFloorTitle · ChlFloorDesc 는 아래 판 글자
+        private bool IsRow(string name) =>
+            name.Length > _rowPrefix.Length && name.StartsWith(_rowPrefix) && char.IsDigit(name[_rowPrefix.Length]);
     }
 }

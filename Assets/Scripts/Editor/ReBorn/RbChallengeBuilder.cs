@@ -100,36 +100,37 @@ namespace Game.Editor.ReBorn
         private static void BuildTower(RectTransform page)
         {
             // 시안 tower(1080 기준) — 탑 그림 판 위에 다섯 층(이번 5층 묶음) · 아래 판에 보상 · 버튼 · 오늘의 소탕.
-            // 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게 — PD 2026-10-26 「층마다 벌려 놓지 말고 · 스크롤 될 필요 없다」.
-            // 층 줄은 시안처럼 거의 붙여(높이 100 · 사이 10)
-            var body = Group(page, "ChlTower", "ui.tower.title", "망령의 탑", 1620 - Top, true);
-            // 해상도 맞춤 — 4:3 은 통째로 키우고, 20:9 는 남는 세로를 탑 판 | 아래 판 사이에 나눈다(경계 = 두 판 사이)
-            body.gameObject.AddComponent<Game.Module.Common.UI.RbFitBands>().Setup((1620 - Top) * S, new[] { (1013 - Top) * S });
-            var ladder = PlaceIn(Node(body, "ChlLadder"), Top, 29, 430, 1047, 1004);
+            // 16:9 보기 칸(머리 줄 밑 ~ 아래 탭 위)을 거의 다 채운다 — PD 2026-10-26 「층 표기 간격을 넓혀서라도 채워 보자 · 빈 공간이 너무 많다」.
+            // 더 긴 화면(20:9)은 RbFitBands 가 남는 세로를 탑 판 안 층 간격에 더 준다
+            var body = Group(page, "ChlTower", "ui.tower.title", "망령의 탑", 1846 - Top, true);
+            var fit = body.gameObject.AddComponent<Game.Module.Common.UI.RbFitBands>();
+            fit.Setup((1846 - Top) * S, new[] { (1197 - Top) * S });
+            fit.GrowRows("ChlLadder", "ChlFloor");
+            var ladder = PlaceIn(Node(body, "ChlLadder"), Top, 29, 430, 1047, 1188);
             Img(ladder, "Components/rb_panel_base");
             ArtCard(ladder, "ChlLadder", "Art/rb_art_bg_tower_column", AspectOf("Art/rb_art_bg_tower_column"));
             for (int i = 0; i < 5; i++)
             {
-                float y0 = 452 + i * 110f, y1 = y0 + 100;
+                float y0 = 454 + i * 146f, y1 = y0 + 118;
                 var row = PlaceIn(Node(body, $"ChlFloor{i}"), Top, 55, y0, 1024, y1);
                 Img(row, "Components/rb_list_row");
-                Text(Local(Node(row, $"ChlFloor{i}No"), 55, y0, 1024, y1, 82, y0 + 20, 300, y0 + 80), null, "5F", 52, White, TA.Left, number: true);
-                Img(Local(Node(row, $"ChlFloor{i}Lock"), 55, y0, 1024, y1, 862, y0 + 30, 902, y0 + 70), "Icons/rb_icon_sys_lock_48");
-                Text(Local(Node(row, $"ChlFloor{i}State"), 55, y0, 1024, y1, 600, y0 + 24, 994, y0 + 76), null, "잠김", 40, Dim, TA.Right, heavy: true);
+                Text(Local(Node(row, $"ChlFloor{i}No"), 55, y0, 1024, y1, 82, y0 + 26, 300, y0 + 92), null, "5F", 56, White, TA.Left, number: true);
+                Img(Local(Node(row, $"ChlFloor{i}Lock"), 55, y0, 1024, y1, 860, y0 + 38, 904, y0 + 82), "Icons/rb_icon_sys_lock_48");
+                Text(Local(Node(row, $"ChlFloor{i}State"), 55, y0, 1024, y1, 600, y0 + 32, 994, y0 + 88), null, "잠김", 42, Dim, TA.Right, heavy: true);
             }
-            Img(PlaceIn(Node(body, "ChlTowerPanel"), Top, 29, 1022, 1047, 1610), "Components/rb_panel_base");
-            Text(PlaceIn(Node(body, "ChlFloorTitle"), Top, 55, 1040, 730, 1098), null, "2층", 54, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlFloorDesc"), Top, 55, 1104, 740, 1144), "ui.tower.first_clear", "첫 클리어 보상 (매주 다시)", 34, Dim, TA.Left);
-            var buy = Button2(body, "ChlTowerBuy", "ui.rb.chl.buy", "추가 입장 ›", 750, 1042, 1020, 1142, false, 38);
+            Img(PlaceIn(Node(body, "ChlTowerPanel"), Top, 29, 1206, 1047, 1838), "Components/rb_panel_base");
+            Text(PlaceIn(Node(body, "ChlFloorTitle"), Top, 55, 1226, 730, 1288), null, "2층", 56, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlFloorDesc"), Top, 55, 1294, 740, 1336), "ui.tower.first_clear", "첫 클리어 보상 (매주 다시)", 34, Dim, TA.Left);
+            var buy = Button2(body, "ChlTowerBuy", "ui.rb.chl.buy", "추가 입장 ›", 750, 1228, 1020, 1332, false, 38);
             buy.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = Cyan;   // 시안: 청록 글자
-            Reward(body, "ChlReward", 1164, 1314);
-            Button2(body, "ChlTowerFit", "ui.rb.chl.sweep_rule", "소탕 조건 확인", 55, 1334, 527, 1450, false, 40);
-            StartButton(body, "ChlTowerStart", "도전", 552, 1334, 1024, 1450);
+            Reward(body, "ChlReward", 1356, 1522);
+            Button2(body, "ChlTowerFit", "ui.rb.chl.sweep_rule", "소탕 조건 확인", 55, 1544, 527, 1670, false, 40);
+            StartButton(body, "ChlTowerStart", "도전", 552, 1544, 1024, 1670);
             // 버튼 줄과 오늘의 소탕 사이 가는 줄(시안 #1D2331 · 두께 2 — 코덱스 납품 rb_divider_line)
-            if (KitSprite("Components/rb_divider_line") != null) Img(PlaceIn(Node(body, "ChlSweepLine"), Top, 55, 1466, 1024, 1474), "Components/rb_divider_line").preserveAspect = false;
-            Text(PlaceIn(Node(body, "ChlSweepTitle"), Top, 55, 1490, 760, 1540), "ui.tower.sweep", "오늘의 소탕", 44, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlSweepInfo"), Top, 55, 1546, 770, 1590), null, "하루 1번 · 입장 횟수를 쓰지 않는다", 32, Dim, TA.Left);
-            Button2(body, "ChlTowerSweep", null, "소탕", 790, 1490, 1024, 1592, false, 40);
+            if (KitSprite("Components/rb_divider_line") != null) Img(PlaceIn(Node(body, "ChlSweepLine"), Top, 55, 1688, 1024, 1696), "Components/rb_divider_line").preserveAspect = false;
+            Text(PlaceIn(Node(body, "ChlSweepTitle"), Top, 55, 1714, 760, 1764), "ui.tower.sweep", "오늘의 소탕", 44, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlSweepInfo"), Top, 55, 1770, 770, 1814), null, "하루 1번 · 입장 횟수를 쓰지 않는다", 32, Dim, TA.Left);
+            Button2(body, "ChlTowerSweep", null, "소탕", 790, 1712, 1024, 1818, false, 40);
             buy.transform.SetAsLastSibling();
         }
 
@@ -139,7 +140,7 @@ namespace Game.Editor.ReBorn
             // 시안 tower: 얇은 청록 테 칸 둘 — 아이콘 왼쪽 · 숫자와 이름 가운데 · 조각은 「?」
             var g = PlaceIn(Node(body, p + "GoldTile"), Top, 55, y0, 527, y1);
             Img(g, CellTeal).pixelsPerUnitMultiplier = CellPpu;
-            Img(Local(Node(g, p + "GoldIcon"), 55, y0, 527, y1, 85, y0 + 32, 185, y0 + 132), "Icons/rb_icon_currency_gold_96");
+            Img(Local(Node(g, p + "GoldIcon"), 55, y0, 527, y1, 85, y0 + 33, 185, y0 + 133), "Icons/rb_icon_currency_gold_96");
             Text(Local(Node(g, p + "Gold"), 55, y0, 527, y1, 200, y0 + 22, 505, y0 + 86), null, "500", 54, White, TA.Center, number: true);
             Text(Local(Node(g, p + "GoldLabel"), 55, y0, 527, y1, 200, y0 + 92, 505, y0 + 136), "ui.rb.result.gold", "골드", 34, White, TA.Center, heavy: true);
             var s = PlaceIn(Node(body, p + "ShardTile"), Top, 552, y0, 1024, y1);
