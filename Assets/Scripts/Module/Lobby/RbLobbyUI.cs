@@ -416,7 +416,8 @@ namespace Game.Module.Lobby
                 if (frame != null) RbFrameFit.Apply(frame.rectTransform, ((RectTransform)card).sizeDelta, frame.sprite, _fitSprites, _fitBodies);
                 _ui.Find(card, "CardSel")?.gameObject.SetActive(sel);
 
-                // 위 왼쪽 판: 랜덤 = BEST · 오늘의 몸 = 「오늘」 / 위 오른쪽: 등급 태그(SR 이상만 — 시안). 둘은 따로 선다(PD 2026-10-26)
+                // 틀 윗변 판: 랜덤 = BEST · 오늘의 몸 = 「오늘」 / 위 오른쪽: 등급 태그 — R 까지 전부(PD 2026-10-26 「SR 이하는 왜 안 나와」,
+                // 처음엔 시안처럼 SR 이상만 달았다). 둘은 따로 선다
                 var badge = _ui.Find(card, "CardBadge")?.GetComponent<Image>();
                 var badgeText = _ui.Find(card, "CardBadgeText")?.GetComponent<TextMeshProUGUI>();
                 Sprite bs = mode == RunStartMode.Random ? _badgeBest : today ? _badgeToday : null;
@@ -424,7 +425,7 @@ namespace Game.Module.Lobby
                 if (badgeText != null) badgeText.text = today ? Localize.FromTable("ui.rb.lobby.today", "오늘") : string.Empty;
                 if (_ui.Find(card, "CardRarity")?.GetComponent<Image>() is Image rarity)
                 {
-                    bool show = mode == RunStartMode.Host && e != null && e.Grade != HostGrade.B && (int)e.Grade < _rarityTags.Length;
+                    bool show = mode == RunStartMode.Host && e != null && (int)e.Grade < _rarityTags.Length;
                     if (show) rarity.sprite = _rarityTags[(int)e.Grade];
                     rarity.gameObject.SetActive(show);
                 }
@@ -537,8 +538,10 @@ namespace Game.Module.Lobby
             _ui.SetActive("StageGhost", !ghost);
             _ui.SetActive("StageHost", !random);
             if (random || _ui.Get<Image>("StageHostArt") is not Image art) return;
-            // 큰 몸 그림(UnitShowcase)이 오기 전 · 없을 때는 얼굴이 대신 선다
-            art.sprite = ghost ? _ghostArt : Face(_host);
+            // 몸은 큰 몸 그림(UnitShowcase)만 세운다 — 얼굴을 대신 세웠더니 그림이 오기 전까지 얼굴만 떠 있다가
+            // 몸으로 바뀌었다(PD 2026-10-26 「대가리만 나오다가 다시 캐릭터가 나와」). 24종 모두 큰 그림이 있다
+            art.sprite = ghost ? _ghostArt : null;
+            art.enabled = ghost;
             if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
             show.Show(ghost ? null : _host);
         }
@@ -574,11 +577,11 @@ namespace Game.Module.Lobby
             float total = lw + Gap * 2 + sIcon.rect.width + 4 + sw + (hasGold ? Gap + gIcon.rect.width + 4 + gw : 0f);
             float x = -total * 0.5f;
             Put(label.rectTransform, x, lw); x += lw + Gap * 2;
-            Put(sIcon, x, sIcon.rect.width); x += sIcon.rect.width + 4;
+            PutIcon(sIcon, x); x += sIcon.rect.width + 4;
             Put(sText.rectTransform, x, sw); x += sw;
             if (!hasGold) return;
             x += Gap;
-            Put(gIcon, x, gIcon.rect.width); x += gIcon.rect.width + 4;
+            PutIcon(gIcon, x); x += gIcon.rect.width + 4;
             Put(gText.rectTransform, x, gw);
         }
 
@@ -617,6 +620,10 @@ namespace Game.Module.Lobby
             r.sizeDelta = new Vector2(Mathf.Max(width + 2f, 4f), r.sizeDelta.y);
             r.anchoredPosition = new Vector2(left + r.sizeDelta.x * 0.5f, r.anchoredPosition.y);
         }
+
+        // 아이콘은 크기를 건드리지 않고 자리만 — 글자 칸처럼 +2 를 주면 몸을 누를 때마다 아이콘이 2씩 커져 줄이 벌어졌다(PD 2026-10-26)
+        private static void PutIcon(RectTransform r, float left)
+            => r.anchoredPosition = new Vector2(left + r.sizeDelta.x * 0.5f, r.anchoredPosition.y);
 
         // ── 출전 — 값을 둘 다 확인한 뒤에 낸다(골드가 모자란데 행동력만 빠지면 안 된다) ──────────
 

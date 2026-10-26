@@ -24,6 +24,8 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
             (720, 1280, Language.Japanese, "battle", "lobby_ja"),
             (720, 1280, Language.English, "battle", "lobby_en"),
+            (720, 1280, Language.Korean, "battle:4@0.05", "lobby_pick_early"),
+            (720, 1280, Language.Korean, "battle:5@0.3", "lobby_pick_mid"),
             (720, 1280, Language.Korean, "battle:1", "lobby_ghost_16x9"),
             (720, 1280, Language.Korean, "battle:2", "lobby_host_16x9"),
             (1080, 2400, Language.Korean, "battle:2", "lobby_host_20x9"),
@@ -499,7 +501,7 @@ namespace Game.Editor.ReBorn
             {
                 // battle:{n} — 출전 줄 n번째 카드를 고른다(1 유령 · 2 오늘의 몸) · battle:paren — 괄호 이름 카드까지 넘겨 고른다
                 lobby.SelectTab("Battle");
-                string arg = state.Substring(7);
+                string arg = state.Substring(7).Split('@')[0];   // 「battle:3@0.05」 — 누른 직후를 찍는다
                 if (arg != "paren") { Click("SortieCard" + arg); return; }
                 foreach (var t in lobby.GetComponentsInChildren<TMPro.TextMeshProUGUI>(true))
                 {
