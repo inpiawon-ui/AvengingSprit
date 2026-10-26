@@ -134,10 +134,40 @@ namespace Game.Module.Lobby
                 if (pulls == null && failKey == "ui.summon.fail.gem") { _shell.Notice.ShowGemShort(); return; }
                 if (pulls == null) { Toast(Localize.Get(failKey)); return; }
                 GameSound.Cue("run.card");
-                ShowResult(pulls, count);
                 _shell.RefreshHeader();
+                // 「영혼 배양실」 연출(10-23 4판, 가이드 _exchange/guide_summon_lab_v2.md) — 예전 소환 패널에 붙어 있던 것을
+                // 새 소환 화면에 다시 잇는다(PD 2026-10-26 「기존에 만들어 둔 시안 연출을 살려서 연결」). 끝나면 결과판
+                if (TryGetComponent<SummonReveal>(out var reveal)) await reveal.PlayAsync(RevealEntries(pulls), this.GetCancellationTokenOnDestroy());
+                if (this == null) return;
+                ShowResult(pulls, count);
             }
             finally { _busy = false; }
+        }
+
+        /// <summary>
+        /// 배양실 연출에 넘길 몸 목록 — 사다리 4단(PD 2026-10-23): 하늘 = B · 보라 = A 가장 적은 조각 · 금 = A 더 많은 조각 또는 픽업 · 무지개 = 대박.
+        /// 이름 판 꼬리표: 대박 > 픽업 > 새 몸 > 획득. (옛 SummonPanel.RevealEntries 그대로)
+        /// </summary>
+        private List<SummonReveal.Entry> RevealEntries(IReadOnlyList<GachaPull> pulls)
+        {
+            // 가장 적은 조각 수(표의 첫 칸) — 숫자를 코드에 적지 않는다
+            int minShards = int.MaxValue;
+            if (CoreModule.TryGet<IGachaService>(out var gs))
+                foreach (var a in gs.AmountRates()) minShards = Mathf.Min(minShards, a.shards);
+            var list = new List<SummonReveal.Entry>(pulls.Count);
+            foreach (var x in pulls)
+            {
+                var h = _player?.GetHost(x.HostKey);
+                bool high = h != null && h.Grade != HostGrade.B;
+                var rarity = x.Jackpot ? SummonReveal.Rarity.Jackpot
+                           : x.Pickup || (high && x.Shards > minShards) ? SummonReveal.Rarity.Super
+                           : high ? SummonReveal.Rarity.Rare : SummonReveal.Rarity.Normal;
+                string tag = x.Jackpot ? "ui.summon.reveal.jackpot" : x.Pickup ? "ui.summon.reveal.pickup"
+                           : x.IsNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get";
+                string grade = h == null ? string.Empty : HostGradeLabel.Of(h.Grade);
+                list.Add(new SummonReveal.Entry(x.HostKey, h != null ? h.DisplayName : x.HostKey, grade, tag, rarity));
+            }
+            return list;
         }
 
         private readonly List<Transform> _cards = new();

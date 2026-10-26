@@ -36,6 +36,7 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_iconGem").objectReferenceValue = KitSprite("Icons/rb_icon_currency_gem_48");
             so.FindProperty("_iconTicket").objectReferenceValue = KitSprite("Icons/rb_icon_summon_ticket_48");
             so.ApplyModifiedPropertiesWithoutUndo();
+            RbSummonRevealWire.Attach(page.gameObject);   // 뽑은 뒤 결과판 전에 「영혼 배양실」 연출
             page.gameObject.SetActive(false);
         }
 

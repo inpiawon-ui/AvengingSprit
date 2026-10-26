@@ -137540,6 +137540,7 @@ GameObject:
   - component: {fileID: 6622737063588339805}
   - component: {fileID: 8688501861375541541}
   - component: {fileID: 6586773166162433459}
+  - component: {fileID: 4861504227070219425}
   m_Layer: 5
   m_Name: PageSummon
   m_TagString: Untagged
@@ -137610,6 +137611,86 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6040e1cb422581a4a8fd56a520c7d581, type: 3}
   _iconGem: {fileID: 21300000, guid: 1e198cb53b60b1d4188d28117c3197dd, type: 3}
   _iconTicket: {fileID: 21300000, guid: feeb716f4cc4ed24ea4b782ae42d0c55, type: 3}
+--- !u!114 &4861504227070219425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896867625070720545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f12f4415bea9934a9ccd2690ccf7573, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.SummonReveal
+  _stage: {fileID: 21300000, guid: 3003e91c5cc52ce4dbdbb48b215acc97, type: 3}
+  _tank: {fileID: 21300000, guid: b34fe8e862f333e4ab851ec8653e2ccb, type: 3}
+  _tankBroken: {fileID: 21300000, guid: cbe2e2c92b2ee454aad35a4c6a2f710f, type: 3}
+  _tankGlass: {fileID: 21300000, guid: 8603896e6501b6543b2cb4ab46f2991b, type: 3}
+  _plate: {fileID: 21300000, guid: 8ced77600ced37f47a503e8f46fc949b, type: 3}
+  _tankGlassTier:
+  - {fileID: 21300000, guid: f5a4199f36f71a64f820a5ab40ee96cf, type: 3}
+  - {fileID: 21300000, guid: da48a0fd46c7e9248936adf0d583bc53, type: 3}
+  - {fileID: 21300000, guid: ef4e3467cee0b94419bb29cf7a092847, type: 3}
+  - {fileID: 21300000, guid: a6512c10ddda9f249934042d2b482dc5, type: 3}
+  _tankTier:
+  - {fileID: 21300000, guid: 48e197834fdd43249aeda06c3f55a671, type: 3}
+  - {fileID: 21300000, guid: c69962923edbe1b4fba5dea5d0cca21e, type: 3}
+  - {fileID: 21300000, guid: 2559f332e7542154ab57d4ae980f149b, type: 3}
+  - {fileID: 21300000, guid: 32534be2e9ac670478f11c59e023e743, type: 3}
+  _revealLight:
+  - {fileID: 21300000, guid: 346c3efb213cbb44e954159acee7ad0a, type: 3}
+  - {fileID: 21300000, guid: 593bb0621a76ed540a7798e935782256, type: 3}
+  - {fileID: 21300000, guid: 766eecded07ec6240987914aeb4afc5b, type: 3}
+  - {fileID: 21300000, guid: 2ab2acb781b62184fba9c46d2c2057b4, type: 3}
+  - {fileID: 21300000, guid: 290671537c2db6e43840805d54d875f5, type: 3}
+  - {fileID: 21300000, guid: 39f3007a8918c994395fc474a882d620, type: 3}
+  _revealLightSr:
+  - {fileID: 21300000, guid: dfa60388a844485469a3725ad1da7c5b, type: 3}
+  - {fileID: 21300000, guid: 56fa6a94a3f982a4999b3ed0be4e22f6, type: 3}
+  - {fileID: 21300000, guid: 602be137ba1dfca4894f03c6b0ca6dd8, type: 3}
+  - {fileID: 21300000, guid: 846a1fbcdeac92741bc15c7b1adb1eb2, type: 3}
+  - {fileID: 21300000, guid: f56c3545b935e974298d803f035a7e45, type: 3}
+  - {fileID: 21300000, guid: ad42ea1e68ba6204bb29a848cd48a8b8, type: 3}
+  _revealLightR:
+  - {fileID: 21300000, guid: 8fc06fb12e29ae145818c833d8863956, type: 3}
+  - {fileID: 21300000, guid: 320664fd6396f1445b9dc1781fbcf611, type: 3}
+  - {fileID: 21300000, guid: fad1342ac4bf9204095caf1c6b7f84dc, type: 3}
+  - {fileID: 21300000, guid: 450a0c26e830e2d45bb9aeeaae6c4a9b, type: 3}
+  - {fileID: 21300000, guid: 350ac9eece1a7794db3e12ef70c9bcaf, type: 3}
+  - {fileID: 21300000, guid: b0aea6c1dc183fa489e3403aba65ed79, type: 3}
+  _revealLightRainbow:
+  - {fileID: 21300000, guid: 68821bdccb4b66844afd6bc327ba6227, type: 3}
+  - {fileID: 21300000, guid: 49628de8bad9e1d4e91ec83ccc180b32, type: 3}
+  - {fileID: 21300000, guid: 24f7e4c79f0384f4e8a9f41af6c0eb51, type: 3}
+  - {fileID: 21300000, guid: a3cd56668af474141af1c727b1a51606, type: 3}
+  - {fileID: 21300000, guid: f3f6f8c1670beb343a9cbff3a7e25911, type: 3}
+  - {fileID: 21300000, guid: eb76d228eeff09640be4b99cd03fa548, type: 3}
+  _crack:
+  - {fileID: 21300000, guid: 9c7dd11cae7a10a4cb489948b360434f, type: 3}
+  - {fileID: 21300000, guid: 3dd129be33d4e1f4ca69d2060bcd396c, type: 3}
+  - {fileID: 21300000, guid: 06116cfe53a0fda46a58e69f9dfb8b13, type: 3}
+  _shardSheet: {fileID: 2800000, guid: 4c0bf6f2f9575614bb263bc7e9ab3953, type: 3}
+  _chipSheet: {fileID: 2800000, guid: 251a04da322bc254fa62f18cd5461732, type: 3}
+  _splashSheet: {fileID: 2800000, guid: 929fa3830600949469c05f29a06d19f8, type: 3}
+  _spark: {fileID: 2800000, guid: e00f4f73593e5dc44a8bad0542864eea, type: 3}
+  _shardGrid: {x: 5, y: 1}
+  _chipGrid: {x: 3, y: 1}
+  _splashGrid: {x: 3, y: 2}
+  _shardAdditive: 1
+  _ring:
+  - {fileID: 21300000, guid: a9f4eee528bb01342ac6967179c9f51e, type: 3}
+  - {fileID: 21300000, guid: bfa0bdfefc1f6934f8dda63822614b4b, type: 3}
+  - {fileID: 21300000, guid: f1cead1682b38c746a8f8741af1eb41e, type: 3}
+  - {fileID: 21300000, guid: dbca13dafd92e6e43a90d8d1be72aac5, type: 3}
+  - {fileID: 21300000, guid: aa354e62f83fac748b62d9cdf25d3a3c, type: 3}
+  - {fileID: 21300000, guid: f2c64272d4f1871498278221016c03bb, type: 3}
+  _stampNew: {fileID: 21300000, guid: 28cc324e8393ba24b8258308c14e7072, type: 3}
+  _ribbonPickup: {fileID: 21300000, guid: f222295d8bea0a84cb8a309989110a36, type: 3}
+  _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}
+  _silhouette: {fileID: 2100000, guid: 43001d9f02ceec74fb08f287c54e4578, type: 2}
+  _softGlow: {fileID: 2100000, guid: e0b93116c67a1f0499dcfb35bbd188cb, type: 2}
+  _font: {fileID: 11400000, guid: 4d923984108639f48ba17abf48cd8a7e, type: 2}
 --- !u!1 &8901331752174489125
 GameObject:
   m_ObjectHideFlags: 0
