@@ -91,7 +91,6 @@ namespace Game.Editor.ReBorn
             Frames(so, "_chestGold", "rbfx_chest_gold_", 4);
             Frames(so, "_chestPlatinum", "rbfx_chest_platinum_", 4);
             so.FindProperty("_shine").objectReferenceValue = Load("rbfx_shine");
-            so.FindProperty("_band").objectReferenceValue = Load("rbfx_band");
             so.FindProperty("_rays").objectReferenceValue = Load("rbfx_rays");
             so.ApplyModifiedPropertiesWithoutUndo();
         }

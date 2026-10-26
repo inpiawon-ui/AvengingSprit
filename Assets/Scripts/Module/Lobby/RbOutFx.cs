@@ -21,9 +21,9 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _chestLight = System.Array.Empty<Sprite>(), _coin = System.Array.Empty<Sprite>();
         [SerializeField] private Sprite[] _chestSilver = System.Array.Empty<Sprite>(), _chestGold = System.Array.Empty<Sprite>(),
                                           _chestPlatinum = System.Array.Empty<Sprite>();
-        [SerializeField] private Sprite _shine, _band, _rays;
+        [SerializeField] private Sprite _shine, _rays;
 
-        private static readonly Color Cyan = new(0.24f, 0.9f, 1f), Gold = new(1f, 0.79f, 0.24f), Green = new(0.29f, 0.88f, 0.54f);
+        private static readonly Color Cyan = new(0.24f, 0.9f, 1f), Gold = new(1f, 0.79f, 0.24f);
 
         // 상자 등급표 — 크기는 같고 알갱이 · 겹만 는다(fx-tier-leveling). 빛 그림 첨자: 0 은 · 1 금 · 2 백금
         private struct ChestTier
@@ -44,7 +44,7 @@ namespace Game.Module.Lobby
         private readonly Dictionary<RectTransform, CancellationTokenSource> _loops = new();
 
         // ── 강화 성공 틱(약) ─────────────────────────────────────
-        // 칸 위 초록 빛 띠가 한 번 맥박 + 알갱이 둘이 오르고 · 값 글자가 톡
+        // 값 글자 뒤 금빛 빛살이 한 번 퍼지고 + 금 알갱이 다섯이 오르고 · 값 글자가 톡
 
         public void UpgradeTick(RectTransform tile, RectTransform value)
         {
@@ -54,23 +54,28 @@ namespace Game.Module.Lobby
 
         private async UniTaskVoid UpgradeTickAsync(RectTransform tile, RectTransform value, CancellationToken ct)
         {
-            // 칸 판 위 · 글자 아래(08_fx 3절 — 빛이 숫자를 덮으면 안 된다): 칸의 첫 자식으로
-            var band = Get(tile, "FxBand", _band, tile.rect.size, true);
-            band.rectTransform.anchoredPosition = tile.rect.center;
-            band.rectTransform.SetSiblingIndex(0);
-            band.preserveAspect = false;
-            band.color = Color.clear;
-            Sparks(tile, new Vector2(0f, tile.rect.height * 0.2f), 2, Green, 60f, 0.6f, true, 14f);
-            const float dur = 0.3f;
+            // 노란 레벨업 — 값 글자 뒤에서 금빛 빛살이 한 번 퍼지고 금 알갱이가 위로 오른다(PD 2026-10-26
+            // 「녹색 레이저 같다, 노란색으로 레벨업 하는 느낌」 — 예전엔 초록 빛 띠 rbfx_band 가 칸을 가로질렀다).
+            // 빛살 그림은 흰색이라 금색을 곱해도 색이 맞다. 칸 판 위 · 글자 아래(08_fx 3절): 칸의 첫 자식으로
+            var center = value != null ? (Vector2)tile.InverseTransformPoint(value.TransformPoint(value.rect.center)) : tile.rect.center;
+            float s = tile.rect.height * 1.5f;
+            var rays = Get(tile, "FxBand", _rays, Vector2.one * s, true);
+            rays.rectTransform.anchoredPosition = center;
+            rays.rectTransform.SetSiblingIndex(0);
+            rays.color = Color.clear;
+            var at = value != null ? value : tile;
+            Sparks(at, Vector2.zero, 5, Gold, 90f, 0.7f, true, 16f);
+            const float dur = 0.4f;
             for (float t = 0f; t < dur; t += Time.unscaledDeltaTime)
             {
                 float u = t / dur;
-                band.color = new Color(1f, 1f, 1f, 0.55f * Mathf.Sin(u * Mathf.PI));   // 약 — 초록 다음 값 글자가 묻히지 않게
+                rays.color = new Color(Gold.r, Gold.g, Gold.b, 0.8f * Mathf.Sin(u * Mathf.PI));
+                rays.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.5f, 1.1f, Ease.OutCubic(u));
                 if (value != null) value.localScale = Vector3.one * (1f + 0.15f * Mathf.Sin(Mathf.Min(1f, u * 1.5f) * Mathf.PI));
                 if (await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow()) return;
             }
             if (value != null) value.localScale = Vector3.one;
-            Release(band);
+            Release(rays);
         }
 
         // ── 별 채움(중 → 강) ─────────────────────────────────────
