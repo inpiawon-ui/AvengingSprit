@@ -44938,6 +44938,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3634098119605740294}
+  - component: {fileID: 2114721595959786347}
   m_Layer: 5
   m_Name: ChlNightBodyContent
   m_TagString: Untagged
@@ -44982,6 +44983,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 880}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &2114721595959786347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2808597134247503894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c35c483105c77345a8efa1891f8fa23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.RbFitBands
+  _designWidth: 720
+  _designHeight: 880
+  _breaks:
+  - 92.66667
+  - 358
+  - 767.3334
 --- !u!1 &2817643016643846279
 GameObject:
   m_ObjectHideFlags: 0
@@ -96272,6 +96291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415038168471763354}
+  - component: {fileID: 1567038487550281273}
   m_Layer: 5
   m_Name: ChlTowerBodyContent
   m_TagString: Untagged
@@ -96316,6 +96336,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 800}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1567038487550281273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6210976935006236236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c35c483105c77345a8efa1891f8fa23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.UI.RbFitBands
+  _designWidth: 720
+  _designHeight: 800
+  _breaks:
+  - 395.33334
 --- !u!1 &6220833551478009437
 GameObject:
   m_ObjectHideFlags: 0
@@ -118069,12 +118105,12 @@ MonoBehaviour:
   _rowLocked: {fileID: 21300000, guid: c0d51b8ef6c45f343be61950ea1024dd, type: 3}
   _nightDayArts:
   - {fileID: 21300000, guid: c4e3f50013829f841a1522942a34660e, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 69054035987f80b4fa4ebb2fcf4e736b, type: 3}
+  - {fileID: 21300000, guid: a79c5179bf7707b4a91f0a2e907d314c, type: 3}
+  - {fileID: 21300000, guid: 05d9de6ac65bace4c9ffc13c53aca5f4, type: 3}
+  - {fileID: 21300000, guid: 1d00f959331ab7e4da8c5c58dcf34db2, type: 3}
+  - {fileID: 21300000, guid: eb5eb1845e9d0274695588d8bebee78a, type: 3}
+  - {fileID: 21300000, guid: 0f6ad95c6a7c91d419367af7a91e93da, type: 3}
 --- !u!1 &7644704221954731349
 GameObject:
   m_ObjectHideFlags: 0

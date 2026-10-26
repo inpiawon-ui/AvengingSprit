@@ -103,6 +103,8 @@ namespace Game.Editor.ReBorn
             // 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게 — PD 2026-10-26 「층마다 벌려 놓지 말고 · 스크롤 될 필요 없다」.
             // 층 줄은 시안처럼 거의 붙여(높이 100 · 사이 10)
             var body = Group(page, "ChlTower", "ui.tower.title", "망령의 탑", 1620 - Top, true);
+            // 해상도 맞춤 — 4:3 은 통째로 키우고, 20:9 는 남는 세로를 탑 판 | 아래 판 사이에 나눈다(경계 = 두 판 사이)
+            body.gameObject.AddComponent<Game.Module.Common.UI.RbFitBands>().Setup((1620 - Top) * S, new[] { (1013 - Top) * S });
             var ladder = PlaceIn(Node(body, "ChlLadder"), Top, 29, 430, 1047, 1004);
             Img(ladder, "Components/rb_panel_base");
             ArtCard(ladder, "ChlLadder", "Art/rb_art_bg_tower_column", AspectOf("Art/rb_art_bg_tower_column"));
@@ -156,6 +158,8 @@ namespace Game.Editor.ReBorn
             // 시안 night(1080 기준) — 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게, 시작 버튼은 판 바로 아래
             // (PD 2026-10-26 「시작 버튼 좀 올리고 · 스크롤 될 필요 없다 · 여백에 맞춰 버튼 크기」)
             var body = Group(page, "ChlNight", "ui.night.title", "망령의 밤", 1740 - Top, true);
+            // 해상도 맞춤 — 4:3 은 통째로 키우고, 20:9 는 남는 세로를 요일 | 배너 | 정보 판 | 시작 버튼 사이에 나눈다
+            body.gameObject.AddComponent<Game.Module.Common.UI.RbFitBands>().Setup((1740 - Top) * S, new[] { (559 - Top) * S, (957 - Top) * S, (1571 - Top) * S });
             // 요일 7칸 — 폭을 꽉 채우는 네모 버튼(141 × 120, 사이 5) · 시안처럼 일곱 칸 다 흰 글자
             for (int i = 0; i < 7; i++)
             {
