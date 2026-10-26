@@ -222,7 +222,7 @@ namespace Game.Editor.ReBorn
             // 능력치 칸 본보기(8칸으로 복제 — 화면 스크립트) — 판 · 아이콘 · 이름 · 값 · 강화 띠(▲ 강화 · 동전 · 값)
             float sx0 = StatCols[0][0], sx1 = StatCols[0][1], sy0 = StatRow0, sy1 = StatRow0 + StatRowH;
             var tile = PlaceIn(Node(body, "GrwStatTemplate"), T, sx0, sy0, sx1, sy1);
-            Img(tile, "Components/rb_stat_tile");
+            Img(tile, "Components/rb_panel_base");
             // 「Lv 0/50」 줄은 뺐다(PD 2026-10-26) — 아이콘을 칸 세로 가운데로
             Img(Local(Node(tile, "GrwStatIcon"), sx0, sy0, sx1, sy1, 50, sy0 + 29, 126, sy0 + 105), "Icons/rb_icon_stat_attack_96");
             // 일본어 「クリティカルダメージ」 가 가장 길다 — 하한을 낮춰 칸 안에서 줄인다(규칙 06 넘침 금지)
@@ -282,9 +282,11 @@ namespace Game.Editor.ReBorn
             icons.arraySize = stat.Length;
             for (int i = 0; i < stat.Length; i++) icons.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Icons/rb_icon_stat_{stat[i]}_96");
             Stars(so);
-            so.FindProperty("_tileNormal").objectReferenceValue = KitSprite("Components/rb_stat_tile");
-            so.FindProperty("_tileMax").objectReferenceValue = KitSprite("Components/rb_stat_tile_max");
-            so.FindProperty("_tilePoor").objectReferenceValue = KitSprite("Components/rb_stat_tile_poor");
+            // 칸 바탕 — rb_stat_tile 묶음은 오른쪽에 초록 · 회색 버튼 자리가 그려져 있다. 강화 버튼을 남색으로 바꾸며
+            // 무늬 없는 판(rb_panel_base)으로 통일 — 모자람은 값 글자 빨강, 다 올림은 버튼이 사라지는 것으로 보인다(PD 2026-10-26)
+            so.FindProperty("_tileNormal").objectReferenceValue = KitSprite("Components/rb_panel_base");
+            so.FindProperty("_tileMax").objectReferenceValue = KitSprite("Components/rb_panel_base");
+            so.FindProperty("_tilePoor").objectReferenceValue = KitSprite("Components/rb_panel_base");
             so.FindProperty("_btnReady").objectReferenceValue = KitSprite("Components/rb_btn_primary");
             so.FindProperty("_btnShort").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
             var bgs = so.FindProperty("_stageBgs");
