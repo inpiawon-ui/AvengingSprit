@@ -25,7 +25,7 @@ namespace Game.Editor.ReBorn
             ("ColFilter4Text", new[] { "ui.rb.host.sort_power", "ui.rb.host.sort_grade" }),
             ("GrwStarUpLabel", new[] { "ui.rb.growth.starup", "ui.rb.growth.unlock", "ui.growth.max" }),
             ("GrwStarInfo", new[] { "ui.rb.growth.max_info" }),
-            ("ColCardPower", new[] { "ui.rb.host.locked" }),
+            ("ColCardPower", new[] { "ui.rb.host.shards" }),   // 안 가진 몸 = 「조각 {0}/{1}」(Lv 줄을 뺀 뒤 이 칸으로 옮겼다)
             // 남은 화면(2026-10-24) — 안내 · 보스 경고 · 다음 방 · 밤 몸 고르기 · 상자 열기
             ("RbGuideTitle", Keys(RbExtraScreensBuilder.GuideTopics, "ui.rb.guide.{0}.title")),
             ("RbGuideBody", Keys(RbExtraScreensBuilder.GuideTopics, "ui.rb.guide.{0}.body")),

@@ -115,24 +115,26 @@ namespace Game.Editor.ReBorn
             Img(frame, "Components/rb_host_frame_r").preserveAspect = false;
             RbLobbyBuilder.RbFrameFitEditor(frame, "Components/rb_host_frame_r");
             // 위 왼쪽 = 내 속성(네모 칸 안) · 위 오른쪽 = 등급 태그 — 로비 출전 카드와 같은 자리(PD 2026-10-26)
-            var affBox = Local(Node(card, "ColCardAffBox"), x0, y0, x1, y1, 40, 872, 100, 932);
-            Img(affBox, "Components/rb_level_badge").pixelsPerUnitMultiplier = 1.6f;
-            Img(Local(Node(affBox, "ColCardAff"), 40, 872, 100, 932, 45, 877, 95, 927), "Icons/rb_icon_aff_force_128");
-            Img(Local(Node(card, "ColCardRarity"), x0, y0, x1, y1, 272, 874, 346, 924), "Components/rb_rarity_r");
+            // 「Lv」 줄(능력치 강화 단계 합)은 뺐다 — 호스트 레벨은 없다, 별 단계가 강화 상한(한 단계 5 · 10성 50)을 정한다(PD 2026-10-26).
+            // 빈 자리만큼 위 두 표시를 키웠다(「등급이 잘 안 보인다 · 공간이 여유롭다」)
+            var affBox = Local(Node(card, "ColCardAffBox"), x0, y0, x1, y1, 40, 872, 122, 954);
+            Img(affBox, "Components/rb_level_badge").pixelsPerUnitMultiplier = 1.2f;
+            Img(Local(Node(affBox, "ColCardAff"), 40, 872, 122, 954, 47, 879, 115, 947), "Icons/rb_icon_aff_force_128");
+            Img(Local(Node(card, "ColCardRarity"), x0, y0, x1, y1, 236, 876, 348, 952), "Components/rb_rarity_r");
             // 빨간 점 — 등급 태그 오른쪽 위 모서리에 얹는다(성급을 올릴 수 있다)
             Img(Local(Node(card, "ColCardDot"), x0, y0, x1, y1, 326, 864, 354, 892), "Components/rb_dot_red");
-            Img(Local(Node(card, "ColCardFace"), x0, y0, x1, y1, 136, 908, 254, 1026), "Icons/rb_icon_mode_ghost_144");
-            Img(Local(Node(card, "ColCardLock"), x0, y0, x1, y1, 166, 938, 224, 996), "Icons/rb_icon_sys_lock_96");
+            Img(Local(Node(card, "ColCardFace"), x0, y0, x1, y1, 138, 946, 250, 1058), "Icons/rb_icon_mode_ghost_144");
+            Img(Local(Node(card, "ColCardLock"), x0, y0, x1, y1, 165, 973, 223, 1031), "Icons/rb_icon_sys_lock_96");
             // 긴 이름은 RbCardName 이 괄호 앞에서 두 줄로 접는다
-            var colName = Text(Local(Node(card, "ColCardName"), x0, y0, x1, y1, 42, 1030, 346, 1090), null, "아마존", 36, White, TA.Center, heavy: true);
+            var colName = Text(Local(Node(card, "ColCardName"), x0, y0, x1, y1, 42, 1062, 346, 1120), null, "아마존", 36, White, TA.Center, heavy: true);
             colName.lineSpacing = -28f;
-            var stars = Local(Node(card, "ColCardStars"), x0, y0, x1, y1, 66, 1090, 310, 1138);
+            var stars = Local(Node(card, "ColCardStars"), x0, y0, x1, y1, 66, 1122, 310, 1172);
             for (int i = 0; i < 5; i++)
-                Img(Local(Node(stars, $"ColCardStar{i}"), 66, 1090, 310, 1138, 68 + i * 48, 1092, 112 + i * 48, 1136), "Icons/rb_icon_star_off_48");
-            // 「Lv 30」 은 시안처럼 본문 글꼴(도트 숫자 아님) — 전투력 숫자만 도트
-            Text(Local(Node(card, "ColCardLv"), x0, y0, x1, y1, 42, 1138, 346, 1188), null, "Lv 30", 40, White, TA.Center, heavy: true);
-            Img(Local(Node(card, "ColCardPowerIcon"), x0, y0, x1, y1, 100, 1194, 140, 1230), "Icons/rb_icon_stat_power_48");
-            Text(Local(Node(card, "ColCardPower"), x0, y0, x1, y1, 142, 1188, 330, 1234), null, "3,230", 44, White, TA.Left, number: true);
+                Img(Local(Node(stars, $"ColCardStar{i}"), 66, 1122, 310, 1172, 68 + i * 48, 1124, 112 + i * 48, 1170), "Icons/rb_icon_star_off_48");
+            // 전투력(가진 몸) · 조각 진행(안 가진 몸)
+            Img(Local(Node(card, "ColCardPowerIcon"), x0, y0, x1, y1, 100, 1186, 140, 1222), "Icons/rb_icon_stat_power_48");
+            // 칸은 카드 폭 — 화면 스크립트(CenterRun)가 글자 폭을 재서 아이콘과 같이 가운데에 세운다(「Shards 88/88」 도 들어가게)
+            Text(Local(Node(card, "ColCardPower"), x0, y0, x1, y1, 42, 1180, 346, 1228), null, "3,230", 44, White, TA.Left, number: true);
         }
 
         // ═════════ 호스트 성장 ═════════

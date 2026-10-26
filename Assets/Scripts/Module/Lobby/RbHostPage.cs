@@ -223,25 +223,11 @@ namespace Game.Module.Lobby
             }
             RbCardName.Fit(_ui.Find(card, "ColCardName")?.GetComponent<TextMeshProUGUI>(), e.DisplayName);
             ApplyStars(_ui.Find(card, "ColCardStars"), "ColCardStar", m);
-            if (owned)
-            {
-                TextIn(card, "ColCardLv", $"Lv {StatLevelSum(key)}");
-                TextIn(card, "ColCardPower", _player.PowerOf(key).ToString("N0"));
-            }
-            else
-            {
-                TextIn(card, "ColCardLv", string.Format(Localize.FromTable("ui.rb.host.shards", "조각 {0}/{1}"), _player.GetShards(key), need));
-                TextIn(card, "ColCardPower", Localize.FromTable("ui.rb.host.locked", "미보유"));
-            }
+            // 「Lv」 줄은 없다(PD 2026-10-26 「호스트 레벨은 필요 없다」 — 강화 단계 합이었다). 안 가진 몸은 전투력 자리에 조각 진행
+            TextIn(card, "ColCardPower", owned ? _player.PowerOf(key).ToString("N0")
+                                               : string.Format(Localize.FromTable("ui.rb.host.shards", "조각 {0}/{1}"), _player.GetShards(key), need));
             _ui.Find(card, "ColCardPowerIcon")?.gameObject.SetActive(owned);
             CenterRun(_ui.Find(card, "ColCardPowerIcon") as RectTransform, _ui.Find(card, "ColCardPower")?.GetComponent<TextMeshProUGUI>(), owned);
-        }
-
-        private int StatLevelSum(string key)
-        {
-            int sum = 0;
-            foreach (HostStat s in Enum.GetValues(typeof(HostStat))) sum += _player.HostStatLevel(key, s);
-            return sum;
         }
 
         /// <summary>
