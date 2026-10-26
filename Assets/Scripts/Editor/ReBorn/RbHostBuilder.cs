@@ -223,17 +223,20 @@ namespace Game.Editor.ReBorn
             float sx0 = StatCols[0][0], sx1 = StatCols[0][1], sy0 = StatRow0, sy1 = StatRow0 + StatRowH;
             var tile = PlaceIn(Node(body, "GrwStatTemplate"), T, sx0, sy0, sx1, sy1);
             Img(tile, "Components/rb_stat_tile");
-            Img(Local(Node(tile, "GrwStatIcon"), sx0, sy0, sx1, sy1, 50, sy0 + 12, 126, sy0 + 88), "Icons/rb_icon_stat_attack_96");
-            Text(Local(Node(tile, "GrwStatLv"), sx0, sy0, sx1, sy1, 36, sy0 + 92, 140, sy0 + 128), null, "Lv 0/50", 24, Dim, TA.Center, number: true);
+            // 「Lv 0/50」 줄은 뺐다(PD 2026-10-26) — 아이콘을 칸 세로 가운데로
+            Img(Local(Node(tile, "GrwStatIcon"), sx0, sy0, sx1, sy1, 50, sy0 + 29, 126, sy0 + 105), "Icons/rb_icon_stat_attack_96");
             // 일본어 「クリティカルダメージ」 가 가장 길다 — 하한을 낮춰 칸 안에서 줄인다(규칙 06 넘침 금지)
             Text(Local(Node(tile, "GrwStatName"), sx0, sy0, sx1, sy1, 148, sy0 + 16, 372, sy0 + 62), null, "공격력", 36, Dim, TA.Left).fontSizeMin = 22f * S;
             Text(Local(Node(tile, "GrwStatValue"), sx0, sy0, sx1, sy1, 148, sy0 + 68, 372, sy0 + 124), null, "+6% › +8%", 40, White, TA.Left, number: true);
-            var band = Local(Node(tile, "GrwStatBuy"), sx0, sy0, sx1, sy1, 380, sy0 + 12, 520, sy0 + 128);
-            Btn(band, "Components/rb_stat_band");
+            // 강화 버튼 — 초록 띠 대신 차분한 남색 버튼에 「금화 + 값」 한 줄(PD 2026-10-26 「녹색 버튼 없애고 차분하게」).
+            // 「▲ 강화」 글자는 뺐다. 값은 금색 · 골드가 모자라면 빨강(화면 스크립트)
+            const float bx0 = 392, bx1 = 518;
+            float by0 = sy0 + 30, by1 = sy0 + 104;
+            var band = Local(Node(tile, "GrwStatBuy"), sx0, sy0, sx1, sy1, bx0, by0, bx1, by1);
+            Btn(band, "Components/rb_btn_secondary");
             band.gameObject.AddComponent<Game.Module.Common.UI.RbHoldRepeat>();
-            Text(Local(Node(band, "GrwStatBuyLabel"), 380, sy0 + 12, 520, sy0 + 128, 386, sy0 + 20, 468, sy0 + 60), "ui.rb.growth.up", "▲ 강화", 28, White, TA.Left, heavy: true).fontSizeMin = 22f * S;
-            Img(Local(Node(band, "GrwStatBuyCoin"), 380, sy0 + 12, 520, sy0 + 128, 474, sy0 + 16, 516, sy0 + 58), "Icons/rb_icon_currency_gold_48");
-            Text(Local(Node(band, "GrwStatBuyCost"), 380, sy0 + 12, 520, sy0 + 128, 386, sy0 + 64, 514, sy0 + 122), null, "60", 42, White, TA.Center, number: true);
+            Img(Local(Node(band, "GrwStatBuyCoin"), bx0, by0, bx1, by1, 402, sy0 + 47, 442, sy0 + 87), "Icons/rb_icon_currency_gold_48");
+            Text(Local(Node(band, "GrwStatBuyCost"), bx0, by0, bx1, by1, 446, sy0 + 44, 512, sy0 + 90), null, "60", 38, Yellow, TA.Center, number: true);
 
             // 성급 판 — 조각 아이콘 · 「성급 2 › 3」 · 조각 획득처 · 막대 · 「12/20 · 체력·공격 +7%」
             const float px0 = 25, py0 = 1880, px1 = 640, py1 = 2020;

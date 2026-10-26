@@ -81,6 +81,7 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "growth:scroll_low", "growth_low_16x9_bottom"),
             (720, 1280, Language.Korean, "host:low", "host_low_16x9"),
             (720, 1280, Language.Korean, "growth:", "growth_16x9"),
+            (720, 1280, Language.Korean, "growth:poor", "growth_poor_16x9"),
             (720, 1280, Language.Korean, "growth:scroll", "growth_16x9_bottom"),
             (1080, 2400, Language.Korean, "growth:", "growth_20x9"),
             (768, 1024, Language.Korean, "growth:", "growth_4x3"),
@@ -667,6 +668,12 @@ namespace Game.Editor.ReBorn
             if (state.StartsWith("host:awaken")) { lobby.ShowReveal(key, state.Contains("10") ? 10 : 6); return; }
             if (!state.StartsWith("growth:")) return;
             if (state.EndsWith("low")) SeedLow(player, key);
+            // 「poor」 — 골드 90(메모리에서만): 값 60 칸은 금색 · 120 칸은 빨강으로 같이 찍힌다
+            if (state.Contains("poor"))
+            {
+                var data = player.GetType().GetField("_data", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(player);
+                data?.GetType().GetField("gold")?.SetValue(data, 90);
+            }
             lobby.OpenGrowth(key);
             if (state.Contains("scroll") && GameObject.Find("GrwBody") is GameObject body && body.TryGetComponent<ScrollRect>(out var sr))
                 sr.verticalNormalizedPosition = 0f;

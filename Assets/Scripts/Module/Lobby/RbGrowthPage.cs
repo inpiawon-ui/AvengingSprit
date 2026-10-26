@@ -215,7 +215,6 @@ namespace Game.Module.Lobby
         private void RefreshStats(int m)
         {
             bool locked = m < 1;
-            int cap = _player.HostStatCap(_key);
             for (int i = 0; i < _tiles.Count; i++)
             {
                 var t = _tiles[i];
@@ -225,7 +224,6 @@ namespace Game.Module.Lobby
                 bool max = !locked && cost <= 0;
                 bool poor = !locked && !max && _player.Gold < cost;
                 TextIn(t, "GrwStatName", Localize.Get($"ui.stat.{StatKeys[(int)stat]}"));
-                TextIn(t, "GrwStatLv", $"Lv {lv}/{cap}");
                 TextIn(t, "GrwStatValue", max || locked ? Pct(stat, lv)
                                           : $"{Pct(stat, lv)}<size=70%> › </size><color={NextColor}>{Pct(stat, lv + 1)}</color>");
                 if (t.GetComponent<Image>() is Image bg) bg.sprite = max ? _tileMax : poor ? _tilePoor : _tileNormal;
@@ -234,7 +232,7 @@ namespace Game.Module.Lobby
                 if (buy != null && buy.GetComponent<Button>() is Button b) b.interactable = !locked;
                 TextIn(t, "GrwStatBuyCost", locked ? Localize.Get("ui.growth.locked") : cost.ToString("N0"));
                 if (_ui.Find(t, "GrwStatBuyCost")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI ct)
-                    ct.color = poor ? new Color(1f, 0.35f, 0.35f) : Color.white;
+                    ct.color = poor ? new Color(1f, 0.35f, 0.35f) : new Color(1f, 0.79f, 0.24f);   // 모자람 빨강 · 평소 금색
                 _ui.Find(t, "GrwStatBuyCoin")?.gameObject.SetActive(!locked);
             }
         }
