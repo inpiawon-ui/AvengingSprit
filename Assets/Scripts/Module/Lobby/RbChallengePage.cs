@@ -26,6 +26,7 @@ namespace Game.Module.Lobby
 
         private static readonly string[] DayKeys = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
         private const int Ladder = 5;
+        private const int NightLineup = 5;   // 밤 배너에 세우는 그날 몸 수(빌더 RbChallengeBuilder.NightLineup 과 같다)
         private static readonly Color Cyan = new(0.24f, 0.90f, 1f), Dim = new(0.70f, 0.74f, 0.84f);
 
         private UIBinder _ui;
@@ -165,8 +166,32 @@ namespace Game.Module.Lobby
             _ui.SetActive(node + "Bar", hasEntry);
             _ui.SetActive(node + "Cost", hasEntry);
             _ui.SetActive(node + "Ticket", hasEntry);
-            if (_ui.Get<TextMeshProUGUI>(node + "Text") is TextMeshProUGUI t) t.alignment = hasEntry ? TextAlignmentOptions.Right : TextAlignmentOptions.Center;
-            if (!hasEntry && _ui.Find(node + "Text") is RectTransform rt) { rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero; }
+            if (_ui.Get<TextMeshProUGUI>(node + "Text") is not TextMeshProUGUI t) return;
+            var tr = t.rectTransform;
+            t.alignment = TextAlignmentOptions.Center;
+            if (!hasEntry)
+            {
+                tr.anchoredPosition = new Vector2(0f, tr.anchoredPosition.y);
+                tr.sizeDelta = new Vector2(((RectTransform)tr.parent).rect.width - 40f, tr.sizeDelta.y);
+                return;
+            }
+            // 「글자 | 🎫1」 넷을 한 묶음으로 버튼 가운데에(PD 2026-10-26 「내용이 왜 오른쪽에 쏠려 있어」) — 글자 폭을 재서 놓는다
+            var bar = _ui.Find(node + "Bar") as RectTransform;
+            var ticket = _ui.Find(node + "Ticket") as RectTransform;
+            var cost = _ui.Get<TextMeshProUGUI>(node + "Cost");
+            if (bar == null || ticket == null || cost == null) return;
+            const float gap = 18f;
+            float tw = t.GetPreferredValues(t.text).x, cw = cost.GetPreferredValues(cost.text).x;
+            float bw = bar.sizeDelta.x, iw = ticket.sizeDelta.x;
+            float total = tw + gap + bw + gap + iw + 4f + cw;
+            float x = -total * 0.5f;
+            tr.sizeDelta = new Vector2(tw + 4f, tr.sizeDelta.y);
+            tr.anchoredPosition = new Vector2(x + tw * 0.5f, tr.anchoredPosition.y); x += tw + gap;
+            bar.anchoredPosition = new Vector2(x + bw * 0.5f, bar.anchoredPosition.y); x += bw + gap;
+            ticket.anchoredPosition = new Vector2(x + iw * 0.5f, ticket.anchoredPosition.y); x += iw + 4f;
+            var cr = cost.rectTransform;
+            cr.sizeDelta = new Vector2(cw + 4f, cr.sizeDelta.y);
+            cr.anchoredPosition = new Vector2(x + cw * 0.5f, cr.anchoredPosition.y);
         }
 
         /// <summary>「소탕 조건 확인」 — 이번 주 깬 층에 따라 받는 소탕 보상 단계(표) · 지금 단계.</summary>
@@ -250,6 +275,18 @@ namespace Game.Module.Lobby
             // 「◆」 는 작은 청록 마름모(시안)
             if (_ui.Get<TextMeshProUGUI>("ChlNightRewardTitle") is TextMeshProUGUI rt)
                 rt.text = Localize.Get("ui.rb.chl.today_reward").Replace("◆", "<size=60%><color=#3EE6FF>◆</color></size>");
+            // 배너 — 그날 몸으로 나오는 호스트 줄(요일마다 바뀐다 · PD 2026-10-26 「요일별로 이미지가 안 바뀐다 · 가운데가 비었다」)
+            var dayHosts = NightEntryPanel.DayHosts(table, _day);
+            for (int i = 0; i < NightLineup; i++)
+            {
+                if (_ui.Get<Image>($"ChlNightHost{i}") is not Image hi) continue;
+                bool on = i < dayHosts.Count;
+                hi.gameObject.SetActive(on);
+                if (!on) continue;
+                if (!hi.TryGetComponent<UnitShowcase>(out var show)) show = hi.gameObject.AddComponent<UnitShowcase>();
+                show.SetShadow(true);
+                show.Show(dayHosts[i]);
+            }
             int best = _progress.NightBest(_day);
             _ui.SetText("ChlNightGoldValue", _progress.NightGold(best).ToString("N0"));
             _ui.SetText("ChlNightShardValue", (best / Mathf.Max(1, perKills)).ToString("N0"));

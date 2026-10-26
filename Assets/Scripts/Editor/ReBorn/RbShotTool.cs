@@ -50,6 +50,11 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "challenge", "challenge_16x9"),
             (720, 1280, Language.Korean, "challenge:tower", "tower_16x9"),
             (720, 1280, Language.Korean, "challenge:night", "night_16x9"),
+            (720, 1280, Language.Korean, "challenge:night:d3", "night_d3_16x9"),
+            (1080, 2400, Language.Korean, "challenge:night", "night_20x9"),
+            (768, 1024, Language.Korean, "challenge:night", "night_4x3"),
+            (1080, 2400, Language.Korean, "challenge:tower", "tower_20x9"),
+            (768, 1024, Language.Korean, "challenge:tower", "tower_4x3"),
             (1080, 2400, Language.Korean, "challenge", "challenge_20x9"),
             (720, 1280, Language.English, "challenge:tower", "tower_en"),
             (720, 1280, Language.Japanese, "challenge:night", "night_ja"),
@@ -642,7 +647,14 @@ namespace Game.Editor.ReBorn
                 var chl = Object.FindAnyObjectByType<RbChallengePage>();
                 if (chl == null || state == "challenge") return;
                 const System.Reflection.BindingFlags F3 = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-                typeof(RbChallengePage).GetMethod("Show", F3)?.Invoke(chl, new object[] { state.EndsWith("tower") ? "ChlTower" : "ChlNight" });
+                typeof(RbChallengePage).GetMethod("Show", F3)?.Invoke(chl, new object[] { state.Contains("tower") ? "ChlTower" : "ChlNight" });
+                // 「challenge:night:d3」 — 그 요일(0 월 … 6 일)로 바꿔 찍는다(배너 몸 줄이 요일마다 바뀌는지)
+                int dAt = state.IndexOf(":d", System.StringComparison.Ordinal);
+                if (dAt > 0 && int.TryParse(state.Substring(dAt + 2), out int dd))
+                {
+                    typeof(RbChallengePage).GetField("_day", F3)?.SetValue(chl, dd);
+                    typeof(RbChallengePage).GetMethod("FillNight", F3)?.Invoke(chl, null);
+                }
                 return;
             }
             if (state.StartsWith("shop:"))

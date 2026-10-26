@@ -95,35 +95,35 @@ namespace Game.Editor.ReBorn
 
         private static void BuildTower(RectTransform page)
         {
-            // 시안 tower(1080 기준, 탑 판 위 변 = 430) — 탑 그림 판 위에 다섯 층(이번 5층 묶음) · 아래 판에 보상 · 버튼 · 오늘의 소탕
-            var body = Group(page, "ChlTower", "ui.tower.title", "망령의 탑", 1990 - Top, true);
-            var ladder = PlaceIn(Node(body, "ChlLadder"), Top, 29, 430, 1047, 1192);
+            // 시안 tower(1080 기준) — 탑 그림 판 위에 다섯 층(이번 5층 묶음) · 아래 판에 보상 · 버튼 · 오늘의 소탕.
+            // 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게 — PD 2026-10-26 「층마다 벌려 놓지 말고 · 스크롤 될 필요 없다」.
+            // 층 줄은 시안처럼 거의 붙여(높이 100 · 사이 10)
+            var body = Group(page, "ChlTower", "ui.tower.title", "망령의 탑", 1620 - Top, true);
+            var ladder = PlaceIn(Node(body, "ChlLadder"), Top, 29, 430, 1047, 1004);
             Img(ladder, "Components/rb_panel_base");
             ArtCard(ladder, "ChlLadder", "Art/rb_art_bg_tower_column", AspectOf("Art/rb_art_bg_tower_column"));
-            float[] ys = { 454, 600, 746, 892, 1038 };
             for (int i = 0; i < 5; i++)
             {
-                float y0 = ys[i], y1 = y0 + 124;
-                // 줄 그림은 모두 같은 판(rb_list_row) — 「현재 도전」 판(rb_list_row_selected)은 왼쪽 청록 막대가 층 글자를 덮었다(PD 2026-10-26)
+                float y0 = 452 + i * 110f, y1 = y0 + 100;
                 var row = PlaceIn(Node(body, $"ChlFloor{i}"), Top, 55, y0, 1024, y1);
                 Img(row, "Components/rb_list_row");
-                Text(Local(Node(row, $"ChlFloor{i}No"), 55, y0, 1024, y1, 82, y0 + 30, 300, y0 + 94), null, "5F", 54, White, TA.Left, number: true);
-                Img(Local(Node(row, $"ChlFloor{i}Lock"), 55, y0, 1024, y1, 862, y0 + 40, 902, y0 + 80), "Icons/rb_icon_sys_lock_48");
-                Text(Local(Node(row, $"ChlFloor{i}State"), 55, y0, 1024, y1, 600, y0 + 34, 994, y0 + 90), null, "잠김", 40, Dim, TA.Right, heavy: true);
+                Text(Local(Node(row, $"ChlFloor{i}No"), 55, y0, 1024, y1, 82, y0 + 20, 300, y0 + 80), null, "5F", 52, White, TA.Left, number: true);
+                Img(Local(Node(row, $"ChlFloor{i}Lock"), 55, y0, 1024, y1, 862, y0 + 30, 902, y0 + 70), "Icons/rb_icon_sys_lock_48");
+                Text(Local(Node(row, $"ChlFloor{i}State"), 55, y0, 1024, y1, 600, y0 + 24, 994, y0 + 76), null, "잠김", 40, Dim, TA.Right, heavy: true);
             }
-            Img(PlaceIn(Node(body, "ChlTowerPanel"), Top, 29, 1216, 1047, 1957), "Components/rb_panel_base");
-            Text(PlaceIn(Node(body, "ChlFloorTitle"), Top, 55, 1238, 730, 1298), null, "2층", 54, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlFloorDesc"), Top, 55, 1310, 740, 1352), "ui.tower.first_clear", "첫 클리어 보상 (매주 다시)", 34, Dim, TA.Left);
-            var buy = Button2(body, "ChlTowerBuy", "ui.rb.chl.buy", "추가 입장 ›", 750, 1240, 1020, 1350, false, 38);
+            Img(PlaceIn(Node(body, "ChlTowerPanel"), Top, 29, 1022, 1047, 1610), "Components/rb_panel_base");
+            Text(PlaceIn(Node(body, "ChlFloorTitle"), Top, 55, 1040, 730, 1098), null, "2층", 54, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlFloorDesc"), Top, 55, 1104, 740, 1144), "ui.tower.first_clear", "첫 클리어 보상 (매주 다시)", 34, Dim, TA.Left);
+            var buy = Button2(body, "ChlTowerBuy", "ui.rb.chl.buy", "추가 입장 ›", 750, 1042, 1020, 1142, false, 38);
             buy.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = Cyan;   // 시안: 청록 글자
-            Reward(body, "ChlReward", 1393, 1557);
-            Button2(body, "ChlTowerFit", "ui.rb.chl.sweep_rule", "소탕 조건 확인", 55, 1584, 527, 1717, false, 40);
-            StartButton(body, "ChlTowerStart", "도전", 552, 1584, 1024, 1717);
+            Reward(body, "ChlReward", 1164, 1314);
+            Button2(body, "ChlTowerFit", "ui.rb.chl.sweep_rule", "소탕 조건 확인", 55, 1334, 527, 1450, false, 40);
+            StartButton(body, "ChlTowerStart", "도전", 552, 1334, 1024, 1450);
             // 버튼 줄과 오늘의 소탕 사이 가는 줄(시안 #1D2331 · 두께 2 — 코덱스 납품 rb_divider_line)
-            if (KitSprite("Components/rb_divider_line") != null) Img(PlaceIn(Node(body, "ChlSweepLine"), Top, 55, 1733, 1024, 1741), "Components/rb_divider_line").preserveAspect = false;
-            Text(PlaceIn(Node(body, "ChlSweepTitle"), Top, 55, 1760, 760, 1812), "ui.tower.sweep", "오늘의 소탕", 44, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlSweepInfo"), Top, 55, 1822, 770, 1868), null, "하루 1번 · 입장 횟수를 쓰지 않는다", 32, Dim, TA.Left);
-            Button2(body, "ChlTowerSweep", null, "소탕", 790, 1756, 1024, 1871, false, 40);
+            if (KitSprite("Components/rb_divider_line") != null) Img(PlaceIn(Node(body, "ChlSweepLine"), Top, 55, 1466, 1024, 1474), "Components/rb_divider_line").preserveAspect = false;
+            Text(PlaceIn(Node(body, "ChlSweepTitle"), Top, 55, 1490, 760, 1540), "ui.tower.sweep", "오늘의 소탕", 44, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlSweepInfo"), Top, 55, 1546, 770, 1590), null, "하루 1번 · 입장 횟수를 쓰지 않는다", 32, Dim, TA.Left);
+            Button2(body, "ChlTowerSweep", null, "소탕", 790, 1490, 1024, 1592, false, 40);
             buy.transform.SetAsLastSibling();
         }
 
@@ -149,50 +149,61 @@ namespace Game.Editor.ReBorn
 
         private static void BuildNight(RectTransform page)
         {
-            // 시안 night(1080 기준, 요일 줄 위 변 = 430) — PD 2026-10-26 「버튼 크기 · 오늘 보상 표현 · 시작 모두 시안과 똑같이」
-            var body = Group(page, "ChlNight", "ui.night.title", "망령의 밤", 1990 - Top, true);
-            // 요일 7칸 — 폭을 꽉 채우는 네모 버튼(141 × 137, 사이 5) · 고른 날은 청록 글자
+            // 시안 night(1080 기준) — 16:9 한 화면(아래 탭 위 ≈ 1880)에 다 들게, 시작 버튼은 판 바로 아래
+            // (PD 2026-10-26 「시작 버튼 좀 올리고 · 스크롤 될 필요 없다 · 여백에 맞춰 버튼 크기」)
+            var body = Group(page, "ChlNight", "ui.night.title", "망령의 밤", 1600 - Top, true);
+            // 요일 7칸 — 폭을 꽉 채우는 네모 버튼(141 × 120, 사이 5) · 시안처럼 일곱 칸 다 흰 글자
             for (int i = 0; i < 7; i++)
             {
                 float x0 = 29 + i * 146f, x1 = x0 + 141f;
-                var d = PlaceIn(Node(body, $"ChlDay{i}"), Top, x0, 430, x1, 567);
+                var d = PlaceIn(Node(body, $"ChlDay{i}"), Top, x0, 430, x1, 550);
                 Btn(d, "Components/rb_btn_secondary");
-                Text(Stretch(Node(d, $"ChlDay{i}Text")), null, "월", 44, Dim, TA.Center, heavy: true);
+                Text(Stretch(Node(d, $"ChlDay{i}Text")), null, "월", 44, White, TA.Center, heavy: true);
             }
-            // 배너 — 판 폭 전체에 그림을 덮어 깐다
-            var art = PlaceIn(Node(body, "ChlNightArt"), Top, 29, 604, 1047, 902);
+            // 배너 — 판 폭 전체 밤거리 그림(rb_art_key_challenge_night — rb_art_key_night 는 왼쪽 절반이 빈 그림이었다) +
+            // 그날 몸으로 나오는 호스트 줄(요일마다 바뀐다 — 화면 스크립트가 UnitShowcase 로 세운다)
+            const float ax0 = 29, ay0 = 568, ax1 = 1047, ay1 = 812;
+            var art = PlaceIn(Node(body, "ChlNightArt"), Top, ax0, ay0, ax1, ay1);
             Img(art, "Components/rb_panel_base");
-            ArtCard(art, "ChlNightArt", "Art/rb_art_key_night", AspectOf("Art/rb_art_key_night"));
+            ArtCard(art, "ChlNightArt", "Art/rb_art_key_challenge_night", AspectOf("Art/rb_art_key_challenge_night"));
+            var clip = art.Find("ChlNightArtClip") as RectTransform;
+            for (int i = 0; i < NightLineup; i++)
+            {
+                // 왼쪽 ~ 가운데에 몸 다섯(오른쪽은 그림의 망령) · 발은 배너 아래에서 14 위
+                float cx = 120 + i * 128f;
+                Img(Local(Node(clip, $"ChlNightHost{i}"), ax0, ay0, ax1, ay1, cx - 62, ay0 + 40, cx + 62, ay1 - 14), "Art/rb_art_mascot_ghost_happy");
+            }
             // 정보 판 — 요일 · 최고 처치 · 남은 입장 · ◆ 오늘의 보상(두 칸) · 규칙 · 보상 줄
-            const float px0 = 29, py0 = 927, px1 = 1047, py1 = 1615;
+            const float px0 = 29, py0 = 830, px1 = 1047, py1 = 1424;
             Img(PlaceIn(Node(body, "ChlNightPanel"), Top, px0, py0, px1, py1), "Components/rb_panel_base");
-            Text(PlaceIn(Node(body, "ChlNightDayTitle"), Top, 55, 955, 1020, 1020), null, "목 · 파워의 날", 56, White, TA.Left, heavy: true);
-            Text(PlaceIn(Node(body, "ChlNightBest"), Top, 55, 1052, 640, 1096), null, "목요일 최고 처치 128", 36, White, TA.Left);
-            Text(PlaceIn(Node(body, "ChlNightLeft"), Top, 640, 1052, 1020, 1096), null, "남은 입장 2/3", 36, White, TA.Right);
-            Text(PlaceIn(Node(body, "ChlNightRewardTitle"), Top, 55, 1124, 700, 1174), "ui.rb.chl.today_reward", "◆ 오늘의 보상", 44, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlNightDayTitle"), Top, 55, 848, 1020, 908), null, "목 · 파워의 날", 56, White, TA.Left, heavy: true);
+            Text(PlaceIn(Node(body, "ChlNightBest"), Top, 55, 920, 640, 962), null, "목요일 최고 처치 128", 36, White, TA.Left);
+            Text(PlaceIn(Node(body, "ChlNightLeft"), Top, 640, 920, 1020, 962), null, "남은 입장 2/3", 36, White, TA.Right);
+            Text(PlaceIn(Node(body, "ChlNightRewardTitle"), Top, 55, 980, 700, 1028), "ui.rb.chl.today_reward", "◆ 오늘의 보상", 44, White, TA.Left, heavy: true);
             // 시안 night 그대로 — ① 금화 · 골드(처치 수만큼, PD 2026-10-26) ② 「?」 조각 · 호스트 조각. 값은 그 요일 최고 처치 기준 예상
-            NightCell(body, "ChlNightGold", 55, 527, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
-            NightCell(body, "ChlNightShard", 552, 1020, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
-            var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1465, 1020, 1510), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
+            NightCell(body, "ChlNightGold", 55, 527, 1044, 1264, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
+            NightCell(body, "ChlNightShard", 552, 1020, 1044, 1264, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
+            var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1282, 1020, 1324), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
             rule.enableWordWrapping = true;
-            Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1540, 1020, 1590), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
-            // 시작 — 노란 큰 버튼 「시작 ▶ | 입장 1」(시안 1825~1975)
-            StartButton(body, "ChlNightStart", "시작 ▶", 29, 1825, 1047, 1975);
+            Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1340, 1020, 1390), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
+            // 시작 — 판과 같은 여백(29 ~ 1047)의 노란 큰 버튼 「시작 ▶ | 🎫1」 · 판 바로 아래
+            StartButton(body, "ChlNightStart", "시작 ▶", 29, 1446, 1047, 1586);
         }
 
+        private const int NightLineup = 5;
+
         /// <summary>오늘의 보상 칸 — 테두리 칸 · 아이콘(위) · 큰 숫자 · 이름(아래). 시안 night 의 「432 골드」 · 「3 호스트 조각」 칸.</summary>
-        private static void NightCell(RectTransform body, string p, float x0, float x1, string frame, string icon, bool question,
+        private static void NightCell(RectTransform body, string p, float x0, float x1, float y0, float y1, string frame, string icon, bool question,
                                       string value, string key, string label)
         {
-            const float y0 = 1201, y1 = 1445;
             var c = PlaceIn(Node(body, p + "Tile"), Top, x0, y0, x1, y1);
             Img(c, frame).pixelsPerUnitMultiplier = CellPpu;
             float cx = (x0 + x1) * 0.5f;
-            var ic = Local(Node(c, p + "Icon"), x0, y0, x1, y1, cx - 50, y0 + 14, cx + 50, y0 + 114);
+            var ic = Local(Node(c, p + "Icon"), x0, y0, x1, y1, cx - 46, y0 + 12, cx + 46, y0 + 104);
             Img(ic, icon);
-            if (question) Question(ic, cx - 50, y0 + 14, cx + 50, y0 + 114);
-            Text(Local(Node(c, p + "Value"), x0, y0, x1, y1, x0 + 10, y0 + 118, x1 - 10, y0 + 176), null, value, 56, White, TA.Center, number: true);
-            Text(Local(Node(c, p + "Label"), x0, y0, x1, y1, x0 + 10, y0 + 178, x1 - 10, y0 + 226), key, label, 38, White, TA.Center, heavy: true);
+            if (question) Question(ic, cx - 46, y0 + 12, cx + 46, y0 + 104);
+            Text(Local(Node(c, p + "Value"), x0, y0, x1, y1, x0 + 10, y0 + 106, x1 - 10, y0 + 160), null, value, 56, White, TA.Center, number: true);
+            Text(Local(Node(c, p + "Label"), x0, y0, x1, y1, x0 + 10, y0 + 162, x1 - 10, y0 + 208), key, label, 38, White, TA.Center, heavy: true);
         }
 
         // 시안 칸 판 — 짙은 남색 · 얇은 금갈색 / 청록 테(코덱스 납품 rb_cell_line_*). 아직 없으면 남색 판
@@ -209,18 +220,19 @@ namespace Game.Editor.ReBorn
                  null, "?", h * 0.30f, White, TA.Center, heavy: true);
         }
 
-        /// <summary>도전 · 시작 노란 버튼 — 글자 · 칸막이 · 「입장 1」(시안의 「▶ | 🎫1」). 「1」 은 입장 1번을 쓴다는 뜻.</summary>
+        /// <summary>
+        /// 도전 · 시작 노란 버튼 「글자 | 🎫1」 — 글자 · 가는 칸막이 · 입장표 아이콘(rb_icon_summon_ticket) · 「1」(입장 1번).
+        /// 넷을 한 묶음으로 버튼 가운데에 — 글자 폭이 언어마다 달라 화면 스크립트(RbChallengePage.StartLabel)가 재서 놓는다.
+        /// </summary>
         private static void StartButton(RectTransform body, string name, string korean, float x0, float y0, float x1, float y1)
         {
             var b = PlaceIn(Node(body, name), Top, x0, y0, x1, y1);
             Btn(b, "Components/rb_btn_primary");
-            float cx = (x0 + x1) * 0.5f;
-            // 시안: 「시작 ▶ | 🎫1」 — 글자 · 가는 칸막이 · 입장표 아이콘(rb_icon_summon_ticket) · 「1」
-            float h = y1 - y0;
-            Text(Local(Node(b, name + "Text"), x0, y0, x1, y1, x0 + 20, y0 + 10, cx + 30, y1 - 18), null, korean, 58, Ink, TA.Right, heavy: true);
+            float cx = (x0 + x1) * 0.5f, h = y1 - y0;
+            Text(Local(Node(b, name + "Text"), x0, y0, x1, y1, cx - 200, y0 + 10, cx + 40, y1 - 18), null, korean, 58, Ink, TA.Center, heavy: true);
             Img(Local(Node(b, name + "Bar"), x0, y0, x1, y1, cx + 50, y0 + h * 0.26f, cx + 53, y1 - h * 0.30f), "Components/rb_bar_fill_cyan").color = new Color(0.55f, 0.36f, 0.05f, 0.7f);
-            Img(Local(Node(b, name + "Ticket"), x0, y0, x1, y1, cx + 72, y0 + h * 0.5f - 34, cx + 152, y0 + h * 0.5f + 30), "Icons/rb_icon_summon_ticket_96");
-            Text(Local(Node(b, name + "Cost"), x0, y0, x1, y1, cx + 156, y0 + 10, cx + 230, y1 - 18), null, "1", 64, Ink, TA.Left, number: true);
+            Img(Local(Node(b, name + "Ticket"), x0, y0, x1, y1, cx + 72, y0 + h * 0.5f - 32, cx + 152, y0 + h * 0.5f + 32), "Icons/rb_icon_summon_ticket_96");
+            Text(Local(Node(b, name + "Cost"), x0, y0, x1, y1, cx + 156, y0 + 10, cx + 230, y1 - 18), null, "1", 64, Ink, TA.Center, number: true);
         }
     }
 }
