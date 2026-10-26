@@ -11098,3 +11098,27 @@ MonoBehaviour:
     _en: "Favored \u25B2"
     _zhHant: "\u6709\u5229 \u25B2"
     _zhHans: "\u6709\u5229 \u25B2"
+  - _key: ui.rb.notice.first_bonus
+    _ko: "\uCCAB \uAD6C\uB9E4 \uBCF4\uB108\uC2A4 {0}"
+    _ja: "\u521D\u56DE\u8CFC\u5165\u30DC\u30FC\u30CA\u30B9 {0}"
+    _en: First-buy bonus {0}
+    _zhHant: "\u9996\u8CFC\u52A0\u8D08 {0}"
+    _zhHans: "\u9996\u8D2D\u52A0\u8D60 {0}"
+  - _key: ui.rb.shop.odds_gold
+    _ko: "\uACE8\uB4DC {0} ~ {1}"
+    _ja: "\u30B4\u30FC\u30EB\u30C9 {0}\uFF5E{1}"
+    _en: Gold {0} - {1}
+    _zhHant: "\u91D1\u5E63 {0}\uFF5E{1}"
+    _zhHans: "\u91D1\u5E01 {0}\uFF5E{1}"
+  - _key: ui.rb.shop.odds_shard
+    _ko: "\uD638\uC2A4\uD2B8 \uC870\uAC01 {0} ~ {1}\uAC1C ({2} ~ {3}\uBA85)"
+    _ja: "\u30DB\u30B9\u30C8\u306E\u304B\u3051\u3089 {0}\uFF5E{1}\u500B\uFF08{2}\uFF5E{3}\u4EBA\uFF09"
+    _en: Host shards {0} - {1} ({2} - {3} hosts)
+    _zhHant: "\u5BBF\u4E3B\u788E\u7247 {0}\uFF5E{1} \u500B\uFF08{2}\uFF5E{3} \u540D\uFF09"
+    _zhHans: "\u5BBF\u4E3B\u788E\u7247 {0}\uFF5E{1} \u4E2A\uFF08{2}\uFF5E{3} \u540D\uFF09"
+  - _key: ui.rb.shop.odds_grade
+    _ko: "\uC870\uAC01\uC774 \uB098\uC624\uB294 \uD638\uC2A4\uD2B8 \uB4F1\uAE09"
+    _ja: "\u304B\u3051\u3089\u304C\u51FA\u308B\u30DB\u30B9\u30C8\u306E\u7B49\u7D1A"
+    _en: Shard host rarity
+    _zhHant: "\u788E\u7247\u5BBF\u4E3B\u7B49\u7D1A\u6A5F\u7387"
+    _zhHans: "\u788E\u7247\u5BBF\u4E3B\u7B49\u7EA7\u6982\u7387"

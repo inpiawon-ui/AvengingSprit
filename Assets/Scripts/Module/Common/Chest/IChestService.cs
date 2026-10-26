@@ -59,6 +59,9 @@ namespace Game.Module.Common.Chest
         /// <summary>그 등급 상자의 골드 범위(챕터 창 「클리어 보상」 표시용). 표에 없으면 (0, 0).</summary>
         (int min, int max) GoldRange(string chestKey);
 
+        /// <summary>그 등급 상자의 표 줄(골드 · 조각 범위 · 등급 무게) — 상점 「확률 보기」. 표에 없으면 null.</summary>
+        ChestEntry Entry(string chestKey);
+
         /// <summary>
         /// 챕터 클리어 보상(PD 2026-10-17 「상자 대신 만난 호스트 조각 + 골드」) — 그 챕터 등급 상자의 골드 · 조각 총량을
         /// **이번 판에서 만난 호스트**에게 나눠 바로 지급한다. 만난 몸이 없으면 예전 상자처럼 고를 수 있는 몸에서 뽑는다.

@@ -67,6 +67,9 @@ namespace Game.Module.Common.Store
         /// <summary>젬 묶음 첫 구매 2배가 남았나.</summary>
         bool IsFirstDouble(StoreProduct p);
 
+        /// <summary>「goldrun:1」 한 판 몫의 골드(연 가장 높은 챕터 기준) — 화면이 「골드 한 줌 = 골드 3,000」 처럼 실제 양을 보인다.</summary>
+        int GoldRunUnit { get; }
+
         UniTask<(PurchaseOutcome outcome, RewardResult result)> BuyAsync(string productId, CancellationToken ct = default);
 
         CardState Card(string cardKey);
@@ -208,6 +211,8 @@ namespace Game.Module.Common.Store
 
         public bool IsFirstDouble(StoreProduct s)
             => s.Badge == "first_double" && Player != null && Array.IndexOf(Player.Store.firstDoubleUsed, s.Id) < 0;
+
+        public int GoldRunUnit => Player != null ? RunGold(Player) : 0;
 
         public string PriceLabel(StoreProduct s)
         {

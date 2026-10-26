@@ -19,7 +19,7 @@ namespace Game.Module.Lobby
     {
         private const int RewardCells = 4;
         private const float CellPitch = 132f, CellWidth = 120f, CellsCenter = 360f;
-        private static readonly string[] Panels = { "RbNotConfirm", "RbNotOptions", "RbNotShort", "RbNotGold", "RbNotReward" };
+        private static readonly string[] Panels = { "RbNotInfo", "RbNotConfirm", "RbNotOptions", "RbNotShort", "RbNotGold", "RbNotReward" };
         private static readonly Color Ink = new(0.16f, 0.11f, 0.03f), Dim = new(0.70f, 0.74f, 0.84f);
 
         /// <summary>키트 아이콘(rb_icon_*_96) — 보상 · 재화 그림을 이름으로 찾는다.</summary>
@@ -50,6 +50,8 @@ namespace Game.Module.Lobby
             _ui.OnClick("NotConfirmNo", () => Close("RbNotConfirm"));
             _ui.OnClick("NotConfirmYes", () => { Close("RbNotConfirm"); _onYes?.Invoke(); });
             _ui.OnClick("NotOptionsClose", () => Close("RbNotOptions"));
+            _ui.OnClick("NotInfoClose", () => Close("RbNotInfo"));
+            _ui.OnClick("NotInfoOk", () => Close("RbNotInfo"));
             for (int i = 0; i < 2; i++)
             {
                 int k = i;
@@ -212,6 +214,20 @@ namespace Game.Module.Lobby
             _ui.SetText("NotConfirmPrice", price);
             _ui.SetText("NotConfirmNote", note ?? string.Empty);
             Open("RbNotConfirm");
+        }
+
+        /// <summary>안내 창 — 아이콘 · 이름 · 여러 줄 본문 · 확인(상점 상자 확률 보기).</summary>
+        public void ShowInfo(string iconName, string name, string body)
+        {
+            Awake();
+            if (_ui.Get<Image>("NotInfoIcon") is Image img)
+            {
+                var s = RbRewards.Find(_icons, iconName);
+                if (s != null) img.sprite = s;
+            }
+            _ui.SetText("NotInfoName", name);
+            _ui.SetText("NotInfoBody", body);
+            Open("RbNotInfo");
         }
 
         /// <summary>상품 고르기(둘까지) — 패스 프리미엄 · 프리미엄 + 단계. 누르면 그 상품의 onBuy.</summary>

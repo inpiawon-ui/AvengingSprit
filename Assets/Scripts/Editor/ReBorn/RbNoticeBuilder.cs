@@ -28,7 +28,8 @@ namespace Game.Editor.ReBorn
             BuildGold(root);
             BuildConfirm(root);
             BuildOptions(root);
-            foreach (var n in new[] { "RbNotReward", "RbNotShort", "RbNotGold", "RbNotConfirm", "RbNotOptions" }) root.Find(n)?.gameObject.SetActive(false);
+            BuildInfo(root);
+            foreach (var n in new[] { "RbNotReward", "RbNotShort", "RbNotGold", "RbNotConfirm", "RbNotOptions", "RbNotInfo" }) root.Find(n)?.gameObject.SetActive(false);
 
             var view = root.gameObject.AddComponent<RbNotice>();
             var so = new SerializedObject(view);
@@ -120,8 +121,11 @@ namespace Game.Editor.ReBorn
             Modal(root, "RbNotConfirm", "ui.rb.notice.buy_title", "구매 확인", 147f, 343f, 573f, 890f, out var c);
             Img(Corner(Node(c, "NotConfirmIcon"), 320f, 440f, 400f, 520f), "Icons/rb_icon_currency_gem_96");
             Text(Corner(Node(c, "NotConfirmName"), 170f, 554f, 550f, 592f), null, "입문 패키지 I 구매", 46, White, TA.Center, heavy: true);
-            Text(Corner(Node(c, "NotConfirmPrice"), 170f, 614f, 550f, 680f), null, "₩5,900", 84, Yellow, TA.Center, number: true);
-            var note = Text(Corner(Node(c, "NotConfirmNote"), 170f, 694f, 550f, 740f), null, "결제는 스토어 계정으로 진행됩니다", 36, Dim, TA.Center, heavy: true);
+            // 큰 줄 = 받는 것(「젬 60 + 첫 구매 보너스 60」 · 「골드 3,000」), 아래 줄 = 값(「₩1,200」 · 「젬 30」).
+            // 예전엔 큰 줄이 값이라 받는 것이 안 보였다 · 「결제는 스토어 계정으로」 · 「보유 젬」 줄은 뺐다(PD 2026-10-26)
+            var price = Text(Corner(Node(c, "NotConfirmPrice"), 170f, 600f, 550f, 690f), null, "젬 60 + 첫 구매 보너스 60", 48, Yellow, TA.Center, heavy: true);
+            price.enableWordWrapping = true;
+            var note = Text(Corner(Node(c, "NotConfirmNote"), 170f, 696f, 550f, 740f), null, "₩1,200", 40, White, TA.Center, number: true);
             note.enableWordWrapping = true;
             var no = Corner(Node(c, "NotConfirmNo"), 168f, 762f, 345f, 866f);
             Btn(no, "Components/rb_btn_secondary");
@@ -129,6 +133,20 @@ namespace Game.Editor.ReBorn
             var yes = Corner(Node(c, "NotConfirmYes"), 360f, 758f, 552f, 870f);
             Btn(yes, "Components/rb_btn_primary");
             Text(Stretch(Node(yes, "NotConfirmYesText")), "ui.rb.shop.buy", "구매", 56, Ink, TA.Center, heavy: true);
+        }
+
+        /// <summary>안내(확률 보기 등) — 아이콘 · 이름 · 여러 줄 본문 · 확인. 상점 상자 「확률 보기」(시안 shop-items)가 연다.</summary>
+        private static void BuildInfo(RectTransform root)
+        {
+            Modal(root, "RbNotInfo", "ui.store.chest.rate", "확률 보기", 100f, 330f, 620f, 990f, out var c);
+            Img(Corner(Node(c, "NotInfoIcon"), 310f, 378f, 410f, 478f), "Icons/rb_icon_reward_chest_96");
+            Text(Corner(Node(c, "NotInfoName"), 130f, 490f, 590f, 536f), null, "금 상자", 46, White, TA.Center, heavy: true);
+            var body = Text(Corner(Node(c, "NotInfoBody"), 140f, 556f, 580f, 860f), null, "골드 1,200~2,000", 36, White, TA.Top, heavy: true);
+            body.enableWordWrapping = true;
+            body.lineSpacing = 12f;
+            var ok = Corner(Node(c, "NotInfoOk"), 160f, 880f, 560f, 968f);
+            Btn(ok, "Components/rb_btn_primary");
+            Text(Stretch(Node(ok, "NotInfoOkText")), "ui.common.ok", "확인", 56, Ink, TA.Center, heavy: true);
         }
     }
 }

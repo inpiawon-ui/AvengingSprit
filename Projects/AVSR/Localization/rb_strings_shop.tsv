@@ -19,3 +19,7 @@ ui.rb.shop.r.stamina	행동력	スタミナ	Stamina	體力	体力
 ui.rb.shop.r.passxp	패스 경험치	パス経験値	Pass XP	通行證經驗	通行证经验
 ui.rb.shop.r.shard	조각	かけら	Shards	碎片	碎片
 ui.rb.shop.best	BEST	BEST	BEST	BEST	BEST
+ui.rb.notice.first_bonus	첫 구매 보너스 {0}	初回購入ボーナス {0}	First-buy bonus {0}	首購加贈 {0}	首购加赠 {0}
+ui.rb.shop.odds_gold	골드 {0} ~ {1}	ゴールド {0}～{1}	Gold {0} - {1}	金幣 {0}～{1}	金币 {0}～{1}
+ui.rb.shop.odds_shard	호스트 조각 {0} ~ {1}개 ({2} ~ {3}명)	ホストのかけら {0}～{1}個（{2}～{3}人）	Host shards {0} - {1} ({2} - {3} hosts)	宿主碎片 {0}～{1} 個（{2}～{3} 名）	宿主碎片 {0}～{1} 个（{2}～{3} 名）
+ui.rb.shop.odds_grade	조각이 나오는 호스트 등급	かけらが出るホストの等級	Shard host rarity	碎片宿主等級機率	碎片宿主等级概率

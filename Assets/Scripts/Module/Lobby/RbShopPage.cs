@@ -21,13 +21,17 @@ namespace Game.Module.Lobby
     /// </summary>
     public sealed class RbShopPage : MonoBehaviour
     {
-        [SerializeField] private Sprite _priceGem, _priceIap, _priceSold;
+        [SerializeField] private Sprite _priceGem, _priceIap, _priceSold, _pricePack;
         [SerializeField] private Sprite[] _packArts = Array.Empty<Sprite>();   // 이름으로 찾는다(rb_art_shop_*)
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();      // 이름으로 찾는다(rb_icon_*_96)
 
         private static readonly string[] Tabs = { "best", "today", "chest", "currency" };
         private const float Pad = 22f, Gap = 12f;
-        private static readonly Color TabOn = new(1f, 1f, 1f), TabOff = new(0.70f, 0.74f, 0.84f);
+        // 고른 탭은 청록 글자(호스트 도감 거르기 칩과 같다)
+        private static readonly Color TabOn = new(0.24f, 0.90f, 1f), TabOff = new(0.70f, 0.74f, 0.84f);
+        // 버튼 글자 — 값은 금색 · 패키지(노란 버튼) 위는 짙은 글자 · 구매 · 받기 · 확률 보기는 흰색 · 못 사는 것은 흐린 색
+        private static readonly Color PriceText = new(1f, 0.79f, 0.24f), InkText = new(0.16f, 0.11f, 0.03f), DimText = new(0.70f, 0.74f, 0.84f);
+        private const float CellH = 312f, ChestCellH = 404f;   // 상자 칸은 「확률 보기」 만큼 높다(시안 shop-items)
 
         private UIBinder _ui;
         private IPlayerDataService _player;
@@ -78,7 +82,6 @@ namespace Game.Module.Lobby
             if (_content == null || _player == null) return;
             for (int i = 0; i < Tabs.Length; i++)
             {
-                _ui.SetActive($"ShpTab{i}On", Tabs[i] == _tab);
                 if (_ui.Get<TextMeshProUGUI>($"ShpTab{i}Text") is TextMeshProUGUI t) t.color = Tabs[i] == _tab ? TabOn : TabOff;
             }
             foreach (var list in _pool.Values) foreach (var t in list) t.gameObject.SetActive(false);
@@ -194,9 +197,10 @@ namespace Game.Module.Lobby
                 // 계약 중 — 오늘 몫 받기 / 받음(남은 날)
                 SetButton(b, state.ClaimedToday ? _priceSold : _priceIap,
                           state.ClaimedToday ? Localize.Format("ui.store.days_left", state.DaysLeft) : Localize.FromTable("ui.rb.shop.claim", "오늘 받기"),
-                          null, !state.ClaimedToday, () => Claim(store, key));
+                          null, !state.ClaimedToday, () => Claim(store, key), state.ClaimedToday ? DimText : Color.white);
             }
-            else PriceButton(c, "ShpContractBuy", store, p);
+            // 시안: 계약은 값 대신 「구매」 — 값은 구매 확인 창에서 보인다
+            else SetButton(b, _priceIap, Localize.FromTable("ui.rb.shop.buy", "구매"), null, true, () => Confirm(store, p), Color.white);
         }
 
         // ── 상자 · 재화 — 3칸 줄 ─────────────────────────────────
@@ -213,12 +217,21 @@ namespace Game.Module.Lobby
             {
                 var c = Take("ShpCellTpl");
                 var rt = (RectTransform)c;
+                var p = items[i];
+                bool chest = p.Kind == "chest";
+                rt.sizeDelta = new Vector2(rt.sizeDelta.x, chest ? ChestCellH : CellH);
                 At(c, Pad + (rt.sizeDelta.x + Gap) * (i % 3), _y + (rt.sizeDelta.y + Gap) * (i / 3));
                 h = rt.sizeDelta.y;
-                var p = items[i];
                 var lines = Parse(p.Rewards);
                 SetImage(c, "ShpCellIcon", lines.Count > 0 ? IconOf(lines[0].kind, lines[0].key) : null);
-                TextIn(c, "ShpCellName", Localize.Get(p.NameKey));
+                // 재화는 이름 대신 실제 양(「골드 한 줌」 이 얼만지 안 보였다 — PD 2026-10-26). 상자는 이름
+                TextIn(c, "ShpCellName", tab == "currency" ? Contents(store, p, false) : Localize.Get(p.NameKey));
+                var odds = _ui.Find(c, "ShpCellOdds");
+                if (odds != null)
+                {
+                    odds.gameObject.SetActive(chest);
+                    if (chest) SetButton(odds, _priceIap, Localize.FromTable("ui.store.chest.rate", "확률 보기"), null, true, () => ShowOdds(p), Color.white);
+                }
                 int left = store.LeftCount(p, out int max);
                 TextIn(c, "ShpCellSub", store.IsFirstDouble(p) ? $"<color=#FFC93D>{Localize.Get("ui.store.first_double")}</color>"
                                         : left >= 0 ? Localize.Format("ui.store.today_count", max - left, max) : string.Empty);
@@ -242,6 +255,8 @@ namespace Game.Module.Lobby
                 var s = daily.Get(i);
                 var c = Take("ShpCellTpl");
                 var rt = (RectTransform)c;
+                rt.sizeDelta = new Vector2(rt.sizeDelta.x, CellH);
+                _ui.Find(c, "ShpCellOdds")?.gameObject.SetActive(false);
                 At(c, Pad + (rt.sizeDelta.x + Gap) * (i % 3), _y + (rt.sizeDelta.y + Gap) * (i / 3));
                 h = rt.sizeDelta.y;
                 var host = s.IsShard ? _player.GetHost(s.Key) : null;
@@ -253,8 +268,8 @@ namespace Game.Module.Lobby
                 TextIn(c, "ShpCellSub", s.IsShard ? Localize.FromTable("ui.rb.summon.card_shards", "조각 ×{0}").Replace("{0}", s.Count.ToString()) : string.Empty);
                 int slot = i;
                 var b = _ui.Find(c, "ShpCellBuy");
-                if (s.Bought) SetButton(b, _priceSold, Localize.Get("ui.shop.daily.bought"), null, false, null);
-                else if (s.Price <= 0) SetButton(b, _priceIap, Localize.Get("ui.shop.daily.free"), null, true, () => BuyDaily(daily, slot));
+                if (s.Bought) SetButton(b, _priceSold, Localize.Get("ui.shop.daily.bought"), null, false, null, DimText);
+                else if (s.Price <= 0) SetButton(b, _priceIap, Localize.Get("ui.shop.daily.free"), null, true, () => BuyDaily(daily, slot), Color.white);
                 else SetButton(b, _priceGem, s.Price.ToString("N0"),
                                Find(_icons, s.PaidWithGem ? "rb_icon_currency_gem_96" : "rb_icon_currency_gold_96"), true, () => BuyDaily(daily, slot));
             }
@@ -273,13 +288,15 @@ namespace Game.Module.Lobby
         private void PriceButton(Transform root, string node, IStoreService store, StoreProduct p)
         {
             var b = _ui.Find(root, node);
-            if (store.IsSoldOut(p)) { SetButton(b, _priceSold, Localize.Get("ui.store.sold"), null, false, null); return; }
+            if (store.IsSoldOut(p)) { SetButton(b, _priceSold, Localize.Get("ui.store.sold"), null, false, null, DimText); return; }
             bool gem = p.PriceType == "gem";
-            SetButton(b, gem ? _priceGem : _priceIap, store.PriceLabel(p), gem ? Find(_icons, "rb_icon_currency_gem_96") : null, true,
-                      () => Confirm(store, p));
+            // 패키지만 노란 큰 버튼(시안 shop) — 위 글자는 짙게
+            bool pack = p.Kind == "package";
+            SetButton(b, pack ? _pricePack : gem ? _priceGem : _priceIap, store.PriceLabel(p), gem ? Find(_icons, "rb_icon_currency_gem_96") : null, true,
+                      () => Confirm(store, p), pack ? InkText : PriceText);
         }
 
-        private void SetButton(Transform b, Sprite face, string label, Sprite icon, bool on, UnityEngine.Events.UnityAction act)
+        private void SetButton(Transform b, Sprite face, string label, Sprite icon, bool on, UnityEngine.Events.UnityAction act, Color? textColor = null)
         {
             if (b == null) return;
             if (b.GetComponent<Image>() is Image img && face != null) img.sprite = face;
@@ -292,6 +309,7 @@ namespace Game.Module.Lobby
             if (ic != null) { ic.sprite = icon; ic.gameObject.SetActive(icon != null); }
             if (t == null) return;
             t.text = label;
+            t.color = textColor ?? PriceText;
             // 아이콘이 있으면 「💎 80」 — 묶음을 버튼 가운데로
             var tr = t.rectTransform;
             float tw = t.GetPreferredValues(label).x;
@@ -306,11 +324,54 @@ namespace Game.Module.Lobby
             if (_busy) return;
             var lines = Parse(p.Rewards);
             string icon = lines.Count > 0 ? RbRewards.IconNameOf(lines[0].kind, lines[0].key) : "rb_icon_currency_gem_96";
-            string note = p.PriceType == "gem"
-                ? string.Format(Localize.FromTable("ui.rb.notice.gem_have", "보유 젬 {0:N0}"), _player.Gem)
-                : Localize.FromTable("ui.rb.notice.store_pay", "결제는 스토어 계정으로 진행됩니다");
-            _shell.Notice.ShowConfirm(icon, string.Format(Localize.FromTable("ui.rb.notice.buy_name", "{0} 구매"), Localize.Get(p.NameKey)), store.PriceLabel(p), note,
+            // 큰 줄 = 받는 것(「젬 60 + 첫 구매 보너스 60」), 아래 줄 = 값(「₩1,200」 · 「젬 30」) — PD 2026-10-26
+            // 「구매를 누르면 무엇을 받는지 설명해야지, 가격 1200 은 뭐냐 · 결제는 스토어 계정으로 · 보유 젬은 빼라」
+            string price = p.PriceType == "gem" ? $"{LabelOf("gem", null)} {store.PriceLabel(p)}" : store.PriceLabel(p);
+            _shell.Notice.ShowConfirm(icon, string.Format(Localize.FromTable("ui.rb.notice.buy_name", "{0} 구매"), Localize.Get(p.NameKey)),
+                                      Contents(store, p, true), price,
                                       () => BuyAsync(store, p.Id).Forget());   // fire-and-forget: 결과가 오면 보상 창으로
+        }
+
+        /// <summary>
+        /// 받는 것 한 줄 — 「골드 3,000」 · 「젬 300 · 소환권 10 · 골드 5,000」. 판 골드(goldrun)는 실제 양으로 바꾼다.
+        /// bonus 면 첫 구매 2배 몫을 「+ 첫 구매 보너스 60」 으로 붙인다(첫 구매는 젬을 두 배로 준다 — StoreModule.DoubleGem).
+        /// 계약(card:키)은 설명 글을 쓴다.
+        /// </summary>
+        private string Contents(IStoreService store, StoreProduct p, bool bonus)
+        {
+            if (p.Rewards.StartsWith("card:")) return Localize.Get(p.DescKey);
+            var lines = Parse(p.Rewards);
+            var sb = new System.Text.StringBuilder();
+            int gem = 0;
+            foreach (var (kind, key, amount) in lines)
+            {
+                if (sb.Length > 0) sb.Append(" · ");
+                if (kind == "chest") { sb.Append(LabelOf(kind, key)); if (amount > 1) sb.Append(" ×").Append(amount); continue; }
+                int n = kind == "goldrun" ? amount * store.GoldRunUnit : amount;
+                if (kind == "gem") gem += n;
+                sb.Append(LabelOf(kind, key)).Append(' ').Append(n.ToString("N0"));
+            }
+            if (bonus && gem > 0 && store.IsFirstDouble(p))
+                sb.Append(" + ").Append(string.Format(Localize.FromTable("ui.rb.notice.first_bonus", "첫 구매 보너스 {0}"), gem.ToString("N0")));
+            return sb.ToString();
+        }
+
+        /// <summary>상자 「확률 보기」 — 표의 골드 · 조각 범위와 조각이 나오는 호스트 등급 확률(무게 → %).</summary>
+        private void ShowOdds(StoreProduct p)
+        {
+            var lines = Parse(p.Rewards);
+            string key = lines.Count > 0 && lines[0].kind == "chest" ? lines[0].key : null;
+            if (key == null || !CoreModule.TryGet<Game.Module.Common.Chest.IChestService>(out var chests)) return;
+            var e = chests.Entry(key);
+            if (e == null) return;
+            float total = Mathf.Max(1, e.WeightB + e.WeightA + e.WeightS);
+            string Pct(int w) => (w * 100f / total).ToString("0.#") + "%";
+            var body = string.Format(Localize.FromTable("ui.rb.shop.odds_gold", "골드 {0} ~ {1}"), e.GoldMin.ToString("N0"), e.GoldMax.ToString("N0"))
+                       + "\n" + string.Format(Localize.FromTable("ui.rb.shop.odds_shard", "호스트 조각 {0} ~ {1}개 ({2} ~ {3}명)"),
+                                              e.ShardMin, e.ShardMax, e.HostKindsMin, e.HostKindsMax)
+                       + "\n\n<color=#3EE6FF>" + Localize.FromTable("ui.rb.shop.odds_grade", "조각이 나오는 호스트 등급") + "</color>"
+                       + $"\nR {Pct(e.WeightB)} · SR {Pct(e.WeightA)} · SSR {Pct(e.WeightS)}";
+            _shell.Notice.ShowInfo($"rb_icon_chest_{key}_96", Localize.Get(p.NameKey), body);
         }
 
         private async UniTaskVoid BuyAsync(IStoreService store, string id)

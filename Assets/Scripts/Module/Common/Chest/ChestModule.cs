@@ -146,6 +146,8 @@ namespace Game.Module.Common.Chest
             return e != null ? (e.GoldMin, e.GoldMax) : (0, 0);
         }
 
+        public ChestEntry Entry(string chestKey) => _table?.Find(chestKey);
+
         public bool GrantChapterClear(string chestKey, IReadOnlyList<string> metHostKeys, out ChestReward reward)
         {
             reward = default;

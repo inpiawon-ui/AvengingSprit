@@ -1715,3 +1715,7 @@ ui.rb.growth.done_line1	{0}성 → {1}성 · 체력·공격 +7%	{0}星 → {1}�
 ui.rb.growth.done_line2	스킬 Lv {0}→{1} · 강화 상한 {2}→{3}	スキルLv {0}→{1}・強化上限 {2}→{3}	Skill Lv {0}→{1} · Cap {2}→{3}	技能Lv {0}→{1}・強化上限 {2}→{3}	技能Lv {0}→{1}・强化上限 {2}→{3}
 ui.rb.growth.power_plus	전투력 +{0}	戦闘力 +{0}	Power +{0}	戰鬥力 +{0}	战斗力 +{0}
 ui.rb.lobby.adv	유리 ▲	有利 ▲	Favored ▲	有利 ▲	有利 ▲
+ui.rb.notice.first_bonus	첫 구매 보너스 {0}	初回購入ボーナス {0}	First-buy bonus {0}	首購加贈 {0}	首购加赠 {0}
+ui.rb.shop.odds_gold	골드 {0} ~ {1}	ゴールド {0}～{1}	Gold {0} - {1}	金幣 {0}～{1}	金币 {0}～{1}
+ui.rb.shop.odds_shard	호스트 조각 {0} ~ {1}개 ({2} ~ {3}명)	ホストのかけら {0}～{1}個（{2}～{3}人）	Host shards {0} - {1} ({2} - {3} hosts)	宿主碎片 {0}～{1} 個（{2}～{3} 名）	宿主碎片 {0}～{1} 个（{2}～{3} 名）
+ui.rb.shop.odds_grade	조각이 나오는 호스트 등급	かけらが出るホストの等級	Shard host rarity	碎片宿主等級機率	碎片宿主等级概率
