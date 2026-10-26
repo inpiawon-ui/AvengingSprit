@@ -268,23 +268,22 @@ namespace Game.Module.Lobby
             text.alignment = TextAlignmentOptions.Left;
         }
 
-        // 칩 안 「아이콘 + 글자」 묶음을 가운데로. 칩 폭(양옆 8)을 넘으면 글자를 먼저 최소 크기까지, 그래도 넘으면 아이콘을 줄인다
-        // (영어 「Weapon」 이 한국어보다 길다)
+        // 칩 안 「아이콘 + 글자」 묶음을 가운데로. 아이콘은 모든 칩이 같은 크기 — 칩 폭(양옆 8)을 넘으면 글자만 줄인다
+        // (영어 「Weapon」 이 길다. PD 2026-10-26 「Weapon 이 맞다, 글자를 줄여서 써」 — 묶음 글자 최소 32 보다 작아도 된다)
         private static void FitChipRun(RectTransform icon, TextMeshProUGUI text, float chipWidth)
         {
             if (icon == null || text == null || chipWidth <= 0f) return;
             const float gap = 4f, pad = 8f;
+            const float iw = 60f * 2f / 3f;   // 빌더 값(시안 60)
             float avail = chipWidth - pad * 2f;
-            const float iconMax = 60f * 2f / 3f;   // 빌더 값(시안 60) — sizeDelta 는 줄였다 되돌리므로 거기서 읽지 않는다
             text.enableAutoSizing = false;
             text.fontSize = text.fontSizeMax;
             float w = text.GetPreferredValues(text.text).x;
-            if (w + iconMax + gap > avail)
+            if (w + iw + gap > avail)
             {
-                text.fontSize = Mathf.Max(text.fontSizeMin, text.fontSizeMax * (avail - iconMax - gap) / w);
+                text.fontSize = text.fontSizeMax * (avail - iw - gap) / w;
                 w = text.GetPreferredValues(text.text).x;
             }
-            float iw = Mathf.Clamp(avail - gap - w, iconMax * 0.6f, iconMax);
             icon.sizeDelta = new Vector2(iw, iw);
             float left = -(w + iw + gap) * 0.5f;
             icon.anchoredPosition = new Vector2(left + iw * 0.5f, icon.anchoredPosition.y);

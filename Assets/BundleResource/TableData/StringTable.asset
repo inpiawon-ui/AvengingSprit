@@ -11098,9 +11098,3 @@ MonoBehaviour:
     _en: "Favored \u25B2"
     _zhHant: "\u6709\u5229 \u25B2"
     _zhHans: "\u6709\u5229 \u25B2"
-  - _key: ui.rb.host.filter_blade
-    _ko: "\uBB34\uAE30"
-    _ja: "\u6B66\u5668"
-    _en: Arms
-    _zhHant: "\u6B66\u5668"
-    _zhHans: "\u6B66\u5668"

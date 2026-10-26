@@ -1381,7 +1381,6 @@ ui.rb.host.title	호스트	ホスト	Hosts	宿主	宿主
 ui.rb.host.ghost_desc	모든 호스트에 붙는 성장	すべてのホストに効く成長	Growth for every host	所有宿主共享的成長	所有宿主共享的成长
 ui.rb.host.grow	성장 ›	成長 ›	Grow ›	成長 ›	成长 ›
 ui.rb.host.filter_all	전체	すべて	All	全部	全部
-ui.rb.host.filter_blade	무기	武器	Arms	武器	武器
 ui.rb.host.sort_power	전투력 순	戦闘力順	By Power	戰力排序	战力排序
 ui.rb.host.sort_grade	등급 순	等級順	By Grade	等級排序	等级排序
 ui.rb.host.ghost_lv	유령 Lv <size=120%>{0}</size>	ゴースト Lv <size=120%>{0}</size>	Ghost Lv <size=120%>{0}</size>	幽靈 Lv <size=120%>{0}</size>	幽灵 Lv <size=120%>{0}</size>
