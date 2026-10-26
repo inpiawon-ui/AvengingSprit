@@ -74,7 +74,8 @@ namespace Game.Editor.ReBorn
 
             // 거르기 칩 — 전체 · 파워 · 무기 · 마법 · 정렬
             float[][] chips = { new[] { 30f, 212f }, new[] { 228f, 410f }, new[] { 427f, 610f }, new[] { 626f, 808f }, new[] { 824f, 1050f } };
-            string[] keys = { "ui.rb.host.filter_all", "ui.affinity.force", "ui.affinity.blade", "ui.affinity.magic", null };
+            // 무기 칩만 칩 전용 키 — 영어 「Weapon」 이 길어 아이콘이 줄어든다, 칩에서만 「Arms」(PD 2026-10-26)
+            string[] keys = { "ui.rb.host.filter_all", "ui.affinity.force", "ui.rb.host.filter_blade", "ui.affinity.magic", null };
             string[] ko = { "전체", "파워", "무기", "마법", "전투력 순" };
             string[] affChip = { "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_magic_128" };
             for (int i = 0; i < chips.Length; i++)
