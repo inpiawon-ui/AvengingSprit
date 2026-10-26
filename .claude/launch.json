@@ -18,6 +18,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8767", "--directory", "Projects/AVSR/_exchange/proto_summon"],
       "port": 8767
+    },
+    {
+      "name": "reborn-mock",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8768", "--directory", "Projects/AVSR/_handoff/reborn_ui_1023/03_리소스_및_시안"],
+      "port": 8768
     }
   ]
 }

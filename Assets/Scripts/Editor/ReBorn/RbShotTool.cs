@@ -237,6 +237,14 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "ingame:levelup", "levelup_ja"),
             (720, 1280, Language.English, "ingame:levelup", "levelup_en"),
             (1080, 2400, Language.Korean, "ingame:levelup", "levelup_20x9"),
+            (768, 1024, Language.Korean, "ingame:levelup", "levelup_4x3"),
+            (720, 1280, Language.Korean, "ingame:levelup_sel", "levelup_sel_16x9"),
+            (1080, 2400, Language.Korean, "ingame:levelup_sel", "levelup_sel_20x9"),
+            (720, 1280, Language.English, "ingame:levelup_sel", "levelup_sel_en"),
+            (720, 1280, Language.Japanese, "ingame:levelup_sel", "levelup_sel_ja"),
+            (1080, 2400, Language.Korean, "ingame:result_fail", "result_fail_20x9"),
+            (768, 1024, Language.Korean, "ingame:result_clear", "result_clear_4x3"),
+            (720, 1280, Language.English, "ingame:result_fail", "result_fail_en"),
             (720, 1280, Language.Korean, "ingame:shop", "shop_16x9"),
             (720, 1280, Language.Japanese, "ingame:shop", "shop_ja"),
             (720, 1280, Language.Korean, "ingame:event", "event_16x9"),
@@ -845,8 +853,10 @@ namespace Game.Editor.ReBorn
             switch (state)
             {
                 case "ingame:levelup":
+                case "ingame:levelup_sel":
                     bt.GetField("_awaitingBuff", F)?.SetValue(battle, false);
                     bt.GetMethod("OfferBuff", F)?.Invoke(battle, new object[] { Game.Character.CardRarity.Common });
+                    if (state.EndsWith("sel")) Click("BuffCard0");   // 고른 상태(금테 · 떠오름 · 「○○ 선택」 — 시안 levelup-selected)
                     break;
                 case "ingame:shop": bt.GetMethod("OpenShop", F)?.Invoke(battle, null); break;
                 case "ingame:event":
@@ -920,6 +930,7 @@ namespace Game.Editor.ReBorn
                         IsCleared = clear, FinishedChapter = 1, RewardGold = clear ? 432 : 96, RewardGhostExp = 30,
                         ShardHostKeys = new[] { "amazon" }, ShardCounts = new[] { 3 },
                         ReachedRoom = clear ? 16 : 7, ChapterRooms = 16, Kills = clear ? 128 : 54, PlaySeconds = clear ? 522 : 231,
+                        LongestHostKey = "amazon",
                     }, faces);
                     break;
                 case "ingame:towerhud":

@@ -140,6 +140,9 @@ namespace Game.Module.Lobby
             RefreshAll();
             SelectTab("Battle");
             LayoutRails();
+            // 실패 결과 「성장 ›」 으로 왔으면 그 몸의 성장 화면부터(시안 result-fail)
+            string growHost = LobbyRequest.TakeGrowthHost();
+            if (!string.IsNullOrEmpty(growHost)) { SelectTab("Host"); OpenGrowth(growHost); }
             if (_fx != null) _fx.ButtonShine(_ui.Find("SortieButton") as RectTransform);   // 주요 버튼 빛 띠(시안 button_shine)
             // 처음 로비에 온 사람에게 — 랜덤 출전 · 성장 · 소환(시안 guide, 쪽 점 셋)
             if (_guide != null) _guide.ShowOnce("lobby", false, "sortie", "growth", "summon");

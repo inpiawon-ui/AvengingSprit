@@ -1728,3 +1728,44 @@ ui.rb.chl.challenge	도전	挑戦	Challenge	挑戰	挑战
 ui.rb.chl.sweep_short	하루 1번 · 입장 횟수를 쓰지 않는다	1日1回・入場回数を使わない	Once a day · no entry used	每天1次 · 不消耗入場次數	每天1次 · 不消耗入场次数
 ui.rb.mis.go	이동 ›	移動 ›	Go ›	前往 ›	前往 ›
 ui.rb.mis.all_hint	전체 완료 시	全達成時	When all done	全部完成時	全部完成时
+ui.rb.levelup.sub	한 장을 골라 강해지세요	1枚選んで強くなろう	Pick one to grow stronger	選一張變得更強	选一张变得更强
+ui.rb.levelup.go	{0} 선택	{0}を選択	Choose {0}	選擇{0}	选择{0}
+ui.rb.result.unlocked_line	CH {0} 열림!	CH {0} 解放！	CH {0} unlocked!	CH {0} 已開啟！	CH {0} 已开启！
+ui.rb.result.tip_title	공격력 강화 추천	攻撃力の強化がおすすめ	Try upgrading Attack	推薦強化攻擊力	推荐强化攻击力
+ui.rb.result.tip_sub	가장 오래 쓴 몸 · {0}	一番長く使った体・{0}	Most used host · {0}	使用最久的宿主・{0}	使用最久的宿主・{0}
+ui.rb.result.tip_go	성장 ›	育成 ›	Grow ›	培養 ›	培养 ›
+ui.card.unit.sec	{0}초	{0}秒	{0}s	{0}秒	{0}秒
+ui.card.stat.attack	공격력	攻撃力	Attack	攻擊力	攻击力
+ui.card.stat.attackspeed	공격 속도	攻撃速度	Attack Speed	攻擊速度	攻击速度
+ui.card.stat.range	사거리	射程	Range	射程	射程
+ui.card.stat.movespeed	이동 속도	移動速度	Move Speed	移動速度	移动速度
+ui.card.stat.activeskillcharge	스킬 쿨타임	スキルCT	Skill Cooldown	技能冷卻	技能冷却
+ui.card.stat.multishot	추가 탄	追加弾	Extra Shots	追加彈	追加弹
+ui.card.stat.lifesteal	흡혈 확률	吸血率	Lifesteal	吸血機率	吸血概率
+ui.card.stat.slow	둔화	鈍化	Slow	減速	减速
+ui.card.stat.pierce	관통	貫通	Pierce	穿透	穿透
+ui.card.stat.damagereduction	받는 피해	被ダメージ	Damage Taken	受到傷害	受到伤害
+ui.card.stat.fieldduration	장판 지속	フィールド持続	Field Duration	場地持續	场地持续
+ui.card.stat.ricochet	튕긴 탄 피해	跳弾ダメージ	Bounce Damage	反彈傷害	反弹伤害
+ui.card.stat.aoeradius	범위	範囲	Area	範圍	范围
+ui.card.stat.execute	마무리 피해	とどめダメージ	Finisher Damage	終結傷害	终结伤害
+ui.card.stat.bossfocus	보스 피해	ボスダメージ	Boss Damage	首領傷害	首领伤害
+ui.card.stat.regen	처치 회복	撃破回復	Heal on Kill	擊殺回復	击杀回复
+ui.card.stat.frostimprint	빙결 확률	凍結率	Freeze Chance	冰凍機率	冰冻概率
+ui.card.stat.flameimprint	화상 확률	火傷率	Burn Chance	燒傷機率	烧伤概率
+ui.card.stat.curseimprint	저주 확률	呪い率	Curse Chance	詛咒機率	诅咒概率
+ui.card.stat.sustainstack	연타 피해	連打ダメージ	Combo Damage	連擊傷害	连击伤害
+ui.card.stat.homing	유도	誘導	Homing	追蹤	追踪
+ui.card.stat.spectralecho	복제 피해	複製ダメージ	Echo Damage	複製傷害	复制伤害
+ui.card.stat.explosiveecho	2차 폭발 피해	2次爆発ダメージ	Echo Blast Damage	二次爆炸傷害	二次爆炸伤害
+ui.card.stat.ghostturret	포대 피해	砲台ダメージ	Turret Damage	砲台傷害	炮台伤害
+ui.card.stat.armorbreak	쌓이는 피해	蓄積ダメージ	Stacking Damage	疊加傷害	叠加伤害
+ui.card.stat.statuschain	번짐 확률	伝染率	Spread Chance	擴散機率	扩散概率
+ui.card.stat.crisisbarrier	방벽	バリア	Barrier	屏障	屏障
+ui.card.stat.overcharge	감전 피해	感電ダメージ	Shock Damage	感電傷害	感电伤害
+ui.card.stat.expgain	경험치	経験値	EXP	經驗值	经验值
+ui.card.stat.orbitshield	방패	盾	Shields	護盾	护盾
+ui.card.stat.assassinate	즉사 확률	即死率	Execute Chance	即死機率	即死概率
+ui.card.stat.chainlightning	튕김 횟수	跳ね回数	Chain Jumps	彈跳次數	弹跳次数
+ui.card.stat.guardinvuln	재사용 대기	再使用待機	Cooldown	冷卻時間	冷却时间
+ui.card.stat.lowhppower	궁지 피해	窮地ダメージ	Desperation Damage	絕境傷害	绝境伤害

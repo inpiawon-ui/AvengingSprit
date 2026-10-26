@@ -523,6 +523,26 @@ namespace Game.Module.InGame
         {
             if (_bootDone) _running = true;
             _runStartedAt = Time.time;
+            _hostSeconds.Clear();
+        }
+
+        // 몸마다 입고 있던 초 — 실패 결과 「가장 오래 쓴 몸」(시안 result-fail). 판이 도는 프레임마다 지금 몸에 더한다
+        private readonly Dictionary<string, float> _hostSeconds = new();
+
+        private void NoteHostTime(float dt)
+        {
+            if (_host == null || string.IsNullOrEmpty(_host.Key)) return;
+            _hostSeconds.TryGetValue(_host.Key, out float s);
+            _hostSeconds[_host.Key] = s + dt;
+        }
+
+        private string LongestHost()
+        {
+            string best = null;
+            float most = 0f;
+            foreach (var kv in _hostSeconds)
+                if (kv.Value > most) { most = kv.Value; best = kv.Key; }
+            return best;
         }
 
         // 결과 창(RE:BORN 「도달한 방 · 처치 · 플레이 시간」) — 판 끝에 StageFinishedEvent 로 싣는다
@@ -3599,6 +3619,7 @@ namespace Game.Module.InGame
             TickKeyboardMove();
 
             float dt = Time.deltaTime;
+            NoteHostTime(dt);
 
             // 빙의가 들어가는 중이면 다른 것은 멈추지 않되 조작만 잠근다 —
             // 0.35 초 동안 영혼이 몸으로 빨려 들어가는 것을 보여 준다.
@@ -10191,6 +10212,7 @@ namespace Game.Module.InGame
                     ShardHostKeys = shardKeys, ShardCounts = shardCounts,
                     ReachedRoom = _runStage, ChapterRooms = ChapterRoomCount(_runChapter),
                     Kills = _runKills, PlaySeconds = Time.time - _runStartedAt,
+                    LongestHostKey = LongestHost(),
                 });
                 return;
             }
@@ -10225,6 +10247,7 @@ namespace Game.Module.InGame
                 ShardCounts = shardCounts,
                 ReachedRoom = ChapterRoomCount(ch), ChapterRooms = ChapterRoomCount(ch),
                 Kills = _runKills, PlaySeconds = Time.time - _runStartedAt,
+                LongestHostKey = LongestHost(),
             });
         }
 

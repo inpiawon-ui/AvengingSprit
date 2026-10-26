@@ -300,5 +300,8 @@ namespace Game.Module.Events
         public int ChapterRooms;
         public int Kills;
         public float PlaySeconds;
+
+        /// <summary>이번 판에 가장 오래 입은 몸(유령으로만 있었으면 비어 있다) — 실패 결과의 「성장 추천」 줄(시안 result-fail).</summary>
+        public string LongestHostKey;
     }
 }

@@ -56,8 +56,6 @@ namespace Game.Module.InGame
         // RE:BORN UI 리뉴얼(2026-10-23) — 새 HUD 프리팹(RbInGameMainUI, 빌더 `RbInGameBuilder`)이면 켠다. 옛 프리팹은 꺼진 채 그대로 돈다.
         // 새 판은 막대 폭이 달라 폭을 프리팹에서 잰다 · 판 레벨 경험치 막대 · 「1-07」 · 레벨업 카드 판(키트 rb_card_*).
         [SerializeField] private bool _reborn;
-        /// <summary>레벨업 카드 판 — `CardRarity` 순서(Common · Rare · Epic · Legendary).</summary>
-        [SerializeField] private Sprite[] _rbCardPanels = Array.Empty<Sprite>();
         /// <summary>상점 값 알약 — 살 수 있음 / 모자람.</summary>
         [SerializeField] private Sprite _rbPrice, _rbPricePoor;
         /// <summary>이벤트 그림(rb_art_ev_*) — 이름으로 찾는다(<see cref="EventArtOf"/>).</summary>
@@ -194,8 +192,9 @@ namespace Game.Module.InGame
             var dim = _ui.Get<Image>("BuffChoicePanel");
             if (dim != null)
             {
-                // RE:BORN 판은 시안처럼 거의 검게 — 제목 · 카드가 위 HUD 글자와 겹쳐 읽히지 않게
-                dim.color = new Color(0.02f, 0.03f, 0.06f, _reborn ? 0.95f : 0.86f);
+                // RE:BORN 판은 화면 전체를 덮는 덧판(BuffDimExtend · 0.99)이 혼자 어둡게 한다 — 판도 칠하면 판 안만 두 겹이라
+                // 20:9 위아래(판 밖) HUD 가 판 안보다 밝게 떴다(2026-10-27 시안 levelup 대조). 판은 입력만 막는다
+                dim.color = new Color(0.02f, 0.03f, 0.06f, _reborn ? 0f : 0.86f);
                 dim.raycastTarget = true;
             }
 
@@ -1575,7 +1574,8 @@ namespace Game.Module.InGame
                 }
                 _ui.SetText("BuffTitleText", titleSprite != null ? string.Empty : "LEVEL UP!");
             }
-            _ui.SetText("BuffSubText", Localize.Get("ui.buff.sub"));
+            _ui.SetText("BuffSubText", _reborn ? Localize.FromTable("ui.rb.levelup.sub", "한 장을 골라 강해지세요") : Localize.Get("ui.buff.sub"));
+            if (_reborn) RbCardsHome();
 
             for (int i = 0; i < BuffCardCount; i++)
             {
@@ -1599,11 +1599,12 @@ namespace Game.Module.InGame
                 if (_reborn && _ui.Find(_ui.Find($"BuffCard{i}"), $"BuffCard{i}Rarity")?.GetComponent<TMPro.TMP_Text>() is TMPro.TMP_Text rare)
                 {
                     rare.text = entry.Rarity.ToString().ToUpperInvariant();
-                    rare.color = RarityColor(entry.Rarity);
+                    rare.color = RbRarityText(entry.Rarity);
                 }
 
                 _ui.SetText($"BuffCard{i}Name", entry.DisplayName);
                 _ui.SetText($"BuffCard{i}Desc", entry.DisplayDescription);
+                if (_reborn) RbFillCard(i, entry, lv);
 
                 SetCardArt(i, entry, lv > 0);
                 if (_fx != null) _fx.Tint(_ui.Find("BuffChoicePanel") as RectTransform, $"BuffCard{i}", RarityColor(entry.Rarity));
@@ -1614,8 +1615,13 @@ namespace Game.Module.InGame
                 var key = entry.BuffKey;
                 var slot = $"BuffCard{i}";   // 어느 칸을 튕길지 눌린 쪽이 알려 준다
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
+                // RE:BORN — 골라서 확정(시안 levelup · levelup-selected): 카드는 고르기만, 아래 노란 버튼이 확정한다
+                int pick = i;
+                string pickName = entry.DisplayName;
+                if (_reborn) btn.onClick.AddListener(() => RbSelectCard(pick, key, pickName));
+                else btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
             }
+            if (_reborn) RbSelectCard(-1, null, null);
 
             ShowCardFx(e);
             EqualizeText("BuffCard0Name", "BuffCard1Name", "BuffCard2Name");
@@ -1637,19 +1643,11 @@ namespace Game.Module.InGame
 
             // ① 판때기 — 등급별 액자
             var panel = _ui.Get<Image>($"BuffCard{i}");
-            if (_reborn && _rbCardPanels.Length > (int)entry.Rarity)
+            if (_reborn)
             {
-                // 키트 카드 판(9분할로 늘려 쓰는 가로 판) — 왕관 장식은 없다(최상위 판 그림이 따로 있다)
-                if (panel != null)
-                {
-                    panel.sprite = _rbCardPanels[(int)entry.Rarity];
-                    panel.type = Image.Type.Sliced;
-                    panel.color = Color.white;
-                }
+                // 카드 칸은 누름 판(투명) — 몸통 · 띠 · 금테는 빌더가 깐 자식 그림이다(시안 levelup-selected). 등급은 왼쪽 띠 색으로
                 SetCardCrown(panel != null ? panel.rectTransform : null, false);
-                if (_ui.Get<Image>($"BuffCard{i}Chip") is Image rbChip) rbChip.enabled = false;
-                if (_ui.Get<TMPro.TMP_Text>($"BuffCard{i}ChipText") is TMPro.TMP_Text rbChipText)
-                    rbChipText.color = owned ? new Color(0.94f, 0.71f, 0.16f) : Color.white;
+                if (_ui.Get<Image>($"BuffCard{i}Strip") is Image strip) strip.color = RbStripColor(entry.Rarity);
                 var rbIcon = _ui.Get<Image>($"BuffCard{i}Icon");
                 if (rbIcon == null) return;
                 var rbArt = _cardAtlas != null && !string.IsNullOrEmpty(entry.CardId)

@@ -408,13 +408,18 @@ namespace Game.Editor.ReBorn
 
         // ── 레벨업 ───────────────────────────────────────────
 
-        public const float CardTop0 = 215f, CardStep = 255f, CardW = 680f, CardH = 245f;
+        // 시안 levelup-selected(Core/ui.css .choice) — 카드 1024 x 300 · 목록 위 510 · 간격 28 · 왼쪽 28. 판 위 = 시안 140 줄
+        public const float CardTop0 = (510f - 140f) * S, CardStep = 328f * S, CardW = 1024f * S, CardH = 300f * S;
+
+        /// <summary>시안 1080 y → 판(720 x 1280, 위 = 시안 140 줄) 안 y.</summary>
+        private static float My(float y) => (y - 140f) * S;
 
         private static void BuildLevelUp(Transform root)
         {
             // 판(720×1280)은 화면 가운데 · 딤은 위아래로 늘린 덧판이 마저 덮는다 — 옛 판은 위 1280 만 덮어 20:9 아래가 훤했다.
             // 판을 화면 전체로 늘리지 않는 까닭: 창 연출(PopupFxSpec)이 판 왼쪽 위 기준 좌표라 20:9 에서 어긋난다
             var panel = F(root, "BuffChoicePanel");
+            panel.gameObject.SetActive(true);   // 켠 채 글자를 붙인다(꺼진 곳의 TMP 는 실행 때 크기가 풀린다) — Awake 가 끈다
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             panel.sizeDelta = new Vector2(720f, 1280f);
             panel.anchoredPosition = Vector2.zero;
@@ -422,48 +427,109 @@ namespace Game.Editor.ReBorn
             ext.anchorMin = Vector2.zero; ext.anchorMax = Vector2.one; ext.pivot = new Vector2(0.5f, 0.5f);
             ext.offsetMin = new Vector2(-400f, -800f); ext.offsetMax = new Vector2(400f, 800f);
             var extImg = ext.GetComponent<Image>() ?? ext.gameObject.AddComponent<Image>();
-            extImg.color = new Color(0.02f, 0.03f, 0.06f, 0.95f);   // InGameMainUI Awake 의 딤 색과 같게
+            // 화면 전체를 이 한 겹이 어둡게 한다(판 자체는 투명 — InGameMainUI Awake). 인게임 캔버스는 선형 색이라 0.95 로는 덜 어두워 0.99
+            extImg.color = new Color(0.02f, 0.03f, 0.06f, RbExtraScreensBuilder.InGameDim);
             extImg.raycastTarget = true;
             ext.SetAsFirstSibling();
             Lock(panel);
+            // 20:9 는 위 여백을 시안(140 줄)까지만 — 가운데 두면 카드 · 버튼이 시안보다 아래로 처진다
+            if (panel.GetComponent<Game.Module.Common.UI.RbFitScale>() == null) panel.gameObject.AddComponent<Game.Module.Common.UI.RbFitScale>();
             FixLevelUpFx(panel);
             Mute(root, "BuffFrame", "BuffTitleText", "BuffNoteText");
+            // 제목 워드아트 284~796 x 200~348 · 부제 42 px(#ABB2CE) 378~431 — 시안 levelup-selected 를 브라우저에서 잰 값
             var title = F(root, "BuffTitleArt");
-            PutPx(title, panel, 360f, 92f, 330f, 95f);
+            PutPx(title, panel, 360f, My(274f), 512f * S, 148f * S);
             Skin(title, "WordArt/rb_word_word_level_up", false);
             var sub = F(root, "BuffSubText");
-            PutPx(sub, panel, 360f, 166f, 640f, 40f);
-            Style(sub, 44, Dim, TA.Center);
+            PutPx(sub, panel, 360f, My(404.5f), 1024f * S, 53f * S);
+            Style(sub, 42, LvMuted, TA.Center);
 
-            for (int i = 0; i < 3; i++)
-            {
-                var card = PutPx(F(root, $"BuffCard{i}"), panel, 360f, CardTop0 + CardStep * i + CardH * 0.5f, CardW, CardH);
-                Skin(card, "Components/rb_card_common");
-                Corner(F(root, $"BuffCard{i}Icon"), 30f, 66f, 113f, 113f);
-                var rare = card.Find($"BuffCard{i}Rarity") as RectTransform ?? Node(card, $"BuffCard{i}Rarity");
-                if (rare.GetComponent<TextMeshProUGUI>() == null) rare.gameObject.AddComponent<TextMeshProUGUI>().text = "EPIC";
-                Corner(rare, 172f, 36f, 280f, 30f);
-                Style(rare, 36, Yellow, TA.Left, number: true);
-                Corner(F(root, $"BuffCard{i}Name"), 172f, 66f, 470f, 44f);
-                Style(F(root, $"BuffCard{i}Name"), 52, White, TA.Left, heavy: true);
-                var desc = F(root, $"BuffCard{i}Desc");
-                Corner(desc, 172f, 114f, 488f, 100f);
-                Style(desc, 38, Dim, TA.TopLeft);
-                if (desc.TryGetComponent<TextMeshProUGUI>(out var dt)) { dt.enableWordWrapping = true; dt.overflowMode = TextOverflowModes.Overflow; }
-                var chip = F(root, $"BuffCard{i}Chip");
-                Corner(chip, 540f, 8f, 128f, 40f);
-                var chipText = F(root, $"BuffCard{i}ChipText");
-                chipText.anchorMin = Vector2.zero; chipText.anchorMax = Vector2.one; chipText.sizeDelta = Vector2.zero; chipText.anchoredPosition = Vector2.zero;
-                Style(chipText, 38, White, TA.Right, number: true);
-            }
+            for (int i = 0; i < 3; i++) BuildLevelUpCard(root, panel, i);
 
-            // 맨 아래 「카드를 골라 주세요」 — 누를 수 없는 안내 판(시안)
+            // 맨 아래 확정 버튼 28~1052 x 1870~2030 — 고르기 전 「카드를 골라 주세요」(대기 판) · 고르면 노란 「○○ 선택」(제단과 같은 길)
             var hint = panel.Find("BuffHint") as RectTransform ?? Node(panel, "BuffHint");
-            PutPx(hint, panel, 360f, 1040f, 680f, 94f);
-            Skin(hint, "Components/rb_btn_secondary_disabled");
+            PutPx(hint, panel, 360f, My(1950f), 1024f * S, 160f * S);
+            var hb = Btn(hint, "Components/rb_btn_primary");
+            hb.transition = Selectable.Transition.SpriteSwap;
+            hb.spriteState = new SpriteState { pressedSprite = KitSprite("Components/rb_btn_primary_pressed"), disabledSprite = KitSprite("Components/rb_btn_wait") };
+            hb.interactable = false;
             var ht = hint.Find("BuffHintText") as RectTransform ?? Node(hint, "BuffHintText");
             if (ht.GetComponent<TextMeshProUGUI>() == null)
-                Text(Stretch(ht), "ui.rb.levelup.hint", "카드를 골라 주세요", 40, Dim, TA.Center);
+                Text(Stretch(ht), null, "카드를 골라 주세요", 36, LvWait, TA.Center);
+        }
+
+        // 시안 카드 글자 색(Core/ui.css) — 흐린 글 #ABB2CE · 이름 #EDF0F6 · 효과 #6BDAA1 · 대기 버튼 글 #A9B1D6
+        private static readonly Color LvMuted = new Color32(171, 178, 206, 255);
+        private static readonly Color LvName = new Color32(237, 240, 246, 255);
+        private static readonly Color LvDelta = new Color32(107, 218, 161, 255);
+        private static readonly Color LvWait = new Color32(169, 177, 214, 255);
+
+        /// <summary>
+        /// 카드 한 장 — 몸통(그러데이션 판) · 왼쪽 등급 띠 · 고른 금테 · 아이콘 칸 · 등급 · 이름 · 설명 · 효과 줄 · 오른쪽 위 꼬리표.
+        /// 카드 칸(버튼)은 투명 — 그림은 자식들이 그린다(고른 금테를 몸통 위에 얹어야 해서). 자리는 카드 위 왼쪽 기준(시안 px × 2/3).
+        /// </summary>
+        private static void BuildLevelUpCard(Transform root, RectTransform panel, int i)
+        {
+            var card = PutPx(F(root, $"BuffCard{i}"), panel, 360f, CardTop0 + CardStep * i + CardH * 0.5f, CardW, CardH);
+            var hit = card.GetComponent<Image>() ?? card.gameObject.AddComponent<Image>();
+            hit.sprite = null; hit.color = new Color(1f, 1f, 1f, 0f); hit.raycastTarget = true;
+            if (card.TryGetComponent<Button>(out var cb)) cb.transition = Selectable.Transition.None;
+
+            // 납품 판은 둘레에 2 px(시안) 여백이 있다 — 그만큼 넓혀 깐다
+            const float pad = 2f * S;
+            var glow = LvLayer(card, $"BuffCard{i}Glow", "Components/rb_card_glow", -26f * S, -18f * S, CardW + 52f * S, CardH + 52f * S, false);
+            glow.color = new Color32(194, 155, 63, 70);   // 시안 0 8px 26px #c29b3f44
+            glow.gameObject.SetActive(false);
+            var body = LvLayer(card, $"BuffCard{i}Body", "Components/rb_lv_card", -pad, -pad, CardW + pad * 2f, CardH + 8f * S + pad * 2f, true);
+            body.color = new Color(0.82f, 0.82f, 0.82f, 1f);   // 납품이 시안보다 밝다(#1C2744 → 시안 #172038) — 밝기만 맞춘다
+            LvLayer(card, $"BuffCard{i}Strip", "Components/rb_lv_strip", -pad, -pad, CardW + pad * 2f, CardH + pad * 2f, true).color = new Color32(140, 149, 166, 255);
+            // 고른 테 — 시안 outline 6 px · offset -2(바깥 4 · 안 2). 납품 판 둘레 여백(가로 10 · 세로 6) 포함
+            var ring = LvLayer(card, $"BuffCard{i}Ring", "Components/rb_lv_ring", -14f * S, -10f * S, CardW + 28f * S, CardH + 20f * S, true);
+            ring.gameObject.SetActive(false);
+            LvLayer(card, $"BuffCard{i}Well", "Components/rb_lv_artwell", 24f * S - pad, 30f * S - pad, 240f * S + pad * 2f, 240f * S + pad * 2f, true);
+
+            var icon = F(root, $"BuffCard{i}Icon");
+            Corner(icon, 24f * S + 16f, 30f * S + 16f, 240f * S - 32f, 240f * S - 32f);
+            icon.SetAsLastSibling();
+            float tx = 292f * S, tw = 708f * S;   // 글자 줄 x 320(카드 안 292) ~ 1028
+            var rare = card.Find($"BuffCard{i}Rarity") as RectTransform ?? Node(card, $"BuffCard{i}Rarity");
+            if (rare.GetComponent<TextMeshProUGUI>() == null) rare.gameObject.AddComponent<TextMeshProUGUI>().text = "EPIC";
+            Corner(rare, tx, 26f * S, tw, 43f * S);
+            Style(rare, 36, LvMuted, TA.Left, heavy: true);
+            var name = F(root, $"BuffCard{i}Name");
+            Corner(name, tx, 83f * S, tw, 62f * S);
+            Style(name, 52, LvName, TA.Left, heavy: true);
+            var desc = F(root, $"BuffCard{i}Desc");
+            Corner(desc, tx, 159f * S, tw, 43f * S);
+            Style(desc, 36, LvMuted, TA.Left, heavy: true);
+            var delta = card.Find($"BuffCard{i}Delta") as RectTransform ?? Node(card, $"BuffCard{i}Delta");
+            if (delta.GetComponent<TextMeshProUGUI>() == null) Text(delta, null, "공격력 +8%", 44, LvDelta, TA.Left, number: true);
+            Corner(delta, tx, 216f * S, tw, 58f * S);
+            foreach (var r in new[] { rare, name, desc, delta }) r.SetAsLastSibling();
+
+            // 꼬리표 「Lv 1→2」 · 「NEW」 — 오른쪽 끝 1028(카드 안 1000) · 위 18 · 높이 60. 폭은 글에 맞춰 화면 스크립트가 늘린다
+            var chip = F(root, $"BuffCard{i}Chip");
+            Corner(chip, 1000f * S - 104f * S, 18f * S, 104f * S, 60f * S);
+            Skin(chip, "Components/rb_lv_tag");
+            if (chip.TryGetComponent<Image>(out var ci)) { ci.color = new Color(1f, 1f, 1f, 0.79f); ci.raycastTarget = false; }
+            var chipText = F(root, $"BuffCard{i}ChipText");
+            if (chipText.parent != chip) chipText.SetParent(chip, false);
+            chipText.anchorMin = Vector2.zero; chipText.anchorMax = Vector2.one; chipText.sizeDelta = Vector2.zero; chipText.anchoredPosition = Vector2.zero;
+            Style(chipText, 36, LvName, TA.Center, number: true);
+            chip.SetAsLastSibling();
+        }
+
+        /// <summary>카드 안 그림 한 겹(위 왼쪽 기준 · 게임 px). 앞쪽 형제로 깔아 글자 · 아이콘보다 뒤에 그린다.</summary>
+        private static Image LvLayer(RectTransform card, string name, string sprite, float x, float y, float w, float h, bool sliced)
+        {
+            var rt = card.Find(name) as RectTransform ?? Node(card, name);
+            Corner(rt, x, y, w, h);
+            Skin(rt, sprite, sliced);
+            var img = rt.GetComponent<Image>();
+            img.raycastTarget = false;
+            if (!sliced) img.preserveAspect = false;
+            rt.SetAsLastSibling();
+            return img;
         }
 
         // ── 방 안 창: 상인 · 이벤트 · 제단 ───────────────────────
@@ -695,58 +761,166 @@ namespace Game.Editor.ReBorn
             fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             fit.aspectRatio = 1080f / 2340f;
 
-            var c = Node(page, "RbResultContent");   // 가운데 720×1280
+            // 가운데 판 — 위 = 시안 140 줄. 클리어(result-story)는 2060 줄까지(1280), 실패(result-fail)는 버튼이 2166 까지라 2200 줄까지(1373).
+            // 화면보다 길면 같은 배율로 줄인다(RbFitScale) — 16:9 실패에서만 0.93 배
+            var c = Node(page, "RbResultContent");
             Lock(c);
             c.anchorMin = c.anchorMax = c.pivot = new Vector2(0.5f, 0.5f);
-            c.sizeDelta = new Vector2(720f, 1280f);
-            Text(PutPx(Node(c, "RbResultChapter"), c, 360f, 128f, 400f, 36f), null, "CHAPTER 1", 36, Cyan, TA.Center, number: true);
-            Img(PutPx(Node(c, "RbResultWord"), c, 360f, 200f, 300f, 96f), "WordArt/rb_word_word_clear");
-            // 탑 · 밤 결과의 머리글(「2F CLEAR」 · 「128 KILLS」) — 워드아트 자리에 글자로(시안 result-tower · result-night)
-            Text(PutPx(Node(c, "RbResultHeadline"), c, 360f, 200f, 640f, 100f), null, "2F CLEAR", 120, White, TA.Center, number: true);
-            Img(PutPx(Node(c, "RbResultGhost"), c, 360f, 318f, 120f, 120f), "Art/rb_art_mascot_ghost_cheer");
-            var nw = PutPx(Node(c, "RbResultNew"), c, 360f, 420f, 330f, 54f);
-            Img(nw, "Components/rb_info_chip");
-            Text(Stretch(Node(nw, "RbResultNewText")), null, "CH 2 열림!  NEW", 34, Cyan, TA.Center, heavy: true);
+            c.sizeDelta = new Vector2(720f, ResultClearH);
+            c.gameObject.AddComponent<Game.Module.Common.UI.RbFitScale>();
+            var slots = new System.Collections.Generic.List<ResultSlot>();
 
-            // 기록 판 — 도달한 방 · 처치 · 플레이 시간
-            var rec = PutPx(Node(c, "RbResultRecord"), c, 360f, 535f, 680f, 132f);
-            Img(rec, "Components/rb_result_record_panel");
+            // 머리 — CHAPTER 1(40 · #54DCEB / 실패 42 · #8FD0D4) · CLEAR / FAILED 워드아트 · 유령
+            var chapter = Two(slots, Node(c, "RbResultChapter"), CBox(28, 170, 1052, 220), CBox(40, 170, 1040, 229), 40f, 42f);
+            Text(chapter, null, "CHAPTER 1", 40, RsCyan, TA.Center);
+            Img(Two(slots, Node(c, "RbResultWord"), CBox(360, 250, 720, 398), CBox(344, 264, 736, 411)), "WordArt/rb_word_word_clear");
+            // 탑 · 밤 결과의 머리글(「2F CLEAR」 · 「128 KILLS」) — 워드아트 자리에 글자로(시안 result-tower · result-night)
+            Text(Two(slots, Node(c, "RbResultHeadline"), CBox(28, 250, 1052, 398), CBox(28, 250, 1052, 398)), null, "2F CLEAR", 120, White, TA.Center, number: true);
+            Img(Two(slots, Node(c, "RbResultGhost"), CBox(444, 440, 636, 632), CBox(444, 431, 636, 623)), "Art/rb_art_mascot_ghost_cheer");
+
+            // 「CH 2 열림!  NEW」 판 180~900 x 690~810 — 글 42 · #54DCEB, NEW 는 도트 글 · #EFC667
+            var nw = Two(slots, Node(c, "RbResultNew"), CBox(180, 690, 900, 810), CBox(180, 690, 900, 810));
+            Img(nw, "Components/rb_panel_base");
+            var nwText = Node(nw, "RbResultNewText");
+            Center(nwText, 0f, 680f * S, 58f * S);
+            Text(nwText, null, "CH 2 열림!", 42, RsCyan, TA.Center);
+            var badge = Node(nw, "RbResultNewBadge");
+            Center(badge, 0f, 120f * S, 56f * S);
+            Text(badge, null, "NEW", 42, RsGold, TA.Left, number: true);
+
+            // 기록 판 — 클리어 28~1052 x 866~1106(줄 72 · 줄 아래 가는 선) / 실패 40~1040 x 800~1078(줄 85 · 선 없음). 이름 42 · 값 도트 42
+            Img(Two(slots, Node(c, "RbResultRecord"), CBox(28, 866, 1052, 1106), CBox(40, 800, 1040, 1078)), "Components/rb_panel_base");
             string[] keys = { "ui.rb.result.rooms", "ui.rb.result.kills", "ui.rb.result.time" };
             string[] ko = { "도달한 방", "처치", "플레이 시간" };
             string[] vals = { "RbResultRoomValue", "RbResultKillValue", "RbResultTimeValue" };
+            float[] failTop = { 828f, 913f, 997f };
             for (int i = 0; i < 3; i++)
             {
-                float y = 20f + 36f * i;   // 셋째 줄이 판 아래 테두리에 걸렸다(첫 캡처)
-                Text(Inside2(Node(rec, $"RbResultRecLabel{i}"), 24f, y, 360f, 36f), keys[i], ko[i], 34, Dim, TA.Left);
-                Text(Inside2(Node(rec, vals[i]), 420f, y, 236f, 36f), null, "16/16", 40, White, TA.Right, number: true);
+                float y = 887f + 72f * i, fy = failTop[i];
+                Text(Two(slots, Node(c, $"RbResultRecLabel{i}"), CBox(58, y, 600, y + 53), CBox(75, fy, 600, fy + 52)), keys[i], ko[i], 42, RsMuted, TA.Left);
+                Text(Two(slots, Node(c, vals[i]), CBox(600, y, 1022, y + 53), CBox(600, fy - 2, 1005, fy + 54)), null, "16/16", 42, RsInk, TA.Right, number: true);
+                float ly = 949.5f + 72f * i;
+                var line = Two(slots, Node(c, $"RbResultRecLine{i}"), CBox(58, ly - 0.75f, 1022, ly + 0.75f), CBox(58, ly - 0.75f, 1022, ly + 0.75f));
+                Img(line, "Components/rb_divider_line").preserveAspect = false;
             }
 
-            // 획득 보상 3칸
-            Text(PutPx(Node(c, "RbResultRewardTitle"), c, 200f, 640f, 360f, 44f), "ui.rb.result.rewards", "획득 보상", 42, White, TA.Left, heavy: true);
-            Tile(c, "RbResultGoldTile", 128f, "Icons/rb_icon_currency_gold_144", "RbResultGoldValue", "RbResultGoldLabel", "ui.rb.result.gold", "골드");
-            var shard = Tile(c, "RbResultShardTile", 360f, "Icons/rb_icon_shard_144", "RbResultShardValue", "RbResultShardLabel", null, "아마존 조각");
+            // 획득 보상 3칸 — 클리어 325 x 400(어두운 칸) / 실패 320 x 480(금 · 청록 테 — 망령의 밤 칸과 같은 판)
+            Text(Two(slots, Node(c, "RbResultRewardTitle"), CBox(28, 1146, 600, 1204), CBox(40, 1113, 600, 1173)), "ui.rb.result.rewards", "획득 보상", 48, RsInk, TA.Left, heavy: true);
+            Tile(slots, c, "RbResultGoldTile", CBox(28, 1214, 353, 1614), CBox(40, 1209, 360, 1690), "Icons/rb_icon_currency_gold_144", "RbResultGoldValue", "RbResultGoldLabel", "ui.rb.result.gold", "골드");
+            var shard = Tile(slots, c, "RbResultShardTile", CBox(377, 1214, 703, 1614), CBox(380, 1222, 700, 1701), "Icons/rb_icon_shard_144", "RbResultShardValue", "RbResultShardLabel", null, "아마존 조각");
             var face = Node(shard, "RbResultShardFace");
-            Inside2(face, 128f, 18f, 60f, 60f);
+            Two(slots, face, TBox(180, 70, 128, 128), TBox(180, 70, 128, 128));
             Img(face, "Icons/rb_icon_mode_ghost_96");
-            Tile(c, "RbResultExpTile", 592f, "Icons/rb_icon_ghost_xp_144", "RbResultExpValue", "RbResultExpLabel", "ui.rb.result.ghost_exp", "유령 경험치");
+            Tile(slots, c, "RbResultExpTile", CBox(727, 1214, 1052, 1614), CBox(720, 1222, 1040, 1701), "Icons/rb_icon_stat_attack_144", "RbResultExpValue", "RbResultExpLabel", "ui.rb.result.ghost_exp", "유령 경험치");
 
-            // 로비로 · 다음 챕터 ▶(다시 도전)
-            var lobby = PutPx(Node(c, "RbResultLobby"), c, 135f, 1010f, 230f, 84f);
+            // 실패 — 성장 추천 판 40~1040 x 1720~1908(얼굴 · 「공격력 강화 추천」 · 「가장 오래 쓴 몸 · 아마존」 · 성장 ›)
+            var tip = Two(slots, Node(c, "RbResultTip"), CBox(40, 1720, 1040, 1908), CBox(40, 1720, 1040, 1908));
+            Img(tip, "Components/rb_panel_base");
+            Img(Inside2(Node(tip, "RbResultTipFace"), 23f * S, 30f * S, 128f * S, 128f * S), "Icons/rb_icon_mode_ghost_96");
+            Text(Inside2(Node(tip, "RbResultTipTitle"), 172f * S, 42f * S, 600f * S, 50f * S), "ui.rb.result.tip_title", "공격력 강화 추천", 40, RsInk, TA.Left, heavy: true);
+            Text(Inside2(Node(tip, "RbResultTipSub"), 172f * S, 99f * S, 600f * S, 43f * S), null, "가장 오래 쓴 몸 · 아마존", 36, RsMuted2, TA.Left);
+            var tipGo = Inside2(Node(tip, "RbResultTipGo"), 795f * S, 21f * S, 183f * S, 144f * S);
+            Btn(tipGo, "Components/rb_btn_secondary");
+            Text(Stretch(Node(tipGo, "RbResultTipGoText")), "ui.rb.result.tip_go", "성장 ›", 44, RsBtnText, TA.Center, heavy: true);
+
+            // 로비로 · 다음 챕터 ▶(다시 도전 | ⚡5)
+            var lobby = Two(slots, Node(c, "RbResultLobby"), CBox(28, 1870, 380, 2030), CBox(28, 1993, 514, 2163));
             Btn(lobby, "Components/rb_btn_secondary");
-            Text(Stretch(Node(lobby, "RbResultLobbyText")), "ui.rb.result.lobby", "로비로", 44, White, TA.Center, heavy: true);
-            var next = PutPx(Node(c, "RbResultNext"), c, 475f, 1010f, 430f, 92f);
+            Text(Stretch(Node(lobby, "RbResultLobbyText")), "ui.rb.result.lobby", "로비로", 44, RsBtnText, TA.Center, heavy: true);
+            var next = Two(slots, Node(c, "RbResultNext"), CBox(404, 1870, 1052, 2030), CBox(534, 1990, 1052, 2166));
             Btn(next, "Components/rb_btn_primary");
-            Text(Stretch(Node(next, "RbResultNextText")), null, "다음 챕터 ▶", 48, Ink, TA.Center, heavy: true);
+            Text(Two(slots, Node(next, "RbResultNextText"), TBox(0, 0, 648, 160), TBox(0, 0, 290, 176), 56f, 44f), null, "다음 챕터 ▶", 56, RsBtnInk, TA.Center, heavy: true);
+            var cost = Node(next, "RbResultNextCost");
+            Corner(cost, 0f, 0f, 518f * S, 176f * S);
+            var costLine = Inside2(Node(cost, "RbResultNextCostLine"), 290f * S, 53f * S, 3f * S, 70f * S);
+            Img(costLine, "Components/rb_divider_line").preserveAspect = false;
+            costLine.GetComponent<Image>().color = new Color32(80, 40, 0, 64);   // 시안 border-left 3px rgba(80,40,0,.25)
+            Img(Inside2(Node(cost, "RbResultNextCostIcon"), 313f * S, 64f * S, 48f * S, 48f * S), "Icons/rb_icon_currency_energy_48");
+            Text(Inside2(Node(cost, "RbResultNextCostValue"), 367f * S, 51f * S, 120f * S, 74f * S), null, "5", 56, RsBtnInk, TA.Left, number: true);
 
+            // 실패 배치를 한 번 입혀 보고 잰 뒤 클리어 배치로 되돌린다 — 둘 다 RbRunResult 에 담긴다
             var view = page.gameObject.AddComponent<Game.Module.InGame.RbRunResult>();
             var so = new SerializedObject(view);
             so.FindProperty("_bgClear").objectReferenceValue = KitSprite("Art/rb_art_result_clear_bg");
+            so.FindProperty("_bgStory").objectReferenceValue = KitSprite("Art/rb_art_result_clear_bg_quiet");
             so.FindProperty("_bgFail").objectReferenceValue = KitSprite("Art/rb_art_result_fail_bg");
             so.FindProperty("_wordClear").objectReferenceValue = KitSprite("WordArt/rb_word_word_clear");
             so.FindProperty("_wordFailed").objectReferenceValue = KitSprite("WordArt/rb_word_word_failed");
             so.FindProperty("_ghostCheer").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_cheer");
             so.FindProperty("_ghostSad").objectReferenceValue = KitSprite("Art/rb_art_mascot_ghost_sad");
+            so.FindProperty("_cellClear").objectReferenceValue = KitSprite("Components/rb_result_cell");
+            so.FindProperty("_cellGold").objectReferenceValue = KitSprite("Components/rb_cell_line_gold");
+            so.FindProperty("_cellTeal").objectReferenceValue = KitSprite("Components/rb_cell_line_teal");
+            so.FindProperty("_expClear").objectReferenceValue = KitSprite("Icons/rb_icon_stat_attack_144");
+            so.FindProperty("_expFail").objectReferenceValue = KitSprite("Icons/rb_icon_ghost_xp_144");
+            so.FindProperty("_clearHeight").floatValue = ResultClearH;
+            so.FindProperty("_failHeight").floatValue = ResultFailH;
+            var sp = so.FindProperty("_slots");
+            sp.arraySize = slots.Count;
+            for (int i = 0; i < slots.Count; i++)
+            {
+                var s = slots[i];
+                var e = sp.GetArrayElementAtIndex(i);
+                e.FindPropertyRelative("Node").objectReferenceValue = s.Rt;
+                e.FindPropertyRelative("ClearPos").vector2Value = s.Clear.pos;
+                e.FindPropertyRelative("ClearSize").vector2Value = s.Clear.size;
+                e.FindPropertyRelative("FailPos").vector2Value = s.Fail.pos;
+                e.FindPropertyRelative("FailSize").vector2Value = s.Fail.size;
+                e.FindPropertyRelative("ClearFont").floatValue = s.ClearFont * S;
+                e.FindPropertyRelative("FailFont").floatValue = s.FailFont * S;
+            }
             so.ApplyModifiedPropertiesWithoutUndo();
+            tip.gameObject.SetActive(false);
+            cost.gameObject.SetActive(false);
+            badge.gameObject.SetActive(false);
+        }
+
+        // 결과 시안 색(브라우저에서 잰 값) — 시안 #54DCEB · NEW #EFC667 · 흐린 글 #ABB2CE / 실패 #AEB4C8 · 흰 글 #EDF0F6 · 버튼 #F2F4FF · 노란 버튼 글 #302008
+        private static readonly Color RsCyan = new Color32(84, 220, 235, 255);
+        private static readonly Color RsGold = new Color32(239, 198, 103, 255);
+        private static readonly Color RsMuted = new Color32(171, 178, 206, 255);
+        private static readonly Color RsMuted2 = new Color32(174, 180, 200, 255);
+        private static readonly Color RsInk = new Color32(237, 240, 246, 255);
+        private static readonly Color RsBtnText = new Color32(242, 244, 255, 255);
+        private static readonly Color RsBtnInk = new Color32(48, 32, 8, 255);
+        private const float ResultClearH = (2060f - 140f) * S, ResultFailH = (2200f - 140f) * S;
+
+        private struct ResultSlot
+        {
+            public RectTransform Rt;
+            public (Vector2 pos, Vector2 size) Clear, Fail;
+            public float ClearFont, FailFont;
+        }
+
+        /// <summary>판 안 상자(시안 1080 · 판 위 = 140 줄) → 위 왼쪽 앵커 · 가운데 피벗 자리.</summary>
+        private static (Vector2 pos, Vector2 size) CBox(float x0, float y0, float x1, float y1)
+            => (new Vector2((x0 + x1) * 0.5f * S, -((y0 + y1) * 0.5f - 140f) * S), new Vector2((x1 - x0) * S, (y1 - y0) * S));
+
+        /// <summary>칸 안 상자(칸 위 왼쪽 기준 시안 px) → 위 왼쪽 앵커 · 위 왼쪽 피벗 자리.</summary>
+        private static (Vector2 pos, Vector2 size) TBox(float x, float y, float w, float h)
+            => (new Vector2(x * S, -y * S), new Vector2(w * S, h * S));
+
+        /// <summary>두 배치를 담고 클리어 자리에 놓는다. CBox 는 가운데 피벗, TBox 는 위 왼쪽 피벗 — 자리 값의 뜻에 맞춰 피벗을 고른다.</summary>
+        private static RectTransform Two(System.Collections.Generic.List<ResultSlot> slots, RectTransform rt,
+                                         (Vector2 pos, Vector2 size) clear, (Vector2 pos, Vector2 size) fail,
+                                         float clearFont = 0f, float failFont = 0f)
+        {
+            bool corner = rt.parent != null && rt.parent.name != "RbResultContent";
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = corner ? new Vector2(0f, 1f) : new Vector2(0.5f, 0.5f);
+            rt.localScale = Vector3.one;
+            rt.anchoredPosition = clear.pos;
+            rt.sizeDelta = clear.size;
+            slots.Add(new ResultSlot { Rt = rt, Clear = clear, Fail = fail, ClearFont = clearFont, FailFont = failFont });
+            return rt;
+        }
+
+        /// <summary>부모 가운데에 놓는다(가로 offset · 폭 · 높이).</summary>
+        private static void Center(RectTransform rt, float x, float w, float h)
+        {
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(w, h);
+            rt.anchoredPosition = new Vector2(x, 0f);
         }
 
         // ── 일시정지 · 포기 확인 ─────────────────────────────────
@@ -828,14 +1002,20 @@ namespace Game.Editor.ReBorn
             Img(Inside2(Node(x, name + "Icon"), 15f, 15f, 36f, 36f), "Icons/rb_icon_sys_close_48");
         }
 
-        /// <summary>보상 칸 — 판 · 아이콘 · 값 · 이름(칸 216×200, 가운데 x).</summary>
-        private static RectTransform Tile(RectTransform c, string name, float cx, string icon, string value, string label, string key, string korean)
+        /// <summary>
+        /// 보상 칸 — 판 · 아이콘 144 · 값(도트 44 / 실패 40) · 이름 36. 클리어 칸 325 x 400(아이콘 91,64 · 값 220 · 이름 291) ·
+        /// 실패 칸 320 x 480(아이콘 88,110 · 값 263 · 이름 325) — 시안 result-story · result-fail 을 브라우저에서 잰 값.
+        /// </summary>
+        private static RectTransform Tile(System.Collections.Generic.List<ResultSlot> slots, RectTransform c, string name,
+                                          (Vector2 pos, Vector2 size) clear, (Vector2 pos, Vector2 size) fail,
+                                          string icon, string value, string label, string key, string korean)
         {
-            var t = PutPx(Node(c, name), c, cx, 770f, 216f, 200f);
-            Img(t, "Components/rb_result_reward_row");
-            Img(Inside2(Node(t, name + "Icon"), 68f, 22f, 80f, 80f), icon);
-            Text(Inside2(Node(t, value), 8f, 108f, 200f, 46f), null, "432", 48, White, TA.Center, number: true);
-            Text(Inside2(Node(t, label), 8f, 154f, 200f, 34f), key, korean, 30, Dim, TA.Center);
+            var t = Two(slots, Node(c, name), clear, fail);
+            Img(t, "Components/rb_result_cell");
+            float cw = clear.size.x / S, fw = fail.size.x / S;
+            Img(Two(slots, Node(t, name + "Icon"), TBox(91, 64, 144, 144), TBox(88, 110, 144, 144)), icon);
+            Text(Two(slots, Node(t, value), TBox(0, 220, cw, 59), TBox(0, 263, fw, 54), 44f, 40f), null, "432", 44, RsInk, TA.Center, number: true);
+            Text(Two(slots, Node(t, label), TBox(0, 291, cw, 44), TBox(0, 325, fw, 45)), key, korean, 36, RsInk, TA.Center);
             return t;
         }
 
@@ -882,10 +1062,6 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_reborn").boolValue = true;
             so.FindProperty("_skillFrame").objectReferenceValue = KitSprite("Hud/rb_btn_skill");
             so.FindProperty("_skillFrameEmpty").objectReferenceValue = KitSprite("Hud/rb_btn_skill_cooldown");
-            var panels = so.FindProperty("_rbCardPanels");
-            string[] p = { "rb_card_common", "rb_card_rare", "rb_card_epic", "rb_card_top" };
-            panels.arraySize = p.Length;
-            for (int i = 0; i < p.Length; i++) panels.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Components/{p[i]}");
             so.FindProperty("_rbPrice").objectReferenceValue = KitSprite("Components/rb_btn_price");
             so.FindProperty("_rbPricePoor").objectReferenceValue = KitSprite("Components/rb_btn_price_poor");
             var arts = AssetDatabase.FindAssets("rb_art_ev_ t:Sprite", new[] { $"{Kit}/Art" });

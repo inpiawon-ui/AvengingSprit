@@ -39,7 +39,7 @@ namespace Game.Module.InGame
                            : string.Format(Localize.FromTable("ui.rb.result.tower_fail", "{0}F FAILED"), e.PlayedFloor), clear);
             _ui.SetText("RbResultChapter", Localize.FromTable("ui.rb.src.tower", "망령의 탑"));
             int max = CoreModule.TryGet<IModeProgress>(out var m) && m.Table != null ? m.Table.FreeEntriesPerDay : 3;
-            Chip(string.Format(Localize.FromTable("ui.rb.result.entries", "남은 입장 {0}/{1}"), e.EntriesLeft, max));
+            Chip(string.Format(Localize.FromTable("ui.rb.result.entries", "남은 입장 {0}/{1}"), e.EntriesLeft, max), false);
 
             Record(0, Localize.FromTable("ui.rb.result.floor", "층"), $"{e.PlayedFloor}F");
             Record(1, Localize.FromTable("ui.rb.result.possess", "빙의 · 잃은 몸"), $"{e.PossessCount} · {e.LostCount}");
@@ -75,7 +75,7 @@ namespace Game.Module.InGame
             string day = DayKey(e.NightDayIndex);
             _ui.SetText("RbResultChapter", $"{Localize.Get($"ui.night.day.{day}")} · {Localize.Get($"ui.night.day_rule.{day}")}");
             Chip(e.IsNewBest ? string.Format(Localize.FromTable("ui.rb.result.best_new", "최고 처치 {0}  <color=#FFC93D>NEW</color>"), e.FinalKills.ToString("N0"))
-                             : string.Format(Localize.FromTable("ui.rb.result.best", "최고 처치 {0}"), Mathf.Max(e.PreviousBest, e.FinalKills).ToString("N0")));
+                             : string.Format(Localize.FromTable("ui.rb.result.best", "최고 처치 {0}"), Mathf.Max(e.PreviousBest, e.FinalKills).ToString("N0")), false);
 
             Record(0, Localize.FromTable("ui.rb.result.survived", "버틴 시간"), Clock(e.SurvivedSeconds));
             Record(1, null, e.FinalKills.ToString("N0"));
@@ -106,6 +106,7 @@ namespace Game.Module.InGame
             gameObject.SetActive(true);
             transform.SetAsLastSibling();   // 06_ui — 열 때 맨 위
             _leaving = false;
+            ApplyLayout(false);
             SetSprite("RbResultBg", clear ? _bgClear : _bgFail);
             SetSprite("RbResultGhost", clear ? _ghostCheer : _ghostSad);
             _ui.SetActive("RbResultWord", false);
@@ -116,12 +117,6 @@ namespace Game.Module.InGame
             _ui.SetActive("RbResultHeadline", true);
             _ui.SetText("RbResultHeadline", text);
             if (_ui.Get<TextMeshProUGUI>("RbResultHeadline") is TextMeshProUGUI t) t.color = good ? Color.white : FailRed;
-        }
-
-        private void Chip(string text)
-        {
-            _ui.SetActive("RbResultNew", true);
-            _ui.SetText("RbResultNewText", text);
         }
 
         /// <summary>기록 한 줄 — 이름이 null 이면 판에 박힌 이름(처치 · 플레이 시간) 그대로.</summary>
@@ -138,11 +133,7 @@ namespace Game.Module.InGame
             var host = _player?.GetHost(hostKey);
             _ui.SetText("RbResultShardValue", value);
             _ui.SetText("RbResultShardLabel", string.Format(Localize.FromTable("ui.rb.result.shard", "{0} 조각"), host != null ? host.DisplayName : hostKey));
-            if (_ui.Get<Image>("RbResultShardFace") is Image face)
-            {
-                face.sprite = faces != null ? faces.GetSprite($"face_{hostKey}") : null;
-                face.enabled = face.sprite != null;
-            }
+            SetFace("RbResultShardFace", hostKey, faces);
         }
 
         /// <summary>켜진 보상 칸을 가운데로 모은다(탑 · 밤은 칸이 하나 · 둘).</summary>

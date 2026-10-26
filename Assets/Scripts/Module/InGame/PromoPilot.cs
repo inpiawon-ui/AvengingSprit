@@ -649,7 +649,8 @@ namespace Game.Module.InGame
 
             switch (open)
             {
-                case "buff": Click($"BuffCard{Random.Range(0, 3)}"); break;
+                // RE:BORN 은 카드를 고른 뒤 아래 버튼으로 확정한다(옛 화면은 카드 누름이 곧 확정 — 버튼이 없어 둘째 누름은 그냥 지나간다)
+                case "buff": Click($"BuffCard{Random.Range(0, 3)}"); Click("BuffHint"); break;
                 case "shrine": Click("ShrineChoice0"); break;
                 case "event": if (!Click("EventAcceptButton")) Click("EventDeclineButton"); break;
                 case "shop":
