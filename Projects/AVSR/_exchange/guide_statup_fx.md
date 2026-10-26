@@ -53,19 +53,19 @@ FX-statup-01  fx_statup_lava_0..7
 · 바탕: 검정(가산)
 · 앵커: ref/statup_mock/anchor_free_idle_lava_x3.png
 · 금지: 칸 밖으로 번짐 · 초록 · 가는 빛줄기(레이저) · 판 · 외곽선
-· 상태: 필요
+· 상태: 납품 → 검수 통과 → 반영(2026-10-26, b0f8a626)
 FX-statup-02  fx_statup_glow
 · 무엇: 용암 뒤 · 칸 아래쪽에 퍼지는 부드러운 금빛 번짐(광원) — 칸 테두리 아래 변 따라 살짝 빛 받음
 · 크기 · 장 수: 680 × 160 1장 · 머묾(코드가 숨쉬기)
 · 바탕: 검정(가산)
 · 앵커: ref/statup_mock/anchor_free_idle_tile_x2.png
 · 금지: 칸 위쪽 · 글자 자리까지 밝게 · 딱딱한 가장자리
-· 상태: 필요
+· 상태: 납품 → 검수 통과 → 반영(2026-10-26, b0f8a626)
 FX-statup-03  fx_statup_spark_dot · fx_statup_spark_cross · fx_statup_spark_diamond
 · 무엇: 떠오르는 반짝이 입자 3종(점 · 작은 십자 · 마름모) — 금 · 노랑
 · 크기 · 장 수: 각 32 × 32 1장
 · 바탕: 검정(가산)
 · 앵커: ref/statup_mock/anchor_free_idle_lava_x3.png 의 반짝이
 · 금지: 큰 별 섬광(지금 반려된 빛살) · 흐림만 있는 동그라미
-· 상태: 필요
+· 상태: 납품 → 검수 통과 → 반영(2026-10-26, b0f8a626)
 ```
