@@ -31,7 +31,6 @@ namespace Game.Module.Lobby
         private UIBinder _ui;
         private RbLobbyUI _shell;
         private IModeProgress _progress;
-        private SpriteAtlas _faces;
         private bool _starting;
         private int _day;
 
@@ -61,7 +60,6 @@ namespace Game.Module.Lobby
 
         public void Open(SpriteAtlas faces)
         {
-            _faces = faces;
             gameObject.SetActive(true);
             CoreModule.TryGet(out _progress);
             _progress?.Refresh();
@@ -116,8 +114,6 @@ namespace Game.Module.Lobby
 
         // ── 탑 ─────────────────────────────────────────────
 
-        private readonly List<string> _fit = new();
-
         private void FillTower()
         {
             var table = _progress.Table;
@@ -138,8 +134,9 @@ namespace Game.Module.Lobby
                 TextIn(row, $"ChlFloor{i}State", now ? Localize.FromTable("ui.rb.chl.now", "현재 도전")
                                                 : past ? "✓ " + Localize.FromTable("ui.rb.chl.cleared", "클리어")
                                                 : Localize.FromTable("ui.rb.chl.locked", "잠김"));
-                if (_ui.Find(row, $"ChlFloor{i}State")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st) st.color = now ? Cyan : past ? Color.white : Dim;
-                if (_ui.Find(row, $"ChlFloor{i}No")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI no) no.color = now ? Cyan : Color.white;
+                // 시안: 현재 · 깬 층 흰 글자, 잠긴 층 흐린 글자
+                if (_ui.Find(row, $"ChlFloor{i}State")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st) st.color = now || past ? Color.white : Dim;
+                if (_ui.Find(row, $"ChlFloor{i}No")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI no) no.color = now || past ? Color.white : Dim;
                 _ui.Find(row, $"ChlFloor{i}Lock")?.gameObject.SetActive(!now && !past);
             }
             var cur = table.FloorAt(next);
@@ -148,10 +145,6 @@ namespace Game.Module.Lobby
             var reward = cur != null && cur.IsBoss ? table.FirstClearBoss : table.FirstClear;
             _ui.SetText("ChlRewardGold", reward.Gold.ToString("N0"));
             _ui.SetText("ChlRewardShard", reward.Shards.ToString());
-            _fit.Clear();
-            _fit.AddRange(_progress.TowerFitHosts(cur));
-            _fit.Sort((a, b) => _progress.IsTrained(b).CompareTo(_progress.IsTrained(a)));
-            SetFace("ChlRewardShardFace", _fit.Count > 0 ? _fit[0] : null);
 
             var step = _progress.SweepNow;
             bool swept = _progress.TowerSweptToday;
@@ -160,7 +153,6 @@ namespace Game.Module.Lobby
             if (_ui.Get<Button>("ChlTowerSweep") is Button sb) sb.interactable = step != null && !swept;
 
             int entries = _progress.TowerEntries, cost = _progress.TowerBuyCost;
-            _ui.SetText("ChlTowerEntryLine", EntryLine(entries, table.FreeEntriesPerDay));
             if (_ui.Get<Button>("ChlTowerBuy") is Button bb) bb.interactable = cost >= 0;
             StartLabel("ChlTowerStart", entries > 0, Localize.FromTable("ui.rb.chl.challenge", "도전"),
                        cost >= 0 ? Localize.Format("ui.tower.start_buy", cost) : Localize.Get("ui.tower.no_entries"));
@@ -172,6 +164,7 @@ namespace Game.Module.Lobby
             _ui.SetText(node + "Text", hasEntry ? label : noEntry);
             _ui.SetActive(node + "Bar", hasEntry);
             _ui.SetActive(node + "Cost", hasEntry);
+            _ui.SetActive(node + "Ticket", hasEntry);
             if (_ui.Get<TextMeshProUGUI>(node + "Text") is TextMeshProUGUI t) t.alignment = hasEntry ? TextAlignmentOptions.Right : TextAlignmentOptions.Center;
             if (!hasEntry && _ui.Find(node + "Text") is RectTransform rt) { rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero; }
         }
@@ -244,7 +237,7 @@ namespace Game.Module.Lobby
             for (int i = 0; i < 7; i++)
             {
                 _ui.SetText($"ChlDay{i}Text", Localize.Get($"ui.night.day.{DayKeys[i]}").Substring(0, 1));
-                if (_ui.Get<TextMeshProUGUI>($"ChlDay{i}Text") is TextMeshProUGUI dt) dt.color = i == _day ? Cyan : Dim;
+                if (_ui.Get<TextMeshProUGUI>($"ChlDay{i}Text") is TextMeshProUGUI dt) dt.color = Color.white;   // 시안: 일곱 칸 다 흰 글자
             }
             string dayName = Localize.Get($"ui.night.day.{DayKeys[_day]}");
             _ui.SetText("ChlNightDayTitle", $"{dayName} · {Localize.Get($"ui.night.day_rule.{DayKeys[_day]}")}");
@@ -253,13 +246,13 @@ namespace Game.Module.Lobby
             _ui.SetText("ChlNightRule", Localize.Get($"ui.night.day_desc.{DayKeys[_day]}"));
             int perKills = table != null ? table.KillsPerShard : 50, bonus = table != null ? table.ClearShardBonus : 3;
             _ui.SetText("ChlNightReward", Localize.Format("ui.night.reward", perKills, bonus).Replace("\n", " · "));
-            // 오늘의 보상 두 칸(시안 night) — 밤은 골드가 없다(기획 — 잔몹 골드 끔 · 결과도 조각뿐)라 「처치마다 조각」 · 「보스 처치 보너스」
-            _ui.SetText("ChlNightKillValue", "1");
-            _ui.SetText("ChlNightKillLabel", string.Format(Localize.FromTable("ui.rb.chl.per_kills", "처치 {0}마다"), perKills));
-            _ui.SetText("ChlNightBossValue", $"+{bonus}");
-            _ui.SetText("ChlNightBossLabel", Localize.FromTable("ui.rb.chl.boss_kill", "보스 처치"));
-            var hosts = NightEntryPanel.DayHosts(table, _day);
-            SetFace("ChlNightShardFace", hosts.Count > 0 ? hosts[0] : null);
+            // 오늘의 보상 두 칸(시안 night) — 골드(처치 수만큼, PD 2026-10-26) · 호스트 조각. 그 요일 최고 처치로 받을 양
+            // 「◆」 는 작은 청록 마름모(시안)
+            if (_ui.Get<TextMeshProUGUI>("ChlNightRewardTitle") is TextMeshProUGUI rt)
+                rt.text = Localize.Get("ui.rb.chl.today_reward").Replace("◆", "<size=60%><color=#3EE6FF>◆</color></size>");
+            int best = _progress.NightBest(_day);
+            _ui.SetText("ChlNightGoldValue", _progress.NightGold(best).ToString("N0"));
+            _ui.SetText("ChlNightShardValue", (best / Mathf.Max(1, perKills)).ToString("N0"));
             bool isToday = _day == today;
             int entries = _progress.NightEntries, cost = _progress.NightBuyCost;
             if (_ui.Get<Button>("ChlNightStart") is Button b) b.interactable = isToday;
@@ -286,13 +279,6 @@ namespace Game.Module.Lobby
         }
 
         // ── 도구 ────────────────────────────────────────────
-
-        private void SetFace(string node, string key)
-        {
-            if (_ui.Get<Image>(node) is not Image img) return;
-            img.sprite = key != null && _faces != null ? _faces.GetSprite($"face_{key}") : null;
-            img.enabled = img.sprite != null;
-        }
 
         private void TextIn(Transform root, string node, string value)
         {

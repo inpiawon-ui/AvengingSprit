@@ -93,6 +93,7 @@ namespace Game.Module.Events
         public int ReachedLevel;
         public string[] ShardHostKeys;
         public int[] ShardCounts;
+        public int EarnedGold;
         public int EntriesLeft;
         public int PossessCount;
         public int LostCount;

@@ -401,6 +401,7 @@ namespace Game.Module.InGame
                 ReachedLevel = _level,
                 ShardHostKeys = keys.ToArray(),
                 ShardCounts = counts.ToArray(),
+                EarnedGold = _modes != null ? _modes.NightGold(_nightKills) : 0,
                 EntriesLeft = _modes != null ? _modes.NightEntries : 0,
                 PossessCount = _modePossessCount,
                 LostCount = _modeLostCount,

@@ -21,8 +21,9 @@ namespace Game.Editor.ReBorn
             BuildNight(page);
             var view = page.gameObject.AddComponent<RbChallengePage>();
             var so = new SerializedObject(view);
-            so.FindProperty("_rowNow").objectReferenceValue = KitSprite("Components/rb_list_row");   // 선택 판은 왼쪽 청록 막대가 층 글자를 덮는다 — 현재 층은 청록 글자로
-            so.FindProperty("_rowPast").objectReferenceValue = KitSprite("Components/rb_list_row");
+            // 시안 tower: 현재 · 깬 층 = 도톰한 남색 버튼 판(흰 글자), 잠긴 층 = 납작한 판(흐린 글자). 선택 판(rb_list_row_selected)은 왼쪽 청록 막대가 층 글자를 덮었다
+            so.FindProperty("_rowNow").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
+            so.FindProperty("_rowPast").objectReferenceValue = KitSprite("Components/rb_btn_secondary");
             so.FindProperty("_rowLocked").objectReferenceValue = KitSprite("Components/rb_list_row");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
@@ -114,29 +115,32 @@ namespace Game.Editor.ReBorn
             Text(PlaceIn(Node(body, "ChlFloorTitle"), Top, 55, 1238, 730, 1298), null, "2층", 54, White, TA.Left, heavy: true);
             Text(PlaceIn(Node(body, "ChlFloorDesc"), Top, 55, 1310, 740, 1352), "ui.tower.first_clear", "첫 클리어 보상 (매주 다시)", 34, Dim, TA.Left);
             var buy = Button2(body, "ChlTowerBuy", "ui.rb.chl.buy", "추가 입장 ›", 750, 1240, 1020, 1350, false, 38);
+            buy.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = Cyan;   // 시안: 청록 글자
             Reward(body, "ChlReward", 1393, 1557);
             Button2(body, "ChlTowerFit", "ui.rb.chl.sweep_rule", "소탕 조건 확인", 55, 1584, 527, 1717, false, 40);
             StartButton(body, "ChlTowerStart", "도전", 552, 1584, 1024, 1717);
+            // 버튼 줄과 오늘의 소탕 사이 가는 줄(시안 #1D2331 · 두께 2 — 코덱스 납품 rb_divider_line)
+            if (KitSprite("Components/rb_divider_line") != null) Img(PlaceIn(Node(body, "ChlSweepLine"), Top, 55, 1733, 1024, 1741), "Components/rb_divider_line").preserveAspect = false;
             Text(PlaceIn(Node(body, "ChlSweepTitle"), Top, 55, 1760, 760, 1812), "ui.tower.sweep", "오늘의 소탕", 44, White, TA.Left, heavy: true);
             Text(PlaceIn(Node(body, "ChlSweepInfo"), Top, 55, 1822, 770, 1868), null, "하루 1번 · 입장 횟수를 쓰지 않는다", 32, Dim, TA.Left);
             Button2(body, "ChlTowerSweep", null, "소탕", 790, 1756, 1024, 1871, false, 40);
-            Text(PlaceIn(Node(body, "ChlTowerEntryLine"), Top, 55, 1890, 1024, 1940), null, "남은 입장 2/3 · 초기화까지 03:24:00", 30, Dim, TA.Left);
             buy.transform.SetAsLastSibling();
         }
 
         /// <summary>보상 두 칸 — 골드 · 조각(얼굴).</summary>
         private static void Reward(RectTransform body, string p, float y0, float y1)
         {
-            // 시안 tower: 얇은 테 칸(rb_slot_common) 둘 — 아이콘 왼쪽 · 숫자와 이름 가운데
+            // 시안 tower: 얇은 청록 테 칸 둘 — 아이콘 왼쪽 · 숫자와 이름 가운데 · 조각은 「?」
             var g = PlaceIn(Node(body, p + "GoldTile"), Top, 55, y0, 527, y1);
-            Img(g, "Components/rb_slot_common");
+            Img(g, CellTeal).pixelsPerUnitMultiplier = CellPpu;
             Img(Local(Node(g, p + "GoldIcon"), 55, y0, 527, y1, 85, y0 + 32, 185, y0 + 132), "Icons/rb_icon_currency_gold_96");
             Text(Local(Node(g, p + "Gold"), 55, y0, 527, y1, 200, y0 + 22, 505, y0 + 86), null, "500", 54, White, TA.Center, number: true);
             Text(Local(Node(g, p + "GoldLabel"), 55, y0, 527, y1, 200, y0 + 92, 505, y0 + 136), "ui.rb.result.gold", "골드", 34, White, TA.Center, heavy: true);
             var s = PlaceIn(Node(body, p + "ShardTile"), Top, 552, y0, 1024, y1);
-            Img(s, "Components/rb_slot_common");
-            Img(Local(Node(s, p + "ShardIcon"), 552, y0, 1024, y1, 582, y0 + 40, 662, y0 + 120), "Icons/rb_icon_shard_96");
-            Img(Local(Node(s, p + "ShardFace"), 552, y0, 1024, y1, 640, y0 + 24, 700, y0 + 84), "Icons/rb_icon_mode_ghost_96");
+            Img(s, CellTeal).pixelsPerUnitMultiplier = CellPpu;
+            var si = Local(Node(s, p + "ShardIcon"), 552, y0, 1024, y1, 577, y0 + 32, 677, y0 + 132);
+            Img(si, "Icons/rb_icon_shard_badge_socket_96");
+            Question(si, 577, y0 + 32, 677, y0 + 132);
             Text(Local(Node(s, p + "Shard"), 552, y0, 1024, y1, 710, y0 + 22, 1004, y0 + 86), null, "3", 54, White, TA.Center, number: true);
             Text(Local(Node(s, p + "ShardLabel"), 552, y0, 1024, y1, 710, y0 + 92, 1004, y0 + 136), "ui.rb.chl.host_shards", "호스트 조각", 34, White, TA.Center, heavy: true);
         }
@@ -166,9 +170,9 @@ namespace Game.Editor.ReBorn
             Text(PlaceIn(Node(body, "ChlNightBest"), Top, 55, 1052, 640, 1096), null, "목요일 최고 처치 128", 36, White, TA.Left);
             Text(PlaceIn(Node(body, "ChlNightLeft"), Top, 640, 1052, 1020, 1096), null, "남은 입장 2/3", 36, White, TA.Right);
             Text(PlaceIn(Node(body, "ChlNightRewardTitle"), Top, 55, 1124, 700, 1174), "ui.rb.chl.today_reward", "◆ 오늘의 보상", 44, White, TA.Left, heavy: true);
-            NightCell(body, "ChlNightKill", 55, 527, "Components/rb_slot_ssr", "Icons/rb_icon_shard_96", "1", "처치 50마다");
-            NightCell(body, "ChlNightBoss", 552, 1020, "Components/rb_slot_rare", "Icons/rb_icon_shard_96", "+3", "보스 처치");
-            Img(PlaceIn(Node(body, "ChlNightShardFace"), Top, 330, 1215, 400, 1285), "Icons/rb_icon_mode_ghost_96");   // 그날 몸 얼굴 — 조각 아이콘 옆
+            // 시안 night 그대로 — ① 금화 · 골드(처치 수만큼, PD 2026-10-26) ② 「?」 조각 · 호스트 조각. 값은 그 요일 최고 처치 기준 예상
+            NightCell(body, "ChlNightGold", 55, 527, CellGold, "Icons/rb_icon_currency_gold_96", false, "432", "ui.rb.result.gold", "골드");
+            NightCell(body, "ChlNightShard", 552, 1020, CellTeal, "Icons/rb_icon_shard_badge_socket_96", true, "3", "ui.rb.chl.host_shards", "호스트 조각");
             var rule = Text(PlaceIn(Node(body, "ChlNightRule"), Top, 55, 1465, 1020, 1510), null, "몸 셋 중 하나에 빙의", 34, Dim, TA.Left);
             rule.enableWordWrapping = true;
             Text(PlaceIn(Node(body, "ChlNightReward"), Top, 55, 1540, 1020, 1590), null, "처치 50마다 조각 1 · 보스 처치 +3", 36, White, TA.Left, heavy: true);
@@ -177,15 +181,32 @@ namespace Game.Editor.ReBorn
         }
 
         /// <summary>오늘의 보상 칸 — 테두리 칸 · 아이콘(위) · 큰 숫자 · 이름(아래). 시안 night 의 「432 골드」 · 「3 호스트 조각」 칸.</summary>
-        private static void NightCell(RectTransform body, string p, float x0, float x1, string frame, string icon, string value, string label)
+        private static void NightCell(RectTransform body, string p, float x0, float x1, string frame, string icon, bool question,
+                                      string value, string key, string label)
         {
             const float y0 = 1201, y1 = 1445;
             var c = PlaceIn(Node(body, p + "Tile"), Top, x0, y0, x1, y1);
-            Img(c, frame);
+            Img(c, frame).pixelsPerUnitMultiplier = CellPpu;
             float cx = (x0 + x1) * 0.5f;
-            Img(Local(Node(c, p + "Icon"), x0, y0, x1, y1, cx - 46, y0 + 18, cx + 46, y0 + 110), icon);
-            Text(Local(Node(c, p + "Value"), x0, y0, x1, y1, x0 + 10, y0 + 114, x1 - 10, y0 + 172), null, value, 52, White, TA.Center, number: true);
-            Text(Local(Node(c, p + "Label"), x0, y0, x1, y1, x0 + 10, y0 + 176, x1 - 10, y0 + 222), null, label, 34, White, TA.Center, heavy: true);
+            var ic = Local(Node(c, p + "Icon"), x0, y0, x1, y1, cx - 50, y0 + 14, cx + 50, y0 + 114);
+            Img(ic, icon);
+            if (question) Question(ic, cx - 50, y0 + 14, cx + 50, y0 + 114);
+            Text(Local(Node(c, p + "Value"), x0, y0, x1, y1, x0 + 10, y0 + 118, x1 - 10, y0 + 176), null, value, 56, White, TA.Center, number: true);
+            Text(Local(Node(c, p + "Label"), x0, y0, x1, y1, x0 + 10, y0 + 178, x1 - 10, y0 + 226), key, label, 38, White, TA.Center, heavy: true);
+        }
+
+        // 시안 칸 판 — 짙은 남색 · 얇은 금갈색 / 청록 테(코덱스 납품 rb_cell_line_*). 아직 없으면 남색 판
+        // 칸 판 테 40px 를 화면 모서리 둥글기 약 12px(시안)로 — 9분할 테를 2.5 배 줄여 그린다
+        private const float CellPpu = 2.5f;
+        private static string CellGold => KitSprite("Components/rb_cell_line_gold") != null ? "Components/rb_cell_line_gold" : "Components/rb_panel_base";
+        private static string CellTeal => KitSprite("Components/rb_cell_line_teal") != null ? "Components/rb_cell_line_teal" : "Components/rb_panel_base";
+
+        /// <summary>「?」 조각 — 조각 아이콘 오른쪽 아래 홈(rb_icon_shard_badge_socket)에 「?」(시안 night · tower: 어느 몸 조각인지 모른다).</summary>
+        private static void Question(RectTransform icon, float x0, float y0, float x1, float y1)
+        {
+            float w = x1 - x0, h = y1 - y0;
+            Text(Local(Node(icon, icon.name + "Q"), x0, y0, x1, y1, x0 + w * 0.70f, y0 + h * 0.66f, x0 + w * 0.97f, y0 + h * 0.97f),
+                 null, "?", h * 0.30f, White, TA.Center, heavy: true);
         }
 
         /// <summary>도전 · 시작 노란 버튼 — 글자 · 칸막이 · 「입장 1」(시안의 「▶ | 🎫1」). 「1」 은 입장 1번을 쓴다는 뜻.</summary>
@@ -194,9 +215,12 @@ namespace Game.Editor.ReBorn
             var b = PlaceIn(Node(body, name), Top, x0, y0, x1, y1);
             Btn(b, "Components/rb_btn_primary");
             float cx = (x0 + x1) * 0.5f;
-            Text(Local(Node(b, name + "Text"), x0, y0, x1, y1, x0 + 20, y0 + 10, cx + 60, y1 - 18), null, korean, 58, Ink, TA.Right, heavy: true);
-            Img(Local(Node(b, name + "Bar"), x0, y0, x1, y1, cx + 84, y0 + 34, cx + 88, y1 - 42), "Components/rb_bar_fill_cyan").color = Ink;
-            Text(Local(Node(b, name + "Cost"), x0, y0, x1, y1, cx + 106, y0 + 10, x1 - 20, y1 - 18), "ui.rb.chl.cost_entry", "입장 1", 46, Ink, TA.Left, heavy: true);
+            // 시안: 「시작 ▶ | 🎫1」 — 글자 · 가는 칸막이 · 입장표 아이콘(rb_icon_summon_ticket) · 「1」
+            float h = y1 - y0;
+            Text(Local(Node(b, name + "Text"), x0, y0, x1, y1, x0 + 20, y0 + 10, cx + 30, y1 - 18), null, korean, 58, Ink, TA.Right, heavy: true);
+            Img(Local(Node(b, name + "Bar"), x0, y0, x1, y1, cx + 50, y0 + h * 0.26f, cx + 53, y1 - h * 0.30f), "Components/rb_bar_fill_cyan").color = new Color(0.55f, 0.36f, 0.05f, 0.7f);
+            Img(Local(Node(b, name + "Ticket"), x0, y0, x1, y1, cx + 72, y0 + h * 0.5f - 34, cx + 152, y0 + h * 0.5f + 30), "Icons/rb_icon_summon_ticket_96");
+            Text(Local(Node(b, name + "Cost"), x0, y0, x1, y1, cx + 156, y0 + 10, cx + 230, y1 - 18), null, "1", 64, Ink, TA.Left, number: true);
         }
     }
 }

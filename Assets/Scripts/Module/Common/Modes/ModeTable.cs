@@ -215,6 +215,8 @@ namespace Game.Module.Common.Modes
         [SerializeField] private int _expMulChief = 12;
         [SerializeField] private int _killsPerShard = 50;
         [SerializeField] private int _clearShardBonus = 3;
+        // 처치 1마리당 골드 — 판이 끝나면 처치 수 × 이 값(PD 2026-10-26 「처치 수만큼 골드」 · 시안 night 「432 골드」)
+        [SerializeField] private int _nightGoldPerKill = 3;
 
         // 공통
         public RangeEntry[] Ranges => _ranges;
@@ -266,6 +268,7 @@ namespace Game.Module.Common.Modes
         public int ExpMulChief => _expMulChief;
         public int KillsPerShard => Mathf.Max(1, _killsPerShard);
         public int ClearShardBonus => _clearShardBonus;
+        public int NightGoldPerKill => Mathf.Max(0, _nightGoldPerKill);
 
         public string[] TrashOf(Affinity affinity) => affinity switch
         {

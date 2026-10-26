@@ -49,6 +49,9 @@ namespace Game.Module.Common.Modes
         /// <summary>오늘 요일(0 = 월 … 6 = 일, 하루 경계 기준).</summary>
         int TodayIndex { get; }
         int NightBest(int dayIndex);
+
+        /// <summary>그 처치 수로 받는 골드(판 끝 지급 · 로비 「오늘의 보상」 예상).</summary>
+        int NightGold(int kills);
         /// <summary>밤 판 끝 — 기록 · 처치 보상. 돌려주는 값: 이전 최고.</summary>
         int RecordNight(int dayIndex, int kills, float seconds, bool cleared, IReadOnlyList<string> dayHosts, List<string> outKeys, List<int> outCounts);
 
@@ -276,6 +279,8 @@ namespace Game.Module.Common.Modes
                 ? 0 : d.nightBestKills[dayIndex];
         }
 
+        public int NightGold(int kills) => _table != null ? Mathf.Max(0, kills) * _table.NightGoldPerKill : 0;
+
         public int RecordNight(int dayIndex, int kills, float seconds, bool cleared, IReadOnlyList<string> dayHosts,
                                List<string> outKeys, List<int> outCounts)
         {
@@ -294,6 +299,8 @@ namespace Game.Module.Common.Modes
             {
                 int shards = kills / _table.KillsPerShard + (cleared ? _table.ClearShardBonus : 0);
                 GiveShards(dayHosts, shards, outKeys, outCounts);
+                int gold = NightGold(kills);
+                if (gold > 0) Player?.AddCurrency(gold, 0);
             }
             SaveAndPublish();
             return prev;

@@ -82,7 +82,9 @@ namespace Game.Module.InGame
             Record(2, Localize.FromTable("ui.rb.result.level", "도달 Lv"), e.ReachedLevel.ToString());
 
             _ui.SetText("RbResultRewardTitle", Localize.FromTable("ui.rb.result.rewards", "획득 보상"));
-            _ui.SetActive("RbResultGoldTile", false);
+            // 처치 수만큼 골드(PD 2026-10-26 · 시안 result-night 「432 골드」)
+            _ui.SetActive("RbResultGoldTile", e.EarnedGold > 0);
+            _ui.SetText("RbResultGoldValue", e.EarnedGold.ToString("N0"));
             bool any = e.ShardHostKeys != null && e.ShardHostKeys.Length > 0;
             ShardTile(any ? e.ShardHostKeys[0] : null, any && e.ShardCounts != null ? e.ShardCounts[0].ToString("N0") : string.Empty, faces);
             _ui.SetActive("RbResultExpTile", false);
