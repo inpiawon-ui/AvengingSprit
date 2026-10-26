@@ -9,6 +9,12 @@ namespace Game.Module.Lobby
     /// </summary>
     public static class RbFrameFit
     {
+        /// <summary>
+        /// SSR 틀 = 왕관 없는 은빛 틀(rb_host_frame_ghost)에 곱하는 금색 — 묶음 SSR 틀의 왕관이 촌스럽다(PD 2026-10-26 「제거해」).
+        /// 은빛 선(176,187,203) × 이 색 ≈ 묶음 SSR 금선(202,159,71).
+        /// </summary>
+        public static readonly Color SsrTint = new(1f, 0.85f, 0.35f, 1f);
+
         public static void Apply(RectTransform frame, Vector2 card, Sprite sprite, Sprite[] sprites, Vector4[] bodies)
         {
             if (frame == null || sprite == null || sprites == null || bodies == null) return;

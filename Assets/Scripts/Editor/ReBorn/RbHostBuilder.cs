@@ -79,7 +79,8 @@ namespace Game.Editor.ReBorn
             for (int i = 0; i < chips.Length; i++)
             {
                 var c = Place(Node(page, $"ColFilter{i}"), Edge.Top, chips[i][0], 720, chips[i][1], 835);
-                Btn(c, "Components/rb_btn_chip");
+                // 시안은 알약(btn_chip)이 아니라 모서리만 둥근 직사각형 버튼(btn_secondary) — 묶음 final.css `button.btn`(PD 2026-10-26)
+                Btn(c, "Components/rb_btn_secondary");
                 Text(Local(Node(c, $"ColFilter{i}Text"), chips[i][0], 720, chips[i][1], 835, chips[i][0] + 12, 745, chips[i][1] - 12, 805),
                      keys[i], ko[i], 38, Dim, TA.Center, heavy: true);
             }
@@ -291,10 +292,10 @@ namespace Game.Editor.ReBorn
                 p.arraySize = paths.Length;
                 for (int i = 0; i < paths.Length; i++) p.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite(paths[i]);
             }
-            Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
+            Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ghost");   // SSR = 은빛 틀 × 금색(왕관 뺌, RbFrameFit.SsrTint)
             Many("_rarityTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
             Many("_affIcons", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
-            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
+            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ghost");
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

@@ -106,10 +106,10 @@ namespace Game.Editor.ReBorn
                 p.arraySize = paths.Length;
                 for (int i = 0; i < paths.Length; i++) p.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite(paths[i]);
             }
-            Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
+            Many("_gradeFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ghost");   // SSR = 은빛 틀 × 금색(왕관 뺌, RbFrameFit.SsrTint)
             One("_frameRandom", "Components/rb_host_frame_random");
             One("_frameGhost", "Components/rb_host_frame_ghost");
-            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr",
+            WireFrameBodies(so, "Components/rb_host_frame_r", "Components/rb_host_frame_sr",
                             "Components/rb_host_frame_random", "Components/rb_host_frame_ghost");
             One("_badgeBest", "Components/rb_badge_best");
             One("_badgeToday", "Components/rb_badge_today");

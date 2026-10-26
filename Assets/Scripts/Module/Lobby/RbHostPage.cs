@@ -32,9 +32,7 @@ namespace Game.Module.Lobby
 
         private const float CardW = 328f * 2f / 3f;
         private static readonly float[] ColX = { (30f + 164f - 540f) * 2f / 3f, (375f + 164f - 540f) * 2f / 3f, (722f + 164f - 540f) * 2f / 3f };
-        // 줄 간격 · 첫 줄 위 여백에 SSR 왕관 자리(CrownRoom)를 더했다 — 틀 몸통을 칸에 맞추자(RbFrameFit) 왕관이 윗줄 전투력을 가렸다
-        private const float CrownRoom = 44f;
-        private const float RowStep = (405f + CrownRoom) * 2f / 3f, FirstY = -(862f + 193f - 850f + CrownRoom) * 2f / 3f;
+        private const float RowStep = 405f * 2f / 3f, FirstY = -(862f + 193f - 850f) * 2f / 3f;
         private static readonly Color LockedTint = new(0.22f, 0.24f, 0.32f, 1f);
         // 등급(R · SR · SSR) 안쪽 빛 — 시안 카드 바탕색
         // 시안 카드 빛 색(묶음 v6.css --card-glow: R #4fa3ff · SR #b67cff · SSR #ffc846, 알파 0x66 = 0.4)
@@ -175,7 +173,7 @@ namespace Game.Module.Lobby
                 if (on) ((RectTransform)_cards[i]).anchoredPosition = new Vector2(ColX[i % 3], FirstY - RowStep * (i / 3));
             }
             int rows = (_shown.Count + 2) / 3;
-            content.sizeDelta = new Vector2(content.sizeDelta.x, (12f + CrownRoom) * 2f / 3f + RowStep * rows);
+            content.sizeDelta = new Vector2(content.sizeDelta.x, 12f * 2f / 3f + RowStep * rows);
         }
 
         private void OpenCard(int index)
@@ -194,7 +192,8 @@ namespace Game.Module.Lobby
             if (_ui.Find(card, "ColCardFrame")?.GetComponent<Image>() is Image frame && g < _gradeFrames.Length)
             {
                 frame.sprite = _gradeFrames[g];
-                frame.color = owned ? Color.white : new Color(0.55f, 0.58f, 0.68f, 1f);
+                var tint = e.Grade == HostGrade.S ? RbFrameFit.SsrTint : Color.white;   // SSR 은 은빛 틀에 금색을 곱한다(왕관 없음)
+                frame.color = owned ? tint : tint * new Color(0.55f, 0.58f, 0.68f, 1f);
                 RbFrameFit.Apply(frame.rectTransform, ((RectTransform)card).sizeDelta, frame.sprite, _fitSprites, _fitBodies);
             }
             if (_ui.Find(card, "ColCardRarity")?.GetComponent<Image>() is Image tag && g < _rarityTags.Length) tag.sprite = _rarityTags[g];

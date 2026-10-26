@@ -413,6 +413,8 @@ namespace Game.Module.Lobby
                 if (frame != null)
                     frame.sprite = mode == RunStartMode.Random ? _frameRandom : mode == RunStartMode.Ghost ? _frameGhost
                                  : e != null && (int)e.Grade < _gradeFrames.Length ? _gradeFrames[(int)e.Grade] : frame.sprite;
+                // SSR 은 은빛 틀에 금색을 곱한다(왕관 없음 — PD 2026-10-26 「촌스럽게」)
+                if (frame != null) frame.color = mode == RunStartMode.Host && e != null && e.Grade == HostGrade.S ? RbFrameFit.SsrTint : Color.white;
                 if (frame != null) RbFrameFit.Apply(frame.rectTransform, ((RectTransform)card).sizeDelta, frame.sprite, _fitSprites, _fitBodies);
                 _ui.Find(card, "CardSel")?.gameObject.SetActive(sel);
 
