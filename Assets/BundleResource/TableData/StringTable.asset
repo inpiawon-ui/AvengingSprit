@@ -11092,3 +11092,9 @@ MonoBehaviour:
     _en: Power +{0}
     _zhHant: "\u6230\u9B25\u529B +{0}"
     _zhHans: "\u6218\u6597\u529B +{0}"
+  - _key: ui.rb.lobby.adv
+    _ko: "\uC720\uB9AC \u25B2"
+    _ja: "\u6709\u5229 \u25B2"
+    _en: "Favored \u25B2"
+    _zhHant: "\u6709\u5229 \u25B2"
+    _zhHans: "\u6709\u5229 \u25B2"

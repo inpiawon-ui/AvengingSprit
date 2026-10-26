@@ -256,8 +256,8 @@ namespace Game.Character
         [SerializeField] private int _staminaRefillGem = 100;
         [SerializeField] private int _staminaRefillPerDay = 6;
 
-        [Tooltip("오늘의 몸 — 하루마다 가진 몸 중 이만큼 골드 출전비가 무료.")]
-        [SerializeField] private int _todayFreeHosts = 3;
+        [Tooltip("오늘의 몸 — 하루마다 가진 몸 중 이만큼 골드 출전비가 무료. 최대 1(PD 2026-10-26 「무조건 하루에 한 개만」).")]
+        [SerializeField] private int _todayFreeHosts = 1;
         [Tooltip("? 랜덤 출전 · 클리어 시 행운 보너스 — 나온 몸 조각 · 판 골드 %.")]
         [SerializeField] private int _randomLuckShards = 3;
         [SerializeField] private int _randomLuckGoldPct = 20;

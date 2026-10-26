@@ -8,7 +8,7 @@ using GameFramework.Core.Common;
 namespace Game.Module.Common.Store
 {
     /// <summary>
-    /// 오늘의 몸 — 하루 경계마다 가진 몸 중 3명을 뽑아 그날 골드 출전비를 0 으로(기획서 B-12).
+    /// 오늘의 몸 — 하루 경계마다 가진 몸 중 **한 명**을 뽑아 그날 골드 출전비를 0 으로(기획서 B-12 · PD 2026-10-26 「무조건 하루에 한 개만」).
     /// 판 수 제한은 행동력이 한다.
     /// </summary>
     public interface ITodayHostService
@@ -73,11 +73,16 @@ namespace Game.Module.Common.Store
             int day = clock.DayKey;
             var d = p.RunEntry;
             if (d.todayDay != day) Roll(p, d, day);
-            if (_shownDay == day && _today.Count == (d.todayHosts?.Length ?? 0)) return;
+            // 예전 저장(3명)이 남아 있어도 오늘 수만큼만 쓴다 — 날이 바뀌기를 기다리지 않는다
+            int max = Count(p);
+            int stored = Math.Min(d.todayHosts?.Length ?? 0, max);
+            if (_shownDay == day && _today.Count == stored) return;
             _shownDay = day;
             _today.Clear();
-            if (d.todayHosts != null) _today.AddRange(d.todayHosts);
+            for (int i = 0; i < stored; i++) _today.Add(d.todayHosts[i]);
         }
+
+        private static int Count(IPlayerDataService p) => Math.Min(p.Config != null ? p.Config.TodayFreeHosts : 1, 1);
 
         private void Roll(IPlayerDataService p, RunEntryData d, int day)
         {
@@ -90,7 +95,7 @@ namespace Game.Module.Common.Store
                 if (e == null || e.IsGhost || PlayerDataService.IsHiddenHost(e.HostKey)) continue;
                 if (p.IsHostOwned(e)) _pool.Add(e.HostKey);
             }
-            int n = Math.Min(p.Config != null ? p.Config.TodayFreeHosts : 3, _pool.Count);
+            int n = Math.Min(Count(p), _pool.Count);
             var picked = new string[n];
             for (int i = 0; i < n; i++)
             {

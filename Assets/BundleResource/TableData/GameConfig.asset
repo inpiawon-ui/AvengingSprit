@@ -75,7 +75,7 @@ MonoBehaviour:
   _staminaCap: 999
   _staminaRefillGem: 100
   _staminaRefillPerDay: 6
-  _todayFreeHosts: 3
+  _todayFreeHosts: 1
   _randomLuckShards: 3
   _randomLuckGoldPct: 20
   _randomIncludesUnowned: 1

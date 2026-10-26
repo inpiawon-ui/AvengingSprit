@@ -86,7 +86,7 @@ namespace Game.Editor.UiHarness
             .AllowRule("C1", @"/ChsRowThumb/ChsRowThumbArt$", "챕터 섬네일 — 무대 그림을 칸(RectMask2D)으로 잘라 쓴다")
             .AllowRule("R1", @"(Shade|Fade|ColCardGlow|GrwHeroEdge)$", "그늘 · 빛 판 — 칸에 맞춰 늘려 쓴다(모양 없는 번짐이라 늘려도 티가 안 난다)")
             .AllowRule("C2", @"Clip/\w+Art$", "칸 그림 — 칸(RectMask2D)을 덮게 깔고 칸이 잘라 낸다(Envelope)")
-            .AllowRule("R2", @"/CardBadge$", "BEST 띠 — 글자 폭에 맞춰 한 장을 쓴다(모서리 장식이 없는 그림)");
+            .AllowRule("R2", @"/CardBadge$", "BEST · 오늘 판 — 그림 비율 그대로 한 장(9분할로 늘리면 카드 폭으로 퍼졌다, PD 2026-10-26)");
 
         // 스크롤 판 내용 — 이 아래 노드는 보기 칸(RectMask2D)이 잘라 낸다
         private const string ScrollContent = @"/(SortieContent|ColGridContent|ChsBodyContent|ProfGridContent|SumBodyContent|ChlHubBodyContent|ShpBodyContent|GrwBodyContent|LckBodyContent|MisBodyContent|PasBodyContent|GhoBodyContent|\w+BodyContent)/";

@@ -24,6 +24,12 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
             (720, 1280, Language.Japanese, "battle", "lobby_ja"),
             (720, 1280, Language.English, "battle", "lobby_en"),
+            (720, 1280, Language.Korean, "battle:1", "lobby_ghost_16x9"),
+            (720, 1280, Language.Korean, "battle:2", "lobby_host_16x9"),
+            (1080, 2400, Language.Korean, "battle:2", "lobby_host_20x9"),
+            (720, 1280, Language.Korean, "battle:paren", "lobby_paren_16x9"),
+            (720, 1280, Language.Japanese, "battle:paren", "lobby_paren_ja"),
+            (720, 1280, Language.English, "battle:paren", "lobby_paren_en"),
             (720, 1280, Language.Korean, "rail:Ghost", "ghost_16x9"),
             (1080, 2400, Language.Korean, "rail:Ghost", "ghost_20x9"),
             (720, 1280, Language.Korean, "rail:Missions", "missions_16x9"),
@@ -489,6 +495,22 @@ namespace Game.Editor.ReBorn
             foreach (var t in lobby.GetComponentsInChildren<Transform>(true))
                 if (t.name is "RbGuide" or "RbChestOpen" or "PageReveal" or "GrwStarDone" or "RbNotReward") t.gameObject.SetActive(false);
             if (state == "battle") { lobby.SelectTab("Battle"); return; }
+            if (state.StartsWith("battle:"))
+            {
+                // battle:{n} — 출전 줄 n번째 카드를 고른다(1 유령 · 2 오늘의 몸) · battle:paren — 괄호 이름 카드까지 넘겨 고른다
+                lobby.SelectTab("Battle");
+                string arg = state.Substring(7);
+                if (arg != "paren") { Click("SortieCard" + arg); return; }
+                foreach (var t in lobby.GetComponentsInChildren<TMPro.TextMeshProUGUI>(true))
+                {
+                    if (t.name != "CardName" || !t.text.Contains("\n(") && !t.text.Contains("\n（")) continue;
+                    var card = (RectTransform)t.transform.parent;
+                    if (card.parent is RectTransform content) content.anchoredPosition = new Vector2(-(card.anchoredPosition.x - 40f), content.anchoredPosition.y);
+                    Click(card.name);
+                    return;
+                }
+                return;
+            }
             if (state.StartsWith("fx:")) { ShowFx(lobby, player, state.Substring(3, state.IndexOf('@') - 3)); return; }
             if (state.StartsWith("guide"))
             {

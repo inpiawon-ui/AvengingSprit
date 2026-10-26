@@ -71,3 +71,4 @@ ui.rb.growth.starup_success	성급 강화 성공	星級強化成功	Star Up Comp
 ui.rb.growth.done_line1	{0}성 → {1}성 · 체력·공격 +7%	{0}星 → {1}星・体力・攻撃 +7%	{0}★ → {1}★ · HP·ATK +7%	{0}星 → {1}星・體力・攻擊 +7%	{0}星 → {1}星・体力・攻击 +7%
 ui.rb.growth.done_line2	스킬 Lv {0}→{1} · 강화 상한 {2}→{3}	スキルLv {0}→{1}・強化上限 {2}→{3}	Skill Lv {0}→{1} · Cap {2}→{3}	技能Lv {0}→{1}・強化上限 {2}→{3}	技能Lv {0}→{1}・强化上限 {2}→{3}
 ui.rb.growth.power_plus	전투력 +{0}	戦闘力 +{0}	Power +{0}	戰鬥力 +{0}	战斗力 +{0}
+ui.rb.lobby.adv	유리 ▲	有利 ▲	Favored ▲	有利 ▲	有利 ▲

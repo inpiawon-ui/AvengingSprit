@@ -22,6 +22,8 @@ namespace Game.Module.Lobby
     {
         [SerializeField] private Sprite[] _gradeFrames = Array.Empty<Sprite>();
         [SerializeField] private Sprite[] _rarityTags = Array.Empty<Sprite>();
+        // 속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1)
+        [SerializeField] private Sprite[] _affIcons = Array.Empty<Sprite>();
         [SerializeField] private Sprite _starOn, _starOff, _starAwaken;
 
         private const float CardW = 328f * 2f / 3f;
@@ -205,7 +207,14 @@ namespace Game.Module.Lobby
             bool ready = m < _player.MasteryMax && need > 0 && _player.GetShards(key) >= need && _player.Gold >= _player.StarUpGoldCost(key);
             _ui.Find(card, "ColCardDot")?.gameObject.SetActive(ready);
 
-            TextIn(card, "ColCardName", e.DisplayName);
+            if (_ui.Find(card, "ColCardAff")?.GetComponent<Image>() is Image aff)
+            {
+                int a = (int)AffinityRule.KindOf(key) - 1;
+                aff.sprite = a >= 0 && a < _affIcons.Length ? _affIcons[a] : null;
+                aff.enabled = aff.sprite != null;
+                aff.color = owned ? Color.white : new Color(0.55f, 0.58f, 0.68f, 1f);   // 틀과 같은 잿빛 — 얼굴처럼 검게 누르면 무엇인지 안 보인다
+            }
+            RbCardName.Fit(_ui.Find(card, "ColCardName")?.GetComponent<TextMeshProUGUI>(), e.DisplayName);
             ApplyStars(_ui.Find(card, "ColCardStars"), "ColCardStar", m);
             if (owned)
             {

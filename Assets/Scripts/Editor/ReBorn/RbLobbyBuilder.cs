@@ -112,6 +112,8 @@ namespace Game.Editor.ReBorn
             One("_badgeBest", "Components/rb_badge_best");
             One("_badgeToday", "Components/rb_badge_today");
             Many("_rarityTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
+            // 속성 순서 = Affinity 값 순서(무기 · 파워 · 마법) — 0(None)은 빼고 1부터
+            Many("_affIcons", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
             One("_iconRandom", "Icons/rb_icon_mode_random_144");
             One("_iconGhost", "Icons/rb_icon_mode_ghost_144");
             One("_iconNext", "Icons/rb_icon_sys_next_96");
@@ -195,7 +197,10 @@ namespace Game.Editor.ReBorn
             Text(Stretch(Node(prompt, "StagePromptText")), "ui.rb.lobby.prompt", "어떤 몸과 만날까요?", 34, Dim, TA.Center);
         }
 
-        // ── 챕터 카드(히어로 판) — 방 진행 칸은 없앴다(PD 2026-10-23) ─────────
+        // ── 챕터 카드(히어로 판) — 16칸 방 진행 칸은 없앴고(PD 2026-10-23) 세 구간 게이지로 다시 넣었다(PD 2026-10-26) ─────────
+        public const int GaugeSections = 3;
+        private const float GaugeLeft = 51f, GaugeStep = 235f, GaugeBarW = 172f, GaugeTop = 1124f, GaugeH = 21f;
+
         private static void BuildChapterCard(RectTransform rt)
         {
             const float x0 = 30, y0 = 1030, x1 = 1050, y1 = 1250;
@@ -204,7 +209,28 @@ namespace Game.Editor.ReBorn
             HitArea(Local(Node(card, "ChapterOpen"), x0, y0, x1, y1, 40, 1040, 755, 1240));   // 챕터 카드 왼쪽 → 챕터 선택(앞뒤 버튼은 그 위)
             Text(Local(Node(card, "ChapterNoText"), x0, y0, x1, y1, 50, 1060, 190, 1115), null, "CH 1", 56, White, TA.Left, number: true);
             Text(Local(Node(card, "ChapterNameText"), x0, y0, x1, y1, 200, 1060, 750, 1115), null, "쓰레기 집적장", 50, White, TA.Left, heavy: true);
-            Text(Local(Node(card, "ChapterInfoText"), x0, y0, x1, y1, 50, 1150, 750, 1205), null, "최고 7/30방 · 권장 1,200 · 파워 ▲", 38, Dim, TA.Left);
+            // 방 게이지 — 세 구간(1~10 · 11~20 · 21~30), 끝마다 중간보스 · 보스 아이콘(PD 2026-10-26 A안, 시안 stage_gauge_options.png)
+            for (int s = 0; s < GaugeSections; s++)
+            {
+                float bx0 = GaugeLeft + s * GaugeStep, bx1 = bx0 + GaugeBarW;
+                var track = Local(Node(card, $"ChapterSeg{s}"), x0, y0, x1, y1, bx0, GaugeTop, bx1, GaugeTop + GaugeH);
+                Img(track, "Components/rb_bar_track");
+                // 채움은 왼쪽에 붙여 폭만 바꾼다(화면 스크립트가 깬 방 수만큼)
+                var fill = Node(track, $"ChapterSeg{s}Fill");
+                fill.anchorMin = new Vector2(0f, 0f); fill.anchorMax = new Vector2(0f, 1f); fill.pivot = new Vector2(0f, 0.5f);
+                fill.sizeDelta = new Vector2(GaugeBarW * S, 0f); fill.anchoredPosition = Vector2.zero;
+                Img(fill, "Components/rb_bar_fill_cyan");
+                float ic = GaugeTop + GaugeH * 0.5f;
+                Img(Local(Node(card, $"ChapterSeg{s}Icon"), x0, y0, x1, y1, bx1 + 4, ic - 28, bx1 + 60, ic + 28),
+                    s == GaugeSections - 1 ? "Icons/rb_icon_room_boss_48" : "Icons/rb_icon_room_midboss_48");
+            }
+            // 안내 줄 「최고 7/30방 · 권장 1,200 · 」 + 유리한 속성 아이콘 + 「유리 ▲」 — 아이콘은 글자 폭을 재서 바로 뒤에 붙인다.
+            // 속성은 글자 대신 아이콘(PD 2026-10-26 「아이콘으로 해야 속성 공부가 되고 적응이 된다」). 폭을 재야 해서 자동 축소는 끈다
+            var info = Text(Local(Node(card, "ChapterInfoText"), x0, y0, x1, y1, 50, 1160, 750, 1212), null, "최고 7/30방 · 권장 1,200 · ", 36, Dim, TA.Left);
+            info.enableAutoSizing = false; info.fontSize = 36 * S;
+            Img(Local(Node(card, "ChapterAdvIcon"), x0, y0, x1, y1, 480, 1164, 524, 1208), "Icons/rb_icon_aff_magic_128");
+            var adv = Text(Local(Node(card, "ChapterAdvText"), x0, y0, x1, y1, 530, 1160, 750, 1212), null, "유리 ▲", 36, White, TA.Left, heavy: true);
+            adv.enableAutoSizing = false; adv.fontSize = 36 * S;
             var prev = Local(Node(card, "ChapterPrev"), x0, y0, x1, y1, 765, 1085, 890, 1210);
             Btn(prev, "Components/rb_btn_icon_round");
             Img(Local(Node(prev, "ChapterPrevIcon"), 765, 1085, 890, 1210, 795, 1112, 860, 1177), "Icons/rb_icon_sys_arrow_left_96");
@@ -243,13 +269,21 @@ namespace Game.Editor.ReBorn
             Img(Stretch(Node(card, "CardFrame")), "Components/rb_host_frame_r");
             var sel = Img(Local(Node(card, "CardSel"), cx0, cy0, cx1, cy1, 24, 1405, 243, 1695), "Components/rb_host_select_ring");
             sel.gameObject.SetActive(false);
-            var badge = Local(Node(card, "CardBadge"), cx0, cy0, cx1, cy1, 42, 1424, 225, 1470);
-            Img(badge, "Components/rb_badge_today");
-            Text(Stretch(Node(badge, "CardBadgeText")), null, "오늘", 34, Ink, TA.Center, heavy: true);
+            // 위 왼쪽 = BEST · 오늘 판(테 윗변에 걸침), 위 오른쪽 = 등급 태그 — 둘을 따로 둔다(PD 2026-10-26 「등급이랑 오늘 두 개로 분기」).
+            // 예전에는 한 칸을 같이 써서 9-slice 판이 카드 폭으로 늘어났다. 그림 비율 그대로(판 80:41 · 태그 59:40)
+            var badge = Local(Node(card, "CardBadge"), cx0, cy0, cx1, cy1, 38, 1398, 138, 1449);
+            var badgeImg = Img(badge, "Components/rb_badge_today");
+            badgeImg.type = Image.Type.Simple;
+            badgeImg.preserveAspect = true;
+            Text(Local(Node(badge, "CardBadgeText"), 38, 1398, 138, 1449, 46, 1402, 130, 1445), null, "오늘", 32, White, TA.Center, heavy: true);
+            Img(Local(Node(card, "CardRarity"), cx0, cy0, cx1, cy1, 168, 1402, 234, 1447), "Components/rb_rarity_sr");
             Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
-            // 일본어 몸 이름(「コマンドー（ミサイル）」)이 칸보다 길어 옆 카드 이름과 겹쳤다(하네스 C5).
-            // 시안 규칙 「글자 32 미만 0」(PD 2026-10-24 「시안을 따라줘」) — 하한은 그대로 두고 긴 이름은 두 줄로 접는다
-            var cardName = Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 40, 1560, 227, 1622), null, "? 랜덤", 36, White, TA.Center, heavy: true);
+            // 내 속성(파워 · 무기 · 마법) — 얼굴 왼쪽 위(PD 2026-10-26 「카드 프레임에 내 속성 표현」)
+            Img(Local(Node(card, "CardAff"), cx0, cy0, cx1, cy1, 38, 1478, 86, 1526), "Icons/rb_icon_aff_force_128");
+            // 긴 이름은 RbCardName 이 괄호 앞에서 두 줄로 접는다(「코만도 / (수류탄)」) — 두 줄이 들어가게 칸을 위아래로 조금 늘렸다.
+            // 시안 규칙 「글자 32 미만 0」(PD 2026-10-24 「시안을 따라줘」) — 하한은 그대로
+            // 폭은 틀 안쪽 끝까지(34~233) — 「サラマンダー」가 최소 크기에서 몇 px 넘쳐 글자 중간에서 접혔다(2026-10-26 캡처)
+            var cardName = Text(Local(Node(card, "CardName"), cx0, cy0, cx1, cy1, 34, 1554, 233, 1626), null, "? 랜덤", 36, White, TA.Center, heavy: true);
             cardName.enableWordWrapping = true;
             cardName.lineSpacing = -28f;
             Img(Local(Node(card, "CardPriceIcon"), cx0, cy0, cx1, cy1, 60, 1628, 104, 1668), "Icons/rb_icon_currency_gold_48");
@@ -281,7 +315,7 @@ namespace Game.Editor.ReBorn
             gold.gameObject.SetActive(false);
         }
 
-        // ── 하단 탭 5 — 상점 · 호스트 · 전투(가운데 솟은 원) · 소환 · 도전(순서 · 이름 바꾸지 않는다) ───────
+        // ── 하단 탭 5 — 상점 · 호스트 · 전투 · 소환 · 도전(순서 · 이름 바꾸지 않는다) ───────
         public static readonly string[] Tabs = { "Shop", "Host", "Battle", "Summon", "Challenge" };
         private static readonly string[] TabIcons = { "tab_shop", "tab_host", "tab_battle", "tab_summon", "tab_challenge" };
         private static readonly string[] TabKorean = { "상점", "호스트", "전투", "소환", "도전" };
@@ -297,8 +331,7 @@ namespace Game.Editor.ReBorn
                 float cx = 108f + i * 215.5f;
                 var tab = Place(Node(rt, $"Tab{Tabs[i]}"), Edge.Bottom, cx - 105, 2045, cx + 105, 2228);
                 HitArea(tab);
-                if (Tabs[i] == "Battle")
-                    Img(Local(Node(tab, "TabBattleRing"), cx - 105, 2045, cx + 105, 2228, cx - 92, 2022, cx + 92, 2170), "Components/rb_tab_center_ring");
+                // 전투 탭 둘레 원(rb_tab_center_ring)은 뺐다 — PD 2026-10-26 「왜 있는 거야, 그냥 제거」
                 Img(Local(Node(tab, $"Tab{Tabs[i]}Icon"), cx - 105, 2045, cx + 105, 2228, cx - 52, 2062, cx + 52, 2166), $"Icons/rb_icon_{TabIcons[i]}_96");
                 Text(Local(Node(tab, $"Tab{Tabs[i]}Label"), cx - 105, 2045, cx + 105, 2228, cx - 100, 2180, cx + 100, 2224),
                      $"ui.rb.tab.{Tabs[i].ToLowerInvariant()}", TabKorean[i], 36, Dim, TA.Center, heavy: true);

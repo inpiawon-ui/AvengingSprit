@@ -6,6 +6,7 @@ using Game.Module.Common;
 using Game.Module.Common.Store;
 using Game.Module.Common.UI;
 using Game.Module.Events;
+using Game.Module.InGame;
 using Game.User;
 using GameFramework.Core.Base;
 using GameFramework.Core.Module.EventBus;
@@ -30,6 +31,8 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _frameRandom, _frameGhost;
         [SerializeField] private Sprite _badgeBest, _badgeToday;
         [SerializeField] private Sprite[] _rarityTags = Array.Empty<Sprite>();
+        // 속성 아이콘 — 무기 · 파워 · 마법(Affinity 값 − 1)
+        [SerializeField] private Sprite[] _affIcons = Array.Empty<Sprite>();
         [SerializeField] private Sprite _iconRandom, _iconGhost;
         [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
         [SerializeField] private Sprite _iconNext, _iconLock;
@@ -126,6 +129,8 @@ namespace Game.Module.Lobby
             try { _faces = await CoreModule.Get<IResourceManager>().LoadAsync<SpriteAtlas>("atlas/hostface"); }
             catch (Exception e) { Debug.LogWarning($"[RbLobby] 얼굴 아틀라스: {e.Message}"); }
             if (this == null) return;
+            // 챕터 표를 상성 규칙에 건다 — 판(BattleDirector)에서만 걸어서 로비에서는 「유리한 속성」을 못 셌다
+            if (_player.Config != null) AffinityRule.Bind(_player.Config);
             _chapter = Mathf.Clamp(_player.SelectedChapter, 1, Mathf.Max(1, _player.ChapterCount));
             if (CoreModule.TryGet<IStaminaService>(out var st)) st.Sync();
             BuildCards();
@@ -248,8 +253,12 @@ namespace Game.Module.Lobby
                 ? Localize.FromTable("ui.rb.lobby.cleared", "클리어")
                 : ChapterOpen ? string.Format(Localize.FromTable("ui.rb.lobby.best", "최고 {0}/{1}방"), Mathf.Max(0, _player.ReachedStage), rooms)
                 : Localize.FromTable("ui.rb.lobby.locked", "잠김");
+            var win = Advantage(_chapter);
             _ui.SetText("ChapterInfoText", string.Format(Localize.FromTable("ui.rb.lobby.chapter_info", "{0} · 권장 <color=#FFFFFF>{1:N0}</color>"),
-                                                         best, _player.RecommendedPower(_chapter)));
+                                                         best, _player.RecommendedPower(_chapter)) + (win != Affinity.None ? " · " : string.Empty));
+            RefreshAdvantage(win);
+            bool cleared = _chapter < _player.UnlockedChapter || _chapter <= _player.ClearedChapter;
+            RefreshGauge(cleared ? rooms : ChapterOpen ? Mathf.Clamp(_player.ReachedStage, 0, rooms) : 0, rooms);
             SetActiveButton("ChapterPrev", _chapter > 1);
             // 다음 챕터가 잠겼으면 자물쇠(시안) — 누르면 넘어가지만 출전은 막힌다
             var nextIcon = _ui.Get<Image>("ChapterNextIcon");
@@ -259,6 +268,82 @@ namespace Game.Module.Lobby
             var bg = _ui.Get<Image>("StageBg");
             if (bg != null && _stageBgs.Length > 0) bg.sprite = _stageBgs[Mathf.Clamp(_chapter - 1, 0, _stageBgs.Length - 1)];
         }
+
+        /// <summary>
+        /// 이 챕터에 가장 많은 적을 이기는 속성(예전 로비 「이 챕터 적: … → … 유리」, 시안 「· 파워 ▲」).
+        /// 리뉴얼 때 빠졌던 줄이다(PD 2026-10-26 「어떤 속성이 클리어에 도움이 된다고 있었는데 사라졌네」).
+        /// </summary>
+        private static Affinity Advantage(int chapter)
+        {
+            if (!AffinityRule.Enabled) return Affinity.None;
+            // 적 구성 값이 없는 챕터(표 8챕터~)는 보스의 속성으로 본다
+            var major = AffinityRule.MajorOf(chapter);
+            if (major == Affinity.None) major = AffinityRule.BossKindOf(chapter);
+            if (major == Affinity.None) return Affinity.None;
+            foreach (Affinity a in Enum.GetValues(typeof(Affinity)))
+                if (AffinityRule.Beats(a, major)) return a;
+            return Affinity.None;
+        }
+
+        // 속성 색 = 아이콘 색(무기 금 · 파워 빨강 · 마법 파랑)
+        private static readonly Color AdvBlade = new(1f, 0.79f, 0.24f), AdvForce = new(1f, 0.42f, 0.35f), AdvMagic = new(0.35f, 0.72f, 1f);
+
+        /// <summary>안내 줄 뒤에 속성 아이콘 + 「유리 ▲」 — 글자 폭을 재서 바로 뒤에 붙인다(언어 · 자릿수마다 폭이 다르다).</summary>
+        private void RefreshAdvantage(Affinity win)
+        {
+            var info = _ui.Get<TextMeshProUGUI>("ChapterInfoText");
+            var icon = _ui.Get<Image>("ChapterAdvIcon");
+            var text = _ui.Get<TextMeshProUGUI>("ChapterAdvText");
+            if (info == null || icon == null || text == null) return;
+            int a = (int)win - 1;
+            bool on = a >= 0 && a < _affIcons.Length && _affIcons[a] != null;
+            icon.gameObject.SetActive(on);
+            text.gameObject.SetActive(on);
+            if (!on) return;
+            icon.sprite = _affIcons[a];
+            text.text = Localize.FromTable("ui.rb.lobby.adv", "유리 ▲");
+            text.color = win == Affinity.Blade ? AdvBlade : win == Affinity.Force ? AdvForce : AdvMagic;
+            var ir = info.rectTransform;
+            var cr = icon.rectTransform;
+            float left = ir.anchoredPosition.x - ir.sizeDelta.x * 0.5f;
+            // 앞 버튼 왼쪽까지 — 넘치면(영어 「Best 14/30 rooms · … Favored ▲」) 두 글자를 같은 비율로 줄인다(하한 = 빌더 하한)
+            float limit = _ui.Find("ChapterPrev") is RectTransform prev ? prev.anchoredPosition.x - prev.sizeDelta.x * 0.5f - 6f : float.MaxValue;
+            info.fontSize = info.fontSizeMax;
+            text.fontSize = text.fontSizeMax;
+            float iw = info.GetPreferredValues(info.text, 9999f, 0f).x, tw = text.GetPreferredValues(text.text, 9999f, 0f).x;
+            float total = iw + 2f + cr.sizeDelta.x + 4f + tw;
+            if (left + total > limit && total > 0f)
+            {
+                float k = Mathf.Max(info.fontSizeMin / info.fontSizeMax, (limit - left - cr.sizeDelta.x - 6f) / (iw + tw));
+                info.fontSize = info.fontSizeMax * k;
+                text.fontSize = text.fontSizeMax * k;
+                iw = info.GetPreferredValues(info.text, 9999f, 0f).x;
+            }
+            float x = left + iw + 2f;
+            cr.anchoredPosition = new Vector2(x + cr.sizeDelta.x * 0.5f, cr.anchoredPosition.y);
+            x += cr.sizeDelta.x + 4f;
+            var tr = text.rectTransform;
+            tr.anchoredPosition = new Vector2(x + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
+        }
+
+        /// <summary>방 게이지 세 구간 — 구간마다 10방, 깬 방 수만큼 왼쪽부터 채운다.</summary>
+        private void RefreshGauge(int reached, int rooms)
+        {
+            int per = Mathf.Max(1, rooms / GaugeSections);
+            for (int s = 0; s < GaugeSections; s++)
+            {
+                if (_ui.Get<Image>($"ChapterSeg{s}Fill") is not Image fill) continue;
+                float full = ((RectTransform)fill.transform.parent).rect.width;
+                float w = full * Mathf.Clamp01((reached - s * per) / (float)per);
+                fill.gameObject.SetActive(w > 0.5f);
+                // 채움이 짧으면 양 끝 둥근 테두리(9-slice)가 겹친다 — 테두리를 그만큼 가늘게
+                float caps = fill.sprite != null ? fill.sprite.border.x + fill.sprite.border.z : 0f;
+                fill.pixelsPerUnitMultiplier = caps > 0f && w < caps ? caps / Mathf.Max(1f, w) : 1f;
+                fill.rectTransform.sizeDelta = new Vector2(w, fill.rectTransform.sizeDelta.y);
+            }
+        }
+
+        private const int GaugeSections = 3;
 
         private void SetActiveButton(string node, bool on)
         {
@@ -326,15 +411,24 @@ namespace Game.Module.Lobby
                                  : e != null && (int)e.Grade < _gradeFrames.Length ? _gradeFrames[(int)e.Grade] : frame.sprite;
                 _ui.Find(card, "CardSel")?.gameObject.SetActive(sel);
 
-                // 배지: 랜덤 = BEST · 오늘의 몸 = 「오늘」 · 그 밖은 등급 태그(SR 이상만 — 시안)
+                // 위 왼쪽 판: 랜덤 = BEST · 오늘의 몸 = 「오늘」 / 위 오른쪽: 등급 태그(SR 이상만 — 시안). 둘은 따로 선다(PD 2026-10-26)
                 var badge = _ui.Find(card, "CardBadge")?.GetComponent<Image>();
                 var badgeText = _ui.Find(card, "CardBadgeText")?.GetComponent<TextMeshProUGUI>();
-                Sprite bs = null; string bt = string.Empty;
-                if (mode == RunStartMode.Random) bs = _badgeBest;
-                else if (today) { bs = _badgeToday; bt = Localize.FromTable("ui.rb.lobby.today", "오늘"); }
-                else if (e != null && e.Grade != HostGrade.B && (int)e.Grade < _rarityTags.Length) bs = _rarityTags[(int)e.Grade];
+                Sprite bs = mode == RunStartMode.Random ? _badgeBest : today ? _badgeToday : null;
                 if (badge != null) { badge.sprite = bs; badge.gameObject.SetActive(bs != null); }
-                if (badgeText != null) badgeText.text = bt;
+                if (badgeText != null) badgeText.text = today ? Localize.FromTable("ui.rb.lobby.today", "오늘") : string.Empty;
+                if (_ui.Find(card, "CardRarity")?.GetComponent<Image>() is Image rarity)
+                {
+                    bool show = mode == RunStartMode.Host && e != null && e.Grade != HostGrade.B && (int)e.Grade < _rarityTags.Length;
+                    if (show) rarity.sprite = _rarityTags[(int)e.Grade];
+                    rarity.gameObject.SetActive(show);
+                }
+                if (_ui.Find(card, "CardAff")?.GetComponent<Image>() is Image aff)
+                {
+                    int a = mode == RunStartMode.Host ? (int)AffinityRule.KindOf(key) - 1 : -1;
+                    aff.sprite = a >= 0 && a < _affIcons.Length ? _affIcons[a] : null;
+                    aff.gameObject.SetActive(aff.sprite != null);
+                }
 
                 var icon = _ui.Find(card, "CardIcon")?.GetComponent<Image>();
                 if (icon != null)
@@ -343,7 +437,7 @@ namespace Game.Module.Lobby
                 string name = mode == RunStartMode.Random ? Localize.FromTable("ui.rb.lobby.random", "? 랜덤")
                             : mode == RunStartMode.Ghost ? Localize.FromTable("host.ghost.name", "유령")
                             : e != null ? e.DisplayName : key;
-                TextIn(card, "CardName", name);
+                RbCardName.Fit(_ui.Find(card, "CardName")?.GetComponent<TextMeshProUGUI>(), name);
 
                 int price = mode == RunStartMode.Host && !today && e != null ? _player.EntryPriceOf(e, _chapter) : 0;
                 var priceText = _ui.Find(card, "CardPrice")?.GetComponent<TextMeshProUGUI>();
@@ -362,12 +456,6 @@ namespace Game.Module.Lobby
 
         private static bool IsToday(string hostKey)
             => !string.IsNullOrEmpty(hostKey) && CoreModule.TryGet<ITodayHostService>(out var t) && t.IsToday(hostKey);
-
-        private void TextIn(Transform root, string node, string value)
-        {
-            var t = _ui.Find(root, node)?.GetComponent<TextMeshProUGUI>();
-            if (t != null) t.text = value;
-        }
 
         // ── 보너스 칩 · 안내 · 출전 버튼 ──────────────────────────
 
@@ -428,6 +516,26 @@ namespace Game.Module.Lobby
             _ui.SetActive("SortieGoldText", gold > 0);
             LayoutSortie(gold > 0);
             SetActiveButton("SortieButton", ChapterOpen);
+            RefreshStage();
+        }
+
+        // ── 무대 — 랜덤 = 물음표 구슬 + 유령 · 유령 = 유령만(받침 위 가운데) · 몸 = 고른 몸 + 옆에 유령(PD 2026-10-26) ──────
+
+        private Sprite _ghostArt;
+
+        private void RefreshStage()
+        {
+            bool random = _mode == RunStartMode.Random, ghost = _mode == RunStartMode.Ghost;
+            if (_ghostArt == null && _ui.Get<Image>("StageGhost") is Image g) _ghostArt = g.sprite;
+            _ui.SetActive("StageOrb", random);
+            _ui.SetActive("StagePrompt", random);
+            _ui.SetActive("StageGhost", !ghost);
+            _ui.SetActive("StageHost", !random);
+            if (random || _ui.Get<Image>("StageHostArt") is not Image art) return;
+            // 큰 몸 그림(UnitShowcase)이 오기 전 · 없을 때는 얼굴이 대신 선다
+            art.sprite = ghost ? _ghostArt : Face(_host);
+            if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
+            show.Show(ghost ? null : _host);
         }
 
         /// <summary>
