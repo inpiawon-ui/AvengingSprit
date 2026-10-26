@@ -2400,9 +2400,9 @@ namespace Game.Module.InGame
         /// 가장자리를 흐리지 않고 Point 필터로 둔다 — 확정 #16(Point 필터 · 후처리 최소).
         /// 흐린 그림자는 이 게임의 다른 그림과 따로 논다.
         ///
-        /// 앱이 사는 동안 딱 한 장만 만들어 23명이 나눠 쓴다.
+        /// 앱이 사는 동안 딱 한 장만 만들어 23명이 나눠 쓴다. 로비 진열 몸(UnitShowcase)의 발밑 그림자도 같은 한 장을 쓴다.
         /// </summary>
-        private static Sprite RoundSprite()
+        internal static Sprite RoundSprite()
         {
             if (s_roundSprite != null) return s_roundSprite;
 

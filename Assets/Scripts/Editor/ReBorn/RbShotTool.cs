@@ -82,6 +82,25 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "host:low", "host_low_16x9"),
             (720, 1280, Language.Korean, "growth:", "growth_16x9"),
             (720, 1280, Language.Korean, "growth:poor", "growth_poor_16x9"),
+            // 발밑 그림자 — 발 자리가 칸 가운데에서 먼 몸들(갱스터 42% · 폭력배 42% · 드라군 59% · 샐러맨더 55%)과 가운데인 몸
+            (720, 1280, Language.Korean, "growth:k=gangster", "growthshadow_gangster"),
+            (720, 1280, Language.Korean, "growth:k=thug", "growthshadow_thug"),
+            (720, 1280, Language.Korean, "growth:k=dragoon", "growthshadow_dragoon"),
+            (720, 1280, Language.Korean, "growth:k=salamander", "growthshadow_salamander"),
+            (720, 1280, Language.Korean, "growth:k=amazon", "growthshadow_amazon"),
+            (720, 1280, Language.Korean, "growth:k=commando_mg", "growthshadow_commando_mg"),
+            // 강화 연출(노란 레벨업) 낱장 — 0.6초에 틀고 0.04초 간격(GIF 로 묶는다)
+            (720, 1280, Language.Korean, "growth:tick@0.60", "growthtick_00"),
+            (720, 1280, Language.Korean, "growth:tick@0.64", "growthtick_01"),
+            (720, 1280, Language.Korean, "growth:tick@0.68", "growthtick_02"),
+            (720, 1280, Language.Korean, "growth:tick@0.72", "growthtick_03"),
+            (720, 1280, Language.Korean, "growth:tick@0.76", "growthtick_04"),
+            (720, 1280, Language.Korean, "growth:tick@0.80", "growthtick_05"),
+            (720, 1280, Language.Korean, "growth:tick@0.84", "growthtick_06"),
+            (720, 1280, Language.Korean, "growth:tick@0.88", "growthtick_07"),
+            (720, 1280, Language.Korean, "growth:tick@0.94", "growthtick_08"),
+            (720, 1280, Language.Korean, "growth:tick@1.02", "growthtick_09"),
+            (720, 1280, Language.Korean, "growth:tick@1.12", "growthtick_10"),
             (720, 1280, Language.Korean, "growth:scroll", "growth_16x9_bottom"),
             (1080, 2400, Language.Korean, "growth:", "growth_20x9"),
             (768, 1024, Language.Korean, "growth:", "growth_4x3"),
@@ -348,10 +367,20 @@ namespace Game.Editor.ReBorn
             PlayerPrefs.Save();
         }
 
+        private static float s_tickAt;
+
         private static void Tick()
         {
             int step = SessionState.GetInt(Key, 0);
             if (step <= 0 || !EditorApplication.isPlaying) return;
+            if (s_tickAt > 0f && Time.realtimeSinceStartup >= s_tickAt)
+            {
+                s_tickAt = 0f;
+                var grow = GameObject.Find("GrwStat0");
+                var lobbyUi = Object.FindAnyObjectByType<RbLobbyUI>();
+                if (grow != null && lobbyUi != null && lobbyUi.Fx != null)
+                    lobbyUi.Fx.UpgradeTick((RectTransform)grow.transform, grow.transform.Find("GrwStatValue") as RectTransform);
+            }
             if (_wait > 0) { _wait--; return; }
             try { Step(step); }
             catch (System.Exception e)
@@ -667,6 +696,9 @@ namespace Game.Editor.ReBorn
             if (state.StartsWith("host:reveal")) { lobby.ShowReveal(key, 0); return; }
             if (state.StartsWith("host:awaken")) { lobby.ShowReveal(key, state.Contains("10") ? 10 : 6); return; }
             if (!state.StartsWith("growth:")) return;
+            // 「k=키」 — 그 몸으로 연다(발밑 그림자 자리를 몸마다 보려고)
+            int kAt = state.IndexOf("k=", System.StringComparison.Ordinal);
+            if (kAt > 0) key = state.Substring(kAt + 2).Split('@', ',')[0];
             if (state.EndsWith("low")) SeedLow(player, key);
             // 「poor」 — 골드 90(메모리에서만): 값 60 칸은 금색 · 120 칸은 빨강으로 같이 찍힌다
             if (state.Contains("poor"))
@@ -680,6 +712,8 @@ namespace Game.Editor.ReBorn
             // 창 — 성급 강화 확인(2 → 3 · 조각 20 · 골드 1,200 예시값) · 성급 올랐어요 · 스킬 정보(필살기)
             var growthPage = Object.FindAnyObjectByType<RbGrowthPage>();
             const System.Reflection.BindingFlags Private = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            // 「tick」 — 창이 다 열린 0.6초 뒤 공격력 칸에 강화 연출을 튼다(「@초」 로 그 사이를 나눠 찍는다)
+            if (state.Contains("tick")) s_tickAt = Time.realtimeSinceStartup + 0.6f;
             if (state.Contains("ask")) typeof(RbGrowthPage).GetMethod("ShowStarAsk", Private)?.Invoke(growthPage, new object[] { 2, 20, 1200 });
             if (state.Contains("done")) typeof(RbGrowthPage).GetMethod("ShowStarDone", Private)?.Invoke(growthPage, null);
             if (state.Contains("skill")) typeof(RbGrowthPage).GetMethod("ShowSkill", Private)?.Invoke(growthPage, new object[] { 0 });

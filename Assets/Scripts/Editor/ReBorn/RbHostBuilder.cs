@@ -157,28 +157,34 @@ namespace Game.Editor.ReBorn
             var body = VScroll(page, "GrwBody", GrowTop, 2040, 2030 - GrowTop);
             const float T = GrowTop;
 
-            // 히어로 판 — 왼쪽에 챕터 무대 그림(판 안에 잘라 넣는다) · 받침 · 몸
+            // 히어로 판 — 챕터 무대 그림을 판 안쪽 전체에 깔고(판 안에 잘라 넣는다) · 받침 · 몸
+            // 예전엔 왼쪽 600 만 무대, 오른쪽은 남색 판이라 경계가 끊겨 보였다(PD 2026-10-26 「매끄럽지 않다」) —
+            // 무대를 판 전체로 펴고, 글자가 있는 오른쪽으로 갈수록 눕힌 그늘로 어둡게 이어 준다
             const float hx0 = 30, hy0 = 440, hx1 = 1050, hy1 = 835;
+            const float cx0 = 42, cy0 = 452, cx1 = 1038, cy1 = 823;   // 판 안쪽(테 안)
             var hero = PlaceIn(Node(body, "GrwHero"), T, hx0, hy0, hx1, hy1);
             Img(hero, "Components/rb_panel_hero");
-            var clip = Local(Node(hero, "GrwHeroClip"), hx0, hy0, hx1, hy1, 42, 452, 640, 823);
+            var clip = Local(Node(hero, "GrwHeroClip"), hx0, hy0, hx1, hy1, cx0, cy0, cx1, cy1);
             clip.gameObject.AddComponent<RectMask2D>();
             var stage = Node(clip, "GrwHeroStage");
             stage.anchorMin = stage.anchorMax = new Vector2(0.5f, 0.5f);
-            stage.sizeDelta = new Vector2(606f * S * 1.1f, 606f * S * 1.1f * 2520f / 1080f);
-            stage.anchoredPosition = new Vector2(0f, -40f * S);   // 그림 가운데(물 반사 위 거리)가 판 높이에 오게
+            stage.sizeDelta = new Vector2((cx1 - cx0) * S, (cx1 - cx0) * S * 2520f / 1080f);
+            stage.anchoredPosition = new Vector2(0f, -60f * S);   // 그림 가운데(물 반사 위 거리)가 판 높이에 오게
             Img(stage, "Art/rb_art_bg_stage_ch01").preserveAspect = false;
-            var shade = Local(Node(hero, "GrwHeroShade"), hx0, hy0, hx1, hy1, 42, 452, 640, 823);
+            var shade = Local(Node(hero, "GrwHeroShade"), hx0, hy0, hx1, hy1, cx0, cy0, cx1, cy1);
             Img(shade, "Components/rb_fade_bottom").preserveAspect = false;
-            // 옆으로 눕힌 그늘 — 그림 위 변(투명)이 왼쪽, 아래 변(짙음)이 오른쪽에 오게 90도
+            // 옆으로 눕힌 그늘 — 그림 위 변(투명)이 왼쪽, 아래 변(짙음)이 오른쪽에 오게 90도. 몸 오른쪽(480)부터 판 끝까지
+            const float ex0 = 480;
             var edge = Node(hero, "GrwHeroEdge");
             edge.anchorMin = edge.anchorMax = new Vector2(0.5f, 0.5f);
-            edge.sizeDelta = new Vector2((823f - 452f) * S, 260f * S);
-            edge.anchoredPosition = new Vector2((640f - 130f - (hx0 + hx1) * 0.5f) * S, -((452f + 823f) * 0.5f - (hy0 + hy1) * 0.5f) * S);
+            edge.sizeDelta = new Vector2((cy1 - cy0) * S, (cx1 - ex0) * S);
+            edge.anchoredPosition = new Vector2(((ex0 + cx1) * 0.5f - (hx0 + hx1) * 0.5f) * S, -((cy0 + cy1) * 0.5f - (hy0 + hy1) * 0.5f) * S);
             edge.localRotation = Quaternion.Euler(0f, 0f, 90f);
             Img(edge, "Components/rb_fade_bottom").preserveAspect = false;
-            Img(Local(Node(hero, "GrwPedestal"), hx0, hy0, hx1, hy1, 70, 640, 450, 710), "Art/rb_art_host_pedestal");
-            Img(Local(Node(hero, "GrwHostArt"), hx0, hy0, hx1, hy1, 110, 450, 410, 700), "Art/rb_art_mascot_ghost_happy");
+            // 받침 그림(돌 발판)은 뺐다 — 몸과 따로 놀았다(PD 2026-10-26 「발판 대신 검정 그림자 · 캐릭터 가운데에 맞춰라」).
+            // 그림자는 화면 스크립트가 몸 칸(UnitShowcase.SetShadow)에 붙인다 — 몸마다 다른 실제 발 자리 아래로
+            // 몸 — 발밑(칸 아래 변)을 아래로 내렸다(PD 「캐릭터를 좀 아래로」)
+            Img(Local(Node(hero, "GrwHostArt"), hx0, hy0, hx1, hy1, 110, 520, 410, 770), "Art/rb_art_mascot_ghost_happy");
             Text(Local(Node(hero, "GrwName"), hx0, hy0, hx1, hy1, 420, 455, 800, 532), null, "갱스터", 66, White, TA.Center, heavy: true);
             for (int i = 0; i < 3; i++)
             {

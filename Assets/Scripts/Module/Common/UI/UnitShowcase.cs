@@ -31,8 +31,14 @@ namespace Game.Module.Common.UI
         /// <summary>떠다니는 몸(유령) — 공격 대신 대기 ↔ 이동 두 칸으로 둥실거린다.</summary>
         [SerializeField] private bool _float;
 
+        private const float ShadowAlpha = 0.55f;
+        private const float FeetBand = 0.06f;   // 잉크 맨 아래에서 이만큼(칸 높이 대비)을 발로 본다
+
         private Image _fallback;
         private Image _body;
+        private Image _shadow;
+        private bool _wantShadow;
+        private float _feetX = 0.5f;   // 칸 너비 대비 발 가운데(0~1)
         private string _key;
         private string _address;
         private Sprite _idle, _atk1, _atk2, _walk1, _walk2;
@@ -49,6 +55,16 @@ namespace Game.Module.Common.UI
 
         /// <summary>떠다니는 몸으로 둥실거리게 한다(코드가 붙이는 칸 — 홈 유령).</summary>
         public void SetFloat(bool on) => _float = on;
+
+        /// <summary>
+        /// 발밑에 검은 그림자를 둔다(호스트 성장 — PD 2026-10-26 「발판 대신 검정 그림자」). 인게임 바닥 그림자와 같은 원 · 비율.
+        /// 가로 자리는 칸 가운데가 아니라 **대기 그림의 실제 발** 가운데다 — 몸마다 칸 안 발 자리가 다르다(갱스터 42% · 드라군 59%).
+        /// </summary>
+        public void SetShadow(bool on)
+        {
+            _wantShadow = on;
+            PlaceShadow();
+        }
 
         private void Start()
         {
@@ -105,9 +121,59 @@ namespace Game.Module.Common.UI
             if (_idle == null) return;
             EnsureBody();
             _body.sprite = _idle;
+            _feetX = FeetCenter(_idle);
             _step = 0;
             _timer = _idleSeconds;
             SetBodyVisible(true);
+            PlaceShadow();
+        }
+
+        // 그림 외곽선(Tight 메시)에서 잉크 맨 아래 띠의 가로 가운데 — 텍스처를 읽지 않는다(Read/Write 끔)
+        private static float FeetCenter(Sprite sprite)
+        {
+            var verts = sprite.vertices;
+            float w = sprite.rect.width, h = sprite.rect.height, ppu = sprite.pixelsPerUnit;
+            if (verts == null || verts.Length == 0 || w <= 0f) return 0.5f;
+            float minY = float.MaxValue;
+            for (int i = 0; i < verts.Length; i++) minY = Mathf.Min(minY, verts[i].y * ppu + sprite.pivot.y);
+            float lo = float.MaxValue, hi = float.MinValue;
+            for (int i = 0; i < verts.Length; i++)
+            {
+                if (verts[i].y * ppu + sprite.pivot.y > minY + h * FeetBand) continue;
+                float x = verts[i].x * ppu + sprite.pivot.x;
+                lo = Mathf.Min(lo, x);
+                hi = Mathf.Max(hi, x);
+            }
+            return lo <= hi ? (lo + hi) * 0.5f / w : 0.5f;
+        }
+
+        private void PlaceShadow()
+        {
+            bool on = _wantShadow && !_float && _body != null && _shown;
+            if (!on)
+            {
+                if (_shadow != null) _shadow.enabled = false;
+                return;
+            }
+            if (_shadow == null)
+            {
+                var go = new GameObject("UnitShowcaseShadow", typeof(RectTransform));
+                go.layer = gameObject.layer;
+                go.transform.SetParent(transform, false);
+                go.transform.SetAsFirstSibling();   // 몸보다 뒤
+                _shadow = go.AddComponent<Image>();
+                _shadow.raycastTarget = false;
+                _shadow.sprite = Game.Module.InGame.Unit.RoundSprite();
+            }
+            // 인게임 바닥 그림자 비율(칸 대비 폭 0.50 · 높이 0.145) — 발밑 줄(붙인 칸 아래 변)에 가운데를 둔다
+            float size = _body.rectTransform.sizeDelta.x;
+            var rt = _shadow.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(size * 0.50f, size * 0.145f);
+            rt.anchoredPosition = new Vector2((_feetX - 0.5f) * size, 0f);
+            _shadow.color = new Color(0f, 0f, 0f, ShadowAlpha);
+            _shadow.enabled = true;
         }
 
         private void Update()
@@ -154,6 +220,7 @@ namespace Game.Module.Common.UI
             rt.pivot = new Vector2(0.5f, 0f);
             rt.sizeDelta = new Vector2(size, size);
             rt.anchoredPosition = new Vector2(0f, -size * FootFromBottom);
+            PlaceShadow();   // 화면 비율이 바뀌어 몸 칸이 커지면 그림자도 따라간다
         }
 
         private void SetBodyVisible(bool on)
@@ -166,6 +233,7 @@ namespace Game.Module.Common.UI
             }
             // 큰 몸 그림이 서면 초상은 숨긴다(지우지 않는다 — 그림이 없을 때의 대신)
             if (_fallback != null) _fallback.color = on ? Color.clear : _tint;
+            PlaceShadow();
         }
 
         private void Release()

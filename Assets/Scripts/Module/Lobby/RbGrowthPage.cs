@@ -143,6 +143,7 @@ namespace Game.Module.Lobby
             if (_ui.Get<Image>("GrwHostArt") is Image art)
             {
                 if (!art.TryGetComponent<UnitShowcase>(out var show)) show = art.gameObject.AddComponent<UnitShowcase>();
+                show.SetShadow(true);   // 발판 그림 대신 발밑 검은 그림자(PD 2026-10-26)
                 show.Show(_key, tint);
             }
             if (_ui.Get<Image>("GrwHeroStage") is Image stage && _stageBgs.Length > 0)
@@ -234,7 +235,32 @@ namespace Game.Module.Lobby
                 if (_ui.Find(t, "GrwStatBuyCost")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI ct)
                     ct.color = poor ? new Color(1f, 0.35f, 0.35f) : new Color(1f, 0.79f, 0.24f);   // 모자람 빨강 · 평소 금색
                 _ui.Find(t, "GrwStatBuyCoin")?.gameObject.SetActive(!locked);
+                FitPrice(buy as RectTransform, _ui.Find(t, "GrwStatBuyCoin") as RectTransform,
+                         _ui.Find(t, "GrwStatBuyCost")?.GetComponent<TextMeshProUGUI>(), !locked);
             }
+        }
+
+        // 금화 + 값 묶음을 버튼 가운데로 — 값이 「1,200」 처럼 길면 글자를 줄인다(겹쳐서 금화를 덮었다, 2026-10-26)
+        private static void FitPrice(RectTransform button, RectTransform coin, TextMeshProUGUI cost, bool withCoin)
+        {
+            if (button == null || cost == null) return;
+            const float gap = 3f, pad = 6f;
+            float cw = withCoin && coin != null ? coin.sizeDelta.x : 0f;
+            float avail = button.rect.width - pad * 2f - (cw > 0f ? cw + gap : 0f);
+            cost.enableAutoSizing = false;
+            cost.fontSize = cost.fontSizeMax;
+            float w = cost.GetPreferredValues(cost.text).x;
+            if (w > avail && w > 0f)
+            {
+                cost.fontSize = cost.fontSizeMax * avail / w;
+                w = cost.GetPreferredValues(cost.text).x;
+            }
+            float left = -(w + (cw > 0f ? cw + gap : 0f)) * 0.5f;
+            if (cw > 0f) coin.anchoredPosition = new Vector2(left + cw * 0.5f, coin.anchoredPosition.y);
+            var tr = cost.rectTransform;
+            tr.sizeDelta = new Vector2(w + 2f, tr.sizeDelta.y);
+            tr.anchoredPosition = new Vector2(left + (cw > 0f ? cw + gap : 0f) + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
+            cost.alignment = TextAlignmentOptions.Left;
         }
 
         /// <summary>사거리만 직업마다 다르다(근 · 중 · 원거리) — 나머지는 표의 레벨당 퍼센트.</summary>
