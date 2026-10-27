@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>어벤징 스피릿 시스템 기획서</title>
+<style>
+@page { size: A4; margin: 16mm 13mm 16mm 13mm; }
+:root { --ink:#1d2330; --sub:#5b6475; --line:#cfd5e0; --head:#2f3d5c; --head2:#e8ecf4; --accent:#6c4bd8; --warn:#b4471b; }
+html, body { background:#fff; }
+body { font-family: 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif; color:var(--ink); font-size:9.4pt; line-height:1.5; margin:0; }
+h1 { font-size:22pt; margin:0 0 6px; }
+h2 { font-size:14pt; color:var(--head); border-bottom:2px solid var(--head); padding-bottom:3px; margin:18px 0 8px; break-after:avoid; }
+h3 { font-size:11pt; color:var(--accent); margin:12px 0 5px; break-after:avoid; }
+p { margin:4px 0 6px; }
+ul { margin:3px 0 6px 0; padding-left:18px; }
+li { margin:1px 0; }
+table { width:100%; border-collapse:collapse; margin:5px 0 9px; font-size:8.6pt; }
+thead { display:table-header-group; }
+tr { break-inside:avoid; }
+th { word-break:keep-all; background:var(--head); color:#fff; font-weight:700; padding:4px 5px; border:1px solid var(--head); text-align:left; }
+td { word-break:keep-all; border:1px solid var(--line); padding:3px 5px; vertical-align:top; }
+tbody tr:nth-child(even) td { background:#f6f8fb; }
+table.small { font-size:8pt; }
+table.tiny { font-size:6.6pt; }
+table.tiny th, table.tiny td { padding:2px 2px; }
+code { font-family:'Malgun Gothic'; background:#eef1f6; padding:0 3px; border-radius:2px; }
+.k { color:var(--sub); font-size:7.4pt; }
+.tag { color:#fff; background:#7a2a3a; padding:0 4px; border-radius:3px; font-size:7pt; }
+.tag2 { color:#fff; background:#2d7a4a; padding:0 4px; border-radius:3px; font-size:7pt; }
+.note { background:#fff6e8; border-left:4px solid #e0a040; padding:5px 8px; margin:6px 0; font-size:8.8pt; }
+.new { background:#eef7ee; border-left:4px solid #3a9a5a; padding:5px 8px; margin:6px 0; font-size:8.8pt; }
+.chk { color:var(--warn); font-weight:700; }
+.cover { height:250mm; display:flex; flex-direction:column; justify-content:center; break-after:page; }
+.cover .sub { color:var(--sub); font-size:12pt; }
+.cover .meta { margin-top:30px; font-size:10pt; color:var(--sub); }
+.toc { break-after:page; }
+.toc ol { font-size:11pt; line-height:1.9; }
+.sec { break-before:page; }
+.flow { font-family:'Malgun Gothic'; background:var(--head2); padding:6px 10px; border-radius:4px; margin:6px 0; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="sub">Avenging Spirit RE:BORN</div>
+  <h1>어벤징 스피릿 시스템 기획서</h1>
+  <div class="sub">지금 구현된 버전 기준 · 코드와 데이터에서 확인한 값</div>
+  <div class="meta">
+    작성일 2026-10-28<br>
+    근거: <b>GameConfig.asset</b>(에셋에 없는 칸은 코드 기본값) · <b>chapters.tsv</b> · <b>rooms30.tsv</b> · 표 에셋(호스트 · 스킬 · 카드 · 상자 · 상점 · 모드 · 패스) · 인게임 · 로비 코드<br>
+    기획 문서(Projects/AVSR/*.md)와 코드가 다르면 코드를 따랐다. 다른 점은 부록 A에 있다.<br>
+    확인하지 못한 것은 <span class="chk">확인 필요</span>로 표시했다(부록 B).
+  </div>
+</div>
+
+<div class="toc">
+<h2>목차</h2>
+<ol>
+<li>게임 개요</li>
+<li>유령과 빙의</li>
+<li>호스트</li>
+<li>스킬 — 액티브 · 필살기 · 패시브</li>
+<li>전투</li>
+<li>레벨업 카드</li>
+<li>챕터 · 방</li>
+<li>성장</li>
+<li>경제 · 상점</li>
+<li>모드 — 망령의 탑 · 망령의 밤</li>
+<li>화면 흐름</li>
+<li>라이브 설정과 테스트 스위치</li>
+</ol>
+<p>부록 A — 기획 문서와 다른 점 · 부록 B — 확인 필요 목록</p>
+<div class="note">거리 단위: 화면 px 기준이다. 방 폭 720px = 8.4m라서 <b>1m = 85.7px</b>로 환산한다.</div>
+</div>
+
+<!-- 1 -->
+<h2>1. 게임 개요</h2>
+<table><tbody>
+<tr><td style="width:22%"><b>장르</b></td><td>세로 화면 모바일 로그라이트 액션. 방을 하나씩 비우며 나아가고, 원작 「궁수의 전설」식 규칙(멈춰야 쏜다 · 레벨업 카드 3장 중 1장)을 따른다.</td></tr>
+<tr><td><b>한 줄 재미</b></td><td>플레이어는 <b>유령</b>이다. 적 호스트(적 몸)에 <b>빙의</b>해 그 몸의 공격 · 스킬 · 필살기로 싸운다. 어떤 몸을 빼앗았느냐가 그 판의 빌드가 된다. 몸이 죽어도 끝이 아니라 다음 몸으로 갈아타는 전환점이다.</td></tr>
+<tr><td><b>챕터 수</b></td><td>20챕터(chapters.tsv 한 줄 = 한 챕터). 한 챕터 = 30방.</td></tr>
+<tr><td><b>호스트 수</b></td><td>23종(그중 사신은 히든).</td></tr>
+<tr><td><b>언어</b></td><td>5개 — 한국어 · 일본어 · 영어 · 번체 중국어 · 간체 중국어.</td></tr>
+</tbody></table>
+
+<h3>한 판 흐름</h3>
+<div class="flow">로비 「전투」 탭 → 챕터 고르기 → 출전 카드 고르기(랜덤 · 유령 · 오늘의 호스트 · 가진 호스트) → 출전(행동력 5)
+→ 1번 방 → … → 10번 방 중간보스 → 악마 제단 → … → 15번 방 상점 → … → 20번 방 중간보스 2 → … → 30번 방 보스 → 결과 창 → 로비</div>
+<ul>
+<li>방 안의 적을 다 쓰러뜨리면 바닥 골드를 모으고 출구가 생긴다. 출구에 닿으면(반경 70px) 다음 방으로 간다.</li>
+<li>판 경험치가 차면 방이 빈 뒤 0.1초에 <b>레벨업 카드 3장 중 1장</b>을 고른다. 고른 뒤 출구가 열린다.</li>
+<li>30번 방 보스를 잡으면 클리어. 결과 창에서 판 골드 · 조각 · 유저 경험치를 받는다.</li>
+</ul>
+
+<!-- 2 -->
+<h2 class="sec">2. 유령과 빙의</h2>
+<div class="new"><b>오늘(10-28) 바뀐 것</b><br>
+· <b>유령 체력 자연 감소 없음</b> — GameConfig <code>_ghostDrainPerSecond</code> = 0. 예전에는 유령 상태에서 초당 체력이 깎였다(코드 기본값 3).<br>
+· <b>모든 챕터 1번 방 입구 앞에 시작 호스트</b> — chapters.tsv <code>starter</code> 칸. 1번 방 시작 자리에서 4.7m 앞(빙의 사거리 5m 안)에 빙의할 수 있는 호스트가 서 있고, 그 둘레 3m 안의 적은 위로 밀어 둔다. 방 굽기 툴(origin_rooms_bake.py)이 rooms30.tsv에 넣는다. 챕터별 시작 호스트는 7장 표에 있다.</div>
+
+<h3>2-1. 유령 수치</h3>
+<table><thead><tr><th>항목</th><th>값</th><th>근거</th></tr></thead><tbody>
+<tr><td>유령 체력 최대</td><td>100(카드 보너스로 늘 수 있음)</td><td>_ghostHpMax</td></tr>
+<tr><td>유령 이동 속도</td><td>446px/초</td><td>_ghostMoveSpeed</td></tr>
+<tr><td>자연 감소</td><td><b>0</b>(감소 없음)</td><td>_ghostDrainPerSecond</td></tr>
+<tr><td>빙의 사거리</td><td>429px = 5.0m</td><td>_possessRange</td></tr>
+<tr><td>빙의에 걸리는 시간</td><td>0.7초(화면이 1.12배 당겨짐)</td><td>_possessChannelSeconds · _possessZoom</td></tr>
+<tr><td>빙의 직후 무적</td><td>1.25초</td><td>_possessInvulnSeconds</td></tr>
+<tr><td>빙의 시 호스트 시작 체력</td><td><b>100%</b>(상성 규칙이 켜져 있어 GameConfig의 70%는 쓰이지 않음)</td><td>BattleDirector.Affinity.cs</td></tr>
+<tr><td>호스트가 죽을 때 대가</td><td>유령 체력 −20%</td><td>_ghostDeathCostPercent</td></tr>
+<tr><td>스스로 놓을 때 대가</td><td>유령 체력 −8%, 다시 빙의 잠금 0.5초(상성 규칙 값. GameConfig의 20% · 1.2초는 안 쓰임). 단, <b>스스로 나가는 버튼은 없다</b> — 판 안 상점에서 호스트를 살 때만 일어난다.</td><td>AffinityRule</td></tr>
+<tr><td>호스트를 잃은 직후 보호</td><td>1초 무적 + 주변(330px) 적 50% 둔화</td><td>_ghostProtectSeconds · _protectSlowPercent</td></tr>
+<tr><td>유령 상태 공격</td><td>못 한다. 대신 적 공격도 받지 않는다.</td><td>BattleDirector.cs</td></tr>
+</tbody></table>
+
+<h3>2-2. 빙의 조건 — 경직 게이지</h3>
+<ul>
+<li><b>잡몹은 빙의할 수 없다.</b> 「호스트 몸」으로 나온 적만 빼앗는다. 보스도 안 된다.</li>
+<li><b>유령일 때</b>: 사거리 안의 호스트 몸에 바로 빙의할 수 있다.</li>
+<li><b>이미 몸을 입고 있을 때</b>: 그 적을 <b>경직</b>시켜야 갈아탈 수 있다. 짧은 시간에 최대 체력의 35%만큼 몰아 때리면 경직 1.5초가 열린다. 때리기를 멈추면 게이지가 초당 12%씩 식고, 경직이 풀린 뒤 2초는 다시 못 채운다. 체력과 무관하다 — 「죽일까 뺏을까」를 매번 판단하게 하려는 규칙이다.</li>
+</ul>
+
+<h3>2-3. 몸이 없을 때 — 구조 호스트 · 긴급 호스트</h3>
+<table><thead><tr><th>구분</th><th>조건</th><th>내용</th></tr></thead><tbody>
+<tr><td>구조 호스트</td><td>몸이 없고 3초가 지나면(쿨 20초, 보스방 제외)</td><td>방 위쪽에서 빙의할 수 있는 호스트 1기가 들어온다.</td></tr>
+<tr><td>긴급 호스트</td><td>몸이 없고, 빙의할 몸도 앞으로 생길 몸도 없고, 방에 적이 남아 있으면 1초 뒤</td><td>쓰러진 자리에서 몸이 <b>체력 30%</b>로 되살아난다. 유령 체력 −20(유령 체력이 20보다 많을 때만).</td></tr>
+</tbody></table>
+
+<h3>2-4. 지는 조건</h3>
+<p>판이 지는 길은 <b>유령 체력 0</b>(코드상 자연 감소 경로에만 있음)과 <b>포기</b>다. 다른 대가(죽음 −20% · 긴급 −20)는 유령 체력을 1 밑으로 내리지 않는다. <b>그래서 자연 감소가 0인 지금은 유령 체력으로는 지지 않는다.</b> 실제로 지는 길은 포기뿐이다 — 의도한 것인지 <span class="chk">확인 필요</span>.</p>
+
+<!-- 3 -->
+<h2 class="sec">3. 호스트</h2>
+<p>23종. 표시 스탯은 0~100 눈금이고, 실제 전투 수치는 GameConfig 계수로 바꾼다. 등급 R/SR/SSR(코드 이름 B/A/S). 사거리 배율은 원거리 기본 사거리 900px에 곱한다(근접은 96.6px 고정).</p>
+<table class="small"><thead><tr><th>#</th><th>호스트</th><th>등급</th><th>속성</th><th>평타</th><th>사거리 배율</th><th>표시 스탯 체력/공격/이속/공속</th><th>액티브(쿨)</th><th>필살기</th><th>패시브</th></tr></thead><tbody><tr><td>1</td><td>갱스터<br><span class="k">gangster</span><br><b class="tag2">시작 호스트</b></td><td>R</td><td>무기</td><td>단발</td><td>1</td><td>69 / 81 / 75 / 66</td><td>일제 표식 <span class="k">(6초)</span></td><td>청부 처형</td><td>처형 계약</td></tr><tr><td>2</td><td>폭력배<br><span class="k">thug</span></td><td>R</td><td>무기</td><td>단발</td><td>0.7</td><td>73 / 71 / 71 / 94</td><td>난사 <span class="k">(5초)</span></td><td>회전 난사</td><td>삥</td></tr><tr><td>3</td><td>아마존<br><span class="k">amazon</span></td><td>R</td><td>무기</td><td>근접</td><td>0.45</td><td>81 / 73 / 73 / 72</td><td>도약 강타 <span class="k">(5초)</span></td><td>번개 무희</td><td>쉴드 질주</td></tr><tr><td>4</td><td>아마존 정예<br><span class="k">amazon_elite</span></td><td>SSR</td><td>무기</td><td>근접</td><td>0.5</td><td>95 / 81 / 66 / 59</td><td>불굴 <span class="k">(8초)</span></td><td>역린</td><td>역전의 자세</td></tr><tr><td>5</td><td>호퍼<br><span class="k">hopper</span></td><td>R</td><td>무기</td><td>단발</td><td>0.95</td><td>66 / 76 / 88 / 71</td><td>정조준 <span class="k">(8초)</span></td><td>킬 포인트</td><td>급소</td></tr><tr><td>6</td><td>호퍼(기관단총)<br><span class="k">hopper_smg</span></td><td>SR</td><td>무기</td><td>연사</td><td>0.9</td><td>72 / 88 / 92 / 99</td><td>백스텝 사격 <span class="k">(5초)</span></td><td>돌진 난사</td><td>충격 반동</td></tr><tr><td>7</td><td>코만도(기관총)<br><span class="k">commando_mg</span></td><td>R</td><td>무기</td><td>연사</td><td>1</td><td>73 / 69 / 72 / 99</td><td>방벽 전개 <span class="k">(8초)</span></td><td>회전 난사</td><td>중장갑</td></tr><tr><td>8</td><td>코만도(레이저)<br><span class="k">commando_laser</span></td><td>SR</td><td>파워</td><td>관통</td><td>1.45</td><td>78 / 84 / 72 / 56</td><td>연쇄 방전 <span class="k">(6초)</span></td><td>프리즘 레이저</td><td>집속 광선</td></tr><tr><td>9</td><td>코만도(수류탄)<br><span class="k">commando_grenade</span></td><td>R</td><td>파워</td><td>확산</td><td>1.2</td><td>72 / 79 / 71 / 52</td><td>융단 폭격 <span class="k">(5초)</span></td><td>C4</td><td>파편탄</td></tr><tr><td>10</td><td>샐러맨더<br><span class="k">salamander</span></td><td>R</td><td>마법</td><td>확산</td><td>0.5</td><td>85 / 73 / 65 / 62</td><td>독 뿜기 <span class="k">(5초)</span></td><td>독 늪</td><td>독니</td></tr><tr><td>11</td><td>드라군<br><span class="k">dragoon</span></td><td>SSR</td><td>마법</td><td>확산</td><td>0.55</td><td>89 / 83 / 63 / 53</td><td>화염 지대 <span class="k">(6초)</span></td><td>메테오</td><td>불씨</td></tr><tr><td>12</td><td>청룡<br><span class="k">dragon_blue</span></td><td>R</td><td>마법</td><td>단발</td><td>0.5</td><td>81 / 71 / 66 / 68</td><td>뇌전 폭주 <span class="k">(6초)</span></td><td>천뢰</td><td>낙뢰</td></tr><tr><td>13</td><td>구루<br><span class="k">guru</span></td><td>R</td><td>파워</td><td>주변 광역</td><td>0.55</td><td>81 / 63 / 78 / 59</td><td>수호 결계 <span class="k">(6초)</span></td><td>결계 가두기</td><td>무형보</td></tr><tr><td>14</td><td>화이트 위저드<br><span class="k">white_wizard</span></td><td>R</td><td>마법</td><td>관통</td><td>1.3</td><td>71 / 75 / 73 / 63</td><td>중력진 <span class="k">(5초)</span></td><td>빛기둥 비</td><td>관통 광선</td></tr><tr><td>15</td><td>영매<br><span class="k">medium</span></td><td>SSR</td><td>마법</td><td>관통</td><td>1.25</td><td>72 / 90 / 69 / 55</td><td>미니 골렘 <span class="k">(10초)</span></td><td>거대 원혼</td><td>강령</td></tr><tr><td>16</td><td>닌자<br><span class="k">ninja</span></td><td>SR</td><td>무기</td><td>단발</td><td>0.9</td><td>70 / 88 / 91 / 94</td><td>그림자 걸음 <span class="k">(7초)</span></td><td>그림자 삼분신</td><td>질주</td></tr><tr><td>17</td><td>닌자(사슬)<br><span class="k">ninja_chain</span></td><td>SR</td><td>파워</td><td>주변 광역</td><td>0.6</td><td>80 / 82 / 84 / 71</td><td>사슬 끌어오기 <span class="k">(6초)</span></td><td>사슬 돌격 연격</td><td>흘리기</td></tr><tr><td>18</td><td>로봇<br><span class="k">robot</span></td><td>SR</td><td>파워</td><td>관통</td><td>1.1</td><td>92 / 72 / 62 / 60</td><td>포탑 전개 <span class="k">(10초)</span></td><td>로봇 특공대</td><td>예비 회로</td></tr><tr><td>19</td><td>슬러거<br><span class="k">baseball</span></td><td>SSR</td><td>파워</td><td>주변 광역</td><td>0.6</td><td>78 / 82 / 73 / 68</td><td>전탄 반사 <span class="k">(8초)</span></td><td>풀스윙 회오리</td><td>장외 타구</td></tr><tr><td>20</td><td>설녀<br><span class="k">snowwoman</span></td><td>R</td><td>마법</td><td>확산</td><td>1.05</td><td>68 / 68 / 79 / 66</td><td>얼음 감옥 <span class="k">(6초)</span></td><td>얼음 진</td><td>서릿발</td></tr><tr><td>21</td><td>흡혈귀<br><span class="k">vampire</span></td><td>SSR</td><td>마법</td><td>단발</td><td>0.5</td><td>80 / 80 / 75 / 69</td><td>혈연 <span class="k">(5초)</span></td><td>피의 웅덩이</td><td>흡혈</td></tr><tr><td>22</td><td>코만도(미사일)<br><span class="k">commando_missile</span></td><td>SR</td><td>파워</td><td>단발</td><td>0.5</td><td>71 / 86 / 68 / 49</td><td>다중 유도 <span class="k">(5초)</span></td><td>집중 포격</td><td>고폭탄</td></tr><tr><td>23</td><td>사신<br><span class="k">death</span><br><b class="tag">히든</b></td><td>SSR</td><td>마법</td><td>근접</td><td>0.5</td><td>86 / 91 / 66 / 49</td><td>사신의 시간 <span class="k">(10초)</span></td><td>망자 군단</td><td>망자 소집</td></tr></tbody></table>
+<div class="note">「평타」 칸은 HostTable <code>_attackKind</code> 값(근접 · 단발 · 연사 · 확산 · 관통 · 저격 · 주변 광역)이다. 몸별 실제 탄 수 · 간격은 원작 값(_canon*)이 있으면 그것을 쓴다.</div>
+
+<h3>3-1. 등급</h3>
+<table><thead><tr><th>등급</th><th>호스트 수</th><th>기본 체력 · 공격 배율</th><th>필살기 위력 배율</th><th>조각 · 성급 비용 배율</th></tr></thead><tbody>
+<tr><td>R</td><td>11</td><td>1.0</td><td>1.0</td><td>1.0</td></tr>
+<tr><td>SR</td><td>6</td><td>1.1</td><td>1.15</td><td>1.5</td></tr>
+<tr><td>SSR</td><td>6(사신 포함)</td><td>1.2</td><td>1.3</td><td>2.0</td></tr>
+</tbody></table>
+
+<h3>3-2. 상성 — 파워 · 무기 · 마법</h3>
+<div class="flow">파워 → 무기 → 마법 → 파워 (화살표 = 이긴다)</div>
+<ul>
+<li>이기는 쪽이 때리면 피해 <b>×1.3</b>, 지는 쪽이 때리면 <b>×0.7</b>. 맞을 때도 거꾸로 똑같이 적용된다. 유리하게 때리면 적이 0.28초 굳는다.</li>
+<li>무기 = 총 · 칼 · 창 / 파워 = 둔기 · 폭발 · 기계 / 마법 = 불 · 얼음 · 번개 · 독 · 망자.</li>
+<li>적(잡몹 · 보스)도 속성을 가진다. 챕터마다 잡몹의 무기 · 파워 · 마법 수를 세어 둔다(chapters.tsv <code>lean</code>, GameConfig MixBlade/Force/Magic).</li>
+<li>상성 규칙(AffinityRule)은 빌드에서 늘 켜져 있다.</li>
+</ul>
+
+<h3>3-3. 히든 호스트 — 사신</h3>
+<ul>
+<li>방 · 상자 · 상점 · 이벤트 · 목록에서 전부 막혀 있다(IsHiddenHost).</li>
+<li>유일하게 나오는 길: 로비 <b>랜덤 출전</b>에서 1% 확률. 그 판만 체험하고 조각은 없다.</li>
+<li>10챕터 첫 중간보스(10번 방) 대장이 사신이다(chapters.tsv <code>leader</code>).</li>
+<li>정식으로 얻는 길은 아직 없다.</li>
+</ul>
+
+<!-- 4 -->
+<h2 class="sec">4. 스킬 — 액티브 · 필살기 · 패시브</h2>
+<p>화면 버튼은 두 개(액티브 · 필살기). 유령일 때는 필살기 칸이 「빙의」 버튼이 된다.</p>
+
+<h3>4-1. 액티브 스킬</h3>
+<ul>
+<li><b>쿨은 호스트마다 다르다</b>(HostTable <code>_activeSkillCooldown</code>): 5초 8종 · 6초 7종 · 7초 1종 · 8초 4종 · 10초 3종. 표에 값이 없으면 기본 14초.</li>
+<li><b>쓰자마자 쿨이 돈다</b>(게이지를 0으로 만들고 시간으로 다시 채움). 실제 쿨 = 표 값 × 카드 배율(c036 등).</li>
+<li><b>빙의하면 가득 찬 상태로 시작</b>한다(PD 2026-10-27).</li>
+<li>유령일 때는 쓸 수 없고 쿨도 흐르지 않는다.</li>
+<li>숙련도 0(못 가진 호스트)은 액티브가 <b>봉인</b>되고 평타만 나간다.</li>
+</ul>
+<table class="small"><thead><tr><th>키</th><th>액티브 스킬</th><th>효과(표 요약)</th></tr></thead><tbody><tr><td>h01</td><td>도약 강타</td><td>가까운 적에게 도약해 주변에 300% 피해</td></tr><tr><td>h02</td><td>불굴</td><td>2.5초 무적</td></tr><tr><td>h03</td><td>융단 폭격</td><td>수류탄을 원형으로 뿌림</td></tr><tr><td>h04</td><td>연쇄 방전</td><td>3초간 전기 연쇄</td></tr><tr><td>h05</td><td>방벽 전개</td><td>5초간 최대 체력만큼 쉴드</td></tr><tr><td>h06</td><td>다중 유도</td><td>유도 미사일 7발</td></tr><tr><td>h07</td><td>뇌전 폭주</td><td>2초간 낙뢰 100%</td></tr><tr><td>h08</td><td>독 뿜기</td><td>5m 안 적 중독 · 둔화</td></tr><tr><td>h09</td><td>화염 지대</td><td>불바다 장판</td></tr><tr><td>h10</td><td>일제 표식</td><td>방 안 모든 적에게 3초 표식</td></tr><tr><td>h11</td><td>난사</td><td>5갈래 × 3회 사격</td></tr><tr><td>h12</td><td>수호 결계</td><td>3초간 받는 피해 −50%, 쉴드 2배</td></tr><tr><td>h13</td><td>정조준</td><td>5초간 치명타 90%</td></tr><tr><td>h14</td><td>백스텝 사격</td><td>뒤로 물러나며 부채꼴 연사</td></tr><tr><td>h15</td><td>미니 골렘</td><td>미니 골렘 10초 소환</td></tr><tr><td>h16</td><td>중력진</td><td>1.2초 끌어당긴 뒤 폭발</td></tr><tr><td>h17</td><td>사슬 끌어오기</td><td>적 5명 끌어와 속박</td></tr><tr><td>h18</td><td>그림자 걸음</td><td>4초간 회피 50%, 이속 +35%</td></tr><tr><td>h19</td><td>포탑 전개</td><td>포탑 10초 설치</td></tr><tr><td>h20</td><td>전탄 반사</td><td>5초간 적 탄 전부 반사</td></tr><tr><td>h21</td><td>얼음 감옥</td><td>1초 무적 + 최대 체력 30% 회복</td></tr><tr><td>h22</td><td>혈연</td><td>적 1명당 최대 체력 2% 회복</td></tr><tr><td>h23</td><td>사신의 시간</td><td>3초간 닿는 적 즉사(중간보스 50%, 보스는 10% 확률로 최대 체력 25% 피해)</td></tr></tbody></table>
+
+<h3>4-2. 필살기</h3>
+<table><thead><tr><th>규칙</th><th>값 · 내용</th></tr></thead><tbody>
+<tr><td>쓰는 조건</td><td>몸이 있고, 필살기가 차 있고, 봉인 상태가 아닐 것</td></tr>
+<tr><td>쓴 뒤 쿨</td><td><b>300초(5분)</b> 뒤 같은 호스트로 다시 찬다 — <code>_ultCooldownSeconds</code>(에셋에 없어 코드 기본값)</td></tr>
+<tr><td>빙의하면</td><td>쿨과 상관없이 <b>다시 가득</b> 찬다</td></tr>
+<tr><td>쿨 감소 카드</td><td>c013 「필살기 쿨 감소」 — 고를 때마다 ×0.5, 바닥 60초(300 → 150 → 75 → 60). 돌던 쿨도 같은 비율로 준다</td></tr>
+<tr><td>위력</td><td>등급 배율(R 1.0 · SR 1.15 · SSR 1.3) × (1 + 0.04 × (숙련도 − 1))</td></tr>
+<tr><td>못 가진 호스트</td><td>판당 1회 체험 — 그 판에서 처음 빙의할 때만 채워지고, 쓰면 쿨로 다시 차지 않는다. 다 쓴 뒤 누르면 안내가 뜬다</td></tr>
+</tbody></table>
+<div class="note"><b>주의 — 코드상 충돌.</b> 「못 가진 호스트」(숙련도 0)와 「스킬 봉인」(숙련도 0)이 같은 조건이라, 필살기 함수가 봉인 검사에서 먼저 멈춘다. 그래서 <b>판당 1회 체험 필살기가 실제 게임에서는 나가지 않는 것으로 보인다.</b> 에디터 녹화용 흉내에서만 나간다. <span class="chk">확인 필요</span>(게임에서 직접 확인하지 않음).</div>
+<p>필살기 이름은 3장 호스트 표에 있다. 23종 모두 전용 연출이 있고, 전용이 없는 몸은 「액티브 ×2.5」로 대신 나간다.</p>
+
+<h3>4-3. 패시브</h3>
+<ul>
+<li>호스트마다 하나. 몸을 입으면 바로 켜진다. 유령에게는 패시브가 없다.</li>
+<li>숙련도 Lv1에서 액티브와 함께 열린다(숙련도 0이면 봉인). 수치는 숙련도 1 → 10을 따라 직선으로 오른다. 예: 처형 계약 즉사 20 → 30%, 서릿발 빙결 30 → 45%, 중장갑 방어 +20 → 35%.</li>
+<li>액티브 스킬의 「특수 효과」 문턱은 숙련도 <b>Lv6</b>이다(SkillScaling.SpecLevel = 6). 기본 축은 Lv1~5에서, 특수 축은 Lv6~10에서 자란다.</li>
+</ul>
+<table class="small"><thead><tr><th>호스트</th><th>패시브</th><th>효과(숙련도 1 기준)</th></tr></thead><tbody>
+<tr><td>갱스터</td><td>처형 계약</td><td>표식이 붙은 적 20% 즉사(엘리트 최대 체력 50%, 보스 30% 피해)</td></tr>
+<tr><td>폭력배</td><td>삥</td><td>주운 골드 +10%</td></tr>
+<tr><td>아마존</td><td>쉴드 질주</td><td>쉴드가 찰수록 이동 속도, 최대 +40%</td></tr>
+<tr><td>아마존 정예</td><td>역전의 자세</td><td>쉴드가 있는 동안 공격력 +15%</td></tr>
+<tr><td>호퍼</td><td>급소</td><td>치명타 피해 +30%</td></tr>
+<tr><td>호퍼(기관단총)</td><td>충격 반동</td><td>적중 시 10% 넉백</td></tr>
+<tr><td>코만도(기관총)</td><td>중장갑</td><td>방어력 +20%</td></tr>
+<tr><td>코만도(레이저) · 화이트 위저드</td><td>집속 광선 · 관통 광선</td><td>탄이 지형을 무시하고 적을 관통</td></tr>
+<tr><td>코만도(수류탄)</td><td>파편탄</td><td>방어 50% 무시</td></tr>
+<tr><td>코만도(미사일)</td><td>고폭탄</td><td>탄이 지형 무시</td></tr>
+<tr><td>샐러맨더</td><td>독니</td><td>10% 중독, 중독된 적 받는 피해 +25%</td></tr>
+<tr><td>드라군</td><td>불씨</td><td>10% 화상</td></tr>
+<tr><td>청룡</td><td>낙뢰</td><td>10% 근처 적에게 번개</td></tr>
+<tr><td>구루</td><td>무형보</td><td>이동 중 지형 통과</td></tr>
+<tr><td>영매</td><td>강령</td><td>처치 시 30% 아군 해골(3초)</td></tr>
+<tr><td>닌자</td><td>질주</td><td>처치 시 1.5초 이동 속도 +30%</td></tr>
+<tr><td>닌자(사슬)</td><td>흘리기</td><td>10% 피해 회피</td></tr>
+<tr><td>로봇</td><td>예비 회로</td><td>평타 시 2% 확률로 액티브 쿨 −1초</td></tr>
+<tr><td>슬러거</td><td>장외 타구</td><td>처치 시 20% 주변 적 날림</td></tr>
+<tr><td>설녀</td><td>서릿발</td><td>30% 빙결, 빙결된 적 피해 +30%(보스 면역)</td></tr>
+<tr><td>흡혈귀</td><td>흡혈</td><td>8% 확률로 공격력의 5% 회복</td></tr>
+<tr><td>사신</td><td>망자 소집</td><td>처치마다 아군 해골</td></tr>
+</tbody></table>
+
+<!-- 5 -->
+<h2 class="sec">5. 전투</h2>
+<h3>5-1. 평타</h3>
+<ul>
+<li><b>멈춰야 공격한다</b>(궁수의 전설 규칙). 멈춘 뒤 0.03초에 사격이 시작된다(_attackResumeSeconds). 예외는 「움직이며 공격」 표시가 있는 호스트(현재 표에서는 없음).</li>
+<li>공격력 등급은 <b>초당 피해량</b>이다. 한 방 피해 = 초당 피해 ÷ 초당 횟수 — 빨리 때리는 몸은 한 방이 가볍다.</li>
+<li>평타 속도: 전투 전체 배율 0.7(_attackSpeedMul) · 내 몸 발사 간격 배율 0.3(_hostAttackSpeedMul).</li>
+<li>사거리: 원거리 900px × 호스트 사거리 배율 · 근접 96.6px(캐릭터 크기 1.2배와 따로 간다). 적 사거리도 900px로 같다.</li>
+<li>적은 300px 안에 들어오면 나를 알아보고 달려든다. 적끼리는 82px × 1.2 안에서 서로 밀어낸다.</li>
+</ul>
+<h3>5-2. 탄</h3>
+<table><thead><tr><th>항목</th><th>값</th></tr></thead><tbody>
+<tr><td>플레이어 탄 속도</td><td>720px/초 × <b>2</b>(_playerShotSpeedMul, PD 2026-10-28 「두 배로 빠르게」, 에셋에 없어 코드 기본값) = <b>1,440px/초</b></td></tr>
+<tr><td>탄 수명</td><td>1.6초 그대로(_shotLifeSeconds) — 그래서 더 멀리 · 벽에 튕겨도 오래 간다</td></tr>
+<tr><td>적 탄 속도</td><td>420px/초</td></tr>
+<tr><td>탄 크기 · 맞힘 반경</td><td>72.8px · 34px</td></tr>
+</tbody></table>
+<h3>5-3. 격투 쉴드 · 치명타 · 방어</h3>
+<ul>
+<li><b>격투 쉴드</b>(근접 직업만): 한 대 때릴 때마다 최대 체력의 1.5%가 쌓이고, 상한 15%. 마지막 타격 뒤 1초 버티고 그다음 초당 12%씩 녹는다.</li>
+<li><b>치명타</b>: 1등급 5% + 등급당 3%, 피해 ×2(_critMultiplier) + 강화 보너스.</li>
+<li><b>방어</b>: 몸의 타고난 방어(등급 × 3%)에 강화가 더해진다. 상한 60%.</li>
+</ul>
+<h3>5-4. 상태이상</h3>
+<table><thead><tr><th>종류</th><th>효과</th></tr></thead><tbody>
+<tr><td>화상</td><td>겹당 초당 6 피해, 최대 3겹</td></tr>
+<tr><td>독</td><td>초당 4 피해 + 25% 둔화, 겹치지 않음</td></tr>
+<tr><td>빙결</td><td>55% 둔화</td></tr>
+<tr><td>저주</td><td>받는 피해 겹당 +15%, 최대 3겹</td></tr>
+<tr><td>기절</td><td>이동 · 공격 정지</td></tr>
+<tr><td>묶기</td><td>이동만 정지</td></tr>
+<tr><td>둔화</td><td>최대 90%(카드 둔화탄 합계는 80%까지)</td></tr>
+<tr><td>갑옷 분쇄</td><td>최대 5겹, 3초</td></tr>
+</tbody></table>
+<p>상태이상별 지속 시간은 스킬마다 다르다 — <span class="chk">확인 필요</span>(스킬별 표 없음). 설녀 둔화 1.6초(_slowSeconds).</p>
+<h3>5-5. 적 공통 배율</h3>
+<ul>
+<li>잡몹 체력 전체 ×2(_enemyHpMul, 보스 제외) · 공격 간격 ×0.85 · 공격 예고 ×0.7. 여기에 챕터 표의 체력 · 공격 · 간격 배율이 곱해진다.</li>
+<li>방 하나에 동시에 서는 적 상한 12.</li>
+</ul>
+
+<!-- 6 -->
+<h2 class="sec">6. 레벨업 카드</h2>
+<h3>6-1. 판 레벨</h3>
+<ul>
+<li>경험치: 잡몹 · 적 호스트 1기 8 · 엘리트 16(×2) · 중간보스 대장 30. 빼앗은 몸도 같은 몫을 준다.</li>
+<li>다음 레벨까지 필요량 = <b>30 × 현재 Lv</b>(30 · 60 · 90 …). 30방 끝에 Lv9 안팎을 목표로 잡은 값이다.</li>
+<li>레벨이 오르면 방의 적이 다 쓰러진 뒤 0.1초에 카드 3장(서로 다른 카드) 중 1장을 고른다. 여러 번 올랐으면 차례로 뜬다.</li>
+<li><b>다시 뽑기(리롤) 없음</b>(PD 2026-10-23). 보스방은 판이 끝나므로 주지 않는다.</li>
+</ul>
+<h3>6-2. 카드 등장 규칙</h3>
+<ul>
+<li>등급 무게(카드 1장당): 커먼 45 · 레어 30 · 에픽 18 · 레전더리 7. 같은 등급 안에서는 똑같다.</li>
+<li>후보에서 빠지는 카드: 미구현 · 지금 챕터보다 뒤 챕터부터 나오는 카드 · 몸 조건(원거리 · 근접 · 폭발)이 안 맞는 카드 · 먼저 가져야 할 카드가 없는 카드.</li>
+<li>같은 카드를 다시 고르면 레벨이 오른다(최대 Lv5). Lv5가 되면 후보에서 빠진다. 종류 수 상한은 없다.</li>
+<li>유령일 때는 몸 조건 카드가 꺼지고, 맞는 몸에 들어가면 다시 켜진다.</li>
+<li>36장 모두 공통 카드다. 호스트 전용 카드는 없다.</li>
+</ul>
+<h3>6-3. 카드 36장</h3>
+<table class="small"><thead><tr><th>id</th><th>카드 이름</th><th>등급</th><th>효과 (Lv1~5) · 조건</th></tr></thead><tbody><tr><td>c001</td><td>감전</td><td>에픽</td><td>적중 시 전기가 튐 — 그 타격의 25/35/45/55/65% 피해</td></tr><tr><td>c002</td><td>성장 가속</td><td>레어</td><td>경험치 +12/20/28/36/44% · ⚠ 미구현 표시(_implemented 0) — 뽑기에 안 나옴</td></tr><tr><td>c003</td><td>수호 방패</td><td>레어</td><td>몸 둘레를 도는 방패 3/3/4/4/5개</td></tr><tr><td>c004</td><td>처형</td><td>레전더리</td><td>약한 적 즉사 3/5/7/9/12% · 6챕터부터</td></tr><tr><td>c005</td><td>번개 사슬</td><td>에픽</td><td>전기 연쇄 +1/1/2/2/3 · 「감전」 필요 · 2챕터부터</td></tr><tr><td>c006</td><td>흡혼</td><td>커먼</td><td>처치 시 최대 체력 3/5/7/9/11% 회복</td></tr><tr><td>c007</td><td>찰나의 불사</td><td>에픽</td><td>피격 시 2초 무적 · 쿨 30/26/22/18/14초</td></tr><tr><td>c008</td><td>추가 발사</td><td>레어</td><td>추가 발수 +1~+5(레벨 = 발수) · 원거리 몸</td></tr><tr><td>c009</td><td>화염 각인</td><td>레어</td><td>화상 확률 30/40/50/60/70%</td></tr><tr><td>c010</td><td>궁지</td><td>레어</td><td>체력 절반 이하일 때 피해 +15/25/35/45/55%</td></tr><tr><td>c011</td><td>공격 강화</td><td>커먼</td><td>공격 +12/18/24/30/36%</td></tr><tr><td>c012</td><td>속사</td><td>레어</td><td>공격 간격 −10/15/20/25/30%(간격 하한 0.2배)</td></tr><tr><td>c013</td><td>필살기 쿨 감소</td><td>레어</td><td>고를 때마다 필살기 쿨 ×0.5 · 바닥 60초(300 → 150 → 75 → 60) · 돌던 쿨도 같이 줄어듦</td></tr><tr><td>c014</td><td>관통탄</td><td>레어</td><td>관통 수 1/1/2/2/3 · 원거리 몸</td></tr><tr><td>c015</td><td>벽 반사</td><td>레어</td><td>튕긴 탄 피해 50/60/65/75/80% · 튕김 1/1/2/2/3회 · 원거리 몸 · 3챕터부터</td></tr><tr><td>c016</td><td>유도탄</td><td>커먼</td><td>유도 세기 +0.12/0.20/0.28/0.36/0.44 · 원거리 몸</td></tr><tr><td>c017</td><td>냉기 각인</td><td>레어</td><td>빙결 확률 25/35/45/55/65% · 2챕터부터</td></tr><tr><td>c018</td><td>저주 각인</td><td>레어</td><td>저주 확률 20/28/36/44/52% · 3챕터부터</td></tr><tr><td>c019</td><td>화상 번짐</td><td>에픽</td><td>3중첩 화상이 주변으로 번짐 · 1레벨만(중복 불가) · 「화염 각인」 필요 · 3챕터부터</td></tr><tr><td>c020</td><td>상태이상 번짐</td><td>에픽</td><td>옮길 확률 18/25/32/39/46% · c009·c017·c018·c021 중 하나 필요 · 5챕터부터</td></tr><tr><td>c021</td><td>둔화탄</td><td>커먼</td><td>둔화 20/28/36/44/52%(합계 상한 80%)</td></tr><tr><td>c022</td><td>갑옷 분쇄</td><td>에픽</td><td>중첩 1겹당 받는 피해 +5/9/13/17/21% · 2챕터부터</td></tr><tr><td>c023</td><td>연속 압박</td><td>커먼</td><td>같은 적 연타 최대 +10/16/22/28/35% · 4챕터부터</td></tr><tr><td>c024</td><td>마무리 본능</td><td>레어</td><td>약한 적에게 피해 +10/18/26/34/42% · 2챕터부터</td></tr><tr><td>c025</td><td>보스 사냥</td><td>레어</td><td>보스에게 피해 +18/24/30/36/42% · 3챕터부터</td></tr><tr><td>c026</td><td>폭발 메아리</td><td>에픽</td><td>2차 폭발 20/28/36/44/52% · 폭발 몸 · 5챕터부터</td></tr><tr><td>c027</td><td>범위 확대</td><td>레어</td><td>스킬 · 폭발 범위 +8/14/20/26/32% · 4챕터부터</td></tr><tr><td>c028</td><td>장판 지속</td><td>커먼</td><td>장판 지속 +1.2/2.0/2.8/3.6/4.4초 · 6챕터부터</td></tr><tr><td>c029</td><td>유령 포대</td><td>에픽</td><td>평타 8회마다 포대 · 공격력의 22/27/32/37/42% · 5챕터부터</td></tr><tr><td>c030</td><td>영혼 복제</td><td>레전더리</td><td>평타 8회마다 복제 35/40/45/50/55% · 6챕터부터</td></tr><tr><td>c031</td><td>유령 갑주</td><td>커먼</td><td>받는 피해 −5/8/11/14/17%(곱으로 쌓임)</td></tr><tr><td>c032</td><td>흡혈</td><td>레어</td><td>흡혈 10/15/20/25/30%(확률인지 비율인지 확인 필요) · 4챕터부터</td></tr><tr><td>c033</td><td>위기 방벽</td><td>레어</td><td>방벽 = 최대 체력의 12/18/24/30/36% · 5챕터부터</td></tr><tr><td>c034</td><td>가속</td><td>커먼</td><td>이동 속도 +5/9/13/17/21%</td></tr><tr><td>c035</td><td>사거리</td><td>커먼</td><td>근접 사거리 +10/15/20/25/30% · 근접 몸 · 4챕터부터</td></tr><tr><td>c036</td><td>스킬 쿨 감소</td><td>레어</td><td>액티브 쿨 −8/14/20/26/32%(하한 0.4배) · 6챕터부터</td></tr></tbody></table>
+
+<!-- 7 -->
+<h2 class="sec">7. 챕터 · 방</h2>
+<h3>7-1. 30방 구성</h3>
+<table><thead><tr><th>방 번호</th><th>종류</th><th>내용</th></tr></thead><tbody>
+<tr><td>1, 11</td><td>소개방</td><td>rooms30.tsv 설명은 「소개」지만 코드에서는 일반 전투방으로 처리한다. 1번 방에는 시작 호스트가 선다.</td></tr>
+<tr><td>2~4 · 6~9 · 12~14 · 16~19 · 21~24 · 26~29</td><td>전투방</td><td>원작 방 배치를 옮긴 것(챕터당 24방 = 소개 2 + 전투 22).</td></tr>
+<tr><td>5, 25</td><td>천사 제단</td><td>공짜로 3개 중 1개. 지나칠 수 있다.</td></tr>
+<tr><td>10</td><td>중간보스 1</td><td>대장 = <code>leader</code>(호스트를 키운 몸). 이기면 <b>악마 제단</b>이 선다.</td></tr>
+<tr><td>15</td><td>상점</td><td>판 골드로 산다. 지나칠 수 있다.</td></tr>
+<tr><td>20</td><td>중간보스 2</td><td>대장 = <code>leader2</code>. 악마 제단은 없다.</td></tr>
+<tr><td>30</td><td>보스</td><td>챕터 보스. 잡으면 클리어.</td></tr>
+</tbody></table>
+
+<h3>7-2. 천사 · 상점 · 악마 제단</h3>
+<table><thead><tr><th>방</th><th>내용</th></tr></thead><tbody>
+<tr><td>천사(5 · 25번)</td><td>공짜 3택1, 거절 없음. 후보: 몸 가득 회복(몸이 있을 때) · 유령 가득 회복 · 최대 체력 +20% · 공격 +25% · 발사 간격 −18% · 사거리 +25% · 카드 3택1(레어 이상) · 가장 낮은 카드 Lv+1</td></tr>
+<tr><td>상점(15번)</td><td>진열 4칸(카드 · 카드 강화 · 호스트 또는 소모품 1 · 회복 1). 상점 하나에서 총 2번, 그중 카드는 1번만 산다. 다시 뽑기 없음.<br>
+값 = 표 값 × 챕터 값 배율 × 0.5. 1챕터 예: 회복(몸 35% · 유령 25%) 21골드 · 카드 21~33골드 · 호스트 33골드(이번 판에 만난 몸만, 사면 바로 갈아탐) · 소모품(폭탄 · 빙결 5초 · 아군, 다음 전투방에서 터짐) 카드 평균값 ÷ 3(최소 10)</td></tr>
+<tr><td>악마 제단(10번 방 뒤)</td><td>이벤트 표(23종)에서 판당 한 번씩 무작위 1개. 대가를 치르고 받는다. 예: 피의 계약(최대 체력 −25% → 전설 카드) · 광란(−25% → 에픽) · 굶주림(−15% → 일반) · 악마의 진열(−20% → 에픽 3택1) · 영혼 저당(유령 체력 −30% → 레어 2장) · 부서진 제단(카드 1장 파괴 → 한 등급 위 새 카드). 최대 체력 빚은 판 끝까지 남고 상한 60%.</td></tr>
+</tbody></table>
+
+<h3>7-3. 중간보스 · 보스 · 엘리트 · 방 기믹</h3>
+<ul>
+<li><b>중간보스 대장</b>: 호스트 몸을 키운 것 — 크기 ×1.8 · 체력 ×2.2 · 공격 ×1.8 · 평타 간격 ×0.6 · 이동 ×1.2. 스킬은 2.5초 뒤 처음, 이후 4~7초마다(탄 수 ×2 · 피해 ×2). 부하는 전부 빙의할 수 있는 몸. 부하를 다 잡으면 대장이 3초 굳는다. 체력 50% 아래에서 격노(간격 ×0.7 · 이동 ×1.2 · 스킬 ×0.7, 부하 2기 추가).</li>
+<li><b>보스</b>: 체력 · 공격은 챕터 표 bossHp · bossAtk. 패턴 전환 문턱 60% · 30%. 빙의할 수 없다. 보스방에서는 구조 호스트가 오지 않고 긴급 호스트만 쓴다.<br>
+보스 6종과 패턴: 로봇 스네이크(솟아오름 · 레이저 · 천장 파편 · 물어뜯기) · 크러셔(미사일 · 쇠사슬 파괴구 · 부채꼴 사격 · 돌진) · 파이썬(머리 뻗기 · 독 뱉기 · 벽돌 낙하 · 몸통 밀기) · 슬러지(솟아오름 · 뱉기 · 천장 붙기 · 천장 확산) · 가디언(마디 돌진 · 마디 사출 · 똬리 · 머리 물기) · 킹핀(미사일 일제 · 처형 조준 · 저공 활강 · 부스터 강하). 20챕터는 이 6종을 돌려 쓴다.</li>
+<li><b>엘리트</b>: 체력 ×2.4 · 공격 ×1.5 · 크기 ×1.25 · 골드 ×4 · 경험치 16. 체력 높은 잡몹부터 엘리트로 바꾼다.
+  <ul><li>16번 방부터(진행도 0.5 이상): <code>elite</code> 수만큼</li>
+  <li>28번 방부터(0.9 이상): <code>eliteLast</code>를 더한다</li>
+  <li>앞쪽 절반: <code>eliteEarly</code> = N이면 N번째 방마다 1기</li></ul></li>
+<li><b>방 기믹(hazard)</b>: 2챕터 폭격 표적 · 3챕터 네온 추적 · 4챕터 번개 웅덩이 · 5챕터 가스 띠. 1챕터 · 6챕터 이후는 없음. 11번 방부터 켜지고, 첫 발 3초 뒤, 20번 방 전까지 12초마다, 그 뒤 8초마다. 전투방에서만(중간보스 · 보스방 · 유령 상태 · 출구가 열린 뒤에는 없음). 적도 맞는다(한 번에 체력 30%, 가스는 0.5초마다 8%). 플레이어가 받는 피해량은 <span class="chk">확인 필요</span>.</li>
+</ul>
+
+<div class="new"><b>1챕터 조정(오늘 10-28)</b><br>
+· 잡몹 체력 배율 <b>절반</b>: hpMul 0.80 → 0.40, 보스 체력 1650 → 825(PD 「죽이는 데 오래 걸린다」).<br>
+· 전투방마다 가운데에 <b>박쥐 1 · 해골 1</b>을 더 세운다(chapters.tsv <code>extra</code> = <code>bat:1,skeleton:1</code>). 원작 적과 2m, 서로 3m, 시작 호스트와 3m 띄운다(「겹치지 말고 띄워」). 지금 extra가 있는 챕터는 1챕터뿐이다.</div>
+
+<h3>7-4. 챕터 표 칸 설명</h3>
+<table class="small"><thead><tr><th>칸</th><th>뜻</th></tr></thead><tbody>
+<tr><td>stage</td><td>무대(방 바닥 · 옆벽 · 소품). 6무대를 돌려 쓴다: junkyard · missile · street · rooftop · lab · refinery</td></tr>
+<tr><td>boss / leader / leader2</td><td>30번 방 보스 · 10번 방 중간보스 대장 · 20번 방 중간보스 대장(호스트 키)</td></tr>
+<tr><td>trash · lean</td><td>이 챕터의 잡몹(몬스터 키) · 잡몹 속성 쏠림</td></tr>
+<tr><td>count · crowd</td><td>방마다 적 수 · 잡몹 자리마다 더 세울 몫(지금 전부 0 = 원작 마리 수)</td></tr>
+<tr><td>elite · eliteEarly · eliteLast</td><td>엘리트 규칙(7-3)</td></tr>
+<tr><td>fire</td><td>적 공격 간격 배율(작을수록 자주 쏨, 보스 제외)</td></tr>
+<tr><td>hpMul · atkMul</td><td>잡몹 · 적 호스트의 체력 · 공격 배율</td></tr>
+<tr><td>bossHp · bossAtk</td><td>보스 체력 · 공격</td></tr>
+<tr><td>roomGold · midGold · bossGold</td><td>전투방 · 중간보스 · 보스가 떨구는 골드</td></tr>
+<tr><td>clearGold · chest · exp</td><td>클리어 골드(전부 0 — 쓰지 않음) · 클리어 보상 상자 등급 · 유저 경험치</td></tr>
+<tr><td>priceMul</td><td>판 안 값(상점 · 이벤트)과 출전비 배율</td></tr>
+<tr><td>music · art · bossArt · chestArt</td><td>빌려 쓰는 음악 · 로비 그림 번호</td></tr>
+<tr><td>power · powerStar</td><td>권장 전투력 배율(1챕터 ≈ 1) · 그때 주력 호스트 성급</td></tr>
+<tr><td>hazard</td><td>방 기믹 키</td></tr>
+<tr><td>starter</td><td>1번 방 입구 앞 시작 호스트(오늘 추가)</td></tr>
+<tr><td>extra</td><td>전투방마다 더 세우는 몬스터 「키:마리」(오늘 추가)</td></tr>
+</tbody></table>
+
+<h3>7-5. 챕터 표(20챕터)</h3>
+<table class="tiny"><thead><tr><th>챕터</th><th>이름</th><th>무대</th><th>보스</th><th>중간보스1</th><th>중간보스2</th><th>적 수</th><th>엘리트 뒤/앞/끝</th><th>공격간격</th><th>체력배율</th><th>공격배율</th><th>보스 체력/공격</th><th>상자</th><th>유저 경험치</th><th>값 배율</th><th>권장 힘</th><th>방 기믹</th><th>시작 호스트</th><th>추가 몬스터</th></tr></thead><tbody><tr><td>1</td><td>쓰레기 집적장</td><td>junkyard</td><td>로봇 스네이크</td><td>샐러맨더</td><td>로봇</td><td>3-5</td><td>0/0/0</td><td>0.9</td><td>0.40</td><td>1.00</td><td>825/36</td><td>은</td><td>300</td><td>1.0</td><td>1.09 (1성)</td><td>-</td><td>갱스터</td><td>bat:1,skeleton:1</td></tr><tr><td>2</td><td>미사일 저장기지</td><td>missile</td><td>크러셔</td><td>로봇</td><td>흡혈귀</td><td>4-6</td><td>0/0/0</td><td>0.85</td><td>1.25</td><td>1.00</td><td>2731/38</td><td>은</td><td>500</td><td>1.3</td><td>1.14 (1성)</td><td>폭격 표적</td><td>로봇</td><td>-</td></tr><tr><td>3</td><td>밤의 도시 거리</td><td>street</td><td>파이썬</td><td>흡혈귀</td><td>청룡</td><td>5-7</td><td>1/0/0</td><td>0.82</td><td>1.45</td><td>1.00</td><td>3301/42</td><td>은</td><td>800</td><td>1.7</td><td>1.20 (1성)</td><td>네온 추적</td><td>호퍼(기관단총)</td><td>-</td></tr><tr><td>4</td><td>밤의 공중기지 옥상</td><td>rooftop</td><td>슬러지</td><td>청룡</td><td>닌자(사슬)</td><td>6-8</td><td>1/0/0</td><td>0.8</td><td>1.66</td><td>1.03</td><td>3942/46</td><td>금</td><td>1200</td><td>2.2</td><td>1.25 (1성)</td><td>번개 웅덩이</td><td>영매</td><td>-</td></tr><tr><td>5</td><td>유령 연구소</td><td>lab</td><td>가디언</td><td>닌자(사슬)</td><td>영매</td><td>7-9</td><td>1/3/0</td><td>0.78</td><td>1.93</td><td>1.08</td><td>4739/51</td><td>금</td><td>1700</td><td>2.8</td><td>1.34 (1성)</td><td>가스 띠</td><td>코만도(수류탄)</td><td>-</td></tr><tr><td>6</td><td>야간 정유소</td><td>refinery</td><td>킹핀</td><td>영매</td><td>슬러거</td><td>8-10</td><td>1/3/0</td><td>0.76</td><td>2.42</td><td>1.20</td><td>6141/59</td><td>금</td><td>2300</td><td>3.5</td><td>1.81 (2성)</td><td>-</td><td>닌자</td><td>-</td></tr><tr><td>7</td><td>불타는 집적장</td><td>junkyard</td><td>파이썬</td><td>슬러거</td><td>코만도(미사일)</td><td>8-10</td><td>2/3/0</td><td>0.74</td><td>2.77</td><td>1.33</td><td>7217/65</td><td>백금</td><td>3000</td><td>4.3</td><td>1.87 (2성)</td><td>-</td><td>청룡</td><td>-</td></tr><tr><td>8</td><td>봉쇄된 저장기지</td><td>missile</td><td>슬러지</td><td>코만도(미사일)</td><td>드라군</td><td>9-11</td><td>2/3/0</td><td>0.74</td><td>3.22</td><td>1.41</td><td>8599/72</td><td>백금</td><td>3800</td><td>5.2</td><td>1.97 (2성)</td><td>-</td><td>코만도(수류탄)</td><td>-</td></tr><tr><td>9</td><td>망령의 거리</td><td>street</td><td>가디언</td><td>드라군</td><td>아마존</td><td>9-11</td><td>2/3/0</td><td>0.74</td><td>4.10</td><td>1.71</td><td>11200/85</td><td>백금</td><td>4700</td><td>6.2</td><td>2.66 (3성)</td><td>-</td><td>호퍼(기관단총)</td><td>-</td></tr><tr><td>10</td><td>최후의 옥상</td><td>rooftop</td><td>킹핀</td><td>사신</td><td>구루</td><td>10-12</td><td>2/3/1</td><td>0.74</td><td>4.72</td><td>1.80</td><td>13152/93</td><td>백금</td><td>5700</td><td>7.3</td><td>2.76 (3성)</td><td>-</td><td>코만도(기관총)</td><td>-</td></tr><tr><td>11</td><td>감시 구역</td><td>lab</td><td>로봇 스네이크</td><td>구루</td><td>코만도(기관총)</td><td>10-12</td><td>2/3/1</td><td>0.74</td><td>5.10</td><td>1.85</td><td>14455/95</td><td>백금</td><td>6306</td><td>7.9</td><td>2.86 (3성)</td><td>-</td><td>갱스터</td><td>-</td></tr><tr><td>12</td><td>그림자 공장</td><td>refinery</td><td>크러셔</td><td>코만도(기관총)</td><td>설녀</td><td>10-12</td><td>2/3/1</td><td>0.74</td><td>6.57</td><td>2.08</td><td>18939/106</td><td>백금</td><td>6977</td><td>8.7</td><td>3.37 (3성)</td><td>-</td><td>로봇</td><td>-</td></tr><tr><td>13</td><td>톱날 고물상</td><td>junkyard</td><td>파이썬</td><td>설녀</td><td>호퍼(기관단총)</td><td>11-13</td><td>2/3/1</td><td>0.74</td><td>7.31</td><td>2.07</td><td>21390/110</td><td>백금</td><td>7720</td><td>9.4</td><td>3.56 (3성)</td><td>-</td><td>호퍼(기관단총)</td><td>-</td></tr><tr><td>14</td><td>푸른 등불 기지</td><td>missile</td><td>슬러지</td><td>호퍼(기관단총)</td><td>화이트 위저드</td><td>11-13</td><td>2/3/1</td><td>0.74</td><td>8.05</td><td>2.14</td><td>23891/113</td><td>백금</td><td>8541</td><td>10.3</td><td>3.74 (3성)</td><td>-</td><td>영매</td><td>-</td></tr><tr><td>15</td><td>속임수 골목</td><td>street</td><td>가디언</td><td>화이트 위저드</td><td>코만도(수류탄)</td><td>11-13</td><td>2/3/1</td><td>0.74</td><td>8.94</td><td>2.22</td><td>26871/117</td><td>백금</td><td>9449</td><td>11.2</td><td>3.95 (3성)</td><td>-</td><td>코만도(수류탄)</td><td>-</td></tr><tr><td>16</td><td>불타는 옥상</td><td>rooftop</td><td>킹핀</td><td>코만도(수류탄)</td><td>닌자</td><td>12-14</td><td>2/3/1</td><td>0.74</td><td>9.32</td><td>2.14</td><td>28331/117</td><td>백금</td><td>10455</td><td>12.2</td><td>3.97 (3성)</td><td>-</td><td>닌자</td><td>-</td></tr><tr><td>17</td><td>오염 실험동</td><td>lab</td><td>로봇 스네이크</td><td>닌자</td><td>코만도(레이저)</td><td>12-14</td><td>2/3/1</td><td>0.74</td><td>9.73</td><td>2.16</td><td>29905/118</td><td>백금</td><td>11567</td><td>13.2</td><td>4.01 (3성)</td><td>-</td><td>청룡</td><td>-</td></tr><tr><td>18</td><td>용광로 심장부</td><td>refinery</td><td>크러셔</td><td>코만도(레이저)</td><td>폭력배</td><td>12-14</td><td>2/3/1</td><td>0.74</td><td>10.06</td><td>2.16</td><td>31228/118</td><td>백금</td><td>12797</td><td>14.4</td><td>4.02 (3성)</td><td>-</td><td>코만도(수류탄)</td><td>-</td></tr><tr><td>19</td><td>폐허의 왕국</td><td>junkyard</td><td>파이썬</td><td>폭력배</td><td>아마존 정예</td><td>13-15</td><td>2/3/1</td><td>0.74</td><td>10.36</td><td>2.08</td><td>32461/118</td><td>백금</td><td>14159</td><td>15.7</td><td>4.02 (3성)</td><td>-</td><td>호퍼(기관단총)</td><td>-</td></tr><tr><td>20</td><td>최후의 발사대</td><td>missile</td><td>슬러지</td><td>아마존 정예</td><td>아마존</td><td>13-15</td><td>2/3/1</td><td>0.74</td><td>10.66</td><td>2.08</td><td>33693/118</td><td>백금</td><td>15665</td><td>17.1</td><td>4.02 (3성)</td><td>-</td><td>코만도(기관총)</td><td>-</td></tr></tbody></table>
+<p class="k">「엘리트 뒤/앞/끝」 = elite / eliteEarly / eliteLast. 「공격간격」 = fire. 「권장 힘」 = power(powerStar).</p>
+<table class="small"><thead><tr><th>챕터</th><th>이름</th><th>챕터 소개 문구</th><th>잡몹</th></tr></thead><tbody><tr><td>1</td><td>쓰레기 집적장</td><td>도시가 버린 것들이 쌓이는 곳 무언가가 그 아래에서 깨어났다.</td><td>해골, 박쥐, 고철 전갈, 돌 고릴라</td></tr><tr><td>2</td><td>미사일 저장기지</td><td>도시 외곽에 위치한 수수께끼의 군사 시설 더 깊은 곳에서 누군가가 움직이고 있다.</td><td>박쥐, 순찰기, 고철 전갈, 연발 전갈, 돌 고릴라, 돌진 쇄석기</td></tr><tr><td>3</td><td>밤의 도시 거리</td><td>네온이 꺼지지 않는 밤의 거리 골목마다 다른 얼굴이 기다린다.</td><td>해골, 터지는 해골, 코일 보행기, 돌 고릴라, turret_cross, 드릴 두더지, 돌진 쇄석기</td></tr><tr><td>4</td><td>밤의 공중기지 옥상</td><td>빗물이 고인 공중기지 옥상 발밑이 무너지는 소리가 난다.</td><td>돌 고릴라, 찍는 고릴라, turret_cross, 박쥐, 흔드는 박쥐, 코일 보행기, 방패 로봇, 드릴 두더지</td></tr><tr><td>5</td><td>유령 연구소</td><td>잠기지 않은 연구소의 문 실패한 것들이 아직 숨을 쉰다.</td><td>순찰기, 연발 순찰기, 속사 전갈, 저격 전갈, 흔드는 박쥐, 터지는 해골, 숨는 해골, 찍는 고릴라, 날뛰는 고릴라, 폭탄 드럼통, 방패 로봇</td></tr><tr><td>6</td><td>야간 정유소</td><td>불길이 멈추지 않는 정유소 모든 것의 주인이 여기 있다.</td><td>숨는 해골, 무덤 해골, 튕김 코일, 갈래 코일, 회오리 순찰기, 날뛰는 고릴라, 갈라지는 고릴라, 팔방 포탑, 회전 포탑, 삼각대 저격기, 폭탄 드럼통, 드릴 두더지</td></tr><tr><td>7</td><td>불타는 집적장</td><td>꺼지지 않는 불이 고철을 녹인다 길은 터뜨려서 여는 수밖에 없다.</td><td>갈라지는 고릴라, 돌격 고릴라, 회전 포탑, 저격 전갈, 무덤 해골, 해골 술사, 박격 코일, 폭주 쇄석기, 삼각대 저격기, 폭탄 드럼통</td></tr><tr><td>8</td><td>봉쇄된 저장기지</td><td>문이 전부 잠긴 기지 깊은 곳 사선과 박자를 읽어야 지나간다.</td><td>흔드는 박쥐, 회오리 순찰기, 저격 전갈, 박격 코일, 회전 포탑, 알 거미, 쌍굴 두더지, 쌍발 저격기</td></tr><tr><td>9</td><td>망령의 거리</td><td>불이 꺼진 거리에 망자가 걷는다 이제는 바닥마저 적이다.</td><td>해골 술사, 갈래 코일, 튕기는 박쥐, 돌격 고릴라, 회오리 순찰기, 미라, 구르는 방패 로봇, 독 드럼통, 알 거미</td></tr><tr><td>10</td><td>최후의 옥상</td><td>모든 것이 시작된 옥상 배운 것을 전부 꺼내야 한다.</td><td>무덤 해골, 해골 술사, 튕기는 박쥐, 저격 전갈, 돌격 고릴라, 회오리 순찰기, 박격 코일, 회전 포탑, 겹고리 미라, 독샘 거미, 쌍발 저격기, 쌍굴 두더지</td></tr><tr><td>11</td><td>감시 구역</td><td>천장의 눈이 모든 걸 지켜본다 붉은 렌즈가 켜지면 이미 늦었다.</td><td>연발 순찰기, 속사 전갈, 감시 눈, 튕김 코일, 숨는 해골, 날뛰는 고릴라, 불 고릴라, 독 드럼통</td></tr><tr><td>12</td><td>그림자 공장</td><td>불 꺼진 공장 바닥을 무언가 소리 없이 건넌다.</td><td>그림자 살쾡이, 숨는 해골, 얼음 전갈, 튕김 코일, 쌍굴 두더지, 폭주 쇄석기, 갈라지는 고릴라, 회전 포탑</td></tr><tr><td>13</td><td>톱날 고물상</td><td>고철 더미 너머로 돌아오는 톱날 소리.</td><td>톱날 투척기, 독 해골, 흔드는 박쥐, 저격 전갈, 갈라지는 고릴라, 쌍발 저격기, 구르는 방패 로봇, 독 드럼통</td></tr><tr><td>14</td><td>푸른 등불 기지</td><td>꺼지지 않는 등불이 적의 몸을 감싼다.</td><td>수호 등불, 얼음 코일, 회오리 순찰기, 저격 전갈, 튕기는 박쥐, 돌격 고릴라, 알 거미, 쌍굴 두더지</td></tr><tr><td>15</td><td>속임수 골목</td><td>길가의 상자도 쓰레기통도 믿지 마라.</td><td>미믹 상자, 독 박쥐, 해골 술사, 박격 코일, 회오리 순찰기, 불 고릴라, 미라, 독샘 거미</td></tr><tr><td>16</td><td>불타는 옥상</td><td>도시 꼭대기까지 불길이 번졌다.</td><td>불 순찰기, 감시 눈, 그림자 살쾡이, 얼음 전갈, 갈라지는 고릴라, 돌격 고릴라, 쌍발 저격기, 회전 포탑</td></tr><tr><td>17</td><td>오염 실험동</td><td>독과 얼음이 섞인 실험실 무엇이 깨어났나.</td><td>독 해골, 얼음 코일, 수호 등불, 톱날 투척기, 감시 눈, 겹고리 미라, 독샘 거미, 튕기는 박쥐</td></tr><tr><td>18</td><td>용광로 심장부</td><td>쇳물이 끓는 곳 버티는 놈만 살아남는다.</td><td>불 순찰기, 불 고릴라, 미믹 상자, 그림자 살쾡이, 박격 코일, 저격 전갈, 구르는 방패 로봇, 독 드럼통</td></tr><tr><td>19</td><td>폐허의 왕국</td><td>버려진 것들이 왕을 세웠다.</td><td>독 박쥐, 얼음 전갈, 톱날 투척기, 수호 등불, 돌격 고릴라, 해골 술사, 쌍굴 두더지, 쌍발 저격기</td></tr><tr><td>20</td><td>최후의 발사대</td><td>모든 것이 이 발사대에서 끝난다.</td><td>감시 눈, 그림자 살쾡이, 미믹 상자, 수호 등불, 얼음 코일, 불 순찰기, 불 고릴라, 독 해골, 독샘 거미, 회전 포탑</td></tr></tbody></table>
+
+<h3>7-6. 챕터 잠금</h3>
+<ul>
+<li>열린 챕터 = 깬 챕터 + 1. 깬 기록은 올라가기만 한다.</li>
+<li>로비에서 잠긴 챕터로는 화살표로 넘어가지 않고 「챕터 N 클리어 시 열려요」 안내가 뜬다(PD 2026-10-28).</li>
+</ul>
+
+<!-- 8 -->
+<h2 class="sec">8. 성장</h2>
+<h3>8-1. 유령 레벨(유저 레벨)</h3>
+<ul>
+<li>다음 레벨까지 경험치 = 100 + 60 × (레벨 − 1). Lv1→2는 100, Lv49→50은 2,980. 상한 Lv50.</li>
+<li>경험치는 <b>챕터를 깼을 때만</b> 들어온다(1챕터 300 … 20챕터 15,665). 죽으면 없다. 유령으로 출전해 깨면 +50%.</li>
+<li>유령 레벨 1마다 유령 탭 강화 상한이 1씩 열린다(최대 50).</li>
+</ul>
+<table><thead><tr><th>성장 경로 보상 — 유령 Lv</th><th>골드</th><th>젬</th><th>영혼 핵</th></tr></thead><tbody>
+<tr><td>10</td><td>5,000</td><td>50</td><td>5</td></tr>
+<tr><td>20</td><td>10,000</td><td>100</td><td>10</td></tr>
+<tr><td>30</td><td>20,000</td><td>200</td><td>20</td></tr>
+<tr><td>40</td><td>30,000</td><td>300</td><td>30</td></tr>
+<tr><td>50</td><td>50,000</td><td>500</td><td>50</td></tr>
+</tbody></table>
+<p>영혼 핵을 쓰는 곳은 코드에서 찾지 못했다 — <span class="chk">확인 필요</span>.</p>
+
+<h3>8-2. 호스트 숙련도(성급) Lv0~10</h3>
+<ul>
+<li>필요 조각 = 단계별 조각 × 등급 배수(R 1 · SR 1.5 · SSR 2). 성급 골드에도 같은 배수가 곱해진다.</li>
+<li><b>조각 해금</b>: 0 → 1 단계(첫 해금)는 조각만 낸다 — R 8 · SR 12 · SSR 16개.</li>
+<li>숙련도가 여는 것: 0 = 봉인(빙의는 되지만 평타만) · 1 = 액티브 · 패시브 열림 · 1~5 = 기본 수치 상승 · 6~10 = 특수 효과 상승 · 단계마다 호스트 탭 강화 상한 +5.</li>
+<li><b>정수</b>: 숙련도 10을 채운 호스트에게 온 조각은 1:1로 정수가 된다. 정수로 원하는 호스트의 조각을 산다(조각 1개 = R 2 · SR 3 · SSR 5 정수).</li>
+</ul>
+<table class="small"><thead><tr><th>단계</th><th>0→1</th><th>1→2</th><th>2→3</th><th>3→4</th><th>4→5</th><th>5→6</th><th>6→7</th><th>7→8</th><th>8→9</th><th>9→10</th><th>합계</th></tr></thead><tbody>
+<tr><td>R 조각</td><td>8</td><td>12</td><td>16</td><td>20</td><td>35</td><td>40</td><td>46</td><td>52</td><td>58</td><td>90</td><td>377</td></tr>
+<tr><td>SR 조각</td><td>12</td><td>18</td><td>24</td><td>30</td><td>52</td><td>60</td><td>69</td><td>78</td><td>87</td><td>135</td><td>565</td></tr>
+<tr><td>SSR 조각</td><td>16</td><td>24</td><td>32</td><td>40</td><td>70</td><td>80</td><td>92</td><td>104</td><td>116</td><td>180</td><td>754</td></tr>
+<tr><td>성급 골드(R)</td><td>0</td><td>400</td><td>700</td><td>1,200</td><td>1,800</td><td>2,500</td><td>3,300</td><td>4,200</td><td>5,200</td><td>8,000</td><td>27,300</td></tr>
+</tbody></table>
+
+<h3>8-3. 능력치 골드 강화</h3>
+<p>강화는 <b>유령 탭</b>(모든 호스트에 붙음)과 <b>호스트 탭</b>(그 호스트만) 둘로 나뉜다. 능력치는 8종이다.</p>
+<table><thead><tr><th>능력치</th><th>레벨당 기본값</th><th>유령 탭(×0.2)</th><th>호스트 탭(×1.75)</th></tr></thead><tbody>
+<tr><td>체력 · 공격 · 치명타율</td><td>+2%</td><td>+0.4%</td><td>+3.5%</td></tr>
+<tr><td>공격 속도 · 사거리 · 이동 속도</td><td>+1%</td><td>+0.2%</td><td>+1.75%</td></tr>
+<tr><td>치명타 피해</td><td>+1%p(더하기)</td><td colspan="2">유령 50 + 호스트 50 = +100%p(→ 300%) — 무게 적용 여부 <span class="chk">확인 필요</span></td></tr>
+<tr><td>방어력</td><td>+0.2%p(더하기)</td><td colspan="2">유령 50 + 호스트 50 = +20%p, 상한 60%</td></tr>
+</tbody></table>
+<ul>
+<li>비용 = 단가 × (현재 Lv + 1). 단가는 유령 탭 30골드, 호스트 탭 60골드.</li>
+<li>상한: 유령 탭 = 유령 Lv(최대 50) · 호스트 탭 = 숙련도 × 5(최대 50). 못 가진 호스트는 0.</li>
+</ul>
+
+<!-- 9 -->
+<h2 class="sec">9. 경제 · 상점</h2>
+<h3>9-1. 재화</h3>
+<table><thead><tr><th>재화</th><th>얻는 곳</th><th>쓰는 곳</th></tr></thead><tbody>
+<tr><td>골드</td><td>판에서 줍기 · 클리어 보상 · 상점 · 패스</td><td>출전비 · 성급 · 강화 · 오늘의 상점 조각</td></tr>
+<tr><td>젬</td><td>스토어 구매 · 패스 · 미션 · 성장 경로</td><td>소환 · 상자 · 행동력 충전 · 새로고침 · 모드 추가 입장</td></tr>
+<tr><td>행동력</td><td>12분에 1 · 클리어 시 5 반환 · 구매</td><td>판 입장 5</td></tr>
+<tr><td>호스트 조각</td><td>판 · 상자 · 상점 · 소환 · 모드</td><td>해금 · 성급</td></tr>
+<tr><td>정수</td><td>숙련도 10 호스트의 넘친 조각</td><td>원하는 호스트 조각 교환</td></tr>
+<tr><td>소환권</td><td>스토어 · 패스</td><td>소환</td></tr>
+<tr><td>영혼 핵</td><td>성장 경로</td><td><span class="chk">확인 필요</span></td></tr>
+</tbody></table>
+
+<h3>9-2. 행동력</h3>
+<p>최대 20 · 판 입장 5 · 720초(12분)에 1 회복 · 클리어 시 5 반환 · 넘쳐서 쌓는 상한 999 · 젬 100으로 +20(하루 6회). 하루 경계는 UTC 20시(일본 05:00), 주 경계는 월요일.</p>
+
+<h3>9-3. 출전 방식</h3>
+<table><thead><tr><th>출전 카드</th><th>출전비</th><th>특징</th></tr></thead><tbody>
+<tr><td>가진 호스트</td><td>R 60 · SR 120 · SSR 200골드 × 챕터 값 배율</td><td>고른 호스트로 시작</td></tr>
+<tr><td>오늘의 호스트</td><td>0</td><td>가진 호스트 중 하루 1명 무료</td></tr>
+<tr><td>랜덤(?)</td><td>0</td><td>사신 1% → 못 가진 호스트 5% → 나머지는 가진 호스트. 깨면 판 골드 +20% · 그 호스트 조각 +3. 사신은 체험만(조각 없음)</td></tr>
+<tr><td>유령</td><td>0</td><td>몸 없이 시작 — 1번 방 시작 호스트를 빼앗는다. 깨면 유령 경험치 +50%</td></tr>
+</tbody></table>
+
+<h3>9-4. 상자</h3>
+<table><thead><tr><th>상자</th><th>여는 시간</th><th>골드</th><th>조각</th><th>호스트 종류</th><th>등급 무게 R/SR/SSR</th><th>즉시 열기</th></tr></thead><tbody>
+<tr><td>은</td><td>3시간</td><td>100~200</td><td>6~10</td><td>1~2</td><td>85/15/0</td><td>남은 분 × 0.1젬</td></tr>
+<tr><td>금</td><td>8시간</td><td>300~500</td><td>14~22</td><td>2~3</td><td>55/38/7</td><td>남은 분 × 0.12젬</td></tr>
+<tr><td>백금</td><td>12시간</td><td>700~1,000</td><td>28~40</td><td>3~4</td><td>30/45/25</td><td>남은 분 × 0.15젬</td></tr>
+</tbody></table>
+<p>로비 상자 칸은 2026-10-17에 없어졌다. <b>챕터 클리어 보상은 상자 실물 없이</b> 그 챕터 상자 등급(1~3챕터 은 · 4~6 금 · 7~20 백금)의 골드 · 조각을 이번 판에 만난 호스트에게 나눠 바로 준다. 젬으로 산 상자는 바로 열린다.</p>
+
+<h3>9-5. 오늘의 상점</h3>
+<ul>
+<li>칸 6개: 무료 골드 1 · 가진 호스트 조각 2 · 없는 호스트 조각 1 · 아무 호스트 조각 1 · 상자 1.</li>
+<li>무료 골드 100 · 조각 칸 하나에 R 6 · SR 4 · SSR 2개 · 조각 1개 값 40 · 80 · 200골드(가장 높이 열린 챕터의 값 배율이 곱해짐) · 상자 칸 은 상자 40젬.</li>
+<li>새로고침 10 · 20 · 40젬, 하루 3회.</li>
+</ul>
+
+<h3>9-6. 소환</h3>
+<ul>
+<li>1회 60젬 · 10회 540젬(소환권 1장 / 10장). 하루 무료 1회.</li>
+<li>등급: R 75% · SR 25%. <b>SSR은 소환에서 나오지 않는다.</b> 10회에서 SR이 하나도 없으면 마지막 칸 SR 확정.</li>
+<li>조각 수: 2개 70% · 5개 25% · 20개 5%. 천장 50회 = 20조각 확정. 픽업 호스트는 비어 있다.</li>
+<li>GameConfig의 79/18/3% · 천장 80은 읽는 코드가 없어 쓰이지 않는다.</li>
+</ul>
+
+<h3>9-7. 스토어(떠돌이 상인) — 탭 4개: 추천 · 오늘 · 상자 · 재화</h3>
+<table class="small"><thead><tr><th>묶음</th><th>상품</th><th>값</th><th>내용</th></tr></thead><tbody>
+<tr><td>입문(설치 7일, 1회)</td><td>starter_1 / 2 / 3</td><td>1,200 / 5,900 / 12,000원</td><td>젬 120 · 소환권 5 · 정수 30 · 행동력 40 / 젬 600 · 소환권 15 · 백금 상자 · 행동력 100 / 젬 1200 · 소환권 30 · 백금 상자 2 · 행동력 200</td></tr>
+<tr><td>챕터(1회)</td><td>chapter_01~10</td><td>2,500~12,000원</td><td>젬 200~1000 · 판 골드 5~15판 몫 · 소환권 3~15(+백금 상자)</td></tr>
+<tr><td>계약</td><td>card_small</td><td>5,900원</td><td>30일 · 즉시 젬 300 · 매일 젬 90 · 매일 행동력 20</td></tr>
+<tr><td></td><td>card_big</td><td>19,000원</td><td>30일 · 즉시 젬 1000 · 매일 젬 200 · 최대 행동력 +20 · 매일 행동력 40 · 무료 새로고침 1</td></tr>
+<tr><td>상자(젬)</td><td>은 / 금 / 백금</td><td>60 / 160 / 320젬</td><td>그 상자</td></tr>
+<tr><td>행동력</td><td>stamina_refill</td><td>100젬</td><td>+20, 하루 6회</td></tr>
+<tr><td>골드(젬)</td><td>gold_s / m / l</td><td>30 / 150 / 450젬</td><td>판 골드 1 / 6 / 20판 몫(s는 하루 3회)</td></tr>
+<tr><td>젬(현금)</td><td>gem_60 ~ gem_7500</td><td>1,200 ~ 129,000원</td><td>젬 60 · 320 · 680 · 2100 · 3600 · 7500, 첫 구매 2배</td></tr>
+<tr><td>패스</td><td>pass_premium / pass_bundle</td><td>12,000 / 25,000원</td><td>프리미엄 / 프리미엄 + 패스 경험치 1500</td></tr>
+</tbody></table>
+<p class="k">「판 골드 1판 몫」 = 가장 높이 열린 챕터의 한 판 골드. 가격 단계 P1 1,200 · P2 2,500 · P3 5,900 · P4 12,000 · P5 19,000 · P6 25,000 · P7 39,000 · P8 65,000 · P9 129,000원.</p>
+
+<h3>9-8. 시즌 패스</h3>
+<ul>
+<li>시즌 s1, 2026-10-12 시작, 28일. 30단계, 단계당 패스 경험치 100.</li>
+<li>무료 줄: 판 골드 · 정수 5 · 행동력 10 · 젬 50이 돌아가며 나옴. 10 · 20단계 정수 20 + 젬 50, 30단계 테두리(frame_s1) + 정수 30.</li>
+<li>프리미엄 줄: 대부분 젬 30. 5 · 15 · 20단계 소환권 3, 10 · 25단계 정수 50, 30단계 젬 300 + 소환권 10 + 칭호(title_s1).</li>
+<li>패스 경험치는 미션에서: 일일 7개(10~20) · 주간 6개(40~60). 일일 전부 → 젬 20 + 행동력 10, 주간 전부 → 젬 100 + 행동력 20.</li>
+</ul>
+
+<!-- 10 -->
+<h2 class="sec">10. 모드 — 망령의 탑 · 망령의 밤</h2>
+<p>로비 「도전」 탭에서 들어간다. 두 모드 모두 행동력을 쓰지 않고, 입장 횟수를 따로 센다: 하루 무료 3회(이기든 지든 1회 소모) + 젬 추가 입장 최대 3회(50 · 100 · 200젬). 모드가 열리는 조건(챕터 해금 등)은 <span class="chk">확인 필요</span>.</p>
+<h3>10-1. 망령의 탑</h3>
+<ul>
+<li>10층 한 바퀴를 되풀이하고, 층 · 바퀴마다 적 체력이 오른다. 출전할 호스트 3개.</li>
+<li>층 규칙: 호스트 거리 · 호스트 속성 · 적 속성 · 이탈 금지 · 단일 호스트 · 한 번 빙의 · 보스(5층 크러셔, 10층 킹핀) · 정예.</li>
+<li>이번 주에 처음 깬 층만 보상(매주 월요일 초기화): 일반 층 조각 1 + 50골드, 보스 층 조각 3 + 150골드.</li>
+<li>소탕 하루 1회(입장 횟수 안 씀): 이번 주 깬 층 1+ → 조각 1 · 100골드 / 10+ → 2 · 200 / 20+ → 3 · 300 / 30+ → 4 · 400 / 40+ → 5 · 500.</li>
+</ul>
+<h3>10-2. 망령의 밤(버티기)</h3>
+<ul>
+<li>요일 조건: 월 근접 · 화 원거리 · 수 중거리 · 목/금/토 속성 조건 · 일 전체.</li>
+<li>60초마다 웨이브, 120초 · 210초에 우두머리, 300초에 보스. 보스를 잡으면 클리어.</li>
+<li>판 레벨은 일반 판과 다르게 등비로 오른다(Lv1→2 40, 레벨마다 +45%).</li>
+<li>보상: 처치 50마리당 조각 1 · 클리어 시 +3조각 · 처치 1마리당 3골드. 요일별 최고 처치 수와 최고 버틴 시간을 기록.</li>
+</ul>
+
+<!-- 11 -->
+<h2 class="sec">11. 화면 흐름</h2>
+<div class="flow">타이틀(「시작하기」) → 첫 실행이면 오프닝 → 로비 → 전투 탭에서 출전 → 인게임 → 결과 창 → 로비</div>
+<h3>11-1. 로비 아래 탭 5개</h3>
+<table><thead><tr><th>탭</th><th>내용</th></tr></thead><tbody>
+<tr><td>상점</td><td>떠돌이 상인 — 추천 · 오늘 · 상자 · 재화</td></tr>
+<tr><td>호스트</td><td>도감 → 성장 화면(숙련도 · 강화). 못 가진 호스트는 잠금 화면(능력치 목록 · 자물쇠)</td></tr>
+<tr><td><b>전투</b>(기본 탭)</td><td>챕터 고르기 · 출전 카드(랜덤 → 유령 → 오늘의 호스트 → 가진 호스트) · 출전 버튼(행동력 5, 골드가 모자라면 랜덤 출전을 권함)</td></tr>
+<tr><td>소환</td><td>조각 뽑기</td></tr>
+<tr><td>도전</td><td>망령의 탑 · 망령의 밤</td></tr>
+</tbody></table>
+<p>유령(강화 · 성장 경로) · 미션 · 패스 · 우편 · 오늘 무료 · 설정 · 프로필은 옆 레일과 머리 버튼으로 연다.</p>
+<h3>11-2. 결과 창</h3>
+<ul>
+<li>CLEAR / FAILED · 기록 3줄(도달한 방 · 처치 · 시간) · 보상 3칸(골드 · 가장 많이 모은 조각 · 유령 경험치) · 「로비로」 · 「다음」.</li>
+<li>클리어: 판 골드 + 챕터 상자 등급 보상(골드 · 만난 호스트 조각) + 유저 경험치 + 행동력 5 반환. 클리어 골드는 없다(0).</li>
+<li>패배: 판 골드와 조각만. 포기는 결과 창 없이 나간다.</li>
+<li>탑 · 밤은 각자 결과 창이 있다.</li>
+</ul>
+<h3>11-3. 설정</h3>
+<p>배경음 · 효과음 · 진동 토글, 언어(5개). 계정 · 고객센터 · 약관 버튼은 「준비 중」 안내만 뜬다.</p>
+
+<!-- 12 -->
+<h2 class="sec">12. 라이브 설정과 테스트 스위치</h2>
+<div class="new">지금은 <b>라이브처럼 잠근 상태</b>다(PD 2026-10-28 「라이브 서비스하듯이 다 잠가」). 테스트 스위치는 <b>모두 꺼짐</b>이고, <b>새 계정은 갱스터 하나</b>(숙련도 1)로 시작한다.</div>
+<table><thead><tr><th>스위치</th><th>지금</th><th>켜면</th></tr></thead><tbody>
+<tr><td>테스트 모드(_testMode)</td><td>꺼짐</td><td>불러올 때 젬 100만 · 호스트 출전비 0. 툴팁의 「전부 해금 · 상자 시간 1/60」은 코드에서 확인 안 됨</td></tr>
+<tr><td>모든 호스트 열기(_openAllHosts)</td><td>꺼짐(코드 기본값도 꺼짐)</td><td>모든 호스트를 숙련도 10으로 읽는다(스킬 · 패시브 전부). 저장은 안 바뀜</td></tr>
+<tr><td>권장 힘 시험(_powerTest)</td><td>꺼짐</td><td>모든 호스트가 고른 챕터 권장 전투력으로 싸운다(숙련도 = 권장 성급 × 2, 강화 0, 체력 · 공격 배율). 저장은 안 바뀜</td></tr>
+<tr><td>테스트 판(_sandboxMode)</td><td>꺼짐</td><td>방마다 적 5마리 · 체력 200배 · 스킬 게이지 안 깎임</td></tr>
+<tr><td>즉사 막기(_sandboxNoExecute)</td><td>꺼짐</td><td>테스트 판에서 즉사(갱스터 처형 · 사신 · 암살)를 막음</td></tr>
+<tr><td>고정 피해(_testPlayerDamage)</td><td>0</td><td>0보다 크면 내 한 방 피해가 그 값으로 고정</td></tr>
+</tbody></table>
+<h3>새 계정 시작 상태</h3>
+<p>갱스터 숙련도 1(선택돼 있음) · 골드 0 · 젬 0 · 행동력 20/20 · 정수 0 · 소환권 0 · 영혼 핵 0 · 유령 Lv1 · 열린 챕터 1.</p>
+
+<!-- 부록 -->
+<h2 class="sec">부록 A. 기획 문서와 다른 점</h2>
+<p>옛 기획 문서(AVSR_GameComposition.md · AVSR_Content_InGame.md 등)와 지금 코드를 비교했다. <b>코드가 맞다.</b></p>
+<table><thead><tr><th>주제</th><th>기획 문서</th><th>지금 구현</th></tr></thead><tbody>
+<tr><td>진행 구조</td><td>3챕터 × 30스테이지 × 방 6개, 3스테이지마다 보스</td><td><b>20챕터 × 30방</b>, 10 · 20번 중간보스, 30번 보스</td></tr>
+<tr><td>호스트 수</td><td>12종, 아마조네스 시작 보유, 진행도로만 해금</td><td><b>23종</b>(사신 히든), 갱스터 시작, <b>조각</b>으로 해금</td></tr>
+<tr><td>과금</td><td>가챠 없음 · SSR 없음</td><td>조각 <b>소환</b> 있음(R/SR만, SSR 없음) · 현금 상품 · 시즌 패스</td></tr>
+<tr><td>버프 3택1 시점</td><td>방을 비울 때마다 12종 중 3개</td><td>판 레벨이 오를 때 <b>36장</b> 중 3장(리롤 없음)</td></tr>
+<tr><td>필살기</td><td>호스트별 12종</td><td>23종 모두 전용. 쓰고 300초 쿨 · 빙의하면 다시 찬다</td></tr>
+<tr><td>유령 체력</td><td>유령 상태에서 시간이 지나면 깎임(남은 시간 역할)</td><td><b>자연 감소 0</b> → 유령 체력으로는 지지 않음</td></tr>
+<tr><td>빙의 조건</td><td>체력을 25~50% 아래로 깎기</td><td>유령은 바로 · 몸을 입었으면 <b>경직 게이지</b>(최대 체력 35% 몰아치기)</td></tr>
+<tr><td>빙의 시 체력 · 이탈 대가</td><td>시작 체력 70% · 이탈 −15~20%</td><td>상성 규칙으로 <b>100%</b> · 이탈 −8%(이탈 버튼은 없음)</td></tr>
+<tr><td>GameConfig 툴팁</td><td>테스트 모드 = 전부 해금 · 상자 1/60 · 가챠 79/18/3 · 천장 80</td><td>해금 · 상자 시간은 코드에서 안 바뀜 · 소환은 GachaTable(75/25 · 천장 50)</td></tr>
+</tbody></table>
+
+<h2>부록 B. 확인 필요 목록</h2>
+<ol>
+<li><b>못 가진 호스트의 필살기 1회 체험이 실제로 나가지 않는 것으로 보인다</b> — 봉인 조건(숙련도 0)과 겹쳐 필살기 함수가 먼저 멈춘다. 게임에서 직접 확인하지 않았다.</li>
+<li><b>지는 길이 포기뿐</b> — 자연 감소 0이라 유령 체력 0으로 판이 끝나는 경로가 사실상 없다. 의도인지 PD 확인 필요.</li>
+<li>방 기믹(폭격 표적 · 네온 추적 · 번개 웅덩이 · 가스 띠)이 플레이어에게 주는 피해량.</li>
+<li>상태이상별 지속 시간(스킬마다 다름, 한 표로 정리된 곳 없음).</li>
+<li>카드 c032 「흡혈」 수치가 확률인지 피해 비율인지.</li>
+<li>영혼 핵 · 호스트 기억(hostMemory)을 쓰는 곳.</li>
+<li>망령의 탑 · 밤이 열리는 조건(챕터 해금 등).</li>
+<li>치명타 피해 강화에 탭 무게(0.2 · 1.75)가 곱해지는지.</li>
+<li>테스트 모드 툴팁의 「전부 해금 · 상자 1/60」 — 코드에서 찾지 못함(툴팁이 낡았을 수 있음).</li>
+<li>chapters.tsv · rooms30.tsv · GameConfig.cs · BattleDirector.cs에 커밋 안 된 변경이 있는 상태에서 읽었다. 오늘 작업이 더 바뀌면 이 문서와 달라질 수 있다.</li>
+</ol>
+
+</body>
+</html>
