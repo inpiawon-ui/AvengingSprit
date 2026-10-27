@@ -31,11 +31,18 @@ namespace Game.Editor.ReBorn
             var keyImg = Img(key, "Art/rb_art_title_key");
             keyImg.preserveAspect = false;
             var keyFit = key.gameObject.AddComponent<AspectRatioFitter>();
-            keyFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;   // 검은 여백 없이 덮는다(20:9 는 양옆이 조금 잘린다)
-            keyFit.aspectRatio = keyImg.sprite != null ? keyImg.sprite.rect.width / keyImg.sprite.rect.height : 941f / 1672f;
+            keyFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;   // 덮는다 — 코덱스가 둘레를 넓힌 판이라 20:9 · 16:9 · 4:3 모두 원본(가운데)은 안 잘린다
+            keyFit.aspectRatio = keyImg.sprite != null ? keyImg.sprite.rect.width / keyImg.sprite.rect.height : 1254f / 2092f;
             // 화면 어디를 눌러도 시작 · 「TAP TO START」 는 화면 스크립트가 깜빡인다(PD 「tap to start 도 넣어 줘」) — 어두운 물 · 지붕 쪽
             HitArea(Stretch(Node(rt, "StartButton")));
-            Text(Place(Node(rt, "TapToStartText"), Edge.Bottom, 140, 1905, 940, 1985), null, "TAP TO START", 60, White, TA.Center, number: true);   // 도시 불빛 위는 안 읽혀 어두운 물 · 지붕 쪽으로
+            // 그림에 붙인다 — 넓힌 그림(1254 × 2092)은 해상도마다 보이는 크기가 달라 화면 기준이면 자리가 어긋난다.
+            //   원본(가운데 941 × 1672, 위 210)의 물과 지붕 사이 y 1470 → 그림 위에서 0.803. 도시 불빛 위는 안 읽힌다
+            var tap = Node(key, "TapToStartText");
+            tap.anchorMin = tap.anchorMax = new Vector2(0.5f, 1f - (210f + 1470f) / 2092f);
+            tap.pivot = new Vector2(0.5f, 0.5f);
+            tap.sizeDelta = new Vector2(800f * S, 80f * S);
+            tap.anchoredPosition = Vector2.zero;
+            Text(tap, null, "TAP TO START", 60, White, TA.Center, number: true);
             // 저작권 줄은 남긴다(원작 표기 — 지우지 않는다) · 회사 로고 밑 맨 아래 가장자리에 작게. 버전은 같은 줄 오른쪽
             Text(Place(Node(rt, "CopyrightText"), Edge.Bottom, 40, 2196, 760, 2226), null, "©1991 JALECO / CITY CONNECTION", 22, Dim, TA.Left);
             Text(Place(Node(rt, "VersionText"), Edge.Bottom, 780, 2196, 1040, 2226), null, "v1.0", 22, Dim, TA.Right, number: true);
