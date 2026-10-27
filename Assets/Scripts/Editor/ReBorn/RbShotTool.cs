@@ -249,6 +249,8 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:event", "event_16x9"),
             (720, 1280, Language.English, "ingame:event", "event_en"),
             // 「내준다 / 받는다」 두 줄 판(PD 2026-10-27) — 대가 · 보상 종류마다 한 장
+            // 4챕터 방 전체 기믹 「번개 + 물웅덩이」 — 1번 방에서 바로 켜고 3.2초를 0.07초마다 녹화(storm_rec/) · 끝에 한 장(PD 2026-10-27)
+            (720, 1280, Language.Korean, "ingame:storm@3.5", "storm_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06:accept", "event_altar_accept_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH1_03", "event_safe_16x9"),
@@ -871,6 +873,47 @@ namespace Game.Editor.ReBorn
             bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
         }
 
+        // ── 번개 녹화 ──
+        private static float _stormRecUntil, _stormRecNext;
+        private static int _stormRecFrame;
+        private const string StormRecDir = "Projects/AVSR/_exchange/ref/ui_reborn_1023/play/storm_rec";
+
+        /// <summary>
+        /// 시험 전용 — 1번 방이라 원래는 안 켜지는 번개를 바로 켠다(웅덩이 4개 · 0.4초 뒤 첫 낙뢰 · 3초마다).
+        /// 게임 코드의 조건(챕터 3분의 1 뒤 방)은 그대로 두고 여기서만 켠다.
+        /// </summary>
+        private static void StartStorm(Game.Module.InGame.BattleDirector battle)
+        {
+            const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            var t = typeof(Game.Module.InGame.BattleDirector);
+            t.GetMethod("ClearStorm", F)?.Invoke(battle, null);
+            t.GetMethod("CacheStormSprites", F)?.Invoke(battle, null);
+            t.GetField("_stormOn", F)?.SetValue(battle, true);
+            t.GetField("_stormEvery", F)?.SetValue(battle, 3f);
+            t.GetField("_stormTimer", F)?.SetValue(battle, 0.4f);
+            var place = t.GetMethod("TryPlacePuddle", F);
+            for (int i = 0; i < 40; i++)
+            {
+                if (t.GetField("_puddles", F)?.GetValue(battle) is System.Collections.ICollection c && c.Count >= 4) break;
+                place?.Invoke(battle, null);
+            }
+            if (Directory.Exists(StormRecDir)) foreach (var f in Directory.GetFiles(StormRecDir, "*.png")) File.Delete(f);
+            Directory.CreateDirectory(StormRecDir);
+            _stormRecFrame = 0;
+            _stormRecNext = Time.realtimeSinceStartup;
+            _stormRecUntil = Time.realtimeSinceStartup + 3.2f;
+            EditorApplication.update -= TickStormRec;
+            EditorApplication.update += TickStormRec;
+        }
+
+        private static void TickStormRec()
+        {
+            if (!EditorApplication.isPlaying || Time.realtimeSinceStartup > _stormRecUntil) { EditorApplication.update -= TickStormRec; return; }
+            if (Time.realtimeSinceStartup < _stormRecNext) return;
+            _stormRecNext += 0.07f;
+            ScreenCapture.CaptureScreenshot(Path.Combine(StormRecDir, $"f{_stormRecFrame++:000}.png"));
+        }
+
         /// <summary>난이도 확인 — 지금 몸 체력 · 방 적 한 대 피해 · 「몇 대에 죽나」를 콘솔 한 줄로(PD 2026-10-27 난이도 기획안).</summary>
         private static void LogHits(Game.Module.InGame.InGameMainUI ui)
         {
@@ -928,6 +971,11 @@ namespace Game.Editor.ReBorn
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
             const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var bt = typeof(Game.Module.InGame.BattleDirector);
+            if (state.StartsWith("ingame:storm"))
+            {
+                StartStorm(battle);
+                return;
+            }
             if (state.StartsWith("ingame:event:"))
             {
                 string id = state.Substring("ingame:event:".Length);

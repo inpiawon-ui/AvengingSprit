@@ -825,6 +825,7 @@ namespace Game.Module.InGame
             }
             SpawnCrowd(room);
             PromoteElites(room);   // 챕터 뒤쪽 방 — 잡몹 몇을 엘리트로 (BattleDirector.Elite)
+            SetupStorm(room);      // 챕터 방 전체 기믹 — 4챕터 번개 + 물웅덩이 (BattleDirector.Storm)
             EnsureHostBodies();
             SpawnMidBoss(room, hosts);
 

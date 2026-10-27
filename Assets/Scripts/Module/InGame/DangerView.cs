@@ -246,6 +246,9 @@ namespace Game.Module.InGame
             HideNow();
         }
 
+        /// <summary>번쩍임 없이 바로 거둔다 — 터지는 자리를 다른 그림(번개 섬광)이 맡을 때.</summary>
+        public void HideWithoutFlash() => HideNow();
+
         private void HideNow()
         {
             _shape = default;

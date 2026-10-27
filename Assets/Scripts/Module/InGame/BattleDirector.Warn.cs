@@ -36,6 +36,8 @@ namespace Game.Module.InGame
             public bool Active;
             /// <summary>터진 자리에 남길 원소 자국(얼음 코일 박격 · 불 고릴라 착지). None 이면 안 남긴다.</summary>
             public Game.Character.TrashElement ZoneElement;
+            /// <summary>터질 때 빨간 번쩍임을 건너뛴다(번개 — 꽂힌 자리는 노란 섬광이 맡는다, 시안).</summary>
+            public bool NoFlash;
         }
 
         private readonly List<Warn> _warns = new();
@@ -78,6 +80,7 @@ namespace Game.Module.InGame
             w.FxSize = fxSize;
             w.Owner = owner;
             w.ZoneElement = Game.Character.TrashElement.None;
+            w.NoFlash = false;
             w.Active = true;
             if (w.View != null) w.View.Show(shape, _roomSize, GetSprite("fx_danger_hatch"), safe: false);
             return w;
@@ -94,7 +97,11 @@ namespace Game.Module.InGame
                 if (w.Left > 0f) continue;
 
                 w.Active = false;
-                if (w.View != null) w.View.Hide();
+                if (w.View != null)
+                {
+                    if (w.NoFlash) w.View.HideWithoutFlash();
+                    else w.View.Hide();
+                }
                 ResolveWarn(w);
             }
             TickRushFx(dt);   // 돌진 예고 위 흐르는 꺾쇠 · 흙먼지 (BattleDirector.Rush)
