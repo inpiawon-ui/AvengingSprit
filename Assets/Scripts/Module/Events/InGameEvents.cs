@@ -63,6 +63,8 @@ namespace Game.Module.Events
         /// <summary>가진 카드 강화 — 오를 카드 키 · 지금 레벨. 오를 카드가 없으면 키가 빈 문자열.</summary>
         public string UpgradeKey, UpgradeName;
         public int UpgradeLevel;
+        /// <summary>대가가 「카드 1장 부서짐」이면 부서질 수 있는 카드 키들(이 중 무작위 하나). 그 밖에는 빈 배열.</summary>
+        public string[] BreakKeys;
     }
 
     /// <summary>이벤트가 끝났다. 무슨 일이 있었는지 한 줄로 알린다.</summary>

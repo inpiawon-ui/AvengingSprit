@@ -260,7 +260,7 @@ event.EV_CH2_05.body	네온 아래에서 누가 손짓한다. 몸을 좀 내주�
 event.EV_CH2_05.accept	살을 떼어 준다	肉を差し出す	Give Up Flesh	割下血肉	割下血肉
 event.EV_CH2_05.decline	물러선다	身を引く	Back Off	退後	后退
 event.EV_CH2_06.title	부서진 제단	壊れた祭壇	Broken Altar	破損的祭壇	破损的祭坛
-event.EV_CH2_06.body	금 간 제단이 아직 숨을 쉰다.\n새 것을 주지는 못하지만, 지닌 것 하나는 벼려 준다고 한다.	ひび割れた祭壇が、まだ息づいている。\n新しいものは与えられないが、持っているものをひとつ鍛えてやると言う。	The cracked Altar still breathes.\nIt offers nothing new, but will temper one thing you carry.	裂開的祭壇仍在呼吸。\n它給不了新東西，但能為你鍛造身上的一件。	开裂的祭坛仍在呼吸。\n它给不了新东西，但能为你锻造身上的一件。
+event.EV_CH2_06.body	금 간 제단이 지닌 것 하나를 삼킨다.\n삼킨 자리에 더 센 것을 돌려준다고 한다.	ひび割れた祭壇が、持っているものをひとつ呑み込む。\n呑んだ場所に、より強いものを返すという。	The cracked Altar swallows one thing you carry.\nIn its place, it returns something stronger.	裂開的祭壇會吞下你身上的一件東西。\n並在原處還你更強的東西。	开裂的祭坛会吞下你身上的一件东西。\n并在原处还你更强的东西。
 event.EV_CH2_06.accept	제단에 올린다	祭壇に捧げる	Offer It Up	放上祭壇	放上祭坛
 event.EV_CH2_06.decline	지나간다	立ち去る	Walk Away	離開	离开
 event.EV_CH3_01.title	영혼을 건 내기	魂を賭けた勝負	Soul Wager	靈魂賭局	灵魂赌局
@@ -1476,6 +1476,13 @@ ui.rb.event.get.upgrade_sub	{0}  Lv {1} → <color=#6AF0C0>{2}</color>	{0}  Lv {
 ui.rb.event.get.grant_sub	바로 받는다	すぐもらえる	Received right away	立即獲得	立即获得
 ui.rb.event.get.offer_sub	3장 중 1장을 고른다	3枚から1枚を選ぶ	Choose 1 of 3	從3張中選1張	从3张中选1张
 ui.rb.event.get.fail_sub	실패하면 대가만 낸다	失敗すると代償だけ払う	On failure, you only pay the cost	失敗時只付出代價	失败时只付出代价
+ui.rb.event.give.card	가진 카드 1장이 부서진다	持っているカード1枚が砕ける	1 owned card shatters	持有的1張卡會碎裂	持有的1张卡会碎裂
+ui.rb.event.random	무작위	ランダム	Random	隨機	随机
+ui.rb.event.get.reforge	한 등급 위 카드 1장	1ランク上のカード1枚	1 card of a higher rarity	高一等級的卡1張	高一等级的卡1张
+ui.rb.event.get.reforge_sub	부서진 자리에 · <color=#6AF0C0>Lv 1</color> 부터	砕けた枠に · <color=#6AF0C0>Lv 1</color>から	Takes its place · starts at <color=#6AF0C0>Lv 1</color>	填入碎裂的位置 · 從<color=#6AF0C0>Lv 1</color>開始	填入碎裂的位置 · 从<color=#6AF0C0>Lv 1</color>开始
+ui.event.blocked.no_card	부술 카드가 없다	砕けるカードがない	No card to shatter	沒有可碎裂的卡	没有可碎裂的卡
+ui.event.result.reforged	{0} Lv {1} 부서짐 → {2} Lv 1	{0} Lv {1} 粉砕 → {2} Lv 1	{0} Lv {1} shattered → {2} Lv 1	{0} Lv {1} 碎裂 → {2} Lv 1	{0} Lv {1} 碎裂 → {2} Lv 1
+ui.event.result.broke_only	{0} Lv {1} 이(가) 부서졌지만 돌아온 것이 없다	{0} Lv {1} は砕けたが、何も戻らなかった	{0} Lv {1} shattered, but nothing came back	{0} Lv {1} 碎裂了，卻什麼也沒回來	{0} Lv {1} 碎裂了，却什么也没回来
 ui.rb.summon.no_records	아직 뽑은 기록이 없어요.	まだ召喚記録がありません。	No summons yet.	尚無召喚紀錄。	尚无召唤记录。
 ui.rb.summon.jackpot_tag	대박	大当たり	Jackpot	大獎	大奖
 ui.rb.summon.pickup	이번 주 픽업:	今週のピックアップ：	This Week's Pickup:	本週UP：	本周UP：

@@ -9463,6 +9463,15 @@ namespace Game.Module.InGame
 
             _eventsUsed.Add(_event.EventId);
             var up = _event.RewardType == EventReward.UpgradeCard ? PickUpgradable() : null;
+            // 부서질 수 있는 카드 — 판에 아이콘으로 보인다(무작위로 하나)
+            string[] breakable = null;
+            if (_event.CostType == EventCost.Card)
+            {
+                BreakCandidates(_breakBuffer);
+                breakable = new string[_breakBuffer.Count];
+                for (int i = 0; i < breakable.Length; i++) breakable[i] = _breakBuffer[i].BuffKey;
+                _breakBuffer.Clear();
+            }
             _bus.Publish(new EventOfferEvent
             {
                 EventId = _event.EventId,
@@ -9488,6 +9497,7 @@ namespace Game.Module.InGame
                 UpgradeKey = up != null ? up.BuffKey : string.Empty,
                 UpgradeName = up != null ? up.DisplayName : string.Empty,
                 UpgradeLevel = up != null ? _buffs.LevelOf(up.BuffKey) : 0,
+                BreakKeys = breakable ?? System.Array.Empty<string>(),
             });
         }
 
@@ -9561,6 +9571,7 @@ namespace Game.Module.InGame
                 EventReward.ShopDiscount => Localize.Format("ui.event.reward.discount", e.RewardValue),
                 EventReward.BossShieldBreak => Localize.Get("ui.event.reward.shield_break"),
                 EventReward.SpawnHost => Localize.Get("ui.event.reward.spawn_host"),
+                EventReward.ReforgeCard => Localize.Get("ui.rb.event.get.reforge"),
                 _ => string.Empty,
             };
         }
@@ -9571,6 +9582,7 @@ namespace Game.Module.InGame
             EventCost.GhostHp => Localize.Format("ui.event.cost.ghost_hp", e.CostValue),
             EventCost.HostHp => Localize.Format("ui.event.cost.host_hp", e.CostValue),
             EventCost.MaxHp => Localize.Format("ui.event.cost.max_hp", e.CostValue),
+            EventCost.Card => Localize.Get("ui.rb.event.give.card"),
             _ => string.Empty,
         };
 
@@ -9584,6 +9596,7 @@ namespace Game.Module.InGame
             // 하한(원본의 40%)을 뚫는 계약은 아예 못 고른다. 목록에서 빼는 것과 같다 -
             // 계약을 셋 다 사면 스스로 멈춘다.
             EventCost.MaxHp => _maxHpDebt + e.CostValue <= MaxHpDebtCap,
+            EventCost.Card => BreakCandidates(null) > 0,
             _ => true,
         };
 
@@ -9606,7 +9619,8 @@ namespace Game.Module.InGame
         /// 길게 적으면 명판 밖으로 두 줄이 되어 버튼 위로 흘러내린다.
         /// </summary>
         private string BlockedReasonOf(EventEntry e)
-            => !CanReceive(e) ? Localize.Get("ui.event.blocked.no_body")
+            => e.CostType == EventCost.Card && !CanAfford(e) ? Localize.Get("ui.event.blocked.no_card")
+             : !CanReceive(e) ? Localize.Get("ui.event.blocked.no_body")
              : !CanAfford(e) ? Localize.Get("ui.event.blocked.cant_pay")
              : string.Empty;
 
@@ -9694,7 +9708,67 @@ namespace Game.Module.InGame
                 case EventCost.MaxHp:
                     AddMaxHpDebt(e.CostValue);
                     break;
+                case EventCost.Card:
+                    BreakCard();
+                    break;
             }
+        }
+
+        // ── 부서진 제단(B안) — 무작위 1장이 부서지고 그 자리에 한 등급 위 새 카드가 Lv 1 ──
+
+        /// <summary>부술 카드(낸 값) — 보상(ReforgeCard)이 등급 · 이름을 읽는다.</summary>
+        private BuffEntry _brokenCard;
+        private int _brokenLevel;
+        private readonly List<BuffEntry> _breakBuffer = new();
+
+        /// <summary>부술 수 있는 카드 수 — 가진 카드 중 전설이 아닌 것(위 등급이 없다). <paramref name="into"/> 에 담는다(null 이면 세기만).</summary>
+        private int BreakCandidates(List<BuffEntry> into)
+        {
+            into?.Clear();
+            if (_buffTable == null) return 0;
+            int n = 0;
+            foreach (var kv in _buffs.Levels)
+            {
+                var card = _buffTable.Get(kv.Key);
+                if (card == null || card.Rarity >= CardRarity.Legendary) continue;
+                into?.Add(card);
+                n++;
+            }
+            return n;
+        }
+
+        private void BreakCard()
+        {
+            _brokenCard = null;
+            if (BreakCandidates(_breakBuffer) == 0) return;
+            _brokenCard = _breakBuffer[_rng.Next(_breakBuffer.Count)];
+            _brokenLevel = _buffs.LevelOf(_brokenCard.BuffKey);
+            _buffs.Remove(_brokenCard.BuffKey);
+            _breakBuffer.Clear();
+        }
+
+        /// <summary>
+        /// 한 등급 위 · **안 가진** 카드 하나(Lv 1 로 들어오게). 그 등급에 없으면 한 칸씩 내려 찾고, 부서진 카드와 같은 등급까지만 내려간다.
+        /// </summary>
+        private BuffEntry DrawReforge(CardRarity broken)
+        {
+            if (_buffTable == null) return null;
+            for (int r = Mathf.Min((int)broken + 1, (int)CardRarity.Legendary); r >= (int)broken; r--)
+            {
+                BuffEntry pick = null;
+                int seen = 0;
+                var list = _buffTable.Entries;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var e = list[i];
+                    if (e == null || !e.Implemented || (int)e.Rarity != r || _buffs.LevelOf(e.BuffKey) > 0) continue;
+                    if (_brokenCard != null && e.BuffKey == _brokenCard.BuffKey) continue;
+                    if (e.FromChapter > _runChapter || !BodyMatches(e.Body, _host?.Profile) || !e.PrerequisiteMet(this)) continue;
+                    if (_rng.Next(++seen) == 0) pick = e;
+                }
+                if (pick != null) return pick;
+            }
+            return null;
         }
 
         private string GiveReward(EventReward kind, int value, CardRarity rarity, string key = null)
@@ -9747,6 +9821,18 @@ namespace Game.Module.InGame
                     // 이벤트 표의 등급 이상만 — 악마 계약 「에픽 3택1」이 예전엔 등급을 안 보고 보통 3택1 을 열었다
                     OfferBuff(rarity);
                     return _awaitingBuff ? Localize.Get("ui.event.result.pick_card") : Localize.Get("ui.event.result.nothing_to_pick");
+
+                case EventReward.ReforgeCard:
+                {
+                    if (_brokenCard == null) return Localize.Get("ui.event.result.nothing_to_upgrade");
+                    var broken = _brokenCard;
+                    _brokenCard = null;
+                    var card = DrawReforge(broken.Rarity);
+                    if (card == null) return Localize.Format("ui.event.result.broke_only", broken.DisplayName, _brokenLevel);
+                    _buffs.Apply(card);
+                    _bus.Publish(new BuffChosenEvent { ChosenKey = card.BuffKey, TotalBuffCount = _buffs.Count });
+                    return Localize.Format("ui.event.result.reforged", broken.DisplayName, _brokenLevel, card.DisplayName);
+                }
 
                 case EventReward.UpgradeCard:
                 {

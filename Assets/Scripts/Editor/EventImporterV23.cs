@@ -142,9 +142,9 @@ namespace Game.EditorTools
                 EventReward.ShopDiscount, 40),
             ["EV_CH2_06"] = new(
                 "부서진 제단",
-                "금 간 제단이 아직 숨을 쉰다.\n새 것을 주지는 못하지만, 지닌 것 하나는 벼려 준다고 한다.",
+                "금 간 제단이 지닌 것 하나를 삼킨다.\n삼킨 자리에 더 센 것을 돌려준다고 한다.",
                 "제단에 올린다", "지나간다",
-                EventReward.UpgradeCard, 0),
+                EventReward.ReforgeCard, 0),   // PD 2026-10-27 B안 — 대가는 아래에서 「카드 1장 부서짐」으로 고정
 
             // ── CH3 생체기계 요새 ────────────────────────────────
             ["EV_CH3_01"] = new(
@@ -224,9 +224,11 @@ namespace Game.EditorTools
                 e.FindPropertyRelative("_acceptKr").stringValue = d.Ready ? d.Accept : "확인";
                 e.FindPropertyRelative("_declineKr").stringValue = d.Ready ? d.Decline : string.Empty;
 
-                // 대가는 정본을 그대로 쓴다 — 우리가 정할 값이 아니다
-                e.FindPropertyRelative("_costType").enumValueIndex = (int)CostOf(r.CostType);
-                e.FindPropertyRelative("_costValue").intValue = r.CostValue;
+                // 대가는 정본을 그대로 쓴다 — 우리가 정할 값이 아니다.
+                // 단 부서진 제단(B안)은 카드를 내주는 거래라 대가를 「카드 1장 부서짐」으로 고정한다(PD 2026-10-27)
+                bool reforge = d.Ready && d.Reward == EventReward.ReforgeCard;
+                e.FindPropertyRelative("_costType").enumValueIndex = reforge ? (int)EventCost.Card : (int)CostOf(r.CostType);
+                e.FindPropertyRelative("_costValue").intValue = reforge ? 0 : r.CostValue;
 
                 e.FindPropertyRelative("_rewardType").enumValueIndex = (int)d.Reward;
                 e.FindPropertyRelative("_rewardValue").intValue = d.Value;

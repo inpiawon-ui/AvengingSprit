@@ -774,6 +774,25 @@ namespace Game.Editor.ReBorn
             Inside(sub, textX, 84f, textW, 32f);
             Text(sub, null, "", 33, Dim, TA.Left);
             if (sub.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st) st.richText = true;
+            if (give)
+            {
+                // 부서질 수 있는 카드 아이콘 줄(부서진 제단) — 아래 줄 자리에 44 칸 8개
+                var cands = Node(row, name + "Cands");
+                Inside(cands, textX, 82f, textW, 44f);
+                for (int i = 0; i < 8; i++)
+                {
+                    var c = Node(cands, $"{name}Cand{i}");
+                    c.anchorMin = c.anchorMax = c.pivot = new Vector2(0f, 0.5f);
+                    c.sizeDelta = new Vector2(44f, 44f);
+                    c.anchoredPosition = new Vector2(i * 50f, 0f);
+                    Skin(c, "Components/rb_panel_base");
+                    var ci = Node(c, $"{name}Cand{i}Icon");
+                    Stretch(ci);
+                    var cimg = ci.gameObject.AddComponent<Image>();
+                    cimg.preserveAspect = true; cimg.raycastTarget = false;
+                }
+                cands.gameObject.SetActive(false);
+            }
             var tag = row.Find(name + "Tag") as RectTransform ?? Node(row, name + "Tag");
             tag.anchorMin = tag.anchorMax = tag.pivot = new Vector2(1f, 1f);
             tag.sizeDelta = new Vector2(120f, 34f); tag.anchoredPosition = new Vector2(-14f, -16f);
@@ -1183,7 +1202,7 @@ namespace Game.Editor.ReBorn
                 ev.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(arts[i]));
             // 이벤트 「내준다 / 받는다」 줄 아이콘 — 이름으로 찾는다(InGameMainUI.RbEvent DealIcon)
             string[] deal = { "heal_ghost", "heal_host", "stat_hp", "currency_gold", "room_battle", "room_elite", "card_up",
-                              "reward_chest", "possess_range", "shop_discount", "boss_shield", "mode_ghost" };
+                              "reward_chest", "possess_range", "shop_discount", "boss_shield", "mode_ghost", "sys_warning" };
             var di = so.FindProperty("_rbDealIcons");
             di.arraySize = deal.Length;
             for (int i = 0; i < deal.Length; i++) di.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Icons/rb_icon_{deal[i]}_96");

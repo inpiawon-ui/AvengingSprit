@@ -21,6 +21,12 @@ namespace Game.Module.InGame
         /// 다른 대가는 「지금 한 번」이지만 이것만 「이 판 내내」다.
         /// </summary>
         MaxHp,
+
+        /// <summary>
+        /// 가진 카드 1장이 무작위로 부서진다(레벨까지) — 부서진 제단(PD 2026-10-27 B안).
+        /// 전설은 더 위가 없어 부서지지 않는다. 보상 `ReforgeCard` 와 짝이다.
+        /// </summary>
+        Card,
     }
 
     /// <summary>
@@ -48,6 +54,11 @@ namespace Game.Module.InGame
         BossShieldBreak,
         /// <summary>빼앗을 수 있는 몸 하나가 나타난다 (`RewardKey` 가 어떤 몸인지 정한다)</summary>
         SpawnHost,
+        /// <summary>
+        /// 부서진 카드 자리에 **한 등급 위** 새 카드가 Lv 1 로 박힌다(대가 `Card` 와 짝).
+        /// 키운 카드가 부서지면 레벨을 잃는다 — 그게 이 거래의 손해다(PD 「무조건 좋은 거 아니야?」 → B안).
+        /// </summary>
+        ReforgeCard,
     }
 
     /// <summary>

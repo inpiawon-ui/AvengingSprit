@@ -279,14 +279,14 @@ MonoBehaviour:
   - _eventId: EV_CH2_06
     _chapter: 2
     _titleKr: "\uBD80\uC11C\uC9C4 \uC81C\uB2E8"
-    _bodyKr: "\uAE08 \uAC04 \uC81C\uB2E8\uC774 \uC544\uC9C1 \uC228\uC744 \uC270\uB2E4.\n\uC0C8
-      \uAC83\uC744 \uC8FC\uC9C0\uB294 \uBABB\uD558\uC9C0\uB9CC, \uC9C0\uB2CC \uAC83
-      \uD558\uB098\uB294 \uBCBC\uB824 \uC900\uB2E4\uACE0 \uD55C\uB2E4."
-    _costType: 2
-    _costValue: 20
+    _bodyKr: "\uAE08 \uAC04 \uC81C\uB2E8\uC774 \uC9C0\uB2CC \uAC83 \uD558\uB098\uB97C
+      \uC0BC\uD0A8\uB2E4.\n\uC0BC\uD0A8 \uC790\uB9AC\uC5D0 \uB354 \uC13C \uAC83\uC744
+      \uB3CC\uB824\uC900\uB2E4\uACE0 \uD55C\uB2E4."
+    _costType: 5
+    _costValue: 0
     _acceptKr: "\uC81C\uB2E8\uC5D0 \uC62C\uB9B0\uB2E4"
     _declineKr: "\uC9C0\uB098\uAC04\uB2E4"
-    _rewardType: 5
+    _rewardType: 10
     _rewardValue: 0
     _rewardRarity: 0
     _rewardKey: 

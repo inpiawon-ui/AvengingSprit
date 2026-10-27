@@ -249,6 +249,7 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "ingame:event", "event_en"),
             // 「내준다 / 받는다」 두 줄 판(PD 2026-10-27) — 대가 · 보상 종류마다 한 장
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_CH2_06:accept", "event_altar_accept_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH1_03", "event_safe_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_DEAL_01", "event_pact_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH3_02", "event_duel_16x9"),
@@ -869,6 +870,28 @@ namespace Game.Editor.ReBorn
             bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
         }
 
+        /// <summary>받아들이고 카드가 어떻게 바뀌었는지 콘솔에 — 부서진 제단(B안) 규칙 확인용. 화면은 창을 닫고 연출이 도는 모습이 찍힌다.</summary>
+        private static void AcceptAndLog(Game.Module.InGame.BattleDirector battle, Game.Module.InGame.InGameMainUI ui)
+        {
+            const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            var buffs = typeof(Game.Module.InGame.BattleDirector).GetField("_buffs", F)?.GetValue(battle) as Game.Module.InGame.RunBuffs;
+            string Cards()
+            {
+                var sb = new System.Text.StringBuilder();
+                if (buffs != null) foreach (var kv in buffs.Levels) sb.Append($"{kv.Key} Lv{kv.Value} · ");
+                return sb.ToString();
+            }
+            string before = Cards();
+            var bus = GameFramework.Core.Base.CoreModule.Get<GameFramework.Core.Module.EventBus.IEventBus>();
+            System.IDisposable token = null;
+            token = bus.Subscribe<Game.Module.Events.EventResolvedEvent>(e =>
+            {
+                Debug.Log($"[캡처] 제단 수락 — 전: {before} 후: {Cards()} 결과: {e.ResultLine}");
+                token?.Dispose();
+            });
+            ui.GetType().GetMethod("Resolve", F)?.Invoke(ui, new object[] { true });
+        }
+
         /// <summary>판을 거의 세운다(유령이 몇 초 만에 죽어 화면이 바뀐다 — 메모리 freeze-run-before-ingame-check). levelup 은 3택1 을 다시 연다(언어가 바뀌면 카드 글도 다시).</summary>
         private static void ShowInGame(Game.Module.InGame.InGameMainUI ui, string state)
         {
@@ -886,7 +909,11 @@ namespace Game.Editor.ReBorn
             var bt = typeof(Game.Module.InGame.BattleDirector);
             if (state.StartsWith("ingame:event:"))
             {
-                ForceEvent(battle, state.Substring("ingame:event:".Length));
+                string id = state.Substring("ingame:event:".Length);
+                bool accept = id.EndsWith(":accept");
+                if (accept) id = id.Substring(0, id.Length - ":accept".Length);
+                ForceEvent(battle, id);
+                if (accept) AcceptAndLog(battle, ui);
                 return;
             }
             switch (state)

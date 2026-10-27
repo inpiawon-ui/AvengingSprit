@@ -264,6 +264,19 @@ namespace Game.Module.InGame
             Recompute();
         }
 
+        /// <summary>
+        /// 카드를 통째로 잃는다(레벨까지) — 부서진 제단(PD 2026-10-27 B안 「카드가 부서지고 한 등급 위를 Lv 1 로」).
+        /// 다 키워 뽑기에서 빠져 있던 카드면 다시 뽑힐 수 있게 된다.
+        /// </summary>
+        public void Remove(string buffKey)
+        {
+            if (!_level.Remove(buffKey)) return;
+            for (int i = _taken.Count - 1; i >= 0; i--)
+                if (_taken[i].BuffKey == buffKey) _taken.RemoveAt(i);
+            ExcludedKeys.Remove(buffKey);
+            Recompute();
+        }
+
         private void Recompute()
         {
             AttackMul = IntervalMul = RangeMul = MoveMul = ShotSpeedMul = ActiveCooldownMul = 1f;

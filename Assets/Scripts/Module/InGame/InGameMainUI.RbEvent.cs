@@ -63,6 +63,7 @@ namespace Game.Module.InGame
             _ui.SetActive("EventGiveIcon", hasCost);
             _ui.SetActive("EventGiveSub", hasCost);
             _ui.SetActive("EventGiveTag", false);
+            _ui.SetActive("EventGiveCands", false);
             var title = _ui.Get<TextMeshProUGUI>("EventGiveTitle");
             if (!hasCost)
             {
@@ -84,6 +85,24 @@ namespace Game.Module.InGame
             }
 
             var cost = (EventCost)e.CostKind;
+            if (cost == EventCost.Card)
+            {
+                // 부서진 제단(B안) — 부서질 수 있는 카드를 아이콘으로 · 「무작위」 표
+                _ui.SetText("EventGiveTitle", Localize.Get("ui.rb.event.give.card"));
+                SetIcon("EventGiveIcon", "sys_warning");
+                bool any = e.BreakKeys != null && e.BreakKeys.Length > 0;
+                _ui.SetActive("EventGiveSub", !any);
+                if (!any) _ui.SetText("EventGiveSub", $"<color={GiveRed}>{e.BlockedReason}</color>");
+                _ui.SetActive("EventGiveCands", any);
+                for (int i = 0; i < 8; i++)
+                {
+                    bool on = any && i < e.BreakKeys.Length;
+                    _ui.SetActive($"EventGiveCand{i}", on);
+                    if (on) SetIcon($"EventGiveCand{i}Icon", CardIconOf(e.BreakKeys[i]));
+                }
+                Tag("EventGiveTag", Localize.Get("ui.rb.event.random"), new Color(0.56f, 0.95f, 1f));
+                return;
+            }
             string fight = e.FightCount <= 0 ? string.Empty
                 : Localize.Format(e.FightElite ? "ui.rb.event.give.fight_elite" : "ui.rb.event.give.fight", e.FightCount);
             string head = cost switch
@@ -120,7 +139,9 @@ namespace Game.Module.InGame
         {
             var kind = (EventReward)e.RewardKind;
             bool up = kind == EventReward.UpgradeCard;
-            string title = up ? Localize.Get("ui.rb.event.get.upgrade") : e.RewardLabel;
+            string title = up ? Localize.Get("ui.rb.event.get.upgrade")
+                         : kind == EventReward.ReforgeCard ? Localize.Get("ui.rb.event.get.reforge")
+                         : e.RewardLabel;
             if (e.ExtraGold > 0) title += " + " + Localize.Format("ui.event.gold", e.ExtraGold);
             _ui.SetText("EventGetTitle", title);
 
@@ -129,7 +150,7 @@ namespace Game.Module.InGame
             if (upIcon != null) SetIcon("EventGetIcon", upIcon);
             else SetIcon("EventGetIcon", kind switch
             {
-                EventReward.UpgradeCard => "card_up",
+                EventReward.UpgradeCard or EventReward.ReforgeCard => "card_up",
                 EventReward.HostHeal => "heal_host",
                 EventReward.GhostHeal => "heal_ghost",
                 EventReward.Gold => "currency_gold",
@@ -145,6 +166,7 @@ namespace Game.Module.InGame
                 EventReward.UpgradeCard => string.IsNullOrEmpty(e.UpgradeKey)
                     ? Localize.Get("ui.event.result.nothing_to_upgrade")
                     : Localize.Format("ui.rb.event.get.upgrade_sub", e.UpgradeName, e.UpgradeLevel, e.UpgradeLevel + 1),
+                EventReward.ReforgeCard => Localize.Get("ui.rb.event.get.reforge_sub"),
                 EventReward.CardOffer => Localize.Get("ui.rb.event.get.offer_sub"),
                 EventReward.CardGrant => Localize.Get("ui.rb.event.get.grant_sub"),
                 _ => string.Empty,
