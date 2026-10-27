@@ -58,6 +58,7 @@ MonoBehaviour:
   _critPerGrade: 3
   _testMode: 0
   _openAllHosts: 1
+  _powerTest: 1
   _starterHost: gangster
   _essencePerShard: 020000000300000005000000
   _shopShardCount: 060000000400000002000000
@@ -79,6 +80,7 @@ MonoBehaviour:
   _randomLuckShards: 3
   _randomLuckGoldPct: 20
   _randomIncludesUnowned: 1
+  _randomHiddenChancePct: 1
   _ghostStartExpPct: 50
   _seasonId: s1
   _seasonStartDay: 20261012
@@ -144,6 +146,9 @@ MonoBehaviour:
     - scrapgunner
     - actor_enforcer
     Elite: 0
+    EliteEarly: 0
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.9
     EnemyHpMul: 0.8
@@ -181,6 +186,9 @@ MonoBehaviour:
     - actor_enforcer
     - boar
     Elite: 0
+    EliteEarly: 0
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.85
     EnemyHpMul: 1.25
@@ -217,7 +225,10 @@ MonoBehaviour:
     - turret_cross
     - mole
     - boar
-    Elite: 0
+    Elite: 1
+    EliteEarly: 0
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.82
     EnemyHpMul: 1.45
@@ -255,7 +266,10 @@ MonoBehaviour:
     - coilwalker
     - armadillo
     - mole
-    Elite: 0
+    Elite: 1
+    EliteEarly: 0
+    EliteLast: 0
+    Hazard: lightning_puddle
     Crowd: 0
     Fire: 0.8
     EnemyHpMul: 1.66
@@ -297,6 +311,9 @@ MonoBehaviour:
     - mushroom
     - armadillo
     Elite: 1
+    EliteEarly: 3
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.78
     EnemyHpMul: 1.93
@@ -339,6 +356,9 @@ MonoBehaviour:
     - mushroom
     - mole
     Elite: 1
+    EliteEarly: 3
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.76
     EnemyHpMul: 2.42
@@ -378,7 +398,10 @@ MonoBehaviour:
     - boar_2
     - mantis
     - mushroom
-    Elite: 1
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 2.77
@@ -416,7 +439,10 @@ MonoBehaviour:
     - spider
     - mole_2
     - mantis_2
-    Elite: 1
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 3.22
@@ -455,7 +481,10 @@ MonoBehaviour:
     - armadillo_2
     - mushroom_2
     - spider
-    Elite: 1
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 0
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 4.1
@@ -498,6 +527,9 @@ MonoBehaviour:
     - mantis_2
     - mole_2
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 4.72
@@ -536,6 +568,9 @@ MonoBehaviour:
     - gorilla_fire
     - mushroom_2
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 5.1
@@ -574,6 +609,9 @@ MonoBehaviour:
     - actor_enforcer_4
     - obj_turret_3
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 6.57
@@ -612,6 +650,9 @@ MonoBehaviour:
     - armadillo_2
     - mushroom_2
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 7.31
@@ -650,6 +691,9 @@ MonoBehaviour:
     - spider
     - mole_2
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 8.05
@@ -688,6 +732,9 @@ MonoBehaviour:
     - mummy
     - spider_2
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 8.94
@@ -725,6 +772,9 @@ MonoBehaviour:
     - mantis_2
     - obj_turret_3
     Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 9.32
@@ -762,7 +812,10 @@ MonoBehaviour:
     - mummy_2
     - spider_2
     - bat_bounce
-    Elite: 3
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 9.73
@@ -800,7 +853,10 @@ MonoBehaviour:
     - scrapgunner_sniper
     - armadillo_2
     - mushroom_2
-    Elite: 3
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 10.06
@@ -837,7 +893,10 @@ MonoBehaviour:
     - skeleton_mage
     - mole_2
     - mantis_2
-    Elite: 3
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 10.36
@@ -876,7 +935,10 @@ MonoBehaviour:
     - skeleton_poison
     - spider_2
     - obj_turret_3
-    Elite: 3
+    Elite: 2
+    EliteEarly: 3
+    EliteLast: 1
+    Hazard: 
     Crowd: 0
     Fire: 0.74
     EnemyHpMul: 10.66

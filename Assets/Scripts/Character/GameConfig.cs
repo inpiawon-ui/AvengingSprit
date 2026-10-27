@@ -185,11 +185,18 @@ namespace Game.Character
         [Tooltip("켜면 모든 호스트를 숙련도 최대로 연다(스킬 · 패시브 전부). 저장은 안 바뀐다. 출시 빌드에서는 끈다.")]
         [SerializeField] private bool _openAllHosts = true;
 
+        // 권장 힘 시험(PD 2026-10-27 「궁수의 전설보다 쉽다」 — 모든 몸 열기로는 설계보다 2~2.5배 센 몸이라 난이도를 잴 수 없었다).
+        // 켜면 모든 몸이 고른 챕터의 권장 전투력으로 싸운다 — 숙련도 = 그 챕터 권장 성급 × 2, 강화 0, 체력 · 공격을 한 배율로 맞춘다.
+        // 모든 몸 열기보다 먼저 본다(몸은 그대로 다 열려 있다). 저장은 안 바뀐다.
+        [Tooltip("켜면 모든 몸이 고른 챕터의 권장 전투력으로 싸운다(난이도 시험용). 저장은 안 바뀐다. 출시 빌드에서는 끈다.")]
+        [SerializeField] private bool _powerTest;
+
         [Tooltip("새 계정이 처음부터 가진 몸. 나머지는 조각을 모아 해금한다.")]
         [SerializeField] private string _starterHost = "gangster";
 
         public bool TestMode => _testMode;
         public bool OpenAllHosts => _openAllHosts;
+        public bool PowerTest => _powerTest;
         public string StarterHost => string.IsNullOrEmpty(_starterHost) ? "gangster" : _starterHost;
 
         // ── 상점 · 정수 (2026-10-04) ───────────────────────────────
@@ -664,6 +671,12 @@ namespace Game.Character
             public string[] Trash;
             [Tooltip("챕터 뒤쪽 절반 전투방마다 세우는 엘리트 수.")]
             public int Elite;
+            [Tooltip("챕터 앞쪽 절반에서 N 방에 한 번 엘리트 1기(0 = 없음). PD 2026-10-27 난이도 기획안.")]
+            public int EliteEarly;
+            [Tooltip("챕터 마지막 10% 전투방에 더 세우는 엘리트 수.")]
+            public int EliteLast;
+            [Tooltip("방 전체 기믹 키(빈칸 = 없음) — lightning_puddle 등. 챕터 앞 1/3 은 없고, 가운데는 가끔 · 뒤는 자주(BattleDirector.Hazard).")]
+            public string Hazard;
             [Tooltip("잡몹 자리마다 같은 잡몹을 한 기 더 세울 몫(0.6 = 잡몹 10자리에 6기 더). 방 상한은 RoomEnemyCap.")]
             public float Crowd;
             [Tooltip("방 적(잡몹 · 적 몸)의 공격 간격 배율. 작을수록 자주 쏜다. 0 이면 1.")]

@@ -871,6 +871,26 @@ namespace Game.Editor.ReBorn
             bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
         }
 
+        /// <summary>난이도 확인 — 지금 몸 체력 · 방 적 한 대 피해 · 「몇 대에 죽나」를 콘솔 한 줄로(PD 2026-10-27 난이도 기획안).</summary>
+        private static void LogHits(Game.Module.InGame.InGameMainUI ui)
+        {
+            const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+            var t = typeof(Game.Module.InGame.BattleDirector);
+            var host = t.GetField("_host", F)?.GetValue(battle) as Game.Module.InGame.Unit;
+            if (host == null || t.GetField("_enemies", F)?.GetValue(battle) is not System.Collections.IList enemies) return;
+            var sb = new System.Text.StringBuilder($"[캡처] 난이도 — 챕터 {t.GetField("_runChapter", F)?.GetValue(battle)} · 몸 {host.Key} 체력 {host.HpMax} · 적:");
+            float sum = 0f; int n = 0;
+            foreach (var o in enemies)
+            {
+                if (o is not Game.Module.InGame.Unit u || !u.IsAlive || u.IsHostBody) continue;
+                sb.Append($" {u.Key} {u.Atk}{(u.IsElite ? "(엘리트)" : "")}");
+                sum += u.Atk; n++;
+            }
+            if (n > 0) sb.Append($" · 평균 한 대 {sum / n:0.0} → {host.HpMax / (sum / n):0.0}대에 죽음");
+            Debug.Log(sb.ToString());
+        }
+
         /// <summary>받아들이고 카드가 어떻게 바뀌었는지 콘솔에 — 부서진 제단(B안) 규칙 확인용. 화면은 창을 닫고 연출이 도는 모습이 찍힌다.</summary>
         private static void AcceptAndLog(Game.Module.InGame.BattleDirector battle, Game.Module.InGame.InGameMainUI ui)
         {
@@ -902,7 +922,7 @@ namespace Game.Editor.ReBorn
             foreach (var t in ui.GetComponentsInChildren<Transform>(true))
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
-            if (state == "ingame") return;
+            if (state == "ingame") { LogHits(ui); return; }
             // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
             Time.timeScale = 1f;
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();

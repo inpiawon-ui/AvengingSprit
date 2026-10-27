@@ -41,6 +41,38 @@ namespace Game.User
             _config = config;
             s_testMode = config != null && config.TestMode;
             s_openAllHosts = config != null && config.OpenAllHosts;
+            s_powerTest = config != null && config.PowerTest;
+        }
+
+        /// <summary>권장 힘 시험(`GameConfig.PowerTest`) — 모든 몸이 고른 챕터의 권장 전투력으로 싸운다. 저장은 그대로다.</summary>
+        private static bool s_powerTest;
+
+        // 시험 배율 — 몸 · 챕터마다 한 번 잰다(체력 · 공격에 같은 배율을 곱하면 전투력이 그만큼 바뀐다: √(DPS × 체력))
+        private readonly Dictionary<string, float> _powerTestMul = new();
+        private int _powerTestChapter = -1;
+
+        private int PowerTestMastery
+        {
+            get
+            {
+                var def = _config != null && _config.HasChapterTable ? _config.ChapterOf(SelectedChapter) : default;
+                return Mathf.Max(1, def.PowerStar * 2);   // RecommendedPower 와 같은 자(성급 n = 숙련도 2n)
+            }
+        }
+
+        /// <summary>이 몸을 권장 전투력에 맞추는 체력 · 공격 배율.</summary>
+        private float PowerTestMul(string hostKey)
+        {
+            if (_powerTestChapter != SelectedChapter) { _powerTestMul.Clear(); _powerTestChapter = SelectedChapter; }
+            if (_powerTestMul.TryGetValue(hostKey, out float f)) return f;
+            var host = GetHost(hostKey);
+            int want = RecommendedPower(SelectedChapter);
+            var g = HostCombat.Growth.None;
+            g.Mastery = PowerTestMastery;
+            int now = host != null && _config != null ? HostCombat.Power(_config, host, g) : 0;
+            f = want > 0 && now > 0 ? (float)want / now : 1f;
+            _powerTestMul[hostKey] = f;
+            return f;
         }
 
         /// <summary>모든 몸을 숙련도 최대로 읽는다(`GameConfig.OpenAllHosts`). 저장은 그대로다.</summary>
@@ -314,6 +346,7 @@ namespace Game.User
         {
             int i = IndexOfHost(hostKey);
             int m = i < 0 ? 0 : _data.hostMastery[i];
+            if (s_powerTest && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return PowerTestMastery;
             if (s_openAllHosts && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return Mathf.Max(m, MasteryMax);
             // 테스트 모드 — 안 가진 몸도 1 로 읽는다(저장은 그대로라 끄면 원래대로 돌아온다).
             if (s_testMode && m < 1 && !string.IsNullOrEmpty(hostKey) && hostKey != HostEntry.GhostKey) return 1;
@@ -689,11 +722,15 @@ namespace Game.User
         }
 
         public float StatBonusFlat(string hostKey, HostStat stat)
-            => StatPercent(stat, GhostStatLevel(stat), true)
+            => s_powerTest ? 0f   // 권장 힘 시험 — 강화 0
+             : StatPercent(stat, GhostStatLevel(stat), true)
              + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
 
         public float StatBonusMul(string hostKey, HostStat stat)
         {
+            // 권장 힘 시험 — 강화 대신 체력 · 공격에 같은 배율(그 챕터 권장 전투력이 되게)
+            if (s_powerTest)
+                return !string.IsNullOrEmpty(hostKey) && (stat == HostStat.Hp || stat == HostStat.Atk) ? PowerTestMul(hostKey) : 1f;
             float pct = StatPercent(stat, GhostStatLevel(stat), true)
                       + (string.IsNullOrEmpty(hostKey) ? 0f : StatPercent(stat, HostStatLevel(hostKey, stat), false));
             return 1f + pct / 100f;

@@ -15,7 +15,7 @@ namespace Game.Module.InGame
     public sealed partial class BattleDirector
     {
         private const float EliteScale = 1.25f;
-        private const float EliteFromProgress = 0.5f;
+        private const float EliteFromProgress = 0.5f, EliteLastProgress = 0.9f;
 
         private readonly List<Unit> _elitePick = new();
 
@@ -25,8 +25,17 @@ namespace Game.Module.InGame
             if (_config == null || IsModeRun) return;
             if (room != null && (room.IsMidBoss || room.IsBoss)) return;   // 관문 방의 부하는 그대로 — 대장이 주인공이다
             int ch = _canonRoom != null ? _canonRoom.Chapter : _runChapter;
-            int n = ChapterRow(ch).Elite;
-            if (n <= 0 || RoomProgress(ch) < EliteFromProgress) return;
+            var row = ChapterRow(ch);
+            float at = RoomProgress(ch);
+            // 뒤쪽 절반 = 표의 수 · 마지막 10% 는 더(eliteLast). 앞쪽 절반은 N 방에 한 번 1기(eliteEarly) — PD 2026-10-27 난이도 기획안
+            int n;
+            if (at >= EliteFromProgress) n = row.Elite + (at >= EliteLastProgress ? row.EliteLast : 0);
+            else
+            {
+                int no = _canonRoom != null ? RoomNumberOf(_canonRoom.RoomId) : _roomIndex + 1;
+                n = row.EliteEarly > 0 && no % row.EliteEarly == 0 ? 1 : 0;
+            }
+            if (n <= 0) return;
 
             _elitePick.Clear();
             for (int i = 0; i < _enemies.Count; i++)

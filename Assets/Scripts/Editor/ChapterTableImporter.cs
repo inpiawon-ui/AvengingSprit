@@ -23,7 +23,8 @@ namespace Game.EditorTools
             public int Ch;
             public string Stage, Boss, Leader, Leader2, Lean, Chest, Name, Desc;
             public string[] Trash;
-            public int Elite, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
+            public int Elite, EliteEarly, EliteLast, BossHp, BossAtk, RoomGold, MidGold, BossGold, ClearGold, Exp;
+            public string Hazard;
             public float Crowd, Fire;
             public int Music, Art, BossArt, ChestArt;
             public float HpMul, AtkMul, PriceMul;
@@ -58,6 +59,7 @@ namespace Game.EditorTools
                 {
                     Ch = I("ch"), Stage = S("stage"), Boss = S("boss"), Leader = S("leader"), Leader2 = S("leader2"),
                     Trash = S("trash").Split(','), Lean = S("lean"), Elite = I("elite"),
+                    EliteEarly = I("eliteEarly"), EliteLast = I("eliteLast"), Hazard = S("hazard"),
                     Crowd = F("crowd"), Fire = F("fire"),
                     HpMul = F("hpMul"), AtkMul = F("atkMul"), BossHp = I("bossHp"), BossAtk = I("bossAtk"),
                     RoomGold = I("roomGold"), MidGold = I("midGold"), BossGold = I("bossGold"),
@@ -147,6 +149,9 @@ namespace Game.EditorTools
                     trash.GetArrayElementAtIndex(k).stringValue = r.Trash[k].Trim();
                 }
                 e.FindPropertyRelative("Elite").intValue = r.Elite;
+                e.FindPropertyRelative("EliteEarly").intValue = r.EliteEarly;
+                e.FindPropertyRelative("EliteLast").intValue = r.EliteLast;
+                e.FindPropertyRelative("Hazard").stringValue = r.Hazard ?? string.Empty;
                 e.FindPropertyRelative("Crowd").floatValue = r.Crowd;
                 e.FindPropertyRelative("Fire").floatValue = r.Fire;
                 e.FindPropertyRelative("EnemyHpMul").floatValue = r.HpMul;
