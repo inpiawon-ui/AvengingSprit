@@ -1030,6 +1030,9 @@ namespace Game.Editor.ReBorn
 
         // ── 일시정지 · 포기 확인 ─────────────────────────────────
 
+        // 일시정지 카드 칸 테두리(납품 254 × 259)를 132 × 152 칸에 — 9분할 경계를 반으로 줄여 그린다(모서리 보석이 시안 크기)
+        private const float PauseFrameScale = 1.92f;
+
         private static void BuildPause(Transform root)
         {
             var old = root.Find("RbPausePanel");
@@ -1064,15 +1067,18 @@ namespace Game.Editor.ReBorn
                 float x0 = 76f + 147f * (i % 4), y0 = 370f + 168f * (i / 4);
                 var slot = PutPx(Node(c, $"RbPauseCard{i}"), c, x0 + 66f, y0 + 76f, 132f, 152f);
                 var empty = Stretch(Node(slot, $"RbPauseCard{i}Empty"));
-                Img(empty, "Components/rb_slot_common").color = new Color(0.45f, 0.5f, 0.6f, 0.3f);   // 시안 빈 칸은 바닥보다 조금 밝은 정도
+                var emptyImg = Img(empty, "Components/rb_pause_card_frame_rare");
+                emptyImg.color = new Color(0.55f, 0.6f, 0.7f, 0.3f);   // 시안 빈 칸 — 같은 카드 칸을 흐리게
+                emptyImg.pixelsPerUnitMultiplier = PauseFrameScale;
                 Img(Inside2(Node(empty, $"RbPauseCard{i}Plus"), 42f, 52f, 48f, 48f), "Icons/rb_icon_sys_plus_48").color = new Color(0.55f, 0.6f, 0.72f, 0.35f);
                 var full = Stretch(Node(slot, $"RbPauseCard{i}Full"));
-                Img(Stretch(Node(full, $"RbPauseCard{i}Frame")), "Components/rb_slot_rare");
-                Text(Inside2(Node(full, $"RbPauseCard{i}Rarity"), 8f, 6f, 116f, 22f), null, "RARE", 26, LvMuted, TA.Center, heavy: true);
-                Img(Inside2(Node(full, $"RbPauseCard{i}Icon"), 22f, 28f, 88f, 88f), "Icons/rb_icon_card_up_96");
-                Text(Inside2(Node(full, $"RbPauseCard{i}Name"), 6f, 104f, 120f, 24f), null, "수호 방패", 30, White, TA.Center, heavy: true);
-                var lvTag = Inside2(Node(full, $"RbPauseCard{i}LvTag"), 80f, 126f, 48f, 22f);
-                Img(lvTag, "Components/rb_lv_tag");
+                // 카드 칸 테두리 — 시안 그대로 발주한 rb_pause_card_frame(등급 넷 · 위 등급 이름판 · 모서리 보석)
+                Img(Stretch(Node(full, $"RbPauseCard{i}Frame")), "Components/rb_pause_card_frame_rare").pixelsPerUnitMultiplier = PauseFrameScale;
+                Text(Inside2(Node(full, $"RbPauseCard{i}Rarity"), 24f, 4f, 84f, 18f), null, "RARE", 26, LvMuted, TA.Center, heavy: true).fontSizeMin = 8f;   // 「LEGENDARY」 도 이름판 안에
+                Img(Inside2(Node(full, $"RbPauseCard{i}Icon"), 22f, 24f, 88f, 88f), "Icons/rb_icon_card_up_96");
+                Text(Inside2(Node(full, $"RbPauseCard{i}Name"), 8f, 108f, 116f, 20f), null, "수호 방패", 30, White, TA.Center, heavy: true).fontSizeMin = 12f;   // Lv 배지(위 128)와 안 겹치게
+                var lvTag = Inside2(Node(full, $"RbPauseCard{i}LvTag"), 82f, 128f, 54f, 27f);
+                Img(lvTag, "Components/rb_pause_lv_badge").pixelsPerUnitMultiplier = 1.6f;
                 Text(Stretch(Node(lvTag, $"RbPauseCard{i}Lv")), null, "Lv 2", 26, White, TA.Center, number: true);
             }
 
@@ -1080,8 +1086,10 @@ namespace Game.Editor.ReBorn
             Img(PutPx(Node(c, "RbPauseBodyBox"), c, 361f, 851f, 606f, 267f), "Components/rb_panel_base");
             Img(PutPx(Node(c, "RbPauseBodyStar"), c, 88f, 738f, 26f, 26f), "Icons/rb_icon_star_on_48");
             Text(PutPx(Node(c, "RbPauseBodyTitle"), c, 190f, 738f, 160f, 36f), "ui.rb.pause.body", "호스트", 38, White, TA.Left, heavy: true);
-            Img(PutPx(Node(c, "RbPauseHostFace"), c, 176f, 868f, 188f, 188f), "Icons/rb_icon_mode_ghost_96");
-            Img(PutPx(Node(c, "RbPauseHostFrame"), c, 176f, 868f, 212f, 212f), "Components/rb_host_frame_r");
+            // 얼굴 칸 — 어두운 바탕 · 얼굴 · 시안 그대로 발주한 테두리(rb_pause_host_frame · 모서리 보석)
+            Img(PutPx(Node(c, "RbPauseHostBack"), c, 176f, 868f, 188f, 188f), "Components/rb_panel_base");
+            Img(PutPx(Node(c, "RbPauseHostFace"), c, 176f, 868f, 184f, 184f), "Icons/rb_icon_mode_ghost_96");
+            Img(PutPx(Node(c, "RbPauseHostFrame"), c, 176f, 868f, 212f, 212f), "Components/rb_pause_host_frame_r");
             Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 95f, 785f, 34f, 24f), "Components/rb_rarity_r");
             Text(PutPx(Node(c, "RbPauseHostName"), c, 360f, 775f, 104f, 40f), null, "갱스터", 42, White, TA.Left, heavy: true);
             Img(PutPx(Node(c, "RbPauseHostGrade"), c, 430f, 776f, 40f, 28f), "Components/rb_rarity_r");
@@ -1144,8 +1152,9 @@ namespace Game.Editor.ReBorn
                 for (int i = 0; i < paths.Length; i++)
                     arr.GetArrayElementAtIndex(i).objectReferenceValue = paths[i] == null ? null : KitSprite(paths[i]);
             }
-            Many("_cardFrames", "Components/rb_slot_common", "Components/rb_slot_rare", "Components/rb_slot_sr", "Components/rb_slot_ssr");
-            Many("_hostFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
+            Many("_cardFrames", "Components/rb_pause_card_frame_common", "Components/rb_pause_card_frame_rare",
+                 "Components/rb_pause_card_frame_epic", "Components/rb_pause_card_frame_legendary");
+            Many("_hostFrames", "Components/rb_pause_host_frame_r", "Components/rb_pause_host_frame_sr", "Components/rb_pause_host_frame_ssr");
             Many("_gradeTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
             Many("_affinityIcons", null, "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
             pso.FindProperty("_ghostFrame").objectReferenceValue = KitSprite("Components/rb_host_frame_ghost");
