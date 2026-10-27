@@ -22,6 +22,8 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] Shots =
         {
             (720, 1280, Language.Korean, "battle", "lobby_16x9"),
+            (1080, 2400, Language.Korean, "battle", "lobby_b_20x9"),
+            (768, 1024, Language.Korean, "battle", "lobby_b_4x3"),
             (720, 1280, Language.Japanese, "battle", "lobby_ja"),
             (720, 1280, Language.English, "battle", "lobby_en"),
             (720, 1280, Language.Korean, "battle:4@0.05", "lobby_pick_early"),

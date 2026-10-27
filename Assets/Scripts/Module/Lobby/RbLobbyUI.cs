@@ -39,6 +39,8 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite _iconRandom, _iconGhost;
         [SerializeField] private Sprite[] _stageBgs = Array.Empty<Sprite>();
         [SerializeField] private Sprite _iconNext, _iconLock;
+        // 방 진행 칸(시안) — 깬 칸 · 남은 칸 · 중간보스 칸 · 보스 칸
+        [SerializeField] private Sprite _segOn, _segOff, _segMid, _segBoss;
 
         private const float CardStep = 220f * 2f / 3f;   // 시안 카드 간격(1080 기준 220)
         private const float CardLeft = 30f * 2f / 3f;
@@ -82,6 +84,7 @@ namespace Game.Module.Lobby
             _ui.OnClick("ChapterNext", () => StepChapter(+1));
             _ui.OnClick("SortieButton", StartRun);
             _ui.OnClick("SortieAll", () => SelectTab("Host"));
+            _ui.OnClick("SortieInfo", () => ShowGuide("sortie"));   // 「i」 — 출전 방식 안내(시안 ghost-start)
             _ui.OnClick("RailEvent", () => Soon("ui.rb.soon"));
             _ui.OnClick("RailMail", () => OpenRail("Mail"));
             _ui.OnClick("RailMission", () => OpenRail("Missions"));
@@ -311,9 +314,10 @@ namespace Game.Module.Lobby
             text.color = win == Affinity.Blade ? AdvBlade : win == Affinity.Force ? AdvForce : AdvMagic;
             var ir = info.rectTransform;
             var cr = icon.rectTransform;
-            float left = ir.anchoredPosition.x - ir.sizeDelta.x * 0.5f;
+            // 부모(챕터 칸) 안 좌표로 잰다 — 넓은 화면에서 왼쪽 글자는 왼쪽 끝 · 앞뒤 버튼은 오른쪽 끝 기준이라 anchoredPosition 끼리는 못 잰다
+            float left = ir.localPosition.x - ir.rect.width * 0.5f;
             // 앞 버튼 왼쪽까지 — 넘치면(영어 「Best 14/30 rooms · … Favored ▲」) 두 글자를 같은 비율로 줄인다(하한 = 빌더 하한)
-            float limit = _ui.Find("ChapterPrev") is RectTransform prev ? prev.anchoredPosition.x - prev.sizeDelta.x * 0.5f - 6f : float.MaxValue;
+            float limit = _ui.Find("ChapterPrev") is RectTransform prev ? prev.localPosition.x - prev.rect.width * 0.5f - 6f : float.MaxValue;
             info.fontSize = info.fontSizeMax;
             text.fontSize = text.fontSizeMax;
             float iw = info.GetPreferredValues(info.text, 9999f, 0f).x, tw = text.GetPreferredValues(text.text, 9999f, 0f).x;
@@ -326,30 +330,29 @@ namespace Game.Module.Lobby
                 iw = info.GetPreferredValues(info.text, 9999f, 0f).x;
             }
             float x = left + iw + 2f;
-            cr.anchoredPosition = new Vector2(x + cr.sizeDelta.x * 0.5f, cr.anchoredPosition.y);
-            x += cr.sizeDelta.x + 4f;
+            cr.localPosition = new Vector3(x + cr.rect.width * 0.5f, cr.localPosition.y, cr.localPosition.z);
+            x += cr.rect.width + 4f;
             var tr = text.rectTransform;
-            tr.anchoredPosition = new Vector2(x + tr.sizeDelta.x * 0.5f, tr.anchoredPosition.y);
+            tr.localPosition = new Vector3(x + tr.rect.width * 0.5f, tr.localPosition.y, tr.localPosition.z);
         }
 
-        /// <summary>방 게이지 세 구간 — 구간마다 10방, 깬 방 수만큼 왼쪽부터 채운다.</summary>
+        /// <summary>방 진행 칸 15 — 한 칸 = 방 (방 수 / 15). 다 깬 칸은 하늘색, 3분의 1 · 3분의 2 칸(중간보스)은 금테, 마지막(보스)은 빨간테, 나머지는 남회색.</summary>
         private void RefreshGauge(int reached, int rooms)
         {
-            int per = Mathf.Max(1, rooms / GaugeSections);
-            for (int s = 0; s < GaugeSections; s++)
+            int blocks = Mathf.Min(GaugeBlocks, Mathf.Max(1, rooms));
+            float per = rooms / (float)blocks;
+            for (int b = 0; b < GaugeBlocks; b++)
             {
-                if (_ui.Get<Image>($"ChapterSeg{s}Fill") is not Image fill) continue;
-                float full = ((RectTransform)fill.transform.parent).rect.width;
-                float w = full * Mathf.Clamp01((reached - s * per) / (float)per);
-                fill.gameObject.SetActive(w > 0.5f);
-                // 채움이 짧으면 양 끝 둥근 테두리(9-slice)가 겹친다 — 테두리를 그만큼 가늘게
-                float caps = fill.sprite != null ? fill.sprite.border.x + fill.sprite.border.z : 0f;
-                fill.pixelsPerUnitMultiplier = caps > 0f && w < caps ? caps / Mathf.Max(1f, w) : 1f;
-                fill.rectTransform.sizeDelta = new Vector2(w, fill.rectTransform.sizeDelta.y);
+                if (_ui.Get<Image>($"ChapterBlk{b}") is not Image blk) continue;
+                blk.gameObject.SetActive(b < blocks);
+                if (b >= blocks) continue;
+                bool done = reached >= Mathf.RoundToInt((b + 1) * per);
+                bool boss = b == blocks - 1, mid = !boss && (b + 1) % Mathf.Max(1, blocks / 3) == 0;
+                blk.sprite = done ? _segOn : boss ? _segBoss : mid ? _segMid : _segOff;
             }
         }
 
-        private const int GaugeSections = 3;
+        private const int GaugeBlocks = 15;   // 빌더 RbLobbyBuilder.GaugeBlocks 와 같다
 
         private void SetActiveButton(string node, bool on)
         {
@@ -714,6 +717,8 @@ namespace Game.Module.Lobby
         // ── 하단 탭 ──────────────────────────────────────────
 
         private static readonly Color TabOn = new(1f, 0.79f, 0.24f), TabOff = new(0.70f, 0.74f, 0.84f);
+        private const float TabIconLift = 14f, TabIconScale = 1.15f;
+        private readonly System.Collections.Generic.Dictionary<string, float> _tabIconY = new();
 
         /// <summary>아래 탭 — 쪽을 바꾼다. 위 막대 · 아래 탭은 모든 쪽이 같이 쓴다.</summary>
         public void SelectTab(string tab)
@@ -724,8 +729,17 @@ namespace Game.Module.Lobby
             if (_randomPage != null) _randomPage.Close();
             foreach (var t in new[] { "Shop", "Host", "Battle", "Summon", "Challenge" })
             {
+                bool on = t == tab;
                 var label = _ui.Get<TextMeshProUGUI>($"Tab{t}Label");
-                if (label != null) label.color = t == tab ? TabOn : TabOff;
+                if (label != null) label.color = on ? TabOn : TabOff;
+                // 고른 탭 — 시안처럼 반원 받침을 켜고 아이콘을 받침 위로 올려 키운다(PD 2026-10-27 「눌린 느낌이 하나도 안 난다」)
+                _ui.SetActive($"Tab{t}Sel", on);
+                if (_ui.Find($"Tab{t}Icon") is RectTransform icon)
+                {
+                    if (!_tabIconY.ContainsKey(t)) _tabIconY[t] = icon.anchoredPosition.y;
+                    icon.anchoredPosition = new Vector2(icon.anchoredPosition.x, _tabIconY[t] + (on ? TabIconLift : 0f));
+                    icon.localScale = Vector3.one * (on ? TabIconScale : 1f);
+                }
             }
             _ui.SetActive("PageBattle", tab == "Battle");
             if (_growthPage != null) { _growthPage.CloseModals(); _growthPage.gameObject.SetActive(false); }

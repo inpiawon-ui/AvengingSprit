@@ -86,6 +86,7 @@ namespace Game.Editor.ReBorn
             if (rt.Find("GrwStarDone") is Transform starDone) starDone.SetSiblingIndex(chestOpen.GetSiblingIndex() + 1);
             rt.Find("RbGuide").gameObject.SetActive(false);         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
+            WidenBattle(rt, battle);   // 넓은 화면(4:3) — 끝까지 늘리고 양옆에 붙인다(PD 2026-10-27)
             Wire(root.AddComponent<RbLobbyUI>());
             RbFxBuilder.Attach(root);   // 아웃게임 연출(새 몸 · 각성 · 상자 · 보상 · 강화 · 별 · 버튼 빛)
             Save(root, PrefabPath);
@@ -120,10 +121,54 @@ namespace Game.Editor.ReBorn
             One("_iconGhost", "Icons/rb_icon_mode_ghost_144");
             One("_iconNext", "Icons/rb_icon_sys_next_96");
             One("_iconLock", "Icons/rb_icon_sys_lock_96");
+            One("_segOn", "Components/rb_lobby_seg_on");
+            One("_segOff", "Components/rb_lobby_seg_off");
+            One("_segMid", "Components/rb_lobby_seg_mid");
+            One("_segBoss", "Components/rb_lobby_seg_boss");
             var bgs = new string[StageBgOf.Length];
             for (int i = 0; i < bgs.Length; i++) bgs[i] = $"Art/rb_art_bg_stage_ch{StageBgOf[i]:00}";
             Many("_stageBgs", bgs);
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+
+        // ── 넓은 화면 — 4:3 태블릿은 보이는 폭이 960 이라 가운데 720 에만 몰려 양옆이 비었다(PD 2026-10-27 「스트레치로 여백 없이」).
+        //    폭 720 에서의 자리는 그대로 두고 기준만 바꾼다: 왼쪽 것은 왼쪽 끝 · 오른쪽 것은 오른쪽 끝 · 화면 폭 판은 늘림 · 탭은 비율.
+        //    다른 쪽(호스트 · 상점 …)은 런타임이 가운데 기준으로 자리를 계산하는 곳이 있어 건드리지 않는다
+        private enum Wide { Left, Right, Stretch, Ratio }
+
+        private static void WidenBattle(RectTransform rt, RectTransform battle)
+        {
+            void Re(RectTransform parent, string name, Wide w)
+            {
+                if (parent.Find(name) is not RectTransform n) return;
+                float pw = parent == rt || parent == battle ? 720f : parent.sizeDelta.x;
+                float ax = n.anchoredPosition.x, ay = n.anchorMin.y, by = n.anchorMax.y;
+                switch (w)
+                {
+                    case Wide.Left: n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(0f, by); n.anchoredPosition = new Vector2(ax + pw * 0.5f, n.anchoredPosition.y); break;
+                    case Wide.Right: n.anchorMin = new Vector2(1f, ay); n.anchorMax = new Vector2(1f, by); n.anchoredPosition = new Vector2(ax - pw * 0.5f, n.anchoredPosition.y); break;
+                    case Wide.Ratio: { float f = (ax + pw * 0.5f) / pw; n.anchorMin = new Vector2(f, ay); n.anchorMax = new Vector2(f, by); n.anchoredPosition = new Vector2(0f, n.anchoredPosition.y); break; }
+                    case Wide.Stretch: { float wd = n.sizeDelta.x; n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(1f, by); n.sizeDelta = new Vector2(wd - pw, n.sizeDelta.y); break; }
+                }
+            }
+            foreach (var n in new[] { "HeaderProfile", "ChipStamina" }) Re(rt, n, Wide.Left);
+            Re(rt, "ChipGold", Wide.Ratio);
+            foreach (var n in new[] { "ChipGem", "HeaderPlus" }) Re(rt, n, Wide.Right);
+            foreach (var t in Tabs) Re(rt, $"Tab{t}", Wide.Ratio);
+            foreach (var n in new[] { "RailMail", "RailMission", "RailSettings", "SortieTitleMark", "SortieTitle" }) Re(battle, n, Wide.Left);
+            foreach (var n in new[] { "RailPass", "RailEvent", "RailDaily", "SortieInfo", "SortieAll" }) Re(battle, n, Wide.Right);
+            // 챕터 칸 안 — 늘리기 전에 자식 기준부터(부모 폭이 시안 그대로일 때 잰다)
+            if (battle.Find("ChapterCard") is RectTransform card)
+            {
+                for (int i = 0; i < card.childCount; i++)
+                {
+                    var c = (RectTransform)card.GetChild(i);
+                    if (c.name == "ChapterTopLine") continue;   // 위 한 줄은 가운데 그대로
+                    Re(card, c.name, c.name is "ChapterPrev" or "ChapterNext" ? Wide.Right : Wide.Left);
+                }
+            }
+            foreach (var n in new[] { "ChapterCard", "SortieViewport", "SortieButton" }) Re(battle, n, Wide.Stretch);
         }
 
         // ── 위 막대: 프로필 · 행동력 · 골드 · 젬 · + ─────────────────
@@ -154,7 +199,7 @@ namespace Game.Editor.ReBorn
         {
             const float y0 = 145, y1 = 238;
             var chip = Place(Node(rt, name), Edge.Top, x0, y0, x1, y1);
-            Img(chip, "Components/rb_info_chip");
+            // 판 없음 — 아이콘과 숫자만(PD 2026-10-27 「재화에 왜 쓸데없이 타원형이 들어가냐」)
             Img(Local(Node(chip, name + "Icon"), x0, y0, x1, y1, x0 + 20, 168, x0 + 66, 214), icon);
             Text(Local(Node(chip, textName), x0, y0, x1, y1, x0 + 76, 160, x1 - 18, 224), null, sample, 46, White, TA.Right, number: true);
         }
@@ -162,12 +207,12 @@ namespace Game.Editor.ReBorn
         // ── 양옆 아이콘(레일) ─────────────────────────────────
         private static void BuildRails(RectTransform rt)
         {
-            Rail(rt, "RailMail", "rail_mail", "ui.rb.rail.mail", "우편", 95, 365, true);
-            Rail(rt, "RailMission", "rail_mission", "ui.rb.rail.mission", "미션", 95, 565, true);
-            Rail(rt, "RailSettings", "rail_settings", "ui.rb.rail.settings", "설정", 95, 765, false);
-            Rail(rt, "RailPass", "rail_pass", null, "패스 3", 985, 365, true);
-            Rail(rt, "RailEvent", "rail_event", "ui.rb.rail.event", "이벤트", 985, 565, false);
-            Rail(rt, "RailDaily", "rail_daily_free", "ui.rb.rail.daily", "오늘 무료", 985, 765, true);
+            Rail(rt, "RailMail", "rail_mail", "ui.rb.rail.mail", "우편", 95, 300, true);
+            Rail(rt, "RailMission", "rail_mission", "ui.rb.rail.mission", "미션", 95, 515, true);
+            Rail(rt, "RailSettings", "rail_settings", "ui.rb.rail.settings", "설정", 95, 730, false);
+            Rail(rt, "RailPass", "rail_pass", null, "패스 3", 985, 300, true);
+            Rail(rt, "RailEvent", "rail_event", "ui.rb.rail.event", "이벤트", 985, 515, false);
+            Rail(rt, "RailDaily", "rail_daily_free", "ui.rb.rail.daily", "오늘 무료", 985, 730, true);
         }
 
         /// <summary>아이콘 80(시안) + 아래 이름. 누름 칸 = 아이콘 + 이름 전체(터치 144 이상).</summary>
@@ -185,14 +230,15 @@ namespace Game.Editor.ReBorn
         // ── 무대: 랜덤 구슬 · 유령 · 고른 몸 · 안내 ───────────────────
         private static void BuildStage(RectTransform rt)
         {
-            var orb = Place(Node(rt, "StageOrb"), Edge.Top, 395, 410, 720, 825);
+            Text(Place(Node(rt, "StageTitle"), Edge.Top, 250, 290, 830, 360), null, "AVENGING SPIRIT", 40, new Color(0.88f, 0.9f, 0.96f, 1f), TA.Center, number: true);   // 시안 제목(도트 글꼴)
+            var orb = Place(Node(rt, "StageOrb"), Edge.Top, 338, 337, 777, 897);   // 시안 크기 — 그림 여백 때문에 상자를 1.35 배
             Img(orb, "Art/rb_art_lobby_random_stage");
             // 고른 몸(직접 · 오늘의 몸) — 원본 정지컷 + 받침(묶음 지시 4장 2번). 몸 그림은 화면 스크립트가 꽂는다
             var host = Place(Node(rt, "StageHost"), Edge.Top, 380, 430, 740, 830);
             Img(Local(Node(host, "StagePedestal"), 380, 430, 740, 830, 400, 740, 720, 830), "Art/rb_art_host_pedestal");
             Img(Local(Node(host, "StageHostArt"), 380, 430, 740, 830, 420, 440, 700, 790), "Art/rb_art_mascot_ghost_happy");
             host.gameObject.SetActive(false);
-            Img(Place(Node(rt, "StageGhost"), Edge.Top, 195, 595, 350, 715), "Art/rb_art_mascot_ghost_happy");
+            Img(Place(Node(rt, "StageGhost"), Edge.Top, 171, 577, 373, 733), "Art/rb_art_mascot_ghost_happy");   // 시안 크기(1.3 배)
 
             var prompt = Place(Node(rt, "StagePrompt"), Edge.Bottom, 380, 930, 700, 990);
             Img(prompt, "Components/rb_info_chip");
@@ -200,31 +246,30 @@ namespace Game.Editor.ReBorn
         }
 
         // ── 챕터 카드(히어로 판) — 16칸 방 진행 칸은 없앴고(PD 2026-10-23) 세 구간 게이지로 다시 넣었다(PD 2026-10-26) ─────────
-        public const int GaugeSections = 3;
-        private const float GaugeLeft = 51f, GaugeStep = 235f, GaugeBarW = 172f, GaugeTop = 1124f, GaugeH = 21f;
+        public const int GaugeBlocks = 15;
+        // 시안 칸(폭 36 · 간격 7)에 맞춘 15칸 — 30방이면 한 칸 = 2방. 30칸은 칸이 너무 작아 점처럼 보였다(2026-10-27 캡처)
+        private const float GaugeLeft = 51f, BlockStep = 46.4f, BlockW = 38f, GaugeTop = 1122f, GaugeH = 24f;
 
         private static void BuildChapterCard(RectTransform rt)
         {
             const float x0 = 30, y0 = 1030, x1 = 1050, y1 = 1250;
             var card = Place(Node(rt, "ChapterCard"), Edge.Bottom, x0, y0, x1, y1);
-            Img(card, "Components/rb_panel_hero");
+            // 시안 판 — 짙은 남색 둥근 사각형 + 위쪽 가운데 하늘색 한 줄(PD 2026-10-27 「시안에도 둥근 사각형이 있었다」)
+            var cardImg = Img(card, "Components/rb_lobby_chapter_panel");   // 시안 크롭 앵커 발주(가는 금빛 테두리)
+            cardImg.preserveAspect = false;
+            cardImg.pixelsPerUnitMultiplier = 1.5f;   // 모서리 반지름을 시안(약 12)에 맞춤
+            Img(Local(Node(card, "ChapterTopLine"), x0, y0, x1, y1, 362, 1024, 714, 1032), "Components/rb_bar_fill_cyan").preserveAspect = false;
             HitArea(Local(Node(card, "ChapterOpen"), x0, y0, x1, y1, 40, 1040, 755, 1240));   // 챕터 카드 왼쪽 → 챕터 선택(앞뒤 버튼은 그 위)
             Text(Local(Node(card, "ChapterNoText"), x0, y0, x1, y1, 50, 1060, 190, 1115), null, "CH 1", 56, White, TA.Left, number: true);
             Text(Local(Node(card, "ChapterNameText"), x0, y0, x1, y1, 200, 1060, 750, 1115), null, "쓰레기 집적장", 50, White, TA.Left, heavy: true);
-            // 방 게이지 — 세 구간(1~10 · 11~20 · 21~30), 끝마다 중간보스 · 보스 아이콘(PD 2026-10-26 A안, 시안 stage_gauge_options.png)
-            for (int s = 0; s < GaugeSections; s++)
+            // 방 진행 — 시안의 칸칸이 막대(PD 2026-10-27 「점선 표현이 안 예쁘다」). 30방 = 30칸, 그림은 화면 스크립트가 진행대로 갈아 끼운다
+            for (int b = 0; b < GaugeBlocks; b++)
             {
-                float bx0 = GaugeLeft + s * GaugeStep, bx1 = bx0 + GaugeBarW;
-                var track = Local(Node(card, $"ChapterSeg{s}"), x0, y0, x1, y1, bx0, GaugeTop, bx1, GaugeTop + GaugeH);
-                Img(track, "Components/rb_bar_track");
-                // 채움은 왼쪽에 붙여 폭만 바꾼다(화면 스크립트가 깬 방 수만큼)
-                var fill = Node(track, $"ChapterSeg{s}Fill");
-                fill.anchorMin = new Vector2(0f, 0f); fill.anchorMax = new Vector2(0f, 1f); fill.pivot = new Vector2(0f, 0.5f);
-                fill.sizeDelta = new Vector2(GaugeBarW * S, 0f); fill.anchoredPosition = Vector2.zero;
-                Img(fill, "Components/rb_bar_fill_cyan");
-                float ic = GaugeTop + GaugeH * 0.5f;
-                Img(Local(Node(card, $"ChapterSeg{s}Icon"), x0, y0, x1, y1, bx1 + 4, ic - 28, bx1 + 60, ic + 28),
-                    s == GaugeSections - 1 ? "Icons/rb_icon_room_boss_48" : "Icons/rb_icon_room_midboss_48");
+                float bx0 = GaugeLeft + b * BlockStep;
+                var blk = Img(Local(Node(card, $"ChapterBlk{b}"), x0, y0, x1, y1, bx0, GaugeTop, bx0 + BlockW, GaugeTop + GaugeH),
+                    "Components/rb_lobby_seg_off");
+                blk.preserveAspect = false;
+                blk.pixelsPerUnitMultiplier = 2f;   // 납품 칸(높이 32)을 16 칸에 — 둥근 모서리가 시안처럼 작게
             }
             // 안내 줄 「최고 7/30방 · 권장 1,200 · 」 + 유리한 속성 아이콘 + 「유리 ▲」 — 아이콘은 글자 폭을 재서 바로 뒤에 붙인다.
             // 속성은 글자 대신 아이콘(PD 2026-10-26 「아이콘으로 해야 속성 공부가 되고 적응이 된다」). 폭을 재야 해서 자동 축소는 끈다
@@ -255,7 +300,11 @@ namespace Game.Editor.ReBorn
 
         private static void BuildSortieRow(RectTransform rt)
         {
-            Text(Place(Node(rt, "SortieTitle"), Edge.Bottom, 30, 1280, 400, 1330), "ui.rb.lobby.sortie_title", "출전 호스트", 44, White, TA.Left, heavy: true);
+            Text(Place(Node(rt, "SortieTitleMark"), Edge.Bottom, 26, 1284, 56, 1326), null, "◆", 28, Cyan, TA.Center, heavy: true);
+            Text(Place(Node(rt, "SortieTitle"), Edge.Bottom, 60, 1280, 430, 1330), "ui.rb.lobby.sortie_title", "출전 호스트", 44, White, TA.Left, heavy: true);
+            var info = Place(Node(rt, "SortieInfo"), Edge.Bottom, 504, 1282, 630, 1398);
+            Btn(info, "Components/rb_btn_chip").image.pixelsPerUnitMultiplier = 1.4f;   // 둥근 네모(시안 ghost-start)
+            Text(Stretch(Node(info, "SortieInfoText")), null, "i", 64, White, TA.Center, number: true);
             var all = Place(Node(rt, "SortieAll"), Edge.Bottom, 775, 1262, 1050, 1395);
             Btn(all, "Components/rb_btn_chip");
             Text(Local(Node(all, "SortieAllText"), 775, 1262, 1050, 1395, 790, 1290, 1035, 1370), null, "전체 23 ›", 44, White, TA.Center, heavy: true);
@@ -285,11 +334,11 @@ namespace Game.Editor.ReBorn
             var sel = Img(Local(Node(card, "CardSel"), cx0, cy0, cx1, cy1, 24, 1405, 243, 1695), "Components/rb_host_select_ring");
             sel.gameObject.SetActive(false);
             // 카드 안 위 왼쪽 = 내 속성(네모 칸 안) · 위 오른쪽 = 등급 태그 · 틀 윗변 위 = BEST · 오늘 판 (PD 2026-10-26)
-            var affBox = Local(Node(card, "CardAffBox"), cx0, cy0, cx1, cy1, 40, 1422, 86, 1468);
+            var affBox = Local(Node(card, "CardAffBox"), cx0, cy0, cx1, cy1, 36, 1418, 104, 1486);   // 크게 — PD 2026-10-27
             var affImg = Img(affBox, "Components/rb_level_badge");
             affImg.pixelsPerUnitMultiplier = 2f;   // 배지 테(25 · 13 px)가 작은 네모에 맞게 — 테 두께가 위 막대 레벨 배지와 비슷해진다
-            Img(Local(Node(affBox, "CardAff"), 40, 1422, 86, 1468, 44, 1426, 82, 1464), "Icons/rb_icon_aff_force_128");
-            Img(Local(Node(card, "CardRarity"), cx0, cy0, cx1, cy1, 168, 1424, 228, 1465), "Components/rb_rarity_sr");
+            Img(Local(Node(affBox, "CardAff"), 36, 1418, 104, 1486, 42, 1424, 98, 1480), "Icons/rb_icon_aff_force_128");
+            Img(Local(Node(card, "CardRarity"), cx0, cy0, cx1, cy1, 140, 1420, 232, 1482), "Components/rb_rarity_sr");
             Img(Local(Node(card, "CardIcon"), cx0, cy0, cx1, cy1, 78, 1476, 190, 1566), "Icons/rb_icon_mode_random_144");
             // BEST · 오늘 판 — 틀 윗변 가운데에 얹는다(그림 비율 그대로 80:41 · 9분할로 늘리지 않는다)
             var badge = Local(Node(card, "CardBadge"), cx0, cy0, cx1, cy1, 83, 1388, 183, 1439);
@@ -311,7 +360,7 @@ namespace Game.Editor.ReBorn
             for (int i = 0; i < chips.Length; i++)
             {
                 var c = Place(Node(rt, $"BonusChip{i}"), Edge.Bottom, chips[i][0], 1718, chips[i][1], 1778);
-                Img(c, "Components/rb_info_chip");
+                Img(c, "Components/rb_btn_chip").pixelsPerUnitMultiplier = 1.6f;   // 시안 — 테두리 없는 어두운 칸
                 Text(Stretch(Node(c, $"BonusChip{i}Text")), null, "히든 등장 가능", 36, Dim, TA.Center);
             }
             Text(Place(Node(rt, "BonusNote"), Edge.Bottom, 120, 1800, 960, 1846), null, "클리어 보너스 · 히든은 이번 판 체험, 조각 미지급", 36, Dim, TA.Center);
@@ -343,13 +392,23 @@ namespace Game.Editor.ReBorn
             var bar = Node(rt, "TabBar");
             bar.anchorMin = new Vector2(0f, 0f); bar.anchorMax = new Vector2(1f, 0f); bar.pivot = new Vector2(0.5f, 0f);
             bar.sizeDelta = new Vector2(0f, (MockBottom - 2040f) * S); bar.anchoredPosition = Vector2.zero;
-            Img(bar, "Components/rb_tab_bar_bg");
+            var barImg = Img(bar, "Components/rb_panel_base");   // 시안 — 테두리 없는 평평한 판
+            barImg.preserveAspect = false;
+            barImg.pixelsPerUnitMultiplier = 0.25f;   // 둥근 모서리가 보이지 않게(판이 화면 폭이라 모서리는 화면 밖)
+            var barLine = Node(bar, "TabBarLine");
+            barLine.anchorMin = new Vector2(0f, 1f); barLine.anchorMax = new Vector2(1f, 1f); barLine.pivot = new Vector2(0.5f, 1f);
+            barLine.sizeDelta = new Vector2(0f, 2f); barLine.anchoredPosition = Vector2.zero;
+            Img(barLine, "Components/rb_divider_line").preserveAspect = false;
             for (int i = 0; i < Tabs.Length; i++)
             {
                 float cx = 108f + i * 215.5f;
                 var tab = Place(Node(rt, $"Tab{Tabs[i]}"), Edge.Bottom, cx - 105, 2045, cx + 105, 2228);
                 HitArea(tab);
-                // 전투 탭 둘레 원(rb_tab_center_ring)은 뺐다 — PD 2026-10-26 「왜 있는 거야, 그냥 제거」
+                // 전투 탭 둘레 원(rb_tab_center_ring)은 뺐다 — PD 2026-10-26 「왜 있는 거야, 그냥 제거」.
+                // 고른 탭에만 시안의 반원 받침 — PD 2026-10-27 「눌린 느낌이 하나도 안 난다」
+                var sel = Img(Local(Node(tab, $"Tab{Tabs[i]}Sel"), cx - 105, 2045, cx + 105, 2228, cx - 95, 2010, cx + 95, 2190), "Components/rb_tab_selected");
+                sel.preserveAspect = false;
+                sel.gameObject.SetActive(false);
                 Img(Local(Node(tab, $"Tab{Tabs[i]}Icon"), cx - 105, 2045, cx + 105, 2228, cx - 52, 2062, cx + 52, 2166), $"Icons/rb_icon_{TabIcons[i]}_96");
                 Text(Local(Node(tab, $"Tab{Tabs[i]}Label"), cx - 105, 2045, cx + 105, 2228, cx - 100, 2180, cx + 100, 2224),
                      $"ui.rb.tab.{Tabs[i].ToLowerInvariant()}", TabKorean[i], 36, Dim, TA.Center, heavy: true);
