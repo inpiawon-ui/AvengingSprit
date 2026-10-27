@@ -161,6 +161,7 @@ namespace Game.Module.InGame
         private void ReaperWindow(Unit me)
         {
             _reaperSeconds = ReaperWindowSeconds;
+            HoldSkillCharge(_reaperSeconds);
             if (!QxReaperOpen(me, _reaperSeconds))   // 퀄업(2026-10-07) — 낫 한 번 + 발밑 보라 기운
                 PlayFx("scythe", me.Position, Meters(3f), loop: false);
         }
@@ -214,6 +215,7 @@ namespace Game.Module.InGame
             //   (기획 2026-09-15). 컷 네 장(`fx_lava_1~4`)을 장판 그림으로 넘겨 돌린다 —
             //   시작할 때 한 번 터지던 같은 그림은 겹쳐 보이므로 뺀다.
             float fieldRadius = Meters(LavaRadiusMeters) * _buffs.AoeMul;
+            HoldSkillCharge(6f);   // 불바다
             SpawnField(at, fieldRadius, 6f,
                        FieldEffect.Burn, tick, fromPlayer: true, artKey: FireFieldArt);
             QxFireBloom(at, fieldRadius);   // 퀄업(2026-10-07) — 불바다가 확 피어난다
@@ -234,6 +236,7 @@ namespace Game.Module.InGame
             //   닿는 순간 피해와 중독이 들어간다 — 누가 중독됐는지도 그 자리에서 읽힌다.
             _spitDamage = dmg;
             _spitPoisonSeconds = seconds;
+            HoldSkillCharge(seconds);
             var from = me.MuzzlePosition;
             QxVenomCast(me);   // 퀄업(2026-10-07) — 입 앞에 모이는 빛 · 둘레로 퍼지는 독 안개
             var frames = ShotFrames("venom");
@@ -273,6 +276,7 @@ namespace Game.Module.InGame
         private void DragonSurge(Unit me)
         {
             _boltSurgeSeconds = BaseAxis(BoltSurgeSeconds);   // Lv1 2 → Lv4 3초
+            HoldSkillCharge(_boltSurgeSeconds);
             // ⚠ 예전에는 번개 한 덩이를 **제 발밑에** 띄웠다. 일자로 뜨고 적을 향하지도
             //   않아 무엇이 일어났는지 안 읽혔다(기획 2026-09-15).
             //   가까운 적 셋에게 **각각 줄기를 뻗었더니** 튕기는 게 아니라 여러 갈래로 쏘는 것으로
@@ -337,6 +341,7 @@ namespace Game.Module.InGame
         {
             float seconds = BaseAxis(IceShellSeconds);   // Lv1 2 → Lv4 3초
             _iceShellSeconds = seconds;
+            HoldSkillCharge(seconds);
             _invuln = Mathf.Max(_invuln, seconds);
             _skillInvuln = Mathf.Max(_skillInvuln, seconds);
             int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent * ActiveRebaseMul));
@@ -419,6 +424,7 @@ namespace Game.Module.InGame
             //   (기획 2026-09-15). 즉시 차면 무엇 때문에 찼는지가 안 보인다.
             _batHeal = heal;
             _batSeconds = BatFlySeconds;
+            HoldSkillCharge(_batSeconds);
             _batBitten = false;
             _batTargets.Clear();
             QxFeastOpen(me, BatFlySeconds);   // 퀄업(2026-10-07) — 발밑 붉은 원, 박쥐 대신 피 구슬
@@ -438,6 +444,7 @@ namespace Game.Module.InGame
             int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * BaseAxis(1f) * ActiveRebaseMul));   // Lv1 100% → Lv4 150% · 쿨 비율
             me.AddShield(amount, me.HpMax * 2);
             _barrierSeconds = BarrierSeconds;
+            HoldSkillCharge(_barrierSeconds);
             // 퀄업 연출(2026-10-07) — 둥근 비눗방울 대신 몸 앞을 비운 분절 방벽
             if (!WpBarrierOpen(me)) PlayFx("shield", me.Position, 128f, loop: false);
         }
@@ -482,6 +489,7 @@ namespace Game.Module.InGame
         private void GangsterMarkAll(Unit me)
         {
             float seconds = BaseAxis(GangsterMarkSeconds);   // Lv1 3 → Lv4 5초
+            HoldSkillCharge(seconds + MarkLeadSeconds + MarkTravelSeconds);
             int percent = _markPercent;
 
             _markQueue.Clear();
@@ -545,6 +553,7 @@ namespace Game.Module.InGame
         private void HopperCritSurge(Unit me)
         {
             _critLockSeconds = BaseAxis(CritLockSeconds);   // Lv1 5 → Lv4 7.5초
+            HoldSkillCharge(_critLockSeconds);
             _critLockPercent = CritLockPercent;
             // 퀄업 연출(2026-10-07) — 몸 바깥 괄호가 조립되고 지속 내내 붙는다(공격이 아니라 상태)
             if (WpHopOpen(me)) { _critAuraFx?.Stop(); _critAuraFx = null; return; }
@@ -577,6 +586,7 @@ namespace Game.Module.InGame
         private void LaserBounce(Unit me)
         {
             _bounceSeconds = BaseAxis(BounceSeconds);   // Lv1 3 → Lv4 4.5초
+            HoldSkillCharge(_bounceSeconds);
             _bounceTick = 0f;
             // 퀄업 연출이 있으면 첫 튐(_bounceTick 0)이 곧바로 조준 · 낙뢰로 시작을 보여 준다
             if (LzReady) { ResetLz(); return; }

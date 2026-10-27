@@ -232,6 +232,7 @@ namespace Game.Module.InGame
         private void EliteUnyielding(Unit me)
         {
             float s = BaseAxis(EliteUnyieldingSeconds);
+            HoldSkillCharge(s);
             _invuln = Mathf.Max(_invuln, s);
             _skillInvuln = Mathf.Max(_skillInvuln, s);
             PlayFx("guard", me.Position, Meters(1.6f), loop: false);

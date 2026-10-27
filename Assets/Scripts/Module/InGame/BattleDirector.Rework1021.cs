@@ -199,6 +199,7 @@ namespace Game.Module.InGame
                     RemoveSummon(i);
                 }
             var at = ClampedInField(me, me.Position + AimDirection(me) * Meters(1.2f));
+            HoldSkillCharge(MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f));   // 골렘이 사는 동안
             SpawnSummon(GolemKey, "미니 골렘", MiniGolemHpPercent, MiniGolemAtkPercent, MiniGolemLifeSeconds + (SpecOpen ? MiniGolemSpecSeconds : 0f),
                         attacks: true, mobile: true, taunt: false, at: at, scale: MiniGolemScale, profile: GolemProfile);
             PlayFx("soulripple", at, Meters(1.4f), loop: false);
@@ -220,6 +221,7 @@ namespace Game.Module.InGame
         private void NinjaEvade(Unit me)
         {
             _evadeSeconds = BaseAxis(EvadeSeconds);
+            HoldSkillCharge(_evadeSeconds);
             _evadeTrail = 0f;
             me.SetDodge(SpecOpen ? EvadeSpecDodgePercent : EvadeDodgePercent);
             // 처치 이속(패시브)과 같은 시계를 쓴다 — 둘이 따로 돌면 먼저 끝나는 쪽이 속도를 1로 되돌린다
@@ -541,6 +543,7 @@ namespace Game.Module.InGame
             me.PlayAttack();
 
             float life = GravityPullSeconds + 0.25f;
+            HoldSkillCharge(GravityPullSeconds);
             var circle = PlayFloorFx("gvcircle", c, r * 2.2f, loop: true);
             if (circle != null) { circle.SetFrameSeconds(0.08f); circle.SetLife(life, 0.2f); }
             else
