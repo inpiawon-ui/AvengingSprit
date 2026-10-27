@@ -227,15 +227,15 @@ namespace Game.Editor.ReBorn
             var body = VScroll(page, "PasBody", 1080, 2000, 30 * 256f);
             const float ry0 = 1090, ry1 = 1331;
             var row = PlaceIn(Node(body, "PasRowTemplate"), 1080, 30, ry0, 1052, ry1);
-            // 가운데 세로 줄 — 다음 줄까지 이어지게 틈만큼 길게
-            var line = Img(Local(Node(row, "PasRowLine"), 30, ry0, 1052, ry1, 538, ry0, 542, ry1 + 16), "Components/rb_bar_fill_cyan");
-            line.preserveAspect = false;
-            line.color = new Color(1f, 1f, 1f, 0.45f);
+            // 가운데 레벨 줄 — 코덱스 시안 mock_pass_track(PD 2026-10-28 「줄이 숫자를 관통해 버그 같다」): 팔각 마디 안에 숫자, 줄은 마디 사이만.
+            //   위 토막(앞 줄에서 마디까지) · 아래 토막(마디에서 다음 줄까지). 마디 · 토막 그림은 화면 스크립트가 레벨 상태로 고른다
+            Img(Local(Node(row, "PasRowLineUp"), 30, ry0, 1052, ry1, 536, ry0 - 8, 544, ry0 + 40), PassPart("rb_pass_line_on", "rb_bar_fill_cyan")).preserveAspect = false;
+            Img(Local(Node(row, "PasRowLineDown"), 30, ry0, 1052, ry1, 536, ry0 + 176, 544, ry1 + 8), PassPart("rb_pass_line_off", "rb_bar_fill_cyan")).preserveAspect = false;
+            Img(Local(Node(row, "PasRowNode"), 30, ry0, 1052, ry1, 484, ry0 + 52, 596, ry0 + 164), PassPart("rb_pass_node_off", "rb_btn_icon_round")).preserveAspect = true;
             Cell(row, "PasRowFree", 30, ry0, 1052, ry1, 30, 468, false);
             Cell(row, "PasRowPrem", 30, ry0, 1052, ry1, 612, 1052, true);
-            Text(Local(Node(row, "PasRowLv"), 30, ry0, 1052, ry1, 480, ry0 + 115, 600, ry0 + 185), null, "3", 56, Cyan, TA.Center, number: true);   // 「현재」 줄은 화면 스크립트가 노랗게 · 위로
-            Img(Local(Node(row, "PasRowDot"), 30, ry0, 1052, ry1, 492, ry0 + 160, 522, ry0 + 190), "Components/rb_toggle_knob").color = Yellow;   // 흰 원에 노랑(빨간 점에 곱하면 빨갛게 남는다)
-            Text(Local(Node(row, "PasRowNow"), 30, ry0, 1052, ry1, 468, ry0 + 196, 612, ry0 + 246), "ui.rb.pass.now", "현재", 38, Yellow, TA.Center, heavy: true);
+            Text(Local(Node(row, "PasRowLv"), 30, ry0, 1052, ry1, 484, ry0 + 52, 596, ry0 + 164), null, "3", 56, Cyan, TA.Center, number: true);   // 마디 안 · 색은 화면 스크립트
+            Text(Local(Node(row, "PasRowNow"), 30, ry0, 1052, ry1, 468, ry0 + 166, 612, ry0 + 212), "ui.rb.pass.now", "현재", 36, Yellow, TA.Center, heavy: true);
 
             // 아래 — 모두 받기 · 프리미엄 열기 | 값 (아래 탭은 시즌 패스를 여는 동안 숨긴다)
             var ca = Place(Node(page, "PasClaimAll"), Edge.Bottom, 30, 2022, 306, 2192);
@@ -256,10 +256,17 @@ namespace Game.Editor.ReBorn
             // 칸 판 — 시안 크롭 앵커로 발주(rb_pass_cell · rb_pass_cell_claim). 들어오기 전엔 비슷한 키트 판
             so.FindProperty("_cellClaim").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell_claim") ? "Components/rb_pass_cell_claim" : "Components/rb_btn_secondary");
             so.FindProperty("_cellIdle").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell") ? "Components/rb_pass_cell" : "Components/rb_panel_base");
+            foreach (var (prop, part, alt) in new[] { ("_nodeNow", "rb_pass_node_now", "rb_btn_icon_round"), ("_nodeOn", "rb_pass_node_on", "rb_btn_icon_round"),
+                                                      ("_nodeOff", "rb_pass_node_off", "rb_btn_icon_round"), ("_lineOn", "rb_pass_line_on", "rb_bar_fill_cyan"),
+                                                      ("_lineOff", "rb_pass_line_off", "rb_bar_fill_cyan") })
+                so.FindProperty(prop).objectReferenceValue = KitSprite(PassPart(part, alt));
             so.FindProperty("_cellDone").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell") ? "Components/rb_pass_cell" : "Components/rb_panel_base");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
         }
+
+        /// <summary>레벨 줄 부품 — 발주한 그림이 들어오기 전엔 비슷한 키트 그림.</summary>
+        private static string PassPart(string part, string alt) => KitHas($"Components/{part}") ? $"Components/{part}" : $"Components/{alt}";
 
         // 보상 칸 — 시안: 아이콘(왼쪽) · 수량(위) · 상태 또는 보상 이름(아래) · 프리미엄은 오른쪽 위 자물쇠
         //   시안 좌표 — 무료 칸 아이콘 가운데 x 178 · 글자 305 / 프리미엄 790 · 888

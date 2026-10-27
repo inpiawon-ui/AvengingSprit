@@ -19,17 +19,20 @@ namespace Game.Module.Lobby
     {
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();
         [SerializeField] private Sprite _cellClaim, _cellIdle, _cellDone;
+        // 레벨 줄 — 마디(현재 금빛 · 지나온 하늘색 · 아직 회색) · 줄 토막(지나온 하늘색 · 아직 회색). 시안 mock_pass_track
+        [SerializeField] private Sprite _nodeNow, _nodeOn, _nodeOff, _lineOn, _lineOff;
 
         // 시안 pass — 받음 초록 · 받기 노랑 · 아직이면 보상 이름(흐린 글자) · 「현재」 줄 숫자는 노랗게 위로
         private static readonly Color StateDone = new(0.36f, 0.86f, 0.55f, 1f);
         private static readonly Color StateClaim = new(1f, 0.79f, 0.24f, 1f);
         private static readonly Color StateDim = new(0.62f, 0.66f, 0.78f, 1f);
-        private static readonly Color LvNormal = new(0.24f, 0.90f, 1f, 1f);
-        private const float NowLift = 28f;   // 「현재」 줄 숫자를 올리는 만큼(게임 px · 시안 42)
+        private static readonly Color LvOn = new(0.24f, 0.90f, 1f, 1f);
+        private static readonly Color LvOff = new(0.55f, 0.60f, 0.70f, 1f);
+        private const float NowGap = 34f;   // 「현재」 글자만큼 아래 줄 토막을 줄인다(게임 px)
         private const string RewardHost = "vampire";   // 이번 시즌 프리미엄 Lv 30 보상 호스트(배너 얼굴)
 
         private UIBinder _ui;
-        private float _lvBaseY = float.NaN;
+        private float _downBaseY = float.NaN, _downBaseH;
         private RbLobbyUI _shell;
         private readonly List<Transform> _rows = new();
         private float _rowStep;
@@ -89,16 +92,23 @@ namespace Game.Module.Lobby
                 if (!on) continue;
                 int level = i + 1;
                 TextIn(_rows[i], "PasRowLv", level.ToString());
-                // 「현재」 표시 — 다음에 열릴 단계(다 열었으면 마지막) · 숫자는 노랗게 위로, 아래에 점과 「현재」
-                bool now = level == Math.Min(s.Tier + 1, s.TierMax);
+                // 레벨 마디 — 현재(다음에 열릴 단계, 다 열었으면 마지막) 금빛 · 지나온 하늘색 · 아직 회색. 「현재」 는 마디 아래
+                int cur = Math.Min(s.Tier + 1, s.TierMax);
+                bool now = level == cur, passed = level < cur, next = level == cur + 1;   // 시안 — 바로 다음 레벨까지 하늘색
                 _ui.Find(_rows[i], "PasRowNow")?.gameObject.SetActive(now);
-                _ui.Find(_rows[i], "PasRowDot")?.gameObject.SetActive(now);
-                if (_ui.Find(_rows[i], "PasRowLv") is RectTransform lv)
+                SetSprite(_rows[i], "PasRowNode", now ? _nodeNow : passed || next ? _nodeOn : _nodeOff);
+                SetSprite(_rows[i], "PasRowLineUp", level <= cur + 1 ? _lineOn : _lineOff);   // 앞 줄에서 여기까지(다음 레벨까지 이어진다)
+                SetSprite(_rows[i], "PasRowLineDown", level <= cur ? _lineOn : _lineOff);      // 여기서 다음 레벨로
+                if (_ui.Find(_rows[i], "PasRowLineDown") is RectTransform down)
                 {
-                    if (float.IsNaN(_lvBaseY)) _lvBaseY = lv.anchoredPosition.y;
-                    lv.anchoredPosition = new Vector2(lv.anchoredPosition.x, _lvBaseY + (now ? NowLift : 0f));
-                    if (lv.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI lt) lt.color = now ? StateClaim : LvNormal;
+                    if (float.IsNaN(_downBaseY)) { _downBaseY = down.anchoredPosition.y; _downBaseH = down.sizeDelta.y; }
+                    // 「현재」 글자 자리만큼 아래 토막 위쪽을 줄인다(중심을 내려 위만 잘리게)
+                    float cut = now ? NowGap : 0f;
+                    down.sizeDelta = new Vector2(down.sizeDelta.x, _downBaseH - cut);
+                    down.anchoredPosition = new Vector2(down.anchoredPosition.x, _downBaseY - cut * 0.5f);
                 }
+                if (_ui.Find(_rows[i], "PasRowLv")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI lt)
+                    lt.color = now ? StateClaim : passed || next ? LvOn : LvOff;
                 Cell(_rows[i], "PasRowFree", tiers[i].Free, level, false, s, true);
                 Cell(_rows[i], "PasRowPrem", tiers[i].Premium, level, true, s, s.HasPremium);
             }
@@ -169,6 +179,11 @@ namespace Game.Module.Lobby
                 Refresh();
             }
             finally { _busy = false; }
+        }
+
+        private void SetSprite(Transform root, string node, Sprite sprite)
+        {
+            if (sprite != null && _ui.Find(root, node)?.GetComponent<Image>() is Image img) img.sprite = sprite;
         }
 
         private void TextIn(Transform root, string node, string value)
