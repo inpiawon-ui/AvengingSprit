@@ -93,14 +93,14 @@ namespace Game.Editor.ReBorn
             Text(Corner(Node(c, "GrwStarAskLine"), 296f, 410f, 600f, 462f), null, "갱스터 성급 2 → 3", 56, White, TA.Left, heavy: true);
 
             var shard = Corner(Node(c, "GrwStarAskShard"), 205f, 505f, 395f, 670f);
-            Img(shard, "Components/rb_slot_common");
+            Img(shard, "Components/rb_panel_base");   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27
             Img(Corner(Node(c, "GrwStarAskShardIcon"), 262f, 518f, 322f, 578f), "Icons/rb_icon_shard_96");
             Img(Corner(Node(c, "GrwStarAskShardFace"), 324f, 568f, 378f, 622f), "Icons/rb_icon_mode_ghost_96");
             Text(Corner(Node(c, "GrwStarAskShardCount"), 220f, 588f, 324f, 622f), null, "20", 56, White, TA.Right, number: true);
             Text(Corner(Node(c, "GrwStarAskShardName"), 215f, 626f, 385f, 656f), null, "갱스터 조각", 38, White, TA.Center, heavy: true);
 
             var gold = Corner(Node(c, "GrwStarAskGold"), 405f, 505f, 595f, 670f);
-            Img(gold, "Components/rb_slot_ssr");
+            Img(gold, "Components/rb_panel_base");
             Img(Corner(Node(c, "GrwStarAskGoldIcon"), 468f, 518f, 532f, 582f), "Icons/rb_icon_currency_gold_96");
             Text(Corner(Node(c, "GrwStarAskGoldCount"), 415f, 588f, 585f, 622f), null, "1,200", 56, White, TA.Center, number: true);
             Text(Corner(Node(c, "GrwStarAskGoldName"), 415f, 626f, 585f, 656f), "ui.rb.result.gold", "골드", 38, White, TA.Center, heavy: true);

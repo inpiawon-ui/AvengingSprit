@@ -1090,9 +1090,10 @@ namespace Game.Editor.ReBorn
             Img(PutPx(Node(c, "RbPauseHostBack"), c, 176f, 868f, 188f, 188f), "Components/rb_panel_base");
             Img(PutPx(Node(c, "RbPauseHostFace"), c, 176f, 868f, 184f, 184f), "Icons/rb_icon_mode_ghost_96");
             Img(PutPx(Node(c, "RbPauseHostFrame"), c, 176f, 868f, 212f, 212f), "Components/rb_pause_host_frame_r");
-            Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 95f, 785f, 34f, 24f), "Components/rb_rarity_r");
-            Text(PutPx(Node(c, "RbPauseHostName"), c, 360f, 775f, 104f, 40f), null, "갱스터", 42, White, TA.Left, heavy: true);
-            Img(PutPx(Node(c, "RbPauseHostGrade"), c, 430f, 776f, 40f, 28f), "Components/rb_rarity_r");
+            // 얼굴 모서리 — 왼쪽 위 속성 · 오른쪽 위 등급(PD 2026-10-27)
+            Img(PutPx(Node(c, "RbPauseHostAffCorner"), c, 96f, 788f, 34f, 34f), "Icons/rb_icon_aff_force_128");
+            Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 252f, 786f, 40f, 26f), "Components/rb_rarity_r");
+            Text(PutPx(Node(c, "RbPauseHostName"), c, 477f, 775f, 342f, 40f), null, "갱스터", 42, White, TA.Left, heavy: true);   // 등급은 얼굴 오른쪽 위로 옮겼다 — 이름 칸을 넓게
             var hp = PutPx(Node(c, "RbPauseHp"), c, 477f, 816f, 342f, 30f);
             Img(Inside2(Node(hp, "RbPauseHpHeart"), 0f, 1f, 28f, 28f), "Icons/rb_icon_stat_hp_48");
             Img(Inside2(Node(hp, "RbPauseHpTrack"), 38f, 1f, 304f, 28f), "Components/rb_bar_track");
@@ -1114,14 +1115,14 @@ namespace Game.Editor.ReBorn
             }
 
             var settings = PutPx(Node(c, "RbPauseSettings"), c, 221f, 1031f, 242f, 54f);
-            Btn(settings, "Components/rb_btn_secondary");
+            Btn(settings, "Components/rb_pause_btn_secondary").image.pixelsPerUnitMultiplier = 2f;   // 시안 그대로 발주한 버튼 판(납품이 칸의 2배)
             Text(Stretch(Node(settings, "RbPauseSettingsText")), "ui.rb.rail.settings", "설정", 40, White, TA.Center, heavy: true);
             var abandon = PutPx(Node(c, "RbPauseAbandon"), c, 498f, 1031f, 242f, 54f);
-            Btn(abandon, "Components/rb_btn_secondary");
+            Btn(abandon, "Components/rb_pause_btn_secondary").image.pixelsPerUnitMultiplier = 2f;
             Text(Stretch(Node(abandon, "RbPauseAbandonText")), "ui.rb.pause.abandon", "포기하기", 40, Red, TA.Center, heavy: true);
             var cont = PutPx(Node(c, "RbPauseContinue"), c, 360f, 1110f, 524f, 70f);
-            Btn(cont, "Components/rb_btn_primary");
-            Text(Stretch(Node(cont, "RbPauseContinueText")), "ui.rb.pause.continue", "계속하기", 50, Ink, TA.Center, heavy: true);
+            Btn(cont, "Components/rb_pause_btn_primary").image.pixelsPerUnitMultiplier = 1.9f;
+            Text(Stretch(Node(cont, "RbPauseContinueText")), "ui.rb.pause.continue", "계속하기", 60, Ink, TA.Center, heavy: true);   // 시안 글자 크기
 
             // 포기 확인 — 한 번 더 묻는다
             var ab = Stretch(Node(c, "RbAbandon"));

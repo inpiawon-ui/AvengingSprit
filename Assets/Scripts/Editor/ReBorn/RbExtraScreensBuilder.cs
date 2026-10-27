@@ -114,7 +114,7 @@ namespace Game.Editor.ReBorn
             Img(band, "Components/rb_panel_base").preserveAspect = false;
             Img(Corner(Node(c, "RbBossWarnWord"), 230f, 268f, 490f, 316f), "WordArt/rb_word_word_warning");
             var face = Corner(Node(c, "RbBossWarnFaceBox"), 30f, 322f, 190f, 428f);
-            Img(face, "Components/rb_slot_common").preserveAspect = false;
+            Img(face, "Components/rb_panel_base").preserveAspect = false;   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27
             face.gameObject.AddComponent<RectMask2D>();
             Img(Inside(Node(face, "RbBossWarnFace"), 80f, 53f, 150f, 150f), "Icons/rb_icon_room_boss_96");
             var weak = Text(Corner(Node(c, "RbBossWarnWeak"), 205f, 326f, 696f, 384f), null, "약점: 나온 머리가 들어가기 전에 때려라", 38, White, TA.Left, heavy: true);

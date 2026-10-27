@@ -105,7 +105,6 @@ namespace Game.Module.InGame
             if (_ui.Get<Image>("RbPauseHostFrame") is Image frame)
                 frame.sprite = has && _hostFrames != null && grade < _hostFrames.Length ? _hostFrames[grade] : _ghostFrame;
             _ui.SetText("RbPauseHostName", has ? he.DisplayName : Localize.FromTable("ui.rb.pause.no_host", "몸 없음 · 유령"));
-            SetIcon("RbPauseHostGrade", has && _gradeTags != null && grade < _gradeTags.Length ? _gradeTags[grade] : null);
             SetIcon("RbPauseHostGradeSmall", has && _gradeTags != null && grade < _gradeTags.Length ? _gradeTags[grade] : null);
 
             _ui.SetActive("RbPauseHp", has);
@@ -119,6 +118,7 @@ namespace Game.Module.InGame
             var aff = has ? AffinityRule.KindOf(host) : Affinity.None;
             bool showAff = has && AffinityRule.Enabled && aff != Affinity.None;
             _ui.SetActive("RbPauseAff", showAff);
+            SetIcon("RbPauseHostAffCorner", showAff && _affinityIcons != null && (int)aff < _affinityIcons.Length ? _affinityIcons[(int)aff] : null);
             if (showAff)
             {
                 SetIcon("RbPauseAffIcon", _affinityIcons != null && (int)aff < _affinityIcons.Length ? _affinityIcons[(int)aff] : null);

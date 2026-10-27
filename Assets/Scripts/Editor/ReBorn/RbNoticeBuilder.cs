@@ -49,7 +49,7 @@ namespace Game.Editor.ReBorn
             {
                 float x0 = 102f + i * 132f;
                 var cell = Corner(Node(c, $"NotRewardCell{i}"), x0, 578f, x0 + 120f, 778f);
-                Img(cell, "Components/rb_slot_common");
+                Img(cell, "Components/rb_panel_base");   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27 「7200 다이아 테두리 다른 네모로」
                 Img(Corner(Node(cell, $"NotRewardCell{i}Icon"), 26f, 14f, 94f, 82f), "Icons/rb_icon_currency_gold_96");
                 Text(Corner(Node(cell, $"NotRewardCell{i}Count"), 4f, 88f, 116f, 124f), null, "432", 48, White, TA.Center, number: true);
                 Text(Corner(Node(cell, $"NotRewardCell{i}Label"), 6f, 128f, 114f, 188f), null, "골드", 34, White, TA.Center, heavy: true).enableWordWrapping = true;   // 「Summon Tickets」 는 두 줄

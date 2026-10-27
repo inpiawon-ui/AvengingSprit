@@ -402,7 +402,7 @@ namespace Game.Editor.ReBorn
                 var cell = Node(content, $"ProfCell{i}");
                 cell.anchorMin = cell.anchorMax = new Vector2(0f, 1f); cell.pivot = new Vector2(0f, 1f);
                 cell.sizeDelta = new Vector2(104f, 104f); cell.anchoredPosition = new Vector2(x, -y);
-                Btn(cell, "Components/rb_slot_common");
+                Btn(cell, "Components/rb_panel_base");   // 로비 칸 그림(rb_slot) 대신 남색 판 — PD 2026-10-27
                 Img(Inside(Node(cell, $"ProfCell{i}Face"), 52f, 52f, 80f, 80f), "Icons/rb_icon_mode_ghost_96");
                 var tt = Text(Inside(Node(cell, $"ProfCell{i}Text"), 52f, 52f, 96f, 90f), null, "", 26, White, TA.Center, heavy: true);
                 tt.enableWordWrapping = true;
