@@ -142,6 +142,7 @@ namespace Game.Module.Lobby
             BuildCards();
             RefreshAll();
             SelectTab("Battle");
+            LayoutTall();
             LayoutRails();
             // 실패 결과 「성장 ›」 으로 왔으면 그 몸의 성장 화면부터(시안 result-fail)
             string growHost = LobbyRequest.TakeGrowthHost();
@@ -154,7 +155,61 @@ namespace Game.Module.Lobby
         // 화면 높이가 바뀌면(회전 · 창 크기) 양옆 아이콘 간격을 다시 잰다
         private void OnRectTransformDimensionsChange()
         {
-            if (_ui != null) LayoutRails();
+            if (_ui == null) return;
+            LayoutTall();
+            LayoutRails();
+        }
+
+        // ── 긴 화면(20:9) — 16:9(1280 높이)보다 남는 세로가 구슬과 챕터 칸 사이에 몰려 비었다(PD 2026-10-27).
+        //    남는 만큼 나눠 준다: 위 묶음은 내리고 구슬을 키우고, 챕터 칸은 아래 끝을 둔 채 위로 키워 글줄을 칸 가운데에 모은다.
+        //    16:9 · 4:3 은 남는 세로가 없어 손대지 않는다
+        private const float DesignHeight = 1280f;   // 16:9 화면 높이 — 이 배치가 보기 좋다(PD 확인 화면)
+        private const float TopShare = 0.4f, CardShare = 0.45f, RowSpread = 0.25f, OrbGrowPer = 0.001f, OrbGrowMax = 0.2f;
+        private static readonly string[] TallTopNodes = { "StageOrb", "StageHost", "StageGhost" };
+        private readonly Dictionary<RectTransform, (Vector2 pos, Vector2 size)> _tallBase = new();
+
+        private void LayoutTall()
+        {
+            var root = (RectTransform)transform;
+            if (root.rect.height <= 0f) return;
+            float extra = Mathf.Max(0f, root.rect.height - DesignHeight);
+            float grow = Mathf.Min(OrbGrowMax, extra * OrbGrowPer);
+            float top = extra * TopShare, d = extra * CardShare;
+            if (_ui.Find("StageTitle") is RectTransform title) Shift(title, -top * 0.5f);
+            foreach (var n in TallTopNodes)
+            {
+                if (_ui.Find(n) is not RectTransform r) continue;
+                Shift(r, -top);
+                r.localScale = Vector3.one * (1f + grow);
+            }
+            if (_ui.Find("StagePrompt") is RectTransform prompt) Shift(prompt, d);
+            if (_ui.Find("ChapterCard") is not RectTransform card) return;
+            var cb = Base(card);
+            card.sizeDelta = new Vector2(cb.size.x, cb.size.y + d);
+            card.anchoredPosition = new Vector2(cb.pos.x, cb.pos.y + d * 0.5f);
+            // 자식은 칸 가운데 기준이라 그대로 가운데에 모인다 — 위 한 줄만 윗변에 붙이고, 제목 줄 · 안내 줄은 위아래로 조금 벌린다
+            if (_ui.Find("ChapterTopLine") is RectTransform line) Shift(line, d * 0.5f);
+            if (_ui.Find("ChapterOpen") is RectTransform open)
+            {
+                var ob = Base(open);
+                open.sizeDelta = new Vector2(ob.size.x, ob.size.y + d);
+            }
+            foreach (var n in new[] { "ChapterNoText", "ChapterNameText" })
+                if (_ui.Find(n) is RectTransform r) Shift(r, d * RowSpread);
+            foreach (var n in new[] { "ChapterInfoText", "ChapterAdvIcon", "ChapterAdvText" })
+                if (_ui.Find(n) is RectTransform r) Shift(r, -d * RowSpread);
+        }
+
+        private (Vector2 pos, Vector2 size) Base(RectTransform r)
+        {
+            if (!_tallBase.TryGetValue(r, out var b)) _tallBase[r] = b = (r.anchoredPosition, r.sizeDelta);
+            return b;
+        }
+
+        private void Shift(RectTransform r, float dy)
+        {
+            var b = Base(r);
+            r.anchoredPosition = new Vector2(r.anchoredPosition.x, b.pos.y + dy);
         }
 
         // ── 양옆 아이콘 — 16:9 는 20:9 시안보다 세로가 짧아 챕터 카드에 아래 아이콘이 가린다. 간격만 줄인다 ──────────
