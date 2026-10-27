@@ -300,6 +300,13 @@ namespace Game.Module.Lobby
         {
             int next = Mathf.Clamp(_chapter + d, 1, Mathf.Max(1, _player.ChapterCount));
             if (next == _chapter) return;
+            // 잠긴 챕터로는 넘어가지 않는다(PD 2026-10-28 「챕터 잠겨 있을 때는 옆으로 지나가기 눌러도 안 되게」) — 무엇을 깨야 열리는지만 알린다
+            if (next > _player.UnlockedChapter)
+            {
+                GameSound.Cue("ui.tap");
+                SystemPopup.Show(Localize.Format("ui.chapter.locked_hint", next - 1), null, Localize.Get("ui.common.ok"), null);
+                return;
+            }
             _chapter = next;
             GameSound.Cue("ui.tap");
             RefreshChapter();
@@ -324,7 +331,7 @@ namespace Game.Module.Lobby
             bool cleared = _chapter < _player.UnlockedChapter || _chapter <= _player.ClearedChapter;
             RefreshGauge(cleared ? rooms : ChapterOpen ? Mathf.Clamp(_player.ReachedStage, 0, rooms) : 0, rooms);
             SetActiveButton("ChapterPrev", _chapter > 1);
-            // 다음 챕터가 잠겼으면 자물쇠(시안) — 누르면 넘어가지만 출전은 막힌다
+            // 다음 챕터가 잠겼으면 자물쇠(시안) — 누르면 넘어가지 않고 「챕터 N 클리어하면 열림」 안내(StepChapter)
             var nextIcon = _ui.Get<Image>("ChapterNextIcon");
             if (nextIcon != null) nextIcon.sprite = _chapter + 1 > _player.UnlockedChapter ? _iconLock : _iconNext;
             SetActiveButton("ChapterNext", _chapter < _player.ChapterCount);

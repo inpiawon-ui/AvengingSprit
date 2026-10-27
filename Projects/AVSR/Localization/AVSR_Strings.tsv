@@ -539,7 +539,7 @@ ui.chapter.title	챕터 선택	チャプター選択	Select Chapter	選擇章節
 ui.chapter.locked	잠김	ロック中	Locked	未解鎖	未解锁
 ui.chapter.cleared	클리어	クリア済み	Cleared	已通關	已通关
 ui.chapter.new	도전 가능	挑戦可能	Available	可挑戰	可挑战
-ui.chapter.locked_hint	챕터 {0}을(를) 클리어하면 열립니다	チャプター{0}をクリアすると解放されます	Clear Chapter {0} to unlock	通關第{0}章後解鎖	通关第{0}章后解锁
+ui.chapter.locked_hint	챕터 {0} 클리어 시 열려요	チャプター{0}をクリアすると解放されます	Clear Chapter {0} to unlock	通關第{0}章後解鎖	通关第{0}章后解锁
 ui.growth.tab.ghost	유령 육성	ゴースト育成	Ghost	幽靈培養	幽灵培养
 ui.growth.tab.host	호스트 육성	ホスト育成	Hosts	宿主培養	宿主培养
 ui.growth.tab.stats	능력치	能力値	Stats	能力值	属性
