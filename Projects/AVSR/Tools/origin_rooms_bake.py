@@ -116,9 +116,62 @@ def tracks(cells, w, h):
     return out
 
 
+# 몸을 막는 칸 · 그중 틀 수 있는 칸(물 · 울타리 — 바위는 원작 모양을 지키려 두지 않는다)
+BODY_BLOCK = {'#', 'o', '~', '='}
+OPENABLE = {'~', '='}
+
+
+def open_islands(cells, w, h, spawns):
+    """물 · 울타리에 둘러싸여 아래 입구에서 못 가는 적 자리가 있으면 한 칸씩 터서 잇는다(PD 2026-10-27).
+
+    원작은 「물 건너편에서 쏘게」 적을 섬에 가뒀지만, 우리 게임은 그 몸에 **빙의**한다 — 갇힌 몸을 빼앗으면 못 나오고,
+    근접 몸은 칠 수가 없다(1챕터 7번 방). 원거리 적이 물 뒤에서 쏘는 맛은 남기고 길을 한 칸만 낸다.
+    트는 칸은 이미 갈 수 있는 곳에 바로 닿는 칸 → 방 한가운데에 가까운 칸 순서. 튼 칸 수를 돌려준다.
+    """
+    g = list(cells)
+    opened = 0
+    cx, cy = (w - 1) / 2, (h - 1) / 2
+
+    def nb(x, y):
+        return [(a, b) for a, b in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if 0 <= a < w and 0 <= b < h]
+
+    def free(q):
+        return g[q[1] * w + q[0]] not in BODY_BLOCK
+
+    def flood(starts):
+        seen, stack = set(), list(starts)
+        while stack:
+            q = stack.pop()
+            if q in seen or not free(q):
+                continue
+            seen.add(q)
+            stack += [n for n in nb(*q) if n not in seen]
+        return seen
+
+    for _ in range(w * h):
+        reach = flood([(x, h - 1) for x in range(w)])
+        cut = [c for c in (tuple(map(int, k.split(','))) for k in spawns) if c not in reach]
+        if not cut:
+            break
+        isle = flood([cut[0]])
+        wall = {q for p in isle for q in nb(*p) if g[q[1] * w + q[0]] in OPENABLE}
+        if not wall:
+            break   # 바위로만 막혔다 — 원작 모양 그대로 둔다
+        best = min(wall, key=lambda q: (not any(n in reach for n in nb(*q)), (q[0] - cx) ** 2 + (q[1] - cy) ** 2))
+        g[best[1] * w + best[0]] = '.'
+        opened += 1
+    return ''.join(g), opened
+
+
+OPENED = []
+
+
 def bake_room(ch, r, lines):
     rid = f'ROOM_CH{ch}_{r["room"]:03d}'
     w, rows, cells = r['w'], r['h'], r['cells']
+    cells, n_open = open_islands(cells, w, rows, r['spawns'])
+    if n_open:
+        OPENED.append(f'{rid} {n_open}칸')
     height = BOTTOM + rows * CELL + GATE
     lines.append('\t'.join(['ROOM', rid, f'원작 {r["source"].split("/")[-1]}', f'{r["ours"]} · 원작 {r["source"]}']))
     lines.append('\t'.join(['SIZE', fmt(WIDTH_M), fmt(height), fmt(CELL)]))
@@ -154,6 +207,7 @@ def main(chapters):
         f.write('\n'.join(lines) + '\n')
     print('\n'.join(stats))
     print(OUT, len(lines), '줄')
+    print("섬 트기(갇힌 적 자리에 길 냄):", len(OPENED), "방 —", ", ".join(OPENED))
 
 
 if __name__ == '__main__':

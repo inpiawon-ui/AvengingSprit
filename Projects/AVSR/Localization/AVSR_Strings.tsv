@@ -139,7 +139,7 @@ card.c011.desc	공격 피해가 늘어난다.	攻撃ダメージが上がる。	
 card.c012.name	속사	速射	Rapid Fire	速射	速射
 card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.	射擊速度更快。	射击速度更快。
 card.c013.name	필살기 초기화	必殺技リセット	Special Reset	必殺技重置	必杀技重置
-card.c013.desc	지금 몸의 필살기를 다시 쓸 수 있다.	今の体の必殺技をもう一度使える。	Use your current body's Special again.	可再次使用當前身體的必殺技。	可再次使用当前身体的必杀技。
+card.c013.desc	호스트의 필살기를 다시 쓸 수 있다.	今の体の必殺技をもう一度使える。	Use your current body's Special again.	可再次使用當前身體的必殺技。	可再次使用当前身体的必杀技。
 card.c014.name	관통탄	貫通弾	Piercing Shot	貫穿彈	贯穿弹
 card.c014.desc	탄이 적을 뚫고 지나간다.	弾が敵を貫通する。	Shots pierce through foes.	子彈穿透敵人。	子弹穿透敌人。
 card.c015.name	벽 반사	壁反射	Ricochet	牆面反彈	墙面反弹
@@ -1427,6 +1427,7 @@ ui.rb.result.lobby	로비로	ロビーへ	Lobby	回大廳	回大厅
 ui.rb.pause.title	일시정지	一時停止	Paused	暫停	暂停
 ui.rb.pause.story	스토리	ストーリー	Story	劇情	剧情
 ui.rb.pause.build	지금 빌드	現在のビルド	Current Build	目前配置	当前配置
+ui.rb.pause.body	호스트	ホスト	Host	宿主	宿主
 ui.rb.pause.no_card	아직 고른 카드가 없어요	まだカードを選んでいません	No cards picked yet	尚未選擇卡片	尚未选择卡片
 ui.rb.pause.no_host	몸 없음 · 유령	体なし・ゴースト	No body · Ghost	無身體 · 幽靈	无身体 · 幽灵
 ui.rb.pause.abandon	포기하기	あきらめる	Give Up	放棄	放弃

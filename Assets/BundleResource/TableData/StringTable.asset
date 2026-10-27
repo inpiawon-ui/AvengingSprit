@@ -4537,8 +4537,8 @@ MonoBehaviour:
     _zhHant: "\u5FC5\u6BBA\u6280\u91CD\u7F6E"
     _zhHans: "\u5FC5\u6740\u6280\u91CD\u7F6E"
   - _key: card.c013.desc
-    _ko: "\uC9C0\uAE08 \uBAB8\uC758 \uD544\uC0B4\uAE30\uB97C \uB2E4\uC2DC \uC4F8
-      \uC218 \uC788\uB2E4."
+    _ko: "\uD638\uC2A4\uD2B8\uC758 \uD544\uC0B4\uAE30\uB97C \uB2E4\uC2DC \uC4F8 \uC218
+      \uC788\uB2E4."
     _ja: "\u4ECA\u306E\u4F53\u306E\u5FC5\u6BBA\u6280\u3092\u3082\u3046\u4E00\u5EA6\u4F7F\u3048\u308B\u3002"
     _en: Use your current body's Special again.
     _zhHant: "\u53EF\u518D\u6B21\u4F7F\u7528\u7576\u524D\u8EAB\u9AD4\u7684\u5FC5\u6BBA\u6280\u3002"
@@ -11678,3 +11678,9 @@ MonoBehaviour:
     _en: '{0} Lv {1} shattered, but nothing came back'
     _zhHant: "{0} Lv {1} \u788E\u88C2\u4E86\uFF0C\u537B\u4EC0\u9EBC\u4E5F\u6C92\u56DE\u4F86"
     _zhHans: "{0} Lv {1} \u788E\u88C2\u4E86\uFF0C\u5374\u4EC0\u4E48\u4E5F\u6CA1\u56DE\u6765"
+  - _key: ui.rb.pause.body
+    _ko: "\uD638\uC2A4\uD2B8"
+    _ja: "\u30DB\u30B9\u30C8"
+    _en: Host
+    _zhHant: "\u5BBF\u4E3B"
+    _zhHans: "\u5BBF\u4E3B"

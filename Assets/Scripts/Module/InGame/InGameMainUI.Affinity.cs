@@ -32,6 +32,8 @@ namespace Game.Module.InGame
         {
             var img = _ui.Get<Image>("AffinityTriangle");
             if (img == null) return;
+            // RE:BORN 위 HUD 에서는 뺀다 — 작게 들어가 무슨 뜻인지 안 읽힌다(PD 2026-10-27 「속성 표시 일단 제거」)
+            if (_reborn) { img.gameObject.SetActive(false); _triangleShown = null; return; }
 
             var sprite = _hasRealHost && _battle != null ? _battle.AffinityTriangleOf(_affinityHostKey) : null;
             img.gameObject.SetActive(sprite != null);

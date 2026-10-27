@@ -789,6 +789,8 @@ namespace Game.Module.InGame
             _ui.SetActive("HostHpText", _hostBarShown);
             if (!_hostBarShown) return;
             _ui.SetText("HostHpText", $"{e.HostHp}/{e.HostHpMax}");
+            _shownHostHp = e.HostHp;
+            _shownHostHpMax = e.HostHpMax;
             _hostHpRatio = Ratio(e.HostHp, e.HostHpMax);
             SetFillSmooth("HostHpBarFill", _hostHpRatio, _hostBarWidth);
         }
@@ -1858,6 +1860,10 @@ namespace Game.Module.InGame
 
         /// <summary>「1-07 /16」.</summary>
         public string StageLine => _rbStageLine;
+        // 일시정지 「지금 몸」 체력 줄 — HUD 가 마지막에 그린 값
+        private int _shownHostHp, _shownHostHpMax;
+        public int ShownHostHp => _shownHostHp;
+        public int ShownHostHpMax => _shownHostHpMax;
         public BattleDirector Battle => _battle;
         /// <summary>지금 입은 몸(유령이면 null).</summary>
         public string ShownHostKey => _hasRealHost ? _affinityHostKey : null;
@@ -1872,6 +1878,7 @@ namespace Game.Module.InGame
         }
 
         public string CardNameOf(string buffKey) => _buffTable != null && _buffTable.Get(buffKey) is BuffEntry e ? e.DisplayName : buffKey;
+        public CardRarity CardRarityOf(string buffKey) => _buffTable != null && _buffTable.Get(buffKey) is BuffEntry e ? e.Rarity : CardRarity.Common;
 
         private void OnPause()
         {

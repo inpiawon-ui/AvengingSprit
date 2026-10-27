@@ -457,10 +457,9 @@ namespace Game.Editor.ReBorn
         // ── 레벨업 ───────────────────────────────────────────
 
         // 시안 levelup-selected(Core/ui.css .choice) — 카드 1024 x 300 · 목록 위 510 · 간격 28 · 왼쪽 28. 판 위 = 시안 140 줄
-        public const float CardTop0 = (510f - 140f) * S, CardStep = 328f * S, CardW = 1024f * S, CardH = 300f * S;
-
-        /// <summary>시안 1080 y → 판(720 x 1280, 위 = 시안 140 줄) 안 y.</summary>
-        private static float My(float y) => (y - 140f) * S;
+        // 카드 줄은 시안보다 135 아래 — 시안 자리면 제목 · 부제가 게임 HUD(체력 판 0~135 · Lv 줄 180) 밑에 깔린다(PD 2026-10-27)
+        public const float LvShift = 135f;
+        public const float CardTop0 = (510f - 140f) * S + LvShift, CardStep = 328f * S, CardW = 1024f * S, CardH = 300f * S;
 
         private static void BuildLevelUp(Transform root)
         {
@@ -486,10 +485,10 @@ namespace Game.Editor.ReBorn
             Mute(root, "BuffFrame", "BuffTitleText", "BuffNoteText");
             // 제목 워드아트 284~796 x 200~348 · 부제 42 px(#ABB2CE) 378~431 — 시안 levelup-selected 를 브라우저에서 잰 값
             var title = F(root, "BuffTitleArt");
-            PutPx(title, panel, 360f, My(274f), 512f * S, 148f * S);
+            PutPx(title, panel, 360f, 250f, 512f * S, 148f * S);   // Lv 줄(180) 아래
             Skin(title, "WordArt/rb_word_word_level_up", false);
             var sub = F(root, "BuffSubText");
-            PutPx(sub, panel, 360f, My(404.5f), 1024f * S, 53f * S);
+            PutPx(sub, panel, 360f, 340f, 1024f * S, 53f * S);
             Style(sub, 42, LvMuted, TA.Center);
 
             for (int i = 0; i < 3; i++) BuildLevelUpCard(root, panel, i);
@@ -1045,36 +1044,74 @@ namespace Game.Editor.ReBorn
             c.sizeDelta = new Vector2(720f, 1280f);
             Lock(c);
 
-            var box = PutPx(Node(c, "RbPauseBox"), c, 360f, 640f, 620f, 560f);
+            // 자리는 시안 mock_pause_panel_free_peak(720 × 1280 그대로) 를 잰 값 — 가운데 x · y, 폭 · 높이
+            var box = PutPx(Node(c, "RbPauseBox"), c, 360f, 699f, 640f, 942f);
             Img(box, "Components/rb_modal");
             var title = Node(c, "RbPauseTitle");
-            TitlePlate(c, title, 220f, 340f, 500f, 400f);
+            TitlePlate(c, title, 222f, 200f, 498f, 256f);
             if (title.GetComponent<TextMeshProUGUI>() == null) Text(title, "ui.rb.pause.title", "일시정지", 46, White, TA.Center, heavy: true);
-            CloseX(c, "RbPauseClose", 618f, 370f);
+            CloseX(c, "RbPauseClose", 636f, 228f);
 
-            Text(PutPx(Node(c, "RbPauseStage"), c, 200f, 450f, 260f, 56f), null, "1-07 /16", 56, White, TA.Left, number: true);
-            Text(PutPx(Node(c, "RbPauseMode"), c, 520f, 450f, 220f, 40f), "ui.rb.pause.story", "스토리", 32, Dim, TA.Right);
-            Text(PutPx(Node(c, "RbPauseBuildTitle"), c, 200f, 506f, 260f, 40f), "ui.rb.pause.build", "지금 빌드", 38, White, TA.Left, heavy: true);
-            for (int i = 0; i < 6; i++)
+            Text(PutPx(Node(c, "RbPauseStage"), c, 200f, 292f, 260f, 56f), null, "1-07 /30", 66, White, TA.Left, number: true);
+            Text(PutPx(Node(c, "RbPauseMode"), c, 560f, 295f, 184f, 36f), "ui.rb.pause.story", "스토리", 32, Dim, TA.Right);
+
+            // ① 지금 빌드 — 카드 4 × 2(132 × 152, 간격 147 · 168). 등급 칸 · 위 등급 글자 · 그림 · 이름 · 오른쪽 아래 Lv
+            Img(PutPx(Node(c, "RbPauseBuildBox"), c, 361f, 515f, 606f, 380f), "Components/rb_panel_base");
+            Img(PutPx(Node(c, "RbPauseBuildStar"), c, 88f, 345f, 26f, 26f), "Icons/rb_icon_star_on_48");
+            Text(PutPx(Node(c, "RbPauseBuildTitle"), c, 190f, 345f, 160f, 36f), "ui.rb.pause.build", "지금 빌드", 38, White, TA.Left, heavy: true);
+            for (int i = 0; i < 8; i++)
             {
-                var slot = PutPx(Node(c, $"RbPauseCard{i}"), c, 116f + 88f * i, 580f, 80f, 92f);
-                Img(Inside2(Node(slot, $"RbPauseCard{i}Frame"), 0f, 0f, 80f, 80f), "Components/rb_slot_common").preserveAspect = false;
-                Img(Inside2(Node(slot, $"RbPauseCard{i}Icon"), 6f, 6f, 68f, 68f), "Icons/rb_icon_card_up_96");
-                Text(Inside2(Node(slot, $"RbPauseCard{i}Lv"), 0f, 64f, 80f, 28f), null, "Lv 2", 28, Yellow, TA.Center, number: true);
+                float x0 = 76f + 147f * (i % 4), y0 = 370f + 168f * (i / 4);
+                var slot = PutPx(Node(c, $"RbPauseCard{i}"), c, x0 + 66f, y0 + 76f, 132f, 152f);
+                var empty = Stretch(Node(slot, $"RbPauseCard{i}Empty"));
+                Img(empty, "Components/rb_slot_common").color = new Color(1f, 1f, 1f, 0.35f);
+                Img(Inside2(Node(empty, $"RbPauseCard{i}Plus"), 42f, 52f, 48f, 48f), "Icons/rb_icon_sys_plus_48").color = new Color(1f, 1f, 1f, 0.35f);
+                var full = Stretch(Node(slot, $"RbPauseCard{i}Full"));
+                Img(Stretch(Node(full, $"RbPauseCard{i}Frame")), "Components/rb_slot_rare");
+                Text(Inside2(Node(full, $"RbPauseCard{i}Rarity"), 8f, 6f, 116f, 22f), null, "RARE", 26, LvMuted, TA.Center, heavy: true);
+                Img(Inside2(Node(full, $"RbPauseCard{i}Icon"), 22f, 28f, 88f, 88f), "Icons/rb_icon_card_up_96");
+                Text(Inside2(Node(full, $"RbPauseCard{i}Name"), 6f, 104f, 120f, 24f), null, "수호 방패", 30, White, TA.Center, heavy: true);
+                var lvTag = Inside2(Node(full, $"RbPauseCard{i}LvTag"), 80f, 126f, 48f, 22f);
+                Img(lvTag, "Components/rb_lv_tag");
+                Text(Stretch(Node(lvTag, $"RbPauseCard{i}Lv")), null, "Lv 2", 26, White, TA.Center, number: true);
             }
-            Text(PutPx(Node(c, "RbPauseNoCard"), c, 360f, 580f, 540f, 40f), "ui.rb.pause.no_card", "아직 고른 카드가 없어요", 34, Dim, TA.Center);
-            Img(PutPx(Node(c, "RbPauseHostFace"), c, 106f, 668f, 56f, 56f), "Icons/rb_icon_mode_ghost_96");
-            Text(PutPx(Node(c, "RbPauseHostName"), c, 260f, 668f, 220f, 40f), null, "아마존", 36, White, TA.Left, heavy: true);
-            Img(PutPx(Node(c, "RbPauseSkill0"), c, 420f, 668f, 56f, 56f), "Icons/rb_icon_skill_base_144");
-            Img(PutPx(Node(c, "RbPauseSkill1"), c, 486f, 668f, 56f, 56f), "Icons/rb_icon_skill_base_144");
 
-            var settings = PutPx(Node(c, "RbPauseSettings"), c, 225f, 750f, 250f, 70f);
+            // ② 호스트 — 큰 얼굴(등급 테두리) · 이름 + 등급 · 체력 줄 · 속성 꼬리표 · 액티브 / 필살기
+            Img(PutPx(Node(c, "RbPauseBodyBox"), c, 361f, 851f, 606f, 267f), "Components/rb_panel_base");
+            Img(PutPx(Node(c, "RbPauseBodyStar"), c, 88f, 738f, 26f, 26f), "Icons/rb_icon_star_on_48");
+            Text(PutPx(Node(c, "RbPauseBodyTitle"), c, 190f, 738f, 160f, 36f), "ui.rb.pause.body", "호스트", 38, White, TA.Left, heavy: true);
+            Img(PutPx(Node(c, "RbPauseHostFace"), c, 176f, 868f, 188f, 188f), "Icons/rb_icon_mode_ghost_96");
+            Img(PutPx(Node(c, "RbPauseHostFrame"), c, 176f, 868f, 212f, 212f), "Components/rb_host_frame_r");
+            Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 95f, 785f, 34f, 24f), "Components/rb_rarity_r");
+            Text(PutPx(Node(c, "RbPauseHostName"), c, 360f, 775f, 104f, 40f), null, "갱스터", 42, White, TA.Left, heavy: true);
+            Img(PutPx(Node(c, "RbPauseHostGrade"), c, 430f, 776f, 40f, 28f), "Components/rb_rarity_r");
+            var hp = PutPx(Node(c, "RbPauseHp"), c, 477f, 816f, 342f, 30f);
+            Img(Inside2(Node(hp, "RbPauseHpHeart"), 0f, 1f, 28f, 28f), "Icons/rb_icon_stat_hp_48");
+            Img(Inside2(Node(hp, "RbPauseHpTrack"), 38f, 1f, 304f, 28f), "Components/rb_bar_track");
+            var fill = Img(Inside2(Node(hp, "RbPauseHpFill"), 41f, 4f, 298f, 22f), "Components/rb_bar_fill_red");
+            fill.type = Image.Type.Filled; fill.fillMethod = Image.FillMethod.Horizontal; fill.preserveAspect = false;
+            Text(Inside2(Node(hp, "RbPauseHpText"), 38f, 0f, 304f, 30f), null, "182 / 207", 30, White, TA.Center, number: true);
+            var aff = PutPx(Node(c, "RbPauseAff"), c, 477f, 863f, 342f, 43f);
+            Img(aff, "Components/rb_info_chip");
+            Img(Inside2(Node(aff, "RbPauseAffIcon"), 12f, 4f, 35f, 35f), "Icons/rb_icon_aff_force_128");
+            Text(Inside2(Node(aff, "RbPauseAffText"), 58f, 4f, 270f, 35f), null, "파워", 32, White, TA.Left, heavy: true);
+            for (int k = 0; k < 2; k++)
+            {
+                var sb = PutPx(Node(c, $"RbPauseSkillBox{k}"), c, k == 0 ? 389f : 565f, 933f, 166f, 77f);
+                Img(sb, "Components/rb_panel_base");
+                var icon = Inside2(Node(sb, $"RbPauseSkill{k}"), 8f, 8f, 61f, 61f);
+                Img(icon, "Icons/rb_icon_skill_base_144");
+                Text(Inside2(Node(sb, $"RbPauseSkill{k}Label"), 76f, 8f, 84f, 61f), k == 0 ? "ui.rb.growth.act" : "ui.rb.growth.ult",
+                     k == 0 ? "액티브" : "필살기", 32, White, TA.Left, heavy: true);
+            }
+
+            var settings = PutPx(Node(c, "RbPauseSettings"), c, 221f, 1031f, 242f, 54f);
             Btn(settings, "Components/rb_btn_secondary");
             Text(Stretch(Node(settings, "RbPauseSettingsText")), "ui.rb.rail.settings", "설정", 40, White, TA.Center, heavy: true);
-            var abandon = PutPx(Node(c, "RbPauseAbandon"), c, 495f, 750f, 250f, 70f);
+            var abandon = PutPx(Node(c, "RbPauseAbandon"), c, 498f, 1031f, 242f, 54f);
             Btn(abandon, "Components/rb_btn_secondary");
             Text(Stretch(Node(abandon, "RbPauseAbandonText")), "ui.rb.pause.abandon", "포기하기", 40, Red, TA.Center, heavy: true);
-            var cont = PutPx(Node(c, "RbPauseContinue"), c, 360f, 846f, 520f, 92f);
+            var cont = PutPx(Node(c, "RbPauseContinue"), c, 360f, 1110f, 524f, 70f);
             Btn(cont, "Components/rb_btn_primary");
             Text(Stretch(Node(cont, "RbPauseContinueText")), "ui.rb.pause.continue", "계속하기", 50, Ink, TA.Center, heavy: true);
 
@@ -1097,7 +1134,22 @@ namespace Game.Editor.ReBorn
             Text(Stretch(Node(yes, "RbAbandonCancelText")), "ui.rb.pause.keep", "계속", 46, Ink, TA.Center, heavy: true);
             ab.gameObject.SetActive(false);
 
-            page.gameObject.AddComponent<Game.Module.InGame.RbPausePanel>();
+            var panel = page.gameObject.AddComponent<Game.Module.InGame.RbPausePanel>();
+            // 등급 그림 — 카드(일반 · 희귀 · 영웅 · 전설) · 몸 테두리 · 등급 꼬리표(R · SR · SSR) · 속성(없음 · 무기 · 파워 · 마법)
+            var pso = new SerializedObject(panel);
+            void Many(string prop, params string[] paths)
+            {
+                var arr = pso.FindProperty(prop);
+                arr.arraySize = paths.Length;
+                for (int i = 0; i < paths.Length; i++)
+                    arr.GetArrayElementAtIndex(i).objectReferenceValue = paths[i] == null ? null : KitSprite(paths[i]);
+            }
+            Many("_cardFrames", "Components/rb_slot_common", "Components/rb_slot_rare", "Components/rb_slot_sr", "Components/rb_slot_ssr");
+            Many("_hostFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ssr");
+            Many("_gradeTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
+            Many("_affinityIcons", null, "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
+            pso.FindProperty("_ghostFrame").objectReferenceValue = KitSprite("Components/rb_host_frame_ghost");
+            pso.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>오른쪽 위 닫기(X) — 키트 둥근 버튼 + 닫기 아이콘.</summary>
@@ -1175,7 +1227,7 @@ namespace Game.Editor.ReBorn
                 var l = layers.GetArrayElementAtIndex(i);
                 string frames = l.FindPropertyRelative("Frames").stringValue;
                 if (frames.Contains("tube") || frames.Contains("pipe")) { layers.DeleteArrayElementAtIndex(i); continue; }
-                if (frames.Contains("emblem")) l.FindPropertyRelative("Y").floatValue = 92f;
+                if (frames.Contains("emblem")) l.FindPropertyRelative("Y").floatValue = 250f;   // 제목 그림 뒤 — 제목과 같이 Lv 줄 아래로
             }
             so.ApplyModifiedPropertiesWithoutUndo();
         }
