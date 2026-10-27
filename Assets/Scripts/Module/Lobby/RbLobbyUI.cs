@@ -553,7 +553,7 @@ namespace Game.Module.Lobby
             else if (_mode == RunStartMode.Ghost)
             {
                 chips = new[] { string.Format(Localize.FromTable("ui.rb.lobby.chip.ghost_exp", "유령 경험치 +{0}%"), cfg != null ? cfg.GhostStartExpPct : 50) };
-                note = Localize.FromTable("ui.rb.lobby.note.ghost", "몸 없이 시작 · 판 안에서 몸을 빼앗아 싸워요");
+                note = Localize.FromTable("ui.rb.lobby.note.ghost", "호스트 없이 시작 · 판 안에서 적에게 빙의해 싸워요");
             }
             else
             {
@@ -563,8 +563,8 @@ namespace Game.Module.Lobby
                     HostGradeLabel.Of(e.Grade),
                     string.Format(Localize.FromTable("ui.rb.lobby.chip.power", "전투력 {0:N0}"), _player.PowerOf(_host)),
                 };
-                note = IsToday(_host) ? Localize.FromTable("ui.rb.lobby.note.today", "오늘의 몸 · 골드 없이 출전")
-                                      : Localize.FromTable("ui.rb.lobby.note.host", "고른 몸으로 바로 시작해요");
+                note = IsToday(_host) ? Localize.FromTable("ui.rb.lobby.note.today", "오늘의 호스트 · 골드 없이 출전")
+                                      : Localize.FromTable("ui.rb.lobby.note.host", "고른 호스트로 바로 시작해요");
             }
             for (int i = 0; i < 3; i++)
             {

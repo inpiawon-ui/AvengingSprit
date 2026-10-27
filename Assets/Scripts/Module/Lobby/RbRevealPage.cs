@@ -45,8 +45,8 @@ namespace Game.Module.Lobby
             if (e == null) return;
             gameObject.SetActive(true);
             bool fresh = rank < AwakenStart;
-            _ui.SetText("RvlTitle", fresh ? Localize.FromTable("ui.rb.reveal.new", "새 몸!") : Localize.FromTable("ui.rb.reveal.awaken_title", "각성"));
-            string head = fresh ? Localize.FromTable("ui.rb.reveal.new", "새 몸!")
+            _ui.SetText("RvlTitle", fresh ? Localize.FromTable("ui.rb.reveal.new", "새 호스트!") : Localize.FromTable("ui.rb.reveal.awaken_title", "각성"));
+            string head = fresh ? Localize.FromTable("ui.rb.reveal.new", "새 호스트!")
                         : rank >= AwakenFull ? Localize.Get("ui.growth6.opt_max")   // 「10성 각성 강화 · 효과 2배」(옛 성장 화면과 같은 말)
                         : string.Format(Localize.FromTable("ui.rb.growth.opt_open", "{0}성 각성 옵션 열림"), rank);
             _ui.SetText("RvlHead", head);

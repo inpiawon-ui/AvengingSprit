@@ -104,7 +104,7 @@ namespace Game.Module.InGame
             SetIcon("RbPauseHostFace", has ? _main.FaceOf(host) : null);
             if (_ui.Get<Image>("RbPauseHostFrame") is Image frame)
                 frame.sprite = has && _hostFrames != null && grade < _hostFrames.Length ? _hostFrames[grade] : _ghostFrame;
-            _ui.SetText("RbPauseHostName", has ? he.DisplayName : Localize.FromTable("ui.rb.pause.no_host", "몸 없음 · 유령"));
+            _ui.SetText("RbPauseHostName", has ? he.DisplayName : Localize.FromTable("ui.rb.pause.no_host", "호스트 없음 · 유령"));
             SetIcon("RbPauseHostGradeSmall", has && _gradeTags != null && grade < _gradeTags.Length ? _gradeTags[grade] : null);
 
             _ui.SetActive("RbPauseHp", has);

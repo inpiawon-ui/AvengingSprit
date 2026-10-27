@@ -93,9 +93,9 @@ namespace Game.Module.Lobby
                            new Vector2(-M(80f) + StarRowWidth(player, s.E.HostKey) * 0.5f, 0f), M(20f), M(3f));
 
             float y = M(134f);
-            if (s.E.IsNew) Chip(dock, x, y, Localize.FromTable("ui.rb.summon.card.unlock", "새 몸 해금! · 이제 출전할 수 있다"), true);
+            if (s.E.IsNew) Chip(dock, x, y, Localize.FromTable("ui.rb.summon.card.unlock", "새 호스트 해금! · 이제 출전할 수 있어요"), true);
             else if (s.E.Essence > 0 || player == null || player.MasteryCost(s.E.HostKey) <= 0)
-                Chip(dock, x, y, string.Format(Localize.FromTable("ui.rb.summon.card.essence", "다 키운 몸 · 정수 +{0}"), s.E.Essence), false);
+                Chip(dock, x, y, string.Format(Localize.FromTable("ui.rb.summon.card.essence", "최대 성급 · 정수 +{0}"), s.E.Essence), false);
             else ShardBar(dock, x, y, right, player.GetShards(s.E.HostKey), s.E.Shards, player.MasteryCost(s.E.HostKey));
             dock.gameObject.SetActive(false);
         }
@@ -119,7 +119,7 @@ namespace Game.Module.Lobby
             Fill(track, "Add", Mathf.Clamp01((float)total / need), new Color(0.56f, 0.95f, 1f));
             Fill(track, "Have", Mathf.Clamp01((float)before / need), Color.white);
             var next = Label(dock, "ShardNext", x, y + M(42f), w, M(20f), M(13f), SubText, TextAlignmentOptions.Left);
-            next.text = total >= need ? Localize.FromTable("ui.rb.summon.card.ready", "성급을 올릴 수 있다!")
+            next.text = total >= need ? Localize.FromTable("ui.rb.summon.card.ready", "성급을 올릴 수 있어요!")
                                       : string.Format(Localize.FromTable("ui.rb.summon.card.next", "다음 성급까지 {0}개"), need - total);
         }
 

@@ -94,7 +94,7 @@ namespace Game.Module.InGame
             _ui.SetActive("RbResultTip", tip);
             if (tip)
             {
-                _ui.SetText("RbResultTipSub", string.Format(Localize.FromTable("ui.rb.result.tip_sub", "가장 오래 쓴 몸 · {0}"), tipEntry.DisplayName));
+                _ui.SetText("RbResultTipSub", string.Format(Localize.FromTable("ui.rb.result.tip_sub", "가장 오래 쓴 호스트 · {0}"), tipEntry.DisplayName));
                 SetFace("RbResultTipFace", _tipHost, faces);
             }
             bool cost = !clear;

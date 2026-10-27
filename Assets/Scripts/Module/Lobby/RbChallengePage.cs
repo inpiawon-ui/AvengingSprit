@@ -150,7 +150,7 @@ namespace Game.Module.Lobby
 
             var step = _progress.SweepNow;
             bool swept = _progress.TowerSweptToday;
-            _ui.SetText("ChlSweepInfo", step != null ? Localize.FromTable("ui.rb.chl.sweep_short", "하루 1번 · 입장 횟수를 쓰지 않는다") : Localize.Get("ui.tower.sweep_locked"));
+            _ui.SetText("ChlSweepInfo", step != null ? Localize.FromTable("ui.rb.chl.sweep_short", "하루 1회 · 입장 횟수 소모 없음") : Localize.Get("ui.tower.sweep_locked"));
             _ui.SetText("ChlTowerSweepText", Localize.Get(swept ? "ui.tower.sweep_done" : "ui.tower.sweep_btn"));
             if (_ui.Get<Button>("ChlTowerSweep") is Button sb) sb.interactable = step != null && !swept;
 

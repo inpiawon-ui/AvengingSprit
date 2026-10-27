@@ -87,7 +87,7 @@ namespace Game.Module.Lobby
             // 픽업 몸이 아직 몸 목록에 없으면(히든 · 미보유 표 밖) 이름만 표에서 꺼낸다
             _ui.SetText("SumPickupHost", pick != null ? $"{HostGradeLabel.Of(pick.Grade)} {pick.DisplayName}"
                                        : string.IsNullOrEmpty(g.PickupHost) ? string.Empty : Localize.FromTable($"host.{g.PickupHost}.name", g.PickupHost));
-            _ui.SetText("SumPickupRule", string.Format(Localize.FromTable("ui.rb.summon.pickup_rule", "SSR 이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트"), g.PickupSharePct));
+            _ui.SetText("SumPickupRule", string.Format(Localize.FromTable("ui.rb.summon.pickup_rule", "SR이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트"), g.PickupSharePct));
             var left = g.PickupLeft;
             _ui.SetText("SumPickupLeft", string.Format(Localize.FromTable("ui.rb.summon.left", "남은 {0}일 {1}시간"), Math.Max(0, left.Days), Math.Max(0, left.Hours)));
             _ui.SetText("SumPity", string.Format(Localize.FromTable("ui.rb.summon.pity", "대박까지 <color=#FFFFFF>{0}</color> /{1}"), g.PityCount, g.PityMax));

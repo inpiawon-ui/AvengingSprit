@@ -991,7 +991,7 @@ namespace Game.Module.InGame
             _ui.SetActive("Hud3HostEmptyBar", true);
             _ui.SetText("HostLabel", "CURRENT HOST");
             _ui.SetText("HostNameEnText", "NO HOST");
-            _ui.SetText("HostNameKrText", Localize.FromTable("ui.ingame.nohost_hint", "빙의할 몸을 찾으세요"));
+            _ui.SetText("HostNameKrText", Localize.FromTable("ui.ingame.nohost_hint", "빙의할 호스트를 찾으세요"));
             _ui.SetText("HostLevelText", "-");   // 픽셀 글꼴에는 「—」 가 없어 대체 글꼴로 떨어져 배지 위로 튀었다
             _ui.SetText("HpLabelHost", string.Empty);
             _ui.SetActive("HostLevelBadge", false);

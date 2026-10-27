@@ -240,6 +240,8 @@ namespace Game.Editor.ReBorn
         {
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
             (720, 1280, Language.Korean, "ingame:skillcd", "skillcd_16x9"),
+            (720, 1280, Language.Korean, "ingame:real_fail@3", "real_fail_16x9"),
+            (720, 1280, Language.Korean, "ingame:real_clear@3", "real_clear_16x9"),
             (720, 1280, Language.Korean, "ingame:ultcd", "ultcd_16x9"),
             (720, 1280, Language.Korean, "ingame:ultcd_end@5", "ultcd_end_16x9"),
             (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
@@ -1013,6 +1015,15 @@ namespace Game.Editor.ReBorn
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") { LogHits(ui); return; }
+            // 진짜 판 끝 — real_fail · real_clear: 판을 실제로 끝내(BattleDirector.Finish) 결과 창이 뜨는 흐름 그대로 찍는다(PD 2026-10-28 「결과창 댑스」)
+            if (state.StartsWith("ingame:real_"))
+            {
+                var bd = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+                Time.timeScale = 1f;
+                typeof(Game.Module.InGame.BattleDirector).GetMethod("Finish", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    ?.Invoke(bd, new object[] { state.StartsWith("ingame:real_clear") });
+                return;
+            }
             // 필살기 쿨 — ultcd: 남은 200초에서 멈춰 찍는다 · ultcd_end: 2초 남기고 풀어 다시 차는지 남긴다
             if (state.StartsWith("ingame:ultcd"))
             {

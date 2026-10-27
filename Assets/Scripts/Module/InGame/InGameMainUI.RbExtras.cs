@@ -281,7 +281,7 @@ namespace Game.Module.InGame
             if (_ui.Get<Button>("RbNightPickGo") is Button b) b.interactable = picked;
             string name = picked ? (CoreModule_GetHost(_rbNightKeys[_rbNightPick])?.DisplayName ?? _rbNightKeys[_rbNightPick]) : null;
             SetRbText("RbNightPickGoText", picked ? string.Format(Localize.FromTable("ui.rb.nightpick.go", "{0}에 빙의"), name)
-                                              : Localize.FromTable("ui.rb.nightpick.pick", "몸을 선택하세요"));
+                                              : Localize.FromTable("ui.rb.nightpick.pick", "호스트를 선택하세요"));
         }
 
         private void ConfirmNightPick()

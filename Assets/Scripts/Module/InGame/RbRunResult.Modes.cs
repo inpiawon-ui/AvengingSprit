@@ -42,14 +42,14 @@ namespace Game.Module.InGame
             Chip(string.Format(Localize.FromTable("ui.rb.result.entries", "남은 입장 {0}/{1}"), e.EntriesLeft, max), false);
 
             Record(0, Localize.FromTable("ui.rb.result.floor", "층"), $"{e.PlayedFloor}F");
-            Record(1, Localize.FromTable("ui.rb.result.possess", "빙의 · 잃은 몸"), $"{e.PossessCount} · {e.LostCount}");
+            Record(1, Localize.FromTable("ui.rb.result.possess", "빙의 · 잃은 호스트"), $"{e.PossessCount} · {e.LostCount}");
             Record(2, null, Clock(e.ElapsedSeconds));
 
             // 클리어 = 첫 클리어 보상(주에 한 번) · 실패 = 키우면 좋은 몸
             bool reward = clear && (e.RewardGold > 0 || (e.ShardHostKeys != null && e.ShardHostKeys.Length > 0));
             _ui.SetText("RbResultRewardTitle", clear
-                ? (reward ? Localize.FromTable("ui.rb.result.first_clear", "첫 클리어 보상") : Localize.FromTable("ui.tower.first_clear_done", "이번 주에 이미 받은 보상이에요"))
-                : Localize.FromTable("ui.rb.result.suggest", "이 층에 맞는 몸"));
+                ? (reward ? Localize.FromTable("ui.rb.result.first_clear", "첫 클리어 보상") : Localize.FromTable("ui.tower.first_clear_done", "이번 주 보상은 이미 받았어요"))
+                : Localize.FromTable("ui.rb.result.suggest", "이 층에 유리한 호스트"));
             _ui.SetActive("RbResultGoldTile", reward && e.RewardGold > 0);
             _ui.SetText("RbResultGoldValue", e.RewardGold.ToString("N0"));
             // 몸 카드 줄 — 클리어는 받은 조각(×n), 실패는 이 층에 맞는 몸(조각 줄 없이 얼굴 · 이름만)

@@ -47,7 +47,7 @@ namespace Game.Module.Lobby
             _revealed = false;
             gameObject.SetActive(true);
             SetWord(_wordRandom);
-            _ui.SetText("RndSub", Localize.FromTable("ui.rb.rnd.ask", "어떤 몸과 만날까요?"));
+            _ui.SetText("RndSub", Localize.FromTable("ui.rb.rnd.ask", "어떤 호스트와 만날까요?"));
             SetFace(_mystery);
             Phase(false);
             _ui.SetText("RndGoText", Localize.FromTable("ui.rb.rnd.reveal", "공개하기"));
@@ -72,7 +72,7 @@ namespace Game.Module.Lobby
             var cfg = _player.Config;
             int gold = cfg != null ? cfg.RandomLuckGoldPct : 20;
             SetWord(hidden ? _wordHidden : _wordRandom);
-            _ui.SetText("RndSub", hidden ? Localize.FromTable("ui.rb.rnd.hidden_sub", "특별한 몸을 만났어요!") : Localize.FromTable("ui.rb.rnd.this_run", "이번 판의 호스트"));
+            _ui.SetText("RndSub", hidden ? Localize.FromTable("ui.rb.rnd.hidden_sub", "특별한 호스트를 만났어요!") : Localize.FromTable("ui.rb.rnd.this_run", "이번 판의 호스트"));
             // 받침 위 큰 몸(작업 지시서 4-2) — 히든은 실루엣(얼굴을 숨긴다)
             SetFace(null);
             _ui.SetActive("RndPedestal", true);
