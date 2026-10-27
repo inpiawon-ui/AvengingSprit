@@ -222,7 +222,7 @@ event.EV_CH1_01.decline	지나간다	立ち去る	Walk Away	離開	离开
 event.EV_CH1_02.title	버려진 보급품	捨てられた補給品	Lost Supplies	遺棄的補給	遗弃的补给
 event.EV_CH1_02.body	뒤집힌 상자 하나. 안에 든 것을 다 가져갈 수는 없다.\n장비를 챙기든지, 팔아 넘기든지.	横倒しの箱がひとつ。中身をすべて持っていくことはできない。\n装備を持っていくか、売り払うか。	An overturned crate. You can't take it all.\nKeep the gear, or sell it off.	一個翻倒的箱子。裡面的東西無法全部帶走。\n帶走裝備，還是賣掉？	一个翻倒的箱子。里面的东西无法全部带走。\n带走装备，还是卖掉？
 event.EV_CH1_02.accept	장비를 챙긴다	装備を持っていく	Take the Gear	帶走裝備	带走装备
-event.EV_CH1_02.decline	팔아 넘긴다  (골드 25)	売り払う  （ゴールド25）	Sell It  (25 Gold)	賣掉  （金幣25）	卖掉  （金币25）
+event.EV_CH1_02.decline	팔아 넘긴다	売り払う	Sell It	賣掉	卖掉
 event.EV_CH1_03.title	잠긴 금고	鍵のかかった金庫	Locked Safe	上鎖的保險箱	上锁的保险箱
 event.EV_CH1_03.body	다이얼이 세 칸 남았다. 억지로 열면 안의 것이 상할지도 모른다.	ダイヤルはあと3つ。無理に開ければ、中身が傷むかもしれない。	Three dials left. Force it, and what's inside may break.	密碼盤還剩三格。硬撬的話，裡面的東西可能會受損。	密码盘还剩三格。硬撬的话，里面的东西可能会受损。
 event.EV_CH1_03.accept	억지로 연다	無理やり開ける	Force It Open	強行打開	强行打开
@@ -282,7 +282,7 @@ event.EV_CH3_04.decline	지나간다	立ち去る	Walk Away	離開	离开
 event.EV_CH3_05.title	심연의 거래	深淵の取引	Abyssal Bargain	深淵交易	深渊交易
 event.EV_CH3_05.body	바닥이 보이지 않는 통로. 아래에서 목소리가 올라온다.\n값은 영혼으로 받는다고 한다.	底の見えない通路。下から声が昇ってくる。\n代価は魂で受け取ると言う。	A passage with no bottom. A voice rises from below.\nIt says the price is paid in soul.	看不見底的通道。聲音從下方傳上來。\n它說代價要用靈魂支付。	看不见底的通道。声音从下方传上来。\n它说代价要用灵魂支付。
 event.EV_CH3_05.accept	영혼을 내준다	魂を差し出す	Give Your Soul	交出靈魂	交出灵魂
-event.EV_CH3_05.decline	대신 쉬어 간다  (고스트 30% 회복)	代わりに休んでいく  （ゴースト30%回復）	Rest Instead  (Ghost 30% Heal)	改為休息  （幽靈回復30%）	改为休息  （幽灵恢复30%）
+event.EV_CH3_05.decline	대신 쉬어 간다	代わりに休んでいく	Rest Instead	改為休息	改为休息
 event.EV_CH3_06.title	마지막 보급 투하	最後の補給投下	Final Supply Drop	最後的空投	最后的空投
 event.EV_CH3_06.body	요새 위로 낙하산 하나가 내려온다.\n먼저 집는 쪽이 임자지만, 안에 무엇이 들었는지는 모른다.	要塞の上に、パラシュートがひとつ降りてくる。\n先に掴んだ者のものだが、中身は分からない。	A parachute drifts down onto the fortress.\nFinders keepers, but no telling what's inside.	一頂降落傘落向要塞。\n先搶到就歸誰，但不知道裡面裝了什麼。	一顶降落伞落向要塞。\n先抢到就归谁，但不知道里面装了什么。
 event.EV_CH3_06.accept	전부 털어 넣는다	全部つぎ込む	Go All In	全部押上	全部押上
@@ -1457,6 +1457,25 @@ ui.rb.summon.card.next	다음 성급까지 {0}개	次の星まであと{0}個	{0
 ui.rb.summon.card.ready	성급을 올릴 수 있다!	星を上げられる！	Ready to rank up!	可以提升星級！	可以提升星级！
 ui.rb.summon.card.unlock	새 몸 해금! · 이제 출전할 수 있다	新しい体を解放！・出撃できる	New body unlocked! · Ready to deploy	新身體解鎖！· 現在可以出戰	新身体解锁！· 现在可以出战
 ui.rb.summon.card.essence	다 키운 몸 · 정수 +{0}	育成完了・エッセンス +{0}	Fully grown · Essence +{0}	已練滿 · 精華 +{0}	已练满 · 精华 +{0}
+ui.rb.event.give	내\n준\n다	渡\nす	G\nI\nV\nE	付\n出	付\n出
+ui.rb.event.get	받\n는\n다	得\nる	G\nE\nT	獲\n得	获\n得
+ui.rb.event.give_flat	내준다	渡す	Give	付出	付出
+ui.rb.event.no_cost	대가 없음	代償なし	No cost	沒有代價	没有代价
+ui.rb.event.give.ghost_hp	고스트 체력 -{0}%	ゴースト体力 -{0}%	Ghost HP -{0}%	幽靈體力 -{0}%	幽灵体力 -{0}%
+ui.rb.event.give.host_hp	호스트 체력 -{0}%	ホスト体力 -{0}%	Host HP -{0}%	宿主體力 -{0}%	宿主体力 -{0}%
+ui.rb.event.give.max_hp	최대 체력 -{0}%	最大体力 -{0}%	Max HP -{0}%	最大體力 -{0}%	最大体力 -{0}%
+ui.rb.event.give.gold	골드 -{0}	ゴールド -{0}	Gold -{0}	金幣 -{0}	金币 -{0}
+ui.rb.event.give.fight	적 {0}과 먼저 싸운다	敵{0}体と先に戦う	Fight {0} enemies first	先與{0}名敵人戰鬥	先与{0}名敌人战斗
+ui.rb.event.give.fight_elite	엘리트 {0}와 먼저 싸운다	エリート{0}体と先に戦う	Fight {0} elites first	先與{0}名精英戰鬥	先与{0}名精英战斗
+ui.rb.event.now	지금 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	今 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	Now <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	目前 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	目前 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>
+ui.rb.event.max_hp_sub	앞으로 빼앗는 <color=#FF8A9C>몸 전부</color>	これから奪う<color=#FF8A9C>体すべて</color>	<color=#FF8A9C>Every body</color> you take from now	之後奪取的<color=#FF8A9C>所有身體</color>	之后夺取的<color=#FF8A9C>所有身体</color>
+ui.rb.event.run_long	이 판 내내	このラン中ずっと	All run	整局有效	整局有效
+ui.rb.event.win_get	이기면 받는다	勝てばもらえる	Win to receive	獲勝即可獲得	获胜即可获得
+ui.rb.event.get.upgrade	가진 카드 1장 강화	持っているカード1枚を強化	Upgrade 1 owned card	強化持有的1張卡	强化持有的1张卡
+ui.rb.event.get.upgrade_sub	{0}  Lv {1} → <color=#6AF0C0>{2}</color>	{0}  Lv {1} → <color=#6AF0C0>{2}</color>	{0}  Lv {1} → <color=#6AF0C0>{2}</color>	{0}  Lv {1} → <color=#6AF0C0>{2}</color>	{0}  Lv {1} → <color=#6AF0C0>{2}</color>
+ui.rb.event.get.grant_sub	바로 받는다	すぐもらえる	Received right away	立即獲得	立即获得
+ui.rb.event.get.offer_sub	3장 중 1장을 고른다	3枚から1枚を選ぶ	Choose 1 of 3	從3張中選1張	从3张中选1张
+ui.rb.event.get.fail_sub	실패하면 대가만 낸다	失敗すると代償だけ払う	On failure, you only pay the cost	失敗時只付出代價	失败时只付出代价
 ui.rb.summon.no_records	아직 뽑은 기록이 없어요.	まだ召喚記録がありません。	No summons yet.	尚無召喚紀錄。	尚无召唤记录。
 ui.rb.summon.jackpot_tag	대박	大当たり	Jackpot	大獎	大奖
 ui.rb.summon.pickup	이번 주 픽업:	今週のピックアップ：	This Week's Pickup:	本週UP：	本周UP：

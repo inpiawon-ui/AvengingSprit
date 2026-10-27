@@ -41,6 +41,28 @@ namespace Game.Module.Events
 
         /// <summary>못 고르는 이유. 비어 있으면 고를 수 있다.</summary>
         public string BlockedReason;
+
+        // ── 「내준다 / 받는다」 두 줄 판(RE:BORN, PD 2026-10-27 시안 mock_event_deal) ──
+        /// <summary>대가 종류 — `EventCost` 값(0 없음 · 1 골드 · 2 고스트 체력 · 3 호스트 체력 · 4 최대 체력).</summary>
+        public int CostKind;
+        /// <summary>대가 크기 — 골드면 낼 골드(챕터 배율을 곱한 값), 체력이면 %.</summary>
+        public int CostValue;
+        /// <summary>골드 · 체력 대가면 지금 → 낸 뒤 값. 그 밖의 대가면 -1.</summary>
+        public int HpNow, HpAfter;
+        /// <summary>먼저 싸울 적 수(0 = 싸움 없음) · 엘리트인가.</summary>
+        public int FightCount;
+        public bool FightElite;
+        /// <summary>보상 종류 — `EventReward` 값. 카드 보상의 등급 — `CardRarity` 값.</summary>
+        public int RewardKind, RewardRarity;
+        /// <summary>받을 확률(%). 0 이면 반드시 받는다.</summary>
+        public int ChancePercent;
+        /// <summary>보상에 덤으로 붙는 골드(0 = 없음).</summary>
+        public int ExtraGold;
+        /// <summary>거절해도 받는 것 한 줄. 없으면 빈 문자열.</summary>
+        public string DeclineRewardLabel;
+        /// <summary>가진 카드 강화 — 오를 카드 키 · 지금 레벨. 오를 카드가 없으면 키가 빈 문자열.</summary>
+        public string UpgradeKey, UpgradeName;
+        public int UpgradeLevel;
     }
 
     /// <summary>이벤트가 끝났다. 무슨 일이 있었는지 한 줄로 알린다.</summary>

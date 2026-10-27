@@ -9462,6 +9462,7 @@ namespace Game.Module.InGame
             if (_event == null) { SpawnExit(); return; }   // 이 판에서 다 봤다
 
             _eventsUsed.Add(_event.EventId);
+            var up = _event.RewardType == EventReward.UpgradeCard ? PickUpgradable() : null;
             _bus.Publish(new EventOfferEvent
             {
                 EventId = _event.EventId,
@@ -9473,8 +9474,48 @@ namespace Game.Module.InGame
                 RewardLabel = RewardLabelOf(_event),
                 CanAfford = CanAfford(_event) && CanReceive(_event),
                 BlockedReason = BlockedReasonOf(_event),
+                CostKind = (int)_event.CostType,
+                CostValue = _event.CostType == EventCost.Gold ? EventGold(_event.CostValue) : _event.CostValue,
+                HpNow = HpNowFor(_event.CostType),
+                HpAfter = HpAfterFor(_event),
+                FightCount = _event.FightFirst ? _event.FightCount : 0,
+                FightElite = _event.FightElite,
+                RewardKind = (int)_event.RewardType,
+                RewardRarity = (int)_event.RewardRarity,
+                ChancePercent = _event.ChancePercent,
+                ExtraGold = _event.ExtraGold > 0 ? EventGold(_event.ExtraGold) : 0,
+                DeclineRewardLabel = _event.HasDeclineReward ? DeclineLabelOf(_event) : string.Empty,
+                UpgradeKey = up != null ? up.BuffKey : string.Empty,
+                UpgradeName = up != null ? up.DisplayName : string.Empty,
+                UpgradeLevel = up != null ? _buffs.LevelOf(up.BuffKey) : 0,
             });
         }
+
+        // 두 줄 판의 「지금 80 → 60」(골드 · 체력) — 대가를 치르는 코드와 같은 식
+        private int HpNowFor(EventCost c) => c switch
+        {
+            EventCost.Gold => _runGold,
+            EventCost.GhostHp => _ghostHp,
+            EventCost.HostHp => _host != null ? _host.Hp : -1,
+            _ => -1,
+        };
+
+        private int HpAfterFor(EventEntry e) => e.CostType switch
+        {
+            EventCost.Gold => _runGold - EventGold(e.CostValue),
+            EventCost.GhostHp => Mathf.Max(1, _ghostHp - GhostHpMax * e.CostValue / 100),
+            EventCost.HostHp => _host != null ? Mathf.Max(1, _host.Hp - _host.HpMax * e.CostValue / 100) : -1,
+            _ => -1,
+        };
+
+        /// <summary>거절 보상 한 줄 — 받는 것 글자(RewardLabelOf)와 같은 말을 쓴다.</summary>
+        private string DeclineLabelOf(EventEntry e) => e.DeclineReward switch
+        {
+            EventReward.Gold => Localize.Format("ui.event.gold", EventGold(e.DeclineValue)),
+            EventReward.HostHeal => Localize.Format("ui.event.reward.host_heal", e.DeclineValue),
+            EventReward.GhostHeal => Localize.Format("ui.event.reward.ghost_heal", e.DeclineValue),
+            _ => string.Empty,
+        };
 
         /// <summary>
         /// 이벤트 골드값의 챕터 배율.

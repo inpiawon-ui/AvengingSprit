@@ -247,6 +247,17 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "ingame:shop", "shop_ja"),
             (720, 1280, Language.Korean, "ingame:event", "event_16x9"),
             (720, 1280, Language.English, "ingame:event", "event_en"),
+            // 「내준다 / 받는다」 두 줄 판(PD 2026-10-27) — 대가 · 보상 종류마다 한 장
+            (720, 1280, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_CH1_03", "event_safe_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_DEAL_01", "event_pact_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_CH3_02", "event_duel_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_CH2_04", "event_cross_16x9"),
+            (720, 1280, Language.Korean, "ingame:event:EV_CH1_02", "event_supply_16x9"),
+            (1080, 2400, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_20x9"),
+            (768, 1024, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_4x3"),
+            (720, 1280, Language.English, "ingame:event:EV_DEAL_01", "event_pact_en"),
+            (720, 1280, Language.Japanese, "ingame:event:EV_CH2_04", "event_cross_ja"),
             (720, 1280, Language.Korean, "ingame:shrine", "shrine_16x9"),
             (1080, 2400, Language.Korean, "ingame:shrine", "shrine_20x9"),
             (720, 1280, Language.Korean, "ingame:result_clear", "result_clear_16x9"),
@@ -831,6 +842,33 @@ namespace Game.Editor.ReBorn
             if (dt.GetField("hostShards")?.GetValue(data) is int[] shards && i < shards.Length) shards[i] = shardCount;
         }
 
+        /// <summary>
+        /// 정해 둔 이벤트를 띄운다 — 나머지를 「이 판에서 봤다」에 넣어 뽑기가 그것만 고르게 한다.
+        /// 부서진 제단은 벼릴 카드가 있어야 보여 줄 것이 있다 — 보스 사냥 Lv2 · 공격 강화 Lv1 을 먼저 쥐여 준다(시험 판에서만, 저장 안 함).
+        /// </summary>
+        private static void ForceEvent(Game.Module.InGame.BattleDirector battle, string id)
+        {
+            const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            var bt = typeof(Game.Module.InGame.BattleDirector);
+            var table = bt.GetField("_eventTable", F)?.GetValue(battle) as Game.Module.InGame.EventTable;
+            var used = bt.GetField("_eventsUsed", F)?.GetValue(battle) as System.Collections.Generic.ICollection<string>;
+            if (table == null || used == null) return;
+            used.Clear();
+            foreach (var e in table.Entries) if (e != null && e.EventId != id) used.Add(e.EventId);
+            if (id == "EV_CH2_06"
+                && bt.GetField("_buffs", F)?.GetValue(battle) is Game.Module.InGame.RunBuffs buffs
+                && bt.GetField("_buffTable", F)?.GetValue(battle) is Game.Character.BuffTable cards)
+            {
+                foreach (var c in cards.Entries)
+                {
+                    if (c == null) continue;
+                    if (c.BuffKey == "c025") while (buffs.LevelOf("c025") < 2) buffs.Apply(c);
+                    if (c.BuffKey == "c011" && buffs.LevelOf("c011") < 1) buffs.Apply(c);
+                }
+            }
+            bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
+        }
+
         /// <summary>판을 거의 세운다(유령이 몇 초 만에 죽어 화면이 바뀐다 — 메모리 freeze-run-before-ingame-check). levelup 은 3택1 을 다시 연다(언어가 바뀌면 카드 글도 다시).</summary>
         private static void ShowInGame(Game.Module.InGame.InGameMainUI ui, string state)
         {
@@ -846,6 +884,11 @@ namespace Game.Editor.ReBorn
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
             const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var bt = typeof(Game.Module.InGame.BattleDirector);
+            if (state.StartsWith("ingame:event:"))
+            {
+                ForceEvent(battle, state.Substring("ingame:event:".Length));
+                return;
+            }
             switch (state)
             {
                 case "ingame:levelup":

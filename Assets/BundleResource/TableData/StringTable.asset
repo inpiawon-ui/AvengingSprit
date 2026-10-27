@@ -1154,11 +1154,11 @@ MonoBehaviour:
     _zhHant: "\u5E36\u8D70\u88DD\u5099"
     _zhHans: "\u5E26\u8D70\u88C5\u5907"
   - _key: event.EV_CH1_02.decline
-    _ko: "\uD314\uC544 \uB118\uAE34\uB2E4  (\uACE8\uB4DC 25)"
-    _ja: "\u58F2\u308A\u6255\u3046  \uFF08\u30B4\u30FC\u30EB\u30C925\uFF09"
-    _en: Sell It  (25 Gold)
-    _zhHant: "\u8CE3\u6389  \uFF08\u91D1\u5E6325\uFF09"
-    _zhHans: "\u5356\u6389  \uFF08\u91D1\u5E0125\uFF09"
+    _ko: "\uD314\uC544 \uB118\uAE34\uB2E4"
+    _ja: "\u58F2\u308A\u6255\u3046"
+    _en: Sell It
+    _zhHant: "\u8CE3\u6389"
+    _zhHans: "\u5356\u6389"
   - _key: event.EV_CH1_03.title
     _ko: "\uC7A0\uAE34 \uAE08\uACE0"
     _ja: "\u9375\u306E\u304B\u304B\u3063\u305F\u91D1\u5EAB"
@@ -1584,11 +1584,11 @@ MonoBehaviour:
     _zhHant: "\u4EA4\u51FA\u9748\u9B42"
     _zhHans: "\u4EA4\u51FA\u7075\u9B42"
   - _key: event.EV_CH3_05.decline
-    _ko: "\uB300\uC2E0 \uC26C\uC5B4 \uAC04\uB2E4  (\uACE0\uC2A4\uD2B8 30% \uD68C\uBCF5)"
-    _ja: "\u4EE3\u308F\u308A\u306B\u4F11\u3093\u3067\u3044\u304F  \uFF08\u30B4\u30FC\u30B9\u30C830%\u56DE\u5FA9\uFF09"
-    _en: Rest Instead  (Ghost 30% Heal)
-    _zhHant: "\u6539\u70BA\u4F11\u606F  \uFF08\u5E7D\u9748\u56DE\u5FA930%\uFF09"
-    _zhHans: "\u6539\u4E3A\u4F11\u606F  \uFF08\u5E7D\u7075\u6062\u590D30%\uFF09"
+    _ko: "\uB300\uC2E0 \uC26C\uC5B4 \uAC04\uB2E4"
+    _ja: "\u4EE3\u308F\u308A\u306B\u4F11\u3093\u3067\u3044\u304F"
+    _en: Rest Instead
+    _zhHant: "\u6539\u70BA\u4F11\u606F"
+    _zhHans: "\u6539\u4E3A\u4F11\u606F"
   - _key: event.EV_CH3_06.title
     _ko: "\uB9C8\uC9C0\uB9C9 \uBCF4\uAE09 \uD22C\uD558"
     _ja: "\u6700\u5F8C\u306E\u88DC\u7D66\u6295\u4E0B"
@@ -11466,3 +11466,169 @@ MonoBehaviour:
     _en: "Fully grown \xB7 Essence +{0}"
     _zhHant: "\u5DF2\u7DF4\u6EFF \xB7 \u7CBE\u83EF +{0}"
     _zhHans: "\u5DF2\u7EC3\u6EE1 \xB7 \u7CBE\u534E +{0}"
+  - _key: ui.rb.event.give
+    _ko: "\uB0B4\n\uC900\n\uB2E4"
+    _ja: "\u6E21\n\u3059"
+    _en: 'G
+
+      I
+
+      V
+
+      E'
+    _zhHant: "\u4ED8\n\u51FA"
+    _zhHans: "\u4ED8\n\u51FA"
+  - _key: "\uB2E4"
+    _ko: "\u5F97"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "\u3059"
+    _ko: G
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: E
+    _ko: "\u4ED8"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "\u51FA"
+    _ko: "\u4ED8"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: ui.rb.event.get
+    _ko: "\uBC1B\n\uB294\n\uB2E4"
+    _ja: "\u5F97\n\u308B"
+    _en: 'G
+
+      E
+
+      T'
+    _zhHant: "\u7372\n\u5F97"
+    _zhHans: "\u83B7\n\u5F97"
+  - _key: "\u308B"
+    _ko: G
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: T
+    _ko: "\u7372"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: "\u5F97"
+    _ko: "\u83B7"
+    _ja: 
+    _en: 
+    _zhHant: 
+    _zhHans: 
+  - _key: ui.rb.event.give_flat
+    _ko: "\uB0B4\uC900\uB2E4"
+    _ja: "\u6E21\u3059"
+    _en: Give
+    _zhHant: "\u4ED8\u51FA"
+    _zhHans: "\u4ED8\u51FA"
+  - _key: ui.rb.event.no_cost
+    _ko: "\uB300\uAC00 \uC5C6\uC74C"
+    _ja: "\u4EE3\u511F\u306A\u3057"
+    _en: No cost
+    _zhHant: "\u6C92\u6709\u4EE3\u50F9"
+    _zhHans: "\u6CA1\u6709\u4EE3\u4EF7"
+  - _key: ui.rb.event.give.ghost_hp
+    _ko: "\uACE0\uC2A4\uD2B8 \uCCB4\uB825 -{0}%"
+    _ja: "\u30B4\u30FC\u30B9\u30C8\u4F53\u529B -{0}%"
+    _en: Ghost HP -{0}%
+    _zhHant: "\u5E7D\u9748\u9AD4\u529B -{0}%"
+    _zhHans: "\u5E7D\u7075\u4F53\u529B -{0}%"
+  - _key: ui.rb.event.give.host_hp
+    _ko: "\uD638\uC2A4\uD2B8 \uCCB4\uB825 -{0}%"
+    _ja: "\u30DB\u30B9\u30C8\u4F53\u529B -{0}%"
+    _en: Host HP -{0}%
+    _zhHant: "\u5BBF\u4E3B\u9AD4\u529B -{0}%"
+    _zhHans: "\u5BBF\u4E3B\u4F53\u529B -{0}%"
+  - _key: ui.rb.event.give.max_hp
+    _ko: "\uCD5C\uB300 \uCCB4\uB825 -{0}%"
+    _ja: "\u6700\u5927\u4F53\u529B -{0}%"
+    _en: Max HP -{0}%
+    _zhHant: "\u6700\u5927\u9AD4\u529B -{0}%"
+    _zhHans: "\u6700\u5927\u4F53\u529B -{0}%"
+  - _key: ui.rb.event.give.gold
+    _ko: "\uACE8\uB4DC -{0}"
+    _ja: "\u30B4\u30FC\u30EB\u30C9 -{0}"
+    _en: Gold -{0}
+    _zhHant: "\u91D1\u5E63 -{0}"
+    _zhHans: "\u91D1\u5E01 -{0}"
+  - _key: ui.rb.event.give.fight
+    _ko: "\uC801 {0}\uACFC \uBA3C\uC800 \uC2F8\uC6B4\uB2E4"
+    _ja: "\u6575{0}\u4F53\u3068\u5148\u306B\u6226\u3046"
+    _en: Fight {0} enemies first
+    _zhHant: "\u5148\u8207{0}\u540D\u6575\u4EBA\u6230\u9B25"
+    _zhHans: "\u5148\u4E0E{0}\u540D\u654C\u4EBA\u6218\u6597"
+  - _key: ui.rb.event.give.fight_elite
+    _ko: "\uC5D8\uB9AC\uD2B8 {0}\uC640 \uBA3C\uC800 \uC2F8\uC6B4\uB2E4"
+    _ja: "\u30A8\u30EA\u30FC\u30C8{0}\u4F53\u3068\u5148\u306B\u6226\u3046"
+    _en: Fight {0} elites first
+    _zhHant: "\u5148\u8207{0}\u540D\u7CBE\u82F1\u6230\u9B25"
+    _zhHans: "\u5148\u4E0E{0}\u540D\u7CBE\u82F1\u6218\u6597"
+  - _key: ui.rb.event.now
+    _ko: "\uC9C0\uAE08 <color=#FFFFFF>{0}</color> \u2192 <color=#FF8A9C>{1}</color>"
+    _ja: "\u4ECA <color=#FFFFFF>{0}</color> \u2192 <color=#FF8A9C>{1}</color>"
+    _en: "Now <color=#FFFFFF>{0}</color> \u2192 <color=#FF8A9C>{1}</color>"
+    _zhHant: "\u76EE\u524D <color=#FFFFFF>{0}</color> \u2192 <color=#FF8A9C>{1}</color>"
+    _zhHans: "\u76EE\u524D <color=#FFFFFF>{0}</color> \u2192 <color=#FF8A9C>{1}</color>"
+  - _key: ui.rb.event.max_hp_sub
+    _ko: "\uC55E\uC73C\uB85C \uBE7C\uC557\uB294 <color=#FF8A9C>\uBAB8 \uC804\uBD80</color>"
+    _ja: "\u3053\u308C\u304B\u3089\u596A\u3046<color=#FF8A9C>\u4F53\u3059\u3079\u3066</color>"
+    _en: <color=#FF8A9C>Every body</color> you take from now
+    _zhHant: "\u4E4B\u5F8C\u596A\u53D6\u7684<color=#FF8A9C>\u6240\u6709\u8EAB\u9AD4</color>"
+    _zhHans: "\u4E4B\u540E\u593A\u53D6\u7684<color=#FF8A9C>\u6240\u6709\u8EAB\u4F53</color>"
+  - _key: ui.rb.event.run_long
+    _ko: "\uC774 \uD310 \uB0B4\uB0B4"
+    _ja: "\u3053\u306E\u30E9\u30F3\u4E2D\u305A\u3063\u3068"
+    _en: All run
+    _zhHant: "\u6574\u5C40\u6709\u6548"
+    _zhHans: "\u6574\u5C40\u6709\u6548"
+  - _key: ui.rb.event.win_get
+    _ko: "\uC774\uAE30\uBA74 \uBC1B\uB294\uB2E4"
+    _ja: "\u52DD\u3066\u3070\u3082\u3089\u3048\u308B"
+    _en: Win to receive
+    _zhHant: "\u7372\u52DD\u5373\u53EF\u7372\u5F97"
+    _zhHans: "\u83B7\u80DC\u5373\u53EF\u83B7\u5F97"
+  - _key: ui.rb.event.get.upgrade
+    _ko: "\uAC00\uC9C4 \uCE74\uB4DC 1\uC7A5 \uAC15\uD654"
+    _ja: "\u6301\u3063\u3066\u3044\u308B\u30AB\u30FC\u30C91\u679A\u3092\u5F37\u5316"
+    _en: Upgrade 1 owned card
+    _zhHant: "\u5F37\u5316\u6301\u6709\u76841\u5F35\u5361"
+    _zhHans: "\u5F3A\u5316\u6301\u6709\u76841\u5F20\u5361"
+  - _key: ui.rb.event.get.upgrade_sub
+    _ko: "{0}  Lv {1} \u2192 <color=#6AF0C0>{2}</color>"
+    _ja: "{0}  Lv {1} \u2192 <color=#6AF0C0>{2}</color>"
+    _en: "{0}  Lv {1} \u2192 <color=#6AF0C0>{2}</color>"
+    _zhHant: "{0}  Lv {1} \u2192 <color=#6AF0C0>{2}</color>"
+    _zhHans: "{0}  Lv {1} \u2192 <color=#6AF0C0>{2}</color>"
+  - _key: ui.rb.event.get.grant_sub
+    _ko: "\uBC14\uB85C \uBC1B\uB294\uB2E4"
+    _ja: "\u3059\u3050\u3082\u3089\u3048\u308B"
+    _en: Received right away
+    _zhHant: "\u7ACB\u5373\u7372\u5F97"
+    _zhHans: "\u7ACB\u5373\u83B7\u5F97"
+  - _key: ui.rb.event.get.offer_sub
+    _ko: "3\uC7A5 \uC911 1\uC7A5\uC744 \uACE0\uB978\uB2E4"
+    _ja: "3\u679A\u304B\u30891\u679A\u3092\u9078\u3076"
+    _en: Choose 1 of 3
+    _zhHant: "\u5F9E3\u5F35\u4E2D\u90781\u5F35"
+    _zhHans: "\u4ECE3\u5F20\u4E2D\u90091\u5F20"
+  - _key: ui.rb.event.get.fail_sub
+    _ko: "\uC2E4\uD328\uD558\uBA74 \uB300\uAC00\uB9CC \uB0B8\uB2E4"
+    _ja: "\u5931\u6557\u3059\u308B\u3068\u4EE3\u511F\u3060\u3051\u6255\u3046"
+    _en: On failure, you only pay the cost
+    _zhHant: "\u5931\u6557\u6642\u53EA\u4ED8\u51FA\u4EE3\u50F9"
+    _zhHans: "\u5931\u8D25\u65F6\u53EA\u4ED8\u51FA\u4EE3\u4EF7"

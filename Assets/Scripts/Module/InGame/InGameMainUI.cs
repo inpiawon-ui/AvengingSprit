@@ -1305,6 +1305,7 @@ namespace Game.Module.InGame
             }
 
             EqualizeText("EventRewardText", "EventCostText");
+            if (_reborn) RbFillDeal(e);   // 「내준다 / 받는다」 두 줄(InGameMainUI.RbEvent)
             SetPanel("EventPanel", true);
             _ui.Find("EventPanel")?.SetAsLastSibling();
         }

@@ -689,41 +689,99 @@ namespace Game.Editor.ReBorn
             Text(PutPx(Node((RectTransform)panel, "ShopNever"), panel, 360f, 1082f, 580f, 36f), "ui.rb.shop.never", "상인은 다시 오지 않아요", 32, Dim, TA.Center);
         }
 
+        // 이벤트 판 — 「내준다 / 받는다」 두 줄(PD 2026-10-27 「지금 시안이 좋은데 시안대로」 · 시안 _exchange/mock_altar/mock_event_deal.png).
+        // 자리 숫자는 시안 판(360 × 640)을 두 배로 옮긴 게임 px. 대가가 없으면 화면 스크립트가 받는다 줄 · 버튼을 위로 당긴다(InGameMainUI.RbEvent).
+        private const float DealRowX = 44f, DealRowW = 632f, DealGiveTop = 644f, DealRowH = 124f, DealGap = 12f;
+
         private static void BuildEvent(Transform root)
         {
             var panel = CenterPanel(root, "EventPanel");
             DropFrameFx(panel, "chain", "flame");
-            var box = PutPx(F(root, "EventBox"), panel, 360f, 640f, 648f, 800f);
+            var box = PutPx(F(root, "EventBox"), panel, 360f, 684f, 680f, 1000f);
             Skin(box, "Components/rb_modal");
-            TitlePlate(panel, F(root, "EventTitleText"), 190f, 222f, 530f, 282f);
+            TitlePlate(panel, F(root, "EventTitleText"), 56f, 154f, 584f, 218f);
+            // 닫기 = 지나간다(시안 event.png 오른쪽 위 X)
+            var close = panel.Find("EventCloseButton") as RectTransform ?? Node(panel, "EventCloseButton");
+            PutPx(close, panel, 668f, 185f, 72f, 70f);
+            Skin(close, "Components/rb_btn_icon_round");
+            if (close.GetComponent<Button>() == null) close.gameObject.AddComponent<Button>();
+            var closeIcon = close.Find("EventCloseIcon") as RectTransform ?? Node(close, "EventCloseIcon");
+            Inside(closeIcon, 36f, 35f, 34f, 34f);
+            Img(closeIcon, "Icons/rb_icon_sys_close_48");
             // 이벤트 그림(키트 rb_art_ev_*) — 화면 스크립트가 이벤트마다 꽂는다
             var art = panel.Find("EventArt") as RectTransform ?? Node(panel, "EventArt");
-            PutPx(art, panel, 360f, 455f, 580f, 300f);
+            PutPx(art, panel, 360f, 386f, 632f, 300f);
             var artImg = art.GetComponent<Image>() ?? art.gameObject.AddComponent<Image>();
             artImg.preserveAspect = true;
             artImg.raycastTarget = false;
             art.SetSiblingIndex(box.GetSiblingIndex() + 1);
-            var body = PutPx(F(root, "EventBodyText"), panel, 360f, 672f, 580f, 110f);
+            var body = PutPx(F(root, "EventBodyText"), panel, 360f, 594f, 624f, 84f);
             Style(body, 36, White, TA.TopLeft);
             if (body.TryGetComponent<TextMeshProUGUI>(out var bt)) bt.enableWordWrapping = true;
-            PutPx(F(root, "EventRewardPill"), panel, 360f, 752f, 580f, 44f);
-            Skin(F(root, "EventRewardPill"), "Components/rb_info_chip");
-            PutPx(F(root, "EventRewardText"), panel, 360f, 752f, 556f, 40f);
-            Style(F(root, "EventRewardText"), 34, Green, TA.Center);
-            PutPx(F(root, "EventCostPill"), panel, 360f, 802f, 580f, 44f);
-            Skin(F(root, "EventCostPill"), "Components/rb_info_chip");
-            PutPx(F(root, "EventCostText"), panel, 360f, 802f, 556f, 40f);
-            Style(F(root, "EventCostText"), 34, Red, TA.Center);
-            var accept = PutPx(F(root, "EventAcceptButton"), panel, 360f, 876f, 580f, 72f);
-            Skin(accept, "Components/rb_btn_secondary");
-            SwapPressed(accept, "Components/rb_btn_secondary_pressed");
-            Style(F(root, "EventAcceptText"), 42, White, TA.Center, heavy: true);
-            var decline = PutPx(F(root, "EventDeclineButton"), panel, 360f, 962f, 580f, 72f);
+            // 옛 알약 두 줄(받는 것 · 대가)은 두 줄 판이 대신한다 — 화면 스크립트도 RE:BORN 이면 켜지 않는다
+            Mute(root, "EventRewardPill", "EventRewardText", "EventCostPill", "EventCostText");
+            DealRow(panel, "EventGive", DealGiveTop, true);
+            DealRow(panel, "EventGet", DealGiveTop + DealRowH + DealGap, false);
+            float buttons = DealGiveTop + (DealRowH + DealGap) * 2f + 16f;
+            var accept = PutPx(F(root, "EventAcceptButton"), panel, 360f, buttons + 40f, DealRowW, 80f);
+            Skin(accept, "Components/rb_btn_primary");
+            SwapPressed(accept, "Components/rb_btn_primary_pressed");
+            Style(F(root, "EventAcceptText"), 44, new Color(0.17f, 0.1f, 0f), TA.Center, heavy: true);
+            var decline = PutPx(F(root, "EventDeclineButton"), panel, 360f, buttons + 136f, DealRowW, 80f);
             Skin(decline, "Components/rb_btn_secondary");
             SwapPressed(decline, "Components/rb_btn_secondary_pressed");
-            Style(F(root, "EventDeclineText"), 42, White, TA.Center, heavy: true);
-            PutPx(F(root, "EventResultText"), panel, 360f, 876f, 580f, 72f);
+            Style(F(root, "EventDeclineText"), 44, White, TA.Center, heavy: true);
+            if (F(root, "EventDeclineText")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI dt) dt.richText = true;
+            PutPx(F(root, "EventResultText"), panel, 360f, buttons + 40f, DealRowW, 80f);
             Style(F(root, "EventResultText"), 38, White, TA.Center);
+        }
+
+        /// <summary>
+        /// 거래 한 줄 — 왼쪽 띠(내준다 빨강 · 받는다 초록) · 아이콘 · 제목 · 아래 줄 · 오른쪽 위 표(확률 · 이 판 내내).
+        /// 노드 이름 = 화면 스크립트 바인딩 키: {name}Row · Key · Icon · Title · Sub · Tag · TagText.
+        /// </summary>
+        private static void DealRow(RectTransform panel, string name, float top, bool give)
+        {
+            // 글자 컴포넌트를 새로 붙이므로 다시 세울 때마다 통째로 새로 만든다(같은 곳에 두 번 붙이면 실패한다)
+            if (panel.Find(name + "Row") is Transform old) Object.DestroyImmediate(old.gameObject);
+            var row = Node(panel, name + "Row");
+            PutPx(row, panel, DealRowX + DealRowW * 0.5f, top + DealRowH * 0.5f, DealRowW, DealRowH);
+            Skin(row, "Components/rb_panel_base");
+            // 판 그림 남색에 붉은 기(내준다) · 푸른 기(받는다)만 곱한다
+            if (row.TryGetComponent<Image>(out var ri)) ri.color = give ? new Color(1f, 0.8f, 0.88f) : new Color(0.8f, 1f, 0.95f);
+            var line = row.Find(name + "Line") as RectTransform ?? Node(row, name + "Line");
+            Stretch(line);
+            Skin(line, "Components/rb_host_frame_ghost");
+            if (line.TryGetComponent<Image>(out var li)) li.color = give ? new Color(0.62f, 0.25f, 0.34f) : new Color(0.2f, 0.52f, 0.43f);
+            var key = row.Find(name + "Key") as RectTransform ?? Node(row, name + "Key");
+            key.anchorMin = new Vector2(0f, 0f); key.anchorMax = new Vector2(0f, 1f); key.pivot = new Vector2(0f, 0.5f);
+            key.sizeDelta = new Vector2(68f, -6f); key.anchoredPosition = new Vector2(3f, 0f);
+            Skin(key, "Components/rb_panel_base");
+            if (key.TryGetComponent<Image>(out var ki)) ki.color = give ? new Color(1.6f, 0.75f, 1f) : new Color(0.7f, 1.5f, 1.25f);
+            var keyText = key.Find(name + "KeyText") as RectTransform ?? Node(key, name + "KeyText");
+            Stretch(keyText);
+            Text(keyText, null, give ? "내\n준\n다" : "받\n는\n다", 30,   // 글자는 화면 스크립트가 넣는다(대가 없음 줄은 가로로)
+                 give ? new Color(1f, 0.54f, 0.61f) : new Color(0.42f, 0.94f, 0.75f), TA.Center, heavy: true);
+            var icon = row.Find(name + "Icon") as RectTransform ?? Node(row, name + "Icon");
+            Inside(icon, 124f, 62f, 80f, 80f);
+            var ib = icon.GetComponent<Image>() ?? icon.gameObject.AddComponent<Image>();
+            ib.preserveAspect = true; ib.raycastTarget = false;
+            float textW = DealRowW - 196f, textX = 180f + textW * 0.5f;
+            var title = row.Find(name + "Title") as RectTransform ?? Node(row, name + "Title");
+            Inside(title, textX, 38f, textW, 40f);
+            Text(title, null, "", 44, White, TA.Left, heavy: true);
+            var sub = row.Find(name + "Sub") as RectTransform ?? Node(row, name + "Sub");
+            Inside(sub, textX, 84f, textW, 32f);
+            Text(sub, null, "", 33, Dim, TA.Left);
+            if (sub.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st) st.richText = true;
+            var tag = row.Find(name + "Tag") as RectTransform ?? Node(row, name + "Tag");
+            tag.anchorMin = tag.anchorMax = tag.pivot = new Vector2(1f, 1f);
+            tag.sizeDelta = new Vector2(120f, 34f); tag.anchoredPosition = new Vector2(-14f, -16f);
+            Skin(tag, "Components/rb_panel_base");
+            var tagText = tag.Find(name + "TagText") as RectTransform ?? Node(tag, name + "TagText");
+            Stretch(tagText);
+            Text(tagText, null, "", 30, Yellow, TA.Center, heavy: true);
+            tag.gameObject.SetActive(false);
         }
 
         private static void BuildShrine(Transform root)
@@ -1123,6 +1181,12 @@ namespace Game.Editor.ReBorn
             ev.arraySize = arts.Length;
             for (int i = 0; i < arts.Length; i++)
                 ev.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(arts[i]));
+            // 이벤트 「내준다 / 받는다」 줄 아이콘 — 이름으로 찾는다(InGameMainUI.RbEvent DealIcon)
+            string[] deal = { "heal_ghost", "heal_host", "stat_hp", "currency_gold", "room_battle", "room_elite", "card_up",
+                              "reward_chest", "possess_range", "shop_discount", "boss_shield", "mode_ghost" };
+            var di = so.FindProperty("_rbDealIcons");
+            di.arraySize = deal.Length;
+            for (int i = 0; i < deal.Length; i++) di.GetArrayElementAtIndex(i).objectReferenceValue = KitSprite($"Icons/rb_icon_{deal[i]}_96");
             // 다음 방 창의 방 아이콘(rb_icon_room_*_96)
             var rooms = AssetDatabase.FindAssets("rb_icon_room_ t:Sprite", new[] { $"{Kit}/Icons" });
             var ri = so.FindProperty("_rbRoomIcons");

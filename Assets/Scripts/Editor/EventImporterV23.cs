@@ -82,7 +82,7 @@ namespace Game.EditorTools
             ["EV_CH1_02"] = new(
                 "버려진 보급품",
                 "뒤집힌 상자 하나. 안에 든 것을 다 가져갈 수는 없다.\n장비를 챙기든지, 팔아 넘기든지.",
-                "장비를 챙긴다", "팔아 넘긴다  (골드 25)",
+                "장비를 챙긴다", "팔아 넘긴다",
                 EventReward.CardGrant, 0, CardRarity.Common,
                 hasDecline: true, declineReward: EventReward.Gold, declineValue: 25),
 
@@ -174,7 +174,7 @@ namespace Game.EditorTools
             ["EV_CH3_05"] = new(
                 "심연의 거래",
                 "바닥이 보이지 않는 통로. 아래에서 목소리가 올라온다.\n값은 영혼으로 받는다고 한다.",
-                "영혼을 내준다", "대신 쉬어 간다  (고스트 30% 회복)",
+                "영혼을 내준다", "대신 쉬어 간다",
                 EventReward.CardGrant, 0, CardRarity.Epic,
                 hasDecline: true, declineReward: EventReward.GhostHeal, declineValue: 30),
 

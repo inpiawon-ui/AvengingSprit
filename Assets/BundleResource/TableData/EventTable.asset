@@ -46,7 +46,7 @@ MonoBehaviour:
     _costType: 0
     _costValue: 0
     _acceptKr: "\uC7A5\uBE44\uB97C \uCC59\uAE34\uB2E4"
-    _declineKr: "\uD314\uC544 \uB118\uAE34\uB2E4  (\uACE8\uB4DC 25)"
+    _declineKr: "\uD314\uC544 \uB118\uAE34\uB2E4"
     _rewardType: 4
     _rewardValue: 0
     _rewardRarity: 0
@@ -405,8 +405,7 @@ MonoBehaviour:
     _costType: 2
     _costValue: 25
     _acceptKr: "\uC601\uD63C\uC744 \uB0B4\uC900\uB2E4"
-    _declineKr: "\uB300\uC2E0 \uC26C\uC5B4 \uAC04\uB2E4  (\uACE0\uC2A4\uD2B8 30%
-      \uD68C\uBCF5)"
+    _declineKr: "\uB300\uC2E0 \uC26C\uC5B4 \uAC04\uB2E4"
     _rewardType: 4
     _rewardValue: 0
     _rewardRarity: 2
