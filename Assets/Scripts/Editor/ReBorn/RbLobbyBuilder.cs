@@ -86,7 +86,8 @@ namespace Game.Editor.ReBorn
             if (rt.Find("GrwStarDone") is Transform starDone) starDone.SetSiblingIndex(chestOpen.GetSiblingIndex() + 1);
             rt.Find("RbGuide").gameObject.SetActive(false);         // 성급 강화 · 성급 올랐어요 · 스킬 정보 — 딤이 위 막대 · 아래 탭까지 덮게 맨 뒤
 
-            WidenBattle(rt, battle);   // 넓은 화면(4:3) — 끝까지 늘리고 양옆에 붙인다(PD 2026-10-27)
+            WidenBattle(rt, battle);
+            WidenPages(rt);   // 넓은 화면(4:3) — 끝까지 늘리고 양옆에 붙인다(PD 2026-10-27)
             Wire(root.AddComponent<RbLobbyUI>());
             RbFxBuilder.Attach(root);   // 아웃게임 연출(새 몸 · 각성 · 상자 · 보상 · 강화 · 별 · 버튼 빛)
             Save(root, PrefabPath);
@@ -134,27 +135,29 @@ namespace Game.Editor.ReBorn
 
         // ── 넓은 화면 — 4:3 태블릿은 보이는 폭이 960 이라 가운데 720 에만 몰려 양옆이 비었다(PD 2026-10-27 「스트레치로 여백 없이」).
         //    폭 720 에서의 자리는 그대로 두고 기준만 바꾼다: 왼쪽 것은 왼쪽 끝 · 오른쪽 것은 오른쪽 끝 · 화면 폭 판은 늘림 · 탭은 비율.
-        //    다른 쪽(호스트 · 상점 …)은 런타임이 가운데 기준으로 자리를 계산하는 곳이 있어 건드리지 않는다
+        //    다른 쪽(상점 · 호스트 · 소환 · 도전)은 WidenPages — 스크롤 본문은 통째로 키우고(RbWideContent) 머리 줄만 양끝에 붙인다
         private enum Wide { Left, Right, Stretch, Ratio }
+
+        private static void Re(RectTransform parent, string name, Wide w)
+        {
+            if (parent.Find(name) is not RectTransform n) return;
+            // 가로로 늘린 부모(루트 · 쪽)는 폭 720 기준, 고정 폭 부모는 제 폭
+            float pw = parent.anchorMin.x == 0f && parent.anchorMax.x == 1f ? 720f + parent.sizeDelta.x : parent.sizeDelta.x;
+            float ax = n.anchoredPosition.x, ay = n.anchorMin.y, by = n.anchorMax.y;
+            switch (w)
+            {
+                case Wide.Left: n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(0f, by); n.anchoredPosition = new Vector2(ax + pw * 0.5f, n.anchoredPosition.y); break;
+                case Wide.Right: n.anchorMin = new Vector2(1f, ay); n.anchorMax = new Vector2(1f, by); n.anchoredPosition = new Vector2(ax - pw * 0.5f, n.anchoredPosition.y); break;
+                case Wide.Ratio: { float f = (ax + pw * 0.5f) / pw; n.anchorMin = new Vector2(f, ay); n.anchorMax = new Vector2(f, by); n.anchoredPosition = new Vector2(0f, n.anchoredPosition.y); break; }
+                case Wide.Stretch: { float wd = n.sizeDelta.x; n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(1f, by); n.sizeDelta = new Vector2(wd - pw, n.sizeDelta.y); break; }
+            }
+        }
 
         private static void WidenBattle(RectTransform rt, RectTransform battle)
         {
-            void Re(RectTransform parent, string name, Wide w)
-            {
-                if (parent.Find(name) is not RectTransform n) return;
-                float pw = parent == rt || parent == battle ? 720f : parent.sizeDelta.x;
-                float ax = n.anchoredPosition.x, ay = n.anchorMin.y, by = n.anchorMax.y;
-                switch (w)
-                {
-                    case Wide.Left: n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(0f, by); n.anchoredPosition = new Vector2(ax + pw * 0.5f, n.anchoredPosition.y); break;
-                    case Wide.Right: n.anchorMin = new Vector2(1f, ay); n.anchorMax = new Vector2(1f, by); n.anchoredPosition = new Vector2(ax - pw * 0.5f, n.anchoredPosition.y); break;
-                    case Wide.Ratio: { float f = (ax + pw * 0.5f) / pw; n.anchorMin = new Vector2(f, ay); n.anchorMax = new Vector2(f, by); n.anchoredPosition = new Vector2(0f, n.anchoredPosition.y); break; }
-                    case Wide.Stretch: { float wd = n.sizeDelta.x; n.anchorMin = new Vector2(0f, ay); n.anchorMax = new Vector2(1f, by); n.sizeDelta = new Vector2(wd - pw, n.sizeDelta.y); break; }
-                }
-            }
-            foreach (var n in new[] { "HeaderProfile", "ChipStamina" }) Re(rt, n, Wide.Left);
-            Re(rt, "ChipGold", Wide.Ratio);
-            foreach (var n in new[] { "ChipGem", "HeaderPlus" }) Re(rt, n, Wide.Right);
+            Re(rt, "HeaderProfile", Wide.Left);
+            // 재화는 오른쪽 끝에 모은다(PD 2026-10-27 「탑뷰는 재화를 오른쪽으로 모아 두자」) — 넓은 화면에서 프로필과 재화 사이만 벌어진다
+            foreach (var n in new[] { "ChipStamina", "ChipGold", "ChipGem", "HeaderPlus" }) Re(rt, n, Wide.Right);
             foreach (var t in Tabs) Re(rt, $"Tab{t}", Wide.Ratio);
             foreach (var n in new[] { "RailMail", "RailMission", "RailSettings", "SortieTitleMark", "SortieTitle" }) Re(battle, n, Wide.Left);
             foreach (var n in new[] { "RailPass", "RailEvent", "RailDaily", "SortieInfo", "SortieAll" }) Re(battle, n, Wide.Right);
@@ -169,6 +172,63 @@ namespace Game.Editor.ReBorn
                 }
             }
             foreach (var n in new[] { "ChapterCard", "SortieViewport", "SortieButton" }) Re(battle, n, Wide.Stretch);
+        }
+
+        // ── 다른 쪽 넓은 화면 — 상점이 태블릿에서 왼쪽으로 쏠렸다(줄을 왼쪽 위 기준으로 쌓는데 보기 칸이 화면 폭이라).
+        //    스크롤 본문은 폭 720 · 위 가운데로 고정하고 RbWideContent 가 화면 폭에 맞게 키운다. 머리 줄 · 탭 · 거르기 칩은 전투처럼 다시 건다
+        private static readonly string[] WidePages = { "PageShop", "PageHost", "PageGrowth", "PageSummon", "PageChallenge" };
+
+        private static string HeadOf(string name)
+        {
+            foreach (var tail in new[] { "Back", "Title", "Help", "Owned" })
+                if (name.EndsWith(tail) && name.Length > tail.Length) return name.Substring(0, name.Length - tail.Length);
+            return null;
+        }
+
+        private static void WidenPages(RectTransform rt)
+        {
+            foreach (var pn in WidePages)
+            {
+                if (rt.Find(pn) is not RectTransform page) continue;
+                foreach (var t in page.GetComponentsInChildren<RectTransform>(true))
+                {
+                    if (t.parent is not RectTransform parent) continue;
+                    // 스크롤 본문 — 보기 칸(RectMask2D) 바로 아래 「…Content」
+                    if (t.name.EndsWith("Content") && parent.GetComponent<RectMask2D>() != null && parent != page)
+                    {
+                        float h = t.sizeDelta.y;
+                        t.anchorMin = t.anchorMax = new Vector2(0.5f, 1f);
+                        t.pivot = new Vector2(0.5f, 1f);
+                        t.sizeDelta = new Vector2(720f, h);
+                        if (t.GetComponent<RbWideContent>() == null) t.gameObject.AddComponent<RbWideContent>();
+                        continue;
+                    }
+                    // 머리 줄 — 뒤로 · 제목은 왼쪽 끝, 도움말 · 보유 수는 오른쪽 끝(쪽 · 하위 쪽 모두)
+                    if (parent.anchorMin.x != 0f || parent.anchorMax.x != 1f) continue;
+                    // 같은 머리 이름의 「…Back」 이 있는 줄만 — 팝업 가운데 제목 등은 그대로
+                    string head = HeadOf(t.name);
+                    if (head == null || parent.Find(head + "Back") == null) continue;
+                    if (t.name.EndsWith("Back") || t.name.EndsWith("Title")) Re(parent, t.name, Wide.Left);
+                    else Re(parent, t.name, Wide.Right);
+                }
+            }
+            if (rt.Find("PageShop") is RectTransform shop)
+                for (int i = 0; i < 4; i++) Re(shop, $"ShpTab{i}", Wide.Ratio);
+            if (rt.Find("PageHost") is RectTransform host)
+            {
+                for (int i = 0; i < 5; i++) Re(host, $"ColFilter{i}", Wide.Ratio);
+                // 유령 카드 — 판은 늘리고 안의 것은 가운데보다 왼쪽이면 왼쪽 끝, 오른쪽이면 오른쪽 끝(챕터 칸과 같은 방식)
+                if (host.Find("ColGhostCard") is RectTransform ghost)
+                {
+                    for (int i = 0; i < ghost.childCount; i++)
+                    {
+                        var c = (RectTransform)ghost.GetChild(i);
+                        if (c.anchorMin.x != c.anchorMax.x) continue;   // 이미 판 폭으로 늘린 것(바탕 등)
+                        Re(ghost, c.name, c.anchoredPosition.x > 0f ? Wide.Right : Wide.Left);
+                    }
+                    Re(host, "ColGhostCard", Wide.Stretch);
+                }
+            }
         }
 
         // ── 위 막대: 프로필 · 행동력 · 골드 · 젬 · + ─────────────────
