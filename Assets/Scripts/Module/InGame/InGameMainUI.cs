@@ -154,10 +154,12 @@ namespace Game.Module.InGame
             _skillCooldownFill = _ui.Get<Image>("SkillCooldown");
             if (_skillCooldownFill != null)
             {
-                // 아래에서 차오르는 쿨다운 덮개. 스프라이트 배선만으로는 채우기 모드를 줄 수 없다.
+                // 아이콘 원 전체를 덮고 시계 방향으로 걷히는 쿨 덮개(PD 2026-10-27 「아이콘 전체를 덮게, 쿨타임 제대로 표기」).
+                // 스프라이트 배선만으로는 채우기 모드를 줄 수 없다
                 _skillCooldownFill.type = Image.Type.Filled;
-                _skillCooldownFill.fillMethod = Image.FillMethod.Vertical;
-                _skillCooldownFill.fillOrigin = (int)Image.OriginVertical.Top;
+                _skillCooldownFill.fillMethod = Image.FillMethod.Radial360;
+                _skillCooldownFill.fillOrigin = (int)Image.Origin360.Top;
+                _skillCooldownFill.fillClockwise = false;
                 _skillCooldownFill.raycastTarget = false;
             }
             _possessButtonImage = _ui.Get<Image>("PossessButton");
@@ -381,10 +383,23 @@ namespace Game.Module.InGame
             ShowPendingModeBanner();   // 모드 — 덮개 뒤에서 들어온 층 소개 띠를 이제 띄운다
         }
 
+        private int _skillCdShown = -1;
+
+        // 남은 초가 바뀔 때만 글자를 고친다(매 프레임 글자를 만들지 않는다)
+        private void TickSkillCooldownText()
+        {
+            int sec = _battle != null && _battle.SkillCooldownRatio < 1f ? Mathf.CeilToInt(_battle.SkillCooldownRemain) : 0;
+            if (sec == _skillCdShown) return;
+            _skillCdShown = sec;
+            _ui.SetActive("SkillCooldownText", sec > 0);
+            if (sec > 0) _ui.SetText("SkillCooldownText", sec.ToString());
+        }
+
         private void Update()
         {
             if (_skillCooldownFill != null && _battle != null)
                 _skillCooldownFill.fillAmount = 1f - _battle.SkillCooldownRatio;
+            TickSkillCooldownText();
 
             TickSkillReady(Time.unscaledDeltaTime);
             TickUltButton();

@@ -239,6 +239,7 @@ namespace Game.Editor.ReBorn
         private static readonly (int w, int h, Language lang, string state, string name)[] InGameShots =
         {
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
+            (720, 1280, Language.Korean, "ingame:skillcd", "skillcd_16x9"),
             (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
             (768, 1024, Language.Korean, "ingame", "fight_4x3"),
             (1200, 1920, Language.Korean, "ingame", "fight_16x10"),   // 16:10 태블릿(PD 2026-10-27 「Lv 게이지랑 UI 가 화면을 삐져나간다」)
@@ -1008,6 +1009,17 @@ namespace Game.Editor.ReBorn
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") { LogHits(ui); return; }
+            // 액티브 쿨이 도는 중 — 35% 찬 채로 멈춰 찍는다(덮개가 아이콘 원 전체를 덮는지 · 남은 초)
+            if (state == "ingame:skillcd")
+            {
+                var bd = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+                var bdt = typeof(Game.Module.InGame.BattleDirector);
+                const System.Reflection.BindingFlags CF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                float full = (float)(bdt.GetProperty("PlayerSkillCooldown", CF)?.GetValue(bd) ?? 6f);
+                bdt.GetField("_skillCooldown", CF)?.SetValue(bd, full * 0.35f);
+                Time.timeScale = 0f;
+                return;
+            }
             // 창이 열리는 연출은 게임 시간으로 돈다 — 0.05 배면 덜 열린 채 찍힌다(제단 첫 캡처). 창이 떠 있으면 판은 멈춰 있다
             Time.timeScale = 1f;
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();

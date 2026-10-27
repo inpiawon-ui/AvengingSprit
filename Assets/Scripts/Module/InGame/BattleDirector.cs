@@ -318,6 +318,10 @@ namespace Game.Module.InGame
         public float SkillCooldownRatio => _config == null ? 0f
             : Mathf.Clamp01(_skillCooldown / PlayerSkillCooldown);
 
+        /// <summary>액티브가 다시 찰 때까지 남은 초(몸이 없으면 0).</summary>
+        public float SkillCooldownRemain => _config == null || _host == null ? 0f
+            : Mathf.Max(0f, PlayerSkillCooldown - _skillCooldown);
+
         /// <summary>
         /// 지금 탄 몸의 액티브 스킬 쿨(초).
         ///

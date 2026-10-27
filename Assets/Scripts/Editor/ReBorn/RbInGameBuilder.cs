@@ -356,15 +356,29 @@ namespace Game.Editor.ReBorn
             Skin(skill, "Hud/rb_btn_skill", false);
             SwapPressed(skill, "Hud/rb_btn_skill_pressed");
             RoundIcon(skill, F(root, "SkillIcon"), "SkillIconMask");
+            // 쿨 덮개 — 아이콘 둥근 마스크 안에 넣어 원 전체를 덮는다. 예전엔 빨간 점 그림(21 칸 중 원 16 칸)을 써서
+            //   아이콘 가운데만 어두워져 「아이콘을 하나 더 넣은 것」처럼 보였다(PD 2026-10-27). 채우기 방식은 화면 스크립트가 준다
             var scd = F(root, "SkillCooldown");
-            Inside(scd, 50f, 50f, 78f, 78f);
-            // 둥근 덮개 — 테두리 없는 키트 원(빨간 점)을 짙게 칠해 쓴다(일시정지 원은 제 테두리 빛이 보였다)
-            if (scd != null && scd.TryGetComponent<Image>(out var scdImg))
+            if (scd != null && skill.Find("SkillIconMask") is RectTransform scdMask)
             {
-                scdImg.sprite = KitSprite("Components/rb_dot_red");
-                scdImg.preserveAspect = false;
-                scdImg.color = new Color(0.03f, 0.04f, 0.08f, 0.78f);
+                scd.SetParent(scdMask, false);
+                Stretch(scd);
+                scd.SetAsLastSibling();   // 아이콘 위
+                if (scd.TryGetComponent<Image>(out var scdImg))
+                {
+                    // 흰 판 — 마스크가 원으로 자른다. 원형 채우기는 그림이 있어야 돈다(그림 없으면 통째로 덮인다)
+                    scdImg.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+                    scdImg.type = Image.Type.Filled;
+                    scdImg.fillMethod = Image.FillMethod.Radial360;
+                    scdImg.color = new Color(0.02f, 0.03f, 0.06f, 0.82f);
+                }
             }
+            // 남은 초 — 아이콘 가운데 숫자
+            if (skill.Find("SkillCooldownText") is Transform oldCd) Object.DestroyImmediate(oldCd.gameObject);
+            var scdText = Node(skill, "SkillCooldownText");
+            Inside(scdText, 50f, 50f, 78f, 50f);
+            Text(scdText, null, "6", 40, White, TA.Center, number: true);
+            scdText.gameObject.SetActive(false);
             Inside(F(root, "SkillSealIcon"), 50f, 50f, 40f, 40f);
             Mute(root, "SkillButtonLabel");
 
