@@ -284,6 +284,8 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
             // 카드가 찬 일시정지(등급 넷 섞어 5장 · 3장은 Lv 2) — PD 2026-10-27 「카드 찬 모습까지 확인」
             (720, 1280, Language.Korean, "ingame:pause_cards", "pause_cards_16x9"),
+            (1080, 2400, Language.Korean, "ingame:pause_cards", "pause_cards_20x9"),
+            (768, 1024, Language.Korean, "ingame:pause_cards", "pause_cards_4x3"),
             (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
             // 남은 화면(2026-10-24) — 보스 경고 · 다음 방 · 밤 몸 고르기 · 첫 판 안내
