@@ -351,7 +351,7 @@ namespace Game.Editor.ReBorn
             Style(F(root, "PossessButtonLabel"), 30, White, TA.Center, number: true);
 
             // 액티브 — 단순한 파란 고리 · 작게(필살기 왼쪽 아래)
-            var skill = PutPx(F(root, "SkillButton"), group, 496f, 160f, 100f, 100f);
+            var skill = PutPx(F(root, "SkillButton"), group, 474f, 160f, 100f, 100f);   // 키운 만큼 왼쪽으로(필살기와 간격 유지)
             skill.localScale = new Vector3(SkillSmall, SkillSmall, 1f);
             Skin(skill, "Hud/rb_btn_skill", false);
             SwapPressed(skill, "Hud/rb_btn_skill_pressed");
@@ -427,8 +427,8 @@ namespace Game.Editor.ReBorn
             F(root, "PossessButtonGlow")?.SetSiblingIndex(0);
         }
 
-        // 버튼 크기 — 액티브는 작고 단순하게, 필살기 · 빙의는 크게(PD 2026-10-27)
-        private const float SkillSmall = 0.9f, UltBig = 1.32f, PossessBig = 1.15f;
+        // 버튼 크기 — 필살기 · 빙의는 크게 · 액티브는 시안(skill_buttons_mock) 크기로 0.9 → 1.35(PD 2026-10-27)
+        private const float SkillSmall = 1.35f, UltBig = 1.32f, PossessBig = 1.15f;
 
         /// <summary>버튼 안 자식 — 버튼 위 왼쪽 기준 중심(게임 px).</summary>
         private static void Inside(RectTransform rt, float cx, float cy, float w, float h)
