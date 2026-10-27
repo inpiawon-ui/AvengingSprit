@@ -8,8 +8,8 @@ using UnityEngine.UI;
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// RE:BORN 레벨업 3택1 — 시안 Screens/levelup · levelup-selected(Core/ui.css .choice).
-    /// 카드를 누르면 **고르기만** 한다(금테 · 12 px 떠오름 · 아래 버튼 「○○ 선택」) — 확정은 아래 노란 버튼(제단과 같은 길).
+    /// RE:BORN 레벨업 3택1 — 시안 Screens/levelup(Core/ui.css .choice).
+    /// 카드를 누르면 바로 적용한다(PD 2026-10-27 「투스텝은 필요 없어」 — 시안의 「골라서 확정」 버튼은 뺐다).
     /// 카드 아래 초록 줄은 이번에 받을 수치(새 카드 「경험치 +15%」 · 가진 카드 「튕김 횟수 2 → 3」).
     /// </summary>
     public sealed partial class InGameMainUI
@@ -18,25 +18,16 @@ namespace Game.Module.InGame
         private static readonly Color RbStripCommon = new Color32(140, 149, 166, 255);
         private static readonly Color RbStripRare = new Color32(79, 128, 177, 255);
         private static readonly Color RbStripEpic = new Color32(121, 94, 156, 255);
-        private static readonly Color RbStripEpicPicked = new Color32(137, 100, 168, 255);
         private static readonly Color RbStripTop = new Color32(194, 155, 63, 255);
         private static readonly Color RbTextMuted = new Color32(171, 178, 206, 255);
         private static readonly Color RbTextRare = new Color32(84, 220, 235, 255);
         private static readonly Color RbTextEpic = new Color32(239, 198, 103, 255);
         private static readonly Color RbTextTop = new Color32(255, 201, 61, 255);
-        private static readonly Color RbWaitText = new Color32(169, 177, 214, 255);
-        private static readonly Color RbGoText = new Color32(48, 32, 8, 255);
-        // 확정 버튼 글 크기(시안 1080 px → 720) — 대기 36 · 선택 56
-        private const float RbWaitSize = 36f * 2f / 3f, RbGoSize = 56f * 2f / 3f;
-        // 고른 카드가 떠오르는 높이(시안 translateY(-12px))
-        private const float RbPickLift = 12f * 2f / 3f;
         // 꼬리표 좌우 여백 · 오른쪽 끝(카드 안 1000 px — 시안)
         private const float RbTagPad = 10f * 2f / 3f, RbTagRight = 1000f * 2f / 3f;
 
         private readonly float[] _rbCardHomeY = new float[3];
-        private readonly CardRarity[] _rbCardRarity = new CardRarity[3];
         private bool _rbHomeKnown;
-        private int _rbPicked = -1;
 
         private static Color RbStripColor(CardRarity r) => r switch
         {
@@ -69,7 +60,6 @@ namespace Game.Module.InGame
         /// <summary>카드 한 장의 RE:BORN 칸 — 효과 줄 · 꼬리표 폭.</summary>
         private void RbFillCard(int i, BuffEntry entry, int level)
         {
-            _rbCardRarity[i] = entry.Rarity;
             string delta = CardDelta(entry, level);
             _ui.SetActive($"BuffCard{i}Delta", !string.IsNullOrEmpty(delta));
             _ui.SetText($"BuffCard{i}Delta", delta);
@@ -84,46 +74,6 @@ namespace Game.Module.InGame
             float w = t.GetPreferredValues(t.text, 9999f, chip.sizeDelta.y).x + RbTagPad * 2f;
             chip.sizeDelta = new Vector2(w, chip.sizeDelta.y);
             chip.anchoredPosition = new Vector2(RbTagRight - w, chip.anchoredPosition.y);
-        }
-
-        /// <summary>카드를 고른다(-1 = 아무것도 안 고른 처음). 금테 · 떠오름 · 아래 버튼 글과 그림이 바뀐다.</summary>
-        private void RbSelectCard(int index, string buffKey, string displayName)
-        {
-            _rbPicked = index;
-            for (int i = 0; i < 3; i++)
-            {
-                bool on = i == index;
-                _ui.SetActive($"BuffCard{i}Ring", on);
-                _ui.SetActive($"BuffCard{i}Glow", on);
-                if (_ui.Get<Image>($"BuffCard{i}Strip") is Image strip)
-                    strip.color = on && _rbCardRarity[i] == CardRarity.Epic ? RbStripEpicPicked : RbStripColor(_rbCardRarity[i]);
-                if (_ui.Find($"BuffCard{i}") is RectTransform rt && _rbHomeKnown)
-                    rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, _rbCardHomeY[i] + (on ? RbPickLift : 0f));
-            }
-
-            var go = _ui.Get<Button>("BuffHint");
-            if (go == null) return;
-            bool picked = index >= 0 && !string.IsNullOrEmpty(buffKey);
-            go.interactable = picked;
-            go.onClick.RemoveAllListeners();
-            if (picked)
-            {
-                GameSound.Cue("ui.tap");
-                string slot = $"BuffCard{index}";
-                go.onClick.AddListener(() =>
-                {
-                    go.interactable = false;   // 두 번 누르지 않게 — 창은 고른 연출(PickCardAsync)이 닫는다
-                    _pickedSlot = slot;
-                    OnBuffPicked(buffKey);
-                });
-            }
-            _ui.SetText("BuffHintText", picked ? string.Format(Localize.FromTable("ui.rb.levelup.go", "{0} 선택"), displayName)
-                                               : Localize.FromTable("ui.rb.levelup.hint", "카드를 골라 주세요"));
-            if (_ui.Get<TMP_Text>("BuffHintText") is TMP_Text t)
-            {
-                t.color = picked ? RbGoText : RbWaitText;
-                t.fontSizeMax = picked ? RbGoSize : RbWaitSize;
-            }
         }
 
         // ── 효과 줄 ────────────────────────────────────────────

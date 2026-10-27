@@ -238,10 +238,6 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.English, "ingame:levelup", "levelup_en"),
             (1080, 2400, Language.Korean, "ingame:levelup", "levelup_20x9"),
             (768, 1024, Language.Korean, "ingame:levelup", "levelup_4x3"),
-            (720, 1280, Language.Korean, "ingame:levelup_sel", "levelup_sel_16x9"),
-            (1080, 2400, Language.Korean, "ingame:levelup_sel", "levelup_sel_20x9"),
-            (720, 1280, Language.English, "ingame:levelup_sel", "levelup_sel_en"),
-            (720, 1280, Language.Japanese, "ingame:levelup_sel", "levelup_sel_ja"),
             (1080, 2400, Language.Korean, "ingame:result_fail", "result_fail_20x9"),
             (768, 1024, Language.Korean, "ingame:result_clear", "result_clear_4x3"),
             (720, 1280, Language.English, "ingame:result_fail", "result_fail_en"),
@@ -291,11 +287,9 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:danger", "now_ghost_danger_16x9"),
             // PD 결정 반영(2026-10-25) — 쉼터 골라서 확정 · 상인 4칸
             (720, 1280, Language.Korean, "ingame:shrine", "now_shrine_16x9"),
-            (720, 1280, Language.Korean, "ingame:shrine_sel", "now_shrine_sel_16x9"),
             (720, 1280, Language.Korean, "ingame:shop", "now_shop_16x9"),
             (1080, 2400, Language.Korean, "ingame:shop", "now_shop_20x9"),
             (720, 1280, Language.English, "ingame:shop", "now_shop_en"),
-            (720, 1280, Language.Japanese, "ingame:shrine_sel", "now_shrine_sel_ja"),
         };
 
         // 이름 앞머리 거르개(SessionState Key+".only") — 새 화면만 찍을 때 목록 전체를 돌지 않게
@@ -855,10 +849,8 @@ namespace Game.Editor.ReBorn
             switch (state)
             {
                 case "ingame:levelup":
-                case "ingame:levelup_sel":
                     bt.GetField("_awaitingBuff", F)?.SetValue(battle, false);
                     bt.GetMethod("OfferBuff", F)?.Invoke(battle, new object[] { Game.Character.CardRarity.Common });
-                    if (state.EndsWith("sel")) Click("BuffCard0");   // 고른 상태(금테 · 떠오름 · 「○○ 선택」 — 시안 levelup-selected)
                     break;
                 case "ingame:shop": bt.GetMethod("OpenShop", F)?.Invoke(battle, null); break;
                 case "ingame:event":
@@ -868,10 +860,6 @@ namespace Game.Editor.ReBorn
                     bt.GetMethod("OfferEvent", F)?.Invoke(battle, null);
                     break;
                 case "ingame:shrine": bt.GetMethod("OpenShrine", F)?.Invoke(battle, null); break;
-                case "ingame:shrine_sel":
-                    bt.GetMethod("OpenShrine", F)?.Invoke(battle, null);
-                    Click("ShrineChoice1");   // 고른 상태(노란 테 · 「○○ 선택」)
-                    break;
                 case "ingame:danger":
                 {
                     // 몸 없이 유령 체력을 20% 로 내린다 — 붉은 테두리가 켜진다(시험 판에서만, 저장하지 않는다)

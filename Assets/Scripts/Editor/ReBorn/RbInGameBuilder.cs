@@ -489,28 +489,17 @@ namespace Game.Editor.ReBorn
             Style(sub, 42, LvMuted, TA.Center);
 
             for (int i = 0; i < 3; i++) BuildLevelUpCard(root, panel, i);
-
-            // 맨 아래 확정 버튼 28~1052 x 1870~2030 — 고르기 전 「카드를 골라 주세요」(대기 판) · 고르면 노란 「○○ 선택」(제단과 같은 길)
-            var hint = panel.Find("BuffHint") as RectTransform ?? Node(panel, "BuffHint");
-            PutPx(hint, panel, 360f, My(1950f), 1024f * S, 160f * S);
-            var hb = Btn(hint, "Components/rb_btn_primary");
-            hb.transition = Selectable.Transition.SpriteSwap;
-            hb.spriteState = new SpriteState { pressedSprite = KitSprite("Components/rb_btn_primary_pressed"), disabledSprite = KitSprite("Components/rb_btn_wait") };
-            hb.interactable = false;
-            var ht = hint.Find("BuffHintText") as RectTransform ?? Node(hint, "BuffHintText");
-            if (ht.GetComponent<TextMeshProUGUI>() == null)
-                Text(Stretch(ht), null, "카드를 골라 주세요", 36, LvWait, TA.Center);
+            // 시안의 맨 아래 「골라서 확정」 버튼은 없다 — 카드를 누르면 바로 적용(PD 2026-10-27 「투스텝은 필요 없어」)
         }
 
-        // 시안 카드 글자 색(Core/ui.css) — 흐린 글 #ABB2CE · 이름 #EDF0F6 · 효과 #6BDAA1 · 대기 버튼 글 #A9B1D6
+        // 시안 카드 글자 색(Core/ui.css) — 흐린 글 #ABB2CE · 이름 #EDF0F6 · 효과 #6BDAA1
         private static readonly Color LvMuted = new Color32(171, 178, 206, 255);
         private static readonly Color LvName = new Color32(237, 240, 246, 255);
         private static readonly Color LvDelta = new Color32(107, 218, 161, 255);
-        private static readonly Color LvWait = new Color32(169, 177, 214, 255);
 
         /// <summary>
-        /// 카드 한 장 — 몸통(그러데이션 판) · 왼쪽 등급 띠 · 고른 금테 · 아이콘 칸 · 등급 · 이름 · 설명 · 효과 줄 · 오른쪽 위 꼬리표.
-        /// 카드 칸(버튼)은 투명 — 그림은 자식들이 그린다(고른 금테를 몸통 위에 얹어야 해서). 자리는 카드 위 왼쪽 기준(시안 px × 2/3).
+        /// 카드 한 장 — 몸통(그러데이션 판) · 왼쪽 등급 띠 · 아이콘 칸 · 등급 · 이름 · 설명 · 효과 줄 · 오른쪽 위 꼬리표.
+        /// 카드 칸(버튼)은 투명 — 그림은 자식들이 그린다. 자리는 카드 위 왼쪽 기준(시안 px × 2/3).
         /// </summary>
         private static void BuildLevelUpCard(Transform root, RectTransform panel, int i)
         {
@@ -521,15 +510,9 @@ namespace Game.Editor.ReBorn
 
             // 납품 판은 둘레에 2 px(시안) 여백이 있다 — 그만큼 넓혀 깐다
             const float pad = 2f * S;
-            var glow = LvLayer(card, $"BuffCard{i}Glow", "Components/rb_card_glow", -26f * S, -18f * S, CardW + 52f * S, CardH + 52f * S, false);
-            glow.color = new Color32(194, 155, 63, 70);   // 시안 0 8px 26px #c29b3f44
-            glow.gameObject.SetActive(false);
             var body = LvLayer(card, $"BuffCard{i}Body", "Components/rb_lv_card", -pad, -pad, CardW + pad * 2f, CardH + 8f * S + pad * 2f, true);
             body.color = new Color(0.82f, 0.82f, 0.82f, 1f);   // 납품이 시안보다 밝다(#1C2744 → 시안 #172038) — 밝기만 맞춘다
             LvLayer(card, $"BuffCard{i}Strip", "Components/rb_lv_strip", -pad, -pad, CardW + pad * 2f, CardH + pad * 2f, true).color = new Color32(140, 149, 166, 255);
-            // 고른 테 — 시안 outline 6 px · offset -2(바깥 4 · 안 2). 납품 판 둘레 여백(가로 10 · 세로 6) 포함
-            var ring = LvLayer(card, $"BuffCard{i}Ring", "Components/rb_lv_ring", -14f * S, -10f * S, CardW + 28f * S, CardH + 20f * S, true);
-            ring.gameObject.SetActive(false);
             LvLayer(card, $"BuffCard{i}Well", "Components/rb_lv_artwell", 24f * S - pad, 30f * S - pad, 240f * S + pad * 2f, 240f * S + pad * 2f, true);
 
             var icon = F(root, $"BuffCard{i}Icon");
@@ -770,21 +753,10 @@ namespace Game.Editor.ReBorn
                 var d = F(root, $"ShrineChoice{i}Desc");
                 Inside(d, 400f, 128f, 460f, 44f);
                 Style(d, 36, Dim, TA.Left);
-                // 고른 칸 — 노란 테 판(시안 rest-selected). 화면 스크립트가 켜고 끈다
-                var sel = row.Find($"ShrineChoice{i}Sel") as RectTransform ?? Node(row, $"ShrineChoice{i}Sel");
-                sel.anchorMin = Vector2.zero; sel.anchorMax = Vector2.one; sel.sizeDelta = Vector2.zero; sel.anchoredPosition = Vector2.zero;
-                Skin(sel, "Components/rb_list_row_selected");
-                if (sel.TryGetComponent<Image>(out var si)) si.raycastTarget = false;
-                sel.SetSiblingIndex(0);
             }
             PutPx(F(root, "ShrineResultText"), panel, 360f, 1060f, 600f, 60f);
             Style(F(root, "ShrineResultText"), 38, White, TA.Center);
-            // 골라서 확정(시안 rest · rest-selected) — 고르기 전엔 회색 「하나를 골라 주세요」, 고르면 노란 「○○ 선택」
-            var old = panel.Find("ShrineConfirm");
-            if (old != null) Object.DestroyImmediate(old.gameObject);
-            var go = PutPx(Node(panel, "ShrineConfirm"), panel, 360f, 1060f, 640f, 84f);
-            Btn(go, "Components/rb_btn_primary");
-            Text(Stretch(Node(go, "ShrineConfirmText")), null, "하나를 골라 주세요", 48, Ink, TA.Center, heavy: true);
+            // 시안의 「골라서 확정」 버튼은 없다 — 칸을 누르면 바로 적용(PD 2026-10-27, 레벨업과 같이)
         }
 
         // ── 결과 화면(스토리 클리어 · 실패) ─────────────────────────
@@ -1143,6 +1115,7 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_reborn").boolValue = true;
             so.FindProperty("_skillFrame").objectReferenceValue = KitSprite("Hud/rb_btn_skill");
             so.FindProperty("_skillFrameEmpty").objectReferenceValue = KitSprite("Hud/rb_btn_skill_cooldown");
+            so.FindProperty("_rbSkillReady").objectReferenceValue = KitSprite("Hud/rb_btn_skill_ready");
             so.FindProperty("_rbPrice").objectReferenceValue = KitSprite("Components/rb_btn_price");
             so.FindProperty("_rbPricePoor").objectReferenceValue = KitSprite("Components/rb_btn_price_poor");
             var arts = AssetDatabase.FindAssets("rb_art_ev_ t:Sprite", new[] { $"{Kit}/Art" });

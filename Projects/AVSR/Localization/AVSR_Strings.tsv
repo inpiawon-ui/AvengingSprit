@@ -1769,3 +1769,4 @@ ui.card.stat.assassinate	즉사 확률	即死率	Execute Chance	即死機率	即
 ui.card.stat.chainlightning	튕김 횟수	跳ね回数	Chain Jumps	彈跳次數	弹跳次数
 ui.card.stat.guardinvuln	재사용 대기	再使用待機	Cooldown	冷卻時間	冷却时间
 ui.card.stat.lowhppower	궁지 피해	窮地ダメージ	Desperation Damage	絕境傷害	绝境伤害
+ui.summon.reveal.reach	리치!	リーチ！	Almost!	差一點！	差一点！

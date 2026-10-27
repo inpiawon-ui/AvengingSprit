@@ -4,26 +4,62 @@
     {
       "name": "modelab",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "Projects/AVSR/ModeLab"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765",
+        "--directory",
+        "Projects/AVSR/ModeLab"
+      ],
       "port": 8765
     },
     {
       "name": "wireframes",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "Projects/AVSR/wireframes"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8766",
+        "--directory",
+        "Projects/AVSR/wireframes"
+      ],
       "port": 8766
     },
     {
       "name": "summon-proto",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8767", "--directory", "Projects/AVSR/_exchange/proto_summon"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8767",
+        "--directory",
+        "Projects/AVSR/_exchange/proto_summon"
+      ],
       "port": 8767
     },
     {
       "name": "reborn-mock",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8768", "--directory", "Projects/AVSR/_handoff/reborn_ui_1023/03_리소스_및_시안"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8768",
+        "--directory",
+        "Projects/AVSR/_handoff/reborn_ui_1023/03_리소스_및_시안"
+      ],
       "port": 8768
+    },
+    {
+      "name": "exchange-mock",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8769",
+        "--directory",
+        "Projects/AVSR/_exchange"
+      ],
+      "port": 8769
     }
   ]
 }

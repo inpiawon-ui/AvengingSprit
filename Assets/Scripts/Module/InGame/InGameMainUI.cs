@@ -52,6 +52,8 @@ namespace Game.Module.InGame
         // ⚠ 몸이 없을 때는 «잠김»이 아니라 «비움»이다(PD 2026-10-04). 자물쇠는 숙련도 0 봉인에만 쓴다.
         [SerializeField] private Sprite _skillFrame;
         [SerializeField] private Sprite _skillFrameEmpty;
+        /// <summary>RE:BORN 액티브 준비 빛 — 둥근 고리(키트 Hud/rb_btn_skill_ready, 가운데가 비어 아이콘 위에 얹는다).</summary>
+        [SerializeField] private Sprite _rbSkillReady;
 
         // RE:BORN UI 리뉴얼(2026-10-23) — 새 HUD 프리팹(RbInGameMainUI, 빌더 `RbInGameBuilder`)이면 켠다. 옛 프리팹은 꺼진 채 그대로 돈다.
         // 새 판은 막대 폭이 달라 폭을 프리팹에서 잰다 · 판 레벨 경험치 막대 · 「1-07」 · 레벨업 카드 판(키트 rb_card_*).
@@ -1388,33 +1390,13 @@ namespace Game.Module.InGame
                 int pick = i;                     // 클로저가 마지막 값을 잡지 않게 복사한다
                 btn.onClick.RemoveAllListeners();
                 btn.interactable = true;
-                // RE:BORN — 골라서 확정(시안 rest · rest-selected, PD 2026-10-25 「선택지는 우리 것, 모양은 시안」)
-                if (_reborn && _ui.Find("ShrineConfirm") != null) btn.onClick.AddListener(() => SelectShrine(pick, e.Titles));
-                else btn.onClick.AddListener(() => ChooseShrine(pick));
+                // 누르면 바로 적용(PD 2026-10-27 — 레벨업과 같이 「골라서 확정」 두 번 누르기를 뺐다)
+                btn.onClick.AddListener(() => ChooseShrine(pick));
             }
-            if (_reborn) SelectShrine(-1, e.Titles);
             EqualizeText("ShrineChoice0Text", "ShrineChoice1Text", "ShrineChoice2Text");
             EqualizeText("ShrineChoice0Desc", "ShrineChoice1Desc", "ShrineChoice2Desc");
             SetPanel("ShrinePanel", true);
             _ui.Find("ShrinePanel")?.SetAsLastSibling();
-        }
-
-        // 고른 칸에 노란 테 · 아래 버튼이 「○○ 선택」으로 켜진다. -1 이면 아무것도 안 고른 처음 상태
-        private void SelectShrine(int index, string[] titles)
-        {
-            for (int i = 0; i < ShrineChoiceCount; i++) _ui.SetActive($"ShrineChoice{i}Sel", i == index);
-            var go = _ui.Get<Button>("ShrineConfirm");
-            if (go == null) return;
-            bool picked = index >= 0 && titles != null && index < titles.Length;
-            go.interactable = picked;
-            go.onClick.RemoveAllListeners();
-            if (picked)
-            {
-                GameSound.Cue("ui.tap");
-                go.onClick.AddListener(() => { go.interactable = false; ChooseShrine(index); });
-            }
-            _ui.SetText("ShrineConfirmText", picked ? string.Format(Localize.FromTable("ui.rb.shrine.go", "{0} 선택"), titles[index])
-                                                    : Localize.FromTable("ui.rb.shrine.pick", "하나를 골라 주세요"));
         }
 
         // 고른 칸 포커스 → 구슬이 몸으로 → 닿는 순간 적용 · 회복 연출(InGameMainUI.Rewards)
@@ -1618,13 +1600,9 @@ namespace Game.Module.InGame
                 var key = entry.BuffKey;
                 var slot = $"BuffCard{i}";   // 어느 칸을 튕길지 눌린 쪽이 알려 준다
                 btn.onClick.RemoveAllListeners();
-                // RE:BORN — 골라서 확정(시안 levelup · levelup-selected): 카드는 고르기만, 아래 노란 버튼이 확정한다
-                int pick = i;
-                string pickName = entry.DisplayName;
-                if (_reborn) btn.onClick.AddListener(() => RbSelectCard(pick, key, pickName));
-                else btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
+                // 누르면 바로 적용 — 「골라서 확정」 두 번 누르기는 뺐다(PD 2026-10-27 「한 번 누르면 바로 적용되게」). 천사 · 악마 제단 카드도 이 창이다
+                btn.onClick.AddListener(() => { _pickedSlot = slot; OnBuffPicked(key); });
             }
-            if (_reborn) RbSelectCard(-1, null, null);
 
             ShowCardFx(e);
             EqualizeText("BuffCard0Name", "BuffCard1Name", "BuffCard2Name");

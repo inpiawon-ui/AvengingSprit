@@ -20,7 +20,6 @@ namespace Game.Editor.ReBorn
             var so = new SerializedObject(reveal);
             so.FindProperty("_stage").objectReferenceValue = Spr($"{Dir}/lab_stage.png");
             so.FindProperty("_tank").objectReferenceValue = Spr($"{Dir}/lab_tank.png");
-            so.FindProperty("_tankGlass").objectReferenceValue = Spr($"{Dir}/lab_tank_glass.png");
             so.FindProperty("_tankBroken").objectReferenceValue = Spr($"{Dir}/lab_tank_broken.png");
             so.FindProperty("_softGlow").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISoftGlow.mat");
             Frames(so, "_crack", "lab_crack_");
@@ -36,18 +35,13 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_plate").objectReferenceValue = Spr($"{Dir}/reveal_plate.png");
             so.FindProperty("_stampNew").objectReferenceValue = Spr($"{Dir}/stamp_new.png");
             so.FindProperty("_ribbonPickup").objectReferenceValue = Spr($"{Dir}/ribbon_pickup.png");
-            // 4단 사다리(PD 10-23) — 흰 고리를 단계색으로 물들인다 · 단계별 배양액 유리 · 대박 무지개 빛(Tools/prep_summon_tiers.py)
-            Frames(so, "_ring", "lab_ring_white_");
-            Frames(so, "_revealLightRainbow", "lab_reveal_light_rainbow_");
-            var glassTier = so.FindProperty("_tankGlassTier");
-            glassTier.arraySize = 4;
-            for (int i = 0; i < 4; i++) glassTier.GetArrayElementAtIndex(i).objectReferenceValue = Spr($"{Dir}/lab_tank_glass_t{i}.png");
-            var tankTier = so.FindProperty("_tankTier");
-            tankTier.arraySize = 4;
-            for (int i = 0; i < 4; i++) tankTier.GetArrayElementAtIndex(i).objectReferenceValue = Spr($"{Dir}/lab_tank_t{i}.png");
+            // 시험판 2(PD 10-27) — 공개 빛은 하나(금빛 6장: 1장은 도는 빛살, 6장은 제자리 반짝). 등급 사다리 빛 · 배양액 색 판은 안 쓴다
             Frames(so, "_revealLight", "lab_reveal_light_");
-            Frames(so, "_revealLightSr", "lab_reveal_light_sr_");
-            Frames(so, "_revealLightR", "lab_reveal_light_r_");
+            // 10회 칸 밑 이름판(꽝 · 좋음) · 아래 버튼(확인 · 10회 더) — RE:BORN 키트
+            so.FindProperty("_labelPlate").objectReferenceValue = RbBuild.KitSprite("Components/rb_panel_base");
+            so.FindProperty("_labelPlateGood").objectReferenceValue = RbBuild.KitSprite("Components/rb_cell_line_gold");
+            so.FindProperty("_btnOk").objectReferenceValue = RbBuild.KitSprite("Components/rb_btn_secondary");
+            so.FindProperty("_btnAgain").objectReferenceValue = RbBuild.KitSprite("Components/rb_btn_primary");
             so.FindProperty("_additive").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UIAdditiveSprite.mat");
             so.FindProperty("_silhouette").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISilhouette.mat");
             so.FindProperty("_font").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset");

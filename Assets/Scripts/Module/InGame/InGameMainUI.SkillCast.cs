@@ -68,7 +68,16 @@ namespace Game.Module.InGame
 
             // ── 스킬 버튼 준비 빛 ──
             var button = _ui.Find("SkillButton") as RectTransform;
-            var f1 = _uiAtlas.GetSprite("skillcastready_1");
+            // RE:BORN — 버튼이 동그라미라 준비 빛도 키트의 둥근 고리(rb_btn_skill_ready) 한 장으로(PD 2026-10-27 「아이콘은 동그라미인데 이펙트는 사각형」).
+            //   옛 준비 빛(skillcastready_*)은 옛 네모 버튼에 맞춘 그림이다
+            if (_reborn && button != null && _rbSkillReady != null)
+            {
+                _readyFrames = new[] { _rbSkillReady };
+                _readyGlow = MakeImage("SkillReadyGlow", button, _rbSkillReady, new Vector2(112f, 106f), Vector2.zero);
+                _readyGlow.preserveAspect = true;
+                _readyGlow.transform.SetAsLastSibling();
+            }
+            var f1 = _reborn ? null : _uiAtlas.GetSprite("skillcastready_1");
             if (button != null && f1 != null)
             {
                 _readyFrames = new[] { f1, _uiAtlas.GetSprite("skillcastready_2") ?? f1,

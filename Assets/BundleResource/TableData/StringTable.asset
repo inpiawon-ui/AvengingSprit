@@ -11423,3 +11423,9 @@ MonoBehaviour:
     _en: Desperation Damage
     _zhHant: "\u7D55\u5883\u50B7\u5BB3"
     _zhHans: "\u7EDD\u5883\u4F24\u5BB3"
+  - _key: ui.summon.reveal.reach
+    _ko: "\uB9AC\uCE58!"
+    _ja: "\u30EA\u30FC\u30C1\uFF01"
+    _en: Almost!
+    _zhHant: "\u5DEE\u4E00\u9EDE\uFF01"
+    _zhHans: "\u5DEE\u4E00\u70B9\uFF01"

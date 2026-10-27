@@ -126,6 +126,7 @@ namespace Game.Module.Lobby
         private async UniTaskVoid PullAsync(IGachaService g, int count, GachaPay pay)
         {
             _busy = true;
+            bool again = false;
             try
             {
                 var (pulls, failKey) = await g.PullAsync(count, pay);
@@ -135,14 +136,22 @@ namespace Game.Module.Lobby
                 if (pulls == null) { Toast(Localize.Get(failKey)); return; }
                 GameSound.Cue("run.card");
                 _shell.RefreshHeader();
-                // 「영혼 배양실」 연출(10-23 4판, 가이드 _exchange/guide_summon_lab_v2.md) — 예전 소환 패널에 붙어 있던 것을
-                // 새 소환 화면에 다시 잇는다(PD 2026-10-26 「기존에 만들어 둔 시안 연출을 살려서 연결」). 끝나면 결과판
-                if (TryGetComponent<SummonReveal>(out var reveal)) await reveal.PlayAsync(RevealEntries(pulls), this.GetCancellationTokenOnDestroy());
+                // 「영혼 배양실」 연출 — 징조 시험판 2(PD 2026-10-27 「시험판 2 흐름 그대로」). 1회는 끝나면 결과판,
+                // 10회는 슬롯 릴 화면에서 끝난다(결과판 없이 「확인 · 10회 더」)
+                if (TryGetComponent<SummonReveal>(out var reveal))
+                    again = await reveal.PlayAsync(RevealEntries(pulls), AgainLabel(g, count), this.GetCancellationTokenOnDestroy());
                 if (this == null) return;
-                ShowResult(pulls, count);
+                if (reveal == null || count == 1) ShowResult(pulls, count);
+                else ShowSub(null);   // 10회 — 결과판 없이 소환 메인으로(값 · 소환권 다시 읽기)
             }
             finally { _busy = false; }
+            // 「10회 더」 — 앞 판 정리가 끝난 뒤에 다시 뽑는다(정리 전에 부르면 연속 누름 막기가 풀린다)
+            if (again && this != null) Pull(count);
         }
+
+        private string AgainLabel(IGachaService g, int count)
+            => string.Format(Localize.FromTable("ui.rb.summon.again", "{0}회 더"), count) + "  "
+               + Price(g, count, PayFor(g, count) == GachaPay.Free ? GachaPay.Gem : PayFor(g, count));
 
         /// <summary>
         /// 배양실 연출에 넘길 몸 목록 — 사다리 4단(PD 2026-10-23): 하늘 = B · 보라 = A 가장 적은 조각 · 금 = A 더 많은 조각 또는 픽업 · 무지개 = 대박.
@@ -165,7 +174,8 @@ namespace Game.Module.Lobby
                 string tag = x.Jackpot ? "ui.summon.reveal.jackpot" : x.Pickup ? "ui.summon.reveal.pickup"
                            : x.IsNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get";
                 string grade = h == null ? string.Empty : HostGradeLabel.Of(h.Grade);
-                list.Add(new SummonReveal.Entry(x.HostKey, h != null ? h.DisplayName : x.HostKey, grade, tag, rarity));
+                list.Add(new SummonReveal.Entry(x.HostKey, h != null ? h.DisplayName : x.HostKey, grade, tag, rarity,
+                                                h != null ? (int)h.Grade : 0, x.Shards, x.ToEssence, x.IsNew));
             }
             return list;
         }

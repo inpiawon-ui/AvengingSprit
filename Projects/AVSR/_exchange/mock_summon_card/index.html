@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>소환 카드 시안</title>
+<style>
+@font-face { font-family: Pre; src: url(img/pretendard_bold.otf); }
+@font-face { font-family: Gal; src: url(img/Galmuri11-Bold.ttf); }
+:root { --r: #4fa3ff; --sr: #b67cff; --ssr: #ffc846; }
+body { margin: 0; background: #0b0f1c; color: #fff; font-family: Pre, sans-serif; }
+h1 { font-size: 22px; margin: 18px 24px 4px; }
+p.note { margin: 0 24px 14px; color: #9fb0d0; font-size: 14px; line-height: 1.5; }
+.row { display: flex; gap: 18px; padding: 0 24px 30px; flex-wrap: wrap; }
+.col { width: 540px; }
+.col h2 { font-size: 16px; margin: 0 0 8px; color: #cfe3ff; }
+.shot { position: relative; width: 540px; height: 1200px; background-size: 540px 1200px; overflow: hidden; border-radius: 6px; }
+
+/* ── 몸 카드(몸 목록과 같은 틀) ── */
+.hc { position: absolute; border-radius: 9px; overflow: hidden; }
+.hc .glow { position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 45%, var(--g) 0%, rgba(14,20,40,.96) 72%), #0e1428; }
+.hc .frame { position: absolute; inset: 0; background-size: 100% 100%; image-rendering: pixelated; }
+.hc .aff { position: absolute; left: 6%; top: 4%; width: 18%; aspect-ratio: 1; border-radius: 5px; background: #0f1a33 center/86% no-repeat; border: 1px solid #2c4a7a; }
+.hc .tag { position: absolute; right: 6%; top: 5%; width: 27%; height: 11%; background: center/contain no-repeat; image-rendering: pixelated; }
+.hc .face { position: absolute; left: 25%; top: 17%; width: 50%; height: 30%; background: center/contain no-repeat; image-rendering: pixelated; }
+.hc .name { position: absolute; left: 0; right: 0; top: 50%; text-align: center; font-weight: 700; }
+.hc .stars { position: absolute; left: 0; right: 0; top: 63%; display: flex; justify-content: center; gap: 2px; }
+.hc .stars i { display: block; background: center/contain no-repeat; image-rendering: pixelated; }
+.hc .pow { position: absolute; left: 0; right: 0; top: 79%; display: flex; justify-content: center; align-items: center; gap: 4px; font-family: Gal; }
+.hc .pow i { display: block; background: url(img/rb_icon_stat_power_48.png) center/contain no-repeat; image-rendering: pixelated; }
+.new { position: absolute; background: url(img/rb_badge_new.png) center/contain no-repeat; image-rendering: pixelated; }
+
+/* ── 1회 아래 정보 판 ── */
+.dock { position: absolute; left: 16px; right: 16px; top: 880px; height: 232px; border-radius: 14px;
+        background: linear-gradient(180deg, rgba(14,22,46,.97), rgba(8,12,26,.98)); border: 2px solid var(--line); box-shadow: 0 0 22px var(--line2); }
+.dock .head { position: absolute; left: 18px; top: -16px; padding: 4px 14px; border-radius: 8px; font-size: 15px; background: #0e1a38; border: 2px solid var(--line); color: var(--line); }
+.info { position: absolute; left: 198px; right: 16px; top: 22px; }
+.info .nm { font-size: 30px; }
+.info .sub { margin-top: 6px; display: flex; align-items: center; gap: 8px; color: #b9c7e6; font-size: 15px; }
+.info .sub i { width: 22px; height: 22px; background: center/contain no-repeat; image-rendering: pixelated; }
+.info .stars { margin-top: 10px; display: flex; gap: 3px; }
+.info .stars i { width: 20px; height: 20px; background: center/contain no-repeat; image-rendering: pixelated; }
+.bar { margin-top: 14px; }
+.bar .lbl { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #b9c7e6; }
+.bar .lbl b { font-family: Gal; color: #fff; font-size: 15px; }
+.bar .lbl em { font-style: normal; font-family: Gal; color: #5ff0c9; }
+.bar .tr { margin-top: 5px; height: 12px; border-radius: 6px; background: #1b2747; overflow: hidden; position: relative; border: 1px solid #2f4777; }
+.bar .tr span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
+.bar .tr .old { background: #3ab7ff; }
+.bar .tr .add { background: #8ff3ff; }
+.chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; padding: 4px 10px; border-radius: 8px; background: #13234a; border: 1px solid #2c4a7a; font-size: 14px; }
+.chip i { width: 18px; height: 18px; background: url(img/rb_icon_shard_48.png) center/contain no-repeat; image-rendering: pixelated; }
+.chip.unlock { background: #3a2a06; border-color: var(--ssr); color: var(--ssr); }
+.tap { position: absolute; left: 0; right: 0; top: 1150px; text-align: center; color: #9fb0d0; font-size: 13px; }
+.cover { position: absolute; left: 0; right: 0; background: linear-gradient(180deg, rgba(6,10,20,0), rgba(6,10,20,.88) 18%, rgba(6,10,20,.92)); }
+
+/* ── 10회 작은 카드 ── */
+.mini { position: absolute; width: 100px; height: 72px; border-radius: 8px; overflow: hidden; border: 2px solid var(--c);
+        background: radial-gradient(110% 100% at 50% 30%, var(--g) 0%, rgba(12,18,36,.97) 75%), #0c1224; }
+.mini .aff { position: absolute; left: 4px; top: 4px; width: 18px; height: 18px; border-radius: 4px; background: #0f1a33 center/86% no-repeat; border: 1px solid #2c4a7a; }
+.mini .tag { position: absolute; right: 4px; top: 4px; width: 30px; height: 19px; background: center/contain no-repeat; image-rendering: pixelated; }
+.mini .nm { position: absolute; left: 2px; right: 2px; top: 26px; text-align: center; font-size: 12.5px; white-space: nowrap; letter-spacing: -.3px; }
+.mini .sh { position: absolute; left: 0; right: 0; top: 46px; display: flex; justify-content: center; align-items: center; gap: 3px; font-family: Gal; font-size: 13px; }
+.mini .sh i { width: 15px; height: 15px; background: url(img/rb_icon_shard_48.png) center/contain no-repeat; image-rendering: pixelated; }
+.mini .sh.unlock { color: var(--ssr); font-family: Pre; font-size: 12px; }
+table { border-collapse: collapse; margin: 0 24px 30px; font-size: 14px; }
+td, th { border: 1px solid #2a3a5e; padding: 6px 10px; text-align: left; }
+th { background: #14203d; }
+</style>
+</head>
+<body>
+<h1>소환 결과 카드 시안 — 몸 목록 카드 틀을 그대로 쓴다</h1>
+<p class="note">틀 · 등급 표 · 속성 아이콘 · 얼굴 · 별 · 전투력은 <b>호스트 목록 카드와 같은 부품</b>(새 그림 없음).<br>
+숫자는 예시다(시험 세이브는 전부 만렙이라 진행 막대가 안 보여서). 게임 적용 땐 실제 보유 조각 · 성급을 넣는다.</p>
+
+<div class="row">
+  <div class="col"><h2>1회 · 지금</h2><div class="shot" style="background-image:url(img/bg_one.png)"></div></div>
+  <div class="col"><h2>1회 · 시안 — 새 몸(SSR)</h2><div class="shot" id="oneNew" style="background-image:url(img/bg_one.png)"></div></div>
+  <div class="col"><h2>1회 · 시안 — 가진 몸(SR, 조각)</h2><div class="shot" id="oneDup" style="background-image:url(img/bg_one_sr.png)"></div></div>
+</div>
+<div class="row">
+  <div class="col"><h2>10회 · 지금</h2><div class="shot" style="background-image:url(img/bg_ten.png)"></div></div>
+  <div class="col"><h2>10회 · 시안</h2><div class="shot" id="ten" style="background-image:url(img/bg_ten.png)"></div></div>
+</div>
+
+<table>
+  <tr><th>칸</th><th>1회</th><th>10회</th></tr>
+  <tr><td>틀 색</td><td colspan="2">R 파랑 · SR 보라 · SSR 금 (목록 카드와 같은 틀)</td></tr>
+  <tr><td>속성 · 등급</td><td>카드 왼쪽 위 속성 · 오른쪽 위 등급 + 옆 글자 「SSR · 마법」</td><td>같은 자리, 작게</td></tr>
+  <tr><td>얼굴</td><td>카드 안 얼굴</td><td>없음 — 바로 위 배양조에 몸이 서 있다</td></tr>
+  <tr><td>별 · 전투력</td><td>있음</td><td>없음 — 칸이 좁다</td></tr>
+  <tr><td>조각</td><td>「조각 +5」 + 진행 막대(가진 것 → 이번에 받은 것) + 다음 성급까지 남은 수</td><td>「◆ ×5」</td></tr>
+  <tr><td>새 몸</td><td>NEW 표 + 「새 몸 해금!」</td><td>NEW 표 + 「새 몸!」</td></tr>
+  <tr><td>다 키운 몸</td><td>「정수 +N」으로 바뀐 것을 같이 보인다</td><td>「정수 +N」</td></tr>
+</table>
+
+<script>
+const G = { r: ['rb_host_frame_r', 'rb_rarity_r', 'rgba(79,163,255,.42)', '#4fa3ff'],
+            sr: ['rb_host_frame_sr', 'rb_rarity_sr', 'rgba(182,124,255,.42)', '#b67cff'],
+            ssr: ['rb_host_frame_ghost', 'rb_rarity_ssr', 'rgba(255,200,70,.45)', '#ffc846'] };
+const AFF = { blade: '무기', force: '파워', magic: '마법' };
+function stars(n, size) {   // 1~4 은별 · 5 마다 금별
+  let s = ''; const gold = Math.floor(n / 5), silver = n % 5;
+  for (let i = 0; i < gold; i++) s += `<i style="width:${size * 1.25}px;height:${size * 1.25}px;background-image:url(img/rb_icon_rank_gold_64.png)"></i>`;
+  for (let i = 0; i < silver; i++) s += `<i style="width:${size}px;height:${size}px;background-image:url(img/rb_icon_rank_silver_64.png)"></i>`;
+  return s;
+}
+function hostCard(h, x, y, w) {
+  const g = G[h.grade], hgt = w * 255 / 218;
+  const tint = h.grade === 'ssr' ? 'filter: sepia(1) saturate(3.2) hue-rotate(-8deg) brightness(1.05);' : '';
+  return `<div class="hc" style="left:${x}px;top:${y}px;width:${w}px;height:${hgt}px;--g:${g[2]}">
+    <div class="glow"></div><div class="frame" style="background-image:url(img/${g[0]}.png);${tint}"></div>
+    <div class="aff" style="background-image:url(img/rb_icon_aff_${h.aff}_128.png)"></div>
+    <div class="tag" style="background-image:url(img/${g[1]}.png)"></div>
+    <div class="face" style="background-image:url(img/face_${h.key}.png)"></div>
+    <div class="name" style="font-size:${w * 0.105}px">${h.name}</div>
+    <div class="stars">${stars(h.star, w * 0.1)}</div>
+    <div class="pow" style="font-size:${w * 0.11}px"><i style="width:${w * 0.1}px;height:${w * 0.1}px"></i>${h.power.toLocaleString()}</div>
+  </div>`;
+}
+function dock(el, h) {
+  const g = G[h.grade];
+  const head = h.isNew ? '새 몸!' : '획득!';
+  const bar = h.isNew
+    ? `<div class="chip unlock">새 몸 해금! · 이제 출전할 수 있다</div>`
+    : `<div class="bar"><div class="lbl"><span>조각 <em>+${h.add}</em></span><b>${h.have + h.add} / ${h.need}</b></div>
+         <div class="tr"><span class="add" style="width:${(h.have + h.add) / h.need * 100}%"></span><span class="old" style="width:${h.have / h.need * 100}%"></span></div>
+         <div class="lbl" style="margin-top:5px"><span>다음 성급까지 ${h.need - h.have - h.add}개</span></div></div>`;
+  el.insertAdjacentHTML('beforeend', `
+    <div class="cover" style="top:840px;height:360px"></div>
+    <div class="dock" style="--line:${g[3]};--line2:${g[2]}">
+      ${hostCard(h, 16, 22, 166)}
+      <div class="head">${head}</div>
+      ${h.isNew ? '<div class="new" style="right:-8px;top:-20px;width:72px;height:40px"></div>' : ''}
+      <div class="info">
+        <div class="nm">${h.name}</div>
+        <div class="sub"><i style="background-image:url(img/${g[1]}.png);width:38px"></i><i style="background-image:url(img/rb_icon_aff_${h.aff}_128.png)"></i>${AFF[h.aff]}형</div>
+        <div class="stars">${stars(h.star, 20)}</div>
+        ${bar}
+      </div>
+    </div>
+    <div class="tap">화면을 눌러 계속</div>`);
+}
+dock(document.getElementById('oneNew'), { key: 'dragoon', name: '드라군', grade: 'ssr', aff: 'magic', star: 1, power: 2852, isNew: true });
+dock(document.getElementById('oneDup'), { key: 'hopper_smg', name: '호퍼(기관단총)', grade: 'sr', aff: 'blade', star: 3, power: 2383, have: 12, add: 5, need: 30 });
+
+// 10회 — 칸 가운데 x(540 판) · 줄 y
+const ten = [
+  ['gangster', '갱스터', 'r', 'blade', 2], ['thug', '폭력배', 'r', 'blade', 2], ['ninja', '닌자', 'sr', 'blade', 5],
+  ['hopper', '호퍼', 'r', 'blade', 2], ['commando_mg', '코만도(기관총)', 'r', 'blade', 2],
+  ['commando_grenade', '코만도(수류탄)', 'r', 'force', 2], ['baseball', '슬러거', 'ssr', 'force', 0, true],
+  ['commando_laser', '코만도(레이저)', 'sr', 'force', 5], ['guru', '구루', 'r', 'force', 2], ['ninja_chain', '닌자(사슬)', 'sr', 'force', 5],
+];
+const tenEl = document.getElementById('ten');
+ten.forEach((h, i) => {
+  const g = G[h[2]], cx = 54 + (i % 5) * 108, y = i < 5 ? 532 : 872;
+  const sh = h[5] ? `<div class="sh unlock">새 몸!</div>` : `<div class="sh"><i></i>×${h[4]}</div>`;
+  tenEl.insertAdjacentHTML('beforeend', `<div class="mini" style="left:${cx - 52}px;top:${y}px;--c:${g[3]};--g:${g[2]}">
+      <div class="aff" style="background-image:url(img/rb_icon_aff_${h[3]}_128.png)"></div>
+      <div class="tag" style="background-image:url(img/${g[1]}.png)"></div>
+      <div class="nm" style="font-size:${h[1].length > 6 ? 10.5 : 12.5}px">${h[1]}</div>${sh}</div>
+      ${h[5] ? `<div class="new" style="left:${cx + 6}px;top:${y - 14}px;width:52px;height:29px"></div>` : ''}`);
+});
+</script>
+</body>
+</html>
