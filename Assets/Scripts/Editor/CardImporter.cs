@@ -54,7 +54,7 @@ namespace Game.EditorTools
         {
             new("c001", "감전", BuffKind.Overcharge, CardRarity.Epic,
                 "ATTACK", new[] { 25, 35, 45, 55, 65 },
-                "명중하면 전기가 옆 적에게 튄다."),
+                "적중 시 전기가 근처 적에게 튄다."),
 
             // ⚠ 일반 판은 「방 하나 = 레벨 하나」라 경험치가 아무 일도 안 한다 — 경험치 레벨업(3단계 30방)이
             //   들어올 때까지 3택1 에서 뺀다(고르면 아무 일도 없는 카드가 되지 않게).
@@ -64,11 +64,11 @@ namespace Game.EditorTools
 
             new("c003", "수호 방패", BuffKind.OrbitShield, CardRarity.Rare,
                 "SURVIVAL", new[] { 3, 3, 4, 4, 5 },
-                "방패가 내 주위를 돌며 막는다."),
+                "방패가 주위를 돌며 공격을 막는다."),
 
             new("c004", "처형", BuffKind.Assassinate, CardRarity.Legendary,
                 "ATTACK", new[] { 3, 5, 7, 9, 12 },
-                "빈사인 적을 확률로 즉사시킨다.", ch: 6),
+                "체력이 낮은 적을 일정 확률로 즉사시킨다.", ch: 6),
 
             new("c005", "번개 사슬", BuffKind.ChainLightning, CardRarity.Epic,
                 "AREA", new[] { 1, 1, 2, 2, 3 },
@@ -76,26 +76,26 @@ namespace Game.EditorTools
 
             new("c006", "흡혼", BuffKind.Regen, CardRarity.Common,
                 "SURVIVAL", new[] { 3, 5, 7, 9, 11 },
-                "적을 잡으면 체력을 돌려받는다."),
+                "적 처치 시 체력을 회복한다."),
 
             new("c007", "찰나의 불사", BuffKind.GuardInvuln, CardRarity.Epic,
                 "SURVIVAL", new[] { 30, 26, 22, 18, 14 },
-                "맞는 순간 2초 무적이 된다."),
+                "피격 시 2초간 무적이 된다(쿨타임 있음)."),
 
             new("c008", "추가 발사", BuffKind.MultiShot, CardRarity.Rare,
                 "PROJECTILE", new[] { 1, 2, 3, 4, 5 },
-                "쏠 때마다 탄이 더 나간다.", body: R),
+                "공격할 때마다 탄이 추가로 발사된다.", body: R),
 
             // ⚠ 8~28% 였다. 「공격에 화상을 붙인다」고 적어 놓고 스무 대에 한두 번만
             //   붙으니 카드를 먹은 줄도 몰랐다(2026-09-10 「화상 효과가 안 나온다」).
             //   레벨 1 에서도 세 대에 한 번은 붙어야 「붙는 카드」로 읽힌다.
             new("c009", "화염 각인", BuffKind.FlameImprint, CardRarity.Rare,
                 "UTILITY", new[] { 30, 40, 50, 60, 70 },
-                "공격에 화상을 붙인다."),
+                "공격 시 일정 확률로 화상을 건다."),
 
             new("c010", "궁지", BuffKind.LowHpPower, CardRarity.Rare,
                 "ATTACK", new[] { 15, 25, 35, 45, 55 },
-                "체력이 절반 아래면 세진다."),
+                "체력이 절반 이하일 때 주는 피해가 늘어난다."),
 
             // 2026-10-12 — 공격력 · 공격 속도를 바로 올리는 카드가 한 장도 없어 「레벨업 안 해도 깬다」(PD).
             // 적 체력을 올리면서, 카드를 고르면 화력이 확실히 붙게 한 장에 약 +10~15% 로 맞췄다.
@@ -110,7 +110,7 @@ namespace Game.EditorTools
             // 즉발 카드 — 고를 때마다 한 번. 다섯 번 고르면 3택1 에서 빠진다(다른 카드와 같은 규칙)
             new("c013", "필살기 쿨 감소", BuffKind.UltReset, CardRarity.Rare,
                 "UTILITY", new[] { 1, 1, 1, 1, 1 },
-                "필살기 쿨이 절반으로 줄어든다."),   // PD 2026-10-28 — 예전 「필살기 초기화」
+                "필살기 쿨타임이 절반으로 줄어든다."),   // PD 2026-10-28 — 예전 「필살기 초기화」
 
             // ── 1단계 추가 23장 (PD 2026-10-21) ────────────────────────────
             // 탄 모양 — 원거리 몸만
@@ -127,16 +127,16 @@ namespace Game.EditorTools
             // 원소 · 상태이상
             new("c017", "냉기 각인", BuffKind.FrostImprint, CardRarity.Rare,
                 "UTILITY", new[] { 25, 35, 45, 55, 65 },
-                "공격에 빙결을 붙인다. 걸린 적은 느려진다.", ch: 2),
+                "공격 시 일정 확률로 빙결을 건다. 빙결된 적은 느려진다.", ch: 2),
             new("c018", "저주 각인", BuffKind.CurseImprint, CardRarity.Rare,
                 "UTILITY", new[] { 20, 28, 36, 44, 52 },
-                "공격에 저주를 붙인다. 걸린 적은 더 아프게 맞는다.", ch: 3),
+                "공격 시 일정 확률로 저주를 건다. 저주받은 적은 받는 피해가 늘어난다.", ch: 3),
             new("c019", "화상 번짐", BuffKind.BurnSpread, CardRarity.Epic,
                 "AREA", new[] { 1 },
-                "화상이 3단계가 된 적 둘레로 화상이 옮는다.", ch: 3, needs: Needs("c009")),
+                "화상이 3중첩된 적 주변으로 화상이 퍼진다.", ch: 3, needs: Needs("c009")),
             new("c020", "상태이상 번짐", BuffKind.StatusChain, CardRarity.Epic,
                 "AREA", new[] { 18, 25, 32, 39, 46 },
-                "상태이상을 걸 때 옆 적에게도 옮긴다.", ch: 5, needs: Needs("c009", "c017", "c018", "c021")),
+                "상태이상을 걸 때 일정 확률로 근처 적에게도 옮긴다.", ch: 5, needs: Needs("c009", "c017", "c018", "c021")),
             new("c021", "둔화탄", BuffKind.Slow, CardRarity.Common,
                 "UTILITY", new[] { 20, 28, 36, 44, 52 },
                 "맞은 적이 잠시 느려진다."),
@@ -144,13 +144,13 @@ namespace Game.EditorTools
             // 표적 · 마무리
             new("c022", "갑옷 분쇄", BuffKind.ArmorBreak, CardRarity.Epic,
                 "ATTACK", new[] { 5, 9, 13, 17, 21 },
-                "때릴수록 그 적이 받는 피해가 쌓여 늘어난다.", ch: 2),
+                "공격할수록 그 적이 받는 피해가 누적해서 늘어난다.", ch: 2),
             new("c023", "연속 압박", BuffKind.SustainStack, CardRarity.Common,
                 "ATTACK", new[] { 10, 16, 22, 28, 35 },
-                "같은 적을 연달아 칠수록 세진다.", ch: 4),
+                "같은 적을 연속 공격할수록 주는 피해가 늘어난다.", ch: 4),
             new("c024", "마무리 본능", BuffKind.Execute, CardRarity.Rare,
                 "ATTACK", new[] { 10, 18, 26, 34, 42 },
-                "체력이 낮은 적에게 더 아프다.", ch: 2),
+                "체력이 낮은 적에게 주는 피해가 늘어난다.", ch: 2),
             new("c025", "보스 사냥", BuffKind.BossFocus, CardRarity.Rare,
                 "ATTACK", new[] { 18, 24, 30, 36, 42 },
                 "보스에게 주는 피해가 늘어난다.", ch: 3),
@@ -158,21 +158,21 @@ namespace Game.EditorTools
             // 폭발 · 범위 · 장판
             new("c026", "폭발 메아리", BuffKind.ExplosiveEcho, CardRarity.Epic,
                 "AREA", new[] { 20, 28, 36, 44, 52 },
-                "내 탄이 터지면 같은 자리에 작은 폭발이 한 번 더.", ch: 5, body: CardBodyRule.Blast),
+                "내 공격이 폭발하면 같은 자리에 작은 폭발이 한 번 더 일어난다.", ch: 5, body: CardBodyRule.Blast),
             new("c027", "범위 확대", BuffKind.AoeRadius, CardRarity.Rare,
                 "AREA", new[] { 8, 14, 20, 26, 32 },
                 "스킬 · 필살기 · 폭발 범위가 넓어진다.", ch: 4),
             new("c028", "장판 지속", BuffKind.FieldDuration, CardRarity.Common,
                 "AREA", new[] { 12, 20, 28, 36, 44 },
-                "내가 깐 장판이 더 오래 남는다.", ch: 6),
+                "내가 만든 장판이 더 오래 지속된다.", ch: 6),
 
             // 소환 · 복제
             new("c029", "유령 포대", BuffKind.GhostTurret, CardRarity.Epic,
                 "SPECIAL", new[] { 22, 27, 32, 37, 42 },
-                "평타 8번마다 유령 포대가 잠시 선다.", ch: 5),
+                "기본 공격 8회마다 유령 포대가 잠시 설치된다.", ch: 5),
             new("c030", "영혼 복제", BuffKind.SpectralEcho, CardRarity.Legendary,
                 "SPECIAL", new[] { 35, 40, 45, 50, 55 },
-                "평타 8번째마다 같은 공격이 한 번 더 나간다.", ch: 6),
+                "기본 공격 8회마다 같은 공격이 한 번 더 나간다.", ch: 6),
 
             // 생존 · 움직임
             new("c031", "유령 갑주", BuffKind.DamageReduction, CardRarity.Common,
@@ -180,10 +180,10 @@ namespace Game.EditorTools
                 "받는 피해가 줄어든다."),
             new("c032", "흡혈", BuffKind.Lifesteal, CardRarity.Rare,
                 "SURVIVAL", new[] { 10, 15, 20, 25, 30 },
-                "공격하면 확률로 준 피해의 절반만큼 회복한다.", ch: 4),
+                "공격 시 확률로 준 피해의 절반만큼 회복한다.", ch: 4),
             new("c033", "위기 방벽", BuffKind.CrisisBarrier, CardRarity.Rare,
                 "SURVIVAL", new[] { 12, 18, 24, 30, 36 },
-                "체력이 위험해지면 방마다 한 번 방벽이 선다.", ch: 5),
+                "체력이 낮아지면 방마다 한 번 방벽이 생긴다.", ch: 5),
             new("c034", "가속", BuffKind.MoveSpeed, CardRarity.Common,
                 "MOBILITY", new[] { 5, 9, 13, 17, 21 },
                 "이동 속도가 빨라진다."),

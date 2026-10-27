@@ -1,0 +1,314 @@
+key	기존 ko	새 ko	새 ja	새 en	새 zh_hant	새 zh_hans
+askill.amazon.opt	착지 둘레 적 0.5초 기절	착지 시 주변 적 0.5초 기절				
+askill.amazon_elite.opt	무적 동안 받은 공격의 30% 를 되돌려 준다	무적 중 받은 피해의 30%를 반사한다				
+askill.commando_grenade.short	내 둘레에 수류탄을 원으로	주변에 수류탄 원형 투하				
+askill.commando_mg.opt	쉴드가 깨질 때 둘레 적을 밀쳐낸다	쉴드가 깨질 때 주변 적을 밀쳐낸다				
+askill.dragon_blue.short	2초간 번개 튕김 확정	2초간 패시브 낙뢰 100% 발동				
+askill.guru.short	3초간 피해 −50%, 쉴드 2배	3초간 받는 피해 −50% · 쉴드 2배				
+askill.medium.short	미니 골렘과 10초간 함께	미니 골렘 소환 (10초)				
+askill.ninja.short	4초간 회피 50% · 빨라짐	4초간 회피 50% · 이동 속도 증가				
+askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.	가장 가까운 적에게 도약해 주변 적에게 300% 피해를 준다.				
+askill.psg_h03.desc	내 둘레에 수류탄을 원으로 떨군다. 가까운 적이 있으면 그 적에게 떨어진다.	주변에 수류탄을 원형으로 뿌린다. 가까운 적이 있으면 그 적을 노린다.				
+askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.	5초간 최대 체력만큼 쉴드를 얻는다. 쉴드가 다 깎이면 끝난다.				
+askill.psg_h06.desc	미사일 7발이 둘레 적들에게 한 발씩 날아간다.	미사일 7발을 주변 적들에게 한 발씩 쏜다.				
+askill.psg_h07.desc	2초간 번개 튕김이 반드시 터진다.	2초간 패시브 낙뢰가 100% 발동한다.				
+askill.psg_h08.desc	둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.	주변 5m 안의 적을 모두 중독시킨다. 중독된 적은 지속 피해를 받고 느려진다.				
+askill.psg_h09.desc	가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.	가장 가까운 적의 발밑에 불바다를 만든다. 불바다 위의 적은 계속 화상 피해를 받는다.				
+askill.psg_h14.desc	가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.	가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다.				
+askill.psg_h15.desc	미니 골렘을 불러 10초간 데리고 다니며 같이 싸운다.	미니 골렘을 소환해 10초간 함께 싸운다.				
+askill.psg_h16.desc	적이 가장 몰린 자리에 황금 마법진을 펼쳐 1.2초 동안 가운데로 빨아들이며 깎다가, 빛으로 터뜨린다.	적이 가장 많이 모인 곳에 황금 마법진을 펼쳐 1.2초간 중앙으로 끌어당기며 피해를 준 뒤 빛을 폭발시킨다.				
+askill.psg_h17.desc	둘레 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다. 묶인 적은 더 아프게 맞는다.	주변 적 5명을 사슬로 내 앞으로 끌어와 속박하고 한 번에 후려친다. 속박된 적은 받는 피해가 늘어난다.				
+askill.psg_h17.growth	결박 시간	속박 시간				
+askill.psg_h19.desc	10초간 자동으로 쏘는 포탑을 세운다.	10초간 자동으로 공격하는 포탑을 설치한다.				
+askill.psg_h20.desc	5초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.	5초간 날아오는 탄을 반사한다. 반사된 탄은 더 큰 피해를 준다.				
+askill.psg_h21.desc	1초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.	1초간 얼음 속에 들어가 무적이 된다(공격 불가). 최대 체력 30%를 회복한다.				
+askill.psg_h22.desc	화면의 적마다 박쥐가 날아가 피를 빨아 온다. 적 수만큼 최대 체력의 2%씩 회복.	화면 안의 적마다 박쥐를 날려 피를 빨아 온다. 적 1명당 최대 체력 2% 회복.				
+askill.psg_h23.desc	3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.	3초간 공격한 적을 즉사시킨다. 중간 보스는 50% 확률, 보스는 10% 확률로 최대 체력 25% 피해.	3秒間、攻撃した敵を即死させる。中ボスは50%の確率、ボスは10%の確率で最大HPの25%ダメージ。	For 3s, enemies you hit die instantly. Mini-bosses: 50% chance. Bosses: 10% chance to lose 25% max HP.	3秒內被你攻擊的敵人即死。中頭目有50%機率即死，頭目有10%機率受到最大HP 25%的傷害。	3秒内被你攻击的敌人即死。中头目有50%几率即死，头目有10%几率受到最大HP 25%的伤害。
+askill.salamander.opt	중독된 적이 죽으면 독이 터져 옆으로 옮는다	중독된 적이 죽으면 독이 주변 적에게 퍼진다				
+askill.salamander.short	둘레 5m 적을 모두 중독	주변 5m 적 모두 중독				
+askill.snowwoman.opt	얼음이 깨질 때 둘레 적 빙결	얼음이 깨질 때 주변 적 빙결				
+askill.snowwoman.short	2초간 얼음 속에서 체력 회복	1초간 얼음 속에서 무적 · 회복	1秒間、氷の中で無敵・回復	1s invincible in ice · Heal	冰封1秒無敵 · 回復	冰封1秒无敌 · 回复
+askill.vampire.opt	넘친 회복량만큼 쉴드	초과 회복량만큼 쉴드 획득				
+card.c001.desc	명중하면 전기가 옆 적에게 튄다.	적중 시 전기가 근처 적에게 튄다.				
+card.c003.desc	방패가 내 주위를 돌며 막는다.	방패가 주위를 돌며 공격을 막는다.				
+card.c004.desc	빈사인 적을 확률로 즉사시킨다.	체력이 낮은 적을 일정 확률로 즉사시킨다.				
+card.c006.desc	적을 잡으면 체력을 돌려받는다.	적 처치 시 체력을 회복한다.				
+card.c007.desc	맞는 순간 2초 무적이 된다.	피격 시 2초간 무적이 된다(재사용 대기시간 있음).	被弾時、2秒間無敵になる(再使用待機あり)。	Invincible for 2s when hit (has a cooldown).	受擊時無敵2秒（有冷卻時間）。	受击时无敌2秒（有冷却时间）。
+card.c008.desc	쏠 때마다 탄이 더 나간다.	공격할 때마다 탄이 추가로 발사된다.				
+card.c009.desc	공격에 화상을 붙인다.	공격 시 일정 확률로 화상을 건다.	攻撃時、確率で燃焼を付与する。	Attacks may inflict Burn.	攻擊時有機率造成燒傷。	攻击时有几率造成灼烧。
+card.c010.desc	체력이 절반 아래면 세진다.	체력이 절반 이하일 때 주는 피해가 늘어난다.				
+card.c013.desc	필살기 쿨이 절반으로 줄어든다.	필살기 쿨타임이 절반으로 줄어든다.				
+card.c017.desc	공격에 빙결을 붙인다. 걸린 적은 느려진다.	공격 시 일정 확률로 빙결을 건다. 빙결된 적은 느려진다.				
+card.c018.desc	공격에 저주를 붙인다. 걸린 적은 더 아프게 맞는다.	공격 시 일정 확률로 저주를 건다. 저주받은 적은 받는 피해가 늘어난다.				
+card.c019.desc	화상이 3단계가 된 적 둘레로 화상이 옮는다.	화상이 3중첩된 적 주변으로 화상이 퍼진다.				
+card.c020.desc	상태이상을 걸 때 옆 적에게도 옮긴다.	상태이상을 걸 때 일정 확률로 근처 적에게도 옮긴다.				
+card.c022.desc	때릴수록 그 적이 받는 피해가 쌓여 늘어난다.	공격할수록 그 적이 받는 피해가 누적해서 늘어난다.				
+card.c023.desc	같은 적을 연달아 칠수록 세진다.	같은 적을 연속 공격할수록 주는 피해가 늘어난다.				
+card.c024.desc	체력이 낮은 적에게 더 아프다.	체력이 낮은 적에게 주는 피해가 늘어난다.				
+card.c026.desc	내 탄이 터지면 같은 자리에 작은 폭발이 한 번 더.	내 공격이 폭발하면 같은 자리에 작은 폭발이 한 번 더 일어난다.				
+card.c028.desc	내가 깐 장판이 더 오래 남는다.	내가 만든 장판이 더 오래 지속된다.				
+card.c029.desc	평타 8번마다 유령 포대가 잠시 선다.	기본 공격 8회마다 유령 포대가 잠시 설치된다.				
+card.c030.desc	평타 8번째마다 같은 공격이 한 번 더 나간다.	기본 공격 8회마다 같은 공격이 한 번 더 나간다.				
+card.c032.desc	공격하면 확률로 준 피해의 절반만큼 회복한다.	공격 시 확률로 준 피해의 절반만큼 회복한다.				
+card.c033.desc	체력이 위험해지면 방마다 한 번 방벽이 선다.	체력이 낮아지면 방마다 한 번 방벽이 생긴다.				
+host.commando_mg.desc	어떤 전장에서도 임무를 완수하는\n특수부대원입니다.	기관총을 든 특수부대원.\n어떤 전장에서도 임무를 완수한다.				
+host.dragoon.concept	용기병 — 탈것	용기병 — 불바다와 메테오	竜騎兵 — 火の海とメテオ	Dragoon — Fire fields & meteors	龍騎兵 — 火海與隕石	龙骑兵 — 火海与陨石
+host.ninja_chain.concept	사슬 사냥꾼 — 사슬을 걸고 내가 날아간다	사슬 사냥꾼 — 끌어오고 날아든다				
+host.robot.desc	고철로 만든 전투 로봇.\n예비 회로로 몇 번이고 일어난다.	고철로 만든 전투 로봇.\n예비 회로로 쉬지 않고 싸운다.	スクラップで作られた戦闘ロボ。\n予備回路で休まず戦い続ける。	A combat robot built from scrap.\nIts spare circuits keep it fighting nonstop.	用廢鐵打造的戰鬥機器人。\n靠備用迴路不停戰鬥。	用废铁打造的战斗机器人。\n靠备用回路不停战斗。
+host.vampire.concept	피의 군주 — 깎이며 폭주	피의 군주 — 빨아들여 회복	血の君主 — 吸い取って回復	Blood Lord — Drain to heal	血之君主 — 吸血回復	血之君主 — 吸血回复
+host.white_wizard.concept	축적 마법사 — 모아서 쏜다	중력 마법사 — 끌어모아 터뜨린다	重力の魔法使い — 引き寄せて炸裂	Gravity Mage — Pull in, then burst	重力法師 — 聚怪引爆	重力法师 — 聚怪引爆
+mission.daily_all_done	매일 전부 완료	일일 미션 모두 완료				
+mission.distinct_hosts_possessed	서로 다른 몸	서로 다른 호스트에 빙의	異なるホストに憑依	Possess different hosts	附身不同宿主	附身不同宿主
+mission.kill_advantage	유리한 상성 처치	상성 우위로 처치				
+mission.stat_upgrade	강화	능력치 강화				
+mission.weekly_all_done	매주 전부 완료	주간 미션 모두 완료				
+pskill.baseball.short	막타에 20% 로 주변 날림	처치 시 20% 확률로 주변 적 날림				
+pskill.death.short	처치한 자리에 해골이 선다	처치 시 해골 소환				
+pskill.dragon_blue.short	10% 로 옆 적에게 번개	10% 확률로 근처 적에게 번개				
+pskill.dragoon.short	10% 로 적에게 화상	10% 확률로 화상				
+pskill.gangster.short	표식 붙은 적을 확률로 즉사	표식이 붙은 적을 일정 확률로 즉사				
+pskill.guru.short	걸을 때 지형지물 통과	이동 시 지형지물 통과				
+pskill.hopper_smg.short	10% 로 맞은 적을 밀어냄	10% 확률로 넉백				
+pskill.medium.short	처치 시 30% 로 해골 소환	처치 시 30% 확률로 해골 소환				
+pskill.ninja.short	처치 시 이동속도 +30%	처치 시 이동 속도 +30%				
+pskill.ninja_chain.short	10% 로 피해를 흘린다	10% 확률로 피해 회피				
+pskill.psv_amazon.desc	쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.	쉴드가 찰수록 이동 속도가 빨라진다(최대 +40%).				
+pskill.psv_amazon.growth	이동속도	이동 속도				
+pskill.psv_death.desc	적을 잡을 때마다 그 자리에서 해골이 일어선다.	적을 처치할 때마다 그 자리에 아군 해골을 소환한다.				
+pskill.psv_dragon_blue.desc	10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.	적중 시 10% 확률로 근처 다른 적에게 번개가 튄다. 근처에 적이 없으면 발동하지 않는다.				
+pskill.psv_dragoon.desc	명중한 적에게 10% 로 화상. 겹치지 않는다.	적중 시 10% 확률로 화상을 건다. 중첩되지 않는다.				
+pskill.psv_gangster.desc	표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.	표식이 붙은 적을 20% 확률로 즉사시킨다. 엘리트는 최대 체력 50%, 보스는 30% 피해.				
+pskill.psv_guru.desc	걸어 다닐 때 지형지물을 통과한다.	이동 중 지형지물을 통과한다.				
+pskill.psv_hopper_smg.desc	10% 로 맞은 적을 밀어낸다.	적중 시 10% 확률로 적을 넉백시킨다.				
+pskill.psv_hopper_smg.growth	밀쳐내기 확률	넉백 확률				
+pskill.psv_leech.desc	8% 로 공격력의 5% 만큼 회복한다.	적중 시 8% 확률로 공격력의 5%만큼 체력을 회복한다.				
+pskill.psv_medium.desc	적을 잡으면 30% 로 내 해골이 일어선다. 해골은 적이 노리지 않고 3초 뒤 사라진다.	적 처치 시 30% 확률로 아군 해골을 소환한다. 해골은 적의 공격을 받지 않고 3초 뒤 사라진다.				
+pskill.psv_ninja.desc	적을 잡으면 1.5초간 이동속도 +30%.	적 처치 시 1.5초간 이동 속도 +30%.				
+pskill.psv_ninja.growth	이동속도	이동 속도				
+pskill.psv_ninja_chain.desc	10% 로 피해를 통째로 흘린다.	10% 확률로 받는 피해를 회피한다.				
+pskill.psv_ninja_chain.growth	회피	회피 확률				
+pskill.psv_salamander.desc	명중한 적에게 10% 로 독. 중독된 적은 25% 더 아프게 맞는다.	적중 시 10% 확률로 중독시킨다. 중독된 적은 받는 피해 +25%.				
+pskill.psv_slugger.desc	막타에 20% 로 주변 적을 날려 버린다.	적 처치 시 20% 확률로 주변 적을 날려 보낸다.				
+pskill.psv_snowwoman.desc	30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.	적중 시 30% 확률로 적을 빙결시킨다. 빙결된 적에게 주는 피해 +30%. 보스는 면역.	命中時30%の確率で敵を凍結。凍結した敵へのダメージ+30%。ボスには無効。	30% chance to Freeze on hit. +30% damage to Frozen foes. Bosses are immune.	命中時30%機率冰凍敵人。對冰凍敵人的傷害+30%。頭目免疫。	命中时30%几率冰冻敌人。对冰冻敌人的伤害+30%。头目免疫。
+pskill.psv_spare_circuit.desc	평타가 2% 로 액티브 쿨을 1초 당긴다.	기본 공격 시 2% 확률로 액티브 쿨타임이 1초 줄어든다.				
+pskill.robot.short	평타 2% 로 쿨 1초 단축	기본 공격 시 2% 확률로 쿨타임 1초 감소				
+pskill.salamander.short	10% 독 · 중독된 적 +25% 피해	10% 확률로 중독 · 중독된 적에게 주는 피해 +25%				
+pskill.snowwoman.short	30% 로 적을 얼린다	30% 확률로 빙결				
+pskill.vampire.short	8% 로 공격력 5% 회복	8% 확률로 공격력의 5%만큼 체력 회복				
+tip.loading.0	고스트는 떠 있는 동안 체력이 깎인다. 몸은 빨리 고를수록 좋다.	유령 상태로 떠 있으면 체력이 줄어든다. 빨리 호스트에 빙의하자.	ゴースト状態で漂っている間はゴースト体力が減り続ける。早くホストに憑依しよう。	Ghost HP drains while you float without a host. Possess a host quickly.	沒有宿主、以幽靈狀態漂浮時，幽靈體力會持續減少。盡快附身宿主吧。	没有宿主、以幽灵状态漂浮时，幽灵体力会持续减少。尽快附身宿主吧。
+tip.loading.1	멈춰야 쏜다. 움직이는 동안에는 자동 공격이 멈춘다.	멈춰 서야 공격한다. 이동 중에는 자동 공격을 하지 않는다.				
+tip.loading.10	붉은 X 가 붙은 몸은 내가 버린 몸이다. 이 방에서는 다시 못 탄다.	붉은 X가 붙은 호스트는 빙의를 해제한 호스트다. 이 방에서는 다시 빙의할 수 없다.	赤い×が付いたホストは、憑依を解除したホストです。この部屋では再び憑依できません。	A red X marks a host you released. You can't possess it again in this room.	帶有紅色X的宿主是已解除附身的宿主，在這個房間內無法再次附身。	带有红色X的宿主是已解除附身的宿主，在这个房间内无法再次附身。
+tip.loading.11	액티브 스킬은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 액티브 스킬를 쓰는지다.	액티브 스킬은 호스트마다 다르다. 어떤 호스트에 빙의하느냐가 곧 어떤 스킬을 쓰느냐다.	アクティブスキルはホストごとに異なります。どのホストに憑依したかで、使えるアクティブスキルが決まります。	Each host has its own Active Skill. Your host determines which one you can use.	主動技能因宿主而異。附身哪個宿主，就決定使用哪個主動技能。	主动技能因宿主而异。附身哪个宿主，就决定使用哪个主动技能。
+tip.loading.12	주위에 뺏을 몸이 하나도 없으면 잠시 뒤 몸 하나가 던져진다. 대신 값이 비싸다.	주변에 빙의할 호스트가 없으면 잠시 뒤 긴급 호스트가 나타난다. 대신 유령 체력이 크게 깎인다.	周りに憑依できるホストがいないと、少しして緊急ホストが現れる。代わりにゴースト体力が大きく減る。	With no hosts nearby, an emergency host appears after a while, at a big Ghost HP cost.	周圍沒有可附身的宿主時，稍後會出現緊急宿主，但會大量扣除幽靈體力。	周围没有可附身的宿主时，稍后会出现紧急宿主，但会大量扣除幽灵体力。
+tip.loading.13	화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.	화면 가장자리 화살표는 화면 밖에 빙의할 호스트가 있다는 뜻이다.	画面端の矢印は、画面外に憑依できるホストがいることを示しています。	Arrows at the screen edge point to hosts you can possess off-screen.	畫面邊緣的箭頭表示畫面外有可附身的宿主。	画面边缘的箭头表示画面外有可附身的宿主。
+tip.loading.2	몸을 스스로 놓아주면 그 몸은 이 방에서 다시 탈 수 없다.	스스로 빙의를 해제한 호스트에는 이 방에서 다시 빙의할 수 없다.	自分から憑依を解除したホストには、その部屋で再び憑依できません。	A host you release can't be possessed again in that Room.	主動放棄的宿主，在這個房間內無法再次附身。	主动放弃的宿主，在这个房间内无法再次附身。
+tip.loading.3	보스는 빼앗을 수 없다. 보스방은 타고 들어간 몸으로 끝내야 한다.	보스에게는 빙의할 수 없다. 보스 방은 입장한 호스트로 끝내야 한다.	ボスには憑依できません。ボス部屋は入室時のホストで戦い抜きましょう。	Bosses can't be possessed. Finish the Boss Room in the host you brought.	頭目無法附身。頭目房必須用帶進來的宿主打完。	头目无法附身。头目房必须用带进来的宿主打完。
+tip.loading.4	조준 링이 회색 자물쇠면 아직 조건이 안 찼다. 더 두들기면 열린다.	조준 링에 회색 자물쇠가 있으면 아직 빙의할 수 없다. 더 공격하면 풀린다.				
+tip.loading.5	몸을 잃으면 Ghost HP 20%가 날아간다. 놓아주는 편이 싸다.	호스트를 잃으면 유령 체력 20%가 깎인다. 직접 빙의를 해제하는 편이 낫다.	ホストを失うとゴースト体力が20%減ります。自分から解除するほうが得です。	Losing a host costs 20% Ghost HP. Releasing it yourself is better.	失去宿主會扣除20%幽靈體力。主動解除比較划算。	失去宿主会扣除20%幽灵体力。主动解除更划算。
+tip.loading.6	회복 방에서는 Ghost HP 가 돌아온다. 다음 방을 보고 들어가라.	회복의 제단에서 유령 체력을 채울 수 있다. 다음 방 종류를 보고 들어가자.				
+tip.loading.7	몸이 바뀌어도 버프는 남는다. 스탯이 아니라 나에게 붙기 때문이다.	호스트를 바꿔도 카드는 유지된다. 카드는 유령에게 붙기 때문이다.	ホストを替えてもカードは残る。カードはゴーストに付くからだ。	Cards stay when you switch hosts. They belong to your ghost.	更換宿主後卡片仍會保留，因為卡片附在幽靈身上。	更换宿主后卡片仍会保留，因为卡片附在幽灵身上。
+tip.loading.8	머리 위 금색 조준 링이 지금 빙의 버튼이 노리는 몸이다.	머리 위에 금색 조준 링이 뜬 적이 빙의 버튼의 대상이다.	頭上の金色の照準リングが、いま憑依ボタンで狙っているホストです。	The gold ring overhead marks the host your Possess button is targeting.	頭上的金色瞄準圈，就是附身按鈕目前鎖定的宿主。	头上的金色瞄准圈，就是附身按钮当前锁定的宿主。
+tip.loading.9	빙의 표식은 가까운 순으로 다섯까지만 뜬다. 나머지는 사거리 밖이다.	빙의 표식은 가까운 적 5명에게만 표시된다.	憑依マーカーは近い敵5体にだけ表示される。	Possess markers show only on the 5 nearest enemies.	附身標記只會顯示在最近的5名敵人身上。	附身标记只会显示在最近的5名敌人身上。
+tower.floor.1.desc	근거리 호스트만 몸으로 나온다	근거리 호스트만 등장	近距離ホストのみ登場		僅出現近戰宿主	仅出现近战宿主
+tower.floor.10.desc	킹핀(무기). 파워 몸만 나온다	킹핀(무기) · 파워 호스트만 등장	キングピン(武器)。パワーのホストだけが出る	Kingpin (Weapon). Only Power hosts appear	黑幫老大（武器）。只出現力量宿主	黑帮老大（武器）。只出现力量宿主
+tower.floor.2.desc	원거리 호스트만 몸으로 나온다	원거리 호스트만 등장	遠距離ホストのみ登場		僅出現遠程宿主	仅出现远程宿主
+tower.floor.3.desc	적이 전부 마법. 몸은 세 속성이 섞여 나온다.	적 전원 마법 속성 · 세 속성의 호스트가 등장	敵はすべて魔法属性・3属性のホストが登場	All foes are Magic. Hosts of all three types appear.	敵人全為魔法屬性 · 三種屬性的宿主皆會出現	敌人全为魔法属性 · 三种属性的宿主均会出现
+tower.floor.4.desc	적은 적지만 하나하나가 세다	적은 적지만 모두 강하다				
+tower.floor.4.name	정예의 층	엘리트의 층				
+tower.floor.5.desc	크러셔(파워). 마법 몸만 나온다	크러셔(파워) · 마법 호스트만 등장	クラッシャー(パワー)。魔法のホストだけが出る	Crusher (Power). Only Magic hosts appear	粉碎者（力量）。只出現魔法宿主	粉碎者（力量）。只出现魔法宿主
+tower.floor.6.desc	중거리 호스트만 몸으로 나온다 · 빠른 박쥐 떼	중거리 호스트만 등장 · 빠른 박쥐 떼	中距離ホストのみ登場・素早いコウモリの群れ		僅出現中程宿主 · 快速蝙蝠群	仅出现中程宿主 · 快速蝙蝠群
+tower.floor.7.desc	호스트 하나만 몸으로 나온다	한 종류의 호스트만 등장	1種類のホストだけが登場	Only one kind of host appears	只出現一種宿主	只出现一种宿主
+tower.floor.8.desc	적이 전부 파워. 마법 몸이 유리	적 전원 파워 속성 · 마법 호스트 유리	敵はすべてパワー。魔法のホストが有利	All foes are Power. Magic hosts have the edge	敵人全為力量。魔法宿主有利	敌人全是力量。魔法宿主有利
+tower.floor.9.desc	빙의를 한 번만 할 수 있다 · 구조 몸이 없다	빙의 1회 제한 · 구조 호스트 없음	憑依は一度だけ・救助のホストはない	Possess only once · no rescue hosts	只能附身一次 · 沒有救援宿主	只能附身一次 · 没有救援宿主
+ui.attack.pulse	주위 광역	주변 광역				
+ui.chapterhost.ghost_power	몸 없음	호스트 없음	ホストなし	No host	無宿主	无宿主
+ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	다음 방에서 아군 호스트 하나가 함께 싸운다	次の部屋で味方のホストが1体一緒に戦う	An allied host fights beside you next Room	下個房間會有一名友方宿主並肩作戰	下个房间会有一名友方宿主并肩作战
+ui.consumable.bomb.desc	다음 방이 열리면 광역 한 방	다음 방 시작 시 광역 폭발				
+ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	다음 방에서 적이 {0:0}초간 멈춘다				
+ui.dodge.swap	몸을 갈아타라	호스트를 바꿔라	ホストを乗り換えろ	Switch hosts	換宿主	换宿主
+ui.event.blocked.no_body	몸이 없다	호스트가 없다	ホストがない	No host	沒有宿主	没有宿主
+ui.event.cost.ghost_hp	고스트 체력 {0}%	유령 체력 {0}%				
+ui.event.result.elite	정예가 앞을 막는다.	엘리트가 앞을 막는다.				
+ui.event.result.no_body	몸이 없어 받을 수 없었다.	호스트가 없어 받을 수 없었다.	ホストがなく、受け取れなかった。	No host to receive it.	沒有宿主，無法領取。	没有宿主，无法领取。
+ui.event.result.nothing_to_upgrade	벼릴 것이 없었다.	강화할 카드가 없었다.				
+ui.event.reward.card_offer	{0} 카드 3택 1	{0} 카드 3장 중 1장 선택				
+ui.event.reward.discount	상점 값 -{0}% (판 끝까지)	상점 가격 -{0}% (이번 판 동안)				
+ui.event.reward.ghost_heal	고스트 체력 {0}% 회복	유령 체력 {0}% 회복				
+ui.event.reward.reach	빙의 사거리 +{0}% (판 끝까지)	빙의 사거리 +{0}% (이번 판 동안)				
+ui.event.reward.spawn_host	빼앗을 몸 하나가 나타난다	빙의할 호스트 하나가 나타난다	憑依できるホストがひとつ現れる	A host to possess appears	出現一個可附身的宿主	出现一个可附身的宿主
+ui.growth6.act_cond	평타 30타 충전	쿨타임마다 사용	クールタイムごとに使用	Use whenever off cooldown	冷卻結束即可使用	冷却结束即可使用
+ui.growth6.ult_cond	빙의할 때 1회	사용 후 쿨타임 5분	使用後クールタイム5分	5 min cooldown after use	使用後冷卻5分鐘	使用后冷却5分钟
+ui.growth6.w.body	몸 능력치	호스트 능력치	ホストの能力	Host stats	宿主能力值	宿主属性
+ui.hostselect.ghost.level	고스트 레벨	유령 레벨				
+ui.hostselect.ghost.rule	몸이 없으면 HP가 계속 줄어든다\n몸 없이 주는 피해는 60%	호스트가 없으면 유령 체력이 계속 줄어든다\n유령 상태로 주는 피해는 60%	ホストがないとゴースト体力が減り続ける\nゴースト状態で与えるダメージは60%	Without a host, Ghost HP keeps draining\nDamage dealt as a ghost is 60%	沒有宿主時幽靈體力會持續減少\n幽靈狀態造成的傷害為60%	没有宿主时幽灵体力会持续减少\n幽灵状态造成的伤害为60%
+ui.hostselect.ghost.skill	몸 빼앗기	빙의	憑依	Possess	附身	附身
+ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적을 빼앗아 그 몸으로 싸운다	{0:0.#}칸 안의 적에게 빙의해 그 호스트로 싸운다	{0:0.#}マス以内の敵に憑依し、そのホストで戦う	Possess an enemy within {0:0.#} tiles and fight as that host	附身{0:0.#}格內的敵人，以該宿主戰鬥	附身{0:0.#}格内的敌人，用该宿主战斗
+ui.hostselect.ghost.skill_desc_near	가까운 적을 빼앗아 그 몸으로 싸운다	가까운 적에게 빙의해 그 호스트로 싸운다	近くの敵に憑依し、そのホストで戦う	Possess a nearby enemy and fight as that host	附身附近的敵人，以該宿主戰鬥	附身附近的敌人，用该宿主战斗
+ui.hostselect.ghost.trait	몸이 없다	호스트 없음	ホストなし	No host	沒有宿主	没有宿主
+ui.hostselect.header_desc	사망 시 유령으로 돌아가, 다른 HOST에 빙의할 수 있습니다.	사망 시 유령으로 돌아가, 다른 호스트에 빙의할 수 있습니다.				
+ui.hostselect.mastery.confirm	{0}  {1}\n파편 {2}개를 쓴다.	{0}  {1}\n조각 {2}개를 사용합니다.				
+ui.hostselect.mastery.maxed	{0} 은(는) 이미 숙련도 최대다.	{0}의 숙련도가 이미 최대입니다.				
+ui.hostselect.mastery.short	파편이 모자란다.\n{0} — {1} / {2}  ({3}개 더)	조각이 부족합니다.\n{0} — {1} / {2}  ({3}개 더)				
+ui.hostselect.owned	보유 HOST  {0}/{1}	보유 호스트  {0}/{1}				
+ui.hostselect.shard	영혼 파편	영혼 조각				
+ui.hostselect.tip	HOST마다 이동속도, 공격 방식, 스킬이 다릅니다.\n다양한 HOST를 경험해 보세요!	호스트마다 이동 속도, 공격 방식, 스킬이 다릅니다.\n다양한 호스트를 경험해 보세요!				
+ui.hostselect.title.codex	HOST 도감	호스트 도감				
+ui.hostselect.title.pick	HOST 를 선택하세요!	호스트를 선택하세요!				
+ui.hostselect.upgrade.title	HOST 강화	호스트 강화				
+ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}	긴급 빙의 — 유령 체력 -{0}				
+ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력	호스트와 별개인 유령 체력	ホストとは別のゴースト体力	Ghost HP, separate from your host	與宿主分開的幽靈體力	与宿主分开的幽灵体力
+ui.ingame.nohost_hint	빙의할 몸을 찾으세요	빙의할 호스트를 찾으세요	憑依するホストを探そう	Find a host to possess	尋找可附身的宿主	寻找可附身的宿主
+ui.ingame.result.clear	스테이지 클리어!\n골드 +{0}   고스트 EXP +{1}	스테이지 클리어!\n골드 +{0}   유령 경험치 +{1}				
+ui.ingame.ult_trial_spent	조각을 모으면 매번 쓸 수 있어요	호스트를 해금하면 필살기를 계속 쓸 수 있어요	ホストを解放すると必殺技をいつでも使えます	Unlock this host to use its Special anytime	解鎖宿主即可隨時使用必殺技	解锁宿主即可随时使用必杀技
+ui.job.melee.rule	때릴 때마다 쉴드 (HP 3% · 최대 30%)\n타격 시 12% 확률로 0.8초 스턴	공격 적중 시 쉴드 획득 (체력 3% · 최대 30%)\n적중 시 12% 확률로 0.8초 기절				
+ui.job.mid.rule	직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다	특수 규칙 없음 · 빠른 연사와 짧은 사거리	特殊ルールなし・速い連射と短い射程	No special rule · Fast fire, short range	無特殊規則 · 連射快、射程短	无特殊规则 · 连射快、射程短
+ui.job.ranged.rule	직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다	특수 규칙 없음 · 호스트마다 액티브 · 패시브가 다름	特殊ルールなし・ホストごとにアクティブ・パッシブが異なる	No special rule · Each host has its own Active and Passive	無特殊規則 · 每個宿主的主動與被動技能不同	无特殊规则 · 每个宿主的主动与被动技能不同
+ui.mode.buy_ask	젬 {0}으로 1번 더 입장할까?\n(오늘 추가 입장 {1} / {2})	젬 {0}개로 1회 추가 입장할까요?\n(오늘 추가 입장 {1} / {2})				
+ui.mode.buy_no_gem	젬이 모자라다	젬이 부족해요				
+ui.night.banner.big_sub	몸에 든 채로 깎아야 빼앗는다	호스트로 체력을 깎아야 빙의할 수 있다	ホストの状態で体力を削らないと憑依できない	Damage it while possessing a host to make it possessable.	必須以宿主狀態削減其體力才能附身	必须以宿主状态削减其体力才能附身
+ui.night.banner.boss_sub	쓰러뜨리면 밤을 버틴다	처치하면 클리어	倒せばクリア	Defeat it to clear	擊敗即通關	击败即通关
+ui.night.banner.heal	버텼다 — {0}% 회복	웨이브 돌파 · 체력 {0}% 회복	ウェーブ突破・体力{0}%回復	Wave cleared · Heal {0}%	突破波次 · 回復{0}%體力	突破波次 · 回复{0}%体力
+ui.night.banner.wave	무리가 {0}(으)로	적 무리 속성: {0}				
+ui.night.counter	{0} 몸이 오면 ▲	{0} 호스트 유리 ▲	{0}のホストなら有利 ▲	{0} hosts favored ▲	{0}宿主有利 ▲	{0}宿主有利 ▲
+ui.night.day_desc.fri	무기 호스트만 몸으로 나온다	무기 호스트만 등장	武器ホストのみ登場		武器宿主限定	武器宿主限定
+ui.night.day_desc.mon	근거리 호스트만 몸으로 나온다	근거리 호스트만 등장	近距離ホストのみ登場		近戰宿主限定	近战宿主限定
+ui.night.day_desc.sat	마법 호스트만 몸으로 나온다	마법 호스트만 등장	魔法ホストのみ登場		魔法宿主限定	魔法宿主限定
+ui.night.day_desc.sun	모든 호스트가 몸으로 나온다	모든 호스트 등장	すべてのホストが登場		所有宿主皆會登場	所有宿主均会登场
+ui.night.day_desc.thu	파워 호스트만 몸으로 나온다	파워 호스트만 등장	パワーホストのみ登場		力量宿主限定	力量宿主限定
+ui.night.day_desc.tue	원거리 호스트만 몸으로 나온다	원거리 호스트만 등장	遠距離ホストのみ登場		遠程宿主限定	远程宿主限定
+ui.night.day_desc.wed	중거리 호스트만 몸으로 나온다	중거리 호스트만 등장	中距離ホストのみ登場		中程宿主限定	中程宿主限定
+ui.night.flow.start	몸 셋 중 하나에 빙의	호스트 3명 중 하나에 빙의	3体のホストから1体に憑依	Possess 1 of 3 hosts	附身三個宿主之一	附身三个宿主之一
+ui.night.flow.wave	무리 속성 · 회복	적 속성 변경 · 체력 회복	敵の属性変化・体力回復	Enemy type shifts · Heal	敵人屬性變化 · 回復體力	敌人属性变化 · 回复体力
+ui.night.flow.wave_title	매 1분	1분마다				
+ui.night.result.fail	쓰러졌다	패배	敗北	Defeat	失敗	失败
+ui.night.result.reward_none	이번엔 조각이 없다 — {0}마리를 잡으면 1	획득한 조각 없음 · {0}마리 처치마다 1개				
+ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 몸 잃음 {3}	버틴 시간 {0} · Lv {1} · 빙의 {2} · 잃은 호스트 {3}	耐えた時間 {0}・Lv {1}・憑依 {2}・失ったホスト {3}	Survived {0} · Lv {1} · Possessions {2} · Hosts lost {3}	撐住時間 {0} · Lv {1} · 附身 {2} · 失去宿主 {3}	坚持时间 {0} · Lv {1} · 附身 {2} · 失去宿主 {3}
+ui.night.start_hint	몸 하나를 골라 빙의하라	호스트 하나를 골라 빙의하세요	ホストをひとつ選んで憑依しよう	Pick a host and possess it	選擇一個宿主附身	选择一个宿主附身
+ui.night.start_hint_sub	나머지 둘은 사라진다	나머지 둘은 사라져요				
+ui.night.today_only	오늘만 시작할 수 있다	오늘만 도전할 수 있어요				
+ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	그날 등장 호스트 조각 · 처치 수만큼 지급	その日のホストのかけら・終了時に撃破数に応じて		當日宿主碎片 · 依擊敗數發放	当日宿主碎片 · 按击败数发放
+ui.rb.chl.sweep_short	하루 1번 · 입장 횟수를 쓰지 않는다	하루 1회 · 입장 횟수 소모 없음				
+ui.rb.event.give.fight	적 {0}과 먼저 싸운다	먼저 {0}와(과) 싸운다				
+ui.rb.event.give.fight_elite	엘리트 {0}와 먼저 싸운다	먼저 엘리트 {0}와(과) 싸운다				
+ui.rb.event.give.ghost_hp	고스트 체력 -{0}%	유령 체력 -{0}%				
+ui.rb.event.max_hp_sub	앞으로 빼앗는 <color=#FF8A9C>몸 전부</color>	앞으로 빙의하는 <color=#FF8A9C>호스트 전부</color>	これから憑依する<color=#FF8A9C>ホストすべて</color>	<color=#FF8A9C>Every host</color> you possess from now	之後附身的<color=#FF8A9C>所有宿主</color>	之后附身的<color=#FF8A9C>所有宿主</color>
+ui.rb.guide.boss.body	보스는 빙의할 수 없어요.\n타고 들어간 몸으로 끝내야 해요.	보스는 빙의할 수 없어요.\n입장한 호스트로 끝내야 해요.	ボスには憑依できません。\n乗ってきたホストで倒しましょう。	You can't possess a boss.\nFinish it with the host you brought in.	無法附身頭目。\n要用帶進來的宿主打倒它。	无法附身头目。\n要用带进来的宿主打倒它。
+ui.rb.guide.boss.title	보스는 빼앗을 수 없어요	보스에게는 빙의할 수 없어요				
+ui.rb.guide.cards.body	레벨이 오르면 카드 3장 중 하나를 골라요.\n카드는 유령에 붙어 몸이 바뀌어도 남아요.	레벨이 오르면 카드 3장 중 하나를 골라요.\n카드는 유령에게 붙어 호스트가 바뀌어도 유지돼요.	レベルが上がると3枚から1枚選びます。\nカードはゴーストに付くのでホストが変わっても残ります。	Level up to pick one of three cards.\nCards stick to the ghost and stay when you swap hosts.	升級時從3張卡中選1張。\n卡附在幽靈身上，換宿主也會保留。	升级时从3张卡中选1张。\n卡附在幽灵身上，换宿主也会保留。
+ui.rb.guide.ghost_hp.body	몸 없이 떠 있는 동안 유령 에너지가 줄어요.\n몸을 잃으면 크게 깎이니 조심해요.	호스트 없이 떠 있으면 유령 체력이 줄어요.\n호스트를 잃으면 크게 깎이니 조심해요.	ホストなしで漂うとゴースト体力が減ります。\nホストを失うと大きく削られるので注意しましょう。	Ghost HP drains while you float without a host.\nLosing a host costs a lot, so be careful.	沒有宿主漂浮時幽靈體力會減少。\n失去宿主會大幅扣除，請小心。	没有宿主漂浮时幽灵体力会减少。\n失去宿主会大幅扣除，请小心。
+ui.rb.guide.ghost_hp.title	유령 에너지	유령 체력	ゴースト体力	Ghost HP	幽靈體力	幽灵体力
+ui.rb.guide.growth.title	몸을 키워요	호스트를 육성해요	ホストを育てよう			
+ui.rb.guide.lock.body	링이 회색 자물쇠면 아직 빼앗을 수 없어요.\n더 때리면 열려요.	링에 회색 자물쇠가 있으면 아직 빙의할 수 없어요.\n더 공격하면 풀려요.	リングに灰色の鍵が表示されている敵には、まだ憑依できません。\nさらに攻撃すると解除されます。	A gray lock on the ring means you can't possess that enemy yet.\nKeep attacking to unlock it.	瞄準環出現灰色鎖頭時，還不能附身該敵人。\n繼續攻擊即可解除。	瞄准环出现灰色锁时，还不能附身该敌人。\n继续攻击即可解除。
+ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 몸으로 싸워요.	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 호스트로 싸워요.	頭上に金の照準リングが出た敵に憑依ボタンを押すと\nそのホストで戦えます。	Tap Possess on an enemy with a gold ring overhead\nto fight as that host.	對頭上出現金色瞄準環的敵人按下附身鍵，\n就能用那個宿主戰鬥。	对头上出现金色瞄准环的敌人按下附身键，\n就能用那个宿主战斗。
+ui.rb.guide.possess.title	몸을 빼앗아요	호스트에 빙의해요	ホストに憑依しよう	Possess a host	附身宿主	附身宿主
+ui.rb.guide.release.body	스스로 놓아준 몸은 이 방에서 다시 탈 수 없어요.	스스로 해제한 호스트에는 이 방에서 다시 빙의할 수 없어요.	自分で解除したホストには、この部屋で再び憑依できません。	A host you release can't be possessed again in this room.	自己放開的宿主在這個房間無法再附身。	自己放开的宿主在这个房间无法再附身。
+ui.rb.guide.release.title	몸 놓아주기	빙의 해제	憑依解除	Releasing a Host	解除附身	解除附身
+ui.rb.guide.sortie.body	출전을 누르면 고른 몸으로 판이 시작돼요.\n랜덤 출전이면 아주 가끔 히든 호스트도 만나요.	출전을 누르면 고른 호스트로 판이 시작돼요.\n랜덤 출전이면 아주 가끔 히든 호스트도 만나요.	出撃を押すと選んだホストでランが始まります。\nランダム出撃では、ごくまれに隠しホストにも出会えます。			
+ui.rb.guide.summon.body	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금하고 성급을 올려요.\n10회 소환은 SR 이상 1회 보장이에요.	호스트 조각을 뽑아요. 조각을 모아 호스트를 해금하고 성급을 올려요.\n10회 소환 시 SR 1회 보장이에요.	ホストのかけらを引きます。集めてホストの解放や星級アップに使えます。\n10回召喚はSR1回確定です。	Draw host shards to unlock hosts and raise stars.\nA 10x summon guarantees one SR.	抽取宿主碎片，收集後可解鎖宿主並提升星級。\n10連召喚保底一次SR。	抽取宿主碎片，收集后可解锁宿主并提升星级。\n10连召唤保底一次SR。
+ui.rb.hud.no_body	몸 없음	호스트 없음	ホストなし	No host	無宿主	无宿主
+ui.rb.hud.no_body_hint	몸 없이 떠 있는 동안 유령 체력이 줄어요	호스트 없이 떠 있으면 유령 체력이 줄어요	ホストなしで漂う間、ゴースト体力が減ります	Your ghost HP drains while you have no host	無宿主漂浮時，幽靈體力會減少	无宿主漂浮时，幽灵体力会减少
+ui.rb.lobby.note.ghost	몸 없이 시작 · 판 안에서 몸을 빼앗아 싸워요	호스트 없이 시작 · 판 안에서 적에게 빙의해 싸워요	ホストなしで開始・ステージ内で敵に憑依して戦う	Start without a host · Possess enemies in the run	無宿主開局 · 在局內附身敵人作戰	无宿主开局 · 在局内附身敌人作战
+ui.rb.lobby.note.host	고른 몸으로 바로 시작해요	고른 호스트로 바로 시작해요	選んだホストですぐ開始	Start with the chosen host	以選擇的宿主直接開始	以选择的宿主直接开始
+ui.rb.lobby.note.today	오늘의 몸 · 골드 없이 출전	오늘의 호스트 · 골드 없이 출전	今日のホスト · ゴールド不要で出撃	Today's host · Sortie with no gold	今日宿主 · 不花金幣出擊	今日宿主 · 不花金币出击
+ui.rb.lobby.prompt	어떤 몸과 만날까요?	어떤 호스트와 함께할까요?	どのホストと出会う？	Which host awaits?	要與哪個宿主相遇？	要与哪个宿主相遇？
+ui.rb.lock.help	조각을 모으면 그 몸을 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요.	조각을 모으면 그 호스트를 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요.	かけらを集めるとそのホストを解放できます。\n解放すると出撃・能力強化・星級強化が開放されます。			
+ui.rb.nightpick.pick	몸을 선택하세요	호스트를 선택하세요	ホストを選んでください	Choose a host	請選擇宿主	请选择宿主
+ui.rb.nightpick.sub	나머지 둘은 사라진다	나머지 둘은 사라져요				
+ui.rb.nightpick.title	몸 하나를 골라 빙의하라	호스트 하나를 골라 빙의하세요	ホストを1つ選んで憑依せよ	Pick one host to possess	選一個宿主附身	选一个宿主附身
+ui.rb.pause.build	지금 빌드	현재 빌드				
+ui.rb.pause.no_host	몸 없음 · 유령	호스트 없음 · 유령	ホストなし・ゴースト	No host · Ghost	無宿主 · 幽靈	无宿主 · 幽灵
+ui.rb.result.possess	빙의 · 잃은 몸	빙의 · 잃은 호스트	憑依・失ったホスト			
+ui.rb.result.suggest	이 층에 맞는 몸	이 층에 유리한 호스트	この階で有利なホスト			
+ui.rb.result.tip_sub	가장 오래 쓴 몸 · {0}	가장 오래 쓴 호스트 · {0}	最も長く使ったホスト・{0}			
+ui.rb.reveal.new	새 몸!	새 호스트!	新しいホスト！			
+ui.rb.rnd.ask	어떤 몸과 만날까요?	어떤 호스트와 만날까요?	どのホストと出会えるかな？		會遇到哪個宿主呢？	会遇到哪个宿主呢？
+ui.rb.rnd.hidden_sub	특별한 몸을 만났어요!	특별한 호스트를 만났어요!	特別なホストに出会いました！			
+ui.rb.rnd.hint	몸은 판이 시작될 때 정해져요.	호스트는 판이 시작될 때 정해져요.	ホストは出撃時に決まります。			
+ui.rb.room.elite	정예	엘리트				
+ui.rb.room.midboss_desc	대장 몸을 쓰러뜨려야 지나가요.	중간 보스를 쓰러뜨려야 지나갈 수 있어요.	中ボスを倒さないと先へ進めません。	Defeat the mini-boss to pass.	必須擊敗中頭目才能通過。	必须击败中头目才能通过。
+ui.rb.src.summon_sub	이 몸 포함 · 중복 획득 시 조각 전환	이 호스트 포함 · 중복 시 조각으로 전환				
+ui.rb.summon.card.essence	다 키운 몸 · 정수 +{0}	최대 성급 · 정수 +{0}	最大星級・エッセンス+{0}	Max stars · Essence +{0}	最高星級 · 精華+{0}	最高星级 · 精华+{0}
+ui.rb.summon.card.ready	성급을 올릴 수 있다!	성급을 올릴 수 있어요!				
+ui.rb.summon.card.unlock	새 몸 해금! · 이제 출전할 수 있다	새 호스트 해금! · 이제 출전할 수 있어요	新しいホストを解放！・出撃できる	New host unlocked! · Ready to deploy	新宿主解鎖！· 現在可以出戰	新宿主解锁！· 现在可以出战
+ui.rb.summon.help	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금 · 성급을 올려요.\n10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.	호스트 조각을 뽑아요. 조각을 모아 호스트를 해금하고 성급을 올려요.\n10회 소환 시 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.	ホストのかけらを引きます。かけらを集めてホストを解放し、星級を上げます。\n10回召喚はSR1回保証・50回以内に大当たりがなければ50回目は大当たり確定です。		抽取宿主碎片。收集碎片可解鎖宿主、提升星級。\n10連召喚保證1個SR · 50次內未出大獎則第50次必定大獎。	抽取宿主碎片。收集碎片可解锁宿主、提升星级。\n10连召唤保证1个SR · 50次内未出大奖则第50次必定大奖。
+ui.rb.summon.new	새 몸!	새 호스트!	新しいホスト！	New Host!	新宿主！	新宿主！
+ui.rb.summon.pickup_rule	SSR 이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트	SR이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트	SRが出ると<color=#FFC93D>{0}%</color>の確率でピックアップホスト	SR draws are the pickup host <color=#FFC93D>{0}%</color> of the time	抽到SR時有<color=#FFC93D>{0}%</color>機率為UP宿主	抽到SR时有<color=#FFC93D>{0}%</color>概率为UP宿主
+ui.shop.heal.desc	호스트 {0}% · 고스트 {1}% 회복	호스트 체력 {0}% · 유령 체력 {1}% 회복				
+ui.shop.host.desc	그 자리에서 이 몸을 빼앗는다	즉시 이 호스트에 빙의한다	その場でこのホストに憑依する	Possess this host on the spot	當場附身這個宿主	当场附身这个宿主
+ui.shop.host.name	몸 — {0}	호스트 — {0}	ホスト — {0}	Host — {0}	宿主 — {0}	宿主 — {0}
+ui.shop.result.card	{0} 구입	{0} 구매				
+ui.shop.result.consumable	{0} 구입 — 다음 방에서 열린다	{0} 구매 · 다음 방에서 발동				
+ui.shrine.atk.title	힘을 받는다	공격력 증가	攻撃力アップ	Attack Up	攻擊力提升	攻击力提升
+ui.shrine.card_pick.desc	레어 이상 카드 셋 중 하나를 가져간다	희귀 이상 카드 3장 중 1장을 고른다	レア以上のカード3枚から1枚を選ぶ	Pick 1 of 3 Rare-or-better cards	從3張稀有以上卡片中選1張	从3张稀有以上卡片中选1张
+ui.shrine.card_pick.title	카드를 고른다	카드 선택	カード選択	Pick a Card	選擇卡片	选择卡片
+ui.shrine.card_up.title	카드를 벼린다	카드 강화	カード強化	Upgrade a Card	強化卡片	强化卡片
+ui.shrine.full_heal.title	몸을 아문다	호스트 체력 회복	ホスト体力回復	Heal Host	恢復宿主體力	恢复宿主体力
+ui.shrine.max_hp.desc	뺏는 몸이 더 튼튼해진다	앞으로 빙의하는 호스트의 최대 체력이 늘어난다	これから憑依するホストの最大体力が増える	Hosts you possess from now on gain increased max HP.	之後附身的宿主最大HP提升	之后附身的宿主最大HP提升
+ui.shrine.max_hp.result	뺏는 몸이 더 튼튼해졌다	앞으로 빙의하는 호스트의 최대 체력이 늘어났다	これから憑依するホストの最大体力が増えた	Hosts you possess from now on have increased max HP.	之後附身的宿主最大HP已提升	之后附身的宿主最大HP已提升
+ui.shrine.max_hp.title	그릇을 넓힌다	최대 체력 증가	最大体力アップ	Max HP Up	最大HP提升	最大HP提升
+ui.shrine.range.title	멀리 닿는다	사거리 증가	射程アップ	Range Up	射程提升	射程提升
+ui.shrine.soul_heal.desc	고스트 체력을 가득 채운다	유령 체력을 가득 채운다				
+ui.shrine.soul_heal.result	고스트 체력을 가득 채웠다	유령 체력을 가득 채웠다				
+ui.shrine.soul_heal.title	영혼을 채운다	유령 체력 회복	ゴースト体力回復	Heal Ghost	恢復幽靈體力	恢复幽灵体力
+ui.shrine.speed.title	손이 빨라진다	공격 속도 증가	攻撃速度アップ	Attack Speed Up	攻擊速度提升	攻击速度提升
+ui.start.dim.ghost	유령 출전 — 판 안에서 몸을 빼앗아 싸워요	유령 출전 — 판 안에서 적에게 빙의해 싸워요	ゴースト出撃 — ステージ内で敵に憑依して戦います	Ghost — possess enemies inside the run	幽靈出擊 — 在關卡中附身敵人戰鬥	幽灵出击 — 在关卡中附身敌人战斗
+ui.start.dim.random	랜덤 출전 — 몸은 판이 시작될 때 정해져요	랜덤 출전 — 호스트는 판이 시작될 때 정해져요	ランダム出撃 — ホストはステージ開始時に決まります	Random — your host is chosen when the run starts	隨機出擊 — 宿主在關卡開始時決定	随机出击 — 宿主在关卡开始时决定
+ui.start.info.random1	몸은 판이 시작될 때 정해져요.	호스트는 판이 시작될 때 정해져요.	ホストはステージ開始時に決まります。	Your host is decided when the run starts.	宿主在關卡開始時決定。	宿主在关卡开始时决定。
+ui.start.mode.host	몸 골라	호스트 선택	ホストを選ぶ	Pick a Host	選擇宿主	选择宿主
+ui.start.mode.host_today	오늘의 몸 · 골드 무료	오늘의 호스트 · 골드 무료	今日のホスト・ゴールド無料	Today's Host · Free	今日宿主 · 免金幣	今日宿主 · 免金币
+ui.start.note.grown	빼앗은 몸도 내가 키운 만큼 세요.	빙의한 호스트도 육성한 만큼 강해요.	憑依したホストも育てた分だけ強い。	Possessed hosts are as strong as you've trained them.	附身的宿主也和你培養的一樣強。	附身的宿主也和你培养的一样强。
+ui.start.ribbon.today	오늘의 몸 무료	오늘의 호스트 무료				
+ui.start.today	오늘의 몸	오늘의 호스트	今日のホスト	Today's Host	今日宿主	今日宿主
+ui.start.today_note	오늘의 몸 {0}명 무료 · {1} 뒤 바뀜	오늘의 호스트 {0}명 무료 · {1} 뒤 교체				
+ui.starup.confirm	{0}  {1}\n파편 {2}개 · 골드 {3}을 씁니다.	{0}  {1}\n조각 {2}개 · 골드 {3}을 씁니다.				
+ui.stat.crit	크리티컬 확률	치명타 확률				
+ui.stat.critdmg	크리티컬 피해	치명타 피해				
+ui.stat.hp	최대 HP	최대 체력				
+ui.store.chest.shard	몸 {0} ~ {1}명 조각	호스트 {0}~{1}명 조각	ホスト {0}～{1}人の欠片	Shards for {0}–{1} hosts	{0} ~ {1}名宿主的碎片	{0} ~ {1}个宿主的碎片
+ui.summon.new_body	새 몸	새 호스트	新しいホスト	New Host	新宿主	新宿主
+ui.summon.pickup_note	A급이 나오면 {0}% 확률로 픽업 호스트	SR이 나오면 {0}% 확률로 픽업 호스트	SRが出たら{0}%の確率でピックアップホスト	SR pulls are the pick-up host {0}% of the time	抽中SR時有{0}%機率為精選宿主	抽中SR时有{0}%概率为UP宿主
+ui.summon.pull10_note	A급 1회 보장	SR 1회 보장	SR1回確定	1 SR guaranteed	必得1次SR	必出1次SR
+ui.summon.rate_guarantee	10회 소환 시 <color=#FFD94A>A급 이상 1명</color> 보장	10회 소환 시 <color=#FFD94A>SR 1명</color> 보장	10回召喚で<color=#FFD94A>SR1人</color>確定	10-pull guarantees <color=#FFD94A>1 SR</color>	10連召喚必得<color=#FFD94A>SR 1名</color>	十连召唤必得<color=#FFD94A>SR 1名</color>
+ui.summon.rate_host	몸별 확률	호스트별 확률			各宿主機率	各宿主概率
+ui.summon.rate_rules	10회 소환은 A급 1회 보장 · {0}회 안에 대박이 없으면 {0}번째는 대박 확정	10회 소환 시 SR 1회 보장 · {0}회 안에 대박이 없으면 {0}번째는 대박 확정	10回召喚はSR1回確定・{0}回以内に大当たりが無ければ{0}回目は大当たり確定	x10 guarantees one SR · no jackpot in {0} pulls makes the {0}th a jackpot	10次召喚必得1次SR · {0}次內未出大獎則第{0}次必出大獎	10次召唤必出1次SR · {0}次内未出大奖则第{0}次必出大奖
+ui.summon.reveal.new	새 몸!	새 호스트!	新しいホスト!	New Host!	新宿主！	新宿主！
+ui.tower.adv	{0} 몸 유리 ▲	{0} 호스트 유리 ▲	{0}のホストが有利 ▲	{0} hosts ▲	{0}宿主有利 ▲	{0}宿主有利 ▲
+ui.tower.banner_enemy	적 전부 {0} · {1} 몸 유리 ▲	적 전원 {0} · {1} 호스트 유리 ▲	敵はすべて{0}・{1}のホストが有利 ▲	All enemies are {0} · {1} hosts favored ▲	敵人全為{0} · {1}宿主有利 ▲	敌人全为{0} · {1}宿主有利 ▲
+ui.tower.first_clear	첫 클리어 보상 (매주 다시)	첫 클리어 보상 (매주 초기화)				
+ui.tower.first_clear_done	이번 주 보상은 이미 받았다	이번 주 보상은 이미 받았어요				
+ui.tower.no_entries	내일 05:00에 3번	내일 05:00에 3회 충전				
+ui.tower.no_leave	이 층은 나갈 수 없다	이 층에서는 나갈 수 없어요				
+ui.tower.result.fail_desc	입장 1번으로 다시 — 몸을 바꿔 보자	입장 1회로 재도전 · 다른 호스트로 바꿔 보세요	入場1回でもう一度 — ホストを変えてみよう	Retry with 1 entry — try another host	消耗1次入場再試 — 換個宿主吧	消耗1次入场再试 — 换个宿主吧
+ui.tower.result.hint	이 층에 맞는 키운 몸 ★{0} / {1}	이 층에 유리한 육성 호스트 ★{0} / {1}	この階に合う育てたホスト ★{0} / {1}	Trained hosts for this floor ★{0} / {1}	適合此層的培養宿主 ★{0} / {1}	适合本层的已培养宿主 ★{0} / {1}
+ui.tower.result.suggest	{0} 호스트를 키우면 쉬워진다	{0} 호스트를 육성하면 쉬워져요				
+ui.tower.start_hint	입장 1번 사용 · 이기든 지든 줄어든다	입장 1회 소모 · 승패와 관계없이 차감				
+ui.tower.sweep_hint	하루 1번 · 입장 횟수를 쓰지 않는다 · 싸우지 않고 받는다	하루 1회 · 입장 횟수 소모 없음 · 전투 없이 보상 획득				
+ui.tower.sweep_locked	1층을 깨면 받을 수 있다	1층을 클리어하면 받을 수 있어요				
+ult.amazon.desc	적 사이를 잔상으로 옮겨 다니며 치고 내려찍기, 시전 중 무적.	잔상을 남기며 적 사이를 누비고 연속 공격 후 내려찍는다. 시전 중 무적.				
+ult.baseball.desc	돌며 회오리를 키워 끌어당기고 풀스윙으로 날린다.	회전하며 회오리를 키워 적을 끌어당긴 뒤 풀스윙으로 날려 보낸다.				
+ult.commando_grenade.desc	반경 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발(그동안 평타 쉼).	범위 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발시킨다(그동안 기본 공격 불가).				
+ult.commando_laser.desc	굵은 레이저가 가까운 적에 꽂히고, 거기서 네 갈래로 갈라져 둘레 적에게 꺾여 든다.	굵은 레이저로 가까운 적을 맞힌 뒤, 4갈래로 갈라져 주변 적을 공격한다.				
+ult.commando_laser.short	레이저가 맞은 자리에서 네 갈래로	레이저가 4갈래로 갈라짐				
+ult.commando_mg.desc	기관총을 세우고 3초 동안 돌며 사방으로 쏟아붓다가, 멈추며 사방으로 산탄 24발.	기관총을 거치하고 3초간 회전하며 사방으로 난사한 뒤, 멈출 때 산탄 24발을 퍼붓는다.				
+ult.commando_missile.desc	가장 센 적에게 미사일 8발을 모아 쏟아붓는다.	가장 강한 적에게 미사일 8발을 집중 발사한다.				
+ult.commando_missile.short	가장 센 적에게 8발 집중	가장 강한 적에게 8발 집중				
+ult.dragon_blue.desc	둘레 모든 적에게 낙뢰가 세 번 떨어지고, 끝에 가장 센 적에게 큰 낙뢰.	주변 모든 적에게 낙뢰가 3번 떨어지고, 마지막에 가장 강한 적에게 거대한 낙뢰가 떨어진다.				
+ult.dragon_blue.short	둘레 모든 적에게 낙뢰 3번	주변 모든 적에게 낙뢰 3번				
+ult.dragoon.desc	가장 센 적에게 불덩이를 떨어뜨려 크게 터뜨리고, 그 자리를 4초 동안 불바다로 만든다.	가장 강한 적에게 메테오를 떨어뜨려 폭발시키고, 그 자리에 4초간 불바다를 남긴다.				
+ult.dragoon.short	가장 센 적에게 메테오 + 불바다	가장 강한 적에게 메테오 + 불바다				
+ult.gangster.desc	가장 체력이 높은 적(보스 포함)을 1.5초 조준한 뒤 초대형 한 발. 보스는 최대 체력의 % 피해.	체력이 가장 높은 적(보스 포함)을 1.5초간 조준한 뒤 강력한 한 발을 쏜다. 보스에게는 최대 체력 비례 피해.				
+ult.guru.desc	결계로 적을 가운데로 모아 가두고 터뜨린다.	결계로 적을 중앙에 모아 가둔 뒤 폭발시킨다.				
+ult.hopper.desc	칼날로 앞의 적들을 묶고, 묶인 적 전원에게 치명 확정.	칼날로 앞쪽 적들을 속박하고, 속박된 적 모두에게 확정 치명타를 준다.				
+ult.hopper.short	앞의 적을 묶고 치명 확정	앞쪽 적 속박 · 확정 치명타				
+ult.hopper_smg.desc	가장 먼 적까지 일직선 돌진하며 양옆 난사, 도착하면 무적.	가장 먼 적까지 일직선으로 돌진하며 양옆으로 난사한다. 도착하면 잠시 무적.				
+ult.medium.desc	거대 원혼을 불러 5초간 둘레 적을 할퀴게 하고, 끝에 크게 터뜨린다.	거대 원혼을 소환해 5초간 주변 적을 할퀸 뒤 크게 폭발시킨다.				
+ult.ninja.desc	분신 셋을 불러 6초간 같이 공격한다 — 닌자가 던질 때 셋도 같이 던진다.	분신 3명을 소환해 6초간 함께 공격한다. 내가 던질 때마다 분신도 함께 던진다.				
+ult.ninja.short	분신 셋이 6초간 함께 공격	분신 3명이 6초간 함께 공격				
+ult.ninja_chain.desc	가장 강한 적에게 사슬을 걸고 내가 날아가 연타 뒤 내려찍는다(보스를 끌어오지 않는다).	가장 강한 적에게 사슬을 걸고 날아가 연타한 뒤 내려찍는다(보스는 끌어오지 않는다).				
+ult.robot.desc	로봇 다섯이 빛기둥으로 내려와 미사일을 퍼붓고, 저마다 세 발을 더 쏘고 돌아간다.	로봇 5기가 빛기둥을 타고 내려와 미사일을 퍼붓고, 각자 3발을 더 쏜 뒤 돌아간다.				
+ult.robot.short	로봇 다섯이 내려와 일제 사격	로봇 5기 강하 · 일제 사격				
+ult.salamander.desc	넓은 독 늪을 깐다 — 안에 있는 적은 모두 중독되고, 늪이 끝날 때 터진다.	넓은 독 늪을 만든다. 안의 적은 모두 중독되고, 늪이 사라질 때 폭발한다.				
+ult.snowwoman.desc	얼음 진을 깔아 기둥이 솟고 가둔 뒤 파쇄.	얼음 진을 펼쳐 얼음 기둥으로 적을 가둔 뒤 부순다.				
+ult.thug.desc	2.5초 돌며 사방 연사, 멈추며 사방 16발.	2.5초간 회전하며 사방으로 연사하고, 멈출 때 사방으로 16발을 쏜다.				
+ult.vampire.desc	둘레에 피 웅덩이를 펴고 녹아든다 — 안의 적 전부에게 피를 묻혀 2초간 빨아들이며 회복하고, 끝에 펑 터뜨린다.	주변에 피 웅덩이를 펼쳐 스며든다. 안의 모든 적에게서 2초간 피를 빨아 회복한 뒤 폭발시킨다.				
+ult.white_wizard.desc	3초 동안 둘레 적 머리 위로 빛기둥 14개가 차례로 꽂힌다.	3초간 주변 적에게 빛기둥 14개가 차례로 떨어진다.				

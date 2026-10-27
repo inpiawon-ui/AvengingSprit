@@ -217,7 +217,7 @@ namespace Game.Module.Lobby
         private void Toggle(string node, bool on)
         {
             if (_ui.Get<Image>(node + "Track") is Image img) img.sprite = on ? _toggleOn : _toggleOff;
-            if (_ui.Find(node + "Knob") is RectTransform k) k.anchoredPosition = new Vector2(on ? 22f : -22f, 0f);
+            if (_ui.Find(node + "Knob") is RectTransform k) k.anchoredPosition = new Vector2(on ? 20f : -20f, 0f);   // 시안 — 손잡이가 트랙 끝에서 높이의 11%
         }
 
         private void FillLanguage()

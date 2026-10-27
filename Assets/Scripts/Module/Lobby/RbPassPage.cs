@@ -20,7 +20,16 @@ namespace Game.Module.Lobby
         [SerializeField] private Sprite[] _icons = Array.Empty<Sprite>();
         [SerializeField] private Sprite _cellClaim, _cellIdle, _cellDone;
 
+        // 시안 pass — 받음 초록 · 받기 노랑 · 아직이면 보상 이름(흐린 글자) · 「현재」 줄 숫자는 노랗게 위로
+        private static readonly Color StateDone = new(0.36f, 0.86f, 0.55f, 1f);
+        private static readonly Color StateClaim = new(1f, 0.79f, 0.24f, 1f);
+        private static readonly Color StateDim = new(0.62f, 0.66f, 0.78f, 1f);
+        private static readonly Color LvNormal = new(0.24f, 0.90f, 1f, 1f);
+        private const float NowLift = 28f;   // 「현재」 줄 숫자를 올리는 만큼(게임 px · 시안 42)
+        private const string RewardHost = "vampire";   // 이번 시즌 프리미엄 Lv 30 보상 호스트(배너 얼굴)
+
         private UIBinder _ui;
+        private float _lvBaseY = float.NaN;
         private RbLobbyUI _shell;
         private readonly List<Transform> _rows = new();
         private float _rowStep;
@@ -39,9 +48,10 @@ namespace Game.Module.Lobby
             if (tpl != null) { _rowStep = ((RectTransform)tpl).sizeDelta.y + 10f; tpl.gameObject.SetActive(false); }
         }
 
-        public void Open()
+        public void Open(UnityEngine.U2D.SpriteAtlas faces)
         {
             gameObject.SetActive(true);
+            if (faces != null && _ui.Get<Image>("PasFace") is Image face && faces.GetSprite($"face_{RewardHost}") is Sprite fs) face.sprite = fs;
             Refresh();
         }
 
@@ -56,7 +66,7 @@ namespace Game.Module.Lobby
             _ui.SetActive("PasMissionsDot", s.HasClaimableMission);
             _ui.SetActive("PasPremium", !s.HasPremium);
             if (CoreModule.TryGet<IStoreService>(out var store) && store.Find("pass_premium") is StoreProduct p)
-                _ui.SetText("PasPremiumText", $"{Localize.FromTable("ui.pass.premium", "프리미엄 열기")}  {store.PriceLabel(p)}");
+                _ui.SetText("PasPremiumPrice", store.PriceLabel(p));   // 글자(「프리미엄 열기」)는 칸을 나눠 따로 둔다(시안)
             if (_ui.Get<Button>("PasClaimAll") is Button ca) ca.interactable = s.HasClaimable;
 
             var tiers = s.Tiers;
@@ -79,8 +89,16 @@ namespace Game.Module.Lobby
                 if (!on) continue;
                 int level = i + 1;
                 TextIn(_rows[i], "PasRowLv", level.ToString());
-                // 「현재」 표시 — 다음에 열릴 단계(다 열었으면 마지막)
-                _ui.Find(_rows[i], "PasRowNow")?.gameObject.SetActive(level == Math.Min(s.Tier + 1, s.TierMax));
+                // 「현재」 표시 — 다음에 열릴 단계(다 열었으면 마지막) · 숫자는 노랗게 위로, 아래에 점과 「현재」
+                bool now = level == Math.Min(s.Tier + 1, s.TierMax);
+                _ui.Find(_rows[i], "PasRowNow")?.gameObject.SetActive(now);
+                _ui.Find(_rows[i], "PasRowDot")?.gameObject.SetActive(now);
+                if (_ui.Find(_rows[i], "PasRowLv") is RectTransform lv)
+                {
+                    if (float.IsNaN(_lvBaseY)) _lvBaseY = lv.anchoredPosition.y;
+                    lv.anchoredPosition = new Vector2(lv.anchoredPosition.x, _lvBaseY + (now ? NowLift : 0f));
+                    if (lv.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI lt) lt.color = now ? StateClaim : LvNormal;
+                }
                 Cell(_rows[i], "PasRowFree", tiers[i].Free, level, false, s, true);
                 Cell(_rows[i], "PasRowPrem", tiers[i].Premium, level, true, s, s.HasPremium);
             }
@@ -92,9 +110,11 @@ namespace Game.Module.Lobby
             if (_ui.Find(row, p + "Icon")?.GetComponent<Image>() is Image ic) { ic.sprite = parsed.Count > 0 ? RbRewards.IconOf(_icons, parsed[0].kind, parsed[0].key) : null; ic.enabled = ic.sprite != null; }
             TextIn(row, p + "Amount", parsed.Count > 0 ? parsed[0].amount.ToString("N0") : string.Empty);
             bool claimed = s.IsClaimed(level, premium), can = s.CanClaim(level, premium);
+            string label = parsed.Count > 0 ? RbRewards.LabelOf(parsed[0].kind, parsed[0].key) : string.Empty;
             TextIn(row, p + "State", claimed ? "✓ " + Localize.FromTable("ui.pass.claimed", "받음")
-                                   : can ? Localize.FromTable("ui.pass.claim", "받기")
-                                   : unlocked ? string.Empty : Localize.FromTable("ui.pass.locked", "잠김"));
+                                   : can ? Localize.FromTable("ui.pass.claim", "받기") : label);
+            if (_ui.Find(row, p + "State")?.GetComponent<TextMeshProUGUI>() is TextMeshProUGUI st)
+                st.color = claimed ? StateDone : can ? StateClaim : StateDim;
             _ui.Find(row, p + "Lock")?.gameObject.SetActive(!unlocked);
             var cell = _ui.Find(row, p);
             if (cell != null && cell.GetComponent<Image>() is Image bg) bg.sprite = claimed ? _cellDone : can ? _cellClaim : _cellIdle;

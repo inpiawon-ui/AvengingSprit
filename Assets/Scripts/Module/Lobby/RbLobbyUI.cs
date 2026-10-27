@@ -849,7 +849,7 @@ namespace Game.Module.Lobby
                     break;
                 case "GhostFromHost": SelectTab("Ghost"); _ghostPage?.Open(_player, "Host"); break;
                 case "Missions": SelectTab("Missions"); _missionsPage?.Open(); break;
-                case "Pass": SelectTab("Pass"); _passPage?.Open(); break;
+                case "Pass": SelectTab("Pass"); SetTabBar(false); _passPage?.Open(_faces); break;   // 시안 pass — 아래 탭 없이 한 화면
                 case "Mail": SelectTab("Mail"); _misc?.ShowMail(); break;
                 case "Daily": _misc?.ShowDaily(); break;
                 case "Settings": _misc?.ShowSettings(); break;

@@ -192,71 +192,86 @@ namespace Game.Editor.ReBorn
         {
             var page = RbHostBuilder.Page(rt, "PagePass");
             RbHostBuilder.Head(page, "Pas", "ui.rb.pass.title", "시즌 패스", 25, 280, 155, 400, 800, 922);
-            const float bx0 = 30, by0 = 430, bx1 = 1050, by1 = 790;
+            // ── 시안 Screens/pass.png 그대로(PD 2026-10-28 「시안이랑 아예 다르다 · 똑같이」) — 좌표는 시안 1080 px
+            // 시즌 판 — 챕터 칸과 같은 짙은 판 + 위쪽 하늘색 한 줄 · 오른쪽에 보상 호스트 얼굴
+            const float bx0 = 30, by0 = 440, bx1 = 1050, by1 = 795;
             var banner = Place(Node(page, "PasBanner"), Edge.Top, bx0, by0, bx1, by1);
-            Img(banner, "Components/rb_panel_hero");
-            var clip = Stretch(Node(banner, "PasBannerClip"));
-            clip.offsetMin = new Vector2(4f, 4f); clip.offsetMax = new Vector2(-4f, -4f);
-            clip.gameObject.AddComponent<RectMask2D>();
-            var art = Stretch(Node(clip, "PasBannerArt"));
-            var artImg = Img(art, "Art/rb_art_pass_showcase_bg");
-            artImg.preserveAspect = false;
-            var fit = art.gameObject.AddComponent<AspectRatioFitter>();
-            fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fit.aspectRatio = artImg.sprite != null ? artImg.sprite.rect.width / artImg.sprite.rect.height : 2.4f;
-            Text(Local(Node(banner, "PasSeason"), bx0, by0, bx1, by1, 66, 456, 600, 500), null, "SEASON 1", 34, Cyan, TA.Left, number: true);
-            Text(Local(Node(banner, "PasName"), bx0, by0, bx1, by1, 66, 506, 800, 574), "ui.rb.pass.name", "복수자", 60, White, TA.Left, heavy: true);
-            Text(Local(Node(banner, "PasPerk"), bx0, by0, bx1, by1, 66, 590, 900, 636), "ui.rb.pass.perk", "프리미엄 Lv 30 보상 — SSR 흡혈귀", 36, White, TA.Left);
-            Text(Local(Node(banner, "PasLeft"), bx0, by0, bx1, by1, 66, 720, 600, 762), null, "남은 기간 17일", 32, Dim, TA.Left);
+            var bannerImg = Img(banner, "Components/rb_lobby_chapter_panel");
+            bannerImg.preserveAspect = false;
+            bannerImg.pixelsPerUnitMultiplier = 1.5f;
+            Img(Local(Node(banner, "PasBannerLine"), bx0, by0, bx1, by1, 362, 437, 714, 445), "Components/rb_bar_fill_cyan").preserveAspect = false;
+            Text(Local(Node(banner, "PasSeason"), bx0, by0, bx1, by1, 62, 470, 600, 514), null, "SEASON 1", 40, Cyan, TA.Left, number: true);
+            Text(Local(Node(banner, "PasName"), bx0, by0, bx1, by1, 62, 520, 860, 594), "ui.rb.pass.name", "복수자", 62, White, TA.Left, heavy: true);
+            Text(Local(Node(banner, "PasPerk"), bx0, by0, bx1, by1, 62, 606, 860, 654), "ui.rb.pass.reward_host", "SSR 흡혈귀", 40, White, TA.Left, heavy: true);
+            Text(Local(Node(banner, "PasPerkLv"), bx0, by0, bx1, by1, 62, 662, 860, 712), "ui.rb.pass.reward_lv", "프리미엄 Lv 30 보상", 36, White, TA.Left);
+            Text(Local(Node(banner, "PasLeft"), bx0, by0, bx1, by1, 62, 718, 600, 766), null, "남은 기간 17일", 36, Dim, TA.Left);
+            Img(Local(Node(banner, "PasFace"), bx0, by0, bx1, by1, 916, 514, 1000, 598), "Icons/rb_icon_sys_info_48").preserveAspect = true;   // 화면 스크립트가 보상 호스트 얼굴로 바꾼다
 
-            const float lx0 = 30, ly0 = 812, lx1 = 1050, ly1 = 960;
+            // 레벨 판
+            const float lx0 = 30, ly0 = 822, lx1 = 1050, ly1 = 992;
             var lvp = Place(Node(page, "PasLvPanel"), Edge.Top, lx0, ly0, lx1, ly1);
             Img(lvp, "Components/rb_panel_base");
-            Text(Local(Node(lvp, "PasLevel"), lx0, ly0, lx1, ly1, 60, 830, 740, 890), null, "Lv 3 · 40/100", 46, White, TA.Left, number: true);
-            Bar(Local(Node(lvp, "PasXpBar"), lx0, ly0, lx1, ly1, 60, 910, 740, 926), "PasXpFill", "Components/rb_bar_fill_cyan");
-            var mis = Local(Node(lvp, "PasMissions"), lx0, ly0, lx1, ly1, 770, 834, 1030, 940);
+            Text(Local(Node(lvp, "PasLevel"), lx0, ly0, lx1, ly1, 56, 860, 780, 914), null, "Lv 3 · 40/100", 48, White, TA.Left, number: true);
+            Bar(Local(Node(lvp, "PasXpBar"), lx0, ly0, lx1, ly1, 56, 944, 782, 960), "PasXpFill", "Components/rb_bar_fill_cyan");
+            var mis = Local(Node(lvp, "PasMissions"), lx0, ly0, lx1, ly1, 808, 838, 1022, 990);
             Btn(mis, "Components/rb_btn_secondary");
-            Text(Stretch(Node(mis, "PasMissionsText")), "ui.rb.pass.missions", "미션 ›", 38, White, TA.Center, heavy: true);
-            Img(Local(Node(mis, "PasMissionsDot"), 770, 834, 1030, 940, 1000, 826, 1036, 862), "Components/rb_dot_red");
+            Text(Stretch(Node(mis, "PasMissionsText")), "ui.rb.pass.missions", "미션 ›", 40, White, TA.Center, heavy: true);
+            Img(Local(Node(mis, "PasMissionsDot"), 808, 838, 1022, 990, 992, 830, 1028, 866), "Components/rb_dot_red");
 
-            Text(Place(Node(page, "PasHeadFree"), Edge.Top, 30, 976, 470, 1020), "ui.pass.free", "무료 보상", 34, Dim, TA.Center, heavy: true);
-            Text(Place(Node(page, "PasHeadLv"), Edge.Top, 470, 976, 610, 1020), "ui.pass.tier", "단계", 34, Dim, TA.Center, heavy: true);
-            Text(Place(Node(page, "PasHeadPrem"), Edge.Top, 610, 976, 1050, 1020), "ui.pass.premium_rewards", "프리미엄 보상", 34, Dim, TA.Center, heavy: true);
+            // 머리 글자 — 무료 · 레벨 · 프리미엄
+            Text(Place(Node(page, "PasHeadFree"), Edge.Top, 30, 1022, 468, 1070), "ui.rb.pass.head_free", "무료", 40, Dim, TA.Center, heavy: true);
+            Text(Place(Node(page, "PasHeadLv"), Edge.Top, 468, 1022, 612, 1070), "ui.rb.pass.head_lv", "레벨", 40, Dim, TA.Center, heavy: true);
+            Text(Place(Node(page, "PasHeadPrem"), Edge.Top, 612, 1022, 1050, 1070), "ui.rb.pass.head_prem", "프리미엄", 40, Dim, TA.Center, heavy: true);
 
-            var body = VScroll(page, "PasBody", 1030, 1860, 30 * 210f);
-            const float ry0 = 1034, ry1 = 1234;
-            var row = PlaceIn(Node(body, "PasRowTemplate"), 1030, 30, ry0, 1050, ry1);
-            Cell(row, "PasRowFree", 30, ry0, 1050, ry1, 30, 470);
-            Cell(row, "PasRowPrem", 30, ry0, 1050, ry1, 610, 1050);
-            Text(Local(Node(row, "PasRowLv"), 30, ry0, 1050, ry1, 480, ry0 + 60, 600, ry0 + 130), null, "3", 52, White, TA.Center, number: true);
-            Text(Local(Node(row, "PasRowNow"), 30, ry0, 1050, ry1, 470, ry0 + 132, 610, ry0 + 168), "ui.rb.chl.now", "현재", 28, Yellow, TA.Center, heavy: true);
+            // 단계 줄 — 칸 높이 240 · 줄 간격 256(본보기 + 화면 스크립트 간격 10 게임 px). 아래 탭 없이 버튼 위까지
+            var body = VScroll(page, "PasBody", 1080, 2000, 30 * 256f);
+            const float ry0 = 1090, ry1 = 1331;
+            var row = PlaceIn(Node(body, "PasRowTemplate"), 1080, 30, ry0, 1052, ry1);
+            // 가운데 세로 줄 — 다음 줄까지 이어지게 틈만큼 길게
+            var line = Img(Local(Node(row, "PasRowLine"), 30, ry0, 1052, ry1, 538, ry0, 542, ry1 + 16), "Components/rb_bar_fill_cyan");
+            line.preserveAspect = false;
+            line.color = new Color(1f, 1f, 1f, 0.45f);
+            Cell(row, "PasRowFree", 30, ry0, 1052, ry1, 30, 468, false);
+            Cell(row, "PasRowPrem", 30, ry0, 1052, ry1, 612, 1052, true);
+            Text(Local(Node(row, "PasRowLv"), 30, ry0, 1052, ry1, 480, ry0 + 115, 600, ry0 + 185), null, "3", 56, Cyan, TA.Center, number: true);   // 「현재」 줄은 화면 스크립트가 노랗게 · 위로
+            Img(Local(Node(row, "PasRowDot"), 30, ry0, 1052, ry1, 492, ry0 + 160, 522, ry0 + 190), "Components/rb_toggle_knob").color = Yellow;   // 흰 원에 노랑(빨간 점에 곱하면 빨갛게 남는다)
+            Text(Local(Node(row, "PasRowNow"), 30, ry0, 1052, ry1, 468, ry0 + 196, 612, ry0 + 246), "ui.rb.pass.now", "현재", 38, Yellow, TA.Center, heavy: true);
 
-            var ca = Place(Node(page, "PasClaimAll"), Edge.Bottom, 30, 1880, 330, 2020);
+            // 아래 — 모두 받기 · 프리미엄 열기 | 값 (아래 탭은 시즌 패스를 여는 동안 숨긴다)
+            var ca = Place(Node(page, "PasClaimAll"), Edge.Bottom, 30, 2022, 306, 2192);
             Btn(ca, "Components/rb_btn_secondary");
-            Text(Stretch(Node(ca, "PasClaimAllText")), "ui.pass.claim_all", "모두 받기", 40, White, TA.Center, heavy: true);
-            var pr = Place(Node(page, "PasPremium"), Edge.Bottom, 350, 1880, 1050, 2020);
+            Text(Stretch(Node(ca, "PasClaimAllText")), "ui.pass.claim_all", "모두 받기", 44, White, TA.Center, heavy: true);
+            const float px0 = 332, py0 = 2022, px1 = 1050, py1 = 2192;
+            var pr = Place(Node(page, "PasPremium"), Edge.Bottom, px0, py0, px1, py1);
             Btn(pr, "Components/rb_btn_primary");
-            Text(Stretch(Node(pr, "PasPremiumText")), null, "프리미엄 열기  ₩12,000", 46, Ink, TA.Center, heavy: true);
+            Text(Local(Node(pr, "PasPremiumText"), px0, py0, px1, py1, 350, 2050, 712, 2160), "ui.pass.premium", "프리미엄 열기", 50, Ink, TA.Center, heavy: true);
+            var div = Img(Local(Node(pr, "PasPremiumDiv"), px0, py0, px1, py1, 713, 2058, 717, 2152), "Components/rb_divider_line");
+            div.preserveAspect = false;
+            div.color = new Color(0.45f, 0.3f, 0.05f, 0.6f);
+            Text(Local(Node(pr, "PasPremiumPrice"), px0, py0, px1, py1, 720, 2050, 1040, 2160), null, "₩12,000", 64, Ink, TA.Center, number: true);
 
             var view = page.gameObject.AddComponent<RbPassPage>();
             var so = new SerializedObject(view);
             Icons(so);
-            so.FindProperty("_cellClaim").objectReferenceValue = KitSprite("Components/rb_pass_claim");
-            so.FindProperty("_cellIdle").objectReferenceValue = KitSprite("Components/rb_pass_locked");
-            so.FindProperty("_cellDone").objectReferenceValue = KitSprite("Components/rb_pass_claimed");
+            // 칸 판 — 시안 크롭 앵커로 발주(rb_pass_cell · rb_pass_cell_claim). 들어오기 전엔 비슷한 키트 판
+            so.FindProperty("_cellClaim").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell_claim") ? "Components/rb_pass_cell_claim" : "Components/rb_btn_secondary");
+            so.FindProperty("_cellIdle").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell") ? "Components/rb_pass_cell" : "Components/rb_panel_base");
+            so.FindProperty("_cellDone").objectReferenceValue = KitSprite(KitHas("Components/rb_pass_cell") ? "Components/rb_pass_cell" : "Components/rb_panel_base");
             so.ApplyModifiedPropertiesWithoutUndo();
             page.gameObject.SetActive(false);
         }
 
-        private static void Cell(RectTransform row, string p, float rx0, float ry0, float rx1, float ry1, float x0, float x1)
+        // 보상 칸 — 시안: 아이콘(왼쪽) · 수량(위) · 상태 또는 보상 이름(아래) · 프리미엄은 오른쪽 위 자물쇠
+        //   시안 좌표 — 무료 칸 아이콘 가운데 x 178 · 글자 305 / 프리미엄 790 · 888
+        private static void Cell(RectTransform row, string p, float rx0, float ry0, float rx1, float ry1, float x0, float x1, bool premium)
         {
-            var c = Local(Node(row, p), rx0, ry0, rx1, ry1, x0 + 10, ry0 + 10, x1 - 10, ry1 - 10);
-            Btn(c, "Components/rb_pass_locked");
-            float cx0 = x0 + 10, cy0 = ry0 + 10, cx1 = x1 - 10, cy1 = ry1 - 10;
-            Img(Local(Node(c, p + "Icon"), cx0, cy0, cx1, cy1, cx0 + 24, cy0 + 40, cx0 + 124, cy0 + 140), "Icons/rb_icon_currency_gem_96");
-            Text(Local(Node(c, p + "Amount"), cx0, cy0, cx1, cy1, cx0 + 140, cy0 + 30, cx1 - 16, cy0 + 96), null, "30", 50, White, TA.Left, number: true);
-            Text(Local(Node(c, p + "State"), cx0, cy0, cx1, cy1, cx0 + 140, cy0 + 104, cx1 - 16, cy0 + 150), null, "받기", 32, Green, TA.Left, heavy: true);
-            Img(Local(Node(c, p + "Lock"), cx0, cy0, cx1, cy1, cx1 - 58, cy0 + 12, cx1 - 18, cy0 + 52), "Icons/rb_icon_sys_lock_48");
+            var c = Local(Node(row, p), rx0, ry0, rx1, ry1, x0, ry0, x1, ry1);
+            Btn(c, "Components/rb_panel_base");
+            float ic = premium ? 790f : 178f, tx = premium ? 888f : 305f;
+            Img(Local(Node(c, p + "Icon"), x0, ry0, x1, ry1, ic - 44, ry0 + 114, ic + 44, ry0 + 202), "Icons/rb_icon_currency_gem_96");
+            Text(Local(Node(c, p + "Amount"), x0, ry0, x1, ry1, tx - 80, ry0 + 100, tx + 80, ry0 + 158), null, "30", 56, White, TA.Center, number: true);
+            Text(Local(Node(c, p + "State"), x0, ry0, x1, ry1, tx - 90, ry0 + 164, tx + 90, ry0 + 214), null, "받기", 40, Yellow, TA.Center, heavy: true);
+            Img(Local(Node(c, p + "Lock"), x0, ry0, x1, ry1, x1 - 62, ry0 + 58, x1 - 20, ry0 + 100), "Icons/rb_icon_sys_lock_48");
         }
 
         // ── 우편 · 오늘 무료 · 설정 · 언어 ─────────────────────────
@@ -337,12 +352,13 @@ namespace Game.Editor.ReBorn
         private static void Toggle(RectTransform c, string name, string key, string korean, float y)
         {
             Text(Corner(Node(c, name + "Label"), 100f, y, 420f, y + 60f), key, korean, 38, White, TA.Left, heavy: true);
-            var b = Corner(Node(c, name), 470f, y + 4f, 610f, y + 56f);
+            // 시안 settings.png 토글 — 트랙 88 × 48 · 손잡이 지름 38(게임 px = 시안의 2/3, 시안 크롭 앵커로 발주한 부품). 예전엔 140 × 52 칸에 늘려 붙여 찌그러졌다(PD 2026-10-28)
+            var b = Corner(Node(c, name), 522f, y + 6f, 610f, y + 54f);   // 게임 px — 시안 140 × 76 비율(1.84) · 높이 48
             HitArea(b);
-            Img(Stretch(Node(b, name + "Track")), "Components/rb_toggle_on");
+            Img(Stretch(Node(b, name + "Track")), "Components/rb_toggle_on").preserveAspect = false;
             var k = Node(b, name + "Knob");
             k.anchorMin = k.anchorMax = k.pivot = new Vector2(0.5f, 0.5f);
-            k.sizeDelta = new Vector2(46f, 46f);
+            k.sizeDelta = new Vector2(38f, 38f);   // 시안 — 트랙 높이의 79% · 끝에서 높이의 11%(좌우 ±20 은 화면 스크립트 RbMiscPages.Toggle)
             Img(k, "Components/rb_toggle_knob");
         }
 

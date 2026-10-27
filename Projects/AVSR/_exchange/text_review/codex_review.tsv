@@ -1,0 +1,54 @@
+key	판정(통과 / 고침 / 되돌림)	고친 ko	고친 ja	고친 en	고친 zh_hant	고친 zh_hans	이유
+askill.psg_h16.desc	고침	적이 가장 많이 모인 곳에 황금 마법진을 펼쳐 1.2초간 중앙으로 끌어당기며 피해를 준 뒤 빛을 폭발시킨다.					수정안에서 원문의 황금 마법진·빛 연출이 빠졌다.
+askill.psg_h17.desc	고침	주변 적 5명을 사슬로 내 앞으로 끌어와 속박하고 한 번에 후려친다. 속박된 적은 받는 피해가 늘어난다.					수정안에서 끌어오는 위치인 「내 앞」이 빠졌다.
+card.c004.desc	고침	체력이 낮은 적을 일정 확률로 즉사시킨다.					「확률로」만 쓰면 문장이 어색하다.
+card.c009.desc	고침	공격 시 일정 확률로 화상을 건다.					수치가 카드 레벨에 따라 달라지므로 「일정 확률」이 자연스럽다.
+card.c017.desc	고침	공격 시 일정 확률로 빙결을 건다. 빙결된 적은 느려진다.					「확률로」만 쓰면 문장이 어색하다.
+card.c018.desc	고침	공격 시 일정 확률로 저주를 건다. 저주받은 적은 받는 피해가 늘어난다.					「확률로」만 쓰면 문장이 어색하다.
+card.c020.desc	고침	상태이상을 걸 때 일정 확률로 근처 적에게도 옮긴다.					「확률로」만 쓰면 문장이 어색하다.
+tip.loading.0	고침		ゴースト状態で漂っている間はゴースト体力が減り続ける。早くホストに憑依しよう。	Ghost HP drains while you float without a host. Possess a host quickly.	沒有宿主、以幽靈狀態漂浮時，幽靈體力會持續減少。盡快附身宿主吧。	没有宿主、以幽灵状态漂浮时，幽灵体力会持续减少。尽快附身宿主吧。	수정안에 빠진 타 언어도 body/身體 표현과 기능 설명을 호스트·빙의 용어로 통일해야 한다.
+tip.loading.2	고침		自分から憑依を解除したホストには、その部屋で再び憑依できません。				「手放した」보다 기능명인 「憑依解除」가 일관된다.
+tip.loading.3	고침		ボスには憑依できません。ボス部屋は入室時のホストで戦い抜きましょう。				「乗り込んだホスト」는 부자연스럽고 한국어의 「입장한 호스트」와도 어긋난다.
+tip.loading.5	고침	호스트를 잃으면 유령 체력 20%가 깎인다. 직접 빙의를 해제하는 편이 낫다.					「직접 해제」는 무엇을 해제하는지 모호하다.
+tip.loading.10	고침		赤い×が付いたホストは、憑依を解除したホストです。この部屋では再び憑依できません。	A red X marks a host you released. You can't possess it again in this room.	帶有紅色X的宿主是已解除附身的宿主，在這個房間內無法再次附身。	带有红色X的宿主是已解除附身的宿主，在这个房间内无法再次附身。	「捨てた/abandoned/拋棄」는 빙의 해제라는 기능명과 불일치한다.
+tip.loading.11	고침			Each host has its own Active Skill. Your host determines which one you can use.			문장 중간의 Host 대문자와 어색한 소유 표현을 바로잡는다.
+tip.loading.13	고침		画面端の矢印は、画面外に憑依できるホストがいることを示しています。	Arrows at the screen edge point to hosts you can possess off-screen.	畫面邊緣的箭頭表示畫面外有可附身的宿主。	画面边缘的箭头表示画面外有可附身的宿主。	수정안의 奪える/take/奪取는 빙의 용어 통일을 다시 깨뜨린다.
+ui.hostselect.ghost.trait	고침		ホストなし				짧은 상태 표시는 「ホストがない」보다 「ホストなし」가 자연스럽다.
+ui.hostselect.ghost.rule	고침		ホストがないとゴースト体力が減り続ける\nゴースト状態で与えるダメージは60%	Without a host, Ghost HP keeps draining\nDamage dealt as a ghost is 60%	沒有宿主時幽靈體力會持續減少\n幽靈狀態造成的傷害為60%	没有宿主时幽灵体力会持续减少\n幽灵状态造成的伤害为60%	타 언어의 단순 HP와 「호스트 없음」을 유령 체력·유령 상태로 구체화한다.
+ui.hostselect.ghost.skill_desc	고침		{0:0.#}マス以内の敵に憑依し、そのホストで戦う	Possess an enemy within {0:0.#} tiles and fight as that host	附身{0:0.#}格內的敵人，以該宿主戰鬥	附身{0:0.#}格内的敌人，用该宿主战斗	수정안의 奪い/奪取와 원문의 Steal을 빙의 용어로 통일한다.
+ui.hostselect.ghost.skill_desc_near	고침		近くの敵に憑依し、そのホストで戦う	Possess a nearby enemy and fight as that host	附身附近的敵人，以該宿主戰鬥	附身附近的敌人，用该宿主战斗	수정안의 奪い/奪取와 원문의 Steal을 빙의 용어로 통일한다.
+ui.shrine.max_hp.desc	고침			Hosts you possess from now on gain increased max HP.			영어 「get more max HP」는 번역투다.
+ui.shrine.max_hp.result	고침			Hosts you possess from now on have increased max HP.			「now have」는 앞으로 빙의할 호스트라는 적용 범위를 흐린다.
+ui.night.day_desc.mon	고침		近距離ホストのみ登場		近戰宿主限定	近战宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.tue	고침		遠距離ホストのみ登場		遠程宿主限定	远程宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.wed	고침		中距離ホストのみ登場		中程宿主限定	中程宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.thu	고침		パワーホストのみ登場		力量宿主限定	力量宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.fri	고침		武器ホストのみ登場		武器宿主限定	武器宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.sat	고침		魔法ホストのみ登場		魔法宿主限定	魔法宿主限定	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+ui.night.day_desc.sun	고침		すべてのホストが登場		所有宿主皆會登場	所有宿主均会登场	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+tower.floor.1.desc	고침		近距離ホストのみ登場		僅出現近戰宿主	仅出现近战宿主	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+tower.floor.2.desc	고침		遠距離ホストのみ登場		僅出現遠程宿主	仅出现远程宿主	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+tower.floor.3.desc	고침	적 전원 마법 속성 · 세 속성의 호스트가 등장	敵はすべて魔法属性・3属性のホストが登場		敵人全為魔法屬性 · 三種屬性的宿主皆會出現	敌人全为魔法属性 · 三种属性的宿主均会出现	「세 속성이 섞여 등장」는 한 호스트에 속성이 섞인다는 뜻으로 읽힌다.
+tower.floor.6.desc	고침		中距離ホストのみ登場・素早いコウモリの群れ		僅出現中程宿主 · 快速蝙蝠群	仅出现中程宿主 · 快速蝙蝠群	수정안에 빠진 타 언어의 「몸으로 등장」 중복 표현을 함께 정리한다.
+mission.distinct_hosts_possessed	고침			Possess different hosts			영어 「Different Hosts」에는 미션 행동인 빙의가 빠졌다.
+ui.night.banner.big_sub	고침			Damage it while possessing a host to make it possessable.			영어 「Wear it down as a host」는 누가 호스트인지 불명확하다.
+ui.tower.banner_enemy	고침			All enemies are {0} · {1} hosts favored ▲			영어 문장에 be동사가 빠졌다.
+ui.night.result.stat_full	고침			Survived {0} · Lv {1} · Possessions {2} · Hosts lost {3}			수정안에 빠진 영어도 횟수 항목임을 분명히 하고 host 용어를 넣어야 한다.
+pskill.vampire.short	고침	8% 확률로 공격력의 5%만큼 체력 회복					무엇의 5%인지와 무엇을 회복하는지가 빠졌다.
+pskill.robot.short	고침	기본 공격 시 2% 확률로 쿨타임 1초 감소					「기본 공격 2% 확률로」는 조사가 빠진 문장이다.
+pskill.salamander.short	고침	10% 확률로 중독 · 중독된 적에게 주는 피해 +25%					원문에 남은 「중독된 적 +25% 피해」는 주는 피해인지 받는 피해인지 모호하다.
+pskill.gangster.short	고침	표식이 붙은 적을 일정 확률로 즉사					원문에 남은 「확률로」는 수치가 없을 때 어색하다.
+ui.rb.lock.help	고침		かけらを集めるとそのホストを解放できます。\n解放すると出撃・能力強化・星級強化が開放されます。				수정안에 빠진 일본어에 体가 남아 있고 「開きます」도 UI 기능 개방 문맥에서 어색하다.
+ui.rb.result.suggest	고침		この階で有利なホスト				수정안에 빠진 일본어의 体를 호스트로 통일한다.
+ui.rb.rnd.ask	고침		どのホストと出会えるかな？		會遇到哪個宿主呢？	会遇到哪个宿主呢？	수정안에 빠진 일본어·중국어의 体/身體를 호스트로 통일한다.
+ui.rb.rnd.hint	고침		ホストは出撃時に決まります。				수정안에 빠진 일본어의 体를 호스트로 통일한다.
+ui.rb.rnd.hidden_sub	고침		特別なホストに出会いました！				수정안에 빠진 일본어의 体를 호스트로 통일한다.
+ui.rb.guide.sortie.body	고침		出撃を押すと選んだホストでランが始まります。\nランダム出撃では、ごくまれに隠しホストにも出会えます。				수정안에 빠진 일본어의 体를 호스트로 통일하고 문장을 자연스럽게 다듬는다.
+ui.rb.guide.lock.body	고침		リングに灰色の鍵が表示されている敵には、まだ憑依できません。\nさらに攻撃すると解除されます。	A gray lock on the ring means you can't possess that enemy yet.\nKeep attacking to unlock it.	瞄準環出現灰色鎖頭時，還不能附身該敵人。\n繼續攻擊即可解除。	瞄准环出现灰色锁时，还不能附身该敌人。\n继续攻击即可解除。	수정안에 빠진 타 언어에 steal/奪取가 남아 있어 빙의 용어와 맞지 않는다.
+ui.rb.result.tip_sub	고침		最も長く使ったホスト・{0}				수정안에 빠진 일본어의 体를 호스트로 통일한다.
+ui.rb.guide.boss.title	고침	보스에게는 빙의할 수 없어요					수정안에 빠진 원문 문제다. 「빼앗다」를 빙의로 통일한다.
+
+# 총평
+# 전체적으로 한국어는 번역투와 용어 혼용을 크게 줄였고, 스킬 설명도 전보다 빠르게 읽힌다.
+# 자주 보인 문제는 수치가 생략된 「확률로」, 기능명 대신 버리다·빼앗다를 쓴 표현, 한국어만 고치고 일본어·중국어의 体/身體를 남긴 경우다.
+# 자리 표시자·color 태그·\n은 수정안 310건에서 원문과 모두 일치했다. 다만 수치 확인 필요라고 적힌 스킬은 실제 데이터와 별도 대조가 남아 있다.

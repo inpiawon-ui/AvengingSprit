@@ -23,23 +23,23 @@ host.vampire.name	흡혈귀	ヴァンパイア	Vampire	吸血鬼	吸血鬼
 host.commando_missile.name	코만도(미사일)	コマンドーMSL	Commando (Missile)	突擊兵（飛彈）	突击兵（导弹）
 host.death.name	사신	死神	Death	死神	死神
 askill.psg_h01.name	도약 강타	跳躍強打	Leap Smash	飛躍重擊	飞跃重击
-askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.	最も近い敵に飛び込み、周囲に300%のダメージを与える。	Leap at the nearest enemy, dealing 300% damage around you.	撲向最近的敵人，對周圍造成300%傷害。	扑向最近的敌人，对周围造成300%伤害。
+askill.psg_h01.desc	가장 가까운 적에게 도약해 주변 적에게 300% 피해를 준다.	最も近い敵に飛び込み、周囲に300%のダメージを与える。	Leap at the nearest enemy, dealing 300% damage around you.	撲向最近的敵人，對周圍造成300%傷害。	扑向最近的敌人，对周围造成300%伤害。
 askill.psg_h02.name	불굴	不屈	Unyielding	不屈	不屈
 askill.psg_h02.desc	2.5초간 무적이 된다.	2.5秒間、無敵になる。	Become invincible for 2.5s.	2.5秒內無敵。	2.5秒内无敌。
 askill.psg_h03.name	융단 폭격	絨毯爆撃	Carpet Bomb	地毯式轟炸	地毯式轰炸
-askill.psg_h03.desc	내 둘레에 수류탄을 원으로 떨군다. 가까운 적이 있으면 그 적에게 떨어진다.	自分の周りに手榴弾を円形に落とす。近くに敵がいればその敵に落ちる。	Drop grenades in a ring around you, landing on nearby foes.	在自身周圍環狀投下手榴彈。附近有敵人時會落在敵人身上。	在自身周围环形投下手榴弹。附近有敌人时会落在敌人身上。
+askill.psg_h03.desc	주변에 수류탄을 원형으로 뿌린다. 가까운 적이 있으면 그 적을 노린다.	自分の周りに手榴弾を円形に落とす。近くに敵がいればその敵に落ちる。	Drop grenades in a ring around you, landing on nearby foes.	在自身周圍環狀投下手榴彈。附近有敵人時會落在敵人身上。	在自身周围环形投下手榴弹。附近有敌人时会落在敌人身上。
 askill.psg_h04.name	연쇄 방전	連鎖放電	Chain Discharge	連鎖放電	连锁放电
 askill.psg_h04.desc	3초간 주변 적에게 전기가 계속 튄다.	3秒間、周囲の敵に電撃が走り続ける。	Shock nearby enemies nonstop for 3s.	3秒內持續電擊周圍敵人。	3秒内持续电击周围敌人。
 askill.psg_h05.name	방벽 전개	防壁展開	Barrier	展開屏障	展开屏障
-askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.	5秒間、最大体力分のシールドをまとう。削られると消える。	Gain a Shield equal to max HP for 5s. Ends when broken.	5秒內獲得等同最大HP的護盾，被打破即消失。	5秒内获得等同最大HP的护盾，被击破即消失。
+askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 얻는다. 쉴드가 다 깎이면 끝난다.	5秒間、最大体力分のシールドをまとう。削られると消える。	Gain a Shield equal to max HP for 5s. Ends when broken.	5秒內獲得等同最大HP的護盾，被打破即消失。	5秒内获得等同最大HP的护盾，被击破即消失。
 askill.psg_h06.name	다중 유도	多重誘導	Multi-Homing	多重追蹤	多重追踪
-askill.psg_h06.desc	미사일 7발이 둘레 적들에게 한 발씩 날아간다.	ミサイル7発が周囲の敵へ1発ずつ飛んでいく。	7 missiles fly out, one to each nearby foe.	7發飛彈分別飛向周圍的敵人。	7枚导弹分别飞向周围的敌人。
+askill.psg_h06.desc	미사일 7발을 주변 적들에게 한 발씩 쏜다.	ミサイル7発が周囲の敵へ1発ずつ飛んでいく。	7 missiles fly out, one to each nearby foe.	7發飛彈分別飛向周圍的敵人。	7枚导弹分别飞向周围的敌人。
 askill.psg_h07.name	뇌전 폭주	雷電暴走	Thunder Rampage	雷電暴走	雷电暴走
-askill.psg_h07.desc	2초간 번개 튕김이 반드시 터진다.	2秒間、連鎖雷が必ず発生する。	Chain lightning always triggers for 2s.	2秒內必定觸發連鎖閃電。	2秒内必定触发连锁闪电。
+askill.psg_h07.desc	2초간 패시브 낙뢰가 100% 발동한다.	2秒間、連鎖雷が必ず発生する。	Chain lightning always triggers for 2s.	2秒內必定觸發連鎖閃電。	2秒内必定触发连锁闪电。
 askill.psg_h08.name	독 뿜기	毒霧噴射	Venom Spray	噴吐毒霧	喷吐毒雾
-askill.psg_h08.desc	둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.	周囲5mの敵を毒状態にする。毒はダメージと鈍足を与える。	Poison all enemies within 5 m. Poison damages and slows.	使周圍5m內所有敵人中毒。中毒會造成傷害並減速。	使周围5m内所有敌人中毒。中毒会造成伤害并减速。
+askill.psg_h08.desc	주변 5m 안의 적을 모두 중독시킨다. 중독된 적은 지속 피해를 받고 느려진다.	周囲5mの敵を毒状態にする。毒はダメージと鈍足を与える。	Poison all enemies within 5 m. Poison damages and slows.	使周圍5m內所有敵人中毒。中毒會造成傷害並減速。	使周围5m内所有敌人中毒。中毒会造成伤害并减速。
 askill.psg_h09.name	화염 지대	火炎地帯	Fire Zone	火焰地帶	火焰地带
-askill.psg_h09.desc	가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.	最も近い敵の足元に火の海を広げる。上に立つ敵は燃え続ける。	Spread fire under the nearest enemy. Enemies on it keep burning.	在最近的敵人腳下展開火海，站在上面的敵人會持續燃燒。	在最近的敌人脚下展开火海，站在上面的敌人会持续燃烧。
+askill.psg_h09.desc	가장 가까운 적의 발밑에 불바다를 만든다. 불바다 위의 적은 계속 화상 피해를 받는다.	最も近い敵の足元に火の海を広げる。上に立つ敵は燃え続ける。	Spread fire under the nearest enemy. Enemies on it keep burning.	在最近的敵人腳下展開火海，站在上面的敵人會持續燃燒。	在最近的敌人脚下展开火海，站在上面的敌人会持续燃烧。
 askill.psg_h10.name	일제 표식	一斉マーキング	Mass Mark	全體標記	全体标记
 askill.psg_h10.desc	방 안 모든 적에게 3초간 표식을 새긴다.	部屋にいるすべての敵に3秒間マーキングを刻む。	Mark every enemy in the room for 3s.	為房間內所有敵人施加3秒標記。	为房间内所有敌人施加3秒标记。
 askill.psg_h11.name	난사	乱射	Bullet Storm	亂射	乱射
@@ -49,97 +49,97 @@ askill.psg_h12.desc	3초간 받는 피해 −50% · 쉴드 획득 2배.	3秒間�
 askill.psg_h13.name	정조준	精密照準	Dead Aim	精準瞄準	精准瞄准
 askill.psg_h13.desc	5초간 치명타 확률이 90% 로 고정된다.	5秒間、クリティカル率が90%に固定される。	Crit chance locked at 90% for 5s.	5秒內暴擊率固定為90%。	5秒内暴击率固定为90%。
 askill.psg_h14.name	백스텝 사격	バックステップ射撃	Backstep Fire	後撤射擊	后撤射击
-askill.psg_h14.desc	가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。	Leap back from the nearest enemy while spraying a fan of shots forward.	從最近的敵人身邊大步後跳，同時向前方扇形連射。	从最近的敌人身边大步后跳，同时向前方扇形连射。
+askill.psg_h14.desc	가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。	Leap back from the nearest enemy while spraying a fan of shots forward.	從最近的敵人身邊大步後跳，同時向前方扇形連射。	从最近的敌人身边大步后跳，同时向前方扇形连射。
 askill.psg_h15.name	미니 골렘	ミニゴーレム	Mini Golem	迷你魔像	迷你魔像
-askill.psg_h15.desc	미니 골렘을 불러 10초간 데리고 다니며 같이 싸운다.	ミニゴーレムを呼び、10秒間連れて一緒に戦う。	Summon a mini golem that follows and fights with you for 10s.	召喚迷你魔像，10秒內跟隨你一起戰鬥。	召唤迷你魔像，10秒内跟随你一起战斗。
+askill.psg_h15.desc	미니 골렘을 소환해 10초간 함께 싸운다.	ミニゴーレムを呼び、10秒間連れて一緒に戦う。	Summon a mini golem that follows and fights with you for 10s.	召喚迷你魔像，10秒內跟隨你一起戰鬥。	召唤迷你魔像，10秒内跟随你一起战斗。
 askill.psg_h16.name	중력진	重力陣	Gravity Well	重力陣	重力阵
-askill.psg_h16.desc	적이 가장 몰린 자리에 황금 마법진을 펼쳐 1.2초 동안 가운데로 빨아들이며 깎다가, 빛으로 터뜨린다.	敵が最も集まった場所に黄金の魔法陣を広げ、1.2秒間中心へ引き寄せながら削り、光で爆発させる。	Open a golden circle where foes crowd, pull them to the center for 1.2s while chipping away, then burst in light.	在敵人最密集處展開黃金魔法陣，1.2秒內將敵人吸向中心並持續削血，最後以光芒引爆。	在敌人最密集处展开黄金魔法阵，1.2秒内将敌人吸向中心并持续掉血，最后以光芒引爆。
+askill.psg_h16.desc	적이 가장 많이 모인 곳에 황금 마법진을 펼쳐 1.2초간 중앙으로 끌어당기며 피해를 준 뒤 빛을 폭발시킨다.	敵が最も集まった場所に黄金の魔法陣を広げ、1.2秒間中心へ引き寄せながら削り、光で爆発させる。	Open a golden circle where foes crowd, pull them to the center for 1.2s while chipping away, then burst in light.	在敵人最密集處展開黃金魔法陣，1.2秒內將敵人吸向中心並持續削血，最後以光芒引爆。	在敌人最密集处展开黄金魔法阵，1.2秒内将敌人吸向中心并持续掉血，最后以光芒引爆。
 askill.psg_h17.name	사슬 끌어오기	鎖引き寄せ	Chain Pull	鎖鏈牽引	锁链牵引
-askill.psg_h17.desc	둘레 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다. 묶인 적은 더 아프게 맞는다.	周囲の敵5体を鎖で目の前に引き寄せて縛り、まとめて薙ぎ払う。縛られた敵へのダメージ増加。	Chain up to 5 nearby foes, yank them in front of you, bind them and strike them all. Bound foes take more damage.	用鎖鏈將周圍5名敵人拉到面前綑綁，一次橫掃。被綑綁的敵人受到更多傷害。	用锁链将周围5名敌人拉到面前捆绑，一次横扫。被捆绑的敌人受到更多伤害。
+askill.psg_h17.desc	주변 적 5명을 사슬로 내 앞으로 끌어와 속박하고 한 번에 후려친다. 속박된 적은 받는 피해가 늘어난다.	周囲の敵5体を鎖で目の前に引き寄せて縛り、まとめて薙ぎ払う。縛られた敵へのダメージ増加。	Chain up to 5 nearby foes, yank them in front of you, bind them and strike them all. Bound foes take more damage.	用鎖鏈將周圍5名敵人拉到面前綑綁，一次橫掃。被綑綁的敵人受到更多傷害。	用锁链将周围5名敌人拉到面前捆绑，一次横扫。被捆绑的敌人受到更多伤害。
 askill.psg_h18.name	그림자 걸음	影走り	Shadow Step	影步	影步
 askill.psg_h18.desc	4초간 회피 50% · 이동 속도 +35%, 잔상이 남는다.	4秒間、回避50%・移動速度+35%、残像が残る。	For 4s, 50% dodge and +35% move speed, leaving afterimages.	4秒內閃避50%，移動速度+35%，並留下殘影。	4秒内闪避50%，移动速度+35%，并留下残影。
 askill.psg_h19.name	포탑 전개	砲台展開	Deploy Turret	架設砲台	部署炮台
-askill.psg_h19.desc	10초간 자동으로 쏘는 포탑을 세운다.	10秒間、自動で撃つ砲台を設置する。	Deploy an auto-firing turret for 10s.	架設一座自動射擊的砲台，持續10秒。	部署一座自动射击的炮台，持续10秒。
+askill.psg_h19.desc	10초간 자동으로 공격하는 포탑을 설치한다.	10秒間、自動で撃つ砲台を設置する。	Deploy an auto-firing turret for 10s.	架設一座自動射擊的砲台，持續10秒。	部署一座自动射击的炮台，持续10秒。
 askill.psg_h20.name	전탄 반사	全弾反射	Full Reflect	全彈反射	全弹反射
-askill.psg_h20.desc	5초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.	5秒間、飛んでくる弾を跳ね返す。反射弾は威力が高い。	Reflect incoming bullets for 5s. Reflected shots hit harder.	5秒內反彈飛來的子彈。反彈的子彈威力更高。	5秒内反弹飞来的子弹。反弹的子弹威力更高。
+askill.psg_h20.desc	5초간 날아오는 탄을 반사한다. 반사된 탄은 더 큰 피해를 준다.	5秒間、飛んでくる弾を跳ね返す。反射弾は威力が高い。	Reflect incoming bullets for 5s. Reflected shots hit harder.	5秒內反彈飛來的子彈。反彈的子彈威力更高。	5秒内反弹飞来的子弹。反弹的子弹威力更高。
 askill.psg_h21.name	얼음 감옥	氷の牢獄	Ice Prison	冰之牢獄	冰之牢狱
-askill.psg_h21.desc	1초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.	1秒間、氷に閉じこもる。攻撃を受けず与えず、体力を30%回復する。	Encase yourself in ice for 1s. No damage dealt or taken; heal 30% HP.	封入冰中1秒。不受傷也不攻擊，回復30%HP。	封入冰中1秒。不受伤也不攻击，恢复30%HP。
+askill.psg_h21.desc	1초간 얼음 속에 들어가 무적이 된다(공격 불가). 최대 체력 30%를 회복한다.	1秒間、氷に閉じこもる。攻撃を受けず与えず、体力を30%回復する。	Encase yourself in ice for 1s. No damage dealt or taken; heal 30% HP.	封入冰中1秒。不受傷也不攻擊，回復30%HP。	封入冰中1秒。不受伤也不攻击，恢复30%HP。
 askill.psg_h22.name	혈연	血宴	Blood Feast	血宴	血宴
-askill.psg_h22.desc	화면의 적마다 박쥐가 날아가 피를 빨아 온다. 적 수만큼 최대 체력의 2%씩 회복.	画面内の敵ごとにコウモリが飛んで血を吸ってくる。敵の数だけ最大体力の2%ずつ回復。	A bat flies to each foe on screen and drains blood. Heal 2% max HP per foe.	蝙蝠飛向畫面中每個敵人吸血。每個敵人回復最大HP的2%。	蝙蝠飞向画面中每个敌人吸血。每个敌人恢复最大HP的2%。
+askill.psg_h22.desc	화면 안의 적마다 박쥐를 날려 피를 빨아 온다. 적 1명당 최대 체력 2% 회복.	画面内の敵ごとにコウモリが飛んで血を吸ってくる。敵の数だけ最大体力の2%ずつ回復。	A bat flies to each foe on screen and drains blood. Heal 2% max HP per foe.	蝙蝠飛向畫面中每個敵人吸血。每個敵人回復最大HP的2%。	蝙蝠飞向画面中每个敌人吸血。每个敌人恢复最大HP的2%。
 askill.psg_h23.name	사신의 시간	死神の刻	Death's Hour	死神之刻	死神之刻
-askill.psg_h23.desc	3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.	3秒間、攻撃した敵を即死させる。中ボスは半分、ボスは10分の1。	For 3s, enemies you hit die. Mini-bosses lose half, bosses a tenth.	3秒內被你攻擊的敵人即死。中頭目扣一半，頭目扣十分之一。	3秒内被你攻击的敌人即死。中头目扣一半，头目扣十分之一。
+askill.psg_h23.desc	3초간 공격한 적을 즉사시킨다. 중간 보스는 50% 확률, 보스는 10% 확률로 최대 체력 25% 피해.	3秒間、攻撃した敵を即死させる。中ボスは50%の確率、ボスは10%の確率で最大HPの25%ダメージ。	For 3s, enemies you hit die instantly. Mini-bosses: 50% chance. Bosses: 10% chance to lose 25% max HP.	3秒內被你攻擊的敵人即死。中頭目有50%機率即死，頭目有10%機率受到最大HP 25%的傷害。	3秒内被你攻击的敌人即死。中头目有50%几率即死，头目有10%几率受到最大HP 25%的伤害。
 pskill.psv_amazon.name	쉴드 질주	シールド疾走	Shield Dash	護盾疾馳	护盾疾驰
-pskill.psv_amazon.desc	쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.	シールドが溜まるほど速くなる。最大時は移動速度+40%。	Faster as Shield fills. Full: Speed +40%.	護盾越滿速度越快。全滿時移動速度+40%。	护盾越满速度越快。充满时移动速度+40%。
+pskill.psv_amazon.desc	쉴드가 찰수록 이동 속도가 빨라진다(최대 +40%).	シールドが溜まるほど速くなる。最大時は移動速度+40%。	Faster as Shield fills. Full: Speed +40%.	護盾越滿速度越快。全滿時移動速度+40%。	护盾越满速度越快。充满时移动速度+40%。
 pskill.psv_counter.name	역전의 자세	逆転の構え	Comeback Stance	逆轉架勢	逆转架势
 pskill.psv_counter.desc	쉴드가 남아 있는 동안 공격력이 오른다.	シールドが残っている間、攻撃力が上がる。	Attack up while Shield remains.	護盾存在期間攻擊力提升。	护盾存在期间攻击力提升。
 pskill.psv_slugger.name	장외 타구	場外弾	Home Run	場外全壘打	场外本垒打
-pskill.psv_slugger.desc	막타에 20% 로 주변 적을 날려 버린다.	とどめの一撃で20%の確率で周囲の敵を吹き飛ばす。	Final blows have a 20% chance to knock away nearby enemies.	最後一擊有20%機率擊飛周圍敵人。	最后一击有20%几率击飞周围敌人。
+pskill.psv_slugger.desc	적 처치 시 20% 확률로 주변 적을 날려 보낸다.	とどめの一撃で20%の確率で周囲の敵を吹き飛ばす。	Final blows have a 20% chance to knock away nearby enemies.	最後一擊有20%機率擊飛周圍敵人。	最后一击有20%几率击飞周围敌人。
 pskill.psv_death.name	망자 소집	亡者召集	Call of the Dead	亡者召集	亡者召集
-pskill.psv_death.desc	적을 잡을 때마다 그 자리에서 해골이 일어선다.	敵を倒すたび、その場にスケルトンが起き上がる。	A skeleton rises wherever you kill an enemy.	每擊倒一名敵人，該處就會站起一具骷髏。	每击倒一名敌人，该处就会站起一具骷髅。
+pskill.psv_death.desc	적을 처치할 때마다 그 자리에 아군 해골을 소환한다.	敵を倒すたび、その場にスケルトンが起き上がる。	A skeleton rises wherever you kill an enemy.	每擊倒一名敵人，該處就會站起一具骷髏。	每击倒一名敌人，该处就会站起一具骷髅。
 pskill.psv_guru.name	무형보	無形歩	Phase Walk	無形步	无形步
-pskill.psv_guru.desc	걸어 다닐 때 지형지물을 통과한다.	歩いている間、障害物をすり抜ける。	Walk through obstacles.	行走時可穿過障礙物。	行走时可穿过障碍物。
+pskill.psv_guru.desc	이동 중 지형지물을 통과한다.	歩いている間、障害物をすり抜ける。	Walk through obstacles.	行走時可穿過障礙物。	行走时可穿过障碍物。
 pskill.psv_ninja_chain.name	흘리기	受け流し	Parry	招架	招架
-pskill.psv_ninja_chain.desc	10% 로 피해를 통째로 흘린다.	10%の確率でダメージを丸ごと受け流す。	10% chance to negate all damage.	10%機率完全化解傷害。	10%几率完全化解伤害。
+pskill.psv_ninja_chain.desc	10% 확률로 받는 피해를 회피한다.	10%の確率でダメージを丸ごと受け流す。	10% chance to negate all damage.	10%機率完全化解傷害。	10%几率完全化解伤害。
 pskill.psv_dragoon.name	불씨	火種	Ember	火種	火种
-pskill.psv_dragoon.desc	명중한 적에게 10% 로 화상. 겹치지 않는다.	命中した敵に10%の確率で燃焼。重複しない。	10% chance to Burn on hit. Doesn't stack.	命中敵人時10%機率造成燒傷。不可疊加。	命中敌人时10%几率造成灼烧。不可叠加。
+pskill.psv_dragoon.desc	적중 시 10% 확률로 화상을 건다. 중첩되지 않는다.	命中した敵に10%の確率で燃焼。重複しない。	10% chance to Burn on hit. Doesn't stack.	命中敵人時10%機率造成燒傷。不可疊加。	命中敌人时10%几率造成灼烧。不可叠加。
 pskill.psv_salamander.name	독니	毒牙	Venom Fang	毒牙	毒牙
-pskill.psv_salamander.desc	명중한 적에게 10% 로 독. 중독된 적은 25% 더 아프게 맞는다.	命中した敵に10%の確率で毒。毒状態の敵へのダメージ+25%。	10% chance to Poison on hit. Poisoned foes take 25% more damage.	命中敵人時10%機率中毒。中毒的敵人受到的傷害+25%。	命中敌人时10%几率中毒。中毒的敌人受到的伤害+25%。
+pskill.psv_salamander.desc	적중 시 10% 확률로 중독시킨다. 중독된 적은 받는 피해 +25%.	命中した敵に10%の確率で毒。毒状態の敵へのダメージ+25%。	10% chance to Poison on hit. Poisoned foes take 25% more damage.	命中敵人時10%機率中毒。中毒的敵人受到的傷害+25%。	命中敌人时10%几率中毒。中毒的敌人受到的伤害+25%。
 pskill.psv_dragon_blue.name	낙뢰	落雷	Thunderbolt	落雷	落雷
-pskill.psv_dragon_blue.desc	10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.	10%の確率で隣の敵に雷が跳ぶ。跳ぶ先がいなければ発動しない。	10% chance for lightning to jump to a nearby enemy. Needs a target.	10%機率對旁邊的敵人彈射閃電。沒有目標時不會觸發。	10%几率对旁边的敌人弹射闪电。没有目标时不会触发。
+pskill.psv_dragon_blue.desc	적중 시 10% 확률로 근처 다른 적에게 번개가 튄다. 근처에 적이 없으면 발동하지 않는다.	10%の確率で隣の敵に雷が跳ぶ。跳ぶ先がいなければ発動しない。	10% chance for lightning to jump to a nearby enemy. Needs a target.	10%機率對旁邊的敵人彈射閃電。沒有目標時不會觸發。	10%几率对旁边的敌人弹射闪电。没有目标时不会触发。
 pskill.psv_commando_grenade.name	파편탄	破片弾	Shrapnel	破片彈	破片弹
 pskill.psv_commando_grenade.desc	상대 방어력을 50% 무시한다.	相手の防御力を50%無視する。	Ignore 50% of enemy defense.	無視敵人50%防禦力。	无视敌人50%防御力。
 pskill.psv_snowwoman.name	서릿발	霜柱	Frost	霜柱	霜冻
-pskill.psv_snowwoman.desc	30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.	30%で敵を凍結。ボスには無効。凍った敵へのダメージが増える。	30% chance to Freeze. Frozen foes take more damage. Not bosses.	30%機率冰凍敵人。對冰凍的敵人傷害更高。對頭目無效。	30%几率冰冻敌人。对冰冻的敌人伤害更高。对头目无效。
+pskill.psv_snowwoman.desc	적중 시 30% 확률로 적을 빙결시킨다. 빙결된 적에게 주는 피해 +30%. 보스는 면역.	命中時30%の確率で敵を凍結。凍結した敵へのダメージ+30%。ボスには無効。	30% chance to Freeze on hit. +30% damage to Frozen foes. Bosses are immune.	命中時30%機率冰凍敵人。對冰凍敵人的傷害+30%。頭目免疫。	命中时30%几率冰冻敌人。对冰冻敌人的伤害+30%。头目免疫。
 pskill.psv_hopper_smg.name	충격 반동	衝撃反動	Recoil Shock	衝擊反震	冲击反震
-pskill.psv_hopper_smg.desc	10% 로 맞은 적을 밀어낸다.	10%の確率で当たった敵を押し返す。	10% chance to knock back hit enemies.	10%機率擊退被命中的敵人。	10%几率击退被命中的敌人。
+pskill.psv_hopper_smg.desc	적중 시 10% 확률로 적을 넉백시킨다.	10%の確率で当たった敵を押し返す。	10% chance to knock back hit enemies.	10%機率擊退被命中的敵人。	10%几率击退被命中的敌人。
 pskill.psv_commando_mg.name	중장갑	重装甲	Heavy Armor	重裝甲	重装甲
 pskill.psv_commando_mg.desc	방어력 20% 증가.	防御力20%上昇。	Defense +20%.	防禦力提升20%。	防御力提升20%。
 pskill.psv_thug.name	삥	カツアゲ	Shakedown	勒索	勒索
 pskill.psv_thug.desc	주운 골드가 10% 더 들어온다.	拾ったゴールドが10%増える。	+10% Gold picked up.	拾取的金幣增加10%。	拾取的金币增加10%。
 pskill.psv_ninja.name	질주	疾走	Sprint	疾走	疾走
-pskill.psv_ninja.desc	적을 잡으면 1.5초간 이동속도 +30%.	敵を倒すと1.5秒間、移動速度+30%。	On kill, Speed +30% for 1.5s.	擊倒敵人後1.5秒內移動速度+30%。	击倒敌人后1.5秒内移动速度+30%。
+pskill.psv_ninja.desc	적 처치 시 1.5초간 이동 속도 +30%.	敵を倒すと1.5秒間、移動速度+30%。	On kill, Speed +30% for 1.5s.	擊倒敵人後1.5秒內移動速度+30%。	击倒敌人后1.5秒内移动速度+30%。
 pskill.psv_leech.name	흡혈	吸血	Lifesteal	吸血	吸血
-pskill.psv_leech.desc	8% 로 공격력의 5% 만큼 회복한다.	8%の確率で攻撃力の5%分を回復する。	8% chance to heal 5% of Attack.	8%機率回復相當於攻擊力5%的HP。	8%几率恢复相当于攻击力5%的HP。
+pskill.psv_leech.desc	적중 시 8% 확률로 공격력의 5%만큼 체력을 회복한다.	8%の確率で攻撃力の5%分を回復する。	8% chance to heal 5% of Attack.	8%機率回復相當於攻擊力5%的HP。	8%几率恢复相当于攻击力5%的HP。
 pskill.psv_gangster.name	처형 계약	処刑契約	Execution Contract	處決契約	处决契约
-pskill.psv_gangster.desc	표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.	マーキング中の敵を20%で即死。\nエリート50%・ボス30%を削る。	20% chance to Execute marked foes. Elites lose 50% max HP, bosses 30%.	20%機率處決帶標記的敵人。精英扣最大HP 50%，頭目扣30%。	20%几率处决带标记的敌人。精英扣最大HP 50%，头目扣30%。
+pskill.psv_gangster.desc	표식이 붙은 적을 20% 확률로 즉사시킨다. 엘리트는 최대 체력 50%, 보스는 30% 피해.	マーキング中の敵を20%で即死。\nエリート50%・ボス30%を削る。	20% chance to Execute marked foes. Elites lose 50% max HP, bosses 30%.	20%機率處決帶標記的敵人。精英扣最大HP 50%，頭目扣30%。	20%几率处决带标记的敌人。精英扣最大HP 50%，头目扣30%。
 pskill.psv_momentum.name	급소	急所	Weak Spot	要害	要害
 pskill.psv_momentum.desc	치명타 피해 +30%.	クリティカルダメージ+30%。	Crit damage +30%.	暴擊傷害+30%。	暴击伤害+30%。
 pskill.psv_commando_missile.name	고폭탄	高爆弾	High Explosive	高爆彈	高爆弹
 pskill.psv_commando_missile.desc	투사체가 지형지물을 무시한다.	弾が障害物を無視する。	Shots ignore obstacles.	子彈無視障礙物。	子弹无视障碍物。
 pskill.psv_medium.name	강령	降霊	Necromancy	降靈	降灵
-pskill.psv_medium.desc	적을 잡으면 30% 로 내 해골이 일어선다. 해골은 적이 노리지 않고 3초 뒤 사라진다.	敵を倒すと30%の確率で味方の骸骨が起き上がる。骸骨は狙われず3秒で消える。	Kills have a 30% chance to raise an allied skeleton. It can't be targeted and fades after 3s.	擊倒敵人時30%機率召喚我方骷髏。骷髏不會被敵人鎖定，3秒後消失。	击倒敌人时30%几率召唤我方骷髅。骷髅不会被敌人锁定，3秒后消失。
+pskill.psv_medium.desc	적 처치 시 30% 확률로 아군 해골을 소환한다. 해골은 적의 공격을 받지 않고 3초 뒤 사라진다.	敵を倒すと30%の確率で味方の骸骨が起き上がる。骸骨は狙われず3秒で消える。	Kills have a 30% chance to raise an allied skeleton. It can't be targeted and fades after 3s.	擊倒敵人時30%機率召喚我方骷髏。骷髏不會被敵人鎖定，3秒後消失。	击倒敌人时30%几率召唤我方骷髅。骷髅不会被敌人锁定，3秒后消失。
 pskill.psv_white_wizard.name	관통 광선	貫通光線	Piercing Ray	貫穿光線	贯穿光线
 pskill.psv_white_wizard.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	Shots ignore obstacles and pierce enemies.	子彈無視障礙物並貫穿敵人。	子弹无视障碍物并贯穿敌人。
 pskill.psv_commando_laser.name	집속 광선	集束光線	Focused Beam	聚焦光束	聚焦光束
 pskill.psv_commando_laser.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	Shots ignore obstacles and pierce enemies.	子彈無視障礙物並貫穿敵人。	子弹无视障碍物并贯穿敌人。
 pskill.psv_spare_circuit.name	예비 회로	予備回路	Spare Circuit	備用迴路	备用回路
-pskill.psv_spare_circuit.desc	평타가 2% 로 액티브 쿨을 1초 당긴다.	通常攻撃が2%の確率でアクティブのクールタイムを1秒短縮する。	Basic attacks have a 2% chance to cut active cooldown by 1s.	普通攻擊有2%機率使主動技能冷卻縮短1秒。	普通攻击有2%几率使主动技能冷却缩短1秒。
+pskill.psv_spare_circuit.desc	기본 공격 시 2% 확률로 액티브 쿨타임이 1초 줄어든다.	通常攻撃が2%の確率でアクティブのクールタイムを1秒短縮する。	Basic attacks have a 2% chance to cut active cooldown by 1s.	普通攻擊有2%機率使主動技能冷卻縮短1秒。	普通攻击有2%几率使主动技能冷却缩短1秒。
 card.c001.name	감전	感電	Shock	感電	感电
-card.c001.desc	명중하면 전기가 옆 적에게 튄다.	命中すると隣の敵に電撃が跳ぶ。	Hits arc to a nearby foe.	命中時電擊會跳到旁邊的敵人。	命中时电击会跳到旁边的敌人。
+card.c001.desc	적중 시 전기가 근처 적에게 튄다.	命中すると隣の敵に電撃が跳ぶ。	Hits arc to a nearby foe.	命中時電擊會跳到旁邊的敵人。	命中时电击会跳到旁边的敌人。
 card.c002.name	성장 가속	成長加速	Fast Growth	成長加速	成长加速
 card.c002.desc	얻는 경험치가 늘어난다.	獲得経験値が増える。	More EXP gained.	獲得的經驗值增加。	获得的经验值增加。
 card.c003.name	수호 방패	守護の盾	Guard Shield	守護之盾	守护之盾
-card.c003.desc	방패가 내 주위를 돌며 막는다.	盾が周囲を回って攻撃を防ぐ。	Orbiting shield blocks hits.	盾牌環繞身邊抵擋攻擊。	盾牌环绕身边抵挡攻击。
+card.c003.desc	방패가 주위를 돌며 공격을 막는다.	盾が周囲を回って攻撃を防ぐ。	Orbiting shield blocks hits.	盾牌環繞身邊抵擋攻擊。	盾牌环绕身边抵挡攻击。
 card.c004.name	처형	処刑	Execute	處決	处决
-card.c004.desc	빈사인 적을 확률로 즉사시킨다.	瀕死の敵を確率で即死させる。	May Execute dying foes.	有機率使瀕死的敵人即死。	有几率使濒死的敌人即死。
+card.c004.desc	체력이 낮은 적을 일정 확률로 즉사시킨다.	瀕死の敵を確率で即死させる。	May Execute dying foes.	有機率使瀕死的敵人即死。	有几率使濒死的敌人即死。
 card.c005.name	번개 사슬	雷鎖	Chain Lightning	連鎖閃電	闪电链
 card.c005.desc	전기가 더 여러 번 튄다.	電撃がより多く跳ぶ。	Shock jumps more times.	電擊彈跳次數增加。	电击弹跳次数增加。
 card.c006.name	흡혼	吸魂	Soul Drain	吸魂	吸魂
-card.c006.desc	적을 잡으면 체력을 돌려받는다.	敵を倒すと体力が回復する。	Heal on kill.	擊倒敵人時回復HP。	击倒敌人时恢复HP。
+card.c006.desc	적 처치 시 체력을 회복한다.	敵を倒すと体力が回復する。	Heal on kill.	擊倒敵人時回復HP。	击倒敌人时恢复HP。
 card.c007.name	찰나의 불사	刹那の不死	Undying	剎那不死	刹那不死
-card.c007.desc	맞는 순간 2초 무적이 된다.	被弾した瞬間、2秒間無敵になる。	Invincible 2s when hit.	受擊瞬間無敵2秒。	受击瞬间无敌2秒。
+card.c007.desc	피격 시 2초간 무적이 된다(쿨타임 있음).	被弾時、2秒間無敵になる(再使用待機あり)。	Invincible for 2s when hit (has a cooldown).	受擊時無敵2秒（有冷卻時間）。	受击时无敌2秒（有冷却时间）。
 card.c008.name	추가 발사	追加発射	Extra Shot	追加射擊	追加射击
-card.c008.desc	쏠 때마다 탄이 더 나간다.	撃つたびに弾が増える。	Fires extra bullets.	每次射擊額外發射子彈。	每次射击额外发射子弹。
+card.c008.desc	공격할 때마다 탄이 추가로 발사된다.	撃つたびに弾が増える。	Fires extra bullets.	每次射擊額外發射子彈。	每次射击额外发射子弹。
 card.c009.name	화염 각인	火炎の刻印	Flame Brand	火焰刻印	火焰刻印
-card.c009.desc	공격에 화상을 붙인다.	攻撃に燃焼を付与する。	Attacks inflict Burn.	攻擊附加燒傷。	攻击附加灼烧。
+card.c009.desc	공격 시 일정 확률로 화상을 건다.	攻撃時、確率で燃焼を付与する。	Attacks may inflict Burn.	攻擊時有機率造成燒傷。	攻击时有几率造成灼烧。
 card.c010.name	궁지	窮地	Last Stand	絕境	绝境
-card.c010.desc	체력이 절반 아래면 세진다.	体力が半分以下になると強くなる。	Stronger below half HP.	HP低於一半時變強。	HP低于一半时变强。
+card.c010.desc	체력이 절반 이하일 때 주는 피해가 늘어난다.	体力が半分以下になると強くなる。	Stronger below half HP.	HP低於一半時變強。	HP低于一半时变强。
 card.c011.name	공격 강화	攻撃強化	Power Up	攻擊強化	攻击强化
 card.c011.desc	공격 피해가 늘어난다.	攻撃ダメージが上がる。	More attack damage.	攻擊傷害提升。	攻击伤害提升。
 card.c012.name	속사	速射	Rapid Fire	速射	速射
 card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.	射擊速度更快。	射击速度更快。
-card.c013.name	필살기 쿨 감소	必殺技クール短縮	Special Cooldown Down	必殺技冷卻減半	必杀技冷却减半
-card.c013.desc	필살기 쿨이 절반으로 줄어든다.	必殺技のクールタイムが半分になる。	Halves your Special cooldown.	必殺技冷卻時間減半。	必杀技冷却时间减半。
+card.c013.name	필살기 쿨 감소	必殺技クール短縮	Special CD Cut	必殺技冷卻減半	必杀技冷却减半
+card.c013.desc	필살기 쿨타임이 절반으로 줄어든다.	必殺技のクールタイムが半分になる。	Halves your Special cooldown.	必殺技冷卻時間減半。	必杀技冷却时间减半。
 card.c014.name	관통탄	貫通弾	Piercing Shot	貫穿彈	贯穿弹
 card.c014.desc	탄이 적을 뚫고 지나간다.	弾が敵を貫通する。	Shots pierce through foes.	子彈穿透敵人。	子弹穿透敌人。
 card.c015.name	벽 반사	壁反射	Ricochet	牆面反彈	墙面反弹
@@ -147,39 +147,39 @@ card.c015.desc	탄이 벽과 엄폐물에서 튕겨 다시 날아간다.	弾が�
 card.c016.name	유도탄	誘導弾	Homing Shot	追蹤彈	追踪弹
 card.c016.desc	탄이 가까운 적 쪽으로 휘어 날아간다.	弾が近くの敵へ曲がって飛ぶ。	Shots curve toward nearby foes.	子彈會轉向附近的敵人。	子弹会转向附近的敌人。
 card.c017.name	냉기 각인	冷気の刻印	Frost Brand	冰霜刻印	冰霜刻印
-card.c017.desc	공격에 빙결을 붙인다. 걸린 적은 느려진다.	攻撃に凍結を付与。かかった敵は遅くなる。	Attacks may freeze. Frozen foes slow down.	攻擊附加冰凍，中招的敵人會減速。	攻击附加冰冻，中招的敌人会减速。
+card.c017.desc	공격 시 일정 확률로 빙결을 건다. 빙결된 적은 느려진다.	攻撃に凍結を付与。かかった敵は遅くなる。	Attacks may freeze. Frozen foes slow down.	攻擊附加冰凍，中招的敵人會減速。	攻击附加冰冻，中招的敌人会减速。
 card.c018.name	저주 각인	呪いの刻印	Curse Brand	詛咒刻印	诅咒刻印
-card.c018.desc	공격에 저주를 붙인다. 걸린 적은 더 아프게 맞는다.	攻撃に呪いを付与。かかった敵は被ダメージが増える。	Attacks may curse. Cursed foes take more damage.	攻擊附加詛咒，中招的敵人受到更多傷害。	攻击附加诅咒，中招的敌人受到更多伤害。
+card.c018.desc	공격 시 일정 확률로 저주를 건다. 저주받은 적은 받는 피해가 늘어난다.	攻撃に呪いを付与。かかった敵は被ダメージが増える。	Attacks may curse. Cursed foes take more damage.	攻擊附加詛咒，中招的敵人受到更多傷害。	攻击附加诅咒，中招的敌人受到更多伤害。
 card.c019.name	화상 번짐	延焼	Wildfire	火勢蔓延	火势蔓延
-card.c019.desc	화상이 3단계가 된 적 둘레로 화상이 옮는다.	火傷が3段階になった敵の周りに火傷が広がる。	Max-stack burns spread to nearby foes.	燒傷疊滿3層的敵人會將燒傷擴散到周圍。	灼烧叠满3层的敌人会将灼烧扩散到周围。
+card.c019.desc	화상이 3중첩된 적 주변으로 화상이 퍼진다.	火傷が3段階になった敵の周りに火傷が広がる。	Max-stack burns spread to nearby foes.	燒傷疊滿3層的敵人會將燒傷擴散到周圍。	灼烧叠满3层的敌人会将灼烧扩散到周围。
 card.c020.name	상태이상 번짐	状態異常伝播	Contagion	異常擴散	异常扩散
-card.c020.desc	상태이상을 걸 때 옆 적에게도 옮긴다.	状態異常をかけると隣の敵にも移る。	Status effects may jump to a nearby foe.	施加狀態異常時也會傳給旁邊的敵人。	施加异常状态时也会传给旁边的敌人。
+card.c020.desc	상태이상을 걸 때 일정 확률로 근처 적에게도 옮긴다.	状態異常をかけると隣の敵にも移る。	Status effects may jump to a nearby foe.	施加狀態異常時也會傳給旁邊的敵人。	施加异常状态时也会传给旁边的敌人。
 card.c021.name	둔화탄	鈍化弾	Slowing Shot	緩速彈	减速弹
 card.c021.desc	맞은 적이 잠시 느려진다.	命中した敵が少しの間遅くなる。	Hit foes are slowed briefly.	被命中的敵人短暫減速。	被命中的敌人短暂减速。
 card.c022.name	갑옷 분쇄	鎧砕き	Armor Break	破甲	破甲
-card.c022.desc	때릴수록 그 적이 받는 피해가 쌓여 늘어난다.	攻撃するほどその敵の被ダメージが蓄積して増える。	Each hit makes that foe take more damage.	越攻擊，該敵人受到的傷害越高。	越攻击，该敌人受到的伤害越高。
+card.c022.desc	공격할수록 그 적이 받는 피해가 누적해서 늘어난다.	攻撃するほどその敵の被ダメージが蓄積して増える。	Each hit makes that foe take more damage.	越攻擊，該敵人受到的傷害越高。	越攻击，该敌人受到的伤害越高。
 card.c023.name	연속 압박	連続圧迫	Relentless	連續壓制	连续压制
-card.c023.desc	같은 적을 연달아 칠수록 세진다.	同じ敵を続けて攻撃するほど強くなる。	Hitting the same foe in a row deals more.	連續攻擊同一敵人時越來越強。	连续攻击同一敌人时越来越强。
+card.c023.desc	같은 적을 연속 공격할수록 주는 피해가 늘어난다.	同じ敵を続けて攻撃するほど強くなる。	Hitting the same foe in a row deals more.	連續攻擊同一敵人時越來越強。	连续攻击同一敌人时越来越强。
 card.c024.name	마무리 본능	仕留めの本能	Finisher	終結本能	终结本能
-card.c024.desc	체력이 낮은 적에게 더 아프다.	体力の低い敵にダメージ増加。	More damage to low-HP foes.	對低HP敵人傷害更高。	对低HP敌人伤害更高。
+card.c024.desc	체력이 낮은 적에게 주는 피해가 늘어난다.	体力の低い敵にダメージ増加。	More damage to low-HP foes.	對低HP敵人傷害更高。	对低HP敌人伤害更高。
 card.c025.name	보스 사냥	ボス狩り	Boss Hunter	頭目獵手	头目猎手
 card.c025.desc	보스에게 주는 피해가 늘어난다.	ボスへのダメージが増える。	More damage to bosses.	對頭目造成的傷害增加。	对头目造成的伤害增加。
 card.c026.name	폭발 메아리	爆発の残響	Blast Echo	爆炸回響	爆炸回响
-card.c026.desc	내 탄이 터지면 같은 자리에 작은 폭발이 한 번 더.	自分の弾が爆発すると同じ場所でもう一度小爆発。	Your blasts echo with a second small blast.	子彈爆炸時，同一位置再引發一次小爆炸。	子弹爆炸时，同一位置再引发一次小爆炸。
+card.c026.desc	내 공격이 폭발하면 같은 자리에 작은 폭발이 한 번 더 일어난다.	自分の弾が爆発すると同じ場所でもう一度小爆発。	Your blasts echo with a second small blast.	子彈爆炸時，同一位置再引發一次小爆炸。	子弹爆炸时，同一位置再引发一次小爆炸。
 card.c027.name	범위 확대	範囲拡大	Wide Reach	範圍擴大	范围扩大
 card.c027.desc	스킬 · 필살기 · 폭발 범위가 넓어진다.	スキル・必殺技・爆発の範囲が広がる。	Wider skill, ultimate and blast areas.	技能、必殺技、爆炸範圍擴大。	技能、必杀技、爆炸范围扩大。
 card.c028.name	장판 지속	フィールド持続	Lingering Field	場地持續	场地持续
-card.c028.desc	내가 깐 장판이 더 오래 남는다.	自分が張ったフィールドが長く残る。	Your fields last longer.	你放置的場地存在更久。	你放置的场地持续更久。
+card.c028.desc	내가 만든 장판이 더 오래 지속된다.	自分が張ったフィールドが長く残る。	Your fields last longer.	你放置的場地存在更久。	你放置的场地持续更久。
 card.c029.name	유령 포대	幽霊砲台	Ghost Turret	幽靈砲台	幽灵炮台
-card.c029.desc	평타 8번마다 유령 포대가 잠시 선다.	通常攻撃8回ごとに幽霊砲台が少しの間現れる。	Every 8 attacks, a ghost turret appears briefly.	每普通攻擊8次，幽靈砲台會短暫出現。	每普通攻击8次，幽灵炮台会短暂出现。
+card.c029.desc	기본 공격 8회마다 유령 포대가 잠시 설치된다.	通常攻撃8回ごとに幽霊砲台が少しの間現れる。	Every 8 attacks, a ghost turret appears briefly.	每普通攻擊8次，幽靈砲台會短暫出現。	每普通攻击8次，幽灵炮台会短暂出现。
 card.c030.name	영혼 복제	魂の複製	Soul Echo	靈魂複製	灵魂复制
-card.c030.desc	평타 8번째마다 같은 공격이 한 번 더 나간다.	通常攻撃8回目ごとに同じ攻撃がもう一度出る。	Every 8th attack fires once more.	每第8次普通攻擊會再發動一次相同攻擊。	每第8次普通攻击会再发动一次相同攻击。
+card.c030.desc	기본 공격 8회마다 같은 공격이 한 번 더 나간다.	通常攻撃8回目ごとに同じ攻撃がもう一度出る。	Every 8th attack fires once more.	每第8次普通攻擊會再發動一次相同攻擊。	每第8次普通攻击会再发动一次相同攻击。
 card.c031.name	유령 갑주	幽霊の甲冑	Ghost Armor	幽靈鎧甲	幽灵铠甲
 card.c031.desc	받는 피해가 줄어든다.	受けるダメージが減る。	Take less damage.	受到的傷害減少。	受到的伤害减少。
 card.c032.name	흡혈	吸血	Lifesteal	吸血	吸血
-card.c032.desc	공격하면 확률로 준 피해의 절반만큼 회복한다.	攻撃時に確率で与ダメージの半分を回復。	Hits may heal half the damage dealt.	攻擊時有機率回復造成傷害的一半。	攻击时有几率恢复所造成伤害的一半。
+card.c032.desc	공격 시 확률로 준 피해의 절반만큼 회복한다.	攻撃時に確率で与ダメージの半分を回復。	Hits may heal half the damage dealt.	攻擊時有機率回復造成傷害的一半。	攻击时有几率恢复所造成伤害的一半。
 card.c033.name	위기 방벽	危機の防壁	Last Barrier	危機屏障	危机屏障
-card.c033.desc	체력이 위험해지면 방마다 한 번 방벽이 선다.	体力が危険になると部屋ごとに一度防壁が張られる。	Once per room, a barrier forms at low HP.	HP危急時，每個房間會展開一次屏障。	HP危急时，每个房间会展开一次屏障。
+card.c033.desc	체력이 낮아지면 방마다 한 번 방벽이 생긴다.	体力が危険になると部屋ごとに一度防壁が張られる。	Once per room, a barrier forms at low HP.	HP危急時，每個房間會展開一次屏障。	HP危急时，每个房间会展开一次屏障。
 card.c034.name	가속	加速	Swift	加速	加速
 card.c034.desc	이동 속도가 빨라진다.	移動速度が上がる。	Move faster.	移動速度提升。	移动速度提升。
 card.c035.name	사거리	射程	Long Reach	射程	射程
@@ -314,20 +314,20 @@ stage.4.1.name	밤의 공중기지 옥상	夜の空中基地 屋上	Sky Base Roo
 stage.5.1.name	유령 연구소	幽霊研究所	Ghost Laboratory	幽靈研究所	幽灵研究所
 stage.6.1.name	야간 정유소	夜の製油所	Refinery at Night	夜間煉油廠	夜间炼油厂
 host.ghost.name	유령	ゴースト	Ghost	幽靈	幽灵
-tip.loading.0	고스트는 떠 있는 동안 체력이 깎인다. 몸은 빨리 고를수록 좋다.	ゴーストは漂っている間、体力が減り続けます。体は早く選ぶほど有利です。	Your Ghost loses HP while drifting. Grab a body fast.	幽靈飄浮時HP會持續減少。越快選好身體越好。	幽灵漂浮时HP会持续减少。越快选好身体越好。
-tip.loading.1	멈춰야 쏜다. 움직이는 동안에는 자동 공격이 멈춘다.	止まっているときだけ撃ちます。移動中は自動攻撃が止まります。	Stand still to shoot. Auto-attack stops while you move.	停下才會射擊。移動時自動攻擊會停止。	停下才会射击。移动时自动攻击会停止。
-tip.loading.2	몸을 스스로 놓아주면 그 몸은 이 방에서 다시 탈 수 없다.	自分から手放した体には、その部屋で再び憑依できません。	A body you release can't be possessed again in that Room.	主動放棄的身體，在這個房間內無法再次附身。	主动放弃的身体，在这个房间内无法再次附身。
-tip.loading.3	보스는 빼앗을 수 없다. 보스방은 타고 들어간 몸으로 끝내야 한다.	ボスには憑依できません。ボス部屋は乗り込んだ体で戦い抜きましょう。	Bosses can't be possessed. Finish the Boss Room in the body you brought.	頭目無法附身。頭目房必須用帶進來的身體打完。	头目无法附身。头目房必须用带进来的身体打完。
-tip.loading.4	조준 링이 회색 자물쇠면 아직 조건이 안 찼다. 더 두들기면 열린다.	照準リングが灰色の鍵なら、まだ条件を満たしていません。さらに攻撃すると解放されます。	A gray lock on the target ring means it's not ready yet. Keep hitting to unlock it.	瞄準圈若是灰色鎖頭，代表條件尚未達成。繼續攻擊就會解鎖。	瞄准圈若是灰色锁头，代表条件尚未达成。继续攻击就会解锁。
-tip.loading.5	몸을 잃으면 Ghost HP 20%가 날아간다. 놓아주는 편이 싸다.	体を失うとGhost HPが20%減ります。自分から手放すほうが安く済みます。	Losing a body costs 20% Ghost HP. Releasing it is cheaper.	失去身體會扣除Ghost HP 20%。主動放棄比較划算。	失去身体会扣除Ghost HP 20%。主动放弃更划算。
-tip.loading.6	회복 방에서는 Ghost HP 가 돌아온다. 다음 방을 보고 들어가라.	回復部屋ではGhost HPが戻ります。次の部屋を見てから進みましょう。	Recovery Rooms restore Ghost HP. Check the next Room before entering.	回復房間能回復Ghost HP。先看清下一個房間再進入。	恢复房间能恢复Ghost HP。先看清下一个房间再进入。
-tip.loading.7	몸이 바뀌어도 버프는 남는다. 스탯이 아니라 나에게 붙기 때문이다.	体が変わってもバフは残ります。ステータスではなく、あなた自身に付くからです。	Buffs stay when you switch bodies. They belong to you, not your stats.	換身體後增益效果仍會保留，因為它附在你身上，而非屬性上。	换身体后增益效果仍会保留，因为它附在你身上，而不是属性上。
-tip.loading.8	머리 위 금색 조준 링이 지금 빙의 버튼이 노리는 몸이다.	頭上の金色の照準リングが、いま憑依ボタンで狙っている体です。	The gold ring overhead marks the body your Possess button is targeting.	頭上的金色瞄準圈，就是附身按鈕目前鎖定的身體。	头上的金色瞄准圈，就是附身按钮当前锁定的身体。
-tip.loading.9	빙의 표식은 가까운 순으로 다섯까지만 뜬다. 나머지는 사거리 밖이다.	憑依マーカーは近い順に5つまで表示されます。それ以外は射程外です。	Up to five nearest Possess markers are shown. The rest are out of range.	附身標記依距離最多顯示5個，其餘都在射程外。	附身标记按距离最多显示5个，其余都在射程外。
-tip.loading.10	붉은 X 가 붙은 몸은 내가 버린 몸이다. 이 방에서는 다시 못 탄다.	赤い×が付いた体は、あなたが捨てた体です。この部屋では再び憑依できません。	A red X marks a body you abandoned. You can't possess it again in this Room.	帶有紅色X的身體是你拋棄的身體，在這個房間內無法再附身。	带有红色X的身体是你抛弃的身体，在这个房间内无法再附身。
-tip.loading.11	액티브 스킬은 몸마다 다르다. 어떤 몸을 탔는지가 곧 어떤 액티브 스킬를 쓰는지다.	アクティブスキルは体ごとに異なります。どの体に憑依したかで、使えるアクティブスキルが決まります。	Each body has its own Active Skill. Your Host decides which one you use.	主動技能因身體而異。附身哪個身體，就決定使用哪個主動技能。	主动技能因身体而异。附身哪个身体，就决定使用哪个主动技能。
-tip.loading.12	주위에 뺏을 몸이 하나도 없으면 잠시 뒤 몸 하나가 던져진다. 대신 값이 비싸다.	周囲に奪える体がひとつもないと、しばらくして体がひとつ投げ込まれます。ただしコストは高めです。	With no bodies nearby, one gets thrown in after a while, at a higher cost.	周圍沒有可奪取的身體時，過一會兒會丟進一個身體，但代價較高。	周围没有可夺取的身体时，过一会儿会扔进一个身体，但代价较高。
-tip.loading.13	화면 가장자리 화살표는 창 밖에 뺏을 몸이 있다는 뜻이다.	画面端の矢印は、画面外に奪える体があることを示しています。	Arrows at the screen edge point to bodies you can take off-screen.	畫面邊緣的箭頭，表示畫面外有可奪取的身體。	画面边缘的箭头，表示画面外有可夺取的身体。
+tip.loading.0	유령 상태로 떠 있으면 체력이 줄어든다. 빨리 호스트에 빙의하자.	ゴースト状態で漂っている間はゴースト体力が減り続ける。早くホストに憑依しよう。	Ghost HP drains while you float without a host. Possess a host quickly.	沒有宿主、以幽靈狀態漂浮時，幽靈體力會持續減少。盡快附身宿主吧。	没有宿主、以幽灵状态漂浮时，幽灵体力会持续减少。尽快附身宿主吧。
+tip.loading.1	멈춰 서야 공격한다. 이동 중에는 자동 공격을 하지 않는다.	止まっているときだけ撃ちます。移動中は自動攻撃が止まります。	Stand still to shoot. Auto-attack stops while you move.	停下才會射擊。移動時自動攻擊會停止。	停下才会射击。移动时自动攻击会停止。
+tip.loading.2	스스로 빙의를 해제한 호스트에는 이 방에서 다시 빙의할 수 없다.	自分から憑依を解除したホストには、その部屋で再び憑依できません。	A host you release can't be possessed again in that Room.	主動放棄的宿主，在這個房間內無法再次附身。	主动放弃的宿主，在这个房间内无法再次附身。
+tip.loading.3	보스에게는 빙의할 수 없다. 보스 방은 입장한 호스트로 끝내야 한다.	ボスには憑依できません。ボス部屋は入室時のホストで戦い抜きましょう。	Bosses can't be possessed. Finish the Boss Room in the host you brought.	頭目無法附身。頭目房必須用帶進來的宿主打完。	头目无法附身。头目房必须用带进来的宿主打完。
+tip.loading.4	조준 링에 회색 자물쇠가 있으면 아직 빙의할 수 없다. 더 공격하면 풀린다.	照準リングが灰色の鍵なら、まだ条件を満たしていません。さらに攻撃すると解放されます。	A gray lock on the target ring means it's not ready yet. Keep hitting to unlock it.	瞄準圈若是灰色鎖頭，代表條件尚未達成。繼續攻擊就會解鎖。	瞄准圈若是灰色锁头，代表条件尚未达成。继续攻击就会解锁。
+tip.loading.5	호스트를 잃으면 유령 체력 20%가 깎인다. 직접 빙의를 해제하는 편이 낫다.	ホストを失うとゴースト体力が20%減ります。自分から解除するほうが得です。	Losing a host costs 20% Ghost HP. Releasing it yourself is better.	失去宿主會扣除20%幽靈體力。主動解除比較划算。	失去宿主会扣除20%幽灵体力。主动解除更划算。
+tip.loading.6	회복의 제단에서 유령 체력을 채울 수 있다. 다음 방 종류를 보고 들어가자.	回復部屋ではGhost HPが戻ります。次の部屋を見てから進みましょう。	Recovery Rooms restore Ghost HP. Check the next Room before entering.	回復房間能回復Ghost HP。先看清下一個房間再進入。	恢复房间能恢复Ghost HP。先看清下一个房间再进入。
+tip.loading.7	호스트를 바꿔도 카드는 유지된다. 카드는 유령에게 붙기 때문이다.	ホストを替えてもカードは残る。カードはゴーストに付くからだ。	Cards stay when you switch hosts. They belong to your ghost.	更換宿主後卡片仍會保留，因為卡片附在幽靈身上。	更换宿主后卡片仍会保留，因为卡片附在幽灵身上。
+tip.loading.8	머리 위에 금색 조준 링이 뜬 적이 빙의 버튼의 대상이다.	頭上の金色の照準リングが、いま憑依ボタンで狙っているホストです。	The gold ring overhead marks the host your Possess button is targeting.	頭上的金色瞄準圈，就是附身按鈕目前鎖定的宿主。	头上的金色瞄准圈，就是附身按钮当前锁定的宿主。
+tip.loading.9	빙의 표식은 가까운 적 5명에게만 표시된다.	憑依マーカーは近い敵5体にだけ表示される。	Possess markers show only on the 5 nearest enemies.	附身標記只會顯示在最近的5名敵人身上。	附身标记只会显示在最近的5名敌人身上。
+tip.loading.10	붉은 X가 붙은 호스트는 빙의를 해제한 호스트다. 이 방에서는 다시 빙의할 수 없다.	赤い×が付いたホストは、憑依を解除したホストです。この部屋では再び憑依できません。	A red X marks a host you released. You can't possess it again in this room.	帶有紅色X的宿主是已解除附身的宿主，在這個房間內無法再次附身。	带有红色X的宿主是已解除附身的宿主，在这个房间内无法再次附身。
+tip.loading.11	액티브 스킬은 호스트마다 다르다. 어떤 호스트에 빙의하느냐가 곧 어떤 스킬을 쓰느냐다.	アクティブスキルはホストごとに異なります。どのホストに憑依したかで、使えるアクティブスキルが決まります。	Each host has its own Active Skill. Your host determines which one you can use.	主動技能因宿主而異。附身哪個宿主，就決定使用哪個主動技能。	主动技能因宿主而异。附身哪个宿主，就决定使用哪个主动技能。
+tip.loading.12	주변에 빙의할 호스트가 없으면 잠시 뒤 긴급 호스트가 나타난다. 대신 유령 체력이 크게 깎인다.	周りに憑依できるホストがいないと、少しして緊急ホストが現れる。代わりにゴースト体力が大きく減る。	With no hosts nearby, an emergency host appears after a while, at a big Ghost HP cost.	周圍沒有可附身的宿主時，稍後會出現緊急宿主，但會大量扣除幽靈體力。	周围没有可附身的宿主时，稍后会出现紧急宿主，但会大量扣除幽灵体力。
+tip.loading.13	화면 가장자리 화살표는 화면 밖에 빙의할 호스트가 있다는 뜻이다.	画面端の矢印は、画面外に憑依できるホストがいることを示しています。	Arrows at the screen edge point to hosts you can possess off-screen.	畫面邊緣的箭頭表示畫面外有可附身的宿主。	画面边缘的箭头表示画面外有可附身的宿主。
 opening.line.0	어느 날, 여자친구와 함께 걷고 있었다.	ある日、恋人と一緒に歩いていた。	One day, I was out walking with my girlfriend.	某天，我正和女友一起散步。	某天，我正和女朋友一起散步。
 opening.line.1	그런데 갑자기, 습격당했다!	すると突然、襲われた！	Then, out of nowhere, we were attacked!	突然間，我們遭到襲擊！	突然间，我们遭到袭击！
 opening.line.2	으아아아아아악……	うわあああああっ……	Aaaaaaargh......	嗚啊啊啊啊啊……	呜啊啊啊啊啊……
@@ -339,75 +339,75 @@ opening.line.12	내 유령 에너지 연구를 캐내려고\n딸을 납치해 �
 opening.line.13	자네의 에너지는 한정돼 있네.	君のエネルギーには限りがある。	Your energy is limited.	你的能量是有限的。	你的能量是有限的。
 opening.line.14	자네의 에너지는 한정돼 있네.	君のエネルギーには限りがある。	Your energy is limited.	你的能量是有限的。	你的能量是有限的。
 opening.line.15	부탁하네. 내 딸을 구해 주게!	頼む。わしの娘を救ってくれ！	Please. Save my daughter!	拜託了。救救我的女兒！	拜托了。救救我的女儿！
-ui.shop.host.name	몸 — {0}	体 — {0}	Body — {0}	身體 — {0}	身体 — {0}
-ui.shop.host.desc	그 자리에서 이 몸을 빼앗는다	その場でこの体を奪う	Take this body on the spot	當場奪取這具身體	当场夺取这具身体
+ui.shop.host.name	호스트 — {0}	ホスト — {0}	Host — {0}	宿主 — {0}	宿主 — {0}
+ui.shop.host.desc	즉시 이 호스트에 빙의한다	その場でこのホストに憑依する	Possess this host on the spot	當場附身這個宿主	当场附身这个宿主
 ui.shop.heal.name	치료	治療	Heal	治療	治疗
-ui.shop.heal.desc	호스트 {0}% · 고스트 {1}% 회복	ホスト{0}%・ゴースト{1}%回復	Restore {0}% Host · {1}% Ghost HP	宿主 {0}% · 幽靈 {1}% 回復	宿主 {0}% · 幽灵 {1}% 恢复
+ui.shop.heal.desc	호스트 체력 {0}% · 유령 체력 {1}% 회복	ホスト{0}%・ゴースト{1}%回復	Restore {0}% Host · {1}% Ghost HP	宿主 {0}% · 幽靈 {1}% 回復	宿主 {0}% · 幽灵 {1}% 恢复
 ui.shop.limit	남은 구매 {0}회 · 카드 {1}장	残り購入{0}回・カード{1}枚	{0} buys left · {1} cards	剩餘購買{0}次 · 卡片{1}張	剩余购买{0}次 · 卡片{1}张
 ui.shop.result.host	{0} 빙의	{0}に憑依	Possessed {0}	附身{0}	附身{0}
-ui.shop.result.consumable	{0} 구입 — 다음 방에서 열린다	{0}を購入 — 次の部屋で発動	Bought {0} — triggers next Room	購買{0} — 下個房間發動	购买{0} — 下个房间生效
-ui.shop.result.card	{0} 구입	{0}を購入	Bought {0}	購買{0}	购买{0}
+ui.shop.result.consumable	{0} 구매 · 다음 방에서 발동	{0}を購入 — 次の部屋で発動	Bought {0} — triggers next Room	購買{0} — 下個房間發動	购买{0} — 下个房间生效
+ui.shop.result.card	{0} 구매	{0}を購入	Bought {0}	購買{0}	购买{0}
 ui.battle.barrier	방벽 {0}	防壁 {0}	Barrier {0}	屏障 {0}	屏障 {0}
 ui.rarity.legendary	전설	レジェンド	Legendary	傳說	传说
 ui.rarity.epic	영웅	エピック	Epic	史詩	史诗
 ui.rarity.rare	희귀	レア	Rare	稀有	稀有
 ui.rarity.common	일반	コモン	Common	普通	普通
 ui.event.reward.card_grant	{0} 카드 {1}장	{0}カード{1}枚	{0} Card ×{1}	{0}卡片{1}張	{0}卡片{1}张
-ui.event.reward.card_offer	{0} 카드 3택 1	{0}カード 3枚から1枚選択	{0} Card: pick 1 of 3	{0}卡片 3選1	{0}卡片 3选1
+ui.event.reward.card_offer	{0} 카드 3장 중 1장 선택	{0}カード 3枚から1枚選択	{0} Card: pick 1 of 3	{0}卡片 3選1	{0}卡片 3选1
 ui.event.reward.upgrade	가진 카드 한 장 레벨 +1	所持カード1枚のレベル+1	+1 level to one owned card	一張已有卡片等級+1	一张已有卡片等级+1
 ui.event.reward.host_heal	호스트 체력 {0}% 회복	ホスト体力{0}%回復	Restore {0}% Host HP	宿主生命回復{0}%	宿主生命恢复{0}%
-ui.event.reward.ghost_heal	고스트 체력 {0}% 회복	ゴースト体力{0}%回復	Restore {0}% Ghost HP	幽靈生命回復{0}%	幽灵生命恢复{0}%
+ui.event.reward.ghost_heal	유령 체력 {0}% 회복	ゴースト体力{0}%回復	Restore {0}% Ghost HP	幽靈生命回復{0}%	幽灵生命恢复{0}%
 ui.event.gold	골드 {0}	ゴールド{0}	Gold {0}	金幣 {0}	金币 {0}
-ui.event.reward.reach	빙의 사거리 +{0}% (판 끝까지)	憑依射程+{0}%（ラン終了まで）	Possess range +{0}% (this run)	附身射程+{0}%（本局有效）	附身射程+{0}%（本局有效）
-ui.event.reward.discount	상점 값 -{0}% (판 끝까지)	ショップ価格-{0}%（ラン終了まで）	Shop prices -{0}% (this run)	商店價格-{0}%（本局有效）	商店价格-{0}%（本局有效）
+ui.event.reward.reach	빙의 사거리 +{0}% (이번 판 동안)	憑依射程+{0}%（ラン終了まで）	Possess range +{0}% (this run)	附身射程+{0}%（本局有效）	附身射程+{0}%（本局有效）
+ui.event.reward.discount	상점 가격 -{0}% (이번 판 동안)	ショップ価格-{0}%（ラン終了まで）	Shop prices -{0}% (this run)	商店價格-{0}%（本局有效）	商店价格-{0}%（本局有效）
 ui.event.reward.shield_break	다음 보스 방어막 한 번 무효	次のボスのバリアを1回無効	Negate next Boss's shield once	下個頭目的護盾無效一次	下个头目的护盾无效一次
-ui.event.reward.spawn_host	빼앗을 몸 하나가 나타난다	奪える体がひとつ現れる	A body to steal appears	出現一具可奪取的身體	出现一具可夺取的身体
-ui.event.cost.ghost_hp	고스트 체력 {0}%	ゴースト体力{0}%	Ghost HP {0}%	幽靈生命 {0}%	幽灵生命 {0}%
+ui.event.reward.spawn_host	빙의할 호스트 하나가 나타난다	憑依できるホストがひとつ現れる	A host to possess appears	出現一個可附身的宿主	出现一个可附身的宿主
+ui.event.cost.ghost_hp	유령 체력 {0}%	ゴースト体力{0}%	Ghost HP {0}%	幽靈生命 {0}%	幽灵生命 {0}%
 ui.event.cost.host_hp	호스트 체력 {0}%	ホスト体力{0}%	Host HP {0}%	宿主生命 {0}%	宿主生命 {0}%
 ui.event.cost.max_hp	최대 체력 -{0}% (영구)	最大体力-{0}%（永続）	Max HP -{0}% (permanent)	最大生命-{0}%（永久）	最大生命-{0}%（永久）
-ui.event.blocked.no_body	몸이 없다	体がない	No body	沒有身體	没有身体
+ui.event.blocked.no_body	호스트가 없다	ホストがない	No host	沒有宿主	没有宿主
 ui.event.blocked.cant_pay	치를 수 없다	払えない	Can't pay	無法支付	无法支付
 ui.event.result.passed	지나쳤다.	立ち去った。	You moved on.	離開了。	离开了。
-ui.event.result.elite	정예가 앞을 막는다.	エリートが立ちはだかる。	An elite blocks the way.	精英擋住了去路。	精英挡住了去路。
+ui.event.result.elite	엘리트가 앞을 막는다.	エリートが立ちはだかる。	An elite blocks the way.	精英擋住了去路。	精英挡住了去路。
 ui.event.result.ambush	매복이다.	待ち伏せだ。	An ambush!	是埋伏！	是埋伏！
 ui.event.result.missed	빗나갔다.	外れた。	It missed.	落空了。	落空了。
 ui.event.result.gold	골드 +{0}	ゴールド+{0}	Gold +{0}	金幣+{0}	金币+{0}
-ui.event.result.no_body	몸이 없어 받을 수 없었다.	体がなく、受け取れなかった。	No body to receive it.	沒有身體，無法領取。	没有身体，无法领取。
+ui.event.result.no_body	호스트가 없어 받을 수 없었다.	ホストがなく、受け取れなかった。	No host to receive it.	沒有宿主，無法領取。	没有宿主，无法领取。
 ui.event.result.nothing_left	가져갈 것이 남아 있지 않았다.	持っていけるものは残っていなかった。	Nothing was left to take.	已經沒有可拿的東西了。	已经没有可拿的东西了。
 ui.event.result.cards	카드 {0}장 획득	カード{0}枚獲得	Got {0} cards	獲得卡片{0}張	获得卡片{0}张
 ui.event.result.got	{0} 획득	{0}を獲得	Got {0}	獲得{0}	获得{0}
 ui.event.result.pick_card	카드를 고른다	カードを選ぶ	Pick a card	選擇卡片	选择卡片
 ui.event.result.nothing_to_pick	고를 것이 남아 있지 않았다.	選べるものが残っていなかった。	Nothing left to pick.	已經沒有可選的了。	已经没有可选的了。
-ui.event.result.nothing_to_upgrade	벼릴 것이 없었다.	鍛えるものがなかった。	Nothing to upgrade.	沒有可強化的東西。	没有可强化的东西。
+ui.event.result.nothing_to_upgrade	강화할 카드가 없었다.	鍛えるものがなかった。	Nothing to upgrade.	沒有可強化的東西。	没有可强化的东西。
 ui.event.result.reach	빙의 사거리 +{0}%	憑依射程+{0}%	Possess range +{0}%	附身射程+{0}%	附身射程+{0}%
 ui.event.result.discount	상점 카드 값 {0}% 할인	ショップのカード価格{0}%割引	{0}% off Shop cards	商店卡片價格降低{0}%	商店卡片价格降低{0}%
 ui.event.result.shield_break	다음 보스의 방어막을 한 번 깬다	次のボスのバリアを一度破る	Breaks the next Boss's shield once	擊破下個頭目的護盾一次	击破下个头目的护盾一次
 ui.event.result.nobody	아무도 오지 않았다.	誰も来なかった。	No one came.	誰也沒來。	谁也没来。
 ui.event.result.appeared	{0} 이(가) 나타났다	{0}が現れた	{0} appeared	{0}出現了	{0}出现了
-ui.hostselect.title.pick	HOST 를 선택하세요!	HOSTを選択してください！	Choose a HOST!	請選擇HOST！	请选择HOST！
-ui.hostselect.title.codex	HOST 도감	HOST図鑑	HOST Codex	HOST圖鑑	HOST图鉴
-ui.hostselect.header_desc	사망 시 유령으로 돌아가, 다른 HOST에 빙의할 수 있습니다.	死亡するとゴーストに戻り、別のHOSTに憑依できます。	On death you return as a Ghost and can possess another HOST.	死亡後會變回幽靈，可附身其他HOST。	死亡后会变回幽灵，可附身其他HOST。
+ui.hostselect.title.pick	호스트를 선택하세요!	HOSTを選択してください！	Choose a HOST!	請選擇HOST！	请选择HOST！
+ui.hostselect.title.codex	호스트 도감	HOST図鑑	HOST Codex	HOST圖鑑	HOST图鉴
+ui.hostselect.header_desc	사망 시 유령으로 돌아가, 다른 호스트에 빙의할 수 있습니다.	死亡するとゴーストに戻り、別のHOSTに憑依できます。	On death you return as a Ghost and can possess another HOST.	死亡後會變回幽靈，可附身其他HOST。	死亡后会变回幽灵，可附身其他HOST。
 ui.hostselect.possess_start	빙의 시작	憑依開始	Possess	開始附身	开始附身
 ui.hostselect.back	돌아가기	戻る	Back	返回	返回
 ui.hostselect.stats	능력치	ステータス	Stats	能力值	属性
-ui.hostselect.upgrade.title	HOST 강화	HOST強化	HOST Upgrade	HOST強化	HOST强化
+ui.hostselect.upgrade.title	호스트 강화	HOST強化	HOST Upgrade	HOST強化	HOST强化
 ui.hostselect.upgrade.sub	액티브 · 패시브 스킬 강화	アクティブ・パッシブスキル強化	Upgrade Active · Passive Skills	主動 · 被動技能強化	主动 · 被动技能强化
-ui.hostselect.mastery.maxed	{0} 은(는) 이미 숙련도 최대다.	{0}の熟練度はすでに最大です。	{0} is already at max Mastery.	{0}的熟練度已達上限。	{0}的熟练度已达上限。
+ui.hostselect.mastery.maxed	{0}의 숙련도가 이미 최대입니다.	{0}の熟練度はすでに最大です。	{0} is already at max Mastery.	{0}的熟練度已達上限。	{0}的熟练度已达上限。
 ui.common.ok	확인	OK	OK	確認	确定
-ui.hostselect.mastery.short	파편이 모자란다.\n{0} — {1} / {2}  ({3}개 더)	欠片が足りません。\n{0} — {1} / {2}（あと{3}個）	Not enough Shards.\n{0} — {1} / {2}  ({3} more)	碎片不足。\n{0} — {1} / {2}（還差{3}個）	碎片不足。\n{0} — {1} / {2}（还差{3}个）
+ui.hostselect.mastery.short	조각이 부족합니다.\n{0} — {1} / {2}  ({3}개 더)	欠片が足りません。\n{0} — {1} / {2}（あと{3}個）	Not enough Shards.\n{0} — {1} / {2}  ({3} more)	碎片不足。\n{0} — {1} / {2}（還差{3}個）	碎片不足。\n{0} — {1} / {2}（还差{3}个）
 ui.hostselect.mastery.unseal	봉인 해제	封印解除	Unseal	解除封印	解除封印
 ui.hostselect.mastery.step	숙련도 Lv {0} → {1}	熟練度 Lv {0} → {1}	Mastery Lv {0} → {1}	熟練度 Lv {0} → {1}	熟练度 Lv {0} → {1}
-ui.hostselect.mastery.confirm	{0}  {1}\n파편 {2}개를 쓴다.	{0}  {1}\n欠片を{2}個使用します。	{0}  {1}\nUse {2} Shards.	{0}  {1}\n消耗碎片{2}個。	{0}  {1}\n消耗碎片{2}个。
+ui.hostselect.mastery.confirm	{0}  {1}\n조각 {2}개를 사용합니다.	{0}  {1}\n欠片を{2}個使用します。	{0}  {1}\nUse {2} Shards.	{0}  {1}\n消耗碎片{2}個。	{0}  {1}\n消耗碎片{2}个。
 ui.hostselect.mastery	숙련도	熟練度	Mastery	熟練度	熟练度
-ui.hostselect.shard	영혼 파편	魂の欠片	Soul Shards	靈魂碎片	灵魂碎片
+ui.hostselect.shard	영혼 조각	魂の欠片	Soul Shards	靈魂碎片	灵魂碎片
 ui.hostselect.start_ghost	유령으로 시작	ゴーストで開始	Start as Ghost	以幽靈開始	以幽灵开始
 ui.hostselect.ghost.badge	유령	ゴースト	Ghost	幽靈	幽灵
-ui.hostselect.ghost.trait	몸이 없다	体がない	Bodiless	沒有身體	没有身体
-ui.hostselect.ghost.rule	몸이 없으면 HP가 계속 줄어든다\n몸 없이 주는 피해는 60%	体がないとHPが減り続ける\n体なしで与えるダメージは60%	Without a body, HP keeps draining\nBodiless damage is 60%	沒有身體時HP會持續減少\n無身體時造成的傷害為60%	没有身体时HP会持续减少\n无身体时造成的伤害为60%
-ui.hostselect.ghost.skill	몸 빼앗기	体を奪う	Steal Body	奪取身體	夺取身体
-ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적을 빼앗아 그 몸으로 싸운다	{0:0.#}マス以内の敵を奪い、その体で戦う	Steal a foe within {0:0.#} tiles and fight as it	奪取{0:0.#}格內的敵人，以其身體戰鬥	夺取{0:0.#}格内的敌人，用其身体战斗
-ui.hostselect.ghost.skill_desc_near	가까운 적을 빼앗아 그 몸으로 싸운다	近くの敵を奪い、その体で戦う	Steal a nearby foe and fight as it	奪取附近的敵人，以其身體戰鬥	夺取附近的敌人，用其身体战斗
-ui.hostselect.ghost.level	고스트 레벨	ゴーストレベル	Ghost Level	幽靈等級	幽灵等级
+ui.hostselect.ghost.trait	호스트 없음	ホストなし	No host	沒有宿主	没有宿主
+ui.hostselect.ghost.rule	호스트가 없으면 유령 체력이 계속 줄어든다\n유령 상태로 주는 피해는 60%	ホストがないとゴースト体力が減り続ける\nゴースト状態で与えるダメージは60%	Without a host, Ghost HP keeps draining\nDamage dealt as a ghost is 60%	沒有宿主時幽靈體力會持續減少\n幽靈狀態造成的傷害為60%	没有宿主时幽灵体力会持续减少\n幽灵状态造成的伤害为60%
+ui.hostselect.ghost.skill	빙의	憑依	Possess	附身	附身
+ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적에게 빙의해 그 호스트로 싸운다	{0:0.#}マス以内の敵に憑依し、そのホストで戦う	Possess an enemy within {0:0.#} tiles and fight as that host	附身{0:0.#}格內的敵人，以該宿主戰鬥	附身{0:0.#}格内的敌人，用该宿主战斗
+ui.hostselect.ghost.skill_desc_near	가까운 적에게 빙의해 그 호스트로 싸운다	近くの敵に憑依し、そのホストで戦う	Possess a nearby enemy and fight as that host	附身附近的敵人，以該宿主戰鬥	附身附近的敌人，用该宿主战斗
+ui.hostselect.ghost.level	유령 레벨	ゴーストレベル	Ghost Level	幽靈等級	幽灵等级
 ui.hostselect.ghost.level_by_gold	골드로 올린다	ゴールドで上げる	Raised with Gold	用金幣提升	用金币提升
 ui.job.melee	근거리	近距離	Melee	近距離	近距离
 ui.job.mid	중거리	中距離	Mid-Range	中距離	中距离
@@ -415,11 +415,11 @@ ui.job.ranged	원거리	遠距離	Ranged	遠距離	远距离
 ui.job.melee.trait	치고 버틴다	殴って耐える	Hit and endure	邊打邊扛	边打边扛
 ui.job.mid.trait	붙어서 쏟는다	張り付いて撃ち込む	Close in and unload	貼身猛攻	贴身猛攻
 ui.job.ranged.trait	거리를 두고 쏜다	距離を取って撃つ	Shoot from afar	保持距離射擊	保持距离射击
-ui.job.melee.rule	때릴 때마다 쉴드 (HP 3% · 최대 30%)\n타격 시 12% 확률로 0.8초 스턴	攻撃でシールド+3%（上限30%）\n命中時12%で0.8秒スタン	Hits grant shield (3% HP · max 30%)\n12% chance on hit to stun 0.8s	每次攻擊獲得護盾（HP 3% · 上限30%）\n命中時12%機率暈眩0.8秒	每次攻击获得护盾（HP 3% · 上限30%）\n命中时12%概率眩晕0.8秒
-ui.job.mid.rule	직업 규칙 없음 — 빠른 연사와 짧은 사거리가 곧 특성이다	職業ルールなし — 速い連射と短い射程がそのまま特性	No class rule — fast fire and short range are its trait	無職業規則 — 快速連射與短射程就是特性	无职业规则 — 快速连射与短射程就是特性
-ui.job.ranged.rule	직업 규칙 없음 — 차별화는 각자의 액티브·패시브가 맡는다	職業ルールなし — 差はそれぞれのアクティブ・パッシブが担う	No class rule — each Active/Passive sets it apart	無職業規則 — 差異由各自的主動 · 被動技能決定	无职业规则 — 差异由各自的主动 · 被动技能决定
-ui.hostselect.tip	HOST마다 이동속도, 공격 방식, 스킬이 다릅니다.\n다양한 HOST를 경험해 보세요!	HOSTごとに移動速度、攻撃方法、スキルが異なります。\nいろいろなHOSTを試してみましょう！	Each HOST differs in speed, attack, and Skills.\nTry out many HOSTs!	每個HOST的移動速度、攻擊方式與技能各不相同。\n多試試各種HOST吧！	每个HOST的移动速度、攻击方式和技能各不相同。\n多试试各种HOST吧！
-ui.hostselect.owned	보유 HOST  {0}/{1}	所持HOST  {0}/{1}	HOSTs Owned  {0}/{1}	已擁有HOST  {0}/{1}	已拥有HOST  {0}/{1}
+ui.job.melee.rule	공격 적중 시 쉴드 획득 (체력 3% · 최대 30%)\n적중 시 12% 확률로 0.8초 기절	攻撃でシールド+3%（上限30%）\n命中時12%で0.8秒スタン	Hits grant shield (3% HP · max 30%)\n12% chance on hit to stun 0.8s	每次攻擊獲得護盾（HP 3% · 上限30%）\n命中時12%機率暈眩0.8秒	每次攻击获得护盾（HP 3% · 上限30%）\n命中时12%概率眩晕0.8秒
+ui.job.mid.rule	특수 규칙 없음 · 빠른 연사와 짧은 사거리	特殊ルールなし・速い連射と短い射程	No special rule · Fast fire, short range	無特殊規則 · 連射快、射程短	无特殊规则 · 连射快、射程短
+ui.job.ranged.rule	특수 규칙 없음 · 호스트마다 액티브 · 패시브가 다름	特殊ルールなし・ホストごとにアクティブ・パッシブが異なる	No special rule · Each host has its own Active and Passive	無特殊規則 · 每個宿主的主動與被動技能不同	无特殊规则 · 每个宿主的主动与被动技能不同
+ui.hostselect.tip	호스트마다 이동 속도, 공격 방식, 스킬이 다릅니다.\n다양한 호스트를 경험해 보세요!	HOSTごとに移動速度、攻撃方法、スキルが異なります。\nいろいろなHOSTを試してみましょう！	Each HOST differs in speed, attack, and Skills.\nTry out many HOSTs!	每個HOST的移動速度、攻擊方式與技能各不相同。\n多試試各種HOST吧！	每个HOST的移动速度、攻击方式和技能各不相同。\n多试试各种HOST吧！
+ui.hostselect.owned	보유 호스트  {0}/{1}	所持HOST  {0}/{1}	HOSTs Owned  {0}/{1}	已擁有HOST  {0}/{1}	已拥有HOST  {0}/{1}
 ui.hostselect.gold_short	골드가 모자란다.\n{0}({1}) — {2:N0} / {3:N0}\n\n유령으로 시작하면 골드가 들지 않는다.	ゴールドが足りません。\n{0}（{1}） — {2:N0} / {3:N0}\n\nゴーストで開始すればゴールドはかかりません。	Not enough Gold.\n{0} ({1}) — {2:N0} / {3:N0}\n\nStarting as a Ghost costs no Gold.	金幣不足。\n{0}（{1}） — {2:N0} / {3:N0}\n\n以幽靈開始則不需金幣。	金币不足。\n{0}（{1}） — {2:N0} / {3:N0}\n\n以幽灵开始则不消耗金币。
 ui.attack.melee_drain	근접 · 흡혈	近接・吸血	Melee · Drain	近戰 · 吸血	近战 · 吸血
 ui.attack.melee	근접	近接	Melee	近戰	近战
@@ -429,34 +429,34 @@ ui.attack.rapid	연사	連射	Rapid	連射	连射
 ui.attack.spread	확산 {0}발	拡散{0}発	Spread ×{0}	擴散{0}發	散射{0}发
 ui.attack.pierce	관통	貫通	Pierce	貫穿	穿透
 ui.attack.snipe	저격	狙撃	Snipe	狙擊	狙击
-ui.attack.pulse	주위 광역	周囲範囲	Area Pulse	周圍範圍	周围范围
+ui.attack.pulse	주변 광역	周囲範囲	Area Pulse	周圍範圍	周围范围
 ui.unlock.stage	CH{0} · {1}스테이지	CH{0}・ステージ{1}	CH{0} · Stage {1}	CH{0} · 第{1}關	CH{0} · 第{1}关
 ui.unlock.boss	CH{0} 보스 격파	CH{0} ボス撃破	Defeat CH{0} Boss	擊敗CH{0}頭目	击败CH{0}头目
-ui.shrine.full_heal.title	몸을 아문다	体を癒す	Mend the Body	治癒身體	治愈身体
+ui.shrine.full_heal.title	호스트 체력 회복	ホスト体力回復	Heal Host	恢復宿主體力	恢复宿主体力
 ui.shrine.full_heal.desc	호스트 체력을 가득 채운다	ホストの体力を全回復する	Fully restore Host HP	宿主生命完全回復	宿主生命完全恢复
 ui.shrine.full_heal.result	호스트 체력을 가득 채웠다	ホストの体力を全回復した	Host HP fully restored	宿主生命已完全回復	宿主生命已完全恢复
-ui.shrine.soul_heal.title	영혼을 채운다	魂を満たす	Fill the Soul	充盈靈魂	充盈灵魂
-ui.shrine.soul_heal.desc	고스트 체력을 가득 채운다	ゴーストの体力を全回復する	Fully restore Ghost HP	幽靈生命完全回復	幽灵生命完全恢复
-ui.shrine.soul_heal.result	고스트 체력을 가득 채웠다	ゴーストの体力を全回復した	Ghost HP fully restored	幽靈生命已完全回復	幽灵生命已完全恢复
-ui.shrine.max_hp.title	그릇을 넓힌다	器を広げる	Widen the Vessel	拓寬容器	拓宽容器
-ui.shrine.max_hp.desc	뺏는 몸이 더 튼튼해진다	奪う体がより頑丈になる	Stolen bodies get sturdier	奪取的身體更加結實	夺取的身体更加结实
-ui.shrine.max_hp.result	뺏는 몸이 더 튼튼해졌다	奪う体がより頑丈になった	Stolen bodies got sturdier	奪取的身體變得更結實了	夺取的身体变得更结实了
-ui.shrine.atk.title	힘을 받는다	力を授かる	Receive Power	獲得力量	获得力量
+ui.shrine.soul_heal.title	유령 체력 회복	ゴースト体力回復	Heal Ghost	恢復幽靈體力	恢复幽灵体力
+ui.shrine.soul_heal.desc	유령 체력을 가득 채운다	ゴーストの体力を全回復する	Fully restore Ghost HP	幽靈生命完全回復	幽灵生命完全恢复
+ui.shrine.soul_heal.result	유령 체력을 가득 채웠다	ゴーストの体力を全回復した	Ghost HP fully restored	幽靈生命已完全回復	幽灵生命已完全恢复
+ui.shrine.max_hp.title	최대 체력 증가	最大体力アップ	Max HP Up	最大HP提升	最大HP提升
+ui.shrine.max_hp.desc	앞으로 빙의하는 호스트의 최대 체력이 늘어난다	これから憑依するホストの最大体力が増える	Hosts you possess from now on gain increased max HP.	之後附身的宿主最大HP提升	之后附身的宿主最大HP提升
+ui.shrine.max_hp.result	앞으로 빙의하는 호스트의 최대 체력이 늘어났다	これから憑依するホストの最大体力が増えた	Hosts you possess from now on have increased max HP.	之後附身的宿主最大HP已提升	之后附身的宿主最大HP已提升
+ui.shrine.atk.title	공격력 증가	攻撃力アップ	Attack Up	攻擊力提升	攻击力提升
 ui.shrine.atk.desc	공격력이 오른다	攻撃力が上がる	Attack goes up	攻擊力提升	攻击力提升
 ui.shrine.atk.result	공격력이 올랐다	攻撃力が上がった	Attack went up	攻擊力提升了	攻击力提升了
-ui.shrine.speed.title	손이 빨라진다	手が速くなる	Quicken Hands	加快出手	加快出手
+ui.shrine.speed.title	공격 속도 증가	攻撃速度アップ	Attack Speed Up	攻擊速度提升	攻击速度提升
 ui.shrine.speed.desc	공격이 빨라진다	攻撃が速くなる	Attacks get faster	攻擊變快	攻击变快
 ui.shrine.speed.result	공격이 빨라졌다	攻撃が速くなった	Attacks got faster	攻擊變快了	攻击变快了
-ui.shrine.range.title	멀리 닿는다	遠くまで届く	Reach Farther	觸及遠方	触及远方
+ui.shrine.range.title	사거리 증가	射程アップ	Range Up	射程提升	射程提升
 ui.shrine.range.desc	사거리가 늘어난다	射程が伸びる	Range increases	射程增加	射程增加
 ui.shrine.range.result	사거리가 늘어났다	射程が伸びた	Range increased	射程增加了	射程增加了
-ui.shrine.card_pick.title	카드를 고른다	カードを選ぶ	Pick a Card	選擇卡片	选择卡片
-ui.shrine.card_pick.desc	레어 이상 카드 셋 중 하나를 가져간다	レア以上のカード3枚から1枚選ぶ	Choose 1 of 3 Rare+ cards	從3張稀有以上卡片中選1張	从3张稀有以上卡片中选1张
-ui.shrine.card_up.title	카드를 벼린다	カードを鍛える	Hone a Card	強化卡片	强化卡片
+ui.shrine.card_pick.title	카드 선택	カード選択	Pick a Card	選擇卡片	选择卡片
+ui.shrine.card_pick.desc	희귀 이상 카드 3장 중 1장을 고른다	レア以上のカード3枚から1枚を選ぶ	Pick 1 of 3 Rare-or-better cards	從3張稀有以上卡片中選1張	从3张稀有以上卡片中选1张
+ui.shrine.card_up.title	카드 강화	カード強化	Upgrade a Card	強化卡片	强化卡片
 ui.shrine.card_up.desc	가진 카드 하나의 레벨이 오른다	所持カード1枚のレベルが上がる	Level up one of your cards	一張已有卡片等級提升	一张已有卡片等级提升
 ui.opening.skip	건너뛰기	スキップ	Skip	跳過	跳过
-ui.ingame.ghost_sub	육체와 별개로 유지되는 영혼 체력	肉体とは別に保たれる魂の体力	Soul HP, kept apart from the body	獨立於肉體之外的靈魂生命	独立于肉体之外的灵魂生命
-ui.ingame.emergency_host	긴급 빙의 — GHOST -{0}	緊急憑依 — GHOST -{0}	Emergency Possess — GHOST -{0}	緊急附身 — GHOST -{0}	紧急附身 — GHOST -{0}
+ui.ingame.ghost_sub	호스트와 별개인 유령 체력	ホストとは別のゴースト体力	Ghost HP, separate from your host	與宿主分開的幽靈體力	与宿主分开的幽灵体力
+ui.ingame.emergency_host	긴급 빙의 — 유령 체력 -{0}	緊急憑依 — GHOST -{0}	Emergency Possess — GHOST -{0}	緊急附身 — GHOST -{0}	紧急附身 — GHOST -{0}
 ui.ingame.exit_opened	출구가 열렸다 — 통과해서 다음 스테이지로	出口が開いた — 通り抜けて次のステージへ	Exit open — go through to the next stage	出口已開啟 — 穿過前往下一關	出口已开启 — 穿过前往下一关
 ui.ingame.no_host_to_possess	빙의할 호스트가 없습니다	憑依できるホストがいません	No host to possess	沒有可附身的宿主	没有可附身的宿主
 ui.ingame.event.reward	보상 · {0}	報酬・{0}	Reward · {0}	獎勵 · {0}	奖励 · {0}
@@ -465,7 +465,7 @@ ui.shrine.title	회복의 제단	回復の祭壇	Altar of Healing	回復祭壇	�
 ui.shrine.hint	하나만 가져갈 수 있다	ひとつだけ持っていける	You may take only one	只能拿走一樣	只能拿走一样
 ui.shop.gold	보유 골드 {0:N0}	所持ゴールド {0:N0}	Gold {0:N0}	持有金幣 {0:N0}	持有金币 {0:N0}
 ui.buff.sub	카드를 선택하세요	カードを選択してください	Choose a Card	請選擇卡片	请选择卡片
-ui.ingame.result.clear	스테이지 클리어!\n골드 +{0}   고스트 EXP +{1}	ステージクリア！\nゴールド+{0}   ゴーストEXP+{1}	Stage Clear!\nGold +{0}   Ghost EXP +{1}	關卡通關！\n金幣+{0}   幽靈EXP+{1}	关卡通关！\n金币+{0}   幽灵EXP+{1}
+ui.ingame.result.clear	스테이지 클리어!\n골드 +{0}   유령 경험치 +{1}	ステージクリア！\nゴールド+{0}   ゴーストEXP+{1}	Stage Clear!\nGold +{0}   Ghost EXP +{1}	關卡通關！\n金幣+{0}   幽靈EXP+{1}	关卡通关！\n金币+{0}   幽灵EXP+{1}
 ui.ingame.result.dead	유령이 소멸했습니다.\n로비로 돌아갑니다.	ゴーストが消滅しました。\nロビーに戻ります。	Your Ghost has faded.\nReturning to lobby.	幽靈消散了。\n返回大廳。	幽灵消散了。\n返回大厅。
 ui.ingame.result.to_lobby	로비로	ロビーへ	To Lobby	返回大廳	返回大厅
 ui.ingame.pause.message	스테이지를 포기하고 로비로 돌아갈까요?	ステージを諦めてロビーに戻りますか？	Give up the stage and return to lobby?	要放棄關卡並返回大廳嗎？	要放弃关卡并返回大厅吗？
@@ -477,15 +477,15 @@ ui.dodge.gap	틈으로	隙間へ	Into the gap	鑽空隙	钻空隙
 ui.dodge.perp	직각으로	直角へ	Cut across	垂直閃避	垂直闪避
 ui.dodge.zone	안전지대로	安全地帯へ	To safe zone	去安全區	去安全区
 ui.dodge.close	붙어라	張り付け	Close in	貼近	贴近
-ui.dodge.swap	몸을 갈아타라	体を乗り換えろ	Switch bodies	換身體	换身体
+ui.dodge.swap	호스트를 바꿔라	ホストを乗り換えろ	Switch hosts	換宿主	换宿主
 ui.dodge.hold	쏘지 마라	撃つな	Hold fire	別開火	别开火
 ui.battle.head_exposed	머리 노출	頭部露出	Head Exposed	頭部暴露	头部暴露
 ui.consumable.bomb.name	폭탄	爆弾	Bomb	炸彈	炸弹
-ui.consumable.bomb.desc	다음 방이 열리면 광역 한 방	次の部屋が開いたら範囲攻撃を一発	AoE blast when the next Room opens	下個房間開啟時發動一次範圍攻擊	下个房间开启时释放一次范围攻击
+ui.consumable.bomb.desc	다음 방 시작 시 광역 폭발	次の部屋が開いたら範囲攻撃を一発	AoE blast when the next Room opens	下個房間開啟時發動一次範圍攻擊	下个房间开启时释放一次范围攻击
 ui.consumable.ally.name	동료	仲間	Ally	夥伴	伙伴
-ui.consumable.ally.desc	다음 방에서 몸 하나가 같이 싸운다	次の部屋で体がひとつ一緒に戦う	A body fights beside you next Room	下個房間有一具身體並肩作戰	下个房间有一具身体并肩作战
+ui.consumable.ally.desc	다음 방에서 아군 호스트 하나가 함께 싸운다	次の部屋で味方のホストが1体一緒に戦う	An allied host fights beside you next Room	下個房間會有一名友方宿主並肩作戰	下个房间会有一名友方宿主并肩作战
 ui.consumable.freeze.name	정지	停止	Freeze	靜止	静止
-ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초 멈춘다	次の部屋で敵が{0:0}秒止まる	Foes freeze {0:0}s in the next Room	下個房間敵人靜止{0:0}秒	下个房间敌人静止{0:0}秒
+ui.consumable.freeze.desc	다음 방에서 적이 {0:0}초간 멈춘다	次の部屋で敵が{0:0}秒止まる	Foes freeze {0:0}s in the next Room	下個房間敵人靜止{0:0}秒	下个房间敌人静止{0:0}秒
 ui.lobby.mode.survival.name	망령의 밤	亡霊の夜	Night of Specters	亡靈之夜	亡灵之夜
 ui.lobby.mode.survival.desc	끝까지 살아남아라	最後まで生き残れ	Survive to the end	堅持存活到最後	坚持存活到最后
 ui.lobby.mode.scenario.name	시나리오 모드	シナリオモード	Scenario Mode	劇情模式	剧情模式
@@ -558,9 +558,9 @@ ui.growth.help.stats	골드로 능력치를 영구히 올립니다.\n유령 육�
 ui.growth.help.path	챕터를 클리어하면 유령 경험치를 얻습니다.\n정해진 레벨에 닿으면 보상을 받을 수 있습니다.	チャプターをクリアするとゴースト経験値を獲得します。\n決まったレベルに達すると報酬を受け取れます。	Clear chapters to earn ghost EXP.\nReach milestone levels to claim rewards.	通關章節可獲得幽靈經驗值。\n達到指定等級即可領取獎勵。	通关章节可获得幽灵经验值。\n达到指定等级即可领取奖励。
 ui.growth.ghost.name	유령	ゴースト	Ghost	幽靈	幽灵
 ui.growth.ghost.desc	세상을 떠도는 정의로운 영혼.\n아직 끝나지 않은 이야기를 위해\n오늘도 함께합니다.	世をさまよう正義の魂。\nまだ終わらない物語のために\n今日も共に戦います。	A righteous soul adrift in the world,\nfighting on for a story\nthat isn't over yet.	遊蕩於世間的正義靈魂。\n為了尚未結束的故事，\n今天也並肩作戰。	游荡于世间的正义灵魂。\n为了尚未结束的故事，\n今天也并肩作战。
-ui.stat.hp	최대 HP	最大HP	Max HP	最大HP	最大HP
+ui.stat.hp	최대 체력	最大HP	Max HP	最大HP	最大HP
 ui.stat.atk	공격력	攻撃力	Attack	攻擊力	攻击力
-ui.stat.crit	크리티컬 확률	クリティカル率	Crit Chance	暴擊率	暴击率
+ui.stat.crit	치명타 확률	クリティカル率	Crit Chance	暴擊率	暴击率
 ui.stat.atkspeed	공격 속도	攻撃速度	Attack Speed	攻擊速度	攻击速度
 ui.stat.range	사거리	射程	Range	射程	射程
 ui.stat.movespeed	이동 속도	移動速度	Move Speed	移動速度	移动速度
@@ -570,7 +570,7 @@ host.amazon.desc	정글의 전사.\n날랜 몸놀림으로 적을 벤다.	ジャ
 host.amazon_elite.desc	아마존 전사단의 정예.\n반격으로 흐름을 뒤집는다.	アマゾネス戦士団の精鋭。\n反撃で流れをひっくり返す。	Elite of the Amazon warband who\nturns the tide with counters.	亞馬遜戰士團的精英。\n以反擊扭轉局勢。	亚马逊战士团的精英。\n以反击扭转局势。
 host.hopper.desc	뛰어오르며 싸우는 무법자.\n멈추지 않는 기세가 무기다.	跳ね回って戦う無法者。\n止まらない勢いが武器だ。	An outlaw who fights on the hop.\nMomentum is the weapon.	邊跳邊戰的亡命之徒。\n停不下來的氣勢就是武器。	边跳边战的亡命之徒。\n停不下来的气势就是武器。
 host.hopper_smg.desc	기관단총을 든 호퍼.\n쉴 새 없이 탄을 퍼붓는다.	サブマシンガンを持つホッパー。\n絶え間なく弾を浴びせる。	A hopper with an SMG who never\nstops pouring out bullets.	手持衝鋒槍的跳躍者。\n毫不停歇地傾瀉子彈。	手持冲锋枪的跳跃者。\n毫不停歇地倾泻子弹。
-host.commando_mg.desc	어떤 전장에서도 임무를 완수하는\n특수부대원입니다.	どんな戦場でも任務を完遂する\n特殊部隊員です。	A special forces soldier who completes\nthe mission on any battlefield.	無論在何種戰場都能完成任務的\n特種部隊士兵。	无论在何种战场都能完成任务的\n特种部队士兵。
+host.commando_mg.desc	기관총을 든 특수부대원.\n어떤 전장에서도 임무를 완수한다.	どんな戦場でも任務を完遂する\n特殊部隊員です。	A special forces soldier who completes\nthe mission on any battlefield.	無論在何種戰場都能完成任務的\n特種部隊士兵。	无论在何种战场都能完成任务的\n特种部队士兵。
 host.commando_laser.desc	레이저 소총을 쓰는 코만도.\n멀리서 한 줄로 꿰뚫는다.	レーザーライフルのコマンドー。\n遠くから一直線に貫く。	A commando with a laser rifle who\npierces enemies from afar.	使用雷射步槍的突擊兵。\n從遠處一線貫穿敵人。	使用激光步枪的突击兵。\n从远处一线贯穿敌人。
 host.commando_grenade.desc	수류탄을 다루는 코만도.\n뭉친 적을 한꺼번에 날린다.	手榴弾を扱うコマンドー。\n固まった敵をまとめて吹き飛ばす。	A grenadier commando who blasts\nclustered enemies at once.	擅用手榴彈的突擊兵。\n把聚集的敵人一口氣炸飛。	擅用手榴弹的突击兵。\n把聚集的敌人一口气炸飞。
 host.salamander.desc	불을 뿜는 도마뱀 인간.\n가까이 오는 적을 태운다.	火を吐くトカゲ人間。\n近づく敵を焼き尽くす。	A fire-breathing lizardman who\nburns anyone who comes close.	會噴火的蜥蜴人。\n燒盡靠近的敵人。	会喷火的蜥蜴人。\n烧尽靠近的敌人。
@@ -581,7 +581,7 @@ host.white_wizard.desc	흰 옷의 마법사.\n멀리서 마력을 쏘아 보낸�
 host.medium.desc	영혼을 부르는 무녀.\n보이지 않는 힘으로 싸운다.	霊を呼ぶ巫女。\n見えない力で戦う。	A medium who calls on spirits\nand fights with unseen power.	召喚靈魂的巫女。\n以看不見的力量戰鬥。	召唤灵魂的巫女。\n以看不见的力量战斗。
 host.ninja.desc	그림자 속의 닌자.\n빠른 손으로 급소를 노린다.	影にひそむ忍者。\n素早い手で急所を狙う。	A ninja in the shadows who strikes\nvital points with quick hands.	潛伏於暗影中的忍者。\n以迅捷之手直取要害。	潜伏于暗影中的忍者。\n以迅捷之手直取要害。
 host.ninja_chain.desc	사슬낫을 쓰는 닌자.\n먼 거리에서 적을 낚아챈다.	鎖鎌を使う忍者。\n離れた敵を絡め取る。	A chain-sickle ninja who snares\nenemies from far away.	使用鎖鏈鐮的忍者。\n從遠處擒住敵人。	使用锁链镰的忍者。\n从远处擒住敌人。
-host.robot.desc	고철로 만든 전투 로봇.\n예비 회로로 몇 번이고 일어난다.	鉄くずで作られた戦闘ロボット。\n予備回路で何度でも立ち上がる。	A scrap-built battle robot that gets\nback up on spare circuits.	用廢鐵打造的戰鬥機器人。\n靠備用迴路一次次重新站起。	用废铁打造的战斗机器人。\n靠备用回路一次次重新站起。
+host.robot.desc	고철로 만든 전투 로봇.\n예비 회로로 쉬지 않고 싸운다.	スクラップで作られた戦闘ロボ。\n予備回路で休まず戦い続ける。	A combat robot built from scrap.\nIts spare circuits keep it fighting nonstop.	用廢鐵打造的戰鬥機器人。\n靠備用迴路不停戰鬥。	用废铁打造的战斗机器人。\n靠备用回路不停战斗。
 host.baseball.desc	방망이를 든 강타자.\n한 번 휘두르면 담장을 넘긴다.	バットを握る強打者。\nひと振りでフェンスを越える。	A power hitter whose single swing\nsends foes over the fence.	手握球棒的強打者。\n一揮就打出全壘打。	手握球棒的强打者。\n一挥就打出本垒打。
 host.snowwoman.desc	눈을 부르는 설녀.\n차가운 손길로 적을 얼린다.	雪を呼ぶ雪女。\n冷たい手で敵を凍らせる。	A snow woman whose icy touch\nfreezes her foes.	召喚風雪的雪女。\n以冰冷之手凍結敵人。	召唤风雪的雪女。\n以冰冷之手冻结敌人。
 host.vampire.desc	밤의 귀족 흡혈귀.\n적의 피로 상처를 메운다.	夜の貴族、吸血鬼。\n敵の血で傷をふさぐ。	A vampire noble of the night who\nheals on the blood of foes.	暗夜貴族吸血鬼。\n以敵人之血癒合傷口。	暗夜贵族吸血鬼。\n以敌人之血愈合伤口。
@@ -639,8 +639,8 @@ ui.shop.daily.fail.refresh_limit	오늘은 더 새로고침할 수 없습니다.
 ui.shop.daily.fail.unknown	지금은 살 수 없습니다.	今は購入できません。	Cannot buy right now.	目前無法購買。	目前无法购买。
 ui.growth.essence.exchange	정수 {0}개로 조각 1개	エッセンス{0}個で欠片1個	{0} essence → 1 shard	{0}個精華換1個碎片	{0}个精华换1个碎片
 ui.growth.essence.short	정수가 부족합니다 ({0}/{1})	エッセンスが足りません ({0}/{1})	Not enough essence ({0}/{1})	精華不足 ({0}/{1})	精华不足 ({0}/{1})
-ui.ingame.nohost_hint	빙의할 몸을 찾으세요	憑依する体を探そう	Find a body to possess	尋找可附身的身體	寻找可附身的身体
-ui.stat.critdmg	크리티컬 피해	クリティカルダメージ	Crit Damage	暴擊傷害	暴击伤害
+ui.ingame.nohost_hint	빙의할 호스트를 찾으세요	憑依するホストを探そう	Find a host to possess	尋找可附身的宿主	寻找可附身的宿主
+ui.stat.critdmg	치명타 피해	クリティカルダメージ	Crit Damage	暴擊傷害	暴击伤害
 ui.stat.def	방어력	防御力	Defense	防禦力	防御力
 ui.starup.title	성급 올리기	星級アップ	Star Up	提升星級	提升星级
 ui.starup.button	성급 UP	星級UP	STAR UP	星級UP	星级UP
@@ -655,24 +655,24 @@ ui.starup.spec_lock	Lv.{0} 특수 효과	Lv.{0} 特殊効果	Lv.{0} special	Lv.{
 ui.starup.maxed	최대 성급입니다.	最大星級です。	Max stars reached.	已達最高星級。	已达最高星级。
 ui.starup.shard_short	조각이 모자랍니다.\n{0} / {1}  ({2}개 더)	欠片が足りません。\n{0} / {1}（あと{2}個）	Not enough shards.\n{0} / {1} ({2} more)	碎片不足。\n{0} / {1}（還差{2}個）	碎片不足。\n{0} / {1}（还差{2}个）
 ui.starup.gold_short	골드가 모자랍니다.\n{0} / {1}  ({2} 더)	ゴールドが足りません。\n{0} / {1}（あと{2}）	Not enough gold.\n{0} / {1} ({2} more)	金幣不足。\n{0} / {1}（還差{2}）	金币不足。\n{0} / {1}（还差{2}）
-ui.starup.confirm	{0}  {1}\n파편 {2}개 · 골드 {3}을 씁니다.	{0}  {1}\n欠片{2}個・ゴールド{3}を使用します。	{0}  {1}\nUses {2} shards and {3} gold.	{0}  {1}\n消耗碎片{2}個 · 金幣{3}。	{0}  {1}\n消耗碎片{2}个 · 金币{3}。
+ui.starup.confirm	{0}  {1}\n조각 {2}개 · 골드 {3}을 씁니다.	{0}  {1}\n欠片{2}個・ゴールド{3}を使用します。	{0}  {1}\nUses {2} shards and {3} gold.	{0}  {1}\n消耗碎片{2}個 · 金幣{3}。	{0}  {1}\n消耗碎片{2}个 · 金币{3}。
 ui.starup.done	성급이 올랐습니다!	星級が上がりました！	Stars up!	星級提升了！	星级提升了！
 ui.growth.skill.active	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL
 ui.growth.skill.passive	PASSIVE	PASSIVE	PASSIVE	PASSIVE	PASSIVE
 ui.growth.skill.header	스킬	スキル	Skills	技能	技能
-pskill.psv_amazon.growth	이동속도	移動速度	Move speed	移動速度	移动速度
+pskill.psv_amazon.growth	이동 속도	移動速度	Move speed	移動速度	移动速度
 pskill.psv_counter.growth	공격력	攻撃力	Attack	攻擊力	攻击力
 pskill.psv_slugger.growth	날려 보낼 확률	吹き飛ばし確率	Fling chance	擊飛機率	击飞概率
-pskill.psv_ninja_chain.growth	회피	回避	Dodge	閃避	闪避
+pskill.psv_ninja_chain.growth	회피 확률	回避	Dodge	閃避	闪避
 pskill.psv_dragoon.growth	화상 확률	火傷確率	Burn chance	燒傷機率	灼烧概率
 pskill.psv_salamander.growth	중독 확률	毒確率	Poison chance	中毒機率	中毒概率
 pskill.psv_dragon_blue.growth	번개 확률	落雷確率	Lightning chance	落雷機率	落雷概率
 pskill.psv_commando_grenade.growth	방어 무시	防御無視	Armor pierce	無視防禦	无视防御
 pskill.psv_snowwoman.growth	빙결 확률	凍結確率	Freeze chance	冰凍機率	冰冻概率
-pskill.psv_hopper_smg.growth	밀쳐내기 확률	ノックバック確率	Knockback chance	擊退機率	击退概率
+pskill.psv_hopper_smg.growth	넉백 확률	ノックバック確率	Knockback chance	擊退機率	击退概率
 pskill.psv_commando_mg.growth	방어력 증가	防御力上昇	Defense up	防禦力提升	防御力提升
 pskill.psv_thug.growth	골드 증가	ゴールド増加	Gold up	金幣增加	金币增加
-pskill.psv_ninja.growth	이동속도	移動速度	Move speed	移動速度	移动速度
+pskill.psv_ninja.growth	이동 속도	移動速度	Move speed	移動速度	移动速度
 pskill.psv_leech.growth	발동 확률	発動確率	Proc chance	發動機率	触发概率
 pskill.psv_gangster.growth	즉사 확률	即死確率	Execute chance	即死機率	即死概率
 pskill.psv_momentum.growth	치명타 피해	クリティカルダメージ	Crit damage	暴擊傷害	暴击伤害
@@ -691,7 +691,7 @@ askill.psg_h11.growth	난사 시간	乱射時間	Barrage time	掃射時間	扫�
 askill.psg_h12.growth	피해 감소	被ダメージ減少	Damage taken down	減傷	减伤
 askill.psg_h13.growth	정조준 시간	狙撃時間	Aim time	瞄準時間	瞄准时间
 askill.psg_h14.growth	무적 시간	無敵時間	Invincible time	無敵時間	无敌时间
-askill.psg_h17.growth	결박 시간	拘束時間	Bind time	束縛時間	束缚时间
+askill.psg_h17.growth	속박 시간	拘束時間	Bind time	束縛時間	束缚时间
 askill.psg_h19.growth	포탑 피해	砲台ダメージ	Turret damage	砲塔傷害	炮塔伤害
 askill.psg_h20.growth	반사 시간	反射時間	Reflect time	反射時間	反射时间
 askill.psg_h21.growth	얼음 시간	氷結時間	Ice time	冰凍時間	冰冻时间
@@ -705,7 +705,7 @@ ui.chapterhost.recpower	권장 전투력 {0}	推奨戦闘力 {0}	Rec. Power {0}	
 ui.chapterhost.random	랜덤 선택	ランダム選択	Random Pick	隨機選擇	随机选择
 ui.chapterhost.randomdesc1	모든 호스트 중 하나가 랜덤으로 선택됩니다.	全ホストの中から1体がランダムで選ばれます。	One of all hosts is picked at random.	將從所有宿主中隨機選出一名。	将从所有宿主中随机选出一名。
 ui.chapterhost.randomdesc2	낮은 확률로 전설 호스트 등장!	低確率で伝説のホストが登場！	Small chance of a legendary host!	低機率出現傳說宿主！	低概率出现传说宿主！
-ui.chapterhost.ghost_power	몸 없음	体なし	No body	無身體	无身体
+ui.chapterhost.ghost_power	호스트 없음	ホストなし	No host	無宿主	无宿主
 uskill.gangster.name	청부 처형	請負処刑	Contract Execution	契約處決	契约处决
 uskill.gangster.en	Contract Execution	Contract Execution	Contract Execution	Contract Execution	Contract Execution
 uskill.hopper.name	킬 포인트	キルポイント	Kill Point	擊殺點	击杀点
@@ -755,22 +755,22 @@ uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed	Wrath Unl
 ui.ingame.ultimate	필살기	必殺技	SPECIAL	必殺技	必杀技
 ui.ingame.ult_trial	체험	お試し	TRIAL	體驗	体验
 ui.ingame.ult_locked	잠김	ロック	LOCKED	未解鎖	未解锁
-ui.ingame.ult_trial_spent	조각을 모으면 매번 쓸 수 있어요	欠片を集めると毎回使えます	Get shards to use it every time	收集碎片即可每次使用	收集碎片即可每次使用
+ui.ingame.ult_trial_spent	호스트를 해금하면 필살기를 계속 쓸 수 있어요	ホストを解放すると必殺技をいつでも使えます	Unlock this host to use its Special anytime	解鎖宿主即可隨時使用必殺技	解锁宿主即可随时使用必杀技
 ui.start.title	출전 방식	出撃方法	Start Mode	出擊方式	出击方式
-ui.start.mode.host	몸 골라	体を選ぶ	Pick a Body	選擇身體	选择身体
-ui.start.mode.host_today	오늘의 몸 · 골드 무료	今日の体・ゴールド無料	Today's Body · Free	今日身體 · 免金幣	今日身体 · 免金币
+ui.start.mode.host	호스트 선택	ホストを選ぶ	Pick a Host	選擇宿主	选择宿主
+ui.start.mode.host_today	오늘의 호스트 · 골드 무료	今日のホスト・ゴールド無料	Today's Host · Free	今日宿主 · 免金幣	今日宿主 · 免金币
 ui.start.mode.random	? 랜덤	? ランダム	? Random	? 隨機	? 随机
 ui.start.mode.random_note	클리어 시\n조각 +{0} · 골드 +{1}%	クリア時\n欠片+{0}・ゴールド+{1}%	On clear\nShards +{0} · Gold +{1}%	通關時\n碎片 +{0} · 金幣 +{1}%	通关时\n碎片 +{0} · 金币 +{1}%
 ui.start.mode.ghost	유령	ゴースト	Ghost	幽靈	幽灵
 ui.start.mode.ghost_note	클리어 시\n유령 경험치 +{0}%	クリア時\nゴースト経験値+{0}%	On clear\nGhost EXP +{0}%	通關時\n幽靈經驗 +{0}%	通关时\n幽灵经验 +{0}%
-ui.start.dim.random	랜덤 출전 — 몸은 판이 시작될 때 정해져요	ランダム出撃 — 体はステージ開始時に決まります	Random — your body is chosen when the run starts	隨機出擊 — 身體在關卡開始時決定	随机出击 — 身体在关卡开始时决定
-ui.start.dim.ghost	유령 출전 — 판 안에서 몸을 빼앗아 싸워요	ゴースト出撃 — ステージ内で体を奪って戦います	Ghost — steal bodies inside the run	幽靈出擊 — 在關卡中奪取身體戰鬥	幽灵出击 — 在关卡中夺取身体战斗
-ui.start.today	오늘의 몸	今日の体	Today	今日身體	今日身体
-ui.start.today_note	오늘의 몸 {0}명 무료 · {1} 뒤 바뀜	今日の体 {0}人無料・{1}後に交代	{0} free today · changes in {1}	今日身體 {0}名免費 · {1}後更換	今日身体 {0}个免费 · {1}后更换
+ui.start.dim.random	랜덤 출전 — 호스트는 판이 시작될 때 정해져요	ランダム出撃 — ホストはステージ開始時に決まります	Random — your host is chosen when the run starts	隨機出擊 — 宿主在關卡開始時決定	随机出击 — 宿主在关卡开始时决定
+ui.start.dim.ghost	유령 출전 — 판 안에서 적에게 빙의해 싸워요	ゴースト出撃 — ステージ内で敵に憑依して戦います	Ghost — possess enemies inside the run	幽靈出擊 — 在關卡中附身敵人戰鬥	幽灵出击 — 在关卡中附身敌人战斗
+ui.start.today	오늘의 호스트	今日のホスト	Today's Host	今日宿主	今日宿主
+ui.start.today_note	오늘의 호스트 {0}명 무료 · {1} 뒤 교체	今日の体 {0}人無料・{1}後に交代	{0} free today · changes in {1}	今日身體 {0}名免費 · {1}後更換	今日身体 {0}个免费 · {1}后更换
 ui.start.info.random	? 랜덤 출전	? ランダム出撃	? Random Start	? 隨機出擊	? 随机出击
-ui.start.info.random1	몸은 판이 시작될 때 정해져요.	体はステージ開始時に決まります。	Your body is decided when the run starts.	身體在關卡開始時決定。	身体在关卡开始时决定。
-ui.start.note.grown	빼앗은 몸도 내가 키운 만큼 세요.	奪った体も育てた分だけ強い。	Stolen bodies are as strong as you've trained them.	奪來的身體也和你培養的一樣強。	夺来的身体也和你培养的一样强。
-ui.start.ribbon.today	오늘의 몸 무료	今日の体 無料	Today's Free	今日身體免費	今日身体免费
+ui.start.info.random1	호스트는 판이 시작될 때 정해져요.	ホストはステージ開始時に決まります。	Your host is decided when the run starts.	宿主在關卡開始時決定。	宿主在关卡开始时决定。
+ui.start.note.grown	빙의한 호스트도 육성한 만큼 강해요.	憑依したホストも育てた分だけ強い。	Possessed hosts are as strong as you've trained them.	附身的宿主也和你培養的一樣強。	附身的宿主也和你培养的一样强。
+ui.start.ribbon.today	오늘의 호스트 무료	今日の体 無料	Today's Free	今日身體免費	今日身体免费
 ui.start.ribbon.luck	행운 보너스	ラッキーボーナス	Luck Bonus	幸運加成	幸运加成
 ui.start.ribbon.ghost	유령 출전	ゴースト出撃	Ghost Start	幽靈出擊	幽灵出击
 ui.stamina.short	행동력이 부족해요\n필요 {0} · 보유 {1} · 다음 회복 {2}	スタミナが足りません\n必要{0}・所持{1}・次の回復{2}	Not enough stamina\nNeed {0} · Have {1} · Next in {2}	體力不足\n需要 {0} · 持有 {1} · 下次回復 {2}	体力不足\n需要 {0} · 拥有 {1} · 下次恢复 {2}
@@ -794,28 +794,28 @@ ui.tower.week	이번 주 <color=#FFD23F>{0}층</color>	今週 <color=#FFD23F>{0}
 ui.tower.last_week	지난주 최고 {0}층	先週の最高 {0}階	Last week best F{0}	上週最高 {0}層	上周最高 {0}层
 ui.tower.floor	{0}층	{0}階	F{0}	{0}層	{0}层
 ui.tower.adv_enemy	적	敵	Foes	敵人	敌人
-ui.tower.adv	{0} 몸 유리 ▲	{0}の体が有利 ▲	{0} bodies ▲	{0}身體有利 ▲	{0}身体有利 ▲
+ui.tower.adv	{0} 호스트 유리 ▲	{0}のホストが有利 ▲	{0} hosts ▲	{0}宿主有利 ▲	{0}宿主有利 ▲
 ui.tower.fit	맞는 호스트 {0} · 내가 키운 ★{1}	対応ホスト {0}・育成済み ★{1}	Eligible {0} · Trained ★{1}	適用宿主 {0} · 已培養 ★{1}	适用宿主 {0} · 已培养 ★{1}
 ui.tower.fit_title	{0}층에 맞는 호스트	{0}階に対応するホスト	Hosts for F{0}	適用於{0}層的宿主	适用于{0}层的宿主
-ui.tower.first_clear	첫 클리어 보상 (매주 다시)	初回クリア報酬(毎週リセット)	First clear reward (weekly)	首次通關獎勵（每週重置）	首通奖励（每周重置）
+ui.tower.first_clear	첫 클리어 보상 (매주 초기화)	初回クリア報酬(毎週リセット)	First clear reward (weekly)	首次通關獎勵（每週重置）	首通奖励（每周重置）
 ui.tower.shard_count	조각 ×{0}	かけら ×{0}	Shards ×{0}	碎片 ×{0}	碎片 ×{0}
 ui.tower.sweep	오늘의 소탕	今日の掃討	Today's Sweep	今日掃蕩	今日扫荡
 ui.tower.sweep_basis	{0}층 기준	{0}階基準	Based on F{0}	以{0}層為準	以{0}层为准
 ui.tower.sweep_reward	{0} · 조각 ×{1}	{0}・かけら ×{1}	{0} · Shards ×{1}	{0} · 碎片 ×{1}	{0} · 碎片 ×{1}
-ui.tower.sweep_locked	1층을 깨면 받을 수 있다	1階をクリアすると受け取れる	Clear F1 to unlock	通關第1層即可領取	通关第1层即可领取
+ui.tower.sweep_locked	1층을 클리어하면 받을 수 있어요	1階をクリアすると受け取れる	Clear F1 to unlock	通關第1層即可領取	通关第1层即可领取
 ui.tower.sweep_btn	소탕	掃討	Sweep	掃蕩	扫荡
 ui.tower.sweep_done	오늘 받음	本日受取済	Claimed today	今日已領	今日已领
-ui.tower.sweep_hint	하루 1번 · 입장 횟수를 쓰지 않는다 · 싸우지 않고 받는다	1日1回・入場回数を使わない・戦わずに受け取る	Once a day · no entry used · no battle	每日1次 · 不消耗入場次數 · 無需戰鬥即可領取	每日1次 · 不消耗挑战次数 · 无需战斗即可领取
+ui.tower.sweep_hint	하루 1회 · 입장 횟수 소모 없음 · 전투 없이 보상 획득	1日1回・入場回数を使わない・戦わずに受け取る	Once a day · no entry used · no battle	每日1次 · 不消耗入場次數 · 無需戰鬥即可領取	每日1次 · 不消耗挑战次数 · 无需战斗即可领取
 ui.tower.sweep_result	소탕 완료	掃討完了	Sweep complete	掃蕩完成	扫荡完成
 ui.tower.entries_label	오늘 입장	今日の入場	Entries	今日入場	今日次数
 ui.tower.entries	{0} / {1}	{0} / {1}	{0} / {1}	{0} / {1}	{0} / {1}
 ui.tower.buy	추가 입장	追加入場	Extra entry	追加入場	增加次数
 ui.tower.start	{0}층 도전 ▶	{0}階に挑戦 ▶	Challenge F{0} ▶	挑戰{0}層 ▶	挑战{0}层 ▶
 ui.tower.start_buy	젬 {0} 추가 입장	ジェム{0} 追加入場	{0} gems: extra entry	寶石 {0} 追加入場	宝石 {0} 增加次数
-ui.tower.no_entries	내일 05:00에 3번	明日05:00に3回	3 more at 05:00 tomorrow	明天05:00恢復3次	明天05:00恢复3次
-ui.tower.start_hint	입장 1번 사용 · 이기든 지든 줄어든다	入場1回使用・勝敗に関わらず減る	Uses 1 entry · win or lose	消耗1次入場 · 無論勝敗都會扣除	消耗1次挑战次数 · 无论胜负都会扣除
-ui.mode.buy_ask	젬 {0}으로 1번 더 입장할까?\n(오늘 추가 입장 {1} / {2})	ジェム{0}で1回追加入場しますか?\n(今日の追加入場 {1} / {2})	Buy 1 more entry for {0} gems?\n(Extra today {1} / {2})	花費寶石 {0} 追加1次入場？\n（今日追加入場 {1} / {2}）	花费宝石 {0} 增加1次挑战？\n（今日已增加 {1} / {2}）
-ui.mode.buy_no_gem	젬이 모자라다	ジェムが足りない	Not enough gems	寶石不足	宝石不足
+ui.tower.no_entries	내일 05:00에 3회 충전	明日05:00に3回	3 more at 05:00 tomorrow	明天05:00恢復3次	明天05:00恢复3次
+ui.tower.start_hint	입장 1회 소모 · 승패와 관계없이 차감	入場1回使用・勝敗に関わらず減る	Uses 1 entry · win or lose	消耗1次入場 · 無論勝敗都會扣除	消耗1次挑战次数 · 无论胜负都会扣除
+ui.mode.buy_ask	젬 {0}개로 1회 추가 입장할까요?\n(오늘 추가 입장 {1} / {2})	ジェム{0}で1回追加入場しますか?\n(今日の追加入場 {1} / {2})	Buy 1 more entry for {0} gems?\n(Extra today {1} / {2})	花費寶石 {0} 追加1次入場？\n（今日追加入場 {1} / {2}）	花费宝石 {0} 增加1次挑战？\n（今日已增加 {1} / {2}）
+ui.mode.buy_no_gem	젬이 부족해요	ジェムが足りない	Not enough gems	寶石不足	宝石不足
 ui.mode.reward_gold	골드 {0}	ゴールド {0}	Gold {0}	金幣 {0}	金币 {0}
 ui.mode.span_dh	{0}일 {1}시간	{0}日{1}時間	{0}d {1}h	{0}天{1}小時	{0}天{1}小时
 ui.mode.span_hm	{0}시간 {1}분	{0}時間{1}分	{0}h {1}m	{0}小時{1}分	{0}小时{1}分
@@ -828,62 +828,62 @@ ui.night.fit	오늘 나오는 호스트 {0} · 내가 키운 ★{1}	今日のホ
 ui.night.best	{0}요일 최고 처치	{0}曜日の最高撃破	Best kills ({0})	星期{0}最高擊殺	星期{0}最高击杀
 ui.night.reward_label	보상	報酬	Rewards	獎勵	奖励
 ui.night.reward	처치 {0}마다 조각 1\n보스 처치 +{1}	{0}体撃破ごとにかけら1\nボス撃破 +{1}	1 shard per {0} kills\nBoss kill +{1}	每擊殺{0}隻得碎片1\n擊殺頭目 +{1}	每击杀{0}个得1碎片\n击杀头目 +{1}
-ui.night.flow.start	몸 셋 중 하나에 빙의	3体のうち1体に憑依	Possess 1 of 3	附身三個身體之一	附身三个身体之一
-ui.night.flow.wave_title	매 1분	毎1分	Every 1 min	每1分鐘	每1分钟
-ui.night.flow.wave	무리 속성 · 회복	群れの属性・回復	Horde type · heal	敵群屬性 · 回復	敌群属性 · 恢复
+ui.night.flow.start	호스트 3명 중 하나에 빙의	3体のホストから1体に憑依	Possess 1 of 3 hosts	附身三個宿主之一	附身三个宿主之一
+ui.night.flow.wave_title	1분마다	毎1分	Every 1 min	每1分鐘	每1分钟
+ui.night.flow.wave	적 속성 변경 · 체력 회복	敵の属性変化・体力回復	Enemy type shifts · Heal	敵人屬性變化 · 回復體力	敌人属性变化 · 回复体力
 ui.night.flow.big_title	{0}초마다	{0}秒ごと	Every {0}s	每{0}秒	每{0}秒
 ui.night.flow.big	대형 호스트	大型ホスト	Giant host	大型宿主	大型宿主
 ui.night.flow.boss	보스	ボス	Boss	頭目	头目
-ui.night.today_only	오늘만 시작할 수 있다	今日の分のみ開始できる	Only today can start	只能開始今日的關卡	只能开始今日的关卡
+ui.night.today_only	오늘만 도전할 수 있어요	今日の分のみ開始できる	Only today can start	只能開始今日的關卡	只能开始今日的关卡
 ui.night.start	시작 ▶	スタート ▶	Start ▶	開始 ▶	开始 ▶
 ui.night.day.mon	월	月	Mon	一	一
 ui.night.day_short.mon	근거리	近距離	Melee	近戰	近战
 ui.night.day_rule.mon	근거리의 날	近距離の日	Melee Day	近戰之日	近战日
-ui.night.day_desc.mon	근거리 호스트만 몸으로 나온다	近距離ホストだけが体として出る	Only melee hosts appear as bodies	只有近戰宿主會作為身體出現	只有近战宿主会作为身体出现
+ui.night.day_desc.mon	근거리 호스트만 등장	近距離ホストのみ登場	Only melee hosts appear as bodies	近戰宿主限定	近战宿主限定
 ui.night.day.tue	화	火	Tue	二	二
 ui.night.day_short.tue	원거리	遠距離	Ranged	遠程	远程
 ui.night.day_rule.tue	원거리의 날	遠距離の日	Ranged Day	遠程之日	远程日
-ui.night.day_desc.tue	원거리 호스트만 몸으로 나온다	遠距離ホストだけが体として出る	Only ranged hosts appear as bodies	只有遠程宿主會作為身體出現	只有远程宿主会作为身体出现
+ui.night.day_desc.tue	원거리 호스트만 등장	遠距離ホストのみ登場	Only ranged hosts appear as bodies	遠程宿主限定	远程宿主限定
 ui.night.day.wed	수	水	Wed	三	三
 ui.night.day_short.wed	중거리	中距離	Mid	中程	中程
 ui.night.day_rule.wed	중거리의 날	中距離の日	Mid-range Day	中程之日	中程日
-ui.night.day_desc.wed	중거리 호스트만 몸으로 나온다	中距離ホストだけが体として出る	Only mid-range hosts appear as bodies	只有中程宿主會作為身體出現	只有中程宿主会作为身体出现
+ui.night.day_desc.wed	중거리 호스트만 등장	中距離ホストのみ登場	Only mid-range hosts appear as bodies	中程宿主限定	中程宿主限定
 ui.night.day.thu	목	木	Thu	四	四
 ui.night.day_short.thu	파워	パワー	Power	力量	力量
 ui.night.day_rule.thu	파워의 날	パワーの日	Power Day	力量之日	力量日
-ui.night.day_desc.thu	파워 호스트만 몸으로 나온다	パワーホストだけが体として出る	Only Power hosts appear as bodies	只有力量宿主會作為身體出現	只有力量宿主会作为身体出现
+ui.night.day_desc.thu	파워 호스트만 등장	パワーホストのみ登場	Only Power hosts appear as bodies	力量宿主限定	力量宿主限定
 ui.night.day.fri	금	金	Fri	五	五
 ui.night.day_short.fri	무기	武器	Weapon	武器	武器
 ui.night.day_rule.fri	무기의 날	武器の日	Weapon Day	武器之日	武器日
-ui.night.day_desc.fri	무기 호스트만 몸으로 나온다	武器ホストだけが体として出る	Only Weapon hosts appear as bodies	只有武器宿主會作為身體出現	只有武器宿主会作为身体出现
+ui.night.day_desc.fri	무기 호스트만 등장	武器ホストのみ登場	Only Weapon hosts appear as bodies	武器宿主限定	武器宿主限定
 ui.night.day.sat	토	土	Sat	六	六
 ui.night.day_short.sat	마법	魔法	Magic	魔法	魔法
 ui.night.day_rule.sat	마법의 날	魔法の日	Magic Day	魔法之日	魔法日
-ui.night.day_desc.sat	마법 호스트만 몸으로 나온다	魔法ホストだけが体として出る	Only Magic hosts appear as bodies	只有魔法宿主會作為身體出現	只有魔法宿主会作为身体出现
+ui.night.day_desc.sat	마법 호스트만 등장	魔法ホストのみ登場	Only Magic hosts appear as bodies	魔法宿主限定	魔法宿主限定
 ui.night.day.sun	일	日	Sun	日	日
 ui.night.day_short.sun	자유	自由	Free	自由	自由
 ui.night.day_rule.sun	자유의 날	自由の日	Free Day	自由之日	自由日
-ui.night.day_desc.sun	모든 호스트가 몸으로 나온다	すべてのホストが体として出る	Every host can appear	所有宿主都會作為身體出現	所有宿主都会作为身体出现
+ui.night.day_desc.sun	모든 호스트 등장	すべてのホストが登場	Every host can appear	所有宿主皆會登場	所有宿主均会登场
 tower.floor.1.name	근거리의 층	近距離の階	Melee Floor	近戰之層	近战层
-tower.floor.1.desc	근거리 호스트만 몸으로 나온다	近距離ホストだけが体として出る	Only melee hosts appear as bodies	只有近戰宿主會作為身體出現	只有近战宿主会作为身体出现
+tower.floor.1.desc	근거리 호스트만 등장	近距離ホストのみ登場	Only melee hosts appear as bodies	僅出現近戰宿主	仅出现近战宿主
 tower.floor.2.name	원거리의 층	遠距離の階	Ranged Floor	遠程之層	远程层
-tower.floor.2.desc	원거리 호스트만 몸으로 나온다	遠距離ホストだけが体として出る	Only ranged hosts appear as bodies	只有遠程宿主會作為身體出現	只有远程宿主会作为身体出现
+tower.floor.2.desc	원거리 호스트만 등장	遠距離ホストのみ登場	Only ranged hosts appear as bodies	僅出現遠程宿主	仅出现远程宿主
 tower.floor.3.name	마법의 무리	魔法の群れ	Magic Horde	魔法敵群	魔法敌群
-tower.floor.3.desc	적이 전부 마법. 몸은 세 속성이 섞여 나온다.	敵はすべて魔法。体は3属性が混ざって出る。	All foes are Magic. Bodies of all three types appear.	敵人全為魔法。身體會混合三種屬性出現。	敌人全是魔法。身体会混合三种属性出现。
-tower.floor.4.name	정예의 층	精鋭の階	Elite Floor	精英之層	精英层
-tower.floor.4.desc	적은 적지만 하나하나가 세다	敵は少ないが一体一体が強い	Fewer enemies, but each one is tough	敵人雖少，但個個強悍	敌人虽少，但个个强悍
+tower.floor.3.desc	적 전원 마법 속성 · 세 속성의 호스트가 등장	敵はすべて魔法属性・3属性のホストが登場	All foes are Magic. Hosts of all three types appear.	敵人全為魔法屬性 · 三種屬性的宿主皆會出現	敌人全为魔法属性 · 三种属性的宿主均会出现
+tower.floor.4.name	엘리트의 층	精鋭の階	Elite Floor	精英之層	精英层
+tower.floor.4.desc	적은 적지만 모두 강하다	敵は少ないが一体一体が強い	Fewer enemies, but each one is tough	敵人雖少，但個個強悍	敌人虽少，但个个强悍
 tower.floor.5.name	보스 — 크러셔	ボス — クラッシャー	Boss — Crusher	頭目 — 粉碎者	头目 — 粉碎者
-tower.floor.5.desc	크러셔(파워). 마법 몸만 나온다	クラッシャー(パワー)。魔法の体だけが出る	Crusher (Power). Only Magic bodies appear	粉碎者（力量）。只出現魔法身體	粉碎者（力量）。只出现魔法身体
+tower.floor.5.desc	크러셔(파워) · 마법 호스트만 등장	クラッシャー(パワー)。魔法のホストだけが出る	Crusher (Power). Only Magic hosts appear	粉碎者（力量）。只出現魔法宿主	粉碎者（力量）。只出现魔法宿主
 tower.floor.6.name	중거리의 층	中距離の階	Mid-range Floor	中程之層	中程层
-tower.floor.6.desc	중거리 호스트만 몸으로 나온다 · 빠른 박쥐 떼	中距離ホストだけが体として出る・速いコウモリの群れ	Only mid-range hosts · fast bat swarm	只有中程宿主會作為身體出現 · 快速蝙蝠群	只有中程宿主会作为身体出现 · 快速蝙蝠群
+tower.floor.6.desc	중거리 호스트만 등장 · 빠른 박쥐 떼	中距離ホストのみ登場・素早いコウモリの群れ	Only mid-range hosts · fast bat swarm	僅出現中程宿主 · 快速蝙蝠群	仅出现中程宿主 · 快速蝙蝠群
 tower.floor.7.name	한 호스트의 층	ひとりのホストの階	One Host Floor	單一宿主之層	单一宿主层
-tower.floor.7.desc	호스트 하나만 몸으로 나온다	1種類のホストだけが体として出る	Only one host appears as bodies	只有一種宿主會作為身體出現	只有一种宿主会作为身体出现
+tower.floor.7.desc	한 종류의 호스트만 등장	1種類のホストだけが登場	Only one kind of host appears	只出現一種宿主	只出现一种宿主
 tower.floor.8.name	파워의 무리	パワーの群れ	Power Horde	力量敵群	力量敌群
-tower.floor.8.desc	적이 전부 파워. 마법 몸이 유리	敵はすべてパワー。魔法の体が有利	All foes are Power. Magic bodies have the edge	敵人全為力量。魔法身體有利	敌人全是力量。魔法身体有利
+tower.floor.8.desc	적 전원 파워 속성 · 마법 호스트 유리	敵はすべてパワー。魔法のホストが有利	All foes are Power. Magic hosts have the edge	敵人全為力量。魔法宿主有利	敌人全是力量。魔法宿主有利
 tower.floor.9.name	빙의는 한 번	憑依は一度だけ	One Possession	只能附身一次	只能附身一次
-tower.floor.9.desc	빙의를 한 번만 할 수 있다 · 구조 몸이 없다	憑依は一度だけ・救助の体はない	Possess only once · no rescue bodies	只能附身一次 · 沒有救援身體	只能附身一次 · 没有救援身体
+tower.floor.9.desc	빙의 1회 제한 · 구조 호스트 없음	憑依は一度だけ・救助のホストはない	Possess only once · no rescue hosts	只能附身一次 · 沒有救援宿主	只能附身一次 · 没有救援宿主
 tower.floor.10.name	보스 — 킹핀	ボス — キングピン	Boss — Kingpin	頭目 — 黑幫老大	头目 — 黑帮老大
-tower.floor.10.desc	킹핀(무기). 파워 몸만 나온다	キングピン(武器)。パワーの体だけが出る	Kingpin (Weapon). Only Power bodies appear	黑幫老大（武器）。只出現力量身體	黑帮老大（武器）。只出现力量身体
+tower.floor.10.desc	킹핀(무기) · 파워 호스트만 등장	キングピン(武器)。パワーのホストだけが出る	Kingpin (Weapon). Only Power hosts appear	黑幫老大（武器）。只出現力量宿主	黑帮老大（武器）。只出现力量宿主
 ui.store.title	상점	ショップ	Shop	商店	商店
 ui.store.tab.today	오늘	今日	Today	今日	今日
 ui.store.tab.chest	상자	宝箱	Chests	寶箱	宝箱
@@ -900,7 +900,7 @@ ui.store.price_gem	젬 {0}	ジェム {0}	{0} Gems	寶石 {0}	宝石 {0}
 ui.store.price_gold	골드 {0}	ゴールド {0}	{0} Gold	金幣 {0}	金币 {0}
 ui.store.chest.open_now	바로 열림	すぐ開く	Opens now	立即開啟	立即开启
 ui.store.chest.gold	골드 {0} ~ {1}	ゴールド {0}～{1}	Gold {0}–{1}	金幣 {0} ~ {1}	金币 {0} ~ {1}
-ui.store.chest.shard	몸 {0} ~ {1}명 조각	体 {0}～{1}人の欠片	Shards for {0}–{1} bodies	{0} ~ {1}名身體的碎片	{0} ~ {1}个身体的碎片
+ui.store.chest.shard	호스트 {0}~{1}명 조각	ホスト {0}～{1}人の欠片	Shards for {0}–{1} hosts	{0} ~ {1}名宿主的碎片	{0} ~ {1}个宿主的碎片
 ui.store.chest.rate	확률 보기	確率を見る	View odds	查看機率	查看概率
 ui.store.chest.rate_body	{0}\n조각 등급 확률\n{1}	{0}\n欠片の等級確率\n{1}	{0}\nShard grade odds\n{1}	{0}\n碎片等級機率\n{1}	{0}\n碎片等级概率\n{1}
 ui.store.chest.note	상자는 사는 즉시 열립니다 · 상자 칸을 쓰지 않음	宝箱は購入後すぐ開きます・宝箱スロットは使いません	Chests open right away · no chest slot used	寶箱購買後立即開啟 · 不佔用寶箱欄位	宝箱购买后立即开启 · 不占用宝箱栏位
@@ -971,7 +971,7 @@ ui.tower.fit_all	전체\n보기 ›	すべて\n見る ›	View\nall ›	查看\n
 ui.tower.badge_go	도전	挑戦	GO	挑戰	挑战
 ui.summon.title	소환	召喚	Summon	召喚	召唤
 ui.summon.pickup	이번 주 픽업:	今週のピックアップ：	This week's pick:	本週精選：	本周UP：
-ui.summon.pickup_note	A급이 나오면 {0}% 확률로 픽업 호스트	A級が出たら{0}%でピックアップ	A-grade pulls are the pick-up {0}% of the time	抽中A級時有{0}%機率為精選宿主	抽中A级时有{0}%概率为UP宿主
+ui.summon.pickup_note	SR이 나오면 {0}% 확률로 픽업 호스트	SRが出たら{0}%の確率でピックアップホスト	SR pulls are the pick-up host {0}% of the time	抽中SR時有{0}%機率為精選宿主	抽中SR时有{0}%概率为UP宿主
 ui.summon.left	남은 <color=#FFD94A>{0}</color>일 <color=#FFD94A>{1}</color>시간	残り<color=#FFD94A>{0}</color>日<color=#FFD94A>{1}</color>時間	<color=#FFD94A>{0}</color>d <color=#FFD94A>{1}</color>h left	剩餘 <color=#FFD94A>{0}</color>天 <color=#FFD94A>{1}</color>小時	剩余 <color=#FFD94A>{0}</color>天 <color=#FFD94A>{1}</color>小时
 ui.summon.tickets	보유 소환권 <color=#FFD94A>{0}</color>	召喚券 <color=#FFD94A>{0}</color>	Tickets <color=#FFD94A>{0}</color>	持有召喚券 <color=#FFD94A>{0}</color>	拥有召唤券 <color=#FFD94A>{0}</color>
 ui.summon.today	오늘	本日	Today	今日	今日
@@ -979,7 +979,7 @@ ui.summon.free	무료 1회	無料1回	1 Free	免費1次	免费1次
 ui.summon.free_used	내일 다시	また明日	Tomorrow	明天再來	明天再来
 ui.summon.pull1	1회 소환	1回召喚	Summon ×1	召喚1次	召唤1次
 ui.summon.pull10	10회 소환	10回召喚	Summon ×10	召喚10次	召唤10次
-ui.summon.pull10_note	A급 1회 보장	A級1回確定	1 A-grade guaranteed	必得1次A級	必出1次A级
+ui.summon.pull10_note	SR 1회 보장	SR1回確定	1 SR guaranteed	必得1次SR	必出1次SR
 ui.summon.price	젬 {0} / 소환권 {1}	ジェム{0} / 召喚券{1}	{0} gems / {1} tickets	寶石 {0} / 召喚券 {1}	宝石 {0} / 召唤券 {1}
 ui.summon.price_ticket	소환권 {0}	召喚券 {0}	{0} tickets	召喚券 {0}	召唤券 {0}
 ui.summon.pity	대박까지 <color=#FFD94A>{0} / {1}</color>	大当たりまで <color=#FFD94A>{0} / {1}</color>	Jackpot in <color=#FFD94A>{0} / {1}</color>	距離大獎 <color=#FFD94A>{0} / {1}</color>	距离大奖 <color=#FFD94A>{0} / {1}</color>
@@ -990,12 +990,12 @@ ui.summon.result	소환 결과	召喚結果	Summon Results	召喚結果	召唤�
 ui.summon.result_count	{0}회 소환	{0}回召喚	x{0} Summon	召喚{0}次	召唤{0}次
 ui.summon.essence	정수 +{0}	エッセンス +{0}	Essence +{0}	精華 +{0}	精华 +{0}
 ui.summon.jackpot	대박	大当たり	Jackpot	大獎	大奖
-ui.summon.new_body	새 몸	新しい体	New	新身體	新身体
+ui.summon.new_body	새 호스트	新しいホスト	New Host	新宿主	新宿主
 ui.summon.again	{0}회 더	もう{0}回	x{0} again	再抽{0}次	再抽{0}次
 ui.summon.rate_grade	등급 확률	等級別の割合	Grade odds	等級機率	等级概率
 ui.summon.rate_amount	조각 수 확률	欠片数の割合	Shard count odds	碎片數量機率	碎片数量概率
-ui.summon.rate_host	몸별 확률	ホスト別の割合	Odds per host	各身體機率	各身体概率
-ui.summon.rate_rules	10회 소환은 A급 1회 보장 · {0}회 안에 대박이 없으면 {0}번째는 대박 확정	10回召喚はA級1回確定・{0}回以内に大当たりが無ければ{0}回目は大当たり確定	x10 guarantees one A-grade · no jackpot in {0} pulls makes the {0}th a jackpot	10次召喚必得1次A級 · {0}次內未出大獎則第{0}次必出大獎	10次召唤必出1次A级 · {0}次内未出大奖则第{0}次必出大奖
+ui.summon.rate_host	호스트별 확률	ホスト別の割合	Odds per host	各宿主機率	各宿主概率
+ui.summon.rate_rules	10회 소환 시 SR 1회 보장 · {0}회 안에 대박이 없으면 {0}번째는 대박 확정	10回召喚はSR1回確定・{0}回以内に大当たりが無ければ{0}回目は大当たり確定	x10 guarantees one SR · no jackpot in {0} pulls makes the {0}th a jackpot	10次召喚必得1次SR · {0}次內未出大獎則第{0}次必出大獎	10次召唤必出1次SR · {0}次内未出大奖则第{0}次必出大奖
 ui.summon.fail.notready	아직 준비 중이에요	準備中です	Not ready yet	準備中	准备中
 ui.summon.fail.free	오늘 무료 소환을 이미 썼어요	本日の無料召喚は使用済みです	Free summon already used today	今日免費召喚已使用	今日免费召唤已使用
 ui.summon.fail.ticket	소환권이 모자라요	召喚券が足りません	Not enough tickets	召喚券不足	召唤券不足
@@ -1036,15 +1036,15 @@ ui.profile.src_pass	시즌 패스	シーズンパス	Season Pass	季票	季票
 mission.login	접속	ログイン	Log In	登入	登录
 mission.run_start	판 시작	プレイ開始	Start a Run	開始一局	开始一局
 mission.possess	빙의	憑依	Possess	附身	附身
-mission.kill_advantage	유리한 상성 처치	有利相性で撃破	Advantage Kills	相剋優勢擊殺	相克优势击杀
+mission.kill_advantage	상성 우위로 처치	有利相性で撃破	Advantage Kills	相剋優勢擊殺	相克优势击杀
 mission.daily_shop_buy	오늘의 상점 구매	本日のショップで購入	Buy in Daily Shop	在今日商店購買	在今日商店购买
-mission.stat_upgrade	강화	強化	Upgrade	強化	强化
-mission.daily_all_done	매일 전부 완료	デイリー全達成	All Dailies Done	完成全部每日任務	完成全部每日任务
+mission.stat_upgrade	능력치 강화	強化	Upgrade	強化	强化
+mission.daily_all_done	일일 미션 모두 완료	デイリー全達成	All Dailies Done	完成全部每日任務	完成全部每日任务
 mission.run_clear	챕터 클리어	チャプタークリア	Clear a Chapter	通關章節	通关章节
 mission.kill_boss	보스 처치	ボス撃破	Defeat Bosses	擊敗頭目	击败头目
 mission.chest_open	상자 열기	宝箱を開ける	Open Chests	開啟寶箱	开启宝箱
-mission.distinct_hosts_possessed	서로 다른 몸	異なる体に憑依	Different Bodies	附身不同身體	附身不同身体
-mission.weekly_all_done	매주 전부 완료	ウィークリー全達成	All Weeklies Done	完成全部每週任務	完成全部每周任务
+mission.distinct_hosts_possessed	서로 다른 호스트에 빙의	異なるホストに憑依	Possess different hosts	附身不同宿主	附身不同宿主
+mission.weekly_all_done	주간 미션 모두 완료	ウィークリー全達成	All Weeklies Done	完成全部每週任務	完成全部每周任务
 profile.frame_default.name	기본 테두리	基本フレーム	Basic Frame	基本頭像框	基础头像框
 profile.frame_s1.name	HOST REVENGE	HOST REVENGE	HOST REVENGE	HOST REVENGE	HOST REVENGE
 profile.frame_ch10.name	챕터 10 정복	チャプター10制覇	Chapter 10 Conqueror	第10章征服	第10章征服
@@ -1059,7 +1059,7 @@ ui.summon.rate_hosts	{0} 호스트 {1}명	{0}ホスト {1}人	{0} Hosts ×{1}	{0
 ui.summon.rate_each	각 {0}	各 {0}	{0} each	各 {0}	各 {0}
 ui.summon.rate_pickup	픽업 {0}	ピックアップ {0}	Pick Up {0}	精選 {0}	精选 {0}
 ui.summon.rate_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}	碎片 ×{0}	碎片 ×{0}
-ui.summon.rate_guarantee	10회 소환 시 <color=#FFD94A>A급 이상 1명</color> 보장	10回召喚で<color=#FFD94A>Aランク以上1人</color>確定	10-pull guarantees <color=#FFD94A>1 A-Grade or better</color>	10連召喚必得<color=#FFD94A>A級以上1名</color>	十连召唤必得<color=#FFD94A>A级以上1名</color>
+ui.summon.rate_guarantee	10회 소환 시 <color=#FFD94A>SR 1명</color> 보장	10回召喚で<color=#FFD94A>SR1人</color>確定	10-pull guarantees <color=#FFD94A>1 SR</color>	10連召喚必得<color=#FFD94A>SR 1名</color>	十连召唤必得<color=#FFD94A>SR 1名</color>
 ui.summon.rate_pity	천장 <color=#FFD94A>{0}</color> / {1}	天井 <color=#FFD94A>{0}</color> / {1}	Pity <color=#FFD94A>{0}</color> / {1}	保底 <color=#FFD94A>{0}</color> / {1}	保底 <color=#FFD94A>{0}</color> / {1}
 ui.summon.rate_pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会继承。
 ui.summon.history_recent	최근 100회	最近100回	Last 100	最近100次	最近100次
@@ -1072,42 +1072,42 @@ ui.summon.shards_now	지금 조각 <color=#FFD94A>{0}</color>	現在のかけら
 ui.tower.floor_f	{0}F	{0}F	{0}F	{0}F	{0}F
 ui.tower.enemies_left	남은 적 {0}	残りの敵 {0}	Enemies left {0}	剩餘敵人 {0}	剩余敌人 {0}
 ui.tower.possess_left	빙의 남음 {0}	憑依の残り {0}	Possess left {0}	剩餘附身 {0}	剩余附身 {0}
-ui.tower.no_leave	이 층은 나갈 수 없다	この階では抜け出せない	You can't leave a body on this floor	此層無法離開身體	本层无法离开身体
+ui.tower.no_leave	이 층에서는 나갈 수 없어요	この階では抜け出せない	You can't leave a body on this floor	此層無法離開身體	本层无法离开身体
 ui.tower.result.clear	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR	{0}F CLEAR
 ui.tower.result.fail	{0}층 실패	{0}階 失敗	F{0} Failed	第{0}層失敗	第{0}层失败
 ui.tower.result.next	다음 층	次の階	Next floor	下一層	下一层
-ui.tower.result.hint	이 층에 맞는 키운 몸 ★{0} / {1}	この階に合う育てた体 ★{0} / {1}	Trained bodies for this floor ★{0} / {1}	適合此層的培養身體 ★{0} / {1}	适合本层的已培养身体 ★{0} / {1}
-ui.tower.result.suggest	{0} 호스트를 키우면 쉬워진다	{0} を育てると楽になる	Training {0} will make it easier	培養{0}會更輕鬆	培养{0}会更轻松
+ui.tower.result.hint	이 층에 유리한 육성 호스트 ★{0} / {1}	この階に合う育てたホスト ★{0} / {1}	Trained hosts for this floor ★{0} / {1}	適合此層的培養宿主 ★{0} / {1}	适合本层的已培养宿主 ★{0} / {1}
+ui.tower.result.suggest	{0} 호스트를 육성하면 쉬워져요	{0} を育てると楽になる	Training {0} will make it easier	培養{0}會更輕鬆	培养{0}会更轻松
 ui.tower.retry	다시 ▶	もう一度 ▶	Retry ▶	再戰 ▶	再来 ▶
 ui.tower.leave	나가기	出る	Leave	離開	离开
 ui.night.kills	처치 {0}	撃破 {0}	Kills {0}	擊殺 {0}	击杀 {0}
-ui.night.start_hint	몸 하나를 골라 빙의하라	体をひとつ選んで憑依しよう	Pick a body and possess it	選擇一個身體附身	选择一个身体附身
-ui.night.start_hint_sub	나머지 둘은 사라진다	残りの2体は消える	The other two will vanish	其餘兩個將會消失	其余两个将会消失
-ui.night.banner.wave	무리가 {0}(으)로	群れが{0}に変わる	The horde turns {0}	敵群變為{0}	敌群变为{0}
-ui.night.banner.heal	버텼다 — {0}% 회복	耐えた — {0}% 回復	Survived — {0}% healed	撐住了 — 回復{0}%	撑住了 — 恢复{0}%
+ui.night.start_hint	호스트 하나를 골라 빙의하세요	ホストをひとつ選んで憑依しよう	Pick a host and possess it	選擇一個宿主附身	选择一个宿主附身
+ui.night.start_hint_sub	나머지 둘은 사라져요	残りの2体は消える	The other two will vanish	其餘兩個將會消失	其余两个将会消失
+ui.night.banner.wave	적 무리 속성: {0}	群れが{0}に変わる	The horde turns {0}	敵群變為{0}	敌群变为{0}
+ui.night.banner.heal	웨이브 돌파 · 체력 {0}% 회복	ウェーブ突破・体力{0}%回復	Wave cleared · Heal {0}%	突破波次 · 回復{0}%體力	突破波次 · 回复{0}%体力
 ui.night.banner.big	대형 {0} 등장	大型 {0} 出現	Giant {0} appears	大型{0}出現	大型{0}出现
-ui.night.banner.big_sub	몸에 든 채로 깎아야 빼앗는다	体に入ったまま削れば奪える	Wear it down while in a body to take it	附身狀態下削弱即可奪取	附身状态下削弱即可夺取
+ui.night.banner.big_sub	호스트로 체력을 깎아야 빙의할 수 있다	ホストの状態で体力を削らないと憑依できない	Damage it while possessing a host to make it possessable.	必須以宿主狀態削減其體力才能附身	必须以宿主状态削减其体力才能附身
 ui.night.banner.chief	대장 {0} 등장	隊長 {0} 出現	Chief {0} appears	隊長{0}出現	队长{0}出现
 ui.night.banner.boss	보스 {0} 등장	ボス {0} 出現	Boss {0} appears	頭目{0}出現	头目{0}出现
-ui.night.banner.boss_sub	쓰러뜨리면 밤을 버틴다	倒せば夜を越えられる	Defeat it to survive the night	擊倒即可撐過今夜	击倒即可撑过今夜
+ui.night.banner.boss_sub	처치하면 클리어	倒せばクリア	Defeat it to clear	擊敗即通關	击败即通关
 ui.night.result.clear	밤을 버텼다	夜を越えた	You survived the night	撐過了夜晚	撑过了夜晚
-ui.night.result.fail	쓰러졌다	倒れた	You fell	倒下了	倒下了
+ui.night.result.fail	패배	敗北	Defeat	失敗	失败
 ui.night.result.best	최고 기록! (이전 {0})	最高記録!(前回 {0})	New best! (prev. {0})	最高紀錄！（前次 {0}）	最高纪录！（上次 {0}）
 ui.night.result.stat	버틴 시간 {0} · 레벨 {1}	耐えた時間 {0}・レベル {1}	Survived {0} · Lv {1}	撐住時間 {0} · 等級 {1}	坚持时间 {0} · 等级 {1}
-ui.tower.banner_enemy	적 전부 {0} · {1} 몸 유리 ▲	敵はすべて{0}・{1}の体が有利 ▲	All enemies {0} · {1} bodies favored ▲	敵人全為{0} · {1}身體有利 ▲	敌人全为{0} · {1}身体有利 ▲
-ui.tower.first_clear_done	이번 주 보상은 이미 받았다	今週の報酬は受取済み	This week's reward already claimed	本週獎勵已領取	本周奖励已领取
+ui.tower.banner_enemy	적 전원 {0} · {1} 호스트 유리 ▲	敵はすべて{0}・{1}のホストが有利 ▲	All enemies are {0} · {1} hosts favored ▲	敵人全為{0} · {1}宿主有利 ▲	敌人全为{0} · {1}宿主有利 ▲
+ui.tower.first_clear_done	이번 주 보상은 이미 받았어요	今週の報酬は受取済み	This week's reward already claimed	本週獎勵已領取	本周奖励已领取
 ui.tower.result.next_try	다음 도전	次の挑戦	Next try	下次挑戰	下次挑战
-ui.tower.result.fail_desc	입장 1번으로 다시 — 몸을 바꿔 보자	入場1回でもう一度 — 体を変えてみよう	Retry with 1 entry — try another body	消耗1次入場再試 — 換個身體吧	消耗1次入场再试 — 换个身体吧
+ui.tower.result.fail_desc	입장 1회로 재도전 · 다른 호스트로 바꿔 보세요	入場1回でもう一度 — ホストを変えてみよう	Retry with 1 entry — try another host	消耗1次入場再試 — 換個宿主吧	消耗1次入场再试 — 换个宿主吧
 ui.night.wave	무리: {0}	群れ: {0}	Horde: {0}	敵群：{0}	敌群：{0}
 ui.night.next_big	대형 호스트 {0}	大型ホスト {0}	Giant host {0}	大型宿主 {0}	大型宿主 {0}
 ui.night.next_boss	보스 {0}	ボス {0}	Boss {0}	頭目 {0}	头目 {0}
-ui.night.counter	{0} 몸이 오면 ▲	{0}の体なら有利 ▲	{0} bodies favored ▲	{0}身體有利 ▲	{0}身体有利 ▲
+ui.night.counter	{0} 호스트 유리 ▲	{0}のホストなら有利 ▲	{0} hosts favored ▲	{0}宿主有利 ▲	{0}宿主有利 ▲
 ui.night.result.boss	보스 {0} 처치	ボス{0}撃破	Defeated {0}	擊敗頭目{0}	击败头目{0}
 ui.night.result.kills	처치	撃破	Kills	擊殺	击杀
 ui.night.result.reward	보상 — 처치 {0}마다 조각 1	報酬 — {0}撃破ごとにかけら1	Reward — 1 shard per {0} kills	獎勵 — 每擊殺{0}得碎片1	奖励 — 每击杀{0}得碎片1
 ui.night.result.reward_clear	보상 — 처치 {0}마다 1 + 보스 처치 {1}	報酬 — {0}撃破ごとに1 + ボス撃破{1}	Reward — 1 per {0} kills + boss {1}	獎勵 — 每擊殺{0}得1 + 擊敗頭目{1}	奖励 — 每击杀{0}得1 + 击败头目{1}
-ui.night.result.reward_none	이번엔 조각이 없다 — {0}마리를 잡으면 1	今回はかけらなし — {0}体で1	No shards this time — 1 per {0} kills	這次沒有碎片 — 擊殺{0}隻得1	这次没有碎片 — 击杀{0}只得1
-ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 몸 잃음 {3}	耐えた時間 {0}・Lv {1}・憑依 {2}・体を失った {3}	Survived {0} · Lv {1} · Possessed {2} · Lost {3}	撐住時間 {0} · Lv {1} · 附身 {2} · 失去身體 {3}	坚持时间 {0} · Lv {1} · 附身 {2} · 失去身体 {3}
+ui.night.result.reward_none	획득한 조각 없음 · {0}마리 처치마다 1개	今回はかけらなし — {0}体で1	No shards this time — 1 per {0} kills	這次沒有碎片 — 擊殺{0}隻得1	这次没有碎片 — 击杀{0}只得1
+ui.night.result.stat_full	버틴 시간 {0} · Lv {1} · 빙의 {2} · 잃은 호스트 {3}	耐えた時間 {0}・Lv {1}・憑依 {2}・失ったホスト {3}	Survived {0} · Lv {1} · Possessions {2} · Hosts lost {3}	撐住時間 {0} · Lv {1} · 附身 {2} · 失去宿主 {3}	坚持时间 {0} · Lv {1} · 附身 {2} · 失去宿主 {3}
 ui.night.result.lobby	로비	ロビー	Lobby	大廳	大厅
 ui.growth6.rank	성급 {0}/10	ランク {0}/10	Rank {0}/10	星級 {0}/10	星级 {0}/10
 ui.growth6.power	전투력 <color=#5CFF7A>{0}</color>	戦闘力 <color=#5CFF7A>{0}</color>	Power <color=#5CFF7A>{0}</color>	戰鬥力 <color=#5CFF7A>{0}</color>	战斗力 <color=#5CFF7A>{0}</color>
@@ -1117,8 +1117,8 @@ ui.growth6.summary_unlock	조각을 모아 해금하면 스킬 · 능력치 강�
 ui.growth6.ult_tag	SPECIAL · 필살기	SPECIAL · 必殺技	SPECIAL	SPECIAL · 必殺技	SPECIAL · 必杀技
 ui.growth6.act_tag	ACTIVE · 액티브	ACTIVE · アクティブ	ACTIVE	ACTIVE · 主動	ACTIVE · 主动
 ui.growth6.pas_tag	PASSIVE · 패시브	PASSIVE · パッシブ	PASSIVE	PASSIVE · 被動	PASSIVE · 被动
-ui.growth6.ult_cond	빙의할 때 1회	憑依ごとに1回	Once per possession	每次附身1次	每次附身1次
-ui.growth6.act_cond	평타 30타 충전	通常攻撃30回で充填	Charges in 30 hits	普攻30次充能	普攻30次充能
+ui.growth6.ult_cond	사용 후 쿨타임 5분	使用後クールタイム5分	5 min cooldown after use	使用後冷卻5分鐘	使用后冷却5分钟
+ui.growth6.act_cond	쿨타임마다 사용	クールタイムごとに使用	Use whenever off cooldown	冷卻結束即可使用	冷却结束即可使用
 ui.growth6.power_line	현재 {0}% → {1}성 <color=#1E8E3E>{2}%</color>	現在 {0}% → ランク{1} <color=#1E8E3E>{2}%</color>	Now {0}% → {1}★ <color=#1E8E3E>{2}%</color>	目前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>	当前 {0}% → {1}星 <color=#1E8E3E>{2}%</color>
 ui.growth6.power_max	위력 {0}% (최대)	威力 {0}%（最大）	Power {0}% (max)	威力 {0}%（最高）	威力 {0}%（最高）
 ui.growth6.pas_line	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>	{0} {1} → <color=#5CFF7A>{2}</color>
@@ -1131,7 +1131,7 @@ ui.growth6.cap	{0}성 강화 상한 Lv {1}	ランク{0} 強化上限 Lv {1}	{0}�
 ui.growth6.row_lv	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}	Lv <color=#B8860B>{0}</color> / {1}
 ui.growth6.card_rank	{0}성	{0}	{0}★	{0}星	{0}星
 ui.growth6.win_rank	{0}성 → <color=#5CFF7A>{1}성</color>	ランク{0} → <color=#5CFF7A>ランク{1}</color>	{0}★ → <color=#5CFF7A>{1}★</color>	{0}星 → <color=#5CFF7A>{1}星</color>	{0}星 → <color=#5CFF7A>{1}星</color>
-ui.growth6.w.body	몸 능력치	体の能力	Body stats	身體能力值	身体属性
+ui.growth6.w.body	호스트 능력치	ホストの能力	Host stats	宿主能力值	宿主属性
 ui.growth6.w.body_val	체력·공격 <color=#1E8E3E>+7%</color>	HP·攻撃 <color=#1E8E3E>+7%</color>	HP/ATK <color=#1E8E3E>+7%</color>	HP·攻擊 <color=#1E8E3E>+7%</color>	HP·攻击 <color=#1E8E3E>+7%</color>
 ui.growth6.w.skill_lv	스킬 Lv	スキルLv	Skill Lv	技能 Lv	技能 Lv
 ui.growth6.w.act	액티브 위력	アクティブ威力	Active power	主動技能威力	主动技能威力
@@ -1150,165 +1150,165 @@ ui.growth6.mile_max	각성 강화 2배	覚醒強化 2倍	Awakening ×2	覺醒強
 ui.growth6.mile_step	액티브 보조↑	アクティブ補助↑	Active bonus↑	主動輔助↑	主动辅助↑
 host.gangster.concept	청부 저격수 — 보스 킬러	請負狙撃手 — ボスキラー	Hired sniper — boss killer	受僱狙擊手 — 頭目殺手	雇佣狙击手 — 头目杀手
 ult.gangster.name	청부 처형	請負処刑	Contract Kill	契約處刑	契约处决
-ult.gangster.desc	가장 체력이 높은 적(보스 포함)을 1.5초 조준한 뒤 초대형 한 발. 보스는 최대 체력의 % 피해.	最も体力の高い敵（ボス含む）を1.5秒狙い、超特大の一発を放つ。ボスには最大体力の割合ダメージ。	Aim 1.5s at the highest-HP enemy (bosses too), then fire one huge shot. Deals % max HP damage to bosses.	瞄準HP最高的敵人（含頭目）1.5秒後射出超大一發。對頭目造成最大HP百分比傷害。	瞄准HP最高的敌人（含头目）1.5秒后射出超大一发。对头目造成最大HP百分比伤害。
+ult.gangster.desc	체력이 가장 높은 적(보스 포함)을 1.5초간 조준한 뒤 강력한 한 발을 쏜다. 보스에게는 최대 체력 비례 피해.	最も体力の高い敵（ボス含む）を1.5秒狙い、超特大の一発を放つ。ボスには最大体力の割合ダメージ。	Aim 1.5s at the highest-HP enemy (bosses too), then fire one huge shot. Deals % max HP damage to bosses.	瞄準HP最高的敵人（含頭目）1.5秒後射出超大一發。對頭目造成最大HP百分比傷害。	瞄准HP最高的敌人（含头目）1.5秒后射出超大一发。对头目造成最大HP百分比伤害。
 ult.gangster.short	가장 강한 적에게 초대형 한 발	最強の敵に超特大の一発	Huge shot at the toughest foe	對最強敵人射出超大一發	对最强敌人射出超大一发
 askill.gangster.short	방 안 모든 적에게 표식	部屋の全ての敵にマーキング	Mark every enemy in the room	標記房間內所有敵人	标记房间内所有敌人
-pskill.gangster.short	표식 붙은 적을 확률로 즉사	マーキング中の敵を確率で即死	Chance to execute marked foes	機率秒殺已標記敵人	概率秒杀已标记敌人
+pskill.gangster.short	표식이 붙은 적을 일정 확률로 즉사	マーキング中の敵を確率で即死	Chance to execute marked foes	機率秒殺已標記敵人	概率秒杀已标记敌人
 askill.gangster.opt	표식 붙은 적이 받는 피해 +15%	マーキング中の敵の被ダメージ+15%	Marked enemies take +15% damage	已標記敵人受到傷害 +15%	已标记敌人受到伤害 +15%
 host.hopper.concept	급소 사냥꾼 — 여럿에게 치명	急所ハンター — 多数に致命	Vital hunter — mass crits	要害獵人 — 群體暴擊	要害猎人 — 群体暴击
 ult.hopper.name	킬 포인트	キルポイント	Kill Point	致命點	致命点
-ult.hopper.desc	칼날로 앞의 적들을 묶고, 묶인 적 전원에게 치명 확정.	刃で前方の敵をまとめて拘束し、拘束した敵全員にクリティカル確定。	Bind the enemies ahead with blades. Every bound enemy takes a guaranteed crit.	以刀刃束縛前方敵人，被束縛的敵人全員必定暴擊。	以刀刃束缚前方敌人，被束缚的敌人全部必定暴击。
-ult.hopper.short	앞의 적을 묶고 치명 확정	前方の敵を拘束し確定クリ	Bind foes, guaranteed crits	束縛前方敵人並必定暴擊	束缚前方敌人并必定暴击
+ult.hopper.desc	칼날로 앞쪽 적들을 속박하고, 속박된 적 모두에게 확정 치명타를 준다.	刃で前方の敵をまとめて拘束し、拘束した敵全員にクリティカル確定。	Bind the enemies ahead with blades. Every bound enemy takes a guaranteed crit.	以刀刃束縛前方敵人，被束縛的敵人全員必定暴擊。	以刀刃束缚前方敌人，被束缚的敌人全部必定暴击。
+ult.hopper.short	앞쪽 적 속박 · 확정 치명타	前方の敵を拘束し確定クリ	Bind foes, guaranteed crits	束縛前方敵人並必定暴擊	束缚前方敌人并必定暴击
 askill.hopper.short	5초간 치명타 확률 90%	5秒間クリティカル率90%	Crit chance 90% for 5s	5秒內暴擊率90%	5秒内暴击率90%
 pskill.hopper.short	치명타 피해 +30%	クリティカルダメージ+30%	Crit damage +30%	暴擊傷害 +30%	暴击伤害 +30%
 askill.hopper.opt	치명타를 맞힐 때마다 정조준 +0.3초 (최대 +2초)	クリティカル命中ごとに精密照準+0.3秒（最大+2秒）	Each crit extends Dead Aim by 0.3s (max +2s)	每次暴擊命中，精準瞄準 +0.3秒（最多 +2秒）	每次暴击命中，精准瞄准 +0.3秒（最多 +2秒）
-host.ninja_chain.concept	사슬 사냥꾼 — 사슬을 걸고 내가 날아간다	鎖の狩人 — 鎖で敵へ飛ぶ	Chain hunter — hook and fly	鎖鏈獵人 — 掛上鎖鏈飛身而去	锁链猎人 — 挂上锁链飞身而去
+host.ninja_chain.concept	사슬 사냥꾼 — 끌어오고 날아든다	鎖の狩人 — 鎖で敵へ飛ぶ	Chain hunter — hook and fly	鎖鏈獵人 — 掛上鎖鏈飛身而去	锁链猎人 — 挂上锁链飞身而去
 ult.ninja_chain.name	사슬 돌격 연격	鎖突撃連撃	Chain Rush Combo	鎖鏈突擊連擊	锁链突击连击
-ult.ninja_chain.desc	가장 강한 적에게 사슬을 걸고 내가 날아가 연타 뒤 내려찍는다(보스를 끌어오지 않는다).	最も強い敵に鎖をかけて自ら飛び込み、連打のあと叩きつける（ボスは引き寄せない）。	Hook the strongest foe with a chain, fly to it, strike repeatedly, then slam down (bosses are not pulled).	對最強敵人掛上鎖鏈並飛身過去，連擊後向下重砸（不會拉動頭目）。	对最强敌人挂上锁链并飞身过去，连击后向下重砸（不会拉动头目）。
+ult.ninja_chain.desc	가장 강한 적에게 사슬을 걸고 날아가 연타한 뒤 내려찍는다(보스는 끌어오지 않는다).	最も強い敵に鎖をかけて自ら飛び込み、連打のあと叩きつける（ボスは引き寄せない）。	Hook the strongest foe with a chain, fly to it, strike repeatedly, then slam down (bosses are not pulled).	對最強敵人掛上鎖鏈並飛身過去，連擊後向下重砸（不會拉動頭目）。	对最强敌人挂上锁链并飞身过去，连击后向下重砸（不会拉动头目）。
 ult.ninja_chain.short	강한 적에게 날아가 연타	強敵へ飛び込んで連撃	Fly to the strongest foe, combo	飛向強敵連擊	飞向强敌连击
 askill.ninja_chain.short	적 5명을 끌어와 한 번에 후려침	敵5体を引き寄せて薙ぎ払う	Pull 5 foes in and strike	拉來5名敵人一次橫掃	拉来5名敌人一次横扫
-pskill.ninja_chain.short	10% 로 피해를 흘린다	10%でダメージを受け流す	10% chance to negate damage	10%機率化解傷害	10%概率化解伤害
+pskill.ninja_chain.short	10% 확률로 피해 회피	10%でダメージを受け流す	10% chance to negate damage	10%機率化解傷害	10%概率化解伤害
 askill.ninja_chain.opt	끌어오는 적 5 → 7명	引き寄せる敵5→7体	Pull 5 → 7 foes	拉來敵人 5 → 7名	拉来敌人 5 → 7名
 host.medium.concept	강령술사 — 혼과 함께 싸운다	降霊術師 — 霊と共に戦う	Necromancer — spirit allies	降靈術師 — 與靈魂並肩作戰	降灵术师 — 与灵魂并肩作战
 ult.medium.name	거대 원혼	巨大怨霊	Giant Wraith	巨大怨靈	巨大怨灵
-ult.medium.desc	거대 원혼을 불러 5초간 둘레 적을 할퀴게 하고, 끝에 크게 터뜨린다.	巨大な怨霊を呼び、5秒間周囲の敵を引き裂かせ、最後に大爆発させる。	Summon a giant wraith that claws nearby foes for 5s, then explodes.	召喚巨大怨靈，抓撕周圍敵人5秒，最後大爆炸。	召唤巨大怨灵，撕抓周围敌人5秒，最后大爆炸。
+ult.medium.desc	거대 원혼을 소환해 5초간 주변 적을 할퀸 뒤 크게 폭발시킨다.	巨大な怨霊を呼び、5秒間周囲の敵を引き裂かせ、最後に大爆発させる。	Summon a giant wraith that claws nearby foes for 5s, then explodes.	召喚巨大怨靈，抓撕周圍敵人5秒，最後大爆炸。	召唤巨大怨灵，撕抓周围敌人5秒，最后大爆炸。
 ult.medium.short	거대 원혼이 5초 할퀴고 폭발	巨大怨霊が5秒引き裂き爆発	Giant wraith claws, then explodes	巨大怨靈抓撕5秒後爆炸	巨大怨灵撕抓5秒后爆炸
-askill.medium.short	미니 골렘과 10초간 함께	ミニゴーレムと10秒共闘	Mini golem fights for 10s	迷你魔像協同作戰10秒	迷你魔像协同作战10秒
-pskill.medium.short	처치 시 30% 로 해골 소환	撃破時30%で骸骨が起き上がる	30% to raise a skeleton on kill	擊殺時30%機率召喚骷髏	击杀时30%概率召唤骷髅
+askill.medium.short	미니 골렘 소환 (10초)	ミニゴーレムと10秒共闘	Mini golem fights for 10s	迷你魔像協同作戰10秒	迷你魔像协同作战10秒
+pskill.medium.short	처치 시 30% 확률로 해골 소환	撃破時30%で骸骨が起き上がる	30% to raise a skeleton on kill	擊殺時30%機率召喚骷髏	击杀时30%概率召唤骷髅
 askill.medium.opt	미니 골렘 지속 +4초	ミニゴーレムの持続+4秒	Mini golem lasts +4s	迷你魔像持續 +4秒	迷你魔像持续 +4秒
 host.death.concept	죽음의 군주	死の君主	Lord of Death	死亡君主	死亡君主
 ult.death.name	망자 군단	亡者の軍勢	Legion of the Dead	亡者軍團	亡者军团
 ult.death.desc	해골 · 유령 군단을 불러 돌격시키고, 군단이 사라질 때 혼불로 터진다.	骸骨と幽霊の軍勢を呼んで突撃させ、軍勢が消える時に鬼火となって爆発する。	Summon a legion of skeletons and ghosts to charge. They burst into soul fire as they vanish.	召喚骷髏 · 幽靈軍團衝鋒，軍團消失時化為鬼火爆炸。	召唤骷髅 · 幽灵军团冲锋，军团消失时化为鬼火爆炸。
 ult.death.short	해골 군단 + 원혼 두 번 폭발	骸骨軍団＋怨霊が2回爆発	Skeletons + wraiths burst twice	骷髏軍團 + 怨靈兩次爆炸	骷髅军团 + 怨灵两次爆炸
 askill.death.short	3초간 때리는 적을 즉사	3秒間、攻撃した敵を即死	Enemies you hit die for 3s	3秒內擊中的敵人即死	3秒内击中的敌人即死
-pskill.death.short	처치한 자리에 해골이 선다	倒した場所に骸骨が起き上がる	Kills raise skeletons	擊殺處會站起骷髏	击杀处会站起骷髅
+pskill.death.short	처치 시 해골 소환	倒した場所に骸骨が起き上がる	Kills raise skeletons	擊殺處會站起骷髏	击杀处会站起骷髅
 askill.death.opt	즉사시킨 적 하나마다 시간 +0.3초	即死させた敵1体ごとに時間+0.3秒	+0.3s for each enemy slain	每即死1名敵人，時間 +0.3秒	每即死1名敌人，时间 +0.3秒
 host.robot.concept	포탑 기술자	砲台技師	Turret engineer	砲台技師	炮台技师
 ult.robot.name	로봇 특공대	ロボ特攻隊	Robo Strike Team	機器人特攻隊	机器人特攻队
-ult.robot.desc	로봇 다섯이 빛기둥으로 내려와 미사일을 퍼붓고, 저마다 세 발을 더 쏘고 돌아간다.	ロボ5体が光の柱で降下してミサイルを浴びせ、最後にそれぞれ3発撃って帰還する。	5 robots drop in on light pillars, rain missiles, fire a final 3 each and warp out.	五台機器人乘光柱降下傾瀉飛彈，各自再射三發後返回。	五台机器人乘光柱降下倾泻导弹，各自再射三发后返回。
-ult.robot.short	로봇 다섯이 내려와 일제 사격	ロボ5体が降下し一斉射撃	5 robots drop in and open fire	五台機器人降下齊射	五台机器人降下齐射
+ult.robot.desc	로봇 5기가 빛기둥을 타고 내려와 미사일을 퍼붓고, 각자 3발을 더 쏜 뒤 돌아간다.	ロボ5体が光の柱で降下してミサイルを浴びせ、最後にそれぞれ3発撃って帰還する。	5 robots drop in on light pillars, rain missiles, fire a final 3 each and warp out.	五台機器人乘光柱降下傾瀉飛彈，各自再射三發後返回。	五台机器人乘光柱降下倾泻导弹，各自再射三发后返回。
+ult.robot.short	로봇 5기 강하 · 일제 사격	ロボ5体が降下し一斉射撃	5 robots drop in and open fire	五台機器人降下齊射	五台机器人降下齐射
 askill.robot.short	10초간 자동 포탑 설치	10秒間、自動砲台を設置	Deploy an auto-turret for 10s	設置自動砲台10秒	设置自动炮台10秒
-pskill.robot.short	평타 2% 로 쿨 1초 단축	通常攻撃2%でクール1秒短縮	2% on hit: cooldown −1s	普攻2%機率冷卻縮短1秒	普攻2%概率冷却缩短1秒
+pskill.robot.short	기본 공격 시 2% 확률로 쿨타임 1초 감소	通常攻撃2%でクール1秒短縮	2% on hit: cooldown −1s	普攻2%機率冷卻縮短1秒	普攻2%概率冷却缩短1秒
 askill.robot.opt	포탑 +1대 (2대)	砲台+1基（2基）	+1 turret (2 total)	砲台 +1座（共2座）	炮台 +1座（共2座）
 host.ninja.concept	분신술사 — 속이고 협공	分身術師 — 欺いて挟撃	Clone master — trick & flank	分身術師 — 欺敵夾擊	分身术师 — 欺敌夹击
 ult.ninja.name	그림자 삼분신	影三分身	Triple Shadow	影三分身	影三分身
-ult.ninja.desc	분신 셋을 불러 6초간 같이 공격한다 — 닌자가 던질 때 셋도 같이 던진다.	分身を3体呼び出し6秒間共に攻撃する。忍者が投げると3体も同時に投げる。	Summon 3 clones that attack with you for 6s, throwing whenever you throw.	召喚三個分身共同攻擊6秒 — 忍者投擲時三個分身也一起投擲。	召唤三个分身共同攻击6秒 — 忍者投掷时三个分身也一起投掷。
-ult.ninja.short	분신 셋이 6초간 함께 공격	分身3体が6秒共に攻撃	3 clones attack with you for 6s	三個分身共同攻擊6秒	三个分身共同攻击6秒
-askill.ninja.short	4초간 회피 50% · 빨라짐	4秒間回避50%・加速	50% dodge + haste for 4s	4秒內迴避50% · 加速	4秒内闪避50% · 加速
-pskill.ninja.short	처치 시 이동속도 +30%	撃破時、移動速度+30%	On kill, Speed +30%	擊殺時移動速度 +30%	击杀时移动速度 +30%
+ult.ninja.desc	분신 3명을 소환해 6초간 함께 공격한다. 내가 던질 때마다 분신도 함께 던진다.	分身を3体呼び出し6秒間共に攻撃する。忍者が投げると3体も同時に投げる。	Summon 3 clones that attack with you for 6s, throwing whenever you throw.	召喚三個分身共同攻擊6秒 — 忍者投擲時三個分身也一起投擲。	召唤三个分身共同攻击6秒 — 忍者投掷时三个分身也一起投掷。
+ult.ninja.short	분신 3명이 6초간 함께 공격	分身3体が6秒共に攻撃	3 clones attack with you for 6s	三個分身共同攻擊6秒	三个分身共同攻击6秒
+askill.ninja.short	4초간 회피 50% · 이동 속도 증가	4秒間回避50%・加速	50% dodge + haste for 4s	4秒內迴避50% · 加速	4秒内闪避50% · 加速
+pskill.ninja.short	처치 시 이동 속도 +30%	撃破時、移動速度+30%	On kill, Speed +30%	擊殺時移動速度 +30%	击杀时移动速度 +30%
 askill.ninja.opt	회피 50% → 70%	回避50%→70%	Dodge 50% → 70%	迴避 50% → 70%	闪避 50% → 70%
 host.amazon.concept	번개 돌격수	稲妻の突撃手	Lightning striker	閃電突擊手	闪电突击手
 ult.amazon.name	번개 무희	稲妻の舞姫	Lightning Dancer	閃電舞姬	闪电舞姬
-ult.amazon.desc	적 사이를 잔상으로 옮겨 다니며 치고 내려찍기, 시전 중 무적.	残像を残して敵の間を駆け巡り、斬りつけて叩きつける。発動中は無敵。	Dart between foes in afterimages, striking and slamming. Invincible while casting.	化作殘影穿梭於敵人之間斬擊並重砸，施放中無敵。	化作残影穿梭于敌人之间斩击并重砸，施放中无敌。
+ult.amazon.desc	잔상을 남기며 적 사이를 누비고 연속 공격 후 내려찍는다. 시전 중 무적.	残像を残して敵の間を駆け巡り、斬りつけて叩きつける。発動中は無敵。	Dart between foes in afterimages, striking and slamming. Invincible while casting.	化作殘影穿梭於敵人之間斬擊並重砸，施放中無敵。	化作残影穿梭于敌人之间斩击并重砸，施放中无敌。
 ult.amazon.short	적 사이를 누비며 무적 연격	敵の間を駆ける無敵連撃	Invincible dash-strike combo	穿梭敵陣的無敵連擊	穿梭敌阵的无敌连击
 askill.amazon.short	가까운 적에게 도약 강타	近くの敵へ跳躍強打	Leap smash the nearest foe	跳躍重擊附近敵人	跳跃重击附近敌人
 pskill.amazon.short	쉴드가 찰수록 빨라진다	シールドが多いほど速くなる	Faster as Shield fills	護盾越滿速度越快	护盾越满速度越快
-askill.amazon.opt	착지 둘레 적 0.5초 기절	着地点周囲の敵を0.5秒気絶	Stun foes near the landing for 0.5s	落地處周圍敵人暈眩0.5秒	落地处周围敌人眩晕0.5秒
+askill.amazon.opt	착지 시 주변 적 0.5초 기절	着地点周囲の敵を0.5秒気絶	Stun foes near the landing for 0.5s	落地處周圍敵人暈眩0.5秒	落地处周围敌人眩晕0.5秒
 host.hopper_smg.concept	돌파 특공	突破特攻	Breakthrough raider	突破特攻	突破特攻
 ult.hopper_smg.name	돌진 난사	突進乱射	Rush Fire	突進亂射	突进乱射
-ult.hopper_smg.desc	가장 먼 적까지 일직선 돌진하며 양옆 난사, 도착하면 무적.	最も遠い敵まで一直線に突進しながら左右に乱射。到着すると無敵。	Charge straight to the farthest foe, spraying both sides. Invincible on arrival.	直線突進至最遠敵人並向兩側亂射，抵達後無敵。	直线突进至最远敌人并向两侧乱射，抵达后无敌。
+ult.hopper_smg.desc	가장 먼 적까지 일직선으로 돌진하며 양옆으로 난사한다. 도착하면 잠시 무적.	最も遠い敵まで一直線に突進しながら左右に乱射。到着すると無敵。	Charge straight to the farthest foe, spraying both sides. Invincible on arrival.	直線突進至最遠敵人並向兩側亂射，抵達後無敵。	直线突进至最远敌人并向两侧乱射，抵达后无敌。
 ult.hopper_smg.short	먼 적까지 돌진하며 난사	遠い敵まで突進乱射	Charge and spray to far foes	突進遠方敵人並亂射	突进远处敌人并乱射
 askill.hopper_smg.short	뒤로 뛰며 앞으로 연사	後ろに跳びつつ前方へ連射	Leap back while firing ahead	向後跳躍同時向前連射	向后跳跃同时向前连射
-pskill.hopper_smg.short	10% 로 맞은 적을 밀어냄	10%で敵を押し返す	10% chance to knock back	10%機率擊退命中的敵人	10%概率击退命中的敌人
+pskill.hopper_smg.short	10% 확률로 넉백	10%で敵を押し返す	10% chance to knock back	10%機率擊退命中的敵人	10%概率击退命中的敌人
 askill.hopper_smg.opt	착지 뒤 1초간 공격 속도 +50%	着地後1秒間、攻撃速度+50%	Attack speed +50% for 1s after landing	落地後1秒內攻擊速度 +50%	落地后1秒内攻击速度 +50%
-host.vampire.concept	피의 군주 — 깎이며 폭주	血の君主 — 身を削り暴走	Blood lord — reckless frenzy	血之君主 — 以血換狂暴	血之君主 — 以血换狂暴
+host.vampire.concept	피의 군주 — 빨아들여 회복	血の君主 — 吸い取って回復	Blood Lord — Drain to heal	血之君主 — 吸血回復	血之君主 — 吸血回复
 ult.vampire.name	피의 웅덩이	血の池	Blood Pool	血池	血池
-ult.vampire.desc	둘레에 피 웅덩이를 펴고 녹아든다 — 안의 적 전부에게 피를 묻혀 2초간 빨아들이며 회복하고, 끝에 펑 터뜨린다.	周囲に血の池を広げて溶け込む。中の敵全員に血を付け、2秒間吸い取って回復し、最後に破裂させる。	Melt into a pool of blood. Every foe inside is marked and drained for 2s to heal you, then bursts.	在周圍展開血池並融入其中 — 池中所有敵人沾染鮮血，吸取2秒回復自身，最後爆裂。	在周围展开血池并融入其中 — 池中所有敌人沾染鲜血，吸取2秒恢复自身，最后爆裂。
+ult.vampire.desc	주변에 피 웅덩이를 펼쳐 스며든다. 안의 모든 적에게서 2초간 피를 빨아 회복한 뒤 폭발시킨다.	周囲に血の池を広げて溶け込む。中の敵全員に血を付け、2秒間吸い取って回復し、最後に破裂させる。	Melt into a pool of blood. Every foe inside is marked and drained for 2s to heal you, then bursts.	在周圍展開血池並融入其中 — 池中所有敵人沾染鮮血，吸取2秒回復自身，最後爆裂。	在周围展开血池并融入其中 — 池中所有敌人沾染鲜血，吸取2秒恢复自身，最后爆裂。
 ult.vampire.short	피 웅덩이로 2초 흡혈 뒤 폭발	血の池で2秒吸血後に破裂	Drain all in a pool, then burst	血池吸血2秒後爆裂	血池吸血2秒后爆裂
 askill.vampire.short	박쥐가 피를 빨아 와 회복	コウモリが血を吸って回復	Bats drain blood to heal	蝙蝠吸血回復	蝙蝠吸血恢复
-pskill.vampire.short	8% 로 공격력 5% 회복	8%で攻撃力の5%回復	8% chance to heal on hit	8%機率回復攻擊力5%的HP	8%概率恢复攻击力5%的HP
-askill.vampire.opt	넘친 회복량만큼 쉴드	回復しすぎた分をシールドに	Overheal becomes Shield	溢出的回復量轉為護盾	溢出的恢复量转为护盾
-host.dragoon.concept	용기병 — 탈것	竜騎兵 — 騎乗	Dragoon — dragon rider	龍騎兵 — 坐騎	龙骑兵 — 坐骑
+pskill.vampire.short	8% 확률로 공격력의 5%만큼 체력 회복	8%で攻撃力の5%回復	8% chance to heal on hit	8%機率回復攻擊力5%的HP	8%概率恢复攻击力5%的HP
+askill.vampire.opt	초과 회복량만큼 쉴드 획득	回復しすぎた分をシールドに	Overheal becomes Shield	溢出的回復量轉為護盾	溢出的恢复量转为护盾
+host.dragoon.concept	용기병 — 불바다와 메테오	竜騎兵 — 火の海とメテオ	Dragoon — Fire fields & meteors	龍騎兵 — 火海與隕石	龙骑兵 — 火海与陨石
 ult.dragoon.name	메테오	メテオ	Meteor	隕石	陨石
-ult.dragoon.desc	가장 센 적에게 불덩이를 떨어뜨려 크게 터뜨리고, 그 자리를 4초 동안 불바다로 만든다.	最も強い敵に火の塊を落として大爆発させ、その場所を4秒間火の海にする。	Drop a meteor on the strongest foe for a huge blast, leaving a sea of fire for 4s.	對最強敵人落下火球引發大爆炸，並使該處化為火海4秒。	对最强敌人落下火球引发大爆炸，并使该处化为火海4秒。
-ult.dragoon.short	가장 센 적에게 메테오 + 불바다	最強の敵にメテオ＋火の海	Meteor + fire field	最強敵人隕石 + 火海	最强敌人陨石 + 火海
+ult.dragoon.desc	가장 강한 적에게 메테오를 떨어뜨려 폭발시키고, 그 자리에 4초간 불바다를 남긴다.	最も強い敵に火の塊を落として大爆発させ、その場所を4秒間火の海にする。	Drop a meteor on the strongest foe for a huge blast, leaving a sea of fire for 4s.	對最強敵人落下火球引發大爆炸，並使該處化為火海4秒。	对最强敌人落下火球引发大爆炸，并使该处化为火海4秒。
+ult.dragoon.short	가장 강한 적에게 메테오 + 불바다	最強の敵にメテオ＋火の海	Meteor + fire field	最強敵人隕石 + 火海	最强敌人陨石 + 火海
 askill.dragoon.short	가까운 적 발밑에 불바다	近くの敵の足元に火の海	Fire pool under nearest foe	附近敵人腳下化為火海	附近敌人脚下化为火海
-pskill.dragoon.short	10% 로 적에게 화상	10%で敵を燃焼	10% chance to Burn	10%機率使敵人燃燒	10%概率使敌人燃烧
+pskill.dragoon.short	10% 확률로 화상	10%で敵を燃焼	10% chance to Burn	10%機率使敵人燃燒	10%概率使敌人燃烧
 askill.dragoon.opt	불바다 2곳 (가까운 적 둘)	火の海2か所（近くの敵2体）	2 fire pools (nearest 2 foes)	火海2處（附近2名敵人）	火海2处（附近2名敌人）
 host.baseball.concept	장외 타자 — 받아치고 날린다	場外打者 — 打ち返して飛ばす	Slugger — hits it back	場外強打 — 擊回並轟飛	场外强打 — 击回并轰飞
 ult.baseball.name	풀스윙 회오리	フルスイング旋風	Full-Swing Cyclone	全力揮擊旋風	全力挥击旋风
-ult.baseball.desc	돌며 회오리를 키워 끌어당기고 풀스윙으로 날린다.	回転して旋風を大きくし、敵を引き寄せてフルスイングで吹き飛ばす。	Spin up a whirlwind that pulls foes in, then launch them with a full swing.	旋轉擴大旋風將敵人吸引過來，再以全力揮擊打飛。	旋转扩大旋风将敌人吸过来，再以全力挥击打飞。
+ult.baseball.desc	회전하며 회오리를 키워 적을 끌어당긴 뒤 풀스윙으로 날려 보낸다.	回転して旋風を大きくし、敵を引き寄せてフルスイングで吹き飛ばす。	Spin up a whirlwind that pulls foes in, then launch them with a full swing.	旋轉擴大旋風將敵人吸引過來，再以全力揮擊打飛。	旋转扩大旋风将敌人吸过来，再以全力挥击打飞。
 ult.baseball.short	회오리로 모아 풀스윙	旋風で集めてフルスイング	Pull foes in, full-swing them	以旋風聚敵後全力揮擊	以旋风聚敌后全力挥击
 askill.baseball.short	5초간 날아온 탄을 반사	5秒間、飛来する弾を反射	Reflect bullets for 5s	5秒內反彈飛來的子彈	5秒内反弹飞来的子弹
-pskill.baseball.short	막타에 20% 로 주변 날림	とどめで20%周囲を吹き飛ばす	20% fling on final blow	最後一擊20%機率擊飛周圍	最后一击20%概率击飞周围
+pskill.baseball.short	처치 시 20% 확률로 주변 적 날림	とどめで20%周囲を吹き飛ばす	20% fling on final blow	最後一擊20%機率擊飛周圍	最后一击20%概率击飞周围
 askill.baseball.opt	반사탄이 관통	反射弾が貫通	Reflected shots pierce	反彈子彈可貫穿	反弹子弹可贯穿
 host.guru.concept	결계 수도승	結界の修行僧	Warding monk	結界修行僧	结界修行僧
 ult.guru.name	결계 가두기	結界封じ	Ward Prison	結界封印	结界封印
-ult.guru.desc	결계로 적을 가운데로 모아 가두고 터뜨린다.	結界で敵を中央に集めて閉じ込め、炸裂させる。	Draw foes into a ward, trap them, then detonate it.	以結界將敵人聚向中央困住後引爆。	以结界将敌人聚向中央困住后引爆。
+ult.guru.desc	결계로 적을 중앙에 모아 가둔 뒤 폭발시킨다.	結界で敵を中央に集めて閉じ込め、炸裂させる。	Draw foes into a ward, trap them, then detonate it.	以結界將敵人聚向中央困住後引爆。	以结界将敌人聚向中央困住后引爆。
 ult.guru.short	결계로 적을 모아 폭파	結界で敵を集めて炸裂	Trap foes in a ward and burst	以結界聚敵並引爆	以结界聚敌并引爆
-askill.guru.short	3초간 피해 −50%, 쉴드 2배	3秒間被ダメ−50%・シールド2倍	3s: −50% damage, 2x Shield	3秒內受到傷害 −50%，護盾2倍	3秒内受到伤害 −50%，护盾2倍
-pskill.guru.short	걸을 때 지형지물 통과	歩行中に障害物をすり抜ける	Walk through obstacles	行走時穿越障礙物	行走时穿越障碍物
+askill.guru.short	3초간 받는 피해 −50% · 쉴드 2배	3秒間被ダメ−50%・シールド2倍	3s: −50% damage, 2x Shield	3秒內受到傷害 −50%，護盾2倍	3秒内受到伤害 −50%，护盾2倍
+pskill.guru.short	이동 시 지형지물 통과	歩行中に障害物をすり抜ける	Walk through obstacles	行走時穿越障礙物	行走时穿越障碍物
 askill.guru.opt	결계 안에서 쉴드가 다시 찬다	結界内でシールドが再び溜まる	Shield refills inside the ward	結界內護盾會重新充能	结界内护盾会重新充能
 host.commando_grenade.concept	폭파 전문가	爆破のプロ	Demolitions expert	爆破專家	爆破专家
 ult.commando_grenade.name	C4	C4	C4	C4	C4
-ult.commando_grenade.desc	반경 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발(그동안 평타 쉼).	範囲内の全ての敵に爆弾を貼り付け、2秒後に連鎖爆発（その間は通常攻撃停止）。	Plant bombs on every enemy in range. They chain-explode after 2s (no basic attacks meanwhile).	對範圍內所有敵人貼上炸彈，2秒後連鎖爆炸（期間停止普攻）。	对范围内所有敌人贴上炸弹，2秒后连锁爆炸（期间停止普攻）。
+ult.commando_grenade.desc	범위 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발시킨다(그동안 기본 공격 불가).	範囲内の全ての敵に爆弾を貼り付け、2秒後に連鎖爆発（その間は通常攻撃停止）。	Plant bombs on every enemy in range. They chain-explode after 2s (no basic attacks meanwhile).	對範圍內所有敵人貼上炸彈，2秒後連鎖爆炸（期間停止普攻）。	对范围内所有敌人贴上炸弹，2秒后连锁爆炸（期间停止普攻）。
 ult.commando_grenade.short	적마다 폭탄, 2초 뒤 연쇄 폭발	敵に爆弾、2秒後に連鎖爆発	Bomb foes; chain blast in 2s	每個敵人貼炸彈，2秒後連鎖爆炸	每个敌人贴炸弹，2秒后连锁爆炸
-askill.commando_grenade.short	내 둘레에 수류탄을 원으로	自分の周りに手榴弾を円形に	Ring of grenades around you	在自身周圍環狀投擲手榴彈	在自身周围环状投掷手榴弹
+askill.commando_grenade.short	주변에 수류탄 원형 투하	自分の周りに手榴弾を円形に	Ring of grenades around you	在自身周圍環狀投擲手榴彈	在自身周围环状投掷手榴弹
 pskill.commando_grenade.short	방어력 50% 무시	防御力50%無視	Ignore 50% defense	無視50%防禦	无视50%防御
 askill.commando_grenade.opt	착탄마다 작은 화상 장판	着弾ごとに小さな燃焼エリア	Each blast leaves a small fire patch	每次著彈留下小型燃燒區	每次着弹留下小型燃烧区
 host.salamander.concept	독술사 — 지속 피해	毒術師 — 継続ダメージ	Venomancer — lasting damage	毒術師 — 持續傷害	毒术师 — 持续伤害
 ult.salamander.name	독 늪	毒の沼	Venom Swamp	毒沼	毒沼
-ult.salamander.desc	넓은 독 늪을 깐다 — 안에 있는 적은 모두 중독되고, 늪이 끝날 때 터진다.	広い毒の沼を広げる。中の敵は全て毒になり、沼が消える時に爆発する。	Lay a wide toxic swamp. Every foe inside is poisoned, and it explodes when it ends.	展開大片毒沼 — 其中的敵人全部中毒，毒沼結束時爆炸。	展开大片毒沼 — 其中的敌人全部中毒，毒沼结束时爆炸。
+ult.salamander.desc	넓은 독 늪을 만든다. 안의 적은 모두 중독되고, 늪이 사라질 때 폭발한다.	広い毒の沼を広げる。中の敵は全て毒になり、沼が消える時に爆発する。	Lay a wide toxic swamp. Every foe inside is poisoned, and it explodes when it ends.	展開大片毒沼 — 其中的敵人全部中毒，毒沼結束時爆炸。	展开大片毒沼 — 其中的敌人全部中毒，毒沼结束时爆炸。
 ult.salamander.short	넓은 독 늪 · 안의 적 전부 중독	広い毒沼・中の敵は全て毒	Wide swamp poisons all inside	大片毒沼 · 範圍內敵人全中毒	大片毒沼 · 范围内敌人全中毒
-askill.salamander.short	둘레 5m 적을 모두 중독	周囲5mの敵を全て毒に	Poison all foes within 5 m	使周圍5m敵人全部中毒	使周围5m敌人全部中毒
-pskill.salamander.short	10% 독 · 중독된 적 +25% 피해	10%で毒・毒の敵へ+25%	10% Poison; +25% dmg to poisoned	10%中毒 · 對中毒敵人傷害 +25%	10%中毒 · 对中毒敌人伤害 +25%
-askill.salamander.opt	중독된 적이 죽으면 독이 터져 옆으로 옮는다	毒状態の敵が倒れると毒が弾けて周りに広がる	Poisoned foes burst on death, spreading poison	中毒敵人死亡時毒素爆開並擴散到周圍	中毒敌人死亡时毒素爆开并扩散到周围
+askill.salamander.short	주변 5m 적 모두 중독	周囲5mの敵を全て毒に	Poison all foes within 5 m	使周圍5m敵人全部中毒	使周围5m敌人全部中毒
+pskill.salamander.short	10% 확률로 중독 · 중독된 적에게 주는 피해 +25%	10%で毒・毒の敵へ+25%	10% Poison; +25% dmg to poisoned	10%中毒 · 對中毒敵人傷害 +25%	10%中毒 · 对中毒敌人伤害 +25%
+askill.salamander.opt	중독된 적이 죽으면 독이 주변 적에게 퍼진다	毒状態の敵が倒れると毒が弾けて周りに広がる	Poisoned foes burst on death, spreading poison	中毒敵人死亡時毒素爆開並擴散到周圍	中毒敌人死亡时毒素爆开并扩散到周围
 host.snowwoman.concept	빙결 마녀 — 얼려서 깬다	氷結の魔女 — 凍らせて砕く	Ice witch — freeze & shatter	冰結魔女 — 冰凍後擊碎	冰结魔女 — 冰冻后击碎
 ult.snowwoman.name	얼음 진	氷陣	Ice Formation	冰陣	冰阵
-ult.snowwoman.desc	얼음 진을 깔아 기둥이 솟고 가둔 뒤 파쇄.	氷の陣を敷いて氷柱を突き出し、敵を閉じ込めてから粉砕する。	Lay an ice circle. Pillars erupt, trap foes, then shatter.	展開冰陣，冰柱竄出困住敵人後粉碎。	展开冰阵，冰柱窜出困住敌人后粉碎。
+ult.snowwoman.desc	얼음 진을 펼쳐 얼음 기둥으로 적을 가둔 뒤 부순다.	氷の陣を敷いて氷柱を突き出し、敵を閉じ込めてから粉砕する。	Lay an ice circle. Pillars erupt, trap foes, then shatter.	展開冰陣，冰柱竄出困住敵人後粉碎。	展开冰阵，冰柱窜出困住敌人后粉碎。
 ult.snowwoman.short	얼음 기둥으로 가두고 파쇄	氷柱で閉じ込めて粉砕	Ice pillars trap, then shatter	以冰柱困住後粉碎	以冰柱困住后粉碎
-askill.snowwoman.short	2초간 얼음 속에서 체력 회복	2秒間氷にこもり体力回復	Encase in ice 2s, heal 30%	2秒內冰封自身回復HP	2秒内冰封自身恢复HP
-pskill.snowwoman.short	30% 로 적을 얼린다	30%で敵を凍結	30% chance to Freeze	30%機率冰凍敵人	30%概率冰冻敌人
-askill.snowwoman.opt	얼음이 깨질 때 둘레 적 빙결	氷が割れる時、周囲の敵を凍結	Shattering ice freezes nearby foes	冰塊碎裂時冰凍周圍敵人	冰块碎裂时冰冻周围敌人
+askill.snowwoman.short	1초간 얼음 속에서 무적 · 회복	1秒間、氷の中で無敵・回復	1s invincible in ice · Heal	冰封1秒無敵 · 回復	冰封1秒无敌 · 回复
+pskill.snowwoman.short	30% 확률로 빙결	30%で敵を凍結	30% chance to Freeze	30%機率冰凍敵人	30%概率冰冻敌人
+askill.snowwoman.opt	얼음이 깨질 때 주변 적 빙결	氷が割れる時、周囲の敵を凍結	Shattering ice freezes nearby foes	冰塊碎裂時冰凍周圍敵人	冰块碎裂时冰冻周围敌人
 host.thug.concept	난사 갱 — 막 쏟아붓는다	乱射ギャング — 撃ちまくる	Spray gang — all-out fire	亂射幫派 — 火力全開	乱射帮派 — 火力全开
 ult.thug.name	회전 난사	回転乱射	Spin Barrage	旋轉亂射	旋转乱射
-ult.thug.desc	2.5초 돌며 사방 연사, 멈추며 사방 16발.	2.5秒間回転しながら全方位に連射し、止まる瞬間に全方位へ16発。	Spin for 2.5s firing in all directions, then burst 16 shots as you stop.	旋轉2.5秒向四方連射，停下時向四方射出16發。	旋转2.5秒向四方连射，停下时向四方射出16发。
+ult.thug.desc	2.5초간 회전하며 사방으로 연사하고, 멈출 때 사방으로 16발을 쏜다.	2.5秒間回転しながら全方位に連射し、止まる瞬間に全方位へ16発。	Spin for 2.5s firing in all directions, then burst 16 shots as you stop.	旋轉2.5秒向四方連射，停下時向四方射出16發。	旋转2.5秒向四方连射，停下时向四方射出16发。
 ult.thug.short	돌며 사방으로 쏟아붓기	回転して全方位に乱射	Spin and fire in all directions	旋轉向四方傾瀉火力	旋转向四方倾泻火力
 askill.thug.short	5갈래 3연발	5方向3連射	5-way burst ×3	5方向3連射	5方向3连射
 pskill.thug.short	주운 골드 +10%	拾ったゴールド+10%	+10% Gold picked up	拾取金幣 +10%	拾取金币 +10%
 askill.thug.opt	한 번에 5 → 9발	1回5発→9発	5 → 9 shots per burst	單次 5 → 9發	单次 5 → 9发
 host.commando_missile.concept	폭격 지원 — 여럿을 추적	爆撃支援 — 多数を追尾	Air support — multi-homing	轟炸支援 — 追蹤多個目標	轰炸支援 — 追踪多个目标
 ult.commando_missile.name	집중 포격	集中砲撃	Focus Barrage	集中砲擊	集中炮击
-ult.commando_missile.desc	가장 센 적에게 미사일 8발을 모아 쏟아붓는다.	最も強い敵にミサイル8発を集中させる。	Converge 8 missiles on the strongest foe.	將8發飛彈集中傾瀉於最強敵人。	将8发导弹集中倾泻于最强敌人。
-ult.commando_missile.short	가장 센 적에게 8발 집중	最強の敵に8発集中	8 missiles on the strongest foe	對最強敵人集中8發	对最强敌人集中8发
+ult.commando_missile.desc	가장 강한 적에게 미사일 8발을 집중 발사한다.	最も強い敵にミサイル8発を集中させる。	Converge 8 missiles on the strongest foe.	將8發飛彈集中傾瀉於最強敵人。	将8发导弹集中倾泻于最强敌人。
+ult.commando_missile.short	가장 강한 적에게 8발 집중	最強の敵に8発集中	8 missiles on the strongest foe	對最強敵人集中8發	对最强敌人集中8发
 askill.commando_missile.short	7발이 여러 적에게 한 발씩	7発が複数の敵へ1発ずつ	7 missiles, one per foe	7發飛彈分別射向多名敵人	7发导弹分别射向多名敌人
 pskill.commando_missile.short	투사체가 지형지물 무시	弾が障害物を無視	Shots ignore obstacles	投射物無視障礙物	投射物无视障碍物
 askill.commando_missile.opt	맞은 자리마다 작은 폭발	命中地点ごとに小爆発	Small blast at each hit	每個命中點小爆炸	每个命中点小爆炸
 host.commando_laser.concept	관통 포격 — 일직선	貫通砲撃 — 一直線	Piercing beam — one line	貫穿砲擊 — 一直線	贯穿炮击 — 一直线
 ult.commando_laser.name	프리즘 레이저	プリズムレーザー	Prism Laser	稜鏡雷射	棱镜激光
-ult.commando_laser.desc	굵은 레이저가 가까운 적에 꽂히고, 거기서 네 갈래로 갈라져 둘레 적에게 꺾여 든다.	太いレーザーが近くの敵に刺さり、そこから4本に分かれて周囲の敵へ折れ曲がって飛ぶ。	A thick laser strikes the nearest foe, then splits into 4 beams that bend into nearby foes.	粗大雷射擊中最近的敵人，再從該處分成四道折向周圍敵人。	粗大激光击中最近的敌人，再从该处分成四道折向周围敌人。
-ult.commando_laser.short	레이저가 맞은 자리에서 네 갈래로	命中地点から4本に分裂	Laser splits into 4 on hit	雷射在命中處分成四道	激光在命中处分成四道
+ult.commando_laser.desc	굵은 레이저로 가까운 적을 맞힌 뒤, 4갈래로 갈라져 주변 적을 공격한다.	太いレーザーが近くの敵に刺さり、そこから4本に分かれて周囲の敵へ折れ曲がって飛ぶ。	A thick laser strikes the nearest foe, then splits into 4 beams that bend into nearby foes.	粗大雷射擊中最近的敵人，再從該處分成四道折向周圍敵人。	粗大激光击中最近的敌人，再从该处分成四道折向周围敌人。
+ult.commando_laser.short	레이저가 4갈래로 갈라짐	命中地点から4本に分裂	Laser splits into 4 on hit	雷射在命中處分成四道	激光在命中处分成四道
 askill.commando_laser.short	3초간 주변에 전기 연쇄	3秒間、周囲に連鎖放電	Chain shock nearby for 3s	3秒內在周圍連鎖放電	3秒内在周围连锁放电
 pskill.commando_laser.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
 askill.commando_laser.opt	전기가 튈 때마다 감전 (둔화)	放電のたびに感電（鈍足）	Each arc shocks and slows	每次放電使敵人感電（緩速）	每次放电使敌人感电（减速）
-host.white_wizard.concept	축적 마법사 — 모아서 쏜다	蓄積の魔法使い — 溜めて撃つ	Charge mage — store & fire	蓄力魔法師 — 蓄力後發射	蓄力魔法师 — 蓄力后发射
+host.white_wizard.concept	중력 마법사 — 끌어모아 터뜨린다	重力の魔法使い — 引き寄せて炸裂	Gravity Mage — Pull in, then burst	重力法師 — 聚怪引爆	重力法师 — 聚怪引爆
 ult.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain	光柱之雨	光柱之雨
-ult.white_wizard.desc	3초 동안 둘레 적 머리 위로 빛기둥 14개가 차례로 꽂힌다.	3秒間、周囲の敵の頭上に光の柱が14本次々と降り注ぐ。	For 3s, 14 pillars of light crash down on nearby foes one after another.	3秒內有14道光柱依序落在周圍敵人頭上。	3秒内有14道光柱依次落在周围敌人头上。
+ult.white_wizard.desc	3초간 주변 적에게 빛기둥 14개가 차례로 떨어진다.	3秒間、周囲の敵の頭上に光の柱が14本次々と降り注ぐ。	For 3s, 14 pillars of light crash down on nearby foes one after another.	3秒內有14道光柱依序落在周圍敵人頭上。	3秒内有14道光柱依次落在周围敌人头上。
 ult.white_wizard.short	3초간 빛기둥 14개가 쏟아짐	3秒間光柱14本が降り注ぐ	14 light pillars over 3s	3秒內落下14道光柱	3秒内落下14道光柱
 askill.white_wizard.short	적을 끌어모아 빛 폭발	敵を引き寄せて光の爆発	Pull foes in, then burst	聚集敵人後引發光爆	聚集敌人后引发光爆
 pskill.white_wizard.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
 askill.white_wizard.opt	중력진 범위 1.8 → 2.2 m	重力陣の範囲1.8→2.2m	Gravity Well radius 1.8 → 2.2 m	重力陣範圍 1.8 → 2.2 m	重力阵范围 1.8 → 2.2 m
 host.dragon_blue.concept	뇌신 — 번개가 튄다	雷神 — 雷が跳ぶ	Storm god — chain lightning	雷神 — 閃電彈跳	雷神 — 闪电弹跳
 ult.dragon_blue.name	천뢰	天雷	Heaven's Thunder	天雷	天雷
-ult.dragon_blue.desc	둘레 모든 적에게 낙뢰가 세 번 떨어지고, 끝에 가장 센 적에게 큰 낙뢰.	周囲の全ての敵に落雷が3回落ち、最後に最も強い敵へ巨大な落雷。	Lightning strikes every nearby foe 3 times, then a huge bolt hits the strongest.	周圍所有敵人遭落雷三次，最後對最強敵人降下巨雷。	周围所有敌人遭落雷三次，最后对最强敌人降下巨雷。
-ult.dragon_blue.short	둘레 모든 적에게 낙뢰 3번	周囲の全敵に落雷3回	Bolts on all nearby foes ×3	周圍所有敵人落雷3次	周围所有敌人落雷3次
-askill.dragon_blue.short	2초간 번개 튕김 확정	2秒間、連鎖雷が確定	Chain lightning sure for 2s	2秒內閃電必定彈跳	2秒内闪电必定弹跳
-pskill.dragon_blue.short	10% 로 옆 적에게 번개	10%で隣の敵に雷	10% chain lightning	10%機率雷擊鄰近敵人	10%概率雷击邻近敌人
+ult.dragon_blue.desc	주변 모든 적에게 낙뢰가 3번 떨어지고, 마지막에 가장 강한 적에게 거대한 낙뢰가 떨어진다.	周囲の全ての敵に落雷が3回落ち、最後に最も強い敵へ巨大な落雷。	Lightning strikes every nearby foe 3 times, then a huge bolt hits the strongest.	周圍所有敵人遭落雷三次，最後對最強敵人降下巨雷。	周围所有敌人遭落雷三次，最后对最强敌人降下巨雷。
+ult.dragon_blue.short	주변 모든 적에게 낙뢰 3번	周囲の全敵に落雷3回	Bolts on all nearby foes ×3	周圍所有敵人落雷3次	周围所有敌人落雷3次
+askill.dragon_blue.short	2초간 패시브 낙뢰 100% 발동	2秒間、連鎖雷が確定	Chain lightning sure for 2s	2秒內閃電必定彈跳	2秒内闪电必定弹跳
+pskill.dragon_blue.short	10% 확률로 근처 적에게 번개	10%で隣の敵に雷	10% chain lightning	10%機率雷擊鄰近敵人	10%概率雷击邻近敌人
 askill.dragon_blue.opt	끝날 때 가장 가까운 적에게 낙뢰	終了時、最も近い敵に落雷	Ends with a bolt on the nearest foe	結束時對最近敵人落雷	结束时对最近敌人落雷
 host.commando_mg.concept	방패병 — 막으며 전진	盾兵 — 防ぎつつ前進	Shieldbearer — block & push	盾兵 — 邊擋邊推進	盾兵 — 边挡边推进
 ult.commando_mg.name	회전 난사	回転乱射	Spin Barrage	旋轉亂射	旋转乱射
-ult.commando_mg.desc	기관총을 세우고 3초 동안 돌며 사방으로 쏟아붓다가, 멈추며 사방으로 산탄 24발.	機関銃を構えて3秒間回りながら全方位に撃ちまくり、止まる瞬間に全方位へ24発の散弾。	Brace the machine gun and spin firing in all directions for 3s, then blast 24 pellets all around.	架起機槍旋轉3秒向四方傾瀉，停下時向四方射出24發散彈。	架起机枪旋转3秒向四方倾泻，停下时向四方射出24发散弹。
+ult.commando_mg.desc	기관총을 거치하고 3초간 회전하며 사방으로 난사한 뒤, 멈출 때 산탄 24발을 퍼붓는다.	機関銃を構えて3秒間回りながら全方位に撃ちまくり、止まる瞬間に全方位へ24発の散弾。	Brace the machine gun and spin firing in all directions for 3s, then blast 24 pellets all around.	架起機槍旋轉3秒向四方傾瀉，停下時向四方射出24發散彈。	架起机枪旋转3秒向四方倾泻，停下时向四方射出24发散弹。
 ult.commando_mg.short	3초 회전 난사 + 사방 산탄	3秒回転乱射＋全方位散弾	3s spin fire + pellet burst	3秒旋轉亂射 + 四方散彈	3秒旋转乱射 + 四方散弹
 askill.commando_mg.short	5초간 최대 체력만큼 쉴드	5秒間、最大体力分のシールド	Shield = max HP for 5s	5秒內獲得等同最大HP的護盾	5秒内获得等同最大HP的护盾
 pskill.commando_mg.short	방어력 20% 증가	防御力20%上昇	Defense +20%	防禦 +20%	防御 +20%
-askill.commando_mg.opt	쉴드가 깨질 때 둘레 적을 밀쳐낸다	シールドが割れる時、周囲の敵を押し返す	Broken Shield knocks back foes	護盾破碎時擊退周圍敵人	护盾破碎时击退周围敌人
+askill.commando_mg.opt	쉴드가 깨질 때 주변 적을 밀쳐낸다	シールドが割れる時、周囲の敵を押し返す	Broken Shield knocks back foes	護盾破碎時擊退周圍敵人	护盾破碎时击退周围敌人
 host.amazon_elite.concept	불굴의 반격자	不屈の反撃者	Unyielding avenger	不屈反擊者	不屈反击者
 ult.amazon_elite.name	역린	逆鱗	Wrath	逆鱗	逆鳞
 ult.amazon_elite.desc	3초간 받은 피해를 모았다가 주변으로 되돌려 터뜨린다.	3秒間受けたダメージを溜め、周囲へ爆発として返す。	Store damage taken for 3s, then unleash it around you.	累積3秒內承受的傷害，再向周圍反彈爆發。	累积3秒内承受的伤害，再向周围反弹爆发。
 ult.amazon_elite.short	받은 피해를 모아 되돌려 폭발	受けたダメージを溜めて爆発	Store damage, blast it back	累積承受傷害反彈爆發	累积承受伤害反弹爆发
 askill.amazon_elite.short	2.5초 무적 + 쉴드 상한 해제	2.5秒無敵＋シールド上限解除	2.5s invincible, Shield cap off	2.5秒無敵 + 解除護盾上限	2.5秒无敌 + 解除护盾上限
 pskill.amazon_elite.short	쉴드 있는 동안 공격력 증가	シールド中は攻撃力アップ	Attack up while Shielded	有護盾時攻擊力提升	有护盾时攻击力提升
-askill.amazon_elite.opt	무적 동안 받은 공격의 30% 를 되돌려 준다	無敵中に受けた攻撃の30%を反射	Reflect 30% of hits taken while invincible	無敵期間反彈所受攻擊的30%	无敌期间反弹所受攻击的30%
+askill.amazon_elite.opt	무적 중 받은 피해의 30%를 반사한다	無敵中に受けた攻撃の30%を反射	Reflect 30% of hits taken while invincible	無敵期間反彈所受攻擊的30%	无敌期间反弹所受攻击的30%
 ui.chapterhost.reward_met_shards	만난 호스트 조각	出会ったホストのかけら	Shards of hosts met	已遇宿主碎片	已遇宿主碎片
 ui.home.scenario	시나리오	シナリオ	Scenario	劇情	剧情
 ui.home.chapter	챕터 {0}	チャプター {0}	Chapter {0}	第{0}章	第{0}章
@@ -1338,7 +1338,7 @@ ui.tower.sweep_preview	{0}층을 깨면 · {1} · 조각 ×{2}	{0}階クリア�
 ui.growth5.ghost_title	유령 육성	ゴースト育成	Ghost Training	幽靈培養	幽灵培养
 ui.growth5.path_done	받음	受取済	Claimed	已領取	已领取
 ui.growth5.path_locked	잠김	ロック	Locked	未解鎖	未解锁
-ui.summon.reveal.new	새 몸!	新しい体!	New Body!	新身體！	新身体！
+ui.summon.reveal.new	새 호스트!	新しいホスト!	New Host!	新宿主！	新宿主！
 ui.summon.reveal.pickup	PICK UP!	PICK UP!	PICK UP!	PICK UP!	PICK UP!
 ui.summon.reveal.jackpot	대박!	大当たり!	Jackpot!	大獎！	大奖！
 ui.summon.reveal.tap	화면을 눌러 계속	タップして続ける	Tap to continue	點擊畫面繼續	点击屏幕继续
@@ -1349,7 +1349,7 @@ ui.rb.rail.mission	미션	ミッション	Missions	任務	任务
 ui.rb.rail.settings	설정	設定	Settings	設定	设置
 ui.rb.rail.event	이벤트	イベント	Events	活動	活动
 ui.rb.rail.daily	오늘 무료	本日無料	Daily Free	今日免費	今日免费
-ui.rb.lobby.prompt	어떤 몸과 만날까요?	どの体と出会う？	Which body awaits?	要與哪個身體相遇？	要与哪个身体相遇？
+ui.rb.lobby.prompt	어떤 호스트와 함께할까요?	どのホストと出会う？	Which host awaits?	要與哪個宿主相遇？	要与哪个宿主相遇？
 ui.rb.lobby.sortie_title	출전 호스트	出撃ホスト	Sortie Host	出擊宿主	出击宿主
 ui.rb.tab.shop	상점	ショップ	Shop	商店	商店
 ui.rb.tab.host	호스트	ホスト	Hosts	宿主	宿主
@@ -1368,10 +1368,10 @@ ui.rb.lobby.chip.shards	조각 +{0}	欠片 +{0}	Shards +{0}	碎片 +{0}	碎片 +
 ui.rb.lobby.chip.gold	골드 +{0}%	ゴールド +{0}%	Gold +{0}%	金幣 +{0}%	金币 +{0}%
 ui.rb.lobby.note.random	클리어 보너스 · 히든은 이번 판 체험, 조각 미지급	クリアボーナス · 隠しは今回のみ体験、欠片なし	Clear bonus · Hidden is a one-run trial, no shards	通關獎勵 · 隱藏僅限本局體驗，不給碎片	通关奖励 · 隐藏仅限本局体验，不给碎片
 ui.rb.lobby.chip.ghost_exp	유령 경험치 +{0}%	ゴースト経験値 +{0}%	Ghost EXP +{0}%	幽靈經驗 +{0}%	幽灵经验 +{0}%
-ui.rb.lobby.note.ghost	몸 없이 시작 · 판 안에서 몸을 빼앗아 싸워요	体なしで開始 · 中で体を奪って戦う	Start bodiless · Steal a body in the run	無身體開局 · 在局內奪取身體作戰	无身体开局 · 在局内夺取身体作战
+ui.rb.lobby.note.ghost	호스트 없이 시작 · 판 안에서 적에게 빙의해 싸워요	ホストなしで開始・ステージ内で敵に憑依して戦う	Start without a host · Possess enemies in the run	無宿主開局 · 在局內附身敵人作戰	无宿主开局 · 在局内附身敌人作战
 ui.rb.lobby.chip.power	전투력 {0:N0}	戦闘力 {0:N0}	Power {0:N0}	戰鬥力 {0:N0}	战斗力 {0:N0}
-ui.rb.lobby.note.today	오늘의 몸 · 골드 없이 출전	今日の体 · ゴールド不要で出撃	Today's body · Sortie with no gold	今日身體 · 不花金幣出擊	今日身体 · 不花金币出击
-ui.rb.lobby.note.host	고른 몸으로 바로 시작해요	選んだ体ですぐ開始	Start with the chosen body	以選擇的身體直接開始	以选择的身体直接开始
+ui.rb.lobby.note.today	오늘의 호스트 · 골드 없이 출전	今日のホスト · ゴールド不要で出撃	Today's host · Sortie with no gold	今日宿主 · 不花金幣出擊	今日宿主 · 不花金币出击
+ui.rb.lobby.note.host	고른 호스트로 바로 시작해요	選んだホストですぐ開始	Start with the chosen host	以選擇的宿主直接開始	以选择的宿主直接开始
 ui.rb.lobby.sortie_with	{0}{1} 출전	{0}で出撃	Sortie: {0}	以{0}出擊	以{0}出击
 ui.rb.lobby.sortie_ghost	유령으로 출전	ゴーストで出撃	Sortie as Ghost	以幽靈出擊	以幽灵出击
 ui.rb.lobby.sortie	출전	出撃	Sortie	出擊	出击
@@ -1426,18 +1426,18 @@ ui.rb.result.ghost_exp	유령 경험치	ゴースト経験値	Ghost EXP	幽靈�
 ui.rb.result.lobby	로비로	ロビーへ	Lobby	回大廳	回大厅
 ui.rb.pause.title	일시정지	一時停止	Paused	暫停	暂停
 ui.rb.pause.story	스토리	ストーリー	Story	劇情	剧情
-ui.rb.pause.build	지금 빌드	現在のビルド	Current Build	目前配置	当前配置
+ui.rb.pause.build	현재 빌드	現在のビルド	Current Build	目前配置	当前配置
 ui.rb.pause.body	호스트	ホスト	Host	宿主	宿主
 ui.rb.pause.no_card	아직 고른 카드가 없어요	まだカードを選んでいません	No cards picked yet	尚未選擇卡片	尚未选择卡片
-ui.rb.pause.no_host	몸 없음 · 유령	体なし・ゴースト	No body · Ghost	無身體 · 幽靈	无身体 · 幽灵
+ui.rb.pause.no_host	호스트 없음 · 유령	ホストなし・ゴースト	No host · Ghost	無宿主 · 幽靈	无宿主 · 幽灵
 ui.rb.pause.abandon	포기하기	あきらめる	Give Up	放棄	放弃
 ui.rb.pause.continue	계속하기	続ける	Continue	繼續	继续
 ui.rb.pause.abandon_title	스테이지 포기	ステージ放棄	Give Up Stage	放棄關卡	放弃关卡
 ui.rb.pause.abandon_ask	스테이지를 포기하고 로비로 돌아갈까요?	ステージをあきらめてロビーに戻りますか？	Give up and return to the lobby?	要放棄關卡並返回大廳嗎？	要放弃关卡并返回大厅吗？
 ui.rb.pause.give_up	포기	放棄	Give Up	放棄	放弃
 ui.rb.pause.keep	계속	続ける	Keep Going	繼續	继续
-ui.rb.summon.help	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금 · 성급을 올려요.\n10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.	体のかけらを引きます。かけらを集めると体の解放・星級アップができます。\n10回召喚はSR1回保証・50回以内に大当たりがなければ50回目は大当たり確定です。	Draw host shards. Collect shards to unlock hosts and raise stars.\n10x summons guarantee one SR. If no jackpot in 50 pulls, the 50th is a jackpot.	抽取身體碎片。收集碎片可解鎖身體、提升星級。\n10連召喚保證1個SR · 50次內未出大獎則第50次必定大獎。	抽取身体碎片。收集碎片可解锁身体、提升星级。\n10连召唤保证1个SR · 50次内未出大奖则第50次必定大奖。
-ui.rb.summon.pickup_rule	SSR 이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트	SSRが出ると<color=#FFC93D>{0}%</color>の確率でピックアップホスト	SSR draws are the pickup host <color=#FFC93D>{0}%</color> of the time	抽到SSR時有<color=#FFC93D>{0}%</color>機率為UP宿主	抽到SSR时有<color=#FFC93D>{0}%</color>概率为UP宿主
+ui.rb.summon.help	호스트 조각을 뽑아요. 조각을 모아 호스트를 해금하고 성급을 올려요.\n10회 소환 시 SR 1회 보장 · 50회 안에 대박이 없으면 50번째는 대박 확정이에요.	ホストのかけらを引きます。かけらを集めてホストを解放し、星級を上げます。\n10回召喚はSR1回保証・50回以内に大当たりがなければ50回目は大当たり確定です。	Draw host shards. Collect shards to unlock hosts and raise stars.\n10x summons guarantee one SR. If no jackpot in 50 pulls, the 50th is a jackpot.	抽取宿主碎片。收集碎片可解鎖宿主、提升星級。\n10連召喚保證1個SR · 50次內未出大獎則第50次必定大獎。	抽取宿主碎片。收集碎片可解锁宿主、提升星级。\n10连召唤保证1个SR · 50次内未出大奖则第50次必定大奖。
+ui.rb.summon.pickup_rule	SR이 나오면 <color=#FFC93D>{0}%</color> 확률로 픽업 호스트	SRが出ると<color=#FFC93D>{0}%</color>の確率でピックアップホスト	SR draws are the pickup host <color=#FFC93D>{0}%</color> of the time	抽到SR時有<color=#FFC93D>{0}%</color>機率為UP宿主	抽到SR时有<color=#FFC93D>{0}%</color>概率为UP宿主
 ui.rb.summon.left	남은 {0}일 {1}시간	残り{0}日{1}時間	{0}d {1}h left	剩餘{0}天{1}小時	剩余{0}天{1}小时
 ui.rb.summon.pity	대박까지 <color=#FFFFFF>{0}</color> /{1}	大当たりまで <color=#FFFFFF>{0}</color> /{1}	Jackpot in <color=#FFFFFF>{0}</color> /{1}	距離大獎 <color=#FFFFFF>{0}</color> /{1}	距离大奖 <color=#FFFFFF>{0}</color> /{1}
 ui.rb.summon.tickets	보유 소환권 <color=#FFFFFF>{0}</color>	所持召喚券 <color=#FFFFFF>{0}</color>	Tickets <color=#FFFFFF>{0}</color>	持有召喚券 <color=#FFFFFF>{0}</color>	拥有召唤券 <color=#FFFFFF>{0}</color>
@@ -1455,21 +1455,21 @@ ui.rb.summon.card_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}	碎片 ×{0}	
 ui.rb.summon.card.aff	{0}형	{0}タイプ	{0} type	{0}型	{0}型
 ui.rb.summon.card.shards_add	조각 <color=#5FF0C9>+{0}</color>	かけら <color=#5FF0C9>+{0}</color>	Shards <color=#5FF0C9>+{0}</color>	碎片 <color=#5FF0C9>+{0}</color>	碎片 <color=#5FF0C9>+{0}</color>
 ui.rb.summon.card.next	다음 성급까지 {0}개	次の星まであと{0}個	{0} more to next star	距下一星級還差 {0} 個	距下一星级还差 {0} 个
-ui.rb.summon.card.ready	성급을 올릴 수 있다!	星を上げられる！	Ready to rank up!	可以提升星級！	可以提升星级！
-ui.rb.summon.card.unlock	새 몸 해금! · 이제 출전할 수 있다	新しい体を解放！・出撃できる	New body unlocked! · Ready to deploy	新身體解鎖！· 現在可以出戰	新身体解锁！· 现在可以出战
-ui.rb.summon.card.essence	다 키운 몸 · 정수 +{0}	育成完了・エッセンス +{0}	Fully grown · Essence +{0}	已練滿 · 精華 +{0}	已练满 · 精华 +{0}
+ui.rb.summon.card.ready	성급을 올릴 수 있어요!	星を上げられる！	Ready to rank up!	可以提升星級！	可以提升星级！
+ui.rb.summon.card.unlock	새 호스트 해금! · 이제 출전할 수 있어요	新しいホストを解放！・出撃できる	New host unlocked! · Ready to deploy	新宿主解鎖！· 現在可以出戰	新宿主解锁！· 现在可以出战
+ui.rb.summon.card.essence	최대 성급 · 정수 +{0}	最大星級・エッセンス+{0}	Max stars · Essence +{0}	最高星級 · 精華+{0}	最高星级 · 精华+{0}
 ui.rb.event.give	내\n준\n다	渡\nす	G\nI\nV\nE	付\n出	付\n出
 ui.rb.event.get	받\n는\n다	得\nる	G\nE\nT	獲\n得	获\n得
 ui.rb.event.give_flat	내준다	渡す	Give	付出	付出
 ui.rb.event.no_cost	대가 없음	代償なし	No cost	沒有代價	没有代价
-ui.rb.event.give.ghost_hp	고스트 체력 -{0}%	ゴースト体力 -{0}%	Ghost HP -{0}%	幽靈體力 -{0}%	幽灵体力 -{0}%
+ui.rb.event.give.ghost_hp	유령 체력 -{0}%	ゴースト体力 -{0}%	Ghost HP -{0}%	幽靈體力 -{0}%	幽灵体力 -{0}%
 ui.rb.event.give.host_hp	호스트 체력 -{0}%	ホスト体力 -{0}%	Host HP -{0}%	宿主體力 -{0}%	宿主体力 -{0}%
 ui.rb.event.give.max_hp	최대 체력 -{0}%	最大体力 -{0}%	Max HP -{0}%	最大體力 -{0}%	最大体力 -{0}%
 ui.rb.event.give.gold	골드 -{0}	ゴールド -{0}	Gold -{0}	金幣 -{0}	金币 -{0}
-ui.rb.event.give.fight	적 {0}과 먼저 싸운다	敵{0}体と先に戦う	Fight {0} enemies first	先與{0}名敵人戰鬥	先与{0}名敌人战斗
-ui.rb.event.give.fight_elite	엘리트 {0}와 먼저 싸운다	エリート{0}体と先に戦う	Fight {0} elites first	先與{0}名精英戰鬥	先与{0}名精英战斗
+ui.rb.event.give.fight	먼저 {0}와(과) 싸운다	敵{0}体と先に戦う	Fight {0} enemies first	先與{0}名敵人戰鬥	先与{0}名敌人战斗
+ui.rb.event.give.fight_elite	먼저 엘리트 {0}와(과) 싸운다	エリート{0}体と先に戦う	Fight {0} elites first	先與{0}名精英戰鬥	先与{0}名精英战斗
 ui.rb.event.now	지금 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	今 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	Now <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	目前 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>	目前 <color=#FFFFFF>{0}</color> → <color=#FF8A9C>{1}</color>
-ui.rb.event.max_hp_sub	앞으로 빼앗는 <color=#FF8A9C>몸 전부</color>	これから奪う<color=#FF8A9C>体すべて</color>	<color=#FF8A9C>Every body</color> you take from now	之後奪取的<color=#FF8A9C>所有身體</color>	之后夺取的<color=#FF8A9C>所有身体</color>
+ui.rb.event.max_hp_sub	앞으로 빙의하는 <color=#FF8A9C>호스트 전부</color>	これから憑依する<color=#FF8A9C>ホストすべて</color>	<color=#FF8A9C>Every host</color> you possess from now	之後附身的<color=#FF8A9C>所有宿主</color>	之后附身的<color=#FF8A9C>所有宿主</color>
 ui.rb.event.run_long	이 판 내내	このラン中ずっと	All run	整局有效	整局有效
 ui.rb.event.win_get	이기면 받는다	勝てばもらえる	Win to receive	獲勝即可獲得	获胜即可获得
 ui.rb.event.get.upgrade	가진 카드 1장 강화	持っているカード1枚を強化	Upgrade 1 owned card	強化持有的1張卡	强化持有的1张卡
@@ -1492,7 +1492,7 @@ ui.rb.summon.rates_title	확률 보기	確率を見る	Rates	機率一覽	概率
 ui.rb.summon.records_title	뽑기 기록	召喚記録	History	召喚紀錄	召唤记录
 ui.rb.summon.pity_note	천장 횟수는 이월되지 않습니다.	天井カウントは持ち越されません。	Pity count does not carry over.	保底次數不會延續。	保底次数不会延续。
 ui.rb.summon.note	10회 소환은 SR 1회 보장 · 50회 안에 대박이 없으면\n50번째는 대박 확정	10回召喚はSR1回保証・50回以内に大当たりがなければ\n50回目は大当たり確定	10x summons guarantee one SR. No jackpot in 50 pulls?\nThe 50th is guaranteed.	10連召喚保證1個SR · 50次內未出大獎\n第50次必定大獎	10连召唤保证1个SR · 50次内未出大奖\n第50次必定大奖
-ui.rb.summon.new	새 몸!	NEW	New!	NEW	NEW
+ui.rb.summon.new	새 호스트!	新しいホスト！	New Host!	新宿主！	新宿主！
 ui.rb.summon.jackpot_card	대박 확정	大当たり確定	Jackpot	大獎確定	大奖确定
 ui.rb.shop.tab.best	추천	おすすめ	Featured	推薦	推荐
 ui.rb.shop.tab.today	오늘	本日	Today	今日	今日
@@ -1527,7 +1527,7 @@ ui.rb.chl.buy	추가 입장 ›	追加入場 ›	Buy Entry ›	追加入場 ›	
 ui.rb.chl.fit	맞는 호스트 보기	適したホストを見る	Fitting Hosts	適合的宿主	适合的宿主
 ui.rb.chl.host_shards	호스트 조각	ホストのかけら	Host Shards	宿主碎片	宿主碎片
 ui.rb.chl.today_reward	◆ 오늘의 보상	◆ 本日の報酬	◆ Today's Rewards	◆ 今日獎勵	◆ 今日奖励
-ui.rb.chl.night_shards	그날 몸의 조각 · 판이 끝나면 처치 수만큼	その日の体のかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日身體碎片 · 依擊敗數發放	当日身体碎片 · 按击败数发放
+ui.rb.chl.night_shards	그날 등장 호스트 조각 · 처치 수만큼 지급	その日のホストのかけら・終了時に撃破数に応じて	Shards of the day's hosts · based on kills	當日宿主碎片 · 依擊敗數發放	当日宿主碎片 · 按击败数发放
 ui.rb.ghost.title	유령	ゴースト	Ghost	幽靈	幽灵
 ui.rb.ghost.applies	모든 호스트에 적용	すべてのホストに適用	Applies to every host	適用於所有宿主	适用于所有宿主
 ui.rb.ghost.level	유령 레벨	ゴーストレベル	Ghost Level	幽靈等級	幽灵等级
@@ -1575,7 +1575,7 @@ ui.rb.growth.star_gain	체력·공격 +7%	HP・攻撃 +7%	HP · ATK +7%	體力·
 ui.rb.growth.rank_now	성급 {0}	星級 {0}	Star {0}	星級 {0}	星级 {0}
 ui.rb.src.title	조각 획득처	かけら入手先	Shard Sources	碎片獲取途徑	碎片获取途径
 ui.rb.src.summon	소환	召喚	Summon	召喚	召唤
-ui.rb.src.summon_sub	이 몸 포함 · 중복 획득 시 조각 전환	重複はかけらに変換	Dupes become shards	重複轉為碎片	重复转为碎片
+ui.rb.src.summon_sub	이 호스트 포함 · 중복 시 조각으로 전환	重複はかけらに変換	Dupes become shards	重複轉為碎片	重复转为碎片
 ui.rb.src.summon_tag	중복 조각	重複かけら	Dupe shards	重複碎片	重复碎片
 ui.rb.src.go	이동 ›	移動 ›	Go ›	前往 ›	前往 ›
 ui.rb.src.tower	망령의 탑	亡霊の塔	Phantom Tower	亡靈之塔	亡灵之塔
@@ -1607,8 +1607,8 @@ ui.rb.lock.sources	얻는 곳: 소환 · 망령의 탑 · 망령의 밤	入手: 
 ui.rb.lock.shards	조각 {0} /{1}	かけら {0} /{1}	Shards {0} /{1}	碎片 {0} /{1}	碎片 {0} /{1}
 ui.rb.lock.unlock	해금	解放	Unlock	解鎖	解锁
 ui.rb.lock.short	조각 {0}개 부족	かけら {0} 不足	{0} shards short	碎片不足 {0}	碎片不足 {0}
-ui.rb.lock.help	조각을 모으면 그 몸을 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요.	かけらを集めるとその体を解放できます。\n解放すると出撃・能力強化・星級強化が開きます。	Collect shards to unlock this host.\nUnlocking opens runs, stat and star upgrades.	收集碎片即可解鎖此宿主。\n解鎖後開放出戰・能力強化・星級強化。	收集碎片即可解锁此宿主。\n解锁后开放出战・属性强化・星级强化。
-ui.rb.reveal.new	새 몸!	新しい体！	New Host!	新宿主！	新宿主！
+ui.rb.lock.help	조각을 모으면 그 호스트를 해금해요.\n해금하면 출전 · 능력치 강화 · 성급 강화가 열려요.	かけらを集めるとそのホストを解放できます。\n解放すると出撃・能力強化・星級強化が開放されます。	Collect shards to unlock this host.\nUnlocking opens runs, stat and star upgrades.	收集碎片即可解鎖此宿主。\n解鎖後開放出戰・能力強化・星級強化。	收集碎片即可解锁此宿主。\n解锁后开放出战・属性强化・星级强化。
+ui.rb.reveal.new	새 호스트!	新しいホスト！	New Host!	新宿主！	新宿主！
 ui.rb.reveal.awaken_title	각성	覚醒	Awaken	覺醒	觉醒
 ui.rb.reveal.awaken	{0}성 각성	{0}星 覚醒	{0}★ Awakened	{0}星 覺醒	{0}星 觉醒
 ui.rb.reveal.awaken_full	{0}성 각성 완성	{0}星 覚醒完了	{0}★ Fully Awakened	{0}星 覺醒完成	{0}星 觉醒完成
@@ -1644,9 +1644,9 @@ ui.rb.result.tower_fail	{0}F FAILED	{0}F FAILED	{0}F FAILED	{0}F FAILED	{0}F FAI
 ui.rb.result.night_kills	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS
 ui.rb.result.entries	남은 입장 {0}/{1}	残り入場 {0}/{1}	Entries left {0}/{1}	剩餘入場 {0}/{1}	剩余入场 {0}/{1}
 ui.rb.result.floor	층	階	Floor	層	层
-ui.rb.result.possess	빙의 · 잃은 몸	憑依・失った体	Possessed · Lost	附身・失去宿主	附身・失去宿主
+ui.rb.result.possess	빙의 · 잃은 호스트	憑依・失ったホスト	Possessed · Lost	附身・失去宿主	附身・失去宿主
 ui.rb.result.first_clear	첫 클리어 보상	初回クリア報酬	First clear reward	首次通關獎勵	首次通关奖励
-ui.rb.result.suggest	이 층에 맞는 몸	この階に合う体	Good hosts for this floor	適合此層的宿主	适合此层的宿主
+ui.rb.result.suggest	이 층에 유리한 호스트	この階で有利なホスト	Good hosts for this floor	適合此層的宿主	适合此层的宿主
 ui.rb.result.to_tower	탑으로	塔へ	To Tower	回到塔	回到塔
 ui.rb.result.next_floor	다음 층 도전	次の階へ挑戦	Next Floor	挑戰下一層	挑战下一层
 ui.rb.result.best_new	최고 처치 {0}  <color=#FFC93D>NEW</color>	最高撃破 {0}  <color=#FFC93D>NEW</color>	Best {0}  <color=#FFC93D>NEW</color>	最高擊殺 {0}  <color=#FFC93D>NEW</color>	最高击杀 {0}  <color=#FFC93D>NEW</color>
@@ -1655,11 +1655,11 @@ ui.rb.result.survived	버틴 시간	生存時間	Survived	存活時間	存活时
 ui.rb.result.level	도달 Lv	到達Lv	Level reached	到達 Lv	到达 Lv
 ui.rb.result.leave	나가기	出る	Leave	離開	离开
 ui.rb.mode.kills	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS	{0} KILLS
-ui.rb.rnd.ask	어떤 몸과 만날까요?	どんな体に出会えるかな？	Who will you meet?	會遇到哪個身體呢？	会遇到哪个身体呢？
-ui.rb.rnd.hint	몸은 판이 시작될 때 정해져요.	体は出撃の時に決まります。	Your host is decided when the run starts.	宿主會在出戰時決定。	宿主会在出战时决定。
+ui.rb.rnd.ask	어떤 호스트와 만날까요?	どのホストと出会えるかな？	Who will you meet?	會遇到哪個宿主呢？	会遇到哪个宿主呢？
+ui.rb.rnd.hint	호스트는 판이 시작될 때 정해져요.	ホストは出撃時に決まります。	Your host is decided when the run starts.	宿主會在出戰時決定。	宿主会在出战时决定。
 ui.rb.rnd.reveal	공개하기	公開する	Reveal	公開	公开
 ui.rb.rnd.this_run	이번 판의 호스트	今回のホスト	This run's host	本局宿主	本局宿主
-ui.rb.rnd.hidden_sub	특별한 몸을 만났어요!	特別な体に出会いました！	You met a special host!	遇到了特別的宿主！	遇到了特别的宿主！
+ui.rb.rnd.hidden_sub	특별한 호스트를 만났어요!	特別なホストに出会いました！	You met a special host!	遇到了特別的宿主！	遇到了特别的宿主！
 ui.rb.rnd.hidden_name	히든 호스트	隠しホスト	Hidden Host	隱藏宿主	隐藏宿主
 ui.rb.rnd.hidden_line	이번 판 한정 체험 · 조각 미지급	今回限りの体験・かけらなし	This run only · no shards	僅限本局體驗・不給碎片	仅限本局体验・不给碎片
 ui.rb.rnd.owned_line	내가 키운 능력치로 출전	育てた能力で出撃	Runs with your upgrades	以培養的能力出戰	以培养的能力出战
@@ -1677,35 +1677,35 @@ ui.rb.chl.extra_price	젬 {0}	ジェム {0}	{0} Gems	寶石 {0}	宝石 {0}
 ui.rb.chl.extra_today	오늘 추가 입장 {0} / {1}	本日の追加入場 {0} / {1}	Extra entries today {0} / {1}	今日追加入場 {0} / {1}	今日追加入场 {0} / {1}
 ui.rb.guide.next	다음	次へ	Next	下一步	下一步
 ui.rb.guide.sortie.title	출전해요	出撃しよう	Time to sortie	出戰吧	出战吧
-ui.rb.guide.sortie.body	출전을 누르면 고른 몸으로 판이 시작돼요.\n랜덤 출전이면 아주 가끔 히든 호스트도 만나요.	出撃を押すと選んだ体でランが始まります。\nランダム出撃ならごくまれに隠しホストにも出会えます。	Tap Sortie to start a run with your chosen host.\nRandom runs may rarely bring a hidden host.	按下出戰即以所選宿主開始本局。\n隨機出戰偶爾會遇到隱藏宿主。	按下出战即以所选宿主开始本局。\n随机出战偶尔会遇到隐藏宿主。
-ui.rb.guide.growth.title	몸을 키워요	体を育てよう	Grow your hosts	培養宿主	培养宿主
+ui.rb.guide.sortie.body	출전을 누르면 고른 호스트로 판이 시작돼요.\n랜덤 출전이면 아주 가끔 히든 호스트도 만나요.	出撃を押すと選んだホストでランが始まります。\nランダム出撃では、ごくまれに隠しホストにも出会えます。	Tap Sortie to start a run with your chosen host.\nRandom runs may rarely bring a hidden host.	按下出戰即以所選宿主開始本局。\n隨機出戰偶爾會遇到隱藏宿主。	按下出战即以所选宿主开始本局。\n随机出战偶尔会遇到隐藏宿主。
+ui.rb.guide.growth.title	호스트를 육성해요	ホストを育てよう	Grow your hosts	培養宿主	培养宿主
 ui.rb.guide.growth.body	능력치는 골드로, 성급은 조각과 골드로 올려요.\n성급이 오르면 강화 상한과 스킬 위력이 함께 올라요.	能力はゴールドで、星級はかけらとゴールドで上げます。\n星級が上がると強化上限とスキルの威力も上がります。	Raise stats with gold and stars with shards and gold.\nHigher stars raise the upgrade cap and skill power.	能力用金幣提升，星級用碎片和金幣提升。\n星級提升後強化上限與技能威力也會提升。	能力用金币提升，星级用碎片和金币提升。\n星级提升后强化上限与技能威力也会提升。
 ui.rb.guide.summon.title	영혼 명부에서 소환	魂の名簿で召喚	Summoning	從靈魂名冊召喚	从灵魂名册召唤
-ui.rb.guide.summon.body	몸의 조각을 뽑아요. 조각을 모으면 몸을 해금하고 성급을 올려요.\n10회 소환은 SR 이상 1회 보장이에요.	体のかけらを引きます。集めると体の解放や星級アップに使えます。\n10回召喚はSR以上1回確定です。	Draw host shards to unlock hosts and raise stars.\nA 10x summon guarantees one SR or better.	抽取宿主碎片，收集後可解鎖宿主並提升星級。\n10連召喚保底一次SR以上。	抽取宿主碎片，收集后可解锁宿主并提升星级。\n10连召唤保底一次SR以上。
+ui.rb.guide.summon.body	호스트 조각을 뽑아요. 조각을 모아 호스트를 해금하고 성급을 올려요.\n10회 소환 시 SR 1회 보장이에요.	ホストのかけらを引きます。集めてホストの解放や星級アップに使えます。\n10回召喚はSR1回確定です。	Draw host shards to unlock hosts and raise stars.\nA 10x summon guarantees one SR.	抽取宿主碎片，收集後可解鎖宿主並提升星級。\n10連召喚保底一次SR。	抽取宿主碎片，收集后可解锁宿主并提升星级。\n10连召唤保底一次SR。
 ui.rb.guide.tower.title	망령의 탑	亡霊の塔	Phantom Tower	亡靈之塔	亡灵之塔
 ui.rb.guide.tower.body	한 주 동안 층을 올라가요. 층마다 조건이 달라요.\n첫 클리어 보상은 매주 다시 받아요.	1週間かけて階を登ります。階ごとに条件が違います。\n初回クリア報酬は毎週もらえます。	Climb floors over a week; each floor has its own rule.\nFirst-clear rewards reset every week.	一週內往上爬，每層的條件都不同。\n首次通關獎勵每週重新領取。	一周内往上爬，每层的条件都不同。\n首次通关奖励每周重新领取。
 ui.rb.guide.night.title	망령의 밤	亡霊の夜	Phantom Night	亡靈之夜	亡灵之夜
 ui.rb.guide.night.body	요일마다 다른 규칙으로 5분을 버텨요.\n쓰러뜨린 수만큼 조각을 받아요.	曜日ごとに違うルールで5分間耐えます。\n倒した数だけかけらがもらえます。	Survive 5 minutes under each day's rule.\nEarn shards by how many you defeat.	每天以不同規則撐過5分鐘。\n依擊倒數量獲得碎片。	每天以不同规则撑过5分钟。\n依击倒数量获得碎片。
 ui.rb.guide.pass.title	시즌 패스	シーズンパス	Season Pass	賽季通行證	赛季通行证
 ui.rb.guide.pass.body	미션을 끝내 패스 경험치를 모으면 단계마다 보상을 받아요.\n프리미엄을 열면 오른쪽 보상도 받아요.	ミッションでパス経験値を集めると段階ごとに報酬がもらえます。\nプレミアムを開くと右の報酬ももらえます。	Clear missions for pass XP and earn rewards each tier.\nUnlock premium to get the right-side rewards too.	完成任務累積通行證經驗，每階都能領獎。\n開啟高級後也能領取右側獎勵。	完成任务累积通行证经验，每阶都能领奖。\n开启高级后也能领取右侧奖励。
-ui.rb.guide.possess.title	몸을 빼앗아요	体を奪おう	Steal a body	奪取身體	夺取身体
-ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 몸으로 싸워요.	頭上に金の照準リングが出た敵に憑依ボタンを押すと\nその体で戦えます。	Tap Possess on an enemy with a gold ring overhead\nto fight in its body.	對頭上出現金色瞄準環的敵人按下附身鍵，\n就能用那個身體戰鬥。	对头上出现金色瞄准环的敌人按下附身键，\n就能用那个身体战斗。
+ui.rb.guide.possess.title	호스트에 빙의해요	ホストに憑依しよう	Possess a host	附身宿主	附身宿主
+ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의 버튼을 누르면\n그 호스트로 싸워요.	頭上に金の照準リングが出た敵に憑依ボタンを押すと\nそのホストで戦えます。	Tap Possess on an enemy with a gold ring overhead\nto fight as that host.	對頭上出現金色瞄準環的敵人按下附身鍵，\n就能用那個宿主戰鬥。	对头上出现金色瞄准环的敌人按下附身键，\n就能用那个宿主战斗。
 ui.rb.guide.stand_fire.title	멈춰야 쏴요	止まると撃つ	Stop to shoot	停下才會射擊	停下才会射击
 ui.rb.guide.stand_fire.body	움직이는 동안에는 자동 공격이 멈춰요.\n멈춰 서면 가까운 적을 쏴요.	移動中は自動攻撃が止まります。\n立ち止まると近くの敵を撃ちます。	Auto-attack stops while you move.\nStand still to shoot the nearest enemy.	移動時會停止自動攻擊。\n停下來就會射擊附近的敵人。	移动时会停止自动攻击。\n停下来就会射击附近的敌人。
-ui.rb.guide.ghost_hp.title	유령 에너지	ゴーストエネルギー	Ghost energy	幽靈能量	幽灵能量
-ui.rb.guide.ghost_hp.body	몸 없이 떠 있는 동안 유령 에너지가 줄어요.\n몸을 잃으면 크게 깎이니 조심해요.	体なしで漂っている間はエネルギーが減ります。\n体を失うと大きく減るので注意。	Ghost energy drains while you float without a body.\nLosing a body costs a lot, so be careful.	沒有身體漂浮時幽靈能量會減少。\n失去身體會大幅減少，要小心。	没有身体漂浮时幽灵能量会减少。\n失去身体会大幅减少，要小心。
+ui.rb.guide.ghost_hp.title	유령 체력	ゴースト体力	Ghost HP	幽靈體力	幽灵体力
+ui.rb.guide.ghost_hp.body	호스트 없이 떠 있으면 유령 체력이 줄어요.\n호스트를 잃으면 크게 깎이니 조심해요.	ホストなしで漂うとゴースト体力が減ります。\nホストを失うと大きく削られるので注意しましょう。	Ghost HP drains while you float without a host.\nLosing a host costs a lot, so be careful.	沒有宿主漂浮時幽靈體力會減少。\n失去宿主會大幅扣除，請小心。	没有宿主漂浮时幽灵体力会减少。\n失去宿主会大幅扣除，请小心。
 ui.rb.guide.lock.title	회색 자물쇠 링	灰色の鍵リング	Gray lock ring	灰色鎖環	灰色锁环
-ui.rb.guide.lock.body	링이 회색 자물쇠면 아직 빼앗을 수 없어요.\n더 때리면 열려요.	リングが灰色の鍵ならまだ奪えません。\nもっと攻撃すると開きます。	A gray lock ring means you can't steal it yet.\nHit it more to open it.	環是灰色鎖時還無法奪取。\n再多打幾下就會打開。	环是灰色锁时还无法夺取。\n再多打几下就会打开。
-ui.rb.guide.release.title	몸 놓아주기	体を手放す	Releasing a body	放開身體	放开身体
-ui.rb.guide.release.body	스스로 놓아준 몸은 이 방에서 다시 탈 수 없어요.	自分で手放した体はこの部屋では二度と乗れません。	A body you release can't be taken again in this room.	自己放開的身體在這個房間無法再附身。	自己放开的身体在这个房间无法再附身。
+ui.rb.guide.lock.body	링에 회색 자물쇠가 있으면 아직 빙의할 수 없어요.\n더 공격하면 풀려요.	リングに灰色の鍵が表示されている敵には、まだ憑依できません。\nさらに攻撃すると解除されます。	A gray lock on the ring means you can't possess that enemy yet.\nKeep attacking to unlock it.	瞄準環出現灰色鎖頭時，還不能附身該敵人。\n繼續攻擊即可解除。	瞄准环出现灰色锁时，还不能附身该敌人。\n继续攻击即可解除。
+ui.rb.guide.release.title	빙의 해제	憑依解除	Releasing a Host	解除附身	解除附身
+ui.rb.guide.release.body	스스로 해제한 호스트에는 이 방에서 다시 빙의할 수 없어요.	自分で解除したホストには、この部屋で再び憑依できません。	A host you release can't be possessed again in this room.	自己放開的宿主在這個房間無法再附身。	自己放开的宿主在这个房间无法再附身。
 ui.rb.guide.rooms.title	다음 방으로	次の部屋へ	On to the next room	前往下一個房間	前往下一个房间
 ui.rb.guide.rooms.body	적을 다 쓰러뜨리면 문이 열려요.\n문으로 들어가면 다음 방으로 가요.	敵を全て倒すと扉が開きます。\n扉に入ると次の部屋へ進みます。	Defeat every enemy to open the door.\nEnter it to move to the next room.	擊倒所有敵人後門會打開。\n走進門就會前往下一個房間。	击倒所有敌人后门会打开。\n走进门就会前往下一个房间。
 ui.rb.guide.cards.title	레벨업 카드	レベルアップカード	Level-up cards	升級卡	升级卡
-ui.rb.guide.cards.body	레벨이 오르면 카드 3장 중 하나를 골라요.\n카드는 유령에 붙어 몸이 바뀌어도 남아요.	レベルが上がると3枚から1枚選びます。\nカードはゴーストに付くので体が変わっても残ります。	Level up to pick one of three cards.\nCards stick to the ghost and stay when you swap bodies.	升級時從3張卡中選1張。\n卡附在幽靈身上，換身體也會保留。	升级时从3张卡中选1张。\n卡附在幽灵身上，换身体也会保留。
+ui.rb.guide.cards.body	레벨이 오르면 카드 3장 중 하나를 골라요.\n카드는 유령에게 붙어 호스트가 바뀌어도 유지돼요.	レベルが上がると3枚から1枚選びます。\nカードはゴーストに付くのでホストが変わっても残ります。	Level up to pick one of three cards.\nCards stick to the ghost and stay when you swap hosts.	升級時從3張卡中選1張。\n卡附在幽靈身上，換宿主也會保留。	升级时从3张卡中选1张。\n卡附在幽灵身上，换宿主也会保留。
 ui.rb.guide.merchant.title	떠돌이 상인	さすらいの商人	Wandering merchant	流浪商人	流浪商人
 ui.rb.guide.merchant.body	판에서 모은 골드로 카드와 회복을 살 수 있어요.\n상인은 다시 오지 않아요.	集めたゴールドでカードや回復を買えます。\n商人は二度と来ません。	Spend run gold on cards and healing.\nThe merchant won't come back.	可用本局金幣購買卡片與回復。\n商人不會再來。	可用本局金币购买卡片与回复。\n商人不会再来。
-ui.rb.guide.boss.title	보스는 빼앗을 수 없어요	ボスは奪えない	Bosses can't be stolen	無法奪取頭目	无法夺取头目
-ui.rb.guide.boss.body	보스는 빙의할 수 없어요.\n타고 들어간 몸으로 끝내야 해요.	ボスには憑依できません。\n乗ってきた体で倒しましょう。	You can't possess a boss.\nFinish it with the body you brought in.	無法附身頭目。\n要用帶進來的身體打倒它。	无法附身头目。\n要用带进来的身体打倒它。
+ui.rb.guide.boss.title	보스에게는 빙의할 수 없어요	ボスは奪えない	Bosses can't be stolen	無法奪取頭目	无法夺取头目
+ui.rb.guide.boss.body	보스는 빙의할 수 없어요.\n입장한 호스트로 끝내야 해요.	ボスには憑依できません。\n乗ってきたホストで倒しましょう。	You can't possess a boss.\nFinish it with the host you brought in.	無法附身頭目。\n要用帶進來的宿主打倒它。	无法附身头目。\n要用带进来的宿主打倒它。
 ui.rb.boss.no_possess	보스는 빙의할 수 없어요	ボスには憑依できません	Bosses can't be possessed	無法附身頭目	无法附身头目
 boss.robot_snakes.weak	약점: 솟은 머리가 들어가기 전에 때려라	弱点：出た頭が引っ込む前に叩け	Weak point: hit the head before it ducks back in	弱點：趁頭縮回去前攻擊	弱点：趁头缩回去前攻击
 boss.crusher.weak	약점: 파괴구가 벽을 치게 안쪽으로 파고들어라	弱点：内側に入り鉄球を壁に当てさせろ	Weak point: get inside so the wrecking ball hits the wall	弱點：鑽到內側讓破壞球撞牆	弱点：钻到内侧让破坏球撞墙
@@ -1717,10 +1717,10 @@ ui.rb.next.title	다음 방	次の部屋	Next Room	下一個房間	下一个房�
 ui.rb.next.go	다음 방으로	次の部屋へ	Next Room	前往下一個房間	前往下一个房间
 ui.rb.room.normal	전투	戦闘	Battle	戰鬥	战斗
 ui.rb.room.normal_desc	적을 모두 쓰러뜨리면 문이 열려요.	敵を全て倒すと扉が開きます。	Defeat every enemy to open the door.	擊倒所有敵人後門會打開。	击倒所有敌人后门会打开。
-ui.rb.room.elite	정예	精鋭	Elite	精英	精英
+ui.rb.room.elite	엘리트	精鋭	Elite	精英	精英
 ui.rb.room.elite_desc	더 센 적이 기다려요.	より強い敵が待っています。	Tougher enemies await.	更強的敵人在等著。	更强的敌人在等着。
 ui.rb.room.midboss	중간 보스	中ボス	Mid-Boss	中頭目	中头目
-ui.rb.room.midboss_desc	대장 몸을 쓰러뜨려야 지나가요.	ボス格の体を倒すと進めます。	Defeat the leader to pass.	擊倒首領才能通過。	击倒首领才能通过。
+ui.rb.room.midboss_desc	중간 보스를 쓰러뜨려야 지나갈 수 있어요.	中ボスを倒さないと先へ進めません。	Defeat the mini-boss to pass.	必須擊敗中頭目才能通過。	必须击败中头目才能通过。
 ui.rb.room.boss	보스	ボス	Boss	頭目	头目
 ui.rb.room.boss_desc	챕터의 마지막 싸움이에요.	チャプター最後の戦いです。	The chapter's final fight.	章節的最後一戰。	章节的最后一战。
 ui.rb.room.shop	떠돌이 상인	さすらいの商人	Wandering Merchant	流浪商人	流浪商人
@@ -1729,9 +1729,9 @@ ui.rb.room.rest	회복의 제단	回復の祭壇	Altar of Rest	恢復祭壇	恢�
 ui.rb.room.rest_desc	하나만 골라 가져갈 수 있어요.	1つだけ選んで持っていけます。	Pick one blessing to take.	只能選一個帶走。	只能选一个带走。
 ui.rb.room.event	사건	イベント	Event	事件	事件
 ui.rb.room.event_desc	무슨 일이 기다리고 있을까요?	何が待っているでしょう？	What awaits inside?	會有什麼在等著呢？	会有什么在等着呢？
-ui.rb.nightpick.title	몸 하나를 골라 빙의하라	体を1つ選んで憑依せよ	Pick one body to possess	選一個身體附身	选一个身体附身
-ui.rb.nightpick.sub	나머지 둘은 사라진다	残りの2体は消える	The other two will vanish	其餘兩個會消失	其余两个会消失
-ui.rb.nightpick.pick	몸을 선택하세요	体を選んでください	Choose a body	請選擇身體	请选择身体
+ui.rb.nightpick.title	호스트 하나를 골라 빙의하세요	ホストを1つ選んで憑依せよ	Pick one host to possess	選一個宿主附身	选一个宿主附身
+ui.rb.nightpick.sub	나머지 둘은 사라져요	残りの2体は消える	The other two will vanish	其餘兩個會消失	其余两个会消失
+ui.rb.nightpick.pick	호스트를 선택하세요	ホストを選んでください	Choose a host	請選擇宿主	请选择宿主
 ui.rb.nightpick.go	{0}에 빙의	{0}に憑依	Possess {0}	附身{0}	附身{0}
 ui.rb.chest.open	{0} 열기!	{0}を開ける！	Open {0}!	開啟{0}！	开启{0}！
 ui.rb.chest.got	획득!	獲得！	Got it!	獲得！	获得！
@@ -1741,8 +1741,8 @@ ui.rb.shrine.go	{0} 선택	{0}を選ぶ	Choose {0}	選擇{0}	选择{0}
 ui.rb.shop.hello	필요한 걸 골라 봐!	必要なものを選びな！	Pick what you need!	挑你需要的吧！	挑你需要的吧！
 ui.rb.shop.leave	지나간다	通り過ぎる	Move on	離開	离开
 ui.rb.shop.never	상인은 다시 오지 않아요	商人は二度と来ません	The merchant won't return	商人不會再來	商人不会再来
-ui.rb.hud.no_body	몸 없음	体なし	No body	無身體	无身体
-ui.rb.hud.no_body_hint	몸 없이 떠 있는 동안 유령 체력이 줄어요	体なしで漂う間、ゴースト体力が減ります	Your ghost HP drains while you have no body	無身體漂浮時，幽靈體力會減少	无身体漂浮时，幽灵体力会减少
+ui.rb.hud.no_body	호스트 없음	ホストなし	No host	無宿主	无宿主
+ui.rb.hud.no_body_hint	호스트 없이 떠 있으면 유령 체력이 줄어요	ホストなしで漂う間、ゴースト体力が減ります	Your ghost HP drains while you have no host	無宿主漂浮時，幽靈體力會減少	无宿主漂浮时，幽灵体力会减少
 ui.rb.growth.starup_success	성급 강화 성공	星級強化成功	Star Up Complete	星級強化成功	星级强化成功
 ui.rb.growth.done_line1	{0}성 → {1}성 · 체력·공격 +7%	{0}星 → {1}星・体力・攻撃 +7%	{0}★ → {1}★ · HP·ATK +7%	{0}星 → {1}星・體力・攻擊 +7%	{0}星 → {1}星・体力・攻击 +7%
 ui.rb.growth.done_line2	스킬 Lv {0}→{1} · 강화 상한 {2}→{3}	スキルLv {0}→{1}・強化上限 {2}→{3}	Skill Lv {0}→{1} · Cap {2}→{3}	技能Lv {0}→{1}・強化上限 {2}→{3}	技能Lv {0}→{1}・强化上限 {2}→{3}
@@ -1758,14 +1758,14 @@ ui.rb.chl.per_kills	처치 {0}마다	{0}体撃破ごと	Every {0} kills	每擊�
 ui.rb.chl.boss_kill	보스 처치	ボス撃破	Boss kill	擊敗頭目	击败首领
 ui.rb.chl.cost_entry	입장 1	入場 1	Entry 1	入場 1	入场 1
 ui.rb.chl.challenge	도전	挑戦	Challenge	挑戰	挑战
-ui.rb.chl.sweep_short	하루 1번 · 입장 횟수를 쓰지 않는다	1日1回・入場回数を使わない	Once a day · no entry used	每天1次 · 不消耗入場次數	每天1次 · 不消耗入场次数
+ui.rb.chl.sweep_short	하루 1회 · 입장 횟수 소모 없음	1日1回・入場回数を使わない	Once a day · no entry used	每天1次 · 不消耗入場次數	每天1次 · 不消耗入场次数
 ui.rb.mis.go	이동 ›	移動 ›	Go ›	前往 ›	前往 ›
 ui.rb.mis.all_hint	전체 완료 시	全達成時	When all done	全部完成時	全部完成时
 ui.rb.levelup.sub	한 장을 골라 강해지세요	1枚選んで強くなろう	Pick one to grow stronger	選一張變得更強	选一张变得更强
 ui.rb.levelup.go	{0} 선택	{0}を選択	Choose {0}	選擇{0}	选择{0}
 ui.rb.result.unlocked_line	CH {0} 열림!	CH {0} 解放！	CH {0} unlocked!	CH {0} 已開啟！	CH {0} 已开启！
 ui.rb.result.tip_title	공격력 강화 추천	攻撃力の強化がおすすめ	Try upgrading Attack	推薦強化攻擊力	推荐强化攻击力
-ui.rb.result.tip_sub	가장 오래 쓴 몸 · {0}	一番長く使った体・{0}	Most used host · {0}	使用最久的宿主・{0}	使用最久的宿主・{0}
+ui.rb.result.tip_sub	가장 오래 쓴 호스트 · {0}	最も長く使ったホスト・{0}	Most used host · {0}	使用最久的宿主・{0}	使用最久的宿主・{0}
 ui.rb.result.tip_go	성장 ›	育成 ›	Grow ›	培養 ›	培养 ›
 ui.card.unit.sec	{0}초	{0}秒	{0}s	{0}秒	{0}秒
 ui.card.stat.attack	공격력	攻撃力	Attack	攻擊力	攻击力
@@ -1803,3 +1803,9 @@ ui.card.stat.chainlightning	튕김 횟수	跳ね回数	Chain Jumps	彈跳次數	
 ui.card.stat.guardinvuln	재사용 대기	再使用待機	Cooldown	冷卻時間	冷却时间
 ui.card.stat.lowhppower	궁지 피해	窮地ダメージ	Desperation Damage	絕境傷害	绝境伤害
 ui.summon.reveal.reach	리치!	リーチ！	Almost!	差一點！	差一点！
+ui.rb.pass.head_free	무료	無料	Free	免費	免费
+ui.rb.pass.head_lv	레벨	レベル	Level	等級	等级
+ui.rb.pass.head_prem	프리미엄	プレミアム	Premium	高級	高级
+ui.rb.pass.reward_host	SSR 흡혈귀	SSR 吸血鬼	SSR Vampire	SSR 吸血鬼	SSR 吸血鬼
+ui.rb.pass.reward_lv	프리미엄 Lv 30 보상	プレミアム Lv 30 報酬	Premium Lv 30 Reward	高級 Lv 30 獎勵	高级 Lv 30 奖励
+ui.rb.pass.now	현재	現在	Now	目前	目前

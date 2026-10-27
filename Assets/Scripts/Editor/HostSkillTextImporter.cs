@@ -28,57 +28,57 @@ namespace Game.EditorTools
             // 넷째 칸 = 영문 이름. 스킬을 명세 2026-09-14 로 바꾸면서 한글만 바뀌고 영문은 정본(예전 스킬)
             // 이름으로 남아, 컷인에 「雷電暴走 / GLACIAL BREATH」처럼 서로 다른 스킬이 떴다(기획 2026-09-17).
             // 아마존 정예는 스킬 보류라 정본 값 그대로 둔다.
-            new[]{ "amazon", "도약 강타", "가장 가까운 적에게 뛰어들어 둘레를 300% 피해로 친다.", "Leap Smash" },
+            new[]{ "amazon", "도약 강타", "가장 가까운 적에게 도약해 주변 적에게 300% 피해를 준다.", "Leap Smash" },
             new[]{ "amazon_elite", "불굴", "2.5초간 무적이 된다.", "Unyielding" },
-            new[]{ "baseball", "전탄 반사", "5초간 날아오는 탄을 되받아친다. 반사탄은 더 아프다.", "Full Reflect" },
-            new[]{ "death",            "사신의 시간",   "3초간 때리는 적이 죽는다. 중간 보스는 절반, 보스는 열에 하나.", "Death Harvest" },
+            new[]{ "baseball", "전탄 반사", "5초간 날아오는 탄을 반사한다. 반사된 탄은 더 큰 피해를 준다.", "Full Reflect" },
+            new[]{ "death",            "사신의 시간",   "3초간 공격한 적을 즉사시킨다. 중간 보스는 50% 확률, 보스는 10% 확률로 최대 체력 25% 피해.", "Death Harvest" },
             new[]{ "guru",             "수호 결계",     "3초간 받는 피해 −50% · 쉴드 획득 2배.", "Guardian Ward" },
-            new[]{ "ninja_chain",      "사슬 끌어오기", "둘레 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다. 묶인 적은 더 아프게 맞는다.", "Chain Pull" },   // PD 2026-10-21
-            new[]{ "dragoon",          "화염 지대",     "가장 가까운 적 발밑에 불바다를 편다. 밟고 선 적이 계속 탄다.", "Inferno Field" },
-            new[]{ "salamander",       "독 뿜기",       "둘레 5 m 의 적을 모두 중독시킨다. 독은 아프고 느려진다.", "Venom Spray" },
-            new[]{ "dragon_blue",      "뇌전 폭주",     "2초간 번개 튕김이 반드시 터진다.", "Thunder Rampage" },
-            new[]{ "commando_grenade", "융단 폭격", "내 둘레에 수류탄을 원으로 떨군다. 가까운 적이 있으면 그 적에게 떨어진다.", "Carpet Bomb" },   // PD 2026-10-21
+            new[]{ "ninja_chain",      "사슬 끌어오기", "주변 적 5명을 사슬로 내 앞으로 끌어와 속박하고 한 번에 후려친다. 속박된 적은 받는 피해가 늘어난다.", "Chain Pull" },   // PD 2026-10-21
+            new[]{ "dragoon",          "화염 지대",     "가장 가까운 적의 발밑에 불바다를 만든다. 불바다 위의 적은 계속 화상 피해를 받는다.", "Inferno Field" },
+            new[]{ "salamander",       "독 뿜기",       "주변 5m 안의 적을 모두 중독시킨다. 중독된 적은 지속 피해를 받고 느려진다.", "Venom Spray" },
+            new[]{ "dragon_blue",      "뇌전 폭주",     "2초간 패시브 낙뢰가 100% 발동한다.", "Thunder Rampage" },
+            new[]{ "commando_grenade", "융단 폭격", "주변에 수류탄을 원형으로 뿌린다. 가까운 적이 있으면 그 적을 노린다.", "Carpet Bomb" },   // PD 2026-10-21
             new[]{ "snowwoman",        "얼음 감옥",     "2초간 얼음에 들어간다. 맞지도 때리지도 않고 체력 30% 를 채운다.", "Ice Prison" },
             new[]{ "thug", "난사", "다섯 갈래로 세 번 빠르게 쏜다.", "Bullet Storm" },   // PD 2026-10-21
-            new[]{ "hopper_smg", "백스텝 사격", "가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.", "Backstep Fire" },
+            new[]{ "hopper_smg", "백스텝 사격", "가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다.", "Backstep Fire" },
             new[]{ "ninja",            "그림자 걸음",   "4초간 회피 50% · 이동 속도 +35%, 잔상이 남는다.", "Shadow Step" },   // PD 2026-10-21
-            new[]{ "vampire",          "혈연",          "화면의 적마다 박쥐가 날아가 피를 빨아 온다. 적 수만큼 최대 체력의 2%씩 회복.", "Blood Feast" },
-            new[]{ "commando_mg",      "방벽 전개",     "5초간 최대 체력만큼 쉴드를 두른다. 깎이면 끝난다.", "Barrier Deploy" },
+            new[]{ "vampire",          "혈연",          "화면 안의 적마다 박쥐를 날려 피를 빨아 온다. 적 1명당 최대 체력 2% 회복.", "Blood Feast" },
+            new[]{ "commando_mg",      "방벽 전개",     "5초간 최대 체력만큼 쉴드를 얻는다. 쉴드가 다 깎이면 끝난다.", "Barrier Deploy" },
             new[]{ "gangster",         "일제 표식",     "방 안 모든 적에게 3초간 표식을 새긴다.", "Mass Death Mark" },
             new[]{ "hopper",           "정조준",        "5초간 치명타 확률이 90% 로 고정된다.", "Dead Aim" },
-            new[]{ "commando_missile", "다중 유도",     "미사일 7발이 둘레 적들에게 한 발씩 날아간다.", "Multi Homing" },   // PD 2026-10-21
-            new[]{ "medium", "미니 골렘", "미니 골렘을 불러 10초간 데리고 다니며 같이 싸운다.", "Mini Golem" },   // PD 2026-10-21
+            new[]{ "commando_missile", "다중 유도",     "미사일 7발을 주변 적들에게 한 발씩 쏜다.", "Multi Homing" },   // PD 2026-10-21
+            new[]{ "medium", "미니 골렘", "미니 골렘을 소환해 10초간 함께 싸운다.", "Mini Golem" },   // PD 2026-10-21
             new[]{ "white_wizard",     "광휘 확산",     "부채꼴 8방향으로 광탄을 쏜다.", "Radiant Burst" },
             new[]{ "commando_laser",   "연쇄 방전",     "3초간 주변 적에게 전기가 계속 튄다.", "Chain Discharge" },
-            new[]{ "robot",            "포탑 전개",     "10초간 자동으로 쏘는 포탑을 세운다.", "Turret Deploy" },
+            new[]{ "robot",            "포탑 전개",     "10초간 자동으로 공격하는 포탑을 설치한다.", "Turret Deploy" },
         };
 
         /// <summary>호스트키 → 패시브 키 · 이름 · 설명 · 확률(0 이면 상시).</summary>
         private static readonly object[][] Passives =
         {
-            new object[]{ "amazon",           "psv_amazon",           "쉴드 질주",   "쉴드가 찰수록 빨라진다. 가득이면 이동속도 +40%.", 0 },
+            new object[]{ "amazon",           "psv_amazon",           "쉴드 질주",   "쉴드가 찰수록 이동 속도가 빨라진다(최대 +40%).", 0 },
             new object[]{ "amazon_elite",     "psv_counter",          "역전의 자세", "쉴드가 남아 있는 동안 공격력이 오른다.", 0 },
-            new object[]{ "baseball",         "psv_slugger",          "장외 타구",   "막타에 20% 로 주변 적을 날려 버린다.", 20 },
-            new object[]{ "death",            "psv_death",            "망자 소집",   "적을 잡을 때마다 그 자리에서 해골이 일어선다.", 0 },
-            new object[]{ "guru",             "psv_guru",             "무형보",      "걸어 다닐 때 지형지물을 통과한다.", 0 },
-            new object[]{ "ninja_chain",      "psv_ninja_chain",      "흘리기",      "10% 로 피해를 통째로 흘린다.", 10 },
-            new object[]{ "dragoon",          "psv_dragoon",          "불씨",        "명중한 적에게 10% 로 화상. 겹치지 않는다.", 10 },
-            new object[]{ "salamander",       "psv_salamander",       "독니",        "명중한 적에게 10% 로 독. 중독된 적은 25% 더 아프게 맞는다.", 10 },
-            new object[]{ "dragon_blue",      "psv_dragon_blue",      "낙뢰",        "10% 로 옆 적에게 번개가 튄다. 튈 적이 없으면 터지지 않는다.", 10 },
+            new object[]{ "baseball",         "psv_slugger",          "장외 타구",   "적 처치 시 20% 확률로 주변 적을 날려 보낸다.", 20 },
+            new object[]{ "death",            "psv_death",            "망자 소집",   "적을 처치할 때마다 그 자리에 아군 해골을 소환한다.", 0 },
+            new object[]{ "guru",             "psv_guru",             "무형보",      "이동 중 지형지물을 통과한다.", 0 },
+            new object[]{ "ninja_chain",      "psv_ninja_chain",      "흘리기",      "10% 확률로 받는 피해를 회피한다.", 10 },
+            new object[]{ "dragoon",          "psv_dragoon",          "불씨",        "적중 시 10% 확률로 화상을 건다. 중첩되지 않는다.", 10 },
+            new object[]{ "salamander",       "psv_salamander",       "독니",        "적중 시 10% 확률로 중독시킨다. 중독된 적은 받는 피해 +25%.", 10 },
+            new object[]{ "dragon_blue",      "psv_dragon_blue",      "낙뢰",        "적중 시 10% 확률로 근처 다른 적에게 번개가 튄다. 근처에 적이 없으면 발동하지 않는다.", 10 },
             new object[]{ "commando_grenade", "psv_commando_grenade", "파편탄",      "상대 방어력을 50% 무시한다.", 0 },
-            new object[]{ "snowwoman",        "psv_snowwoman",        "서릿발",      "30% 로 적을 얼린다. 얼어 있는 적에게는 더 아프다. 보스는 안 걸린다.", 30 },
-            new object[]{ "hopper_smg",       "psv_hopper_smg",       "충격 반동",   "10% 로 맞은 적을 밀어낸다.", 10 },
+            new object[]{ "snowwoman",        "psv_snowwoman",        "서릿발",      "적중 시 30% 확률로 적을 빙결시킨다. 빙결된 적에게 주는 피해 +30%. 보스는 면역.", 30 },
+            new object[]{ "hopper_smg",       "psv_hopper_smg",       "충격 반동",   "적중 시 10% 확률로 적을 넉백시킨다.", 10 },
             new object[]{ "commando_mg",      "psv_commando_mg",      "중장갑",      "방어력 20% 증가.", 0 },
             new object[]{ "thug",             "psv_thug",             "삥",          "주운 골드가 10% 더 들어온다.", 0 },
-            new object[]{ "ninja",            "psv_ninja",            "질주",        "적을 잡으면 1.5초간 이동속도 +30%.", 0 },
-            new object[]{ "vampire",          "psv_leech",            "흡혈",        "8% 로 공격력의 5% 만큼 회복한다.", 8 },
-            new object[]{ "gangster",         "psv_gangster",         "처형 계약",   "표식이 붙은 적을 20% 로 즉사. 엘리트는 최대 체력 50%, 보스는 30%.", 20 },
+            new object[]{ "ninja",            "psv_ninja",            "질주",        "적 처치 시 1.5초간 이동 속도 +30%.", 0 },
+            new object[]{ "vampire",          "psv_leech",            "흡혈",        "적중 시 8% 확률로 공격력의 5%만큼 체력을 회복한다.", 8 },
+            new object[]{ "gangster",         "psv_gangster",         "처형 계약",   "표식이 붙은 적을 20% 확률로 즉사시킨다. 엘리트는 최대 체력 50%, 보스는 30% 피해.", 20 },
             new object[]{ "hopper",           "psv_momentum",         "급소",        "치명타 피해 +30%.", 0 },
             new object[]{ "commando_missile", "psv_commando_missile", "고폭탄",      "투사체가 지형지물을 무시한다.", 0 },
-            new object[]{ "medium",           "psv_medium",           "강령",        "적을 잡으면 30% 로 내 해골이 일어선다. 해골은 적이 노리지 않고 3초 뒤 사라진다.", 30 },
+            new object[]{ "medium",           "psv_medium",           "강령",        "적 처치 시 30% 확률로 아군 해골을 소환한다. 해골은 적의 공격을 받지 않고 3초 뒤 사라진다.", 30 },
             new object[]{ "white_wizard",     "psv_white_wizard",     "관통 광선",   "투사체가 지형지물을 무시하고 적을 관통한다.", 0 },
             new object[]{ "commando_laser",   "psv_commando_laser",   "집속 광선",   "투사체가 지형지물을 무시하고 적을 관통한다.", 0 },
-            new object[]{ "robot",            "psv_spare_circuit",    "예비 회로",   "평타가 2% 로 액티브 쿨을 1초 당긴다.", 2 },
+            new object[]{ "robot",            "psv_spare_circuit",    "예비 회로",   "기본 공격 시 2% 확률로 액티브 쿨타임이 1초 줄어든다.", 2 },
         };
 
         [MenuItem("Tools/Game/스킬 문구 갱신 (명세 2026-09-14)")]

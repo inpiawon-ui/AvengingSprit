@@ -144,6 +144,9 @@ namespace Game.Editor.ReBorn
             return s;
         }
 
+        /// <summary>키트에 그 그림이 있는가 — 발주 중인 부품이 들어오기 전엔 다른 판으로 세울 때(경고 없이 잰다).</summary>
+        public static bool KitHas(string path) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Kit}/{path}.png") != null;
+
         /// <summary>
         /// 카드 틀 그림의 몸통(테 선) 상자 — 그림 기준 0~1(왼 · 위 · 오른 · 아래). 불투명 칸이 그 줄 · 열의 60% 이상인
         /// 첫 · 끝 줄과 열이다(왕관 · 구름 같은 바깥 장식은 짧아서 빠진다). RbFrameFit 이 이 상자를 카드 칸에 맞춘다.
