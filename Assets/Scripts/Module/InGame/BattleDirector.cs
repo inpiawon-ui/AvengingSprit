@@ -3821,6 +3821,9 @@ namespace Game.Module.InGame
         /// </summary>
         private void TickGhostState(float dt)
         {
+            // 빙의할 유령 체력이 없으면 판이 끝난다(PD 2026-10-28) — 몸을 잃거나 버려 0 이 된 다음 틱
+            if (_host == null && _ghostHp <= 0 && !SandboxKeepsGhost) { PublishHp(); Finish(false); return; }
+
             if (_invuln > 0f) _invuln = Mathf.Max(0f, _invuln - dt);
             if (_hurtGrace > 0f) _hurtGrace = Mathf.Max(0f, _hurtGrace - dt);
             if (_skillInvuln > 0f) _skillInvuln = Mathf.Max(0f, _skillInvuln - dt);
@@ -3972,7 +3975,8 @@ namespace Game.Module.InGame
             //
             //   값은 **Ghost HP 로 낸다.** 낼 수 있는 만큼 내는 것이지 횟수를 세는 것이
             //   아니다. 한 번에 20 이 나가므로 무한히 버티지 못한다 — 그게 상한이다.
-            if (_ghostHp <= _config.EmergencyGhostCost) return;
+            // 낼 체력이 없으면 빙의할 길이 없다 — 패배(PD 2026-10-28)
+            if (_ghostHp <= _config.EmergencyGhostCost) { _ghostHp = 0; PublishHp(); Finish(false); return; }
 
             var entry = PickPlayerHost();
             if (entry == null) return;
@@ -7843,7 +7847,7 @@ namespace Game.Module.InGame
             // 기획서 1-2 A — 몸을 잃는 값(-20%)이 놓아주는 값(-15%)보다 커야
             // "죽기 전에 버리고 나온다" 가 선택지가 된다.
             int cost = Mathf.Max(1, GhostHpMax * _config.GhostDeathCostPercent / 100);
-            _ghostHp = Mathf.Max(1, _ghostHp - cost);
+            _ghostHp = Mathf.Max(0, _ghostHp - cost);   // 0 이면 다음 틱에 패배(TickGhostState)
             ShowGhostCost(pos, cost);
 
             _ghost.gameObject.SetActive(true);
@@ -8898,7 +8902,7 @@ namespace Game.Module.InGame
             var key = body.Key;
 
             int cost = Mathf.Max(1, GhostHpMax * _config.GhostLeaveCostPercent / 100);
-            _ghostHp = Mathf.Max(1, _ghostHp - cost);   // 탈출로 소멸하지는 않는다
+            _ghostHp = Mathf.Max(0, _ghostHp - cost);   // 0 이면 다음 틱에 패배(TickGhostState)
             ShowGhostCost(pos, cost);
 
             _host = null;

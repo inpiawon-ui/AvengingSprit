@@ -320,7 +320,7 @@ namespace Game.Module.InGame
             var key = body.Key;
 
             int cost = Mathf.Max(1, GhostHpMax * LeaveCostPercent / 100);
-            _ghostHp = Mathf.Max(1, _ghostHp - cost);   // 나오는 것으로 소멸하지는 않는다
+            _ghostHp = Mathf.Max(0, _ghostHp - cost);   // 0 이면 다음 틱에 패배(TickGhostState)
             ShowGhostCost(pos, cost);
 
             Retire(body);

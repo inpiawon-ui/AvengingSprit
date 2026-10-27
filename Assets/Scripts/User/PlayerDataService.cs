@@ -242,7 +242,9 @@ namespace Game.User
         /// 몸을 쓰는 것 자체는 막지 않는다 — 파편은 그 몸을 써야 모이므로,
         /// 막으면 열 방법이 사라진다.
         /// </summary>
-        public bool IsSkillSealed(string hostKey) => GetMastery(hostKey) < 1;
+        // 봉인을 풀었다(PD 2026-10-28 「한 번 빌려 쓰는 거니깐 그냥 스킬을 쓰게」) — 안 가진 몸도 1레벨 스킬을 쓴다.
+        // 다시 쓰고 싶으면 돈을 내고 들고 들어가야 하니 그것이 값이다. 필살기는 판당 1회 체험 규칙(`OwnsHostForUlt`)이 따로 지킨다.
+        public bool IsSkillSealed(string hostKey) => false;
 
         /// <summary>
         /// 새 계정에 시작 몸 하나를 준다(숙련도 1). **한 번만** — 저장에 표시가 남는다.
