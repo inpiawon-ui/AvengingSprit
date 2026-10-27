@@ -6904,7 +6904,7 @@ namespace Game.Module.InGame
 
             float speed = ShotSpeedOf(p, fromPlayer)
                           * (snipe ? 1.6f : 1f)
-                          * (fromPlayer ? _buffs.ShotSpeedMul : 1f);
+                          * (fromPlayer ? _buffs.ShotSpeedMul * _config.PlayerShotSpeedMul : 1f);   // 내 탄만 빠르게(GameConfig) — 수명은 그대로
 
             // 몸 중심이 아니라 총구에서 나간다. 탄이 배에서 튀어나오면
             // 방향 스프라이트를 그린 의미가 없다.
@@ -7486,6 +7486,7 @@ namespace Game.Module.InGame
             {
                 var p = _shots[i];
                 if (!p.IsActive) continue;
+                var before = p.Position;   // 빠른 탄은 한 프레임에 적을 건너뛴다 — 아래에서 중간 자리도 잰다
 
                 if (!p.Tick(dt))
                 {
@@ -7560,6 +7561,9 @@ namespace Game.Module.InGame
                 if (p.FromPlayer)
                 {
                     var hit = HitEnemy(p.Position, p);
+                    // 한 프레임에 맞힘 반경보다 많이 움직였으면 지나온 중간 자리도 본다(내 탄 속도 2배 — PD 2026-10-28)
+                    if (hit == null && (p.Position - before).sqrMagnitude > _config.ShotHitRadius * _config.ShotHitRadius)
+                        hit = HitEnemy((before + p.Position) * 0.5f, p);
                     if (hit == null) continue;
                     // 터지는 탄은 **닿은 자리에서 터진다.** 반경 안이 다 맞는다.
                     if (p.BlastRadiusOverride > 0f) { Explode(p); p.Despawn(); continue; }

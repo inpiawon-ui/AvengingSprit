@@ -240,6 +240,7 @@ namespace Game.Editor.ReBorn
         {
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
             (720, 1280, Language.Korean, "ingame:skillcd", "skillcd_16x9"),
+            (720, 1280, Language.Korean, "ingame:ghostcheck@7", "ghostcheck_16x9"),
             (720, 1280, Language.Korean, "ingame:real_fail@3", "real_fail_16x9"),
             (720, 1280, Language.Korean, "ingame:real_clear@3", "real_clear_16x9"),
             (720, 1280, Language.Korean, "ingame:ultcd", "ultcd_16x9"),
@@ -1015,6 +1016,32 @@ namespace Game.Editor.ReBorn
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") { LogHits(ui); return; }
+            // 유령 출전 시험 — 첫 방 빙의 대상 · 거리 · 유령 체력이 시간이 지나도 그대로인지 남긴다(PD 2026-10-28)
+            if (state.StartsWith("ingame:ghostcheck"))
+            {
+                var bd = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+                var bdt = typeof(Game.Module.InGame.BattleDirector);
+                const System.Reflection.BindingFlags GF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                Time.timeScale = 1f;
+                bdt.GetField("_invuln", GF)?.SetValue(bd, 60f);   // 적에게 맞아 깎이는 것과 구분 — 시간으로만 깎이는지 본다
+                int hp0 = (int)(bdt.GetField("_ghostHp", GF)?.GetValue(bd) ?? -1);
+                float t0 = Time.time;
+                void Probe()
+                {
+                    if (!EditorApplication.isPlaying || bd == null) { EditorApplication.update -= Probe; return; }
+                    if (Time.time - t0 < 5f) return;
+                    EditorApplication.update -= Probe;
+                    int hp1 = (int)(bdt.GetField("_ghostHp", GF)?.GetValue(bd) ?? -1);
+                    var ghost = bdt.GetField("_ghost", GF)?.GetValue(bd) as Component;
+                    var sb = new System.Text.StringBuilder($"[유령 시험] 유령 체력 {hp0} → 5초 뒤 {hp1} · 빙의 대상:");
+                    foreach (var u in Object.FindObjectsByType<Game.Module.InGame.Unit>(FindObjectsSortMode.None))
+                        if (u != null && u.IsHostBody && u.IsAlive && u.Side == Game.Module.InGame.UnitSide.Enemy && ghost != null)
+                            sb.Append($" {u.Key} {Vector2.Distance(u.transform.localPosition, ghost.transform.localPosition):0}px");
+                    Debug.Log(sb.ToString());
+                }
+                EditorApplication.update += Probe;
+                return;
+            }
             // 진짜 판 끝 — real_fail · real_clear: 판을 실제로 끝내(BattleDirector.Finish) 결과 창이 뜨는 흐름 그대로 찍는다(PD 2026-10-28 「결과창 댑스」)
             if (state.StartsWith("ingame:real_"))
             {

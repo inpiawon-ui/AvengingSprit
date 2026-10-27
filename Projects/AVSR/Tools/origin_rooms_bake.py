@@ -22,6 +22,7 @@ PD 10-22 「원작 배치를 따라서 정확하게 유저가 느낄 수 있게�
 표 형식(탭):  ROOM id 이름 설명 · SIZE 폭m 높이m 칸m · OBJ(rooms90.tsv 와 같다) · SPAWN · TRACK 고리 톱수 x,y;x,y;…
 쓰는 법: python origin_rooms_bake.py [챕터 …]   (빼면 origin_ch*.json 전부)
 """
+import math
 import glob
 import json
 import os
@@ -164,6 +165,125 @@ def open_islands(cells, w, h, spawns):
 
 
 OPENED = []
+STARTED = []
+
+# ── 첫 방 호스트 (PD 2026-10-28 「1스테이지에 기본 호스트를 둬서 유령으로 시작하면 그 호스트로 시작」) ──
+# 원작 방은 적 자리가 전부 빙의 불가라, 유령으로 출전하면 첫 방에 빼앗을 몸이 없었다.
+# 1번 방에 chapters.tsv 의 starter 호스트를 입구 앞(시작 자리에서 빙의 사거리 5 m 안)에 세운다.
+# 그 몸 둘레 3 m 안의 원작 적은 뒤(위)로 민다 — 빼앗기 전에 붙어서 때리지 않게(예전 손배치 규칙 「적은 몸보다 3 m 뒤」).
+START_AT = (WIDTH_M * 0.5, 1.7)     # 플레이어 시작 자리(RoomImporter60.EntranceAt)
+STARTER_DIST = 4.7                  # 시작 자리에서 몸까지 — 빙의 사거리 5 m 안
+STARTER_CLEAR = 3.0                 # 몸 둘레 이 안의 적은 민다
+
+
+EXTRA_GAP = 2.0        # 더 세우는 몬스터 — 원작 적과 이만큼 띄운다
+EXTRA_SELF_GAP = 3.0   # 더 세운 몬스터끼리는 이만큼(PD 「너무 겹쳐 놓지 말고 좀 띄워」)
+EXTRA_HOST_GAP = 3.0   # 1번 방 첫 호스트와는 이만큼
+
+
+def extras():
+    """chapters.tsv extra 칸 — {챕터: [(몬스터, 마리), …]}"""
+    out, head = {}, None
+    for line in open(os.path.join(ROOMS, 'chapters.tsv'), encoding='utf-8').read().split('\n'):
+        if not line.strip() or line.startswith('#'):
+            continue
+        t = line.split('\t')
+        if head is None:
+            head = t
+            continue
+        d = dict(zip(head, t))
+        v = d.get('extra', '').strip()
+        if v:
+            out[int(d['ch'])] = [(k.strip(), int(n)) for k, n in (p.split(':') for p in v.split(','))]
+    return out
+
+
+def place_extras(cells, w, rows, spawn_lines, extra):
+    """방 가운데에서 가까운 빈 칸부터, 다른 적 · 첫 호스트와 떨어진 자리에 세운다."""
+    taken = []
+    host = None
+    for line in spawn_lines:
+        t = line.split('\t')
+        xy = (float(t[2]), float(t[3]))
+        taken.append(xy)
+        if t[4] == '1':
+            host = xy
+    mid = (WIDTH_M * 0.5, BOTTOM + rows * CELL * 0.5)
+    free = []
+    for i, c in enumerate(cells):
+        if c in CELL_KIND:
+            continue
+        x, y = center(i % w, i // w, rows)
+        free.append(((x - mid[0]) ** 2 + (y - mid[1]) ** 2, x, y))
+    free.sort()
+    added = 0
+    mine = []
+    for key, n in extra:
+        for _ in range(n):
+            for _, x, y in free:
+                if any(((x - a) ** 2 + (y - b2) ** 2) ** 0.5 < EXTRA_GAP for a, b2 in taken):
+                    continue
+                if any(((x - a) ** 2 + (y - b2) ** 2) ** 0.5 < EXTRA_SELF_GAP for a, b2 in mine):
+                    continue
+                if host and ((x - host[0]) ** 2 + (y - host[1]) ** 2) ** 0.5 < EXTRA_HOST_GAP:
+                    continue
+                spawn_lines.append('\t'.join(['SPAWN', key, fmt(x), fmt(y), '0']))
+                taken.append((x, y))
+                mine.append((x, y))
+                added += 1
+                break
+    return added
+
+
+def starters():
+    out, head = {}, None
+    for line in open(os.path.join(ROOMS, 'chapters.tsv'), encoding='utf-8').read().split('\n'):
+        if not line.strip() or line.startswith('#'):
+            continue
+        t = line.split('\t')
+        if head is None:
+            head = t
+            continue
+        d = dict(zip(head, t))
+        if d.get('starter', '').strip():
+            out[int(d['ch'])] = d['starter'].strip()
+    return out
+
+
+def place_starter(cells, w, rows, spawn_lines, host):
+    """막는 물건이 없는 칸 중 시작 자리에서 4~5 m(빙의 사거리 안)이면서 가장 가운데 칸에 몸을 세운다."""
+    best = None
+    for i, c in enumerate(cells):
+        if c in CELL_KIND:
+            continue
+        x, y = center(i % w, i // w, rows)
+        d = ((x - START_AT[0]) ** 2 + (y - START_AT[1]) ** 2) ** 0.5
+        if d > 5.0 or d < 4.0:
+            continue
+        score = (abs(x - START_AT[0]), abs(d - STARTER_DIST))
+        if best is None or score < best[0]:
+            best = (score, x, y)
+    if best is None:
+        return None
+    _, hx, hy = best
+    moved = 0
+    for k, line in enumerate(spawn_lines):
+        t = line.split('\t')
+        x, y = float(t[2]), float(t[3])
+        if ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 < STARTER_CLEAR:
+            # 같은 열에서 몸보다 3 m 뒤 · 막히지 않은 칸까지 한 칸씩 올린다(방 위 문 띠는 넘지 않는다)
+            col = min(w - 1, max(0, int(x / CELL)))
+            # 칸 가운데가 몸에서 3 m 이상이 되는 첫 칸(올림) — 내림이면 2.7 m 칸에 섰다
+            idx = math.ceil((hy + STARTER_CLEAR - BOTTOM) / CELL - 0.5)
+            while idx < rows and cells[(rows - 1 - idx) * w + col] in CELL_KIND:
+                idx += 1
+            if idx >= rows:
+                continue
+            t[3] = fmt(BOTTOM + (idx + 0.5) * CELL)
+            spawn_lines[k] = '\t'.join(t)
+            moved += 1
+    spawn_lines.insert(0, '\t'.join(['SPAWN', host, fmt(hx), fmt(hy), '1']))
+    return hx, hy, moved
 
 
 def bake_room(ch, r, lines):
@@ -185,14 +305,29 @@ def bake_room(ch, r, lines):
     for loop, saws, path in tracks(cells, w, rows):
         pts = ';'.join(f'{fmt(px)},{fmt(py)}' for px, py in (center(x, y, rows) for x, y in path))
         lines.append('\t'.join(['TRACK', str(loop), str(saws), pts]))
+    spawn_lines = []
     for k, v in sorted(r['spawns'].items()):
         x, row = map(int, k.split(','))
         px, py = center(x, row, rows)
-        lines.append('\t'.join(['SPAWN', v['monster'], fmt(px), fmt(py), '0']))
+        spawn_lines.append('\t'.join(['SPAWN', v['monster'], fmt(px), fmt(py), '0']))
+    host = STARTERS.get(ch) if r['room'] == 1 else None
+    if host:
+        got = place_starter(cells, w, rows, spawn_lines, host)
+        STARTED.append(f'{rid} {host}' + (f' ({fmt(got[0])}, {fmt(got[1])}) · 민 적 {got[2]}' if got else ' — 자리 없음'))
+    if ch in EXTRAS:
+        EXTRA_ADDED.append(place_extras(cells, w, rows, spawn_lines, EXTRAS[ch]))
+    lines.extend(spawn_lines)
     return rid
 
 
+STARTERS = {}
+EXTRAS = {}
+EXTRA_ADDED = []
+
+
 def main(chapters):
+    STARTERS.update(starters())
+    EXTRAS.update(extras())
     lines = ['# rooms30-origin-1.0 — origin_rooms_bake.py 가 굽는다. 손으로 고치지 않는다.']
     stats = []
     for ch in chapters:
@@ -208,6 +343,10 @@ def main(chapters):
     print('\n'.join(stats))
     print(OUT, len(lines), '줄')
     print("섬 트기(갇힌 적 자리에 길 냄):", len(OPENED), "방 —", ", ".join(OPENED))
+    print("더 세운 몬스터:", sum(EXTRA_ADDED), "마리 ·", len(EXTRA_ADDED), "방")
+    print("첫 방 호스트:", len(STARTED), "방")
+    for s in STARTED:
+        print("  ", s)
 
 
 if __name__ == '__main__':

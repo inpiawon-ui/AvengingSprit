@@ -314,7 +314,7 @@ stage.4.1.name	밤의 공중기지 옥상	夜の空中基地 屋上	Sky Base Roo
 stage.5.1.name	유령 연구소	幽霊研究所	Ghost Laboratory	幽靈研究所	幽灵研究所
 stage.6.1.name	야간 정유소	夜の製油所	Refinery at Night	夜間煉油廠	夜间炼油厂
 host.ghost.name	유령	ゴースト	Ghost	幽靈	幽灵
-tip.loading.0	유령 상태로 떠 있으면 체력이 줄어든다. 빨리 호스트에 빙의하자.	ゴースト状態で漂っている間はゴースト体力が減り続ける。早くホストに憑依しよう。	Ghost HP drains while you float without a host. Possess a host quickly.	沒有宿主、以幽靈狀態漂浮時，幽靈體力會持續減少。盡快附身宿主吧。	没有宿主、以幽灵状态漂浮时，幽灵体力会持续减少。尽快附身宿主吧。
+tip.loading.0	유령 상태에서는 체력이 줄지 않는다. 천천히 둘러보고 빙의할 호스트를 고르자.	ゴースト状態ではゴースト体力が減らない。落ち着いて周りを見て、憑依するホストを選ぼう。	Ghost HP doesn't drain while you float. Take your time and pick a host to possess.	幽靈狀態下幽靈體力不會減少。慢慢觀察，挑選要附身的宿主吧。	幽灵状态下幽灵体力不会减少。慢慢观察，挑选要附身的宿主吧。
 tip.loading.1	멈춰 서야 공격한다. 이동 중에는 자동 공격을 하지 않는다.	止まっているときだけ撃ちます。移動中は自動攻撃が止まります。	Stand still to shoot. Auto-attack stops while you move.	停下才會射擊。移動時自動攻擊會停止。	停下才会射击。移动时自动攻击会停止。
 tip.loading.2	스스로 빙의를 해제한 호스트에는 이 방에서 다시 빙의할 수 없다.	自分から憑依を解除したホストには、その部屋で再び憑依できません。	A host you release can't be possessed again in that Room.	主動放棄的宿主，在這個房間內無法再次附身。	主动放弃的宿主，在这个房间内无法再次附身。
 tip.loading.3	보스에게는 빙의할 수 없다. 보스 방은 입장한 호스트로 끝내야 한다.	ボスには憑依できません。ボス部屋は入室時のホストで戦い抜きましょう。	Bosses can't be possessed. Finish the Boss Room in the host you brought.	頭目無法附身。頭目房必須用帶進來的宿主打完。	头目无法附身。头目房必须用带进来的宿主打完。
@@ -403,7 +403,7 @@ ui.hostselect.shard	영혼 조각	魂の欠片	Soul Shards	靈魂碎片	灵魂�
 ui.hostselect.start_ghost	유령으로 시작	ゴーストで開始	Start as Ghost	以幽靈開始	以幽灵开始
 ui.hostselect.ghost.badge	유령	ゴースト	Ghost	幽靈	幽灵
 ui.hostselect.ghost.trait	호스트 없음	ホストなし	No host	沒有宿主	没有宿主
-ui.hostselect.ghost.rule	호스트가 없으면 유령 체력이 계속 줄어든다\n유령 상태로 주는 피해는 60%	ホストがないとゴースト体力が減り続ける\nゴースト状態で与えるダメージは60%	Without a host, Ghost HP keeps draining\nDamage dealt as a ghost is 60%	沒有宿主時幽靈體力會持續減少\n幽靈狀態造成的傷害為60%	没有宿主时幽灵体力会持续减少\n幽灵状态造成的伤害为60%
+ui.hostselect.ghost.rule	호스트가 없어도 유령 체력은 줄지 않는다\n유령 상태로 주는 피해는 60%	ホストがなくてもゴースト体力は減らない\nゴースト状態で与えるダメージは60%	Ghost HP doesn't drain without a host\nDamage dealt as a ghost is 60%	沒有宿主時幽靈體力也不會減少\n幽靈狀態造成的傷害為60%	没有宿主时幽灵体力也不会减少\n幽灵状态造成的伤害为60%
 ui.hostselect.ghost.skill	빙의	憑依	Possess	附身	附身
 ui.hostselect.ghost.skill_desc	{0:0.#}칸 안의 적에게 빙의해 그 호스트로 싸운다	{0:0.#}マス以内の敵に憑依し、そのホストで戦う	Possess an enemy within {0:0.#} tiles and fight as that host	附身{0:0.#}格內的敵人，以該宿主戰鬥	附身{0:0.#}格内的敌人，用该宿主战斗
 ui.hostselect.ghost.skill_desc_near	가까운 적에게 빙의해 그 호스트로 싸운다	近くの敵に憑依し、そのホストで戦う	Possess a nearby enemy and fight as that host	附身附近的敵人，以該宿主戰鬥	附身附近的敌人，用该宿主战斗
@@ -1693,7 +1693,7 @@ ui.rb.guide.possess.body	머리 위에 금색 조준 링이 뜬 적에게 빙의
 ui.rb.guide.stand_fire.title	멈춰야 쏴요	止まると撃つ	Stop to shoot	停下才會射擊	停下才会射击
 ui.rb.guide.stand_fire.body	움직이는 동안에는 자동 공격이 멈춰요.\n멈춰 서면 가까운 적을 쏴요.	移動中は自動攻撃が止まります。\n立ち止まると近くの敵を撃ちます。	Auto-attack stops while you move.\nStand still to shoot the nearest enemy.	移動時會停止自動攻擊。\n停下來就會射擊附近的敵人。	移动时会停止自动攻击。\n停下来就会射击附近的敌人。
 ui.rb.guide.ghost_hp.title	유령 체력	ゴースト体力	Ghost HP	幽靈體力	幽灵体力
-ui.rb.guide.ghost_hp.body	호스트 없이 떠 있으면 유령 체력이 줄어요.\n호스트를 잃으면 크게 깎이니 조심해요.	ホストなしで漂うとゴースト体力が減ります。\nホストを失うと大きく削られるので注意しましょう。	Ghost HP drains while you float without a host.\nLosing a host costs a lot, so be careful.	沒有宿主漂浮時幽靈體力會減少。\n失去宿主會大幅扣除，請小心。	没有宿主漂浮时幽灵体力会减少。\n失去宿主会大幅扣除，请小心。
+ui.rb.guide.ghost_hp.body	호스트 없이 떠 있어도 유령 체력은 줄지 않아요.\n호스트를 잃으면 크게 깎이니 조심해요.	ホストなしで漂ってもゴースト体力は減りません。\nホストを失うと大きく削られるので注意しましょう。	Ghost HP doesn't drain while you float without a host.\nLosing a host costs a lot, so be careful.	沒有宿主漂浮時幽靈體力也不會減少。\n失去宿主會大幅扣除，請小心。	没有宿主漂浮时幽灵体力也不会减少。\n失去宿主会大幅扣除，请小心。
 ui.rb.guide.lock.title	회색 자물쇠 링	灰色の鍵リング	Gray lock ring	灰色鎖環	灰色锁环
 ui.rb.guide.lock.body	링에 회색 자물쇠가 있으면 아직 빙의할 수 없어요.\n더 공격하면 풀려요.	リングに灰色の鍵が表示されている敵には、まだ憑依できません。\nさらに攻撃すると解除されます。	A gray lock on the ring means you can't possess that enemy yet.\nKeep attacking to unlock it.	瞄準環出現灰色鎖頭時，還不能附身該敵人。\n繼續攻擊即可解除。	瞄准环出现灰色锁时，还不能附身该敌人。\n继续攻击即可解除。
 ui.rb.guide.release.title	빙의 해제	憑依解除	Releasing a Host	解除附身	解除附身
@@ -1742,7 +1742,7 @@ ui.rb.shop.hello	필요한 걸 골라 봐!	必要なものを選びな！	Pick w
 ui.rb.shop.leave	지나간다	通り過ぎる	Move on	離開	离开
 ui.rb.shop.never	상인은 다시 오지 않아요	商人は二度と来ません	The merchant won't return	商人不會再來	商人不会再来
 ui.rb.hud.no_body	호스트 없음	ホストなし	No host	無宿主	无宿主
-ui.rb.hud.no_body_hint	호스트 없이 떠 있으면 유령 체력이 줄어요	ホストなしで漂う間、ゴースト体力が減ります	Your ghost HP drains while you have no host	無宿主漂浮時，幽靈體力會減少	无宿主漂浮时，幽灵体力会减少
+ui.rb.hud.no_body_hint	천천히 둘러보고 빙의할 호스트를 골라요	落ち着いて周りを見て、憑依するホストを選びましょう	Look around and pick a host to possess	慢慢觀察，挑選要附身的宿主	慢慢观察，挑选要附身的宿主
 ui.rb.growth.starup_success	성급 강화 성공	星級強化成功	Star Up Complete	星級強化成功	星级强化成功
 ui.rb.growth.done_line1	{0}성 → {1}성 · 체력·공격 +7%	{0}星 → {1}星・体力・攻撃 +7%	{0}★ → {1}★ · HP·ATK +7%	{0}星 → {1}星・體力・攻擊 +7%	{0}星 → {1}星・体力・攻击 +7%
 ui.rb.growth.done_line2	스킬 Lv {0}→{1} · 강화 상한 {2}→{3}	スキルLv {0}→{1}・強化上限 {2}→{3}	Skill Lv {0}→{1} · Cap {2}→{3}	技能Lv {0}→{1}・強化上限 {2}→{3}	技能Lv {0}→{1}・强化上限 {2}→{3}

@@ -420,6 +420,8 @@ namespace Game.Character
         [Header("투사체 — 기본 공격은 탄이 날아가 맞아야 피해가 들어간다")]
         [SerializeField] private float _shotSpeedPlayer = 720f;
         [SerializeField] private float _shotSpeedEnemy = 420f;
+        [Tooltip("플레이어 평타 탄이 날아가는 속도 배율. 공격 속도가 아니라 탄 속도 · 수명(ShotLifeSeconds)은 그대로라 멀리 · 벽에 튕겨도 오래 간다(PD 2026-10-28 「두 배로 빠르게」).")]
+        [SerializeField] private float _playerShotSpeedMul = 2f;
         // 원작 탄은 캔버스(24) 안에서 작게 그려져 있다 — 상자를 그 여백만큼 키워야
         // 화면에서 탄으로 보인다. 26 이면 총알이 6px 짜리 점이 된다.
         [SerializeField] private float _shotSize = 104f;
@@ -768,6 +770,7 @@ namespace Game.Character
 
         public float ShotSpeedPlayer => _shotSpeedPlayer;
         public float ShotSpeedEnemy => _shotSpeedEnemy;
+        public float PlayerShotSpeedMul => _playerShotSpeedMul > 0f ? _playerShotSpeedMul : 1f;
         public float ShotSize => _shotSize;
         public float ShotHitRadius => _shotHitRadius;
         public float ShotLifeSeconds => _shotLifeSeconds;

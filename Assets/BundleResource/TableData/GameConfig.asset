@@ -20,7 +20,7 @@ MonoBehaviour:
   _ghostLeaveCostPercent: 20
   _ghostDeathCostPercent: 20
   _repossessLockSeconds: 1.2
-  _ghostDrainPerSecond: 3.35
+  _ghostDrainPerSecond: 0
   _ghostProtectSeconds: 1
   _protectSlowPercent: 50
   _possessChannelSeconds: 0.7
@@ -123,12 +123,15 @@ MonoBehaviour:
   _bossAttackInterval: 1.6
   _shotSpeedPlayer: 720
   _shotSpeedEnemy: 420
+  _playerShotSpeedMul: 2
   _shotSize: 72.8
   _shotHitRadius: 34
   _shotLifeSeconds: 1.6
   _slowSeconds: 1.6
   _activeSkillCooldownSeconds: 14
   _activeSkillDamage: 140
+  _ultCooldownSeconds: 300
+  _ultCooldownMinSeconds: 60
   _rewardGoldPerRoom: 120
   _rewardGhostExpPerRoom: 8
   _chapters:
@@ -151,9 +154,9 @@ MonoBehaviour:
     Hazard: 
     Crowd: 0
     Fire: 0.9
-    EnemyHpMul: 0.8
+    EnemyHpMul: 0.4
     EnemyAtkMul: 1
-    BossHp: 1650
+    BossHp: 825
     BossAtk: 36
     ClearGold: 0
     Chest: silver
@@ -164,9 +167,9 @@ MonoBehaviour:
     Art: 1
     BossArt: 1
     ChestArt: 1
-    MixBlade: 125
+    MixBlade: 149
     MixForce: 15
-    MixMagic: 11
+    MixMagic: 35
     PowerMul: 1.09
     PowerStar: 1
   - Chapter: 2
