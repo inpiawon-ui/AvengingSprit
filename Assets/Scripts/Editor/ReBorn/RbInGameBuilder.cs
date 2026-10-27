@@ -1064,8 +1064,8 @@ namespace Game.Editor.ReBorn
                 float x0 = 76f + 147f * (i % 4), y0 = 370f + 168f * (i / 4);
                 var slot = PutPx(Node(c, $"RbPauseCard{i}"), c, x0 + 66f, y0 + 76f, 132f, 152f);
                 var empty = Stretch(Node(slot, $"RbPauseCard{i}Empty"));
-                Img(empty, "Components/rb_slot_common").color = new Color(1f, 1f, 1f, 0.35f);
-                Img(Inside2(Node(empty, $"RbPauseCard{i}Plus"), 42f, 52f, 48f, 48f), "Icons/rb_icon_sys_plus_48").color = new Color(1f, 1f, 1f, 0.35f);
+                Img(empty, "Components/rb_slot_common").color = new Color(0.45f, 0.5f, 0.6f, 0.3f);   // 시안 빈 칸은 바닥보다 조금 밝은 정도
+                Img(Inside2(Node(empty, $"RbPauseCard{i}Plus"), 42f, 52f, 48f, 48f), "Icons/rb_icon_sys_plus_48").color = new Color(0.55f, 0.6f, 0.72f, 0.35f);
                 var full = Stretch(Node(slot, $"RbPauseCard{i}Full"));
                 Img(Stretch(Node(full, $"RbPauseCard{i}Frame")), "Components/rb_slot_rare");
                 Text(Inside2(Node(full, $"RbPauseCard{i}Rarity"), 8f, 6f, 116f, 22f), null, "RARE", 26, LvMuted, TA.Center, heavy: true);

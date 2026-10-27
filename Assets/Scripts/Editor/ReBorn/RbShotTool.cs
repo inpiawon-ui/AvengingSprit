@@ -282,6 +282,8 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Japanese, "ingame:tower_clear", "moderesult_tower_clear_ja"),
             (1080, 2400, Language.Korean, "ingame:tower_clear", "moderesult_tower_clear_20x9"),
             (720, 1280, Language.Korean, "ingame:pause", "pause_16x9"),
+            // 카드가 찬 일시정지(등급 넷 섞어 5장 · 3장은 Lv 2) — PD 2026-10-27 「카드 찬 모습까지 확인」
+            (720, 1280, Language.Korean, "ingame:pause_cards", "pause_cards_16x9"),
             (720, 1280, Language.Korean, "ingame:abandon", "abandon_16x9"),
             (720, 1280, Language.Japanese, "ingame:pause", "pause_ja"),
             // 남은 화면(2026-10-24) — 보스 경고 · 다음 방 · 밤 몸 고르기 · 첫 판 안내
@@ -1083,6 +1085,24 @@ namespace Game.Editor.ReBorn
                 case "ingame:guide":
                     ui.GetComponentInChildren<Game.Module.Common.UI.RbGuide>(true)?.Show(true, "possess", "stand_fire", "ghost_hp", "lock", "release", "rooms");
                     break;
+                case "ingame:pause_cards":
+                    {
+                        // 시험 전용 — 판에 카드를 몇 장 붙인다(등급마다 앞에서 하나씩 + 일반 하나, 앞 셋은 두 번 = Lv 2)
+                        const System.Reflection.BindingFlags CF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                        var bt3 = typeof(Game.Module.InGame.BattleDirector);
+                        var table = bt3.GetField("_buffTable", CF)?.GetValue(battle) as Game.Character.BuffTable;
+                        var buffs = bt3.GetField("_buffs", CF)?.GetValue(battle) as Game.Module.InGame.RunBuffs;
+                        if (table != null && buffs != null)
+                        {
+                            var picked = new System.Collections.Generic.List<Game.Character.BuffEntry>();
+                            foreach (Game.Character.CardRarity r in System.Enum.GetValues(typeof(Game.Character.CardRarity)))
+                                foreach (var e in table.Entries) if (e != null && e.Rarity == r && !picked.Contains(e)) { picked.Add(e); break; }
+                            foreach (var e in table.Entries) if (e != null && !picked.Contains(e) && picked.Count < 5) picked.Add(e);
+                            for (int i = 0; i < picked.Count; i++) { buffs.Apply(picked[i]); if (i < 3) buffs.Apply(picked[i]); }
+                        }
+                        ui.GetComponentInChildren<Game.Module.InGame.RbPausePanel>(true)?.Open(ui);
+                        break;
+                    }
                 case "ingame:pause":
                 case "ingame:abandon":
                     var pause = ui.GetComponentInChildren<Game.Module.InGame.RbPausePanel>(true);
