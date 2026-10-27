@@ -137810,10 +137810,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f12f4415bea9934a9ccd2690ccf7573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Lobby.SummonReveal
+  _cardFrames:
+  - {fileID: 21300000, guid: 2e9626301b06c17448206cfbbbdae876, type: 3}
+  - {fileID: 21300000, guid: 02f659543bab9cd41b198233cc2e42c0, type: 3}
+  - {fileID: 21300000, guid: dd6364fa8ed59c94b8935b04c24b46a1, type: 3}
+  _cardTags:
+  - {fileID: 21300000, guid: e6180710da9151044a0f30d786a15af2, type: 3}
+  - {fileID: 21300000, guid: fa2197a543af0c040ac3ecf4d46f3cf3, type: 3}
+  - {fileID: 21300000, guid: 6040e1cb422581a4a8fd56a520c7d581, type: 3}
+  _affIcons:
+  - {fileID: 21300000, guid: a7fa89dda04557640a8b7f51918926b0, type: 3}
+  - {fileID: 21300000, guid: 48f966e2e6a21de428e0d5c3b2a97424, type: 3}
+  - {fileID: 21300000, guid: 4680fd9712ed0324484ea765c5d81a40, type: 3}
+  _rankGold: {fileID: 21300000, guid: 4d4d373da9ecac946b1299d7aa74de47, type: 3}
+  _rankSilver: {fileID: 21300000, guid: c846bb94f80587c4dac6a03768448636, type: 3}
+  _shardIcon: {fileID: 21300000, guid: 6266ccdb8d41f0a4e87a82cc1961d9d7, type: 3}
+  _badgeNew: {fileID: 21300000, guid: 76612a0ca01f6f5458b344daf63f085d, type: 3}
+  _barTrack: {fileID: 21300000, guid: cd72c47f5943e834b95711d05f40d830, type: 3}
+  _barFill: {fileID: 21300000, guid: 91008f9315249e4439cd5628ad54da1a, type: 3}
   _stage: {fileID: 21300000, guid: 3003e91c5cc52ce4dbdbb48b215acc97, type: 3}
   _tank: {fileID: 21300000, guid: b34fe8e862f333e4ab851ec8653e2ccb, type: 3}
   _tankBroken: {fileID: 21300000, guid: cbe2e2c92b2ee454aad35a4c6a2f710f, type: 3}
-  _plate: {fileID: 21300000, guid: 8ced77600ced37f47a503e8f46fc949b, type: 3}
   _revealLight:
   - {fileID: 21300000, guid: 346c3efb213cbb44e954159acee7ad0a, type: 3}
   - {fileID: 21300000, guid: 593bb0621a76ed540a7798e935782256, type: 3}
@@ -137833,10 +137850,7 @@ MonoBehaviour:
   _chipGrid: {x: 3, y: 1}
   _splashGrid: {x: 3, y: 2}
   _shardAdditive: 1
-  _stampNew: {fileID: 21300000, guid: 28cc324e8393ba24b8258308c14e7072, type: 3}
-  _ribbonPickup: {fileID: 21300000, guid: f222295d8bea0a84cb8a309989110a36, type: 3}
   _labelPlate: {fileID: 21300000, guid: fdcd2b8969b51fa4ca8ccd9dba785815, type: 3}
-  _labelPlateGood: {fileID: 21300000, guid: ac3adc2208b260f43b11d79c0bc323eb, type: 3}
   _btnOk: {fileID: 21300000, guid: a1bde87b36c910e489bb519da7083acb, type: 3}
   _btnAgain: {fileID: 21300000, guid: 94d1c49eb578cac40b30351f53c027d9, type: 3}
   _additive: {fileID: 2100000, guid: 9165f1302f383a14fafa965f4ca59a64, type: 2}

@@ -26,7 +26,7 @@ namespace Game.Module.Lobby
     ///      칸 밑에 이름 · 조각 수 · 새 몸. 결과는 이 화면에서 끝(「확인 · 10회 더」).
     /// 실루엣은 공개 전까지 정체를 숨긴다(PD 2026-10-23 「까기 전부터 뭔지 알고 하는 거고」).
     /// </summary>
-    public sealed class SummonReveal : MonoBehaviour
+    public sealed partial class SummonReveal : MonoBehaviour
     {
         /// <summary>뽑기 등급 — 연출은 꽝(Normal) · 좋음(나머지) 둘로만 가른다. 이름 판 꼬리표는 따로(TagKey).</summary>
         public enum Rarity { Normal, Rare, Super, Jackpot }
@@ -58,7 +58,7 @@ namespace Game.Module.Lobby
         private static readonly float[] GhostSparks = { 0f, 15f, 35f }, ReachDur = { 0f, 1.2f, 1.8f };
         private static readonly float[] AuraOne = { 0.12f, 0.2f, 0.28f };
 
-        [SerializeField] private Sprite _stage, _tank, _tankBroken, _plate;
+        [SerializeField] private Sprite _stage, _tank, _tankBroken;
         /// <summary>공개 빛 — 6장 루프(검은 바탕 가산). 1장은 도는 빛살로, 6장은 제자리 반짝으로 쓴다.</summary>
         [SerializeField] private Sprite[] _revealLight = Array.Empty<Sprite>();
         [SerializeField] private Sprite[] _crack = Array.Empty<Sprite>();
@@ -69,9 +69,8 @@ namespace Game.Module.Lobby
         [SerializeField] private Texture2D _shardSheet, _chipSheet, _splashSheet, _spark;
         [SerializeField] private Vector2Int _shardGrid = new Vector2Int(3, 2), _chipGrid = new Vector2Int(1, 1), _splashGrid = new Vector2Int(3, 2);
         [SerializeField] private bool _shardAdditive;
-        [SerializeField] private Sprite _stampNew, _ribbonPickup;
-        /// <summary>10회 칸 밑 이름판(꽝 · 좋음) · 아래 버튼(확인 · 10회 더) — RE:BORN 키트 판.</summary>
-        [SerializeField] private Sprite _labelPlate, _labelPlateGood, _btnOk, _btnAgain;
+        /// <summary>결과 카드 바탕(남색 판 · 금 테) · 아래 버튼(확인 · 10회 더) — RE:BORN 키트 판.</summary>
+        [SerializeField] private Sprite _labelPlate, _btnOk, _btnAgain;
         [SerializeField] private Material _additive, _silhouette;
         /// <summary>둥근 부드러운 빛 — 그림 없이 셰이더가 그린다(`UISoftGlow.mat`).</summary>
         [SerializeField] private Material _softGlow;
@@ -97,7 +96,7 @@ namespace Game.Module.Lobby
             public Sprite[] Pose;
             /// <summary>룰렛에 도는 실루엣들 — 진짜는 멈출 때만.</summary>
             public Sprite[] Seed;
-            public RectTransform Root, GhostLayer, Label;
+            public RectTransform Root, GhostLayer, Label, Dock;
             public Image Aura, Tank, Broken, Rays, Rays2, Light, LightB, Body, White, Crack, Trail0, GhostGlow, GhostImg, LabelImg, LabelNew;
             public Image[] Trail;
             public TextMeshProUGUI ReachText, LabelName, LabelCount;
@@ -116,8 +115,8 @@ namespace Game.Module.Lobby
         // 파티클은 Overlay 캔버스 위에 안 그려진다 — 배양실만 메인 카메라 캔버스로 따로 띄우고, 도는 동안 로비 캔버스를 잠깐 숨긴다
         private Canvas _canvas, _lobbyCanvas;
         private ParticleSystem _shardPs, _chipPs, _splashPs, _sparkPs;
-        private Image _dim, _bg, _flash, _plateImg, _tagImg;
-        private TextMeshProUGUI _tagText, _nameText, _gradeText, _tapText, _againText;
+        private Image _dim, _bg, _flash;
+        private TextMeshProUGUI _tapText, _againText;
         private readonly List<Slot> _slots = new();
         private bool _tapped, _again, _ok;
         private int _run;   // 새 연출이 시작되면 앞의 것은 그 자리에서 멈춘다(같은 판을 둘이 그리지 않게)
@@ -308,7 +307,8 @@ namespace Game.Module.Lobby
             s.GhostGlow.rectTransform.sizeDelta = new Vector2(g * 3f, g * 3f);
             foreach (var t in s.Trail) t.rectTransform.sizeDelta = new Vector2(g, g);
             if (s.ReachText != null) s.ReachText.rectTransform.anchoredPosition = tankCenter + new Vector2(0f, tankH * 0.5f - P(34f));
-            if (s.Label != null) s.Label.anchoredPosition = feet - new Vector2(0f, P(52f + 26f));
+            // 작은 카드 위 끝 = 발에서 49(시안 mock_summon_card 와 겹쳐 잼 2026-10-27)
+            if (s.Label != null) s.Label.anchoredPosition = feet - new Vector2(0f, P(49f) + s.Label.sizeDelta.y * 0.5f);
         }
 
         // ── 진행 ─────────────────────────────────────────────
@@ -318,7 +318,6 @@ namespace Game.Module.Lobby
             _canvas.gameObject.SetActive(true);
             if (_lobbyCanvas != null && _canvas.renderMode == RenderMode.ScreenSpaceCamera) _lobbyCanvas.enabled = false;   // 위에 그려지지 않게
             _root.gameObject.SetActive(true);
-            _plateImg.gameObject.SetActive(false);
             _tapText.gameObject.SetActive(false);
             _footer.gameObject.SetActive(false);
             _flash.enabled = false;
@@ -357,7 +356,7 @@ namespace Game.Module.Lobby
                 foreach (var s in _slots) Draw(s, t);
                 if (!ten)
                 {
-                    Banner(t - (one.RevealT + 0.6f), one);
+                    DrawDock(one, t - (one.RevealT + 0.6f));
                     _tapText.gameObject.SetActive(t >= one.RevealT + 1.3f);
                     if (_tapText.gameObject.activeSelf) _tapText.alpha = 0.6f + 0.4f * Mathf.Sin(t * 2.5f);
                 }
@@ -412,7 +411,8 @@ namespace Game.Module.Lobby
                 float tr = t - s.RevealT, u = Seg(tr, 0f, 0.3f);
                 sy = u < 0.3f ? Mathf.Lerp(1f, 1.15f, u / 0.3f) : Mathf.Lerp(1.15f, 1f, Ease.OutBack((u - 0.3f) / 0.7f));
                 sx = 2f - sy;
-                float grow = 1f + (s.Ten ? 0.05f + 0.05f * tier : 0.3f) * Ease.OutCubic(u);
+                // 공개 때 살짝만 커진다 — 30% 키우면 깨진 배양조 밖으로 삐져나왔다(PD 2026-10-27 「시험관을 삐져나가는 건 좋지 않다」)
+                float grow = 1f + (s.Ten ? 0.03f + 0.02f * tier : 0.06f) * Ease.OutCubic(u);
                 float breathe = !s.Ten && tr > PoseEnd ? Mathf.Sin((tr - PoseEnd) * Mathf.PI * 2f / 1.8f) : 0f;
                 sx *= grow * (1f - 0.01f * breathe); sy *= grow * (1f + 0.02f * breathe);
                 body = !s.Ten || good ? PoseSprite(s, tr) : s.Art;
@@ -420,6 +420,8 @@ namespace Game.Module.Lobby
             s.Body.enabled = body != null;
             if (s.Body.enabled)
             {
+                float fit = GlassFit(s, body);
+                sx *= fit; sy *= fit;
                 s.Body.sprite = body;
                 s.Body.material = revealed ? null : _silhouette;
                 s.Body.color = revealed ? Color.white : WithA(SilhouetteColor, inU);
@@ -457,6 +459,28 @@ namespace Game.Module.Lobby
         }
 
         /// <summary>룰렛 실루엣 — 바뀌는 시각을 따라가다 끝나면 진짜. 시험판 reelKey.</summary>
+        // 그림마다 실제 그려진 부분(잉크) 크기 — 스프라이트 정점(꽉 맞춤 메시)에서 한 번 재고 둔다
+        private readonly Dictionary<Sprite, Vector2> _ink = new();
+
+        /// <summary>
+        /// 몸 · 실루엣이 배양조 유리창 안에 들어가게 줄이는 배율(1 이하). 꼬리 · 날개가 넓은 몸(드라군 등)이 유리 밖으로 삐져나왔다
+        /// (PD 2026-10-27 「실루엣이랑 캐릭터들이 너무 커」). 유리창 = 폭 58% · 발에서 위로 배양조 높이의 62%.
+        /// </summary>
+        private float GlassFit(Slot s, Sprite sp)
+        {
+            if (!_ink.TryGetValue(sp, out var ink))
+            {
+                var v = sp.vertices;
+                Vector2 lo = v.Length > 0 ? v[0] : Vector2.zero, hi = lo;
+                for (int i = 1; i < v.Length; i++) { lo = Vector2.Min(lo, v[i]); hi = Vector2.Max(hi, v[i]); }
+                ink = (hi - lo) * sp.pixelsPerUnit / Mathf.Max(sp.rect.width, sp.rect.height);   // 칸 한 변에 대한 비율
+                _ink[sp] = ink;
+            }
+            float w = ink.x * s.Cell, h = ink.y * s.Cell;
+            float maxW = s.GlassSize.x * 0.96f, maxH = s.TankH * 0.6f;
+            return Mathf.Min(1f, maxW / Mathf.Max(1f, w), maxH / Mathf.Max(1f, h));
+        }
+
         private static Sprite ReelSprite(Slot s, float t)
         {
             if (t < 0f) return s.Seed[0];
@@ -616,21 +640,6 @@ namespace Game.Module.Lobby
             float f = s.E.Tier < 2 ? 0f : t < s.RevealT ? Seg(t, s.RevealT - 0.15f, s.RevealT) : 1f - Seg(t, s.RevealT, s.RevealT + 0.25f);
             _flash.enabled = f > 0f;
             if (_flash.enabled) _flash.color = WithA(Color.white, 0.75f * f);
-        }
-
-        /// <summary>이름 판 — 왼쪽 밖에서 OutBack 0.45s.</summary>
-        private void Banner(float u, Slot best)
-        {
-            bool on = u >= 0f && _plate != null;
-            _plateImg.gameObject.SetActive(on);
-            if (!on) return;
-            float k = Ease.OutBack(Seg(u, 0f, 0.45f));
-            _plateImg.rectTransform.anchoredPosition = new Vector2(Mathf.LerpUnclamped(-H * 0.5625f, 0f, k), -H * 0.3f);
-            _tagText.text = Localize.Get(best.E.TagKey);
-            _nameText.text = best.E.Name;
-            _gradeText.text = best.E.GradeLabel;
-            _tagImg.sprite = best.E.TagKey == "ui.summon.reveal.pickup" ? _ribbonPickup : best.E.TagKey == "ui.summon.reveal.new" ? _stampNew : null;
-            _tagImg.enabled = _tagImg.sprite != null;
         }
 
         /// <summary>10회 아래 버튼 「확인 · 10회 더」 — 다 멈춘 뒤 0.4초에 밑에서 올라온다(시험판 footer).</summary>
@@ -801,7 +810,7 @@ namespace Game.Module.Lobby
             rend.renderMode = ParticleSystemRenderMode.Billboard;
             rend.alignment = ParticleSystemRenderSpace.View;
             rend.sortingLayerID = _canvas.sortingLayerID;
-            rend.sortingOrder = _canvas.sortingOrder + 1;   // 배양실 그림 위 · 이름 판도 위(조각은 판이 들어오기 전에 사라진다)
+            rend.sortingOrder = _canvas.sortingOrder + 1;   // 배양실 그림 위 · 결과 카드 아래(카드는 + 2 캔버스 — SummonReveal.Card)
             rend.sharedMaterial = new Material(baseMat) { hideFlags = HideFlags.DontSave, mainTexture = tex };
             rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             rend.receiveShadows = false;
@@ -841,10 +850,11 @@ namespace Game.Module.Lobby
                 s.ReachText.alignment = TextAlignmentOptions.Center;
                 s.ReachText.text = Localize.FromTable("ui.summon.reveal.reach", "리치!");
                 s.ReachText.gameObject.SetActive(false);
-                MakeLabel(s);
+                MakeMini(s);
             }
             else
             {
+                MakeDock(s);
                 // 유령 묶음 — 배양조 뒤로 돌 땐 맨 뒤로 옮긴다(나선)
                 s.GhostLayer = Layer("GhostLayer", s.Root, true);
                 s.Trail = new Image[6];
@@ -865,35 +875,11 @@ namespace Game.Module.Lobby
             return s;
         }
 
-        /// <summary>10회 칸 밑 이름판 — 이름 · 조각 ×n(정수 ×n) · 새 몸 도장. 시험판 label(128 × 52).</summary>
-        private void MakeLabel(Slot s)
-        {
-            var plate = Img("Label", s.Root, null);
-            s.Label = plate.rectTransform;
-            s.LabelImg = plate;
-            plate.preserveAspect = false;
-            plate.sprite = s.E.Good ? _labelPlateGood : _labelPlate;
-            plate.type = plate.sprite != null && plate.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
-            plate.enabled = plate.sprite != null;
-            s.Label.sizeDelta = new Vector2(P(128f), P(52f));
-            s.LabelName = Text(s.Label, "Name", new Vector2(0f, 0.2f), new Vector2(0.92f, 0.42f), P(15f), Color.white);
-            s.LabelName.alignment = TextAlignmentOptions.Center;
-            s.LabelName.text = s.E.Name;
-            s.LabelCount = Text(s.Label, "Count", new Vector2(0f, -0.2f), new Vector2(0.92f, 0.42f), P(15f), TierColor[s.E.Tier]);
-            s.LabelCount.alignment = TextAlignmentOptions.Center;
-            s.LabelCount.text = s.E.Essence > 0 ? string.Format(Localize.FromTable("ui.rb.summon.card_essence", "정수 ×{0}"), s.E.Essence)
-                                                : string.Format(Localize.FromTable("ui.rb.summon.card_shards", "조각 ×{0}"), s.E.Shards);
-            var stamp = Child(s.Label, "New", new Vector2(0.34f, 0.5f), new Vector2(0.39f, 0.63f));
-            stamp.sprite = _stampNew;
-            stamp.enabled = s.E.IsNew && _stampNew != null;
-            s.LabelNew = stamp;
-            s.Label.gameObject.SetActive(false);
-        }
-
         private void ClearSlots()
         {
             foreach (var s in _slots) if (s.Root != null) Destroy(s.Root.gameObject);
             _slots.Clear();
+            _ink.Clear();   // 앞 판 아틀라스는 풀렸다
         }
 
         private void Build()
@@ -939,19 +925,7 @@ namespace Game.Module.Lobby
             var fr = _flash.rectTransform; fr.anchorMin = Vector2.zero; fr.anchorMax = Vector2.one; fr.offsetMin = fr.offsetMax = Vector2.zero;
             _flash.sprite = null;
 
-            _plateImg = Img("Plate", _root, null);
-            _plateImg.sprite = _plate;
-            _plateImg.enabled = true;
-            float ph = H * 0.13f;
-            _plateImg.rectTransform.sizeDelta = _plate != null ? new Vector2(ph * _plate.rect.width / _plate.rect.height, ph) : new Vector2(ph * 3.3f, ph);
-            var pr = _plateImg.rectTransform;
-            _tagImg = Child(pr, "TagImg", new Vector2(0.4f, 0.42f), new Vector2(0.17f, 0.42f));
-            _tagText = Text(pr, "TagText", new Vector2(-0.285f, 0.36f), new Vector2(0.27f, 0.2f), 30f, new Color(1f, 0.84f, 0.32f));
-            _tagText.alignment = TextAlignmentOptions.Center;
-            _nameText = Text(pr, "NameText", new Vector2(-0.04f, -0.04f), new Vector2(0.78f, 0.34f), 46f, Color.white);
-            _gradeText = Text(pr, "GradeText", new Vector2(-0.2f, -0.32f), new Vector2(0.46f, 0.17f), 22f, new Color(0.8f, 0.85f, 0.96f));
-            _plateImg.gameObject.SetActive(false);
-            _tapText = Text(_root, "TapText", new Vector2(0f, -0.44f), new Vector2(0.8f, 0.04f), 24f, new Color(0.88f, 0.86f, 0.98f));
+            _tapText = Text(_root, "TapText", new Vector2(0f, -0.458f), new Vector2(0.8f, 0.04f), 24f, new Color(0.88f, 0.86f, 0.98f));
             _tapText.alignment = TextAlignmentOptions.Center;
             _tapText.text = Localize.Get("ui.summon.reveal.tap");
             BuildFooter();

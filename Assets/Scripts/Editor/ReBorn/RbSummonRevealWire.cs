@@ -32,20 +32,33 @@ namespace Game.Editor.ReBorn
             so.FindProperty("_splashSheet").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_splash_sheet.png");
             so.FindProperty("_splashGrid").vector2IntValue = new Vector2Int(3, 2);
             so.FindProperty("_spark").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Dir}/lab_spark.png");
-            so.FindProperty("_plate").objectReferenceValue = Spr($"{Dir}/reveal_plate.png");
-            so.FindProperty("_stampNew").objectReferenceValue = Spr($"{Dir}/stamp_new.png");
-            so.FindProperty("_ribbonPickup").objectReferenceValue = Spr($"{Dir}/ribbon_pickup.png");
             // 시험판 2(PD 10-27) — 공개 빛은 하나(금빛 6장: 1장은 도는 빛살, 6장은 제자리 반짝). 등급 사다리 빛 · 배양액 색 판은 안 쓴다
             Frames(so, "_revealLight", "lab_reveal_light_");
-            // 10회 칸 밑 이름판(꽝 · 좋음) · 아래 버튼(확인 · 10회 더) — RE:BORN 키트
+            // 결과 카드 바탕 판 · 아래 버튼(확인 · 10회 더) — RE:BORN 키트
             so.FindProperty("_labelPlate").objectReferenceValue = RbBuild.KitSprite("Components/rb_panel_base");
-            so.FindProperty("_labelPlateGood").objectReferenceValue = RbBuild.KitSprite("Components/rb_cell_line_gold");
+            // 결과 카드 — 호스트 목록 카드와 같은 부품(PD 10-27 시안 mock_summon_card). SSR 은 은빛 틀 × 금색(RbFrameFit.SsrTint)
+            Many(so, "_cardFrames", "Components/rb_host_frame_r", "Components/rb_host_frame_sr", "Components/rb_host_frame_ghost");
+            Many(so, "_cardTags", "Components/rb_rarity_r", "Components/rb_rarity_sr", "Components/rb_rarity_ssr");
+            Many(so, "_affIcons", "Icons/rb_icon_aff_blade_128", "Icons/rb_icon_aff_force_128", "Icons/rb_icon_aff_magic_128");
+            so.FindProperty("_rankGold").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_gold_64");
+            so.FindProperty("_rankSilver").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_rank_silver_64");
+            so.FindProperty("_shardIcon").objectReferenceValue = RbBuild.KitSprite("Icons/rb_icon_shard_48");
+            so.FindProperty("_badgeNew").objectReferenceValue = RbBuild.KitSprite("Components/rb_badge_new");
+            so.FindProperty("_barTrack").objectReferenceValue = RbBuild.KitSprite("Components/rb_bar_track");
+            so.FindProperty("_barFill").objectReferenceValue = RbBuild.KitSprite("Components/rb_bar_fill_cyan");
             so.FindProperty("_btnOk").objectReferenceValue = RbBuild.KitSprite("Components/rb_btn_secondary");
             so.FindProperty("_btnAgain").objectReferenceValue = RbBuild.KitSprite("Components/rb_btn_primary");
             so.FindProperty("_additive").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UIAdditiveSprite.mat");
             so.FindProperty("_silhouette").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/BaseResource/Shaders/UISilhouette.mat");
             so.FindProperty("_font").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/BaseResource/Fonts/NotoSansKR-Bold SDF.asset");
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void Many(SerializedObject so, string field, params string[] paths)
+        {
+            var p = so.FindProperty(field);
+            p.arraySize = paths.Length;
+            for (int i = 0; i < paths.Length; i++) p.GetArrayElementAtIndex(i).objectReferenceValue = RbBuild.KitSprite(paths[i]);
         }
 
         /// <summary>

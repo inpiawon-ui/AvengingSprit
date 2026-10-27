@@ -463,6 +463,10 @@ namespace Game.Module.Lobby
             }
         }
 
+        /// <summary>호스트 탭 — 소환 결과가 도감 카드를 같은 틀로 만든다.</summary>
+        public RbHostPage HostPage => _hostPage;
+        public SpriteAtlas Faces => _faces;
+
         public Sprite Face(string key) => _faces != null && key != null ? _faces.GetSprite($"face_{key}") : null;
 
         private static bool IsToday(string hostKey)

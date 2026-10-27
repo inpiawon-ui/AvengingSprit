@@ -185,6 +185,27 @@ namespace Game.Module.Lobby
             content.sizeDelta = new Vector2(content.sizeDelta.x, 12f * 2f / 3f + RowStep * rows);
         }
 
+        /// <summary>
+        /// 도감 카드 한 장을 <paramref name="parent"/> 밑에 새로 만들어 채운다 — 소환 결과가 같은 틀을 쓴다(PD 2026-10-27 시안).
+        /// 누를 수 없는 카드다. 호스트 탭을 한 번도 안 열었으면 이 쪽의 Awake 가 아직 안 돌았으니 여기서 묶는다.
+        /// </summary>
+        public RectTransform NewCard(Transform parent, HostEntry e, IPlayerDataService player, SpriteAtlas faces)
+        {
+            _ui ??= new UIBinder(transform);
+            _player ??= player;
+            _faces ??= faces;
+            var tpl = _ui.Find("ColCardTemplate");
+            if (tpl == null || e == null || _player == null) return null;
+            var c = (RectTransform)Instantiate(tpl.gameObject, parent).transform;
+            c.name = "HostCard";
+            c.gameObject.SetActive(true);
+            if (c.TryGetComponent<Button>(out var b)) b.enabled = false;
+            foreach (var g in c.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            if (CoreModule.TryGet<ILanguageService>(out var lang)) lang.ApplyFonts(c);
+            FillCard(c, e);
+            return c;
+        }
+
         private void OpenCard(int index)
         {
             if (index < 0 || index >= _shown.Count) return;

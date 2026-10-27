@@ -69,6 +69,7 @@ namespace Game.Editor.ReBorn
                 if (_scene >= Scenes.Length)
                 {
                     SessionState.SetInt(Key, 0);
+                    SetOpenAll(true);
                     Debug.Log($"[소환 녹화] 끝 → {OutRoot}");
                     EditorApplication.ExitPlaymode();
                     return;
@@ -85,6 +86,9 @@ namespace Game.Editor.ReBorn
             var dir = Path.Combine(OutRoot, Scenes[_scene].name);
             if (Directory.Exists(dir)) foreach (var f in Directory.GetFiles(dir, "*.png")) File.Delete(f);
             Directory.CreateDirectory(dir);
+            // 「가진 몸 + 조각 진행」 막대를 보이려고 SR 장면만 한 몸을 3성 · 조각 17 로 잠깐 바꾼다(모든 몸 열기 스위치가 켜져 있으면 전부 만렙으로 읽힌다).
+            // 녹화 전 세이브를 백업하고 끝나면 되돌린다(메뉴 쓰는 쪽 몫) — 스위치는 다음 장면에서 원래대로.
+            SetOpenAll(Scenes[_scene].name != "one_sr");
             var entries = Entries(player, Scenes[_scene].name);
             reveal.PlayAsync(entries, "10회 더  젬 3,000", default).Forget();   // fire-and-forget: 녹화 — 시간이 다 되면 다음 장면이 덮는다
             _frame = 0;
@@ -99,14 +103,23 @@ namespace Game.Editor.ReBorn
             var byGrade = new List<HostEntry>[3] { new(), new(), new() };
             foreach (var h in player.PlayableHosts)
                 if (h != null && !h.IsGhost && !PlayerDataService.IsHiddenHost(h.HostKey)) byGrade[(int)h.Grade].Add(h);
+            // 다 키운 몸에게 온 조각은 정수로 바뀐다(게임과 같게)
             SummonReveal.Entry Make(HostEntry h, int shards, bool isNew)
                 => new(h.HostKey, h.DisplayName, HostGradeLabel.Of(h.Grade), isNew ? "ui.summon.reveal.new" : "ui.summon.reveal.get",
-                       h.Grade == HostGrade.B ? SummonReveal.Rarity.Normal : SummonReveal.Rarity.Rare, (int)h.Grade, shards, 0, isNew);
+                       h.Grade == HostGrade.B ? SummonReveal.Rarity.Normal : SummonReveal.Rarity.Rare, (int)h.Grade, shards,
+                       !isNew && player.MasteryCost(h.HostKey) <= 0 ? shards : 0, isNew);
             var list = new List<SummonReveal.Entry>();
             switch (scene)
             {
                 case "one_r": list.Add(Make(byGrade[0][0], 2, false)); break;
-                case "one_sr": list.Add(Make(byGrade[1][0], 5, false)); break;
+                case "one_sr":
+                {
+                    var h = byGrade[1][0];
+                    SetSlot(player, "hostMastery", h.HostKey, 3);
+                    SetSlot(player, "hostShards", h.HostKey, 17);
+                    list.Add(Make(h, 5, false));
+                    break;
+                }
                 case "one_ssr": list.Add(Make(byGrade[2][0], 5, true)); break;
                 default:
                     int[] grades = { 0, 0, 1, 0, 0, 0, 2, 1, 0, 1 };
@@ -118,6 +131,18 @@ namespace Game.Editor.ReBorn
                     break;
             }
             return list;
+        }
+
+        private const System.Reflection.BindingFlags Any = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance;
+
+        private static void SetOpenAll(bool on) => typeof(PlayerDataService).GetField("s_openAllHosts", Any)?.SetValue(null, on);
+
+        /// <summary>세이브 몸 칸 하나를 바로 바꾼다(성급 hostMastery · 조각 hostShards) — 녹화 전용.</summary>
+        private static void SetSlot(IPlayerDataService player, string field, string key, int value)
+        {
+            var data = typeof(PlayerDataService).GetField("_data", Any)?.GetValue(player);
+            int i = (int)typeof(PlayerDataService).GetMethod("IndexOfHost", Any).Invoke(player, new object[] { key });
+            if (data?.GetType().GetField(field)?.GetValue(data) is int[] m && i >= 0 && i < m.Length) m[i] = value;
         }
     }
 }

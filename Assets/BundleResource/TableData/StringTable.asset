@@ -11429,3 +11429,40 @@ MonoBehaviour:
     _en: Almost!
     _zhHant: "\u5DEE\u4E00\u9EDE\uFF01"
     _zhHans: "\u5DEE\u4E00\u70B9\uFF01"
+  - _key: ui.rb.summon.card.aff
+    _ko: "{0}\uD615"
+    _ja: "{0}\u30BF\u30A4\u30D7"
+    _en: '{0} type'
+    _zhHant: "{0}\u578B"
+    _zhHans: "{0}\u578B"
+  - _key: ui.rb.summon.card.shards_add
+    _ko: "\uC870\uAC01 <color=#5FF0C9>+{0}</color>"
+    _ja: "\u304B\u3051\u3089 <color=#5FF0C9>+{0}</color>"
+    _en: Shards <color=#5FF0C9>+{0}</color>
+    _zhHant: "\u788E\u7247 <color=#5FF0C9>+{0}</color>"
+    _zhHans: "\u788E\u7247 <color=#5FF0C9>+{0}</color>"
+  - _key: ui.rb.summon.card.next
+    _ko: "\uB2E4\uC74C \uC131\uAE09\uAE4C\uC9C0 {0}\uAC1C"
+    _ja: "\u6B21\u306E\u661F\u307E\u3067\u3042\u3068{0}\u500B"
+    _en: '{0} more to next star'
+    _zhHant: "\u8DDD\u4E0B\u4E00\u661F\u7D1A\u9084\u5DEE {0} \u500B"
+    _zhHans: "\u8DDD\u4E0B\u4E00\u661F\u7EA7\u8FD8\u5DEE {0} \u4E2A"
+  - _key: ui.rb.summon.card.ready
+    _ko: "\uC131\uAE09\uC744 \uC62C\uB9B4 \uC218 \uC788\uB2E4!"
+    _ja: "\u661F\u3092\u4E0A\u3052\u3089\u308C\u308B\uFF01"
+    _en: Ready to rank up!
+    _zhHant: "\u53EF\u4EE5\u63D0\u5347\u661F\u7D1A\uFF01"
+    _zhHans: "\u53EF\u4EE5\u63D0\u5347\u661F\u7EA7\uFF01"
+  - _key: ui.rb.summon.card.unlock
+    _ko: "\uC0C8 \uBAB8 \uD574\uAE08! \xB7 \uC774\uC81C \uCD9C\uC804\uD560 \uC218
+      \uC788\uB2E4"
+    _ja: "\u65B0\u3057\u3044\u4F53\u3092\u89E3\u653E\uFF01\u30FB\u51FA\u6483\u3067\u304D\u308B"
+    _en: "New body unlocked! \xB7 Ready to deploy"
+    _zhHant: "\u65B0\u8EAB\u9AD4\u89E3\u9396\uFF01\xB7 \u73FE\u5728\u53EF\u4EE5\u51FA\u6230"
+    _zhHans: "\u65B0\u8EAB\u4F53\u89E3\u9501\uFF01\xB7 \u73B0\u5728\u53EF\u4EE5\u51FA\u6218"
+  - _key: ui.rb.summon.card.essence
+    _ko: "\uB2E4 \uD0A4\uC6B4 \uBAB8 \xB7 \uC815\uC218 +{0}"
+    _ja: "\u80B2\u6210\u5B8C\u4E86\u30FB\u30A8\u30C3\u30BB\u30F3\u30B9 +{0}"
+    _en: "Fully grown \xB7 Essence +{0}"
+    _zhHant: "\u5DF2\u7DF4\u6EFF \xB7 \u7CBE\u83EF +{0}"
+    _zhHans: "\u5DF2\u7EC3\u6EE1 \xB7 \u7CBE\u534E +{0}"

@@ -1451,6 +1451,12 @@ ui.rb.summon.essence	+{0} 영혼 정수	+{0} 魂のエッセンス	+{0} Soul Ess
 ui.rb.summon.again	{0}회 더	もう{0}回	{0} More	再{0}次	再{0}次
 ui.rb.summon.card_essence	정수 ×{0}	エッセンス ×{0}	Essence ×{0}	精華 ×{0}	精华 ×{0}
 ui.rb.summon.card_shards	조각 ×{0}	かけら ×{0}	Shards ×{0}	碎片 ×{0}	碎片 ×{0}
+ui.rb.summon.card.aff	{0}형	{0}タイプ	{0} type	{0}型	{0}型
+ui.rb.summon.card.shards_add	조각 <color=#5FF0C9>+{0}</color>	かけら <color=#5FF0C9>+{0}</color>	Shards <color=#5FF0C9>+{0}</color>	碎片 <color=#5FF0C9>+{0}</color>	碎片 <color=#5FF0C9>+{0}</color>
+ui.rb.summon.card.next	다음 성급까지 {0}개	次の星まであと{0}個	{0} more to next star	距下一星級還差 {0} 個	距下一星级还差 {0} 个
+ui.rb.summon.card.ready	성급을 올릴 수 있다!	星を上げられる！	Ready to rank up!	可以提升星級！	可以提升星级！
+ui.rb.summon.card.unlock	새 몸 해금! · 이제 출전할 수 있다	新しい体を解放！・出撃できる	New body unlocked! · Ready to deploy	新身體解鎖！· 現在可以出戰	新身体解锁！· 现在可以出战
+ui.rb.summon.card.essence	다 키운 몸 · 정수 +{0}	育成完了・エッセンス +{0}	Fully grown · Essence +{0}	已練滿 · 精華 +{0}	已练满 · 精华 +{0}
 ui.rb.summon.no_records	아직 뽑은 기록이 없어요.	まだ召喚記録がありません。	No summons yet.	尚無召喚紀錄。	尚无召唤记录。
 ui.rb.summon.jackpot_tag	대박	大当たり	Jackpot	大獎	大奖
 ui.rb.summon.pickup	이번 주 픽업:	今週のピックアップ：	This Week's Pickup:	本週UP：	本周UP：
