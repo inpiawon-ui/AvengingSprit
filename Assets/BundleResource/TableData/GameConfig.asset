@@ -188,7 +188,7 @@ MonoBehaviour:
     Elite: 0
     EliteEarly: 0
     EliteLast: 0
-    Hazard: 
+    Hazard: bomb_target
     Crowd: 0
     Fire: 0.85
     EnemyHpMul: 1.25
@@ -228,7 +228,7 @@ MonoBehaviour:
     Elite: 1
     EliteEarly: 0
     EliteLast: 0
-    Hazard: 
+    Hazard: neon_tracker
     Crowd: 0
     Fire: 0.82
     EnemyHpMul: 1.45
@@ -313,7 +313,7 @@ MonoBehaviour:
     Elite: 1
     EliteEarly: 3
     EliteLast: 0
-    Hazard: 
+    Hazard: gas_band
     Crowd: 0
     Fire: 0.78
     EnemyHpMul: 1.93
