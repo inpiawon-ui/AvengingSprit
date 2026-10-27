@@ -53,10 +53,11 @@ namespace Game.Editor.ReBorn
             float[] rows = { 1200, 1291, 1381, 1471 };
             for (int i = 0; i < Stats.Length; i++)
             {
-                float x0 = i % 2 == 0 ? 60 : 500, y = rows[i / 2];
+                // 두 칸 — 왼쪽 60~520 · 오른쪽 560~1020. 자물쇠는 제 칸 오른쪽 끝(예전엔 왼쪽 칸 자물쇠가 482 라 오른쪽 칸 아이콘 500 과 겹쳤다, PD 2026-10-28)
+                float x0 = i % 2 == 0 ? 60 : 560, y = rows[i / 2];
                 Img(PlaceIn(Node(body, $"LckStat{i}Icon"), T, x0, y - 24, x0 + 48, y + 24), $"Icons/{Stats[i].icon}_48");
                 Text(PlaceIn(Node(body, $"LckStat{i}Name"), T, x0 + 60, y - 30, x0 + 360, y + 30), Stats[i].key, Stats[i].ko, 46, White, TA.Left, heavy: true);
-                Img(PlaceIn(Node(body, $"LckStat{i}Lock"), T, x0 + 422, y - 22, x0 + 466, y + 22), "Icons/rb_icon_sys_lock_48");
+                Img(PlaceIn(Node(body, $"LckStat{i}Lock"), T, x0 + 410, y - 22, x0 + 454, y + 22), "Icons/rb_icon_sys_lock_48");
             }
 
             var shard = PlaceIn(Node(body, "LckShard"), T, 31, 1574, 1048, 1883);
