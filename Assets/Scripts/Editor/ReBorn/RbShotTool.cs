@@ -253,6 +253,10 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame:storm@3.5", "storm_16x9"),
             // 방 전체 기믹 시안 바탕 — SessionState .chapter 로 챕터를 정하고 찍는다(이름 끝 숫자는 사람이 붙이는 것, 2026-10-27)
             (720, 1280, Language.Korean, "ingame", "hazard_base"),
+            // 2 · 3 · 5챕터 방 전체 기믹 — SessionState .chapter 로 그 챕터 무대에서 켜고 녹화(hazard_rec/) · PD 2026-10-27 「추천대로 가자」
+            (720, 1280, Language.Korean, "ingame:hazard:bomb_target@3.5", "hazard_bomb_16x9"),
+            (720, 1280, Language.Korean, "ingame:hazard:neon_tracker@3.5", "hazard_neon_16x9"),
+            (720, 1280, Language.Korean, "ingame:hazard:gas_band@4.5", "hazard_gas_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06:accept", "event_altar_accept_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH1_03", "event_safe_16x9"),
@@ -914,11 +918,20 @@ namespace Game.Editor.ReBorn
                 if (t.GetField("_puddles", F)?.GetValue(battle) is System.Collections.ICollection c && c.Count >= 4) break;
                 place?.Invoke(battle, null);
             }
-            if (Directory.Exists(StormRecDir)) foreach (var f in Directory.GetFiles(StormRecDir, "*.png")) File.Delete(f);
-            Directory.CreateDirectory(StormRecDir);
+            BeginRec(StormRecDir, 3.2f);
+        }
+
+        private static string _recDir = StormRecDir;
+
+        /// <summary>0.07초마다 화면을 <paramref name="dir"/> 에 찍는다(지난 녹화는 지운다).</summary>
+        private static void BeginRec(string dir, float seconds)
+        {
+            _recDir = dir;
+            if (Directory.Exists(dir)) foreach (var f in Directory.GetFiles(dir, "*.png")) File.Delete(f);
+            Directory.CreateDirectory(dir);
             _stormRecFrame = 0;
             _stormRecNext = Time.realtimeSinceStartup;
-            _stormRecUntil = Time.realtimeSinceStartup + 3.2f;
+            _stormRecUntil = Time.realtimeSinceStartup + seconds;
             EditorApplication.update -= TickStormRec;
             EditorApplication.update += TickStormRec;
         }
@@ -928,7 +941,7 @@ namespace Game.Editor.ReBorn
             if (!EditorApplication.isPlaying || Time.realtimeSinceStartup > _stormRecUntil) { EditorApplication.update -= TickStormRec; return; }
             if (Time.realtimeSinceStartup < _stormRecNext) return;
             _stormRecNext += 0.07f;
-            ScreenCapture.CaptureScreenshot(Path.Combine(StormRecDir, $"f{_stormRecFrame++:000}.png"));
+            ScreenCapture.CaptureScreenshot(Path.Combine(_recDir, $"f{_stormRecFrame++:000}.png"));
         }
 
         /// <summary>난이도 확인 — 지금 몸 체력 · 방 적 한 대 피해 · 「몇 대에 죽나」를 콘솔 한 줄로(PD 2026-10-27 난이도 기획안).</summary>
@@ -988,6 +1001,17 @@ namespace Game.Editor.ReBorn
             var battle = ui.GetComponent<Game.Module.InGame.BattleDirector>();
             const System.Reflection.BindingFlags F = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var bt = typeof(Game.Module.InGame.BattleDirector);
+            if (state.StartsWith("ingame:hazard:"))
+            {
+                // 1번 방이라 원래는 안 켜진다 — 여기서만 켠다(3초마다 · 곧바로 첫 판). 녹화는 번개와 같은 폴더 규칙
+                string key = state.Substring("ingame:hazard:".Length).Split('@')[0];
+                const System.Reflection.BindingFlags HF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                var bt2 = typeof(Game.Module.InGame.BattleDirector);
+                bt2.GetMethod("ClearRoomHazards", HF)?.Invoke(battle, null);
+                bt2.GetMethod("StartRoomHazard", HF)?.Invoke(battle, new object[] { key, 3f, 0.02f }   /* 1번 방은 적이 금방 다 죽어 문이 열린다 — 그 전에 첫 판을 건다 */);
+                BeginRec(StormRecDir.Replace("storm_rec", "hazard_rec/" + key), key == "gas_band" ? 4.2f : 3.2f);
+                return;
+            }
             if (state.StartsWith("ingame:storm"))
             {
                 StartStorm(battle);

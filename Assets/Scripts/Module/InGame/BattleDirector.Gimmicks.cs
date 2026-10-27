@@ -389,6 +389,7 @@ namespace Game.Module.InGame
             TickHazards2(dt);   // 분사구 · 낙하물 · 웅덩이 · 지뢰 (BattleDirector.Hazards)
             TickWarns(dt);      // 바닥 예고 (BattleDirector.Warn)
             TickStorm(dt);      // 방 전체 기믹 — 번개 + 물웅덩이 (BattleDirector.Storm)
+            TickRoomHazards(dt);  // 폭격 · 네온 · 가스 (BattleDirector.RoomHazards)
             TickElements(dt);   // 원소판 잡몹의 자국 · 내 몸의 화상 · 독 · 냉기 (BattleDirector.Elements)
             TickNewShapeFlights(dt);   // 톱날 되돌리기 · 등불 방패 · 사냥개 붙잡힘 (BattleDirector.Trash6)
         }
@@ -399,6 +400,7 @@ namespace Game.Module.InGame
             _fuse.Clear();
             ClearWarns();
             ClearStorm();
+            ClearRoomHazards();
             _inSlowPool = false;
         }
     }
