@@ -481,7 +481,6 @@ namespace Game.Module.InGame
         private void ReflectAll(Unit me)
         {
             _reflectSeconds = BaseAxis(5f);         // 표 성장 축 Lv1 5 → Lv4 7초 (기획 2026-09-15 +1초)
-            HoldSkillCharge(_reflectSeconds);
             _reflectMul = SpecOpen ? SpecAxis(2f) : 2f;   // Lv5 2배 → Lv10 4배
             _reflectPierce = SpecOpen;              // Lv5 부터 반사탄이 관통
             // 반사 중인 것이 **보여야 한다**(기획 2026-09-15). 방벽 쉴드에 가려 반사 상태인지 몰랐다.
@@ -528,7 +527,6 @@ namespace Game.Module.InGame
         {
             _wardReduce = BaseAxis(0.5f);           // Lv1 −50% → Lv4 −70%
             _wardSeconds = SpecOpen ? SpecAxis(3f) : 3f;   // 명세 2026-09-14 — 3초
-            HoldSkillCharge(_wardSeconds);
             _wardTick = 0f;
             // ⚠ 그림을 `ward`(얼음 결정)에서 `guard`(빛으로 짜인 방어막)로 바꾼다 —
             //   얼음은 설녀의 것이라 둘이 구별되지 않았다(기획 2026-09-15).
@@ -953,7 +951,6 @@ namespace Game.Module.InGame
         {
             float mul = BaseAxis(0.6f);             // Lv1 ×0.6 → Lv4 ×1.0
             float seconds = SpecOpen ? SpecAxis(10f) : 10f;   // 명세 2026-09-14 — 10초
-            HoldSkillCharge(seconds);   // 포탑
             int dmg = SkillDamage(me, mul);
 
             // ⚠ **내 자리에 세우지 않는다.** `me.Position` 그대로 두었더니 포탑이 몸과

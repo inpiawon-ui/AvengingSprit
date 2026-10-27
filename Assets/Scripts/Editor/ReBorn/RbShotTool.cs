@@ -240,7 +240,6 @@ namespace Game.Editor.ReBorn
         {
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
             (720, 1280, Language.Korean, "ingame:skillcd", "skillcd_16x9"),
-            (720, 1280, Language.Korean, "ingame:hold@6", "skillhold_16x9"),
             (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
             (768, 1024, Language.Korean, "ingame", "fight_4x3"),
             (1200, 1920, Language.Korean, "ingame", "fight_16x10"),   // 16:10 태블릿(PD 2026-10-27 「Lv 게이지랑 UI 가 화면을 삐져나간다」)
@@ -1012,28 +1011,6 @@ namespace Game.Editor.ReBorn
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") { LogHits(ui); return; }
-            // 지속형 액티브 — 쿨을 채워 한 번 쓰고, 효과 중 · 끝난 뒤의 쿨을 1초마다 남긴다(효과가 끝난 뒤부터 쿨이 차는지)
-            if (state.StartsWith("ingame:hold"))
-            {
-                var bd = ui.GetComponent<Game.Module.InGame.BattleDirector>();
-                var bdt = typeof(Game.Module.InGame.BattleDirector);
-                const System.Reflection.BindingFlags CF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-                float full = (float)(bdt.GetProperty("PlayerSkillCooldown", CF)?.GetValue(bd) ?? 6f);
-                bdt.GetField("_skillCooldown", CF)?.SetValue(bd, full);
-                bdt.GetField("_invuln", CF)?.SetValue(bd, 60f);   // 시험 중에 죽지 않게
-                Time.timeScale = 1f;
-                bd.TryActiveSkill();
-                float t0 = Time.time; int next = 0;
-                void Probe()
-                {
-                    if (!EditorApplication.isPlaying || bd == null) { EditorApplication.update -= Probe; return; }
-                    if (Time.time - t0 < next) return;
-                    Debug.Log($"[쿨 시험] {next}초 · 남은 쿨 {bd.SkillCooldownRemain:0.0} / {full:0.0} · 효과 붙잡음 {(float)(bdt.GetField("_skillHoldLeft", CF)?.GetValue(bd) ?? 0f):0.0}");
-                    if (++next > 10) EditorApplication.update -= Probe;
-                }
-                EditorApplication.update += Probe;
-                return;
-            }
             // 액티브 쿨이 도는 중 — 35% 찬 채로 멈춰 찍는다(덮개가 아이콘 원 전체를 덮는지 · 남은 초)
             if (state == "ingame:skillcd")
             {

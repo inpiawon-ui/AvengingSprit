@@ -123,17 +123,9 @@ namespace Game.Module.InGame
         /// </summary>
         private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul;
 
-        // 지속형 액티브는 효과가 끝난 뒤부터 쿨을 센다(PD 2026-10-27 「너무 짧다」 — 효과 도중에도 차서
-        // 끝나고 기다리는 시간이 「쿨 − 지속」뿐이었다. 호퍼 Lv4 는 0.5초). 표의 쿨 숫자는 그대로
-        private float _skillHoldLeft;
-
-        /// <summary>액티브 효과가 이만큼 이어진다 — 그동안은 쿨이 차지 않는다. 각 지속형 스킬이 시작할 때 부른다.</summary>
-        private void HoldSkillCharge(float seconds) => _skillHoldLeft = Mathf.Max(_skillHoldLeft, seconds);
-
         private void TickSkillCharge(float dt)
         {
             if (!_running || _host == null) return;
-            if (_skillHoldLeft > 0f) { _skillHoldLeft -= dt; return; }
             float full = PlayerSkillCooldown;
             if (full <= 0f) return;
             _skillCooldown = Mathf.Min(_skillCooldown + dt, full);
@@ -9082,10 +9074,9 @@ namespace Game.Module.InGame
             // ⚠ 쿨 게이지를 **가득 채운 채로** 시작한다. 0 에서 시작하면 뺏자마자
             //   8~28초 동안 버튼이 덮개에 가려져 "고장난 버튼" 으로 보인다.
             //   몸을 뺏는 순간이 이 게임에서 가장 쓰고 싶은 순간이기도 하다.
-            // 액티브는 빈 채로 시작해 평타로 채우고, 필살기는 빙의할 때마다 한 번 쓸 수 있다(PD 2026-10-15).
-            // (예전엔 액티브를 가득 찬 채로 시작했다 — 「몸을 뺏는 순간이 가장 쓰고 싶은 순간」은 이제 필살기의 몫)
-            _skillCooldown = 0f;
-            _skillHoldLeft = 0f;   // 앞 몸의 효과 시간이 새 몸 쿨을 붙잡지 않게
+            // 2026-10-15 에 빈 채로 시작하게 바꿨다가 다시 가득 찬 채로(PD 2026-10-27 「시작했을 때 쿨은 가득 차 있게」).
+            // 필살기는 그대로 빙의할 때마다 한 번
+            _skillCooldown = PlayerSkillCooldown;
             _ultReady = UltReadyOnEnter(key);
             // ⚠ 지속형 스킬은 **몸에 붙은 것**이지 판에 붙은 것이 아니다.
             //   안 끄면 오버히트를 켜고 다른 몸으로 갈아타는 것이 이득이 된다.
