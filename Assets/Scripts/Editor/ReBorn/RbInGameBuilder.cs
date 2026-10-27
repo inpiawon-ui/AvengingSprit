@@ -170,33 +170,41 @@ namespace Game.Editor.ReBorn
             backImg.sprite = null;
             backImg.color = new Color(0.035f, 0.045f, 0.085f, 1f);
             back.SetAsFirstSibling();
+            // 위 판 — 시안 .hud(28~1052 x 120~320 · rgba(8,13,23,.85) · 둥근 24 · 위 안쪽 가는 금선). 테두리 없는 어두운 판이라
+            //   보상 칸 판(rb_result_cell — 같은 색 · 같은 위 금선)을 깐다. 옛 네온 판(rb_hud_top_bar)은 아래 테두리 홈에 막대가 끼어
+            //   숫자와 멀리 떨어졌다(PD 2026-10-27 「체력 막대가 너무 아래 · 시안보다도 올려 줘」)
             var bar = hud.Find("RbTopBar") as RectTransform ?? Node(hud, "RbTopBar");
-            Put(bar, hud, HudTop, 28, 120, 1052, 318);
-            Skin(bar, "Hud/rb_hud_top_bar");
+            Put(bar, hud, HudTop, 28, 120, 1052, 320);
+            Skin(bar, "Components/rb_result_cell");
+            // 불투명 — 인게임 캔버스는 선형 색이라 0.92 로도 판이 뿌옇게 비쳤다(시안 #0E1119 · 게임 #392E35, 2026-10-27 실측)
+            bar.GetComponent<Image>().color = Color.white;
             bar.SetSiblingIndex(1);
 
-            // 유령 — 얼굴 · 「92/100」 · 막대
-            Put(F(root, "GhostHudIcon"), hud, HudTop, 50, 150, 150, 255);
-            Put(F(root, "GhostHpText"), hud, HudTop, 162, 180, 330, 230);
-            Style(F(root, "GhostHpText"), 46, White, TA.Left, number: true);
-            var gbg = Put(F(root, "GhostHpBarBg"), hud, HudTop, 50, 266, 318, 290);
-            Skin(gbg, "Hud/rb_hp_ghost_base");
+            // 숫자 · 막대 한 묶음을 판 가운데(220)에 — 숫자 184~228(도트 36) · 막대 242~256(높이 14). 유령 · 몸 막대는 같은 줄 · 같은 간격
+            // 막대는 시안 .hpbar(바탕 #222A40 · 둥근 7 · 채움 청록 #48BDCD / 초록 #4AC28B) — 평평한 키트 막대(rb_bar_track · rb_bar_fill_cyan)
+            // 얼굴은 막대 위로 올라오게 88 로 줄여 146~234 에(시안 96 · 155~251 그대로면 올린 막대와 겹친다)
+            Put(F(root, "GhostHudIcon"), hud, HudTop, 52, 146, 140, 234);
+            Put(F(root, "GhostHpText"), hud, HudTop, 156, 184, 340, 228);
+            Style(F(root, "GhostHpText"), 36, White, TA.Left, number: true);
+            var gbg = Put(F(root, "GhostHpBarBg"), hud, HudTop, 52, 242, 316, 256);
+            Skin(gbg, "Components/rb_bar_track");
             var gfill = F(root, "GhostHpBarFill");
-            Skin(gfill, "Hud/rb_hp_ghost_fill");
+            Skin(gfill, "Components/rb_bar_fill_cyan");
             FillLeft(gfill);
 
             // 가운데 「1-07」(방 진행 칸은 뺐다)
-            Put(F(root, "ChapterLabel"), hud, HudTop, 370, 172, 540, 232);
-            Style(F(root, "ChapterLabel"), 60, White, TA.Center, number: true);
+            Put(F(root, "ChapterLabel"), hud, HudTop, 340, 176, 572, 236);
+            Style(F(root, "ChapterLabel"), 44, White, TA.Center, number: true);
 
-            // 몸 — 얼굴 · 「232/300」 · 막대
-            Put(F(root, "HostPortraitImage"), hud, HudTop, 612, 160, 708, 248);
-            Put(F(root, "HostHpText"), hud, HudTop, 728, 180, 895, 230);
-            Style(F(root, "HostHpText"), 46, White, TA.Left, number: true);
-            var hbg = Put(F(root, "HostHpBarBg"), hud, HudTop, 595, 282, 862, 306);
-            Skin(hbg, "Hud/rb_hp_host_base");
+            // 몸 — 얼굴 · 「232/300」 · 막대(유령과 같은 줄 · 같은 간격 — PD 같은 날 「유령 간격만큼 호스트도」)
+            Put(F(root, "HostPortraitImage"), hud, HudTop, 596, 146, 692, 234);
+            Put(F(root, "HostHpText"), hud, HudTop, 708, 184, 890, 228);
+            Style(F(root, "HostHpText"), 36, White, TA.Left, number: true);
+            var hbg = Put(F(root, "HostHpBarBg"), hud, HudTop, 596, 242, 860, 256);
+            Skin(hbg, "Components/rb_bar_track");
             var hfill = F(root, "HostHpBarFill");
-            Skin(hfill, "Hud/rb_hp_host_fill");
+            Skin(hfill, "Components/rb_bar_fill_cyan");
+            hfill.GetComponent<Image>().color = new Color32(255, 255, 172, 255);   // 청록 채움을 시안 초록(#4AC28B)으로 — 파랑만 덜어 낸다
             FillLeft(hfill);
 
             // 일시정지 — 키트 원 + 아이콘
@@ -217,22 +225,23 @@ namespace Game.Editor.ReBorn
             row.pivot = new Vector2(0.5f, 1f);
             row.sizeDelta = new Vector2(720f, 230f);
             row.anchoredPosition = Vector2.zero;
-            Put(F(root, "LevelText"), row, HudTop, 22, 358, 128, 410);
-            Style(F(root, "LevelText"), 50, White, TA.Left, number: true);
+            // 시안 .progress 134~902 x 372~388(높이 16 · 바탕 #252C40 · 청록 채움) — 평평한 키트 막대
+            Put(F(root, "LevelText"), row, HudTop, 28, 355, 128, 405);
+            Style(F(root, "LevelText"), 40, White, TA.Left, number: true);
             var xbg = row.Find("RunExpBg") as RectTransform ?? Node(row, "RunExpBg");
-            Put(xbg, row, HudTop, 136, 368, 902, 392);
-            Skin(xbg, "Hud/rb_xp_base");
+            Put(xbg, row, HudTop, 134, 372, 902, 388);
+            Skin(xbg, "Components/rb_bar_track");
             var xfill = xbg.Find("RunExpFill") as RectTransform ?? Node(xbg, "RunExpFill");
-            Skin(xfill, "Hud/rb_xp_fill");
+            Skin(xfill, "Components/rb_bar_fill_cyan");
             FillLeft(xfill);
 
             // 골드 — 줄 오른쪽 끝(보스 때도 남는다)
-            Put(F(root, "GoldIcon"), hud, HudTop, 914, 354, 968, 408);
-            Put(F(root, "GoldText"), hud, HudTop, 974, 358, 1060, 410);
-            Style(F(root, "GoldText"), 50, White, TA.Left, number: true);
+            Put(F(root, "GoldIcon"), hud, HudTop, 918, 356, 966, 404);
+            Put(F(root, "GoldText"), hud, HudTop, 982, 355, 1060, 405);
+            Style(F(root, "GoldText"), 40, White, TA.Left, number: true);
 
             // 상성 삼각판(방에 들어설 때 크게 떴다 작아진다) — 몸 얼굴 왼쪽 빈 곳
-            Put(F(root, "AffinityTriangle"), hud, HudTop, 548, 172, 606, 230);
+            Put(F(root, "AffinityTriangle"), hud, HudTop, 534, 162, 588, 216);
 
             BuildBossBar(root, hud);
             BuildModeHud(hud);
@@ -312,11 +321,20 @@ namespace Game.Editor.ReBorn
             knob.sizeDelta = new Vector2(76f, 78f);
             Skin(knob, "Hud/rb_joystick_knob", false);
 
-            // 빙의(큰 원) · 액티브(아래) · 필살기(위) — 230 띠 안에 시안 배치(필살기는 빙의 위)를 접어 넣는다
-            var possess = PutPx(F(root, "PossessButton"), group, 630f, 128f, 150f, 120f);
+            // 두 묶음(PD 2026-10-27) — 몸이 있으면 스킬 묶음(액티브 · 필살기)만, 몸을 잃으면 빙의 묶음만(크게 · 강조).
+            //   화면 스크립트(InGameMainUI.RbExtras OnRbHp)가 몸 상태로 묶음을 켜고 끈다. 버튼끼리는 같은 자리를 나눠 쓴다
+            var skills = group.Find("RbSkillGroup") as RectTransform ?? Node(group, "RbSkillGroup");
+            Stretch(skills);
+            var souls = group.Find("RbPossessGroup") as RectTransform ?? Node(group, "RbPossessGroup");
+            Stretch(souls);
+            souls.gameObject.SetActive(false);
+
+            // 빙의 — 몸을 잃었을 때 필살기 자리에 크게(시안 230 원 · 강조 빛)
+            var possess = PutPx(F(root, "PossessButton"), group, 628f, 122f, 150f, 120f);
+            possess.localScale = new Vector3(PossessBig, PossessBig, 1f);
             Skin(possess, "Hud/rb_btn_possess", false);
             SwapPressed(possess, "Hud/rb_btn_possess_pressed");
-            PutPx(F(root, "PossessButtonGlow"), group, 630f, 128f, 166f, 133f);
+            PutPx(F(root, "PossessButtonGlow"), group, 628f, 122f, 166f, 133f).localScale = new Vector3(PossessBig, PossessBig, 1f);
             Skin(F(root, "PossessButtonGlow"), "Hud/rb_btn_possess_ready", false);
             Inside(F(root, "PossessGhostIcon"), 75f, 50f, 60f, 58f);
             // 쿨다운 덮개는 버튼과 같은 모양(그림 없는 네모로 두면 버튼 둘레에 짙은 네모가 보였다 — 첫 캡처)
@@ -328,7 +346,9 @@ namespace Game.Editor.ReBorn
             Inside(F(root, "PossessButtonLabel"), 75f, 94f, 120f, 24f);
             Style(F(root, "PossessButtonLabel"), 30, White, TA.Center, number: true);
 
-            var skill = PutPx(F(root, "SkillButton"), group, 487f, 170f, 100f, 100f);
+            // 액티브 — 단순한 파란 고리 · 작게(필살기 왼쪽 아래)
+            var skill = PutPx(F(root, "SkillButton"), group, 496f, 160f, 100f, 100f);
+            skill.localScale = new Vector3(SkillSmall, SkillSmall, 1f);
             Skin(skill, "Hud/rb_btn_skill", false);
             SwapPressed(skill, "Hud/rb_btn_skill_pressed");
             RoundIcon(skill, F(root, "SkillIcon"), "SkillIconMask");
@@ -344,13 +364,32 @@ namespace Game.Editor.ReBorn
             Inside(F(root, "SkillSealIcon"), 50f, 50f, 40f, 40f);
             Mute(root, "SkillButtonLabel");
 
-            var ult = PutPx(F(root, "UltButton"), group, 487f, 58f, 100f, 100f);
+            // 필살기 — 크게 · 모양부터 다르게(왕관 · 날개 장식 금테 rb_btn_ult_frame). 빙의 버튼이 있던 오른쪽 큰 자리
+            //   테는 아이콘 위에 얹는다(가운데 구멍으로 아이콘이 보인다) — 구멍 지름 150/260 · 중심이 그림 가운데보다 10/260 아래
+            var ult = PutPx(F(root, "UltButton"), group, 628f, 118f, 100f, 100f);
+            ult.localScale = new Vector3(UltBig, UltBig, 1f);
             Skin(ult, "Hud/rb_btn_ult", false);
-            SwapPressed(ult, "Hud/rb_btn_ult_pressed");
-            PutPx(F(root, "UltButtonGlow"), group, 487f, 58f, 112f, 112f);
-            Skin(F(root, "UltButtonGlow"), "Hud/rb_btn_ult_ready", false);
             RoundIcon(ult, F(root, "UltIcon"), "UltIconMask");
             Mute(root, "UltButtonLabel");
+            var frameSprite = KitSprite("Hud/rb_btn_ult_frame");
+            if (frameSprite != null)
+            {
+                const float frameSize = 78f * 260f / 150f;   // 구멍이 아이콘 원판(78)과 맞는 크기
+                var frame = ult.Find("UltFrame") as RectTransform ?? Node(ult, "UltFrame");
+                Inside(frame, 50f, 50f - frameSize * 10f / 260f, frameSize, frameSize);
+                var fi = frame.GetComponent<Image>() ?? frame.gameObject.AddComponent<Image>();
+                fi.sprite = frameSprite; fi.preserveAspect = true; fi.raycastTarget = false;
+                frame.SetSiblingIndex(F(root, "UltIconMask").GetSiblingIndex() + 1);
+                // 옛 노란 고리는 누름 칸으로만(보이지 않게) · 누르면 테가 어두워진다
+                if (ult.TryGetComponent<Image>(out var ui)) ui.color = new Color(1f, 1f, 1f, 0f);
+                if (ult.TryGetComponent<Button>(out var ub)) { ub.targetGraphic = fi; ub.transition = Selectable.Transition.ColorTint; }
+            }
+            else SwapPressed(ult, "Hud/rb_btn_ult_pressed");
+            // 준비 빛 — 테 모양이 달라 둥근 고리 빛 대신 부드러운 금빛 번짐을 뒤에
+            var ug = PutPx(F(root, "UltButtonGlow"), group, 628f, 112f, 170f, 170f);
+            ug.localScale = new Vector3(UltBig, UltBig, 1f);
+            Skin(ug, "Components/rb_card_glow", false);
+            ug.GetComponent<Image>().color = new Color32(255, 196, 70, 150);
 
             // 몸 없음(시안 ghost-hud) — 액티브 · 필살기 단추 가운데 「몸 없음」. 화면 스크립트가 켜고 끈다
             foreach (var (btn, n) in new[] { (skill, "SkillNoBodyText"), (ult, "UltNoBodyText") })
@@ -363,10 +402,15 @@ namespace Game.Editor.ReBorn
             Mute(root, "ActionFrame", "ActionLabel", "FreeMoveLabel");
             var rowT = F(root, "ButtonRow");
             if (rowT != null && rowT.TryGetComponent<HorizontalLayoutGroup>(out var hl)) Object.DestroyImmediate(hl);
-            // 준비 됨 빛 — 키트 ready 판을 조금 크게 버튼 **뒤**에 깐다(밝은 테두리만 둘레로 보인다 · 아이콘을 가리지 않게)
-            F(root, "PossessButtonGlow")?.SetSiblingIndex(possess.GetSiblingIndex());
-            F(root, "UltButtonGlow")?.SetSiblingIndex(ult.GetSiblingIndex());
+            // 묶음으로 옮긴다(자리 값은 같은 판 기준이라 그대로) — 준비 빛은 버튼 **뒤**
+            foreach (var n in new[] { "UltButtonGlow", "UltButton", "SkillButton" }) F(root, n)?.SetParent(skills, false);
+            foreach (var n in new[] { "PossessButtonGlow", "PossessButton" }) F(root, n)?.SetParent(souls, false);
+            F(root, "UltButtonGlow")?.SetSiblingIndex(0);
+            F(root, "PossessButtonGlow")?.SetSiblingIndex(0);
         }
+
+        // 버튼 크기 — 액티브는 작고 단순하게, 필살기 · 빙의는 크게(PD 2026-10-27)
+        private const float SkillSmall = 0.9f, UltBig = 1.32f, PossessBig = 1.15f;
 
         /// <summary>버튼 안 자식 — 버튼 위 왼쪽 기준 중심(게임 px).</summary>
         private static void Inside(RectTransform rt, float cx, float cy, float w, float h)

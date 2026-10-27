@@ -177,7 +177,9 @@ namespace Game.Module.InGame
             CacheGoldFx();
             _ui.OnClick("PossessButton", () => _battle?.TryPossess());
             _ui.OnClick("UltButton", () => _battle?.TryUltimate());   // 빙의와 나눴다(PD 2026-10-16)
-            _ultButtonImage = _ui.Get<Image>("UltButton");
+            // RE:BORN — 필살기 금테(UltFrame)가 보이는 그림이다(버튼 칸은 투명한 누름 칸). 밝기(쓸 수 있음 · 다 씀)를 테에 입힌다
+            var ultFrame = _ui.Get<Image>("UltFrame");
+            _ultButtonImage = ultFrame != null ? ultFrame : _ui.Get<Image>("UltButton");
             _ui.OnClick("SkillButton", () => _battle?.TryActiveSkill());
             _ui.OnClick("PauseButton", OnPause);
 
@@ -1149,9 +1151,10 @@ namespace Game.Module.InGame
             // ⚠ 늘 눌리게 둔다 — 회색 칠만으로 꺼진 것을 보인다. 비활성 색(반투명)이 겹치면 버튼이 사라져 보였다(녹화 pd_alert).
             //   못 누르는 때는 `TryPossess` 가 거른다(대상 없음 · 쿨다운 · 몸이 있음)
             if (btn != null) btn.interactable = true;
+            // RE:BORN — 빙의 버튼은 몸을 잃었을 때만 뜨는 「지금 누를 것」이라 늘 밝게(PD 2026-10-27 「저것만 강조」). 탈 몸이 잡히면 빛 테두리가 더해진다
             if (_possessButtonImage != null)
                 _possessButtonImage.color =
-                    usable ? Color.white
+                    usable || _reborn ? Color.white
                     : leaveDenied ? new Color(0.45f, 0.45f, 0.5f, 1f)
                     : hasTarget ? new Color(0.85f, 0.55f, 0.55f, 1f)   // 대상은 있는데 값이 모자라다
                     : new Color(0.45f, 0.45f, 0.5f, 1f);

@@ -92,6 +92,11 @@ namespace Game.Module.InGame
                 _ui.SetActive("RbNoBodyText", !e.HasHost);
                 _ui.SetActive("SkillNoBodyText", !e.HasHost);
                 _ui.SetActive("UltNoBodyText", !e.HasHost);
+                // 몸이 있으면 스킬 묶음(액티브 · 필살기)만, 몸을 잃으면 스킬을 걷고 빙의 버튼만 크게 숨쉬며(PD 2026-10-27)
+                _ui.SetActive("RbSkillGroup", e.HasHost);
+                _ui.SetActive("RbPossessGroup", !e.HasHost);
+                if (!e.HasHost) PossessBreathAsync(++_rbPossessBreathId).Forget();   // fire-and-forget: 몸을 입으면 스스로 멈춘다
+                else _rbPossessBreathId++;
                 if (e.HasHost) _ui.SetActive("RbNoBodyHint", false);
                 else if (!_rbNoBodyHintShown && !_finished)
                 {
@@ -103,6 +108,26 @@ namespace Game.Module.InGame
             if (danger == _rbDanger) return;
             _rbDanger = danger;
             if (danger) DangerPulseAsync().Forget();   // fire-and-forget: 위험이 풀리면 스스로 끈다
+        }
+
+        private int _rbPossessBreathId;
+        private Vector3 _rbPossessHomeScale;
+
+        // 빙의 버튼 숨쉬기 — 몸이 없는 동안 「지금 이것만 누르면 된다」가 읽히게 천천히 커졌다 작아진다(1 → 1.06)
+        private async UniTaskVoid PossessBreathAsync(int id)
+        {
+            if (_ui.Find("PossessButton") is not RectTransform btn) return;
+            if (_rbPossessHomeScale == Vector3.zero) _rbPossessHomeScale = btn.localScale;
+            var token = this.GetCancellationTokenOnDestroy();
+            float t = 0f;
+            while (id == _rbPossessBreathId)
+            {
+                float k = 0.5f - 0.5f * Mathf.Cos(t * Mathf.PI * 2f / 1.4f);
+                btn.localScale = _rbPossessHomeScale * Mathf.Lerp(1f, 1.06f, k);
+                if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow()) return;
+                t += Time.unscaledDeltaTime;
+            }
+            btn.localScale = _rbPossessHomeScale;
         }
 
         private async UniTaskVoid NoBodyHintAsync()
@@ -165,8 +190,12 @@ namespace Game.Module.InGame
 
         // ── 다음 방 ───────────────────────────────────────────
 
+        // 적을 다 잡으면 뜨던 「다음 방」 창 — PD 2026-10-27 「일단 안 뜨게」. 출구로 걸어 나가면 그대로 다음 방이다(창은 안내일 뿐)
+        private const bool NextRoomPopupOn = false;
+
         private void ShowNextRoom()
         {
+            if (!NextRoomPopupOn) return;
             if (_battle == null || _finished || !_battle.TryNextRoomPreview(out var kind, out bool midBoss)) return;
             OpenNextRoom(kind, midBoss);
         }

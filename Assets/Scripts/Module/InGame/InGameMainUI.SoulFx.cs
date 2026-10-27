@@ -68,14 +68,19 @@ namespace Game.Module.InGame
             else _possessGlowId++;
         }
 
+        // 빛 그림의 프리팹 색 · 크기 — 맥박은 이것을 기준으로 곱한다(필살기 빛은 금빛 · 1.32 배로 깔려 있다, 2026-10-27)
+        private readonly System.Collections.Generic.Dictionary<Image, (Color color, Vector3 scale)> _glowBase = new();
+
         private async UniTaskVoid PulseGlowAsync(Image img, int id, bool ult)
         {
             float t = 0f;
+            if (img != null && !_glowBase.ContainsKey(img)) _glowBase[img] = (img.color, img.rectTransform.localScale);
+            var (baseColor, baseScale) = img != null ? _glowBase[img] : (Color.white, Vector3.one);
             while (this != null && img != null && id == (ult ? _ultGlowId : _possessGlowId))
             {
                 float k = Mathf.PingPong(t / GlowPulseSeconds * 2f, 1f);
-                img.color = new Color(1f, 1f, 1f, Mathf.Lerp(GlowMinAlpha, 1f, k));
-                img.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.96f, 1.06f, k);
+                img.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * Mathf.Lerp(GlowMinAlpha, 1f, k));
+                img.rectTransform.localScale = baseScale * Mathf.Lerp(0.96f, 1.06f, k);
                 await UniTask.Yield();
                 t += Time.unscaledDeltaTime;
             }
