@@ -138,8 +138,8 @@ card.c011.name	공격 강화	攻撃強化	Power Up	攻擊強化	攻击强化
 card.c011.desc	공격 피해가 늘어난다.	攻撃ダメージが上がる。	More attack damage.	攻擊傷害提升。	攻击伤害提升。
 card.c012.name	속사	速射	Rapid Fire	速射	速射
 card.c012.desc	더 빠르게 쏜다.	攻撃がより速くなる。	Attack faster.	射擊速度更快。	射击速度更快。
-card.c013.name	필살기 초기화	必殺技リセット	Special Reset	必殺技重置	必杀技重置
-card.c013.desc	호스트의 필살기를 다시 쓸 수 있다.	今の体の必殺技をもう一度使える。	Use your current body's Special again.	可再次使用當前身體的必殺技。	可再次使用当前身体的必杀技。
+card.c013.name	필살기 쿨 감소	必殺技クール短縮	Special Cooldown Down	必殺技冷卻減半	必杀技冷却减半
+card.c013.desc	필살기 쿨이 절반으로 줄어든다.	必殺技のクールタイムが半分になる。	Halves your Special cooldown.	必殺技冷卻時間減半。	必杀技冷却时间减半。
 card.c014.name	관통탄	貫通弾	Piercing Shot	貫穿彈	贯穿弹
 card.c014.desc	탄이 적을 뚫고 지나간다.	弾が敵を貫通する。	Shots pierce through foes.	子彈穿透敵人。	子弹穿透敌人。
 card.c015.name	벽 반사	壁反射	Ricochet	牆面反彈	墙面反弹

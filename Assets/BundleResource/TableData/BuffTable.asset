@@ -280,9 +280,8 @@ MonoBehaviour:
     _requiresAny: []
     _implemented: 1
   - _buffKey: c013
-    _nameKr: "\uD544\uC0B4\uAE30 \uCD08\uAE30\uD654"
-    _description: "\uD638\uC2A4\uD2B8\uC758 \uD544\uC0B4\uAE30\uB97C \uB2E4\uC2DC
-      \uC4F8 \uC218 \uC788\uB2E4."
+    _nameKr: "\uD544\uC0B4\uAE30 \uCFE8 \uAC10\uC18C"
+    _description: "\uD544\uC0B4\uAE30 \uCFE8\uC774 \uC808\uBC18\uC73C\uB85C \uC904\uC5B4\uB4E0\uB2E4."
     _kind: 53
     _value: 1
     _stackable: 1

@@ -26,14 +26,19 @@ namespace Game.Editor.ReBorn
         {
             var root = Root("RbTitleUI");
             var rt = (RectTransform)root.transform;
-            Backdrop(rt, "TitleBg");
-            Logo(rt, "TitleLogo");
-            var start = Place(Node(rt, "StartButton"), Edge.Bottom, 73, 1802, 1007, 1974);
-            Btn(start, "Components/rb_btn_primary");
-            Text(Stretch(Node(start, "StartButtonText")), "ui.rb.title.start", "시작하기", 84, Ink, TA.Center, heavy: true);
-            // 시안에는 없지만 저작권 줄은 남긴다(원작 표기 — 지우지 않는다). 버전은 같은 줄 오른쪽
-            Text(Place(Node(rt, "CopyrightText"), Edge.Bottom, 60, 2150, 760, 2200), null, "©1991 JALECO / CITY CONNECTION", 30, Dim, TA.Left);
-            Text(Place(Node(rt, "VersionText"), Edge.Bottom, 780, 2150, 1020, 2200), null, "v1.0", 30, Dim, TA.Right, number: true);
+            // 타이틀 한 장 그림(PD 2026-10-28) — 로고 · 유령 · 밤 도시 · 회사 로고가 그림에 다 들어 있다. 따로 얹던 로고는 뺀다
+            var key = Stretch(Node(rt, "TitleBg"));
+            var keyImg = Img(key, "Art/rb_art_title_key");
+            keyImg.preserveAspect = false;
+            var keyFit = key.gameObject.AddComponent<AspectRatioFitter>();
+            keyFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;   // 검은 여백 없이 덮는다(20:9 는 양옆이 조금 잘린다)
+            keyFit.aspectRatio = keyImg.sprite != null ? keyImg.sprite.rect.width / keyImg.sprite.rect.height : 941f / 1672f;
+            // 화면 어디를 눌러도 시작 · 「TAP TO START」 는 화면 스크립트가 깜빡인다(PD 「tap to start 도 넣어 줘」) — 어두운 물 · 지붕 쪽
+            HitArea(Stretch(Node(rt, "StartButton")));
+            Text(Place(Node(rt, "TapToStartText"), Edge.Bottom, 140, 1905, 940, 1985), null, "TAP TO START", 60, White, TA.Center, number: true);   // 도시 불빛 위는 안 읽혀 어두운 물 · 지붕 쪽으로
+            // 저작권 줄은 남긴다(원작 표기 — 지우지 않는다) · 회사 로고 밑 맨 아래 가장자리에 작게. 버전은 같은 줄 오른쪽
+            Text(Place(Node(rt, "CopyrightText"), Edge.Bottom, 40, 2196, 760, 2226), null, "©1991 JALECO / CITY CONNECTION", 22, Dim, TA.Left);
+            Text(Place(Node(rt, "VersionText"), Edge.Bottom, 780, 2196, 1040, 2226), null, "v1.0", 22, Dim, TA.Right, number: true);
 
             var ui = root.AddComponent<TitleMainUI>();
             var so = new SerializedObject(ui);

@@ -112,7 +112,7 @@ namespace Game.Editor
             Do("액티브 시간 쿨", ActiveCooldown);
             Do("위기 방벽", CrisisBarrier);
             Do("보스 사냥", BossHunter);
-            Do("필살기 초기화", UltReset);
+            Do("필살기 쿨 감소", UltReset);
             Do("상점", Shop);
             Do("천사 제단", Shrine);
             Do("악마 거래", Devil);
@@ -159,7 +159,7 @@ namespace Game.Editor
                 string before = Snapshot();
                 Max(e.BuffKey);
                 bool atMax = s_buffs.LevelOf(e.BuffKey) == e.MaxLevel && s_buffs.ExcludedKeys.Contains(e.BuffKey);
-                bool changed = Snapshot() != before || e.Kind == BuffKind.UltReset;   // 필살기 초기화는 고르는 순간 효과(따로 잰다)
+                bool changed = Snapshot() != before || e.Kind == BuffKind.UltReset;   // 필살기 쿨 감소는 고르는 순간 효과(따로 잰다)
                 if (atMax && changed) ok++; else noChange.Add($"{e.BuffKey}{(atMax ? "" : "(최대 레벨 아님)")}");
             }
             Row("최대 레벨 적용", "35장 모두 최대 레벨 · 뽑기에서 빠짐 · 수치가 바뀜", noChange.Count == 0, $"{ok}/35" + (noChange.Count > 0 ? " · 안 바뀜: " + string.Join(", ", noChange) : ""));
@@ -341,12 +341,12 @@ namespace Game.Editor
         private static void UltReset()
         {
             Reset(Host("commando_mg"));
-            var ready = T.GetField("_ultReady", F);
-            ready.SetValue(s_bd, false);
+            var left = T.GetField("_ultCooldownLeft", F);
+            left.SetValue(s_bd, 200f);
             T.GetField("_awaitingBuff", F).SetValue(s_bd, true);
             s_bd.ChooseBuff("c013");
-            bool r = (bool)ready.GetValue(s_bd);
-            Row("필살기 초기화", "다 쓴 필살기가 카드를 고르는 순간 다시 준비됨", r, $"준비={r}");
+            float l = (float)left.GetValue(s_bd);
+            Row("필살기 쿨 감소", "고르는 순간 돌던 필살기 쿨이 절반(200 → 100초)", Mathf.Abs(l - 100f) < 0.5f, $"남은 쿨={l:0.#}");
         }
 
         private static void Shop()

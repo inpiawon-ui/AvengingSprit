@@ -75,20 +75,24 @@ namespace Game.Module.InGame
             }
         }
 
-        // ── 필살기 초기화 카드 (PD 2026-10-15 D안 승인 · c013) ─────────────
-        //
-        // 고르는 순간 지금 몸의 필살기를 다시 채운다. 이미 차 있거나 유령이면 **한 번 남겨 둔다** —
-        // 다음에 필살기가 비었을 때 버튼을 누르면 그것을 쓴다. 고른 카드가 그냥 사라지면 안 된다.
-        // 못 가진 몸의 체험을 다 쓴 뒤에도 먹힌다(카드 값어치).
-        private int _ultSpare;
-
         // ── 필살기 쿨 (PD 2026-10-28 「한 번만 쓰니 재미가 떨어진다 · 쿨타임 5분으로 일단」) ─────────
         //
         // 가진 몸은 쓰고 나서 `GameConfig.UltCooldownSeconds` 가 지나면 같은 몸으로도 다시 찬다.
         // 빙의하면 예전처럼 바로 찬다. 못 가진 몸의 1회 체험은 그대로(쿨로 다시 차지 않는다)
         private float _ultCooldownLeft;
 
-        private float UltCooldownFull => _config != null && _config.UltCooldownSeconds > 0f ? _config.UltCooldownSeconds : 300f;
+        // 「필살기 쿨 감소」 카드(c013)가 고를 때마다 절반으로 줄인다
+        private float _ultCoolMul = 1f;
+
+        private float UltCooldownFull
+        {
+            get
+            {
+                float full = _config != null && _config.UltCooldownSeconds > 0f ? _config.UltCooldownSeconds : 300f;
+                float min = _config != null ? _config.UltCooldownMinSeconds : 60f;
+                return Mathf.Max(Mathf.Min(min, full), full * _ultCoolMul);
+            }
+        }
 
         /// <summary>필살기가 다시 찰 때까지 남은 초(쿨이 안 돌면 0).</summary>
         public float UltCooldownRemain => _host != null && !_ultReady ? _ultCooldownLeft : 0f;
@@ -105,10 +109,16 @@ namespace Game.Module.InGame
             if (_host != null && !_ultReady && OwnsHostForUlt(_host.Key)) { _ultReady = true; UltResetFx(); }
         }
 
+        // ── 필살기 쿨 감소 카드 (c013 · PD 2026-10-28 「한 번 더 쓰게 해 주는 걸 전체 쿨을 반으로 줄여 준다로」) ─────────
+        //
+        // 예전엔 고르는 순간 필살기를 다시 채웠다(필살기 초기화). 쿨이 생겨 쿨 자체를 줄인다 —
+        // 고를 때마다 절반 · 돌던 쿨도 바로 같은 비율로. 바닥은 `GameConfig.UltCooldownMinSeconds`
         private void ApplyUltResetCard()
         {
-            if (_host != null && !_ultReady) { _ultReady = true; UltResetFx(); }
-            else _ultSpare++;
+            float before = UltCooldownFull;
+            _ultCoolMul *= 0.5f;
+            if (_ultCooldownLeft > 0f && before > 0f) _ultCooldownLeft *= UltCooldownFull / before;
+            UltResetFx();
         }
 
         private void UltResetFx()
@@ -129,12 +139,6 @@ namespace Game.Module.InGame
             if (!_running || IsCastFrozen || IsChanneling) return;
             var me = _host;
             if (me == null) return;
-            if (!_ultReady && _ultSpare > 0)
-            {
-                // 필살기 초기화 카드로 남겨 둔 한 번
-                _ultSpare--;
-                _ultReady = true;
-            }
             if (!_ultReady)
             {
                 // 체험을 다 쓴 몸 — 왜 안 나가는지 버튼 위에 알린다

@@ -19,6 +19,7 @@ namespace Game.Module.InGame
     ///   0   방 · 바닥 · 유닛 · 탄 · 터짐   (루트 캔버스)
     ///  10   **파티클**                      (<see cref="ParticleOrder"/>)
     ///  20   HUD · 조작 · 패널 · 팝업        (<see cref="HudBandOrder"/>)
+    ///  30   결과 창(판 끝)                  (<see cref="ResultBandOrder"/>)
     ///  50   화면 덮개                       (<see cref="CoverBandOrder"/>)
     ///  900+ 로딩 · SystemPopup              (각자 Overlay 캔버스 — 언제나 맨 위)
     ///
@@ -40,6 +41,10 @@ namespace Game.Module.InGame
 
         private const int HudBandOrder = 20;
         private const int CoverBandOrder = 50;
+        // 판 끝 결과 창 — 같은 HUD 밴드에 두면 레벨업 연출 · 버튼 빛처럼 「밴드 + 몇」으로 올라가는 것이
+        // 결과 창 위로 튀어나왔다(PD 2026-10-28 「유령이 죽었을 때 결과창 위에 유령 버튼 · 레벨업 UI」). 창 안의 빛은 창 기준이라 같이 올라간다
+        private const int ResultBandOrder = 30;
+        private static readonly string[] ResultPanels = { "RbResultPanel", "ChapterResultPopup", "TowerResultPopup", "NightResultPopup" };
 
         /// <summary>방 뒤에 오는 형제를 전부 HUD 밴드로 올린다. `Awake` 에서 한 번.</summary>
         private void SetupSortingBands()
@@ -48,6 +53,8 @@ namespace Game.Module.InGame
             int from = field != null ? field.GetSiblingIndex() + 1 : 0;
             for (int i = from; i < transform.childCount; i++)
                 LiftToBand(transform.GetChild(i), HudBandOrder);
+            for (int i = 0; i < ResultPanels.Length; i++)
+                LiftToBand(transform.Find(ResultPanels[i]), ResultBandOrder);
         }
 
         /// <summary>런타임에 만든 층(덮개 등)을 밴드에 올린다.</summary>
