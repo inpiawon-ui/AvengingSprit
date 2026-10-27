@@ -251,6 +251,8 @@ namespace Game.Editor.ReBorn
             // 「내준다 / 받는다」 두 줄 판(PD 2026-10-27) — 대가 · 보상 종류마다 한 장
             // 4챕터 방 전체 기믹 「번개 + 물웅덩이」 — 1번 방에서 바로 켜고 3.2초를 0.07초마다 녹화(storm_rec/) · 끝에 한 장(PD 2026-10-27)
             (720, 1280, Language.Korean, "ingame:storm@3.5", "storm_16x9"),
+            // 방 전체 기믹 시안 바탕 — SessionState .chapter 로 챕터를 정하고 찍는다(이름 끝 숫자는 사람이 붙이는 것, 2026-10-27)
+            (720, 1280, Language.Korean, "ingame", "hazard_base"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06", "event_altar_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH2_06:accept", "event_altar_accept_16x9"),
             (720, 1280, Language.Korean, "ingame:event:EV_CH1_03", "event_safe_16x9"),
@@ -434,6 +436,21 @@ namespace Game.Editor.ReBorn
                     lobby.SelectTab("Battle");
                     // SessionState .ghost — 몸 없이(유령으로) 출전해 「몸 없음」 화면을 찍는다
                     if (SessionState.GetBool(Key + ".ghost", false)) { lobby.StartRunDirect(1, Game.Character.HostEntry.GhostKey); _sortie = true; }
+                    else if (SessionState.GetInt(Key + ".chapter", 0) > 0)
+                    {
+                        // SessionState .chapter — 그 챕터로 바로 출전(방 전체 기믹 시안 바탕 · 무대 배경 찍기). 가진 몸 첫째로
+                        string key = null;
+                        foreach (var e in p0.PlayableHosts)
+                            if (e != null && !e.IsGhost && !PlayerDataService.IsHiddenHost(e.HostKey)) { key = e.HostKey; break; }
+                        int ch = SessionState.GetInt(Key + ".chapter", 0);
+                        // 아직 안 연 챕터면 고른 챕터가 열린 데까지로 깎인다 — 캡처하는 동안만 메모리에서 연다(세이브는 캡처 전 백업 · 뒤에 되돌린다)
+                        const System.Reflection.BindingFlags DF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                        var data = p0.GetType().GetField("_data", DF)?.GetValue(p0);
+                        var cleared = data?.GetType().GetField("clearedChapter");
+                        if (cleared != null && (int)cleared.GetValue(data) < ch - 1) cleared.SetValue(data, ch - 1);
+                        lobby.StartRunDirect(ch, key);
+                        _sortie = true;
+                    }
                     else _sortie = Click("SortieButton");
                     _wait = 120;
                     return;
