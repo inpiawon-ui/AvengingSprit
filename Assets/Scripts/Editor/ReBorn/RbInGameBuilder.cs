@@ -1091,15 +1091,15 @@ namespace Game.Editor.ReBorn
             Img(PutPx(Node(c, "RbPauseHostFace"), c, 176f, 868f, 184f, 184f), "Icons/rb_icon_mode_ghost_96");
             Img(PutPx(Node(c, "RbPauseHostFrame"), c, 176f, 868f, 212f, 212f), "Components/rb_pause_host_frame_r");
             // 얼굴 모서리 — 왼쪽 위 속성 · 오른쪽 위 등급(PD 2026-10-27)
-            Img(PutPx(Node(c, "RbPauseHostAffCorner"), c, 96f, 788f, 34f, 34f), "Icons/rb_icon_aff_force_128");
-            Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 252f, 786f, 40f, 26f), "Components/rb_rarity_r");
+            Img(PutPx(Node(c, "RbPauseHostAffCorner"), c, 100f, 792f, 52f, 52f), "Icons/rb_icon_aff_force_128");   // 크게 — PD 2026-10-27 「너무 안 보인다」
+            Img(PutPx(Node(c, "RbPauseHostGradeSmall"), c, 246f, 790f, 62f, 40f), "Components/rb_rarity_r");
             Text(PutPx(Node(c, "RbPauseHostName"), c, 477f, 775f, 342f, 40f), null, "갱스터", 42, White, TA.Left, heavy: true);   // 등급은 얼굴 오른쪽 위로 옮겼다 — 이름 칸을 넓게
-            var hp = PutPx(Node(c, "RbPauseHp"), c, 477f, 816f, 342f, 30f);
-            Img(Inside2(Node(hp, "RbPauseHpHeart"), 0f, 1f, 28f, 28f), "Icons/rb_icon_stat_hp_48");
-            Img(Inside2(Node(hp, "RbPauseHpTrack"), 38f, 1f, 304f, 28f), "Components/rb_bar_track");
-            var fill = Img(Inside2(Node(hp, "RbPauseHpFill"), 41f, 4f, 298f, 22f), "Components/rb_bar_fill_red");
+            var hp = PutPx(Node(c, "RbPauseHp"), c, 477f, 816f, 342f, 34f);   // 시안 체력 줄 — 높이 30 · 숫자가 줄 안에 크게
+            Img(Inside2(Node(hp, "RbPauseHpHeart"), -2f, -1f, 36f, 36f), "Icons/rb_icon_stat_hp_48");
+            Img(Inside2(Node(hp, "RbPauseHpTrack"), 38f, 2f, 304f, 30f), "Components/rb_pause_hp_track").preserveAspect = false;   // 시안 그대로 발주한 막대(두툼한 평면 빨강)
+            var fill = Img(Inside2(Node(hp, "RbPauseHpFill"), 41f, 5f, 298f, 24f), "Components/rb_pause_hp_fill");
             fill.type = Image.Type.Filled; fill.fillMethod = Image.FillMethod.Horizontal; fill.preserveAspect = false;
-            Text(Inside2(Node(hp, "RbPauseHpText"), 38f, 0f, 304f, 30f), null, "182 / 207", 30, White, TA.Center, number: true);
+            Text(Inside2(Node(hp, "RbPauseHpText"), 52f, 0f, 280f, 34f), null, "182 / 207", 38, White, TA.Left, number: true);   // 시안은 막대 안 왼쪽
             var aff = PutPx(Node(c, "RbPauseAff"), c, 477f, 863f, 342f, 43f);
             Img(aff, "Components/rb_info_chip");
             Img(Inside2(Node(aff, "RbPauseAffIcon"), 12f, 4f, 35f, 35f), "Icons/rb_icon_aff_force_128");
