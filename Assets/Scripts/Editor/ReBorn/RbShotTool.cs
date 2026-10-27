@@ -233,6 +233,7 @@ namespace Game.Editor.ReBorn
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
             (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
             (768, 1024, Language.Korean, "ingame", "fight_4x3"),
+            (1200, 1920, Language.Korean, "ingame", "fight_16x10"),   // 16:10 태블릿(PD 2026-10-27 「Lv 게이지랑 UI 가 화면을 삐져나간다」)
             (720, 1280, Language.Korean, "ingame:levelup", "levelup_16x9"),
             (720, 1280, Language.Japanese, "ingame:levelup", "levelup_ja"),
             (720, 1280, Language.English, "ingame:levelup", "levelup_en"),

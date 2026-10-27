@@ -187,14 +187,17 @@ namespace Game.Module.Common.UI
                 bool share = rt.GetComponent<ScreenFitShare>() != null;
                 if (parentIsLayout && !share) continue;   // 자리는 그룹 몫, 크기만 우리 몫
 
+                var x = ReadBox(rt.anchorMin.x, rt.anchorMax.x, rt.pivot.x,
+                                rt.anchoredPosition.x, rt.sizeDelta.x, baseW);
+                // 가로로 늘리지 말라는 판 — 꽉 채운다로 읽지 않아 늘지도, 안쪽을 다시 가르지도 않는다
+                if (rt.GetComponent<ScreenFitKeepWidth>() != null) x.Full = false;
                 _entries.Add(new Entry
                 {
                     Rect = rt,
                     Parent = rt.parent,
                     Share = share,
                     LayoutOwned = parentIsLayout,
-                    X = ReadBox(rt.anchorMin.x, rt.anchorMax.x, rt.pivot.x,
-                                rt.anchoredPosition.x, rt.sizeDelta.x, baseW),
+                    X = x,
                     Y = ReadBox(rt.anchorMin.y, rt.anchorMax.y, rt.pivot.y,
                                 rt.anchoredPosition.y, rt.sizeDelta.y, baseH),
                 });
@@ -252,7 +255,8 @@ namespace Game.Module.Common.UI
                 if (Axis(_entries[i], horizontal).Full) continue;
                 // 「가운데에 둬라」 표시가 붙은 칸은 여기서 바로 가른다 — 좌·우로 찢으면
                 //   작은 칸(상자 칸)의 한 줄이 두 동강 난다(2026-09-16).
-                if (_entries[i].Rect.GetComponent<ScreenFitCenter>() != null)
+                if (_entries[i].Rect.GetComponent<ScreenFitCenter>() != null
+                    || (horizontal && _entries[i].Rect.GetComponent<ScreenFitKeepWidth>() != null))
                 {
                     SetSide(i, horizontal, Side.Center);
                     continue;

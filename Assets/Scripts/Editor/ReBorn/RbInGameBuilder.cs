@@ -34,6 +34,10 @@ namespace Game.Editor.ReBorn
                 BuildResult(root.transform);
                 BuildPause(root.transform);
                 RbExtraScreensBuilder.BuildInGame((RectTransform)root.transform);   // 보스 경고 · 다음 방 · 밤 몸 고르기 · 안내
+                // 상단 HUD · 하단 조작 · 무대 글자는 방(늘 720 폭)을 넘어 화면 끝까지 늘리지 않는다 — 16:10 · 4:3 에서 Lv 줄 · 필살기가 방 밖으로 나갔다(PD 2026-10-27)
+                foreach (var n in new[] { "TopHudGroup", "ControlGroup", "StageText" })
+                    if (root.transform.Find(n) is Transform t && t.GetComponent<Game.Module.Common.UI.ScreenFitKeepWidth>() == null)
+                        t.gameObject.AddComponent<Game.Module.Common.UI.ScreenFitKeepWidth>();
                 Wire(root.GetComponent<Game.Module.InGame.InGameMainUI>());
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
