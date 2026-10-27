@@ -403,6 +403,7 @@ namespace Game.Module.InGame
 
             TickSkillReady(Time.unscaledDeltaTime);
             TickUltButton();
+            TickUltCooldownView();
             TickBossTrail(Time.deltaTime);
             TickGoldFx(Time.deltaTime);
             TickLowHpBlink();

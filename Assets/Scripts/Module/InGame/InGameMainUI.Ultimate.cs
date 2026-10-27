@@ -66,7 +66,8 @@ namespace Game.Module.InGame
                 var sprite = spent && _ultLockSprite != null ? _ultLockSprite : _battle.UltimateIcon(host);
                 if (sprite != null) icon.sprite = sprite;
                 icon.preserveAspect = true;   // 자물쇠는 세로로 길다 — 정사각 칸에 늘이지 않는다
-                icon.color = ready || spent ? Color.white : UltUsedTint;
+                // 쿨이 도는 중이면 덮개 · 남은 시간이 보여 준다 — 아이콘은 밝게 두어야 걷히는 쪽이 보인다
+                icon.color = ready || spent || _battle.UltCooldownRemain > 0f ? Color.white : UltUsedTint;
             }
             _ui.SetText("UltButtonLabel", trial ? Localize.Get("ui.ingame.ult_trial")
                                          : spent ? Localize.Get("ui.ingame.ult_locked") : UltLabel);
@@ -76,6 +77,37 @@ namespace Game.Module.InGame
             if (btn != null) btn.interactable = true;
             if (_ultButtonImage != null) _ultButtonImage.color = ready ? Color.white : UltUsedTint;
             SetUltGlow(ready);
+        }
+
+        private Image _ultCooldownFill;
+        private bool _ultCdInit;
+        private int _ultCdShown = -1;
+
+        // 필살기 쿨 — 아이콘 원을 덮고 시계 방향으로 걷힌다 · 가운데 「4:59」(초가 바뀔 때만 글자를 고친다)
+        private void TickUltCooldownView()
+        {
+            if (_battle == null) return;
+            if (!_ultCdInit)
+            {
+                _ultCdInit = true;
+                _ultCooldownFill = _ui.Get<Image>("UltCooldown");
+                if (_ultCooldownFill != null)
+                {
+                    _ultCooldownFill.type = Image.Type.Filled;
+                    _ultCooldownFill.fillMethod = Image.FillMethod.Radial360;
+                    _ultCooldownFill.fillOrigin = (int)Image.Origin360.Top;
+                    _ultCooldownFill.fillClockwise = false;
+                    _ultCooldownFill.raycastTarget = false;
+                }
+            }
+            float remain = _battle.UltCooldownRemain;
+            if (_ultCooldownFill != null) _ultCooldownFill.fillAmount = remain > 0f ? 1f - _battle.UltCooldownRatio : 0f;
+            int sec = remain > 0f ? Mathf.CeilToInt(remain) : 0;
+            if (sec == _ultCdShown) return;
+            _ultCdShown = sec;
+            _ui.SetActive("UltCooldownText", sec > 0);
+            if (sec > 0) _ui.SetText("UltCooldownText", $"{sec / 60}:{sec % 60:00}");
+            _ultShownHost = null;   // 쿨이 끝나거나 시작하면 아이콘 밝기도 다시 정한다
         }
 
         private void SetUltGlow(bool on)

@@ -403,6 +403,26 @@ namespace Game.Editor.ReBorn
                 if (ult.TryGetComponent<Button>(out var ub)) { ub.targetGraphic = fi; ub.transition = Selectable.Transition.ColorTint; }
             }
             else SwapPressed(ult, "Hud/rb_btn_ult_pressed");
+            // 필살기 쿨 덮개 · 남은 시간(PD 2026-10-28 「쿨타임 5분」) — 액티브와 같이 아이콘 원 안을 덮고, 시간은 테 위에
+            if (ult.Find("UltIconMask") is RectTransform ultMask)
+            {
+                var ucd = ultMask.Find("UltCooldown") as RectTransform ?? Node(ultMask, "UltCooldown");
+                Stretch(ucd);
+                ucd.SetAsLastSibling();
+                var ucdImg = ucd.GetComponent<Image>() ?? ucd.gameObject.AddComponent<Image>();
+                ucdImg.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+                ucdImg.type = Image.Type.Filled;
+                ucdImg.fillMethod = Image.FillMethod.Radial360;
+                ucdImg.fillAmount = 0f;
+                ucdImg.raycastTarget = false;
+                ucdImg.color = new Color(0.02f, 0.03f, 0.06f, 0.9f);   // 필살기 아이콘은 밝고 진해 액티브(0.82)보다 짙게
+            }
+            if (ult.Find("UltCooldownText") is Transform oldUcd) Object.DestroyImmediate(oldUcd.gameObject);
+            var ucdText = Node(ult, "UltCooldownText");
+            Inside(ucdText, 50f, 50f, 78f, 40f);
+            Text(ucdText, null, "4:59", 36, White, TA.Center, number: true);
+            ucdText.SetAsLastSibling();
+            ucdText.gameObject.SetActive(false);
             // 준비 빛 — 테 모양이 달라 둥근 고리 빛 대신 부드러운 금빛 번짐을 뒤에
             var ug = PutPx(F(root, "UltButtonGlow"), group, 628f, 112f, 170f, 170f);
             ug.localScale = new Vector3(UltBig, UltBig, 1f);

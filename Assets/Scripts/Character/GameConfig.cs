@@ -434,6 +434,8 @@ namespace Game.Character
                  "쿨 차등은 호스트 표가 정한다 — 여기서 전원을 같은 값으로 묶지 않는다.")]
         [SerializeField] private float _activeSkillCooldownSeconds = 14f;
         [SerializeField] private int _activeSkillDamage = 140;
+        [Tooltip("필살기를 쓰고 같은 호스트로 다시 쓰기까지(초). 빙의하면 이와 상관없이 다시 찬다(PD 2026-10-28 「한 번만 쓰니 재미가 떨어진다 · 일단 5분」).")]
+        [SerializeField] private float _ultCooldownSeconds = 300f;
 
         [Header("보상")]
         [SerializeField] private int _rewardGoldPerRoom = 120;
@@ -771,6 +773,7 @@ namespace Game.Character
 
         public float ActiveSkillCooldownSeconds => _activeSkillCooldownSeconds;
         public int ActiveSkillDamage => _activeSkillDamage;
+        public float UltCooldownSeconds => _ultCooldownSeconds;
 
         public int RewardGold(int rooms) => _rewardGoldPerRoom * rooms;
         public int RewardGhostExp(int rooms) => _rewardGhostExpPerRoom * rooms;

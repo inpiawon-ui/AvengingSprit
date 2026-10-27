@@ -240,6 +240,8 @@ namespace Game.Editor.ReBorn
         {
             (720, 1280, Language.Korean, "ingame", "fight_16x9"),
             (720, 1280, Language.Korean, "ingame:skillcd", "skillcd_16x9"),
+            (720, 1280, Language.Korean, "ingame:ultcd", "ultcd_16x9"),
+            (720, 1280, Language.Korean, "ingame:ultcd_end@5", "ultcd_end_16x9"),
             (1080, 2400, Language.Korean, "ingame", "fight_20x9"),
             (768, 1024, Language.Korean, "ingame", "fight_4x3"),
             (1200, 1920, Language.Korean, "ingame", "fight_16x10"),   // 16:10 태블릿(PD 2026-10-27 「Lv 게이지랑 UI 가 화면을 삐져나간다」)
@@ -1011,6 +1013,31 @@ namespace Game.Editor.ReBorn
                 if (t.name is "BuffChoicePanel" or "ShopPanel" or "EventPanel" or "ShrinePanel" or "RbResultPanel" or "RbPausePanel" or "RbModeBar" or "RbModeBanner"
                     or "RbBossWarn" or "RbNextRoom" or "RbNightPick" or "RbGuide") t.gameObject.SetActive(false);
             if (state == "ingame") { LogHits(ui); return; }
+            // 필살기 쿨 — ultcd: 남은 200초에서 멈춰 찍는다 · ultcd_end: 2초 남기고 풀어 다시 차는지 남긴다
+            if (state.StartsWith("ingame:ultcd"))
+            {
+                var bd = ui.GetComponent<Game.Module.InGame.BattleDirector>();
+                var bdt = typeof(Game.Module.InGame.BattleDirector);
+                const System.Reflection.BindingFlags CF = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                bool end = state.StartsWith("ingame:ultcd_end");
+                bdt.GetField("_ultReady", CF)?.SetValue(bd, false);
+                bdt.GetField("_ultCooldownLeft", CF)?.SetValue(bd, end ? 2f : 200f);
+                bdt.GetField("_invuln", CF)?.SetValue(bd, 60f);
+                Time.timeScale = end ? 1f : 0f;
+                if (end)
+                {
+                    float t0 = Time.time;
+                    void Probe()
+                    {
+                        if (!EditorApplication.isPlaying || bd == null) { EditorApplication.update -= Probe; return; }
+                        if (Time.time - t0 < 3f) return;
+                        Debug.Log($"[필살기 쿨 시험] 3초 뒤 · 준비 {bd.IsUltReady} · 남은 {bd.UltCooldownRemain:0.0}");
+                        EditorApplication.update -= Probe;
+                    }
+                    EditorApplication.update += Probe;
+                }
+                return;
+            }
             // 액티브 쿨이 도는 중 — 35% 찬 채로 멈춰 찍는다(덮개가 아이콘 원 전체를 덮는지 · 남은 초)
             if (state == "ingame:skillcd")
             {

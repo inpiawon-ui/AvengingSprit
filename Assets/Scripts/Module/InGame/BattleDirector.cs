@@ -3690,6 +3690,7 @@ namespace Game.Module.InGame
             TickStatusFx(dt);
             TickHostPassives(dt);
             TickSkillCharge(dt);   // 액티브 쿨 — 시간으로 찬다
+            TickUltCooldown(dt);   // 필살기 쿨 — 쓰고 5분
             TickNewSkills(dt);
             // 모든 이동이 끝난 뒤에 화면을 옮긴다. 중간에 옮기면 한 프레임 늦게 따라온다.
             TickCamera(dt);
@@ -9078,6 +9079,7 @@ namespace Game.Module.InGame
             // 필살기는 그대로 빙의할 때마다 한 번
             _skillCooldown = PlayerSkillCooldown;
             _ultReady = UltReadyOnEnter(key);
+            if (_ultReady) _ultCooldownLeft = 0f;   // 빙의로 다시 찼다 — 돌던 쿨은 끝
             // ⚠ 지속형 스킬은 **몸에 붙은 것**이지 판에 붙은 것이 아니다.
             //   안 끄면 오버히트를 켜고 다른 몸으로 갈아타는 것이 이득이 된다.
             ClearSkillState();
