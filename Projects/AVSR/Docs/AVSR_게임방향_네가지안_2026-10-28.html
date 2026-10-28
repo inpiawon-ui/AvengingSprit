@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>게임 방향 네 가지 안</title>
+<style>
+:root{--bg:#14141b;--panel:#1d1d27;--panel2:#252533;--line:#363648;--text:#e9e9f1;--sub:#a9a9bd;--gold:#f2c14e;--red:#ff5c4d;--blue:#5cc8ff;--green:#73ff8c;--purple:#b98cff;--orange:#ff9a3c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 "Pretendard","Malgun Gothic",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:0 0 6px}
+h2{font-size:21px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:17px;margin:24px 0 8px;color:var(--gold)}
+h4{font-size:15px;margin:16px 0 6px;color:var(--blue)}
+p{margin:6px 0}
+.sub{color:var(--sub)}
+.quote{background:var(--panel);border-left:3px solid var(--gold);padding:10px 14px;margin:12px 0;color:var(--sub)}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:14px}
+th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+th{background:var(--panel2);font-weight:600}
+td{background:var(--panel)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--line)}
+.tabs button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--gold);color:#1a1a1a;border-color:var(--gold);font-weight:700}
+.pane{display:none}.pane.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0}
+.oneline{font-size:18px;font-weight:700;margin:8px 0 4px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;margin-right:4px;border:1px solid var(--line);background:var(--panel2)}
+.strip{display:grid;grid-template-columns:repeat(30,1fr);gap:2px;margin:8px 0}
+.strip div{height:34px;border-radius:3px;font-size:10px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:700}
+.legend span{display:inline-block;margin-right:10px;font-size:13px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.flow b{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-weight:500}
+.flow em{color:var(--sub);font-style:normal}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.two{grid-template-columns:1fr}.strip div{font-size:0}}
+svg{max-width:100%;height:auto;display:block;margin:8px auto;background:#101018;border-radius:8px;border:1px solid var(--line)}
+ul{margin:6px 0;padding-left:20px}
+li{margin:3px 0}
+.rec{color:var(--gold);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>게임 방향 네 가지 안 — 스테이지 · 클리어 재미 · 육성</h1>
+<p class="sub">어벤징 스피릿 RE:BORN · 2026-10-28 · PD 검토용 · 근거: 지금 구현 기준 시스템 기획서(20챕터 × 30방 · 호스트 23명 · 스킬 69가지)</p>
+<div class="quote">PD 「단편적인 핵심 재미보다는 ① 어떤 식으로 스테이지를 구성하고 클리어할지 ② 그 스테이지를 클리어할 때 보는 재미 또는 머리 쓰는 재미 ③ 캐릭터 육성에 대한 디테일한 정보 — 구조적으로 정리해서 『아 게임을 이렇게 만들면 되겠구나』를 생각하게 해 줘. 각각의 제안에 맞게 하나하나 설명을 정리해 줘.」</div>
+
+<p>안마다 같은 순서로 적었다: <b>한 줄 · 한 장면 그림 → ① 스테이지 구성 → ② 클리어 재미 → ③ 육성 상세 → 만들 것 · 위험</b>. 맨 위 탭으로 안을 바꿔 본다. 「공통 바탕」은 네 안이 모두 깔고 가는 것이다.</p>
+
+<div class="tabs">
+<button data-t="common" class="on">공통 바탕</button>
+<button data-t="d1">1 사령 군단 ★</button>
+<button data-t="d2">2 영혼 합주</button>
+<button data-t="d3">3 빙의 릴레이</button>
+<button data-t="d4">4 영혼 덱</button>
+<button data-t="cmp">비교 · 정할 것</button>
+</div>
+
+<!-- ═════════════ 공통 ═════════════ -->
+<section class="pane on" id="common">
+<h2>공통 바탕 — 네 안이 모두 깔고 가는 것</h2>
+
+<h3>1. 지금 뼈대는 그대로 쓴다 — 챕터 하나 = 방 30개</h3>
+<div class="strip" id="stripCommon"></div>
+<div class="legend"><span><i style="background:#8a8aa3"></i>전투방</span><span><i style="background:#73ff8c"></i>천사 제단(5 · 25)</span><span><i style="background:#ff9a3c"></i>중간보스(10 · 20)</span><span><i style="background:#f2c14e"></i>상점(15)</span><span><i style="background:#ff5c4d"></i>보스(30)</span></div>
+<p>20챕터 · 6무대(쓰레기장 · 미사일 기지 · 밤거리 · 옥상 · 연구소 · 정유소) · 챕터마다 보스 1 · 중간보스 대장 2. 레벨업 카드(3장 중 1장) · 천사 · 악마 제단 · 상점도 그대로 둔다. <b>안마다 바뀌는 것은 「방 안에서 무엇을 고민하고 무엇을 보느냐」와 「로비에서 무엇을 키우느냐」다.</b></p>
+
+<h3>2. 보이는 가위바위보 — 적 유형 다섯</h3>
+<p>지금 상성(파워 · 무기 · 마법 ±30%)은 숫자라 화면에서 안 읽힌다. 대신 <b>적의 생김새가 답을 알려 주게</b> 한다. 이미 있는 잡몹을 유형으로 묶으면 새 그림 없이 시작할 수 있다.</p>
+<table>
+<tr><th>적 유형</th><th>지금 있는 잡몹</th><th>화면에서 보이는 것</th><th>잘 먹히는 스킬 갈래</th><th>왜 먹히는지가 보인다</th></tr>
+<tr><td><b>방패</b></td><td>방패 로봇</td><td>정면 탄이 튕긴다</td><td>돌격 난무 · 설치</td><td>옆 · 뒤로 파고들거나 발밑에서 터진다</td></tr>
+<tr><td><b>떼</b></td><td>박쥐 · 해골 · 터지는 해골</td><td>작은 놈 여럿이 몰려온다</td><td>제압 · 탄막</td><td>끌어모아 한 번에, 쏟아부어 쓸어낸다</td></tr>
+<tr><td><b>탄막</b></td><td>연발 전갈 · 팔방 포탑 · 회전 포탑</td><td>화면을 덮는 적 탄</td><td>수호 · 반격</td><td>막고 되받아친다 — 적 탄이 많을수록 내가 세진다</td></tr>
+<tr><td><b>날쌘</b></td><td>돌진 쇄석기 · 드릴 두더지 · 흔드는 박쥐</td><td>빠르게 파고든다</td><td>설치 · 소환</td><td>함정에 걸리고, 분신 · 해골에 시선이 끌린다</td></tr>
+<tr><td><b>거대</b></td><td>돌 고릴라 · 날뛰는 고릴라 · 엘리트</td><td>크고 단단하다</td><td>단일 강타</td><td>표식 · 급소 · 처형으로 한 놈을 녹인다</td></tr>
+</table>
+<p>호스트 23명은 이미 스킬 갈래 7개로 나뉘어 있다(스킬 컨셉 정본).</p>
+<table>
+<tr><th>갈래</th><th>호스트</th><th>잘 잡는 적</th></tr>
+<tr><td>단일 강타</td><td>갱스터 · 호퍼 · 닌자(사슬)</td><td>거대</td></tr>
+<tr><td>소환</td><td>영매 · 로봇 · 닌자 · 사신(히든)</td><td>날쌘</td></tr>
+<tr><td>돌격 난무</td><td>아마존 · 호퍼(기관단총) · 흡혈귀 · 드라군</td><td>방패</td></tr>
+<tr><td>제압</td><td>슬러거 · 구루</td><td>떼</td></tr>
+<tr><td>설치 · 함정</td><td>코만도(수류탄) · 샐러맨더 · 설녀</td><td>방패 · 날쌘</td></tr>
+<tr><td>탄막 · 포격</td><td>폭력배 · 코만도(미사일) · 코만도(레이저) · 화이트 위저드 · 청룡</td><td>떼</td></tr>
+<tr><td>수호 · 반격</td><td>코만도(기관총) · 아마존 정예</td><td>탄막</td></tr>
+</table>
+<p><b>방 문 위에 다음 방 적 유형 아이콘이 미리 뜬다</b>(「다음 방: 떼 · 탄막」). 이 예고 한 줄이 네 안 모두에서 「다음 방을 위해 지금 무엇을 준비할까」라는 머리 쓰는 재미의 출발점이 된다.</p>
+
+<h3>3. 챕터마다 「문제」를 하나 낸다</h3>
+<p>챕터 = 적 유형 조합으로 낸 문제 하나. 플레이어는 그 문제를 푸는 편성 · 빙의 계획을 세운다. 예:</p>
+<table>
+<tr><th>챕터</th><th>무대</th><th>주로 나오는 적 유형</th><th>문제</th><th>지금 있는 시작 호스트</th></tr>
+<tr><td>1</td><td>쓰레기 집적장</td><td>떼(해골 · 박쥐) + 거대(돌 고릴라)</td><td>떼를 쓸면서 큰 놈도 잡아라 — 기본기</td><td>갱스터</td></tr>
+<tr><td>2</td><td>미사일 저장기지</td><td>떼 + 날쌘(돌진 쇄석기) + 폭격 표적 기믹</td><td>파고드는 놈을 묶어라</td><td>로봇</td></tr>
+<tr><td>3</td><td>밤의 도시 거리</td><td>떼(터지는 해골) + 탄막(포탑)</td><td>탄을 막거나 되돌려라</td><td>호퍼(기관단총)</td></tr>
+<tr><td>4</td><td>공중기지 옥상</td><td>방패(방패 로봇) + 거대 + 번개 웅덩이</td><td>정면이 막힌다 — 돌아 들어가라</td><td>영매</td></tr>
+<tr><td>5</td><td>유령 연구소</td><td>탄막(저격 전갈) + 날쌘 + 방패</td><td>세 문제를 동시에 — 편성의 폭</td><td>코만도(수류탄)</td></tr>
+<tr><td>6</td><td>야간 정유소</td><td>다섯 유형 전부 + 엘리트</td><td>1막 졸업 시험</td><td>닌자</td></tr>
+</table>
+</section>
+
+<!-- ═════════════ 요리 1 ═════════════ -->
+<section class="pane" id="d1">
+<h2>1 · 사령 군단 — 빼앗고, 버리고, 부린다 <span class="rec">★ 추천</span></h2>
+<p class="oneline">빼앗았던 몸이 버려지지 않고 내 망령 부하가 되어 따라다니며 자기 스킬을 쓴다. 판이 갈수록 군단이 커지고, 그 조합이 그 판의 빌드다.</p>
+<span class="tag">키우는 것: 사령술사(유령) + 사령구 장비 + 군단 후보(호스트)</span><span class="tag">조작: 쉬움</span><span class="tag">원작 테마: 복수하는 망령 · 강령</span>
+
+<svg viewBox="0 0 720 420" role="img" aria-label="사령 군단 한 장면">
+<rect x="20" y="20" width="680" height="380" fill="#24242f" stroke="#444"/>
+<text x="30" y="42" fill="#a9a9bd" font-size="13">12번 방 — 적: 떼 + 거대 · 내 군단 3</text>
+<!-- 플레이어 -->
+<circle cx="360" cy="320" r="18" fill="#5cc8ff"/><text x="333" y="356" fill="#e9e9f1" font-size="13">입은 몸: 설녀</text>
+<!-- 부하 -->
+<circle cx="300" cy="300" r="14" fill="#b98cff" opacity=".7"/><text x="232" y="290" fill="#b98cff" font-size="12">망령: 갱스터</text>
+<circle cx="420" cy="300" r="14" fill="#b98cff" opacity=".7"/><text x="430" y="290" fill="#b98cff" font-size="12">망령: 사슬 닌자</text>
+<circle cx="360" cy="270" r="14" fill="#b98cff" opacity=".7"/><text x="330" y="258" fill="#b98cff" font-size="12">망령: 로봇</text>
+<rect x="380" y="240" width="18" height="14" fill="#b98cff" opacity=".7"/><text x="402" y="252" fill="#b98cff" font-size="11">포탑</text>
+<!-- 적 -->
+<g fill="#ff5c4d"><circle cx="200" cy="120" r="8"/><circle cx="225" cy="105" r="8"/><circle cx="250" cy="125" r="8"/><circle cx="215" cy="140" r="8"/><circle cx="240" cy="150" r="8"/></g>
+<text x="185" y="88" fill="#ff5c4d" font-size="12">떼(해골)</text>
+<circle cx="520" cy="130" r="26" fill="#ff9a3c"/><text x="490" y="92" fill="#ff9a3c" font-size="12">거대(고릴라)</text>
+<!-- 효과 -->
+<path d="M420 300 Q330 200 225 130" stroke="#b98cff" stroke-width="2" fill="none" stroke-dasharray="5 4"/><text x="300" y="200" fill="#b98cff" font-size="11">사슬 결박 → 떼 묶음</text>
+<path d="M300 300 L520 130" stroke="#ff5c4d" stroke-width="1.5" fill="none" stroke-dasharray="2 3"/><text x="430" y="210" fill="#ff5c4d" font-size="11">표식 → 처형</text>
+<circle cx="225" cy="130" r="45" fill="none" stroke="#5cc8ff" stroke-width="2"/><text x="150" y="190" fill="#5cc8ff" font-size="11">설녀 평타: 빙결</text>
+<text x="30" y="390" fill="#a9a9bd" font-size="12">한 화면에서 스킬 4가지(빙결 · 결박 · 표식 · 포탑)가 같이 돈다 — 모두 「내가 빼앗았던 몸」</text>
+</svg>
+
+<h3>① 스테이지 구성</h3>
+<h4>30방 리듬 — 「영입 → 다듬기 → 시험」 세 박자</h4>
+<div class="strip" id="strip1"></div>
+<div class="legend"><span><i style="background:#8a8aa3"></i>전투방</span><span><i style="background:#b98cff"></i>영입 기회 많은 방</span><span><i style="background:#73ff8c"></i>망령 제단</span><span><i style="background:#ff9a3c"></i>중간보스(굴복)</span><span><i style="background:#f2c14e"></i>상점</span><span><i style="background:#ff5c4d"></i>보스</span></div>
+<table>
+<tr><th>구간</th><th>방</th><th>하는 일</th><th>적 · 호스트 배치</th></tr>
+<tr><td>영입</td><td>1~9</td><td>군단을 모은다. 부하 칸이 빈 상태라 「누구든 데려간다」</td><td>방마다 빙의할 수 있는 적 호스트 1~2기. 1번 방엔 시작 호스트(지금 규칙 그대로)</td></tr>
+<tr><td>첫 시험</td><td>10</td><td>중간보스 대장 — 체력 30% 아래에서 <b>굴복</b>(경직 게이지)시키면 처치 대신 <b>정예 망령</b>으로 영입(체력 · 스킬 ×1.5)</td><td>대장 + 부하 호스트 2~3기</td></tr>
+<tr><td>다듬기</td><td>11~19</td><td>칸이 찼다 — 이제 「누구를 놓아주고 누구를 데려갈까」. 다음 방 예고를 보고 군단을 고친다</td><td>방마다 적 유형 2개 섞임. 호스트는 1기(고르는 무게가 커짐)</td></tr>
+<tr><td>제단</td><td>5 · 25</td><td><b>망령 제단</b>(천사 자리): 부하 하나 강화 / 부하 칸 +1(판당 1회) / 놓아준 망령 되살리기 중 1</td><td>—</td></tr>
+<tr><td>상점</td><td>15</td><td>판 골드로 <b>계약 망령</b>(이번 판 만난 호스트) 사기 · 카드 · 회복</td><td>—</td></tr>
+<tr><td>두 번째 시험</td><td>20</td><td>중간보스 2 — 굴복 영입 한 번 더</td><td>—</td></tr>
+<tr><td>마무리</td><td>21~29</td><td>군단 완성. 엘리트가 늘고 방 기믹이 빨라진다</td><td>16번 방부터 엘리트(지금 규칙)</td></tr>
+<tr><td>보스</td><td>30</td><td>보스는 빙의 불가 — <b>군단 전원 + 필살기 「군단 총공」</b>으로 잡는다</td><td>보스 패턴이 군단 역할을 요구(아래)</td></tr>
+</table>
+<h4>클리어 조건</h4>
+<ul>
+<li>전투방: 지금처럼 적을 다 쓰러뜨리면 출구가 열린다.</li>
+<li>판 클리어: 30번 방 보스 처치. 패배: 유령 체력 0(오늘 넣은 규칙) — 망령 부하는 유령을 지키는 방패가 아니라 공격 손이라, 유령 체력 관리는 그대로 중요하다.</li>
+<li>추가 별(챕터 별 3개): ① 클리어 ② 정예 망령 2명 영입(10 · 20번 굴복) ③ 군단 시너지 하나 이상 완성. 별이 챕터 보상 상자 등급을 올린다.</li>
+</ul>
+<h4>보스와 군단 — 보스가 역할을 묻는다</h4>
+<table>
+<tr><th>보스</th><th>센 패턴</th><th>필요한 망령 역할</th></tr>
+<tr><td>로봇 스네이크</td><td>레이저 · 천장 파편</td><td>수호 · 반격(방벽 · 전탄 반사)이 있으면 파편을 막는다</td></tr>
+<tr><td>크러셔</td><td>미사일 · 쇠사슬 파괴구</td><td>탄막 갈래가 미사일을 공중에서 떨어뜨린다</td></tr>
+<tr><td>파이썬</td><td>머리 뻗기 · 벽돌 낙하</td><td>단일 강타(표식 · 처형)가 머리 약점에 큰 피해</td></tr>
+<tr><td>슬러지</td><td>천장 붙기 · 확산</td><td>설치 갈래가 내려앉는 자리에 미리 덫</td></tr>
+<tr><td>가디언</td><td>마디 사출(작은 몸 떼)</td><td>제압 갈래가 마디를 모아 한 번에</td></tr>
+<tr><td>킹핀</td><td>처형 조준 · 부스터 강하</td><td>소환 갈래(분신 · 해골)가 조준을 빼앗는다</td></tr>
+</table>
+
+<h3>② 클리어 재미</h3>
+<div class="two">
+<div class="card"><h4>보는 재미</h4>
+<ul>
+<li><b>군단이 같이 싸운다</b> — 입은 몸 + 망령 부하 셋이 각자 스킬을 쓴다. 판마다 화면 조합이 다르다.</li>
+<li><b>망령이 되는 순간</b> — 갈아탈 때 떠난 몸이 쓰러지지 않고 반투명 보라 윤곽으로 일어나 내 뒤에 선다.</li>
+<li><b>놓아주기 = 혼불 폭발</b> — 칸이 차서 하나를 놓아주면 그 망령이 적에게 날아가 마지막 한 방(그 몸 액티브 크게).</li>
+<li><b>군단 총공</b>(필살기) — 입은 몸 필살기 컷인에 부하 전원이 합세(분신 · 해골 · 포탑이 같이 돌격).</li>
+<li><b>굴복 연출</b> — 중간보스 대장이 무릎 꿇고 망령으로 바뀌는 컷.</li>
+</ul></div>
+<div class="card"><h4>머리 쓰는 재미 — 판단하는 순간</h4>
+<table>
+<tr><th>순간</th><th>판단</th></tr>
+<tr><td>적 호스트를 만났다</td><td>죽일까(경험치) · 경직시켜 빼앗을까(영입)</td></tr>
+<tr><td>칸이 찼다</td><td>누구를 놓아줄까 — 다음 방 예고(떼 · 탄막)를 보고</td></tr>
+<tr><td>입을 몸 고르기</td><td>입은 몸 = 평타 · 패시브 · 필살기, 부하 = 액티브만. 「평타가 좋은 몸을 입고 스킬이 좋은 몸을 부하로」</td></tr>
+<tr><td>시너지 맞추기</td><td>같은 갈래 둘 = 그 스킬 강화 / 서로 다른 셋 = 「삼각 진형」 / 같은 조직 셋 = 조직 보너스</td></tr>
+<tr><td>10 · 20번 방</td><td>대장을 굴복시켜 정예 망령으로 데려갈까, 빨리 잡고 넘어갈까(굴복은 위험이 크다)</td></tr>
+</table></div>
+</div>
+<h4>방 하나, 30초 — 시간표 예(14번 방 · 떼 + 탄막)</h4>
+<table>
+<tr><th>시각</th><th>일어나는 일</th><th>플레이어가 하는 것</th></tr>
+<tr><td>0초</td><td>문 위 예고「떼 · 탄막」을 이미 봤다. 지금 군단: 갱스터(표식) · 로봇(포탑)</td><td>입은 몸은 사슬 닌자 — 떼는 결박으로 묶을 수 있다</td></tr>
+<tr><td>3초</td><td>포탑 전갈 두 마리가 탄을 뿌린다</td><td>탄이 많다 — 방 안 적 호스트 「코만도(기관총)」가 보인다. 방벽을 쓰는 몸</td></tr>
+<tr><td>8초</td><td>떼를 결박 → 망령 로봇 포탑이 쓸어 낸다</td><td>코만도를 때려 경직 게이지를 채운다</td></tr>
+<tr><td>14초</td><td>코만도 경직</td><td>칸이 찼다 — 놓아줄 망령 고르기: 갱스터(이 방엔 거대 없음) → 혼불 폭발로 전갈 하나 처리</td></tr>
+<tr><td>15초</td><td>코만도로 빙의 · 사슬 닌자가 망령이 됨</td><td>방벽을 켜고 탄막을 버틴다, 망령 닌자가 자동으로 결박</td></tr>
+<tr><td>28초</td><td>방 정리 · 레벨업 카드 「군단 카드」 등장</td><td>「망령이 스킬을 쓸 때 20% 로 한 번 더」를 고른다</td></tr>
+</table>
+
+<h3>③ 육성 상세</h3>
+<h4>무엇을 키우나 — 세 줄</h4>
+<table>
+<tr><th>성장 줄</th><th>무엇이 세지나</th><th>재화</th><th>상한</th><th>판에서 보이는 것</th></tr>
+<tr><td><b>사령술사(유령) 레벨</b></td><td>부하 칸 수 · 기본 체력 · 공격 · 망령 지속</td><td>유저 경험치(챕터 클리어)</td><td>Lv50</td><td>칸: Lv1 2칸 · Lv15 3칸 · Lv35 4칸</td></tr>
+<tr><td><b>사령구 장비 6칸</b></td><td>스탯 대부분(궁수의 전설 장비 자리)</td><td>챕터 상자 · 탑 · 골드 강화 · 같은 것 3개 합성</td><td>등급 5단계 × 강화 Lv</td><td>장비마다 특수 효과 하나</td></tr>
+<tr><td><b>호스트 성급</b></td><td>그 호스트가 <b>입은 몸일 때 · 망령일 때</b>의 세기, 스킬 레벨</td><td>조각 + 골드(지금 그대로)</td><td>★10</td><td>성급 높은 몸은 망령이 돼도 세다</td></tr>
+</table>
+<h4>사령구 장비 6칸</h4>
+<table>
+<tr><th>칸</th><th>기본 스탯</th><th>특수 효과 예(전설 등급)</th></tr>
+<tr><td>낫</td><td>공격</td><td>입은 몸 평타 5번마다 망령 하나가 따라 친다</td></tr>
+<tr><td>망토</td><td>체력</td><td>호스트를 잃을 때 유령 체력 대가 −20% → −12%</td></tr>
+<tr><td>등불</td><td>망령 공격 · 지속</td><td>망령 스킬 쿨 −20%</td></tr>
+<tr><td>사슬</td><td>경직 게이지 속도</td><td>경직된 적을 빼앗으면 주변 적 1초 기절</td></tr>
+<tr><td>반지</td><td>치명</td><td>망령 치명타가 입은 몸 치명 피해를 따른다</td></tr>
+<tr><td>부적</td><td>필살기 충전</td><td>군단 총공에 망령 하나당 피해 +10%</td></tr>
+</table>
+<p>등급: 일반 · 고급 · 희귀 · 영웅 · 전설. 같은 장비 3개 → 한 등급 위(궁수의 전설식 합성). 장비는 <b>모든 호스트 공통</b> — 무엇을 입든 내 사령술사가 세다.</p>
+<h4>호스트 성급이 주는 것 (지금 ★0~10 체계 그대로, 주는 것만 다시)</h4>
+<table>
+<tr><th>성급</th><th>열리는 것</th></tr>
+<tr><td>★0(못 가짐)</td><td>판 안에서 빼앗아 입고 망령으로도 쓸 수 있다(1레벨 수치). 판이 끝나면 조각 몇 개</td></tr>
+<tr><td>★1</td><td>해금 · 액티브 · 패시브 Lv1 · 출전 몸으로 고를 수 있다</td></tr>
+<tr><td>★3</td><td><b>계약 망령</b> — 판 시작부터 부하 한 칸에 데리고 들어간다(계약 칸 1개)</td></tr>
+<tr><td>★5</td><td>망령일 때 패시브 절반 효과</td></tr>
+<tr><td>★6</td><td>액티브 특수 축(지금 SpecLevel 6 그대로)</td></tr>
+<tr><td>★8</td><td>계약 칸 2개째에 넣을 자격</td></tr>
+<tr><td>★10</td><td><b>각성 망령</b> — 망령일 때도 필살기를 판당 1번 쓴다</td></tr>
+</table>
+<p>단계마다: 입은 몸 체력 · 공격 +7%(지금 성급 규칙) · 망령 세기 +8%.</p>
+<h4>그래서 무엇을 먼저 키우나 — 방향</h4>
+<ol>
+<li><b>사령구 장비</b>가 첫째(늘 세짐). 매일 챕터 · 탑에서 장비가 나온다.</li>
+<li><b>계약 망령 2명</b> — 다음 막(챕터 1~6, 7~12…)의 적 유형에 맞는 갈래 둘을 ★3 · ★8 로. 게임이 챕터 화면에 「추천 계약: 제압 · 수호」를 보여 준다.</li>
+<li>나머지 호스트는 판에서 빼앗아 쓰며 조각이 조금씩 쌓인다 — 「많이 모으면 좋지만 다 키울 필요는 없다」.</li>
+</ol>
+<h4>하루 · 첫 주</h4>
+<table>
+<tr><th>언제</th><th>하는 것</th></tr>
+<tr><td>매일</td><td>챕터 2~4판(행동력) → 장비 · 조각 · 경험치 / 탑 3회 → 장비 강화석 / 오늘의 상점 조각</td></tr>
+<tr><td>1일</td><td>1~2챕터 · 장비 6칸 일반 등급 채움 · 갱스터 ★1</td></tr>
+<tr><td>3일</td><td>3챕터 탄막 벽 → 「수호 갈래 계약」 목표가 생김(코만도 기관총 조각 모으기)</td></tr>
+<tr><td>7일</td><td>사령술사 Lv15(부하 3칸) · 계약 망령 1명 ★3 · 장비 희귀 2~3개 · 6챕터 졸업 시험</td></tr>
+</table>
+<h4>과금과 맞물림</h4>
+<ul><li>조각 소환 = 군단 후보 품질 · 장비 상자 = 새 수집축 · 패스 = 장비 강화석 · 외형 = 망령 색(나중).</li></ul>
+
+<h3>만들 것 · 위험</h3>
+<table>
+<tr><th>새로 만들 것</th><th>그대로 쓰는 것</th></tr>
+<tr><td>망령 부하(따라다님 · 자동 시전 AI) · 놓아주기 혼불 · 굴복 영입 · 망령 제단 · 사령구 장비 6종 × 5등급 그림 · 군단 카드 6~8장 · 적 유형 아이콘 5 · 문 위 예고</td><td>호스트 23명 · 스킬 69가지 · 30방 · 보스 6 · 레벨업 카드 36 · 성급 · 조각 · 상점</td></tr>
+</table>
+<ul>
+<li>위험: 화면이 다시 복잡해진다 → 망령은 반투명 단색 윤곽 · 망령 스킬 이펙트는 크기 70%(인게임 심플화와 같이 간다).</li>
+<li>위험: 군단이 너무 세면 입은 몸 조작이 무의미 → 망령 피해는 입은 몸의 40~60% 선에서 시작.</li>
+</ul>
+</section>
+
+<!-- ═════════════ 요리 2 ═════════════ -->
+<section class="pane" id="d2">
+<h2>2 · 영혼 합주 — 세 몸을 겹쳐 입고, 순서를 짠다</h2>
+<p class="oneline">호스트 셋을 장비처럼 겹쳐 입는다. 액티브를 누르면 세 몸의 스킬이 정한 순서대로 이어 터진다. 순서가 바뀌면 결과가 바뀐다.</p>
+<span class="tag">키우는 것: 내 「곡」 3명 + 지휘 펫</span><span class="tag">조작: 보통</span><span class="tag">맛: 퍼즐 · 조합 발견</span>
+
+<svg viewBox="0 0 720 300" role="img" aria-label="영혼 합주 연계">
+<text x="30" y="36" fill="#a9a9bd" font-size="13">합주 한 곡 — 액티브 버튼 한 번</text>
+<g font-size="13">
+<rect x="40" y="70" width="170" height="80" rx="8" fill="#252533" stroke="#b98cff"/><text x="60" y="100" fill="#b98cff">1번(입은 몸)</text><text x="60" y="125" fill="#e9e9f1">사슬 닌자 · 결박</text>
+<rect x="275" y="70" width="170" height="80" rx="8" fill="#252533" stroke="#ff9a3c"/><text x="295" y="100" fill="#ff9a3c">2번 · 0.5초 뒤</text><text x="295" y="125" fill="#e9e9f1">드라군 · 화염 지대</text>
+<rect x="510" y="70" width="170" height="80" rx="8" fill="#252533" stroke="#5cc8ff"/><text x="530" y="100" fill="#5cc8ff">3번 · 1.0초 뒤</text><text x="530" y="125" fill="#e9e9f1">슬러거 · 풀스윙</text>
+<path d="M210 110 L275 110" stroke="#e9e9f1" stroke-width="2" marker-end="url(#a)"/><path d="M445 110 L510 110" stroke="#e9e9f1" stroke-width="2" marker-end="url(#a)"/>
+<text x="40" y="200" fill="#f2c14e" font-size="15">연계 「묶고 태우고 날리기」 — 묶인 적이 불바다 위에서 타고, 날아가며 불을 옮긴다</text>
+<text x="40" y="235" fill="#a9a9bd">순서를 바꾸면: 풀스윙 → 결박 → 화염 = 「흩고 줍기」(멀리 날린 적을 사슬로 다시 끌어와 태움)</text>
+<text x="40" y="265" fill="#a9a9bd">같은 세 몸, 다른 순서 = 다른 기술</text>
+</g>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8z" fill="#e9e9f1"/></marker></defs>
+</svg>
+
+<h3>① 스테이지 구성</h3>
+<h4>30방 리듬 — 「악보 맞추기」</h4>
+<div class="strip" id="strip2"></div>
+<div class="legend"><span><i style="background:#8a8aa3"></i>전투방</span><span><i style="background:#5cc8ff"></i>연계 시험방</span><span><i style="background:#73ff8c"></i>조율 제단</span><span><i style="background:#ff9a3c"></i>중간보스</span><span><i style="background:#f2c14e"></i>상점</span><span><i style="background:#ff5c4d"></i>보스</span></div>
+<table>
+<tr><th>구간</th><th>방</th><th>하는 일</th></tr>
+<tr><td>시작</td><td>1</td><td>출전 전에 짠 곡(3명 순서)으로 들어간다. 1번 = 입은 몸</td></tr>
+<tr><td>전투방</td><td>2~29 대부분</td><td>방마다 적 유형 2~3개. 곡의 <b>마지막 음</b>이 그 방 주 유형을 맞히면 연계 ×2</td></tr>
+<tr><td>연계 시험방</td><td>7 · 13 · 23</td><td>방 가운데 글귀「얼려서 깨라」 — 그 연계로 처치하면 보너스 상자(못 해도 클리어는 된다)</td></tr>
+<tr><td>조율 제단</td><td>5 · 25</td><td>곡 순서 바꾸기 · 한 자리 강화 · 박자 당기기 중 1</td></tr>
+<tr><td>빙의</td><td>아무 방</td><td>적 호스트를 빼앗으면 <b>곡의 한 자리를 그 몸으로 바꿀지</b> 고른다(바꾸지 않으면 경험치로)</td></tr>
+<tr><td>중간보스</td><td>10 · 20</td><td>대장이 두 유형을 겸한다(방패 + 떼 소환) — 두 음으로 두 문제를 풀어야</td></tr>
+<tr><td>보스</td><td>30</td><td>패턴마다 <b>약점 연계</b>가 있다(아래)</td></tr>
+</table>
+<h4>보스 약점 연계</h4>
+<table>
+<tr><th>보스</th><th>패턴</th><th>약점 연계</th><th>맞히면</th></tr>
+<tr><td>크러셔</td><td>쇠사슬 파괴구</td><td>빙결 → 강타 「얼려서 깨기」</td><td>파괴구가 부서지고 3초 기절</td></tr>
+<tr><td>파이썬</td><td>머리 뻗기</td><td>결박 → 표식 「묶고 찍기」</td><td>머리가 묶여 처형 피해</td></tr>
+<tr><td>슬러지</td><td>천장 붙기</td><td>설치 → 폭발 「덫 터뜨리기」</td><td>떨어질 때 덫에 걸려 기절</td></tr>
+<tr><td>킹핀</td><td>미사일 일제</td><td>반사 → 탄막 「되받아 쏟기」</td><td>미사일이 킹핀에게 돌아간다</td></tr>
+</table>
+<h4>클리어 조건</h4>
+<ul><li>전투방 · 판 클리어는 지금 그대로. 챕터 별: ① 클리어 ② 연계 시험방 2개 성공 ③ 보스 약점 연계 2회.</li></ul>
+
+<h3>② 클리어 재미</h3>
+<div class="two">
+<div class="card"><h4>보는 재미</h4>
+<ul>
+<li>버튼 한 번에 <b>세 스킬이 박자 맞춰</b> 이어 터진다 — 결박(사슬 소리) · 불바다(화르륵) · 풀스윙(딱!).</li>
+<li>연계가 맞으면 화면 위에 <b>연계 이름</b>이 금빛으로(「묶고 태우고 날리기」).</li>
+<li>처음 터뜨린 연계는 「새 연계 발견!」 도감 카드가 뜬다.</li>
+<li>합주 필살기 — 세 몸 필살기가 한 컷에 이어진다.</li>
+</ul></div>
+<div class="card"><h4>머리 쓰는 재미</h4>
+<table>
+<tr><th>순간</th><th>판단</th></tr>
+<tr><td>출전 전</td><td>이 챕터 문제(적 유형)를 보고 곡 짜기 — 어떤 셋을 어떤 순서로</td></tr>
+<tr><td>방 입장</td><td>마지막 음이 이 방 유형에 맞나? 안 맞으면 다음 연계까지 버틸지</td></tr>
+<tr><td>적 호스트</td><td>곡 한 자리를 바꿀까(새 연계) · 지금 곡을 지킬까</td></tr>
+<tr><td>누를 때</td><td>세 스킬이 이어지는 1초 동안 적이 어디 모이나 — 버튼 누르는 <b>자리와 순간</b></td></tr>
+<tr><td>제단</td><td>순서를 뒤집어 다른 연계로 갈지</td></tr>
+</table></div>
+</div>
+<h4>연계 반응표(일부) — 갈래 7개 × 7개 중 앞 → 뒤</h4>
+<table>
+<tr><th>앞 음 → 뒤 음</th><th>연계 이름</th><th>보이는 것</th></tr>
+<tr><td>제압(끌어모음) → 설치(장판)</td><td>모아 태우기</td><td>모인 적 발밑에 바로 불 · 독 · 얼음</td></tr>
+<tr><td>설치(빙결) → 단일 강타</td><td>얼려서 깨기</td><td>얼음이 깨지며 파편 피해 3배</td></tr>
+<tr><td>단일(표식) → 탄막</td><td>표식 난사</td><td>표식 붙은 적에게 탄이 유도</td></tr>
+<tr><td>수호(반사) → 탄막</td><td>반사 폭풍</td><td>되받아친 탄이 갈래로 쪼개짐</td></tr>
+<tr><td>소환(분신) → 돌격</td><td>미끼 돌격</td><td>적이 분신에 몰린 사이 뒤에서 돌격 · 치명 확정</td></tr>
+<tr><td>돌격 → 제압</td><td>몰이</td><td>돌격으로 밀린 적이 끌어모음 자리로 쏠림</td></tr>
+</table>
+
+<h3>③ 육성 상세</h3>
+<table>
+<tr><th>성장 줄</th><th>무엇이 세지나</th><th>재화</th><th>상한</th></tr>
+<tr><td><b>유령(지휘자) 레벨</b></td><td>박자(연계 간격 0.5초 → 0.3초) · 기본 스탯 · 곡 슬롯(Lv20 두 번째 곡 저장)</td><td>유저 경험치</td><td>Lv50</td></tr>
+<tr><td><b>유령 스탯 강화</b></td><td>체력 · 공격 · 치명 등(지금 유령 탭, 몫을 키움)</td><td>골드</td><td>유령 Lv</td></tr>
+<tr><td><b>지휘 펫 1마리</b></td><td>연계 보조 — 펫 5종 중 하나 장착</td><td>펫 조각 · 골드</td><td>펫 Lv30</td></tr>
+<tr><td><b>호스트 성급</b></td><td>스킬 레벨 + <b>설 수 있는 자리</b></td><td>조각 + 골드</td><td>★10</td></tr>
+<tr><td><b>연계 숙련</b></td><td>쓴 연계마다 숙련 Lv1~5 → 그 연계 피해 · 범위</td><td>판에서 그 연계를 쓴 횟수</td><td>연계마다 Lv5</td></tr>
+</table>
+<h4>호스트 성급과 자리</h4>
+<table><tr><th>성급</th><th>열리는 것</th></tr>
+<tr><td>★1</td><td>3번 자리(마지막 음)만</td></tr>
+<tr><td>★3</td><td>2번 자리</td></tr>
+<tr><td>★5</td><td>1번 자리(입은 몸) — 패시브까지</td></tr>
+<tr><td>★6</td><td>액티브 특수 축</td></tr>
+<tr><td>★10</td><td>그 호스트가 낀 연계 전부 ×1.2</td></tr></table>
+<h4>지휘 펫 5종</h4>
+<table><tr><th>펫</th><th>효과</th></tr>
+<tr><td>박자 까마귀</td><td>연계 간격 −0.1초</td></tr><tr><td>메아리 박쥐</td><td>마지막 음이 20% 로 한 번 더</td></tr>
+<tr><td>등불 고양이</td><td>연계 범위 +15%</td></tr><tr><td>해골 고수</td><td>연계 성공 때 액티브 쿨 −1초</td></tr><tr><td>혼 나비</td><td>연계 성공 때 체력 회복</td></tr></table>
+<h4>방향 · 첫 주</h4>
+<ul>
+<li>「내 곡 하나」를 정하고 그 <b>세 명</b>을 ★5 까지 — 23명보다 훨씬 좁다. 4챕터 방패 · 5챕터 탄막에서 두 번째 곡이 필요해진다.</li>
+<li>1일: 갱스터 + 시작에 주는 2명으로 첫 곡 · 3일: 첫 연계 시험방 성공 · 7일: 곡 둘 · 펫 1 · 연계 숙련 몇 개 Lv3.</li>
+</ul>
+<h3>만들 것 · 위험</h3>
+<ul>
+<li>새로: 이어 쏘기 시스템 · 연계 반응표(갈래 7 × 7 중 20~25개) · 연계 이름 · 도감 · 펫 5 · 보스 약점 연계 · 합주 필살기 컷.</li>
+<li>위험: 반응표 설계 · 밸런스 양이 가장 크다. 세 스킬이 1초에 겹쳐 화면이 바쁘다. 스킬이 「내 몸」이 아닌 느낌(빙의 정체성이 약해짐).</li>
+</ul>
+</section>
+
+<!-- ═════════════ 요리 3 ═════════════ -->
+<section class="pane" id="d3">
+<h2>3 · 빙의 릴레이 — 갈아타는 순간이 가장 큰 기술</h2>
+<p class="oneline">떠나는 몸은 이탈기를 남기고, 들어가는 몸은 진입기로 등장한다. 두 기술이 겹쳐 이름 있는 릴레이 콤보가 된다. 몸을 바꿔 타며 춤추듯 싸운다.</p>
+<span class="tag">키우는 것: 잘 이어지는 짝 2~3명 + 영혼 짐승(펫)</span><span class="tag">조작: 어려움</span><span class="tag">「빙의 게임」 정체성 최강</span>
+
+<svg viewBox="0 0 720 360" role="img" aria-label="빙의 릴레이">
+<rect x="20" y="20" width="680" height="320" fill="#24242f" stroke="#444"/>
+<text x="30" y="42" fill="#a9a9bd" font-size="13">릴레이 한 번 — 수류탄 코만도 → 드라군</text>
+<circle cx="170" cy="250" r="18" fill="#8a8aa3"/><text x="110" y="290" fill="#e9e9f1" font-size="12">떠나는 몸: 코만도(수류탄)</text>
+<g fill="none" stroke="#ff9a3c" stroke-width="2"><circle cx="170" cy="250" r="40"/><circle cx="170" cy="250" r="60" stroke-dasharray="4 4"/></g>
+<text x="80" y="200" fill="#ff9a3c" font-size="12">이탈기: 그 자리에 융단 폭격</text>
+<path d="M170 250 Q330 80 500 160" stroke="#5cc8ff" stroke-width="3" fill="none" stroke-dasharray="8 6"/><text x="280" y="110" fill="#5cc8ff" font-size="13">유령이 날아간다(0.3초 슬로)</text>
+<circle cx="500" cy="160" r="20" fill="#ff5c4d"/><text x="470" y="125" fill="#ff5c4d" font-size="12">드라군(경직)</text>
+<circle cx="500" cy="160" r="70" fill="#ff9a3c" opacity=".18"/><text x="520" y="245" fill="#ff9a3c" font-size="12">진입기: 화염 폭발</text>
+<text x="230" y="320" fill="#f2c14e" font-size="15">두 폭발이 겹치면 → 릴레이 「폭염」 · 콤보 2단</text>
+</svg>
+
+<h3>① 스테이지 구성</h3>
+<h4>30방 리듬 — 「발판을 밟고 건넌다」</h4>
+<div class="strip" id="strip3"></div>
+<div class="legend"><span><i style="background:#8a8aa3"></i>전투방</span><span><i style="background:#ff9a3c"></i>릴레이 길 방</span><span><i style="background:#73ff8c"></i>쉼터 제단</span><span><i style="background:#ffb07a"></i>중간보스</span><span><i style="background:#f2c14e"></i>상점</span><span><i style="background:#ff5c4d"></i>보스</span></div>
+<table>
+<tr><th>방 종류</th><th>어디</th><th>구성</th><th>클리어</th></tr>
+<tr><td>전투방</td><td>대부분</td><td>적 호스트 <b>3~4기</b>를 방 곳곳에 놓는다 = 릴레이 발판. 잡몹은 유형 2개</td><td>다 쓰러뜨리기</td></tr>
+<tr><td>릴레이 길</td><td>6 · 12 · 18 · 24</td><td>입구에서 출구까지 길게 · 바닥이 <b>영혼을 태운다</b>(유령 상태로 오래 못 버팀) · 길 위 호스트를 차례로 갈아타며 건넌다</td><td>출구 도달(제한 40초) — 적을 다 잡을 필요 없음</td></tr>
+<tr><td>쉼터 제단</td><td>5 · 25</td><td>영혼 부담 초기화 · 들고 가는 패시브 칸 +1 · 릴레이 하나 강화 중 1</td><td>—</td></tr>
+<tr><td>중간보스</td><td>10 · 20</td><td>대장 둘레를 부하 호스트들이 돈다 — 부하를 갈아타며 진입기로 대장을 친다(대장은 진입기에 ×2)</td><td>대장 처치</td></tr>
+<tr><td>보스</td><td>30</td><td>보스는 빙의 불가 · 패턴마다 <b>호스트 부하를 뿌린다</b> → 그 부하로 들어가며 진입기로 보스 약점을 친다</td><td>보스 처치</td></tr>
+</table>
+<h4>영혼 부담 — 갈아타게 만드는 규칙</h4>
+<ul>
+<li>몸을 입은 시간만큼 <b>부담 게이지</b>가 찬다(15초에 가득). 가득 차면 그 몸 공격 −30% · 받는 피해 +30%.</li>
+<li>갈아타면 부담 0. 단, 갈아타기는 경직 게이지가 필요하다(지금 규칙 그대로) — 아무 때나가 아니라 <b>준비해서</b> 갈아탄다.</li>
+<li>스스로 나오는 대가(유령 체력 −8%)는 둔다(10-04 결정 「갈아타기는 판단」). 대신 <b>경직된 몸으로 바로 건너뛰면 대가 없음</b> — 「준비된 릴레이」만 공짜.</li>
+</ul>
+
+<h3>② 클리어 재미</h3>
+<div class="two">
+<div class="card"><h4>보는 재미</h4>
+<ul>
+<li>갈아타는 0.3초 슬로 — 유령이 빛줄기로 날아가 꽂힌다.</li>
+<li>이탈기(남기고 가는 폭탄 · 장판 · 분신 · 포탑)와 진입기(등장 폭발)가 <b>겹치는 자리</b>에서 큰 콤보.</li>
+<li>릴레이 이름 · 콤보 단수(2단 · 3단 · 4단…)가 화면 가운데 크게. 단수가 오를수록 화면 테두리가 달아오른다.</li>
+<li>콤보 도감 — 이름 있는 릴레이 30~40종, 처음 하면 「새 릴레이!」.</li>
+</ul></div>
+<div class="card"><h4>머리 쓰는 재미</h4>
+<table>
+<tr><th>순간</th><th>판단</th></tr>
+<tr><td>방 입장</td><td>발판 호스트 3~4기의 <b>순서 · 길</b>을 정한다 — 어느 몸에서 어느 몸으로</td></tr>
+<tr><td>입은 동안</td><td>다음 몸의 경직 게이지를 미리 채워 둔다(찜)</td></tr>
+<tr><td>떠나기 직전</td><td>이탈기를 어디에 떨굴까 — 적이 모인 곳에서 떠나라</td></tr>
+<tr><td>상성</td><td>적 속성에 유리한 몸으로 들어가면 진입기 ×2</td></tr>
+<tr><td>부담</td><td>부담이 찼는데 다음 몸이 멀다 — 버틸까, 유령으로 건너갈까</td></tr>
+</table></div>
+</div>
+
+<h3>③ 육성 상세</h3>
+<table>
+<tr><th>성장 줄</th><th>무엇이 세지나</th><th>재화</th><th>상한</th></tr>
+<tr><td><b>유령 레벨</b></td><td>기본 스탯 · 부담 한도(15초 → 22초) · 들고 가는 패시브 칸(1 → 3)</td><td>유저 경험치</td><td>Lv50</td></tr>
+<tr><td><b>영혼 짐승(펫) 1마리</b></td><td>갈아타기 능력</td><td>펫 조각 · 골드</td><td>Lv30</td></tr>
+<tr><td><b>영혼 장비 4칸</b></td><td>스탯(체력 · 공격 · 치명 · 속도)</td><td>상자 · 합성</td><td>5등급</td></tr>
+<tr><td><b>호스트 성급</b></td><td>스킬 레벨 · 이탈기 · 진입기 세기</td><td>조각 + 골드</td><td>★10</td></tr>
+<tr><td><b>인연 레벨</b>(짝)</td><td>두 호스트를 이어 쓴 횟수로 오른다 → 그 릴레이 피해 · 이름 붙은 효과</td><td>판에서 쓴 횟수</td><td>짝마다 Lv5</td></tr>
+</table>
+<h4>영혼 짐승 5종</h4>
+<table><tr><th>짐승</th><th>효과</th></tr>
+<tr><td>혼 여우</td><td>빙의 사거리 +20%</td></tr><tr><td>사슬 늑대</td><td>경직 게이지 +25%</td></tr>
+<tr><td>그림자 까마귀</td><td>갈아탈 때 1초 무적</td></tr><tr><td>불 도마뱀</td><td>이탈기 범위 +20%</td></tr><tr><td>달 나방</td><td>진입기 때 체력 회복</td></tr></table>
+<h4>성급이 주는 것</h4>
+<table><tr><th>성급</th><th>열리는 것</th></tr>
+<tr><td>★0</td><td>빼앗아 쓸 수 있다 · 이탈기 · 진입기 1레벨</td></tr>
+<tr><td>★1</td><td>해금 · 출전 몸</td></tr>
+<tr><td>★3</td><td>이탈기 2단계(크기 · 지속)</td></tr>
+<tr><td>★6</td><td>진입기 2단계 + 액티브 특수 축</td></tr>
+<tr><td>★10</td><td>그 호스트가 끼면 콤보 단수 +1부터 시작</td></tr></table>
+<h4>방향 · 첫 주</h4>
+<ul>
+<li>한 명이 아니라 <b>짝</b>을 키운다 — 「코만도(수류탄) → 드라군」, 「사슬 닌자 → 슬러거」. 인연 레벨이 오르면 그 짝만의 효과가 붙어 애착이 생긴다.</li>
+<li>1일: 기본 릴레이 배움(1챕터 릴레이 길 방) · 3일: 첫 인연 Lv3 · 7일: 펫 1 · 짝 둘 · 도감 10종.</li>
+</ul>
+<h3>만들 것 · 위험</h3>
+<ul>
+<li>새로: 이탈기 23 · 진입기 23(지금 액티브 · 필살기를 변형) · 영혼 부담 · 릴레이 길 방 · 이름 있는 릴레이 30~40 · 인연 · 펫 5 · 장비 4.</li>
+<li>위험: 모바일 한 손 조작으로 바쁘다. 부담 수치가 어긋나면 「쉴 틈이 없다」. 화면이 가장 화려해 인게임 심플화와 부딪힌다.</li>
+</ul>
+</section>
+
+<!-- ═════════════ 요리 4 ═════════════ -->
+<section class="pane" id="d4">
+<h2>4 · 영혼 덱 — 내 호스트들이 레벨업 카드가 된다</h2>
+<p class="oneline">레벨업 카드(3장 중 1장)를 내가 모은 호스트들의 스킬 조각으로 채운다. 입은 몸에 다른 호스트의 힘을 이식해 판마다 다른 혼종을 만든다.</p>
+<span class="tag">키우는 것: 내 덱 8명 + 유령 장비 6칸</span><span class="tag">조작: 쉬움</span><span class="tag">궁수의 전설과 가장 가깝다</span>
+
+<svg viewBox="0 0 720 300" role="img" aria-label="영혼 덱 레벨업">
+<text x="30" y="36" fill="#a9a9bd" font-size="13">레벨업 — 3장 중 1장 (입은 몸: 아마존)</text>
+<g font-size="13">
+<rect x="40" y="60" width="200" height="150" rx="10" fill="#252533" stroke="#5cc8ff"/><text x="60" y="90" fill="#5cc8ff">설녀의 카드</text><text x="60" y="120" fill="#e9e9f1">서릿발 — 평타 30% 빙결</text><text x="60" y="190" fill="#a9a9bd">설녀 2/3 → 강림까지 1장</text>
+<rect x="260" y="60" width="200" height="150" rx="10" fill="#252533" stroke="#ff5c4d"/><text x="280" y="90" fill="#ff5c4d">갱스터의 카드</text><text x="280" y="120" fill="#e9e9f1">일제 표식 — 8초마다</text><text x="280" y="190" fill="#a9a9bd">갱스터 1/3</text>
+<rect x="480" y="60" width="200" height="150" rx="10" fill="#252533" stroke="#8a8aa3"/><text x="500" y="90" fill="#e9e9f1">공통 카드</text><text x="500" y="120" fill="#e9e9f1">공격 강화 +12%</text>
+</g>
+<text x="40" y="250" fill="#f2c14e" font-size="14">아마존(돌격 몸) + 서릿발 + 표식 = 「얼려서 뛰어드는 처형자」 — 이번 판만의 혼종</text>
+<text x="40" y="278" fill="#a9a9bd" font-size="12">덱 안 갈래 조합(설치 2 + 단일 2)이 세트 「덫 사냥꾼」을 켠다</text>
+</svg>
+
+<h3>① 스테이지 구성</h3>
+<h4>30방 리듬 — 「갈림길을 고르며 덱을 굴린다」</h4>
+<div class="strip" id="strip4"></div>
+<div class="legend"><span><i style="background:#8a8aa3"></i>전투방</span><span><i style="background:#5cc8ff"></i>갈림길(다음 방 2개 중 고름)</span><span><i style="background:#73ff8c"></i>천사</span><span><i style="background:#ff9a3c"></i>중간보스</span><span><i style="background:#f2c14e"></i>상점</span><span><i style="background:#ff5c4d"></i>보스</span></div>
+<table>
+<tr><th>방 · 장치</th><th>내용</th></tr>
+<tr><td>출전 전</td><td>챕터 문제(적 유형) 확인 → <b>영혼 덱 8명</b> 편성(유령 레벨로 6 → 10칸) · 출전 몸 1명</td></tr>
+<tr><td>전투방</td><td>지금 그대로. 레벨업 카드 3장이 <b>공통 카드 + 덱 호스트 카드</b>에서 나온다(덱 카드 비율 60%)</td></tr>
+<tr><td>갈림길</td><td>4 · 8 · 14 · 18 · 22 · 27번 방을 나갈 때 문이 둘 — 「엘리트(카드 등급↑)」 / 「휴식(회복)」 / 「제련(카드 하나 Lv+1)」 / 「상인(덱 카드 사기)」 중 두 개가 뜬다. <b>길 고르기</b>가 판의 전략</td></tr>
+<tr><td>빙의</td><td>적 호스트를 빼앗으면 <b>입은 몸이 바뀌고</b> 그 호스트 카드 3장이 이번 판 덱에 섞인다</td></tr>
+<tr><td>중간보스</td><td>잡으면 「강림 카드」 확정 1장(덱에서 가장 많이 모은 호스트)</td></tr>
+<tr><td>보스</td><td>보스 체력 단계마다 「약점 유형」이 바뀐다 — 덱의 폭이 넓어야 대응</td></tr>
+</table>
+<h4>강림 — 같은 호스트 카드 3장</h4>
+<ul><li>같은 호스트 카드 3장을 모으면 그 호스트가 <b>강림</b> — 그 호스트 필살기를 필살기 버튼으로 쓴다(빙의 때 차는 지금 규칙과 별개로 30초 쿨).</li></ul>
+
+<h3>② 클리어 재미</h3>
+<div class="two">
+<div class="card"><h4>보는 재미</h4>
+<ul>
+<li><b>혼종 겉모습</b> — 이식한 카드마다 몸에 표가 붙는다(서릿발 = 발밑 얼음 · 표식 = 붉은 조준 · 포탑 = 어깨 위 포탑).</li>
+<li>강림 컷인 — 그 호스트의 혼이 내 몸 위에 겹쳐 서며 필살기.</li>
+<li>세트가 켜질 때 덱 칸이 빛나는 연출.</li>
+</ul></div>
+<div class="card"><h4>머리 쓰는 재미</h4>
+<table>
+<tr><th>순간</th><th>판단</th></tr>
+<tr><td>출전 전</td><td>덱 8명 짜기 — 챕터 문제 + 세트</td></tr>
+<tr><td>레벨업</td><td>강림을 노릴까(같은 호스트 몰기) · 넓게 갈까(세트)</td></tr>
+<tr><td>갈림길</td><td>엘리트로 위험을 사고 좋은 카드를 · 휴식으로 안전하게</td></tr>
+<tr><td>빙의</td><td>지금 이식이 잘 맞는 몸을 지킬까 · 새 몸으로 가며 그 카드를 덱에 넣을까</td></tr>
+</table></div>
+</div>
+<h4>덱 세트(일부)</h4>
+<table>
+<tr><th>세트</th><th>조건</th><th>효과</th></tr>
+<tr><td>덫 사냥꾼</td><td>설치 2 + 단일 2</td><td>장판 위 적에게 치명 +20%</td></tr>
+<tr><td>강령회</td><td>소환 3</td><td>소환물이 죽을 때 혼불 폭발</td></tr>
+<tr><td>포격 지원</td><td>탄막 3</td><td>8초마다 자동 포격</td></tr>
+<tr><td>철벽</td><td>수호 2 + 제압 1</td><td>쉴드가 있을 때 반사 10%</td></tr>
+<tr><td>코만도 부대</td><td>코만도 4명</td><td>폭발 범위 +15%(조직 세트)</td></tr>
+</table>
+
+<h3>③ 육성 상세</h3>
+<table>
+<tr><th>성장 줄</th><th>무엇이 세지나</th><th>재화</th><th>상한</th></tr>
+<tr><td><b>유령 레벨</b></td><td>덱 칸 수(6 → 10) · 기본 스탯</td><td>유저 경험치</td><td>Lv50</td></tr>
+<tr><td><b>유령 장비 6칸</b></td><td>스탯 대부분 — 무기 · 갑옷 · 반지 2 · 부적 · 망토(궁수의 전설과 같은 자리)</td><td>상자 · 합성 · 골드 강화</td><td>5등급</td></tr>
+<tr><td><b>호스트 성급</b></td><td>그 호스트 카드의 <b>등급</b>과 등장 확률</td><td>조각 + 골드</td><td>★10</td></tr>
+<tr><td><b>세트 도감</b></td><td>처음 켠 세트마다 계정 보너스(작게, 영구)</td><td>판에서 켜기</td><td>세트 수</td></tr>
+</table>
+<h4>성급 → 카드 등급</h4>
+<table><tr><th>성급</th><th>그 호스트 카드</th></tr>
+<tr><td>★0</td><td>덱에 넣을 수 없다(판 안 빙의로만 섞임) · 커먼판</td></tr>
+<tr><td>★1~2</td><td>커먼판(서릿발 빙결 15%)</td></tr>
+<tr><td>★3~5</td><td>레어판(25%) · 강림 해금</td></tr>
+<tr><td>★6~8</td><td>에픽판(35% + 빙결 적 피해 +20%)</td></tr>
+<tr><td>★9~10</td><td>전설판(45% + 빙결이 번짐) · 덱 카드 비율 +5%</td></tr></table>
+<h4>방향 · 첫 주</h4>
+<ul>
+<li>「내 덱 컨셉」(빙결 덱 · 소환 덱 · 포격 덱)을 정하고 <b>그 8명</b>을 키운다 — 카드 게임처럼 방향이 분명하다.</li>
+<li>장비는 궁수의 전설과 같은 방식이라 바로 이해된다.</li>
+<li>1일: 덱 6칸(시작 호스트 + 판에서 얻는 조각) · 3일: 첫 세트 · 7일: 덱 8칸 · 강림 첫 경험 · 장비 희귀.</li>
+</ul>
+<h3>만들 것 · 위험</h3>
+<ul>
+<li>새로: 호스트 카드 69장(23 × 3) × 등급 4판 · 문구 · 아이콘 · 세트 10~12 · 갈림길 방 · 장비 6칸 · 강림.</li>
+<li>위험: 화면 볼거리는 1 · 3보다 약하다(몸 하나에 효과가 붙는 방식). 빙의는 「덱에 카드 넣기」로 작아진다. 카드 글자 · 아이콘 양이 많다.</li>
+</ul>
+</section>
+
+<!-- ═════════════ 비교 ═════════════ -->
+<section class="pane" id="cmp">
+<h2>비교 · 정하실 것</h2>
+<table>
+<tr><th></th><th>1 사령 군단 ★</th><th>2 영혼 합주</th><th>3 빙의 릴레이</th><th>4 영혼 덱</th></tr>
+<tr><th>방에서 고민하는 것</th><td>누구를 데려가고 누구를 놓아줄까</td><td>곡 순서 · 누르는 자리</td><td>발판 순서 · 다음 몸 찜</td><td>카드 · 갈림길</td></tr>
+<tr><th>보는 재미</th><td>군단이 같이 싸움(스킬 2~4 동시)</td><td>세 스킬 박자 연계</td><td>갈아타기 슬로 · 콤보 단수</td><td>혼종 겉모습 · 강림</td></tr>
+<tr><th>빙의의 의미</th><td>영입 — 늘 이득이자 판단</td><td>곡 한 자리 바꾸기</td><td>게임의 중심 동작</td><td>몸 바꾸기 + 카드 넣기</td></tr>
+<tr><th>스테이지 특색</th><td>굴복 영입(10 · 20) · 망령 제단 · 보스가 역할을 요구</td><td>연계 시험방 · 보스 약점 연계</td><td>릴레이 길 방 · 영혼 부담</td><td>갈림길 · 보스 약점 바뀜</td></tr>
+<tr><th>육성 중심</th><td>사령술사 + 사령구 장비 6 · 계약 망령 2</td><td>곡 3명 · 지휘 펫 · 연계 숙련</td><td>짝 2~3명 · 영혼 짐승 · 인연</td><td>덱 8명 · 장비 6 · 카드 등급</td></tr>
+<tr><th>방향이 뚜렷한가</th><td>높다(장비 + 계약 2명)</td><td>높다(3명)</td><td>보통(짝)</td><td>높다(덱 컨셉)</td></tr>
+<tr><th>조작</th><td>쉬움</td><td>보통</td><td>어려움</td><td>쉬움</td></tr>
+<tr><th>새로 만들 양</th><td>중</td><td>대(반응표)</td><td>대(이탈 · 진입 46)</td><td>대(카드 69 × 4)</td></tr>
+<tr><th>원작 테마</th><td>가장 잘 맞음</td><td>보통</td><td>잘 맞음</td><td>보통</td></tr>
+</table>
+<h3>추천 — 1 사령 군단</h3>
+<ul>
+<li>「데미지보다 보여 주는 다양함」 — 한 화면에 내가 빼앗았던 몸 여럿이 같이 싸운다.</li>
+<li>빙의가 늘 이득이면서 판단(누구를 데려갈까 · 놓아줄까)이 된다 — 10월 1일부터 남은 「빙의 메리트」 문제가 풀린다.</li>
+<li>육성이 한 줄로 뚜렷하다: 사령구 장비(모두 공통) → 계약 망령 2명(다음 막 적 유형에 맞춰).</li>
+<li>새로 만들 양이 넷 중 가장 적고, 스킬 69가지를 그대로 쓴다.</li>
+</ul>
+<h3>정하실 것</h3>
+<ol>
+<li><b>어느 안으로 갈까</b> — 하나, 또는 둘을 HTML 시험판(한 판 장면을 직접 해 보는 판)으로 먼저 비교.</li>
+<li><b>보이는 가위바위보(적 유형 5)</b> — 더할지 / 파워 · 무기 · 마법을 이것으로 바꿀지 / 둘 다 둘지.</li>
+<li><b>유령 스탯 자리</b> — 장비 / 펫 / 둘 다(안마다 기본값이 있지만 바꿀 수 있다).</li>
+</ol>
+</section>
+</div>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.t));
+  window.scrollTo({top:0});
+});
+const C={b:'#8a8aa3',a:'#73ff8c',m:'#ff9a3c',s:'#f2c14e',x:'#ff5c4d'};
+function strip(id,map){const el=document.getElementById(id);for(let i=1;i<=30;i++){const d=document.createElement('div');d.textContent=i;d.style.background=map[i]||C.b;el.appendChild(d);}}
+const base={5:C.a,25:C.a,10:C.m,20:C.m,15:C.s,30:C.x};
+strip('stripCommon',base);
+const m1=Object.assign({},base);[1,2,3,4,6,7,8,9].forEach(i=>m1[i]='#b98cff');strip('strip1',m1);
+const m2=Object.assign({},base);[7,13,23].forEach(i=>m2[i]='#5cc8ff');strip('strip2',m2);
+const m3=Object.assign({},base,{10:'#ffb07a',20:'#ffb07a'});[6,12,18,24].forEach(i=>m3[i]='#ff9a3c');strip('strip3',m3);
+const m4=Object.assign({},base);[4,8,14,18,22,27].forEach(i=>m4[i]='#5cc8ff');strip('strip4',m4);
+</script>
+</body>
+</html>
