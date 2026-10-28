@@ -101,15 +101,17 @@ function newRun(){
   ents:[],shots:[],eshots:[],zones:[],allies:[],fx:[],obst:[],
   door:null,cleared:false,rescueT:0,cards:{},fitBonus:0.5,possessed:{},
   joy:null,keys:{},stopT:0,atkT:0,invuln:0,shield:0,shieldT:0,guardT:0,reflectT:0,
-  ultReady:false,actCd:0,lastPossess:null};
+  ultReady:false,actCd:0,lastPossess:null,
+  // MODEL_B — 영혼 지휘: 메인 한 몸 + 혼령(안 맞음 · 펫 평타 · 내가 누르면 차례로 스킬)
+  mode:acct.mode||'A',spirits:[],spiritCap:hasRes('hand2')?3:2,swapLeft:2,chainGap:0.35,chainMul:1};
  S.energy=S.maxBase;
  enterRoom(0);
  // 동행(★3 호스트) — 판 시작에 손 자리에
- if(acct.companion&&stars(acct.companion)>=3){S.hand.push(mkMember(acct.companion,W/2+60,950));toast('동행: '+HOSTS[acct.companion].n+' 이(가) 손 자리에','#b98cff');}
+ if(acct.companion&&stars(acct.companion)>=3){if(S.mode==='B'){S.spirits.push(mkMember(acct.companion,W/2+60,950));toast('동행: '+HOSTS[acct.companion].n+' 이(가) 혼령으로','#b98cff');}else{S.hand.push(mkMember(acct.companion,W/2+60,950));toast('동행: '+HOSTS[acct.companion].n+' 이(가) 손 자리에','#b98cff');}}
  scene='play';
 }
 function share(slot){const base={soul:10,hand:15,spirit:20}[slot];return base-(hasRes('share')?5:0);}
-function energyMax(){let m=S.maxBase-S.lost;if(S.soul)m-=share('soul');m-=S.hand.length*share('hand');if(S.spirit)m-=share('spirit');return m;}
+function energyMax(){let m=S.maxBase-S.lost;if(S.soul)m-=share('soul');m-=S.hand.length*share('hand');if(S.spirit)m-=share('spirit');m-=S.spirits.length*share('hand');return m;}
 function hostScale(k){return 1+0.07*stars(k);}
 function mkBody(k,x,y,elite){const h=HOSTS[k],sc=hostScale(k)*(elite?1.5:1);return{k,x,y,hp:h.hp*sc,max:h.hp*sc,atk:h.atk*sc,elite:!!elite,actCd:0,face:0};}
 function mkMember(k,x,y,src){const b=src||mkBody(k,x,y);b.x=x;b.y=y;b.actCd=b.actCd||rnd(1,3);b.atkT=0;return b;}
@@ -121,9 +123,10 @@ function enterRoom(i){
  S.room=i;const R=ROOMS[i];
  S.ents=[];S.shots=[];S.eshots=[];S.zones=[];S.allies=[];S.fx=[];S.door=null;S.cleared=false;S.rescueT=0;
  S.obst=[];
- if(R.t==='battle'||R.t==='leader'){const n=2+((i*7)%3);for(let j=0;j<n;j++){const w=rnd(70,140),h=rnd(50,70);S.obst.push({x:rnd(60,W-60-w),y:rnd(TOP+180,BOT-260),w,h});}}
+ if(R.t==='battle'||R.t==='leader'){const n=2+((i*7)%3);for(let j=0;j<n;j++){const w=rnd(70,130),h=rnd(50,70),left=j%2===0; // 가운데 길(문으로 가는 길)은 비우고, 서로 겹치지 않게
+  for(let tries=0;tries<20;tries++){const o={x:left?rnd(40,270-w):rnd(450,W-40-w),y:rnd(TOP+180,BOT-260),w,h};if(!S.obst.some(b=>o.x<b.x+b.w+40&&o.x+o.w+40>b.x&&o.y<b.y+b.h+40&&o.y+o.h+40>b.y)){S.obst.push(o);break;}}}}
  const p=S.body||S.ghost;p.x=W/2;p.y=BOT-80;
- S.hand.forEach((m,j)=>{m.x=W/2+(j?-70:70);m.y=BOT-60;});
+ S.hand.forEach((m,j)=>{m.x=W/2+(j?-70:70);m.y=BOT-60;});S.spirits.forEach((m,j)=>{m.x=W/2+(j-1)*60;m.y=BOT-40;});S.swapLeft=2;
  // 바뀐 방: 손 자리 몸은 필살기를 이 방에서 다시 한 번 채울 수 있다
  S.ultRoomUsed={};
  const lvl=1+i*0.12;
@@ -144,8 +147,8 @@ function addHost(k,x,y,lvl,elite){const h=HOSTS[k];const m=elite?1.6:1;S.ents.pu
 // ─────────────────────────────────────────
 // 피해 · 효과
 // ─────────────────────────────────────────
-function partyKeys(){const a=[];if(S.body)a.push(S.body.k);if(S.soul)a.push(S.soul.k);S.hand.forEach(m=>a.push(m.k));if(S.spirit)a.push(S.spirit.k);return a;}
-function passiveMul(k){let m=0;if(S.body&&S.body.k===k)m+=1;if(S.soul&&S.soul.k===k)m+=FIT[HOSTS[k].br]==='soul'?1+S.fitBonus:1;return m;}
+function partyKeys(){const a=[];if(S.body)a.push(S.body.k);if(S.soul)a.push(S.soul.k);S.hand.forEach(m=>a.push(m.k));if(S.spirit)a.push(S.spirit.k);S.spirits.forEach(m=>a.push(m.k));return a;}
+function passiveMul(k){let m=0;if(S.body&&S.body.k===k)m+=1;if(S.soul&&S.soul.k===k)m+=FIT[HOSTS[k].br]==='soul'?1+S.fitBonus:1;for(const s of S.spirits)if(s.k===k)m+=0.5;return m;}
 function synergies(){const ks=partyKeys(),out=[];const brc={};ks.forEach(k=>{const b=HOSTS[k].br;brc[b]=(brc[b]||0)+1;});
  for(const b in brc)if(brc[b]>=2)out.push({id:'res_'+b,n:'공명 · '+BR[b],d:'같은 갈래 둘 — 내가 쓴 액티브를 40% 로 한 번 더'});
  const has=k=>ks.includes(k);const any=b=>ks.some(k=>HOSTS[k].br===b);
@@ -191,7 +194,7 @@ function killEnemy(e){
  const sl=passiveMul('baseball');if(sl&&Math.random()<0.2*sl){for(const x of S.ents)if(!x.dead&&x!==e&&dist(x,e)<150){const a=Math.atan2(x.y-e.y,x.x-e.x);x.x+=Math.cos(a)*80;x.y+=Math.sin(a)*80;hurtEnemy(x,30,{});}S.fx.push({ty:'ring',x:e.x,y:e.y,r:150,c:'#f2c14e',life:0.35});}
  if(S.body)S.orbT+=0.5;
  while(S.xp>=30*S.lv){S.xp-=30*S.lv;S.lv++;S.pendingLv++;}
- if(e.ty==='boss'){S.won=true;setTimeout(()=>endRun(true),900);}
+ if(e.ty==='boss'){S.won=true;S.winT=0.9;}
 }
 function aoe(x,y,r,dmg,o){for(const e of S.ents)if(!e.dead&&Math.hypot(e.x-x,e.y-y)<r+e.r)hurtEnemy(e,dmg,Object.assign({aoe:true},o));}
 function nearestEnemy(p,maxD,not){let b=null,bd=maxD||1e9;for(const e of S.ents){if(e.dead||e===not)continue;const d=dist(e,p);if(d<bd){bd=d;b=e;}}return b;}
@@ -208,6 +211,7 @@ function hurtMe(d,from){
 function bodyDies(){
  const b=S.body;S.energy-=20;S.fx.push({ty:'ring',x:b.x,y:b.y,r:80,c:'#ff5c4d',life:0.5});toast(HOSTS[b.k].n+' 이(가) 쓰러졌다 — 유령 에너지 −20','#ff5c4d');
  S.body=null;
+ if(S.mode==='B'&&S.spirits.length){clampEnergy();if(scene!=='play')return;modal={title:'메인이 쓰러졌다 — 어느 혼령으로 들어갈까?',lines:['들어간 몸은 체력이 가득 찬다 · 그 혼령 칸은 빈다'],opts:S.spirits.map((m,i)=>({t:HOSTS[m.k].n+' · '+BR[HOSTS[m.k].br],sub:'액티브 「'+HOSTS[m.k].act[0]+'」 · 필살기 「'+HOSTS[m.k].ult+'」',fn:()=>{const s=S.spirits.splice(i,1)[0];s.hp=s.max;s.x=b.x;s.y=b.y;S.body=s;S.invuln=1.5;S.ultReady=true;S.fx.push({ty:'beam',x:b.x,y:b.y-200,x2:b.x,y2:b.y,life:0.4});clampEnergy();}}))};return;}
  if(S.hand.length){let bi=0,bd=1e9;S.hand.forEach((m,i)=>{const d=Math.hypot(m.x-b.x,m.y-b.y);if(d<bd){bd=d;bi=i;}});const m=S.hand.splice(bi,1)[0];S.body=m;S.invuln=1;toast('가까운 잔혼 '+HOSTS[m.k].n+' (으)로 자동 옮겨 탐','#5cc8ff');S.fx.push({ty:'beam',x:b.x,y:b.y,x2:m.x,y2:m.y,life:0.35});}
  else{S.ghost.x=b.x;S.ghost.y=b.y;S.rescueT=3;toast('유령 상태 — 가까운 호스트에 빙의하라','#5cc8ff');}
  clampEnergy();
@@ -238,9 +242,16 @@ function castActive(k,caster,p,echo){
   case 'robot':S.allies.push({ty:'turret',x:caster.x+30,y:caster.y-40,life:10*p,t:0,atk:atk*0.5});say();break;
  }
 }
+// 순서 짝 — 앞 스킬 갈래 → 뒤 스킬 갈래가 맞으면 뒤 스킬 ×1.5
+const PAIR={control:{trap:'모아 태우기',barrage:'모아 쓸기'},trap:{single:'얼려 깨기',rush:'덫 위 돌격'},single:{barrage:'표식 난사',summon:'표식 사냥'},guard:{barrage:'받아 쏘기'},summon:{rush:'미끼 돌격'},rush:{control:'몰이',trap:'몰아 넣기'},barrage:{single:'쓸고 마무리'}};
 function useActive(){
  if(!S.body||S.body.actCd>0)return;
  const k=S.body.k,h=HOSTS[k];castActive(k,S.body,1);S.body.actCd=h.act[1];
+ if(S.mode==='B'){ // 혼령이 차례로 이어서 — 각자 쿨, 안 찬 혼령은 건너뜀
+  let prev=h.br,step=0;
+  S.spirits.forEach(m=>{if(m.actCd>0)return;step++;const br=HOSTS[m.k].br,pair=PAIR[prev]&&PAIR[prev][br];prev=br;m.actCd=HOSTS[m.k].act[1];
+   setTimeout(()=>{if(!S||!S.body)return;m.x=S.body.x+rnd(-40,40);m.y=S.body.y-30;castActive(m.k,m,0.6*(pair?1.5:1)*S.chainMul*(S.handMul||1));if(pair)fxText(S.body.x,S.body.y-96,'연계 「'+pair+'」','#ffd56a');},step*S.chainGap*1000);});
+  return;}
  // 공명: 파티에 같은 갈래가 있으면 40% 로 한 번 더
  const same=[S.soul,...S.hand,S.spirit].filter(m=>m&&HOSTS[m.k].br===h.br).length;
  if(same>0)setTimeout(()=>{if(S&&S.body){castActive(k,S.body,0.4,true);fxText(S.body.x,S.body.y-76,'공명','#b98cff');}},450);
@@ -253,6 +264,7 @@ function castUlt(k,caster,p){
 }
 function useUlt(){
  if(!S.body||!S.ultReady)return;S.ultReady=false;S.ultRoomUsed[S.body.k]=true;
+ if(S.mode==='B'){const n=S.spirits.length;castUlt(S.body.k,S.body,1+0.15*n);S.spirits.forEach((m,i)=>setTimeout(()=>{if(S&&S.body){m.x=S.body.x+rnd(-60,60);m.y=S.body.y-40;castActive(m.k,m,1,true);}},300+i*200));if(n)toast('혼령 '+n+' 합세 — 필살기 +'+(15*n)+'%','#b98cff');return;}
  castUlt(S.body.k,S.body,1);
  if(S.spirit){const sp=S.spirit,fit=FIT[HOSTS[sp.k].br]==='spirit';setTimeout(()=>{if(S&&S.body){castUlt(sp.k,S.body,(fit?1+S.fitBonus:1)*0.8);toast('혼백 자리 '+HOSTS[sp.k].n+' — 합동 필살기','#b98cff');}},800);}
 }
@@ -270,10 +282,27 @@ function doPossess(){
  const old=S.body;const nb=mkBody(e.k,e.x,e.y,e.elite);
  e.dead=true;S.fx.push({ty:'beam',x:(old||S.ghost).x,y:(old||S.ghost).y,x2:e.x,y2:e.y,life:0.35});
  S.possessed[e.k]=(S.possessed[e.k]||0)+1;
+ if(S.mode==='B'&&old){openEnterOrHold(old,nb,e);return;}
  S.body=nb;S.ultReady=true;S.invuln=1.25;S.body.actCd=0; // 빙의하면 액티브 · 필살기 가득
  toast(HOSTS[e.k].n+(e.elite?' (간부 몸 ×1.5)':'')+' 에 빙의!','#5cc8ff');
  if(old)openSlotChooser(old);
 }
+function addSpirit(m){let gone=null;if(S.spirits.length>=S.spiritCap){gone=S.spirits.shift();if(S.body){gone.x=S.body.x;gone.y=S.body.y;}releaseMember(gone);}m.actCd=0;S.spirits.push(mkMember(m.k,m.x,m.y,m));clampEnergy();}
+function openEnterOrHold(old,nb,e){
+ const full=S.spirits.length>=S.spiritCap,out=full?'  ⟶ 칸이 차서 '+HOSTS[S.spirits[0].k].n+' 을(를) 놓아준다(혼불)':'';
+ modal={title:HOSTS[nb.k].n+(nb.elite?'(간부 몸)':'')+' — 들어갈까, 붙들까?',lines:['메인 '+HOSTS[old.k].n+' · 혼령 '+S.spirits.length+' / '+S.spiritCap+' · 혼령 하나마다 유령 에너지 최대 −'+share('hand')],opts:[
+  {t:'들어가기 — 메인 교체',sub:HOSTS[nb.k].n+' 을(를) 직접 조작 · 지금 메인 '+HOSTS[old.k].n+' 은(는) 혼령이 된다 · 액티브 · 필살기 가득'+out,gold:true,fn:()=>{S.body=nb;S.ultReady=true;S.invuln=1.25;nb.actCd=0;addSpirit(old);toast(HOSTS[nb.k].n+' 에 들어갔다 · '+HOSTS[old.k].n+' 은(는) 혼령으로','#5cc8ff');}},
+  {t:'붙들기 — 혼령으로',sub:'지금 메인 '+HOSTS[old.k].n+' 그대로 · '+HOSTS[nb.k].n+' 은(는) 혼령으로 곁에'+out,fn:()=>{S.body=old;addSpirit(nb);toast(HOSTS[nb.k].n+' 을(를) 혼령으로 붙들었다','#b98cff');}},
+  {t:'놓아주기',sub:'몸을 빼앗자마자 놓아준다 — 혼불 폭발 · 에너지 몫 없음',fn:()=>{S.body=old;releaseFx(nb);}}]};
+}
+function swapSpirit(i){
+ if(!S.body||S.swapLeft<=0||S.swapCd>0)return;const m=S.spirits[i];if(!m)return;
+ const old=S.body;S.spirits[i]=mkMember(old.k,old.x,old.y,old);m.x=old.x;m.y=old.y;S.body=m;S.swapLeft--;S.swapCd=1.5;
+ if(hasRes('iframe')||S.cards.iframe)S.invuln=Math.max(S.invuln,1);
+ if(!S.ultRoomUsed[m.k])S.ultReady=true;
+ S.fx.push({ty:'beam',x:old.x,y:old.y-60,x2:m.x,y2:m.y,life:0.3});fxText(m.x,m.y-56,'메인 교체','#f2c14e');
+}
+function releaseSpirit(i){const m=S.spirits.splice(i,1)[0];if(!m)return;const p=S.body||S.ghost;m.x=p.x;m.y=p.y-40;releaseMember(m);}
 function openSlotChooser(old){
  const h=HOSTS[old.k],fit=FIT[h.br];
  const desc={soul:'패시브 「'+h.pas[0]+'」 — '+h.pas[1],hand:'따라다니며 액티브 「'+h.act[0]+'」을 쿨마다 · 옮겨 탈 수 있음',spirit:'내 필살기 뒤에 「'+h.ult+'」 이 이어 나옴'};
@@ -305,7 +334,10 @@ function swapInto(i){
 // ─────────────────────────────────────────
 // 박사의 통신 · 레벨업 카드
 // ─────────────────────────────────────────
-function openDoctor(){modal={title:'박사의 통신',lines:['「자네의 에너지는 한정돼 있네. 하나만 고르게.」'],opts:[
+function openDoctor(){if(S.mode==='B'){modal={title:'박사의 통신',lines:['「자네의 에너지는 한정돼 있네. 하나만 고르게.」'],opts:[
+ {t:'유령 에너지 회복',sub:'최대치까지 채운다',fn:()=>{S.energy=energyMax();}},
+ {t:'혼령 칸 +1',sub:'이번 판 혼령이 '+(S.spiritCap+1)+'칸이 된다',fn:()=>{S.spiritCap++;}},
+ {t:'연계 강화',sub:'혼령 스킬 위력 +30% · 이어지는 간격 −0.1초',fn:()=>{S.chainMul*=1.3;S.chainGap=Math.max(0.15,S.chainGap-0.1);}}]};return;}modal={title:'박사의 통신',lines:['「자네의 에너지는 한정돼 있네. 하나만 고르게.」'],opts:[
  {t:'유령 에너지 회복',sub:'최대치까지 채운다',fn:()=>{S.energy=energyMax();}},
  {t:'손 자리 +1 칸',sub:'이번 판 손 자리가 '+(S.handCap+1)+'칸이 된다',fn:()=>{S.handCap++;}},
  {t:'맞는 자리 공명 강화',sub:'맞는 자리 보너스 ×1.5 → ×2.0',fn:()=>{S.fitBonus=1;}}]};}
@@ -351,6 +383,7 @@ function update(dt){
  if(modal||scene!=='play')return;
  if(S.pendingLv>0&&S.cleared){openLevelUp();return;}
  S.t+=dt;SYN=synergies();
+ if(S.winT>0){S.winT-=dt;if(S.winT<=0){endRun(true);return;}}
  const me=S.body||S.ghost;
  // 이동
  let mx=0,my=0;if(S.joy){mx=S.joy.dx;my=S.joy.dy;}
@@ -366,6 +399,8 @@ function update(dt){
  if(S.body){S.body.actCd=Math.max(0,S.body.actCd-dt);
   // 멈춰야 쏜다(궁수의 전설 규칙)
   S.atkT-=dt;if(!moving&&S.stopT>0.03&&S.atkT<=0){if(basicAttack(S.body,1,'me'))S.atkT=RATE[HOSTS[S.body.k].kind]*(S.rateMul||1);}}
+ S.spirits.forEach((m,i)=>{const n=S.spirits.length,ang=-Math.PI/2+(i-(n-1)/2)*0.9;const tx=me.x+Math.cos(ang)*70,ty=me.y+Math.sin(ang)*55;m.x+=(tx-m.x)*Math.min(1,dt*5);m.y+=(ty-m.y)*Math.min(1,dt*5);
+  m.actCd=Math.max(0,m.actCd-dt);m.atkT=(m.atkT||0)-dt;if(m.atkT<=0&&S.body){if(basicAttack(m,0.3,'party'))m.atkT=RATE[HOSTS[m.k].kind]*1.2;}});
  // 손 자리 잔혼 — 따라다니며 약한 평타 · 쿨마다 액티브
  S.hand.forEach((m,i)=>{const tx=me.x+(i?-64:64),ty=me.y+40;m.x+=(tx-m.x)*Math.min(1,dt*4);m.y+=(ty-m.y)*Math.min(1,dt*4);
   m.atkT=(m.atkT||0)-dt;if(m.atkT<=0&&S.body){if(basicAttack(m,0.4,'party'))m.atkT=RATE[HOSTS[m.k].kind]*1.3;}
@@ -406,7 +441,8 @@ function update(dt){
  // 적 탄
  for(const s of S.eshots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;if(inObst(s.x,s.y)){s.life=0;continue;}
   if(S.reflectT>0&&S.body&&!s.ref&&dist(s,S.body)<170){s.ref=true;S.shots.push({x:s.x,y:s.y,vx:-s.vx*2,vy:-s.vy*2,dmg:s.dmg*3,life:0.8,src:'me',pierce:0,hit:new Set(),at:'force'});s.life=0;continue;}
-  if(S.body&&dist(s,S.body)<26){s.life=0;hurtMe(s.dmg,s);}}
+  if(S.body&&dist(s,S.body)<26){s.life=0;hurtMe(s.dmg,s);continue;}
+  for(let hi=0;hi<S.hand.length;hi++){const m=S.hand[hi];if(dist(s,m)<22){s.life=0;m.hp-=s.dmg;if(m.hp<=0){S.hand.splice(hi,1);S.lost+=share('hand');toast(HOSTS[m.k].n+' 잔혼이 쓰러졌다 — 몫 '+share('hand')+' 을(를) 잃음','#ff5c4d');S.fx.push({ty:'ring',x:m.x,y:m.y,r:60,c:'#ff5c4d',life:0.4});clampEnergy();}break;}}}
  S.eshots=S.eshots.filter(s=>s.life>0&&s.y>TOP-20&&s.y<BOT+20&&s.x>-20&&s.x<W+20);
  // 장판 · 아군
  for(const z of S.zones){z.life-=dt;z.tick=(z.tick||0)-dt;if(z.tick<=0){z.tick=0.4;for(const e of S.ents)if(!e.dead&&Math.hypot(e.x-z.x,e.y-z.y)<z.r+e.r){hurtEnemy(e,z.dps*0.4,{aoe:true});if(z.burn)e.burn=2;}}}
@@ -484,6 +520,8 @@ function drawEnts(){
   else if(e.ty!=='boss')txt(ETYPE[e.ty].n,e.x,e.y+s*0.5+4,15,'#ffb3a8','center');
  }
  for(const a of S.allies){if(a.ty==='skel'){if(!spr('e_skel',a.x,a.y,64,0.85))txt('☠',a.x,a.y,28,'#9cf','center');}else{rr(a.x-18,a.y-18,36,36,6,'#5cc8ff55','#5cc8ff',2);txt('포탑',a.x,a.y,14,'#fff','center');}}
+ // 혼령(B) — 작고 반투명, 맞지 않는다
+ S.spirits.forEach((m,i)=>{cx.save();cx.shadowColor='#b98cff';cx.shadowBlur=18;spr(hostSpr(m.k),m.x,m.y+Math.sin(S.t*4+i)*5,62,0.5,Math.cos(m.face||0)<0);cx.restore();txt(String(i+1),m.x+22,m.y-26,16,'#ffd56a','center');});
  // 손 자리 잔혼
  S.hand.forEach(m=>{cx.save();cx.shadowColor='#7fe3ff';cx.shadowBlur=16;spr(hostSpr(m.k),m.x,m.y,78,0.55,Math.cos(m.face||0)<0);cx.restore();bar(m.x-28,m.y-46,56,5,m.hp/m.max,'#7fe3ff');});
  // 나
@@ -511,19 +549,20 @@ function drawEnts(){
 }
 function drawHud(){
  cx.fillStyle='#14141d';cx.fillRect(0,0,W,TOP);
- const R=ROOMS[S.room];txt('잔혼 파티 시험판 · '+(S.room+1)+' / 15방 · '+({start:'시작',battle:'전투',doctor:'박사의 통신',leader:'결사 간부',boss:'아지트 두목'}[R.t]),16,24,20,'#cfd');
+ const R=ROOMS[S.room];txt('시험판 모델 '+S.mode+' · '+(S.room+1)+' / 15방 · '+({start:'시작',battle:'전투',doctor:'박사의 통신',leader:'결사 간부',boss:'아지트 두목'}[R.t]),16,24,20,'#cfd');
  txt('Lv '+S.lv,W-16,24,20,'#f2c14e','right');bar(W-180,40,164,6,S.xp/(30*S.lv),'#f2c14e');
  // 유령 에너지 막대 — 나눠 쓴 몫이 보이게
  const X=16,Y=52,BW=W-32,BH=26,full=S.maxBase;txt('유령 에너지 '+Math.round(S.energy)+' / '+Math.round(energyMax()),X,Y-4+BH+18,18,'#7fe3ff');
  cx.fillStyle='#222';cx.fillRect(X,Y,BW,BH);const u=BW/full;cx.fillStyle='#5cc8ff';cx.fillRect(X,Y,S.energy*u,BH);
  let x=X+energyMax()*u;const seg=(w,c,l)=>{cx.fillStyle=c;cx.fillRect(x,Y,w*u,BH);cx.strokeStyle='#111';cx.strokeRect(x,Y,w*u,BH);if(w*u>40)txt(l,x+w*u/2,Y+BH/2,13,'#111','center');x+=w*u;};
- if(S.soul)seg(share('soul'),'#73ff8c','혼');S.hand.forEach(()=>seg(share('hand'),'#9fe7ff','손'));if(S.spirit)seg(share('spirit'),'#c9a8ff','혼백');if(S.lost)seg(S.lost,'#552','잃음');
+ if(S.soul)seg(share('soul'),'#73ff8c','혼');S.hand.forEach(()=>seg(share('hand'),'#9fe7ff','손'));if(S.spirit)seg(share('spirit'),'#c9a8ff','혼백');S.spirits.forEach(()=>seg(share('hand'),'#c9a8ff','혼령'));if(S.lost)seg(S.lost,'#552','잃음');
  // 시너지
  let sx=16;SYN.forEach(s=>{const w=cx.measureText(s.n).width;rr(sx,112,w+38,28,8,'#2b2240','#b98cff',2);txt(s.n,sx+12,126,16,'#e3d4ff');sx+=w+48;});
  if(!SYN.length)txt('시너지 없음 — 같은 갈래 둘 · 이름 있는 짝 · 파워 · 무기 · 마법 하나씩',16,126,15,'#667');
 }
 function drawPanel(){
  cx.fillStyle='#14141d';cx.fillRect(0,PANEL_Y,W,H-PANEL_Y);
+ if(S.mode==='B'){drawPanelB();return;}
  // 자리 셋
  const slots=[['soul',S.soul],['hand',S.hand],['spirit',S.spirit]];
  let x=10;const y=PANEL_Y+10;
@@ -554,7 +593,34 @@ function drawPanel(){
  // 알림
  toastList.slice(-3).forEach((t,i)=>{cx.globalAlpha=clamp(t.life,0,1)*0.9;rr(90,TOP+6+i*30,W-180,26,8,'rgba(10,10,20,.75)',null);txt(t.t,W/2,TOP+19+i*30,14,t.c,'center');cx.globalAlpha=1;});
 }
-function openHelp(){modal={title:'규칙 한 장',lines:[
+function drawPanelB(){
+ let x=10;const y=PANEL_Y+10;
+ txt('혼령(순서 = 연계 순서) · 칸 누르기 = 메인 교체(이 방 '+S.swapLeft+'번 남음) · 길게 = 놓아주기',14,PANEL_Y+170,14,'#998');
+ for(let i=0;i<S.spiritCap;i++){const m=S.spirits[i],w=150;
+  btn(x,y,w,140,'',()=>{if(m)swapSpirit(i);},{bg:'#1e1e2a',stroke:m?BRCOL[HOSTS[m.k].br]:'#333',lw:2,hold:m?()=>releaseSpirit(i):null});
+  txt('혼령 '+(i+1),x+w/2,y+14,14,'#c9a8ff','center');
+  if(m){const h=HOSTS[m.k];spr(hostSpr(m.k),x+w/2,y+62,64,0.85);txt(h.n,x+w/2,y+104,15,'#fff','center');txt(m.actCd>0?h.act[0]+' '+m.actCd.toFixed(1):h.act[0]+' ●',x+w/2,y+124,12,m.actCd>0?'#778':'#ffd56a','center');}
+  else txt('비어 있음',x+w/2,y+70,14,'#555','center');x+=w+8;}
+ const bx=W-250,by=PANEL_Y+184;
+ if(S.body){const h=HOSTS[S.body.k];const cd=S.body.actCd;
+  btn(bx,by,120,76,'',useActive,{bg:cd>0?'#222':'#24405a',stroke:BRCOL[h.br]});txt('액티브',bx+60,by+20,15,'#9cf','center');txt(cd>0?cd.toFixed(1):h.act[0],bx+60,by+44,cd>0?24:15,'#fff','center');if(S.spirits.length)txt('+ 혼령 '+S.spirits.filter(m=>m.actCd<=0).length+' 이어서',bx+60,by+64,11,'#ffd56a','center');
+  btn(bx+126,by,120,76,'',useUlt,{bg:S.ultReady?'#4a2a60':'#222',stroke:S.ultReady?'#c9a8ff':'#444'});txt('필살기',bx+186,by+20,15,'#d9c2ff','center');txt(S.ultReady?h.ult:'빙의 · 교체로 참',bx+186,by+46,S.ultReady?15:12,'#fff','center');if(S.spirits.length&&S.ultReady)txt('혼령 합세 +'+15*S.spirits.length+'%',bx+186,by+64,11,'#ffd56a','center');}
+ const tg=possessTarget();
+ btn(bx-130,by,124,76,'',doPossess,{bg:tg?'#1d4a66':'#1a1a22',stroke:tg?'#5cc8ff':'#333',lw:tg?4:2});txt('빙의',bx-68,by+24,20,tg?'#bff':'#556','center');txt(tg?HOSTS[tg.k].n:(S.body?'경직된 호스트 필요':'가까운 호스트'),bx-68,by+52,13,tg?'#fff':'#556','center');
+ if(S.joy){cx.strokeStyle='rgba(255,255,255,.25)';cx.lineWidth=3;cx.beginPath();cx.arc(S.joy.ox,S.joy.oy,70,0,7);cx.stroke();cx.fillStyle='rgba(255,255,255,.25)';cx.beginPath();cx.arc(S.joy.ox+S.joy.dx*60,S.joy.oy+S.joy.dy*60,30,0,7);cx.fill();}
+ txt('모델 B 영혼 지휘 · 방 안 끌어서 이동 · 멈추면 자동 공격',16,H-24,14,'#667');
+ btn(16,by+8,90,56,'규칙',()=>openHelp(),{sz:18});
+ toastList.slice(-3).forEach((t,i)=>{cx.globalAlpha=clamp(t.life,0,1)*0.9;rr(90,TOP+6+i*30,W-180,26,8,'rgba(10,10,20,.75)',null);txt(t.t,W/2,TOP+19+i*30,14,t.c,'center');cx.globalAlpha=1;});
+}
+function openHelp(){if((S?S.mode:acct.mode)==='B'){modal={title:'규칙 한 장 — 모델 B 영혼 지휘',lines:[
+ '· 나는 유령. 적 호스트를 경직(체력 35% 몰아치기)시켜 「빙의」로 빼앗는다. 유령일 땐 가까운 호스트에 바로 빙의.',
+ '· 빼앗을 때 고른다 — 「들어가기」: 새 몸을 직접 조작, 지금 메인은 혼령이 된다 / 「붙들기」: 메인 그대로, 새 몸은 혼령.',
+ '· 체력은 메인만. 혼령은 맞지 않고 내 곁에 떠서 펫처럼 평타(30%)만 쏜다.',
+ '· 액티브를 누르면 메인 스킬 → 혼령 1 → 혼령 2 스킬이 0.35초 간격으로 이어진다(각자 쿨 · 안 찬 혼령은 건너뜀). 순서가 짝이면(묶기 → 장판 등) 뒤 스킬 ×1.5.',
+ '· 패시브는 메인 전부 + 혼령마다 절반. 필살기는 메인 것, 혼령 하나당 +15% 합세.',
+ '· 혼령 칸을 누르면 그 몸으로 메인 교체(방마다 2번) · 길게 누르면 놓아주기(혼불 폭발).',
+ '· 혼령 하나마다 유령 에너지 최대 −15. 메인이 쓰러지면 −20, 혼령 하나를 골라 그 몸으로(체력 가득). 0 이면 패배.',
+ '· 적 유형 · 속성 · 문 위 예고는 모델 A 와 같다.'],opts:[{t:'닫기',fn:()=>{}}]};return;}modal={title:'규칙 한 장',lines:[
  '· 나는 유령. 적 호스트를 경직(체력 35% 몰아치기)시켜 「빙의」로 빼앗는다. 유령일 땐 가까운 호스트에 바로 빙의.',
  '· 빼앗으면 떠난 몸을 세 자리 중 하나에 남긴다(잔혼). 혼 = 패시브가 내 몸에 · 손 = 따라다니며 액티브 · 혼백 = 내 필살기 뒤 그 몸 필살기.',
  '· 맞는 자리(금빛 ★)에 두면 효과 ×1.5. 수호 · 제압 → 혼 / 소환 · 설치 → 손 / 단일 · 탄막 · 돌격 → 혼백.',
@@ -586,7 +652,10 @@ function drawLobby(){
  HOSTKEYS.forEach((k,i)=>{const cxp=40+(i%7)*92,cy=800+Math.floor(i/7)*120,st=stars(k),comp=acct.companion===k;
   btn(cxp,cy,84,112,'',()=>{if(st>=3){acct.companion=comp?null:k;saveAcct();}},{bg:'#1a1a24',stroke:comp?'#b98cff':st>=3?'#f2c14e':'#333',lw:comp?4:2});
   spr(hostSpr(k),cxp+42,cy+42,60,st?1:0.45);txt(HOSTS[k].n.replace('코만도','코만').slice(0,6),cxp+42,cy+82,12,'#ccd','center');txt('★'+st+' ('+(acct.shard[k]||0)+')',cxp+42,cy+100,12,st?'#f2c14e':'#666','center');});
- btn(W/2-160,1080,320,96,'출전 — 유령으로',()=>newRun(),{bg:'#1d4a66',stroke:'#5cc8ff',lw:4,sz:28});
+ const md=acct.mode||'A';
+ btn(40,1080,150,96,'',()=>{acct.mode='A';saveAcct();},{bg:md==='A'?'#3a3016':'#1a1a24',stroke:md==='A'?'#f2c14e':'#333',lw:md==='A'?4:2});txt('모델 A',115,1108,20,md==='A'?'#ffd56a':'#888','center');txt('한 몸 직접',115,1136,14,'#aab','center');txt('옮겨 타기 · 자리 셋',115,1156,12,'#889','center');
+ btn(W-190,1080,150,96,'',()=>{acct.mode='B';saveAcct();},{bg:md==='B'?'#3a3016':'#1a1a24',stroke:md==='B'?'#f2c14e':'#333',lw:md==='B'?4:2});txt('모델 B',W-115,1108,20,md==='B'?'#ffd56a':'#888','center');txt('영혼 지휘',W-115,1136,14,'#aab','center');txt('메인 + 혼령 연계',W-115,1156,12,'#889','center');
+ btn(W/2-150,1080,300,96,'출전 — 모델 '+md,()=>newRun(),{bg:'#1d4a66',stroke:'#5cc8ff',lw:4,sz:26});
  btn(W/2-160,1190,150,60,'규칙',()=>openHelp(),{sz:20});
  btn(W/2+10,1190,150,60,'기록 지우기',()=>{acct={core:3,res:{},shard:{},runs:0,best:0,companion:null};saveAcct();},{sz:18,c:'#f88'});
 }
@@ -625,9 +694,9 @@ function up(ev){const d=downs[ev.pointerId];delete downs[ev.pointerId];
  if(S&&S.joy&&S.joy.id===ev.pointerId)S.joy=null;}
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
 addEventListener('keydown',ev=>{const k=ev.key.toLowerCase();if(S)S.keys[k]=true;if(!S||scene!=='play'||modal)return;
- if(k==='j')useActive();if(k==='k')useUlt();if(k==='l'||k===' ')doPossess();if(k==='1')swapInto(0);if(k==='2')swapInto(1);});
+ if(k==='j')useActive();if(k==='k')useUlt();if(k==='l'||k===' ')doPossess();if(k==='1')(S.mode==='B'?swapSpirit(0):swapInto(0));if(k==='2')(S.mode==='B'?swapSpirit(1):swapInto(1));if(k==='3'&&S.mode==='B')swapSpirit(2);});
 addEventListener('keyup',ev=>{if(S)S.keys[ev.key.toLowerCase()]=false;});
-window.__T={step:(dt)=>{update(dt);},get S(){return S},newRun,doPossess,swapInto,useActive,useUlt,enterRoom,get modal(){return modal},pick:i=>{const o=modal.opts[i];modal=null;o.fn();},possessTarget};
+window.__T={swapSpirit:i=>swapSpirit(i),setMode:m=>{acct.mode=m;},step:(dt)=>{update(dt);},get S(){return S},newRun,doPossess,swapInto,useActive,useUlt,enterRoom,get modal(){return modal},pick:i=>{const o=modal.opts[i];modal=null;o.fn();},possessTarget};
 </script>
 </body>
 </html>
