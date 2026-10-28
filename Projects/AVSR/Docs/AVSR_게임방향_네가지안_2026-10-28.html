@@ -40,7 +40,7 @@ svg{max-width:100%;height:auto;display:block;margin:8px auto;background:#101018;
 ul{margin:6px 0;padding-left:20px}
 li{margin:3px 0}
 .rec{color:var(--gold);font-weight:700}
-@media print{.tabs{display:none}.pane{display:block!important;break-before:page}#common{break-before:auto}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}table,svg,.card{break-inside:avoid}}
+@media print{.tabs{display:none}.pane{display:block!important;break-before:page}#pd{break-before:auto}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}table,svg,.card{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -52,7 +52,8 @@ li{margin:3px 0}
 <p>안마다 같은 순서로 적었다: <b>한 줄 · 한 장면 그림 → ① 스테이지 구성 → ② 클리어 재미 → ③ 육성 상세 → 만들 것 · 위험</b>. 맨 위 탭으로 안을 바꿔 본다. 「공통 바탕」은 네 안이 모두 깔고 가는 것이다.</p>
 
 <div class="tabs">
-<button data-t="common" class="on">공통 바탕</button>
+<button data-t="pd" class="on">정리안 ★ (PD 10-28)</button>
+<button data-t="common">공통 바탕</button>
 <button data-t="d1">1 잔혼 파티 ★</button>
 <button data-t="party">1-1 파티 조작 세 모델</button>
 <button data-t="d2">2 영혼 합주</button>
@@ -62,7 +63,106 @@ li{margin:3px 0}
 </div>
 
 <!-- ═════════════ 공통 ═════════════ -->
-<section class="pane on" id="common">
+<!-- ═════════════ 정리안 ═════════════ -->
+<section class="pane on" id="pd">
+<h2>정리안 — PD 2026-10-28 · 한 장으로 보는 시스템</h2>
+<div class="quote">PD 「간단해 보여야 하고 버튼도 딱 봐서 어떤 건지 보여야 · 보조 혼령은 쿨마다 스킬을 쓰고 서브일 땐 능력치 30% · 필살기 · 패시브는 메인 것만 · 서브 혼령은 액티브 자동 + 기본 공격 · 조합 3개가 족보식으로 능력치 · 파티를 메인으로 · 레벨업도 보조 혼령 1 스킬 +1 · UI 도 실제 적용할 레이아웃, 버튼은 글자로 · 액티브 스킬 개념도 없애도 돼」</div>
+<p><b>시험판</b>: 드라이브 기획문서 폴더 <b>AVSR_잔혼파티_시험판_2026-10-28.html</b> — 로비 기본이 「정리안」. (예전 모델 A · B 는 로비 아래 작은 칸에서 고를 수 있게 남겨 둠)</p>
+
+<h3>1. 한 판에 하는 일 — 세 줄</h3>
+<ol>
+<li><b>빙의로 파티를 모은다</b> — 적 호스트를 경직(체력 35% 몰아치기)시켜 「빙의」 → <b>들어가기</b>(그 몸이 메인, 지금 메인은 혼령으로) 또는 <b>붙들기</b>(그 몸이 혼령으로).</li>
+<li><b>파티 셋(메인 + 혼령 둘)으로 싸운다</b> — 메인은 내가 움직이고 멈추면 쏜다. 혼령은 알아서 스킬 · 평타.</li>
+<li><b>족보를 맞춘다</b> — 셋의 조합이 족보가 되어 능력치가 붙는다. 레벨업 카드로 혼령 스킬을 올린다.</li>
+</ol>
+
+<h3>2. 누가 무엇을 하나</h3>
+<table>
+<tr><th></th><th>메인(직접 조작)</th><th>혼령 1 · 2(자동)</th></tr>
+<tr><td>움직임</td><td>내가 끌어서 이동 · <b>멈추면 자동 공격</b>(궁수의 전설 규칙)</td><td>메인 곁에 떠서 따라다님</td></tr>
+<tr><td>평타</td><td>그 몸 평타 100%</td><td>그 몸 평타 <b>30%</b></td></tr>
+<tr><td>스킬</td><td><b>없음</b>(스킬 버튼 없음)</td><td>그 몸 스킬을 <b>쿨마다 혼자</b> 쓴다(위력 30% 기준 × 스킬 Lv)</td></tr>
+<tr><td>패시브</td><td><b>메인 것만</b> 켜진다</td><td>없음</td></tr>
+<tr><td>필살기</td><td><b>메인 것만</b> · 버튼 하나 · 빙의 · 교체로 찬다</td><td>없음</td></tr>
+<tr><td>체력</td><td><b>메인만</b> 맞는다</td><td>맞지 않는다</td></tr>
+<tr><td>대가</td><td>쓰러지면 유령 에너지 −20 → 혼령 하나를 골라 그 몸으로</td><td>하나마다 유령 에너지 최대 −15(원작 「에너지는 한정」)</td></tr>
+</table>
+<p>호스트 하나가 <b>메인일 때 = 평타 · 패시브 · 필살기</b>, <b>혼령일 때 = 스킬 · 약한 평타</b> — 같은 호스트가 자리에 따라 두 얼굴을 가진다. 그래서 「이 몸은 메인으로 쓸까, 혼령으로 붙들까」가 판단이 된다.</p>
+
+<h3>3. 족보 — 파티 셋의 조합(가장 높은 것 하나만)</h3>
+<table>
+<tr><th>순위</th><th>족보</th><th>조건</th><th>능력치</th></tr>
+<tr><td>1</td><td>조직 셋</td><td>같은 조직 3명</td><td>모든 피해 +30% · 혼령 능력치 30% → 45%</td></tr>
+<tr><td>2</td><td>갈래 트리플</td><td>같은 갈래(스킬 성격) 3명</td><td>모든 피해 +25% · 혼령 스킬 쿨 −25%</td></tr>
+<tr><td>3</td><td>삼색</td><td>파워 · 무기 · 마법 하나씩</td><td>모든 피해 +15% · 받는 피해 −15%</td></tr>
+<tr><td>4</td><td>단색</td><td>같은 속성 3명</td><td>모든 피해 +20%</td></tr>
+<tr><td>5</td><td>원 페어</td><td>조직 · 갈래 · 속성 중 하나가 2명</td><td>모든 피해 +8%</td></tr>
+</table>
+<table>
+<tr><th>조직(시험판 14명)</th><th>호스트</th></tr>
+<tr><td>갱단</td><td>갱스터 · 폭력배</td></tr>
+<tr><td>코만도 부대</td><td>코만도(기관총) · 코만도(수류탄) · 로봇</td></tr>
+<tr><td>무도가</td><td>아마존 · 닌자(사슬) · 슬러거</td></tr>
+<tr><td>괴물</td><td>샐러맨더 · 드라군 · 청룡</td></tr>
+<tr><td>마도</td><td>구루 · 영매 · 설녀</td></tr>
+</table>
+<p class="sub">23명 전부로 넓히면 조직마다 4~5명. 족보 이름 · 수치는 시험값.</p>
+
+<h3>4. 레벨업 카드 — 파티가 중심</h3>
+<table>
+<tr><th>카드</th><th>효과</th></tr>
+<tr><td>혼령 1 「드라군 · 화염 지대」 Lv 1 → 2</td><td>그 혼령 스킬 위력 +25% · 쿨 −8% (최대 Lv5) — 레벨은 호스트에 붙어서 메인 · 혼령을 바꿔도 남는다</td></tr>
+<tr><td>혼령 2 「…」 Lv +1</td><td>같은 방식</td></tr>
+<tr><td>메인 「…」 필살기 Lv +1</td><td>메인 필살기 위력 +25%</td></tr>
+<tr><td>혼령 능력치 +10%</td><td>혼령 평타 · 스킬 30% → 40%</td></tr>
+<tr><td>공통(공격 강화 · 속사 · 추가 발사 · 몸 회복 · 에너지 회복 …)</td><td>메인에게</td></tr>
+</table>
+<p class="sub">카드 3장 중 파티 카드가 1~2장(금빛)으로 나온다.</p>
+
+<h3>5. 화면 배치 — 실제 적용할 레이아웃(세로 720 × 1280 기준)</h3>
+<svg viewBox="0 0 360 640" role="img" aria-label="정리안 화면 배치" style="max-width:360px">
+<g font-size="9">
+<rect x="0" y="0" width="360" height="640" fill="#14141d"/>
+<rect x="8" y="8" width="344" height="10" fill="#5cc8ff"/><rect x="260" y="8" width="92" height="10" fill="#c9a8ff"/><text x="8" y="30" fill="#7fe3ff">유령 에너지 70 / 70 · 보라 칸 = 혼령이 나눠 쓴 몫</text>
+<text x="300" y="30" fill="#f2c14e">Lv 4</text>
+<rect x="8" y="53" width="344" height="19" rx="5" fill="#3a3016" stroke="#f2c14e"/><text x="180" y="66" fill="#ffd56a" text-anchor="middle">족보 「삼색」 · 모든 피해 +15% · 받는 피해 −15%</text>
+<rect x="0" y="75" width="360" height="430" fill="#1b1e2b"/><text x="180" y="290" fill="#556" text-anchor="middle" font-size="12">방(전투)</text>
+<circle cx="180" cy="420" r="11" fill="#f2c14e"/><circle cx="150" cy="398" r="7" fill="#c9a8ff" opacity=".6"/><circle cx="210" cy="398" r="7" fill="#c9a8ff" opacity=".6"/><text x="196" y="424" fill="#ffd56a">메인</text><text x="214" y="392" fill="#c9a8ff">혼령</text>
+<rect x="4" y="509" width="124" height="75" rx="5" fill="#2a2412" stroke="#f2c14e" stroke-width="2"/><text x="10" y="521" fill="#ffd56a">메인 · 직접 조작</text><text x="10" y="536" fill="#fff">영매 · 마법 · 소환</text><text x="10" y="550" fill="#73ff8c">패시브 강령</text><text x="10" y="563" fill="#d9c2ff">필살기 골렘 강령 Lv1</text><rect x="10" y="572" width="112" height="5" fill="#73ff8c"/>
+<rect x="132" y="509" width="110" height="75" rx="5" fill="#1e1e2a" stroke="#f2c14e"/><text x="138" y="521" fill="#c9a8ff">혼령 1 · 자동</text><text x="138" y="536" fill="#fff">구루</text><text x="138" y="550" fill="#9fe7ff">수호 결계 Lv1</text><text x="138" y="563" fill="#889">자동 · 2.4초</text><rect x="138" y="572" width="98" height="4" fill="#9fe7ff"/>
+<rect x="246" y="509" width="110" height="75" rx="5" fill="#1e1e2a" stroke="#c8c8d8"/><text x="252" y="521" fill="#c9a8ff">혼령 2 · 자동</text><text x="252" y="536" fill="#fff">코만도(기관총)</text><text x="252" y="550" fill="#9fe7ff">방벽 전개 Lv1</text><text x="252" y="563" fill="#889">자동 · 준비</text>
+<rect x="4" y="593" width="46" height="44" rx="5" fill="#1a1a24" stroke="#444"/><text x="27" y="619" fill="#ccd" text-anchor="middle">규칙</text>
+<rect x="54" y="593" width="130" height="44" rx="5" fill="#1d4a66" stroke="#5cc8ff" stroke-width="2"/><text x="119" y="611" fill="#bff" text-anchor="middle" font-size="12">빙의</text><text x="119" y="627" fill="#fff" text-anchor="middle" font-size="8">청룡 에게 — 들어가기 · 붙들기</text>
+<rect x="188" y="593" width="168" height="44" rx="5" fill="#4a2a60" stroke="#c9a8ff" stroke-width="2"/><text x="272" y="611" fill="#efe2ff" text-anchor="middle" font-size="12">필살기</text><text x="272" y="627" fill="#fff" text-anchor="middle" font-size="8">골렘 강령 — 지금 쓸 수 있다</text>
+</g>
+</svg>
+<table>
+<tr><th>칸</th><th>무엇이 보이나</th><th>누르면</th></tr>
+<tr><td>위 — 유령 에너지</td><td>남은 에너지 · 혼령이 나눠 쓴 몫(보라)</td><td>—</td></tr>
+<tr><td>위 — 족보 띠</td><td>지금 족보 이름 · 능력치 한 줄(없으면 무엇을 모으면 되는지)</td><td>—</td></tr>
+<tr><td>아래 — 메인 칸(금 테)</td><td>이름 · 속성 · 갈래 · 조직 · 패시브 · 필살기 Lv · 체력</td><td>—</td></tr>
+<tr><td>아래 — 혼령 칸 둘</td><td>이름 · 스킬 이름 · Lv · 「자동 · 남은 초」 · 쿨 막대</td><td>누르기 = 메인과 교체(방마다 2번) · 길게 = 놓아주기</td></tr>
+<tr><td>버튼 — 빙의</td><td>켜지면 「청룡 에게 — 들어가기 · 붙들기」, 꺼지면 「경직된 호스트에 다가가면 켜진다」</td><td>빙의 → 들어가기 / 붙들기 / 놓아주기 창</td></tr>
+<tr><td>버튼 — 필살기</td><td>켜지면 필살기 이름 · 「지금 쓸 수 있다」, 꺼지면 「빙의하거나 혼령과 교체하면 찬다」</td><td>메인 필살기</td></tr>
+</table>
+<p class="sub">버튼은 그림 없이 글자로만 — 아이콘 그림은 방향이 정해진 뒤 발주한다.</p>
+
+<h3>6. 육성(로비) — 이번 정리안에서</h3>
+<ul>
+<li><b>유령</b>(주): 박사의 연구 — 혼령 칸 · 에너지 최대 · 에너지 몫 · 교체 무적.</li>
+<li><b>호스트 기록</b>(부): 빼앗을 때마다 조각 → 성급. 성급은 그 몸 능력치(메인일 때 · 혼령일 때 둘 다) · ★3 동행(판 시작에 혼령 1칸).</li>
+<li>판 안 스킬 Lv(카드)는 그 판에서만. 로비에서 올리는 「기본 스킬 Lv」를 성급에 묶을지는 다음 정리 때.</li>
+</ul>
+
+<h3>7. 시험판에서 확인한 것 · 못 한 것</h3>
+<ul>
+<li>자동 조종으로 정리안 15방을 여러 번 끝까지 — 오류 0, 클리어 2~3분.</li>
+<li>파티에 있는 호스트는 방에 다시 안 나오게 했다(같은 몸 둘 방지).</li>
+<li>휴대폰에서 직접 눌러 보지 않음 · 수치는 시험값.</li>
+</ul>
+</section>
+
+<section class="pane" id="common">
 <h2>공통 바탕 — 네 안이 모두 깔고 가는 것</h2>
 
 <h3>1. 지금 뼈대는 그대로 쓴다 — 챕터 하나 = 방 30개</h3>
