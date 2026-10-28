@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5f1907a4e9b04489afb72659d4809c, type: 3}
   m_Name: StringTable
   m_EditorClassIdentifier: Assembly-CSharp::Game.Module.Common.StringTable
-  _defaultLanguage: 0
+  _defaultLanguage: 1
   _followSystemLanguage: 0
   _fonts:
   - _language: 0
