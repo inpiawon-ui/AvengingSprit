@@ -79,7 +79,13 @@ Assets/BaseResource/InGameMainUI/impact_flame_1.png	Assets/BaseResource/InGameMa
 Assets/BaseResource/InGameMainUI/obj_blade_1.new.png	Assets/BaseResource/InGameMainUI/obj_blade_1.png
 Assets/BaseResource/InGameMainUI/obj_missile_channel_h.png	Assets/BaseResource/InGameMainUI/obj_missile_channel_h_1.png
 Assets/BaseResource/InGameMainUI/obj_missile_channel_v.png	Assets/BaseResource/InGameMainUI/obj_missile_channel_v_1.png
+Assets/BaseResource/InGameMainUI/party_lock.png	Assets/BaseResource/ReBornKit/Components/rb_iy_lock.png
 Assets/BaseResource/InGameMainUI/shot.png	Assets/BaseResource/InGameMainUI/shot_1.png
+Assets/BaseResource/InGameMainUI/syn_icon_commando.png	Assets/BaseResource/ReBornKit/Components/rb_syn_icon_commando.png
+Assets/BaseResource/InGameMainUI/syn_icon_gang.png	Assets/BaseResource/ReBornKit/Components/rb_syn_icon_gang.png
+Assets/BaseResource/InGameMainUI/syn_icon_martial.png	Assets/BaseResource/ReBornKit/Components/rb_syn_icon_martial.png
+Assets/BaseResource/InGameMainUI/syn_icon_monster.png	Assets/BaseResource/ReBornKit/Components/rb_syn_icon_monster.png
+Assets/BaseResource/InGameMainUI/syn_icon_mystic.png	Assets/BaseResource/ReBornKit/Components/rb_syn_icon_mystic.png
 Assets/BaseResource/ParticleFx/ghostmote.png	Assets/BaseResource/SummonReveal/lab_spark.png
 Assets/BaseResource/ReBornKit/Icons/rb_icon_rail_daily_free_144.png	Assets/BaseResource/ReBornKit/Icons/rb_icon_rail_gift_144.png
 Assets/BaseResource/ReBornKit/Icons/rb_icon_rail_daily_free_48.png	Assets/BaseResource/ReBornKit/Icons/rb_icon_rail_gift_48.png

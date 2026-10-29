@@ -384,7 +384,7 @@
 그림	Assets/BundleResource/Cutscene/cut_start_2.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_4.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
 그림	Assets/BundleResource/Cutscene/cut_start_5.png	640x640	아틀라스 밖 · 압축 없음(RGBA32) — 메모리 약 1.6MB, ASTC 6x6 이면 약 0.2MB
-아틀라스	Assets/BundleResource/Atlas/ReBornComponents.spriteatlasv2	최대 2048 · 어림 17.5MB	필터 Point 아님
+아틀라스	Assets/BundleResource/Atlas/ReBornComponents.spriteatlasv2	최대 2048 · 어림 19.9MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/ReBornHud.spriteatlasv2	최대 2048 · 어림 2.1MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/popupfx.spriteatlasv2	최대 2048 · 어림 53.1MB	필터 Point 아님
 아틀라스	Assets/BundleResource/Atlas/unitl_amazon.spriteatlasv2	최대 2048 · 어림 5.9MB	필터 Point 아님
