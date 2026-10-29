@@ -970,7 +970,7 @@ namespace Game.Module.InGame
             // 두 LV 배지는 **같은 값**이다. 몸은 고스트가 들고 온 레벨로 굴러간다 —
             // 호스트마다 레벨을 따로 쌓지 않는 것이 이 게임의 규칙이다.
             int lv = _player != null ? _player.GhostLevel : 1;
-            _ui.SetText("LevelText", _reborn ? "Lv 1" : $"LV. {lv}");
+            _ui.SetText("LevelText", _reborn ? "Lv.1" : $"LV. {lv}");   // 「Lv.1」 표기(PD 2026-10-30)
             _ui.SetText("HostLevelText", $"LV. {lv}");
             if (_reborn && _expBarWidth > 0f) _ui.SetFill("RunExpFill", 0f, _expBarWidth);
         }
@@ -1127,8 +1127,10 @@ namespace Game.Module.InGame
         /// 증원 예고. 방을 다 비웠다고 생각한 순간 여섯 기가 소리 없이 나타나면
         /// 기획이 아니라 버그로 읽힌다 — 나오기 전에 한 줄이라도 알린다.
         /// </summary>
+        // 「출구가 열렸다 — 통과해서 다음 스테이지로」는 더 띄우지 않는다(PD 2026-10-30 「이제 안 뜨게」) —
+        //   열린 문 그림 · 다음 방 안내(RbNextRoom)가 같은 일을 한다. 앞 방 글자가 남지 않게 비워만 둔다
         private void OnExitOpened(ExitOpenedEvent e)
-            => _ui.SetText("StageText", Localize.Get("ui.ingame.exit_opened"));
+            => _ui.SetText("StageText", string.Empty);
 
         /// <summary>
         /// 레벨 표기만 남긴다.
@@ -1146,7 +1148,7 @@ namespace Game.Module.InGame
         {
             // RE:BORN 판은 시안대로 「Lv 3 ━━━」 — 판 레벨(레벨업 카드가 나오는 레벨)과 다음 레벨까지의 경험치
             if (!_reborn) return;
-            _ui.SetText("LevelText", $"Lv {e.Level}");
+            _ui.SetText("LevelText", $"Lv.{e.Level}");
             if (_expBarWidth > 0f) _ui.SetFill("RunExpFill", e.ExpToNext > 0 ? (float)e.Exp / e.ExpToNext : 1f, _expBarWidth);
         }
 

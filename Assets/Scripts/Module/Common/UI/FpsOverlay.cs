@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Game.Module.Common.UI
 {
     /// <summary>
-    /// 화면 왼쪽 위에 FPS · 최저 FPS · 메모리를 늘 띄운다 — 폰에서 빌드마다 최적화 효과를 숫자로 비교하려는 시험용 표시(PD 2026-10-30).
+    /// 화면 맨 아래 가운데에 FPS · 최저 FPS · 메모리를 늘 띄운다 — 폰에서 빌드마다 최적화 효과를 숫자로 비교하려는 시험용 표시(PD 2026-10-30).
     ///
     /// 0.5초마다 한 번만 글자를 바꾼다(매 프레임 바꾸면 그것 자체가 부하다). `SetText` 의 숫자 자리 채우기는 문자열을 새로 만들지 않는다.
     /// 메모리는 「System Used Memory」 — 개발 빌드가 아니어도 값이 나오는 카운터다.
@@ -47,12 +47,13 @@ namespace Game.Module.Common.UI
             scaler.matchWidthOrHeight = 0f;
             // 터치를 막지 않는다 — GraphicRaycaster 를 붙이지 않고 글자도 raycastTarget 을 끈다
 
+            // 화면 맨 아래 가운데 — 왼쪽 위에 두었더니 판 레벨 칸 · 메인 얼굴을 덮었다(PD 2026-10-30 캡처)
             var bg = new GameObject("FpsBack", typeof(RectTransform), typeof(Image));
             bg.transform.SetParent(transform, false);
             var bgRect = (RectTransform)bg.transform;
-            bgRect.anchorMin = bgRect.anchorMax = bgRect.pivot = new Vector2(0f, 1f);
-            bgRect.anchoredPosition = new Vector2(4f, -4f);
-            bgRect.sizeDelta = new Vector2(250f, 26f);
+            bgRect.anchorMin = bgRect.anchorMax = bgRect.pivot = new Vector2(0.5f, 0f);
+            bgRect.anchoredPosition = new Vector2(0f, 2f);
+            bgRect.sizeDelta = new Vector2(230f, 22f);
             var img = bg.GetComponent<Image>();
             img.color = new Color(0f, 0f, 0f, 0.55f);
             img.raycastTarget = false;
@@ -65,8 +66,8 @@ namespace Game.Module.Common.UI
             r.offsetMin = new Vector2(6f, 0f);
             r.offsetMax = new Vector2(-4f, 0f);
             _text = label.AddComponent<TextMeshProUGUI>();
-            _text.fontSize = 18f;
-            _text.alignment = TextAlignmentOptions.MidlineLeft;
+            _text.fontSize = 15f;
+            _text.alignment = TextAlignmentOptions.Center;
             _text.raycastTarget = false;
             _text.color = Color.white;
             _text.textWrappingMode = TextWrappingModes.NoWrap;
