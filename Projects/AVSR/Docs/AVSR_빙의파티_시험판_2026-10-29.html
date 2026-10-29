@@ -128,7 +128,7 @@ function newRun(){
   ents:[],shots:[],eshots:[],zones:[],allies:[],fx:[],obst:[],later:[],door:null,cleared:false,
   joy:null,keys:{},stopT:0,atkT:0,invuln:0,shield:0,shieldT:0,guardT:0,reflectT:0,
   E:null,used:{},spent:[],log:[]};
- toastList=[];enterStage(0);scene='play';
+ S.E=synOf([]);toastList=[];enterStage(0);scene='play';
 }
 function spend(n,why){S.ghostHP-=n;S.spent.push({n,why,st:S.stage+1});fxText((S.main||S.ghost).x,(S.main||S.ghost).y-80,'유령 HP −'+n,'#7fe3ff');}
 function gain(n,why){S.ghostHP=Math.min(100,S.ghostHP+n);S.spent.push({n:-n,why,st:S.stage+1});toast('유령 HP +'+n+' · '+why,'#7fe3ff');}
@@ -173,7 +173,6 @@ function synDiff(before,after){const b=new Set(synOf(before).list.map(s=>s.n)),a
 // ─────────────────────────────────────────
 function enterStage(i){
  // 두고 온 약해진 호스트 = 놔두기
- const left=S.ents.filter(e=>!e.dead&&e.ty==='host'&&e.weak).length;if(left&&i>0)toast('약해진 호스트 '+left+'명을 두고 왔다(놔두기)','#889');
  S.stage=i;const R=STAGES[i],rng=seeded(i*977+13);
  S.ents=[];S.shots=[];S.eshots=[];S.zones=[];S.allies=[];S.fx=[];S.door=null;S.cleared=false;S.obst=[];
  if(R.t==='battle'||R.t==='elite'){const n=2+(i%3);for(let j=0;j<n;j++){const w=70+rng()*60,h=50+rng()*20,lf=j%2===0;
@@ -181,7 +180,7 @@ function enterStage(i){
  const p=S.main||S.ghost;p.x=W/2;p.y=BOT-80;S.subs.forEach((m,j)=>{m.x=W/2+(j?-60:60);m.y=BOT-40;});
  const lvl=1+i*0.15;
  if(R.t==='start'){const pool=HOSTKEYS.slice().sort(()=>Math.random()-0.5).slice(0,3);pool.forEach((k,j)=>addHost(k,180+j*180,TOP+330,0.6,{cand:true}));
-  toast('유령은 공격하지 못한다 — 후보 하나를 터치해 메인으로 빙의','#5cc8ff');}
+  toast('유령은 공격하지 못한다 — 후보 하나를 터치하면 바로 메인으로 빙의','#5cc8ff');}
  if(R.en)for(const ty in R.en)for(let j=0;j<R.en[ty]+Math.floor(i/4);j++)addEnemy(ty,80+rng()*(W-160),TOP+60+rng()*360,lvl,rng);
  if(R.slots)for(let j=0;j<R.slots;j++){const k=pickHost();if(k)addHost(k,120+rng()*(W-240),TOP+140+rng()*240,lvl);}
  if(R.t==='elite'){S.ents.push({ty:'elite',x:W/2,y:TOP+200,r:46,hp:2400,max:2400,spd:50,dmg:22,at:'force',t:2,st:3,slow:0});toast('중간 보스 「결사 간부」 — 빙의할 수 없다','#ff9a3c');}
@@ -199,7 +198,7 @@ function addHost(k,x,y,lvl,o){o=o||{};const h=HOSTS[k];S.ents.push({ty:'host',k,
 function passiveMul(k){return S.main&&S.main.k===k?1:0;} // 패시브는 메인만
 function ghostAtk(){return 1+acct.g.atk*0.04+S.ghostAtkRun;}
 function hurtEnemy(e,dmg,o){
- o=o||{};if(e.dead||e.cand||e.weak)return;
+ o=o||{};if(e.dead||e.cand)return;
  const party=o.src==='party',syn=party?0.5:1,E=S.E||synOf(partyKeys());
  if(e.ty==='shield'&&o.shot&&!o.aoe&&!(o.src==='me'&&passiveMul('commando_grenade'))){const a=Math.atan2(o.from.y-e.y,o.from.x-e.x);const d=Math.abs(((a-e.face)+Math.PI*3)%(Math.PI*2)-Math.PI);if(d<1.0){fxText(e.x,e.y-30,'막힘','#aaa');return;}}
  let m=ghostAtk();
@@ -222,12 +221,12 @@ function hurtEnemy(e,dmg,o){
  if(S.main)S.main.ult=Math.min(1,S.main.ult+dmg/(S.main.atk*120)*(1+0.4*mc(S.main.k).ult));
  e.hp-=dmg;e.hitT=0.1;if(o.src==='me')S.lastHitT=S.t;
  fxText(e.x+rnd(-10,10),e.y-20,Math.round(dmg)+'',crit?'#ffd24d':party?'#cfe8ff':'#fff');
- // 호스트는 체력 35% 아래로 떨어지면 약해진다 — 터치하면 빙의
- if(e.ty==='host'&&e.hp<=e.max*0.35){e.hp=e.max*0.35;e.weak=true;S.xp+=12;fxText(e.x,e.y-50,'약해짐 — 터치해서 빙의','#5cc8ff');checkLv();return;}
+ // 호스트는 체력 35% 아래면 「빙의 가능」 표시만 — 계속 싸우고, 죽기 전에 터치해야 데려온다
+ if(e.ty==='host'&&!e.weak&&e.hp>0&&e.hp<=e.max*0.35){e.weak=true;if(possessOK())fxText(e.x,e.y-50,'빙의 가능 — 죽기 전에 터치','#5cc8ff');}
  if(e.hp<=0)killEnemy(e);
 }
 function killEnemy(e){
- if(e.dead)return;e.dead=true;S.kills++;S.xp+=e.ty==='boss'?0:e.ty==='elite'?60:e.ty==='brute'?16:8;
+ if(e.dead)return;e.dead=true;S.kills++;S.xp+=e.ty==='boss'?0:e.ty==='elite'?60:(e.ty==='brute'||e.ty==='host')?16:8;
  S.fx.push({ty:'ring',x:e.x,y:e.y,r:e.r+20,c:'#fff',life:0.3});
  if(passiveMul('medium')&&Math.random()<0.3)S.allies.push({ty:'skel',x:e.x,y:e.y,life:4,t:0});
  if(passiveMul('baseball')&&Math.random()<0.2){for(const x of S.ents)if(!x.dead&&x!==e&&dist(x,e)<150){const a=Math.atan2(x.y-e.y,x.x-e.x);x.x+=Math.cos(a)*80;x.y+=Math.sin(a)*80;hurtEnemy(x,30,{});}}
@@ -237,7 +236,7 @@ function killEnemy(e){
 }
 function checkLv(){while(S.xp>=30*S.lv){S.xp-=30*S.lv;S.lv++;S.pendingLv++;}}
 function aoe(x,y,r,dmg,o){for(const e of S.ents)if(!e.dead&&Math.hypot(e.x-x,e.y-y)<r+e.r)hurtEnemy(e,dmg,Object.assign({aoe:true},o));}
-function nearestEnemy(p,maxD,not){let b=null,bd=maxD||1e9;for(const e of S.ents){if(e.dead||e===not||e.cand||e.weak)continue;const d=dist(e,p);if(d<bd){bd=d;b=e;}}return b;}
+function nearestEnemy(p,maxD,not){let b=null,bd=maxD||1e9;for(const e of S.ents){if(e.dead||e===not||e.cand)continue;const d=dist(e,p);if(d<bd){bd=d;b=e;}}return b;}
 function fxText(x,y,t,c){S.fx.push({ty:'txt',x,y,t,c,life:0.8});}
 function hurtMe(d,from){
  if(!S.main||S.invuln>0)return;const E=S.E;
@@ -269,7 +268,7 @@ function castSkill(k,caster,p,sub){
   case 'commando_grenade':if(tgt){const tx=tgt.x,ty=tgt.y;for(let j=0;j<8;j++){const a=j/8*Math.PI*2,x=tx+Math.cos(a)*120,y=ty+Math.sin(a)*120;later(j*0.06,()=>{aoe(x,y,75,atk*1.4,{at:h.at,src});S.fx.push({ty:'ring',x,y,r:75,c:'#ffb84d',life:0.35});});}}break;
   case 'salamander':for(const e of S.ents)if(!e.dead&&dist(e,caster)<320){e.poison=4*dp;e.slow=Math.max(e.slow,2);hurtEnemy(e,atk*0.6,{aoe:true,at:h.at,src});}S.fx.push({ty:'ring',x:caster.x,y:caster.y,r:320,c:'#73ff8c',life:0.45});break;
   case 'dragoon':if(tgt)S.zones.push({x:tgt.x,y:tgt.y,r:115,life:4,dps:atk*1.1,c:'rgba(255,120,40,.35)',burn:true,src});break;
-  case 'dragon_blue':for(let j=0;j<8;j++)later(j*0.25,()=>{const live=S.ents.filter(e=>!e.dead&&!e.cand&&!e.weak);if(!live.length)return;const e=live[Math.floor(Math.random()*live.length)];hurtEnemy(e,atk*1.5,{aoe:true,at:h.at,src});S.fx.push({ty:'bolt',x:e.x,y:TOP,x2:e.x,y2:e.y,life:0.2});});break;
+  case 'dragon_blue':for(let j=0;j<8;j++)later(j*0.25,()=>{const live=S.ents.filter(e=>!e.dead&&!e.cand);if(!live.length)return;const e=live[Math.floor(Math.random()*live.length)];hurtEnemy(e,atk*1.5,{aoe:true,at:h.at,src});S.fx.push({ty:'bolt',x:e.x,y:TOP,x2:e.x,y2:e.y,life:0.2});});break;
   case 'guru':S.guardT=3*dp;break;
   case 'medium':for(let j=0;j<(sub?1:2);j++)S.allies.push({ty:'skel',x:caster.x+rnd(-40,40),y:caster.y-30,life:8,t:0,dmg:18*dp*(sub?0.5:1)});break;
   case 'ninja_chain':for(const e of S.ents)if(!e.dead&&e.ty!=='boss'){e.root=3;S.fx.push({ty:'beam',x:caster.x,y:caster.y,x2:e.x,y2:e.y,life:0.3,c:'#b98cff'});}break;
@@ -292,7 +291,7 @@ function useUlt(){
  if(!S.main||S.main.ult<1)return;const k=S.main.k,h=HOSTS[k],p=skillMul(k);S.main.ult=0;
  S.flash=0.35;S.cut={n:h.ult,k,life:1.1};
  castSkill(k,S.main,2.5*p,false);aoe(S.main.x,S.main.y,240,h.atk*3*p,{at:h.at,src:'me'});S.fx.push({ty:'ring',x:S.main.x,y:S.main.y,r:240,c:'#ffd56a',life:0.6});
- if(k==='gangster'){let b=null;for(const e of S.ents)if(!e.dead&&!e.cand&&!e.weak&&(!b||e.hp>b.hp))b=e;if(b)hurtEnemy(b,h.atk*10*p,{at:h.at,src:'me'});}
+ if(k==='gangster'){let b=null;for(const e of S.ents)if(!e.dead&&!e.cand&&(!b||e.hp>b.hp))b=e;if(b)hurtEnemy(b,h.atk*10*p,{at:h.at,src:'me'});}
 }
 
 // ─────────────────────────────────────────
@@ -300,12 +299,17 @@ function useUlt(){
 // ─────────────────────────────────────────
 function tapHost(e){
  if(!e||e.dead||e.ty!=='host')return;
- if(e.cand&&!S.main){openChoice(e);return;}
+ if(e.cand&&!S.main){const cost=S.revive==='A'?COST.deathA:COST.first;spend(cost,S.revive==='A'?'사망 후 새 빙의':'첫 빙의');becomeMain(e);return;}
  if(e.cand){toast('남은 후보는 적이 됐다 — 약하게 만든 뒤 터치','#889');return;}
- if(e.weak&&S.main){openChoice(e);return;}
+ if(e.weak&&S.main){if(possessOK())openChoice(e);return;}
  if(!S.main)return;
- toast('먼저 약하게 만든다(체력 35% 아래)','#889');
+ toast('체력을 35% 아래로 깎으면 빙의할 수 있다','#889');
 }
+// 빙의 선택지 중 하나라도 고를 수 있는가 — 없으면 표시도 선택창도 띄우지 않는다
+function possessOK(){if(!S||!S.main)return false;const hp=S.ghostHP;
+ if(S.mainSwaps<MAINSWAP_MAX&&hp>COST.mainSwap)return true;
+ if(S.subs.length<S.subCap)return hp>COST.sub;
+ return S.subSwaps<SUBSWAP_MAX&&hp>COST.subSwap;}
 function hostLine(k){const h=HOSTS[k];return ATTR[h.at]+' · '+h.org+' · 스킬 Lv'+hostLv(k);}
 function openChoice(e){
  const k=e.k,h=HOSTS[k],ks=partyKeys(),opts=[];
@@ -313,27 +317,27 @@ function openChoice(e){
   opts.push({t:'메인으로 빙의 · 유령 HP −'+cost,sub:'직접 조작 · 스킬 「'+h.act[0]+'」 · 필살기 「'+h.ult+'」 · 패시브 「'+h.pas[0]+'」 · '+synDiff(ks,[k,...ks]),gold:true,disabled:S.ghostHP<=cost,fn:()=>{spend(cost,S.revive==='A'?'사망 후 새 빙의':'첫 빙의');becomeMain(e);}});
   opts.push({t:'놔두기',sub:'다른 후보를 본다',fn:()=>{}});
  }else{
-  const left=MAINSWAP_MAX-S.mainSwaps,oldK=S.main.k;
-  const afterMain=[k,oldK,...S.subs.map(s=>s.k)].slice(0,3);
-  opts.push({t:'메인으로 · 유령 HP −'+COST.mainSwap+'  (이번 챕터 남은 '+left+'회)',sub:'지금 메인 '+HOSTS[oldK].n+' 은(는) 보조로 · '+(fix('f2')?'메인 카드는 그 호스트에 남는다(메인일 때만)':'메인 카드는 그 호스트에 묶여 쉰다')+' · '+synDiff(ks,afterMain),disabled:left<=0||S.ghostHP<=COST.mainSwap,fn:()=>{spend(COST.mainSwap,'메인 교체');S.mainSwaps++;const old=S.main;becomeMain(e);placeSub(mkSub(old.k,old.x,old.y));}});
-  if(S.subs.length<S.subCap)opts.push({t:'보조로 흡수 · 유령 HP −'+COST.sub,sub:'자동 스킬 「'+subSkillName(k)+'」 6초마다 30% · '+synDiff(ks,[...ks,k]),gold:true,disabled:S.ghostHP<=COST.sub,fn:()=>{spend(COST.sub,'보조 흡수');e.dead=true;placeSub(mkSub(k,e.x,e.y));S.used[k]=(S.used[k]||0)+1;}});
-  else{const sl=SUBSWAP_MAX-S.subSwaps;opts.push({t:'보조 교체 · 유령 HP −'+COST.subSwap+'  (이번 챕터 남은 '+sl+'회)',sub:'보조 칸이 가득 — 내보낼 초상화를 고른다'+(fix('f1')?' · 내보내면 +5 돌려받음':''),disabled:sl<=0||S.ghostHP<=COST.subSwap,fn:()=>{spend(COST.subSwap,'보조 교체');S.subSwaps++;e.dead=true;S.used[k]=(S.used[k]||0)+1;openExpel(mkSub(k,e.x,e.y));}});}
-  opts.push({t:'놔두기',sub:'그대로 둔다 — 다음 스테이지로 가면 사라진다',fn:()=>{}});
+  // 고른 자리와 바로 바꾼다 — 원래 있던 호스트는 놓아준다(내보내기를 따로 고르지 않는다)
+  const left=MAINSWAP_MAX-S.mainSwaps,sl=SUBSWAP_MAX-S.subSwaps,oldK=S.main.k,subKs=S.subs.map(s=>s.k);
+  const refund=fix('f1')?' · '+'놓아주면 +5':'';
+  opts.push({t:'메인과 바꾸기 · 유령 HP −'+COST.mainSwap+'  (이번 챕터 남은 '+left+'회)',sub:'메인 '+HOSTS[oldK].n+' 대신 '+h.n+' 이(가) 메인 · '+HOSTS[oldK].n+' 은(는) 사라진다'+refund+' · '+synDiff(ks,[k,...subKs]),disabled:left<=0||S.ghostHP<=COST.mainSwap,
+   fn:()=>{spend(COST.mainSwap,'메인 교체');S.mainSwaps++;const old=S.main;becomeMain(e);expelFx(old);}});
+  for(let i=0;i<S.subCap;i++){const cur=S.subs[i];
+   if(cur){const after=[oldK,...subKs.map((x,j)=>j===i?k:x)];
+    opts.push({t:'보조 '+(i+1)+(i===0?' 과':' 와')+' 바꾸기 · 유령 HP −'+COST.subSwap+'  (이번 챕터 남은 '+sl+'회)',sub:HOSTS[cur.k].n+' 대신 '+h.n+' · 자동 스킬 「'+subSkillName(k)+'」 · '+HOSTS[cur.k].n+' 은(는) 사라진다'+refund+' · '+synDiff(ks,after),disabled:sl<=0||S.ghostHP<=COST.subSwap,
+     fn:()=>{spend(COST.subSwap,'보조 '+(i+1)+' 교체');S.subSwaps++;e.dead=true;S.used[k]=(S.used[k]||0)+1;S.subs[i]=mkSub(k,e.x,e.y);expelFx(cur);}});}
+   else{opts.push({t:'보조 '+(i+1)+' 에 넣기 · 유령 HP −'+COST.sub,sub:'자동 스킬 「'+subSkillName(k)+'」 6초마다 30% · '+synDiff(ks,[...ks,k]),gold:true,disabled:S.ghostHP<=COST.sub,
+     fn:()=>{spend(COST.sub,'보조 흡수');e.dead=true;S.used[k]=(S.used[k]||0)+1;S.subs.push(mkSub(k,e.x,e.y));}});break;}}
+  opts.push({t:'놔두기',sub:'그대로 둔다 — 계속 싸우다 죽는다',fn:()=>{}});
  }
  modal={title:h.n+' — 어떻게 할까?',lines:[hostLine(k)+' · 보조 스킬 「'+subSkillName(k)+'」: '+subSkillDesc(k)],opts};
 }
 function becomeMain(e){const k=e.k;e.dead=true;S.main=mkBody(k,e.x,e.y);S.main.ult=1;S.invuln=1.2;S.revive=null;S.used[k]=(S.used[k]||0)+1;
  S.fx.push({ty:'beam',x:S.ghost.x,y:S.ghost.y,x2:e.x,y2:e.y,life:0.35});toast(HOSTS[k].n+' 에 빙의 — 메인','#5cc8ff');
- // 시작 스테이지: 남은 후보는 적이 되고 잡몹이 나온다
- if(STAGES[S.stage].t==='start'&&!S.startDone){S.startDone=true;S.ents.forEach(x=>{if(x.cand)x.cand=false;});for(let j=0;j<6;j++)addEnemy('swarm',rnd(80,W-80),rnd(TOP+60,TOP+200),1);toast('남은 후보는 적이 됐다 — 약하게 만들어 보조로 데려올 수 있다','#ffd56a');}
- S.ents.forEach(x=>{if(x.cand&&S.stage>0)x.cand=false;});}
-function placeSub(m){if(S.subs.length<S.subCap){S.subs.push(m);return;}openExpel(m);}
-function openExpel(nm){
- const all=[...S.subs,nm];
- modal={title:'보조 칸이 가득 — 누구를 내보낼까?',lines:['내보낸 호스트는 쓰러져 사라진다'+(fix('f1')?' · 유령 HP +5 돌려받음(보완 ①)':'')],
-  opts:all.map(m=>({t:'내보내기: '+HOSTS[m.k].n+(m===nm?' (새로 온 호스트)':''),sub:hostLine(m.k)+' · '+synDiff(partyKeys().concat(nm.k).filter((x,i,a)=>a.indexOf(x)===i),[S.main.k,...all.filter(x=>x!==m).map(x=>x.k)]),fn:()=>{S.subs=all.filter(x=>x!==m);expelFx(m);}}))};
-}
-function expelFx(m){S.fx.push({ty:'ring',x:m.x,y:m.y,r:90,c:'#7fe3ff',life:0.5});toast(HOSTS[m.k].n+' 을(를) 내보냈다','#7fe3ff');if(fix('f1'))gain(5,'내보내기 환급(보완 ①)');}
+ // 고르고 나면 남은 후보는 사라진다 — 파티는 스테이지를 지나며 하나씩 모은다
+ S.ents.forEach(x=>{if(x.cand){x.dead=true;S.fx.push({ty:'ring',x:x.x,y:x.y,r:50,c:'#7fe3ff',life:0.4});}});
+ if(STAGES[S.stage].t==='start'&&!S.startDone){S.startDone=true;for(let j=0;j<6;j++)addEnemy('swarm',rnd(80,W-80),rnd(TOP+60,TOP+200),1);toast('보조는 스테이지를 지나며 하나씩 — 호스트를 「빙의 가능」 일 때 터치','#ffd56a');}}
+function expelFx(m){S.fx.push({ty:'ring',x:m.x,y:m.y,r:90,c:'#7fe3ff',life:0.5});toast(HOSTS[m.k].n+' 을(를) 놓아줬다','#7fe3ff');if(fix('f1'))gain(5,'놓아주기 환급(보완 ①)');}
 // 상단 보조 초상화 길게 누르기 → 메인으로 바꾸기
 function openSwapPortrait(i){
  const m=S.subs[i];if(!m||!S.main)return;const left=MAINSWAP_MAX-S.mainSwaps,ks=partyKeys();
@@ -348,7 +352,7 @@ function mainDies(){
  spend(COST.death,'메인 사망');S.deaths=(S.deaths||0)+1;
  if(S.ghostHP<=0){endRun(false);return;}
  const opts=[],hp=S.ghostHP;
- opts.push({t:'A. 근처 호스트에 새로 빙의 · −'+COST.deathA,sub:'떠도는 호스트 둘이 나타난다 · 파티 유지 · 유령으로 떠 있는 동안 초당 −1',disabled:hp<=COST.deathA,fn:()=>{S.revive='A';for(let j=0;j<2;j++){const k=pickHost();if(k)addHost(k,clamp(b.x+(j?-150:150),80,W-80),clamp(b.y-120,TOP+60,BOT-60),0.6,{cand:true});}toast('떠도는 호스트를 터치해 빙의','#5cc8ff');}});
+ opts.push({t:'A. 근처 호스트에 새로 빙의 · −'+COST.deathA,sub:'떠도는 호스트 둘이 나타난다 · 터치하면 바로 빙의 · 파티 유지 · 유령으로 떠 있는 동안 초당 −1',disabled:hp<=COST.deathA,fn:()=>{S.revive='A';for(let j=0;j<2;j++){const k=pickHost();if(k)addHost(k,clamp(b.x+(j?-150:150),80,W-80),clamp(b.y-120,TOP+60,BOT-60),0.6,{cand:true});}toast('떠도는 호스트를 터치해 빙의','#5cc8ff');}});
  S.subs.forEach((m,i)=>opts.push({t:'B. 보조 '+(i+1)+' 「'+HOSTS[m.k].n+'」 을(를) 메인으로 · −'+COST.deathB,sub:'보조 칸 하나가 빈다 · '+synDiff([b.k,...S.subs.map(s=>s.k)],[m.k,...S.subs.filter(s=>s!==m).map(s=>s.k)]),gold:true,disabled:hp<=COST.deathB,fn:()=>{spend(COST.deathB,'보조 승격');S.subs.splice(i,1);S.main=mkBody(m.k,b.x,b.y);S.main.ult=0.5;S.invuln=1.5;}}));
  opts.push({t:'C. 그 자리에서 '+HOSTS[b.k].n+' 부활 · −'+COST.deathC,sub:'파티 그대로 · 체력 가득',disabled:hp<=COST.deathC,fn:()=>{spend(COST.deathC,'제자리 부활');S.main=mkBody(b.k,b.x,b.y);S.main.ult=b.ult;S.invuln=1.5;}});
  if(opts.every(o=>o.disabled)){toast('고를 수 있는 길이 없다','#ff5c4d');endRun(false);return;}
@@ -431,8 +435,7 @@ function update(dt){
  for(const e of S.ents){if(e.dead)continue;
   for(const s of ['mark','root','poison','burn','freeze','slow'])if(e[s]>0)e[s]-=dt;
   if(e.cand){e.y+=Math.sin(S.t*2+e.x)*0.2;continue;}
-  if(e.weak){continue;}
-  if(e.burn>0)e.hp-=8*dt*(1+S.stage*0.1);if(e.poison>0)e.hp-=5*dt*(1+S.stage*0.1);if(e.hp<=0){if(e.ty==='host'){e.hp=e.max*0.35;e.weak=true;}else{killEnemy(e);continue;}}
+  if(e.burn>0)e.hp-=8*dt*(1+S.stage*0.1);if(e.poison>0)e.hp-=5*dt*(1+S.stage*0.1);if(e.hp<=0){killEnemy(e);continue;}if(e.ty==='host'&&!e.weak&&e.hp<=e.max*0.35)e.weak=true;
   const tgt=S.main;const sp=(e.spd||0)*(e.freeze>0?0.45:1)*(e.slow>0?0.6:1)*(e.root>0?0:1);
   e.t-=dt;
   if(e.ty==='host'){if(tgt){const d=dist(e,tgt);if(d>260)steer(e,tgt.x,tgt.y,sp,dt);if(e.t<=0){e.t=1.5;eshoot(e,Math.atan2(tgt.y-e.y,tgt.x-e.x),e.dmg,300);}}}
@@ -446,10 +449,10 @@ function update(dt){
   e.x=clamp(e.x,30,W-30);e.y=clamp(e.y,TOP+20,BOT-20);if(e.ty!=='boss'&&e.ty!=='dasher'&&e.ty!=='swarm')collideObst(e,e.r);
   if(tgt&&dist(e,tgt)<e.r+22&&e.ty!=='turret'){e.ct=(e.ct||0)-dt;if(e.ct<=0){e.ct=0.7;hurtMe(e.dmg*(e.ty==='dasher'&&e.state===2?1.6:1),e);}}
  }
- for(let i=0;i<S.ents.length;i++)for(let j=i+1;j<S.ents.length;j++){const a=S.ents[i],b=S.ents[j];if(a.dead||b.dead)continue;const d=dist(a,b),m=a.r+b.r;if(d<m&&d>0){const p=(m-d)/2,ux=(a.x-b.x)/d,uy=(a.y-b.y)/d;if(!['turret','boss'].includes(a.ty)&&!a.weak&&!a.cand){a.x+=ux*p;a.y+=uy*p;}if(!['turret','boss'].includes(b.ty)&&!b.weak&&!b.cand){b.x-=ux*p;b.y-=uy*p;}}}
+ for(let i=0;i<S.ents.length;i++)for(let j=i+1;j<S.ents.length;j++){const a=S.ents[i],b=S.ents[j];if(a.dead||b.dead)continue;const d=dist(a,b),m=a.r+b.r;if(d<m&&d>0){const p=(m-d)/2,ux=(a.x-b.x)/d,uy=(a.y-b.y)/d;if(!['turret','boss'].includes(a.ty)&&!a.cand){a.x+=ux*p;a.y+=uy*p;}if(!['turret','boss'].includes(b.ty)&&!b.cand){b.x-=ux*p;b.y-=uy*p;}}}
  for(const s of S.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
   if(!s.pierce&&inObst(s.x,s.y)){if(s.grenade)boom(s);s.life=0;continue;}
-  for(const e of S.ents){if(e.dead||e.cand||e.weak||s.hit.has(e))continue;if(Math.hypot(e.x-s.x,e.y-s.y)<e.r+(s.big?20:10)){s.hit.add(e);if(s.grenade){boom(s);s.life=0;break;}
+  for(const e of S.ents){if(e.dead||e.cand||s.hit.has(e))continue;if(Math.hypot(e.x-s.x,e.y-s.y)<e.r+(s.big?20:10)){s.hit.add(e);if(s.grenade){boom(s);s.life=0;break;}
    if(s.knock&&e.ty!=='boss'){const a=Math.atan2(s.vy,s.vx);e.x+=Math.cos(a)*70;e.y+=Math.sin(a)*70;}
    hurtEnemy(e,s.dmg,{shot:true,from:{x:s.x-s.vx*0.02,y:s.y-s.vy*0.02},at:s.at,src:s.src});if(s.pierce>0)s.pierce--;else{s.life=0;break;}}}}
  S.shots=S.shots.filter(s=>s.life>0&&s.y>TOP-20&&s.y<BOT+20&&s.x>-20&&s.x<W+20);
@@ -467,9 +470,9 @@ function update(dt){
  for(const t of toastList)t.life-=dt;toastList=toastList.filter(t=>t.life>0);
  if(S.cut){S.cut.life-=dt;if(S.cut.life<=0)S.cut=null;}
  S.ents=S.ents.filter(e=>!e.dead);
- // 정리 판정 — 약해진 호스트 · 후보는 세지 않는다
- const alive=S.ents.filter(e=>!e.cand&&!e.weak).length;
- if(!S.cleared&&S.main&&alive===0&&(STAGES[S.stage].t!=='start'||S.startDone)){S.cleared=true;toast(S.ents.some(e=>e.weak)?'정리 — 약해진 호스트를 데려가려면 지금 터치 · 위 문으로':'정리 — 위 문으로','#73ff8c');}
+ // 정리 판정 — 후보는 세지 않는다
+ const alive=S.ents.filter(e=>!e.cand).length;
+ if(!S.cleared&&S.main&&alive===0&&(STAGES[S.stage].t!=='start'||S.startDone)){S.cleared=true;toast('정리 — 위 문으로','#73ff8c');}
  if(S.cleared&&S.stage<STAGES.length-1){S.door={x:W/2,y:TOP+30};if(S.main&&Math.abs(me.x-W/2)<70&&me.y<TOP+70&&!(S.pendingLv>0))enterStage(S.stage+1);}
 }
 function updBoss(e,dt,tgt){
@@ -514,10 +517,10 @@ function drawEnts(){
  const me=S.main;
  for(const e of S.ents){
   const s=e.ty==='boss'?190:e.ty==='elite'?140:e.ty==='host'?108:e.r*2.6;
-  const blink=(e.weak||e.cand)?0.82+0.18*Math.sin(S.t*8):1;
+  const canP=e.cand||(e.weak&&possessOK());const blink=canP?0.82+0.18*Math.sin(S.t*8):1;
   if(e.ty==='host'){cx.strokeStyle=ATTRCOL[e.at];cx.lineWidth=3;cx.beginPath();cx.arc(e.x,e.y+s*0.32,s*0.3,0,7);cx.stroke();}
   const key=e.ty==='host'?hostSpr(e.k):e.ty==='boss'?'boss':e.ty==='elite'?'e_elite':'e_'+e.ty;
-  if(!spr(key,e.x,e.y+(e.weak?10:0),s,(e.hitT>0?0.6:1)*blink,me&&me.x<e.x)){cx.fillStyle='#c44';cx.beginPath();cx.arc(e.x,e.y,e.r,0,7);cx.fill();}
+  if(!spr(key,e.x,e.y,s,(e.hitT>0?0.6:1)*blink,me&&me.x<e.x)){cx.fillStyle='#c44';cx.beginPath();cx.arc(e.x,e.y,e.r,0,7);cx.fill();}
   e.hitT=(e.hitT||0)-0.016;
   if(e.ty==='shield'){cx.strokeStyle='#e8e8ff';cx.lineWidth=6;cx.beginPath();cx.arc(e.x,e.y,e.r+10,e.face-0.9,e.face+0.9);cx.stroke();}
   if(e.ty==='dasher'&&e.state===1){cx.strokeStyle='rgba(255,80,80,.6)';cx.lineWidth=10;cx.beginPath();cx.moveTo(e.x,e.y);cx.lineTo(e.x+Math.cos(e.da)*370,e.y+Math.sin(e.da)*370);cx.stroke();}
@@ -528,8 +531,8 @@ function drawEnts(){
   if(e.ty==='host'){
    const need=recipeNeed(e.k);txt((need?'★ ':'')+HOSTS[e.k].n,e.x,e.y-s*0.5-40,18,need?'#ffd56a':'#ffd9a8','center');
    txt(ATTR[e.at]+' · '+HOSTS[e.k].org,e.x,e.y+s*0.5+6,14,ORGCOL[HOSTS[e.k].org],'center');
-   if(e.weak||e.cand){cx.strokeStyle='#5cc8ff';cx.lineWidth=3;cx.setLineDash([6,5]);cx.beginPath();cx.arc(e.x,e.y,s*0.6,0,7);cx.stroke();cx.setLineDash([]);
-    rr(e.x-52,e.y+s*0.5+18,104,28,14,'rgba(92,200,255,'+(0.35+0.3*blink)+')','#5cc8ff',2);txt(e.cand?'👆 후보 — 터치':'👆 빙의',e.x,e.y+s*0.5+32,15,'#fff','center');}
+   if(canP){cx.strokeStyle='#5cc8ff';cx.lineWidth=3;cx.setLineDash([6,5]);cx.beginPath();cx.arc(e.x,e.y,s*0.6,0,7);cx.stroke();cx.setLineDash([]);
+    const lw=e.cand?160:120;rr(e.x-lw/2,e.y+s*0.5+22,lw,28,14,'rgba(92,200,255,'+(0.35+0.3*blink)+')','#5cc8ff',2);txt(e.cand?'👆 터치 — 바로 빙의':'👆 빙의 가능',e.x,e.y+s*0.5+36,15,'#fff','center');}
    }
   else if(e.ty==='elite')txt('결사 간부 · 빙의 불가',e.x,e.y+s*0.5+4,16,'#ff9a3c','center');
   else if(e.ty!=='boss')txt(ETYPE[e.ty].n,e.x,e.y+s*0.5+4,14,'#ffb3a8','center');
@@ -603,13 +606,13 @@ function drawPanel(){
   txt(ATTR[h.at]+' · '+h.org+' · 스킬 Lv'+hostLv(m.k),104,PANEL_Y+54,14,ATTRCOL[h.at]);
   wrap('패시브 「'+h.pas[0]+'」 '+h.pas[1],104,PANEL_Y+78,316,13,'#c8c8d8',2);
   bar(104,PANEL_Y+120,316,10,m.hp/m.max,'#73ff8c');txt(Math.round(m.hp)+' / '+Math.round(m.max),420,PANEL_Y+108,12,'#9c9','right');}
- else txt(S.revive==='A'?'유령 — 떠도는 호스트를 터치해 빙의 (초당 −1)':'유령 — 후보 호스트를 터치해 빙의',220,PANEL_Y+76,16,'#9fe7ff','center');
+ else txt(S.revive==='A'?'유령 — 떠도는 호스트를 터치하면 바로 빙의 (초당 −1)':'유령 — 후보 호스트를 터치하면 바로 빙의',220,PANEL_Y+76,16,'#9fe7ff','center');
  // 보조 칸
  for(let i=0;i<S.subCap;i++){const s=S.subs[i],y=PANEL_Y+150+i*58;rr(10,y,420,52,10,'#1a1a24',s?'#b98cff':'#333',2);
   rr(18,y+14,24,24,12,'#b98cff','#111',2);txt(String(i+1),30,y+26,14,'#111','center');
   if(s){spr(hostSpr(s.k),66,y+26,44);txt(HOSTS[s.k].n+' · 「'+subSkillName(s.k)+'」 Lv'+(1+(S.subLv[s.k]||0)),94,y+16,14,'#e3d4ff');
    const cdv=subCd(s.k);bar(94,y+34,250,7,1-s.cd/cdv,'#b98cff');txt(s.cd>0?'자동 · '+Math.max(0,s.cd).toFixed(1)+'초':'자동 · 발동',420,y+38,12,'#aab','right');}
-  else txt('비어 있음 — 약해진 호스트를 터치해 보조로',94,y+26,13,'#555');}
+  else txt('비어 있음 — 「빙의 가능」 호스트를 터치해 보조로',94,y+26,13,'#555');}
  // ④ 메인 스킬 버튼 — 글자로
  const bx=444,by=PANEL_Y+12;
  if(m){const h=HOSTS[m.k],cd=m.actCd;
@@ -623,10 +626,10 @@ function drawPanel(){
  toastList.forEach((t,i)=>{rr(W/2-300,TOP+96+i*34+(S.main?150:0)*0,600,30,10,'rgba(0,0,0,.6)',null);txt(t.t,W/2,TOP+111+i*34,15,t.c,'center');});
 }
 function openHelp(){modal={title:'규칙 한 장 — 빙의 파티(PD 기획서 v0.1)',lines:[
- '유령은 공격하지 못한다. 후보 호스트를 터치해 메인으로 빙의(−20). 유령 HP 100 이 한 판의 목숨이자 예산이다.',
+ '유령은 공격하지 못한다. 후보 호스트를 터치하면 바로 메인으로 빙의(−20). 유령 HP 100 이 한 판의 목숨이자 예산이다.',
  '메인: 직접 조작 · 스킬(수동) · 필살기 · 패시브 · 체력. 멈추면 자동 평타.',
  '보조 1 · 2: 체력 없음 · 평타 30% · 고유 스킬 6초마다 자동(위력 30%, 묶기 · 둔화는 그대로).',
- '빙의: 호스트 체력을 35% 아래로 → 깜빡이면 터치 → 메인으로(−25) / 보조로(−10 · 가득이면 교체 −15) / 놔두기.',
+ '빙의: 호스트 체력이 35% 아래면 「빙의 가능」 표시 — 계속 싸우다 죽으면 끝. 죽기 전에 터치하면 잠깐 멈추고 메인과 바꾸기(−25) / 보조 1 · 2 와 바꾸기(−15) · 빈 칸에 넣기(−10) / 놔두기. 바뀐 호스트는 사라진다. 유령 HP 나 교체 횟수가 모자라 고를 게 없으면 표시가 안 뜬다.',
  '메인 사망: −30 → 8초 안에 A 새 빙의(−20) · B 보조 승격(−5) · C 제자리 부활(−40).',
  '시너지: 속성 · 조직이 2명 = 약, 3명 = 강, 세 속성이 다 다르면 균형. 메인 100% · 보조 50%. 상단 보조 초상화를 길게 누르면 메인과 자리 바꾸기(−25).',
  '보완: ① 회복 길 '+(fix('f1')?'켬':'끔')+' · ② 카드 둘로 나눔 '+(fix('f2')?'켬':'끔')+' · ③ 합체 8개만(늘 켬) · ④ 보조 전용 스킬 4종(늘 켬) · ⑤ 보조에게도 상성 '+(fix('f5')?'켬':'끔')+'.'],
@@ -657,7 +660,7 @@ function drawLobby(){
  HOSTKEYS.forEach((k,i)=>{const c=i%4,r=Math.floor(i/4),x=34+c*168,y=606+r*70;rr(x,y,158,62,8,'#1e1e2a','#333',1);spr(hostSpr(k),x+28,y+31,50);txt(HOSTS[k].n,x+58,y+18,13,'#fff');txt('스킬 Lv'+hostLv(k)+' · 조각 '+(acct.shard[k]||0),x+58,y+38,11,'#aab');txt(ATTR[HOSTS[k].at]+' · '+HOSTS[k].org,x+58,y+53,10,ORGCOL[HOSTS[k].org]);});
  // 보완 켜고 끄기 — 원안과 비교
  rr(20,904,W-40,250,14,'#181824','#ffd56a55',2);txt('보완 켜고 끄기 (끄면 기획서 원안 그대로)',40,930,18,'#ffd56a');
- [['f1','① 회복 길 — 중간 보스 +15 · 내보내기 +5 · 회복 카드'],['f2','② 카드 둘로 — 파티 카드는 교체해도 남는다'],['f5','⑤ 보조에게도 상성 ±30%']].forEach(([id,n],i)=>{const y=950+i*62;
+ [['f1','① 회복 길 — 중간 보스 +15 · 놓아주기 +5 · 회복 카드'],['f2','② 카드 둘로 — 파티 카드는 교체해도 남는다'],['f5','⑤ 보조에게도 상성 ±30%']].forEach(([id,n],i)=>{const y=950+i*62;
   btn(40,y,W-80,54,'',()=>{acct.fix[id]=!acct.fix[id];saveAcct();},{bg:fix(id)?'#2a3a20':'#1a1a1a',stroke:fix(id)?'#73ff8c':'#444'});txt((fix(id)?'켬  ':'끔  ')+n,60,y+27,16,fix(id)?'#cfe':'#778');});
  txt('③ 합체 8개만 · ④ 보조 전용 스킬 4종은 늘 켜짐 · 판 '+acct.runs+' · 최고 '+acct.best+'스테이지',W/2,1146,13,'#778','center');
  btn(W/2-120,1190,240,44,'계정 처음으로',()=>{acct={gold:0,g:{atk:0,crit:0,def:0},shard:{},runs:0,best:0,fix:acct.fix};saveAcct();},{bg:'#1a1a1a',stroke:'#444',sz:15,c:'#889'});
@@ -689,7 +692,7 @@ cv.addEventListener('pointerdown',ev=>{const p=pt(ev);cv.setPointerCapture(ev.po
  if(modal){if(u)downs[ev.pointerId]={u};return;}
  if(u){downs[ev.pointerId]={u};if(u.hold)u.timer=setTimeout(()=>{u.held=true;u.hold();},550);return;}
  if(scene==='play'&&p.y>TOP&&p.y<PANEL_Y){
-  let best=null,bd=80;for(const e of S.ents){if(e.ty!=='host'||!(e.weak||e.cand))continue;const d=Math.hypot(e.x-p.x,e.y-p.y);if(d<bd){bd=d;best=e;}}
+  let best=null,bd=80;for(const e of S.ents){if(e.ty!=='host'||!(e.cand||(e.weak&&possessOK())))continue;const d=Math.hypot(e.x-p.x,e.y-p.y);if(d<bd){bd=d;best=e;}}
   if(best){tapHost(best);return;}
   if(!S.joy)S.joy={id:ev.pointerId,ox:p.x,oy:p.y,dx:0,dy:0};}
 });
@@ -707,17 +710,17 @@ addEventListener('keyup',ev=>{if(S)S.keys[ev.key.toLowerCase()]=false;});
 function simMove(){const me=S.main||S.ghost;
  if(!S.main){const c=S.ents.find(e=>e.cand);if(c){const d=dist(c,me);return d>40?[(c.x-me.x)/d,(c.y-me.y)/d]:[0,0];}return[0,0];}
  if(S.cleared)return[(W/2-me.x)/60,-1];
- let ax=0,ay=0;for(const s of S.eshots){const d=dist(s,me);if(d<150){ax+=(me.x-s.x)/d;ay+=(me.y-s.y)/d;}}
- for(const e of S.ents){if(e.cand||e.weak)continue;const d=dist(e,me);if(d<e.r+110){ax+=(me.x-e.x)/d*1.5;ay+=(me.y-e.y)/d*1.5;}}
+ let ax=0,ay=0;const idle=S.t-(S.lastHitT||0)>2;if(!S.simInv&&!idle)for(const s of S.eshots){const d=dist(s,me);if(d<150){ax+=(me.x-s.x)/d;ay+=(me.y-s.y)/d;}}
+ const close=['melee','nova'].includes(HOSTS[S.main.k].kind)||S.simInv||idle;for(const e of S.ents){if(e.cand||close)continue;const d=dist(e,me);if(d<e.r+110){ax+=(me.x-e.x)/d*1.5;ay+=(me.y-e.y)/d*1.5;}}
  if(Math.hypot(ax,ay)>0.6)return[ax,ay];
  const t=nearestEnemy(me,2000);if(t&&(dist(t,me)>520||S.t-(S.lastHitT||0)>2)&&dist(t,me)>130)return[(t.x-me.x)/dist(t,me),(t.y-me.y)/dist(t,me)];
  if(me.y<TOP+260)return[0,1];return[0,0];}
 function simPick(){if(!modal)return;const o=modal.opts;let i=o.findIndex(x=>!x.disabled&&x.gold);if(i<0)i=o.findIndex(x=>!x.disabled);if(i<0)i=0;const op=o[i];modal=null;op.fn();}
-function simTap(){const w=S.ents.find(e=>e.ty==='host'&&!e.simSkip&&((e.cand&&!S.main)||(e.weak&&S.main)));if(!w||modal)return;
+function simTap(){const w=S.ents.find(e=>e.ty==='host'&&!e.simSkip&&((e.cand&&!S.main)||(e.weak&&possessOK())));if(!w||modal)return;
  if(S.main&&S.subs.length>=S.subCap){w.simSkip=true;return;} // 칸이 차면 놔두기
  tapHost(w);if(modal)simPick();}
 window.__T={newRun,step:dt=>update(dt),get S(){return S},get modal(){return modal},pick:i=>{const o=modal.opts[i];modal=null;o.fn();},tapHost,useSkill,useUlt,openSwapPortrait,setFix:(id,v)=>{acct.fix[id]=v;},
- run:(sec,o)=>{o=o||{};S.sim=true;const n=Math.round(sec*60);for(let i=0;i<n&&scene==='play';i++){if(o.invuln&&S.main)S.invuln=1;if(modal)simPick();else{simTap();update(1/60);}}return{scene,stage:S.stage+1,hp:Math.round(S.ghostHP),main:S.main&&S.main.k,subs:S.subs.map(s=>s.k),lv:S.lv,res:S.result};}};
+ run:(sec,o)=>{o=o||{};S.sim=true;S.simInv=!!o.invuln;const n=Math.round(sec*60);for(let i=0;i<n&&scene==='play';i++){if(o.invuln&&S.main)S.invuln=1;if(modal)simPick();else{simTap();update(1/60);}}return{scene,stage:S.stage+1,hp:Math.round(S.ghostHP),main:S.main&&S.main.k,subs:S.subs.map(s=>s.k),lv:S.lv,res:S.result};}};
 </script>
 </body>
 </html>
