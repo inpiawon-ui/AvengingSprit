@@ -443,6 +443,8 @@ namespace Game.Module.InGame
 
                 // 고르는 적 — 메인 둘레(반경 + 내 사거리) 안에서 나에게 가장 가까운 것. 반경 밖 적은 쫓지 않는다
                 float leash = PartyRule.LeashMeters * _pxPerMeter;
+                // 갱스터 인연 「청부 표식」 — 표식 붙은 적을 먼저 노린다(가까운 것처럼 친다)
+                bool huntMarks = _inyeonKey == "gangster";
                 Unit target = null;
                 float best = float.MaxValue;
                 for (int k = 0; k < _enemies.Count; k++)
@@ -451,8 +453,11 @@ namespace Game.Module.InGame
                     if (e == null || !e.IsAlive || e.IsDying) continue;
                     if (Vector2.Distance(e.Position, me.Position) > leash + u.AttackRange) continue;
                     float d = Vector2.Distance(e.Position, u.Position);
+                    if (huntMarks && e.IsMarked) d *= 0.1f;
                     if (d < best) { best = d; target = e; }
                 }
+                // 이 아래 사거리 판정은 진짜 거리로 한다 — 위 점수(표식 우대)가 사거리를 늘리면 안 된다
+                if (target != null) best = Vector2.Distance(target.Position, u.Position);
 
                 bool inRange = target != null && best <= u.AttackRange;
                 // 사거리 밖이면 적에게 다가간다(근접도 나가서 친다). 적이 없으면 메인 곁으로 돌아온다
