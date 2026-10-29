@@ -23,24 +23,25 @@ namespace Game.Editor
         // 패시브 키 → (Lv1, 만렙) %. 전투 코드의 어느 상수를 대신하는지는 `BattleDirector.HostPassives.cs`.
         private static readonly Dictionary<string, (float min, float max)> Passive = new()
         {
-            { "psv_amazon",           (40f, 60f) },   // 쉴드 질주 — 이동속도
-            { "psv_counter",          (15f, 25f) },   // 역전의 자세 — 공격력
-            { "psv_slugger",          (20f, 35f) },   // 장외 타구 — 날려 보낼 확률
-            { "psv_ninja_chain",      (10f, 18f) },   // 흘리기 — 회피
-            { "psv_dragoon",          (10f, 18f) },   // 불씨 — 화상 확률
-            { "psv_salamander",       (10f, 18f) },   // 독니 — 중독 확률
+            // PD 2026-10-29 패시브 다시 잡기 — 질주(아마존) · 청부 계약(갱스터)은 오르는 수치가 없다
+            { "psv_counter",          (30f, 45f) },   // 불굴 — 회복량(최대 체력 %)
+            { "psv_slugger",          (30f, 45f) },   // 반사 신경 — 반사 확률
+            { "psv_ninja_chain",      (25f, 40f) },   // 사슬 감기 — 추가 피해
+            { "psv_dragoon",          (30f, 45f) },   // 용의 피 — 공격력
+            { "psv_salamander",       (20f, 35f) },   // 독니 — 추가 피해
             { "psv_dragon_blue",      (10f, 18f) },   // 낙뢰 — 번개 확률
             { "psv_commando_grenade", (50f, 75f) },   // 파편탄 — 방어 무시
-            { "psv_snowwoman",        (30f, 45f) },   // 서릿발 — 빙결 확률
-            { "psv_hopper_smg",       (10f, 18f) },   // 충격 반동 — 밀쳐내기 확률
+            { "psv_snowwoman",        (30f, 45f) },   // 서릿발 — 추가 피해
+            { "psv_hopper_smg",       (60f, 80f) },   // 치고 빠지기 — 이동 사격 위력
             { "psv_commando_mg",      (20f, 35f) },   // 중장갑 — 방어력 증가
-            { "psv_thug",             (10f, 20f) },   // 삥 — 골드 증가
-            { "psv_ninja",            (30f, 45f) },   // 질주 — 이동속도
-            { "psv_leech",            (8f, 14f) },    // 흡혈 — 발동 확률
-            { "psv_gangster",         (20f, 30f) },   // 처형 계약 — 즉사 확률
+            { "psv_thug",             (20f, 35f) },   // 난전 — 공격 속도
+            { "psv_ninja",            (20f, 30f) },   // 몸놀림 — 회피
+            { "psv_leech",            (5f, 8f) },   // 피의 갈증 — 흡혈량
             { "psv_momentum",         (30f, 50f) },   // 급소 — 치명타 피해
-            { "psv_medium",           (30f, 45f) },   // 강령 — 해골 확률
-            { "psv_spare_circuit",    (2f, 4f) },     // 예비 회로 — 발동 확률
+            { "psv_commando_missile", (10f, 15f) },   // 표적 고정 — 겹마다 피해
+            { "psv_medium",           (30f, 45f) },   // 강령술 — 해골 확률
+            { "psv_white_wizard",     (15f, 25f) },   // 빛의 가호 — 쉴드량
+            { "psv_spare_circuit",    (20f, 30f) },   // 예비 회로 — 받는 피해 감소
         };
 
         // 액티브 키 → (단위, 배수). 배수는 표 값이 화면 숫자가 되는 곱이다(전투 코드가 곱하는 상수 그대로).
@@ -48,22 +49,24 @@ namespace Game.Editor
         {
             { "psg_h01", (SkillGrowthUnit.Multiplier, 6f) },    // 도약 강타 — 피해(공격력 ×). AmazonStrikeMul 6 을 곱한다
             { "psg_h03", (SkillGrowthUnit.Multiplier, 1f) },    // 융단 폭격 — 수류탄 한 발 피해
-            { "psg_h04", (SkillGrowthUnit.Seconds, 1f) },       // 연쇄 방전 — 지속
-            { "psg_h05", (SkillGrowthUnit.Percent, 100f) },     // 방벽 전개 — 쉴드(최대 체력 %)
+            { "psg_h04", (SkillGrowthUnit.Multiplier, 3.5f / 3f) },   // 충전 레이저 — 피해 ×3.5 × 축 비율(축 3 → 4.5)
+            { "psg_h05", (SkillGrowthUnit.Multiplier, 0.3f) },   // 제압 사격 — 한 발 ×0.3 × 축(1 → 1.5)
             { "psg_h06", (SkillGrowthUnit.Multiplier, 1f) },    // 다중 유도 — 미사일 한 발 피해
-            { "psg_h07", (SkillGrowthUnit.Seconds, 1f) },       // 뇌전 폭주 — 폭주 시간
+            { "psg_h07", (SkillGrowthUnit.Multiplier, 0.75f) },   // 뇌전 — 낙뢰 ×1.5 × 축 비율(축 2 → 3)
             { "psg_h08", (SkillGrowthUnit.Multiplier, 1f) },    // 독 뿜기 — 독 피해
             { "psg_h09", (SkillGrowthUnit.Multiplier, 1f) },    // 화염 지대 — 초당 피해
-            { "psg_h10", (SkillGrowthUnit.Seconds, 1f) },       // 일제 표식 — 표식 시간
+            { "psg_h10", (SkillGrowthUnit.Seconds, 4f / 3f) },   // 일제 표식 — 4초 × 축 비율(축 3 → 5)
             { "psg_h11", (SkillGrowthUnit.Seconds, 1f) },       // 난사 — 난사 시간
-            { "psg_h12", (SkillGrowthUnit.Percent, 100f) },     // 수호 결계 — 받는 피해 감소
-            { "psg_h13", (SkillGrowthUnit.Seconds, 1f) },       // 정조준 — 치명타 고정 시간
+            { "psg_h12", (SkillGrowthUnit.Seconds, 4f) },   // 진압 결계 — 2초 × 축 비율(축 0.5 → 0.7)
+            { "psg_h13", (SkillGrowthUnit.Multiplier, 0.24f) },   // 조준 사격 — 한 발 ×1.2 × 축 비율(축 5 → 7.5) · 치명 배율은 따로
             { "psg_h14", (SkillGrowthUnit.Seconds, 1f) },       // 도약 강습 — 무적 시간
             { "psg_h17", (SkillGrowthUnit.Seconds, 1f) },       // 사슬 결박 — 결박 시간
             { "psg_h19", (SkillGrowthUnit.Multiplier, 1f) },    // 포탑 전개 — 포탑 한 발 피해
-            { "psg_h20", (SkillGrowthUnit.Seconds, 1f) },       // 전탄 반사 — 반사 시간
-            { "psg_h21", (SkillGrowthUnit.Seconds, 1f) },       // 얼음 감옥 — 얼음 시간
+            { "psg_h20", (SkillGrowthUnit.Multiplier, 0.5f) },   // 라인 드라이브 — 타구 ×2.5 × 축 비율(축 5 → 7)
+            { "psg_h21", (SkillGrowthUnit.Seconds, 1.2f) },   // 눈보라 — 빙결 1.5초 × 축 비율(축 1.25 → 1.9)
             { "psg_h22", (SkillGrowthUnit.Percent, 2f) },       // 혈연 — 적 하나당 회복(최대 체력 %). 0.02 × 값
+            { "psg_h18", (SkillGrowthUnit.Multiplier, 4f) },   // 그림자 베기 — 한 번 ×2 × 축 비율(축 0.5 → 0.8)
+            { "psg_h02", (SkillGrowthUnit.Percent, 8f) },   // 전장의 함성 — 쉴드(최대 체력 %). 20% × 축 비율(축 2.5 → 4)
         };
 
         [MenuItem("Tools/Game/스킬 성장 값 굽기 (성급과 함께 오르는 수치)")]

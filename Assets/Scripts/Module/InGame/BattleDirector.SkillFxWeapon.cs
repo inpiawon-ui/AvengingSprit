@@ -327,13 +327,14 @@ namespace Game.Module.InGame
         /// 총구에서 적마다 빠르게 조준이 훑고(0.1초) → 한 번 쏘아 예광이 차례로 닿고 →
         /// 모두 **같은 순간** 표식이 박힌다. 예전처럼 하나씩 0.11초 간격으로 찍지 않는다(설계).
         /// </summary>
-        private bool WpGangOpen(Unit me, float seconds, int percent)
+        /// <param name="targets">찍을 적 — 체력 높은 셋(PD 2026-10-29). 예전엔 방 안 전부였다.</param>
+        private bool WpGangOpen(Unit me, List<Unit> targets, float seconds, int percent)
         {
             if (!GaReady) return false;
             _gangTargets.Clear();
-            for (int i = 0; i < _enemies.Count; i++)
+            for (int i = 0; i < targets.Count; i++)
             {
-                var e = _enemies[i];
+                var e = targets[i];
                 if (e != null && e.IsAlive && !e.IsDying) _gangTargets.Add(e);
             }
             var from = me.Position;

@@ -3,66 +3,66 @@
 namespace Game.Module.InGame
 {
     /// <summary>
-    /// 호스트 패시브 — **명세 2026-09-14(대화)** 가 정본이다.
+    /// 호스트 패시브 — **PD 2026-10-29 다시 잡기**(`Projects/AVSR/_exchange/plan_party_skills.md`)가 정본이다.
     ///
-    /// 예전에는 11명만 패시브를 가졌고 그 목록은 `PassiveSkillTable` 이 들고 있었다.
-    /// 새 명세는 **23명 전원**에게 하나씩 준다. 표는 화면에 글을 띄우는 쪽이고,
-    /// **실제로 무슨 일이 벌어지는가는 이 파일 하나**다 — 두 곳에 적으면 한쪽이 낡는다.
+    /// 빙의 파티에서 패시브는 **메인일 때만** 켜진다(보조는 없다). 그래서 패시브는 「놀이 방식을 정하는 규칙」 —
+    /// 태그 시너지가 맡은 맨 스탯(공속 · 회피 · 치명 · 받는 피해 · 체력 · 쿨)과 겹치지 않게 조건 · 반응형으로 잡았다.
     ///
-    /// 걸리는 자리는 넷뿐이다.
+    /// 표는 화면에 글을 띄우는 쪽이고, **실제로 무슨 일이 벌어지는가는 이 파일**이다 — 두 곳에 적으면 한쪽이 낡는다.
+    /// (맞는 적을 보고 곱하는 몇 개 — 독니 · 표적 고정 · 용의 피 · 치고 빠지기 — 는 `BattleDirector.Skills.cs` 의
+    ///  `ScorchMul` · `BeginSwing` 이 부르고, 몸값은 아래 있다.)
+    ///
+    /// 걸리는 자리.
     ///   입을 때   `ApplyHostPassives`  — 몸의 성질(회피 · 방어력)
-    ///   때릴 때   `PassiveOnHit`       — 확률로 터지는 것
+    ///   때릴 때   `PassiveOnHit`       — 맞힐 때마다
     ///   잡을 때   `PassiveOnKill`      — 처치 보상
-    ///   매 프레임 `TickHostPassives`   — 상태에 따라 변하는 것(쉴드 이속 등)
-    ///
-    /// 소환 계열(사신 · 영매의 해골)은 여기서 부르고, 실제로 세우고 굴리는 것은
-    /// `BattleDirector.Summons.cs` 가 한다 — 여럿이 서고 시간이 지나면 사라지는 것들이다.
+    ///   매 프레임 `TickHostPassives`   — 상태에 따라 변하는 것(난전 · 불굴 · 반사 신경 등)
     /// </summary>
     public sealed partial class BattleDirector
     {
-        // ── 수치 ─────────────────────────────────────────────
+        // ── 수치 — PD 2026-10-29 시험값 ─────────────────────────
         //
-        // 「10% 확률」이 여럿이라 한 값으로 묶는다. 명세가 드라군 · 샐러맨더 · 청룡 ·
-        // 호퍼(기관단총)에 모두 10% 를 줬다 — 따로 두면 하나만 고치고 나머지를 잊는다.
-        private const int PassiveProcPercent = 10;
+        // 패시브의 **대표 수치 하나**는 성급과 함께 오른다(패시브 표 `_growthMin/Max`, % 단위 —
+        // 원천 `Editor/SkillGrowthImporter.cs`). 아래 상수는 표가 비었을 때의 Lv1 값이다.
 
-        /// <summary>확률로 거는 상태이상이 도는 시간.</summary>
+        private const int PassiveProcPercent = 10;            // 청룡 낙뢰 확률
+        /// <summary>확률로 거는 상태이상이 도는 시간(필살기가 같이 쓴다).</summary>
         private const float PassiveAilmentSeconds = 3f;
-
-        private const int NinjaChainDodgePercent = 10;      // 닌자(사슬)
-
+        private const int NinjaDodgePercent = 20;             // 닌자 몸놀림 — 회피
         /// <summary>
         /// 코만도(기관총) — 「기본 방어력 20% 증가」. 제 등급이 준 값에 **곱한다**.
         /// 20%p 를 더하면 등급 9(27%)가 47% 가 되어 이 몸만 다른 게임을 한다.
         /// </summary>
         private const float CommandoMgDefenseBonus = 0.20f;
-        private const int GrenadeArmorIgnorePercent = 50;   // 코만도(수류탄)
-        private const int SnowFreezeChancePercent = 30;     // 설녀
-        private const float FrozenExtraDamageMul = 1.3f;    // 얼어 있는 적에게
-        private const int SluggerFlingChancePercent = 20;   // 슬러거
-        private const float SluggerFlingMeters = 2.2f;
-        private const int GangsterExecutePercent = 20;      // 갱스터 — 표식이 붙은 적에게
-        private const float GangsterEliteHpCut = 0.5f;
-        private const float GangsterBossHpCut = 0.3f;
-        private const int MediumSkullPercent = 30;          // 영매
-        private const int RobotCoolProcPercent = 2;         // 로봇
-        private const float RobotCoolGainSeconds = 1f;
-        private const float ThugGoldBonus = 0.10f;          // 폭력배
-        private const float HopperCritDamageBonus = 0.30f;  // 호퍼
-        private const float AmazonShieldSpeedBonus = 0.40f; // 아마존 — 쉴드가 가득일 때
-        private const float NinjaKillSpeedBonus = 0.30f;    // 닌자
-        private const float NinjaKillSpeedSeconds = 1.5f;
-        private const float DragonBoltRangeMeters = 3.5f;   // 청룡 — 튕겨 갈 거리
+        private const int GrenadeArmorIgnorePercent = 50;     // 코만도(수류탄) 파편탄
+        private const float FrostBiteBonus = 0.30f;           // 설녀 서릿발 — 빙결된 적에게
+        private const float VenomFangBonus = 0.20f;           // 샐러맨더 독니 — 중독된 적에게
+        private const float ChainWrapBonus = 0.25f;           // 닌자(사슬) 사슬 감기 — 끌려온 적에게
+        private const float ChainWrapSeconds = 3f;
+        private const float ContractCooldownSeconds = 1f;     // 갱스터 청부 계약 — 표식 적 처치마다 쿨 −1초
+        private const float BrawlHasteBonus = 0.20f;          // 폭력배 난전 — 평타 공속 +20%
+        private const int BrawlEnemyCount = 3;
+        private const float BrawlRangeMeters = 3f;
+        private const float BrawlRefreshSeconds = 0.25f;
+        private const float HopperCritDamageBonus = 0.30f;    // 호퍼 급소
+        private const float RunGunPower = 0.60f;              // 호퍼(기관단총) 치고 빠지기 — 걸으며 쏘는 위력
+        private const float LockOnStepBonus = 0.10f;          // 코만도(미사일) 표적 고정 — 연속 명중마다
+        private const int LockOnMaxStacks = 5;                // 최대 +50%
+        private const float SpareCircuitDamageCut = 0.20f;    // 로봇 예비 회로 — 포탑이 서 있는 동안 받는 피해
+        private const float UnbowedHpCut = 0.30f;             // 아마존 정예 불굴 — 체력 30% 아래
+        private const float UnbowedInvulnSeconds = 3f;
+        private const float UnbowedHealBonus = 0.30f;         // 최대 체력의 30% 회복
+        private const int SluggerReflexPercent = 30;          // 슬러거 반사 신경 — 날아온 적 탄 자동 반사
+        private const float SluggerReflexMeters = 1.2f;       // 몸에 이만큼 붙은 탄을 본다
+        private const float DragonBloodAtkBonus = 0.30f;      // 드라군 용의 피 — 불바다 위 공격력
+        private const float BloodThirstBonus = 0.05f;         // 흡혈귀 피의 갈증 — 주는 피해의 5% 흡혈
+        private const float BloodThirstFlushSeconds = 0.5f;   // 모아서 한 번에 — 맞힐 때마다 「+1」이 수십 개 뜨지 않게
+        private const int MediumSkullPercent = 30;            // 영매 강령술
+        private const int MediumSummonCapBonus = 2;           // 소환물 최대 수 +2
+        private const float LightWardShieldBonus = 0.15f;     // 화이트 위저드 빛의 가호 — 최대 체력 15% 쉴드
+        private const int LightWardMinHits = 3;
+        private const float DragonBoltRangeMeters = 3.5f;     // 청룡 — 튕겨 갈 거리
         private const float DragonBoltDamageMul = 0.6f;
-        private const float KnockbackMeters = 1.2f;         // 호퍼(기관단총)
-
-        /// <summary>
-        /// 흡혈귀 — 명세는 「3% 확률로 공격력의 1%」인데 그대로면 100 대를 때려 3 번,
-        /// 한 번에 0.1 이라 **화면에서 아무 일도 안 일어난다.** 사용자 확인(2026-09-14
-        /// "약간만 올려봐 · 최대한 낮게")에 따라 아주 조금만 올린다.
-        /// </summary>
-        private const int VampireProcPercent = 8;
-        private const float VampireProcAtkPercent = 0.05f;
 
         /// <summary>지금 입고 있는 몸의 키. 몸이 없으면 null — 유령에는 패시브가 없다.</summary>
         private string PassiveHostKey => _host != null ? _host.Key : null;
@@ -96,10 +96,15 @@ namespace Game.Module.InGame
         {
             if (body == null) return;
             CachePassiveGrowth(entry);
-            body.SetDodge(key == "ninja_chain" ? PassivePct(NinjaChainDodgePercent) : 0);
+            // 회피는 닌자 패시브로 옮겼다(PD 2026-10-29) — 사슬 닌자의 「흘리기」는 「사슬 감기」로 바뀌었다
+            body.SetDodge(key == "ninja" ? PassivePct(NinjaDodgePercent) : 0);
             body.SetDefense(HostDefensePercent(key, entry));
             body.SetSpeedMul(1f);
-            _ninjaKillSpeedTimer = 0f;
+            _brawlOn = false;
+            _lockOnTarget = null;
+            _lockOnHits = 0;
+            _thirstCarry = 0f;
+            _thirstFlush = 0f;
         }
 
         /// <summary>
@@ -121,9 +126,11 @@ namespace Game.Module.InGame
         private int ArmorIgnorePercent
             => PassiveHostKey == "commando_grenade" ? PassivePct(GrenadeArmorIgnorePercent) : 0;
 
-        /// <summary>폭력배 — 주운 골드가 더 들어온다.</summary>
-        private float GoldGainMul
-            => PassiveHostKey == "thug" ? 1f + PassiveFrac(ThugGoldBonus) : 1f;
+        /// <summary>
+        /// 주운 골드 배율. 폭력배 「삥」(+10%)은 싸움과 상관없어 PD 2026-10-29 에 「난전」으로 바뀌었다 — 지금은 1배다.
+        /// 골드 줍는 코드가 이 값을 부르므로 자리는 남겨 둔다.
+        /// </summary>
+        private float GoldGainMul => 1f;
 
         /// <summary>
         /// 치명타 배율에 **더하는** 몫 — 호퍼 패시브 + 로비 치명타 피해 강화(%p → 배율, 2026-10-06).
@@ -136,18 +143,92 @@ namespace Game.Module.InGame
         private bool HostIgnoresObstacles => PassiveHostKey == "guru";
 
         /// <summary>
-        /// 탄이 지형지물을 통과하는 몸 — 코만도(미사일) · 화이트 위저드 · 코만도(레이저).
+        /// 탄이 지형지물을 통과하는 몸 — 코만도(레이저) 「집속 광선」만(PD 2026-10-29).
+        /// 미사일 · 화이트 위저드도 같은 패시브였는데 겹쳐서 각자 다른 패시브로 바꿨다.
         /// 관통(적을 뚫는 것)은 무기 종류(`AttackKind.Pierce`)가 따로 갖는다. 이것은 **엄폐물** 쪽이다.
         /// </summary>
-        private bool ShotIgnoresObstacles
-            => PassiveHostKey == "commando_missile"
-            || PassiveHostKey == "white_wizard"
-            || PassiveHostKey == "commando_laser";
+        private bool ShotIgnoresObstacles => PassiveHostKey == "commando_laser";
 
-        /// <summary>설녀 — 얼어 있는 적에게는 더 아프다. 얼리는 것과 한 쌍이다.</summary>
+        /// <summary>설녀 서릿발 — 얼어 있는 적에게는 더 아프다. 액티브 「눈보라」가 얼린다.</summary>
         private float FrozenBonusMul(Unit victim)
             => PassiveHostKey == "snowwoman" && victim != null && victim.IsFrozen
-               ? FrozenExtraDamageMul : 1f;
+               ? 1f + PassiveFrac(FrostBiteBonus) : 1f;
+
+        /// <summary>호퍼(기관단총) 치고 빠지기 — 걸으면서도 평타를 쏜다(이동 사격). `TickPlayer` 가 읽는다.</summary>
+        private bool PassiveMoveAttack => PassiveHostKey == "hopper_smg";
+
+        /// <summary>걸으면서 쏜 평타의 위력 — 치고 빠지기는 60% 로 쏜다. 서서 쏘면 그대로다.</summary>
+        private float RunGunMul
+            => PassiveHostKey == "hopper_smg" && MoveInput.sqrMagnitude > 0.0001f
+               ? Mathf.Min(1f, PassiveFrac(RunGunPower)) : 1f;
+
+        /// <summary>영매 강령술 — 소환물을 이만큼 더 세운다(`SpawnSummon` 의 상한).</summary>
+        private int SummonCapBonus => PassiveHostKey == "medium" ? MediumSummonCapBonus : 0;
+
+        /// <summary>로봇 예비 회로 — 포탑이 서 있는 동안 받는 피해를 줄인다(`WardReduce` 가 곱한다).</summary>
+        private float SpareCircuitCut
+            => PassiveHostKey == "robot" && _turretHasteSeconds > 0f ? PassiveFrac(SpareCircuitDamageCut) : 0f;
+
+        /// <summary>
+        /// 드라군 용의 피 — 내가 깐 불바다 위에 서 있으면 공격력 +30%.
+        /// 불바다를 깔고 그 위에서 싸우는 것이 이 몸의 놀이다(PD 2026-10-29).
+        /// </summary>
+        private float DragonBloodMul(Unit me)
+            => me != null && me == _host && me.Key == "dragoon" && StandsOnOwnFire(me.Position)
+               ? 1f + PassiveFrac(DragonBloodAtkBonus) : 1f;
+
+        private bool StandsOnOwnFire(Vector2 at)
+        {
+            for (int i = 0; i < _fields.Count; i++)
+            {
+                var f = _fields[i];
+                if (f.IsActive && f.FromPlayer && f.Effect == FieldEffect.Burn && f.Contains(at)) return true;
+            }
+            return false;
+        }
+
+        // ── 표적 고정 (코만도(미사일)) ─────────────────────────
+        //
+        // 같은 적을 연달아 맞히면 10% 씩 쌓인다(최대 +50%). 다른 적을 맞히면 처음부터.
+        // 미사일 7발이 여럿에게 갈라지는 액티브와 반대로, 평타는 한 놈을 물고 늘어지게 한다.
+
+        private Unit _lockOnTarget;
+        private int _lockOnHits;
+
+        private float LockOnMul(Unit victim)
+        {
+            if (_summonStriking) return 1f;   // 보조 · 소환물이 친 것은 세지 않는다
+            if (victim != _lockOnTarget) { _lockOnTarget = victim; _lockOnHits = 0; }
+            int stacks = Mathf.Min(LockOnMaxStacks, _lockOnHits);
+            _lockOnHits++;
+            return 1f + stacks * PassiveFrac(LockOnStepBonus);
+        }
+
+        // ── 사슬 감기 (닌자(사슬)) ─────────────────────────────
+
+        private readonly System.Collections.Generic.Dictionary<Unit, float> _wrapUntil = new();
+
+        /// <summary>메인이 사슬로 끌어온 적 — 지금부터 3초간 더 아프다.</summary>
+        private void WrapChained(System.Collections.Generic.List<Unit> pulled)
+        {
+            float until = Time.time + ChainWrapSeconds;
+            for (int i = 0; i < pulled.Count; i++)
+                if (pulled[i] != null && pulled[i].IsAlive) _wrapUntil[pulled[i]] = until;
+        }
+
+        private bool IsWrapped(Unit victim)
+            => victim != null && _wrapUntil.TryGetValue(victim, out float until) && until > Time.time;
+
+        // ── 빛의 가호 (화이트 위저드) ──────────────────────────
+
+        /// <summary>액티브(빛의 인력)가 셋 이상 맞혔으면 메인에게 쉴드. 보조가 쓰면 없다(패시브).</summary>
+        private void LightWardOnBurst(Unit me, int hits)
+        {
+            if (me == null || me != _host || me.Key != "white_wizard" || hits < LightWardMinHits) return;
+            int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * PassiveFrac(LightWardShieldBonus)));
+            me.AddShield(amount, me.HpMax);
+            PlayFx("guard", me.Position, Meters(1.4f), loop: false);
+        }
 
         // ── 때릴 때 ──────────────────────────────────────────
 
@@ -164,58 +245,14 @@ namespace Game.Module.InGame
 
             switch (_host.Key)
             {
-                // 드라군 — 불이 붙는다. 이미 타고 있으면 시간만 늘어난다(중복 없음).
-                case "dragoon":
-                    if (Roll(PassivePct(PassiveProcPercent)))
-                    {
-                        victim.ApplyBurn(PassiveAilmentSeconds);
-                        PlayFx("burn", victim.Position, 64f, loop: false);
-                    }
-                    break;
-
-                // 샐러맨더 — 독. 겹치지 않는다(명세).
-                case "salamander":
-                    if (!victim.IsPoisoned && Roll(PassivePct(PassiveProcPercent)))
-                    {
-                        victim.ApplyPoison(PassiveAilmentSeconds);
-                        PlayFx("venom", victim.Position, 64f, loop: false);
-                    }
-                    break;
-
                 // 청룡 — 옆 적에게 튄다. **튈 곳이 없으면 안 터진다**(명세).
                 case "dragon_blue":
-                    // 액티브가 도는 2초 동안은 확률을 보지 않는다 — 무조건 튄다(명세).
-                    if (_boltSurgeSeconds > 0f || Roll(PassivePct(PassiveProcPercent))) ChainBolt(victim, damage);
+                    if (Roll(PassivePct(PassiveProcPercent))) ChainBolt(victim, damage);
                     break;
 
-                // 설녀 — 얼린다. 보스는 안 걸린다(명세).
-                case "snowwoman":
-                    if (!victim.IsBoss && Roll(PassivePct(SnowFreezeChancePercent)))
-                    {
-                        victim.ApplyFreeze(PassiveAilmentSeconds);
-                        PlayFx("freeze", victim.Position, 72f, loop: false);
-                    }
-                    break;
-
-                // 호퍼(기관단총) — 살짝 밀어낸다.
-                case "hopper_smg":
-                    if (Roll(PassivePct(PassiveProcPercent))) Knockback(victim, KnockbackMeters);
-                    break;
-
-                // 흡혈귀 — 아주 조금 돌려받는다.
+                // 흡혈귀 피의 갈증 — 주는 피해의 5% 를 늘 모은다. 0.5초마다 한 번에 돌려받는다(TickBloodThirst).
                 case "vampire":
-                    if (Roll(PassivePct(VampireProcPercent)) && _host != null)
-                        Leech(Mathf.Max(1, Mathf.RoundToInt(_host.Atk * VampireProcAtkPercent)));
-                    break;
-
-                // 갱스터 — **표식이 붙은 적에게만**. 일반은 즉사, 엘리트·보스는 최대 체력을 깎는다.
-                case "gangster":
-                    if (victim.IsMarked && Roll(PassivePct(GangsterExecutePercent))) MarkExecute(victim);
-                    break;
-
-                // 로봇 — 평타가 스킬 쿨을 당긴다.
-                case "robot":
-                    if (Roll(PassivePct(RobotCoolProcPercent))) GainSkillCharge(RobotCoolGainSeconds);
+                    _thirstCarry += damage * PassiveFrac(BloodThirstBonus);
                     break;
             }
         }
@@ -240,23 +277,7 @@ namespace Game.Module.InGame
             if (best.TakeDamage(dmg)) KillEnemy(best);
         }
 
-        /// <summary>갱스터 — 표식이 붙은 적을 처형한다. 큰 몸은 죽지 않고 크게 깎인다.</summary>
-        private void MarkExecute(Unit victim)
-        {
-            // 표적은 이미 몸에 붙어 돌고 있다 — 처형 순간에 하나 더 띄우면 겹친다.
-            // 처형은 **터짐**으로 보여 준다.
-            if (!WpExecute(victim)) PlayFx("shatter", victim.Position, 120f, loop: false);
-            // Sandbox — 테스트 판에서는 즉사가 안 터진다 (지울 때 이 줄도 함께)
-            if (SandboxBlocksExecute) return;
-            if (!victim.IsBoss && !victim.IsElite) { KillEnemy(victim); return; }
-
-            float cut = victim.IsBoss ? GangsterBossHpCut : GangsterEliteHpCut;
-            int dmg = Mathf.Max(1, Mathf.RoundToInt(victim.HpMax * cut));
-            ShowDamage(victim.Position, dmg, toEnemy: true);
-            if (victim.TakeDamage(dmg)) KillEnemy(victim);
-        }
-
-        /// <summary>호퍼(기관단총) — 맞은 적을 뒤로 민다. 방 밖으로는 못 나간다.</summary>
+        /// <summary>맞은 적을 메인에게서 뒤로 민다. 방 밖으로는 못 나간다(필살기 넉백).</summary>
         private void Knockback(Unit victim, float meters)
         {
             var me = Avatar;
@@ -323,7 +344,7 @@ namespace Game.Module.InGame
         private static bool IsMeleeKind(Game.Character.AttackKind kind)
             => kind == Game.Character.AttackKind.Melee || kind == Game.Character.AttackKind.Pulse;
 
-        /// <summary>로봇 — 스킬 게이지를 이만큼 더 채운다(쿨이 그만큼 줄어든 것과 같다).</summary>
+        /// <summary>스킬 게이지를 이만큼 더 채운다(쿨이 그만큼 줄어든 것과 같다) — 갱스터 청부 계약.</summary>
         private void GainSkillCharge(float seconds)
         {
             float full = SkillCooldownOf(_lastHostEntry) * _buffs.ActiveCooldownMul;
@@ -332,8 +353,6 @@ namespace Game.Module.InGame
 
         // ── 잡을 때 ──────────────────────────────────────────
 
-        private float _ninjaKillSpeedTimer;
-
         /// <summary>적을 잡은 **직후**에 부른다(`KillEnemy`).</summary>
         private void PassiveOnKill(Unit victim)
         {
@@ -341,17 +360,9 @@ namespace Game.Module.InGame
 
             switch (_host.Key)
             {
-                // 슬러거 — 막타에 주변이 날아간다. 야구 방망이다.
-                case "baseball":
-                    // 풀스윙 회오리가 끌어당기는 동안은 밀어내지 않는다 — 끌기와 밀기가 부딪히고, 잡힐 때마다 흙먼지 폭발이 화면을 덮었다(녹화 rw_sl_3)
-                    if (!_fsActive && Roll(PassivePct(SluggerFlingChancePercent))) FlingAround(victim.Position);
-                    break;
-
-                // 닌자 — 잡으면 잠깐 빨라진다.
-                case "ninja":
-                    _ninjaKillSpeedTimer = NinjaKillSpeedSeconds;
-                    _host.SetSpeedMul(1f + PassiveFrac(NinjaKillSpeedBonus));
-                    PlayFx("dash", _host.Position, 96f, loop: false);
+                // 갱스터 청부 계약 — 표식 단 적을 잡으면 액티브 쿨 −1초(PD 2026-10-29 — 예전 「표식 적 즉사」는 R 에 너무 셌다)
+                case "gangster":
+                    if (victim.IsMarked) GainSkillCharge(ContractCooldownSeconds);
                     break;
 
                 // 사신 — 잡을 때마다 그 자리에서 해골이 일어선다(명세 — 확률 없음).
@@ -359,52 +370,108 @@ namespace Game.Module.InGame
                     SummonSkull(victim.Position);
                     break;
 
-                // 영매 — 30% 로 해골.
+                // 영매 강령술 — 30% 로 해골(소환물 최대 수 +2 는 `SummonCapBonus`).
                 case "medium":
                     if (Roll(PassivePct(MediumSkullPercent))) SummonSkull(victim.Position);
                     break;
             }
         }
 
-        /// <summary>슬러거 — 죽은 자리 둘레의 적을 밀어낸다.</summary>
-        private void FlingAround(Vector2 at)
-        {
-            float r = Meters(SluggerFlingMeters);
-            PlayFx("slam", at, r * 2f, loop: false);
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying) continue;
-                var away = e.Position - at;
-                if (away.sqrMagnitude > r * r || away.sqrMagnitude < 0.01f) continue;
-                e.Position = ClampedInField(e, e.Position + away.normalized * Meters(SluggerFlingMeters));
-            }
-        }
-
         // ── 매 프레임 ────────────────────────────────────────
 
-        /// <summary>
-        /// 상태에 따라 변하는 패시브. 아마존은 **쉴드가 찰수록 빨라진다** —
-        /// 쉴드를 쌓는 격투 규칙과 한 몸이라, 쉴드가 곧 속도가 된다.
-        /// </summary>
+        private bool _brawlOn;
+        private bool _unbowedUsed;     // 아마존 정예 불굴 — 한 판에 한 번
+        private float _thirstCarry;    // 흡혈귀 — 모아 둔 흡혈량
+        private float _thirstFlush;
+        private readonly System.Collections.Generic.HashSet<Projectile> _reflexSeen = new();
+
+        /// <summary>상태에 따라 변하는 패시브.</summary>
         private void TickHostPassives(float dt)
         {
-            if (_host == null) return;
+            if (_host == null) { _reflexSeen.Clear(); return; }
 
-            if (_ninjaKillSpeedTimer > 0f)
+            switch (_host.Key)
             {
-                _ninjaKillSpeedTimer -= dt;
-                if (_ninjaKillSpeedTimer <= 0f) _host.SetSpeedMul(1f);
-                return;   // 닌자 이속이 도는 동안은 다른 배수를 얹지 않는다
+                case "thug":         TickBrawl(); break;
+                case "amazon_elite": TickUnbowed(); break;
+                case "vampire":      TickBloodThirst(dt); break;
+                case "baseball":     TickReflex(); break;
+                case "dragoon":      if (_host.BurnStack > 0) _host.ClearBurn(); break;   // 용의 피 — 화상을 입지 않는다
             }
+            if (_host.Key != "baseball" && _reflexSeen.Count > 0) _reflexSeen.Clear();
+        }
 
-            if (_host.Key != "amazon") return;
+        /// <summary>폭력배 난전 — 둘레 3 m 에 적이 셋 이상이면 평타 공속 +20%(간격 ÷ 1.2).</summary>
+        private void TickBrawl()
+        {
+            float r = Meters(BrawlRangeMeters);
+            float r2 = r * r;
+            int n = 0;
+            var at = _host.Position;
+            for (int i = 0; i < _enemies.Count && n < BrawlEnemyCount; i++)
+            {
+                var e = _enemies[i];
+                if (e != null && e.IsAlive && !e.IsDying && (e.Position - at).sqrMagnitude <= r2) n++;
+            }
+            _brawlOn = n >= BrawlEnemyCount;
+            if (!_brawlOn) return;
+            // 다른 단축이 더 크게 돌고 있으면 그것을 남긴다. 짧게 잡아 계속 갱신한다 — 무리가 흩어지면 바로 꺼진다.
+            float cut = 100f * (1f - 1f / (1f + PassiveFrac(BrawlHasteBonus)));
+            if (_hasteSeconds > BrawlRefreshSeconds && HasteMul < 1f - cut * 0.01f) return;
+            GrantHaste(cut, BrawlRefreshSeconds);
+        }
+
+        /// <summary>아마존 정예 불굴 — 체력이 30% 아래로 떨어지면 한 판에 한 번 3초 무적 + 체력 30% 회복.</summary>
+        private void TickUnbowed()
+        {
+            if (_unbowedUsed || _host.Hp <= 0 || _host.Hp >= _host.HpMax * UnbowedHpCut) return;
+            _unbowedUsed = true;
+            UltInvuln(UnbowedInvulnSeconds);
+            Leech(Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * PassiveFrac(UnbowedHealBonus))));
+            PlayFx("guard", _host.Position, Meters(1.8f), loop: false);
+            _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, _host.Position, 14, 220f, 36f, 0.6f, 0f);
+            Shake(5f);
+        }
+
+        /// <summary>흡혈귀 피의 갈증 — 모은 흡혈을 돌려받는다. 체력이 가득이면 넘친 만큼 쉴드.</summary>
+        private void TickBloodThirst(float dt)
+        {
+            _thirstFlush -= dt;
+            if (_thirstFlush > 0f) return;
+            _thirstFlush = BloodThirstFlushSeconds;
+            int amount = Mathf.FloorToInt(_thirstCarry);
+            if (amount <= 0) return;
+            _thirstCarry -= amount;
+
+            int room = _host.HpMax - _host.Hp;
+            if (room > 0) Leech(Mathf.Min(amount, room));
+            int over = amount - Mathf.Max(0, room);
+            if (over <= 0) return;
             int cap = Mathf.Max(1, _host.HpMax * (_config != null ? _config.ShieldCapPercent : 30) / 100);
-            float ratio = Mathf.Clamp01(_host.Shield / (float)cap);
-            _host.SetSpeedMul(1f + PassiveFrac(AmazonShieldSpeedBonus) * ratio);
+            _host.AddShield(over, cap);
+        }
+
+        /// <summary>
+        /// 슬러거 반사 신경 — 몸에 닿으려는 적 탄을 30% 로 자동으로 되받아친다.
+        /// 탄 하나에 한 번만 굴린다(`_reflexSeen`) — 매 프레임 굴리면 붙어 있는 동안 거의 다 튕긴다.
+        /// </summary>
+        private void TickReflex()
+        {
+            float r = Meters(SluggerReflexMeters);
+            float r2 = r * r;
+            var at = _host.Position;
+            int chance = PassivePct(SluggerReflexPercent);
+            for (int i = 0; i < _shots.Count; i++)
+            {
+                var s = _shots[i];
+                if (!s.IsActive || s.FromPlayer) continue;
+                if ((s.Position - at).sqrMagnitude > r2) continue;
+                if (!_reflexSeen.Add(s)) continue;
+                if (!Roll(chance)) continue;
+                global::Game.Module.Common.GameSound.Cue("hit.reflect");
+                ReflectShot(s);
+            }
+            if (_reflexSeen.Count > 0) _reflexSeen.RemoveWhere(s => !s.IsActive || s.FromPlayer);
         }
     }
 }
-
-
-

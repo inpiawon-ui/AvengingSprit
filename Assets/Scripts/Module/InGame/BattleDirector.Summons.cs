@@ -118,7 +118,7 @@ namespace Game.Module.InGame
             var art = UnitGet(key);
             if (art == null) return;   // 그림이 없으면 세우지 않는다 — 깨진 사각형이 서느니 없는 게 낫다
 
-            while (_summons.Count >= SummonMaxCount) RemoveSummon(0);
+            while (_summons.Count >= SummonMaxCount + SummonCapBonus) RemoveSummon(0);   // 영매 강령술 +2(PD 2026-10-29)
 
             var u = NewUnit($"Summon_{key}_{_summons.Count}");
             int hp = Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * hpPercent));

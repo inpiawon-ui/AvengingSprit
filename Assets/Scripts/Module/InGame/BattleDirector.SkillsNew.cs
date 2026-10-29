@@ -20,34 +20,16 @@ namespace Game.Module.InGame
         /// <summary>사신 — 이 시간 동안 때리는 것마다 즉사 판정을 굴린다.</summary>
         private float _reaperSeconds;
 
-        /// <summary>청룡 — 이 시간 동안 패시브(번개 튕김)가 100% 로 터진다.</summary>
-        private float _boltSurgeSeconds;
-
         /// <summary>호퍼 — 이 시간 동안 치명타 확률이 고정된다.</summary>
         private float _critLockSeconds;
-        private float _critLockPercent;
+        private float _critLockPercent = 90f;   // 정조준 액티브는 PD 2026-10-29 에 「조준 사격」으로 바뀌었다 — 켜는 곳이 없다
 
         /// <summary>설녀 — 얼음 안에 있는 동안. 맞지도 때리지도 않고 적이 표적으로 잡지도 않는다.</summary>
         private float _iceShellSeconds;
 
-        /// <summary>닌자(사슬) — 이 시간 동안 묶인 적이 더 아프다.</summary>
-        private float _bindBonusSeconds;
-
-        /// <summary>코만도(레이저) — 이 시간 동안 주변 적에게 번개가 계속 튄다.</summary>
-        private float _bounceSeconds, _bounceTick;
 
         /// <summary>호퍼(기관단총)·설녀 — **스킬이 준** 무적 시간. 이 동안만 몸 윤곽이 깜빡인다.</summary>
         private float _skillInvuln;
-
-        /// <summary>청룡 — 적에서 적으로 튕겨 가는 번개. 남은 튕김 · 다음 튕김까지 · 지난 자리.</summary>
-        private int _chainHopsLeft;
-        private float _chainHopTimer;
-        private Vector2 _chainFrom;
-        private Unit _chainLast;
-        // 이번 연쇄에서 이미 맞은 적. 안 맞은 적이 있으면 그쪽으로 먼저 튄다(기획 2026-09-15).
-        private readonly System.Collections.Generic.HashSet<Unit> _chainStruck = new();
-        private int _chainDamage;
-        private HostEntry _chainProfile;
 
         /// <summary>샐러맨더 — 날아가는 독침. 닿는 순간 피해와 중독이 들어간다.</summary>
         private readonly System.Collections.Generic.List<(Impact Fx, Unit Target, Vector2 From, float T)> _spits = new();
@@ -63,33 +45,18 @@ namespace Game.Module.InGame
         private const float ReaperWindowSeconds = 3f;          // 명세 「3초간 유지」
         private const int ReaperBossPercent = 10;
         private const int ReaperMidBossPercent = 50;
-        private const float BindDamageMul = 1.3f;
         private const float VenomRadiusMeters = 5f;
         /// <summary>독 지속에 얹는 시간. 표의 성장 축이 피해 계수와 같은 값(Lv1 0.5)이라 독이 0.5초뿐이었다.</summary>
         private const float VenomExtraSeconds = 2f;
-        private const float BoltSurgeSeconds = 2f;
-        private const int ChainHops = 20;                      // 기획 2026-09-15 — 10번 → 20번
-        private const float ChainHopSeconds = 0.08f;           // 한 번에 다 그으면 여러 갈래로 보인다
-        private const float ChainHopRangeMeters = 6f;
-        private const float ChainHopDamageMul = 0.6f;          // 튕길 때마다 **같은** 피해
         private const float SpitSeconds = 0.28f;               // 독침이 날아가는 시간
         private const float SpitFxSize = 48f;
         private const float SkillAuraFxSize = 184f;
         private const float MissileFanHoming = 1.2f;           // 벌어진 자리에서 표적으로 모이는 휨
-        // ⚠ 아래 값은 **표가 비었을 때만** 쓰는 대비값이다. 실제 지속은 `BaseAxis` 가 액티브 스킬 표의
-        //   성장 축(psg_h21 `_scaling`)에서 읽는다 — 상수만 반으로 줄였더니 여전히 2.5초였다(2026-09-15).
-        //   반으로 줄인 값은 표(1.25~1.9)와 원천(`Editor/HostSkillTable.cs`)에 들어 있다.
-        private const float IceShellSeconds = 1f;
-        private const float IceShellHealPercent = 0.30f;
         private const float SprayBurstSeconds = 1f;            // 명세 「1초간 3방향」
         private const float LeapFarInvulnSeconds = 2f;
         private const float VampireFeastPercentPerEnemy = 0.02f;
         private const float VampireBiteMul = 0.5f;
         private bool _batBitten;
-        private const float BarrierSeconds = 5f;
-        private const float GangsterMarkSeconds = 3f;
-        private const float CritLockSeconds = 5f;              // 명세에 시간이 없어 5초로 잡았다
-        private const float CritLockPercent = 90f;             // 「90퍼 고정」
         /// <summary>발사 지점을 반원으로 벌리는 거리. 이만큼 떨어져 날아올라 한 점에서 모인다.</summary>
         private const float MissileFanOutMeters = 0.45f;
         /// <summary>미사일 한 발의 폭발 반경. 1.2 m 는 기본 폭발(130px)보다 작아 안 터진 것처럼 보였다.</summary>
@@ -108,11 +75,6 @@ namespace Game.Module.InGame
 
         /// <summary>표식이 걸린 몸과 그 위의 표적. 시간이 다하면 거둔다.</summary>
         private readonly System.Collections.Generic.List<(Unit U, Impact Fx, float Life)> _markFx = new();
-
-        private const float BounceSeconds = 3f;
-        private const float BounceInterval = 0.4f;
-        private const float BounceRangeMeters = 6f;
-        private const float BounceDamageMul = 0.5f;
 
         // ═══════════════════════════════════════════════════════════
         //  격투
@@ -147,8 +109,16 @@ namespace Game.Module.InGame
 
             float r = Meters(AmazonStrikeRadiusMeters) * _buffs.AoeMul;
             int dmg = SkillDamage(me, AmazonStrikeMul * BaseAxis(1f));   // 6.0 × 표 성장축(Lv1 1.5 → Lv4 2.2)
-            var list = EnemiesInRange(me.Position, r);
-            for (int i = 0; i < list.Count; i++) HitEnemyWith(list[i], dmg, me.Profile);
+            // 목록을 베껴 둔다 — 맞아 죽는 쪽(KillEnemy)이 같은 버퍼를 다시 쓸 수 있다
+            var list = new List<Unit>(EnemiesInRange(me.Position, r));
+            int killed = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                bool alive = list[i].IsAlive;
+                HitEnemyWith(list[i], dmg, me.Profile);
+                if (alive && !list[i].IsAlive) killed++;
+            }
+            if (killed > 0) AmazonSprint(me);   // 패시브 「질주」 — 처치하면 한 번 더 도약(PD 2026-10-29)
             // 큰 회색 폭발 구름은 캐릭터 · 적을 통째로 가렸다(코덱스 진단) — 퀄업 연출이 있으면 절삭 · 바닥 펄스로
             if (WpReady) WpAmazonImpact(from, me.Position, r);
             else PlayFx("slam", me.Position, r * 2f, loop: false);
@@ -191,10 +161,12 @@ namespace Game.Module.InGame
             return true;
         }
 
-        /// <summary>묶여 있는 적에게 더 아프다. 얼린 적 보너스(설녀)와 같은 층이다.</summary>
+        /// <summary>
+        /// 패시브 「사슬 감기」(닌자(사슬) · PD 2026-10-29) — 사슬로 끌려온 적은 3초간 받는 피해 +25%.
+        /// 예전엔 「묶여 있는 동안 ×1.3」(묶임 1.5초)이었다. 얼린 적 보너스(설녀)와 같은 층이다.
+        /// </summary>
         private float BindBonusMul(Unit victim)
-            => _bindBonusSeconds > 0f && PassiveHostKey == "ninja_chain"
-               && victim != null && victim.IsRooted ? BindDamageMul : 1f;
+            => PassiveHostKey == "ninja_chain" && IsWrapped(victim) ? 1f + PassiveFrac(ChainWrapBonus) : 1f;
 
         // ═══════════════════════════════════════════════════════════
         //  중거리
@@ -269,98 +241,11 @@ namespace Game.Module.InGame
         private int _batHeal;
 
 
-        /// <summary>청룡 — 2초 동안 번개 튕김이 **반드시** 터진다.</summary>
-        private void DragonSurge(Unit me)
-        {
-            _boltSurgeSeconds = BaseAxis(BoltSurgeSeconds);   // Lv1 2 → Lv4 3초
-            // ⚠ 예전에는 번개 한 덩이를 **제 발밑에** 띄웠다. 일자로 뜨고 적을 향하지도
-            //   않아 무엇이 일어났는지 안 읽혔다(기획 2026-09-15).
-            //   가까운 적 셋에게 **각각 줄기를 뻗었더니** 튕기는 게 아니라 여러 갈래로 쏘는 것으로
-            //   보였다(기획 2026-09-15). 이제 **적에서 적으로 20번** 튕겨 간다 — 한 번에 긋지 않고
-            //   0.08초마다 한 칸씩. **아직 안 맞은 적이 사거리에 있으면 그쪽으로** 튄다(기획 2026-09-15).
-            //   다 맞았으면 맞은 적을 다시 맞아도 되지만 방금 맞은 적은 건너뛴다 —
-            //   그래서 **몹이 하나뿐이면 한 번 쏘고 끝난다.**
-            _chainHopsLeft = ChainHops;
-            _chainHopTimer = 0f;
-            _chainFrom = me.Position;
-            _chainLast = null;
-            _chainStruck.Clear();
-            // 성장 축은 **초**다(2 → 3) — 피해는 그 오른 비율(×1 → ×1.5)만 따른다.
-            // 축 값을 피해에 그대로 곱하면 폭주 시간을 초로 고친 순간 피해가 두 배가 된다(2026-10-06)
-            _chainDamage = SkillDamage(me, ChainHopDamageMul * _boltSurgeSeconds / BoltSurgeSeconds);
-            _chainProfile = me.Profile;
-            QxSurgeOpen(me, _boltSurgeSeconds);   // 퀄업(2026-10-07) — 몸에 감기는 청백 전기
-            if (NearestEnemy(me.Position, Meters(ChainHopRangeMeters)) == null)
-            { _chainHopsLeft = 0; PlayFx("crit", me.Position, 96f, loop: false); }
-        }
-
-        /// <summary>청룡 번개 한 칸. 지난 자리에서 가장 가까운 적으로 뻗는다.</summary>
-        private void TickChain(float dt)
-        {
-            if (_chainHopsLeft <= 0) return;
-            _chainHopTimer -= dt;
-            if (_chainHopTimer > 0f) return;
-            _chainHopTimer = ChainHopSeconds;
-
-            // ① 아직 안 맞은 적 중 가장 가까운 적 ② 없으면 방금 맞은 적만 빼고 가장 가까운 적
-            float range = Meters(ChainHopRangeMeters);
-            Unit next = null, fallback = null;
-            float best = range, bestFallback = range;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (!Targetable(e) || e == _chainLast) continue;
-                float d = Vector2.Distance(e.Position, _chainFrom);
-                if (d <= bestFallback) { bestFallback = d; fallback = e; }
-                if (!_chainStruck.Contains(e) && d <= best) { best = d; next = e; }
-            }
-            if (next == null) next = fallback;
-            // 튈 곳이 방금 맞은 적뿐이면 **거기서 끝낸다**(기획 2026-09-15) — 몹이 하나면 한 번 쏘고 끝이다.
-            if (next == null) { _chainHopsLeft = 0; return; }
-
-            PlayBolt(_chainFrom, next.Position);
-            // 줄기가 닿은 자리도 **번개 색**이어야 한다. 기본 타격 불꽃은 노란색이라
-            // 파란 줄기와 따로 놀았다 — 줄기 끝에서 노란 별이 터졌다(2026-09-20).
-            if (!QxSurgeSpark(next.Position)) SpawnImpact(next.Position, "thunder", ChainImpactSize);
-            HitEnemyWith(next, _chainDamage, _chainProfile);
-            _chainFrom = next.Position;
-            _chainLast = next;
-            _chainStruck.Add(next);
-            _chainHopsLeft--;
-        }
-
         /// <summary>
-        /// 설녀 — 스스로 얼음에 들어간다. 2초 동안 맞지도 때리지도 않고
-        /// 적이 표적으로 잡지도 않는다. 나오면서 체력을 채운다.
+        /// 몸을 감싼 얼음(예전 설녀 액티브 「얼음 감옥」의 잔재 — 지금은 켜는 스킬이 없다).
+        /// PD 2026-10-29 에 설녀 액티브가 「눈보라」(적을 얼린다)로 바뀌었다. 시계 · 그림을 거두는 쪽만 남겨 둔다.
         /// </summary>
-        private void SnowIceShell(Unit me)
-        {
-            float seconds = BaseAxis(IceShellSeconds);   // Lv1 2 → Lv4 3초
-            _iceShellSeconds = seconds;
-            _invuln = Mathf.Max(_invuln, seconds);
-            _skillInvuln = Mathf.Max(_skillInvuln, seconds);
-            int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * IceShellHealPercent * ActiveRebaseMul));
-            Leech(heal);
-            // 얼음은 **버티는 내내** 서 있어야 한다 — 한 번 터지고 사라지면 무적인지 알 수 없다.
-            _iceFx?.Stop();
-            // ⚠ 그림을 `iceblock`(바닥에서 솟는 결정)에서 `ward`(몸을 감싸는 결정 껍질)로
-            //   바꾼다. 「갇혔다」가 읽히려면 몸을 **둘러싸야** 한다(기획 2026-09-15).
-            //   구루가 쓰던 자리인데, 구루는 얼음이 아니어야 하므로 이쪽으로 넘긴다.
-            // 퀄업(2026-10-07) — 모이는 서리 → 얼음 결정 속(지속) → 끝나면 깨져 흩어짐
-            _iceFx = QxIceOpen(me);
-            if (_iceFx == null)
-            {
-                _iceFx = TakeLoopFx("ward", me.Position, IceShellFxSize);
-                _iceFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-            }
-        }
-
-        /// <summary>몸을 감싼 얼음. 스킬이 끝나면 거둔다.</summary>
         private Impact _iceFx;
-
-        // 캐릭터 몸통이 96×92 에 `UnitScale` 1.5 라 화면에서 약 144 px 다.
-        // 「조금만 더 크게」 — 갇힌 것으로 보이되 몸을 덮어 가리지는 않는 크기.
-        private const float IceShellFxSize = 168f;
 
         // ═══════════════════════════════════════════════════════════
         //  원거리
@@ -413,7 +298,9 @@ namespace Game.Module.InGame
             if (list.Count == 0) { PlayFx("drain", me.Position, 64f, loop: false); return; }
 
             float per = VampireFeastPercentPerEnemy * BaseAxis(1f) * ActiveRebaseMul;   // Lv1 2% → Lv4 3% · 쿨 비율(BattleDirector.Rework1021)
-            int heal = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * per * list.Count));
+            // 빨아 온 피는 **메인**에게 간다(PD 2026-10-29) — 보조가 써도 메인의 최대 체력으로 센다
+            var main = _host != null ? _host : me;
+            int heal = Mathf.Max(1, Mathf.RoundToInt(main.HpMax * per * list.Count));
 
             // ⚠ **즉발이 아니다.** 머릿수만큼 박쥐를 날려 보내고, 돌아온 뒤에 피가 찬다
             //   (기획 2026-09-15). 즉시 차면 무엇 때문에 찼는지가 안 보인다.
@@ -432,16 +319,7 @@ namespace Game.Module.InGame
             if (_batTargets.Count == 0) { Leech(heal); _batSeconds = 0f; }
         }
 
-        /// <summary>코만도(기관총) — 최대 체력만큼 쉴드를 두른다. 5초가 지나거나 깎이면 끝난다.</summary>
-        private void CommandoBarrier(Unit me)
-        {
-            int amount = Mathf.Max(1, Mathf.RoundToInt(me.HpMax * BaseAxis(1f) * ActiveRebaseMul));   // Lv1 100% → Lv4 150% · 쿨 비율
-            me.AddShield(amount, me.HpMax * 2);
-            _barrierSeconds = BarrierSeconds;
-            // 퀄업 연출(2026-10-07) — 둥근 비눗방울 대신 몸 앞을 비운 분절 방벽
-            if (!WpBarrierOpen(me)) PlayFx("shield", me.Position, 128f, loop: false);
-        }
-
+        /// <summary>코만도(기관총) 예전 방벽의 시계 — 액티브가 제압 사격으로 바뀌어(PD 2026-10-29) 지금은 켜는 곳이 없다.</summary>
         private float _barrierSeconds;
 
         // ── 갱스터 · 일제 마킹 ──────────────────────────────────
@@ -478,21 +356,21 @@ namespace Game.Module.InGame
         /// </summary>
         private readonly List<(Unit Target, float DartLeft, float MarkLeft, float Seconds, int Percent)> _markQueue = new();
 
-        /// <summary>갱스터 — 방 전체에 표식. 패시브(20% 즉사)와 한 쌍이다.</summary>
+        /// <summary>
+        /// 갱스터 — **체력 높은 적 셋**에게 4초 표식(받는 피해 +30%). PD 2026-10-29 — 예전엔 방 전체였고
+        /// 패시브가 표식 적을 즉사시켜 R 등급에 너무 셌다. 패시브 「청부 계약」(표식 적 처치 → 쿨 −1초)과 한 쌍이다.
+        /// </summary>
         private void GangsterMarkAll(Unit me)
         {
-            float seconds = BaseAxis(GangsterMarkSeconds);   // Lv1 3 → Lv4 5초
-            int percent = _markPercent;
+            float seconds = GangMarkSeconds * GrowRatio(GangMarkTableBase);   // 4초 × 성급 성장(표 3 → 5 의 비율)
+            int percent = GangMarkPercent;
+            var targets = ToughestEnemies(GangMarkTargets);
 
             _markQueue.Clear();
+            if (targets.Count == 0) { PlayFx("crit", me.Position, 96f, loop: false); return; }
             // 퀄업 연출(2026-10-07) — 빠르게 훑고 한 번에 박힌다(큰 불덩이 · 섬광 없이)
-            if (WpGangOpen(me, seconds, percent)) return;
-            for (int i = 0; i < _enemies.Count; i++)
-            {
-                var e = _enemies[i];
-                if (e == null || !e.IsAlive || e.IsDying) continue;
-                _markQueue.Add((e, 0f, 0f, seconds, percent));
-            }
+            if (WpGangOpen(me, targets, seconds, percent)) return;
+            for (int i = 0; i < targets.Count; i++) _markQueue.Add((targets[i], 0f, 0f, seconds, percent));
             // 가까운 적부터 — 훑는 방향이 있어야 «시선이 지나갔다»로 읽힌다
             var from = me.Position;
             _markQueue.Sort((a, b) => (a.Target.Position - from).sqrMagnitude
@@ -541,18 +419,6 @@ namespace Game.Module.InGame
             }
         }
 
-        /// <summary>호퍼 — 치명타 확률을 90% 로 **고정**한다(명세). 패시브(치명타 피해)와 한 쌍이다.</summary>
-        private void HopperCritSurge(Unit me)
-        {
-            _critLockSeconds = BaseAxis(CritLockSeconds);   // Lv1 5 → Lv4 7.5초
-            _critLockPercent = CritLockPercent;
-            // 퀄업 연출(2026-10-07) — 몸 바깥 괄호가 조립되고 지속 내내 붙는다(공격이 아니라 상태)
-            if (WpHopOpen(me)) { _critAuraFx?.Stop(); _critAuraFx = null; return; }
-            PlayFx("crit", me.Position, 96f, loop: false);
-            // 지속 내내 **몸에 붙어 도는 표시**(기획 2026-09-15) — 시작 별 한 번으로는 켜져 있는지 몰랐다.
-            StartSkillAura(ref _critAuraFx, "critlock");
-        }
-
         /// <summary>
         /// 코만도(미사일) 한 발 — **곧게 날아간다.** 수류탄처럼 포물선으로 던졌더니
         /// 로켓이 아니라 폭탄을 던지는 것으로 보였다(기획 2026-09-15). 머리가 나는 쪽을 보고,
@@ -573,19 +439,6 @@ namespace Game.Module.InGame
         //  관통
         // ═══════════════════════════════════════════════════════════
 
-        /// <summary>코만도(레이저) — 3초 동안 주변 적에게 계속 튄다.</summary>
-        private void LaserBounce(Unit me)
-        {
-            _bounceSeconds = BaseAxis(BounceSeconds);   // Lv1 3 → Lv4 4.5초
-            _bounceTick = 0f;
-            // 퀄업 연출이 있으면 첫 튐(_bounceTick 0)이 곧바로 조준 · 낙뢰로 시작을 보여 준다
-            if (LzReady) { ResetLz(); return; }
-            // 시전 순간 한 번은 나에게서 가장 가까운 적으로 뻗는다 — 시작이 보여야 한다.
-            var first = NearestEnemy(me.Position);
-            if (first != null) PlayBolt(me.Position, first.Position);
-            else PlayFx("crit", me.Position, 96f, loop: false);
-        }
-
         // ═══════════════════════════════════════════════════════════
         //  시간 흐르기
         // ═══════════════════════════════════════════════════════════
@@ -600,7 +453,7 @@ namespace Game.Module.InGame
             TickStickyBomb(dt);       // 코만도(수류탄) C4
             TickFullSwing(dt);        // 슬러거 풀스윙 회오리
             TickUltimates(dt);        // 필살기 18종(BattleDirector.Ultimates)
-            TickEvade(dt);            // 닌자 몸놀림 (BattleDirector.Rework1021)
+            TickSkills1029(dt);       // 다시 잡은 스킬(PD 2026-10-29 · BattleDirector.Skills1029)
             TickWraiths(dt);          // 사신 원혼
             TickQx();     // 파워 · 마법 퀄업 연출 — 몸을 따라다니는 부품
             for (int i = _spits.Count - 1; i >= 0; i--)
@@ -625,7 +478,6 @@ namespace Game.Module.InGame
                 }
                 _spits[i] = (fx, target, from, t);
             }
-            TickChain(dt);
             TickMarkQueue(dt);
             TickSkillAura(ref _reflectAuraFx, IsReflectingAll);
             TickSkillAura(ref _critAuraFx, _critLockSeconds > 0f);
@@ -670,8 +522,6 @@ namespace Game.Module.InGame
                 }
             }
             if (_reaperSeconds > 0f) _reaperSeconds -= dt;
-            if (_boltSurgeSeconds > 0f) _boltSurgeSeconds -= dt;
-            if (_bindBonusSeconds > 0f) _bindBonusSeconds -= dt;
             if (_critLockSeconds > 0f) _critLockSeconds -= dt;
             if (_iceShellSeconds > 0f)
             {
@@ -691,28 +541,6 @@ namespace Game.Module.InGame
             {
                 _barrierSeconds -= dt;
                 if (_barrierSeconds <= 0f && _host != null) _host.ClearShield();
-            }
-
-            if (_bounceSeconds <= 0f) return;
-            _bounceSeconds -= dt;
-            _bounceTick -= dt;
-            if (_bounceTick > 0f || _host == null) return;
-
-            _bounceTick = BounceInterval;
-            var list = EnemiesInRange(_host.Position, Meters(BounceRangeMeters));
-            int dmg = SkillDamage(_host, BounceDamageMul);
-            // 퀄업 연출(2026-10-07) — 조준 → 상공 낙뢰. 피해는 낙뢰가 떨어질 때(0.09초 뒤) 들어간다
-            if (LzChain(_host, list, Mathf.Min(3, list.Count), dmg)) return;
-            // ⚠ **줄기를 이어 그린다.** 예전에는 맞는 적 자리에 번개 한 덩이만 띄웠다 —
-            //   시전자 발밑의 레이저 기둥은 가만히 있는데 멀리 있는 적이 맞아서,
-            //   무엇이 무엇을 때리는지 안 보였다(기획 2026-09-15).
-            //   나 → 첫 적 → 둘째 → 셋째 로 **타고 흐르는** 것이 이 스킬이다.
-            var link = _host.Position;
-            for (int i = 0; i < list.Count && i < 3; i++)
-            {
-                PlayBolt(link, list[i].Position);
-                link = list[i].Position;
-                HitEnemyWith(list[i], dmg, _host.Profile);
             }
         }
 

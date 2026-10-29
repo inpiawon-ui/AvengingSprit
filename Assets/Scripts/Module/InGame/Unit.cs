@@ -2089,6 +2089,13 @@ namespace Game.Module.InGame
             return total + DotChunkDamage;
         }
 
+        /// <summary>화상만 끈다 — 드라군 패시브 「용의 피」(화상을 입지 않는다, PD 2026-10-29).</summary>
+        public void ClearBurn()
+        {
+            _burnTimer = _burnAccum = 0f;
+            _burnStack = 0;
+        }
+
         public void ClearStatus()
         {
             _burnTimer = _curseTimer = _freezeTimer = _burnAccum = 0f;

@@ -4137,7 +4137,8 @@ namespace Game.Module.InGame
 
                 // 기획서 A 3-3 Move Attack — 이동 중 사격은 **예외 호스트에만** 허용한다.
                 // 전부 허용하면 멈출 이유가 없어져 위 규칙이 죽는다.
-                bool moveAttack = _host != null && _host.Profile != null && _host.Profile.MoveAttack;
+                // 호퍼(기관단총) 패시브 「치고 빠지기」도 걸으며 쏜다(PD 2026-10-29 · BattleDirector.HostPassives)
+                bool moveAttack = _host != null && _host.Profile != null && (_host.Profile.MoveAttack || PassiveMoveAttack);
                 if (!moveAttack)
                 {
                     _stopTimer = 0f;

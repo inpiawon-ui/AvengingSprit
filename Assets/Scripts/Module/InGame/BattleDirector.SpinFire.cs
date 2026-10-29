@@ -38,11 +38,7 @@ namespace Game.Module.InGame
 
         private void ThugSpinFire(Unit me) => StartSpinFire(me, SfSeconds, SfFinaleShots);
 
-        // 코만도(기관총) 필살기도 같은 틀 — 기관총을 세워 3초 돌며 쏘고, 마지막에 사방 산탄(PD 2026-10-21 「일단 그렇게 적용」)
-        private const float MgSpinSeconds = 3f;
-        private const int MgFinaleShots = 24;
-
-        private void MgSpinFire(Unit me) => StartSpinFire(me, MgSpinSeconds, MgFinaleShots);
+        // 코만도(기관총) 필살기는 PD 2026-10-29 에 「탄막 요새」로 바뀌었다(BattleDirector.Skills1029) — 이 틀은 폭력배만 쓴다.
 
         private string _sfKey;
         private int _sfFinaleShots;

@@ -23,97 +23,101 @@ host.vampire.name	흡혈귀	ヴァンパイア	Vampire	吸血鬼	吸血鬼
 host.commando_missile.name	코만도(미사일)	コマンドーMSL	Commando (Missile)	突擊兵（飛彈）	突击兵（导弹）
 host.death.name	사신	死神	Death	死神	死神
 askill.psg_h01.name	도약 강타	跳躍強打	Leap Smash	飛躍重擊	飞跃重击
-askill.psg_h01.desc	가장 가까운 적에게 도약해 주변 적에게 300% 피해를 준다.	最も近い敵に飛び込み、周囲に300%のダメージを与える。	Leap at the nearest enemy, dealing 300% damage around you.	撲向最近的敵人，對周圍造成300%傷害。	扑向最近的敌人，对周围造成300%伤害。
-askill.psg_h02.name	불굴	不屈	Unyielding	不屈	不屈
-askill.psg_h02.desc	2.5초간 무적이 된다.	2.5秒間、無敵になる。	Become invincible for 2.5s.	2.5秒內無敵。	2.5秒内无敌。
+askill.psg_h01.desc	가장 가까운 적에게 뛰어들어 둘레 적을 강타한다.	最も近い敵に飛び込み、周囲の敵を強打する。	Leap at the nearest foe and smash everything around you.	撲向最近的敵人，重擊周圍敵人。	扑向最近的敌人，重击周围敌人。
+askill.psg_h02.name	전장의 함성	戦場の咆哮	War Cry	戰場咆哮	战场咆哮
+askill.psg_h02.desc	둘레 적을 밀쳐내고 1.5초간 기절시킨다. 메인이면 최대 체력 20%만큼 쉴드를 얻는다.	周囲の敵を押し返し1.5秒気絶させる。メインなら最大体力20%のシールドを得る。	Knock back nearby foes and stun them for 1.5s. As main, gain a Shield of 20% max HP.	震退周圍敵人並暈眩1.5秒。作為主控時獲得最大HP 20%的護盾。	震退周围敌人并眩晕1.5秒。作为主控时获得最大HP 20%的护盾。
+askill.psg_h02.growth	쉴드량	シールド量	Shield	護盾量	护盾值
 askill.psg_h03.name	융단 폭격	絨毯爆撃	Carpet Bomb	地毯式轟炸	地毯式轰炸
 askill.psg_h03.desc	주변에 수류탄을 원형으로 뿌린다. 가까운 적이 있으면 그 적을 노린다.	自分の周りに手榴弾を円形に落とす。近くに敵がいればその敵に落ちる。	Drop grenades in a ring around you, landing on nearby foes.	在自身周圍環狀投下手榴彈。附近有敵人時會落在敵人身上。	在自身周围环形投下手榴弹。附近有敌人时会落在敌人身上。
-askill.psg_h04.name	연쇄 방전	連鎖放電	Chain Discharge	連鎖放電	连锁放电
-askill.psg_h04.desc	3초간 주변 적에게 전기가 계속 튄다.	3秒間、周囲の敵に電撃が走り続ける。	Shock nearby enemies nonstop for 3s.	3秒內持續電擊周圍敵人。	3秒内持续电击周围敌人。
-askill.psg_h05.name	방벽 전개	防壁展開	Barrier	展開屏障	展开屏障
-askill.psg_h05.desc	5초간 최대 체력만큼 쉴드를 얻는다. 쉴드가 다 깎이면 끝난다.	5秒間、最大体力分のシールドをまとう。削られると消える。	Gain a Shield equal to max HP for 5s. Ends when broken.	5秒內獲得等同最大HP的護盾，被打破即消失。	5秒内获得等同最大HP的护盾，被击破即消失。
-askill.psg_h06.name	다중 유도	多重誘導	Multi-Homing	多重追蹤	多重追踪
-askill.psg_h06.desc	미사일 7발을 주변 적들에게 한 발씩 쏜다.	ミサイル7発が周囲の敵へ1発ずつ飛んでいく。	7 missiles fly out, one to each nearby foe.	7發飛彈分別飛向周圍的敵人。	7枚导弹分别飞向周围的敌人。
-askill.psg_h07.name	뇌전 폭주	雷電暴走	Thunder Rampage	雷電暴走	雷电暴走
-askill.psg_h07.desc	2초간 패시브 낙뢰가 100% 발동한다.	2秒間、連鎖雷が必ず発生する。	Chain lightning always triggers for 2s.	2秒內必定觸發連鎖閃電。	2秒内必定触发连锁闪电。
+askill.psg_h04.name	충전 레이저	チャージレーザー	Charge Laser	蓄能雷射	蓄能激光
+askill.psg_h04.desc	1초간 힘을 모은 뒤 일직선으로 모든 적을 꿰뚫는 레이저를 쏜다.	1秒溜めてから、一直線上の敵をすべて貫くレーザーを撃つ。	Charge for 1s, then fire a laser that pierces every foe in a line.	蓄力1秒後，發射貫穿直線上所有敵人的雷射。	蓄力1秒后，发射贯穿直线上所有敌人的激光。
+askill.psg_h05.name	제압 사격	制圧射撃	Suppressing Fire	壓制射擊	压制射击
+askill.psg_h05.desc	앞쪽 부채꼴로 2초간 연사한다. 맞은 적은 30% 느려진다.	前方の扇状に2秒間連射する。当たった敵は30%鈍足になる。	Spray a forward cone for 2s. Hit foes are slowed by 30%.	向前方扇形連射2秒。被擊中的敵人減速30%。	向前方扇形连射2秒。被击中的敌人减速30%。
+askill.psg_h06.name	다탄두	マルチ弾頭	Multi-Warhead	多彈頭	多弹头
+askill.psg_h06.desc	미사일 7발이 주변 적들에게 한 발씩 날아간다.	ミサイル7発が周囲の敵へ1発ずつ飛んでいく。	7 missiles fly out, one to each nearby foe.	7發飛彈分別飛向周圍的敵人。	7枚导弹分别飞向周围的敌人。
+askill.psg_h07.name	뇌전	雷電	Thunderclap	雷電	雷电
+askill.psg_h07.desc	둘레 적 5명에게 낙뢰를 한 번씩 떨어뜨린다.	周囲の敵5体に落雷を1回ずつ落とす。	Drop a lightning bolt on up to 5 nearby foes.	對周圍5名敵人各降下一次落雷。	对周围5名敌人各降下一次落雷。
 askill.psg_h08.name	독 뿜기	毒霧噴射	Venom Spray	噴吐毒霧	喷吐毒雾
 askill.psg_h08.desc	주변 5m 안의 적을 모두 중독시킨다. 중독된 적은 지속 피해를 받고 느려진다.	周囲5mの敵を毒状態にする。毒はダメージと鈍足を与える。	Poison all enemies within 5 m. Poison damages and slows.	使周圍5m內所有敵人中毒。中毒會造成傷害並減速。	使周围5m内所有敌人中毒。中毒会造成伤害并减速。
 askill.psg_h09.name	화염 지대	火炎地帯	Fire Zone	火焰地帶	火焰地带
 askill.psg_h09.desc	가장 가까운 적의 발밑에 불바다를 만든다. 불바다 위의 적은 계속 화상 피해를 받는다.	最も近い敵の足元に火の海を広げる。上に立つ敵は燃え続ける。	Spread fire under the nearest enemy. Enemies on it keep burning.	在最近的敵人腳下展開火海，站在上面的敵人會持續燃燒。	在最近的敌人脚下展开火海，站在上面的敌人会持续燃烧。
 askill.psg_h10.name	일제 표식	一斉マーキング	Mass Mark	全體標記	全体标记
-askill.psg_h10.desc	방 안 모든 적에게 3초간 표식을 새긴다.	部屋にいるすべての敵に3秒間マーキングを刻む。	Mark every enemy in the room for 3s.	為房間內所有敵人施加3秒標記。	为房间内所有敌人施加3秒标记。
+askill.psg_h10.desc	체력이 가장 높은 적 3명에게 4초간 표식을 새긴다. 표식이 붙은 적은 받는 피해 +30%.	体力が最も高い敵3体に4秒間マーキング。マーキング中の敵は被ダメージ+30%。	Mark the 3 toughest foes for 4s. Marked foes take 30% more damage.	為體力最高的3名敵人施加4秒標記。被標記的敵人受到傷害+30%。	为体力最高的3名敌人施加4秒标记。被标记的敌人受到伤害+30%。
 askill.psg_h11.name	난사	乱射	Bullet Storm	亂射	乱射
 askill.psg_h11.desc	다섯 갈래로 세 번 빠르게 쏜다.	5方向の弾を素早く3連射する。	Fire a 5-way spread 3 times in quick succession.	向五個方向快速連射3次。	向五个方向快速连射3次。
-askill.psg_h12.name	수호 결계	守護結界	Guardian Ward	守護結界	守护结界
-askill.psg_h12.desc	3초간 받는 피해 −50% · 쉴드 획득 2배.	3秒間、被ダメージ−50%・シールド獲得量2倍。	For 3s: damage taken −50%, Shield gain x2.	3秒內受到傷害−50%，護盾獲得量2倍。	3秒内受到伤害−50%，护盾获得量2倍。
-askill.psg_h13.name	정조준	精密照準	Dead Aim	精準瞄準	精准瞄准
-askill.psg_h13.desc	5초간 치명타 확률이 90% 로 고정된다.	5秒間、クリティカル率が90%に固定される。	Crit chance locked at 90% for 5s.	5秒內暴擊率固定為90%。	5秒内暴击率固定为90%。
+askill.psg_h12.name	진압 결계	鎮圧結界	Binding Ward	鎮壓結界	镇压结界
+askill.psg_h12.desc	둘레 3m 안의 적을 2초간 묶어 움직이지 못하게 한다.	周囲3mの敵を2秒間縛り、動けなくする。	Bind foes within 3 m for 2s so they can't move.	束縛周圍3m內的敵人2秒，使其無法移動。	束缚周围3m内的敌人2秒，使其无法移动。
+askill.psg_h13.name	조준 사격	狙い撃ち	Aimed Shot	瞄準射擊	瞄准射击
+askill.psg_h13.desc	가장 먼 적에게 확정 치명타 3발을 쏜다.	最も遠い敵に確定クリティカルを3発撃つ。	Fire 3 guaranteed critical shots at the farthest foe.	向最遠的敵人射出3發必定暴擊。	向最远的敌人射出3发必定暴击。
 askill.psg_h14.name	백스텝 사격	バックステップ射撃	Backstep Fire	後撤射擊	后撤射击
-askill.psg_h14.desc	가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。	Leap back from the nearest enemy while spraying a fan of shots forward.	從最近的敵人身邊大步後跳，同時向前方扇形連射。	从最近的敌人身边大步后跳，同时向前方扇形连射。
+askill.psg_h14.desc	가까운 적에게서 뒤로 크게 물러나며 앞쪽으로 부채꼴 연사한다. 맞은 적은 밀려난다.	近くの敵から大きく後ろへ跳び、前方へ扇状に連射する。当たった敵は押し返される。	Leap back from the nearest foe while spraying a fan of shots forward. Hit foes are knocked back.	從最近的敵人身邊大步後跳，同時向前方扇形連射。被擊中的敵人會被擊退。	从最近的敌人身边大步后跳，同时向前方扇形连射。被击中的敌人会被击退。
 askill.psg_h15.name	미니 골렘	ミニゴーレム	Mini Golem	迷你魔像	迷你魔像
 askill.psg_h15.desc	미니 골렘을 소환해 10초간 함께 싸운다.	ミニゴーレムを呼び、10秒間連れて一緒に戦う。	Summon a mini golem that follows and fights with you for 10s.	召喚迷你魔像，10秒內跟隨你一起戰鬥。	召唤迷你魔像，10秒内跟随你一起战斗。
-askill.psg_h16.name	중력진	重力陣	Gravity Well	重力陣	重力阵
-askill.psg_h16.desc	적이 가장 많이 모인 곳에 황금 마법진을 펼쳐 1.2초간 중앙으로 끌어당기며 피해를 준 뒤 빛을 폭발시킨다.	敵が最も集まった場所に黄金の魔法陣を広げ、1.2秒間中心へ引き寄せながら削り、光で爆発させる。	Open a golden circle where foes crowd, pull them to the center for 1.2s while chipping away, then burst in light.	在敵人最密集處展開黃金魔法陣，1.2秒內將敵人吸向中心並持續削血，最後以光芒引爆。	在敌人最密集处展开黄金魔法阵，1.2秒内将敌人吸向中心并持续掉血，最后以光芒引爆。
-askill.psg_h17.name	사슬 끌어오기	鎖引き寄せ	Chain Pull	鎖鏈牽引	锁链牵引
-askill.psg_h17.desc	주변 적 5명을 사슬로 내 앞으로 끌어와 속박하고 한 번에 후려친다. 속박된 적은 받는 피해가 늘어난다.	周囲の敵5体を鎖で目の前に引き寄せて縛り、まとめて薙ぎ払う。縛られた敵へのダメージ増加。	Chain up to 5 nearby foes, yank them in front of you, bind them and strike them all. Bound foes take more damage.	用鎖鏈將周圍5名敵人拉到面前綑綁，一次橫掃。被綑綁的敵人受到更多傷害。	用锁链将周围5名敌人拉到面前捆绑，一次横扫。被捆绑的敌人受到更多伤害。
-askill.psg_h18.name	그림자 걸음	影走り	Shadow Step	影步	影步
-askill.psg_h18.desc	4초간 회피 50% · 이동 속도 +35%, 잔상이 남는다.	4秒間、回避50%・移動速度+35%、残像が残る。	For 4s, 50% dodge and +35% move speed, leaving afterimages.	4秒內閃避50%，移動速度+35%，並留下殘影。	4秒内闪避50%，移动速度+35%，并留下残影。
+askill.psg_h16.name	빛의 인력	光の引力	Light Pull	光之引力	光之引力
+askill.psg_h16.desc	적이 가장 많이 모인 곳에 마법진을 펼쳐 1.2초간 가운데로 끌어당긴 뒤 빛으로 폭발시킨다.	敵が最も集まった場所に魔法陣を広げ、1.2秒間中心へ引き寄せてから光で爆発させる。	Open a circle where foes crowd, pull them to the center for 1.2s, then burst in light.	在敵人最密集處展開魔法陣，1.2秒內將敵人吸向中心，最後以光芒引爆。	在敌人最密集处展开魔法阵，1.2秒内将敌人吸向中心，最后以光芒引爆。
+askill.psg_h17.name	사슬 결박	鎖縛り	Chain Bind	鎖鏈束縛	锁链束缚
+askill.psg_h17.desc	주변 적 5명을 사슬로 내 앞에 끌어와 묶고 한 번에 후려친다.	周囲の敵5体を鎖で目の前に引き寄せて縛り、まとめて薙ぎ払う。	Chain up to 5 nearby foes, yank them in front of you, bind them and strike them all.	用鎖鏈將周圍5名敵人拉到面前綑綁，一次橫掃。	用锁链将周围5名敌人拉到面前捆绑，一次横扫。
+askill.psg_h18.name	그림자 베기	影斬り	Shadow Cut	影斬	影斩
+askill.psg_h18.desc	가까운 적 3명 사이를 순간이동하며 벤다.	近くの敵3体の間を瞬間移動しながら斬る。	Blink between the 3 nearest foes, slashing each.	在最近的3名敵人之間瞬移斬擊。	在最近的3名敌人之间瞬移斩击。
+askill.psg_h18.growth	베기 피해	斬撃ダメージ	Slash damage	斬擊傷害	斩击伤害
 askill.psg_h19.name	포탑 전개	砲台展開	Deploy Turret	架設砲台	部署炮台
 askill.psg_h19.desc	10초간 자동으로 공격하는 포탑을 설치한다.	10秒間、自動で撃つ砲台を設置する。	Deploy an auto-firing turret for 10s.	架設一座自動射擊的砲台，持續10秒。	部署一座自动射击的炮台，持续10秒。
-askill.psg_h20.name	전탄 반사	全弾反射	Full Reflect	全彈反射	全弹反射
-askill.psg_h20.desc	5초간 날아오는 탄을 반사한다. 반사된 탄은 더 큰 피해를 준다.	5秒間、飛んでくる弾を跳ね返す。反射弾は威力が高い。	Reflect incoming bullets for 5s. Reflected shots hit harder.	5秒內反彈飛來的子彈。反彈的子彈威力更高。	5秒内反弹飞来的子弹。反弹的子弹威力更高。
-askill.psg_h21.name	얼음 감옥	氷の牢獄	Ice Prison	冰之牢獄	冰之牢狱
-askill.psg_h21.desc	1초간 얼음 속에 들어가 무적이 된다(공격 불가). 최대 체력 30%를 회복한다.	1秒間、氷に閉じこもる。攻撃を受けず与えず、体力を30%回復する。	Encase yourself in ice for 1s. No damage dealt or taken; heal 30% HP.	封入冰中1秒。不受傷也不攻擊，回復30%HP。	封入冰中1秒。不受伤也不攻击，恢复30%HP。
-askill.psg_h22.name	혈연	血宴	Blood Feast	血宴	血宴
-askill.psg_h22.desc	화면 안의 적마다 박쥐를 날려 피를 빨아 온다. 적 1명당 최대 체력 2% 회복.	画面内の敵ごとにコウモリが飛んで血を吸ってくる。敵の数だけ最大体力の2%ずつ回復。	A bat flies to each foe on screen and drains blood. Heal 2% max HP per foe.	蝙蝠飛向畫面中每個敵人吸血。每個敵人回復最大HP的2%。	蝙蝠飞向画面中每个敌人吸血。每个敌人恢复最大HP的2%。
+askill.psg_h20.name	라인 드라이브	ライナー	Line Drive	平飛球	平飞球
+askill.psg_h20.desc	적을 꿰뚫는 강타구를 친다. 맞은 적은 멀리 날아가고, 날아간 적에 부딪힌 적도 피해를 받는다.	敵を貫く強烈な打球を放つ。当たった敵は遠くへ飛ばされ、ぶつかった敵もダメージを受ける。	Smash a piercing line drive. Hit foes fly far, and foes they crash into take damage too.	擊出貫穿敵人的強力平飛球。被擊中的敵人會飛遠，被撞到的敵人也會受到傷害。	击出贯穿敌人的强力平飞球。被击中的敌人会飞远，被撞到的敌人也会受到伤害。
+askill.psg_h21.name	눈보라	吹雪	Blizzard	暴風雪	暴风雪
+askill.psg_h21.desc	둘레 적을 1.5초간 빙결시킨다. 보스는 얼지 않고 느려진다.	周囲の敵を1.5秒間凍結させる。ボスは凍らず鈍足になる。	Freeze nearby foes for 1.5s. Bosses are slowed instead.	冰凍周圍敵人1.5秒。頭目不會被冰凍，改為減速。	冰冻周围敌人1.5秒。头目不会被冰冻，改为减速。
+askill.psg_h22.name	박쥐 떼	コウモリの群れ	Bat Swarm	蝙蝠群	蝙蝠群
+askill.psg_h22.desc	화면 안의 적마다 박쥐가 날아가 물고, 빨아 온 피로 메인을 회복한다. 적 1명당 최대 체력 2%.	画面内の敵ごとにコウモリが噛みつき、吸った血でメインを回復する。敵1体ごとに最大体力2%。	A bat bites each foe on screen and brings blood back to heal your main. 2% max HP per foe.	蝙蝠咬向畫面中每個敵人，吸回的血為主控回復。每個敵人回復最大HP的2%。	蝙蝠咬向画面中每个敌人，吸回的血为主控恢复。每个敌人恢复最大HP的2%。
 askill.psg_h23.name	사신의 시간	死神の刻	Death's Hour	死神之刻	死神之刻
 askill.psg_h23.desc	3초간 공격한 적을 즉사시킨다. 중간 보스는 50% 확률, 보스는 10% 확률로 최대 체력 25% 피해.	3秒間、攻撃した敵を即死させる。中ボスは50%の確率、ボスは10%の確率で最大HPの25%ダメージ。	For 3s, enemies you hit die instantly. Mini-bosses: 50% chance. Bosses: 10% chance to lose 25% max HP.	3秒內被你攻擊的敵人即死。中頭目有50%機率即死，頭目有10%機率受到最大HP 25%的傷害。	3秒内被你攻击的敌人即死。中头目有50%几率即死，头目有10%几率受到最大HP 25%的伤害。
-pskill.psv_amazon.name	쉴드 질주	シールド疾走	Shield Dash	護盾疾馳	护盾疾驰
-pskill.psv_amazon.desc	쉴드가 찰수록 이동 속도가 빨라진다(최대 +40%).	シールドが溜まるほど速くなる。最大時は移動速度+40%。	Faster as Shield fills. Full: Speed +40%.	護盾越滿速度越快。全滿時移動速度+40%。	护盾越满速度越快。充满时移动速度+40%。
-pskill.psv_counter.name	역전의 자세	逆転の構え	Comeback Stance	逆轉架勢	逆转架势
-pskill.psv_counter.desc	쉴드가 남아 있는 동안 공격력이 오른다.	シールドが残っている間、攻撃力が上がる。	Attack up while Shield remains.	護盾存在期間攻擊力提升。	护盾存在期间攻击力提升。
-pskill.psv_slugger.name	장외 타구	場外弾	Home Run	場外全壘打	场外本垒打
-pskill.psv_slugger.desc	적 처치 시 20% 확률로 주변 적을 날려 보낸다.	とどめの一撃で20%の確率で周囲の敵を吹き飛ばす。	Final blows have a 20% chance to knock away nearby enemies.	最後一擊有20%機率擊飛周圍敵人。	最后一击有20%几率击飞周围敌人。
+pskill.psv_amazon.name	질주	疾走	Sprint	疾走	疾走
+pskill.psv_amazon.desc	도약 강타로 적을 처치하면 한 번 더 도약한다.	跳躍強打で敵を倒すと、もう一度跳ぶ。	Killing with Leap Smash lets you leap once more.	以飛躍重擊擊倒敵人時，再飛躍一次。	以飞跃重击击倒敌人时，再飞跃一次。
+pskill.psv_counter.name	불굴	不屈	Unyielding	不屈	不屈
+pskill.psv_counter.desc	체력이 30% 아래로 떨어지면 한 판에 한 번 3초간 무적이 되고 최대 체력 30%를 회복한다.	体力が30%を下回ると、1回のプレイで1度だけ3秒間無敵になり最大体力の30%を回復する。	Once per run, dropping below 30% HP grants 3s of invincibility and heals 30% max HP.	體力低於30%時，每局一次3秒無敵並回復最大HP的30%。	体力低于30%时，每局一次3秒无敌并恢复最大HP的30%。
+pskill.psv_slugger.name	반사 신경	反射神経	Reflexes	反射神經	反射神经
+pskill.psv_slugger.desc	날아온 적 탄을 30% 확률로 자동으로 되받아친다.	飛んできた敵弾を30%の確率で自動で打ち返す。	30% chance to automatically bat back incoming enemy shots.	有30%機率自動擊回飛來的敵方子彈。	有30%几率自动击回飞来的敌方子弹。
 pskill.psv_death.name	망자 소집	亡者召集	Call of the Dead	亡者召集	亡者召集
 pskill.psv_death.desc	적을 처치할 때마다 그 자리에 아군 해골을 소환한다.	敵を倒すたび、その場にスケルトンが起き上がる。	A skeleton rises wherever you kill an enemy.	每擊倒一名敵人，該處就會站起一具骷髏。	每击倒一名敌人，该处就会站起一具骷髅。
 pskill.psv_guru.name	무형보	無形歩	Phase Walk	無形步	无形步
 pskill.psv_guru.desc	이동 중 지형지물을 통과한다.	歩いている間、障害物をすり抜ける。	Walk through obstacles.	行走時可穿過障礙物。	行走时可穿过障碍物。
-pskill.psv_ninja_chain.name	흘리기	受け流し	Parry	招架	招架
-pskill.psv_ninja_chain.desc	10% 확률로 받는 피해를 회피한다.	10%の確率でダメージを丸ごと受け流す。	10% chance to negate all damage.	10%機率完全化解傷害。	10%几率完全化解伤害。
-pskill.psv_dragoon.name	불씨	火種	Ember	火種	火种
-pskill.psv_dragoon.desc	적중 시 10% 확률로 화상을 건다. 중첩되지 않는다.	命中した敵に10%の確率で燃焼。重複しない。	10% chance to Burn on hit. Doesn't stack.	命中敵人時10%機率造成燒傷。不可疊加。	命中敌人时10%几率造成灼烧。不可叠加。
+pskill.psv_ninja_chain.name	사슬 감기	鎖巻き	Chain Wrap	鎖鏈纏繞	锁链缠绕
+pskill.psv_ninja_chain.desc	사슬로 끌려온 적은 3초간 받는 피해 +25%.	鎖で引き寄せた敵は3秒間被ダメージ+25%。	Foes pulled by your chain take 25% more damage for 3s.	被鎖鏈拉來的敵人3秒內受到傷害+25%。	被锁链拉来的敌人3秒内受到伤害+25%。
+pskill.psv_dragoon.name	용의 피	竜の血	Dragon Blood	龍之血	龙之血
+pskill.psv_dragoon.desc	불바다 위에 서 있으면 공격력 +30%, 화상을 입지 않는다.	火の海の上に立つと攻撃力+30%、燃焼を受けない。	Standing on your fire grants +30% Attack and Burn immunity.	站在火海上時攻擊力+30%，且不會燒傷。	站在火海上时攻击力+30%，且不会灼烧。
 pskill.psv_salamander.name	독니	毒牙	Venom Fang	毒牙	毒牙
-pskill.psv_salamander.desc	적중 시 10% 확률로 중독시킨다. 중독된 적은 받는 피해 +25%.	命中した敵に10%の確率で毒。毒状態の敵へのダメージ+25%。	10% chance to Poison on hit. Poisoned foes take 25% more damage.	命中敵人時10%機率中毒。中毒的敵人受到的傷害+25%。	命中敌人时10%几率中毒。中毒的敌人受到的伤害+25%。
+pskill.psv_salamander.desc	중독된 적에게 주는 피해 +20%.	毒状態の敵へのダメージ+20%。	+20% damage to Poisoned foes.	對中毒敵人造成的傷害+20%。	对中毒敌人造成的伤害+20%。
 pskill.psv_dragon_blue.name	낙뢰	落雷	Thunderbolt	落雷	落雷
 pskill.psv_dragon_blue.desc	적중 시 10% 확률로 근처 다른 적에게 번개가 튄다. 근처에 적이 없으면 발동하지 않는다.	10%の確率で隣の敵に雷が跳ぶ。跳ぶ先がいなければ発動しない。	10% chance for lightning to jump to a nearby enemy. Needs a target.	10%機率對旁邊的敵人彈射閃電。沒有目標時不會觸發。	10%几率对旁边的敌人弹射闪电。没有目标时不会触发。
 pskill.psv_commando_grenade.name	파편탄	破片弾	Shrapnel	破片彈	破片弹
 pskill.psv_commando_grenade.desc	상대 방어력을 50% 무시한다.	相手の防御力を50%無視する。	Ignore 50% of enemy defense.	無視敵人50%防禦力。	无视敌人50%防御力。
 pskill.psv_snowwoman.name	서릿발	霜柱	Frost	霜柱	霜冻
-pskill.psv_snowwoman.desc	적중 시 30% 확률로 적을 빙결시킨다. 빙결된 적에게 주는 피해 +30%. 보스는 면역.	命中時30%の確率で敵を凍結。凍結した敵へのダメージ+30%。ボスには無効。	30% chance to Freeze on hit. +30% damage to Frozen foes. Bosses are immune.	命中時30%機率冰凍敵人。對冰凍敵人的傷害+30%。頭目免疫。	命中时30%几率冰冻敌人。对冰冻敌人的伤害+30%。头目免疫。
-pskill.psv_hopper_smg.name	충격 반동	衝撃反動	Recoil Shock	衝擊反震	冲击反震
-pskill.psv_hopper_smg.desc	적중 시 10% 확률로 적을 넉백시킨다.	10%の確率で当たった敵を押し返す。	10% chance to knock back hit enemies.	10%機率擊退被命中的敵人。	10%几率击退被命中的敌人。
+pskill.psv_snowwoman.desc	빙결된 적에게 주는 피해 +30%.	凍結した敵へのダメージ+30%。	+30% damage to Frozen foes.	對冰凍敵人造成的傷害+30%。	对冰冻敌人造成的伤害+30%。
+pskill.psv_hopper_smg.name	치고 빠지기	ヒット＆アウェイ	Hit and Run	打帶跑	打带跑
+pskill.psv_hopper_smg.desc	이동 중에도 기본 공격을 쏜다(위력 60%).	移動中も通常攻撃を撃つ（威力60%）。	Keep firing basic attacks while moving (60% power).	移動中也會進行普通攻擊（威力60%）。	移动中也会进行普通攻击（威力60%）。
 pskill.psv_commando_mg.name	중장갑	重装甲	Heavy Armor	重裝甲	重装甲
 pskill.psv_commando_mg.desc	방어력 20% 증가.	防御力20%上昇。	Defense +20%.	防禦力提升20%。	防御力提升20%。
-pskill.psv_thug.name	삥	カツアゲ	Shakedown	勒索	勒索
-pskill.psv_thug.desc	주운 골드가 10% 더 들어온다.	拾ったゴールドが10%増える。	+10% Gold picked up.	拾取的金幣增加10%。	拾取的金币增加10%。
-pskill.psv_ninja.name	질주	疾走	Sprint	疾走	疾走
-pskill.psv_ninja.desc	적 처치 시 1.5초간 이동 속도 +30%.	敵を倒すと1.5秒間、移動速度+30%。	On kill, Speed +30% for 1.5s.	擊倒敵人後1.5秒內移動速度+30%。	击倒敌人后1.5秒内移动速度+30%。
-pskill.psv_leech.name	흡혈	吸血	Lifesteal	吸血	吸血
-pskill.psv_leech.desc	적중 시 8% 확률로 공격력의 5%만큼 체력을 회복한다.	8%の確率で攻撃力の5%分を回復する。	8% chance to heal 5% of Attack.	8%機率回復相當於攻擊力5%的HP。	8%几率恢复相当于攻击力5%的HP。
-pskill.psv_gangster.name	처형 계약	処刑契約	Execution Contract	處決契約	处决契约
-pskill.psv_gangster.desc	표식이 붙은 적을 20% 확률로 즉사시킨다. 엘리트는 최대 체력 50%, 보스는 30% 피해.	マーキング中の敵を20%で即死。\nエリート50%・ボス30%を削る。	20% chance to Execute marked foes. Elites lose 50% max HP, bosses 30%.	20%機率處決帶標記的敵人。精英扣最大HP 50%，頭目扣30%。	20%几率处决带标记的敌人。精英扣最大HP 50%，头目扣30%。
+pskill.psv_thug.name	난전	乱戦	Brawl	亂戰	乱战
+pskill.psv_thug.desc	근처에 적이 3명 이상이면 기본 공격 속도 +20%.	近くに敵が3体以上いると通常攻撃速度+20%。	+20% basic attack speed while 3+ foes are nearby.	附近有3名以上敵人時，普通攻擊速度+20%。	附近有3名以上敌人时，普通攻击速度+20%。
+pskill.psv_ninja.name	몸놀림	身のこなし	Agility	身法	身法
+pskill.psv_ninja.desc	20% 확률로 받는 피해를 회피한다.	20%の確率でダメージを回避する。	20% chance to dodge damage.	20%機率閃避傷害。	20%几率闪避伤害。
+pskill.psv_leech.name	피의 갈증	血の渇き	Bloodthirst	血之渴望	血之渴望
+pskill.psv_leech.desc	주는 피해의 5%를 늘 흡혈한다. 체력이 가득이면 넘친 만큼 쉴드가 된다.	与えたダメージの5%を常に吸血する。体力が満タンなら余った分がシールドになる。	Always heal 5% of damage dealt. At full HP, the excess becomes Shield.	總是吸取造成傷害的5%。體力全滿時，溢出的部分轉為護盾。	总是吸取造成伤害的5%。体力全满时，溢出的部分转为护盾。
+pskill.psv_gangster.name	청부 계약	請負契約	Hit Contract	委託契約	委托契约
+pskill.psv_gangster.desc	표식이 붙은 적을 처치하면 액티브 쿨타임이 1초 줄어든다.	マーキング中の敵を倒すとアクティブのクールタイムが1秒短縮。	Killing a marked foe cuts your active cooldown by 1s.	擊倒帶標記的敵人時，主動技能冷卻縮短1秒。	击倒带标记的敌人时，主动技能冷却缩短1秒。
 pskill.psv_momentum.name	급소	急所	Weak Spot	要害	要害
 pskill.psv_momentum.desc	치명타 피해 +30%.	クリティカルダメージ+30%。	Crit damage +30%.	暴擊傷害+30%。	暴击伤害+30%。
-pskill.psv_commando_missile.name	고폭탄	高爆弾	High Explosive	高爆彈	高爆弹
-pskill.psv_commando_missile.desc	투사체가 지형지물을 무시한다.	弾が障害物を無視する。	Shots ignore obstacles.	子彈無視障礙物。	子弹无视障碍物。
-pskill.psv_medium.name	강령	降霊	Necromancy	降靈	降灵
-pskill.psv_medium.desc	적 처치 시 30% 확률로 아군 해골을 소환한다. 해골은 적의 공격을 받지 않고 3초 뒤 사라진다.	敵を倒すと30%の確率で味方の骸骨が起き上がる。骸骨は狙われず3秒で消える。	Kills have a 30% chance to raise an allied skeleton. It can't be targeted and fades after 3s.	擊倒敵人時30%機率召喚我方骷髏。骷髏不會被敵人鎖定，3秒後消失。	击倒敌人时30%几率召唤我方骷髅。骷髅不会被敌人锁定，3秒后消失。
-pskill.psv_white_wizard.name	관통 광선	貫通光線	Piercing Ray	貫穿光線	贯穿光线
-pskill.psv_white_wizard.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	Shots ignore obstacles and pierce enemies.	子彈無視障礙物並貫穿敵人。	子弹无视障碍物并贯穿敌人。
+pskill.psv_commando_missile.name	표적 고정	ロックオン	Lock-On	目標鎖定	目标锁定
+pskill.psv_commando_missile.desc	같은 적을 연속으로 맞히면 피해가 10%씩 쌓인다(최대 50%).	同じ敵に連続で当てるとダメージが10%ずつ上がる（最大50%）。	Hitting the same foe in a row stacks +10% damage (max 50%).	連續擊中同一敵人時傷害每次+10%（最多50%）。	连续击中同一敌人时伤害每次+10%（最多50%）。
+pskill.psv_commando_missile.growth	겹마다 피해	1段ごとのダメージ	Damage per stack	每層傷害	每层伤害
+pskill.psv_medium.name	강령술	降霊術	Necromancy	降靈術	降灵术
+pskill.psv_medium.desc	소환물 최대 수 +2. 적 처치 시 30% 확률로 아군 해골을 소환한다.	召喚物の最大数+2。敵を倒すと30%の確率で味方の骸骨を召喚する。	+2 max summons. Kills have a 30% chance to raise an allied skeleton.	召喚物上限+2。擊倒敵人時30%機率召喚我方骷髏。	召唤物上限+2。击倒敌人时30%几率召唤我方骷髅。
+pskill.psv_white_wizard.name	빛의 가호	光の加護	Light's Blessing	光之加護	光之加护
+pskill.psv_white_wizard.desc	액티브로 적 3명 이상을 맞히면 최대 체력 15%만큼 쉴드를 얻는다.	アクティブで敵3体以上に当てると最大体力15%のシールドを得る。	Hit 3+ foes with your active to gain a Shield of 15% max HP.	主動技能擊中3名以上敵人時，獲得最大HP 15%的護盾。	主动技能击中3名以上敌人时，获得最大HP 15%的护盾。
+pskill.psv_white_wizard.growth	쉴드량	シールド量	Shield	護盾量	护盾值
 pskill.psv_commando_laser.name	집속 광선	集束光線	Focused Beam	聚焦光束	聚焦光束
 pskill.psv_commando_laser.desc	투사체가 지형지물을 무시하고 적을 관통한다.	弾が障害物を無視し、敵を貫通する。	Shots ignore obstacles and pierce enemies.	子彈無視障礙物並貫穿敵人。	子弹无视障碍物并贯穿敌人。
 pskill.psv_spare_circuit.name	예비 회로	予備回路	Spare Circuit	備用迴路	备用回路
-pskill.psv_spare_circuit.desc	기본 공격 시 2% 확률로 액티브 쿨타임이 1초 줄어든다.	通常攻撃が2%の確率でアクティブのクールタイムを1秒短縮する。	Basic attacks have a 2% chance to cut active cooldown by 1s.	普通攻擊有2%機率使主動技能冷卻縮短1秒。	普通攻击有2%几率使主动技能冷却缩短1秒。
+pskill.psv_spare_circuit.desc	포탑이 서 있는 동안 받는 피해 −20%.	砲台がある間、被ダメージ−20%。	Take 20% less damage while your turret stands.	砲台存在期間受到傷害−20%。	炮台存在期间受到伤害−20%。
 card.c001.name	감전	感電	Shock	感電	感电
 card.c001.desc	적중 시 전기가 근처 적에게 튄다.	命中すると隣の敵に電撃が跳ぶ。	Hits arc to a nearby foe.	命中時電擊會跳到旁邊的敵人。	命中时电击会跳到旁边的敌人。
 card.c002.name	성장 가속	成長加速	Fast Growth	成長加速	成长加速
@@ -661,40 +665,40 @@ ui.growth.skill.active	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL	ACTIVE SKILL	ACTIV
 ui.growth.skill.passive	PASSIVE	PASSIVE	PASSIVE	PASSIVE	PASSIVE
 ui.growth.skill.header	스킬	スキル	Skills	技能	技能
 pskill.psv_amazon.growth	이동 속도	移動速度	Move speed	移動速度	移动速度
-pskill.psv_counter.growth	공격력	攻撃力	Attack	攻擊力	攻击力
-pskill.psv_slugger.growth	날려 보낼 확률	吹き飛ばし確率	Fling chance	擊飛機率	击飞概率
-pskill.psv_ninja_chain.growth	회피 확률	回避	Dodge	閃避	闪避
-pskill.psv_dragoon.growth	화상 확률	火傷確率	Burn chance	燒傷機率	灼烧概率
-pskill.psv_salamander.growth	중독 확률	毒確率	Poison chance	中毒機率	中毒概率
+pskill.psv_counter.growth	회복량	回復量	Heal	回復量	恢复量
+pskill.psv_slugger.growth	반사 확률	反射確率	Reflect chance	反射機率	反射概率
+pskill.psv_ninja_chain.growth	추가 피해	追加ダメージ	Bonus damage	額外傷害	额外伤害
+pskill.psv_dragoon.growth	공격력	攻撃力	Attack	攻擊力	攻击力
+pskill.psv_salamander.growth	추가 피해	追加ダメージ	Bonus damage	額外傷害	额外伤害
 pskill.psv_dragon_blue.growth	번개 확률	落雷確率	Lightning chance	落雷機率	落雷概率
 pskill.psv_commando_grenade.growth	방어 무시	防御無視	Armor pierce	無視防禦	无视防御
-pskill.psv_snowwoman.growth	빙결 확률	凍結確率	Freeze chance	冰凍機率	冰冻概率
-pskill.psv_hopper_smg.growth	넉백 확률	ノックバック確率	Knockback chance	擊退機率	击退概率
+pskill.psv_snowwoman.growth	추가 피해	追加ダメージ	Bonus damage	額外傷害	额外伤害
+pskill.psv_hopper_smg.growth	이동 사격 위력	移動射撃威力	Moving fire power	移動射擊威力	移动射击威力
 pskill.psv_commando_mg.growth	방어력 증가	防御力上昇	Defense up	防禦力提升	防御力提升
-pskill.psv_thug.growth	골드 증가	ゴールド増加	Gold up	金幣增加	金币增加
-pskill.psv_ninja.growth	이동 속도	移動速度	Move speed	移動速度	移动速度
-pskill.psv_leech.growth	발동 확률	発動確率	Proc chance	發動機率	触发概率
+pskill.psv_thug.growth	공격 속도	攻撃速度	Attack speed	攻擊速度	攻击速度
+pskill.psv_ninja.growth	회피 확률	回避	Dodge	閃避	闪避
+pskill.psv_leech.growth	흡혈량	吸血量	Lifesteal	吸血量	吸血量
 pskill.psv_gangster.growth	즉사 확률	即死確率	Execute chance	即死機率	即死概率
 pskill.psv_momentum.growth	치명타 피해	クリティカルダメージ	Crit damage	暴擊傷害	暴击伤害
 pskill.psv_medium.growth	해골 확률	骸骨確率	Skull chance	骷髏機率	骷髅概率
-pskill.psv_spare_circuit.growth	발동 확률	発動確率	Proc chance	發動機率	触发概率
+pskill.psv_spare_circuit.growth	피해 감소	被ダメージ減少	Damage taken down	減傷	减伤
 askill.psg_h01.growth	피해	ダメージ	Damage	傷害	伤害
 askill.psg_h03.growth	수류탄 피해	手榴弾ダメージ	Grenade damage	手榴彈傷害	手榴弹伤害
-askill.psg_h04.growth	지속 시간	持続時間	Duration	持續時間	持续时间
-askill.psg_h05.growth	쉴드량	シールド量	Shield	護盾量	护盾值
+askill.psg_h04.growth	레이저 피해	レーザーダメージ	Laser damage	雷射傷害	激光伤害
+askill.psg_h05.growth	탄 한 발 피해	1発のダメージ	Damage per shot	每發傷害	每发伤害
 askill.psg_h06.growth	미사일 피해	ミサイルダメージ	Missile damage	飛彈傷害	导弹伤害
-askill.psg_h07.growth	폭주 시간	暴走時間	Surge time	暴走時間	暴走时间
+askill.psg_h07.growth	낙뢰 피해	落雷ダメージ	Bolt damage	落雷傷害	落雷伤害
 askill.psg_h08.growth	독 피해	毒ダメージ	Poison damage	毒傷害	毒伤害
 askill.psg_h09.growth	초당 피해	毎秒ダメージ	Damage / sec	每秒傷害	每秒伤害
 askill.psg_h10.growth	표식 시간	マーク時間	Mark time	標記時間	标记时间
 askill.psg_h11.growth	난사 시간	乱射時間	Barrage time	掃射時間	扫射时间
-askill.psg_h12.growth	피해 감소	被ダメージ減少	Damage taken down	減傷	减伤
-askill.psg_h13.growth	정조준 시간	狙撃時間	Aim time	瞄準時間	瞄准时间
+askill.psg_h12.growth	묶는 시간	拘束時間	Bind time	束縛時間	束缚时间
+askill.psg_h13.growth	한 발 피해	1発のダメージ	Damage per shot	每發傷害	每发伤害
 askill.psg_h14.growth	무적 시간	無敵時間	Invincible time	無敵時間	无敌时间
 askill.psg_h17.growth	속박 시간	拘束時間	Bind time	束縛時間	束缚时间
 askill.psg_h19.growth	포탑 피해	砲台ダメージ	Turret damage	砲塔傷害	炮塔伤害
-askill.psg_h20.growth	반사 시간	反射時間	Reflect time	反射時間	反射时间
-askill.psg_h21.growth	얼음 시간	氷結時間	Ice time	冰凍時間	冰冻时间
+askill.psg_h20.growth	타구 피해	打球ダメージ	Drive damage	擊球傷害	击球伤害
+askill.psg_h21.growth	빙결 시간	凍結時間	Freeze time	冰凍時間	冰冻时间
 askill.psg_h22.growth	적 하나당 회복	敵1体ごとの回復	Heal per enemy	每個敵人回復	每个敌人恢复
 ui.unit.seconds	{0:0.0}초	{0:0.0}秒	{0:0.0}s	{0:0.0}秒	{0:0.0}秒
 ui.affinity.blade	무기	武器	Weapon	武器	武器
@@ -748,8 +752,8 @@ uskill.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain	光柱之雨	光
 uskill.white_wizard.en	Pillar Rain	Pillar Rain	Pillar Rain	Pillar Rain	Pillar Rain
 uskill.dragon_blue.name	천뢰	天雷	Heaven's Thunder	天雷	天雷
 uskill.dragon_blue.en	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder	Heaven's Thunder
-uskill.commando_mg.name	회전 난사	回転乱射	Spin Barrage	迴旋掃射	回旋扫射
-uskill.commando_mg.en	Spin Barrage	Spin Barrage	Spin Barrage	Spin Barrage	Spin Barrage
+uskill.commando_mg.name	탄막 요새	弾幕要塞	Bullet Fortress	彈幕要塞	弹幕要塞
+uskill.commando_mg.en	Bullet Fortress	Bullet Fortress	Bullet Fortress	Bullet Fortress	Bullet Fortress
 uskill.amazon_elite.name	역린	逆鱗	Wrath Unleashed	逆鱗	逆鳞
 uskill.amazon_elite.en	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed	Wrath Unleashed
 ui.ingame.ultimate	필살기	必殺技	SPECIAL	必殺技	必杀技
@@ -1152,29 +1156,29 @@ host.gangster.concept	청부 저격수 — 보스 킬러	請負狙撃手 — ボ
 ult.gangster.name	청부 처형	請負処刑	Contract Kill	契約處刑	契约处决
 ult.gangster.desc	체력이 가장 높은 적(보스 포함)을 1.5초간 조준한 뒤 강력한 한 발을 쏜다. 보스에게는 최대 체력 비례 피해.	最も体力の高い敵（ボス含む）を1.5秒狙い、超特大の一発を放つ。ボスには最大体力の割合ダメージ。	Aim 1.5s at the highest-HP enemy (bosses too), then fire one huge shot. Deals % max HP damage to bosses.	瞄準HP最高的敵人（含頭目）1.5秒後射出超大一發。對頭目造成最大HP百分比傷害。	瞄准HP最高的敌人（含头目）1.5秒后射出超大一发。对头目造成最大HP百分比伤害。
 ult.gangster.short	가장 강한 적에게 초대형 한 발	最強の敵に超特大の一発	Huge shot at the toughest foe	對最強敵人射出超大一發	对最强敌人射出超大一发
-askill.gangster.short	방 안 모든 적에게 표식	部屋の全ての敵にマーキング	Mark every enemy in the room	標記房間內所有敵人	标记房间内所有敌人
-pskill.gangster.short	표식이 붙은 적을 일정 확률로 즉사	マーキング中の敵を確率で即死	Chance to execute marked foes	機率秒殺已標記敵人	概率秒杀已标记敌人
+askill.gangster.short	체력 높은 적 3명에게 표식	体力の高い敵3体にマーキング	Mark the 3 toughest foes	標記體力最高的3名敵人	标记体力最高的3名敌人
+pskill.gangster.short	표식 적 처치 시 쿨 −1초	マーキング敵撃破でクール−1秒	Marked kill: cooldown −1s	擊殺標記敵人冷卻−1秒	击杀标记敌人冷却−1秒
 askill.gangster.opt	표식 붙은 적이 받는 피해 +15%	マーキング中の敵の被ダメージ+15%	Marked enemies take +15% damage	已標記敵人受到傷害 +15%	已标记敌人受到伤害 +15%
 host.hopper.concept	급소 사냥꾼 — 여럿에게 치명	急所ハンター — 多数に致命	Vital hunter — mass crits	要害獵人 — 群體暴擊	要害猎人 — 群体暴击
 ult.hopper.name	킬 포인트	キルポイント	Kill Point	致命點	致命点
 ult.hopper.desc	칼날로 앞쪽 적들을 속박하고, 속박된 적 모두에게 확정 치명타를 준다.	刃で前方の敵をまとめて拘束し、拘束した敵全員にクリティカル確定。	Bind the enemies ahead with blades. Every bound enemy takes a guaranteed crit.	以刀刃束縛前方敵人，被束縛的敵人全員必定暴擊。	以刀刃束缚前方敌人，被束缚的敌人全部必定暴击。
 ult.hopper.short	앞쪽 적 속박 · 확정 치명타	前方の敵を拘束し確定クリ	Bind foes, guaranteed crits	束縛前方敵人並必定暴擊	束缚前方敌人并必定暴击
-askill.hopper.short	5초간 치명타 확률 90%	5秒間クリティカル率90%	Crit chance 90% for 5s	5秒內暴擊率90%	5秒内暴击率90%
+askill.hopper.short	가장 먼 적에게 확정 치명 3발	最も遠い敵に確定クリ3発	3 sure crits at the farthest foe	對最遠敵人3發必定暴擊	对最远敌人3发必定暴击
 pskill.hopper.short	치명타 피해 +30%	クリティカルダメージ+30%	Crit damage +30%	暴擊傷害 +30%	暴击伤害 +30%
-askill.hopper.opt	치명타를 맞힐 때마다 정조준 +0.3초 (최대 +2초)	クリティカル命中ごとに精密照準+0.3秒（最大+2秒）	Each crit extends Dead Aim by 0.3s (max +2s)	每次暴擊命中，精準瞄準 +0.3秒（最多 +2秒）	每次暴击命中，精准瞄准 +0.3秒（最多 +2秒）
+askill.hopper.opt	조준 사격 3 → 4발	狙い撃ち3→4発	Aimed Shot 3 → 4 shots	瞄準射擊 3 → 4發	瞄准射击 3 → 4发
 host.ninja_chain.concept	사슬 사냥꾼 — 끌어오고 날아든다	鎖の狩人 — 鎖で敵へ飛ぶ	Chain hunter — hook and fly	鎖鏈獵人 — 掛上鎖鏈飛身而去	锁链猎人 — 挂上锁链飞身而去
 ult.ninja_chain.name	사슬 돌격 연격	鎖突撃連撃	Chain Rush Combo	鎖鏈突擊連擊	锁链突击连击
 ult.ninja_chain.desc	가장 강한 적에게 사슬을 걸고 날아가 연타한 뒤 내려찍는다(보스는 끌어오지 않는다).	最も強い敵に鎖をかけて自ら飛び込み、連打のあと叩きつける（ボスは引き寄せない）。	Hook the strongest foe with a chain, fly to it, strike repeatedly, then slam down (bosses are not pulled).	對最強敵人掛上鎖鏈並飛身過去，連擊後向下重砸（不會拉動頭目）。	对最强敌人挂上锁链并飞身过去，连击后向下重砸（不会拉动头目）。
 ult.ninja_chain.short	강한 적에게 날아가 연타	強敵へ飛び込んで連撃	Fly to the strongest foe, combo	飛向強敵連擊	飞向强敌连击
 askill.ninja_chain.short	적 5명을 끌어와 한 번에 후려침	敵5体を引き寄せて薙ぎ払う	Pull 5 foes in and strike	拉來5名敵人一次橫掃	拉来5名敌人一次横扫
-pskill.ninja_chain.short	10% 확률로 피해 회피	10%でダメージを受け流す	10% chance to negate damage	10%機率化解傷害	10%概率化解伤害
+pskill.ninja_chain.short	끌려온 적 3초간 받는 피해 +25%	引き寄せた敵の被ダメ3秒+25%	Pulled foes take +25% for 3s	被拉來的敵人3秒受傷+25%	被拉来的敌人3秒受伤+25%
 askill.ninja_chain.opt	끌어오는 적 5 → 7명	引き寄せる敵5→7体	Pull 5 → 7 foes	拉來敵人 5 → 7名	拉来敌人 5 → 7名
 host.medium.concept	강령술사 — 혼과 함께 싸운다	降霊術師 — 霊と共に戦う	Necromancer — spirit allies	降靈術師 — 與靈魂並肩作戰	降灵术师 — 与灵魂并肩作战
 ult.medium.name	거대 원혼	巨大怨霊	Giant Wraith	巨大怨靈	巨大怨灵
 ult.medium.desc	거대 원혼을 소환해 5초간 주변 적을 할퀸 뒤 크게 폭발시킨다.	巨大な怨霊を呼び、5秒間周囲の敵を引き裂かせ、最後に大爆発させる。	Summon a giant wraith that claws nearby foes for 5s, then explodes.	召喚巨大怨靈，抓撕周圍敵人5秒，最後大爆炸。	召唤巨大怨灵，撕抓周围敌人5秒，最后大爆炸。
 ult.medium.short	거대 원혼이 5초 할퀴고 폭발	巨大怨霊が5秒引き裂き爆発	Giant wraith claws, then explodes	巨大怨靈抓撕5秒後爆炸	巨大怨灵撕抓5秒后爆炸
 askill.medium.short	미니 골렘 소환 (10초)	ミニゴーレムと10秒共闘	Mini golem fights for 10s	迷你魔像協同作戰10秒	迷你魔像协同作战10秒
-pskill.medium.short	처치 시 30% 확률로 해골 소환	撃破時30%で骸骨が起き上がる	30% to raise a skeleton on kill	擊殺時30%機率召喚骷髏	击杀时30%概率召唤骷髅
+pskill.medium.short	소환 +2 · 처치 시 30% 해골	召喚+2・撃破時30%で骸骨	+2 summons · 30% skeleton on kill	召喚+2 · 擊殺時30%骷髏	召唤+2 · 击杀时30%骷髅
 askill.medium.opt	미니 골렘 지속 +4초	ミニゴーレムの持続+4秒	Mini golem lasts +4s	迷你魔像持續 +4秒	迷你魔像持续 +4秒
 host.death.concept	죽음의 군주	死の君主	Lord of Death	死亡君主	死亡君主
 ult.death.name	망자 군단	亡者の軍勢	Legion of the Dead	亡者軍團	亡者军团
@@ -1188,57 +1192,57 @@ ult.robot.name	로봇 특공대	ロボ特攻隊	Robo Strike Team	機器人特攻
 ult.robot.desc	로봇 5기가 빛기둥을 타고 내려와 미사일을 퍼붓고, 각자 3발을 더 쏜 뒤 돌아간다.	ロボ5体が光の柱で降下してミサイルを浴びせ、最後にそれぞれ3発撃って帰還する。	5 robots drop in on light pillars, rain missiles, fire a final 3 each and warp out.	五台機器人乘光柱降下傾瀉飛彈，各自再射三發後返回。	五台机器人乘光柱降下倾泻导弹，各自再射三发后返回。
 ult.robot.short	로봇 5기 강하 · 일제 사격	ロボ5体が降下し一斉射撃	5 robots drop in and open fire	五台機器人降下齊射	五台机器人降下齐射
 askill.robot.short	10초간 자동 포탑 설치	10秒間、自動砲台を設置	Deploy an auto-turret for 10s	設置自動砲台10秒	设置自动炮台10秒
-pskill.robot.short	기본 공격 시 2% 확률로 쿨타임 1초 감소	通常攻撃2%でクール1秒短縮	2% on hit: cooldown −1s	普攻2%機率冷卻縮短1秒	普攻2%概率冷却缩短1秒
+pskill.robot.short	포탑이 있는 동안 받는 피해 −20%	砲台がある間、被ダメ−20%	−20% damage taken while turret stands	砲台存在時受傷−20%	炮台存在时受伤−20%
 askill.robot.opt	포탑 +1대 (2대)	砲台+1基（2基）	+1 turret (2 total)	砲台 +1座（共2座）	炮台 +1座（共2座）
 host.ninja.concept	분신술사 — 속이고 협공	分身術師 — 欺いて挟撃	Clone master — trick & flank	分身術師 — 欺敵夾擊	分身术师 — 欺敌夹击
 ult.ninja.name	그림자 삼분신	影三分身	Triple Shadow	影三分身	影三分身
 ult.ninja.desc	분신 3명을 소환해 6초간 함께 공격한다. 내가 던질 때마다 분신도 함께 던진다.	分身を3体呼び出し6秒間共に攻撃する。忍者が投げると3体も同時に投げる。	Summon 3 clones that attack with you for 6s, throwing whenever you throw.	召喚三個分身共同攻擊6秒 — 忍者投擲時三個分身也一起投擲。	召唤三个分身共同攻击6秒 — 忍者投掷时三个分身也一起投掷。
 ult.ninja.short	분신 3명이 6초간 함께 공격	分身3体が6秒共に攻撃	3 clones attack with you for 6s	三個分身共同攻擊6秒	三个分身共同攻击6秒
-askill.ninja.short	4초간 회피 50% · 이동 속도 증가	4秒間回避50%・加速	50% dodge + haste for 4s	4秒內迴避50% · 加速	4秒内闪避50% · 加速
-pskill.ninja.short	처치 시 이동 속도 +30%	撃破時、移動速度+30%	On kill, Speed +30%	擊殺時移動速度 +30%	击杀时移动速度 +30%
-askill.ninja.opt	회피 50% → 70%	回避50%→70%	Dodge 50% → 70%	迴避 50% → 70%	闪避 50% → 70%
+askill.ninja.short	가까운 적 3명을 순간이동 베기	近くの敵3体を瞬間移動で斬る	Blink-slash the 3 nearest foes	瞬移斬擊最近的3名敵人	瞬移斩击最近的3名敌人
+pskill.ninja.short	회피 20%	回避20%	20% dodge	閃避20%	闪避20%
+askill.ninja.opt	베는 적 3 → 5명	斬る敵3→5体	Slash 3 → 5 foes	斬擊敵人 3 → 5名	斩击敌人 3 → 5名
 host.amazon.concept	번개 돌격수	稲妻の突撃手	Lightning striker	閃電突擊手	闪电突击手
 ult.amazon.name	번개 무희	稲妻の舞姫	Lightning Dancer	閃電舞姬	闪电舞姬
 ult.amazon.desc	잔상을 남기며 적 사이를 누비고 연속 공격 후 내려찍는다. 시전 중 무적.	残像を残して敵の間を駆け巡り、斬りつけて叩きつける。発動中は無敵。	Dart between foes in afterimages, striking and slamming. Invincible while casting.	化作殘影穿梭於敵人之間斬擊並重砸，施放中無敵。	化作残影穿梭于敌人之间斩击并重砸，施放中无敌。
 ult.amazon.short	적 사이를 누비며 무적 연격	敵の間を駆ける無敵連撃	Invincible dash-strike combo	穿梭敵陣的無敵連擊	穿梭敌阵的无敌连击
 askill.amazon.short	가까운 적에게 도약 강타	近くの敵へ跳躍強打	Leap smash the nearest foe	跳躍重擊附近敵人	跳跃重击附近敌人
-pskill.amazon.short	쉴드가 찰수록 빨라진다	シールドが多いほど速くなる	Faster as Shield fills	護盾越滿速度越快	护盾越满速度越快
+pskill.amazon.short	도약 강타로 처치하면 한 번 더 도약	跳躍強打で倒すともう一度跳ぶ	Leap again after a Leap Smash kill	飛躍重擊擊殺後再飛躍一次	飞跃重击击杀后再飞跃一次
 askill.amazon.opt	착지 시 주변 적 0.5초 기절	着地点周囲の敵を0.5秒気絶	Stun foes near the landing for 0.5s	落地處周圍敵人暈眩0.5秒	落地处周围敌人眩晕0.5秒
 host.hopper_smg.concept	돌파 특공	突破特攻	Breakthrough raider	突破特攻	突破特攻
 ult.hopper_smg.name	돌진 난사	突進乱射	Rush Fire	突進亂射	突进乱射
 ult.hopper_smg.desc	가장 먼 적까지 일직선으로 돌진하며 양옆으로 난사한다. 도착하면 잠시 무적.	最も遠い敵まで一直線に突進しながら左右に乱射。到着すると無敵。	Charge straight to the farthest foe, spraying both sides. Invincible on arrival.	直線突進至最遠敵人並向兩側亂射，抵達後無敵。	直线突进至最远敌人并向两侧乱射，抵达后无敌。
 ult.hopper_smg.short	먼 적까지 돌진하며 난사	遠い敵まで突進乱射	Charge and spray to far foes	突進遠方敵人並亂射	突进远处敌人并乱射
-askill.hopper_smg.short	뒤로 뛰며 앞으로 연사	後ろに跳びつつ前方へ連射	Leap back while firing ahead	向後跳躍同時向前連射	向后跳跃同时向前连射
-pskill.hopper_smg.short	10% 확률로 넉백	10%で敵を押し返す	10% chance to knock back	10%機率擊退命中的敵人	10%概率击退命中的敌人
+askill.hopper_smg.short	뒤로 뛰며 앞으로 연사 · 넉백	後ろに跳びつつ連射・ノックバック	Leap back, spray forward, knock back	後跳並向前連射 · 擊退	后跳并向前连射 · 击退
+pskill.hopper_smg.short	이동 중에도 평타 (위력 60%)	移動中も通常攻撃（威力60%）	Fire while moving (60% power)	移動中也普攻（威力60%）	移动中也普攻（威力60%）
 askill.hopper_smg.opt	착지 뒤 1초간 공격 속도 +50%	着地後1秒間、攻撃速度+50%	Attack speed +50% for 1s after landing	落地後1秒內攻擊速度 +50%	落地后1秒内攻击速度 +50%
 host.vampire.concept	피의 군주 — 빨아들여 회복	血の君主 — 吸い取って回復	Blood Lord — Drain to heal	血之君主 — 吸血回復	血之君主 — 吸血回复
 ult.vampire.name	피의 웅덩이	血の池	Blood Pool	血池	血池
 ult.vampire.desc	주변에 피 웅덩이를 펼쳐 스며든다. 안의 모든 적에게서 2초간 피를 빨아 회복한 뒤 폭발시킨다.	周囲に血の池を広げて溶け込む。中の敵全員に血を付け、2秒間吸い取って回復し、最後に破裂させる。	Melt into a pool of blood. Every foe inside is marked and drained for 2s to heal you, then bursts.	在周圍展開血池並融入其中 — 池中所有敵人沾染鮮血，吸取2秒回復自身，最後爆裂。	在周围展开血池并融入其中 — 池中所有敌人沾染鲜血，吸取2秒恢复自身，最后爆裂。
 ult.vampire.short	피 웅덩이로 2초 흡혈 뒤 폭발	血の池で2秒吸血後に破裂	Drain all in a pool, then burst	血池吸血2秒後爆裂	血池吸血2秒后爆裂
-askill.vampire.short	박쥐가 피를 빨아 와 회복	コウモリが血を吸って回復	Bats drain blood to heal	蝙蝠吸血回復	蝙蝠吸血恢复
-pskill.vampire.short	8% 확률로 공격력의 5%만큼 체력 회복	8%で攻撃力の5%回復	8% chance to heal on hit	8%機率回復攻擊力5%的HP	8%概率恢复攻击力5%的HP
+askill.vampire.short	박쥐가 피를 빨아 와 메인 회복	コウモリが血を吸ってメイン回復	Bats drain blood to heal your main	蝙蝠吸血為主控回復	蝙蝠吸血为主控恢复
+pskill.vampire.short	주는 피해의 5% 흡혈 · 넘치면 쉴드	与ダメの5%吸血・余りはシールド	Heal 5% of damage · excess → Shield	吸取傷害的5% · 溢出轉護盾	吸取伤害的5% · 溢出转护盾
 askill.vampire.opt	초과 회복량만큼 쉴드 획득	回復しすぎた分をシールドに	Overheal becomes Shield	溢出的回復量轉為護盾	溢出的恢复量转为护盾
 host.dragoon.concept	용기병 — 불바다와 메테오	竜騎兵 — 火の海とメテオ	Dragoon — Fire fields & meteors	龍騎兵 — 火海與隕石	龙骑兵 — 火海与陨石
 ult.dragoon.name	메테오	メテオ	Meteor	隕石	陨石
 ult.dragoon.desc	가장 강한 적에게 메테오를 떨어뜨려 폭발시키고, 그 자리에 4초간 불바다를 남긴다.	最も強い敵に火の塊を落として大爆発させ、その場所を4秒間火の海にする。	Drop a meteor on the strongest foe for a huge blast, leaving a sea of fire for 4s.	對最強敵人落下火球引發大爆炸，並使該處化為火海4秒。	对最强敌人落下火球引发大爆炸，并使该处化为火海4秒。
 ult.dragoon.short	가장 강한 적에게 메테오 + 불바다	最強の敵にメテオ＋火の海	Meteor + fire field	最強敵人隕石 + 火海	最强敌人陨石 + 火海
 askill.dragoon.short	가까운 적 발밑에 불바다	近くの敵の足元に火の海	Fire pool under nearest foe	附近敵人腳下化為火海	附近敌人脚下化为火海
-pskill.dragoon.short	10% 확률로 화상	10%で敵を燃焼	10% chance to Burn	10%機率使敵人燃燒	10%概率使敌人燃烧
+pskill.dragoon.short	불바다 위 공격력 +30% · 화상 면역	火の海の上で攻撃+30%・燃焼無効	On fire: Attack +30%, no Burn	火海上攻擊+30% · 免疫燒傷	火海上攻击+30% · 免疫灼烧
 askill.dragoon.opt	불바다 2곳 (가까운 적 둘)	火の海2か所（近くの敵2体）	2 fire pools (nearest 2 foes)	火海2處（附近2名敵人）	火海2处（附近2名敌人）
 host.baseball.concept	장외 타자 — 받아치고 날린다	場外打者 — 打ち返して飛ばす	Slugger — hits it back	場外強打 — 擊回並轟飛	场外强打 — 击回并轰飞
 ult.baseball.name	풀스윙 회오리	フルスイング旋風	Full-Swing Cyclone	全力揮擊旋風	全力挥击旋风
 ult.baseball.desc	회전하며 회오리를 키워 적을 끌어당긴 뒤 풀스윙으로 날려 보낸다.	回転して旋風を大きくし、敵を引き寄せてフルスイングで吹き飛ばす。	Spin up a whirlwind that pulls foes in, then launch them with a full swing.	旋轉擴大旋風將敵人吸引過來，再以全力揮擊打飛。	旋转扩大旋风将敌人吸过来，再以全力挥击打飞。
 ult.baseball.short	회오리로 모아 풀스윙	旋風で集めてフルスイング	Pull foes in, full-swing them	以旋風聚敵後全力揮擊	以旋风聚敌后全力挥击
-askill.baseball.short	5초간 날아온 탄을 반사	5秒間、飛来する弾を反射	Reflect bullets for 5s	5秒內反彈飛來的子彈	5秒内反弹飞来的子弹
-pskill.baseball.short	처치 시 20% 확률로 주변 적 날림	とどめで20%周囲を吹き飛ばす	20% fling on final blow	最後一擊20%機率擊飛周圍	最后一击20%概率击飞周围
-askill.baseball.opt	반사탄이 관통	反射弾が貫通	Reflected shots pierce	反彈子彈可貫穿	反弹子弹可贯穿
+askill.baseball.short	관통 강타구 · 맞은 적을 날려 보냄	貫通打球・当たった敵を吹き飛ばす	Piercing drive that sends foes flying	貫穿強擊球 · 擊飛敵人	贯穿强击球 · 击飞敌人
+pskill.baseball.short	30% 확률로 적 탄 자동 반사	30%で敵弾を自動で打ち返す	30% to auto-reflect enemy shots	30%機率自動反射敵彈	30%几率自动反射敌弹
+askill.baseball.opt	날려 보내는 거리 1.5배	吹き飛ばす距離1.5倍	Launch distance x1.5	擊飛距離1.5倍	击飞距离1.5倍
 host.guru.concept	결계 수도승	結界の修行僧	Warding monk	結界修行僧	结界修行僧
 ult.guru.name	결계 가두기	結界封じ	Ward Prison	結界封印	结界封印
 ult.guru.desc	결계로 적을 중앙에 모아 가둔 뒤 폭발시킨다.	結界で敵を中央に集めて閉じ込め、炸裂させる。	Draw foes into a ward, trap them, then detonate it.	以結界將敵人聚向中央困住後引爆。	以结界将敌人聚向中央困住后引爆。
 ult.guru.short	결계로 적을 모아 폭파	結界で敵を集めて炸裂	Trap foes in a ward and burst	以結界聚敵並引爆	以结界聚敌并引爆
-askill.guru.short	3초간 받는 피해 −50% · 쉴드 2배	3秒間被ダメ−50%・シールド2倍	3s: −50% damage, 2x Shield	3秒內受到傷害 −50%，護盾2倍	3秒内受到伤害 −50%，护盾2倍
+askill.guru.short	둘레 3m 적 2초 묶기	周囲3mの敵を2秒拘束	Bind foes within 3 m for 2s	束縛周圍3m敵人2秒	束缚周围3m敌人2秒
 pskill.guru.short	이동 시 지형지물 통과	歩行中に障害物をすり抜ける	Walk through obstacles	行走時穿越障礙物	行走时穿越障碍物
-askill.guru.opt	결계 안에서 쉴드가 다시 찬다	結界内でシールドが再び溜まる	Shield refills inside the ward	結界內護盾會重新充能	结界内护盾会重新充能
+askill.guru.opt	묶는 시간 2 → 3초	拘束時間2→3秒	Bind time 2 → 3s	束縛時間 2 → 3秒	束缚时间 2 → 3秒
 host.commando_grenade.concept	폭파 전문가	爆破のプロ	Demolitions expert	爆破專家	爆破专家
 ult.commando_grenade.name	C4	C4	C4	C4	C4
 ult.commando_grenade.desc	범위 안 모든 적에게 폭탄을 붙이고 2초 뒤 연쇄 폭발시킨다(그동안 기본 공격 불가).	範囲内の全ての敵に爆弾を貼り付け、2秒後に連鎖爆発（その間は通常攻撃停止）。	Plant bombs on every enemy in range. They chain-explode after 2s (no basic attacks meanwhile).	對範圍內所有敵人貼上炸彈，2秒後連鎖爆炸（期間停止普攻）。	对范围内所有敌人贴上炸弹，2秒后连锁爆炸（期间停止普攻）。
@@ -1251,64 +1255,64 @@ ult.salamander.name	독 늪	毒の沼	Venom Swamp	毒沼	毒沼
 ult.salamander.desc	넓은 독 늪을 만든다. 안의 적은 모두 중독되고, 늪이 사라질 때 폭발한다.	広い毒の沼を広げる。中の敵は全て毒になり、沼が消える時に爆発する。	Lay a wide toxic swamp. Every foe inside is poisoned, and it explodes when it ends.	展開大片毒沼 — 其中的敵人全部中毒，毒沼結束時爆炸。	展开大片毒沼 — 其中的敌人全部中毒，毒沼结束时爆炸。
 ult.salamander.short	넓은 독 늪 · 안의 적 전부 중독	広い毒沼・中の敵は全て毒	Wide swamp poisons all inside	大片毒沼 · 範圍內敵人全中毒	大片毒沼 · 范围内敌人全中毒
 askill.salamander.short	주변 5m 적 모두 중독	周囲5mの敵を全て毒に	Poison all foes within 5 m	使周圍5m敵人全部中毒	使周围5m敌人全部中毒
-pskill.salamander.short	10% 확률로 중독 · 중독된 적에게 주는 피해 +25%	10%で毒・毒の敵へ+25%	10% Poison; +25% dmg to poisoned	10%中毒 · 對中毒敵人傷害 +25%	10%中毒 · 对中毒敌人伤害 +25%
+pskill.salamander.short	중독된 적에게 주는 피해 +20%	毒状態の敵へのダメージ+20%	+20% damage to Poisoned foes	對中毒敵人傷害+20%	对中毒敌人伤害+20%
 askill.salamander.opt	중독된 적이 죽으면 독이 주변 적에게 퍼진다	毒状態の敵が倒れると毒が弾けて周りに広がる	Poisoned foes burst on death, spreading poison	中毒敵人死亡時毒素爆開並擴散到周圍	中毒敌人死亡时毒素爆开并扩散到周围
 host.snowwoman.concept	빙결 마녀 — 얼려서 깬다	氷結の魔女 — 凍らせて砕く	Ice witch — freeze & shatter	冰結魔女 — 冰凍後擊碎	冰结魔女 — 冰冻后击碎
 ult.snowwoman.name	얼음 진	氷陣	Ice Formation	冰陣	冰阵
 ult.snowwoman.desc	얼음 진을 펼쳐 얼음 기둥으로 적을 가둔 뒤 부순다.	氷の陣を敷いて氷柱を突き出し、敵を閉じ込めてから粉砕する。	Lay an ice circle. Pillars erupt, trap foes, then shatter.	展開冰陣，冰柱竄出困住敵人後粉碎。	展开冰阵，冰柱窜出困住敌人后粉碎。
 ult.snowwoman.short	얼음 기둥으로 가두고 파쇄	氷柱で閉じ込めて粉砕	Ice pillars trap, then shatter	以冰柱困住後粉碎	以冰柱困住后粉碎
-askill.snowwoman.short	1초간 얼음 속에서 무적 · 회복	1秒間、氷の中で無敵・回復	1s invincible in ice · Heal	冰封1秒無敵 · 回復	冰封1秒无敌 · 回复
-pskill.snowwoman.short	30% 확률로 빙결	30%で敵を凍結	30% chance to Freeze	30%機率冰凍敵人	30%概率冰冻敌人
-askill.snowwoman.opt	얼음이 깨질 때 주변 적 빙결	氷が割れる時、周囲の敵を凍結	Shattering ice freezes nearby foes	冰塊碎裂時冰凍周圍敵人	冰块碎裂时冰冻周围敌人
+askill.snowwoman.short	둘레 적 1.5초 빙결	周囲の敵を1.5秒凍結	Freeze nearby foes for 1.5s	冰凍周圍敵人1.5秒	冰冻周围敌人1.5秒
+pskill.snowwoman.short	빙결된 적에게 주는 피해 +30%	凍結した敵へのダメージ+30%	+30% damage to Frozen foes	對冰凍敵人傷害+30%	对冰冻敌人伤害+30%
+askill.snowwoman.opt	빙결 1.5 → 2.5초	凍結1.5→2.5秒	Freeze 1.5 → 2.5s	冰凍 1.5 → 2.5秒	冰冻 1.5 → 2.5秒
 host.thug.concept	난사 갱 — 막 쏟아붓는다	乱射ギャング — 撃ちまくる	Spray gang — all-out fire	亂射幫派 — 火力全開	乱射帮派 — 火力全开
 ult.thug.name	회전 난사	回転乱射	Spin Barrage	旋轉亂射	旋转乱射
 ult.thug.desc	2.5초간 회전하며 사방으로 연사하고, 멈출 때 사방으로 16발을 쏜다.	2.5秒間回転しながら全方位に連射し、止まる瞬間に全方位へ16発。	Spin for 2.5s firing in all directions, then burst 16 shots as you stop.	旋轉2.5秒向四方連射，停下時向四方射出16發。	旋转2.5秒向四方连射，停下时向四方射出16发。
 ult.thug.short	돌며 사방으로 쏟아붓기	回転して全方位に乱射	Spin and fire in all directions	旋轉向四方傾瀉火力	旋转向四方倾泻火力
 askill.thug.short	5갈래 3연발	5方向3連射	5-way burst ×3	5方向3連射	5方向3连射
-pskill.thug.short	주운 골드 +10%	拾ったゴールド+10%	+10% Gold picked up	拾取金幣 +10%	拾取金币 +10%
+pskill.thug.short	근처 적 3명 이상이면 공속 +20%	近くに敵3体以上で攻撃速度+20%	+20% attack speed with 3+ foes near	附近3名以上敵人時攻速+20%	附近3名以上敌人时攻速+20%
 askill.thug.opt	한 번에 5 → 9발	1回5発→9発	5 → 9 shots per burst	單次 5 → 9發	单次 5 → 9发
 host.commando_missile.concept	폭격 지원 — 여럿을 추적	爆撃支援 — 多数を追尾	Air support — multi-homing	轟炸支援 — 追蹤多個目標	轰炸支援 — 追踪多个目标
 ult.commando_missile.name	집중 포격	集中砲撃	Focus Barrage	集中砲擊	集中炮击
 ult.commando_missile.desc	가장 강한 적에게 미사일 8발을 집중 발사한다.	最も強い敵にミサイル8発を集中させる。	Converge 8 missiles on the strongest foe.	將8發飛彈集中傾瀉於最強敵人。	将8发导弹集中倾泻于最强敌人。
 ult.commando_missile.short	가장 강한 적에게 8발 집중	最強の敵に8発集中	8 missiles on the strongest foe	對最強敵人集中8發	对最强敌人集中8发
 askill.commando_missile.short	7발이 여러 적에게 한 발씩	7発が複数の敵へ1発ずつ	7 missiles, one per foe	7發飛彈分別射向多名敵人	7发导弹分别射向多名敌人
-pskill.commando_missile.short	투사체가 지형지물 무시	弾が障害物を無視	Shots ignore obstacles	投射物無視障礙物	投射物无视障碍物
+pskill.commando_missile.short	같은 적 연속 명중 시 피해 누적 (최대 +50%)	同じ敵へ連続命中でダメージ上昇（最大+50%）	Repeat hits on one foe stack damage (max +50%)	連續命中同一敵人傷害累積（最多+50%）	连续命中同一敌人伤害累积（最多+50%）
 askill.commando_missile.opt	맞은 자리마다 작은 폭발	命中地点ごとに小爆発	Small blast at each hit	每個命中點小爆炸	每个命中点小爆炸
 host.commando_laser.concept	관통 포격 — 일직선	貫通砲撃 — 一直線	Piercing beam — one line	貫穿砲擊 — 一直線	贯穿炮击 — 一直线
 ult.commando_laser.name	프리즘 레이저	プリズムレーザー	Prism Laser	稜鏡雷射	棱镜激光
 ult.commando_laser.desc	굵은 레이저로 가까운 적을 맞힌 뒤, 4갈래로 갈라져 주변 적을 공격한다.	太いレーザーが近くの敵に刺さり、そこから4本に分かれて周囲の敵へ折れ曲がって飛ぶ。	A thick laser strikes the nearest foe, then splits into 4 beams that bend into nearby foes.	粗大雷射擊中最近的敵人，再從該處分成四道折向周圍敵人。	粗大激光击中最近的敌人，再从该处分成四道折向周围敌人。
 ult.commando_laser.short	레이저가 4갈래로 갈라짐	命中地点から4本に分裂	Laser splits into 4 on hit	雷射在命中處分成四道	激光在命中处分成四道
-askill.commando_laser.short	3초간 주변에 전기 연쇄	3秒間、周囲に連鎖放電	Chain shock nearby for 3s	3秒內在周圍連鎖放電	3秒内在周围连锁放电
-pskill.commando_laser.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
-askill.commando_laser.opt	전기가 튈 때마다 감전 (둔화)	放電のたびに感電（鈍足）	Each arc shocks and slows	每次放電使敵人感電（緩速）	每次放电使敌人感电（减速）
+askill.commando_laser.short	1초 충전 뒤 일직선 관통 레이저	1秒溜めて一直線の貫通レーザー	Charge 1s, fire a piercing line laser	蓄能1秒後發射直線貫穿雷射	蓄能1秒后发射直线贯穿激光
+pskill.commando_laser.short	지형 무시 · 적 관통	地形無視・敵貫通	Ignore obstacles · pierce foes	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
+askill.commando_laser.opt	레이저 폭 1.5배	レーザーの幅1.5倍	Laser width x1.5	雷射寬度1.5倍	激光宽度1.5倍
 host.white_wizard.concept	중력 마법사 — 끌어모아 터뜨린다	重力の魔法使い — 引き寄せて炸裂	Gravity Mage — Pull in, then burst	重力法師 — 聚怪引爆	重力法师 — 聚怪引爆
 ult.white_wizard.name	빛기둥 비	光柱の雨	Pillar Rain	光柱之雨	光柱之雨
 ult.white_wizard.desc	3초간 주변 적에게 빛기둥 14개가 차례로 떨어진다.	3秒間、周囲の敵の頭上に光の柱が14本次々と降り注ぐ。	For 3s, 14 pillars of light crash down on nearby foes one after another.	3秒內有14道光柱依序落在周圍敵人頭上。	3秒内有14道光柱依次落在周围敌人头上。
 ult.white_wizard.short	3초간 빛기둥 14개가 쏟아짐	3秒間光柱14本が降り注ぐ	14 light pillars over 3s	3秒內落下14道光柱	3秒内落下14道光柱
 askill.white_wizard.short	적을 끌어모아 빛 폭발	敵を引き寄せて光の爆発	Pull foes in, then burst	聚集敵人後引發光爆	聚集敌人后引发光爆
-pskill.white_wizard.short	지형 무시 · 적 관통	障害物無視・敵貫通	Shots ignore cover and pierce	無視地形 · 貫穿敵人	无视地形 · 贯穿敌人
-askill.white_wizard.opt	중력진 범위 1.8 → 2.2 m	重力陣の範囲1.8→2.2m	Gravity Well radius 1.8 → 2.2 m	重力陣範圍 1.8 → 2.2 m	重力阵范围 1.8 → 2.2 m
+pskill.white_wizard.short	적 3명 이상 맞히면 쉴드 15%	敵3体以上に当てるとシールド15%	Hit 3+ foes: 15% Shield	擊中3名以上敵人獲得15%護盾	击中3名以上敌人获得15%护盾
+askill.white_wizard.opt	빛의 인력 범위 1.8 → 2.2 m	光の引力の範囲1.8→2.2m	Light Pull radius 1.8 → 2.2 m	光之引力範圍 1.8 → 2.2 m	光之引力范围 1.8 → 2.2 m
 host.dragon_blue.concept	뇌신 — 번개가 튄다	雷神 — 雷が跳ぶ	Storm god — chain lightning	雷神 — 閃電彈跳	雷神 — 闪电弹跳
 ult.dragon_blue.name	천뢰	天雷	Heaven's Thunder	天雷	天雷
 ult.dragon_blue.desc	주변 모든 적에게 낙뢰가 3번 떨어지고, 마지막에 가장 강한 적에게 거대한 낙뢰가 떨어진다.	周囲の全ての敵に落雷が3回落ち、最後に最も強い敵へ巨大な落雷。	Lightning strikes every nearby foe 3 times, then a huge bolt hits the strongest.	周圍所有敵人遭落雷三次，最後對最強敵人降下巨雷。	周围所有敌人遭落雷三次，最后对最强敌人降下巨雷。
 ult.dragon_blue.short	주변 모든 적에게 낙뢰 3번	周囲の全敵に落雷3回	Bolts on all nearby foes ×3	周圍所有敵人落雷3次	周围所有敌人落雷3次
-askill.dragon_blue.short	2초간 패시브 낙뢰 100% 발동	2秒間、連鎖雷が確定	Chain lightning sure for 2s	2秒內閃電必定彈跳	2秒内闪电必定弹跳
+askill.dragon_blue.short	둘레 적 5명에게 낙뢰	周囲の敵5体に落雷	Lightning on 5 nearby foes	對周圍5名敵人落雷	对周围5名敌人落雷
 pskill.dragon_blue.short	10% 확률로 근처 적에게 번개	10%で隣の敵に雷	10% chain lightning	10%機率雷擊鄰近敵人	10%概率雷击邻近敌人
-askill.dragon_blue.opt	끝날 때 가장 가까운 적에게 낙뢰	終了時、最も近い敵に落雷	Ends with a bolt on the nearest foe	結束時對最近敵人落雷	结束时对最近敌人落雷
+askill.dragon_blue.opt	낙뢰 5 → 8명	落雷5→8体	Bolts 5 → 8 foes	落雷 5 → 8名	落雷 5 → 8名
 host.commando_mg.concept	방패병 — 막으며 전진	盾兵 — 防ぎつつ前進	Shieldbearer — block & push	盾兵 — 邊擋邊推進	盾兵 — 边挡边推进
-ult.commando_mg.name	회전 난사	回転乱射	Spin Barrage	旋轉亂射	旋转乱射
-ult.commando_mg.desc	기관총을 거치하고 3초간 회전하며 사방으로 난사한 뒤, 멈출 때 산탄 24발을 퍼붓는다.	機関銃を構えて3秒間回りながら全方位に撃ちまくり、止まる瞬間に全方位へ24発の散弾。	Brace the machine gun and spin firing in all directions for 3s, then blast 24 pellets all around.	架起機槍旋轉3秒向四方傾瀉，停下時向四方射出24發散彈。	架起机枪旋转3秒向四方倾泻，停下时向四方射出24发散弹。
-ult.commando_mg.short	3초 회전 난사 + 사방 산탄	3秒回転乱射＋全方位散弾	3s spin fire + pellet burst	3秒旋轉亂射 + 四方散彈	3秒旋转乱射 + 四方散弹
-askill.commando_mg.short	5초간 최대 체력만큼 쉴드	5秒間、最大体力分のシールド	Shield = max HP for 5s	5秒內獲得等同最大HP的護盾	5秒内获得等同最大HP的护盾
+ult.commando_mg.name	탄막 요새	弾幕要塞	Bullet Fortress	彈幕要塞	弹幕要塞
+ult.commando_mg.desc	3초간 제자리에 기관총을 거치해 받는 피해를 70% 줄이고 사방으로 연사한다.	3秒間その場に機関銃を据え、被ダメージを70%減らして全方向へ連射する。	Plant your machine gun for 3s: take 70% less damage and fire in every direction.	原地架設機槍3秒，受到傷害降低70%並向四面八方連射。	原地架设机枪3秒，受到伤害降低70%并向四面八方连射。
+ult.commando_mg.short	3초 고정 · 받는 피해 −70% · 사방 연사	3秒固定・被ダメ−70%・全方向連射	3s planted · −70% damage · all-round fire	固定3秒 · 受傷−70% · 全方位連射	固定3秒 · 受伤−70% · 全方位连射
+askill.commando_mg.short	앞쪽 부채꼴 2초 연사 · 둔화	前方扇状に2秒連射・鈍足	2s forward spray · slows	向前扇形連射2秒 · 減速	向前扇形连射2秒 · 减速
 pskill.commando_mg.short	방어력 20% 증가	防御力20%上昇	Defense +20%	防禦 +20%	防御 +20%
-askill.commando_mg.opt	쉴드가 깨질 때 주변 적을 밀쳐낸다	シールドが割れる時、周囲の敵を押し返す	Broken Shield knocks back foes	護盾破碎時擊退周圍敵人	护盾破碎时击退周围敌人
+askill.commando_mg.opt	둔화 30 → 50%	鈍足30→50%	Slow 30 → 50%	減速 30 → 50%	减速 30 → 50%
 host.amazon_elite.concept	불굴의 반격자	不屈の反撃者	Unyielding avenger	不屈反擊者	不屈反击者
 ult.amazon_elite.name	역린	逆鱗	Wrath	逆鱗	逆鳞
 ult.amazon_elite.desc	3초간 받은 피해를 모았다가 주변으로 되돌려 터뜨린다.	3秒間受けたダメージを溜め、周囲へ爆発として返す。	Store damage taken for 3s, then unleash it around you.	累積3秒內承受的傷害，再向周圍反彈爆發。	累积3秒内承受的伤害，再向周围反弹爆发。
 ult.amazon_elite.short	받은 피해를 모아 되돌려 폭발	受けたダメージを溜めて爆発	Store damage, blast it back	累積承受傷害反彈爆發	累积承受伤害反弹爆发
-askill.amazon_elite.short	2.5초 무적 + 쉴드 상한 해제	2.5秒無敵＋シールド上限解除	2.5s invincible, Shield cap off	2.5秒無敵 + 解除護盾上限	2.5秒无敌 + 解除护盾上限
-pskill.amazon_elite.short	쉴드 있는 동안 공격력 증가	シールド中は攻撃力アップ	Attack up while Shielded	有護盾時攻擊力提升	有护盾时攻击力提升
-askill.amazon_elite.opt	무적 중 받은 피해의 30%를 반사한다	無敵中に受けた攻撃の30%を反射	Reflect 30% of hits taken while invincible	無敵期間反彈所受攻擊的30%	无敌期间反弹所受攻击的30%
+askill.amazon_elite.short	둘레 밀쳐내기 + 기절 · 메인이면 쉴드	周囲を押し返し気絶・メインならシールド	Knock back + stun · Shield as main	震退並暈眩 · 主控時獲得護盾	震退并眩晕 · 主控时获得护盾
+pskill.amazon_elite.short	체력 30% 아래에서 한 번 3초 무적 + 회복	体力30%未満で1度だけ3秒無敵＋回復	Below 30% HP once: 3s invincible + heal	體力30%以下時一次3秒無敵並回復	体力30%以下时一次3秒无敌并恢复
+askill.amazon_elite.opt	기절 1.5 → 2.5초	気絶1.5→2.5秒	Stun 1.5 → 2.5s	暈眩 1.5 → 2.5秒	眩晕 1.5 → 2.5秒
 ui.chapterhost.reward_met_shards	만난 호스트 조각	出会ったホストのかけら	Shards of hosts met	已遇宿主碎片	已遇宿主碎片
 ui.home.scenario	시나리오	シナリオ	Scenario	劇情	剧情
 ui.home.chapter	챕터 {0}	チャプター {0}	Chapter {0}	第{0}章	第{0}章

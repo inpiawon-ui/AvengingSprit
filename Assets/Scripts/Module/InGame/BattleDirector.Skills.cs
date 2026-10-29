@@ -34,12 +34,12 @@ namespace Game.Module.InGame
         /// <summary>`평타 ×N`. 정본은 스킬 피해를 전부 평타 배수로 적는다.</summary>
         private int SkillDamage(Unit me, float mul)
             => me == null ? 1
-             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * ActivePowerMul * ActiveRebaseMul * _ultFallbackMul));
+             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * DragonBloodMul(me) * mul * ActivePowerMul * ActiveRebaseMul * _ultFallbackMul));
 
         /// <summary>필살기 피해 — 성급 위력만 다르다(단계마다 +4%).</summary>
         private int UltDamage(Unit me, float mul)
             => me == null ? 1
-             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * ReversalMul * mul * UltPowerMul));
+             : Mathf.Max(1, Mathf.RoundToInt(me.Atk * _buffs.AttackMul * DragonBloodMul(me) * mul * UltPowerMul));
 
         // 성급 성장(PD 2026-10-15 「성급이 올라가면 액티브가 더 좋아져야」) — 몸 공격력(×1.07/단계)과 따로 곱한다.
         // 기획: `Projects/AVSR/_exchange/doc_skill_concept` 성급 성장 표
@@ -224,11 +224,10 @@ namespace Game.Module.InGame
         //   **다른 코드가 읽는 깃발**이지 스스로 무언가를 하는 것이 아니다.
         //   깃발마다 이름이 있어야 어디서 읽히는지 따라갈 수 있다.
 
-        private float _reflectSeconds;      // 슬러거 — 적 탄 100% 반사
+        private float _reflectSeconds;      // 슬러거 — 적 탄 100% 반사(지금은 켜는 스킬이 없다 — 카드 · 다른 곳이 켤 자리)
         private float _reflectMul = 2f;
-        private bool _reflectPierce;
 
-        private float _wardSeconds;         // 구루 — 받는 피해 감소 · 쉴드 2배
+        private float _wardSeconds;         // 구루 필살기 — 받는 피해 감소 · 쉴드 2배
         private float _wardReduce = 0.5f;
 
         private float _drainSeconds;        // 흡혈귀 — 흡혈 확정 · 회복 배율
@@ -237,13 +236,26 @@ namespace Game.Module.InGame
         private float _cloneSeconds;        // 닌자(표창) — 분신
         private readonly List<Deployable> _clones = new();
 
-        private float _turretHasteSeconds;  // 로봇 — 포탑 생존 중 −15%
+        private float _turretHasteSeconds;  // 로봇 — 포탑이 서 있는 남은 시간(패시브 「예비 회로」가 읽는다)
 
         /// <summary>지금 적 탄이 전부 되돌아가는가.</summary>
         public bool IsReflectingAll => _reflectSeconds > 0f;
 
-        /// <summary>구루 결계가 도는 동안의 피해 감소(0~1).</summary>
-        private float WardReduce => _wardSeconds > 0f ? _wardReduce : 0f;
+        /// <summary>
+        /// 받는 피해 감소(0~1) — 구루 결계 · 탄막 요새(코만도 기관총) · 예비 회로(로봇).
+        /// 셋은 **곱해진다**(남는 몫끼리 곱). 더하면 겹쳤을 때 무적이 된다.
+        /// </summary>
+        private float WardReduce
+        {
+            get
+            {
+                float keep = 1f;
+                if (_wardSeconds > 0f) keep *= 1f - _wardReduce;
+                if (_fortressSeconds > 0f) keep *= 1f - FortressDamageCut;
+                keep *= 1f - SpareCircuitCut;
+                return 1f - keep;
+            }
+        }
 
         /// <summary>지속형 스킬의 시계를 한꺼번에 흘린다.</summary>
         private void TickSkillEffect(float dt)
@@ -282,7 +294,7 @@ namespace Game.Module.InGame
             _iceShellSeconds = 0f;
             _iceFx?.Stop();
             _iceFx = null;
-            _chainHopsLeft = 0;
+            ClearSkills1029();
             ClearLz();
             ClearWp();
             ClearPw();
@@ -317,32 +329,16 @@ namespace Game.Module.InGame
         //  패시브 — 상시로 도는 것
         // ═══════════════════════════════════════════════════════════
         //
-        // 23명 중 **여섯은 이미 있던 것**을 그대로 쓴다 —
-        // 탄 반사(슬러거) · 흡혈(사신 · 흡혈귀) · 약화(청룡 · 설녀 · 화이트위저드).
-        // 여기 있는 것은 **신규 다섯**뿐이고, 그중 둘(탄창 과열 · 예비 회로)은
-        // 각자 제 스킬 옆에 있다. 나머지 셋이 이 절이다.
-        //
-        // 셋 다 **곱하는 값 하나**로 끝난다. 조건만 다르다 —
-        //   역전의 자세  내 쉴드가 남아 있는가   (아마존 정예)
-        //   탄력         방금 멈췄는가            (호퍼)
-        //   작열         맞는 놈이 타는 중인가    (샐러맨더)
+        // 곱하는 값 하나로 끝나는 패시브 — 조건만 다르다.
+        //   탄력         방금 멈췄는가                 (호퍼)
+        //   독니         맞는 놈이 중독됐는가          (샐러맨더 · PD 2026-10-29)
+        //   표적 고정    같은 적을 연달아 맞히는가     (코만도(미사일) · PD 2026-10-29)
+        //   용의 피      불바다 위에 서 있는가         (드라군 · PD 2026-10-29 — `DragonBloodMul`)
+        //   치고 빠지기  걸으면서 쏘는가               (호퍼(기관단총) · PD 2026-10-29 — 위력 60%)
+        // 나머지 패시브는 `BattleDirector.HostPassives.cs` 에 있다.
 
-        private const float ReversalAtkBonus = 0.15f;   // 쉴드 있는 동안 +15%
         private const float PoiseFirstShotBonus = 0.25f;
         private const float PoiseChargeSeconds = 0.3f;  // 이만큼은 움직여야 충전된다
-        private const float ScorchVsBurningBonus = 0.20f;
-        // PD 2026-10-21 「독에 걸리면 20~30% 추가 데미지」 — 예전엔 불탄 적에게만 붙어 독 몸에게는 거의 안 터졌다
-        private const float VenomVsPoisonedBonus = 0.25f;
-
-        /// <summary>
-        /// 역전의 자세 (아마존 정예) — 쉴드가 남아 있는 동안 공격력 +15%.
-        ///
-        /// 쉴드는 **맞아야 쌓인다.** 그래서 이 몸은 "안 맞으면 약한" 유일한 몸이 된다 —
-        /// 불굴(상한 해제)과 같은 방향이다.
-        /// </summary>
-        private float ReversalMul
-            => _host != null && _host.Key == "amazon_elite" && _host.Shield > 0
-             ? 1f + PassiveFrac(ReversalAtkBonus) : 1f;
 
         // ── 탄력 (호퍼) ──────────────────────────────────────────
         //
@@ -383,15 +379,19 @@ namespace Game.Module.InGame
         }
 
         /// <summary>
-        /// 작열 (샐러맨더) — **화상 중인 적**에게 주는 피해 +20%.
-        ///
-        /// 장판을 먼저 깔고 평타로 마무리하는 순서에 값을 준다.
-        /// 순서를 지키면 이득이 되는 것이 이 몸의 리듬이다.
+        /// 맞는 적을 보고 거는 패시브 배수 — 근접 · 탄 두 길이 다 부른다(이름은 예전 「작열」 그대로).
+        ///   독니(샐러맨더)       중독된 적에게 +20%
+        ///   표적 고정(미사일)    같은 적을 연달아 맞히면 10% 씩 쌓인다(최대 50%)
+        /// ⚠ 표적 고정은 **맞을 때마다 센다** — 한 번 맞을 때 한 번만 불러야 한다(지금 두 길 다 한 번씩).
         /// </summary>
         private float ScorchMul(Unit victim)
-            => victim != null && (victim.BurnStack > 0 || victim.IsPoisoned)
-            && _host != null && _host.Key == "salamander"
-             ? 1f + (victim.IsPoisoned ? VenomVsPoisonedBonus : ScorchVsBurningBonus) : 1f;
+        {
+            if (victim == null || _host == null) return 1f;
+            if (_host.Key == "salamander")
+                return victim.IsPoisoned ? 1f + PassiveFrac(VenomFangBonus) : 1f;
+            if (_host.Key == "commando_missile") return LockOnMul(victim);
+            return 1f;
+        }
 
         /// <summary>
         /// 이번 평타 한 번에 실리는 배수. <see cref="PerformAttack"/> 이 시작할 때 한 번 잡는다.
@@ -403,7 +403,8 @@ namespace Game.Module.InGame
         private float _swingMul = 1f;
 
         private void BeginSwing(bool fromPlayer)
-            => _swingMul = fromPlayer ? ReversalMul * TakePoiseMul() : 1f;
+            // 소환물 · 보조가 치는 평타(_summonStriking)에는 메인의 패시브를 싣지 않는다
+            => _swingMul = fromPlayer && !_summonStriking ? TakePoiseMul() * DragonBloodMul(_host) * RunGunMul : 1f;
 
         /// <summary>이번 공격의 패시브 배수. 적 공격에는 안 실린다.</summary>
         private float SwingMul(bool fromPlayer) => fromPlayer ? _swingMul : 1f;
@@ -429,32 +430,35 @@ namespace Game.Module.InGame
                 // ⚠ 직업은 **근거리 6 · 중거리 3 · 원거리 14** 셋이다(확정본 2026-09-14).
                 //   예전의 「중거리 5 · 관통 4」 묶음은 폐기됐다 — 관통은 직업이 아니라
                 //   공격 종류(`AttackKind.Pierce`)다.
-                case "amazon":           AmazonLeapStrike(me);  break;   // 도약 강타 — 필살기는 번개 무희
-                case "amazon_elite":     EliteUnyielding(me);   break;   // 불굴(2026-10-15 다시 살림) — 필살기는 역린
-                case "baseball":         ReflectAll(me);        break;   // 전탄 반사 — 필살기는 풀스윙 회오리
+                // ⚠ 빙의 파티(PD 2026-10-29)부터 액티브는 **보조도 자동으로 쓴다** — `me` 가 메인이 아닐 수 있다.
+                //   메인에게만 붙는 덤(쉴드 · 무적 · 패시브)은 `me == _host` 로 가른다.
+                //   바뀐 스킬 · 수치는 `BattleDirector.Skills1029.cs`(기획 `_exchange/plan_party_skills.md`).
+                case "amazon":           AmazonLeapCast(me);    break;   // 도약 강타 — 패시브 질주(처치하면 한 번 더)
+                case "amazon_elite":     EliteWarCry(me);       break;   // 전장의 함성(PD 2026-10-29) — 필살기는 역린
+                case "baseball":         SluggerLineDrive(me);  break;   // 라인 드라이브(PD 2026-10-29) — 필살기는 풀스윙 회오리
                 case "death":            ReaperWindow(me);      break;
-                case "guru":             GuardianWard(me);      break;
-                case "ninja_chain":      ChainPull(me);         break;   // 사슬 끌어오기(PD 2026-10-21)
+                case "guru":             GuruBindWard(me);      break;   // 진압 결계(PD 2026-10-29)
+                case "ninja_chain":      ChainPull(me);         break;   // 사슬 결박(PD 2026-10-21)
 
                 // ── 중거리 3 (기관총 셋) ──
                 case "thug":             ThugBurst(me);         break;   // 3연발 난사(PD 2026-10-21 「파파팍 쏘고 끝」) — 필살기는 회전 난사
-                case "hopper_smg":       SmgBackstep(me);       break;   // 백스텝 사격(2026-10-15) — 필살기는 돌진 난사
-                case "commando_mg":      CommandoBarrier(me);   break;
+                case "hopper_smg":       SmgBackstep(me);       break;   // 백스텝 사격 + 넉백(PD 2026-10-29) — 필살기는 돌진 난사
+                case "commando_mg":      SuppressFire(me);      break;   // 제압 사격(PD 2026-10-29) — 필살기는 탄막 요새
 
                 // ── 원거리 14 ──
                 case "dragoon":          DragoonFireField(me);  break;
                 case "salamander":       SalamanderVenom(me);   break;
-                case "dragon_blue":      DragonSurge(me);       break;
+                case "dragon_blue":      DragonThunder(me);     break;   // 뇌전(PD 2026-10-29)
                 case "commando_grenade": CarpetBomb(me);        break;   // 융단 폭격 — 필살기는 C4
-                case "snowwoman":        SnowIceShell(me);      break;
-                case "ninja":            NinjaEvade(me);        break;   // 몸놀림(PD 2026-10-21 — 분신 대신 회피 · 이속)
-                case "vampire":          VampireFeast(me);      break;
-                case "gangster":         GangsterMarkAll(me);   break;
-                case "hopper":           HopperCritSurge(me);   break;
+                case "snowwoman":        SnowBlizzard(me);      break;   // 눈보라(PD 2026-10-29)
+                case "ninja":            NinjaShadowCut(me);    break;   // 그림자 베기(PD 2026-10-29)
+                case "vampire":          VampireFeast(me);      break;   // 박쥐 떼 — 회복은 메인(PD 2026-10-29)
+                case "gangster":         GangsterMarkAll(me);   break;   // 일제 표식 — 체력 높은 적 셋(PD 2026-10-29)
+                case "hopper":           HopperAimedShot(me);   break;   // 조준 사격(PD 2026-10-29)
                 case "commando_missile": MissileVolley(me);     break;   // 여러 적에게 한 발씩(PD 2026-10-21)
-                case "medium":           MediumMiniGolem(me);   break;   // 미니 골렘(PD 2026-10-21) — 필살기는 골렘 강령
-                case "white_wizard":     GravityWell(me);       break;   // 중력진(PD 2026-10-21)
-                case "commando_laser":   LaserBounce(me);       break;
+                case "medium":           MediumMiniGolem(me);   break;   // 미니 골렘(PD 2026-10-21) — 필살기는 거대 원혼
+                case "white_wizard":     GravityWell(me);       break;   // 빛의 인력(PD 2026-10-21 중력진)
+                case "commando_laser":   ChargeLaser(me);       break;   // 충전 레이저(PD 2026-10-29)
                 case "robot":            DeployTurret(me);      break;
 
                 // 표에 없는 몸(유령 등). 조용히 넘어간다 — 오류가 아니다.
@@ -466,40 +470,16 @@ namespace Game.Module.InGame
         //  격투 6종
         // ═══════════════════════════════════════════════════════════
 
-        // ── 아마존 정예 · (스킬 미정) ────────────────────────────
+        // ── 슬러거 · 탄 되받아치기 ───────────────────────────────
         //
-        // 확정본 2026-09-14 에서 **보류**다. 이 자리에 있던 「불굴」(무적 2.5초 +
-        // 쉴드 상한 해제)은 확정 전에 임의로 잡아 둔 것이라 걷어냈다 —
-        // 스킬이 정해지면 그때 새로 쓴다. 지금 이 몸은 액티브가 없다.
+        // 액티브 「전탄 반사」는 PD 2026-10-29 에 라인 드라이브로 바뀌었다(자기 몸 스킬이라 보조가 쓰면 무의미).
+        // 되받아치기는 이제 SSR 패시브 「반사 신경」(30% 자동)이 쓴다 — `BattleDirector.HostPassives.cs`.
 
-        // ── 슬러거 · 전탄 반사 ───────────────────────────────────
-        //
-        // 패시브가 확률 40% 로 하던 것을 지속 시간 동안 100% 로 만든다.
-        // **원거리가 두꺼운 방에서만 강하다** — 근접만 있는 방에서는 아무 일도 안 난다.
-        // 그것이 이 스킬의 답이다. 언제 쓸지가 전부인 스킬이 하나는 있어야 한다.
-
-        private void ReflectAll(Unit me)
-        {
-            _reflectSeconds = BaseAxis(5f);         // 표 성장 축 Lv1 5 → Lv4 7초 (기획 2026-09-15 +1초)
-            _reflectMul = SpecOpen ? SpecAxis(2f) : 2f;   // Lv5 2배 → Lv10 4배
-            _reflectPierce = SpecOpen;              // Lv5 부터 반사탄이 관통
-            // 반사 중인 것이 **보여야 한다**(기획 2026-09-15). 방벽 쉴드에 가려 반사 상태인지 몰랐다.
-            // 퀄업(2026-10-07) — 몸 둘레 하얀-적황 반사 원(BattleDirector.SkillFxQuality)
-            _reflectAuraFx?.Stop();
-            _reflectAuraFx = QxReflectAura(me);
-            if (_reflectAuraFx == null)
-            {
-                PlayFx("reflect", me.Position, 64f, loop: false);
-                StartSkillAura(ref _reflectAuraFx, "reflectaura");
-            }
-        }
-
-        /// <summary>날아온 적 탄을 되받아친다. 반사가 도는 동안 호출된다.</summary>
+        /// <summary>날아온 적 탄을 내 탄으로 되받아친다.</summary>
         private void ReflectShot(Projectile shot)
         {
             if (shot == null) return;
             shot.TurnFriendly(_reflectMul);
-            if (_reflectPierce) shot.GrantPierce();
             if (!QxReflectSwing(shot.Position)) PlayFx("reflect", shot.Position, 64f, loop: false);
         }
 
@@ -512,34 +492,15 @@ namespace Game.Module.InGame
         private const float HarvestRadiusMeters = 3.0f;
         private const float HarvestBossPercent = 0.08f;
 
-        // ── 구루 · 수호 결계 ─────────────────────────────────────
+        // ── 구루 · 결계 ──────────────────────────────────────────
         //
-        // 격투 여섯 중 쉴드를 **가장 느리게** 쌓는 몸이다(공격 간격 0.85초).
-        // 그 느린 것을 스킬이 두 배로 메운다 — 느린 것이 약점이 아니라
-        // 스킬을 쓸 이유가 되게 만든다.
+        // 액티브 「수호 결계」(받는 피해 −50%)는 PD 2026-10-29 에 「진압 결계」(둘레 적 묶기)로 바뀌었다.
+        // 아래 결계 시계(`_wardSeconds`)는 이제 필살기 「결계 가두기」(`UltGuru`)만 켠다.
 
         private const float WardRadiusMeters = 3.0f;
         private const float WardTickInterval = 0.5f;
 
         private float _wardTick;
-
-        private void GuardianWard(Unit me)
-        {
-            _wardReduce = BaseAxis(0.5f);           // Lv1 −50% → Lv4 −70%
-            _wardSeconds = SpecOpen ? SpecAxis(3f) : 3f;   // 명세 2026-09-14 — 3초
-            _wardTick = 0f;
-            // ⚠ 그림을 `ward`(얼음 결정)에서 `guard`(빛으로 짜인 방어막)로 바꾼다 —
-            //   얼음은 설녀의 것이라 둘이 구별되지 않았다(기획 2026-09-15).
-            //   그리고 **버티는 내내 돈다.** 한 번 터지고 사라지면 결계가 있는지 알 수 없다.
-            _wardFx?.Stop();
-            // 퀄업(2026-10-07) — 발밑 황금 원 → 결계 막 → 결계 동안 얇은 테두리(BattleDirector.SkillFxQuality)
-            _wardFx = QxGuardOpen(me);
-            if (_wardFx == null)
-            {
-                _wardFx = TakeLoopFx("guard", me.Position, WardFxSize);
-                _wardFx?.SetPulse(SkillPulseMin, 1f, SkillPulseSeconds);
-            }
-        }
 
         /// <summary>버티는 내내 몸에 붙어 도는 방어막.</summary>
         private Impact _wardFx;
@@ -974,14 +935,10 @@ namespace Game.Module.InGame
             PlayFx("turret", me.Position, 96f, loop: false);
         }
 
-        /// <summary>패시브 · 예비 회로 — 포탑이 살아 있는 동안 자기 간격 −15%.</summary>
+        /// <summary>포탑이 서 있는 시간을 흘린다 — 패시브 「예비 회로」(받는 피해 −20%)가 이 시계를 본다(PD 2026-10-29).</summary>
         private void TickTurretHaste(float dt)
         {
-            if (_turretHasteSeconds <= 0f) return;
-            _turretHasteSeconds -= dt;
-            // 겹쳐 걸리는 것을 막는다 — 오버히트 같은 큰 단축이 도는 중이면 그것을 남긴다.
-            if (_hasteSeconds <= 0f && _host != null && _host.Key == "robot")
-                GrantHaste(15f, Mathf.Max(0f, _turretHasteSeconds));
+            if (_turretHasteSeconds > 0f) _turretHasteSeconds = Mathf.Max(0f, _turretHasteSeconds - dt);
         }
 
         // ═══════════════════════════════════════════════════════════

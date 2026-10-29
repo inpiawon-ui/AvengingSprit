@@ -181,7 +181,7 @@ namespace Game.Module.InGame
                 case "commando_laser":   PrismLaser(me);        break;   // 프리즘 레이저(PD 2026-10-21)
                 case "white_wizard":     LightRain(me);         break;   // 빛기둥 비(PD 2026-10-21)
                 case "dragon_blue":      UltDragonStorm(me);    break;   // 천뢰 — 둘레 모든 적에게 낙뢰(PD 2026-10-21)
-                case "commando_mg":      MgSpinFire(me);        break;   // 회전 난사 + 사방 산탄(PD 2026-10-21)
+                case "commando_mg":      MgFortress(me);        break;   // 탄막 요새(PD 2026-10-29 — 회전 난사가 폭력배와 겹쳤다)
                 case "amazon_elite":     UltAmazonElite(me);    break;   // 역린
                 default:                 UltFallback(me);       break;   // 표에 없는 몸 — 아래 참고
             }
@@ -254,20 +254,12 @@ namespace Game.Module.InGame
         /// <summary>영매 액티브 — 해골 2기(패시브 「강령」과 같은 해골).</summary>
         private const int MediumSkeletonCount = 2;
 
-        /// <summary>아마존 정예 액티브 — 불굴. 2.5초 무적(스킬 무적 윤곽).</summary>
-        private const float EliteUnyieldingSeconds = 2.5f;
-
-        private void EliteUnyielding(Unit me)
-        {
-            float s = BaseAxis(EliteUnyieldingSeconds);
-            _invuln = Mathf.Max(_invuln, s);
-            _skillInvuln = Mathf.Max(_skillInvuln, s);
-            PlayFx("guard", me.Position, Meters(1.6f), loop: false);
-        }
+        // 아마존 정예 액티브 「불굴」(자기 무적)은 PD 2026-10-29 에 「전장의 함성」으로 바뀌었다(BattleDirector.Skills1029).
 
         /// <summary>
         /// 호퍼(기관단총) 액티브 — 백스텝 사격. 가까운 적에게서 뒤로 크게 뛰며 앞으로 부채꼴 연사.
         /// 필살기 「돌진 난사」(먼 적까지 돌파)와 반대 방향이라 둘이 겹치지 않는다.
+        /// PD 2026-10-29 — 쏜 쪽 부채꼴의 적을 밀어낸다(예전 패시브 넉백을 액티브 덤으로 옮김).
         /// </summary>
         private const float SmgBackstepMeters = 3f;
         private const int SmgBackstepShots = 7;
@@ -287,6 +279,7 @@ namespace Game.Module.InGame
                 me.SetFacing(near.Position - to);
                 FireFan(me, near.Position, SmgBackstepShots, SmgBackstepSpreadDeg,
                         SkillDamage(me, BaseAxis(0.6f)), fromPlayer: true);
+                SmgKnockFan(me, to, near.Position - to, SmgBackstepSpreadDeg);
             }
             PlayFx("dash", to, GaleDashFxSize, loop: false);
         }

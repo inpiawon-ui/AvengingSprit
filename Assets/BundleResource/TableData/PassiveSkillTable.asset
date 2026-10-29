@@ -15,8 +15,9 @@ MonoBehaviour:
   _entries:
   - _passiveSkillKey: psv_amazon
     _nameEn: AMAZON
-    _nameKr: "\uC274\uB4DC \uC9C8\uC8FC"
-    _description: "\uC274\uB4DC\uAC00 \uCC30\uC218\uB85D \uC774\uB3D9 \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4(\uCD5C\uB300 +40%)."
+    _nameKr: "\uC9C8\uC8FC"
+    _description: "\uB3C4\uC57D \uAC15\uD0C0\uB85C \uC801\uC744 \uCC98\uCE58\uD558\uBA74
+      \uD55C \uBC88 \uB354 \uB3C4\uC57D\uD55C\uB2E4."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -24,13 +25,14 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 40
-    _growthMax: 60
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_counter
     _nameEn: COUNTER
-    _nameKr: "\uC5ED\uC804\uC758 \uC790\uC138"
-    _description: "\uC274\uB4DC\uAC00 \uB0A8\uC544 \uC788\uB294 \uB3D9\uC548 \uACF5\uACA9\uB825\uC774
-      \uC624\uB978\uB2E4."
+    _nameKr: "\uBD88\uAD74"
+    _description: "\uCCB4\uB825\uC774 30% \uC544\uB798\uB85C \uB5A8\uC5B4\uC9C0\uBA74
+      \uD55C \uD310\uC5D0 \uD55C \uBC88 3\uCD08\uAC04 \uBB34\uC801\uC774 \uB418\uACE0
+      \uCD5C\uB300 \uCCB4\uB825 30%\uB97C \uD68C\uBCF5\uD55C\uB2E4."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -38,25 +40,27 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 15
-    _growthMax: 25
+    _growthMin: 30
+    _growthMax: 45
   - _passiveSkillKey: psv_slugger
     _nameEn: SLUGGER
-    _nameKr: "\uC7A5\uC678 \uD0C0\uAD6C"
-    _description: "\uC801 \uCC98\uCE58 \uC2DC 20% \uD655\uB960\uB85C \uC8FC\uBCC0 \uC801\uC744 \uB0A0\uB824 \uBCF4\uB0B8\uB2E4."
+    _nameKr: "\uBC18\uC0AC \uC2E0\uACBD"
+    _description: "\uB0A0\uC544\uC628 \uC801 \uD0C4\uC744 30% \uD655\uB960\uB85C
+      \uC790\uB3D9\uC73C\uB85C \uB418\uBC1B\uC544\uCE5C\uB2E4."
     _kind: 1
-    _chancePercent: 20
+    _chancePercent: 30
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 20
-    _growthMax: 35
+    _growthMin: 30
+    _growthMax: 45
   - _passiveSkillKey: psv_death
     _nameEn: DEATH
     _nameKr: "\uB9DD\uC790 \uC18C\uC9D1"
-    _description: "\uC801\uC744 \uCC98\uCE58\uD560 \uB54C\uB9C8\uB2E4 \uADF8 \uC790\uB9AC\uC5D0 \uC544\uAD70 \uD574\uACE8\uC744 \uC18C\uD658\uD55C\uB2E4."
+    _description: "\uC801\uC744 \uCC98\uCE58\uD560 \uB54C\uB9C8\uB2E4 \uADF8 \uC790\uB9AC\uC5D0
+      \uC544\uAD70 \uD574\uACE8\uC744 \uC18C\uD658\uD55C\uB2E4."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -81,47 +85,52 @@ MonoBehaviour:
     _growthMax: 0
   - _passiveSkillKey: psv_ninja_chain
     _nameEn: NINJA_CHAIN
-    _nameKr: "\uD758\uB9AC\uAE30"
-    _description: "10% \uD655\uB960\uB85C \uBC1B\uB294 \uD53C\uD574\uB97C \uD68C\uD53C\uD55C\uB2E4."
-    _kind: 1
-    _chancePercent: 10
+    _nameKr: "\uC0AC\uC2AC \uAC10\uAE30"
+    _description: "\uC0AC\uC2AC\uB85C \uB04C\uB824\uC628 \uC801\uC740 3\uCD08\uAC04
+      \uBC1B\uB294 \uD53C\uD574 +25%."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 18
+    _growthMin: 25
+    _growthMax: 40
   - _passiveSkillKey: psv_dragoon
     _nameEn: DRAGOON
-    _nameKr: "\uBD88\uC528"
-    _description: "\uC801\uC911 \uC2DC 10% \uD655\uB960\uB85C \uD654\uC0C1\uC744 \uAC74\uB2E4. \uC911\uCCA9\uB418\uC9C0 \uC54A\uB294\uB2E4."
-    _kind: 1
-    _chancePercent: 10
+    _nameKr: "\uC6A9\uC758 \uD53C"
+    _description: "\uBD88\uBC14\uB2E4 \uC704\uC5D0 \uC11C \uC788\uC73C\uBA74 \uACF5\uACA9\uB825
+      +30%, \uD654\uC0C1\uC744 \uC785\uC9C0 \uC54A\uB294\uB2E4."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 18
+    _growthMin: 30
+    _growthMax: 45
   - _passiveSkillKey: psv_salamander
     _nameEn: SALAMANDER
     _nameKr: "\uB3C5\uB2C8"
-    _description: "\uC801\uC911 \uC2DC 10% \uD655\uB960\uB85C \uC911\uB3C5\uC2DC\uD0A8\uB2E4. \uC911\uB3C5\uB41C \uC801\uC740 \uBC1B\uB294 \uD53C\uD574 +25%."
-    _kind: 1
-    _chancePercent: 10
+    _description: "\uC911\uB3C5\uB41C \uC801\uC5D0\uAC8C \uC8FC\uB294 \uD53C\uD574
+      +20%."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 18
+    _growthMin: 20
+    _growthMax: 35
   - _passiveSkillKey: psv_dragon_blue
     _nameEn: DRAGON_BLUE
     _nameKr: "\uB099\uB8B0"
-    _description: "\uC801\uC911 \uC2DC 10% \uD655\uB960\uB85C \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C \uBC88\uAC1C\uAC00 \uD284\uB2E4. \uADFC\uCC98\uC5D0 \uC801\uC774 \uC5C6\uC73C\uBA74 \uBC1C\uB3D9\uD558\uC9C0 \uC54A\uB294\uB2E4."
+    _description: "\uC801\uC911 \uC2DC 10% \uD655\uB960\uB85C \uADFC\uCC98 \uB2E4\uB978
+      \uC801\uC5D0\uAC8C \uBC88\uAC1C\uAC00 \uD284\uB2E4. \uADFC\uCC98\uC5D0 \uC801\uC774
+      \uC5C6\uC73C\uBA74 \uBC1C\uB3D9\uD558\uC9C0 \uC54A\uB294\uB2E4."
     _kind: 1
     _chancePercent: 10
     _scaling:
@@ -147,9 +156,10 @@ MonoBehaviour:
   - _passiveSkillKey: psv_snowwoman
     _nameEn: SNOWWOMAN
     _nameKr: "\uC11C\uB9BF\uBC1C"
-    _description: "\uC801\uC911 \uC2DC 30% \uD655\uB960\uB85C \uC801\uC744 \uBE59\uACB0\uC2DC\uD0A8\uB2E4. \uBE59\uACB0\uB41C \uC801\uC5D0\uAC8C \uC8FC\uB294 \uD53C\uD574 +30%. \uBCF4\uC2A4\uB294 \uBA74\uC5ED."
-    _kind: 1
-    _chancePercent: 30
+    _description: "\uBE59\uACB0\uB41C \uC801\uC5D0\uAC8C \uC8FC\uB294 \uD53C\uD574
+      +30%."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
@@ -159,17 +169,18 @@ MonoBehaviour:
     _growthMax: 45
   - _passiveSkillKey: psv_hopper_smg
     _nameEn: HOPPER_SMG
-    _nameKr: "\uCDA9\uACA9 \uBC18\uB3D9"
-    _description: "\uC801\uC911 \uC2DC 10% \uD655\uB960\uB85C \uC801\uC744 \uB109\uBC31\uC2DC\uD0A8\uB2E4."
-    _kind: 1
-    _chancePercent: 10
+    _nameKr: "\uCE58\uACE0 \uBE60\uC9C0\uAE30"
+    _description: "\uC774\uB3D9 \uC911\uC5D0\uB3C4 \uAE30\uBCF8 \uACF5\uACA9\uC744
+      \uC3DC\uB2E4(\uC704\uB825 60%)."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 18
+    _growthMin: 60
+    _growthMax: 80
   - _passiveSkillKey: psv_commando_mg
     _nameEn: COMMANDO_MG
     _nameKr: "\uC911\uC7A5\uAC11"
@@ -185,8 +196,9 @@ MonoBehaviour:
     _growthMax: 35
   - _passiveSkillKey: psv_thug
     _nameEn: THUG
-    _nameKr: "\uC0A5"
-    _description: "\uC8FC\uC6B4 \uACE8\uB4DC\uAC00 10% \uB354 \uB4E4\uC5B4\uC628\uB2E4."
+    _nameKr: "\uB09C\uC804"
+    _description: "\uADFC\uCC98\uC5D0 \uC801\uC774 3\uBA85 \uC774\uC0C1\uC774\uBA74
+      \uAE30\uBCF8 \uACF5\uACA9 \uC18D\uB3C4 +20%."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -194,40 +206,14 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 10
-    _growthMax: 20
+    _growthMin: 20
+    _growthMax: 35
   - _passiveSkillKey: psv_ninja
     _nameEn: NINJA
-    _nameKr: "\uC9C8\uC8FC"
-    _description: "\uC801 \uCC98\uCE58 \uC2DC 1.5\uCD08\uAC04 \uC774\uB3D9 \uC18D\uB3C4 +30%."
+    _nameKr: "\uBAB8\uB180\uB9BC"
+    _description: "20% \uD655\uB960\uB85C \uBC1B\uB294 \uD53C\uD574\uB97C \uD68C\uD53C\uD55C\uB2E4."
     _kind: 0
     _chancePercent: 0
-    _scaling:
-      _baseValue: 0
-      _baseValueMax: 0
-      _specValue: 0
-      _specValueMax: 0
-    _growthMin: 30
-    _growthMax: 45
-  - _passiveSkillKey: psv_leech
-    _nameEn: LEECH
-    _nameKr: "\uD761\uD608"
-    _description: "\uC801\uC911 \uC2DC 8% \uD655\uB960\uB85C \uACF5\uACA9\uB825\uC758 5%\uB9CC\uD07C \uCCB4\uB825\uC744 \uD68C\uBCF5\uD55C\uB2E4."
-    _kind: 1
-    _chancePercent: 8
-    _scaling:
-      _baseValue: 0
-      _baseValueMax: 0
-      _specValue: 0
-      _specValueMax: 0
-    _growthMin: 8
-    _growthMax: 14
-  - _passiveSkillKey: psv_gangster
-    _nameEn: GANGSTER
-    _nameKr: "\uCC98\uD615 \uACC4\uC57D"
-    _description: "\uD45C\uC2DD\uC774 \uBD99\uC740 \uC801\uC744 20% \uD655\uB960\uB85C \uC989\uC0AC\uC2DC\uD0A8\uB2E4. \uC5D8\uB9AC\uD2B8\uB294 \uCD5C\uB300 \uCCB4\uB825 50%, \uBCF4\uC2A4\uB294 30% \uD53C\uD574."
-    _kind: 1
-    _chancePercent: 20
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
@@ -235,6 +221,35 @@ MonoBehaviour:
       _specValueMax: 0
     _growthMin: 20
     _growthMax: 30
+  - _passiveSkillKey: psv_leech
+    _nameEn: LEECH
+    _nameKr: "\uD53C\uC758 \uAC08\uC99D"
+    _description: "\uC8FC\uB294 \uD53C\uD574\uC758 5%\uB97C \uB298 \uD761\uD608\uD55C\uB2E4.
+      \uCCB4\uB825\uC774 \uAC00\uB4DD\uC774\uBA74 \uB118\uCE5C \uB9CC\uD07C \uC274\uB4DC\uAC00
+      \uB41C\uB2E4."
+    _kind: 0
+    _chancePercent: 0
+    _scaling:
+      _baseValue: 0
+      _baseValueMax: 0
+      _specValue: 0
+      _specValueMax: 0
+    _growthMin: 5
+    _growthMax: 8
+  - _passiveSkillKey: psv_gangster
+    _nameEn: GANGSTER
+    _nameKr: "\uCCAD\uBD80 \uACC4\uC57D"
+    _description: "\uD45C\uC2DD\uC774 \uBD99\uC740 \uC801\uC744 \uCC98\uCE58\uD558\uBA74
+      \uC561\uD2F0\uBE0C \uCFE8\uD0C0\uC784\uC774 1\uCD08 \uC904\uC5B4\uB4E0\uB2E4."
+    _kind: 0
+    _chancePercent: 0
+    _scaling:
+      _baseValue: 0
+      _baseValueMax: 0
+      _specValue: 0
+      _specValueMax: 0
+    _growthMin: 0
+    _growthMax: 0
   - _passiveSkillKey: psv_momentum
     _nameEn: MOMENTUM
     _nameKr: "\uAE09\uC18C"
@@ -250,8 +265,9 @@ MonoBehaviour:
     _growthMax: 50
   - _passiveSkillKey: psv_commando_missile
     _nameEn: COMMANDO_MISSILE
-    _nameKr: "\uACE0\uD3ED\uD0C4"
-    _description: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C\uC744 \uBB34\uC2DC\uD55C\uB2E4."
+    _nameKr: "\uD45C\uC801 \uACE0\uC815"
+    _description: "\uAC19\uC740 \uC801\uC744 \uC5F0\uC18D\uC73C\uB85C \uB9DE\uD788\uBA74
+      \uD53C\uD574\uAC00 10%\uC529 \uC313\uC778\uB2E4(\uCD5C\uB300 50%)."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -259,12 +275,13 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 0
-    _growthMax: 0
+    _growthMin: 10
+    _growthMax: 15
   - _passiveSkillKey: psv_medium
     _nameEn: MEDIUM
-    _nameKr: "\uAC15\uB839"
-    _description: "\uC801 \uCC98\uCE58 \uC2DC 30% \uD655\uB960\uB85C \uC544\uAD70 \uD574\uACE8\uC744 \uC18C\uD658\uD55C\uB2E4. \uD574\uACE8\uC740 \uC801\uC758 \uACF5\uACA9\uC744 \uBC1B\uC9C0 \uC54A\uACE0 3\uCD08 \uB4A4 \uC0AC\uB77C\uC9C4\uB2E4."
+    _nameKr: "\uAC15\uB839\uC220"
+    _description: "\uC18C\uD658\uBB3C \uCD5C\uB300 \uC218 +2. \uC801 \uCC98\uCE58
+      \uC2DC 30% \uD655\uB960\uB85C \uC544\uAD70 \uD574\uACE8\uC744 \uC18C\uD658\uD55C\uB2E4."
     _kind: 1
     _chancePercent: 30
     _scaling:
@@ -276,9 +293,9 @@ MonoBehaviour:
     _growthMax: 45
   - _passiveSkillKey: psv_white_wizard
     _nameEn: WHITE_WIZARD
-    _nameKr: "\uAD00\uD1B5 \uAD11\uC120"
-    _description: "\uD22C\uC0AC\uCCB4\uAC00 \uC9C0\uD615\uC9C0\uBB3C\uC744 \uBB34\uC2DC\uD558\uACE0
-      \uC801\uC744 \uAD00\uD1B5\uD55C\uB2E4."
+    _nameKr: "\uBE5B\uC758 \uAC00\uD638"
+    _description: "\uC561\uD2F0\uBE0C\uB85C \uC801 3\uBA85 \uC774\uC0C1\uC744 \uB9DE\uD788\uBA74
+      \uCD5C\uB300 \uCCB4\uB825 15%\uB9CC\uD07C \uC274\uB4DC\uB97C \uC5BB\uB294\uB2E4."
     _kind: 0
     _chancePercent: 0
     _scaling:
@@ -286,8 +303,8 @@ MonoBehaviour:
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 0
-    _growthMax: 0
+    _growthMin: 15
+    _growthMax: 25
   - _passiveSkillKey: psv_commando_laser
     _nameEn: COMMANDO_LASER
     _nameKr: "\uC9D1\uC18D \uAD11\uC120"
@@ -305,13 +322,14 @@ MonoBehaviour:
   - _passiveSkillKey: psv_spare_circuit
     _nameEn: SPARE_CIRCUIT
     _nameKr: "\uC608\uBE44 \uD68C\uB85C"
-    _description: "\uAE30\uBCF8 \uACF5\uACA9 \uC2DC 2% \uD655\uB960\uB85C \uC561\uD2F0\uBE0C \uCFE8\uD0C0\uC784\uC774 1\uCD08 \uC904\uC5B4\uB4E0\uB2E4."
-    _kind: 1
-    _chancePercent: 2
+    _description: "\uD3EC\uD0D1\uC774 \uC11C \uC788\uB294 \uB3D9\uC548 \uBC1B\uB294
+      \uD53C\uD574 \u221220%."
+    _kind: 0
+    _chancePercent: 0
     _scaling:
       _baseValue: 0
       _baseValueMax: 0
       _specValue: 0
       _specValueMax: 0
-    _growthMin: 2
-    _growthMax: 4
+    _growthMin: 20
+    _growthMax: 30

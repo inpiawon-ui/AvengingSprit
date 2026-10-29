@@ -65,7 +65,8 @@ namespace Game.Module.InGame
             {
                 UltAfter(v * ThugBurstGap, () =>
                 {
-                    if (_host != me || me == null || !me.IsAlive) return;
+                    // 보조가 쓸 때도 나가야 한다(빙의 파티) — 예전 `_host != me` 는 보조의 난사를 통째로 막았다
+                    if (!IsLiveCaster(me)) return;
                     var target = NearestEnemy(me.Position);
                     var at = target != null ? target.Position : me.Position + AimDirection(me) * Meters(6f);
                     me.SetFacing(at - me.Position);
@@ -204,49 +205,8 @@ namespace Game.Module.InGame
             PlayFx("soulripple", at, Meters(1.4f), loop: false);
         }
 
-        // ═══════════════════════════════════════════════════════════
-        //  닌자 — 몸놀림: 4초 동안 회피 · 이동 속도가 오르고 잔상이 남는다 (PD 「회피율을 올린다거나 닌자 같은 느낌」)
-        // ═══════════════════════════════════════════════════════════
-
-        private const float EvadeSeconds = 4f;
-        private const int EvadeDodgePercent = 50;
-        private const int EvadeSpecDodgePercent = 70;   // Lv5 옵션 「회피 50 → 70%」
-        private const float EvadeSpeedBonus = 0.35f;
-        private const float EvadeTrailEvery = 0.07f;
-        private static readonly Color EvadeTrailTint = new(0.55f, 0.75f, 1f, 1f);
-        private float _evadeSeconds;
-        private float _evadeTrail;
-
-        private void NinjaEvade(Unit me)
-        {
-            _evadeSeconds = BaseAxis(EvadeSeconds);
-            _evadeTrail = 0f;
-            me.SetDodge(SpecOpen ? EvadeSpecDodgePercent : EvadeDodgePercent);
-            // 처치 이속(패시브)과 같은 시계를 쓴다 — 둘이 따로 돌면 먼저 끝나는 쪽이 속도를 1로 되돌린다
-            _ninjaKillSpeedTimer = Mathf.Max(_ninjaKillSpeedTimer, _evadeSeconds);
-            me.SetSpeedMul(1f + EvadeSpeedBonus);
-            PlayFx("njsmoke", me.Position, SsrBody * 1.8f, loop: false);
-            PlayFx("dash", me.Position, 96f, loop: false);
-        }
-
-        private void TickEvade(float dt)
-        {
-            if (_evadeSeconds <= 0f) return;
-            _evadeSeconds -= dt;
-            var me = _host;
-            if (me == null || me.Key != "ninja") { _evadeSeconds = 0f; return; }
-            if (_evadeSeconds <= 0f)
-            {
-                me.SetDodge(0);   // 닌자는 기본 회피가 없다(사슬 닌자만 패시브로 가진다)
-                return;
-            }
-            _evadeTrail -= dt;
-            if (_evadeTrail > 0f) return;
-            _evadeTrail = EvadeTrailEvery;
-            var sprite = me.BodySprite;
-            var img = sprite != null ? RentAfterimage() : null;
-            img?.Play(sprite, me.Position, me.GetComponent<RectTransform>().sizeDelta, me.BodyFlipX, 0.4f, 0.25f, EvadeTrailTint);
-        }
+        // 닌자 액티브 「몸놀림」(회피 · 이속)은 PD 2026-10-29 에 「그림자 베기」로 바뀌었다(BattleDirector.Skills1029).
+        // 회피 20% 는 이제 닌자 패시브다(BattleDirector.HostPassives).
 
         // ═══════════════════════════════════════════════════════════
         //  닌자(사슬) — 사슬 끌어오기: 둘레 적을 사슬로 내 앞에 끌어와 한데 묶고 한 번 후려친다
@@ -300,7 +260,8 @@ namespace Game.Module.InGame
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] != null && list[i].IsAlive) list[i].ApplyRoot(ChainPullRootSeconds);
-                _bindBonusSeconds = Mathf.Max(_bindBonusSeconds, ChainPullRootSeconds);
+                // 패시브 「사슬 감기」(PD 2026-10-29) — 메인이 끌어온 적만 3초간 더 아프다(보조가 쓰면 패시브가 없다)
+                if (me == _host) WrapChained(list);
                 // 끌려온 무리를 한 번 범위로 후려친다
                 int dmg = SkillDamage(me, BaseAxis(ChainPullSlamMul));
                 var hit = new List<Unit>(EnemiesInRange(front, Meters(ChainPullSlamMeters) * _buffs.AoeMul));
@@ -562,7 +523,7 @@ namespace Game.Module.InGame
                 bool tick = s % GravityTickEvery == 0;   // 루프 변수를 람다에 잡지 않는다
                 UltAfter(GravityPullSeconds * s / GravitySteps, () =>
                 {
-                    if (_host != me || me == null || !me.IsAlive) return;
+                    if (!IsLiveCaster(me)) return;   // 보조가 써도 돈다(빙의 파티)
                     var list = new List<Unit>(EnemiesInRange(c, r * 1.15f));
                     for (int i = 0; i < list.Count; i++)
                     {
@@ -580,10 +541,11 @@ namespace Game.Module.InGame
             }
             UltAfter(GravityPullSeconds + 0.05f, () =>
             {
-                if (_host != me || me == null || !me.IsAlive) return;
+                if (!IsLiveCaster(me)) return;
                 int dmg = SkillDamage(me, GravityBurstMul);
                 var hit = new List<Unit>(EnemiesInRange(c, r));
                 for (int i = 0; i < hit.Count; i++) HitEnemyWith(hit[i], dmg, me.Profile);
+                LightWardOnBurst(me, hit.Count);   // 패시브 「빛의 가호」 — 셋 이상 맞히면 쉴드(PD 2026-10-29)
                 (PlayFx("gvburst", c, r * 2.6f, loop: false) ?? PlayFx("wwburst", c, r * 2.2f, loop: false))?.SetFrameSeconds(0.05f);
                 _pfx?.Burst(ParticleFxKind.Glow, ParticleElement.Fire, c, 16, 260f, 40f, 0.7f, 0f);
                 Shake(6f);
