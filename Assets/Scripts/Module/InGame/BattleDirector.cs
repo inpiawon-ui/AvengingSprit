@@ -2877,7 +2877,10 @@ namespace Game.Module.InGame
         /// <summary>이 런이 건드릴 수 있는 캐릭터 키를 모은다.</summary>
         private List<string> RunUnitKeys()
         {
-            int chapter = _runChapter;
+            // ⚠ `_runChapter` 를 쓰면 안 된다 — 그림을 읽는 자리(LoadAsync)가 판 챕터를 정하는 자리(StartRun)보다 먼저 돈다.
+            //   이번 챕터 그림만 읽게 바꾼 뒤(2026-10-30) 2챕터 판이 1챕터 그림을 읽어 몬스터가 흰 네모로 섰다(PD 캡처).
+            //   판 챕터를 정하는 식과 같은 식으로 직접 계산한다
+            int chapter = IsModeRun ? 1 : StartChapter;
 
             // 잡몹은 챕터마다 짝이 다르다(`TrashKeysFor`). **여섯 챕터 것을 다 올린다.**
             //
