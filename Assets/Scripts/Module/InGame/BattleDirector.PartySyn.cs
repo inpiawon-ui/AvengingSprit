@@ -9,7 +9,7 @@ namespace Game.Module.InGame
     /// <summary>
     /// 빙의 파티 2단계 — 태그 시너지 · 파티 카드 · 파티 화면(PD 2026-10-29).
     ///
-    ///   · 태그 = 속성(파워 · 무기 · 마법, `AffinityRule.KindOf`) + 조직(아래 표). 같은 태그 2명 = 약 · 3명 = 강, 속성 셋이 다 다르면 균형
+    ///   · 태그 = 속성(파워 · 무기 · 마법, `AffinityRule.KindOf`) + 조직(아래 표). 같은 태그 2명 = 약 · 3명 = 강 · 스탯만 준다
     ///   · 레벨업 3장 안에 파티 카드가 랜덤으로 섞인다(따로 창을 두지 않는다 — PD 「3장 나오는 데서 메인과 파티가 랜덤으로」)
     ///   · 화면: 위에 파티 초상화 M · 1 · 2(길게 누르면 메인과 자리 바꾸기) · 켜진 시너지 · 레시피(글자만, 실루엣 없음 — PD)
     ///
@@ -35,9 +35,29 @@ namespace Game.Module.InGame
             Affinity.Force => "파워", Affinity.Blade => "무기", Affinity.Magic => "마법", _ => null,
         };
 
+        /// <summary>
+        /// 태그 시너지는 **스탯만** 준다(PD 2026-10-29 「속성은 공속 · 회피 · 치명 같은 스탯, 캐릭터별은 스킬」).
+        /// 피해 % · 균형 · 보조 위력은 뺐다 — 스킬이 바뀌는 쪽은 인연이 맡는다(`plan_party_inyeon.md`).
+        /// 값은 메인에 100% 걸린다. 보조는 맞지 않으므로(무적) 공속만 절반 받는다.
+        /// </summary>
         private struct PartySynergy
         {
-            public float Dmg, Crit, Def, Cd, SubPow;
+            /// <summary>받는 피해 감소(0~1) — 파워.</summary>
+            public float Def;
+            /// <summary>공속 증가(0~1) — 무기.</summary>
+            public float AtkSpd;
+            /// <summary>스킬 쿨 감소(0~1) — 마법.</summary>
+            public float Cd;
+            /// <summary>치명(%p) — 갱단.</summary>
+            public float Crit;
+            /// <summary>최대 체력 증가(0~1) — 코만도.</summary>
+            public float Hp;
+            /// <summary>회피(%) — 무도가.</summary>
+            public int Dodge;
+            /// <summary>처치마다 최대 체력의 이만큼 회복(0~1) — 괴물.</summary>
+            public float KillHeal;
+            /// <summary>보조 스킬 간격 감소(0~1) — 마도.</summary>
+            public float SubCd;
         }
 
         private PartySynergy _syn;
@@ -49,53 +69,78 @@ namespace Game.Module.InGame
         {
             _syn = default;
             _synLines.Clear();
-            if (!PartyOn) return;
-            var keys = Unit.PartyKeys;
-            if (keys.Count < 2) return;
-
-            _tagCount.Clear();
-            int force = 0, blade = 0, magic = 0;
-            foreach (var k in keys)
+            if (PartyOn && Unit.PartyKeys.Count >= 2)
             {
-                var a = AffinityRule.KindOf(k);
-                if (a == Affinity.Force) force++; else if (a == Affinity.Blade) blade++; else if (a == Affinity.Magic) magic++;
-                var o = OrgOf(k);
-                if (o != null) _tagCount[o] = _tagCount.TryGetValue(o, out int n) ? n + 1 : 1;
-            }
-
-            AddAttr("파워", force); AddAttr("무기", blade); AddAttr("마법", magic);
-            if (keys.Count >= 3 && force == 1 && blade == 1 && magic == 1)
-            { _syn.Dmg += 0.12f; _syn.Def += 0.10f; _synLines.Add("균형 · 피해 +12% · 받는 피해 −10%"); }
-
-            foreach (var kv in _tagCount)
-            {
-                if (kv.Value < 2) continue;
-                bool strong = kv.Value >= 3;
-                string lv = strong ? "3인" : "2인";
-                switch (kv.Key)
+                _tagCount.Clear();
+                int force = 0, blade = 0, magic = 0;
+                foreach (var k in Unit.PartyKeys)
                 {
-                    case "갱단": _syn.Crit += strong ? 20f : 10f; _synLines.Add($"갱단 {lv} · 치명 +{(strong ? 20 : 10)}%"); break;
-                    case "코만도 부대": _syn.Def += strong ? 0.20f : 0.10f; _synLines.Add($"코만도 {lv} · 받는 피해 −{(strong ? 20 : 10)}%"); break;
-                    case "무도가": _syn.Dmg += strong ? 0.20f : 0.10f; _synLines.Add($"무도가 {lv} · 피해 +{(strong ? 20 : 10)}%"); break;
-                    case "괴물": _syn.SubPow += strong ? 0.20f : 0.10f; _synLines.Add($"괴물 {lv} · 보조 위력 +{(strong ? 20 : 10)}%"); break;
-                    case "마도": _syn.Cd += strong ? 0.30f : 0.15f; _synLines.Add($"마도 {lv} · 스킬 쿨 −{(strong ? 30 : 15)}%"); break;
+                    var a = AffinityRule.KindOf(k);
+                    if (a == Affinity.Force) force++; else if (a == Affinity.Blade) blade++; else if (a == Affinity.Magic) magic++;
+                    var o = OrgOf(k);
+                    if (o != null) _tagCount[o] = _tagCount.TryGetValue(o, out int n) ? n + 1 : 1;
+                }
+
+                if (force >= 2) { bool st = force >= 3; _syn.Def += st ? 0.20f : 0.10f; _synLines.Add($"파워 {force}인 · 받는 피해 −{(st ? 20 : 10)}%"); }
+                if (blade >= 2) { bool st = blade >= 3; _syn.AtkSpd += st ? 0.25f : 0.12f; _synLines.Add($"무기 {blade}인 · 공속 +{(st ? 25 : 12)}%"); }
+                if (magic >= 2) { bool st = magic >= 3; _syn.Cd += st ? 0.25f : 0.12f; _synLines.Add($"마법 {magic}인 · 스킬 쿨 −{(st ? 25 : 12)}%"); }
+
+                foreach (var kv in _tagCount)
+                {
+                    if (kv.Value < 2) continue;
+                    bool st = kv.Value >= 3;
+                    string lv = st ? "3인" : "2인";
+                    switch (kv.Key)
+                    {
+                        case "갱단": _syn.Crit += st ? 20f : 10f; _synLines.Add($"갱단 {lv} · 치명 +{(st ? 20 : 10)}%"); break;
+                        case "코만도 부대": _syn.Hp += st ? 0.30f : 0.15f; _synLines.Add($"코만도 {lv} · 최대 체력 +{(st ? 30 : 15)}%"); break;
+                        case "무도가": _syn.Dodge += st ? 16 : 8; _synLines.Add($"무도가 {lv} · 회피 +{(st ? 16 : 8)}%"); break;
+                        case "괴물": _syn.KillHeal += st ? 0.04f : 0.02f; _synLines.Add($"괴물 {lv} · 처치 회복 {(st ? 4 : 2)}%"); break;
+                        case "마도": _syn.SubCd += st ? 0.30f : 0.15f; _synLines.Add($"마도 {lv} · 보조 스킬 간격 −{(st ? 30 : 15)}%"); break;
+                    }
                 }
             }
+            ApplySynergyHp();
         }
 
-        private void AddAttr(string name, int n)
+        // ── 코만도 — 최대 체력 ─────────────────────────────────
+        // 체력은 유닛 값이라 곱셈 자리가 없다. 걸어 둔 배수를 기억해 두고, 배수가 바뀌면 원래 최대치로 되돌려 다시 곱한다.
+        // 늘 때는 늘어난 만큼 채워 준다(「켜졌다」가 바로 보이게), 줄 때는 비율을 넘는 몫만 깎인다.
+        private Unit _synHpHost;
+        private float _synHpApplied = 1f;
+
+        private void ApplySynergyHp()
         {
-            if (n < 2) return;
-            bool strong = n >= 3;
-            _syn.Dmg += strong ? 0.25f : 0.10f;
-            _synLines.Add($"{name} {n}인 · 피해 +{(strong ? 25 : 10)}%");
+            if (_host != _synHpHost) { _synHpHost = _host; _synHpApplied = 1f; }
+            if (_host == null) return;
+            float want = 1f + _syn.Hp;
+            if (Mathf.Approximately(want, _synHpApplied)) return;
+            int baseMax = Mathf.Max(1, Mathf.RoundToInt(_host.HpMax / _synHpApplied));
+            int oldMax = _host.HpMax;
+            int newMax = Mathf.Max(1, Mathf.RoundToInt(baseMax * want));
+            _host.SetHpMax(newMax);
+            if (newMax > oldMax) _host.Heal(newMax - oldMax);
+            _synHpApplied = want;
         }
 
         // 계산 자리에서 부르는 배수 — 파티가 아니면 전부 1(또는 0)
-        private float PartyDamageMul => PartyOn ? 1f + _syn.Dmg : 1f;
         private float PartyCritAdd => PartyOn ? _syn.Crit : 0f;
         private float PartyDefMul => PartyOn ? Mathf.Max(0.3f, 1f - _syn.Def) : 1f;
         private float PartyCdMul => PartyOn ? Mathf.Max(0.3f, 1f - _syn.Cd) : 1f;
+        /// <summary>공격 간격 배수 — 공속 +25% 면 간격은 1/1.25.</summary>
+        private float PartyIntervalMul => PartyOn ? 1f / (1f + _syn.AtkSpd) : 1f;
+        /// <summary>보조는 공속을 절반만 받는다.</summary>
+        private float PartySubIntervalMul => PartyOn ? 1f / (1f + _syn.AtkSpd * 0.5f) : 1f;
+
+        /// <summary>무도가 회피 — 맞을 피해가 없던 일이 된다.</summary>
+        private bool PartyDodged() => PartyOn && _syn.Dodge > 0 && Roll(_syn.Dodge);
+
+        /// <summary>괴물 처치 회복 — 적이 쓰러질 때 메인을 채운다.</summary>
+        private void PartyKillHeal()
+        {
+            if (!PartyOn || _syn.KillHeal <= 0f || _host == null) return;
+            _host.Heal(Mathf.Max(1, Mathf.RoundToInt(_host.HpMax * _syn.KillHeal)));
+        }
 
         // ─────────────────────────────────────────
         // 파티 카드 — 레벨업 3장에 랜덤으로 섞인다
@@ -103,13 +148,13 @@ namespace Game.Module.InGame
         private readonly Dictionary<string, int> _subLv = new();
         private float _subPowCard;
 
-        /// <summary>보조 한 명의 공격력 배수 = 30% × (1 + 카드 + 괴물 시너지) × 스킬 Lv(+25%/Lv).</summary>
+        /// <summary>보조 한 명의 공격력 배수 = 30% × (1 + 카드) × 스킬 Lv(+25%/Lv).</summary>
         private float SubPowerOf(string key)
-            => PartyRule.SubPower * (1f + _subPowCard + _syn.SubPow) * (1f + 0.25f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
+            => PartyRule.SubPower * (1f + _subPowCard) * (1f + 0.25f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
 
-        /// <summary>보조 스킬 간격 — 6초 × 마도 시너지(보조는 절반만) × 스킬 Lv(−8%/Lv).</summary>
+        /// <summary>보조 스킬 간격 — 6초 × 마도 시너지 × 스킬 Lv(−8%/Lv).</summary>
         private float SubSkillCdOf(string key)
-            => PartyRule.SubSkillSeconds * (1f - _syn.Cd * 0.5f) * Mathf.Max(0.5f, 1f - 0.08f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
+            => PartyRule.SubSkillSeconds * (1f - _syn.SubCd) * Mathf.Max(0.5f, 1f - 0.08f * (_subLv.TryGetValue(key, out int lv) ? lv : 0));
 
         /// <summary>카드 3장 중 일부를 파티 카드로 바꾼다(보조가 있을 때만, 한 번에 최대 2장).</summary>
         private void MixPartyCards(string[] keys)
@@ -364,18 +409,14 @@ namespace Game.Module.InGame
             string org = OrgOf(_host.Key);
             var attr = AffinityRule.KindOf(_host.Key);
             int nOrg = 0, nAttr = 0;
-            var kinds = new HashSet<Affinity>();
             foreach (var k in keys)
             {
                 if (org != null && OrgOf(k) == org) nOrg++;
-                var a = AffinityRule.KindOf(k);
-                if (a == attr) nAttr++;
-                if (a != Affinity.None) kinds.Add(a);
+                if (AffinityRule.KindOf(k) == attr) nAttr++;
             }
             var sb = new System.Text.StringBuilder("레시피 · 메인 " + HostName(_host.Key) + "\n");
             if (org != null) sb.Append($"{(nOrg >= 2 ? "●" : "○")} {org} ({nOrg}/{(nOrg >= 2 ? 3 : 2)})   ");
-            if (AttrName(attr) != null) sb.Append($"{(nAttr >= 2 ? "●" : "○")} {AttrName(attr)} ({nAttr}/{(nAttr >= 2 ? 3 : 2)})   ");
-            sb.Append($"{(kinds.Count >= 3 && keys.Count >= 3 ? "●" : "○")} 균형 ({kinds.Count}/3)");
+            if (AttrName(attr) != null) sb.Append($"{(nAttr >= 2 ? "●" : "○")} {AttrName(attr)} ({nAttr}/{(nAttr >= 2 ? 3 : 2)})");
             return sb.ToString();
         }
     }

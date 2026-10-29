@@ -466,7 +466,7 @@ namespace Game.Module.InGame
                 if (target != null)
                 {
                     u.SetFacing(target.Position - u.Position);
-                    if (inRange && u.TickAttack(dt))
+                    if (inRange && u.TickAttack(dt, PartySubIntervalMul))   // 무기 시너지 — 보조는 절반
                     {
                         _summonStriking = true;
                         try { PerformAttack(u, target, true); }

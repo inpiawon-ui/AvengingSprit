@@ -121,7 +121,7 @@ namespace Game.Module.InGame
         /// ⚠ 카드 몫은 <see cref="SkillCooldownOf"/> 에 넣지 않는다 — 그 값으로 액티브 위력 배율(쿨 비례)을 재므로
         ///   카드를 먹을수록 액티브가 약해진다.
         /// </summary>
-        private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul * PartyCdMul;   // 빙의 파티 — 마도 시너지
+        private float PlayerSkillCooldown => SkillCooldownOf(_host?.Profile) * _buffs.ActiveCooldownMul * PartyCdMul;   // 빙의 파티 — 마법 시너지
 
         private void TickSkillCharge(float dt)
         {
@@ -4185,7 +4185,7 @@ namespace Game.Module.InGame
             IsFiring = inRange;
             if (!inRange) { _host.CoolAttack(dt); return; }
             // 버프는 유닛 스탯을 덮어쓰지 않고 발사 시점에 곱한다 (빙의로 몸이 바뀌어도 유지)
-            if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul)) return;
+            if (!_host.TickAttack(dt, _buffs.IntervalMul * HasteMul * PartyIntervalMul)) return;   // 빙의 파티 — 무기 시너지
             PerformAttack(_host, target, true);
             // C024 전투 스텝 — 쏘고 나면 잠깐 빨라진다. 치고 빠지는 손맛이 여기서 난다.
             if (_buffs.CombatStepBonus > 0f) _combatStep = CombatStepSeconds;
@@ -6093,7 +6093,6 @@ namespace Game.Module.InGame
         private float CardDamageMul(Unit victim)
         {
             float m = GritDamageMul;   // 궁지 — 내 체력이 절반 아래면
-            m *= PartyDamageMul;       // 빙의 파티 — 속성 · 무도가 · 균형 시너지
 
             if (_buffs.SingleTargetBonus > 0f)
             {
@@ -7777,7 +7776,7 @@ namespace Game.Module.InGame
 
             // 맞을 때도 상성(PD 2026-10-13) — 내 몸이 이기는 적에게는 덜, 지는 적에게는 더 아프다
             amount = WithDefenseAffinity(amount, sourceKey);
-            // 빙의 파티 — 코만도 · 균형 시너지
+            // 빙의 파티 — 파워 시너지
             if (PartyOn) amount = Mathf.Max(1, Mathf.RoundToInt(amount * PartyDefMul));
 
             // 회피 — 깎는 것이 아니라 **없던 일**이 된다(닌자(사슬) 패시브).
@@ -7785,6 +7784,12 @@ namespace Game.Module.InGame
             if (Avatar != null && Avatar.DodgePercent > 0 && Roll(Avatar.DodgePercent))
             {
                 SpawnFx("dash", Avatar.Position, HurtFxSize);   // 잔상 — 흘렸다는 표시
+                return;
+            }
+            // 빙의 파티 — 무도가 시너지 회피(호스트 제 회피와 따로 굴린다)
+            if (Avatar != null && PartyDodged())
+            {
+                SpawnFx("dash", Avatar.Position, HurtFxSize);
                 return;
             }
 
@@ -7975,6 +7980,7 @@ namespace Game.Module.InGame
         private void KillEnemy(Unit u)
         {
             u.SetState(EnemyState.Dead);
+            if (u.Side == UnitSide.Enemy) PartyKillHeal();   // 빙의 파티 — 괴물 시너지
             // 쓰러지는 그림만으로는 «해치웠다»가 약하다. 부서진 조각과 흙먼지를 같이 뿌린다.
             // 잡몹·호스트는 작고 짧게(`Death`), 보스만 크게 — 방마다 여러 번 나는 일이라
             // 예전 크기로는 화면이 먼지로 덮였다(기획 2026-09-28).
