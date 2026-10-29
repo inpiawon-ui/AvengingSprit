@@ -521,7 +521,7 @@ namespace Game.Module.InGame
                 ? (e != null && !string.IsNullOrEmpty(e.ActiveSkillKey) ? Localize.Get($"askill.{e.ActiveSkillKey}.name") : u.Key)
                 : "연사";
             var t = RentDamageText();
-            if (t != null) t.Show(u.Position + new Vector2(0f, 70f), skill, new Color(0.85f, 0.76f, 1f));
+            if (t != null) t.ShowMinor(u.Position + new Vector2(0f, 70f), skill, new Color(0.85f, 0.76f, 1f));   // 데미지 숫자를 덮지 않게 작게
         }
 
         /// <summary>
@@ -605,10 +605,13 @@ namespace Game.Module.InGame
             Sliced(panel.gameObject.AddComponent<Image>(), "party_popup_panel", new Color(0.106f, 0.106f, 0.153f, 0.98f));
 
             float y = h * 0.5f - 44f;
-            NewText(panel, title, 30, Color.white, new Vector2(0f, y), new Vector2(W - 40f, 44f), true);
-            y -= 42f;
-            NewText(panel, sub, 20, new Color(0.78f, 0.78f, 0.85f), new Vector2(0f, y), new Vector2(W - 40f, 30f), false);
-            y -= 30f;
+            // 시계가 있으면 제목은 시계 테(오른쪽 위 64)를 비켜 왼쪽으로 · 부제는 두 줄까지(2026-10-29 판 검수 — 제목이 창 밖으로 나갔다)
+            float titleW = timer > 0f ? W - 150f : W - 48f;
+            float titleX = timer > 0f ? -40f : 0f;
+            NewText(panel, title, 26, Color.white, new Vector2(titleX, y), new Vector2(titleW, 44f), true);
+            y -= 44f;
+            NewText(panel, sub, 17, new Color(0.78f, 0.78f, 0.85f), new Vector2(0f, y - 4f), new Vector2(W - 48f, 40f), false);
+            y -= 40f;
             _partyTimerText = null;
             if (timer > 0f)
             {
@@ -650,9 +653,12 @@ namespace Game.Module.InGame
                     act?.Invoke();
                 });
                 var tc = !o.Enabled ? new Color(0.35f, 0.35f, 0.35f) : gold ? new Color(1f, 0.84f, 0.42f) : Color.white;
-                var t1 = NewText(b, o.Title, 24, tc, new Vector2(0f, 20f), new Vector2(W - 88f, 36f), true);
+                // 추천 줄은 왼쪽에 왕관 꼬리표, 못 고름 줄은 오른쪽에 자물쇠가 그려져 있다 — 그쪽 40 을 비운다
+                float inset = gold ? 40f : !o.Enabled ? -40f : 0f;
+                float rowW = W - 88f - Mathf.Abs(inset);
+                var t1 = NewText(b, o.Title, 22, tc, new Vector2(inset * 0.5f, 20f), new Vector2(rowW, 36f), true);
                 t1.alignment = TextAlignmentOptions.MidlineLeft;
-                var t2 = NewText(b, o.Detail, 17, new Color(0.67f, 0.67f, 0.73f), new Vector2(0f, -22f), new Vector2(W - 88f, 44f), false);
+                var t2 = NewText(b, o.Detail, 16, new Color(0.67f, 0.67f, 0.73f), new Vector2(inset * 0.5f, -22f), new Vector2(rowW, 44f), false);
                 t2.alignment = TextAlignmentOptions.TopLeft;
                 y -= 122f;
             }
@@ -695,8 +701,10 @@ namespace Game.Module.InGame
             t.fontStyle = bold ? FontStyles.Bold : FontStyles.Normal;
             t.alignment = TextAlignmentOptions.Center;
             t.enableAutoSizing = true;
-            t.fontSizeMin = 12f;
+            t.fontSizeMin = 10f;
             t.fontSizeMax = size;
+            t.enableWordWrapping = true;
+            t.overflowMode = TextOverflowModes.Overflow;
             t.raycastTarget = false;
             return t;
         }

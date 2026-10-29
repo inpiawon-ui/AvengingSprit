@@ -148,7 +148,7 @@ namespace Game.Module.InGame
             _bubbleImg.sprite = GetSprite(on ? "possess_bubble_syn" : "possess_bubble_none");
             // 금빛 말풍선 안쪽은 크림색 — 글자는 짙게(부품 검수)
             _bubbleText.color = on ? new Color(0.29f, 0.18f, 0.05f) : new Color(0.86f, 0.86f, 0.9f);
-            _bubbleText.text = on ? (inyeon ? line : $"데려오면 ▶ {line}") : "시너지 없음";
+            _bubbleText.text = on ? $"데려오면 ▶\n{line}" : "시너지 없음";
         }
 
         private Unit NearestPossessable()
@@ -174,11 +174,12 @@ namespace Game.Module.InGame
             _bubble.SetParent(_shotLayer, false);
             _bubble.anchorMin = _bubble.anchorMax = new Vector2(0f, 1f);
             _bubble.pivot = new Vector2(0.5f, 0f);
-            _bubble.sizeDelta = new Vector2(180f, 56f);
+            _bubble.sizeDelta = new Vector2(220f, 70f);
             _bubbleImg = go.GetComponent<UnityEngine.UI.Image>();
             _bubbleImg.type = UnityEngine.UI.Image.Type.Sliced;
             _bubbleImg.raycastTarget = false;
-            _bubbleText = NewText(_bubble, string.Empty, 17, Color.white, new Vector2(0f, 6f), new Vector2(164f, 36f), true);
+            // 두 줄(「데려오면 ▶」 / 효과) — 꼬리(아래 12)를 빼고 판 안쪽(테 16)에 들어가게
+            _bubbleText = NewText(_bubble, string.Empty, 15, Color.white, new Vector2(0f, 6f), new Vector2(192f, 46f), true);
             if (GameFramework.Core.Base.CoreModule.TryGet<Game.Module.Common.ILanguageService>(out var lang) && lang.IsReady)
                 lang.ApplyFonts(_bubble);
         }
