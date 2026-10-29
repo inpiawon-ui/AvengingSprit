@@ -158,8 +158,10 @@ namespace Game.Module.Lobby
             _orgTitle.text = string.Format(Localize.FromTable("ui.rb.org.title", "무리 – {0}"), Localize.Get($"ui.party.tag.{id}"));
             _orgCount.text = $"{Mathf.Min(owned, 3)}/3";
             _orgDesc.text = Localize.Get($"ui.party.tag.{id}.desc");
-            _orgTier2.text = TierLine(org, id, 2, owned >= 2);
-            _orgTier3.text = TierLine(org, id, 3, owned >= 3);
+            // 효과 줄은 늘 켜진 색 — 가진 수로 잿빛을 치면 「해금 안 하면 못 받는다」로 읽혔다(PD 2026-10-30).
+            //   무리 수는 판 안에서 데려간 몸으로 센다(해금 여부와 상관없다)
+            _orgTier2.text = TierLine(org, id, 2, true);
+            _orgTier3.text = TierLine(org, id, 3, true);
             _orgRule.text = Localize.FromTable("ui.rb.org.rule", "같은 무리를 메인 · 보조로 함께 데려가면 켜진다");
 
             for (int i = _members.childCount - 1; i >= 0; i--) Destroy(_members.GetChild(i).gameObject);
@@ -171,13 +173,11 @@ namespace Game.Module.Lobby
                 string k = _orgMembers[i];
                 bool have = player.IsHostOwned(player.GetHost(k));
                 var at = new Vector2(x0 + pitch * i, 10f);
+                // 안 가진 몸도 잿빛 · 자물쇠 없이 그대로 — 판 안에서 데려가면 똑같이 무리 수에 든다(PD 2026-10-30 「회색 말고 다 흰색으로」)
                 var frame = Child(_members, at, cell, k == key ? _art.FaceCyan : have ? _art.FaceGold : _art.FaceCyan);
-                if (!have) frame.color = new Color(0.55f, 0.58f, 0.66f);
                 var face = Child(_members, at, cell - 12f, shell.Face(k));
                 face.preserveAspect = true;
-                if (!have) face.color = new Color(0.32f, 0.34f, 0.4f);
-                if (!have && _art.Lock != null) Child(_members, at + new Vector2(0f, -4f), 26f, _art.Lock).preserveAspect = true;
-                var nm = Label(_members, cell + 12f, 12, have ? Color.white : new Color(0.62f, 0.66f, 0.76f));
+                var nm = Label(_members, cell + 12f, 12, Color.white);
                 nm.rectTransform.anchoredPosition = at + new Vector2(0f, -(cell * 0.5f + 10f));
                 nm.text = player.GetHost(k)?.DisplayName ?? k;
             }
