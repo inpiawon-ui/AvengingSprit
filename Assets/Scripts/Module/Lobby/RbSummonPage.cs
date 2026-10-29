@@ -149,6 +149,9 @@ namespace Game.Module.Lobby
             if (again && this != null) Pull(count);
         }
 
+        /// <summary>뽑는 중이거나 결과판이 떠 있나 — 해금 연출이 소환 결과 뒤로 미룬다(PD 2026-10-30 「가챠 결과 전에 얻은 걸 알게 된다」).</summary>
+        public bool ShowingPull => _busy || (_ui != null && _ui.Find("SumResult") is Transform r && r.gameObject.activeInHierarchy);
+
         private string AgainLabel(IGachaService g, int count)
             => string.Format(Localize.FromTable("ui.rb.summon.again", "{0}회 더"), count) + "  "
                + Price(g, count, PayFor(g, count) == GachaPay.Free ? GachaPay.Gem : PayFor(g, count));

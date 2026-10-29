@@ -162,8 +162,22 @@ namespace Game.Module.Lobby
         {
             if (_player == null || (_unlockReveal != null && _unlockReveal.IsOpen)) return;
             if (_revealPage != null && _revealPage.IsOpen) return;
+            if (UnlockRevealWaits()) return;
             if (!_player.TryTakeNewUnlock(out var key)) return;
             ShowUnlock(key);
+        }
+
+        // 조각을 준 그 일(소환 · 상자 · 보상 알림 · 성급 결과 · 설명)이 다 끝난 뒤에 해금을 보여 준다.
+        //   예전엔 조각이 들어온 순간 바로 띄워 소환 결과보다 「새로 획득」이 먼저 떴다(PD 2026-10-30)
+        private static readonly string[] UnlockWaitsFor = { "RbChestOpen", "GrwStarDone", "GrwStarAsk", "GrwEssence", "RbGuide" };
+
+        private bool UnlockRevealWaits()
+        {
+            if (_summonPage != null && _summonPage.ShowingPull) return true;
+            if (_notice != null && _notice.AnyOpen) return true;
+            for (int i = 0; i < UnlockWaitsFor.Length; i++)
+                if (_ui.Find(UnlockWaitsFor[i]) is Transform t && t.gameObject.activeInHierarchy) return true;
+            return false;
         }
 
         private void ShowUnlock(string key)

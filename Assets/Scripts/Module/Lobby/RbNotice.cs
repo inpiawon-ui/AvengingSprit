@@ -250,6 +250,18 @@ namespace Game.Module.Lobby
 
         // ── 열고 닫기 ───────────────────────────────────────
 
+        /// <summary>알림 창이 하나라도 떠 있나 — 해금 연출이 그 뒤로 미룬다(2026-10-30).</summary>
+        public bool AnyOpen
+        {
+            get
+            {
+                if (_ui == null) return false;
+                foreach (var p in Panels)
+                    if (_ui.Find(p) is Transform t && t.gameObject.activeInHierarchy) return true;
+                return false;
+            }
+        }
+
         public bool Back()
         {
             if (_ui == null) return false;
