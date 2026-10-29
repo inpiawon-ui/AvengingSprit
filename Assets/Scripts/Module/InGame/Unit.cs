@@ -1815,13 +1815,13 @@ namespace Game.Module.InGame
             if (_body != null) _body.color = RestColor;
         }
 
-        /// <summary>보조 색 — 투명도가 0.5~0.68 사이로 천천히 오르내린다(숨쉬기).</summary>
+        /// <summary>보조 색 — 70% 쯤 보이고 0.66~0.74 사이로 천천히 오르내린다(숨쉬기). 0.5~0.68 은 너무 빠져 잘 안 보였다(PD 2026-10-29).</summary>
         private Color PartySubTint
         {
             get
             {
                 var c = PartySubColor;
-                c.a = 0.59f + 0.09f * Mathf.Sin(Time.time * 2.6f + _rect.anchoredPosition.x * 0.01f);
+                c.a = 0.70f + 0.04f * Mathf.Sin(Time.time * 2.6f + _rect.anchoredPosition.x * 0.01f);
                 return c;
             }
         }
