@@ -855,6 +855,8 @@ namespace Game.Module.InGame
         /// </summary>
         private Unit SpawnRoomUnit(HostEntry e, bool isHost, bool elite, Vector2 pixelPos, string name)
         {
+            // 빙의 파티 — 호스트 자리에는 정본 호스트 대신 전체 호스트 중 랜덤(PD 2026-10-29 「빙의할 게 없다」)
+            if (isHost && !elite && PartyOn) e = PartyRandomHost(e);
             var u = NewUnit(name);
             NoteMetHost(e);   // 상점이 파는 목록은 이 판에서 만난 몸뿐이다
             u.Setup(UnitSide.Enemy, e.HostKey, e.DisplayName, TrashSprite(e),
@@ -1031,6 +1033,8 @@ namespace Game.Module.InGame
                     e.Profile.PossessKind == Game.Character.PossessKind.NotPossessable) continue;
                 if (e.PossessPriority > bestScore) { bestScore = e.PossessPriority; best = i; }
             }
+            // 빙의 파티 — 호스트는 정본 호스트 자리에만 랜덤으로 선다. 매 방 나올 필요는 없다(PD 2026-10-29) — 잡몹을 올려 쓰지 않는다
+            if (PartyOn) return;
             if (have == 0 && best >= 0) { _enemies[best].MarkAsHostBody(); _enemies[best].MarkAsNextBody(); }
         }
 
@@ -2928,6 +2932,7 @@ namespace Game.Module.InGame
             AddModeUnitKeys(keys);   // 모드 — 조건으로 뽑히는 몸 · 무리 잡몹
             var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
             if (hosts == null || hosts.Count == 0) return keys;
+            AddPartyUnitKeys(keys, hosts);   // 빙의 파티 — 호스트 자리가 랜덤이라 모든 호스트 그림을 올린다
 
             // 중간보스 대장은 방 자리(Spawns)가 아니라 `MidBossKey` 로 선다 — 아래 경로 훑기에 안 걸린다.
             // 안 올리면 대장이 그림 없는 단색 네모로 선다(2026-10-08 실측 9-8 용기병, PD 「하얀 화면」).

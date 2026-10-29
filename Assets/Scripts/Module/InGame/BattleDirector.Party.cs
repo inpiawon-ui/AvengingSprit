@@ -91,6 +91,47 @@ namespace Game.Module.InGame
         };
 
         // ─────────────────────────────────────────
+        // 호스트 자리 — 랜덤
+        // ─────────────────────────────────────────
+
+        /// <summary>빙의할 수 있는 호스트인가 — 유령 · 히든(사신) · 빙의 불가 몸은 뺀다.</summary>
+        private static bool PartyPickable(HostEntry h)
+            => h != null && !h.IsGhost && !Game.User.PlayerDataService.IsHiddenHost(h.HostKey)
+               && h.PossessKind != PossessKind.NotPossessable;
+
+        /// <summary>판 시작에 올릴 그림 — 호스트 자리가 랜덤이라 빙의할 수 있는 호스트를 전부 올린다.</summary>
+        private void AddPartyUnitKeys(List<string> keys, IReadOnlyList<HostEntry> hosts)
+        {
+            if (!PartyOn) return;
+            for (int i = 0; i < hosts.Count; i++)
+                if (PartyPickable(hosts[i]) && !keys.Contains(hosts[i].SpriteKey)) keys.Add(hosts[i].SpriteKey);
+        }
+
+        /// <summary>
+        /// 호스트 자리에 세울 몸을 전체에서 랜덤으로 고른다. 파티에 있는 호스트 · 이 방에 이미 선 호스트 · 그림이 안 올라온 몸은 뺀다.
+        /// 고를 것이 없으면 정본 호스트 그대로.
+        /// </summary>
+        private HostEntry PartyRandomHost(HostEntry canon)
+        {
+            var hosts = _player != null && _player.IsReady ? _player.AllHosts : null;
+            if (hosts == null || hosts.Count == 0) return canon;
+            SyncPartyKeys();
+            _partyPool.Clear();
+            for (int i = 0; i < hosts.Count; i++)
+            {
+                var h = hosts[i];
+                if (!PartyPickable(h) || Unit.PartyKeys.Contains(h.HostKey) || TrashSprite(h) == null) continue;
+                bool here = false;
+                for (int k = 0; k < _enemies.Count; k++)
+                    if (_enemies[k] != null && _enemies[k].IsHostBody && _enemies[k].Key == h.HostKey) { here = true; break; }
+                if (!here) _partyPool.Add(h);
+            }
+            return _partyPool.Count == 0 ? canon : _partyPool[_rng.Next(_partyPool.Count)];
+        }
+
+        private readonly List<HostEntry> _partyPool = new();
+
+        // ─────────────────────────────────────────
         // 판 시작 · 정리
         // ─────────────────────────────────────────
 
